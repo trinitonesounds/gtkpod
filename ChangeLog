@@ -6,6 +6,17 @@ gtkpod V0.61-CVS
 	Unfortunately .m4p files are not played by the iPod. .m4a files
 	work fine.
 
+	IMPROVEMENT: When adding existing tracks:
+	 Until now the default action when adding tracks that already
+	 exist (identical full filename) was to add it again (they were
+	 refused by the duplicate detection, but that took a long time),
+	 or to update the track information (option).
+
+	 Now the default action is to skip existing tracks (identical
+	 filename) or to update the track information (option). Thus, by
+	 default, only new tracks are read, allowing quick synchronization
+	 of entire directories.
+
 	BUGFIX: Drag and Drop of files with spaces did not work.
 
 gtkpod V0.60

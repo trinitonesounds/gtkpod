@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-07 23:26:50 jcs>
+/* Time-stamp: <2003-11-13 21:44:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -87,7 +87,9 @@ Track *add_track (Track *track)
 {
   Track *oldtrack, *result=NULL;
 
-  /* fill in additional information from the extended info hash */
+  /* fill in additional information from the extended info hash
+     (extended info hash only exists during initial import of the
+     database */
   fill_in_extended_info (track);
   if((oldtrack = md5_track_exists_insert (track)))
   {
@@ -444,7 +446,7 @@ void remove_duplicate (Track *oldtrack, Track *track)
    static gboolean removed = FALSE;
    static GString *str = NULL;
 
-   if (prefs_get_show_duplicates() && (oldtrack == NULL) && (track == NULL) && str)
+   if (prefs_get_show_duplicates() && !oldtrack && !track && str)
    {
        if (str->len)
        { /* Some tracks have been deleted. Print a notice */
@@ -519,10 +521,14 @@ void remove_duplicate (Track *oldtrack, Track *track)
        /* Set 'played' timestamp */
        oldtrack->time_played =  MAX (oldtrack->time_played, track->time_played);
 
-       /* Set pc filename */
-       oldtrack->pc_path_utf8 = g_strdup (track->pc_path_utf8);
-       oldtrack->pc_path_locale = g_strdup (track->pc_path_locale);
-
+       /* Update filename if new track has filename set */
+       if (track->pc_path_locale && *oldtrack->pc_path_locale)
+       {
+	   g_free (oldtrack->pc_path_locale);
+	   g_free (oldtrack->pc_path_utf8);
+	   oldtrack->pc_path_utf8 = g_strdup (track->pc_path_utf8);
+	   oldtrack->pc_path_locale = g_strdup (track->pc_path_locale);
+       }
        if (track_is_in_playlist (NULL, track))
        { /* track is already added to memory -> replace with "oldtrack" */
 	   /* check for "track" in all playlists (except for MPL) */

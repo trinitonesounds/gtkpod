@@ -1564,7 +1564,7 @@ create_prefs_window (void)
   cfg_update_existing = gtk_check_button_new_with_mnemonic (_("When adding dirs/files, update information of\n existing tracks with identical filenames"));
   gtk_widget_show (cfg_update_existing);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_existing, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_update_existing, _("If the filename (full path) of an existing track matches that of a track to be added, this option allows you to update the information of the existing track rather than adding the track again. Please note that this option is different from the option 'Don't allow file duplication' above: duplicates are completely identical, while having the same filename still allows for different ID3 tags. On export the updated track is copied to the iPod overwriting the old version."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_update_existing, _("If the filename (full path) of an existing track matches that of a track to be added, this option allows you to update the information about the existing track rather than just skipping the track altogether. No update will take place if the file hasn't changed and you have selected the 'Don't allow file duplication' option above."), NULL);
 
   table1 = gtk_table_new (2, 1, FALSE);
   gtk_widget_show (table1);

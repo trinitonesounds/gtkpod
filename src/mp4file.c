@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 15:30:33 jcs>
+/* Time-stamp: <2003-11-13 23:22:38 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -400,13 +400,13 @@ gboolean file_write_mp4_info (gchar *mp4FileName, Track *track, T_item tag_id)
 /* Use our own code to read some information from mp4 files */
 Track *file_get_mp4_info (gchar *name)
 {
-    gtkpod_warning (_("m4a/m4p not yet supported without the mp4v2 library.\n"));
+    gtkpod_warning (_("Import of '%s' failed: m4a/m4p not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), name);
     return NULL;
 }
 
 gboolean file_write_mp4_info (gchar *filename, Track *track, T_item tag_id)
 {
-    gtkpod_warning (_("m4a/m4p metadata writing not supported without the mp4v2 library.\n"));
+    gtkpod_warning (_("m4a/m4p metadata update for '%s' failed: m4a/m4p not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), filename);
     return FALSE;
 }
 #endif

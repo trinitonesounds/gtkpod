@@ -302,7 +302,7 @@ Tracks
 
 - You can add individual tracks, entire directories recursively, or
   existing playlists using "Add Files". A file selection dialogue will
-  appear.
+  appear. By default existing tracks (same full filename) will be skipped.
 - You can add directories recursively using "Add Dirs". A directory
   selection dialogue will appear.
 - You can add existing playlists using "Add Playlists"
@@ -318,7 +318,7 @@ Tracks
   tab.
 - Cou can specify which tags to display in the preferences window
 - Cou can specify (in the prefs window) if the ID3 tags of the
-  corresponding mp3 file should also be updated
+  corresponding mp3 file(s) should also be updated
 
 
 Sort Tabs
@@ -483,8 +483,8 @@ It will then add all non-existing tracks in those directories and
 update (see "Refresh") all existing tracks. The tracks are also added to
 the currently selected playlist, if they aren't already a member.
 
-Tracks that have been removed from the directory will not be removed
-from the iTunesDB.
+Tracks that have been removed from the directory will only be removed
+from the iTunesDB if this option is checked in the option dialogue.
 
 For best results you should also activate duplicate detection. This
 avoids unnecessary copying of unchanged tracks.

@@ -1958,7 +1958,7 @@
 			      <child>
 				<widget class="GtkCheckButton" id="cfg_update_existing">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">If the filename (full path) of an existing track matches that of a track to be added, this option allows you to update the information of the existing track rather than adding the track again. Please note that this option is different from the option 'Don't allow file duplication' above: duplicates are completely identical, while having the same filename still allows for different ID3 tags. On export the updated track is copied to the iPod overwriting the old version.</property>
+				  <property name="tooltip" translatable="yes">If the filename (full path) of an existing track matches that of a track to be added, this option allows you to update the information about the existing track rather than just skipping the track altogether. No update will take place if the file hasn't changed and you have selected the 'Don't allow file duplication' option above.</property>
 				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">When adding dirs/files, update information of
  existing tracks with identical filenames</property>

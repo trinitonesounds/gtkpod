@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 12:51:27 jcs>
+/* Time-stamp: <2003-11-13 21:44:48 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -412,8 +412,8 @@ Track *copy_new_info (Track *from, Track *to)
     to->composer_utf16 = utf16_strdup (from->composer_utf16);
     to->fdesc = g_strdup (from->fdesc);
     to->fdesc_utf16 = utf16_strdup (from->fdesc_utf16);
-    to->album = g_strdup (from->album);
-    to->album_utf16 = utf16_strdup (from->album_utf16);
+    to->pc_path_utf8 = g_strdup (from->pc_path_utf8);
+    to->pc_path_locale = g_strdup (from->pc_path_locale);
     to->charset = g_strdup (from->charset);
     to->size = from->size;
     to->tracklen = from->tracklen;
@@ -1213,24 +1213,23 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 {
   static gint count = 0; /* do a gtkpod_tracks_statusbar_update() every
 			    10 tracks */
-  Track *track;
+  Track *oldtrack;
   gchar str[PATH_MAX];
-  gchar *basename;
-  gint len;
+  gchar *basename, *suffix;
 
   if (name == NULL) return TRUE;
 
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
-      return add_directory_by_name (name, NULL, descend, addtrackfunc, data);
+      return add_directory_by_name (name, plitem, descend, addtrackfunc, data);
   }
 
   /* check if file is a playlist */
-  len = strlen (name);
-  if (len >= 4)
+  suffix = strrchr (name, '.');
+  if (suffix)
   {
-      if ((strcasecmp (&name[len-4], ".pls") == 0) ||
-	  (strcasecmp (&name[len-4], ".m3u") == 0))
+      if ((strcasecmp (suffix, ".pls") == 0) ||
+	  (strcasecmp (suffix, ".m3u") == 0))
       {
 	  return add_playlist_by_filename (name, plitem, addtrackfunc, data);
       }
@@ -1248,76 +1247,83 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
   }
   C_FREE (basename);
 
-  track = get_track_info_from_file (name, NULL);
-
-  if (track && prefs_get_update_existing ())
-  {  /* If a file is added again, update the information of the
-      * existing track */
-      Track *oldtrack = get_track_by_filename (name);
-
-      if (oldtrack)
-      {
+  /* Check if there exists already a track with the same filename */
+  oldtrack = get_track_by_filename (name);
+  /* If a track already exists in the database, either update it or
+     just add it to the current playlist (if it doesn't already exist) */
+  if (oldtrack)
+  {
+      if (prefs_get_update_existing ())
+      {   /* update the information */
 	  update_track_from_file (oldtrack);
-	  if (plitem && (plitem->type != PL_TYPE_MPL))
+      }
+      /* add to current playlist if it's not already in there */
+      if (plitem && (plitem->type != PL_TYPE_MPL))
+      {
+	  if (!track_is_in_playlist (plitem, oldtrack))
 	  {
 	      if (addtrackfunc)
 		  addtrackfunc (plitem, oldtrack, data);
 	      else
 		  add_track_to_playlist (plitem, oldtrack, TRUE);
 	  }
-	  free_track (track);
-	  track = NULL;
       }
   }
-
-  if (track)
-  {
-      Track *added_track = NULL;
-
-      track->ipod_id = 0;
-      track->transferred = FALSE;
-      if (gethostname (str, PATH_MAX-2) == 0)
+  else  /* oldtrack == NULL */
+  {  /* Only read the new track if there doesn't already exist an old
+	track with the same filename in the database */
+      Track *track = get_track_info_from_file (name, NULL);
+      if (track)
       {
-	  str[PATH_MAX-1] = 0;
-	  track->hostname = g_strdup (str);
-      }
-      added_track = add_track (track);
-      if(added_track)                   /* add track to memory */
-      {
-	  if (addtrackfunc)
+	  Track *added_track = NULL;
+
+	  track->ipod_id = 0;
+	  track->transferred = FALSE;
+	  if (gethostname (str, PATH_MAX-2) == 0)
 	  {
-	      if (!plitem || (plitem->type == PL_TYPE_MPL))
-	      {   /* add track to master playlist (if it hasn't been
-		   * done before) */
-		  if (added_track == track) addtrackfunc (plitem, added_track,
-						       data);
-	      }
-	      else
-	      {   /* (plitem != NULL) && (type == NORM) */
-		  /* add track to master playlist (if it hasn't been
-		   * done before) */
-		  if (added_track == track)
-		      add_track_to_playlist (NULL, added_track, TRUE);
-		  /* add track to specified playlist */
-		  addtrackfunc (plitem, added_track, data);
-	      }
+	      str[PATH_MAX-1] = 0;
+	      track->hostname = g_strdup (str);
 	  }
-	  else  /* no addtrackfunc */
+	  /* add_track may return pointer to a different track if an
+	     identical one (MD5 checksum) was found */
+	  added_track = add_track (track);
+	  if(added_track)                   /* add track to memory */
 	  {
-	      /* add track to master playlist (if it hasn't been done before) */
-	      if (added_track == track) add_track_to_playlist (NULL, added_track,
-							    TRUE);
-	      /* add track to specified playlist, but not to MPL */
-	      if (plitem && (plitem->type != PL_TYPE_MPL))
-		  add_track_to_playlist (plitem, added_track, TRUE);
-	  }
-	  /* indicate that non-transferred files exist */
-	  data_changed ();
-	  ++count;
-	  if (count >= 10)  /* update every ten tracks added */
-	  {
-	      gtkpod_tracks_statusbar_update();
-	      count = 0;
+	      if (addtrackfunc)
+	      {
+		  if (!plitem || (plitem->type == PL_TYPE_MPL))
+		  {   /* add track to master playlist (if it hasn't been
+		       * done before) */
+		      if (added_track == track) 
+			  addtrackfunc (plitem, added_track, data);
+		  }
+		  else
+		  {   /* (plitem != NULL) && (type == NORM) */
+		      /* add track to master playlist (if it hasn't been
+		       * done before) */
+		      if (added_track == track)
+			  add_track_to_playlist (NULL, added_track, TRUE);
+		      /* add track to specified playlist */
+		      addtrackfunc (plitem, added_track, data);
+		  }
+	      }
+	      else  /* no addtrackfunc */
+	      {
+		  /* add track to master playlist (if it hasn't been done before) */
+		  if (added_track == track) add_track_to_playlist (NULL, added_track,
+								   TRUE);
+		  /* add track to specified playlist, but not to MPL */
+		  if (plitem && (plitem->type != PL_TYPE_MPL))
+		      add_track_to_playlist (plitem, added_track, TRUE);
+	      }
+	      /* indicate that non-transferred files exist */
+	      data_changed ();
+	      ++count;
+	      if (count >= 10)  /* update every ten tracks added */
+	      {
+		  gtkpod_tracks_statusbar_update();
+		  count = 0;
+	      }
 	  }
       }
   }
