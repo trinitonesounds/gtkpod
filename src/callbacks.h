@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-14 00:36:41 jcs>
+/* Time-stamp: <2003-08-03 15:51:49 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -48,10 +48,6 @@ on_export_itunes1_activate             (GtkMenuItem     *menuitem,
 
 void
 on_quit1_activate                      (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_new_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -524,5 +520,28 @@ on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_generate_genre_playlists_activate   (GtkMenuItem     *menuitem,
+on_new_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_pl_containing_displayed_songs_activate (GtkMenuItem     *menuitem,
+					   gpointer         user_data);
+void
+on_pl_containing_selected_songs_activate (GtkMenuItem     *menuitem,
+					  gpointer         user_data);
+void
+on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_pl_for_each_album_activate         (GtkMenuItem     *menuitem,
+				       gpointer         user_data);
+
+void
+on_pl_for_each_genre_activate         (GtkMenuItem     *menuitem,
+				       gpointer         user_data);
+
+void
+on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
+					  gpointer         user_data);
+

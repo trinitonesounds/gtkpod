@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-25 00:50:23 jcs>
+/* Time-stamp: <2003-08-03 15:52:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -78,13 +78,6 @@ on_quit1_activate                      (GtkMenuItem     *menuitem,
   if (!widgets_blocked) gtkpod_main_quit ();
 }
 
-
-void
-on_new_playlist1_activate              (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-  add_new_playlist (_("New Playlist"), -1);
-}
 
 void
 on_about1_activate                     (GtkMenuItem     *menuitem,
@@ -1409,9 +1402,51 @@ on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
 
 
 void
-on_generate_genre_playlists_activate   (GtkMenuItem     *menuitem,
+on_new_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    generate_genre_playlists();    
+  add_new_playlist (_("New Playlist"), -1);
+}
+
+void
+on_pl_containing_displayed_songs_activate (GtkMenuItem     *menuitem,
+					    gpointer         user_data)
+{
+    generate_displayed_playlist ();
+}
+
+void
+on_pl_containing_selected_songs_activate (GtkMenuItem     *menuitem,
+					    gpointer         user_data)
+{
+    generate_selected_playlist ();
+}
+
+void
+on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    generate_category_playlists (S_ARTIST);
+}
+
+void
+on_pl_for_each_album_activate         (GtkMenuItem     *menuitem,
+				       gpointer         user_data)
+{
+    generate_category_playlists (S_ALBUM);
+}
+
+void
+on_pl_for_each_genre_activate         (GtkMenuItem     *menuitem,
+				       gpointer         user_data)
+{
+    generate_category_playlists (S_GENRE);
+}
+
+void
+on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
+					  gpointer         user_data)
+{
+    generate_category_playlists (S_COMPOSER);
 }
 

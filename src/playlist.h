@@ -67,7 +67,6 @@ gboolean song_is_in_playlist (Playlist *plitem, Song *song);
 void move_playlist (Playlist *playlist, gint pos);
 void remove_playlist (Playlist *playlist);
 void remove_all_playlists (void);
-void generate_genre_playlists(void);
 #define it_get_nr_of_playlists get_nr_of_playlists
 guint32 get_nr_of_playlists (void);
 #define it_get_playlist_by_nr get_playlist_by_nr

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-02 23:10:03 jcs>
+/* Time-stamp: <2003-08-03 13:36:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -584,7 +584,7 @@ gchar **song_get_item_pointer_utf8 (Song *song, S_item s_item)
 }
 
 /* return the UTF8 item @s_item. @s_item is one of
-(the * applicable) S_* defined in song.h */
+   (the applicable) S_* defined in song.h */
 gchar *song_get_item_utf8 (Song *song, S_item s_item)
 {
     gchar **address = song_get_item_pointer_utf8 (song, s_item);

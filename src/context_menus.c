@@ -147,6 +147,11 @@ delete_entries(GtkMenuItem *mi, gpointer data)
 	delete_song_head();
 }
 
+static void
+create_playlist_from_entries (GtkMenuItem *mi, gpointer data)
+{
+    generate_playlist (selected_songs);
+}
 
 /**
  * alphabetize_ascending - alphabetize the currently selected entry
@@ -261,6 +266,12 @@ create_context_menu(CM_type type)
 	 * per column basis but for the whole sm view), Alphabatize
 	 * forward/backward can be done with the column label buttons.
 	 */
+
+	if ((type == CM_ST) || (type == CM_SM))
+	{
+	    hookup_mi (menu[type], _("Create Playlist"), "gtk-justify-left",
+		       G_CALLBACK (create_playlist_from_entries));
+	}
 
 	if (type == CM_ST)
 	{

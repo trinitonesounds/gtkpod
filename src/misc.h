@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-07-13 15:56:07 jcs>
+/* Time-stamp: <2003-08-03 15:48:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -116,4 +116,8 @@ gchar *filename_from_uri (const char *uri,
 			  char      **hostname,
 			  GError    **error);
 
+void generate_category_playlists (S_item cat);
+void generate_displayed_playlist (void);
+void generate_selected_playlist (void);
+void generate_playlist (GList *songs);
 #endif 

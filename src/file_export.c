@@ -119,16 +119,16 @@ song_get_export_filename (Song *song)
 			    case 't':
 				    tmp = dummy;
 				    if (song->tracks == 0)
-					    g_sprintf (tmp, "%.2d", song->track_nr);
+					    sprintf (tmp, "%.2d", song->track_nr);
 				    else if (song->tracks < 10)
-					    g_sprintf("%.1d", song->track_nr);
+					    sprintf(tmp, "%.1d", song->track_nr);
 				    else if (song->tracks < 100)
-					    g_sprintf (tmp, "%.2d", song->track_nr);
+					    sprintf (tmp, "%.2d", song->track_nr);
 				    else if (song->tracks < 1000)
-					    g_sprintf (tmp, "%.3d", song->track_nr);
+					    sprintf (tmp, "%.3d", song->track_nr);
 				    else {
 					    g_print ("wow, more that 1000 tracks!");
-					    g_sprintf (tmp,"%.4d", song->track_nr);
+					    sprintf (tmp,"%.4d", song->track_nr);
 				    }
 				    break;
 			    default:

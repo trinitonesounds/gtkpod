@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-29 13:47:09 jcs>
+/* Time-stamp: <2003-08-03 15:28:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -633,8 +633,8 @@ sm_rows_reordered (void)
 
 
 static void
-on_selected_songids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data)
+on_songids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
+			  GtkTreeIter *i, gpointer data)
 {
     Song *s = NULL;
     GList *l = *((GList**)data);
@@ -647,6 +647,8 @@ on_selected_songids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
     }
 }
 
+/* return a list containing the song IDs of all songs currently being
+   selected */
 GList *
 sm_get_selected_songids(void)
 {
@@ -655,16 +657,39 @@ sm_get_selected_songids(void)
 
     if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(song_treeview))))
     {
-	gtk_tree_selection_selected_foreach(ts,on_selected_songids_list_foreach,
+	gtk_tree_selection_selected_foreach(ts,on_songids_list_foreach,
 					    &result);
     }
     return(result);
 }
 
+static gboolean
+on_all_songids_list_foreach (GtkTreeModel *tm, GtkTreePath *tp, 
+			     GtkTreeIter *i, gpointer data)
+{
+    on_songids_list_foreach (tm, tp, i, data);
+    return FALSE;
+}
+
+/* return a list containing the song IDs of all songs currently being
+   displayed */
+GList *
+sm_get_all_songids(void)
+{
+    GList *result = NULL;
+    GtkTreeModel *model;
+
+    if((model = gtk_tree_view_get_model (song_treeview)))
+    {
+	gtk_tree_model_foreach(model, on_all_songids_list_foreach,
+			       &result);
+    }
+    return(result);
+}
 
 static void
-on_selected_songs_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data)
+on_songs_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
+			GtkTreeIter *i, gpointer data)
 {
     Song *s = NULL;
     GList *l = *((GList**)data);
@@ -677,6 +702,8 @@ on_selected_songs_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
     }
 }
 
+/* return a list containing pointers to all songs currently being
+   selected */
 GList *
 sm_get_selected_songs(void)
 {
@@ -685,12 +712,36 @@ sm_get_selected_songs(void)
 
     if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(song_treeview))))
     {
-	gtk_tree_selection_selected_foreach(ts,on_selected_songs_list_foreach,
+	gtk_tree_selection_selected_foreach(ts,on_songs_list_foreach,
 					    &result);
     }
     return(result);
 }
 
+
+static gboolean
+on_all_songs_list_foreach (GtkTreeModel *tm, GtkTreePath *tp, 
+			   GtkTreeIter *i, gpointer data)
+{
+    on_songs_list_foreach (tm, tp, i, data);
+    return FALSE;
+}
+
+/* return a list containing pointers to all songs currently being
+   displayed */
+GList *
+sm_get_all_songs(void)
+{
+    GList *result = NULL;
+    GtkTreeModel *model;
+
+    if((model = gtk_tree_view_get_model (song_treeview)))
+    {
+	gtk_tree_model_foreach(model, on_all_songs_list_foreach,
+			       &result);
+    }
+    return(result);
+}
 
 /* Function used to compare two cells during sorting (song view) */
 gint sm_data_compare_func (GtkTreeModel *model,

@@ -1,4 +1,11 @@
 gtkpod V0.53-CVS
+	NEW FEATURE: automatically create a playlist for each
+	album/artist/genre/composer in your collection (thanks to Chris
+	Cutler).
+
+	NEW FEATURE: menu items and context menu items to create new
+	playlist containing displayed songs or selected songs.
+
 	IMPROVEMENT: handle adding of playlist files containing
 	files with relative paths.
 

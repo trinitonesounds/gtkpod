@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-02 23:41:31 jcs>
+/* Time-stamp: <2003-08-03 15:48:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2293,4 +2293,176 @@ filename_from_uri (const char *uri,
   g_free (filename);
   
   return result;
+}
+
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                     Special Playlist Stuff                       *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+/* generate_category_playlists: Create a playlist for each category
+   @cat (S_ARTIST, S_ALBUM, S_GENRE, S_COMPOSER) */
+void generate_category_playlists (S_item cat)
+{
+    Playlist *master_pl;
+    gint i;
+    gchar *qualifier, *str;
+
+    /* sanity */
+    if ((cat != S_ARTIST) && (cat != S_ALBUM) &&
+	(cat != S_GENRE) && (cat != S_COMPOSER)) return;
+
+    /* Initialize the "qualifier". It is used to indicate the category of
+       automatically generated playlists */
+    switch (cat)
+    {
+    case S_ARTIST:
+	qualifier = _("AR:");
+	break;
+    case S_ALBUM:
+	qualifier = _("AL:");
+	break;
+    case S_GENRE:
+	qualifier = _("GE:");
+	break;
+    case S_COMPOSER:
+	qualifier = _("CO:");
+	break;
+    default:
+	qualifier = NULL;
+	break;
+    }
+
+    /* sanity */
+    if (qualifier == NULL) return;
+
+    /* FIXME: this is a bit dangerous. . . we delete all
+     * playlists with titles that start with '[<qualifier>' and end 
+     * with ']'.  We assume that they are previously generated
+     * (and possibly out of date) genre playlists. */
+    str = g_strdup_printf ("[%s ", qualifier);
+    for(i = 1; i < get_nr_of_playlists(); i++)
+    {
+        Playlist *pl = get_playlist_by_nr (i);
+
+        if(pl->name && (strncmp (pl->name, str, strlen (str)) == 0) && 
+	   (pl->name[strlen(pl->name)-1] == ']'))
+	{
+            remove_playlist(pl);
+            /* we just deleted the ith element of playlists, so
+             * we must examine the new ith element. */
+            i--;
+        }
+    }
+    C_FREE (str);
+
+    master_pl = get_playlist_by_nr (0);
+    
+    for(i = 0; i < get_nr_of_songs_in_playlist (master_pl) ; i++)
+    {
+        Song *song = g_list_nth_data (master_pl->members, i);
+        Playlist *cat_pl = NULL;
+	gint j;
+        gchar *category = NULL;
+	gchar *song_cat = NULL;
+        int playlists_len = get_nr_of_playlists();
+
+	song_cat = song_get_item_utf8 (song, cat);
+
+	if (song_cat)
+	{
+	    /* some songs have empty strings in the genre field */
+	    if(song_cat[0] == '\0')
+	    {
+		category = g_strdup_printf ("[%s %s]",
+					    qualifier, _("Unknown"));
+	    }
+	    else
+	    {
+		category = g_strdup_printf ("[%s %s]",
+					    qualifier, song_cat);
+	    }
+
+	    /* look for category playlist */
+	    for(j = 1; j < playlists_len; j++)
+	    {
+		Playlist *pl = get_playlist_by_nr (j);
+
+		if(g_ascii_strcasecmp(pl->name, category) == 0)
+		{
+		    cat_pl = pl;
+		    break;
+		}
+	    }
+	    /* or, create category playlist */
+	    if(!cat_pl)
+	    {
+		cat_pl = add_new_playlist(category, -1);
+	    }
+
+	    add_song_to_playlist(cat_pl, song, TRUE);
+	    C_FREE (category);
+	}
+    }
+    gtkpod_songs_statusbar_update();
+}
+
+
+/* Generate a new playlist containing all the songs currently
+   displayed */
+void generate_displayed_playlist (void)
+{
+    GList *songs = sm_get_all_songs ();
+
+    if (!songs)
+    {   /* no songs displayed */
+	gtkpod_statusbar_message (_("No songs displayed."));
+	return;
+    }
+
+    generate_playlist (songs);
+    g_list_free (songs);
+}    
+
+
+/* Generate a new playlist containing all the songs currently
+   selected */
+void generate_selected_playlist (void)
+{
+    GList *songs = sm_get_selected_songs ();
+
+    if (!songs)
+    {   /* no songs displayed */
+	gtkpod_statusbar_message (_("No songs selected."));
+	return;
+    }
+
+    generate_playlist (songs);
+    g_list_free (songs);
+}    
+
+
+/* Generate a playlist consisting of the songs in @songs. */
+void generate_playlist (GList *songs)
+{
+    GList *l;
+    Playlist *pl;
+    gint n = g_list_length (songs);
+    gchar *str;
+
+    pl = add_new_playlist (_("New Playlist"), -1);
+    for (l=songs; l; l=l->next)
+    {
+	Song *song = (Song *)l->data;
+	add_song_to_playlist (pl, song, TRUE);
+    }
+    str = g_strdup_printf (ngettext ("Created new playlist with %d song.",
+				     "Created new playlist with %d songs.",
+				     n), n);
+    gtkpod_statusbar_message (str);
+    gtkpod_songs_statusbar_update();
+    g_free (str);
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-27 23:16:36 jcs>
+/* Time-stamp: <2003-08-03 15:24:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -228,6 +228,8 @@ void sm_show_preferred_columns(void);
 Playlist* pm_get_selected_playlist(void);
 GList* sm_get_selected_songids(void);
 GList* sm_get_selected_songs(void);
+GList* sm_get_all_songids(void);
+GList* sm_get_all_songs(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
 void display_show_hide_tooltips (void);

@@ -30,6 +30,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <string.h>
 #include "prefs.h"
 #include "playlist.h"
 #include "display.h"
@@ -275,62 +276,6 @@ void remove_all_playlists (void)
     }
 }
 
-/* FIXME: should this function have handling for utf16 
- * genres and playlist titles? */
-void generate_genre_playlists (void)
-{
-    Playlist *master_pl;
-    int i, j; 
-
-    /* FIXME: this is a bit dangerous. . . we delete all
-     * playlists with titles that start with '[' and end 
-     * with ']'.  We assume that they are previously generated
-     * (and possibly out of date) genre playlists. */
-    for(i = 0; i < g_list_length(playlists); i++) {
-        Playlist *pl = g_list_nth_data(playlists, i);
-
-        if(pl->name[0] == '[' && 
-                pl->name[strlen(pl->name)-1] == ']') {
-            remove_playlist(pl);
-            /* we just deleted the ith element of playlists, so
-             * we must examine the new ith element. */
-            i--;
-        }
-    }
-
-   master_pl = g_list_nth_data(playlists, 0);
-    
-    for(i = 0; i < master_pl->num ; i++) {
-        Song *song = g_list_nth_data(master_pl->members, i);
-        Playlist *genre_pl = NULL;
-        gchar genre[ID3V2_MAX_STRING_LEN+3]; 
-        int playlists_len = g_list_length(playlists);
-
-        /* some songs have empty strings in the genre field */
-        if(song->genre[0] == '\0') {
-            sprintf(genre, "[%s]", _("Unknown Genre"));
-        } else {
-            sprintf(genre, "[%s]", song->genre);
-        }
-
-        /* look for genre playlist */
-        for(j = 0; j < playlists_len; j++) {
-            Playlist *pl = g_list_nth_data(playlists, j);
-
-            if(!g_ascii_strcasecmp(pl->name, genre)) {
-                genre_pl = pl;
-                break;
-            }
-        }
-
-        /* or, create genre playlist */
-        if(!genre_pl) {
-            genre_pl = add_new_playlist(genre, -1);
-        }
-
-        add_song_to_playlist(genre_pl, song, TRUE);
-    }
-}
 
 /* ------------------------------------------------------------------- */
 /* functions used by itunesdb (so we can refresh the display during
