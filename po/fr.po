@@ -411,11 +411,11 @@ msgstr "Taux"
 
 #: src/display_songs.c:871 src/interface.c:2497
 msgid "Played"
-msgstr "Joué"
+msgstr "Joué le"
 
 #: src/display_songs.c:875 src/interface.c:2503
 msgid "Modified"
-msgstr "Modifié"
+msgstr "Modifié le"
 
 #: src/display_sorttabs.c:176
 msgid "'Played' condition ignored because of error."
@@ -482,7 +482,7 @@ msgstr "Synchronisation terminée. Aucun fichier effacé."
 #. scrolled text
 #: src/file.c:726
 msgid "Never delete any files when syncing"
-msgstr "Ne jamais effacer les fichiers lors des synchros"
+msgstr "Ne jamais effacer les fichiers lors des synchronisations"
 
 #: src/file.c:745
 msgid "Syncing completed."
@@ -926,7 +926,7 @@ msgstr "_Liste de lecture sélectionnée"
 #: src/interface.c:231 src/interface.c:254 src/interface.c:282
 #: src/interface.c:415 src/interface.c:496 src/interface.c:519
 msgid "Selected _Tab Entry"
-msgstr "_Onglet sélectionné"
+msgstr "Zone de _tri sélectionnée"
 
 #: src/interface.c:235 src/interface.c:258 src/interface.c:286
 #: src/interface.c:419 src/interface.c:500 src/interface.c:523
@@ -1306,7 +1306,7 @@ msgstr "Transféré"
 
 #: src/interface.c:1572
 msgid "Time played"
-msgstr "Temps joué"
+msgstr "Joué le"
 
 #: src/interface.c:1584
 msgid "Track Nr (#)"
@@ -1314,7 +1314,7 @@ msgstr "N° de piste (#)"
 
 #: src/interface.c:1592
 msgid "Time modified"
-msgstr "Durée modifiée"
+msgstr "Modifié le"
 
 #: src/interface.c:1604
 msgid "iPod ID"
@@ -1531,8 +1531,7 @@ msgid ""
 "Before removing tracks completely when\n"
 " synchronizing directories"
 msgstr ""
-"Avant de supprimer complètement les morceaux lors\n"
-" de la synchronisation"
+"Avant de supprimer complètement les morceaux lors des synchronisations"
 
 #: src/interface.c:1893
 msgid ""
@@ -1860,7 +1859,6 @@ msgstr ""
 "\n"
 
 #: src/misc.c:310
-#, fuzzy
 msgid ""
 "Patches were supplied by the following people (list may be incomplete -- "
 "please contact me)\n"
@@ -1875,8 +1873,10 @@ msgstr ""
 "Les patches ont été soumis par les personnes suivantes (liste peut être "
 "incomplète -- contactez-moi)\n"
 "\n"
-"Ramesh Dharan: Edition multiple (edition de plusieurs tags en un coup)\n"
+"Ramesh Dharan: edition multiple (edition de plusieurs tags en un coup)\n"
 "Adrian Ulrich: portage du code de gestion des listes de lecture\n"
+"Walter Bell: correction de la gestion des URIs avec des caractères"
+" d'échappement"
 "\n"
 "\n"
 
