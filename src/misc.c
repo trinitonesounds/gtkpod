@@ -120,7 +120,11 @@ D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"),
 Jim Hall: Decent INSTALL file\n"),
 		       _("\
 Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/contacts to the iPod\n"),  /* Jürgen! */
-		       "\n\n",
+		       "\n",
+		       _("\
+Icons of buttons were made by Nicolas Chariot.\n\
+\n\
+\n"),
 		       _("\
 This program borrows code from the following projects:\n"),
 		       _("\
