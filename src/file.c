@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-02 22:48:30 jcs>
+/* Time-stamp: <2004-10-03 11:55:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1492,57 +1492,6 @@ void display_mserv_problems (Track *track, gchar *txt)
    "remove_duplicate (NULL, (void *)-1)"*/
 void update_track_from_file (Track *track)
 {
-    gchar *prefs_charset = NULL;
-    gboolean charset_set;
-
-    if (!track) return;
-
-    /* remember if charset was set */
-    if (track->charset)  charset_set = TRUE;
-    else                 charset_set = FALSE;
-
-    if (!prefs_get_update_charset () && charset_set)
-    {   /* we should use the initial charset for the update */
-	if (prefs_get_charset ())
-	{   /* remember the charset originally set */
-	    prefs_charset = g_strdup (prefs_get_charset ());
-	}
-	/* use the charset used when first importing the track */
-	prefs_set_charset (track->charset);
-    }
-
-    if (!(track->pc_path_locale && *track->pc_path_locale))
-    { /* no path available */
-	display_non_updated (track, _("no filename available"));
-    }
-    else if (get_track_info_from_file (track->pc_path_locale, track))
-    { /* update successfull */
-	/* notify display model */
-	pm_track_changed (track);
-	display_updated (track, NULL);
-    }
-    else
-    { /* update not successful -- log this track for later display */
-	if (g_file_test (track->pc_path_locale,
-			 G_FILE_TEST_EXISTS) == FALSE)
-	{
-	    display_non_updated (track, _("file not found"));
-	}
-	else
-	{
-	    display_non_updated (track, _("format not supported"));
-	}
-    }
-
-    if (!prefs_get_update_charset () && charset_set)
-    {   /* reset charset */
-	prefs_set_charset (prefs_charset);
-    }
-
-    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-}
-#if 0
-{
     Track *oldtrack;
     gchar *prefs_charset = NULL;
     gchar *trackpath = NULL;
@@ -1639,7 +1588,6 @@ void update_track_from_file (Track *track)
 
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 }
-#endif
 
 
 /*------------------------------------------------------------------*\

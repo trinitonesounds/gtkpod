@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-02 22:40:35 jcs>
+/* Time-stamp: <2004-10-03 11:47:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -884,6 +884,37 @@ on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
 {
     prefs_window_set_mserv_report_probs (
 	gtk_toggle_button_get_active(togglebutton));
+}
+
+
+
+void
+on_mserv_music_root_changed            (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    gchar *buf = gtk_editable_get_chars (editable,0, -1);
+    prefs_window_set_mserv_music_root (buf);
+    g_free (buf);
+}
+
+
+void
+on_mserv_trackinfo_root_changed        (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    gchar *buf = gtk_editable_get_chars (editable,0, -1);
+    prefs_window_set_mserv_trackinfo_root (buf);
+    g_free (buf);
+}
+
+
+void
+on_mserv_username_changed              (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    gchar *buf = gtk_editable_get_chars (editable,0, -1);
+    prefs_window_set_mserv_username (buf);
+    g_free (buf);
 }
 
 
@@ -1990,4 +2021,3 @@ on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
     prefs_window_set_tmp_disable_sort (
 	gtk_toggle_button_get_active(togglebutton));
 }
-

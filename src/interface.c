@@ -2740,13 +2740,13 @@ create_prefs_window (void)
                     G_CALLBACK (on_mserv_use_toggled),
                     NULL);
   g_signal_connect ((gpointer) mserv_music_root_entry, "changed",
-                    G_CALLBACK (on_parsetags_template_changed),
+                    G_CALLBACK (on_mserv_music_root_changed),
                     NULL);
   g_signal_connect ((gpointer) mserv_trackinfo_root_entry, "changed",
-                    G_CALLBACK (on_parsetags_template_changed),
+                    G_CALLBACK (on_mserv_trackinfo_root_changed),
                     NULL);
   g_signal_connect ((gpointer) mserv_username_entry, "changed",
-                    G_CALLBACK (on_parsetags_template_changed),
+                    G_CALLBACK (on_mserv_username_changed),
                     NULL);
   g_signal_connect ((gpointer) cfg_mserv_report_probs, "toggled",
                     G_CALLBACK (on_mserv_report_probs_toggled),

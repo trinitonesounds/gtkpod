@@ -742,3 +742,15 @@ on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
 void
 on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_mserv_music_root_changed            (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_mserv_trackinfo_root_changed        (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_mserv_username_changed              (GtkEditable     *editable,
+                                        gpointer         user_data);
