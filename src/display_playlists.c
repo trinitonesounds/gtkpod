@@ -169,10 +169,10 @@ void pm_add_playlist (Playlist *playlist, gint position)
 
 /* Used by pm_remove_playlist() to remove playlist from model by calling
    gtk_tree_model_foreach () */ 
-static gboolean pm_delete_playlist (GtkTreeModel *model,
-				    GtkTreePath *path,
-				    GtkTreeIter *iter,
-				    gpointer data)
+static gboolean pm_delete_playlist_fe (GtkTreeModel *model,
+				       GtkTreePath *path,
+				       GtkTreeIter *iter,
+				       gpointer data)
 {
   Playlist *playlist;
 
@@ -212,7 +212,7 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 	    }
 	}
       /* find the pl and delete it */
-      gtk_tree_model_foreach (model, pm_delete_playlist, playlist);
+      gtk_tree_model_foreach (model, pm_delete_playlist_fe, playlist);
       if (select && (current_playlist == playlist) && !have_iter)
 	{
 	  /* We deleted the current playlist which was the last.
@@ -256,6 +256,37 @@ void pm_remove_all_playlists (gboolean clear_sort)
       {
 	  pm_create_treeview ();
       }
+  }
+}
+
+/* Used by pm_select_playlist() to select the specified playlist by
+   calling gtk_tree_model_foreach () */ 
+static gboolean pm_select_playlist_fe (GtkTreeModel *model,
+				       GtkTreePath *path,
+				       GtkTreeIter *iter,
+				       gpointer data)
+{
+    Playlist *playlist;
+
+    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
+    if(playlist == data)
+    {
+	GtkTreeSelection *ts = gtk_tree_view_get_selection (playlist_treeview);
+	gtk_tree_selection_select_iter (ts, iter);
+	return TRUE;
+    }
+    return FALSE;
+}
+
+/* Select specified playlist */
+void pm_select_playlist (Playlist *playlist)
+{
+  GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
+
+  if (model != NULL)
+  {
+      /* find the pl and select it */
+      gtk_tree_model_foreach (model, pm_select_playlist_fe, playlist);
   }
 }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-22 21:25:18 jcs>
+/* Time-stamp: <2003-08-23 00:46:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -85,6 +85,9 @@
    "transferred" will be set to TRUE because all songs read from a
    iTunesDB are obviously (or hopefully) already transferred to the
    iPod.
+
+   "recent_playcount" is for information only and will not be stored
+   to the iPod.
 
    By #defining ITUNESDB_PROVIDE_UTF8, itunesdb_parse() will also
    provide utf8 versions of the above utf16 strings. You must then add

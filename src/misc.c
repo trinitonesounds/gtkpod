@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-23 00:39:11 jcs>
+/* Time-stamp: <2003-08-24 00:54:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2304,7 +2304,7 @@ void generate_category_playlists (S_item cat)
 {
     Playlist *master_pl;
     gint i;
-    gchar *qualifier, *str;
+    gchar *qualifier;
 
     /* sanity */
     if ((cat != S_ARTIST) && (cat != S_ALBUM) &&
@@ -2333,10 +2333,6 @@ void generate_category_playlists (S_item cat)
 
     /* sanity */
     if (qualifier == NULL) return;
-
-    str = g_strdup_printf ("[%s] ", qualifier);
-    remove_pl_by_name(str);
-    C_FREE (str);
 
     master_pl = get_playlist_by_nr (0);
 
@@ -2392,41 +2388,47 @@ void generate_category_playlists (S_item cat)
 
 /* Generate a new playlist containing all the songs currently
    displayed */
-void generate_displayed_playlist (void)
+Playlist *generate_displayed_playlist (void)
 {
     GList *songs = sm_get_all_songs ();
+    Playlist *result = NULL;
 
-    if (!songs)
+    if (songs)
+    {
+	result = generate_new_playlist (songs);
+	g_list_free (songs);
+    }
+    else
     {   /* no songs displayed */
 	gtkpod_statusbar_message (_("No tracks displayed."));
-	return;
     }
-
-    generate_new_playlist (songs);
-    g_list_free (songs);
+    return result;
 }
 
 
 /* Generate a new playlist containing all the songs currently
    selected */
-void generate_selected_playlist (void)
+Playlist *generate_selected_playlist (void)
 {
     GList *songs = sm_get_selected_songs ();
+    Playlist *result = NULL;
 
-    if (!songs)
+    if (songs)
+    {
+	result = generate_new_playlist (songs);
+	g_list_free (songs);
+    }
+    else
     {   /* no songs displayed */
 	gtkpod_statusbar_message (_("No tracks selected."));
-	return;
     }
-
-    generate_new_playlist (songs);
-    g_list_free (songs);
+    return result;
 }
 
 
 /* Generate a playlist consisting of the songs in @songs
  * with @name name*/
-void generate_new_playlist_with_name (GList *songs,gchar *pl_name){
+Playlist *generate_new_playlist_with_name (GList *songs,gchar *pl_name){
     GList *l;
     Playlist *pl;
     gint n = g_list_length (songs);
@@ -2438,18 +2440,19 @@ void generate_new_playlist_with_name (GList *songs,gchar *pl_name){
 	Song *song = (Song *)l->data;
 	add_song_to_playlist (pl, song, TRUE);
     }
-    str = g_strdup_printf (ngettext ("Created new playlist with %d track.",
-				     "Created new playlist with %d tracks.",
-				     n), n);
+    str = g_strdup_printf (ngettext ("Created playlist '%s' with %d track.",
+				     "Created playlist '%s' with %d tracks.",
+				     n), pl_name, n);
     gtkpod_statusbar_message (str);
     gtkpod_songs_statusbar_update();
     g_free (str);
+    return pl;
 }
 
 /* Generate a playlist named "New Playlist" consisting of the songs in @songs. */
-void generate_new_playlist (GList *songs)
+Playlist *generate_new_playlist (GList *songs)
 {
-    generate_new_playlist_with_name (songs,_("New Playlist"));
+    return generate_new_playlist_with_name (songs,_("New Playlist"));
 }
 
 
@@ -2459,12 +2462,15 @@ void generate_new_playlist (GList *songs)
  *              If @insertfunc is NULL, all songs are added.
  * @comparefunc: determines order of songs
  * @songs_nr: max. number of songs in playlist or 0 for no limit.
+ *
+ * Return value: the newly created playlist
  */
-static void add_ranked_playlist(gchar *pl_name, gint songs_nr,
-				PL_InsertFunc insertfunc,
-				GCompareFunc comparefunc)
+static Playlist *add_ranked_playlist(gchar *pl_name, gint songs_nr,
+				     PL_InsertFunc insertfunc,
+				     GCompareFunc comparefunc)
 {
-    GList *songs=NULL;
+    GList *songs = NULL;
+    Playlist *result = NULL;
     gint f=0;
     gint i=0;
     Song *song;
@@ -2495,13 +2501,14 @@ static void add_ranked_playlist(gchar *pl_name, gint songs_nr,
 	    printf ("%ud\n", s->time_played);
 	}
 #endif
-	generate_new_playlist_with_name (songs, pl_name);
+	result = generate_new_playlist_with_name (songs, pl_name);
     }
     else
     {
 	gtkpod_statusbar_message (_("Playlist with 0 tracks not created."));
     }
     g_list_free (songs);
+    return result;
 }
 
  /*update a ranked playlist according the iPod content,
@@ -2511,8 +2518,21 @@ static void update_ranked_playlist(gchar *str, gint songs_nr,
 				   GCompareFunc compfunc)
 {
     gchar *str2 = g_strdup_printf ("[%s]", str);
-    remove_pl_by_name (str2);
-    add_ranked_playlist (str2, songs_nr, insertfunc, compfunc);
+    Playlist *sel_pl, *new_pl;
+    gboolean select = FALSE;
+
+    /* currently selected playlist */
+    sel_pl= pm_get_selected_playlist ();
+    /* remove all playlists with named @str2 */
+    remove_playlist_by_name (str2);
+    /* check if we deleted the selected playlist */
+    if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
+    new_pl = add_ranked_playlist (str2, songs_nr, insertfunc, compfunc);
+    if (select)
+    {   /* need to select newly created playlist because the old
+	 * selection was deleted */
+	pm_select_playlist (new_pl);
+    }
     g_free (str2);
 }
 
@@ -2523,20 +2543,20 @@ static void update_ranked_playlist(gchar *str, gint songs_nr,
 
 /* Sort Function: determines the order of the generated playlist */
 
-/* NOTE: THE (float) CASTING and "SIGN" CONVERSIONS ARE NECESSARY FOR
+/* NOTE: THE (double) CASTING and "SIGN" CONVERSIONS ARE NECESSARY FOR
    THE TIME_PLAYED COMPARES WHERE A SIGN OVERFLOW MAY OCCUR BECAUSE OF
    THE 32 BIT UNSIGNED MAC TIMESTAMPS. */
 static gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
 {
-    float result = 0;
+    double result = 0;
     const Song *a = aa;
     const Song *b = bb;
 
     if (a && b)
     {
-	result = (float)b->playcount - a->playcount;
-	if (result == 0) result = (float)b->rating - a->rating;
-	if (result == 0) result = (float)b->time_played - a->time_played;
+	result = (double)b->playcount - a->playcount;
+	if (result == 0) result = (double)b->rating - a->rating;
+	if (result == 0) result = (double)b->time_played - a->time_played;
     }
     return SIGN (result);
 }
@@ -2565,15 +2585,15 @@ void most_listened_pl(void)
 /* Sort Function: determines the order of the generated playlist */
 static gint Most_Rated_CF (gconstpointer aa, gconstpointer bb)
 {
-    float result = 0;
+    double result = 0;
     const Song *a = aa;
     const Song *b = bb;
     
     if (a && b)
     {
-	result = (float)b->rating - a->rating;
-	if (result == 0) result = (float)b->playcount - a->playcount;
-	if (result == 0) result = (float)b->time_played - a->time_played;
+	result = (double)b->rating - a->rating;
+	if (result == 0) result = (double)b->playcount - a->playcount;
+	if (result == 0) result = (double)b->time_played - a->time_played;
     }
     return SIGN (result);
 }
@@ -2602,15 +2622,15 @@ void most_rated_pl(void)
 /* Sort Function: determines the order of the generated playlist */
 static gint Last_Listened_CF (gconstpointer aa, gconstpointer bb)
 {
-    float result = 0;
+    double result = 0;
     const Song *a = aa;
     const Song *b = bb;
 
     if (a && b)
     {
-	result = (float)b->time_played - a->time_played;
-	if (result == 0) result = (float)b->rating - a->rating;
-	if (result == 0) result = (float)b->playcount - a->playcount;
+	result = (double)b->time_played - a->time_played;
+	if (result == 0) result = (double)b->rating - a->rating;
+	if (result == 0) result = (double)b->playcount - a->playcount;
     }
     return SIGN (result);
 }
@@ -2640,16 +2660,16 @@ void last_listened_pl(void)
 /* Sort Function: determines the order of the generated playlist */
 static gint since_last_CF (gconstpointer aa, gconstpointer bb)
 {
-    float result = 0;
+    double result = 0;
     const Song *a = aa;
     const Song *b = bb;
 
     if (a && b)
     {
-	result = (float)b->recent_playcount - a->recent_playcount;
-	if (result == 0) result = (float)b->time_played - a->time_played;
-	if (result == 0) result = (float)b->playcount - a->playcount;
-	if (result == 0) result = (float)b->rating - a->rating;
+	result = (double)b->recent_playcount - a->recent_playcount;
+	if (result == 0) result = (double)b->time_played - a->time_played;
+	if (result == 0) result = (double)b->playcount - a->playcount;
+	if (result == 0) result = (double)b->rating - a->rating;
     }
     return SIGN (result);
 }

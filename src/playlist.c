@@ -276,12 +276,22 @@ void remove_all_playlists (void)
     }
 }
 
+/***
+ * playlist_exists(): return TRUE if the playlist @pl exists, FALSE
+ * otherwise
+ ***/
+gboolean playlist_exists (Playlist *pl)
+{
+    if (g_list_find (playlists, pl))  return TRUE;
+    else                              return FALSE;
+}
+
 
 /* FIXME: this is a bit dangerous. . . we delete all
  * playlists with titles @pl_name and return how many
  * pl have been removed.
- * */
-guint remove_pl_by_name(gchar *pl_name){
+ ***/
+guint remove_playlist_by_name(gchar *pl_name){
     Playlist *pl;
     guint i;
     guint pl_removed=0;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-22 22:59:39 jcs>
+/* Time-stamp: <2003-08-23 11:51:48 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -808,7 +808,7 @@ gint sm_data_compare_func (GtkTreeModel *model,
       return song1->rating - song2->rating;
   case SM_COLUMN_TIME_PLAYED:
   case SM_COLUMN_TIME_MODIFIED:
-      return ((float)time_get_time (song1, sm_item) -
+      return SIGN ((float)time_get_time (song1, sm_item) -
 	      time_get_time (song2, sm_item));
   case  SM_COLUMN_VOLUME:
       return song1->volume - song2->volume;

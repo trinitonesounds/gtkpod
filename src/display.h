@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-09 23:44:49 jcs>
+/* Time-stamp: <2003-08-23 12:24:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -180,6 +180,7 @@ GList *display_get_selection (guint32 inst);
 
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);
+void pm_select_playlist (Playlist *playlist);
 void pm_remove_song (Playlist *playlist, Song *song);
 void pm_add_song (Playlist *playlist, Song *song, gboolean display);
 void pm_name_changed (Playlist *playlist);

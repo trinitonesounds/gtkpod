@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-23 00:32:42 jcs>
+/* Time-stamp: <2003-08-23 12:20:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -120,12 +120,12 @@ gchar *filename_from_uri (const char *uri,
 			  GError    **error);
 
 void generate_category_playlists (S_item cat);
-void generate_displayed_playlist (void);
-void generate_selected_playlist (void);
-void generate_new_playlist (GList *songs);
-void generate_new_playlist_with_name (GList *songs, gchar *pl_name);
-void generate_playlist (GList *songs, gchar *pl_name);
-void generate_new_playlist (GList *songs);
+Playlist *generate_displayed_playlist (void);
+Playlist *generate_selected_playlist (void);
+Playlist *generate_new_playlist (GList *songs);
+Playlist *generate_new_playlist_with_name (GList *songs, gchar *pl_name);
+Playlist *generate_playlist (GList *songs, gchar *pl_name);
+Playlist *generate_new_playlist (GList *songs);
 void most_listened_pl (void);
 void last_listened_pl(void);
 void most_rated_pl(void);

@@ -61,4 +61,40 @@ BUGLIST:
 
 - fix memory holes during use of time_field_to_string() and co.
 
+- when deleting an entry in a sort tab -> data is not marked as changed.
+
+- when deleting an entry in a sort tab and the entry is currently in
+  "edit mode" (i.e. the name could be changed by entering text), the
+  entry is deleted, but the next entry is named according to the
+  deleted entry. We had the same problem in the song view, but I think
+  this got solved by explicetely deselecting the song before deleting
+  it. Deselecting all in the sort tabs doesn't seem to (always) solve
+  it -> some race condition? How can we avoid the context menu being
+  called while editing the field???
+
+- when deleting an entry in the last sort tab (of 2):
+
+jcs@hatarakibachi:~/source/gtkpod/gtkpod$ 
+(gtkpod:3842): Gdk-CRITICAL **: file gdkwindow-x11.c: line 1132 (gdk_window_hide): assertion `window != NULL' failed
+
+(gtkpod:3842): Gtk-CRITICAL **: file gtkliststore.c: line 566 (gtk_list_store_get_value): assertion `GTK_LIST_STORE (tree_model)->stamp == iter->stamp' failed
+
+(gtkpod:3842): GLib-GObject-WARNING **: gtype.c:2963: type id `0' is invalid
+
+(gtkpod:3842): GLib-GObject-WARNING **: can't peek value table for type `<invalid>' which is not currently referenced
+
+[3]+  Segmentation fault      src/gtkpod
+------------------------
+- when deleting the last entry in the last sort tab (of 2):
+
+(gtkpod:5034): Gtk-CRITICAL **: file gtkliststore.c: line 566 (gtk_list_store_get_value): assertion `GTK_LIST_STORE (tree_model)->stamp == iter->stamp' failed
+
+(gtkpod:5034): GLib-GObject-WARNING **: gtype.c:2963: type id `0' is invalid
+
+(gtkpod:5034): GLib-GObject-WARNING **: can't peek value table for type `<invalid>' which is not currently referenced
+
+[3]   Segmentation fault      src/gtkpod
+
+
+
 Please add bugs as you find them.
