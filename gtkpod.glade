@@ -2773,7 +2773,6 @@
 				      <property name="has_frame">True</property>
 				      <property name="invisible_char" translatable="yes">*</property>
 				      <property name="activates_default">False</property>
-				      <signal name="changed" handler="on_parsetags_template_changed" last_modification_time="Sat, 17 Jan 2004 08:00:25 GMT"/>
 				    </widget>
 				    <packing>
 				      <property name="left_attach">1</property>
@@ -2839,7 +2838,6 @@
 				      <property name="has_frame">True</property>
 				      <property name="invisible_char" translatable="yes">*</property>
 				      <property name="activates_default">False</property>
-				      <signal name="changed" handler="on_parsetags_template_changed" last_modification_time="Sat, 17 Jan 2004 08:00:25 GMT"/>
 				    </widget>
 				    <packing>
 				      <property name="left_attach">1</property>
@@ -2905,7 +2903,7 @@
 				      <property name="has_frame">True</property>
 				      <property name="invisible_char" translatable="yes">*</property>
 				      <property name="activates_default">False</property>
-				      <signal name="changed" handler="on_parsetags_template_changed" last_modification_time="Sat, 17 Jan 2004 08:00:25 GMT"/>
+				      <signal name="changed" handler="on_mserv_username_changed" last_modification_time="Sun, 03 Oct 2004 02:45:04 GMT"/>
 				    </widget>
 				    <packing>
 				      <property name="left_attach">1</property>

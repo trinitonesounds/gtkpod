@@ -5,8 +5,6 @@ TODO:
 - get_track_name_on_ipod (track): does not consider file sensitivity
   problem.
 
-- Play Counts file not renamed when exporting database.
-
 - Update calendar in special sort tab when changing category.
 
 - special sort tab 'modified' and 'created' does not work correctly.
@@ -116,19 +114,75 @@ David Dan
   the prefs dialogue that is executed instead of the simple copy
   command.
 
+
+-- Larry Marso
+> It would be very helpful to know the gtkpodXXXX.mp3 file name of a
+> particular song on the Ipod.
+>
+> (ii) In addition to auto-generating a "top 25 rated songs" playlist,
+> could gtkpod create one playlist for each rating level?  This would
+> permit selectively erasing songs by the worst rating level, and
+> moving to backups certain other rating levels.
+
+-- John Pedersen
+> I have an Ipod mini, which stores roughly 4GB.  My music collection
+> is roughly 18GB.
+>
+> ITunes has a nice feature: each song has a checkbox in front of the
+> song name.  And in the ipod preferences, there's a setting called
+> "Only Update Checked Songs".
+>
+> So the checkmarks are a nice simple way to create a subset of my
+> collection.
+>
+> Usage: by default, the songs are all checked, so my first task was
+> to uncheck all these thousands of songs.  Solution: get a listing
+> view of ALL songs, and hold down the CTRL key while I uncheck a
+> song.  ALL songs in the list now become unchecked (takes a little
+> while of course).
+> 
+> Next, I want to re-check the individual albums and/or songs that I 
+> want to put back in the mini ipod selection.  For the most part, I 
+> select an artist, show ALL their songs, and CTRL-click a single  
+> checkbox.  Alternatively, I can select a single album, or even a 
+> single song.
+
+
+
+
 Please feel free to submit further features.
 
 
 BUGLIST:
 
-- Adam Pavlakovic (4th generation): 
+- Alexander C Gross
+> I am a happy user of gtkpod and really like the intuitive editing of
+> mp3-tags. I have noticed though, that the tags are not updated in
+> the original files if you close and open gtkpod before editing the
+> tags even though the location of the original folder is saved. I
+> wonder if that is meant to be that way.
 
+
+- Eelco van Veldhuizen 
+> First all apoligise for my bad english, i'm from the neatherlands. I
+> have the following problem with my iPod when I select a playlist for
+> my wake up alarm. The iPod switches it back to "beep". This only
+> happens with the playlists from gtkPod. When I sync with iTunes I
+> can select the playlist for my alarm. Maybe you already know this
+> problem.. I have searched on the internet and found a couple of
+> people that have the same problem. But no solutions found... Mabey
+> you know a solution for this problem :)
+
+
+- Adam Pavlakovic (4th generation): 
 > > Hey, I am using korganizer and the script included in gtkpod to
 > > sync it, the only problem is that the ipod doesn't see it and even
 > > though the file is in the Calendars folder in the ipod, it won't
 > > be recognized and none of my dates will show up. Any help?
   JCS: works with 2nd generation -- testing needed with 4th
   generation!
+
+- special sorttab does not do date sorting correctly.
 
 - during a long operation (menues are blocked) the user can still edit
   the track data. This could potentially crash gtkpod -> need a way to

@@ -94,3 +94,33 @@ added the #define after the #include <mp4.h> and it worked just fine,
 dont know which version are you using but I´m compiling against
 mpeg4ip-1.1.
 
+
+----------
+Files copied to gtkpod but they don't appear in the database (0.80,
+Tony Williams)
+
+I'm having a problem that I wonder if you've seen.  I've setup
+gtkpod.  launch it and add files.  I can hear the ipod harddrive
+spin up.  If I go onto the ipod directly I can see the space being
+used and can even see the new files on the ipod.  However the ipod
+interface doesn't show the new files and gtkpod keeps telling me
+that there are orphaned files.
+
+Solution:
+
+I finally figured out the problem.  In my fstab I had the filesystem
+set to 'auto' and it was mounting as msdos instead of vfat.  I
+specified vfat in fstab and voila!  I'm a happy happy man.
+
+
+----------
+Filenames on the iPod appear in DOS 8.3 format and syncing to the iPod
+is not working as expected.
+
+Solution:
+
+You need to specify "vfat" as file system type. How to do that depends
+on which way you use to mount the iPod -- see the README file for more
+details.
+
+
