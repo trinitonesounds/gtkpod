@@ -59,8 +59,8 @@ cfg_new(void)
     memset(mycfg, 0, sizeof(struct cfg));
     if(getcwd(buf, PATH_MAX))
     {
-	mycfg->last_dir.dir_browse = g_strdup (buf);
-	mycfg->last_dir.file_browse = g_strdup (buf);
+	mycfg->last_dir.dir_browse = g_strdup_printf ("%s/", buf);
+	mycfg->last_dir.file_browse = g_strdup_printf ("%s/", buf);
     }
     else
     {
