@@ -69,8 +69,11 @@ struct cfg
   gint sm_col_width[SM_NUM_COLUMNS_PREFS]; /* width colums in song model */
   gboolean col_visible[SM_NUM_COLUMNS_PREFS]; /* displayed song model colums */
   gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
-  gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements
-				 * */
+  gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
+
+  gboolean show_duplicates;     /* show duplicate notification ?*/
+  gboolean show_updated;        /* show update notification ?*/
+  gboolean show_non_updated;    /* show update notification ?*/
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
 };
 
@@ -141,5 +144,11 @@ gboolean prefs_get_update_existing(void);
 gboolean prefs_get_block_display(void);
 gint prefs_get_paned_pos (gint i);
 guint32 prefs_get_statusbar_timeout (void);
+gboolean prefs_get_show_duplicates (void);
+void prefs_set_show_duplicates (gboolean val);
+gboolean prefs_get_show_updated (void);
+void prefs_set_show_updated (gboolean val);
+gboolean prefs_get_show_non_updated (void);
+void prefs_set_show_non_updated (gboolean val);
 
 #endif __PREFS_H__

@@ -141,6 +141,9 @@ struct cfg *cfg_new(void)
     {
 	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
     }
+    mycfg->show_duplicates = TRUE;
+    mycfg->show_updated = TRUE;
+    mycfg->show_non_updated = TRUE;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     return(mycfg);
 }
@@ -996,3 +999,34 @@ guint32 prefs_get_statusbar_timeout (void)
 {
     return cfg->statusbar_timeout;
 }
+
+gboolean prefs_get_show_duplicates (void)
+{
+    return cfg->show_duplicates;
+}
+
+void prefs_set_show_duplicates (gboolean val)
+{
+    cfg->show_duplicates = val;
+}
+
+gboolean prefs_get_show_updated (void)
+{
+    return cfg->show_updated;
+}
+
+void prefs_set_show_updated (gboolean val)
+{
+    cfg->show_updated = val;
+}
+
+gboolean prefs_get_show_non_updated (void)
+{
+    return cfg->show_non_updated;
+}
+
+void prefs_set_show_non_updated (gboolean val)
+{
+    cfg->show_non_updated = val;
+}
+

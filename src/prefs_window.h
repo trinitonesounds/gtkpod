@@ -47,4 +47,8 @@ void prefs_window_set_delete_song_playlist(gboolean val);
 void prefs_window_set_auto_import(gboolean val);
 void prefs_window_set_charset (gchar *charset);
 void prefs_window_set_mpl_autoselect (gboolean autoselect);
+void prefs_window_set_show_duplicates (gboolean val);
+void prefs_window_set_show_updated (gboolean val);
+void prefs_window_set_show_non_updated (gboolean val);
+
 #endif

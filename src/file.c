@@ -544,7 +544,7 @@ void display_non_updated (Song *song, gchar *txt)
 
    if ((song == NULL) && str)
    {
-       if (str->len)
+       if (prefs_get_show_non_updated() && str->len)
        { /* Some songs have not been updated. Print a notice */
 	   buf = g_strdup_printf (
 	       ngettext ("The following song could not be updated",
@@ -575,7 +575,7 @@ void display_non_updated (Song *song, gchar *txt)
        song_nr = 0;
        gtkpod_songs_statusbar_update();
    }
-   else if (song)
+   else if (prefs_get_show_non_updated() && song)
    {
        /* add info about it to str */
        buf = get_song_info (song);
@@ -604,7 +604,7 @@ void display_updated (Song *song, gchar *txt)
    static gint song_nr = 0;
    static GString *str = NULL;
 
-   if ((song == NULL) && str)
+   if (prefs_get_show_updated() && (song == NULL) && str)
    {
        if (str->len)
        { /* Some songs have been updated. Print a notice */
@@ -637,7 +637,7 @@ void display_updated (Song *song, gchar *txt)
        song_nr = 0;
        gtkpod_songs_statusbar_update();
    }
-   else if (song)
+   else if (prefs_get_show_updated() && song)
    {
        /* add info about it to str */
        buf = get_song_info (song);
@@ -726,7 +726,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
 {
   static gint count = 0; /* do a gtkpod_songs_statusbar_update() every
 			    10 songs */
-  Song *song, *added_song;
+  Song *song;
   gchar str[PATH_MAX];
   gint len;
 
@@ -758,6 +758,8 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       if (oldsong)
       {
 	  update_song_from_file (oldsong);
+	  if (plitem && (plitem->type != PL_TYPE_MPL))
+	      add_song_to_playlist (plitem, oldsong);
 	  free_song (song);
 	  song = NULL;
       }
@@ -765,6 +767,8 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
 
   if (song)
   {
+      Song *added_song = NULL;
+
       song->ipod_id = 0;
       song->transferred = FALSE;
       if (gethostname (str, PATH_MAX-2) == 0)

@@ -286,13 +286,3 @@ on_selected_songs1_activate            (GtkMenuItem     *menuitem,
 void
 on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
-
-void
-on_song_window_drag_data_received      (GtkWidget       *widget,
-                                        GdkDragContext  *drag_context,
-                                        gint             x,
-                                        gint             y,
-                                        GtkSelectionData *data,
-                                        guint            info,
-                                        guint            time,
-                                        gpointer         user_data);

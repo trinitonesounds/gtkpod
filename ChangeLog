@@ -1,4 +1,10 @@
 gtkpod V0.43-CVS 
+	IMPROVEMENT: drag and drop files/directories/playlists from
+	konqueror or nautilus directly into the playlist view. If you drop
+	between playlists a (number of) new playlist(s) will be created
+	for the drop. If you drop onto a playlist, the songs will be added
+	into that playlist. Alpha-Version!
+
 	IMPROVEMENT: speed-up of display refreshs.
 	- Import of iTunesDB with full non-blocked display: 4x as fast (51''
 	against 3'35'' on my 2459 songs)

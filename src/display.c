@@ -580,9 +580,9 @@ static void pm_create_listview (GtkWidget *gtkpod)
   /* need the gtk_drag_dest_set() with no actions ("0") so that the
      data_received callback gets the correct info value. This is most
      likely a bug... */
-  gtk_drag_dest_set (GTK_WIDGET (playlist_treeview), 0,
-		     drop_types_all, drop_size_all, 
-		     GDK_ACTION_COPY);
+  gtk_drag_dest_set_target_list (GTK_WIDGET (playlist_treeview),
+				 gtk_target_list_new (drop_types_all,
+						      drop_size_all));
   gtk_drag_source_set (GTK_WIDGET (playlist_treeview), GDK_BUTTON1_MASK,
 		       drag_types, drag_size, GDK_ACTION_COPY);
 }
@@ -2271,9 +2271,9 @@ static void sm_create_listview (GtkWidget *gtkpod)
   /* need the gtk_drag_dest_set() with no actions ("0") so that the
      data_received callback gets the correct info value. This is most
      likely a bug... */
-  gtk_drag_dest_set (GTK_WIDGET (song_treeview), 0,
-		     drop_types_all, drop_size_all, 
-		     GDK_ACTION_COPY);
+  gtk_drag_dest_set_target_list (GTK_WIDGET (song_treeview),
+				 gtk_target_list_new (drop_types_all,
+						      drop_size_all));
 }
 
 

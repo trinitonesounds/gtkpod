@@ -863,17 +863,3 @@ on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
     prefs_window_set_update_existing(
 	gtk_toggle_button_get_active(togglebutton));
 }
-
-void
-on_song_window_drag_data_received      (GtkWidget       *widget,
-                                        GdkDragContext  *drag_context,
-                                        gint             x,
-                                        gint             y,
-                                        GtkSelectionData *data,
-                                        guint            info,
-                                        guint            time,
-                                        gpointer         user_data)
-{
-    printf("was here\n");
-}
-

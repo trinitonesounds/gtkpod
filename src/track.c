@@ -368,7 +368,7 @@ void remove_duplicate (Song *oldsong, Song *song)
    static gboolean removed = FALSE;
    static GString *str = NULL;
 
-   if ((oldsong == NULL) && (song == NULL) && str)
+   if (prefs_get_show_duplicates() && (oldsong == NULL) && (song == NULL) && str)
    {
        if (str->len)
        { /* Some songs have been deleted. Print a notice */
@@ -382,8 +382,8 @@ void remove_duplicate (Song *oldsong, Song *song)
 	   else
 	   {
 	       buf = g_strdup_printf (
-		   ngettext ("The following duplicate song has been skipped.",
-			     "The following %d duplicate songs have been skipped.",
+		   ngettext ("The following duplicate song has not been added to the master play list.",
+			     "The following %d duplicate songs have not been added to the master play list.",
 			     delsong_nr), delsong_nr);
 	   }
 	   gtkpod_confirmation
@@ -410,7 +410,7 @@ void remove_duplicate (Song *oldsong, Song *song)
        delsong_nr = 0;
        gtkpod_songs_statusbar_update();
    }
-   if (oldsong && song)
+   if (prefs_get_show_duplicates() && oldsong && song)
    {
        /* add info about it to str */
        buf = get_song_info (song);

@@ -387,21 +387,78 @@ void add_idlist_to_playlist (Playlist *pl, gchar *str)
    playlist file will be added */
 void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position)
 {
-    gchar **files, **filesp;
+    gchar **files = NULL, **filesp = NULL;
+    gchar *file = NULL;
+    Playlist *pl_playlist = pl; /* playlist for playlist file */
 
     if (!str)  return;
 
+    /*   printf("pl: %x, position: %d\n%s\n", pl, position, str);*/
+
+    block_widgets ();
     files = g_strsplit (str, "\n", -1);
     if (files)
     {
 	filesp = files;
 	while (*filesp)
 	{
-	    puts (*filesp);
+	    gboolean added;
+
+	    added = FALSE;
+	    file = *filesp;
+	    if (strncmp (file, "file:", 5) == 0)
+	    {
+		file += 5;
+		if (g_file_test (file, G_FILE_TEST_IS_DIR))
+		{   /* directory */
+		    if (!pl)
+		    {  /* no playlist yet -- create new one */
+			pl = add_new_playlist (_("New Playlist"), position);
+		    }
+		    add_directory_recursively (file, pl);
+		    added = TRUE;
+		}
+		if (g_file_test (file, G_FILE_TEST_IS_REGULAR))
+		{   /* regular file */
+		    gint len = strlen (file);
+
+		    if (len >= 4)
+		    {
+			if (strcmp (&file[len-4], ".mp3") == 0)
+			{   /* mp3 file */
+			    if (!pl)
+			    {  /* no playlist yet -- create new one */
+				pl = add_new_playlist (
+				    _("New Playlist"), position);
+			    }
+			    add_song_by_filename (file, pl);
+			    added = TRUE;
+			}
+			else if ((strcmp (&file[len-4], ".plu") == 0) ||
+				 (strcmp (&file[len-4], ".m3u") == 0))
+			{
+			    add_playlist_by_filename (file, pl_playlist);
+			    added = TRUE;
+			}
+		    }
+		}
+	    }
+	    if (!added)
+	    {
+		gtkpod_warning (_("drag and drop: ignored '%s'"), *filesp);
+	    }
 	    ++filesp;
 	}
 	g_strfreev (files);
     }
+    /* display log of non-updated songs */
+    display_non_updated (NULL, NULL);
+    /* display log updated songs */
+    display_updated (NULL, NULL);
+    /* display log of detected duplicates */
+    remove_duplicate (NULL, NULL);
+
+    release_widgets ();
 }
 
 

@@ -412,3 +412,19 @@ void prefs_window_set_id3_writeall (gboolean val)
 {
     tmpcfg->id3_writeall = val;
 }
+
+void prefs_window_set_show_duplicates (gboolean val)
+{
+    tmpcfg->show_duplicates = val;
+}
+
+void prefs_window_set_show_updated (gboolean val)
+{
+    tmpcfg->show_updated = val;
+}
+
+void prefs_window_set_show_non_updated (gboolean val)
+{
+    tmpcfg->show_non_updated = val;
+}
+
