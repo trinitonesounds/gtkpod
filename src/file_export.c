@@ -267,7 +267,6 @@ export_files_ok_button_clicked(GtkWidget *w, gpointer data)
 		else
 		    file_export.dest_dir = g_path_get_dirname(name[0]);
 
-		fprintf(stderr, "Selected %s\n", file_export.dest_dir);
 		g_strfreev(name);
 		file_export_do();
 	    }
