@@ -216,7 +216,7 @@ md5_unique_file_init(GList * songlist)
       for (l = songlist; l; l = l->next)
       {
 	  s = (Song *) l->data;
-	  if((val = md5_song_exists_on_ipod(s)))
+	  if((val = md5_song_exists(s)))
 	      g_free(val);	
 	  /* 
 	   * TODO could eventually be used to detect duplicates if the user
@@ -248,7 +248,7 @@ md5_unique_file_free(void)
  * _before_ you free the song "s".
  */
 gchar *
-md5_song_exists_on_ipod(Song * s)
+md5_song_exists(Song * s)
 {
    gchar *val = NULL;
    gchar *result = NULL;
@@ -290,7 +290,7 @@ md5_song_exists_on_ipod(Song * s)
  * @s - The Song that's being freed from the ipod
  */
 void
-md5_song_removed_from_ipod(Song * s)
+md5_song_removed(Song * s)
 {
    gchar *val = NULL;
 

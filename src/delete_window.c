@@ -414,6 +414,7 @@ void confirmation_window_ok_clicked(void)
 	if(strlen(buf) > 0)
 	    gtkpod_statusbar_message(buf);
     }
+    gtkpod_songs_statusbar_update();
     confirmation_window_cleanup();
 }
 void confirmation_window_cancel_clicked(void)

@@ -160,7 +160,7 @@ void remove_song_from_playlist (Playlist *plitem, Song *song)
 	    * skip MPL or we loop */
 	    remove_song_from_playlist (get_playlist_by_nr (i), song);
 	}
-	remove_song_from_ipod_by_id(song->ipod_id);	
+	remove_song_from_ipod (song);	
     }
     else
     {

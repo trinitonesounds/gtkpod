@@ -84,5 +84,5 @@ gboolean files_are_saved (void);
 void data_changed (void);
 gchar* get_song_name_on_disk(Song *s);
 gchar* get_preferred_song_name_format(Song *s);
-void remove_song_from_ipod_by_id(guint32 id);
+void remove_song_from_ipod (Song *song);
 #endif __SONG_H__

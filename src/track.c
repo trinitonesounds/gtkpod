@@ -170,7 +170,7 @@ gboolean add_song (Song *song)
 	}
     }
 
-  if((str = md5_song_exists_on_ipod(song)))
+  if((str = md5_song_exists (song)))
   {
     gtkpod_warning (_("Song (%s) already exists on iPod! (%s)\n"), song->pc_path_utf8, str);
     free_song(song);
@@ -211,31 +211,23 @@ gboolean add_song (Song *song)
 }
 
 /**
- * remove_song_from_ipod_by_id - in order to delete a song from the system
+ * remove_song_from_ipod - in order to delete a song from the system
  * we need to keep track of the Songs we want to delete next time we export
  * the id. 
- * @id - the Song id we want to delete
+ * @song - the Song id we want to delete
  */
 void
-remove_song_from_ipod_by_id(guint32 id)
+remove_song_from_ipod (Song *song)
 {
-    if(id > 50)
+    if (song->transferred)
     {
-	Song *song = NULL;
-	if((song = get_song_by_id(id)))
-	{
-	    if (song->transferred)
-	    {
-		songs = g_list_remove(songs, song);
-		pending_deletion = g_list_append(pending_deletion, song);
-		if(cfg->md5songs)
-		    md5_song_removed_from_ipod(song);
-	    }
-	    else
-	    {
-		remove_song (song);
-	    }
-	}
+	songs = g_list_remove(songs, song);
+	md5_song_removed (song);
+	pending_deletion = g_list_append(pending_deletion, song);
+    }
+    else
+    {
+	remove_song (song);
     }
 }
 
@@ -399,6 +391,7 @@ void remove_song (Song *song)
 {
   /*  remove_song_from_model (song); Must be done by playlist handling! */
   songs = g_list_remove (songs, song);
+  md5_song_removed (song);
   free_song(song);
 }
 
