@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <support.h>
+#include <limits.h>
 
 #include "prefs.h"
 #include "display.h"
@@ -56,6 +57,7 @@ static void st_add_song (Song *song, gboolean final, guint32 inst);
 static void st_remove_song (Song *song, guint32 inst);
 static void st_init (gint32 new_category, guint32 inst);
 
+static void pm_dnd_advertise(GtkTreeView *v);
 /* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
 /* ---------------------------------------------------------------- */
@@ -76,7 +78,35 @@ void pm_add_song (Playlist *playlist, Song *song)
     st_add_song (song, TRUE, 0); /* Add to first sort tab */
 }
 
+/* advertise dnd for the playlist model GtkTreeView
+ */
+static void
+pm_dnd_advertise(GtkTreeView *v)
+{
+    GtkTargetEntry target[] = {
+	{ "gtkpod/file", 0, 1000 },
+	{ "text/plain", 0, 1001 }
+    };
+    guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
+    
+    if(!v) return;
+    gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
+					    GDK_ACTION_COPY);
+}
 
+static void
+st_dnd_advertise(GtkTreeView *v)
+{
+    GtkTargetEntry target[] = {
+	{ "gtkpod/file", 0, 1000 },
+	{ "text/plain", 0, 1001 }
+    };
+    guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
+    
+    if(!v) return;
+    gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
+					    target_size, GDK_ACTION_COPY);
+}
 
 /* Used by model_playlist_name_changed() to find the playlist that
    changed name. If found, emit a "row changed" signal to display the change */
@@ -349,6 +379,7 @@ static void create_playlist_listview (GtkWidget *gtkpod)
   g_signal_connect (G_OBJECT (selection), "changed",
 		    G_CALLBACK (pm_selection_changed), NULL);
   pm_add_columns ();
+  pm_dnd_advertise(GTK_TREE_VIEW(lookup_widget(gtkpod, "playlist_treeview")));
 }
 
 
@@ -1521,6 +1552,7 @@ static void create_song_listview (GtkWidget *gtkpod)
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (song_treeview),
 			       GTK_SELECTION_MULTIPLE);
   add_song_columns ();
+  st_dnd_advertise(GTK_TREE_VIEW(lookup_widget(gtkpod, "song_treeview")));
 }
 
 
@@ -1540,4 +1572,34 @@ void create_listviews (GtkWidget *gtkpod)
 void cleanup_listviews (GtkWidget *gtkpod)
 {
   cleanup_sort_tabs ();
+}
+
+/*
+ * utility function for appending ipod song ids for playlist callback
+ */
+void 
+on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+				 GtkTreeIter *i, gpointer data)
+{
+    Song *s;
+    gchar *new = NULL;
+    gchar *filelist = *((gchar**)data);
+    /* gtk_tree_model_get(tm, i, SM_COLUMN_IPOD_ID, &s, -1); */
+    gtk_tree_model_get(tm, i, 0, &s, -1); 
+    /* can call on 0 cause s is consistent across all of the columns */
+    if(s)
+    {
+	gchar buf[PATH_MAX];
+	if(filelist)
+	{
+	    snprintf(buf, PATH_MAX, "%s%d\n", filelist, s->ipod_id);
+	    g_free(filelist);
+	}
+	else
+	{
+	    snprintf(buf, PATH_MAX, "%d\n", s->ipod_id);
+	}
+	new = g_strdup(buf);
+	*((gchar**)data) = new;
+    }
 }

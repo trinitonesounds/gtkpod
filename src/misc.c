@@ -151,5 +151,3 @@ void close_about_window (void)
   gtk_widget_destroy (about_window);
   about_window = NULL;
 }
-
-

@@ -39,7 +39,7 @@
 #include "dirbrowser.h"
 #include "song.h"
 #include "playlist.h"
-
+#include "display.h"
 
 void
 on_import_itunes1_activate             (GtkMenuItem     *menuitem,
@@ -214,3 +214,138 @@ on_sorttab_switch_page                 (GtkNotebook     *notebook,
 {
   st_page_selected (notebook, page_num);
 }
+
+/* parse a bunch of ipod ids delimited by \n
+ * @s - address of the character string we're parsing
+ * @id - pointer the ipod id parsed from the string
+ * returns FALSE when the string is empty, TRUE when the string can still be
+ * 	parsed
+ */
+static gboolean
+parse_ipod_id_from_string(gchar **s, guint32 *id)
+{
+    if((s) && (*s))
+    {
+	int i = 0;
+	gchar buf[4096];
+	gchar *new = NULL;
+	gchar *str = *s;
+	guint max = strlen(str);
+
+	for(i = 0; i < max; i++)
+	{
+	    if(str[i] == '\n')
+	    {
+		snprintf(buf, 4096, "%s", str);
+		buf[i] = '\0';
+		*id = (guint32)atoi(buf);
+		if((i+1) < max)
+		    new = g_strdup(&str[i+1]);
+		break;
+	    }
+	}
+	g_free(str);
+	*s = new;
+	return(TRUE);
+    }
+    return(FALSE);
+}
+
+void
+on_playlist_treeview_drag_data_received
+                                        (GtkWidget       *widget,
+                                        GdkDragContext  *drag_context,
+                                        gint             x,
+                                        gint             y,
+                                        GtkSelectionData *data,
+                                        guint            info,
+                                        guint            time,
+                                        gpointer         user_data)
+{
+    GtkTreeIter i;
+    GtkWidget *w = NULL;
+    GtkTreePath *tp = NULL;
+    GtkTreeModel *tm = NULL;
+    GtkTreeViewDropPosition pos = 0;
+
+    /* sometimes we get empty dnd data, ignore */
+    if((!data) || (data->length < 0)) return;
+    /* don't allow us to drag onto ourselves =) */
+    w = gtk_drag_get_source_widget(drag_context);
+    if(w == widget) return;
+    /* yet another check, i think it's an 8 bit per byte check */
+    if(data->format != 8) return;
+
+    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget), x, y, &tp,
+		&pos))
+    {
+	/* 
+	 * ensure a valid tree path, and that we're dropping ON a playlist
+	 * not between 
+	 */
+	if((tp) && ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
+	    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))) 
+	{
+	    tm = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+	    if(gtk_tree_model_get_iter(tm, &i, tp))
+	    {
+		Playlist *pl = NULL;
+		gtk_tree_model_get(tm, &i, 0, &pl, -1);
+		if(pl)
+		{
+		    gchar *str = g_strdup(data->data);
+		    guint32 id = 0;
+		    while(parse_ipod_id_from_string(&str,&id))
+		    {
+			add_songid_to_playlist(pl, id);
+		    }
+		}
+	    }
+	    gtk_tree_path_free(tp);
+	}
+	else
+	{
+	    fprintf(stderr, "Unknown treepath droppage or badly positioned
+				drop\n");
+	}
+    }
+    fprintf(stderr, "Playlist dnd receieved\n");
+}
+
+
+
+void
+on_song_treeview_drag_data_get         (GtkWidget       *widget,
+                                        GdkDragContext  *drag_context,
+                                        GtkSelectionData *data,
+                                        guint            info,
+                                        guint            time,
+                                        gpointer         user_data)
+{
+    GtkTreeSelection *ts = NULL;
+    
+    if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
+    {
+	gchar *reply = NULL;
+	if(info == 1000)	/* gtkpod/file */
+	{
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_song_listing_drag_foreach, &reply);
+	    if(reply)
+	    {
+		gtk_selection_data_set(data, data->target, 8, reply,
+					strlen(reply));
+		g_free(reply);
+	    }
+	}
+	else if(info == 1001)
+	{
+	    fprintf(stderr, "received file of type \"text/plain\"\n");
+	}
+	else
+	{
+	    fprintf(stderr, "Unknown info %d\n", info);
+	}
+    }
+}
+

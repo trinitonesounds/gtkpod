@@ -34,7 +34,7 @@
 #include "mp3file.h"
 #include "support.h"
 
-static GList *songs = NULL;
+GList *songs = NULL;
 
 static guint32 free_ipod_id (guint32 id);
 

@@ -256,6 +256,7 @@ create_gtkpod (void)
   scrolledwindow8 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow8);
   gtk_paned_pack1 (GTK_PANED (hpaned1), scrolledwindow8, FALSE, TRUE);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow8), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   playlist_treeview = gtk_tree_view_new ();
   gtk_widget_show (playlist_treeview);
@@ -277,6 +278,7 @@ create_gtkpod (void)
   scrolledwindow9 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow9);
   gtk_container_add (GTK_CONTAINER (sorttab0), scrolledwindow9);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow9), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   st0_cat0_treeview = gtk_tree_view_new ();
   gtk_widget_show (st0_cat0_treeview);
@@ -290,6 +292,7 @@ create_gtkpod (void)
   scrolledwindow12 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow12);
   gtk_container_add (GTK_CONTAINER (sorttab0), scrolledwindow12);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow12), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   st0_cat1_treeview = gtk_tree_view_new ();
   gtk_widget_show (st0_cat1_treeview);
@@ -303,6 +306,7 @@ create_gtkpod (void)
   scrolledwindow13 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow13);
   gtk_container_add (GTK_CONTAINER (sorttab0), scrolledwindow13);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow13), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   st0_cat2_treeview = gtk_tree_view_new ();
   gtk_widget_show (st0_cat2_treeview);
@@ -333,6 +337,7 @@ create_gtkpod (void)
   scrolledwindow15 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow15);
   gtk_container_add (GTK_CONTAINER (sorttab1), scrolledwindow15);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow15), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   st1_cat0_treeview = gtk_tree_view_new ();
   gtk_widget_show (st1_cat0_treeview);
@@ -346,6 +351,7 @@ create_gtkpod (void)
   scrolledwindow14 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow14);
   gtk_container_add (GTK_CONTAINER (sorttab1), scrolledwindow14);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow14), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   st1_cat1_treeview = gtk_tree_view_new ();
   gtk_widget_show (st1_cat1_treeview);
@@ -359,6 +365,7 @@ create_gtkpod (void)
   scrolledwindow10 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow10);
   gtk_container_add (GTK_CONTAINER (sorttab1), scrolledwindow10);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow10), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   st1_cat2_treeview = gtk_tree_view_new ();
   gtk_widget_show (st1_cat2_treeview);
@@ -385,10 +392,14 @@ create_gtkpod (void)
   scrolledwindow11 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow11);
   gtk_paned_pack2 (GTK_PANED (vpaned1), scrolledwindow11, TRUE, TRUE);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow11), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   song_treeview = gtk_tree_view_new ();
   gtk_widget_show (song_treeview);
   gtk_container_add (GTK_CONTAINER (scrolledwindow11), song_treeview);
+  gtk_widget_add_accelerator (song_treeview, "select_all", accel_group,
+                              GDK_a, GDK_CONTROL_MASK,
+                              GTK_ACCEL_VISIBLE);
 
   statusbar1 = gtk_statusbar_new ();
   gtk_widget_show (statusbar1);
@@ -445,11 +456,17 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) button5, "clicked",
                     G_CALLBACK (on_export_itunes1_button),
                     NULL);
+  g_signal_connect ((gpointer) playlist_treeview, "drag_data_received",
+                    G_CALLBACK (on_playlist_treeview_drag_data_received),
+                    NULL);
   g_signal_connect ((gpointer) sorttab0, "switch_page",
                     G_CALLBACK (on_sorttab_switch_page),
                     NULL);
   g_signal_connect ((gpointer) sorttab1, "switch_page",
                     G_CALLBACK (on_sorttab_switch_page),
+                    NULL);
+  g_signal_connect ((gpointer) song_treeview, "drag_data_get",
+                    G_CALLBACK (on_song_treeview_drag_data_get),
                     NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */

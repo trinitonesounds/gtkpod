@@ -40,4 +40,5 @@ void create_add_files_fileselector (gchar *startdir);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
 void open_about_window (void);
 void close_about_window (void);
+
 #endif __UTILS_H__
