@@ -97,6 +97,7 @@ void remove_all_songs (void);
 #define it_get_nr_of_songs get_nr_of_songs
 guint get_nr_of_songs (void);
 guint get_nr_of_nontransferred_songs (void);
+guint get_filesize_of_nontransferred_songs (void);
 Song *it_get_song_by_nr (guint32 n);
 Song *get_song_by_nr (guint32 n);
 Song *get_song_by_id (guint32 id);

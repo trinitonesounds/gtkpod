@@ -43,6 +43,7 @@ typedef struct
     guint32 type;         /* 1: master play list (PL_TYPE_MPL) */
     gint  num;            /* number of songs in playlist */
     GList *members;       /* songs in playlist (Song *) */
+    glong size;
 } Playlist;
 
 enum { /* types for playlist->type */

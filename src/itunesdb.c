@@ -146,7 +146,6 @@
 #include <stdio.h>
 #include <support.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "itunesdb.h"
 
@@ -1178,13 +1177,7 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
   gchar *ipod_file = NULL, *ipod_fullfile = NULL;
   gboolean success;
   gint32 oops = 0;
-  gint pathlen = 0;
 
-  if (path) pathlen = strlen (path); /* length of path in bytes */
-
-#if ITUNESDB_DEBUG
-  fprintf(stderr, "Entered itunesdb_copy_song_to_ipod: '%s', %p, '%s'\n", path, song, pcfile);
-#endif
   if (dir_num == -1) dir_num = (gint) (19.0*rand()/(RAND_MAX));
   if(song->transferred == TRUE) return TRUE; /* nothing to do */
   if (song == NULL)
@@ -1193,9 +1186,19 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
       return FALSE;
     }
 
+
   /* If song->ipod_path exists, we use that one instead. */
-  ipod_fullfile = itunesdb_get_song_name_on_ipod (path, song);
-  if (!ipod_fullfile) do
+  if (song->ipod_path && *song->ipod_path)
+  {
+      gint i, len;
+      ipod_file = g_strdup (song->ipod_path);
+      len = strlen (ipod_file);
+      for (i=0; i<len; ++i)     /* replace ':' by '/' */
+	  if (ipod_file[i] == ':')  ipod_file[i] = '/';
+      if (*ipod_file == '/') ipod_fullfile = itunesdb_concat_dir (path, ipod_file+1);
+      else                   ipod_fullfile = itunesdb_concat_dir (path, ipod_file);
+  }
+  else do
   { /* we need to loop until we find a unused filename */
       if (ipod_file)     g_free(ipod_file);
       if (ipod_fullfile) g_free(ipod_fullfile);
@@ -1205,113 +1208,35 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
       ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d.mp3",
 				   dir_num, song->ipod_id + oops);
       ipod_fullfile = itunesdb_concat_dir (path, ipod_file+1);
-      /* There is a case-sensitivity problem on some systems (see note
-       * at itunesdb_get_song_name_on_ipod (). The following code
-       tries to work around it */
-      if (!g_file_test (ipod_fullfile, G_FILE_TEST_EXISTS))
-      { /* does not exist -- let's try to create it */
-	  FILE *file = fopen (ipod_fullfile, "w+");
-	  if (file)
-	  { /* OK -- everything's fine -- let's clean up */
-	      fclose (file);
-	      remove (ipod_fullfile);
-	  }
-	  else
-	  { /* let's try to change the ".../Music/F..." to
-	     * ".../Music/f..." and try again */
-	      gchar *bufp = strstr (ipod_fullfile+pathlen,
-				    "/Music/F");
-	      if (bufp)	  bufp[7] = 'f';
-	      /* we don't have to check if it works because if it
-		 doesn't most likely @path is wrong in the first
-		 place, or the iPod isn't mounted etc. We'll catch
-		 that curing copy anyhow. */
-	  }
-      }
       if (oops == 0)   oops += 90000;
       else             ++oops;
   } while (g_file_test (ipod_fullfile, G_FILE_TEST_EXISTS));
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "ipod_fullfile: '%s'\n", ipod_fullfile);
+  fprintf(stderr, "ipod_fullfile: %s\n", ipod_fullfile);
 #endif
 
   success = itunesdb_cp (pcfile, ipod_fullfile);
   if (success)
-  {
+  { /* need to store ipod_filename */
       gint i, len;
+      len = strlen (ipod_file);
+      for (i=0; i<len; ++i)     /* replace '/' by ':' */
+	  if (ipod_file[i] == '/')  ipod_file[i] = ':';
+#ifdef ITUNESDB_PROVIDE_UTF8
+      if (song->ipod_path) g_free (song->ipod_path);
+      song->ipod_path = g_strdup (ipod_file);
+#endif ITUNESDB_PROVIDE_UTF8
+      if (song->ipod_path_utf16) g_free (song->ipod_path_utf16);
+      song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
+					       -1, NULL, NULL, NULL);
       song->transferred = TRUE;
       ++dir_num;
       if (dir_num == 20) dir_num = 0;
-      if (ipod_file)
-      { /* need to store ipod_filename */
-	  len = strlen (ipod_file);
-	  for (i=0; i<len; ++i)     /* replace '/' by ':' */
-	      if (ipod_file[i] == '/')  ipod_file[i] = ':';
-#ifdef ITUNESDB_PROVIDE_UTF8
-	  if (song->ipod_path) g_free (song->ipod_path);
-	  song->ipod_path = g_strdup (ipod_file);
-#endif ITUNESDB_PROVIDE_UTF8
-	  if (song->ipod_path_utf16) g_free (song->ipod_path_utf16);
-	  song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
-						   -1, NULL, NULL, NULL);
-      }
   }
-  if (ipod_file )    g_free (ipod_file);
-  if (ipod_fullfile) g_free (ipod_fullfile);
+  g_free (ipod_file);
+  g_free (ipod_fullfile);
   return success;
-}
-
-
-/* Return the full iPod filename as stored in @s.
-   @s: song
-   @path: mount point of the iPod file system
-   Return value: full filename to @s on the iPod or NULL if no
-   filename is set in @s. NOTE: the file does not necessarily
-   exist. NOTE: this code works around a problem on some systems (see
-   below) and might return a filename with different case than the
-   original filename. Don't copy it back to @s */
-gchar *itunesdb_get_song_name_on_ipod (gchar *path, Song *s)
-{
-    gchar *result = NULL;
-
-    if(s)
-    {
-	guint i = 0, size = 0;
-	gchar *buf = g_strdup (s->ipod_path);
-	size = strlen(buf);
-	for(i = 0; i < size; i++)
-	    if(buf[i] == ':') buf[i] = '/';
-	result = itunesdb_concat_dir(path, buf);
-	/* There seems to be a problem with some distributions
-	   (kernel versions or whatever -- even identical version
-	   numbers don't don't show identical behaviour...): even
-	   though vfat is supposed to be case insensitive, a
-	   difference is made between upper and lower case under
-	   some special circumstances. As in
-	   "/iPod_Control/Music/F00" and "/iPod_Control/Music/f00
-	   "... If the former filename does not exist, we try to
-	   access the latter. If that exists we return it,
-	   otherwise we return the first version. */
-	if (!g_file_test (result, G_FILE_TEST_EXISTS))
-	{
-	    gchar *bufp = strstr (buf, "/Music/F");
-	    if (bufp)
-	    {
-		gchar *result2;
-		bufp[7] = 'f'; /* change the 'F' to 'f' */
-		result2 = itunesdb_concat_dir(path, buf);
-		if (g_file_test (result, G_FILE_TEST_EXISTS))
-		{
-		    g_free (result);
-		    result = result2;
-		}
-		else g_free (result2);
-	    }
-	}
-	g_free (buf);
-    }
-    return result;
 }
 
 
@@ -1324,10 +1249,6 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
   gboolean success = TRUE;
   FILE *file_in = NULL;
   FILE *file_out = NULL;
-
-#if ITUNESDB_DEBUG
-  fprintf(stderr, "Entered itunesdb_cp: '%s', '%s'\n", from_file, to_file);
-#endif
 
   do { /* dummy loop for easier error handling */
     file_in = fopen (from_file, "r");
@@ -1346,9 +1267,6 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
       }
     do {
       bread = fread (data, 1, ITUNESDB_COPYBLK, file_in);
-#if ITUNESDB_DEBUG
-      fprintf(stderr, "itunesdb_cp: read %ld bytes\n", bread);
-#endif
       if (bread == 0)
 	{
 	  if (feof (file_in) == 0)
@@ -1360,9 +1278,6 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
       else
 	{
 	  bwrite = fwrite (data, 1, bread, file_out);
-#if ITUNESDB_DEBUG
-      fprintf(stderr, "itunesdb_cp: wrote %ld bytes\n", bwrite);
-#endif
 	  if (bwrite != bread)
 	    {
 	      itunesdb_warning (_("Error writing PC file \"%s\"."),to_file);
@@ -1375,11 +1290,7 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
   if (file_out)
     {
       fclose (file_out);
-      if (!success)
-      { /* error occured -> delete to_file */
-#if ITUNESDB_DEBUG
-	  fprintf(stderr, "itunesdb_cp: copy unsuccessful, removing '%s'\n", to_file);
-#endif
+      if (!success) { /* error occured -> delete to_file */
 	remove (to_file);
       }
     }

@@ -202,6 +202,20 @@ guint get_nr_of_nontransferred_songs (void)
     return n;
 }
 
+guint get_filesize_of_nontransferred_songs(void)
+{
+    guint n = 0;
+    Song *song;
+    GList *gl_song;
+
+    for (gl_song = songs; gl_song; gl_song=gl_song->next)
+    {
+	song = (Song *)gl_song->data;
+	if (!song->transferred)   n += (song->size/1024);
+    }
+    return n;
+
+}
 /* Returns the n_th song */
 Song *get_song_by_nr (guint32 n)
 {

@@ -53,8 +53,11 @@ static GtkWidget *file_selector = NULL;
 static GtkWidget *pl_file_selector = NULL;
 static GtkWidget *gtkpod_statusbar = NULL;
 static GtkWidget *gtkpod_songs_statusbar = NULL;
+static GtkWidget *gtkpod_space_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
 
+static guint32 get_ipod_free_space(void);
+static guint32 get_ipod_used_space(void);
 /* --------------------------------------------------------------*/
 /* are widgets blocked at the moment? */
 gboolean widgets_blocked = FALSE;
@@ -660,11 +663,9 @@ gtkpod_songs_statusbar_update(void)
     if(gtkpod_songs_statusbar)
     {
 	gchar *buf;
-
-	buf = g_strdup_printf (_(" P:%d S:%d/%d"),
-			       get_nr_of_playlists () - 1,
-			       sm_get_nr_of_songs (),
-			       get_nr_of_songs ());
+	
+	buf = g_strdup_printf (_(" P:%d S:%d/%d"), get_nr_of_playlists
+		() - 1, sm_get_nr_of_songs (), get_nr_of_songs ());
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_songs_statusbar), 1);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_songs_statusbar), 1,  buf);
 	g_free (buf);
@@ -1563,4 +1564,132 @@ void enqueue_songs (GList *selected_songs)
     do_command_on_entries (prefs_get_play_enqueue_path (),
 			   _("Enqueue"),
 			   selected_songs);
+}
+
+static gchar*
+get_drive_stats_from_df(const gchar *mp)
+{
+    FILE *fp;
+    gchar buf[PATH_MAX];
+    gchar *result = NULL;
+    guint bytes_read = 0;
+
+    snprintf(buf, PATH_MAX, "df -k | grep %s", mp);
+    if((fp = popen(buf, "r")))
+    {
+	if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
+	{
+	    if(g_strstr_len(buf, PATH_MAX, mp))
+	    {
+		int i = 0;
+		int j = 0;
+		gchar buf2[PATH_MAX];
+		
+		while(i < bytes_read)
+		{
+		    while(!g_ascii_isspace(buf[i]))
+			buf2[j++] = buf[i++];
+		    buf2[j++] = ' ';
+		    while(g_ascii_isspace(buf[i]))
+			i++;
+		}
+		buf2[j] = '\0';
+		result = g_strdup_printf("%s", buf2);
+	    }
+	}
+	pclose(fp);	
+    }
+    return(result);
+}
+
+static gchar* 
+get_filesize_in_bytes(int size)
+{
+    guint i = 1;
+    float newsize = 0.0;
+    gchar *result = NULL;
+    glong tmpsize = (glong)size;
+    gchar *sizes[] = { _("Bytes"), _("KB"), _("MB"), _("GB"), NULL };
+
+    while((tmpsize) > (float)1024.0 )
+    {
+	int c;
+
+	c = tmpsize % 1024;
+	tmpsize /= (float)1024.0;
+	newsize = (newsize * 0.1) + ((float) c / (float)1024.0);
+	i++;
+    }
+    newsize += (float)tmpsize;
+    result = g_strdup_printf("%0.2f %s", (float)newsize, sizes[i]);
+    return(result);
+}
+static guint32
+get_ipod_used_space(void)
+{
+    guint32 result = 0;
+    gchar *line = NULL;
+    gchar **tokens = NULL;
+    
+    if((line = get_drive_stats_from_df(prefs_get_ipod_mount())))
+    {
+	if((tokens = g_strsplit(line, " ", 5)))
+	{
+	    if(tokens[2]) 
+		result = atoi(tokens[2]);
+	    g_strfreev(tokens);
+	}
+    }
+    g_free(line);
+    return(result);
+}
+static guint32
+get_ipod_free_space(void)
+{
+    guint32 result = 0;
+    gchar *line = NULL;
+    gchar **tokens = NULL;
+    if((line = get_drive_stats_from_df(prefs_get_ipod_mount())))
+    {
+	if((tokens = g_strsplit(line, " ", 5)))
+	{
+	    if(tokens[3]) 
+		result = atoi(tokens[3]);
+	    g_strfreev(tokens);
+	}
+    }
+    g_free(line);
+    return(result);
+}
+
+static guint
+gtkpod_space_statusbar_update(void)
+{
+    if(gtkpod_space_statusbar)
+    {
+	gchar *buf;
+	gchar *str = NULL;
+	guint32 free_space, left, pending;
+
+	left = get_ipod_free_space();
+	pending = get_filesize_of_nontransferred_songs();
+
+	free_space = (left - pending);
+	str = get_filesize_in_bytes(free_space);
+	buf = g_strdup_printf (_(" %s Free"), str);
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_space_statusbar), 1);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_space_statusbar), 1,  buf);
+	g_free (buf);
+	g_free (str);
+    }
+    return(TRUE);
+}
+
+void
+gtkpod_space_statusbar_init(GtkWidget *w)
+{
+    gtkpod_space_statusbar = w;
+
+    gtkpod_space_statusbar_update();
+    gtk_timeout_add(5000, (GtkFunction) gtkpod_space_statusbar_update, NULL);
 }

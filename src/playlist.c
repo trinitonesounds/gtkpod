@@ -48,6 +48,7 @@ Playlist *add_new_playlist (gchar *plname, gint position)
   plitem = g_malloc0 (sizeof (Playlist));
   plitem->type = PL_TYPE_NORM;
   plitem->name = g_strdup (plname);
+  plitem->size = 0.0;
   plitem->name_utf16 = g_utf8_to_utf16 (plname, -1, NULL, NULL, NULL);
   data_changed (); /* indicate that data has changed in memory */
   return add_playlist (plitem, position);
@@ -63,6 +64,7 @@ void create_mpl (void)
   plitem = g_malloc0 (sizeof (Playlist));
   plitem->type = PL_TYPE_MPL;  /* MPL! */
   plitem->name = g_strdup ("gtkpod");
+  plitem->size = 0.0;
   plitem->name_utf16 = g_utf8_to_utf16 (plitem->name, -1, NULL, NULL, NULL);
   add_playlist (plitem, -1);
 }
@@ -219,6 +221,10 @@ Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n)
   return g_list_nth_data (plitem->members, n);
 }
 
+/**
+ * 
+ * You must free this yourself
+ */
 /* Remove playlist from the list. First it's removed from any display
    model using remove_playlist_from_model (), then the entry itself
    is removed from the GList *playlists */

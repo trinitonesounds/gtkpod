@@ -134,6 +134,8 @@ create_gtkpod (void)
   GtkWidget *song_window;
   GtkWidget *paned2;
   GtkWidget *gtkpod_status;
+  GtkWidget *hbox13;
+  GtkWidget *space_statusbar;
   GtkWidget *songs_statusbar;
   GtkAccelGroup *accel_group;
 
@@ -594,18 +596,28 @@ create_gtkpod (void)
   paned2 = gtk_hpaned_new ();
   gtk_widget_show (paned2);
   gtk_box_pack_start (GTK_BOX (vbox1), paned2, FALSE, TRUE, 0);
-  GTK_WIDGET_UNSET_FLAGS (paned2, GTK_CAN_FOCUS);
-  gtk_paned_set_position (GTK_PANED (paned2), 440);
 
   gtkpod_status = gtk_statusbar_new ();
   gtk_widget_show (gtkpod_status);
-  gtk_paned_pack1 (GTK_PANED (paned2), gtkpod_status, TRUE, TRUE);
+  gtk_paned_pack1 (GTK_PANED (paned2), gtkpod_status, TRUE, FALSE);
+  gtk_widget_set_size_request (gtkpod_status, 300, 20);
   gtk_container_set_border_width (GTK_CONTAINER (gtkpod_status), 1);
   gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (gtkpod_status), FALSE);
 
+  hbox13 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox13);
+  gtk_paned_pack2 (GTK_PANED (paned2), hbox13, FALSE, TRUE);
+
+  space_statusbar = gtk_statusbar_new ();
+  gtk_widget_show (space_statusbar);
+  gtk_box_pack_start (GTK_BOX (hbox13), space_statusbar, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (space_statusbar, 80, 20);
+  gtk_container_set_border_width (GTK_CONTAINER (space_statusbar), 1);
+  gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (space_statusbar), FALSE);
+
   songs_statusbar = gtk_statusbar_new ();
   gtk_widget_show (songs_statusbar);
-  gtk_paned_pack2 (GTK_PANED (paned2), songs_statusbar, TRUE, TRUE);
+  gtk_box_pack_start (GTK_BOX (hbox13), songs_statusbar, TRUE, TRUE, 0);
   gtk_widget_set_size_request (songs_statusbar, 175, 20);
   gtk_container_set_border_width (GTK_CONTAINER (songs_statusbar), 1);
 
@@ -744,6 +756,9 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) gtkpod_status, "realize",
                     G_CALLBACK (on_gtkpod_status_realize),
                     NULL);
+  g_signal_connect ((gpointer) space_statusbar, "realize",
+                    G_CALLBACK (on_space_statusbar_realize),
+                    NULL);
   g_signal_connect ((gpointer) songs_statusbar, "realize",
                     G_CALLBACK (on_songs_statusbar_realize),
                     NULL);
@@ -853,6 +868,8 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, song_window, "song_window");
   GLADE_HOOKUP_OBJECT (gtkpod, paned2, "paned2");
   GLADE_HOOKUP_OBJECT (gtkpod, gtkpod_status, "gtkpod_status");
+  GLADE_HOOKUP_OBJECT (gtkpod, hbox13, "hbox13");
+  GLADE_HOOKUP_OBJECT (gtkpod, space_statusbar, "space_statusbar");
   GLADE_HOOKUP_OBJECT (gtkpod, songs_statusbar, "songs_statusbar");
 
   gtk_window_add_accel_group (GTK_WINDOW (gtkpod), accel_group);

@@ -93,4 +93,5 @@ void do_command_on_entries (gchar *command, gchar *what, GList *selected_songs);
 void play_songs (GList *selected_songs);
 void enqueue_songs (GList *selected_songs);
 
+void gtkpod_space_statusbar_init(GtkWidget *w);
 #endif __MISC_H__

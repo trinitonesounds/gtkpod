@@ -390,3 +390,7 @@ on_enqueue_songs_activate              (GtkMenuItem     *menuitem,
 void
 on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_space_statusbar_realize             (GtkWidget       *widget,
+                                        gpointer         user_data);

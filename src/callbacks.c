@@ -1156,3 +1156,11 @@ on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
     st_arrange_visible_sort_tabs ();
 }
 
+
+void
+on_space_statusbar_realize             (GtkWidget       *widget,
+                                        gpointer         user_data)
+{
+    gtkpod_space_statusbar_init(widget);
+}
+
