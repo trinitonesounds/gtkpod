@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-04 00:00+0900\n"
+"POT-Creation-Date: 2004-02-04 00:10+0900\n"
 "PO-Revision-Date: 2003-12-01 23:28+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -2995,6 +2995,16 @@ msgstr "重複の検出"
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "以下の画像ファイルが見つかりません: %s"
+
+#: src/wavfile.c:106
+#, fuzzy, c-format
+msgid "Could not open '%s' for reading.\n"
+msgstr "ファイル \"%s\" を読み込もうとしましたが、開くことができません。\n"
+
+#: src/wavfile.c:179
+#, fuzzy, c-format
+msgid "%s does not appear to be a supported wav file.\n"
+msgstr "'%s' は mp4 オーディオファイルとは認識できません。\n"
 
 #~ msgid "Could not find mp3gain executable."
 #~ msgstr "mp3gain コマンドが見付かりません。"

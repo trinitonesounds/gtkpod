@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-04 00:00+0900\n"
+"POT-Creation-Date: 2004-02-04 00:10+0900\n"
 "PO-Revision-Date: 2004-01-24 00:18+0900\n"
 "Last-Translator: \n"
 "Language-Team:  <it@li.org>\n"
@@ -3117,6 +3117,16 @@ msgstr "Rilevazione dei duplicati"
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Impossibile trovare il file pixmap: %s"
+
+#: src/wavfile.c:106
+#, fuzzy, c-format
+msgid "Could not open '%s' for reading.\n"
+msgstr "Impossibile aprire il file \"%s\" in scrittura.\n"
+
+#: src/wavfile.c:179
+#, fuzzy, c-format
+msgid "%s does not appear to be a supported wav file.\n"
+msgstr "'%s' non sembra essere un file audio mp4.\n"
 
 #~ msgid "Could not find mp3gain executable."
 #~ msgstr "Impossibile trovare l'eseguibile mp3gain."

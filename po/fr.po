@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.73-CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-04 00:00+0900\n"
+"POT-Creation-Date: 2004-02-04 00:10+0900\n"
 "PO-Revision-Date: 2004-01-20 23:28+0100\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
@@ -3101,6 +3101,16 @@ msgstr "Détection de doublon"
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Impossible de trouver le fichier pixmap: %s"
+
+#: src/wavfile.c:106
+#, fuzzy, c-format
+msgid "Could not open '%s' for reading.\n"
+msgstr "Ne peut ouvrir en lecture le fichier \"%s\".\n"
+
+#: src/wavfile.c:179
+#, fuzzy, c-format
+msgid "%s does not appear to be a supported wav file.\n"
+msgstr "'%s' n'est pas un fichier audio mp4\n"
 
 #~ msgid "Could not find mp3gain executable."
 #~ msgstr "Impossible de trouver le fichier mp3gain."

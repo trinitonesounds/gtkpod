@@ -29,3 +29,4 @@ src/prefs.c
 src/prefs_window.c
 src/song.c
 src/support.c
+src/wavfile.c
