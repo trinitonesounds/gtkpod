@@ -24,6 +24,7 @@ Inc., registered in the U.S. and other countries.
      - Offline Mode
      - Export of Tracks
      - Encoding of ID3 tags (charsets)
+     - Extracting tag information from the filename
      - About filenames
      - Restoring your iPod after file system error
   - Connecting iPod to a Linux box:
@@ -41,7 +42,7 @@ Follow steps 1-7 in the "Connecting your iPod to a Linux box"
 (basically you need to get the iPod partition mounted to /mnt/ipod)
 
 
-1) make a backup of your iTunesDB:
+1) The faint-of-heart make a backup of their iTunesDB:
 
 cp /mnt/ipod/iPod_Control/iTunes/iTunesDB /mnt/ipod/iPod_Control/iTunes/iTunesDB.bak
 

@@ -1,4 +1,4 @@
-gtkpod V0.72-CVS
+gtkpod V0.72
         NEW FEATURE: tags can now be set from the filename using a
 	template like "%a - %A/%T %t.mp3".
 

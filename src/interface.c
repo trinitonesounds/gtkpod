@@ -3962,7 +3962,7 @@ create_sort_window (void)
   gtk_widget_show (hbox39);
   gtk_box_pack_start (GTK_BOX (vbox53), hbox39, FALSE, FALSE, 4);
 
-  label94 = gtk_label_new (_("Notice: the track order is always stored to the iPod when using drag and drop. In order to store a alphabetized track order to the iPod you must choose the 'Save Displayed Track Order' from the 'Edit' menu or select 'Auto Store' above."));
+  label94 = gtk_label_new (_("Notice: the track order is always stored to the iPod when you use drag and drop to re-arrange the tracks.\nIn order to store an alphabetized track order to the iPod you must choose the 'Save Displayed Track Order' from the 'Edit' menu or select 'Auto Store' above."));
   gtk_widget_show (label94);
   gtk_box_pack_start (GTK_BOX (hbox39), label94, FALSE, FALSE, 4);
   GTK_WIDGET_SET_FLAGS (label94, GTK_CAN_FOCUS);

@@ -16,7 +16,7 @@ version I used):
 
 	libgtk2 (2.2.4)
 	libglib2 (2.2.3)
-	libid3 (3.8.3)
+	libid3tag (0.15.0b)
 	libmp4v2 (1.0RC1, needed only for aac files)
-	C compiler (gcc 3.3.2 20031005)
+	C compiler (gcc 3.3.2)
 	libstdc++5 (3.3.2)
