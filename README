@@ -406,14 +406,17 @@ add files or directories: the iTunesDB itself is using UTF16, so once
 tags are imported correctly, changing the charset has no influence.
 
 If you chose "Japanese (automatic detection)", gtkpod will try to
-determine if the string is in ISO-2022-JP, Shift_JIS, or EUC-JP. The
-actual encoding used for the ID tags will be stored and will be used
-when writing tags or doing updates/syncs. This can be prevented
-by checking the "Use selected charset also when updating or syncing
-tracks" and "Use selected charset when writing tags" options. The
-default charset is "EUC-JP" -- it will be used when the charset cannot
-be autodetected, as well as when writing tags if a specific charset
-could not be determined before.
+determine if the string is in ISO-2022-JP, Shift_JIS, or EUC-JP
+(Hankaku Katakana (1-byte Katakana) may not be recognised correctly --
+specify the correct encoding if you run into this problem). The actual
+encoding used for the ID tags will be stored and will be used when
+writing tags or doing updates/syncs. Check the "Use selected charset
+also when updating or syncing tracks" and "Use selected charset when
+writing tags" options if you want to specify a particular character
+set when writing or updating/syncing. The default charset is "EUC-JP"
+-- it will be used when the charset cannot be autodetected, as well as
+when writing tags if a specific charset could not be determined
+before.
 
 
 About filenames (excerpt from the GTK2 release notes):

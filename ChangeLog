@@ -1,12 +1,15 @@
 gtkpod V0.52-CVS
+	IMPROVEMENT: added auto-dection of Japanese encoding (thanks
+	to Hiroshi Kawashima).
+
+	IMPROVEMENT: option to sort case-sensitively. Case-insensitive
+	utf8 sort should work fine, case-sensitive may not work entirely
+	as expected with some charsets.
+
 	BUGFIX: fixed memory holes in pm_data_compare_func(),
 	st_data_compare_func(), sm_data_compare_func(),
 	get_ipod_used_space(), get_ipod_free_space(),
 	charset_to_description(), add_playlist_by_filename()
-	
-
-	IMPROVEMENT: added auto-dection of Japanese encoding (thanks
-	to Hiroshi Kawashima).
 
 gtkpod V0.51
 	NEW FEATURE: Synchronize directories (removed songs can be deleted

@@ -3410,7 +3410,7 @@
 		      <child>
 			<widget class="GtkCheckButton" id="cfg_case_sensitive">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">If checked, sorting will be case sensitive.</property>
+			  <property name="tooltip" translatable="yes">If checked, sorting will be case sensitive. Please note that case sensitive sorting will not work well with most charsets.</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Sorting case sensitive</property>
 			  <property name="use_underline">True</property>

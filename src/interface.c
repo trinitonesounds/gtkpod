@@ -1806,7 +1806,7 @@ create_new_prefs_window (void)
   cfg_case_sensitive = gtk_check_button_new_with_mnemonic (_("Sorting case sensitive"));
   gtk_widget_show (cfg_case_sensitive);
   gtk_box_pack_start (GTK_BOX (vbox30), cfg_case_sensitive, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_case_sensitive, _("If checked, sorting will be case sensitive."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_case_sensitive, _("If checked, sorting will be case sensitive. Please note that case sensitive sorting will not work well with most charsets."), NULL);
 
   cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\n entry (faster!)"));
   gtk_widget_show (cfg_block_display);

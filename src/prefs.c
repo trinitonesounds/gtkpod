@@ -212,7 +212,7 @@ struct cfg *cfg_new(void)
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
     mycfg->add_recursively = TRUE;
-    mycfg->case_sensitive = TRUE;
+    mycfg->case_sensitive = FALSE;
     mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->save_sorted_order = FALSE;
     mycfg->sort_tab_num = 2;
