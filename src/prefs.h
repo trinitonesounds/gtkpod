@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 21:07:30 jcs>
+/* Time-stamp: <2003-06-22 01:58:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -77,6 +77,7 @@ struct cfg
       gboolean song, playlist, ipod_file, syncing;
   } deletion;
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
+  struct win_size size_cal;     /* last size of calendar window */
   struct win_size size_conf_sw; /* last size of conf window (scrolled) */
   struct win_size size_conf;    /* last size of conf window */
   struct win_size size_dirbr;   /* last size of dirbrowser window */
@@ -145,6 +146,7 @@ void prefs_set_last_dir_export(gchar * dir);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_size_gtkpod (gint x, gint y);
+void prefs_set_size_cal (gint x, gint y);
 void prefs_set_size_conf_sw (gint x, gint y);
 void prefs_set_size_conf (gint x, gint y);
 void prefs_set_size_dirbr (gint x, gint y);
@@ -172,6 +174,7 @@ gboolean prefs_get_id3_writeall(void);
 gchar *prefs_get_ipod_mount (void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);
+void prefs_get_size_cal (gint *x, gint *y);
 void prefs_get_size_conf_sw (gint *x, gint *y);
 void prefs_get_size_conf (gint *x, gint *y);
 void prefs_get_size_dirbr (gint *x, gint *y);

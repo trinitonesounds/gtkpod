@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 21:18:02 jcs>
+/* Time-stamp: <2003-06-22 01:58:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -188,6 +188,8 @@ struct cfg *cfg_new(void)
     mycfg->id3_writeall = FALSE;
     mycfg->size_gtkpod.x = 600;
     mycfg->size_gtkpod.y = 500;
+    mycfg->size_cal.x = 455;
+    mycfg->size_cal.y = 290;
     mycfg->size_conf_sw.x = 300;
     mycfg->size_conf_sw.y = 300;
     mycfg->size_conf.x = 300;
@@ -527,6 +529,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_size_gtkpod (-2, atoi (arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "size_cal.x") == 0)
+	  {
+	      prefs_set_size_cal (atoi (arg), -2);
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_cal.y") == 0)
+	  {
+	      prefs_set_size_cal (-2, atoi (arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "size_conf_sw.x") == 0)
 	  {
 	      prefs_set_size_conf_sw (atoi (arg), -2);
@@ -802,6 +812,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser\n"));
     fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
     fprintf (fp, "size_gtkpod.y=%d\n", cfg->size_gtkpod.y);
+    fprintf (fp, "size_cal.x=%d\n", cfg->size_cal.x);
+    fprintf (fp, "size_cal.y=%d\n", cfg->size_cal.y);
     fprintf (fp, "size_conf_sw.x=%d\n", cfg->size_conf_sw.x);
     fprintf (fp, "size_conf_sw.y=%d\n", cfg->size_conf_sw.y);
     fprintf (fp, "size_conf.x=%d\n", cfg->size_conf.x);
@@ -1223,6 +1235,14 @@ void prefs_set_size_gtkpod (gint x, gint y)
     if (y != -2) cfg->size_gtkpod.y = y;
 }
 
+/* Sets the default size for the calendar window. -2 means: don't change
+ * the current size */
+void prefs_set_size_cal (gint x, gint y)
+{
+    if (x != -2) cfg->size_cal.x = x;
+    if (y != -2) cfg->size_cal.y = y;
+}
+
 /* Sets the default size for the scrolled conf window. -2 means: don't
  * change the current size */
 void prefs_set_size_conf_sw (gint x, gint y)
@@ -1253,6 +1273,14 @@ void prefs_get_size_gtkpod (gint *x, gint *y)
 {
     *x = cfg->size_gtkpod.x;
     *y = cfg->size_gtkpod.y;
+}
+
+/* Writes the current default size for the gtkpod window in "x" and
+   "y" */
+void prefs_get_size_cal (gint *x, gint *y)
+{
+    *x = cfg->size_cal.x;
+    *y = cfg->size_cal.y;
 }
 
 /* Writes the current default size for the scrolled conf window in "x"

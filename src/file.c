@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 23:09:47 jcs>
+/* Time-stamp: <2003-06-21 21:37:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1779,21 +1779,21 @@ gchar *get_song_name_on_ipod (Song *s)
  * Returns - The preferred filename, you must free it yourself.
  */
 gchar *
-get_preferred_song_name_format(Song *s)
+get_preferred_song_name_format (Song *s)
 {
-    gchar buf[PATH_MAX];
     gchar *result = NULL;
-    if(s)
+    if (s)
     {
-	if(s->track_nr < 10)
-	    snprintf(buf, PATH_MAX, "0%d-%s-%s.mp3", s->track_nr,
-						s->title,s->artist);
-	else
-	    snprintf(buf, PATH_MAX, "%d-%s-%s.mp3", s->track_nr,
-						s->title,s->artist);
-	result = g_strdup(buf);
+	gchar *artist = charset_from_utf8 (s->artist);
+	gchar *album = charset_from_utf8 (s->album);
+	gchar *title = charset_from_utf8 (s->title);
+	result = g_strdup_printf ("%s-%s-02%d-%s.mp3",
+				  artist, album, s->track_nr, title);
+	g_free (artist);
+	g_free (album);
+	g_free (title);
     }
-    return(result);
+    return (result);
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 21:07:31 jcs>
+/* Time-stamp: <2003-06-22 00:22:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -193,6 +193,9 @@ gint st_get_instance_from_treeview (GtkTreeView *tv);
 void st_show_visible (void);
 void st_arrange_visible_sort_tabs (void);
 TabEntry *st_get_selected_entry (gint inst);
+
+void cal_open_calendar (gint inst, S_item item);
+
 void sp_go (guint32 inst);
 void sp_conditions_changed (guint32 inst);
 

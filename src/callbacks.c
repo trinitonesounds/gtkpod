@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-16 00:14:01 jcs>
+/* Time-stamp: <2003-06-22 00:23:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1299,7 +1299,10 @@ void
 on_sp_cal_button_clicked        (GtkButton       *button,
 				 gpointer         user_data)
 {
+    guint32 inst = (guint32)user_data & SP_MASK;
+    S_item item = (guint32)user_data >> SP_SHIFT;
 
+    cal_open_calendar (inst, item);
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 23:57:26 jcs>
+/* Time-stamp: <2003-06-22 01:07:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -672,7 +672,7 @@ static void init_playcounts (gchar *filename)
   {
       gchar data[4];
       guint32 header_length, entry_length, entry_num, i=0;
-      time_t tt;
+      time_t tt = time (NULL);
 
       localtime (&tt);  /* set the ext. variable 'timezone' (see below) */
       if (seek_get_n_bytes (plycts, data, 0, 4) != 4)  break;

@@ -300,10 +300,10 @@ gchar *charset_check_auto (gchar *str)
     return NULL;
 }
 
-
 /* Convert "str" (in the charset specified in cfg->charset) to
  * utf8. If cfg->charset is NULL, "str" is assumed to be in the
  * current locale charset */
+/* Must free the returned string yourself */
 gchar *charset_to_utf8 (gchar *str)
 {
     G_CONST_RETURN gchar *charset;
@@ -321,6 +321,7 @@ gchar *charset_to_utf8 (gchar *str)
 /* Convert "str" from utf8 to the charset specified in
  * cfg->charset. If cfg->charset is NULL, "str" is converted to the
  * current locale charset */
+/* Must free the returned string yourself */
 gchar *charset_from_utf8 (gchar *str)
 {
     G_CONST_RETURN gchar *charset;
@@ -337,6 +338,7 @@ gchar *charset_from_utf8 (gchar *str)
 
 /* Convert "str" from "from_charset" to "to_charset", trying to skip
    illegal character as best as possible */
+/* Must free the returned string yourself */
 gchar *charset_to_charset (gchar *from_charset, gchar *to_charset, gchar *str)
 {
     gchar *ret;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-20 00:12:08 jcs>
+/* Time-stamp: <2003-06-22 01:58:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -59,7 +59,9 @@ typedef enum {
 
 
 /* ---------------------------------------------------------------- */
+/*                                                                  */
 /* Section for sort tab display (special sort tab)                  */
+/*                                                                  */
 /* ---------------------------------------------------------------- */
 
 /* Remove all members of special sort tab (ST_CAT_SPECIAL) in instance
@@ -109,7 +111,7 @@ static TimeInfo *st_get_timeinfo_ptr (guint32 inst, S_item item)
 /* Update the date interval from the string provided by
    prefs_get_sp_entry() */
 /* @inst: instance
-   @item: S_TIME_CREATED, S_TIME_PLAYED, or S_TIME_MODIFIED,
+   @item: S_TIME_PLAYED, or S_TIME_MODIFIED,
    @force_update: usually the update is only performed if the string
    has changed. TRUE will re-evaluate the string (and print an error
    message again, if necessary */
@@ -122,7 +124,7 @@ TimeInfo *st_update_date_interval_from_string (guint32 inst,
     SortTab *st;
     TimeInfo *ti;
 
-    if (inst >= prefs_get_sort_tab_num ()) return NULL;
+    if (inst >= SORT_TAB_MAX) return NULL;
 
     st = sorttab[inst];
     ti = st_get_timeinfo_ptr (inst, item);
@@ -510,7 +512,9 @@ void sp_conditions_changed (guint32 inst)
 
 
 /* ---------------------------------------------------------------- */
+/*                                                                  */
 /* Section for sort tab display (normal and general)                */
+/*                                                                  */
 /* ---------------------------------------------------------------- */
 
 
@@ -2370,3 +2374,199 @@ on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     }
 }
 
+
+
+/* ---------------------------------------------------------------- */
+/*                                                                  */
+/*                Section for calendar display                      */
+/*                                                                  */
+/* ---------------------------------------------------------------- */
+
+/* Strings for 'Category-Combo' */
+
+const gchar *cat_strings[] = {
+    N_("Last Played"),
+    N_("Last Modified"),
+    NULL };
+
+/* enum to access cat_strings */
+enum {
+    CAT_STRING_PLAYED = 0,
+    CAT_STRING_MODIFIED = 1 };
+
+
+/* Set the calendar @calendar, as well as spin buttons @hour and @min
+ * according to @mactime */
+static void cal_set_time (GtkCalendar *cal, GtkSpinButton *hour,
+			  GtkSpinButton *min, guint32 mactime)
+{
+    struct tm *tm;
+    time_t tt = time (NULL);
+
+    /* 0, -1 are treated in a special way (no lower/upper margin
+     * -> set calendar to current time */
+    if ((mactime != 0) && (mactime != -1))
+           tt = itunesdb_time_mac_to_host (mactime);
+
+    tm = localtime (&tt);
+
+    if (cal)
+    {
+	gtk_calendar_select_month (cal, tm->tm_mon, 1900+tm->tm_year);
+	gtk_calendar_select_day (cal, tm->tm_mday);
+    }
+
+    if (hour)
+	gtk_spin_button_set_value (hour, tm->tm_hour);
+    if (min)
+	gtk_spin_button_set_value (min, tm->tm_min);
+}
+
+
+/* Callback for 'No Lower/Upper Margin' buttons */
+static void cal_no_margin_toggled (GtkToggleButton *togglebutton,
+				   gpointer         user_data)
+{
+    GtkWidget *cal = user_data;
+    gboolean sens = !gtk_toggle_button_get_active (togglebutton);
+
+    if ((GtkWidget *)togglebutton == lookup_widget (cal, "no_lower_margin"))
+    {
+	gtk_widget_set_sensitive (lookup_widget (cal, "lower_cal"), sens);
+	gtk_widget_set_sensitive (lookup_widget (cal, "lower_time"), sens);
+    }
+    if ((GtkWidget *)togglebutton == lookup_widget (cal, "no_upper_margin"))
+    {
+	gtk_widget_set_sensitive (lookup_widget (cal, "upper_cal"), sens);
+	gtk_widget_set_sensitive (lookup_widget (cal, "upper_time"), sens);
+    }
+}
+
+
+/* Save the default geometry of the window */
+static void cal_save_default_geometry (GtkWindow *cal)
+{
+    gint x,y;
+
+    gtk_window_get_size (cal, &x, &y);
+    prefs_set_size_cal (x, y);
+}
+
+/* Callback for 'Delete event' */
+static gboolean cal_delete_event (GtkWidget       *widget,
+				  GdkEvent        *event,
+				  gpointer         user_data)
+{
+    cal_save_default_geometry (GTK_WINDOW (user_data));
+    return FALSE;
+}
+
+/* Callback for 'Cancel button' */
+static void cal_cancel (GtkButton *button, gpointer user_data)
+{
+    cal_save_default_geometry (GTK_WINDOW (user_data));
+    gtk_widget_destroy (user_data);
+}
+
+
+/* Open a calendar window. Preset the values for instance @inst,
+   category @item (time played or time modified) */
+void cal_open_calendar (gint inst, S_item item)
+{
+    SortTab *st;
+    GtkWidget *w;
+    GtkWidget *cal;
+    gchar *str;
+    static GList *catlist = NULL;
+    gint defx, defy;
+    TimeInfo *ti;
+
+    /* Sanity */
+    if (inst >= SORT_TAB_MAX)  return;
+
+    st = sorttab[inst];
+
+    /* Sanity */
+    if (!st) return;
+
+    cal = create_calendar_window ();
+
+    /* Set to saved size */
+    prefs_get_size_cal (&defx, &defy);
+    gtk_window_set_default_size (GTK_WINDOW (cal), defx, defy);
+
+    /* Set sorttab number */
+    w = lookup_widget (cal, "sorttab_num_spin");
+    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
+			       1, SORT_TAB_MAX);
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (w), inst+1);
+
+    /* Set Category-Combo */
+    if (!catlist)
+    {   /* create list */
+	const gchar **bp = cat_strings;
+	while (*bp)   catlist = g_list_append (catlist, gettext (*bp++));
+    }
+    w = lookup_widget (cal, "cat_combo");
+    gtk_combo_set_popdown_strings (GTK_COMBO (w), catlist); 
+    /* set standard entry */
+    if (item == S_TIME_PLAYED)
+	    str = gettext (cat_strings[CAT_STRING_PLAYED]);
+    else    str = gettext (cat_strings[CAT_STRING_MODIFIED]);
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
+
+    /* set calendar */
+    ti = st_update_date_interval_from_string (inst, item, TRUE);
+    /* set the calendar if we have a valid TimeInfo */
+    if (ti)
+    {
+	if (!ti->valid)
+	{   /* set to reasonable default */
+	    ti->low = 0;
+	    ti->high = 0;
+	}
+
+	/* Lower Margin */
+	w = lookup_widget (cal, "no_lower_margin");
+	g_signal_connect (w,
+			  "toggled",
+			  G_CALLBACK (cal_no_margin_toggled),
+			  cal);
+        /* lower margin? -> set checkbox and calendar accordingly */
+	if (ti->valid && (ti->low == 0))
+	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+	else
+	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), FALSE);
+	cal_set_time (GTK_CALENDAR (lookup_widget (cal, "lower_cal")),
+		      GTK_SPIN_BUTTON (lookup_widget (cal, "lower_hours")),
+		      GTK_SPIN_BUTTON (lookup_widget (cal, "lower_minutes")),
+		      ti->low);
+
+	/* Upper Margin */
+	w = lookup_widget (cal, "no_upper_margin");
+	g_signal_connect (w,
+			  "toggled",
+			  G_CALLBACK (cal_no_margin_toggled),
+			  cal);
+        /* upper margin? -> set checkbox and calendar accordingly */
+	if (ti->valid && (ti->high == -1))
+	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+	else
+	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), FALSE);
+	cal_set_time (GTK_CALENDAR (lookup_widget (cal, "upper_cal")),
+		      GTK_SPIN_BUTTON (lookup_widget (cal, "upper_hours")),
+		      GTK_SPIN_BUTTON (lookup_widget (cal, "upper_minutes")),
+		      ti->high);
+    }
+
+    /* Connect delete-event */
+    g_signal_connect (cal, "delete_event",
+		      G_CALLBACK (cal_delete_event), cal);
+    /* Connect cancel-button */
+    g_signal_connect (lookup_widget (cal, "cal_cancel"), "clicked",
+		      G_CALLBACK (cal_cancel), cal);
+
+
+
+    gtk_widget_show (cal);
+}

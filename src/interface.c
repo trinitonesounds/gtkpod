@@ -2588,3 +2588,312 @@ create_special_sorttab (void)
   return special_sorttab;
 }
 
+GtkWidget*
+create_calendar_window (void)
+{
+  GtkWidget *calendar_window;
+  GtkWidget *scrolledwindow4;
+  GtkWidget *viewport1;
+  GtkWidget *vbox43;
+  GtkWidget *hbox29;
+  GtkWidget *label64;
+  GtkObject *sorttab_num_spin_adj;
+  GtkWidget *sorttab_num_spin;
+  GtkWidget *label65;
+  GtkWidget *label66;
+  GtkWidget *cat_combo;
+  GtkWidget *cat_entry;
+  GtkWidget *hseparator6;
+  GtkWidget *label63;
+  GtkWidget *hseparator5;
+  GtkWidget *hbox25;
+  GtkWidget *vbox44;
+  GtkWidget *label57;
+  GtkWidget *lower_cal;
+  GtkWidget *lower_time;
+  GtkWidget *label60;
+  GtkObject *lower_hours_adj;
+  GtkWidget *lower_hours;
+  GtkWidget *label59;
+  GtkObject *lower_minutes_adj;
+  GtkWidget *lower_minutes;
+  GtkWidget *hseparator3;
+  GtkWidget *no_lower_margin;
+  GtkWidget *vseparator1;
+  GtkWidget *vbox45;
+  GtkWidget *label58;
+  GtkWidget *upper_cal;
+  GtkWidget *upper_time;
+  GtkWidget *label61;
+  GtkObject *upper_hours_adj;
+  GtkWidget *upper_hours;
+  GtkWidget *label62;
+  GtkObject *upper_minutes_adj;
+  GtkWidget *upper_minutes;
+  GtkWidget *hseparator4;
+  GtkWidget *no_upper_margin;
+  GtkWidget *hseparator7;
+  GtkWidget *hbuttonbox7;
+  GtkWidget *cal_apply;
+  GtkWidget *cal_cancel;
+  GtkWidget *cal_ok;
+
+  calendar_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (calendar_window), _("Calendar"));
+  gtk_window_set_default_size (GTK_WINDOW (calendar_window), 480, 290);
+
+  scrolledwindow4 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow4);
+  gtk_container_add (GTK_CONTAINER (calendar_window), scrolledwindow4);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow4), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolledwindow4), GTK_SHADOW_ETCHED_IN);
+
+  viewport1 = gtk_viewport_new (NULL, NULL);
+  gtk_widget_show (viewport1);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow4), viewport1);
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport1), GTK_SHADOW_ETCHED_IN);
+
+  vbox43 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox43);
+  gtk_container_add (GTK_CONTAINER (viewport1), vbox43);
+
+  hbox29 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox29);
+  gtk_box_pack_start (GTK_BOX (vbox43), hbox29, FALSE, TRUE, 2);
+
+  label64 = gtk_label_new (_("Sorttab: "));
+  gtk_widget_show (label64);
+  gtk_box_pack_start (GTK_BOX (hbox29), label64, FALSE, FALSE, 3);
+  gtk_label_set_justify (GTK_LABEL (label64), GTK_JUSTIFY_LEFT);
+
+  sorttab_num_spin_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
+  sorttab_num_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sorttab_num_spin_adj), 1, 0);
+  gtk_widget_show (sorttab_num_spin);
+  gtk_box_pack_start (GTK_BOX (hbox29), sorttab_num_spin, FALSE, FALSE, 0);
+
+  label65 = gtk_label_new (_("     "));
+  gtk_widget_show (label65);
+  gtk_box_pack_start (GTK_BOX (hbox29), label65, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label65), GTK_JUSTIFY_LEFT);
+
+  label66 = gtk_label_new (_("Category: "));
+  gtk_widget_show (label66);
+  gtk_box_pack_start (GTK_BOX (hbox29), label66, FALSE, FALSE, 3);
+  gtk_label_set_justify (GTK_LABEL (label66), GTK_JUSTIFY_LEFT);
+
+  cat_combo = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (cat_combo)->popwin),
+                     "GladeParentKey", cat_combo);
+  gtk_widget_show (cat_combo);
+  gtk_box_pack_start (GTK_BOX (hbox29), cat_combo, FALSE, FALSE, 0);
+  gtk_combo_set_value_in_list (GTK_COMBO (cat_combo), TRUE, FALSE);
+
+  cat_entry = GTK_COMBO (cat_combo)->entry;
+  gtk_widget_show (cat_entry);
+
+  hseparator6 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator6);
+  gtk_box_pack_start (GTK_BOX (vbox43), hseparator6, FALSE, FALSE, 0);
+
+  label63 = gtk_label_new (_("Please specify a time interval"));
+  gtk_widget_show (label63);
+  gtk_box_pack_start (GTK_BOX (vbox43), label63, FALSE, FALSE, 3);
+  GTK_WIDGET_SET_FLAGS (label63, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label63), GTK_JUSTIFY_LEFT);
+  gtk_label_set_line_wrap (GTK_LABEL (label63), TRUE);
+  gtk_label_set_selectable (GTK_LABEL (label63), TRUE);
+
+  hseparator5 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator5);
+  gtk_box_pack_start (GTK_BOX (vbox43), hseparator5, FALSE, FALSE, 0);
+
+  hbox25 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox25);
+  gtk_box_pack_start (GTK_BOX (vbox43), hbox25, FALSE, TRUE, 0);
+
+  vbox44 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox44);
+  gtk_box_pack_start (GTK_BOX (hbox25), vbox44, TRUE, TRUE, 0);
+
+  label57 = gtk_label_new (_("Lower Margin"));
+  gtk_widget_show (label57);
+  gtk_box_pack_start (GTK_BOX (vbox44), label57, FALSE, FALSE, 2);
+  GTK_WIDGET_SET_FLAGS (label57, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label57), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label57), TRUE);
+
+  lower_cal = gtk_calendar_new ();
+  gtk_widget_show (lower_cal);
+  gtk_box_pack_start (GTK_BOX (vbox44), lower_cal, FALSE, FALSE, 0);
+  gtk_calendar_display_options (GTK_CALENDAR (lower_cal),
+                                GTK_CALENDAR_SHOW_HEADING
+                                | GTK_CALENDAR_SHOW_DAY_NAMES
+                                | GTK_CALENDAR_WEEK_START_MONDAY);
+
+  lower_time = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (lower_time);
+  gtk_box_pack_start (GTK_BOX (vbox44), lower_time, FALSE, FALSE, 1);
+
+  label60 = gtk_label_new (_("Time: "));
+  gtk_widget_show (label60);
+  gtk_box_pack_start (GTK_BOX (lower_time), label60, FALSE, FALSE, 3);
+  gtk_label_set_justify (GTK_LABEL (label60), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label60), 0.01, 0.5);
+
+  lower_hours_adj = gtk_adjustment_new (0, 0, 23, 1, 2, 10);
+  lower_hours = gtk_spin_button_new (GTK_ADJUSTMENT (lower_hours_adj), 1, 0);
+  gtk_widget_show (lower_hours);
+  gtk_box_pack_start (GTK_BOX (lower_time), lower_hours, FALSE, FALSE, 0);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (lower_hours), TRUE);
+  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (lower_hours), TRUE);
+
+  label59 = gtk_label_new (_(":"));
+  gtk_widget_show (label59);
+  gtk_box_pack_start (GTK_BOX (lower_time), label59, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label59), GTK_JUSTIFY_LEFT);
+
+  lower_minutes_adj = gtk_adjustment_new (3, 0, 59, 1, 5, 2);
+  lower_minutes = gtk_spin_button_new (GTK_ADJUSTMENT (lower_minutes_adj), 1, 0);
+  gtk_widget_show (lower_minutes);
+  gtk_box_pack_start (GTK_BOX (lower_time), lower_minutes, FALSE, FALSE, 0);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (lower_minutes), TRUE);
+  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (lower_minutes), TRUE);
+
+  hseparator3 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator3);
+  gtk_box_pack_start (GTK_BOX (vbox44), hseparator3, FALSE, FALSE, 0);
+
+  no_lower_margin = gtk_check_button_new_with_mnemonic (_("No lower margin"));
+  gtk_widget_show (no_lower_margin);
+  gtk_box_pack_start (GTK_BOX (vbox44), no_lower_margin, FALSE, FALSE, 0);
+
+  vseparator1 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator1);
+  gtk_box_pack_start (GTK_BOX (hbox25), vseparator1, FALSE, FALSE, 0);
+
+  vbox45 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox45);
+  gtk_box_pack_start (GTK_BOX (hbox25), vbox45, TRUE, TRUE, 0);
+
+  label58 = gtk_label_new (_("Upper margin"));
+  gtk_widget_show (label58);
+  gtk_box_pack_start (GTK_BOX (vbox45), label58, FALSE, FALSE, 2);
+  GTK_WIDGET_SET_FLAGS (label58, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label58), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label58), TRUE);
+
+  upper_cal = gtk_calendar_new ();
+  gtk_widget_show (upper_cal);
+  gtk_box_pack_start (GTK_BOX (vbox45), upper_cal, FALSE, FALSE, 0);
+  gtk_calendar_display_options (GTK_CALENDAR (upper_cal),
+                                GTK_CALENDAR_SHOW_HEADING
+                                | GTK_CALENDAR_SHOW_DAY_NAMES
+                                | GTK_CALENDAR_WEEK_START_MONDAY);
+
+  upper_time = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (upper_time);
+  gtk_box_pack_start (GTK_BOX (vbox45), upper_time, FALSE, FALSE, 1);
+
+  label61 = gtk_label_new (_("Time: "));
+  gtk_widget_show (label61);
+  gtk_box_pack_start (GTK_BOX (upper_time), label61, FALSE, FALSE, 3);
+  gtk_label_set_justify (GTK_LABEL (label61), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label61), 0.01, 0.5);
+
+  upper_hours_adj = gtk_adjustment_new (0, 0, 23, 1, 2, 10);
+  upper_hours = gtk_spin_button_new (GTK_ADJUSTMENT (upper_hours_adj), 1, 0);
+  gtk_widget_show (upper_hours);
+  gtk_box_pack_start (GTK_BOX (upper_time), upper_hours, FALSE, FALSE, 0);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (upper_hours), TRUE);
+  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (upper_hours), TRUE);
+
+  label62 = gtk_label_new (_(":"));
+  gtk_widget_show (label62);
+  gtk_box_pack_start (GTK_BOX (upper_time), label62, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label62), GTK_JUSTIFY_LEFT);
+
+  upper_minutes_adj = gtk_adjustment_new (3, 0, 59, 1, 5, 2);
+  upper_minutes = gtk_spin_button_new (GTK_ADJUSTMENT (upper_minutes_adj), 1, 0);
+  gtk_widget_show (upper_minutes);
+  gtk_box_pack_start (GTK_BOX (upper_time), upper_minutes, FALSE, FALSE, 0);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (upper_minutes), TRUE);
+  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (upper_minutes), TRUE);
+
+  hseparator4 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator4);
+  gtk_box_pack_start (GTK_BOX (vbox45), hseparator4, FALSE, FALSE, 0);
+
+  no_upper_margin = gtk_check_button_new_with_mnemonic (_("No upper margin"));
+  gtk_widget_show (no_upper_margin);
+  gtk_box_pack_start (GTK_BOX (vbox45), no_upper_margin, FALSE, FALSE, 0);
+
+  hseparator7 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator7);
+  gtk_box_pack_start (GTK_BOX (vbox43), hseparator7, FALSE, FALSE, 0);
+
+  hbuttonbox7 = gtk_hbutton_box_new ();
+  gtk_widget_show (hbuttonbox7);
+  gtk_box_pack_end (GTK_BOX (vbox43), hbuttonbox7, FALSE, TRUE, 2);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox7), GTK_BUTTONBOX_SPREAD);
+
+  cal_apply = gtk_button_new_from_stock ("gtk-apply");
+  gtk_widget_show (cal_apply);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox7), cal_apply);
+  GTK_WIDGET_SET_FLAGS (cal_apply, GTK_CAN_DEFAULT);
+
+  cal_cancel = gtk_button_new_from_stock ("gtk-cancel");
+  gtk_widget_show (cal_cancel);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox7), cal_cancel);
+  GTK_WIDGET_SET_FLAGS (cal_cancel, GTK_CAN_DEFAULT);
+
+  cal_ok = gtk_button_new_from_stock ("gtk-ok");
+  gtk_widget_show (cal_ok);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox7), cal_ok);
+  GTK_WIDGET_SET_FLAGS (cal_ok, GTK_CAN_DEFAULT);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (calendar_window, calendar_window, "calendar_window");
+  GLADE_HOOKUP_OBJECT (calendar_window, scrolledwindow4, "scrolledwindow4");
+  GLADE_HOOKUP_OBJECT (calendar_window, viewport1, "viewport1");
+  GLADE_HOOKUP_OBJECT (calendar_window, vbox43, "vbox43");
+  GLADE_HOOKUP_OBJECT (calendar_window, hbox29, "hbox29");
+  GLADE_HOOKUP_OBJECT (calendar_window, label64, "label64");
+  GLADE_HOOKUP_OBJECT (calendar_window, sorttab_num_spin, "sorttab_num_spin");
+  GLADE_HOOKUP_OBJECT (calendar_window, label65, "label65");
+  GLADE_HOOKUP_OBJECT (calendar_window, label66, "label66");
+  GLADE_HOOKUP_OBJECT (calendar_window, cat_combo, "cat_combo");
+  GLADE_HOOKUP_OBJECT (calendar_window, cat_entry, "cat_entry");
+  GLADE_HOOKUP_OBJECT (calendar_window, hseparator6, "hseparator6");
+  GLADE_HOOKUP_OBJECT (calendar_window, label63, "label63");
+  GLADE_HOOKUP_OBJECT (calendar_window, hseparator5, "hseparator5");
+  GLADE_HOOKUP_OBJECT (calendar_window, hbox25, "hbox25");
+  GLADE_HOOKUP_OBJECT (calendar_window, vbox44, "vbox44");
+  GLADE_HOOKUP_OBJECT (calendar_window, label57, "label57");
+  GLADE_HOOKUP_OBJECT (calendar_window, lower_cal, "lower_cal");
+  GLADE_HOOKUP_OBJECT (calendar_window, lower_time, "lower_time");
+  GLADE_HOOKUP_OBJECT (calendar_window, label60, "label60");
+  GLADE_HOOKUP_OBJECT (calendar_window, lower_hours, "lower_hours");
+  GLADE_HOOKUP_OBJECT (calendar_window, label59, "label59");
+  GLADE_HOOKUP_OBJECT (calendar_window, lower_minutes, "lower_minutes");
+  GLADE_HOOKUP_OBJECT (calendar_window, hseparator3, "hseparator3");
+  GLADE_HOOKUP_OBJECT (calendar_window, no_lower_margin, "no_lower_margin");
+  GLADE_HOOKUP_OBJECT (calendar_window, vseparator1, "vseparator1");
+  GLADE_HOOKUP_OBJECT (calendar_window, vbox45, "vbox45");
+  GLADE_HOOKUP_OBJECT (calendar_window, label58, "label58");
+  GLADE_HOOKUP_OBJECT (calendar_window, upper_cal, "upper_cal");
+  GLADE_HOOKUP_OBJECT (calendar_window, upper_time, "upper_time");
+  GLADE_HOOKUP_OBJECT (calendar_window, label61, "label61");
+  GLADE_HOOKUP_OBJECT (calendar_window, upper_hours, "upper_hours");
+  GLADE_HOOKUP_OBJECT (calendar_window, label62, "label62");
+  GLADE_HOOKUP_OBJECT (calendar_window, upper_minutes, "upper_minutes");
+  GLADE_HOOKUP_OBJECT (calendar_window, hseparator4, "hseparator4");
+  GLADE_HOOKUP_OBJECT (calendar_window, no_upper_margin, "no_upper_margin");
+  GLADE_HOOKUP_OBJECT (calendar_window, hseparator7, "hseparator7");
+  GLADE_HOOKUP_OBJECT (calendar_window, hbuttonbox7, "hbuttonbox7");
+  GLADE_HOOKUP_OBJECT (calendar_window, cal_apply, "cal_apply");
+  GLADE_HOOKUP_OBJECT (calendar_window, cal_cancel, "cal_cancel");
+  GLADE_HOOKUP_OBJECT (calendar_window, cal_ok, "cal_ok");
+
+  return calendar_window;
+}
+
