@@ -449,6 +449,8 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 \*------------------------------------------------------------------*/
 
 
+/* reads info from file and updates the ID3 tags of
+   @selected_songids. */
 void update_selected_songids (GList *selected_songids)
 {
     GList *gl_id;
@@ -473,11 +475,10 @@ void update_selected_songids (GList *selected_songids)
 	data_changed ();
     }
     release_widgets ();
-    g_list_free (selected_songids);
     /* display log of non-updated songs */
     display_non_updated (NULL, NULL);
-    /* clear log of updated songs */
-    display_updated ((void *)-1, NULL);
+    /* display log of updated songs */
+    display_updated (NULL, NULL);
     /* display log of detected duplicates */
     remove_duplicate (NULL, NULL);
     gtkpod_statusbar_message(_("Updated selected songs with info from file."));
@@ -492,6 +493,7 @@ void update_selected_songs (void)
      * possible that a song gets removed during the process */
     selected_songids = sm_get_selected_songids();
     update_selected_songids (selected_songids);
+    g_list_free (selected_songids);
 }
 
 
@@ -517,6 +519,7 @@ void update_selected_entry (gint inst)
 					      (gpointer)song->ipod_id);
     }
     update_selected_songids (selected_songids);
+    g_list_free (selected_songids);
 }
 
 
@@ -540,6 +543,7 @@ void update_selected_playlist (void)
 					      (gpointer)song->ipod_id);
     }
     update_selected_songids (selected_songids);
+    g_list_free (selected_songids);
 }
 
 
@@ -672,8 +676,8 @@ void display_updated (Song *song, gchar *txt)
    exists.
    Returns TRUE if the data could be updated, FALSE otherwise. A list
    of non-updated songs can be displayed by calling
-   display_non_updated (NULL). This list can be deleted by
-   calling display_non_updated ((void *)-1);
+   display_non_updated (NULL, NULL). This list can be deleted by
+   calling display_non_updated ((void *)-1, NULL);
    It is also possible that duplicates get detected in the process --
    a list of those can be displayed by calling "remove_duplicate
    (NULL, NULL)", that list can be deleted by calling
@@ -854,8 +858,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem,
 gboolean write_tags_to_file (Song *song, S_item tag_id)
 {
     File_Tag *filetag;
-    gint i, len;
-    gchar *ipod_file, *ipod_fullpath, track[20];
+    gchar *ipod_fullpath, track[20];
     Song *oldsong;
 
     filetag = g_malloc0 (sizeof (File_Tag));
@@ -888,20 +891,12 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 	(g_utf8_strlen (song->ipod_path, -1) > 0))
       {
 	/* need to get ipod filename */
-	ipod_file = g_locale_from_utf8 (song->ipod_path, -1, NULL, NULL, NULL);
-	/* FIXME? locale might be utf8 again, but filename should always be
-	   "US-ASCII", so we could just forget about utf8_to_locale() */
-	len = strlen (ipod_file);
-	for (i=0; i<len; ++i)     /* replace ':' by '/' */
-	  if (ipod_file[i] == ':')  ipod_file[i] = '/';
-	/* ipod_file+1: ipod_file always starts with ":", i.e. "/" */
-	ipod_fullpath = concat_dir (cfg->ipod_mount, ipod_file+1);
+	ipod_fullpath = get_song_name_on_ipod (song);
 	if (Id3tag_Write_File_Tag (ipod_fullpath, filetag) == FALSE)
 	  {
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    ipod_fullpath);
 	  }
-	g_free (ipod_file);
 	g_free (ipod_fullpath);
       }
     /* remove song from md5 hash and reinsert it (hash value has changed!) */
@@ -1244,29 +1239,27 @@ gchar* get_song_name_on_disk(Song *s)
     return(result);
 }
 
-/* same as get_song_name_on_disk(), but only return a valid path to a
-   song on the ipod. Must be g_free'd. */
+
+/* Return the full iPod filename as stored in @s.
+   @s: song
+   Return value: full filename to @s on the iPod or NULL if no
+   filename is set in @s. NOTE: the file does not necessarily
+   exist. NOTE: the in itunesdb.c code works around a problem on some
+   systems (see below) and might return a filename with different case
+   than the original filename. Don't copy it back to @s */
 gchar *get_song_name_on_ipod (Song *s)
 {
     gchar *result = NULL;
 
-    if(s)
+    if(s &&  !prefs_get_offline ())
     {
-	if(!prefs_get_offline () &&
-	   s->ipod_path &&
-	   (strlen(s->ipod_path) > 0))
-	{
-	    guint i = 0, size = 0;
-	    gchar *buf = g_strdup (s->ipod_path);
-	    size = strlen(buf);
-	    for(i = 0; i < size; i++)
-		if(buf[i] == ':') buf[i] = '/';
-	    result = concat_dir(cfg->ipod_mount, buf);
-	    g_free (buf);
-	}
+	gchar *path = prefs_get_ipod_mount ();
+	result = itunesdb_get_song_name_on_ipod (path, s);
+	C_FREE (path);
     }
     return(result);
 }
+
 
 
 /**
