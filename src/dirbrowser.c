@@ -29,6 +29,7 @@
 #  include <config.h>
 #endif
 
+#include "misc.h"
 #include "support.h"
 #include "prefs.h"
 #include "song.h"
