@@ -1,6 +1,6 @@
-/* Time-stamp: <2005-01-08 00:44:36 jcs>
+/* Time-stamp: <2005-03-07 23:08:57 jcs>
 |
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://gtkpod.sourceforge.net/
@@ -500,11 +500,16 @@ static void splr_entry_changed (GtkEditable *editable,
     type = (enum entrytype)g_object_get_data (
 	G_OBJECT (editable), "spl_entrytype");
     g_return_if_fail (type != 0);
+
     str = gtk_editable_get_chars (editable, 0, -1);
     switch (type)
     {
     case spl_ET_FROMVALUE:
 	splr->fromvalue = atol (str);
+	if (splr->field == SPLFIELD_RATING)
+	{
+	    splr->fromvalue *= RATING_STEP;
+	}
 	break;
     case spl_ET_FROMVALUE_DATE:
 	t = time_string_to_fromtime (str);
@@ -516,6 +521,10 @@ static void splr_entry_changed (GtkEditable *editable,
 	break;
     case spl_ET_TOVALUE:
 	splr->tovalue = atol (str);
+	if (splr->field == SPLFIELD_RATING)
+	{
+	    splr->tovalue *= RATING_STEP;
+	}
 	break;
     case spl_ET_TOVALUE_DATE:
 	t = time_string_to_totime (str);
@@ -814,16 +823,22 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
 			       enum entrytype et)
 {
     gchar *strp = str;
+    gint stepsize = 1; /* for FROMVALUE/TOVALUE (20 for rating) */
 
     g_return_val_if_fail (str, NULL);
     g_return_val_if_fail (splr, NULL);
+
+    if (splr->field == SPLFIELD_RATING)
+    {
+	stepsize = RATING_STEP;
+    }
 
     switch (et)
     {
     case spl_ET_FROMVALUE:
 	if (splr->fromvalue == SPLDATE_IDENTIFIER)
 	    splr->fromvalue = 0;
-	snprintf (str, WNLEN, "%lld", splr->fromvalue);
+	snprintf (str, WNLEN, "%lld", splr->fromvalue / stepsize);
 	break;
     case spl_ET_FROMVALUE_DATE:
 	if (splr->fromvalue == SPLDATE_IDENTIFIER)
@@ -836,7 +851,7 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
     case spl_ET_TOVALUE:
 	if (splr->tovalue == SPLDATE_IDENTIFIER)
 	    splr->tovalue = 0;
-	snprintf (str, WNLEN, "%lld", splr->tovalue);
+	snprintf (str, WNLEN, "%lld", splr->tovalue / stepsize);
 	break;
     case spl_ET_TOVALUE_DATE:
 	if (splr->tovalue == SPLDATE_IDENTIFIER)

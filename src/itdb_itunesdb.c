@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-13 21:42:05 jcs>
+/* Time-stamp: <2005-03-02 17:53:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -118,6 +118,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <stdio.h>
 #include "itdb_private.h"
 #include "support.h"
 
