@@ -45,6 +45,26 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+/* Macro to attach menu items to your context menu */
+/* @_m - the GtkMenu we're attaching to
+ * @_mi - a GtkWidget we're gonna hook into the menu
+ * @_str - a gchar* with the menu label
+ * @_func - the callback for when the item is selected
+ */
+#define HOOKUP(_m, _mi, _str, _func) { \
+    _mi = gtk_menu_item_new_with_label(_str); \
+    gtk_widget_show(_mi); \
+    gtk_widget_set_sensitive(_mi, TRUE); \
+    g_signal_connect(G_OBJECT(_mi), "activate", G_CALLBACK(_func), NULL); \
+    gtk_menu_append(_m, _mi); \
+}
+
+static guint entry_inst = -1;
+static GtkWidget *menu = NULL;
+static GList *selected_songs = NULL;
+static Playlist *selected_playlist = NULL;
+static TabEntry *selected_entry = NULL; 
+
 /**
  * which - run the shell command which, useful for querying default values
  * for executable, 
@@ -72,25 +92,6 @@ which(const gchar *exe)
     return(result);
 }
 
-/* Macro to attach menu items to your context menu */
-/* @_m - the GtkMenu we're attaching to
- * @_mi - a GtkWidget we're gonna hook into the menu
- * @_str - a gchar* with the menu label
- * @_func - the callback for when the item is selected
- */
-#define HOOKUP(_m, _mi, _str, _func) { \
-    _mi = gtk_menu_item_new_with_label(_str); \
-    gtk_widget_show(_mi); \
-    gtk_widget_set_sensitive(_mi, TRUE); \
-    g_signal_connect(G_OBJECT(_mi), "activate", G_CALLBACK(_func), NULL); \
-    gtk_menu_append(_m, _mi); \
-}
-
-static guint entry_inst = -1;
-static GtkWidget *menu = NULL;
-static GList *selected_songs = NULL;
-static Playlist *selected_playlist = NULL;
-static TabEntry *selected_entry = NULL; 
 /**
  * export_entries - export the currently selected files to disk
  * @mi - the menu item selected
@@ -99,9 +100,7 @@ static TabEntry *selected_entry = NULL;
 static void 
 export_entries(GtkWidget *w, gpointer data)
 {
-    if(selected_playlist)
-	file_export_init(selected_playlist->members);
-    else if(selected_songs)
+    if(selected_songs)
 	file_export_init(selected_songs);
 }
 
@@ -130,8 +129,6 @@ do_command_on_entries (gchar *command, gchar *what)
     gchar *str, *commandc, *next;
     gboolean percs = FALSE; /* did "%s" already appear? */
     GPtrArray *args;
-
-    if(selected_playlist) selected_songs = selected_playlist->members;
 
     if ((!command) || (strlen (command) == 0))
     {
@@ -254,7 +251,7 @@ play_entries_enqueue (GtkMenuItem *mi, gpointer data)
 static void 
 update_entries(GtkMenuItem *mi, gpointer data)
 {
-    if(selected_playlist)
+    if (selected_playlist)
 	update_selected_playlist();
     else if(selected_entry)
 	update_selected_entry(entry_inst);
@@ -271,7 +268,7 @@ update_entries(GtkMenuItem *mi, gpointer data)
 static void 
 delete_entries(GtkMenuItem *mi, gpointer data)
 {
-    if(selected_playlist)
+    if (selected_playlist)
 	delete_playlist_head();
     else if(selected_entry)
 	delete_entry_head(entry_inst);
@@ -308,8 +305,12 @@ sm_context_menu_init(void)
     selected_entry = NULL; 
     selected_playlist = NULL;
     entry_inst = -1;
-    if((selected_songs = get_currently_selected_songs()))
+    if (selected_songs)  g_list_free (selected_songs);
+    selected_songs = get_currently_selected_songs();
+    if(selected_songs)
+    {
 	create_sm_menu();
+    }
 }
 /**
  * pm_context_menu_init - initialize the right click menu for playlists 
@@ -317,12 +318,16 @@ sm_context_menu_init(void)
 void
 pm_context_menu_init(void)
 {
+    if (selected_songs)  g_list_free (selected_songs);
     selected_songs = NULL;
-    selected_entry = NULL; 
+    selected_entry = NULL;
     entry_inst = -1;
-    if((selected_playlist = get_currently_selected_playlist()) && 
-	    (selected_playlist->type != PL_TYPE_MPL))
+    selected_playlist = get_currently_selected_playlist();
+    if(selected_playlist)
+    {
+	selected_songs = g_list_copy (selected_playlist->members);
 	create_sm_menu();
+    }
 }
 /**
  * st_context_menu_init - initialize the right click menu for sort tabs 
@@ -331,13 +336,14 @@ pm_context_menu_init(void)
 void
 st_context_menu_init(gint inst)
 {
+    if (selected_songs)  g_list_free (selected_songs);
     selected_songs = NULL;
     selected_playlist = NULL;
-    selected_entry = NULL;
-    if((selected_entry = st_get_selected_entry(inst)))
+    selected_entry = st_get_selected_entry(inst);
+    if(selected_entry)
     {
 	entry_inst = inst;
-	selected_songs = selected_entry->members;
+	selected_songs = g_list_copy (selected_entry->members);
 	create_sm_menu();
     }
 }
