@@ -13,6 +13,7 @@
   <property name="default_height">500</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gtkpod-icon-48.png</property>
   <signal name="delete_event" handler="on_gtkpod_delete_event" last_modification_time="Sun, 24 Nov 2002 13:00:13 GMT"/>
 
   <child>
@@ -1304,6 +1305,7 @@
   <property name="default_height">450</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gtkpod-icon-48.png</property>
   <signal name="delete_event" handler="on_about_window_close" last_modification_time="Sat, 30 Nov 2002 16:10:01 GMT"/>
 
   <child>
@@ -1319,7 +1321,19 @@
 	  <property name="spacing">0</property>
 
 	  <child>
-	    <placeholder/>
+	    <widget class="GtkImage" id="logo_image">
+	      <property name="visible">True</property>
+	      <property name="pixbuf">gtkpod-logo.png</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xpad">0</property>
+	      <property name="ypad">0</property>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">True</property>
+	      <property name="fill">True</property>
+	    </packing>
 	  </child>
 
 	  <child>
@@ -1510,6 +1524,7 @@
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gtkpod-icon-48.png</property>
 
   <child>
     <widget class="GtkVBox" id="vbox6">
@@ -1698,6 +1713,7 @@
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gtkpod-icon-48.png</property>
   <signal name="delete_event" handler="on_prefs_window_delete_event" last_modification_time="Fri, 14 Mar 2003 12:37:31 GMT"/>
 
   <child>
@@ -5082,6 +5098,7 @@
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gtkpod-icon-48.png</property>
 
   <child>
     <widget class="GtkViewport" id="special_viewport">
@@ -5768,6 +5785,7 @@
   <property name="default_height">290</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gtkpod-icon-48.png</property>
 
   <child>
     <widget class="GtkScrolledWindow" id="scrolledwindow4">
@@ -6450,6 +6468,7 @@
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gtkpod-icon-48.png</property>
   <signal name="delete_event" handler="on_sort_window_delete_event" last_modification_time="Mon, 22 Sep 2003 11:54:32 GMT"/>
 
   <child>
@@ -7755,6 +7774,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gtkpod-icon-48.png</property>
 
   <child>
     <widget class="GtkVBox" id="vbox56">

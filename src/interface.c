@@ -30,6 +30,7 @@ GtkWidget*
 create_gtkpod (void)
 {
   GtkWidget *gtkpod;
+  GdkPixbuf *gtkpod_icon_pixbuf;
   GtkWidget *vbox1;
   GtkWidget *menubar;
   GtkWidget *menuitem10;
@@ -178,6 +179,12 @@ create_gtkpod (void)
   gtkpod = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (gtkpod), _("gtkpod"));
   gtk_window_set_default_size (GTK_WINDOW (gtkpod), 600, 500);
+  gtkpod_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
+  if (gtkpod_icon_pixbuf)
+    {
+      gtk_window_set_icon (GTK_WINDOW (gtkpod), gtkpod_icon_pixbuf);
+      gdk_pixbuf_unref (gtkpod_icon_pixbuf);
+    }
 
   vbox1 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox1);
@@ -1153,8 +1160,10 @@ GtkWidget*
 create_gtkpod_about_window (void)
 {
   GtkWidget *gtkpod_about_window;
+  GdkPixbuf *gtkpod_about_window_icon_pixbuf;
   GtkWidget *vbox2;
   GtkWidget *about_top_box;
+  GtkWidget *logo_image;
   GtkWidget *about_label;
   GtkWidget *notebook1;
   GtkWidget *scrolledwindow2;
@@ -1170,6 +1179,12 @@ create_gtkpod_about_window (void)
   gtk_widget_set_size_request (gtkpod_about_window, 350, 0);
   gtk_window_set_title (GTK_WINDOW (gtkpod_about_window), _("About gtkpod"));
   gtk_window_set_default_size (GTK_WINDOW (gtkpod_about_window), 450, 450);
+  gtkpod_about_window_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
+  if (gtkpod_about_window_icon_pixbuf)
+    {
+      gtk_window_set_icon (GTK_WINDOW (gtkpod_about_window), gtkpod_about_window_icon_pixbuf);
+      gdk_pixbuf_unref (gtkpod_about_window_icon_pixbuf);
+    }
 
   vbox2 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox2);
@@ -1178,6 +1193,10 @@ create_gtkpod_about_window (void)
   about_top_box = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (about_top_box);
   gtk_box_pack_start (GTK_BOX (vbox2), about_top_box, FALSE, FALSE, 0);
+
+  logo_image = create_pixmap (gtkpod_about_window, "gtkpod-logo.png");
+  gtk_widget_show (logo_image);
+  gtk_box_pack_start (GTK_BOX (about_top_box), logo_image, TRUE, TRUE, 0);
 
   about_label = gtk_label_new ("");
   gtk_widget_show (about_label);
@@ -1242,6 +1261,7 @@ create_gtkpod_about_window (void)
   GLADE_HOOKUP_OBJECT_NO_REF (gtkpod_about_window, gtkpod_about_window, "gtkpod_about_window");
   GLADE_HOOKUP_OBJECT (gtkpod_about_window, vbox2, "vbox2");
   GLADE_HOOKUP_OBJECT (gtkpod_about_window, about_top_box, "about_top_box");
+  GLADE_HOOKUP_OBJECT (gtkpod_about_window, logo_image, "logo_image");
   GLADE_HOOKUP_OBJECT (gtkpod_about_window, about_label, "about_label");
   GLADE_HOOKUP_OBJECT (gtkpod_about_window, notebook1, "notebook1");
   GLADE_HOOKUP_OBJECT (gtkpod_about_window, scrolledwindow2, "scrolledwindow2");
@@ -1260,6 +1280,7 @@ GtkWidget*
 create_confirm_window (void)
 {
   GtkWidget *confirm_window;
+  GdkPixbuf *confirm_window_icon_pixbuf;
   GtkWidget *vbox6;
   GtkWidget *label;
   GtkWidget *vbox7;
@@ -1276,6 +1297,12 @@ create_confirm_window (void)
   confirm_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_container_set_border_width (GTK_CONTAINER (confirm_window), 6);
   gtk_window_set_title (GTK_WINDOW (confirm_window), _("window1"));
+  confirm_window_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
+  if (confirm_window_icon_pixbuf)
+    {
+      gtk_window_set_icon (GTK_WINDOW (confirm_window), confirm_window_icon_pixbuf);
+      gdk_pixbuf_unref (confirm_window_icon_pixbuf);
+    }
 
   vbox6 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox6);
@@ -1360,6 +1387,7 @@ GtkWidget*
 create_prefs_window (void)
 {
   GtkWidget *prefs_window;
+  GdkPixbuf *prefs_window_icon_pixbuf;
   GtkWidget *vbox13;
   GtkWidget *notebook;
   GtkWidget *scrolledwindow5;
@@ -1562,6 +1590,12 @@ create_prefs_window (void)
   prefs_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_size_request (prefs_window, -1, 480);
   gtk_window_set_title (GTK_WINDOW (prefs_window), _("Preferences"));
+  prefs_window_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
+  if (prefs_window_icon_pixbuf)
+    {
+      gtk_window_set_icon (GTK_WINDOW (prefs_window), prefs_window_icon_pixbuf);
+      gdk_pixbuf_unref (prefs_window_icon_pixbuf);
+    }
 
   vbox13 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox13);
@@ -2941,6 +2975,7 @@ GtkWidget*
 create_special_sorttab (void)
 {
   GtkWidget *special_sorttab;
+  GdkPixbuf *special_sorttab_icon_pixbuf;
   GtkWidget *special_viewport;
   GtkWidget *vbox37;
   GtkWidget *hbox20;
@@ -2990,6 +3025,12 @@ create_special_sorttab (void)
 
   special_sorttab = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (special_sorttab), _("Special"));
+  special_sorttab_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
+  if (special_sorttab_icon_pixbuf)
+    {
+      gtk_window_set_icon (GTK_WINDOW (special_sorttab), special_sorttab_icon_pixbuf);
+      gdk_pixbuf_unref (special_sorttab_icon_pixbuf);
+    }
 
   special_viewport = gtk_viewport_new (NULL, NULL);
   gtk_widget_show (special_viewport);
@@ -3240,6 +3281,7 @@ GtkWidget*
 create_calendar_window (void)
 {
   GtkWidget *calendar_window;
+  GdkPixbuf *calendar_window_icon_pixbuf;
   GtkWidget *scrolledwindow4;
   GtkWidget *viewport1;
   GtkWidget *vbox43;
@@ -3293,6 +3335,12 @@ create_calendar_window (void)
   calendar_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (calendar_window), _("Calendar"));
   gtk_window_set_default_size (GTK_WINDOW (calendar_window), 480, 290);
+  calendar_window_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
+  if (calendar_window_icon_pixbuf)
+    {
+      gtk_window_set_icon (GTK_WINDOW (calendar_window), calendar_window_icon_pixbuf);
+      gdk_pixbuf_unref (calendar_window_icon_pixbuf);
+    }
 
   scrolledwindow4 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow4);
@@ -3573,6 +3621,7 @@ GtkWidget*
 create_sort_window (void)
 {
   GtkWidget *sort_window;
+  GdkPixbuf *sort_window_icon_pixbuf;
   GtkWidget *vbox52;
   GtkWidget *frame26;
   GtkWidget *vbox53;
@@ -3660,6 +3709,12 @@ create_sort_window (void)
 
   sort_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (sort_window), _("Sorting Options"));
+  sort_window_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
+  if (sort_window_icon_pixbuf)
+    {
+      gtk_window_set_icon (GTK_WINDOW (sort_window), sort_window_icon_pixbuf);
+      gdk_pixbuf_unref (sort_window_icon_pixbuf);
+    }
 
   vbox52 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox52);
@@ -4261,6 +4316,7 @@ GtkWidget*
 create_gtkpod_info (void)
 {
   GtkWidget *gtkpod_info;
+  GdkPixbuf *gtkpod_info_icon_pixbuf;
   GtkWidget *vbox56;
   GtkWidget *scrolledwindow10;
   GtkWidget *viewport7;
@@ -4322,6 +4378,12 @@ create_gtkpod_info (void)
 
   gtkpod_info = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (gtkpod_info), _("gtkpod Info"));
+  gtkpod_info_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
+  if (gtkpod_info_icon_pixbuf)
+    {
+      gtk_window_set_icon (GTK_WINDOW (gtkpod_info), gtkpod_info_icon_pixbuf);
+      gdk_pixbuf_unref (gtkpod_info_icon_pixbuf);
+    }
 
   vbox56 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox56);
