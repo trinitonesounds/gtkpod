@@ -1339,7 +1339,7 @@ create_new_prefs_window (void)
   gtk_widget_show (vbox19);
   gtk_box_pack_start (GTK_BOX (hbox10), vbox19, TRUE, TRUE, 0);
 
-  tag_autoset0 = gtk_check_button_new_with_mnemonic (_("Album"));
+  tag_autoset0 = gtk_check_button_new_with_mnemonic (_("Title"));
   gtk_widget_show (tag_autoset0);
   gtk_box_pack_start (GTK_BOX (vbox19), tag_autoset0, FALSE, FALSE, 0);
 
