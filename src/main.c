@@ -81,7 +81,7 @@ main (int argc, char *argv[])
   gtk_widget_show (gtkpod_window);
 
   if(prefs_get_automount())      mount_ipod();
-  if(prefs_get_auto_import())    handle_import();
+  if(prefs_get_autoimport())     handle_import();
 
   server_setup ();   /* start server to accept playcount updates */
 

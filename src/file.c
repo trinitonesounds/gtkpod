@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 23:40:19 JST jcs>
+/* Time-stamp: <2004-03-22 22:45:28 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1492,7 +1492,7 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
   C_FREE (basename);
 
   /* Check if there exists already a track with the same filename */
-  oldtrack = get_track_by_local_filename (name);
+  oldtrack = get_track_by_filename (name);
   /* If a track already exists in the database, either update it or
      just add it to the current playlist (if it doesn't already exist) */
   if (oldtrack)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 23:34:24 JST jcs>
+/* Time-stamp: <2004-03-22 22:42:31 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -132,7 +132,7 @@ Track *it_get_track_by_nr (guint32 n);
 Track *get_next_track (gint i);
 Track *get_track_by_nr (guint32 n);
 Track *get_track_by_id (guint32 id);
-Track *get_track_by_local_filename (gchar *name);
+Track *get_track_by_filename (gchar *name);
 void remove_track_from_ipod (Track *track);
 void hash_tracks(void);
 void remove_duplicate (Track *oldtrack, Track *track);
@@ -145,4 +145,5 @@ gunichar2 *track_get_item_utf16 (Track *track, T_item t_item);
 guint32 *track_get_timestamp_ptr (Track *track, T_item t_item);
 guint32 track_get_timestamp (Track *track, T_item t_item);
 gboolean track_is_valid (Track *track);
+gboolean track_increase_playcount (gchar *file, gint num);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 23:34:25 JST jcs>
+/* Time-stamp: <2004-03-22 23:05:26 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -40,6 +40,7 @@
 #include "md5.h"
 #include "confirmation.h"
 #include "file.h"
+#include "itunesdb.h"
 
 /* List with all the tracks */
 GList *tracks = NULL;
@@ -288,19 +289,41 @@ Track *get_track_by_id (guint32 id)
 }
 
 
-/* Returns the track with the local filename @name or NULL, if none can
- * be found. */
-Track *get_track_by_local_filename (gchar *name)
+/* Returns the track with the filename @name or NULL, if none can be
+ * found. This function also works if @name is on the iPod. */
+Track *get_track_by_filename (gchar *filename)
 {
-  GList *l;
+  if (!filename) return NULL;
 
-  if (!name) return NULL;
-
-  for (l=tracks; l; l=l->next)
-  {
-      Track *track = (Track *)l->data;
-      if (track->pc_path_locale)
-	  if (strcmp (track->pc_path_locale, name) == 0) return track;
+  if (strncmp (filename, prefs_get_ipod_mount (),
+	       strlen (prefs_get_ipod_mount ())) == 0)
+  {   /* handle track on iPod */
+      GList *l;
+      for (l=tracks; l; l=l->next)
+      {
+	  Track *track = (Track *)l->data;
+	  gchar *ipod_path = itunesdb_get_track_name_on_ipod (
+	      prefs_get_ipod_mount (), track);
+	  if (ipod_path)
+	  {
+	      if (strcmp (ipod_path, filename) == 0)
+	      {
+		  g_free (ipod_path);
+		  return track;
+	      }
+	      g_free (ipod_path);
+	  }
+      }
+  }
+  else
+  {   /* handle track on local filesystem */
+      GList *l;
+      for (l=tracks; l; l=l->next)
+      {
+	  Track *track = (Track *)l->data;
+	  if (track->pc_path_locale)
+	      if (strcmp (track->pc_path_locale, filename) == 0) return track;
+      }
   }
   return NULL;
 }
@@ -713,6 +736,31 @@ guint32 track_get_timestamp (Track *track, T_item t_item)
     if (ptr)  return *ptr;
     else      return 0;
 }
+
+
+/* Increase playcount of filename <file> by <num>. If md5 is activated,
+   use md5 to find the track. Otherwise use the filename
+   Return value:
+   TRUE: OK
+   FALSE: file could not be found. */
+gboolean track_increase_playcount (gchar *file, gint num)
+{
+    gboolean result = FALSE;
+    Track *track = NULL;
+
+    track = md5_file_exists (file);
+    if (!track)	  track = get_track_by_filename (file);
+    if (track)
+    {
+	track->playcount += num;
+	data_changed ();
+	pm_track_changed (track);
+	result = TRUE;
+    }
+    return result;
+}
+
+
 
 
 /* ------------------------------------------------------------------- */

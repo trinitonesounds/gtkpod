@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-04 23:48:07 JST jcs>
+/* Time-stamp: <2004-03-22 22:42:29 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1509,9 +1509,10 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
 }
 
 
-/* Return the full iPod filename as stored in @trac.
-   @s: track
+/* Return the full iPod filename as stored in @track. Return value
+   must be g_free()d after use.
    @path: mount point of the iPod file system
+   @track: track
    Return value: full filename to @track on the iPod or NULL if no
    filename is set in @track. NOTE: the file does not necessarily
    exist. NOTE: this code works around a problem on some systems (see

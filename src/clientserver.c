@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 23:50:22 JST jcs>
+/* Time-stamp: <2004-03-22 22:22:32 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -137,34 +137,6 @@ static gboolean register_playcount (gchar *file)
 }
 
 
-/* Increase playcount of filename <file> by <num>. If md5 is activated,
-   use md5 to find the track. Otherwise use the filename
-   Return value:
-   TRUE: OK
-   FALSE: file could not be found. */
-static gboolean increase_playcount (gchar *file, gint num)
-{
-    gboolean result = FALSE;
-    Track *track = NULL;
-
-    track = md5_file_exists (file);
-    if (!track)
-	track = get_track_by_local_filename (file);
-    printf ("%p\n", track);
-    {
-	/* FIXME: the following call doesn't exist yet */
-/* 	track = get_track_by_ipod_filename (file); */
-    }
-    if (track)
-    {
-	track->playcount += num;
-	pm_track_changed (track);
-	result = TRUE;
-    }
-    return result;
-}
-
-
 void received_message (gpointer data, gint source, GdkInputCondition condition)
 {
     gint csock, rval;
@@ -195,7 +167,7 @@ void received_message (gpointer data, gint source, GdkInputCondition condition)
 		if (strncmp (buf, SOCKET_PLYC, strlen (SOCKET_PLYC)) == 0)
 		{
 		    gchar *file = buf + strlen (SOCKET_PLYC);
-		    if (increase_playcount (file, 1) == FALSE)
+		    if (track_increase_playcount (file, 1) == FALSE)
 		    {   /* didn't find the track --> write to
 			   offline_playcount */
 			register_playcount (file);

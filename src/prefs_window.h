@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 12:51:23 JST jcs>
+/* Time-stamp: <2004-03-22 22:56:52 JST jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -60,7 +60,7 @@ void prefs_window_set_write_extended_info (gboolean active);
 void prefs_window_set_delete_track_ipod (gboolean val);
 void prefs_window_set_delete_track_playlist (gboolean val);
 void prefs_window_set_sync_remove_confirm (gboolean val);
-void prefs_window_set_auto_import (gboolean val);
+void prefs_window_set_autoimport (gboolean val);
 void prefs_window_set_charset (gchar *charset);
 void prefs_window_set_mpl_autoselect (gboolean autoselect);
 void prefs_window_set_show_duplicates (gboolean val);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 12:51:24 JST jcs>
+/* Time-stamp: <2004-03-22 22:56:52 JST jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -569,7 +569,7 @@ prefs_window_set(void)
 	tm_store_col_order ();
 	prefs_set_id3_write(tmpcfg->id3_write);
 	prefs_set_id3_write_id3v24(tmpcfg->id3_write_id3v24);
-	prefs_set_mount_point(tmpcfg->ipod_mount);
+	prefs_set_ipod_mount(tmpcfg->ipod_mount);
 	prefs_set_play_now_path(tmpcfg->play_now_path);
 	prefs_set_play_enqueue_path(tmpcfg->play_enqueue_path);
 	prefs_set_mp3gain_path(tmpcfg->mp3gain_path);
@@ -577,7 +577,7 @@ prefs_window_set(void)
 	prefs_set_sync_calendar_path(tmpcfg->sync_calendar_path);
 	prefs_set_time_format(tmpcfg->time_format);
 	prefs_set_charset(tmpcfg->charset);
-	prefs_set_auto_import(tmpcfg->autoimport);
+	prefs_set_autoimport(tmpcfg->autoimport);
 	for (i=0; i<SORT_TAB_MAX; ++i) {
 	    prefs_set_st_autoselect (i, tmpcfg->st[i].autoselect);
 	    prefs_set_st_category (i, tmpcfg->st[i].category);
@@ -925,7 +925,7 @@ prefs_window_set_sync_remove_confirm(gboolean val)
 }
 
 void
-prefs_window_set_auto_import(gboolean val)
+prefs_window_set_autoimport(gboolean val)
 {
     tmpcfg->autoimport = val;
 }

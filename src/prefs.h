@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 12:51:22 JST jcs>
+/* Time-stamp: <2004-03-22 22:56:53 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -167,7 +167,7 @@ void write_prefs (void);
 void discard_prefs (void);
 struct cfg* clone_prefs(void);
 struct sortcfg* clone_sortprefs(void);
-void prefs_set_mount_point(const gchar *mp);
+void prefs_set_ipod_mount(const gchar *mp);
 gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[]);
 
 void prefs_set_offline(gboolean active);
@@ -179,7 +179,7 @@ void prefs_set_tm_autostore (gboolean active);
 void prefs_set_pm_autostore (gboolean active);
 void prefs_set_keep_backups(gboolean active);
 void prefs_set_write_extended_info(gboolean active);
-void prefs_set_auto_import(gboolean val);
+void prefs_set_autoimport(gboolean val);
 void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
 void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
@@ -233,7 +233,7 @@ gboolean prefs_get_tm_autostore (void);
 gboolean prefs_get_pm_autostore (void);
 gboolean prefs_get_keep_backups(void);
 gboolean prefs_get_write_extended_info(void);
-gboolean prefs_get_auto_import(void);
+gboolean prefs_get_autoimport(void);
 gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);

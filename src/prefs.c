@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 21:43:51 JST jcs>
+/* Time-stamp: <2004-03-22 23:00:04 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -152,12 +152,14 @@ struct cfg *cfg_new(void)
     }
     if((str = getenv("IPOD_MOUNTPOINT")))
     {
-	snprintf(buf, PATH_MAX, "%s", str);
-	mycfg->ipod_mount = g_strdup_printf("%s/", buf);
+	if (strncmp ("~/", str, 2) == 0)
+	    mycfg->ipod_mount = g_build_filename (g_get_home_dir(),
+						  str+2, NULL);
+	else mycfg->ipod_mount = g_strdup(str);
     }
     else
     {
-	mycfg->ipod_mount = g_strdup ("/mnt/ipod");
+	mycfg->ipod_mount = g_strdup("/mnt/ipod");
     }
     mycfg->charset = NULL;
     mycfg->deletion.track = TRUE;
@@ -306,7 +308,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "mountpoint") == 0)
 	  {
-	      prefs_set_mount_point (arg);
+	      prefs_set_ipod_mount (arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
 	  {
@@ -414,7 +416,11 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "auto_import") == 0)
 	  {
-	      prefs_set_auto_import((gboolean)atoi(arg));
+	      prefs_set_autoimport((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "autoimport") == 0)
+	  {
+	      prefs_set_autoimport((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strncasecmp (line, "st_autoselect", 13) == 0)
 	  {
@@ -872,27 +878,26 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
     switch(opt)
       {
       case GP_HELP:
-	usage(stdout);
-	exit(0);
-	break;
+	  usage(stdout);
+	  exit(0);
+	  break;
       case GP_PLAYCOUNT:
 	  client_playcount (optarg);
 	  result = FALSE;
 	  break;
       case GP_MOUNT:
-	g_free (cfg->ipod_mount);
-	cfg->ipod_mount = g_strdup (optarg);
-	break;
+	  prefs_set_ipod_mount (optarg);
+	  break;
       case GP_AUTO:
-	cfg->autoimport = TRUE;
-	break;
+	  prefs_set_autoimport (TRUE);
+	  break;
       case GP_OFFLINE:
-	cfg->offline = TRUE;
-	break;
+	  prefs_set_offline (TRUE);
+	  break;
       default:
-	usage_fpf(stderr, _("Unknown option: %s\n"), argv[optind]);
-	usage(stderr);
-	exit(1);
+	  usage_fpf(stderr, _("Unknown option: %s\n"), argv[optind]);
+	  usage(stderr);
+	  exit(1);
       }
   }
   menu = GTK_CHECK_MENU_ITEM (lookup_widget (gtkpod, "offline_menu"));
@@ -938,7 +943,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "delete_file=%d\n",prefs_get_track_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_track_ipod_file_deletion());
     fprintf(fp, "sync_remove_confirm=%d\n",prefs_get_sync_remove_confirm());
-    fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
+    fprintf(fp, "autoimport=%d\n",prefs_get_autoimport());
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
@@ -1163,8 +1168,9 @@ const char *prefs_get_last_dir_export(void)
     return cfg->last_dir.export;
 }
 
-void prefs_set_mount_point(const gchar *mp)
+void prefs_set_ipod_mount(const gchar *mp)
 {
+    if (!mp) mp = ""; /* make sure we never set a NULL pointer */
     if(cfg->ipod_mount) g_free(cfg->ipod_mount);
     /* if new mount point starts with "~/", we replace it with the
        home directory */
@@ -1352,12 +1358,12 @@ struct sortcfg *clone_sortprefs(void)
     return(result);
 }
 
-gboolean prefs_get_auto_import(void)
+gboolean prefs_get_autoimport(void)
 {
     return(cfg->autoimport);
 }
 
-void prefs_set_auto_import(gboolean val)
+void prefs_set_autoimport(gboolean val)
 {
     cfg->autoimport = val;
 }
