@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-06 22:36:45 jcs>
+/* Time-stamp: <2004-12-30 12:58:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -165,6 +165,7 @@ typedef enum  {
   TM_COLUMN_BPM,
   TM_COLUMN_FDESC,
   TM_COLUMN_GROUPING,         /* 25 */
+  TM_COLUMN_COMPILATION,
   TM_NUM_COLUMNS
 } TM_item;
 

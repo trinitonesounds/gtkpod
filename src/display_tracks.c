@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-18 13:12:55 jcs>
+/* Time-stamp: <2004-12-30 13:32:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -105,6 +105,7 @@ const gchar *tm_col_strings[] = {
     N_("BPM"),
     N_("Kind"),
     N_("Grouping"),          /* 25 */
+    N_("Compilation"),
     NULL };
 /* Tooltips for prefs window */
 const gchar *tm_col_tooltips[] = {
@@ -136,7 +137,9 @@ const gchar *tm_col_tooltips[] = {
     N_("Supposedly something that tells the iPod to "
        "increase or decrease the playback speed"),
     NULL,
-    NULL };                  /* 25 */
+    NULL,                  /* 25 */
+    NULL,
+    NULL };
 
 
 /* ---------------------------------------------------------------- */
@@ -633,6 +636,11 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_TRANSFERRED:
       g_object_set (G_OBJECT (renderer), "active", track->transferred, NULL);
       break;
+  case TM_COLUMN_COMPILATION:
+      g_object_set (G_OBJECT (renderer),
+		    "active", !track->compilation,
+		    "activatable", TRUE, NULL);
+      break;
   case TM_COLUMN_SIZE:
       snprintf (text, 20, "%d", track->size);
       g_object_set (G_OBJECT (renderer),
@@ -737,7 +745,7 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
   gboolean multi_edit;
   gint sel_rows_num;
   GList *row_list, *row_node, *first;
-
+  gboolean active;
 
   column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
   multi_edit = prefs_get_multi_edit ();
@@ -752,6 +760,9 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
   if (multi_edit && (sel_rows_num > 1)) block_widgets ();
 
   first = g_list_first (row_list);
+
+
+  g_object_get (G_OBJECT (renderer), "active", &active, NULL);
 
   for (row_node = first;
        row_node && (multi_edit || (row_node == first));
@@ -768,11 +779,18 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
      switch(column)
      {
      case TM_COLUMN_TITLE:
-	 if (track->checked == 1)
-	     track->checked = 0;
-	 else
-	     track->checked = 1;
-         changed = TRUE;
+	 if ((active && (track->checked == 0)) ||
+	     (!active && (track->checked == 1)))
+	     changed = TRUE;
+	 if (active) track->checked = 1;
+	 else        track->checked = 0;
+	 break;
+     case TM_COLUMN_COMPILATION:
+	 if ((active && (track->compilation == 0)) ||
+	     (!active && (track->compilation == 1)))
+	     changed = TRUE;
+	 if (active) track->compilation = 1;
+	 else        track->compilation = 0;
         break;
      default:
         g_warning ("Programming error: tm_cell_toggled: unknown track cell (%d) edited\n", column);
@@ -1125,6 +1143,10 @@ static gint tm_data_compare (Track *track1, Track *track2,
       if(track1->transferred == track2->transferred) return 0;
       if(track1->transferred == TRUE) return 1;
       else return -1;
+  case TM_COLUMN_COMPILATION:
+      if(track1->compilation == track2->compilation) return 0;
+      if(track1->compilation == TRUE) return 1;
+      else return -1;
   case TM_COLUMN_SIZE:
       return track1->size - track2->size;
   case TM_COLUMN_TRACKLEN:
@@ -1397,6 +1419,11 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       editable = FALSE;
       renderer = gtk_cell_renderer_toggle_new ();
       break;
+  case TM_COLUMN_COMPILATION:
+      text = _("Cmpl");
+      editable = FALSE;
+      renderer = gtk_cell_renderer_toggle_new ();
+      break;
   case TM_COLUMN_SIZE:
       editable = FALSE;
       break;
@@ -1438,7 +1465,12 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 			G_CALLBACK (tm_cell_toggled), model);
       gtk_tree_view_column_pack_start (col, renderer, FALSE);
       gtk_tree_view_column_set_cell_data_func (col, renderer, tm_cell_data_func_toggle, NULL, NULL);
-  }	  
+  }
+  if (col && (tm_item == TM_COLUMN_COMPILATION))
+  {
+      g_signal_connect (G_OBJECT (renderer), "toggled",
+			G_CALLBACK (tm_cell_toggled), model);
+  }      
   if (col && (pos != -1))
   {
       gtk_tree_view_column_set_visible (col,

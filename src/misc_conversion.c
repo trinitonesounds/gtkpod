@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-04 13:49:19 jcs>
+/* Time-stamp: <2004-12-30 13:01:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -81,6 +81,7 @@ T_item TM_to_T (TM_item sm)
     case TM_COLUMN_VOLUME:        return T_VOLUME;
     case TM_COLUMN_SOUNDCHECK:    return T_SOUNDCHECK;
     case TM_COLUMN_YEAR:          return T_YEAR;
+    case TM_COLUMN_COMPILATION:   return T_COMPILATION;
     case TM_NUM_COLUMNS:          return -1;
     }
     return -1;

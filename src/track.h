@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-04 13:54:28 jcs>
+/* Time-stamp: <2004-12-30 12:58:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,6 +34,25 @@
 #  include <config.h>
 #endif
 #include <glib.h>
+
+typedef struct
+{
+  gint32  oldsize;        /* used when updating tracks: size on iPod */
+  gchar   *year_str;      /* year as string -- always identical to year */
+  guint32 peak_signal;	  /* LAME Peak Signal * 0x800000    */
+  gdouble radio_gain;	  /* RadioGain in dB
+			     (as defined by www.replaygain.org) */
+  gdouble audiophile_gain;/* AudiophileGain in dB 
+			     (as defined by www.replaygain.org)  */
+  gboolean peak_signal_set;    /* has the peak signal been set?       */
+  gboolean radio_gain_set;     /* has the radio gain been set?        */
+  gboolean audiophile_gain_set;/* has the audiophile gain been set? */
+  gchar   *pc_path_utf8;  /* PC filename in utf8 encoding   */
+  gchar   *pc_path_locale;/* PC filename in locale encoding */
+  gchar   *hostname;      /* name of host this file has been imported on*/
+  gchar   *md5_hash;      /* md5 hash of file (or NULL)          */
+  gchar   *charset;       /* charset used for ID3 tags           */
+} ExtraTrackData;
 
 typedef struct
 {
@@ -139,6 +158,7 @@ typedef enum {
     T_YEAR,
     T_CD_NR,
     T_GROUPING,
+    T_COMPILATION,
 } T_item;
 
 void free_track(Track *track);

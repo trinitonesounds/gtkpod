@@ -1519,6 +1519,7 @@ create_prefs_window (void)
   GtkWidget *col_visible14;
   GtkWidget *col_visible7;
   GtkWidget *col_visible6;
+  GtkWidget *col_visible26;
   GtkWidget *vbox35;
   GtkWidget *col_visible3;
   GtkWidget *col_visible17;
@@ -2150,6 +2151,10 @@ create_prefs_window (void)
   col_visible6 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible6);
   gtk_box_pack_start (GTK_BOX (vbox29), col_visible6, FALSE, FALSE, 0);
+
+  col_visible26 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible26);
+  gtk_box_pack_start (GTK_BOX (vbox29), col_visible26, FALSE, FALSE, 0);
 
   vbox35 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox35);
@@ -2995,6 +3000,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible14, "col_visible14");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible7, "col_visible7");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible6, "col_visible6");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible26, "col_visible26");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox35, "vbox35");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible3, "col_visible3");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible17, "col_visible17");
