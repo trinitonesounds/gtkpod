@@ -1609,7 +1609,8 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 			data_length *= 10;
 			data_length += buf[i] - '0';
 		}
-		if (fseek(file, -LYRICS_FOOTER_SIZE - data_length + offset, SEEK_END) ||
+		if (fseek(file, -LYRICS_FOOTER_SIZE - data_length + offset,
+					SEEK_END) ||
 				fread(&buf, 1, 11, file) != 11)
 			goto rg_fail;
 		if (!strncmp(buf, "LYRICSBEGIN", 11)) 
@@ -1671,7 +1672,8 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 			buf[entry_length] = '\0';
 			
 			d = strtod(buf, &ep);
-			if ((ep == buf + entry_length - 3) && (!strncasecmp(ep, " dB", 3))) {
+			if ((ep == buf + entry_length - 3) 
+					&& (!strncasecmp(ep, " dB", 3))) {
 				d *= 10;
 				track->radio_gain = (guint32) floor(d + 0.5);
 				track->radio_gain_set = TRUE;

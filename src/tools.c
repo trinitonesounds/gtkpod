@@ -69,45 +69,6 @@ static GCond  *cond = NULL;
 static gboolean mutex_data = FALSE;
 #endif
 
-/* I'm not sure how exactly to calculate between iPod's volume tag and
- * mp3gain's gain. The following worked fine with 2 (two) tracks...
- * Change here if you know better. */
-#if 0
-static gint32 nm_gain_to_volume (gint gain)
-{
-    gint vol;
-
-    vol = 10*gain;
-
-    /* volume level is -100...+100 */
-    if (vol > 100)  vol = 100;
-    if (vol < -100) vol = -100;
-
-    return vol;
-}
-#endif
-
-#if 0
-/* if you change nm_gain_to_volume() also change this, even though it's
-   not used at the moment */
-static gint nm_volume_to_gain (gint32 volume)
-{
-    return volume/10;
-}
-#endif
-
-/* 
- * replaygain_to_vol - convert ReplayGain to iPod volume. 
- * @replaygain: ReplayGain Volume (RadioGain or AudiophileGain) in dB
- *
- * Conversion should give the exact same results as above mp3gain to volme
- * calculations.
- *
- * FIXME: Conversion seems to be incorrect (according to subjective impression).
- * FIXME: What are the limits for the volume? The above suggested 100 seems not
- * to be enough for all tracks.
- */
-
 static gint32 replaygain_to_volume(gint replaygain)
 {
     double tv;
@@ -126,51 +87,6 @@ static gint32 replaygain_to_volume(gint replaygain)
     return volume;
 }
 
-#if 0
-/* parse the mp3gain stdout to search the mp3gain output:
- *
- * mp3gain stdout for a single file is something like this:
- * FIRST LINE (header)
- * FILENAME\tMP3GAIN\tOTHER NOT INTERESTING OUTPUT\n
- * ALBUM\tALBUMGAIN\tOTHER OUTPUT\n
- *
- * we want to extract only the right file's MP3GAIN
- *
- * BEWARE: mp3gain doesn't separate stdout/stderror */
-static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
-{
-   gint found=FALSE;
-   gint gain=TRACKVOLERROR;
-   /*they are just pointers, don't need to be freed*/
-   gchar *filename=NULL;
-   gchar *num=NULL;
-
-   filename=strtok((gchar *)mp3gain_stdout,"\t\n\0");
-   while(!found&&filename!=NULL&&((gchar *)mp3gain_stdout)!=NULL)
-   {
-#ifdef MP3GAIN_PARSE_DEBUG
-      printf("mp3gain_stdout %s",mp3gain_stdout);
-      printf("filename %s",filename);
-#endif
-      if(strcmp((gchar *)tracksfile,filename)==0)
-      {
-	 num=strtok(NULL,"\t");
-	 strcat(num,"\0"); /* jlt: this should not be necessary */
-	 gain=atoi(num);
-	 found=TRUE;
-      }
-      else{
-	 strtok(NULL,"\n\t\0");
-	 filename=strtok(NULL,"\t\n\0");
-      }
-#ifdef MP3GAIN_PARSE_DEBUG
-      printf("mp3gain_stdout %s",mp3gain_stdout);
-      printf("filename %s",filename);
-#endif
-   }
-   return gain;
-}
-#endif
 
 /* this function returns the @track volume */
 /* mp3gain version 1.4.2 */
@@ -220,10 +136,9 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
     case 0: /*child*/
 	/* this call may add a tag to the mp3file!! */
         execl(mp3gain_path, mp3gain_exec, 
-/*			"-q", *//* quiet */
-/*			"-k", *//* set ReplayGain so that clipping is prevented */
+			"-q", /* quiet */
+			"-k", /* set ReplayGain so that clipping is prevented */
 			"-o", /* database friendly output */
-/*			">/dev/bull", */
 			filename, NULL);
 	errsv = errno;
         fprintf(stderr, "execl() failed: %s\n", strerror(errsv));
@@ -397,8 +312,6 @@ void nm_tracks_list(GList *list)
   while (!abort &&  (list!=NULL)) /*FIXME:change it in a do-while cycle*/
   {
      track=list->data;
-/*     if (track->transferred)
-     {  jlt: what is this supposed to deal with? */
 #ifdef G_THREADS_ENABLED
 	mutex_data = FALSE;
 	thread = g_thread_create (th_nm_get_volume, track, TRUE, NULL);
@@ -479,7 +392,6 @@ void nm_tracks_list(GList *list)
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
 					progtext);
 	g_free (progtext);
-/*     } *//*end if transferred*/ 
 
      if (abort && (count != n))
 	gtkpod_statusbar_message (_("Some tracks were not normalized. Normalization aborted!"));
