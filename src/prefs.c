@@ -71,21 +71,27 @@
                   read_prefs_from_file_desc()
 */
 
+/* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
+   Ditto for AIX 3.2 and <stdlib.h>.  */
+#ifndef _NO_PROTO
+# define _NO_PROTO
+#endif
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #ifdef HAVE_GETOPT_LONG_ONLY
 #  include <getopt.h>
 #else
 #  include "getopt.h"
 #endif
-#include <sys/stat.h>
-#include <sys/types.h>
 #include "prefs.h"
 #include "support.h"
 #include "misc.h"
