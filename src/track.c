@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:19:15 JST jcs>
+/* Time-stamp: <2004-02-07 02:55:19 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -457,6 +457,8 @@ void remove_duplicate (Track *oldtrack, Track *track)
    static gint deltrack_nr = 0;
    static gboolean removed = FALSE;
    static GString *str = NULL;
+
+/*   printf ("%p, %p, '%s'\n", oldtrack, track, str?str->str:"empty");*/
 
    if (prefs_get_show_duplicates() && !oldtrack && !track && str)
    {

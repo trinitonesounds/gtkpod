@@ -4,8 +4,8 @@ src/callbacks.c
 src/charset.c
 src/confirmation.c
 src/context_menus.c
-src/date_parser2.c
 src/date_parser.c
+src/date_parser2.c
 src/dirbrowser.c
 src/display.c
 src/display_playlists.c
@@ -13,8 +13,8 @@ src/display_songs.c
 src/display_sorttabs.c
 src/file.c
 src/file_export.c
-src/getopt1.c
 src/getopt.c
+src/getopt1.c
 src/info.c
 src/interface.c
 src/itunesdb.c
@@ -23,10 +23,10 @@ src/md5.c
 src/misc.c
 src/mp3file.c
 src/mp4file.c
-src/normalize.c
 src/playlist.c
 src/prefs.c
 src/prefs_window.c
-src/song.c
 src/support.c
+src/tools.c
+src/track.c
 src/wavfile.c

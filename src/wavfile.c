@@ -1,26 +1,26 @@
-/* Time-stamp: <2004-01-24 20:10:08 jcs>
+/* Time-stamp: <2004-02-06 21:45:18 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -53,9 +53,9 @@
 #define	WAVE_FORMAT_OKI_ADPCM		(0x0010)
 #define	WAVE_FORMAT_DIGISTD		(0x0015)
 #define	WAVE_FORMAT_DIGIFIX		(0x0016)
-#define	IBM_FORMAT_MULAW         	(0x0101)
+#define	IBM_FORMAT_MULAW	(0x0101)
 #define	IBM_FORMAT_ALAW			(0x0102)
-#define	IBM_FORMAT_ADPCM         	(0x0103)
+#define	IBM_FORMAT_ADPCM	(0x0103)
 
 typedef struct
 {
@@ -151,7 +151,7 @@ Track *file_get_wav_info (gchar *filename)
     for (;;)
     {
 	fread(magic, 4, 1, wav_file->file);
-	
+
 	if (!read_le_long(wav_file->file, &len))  goto file_error;
 	if (!strncmp("data", magic, 4))
 	    break;

@@ -1,26 +1,26 @@
-/* Time-stamp: <2004-02-01 14:58:37 JST jcs>
+/* Time-stamp: <2004-02-06 21:44:13 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL:  http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -38,7 +38,7 @@
  * easytag. */
 
 /* The code in the last section of this file is original gtkpod
- * code. */ 
+ * code. */
 
 /****************
  * Declarations *
@@ -68,7 +68,7 @@ struct _File_Tag
 
 /*
     mp3tech.c - Functions for handling MP3 files and most MP3 data
-                structure manipulation.
+		structure manipulation.
 
     Copyright (C) 2000-2001  Cedric Tefft <cedric@earthling.net>
 
@@ -91,7 +91,7 @@ struct _File_Tag
   This file is based in part on:
 
 	* MP3Info 0.5 by Ricardo Cerqueira <rmc@rccn.net>
-	* MP3Stat 0.9 by Ed Sweetman <safemode@voicenet.com> and 
+	* MP3Stat 0.9 by Ed Sweetman <safemode@voicenet.com> and
 			 Johannes Overmann <overmann@iname.com>
 
 */
@@ -152,12 +152,8 @@ typedef struct {
 } mp3info;
 
 /* These are for mp3info code */
-gint mp3file_header_layer(mp3header *h);
-gint mp3file_header_bitrate(mp3header *h);
-gchar *mp3file_header_emphasis(mp3header *h);
-gchar *mp3file_header_mode(mp3header *h);
-int mp3file_header_frequency(mp3header *h);
-mp3info *mp3file_get_info (gchar *name);
+static gint mp3file_header_bitrate(mp3header *h);
+static int mp3file_header_frequency(mp3header *h);
 
 /* This is for xmms code */
 static guint get_track_time(gchar *path);
@@ -184,7 +180,7 @@ gint frequencies[3][4] = {
    {11025,12000,8000,50000}    /* MPEG 2.5 */
 };
 
-gint bitrate[2][3][14] = { 
+gint bitrate[2][3][14] = {
   { /* MPEG 2.0 */
     {32,48,56,64,80,96,112,128,144,160,176,192,224,256},  /* layer 1 */
     {8,16,24,32,40,48,56,64,80,96,112,128,144,160},       /* layer 2 */
@@ -256,20 +252,20 @@ void get_mp3_info(mp3info *mp3)
 }
 
 
-gint get_first_header(mp3info *mp3, long startpos) 
+gint get_first_header(mp3info *mp3, long startpos)
 {
   gint k, l=0,c;
   mp3header h, h2;
   long valid_start=0;
-  
+
   fseek(mp3->file,startpos,SEEK_SET);
   while (1) {
      while((c=fgetc(mp3->file)) != 255 && (c != EOF));
      if(c == 255) {
-        ungetc(c,mp3->file);
-        valid_start=ftell(mp3->file);
-        if((l=get_header(mp3->file,&h))) {
-          fseek(mp3->file,l-FRAME_HEADER_SIZE,SEEK_CUR);
+	ungetc(c,mp3->file);
+	valid_start=ftell(mp3->file);
+	if((l=get_header(mp3->file,&h))) {
+	  fseek(mp3->file,l-FRAME_HEADER_SIZE,SEEK_CUR);
 	  for(k=1; (k < MIN_CONSEC_GOOD_FRAMES) && (mp3->datasize-ftell(mp3->file) >= FRAME_HEADER_SIZE); k++) {
 	    if(!(l=get_header(mp3->file,&h2))) break;
 	    if(!sameConstant(&h,&h2)) break;
@@ -280,38 +276,38 @@ gint get_first_header(mp3info *mp3, long startpos)
 		memcpy(&(mp3->header),&h2,sizeof(mp3header));
 		mp3->header_isvalid=1;
 		return 1;
-	  } 
-        }
+	  }
+	}
      } else {
 	return 0;
      }
    }
 
-  return 0;  
+  return 0;
 }
 
-/* get_next_header() - read header at current position or look for 
+/* get_next_header() - read header at current position or look for
    the next valid header if there isn't one at the current position
 */
-gint get_next_header(mp3info *mp3) 
+gint get_next_header(mp3info *mp3)
 {
   gint l=0,c,skip_bytes=0;
   mp3header h;
-  
+
    while(1) {
      while((c=fgetc(mp3->file)) != 255 && (ftell(mp3->file) < mp3->datasize)) skip_bytes++;
      if(c == 255) {
-        ungetc(c,mp3->file);
-        if((l=get_header(mp3->file,&h))) {
+	ungetc(c,mp3->file);
+	if((l=get_header(mp3->file,&h))) {
 	  if(skip_bytes) mp3->badframes++;
-          fseek(mp3->file,l-FRAME_HEADER_SIZE,SEEK_CUR);
-          return 15-h.bitrate;
+	  fseek(mp3->file,l-FRAME_HEADER_SIZE,SEEK_CUR);
+	  return 15-h.bitrate;
 	} else {
 		skip_bytes += FRAME_HEADER_SIZE;
 	}
      } else {
 	  if(skip_bytes) mp3->badframes++;
-      	  return 0;
+	  return 0;
      }
   }
 }
@@ -334,7 +330,7 @@ gint get_header(FILE *file,mp3header *header)
     }
     header->sync=(((gint)buffer[0]<<4) | ((gint)(buffer[1]&0xE0)>>4));
     if(buffer[1] & 0x10) header->version=(buffer[1] >> 3) & 1;
-                    else header->version=2;
+		    else header->version=2;
     header->layer=(buffer[1] >> 1) & 3;
     if((header->sync != 0xFFE) || (header->layer != 1)) {
 	header->sync=0;
@@ -350,34 +346,24 @@ gint get_header(FILE *file,mp3header *header)
     header->copyright=(buffer[3] >> 3) & 0x1;
     header->original=(buffer[3] >> 2) & 0x1;
     header->emphasis=(buffer[3]) & 0x3;
-    
-    return ((fl=frame_length(header)) >= MIN_FRAME_SIZE ? fl : 0); 
+
+    return ((fl=frame_length(header)) >= MIN_FRAME_SIZE ? fl : 0);
 }
 
 gint frame_length(mp3header *header) {
-	return header->sync == 0xFFE ? 
+	return header->sync == 0xFFE ?
 		    (frame_size_index[3-header->layer]*((header->version&1)+1)*
 		    mp3file_header_bitrate(header)/mp3file_header_frequency(header))+
 		    header->padding : 1;
 }
 
-gint mp3file_header_bitrate(mp3header *h) {
+static gint mp3file_header_bitrate(mp3header *h) {
 	return bitrate[h->version & 1][3-h->layer][h->bitrate-1];
 }
 
-gint mp3file_header_layer(mp3header *h) {return layer_tab[h->layer];}
 
-
-gint mp3file_header_frequency(mp3header *h) {
+static gint mp3file_header_frequency(mp3header *h) {
 	return frequencies[h->version][h->freq];
-}
-
-gchar *mp3file_header_emphasis(mp3header *h) {
-	return emphasis_text[h->emphasis];
-}
-
-gchar *mp3file_header_mode(mp3header *h) {
-	return mode_text[h->mode];
 }
 
 gint sameConstant(mp3header *h1, mp3header *h2) {
@@ -390,14 +376,14 @@ gint sameConstant(mp3header *h1, mp3header *h2) {
        (h1->mode          == h2->mode            ) &&
        (h1->copyright     == h2->copyright       ) &&
        (h1->original      == h2->original        ) &&
-       (h1->emphasis      == h2->emphasis        )) 
+       (h1->emphasis      == h2->emphasis        ))
 		return 1;
     else return 0;
 }
 
 
 /* Returns a filled-in mp3info struct that must be g_free'd after use */
-mp3info *mp3file_get_info (gchar *filename)
+static mp3info *mp3file_get_info (gchar *filename)
 {
     mp3info *mp3 = NULL;
     FILE *fp;
@@ -417,7 +403,7 @@ mp3info *mp3file_get_info (gchar *filename)
 
 /* ------------------------------------------------------------
 
-         xmms code
+	 xmms code
 
 
    ------------------------------------------------------------ */
@@ -479,7 +465,7 @@ long mpg123_freqs[9] =
 
 /*
  * structure to receive extracted header
- */ 
+ */
 typedef struct
 {
 	int frames;		/* total bit stream frames from Xing header data */
@@ -547,7 +533,7 @@ static int mpg123_head_check(unsigned long head)
 		return FALSE;
 	if ((head & 0xffff0000) == 0xfffe0000)
 		return FALSE;
-	
+
 	return TRUE;
 }
 
@@ -598,21 +584,21 @@ static int mpg123_decode_header(struct frame *fr, unsigned long newhead)
 	switch (fr->lay)
 	{
 		case 1:
-/* 			fr->do_layer = mpg123_do_layer1; */
-/* 			mpg123_init_layer2();	/\* inits also shared tables with layer1 *\/ */
+/*			fr->do_layer = mpg123_do_layer1; */
+/*			mpg123_init_layer2();	/\* inits also shared tables with layer1 *\/ */
 			fr->framesize = (long) tabsel_123[fr->lsf][0][fr->bitrate_index] * 12000;
 			fr->framesize /= mpg123_freqs[fr->sampling_frequency];
 			fr->framesize = ((fr->framesize + fr->padding) << 2) - 4;
 			break;
 		case 2:
-/* 			fr->do_layer = mpg123_do_layer2; */
-/* 			mpg123_init_layer2();	/\* inits also shared tables with layer1 *\/ */
+/*			fr->do_layer = mpg123_do_layer2; */
+/*			mpg123_init_layer2();	/\* inits also shared tables with layer1 *\/ */
 			fr->framesize = (long) tabsel_123[fr->lsf][1][fr->bitrate_index] * 144000;
 			fr->framesize /= mpg123_freqs[fr->sampling_frequency];
 			fr->framesize += fr->padding - 4;
 			break;
 		case 3:
-/* 			fr->do_layer = mpg123_do_layer3; */
+/*			fr->do_layer = mpg123_do_layer3; */
 			if (fr->lsf)
 				ssize = (fr->stereo == 1) ? 9 : 17;
 			else
@@ -635,17 +621,17 @@ static int mpg123_decode_header(struct frame *fr, unsigned long newhead)
 (i = (b[0] << 24) | (b[1] << 16) | b[2] << 8 | b[3], b += 4, i)
 
 static int mpg123_get_xing_header(xing_header_t * xing, unsigned char *buf)
-{	
+{
 	int i, head_flags;
 	int id, mode;
-	
+
 	memset(xing, 0, sizeof(xing_header_t));
-	
-	/* get selected MPEG header data */ 
+
+	/* get selected MPEG header data */
 	id = (buf[1] >> 3) & 1;
 	mode = (buf[3] >> 6) & 3;
 	buf += 4;
-	
+
 	/* Skip the sub band data */
 	if (id)
 	{
@@ -663,27 +649,27 @@ static int mpg123_get_xing_header(xing_header_t * xing, unsigned char *buf)
 		else
 			buf += 9;
 	}
-	
+
 	if (strncmp(buf, "Xing", 4))
 		return 0;
 	buf += 4;
-		
+
 	head_flags = GET_INT32BE(buf);
-	
+
 	if (head_flags & FRAMES_FLAG)
 		xing->frames = GET_INT32BE(buf);
 	if (xing->frames < 1)
 		xing->frames = 1;
 	if (head_flags & BYTES_FLAG)
 		xing->bytes = GET_INT32BE(buf);
-	
+
 	if (head_flags & TOC_FLAG)
 	{
 		for (i = 0; i < 100; i++)
 			xing->toc[i] = buf[i];
 		buf += 100;
 	}
-	
+
 #ifdef XING_DEBUG
 	for (i = 0; i < 100; i++)
 	{
@@ -692,7 +678,7 @@ static int mpg123_get_xing_header(xing_header_t * xing, unsigned char *buf)
 		fprintf(stderr, " %3d", xing->toc[i]);
 	}
 #endif
-	
+
 	return 1;
 }
 
@@ -755,7 +741,7 @@ unsigned int mpg123_getbits(int number_of_bits)
 
 		rval <<= bsi.bitindex;
 		rval &= 0xffffff;
-		
+
 		bsi.bitindex += number_of_bits;
 
 		rval >>= (24-number_of_bits);
@@ -978,28 +964,28 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
     if (field && (id3_field_type (field) == ID3_FIELD_TYPE_TEXTENCODING))
     {
 	encoding = field->number.value;
-/* 	printf ("encoding: %d\n", encoding); */
+/*	printf ("encoding: %d\n", encoding); */
     }
 
     if (frame_name == ID3_FRAME_COMMENT)
-        field = id3_frame_field (frame, 3);
+	field = id3_frame_field (frame, 3);
     else
-        field = id3_frame_field (frame, 1);
+	field = id3_frame_field (frame, 1);
 
 /*     printf ("field: %p\n", field); */
 
     if (!field) return NULL;
 
     if (frame_name == ID3_FRAME_COMMENT)
-        string = id3_field_getfullstring (field);
+	string = id3_field_getfullstring (field);
     else
-        string = id3_field_getstrings (field, 0); 
+	string = id3_field_getstrings (field, 0);
 
 /*     printf ("string: %p\n", string); */
 
     if (!string) return NULL;
 
-    if (frame_name == ID3_FRAME_GENRE) 
+    if (frame_name == ID3_FRAME_GENRE)
        string = id3_genre_name (string);
 
     if (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1)
@@ -1019,7 +1005,7 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
     }
     return utf8;
 }
- 
+
 static void id3_set_string (struct id3_tag *tag, const char *frame_name, const char *data, enum id3_field_textencoding encoding)
 {
     int res;
@@ -1027,7 +1013,7 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
     union id3_field *field;
     id3_ucs4_t *ucs4;
 
-    if (data == NULL) 
+    if (data == NULL)
 	return;
 
 /*    printf ("updating id3 (enc: %d): %s: %s\n", encoding, frame_name, data);*/
@@ -1038,13 +1024,13 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
     if (strlen(data) == 0)
     {
 /*	printf("removing ID3 frame: %s\n", frame_name);*/
-        while ((frame = id3_tag_findframe (tag, frame_name, 0)))
- 	    id3_tag_detachframe (tag, frame);
+	while ((frame = id3_tag_findframe (tag, frame_name, 0)))
+	    id3_tag_detachframe (tag, frame);
 	return;
     }
 
     frame = id3_tag_findframe (tag, frame_name, 0);
-    if (!frame) 
+    if (!frame)
     {
 /*	puts("new frame!");*/
 	frame = id3_frame_new (frame_name);
@@ -1061,7 +1047,7 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
 	field = id3_frame_field (frame, 1);
 	field->type = ID3_FIELD_TYPE_STRINGLIST;
     }
-    
+
     /* Use the specified text encoding */
     id3_field_settextencoding(field, encoding);
 
@@ -1116,9 +1102,9 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
     }
 
     if (frame_name == ID3_FRAME_COMMENT)
-        res = id3_field_setfullstring (field, ucs4);
-    else 
-        res = id3_field_setstrings (field, 1, &ucs4);
+	res = id3_field_setfullstring (field, ucs4);
+    else
+	res = id3_field_setstrings (field, 1, &ucs4);
 
     g_free (ucs4);
 
@@ -1129,7 +1115,7 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
 
 /***
  * Reads id3v1.x / id3v2 tag and load data into the Id3tag structure.
- * If a tag entry exists (ex: title), we allocate memory, else value 
+ * If a tag entry exists (ex: title), we allocate memory, else value
  * stays to NULL
  * @returns: TRUE on success, else FALSE.
  */
@@ -1141,33 +1127,33 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
     gchar* string2;
 
     if (!filename || !tag)
-        return FALSE;
+	return FALSE;
 
     memset (tag, 0, sizeof (File_Tag));
 
     if (!(id3file = id3_file_open (filename, ID3_FILE_MODE_READONLY)))
     {
 	gchar *fbuf = charset_to_utf8 (filename);
-        g_print(_("ERROR while opening file: '%s' (%s).\n"),
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
 		fbuf, g_strerror(errno));
 	g_free (fbuf);
-        return FALSE;
+	return FALSE;
     }
 
     if ((id3tag = id3_file_tag(id3file)))
     {
-        tag->title = id3_get_string (id3tag, ID3_FRAME_TITLE);
-        tag->artist = id3_get_string (id3tag, ID3_FRAME_ARTIST);
-        tag->album = id3_get_string (id3tag, ID3_FRAME_ALBUM);
-        tag->year = id3_get_string (id3tag, ID3_FRAME_YEAR);
-        tag->composer = id3_get_string (id3tag, "TCOM");
-        tag->comment = id3_get_string (id3tag, ID3_FRAME_COMMENT);
+	tag->title = id3_get_string (id3tag, ID3_FRAME_TITLE);
+	tag->artist = id3_get_string (id3tag, ID3_FRAME_ARTIST);
+	tag->album = id3_get_string (id3tag, ID3_FRAME_ALBUM);
+	tag->year = id3_get_string (id3tag, ID3_FRAME_YEAR);
+	tag->composer = id3_get_string (id3tag, "TCOM");
+	tag->comment = id3_get_string (id3tag, ID3_FRAME_COMMENT);
 	tag->genre = id3_get_string (id3tag, ID3_FRAME_GENRE);
 
 	string = id3_get_string (id3tag, "TLEN");
-	if (string) 
+	if (string)
 	{
-            tag->songlen = (guint32) strtoul (string, 0, 10);
+	    tag->songlen = (guint32) strtoul (string, 0, 10);
 	    g_free (string);
 	}
 
@@ -1177,11 +1163,11 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 	    string2 = strchr(string,'/');
 	    if (string2)
 	    {
-	        tag->track_total = g_strdup_printf ("%.2d", atoi (string2+1));
-	        *string2 = '\0';
+		tag->track_total = g_strdup_printf ("%.2d", atoi (string2+1));
+		*string2 = '\0';
 	    }
 	    tag->trackstring = g_strdup_printf ("%.2d", atoi (string));
-            g_free(string);
+	    g_free(string);
 	}
     }
 
@@ -1241,10 +1227,10 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
     if (!id3file)
     {
 	gchar *fbuf = charset_to_utf8 (filename);
-        g_print(_("ERROR while opening file: '%s' (%s).\n"),
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
 		fbuf, g_strerror(errno));
 	g_free (fbuf);
-        return FALSE;
+	return FALSE;
     }
 
     if ((id3tag = id3_file_tag(id3file)))
@@ -1279,10 +1265,10 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
     if (id3_file_update(id3file) != 0)
     {
 	gchar *fbuf = charset_to_utf8 (filename);
-        g_print(_("ERROR while writing tag to file: '%s' (%s).\n"),
+	g_print(_("ERROR while writing tag to file: '%s' (%s).\n"),
 		fbuf, g_strerror(errno));
 	g_free (fbuf);
-        return FALSE;
+	return FALSE;
     }
 
     id3_file_close (id3file);
@@ -1294,7 +1280,7 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
 
 /* ----------------------------------------------------------------------
 
-              From here starts original gtkpod code
+	      From here starts original gtkpod code
 
 ---------------------------------------------------------------------- */
 

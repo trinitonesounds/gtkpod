@@ -9,10 +9,11 @@ Dangling/orphaned tracks
       statusbar messages.
 
 
-- Tools->Export Adresses and Export Contacts (simply calls external
-  scripts)
-
 - "adjust volume by ...%" functionality
+
+- Pattern matching for tag extraction from filename should also work
+  from the beginning of the name towards the end, not only from the
+  end to the beginning (clear?)
 
 - stable column sorting:
 > BTW, the other thing that bothers me about gtkpod is that column sorting

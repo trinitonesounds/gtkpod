@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:19:09 JST jcs>
+/* Time-stamp: <2004-02-07 02:26:27 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2277,9 +2277,28 @@ static void flush_tracks_abort (gboolean *abort)
     *abort = TRUE;
 }
 
+
+/* check if iPod directory stucture is present */
+static gboolean ipod_dirs_present (void)
+{
+    const gchar *mp = prefs_get_ipod_mount ();
+    gchar *file;
+    gboolean result = TRUE;
+
+    file = g_build_filename (mp, "iPod_Control/Music", NULL);
+    if (!g_file_test (file, G_FILE_TEST_IS_DIR))  result = FALSE;
+    g_free (file);
+    file = g_build_filename (mp, "iPod_Control/iTunes", NULL);
+    if (!g_file_test (file, G_FILE_TEST_IS_DIR))  result = FALSE;
+    g_free (file);
+
+    return result;
+}
+
+
 /* Flushes all non-transferred tracks to the iPod filesystem
    Returns TRUE on success, FALSE if some error occured */
-gboolean flush_tracks (void)
+static gboolean flush_tracks (void)
 {
   gint count, n, nrs;
   gchar *buf;
@@ -2302,6 +2321,18 @@ gboolean flush_tracks (void)
   n = get_nr_of_nontransferred_tracks ();
 
   if (n==0 && !pending_deletion) return TRUE;
+
+  /* check if iPod directories are present */
+  if (!ipod_dirs_present ())
+  {   /* no -- create them */
+      ipod_directories_head (TRUE);
+      /* if still not present abort */
+      if (!ipod_dirs_present ())
+      {
+	  gtkpod_warning (_("iPod directory structure must be present before synching to the iPod can be performed.\n"));
+	  return FALSE;
+      }
+  }
 
   abort = FALSE;
   /* create the dialog window */
@@ -2501,13 +2532,13 @@ void handle_export (void)
   ipe = g_build_filename (prefs_get_ipod_mount (),
 			  "iPod_Control/iTunes/iTunesDB.ext", NULL);
   if (cfgdir)
-    {
+  {
       cft = g_build_filename (cfgdir, "iTunesDB", NULL);
       cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
-    }
+  }
 
   if(!prefs_get_offline ())
-    {
+  {
       /* write tracks to iPod */
       if ((success=flush_tracks ()))
       { /* write iTunesDB to iPod */
@@ -2560,9 +2591,9 @@ void handle_export (void)
       }
       if (success && !prefs_get_keep_backups() && cfgdir)
 	  cleanup_backup_and_extended_files ();
-    }
+  }
   else
-    { /* we are offline -> only write database to ~/.gtkpod */
+  {   /* we are offline -> only write database to ~/.gtkpod */
       /* offline implies "extended information" */
       if (cfgdir)
       {
@@ -2578,7 +2609,7 @@ void handle_export (void)
 	  gtkpod_statusbar_message (_("Export not successful!"));
 	  success = FALSE;
       }
-    }
+  }
 
   /* indicate that files and/or database is saved */
   if (success)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:30:37 JST jcs>
+/* Time-stamp: <2004-02-07 01:35:34 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1089,13 +1089,14 @@ static void ipod_directories_ok (gpointer user_data1, gpointer user_data2)
 /* cancel handler for ipod directory creation */
 static void ipod_directories_cancel (gpointer user_data1, gpointer user_data2)
 {
-    C_FREE (user_data1);
+    g_free (user_data1);
 }
 
 
 /* Pop up the confirmation window for creation of ipod directory
-   hierarchy */
-void ipod_directories_head (void)
+   hierarchy. @modal: make the window modal, i.e. block gtkpod until
+   the dialog is closed. */
+void ipod_directories_head (gboolean modal)
 {
     gchar *mp;
     GString *str;
@@ -1123,7 +1124,7 @@ void ipod_directories_head (void)
     g_string_append_printf (str, "%s/iPod_Control/Music/F19\n", mp);
 
     if (!gtkpod_confirmation (CONF_ID_IPOD_DIR,    /* gint id, */
-			 FALSE,               /* gboolean modal, */
+			 modal,               /* gboolean modal, */
 			 _("Create iPod directories"), /* title */
 			 _("OK to create the following directories?"),
 			 str->str,
@@ -1847,11 +1848,6 @@ void call_script (gchar *script)
 }
 
 
-
-/***************************************************************************
- * play / enqueue / general "do command on selected tracks" stuff
- *
- **************************************************************************/
 
 /**
  * which - run the shell command which, useful for querying default values
