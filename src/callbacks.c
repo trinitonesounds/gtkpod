@@ -730,3 +730,45 @@ on_st_treeview_drag_data_get           (GtkWidget       *widget,
 
 }
 
+/* delete selected entry in sort tab */
+gboolean
+on_st_treeview_key_release_event       (GtkWidget       *widget,
+                                        GdkEventKey     *event,
+                                        gpointer         user_data)
+{
+    guint mods;
+    mods = event->state;
+
+    if(!widgets_blocked && (mods & GDK_CONTROL_MASK))
+    {
+	switch(event->keyval)
+	{
+	    case GDK_d:
+		delete_entry_head (st_get_instance_from_treeview (
+				       GTK_TREE_VIEW (widget)));
+		break;
+	    default:
+		break;
+	}
+
+    }
+  return FALSE;
+}
+
+/* delete selected entry in sort tab 0 */
+void
+on_delete_st0_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    delete_entry_head (0);
+}
+
+
+/* delete selected entry in sort tab 1 */
+void
+on_delete_st1_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    delete_entry_head (1);
+}
+

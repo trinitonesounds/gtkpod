@@ -256,3 +256,16 @@ on_st_treeview_drag_data_get           (GtkWidget       *widget,
                                         guint            info,
                                         guint            time,
                                         gpointer         user_data);
+
+gboolean
+on_st_treeview_key_release_event       (GtkWidget       *widget,
+                                        GdkEventKey     *event,
+                                        gpointer         user_data);
+
+void
+on_delete_st0_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_delete_st1_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

@@ -526,18 +526,44 @@ static void create_playlist_listview (GtkWidget *gtkpod)
 /* Get the instance of the sort tab that corresponds to
    "notebook". Returns -1 if sort tab could not be found
    and prints error message */
-static gint st_get_instance (GtkNotebook *notebook)
+static gint st_get_instance_from_notebook (GtkNotebook *notebook)
 {
-  gint i=0;
-  while (i<SORT_TAB_NUM)
+    gint i;
+
+    for(i=0; i<SORT_TAB_NUM; ++i)
     {
-      if (sorttab[i] && (sorttab[i]->notebook == notebook)) return i;
-      ++i;
+	if (sorttab[i] && (sorttab[i]->notebook == notebook)) return i;
     }
-/*  g_warning ("Programming error (st_get_instance): notebook could
-  not be found.\n"); function somehow can get called after notebooks got
-  destroyed */
-  return -1;
+/*  g_warning ("Programming error (st_get_instance_from_notebook): notebook could
+    not be found.\n"); function somehow can get called after notebooks got
+    destroyed */
+    return -1;
+}
+
+/* Get the instance of the sort tab that corresponds to
+   "treeview". Returns -1 if sort tab could not be found
+   and prints error message */
+gint st_get_instance_from_treeview (GtkTreeView *tv)
+{
+    gint i,cat;
+
+    for(i=0; i<SORT_TAB_NUM; ++i)
+    {
+	for(cat=0; cat<ST_CAT_NUM; ++cat)
+	{
+	    if (sorttab[i] && (sorttab[i]->treeview[cat] == tv)) return i;
+	}
+    }
+    return -1;
+}
+
+
+/* returns the selected entry (used by delete_entry_head() */
+TabEntry *st_get_selected_entry (gint inst)
+{
+    if ((inst >= 0) && (inst < SORT_TAB_NUM) && sorttab[inst])
+	return sorttab[inst]->current_entry;
+    return NULL;
 }
 
 
@@ -576,7 +602,7 @@ static gboolean st_delete_entry_from_model (GtkTreeModel *model,
 
 
 /* Remove entry from the display model and the sorttab */
-static void st_remove_entry (TabEntry *entry, guint32 inst)
+static void st_remove_entry_from_model (TabEntry *entry, guint32 inst)
 {
   GtkTreeModel *model = sorttab[inst]->model;
   if (model && entry)
@@ -594,17 +620,89 @@ static void st_remove_entry (TabEntry *entry, guint32 inst)
 }
 
 /* Remove all entries from the display model and the sorttab */
-static void st_remove_all_entries (guint32 inst)
+static void st_remove_all_entries_from_model (guint32 inst)
 {
   TabEntry *entry;
 
   while (sorttab[inst]->entries != NULL)
     {
       entry = (TabEntry *)g_list_nth_data (sorttab[inst]->entries, 0);
-      st_remove_entry (entry, inst);
+      st_remove_entry_from_model (entry, inst);
     }
 }
 
+/* Remove "entry" from the model (used by delete_entry_ok()). The
+ * entry should be empty (otherwise it's not removed).
+ * If "entry" is the master entry 'All', the sort tab is redisplayed
+ * (it's empty).
+ * If the entry is currently selected (usually will be), the next
+ * or previous entry will be selected automatically (unless it's the
+ * master entry and prefs_get_st_autosel() says don't select the 'All'
+ * entry). If no new entry is selected, the next sort tab will be
+ * redisplayed (should be empty) */
+void st_remove_entry (TabEntry *entry, guint32 inst)
+{
+    gboolean current_entry=FALSE, valid;
+    TabEntry *next=NULL, *entry2=NULL;
+    GtkTreeIter iter, iter2;
+    GtkTreeSelection *selection;
+    SortTab *st = sorttab[inst];
+
+    if (!entry) return;
+    /* is the entry empty (contains no songs)? */
+    if (g_list_length (entry->members) != 0) return;
+    /* if the entry is the master entry 'All' -> the tab is empty,
+       re-init tab */
+    if (entry->master)
+    {
+	st_redisplay (inst);
+	return;
+    }
+    
+    /* is the entry currently selected? Remember! */
+    selection = gtk_tree_view_get_selection (st->treeview[st->current_category]);
+    if (sorttab[inst]->current_entry == entry)
+    {
+	current_entry = TRUE;
+	/* what's the next entry (displayed)? */
+	if (gtk_tree_selection_get_selected (selection, NULL, &iter))
+	{ /* found selected entry -> now chose next one */
+	    if (gtk_tree_model_iter_next (st->model, &iter))
+	    {
+		gtk_tree_model_get(st->model, &iter, ST_COLUMN_ENTRY, &next, -1);
+	    }
+	    else
+	    { /* no next entry, try to find previous one */
+		/* There doesn't seem to be a ..._iter_previous()
+		 * call... */
+		next = NULL;
+		valid = gtk_tree_model_get_iter_first(st->model, &iter2);
+		while(valid)
+		{
+		    gtk_tree_model_get(st->model, &iter2, ST_COLUMN_ENTRY, &entry2, -1);
+		    if (entry == entry2)   break;  /* found it */
+		    iter = iter2;
+		    next = entry2;
+		    valid = gtk_tree_model_iter_next(st->model, &iter2);
+		}
+		if (!valid) next = NULL;
+	    }
+	    /* don't select master entry 'All' until requested to do so */
+	    if (next && next->master && !prefs_get_st_autoselect (inst))
+		next = NULL;
+	}
+    }
+    st_remove_entry_from_model (entry, inst);
+    /* if we have a next entry, select it. */
+    if (next)
+    {
+	gtk_tree_selection_select_iter (selection, &iter);
+    }
+    else
+    { /* redisplay next instance if removed entry was selected (should be empty) */
+	if (current_entry)  st_redisplay (inst+1);
+    }
+}
 
 /* Get the correct name for the entry according to currently
    selected category (page). Do _not_ g_free() the return value! */
@@ -963,7 +1061,7 @@ static void st_init (gint32 new_category, guint32 inst)
 	  st->current_category = new_category;
 	  prefs_set_st_category (inst, new_category);
 	}
-      st_remove_all_entries (inst);
+      st_remove_all_entries_from_model (inst);
       st_init (-1, inst+1);
     }
 }
@@ -979,7 +1077,7 @@ void st_page_selected (GtkNotebook *notebook, guint page)
   gint i,n;
   Song *song;
 
-  inst = st_get_instance (notebook);
+  inst = st_get_instance_from_notebook (notebook);
   if (inst == -1) return;
   st = sorttab[inst];
   master = g_list_nth_data (st->entries, 0);
@@ -1304,7 +1402,7 @@ static void cleanup_sort_tabs (void)
     {
       if (sorttab[i] != NULL)
 	{
-	  st_remove_all_entries (i);
+	  st_remove_all_entries_from_model (i);
 	  for (j=0; j<ST_CAT_NUM; ++j)
 	    {
 		C_FREE (sorttab[i]->lastselection[j]);

@@ -69,6 +69,7 @@ void gtkpod_songs_statusbar_update(void);
 void ipod_directories_head (void);
 void delete_playlist_head (void);
 void delete_song_head (void);
+void delete_entry_head (gint inst);
 
 void create_blocked_widget_list (void);
 void destroy_blocked_widget_list (void);

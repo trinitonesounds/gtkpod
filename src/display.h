@@ -57,7 +57,7 @@ enum {
 typedef struct {
   gchar *name;
   gboolean master; /* set if this is the "All" entry */
-  GList *members;
+  GList *members;  /* GList with member songs (pointer to "Song") */
 } TabEntry;
 
 /* struct with data corresponding to each sort tab */
@@ -120,6 +120,10 @@ void pm_select_playlist_reinit(Playlist *playlist);
 void st_page_selected (GtkNotebook *notebook, guint page);
 void st_redisplay (guint32 inst);
 void st_sort (guint32 inst, GtkSortType order);
+void st_remove_entry (TabEntry *entry, guint32 inst);
+gint st_get_instance_from_treeview (GtkTreeView *tv);
+TabEntry *st_get_selected_entry (gint inst);
+
 void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				 GtkTreeIter *i, gpointer data);
 void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 

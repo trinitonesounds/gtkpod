@@ -1,3 +1,20 @@
+gtkpod V0.41+ 01-Feb-2003 to 04-Feb-2003
+        Improvement: Delete works on entries in sort tabs now (ctrl-d and
+	new menu item)
+	
+	Improvement?: don't close dirbrowser window until after the songs
+	have been read.
+
+	Improvement: do expose events when writing tags
+
+	Bugfix: sometimes deleted songs were not removed from the
+	display. Changing tags then could crash program
+
+	Bugfix: convert filenames ot UTF8 based on the charset chosen in
+	the options window
+
+	Bugfix: don't try to access iPod based files when in offline mode
+
 gtkpod V0.41 01-Feb-2003
 	- minor bugfixes (just possible segfaults and such)
 	- window won't freeze during import/export/add operations
