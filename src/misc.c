@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-11 23:39:35 jcs>
+/* Time-stamp: <2003-09-12 23:15:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -318,27 +318,39 @@ You should have received a copy of the GNU General Public License along with thi
 \n\
 \n"),
 		       _("\
-Patches were supplied by the following people (list may be incomplete -- please contact me)\n\
-\n\
-Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n\
-Hiroshi Kawashima: Japanese charset autodetecion feature\n\
-Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n\
+Patches were supplied by the following people (list may be incomplete -- please contact me)\n\n"),
+		       _("\
+Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n"),
+		       _("\
+Hiroshi Kawashima: Japanese charset autodetecion feature\n"),
+		       _("\
+Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"),
+		       _("\
 Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newlines at the end\n"),
 		       _("\
-Sam Clegg: user defined filenames when exporting tracks from the iPod\n\
-Chris Cutler: automatic creation of various playlist types\n\
-Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress dialogue during sync\n\
-Edward Matteucci: debugging, special playlist creation\n\
+Sam Clegg: user defined filenames when exporting tracks from the iPod\n"),
+		       _("\
+Chris Cutler: automatic creation of various playlist types\n"),
+		       _("\
+Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress dialogue during sync\n"),
+		       _("\
+Edward Matteucci: debugging, special playlist creation\n"),
+		       _("\
 Jens Lautenbach: some optical improvements\n"),
 		       "\n\n",
 		       _("\
-This program borrows code from the following projects:\n\
-    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB (http://www.gnu.org/software/gnupod/)\n\
-    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n\
-    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n\
-    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge.net)\n\
-\n\
-The GUI was created with the help of glade-2 (http://glade.gnome.org/)."),
+This program borrows code from the following projects:\n"),
+		       _("\
+    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB (http://www.gnu.org/software/gnupod/)\n"),
+		       _("\
+    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"),
+		       _("\
+    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"),
+		       _("\
+    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge.net)\n"),
+		       "\n",
+		       _("\
+The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"),
 		       NULL };
       gchar **strp = text;
       textview = GTK_TEXT_VIEW (lookup_widget (about_window, "credits_textview"));
@@ -361,7 +373,7 @@ Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot net)\n"
 				     _("\
 Japanese: Ayako Sano\n"),
 				     _("\
-Japanese: Kentaro Fukuchi (fukuchi at is dot titech dot ac dot jp)\n"),
+Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"),
 				     NULL };
       gchar **strp = text;
       textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));

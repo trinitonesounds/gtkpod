@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-07 20:25:40 jcs>
+/* Time-stamp: <2003-09-12 23:15:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -122,15 +122,15 @@ static void usage (FILE *file)
   usage_fpf(file, _("gtkpod version %s usage:\n"), VERSION);
   usage_fpf(file, _("  -h, --help:   display this message\n"));
   usage_fpf(file, _("  -m path:      define the mountpoint of your iPod\n"));
-  usage_fpf(file, _("  --mountpoint: same as \"-m\".\n"));
+  usage_fpf(file, _("  --mountpoint: same as '-m'.\n"));
   usage_fpf(file, _("  -w:           write changed ID3 tags to file\n"));
-  usage_fpf(file, _("  --id3_write:   same as \"-w\".\n"));
+  usage_fpf(file, _("  --id3_write:   same as '-w'.\n"));
   usage_fpf(file, _("  -c:           check files automagically for duplicates\n"));
-  usage_fpf(file, _("  --md5:        same as \"-c\".\n"));
+  usage_fpf(file, _("  --md5:        same as '-c'.\n"));
   usage_fpf(file, _("  -a:           import database automatically after start.\n"));
-  usage_fpf(file, _("  --auto:       same as \"-a\".\n"));
-  usage_fpf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n                used with \"Offline\" deactivated.\n"));
-  usage_fpf(file, _("  --offline:    same as \"-o\".\n"));
+  usage_fpf(file, _("  --auto:       same as '-a'.\n"));
+  usage_fpf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n                used with 'Offline' deactivated.\n"));
+  usage_fpf(file, _("  --offline:    same as '-o'.\n"));
 }
 
 struct cfg *cfg_new(void)
@@ -627,7 +627,7 @@ read_prefs_defaults(void)
 	  }
 	  else
 	  {
-	      gtkpod_warning(_("Unable to open config file \"%s\" for reading\n"), filename);
+	      gtkpod_warning(_("Unable to open config file '%s' for reading\n"), filename);
 	  }
       }
   }
@@ -878,7 +878,7 @@ write_prefs (void)
 	  }
 	else
 	  {
-	    gtkpod_warning (_("Unable to open \"%s\" for writing\n"),
+	    gtkpod_warning (_("Unable to open '%s' for writing\n"),
 			    filename);
 	  }
       }
@@ -1246,7 +1246,7 @@ gchar *prefs_get_cfgdir (void)
 	{
 	  if(mkdir(cfgdir, 0755) == -1)
 	    {
-	      gtkpod_warning(_("Unable to \"mkdir %s\"\n"), cfgdir);
+	      gtkpod_warning(_("Unable to 'mkdir %s'\n"), cfgdir);
 	      C_FREE (cfgdir); /*defined in misc.h*/
 	    }
 	}
