@@ -74,6 +74,9 @@ Please feel free to submit further features.
 
 BUGLIST:
 
+- Dragging tracks into a new playlist (i.e. in between two playlists)
+  leaves the newly created playlist empty.
+
 - Submitted By: Olivier Magere (omagere)   [ 873014 ]
 
   I tried to reconcile my Ipod with GtkPod. I wanted to remove

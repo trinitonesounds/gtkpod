@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-26 23:12:36 JST jcs>
+/* Time-stamp: <2004-03-12 00:18:00 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2308,6 +2308,9 @@ void generate_category_playlists (T_item cat)
     case T_COMPOSER:
 	qualifier = _("CO:");
 	break;
+    case T_YEAR:
+	qualifier = _("YE:");
+	break;
     default:
 	qualifier = NULL;
 	break;
@@ -2329,8 +2332,17 @@ void generate_category_playlists (T_item cat)
 	gchar *category = NULL;
 	gchar *track_cat = NULL;
 	int playlists_len = get_nr_of_playlists();
+	gchar yearbuf[12];
 
-	track_cat = track_get_item_utf8 (track, cat);
+	if (cat == T_YEAR)
+	{
+	    snprintf (yearbuf, 11, "%d", track->year);
+	    track_cat = yearbuf;
+	}
+	else
+	{
+	    track_cat = track_get_item_utf8 (track, cat);
+	}
 
 	if (track_cat)
 	{
@@ -2391,9 +2403,76 @@ Playlist *generate_selected_playlist (void)
     return result;
 }
 
+
+static void not_listed_make_track_list (gpointer key, gpointer track,
+					gpointer tracks)
+{
+    *(GList **)tracks = g_list_append (*(GList **)tracks, (Track *)track);
+}
+
+/* Generate a playlist containing all tracks that are not part of any
+   playlist.
+   For this, playlists starting with a "[" (generated playlists) are
+   being ignored. */
+Playlist *generate_not_listed_playlist (void)
+{
+    GHashTable *hash = g_hash_table_new (NULL, NULL);
+    GList *gl, *tracks=NULL;
+    guint32 pl_nr, i;
+    gchar *pl_name;
+    Playlist *sel_pl, *new_pl, *pl;
+    gboolean select = FALSE;
+
+    /* Create hash with all track/track pairs */
+    pl = get_playlist_by_nr (0);
+    if (pl)
+    {
+	for (gl=pl->members; gl != NULL; gl=gl->next)
+	{
+	    g_hash_table_insert (hash, gl->data, gl->data);
+	}
+    }
+    /* remove all tracks that are members of other playlists */
+    pl_nr = get_nr_of_playlists ();
+    for (i=1; i<pl_nr; ++i)
+    {
+	pl = get_playlist_by_nr (i);
+	/* skip playlists starting with a '[' */
+	if (pl && pl->name && (pl->name[0] != '['))
+	{
+	    for (gl=pl->members; gl != NULL; gl=gl->next)
+	    {
+		g_hash_table_remove (hash, gl->data);
+	    }
+	}
+    }
+
+    g_hash_table_foreach (hash, not_listed_make_track_list, &tracks);
+    g_hash_table_destroy (hash);
+    hash = NULL;
+
+    pl_name = g_strdup_printf ("[%s]", _("Not Listed"));
+
+    /* currently selected playlist */
+    sel_pl= pm_get_selected_playlist ();
+    /* remove all playlists with named pl_name */
+    remove_playlist_by_name (pl_name);
+    /* check if we deleted the selected playlist */
+    if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
+    new_pl = generate_playlist_with_name (tracks, pl_name);
+    if (new_pl && select)
+    {   /* need to select newly created playlist because the old
+	 * selection was deleted */
+	pm_select_playlist (new_pl);
+    }
+    g_free (pl_name);
+    return new_pl;
+}
+
+
 /* Generate a playlist consisting of the tracks in @tracks
  * with @name name */
-Playlist *generate_playlist_with_name (GList *tracks,gchar *pl_name){
+Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name){
     GList *l;
     Playlist *pl=NULL;
     gint n = g_list_length (tracks);
@@ -2506,7 +2585,7 @@ static void update_ranked_playlist(gchar *str, gint tracks_nr,
     /* check if we deleted the selected playlist */
     if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
     new_pl = add_ranked_playlist (str2, tracks_nr, insertfunc, compfunc);
-    if (select)
+    if (new_pl && select)
     {   /* need to select newly created playlist because the old
 	 * selection was deleted */
 	pm_select_playlist (new_pl);

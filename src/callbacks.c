@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-07 01:35:35 JST jcs>
+/* Time-stamp: <2004-03-12 00:10:53 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1946,3 +1946,20 @@ on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
     prefs_window_set_concal_autosync
 	(gtk_toggle_button_get_active(togglebutton));
 }
+
+void
+on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    generate_category_playlists (T_YEAR);
+}
+
+
+void
+on_all_tracks_not_listed_in_any_playlist1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    generate_not_listed_playlist ();
+}
+

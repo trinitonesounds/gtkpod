@@ -734,3 +734,12 @@ on_sync_contacts_activate              (GtkMenuItem     *menuitem,
 void
 on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
 					gpointer         user_data);
+
+void
+on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_all_tracks_not_listed_in_any_playlist1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

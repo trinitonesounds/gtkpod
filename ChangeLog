@@ -7,6 +7,9 @@ gtkpod V0.73-CVS
 	Only one script is included so far: kaddressbook_ipod. Please
 	submit more for inclusion into the next release.
 
+	IMPROVEMENT: added new auto-playlists: "One playlist for each
+	year" and "Playlist with all songs not listed in any playlist".
+
 	IMPROVEMENT: can specify several templates to scan the filename
 	for tags using the ';' as a separator
 
