@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-24 23:48:42 jcs>
+/* Time-stamp: <2003-09-29 09:38:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -258,7 +258,7 @@ gchar *charset_to_description (gchar *charset)
 
 /* code for automatic detection of Japanese char-subset donated by
    Hiroshi Kawashima */
-gchar *charset_check_k_code (guchar *p)
+gchar *charset_check_k_code (G_CONST_RETURN guchar *p)
 {
     while (p && *p && (*p != '\n'))
     {
@@ -280,7 +280,7 @@ gchar *charset_check_k_code (guchar *p)
 }
 
 /* same as check_k_code, but defaults to "EUC-JP" if no match is found */
-gchar *charset_check_k_code_with_default (guchar *p)
+gchar *charset_check_k_code_with_default (G_CONST_RETURN guchar *p)
 {
     gchar *result=NULL;
 
@@ -307,7 +307,7 @@ gchar *charset_check_auto (gchar *str)
  * utf8. If cfg->charset is NULL, "str" is assumed to be in the
  * current locale charset */
 /* Must free the returned string yourself */
-gchar *charset_to_utf8 (gchar *str)
+gchar *charset_to_utf8 (G_CONST_RETURN gchar *str)
 {
     G_CONST_RETURN gchar *charset;
 
@@ -325,7 +325,7 @@ gchar *charset_to_utf8 (gchar *str)
  * cfg->charset. If cfg->charset is NULL, "str" is converted to the
  * current locale charset */
 /* Must free the returned string yourself */
-gchar *charset_from_utf8 (gchar *str)
+gchar *charset_from_utf8 (G_CONST_RETURN gchar *str)
 {
     G_CONST_RETURN gchar *charset;
 
@@ -342,7 +342,7 @@ gchar *charset_from_utf8 (gchar *str)
  * this is NULL, try cfg->charset. If cfg->charset is also NULL, "str"
  * is converted to the current locale charset */
 /* Must free the returned string yourself */
-gchar *charset_song_charset_from_utf8 (Song *s, gchar *str)
+gchar *charset_song_charset_from_utf8 (Song *s, G_CONST_RETURN gchar *str)
 {
     G_CONST_RETURN gchar *charset;
 
@@ -360,7 +360,8 @@ gchar *charset_song_charset_from_utf8 (Song *s, gchar *str)
 /* Convert "str" from "from_charset" to "to_charset", trying to skip
    illegal character as best as possible */
 /* Must free the returned string yourself */
-gchar *charset_to_charset (gchar *from_charset, gchar *to_charset, gchar *str)
+gchar *charset_to_charset (gchar *from_charset, gchar *to_charset,
+			   G_CONST_RETURN gchar *str)
 {
     gchar *ret;
     gssize len;

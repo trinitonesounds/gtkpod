@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 00:34:07 jcs>
+/* Time-stamp: <2003-09-29 22:52:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -98,6 +98,7 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
     frame = id3_tag_findframe (tag, frame_name, 0);
     if (!frame) 
     {
+	puts("new frame!");
 	frame = id3_frame_new (frame_name);
 	id3_tag_attachframe (tag, frame);
     }
@@ -113,22 +114,29 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
 	field->type = ID3_FIELD_TYPE_STRINGLIST;
     }
 
-    ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
-
     if (frame_name == ID3_FRAME_GENRE)
     {
-	char *tmp;
- 	int index = id3_genre_number (ucs4);
-	g_free (ucs4);
+	gchar *tmp;
+	id3_ucs4_t *tmp_ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
+ 	int index = id3_genre_number (tmp_ucs4);
 	tmp = g_strdup_printf("%d", index);
 	ucs4 = id3_latin1_ucs4duplicate (tmp);
+	g_free (tmp_ucs4);
+	g_free (tmp);
     }
-    g_free (ucs4);
+    else
+    {
+	id3_latin1_t *raw = charset_from_utf8 (data);
+	ucs4 = id3_latin1_ucs4duplicate (raw);
+	g_free (raw);
+    }
 
     if (frame_name == ID3_FRAME_COMMENT)
         res = id3_field_setfullstring (field, ucs4);
     else 
         res = id3_field_setstrings (field, 1, &ucs4);
+
+    g_free (ucs4);
 
     if (res != 0)
 	g_print("error setting id3 field: %s\n", frame_name);
