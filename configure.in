@@ -1,0 +1,92 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(configure.in)
+AM_INIT_AUTOMAKE(gtkpod, 0.12)
+AM_CONFIG_HEADER(config.h)
+AM_MAINTAINER_MODE
+
+AC_ISC_POSIX
+AC_PROG_CC
+AM_PROG_CC_STDC
+AC_HEADER_STDC
+
+AC_ARG_ENABLE(shared_id3,
+	[  --disable-shared-id3    use static id3lib],
+        , enable_shared_id3=yes)
+
+pkg_modules="gtk+-2.0 >= 2.0.0"
+PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
+AC_SUBST(PACKAGE_CFLAGS)
+AC_SUBST(PACKAGE_LIBS)
+
+GETTEXT_PACKAGE=gtkpod
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
+
+dnl Add the languages which your application supports here.
+ALL_LINGUAS=""
+AM_GLIB_GNU_GETTEXT
+
+dnl check BIG/LITTLE endian
+dnl WORDS_BIGENDIAN is defined if we have to deal with BIGENDIAN
+AC_C_BIGENDIAN (,,)
+
+dnl Id3lib librairies
+dnl Check which libs are required by id3lib
+AC_SEARCH_LIBS(ID3Tag_Link,"id3" "id3 -lstdc++" "id3 -lz" "id3 -lz -lstdc++",,AC_MSG_ERROR(id3lib not found))
+if test "$enable_shared_id3" = "yes"; then
+  echo "using shared id3lib"
+  LIBS="-lz -lstdc++ $LIBS"
+else
+  echo "using static id3lib"
+  LIBS="$prefix/lib/libid3.a -lz -lstdc++ $LIBS"
+fi
+
+dnl expected version for cross compiling
+ID3LIB_MAJOR=3
+ID3LIB_MINOR=8
+ID3LIB_PATCH=0
+
+AC_MSG_CHECKING(for id3lib version)
+      AC_TRY_RUN([
+#include <id3.h>
+#include <stdio.h>
+int 
+main ()
+{
+    FILE *output;
+    output=fopen("conftest.id3","w");
+    fprintf(output,"ID3LIB_MAJOR=%d\nID3LIB_MINOR=%d\nID3LIB_PATCH=%d\n",ID3LIB_MAJOR_VERSION,ID3LIB_MINOR_VERSION,ID3LIB_PATCH_VERSION);
+    fclose(output);
+    exit(0);
+}
+], . conftest.id3; echo "${ID3LIB_MAJOR}.${ID3LIB_MINOR}.${ID3LIB_PATCH}", AC_MSG_WARN(could not determine id3lib version),[echo $ac_n "cross compiling; assuming ${ID3LIB_MAJOR}.${ID3LIB_MINOR}.${ID3LIB_PATCH} $ac_c"])
+AC_DEFINE_UNQUOTED(ID3LIB_MAJOR, $ID3LIB_MAJOR)
+AC_DEFINE_UNQUOTED(ID3LIB_MINOR, $ID3LIB_MINOR)
+AC_DEFINE_UNQUOTED(ID3LIB_PATCH, $ID3LIB_PATCH)
+
+
+
+AC_OUTPUT([
+Makefile
+src/Makefile
+po/Makefile.in
+])
+
+echo "
+Configuration for $PACKAGE $VERSION :
+--------------------------------
+
+ Source code location .: $srcdir
+ Host System Type .....: $host
+ Preprocessor .........: $CC $CPPFLAGS
+ Compiler .............: $CC $CFLAGS $LIBFLAC_CFLAGS
+ Linker ...............: $CC $LDFLAGS $LIBS $LIBFLAC_LIBS
+ GTK+ version .........: `gtk-config --version`
+ Id3lib version .......: $ID3LIB_MAJOR.$ID3LIB_MINOR.$ID3LIB_PATCH
+ NLS/gettext ..........: $USE_NLS
+ Install path .........: $prefix
+
+ Now type 'make' to build $PACKAGE $VERSION,
+ and then 'make install' for installation.
+"

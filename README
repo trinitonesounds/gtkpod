@@ -1,0 +1,148 @@
+iPod, iTunes, Mac, Macintosh, iBook are trademarks of Apple Computer,
+Inc., registered in the U.S. and other countries.
+
+
+Short instructions:
+-------------------
+
+
+Connecting iPod to a Linux box:
+-------------------------------
+
+1) You need a Windows iPod. See e.g.
+
+http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipode
+
+for information about how to convert your mac iPod to a windows iPod.
+
+2) Get kernel source and configure
+Needed configuration:
+
+    * Code maturity level options - y
+    * SCSI support - y
+    * SCSI disk support - m
+    * IEEE1394 (FireWire)/IEEE 1394 (FireWire) support (Experimental) - y
+    * OHCI-1394 support - y
+    * SBP-2 support - m
+
+3) Create /mnt/ipod:
+
+   mkdir /mnt/ipod
+
+4) Add a line to /etc/fstab. You should edit uid to match your user
+   id. Also, /dev/sda2 may not be appropriate, if you have other scsi
+   devices.
+
+/dev/sda2	/mnt/ipod	vfat	uid=1000,user,defaults,noatime,errors=remount 0 0
+
+5) Connect your iPod to your computer and wait until you see something
+   like the following on your system log (you can use the 'dmesg'
+   command to check).
+
+Nov 28 21:58:06 hatarakibachi kernel: ieee1394: Node 00:1023 changed to 01:1023
+Nov 28 21:58:09 hatarakibachi kernel: ieee1394: Node 01:1023 changed to 00:1023
+Nov 28 21:58:12 hatarakibachi kernel: ieee1394: NodeMgr: hotplug policy returned -2
+Nov 28 21:58:12 hatarakibachi kernel: ieee1394: Device added: Node[00:1023]  GUID[000a2700020680b5]  [Apple Computer, Inc.]
+Nov 28 21:58:12 hatarakibachi kernel: ieee1394: Node 00:1023 changed to 01:1023
+
+6) Load the sbp2 module (most likely as root):
+
+   modprobe sbp2
+
+   You should see something like the following on your system log:
+
+Nov 28 21:58:38 hatarakibachi kernel: ieee1394: sbp2: Logged into SBP-2 device
+Nov 28 21:58:38 hatarakibachi kernel: scsi0 : IEEE-1394 SBP-2 protocol driver (host: ohci1394)
+Nov 28 21:58:38 hatarakibachi kernel: $Rev$ James Goodwin <jamesg@filanet.com>
+Nov 28 21:58:38 hatarakibachi kernel: SBP-2 module load options:
+Nov 28 21:58:38 hatarakibachi kernel: - Max speed supported: S400
+Nov 28 21:58:38 hatarakibachi kernel: - Max sectors per I/O supported: 255
+Nov 28 21:58:38 hatarakibachi kernel: - Max outstanding commands supported: 8
+Nov 28 21:58:38 hatarakibachi kernel: - Max outstanding commands per lun supported: 1
+Nov 28 21:58:38 hatarakibachi kernel: - Serialized I/O (debug): no
+Nov 28 21:58:38 hatarakibachi kernel: - Exclusive login: yes
+Nov 28 21:58:38 hatarakibachi kernel:   Vendor: Apple     Model: iPod              Rev: 1.21
+Nov 28 21:58:38 hatarakibachi kernel:   Type:   Direct-Access                      ANSI SCSI revision: 02
+Nov 28 21:58:38 hatarakibachi kernel: Attached scsi removable disk sda at scsi0, channel 0, id 0, lun 0
+Nov 28 21:58:38 hatarakibachi kernel: SCSI device sda: 39062520 512-byte hdwr sectors (20000 MB)
+Nov 28 21:58:38 hatarakibachi kernel: sda: test WP failed, assume Write Enabled
+Nov 28 21:58:39 hatarakibachi kernel:  sda: sda1 sda2
+
+7) Mount the iPod hard drive
+
+   mount /mnt/ipod
+
+8) do whatever you need to do (e.g. start gtkpod, see below)
+
+9) Unmount the iPod:
+
+    umount /mnt/ipod
+
+10) Unload the module sbp2 (as most likely as root):
+
+    rmmod sbp2
+
+11) Disconnect the iPod from your computer.
+
+
+
+Using gtkpod
+------------
+
+Make sure you have followed steps 1-7 above. Then:
+
+
+1) make a backup of your iTunesDB:
+
+cp /mnt/ipod/iPod_Control/iTunes/iTunesDB /mnt/ipod/iPod_Control/iTunes/iTunesDB.bak
+
+2) Start gtkpod
+
+3) Use "Import" to import the contents of your old iTunesDB.
+
+4) Use "Add Files" and "Add Directories" to add files or directories.
+
+5) Use "Export" to write the added files to the iPod and create a new
+    iTunesDB.
+
+6) Quit the program. BTW: all other menu items do have no meaning
+    (yet).
+
+and continue with step 8-11 above.
+
+
+
+Comments:
+---------
+ID3 tags are assumed to be stored in the charset corresponding to the
+current locale setting (this will be made configurable in a later
+version). To add files with tags in a different encoding, you need to
+
+- export the iTunesDB
+- quit the program
+- set the locale accordingly
+- restart the program
+- import the iTunesDB
+- add the files with different encoding
+...
+
+The iTunesDB itself is using UTF16, so once entered correctly, they
+will still be correct after import under a different locale.
+
+
+
+About filenames (excerpt from the GTK2 release notes):
+------------------------------------------------------
+* The assumption of GLib and GTK+ by default is that filenames on the
+  filesystem are encoded in UTF-8 rather than the encoding of the locale;
+  The GTK+ developers consider that having filenames whose interpretation
+  depends on the current locale is fundamentally a bad idea.
+
+  If you have filenames encoded in the encoding of your locale, then
+  you may want to set the G_BROKEN_FILENAMES environment variable:
+  
+   G_BROKEN_FILENAMES=1
+   export G_BROKEN_FILENAMES
+
+  Best integration of GTK+-2.0 with the environment is achieved by 
+  using a UTF-8 locale.
