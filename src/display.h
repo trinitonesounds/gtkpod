@@ -39,6 +39,11 @@
    is not changed automatically! */
 #define SORT_TAB_NUM 2
 
+/* Number of GtkPaned elements in the main window. The positions of
+ * these elements will be stored in the prefs file and be set to the
+ * last value when starting gtkpod again */
+#define PANED_NUM 3
+
 /* Categories in each sort tab (page numbers) */
 enum {
   ST_CAT_ARTIST = 0,
@@ -73,6 +78,11 @@ enum  {
 };
 
 /* Column numbers in song model */
+/* Note: the toggle buttons for tag_autoset in the prefs_window are
+ * named after the numbers (Title: tag_autoset0, Artist: tag_autoset1
+ * etc.) Therefore, if you change the order of the first
+ * SM_NUM_TAGS_PREFS entries, you should also adjust the names in
+ * gtkpod.glade and rebuild the interface */
 enum  {
   SM_COLUMN_TITLE = 0,
   SM_COLUMN_ARTIST,
@@ -86,7 +96,9 @@ enum  {
   SM_NUM_COLUMNS
 };
 
-#define  SM_NUM_COLUMNS_PREFS (5) /* number of colums for prefs size storage */
+#define SM_NUM_COLUMNS_PREFS (5) /* number of colums for prefs size storage */
+#define SM_NUM_TAGS_PREFS (4)    /* number of entries with "tag
+				  * autoset" feature */
 
 /* "Column numbers" in playlist model */
 enum  {
@@ -116,8 +128,9 @@ void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 guint sm_get_nr_of_songs(void);
 void sm_rows_reordered_callback(void);
 void sm_show_preferred_columns(void);
-void sm_update_prefs_sm_col_width (void);
 
 Playlist* get_currently_selected_playlist(void);
 GList* get_currently_selected_songs(void);
+void display_update_default_sizes (void);
+void display_set_default_sizes (void);
 #endif __TREE_H__

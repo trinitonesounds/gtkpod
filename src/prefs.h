@@ -77,6 +77,8 @@ struct cfg
   struct win_size size_conf_sw; /* last size of gtkpod main window */
   struct win_size size_conf;    /* last size of gtkpod main window */
   gint sm_col_width[SM_NUM_COLUMNS_PREFS]; /* width colums in song model */
+  gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
+  gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 };
 
 /* enum for reading of options */
@@ -124,6 +126,8 @@ void prefs_set_size_gtkpod (gint x, gint y);
 void prefs_set_size_conf_sw (gint x, gint y);
 void prefs_set_size_conf (gint x, gint y);
 void prefs_set_sm_col_width (gint col, gint width);
+void prefs_set_tag_autoset (gint category, gboolean autoset);
+void prefs_set_paned_pos (gint i, gint pos);
 
 gboolean prefs_get_offline(void);
 gboolean prefs_get_keep_backups(void);
@@ -145,5 +149,7 @@ void prefs_get_size_gtkpod (gint *x, gint *y);
 void prefs_get_size_conf_sw (gint *x, gint *y);
 void prefs_get_size_conf (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
+gboolean prefs_get_tag_autoset (gint category);
+gint prefs_get_paned_pos (gint i);
 
 #endif __PREFS_H__

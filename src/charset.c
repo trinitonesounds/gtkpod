@@ -152,7 +152,7 @@ void charset_init_combo (GtkCombo *combo)
 	ci=charset_info;
 	while (ci->descr != NULL)
 	{
-	    charsets = g_list_append (charsets, ci->descr);
+	    charsets = g_list_append (charsets, gettext (ci->descr));
 	    ++ci;
 	}
 	/* now add all the charsets listed by "iconv -l" */
@@ -182,7 +182,7 @@ gchar *charset_from_description (gchar *descr)
     ci = charset_info;
     while (ci->descr != NULL)
     {
-	if (g_utf8_collate (descr, ci->descr) == 0)
+	if (g_utf8_collate (descr, gettext (ci->descr)) == 0)
 	{
 	    return g_strdup (ci->name);
 	}
@@ -209,7 +209,7 @@ gchar *charset_to_description (gchar *charset)
     {
 	if (g_utf8_collate (charset, ci->name) == 0)
 	{
-	    return g_strdup (ci->descr);
+	    return g_strdup (gettext (ci->descr));
 	}
 	++ci;
     }

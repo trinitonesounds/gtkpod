@@ -118,7 +118,9 @@ static void set_entry_from_filename (Song *song, gint column)
 {
   gchar *str;
 
-  if (song->pc_path_utf8 && strlen (song->pc_path_utf8))
+  if (prefs_get_tag_autoset (column) &&
+      song->pc_path_utf8 &&
+      strlen (song->pc_path_utf8))
     {
       switch (column)
 	{
@@ -133,6 +135,10 @@ static void set_entry_from_filename (Song *song, gint column)
 	case SM_COLUMN_ARTIST:
 	  str = g_path_get_basename (song->pc_path_utf8);
 	  set_entry (&song->artist, &song->artist_utf16, str);
+	  break;
+	case SM_COLUMN_GENRE:
+	  str = g_path_get_basename (song->pc_path_utf8);
+	  set_entry (&song->genre, &song->genre_utf16, str);
 	  break;
 	}	  
     }

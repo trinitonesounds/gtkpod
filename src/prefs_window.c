@@ -36,6 +36,25 @@ static GtkWidget *prefs_window = NULL;
 static struct cfg *tmpcfg = NULL;
 
 static void prefs_window_song_list_init(void);
+static void prefs_window_set_tag_autoset (gint category, gboolean autoset);
+static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
+
+static void on_cfg_st_autoselect_toggled (GtkToggleButton *togglebutton,
+					  gpointer         user_data)
+{
+    prefs_window_set_st_autoselect (
+	(guint32)user_data,
+	gtk_toggle_button_get_active(togglebutton));
+}
+
+static void on_cfg_tag_autoset_toggled (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    prefs_window_set_tag_autoset (
+	(guint32)user_data,
+	gtk_toggle_button_get_active(togglebutton));
+}
+
 /**
  * create_gtk_prefs_window
  * Create, Initialize, and Show the preferences window
@@ -104,7 +123,7 @@ prefs_window_create(void)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					     tmpcfg->st[i].autoselect);
 		/* glade makes a "GTK_OBJECT (i)" which segfaults
-		   because it's not GTK object. So we have to set up
+		   because "i" is not a GTK object. So we have to set up
 		   the signal handlers ourselves */
 		g_signal_connect ((gpointer)w,
 				  "toggled",
@@ -113,6 +132,25 @@ prefs_window_create(void)
 	    }
 	    g_free (buf);
 	}
+	for (i=0; i<SM_NUM_TAGS_PREFS; ++i)
+	{
+	    gchar *buf;
+	    buf = g_strdup_printf ("tag_autoset%d", i);
+	    if((w = lookup_widget(prefs_window,  buf)))
+	    {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					     tmpcfg->tag_autoset[i]);
+		/* glade makes a "GTK_OBJECT (i)" which segfaults
+		   because "i" is not a GTK object. So we have to set up
+		   the signal handlers ourselves */
+		g_signal_connect ((gpointer)w,
+				  "toggled",
+				  G_CALLBACK (on_cfg_tag_autoset_toggled),
+				  (gpointer)i);
+	    }
+	    g_free (buf);
+	}
+	
 	if((w = lookup_widget(prefs_window, "cfg_keep_backups")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -160,6 +198,9 @@ prefs_window_save(void)
     for (i=0; i<SORT_TAB_NUM; ++i) {
 	prefs_set_st_autoselect (i, tmpcfg->st[i].autoselect);
 	prefs_set_st_category (i, tmpcfg->st[i].category);
+    }
+    for (i=0; i<SM_NUM_TAGS_PREFS; ++i) {
+	prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
     }
     prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
@@ -349,4 +390,10 @@ void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
     {
 	tmpcfg->st[inst].autoselect = autoselect;
     }
+}
+
+void prefs_window_set_tag_autoset (gint category, gboolean autoset)
+{
+    if (category < SM_NUM_TAGS_PREFS)
+	tmpcfg->tag_autoset[category] = autoset;
 }

@@ -44,7 +44,7 @@
 static GtkTreeView *song_treeview = NULL;
 static GtkTreeView *playlist_treeview = NULL;
        /* pointer to the columns used in the song display */
-static GtkTreeViewColumn *sm_columns[SM_NUM_COLUMNS_PREFS];
+static GtkTreeViewColumn *sm_columns[SM_NUM_COLUMNS];
 
 static SortTab *sorttab[SORT_TAB_NUM];
 
@@ -1677,24 +1677,6 @@ sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
     }
 }
 
-/* Update width of the song columns in the prefs structure */
-void sm_update_prefs_sm_col_width (void)
-{
-    gint i;
-    GtkTreeViewColumn *col;
-
-    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
-    {
-	col = sm_columns [i];
-	if (col)
-	{
-	    prefs_set_sm_col_width (i,
-				    gtk_tree_view_column_get_width (col));
-	}
-    }
-}
-
-
 /* Adds the columns to our song_treeview */
 static void add_song_columns ()
 {
@@ -1717,12 +1699,9 @@ static void add_song_columns ()
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
   gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
 				(gpointer)col_id);
@@ -1742,12 +1721,9 @@ static void add_song_columns ()
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
   gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
 				(gpointer)col_id);
@@ -1766,12 +1742,9 @@ static void add_song_columns ()
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
   gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
 				(gpointer)col_id);
@@ -1790,12 +1763,9 @@ static void add_song_columns ()
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
   gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
 				(gpointer)col_id);
@@ -1814,12 +1784,9 @@ static void add_song_columns ()
   gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
 				(gpointer)col_id);
@@ -1836,12 +1803,9 @@ static void add_song_columns ()
   gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   gtk_tree_view_append_column (song_treeview, column);
 
   /* pc_path column */
@@ -1856,12 +1820,9 @@ static void add_song_columns ()
 					    sm_cell_data_func, NULL, NULL);
   gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   gtk_tree_view_append_column (song_treeview, column);
   
   /* transferred column */
@@ -1876,12 +1837,9 @@ static void add_song_columns ()
   gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   gtk_tree_view_append_column (song_treeview, column);
   
   /* Gtkpod playlist sorting */
@@ -1893,12 +1851,9 @@ static void add_song_columns ()
 						    NULL);
   gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
-  if (col_id < SM_NUM_COLUMNS_PREFS)
-  {
-      sm_columns[col_id] = column;
-      gtk_tree_view_column_set_fixed_width (column,
-					    prefs_get_sm_col_width (col_id));
-  }
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
   gtk_tree_view_append_column (song_treeview, column);
 
   sm_show_preferred_columns();
@@ -2094,4 +2049,82 @@ get_currently_selected_songs(void)
 					    &result);
     }
     return(result);
+}
+
+
+/* set the default sizes for the gtkpod main window according to prefs:
+   x, y, position of the PANED_NUM GtkPaned elements (the widht of the
+   colums is set when setting up the colums in the listview */
+void display_set_default_sizes (void)
+{
+    gint defx, defy, i;
+    GtkWidget *w;
+    gchar *buf;
+
+    /* x,y-size */
+    prefs_get_size_gtkpod (&defx, &defy);
+    gtk_window_set_default_size (GTK_WINDOW (gtkpod_window), defx, defy);
+
+    /* GtkPaned elements */
+    if (gtkpod_window)
+    {
+	for (i=0; i<PANED_NUM; ++i)
+	{
+	    if (prefs_get_paned_pos (i) != -1)
+	    {
+		buf = g_strdup_printf ("paned%d", i);
+		if((w = lookup_widget(gtkpod_window,  buf)))
+		    gtk_paned_set_position (GTK_PANED (w),
+					    prefs_get_paned_pos (i));
+		g_free (buf);
+	    }
+	}
+    }
+}
+
+
+/* update the cfg structure (preferences) with the current sizes /
+   positions:
+   x,y size of main window
+   column widths of song model
+   position of GtkPaned elements */
+void display_update_default_sizes (void)
+{
+    gint x,y,i;
+    gchar *buf;
+    GtkWidget *w;
+    GtkTreeViewColumn *col;
+
+    /* column widths */
+    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    {
+	col = sm_columns [i];
+	if (col)
+	{
+	    prefs_set_sm_col_width (i,
+				    gtk_tree_view_column_get_width (col));
+	}
+    }
+
+    /* x,y size of main window */
+    if (gtkpod_window)
+    {
+	gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
+	prefs_set_size_gtkpod (x, y);
+    }
+
+    /* GtkPaned elements */
+    if (gtkpod_window)
+    {
+	for (i=0; i<PANED_NUM; ++i)
+	{
+	    buf = g_strdup_printf ("paned%d", i);
+	    if((w = lookup_widget(gtkpod_window,  buf)))
+	    {
+		prefs_set_paned_pos (i,
+				     gtk_paned_get_position (GTK_PANED (w)));
+	    }
+	    g_free (buf);
+	}
+    }
 }

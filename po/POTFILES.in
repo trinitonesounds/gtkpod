@@ -2,7 +2,7 @@
 
 src/callbacks.c
 src/charset.c
-src/delete_window.c
+src/confirmation.c
 src/dirbrowser.c
 src/display.c
 src/file_export.c

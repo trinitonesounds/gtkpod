@@ -83,7 +83,7 @@ struct cfg *cfg_new(void)
     }
     else
     {
-	mycfg->ipod_mount = g_strdup ("/mnt");
+	mycfg->ipod_mount = g_strdup ("/mnt/ipod");
     }
     mycfg->charset = NULL;
     mycfg->deletion.song = TRUE;
@@ -108,6 +108,17 @@ struct cfg *cfg_new(void)
     {
 	mycfg->sm_col_width[i] = 80;
     }
+    for (i=0; i<SM_NUM_TAGS_PREFS; ++i)
+    {
+	mycfg->tag_autoset[i] = FALSE;
+    }
+    for (i=0; i<PANED_NUM; ++i)
+    {
+	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
+    }
+    mycfg->tag_autoset[SM_COLUMN_ARTIST] = TRUE;
+    mycfg->tag_autoset[SM_COLUMN_ALBUM] = TRUE;
+    mycfg->tag_autoset[SM_COLUMN_TITLE] = TRUE;
     return(mycfg);
 }
 
@@ -140,7 +151,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
 	  /* skip whitespace */
 	  while (ISSPACE(*arg)) ++arg;
-	  if(g_ascii_strcasecmp (line, "mp") == 0)
+	  if(g_ascii_strcasecmp (line, "mountpoint") == 0)
 	  {
 	      gchar mount_point[PATH_MAX];
 	      snprintf(mount_point, PATH_MAX, "%s", arg);
@@ -204,6 +215,16 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint i = atoi (line+12);
 	      prefs_set_sm_col_width (i, atoi (arg));
+	  }      
+	  else if(g_ascii_strncasecmp (line, "tag_autoset", 11) == 0)
+	  {
+	      gint i = atoi (line+11);
+	      prefs_set_tag_autoset (i, atoi (arg));
+	  }      
+	  else if(g_ascii_strncasecmp (line, "paned_pos", 9) == 0)
+	  {
+	      gint i = atoi (line+9);
+	      prefs_set_paned_pos (i, atoi (arg));
 	  }      
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
@@ -353,12 +374,15 @@ static void
 write_prefs_to_file_desc(FILE *fp)
 {
     gint i;
-    gint x,y;
 
     if(!fp)
 	fp = stderr;
-    
-    fprintf(fp, "mp=%s\n", cfg->ipod_mount);
+
+    /* update column widths, x,y-size of main window and GtkPaned
+     * positions */
+    display_update_default_sizes ();
+
+    fprintf(fp, "mountpoint=%s\n", cfg->ipod_mount);
     if (cfg->charset)
     {
 	fprintf(fp, "charset=%s\n", cfg->charset);
@@ -380,21 +404,23 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
 	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
     }
-    sm_update_prefs_sm_col_width (); /* update cfg */
     for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
     {
 	fprintf(fp, "sm_col_width%d=%d\n", i, prefs_get_sm_col_width (i));
+    }	
+    for (i=0; i<SM_NUM_TAGS_PREFS; ++i)
+    {
+	fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_tag_autoset (i));
+    }	
+    for (i=0; i<PANED_NUM; ++i)
+    {
+	fprintf(fp, "paned_pos%d=%d\n", i, prefs_get_paned_pos (i));
     }	
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
     fprintf(fp, "dir_browse=%s\n",cfg->last_dir.browse);
     fprintf(fp, "dir_export=%s\n",cfg->last_dir.export);
-    if (gtkpod_window)
-    {
-	gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
-	prefs_set_size_gtkpod (x, y);
-    }
     fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
     fprintf (fp, "size_gtkpod.y=%d\n", cfg->size_gtkpod.y);
     fprintf (fp, "size_conf_sw.x=%d\n", cfg->size_conf_sw.x);
@@ -739,6 +765,7 @@ void prefs_set_auto_import(gboolean val)
     cfg->autoimport = val;
 }
 
+/* "inst": the instance of the sort tab */
 gboolean prefs_get_st_autoselect (guint32 inst)
 {
     if (inst < SORT_TAB_NUM)
@@ -751,6 +778,8 @@ gboolean prefs_get_st_autoselect (guint32 inst)
     }
 }
 
+/* "inst": the instance of the sort tab, "autoselect": should "All" be
+ * selected automatically? */
 void prefs_set_st_autoselect (guint32 inst, gboolean autoselect)
 {
     if (inst < SORT_TAB_NUM)
@@ -759,6 +788,7 @@ void prefs_set_st_autoselect (guint32 inst, gboolean autoselect)
     }
 }
 
+/* "inst": the instance of the sort tab */
 guint prefs_get_st_category (guint32 inst)
 {
     if (inst < SORT_TAB_NUM)
@@ -771,6 +801,8 @@ guint prefs_get_st_category (guint32 inst)
     }
 }
 
+/* "inst": the instance of the sort tab, "category": one of the
+   ST_CAT_... */
 void prefs_set_st_category (guint32 inst, guint category)
 {
     if ((inst < SORT_TAB_NUM) && (category < ST_CAT_NUM))
@@ -783,17 +815,21 @@ void prefs_set_st_category (guint32 inst, guint category)
     }
 }
 
+/* retrieve the width of the song display columns. "col": one of the
+   SM_COLUMN_... */
 gint prefs_get_sm_col_width (gint col)
 {
-    if (col < SM_NUM_COLUMNS_PREFS)
+    if (col < SM_NUM_COLUMNS_PREFS && (cfg->sm_col_width[col] > 0))
 	return cfg->sm_col_width[col];
     return 80;  /* default -- col should be smaller than
 		   SM_NUM_COLUMNS_PREFS) */
 }
 
+/* set the width of the song display columns. "col": one of the
+   SM_COLUMN_..., "width": current width */
 void prefs_set_sm_col_width (gint col, gint width)
 {
-    if (col < SM_NUM_COLUMNS_PREFS)
+    if (col < SM_NUM_COLUMNS_PREFS && width > 0)
 	cfg->sm_col_width[col] = width;
 }
 
@@ -873,4 +909,42 @@ void prefs_get_size_conf (gint *x, gint *y)
 {
     *x = cfg->size_conf.x;
     *y = cfg->size_conf.y;
+}
+
+
+/* Should empty tags be set to filename? -- "category": one of the
+   SM_COLUMN_..., "autoset": new value */
+void prefs_set_tag_autoset (gint category, gboolean autoset)
+{
+    if (category < SM_NUM_TAGS_PREFS)
+	cfg->tag_autoset[category] = autoset;
+}
+
+
+/* Should empty tags be set to filename? -- "category": one of the
+   SM_COLUMN_... */
+gboolean prefs_get_tag_autoset (gint category)
+{
+    if (category < SM_NUM_TAGS_PREFS)
+	return cfg->tag_autoset[category];
+    return FALSE;
+}
+
+/* get position of GtkPaned element nr. "i" */
+gint prefs_get_paned_pos (gint i)
+{
+    if (i < PANED_NUM)
+	return cfg->paned_pos[i];
+    else
+    {
+	fprintf (stderr, "Programming error: prefs_get_paned_pos: arg out of range (%d)\n", i);
+	return 100; /* something reasonable? */
+    }
+}
+
+/* set position of GtkPaned element nr. "i" */
+void prefs_set_paned_pos (gint i, gint pos)
+{
+    if (i < PANED_NUM)
+	cfg->paned_pos[i] = pos;
 }

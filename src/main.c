@@ -47,7 +47,6 @@
 int
 main (int argc, char *argv[])
 {
-    gint defx, defy;
 
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -72,8 +71,7 @@ main (int argc, char *argv[])
   md5_unique_file_init (NULL); /* init for duplicate detection */
   if(prefs_get_auto_import())
     handle_import();
-  prefs_get_size_gtkpod (&defx, &defy);
-  gtk_window_set_default_size (GTK_WINDOW (gtkpod_window), defx, defy);
+  display_set_default_sizes ();
   gtk_widget_show (gtkpod_window);
   gtk_main ();
   return 0;
