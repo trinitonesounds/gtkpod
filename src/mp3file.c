@@ -1398,6 +1398,7 @@ static inline guint32 parse_lame_uint32(char *buf) {
  *
  * FIXME: Are there other encoders writing a LAME Tag using a different magic
  * string?
+ * TODO: Check CRC.
  */
 
 gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
@@ -1710,6 +1711,39 @@ rg_fail:
 		fclose(file);
 	return FALSE;
 }
+
+
+/* 
+ * mp3_read_gain_tags - try to read the ReplayGain values from the LAME or Ape
+ * Tags. If that does not work run mp3gain.
+ *
+ * @path: localtion of the file
+ * @track: structure holding track information
+ *
+ * The function always rereads the gains. Even if they have been previuosly
+ * known.
+ *
+ * Returns TRUE if at least the radio_gain could be read.
+ */
+
+gboolean mp3_read_gain_tags(gchar *path, Track *track) 
+{
+	track->radio_gain_set = FALSE;
+	track->audiophile_gain_set = FALSE;
+	track->peak_signal_set = FALSE;
+
+	mp3_get_track_lame_replaygain(path, track);
+	if (track->radio_gain_set && track->peak_signal_set) return TRUE;
+	
+	mp3_get_track_ape_replaygain(path, track);
+	if (track->radio_gain_set) return TRUE;
+	    
+/*	if (nm_mp3gain_calc_gain(track))
+	mp3_get_track_ape_replaygain(path, track); */
+	return FALSE;
+}
+
+
 /* ----------------------------------------------------------------------
 
 	      From here starts original gtkpod code
@@ -1795,12 +1829,7 @@ Track *file_get_mp3_info (gchar *name)
 	}
     }
 
-    mp3_get_track_lame_replaygain(name, track);
-/*    track->peak_signal_set = FALSE;
-    track->radio_gain_set = FALSE;
-    track->audiophile_gain_set = FALSE; */
-    mp3_get_track_ape_replaygain(name, track);
-/*    printf("\n");*/
+    mp3_read_gain_tags(name, track);
 
     /* Get additional info (play time and bitrate */
     mp3info = mp3file_get_info (name);

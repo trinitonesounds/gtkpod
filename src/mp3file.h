@@ -33,6 +33,6 @@
 
 gboolean file_write_mp3_info (gchar *filename, Track *track);
 Track *file_get_mp3_info (gchar *name);
-gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track);
-gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track);
+gboolean mp3_read_gain_tags(gchar *path, Track *track);
+
 #endif

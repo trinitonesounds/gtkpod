@@ -171,28 +171,33 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
 }
 
 
+static gboolean calc_gain(Track *track) 
+{
+	return nm_mp3gain_calc_gain(track);
+}
+
+
+static gboolean read_gain_tags(gchar *path, Track *track) 
+{
+	return mp3_read_gain_tags(path, track);
+}
+
+
 /* will get the volume either from mp3gain or from LAME's ReplayGain */
 static gint32 nm_get_volume (Track *track)
 {
     if (track)
     {
 	gchar *path;
-
-	if (track->radio_gain_set) 
-		return replaygain_to_volume (track->radio_gain);
-	
 	path = get_track_name_on_disk_verified (track);
 
-	mp3_get_track_lame_replaygain (path, track);
-	if (track->radio_gain_set) 
-		return replaygain_to_volume (track->radio_gain);
-	
-	mp3_get_track_ape_replaygain (path, track);
+	read_gain_tags (path, track);
+
 	if (track->radio_gain_set) 
 		return replaygain_to_volume (track->radio_gain);
 	    
-	if (nm_mp3gain_calc_gain (track)) {
-	    mp3_get_track_ape_replaygain (path, track);
+	if (calc_gain (track)) {
+	    read_gain_tags (path, track);
 	    if (track->radio_gain_set) 
 		    return replaygain_to_volume (track->radio_gain);
 	}
