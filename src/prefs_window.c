@@ -293,8 +293,8 @@ prefs_window_cancel(void)
 }
 /**
  * save_gtkpod_prefs_window
- * UI has requested preferences update(by clicking ok on the prefs window)
- * Frees the tmpcfg variable
+ * UI has requested preferences update(by clicking ok/update on the 
+ * prefs window) Frees the tmpcfg variable
  */
 void 
 prefs_window_save(void)
@@ -337,16 +337,24 @@ prefs_window_save(void)
     prefs_set_show_non_updated(tmpcfg->show_non_updated);
     prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
 
+    sm_show_preferred_columns();
+    write_prefs();
+}
+
+/**
+ * prefs_window_save_quit - save preferences and close prefs window
+ */
+void
+prefs_window_save_quit(void)
+{
+    prefs_window_save();
     cfg_free(tmpcfg);
     tmpcfg =NULL;
-
-    sm_show_preferred_columns();
 
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
 }
-
 /**
  * prefs_window_set_md5songs
  * @val - truth value of whether or not we should use the md5 hash to

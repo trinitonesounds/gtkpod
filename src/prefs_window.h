@@ -32,6 +32,7 @@ void release_prefs_window (void);
 void prefs_window_save(void);
 void prefs_window_create(void);
 void prefs_window_cancel(void);
+void prefs_window_save_quit(void);
 void prefs_window_set_md5songs(gboolean val);
 void prefs_window_set_update_existing(gboolean val);
 void prefs_window_set_block_display(gboolean val);

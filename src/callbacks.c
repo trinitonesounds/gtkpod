@@ -327,8 +327,7 @@ void
 on_prefs_ok_clicked                    (GtkButton       *button,
                                         gpointer         user_data)
 {
-    prefs_window_save();
-/*    write_prefs();*/
+    prefs_window_save_quit();
 }
 
 
@@ -345,7 +344,7 @@ void
 on_prefs_apply_clicked                 (GtkButton       *button,
                                         gpointer         user_data)
 {
-    printf ("not yet implemented\n");
+    prefs_window_save();
 }
 
 void
