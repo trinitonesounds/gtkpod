@@ -138,13 +138,14 @@ static gchar *time_to_string_format (time_t t, const gchar *format)
 {
     gchar buf[PATH_MAX+1];
     struct tm tm;
+    size_t size;
 
     g_return_val_if_fail (format, NULL);
 
     if (t)
     {
 	localtime_r (&t, &tm);
-	size_t size = strftime (buf, PATH_MAX, format, &tm);
+	size = strftime (buf, PATH_MAX, format, &tm);
 	buf[size] = 0;
 	return g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
     }
