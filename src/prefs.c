@@ -54,6 +54,32 @@ enum {
   GP_OFFLINE
 };
 
+/**
+ * which - run the shell command which, useful for querying default values
+ * for executable, 
+ * @name - the executable we're trying to find the path for
+ * Returns the path to the executable, NULL on not found
+ */
+static gchar* 
+which(const gchar *exe)
+{
+    FILE *fp = NULL;
+    gchar *result = NULL; 
+    gchar buf[PATH_MAX];
+    gchar *which_exec = NULL;
+   
+    memset(&buf[0], 0, PATH_MAX);
+    which_exec = g_strdup_printf("which %s", exe);
+    if((fp = popen(which_exec, "r")))
+    {
+	int read_bytes = 0;
+	if((read_bytes = fread(buf, sizeof(gchar), PATH_MAX, fp)) > 0)
+	    result = g_strndup(buf, read_bytes-1);
+	pclose(fp);
+    }
+    C_FREE(which_exec);
+    return(result);
+}
 static void usage (FILE *file)
 {
   fprintf(file, _("gtkpod version %s usage:\n"), VERSION);
@@ -148,9 +174,9 @@ struct cfg *cfg_new(void)
     mycfg->save_sorted_order = FALSE;
     mycfg->sort_tab_num = 2;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
+    mycfg->xmms_path = which("xmms");
     return(mycfg);
 }
-
 
 static void
 read_prefs_from_file_desc(FILE *fp)
@@ -1108,4 +1134,16 @@ void prefs_set_sort_tab_num (gint i)
 	    st_show_visible ();
 	}
     }
+}
+void prefs_set_xmms_path(const gchar *xmms)
+{
+    if (g_file_test (xmms, G_FILE_TEST_IS_REGULAR) == TRUE)
+    {
+	C_FREE(cfg->xmms_path);
+	cfg->xmms_path = g_strdup(xmms);
+    }
+}
+gchar * prefs_get_xmms_path(void)
+{
+    return(cfg->xmms_path);
 }

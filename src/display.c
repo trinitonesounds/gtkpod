@@ -42,6 +42,7 @@
 #include "callbacks.h"
 #include "misc.h"
 #include "file.h"
+#include "context_menus.h"
 
 
 /* pointer to the treeview for the song display */
@@ -578,6 +579,23 @@ static void pm_add_columns ()
   gtk_tree_view_append_column (playlist_treeview, column);
 }
 
+static gboolean
+pm_button_release(GtkWidget *w, GdkEventButton *e, gpointer data)
+{
+    if(w && e)
+    {
+	switch(e->button)
+	{
+	    case 3:
+		pm_context_menu_init();
+		break;
+	    default:
+		break;
+	}
+	
+    }
+    return(FALSE);
+}
 
 /* Create playlist listview */
 static void pm_create_listview (GtkWidget *gtkpod)
@@ -609,6 +627,8 @@ static void pm_create_listview (GtkWidget *gtkpod)
 						      TGNR (pm_drop_types)));
   gtk_drag_source_set (GTK_WIDGET (playlist_treeview), GDK_BUTTON1_MASK,
 		       pm_drag_types, TGNR (pm_drag_types), GDK_ACTION_COPY);
+  g_signal_connect (G_OBJECT (playlist_treeview), "button-release-event",
+		    G_CALLBACK (pm_button_release), model);
 }
 
 
@@ -2790,7 +2810,23 @@ static void sm_add_columns (void)
     sm_show_preferred_columns();
 }
 
-
+static gboolean
+sm_button_release_event(GtkWidget *w, GdkEventButton *e, gpointer data)
+{
+    if(w && e)
+    {
+	switch(e->button)
+	{
+	    case 3:
+		sm_context_menu_init();
+		break;
+	    default:
+		break;
+	}
+	
+    }
+    return(FALSE);
+}
 
 /* Create songs listview */
 static void sm_create_listview (void)
@@ -2844,6 +2880,9 @@ static void sm_create_listview (void)
   gtk_drag_dest_set_target_list (GTK_WIDGET (song_treeview),
 				 gtk_target_list_new (sm_drop_types,
 						      TGNR (sm_drop_types)));
+  g_signal_connect ((gpointer) song_treeview, "button-release-event",
+		    G_CALLBACK (sm_button_release_event),
+		    NULL);
 }
 
 /* Create the different listviews to display the various information */

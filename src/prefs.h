@@ -78,6 +78,7 @@ struct cfg
   gboolean save_sorted_order;   /* save order after sort automatically? */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
+  gchar *xmms_path;
 };
 
 /* FIXME: make the global struct obsolete! */
@@ -135,6 +136,7 @@ gboolean prefs_get_song_ipod_file_deletion(void);
 gboolean prefs_get_id3_write(void);
 gboolean prefs_get_id3_writeall(void);
 gchar *prefs_get_ipod_mount (void);
+gchar *prefs_get_xmms_path(void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);
 void prefs_get_size_conf_sw (gint *x, gint *y);
@@ -159,5 +161,5 @@ gboolean prefs_get_save_sorted_order (void);
 void prefs_set_save_sorted_order (gboolean val);
 gint prefs_get_sort_tab_num (void);
 void prefs_set_sort_tab_num (gint i);
-
+void prefs_set_xmms_path(const gchar *xmms);
 #endif __PREFS_H__
