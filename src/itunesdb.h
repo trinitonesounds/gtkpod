@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 20:56:52 jcs>
+/* Time-stamp: <2004-08-14 16:40:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -42,6 +42,12 @@
 #include "track.h"
 #include "playlist.h"
 #include <time.h>
+
+enum { /* types for playlist->type */
+    PL_TYPE_NORM = 0,       /* normal playlist, visible in iPod */
+    PL_TYPE_MPL = 1         /* master playlist, contains all tracks,
+			       not visible in iPod */
+};
 
 gboolean itunesdb_parse (const gchar *path);
 gboolean itunesdb_parse_file (const gchar *filename);

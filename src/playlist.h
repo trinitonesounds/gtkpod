@@ -36,6 +36,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include "itunesdb.h"     /* required for PL_TYPE enum def */
 #include "track.h"
 
 typedef struct
@@ -47,12 +48,6 @@ typedef struct
     GList *members;       /* tracks in playlist (Track *) */
     glong size;
 } Playlist;
-
-enum { /* types for playlist->type */
-    PL_TYPE_NORM = 0,       /* normal playlist, visible in iPod */
-    PL_TYPE_MPL = 1         /* master playlist, contains all tracks,
-			       not visible in iPod */
-};
 
 void create_mpl (void);
 Playlist *add_new_playlist (gchar *plname, gint position);

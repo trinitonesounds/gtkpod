@@ -17,6 +17,9 @@ gtkpod V0.82-CVS
 	correctly. Normalization using mp3gain was therefore
 	impossible. Didn't anyone ever use that feature?!
 
+	NEW FEATURE: support for On-The-Go Playlists. They will show
+	up as "OTG Playlist 1" etc.
+	
 	NEW FEATURE: registering playcounts when tracks are played on
 	the local machine is now possible (actually it was already
 	possible in V0.80, but now the README explains how to do it).

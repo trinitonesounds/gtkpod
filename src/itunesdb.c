@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 14:56:46 jcs>
+/* Time-stamp: <2004-08-14 23:10:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -185,6 +185,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include "itunesdb.h"
 #include "support.h"
 #include "file.h"
@@ -404,7 +405,7 @@ static glong get_pl(FILE *file, glong seek)
   if (!plname_utf16)
   {   /* we did not read a valid mhod TITLE header -> */
       /* we simply make up our own name */
-	if (pltype == 1)
+	if (pltype == PL_TYPE_MPL)
 	    plname_utf16 = g_utf8_to_utf16 (_("Master-PL"),
 					    -1, NULL, NULL, NULL);
 	else plname_utf16 = g_utf8_to_utf16 (_("Playlist"),
@@ -679,16 +680,19 @@ static void reset_playcounts (void)
 }
 
 /* Read the Play Count file (formed by adding "Play Counts" to the
- * directory contained in @filename) and set up the GList *playcounts
+ * directory contained in @dirname) and set up the GList *playcounts
  * */
-static void init_playcounts (const gchar *filename)
+static void init_playcounts (const gchar *dirname)
 {
-  gchar *dirname = g_path_get_dirname (filename);
-  gchar *plcname = g_build_filename (dirname, "Play Counts", NULL);
-  FILE *plycts = fopen (plcname, "r");
+//  gchar *plcname = g_build_filename (dirname, "Play Counts", NULL);
+  const gchar *db[] = {"Play Counts", NULL};
+  gchar *plcname = resolve_path (dirname, db);
+  FILE *plycts = NULL;
   gboolean error = TRUE;
 
   reset_playcounts ();
+
+  if (plcname)  plycts = fopen (plcname, "r");
 
   if (plycts) do
   {
@@ -740,8 +744,94 @@ static void init_playcounts (const gchar *filename)
   } while (FALSE);
   if (plycts)  fclose (plycts);
   if (error)   reset_playcounts ();
-  g_free (dirname);
   g_free (plcname);
+}
+
+
+
+/* Called by read_OTG_playlists(): reads and processes OTG playlist
+ * file @filename by adding a new playlist (named @plname) with the
+ * tracks specified in @filename. If @plname is NULL, a standard name
+ * will be substituted */
+/* Returns FALSE on error, TRUE on success */
+static gboolean process_OTG_file (const gchar *filename,
+				  const gchar *plname)
+{
+    FILE *otgf = NULL;
+    gboolean result = FALSE;
+
+    if (filename)  otgf = fopen (filename, "r");
+    if (otgf)
+    {
+	gchar data[4];
+	guint32 header_length, entry_length, entry_num, i=0;
+
+	if (!plname) plname = _("OTG Playlist");
+
+	if (seek_get_n_bytes (otgf, data, 0, 4) != 4)  goto end;
+	if (cmp_n_bytes (data, "mhpo", 4) == FALSE)    goto end;
+	header_length = get4int (otgf, 4);
+	/* all the headers I know are 0x14 long -- if this one is
+	 longer we can simply ignore the additional information */
+	if (header_length < 0x14)                      goto end;
+	entry_length = get4int (otgf, 8);
+	/* all the entries I know are 0x04 long */
+	if (entry_length < 0x04)                       goto end;
+	/* number of entries */
+	entry_num = get4int (otgf, 12);
+	if (entry_num > 0)
+	{
+	    /* Create new playlist */
+	    Playlist *pl = g_malloc0 (sizeof (Playlist));
+#ifdef ITUNESDB_PROVIDE_UTF8
+	    pl->name = g_strdup (plname);
+#endif
+	    pl->name_utf16 = g_utf8_to_utf16 (plname, -1,
+					      NULL, NULL, NULL);
+	    pl->type = PL_TYPE_NORM;
+	    pl = it_add_playlist (pl);
+
+	    /* Add items */
+	    for (i=0; i<entry_num; ++i)
+	    {
+		guint32 id = get4int (otgf,
+				      header_length + entry_length *i);
+		it_add_trackid_to_playlist (pl, id);
+	    }
+	}
+	result = TRUE;
+    }
+  end:
+    if (otgf)   fclose (otgf);
+    return result;
+}
+
+
+/* Add the On-The-Go Playlist(s) to the main playlist */
+/* The OTG-Files are located in @dirname */
+static void read_OTG_playlists (const gchar *dirname)
+{
+    gchar *filename;
+    gint i=1;
+    gchar *db[] = {"OTGPlaylistInfo", NULL};
+    gchar *otgname = resolve_path (dirname, (const gchar **)db);
+
+    /* only parse if "OTGPlaylistInfo" exists */
+    if (otgname) do
+    {
+	db[0] = g_strdup_printf ("OTGPlaylistInfo_%d", i);
+	filename = resolve_path (dirname, (const gchar **)db);
+	g_free (db[0]);
+	if (filename)
+	{
+	    gchar *plname = g_strdup_printf (_("OTG Playlist %d"), i);
+	    process_OTG_file (filename, plname);
+	    g_free (filename);
+	    g_free (plname);
+	    ++i;
+	}
+    } while (filename);
+    g_free (otgname);
 }
 
 
@@ -772,12 +862,16 @@ gboolean itunesdb_parse_file (const gchar *filename)
   glong seek=0, pl_mhsd=0;
   guint32 zip, nr_tracks=0, nr_playlists=0;
   gboolean swapped_mhsd = FALSE;
+  gchar *dirname=NULL;
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, it_get_nr_of_tracks ());
 #endif
 
   if (!filename) return FALSE;
+
+  /* extract valid directory base from @filename */
+  dirname = g_path_get_dirname (filename);
 
   itunes = fopen (filename, "r");
   do
@@ -859,7 +953,7 @@ gboolean itunesdb_parse_file (const gchar *filename)
       /* now we should be at the first MHIT */
 
       /* Read Play Count file if available */
-      init_playcounts (filename);
+      init_playcounts (dirname);
 
       /* get every file entry */
       if (nr_tracks)  while(seek != -1) {
@@ -908,6 +1002,11 @@ gboolean itunesdb_parse_file (const gchar *filename)
   } while (FALSE);
 
   if (itunes != NULL)     fclose (itunes);
+
+  /* Read OTG playlists */
+  read_OTG_playlists (dirname);
+
+  g_free (dirname);
 #if ITUNESDB_DEBUG
   fprintf(stderr, "exit:  %4d\n", it_get_nr_of_tracks ());
 #endif
@@ -1423,11 +1522,17 @@ gboolean itunesdb_write_to_file (const gchar *filename)
       result = FALSE;
     }
   if (result == TRUE)
-  {   /* rename "Play Counts" to "Play Counts.bak" */
+  {
+      const gchar *db_plc_o[] = {"Play Counts", NULL};
+      const gchar *db_plc_n[] = {"Play Counts.bak", NULL};
+      const gchar *db_otg[] = {"OTGPlaylistInfo", NULL};
       gchar *dirname = g_path_get_dirname (filename);
-      gchar *plcname_o = g_build_filename (dirname, "Play Counts", NULL);
-      gchar *plcname_n = g_build_filename (dirname, "Play Counts.bak", NULL);
-      if (g_file_test (plcname_o, G_FILE_TEST_EXISTS))
+      gchar *plcname_o = resolve_path (dirname, db_plc_o);
+      gchar *plcname_n = resolve_path (dirname, db_plc_n);
+      gchar *otgname = resolve_path (dirname, db_otg);
+
+      /* rename "Play Counts" to "Play Counts.bak" */
+      if (plcname_o)
       {
 	  if (rename (plcname_o, plcname_n) == -1)
 	  {   /* an error occured */
@@ -1435,9 +1540,19 @@ gboolean itunesdb_write_to_file (const gchar *filename)
 				plcname_o, plcname_n, g_strerror (errno));
 	  }
       }
+      /* remove "OTGPlaylistInfo" (the iPod will remove the remaining
+       * files */
+      if (otgname)
+      {
+	  if (unlink (otgname) == -1)
+	  {   /* an error occured */
+	      itunesdb_warning (_("Error removing '%s'.\n"), otgname);
+	  }
+      }
       g_free (dirname);
       g_free (plcname_o);
       g_free (plcname_n);
+      g_free (otgname);
   }
   return result;
 }
@@ -1527,7 +1642,7 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
       dest_components[4] = 
         g_strdup_printf("gtkpod%05d%s",track->ipod_id + oops,original_suffix);
       ipod_fullfile = resolve_path(path,
-                                   (const gchar * const *)dest_components);
+                                   (const gchar **)dest_components);
       if(ipod_fullfile)
       {
               g_free(ipod_fullfile);
