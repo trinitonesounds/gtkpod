@@ -474,7 +474,7 @@ necessary for older V2.6 versions).
    using FireWire -- so the USB options are just educated
    guesses. Please let me know if it works).
 
-   I'm not using modules, because what's compiled in can't fail
+   I'm not using modules, simply because what's compiled in can't fail
    loading.
 
     * General Setup  -> Support for hot-pluggable devices - y
@@ -512,9 +512,9 @@ filesystems" for HFS support -- let me know how it works).
 BUS="scsi", SYSFS{model}="iPod            ", KERNEL="sd?2", NAME="%k", SYMLINK="ipod"
 
    This will map /dev/sd?2 to /dev/ipod everytime you plug in your
-   iPod. That's even works if you own more than one USB/Firewire
-   device that shows up as a harddisk, independent of the order in
-   which you connect the devices.
+   iPod. That even works if you own more than one USB/Firewire device
+   that shows up as a harddisk, independent of the order in which you
+   connect the devices.
 
    (You need to replace "sd?2" with "sd?1" for HFS formatted iPods.)
 

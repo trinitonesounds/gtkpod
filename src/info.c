@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-13 22:27:19 JST jcs>
+/* Time-stamp: <2004-06-14 00:56:02 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -364,6 +364,10 @@ gtkpod_tracks_statusbar_update(void)
 \*------------------------------------------------------------------*/
 
 
+/* Since the mount point is used by two separate threads, it can only
+   be accessed securely by using a locking mechanism. Therefore we
+   keep a copy of the mount point here. Access must only be done
+   after locking. */
 void space_set_ipod_mount (const gchar *mp)
 {
     if (space_mutex)  g_mutex_lock (space_mutex);
@@ -596,7 +600,8 @@ gtkpod_space_statusbar_init(void)
     if (!space_mutex)
     {
 	space_mutex = g_mutex_new ();
-	space_mp = g_strdup (prefs_get_ipod_mount ());
+	if (!space_mp)
+	    space_mp = g_strdup (prefs_get_ipod_mount ());
 	th_space_update ();  /* make sure we have current data */
 	space_thread = g_thread_create (th_space_thread, NULL, FALSE, NULL);
     }

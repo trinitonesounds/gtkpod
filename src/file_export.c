@@ -91,19 +91,21 @@ static gchar check_char(gchar c)
 
 /**
  * Process a path. It will substitute all the invalid characters.
+ * The changes are made within the original string. A pointer to the
+ * original string is returned.
  */
-gchar *fix_path(const gchar *orig)
+gchar *fix_path(gchar *orig)
 {
-        gint i, l;
-        gchar *new;
-
-        if(orig == NULL)         return NULL;
-        new = g_strdup(orig);
-        for(i=0, l=strlen(orig); i<l; i++)
+        if(orig)
 	{
-	    new[i]=check_char(new[i]);
-        }
-        return new;
+	    gchar *op = orig;
+	    while (*op)
+	    {
+		*op = check_char(*op);
+		++op;
+	    }
+	}
+	return orig;
 }
 
 /* End of code originally supplied by Ero Carrera */
@@ -193,8 +195,7 @@ track_get_export_filename (Track *track)
     p=template;
     while (*p != '\0') {
 	if (*p == '%') {
-	    gchar* tmp = NULL;
-	    gchar *fixtmp = NULL;
+	    const gchar* tmp = NULL;
 	    p++;
 	    switch (*p) {
 	    case 'o':
@@ -221,36 +222,34 @@ track_get_export_filename (Track *track)
 		tmp = track_get_item_utf8 (track, T_GENRE);
 		break;
 	    case 'C':
-		tmp = dummy;
 		if (track->cds == 0)
-		    sprintf (tmp, "%.2d", track->cd_nr);
+		    sprintf (dummy, "%.2d", track->cd_nr);
 		else if (track->cds < 10)
-		    sprintf(tmp, "%.1d", track->cd_nr);
+		    sprintf(dummy, "%.1d", track->cd_nr);
 		else if (track->cds < 100)
-		    sprintf (tmp, "%.2d", track->cd_nr);
+		    sprintf (dummy, "%.2d", track->cd_nr);
 		else if (track->cds < 1000)
-		    sprintf (tmp, "%.3d", track->cd_nr);
-		else {
-		    sprintf (tmp,"%.4d", track->cd_nr);
-		}
+		    sprintf (dummy, "%.3d", track->cd_nr);
+		else
+		    sprintf (dummy,"%.4d", track->cd_nr);
+		tmp = dummy;
 		break;
 	    case 'T':
-		tmp = dummy;
 		if (track->tracks == 0)
-		    sprintf (tmp, "%.2d", track->track_nr);
+		    sprintf (dummy, "%.2d", track->track_nr);
 		else if (track->tracks < 10)
-		    sprintf(tmp, "%.1d", track->track_nr);
+		    sprintf(dummy, "%.1d", track->track_nr);
 		else if (track->tracks < 100)
-		    sprintf (tmp, "%.2d", track->track_nr);
+		    sprintf (dummy, "%.2d", track->track_nr);
 		else if (track->tracks < 1000)
-		    sprintf (tmp, "%.3d", track->track_nr);
-		else {
-		    sprintf (tmp,"%.4d", track->track_nr);
-		}
+		    sprintf (dummy, "%.3d", track->track_nr);
+		else
+		    sprintf (dummy,"%.4d", track->track_nr);
+		tmp = dummy;
 		break;
 	    case 'Y':
+		sprintf (dummy, "%4d", track->year);
 		tmp = dummy;
-		sprintf (tmp, "%4d", track->year);
 		break;
 	    case '%':
 		tmp = "%";
@@ -262,15 +261,13 @@ track_get_export_filename (Track *track)
 	    }
 	    if (tmp)
 	    {
-		if(prefs_get_fix_path())
-		{
-		    fixtmp = fix_path (tmp);
-		    tmp = fixtmp;
-		}
-		result = g_string_append (result, tmp);
+		gchar *tmpcp = g_strdup (tmp);
+		if(prefs_get_fix_path())   fix_path (tmpcp);
+		g_strstrip (tmpcp); /* strip spaces around to
+				       avoid problems with vfat */
+		result = g_string_append (result, tmpcp);
 		tmp = NULL;
-		g_free (fixtmp);
-		fixtmp = NULL;
+		g_free (tmpcp);
 	    }
 	}
 	else 

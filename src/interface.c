@@ -156,7 +156,8 @@ create_gtkpod (void)
   GtkWidget *about1;
   GtkWidget *image2673;
   GtkWidget *toolbar;
-  GtkWidget *tmp_toolbar_icon;
+  gint tmp_toolbar_icon_size;
+  GtkWidget *tmp_image;
   GtkWidget *import_button;
   GtkWidget *add_files_button;
   GtkWidget *add_dirs_button;
@@ -696,75 +697,55 @@ create_gtkpod (void)
   gtk_widget_show (toolbar);
   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
+  tmp_toolbar_icon_size = gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar));
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-goto-top", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  import_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("Read"),
-                                _("Read Existing Database from Disk/iPod"), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
+  tmp_image = gtk_image_new_from_stock ("gtk-goto-top", tmp_toolbar_icon_size);
+  gtk_widget_show (tmp_image);
+  import_button = (GtkWidget*) gtk_tool_button_new (tmp_image, _("Read"));
   gtk_widget_show (import_button);
+  gtk_container_add (GTK_CONTAINER (toolbar), import_button);
+  gtk_tool_item_set_tooltip (GTK_TOOL_ITEM (import_button), tooltips, _("Read Existing Database from Disk/iPod"), NULL);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  add_files_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("Files"),
-                                _("Add Files or Directories"), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
+  tmp_image = gtk_image_new_from_stock ("gtk-add", tmp_toolbar_icon_size);
+  gtk_widget_show (tmp_image);
+  add_files_button = (GtkWidget*) gtk_tool_button_new (tmp_image, _("Files"));
   gtk_widget_show (add_files_button);
+  gtk_container_add (GTK_CONTAINER (toolbar), add_files_button);
+  gtk_tool_item_set_tooltip (GTK_TOOL_ITEM (add_files_button), tooltips, _("Add Files or Directories"), NULL);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  add_dirs_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("Dirs"),
-                                _("Add Directories Recursively"), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
+  tmp_image = gtk_image_new_from_stock ("gtk-add", tmp_toolbar_icon_size);
+  gtk_widget_show (tmp_image);
+  add_dirs_button = (GtkWidget*) gtk_tool_button_new (tmp_image, _("Dirs"));
   gtk_widget_show (add_dirs_button);
+  gtk_container_add (GTK_CONTAINER (toolbar), add_dirs_button);
+  gtk_tool_item_set_tooltip (GTK_TOOL_ITEM (add_dirs_button), tooltips, _("Add Directories Recursively"), NULL);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  add_PL_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("Playlist"),
-                                _("Add playlist from file"), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
+  tmp_image = gtk_image_new_from_stock ("gtk-add", tmp_toolbar_icon_size);
+  gtk_widget_show (tmp_image);
+  add_PL_button = (GtkWidget*) gtk_tool_button_new (tmp_image, _("Playlist"));
   gtk_widget_show (add_PL_button);
+  gtk_container_add (GTK_CONTAINER (toolbar), add_PL_button);
+  gtk_tool_item_set_tooltip (GTK_TOOL_ITEM (add_PL_button), tooltips, _("Add playlist from file"), NULL);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-justify-left", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  new_PL_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("New PL"),
-                                _("Create New Playlist"), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
+  tmp_image = gtk_image_new_from_stock ("gtk-justify-left", tmp_toolbar_icon_size);
+  gtk_widget_show (tmp_image);
+  new_PL_button = (GtkWidget*) gtk_tool_button_new (tmp_image, _("New PL"));
   gtk_widget_show (new_PL_button);
+  gtk_container_add (GTK_CONTAINER (toolbar), new_PL_button);
+  gtk_tool_item_set_tooltip (GTK_TOOL_ITEM (new_PL_button), tooltips, _("Create New Playlist"), NULL);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-goto-bottom", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  export_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("Sync"),
-                                _("Write Changes to Disk/iPod"), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
+  tmp_image = gtk_image_new_from_stock ("gtk-goto-bottom", tmp_toolbar_icon_size);
+  gtk_widget_show (tmp_image);
+  export_button = (GtkWidget*) gtk_tool_button_new (tmp_image, _("Sync"));
   gtk_widget_show (export_button);
+  gtk_container_add (GTK_CONTAINER (toolbar), export_button);
+  gtk_tool_item_set_tooltip (GTK_TOOL_ITEM (export_button), tooltips, _("Write Changes to Disk/iPod"), NULL);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-stop", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  stop_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("Stop"),
-                                _("Stop Display Update"), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
+  tmp_image = gtk_image_new_from_stock ("gtk-stop", tmp_toolbar_icon_size);
+  gtk_widget_show (tmp_image);
+  stop_button = (GtkWidget*) gtk_tool_button_new (tmp_image, _("Stop"));
+  gtk_container_add (GTK_CONTAINER (toolbar), stop_button);
+  gtk_tool_item_set_tooltip (GTK_TOOL_ITEM (stop_button), tooltips, _("Stop Display Update"), NULL);
 
   paned0 = gtk_hpaned_new ();
   gtk_widget_show (paned0);
@@ -794,7 +775,7 @@ create_gtkpod (void)
   gtkpod_status = gtk_statusbar_new ();
   gtk_widget_show (gtkpod_status);
   gtk_paned_pack1 (GTK_PANED (paned2), gtkpod_status, TRUE, FALSE);
-  gtk_widget_set_size_request (gtkpod_status, 300, 20);
+  gtk_widget_set_size_request (gtkpod_status, 300, -1);
   gtk_container_set_border_width (GTK_CONTAINER (gtkpod_status), 1);
   gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (gtkpod_status), FALSE);
 
@@ -806,14 +787,14 @@ create_gtkpod (void)
   space_statusbar = gtk_statusbar_new ();
   gtk_widget_show (space_statusbar);
   gtk_paned_pack1 (GTK_PANED (paned3), space_statusbar, FALSE, TRUE);
-  gtk_widget_set_size_request (space_statusbar, 80, 20);
+  gtk_widget_set_size_request (space_statusbar, 80, -1);
   gtk_container_set_border_width (GTK_CONTAINER (space_statusbar), 1);
   gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (space_statusbar), FALSE);
 
   tracks_statusbar = gtk_statusbar_new ();
   gtk_widget_show (tracks_statusbar);
   gtk_paned_pack2 (GTK_PANED (paned3), tracks_statusbar, TRUE, TRUE);
-  gtk_widget_set_size_request (tracks_statusbar, 175, 20);
+  gtk_widget_set_size_request (tracks_statusbar, 175, -1);
   gtk_container_set_border_width (GTK_CONTAINER (tracks_statusbar), 1);
 
   g_signal_connect ((gpointer) gtkpod, "delete_event",
@@ -4770,6 +4751,7 @@ create_confirm_dialog (void)
   GtkWidget *ok;
 
   confirm_dialog = gtk_dialog_new ();
+  gtk_window_set_type_hint (GTK_WINDOW (confirm_dialog), GDK_WINDOW_TYPE_HINT_DIALOG);
 
   dialog_vbox1 = GTK_DIALOG (confirm_dialog)->vbox;
   gtk_widget_show (dialog_vbox1);
