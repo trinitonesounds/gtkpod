@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 01:32:26 jcs>
+/* Time-stamp: <2003-09-23 15:57:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -124,9 +124,12 @@ typedef enum  {
 /* Note: the toggle buttons for tag_autoset and display_col
  * in the prefs_window are
  * named after the numbers (Title: tag_autoset0, Artist: tag_autoset1
- * etc.) Therefore, if you change the order of the first
- * SM_NUM_TAGS_PREFS entries, you must also adjust the names in
- * gtkpod.glade and rebuild the interface */
+ * etc.). Since the labels to the buttons are set in prefs_window.c
+ * when creating the window, you only need to make sure the displayed
+ * order is what you want */
+/* Note: the sm_col_strings[] in display_songs.c are ordered according
+   to this enum list. Therefore, if you change the order, you must
+   also adjust the order of the sm_col_strings[] array. */
 typedef enum  {
   SM_COLUMN_TITLE = 0,
   SM_COLUMN_ARTIST,
@@ -148,10 +151,10 @@ typedef enum  {
   SM_NUM_COLUMNS
 } SM_item;
 
-/* number of colums for prefs size storage */
-#define SM_NUM_COLUMNS_PREFS SM_NUM_COLUMNS
 /* number of entries with "autoset empty tag to filename " feature */
 #define SM_NUM_TAGS_PREFS (5)
+
+extern const gchar *sm_col_strings[];
 
 /* "Column numbers" in playlist model */
 enum  {
@@ -193,7 +196,7 @@ gboolean pm_move_pathlist (gchar *data, GtkTreePath *path,
 
 void st_stop_editing (gint inst, gboolean cancel);
 void st_page_selected (GtkNotebook *notebook, guint page);
-void st_sort (guint32 inst, GtkSortType order);
+void st_sort (GtkSortType order);
 void st_remove_entry (TabEntry *entry, guint32 inst);
 gint st_get_instance_from_treeview (GtkTreeView *tv);
 void st_show_visible (void);
@@ -232,7 +235,6 @@ void sm_show_preferred_columns(void);
 void sm_store_col_order (void);
 
 void sm_sort (SM_item col, GtkSortType order);
-void sm_sortit (void);
 GList* sm_get_selected_songids(void);
 GList* sm_get_selected_songs(void);
 GList* sm_get_all_songids(void);

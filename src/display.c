@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 01:32:26 jcs>
+/* Time-stamp: <2003-09-23 14:34:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -143,7 +143,7 @@ void display_create (GtkWidget *gtkpod)
     /* change standard g_print () handler */
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
     /* initialize sorting */
-    sm_sortit ();
+    sm_sort (prefs_get_sm_sortcol (), prefs_get_sm_sort ());
 }
 
 /* redisplay the entire display (playlists, sort tabs, song view) and
@@ -152,7 +152,8 @@ void display_create (GtkWidget *gtkpod)
    -2: all treeviews
    -1: only playlist
     0...SORT_TAB_MAX-1: sort tab of instance @inst
-    SORT_TAB_MAX: song treeview */
+    SORT_TAB_MAX: song treeview 
+    SORT_TAB_MAX+1: all sort tabs */
 void display_reset (gint inst)
 {
     gint i,n;
@@ -171,8 +172,8 @@ void display_reset (gint inst)
     /* reset "sortable" */
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	if ((inst == -2) || (inst == i))
-	    st_remove_all_entries_from_model (TRUE, i);
+	if ((inst == -2) || (inst == i) || (inst == SORT_TAB_MAX+1))
+	    st_remove_all_entries_from_model (i);
     }
 
     /* add playlists back to model (without selecting) */
@@ -239,6 +240,8 @@ void display_show_hide_tooltips (void)
     st_show_hide_tooltips ();
     /* Show/Hide tooltips of the prefs window */
     prefs_window_show_hide_tooltips ();
+    /* Show/Hide tooltips of the prefs window */
+    sort_window_show_hide_tooltips ();
 }
 
 

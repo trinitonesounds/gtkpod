@@ -38,6 +38,9 @@
 static GtkTreeView *playlist_treeview = NULL;
 /* pointer to the currently selected playlist */
 static Playlist *current_playlist = NULL;
+/* flag set if selection changes to be ignored temporarily */
+static gboolean pm_selection_blocked = FALSE;
+
 
 /* Drag and drop definitions */
 static GtkTargetEntry pm_drag_types [] = {
@@ -259,6 +262,7 @@ void pm_remove_all_playlists (gboolean clear_sort)
   }
 }
 
+
 /* Used by pm_select_playlist() to select the specified playlist by
    calling gtk_tree_model_foreach () */ 
 static gboolean pm_select_playlist_fe (GtkTreeModel *model,
@@ -379,8 +383,9 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 static void pm_selection_changed (GtkTreeSelection *selection,
 				  gpointer user_data)
 {
-    add_selection_callback (-1, pm_selection_changed_cb,
-			    (gpointer)selection, user_data);
+    if (!pm_selection_blocked)
+	add_selection_callback (-1, pm_selection_changed_cb,
+				(gpointer)selection, user_data);
 }
 
 
@@ -402,6 +407,96 @@ void pm_stop_editing (gboolean cancel)
 	}
     }
 }
+
+
+/* set/read the counter used to remember how often the sort column has
+   been clicked.
+   @inc: negative: reset counter to 0
+   @inc: positive or zero : add to counter
+   return value: new value of the counter */
+static gint pm_sort_counter (gint inc)
+{
+    static gint cnt = 0;
+    if (inc <0) cnt = 0;
+    else        cnt += inc;
+    return cnt;
+}
+
+
+/* "unsort" the playlist view without causing the sort tabs to be
+   touched. */
+static void pm_unsort ()
+{
+    gint i,n;
+    Playlist *cur_pl;
+
+    pm_selection_blocked = TRUE;
+
+    /* remember */
+    cur_pl = pm_get_selected_playlist ();
+
+    pm_remove_all_playlists (TRUE);
+
+    pm_set_selected_playlist (cur_pl);
+
+    /* add playlists back to model (without selecting) */
+    n = get_nr_of_playlists ();
+    for (i=0; i<n; ++i)
+    {
+	pm_add_playlist (get_playlist_by_nr (i), -1);
+    }
+    pm_selection_blocked = FALSE;
+    /* reset sort counter */
+    pm_sort_counter (-1);
+}
+
+
+/* Set the sorting accordingly */
+void pm_sort (GtkSortType order)
+{
+    if (playlist_treeview)
+    {
+	GtkTreeModel *model= gtk_tree_view_get_model (playlist_treeview);
+	if (order != SORT_NONE)
+	{
+	    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
+						  PM_COLUMN_PLAYLIST, order);
+	}
+	else
+	{ /* only unsort if treeview is sorted */
+	    gint column;
+	    GtkSortType order;
+	    if (gtk_tree_sortable_get_sort_column_id
+		(GTK_TREE_SORTABLE (model), &column, &order))
+		pm_unsort ();
+	}
+    }
+}
+
+/**
+ * pm_song_column_button_clicked
+ * @tvc - the tree view colum that was clicked
+ * @data - ignored user data
+ * When the sort button is clicked we want to update our internal playlist
+ * representation to what's displayed on screen.
+ * If the button was clicked three times, the sort order is undone.
+ */
+static void
+pm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
+{
+    gint cnt = pm_sort_counter (1);
+    if (cnt >= 3)
+    {
+	prefs_set_pm_sort (SORT_NONE);
+	pm_unsort (); /* also resets the sort_counter */
+    }
+    else
+    {
+	prefs_set_pm_sort (gtk_tree_view_column_get_sort_order (tvc));
+	if (prefs_get_pm_autostore ())  pm_rows_reordered ();
+    }
+}
+
 
 
 /**
@@ -540,20 +635,6 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
     }
 }
 
-/**
- * pm_song_column_button_clicked
- * @tvc - the tree view colum that was clicked
- * @data - ignored user data
- * When the sort button is clicked we want to update our internal playlist
- * representation to what's displayed on screen.
- */
-static void
-pm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
-{
-    prefs_set_pm_sort (gtk_tree_view_column_get_sort_order (tvc));
-    if (prefs_get_pm_autostore ())  pm_rows_reordered ();
-}
-
 /* Adds the columns to our playlist_treeview */
 static void pm_add_columns ()
 {
@@ -582,19 +663,6 @@ static void pm_add_columns ()
   gtk_tree_view_append_column (playlist_treeview, column);
 }
 
-
-/* Start sorting */
-void pm_sort (GtkSortType order)
-{
-    GtkTreeModel *model;
-
-    if (playlist_treeview)
-    {
-	model = gtk_tree_view_get_model (playlist_treeview);
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
-					      PM_COLUMN_PLAYLIST, order);
-    }
-}
 
 static void pm_select_current_position (gint x, gint y)
 {

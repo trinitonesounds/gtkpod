@@ -154,52 +154,31 @@ create_playlist_from_entries (GtkMenuItem *mi, gpointer data)
 }
 
 /**
- * alphabetize_ascending - alphabetize the currently selected entry
- * (playlist view or sort tab)
+ * alphabetize - alphabetize the currently selected entry
+ * sort tab). The sort order is being cycled through.
  * @mi - the menu item selected
  * @data - ignored, should be NULL
  */
 static void 
-alphabetize_ascending(GtkMenuItem *mi, gpointer data)
+alphabetize(GtkMenuItem *mi, gpointer data)
 {
-    if (selected_playlist)
-	pm_sort (GTK_SORT_ASCENDING);
-    else if (selected_entry)
-	st_sort (entry_inst, GTK_SORT_ASCENDING);
+    if (selected_entry)
+    {
+	switch (prefs_get_st_sort ())
+	{
+	case SORT_ASCENDING:
+	    prefs_set_st_sort (SORT_DESCENDING);
+	    break;
+	case SORT_DESCENDING:
+	    prefs_set_st_sort (SORT_NONE);
+	    break;
+	case SORT_NONE:
+	    prefs_set_st_sort (SORT_ASCENDING);
+	    break;
+	}
+	st_sort (prefs_get_st_sort ());
+    }
 }
-
-
-/**
- * alphabetize_ascending - alphabetize the currently selected entry
- * (playlist view or sort tab)
- * @mi - the menu item selected
- * @data - ignored, should be NULL
- */
-static void 
-alphabetize_descending(GtkMenuItem *mi, gpointer data)
-{
-    if (selected_playlist)
-	pm_sort (GTK_SORT_DESCENDING);
-    else if (selected_entry)
-	st_sort (entry_inst, GTK_SORT_DESCENDING);
-}
-
-/**
- * reset_alphabetize - reset the sorting in the currently selected entry
- * (playlist view or sort tab)
- * @mi - the menu item selected
- * @data - ignored, should be NULL
- */
-static void 
-reset_alphabetize(GtkMenuItem *mi, gpointer data)
-{
-    if (selected_playlist)
-	display_reset (-1);
-    else if (selected_entry)
-	display_reset (entry_inst);
-}
-
-
 
 /* Attach a menu item to your context menu */
 /* @m - the GtkMenu we're attaching to
@@ -260,12 +239,6 @@ create_context_menu(CM_type type)
 	/* FIXME: once we can find out in which song column the
 	   context menu was activated, we should offer the following
 	   options to the song view context menu as well */
-	/* 
-	 * FIXME: the only one of these options I'm for having in the SM
-	 * column is reset to our internal representation order(Not on a
-	 * per column basis but for the whole sm view), Alphabatize
-	 * forward/backward can be done with the column label buttons.
-	 */
 
 	if ((type == CM_ST) || (type == CM_SM))
 	{
@@ -275,8 +248,12 @@ create_context_menu(CM_type type)
 
 	if (type == CM_ST)
 	{
+	    hookup_mi (menu[type], _("Alphabetize"), "gtk-sort-ascending",
+		       G_CALLBACK (alphabetize));
+/* example for sub menus!
 	    GtkWidget *mi;
 	    GtkWidget *sub;
+
 	    mi = hookup_mi (menu[type], _("Alphabetize"), NULL, NULL);
 	    sub = gtk_menu_new ();
 	    gtk_widget_show (sub);
@@ -286,7 +263,8 @@ create_context_menu(CM_type type)
 	    hookup_mi (sub, _("Descending"), "gtk-sort-descending",
 		       G_CALLBACK (alphabetize_descending));
 	    hookup_mi (sub, _("Reset"), "gtk-undo",
-		       G_CALLBACK (reset_alphabetize));
+	               G_CALLBACK (reset_alphabetize));
+*/
 	}
     }
     /* 

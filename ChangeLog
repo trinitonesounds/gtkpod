@@ -13,6 +13,11 @@ gtkpod V0.53-CVS
 	NEW FEATURE: menu items and context menu items to create new
 	playlist containing displayed songs or selected songs.
 
+	IMPROVEMENT: better alphabetize interface. Alphabetize settings
+	will be remembered, different settings for playlists, sort tabs,
+	and tracks possible. Also, clicking the column header three times
+	will revert the view to its unsorted state.
+
 	IMPROVEMENT: handle adding of playlist files containing
 	files with relative paths.
 

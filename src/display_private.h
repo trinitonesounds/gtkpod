@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-28 19:18:26 jcs>
+/* Time-stamp: <2003-09-23 14:06:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -56,7 +56,7 @@ void sm_create_treeview (void);
 void sm_song_changed (Song *song);
 void sm_remove_song (Song *song);
 void sm_remove_all_songs (gboolean clear_sort);
-void st_remove_all_entries_from_model (gboolean clear_sort, guint32 inst);
+void st_remove_all_entries_from_model (guint32 inst);
 void st_song_changed (Song *song, gboolean removed, guint32 inst);
 void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst);
 void st_create_tabs (void);

@@ -144,14 +144,14 @@ struct dirnode
  * ------------------------------------------------------------ */
 
 /* turn the dirbrowser insensitive (if it's open) */
-void block_dirbrowser (void)
+void dirbrowser_block (void)
 {
     if (dirbrowser)
 	gtk_widget_set_sensitive (dirbrowser, FALSE);
 }
 
 /* turn the dirbrowser sensitive (if it's open) */
-void release_dirbrowser (void)
+void dirbrowser_release (void)
 {
     if (dirbrowser)
 	gtk_widget_set_sensitive (dirbrowser, TRUE);
@@ -180,7 +180,7 @@ static void add_dir_selected (gchar *dir)
     }
 }
 
-void create_dir_browser (void)
+void dirbrowser_create (void)
 {
     if(dirbrowser)  return;
     dirbrowser = xmms_create_dir_browser (

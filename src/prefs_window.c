@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 01:37:56 jcs>
+/* Time-stamp: <2003-09-23 16:03:08 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -25,6 +25,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 #include "prefs.h"
 #include "prefs_window.h"
 #include "song.h"
@@ -74,14 +75,14 @@ static void on_cfg_col_visible_toggled (GtkToggleButton *togglebutton,
 
 
 /* turn the prefs window insensitive (if it's open) */
-void block_prefs_window (void)
+void prefs_window_block (void)
 {
     if (prefs_window)
 	gtk_widget_set_sensitive (prefs_window, FALSE);
 }
 
 /* turn the prefs window sensitive (if it's open) */
-void release_prefs_window (void)
+void prefs_window_release (void)
 {
     if (prefs_window)
 	gtk_widget_set_sensitive (prefs_window, TRUE);
@@ -318,11 +319,6 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->add_recursively);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_case_sensitive")))
-	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpcfg->case_sensitive);
-	}
 	if((w = lookup_widget(prefs_window, "cfg_delete_playlist")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -401,12 +397,15 @@ prefs_window_create(void)
 	    }
 	    g_free (buf);
 	}
-	for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+	for (i=0; i<SM_NUM_COLUMNS; ++i)
 	{
 	    gchar *buf;
 	    buf = g_strdup_printf ("col_visible%d", i);
 	    if((w = lookup_widget(prefs_window,  buf)))
 	    {
+		/* set label */
+		gtk_button_set_label (GTK_BUTTON (w),
+				      gettext (sm_col_strings[i]));
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					     tmpcfg->col_visible[i]);
 		/* glade makes a "GTK_OBJECT (i)" which segfaults
@@ -494,7 +493,7 @@ prefs_window_set(void)
 	for (i=0; i<SM_NUM_TAGS_PREFS; ++i) {
 	    prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
 	}
-	for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+	for (i=0; i<SM_NUM_COLUMNS; ++i)
 	{
 	    prefs_set_col_visible (i, tmpcfg->col_visible[i]);
 	}
@@ -530,7 +529,6 @@ prefs_window_set(void)
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
-	prefs_set_case_sensitive(tmpcfg->case_sensitive);
 	prefs_set_automount(tmpcfg->automount);
 	prefs_set_filename_format(tmpcfg->filename_format);
 	prefs_set_write_gaintag(tmpcfg->write_gaintag);
@@ -820,7 +818,7 @@ void prefs_window_set_tag_autoset (gint category, gboolean autoset)
 
 void prefs_window_set_col_visible (gint column, gboolean visible)
 {
-    if (column < SM_NUM_COLUMNS_PREFS)
+    if (column < SM_NUM_COLUMNS)
 	tmpcfg->col_visible[column] = visible;
 }
 
@@ -919,11 +917,6 @@ void prefs_window_set_add_recursively (gboolean val)
     tmpcfg->add_recursively = val;
 }
 
-void prefs_window_set_case_sensitive (gboolean val)
-{
-    tmpcfg->case_sensitive = val;
-}
-
 void prefs_window_set_sort_tab_num (gint num)
 {
     gint i;
@@ -984,6 +977,9 @@ void sort_window_create (void)
     if (!sort_window)
     {
 	GtkWidget *w;
+	gchar *str;
+	GList *collist = NULL;
+	gint i;
 
 	if(!tmpsortcfg && !origsortcfg)
 	{
@@ -1043,9 +1039,103 @@ void sort_window_create (void)
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpsortcfg->sm_autostore);
+	if((w = lookup_widget(sort_window, "cfg_case_sensitive")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpsortcfg->case_sensitive);
+	}
+	/* Set Sort-Column-Combo */
+	/* create the list in the order of the columns displayed */
+	sm_store_col_order ();
+	for (i=0; i<SM_NUM_COLUMNS; ++i)
+	{   /* first the visible columns */
+	    SM_item col = prefs_get_col_order (i);
+	    if (col != -1)
+	    {
+		if (prefs_get_col_visible (col))
+		    collist = g_list_append (collist,
+					     gettext (sm_col_strings[col]));
+	    }
+	}
+	for (i=0; i<SM_NUM_COLUMNS; ++i)
+	{   /* first the visible columns */
+	    SM_item col = prefs_get_col_order (i);
+	    if (col != -1)
+	    {
+		if (!prefs_get_col_visible (col))
+		    collist = g_list_append (collist,
+					     gettext (sm_col_strings[col]));
+	    }
+	}
+	w = lookup_widget (sort_window, "sort_combo");
+	gtk_combo_set_popdown_strings (GTK_COMBO (w), collist);
+	g_list_free (collist);
+	collist = NULL;
+	/* set standard entry */
+	str = gettext (sm_col_strings[prefs_get_sm_sortcol ()]);
+	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
 
+	sort_window_show_hide_tooltips ();
 	gtk_widget_show (sort_window);
     }
+}
+
+
+
+/* turn the sort window insensitive (if it's open) */
+void sort_window_block (void)
+{
+    if (sort_window)
+	gtk_widget_set_sensitive (sort_window, FALSE);
+}
+
+/* turn the sort window sensitive (if it's open) */
+void sort_window_release (void)
+{
+    if (sort_window)
+	gtk_widget_set_sensitive (sort_window, TRUE);
+}
+
+
+/* make the tooltips visible or hide it depending on the value set in
+ * the prefs (tooltips_prefs) */
+void sort_window_show_hide_tooltips (void)
+{
+    if (sort_window)
+    {
+	GtkTooltips *tt = GTK_TOOLTIPS (lookup_widget (sort_window,
+						      "tooltips"));
+	if (tt)
+	{
+	    if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
+	    else                                     gtk_tooltips_disable (tt);
+	}
+    }
+}
+
+
+/* get the sort_column selected in the combo */
+static SM_item sort_window_get_sort_col (void)
+{
+    const gchar *str;
+    GtkWidget *w;
+    gint i = -1;
+
+    w = lookup_widget (sort_window, "sort_combo");
+    str = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w)->entry));
+    /* Check which string is selected in the combo */
+    if (str)
+	for (i=0; sm_col_strings[i]; ++i)
+	    if (strcmp (gettext (sm_col_strings[i]), str) == 0)  break;
+    if ((i<0) || (i>= SM_NUM_COLUMNS))
+    {
+	fprintf (stderr, 
+		 "Programming error: cal_get_category () -- item not found.\n");
+	/* set to something reasonable at least */
+	i = SM_COLUMN_TITLE;
+    }
+
+    return i;
 }
 
 
@@ -1060,28 +1150,18 @@ void sort_window_set (void)
 	prefs_set_st_sort (tmpsortcfg->st_sort);
 	prefs_set_sm_sort (tmpsortcfg->sm_sort);
 	prefs_set_sm_autostore (tmpsortcfg->sm_autostore);
+	prefs_set_case_sensitive(tmpsortcfg->case_sensitive);
+	tmpsortcfg->sm_sortcol = sort_window_get_sort_col ();
+	prefs_set_sm_sortcol (tmpsortcfg->sm_sortcol);
 	/* if sort type has changed, initialize display */
 	if (tsc->pm_sort != tmpsortcfg->pm_sort)
-	{
-	    if (tmpsortcfg->pm_sort == SORT_NONE)
-		  display_reset (-1);
-	    else  pm_sort (tmpsortcfg->pm_sort);
-	}
+	    pm_sort (tmpsortcfg->pm_sort);
 	if (tsc->st_sort != tmpsortcfg->st_sort)
+	    st_sort (tmpsortcfg->st_sort);
+	if ((tsc->sm_sort != tmpsortcfg->sm_sort) ||
+	    (tsc->sm_sortcol != tmpsortcfg->sm_sortcol))
 	{
-	    gint i;
-	    for (i=0; i<prefs_get_sort_tab_num (); ++i)
-	    {
-		if (tmpsortcfg->st_sort == SORT_NONE)
-		      display_reset (i);
-		else  st_sort (i, tmpsortcfg->st_sort);
-	    }
-	}
-	if (tsc->sm_sort != tmpsortcfg->sm_sort)
-	{
-	    if (tmpsortcfg->sm_sort == SORT_NONE)
-		  display_reset (SORT_TAB_MAX);
-	    else  sm_sortit ();
+	    sm_sort (prefs_get_sm_sortcol (), tmpsortcfg->sm_sort);
 	}
 	/* if auto sort was changed to TRUE, store order */
 	if (!tsc->pm_autostore && tmpsortcfg->pm_autostore)
@@ -1116,6 +1196,7 @@ void sort_window_cancel(void)
     sortcfg_free (tmpsortcfg);
     sortcfg_free (origsortcfg);
     tmpsortcfg = NULL;
+    origsortcfg = NULL;
 
     /* close the window */
     if(sort_window)
@@ -1165,8 +1246,6 @@ void sort_window_apply (void)
     sort_window_set ();
 }
 
-
-
 void sort_window_set_pm_autostore (gboolean val)
 {
     tmpsortcfg->pm_autostore = val;
@@ -1189,8 +1268,10 @@ void sort_window_set_st_sort (gint val)
 
 void sort_window_set_sm_sort (gint val)
 {
-    if (val != SORT_RESET)
-	tmpsortcfg->sm_sort = val;
-    else
-	tmpsortcfg->sm_sort = origsortcfg->sm_sort;
+    tmpsortcfg->sm_sort = val;
+}
+
+void sort_window_set_case_sensitive (gboolean val)
+{
+    tmpsortcfg->case_sensitive = val;
 }

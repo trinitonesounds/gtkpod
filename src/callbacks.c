@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 22:59:27 jcs>
+/* Time-stamp: <2003-09-23 14:40:12 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -60,7 +60,7 @@ void
 on_add_directory1_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  create_dir_browser ();
+  dirbrowser_create ();
 }
 
 
@@ -100,7 +100,7 @@ void
 on_add_directory1_button               (GtkButton       *button,
                                         gpointer         user_data)
 {
-  create_dir_browser ();
+  dirbrowser_create ();
 }
 
 void
@@ -1506,14 +1506,6 @@ on_cfg_special_export_charset_toggled  (GtkToggleButton *togglebutton,
 
 
 void
-on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_case_sensitive(
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-void
 on_sorting_clicked                     (GtkButton       *button,
                                         gpointer         user_data)
 {
@@ -1526,17 +1518,6 @@ on_sorting_activate                    (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     sort_window_create ();
-}
-
-
-void
-on_sm_none_toggled                     (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    if (gtk_toggle_button_get_active(togglebutton))
-	sort_window_set_sm_sort (SORT_NONE);
-    else
-	sort_window_set_sm_sort (SORT_RESET);
 }
 
 
@@ -1602,11 +1583,47 @@ on_pm_autostore_toggled                (GtkToggleButton *togglebutton,
 }
 
 
+
+void
+on_sm_ascend_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_sm_sort (SORT_ASCENDING);
+}
+
+
+void
+on_sm_descend_toggled                  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_sm_sort (SORT_DESCENDING);
+}
+
+
+void
+on_sm_none_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_sm_sort (SORT_NONE);
+}
+
 void
 on_sm_autostore_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     sort_window_set_sm_autostore (gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    sort_window_set_case_sensitive(
+	gtk_toggle_button_get_active(togglebutton));
 }
 
 

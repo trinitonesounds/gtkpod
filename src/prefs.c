@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 23:27:41 jcs>
+/* Time-stamp: <2003-09-23 15:49:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -202,7 +202,7 @@ struct cfg *cfg_new(void)
     mycfg->size_dirbr.y = 400;
     mycfg->size_prefs.x = -1;
     mycfg->size_prefs.y = 480;
-    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    for (i=0; i<SM_NUM_COLUMNS; ++i)
     {
 	mycfg->sm_col_width[i] = 80;
 	mycfg->col_visible[i] = FALSE;
@@ -235,7 +235,6 @@ struct cfg *cfg_new(void)
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
     mycfg->add_recursively = TRUE;
-    mycfg->case_sensitive = FALSE;
     mycfg->sort_tab_num = 2;
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
@@ -254,6 +253,7 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.sm_sortcol = SM_COLUMN_TITLE;
     mycfg->sortcfg.pm_autostore = FALSE;
     mycfg->sortcfg.sm_autostore = FALSE;
+    mycfg->sortcfg.case_sensitive = FALSE;
     return(mycfg);
 }
 
@@ -838,7 +838,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# title=0, artist, album, genre, composer\n"));
     fprintf(fp, _("# track_nr=5, ipod_id, pc_path, transferred\n"));
     fprintf(fp, _("# autoset: set empty tag to filename?\n"));
-    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    for (i=0; i<SM_NUM_COLUMNS; ++i)
     {
 	fprintf(fp, "sm_col_width%d=%d\n", i, prefs_get_sm_col_width (i));
 	fprintf(fp, "col_visible%d=%d\n",  i, prefs_get_col_visible (i));
@@ -1280,17 +1280,17 @@ void prefs_set_mpl_autoselect (gboolean autoselect)
    SM_COLUMN_... */
 gint prefs_get_sm_col_width (gint col)
 {
-    if (col < SM_NUM_COLUMNS_PREFS && (cfg->sm_col_width[col] > 0))
+    if (col < SM_NUM_COLUMNS && (cfg->sm_col_width[col] > 0))
 	return cfg->sm_col_width[col];
     return 80;  /* default -- col should be smaller than
-		   SM_NUM_COLUMNS_PREFS) */
+		   SM_NUM_COLUMNS) */
 }
 
 /* set the width of the song display columns. "col": one of the
    SM_COLUMN_..., "width": current width */
 void prefs_set_sm_col_width (gint col, gint width)
 {
-    if (col < SM_NUM_COLUMNS_PREFS && width > 0)
+    if (col < SM_NUM_COLUMNS && width > 0)
 	cfg->sm_col_width[col] = width;
 }
 
@@ -1441,26 +1441,26 @@ gboolean prefs_get_tag_autoset (gint category)
     return FALSE;
 }
 
-/* Display column nr @pos? @visible: new value */
-void prefs_set_col_visible (gint pos, gboolean visible)
+/* Display column sm_item @visible: new value */
+void prefs_set_col_visible (SM_item sm_item, gboolean visible)
 {
-    if (pos < SM_NUM_COLUMNS_PREFS)
-	cfg->col_visible[pos] = visible;
+    if (sm_item < SM_NUM_COLUMNS)
+	cfg->col_visible[sm_item] = visible;
 }
 
 
-/* Display column nr @pos? */
-gboolean prefs_get_col_visible (gint pos)
+/* Display column sm_item? */
+gboolean prefs_get_col_visible (SM_item sm_item)
 {
-    if (pos < SM_NUM_COLUMNS_PREFS)
-	return cfg->col_visible[pos];
+    if (sm_item < SM_NUM_COLUMNS)
+	return cfg->col_visible[sm_item];
     return FALSE;
 }
 
 /* Display which column at nr @pos? */
 void prefs_set_col_order (gint pos, SM_item sm_item)
 {
-    if (pos < SM_NUM_COLUMNS_PREFS)
+    if (pos < SM_NUM_COLUMNS)
 	cfg->col_order[pos] = sm_item;
 }
 
@@ -1468,7 +1468,7 @@ void prefs_set_col_order (gint pos, SM_item sm_item)
 /* Display column nr @pos? */
 SM_item prefs_get_col_order (gint pos)
 {
-    if (pos < SM_NUM_COLUMNS_PREFS)
+    if (pos < SM_NUM_COLUMNS)
 	return cfg->col_order[pos];
     return -1;
 }
@@ -1599,12 +1599,12 @@ void prefs_set_add_recursively (gboolean val)
 
 gboolean prefs_get_case_sensitive (void)
 {
-    return cfg->case_sensitive;
+    return cfg->sortcfg.case_sensitive;
 }
 
 void prefs_set_case_sensitive (gboolean val)
 {
-    cfg->case_sensitive = val;
+    cfg->sortcfg.case_sensitive = val;
 }
 
 gint prefs_get_sort_tab_num (void)

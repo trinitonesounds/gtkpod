@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 01:38:23 jcs>
+/* Time-stamp: <2003-09-23 15:37:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -65,6 +65,29 @@ static GtkTargetEntry sm_drop_types [] = {
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
+
+
+/* Strings associated to the column headers */
+const gchar *sm_col_strings[] = {
+    N_("Title"),
+    N_("Artist"),
+    N_("Album"),
+    N_("Genre"),
+    N_("Composer"),
+    N_("Track Nr (#)"),
+    N_("iPod ID"),
+    N_("PC File"),
+    N_("Transferred"),
+    N_("File Size"),
+    N_("Play Time"),
+    N_("Bitrate"),
+    N_("Playcount"),
+    N_("Rating"),
+    N_("Time played"),
+    N_("Time modified"),
+    N_("Volume"),
+    NULL };
+
 
 
 /* ---------------------------------------------------------------- */
@@ -156,7 +179,7 @@ void sm_remove_all_songs (gboolean clear_sort)
   {
       gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
   }
-  if(clear_sort &&
+  if(clear_sort && (prefs_get_sm_sort () == SORT_NONE) &&
      gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order))
   { /* recreate song treeview to unset sorted column */
@@ -165,8 +188,6 @@ void sm_remove_all_songs (gboolean clear_sort)
 	  sm_store_col_order ();
 	  display_update_default_sizes ();
 	  sm_create_treeview ();
-	  /* re-initialize sorting, if necessary */
-	  sm_sortit ();
       }
   }
 }
@@ -195,7 +216,7 @@ void sm_store_col_order (void)
     gint i;
     GtkTreeViewColumn *col;
 
-    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    for (i=0; i<SM_NUM_COLUMNS; ++i)
     {
 	col = gtk_tree_view_get_column (song_treeview, i);
 	prefs_set_col_order (i, col->sort_column_id);
@@ -857,31 +878,94 @@ gint default_comp  (GtkTreeModel *model,
     return 0;
 }
 
+
+
+/* set/read the counter used to remember how often the sort column has
+   been clicked.
+   @inc: negative: reset counter to 0
+   @inc: positive or zero : add to counter
+   return value: new value of the counter */
+static gint sm_sort_counter (gint inc)
+{
+    static gint cnt = 0;
+    if (inc <0) cnt = 0;
+    else        cnt += inc;
+    return cnt;
+}
+
+/* redisplay the contents of the song view in it's unsorted order */
+static void sm_unsort (void)
+{
+    GList *gl, *songs = NULL;
+    gint st_num = prefs_get_sort_tab_num ();
+
+    /* retrieve the currently displayed songs (non ordered) from the
+       last sort tab or from the selected playlist if no sort tabs are
+       being used */
+    if (st_num == 0)
+    {
+	Playlist *pl = pm_get_selected_playlist ();
+	if (pl)  songs = pl->members;
+    }
+    else
+    {
+	TabEntry *te = st_get_selected_entry (st_num - 1);
+	if (te)  songs = te->members;
+    }
+    sm_remove_all_songs (TRUE);
+    for (gl=songs; gl; gl=gl->next)
+	sm_add_song_to_song_model ((Song *)gl->data, NULL);
+    sm_sort_counter (-1);
+}
+
+
+/* when clicking the same table header three times, the sorting is
+   aborted */
 static void
 sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 {
-    prefs_set_sm_sort (gtk_tree_view_column_get_sort_order (tvc));
-    prefs_set_sm_sortcol (gtk_tree_view_column_get_sort_column_id (tvc));
+    static gint lastcol = -1; /* which column was sorted last time? */
+    gint newcol = gtk_tree_view_column_get_sort_column_id (tvc);
+
+    if (newcol != lastcol)
+    {
+	sm_sort_counter (-1);
+	lastcol = newcol;
+    }
+    
+    if (sm_sort_counter (1) >= 3)
+    { /* after clicking three times, reset sort order! */
+	prefs_set_sm_sort (SORT_NONE);
+	sm_unsort ();  /* also resets sort counter */
+    }
+    else
+    {
+	prefs_set_sm_sort (gtk_tree_view_column_get_sort_order (tvc));
+    }
+    prefs_set_sm_sortcol (newcol);
     if(prefs_get_sm_autostore ())  sm_rows_reordered ();
 }
 
 
 void sm_sort (SM_item col, GtkSortType order)
 {
-    GtkTreeModel *model;
-
-    if (!song_treeview)  return;
-    model = gtk_tree_view_get_model (song_treeview);
-    if (!model)          return;
-    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
-					  col, order);
-}
-
-
-void sm_sortit (void)
-{
-    if (prefs_get_sm_sort () != SORT_NONE)
-	sm_sort (prefs_get_sm_sortcol (), prefs_get_sm_sort ());
+    if (song_treeview)
+    {
+	GtkTreeModel *model= gtk_tree_view_get_model (song_treeview);
+	if (order != SORT_NONE)
+	{
+	    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
+						  col, order);
+	}
+	else
+	{ /* only unsort if treeview is sorted */
+	    gint column;
+	    GtkSortType order;
+	    if (gtk_tree_sortable_get_sort_column_id
+		(GTK_TREE_SORTABLE (model), &column, &order))
+		sm_unsort ();
+	}
+    }
 }
 
 
@@ -936,22 +1020,17 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
 
   if ((sm_item) < 0 || (sm_item >= SM_NUM_COLUMNS))  return NULL;
 
+  text = gettext (sm_col_strings[sm_item]);
+
   switch (sm_item)
   {
   case SM_COLUMN_TITLE:
-      text = _("Title");
-      break;
   case SM_COLUMN_ARTIST:
-      text = _("Artist");
-      break;
   case SM_COLUMN_ALBUM:
-      text = _("Album");
-      break;
   case SM_COLUMN_GENRE:
-      text = _("Genre");
-      break;
   case SM_COLUMN_COMPOSER:
-      text = _("Composer");
+  case SM_COLUMN_VOLUME:
+  case SM_COLUMN_RATING:
       break;
   case SM_COLUMN_TRACK_NR:
       text = _("#");
@@ -961,7 +1040,6 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
       editable = FALSE;
       break;
   case SM_COLUMN_PC_PATH:
-      text = _("PC File");
       editable = FALSE;
       break;
   case SM_COLUMN_TRANSFERRED:
@@ -970,7 +1048,6 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
       renderer = gtk_cell_renderer_toggle_new ();
       break;
   case SM_COLUMN_SIZE:
-      text = _("File Size");
       editable = FALSE;
       break;
   case SM_COLUMN_SONGLEN:
@@ -978,14 +1055,10 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
       editable = FALSE;
       break;
   case SM_COLUMN_BITRATE:
-      text = _("Bitrate");
       editable = FALSE;
       break;
   case SM_COLUMN_PLAYCOUNT:
       text = _("Plycnt");
-      break;
-  case SM_COLUMN_RATING:
-      text = _("Rating");
       break;
   case SM_COLUMN_TIME_PLAYED:
       text = _("Played");
@@ -994,9 +1067,6 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
   case SM_COLUMN_TIME_MODIFIED:
       text = _("Modified");
       editable = FALSE;
-      break;
-  case SM_COLUMN_VOLUME:
-      text = _("Volume");
       break;
   case SM_NUM_COLUMNS:
       break;
@@ -1127,7 +1197,7 @@ sm_show_preferred_columns(void)
     gboolean visible;
     gint i;
     
-    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    for (i=0; i<SM_NUM_COLUMNS; ++i)
     {
 	tvc = gtk_tree_view_get_column (song_treeview, i);
 	visible = prefs_get_col_visible (prefs_get_col_order (i));
@@ -1145,7 +1215,7 @@ void sm_update_default_sizes (void)
     GtkTreeViewColumn *col;
 
     /* column widths */
-    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    for (i=0; i<SM_NUM_COLUMNS; ++i)
     {
 	col = sm_columns [i];
 	if (col)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 22:40:41 jcs>
+/* Time-stamp: <2003-09-23 14:36:02 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -28,8 +28,8 @@
 
 #include <gtk/gtk.h>
 
-void block_prefs_window (void);
-void release_prefs_window (void);
+void prefs_window_block (void);
+void prefs_window_release (void);
 void prefs_window_show_hide_tooltips (void);
 void prefs_window_ok (void);
 void prefs_window_apply (void);
@@ -69,7 +69,6 @@ void prefs_window_set_not_played_song (gboolean val);
 void prefs_window_set_update_charset (gboolean val);
 void prefs_window_set_write_charset (gboolean val);
 void prefs_window_set_add_recursively (gboolean val);
-void prefs_window_set_case_sensitive (gboolean val);
 void prefs_window_set_toolbar_style (GtkToolbarStyle val);
 void prefs_window_set_sort_tab_num (gint num);
 void prefs_window_set_automount (gboolean val);
@@ -78,6 +77,9 @@ void prefs_window_set_write_gaintag (gboolean val);
 void prefs_window_set_special_export_charset (gboolean val);
 
 void sort_window_create (void);
+void sort_window_block (void);
+void sort_window_release (void);
+void sort_window_show_hide_tooltips (void);
 void sort_window_ok (void);
 void sort_window_apply (void);
 void sort_window_cancel (void);
@@ -88,4 +90,5 @@ void sort_window_set_sm_autostore (gboolean val);
 void sort_window_set_pm_sort (gint val);
 void sort_window_set_st_sort (gint val);
 void sort_window_set_sm_sort (gint val);
+void sort_window_set_case_sensitive (gboolean val);
 #endif

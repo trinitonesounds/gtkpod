@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 23:29:26 jcs>
+/* Time-stamp: <2003-09-23 15:49:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -68,12 +68,13 @@ struct cfg
   } st[SORT_TAB_MAX];
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
-    gint pm_sort;         /* sort type for playlists */
-    gint st_sort;         /* sort type for sort tabs */
-    gint sm_sort;         /* sort type for tracks    */
-    SM_item sm_sortcol;   /* sort column for tracks  */
-    gboolean pm_autostore;/* save sort order automatically? */
-    gboolean sm_autostore;/* save sort order automatically? */
+    gint pm_sort;             /* sort type for playlists           */
+    gint st_sort;             /* sort type for sort tabs           */
+    gint sm_sort;             /* sort type for tracks              */
+    SM_item sm_sortcol;       /* sort column for tracks            */
+    gboolean pm_autostore;    /* save sort order automatically?    */
+    gboolean sm_autostore;    /* save sort order automatically?    */
+    gboolean case_sensitive;  /* Should sorting be case-sensitive? */
   } sortcfg;
   gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
@@ -94,9 +95,9 @@ struct cfg
   struct win_size size_conf;    /* last size of conf window */
   struct win_size size_dirbr;   /* last size of dirbrowser window */
   struct win_size size_prefs;   /* last size of prefs window */
-  gint sm_col_width[SM_NUM_COLUMNS_PREFS]; /* width colums in song model */
-  gboolean col_visible[SM_NUM_COLUMNS_PREFS]; /* displayed song model colums */
-  SM_item col_order[SM_NUM_COLUMNS_PREFS]; /* order of columns */
+  gint sm_col_width[SM_NUM_COLUMNS];    /* width colums in song model */
+  gboolean col_visible[SM_NUM_COLUMNS]; /* displayed song model colums */
+  SM_item col_order[SM_NUM_COLUMNS];    /* order of columns */
   gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 
@@ -112,7 +113,6 @@ struct cfg
   gboolean update_charset;      /* Update charset when updating song? */
   gboolean write_charset;       /* Add directories recursively? */
   gboolean add_recursively;     /* Update charset when writing song? */
-  gboolean case_sensitive;      /* Should sorting be case-sensitive? */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
@@ -137,7 +137,6 @@ enum
     SORT_ASCENDING = GTK_SORT_ASCENDING,
     SORT_DESCENDING = GTK_SORT_DESCENDING,
     SORT_NONE = 10*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
-    SORT_RESET = 20*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
 };
 /* SORT_RESET: only used for sort_window_set_sm_sort() */
 
@@ -191,7 +190,7 @@ void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_size_prefs (gint x, gint y);
 void prefs_set_sm_col_width (gint col, gint width);
 void prefs_set_tag_autoset (gint category, gboolean autoset);
-void prefs_set_col_visible (gint pos, gboolean visible);
+void prefs_set_col_visible (SM_item sm_item, gboolean visible);
 void prefs_set_col_order (gint pos, SM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
@@ -226,7 +225,7 @@ void prefs_get_size_dirbr (gint *x, gint *y);
 void prefs_get_size_prefs (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
-gboolean prefs_get_col_visible (gint pos);
+gboolean prefs_get_col_visible (SM_item sm_item);
 SM_item prefs_get_col_order (gint pos);
 gboolean prefs_get_md5songs(void);
 gboolean prefs_get_update_existing(void);

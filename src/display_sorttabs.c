@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 01:27:24 jcs>
+/* Time-stamp: <2003-09-23 16:02:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -702,8 +702,7 @@ static void st_remove_entry_from_model (TabEntry *entry, guint32 inst)
 
 /* Remove all entries from the display model and the sorttab */
 /* @clear_sort: reset sorted columns to the non-sorted state */
-void st_remove_all_entries_from_model (gboolean clear_sort,
-				       guint32 inst)
+void st_remove_all_entries_from_model (guint32 inst)
 {
   TabEntry *entry;
   SortTab *st = sorttab[inst];
@@ -728,7 +727,7 @@ void st_remove_all_entries_from_model (gboolean clear_sort,
       if (st->entry_hash)  g_hash_table_destroy (st->entry_hash);
       st->entry_hash = NULL;
 
-      if(clear_sort &&
+      if((prefs_get_st_sort () == SORT_NONE) &&
 	 gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (st->model),
 					       &column, &order))
       { /* recreate song treeview to unset sorted column */
@@ -1333,7 +1332,7 @@ void st_init (ST_CAT_item new_category, guint32 inst)
       case ST_CAT_GENRE:
       case ST_CAT_COMPOSER:
       case ST_CAT_TITLE:
-	  st_remove_all_entries_from_model (FALSE, inst);
+	  st_remove_all_entries_from_model (inst);
 	  break;
       case ST_CAT_SPECIAL:
 	  sp_remove_all_members (inst);
@@ -1483,7 +1482,7 @@ void st_redisplay (guint32 inst)
 }
 
 /* Start sorting */
-void st_sort (guint32 inst, GtkSortType order)
+static void st_sort_inst (guint32 inst, GtkSortType order)
 {
     if (inst < prefs_get_sort_tab_num ())
     {
@@ -1497,9 +1496,21 @@ void st_sort (guint32 inst, GtkSortType order)
 	    case ST_CAT_GENRE:
 	    case ST_CAT_COMPOSER:
 	    case ST_CAT_TITLE:
-		gtk_tree_sortable_set_sort_column_id (
-		    GTK_TREE_SORTABLE (st->model),
-		    ST_COLUMN_ENTRY, order);
+		if (order != SORT_NONE)
+		    gtk_tree_sortable_set_sort_column_id (
+			GTK_TREE_SORTABLE (st->model),
+			ST_COLUMN_ENTRY, order);
+		else if (inst == 0)
+		{   /* we only redisplay for st0 because the others
+		       are reinitialized automatically */
+		    /* and we only redisplay if the tree is actually
+		       sorted */
+		    gint column;
+		    GtkSortType order;
+		    if (gtk_tree_sortable_get_sort_column_id
+			(GTK_TREE_SORTABLE (st->model), &column, &order))
+			st_redisplay (0);
+		}
 		break;
 	    case ST_CAT_SPECIAL:
 	    case ST_CAT_NUM:
@@ -1507,6 +1518,14 @@ void st_sort (guint32 inst, GtkSortType order)
 	    }
 	}
     }
+}
+
+
+void st_sort (GtkSortType order)
+{
+    gint i;
+    for (i=0; i<prefs_get_sort_tab_num (); ++i)
+	st_sort_inst (i, order);
 }
 
 
@@ -2312,7 +2331,7 @@ void st_create_notebook (gint inst)
   st->current_category = page;
   gtk_notebook_set_current_page (st->notebook, page);
   if (prefs_get_st_sort () != SORT_NONE)
-    st_sort (inst, prefs_get_st_sort ());
+    st_sort_inst (inst, prefs_get_st_sort ());
 }
 
 
@@ -2341,7 +2360,7 @@ void st_cleanup (void)
 	if (sorttab[i] != NULL)
 	{
 	    sp_store_sp_entries (i);
-	    st_remove_all_entries_from_model (FALSE, i);
+	    st_remove_all_entries_from_model (i);
 	    for (j=0; j<ST_CAT_NUM; ++j)
 	    {
 		C_FREE (sorttab[i]->lastselection[j]);

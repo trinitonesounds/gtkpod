@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 15:42:42 jcs>
+/* Time-stamp: <2003-09-23 14:39:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -80,7 +80,7 @@ struct blocked_widget { /* struct to be kept in blocked_widgets */
 /* --------------------------------------------------------------*/
 
 /* turn the file selector insensitive (if it's open) */
-static void block_file_selector (void)
+static void file_selector_block (void)
 {
     if (file_selector)
 	gtk_widget_set_sensitive (file_selector, FALSE);
@@ -89,7 +89,7 @@ static void block_file_selector (void)
 }
 
 /* turn the file selector sensitive (if it's open) */
-static void release_file_selector (void)
+static void file_selector_release (void)
 {
     if (file_selector)
 	gtk_widget_set_sensitive (file_selector, TRUE);
@@ -967,9 +967,10 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 		bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
 		gtk_widget_set_sensitive (bw->widget, FALSE);
 	    }
-	    block_prefs_window ();
-	    block_file_selector ();
-	    block_dirbrowser ();
+	    sort_window_block ();
+	    prefs_window_block ();
+	    file_selector_block ();
+	    dirbrowser_block ();
 	    widgets_blocked = TRUE;
 	}
 	break;
@@ -985,9 +986,10 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 		    bw = (struct blocked_widget *)l->data;
 		    gtk_widget_set_sensitive (bw->widget, bw->sensitive);
 		}
-		release_prefs_window ();
-		release_file_selector ();
-		release_dirbrowser ();
+		sort_window_release ();
+		prefs_window_release ();
+		file_selector_release ();
+		dirbrowser_release ();
 		widgets_blocked = FALSE;
 	    }
 	}
