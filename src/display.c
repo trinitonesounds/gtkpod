@@ -191,7 +191,10 @@ static gboolean pm_delete_playlist (GtkTreeModel *model,
   gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   if(playlist == (Playlist *)data) {
     gtk_list_store_remove (GTK_LIST_STORE (model), iter);
+    /* this is deleting two rows at a time. !!! */
+    /*
     gtk_tree_model_row_deleted (model, path);
+    */
     return TRUE;
   }
   return FALSE;
@@ -1172,7 +1175,10 @@ static gboolean sm_delete_song (GtkTreeModel *model,
   gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &song, -1);
   if(song == (Song *)data) {
     gtk_list_store_remove (GTK_LIST_STORE (model), iter);
+    /* this is deleting two rows !!! */
+    /*
     gtk_tree_model_row_deleted (model, path);
+    */
     return TRUE;
   }
   return FALSE;
