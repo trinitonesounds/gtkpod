@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.51\n"
 "POT-Creation-Date: 2003-05-21 16:14+0200\n"
-"PO-Revision-Date: 2003-05-21 11:50+0200\n"
+"PO-Revision-Date: 2003-05-26 23:50+0200\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -23,23 +23,23 @@ msgstr "Nouvelle liste de lecture"
 
 #: src/callbacks.c:335 src/callbacks.c:379
 msgid "Preferences not updated"
-msgstr "Options non mises à jour"
+msgstr "Préférences non mises à jour"
 
 #: src/callbacks.c:388
 msgid "Preferences applied"
-msgstr "Options appliquées"
+msgstr "Préférences appliquées"
 
 #: src/callbacks.c:614
 msgid "Delete selected entry of which sort tab?"
-msgstr "Supprimer l'onglet séléctionné de quelle zone de tri ?"
+msgstr "Supprimer la séléction de quelle zone de tri ?"
 
 #: src/callbacks.c:762
 msgid "Update selected entry of which sort tab?"
-msgstr "Mettre à jour l'onglet sélectionné de quelle zone de tri ?"
+msgstr "Mettre à jour la sélection de quelle zone de tri ?"
 
 #: src/callbacks.c:788
 msgid "Sync dirs of selected entry in which sort tab?"
-msgstr "Synchroniser les répertoires de l'onglet sélectionné de quelle zone de tri ?"
+msgstr "Synchroniser les répertoires de la sélection de quelle zone de tri ?"
 
 #: src/callbacks.c:959
 msgid "Sort which sort tab in ascending order?"
@@ -55,7 +55,7 @@ msgstr "Aucune liste de lecture sélectionnée"
 
 #: src/callbacks.c:1045
 msgid "Export selected entry of which sort tab?"
-msgstr "Exporter l'onglet sélectionné de quelle zone de tri ?"
+msgstr "Exporter la sélection de quelle zone de tri ?"
 
 #: src/callbacks.c:1051 src/callbacks.c:1100 src/callbacks.c:1151
 #, c-format
@@ -72,7 +72,7 @@ msgstr "Jouer la sélection de quelle zone de tri ?"
 
 #: src/callbacks.c:1145
 msgid "Enqueue songs in selected entry of which sort tab?"
-msgstr "Mettre dans la file les morceaux de l'onglet sélectionné de quelle zone de tri ?"
+msgstr "Mettre dans la file les morceaux sélectionnés de quelle zone de tri ?"
 
 #: src/charset.c:36
 msgid "Arabic (IBM-864)"
@@ -264,7 +264,7 @@ msgstr "Europe occidentale (ISO-8859-1)"
 
 #: src/charset.c:83
 msgid "Western (ISO-8859-15)"
-msgstr "EUrope occidentale (ISO-8859-15)"
+msgstr "Europe occidentale (ISO-8859-15)"
 
 #: src/charset.c:84
 msgid "Western (Windows-1252)"
@@ -464,7 +464,7 @@ msgstr "Le fichier est en lecture seule"
 
 #: src/id3_tag.c:861
 msgid "Error in compression/uncompression"
-msgstr "Erreur à la compression/décompression"
+msgstr "Erreur lors de la compression/décompression"
 
 #: src/id3_tag.c:863
 msgid "Unknown error message!"
@@ -510,12 +510,12 @@ msgstr "_Liste de lecture sélectionnée"
 #: src/interface.c:230 src/interface.c:253 src/interface.c:281
 #: src/interface.c:414 src/interface.c:491 src/interface.c:514
 msgid "Selected _Tab Entry"
-msgstr "_Onglet sélectionné"
+msgstr "_Sélec_tion"
 
 #: src/interface.c:234 src/interface.c:257 src/interface.c:285
 #: src/interface.c:418 src/interface.c:495 src/interface.c:518
 msgid "Selected _Songs"
-msgstr "_Musiques sélectionnées"
+msgstr "Mu_siques sélectionnées"
 
 #: src/interface.c:238
 msgid "Synchronize Directories"
@@ -527,7 +527,7 @@ msgstr "Exporter vers le disque"
 
 #: src/interface.c:294
 msgid "_Offline"
-msgstr "_Mode Déconnecté"
+msgstr "Mode Déc_onnecté"
 
 #: src/interface.c:303
 msgid "_Create iPod's Directories"
@@ -571,7 +571,7 @@ msgstr "_Supprimer"
 
 #: src/interface.c:427
 msgid "_Edit Preferences"
-msgstr "_Options"
+msgstr "_Préférences"
 
 #: src/interface.c:438
 msgid "_View"
@@ -699,7 +699,7 @@ msgstr "Appliquer"
 
 #: src/interface.c:1274
 msgid "Preferences"
-msgstr "Options"
+msgstr "Préférences"
 
 #: src/interface.c:1301
 msgid " iPod Mount _Point:"
@@ -852,7 +852,7 @@ msgstr "Confirmer avant la suppression des morceaux"
 
 #: src/interface.c:1428
 msgid "This is the same option as in 'Misc/Delete Confirmation'"
-msgstr "C'est la même option que dans 'Divers/Confirmation de suppression"
+msgstr "C'est la même option que dans 'Divers/Confirmation de suppression'"
 
 #: src/interface.c:1430
 msgid "Adding/Updating/Syncing"
@@ -971,7 +971,7 @@ msgstr "_Nombre de zones de tri"
 
 #: src/interface.c:1633
 msgid "Sort Tabs"
-msgstr "Onglet de tri"
+msgstr "Zones de tri"
 
 #: src/interface.c:1659
 msgid "iPod ID"
@@ -1008,7 +1008,7 @@ msgstr ""
 
 #: src/interface.c:1726
 msgid "...entry 'All' in sort tab..."
-msgstr "...onglet 'Tous' dans l'onglet de tri..."
+msgstr "...entrée 'Tous' dans la zone de tri..."
 
 #: src/interface.c:1737
 msgid "Automatically select..."
@@ -1019,7 +1019,7 @@ msgid ""
 "Block display when changing playlist or tab\n"
 " entry (faster!)"
 msgstr ""
-"Bloquer l'affichage lors du changement de liste de lecture ou d'onglet (plus "
+"Bloquer l'affichage lors du changement de liste de lecture ou d'entrée (plus "
 "rapide !)"
 
 #: src/interface.c:1754
@@ -1054,7 +1054,7 @@ msgstr ""
 
 #: src/interface.c:1790
 msgid "Command Line for 'Enqueue'"
-msgstr "Ligne de commande pour 'Enqueue':"
+msgstr "Ligne de commande pour 'Mettre dans la file d'attente':"
 
 #: src/interface.c:1799
 #, c-format
@@ -1062,7 +1062,7 @@ msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected songs to xmms' "
 "current playlist."
 msgstr ""
-"Par exemple 'xmms -e %s' ajoutera à la liste de lecture de xmms les morceaux "
+"Par exemple 'xmms -e %s' ajoutera dans la file d'attente de xmms les morceaux "
 "sélectionnés."
 
 #: src/interface.c:1801
@@ -1281,14 +1281,14 @@ msgid ""
 "German:   Jorg Schuler (jcsjcs at users.sourceforge.net)\n"
 "Japanese: Ayako Sano"
 msgstr ""
-"Allemand:    Jorg Schuler (jcsjcs at users.sourceforge.net)\n"
-"Japonais:    Ayako Sano\n"
-"Français: David Le Brun (david@dyn-ns.net)"
+"Allemand: Jorg Schuler (jcsjcs at users.sourceforge.net)\n"
+"Japonais: Ayako Sano\n"
+"Français: David Le Brun (david at dyn-ns.net)"
 
 #: src/misc.c:448
 #, c-format
 msgid "drag and drop: ignored '%s'"
-msgstr "Glisser/déposer: ignoré '%s'"
+msgstr "Glisser/déposer: '%s' ignoré"
 
 #: src/misc.c:479 src/misc.c:483
 #, c-format
@@ -1578,7 +1578,7 @@ msgstr ""
 
 #: src/prefs.c:706
 msgid "Settings are not saved.\n"
-msgstr "Réglages non sauvés.\n"
+msgstr "Préférences non sauvées.\n"
 
 #: src/prefs.c:719
 #, c-format
@@ -1601,11 +1601,11 @@ msgstr "Impossible de lancer \"mkdir %s\"\n"
 #: src/prefs.c:1381
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
-msgstr ""
+msgstr "prefs_set_toolbar_style: style non valable '%d' ignoré\n"
 
 #: src/prefs.c:1423 src/prefs.c:1430
 msgid "'%s': only one '%%s' allowed.\n"
-msgstr "'%s': seulement une '%%s' autorisée.\n"
+msgstr "'%s': seulement un '%%s' autorisé.\n"
 
 #. gint id,
 #. gboolean modal,
