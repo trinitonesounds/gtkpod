@@ -36,6 +36,30 @@ TODO:
 - add an option to let the user decide if all the gtkpod's
   playlist must be update on export.
 
+-
+> Feature-Request:
+> - Delete the Alphabetical search orders from the menu and
+> integrate them to automatically sort the tabs etc. I just don't
+> see why I should be interested in an unsorted album view with 200
+> entries while searching for "rage against the machine". I don't
+> like scrolling all the list up and down to find it and I don't
+> see why anyone else should...
+> 
+> Tabs should allways be sorted! I don't know how the database
+> looks but maybe you can speed it up if you save it sorted (if
+> this works)
+
+-
+> Feature:
+> - If I change the view of my songs by clicking on the tabs or by
+> manually reordering they should be saved that way on the ipod.
+> Allway save displayed song order. This function already exists.
+> Either do it automatically or make an option in the preferences.
+
+The existing option should be changed to always save the order. I'll
+put it onto the TODO list.
+
+
 Please feel free to submit further features.
 
 

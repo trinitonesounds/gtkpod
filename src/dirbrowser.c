@@ -319,7 +319,7 @@ static void select_row_cb(GtkWidget *widget, int row, int column, GdkEventButton
 	GtkCTreeNode *node;
 	void (*handler) (char *);
 
-	if (bevent->type == GDK_2BUTTON_PRESS)
+	if (bevent && (bevent->type == GDK_2BUTTON_PRESS))
 	{
 		node = gtk_ctree_node_nth(GTK_CTREE(widget), row);
 		dirnode = gtk_ctree_node_get_row_data(GTK_CTREE(widget), node);
