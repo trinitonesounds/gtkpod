@@ -522,6 +522,9 @@ create_gtkpod (void)
   g_signal_connect_after ((gpointer) song_treeview, "key_release_event",
                           G_CALLBACK (on_song_treeview_key_release_event),
                           NULL);
+  g_signal_connect ((gpointer) song_treeview, "drag_data_received",
+                    G_CALLBACK (on_song_treeview_drag_data_received),
+                    NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (gtkpod, gtkpod, "gtkpod");

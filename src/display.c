@@ -105,6 +105,8 @@ st_dnd_advertise(GtkTreeView *v)
     if(!v) return;
     gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
 					    target_size, GDK_ACTION_COPY);
+    gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
+					    GDK_ACTION_COPY);
 }
 
 /* Used by model_playlist_name_changed() to find the playlist that
@@ -265,6 +267,7 @@ static void pm_selection_changed (GtkTreeSelection *selection,
   /* remove all entries from sort tab 0 */
   /* printf ("removing entries: %x\n", current_playlist);*/
   st_init (-1, 0);
+
   current_playlist = new_playlist;
   n = get_nr_of_songs_in_playlist (new_playlist);
   for (i=0; i<n; ++i)

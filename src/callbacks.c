@@ -293,10 +293,6 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
 	{
 	    fprintf(stderr, "received file of type \"text/plain\"\n");
 	}
-	else
-	{
-	    fprintf(stderr, "Unknown info %d\n", info);
-	}
     }
 }
 
@@ -568,5 +564,71 @@ on_import_button_clicked               (GtkButton       *button,
                                         gpointer         user_data)
 {
   handle_import ();
+}
+
+
+void
+on_song_treeview_drag_data_received    (GtkWidget       *widget,
+                                        GdkDragContext  *drag_context,
+                                        gint             x,
+                                        gint             y,
+                                        GtkSelectionData *data,
+                                        guint            info,
+                                        guint            time,
+                                        gpointer         user_data)
+{
+    GtkTreeIter i;
+    GtkWidget *w = NULL;
+    GtkTreePath *tp = NULL;
+    GtkTreeModel *tm = NULL;
+    GtkTreeViewDropPosition pos = 0;
+
+    /* sometimes we get empty dnd data, ignore */
+    if((!data) || (data->length < 0)) return;
+    /* allow us to drag only onto ourselves =) */
+    w = gtk_drag_get_source_widget(drag_context);
+    if(w != widget) return;
+    /* yet another check, i think it's an 8 bit per byte check */
+    if(data->format != 8) return;
+
+    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget), x, y, &tp,
+		&pos))
+    {
+	/* 
+	 * ensure a valid tree path, and that we're dropping BEFORE or AFTER
+	 * a track not onto
+	 */
+	if((tp) && ((pos == GTK_TREE_VIEW_DROP_BEFORE) ||
+	    (pos == GTK_TREE_VIEW_DROP_AFTER))) 
+	{
+	    tm = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+	    if(gtk_tree_model_get_iter(tm, &i, tp))
+	    {
+		Song *s = NULL;
+		gtk_tree_model_get(tm, &i, 0, &s, -1);
+		if(s)
+		{
+		    guint32 id = 0;
+		    gchar *str = g_strdup(data->data);
+		    
+		    while(parse_ipod_id_from_string(&str,&id))
+		    {
+			switch(pos)
+			{
+			    case GTK_TREE_VIEW_DROP_BEFORE:
+				fprintf(stderr, "Dropped %d before %d\n", id, s->ipod_id);	
+				break;
+			    case GTK_TREE_VIEW_DROP_AFTER:
+				fprintf(stderr, "Dropped %d after %d\n", id, s->ipod_id);	
+				break;
+			    default:
+				break;
+			}
+		    }
+		}
+	    }
+	    gtk_tree_path_free(tp);
+	}
+    }
 }
 

@@ -785,6 +785,7 @@
 		      <property name="enable_search">True</property>
 		      <signal name="drag_data_get" handler="on_song_treeview_drag_data_get" last_modification_time="Thu, 19 Dec 2002 21:56:20 GMT"/>
 		      <signal name="key_release_event" handler="on_song_treeview_key_release_event" after="yes" last_modification_time="Mon, 23 Dec 2002 09:16:59 GMT"/>
+		      <signal name="drag_data_received" handler="on_song_treeview_drag_data_received" last_modification_time="Thu, 09 Jan 2003 06:53:46 GMT"/>
 		      <accelerator key="a" modifiers="GDK_CONTROL_MASK" signal="select_all"/>
 		    </widget>
 		  </child>
