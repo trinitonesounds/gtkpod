@@ -71,6 +71,7 @@ static gboolean mutex_data = FALSE;
 /* I'm not sure how exactly to calculate between iPod's volume tag and
  * mp3gain's gain. The following worked fine with 2 (two) tracks...
  * Change here if you know better. */
+#if 0
 static gint32 nm_gain_to_volume (gint gain)
 {
     gint vol;
@@ -83,6 +84,7 @@ static gint32 nm_gain_to_volume (gint gain)
 
     return vol;
 }
+#endif
 
 #if 0
 /* if you change nm_gain_to_volume() also change this, even though it's
@@ -123,7 +125,7 @@ static gint32 replaygain_to_volume(gint replaygain)
     return volume;
 }
 
-
+#if 0
 /* parse the mp3gain stdout to search the mp3gain output:
  *
  * mp3gain stdout for a single file is something like this:
@@ -167,15 +169,14 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
    }
    return gain;
 }
-
+#endif
 
 /* this function returns the @track volume */
 /* mp3gain version 1.4.2 */
-gint nm_mp3gain_get_gain (Track *track)
+static gboolean nm_mp3gain_calc_gain (Track *track)
 {
     gint k,n;  /*for's counter*/
     gint len = 0;
-    gint gain = TRACKVOLERROR;
     gint fdpipe[2];  /*a pipe*/
     gchar *filename=NULL; /*track's filename*/
     gchar *mp3gain_path;
@@ -198,7 +199,7 @@ gint nm_mp3gain_get_gain (Track *track)
     if (!mp3gain_path)
     {
 	gtkpod_warning (_("Could not find mp3gain. I tried to use the following executable: '%s'.\n\nIf the mp3gain executable is not in your path or named differently, you can set the full path in the 'Tools' section of the preferences dialog.\n\nIf you do not have mp3gain installed, you can download it from http://www.sourceforge.net/projects/mp3gain."), mp3gain_set);
-	return TRACKVOLERROR;
+	return FALSE;
     }
 
     mp3gain_exec = g_path_get_basename (mp3gain_path);
@@ -223,15 +224,14 @@ gint nm_mp3gain_get_gain (Track *track)
 	dup2(fdpipe[WRITE],fileno(stdout));
 	close(fdpipe[READ]);
 	close(fdpipe[WRITE]);
-	if(prefs_get_write_gaintag())
-	{
-	    /* this call may add a tag to the mp3file!! */
-	    execl(mp3gain_path, mp3gain_exec, "-o", filename, NULL);
-	}
-	else
-	{
-	    execl(mp3gain_path, mp3gain_exec, "-s", "s", "-o", filename, NULL);
-	}
+        
+	/* this call may add a tag to the mp3file!! 
+	 * -o output_file
+	 * -k lower gain to avoid cipping
+	 * -q quiet
+	 * */
+        execl(mp3gain_path, mp3gain_exec, "-o", filename, "-k", "-q", NULL);
+	
 	break;
     default: /*parent*/
 	close(fdpipe[WRITE]);
@@ -242,8 +242,6 @@ gint nm_mp3gain_get_gain (Track *track)
 	    if (len > 0) g_string_append_len (gain_output, buf, len);
 	} while (len > 0);
 	close(fdpipe[READ]);
-	/* now output->str contains the mp3gain stdout */
-	gain = parse_mp3gain_stdout(gain_output->str, filename);
 	break;
     }/*end switch*/
 
@@ -255,41 +253,35 @@ gint nm_mp3gain_get_gain (Track *track)
     g_string_free (gain_output, TRUE);
 
     /*and happily return the right value*/
-    return gain;
+    return TRUE;
 }
 
 
 /* will get the volume either from mp3gain or from LAME's ReplayGain */
 static gint32 nm_get_volume (Track *track)
 {
-    gint32 volume = TRACKVOLERROR;
-
     if (track)
     {
-	if (prefs_get_mp3gain_use_radio_gain ())
-	{   /* use LAME's radio gain instead of mp3gain */
-	    if (!track->radio_gain_set)
-	    {
-		gchar *path = get_track_name_on_disk_verified (track);
-		mp3_get_track_lame_replaygain (path, track);
-		g_free (path);
-	    }
-	    if (track->radio_gain_set)
-	    {
-		volume = replaygain_to_volume (track->radio_gain);
-	    }
-	}
-	if (!prefs_get_mp3gain_use_radio_gain () || !track->radio_gain_set)
-	{
-	    gint gain = nm_mp3gain_get_gain (track);
-	    if (gain != TRACKVOLERROR)
-	    {
-		volume = nm_gain_to_volume (gain);
-	    }
+	if (track->radio_gain_set) 
+		return replaygain_to_volume (track->radio_gain);
+	
+	gchar *path = get_track_name_on_disk_verified (track);
+	mp3_get_track_lame_replaygain (path, track);
+	if (track->radio_gain_set) 
+		return replaygain_to_volume (track->radio_gain);
+	
+	mp3_get_track_ape_replaygain (path, track);
+	if (track->radio_gain_set) 
+		return replaygain_to_volume (track->radio_gain);
+	    
+	if (nm_mp3gain_calc_gain (track)) {
+	    mp3_get_track_ape_replaygain (path, track);
+	    if (track->radio_gain_set) 
+		    return replaygain_to_volume (track->radio_gain);
 	}
     }
-/*    printf ("%d\n", volume);*/
-    return volume;
+
+    return TRACKVOLERROR;
 }
 
 
@@ -410,8 +402,8 @@ void nm_tracks_list(GList *list)
   while (!abort &&  (list!=NULL)) /*FIXME:change it in a do-while cycle*/
   {
      track=list->data;
-     if (track->transferred)
-     {
+/*     if (track->transferred)
+     {  jlt: what is this supposed to deal with? */
 #ifdef G_THREADS_ENABLED
 	mutex_data = FALSE;
 	thread = g_thread_create (th_nm_get_volume, track, TRUE, NULL);
@@ -473,7 +465,7 @@ void nm_tracks_list(GList *list)
 	if (count == 1)  /* we need ***much*** longer timeout */
 	   prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
 
-	buf = g_strdup_printf (ngettext ("Normalized %d of %d new track.",
+	buf = g_strdup_printf (ngettext ("Normalized %d of %d new tracks.",
 					       "Normalized %d of %d new tracks.", n),
 					 count, n);
 	gtkpod_statusbar_message(buf);
@@ -492,7 +484,7 @@ void nm_tracks_list(GList *list)
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
 					progtext);
 	g_free (progtext);
-     } /*end if transferred*/
+/*     } *//*end if transferred*/ 
 
      if (abort && (count != n))
 	gtkpod_statusbar_message (_("Some tracks were not normalized. Normalization aborted!"));

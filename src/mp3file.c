@@ -1357,7 +1357,7 @@ static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
 			if (track->radio_gain_set) return;
 			track->radio_gain = gain;
 			track->radio_gain_set = TRUE;
-			printf("radio_gain (lame): %i\n", track->radio_gain); 
+/*			printf("radio_gain (lame): %i\n", track->radio_gain); */
 			break;
 		case 0x40:
 			if (track->audiophile_gain_set) return;
