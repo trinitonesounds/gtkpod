@@ -204,3 +204,7 @@ on_cfg_delete_track_from_playlist_toggled
 void
 on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

@@ -49,6 +49,8 @@ struct cfg
   gchar    *ipod_mount;   /* mount point of iPod */
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */	
+  gboolean autoimport;	  /* whether or not to automatically import files */
+
   struct {
       gboolean artist, album, track, genre;
   } song_list_show; /* what columns are displayed in the song list */	
@@ -84,6 +86,7 @@ void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
 void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
 void prefs_set_last_dir_file_export_for_filename(gchar * dir);
 
+void prefs_set_auto_import(gboolean val);
 void prefs_set_playlist_deletion(gboolean val);
 void prefs_set_song_list_show_all(gboolean val);
 void prefs_set_song_list_show_track(gboolean val);
@@ -93,6 +96,7 @@ void prefs_set_song_list_show_artist(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
 
+gboolean prefs_get_auto_import(void);
 gboolean prefs_get_playlist_deletion(void);
 gboolean prefs_get_song_list_show_all(void);
 gboolean prefs_get_song_list_show_album(void);

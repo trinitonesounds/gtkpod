@@ -82,6 +82,11 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->deletion.ipod_file);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_autoimport")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->autoimport);
+	}
 	prefs_window_song_list_init();
 	gtk_widget_show(prefs_window);
     }
@@ -112,6 +117,7 @@ prefs_window_save(void)
     prefs_set_md5songs_active(tmpcfg->md5songs);
     prefs_set_writeid3_active(tmpcfg->writeid3);
     prefs_set_mount_point(tmpcfg->ipod_mount);
+    prefs_set_auto_import(tmpcfg->autoimport);
     prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
     prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
@@ -181,7 +187,7 @@ void prefs_window_set_song_list_all(gboolean val)
 	"cfg_song_list_artist",
 	"cfg_song_list_album",
 	"cfg_song_list_genre",
-	"cfg_song_list_track",
+	"cfg_song_list_track"
     };
     guint i = 0, extra_size = 4;
     GtkWidget *w = NULL;
@@ -271,4 +277,10 @@ void
 prefs_window_set_delete_song_playlist(gboolean val)
 {
     tmpcfg->deletion.song = val;
+}
+
+void
+prefs_window_set_auto_import(gboolean val)
+{
+    tmpcfg->autoimport = val;
 }

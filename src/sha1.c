@@ -79,7 +79,6 @@ do_hash_on_file(FILE *fp)
 	}
 	buf[last] = '\0';
 	result = g_strdup(buf);
-	printf ("%s\n", buf);
     }
     return(result);
 }
@@ -158,7 +157,10 @@ void
 unique_file_repository_free(void)
 {
     if((cfg->md5songs) && (filehash))
+    {
 	g_hash_table_destroy(filehash);
+	filehash = NULL;
+    }
 }
 
 /**

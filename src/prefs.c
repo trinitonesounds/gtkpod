@@ -121,7 +121,7 @@ read_prefs_from_file_desc(FILE *fp)
     {
 	gchar *tags[] = {
 	    "mp=", "id3=", "md5=", "album=", "track=", "genre=", "artist=",
-	    "delete_file=", "delete_playlist=", "delete_ipod="
+	    "delete_file=", "delete_playlist=", "delete_ipod=", "auto_import="
 	};
 	gchar *line = NULL;
 	length = fread(buf, 1, PATH_MAX, fp);
@@ -172,6 +172,10 @@ read_prefs_from_file_desc(FILE *fp)
 		{
 		    prefs_set_song_ipod_file_deletion((gboolean)atoi(&line[12]));
 		}
+		else if((g_strstr_len(line, strlen(tags[10]), tags[10])))
+		{
+		    prefs_set_auto_import((gboolean)atoi(&line[12]));
+		}
 		g_free(line);
 	    }
 	}
@@ -201,7 +205,6 @@ read_prefs_defaults(void)
 	    }
 	}
     }
-
 }
 
 /* Read Preferences and initialise the cfg-struct */
@@ -269,6 +272,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "delete_file=%d\n",prefs_get_song_playlist_deletion());
     fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
+    fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
 }
 
 void 
@@ -475,6 +479,12 @@ prefs_print(void)
     else
 	fprintf(fp, "%s\n", off);
     
+    fprintf(fp, "Auto Import:\t");
+    if(cfg->autoimport)
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
+    
     fprintf(fp, "Song List Options:\n");
     fprintf(fp, "  Show All Attributes: ");
     if(prefs_get_song_list_show_all())
@@ -550,6 +560,7 @@ clone_prefs(void)
 	memset(result, 0, sizeof(struct cfg));
 	result->md5songs = cfg->md5songs;
 	result->writeid3 = cfg->writeid3;
+	result->autoimport = cfg->autoimport;
 	result->ipod_mount = g_strdup(cfg->ipod_mount);
 	    
 	result->song_list_show.artist = prefs_get_song_list_show_artist();
@@ -569,4 +580,16 @@ clone_prefs(void)
 	    result->last_dir.file_export = g_strdup(cfg->last_dir.file_export);
     }
     return(result);
+}
+
+gboolean
+prefs_get_auto_import(void)
+{
+    return(cfg->autoimport);
+}
+
+void
+prefs_set_auto_import(gboolean val)
+{
+    cfg->autoimport = val;
 }

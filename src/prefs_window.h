@@ -42,5 +42,6 @@ void prefs_window_set_delete_playlist(gboolean val);
 void prefs_window_set_delete_song_ipod(gboolean val);
 void prefs_window_set_song_list_artist(gboolean val);
 void prefs_window_set_delete_song_playlist(gboolean val);
+void prefs_window_set_auto_import(gboolean val);
 
 #endif

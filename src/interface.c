@@ -698,6 +698,7 @@ create_prefs_window (void)
   GtkWidget *hbox1;
   GtkWidget *label17;
   GtkWidget *cfg_mount_point;
+  GtkWidget *cfg_autoimport;
   GtkWidget *cfg_md5songs;
   GtkWidget *cfg_writeid3;
   GtkWidget *frame2;
@@ -745,6 +746,10 @@ create_prefs_window (void)
   cfg_mount_point = gtk_entry_new ();
   gtk_widget_show (cfg_mount_point);
   gtk_box_pack_start (GTK_BOX (hbox1), cfg_mount_point, FALSE, TRUE, 0);
+
+  cfg_autoimport = gtk_check_button_new_with_mnemonic (_("Automatically Import ItunesDB on startup"));
+  gtk_widget_show (cfg_autoimport);
+  gtk_box_pack_start (GTK_BOX (vbox3), cfg_autoimport, FALSE, FALSE, 0);
 
   cfg_md5songs = gtk_check_button_new_with_mnemonic (_("Don't Allow File Duplication(slower import)"));
   gtk_widget_show (cfg_md5songs);
@@ -846,6 +851,9 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_mount_point, "changed",
                     G_CALLBACK (on_cfg_mount_point_changed),
                     NULL);
+  g_signal_connect ((gpointer) cfg_autoimport, "toggled",
+                    G_CALLBACK (on_cfg_autoimport_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_md5songs, "toggled",
                     G_CALLBACK (on_cfg_md5songs_toggled),
                     NULL);
@@ -890,6 +898,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, hbox1, "hbox1");
   GLADE_HOOKUP_OBJECT (prefs_window, label17, "label17");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_mount_point, "cfg_mount_point");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_autoimport, "cfg_autoimport");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5songs, "cfg_md5songs");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_writeid3, "cfg_writeid3");
   GLADE_HOOKUP_OBJECT (prefs_window, frame2, "frame2");

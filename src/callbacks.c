@@ -535,3 +535,12 @@ on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
 	    gtk_toggle_button_get_active(togglebutton));
 }
 
+
+void
+on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_auto_import(
+	    gtk_toggle_button_get_active(togglebutton));
+}
+
