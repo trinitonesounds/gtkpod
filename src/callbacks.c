@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:04:18 jcs>
+/* Time-stamp: <2004-10-02 22:40:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -837,6 +837,53 @@ on_update_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
     do_selected_tracks (update_trackids);
+}
+
+
+void
+on_mserv_from_file_playlist_menu_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    do_selected_playlist (mserv_from_file_trackids);
+}
+
+
+void
+on_mserv_from_file_entry_menu_activate (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Update selected entry of which sort tab?"));
+
+    if (inst != -1) do_selected_entry (mserv_from_file_trackids, inst);
+}
+
+
+void
+on_mserv_from_file_tracks_menu_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    do_selected_tracks (mserv_from_file_trackids);
+}
+
+
+void
+on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_mserv_use (
+	gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_mserv_report_probs (
+	gtk_toggle_button_get_active(togglebutton));
 }
 
 

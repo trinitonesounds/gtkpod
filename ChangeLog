@@ -40,6 +40,10 @@ gtkpod V0.82-CVS
 	BUGFIX: when copying track to the iPod, the free space
 	indication became bigger and bigger during the process.
 
+	NEW FEATURE: Implemented Michael Rolig's patch/idea to access
+	mserv data for the rating. Still needs testing as I don't use
+	mserv.
+
 	NEW FEATURE: added "randomize current playlist" (only the menu
 	entry without actual code was present so far).
 

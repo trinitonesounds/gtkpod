@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:27:00 jcs>
+/* Time-stamp: <2004-10-02 22:32:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -148,8 +148,11 @@ struct cfg
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   gboolean concal_autosync;     /* sync contacts and calendar on iTunesDB sync? */
-  gboolean unused_gboolean1;    /* unused */
-  gboolean unused_gboolean2;    /* unused */
+  gboolean mserv_use;           /* use mserv data (rating)? */
+  gboolean mserv_report_probs;  /* report problems while updating? */
+  gchar *mserv_music_root;      /* where is mserv music located? */
+  gchar *mserv_trackinfo_root;  /* where is mserv data located? */
+  gchar *mserv_username;        /* username for mserv? */
   gboolean unused_gboolean3;    /* unused */
   float version;                /* version of gtkpod writing the cfg file */
 };
@@ -288,7 +291,7 @@ void prefs_set_last_prefs_page (gint i);
 void prefs_set_toolpath (PathType type, const gchar *path);
 const gchar *prefs_get_toolpath (PathType type);
 void prefs_set_time_format (const gchar *format);
-gchar *prefs_get_time_format (void);
+const gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
 void prefs_set_sp_or (guint32 inst, gboolean state);
@@ -325,8 +328,16 @@ void prefs_set_concal_autosync(gboolean val);
 gboolean prefs_get_concal_autosync(void);
 void prefs_set_tmp_disable_sort(gboolean val);
 gboolean prefs_get_tmp_disable_sort(void);
-void prefs_set_unused_gboolean2(gboolean val);
-gboolean prefs_get_unused_gboolean2(void);
+gboolean prefs_get_mserv_use(void);
+void prefs_set_mserv_use(gboolean val);
+gboolean prefs_get_mserv_report_probs(void);
+void prefs_set_mserv_report_probs(gboolean val);
+const gchar *prefs_get_mserv_music_root(void);
+void prefs_set_mserv_music_root(const gchar *root);
+const gchar *prefs_get_mserv_trackinfo_root(void);
+void prefs_set_mserv_trackinfo_root(const gchar *root);
+const gchar *prefs_get_mserv_username(void);
+void prefs_set_mserv_username(const gchar *root);
 
 gboolean prefs_get_disable_sorting(void);
 

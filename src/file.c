@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-21 00:26:22 jcs>
+/* Time-stamp: <2004-10-02 22:48:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -671,7 +671,100 @@ Track *copy_new_info (Track *from, Track *to)
     return to;
 }
 
-/* Fills the supplied @or_track with data from the file @name. If
+/* Updates mserv data (rating only) of @track using filename @name to
+   look up mserv information.
+   Return TRUE if successfully updated (or disabled), FALSE if not */
+gboolean update_mserv_data_from_file (gchar *name, Track *track)
+{
+    gboolean success=TRUE;
+
+    if (!name || !track) return FALSE;
+
+    if (g_file_test (name, G_FILE_TEST_IS_DIR)) return FALSE;
+    if (!g_file_test (name, G_FILE_TEST_EXISTS))
+    {
+	gchar *buf = g_strdup_printf (_("Local filename not valid (%s)"), name);
+	display_mserv_problems (track, buf);
+	g_free (buf);
+	return FALSE;
+    }
+
+    if (prefs_get_mserv_use())
+    {
+	/* try getting the user's rating from the mserv db */
+	const gchar *music_root = prefs_get_mserv_music_root();
+	const gchar *trackinfo_root = prefs_get_mserv_trackinfo_root();
+	/* music_root and trackinfo_root guaranteed to be != NULL */
+	g_return_val_if_fail (music_root && trackinfo_root, FALSE);
+
+	success = FALSE;
+        /* printf("mroot %s troot %s fname %s\n", music_root, trackinfo_root, name); */
+
+        /* first, check if the file is in the mserv music directory */
+	if (*music_root == 0 || strstr(name, music_root))
+	{
+	    gchar *infoname = g_strdup_printf ("%s%c%s.trk",
+					   trackinfo_root,
+					   G_DIR_SEPARATOR,
+					   &(name[strlen(music_root)]));
+	    /* printf("trying %s\n", infoname); */
+	    FILE *fp = fopen (infoname, "r");
+	    if (fp)
+	    {
+		/* printf("opened\n");*/
+		gchar buff[PATH_MAX];
+		const gchar *username = prefs_get_mserv_username ();
+		guint usernamelen;
+		g_return_val_if_fail (username, (fclose (fp), FALSE));
+		usernamelen = strlen (username);
+		while (fgets(buff, PATH_MAX, fp))
+		{
+		    /* printf("username %s (%d) read %s\n",
+		     * prefs_get_mserv_username(), usernamelen,
+		     * buff);*/
+		    if (strncmp(buff, username, usernamelen) == 0
+			&& buff[usernamelen] == (gchar)'=')
+		    {
+			/* found it */
+			track->rating = atoi(&buff[usernamelen+1]) * RATING_STEP;
+			/* printf("found it, = %d\n",
+			   orig_track->rating/RATING_STEP); */
+			success = TRUE;
+			break; /* while(fgets(... */
+		    }
+		}
+		fclose(fp);
+		if (!success)
+		{
+		    gchar *buf = g_strdup_printf (_("No information found for user '%s' in '%s'"), prefs_get_mserv_username(), infoname);
+		    display_mserv_problems (track, buf);
+		    g_free (buf);
+		}
+	    }
+	    else
+	    {
+		gchar *buf = g_strdup_printf (_("mserv data file (%s) not available for track (%s)"), infoname, name);
+		display_mserv_problems (track, buf);
+		g_free (buf);
+	    }
+	    g_free (infoname);
+	}
+	else
+	{
+	    gchar *buf = g_strdup_printf (_("Track (%s) not in mserv music root directory (%s)"), name, music_root);
+	    display_mserv_problems (track, buf);
+	    g_free (buf);
+	}
+    }
+
+    while (widgets_blocked && gtk_events_pending ())
+	gtk_main_iteration ();
+
+    return success;
+}
+
+
+/* Fills the supplied @orig_track with data from the file @name. If
  * @or_track is NULL, a new track struct is created The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists */
@@ -771,6 +864,8 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    track = nti;
 	    nti = NULL;
 	}
+
+	update_mserv_data_from_file (name, track);
     }
 
     while (widgets_blocked && gtk_events_pending ())
@@ -814,9 +909,50 @@ void update_trackids (GList *selected_trackids)
     display_non_updated (NULL, NULL);
     /* display log of updated tracks */
     display_updated (NULL, NULL);
+    /* display log of problems with mserv data */
+    display_mserv_problems (NULL, NULL);
     /* display log of detected duplicates */
     remove_duplicate (NULL, NULL);
     gtkpod_statusbar_message(_("Updated selected tracks with info from file."));
+}
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *      Update mserv Data from File                                 *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+/* reads info from file and updates the ID3 tags of
+   @selected_trackids. */
+void mserv_from_file_trackids (GList *selected_trackids)
+{
+    GList *gl_id;
+
+    if (g_list_length (selected_trackids) == 0)
+    {
+	gtkpod_statusbar_message(_("Nothing to update"));
+	return;
+    }
+
+    block_widgets ();
+    for (gl_id = selected_trackids; gl_id; gl_id = gl_id->next)
+    {
+	guint32 id = (guint32)gl_id->data;
+	Track *track = get_track_by_id (id);
+	gchar *buf = g_strdup_printf (_("Retrieving mserv data %s"), get_track_info (track));
+	gtkpod_statusbar_message (buf);
+	g_free (buf);
+	if (track->pc_path_locale && *track->pc_path_locale)
+	    update_mserv_data_from_file (track->pc_path_locale, track);
+	else
+	    display_mserv_problems (track, _("no filename available"));
+    }
+    release_widgets ();
+    /* display log of problems with mserv data */
+    display_mserv_problems (NULL, NULL);
+    gtkpod_statusbar_message(_("Updated selected tracks with data from mserv."));
 }
 
 
@@ -1277,6 +1413,71 @@ void display_updated (Track *track, gchar *txt)
 }
 
 
+/* Logs tracks (@track) that could not be updated with info from mserv
+   database for some reason. Pop up a window with the log by calling
+   with @track = NULL, or remove the log by calling with @track = -1.
+   @txt (if available) is added as an explanation as to why it was
+   impossible to retrieve mserv information */
+void display_mserv_problems (Track *track, gchar *txt)
+{
+   gchar *buf;
+   static gint track_nr = 0;
+   static GString *str = NULL;
+
+   if ((track == NULL) && str)
+   {
+       if (prefs_get_mserv_use() &&
+	   prefs_get_mserv_report_probs() && str->len)
+       { /* Some tracks have had problems. Print a notice */
+	   buf = g_strdup_printf (
+	       ngettext ("No mserv information could be retrieved for the following track",
+			 "No mserv information could be retrieved for the following %d tracks",
+			 track_nr), track_nr);
+	   gtkpod_confirmation
+	       (-1,                 /* gint id, */
+		FALSE,              /* gboolean modal, */
+		_("mserv data retrieval problem"),   /* title */
+		buf,                /* label */
+		str->str,           /* scrolled text */
+		NULL, 0, NULL,          /* option 1 */
+		NULL, 0, NULL,          /* option 2 */
+		TRUE,               /* gboolean confirm_again, */
+		prefs_set_mserv_report_probs,/* confirm_again_handler,*/
+		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
+		NULL,               /* don't show "Apply" button */
+		NULL,               /* cancel_handler,*/
+		NULL,               /* gpointer user_data1,*/
+		NULL);              /* gpointer user_data2,*/
+	   g_free (buf);
+       }
+       display_mserv_problems ((void *)-1, NULL);
+   }
+
+   if (track == (void *)-1)
+   { /* clean up */
+       if (str)       g_string_free (str, TRUE);
+       str = NULL;
+       track_nr = 0;
+       gtkpod_tracks_statusbar_update();
+   }
+   else if (prefs_get_mserv_use() &&
+	    prefs_get_mserv_report_probs() && track)
+   {
+       /* add info about it to str */
+       buf = get_track_info (track);
+       if (!str)
+       {
+	   track_nr = 0;
+	   str = g_string_sized_new (2000); /* used to keep record */
+       }
+       if (txt) g_string_append_printf (str, "%s (%s)\n", buf, txt);
+       else     g_string_append_printf (str, "%s\n", buf);
+       g_free (buf);
+       ++track_nr; /* count tracks */
+   }
+}
+
+
 /* Update information of @track from data in original file. This
    requires that the original filename is available, and that the file
    exists.
@@ -1290,6 +1491,57 @@ void display_updated (Track *track, gchar *txt)
    (NULL, NULL)", that list can be deleted by calling
    "remove_duplicate (NULL, (void *)-1)"*/
 void update_track_from_file (Track *track)
+{
+    gchar *prefs_charset = NULL;
+    gboolean charset_set;
+
+    if (!track) return;
+
+    /* remember if charset was set */
+    if (track->charset)  charset_set = TRUE;
+    else                 charset_set = FALSE;
+
+    if (!prefs_get_update_charset () && charset_set)
+    {   /* we should use the initial charset for the update */
+	if (prefs_get_charset ())
+	{   /* remember the charset originally set */
+	    prefs_charset = g_strdup (prefs_get_charset ());
+	}
+	/* use the charset used when first importing the track */
+	prefs_set_charset (track->charset);
+    }
+
+    if (!(track->pc_path_locale && *track->pc_path_locale))
+    { /* no path available */
+	display_non_updated (track, _("no filename available"));
+    }
+    else if (get_track_info_from_file (track->pc_path_locale, track))
+    { /* update successfull */
+	/* notify display model */
+	pm_track_changed (track);
+	display_updated (track, NULL);
+    }
+    else
+    { /* update not successful -- log this track for later display */
+	if (g_file_test (track->pc_path_locale,
+			 G_FILE_TEST_EXISTS) == FALSE)
+	{
+	    display_non_updated (track, _("file not found"));
+	}
+	else
+	{
+	    display_non_updated (track, _("format not supported"));
+	}
+    }
+
+    if (!prefs_get_update_charset () && charset_set)
+    {   /* reset charset */
+	prefs_set_charset (prefs_charset);
+    }
+
+    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+}
+#if 0
 {
     Track *oldtrack;
     gchar *prefs_charset = NULL;
@@ -1387,6 +1639,7 @@ void update_track_from_file (Track *track)
 
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 }
+#endif
 
 
 /*------------------------------------------------------------------*\

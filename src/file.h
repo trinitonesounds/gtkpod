@@ -72,9 +72,11 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 gboolean write_tags_to_file(Track *s);
 void update_track_from_file (Track *track);
 void update_trackids (GList *selected_trackids);
+void mserv_from_file_trackids (GList *selected_trackids);
 void sync_trackids (GList *selected_trackids);
 void display_non_updated (Track *track, gchar *txt);
 void display_updated (Track *track, gchar *txt);
+void display_mserv_problems (Track *track, gchar *txt);
 void handle_import (void);
 void handle_export (void);
 gboolean files_are_saved (void);

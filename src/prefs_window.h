@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:04:18 jcs>
+/* Time-stamp: <2004-10-02 22:34:27 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -81,7 +81,11 @@ void prefs_window_set_sort_tab_num (gint num);
 void prefs_window_set_automount (gboolean val);
 void prefs_window_set_concal_autosync (gboolean val);
 void prefs_window_set_tmp_disable_sort (gboolean val);
-void prefs_window_set_unused_gboolean2 (gboolean val);
+void prefs_window_set_mserv_use (gboolean val);
+void prefs_window_set_mserv_report_probs (gboolean val);
+void prefs_window_set_mserv_music_root (const gchar *val);
+void prefs_window_set_mserv_trackinfo_root (const gchar *val);
+void prefs_window_set_mserv_username (const gchar *val);
 void prefs_window_set_unused_gboolean3 (gboolean val);
 
 void sort_window_create (void);

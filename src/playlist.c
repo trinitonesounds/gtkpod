@@ -1,6 +1,6 @@
 /*
 |  Copyright (C) 2002 Adrian Ulrich <pab at blinkenlights.ch>
-|                2002-2003 Jörg Schuler  <jcsjcs at users.sourceforge.net>
+|                2002-2003 JÃ¶rg Schuler  <jcsjcs at users.sourceforge.net>
 |
 |  Part of the gtkpod project.
 |

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:05:39 jcs>
+/* Time-stamp: <2004-10-02 22:35:21 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -660,11 +660,49 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->tmp_disable_sort);
 	}
-/* 	if((w = lookup_widget(prefs_window, "cfg_unused_gboolean2"))) */
-/* 	{ */
-/* 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), */
-/* 					 tmpcfg->unused_gboolean2); */
-/* 	} */
+	if((w = lookup_widget(prefs_window, "cfg_mserv_use")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->mserv_use);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_mserv_report_probs")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->mserv_report_probs);
+	}
+	if((w = lookup_widget(prefs_window, "mserv_music_root_entry")))
+	{
+	    if (tmpcfg->mserv_music_root)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->mserv_music_root);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
+	if((w = lookup_widget(prefs_window, "mserv_trackinfo_root_entry")))
+	{
+	    if (tmpcfg->mserv_trackinfo_root)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->mserv_trackinfo_root);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
+	if((w = lookup_widget(prefs_window, "mserv_username_entry")))
+	{
+	    if (tmpcfg->mserv_username)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->mserv_username);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
 /* 	if((w = lookup_widget(prefs_window, "cfg_unused_gboolean3"))) */
 /* 	{ */
 /* 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), */
@@ -754,7 +792,11 @@ prefs_window_set(void)
 	prefs_set_automount(tmpcfg->automount);
 	prefs_set_concal_autosync(tmpcfg->concal_autosync);
 	prefs_set_tmp_disable_sort(tmpcfg->tmp_disable_sort);
-	prefs_set_unused_gboolean2(tmpcfg->unused_gboolean2);
+	prefs_set_mserv_use(tmpcfg->mserv_use);
+	prefs_set_mserv_report_probs(tmpcfg->mserv_report_probs);
+	prefs_set_mserv_music_root(tmpcfg->mserv_music_root);
+	prefs_set_mserv_trackinfo_root(tmpcfg->mserv_trackinfo_root);
+	prefs_set_mserv_username(tmpcfg->mserv_username);
 	prefs_set_unused_gboolean3(tmpcfg->unused_gboolean3);
 
 	tm_show_preferred_columns();
@@ -897,6 +939,24 @@ prefs_window_apply (void)
     if((w = lookup_widget(prefs_window, "time_format_entry")))
     {
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_time_format ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
+
+    if((w = lookup_widget(prefs_window, "mserv_music_root_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mserv_music_root ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
+
+    if((w = lookup_widget(prefs_window, "mserv_trackinfo_root_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mserv_trackinfo_root ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
+
+    if((w = lookup_widget(prefs_window, "mserv_username_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mserv_username ());
 	/* tmpcfg gets set by the "changed" callback */
     }
 
@@ -1208,9 +1268,36 @@ prefs_window_set_tmp_disable_sort(gboolean val)
 }
 
 void
-prefs_window_set_unused_gboolean2(gboolean val)
+prefs_window_set_mserv_use(gboolean val)
 {
-    tmpcfg->unused_gboolean2 = val;
+    tmpcfg->mserv_use = val;
+}
+
+void
+prefs_window_set_mserv_report_probs(gboolean val)
+{
+    tmpcfg->mserv_report_probs = val;
+}
+
+void prefs_window_set_mserv_music_root(const gchar *val)
+{
+    if (!val) return;
+    g_free (tmpcfg->mserv_music_root);
+    tmpcfg->mserv_music_root = g_strdup (val);
+}
+
+void prefs_window_set_mserv_trackinfo_root(const gchar *val)
+{
+    if (!val) return;
+    g_free (tmpcfg->mserv_trackinfo_root);
+    tmpcfg->mserv_trackinfo_root = g_strdup (val);
+}
+
+void prefs_window_set_mserv_username(const gchar *val)
+{
+    if (!val) return;
+    g_free (tmpcfg->mserv_username);
+    tmpcfg->mserv_username = g_strdup (val);
 }
 
 void

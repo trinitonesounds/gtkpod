@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 19:36:30 jcs>
+/* Time-stamp: <2004-10-02 13:25:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -111,7 +111,7 @@ T_item ST_to_T (ST_CAT_item st)
  * PATH_MAX). You must g_free the return value */
 gchar *time_time_to_string (time_t time)
 {
-    gchar *format = prefs_get_time_format ();
+    const gchar *format = prefs_get_time_format ();
 
     if (time && format)
     {

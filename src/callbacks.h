@@ -720,3 +720,25 @@ on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
 void
 on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_mserv_from_file_playlist_menu_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_mserv_from_file_entry_menu_activate (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_mserv_from_file_tracks_menu_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

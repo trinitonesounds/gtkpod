@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:26:36 jcs>
+/* Time-stamp: <2004-10-02 22:51:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -268,7 +268,6 @@ struct cfg *cfg_new(void)
     mycfg->unused_gboolean3 = FALSE;
     mycfg->concal_autosync = FALSE;
     mycfg->tmp_disable_sort = TRUE;
-    mycfg->unused_gboolean2 = FALSE;
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
@@ -282,6 +281,11 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.pm_autostore = FALSE;
     mycfg->sortcfg.tm_autostore = FALSE;
     mycfg->sortcfg.case_sensitive = FALSE;
+    mycfg->mserv_use = FALSE;
+    mycfg->mserv_report_probs = TRUE;
+    mycfg->mserv_music_root = g_strdup ("");
+    mycfg->mserv_trackinfo_root = g_strdup ("/var/lib/mserv/trackinfo/");
+    mycfg->mserv_username = g_strdup ("");
     return(mycfg);
 }
 
@@ -791,14 +795,30 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_tmp_disable_sort ((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "unused_gboolean2") == 0)
-	  {
-	      prefs_set_unused_gboolean2 ((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
 	      prefs_set_int_value (EXPORT_FILES_SPECIAL_CHARSET,
 				   atoi (arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "mserv_use") == 0)
+	  {
+	      prefs_set_mserv_use ((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "mserv_report_probs") == 0)
+	  {
+	      prefs_set_mserv_report_probs ((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "mserv_music_root") == 0)
+	  {
+	      prefs_set_mserv_music_root (arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "mserv_trackinfo_root") == 0)
+	  {
+	      prefs_set_mserv_trackinfo_root (arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "mserv_username") == 0)
+	  {
+	      prefs_set_mserv_username (arg);
 	  }
 	  else
 	  {   /* All leftover options will be stored into the prefs
@@ -1083,8 +1103,12 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
     prefs_write_hash_values (fp);
-     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
-/*     fprintf (fp, "unused_gboolean2=%d\n", cfg->unused_gboolean2); */
+    fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
+    fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);
+    fprintf (fp, "mserv_report_probs=%d\n", cfg->mserv_report_probs);
+    fprintf(fp, "mserv_music_root=%s\n", cfg->mserv_music_root);
+    fprintf(fp, "mserv_trackinfo_root=%s\n", cfg->mserv_trackinfo_root);
+    fprintf(fp, "mserv_username=%s\n", cfg->mserv_username);
 /*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
 }
 
@@ -1139,6 +1163,9 @@ void cfg_free(struct cfg *c)
       for (i=0; i<PATH_NUM; ++i)
 	  g_free (c->toolpath[i]);
       g_free (c->time_format);
+      g_free (c->mserv_music_root);
+      g_free (c->mserv_trackinfo_root);
+      g_free (c->mserv_username);
       g_free (c);
     }
 }
@@ -1344,18 +1371,16 @@ struct cfg *clone_prefs(void)
 	gint i;
 
 	result = g_memdup (cfg, sizeof (struct cfg));
-	if (cfg->ipod_mount)
-	    result->ipod_mount = g_strdup(cfg->ipod_mount);
-	if (cfg->charset)
-	    result->charset = g_strdup(cfg->charset);
-	if(cfg->last_dir.browse)
-	    result->last_dir.browse = g_strdup(cfg->last_dir.browse);
+	result->ipod_mount = g_strdup(cfg->ipod_mount);
+	result->charset = g_strdup(cfg->charset);
+	result->last_dir.browse = g_strdup(cfg->last_dir.browse);
 	for (i=0; i<PATH_NUM; ++i)
-	    if (cfg->toolpath[i])  result->toolpath[i] = g_strdup (cfg->toolpath[i]);
-	if(cfg->time_format)
-	    result->time_format = g_strdup(cfg->time_format);
-	if (cfg->parsetags_template)
-	    result->parsetags_template = g_strdup(cfg->parsetags_template);
+	    result->toolpath[i] = g_strdup (cfg->toolpath[i]);
+	result->time_format = g_strdup(cfg->time_format);
+	result->parsetags_template = g_strdup(cfg->parsetags_template);
+	result->mserv_music_root = g_strdup(cfg->mserv_music_root);
+	result->mserv_trackinfo_root = g_strdup(cfg->mserv_trackinfo_root);
+	result->mserv_username = g_strdup(cfg->mserv_username);
     }
     return(result);
 }
@@ -2129,12 +2154,12 @@ void prefs_set_time_format (const gchar *format)
 {
     if (format)
     {
-	C_FREE (cfg->time_format);
+	g_free (cfg->time_format);
 	cfg->time_format = g_strdup (format);
     }
 }
 
-gchar *prefs_get_time_format (void)
+const gchar *prefs_get_time_format (void)
 {
     return cfg->time_format;
 }
@@ -2451,14 +2476,68 @@ gboolean prefs_get_disable_sorting(void)
     return (prefs_get_block_display() || prefs_get_tmp_disable_sort());
 }
 
-gboolean prefs_get_unused_gboolean2(void)
+/* whether or not to read ratings from mserv db */
+gboolean prefs_get_mserv_use(void)
 {
-    return(cfg->unused_gboolean2);
+    return(cfg->mserv_use);
 }
 
-void prefs_set_unused_gboolean2(gboolean val)
+void prefs_set_mserv_use(gboolean val)
 {
-    cfg->unused_gboolean2 = val;
+    cfg->mserv_use = val;
+}
+
+/* whether or not to report problems reading from mserv database */
+gboolean prefs_get_mserv_report_probs(void)
+{
+    return(cfg->mserv_report_probs);
+}
+
+void prefs_set_mserv_report_probs(gboolean val)
+{
+    cfg->mserv_report_probs = val;
+}
+
+void prefs_set_mserv_music_root (const gchar *str)
+{
+    if (str)
+    {
+	g_free (cfg->mserv_music_root);
+	cfg->mserv_music_root = g_strdup (str);
+    }
+}
+
+const gchar *prefs_get_mserv_music_root (void)
+{
+    return cfg->mserv_music_root;
+}
+
+void prefs_set_mserv_trackinfo_root (const gchar *str)
+{
+    if (str)
+    {
+	g_free (cfg->mserv_trackinfo_root);
+	cfg->mserv_trackinfo_root = g_strdup (str);
+    }
+}
+
+const gchar *prefs_get_mserv_trackinfo_root (void)
+{
+    return cfg->mserv_trackinfo_root;
+}
+
+void prefs_set_mserv_username (const gchar *str)
+{
+    if (str)
+    {
+	g_free (cfg->mserv_username);
+	cfg->mserv_username = g_strdup (str);
+    }
+}
+
+const gchar *prefs_get_mserv_username (void)
+{
+    return cfg->mserv_username;
 }
 
 gboolean prefs_get_unused_gboolean3(void)
@@ -2470,7 +2549,6 @@ void prefs_set_unused_gboolean3(gboolean val)
 {
     cfg->unused_gboolean3 = val;
 }
-
 
 /* ------------------------------------------------------------
 
