@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-07 21:20:08 jcs>
+/* Time-stamp: <2003-09-19 23:18:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2175,8 +2175,8 @@ gboolean flush_songs (void)
 					    (gdouble) count/n);
 
 	      diff = time(NULL) - start;
-	      mins = ((diff*n/count)-diff)/60;
-	      secs = ((((diff*n/count)-diff) & 60) / 5) * 5;
+	      mins = ((diff*n/count)-diff+5)/60;
+	      secs = ((((diff*n/count)-diff+5) & 60) / 5) * 5;
 	      /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
 	      progtext = g_strdup_printf (_("%d%% (%d:%02d) left"),

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-02 22:55:43 jcs>
+/* Time-stamp: <2003-09-19 23:35:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -44,8 +44,9 @@
 
 #define C_FREE(a) {if(a) g_free(a); a=NULL;}
 
-/* I'm sure there was a C-function or macro for this... */
-#define SIGN(a) (a<0 ? -1:a>0 ? +1:0)
+/* compare a and b, return sign (a-b) -- it has to be this way rather
+   than just calculate a-b, because a and b might be unsigned... */
+#define COMP(a,b) (a<b ? -1:a>b ? +1:0)
 
 /* pointer to main window */
 extern GtkWidget *gtkpod_window;

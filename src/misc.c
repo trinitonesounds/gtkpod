@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-12 23:15:05 jcs>
+/* Time-stamp: <2003-09-19 23:39:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2544,22 +2544,22 @@ static void update_ranked_playlist(gchar *str, gint songs_nr,
 
 /* Sort Function: determines the order of the generated playlist */
 
-/* NOTE: THE (double) CASTING and "SIGN" CONVERSIONS ARE NECESSARY FOR
-   THE TIME_PLAYED COMPARES WHERE A SIGN OVERFLOW MAY OCCUR BECAUSE OF
-   THE 32 BIT UNSIGNED MAC TIMESTAMPS. */
+/* NOTE: THE USE OF 'COMP' ARE NECESSARY FOR THE TIME_PLAYED COMPARES
+   WHERE A SIGN OVERFLOW MAY OCCUR BECAUSE OF THE 32 BIT UNSIGNED MAC
+   TIMESTAMPS. */
 static gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
 {
-    double result = 0;
+    gint result = 0;
     const Song *a = aa;
     const Song *b = bb;
 
     if (a && b)
     {
-	result = (double)b->playcount - a->playcount;
-	if (result == 0) result = (double)b->rating - a->rating;
-	if (result == 0) result = (double)b->time_played - a->time_played;
+	result = COMP (b->playcount, a->playcount);
+	if (result == 0) result = COMP (b->rating, a->rating);
+	if (result == 0) result = COMP (b->time_played, a->time_played);
     }
-    return SIGN (result);
+    return result;
 }
 
 /* Insert function: determines whether a song is entered into the playlist */
@@ -2586,17 +2586,17 @@ void most_listened_pl(void)
 /* Sort Function: determines the order of the generated playlist */
 static gint Most_Rated_CF (gconstpointer aa, gconstpointer bb)
 {
-    double result = 0;
+    gint result = 0;
     const Song *a = aa;
     const Song *b = bb;
     
     if (a && b)
     {
-	result = (double)b->rating - a->rating;
-	if (result == 0) result = (double)b->playcount - a->playcount;
-	if (result == 0) result = (double)b->time_played - a->time_played;
+	result = COMP (b->rating, a->rating);
+	if (result == 0) result = COMP (b->playcount, a->playcount);
+	if (result == 0) result = COMP (b->time_played, a->time_played);
     }
-    return SIGN (result);
+    return result;
 }
 
 /* Insert function: determines whether a song is entered into the playlist */
@@ -2623,17 +2623,17 @@ void most_rated_pl(void)
 /* Sort Function: determines the order of the generated playlist */
 static gint Last_Listened_CF (gconstpointer aa, gconstpointer bb)
 {
-    double result = 0;
+    gint result = 0;
     const Song *a = aa;
     const Song *b = bb;
 
     if (a && b)
     {
-	result = (double)b->time_played - a->time_played;
-	if (result == 0) result = (double)b->rating - a->rating;
-	if (result == 0) result = (double)b->playcount - a->playcount;
+	result = COMP (b->time_played, a->time_played);
+	if (result == 0) result = COMP (b->rating, a->rating);
+	if (result == 0) result = COMP (b->playcount, a->playcount);
     }
-    return SIGN (result);
+    return result;
 }
 
 /* Insert function: determines whether a song is entered into the playlist */
@@ -2661,18 +2661,18 @@ void last_listened_pl(void)
 /* Sort Function: determines the order of the generated playlist */
 static gint since_last_CF (gconstpointer aa, gconstpointer bb)
 {
-    double result = 0;
+    gint result = 0;
     const Song *a = aa;
     const Song *b = bb;
 
     if (a && b)
     {
-	result = (double)b->recent_playcount - a->recent_playcount;
-	if (result == 0) result = (double)b->time_played - a->time_played;
-	if (result == 0) result = (double)b->playcount - a->playcount;
-	if (result == 0) result = (double)b->rating - a->rating;
+	result = COMP (b->recent_playcount, a->recent_playcount);
+	if (result == 0) result = COMP (b->time_played, a->time_played);
+	if (result == 0) result = COMP (b->playcount, a->playcount);
+	if (result == 0) result = COMP (b->rating, a->rating);
     }
-    return SIGN (result);
+    return result;
 }
 
 /* Insert function: determines whether a song is entered into the playlist */
