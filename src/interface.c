@@ -1345,7 +1345,6 @@ create_prefs_window (void)
   GtkWidget *frame9;
   GtkWidget *vbox21;
   GtkWidget *cfg_write_extended;
-  GtkWidget *cfg_keep_backups;
   GtkWidget *label31;
   GtkWidget *frame23;
   GtkWidget *vbox50;
@@ -1794,10 +1793,6 @@ create_prefs_window (void)
   gtk_widget_show (cfg_write_extended);
   gtk_box_pack_start (GTK_BOX (vbox21), cfg_write_extended, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_write_extended, _("Highly recommended for faster import when taking advantage of the duplication recognition. Also, having the PC filenames allows writing changed ID3 tags to disk, and even to reconstruct your ipod's contents in case of file system corruption (change the \"transferred=\" entries in your backuped database)."), NULL);
-
-  cfg_keep_backups = gtk_check_button_new_with_mnemonic (_("Keep a backup of the iTunesDB in ~/.gtkpod/"));
-  gtk_widget_show (cfg_keep_backups);
-  gtk_box_pack_start (GTK_BOX (vbox21), cfg_keep_backups, FALSE, FALSE, 0);
 
   label31 = gtk_label_new (_("Sync (Writing of iTunesDB)"));
   gtk_widget_show (label31);
@@ -2597,9 +2592,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_write_extended, "toggled",
                     G_CALLBACK (on_cfg_write_extended_info_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_keep_backups, "toggled",
-                    G_CALLBACK (on_cfg_keep_backups_toggled),
-                    NULL);
   g_signal_connect ((gpointer) cfg_export_template, "changed",
                     G_CALLBACK (on_cfg_export_template_changed),
                     NULL);
@@ -2749,7 +2741,6 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, frame9, "frame9");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox21, "vbox21");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_extended, "cfg_write_extended");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_keep_backups, "cfg_keep_backups");
   GLADE_HOOKUP_OBJECT (prefs_window, label31, "label31");
   GLADE_HOOKUP_OBJECT (prefs_window, frame23, "frame23");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox50, "vbox50");

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 00:46:01 jcs>
+/* Time-stamp: <2004-08-15 01:37:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -554,15 +554,6 @@ on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     prefs_window_set_autoimport(
-	    gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_cfg_keep_backups_toggled            (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_keep_backups(
 	    gtk_toggle_button_get_active(togglebutton));
 }
 

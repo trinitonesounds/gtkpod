@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-06-27 23:09:14 jcs>
+|  Time-stamp: <2004-08-15 01:41:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -242,24 +242,18 @@ parse_ipod_id_from_string(gchar **s, guint32 *id)
 
 void cleanup_backup_and_extended_files (void)
 {
-  gchar *cfgdir, *cft, *cfe;
+  gchar *cfgdir;
 
   cfgdir = prefs_get_cfgdir ();
   /* in offline mode, there are no backup files! */
   if (cfgdir && !prefs_get_offline ())
     {
-      cft = g_build_filename (cfgdir, "iTunesDB", NULL);
-      cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
+      gchar *cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
       if (!prefs_get_write_extended_info ())
 	/* delete extended info file from computer */
 	if (g_file_test (cfe, G_FILE_TEST_EXISTS))
 	  if (remove (cfe) != 0)
 	    gtkpod_warning (_("Could not delete backup file: \"%s\"\n"), cfe);
-      if (!prefs_get_keep_backups())
-	if(g_file_test (cft, G_FILE_TEST_EXISTS))
-	  if (remove (cft) != 0)
-	    gtkpod_warning (_("Could not delete backup file: \"%s\"\n"), cft);
-      g_free (cft);
       g_free (cfe);
     }
   C_FREE (cfgdir);

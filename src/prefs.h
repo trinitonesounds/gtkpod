@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 00:11:12 jcs>
+/* Time-stamp: <2004-08-15 01:37:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -94,7 +94,6 @@ struct cfg
   gboolean info_window;   /* is info window open (will then open on restart */
   gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
-  gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
   gboolean write_extended_info; /* write additional file with PC
 				   filenames etc? */
   struct
@@ -184,7 +183,6 @@ void prefs_set_st_sort (gint type);
 void prefs_set_tm_sortcol (TM_item col);
 void prefs_set_tm_autostore (gboolean active);
 void prefs_set_pm_autostore (gboolean active);
-void prefs_set_keep_backups(gboolean active);
 void prefs_set_write_extended_info(gboolean active);
 void prefs_set_autoimport(gboolean val);
 void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
@@ -237,7 +235,6 @@ gint prefs_get_tm_sort (void);
 TM_item prefs_get_tm_sortcol (void);
 gboolean prefs_get_tm_autostore (void);
 gboolean prefs_get_pm_autostore (void);
-gboolean prefs_get_keep_backups(void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_autoimport(void);
 gboolean prefs_get_st_autoselect (guint32 inst);

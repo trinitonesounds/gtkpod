@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-14 23:10:02 jcs>
+/* Time-stamp: <2004-08-15 01:41:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -173,8 +173,6 @@
 /* call itunesdb_parse () to read the iTunesDB  */
 /* call itunesdb_write () to write the iTunesDB */
 
-
-
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -189,6 +187,10 @@
 #include "itunesdb.h"
 #include "support.h"
 #include "file.h"
+
+#ifndef P_tmpdir
+#define P_tmpdir	"/tmp"
+#endif
 
 #ifdef IS_GTKPOD
 /* we're being linked with gtkpod */
@@ -1473,29 +1475,57 @@ write_it (FILE *file)
     return TRUE;
 }
 
-
 /* Write out an iTunesDB.
    Note: only the _utf16 entries in the Track-struct are used
+
    An existing "Play Counts" file is renamed to "Play Counts.bak" if
    the export was successful.
+   An existing "OTGPlaylistInfo" file is removed if the export was
+   successful.
+
    Returns TRUE on success, FALSE on error.
    "path" should point to the mount point of the
    iPod, e.g. "/mnt/ipod" and be in local encoding */
 gboolean itunesdb_write (const gchar *path)
 {
-    gchar *filename, *itunes_filename;
+    gchar *itunes_filename, *itunes_path;
+/*    gchar *tmp_filename = g_build_filename (P_tmpdir, "itunesDB.XXXXXX", NULL);*/
+/*     int fd; */
     const gchar *itunes[] = {"iPod_Control","iTunes",NULL};
     gboolean result = FALSE;
 
-    itunes_filename = resolve_path(path, itunes);
+    itunes_path = resolve_path(path, itunes);
     
-    if(!itunes_filename)
+    if(!itunes_path)
       return FALSE;
     
-    filename = g_build_filename (itunes_filename, "iTunesDB", NULL);
+    itunes_filename = g_build_filename (itunes_path, "iTunesDB", NULL);
+    /* We write to /tmp/ first, then copy to the iPod. For me this
+       means a speed increase from 38 seconds to 4 seconds (my iPod is
+       mounted "sync" -- that means all changes are written to the
+       iPod immediately. Because we are seeking around the file,
+       writing is slow. */
+/*     printf ("%s: %s\n", P_tmpdir, tmp_filename); */
+/*     fd = mkstemp (tmp_filename); */
+/*     printf ("%s: %d %d\n", tmp_filename, fd, errno); */
+/*     if (fd != -1) */
+/*     { */
+/* 	close (fd); */
+/* 	result = itunesdb_write_to_file (tmp_filename); */
+/* 	if (result) */
+/* 	{ */
+/* 	    itunesdb_cp (tmp_filename, itunes_filename); */
+/* 	    remove (tmp_filename); */
+/* 	} */
+/*     } */
+/*     else */
+/*     {   /\* tmp file could not be opened *\/ */
+/* 	result = itunesdb_write_to_file (itunes_filename); */
+/*     } */
+/*  g_free(tmp_filename);*/
+    result = itunesdb_write_to_file (itunes_filename);
     g_free(itunes_filename);
-    result = itunesdb_write_to_file (filename);
-    g_free (filename);
+    g_free(itunes_path);
     return result;
 }
 

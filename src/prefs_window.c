@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-20 01:01:29 jcs>
+/* Time-stamp: <2004-08-15 01:37:45 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -637,11 +637,6 @@ prefs_window_create(void)
 	    g_free (buf);
 	}
 
-	if((w = lookup_widget(prefs_window, "cfg_keep_backups")))
-	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					    tmpcfg->keep_backups);
-	}
 	if((w = lookup_widget(prefs_window, "cfg_write_extended")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -752,7 +747,6 @@ prefs_window_set(void)
 	prefs_set_track_ipod_file_deletion(tmpcfg->deletion.ipod_file);
 	prefs_set_sync_remove_confirm(tmpcfg->deletion.syncing);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
-	prefs_set_keep_backups(tmpcfg->keep_backups);
 	prefs_set_show_duplicates(tmpcfg->show_duplicates);
 	prefs_set_show_updated(tmpcfg->show_updated);
 	prefs_set_show_non_updated(tmpcfg->show_non_updated);
@@ -1017,10 +1011,6 @@ void prefs_window_set_time_format(const gchar *format)
     tmpcfg->time_format = g_strdup (format);
 }
 
-void prefs_window_set_keep_backups(gboolean active)
-{
-  tmpcfg->keep_backups = active;
-}
 void prefs_window_set_write_extended_info(gboolean active)
 {
   tmpcfg->write_extended_info = active;

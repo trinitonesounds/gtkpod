@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 16:11:17 jcs>
+/* Time-stamp: <2004-08-15 01:41:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -189,7 +189,6 @@ struct cfg *cfg_new(void)
     }
     mycfg->mpl_autoselect = TRUE;
     mycfg->offline = FALSE;
-    mycfg->keep_backups = TRUE;
     mycfg->write_extended_info = TRUE;
     mycfg->id3_write = FALSE;
     mycfg->id3_write_id3v24 = FALSE;
@@ -615,7 +614,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "backups") == 0)
 	  {
-	      prefs_set_keep_backups((gboolean)atoi(arg));
+	      /* removed with version after 0.82-CVS */
 	  }
 	  else if(g_ascii_strcasecmp (line, "extended_info") == 0)
 	  {
@@ -1036,7 +1035,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
-    fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
     fprintf(fp, "dir_browse=%s\n",cfg->last_dir.browse);
     fprintf(fp, "dir_export=%s\n",cfg->last_dir.export);
@@ -1183,10 +1181,6 @@ void prefs_set_offline(gboolean active)
   cfg->offline = active;
   info_update_totals_view_space ();
 }
-void prefs_set_keep_backups(gboolean active)
-{
-  cfg->keep_backups = active;
-}
 void prefs_set_write_extended_info(gboolean active)
 {
   cfg->write_extended_info = active;
@@ -1298,11 +1292,6 @@ gboolean prefs_get_id3_write_id3v24(void)
 gboolean prefs_get_offline(void)
 {
   return cfg->offline;
-}
-
-gboolean prefs_get_keep_backups(void)
-{
-  return cfg->keep_backups;
 }
 
 gboolean prefs_get_write_extended_info(void)

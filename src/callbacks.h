@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 23:20:51 jcs>
+/* Time-stamp: <2004-08-15 01:37:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -173,10 +173,6 @@ on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
 
 void
 on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_keep_backups_toggled            (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void

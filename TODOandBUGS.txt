@@ -109,10 +109,8 @@ BUGLIST:
 > > sync it, the only problem is that the ipod doesn't see it and even
 > > though the file is in the Calendars folder in the ipod, it won't
 > > be recognized and none of my dates will show up. Any help?
-
-
-- "iTundesDB.ext could not be found" printed when "iTunesDB" could not
-  be found (confusing).
+  JCS: works with 2nd generation -- testing needed with 4th
+  generation!
 
 - during a long operation (menues are blocked) the user can still edit
   the track data. This could potentially crash gtkpod -> need a way to

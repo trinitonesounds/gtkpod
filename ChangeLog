@@ -24,6 +24,11 @@ gtkpod V0.82-CVS
 	the local machine is now possible (actually it was already
 	possible in V0.80, but now the README explains how to do it).
 
+	IMPROVEMENT: Speeded up writing of iTunesDB. For me it is now
+	around one second instead of 38 seconds before (for security
+	I'm using the iPod as a non-buffered device). A back-upped
+	version of the iTunesDB is now always written to ~/.gtkpod.
+
 	IMPROVEMENT: Added "Time Created" support to special sorttab,
 	track display and iTunesDB. (Before only "modified" and
 	"played" were supported.)
