@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 13:51:01 jcs>
+/* Time-stamp: <2003-06-24 23:48:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1594,7 +1594,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    else if (g_ascii_strcasecmp (line, "oldsize") == 0)
 		sei->oldsize = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "playcount") == 0)
-	    sei->playcount = atoi (arg);
+		sei->playcount = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "rating") == 0)
 		sei->rating = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
@@ -1784,10 +1784,10 @@ get_preferred_song_name_format (Song *s)
     gchar *result = NULL;
     if (s)
     {
-	gchar *artist = charset_from_utf8 (s->artist);
-	gchar *album = charset_from_utf8 (s->album);
-	gchar *title = charset_from_utf8 (s->title);
-	result = g_strdup_printf ("%s-%s-02%d-%s.mp3",
+	gchar *artist = charset_song_charset_from_utf8 (s, s->artist);
+	gchar *album = charset_song_charset_from_utf8 (s, s->album);
+	gchar *title = charset_song_charset_from_utf8 (s, s->title);
+	result = g_strdup_printf ("%s-%s-%02d-%s.mp3",
 				  artist, album, s->track_nr, title);
 	g_free (artist);
 	g_free (album);

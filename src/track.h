@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 21:07:32 jcs>
+/* Time-stamp: <2003-06-25 00:31:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -130,4 +130,5 @@ gunichar2 **song_get_item_pointer_utf16 (Song *song, S_item s_item);
 gunichar2 *song_get_item_utf16 (Song *song, S_item s_item);
 guint32 *song_get_timestamp_ptr (Song *song, S_item s_item);
 guint32 song_get_timestamp (Song *song, S_item s_item);
+gboolean song_is_valid (Song *song);
 #endif 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 21:47:40 jcs>
+/* Time-stamp: <2003-06-25 00:50:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1010,7 +1010,6 @@ void
 on_export_playlist_activate  (GtkMenuItem     *menuitem,
 			      gpointer         user_data)
 {
-    GList *songs;
     Playlist *pl = pm_get_selected_playlist ();
 
     if (!pl)
@@ -1018,8 +1017,7 @@ on_export_playlist_activate  (GtkMenuItem     *menuitem,
 	gtkpod_statusbar_message (_("No playlist selected"));
 	return;
     }
-    songs = g_list_copy (pl->members);
-    file_export_init (songs);  /* will free the songs list */
+    file_export_init (pl->members);
 }
 
 
@@ -1029,7 +1027,6 @@ on_export_tab_entry_activate (GtkMenuItem     *menuitem,
 {
     TabEntry *entry;
     gint inst;
-    GList *songs;
 
     inst = get_sort_tab_number (_("Export selected entry of which sort tab?"));
     if (inst == -1) return;
@@ -1043,8 +1040,7 @@ on_export_tab_entry_activate (GtkMenuItem     *menuitem,
 	g_free (str);
 	return;
     }
-    songs = g_list_copy (entry->members);
-    file_export_init (songs);  /* will free the songs list */
+    file_export_init (entry->members);
 }
 
 
@@ -1055,9 +1051,14 @@ on_export_songs_activate     (GtkMenuItem     *menuitem,
     GList *songs = sm_get_selected_songs ();
 
     if (songs)
-	file_export_init(songs);  /* will free the songs list */
+    {
+	file_export_init(songs);
+	g_list_free (songs);
+    }
     else
+    {
 	gtkpod_statusbar_message (_("No songs selected"));
+    }
 }
 
 
@@ -1287,7 +1288,7 @@ on_sp_entry_activate             (GtkEditable     *editable,
     S_item item = (guint32)user_data >> SP_SHIFT;
     gchar *buf = gtk_editable_get_chars(editable,0, -1);
 
-    printf ("sp_entry_activate inst: %d, item: %d\n", inst, item);
+/*    printf ("sp_entry_activate inst: %d, item: %d\n", inst, item);*/
 
     prefs_set_sp_entry (inst, item, buf);
     g_free (buf);

@@ -16,6 +16,11 @@ gtkpod V0.52-CVS
 	utf8 sort should work fine, case-sensitive may not work entirely
 	as expected with some charsets.
 
+	BUGFIX: using 'file_export' from the context menu could crash
+	context menu
+
+	BUGFIX: file_export didn't remember directory last used.
+
 	BUGFIX: can now choose zero sort tabs in the prefs dialogue
 	(instead of the minimum one) -- why didn't anyone tell me?
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 22:40:19 jcs>
+/* Time-stamp: <2003-06-25 00:31:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -265,7 +265,6 @@ Song *get_song_by_id (guint32 id)
 
 /* Returns the song with the local filename @name or NULL, if none can
  * be found. */
-
 Song *get_song_by_filename (gchar *name)
 {
   GList *l;
@@ -279,6 +278,17 @@ Song *get_song_by_filename (gchar *name)
 	  if (strcmp (song->pc_path_locale, name) == 0) return song;
   }
   return NULL;
+}
+
+
+/* Check if @song is (still) in the song list
+ *
+ * Return TRUE if present
+ */
+gboolean song_is_valid (Song *song)
+{
+    if (g_list_find (songs, song)) return TRUE;
+    else                           return FALSE;
 }
 
 

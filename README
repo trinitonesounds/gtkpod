@@ -55,6 +55,11 @@ http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipode
 
 for information about how to convert your mac iPod to a windows iPod.
 
+Alternatively, I have received a report that Alan Cox's patches
+(2.4.21-rc8-ac1, but 2.4.21-ac1 should work as well) include hfsplus
+support. That should allow you to use hfs formatted iPods. But beware:
+hfsplus support is still beta.
+
 2) Get kernel source and configure
 Needed configuration:
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 22:18:25 jcs>
+/* Time-stamp: <2003-06-25 00:43:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -141,8 +141,8 @@ void prefs_set_update_existing(gboolean active);
 void prefs_set_block_display(gboolean active);
 void prefs_set_id3_write(gboolean active);
 void prefs_set_id3_writeall(gboolean active);
-void prefs_set_last_dir_browse(gchar * dir);
-void prefs_set_last_dir_export(gchar * dir);
+void prefs_set_last_dir_browse(const gchar * dir);
+void prefs_set_last_dir_export(const gchar * dir);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_size_gtkpod (gint x, gint y);

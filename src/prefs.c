@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 22:27:01 jcs>
+/* Time-stamp: <2003-06-25 00:44:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -878,7 +878,7 @@ void cfg_free(struct cfg *c)
 }
 
 static gchar *
-get_dirname_of_filename(gchar *file)
+get_dirname_of_filename(const gchar *file)
 {
     gint len;
     gchar *buf, *result = NULL;
@@ -891,8 +891,7 @@ get_dirname_of_filename(gchar *file)
 	buf = g_path_get_dirname (file);
 	
     len = strlen (buf);
-    if (len && (buf[len-1] == '/'))
-	result = buf;
+    if (len && (buf[len-1] == '/'))	result = buf;
     else
     {
 	result = g_strdup_printf ("%s/", buf);
@@ -914,7 +913,7 @@ void prefs_set_write_extended_info(gboolean active)
 {
   cfg->write_extended_info = active;
 }
-void prefs_set_last_dir_browse(gchar *file)
+void prefs_set_last_dir_browse(const gchar *file)
 {
     if (file)
     {
@@ -923,11 +922,11 @@ void prefs_set_last_dir_browse(gchar *file)
     }
 }
 
-void prefs_set_last_dir_export(gchar *file)
+void prefs_set_last_dir_export(const gchar *file)
 {
     if (file)
     {
-	if(cfg->last_dir.export) g_free(cfg->last_dir.export);
+	g_free(cfg->last_dir.export);
 	cfg->last_dir.export = get_dirname_of_filename(file);
     }
 }

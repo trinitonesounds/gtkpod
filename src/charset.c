@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 02:08:35 jcs>
+/* Time-stamp: <2003-06-24 23:48:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -336,6 +336,24 @@ gchar *charset_from_utf8 (gchar *str)
     return charset_to_charset ("UTF-8", (gchar *)charset, str);
 }
 
+/* Convert "str" from utf8 to the charset specified in @s->charset. If
+ * this is NULL, try cfg->charset. If cfg->charset is also NULL, "str"
+ * is converted to the current locale charset */
+/* Must free the returned string yourself */
+gchar *charset_song_charset_from_utf8 (Song *s, gchar *str)
+{
+    G_CONST_RETURN gchar *charset;
+
+    if (str == NULL) return NULL;  /* sanity */
+    if (s && s->charset && strlen (s->charset))
+	   charset = s->charset;
+    else   charset = prefs_get_charset ();
+    if (!charset || !strlen (charset))
+    {    /* use standard locale charset */
+	g_get_charset (&charset);
+    }
+    return charset_to_charset ("UTF-8", (gchar *)charset, str);
+}
 
 /* Convert "str" from "from_charset" to "to_charset", trying to skip
    illegal character as best as possible */

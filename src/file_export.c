@@ -229,9 +229,12 @@ file_export_do(void)
 	for(l = file_export.songs; l; l = l->next)
 	{
 	    s = (Song*)l->data;
-	    if(!write_song(s))
-		gtkpod_warning (_("Failed to write %s-%s\n"), s->artist, s->title);	
-	    l->data = NULL;
+	    if (song_is_valid (s))
+	    {
+		if(!write_song(s))
+		    gtkpod_warning (_("Failed to write %s-%s\n"), s->artist, s->title);	
+		l->data = NULL;
+	    }
 	}
     }
     file_export_cleanup();
@@ -260,22 +263,18 @@ export_files_ok_button_clicked(GtkWidget *w, gpointer data)
 {
     if((w) && (data))
     {
-	gchar **name = NULL;
-	if((name = gtk_file_selection_get_selections(GTK_FILE_SELECTION(data))))
+	const gchar *name;
+	name = gtk_file_selection_get_filename (GTK_FILE_SELECTION(data));
+	if(name)
 	{
-	    if(name[0])
-	    {
-		if(g_file_test(name[0], G_FILE_TEST_IS_DIR))
-		    file_export.dest_dir = g_strdup(name[0]);
-		else
-		    file_export.dest_dir = g_path_get_dirname(name[0]);
-
-		g_strfreev(name);
-		file_export_do();
-	    }
+	    prefs_set_last_dir_export (name);
+	    file_export.dest_dir = g_strdup (cfg->last_dir.export);
+	    file_export_do();
 	}
+	else file_export_cleanup ();
     }
 }
+
 
 /**
  * export_file_init - Export files off of your ipod to an arbitrary
@@ -289,8 +288,12 @@ file_export_init(GList *songs)
 
     if(!file_export.fs)
     {
-	file_export.songs = songs;
+	/* FIXME: we should besser use an ID list since songs might be
+	   removed during the procedure of selecting a directory */
+	file_export.songs = g_list_copy (songs);
 	w = gtk_file_selection_new(_("Select Export Destination Directory"));
+	gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION(w),
+						FALSE);
 	gtk_file_selection_set_filename(GTK_FILE_SELECTION(w),
 					cfg->last_dir.export);
 	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(w)->ok_button),
@@ -299,11 +302,7 @@ file_export_init(GList *songs)
 		"clicked", G_CALLBACK(export_files_cancel_button_clicked), w);
 	g_signal_connect(GTK_OBJECT(w), "delete_event",
 		G_CALLBACK(export_files_cancel_button_clicked), w);
-	gtk_widget_show(w);
 	file_export.fs = w;
-    }
-    else if(songs) 
-    {
-	    g_list_free(songs);
+	gtk_widget_show(w);
     }
 }

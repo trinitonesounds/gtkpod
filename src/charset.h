@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 02:08:34 jcs>
+/* Time-stamp: <2003-06-24 23:49:42 jcs>
 |
 |  Copyright (C) 2002 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,6 +33,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include "song.h"
 
 #define GTKPOD_JAPAN_AUTOMATIC "gtkpod-japan-automatic"
 
@@ -44,6 +45,7 @@ gchar *charset_from_description (gchar *descr);
 gchar *charset_to_description (gchar *charset);
 gchar *charset_to_utf8 (gchar *str);
 gchar *charset_from_utf8 (gchar *str);
+gchar *charset_song_charset_from_utf8 (Song *s, gchar *str);
 gchar *charset_to_charset (gchar *from_charset, gchar *to_charset, gchar *str);
 
 #endif 
