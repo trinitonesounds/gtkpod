@@ -961,7 +961,7 @@ void
 on_reset_sorting_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    display_reset ();
+    display_reset (-2);
 }
 
 void

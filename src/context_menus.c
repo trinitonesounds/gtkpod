@@ -131,6 +131,54 @@ delete_entries(GtkMenuItem *mi, gpointer data)
 }
 
 
+/**
+ * alphabetize_ascending - alphabetize the currently selected entry
+ * (playlist view or sort tab)
+ * @mi - the menu item selected
+ * @data - ignored, should be NULL
+ */
+static void 
+alphabetize_ascending(GtkMenuItem *mi, gpointer data)
+{
+    if (selected_playlist)
+	pm_sort (GTK_SORT_ASCENDING);
+    else if (selected_entry)
+	st_sort (entry_inst, GTK_SORT_ASCENDING);
+}
+
+
+/**
+ * alphabetize_ascending - alphabetize the currently selected entry
+ * (playlist view or sort tab)
+ * @mi - the menu item selected
+ * @data - ignored, should be NULL
+ */
+static void 
+alphabetize_descending(GtkMenuItem *mi, gpointer data)
+{
+    if (selected_playlist)
+	pm_sort (GTK_SORT_DESCENDING);
+    else if (selected_entry)
+	st_sort (entry_inst, GTK_SORT_DESCENDING);
+}
+
+/**
+ * reset_alphabetize - reset the sorting in the currently selected entry
+ * (playlist view or sort tab)
+ * @mi - the menu item selected
+ * @data - ignored, should be NULL
+ */
+static void 
+reset_alphabetize(GtkMenuItem *mi, gpointer data)
+{
+    if (selected_playlist)
+	display_reset (-1);
+    else if (selected_entry)
+	display_reset (entry_inst);
+}
+
+
+
 /* Attach a menu item to your context menu */
 /* @m - the GtkMenu we're attaching to
  * @str - a gchar* with the menu label
@@ -158,7 +206,7 @@ GtkWidget *hookup_mi (GtkWidget *m, gchar *str, gchar *stock, GCallback func)
     gtk_widget_set_sensitive(mi, TRUE);
     if (func)
 	g_signal_connect(G_OBJECT(mi), "activate", func, NULL);
-    gtk_menu_append(m, mi);
+    gtk_container_add (GTK_CONTAINER (m), mi);
     return mi;
 }
 
@@ -184,18 +232,23 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (update_entries));
 	hookup_mi (menu[type], _("Delete"), "gtk-delete",
 		   G_CALLBACK (delete_entries));
+	/* FIXME: once we can find out in which song column the
+	   context menu was activated, we should offer the following
+	   options to the song view context menu as well */
 	if (type != CM_SM)
 	{
 	    GtkWidget *mi;
-	    GtkWidget *sub = gtk_menu_new ();
-	    gtk_widget_show (sub);
+	    GtkWidget *sub;
 	    mi = hookup_mi (menu[type], _("Alphabetize"), NULL, NULL);
+	    sub = gtk_menu_new ();
+	    gtk_widget_show (sub);
 	    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
 	    hookup_mi (sub, _("Ascending"), "gtk-sort-ascending",
-		       G_CALLBACK (NULL));
+		       G_CALLBACK (alphabetize_ascending));
 	    hookup_mi (sub, _("Descending"), "gtk-sort-descending",
-		       G_CALLBACK (NULL));
-	    hookup_mi (sub, _("Reset"), "gtk-undo", G_CALLBACK (NULL));
+		       G_CALLBACK (alphabetize_descending));
+	    hookup_mi (sub, _("Reset"), "gtk-undo",
+		       G_CALLBACK (reset_alphabetize));
 	}
     }
     gtk_menu_popup(GTK_MENU(menu[type]), NULL, NULL,

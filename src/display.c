@@ -76,7 +76,7 @@ static void sm_create_treeview (void);
 static void st_song_changed (Song *song, gboolean removed, guint32 inst);
 static void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst);
 static void st_remove_song (Song *song, guint32 inst);
-static void st_init (ST_CAT_item new_category, gboolean clear_sort, guint32 inst);
+static void st_init (ST_CAT_item new_category, guint32 inst);
 static void st_create_notebook (gint inst);
 
 /* Drag and drop definitions */
@@ -302,7 +302,8 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 /* Remove all playlists from the display model */
 /* ATTENTION: the playlist_treeview and model might be changed by
    calling this function */
-static void pm_remove_all_playlists (void)
+/* @clear_sort: TRUE: clear "sortable" setting of treeview */
+static void pm_remove_all_playlists (gboolean clear_sort)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
   GtkTreeIter iter;
@@ -313,7 +314,8 @@ static void pm_remove_all_playlists (void)
   {
       gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
   }
-  if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
+  if(clear_sort &&
+     gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order))
   { /* recreate song treeview to unset sorted column */
       if (column >= 0)
@@ -342,7 +344,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 
   if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
   {  /* no selection -> reset sort tabs */
-      st_init (-1, FALSE, 0);
+      st_init (-1, 0);
       current_playlist = NULL;
   }
   else
@@ -352,7 +354,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 			  -1);
       /* remove all entries from sort tab 0 */
       /* printf ("removing entries: %x\n", current_playlist);*/
-      st_init (-1, FALSE, 0);
+      st_init (-1, 0);
 
       current_playlist = new_playlist;
       n = get_nr_of_songs_in_playlist (new_playlist);
@@ -873,7 +875,7 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
        re-init tab */
     if (entry->master)
     {
-	st_init (-1, FALSE, inst);
+	st_init (-1, inst);
 	return;
     }
 
@@ -1325,9 +1327,7 @@ static void st_remove_song (Song *song, guint32 inst)
    -1 if the current category is to be left unchanged */
 /* Normally we do not specifically remember the "All" entry and will
    select "All" in accordance to the prefs settings. */
-/* @clear_sort: TRUE: sorted columns are reset to the unsorted state */
-static void st_init (ST_CAT_item new_category,
-		     gboolean clear_sort, guint32 inst)
+static void st_init (ST_CAT_item new_category, guint32 inst)
 {
   SortTab *st;
   ST_CAT_item cat;
@@ -1374,8 +1374,8 @@ static void st_init (ST_CAT_item new_category,
   }
   if (inst < prefs_get_sort_tab_num ())
   {
-      st_remove_all_entries_from_model (clear_sort, inst);
-      st_init (-1, clear_sort, inst+1);
+      st_remove_all_entries_from_model (FALSE, inst);
+      st_init (-1, inst+1);
   }
 }
 
@@ -1404,7 +1404,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   if (stop_add < (gint)inst)  return;
   st = sorttab[inst];
   /* re-initialize current instance */
-  st_init (page, FALSE, inst);
+  st_init (page, inst);
   /* Get list of songs to re-insert */
   if (inst == 0)
   {
@@ -1548,7 +1548,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  C_FREE (st->lastselection[st->current_category]);
 	  st->unselected = TRUE;
       }
-	  st_init (-1, FALSE, inst+1);
+	  st_init (-1, inst+1);
   }
   else
   {   /* handle new selection */
@@ -1559,7 +1559,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
        * new_entry, st->current_entry);*/
 
       /* initialize next instance */
-      st_init (-1, FALSE, inst+1);
+      st_init (-1, inst+1);
       /* remember new selection */
       st->current_entry = new_entry;
       if (!new_entry->master)
@@ -1796,7 +1796,7 @@ void st_show_visible (void)
     /* first initialize (clear) all sorttabs */
     n = prefs_get_sort_tab_num ();
     prefs_set_sort_tab_num (SORT_TAB_MAX, FALSE);
-    st_init (-1, FALSE, 0);
+    st_init (-1, 0);
     prefs_set_sort_tab_num (n, FALSE);
 
     /* set the visible elements */
@@ -2037,7 +2037,8 @@ static void st_create_notebook (gint inst)
   if (!st_paned[0])   st_create_paned ();
 
   st0_notebook = gtk_notebook_new ();
-  gtk_widget_show (st0_notebook);
+  if (inst < prefs_get_sort_tab_num ()) gtk_widget_show (st0_notebook);
+  else                                  gtk_widget_hide (st0_notebook);
   /* which pane? */
   if (inst == SORT_TAB_MAX-1)  i = inst-1;
   else                         i = inst;
@@ -2057,7 +2058,7 @@ static void st_create_notebook (gint inst)
   page = prefs_get_st_category (inst);
   st->current_category = page;
   gtk_notebook_set_current_page (st->notebook, page);
-/*  st_init (page, FALSE, inst);*/
+/*  st_init (page, inst);*/
 }
 
 
@@ -3119,8 +3120,13 @@ void display_create (GtkWidget *gtkpod)
 }
 
 /* redisplay the entire display (playlists, sort tabs, song view) and
- * reset the sorted treeviews to normal */
-void display_reset (void)
+ * reset the sorted treeviews to normal (according to @inst) */
+/* @inst: which treeviews should be reset to normal?
+   -2: all treeviews
+   -1: only playlist
+    0...SORT_TAB_MAX-1: sort tab of instance @inst
+    SORT_TAB_MAX: song treeview */
+void display_reset (gint inst)
 {
     gint i,n;
     Playlist *cur_pl;
@@ -3129,10 +3135,18 @@ void display_reset (void)
     cur_pl = current_playlist;
 
     /* remove all playlists from model (and reset "sortable") */
-    pm_remove_all_playlists ();
+    if ((inst == -2) || (inst == -1))	pm_remove_all_playlists (TRUE);
+    else                                pm_remove_all_playlists (FALSE);
 
     /* reset the sort tabs and song view */
-    st_init (-1, TRUE, 0);
+    st_init (-1, 0);
+
+    /* reset "sortable" */
+    for (i=0; i<SORT_TAB_MAX; ++i)
+    {
+	if ((inst == -2) || (inst == i))
+	    st_remove_all_entries_from_model (TRUE, i);
+    }
 
     /* add playlists back to model (without selecting) */
     current_playlist = cur_pl;
