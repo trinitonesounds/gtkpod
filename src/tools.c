@@ -225,12 +225,13 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
 	close(fdpipe[READ]);
 	close(fdpipe[WRITE]);
         
-	/* this call may add a tag to the mp3file!! 
-	 * -o output_file
-	 * -k lower gain to avoid cipping
-	 * -q quiet
-	 * */
-        execl(mp3gain_path, mp3gain_exec, "-o", filename, "-k", "-q", NULL);
+	/* this call may add a tag to the mp3file!! */
+        execl(mp3gain_path, mp3gain_exec, 
+/*			"-q", *//* quiet */
+/*			"-k", *//* set ReplayGain so that clipping is prevented */
+			"-o", /* database friendly output */
+/*			">/dev/bull", */
+			filename, NULL);
 	
 	break;
     default: /*parent*/
