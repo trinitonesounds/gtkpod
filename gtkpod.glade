@@ -42,7 +42,7 @@
 		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image311">
+			<widget class="GtkImage" id="image350">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-top</property>
 			  <property name="icon_size">1</property>
@@ -63,7 +63,7 @@
 		      <signal name="activate" handler="on_add_files1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image312">
+			<widget class="GtkImage" id="image351">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -84,7 +84,7 @@
 		      <signal name="activate" handler="on_add_directory1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image313">
+			<widget class="GtkImage" id="image352">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -105,7 +105,7 @@
 		      <signal name="activate" handler="on_add_playlist1_activate" last_modification_time="Fri, 21 Feb 2003 14:49:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image314">
+			<widget class="GtkImage" id="image353">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -126,7 +126,7 @@
 		      <signal name="activate" handler="on_export_itunes1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image315">
+			<widget class="GtkImage" id="image354">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-bottom</property>
 			  <property name="icon_size">1</property>
@@ -147,7 +147,7 @@
 		      <signal name="activate" handler="on_export_files_to_disk_activate" last_modification_time="Fri, 17 Jan 2003 15:04:16 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image316">
+			<widget class="GtkImage" id="image355">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -190,7 +190,7 @@
 		      <signal name="activate" handler="on_ipod_directories_menu" last_modification_time="Sat, 18 Jan 2003 02:10:39 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image317">
+			<widget class="GtkImage" id="image356">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-execute</property>
 			  <property name="icon_size">1</property>
@@ -239,7 +239,7 @@
 		      <signal name="activate" handler="on_new_playlist1_activate" last_modification_time="Thu, 05 Dec 2002 12:10:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image318">
+			<widget class="GtkImage" id="image357">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-justify-left</property>
 			  <property name="icon_size">1</property>
@@ -265,7 +265,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image319">
+			<widget class="GtkImage" id="image358">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -339,6 +339,33 @@
 		  </child>
 
 		  <child>
+		    <widget class="GtkImageMenuItem" id="save_song_order1">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Save Song Order</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_save_song_order1_activate" last_modification_time="Sat, 08 Mar 2003 13:45:01 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image359">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-justify-fill</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkMenuItem" id="separator4">
+		      <property name="visible">True</property>
+		    </widget>
+		  </child>
+
+		  <child>
 		    <widget class="GtkImageMenuItem" id="delete_playlist1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Delete Selected _Playlist</property>
@@ -346,7 +373,7 @@
 		      <signal name="activate" handler="on_delete_playlist_menu" last_modification_time="Fri, 17 Jan 2003 15:04:16 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image320">
+			<widget class="GtkImage" id="image360">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -366,7 +393,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image321">
+			<widget class="GtkImage" id="image361">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -410,7 +437,7 @@
 		      <signal name="activate" handler="on_delete_song_menu" last_modification_time="Fri, 17 Jan 2003 15:04:16 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image322">
+			<widget class="GtkImage" id="image362">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -438,7 +465,7 @@
 		      <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image323">
+			<widget class="GtkImage" id="image363">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -481,7 +508,7 @@
 			      <signal name="activate" handler="on_alphabetize0_up_menu" last_modification_time="Sat, 18 Jan 2003 04:57:46 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image324">
+				<widget class="GtkImage" id="image364">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-sort-ascending</property>
 				  <property name="icon_size">1</property>
@@ -502,7 +529,7 @@
 			      <signal name="activate" handler="on_alphabetize0_down_menu" last_modification_time="Sat, 18 Jan 2003 04:57:46 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image325">
+				<widget class="GtkImage" id="image365">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-sort-descending</property>
 				  <property name="icon_size">1</property>
@@ -523,7 +550,7 @@
 			      <signal name="activate" handler="on_re-init0_menu" last_modification_time="Sat, 18 Jan 2003 02:33:52 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image326">
+				<widget class="GtkImage" id="image366">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-refresh</property>
 				  <property name="icon_size">1</property>
@@ -557,7 +584,7 @@
 			      <signal name="activate" handler="on_alphabetize1_up_menu" last_modification_time="Sat, 18 Jan 2003 04:57:46 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image327">
+				<widget class="GtkImage" id="image367">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-sort-ascending</property>
 				  <property name="icon_size">1</property>
@@ -578,7 +605,7 @@
 			      <signal name="activate" handler="on_alphabetize1_down_menu" last_modification_time="Sat, 18 Jan 2003 04:57:46 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image328">
+				<widget class="GtkImage" id="image368">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-sort-descending</property>
 				  <property name="icon_size">1</property>
@@ -599,7 +626,7 @@
 			      <signal name="activate" handler="on_re-init1_menu" last_modification_time="Sat, 18 Jan 2003 02:33:52 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image329">
+				<widget class="GtkImage" id="image369">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-refresh</property>
 				  <property name="icon_size">1</property>
@@ -637,7 +664,7 @@
 		      <signal name="activate" handler="on_about1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image330">
+			<widget class="GtkImage" id="image370">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-info</property>
 			  <property name="icon_size">1</property>
@@ -1317,17 +1344,7 @@
 		  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
 
 		  <child>
-		    <widget class="GtkTreeView" id="song_treeview">
-		      <property name="visible">True</property>
-		      <property name="can_focus">True</property>
-		      <property name="headers_visible">True</property>
-		      <property name="rules_hint">False</property>
-		      <property name="reorderable">False</property>
-		      <property name="enable_search">True</property>
-		      <signal name="drag_data_get" handler="on_song_treeview_drag_data_get" last_modification_time="Thu, 19 Dec 2002 21:56:20 GMT"/>
-		      <signal name="key_release_event" handler="on_song_treeview_key_release_event" after="yes" last_modification_time="Mon, 23 Dec 2002 09:16:59 GMT"/>
-		      <signal name="drag_data_received" handler="on_song_treeview_drag_data_received" last_modification_time="Thu, 09 Jan 2003 06:53:46 GMT"/>
-		    </widget>
+		    <placeholder/>
 		  </child>
 		</widget>
 		<packing>
@@ -1794,6 +1811,26 @@
 	  </child>
 
 	  <child>
+	    <widget class="GtkCheckButton" id="cfg_show_duplicates">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Display the list of duplicates that have been detected after adding files.</property>
+	      <property name="can_focus">True</property>
+	      <property name="label" translatable="yes">Display info about detected duplicates</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="active">False</property>
+	      <property name="inconsistent">False</property>
+	      <property name="draw_indicator">True</property>
+	      <signal name="toggled" handler="on_cfg_show_duplicates_toggled" last_modification_time="Sat, 08 Mar 2003 13:40:12 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
 	    <widget class="GtkCheckButton" id="cfg_update_existing">
 	      <property name="visible">True</property>
 	      <property name="tooltip" translatable="yes">If the filename (full path) of an existing song matches that of a song to be added, this option allows you to update the information of the existing song rather than adding the song again. Please note that this option is different from the option above: duplicates are completely identical, having the same filename still allows for different ID3 tags. On export the updated song is copied to the iPod overwriting the old version.</property>
@@ -1806,6 +1843,46 @@ existing songs with identical filenames</property>
 	      <property name="inconsistent">False</property>
 	      <property name="draw_indicator">True</property>
 	      <signal name="toggled" handler="on_cfg_update_existing_toggled" last_modification_time="Sat, 22 Feb 2003 14:31:49 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkCheckButton" id="cfg_show_updated">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Display the songs that have been updated after updating songs.</property>
+	      <property name="can_focus">True</property>
+	      <property name="label" translatable="yes">Display info about updated songs</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="active">False</property>
+	      <property name="inconsistent">False</property>
+	      <property name="draw_indicator">True</property>
+	      <signal name="toggled" handler="on_cfg_show_updated_toggled" last_modification_time="Sat, 08 Mar 2003 13:40:19 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkCheckButton" id="cfg_show_non_updated">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Display the songs that could not be updated after updating songs.</property>
+	      <property name="can_focus">True</property>
+	      <property name="label" translatable="yes">Display info about non-updated songs</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="active">False</property>
+	      <property name="inconsistent">False</property>
+	      <property name="draw_indicator">True</property>
+	      <signal name="toggled" handler="on_cfg_show_non_updated_toggled" last_modification_time="Sat, 08 Mar 2003 13:40:24 GMT"/>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
@@ -2523,6 +2600,26 @@ entry (faster!)</property>
 	      <property name="padding">0</property>
 	      <property name="expand">False</property>
 	      <property name="fill">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkCheckButton" id="cfg_save_sorted_order">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Alternatively you can use the menu item 'Save Song Order' to save the sort order.</property>
+	      <property name="can_focus">True</property>
+	      <property name="label" translatable="yes">Automatically save song order after sorting.</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="active">False</property>
+	      <property name="inconsistent">False</property>
+	      <property name="draw_indicator">True</property>
+	      <signal name="toggled" handler="on_cfg_save_sorted_order_toggled" last_modification_time="Sat, 08 Mar 2003 13:42:24 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
 	    </packing>
 	  </child>
 

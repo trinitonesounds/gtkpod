@@ -68,12 +68,14 @@ struct cfg
   struct win_size size_dirbr;   /* last size of dirbrowser window */
   gint sm_col_width[SM_NUM_COLUMNS_PREFS]; /* width colums in song model */
   gboolean col_visible[SM_NUM_COLUMNS_PREFS]; /* displayed song model colums */
+  SM_item col_order[SM_NUM_COLUMNS_PREFS]; /* order of columns */
   gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 
   gboolean show_duplicates;     /* show duplicate notification ?*/
   gboolean show_updated;        /* show update notification ?*/
   gboolean show_non_updated;    /* show update notification ?*/
+  gboolean save_sorted_order;   /* save order after sort automatically? */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
 };
@@ -115,7 +117,8 @@ void prefs_set_size_conf (gint x, gint y);
 void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_sm_col_width (gint col, gint width);
 void prefs_set_tag_autoset (gint category, gboolean autoset);
-void prefs_set_col_visible (gint column, gboolean visible);
+void prefs_set_col_visible (gint pos, gboolean visible);
+void prefs_set_col_order (gint pos, SM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
 
@@ -139,7 +142,8 @@ void prefs_get_size_conf (gint *x, gint *y);
 void prefs_get_size_dirbr (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
-gboolean prefs_get_col_visible (gint column);
+gboolean prefs_get_col_visible (gint pos);
+SM_item prefs_get_col_order (gint pos);
 gboolean prefs_get_md5songs(void);
 gboolean prefs_get_update_existing(void);
 gboolean prefs_get_block_display(void);
@@ -151,6 +155,8 @@ gboolean prefs_get_show_updated (void);
 void prefs_set_show_updated (gboolean val);
 gboolean prefs_get_show_non_updated (void);
 void prefs_set_show_non_updated (gboolean val);
+gboolean prefs_get_save_sorted_order (void);
+void prefs_set_save_sorted_order (gboolean val);
 gint prefs_get_sort_tab_num (void);
 void prefs_set_sort_tab_num (gint i);
 

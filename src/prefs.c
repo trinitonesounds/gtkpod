@@ -127,6 +127,7 @@ struct cfg *cfg_new(void)
     {
 	mycfg->sm_col_width[i] = 80;
 	mycfg->col_visible[i] = FALSE;
+	mycfg->col_order[i] = i;
     }
     mycfg->col_visible[SM_COLUMN_ARTIST] = TRUE;
     mycfg->col_visible[SM_COLUMN_ALBUM] = TRUE;
@@ -144,6 +145,7 @@ struct cfg *cfg_new(void)
     mycfg->show_duplicates = TRUE;
     mycfg->show_updated = TRUE;
     mycfg->show_non_updated = TRUE;
+    mycfg->save_sorted_order = FALSE;
     mycfg->sort_tab_num = SORT_TAB_MAX;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     return(mycfg);
@@ -253,6 +255,11 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+11);
 	      prefs_set_col_visible (i, atoi (arg));
 	  }      
+	  else if(g_ascii_strncasecmp (line, "col_order", 9) == 0)
+	  {
+	      gint i = atoi (line+9);
+	      prefs_set_col_order (i, atoi (arg));
+	  }      
 	  else if(g_ascii_strncasecmp (line, "paned_pos", 9) == 0)
 	  {
 	      gint i = atoi (line+9);
@@ -281,6 +288,22 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
 	  {
 	      prefs_set_last_dir_export(strdup(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "show_duplicates") == 0)
+	  {
+	      prefs_set_show_duplicates((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "show_updated") == 0)
+	  {
+	      prefs_set_show_updated((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "show_non_updated") == 0)
+	  {
+	      prefs_set_show_non_updated((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
+	  {
+	      prefs_set_save_sorted_order((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "size_gtkpod.x") == 0)
 	  {
@@ -425,6 +448,8 @@ write_prefs_to_file_desc(FILE *fp)
     /* update column widths, x,y-size of main window and GtkPaned
      * positions */
     display_update_default_sizes ();
+    /* update order of song view columns */
+    sm_store_col_order ();
 
     fprintf(fp, "mountpoint=%s\n", cfg->ipod_mount);
     if (cfg->charset)
@@ -458,6 +483,7 @@ write_prefs_to_file_desc(FILE *fp)
     {
 	fprintf(fp, "sm_col_width%d=%d\n", i, prefs_get_sm_col_width (i));
 	fprintf(fp, "col_visible%d=%d\n",  i, prefs_get_col_visible (i));
+	fprintf(fp, "col_order%d=%d\n",  i, prefs_get_col_order (i));
 	if (i < SM_NUM_TAGS_PREFS)
 	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_tag_autoset (i));
     }	
@@ -472,6 +498,10 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
     fprintf(fp, "dir_browse=%s\n",cfg->last_dir.browse);
     fprintf(fp, "dir_export=%s\n",cfg->last_dir.export);
+    fprintf(fp, "show_duplicates=%d\n",prefs_get_show_duplicates());
+    fprintf(fp, "show_updated=%d\n",prefs_get_show_updated());
+    fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
+    fprintf(fp, "save_sorted_order=%d\n",prefs_get_save_sorted_order());
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n"));
     fprintf(fp, _("#               confirmation non-scrolled, dirbrowser\n"));
     fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
@@ -957,21 +987,38 @@ gboolean prefs_get_tag_autoset (gint category)
     return FALSE;
 }
 
-/* Display column @column? @column: one of SM_COLUMN_..., @visible:
-   new value */
-void prefs_set_col_visible (gint column, gboolean visible)
+/* Display column nr @pos? @visible: new value */
+void prefs_set_col_visible (gint pos, gboolean visible)
 {
-    if (column < SM_NUM_COLUMNS_PREFS)
-	cfg->col_visible[column] = visible;
+    if (pos < SM_NUM_COLUMNS_PREFS)
+	cfg->col_visible[pos] = visible;
 }
 
 
-/* Display column @column? @column: one of SM_COLUMN_... */
-gboolean prefs_get_col_visible (gint column)
+/* Display column nr @pos? */
+gboolean prefs_get_col_visible (gint pos)
 {
-    if (column < SM_NUM_COLUMNS_PREFS)
-	return cfg->col_visible[column];
+    if (pos < SM_NUM_COLUMNS_PREFS)
+	return cfg->col_visible[pos];
     return FALSE;
+}
+
+/* Display which column at nr @pos? */
+void prefs_set_col_order (gint pos, SM_item sm_item)
+{
+    if (pos < SM_NUM_COLUMNS_PREFS)
+	cfg->col_order[pos] = sm_item;
+}
+
+
+/* Display column nr @pos? */
+SM_item prefs_get_col_order (gint pos)
+{
+    if (pos < SM_NUM_COLUMNS_PREFS)
+	return cfg->col_order[pos];
+    if (pos == SM_COLUMN_NONE)
+	return SM_NUM_COLUMNS_PREFS;  /* this column is always at the end */
+    return -1;
 }
 
 /* get position of GtkPaned element nr. "i" */
@@ -1034,6 +1081,16 @@ gboolean prefs_get_show_non_updated (void)
 void prefs_set_show_non_updated (gboolean val)
 {
     cfg->show_non_updated = val;
+}
+
+gboolean prefs_get_save_sorted_order (void)
+{
+    return cfg->save_sorted_order;
+}
+
+void prefs_set_save_sorted_order (gboolean val)
+{
+    cfg->save_sorted_order = val;
 }
 
 gint prefs_get_sort_tab_num (void)

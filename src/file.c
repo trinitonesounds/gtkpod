@@ -759,7 +759,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       {
 	  update_song_from_file (oldsong);
 	  if (plitem && (plitem->type != PL_TYPE_MPL))
-	      add_song_to_playlist (plitem, oldsong, TRUE);
+	      add_song_to_playlist (plitem, oldsong, TRUE, -1);
 	  free_song (song);
 	  song = NULL;
       }
@@ -780,10 +780,11 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       if(added_song)                   /* add song to memory */
       {
 	  /* add song to master playlist (if it hasn't been done before) */
-	  if (added_song == song) add_song_to_playlist (NULL, added_song, TRUE);
+	  if (added_song == song) add_song_to_playlist (NULL, added_song,
+							TRUE, -1);
 	  /* add song to specified playlist, but not to MPL */
 	  if (plitem && (plitem->type != PL_TYPE_MPL))
-	      add_song_to_playlist (plitem, added_song, TRUE);
+	      add_song_to_playlist (plitem, added_song, TRUE, -1);
 	  /* indicate that non-transferred files exist */
 	  data_changed ();
 	  ++count;
@@ -1151,13 +1152,38 @@ void handle_import (void)
 }
 
 
+/* Like get_song_name_on_disk(), but verifies the song actually exists */
+gchar *get_song_name_on_disk_verified (Song *song)
+{
+    gchar *name = NULL;
+
+    if (song)
+    {
+	name = get_song_name_on_ipod (song);
+	if (name)
+	{
+	    if (!g_file_test (name, G_FILE_TEST_IS_REGULAR))
+	    {
+		g_free (name);
+		name = NULL;
+	    }
+	}
+	if(!name && song->pc_path_locale && (*song->pc_path_locale))
+	{
+	    if (g_file_test (song->pc_path_locale, G_FILE_TEST_IS_REGULAR))
+		name = g_strdup (song->pc_path_locale);
+	} 
+    }
+    return name;
+}
+
 /**
  * get_song_name_on_disk
  * Function to retrieve the filename on disk for the specified Song.  It
  * returns the valid filename whether the file has been copied to the ipod,
  * or has yet to be copied.  So it's useful for file operations on a song.
  * @s - The Song data structure we want the on disk file for
- * Returns - the filename for this Song
+ * Returns - the filename for this Song. Must be g_free'd.
  */
 gchar* get_song_name_on_disk(Song *s)
 {
@@ -1176,7 +1202,7 @@ gchar* get_song_name_on_disk(Song *s)
 }
 
 /* same as get_song_name_on_disk(), but only return a valid path to a
-   song on the ipod */
+   song on the ipod. Must be g_free'd. */
 gchar *get_song_name_on_ipod (Song *s)
 {
     gchar *result = NULL;

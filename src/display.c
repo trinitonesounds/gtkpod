@@ -39,6 +39,7 @@
 #include "song.h"
 #include "playlist.h"
 #include "interface.h"
+#include "callbacks.h"
 #include "misc.h"
 #include "file.h"
 
@@ -67,33 +68,46 @@ static void sm_song_changed (Song *song);
 static void sm_remove_song (Song *song);
 static void sm_remove_all_songs (void);
 static void sm_add_song_to_song_model (Song *song);
+static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint position);
+static void sm_create_listview (void);
 static void st_song_changed (Song *song, gboolean removed, guint32 inst);
 static void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst);
 static void st_remove_song (Song *song, guint32 inst);
 static void st_init (gint32 new_category, guint32 inst);
 
 /* Drag and drop definitions */
-#define TARGET_NR(a) (guint)(sizeof(a)/sizeof(GtkTargetEntry));
+#define TGNR(a) (guint)(sizeof(a)/sizeof(GtkTargetEntry))
 #define DND_GTKPOD_IDLIST_TYPE "application/gtkpod-idlist"
-static GtkTargetEntry drag_types [] = {
+#define DND_GTKPOD_PATHLIST_TYPE "application/gtkpod-pathlist"
+static GtkTargetEntry pm_drag_types [] = {
     { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
-static guint drag_size = TARGET_NR (drag_types);
-static GtkTargetEntry drop_types_all [] = {
+static GtkTargetEntry pm_drop_types [] = {
     { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
-static guint drop_size_all = TARGET_NR (drop_types_all);
-/* static GtkTargetEntry drop_types_plain [] = { */
-/*     { "text/plain", 0, DND_TEXT_PLAIN }, */
-/*     { "STRING", 0, DND_TEXT_PLAIN } */
-/* }; */
-/* static guint drop_size_plain = TARGET_NR (drop_types_plain); */
-#undef TARGET_NR
+static GtkTargetEntry st_drag_types [] = {
+    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { "text/plain", 0, DND_TEXT_PLAIN },
+    { "STRING", 0, DND_TEXT_PLAIN }
+};
+static GtkTargetEntry sm_drag_types [] = {
+    { DND_GTKPOD_PATHLIST_TYPE, 0, DND_GTKPOD_PATHLIST },
+    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { "text/plain", 0, DND_TEXT_PLAIN },
+    { "STRING", 0, DND_TEXT_PLAIN }
+};
+static GtkTargetEntry sm_drop_types [] = {
+    { DND_GTKPOD_PATHLIST_TYPE, 0, DND_GTKPOD_PATHLIST },
+    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { "text/plain", 0, DND_TEXT_PLAIN },
+    { "STRING", 0, DND_TEXT_PLAIN }
+};
 #undef DND_GTKPOD_IDLIST_TYPE
+#undef DND_GTKPOD_ITERLIST_TYPE
 
 /* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
@@ -296,6 +310,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       /* remove all entries from sort tab 0 */
       /* printf ("removing entries: %x\n", current_playlist);*/
       st_init (-1, 0);
+      playlist_renumber_songs (new_playlist);
 
       current_playlist = new_playlist;
       n = get_nr_of_songs_in_playlist (new_playlist);
@@ -369,6 +384,7 @@ pm_select_playlist_reinit(Playlist *pl)
     Playlist *playlist = NULL;
     GtkTreeSelection *ts = NULL;
 
+    return;
     if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(playlist_treeview))))
     {
 	if(gtk_tree_selection_get_selected(ts, &tm, &i))
@@ -380,8 +396,8 @@ pm_select_playlist_reinit(Playlist *pl)
 			GTK_TREE_SORTABLE(sm), SM_COLUMN_NONE,
 			GTK_SORT_ASCENDING);
 	    }
-	    if((playlist) && (playlist == pl))
-		pm_selection_changed(ts, NULL); 
+/* 	    if((playlist) && (playlist == pl)) */
+/* 		pm_selection_changed(ts, NULL);  */
 	}
     }
     else
@@ -576,16 +592,16 @@ static void pm_create_listview (GtkWidget *gtkpod)
 		    G_CALLBACK (pm_selection_changed), NULL);
   pm_add_columns ();
   gtk_tree_view_enable_model_drag_dest (playlist_treeview,
-					drop_types_all, drop_size_all, 
+					pm_drop_types, TGNR (pm_drop_types),
 					GDK_ACTION_COPY);
   /* need the gtk_drag_dest_set() with no actions ("0") so that the
      data_received callback gets the correct info value. This is most
      likely a bug... */
   gtk_drag_dest_set_target_list (GTK_WIDGET (playlist_treeview),
-				 gtk_target_list_new (drop_types_all,
-						      drop_size_all));
+				 gtk_target_list_new (pm_drop_types,
+						      TGNR (pm_drop_types)));
   gtk_drag_source_set (GTK_WIDGET (playlist_treeview), GDK_BUTTON1_MASK,
-		       drag_types, drag_size, GDK_ACTION_COPY);
+		       pm_drag_types, TGNR (pm_drag_types), GDK_ACTION_COPY);
 }
 
 
@@ -980,6 +996,55 @@ static void st_song_changed (Song *song, gboolean removed, guint32 inst)
 	    }
 	}
     }
+}
+
+
+/* Reorders the songs stored in the sort tabs according to the order
+ * in the selected playlist. This has to be done e.g. if we change the
+ * order in the song view.
+ * 
+ * Right now I simply delete all members of all tab entries, then add
+ * the songs again without having them added to the song view. For my
+ * 2459 songs that takes approx. 1.3 seconds (850 MHz AMD Duron) */
+static void st_adopt_order_in_playlist ()
+{
+    gint inst;
+
+#if DEBUG_TIMING
+    GTimeVal time;
+    g_get_current_time (&time);
+    printf ("st_adopt_order_in_playlist enter: %ld.%06ld sec\n",
+	    time.tv_sec % 3600, time.tv_usec);
+#endif DEBUG_TIMING
+
+    /* first delete all songs in all visible sort tabs */
+    for (inst = 0; inst< prefs_get_sort_tab_num (); ++inst)
+    {
+	SortTab *st = sorttab[inst];
+	GList *link;
+	for (link=st->entries; link; link=link->next)
+	{   /* in each entry delete all songs */
+	    TabEntry *entry = (TabEntry *)link->data;
+	    g_list_free (entry->members);
+	    entry->members = NULL;
+	}
+    }
+
+    /* now add the songs again, without adding them to the song view */
+    if (current_playlist)
+    {
+	GList *link;
+
+	for (link=current_playlist->members; link; link=link->next)
+	{
+	    st_add_song ((Song *)link->data, FALSE, FALSE, 0);
+	}
+    }
+#if DEBUG_TIMING
+    g_get_current_time (&time);
+    printf ("st_adopt_order_in_playlist enter: %ld.%06ld sec\n",
+	    time.tv_sec % 3600, time.tv_usec);
+#endif DEBUG_TIMING
 }
 
 
@@ -1638,7 +1703,7 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
       gtk_tree_view_append_column (treeview, column);
       gtk_tree_view_set_headers_visible (treeview, FALSE);
       gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
-			   drag_types, drag_size, GDK_ACTION_COPY);
+		      st_drag_types, TGNR (st_drag_types), GDK_ACTION_COPY);
     }
 }
 
@@ -1747,10 +1812,52 @@ static void sm_remove_all_songs (void)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (song_treeview);
   GtkTreeIter iter;
+  gint column;
+  GtkSortType order;
 
   while (gtk_tree_model_get_iter_first (model, &iter))
-    {
+  {
       gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
+  }
+  if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
+					   &column, &order))
+  { /* recreate song treeview to unset sorted column */
+      if (column >= 0)
+      {
+	  sm_store_col_order ();
+	  sm_create_listview ();
+      }
+  }
+}
+
+
+/* find out at which position column @sm_item is displayed */
+/* static gint sm_get_col_position (SM_item sm_item) */
+/* { */
+/*     gint i; */
+/*     GtkTreeViewColumn *col; */
+
+/*     if (!song_treeview) return -1; */
+
+/*     for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i) */
+/*     { */
+/* 	col = gtk_tree_view_get_column (song_treeview, i); */
+/* 	if (col->sort_column_id == sm_item) return i; */
+/*     } */
+/*     return -1; */
+/* } */
+
+
+/* store the order of the song view columns */
+void sm_store_col_order (void)
+{
+    gint i;
+    GtkTreeViewColumn *col;
+
+    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    {
+	col = gtk_tree_view_get_column (song_treeview, i);
+	prefs_set_col_order (i, col->sort_column_id);
     }
 }
 
@@ -1958,38 +2065,87 @@ sm_get_nr_of_songs(void)
     return(result);
 
 }
+
+
+static gint comp_int (gconstpointer a, gconstpointer b)
+{
+    return ((gint)a)-((gint)b);
+}
+
+
 /**
- * If/When we can ever trap songview changes this code *should* reorder all
- * user defined playlists to match the listing on screen
+ * Reorder songs in playlist to match order of songs displayed in song
+ * view. Only the subset of songs currently displayed is reordered.
+ * data_changed() is called when necessary.
  */
 void
 sm_rows_reordered_callback(void)
 {
-    Song *new_song = NULL;
-    Playlist *current_pl = NULL;
+    Playlist *current_pl = get_currently_selected_playlist();
+    gboolean changed = FALSE;
 		    
-    if((current_pl = get_currently_selected_playlist()))
+    if(current_pl)
     {
-	GtkTreeIter i;
-	GList *new_list = NULL;
-	gboolean valid = FALSE;
 	GtkTreeModel *tm = NULL;
-			    
-	if(current_pl->type == PL_TYPE_MPL) 
-	    return;
-	
+
 	if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(song_treeview))))
 	{
+	    GtkTreeIter i;
+	    GList *new_list = NULL, *old_pos_l = NULL;
+	    gboolean valid = FALSE;
+	    GList *nlp, *olp;
+
 	    valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
 	    while(valid)
 	    {
+		Song *new_song;
+		gint old_position;
+
 		gtk_tree_model_get(tm, &i, 0, &new_song, -1); 
 		new_list = g_list_append(new_list, new_song);
+		/* what position was this song in before? */
+		old_position = g_list_index (current_pl->members, new_song);
+		/* we make a sorted list of the old positions */
+		old_pos_l = g_list_insert_sorted (old_pos_l,
+						  (gpointer)old_position,
+						  comp_int);
 		valid = gtk_tree_model_iter_next(tm, &i);
 	    }
-	    g_list_free(current_pl->members);
-	    current_pl->members = new_list;
+	    nlp = new_list;
+	    olp = old_pos_l;
+	    while (nlp && olp)
+	    {
+		GList *old_link;
+		gint position = (gint)olp->data;
+
+		/* if position == -1 one of the songs in the song view
+		   could not be found in the selected playlist -> stop! */
+		if (position == -1)
+		{
+		    printf("Prgramming error (sm_rows_reordered_callback): song in song view was not in selected playlist\n");
+		    break;
+		}
+		old_link = g_list_nth (current_pl->members, position);
+		/* replace old song with new song */
+		if (old_link->data != nlp->data)
+		{
+		    old_link->data = nlp->data;
+		    changed = TRUE;
+		}
+		/* next */
+		nlp = nlp->next;
+		olp = olp->next;
+	    }
+	    g_list_free (new_list);
+	    g_list_free (old_pos_l);
 	}
+    }
+    /* if we changed data, mark data as changed and adopt order in
+       sort tabs */
+    if (changed)
+    {
+	data_changed ();
+	st_adopt_order_in_playlist ();
     }
 }
 
@@ -2011,6 +2167,7 @@ gint sm_data_compare_func (GtkTreeModel *model,
   if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order) == FALSE) return 0;
   sm_item = (SM_item) column;
+  /*printf ("sm_comp: %d\n", sm_item);*/
   switch (sm_item)
   {
   case SM_COLUMN_TITLE:
@@ -2032,12 +2189,11 @@ gint sm_data_compare_func (GtkTreeModel *model,
       if(song1->transferred == song2->transferred) return 0;
       if(song1->transferred == TRUE) return 1;
       else return -1;
-      break;
   case SM_COLUMN_NONE: 
-      if (current_playlist)
-	  return((g_list_index(current_playlist->members, song1)) -
-		 (g_list_index(current_playlist->members, song2)));
-      break;
+      return (song1->pos - song2->pos);
+/*       if (current_playlist) */
+/* 	  return((g_list_index(current_playlist->members, song1)) - */
+/* 		 (g_list_index(current_playlist->members, song2))); */
   default:
       gtkpod_warning("No sort for column %d\n", column);
       break;
@@ -2045,36 +2201,29 @@ gint sm_data_compare_func (GtkTreeModel *model,
   return 0;
 }
 
+
+gint default_comp  (GtkTreeModel *model,
+		    GtkTreeIter *a,
+		    GtkTreeIter *b,
+		    gpointer user_data)
+{
+    return 0;
+}
+
 static void
 sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 {
-    Playlist *pl = NULL;
-
-    if((pl = get_currently_selected_playlist()) &&
-	    (pl->type != PL_TYPE_MPL))
-    {
-	switch((gint)data)
-	{
-	    case SM_COLUMN_TITLE:
-	    case SM_COLUMN_ARTIST:
-	    case SM_COLUMN_ALBUM:
-	    case SM_COLUMN_GENRE:
-	    case SM_COLUMN_COMPOSER:
-	    case SM_COLUMN_TRACK_NR:
-		sm_rows_reordered_callback();
-		break;
-	    default:
-		fprintf(stderr, "Unknown clicked:%d\n",(gint)data);
-		break;
-	}
-    }
+    if(prefs_get_save_sorted_order ())  sm_rows_reordered_callback();
 }
 
 
+/* Add one column at position @pos. This code is used over and over
+   by sm_add_column() -- therefore I put it into a separate function */
 static GtkTreeViewColumn *sm_add_text_column (gint col_id,
 					      gchar *name,
 					      GtkCellRenderer *renderer,
-					      gboolean editable)
+					      gboolean editable,
+					      gint pos)
 {
     GtkTreeViewColumn *column;
     GtkTreeModel *model = gtk_tree_view_get_model (song_treeview);
@@ -2094,7 +2243,6 @@ static GtkTreeViewColumn *sm_add_text_column (gint col_id,
     gtk_tree_view_column_set_resizable (column, TRUE);
     gtk_tree_view_column_set_clickable(column, TRUE);
     gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-    sm_columns[col_id] = column;
     gtk_tree_view_column_set_fixed_width (column,
 					  prefs_get_sm_col_width (col_id));
     g_signal_connect (G_OBJECT (column), "clicked",
@@ -2102,109 +2250,148 @@ static GtkTreeViewColumn *sm_add_text_column (gint col_id,
 		      (gpointer)col_id);
     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), col_id,
 				     sm_data_compare_func, NULL, NULL);
-    gtk_tree_view_append_column (song_treeview, column);
+    gtk_tree_view_column_set_reorderable (column, TRUE);
+    gtk_tree_view_insert_column (song_treeview, column, pos);
+    sm_columns[col_id] = column;
     return column;
 }
 
 
 
 /* Adds the columns to our song_treeview */
-static void sm_add_columns ()
+static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
 {
   gint col_id;
-  GtkTreeViewColumn *column;
+  GtkTreeViewColumn *col = NULL;
   GtkCellRenderer *renderer;
   GtkTreeModel *model = gtk_tree_view_get_model (song_treeview);
-  
-  /* title column */
-  sm_add_text_column (SM_COLUMN_TITLE, _("Title"), NULL, TRUE);
-  /* artist column */
-  sm_add_text_column (SM_COLUMN_ARTIST, _("Artist"), NULL, TRUE);
-  /* album column */
-  sm_add_text_column (SM_COLUMN_ALBUM, _("Album"), NULL, TRUE);
-  /* genre column */
-  sm_add_text_column (SM_COLUMN_GENRE, _("Genre"), NULL, TRUE);
-  /* composer column */
-  sm_add_text_column (SM_COLUMN_COMPOSER, _("Composer"), NULL, TRUE);
-  /* track column "#" stands for "Track Number" */
-  sm_add_text_column (SM_COLUMN_TRACK_NR, _("#"), NULL, TRUE);
-  /* ipod_id column */
-  sm_add_text_column (SM_COLUMN_IPOD_ID, _("ID"), NULL, FALSE);
-  /* pc_path column */
-  sm_add_text_column (SM_COLUMN_PC_PATH, _("PC File"), NULL, FALSE);
-  /* transferred column */
-  renderer = gtk_cell_renderer_toggle_new ();
-  sm_add_text_column (SM_COLUMN_TRANSFERRED, _("Trnsfrd"), renderer, FALSE);
-  /* Gtkpod playlist sorting */
-  col_id = SM_COLUMN_NONE;
-  renderer = gtk_cell_renderer_toggle_new ();
-  g_object_set_data (G_OBJECT (renderer), "column", 
-	      (gint*)col_id);
-  column = gtk_tree_view_column_new_with_attributes ("gtkpod", renderer,
-						    NULL);
-  gtk_tree_view_column_set_sort_column_id (column, col_id);
-  gtk_tree_view_column_set_resizable (column, TRUE);
-  sm_columns[col_id] = column;
-  gtk_tree_view_column_set_fixed_width (column,
-					prefs_get_sm_col_width (col_id));
-  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
-	  SM_COLUMN_NONE, sm_data_compare_func, NULL, NULL);
-  gtk_tree_view_append_column (song_treeview, column);
 
-  sm_show_preferred_columns();
+  switch (sm_item)
+  {
+  case SM_COLUMN_TITLE:
+      col = sm_add_text_column (SM_COLUMN_TITLE, _("Title"), NULL, TRUE, pos);
+      break;
+  case SM_COLUMN_ARTIST:
+      col = sm_add_text_column (SM_COLUMN_ARTIST, _("Artist"), NULL, TRUE, pos);
+      break;
+  case SM_COLUMN_ALBUM:
+      col = sm_add_text_column (SM_COLUMN_ALBUM, _("Album"), NULL, TRUE, pos);
+      break;
+  case SM_COLUMN_GENRE:
+      col = sm_add_text_column (SM_COLUMN_GENRE, _("Genre"), NULL, TRUE, pos);
+      break;
+  case SM_COLUMN_COMPOSER:
+      col = sm_add_text_column (SM_COLUMN_COMPOSER, _("Composer"), NULL, TRUE, pos);
+      break;
+  case SM_COLUMN_TRACK_NR:
+      col = sm_add_text_column (SM_COLUMN_TRACK_NR, _("#"), NULL, TRUE, pos);
+      break;
+  case SM_COLUMN_IPOD_ID:
+      col = sm_add_text_column (SM_COLUMN_IPOD_ID, _("ID"), NULL, FALSE, pos);
+      break;
+  case SM_COLUMN_PC_PATH:
+      col = sm_add_text_column (SM_COLUMN_PC_PATH, _("PC File"), NULL, FALSE, pos);
+      break;
+  case SM_COLUMN_TRANSFERRED:
+      renderer = gtk_cell_renderer_toggle_new ();
+      col = sm_add_text_column (SM_COLUMN_TRANSFERRED, _("Trnsfrd"),
+			  renderer, FALSE, pos);
+      break;
+  case SM_COLUMN_NONE:
+      /* Gtkpod playlist sorting */
+      col_id = SM_COLUMN_NONE;
+      renderer = gtk_cell_renderer_toggle_new ();
+      g_object_set_data (G_OBJECT (renderer), "column", 
+			 (gint*)col_id);
+      col = gtk_tree_view_column_new_with_attributes ("gtkpod", renderer,
+							 NULL);
+      gtk_tree_view_column_set_sort_column_id (col, col_id);
+      gtk_tree_view_column_set_resizable (col, TRUE);
+      gtk_tree_view_column_set_fixed_width (col,
+					    prefs_get_sm_col_width (col_id));
+      gtk_tree_view_append_column (song_treeview, col);
+      sm_columns[col_id] = col;
+      gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), col_id,
+				       sm_data_compare_func, NULL, NULL);
+      break;
+    case SM_NUM_COLUMNS:
+      break;
+  }
+  if (col && (pos != -1))
+      gtk_tree_view_column_set_visible (col,
+					prefs_get_col_visible (pos));
+  return col;
 }
 
 
-
-/* creates the model and sets the sort functions */
-static GtkTreeModel *create_song_model (void)
+/* Adds the columns to our song_treeview */
+static void sm_add_columns (void)
 {
-  GtkListStore *model;
+    gint i;
 
-  /* create list store */
-  model = gtk_list_store_new (SM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_POINTER,
-			      G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_POINTER,
-			      G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_POINTER,
-			      G_TYPE_POINTER, G_TYPE_POINTER);
-
-  return GTK_TREE_MODEL (model);
+    for (i=0; i<SM_NUM_COLUMNS; ++i)
+    {
+	sm_add_column (prefs_get_col_order (i), -1);
+    }
+    sm_show_preferred_columns();
 }
 
 
 
 /* Create songs listview */
-static void sm_create_listview (GtkWidget *gtkpod)
+static void sm_create_listview (void)
 {
   GtkTreeModel *model;
+  GtkWidget *song_window = lookup_widget (gtkpod_window, "song_window");
+  GtkWidget *stv = gtk_tree_view_new ();
 
+  /* create tree view */
+  if (song_treeview) gtk_widget_destroy (GTK_WIDGET (song_treeview));
+  song_treeview = GTK_TREE_VIEW (stv);
+  gtk_widget_show (stv);
+  gtk_container_add (GTK_CONTAINER (song_window), stv);
+  g_signal_connect ((gpointer) stv, "drag_data_get",
+		    G_CALLBACK (on_song_treeview_drag_data_get),
+		    NULL);
+  g_signal_connect_after ((gpointer) stv, "key_release_event",
+			  G_CALLBACK (on_song_treeview_key_release_event),
+			  NULL);
+  g_signal_connect ((gpointer) stv, "drag_data_received",
+		    G_CALLBACK (on_song_treeview_drag_data_received),
+		    NULL);
   /* create model */
-  model = create_song_model ();
-  /* set tree view */
-  song_treeview = GTK_TREE_VIEW (lookup_widget (gtkpod, "song_treeview"));
+  model = GTK_TREE_MODEL (gtk_list_store_new (SM_NUM_COLUMNS, G_TYPE_POINTER,
+					      G_TYPE_POINTER, G_TYPE_POINTER,
+					      G_TYPE_POINTER, G_TYPE_POINTER,
+					      G_TYPE_POINTER, G_TYPE_POINTER,
+					      G_TYPE_POINTER, G_TYPE_POINTER,
+					      G_TYPE_POINTER));
   gtk_tree_view_set_model (song_treeview, GTK_TREE_MODEL (model));
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (song_treeview), TRUE);
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (song_treeview),
 			       GTK_SELECTION_MULTIPLE);
   sm_add_columns ();
   gtk_drag_source_set (GTK_WIDGET (song_treeview), GDK_BUTTON1_MASK,
-		       drag_types, drag_size, GDK_ACTION_COPY);
-  gtk_tree_view_enable_model_drag_dest(song_treeview, drop_types_all,
-				       drop_size_all, GDK_ACTION_COPY);
+		       sm_drag_types, TGNR (sm_drag_types), GDK_ACTION_COPY);
+/*  gtk_tree_view_enable_model_drag_source (song_treeview, GDK_BUTTON1_MASK,
+					  sm_drag_types, TGNR (sm_drag_types),
+					  GDK_ACTION_COPY);*/
+  gtk_tree_view_enable_model_drag_dest(song_treeview, sm_drop_types,
+				       TGNR (sm_drop_types), GDK_ACTION_COPY);
   /* need the gtk_drag_dest_set() with no actions ("0") so that the
      data_received callback gets the correct info value. This is most
      likely a bug... */
   gtk_drag_dest_set_target_list (GTK_WIDGET (song_treeview),
-				 gtk_target_list_new (drop_types_all,
-						      drop_size_all));
+				 gtk_target_list_new (sm_drop_types,
+						      TGNR (sm_drop_types)));
 }
-
 
 /* Create the different listviews to display the various information */
 void create_display (GtkWidget *gtkpod)
 {
     GtkWidget *stop_button;
 
-    sm_create_listview (gtkpod);
+    sm_create_listview ();
     st_create_tabs (gtkpod);
     pm_create_listview (gtkpod);
     /* set certain sizes, positions, widths... to default values */
@@ -2222,11 +2409,11 @@ void cleanup_display (void)
 }
 
 /*
- * utility function for appending ipod song ids for song treeview callback
+ * utility function for appending ipod song ids for song view (DND)
  */
 void 
-on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data)
+on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			 GtkTreeIter *i, gpointer data)
 {
     Song *s;
     GString *filelist = (GString *)data;
@@ -2236,6 +2423,41 @@ on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     if(s)
     {
 	g_string_append_printf (filelist, "%d\n", s->ipod_id);
+    }
+}
+
+
+/*
+ * utility function for appending path for song view (DND)
+ */
+void 
+on_sm_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			   GtkTreeIter *iter, gpointer data)
+{
+    GString *filelist = (GString *)data;
+    gchar *ps = gtk_tree_path_to_string (tp);
+    g_string_append_printf (filelist, "%s\n", ps);
+    g_free (ps);
+}
+
+/*
+ * utility function for appending file for song view (DND)
+ */
+void 
+on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			   GtkTreeIter *iter, gpointer data)
+{
+    Song *s;
+    GString *filelist = (GString *)data;
+    gchar *name;
+
+    gtk_tree_model_get(tm, iter, SM_COLUMN_TITLE, &s, -1); 
+    /* can call on 0 cause s is consistent across all of the columns */
+    name = get_song_name_on_disk_verified (s);
+    if (name)
+    {
+	g_string_append_printf (filelist, "file:%s\n", name);
+	g_free (name);
     }
 }
 

@@ -286,3 +286,23 @@ on_selected_songs1_activate            (GtkMenuItem     *menuitem,
 void
 on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_save_song_order1_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_cfg_show_duplicates_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_show_updated_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

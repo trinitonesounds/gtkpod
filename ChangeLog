@@ -1,4 +1,10 @@
-gtkpod V0.43-CVS 
+gtkpod V0.43-CVS
+	IMPROVEMENT: user settable: save song order after sort action
+	automatically?
+
+	IMPROVEMENT: columns in song view can be dragged into any
+	order. Order will be saved.
+	
         Change of copyright: itunesdb.c and itunesdb.h are now under the
 	GNU Lesser General Public License to make it easier to use the
 	code in other programs.

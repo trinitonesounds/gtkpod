@@ -344,7 +344,7 @@ void add_idlist_to_playlist (Playlist *pl, gchar *str)
     if (!pl) return;
     while(parse_ipod_id_from_string(&str,&id))
     {
-	add_songid_to_playlist(pl, id, TRUE);
+	add_songid_to_playlist(pl, id, TRUE, -1);
     }
     data_changed();
 }

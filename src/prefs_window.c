@@ -121,6 +121,26 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->update_existing);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_show_duplicates")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->show_duplicates);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_show_updated")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->show_updated);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_show_non_updated")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->show_non_updated);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_save_sorted_order")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->save_sorted_order);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_block_display")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -288,6 +308,7 @@ prefs_window_save(void)
     prefs_set_show_duplicates(tmpcfg->show_duplicates);
     prefs_set_show_updated(tmpcfg->show_updated);
     prefs_set_show_non_updated(tmpcfg->show_non_updated);
+    prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
 
     cfg_free(tmpcfg);
     tmpcfg =NULL;
@@ -430,5 +451,10 @@ void prefs_window_set_show_updated (gboolean val)
 void prefs_window_set_show_non_updated (gboolean val)
 {
     tmpcfg->show_non_updated = val;
+}
+
+void prefs_window_set_save_sorted_order (gboolean val)
+{
+    tmpcfg->save_sorted_order = val;
 }
 

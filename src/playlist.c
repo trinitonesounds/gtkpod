@@ -107,27 +107,41 @@ Playlist *add_playlist (Playlist *plitem, gint position)
    playlist "plitem". It then lets the display model know.
    If "plitem" == NULL, add to master playlist
    @display: if TRUE, song is eventually added to song model
-   (i.e. displayed). Otherwise it's only added to the sort tabs */
-void add_songid_to_playlist (Playlist *plitem, guint32 id, gboolean display)
+   (i.e. displayed). Otherwise it's only added to the sort tabs
+   @position insert at that position. -1: append */
+void add_songid_to_playlist (Playlist *plitem, guint32 id,
+			     gboolean display, gint position)
 {
   Song *song;
 
   song = get_song_by_id (id);
   /* printf ("id: %4d song: %x\n", id, song); */
-  add_song_to_playlist (plitem, song, display);
+  add_song_to_playlist (plitem, song, display, position);
 }
 
 /* This function appends the song "song" to the 
    playlist "plitem". It then lets the display model know.
    If "plitem" == NULL, add to master playlist
    @display: if TRUE, song is eventually added to song model
-   (i.e. displayed). Otherwise it's only added to the sort tabs */
-void add_song_to_playlist (Playlist *plitem, Song *song, gboolean display)
+   (i.e. displayed). Otherwise it's only added to the sort tabs
+   @position insert at that position. -1: append */
+void add_song_to_playlist (Playlist *plitem, Song *song,
+			   gboolean display, gint position)
 {
   if (song == NULL) return;
   if (plitem == NULL)  plitem = get_playlist_by_nr (0);
-  plitem->members = g_list_append (plitem->members, song);
-  /*  ++plitem->num;  */ /* increase song counter */
+  if (position == -1)
+  {
+      song->pos = plitem->num; /* position of song in playlist */
+      plitem->members = g_list_append (plitem->members, song);
+      ++plitem->num;  /* increase song counter */
+  }
+  else
+  {
+      plitem->members = g_list_insert (plitem->members, song, position);
+      ++plitem->num;  /* increase song counter */
+      playlist_renumber_songs (plitem);
+  }
   /* it's more convenient to store the pointer to the song than
      the ID, because id=song->ipod_id -- it takes more computing
      power to do it the other way round */
@@ -163,6 +177,7 @@ gboolean remove_song_from_playlist (Playlist *plitem, Song *song)
 	return FALSE; /* not a member */
     pm_remove_song (plitem, song);
     plitem->members = g_list_remove (plitem->members, song);
+    --plitem->num; /* decrease number of songs */
     if (plitem->type == PL_TYPE_MPL)
     { /* if it's the MPL, we remove the song permanently */
 	gint i, n;
@@ -174,6 +189,7 @@ gboolean remove_song_from_playlist (Playlist *plitem, Song *song)
 	}
 	remove_song_from_ipod (song);	
     }
+    playlist_renumber_songs (plitem);
     return TRUE; /* song was a member */
 }
 
@@ -207,8 +223,8 @@ Playlist *get_playlist_by_nr (guint32 n)
 /* Stupid function... but please use it :-) */
 guint32 get_nr_of_songs_in_playlist (Playlist *plitem)
 {
-  /*  return plitem->num;*/
-  return g_list_length (plitem->members);
+  return plitem->num;
+  /* return g_list_length (plitem->members);*/
 }
 
 /* Returns the song nur "n" in playlist "plitem" */
@@ -266,6 +282,25 @@ reset_playlists_to_new_list(GList *new_l)
 }
 
 
+/* assign numbers to the songs in playlist @pl. This number is used in
+   e.g. in sm_data_comp() */
+void  playlist_renumber_songs (Playlist *pl)
+{
+    guint n = 0;
+    Song *song;
+    GList *gl_song;
+
+    if (!pl) return;
+
+    for (gl_song = pl->members ; gl_song; gl_song=gl_song->next)
+    {
+	song = (Song *)gl_song->data;
+	song->pos = n;
+	++n;
+    }
+}
+
+
 /* ------------------------------------------------------------------- */
 /* functions used by itunesdb (so we can refresh the display during
  * import */
@@ -289,7 +324,7 @@ void it_add_songid_to_playlist (Playlist *plitem, guint32 id)
 	g_get_current_time (time);
 	last_pl = plitem;
     }
-    add_songid_to_playlist (plitem, id, TRUE);
+    add_songid_to_playlist (plitem, id, TRUE, -1);
     --count;
     ++count_s;
     if ((count < 0) && widgets_blocked)

@@ -439,7 +439,7 @@ void remove_duplicate (Song *oldsong, Song *song)
 	       if (remove_song_from_playlist (pl, song))
 	       {
 		   if (!song_is_in_playlist (pl, oldsong))
-		       add_song_to_playlist (pl, oldsong, TRUE);
+		       add_song_to_playlist (pl, oldsong, TRUE, -1);
 	       }
 	   }
 	   /* remove song from MPL, i.e. from the ipod */

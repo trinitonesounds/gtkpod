@@ -65,6 +65,7 @@ typedef struct
   gchar   *hostname;         /* name of host this file has been imported from */
   gboolean transferred;      /* has file been transferred to iPod? */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)         */
+  guint   pos;               /* position of this song in selected playlist */
 } Song;
 
 /* A means to address the fields by uniform IDs. May be extended as

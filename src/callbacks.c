@@ -261,26 +261,29 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
                                         gpointer         user_data)
 {
     GtkTreeSelection *ts = NULL;
+    GString *reply = g_string_sized_new (2000);
 
+    printf("info: %d\n", info);
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
     {
-	if(info == DND_GTKPOD_IDLIST)
+	switch (info)
 	{
-	    GString *reply = g_string_sized_new (2000);
+	case DND_GTKPOD_IDLIST:
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_song_listing_drag_foreach, reply);
-	    if(reply->len)
-	    {
-		gtk_selection_data_set(data, data->target, 8, reply->str,
-				       reply->len);
-	    }
-	    g_string_free (reply, TRUE);
-	}
-	else if(info == DND_TEXT_PLAIN)
-	{
-	    fprintf(stderr, "received file of type \"text/plain\"\n");
+				    on_sm_dnd_get_id_foreach, reply);
+	    break;
+	case DND_GTKPOD_PATHLIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_sm_dnd_get_path_foreach, reply);
+	    break;
+	case DND_TEXT_PLAIN:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_sm_dnd_get_file_foreach, reply);
+	    break;
 	}
     }
+    gtk_selection_data_set(data, data->target, 8, reply->str, reply->len);
+    g_string_free (reply, TRUE);
 }
 
 
@@ -513,75 +516,31 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
 
-    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget), x, y, &path,
-		&pos))
+    /* drop AFTER instead of dropping ON */
+    if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
+	(pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
+	pos = GTK_TREE_VIEW_DROP_AFTER;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
+					 x, y, &path, &pos) &&
+       gtk_tree_model_get_iter(model, &i, path))
     {
-	/* 
-	 * ensure a valid tree path, and that we're dropping BEFORE or AFTER
-	 * a track not onto
-	 */
-	if((path) && ((pos == GTK_TREE_VIEW_DROP_BEFORE) ||
-	    (pos == GTK_TREE_VIEW_DROP_AFTER))) 
+	switch (info)
 	{
-	    model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-	    if(gtk_tree_model_get_iter(model, &i, path))
-	    {
-		Song *s = NULL;
-		gtk_tree_model_get(model, &i, 0, &s, -1);
-		if(s)
-		{
-		    guint32 id = 0;
-		    Song *new_song = NULL;
-		    Playlist *current_pl = NULL;
-		    gchar *str = data->data;
-		    if((current_pl = get_currently_selected_playlist()) &&
-			    (current_pl->type != PL_TYPE_MPL))
-		    {
-			guint insert_index = -1;
-			GList *new_list = NULL, *members = NULL, *l = NULL;
-
-			members = g_list_copy(current_pl->members);
-			/* build a list of songs to append */
-			while(parse_ipod_id_from_string(&str,&id))
-			{
-			    if((new_song = get_song_by_id(id)))
-			    {
-				members = g_list_remove(members, new_song);
-				new_list = g_list_append(new_list, new_song);
-			    }
-			}
-
-			/* find where we wanna put the new tracks */
-			if((insert_index = g_list_index(members, s)) != -1)
-			{
-			    switch(pos)
-			    {
-				case GTK_TREE_VIEW_DROP_AFTER:
-				    insert_index++;
-				case GTK_TREE_VIEW_DROP_BEFORE:
-				    for(l = new_list; l; l = l->next)
-				    {
-					new_song = (Song*)l->data;
-					members = g_list_insert(members,
-						new_song, insert_index++);
-				    }
-				    break;
-				default:
-				    break;
-			    }
-			}
-			if(new_list) 
-			    g_list_free(new_list);
-			if(current_pl->members) 
-			    g_list_free(current_pl->members);
-			current_pl->members = members;
-			pm_select_playlist_reinit(current_pl);
-			data_changed();
-		    }
-		}
-	    }
-	    gtk_tree_path_free(path);
+	case DND_GTKPOD_PATHLIST:
+	    printf ("pathlist not supported yet\n");
+	    break;
+	case DND_GTKPOD_IDLIST:
+	    printf ("idlist not supported yet\n");
+	    break;
+	case DND_TEXT_PLAIN:
+	    printf ("text/plain not supported yet\n");
+	    break;
+	default:
+	    printf ("unknown drop not supported\n");
+	    break;
 	}
+	gtk_tree_path_free(path);
     }
 }
 
@@ -863,3 +822,51 @@ on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
     prefs_window_set_update_existing(
 	gtk_toggle_button_get_active(togglebutton));
 }
+
+void
+on_save_song_order1_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    sm_rows_reordered_callback ();
+}
+
+
+void
+on_cfg_show_duplicates_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_show_duplicates(
+	gtk_toggle_button_get_active(togglebutton));
+
+}
+
+
+void
+on_cfg_show_updated_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_show_updated(
+	gtk_toggle_button_get_active(togglebutton));
+
+}
+
+
+void
+on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_show_non_updated(
+	gtk_toggle_button_get_active(togglebutton));
+
+}
+
+
+void
+on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_save_sorted_order(
+	gtk_toggle_button_get_active(togglebutton));
+
+}
+

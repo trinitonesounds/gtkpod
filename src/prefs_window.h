@@ -50,5 +50,6 @@ void prefs_window_set_mpl_autoselect (gboolean autoselect);
 void prefs_window_set_show_duplicates (gboolean val);
 void prefs_window_set_show_updated (gboolean val);
 void prefs_window_set_show_non_updated (gboolean val);
+void prefs_window_set_save_sorted_order (gboolean val);
 
 #endif

@@ -49,6 +49,7 @@ void handle_import (void);
 void handle_export (void);
 gboolean files_are_saved (void);
 void data_changed (void);
+gchar *get_song_name_on_disk_verified (Song *song);
 gchar* get_song_name_on_disk(Song *s);
 gchar* get_song_name_on_ipod(Song *s);
 gchar* get_preferred_song_name_format(Song *s);

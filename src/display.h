@@ -125,6 +125,7 @@ enum  {
 /* Drag and drop types */
 enum {
     DND_GTKPOD_IDLIST = 1000,
+    DND_GTKPOD_PATHLIST,
     DND_TEXT_PLAIN
 };
 
@@ -147,8 +148,12 @@ void st_remove_entry (TabEntry *entry, guint32 inst);
 gint st_get_instance_from_treeview (GtkTreeView *tv);
 TabEntry *st_get_selected_entry (gint inst);
 
-void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data);
+void on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			      GtkTreeIter *i, gpointer data);
+void on_sm_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+				GtkTreeIter *i, gpointer data);
+void on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+				GtkTreeIter *i, gpointer data);
 void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				GtkTreeIter *i, gpointer data);
 guint sm_get_nr_of_songs(void);
@@ -160,6 +165,7 @@ GList* get_currently_selected_songids(void);
 GList* get_currently_selected_songs(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
+void sm_store_col_order (void);
 
 void stop_display_update (gint inst);
 #endif __TREE_H__
