@@ -489,7 +489,7 @@ gtkpod_main_quit(void)
 				   * songs! (otherwise non-existing
 				   *songs may be accessed) */
 	remove_all_songs ();
-	cleanup_display ();
+	display_cleanup ();
 	write_prefs (); /* FIXME: how can we avoid saving options set by
 			 * command line? */
 	gtk_main_quit ();
@@ -527,6 +527,50 @@ disable_gtkpod_import_buttons(void)
 	}
     }
 }
+
+
+/* Let the user select a sort tab number */
+/* @text: text to be displayed */
+/* return value: -1: user selected cancel 
+   0...prefs_get_sort_tab_number()-1: selected tab */
+gint get_sort_tab_number (gchar *text)
+{
+    GtkWidget *mdialog;
+    GtkDialog *dialog;
+    GtkWidget *combo;
+    gint result;
+    gint nr;
+
+    mdialog = gtk_message_dialog_new (
+	GTK_WINDOW (gtkpod_window),
+	GTK_DIALOG_DESTROY_WITH_PARENT,
+	GTK_MESSAGE_QUESTION,
+	GTK_BUTTONS_OK_CANCEL,
+	text);
+
+    dialog = GTK_DIALOG (mdialog);
+
+    combo = gtk_combo_new ();
+    gtk_widget_show (combo);
+    gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), combo);
+
+    result = gtk_dialog_run (GTK_DIALOG (mdialog));
+
+    if (result == GTK_RESPONSE_CANCEL)
+    {
+	nr = -1;  /* no selection */
+    }
+    else
+    {
+	nr = 0;
+    }
+
+    gtk_widget_destroy (mdialog);
+
+    return nr;
+}
+
+
 
 void
 gtkpod_statusbar_init(GtkWidget *sb)

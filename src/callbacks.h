@@ -109,6 +109,11 @@ void
 on_prefs_cancel_clicked                (GtkButton       *button,
                                         gpointer         user_data);
 
+
+void
+on_prefs_apply_clicked                 (GtkButton       *button,
+                                        gpointer         user_data);
+
 void
 on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
@@ -312,13 +317,65 @@ on_sort_tab_num_combo_entry_changed    (GtkEditable     *editable,
                                         gpointer         user_data);
 
 void
-on_prefs_apply_clicked                 (GtkButton       *button,
+on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_prefs_cancel_clicked                (GtkButton       *button,
+on_cfg_display_toolbar_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_prefs_ok_clicked                    (GtkButton       *button,
+on_more_sort_tabs_activate             (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_less_sort_tabs_activate             (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_cfg_toolbar_display_text_toggled    (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_toolbar_style_both_toggled      (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_toolbar_style_text_toggled      (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_toolbar_style_icons_toggled     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_alpha_playlists0_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alpha_sort_tab0_activate            (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alpha_songs0_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alpha_playlist1_activate            (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alpha_songs1_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_tab_entry_activate                  (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data);

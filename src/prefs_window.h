@@ -29,10 +29,11 @@
 
 void block_prefs_window (void);
 void release_prefs_window (void);
-void prefs_window_save(void);
-void prefs_window_create(void);
+void prefs_window_ok(void);
+void prefs_window_apply(void);
 void prefs_window_cancel(void);
-void prefs_window_save_quit(void);
+void prefs_window_create(void);
+void prefs_window_delete(void);
 void prefs_window_set_md5songs(gboolean val);
 void prefs_window_set_update_existing(gboolean val);
 void prefs_window_set_block_display(gboolean val);
@@ -51,6 +52,8 @@ void prefs_window_set_mpl_autoselect (gboolean autoselect);
 void prefs_window_set_show_duplicates (gboolean val);
 void prefs_window_set_show_updated (gboolean val);
 void prefs_window_set_show_non_updated (gboolean val);
+void prefs_window_set_display_toolbar (gboolean val);
+void prefs_window_set_toolbar_style (GtkToolbarStyle val);
 void prefs_window_set_save_sorted_order (gboolean val);
 void prefs_window_set_sort_tab_num (gint num);
 #endif

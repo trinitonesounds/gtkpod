@@ -1704,22 +1704,20 @@ gint st_data_compare_func (GtkTreeModel *model,
 
 
 /* Make the appropriate number of sort tab instances visible */
+/* Also: make the menu items "more/less sort tabs" active/inactive as
+ * needed */
 void st_show_visible (void)
 {
-    static gboolean active=FALSE;
     gint i,n;
+    GtkWidget *w;
 
-    if (!st_paned[0] || active)  return;
-
-    /* indicate that we are currently using this function (we get
-     * called again when we call prefs_set_sort_tab_num()... */
-    active = TRUE;
+    if (!st_paned[0])  return;
 
     /* first initialize (clear) all sorttabs */
     n = prefs_get_sort_tab_num ();
-    prefs_set_sort_tab_num (SORT_TAB_MAX);
+    prefs_set_sort_tab_num (SORT_TAB_MAX, FALSE);
     st_init (-1, 0);
-    prefs_set_sort_tab_num (n);
+    prefs_set_sort_tab_num (n, FALSE);
 
     /* set the visible elements */
     for (i=0; i<n; ++i)
@@ -1734,11 +1732,18 @@ void st_show_visible (void)
 	if (i < PANED_NUM_ST)	gtk_widget_hide (GTK_WIDGET (st_paned[i]));
     }
 
+    /* activate / deactiveate "less sort tabs" menu item */
+    w = lookup_widget (gtkpod_window, "less_sort_tabs");
+    if (n == 0) gtk_widget_set_sensitive (w, FALSE);
+    else        gtk_widget_set_sensitive (w, TRUE);
+
+    /* activate / deactiveate "more sort tabs" menu item */
+    w = lookup_widget (gtkpod_window, "more_sort_tabs");
+    if (n == SORT_TAB_MAX) gtk_widget_set_sensitive (w, FALSE);
+    else                   gtk_widget_set_sensitive (w, TRUE);
+
     /* redisplay */
     st_redisplay (0);
-
-    /* finished */
-    active = FALSE;
 }
 
 
@@ -2887,7 +2892,7 @@ static void sm_create_listview (void)
 }
 
 /* Create the different listviews to display the various information */
-void create_display (GtkWidget *gtkpod)
+void display_create (GtkWidget *gtkpod)
 {
     GtkWidget *stop_button;
 
@@ -2899,11 +2904,13 @@ void create_display (GtkWidget *gtkpod)
     /* Hide the "stop_button" */
     stop_button = lookup_widget (gtkpod_window, "stop_button");
     if (stop_button) gtk_widget_hide (stop_button);
+    /* Hide/Show the toolbar */
+    display_show_hide_toolbar ();
 }
 
 
 /* Clean up used memory (when quitting the program) */
-void cleanup_display (void)
+void display_cleanup (void)
 {
   cleanup_sort_tabs ();
 }
@@ -3067,6 +3074,27 @@ get_currently_selected_songs(void)
 					    &result);
     }
     return(result);
+}
+
+
+/* make the toolbar visible or hide it depending on the value set in
+   the prefs */
+void display_show_hide_toolbar (void)
+{
+    GtkWidget *tb = lookup_widget (gtkpod_window, "toolbar");
+    GtkWidget *mi = lookup_widget (gtkpod_window, "toolbar_menu");
+
+    if (prefs_get_display_toolbar ())
+    {
+	gtk_toolbar_set_style (GTK_TOOLBAR (tb), prefs_get_toolbar_style ());
+	gtk_widget_show (tb);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), TRUE);
+    }
+    else
+    {
+	gtk_widget_hide (tb);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), FALSE);
+    }
 }
 
 

@@ -55,6 +55,7 @@ void create_add_files_fileselector (void);
 void create_add_playlists_fileselector (void);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
 float get_ms_since (GTimeVal *old_time, gboolean update);
+gint get_sort_tab_number (gchar *text);
 void open_about_window (void);
 void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);

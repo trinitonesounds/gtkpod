@@ -34,6 +34,7 @@
 
 static GtkWidget *prefs_window = NULL;
 static struct cfg *tmpcfg = NULL;
+static struct cfg *origcfg = NULL;
 
 static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
 static void prefs_window_set_tag_autoset (gint category, gboolean autoset);
@@ -117,13 +118,15 @@ prefs_window_create(void)
     {
 	GtkWidget *w = NULL;
 	
-	if(!tmpcfg)
+	if(!tmpcfg && !origcfg)
 	{
 	    tmpcfg = clone_prefs();
+	    origcfg = clone_prefs();
 	}
 	else
 	{
 	    fprintf(stderr, "Programming error: tmpcfg is not NULL wtf !!\n");
+	    return;
 	}
 	prefs_window = create_new_prefs_window();
 	if((w = lookup_widget(prefs_window, "cfg_mount_point")))
@@ -161,6 +164,30 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_non_updated);
 	    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_display_toolbar")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->display_toolbar);
+	    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_toolbar_style_icons")))
+	{
+	    if (tmpcfg->toolbar_style == GTK_TOOLBAR_ICONS)
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+	    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_toolbar_style_text")))
+	{
+	    if (tmpcfg->toolbar_style == GTK_TOOLBAR_TEXT)
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+	    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_toolbar_style_both")))
+	{
+	    if (tmpcfg->toolbar_style == GTK_TOOLBAR_BOTH)
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+	    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_save_sorted_order")))
 	{
@@ -203,23 +230,28 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->autoimport);
 	}
-	for (i=0; i<SORT_TAB_MAX; ++i)
+	if((w = lookup_widget(prefs_window, "autoselect_hbox")))
 	{
-	    gchar *buf;
-	    buf = g_strdup_printf ("cfg_st_autoselect%d", i);
-	    if((w = lookup_widget(prefs_window,  buf)))
+	    for (i=0; i<SORT_TAB_MAX; ++i)
 	    {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+		gchar *buf;
+		GtkWidget *as;
+		gint padding;
+
+		buf = g_strdup_printf (_("%d"), i+1);
+		as = gtk_check_button_new_with_mnemonic (buf);
+		gtk_widget_show (as);
+		if (i==0) padding = 0;
+		else      padding = 5;
+		gtk_box_pack_start (GTK_BOX (w), as, FALSE, FALSE, padding);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(as),
 					     tmpcfg->st[i].autoselect);
-		/* glade makes a "GTK_OBJECT (i)" which segfaults
-		   because "i" is not a GTK object. So we have to set up
-		   the signal handlers ourselves */
-		g_signal_connect ((gpointer)w,
+		g_signal_connect ((gpointer)as,
 				  "toggled",
 				  G_CALLBACK (on_cfg_st_autoselect_toggled),
 				  (gpointer)i);
+		g_free (buf);
 	    }
-	    g_free (buf);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_mpl_autoselect")))
 	{
@@ -273,88 +305,160 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->write_extended_info);
 	}
+
+	if ((w = lookup_widget (prefs_window, "notebook")))
+	{
+	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
+					   prefs_get_last_prefs_page ());
+	}
+
 	set_sort_tab_num_combo ();
+
 	gtk_widget_show(prefs_window);
     }
 }
+
+
+/**
+ * save_gtkpod_prefs_window
+ * UI has requested preferences update(by clicking ok on the prefs window)
+ * Frees the tmpcfg variable
+ */
+static void 
+prefs_window_set(void)
+{
+    gint i;
+
+    if (tmpcfg)
+    {
+	prefs_set_id3_write(tmpcfg->id3_write);
+	prefs_set_id3_writeall(tmpcfg->id3_writeall);
+	prefs_set_mount_point(tmpcfg->ipod_mount);
+	prefs_set_charset(tmpcfg->charset);
+	prefs_set_auto_import(tmpcfg->autoimport);
+	for (i=0; i<SORT_TAB_MAX; ++i) {
+	    prefs_set_st_autoselect (i, tmpcfg->st[i].autoselect);
+	    prefs_set_st_category (i, tmpcfg->st[i].category);
+	}
+	for (i=0; i<SM_NUM_TAGS_PREFS; ++i) {
+	    prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
+	}
+	for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+	{
+	    prefs_set_col_visible (i, tmpcfg->col_visible[i]);
+	}
+	prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
+	prefs_set_song_playlist_deletion(tmpcfg->deletion.song);
+	prefs_set_song_ipod_file_deletion(tmpcfg->deletion.ipod_file);
+	prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
+	prefs_set_write_extended_info(tmpcfg->write_extended_info);
+	prefs_set_keep_backups(tmpcfg->keep_backups);
+	/* we delete all stored md5 checksums if the md5 checksumming got
+	   disabled */
+	if (prefs_get_md5songs() && !tmpcfg->md5songs)
+	    clear_md5_hash_from_songs ();
+	/* this call well automatically destroy/setup the md5 hash table */
+	prefs_set_md5songs(tmpcfg->md5songs);
+	prefs_set_update_existing(tmpcfg->update_existing);
+	prefs_set_block_display(tmpcfg->block_display);
+	prefs_set_sort_tab_num(tmpcfg->sort_tab_num, TRUE);
+	prefs_set_show_duplicates(tmpcfg->show_duplicates);
+	prefs_set_show_updated(tmpcfg->show_updated);
+	prefs_set_show_non_updated(tmpcfg->show_non_updated);
+	prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
+	prefs_set_toolbar_style(tmpcfg->toolbar_style);
+	prefs_set_display_toolbar(tmpcfg->display_toolbar);
+
+	sm_show_preferred_columns();
+    }
+}
+
+
 /**
  * cancel_gtk_prefs_window
- * UI has requested preference changes be ignored
- * Frees the tmpcfg variable
+ * UI has requested preference changes be ignored -- write back the
+ * original values
+ * Frees the tmpcfg and origcfg variable
  */
 void
 prefs_window_cancel(void)
 {
+    cfg_free (tmpcfg);
+    /* exchange tmpcfg for origcfg */
+    tmpcfg = origcfg;
+    origcfg = NULL;
+
+    /* "save" (i.e. reset) original configs */
+    prefs_window_set ();
+
+    /* delete cfg struct */
+    cfg_free (tmpcfg);
+    tmpcfg = NULL;
+
+    /* close the window */
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
-    cfg_free(tmpcfg);
-    tmpcfg =NULL;
     prefs_window = NULL;
 }
-/**
- * save_gtkpod_prefs_window
- * UI has requested preferences update(by clicking ok/update on the 
- * prefs window) Frees the tmpcfg variable
- */
-void 
-prefs_window_save(void)
+
+/* when window is deleted, we keep the currently applied prefs and
+   save the notebook page */
+void prefs_window_delete(void)
 {
-    gint i;
+    GtkWidget *nb;
 
-    prefs_set_id3_write(tmpcfg->id3_write);
-    prefs_set_id3_writeall(tmpcfg->id3_writeall);
-    prefs_set_mount_point(tmpcfg->ipod_mount);
-    prefs_set_charset(tmpcfg->charset);
-    prefs_set_auto_import(tmpcfg->autoimport);
-    for (i=0; i<SORT_TAB_MAX; ++i) {
-	prefs_set_st_autoselect (i, tmpcfg->st[i].autoselect);
-	prefs_set_st_category (i, tmpcfg->st[i].category);
-    }
-    for (i=0; i<SM_NUM_TAGS_PREFS; ++i) {
-	prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
-    }
-    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
-    {
-	prefs_set_col_visible (i, tmpcfg->col_visible[i]);
-    }
-    prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
-    prefs_set_song_playlist_deletion(tmpcfg->deletion.song);
-    prefs_set_song_ipod_file_deletion(tmpcfg->deletion.ipod_file);
-    prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
-    prefs_set_write_extended_info(tmpcfg->write_extended_info);
-    prefs_set_keep_backups(tmpcfg->keep_backups);
-    /* we delete all stored md5 checksums if the md5 checksumming got
-       disabled */
-    if (prefs_get_md5songs() && !tmpcfg->md5songs)
-	clear_md5_hash_from_songs ();
-    /* this call well automatically destroy/setup the md5 hash table */
-    prefs_set_md5songs(tmpcfg->md5songs);
-    prefs_set_update_existing(tmpcfg->update_existing);
-    prefs_set_block_display(tmpcfg->block_display);
-    prefs_set_sort_tab_num(tmpcfg->sort_tab_num);
-    prefs_set_show_duplicates(tmpcfg->show_duplicates);
-    prefs_set_show_updated(tmpcfg->show_updated);
-    prefs_set_show_non_updated(tmpcfg->show_non_updated);
-    prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
+    /* delete cfg structs */
+    cfg_free (tmpcfg);
+    tmpcfg = NULL;
+    cfg_free (origcfg);
+    origcfg = NULL;
 
-    sm_show_preferred_columns();
-    write_prefs();
+    /* save current notebook page */
+    nb = lookup_widget (prefs_window, "notebook");
+    prefs_set_last_prefs_page (gtk_notebook_get_current_page (
+				   GTK_NOTEBOOK (nb)));
+    /* close the window */
+    if(prefs_window)
+	gtk_widget_destroy(prefs_window);
+    prefs_window = NULL;
 }
 
-/**
- * prefs_window_save_quit - save preferences and close prefs window
- */
+/* apply the current settings and close the window */
+/* Frees the tmpcfg and origcfg variable */
 void
-prefs_window_save_quit(void)
+prefs_window_ok (void)
 {
-    prefs_window_save();
-    cfg_free(tmpcfg);
-    tmpcfg =NULL;
+    GtkWidget *nb;
 
+    /* save current settings */
+    prefs_window_set ();
+
+    /* delete cfg structs */
+    cfg_free (tmpcfg);
+    tmpcfg = NULL;
+    cfg_free (origcfg);
+    origcfg = NULL;
+
+    /* save current notebook page */
+    nb = lookup_widget (prefs_window, "notebook");
+    prefs_set_last_prefs_page (gtk_notebook_get_current_page (
+				   GTK_NOTEBOOK (nb)));
+    /* close the window */
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
 }
+
+
+/* apply the current settings, don't close the window */
+void
+prefs_window_apply (void)
+{
+    /* save current settings */
+    prefs_window_set ();
+}
+
+
 /**
  * prefs_window_set_md5songs
  * @val - truth value of whether or not we should use the md5 hash to
@@ -454,7 +558,7 @@ void prefs_window_set_charset (gchar *charset)
 
 void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
 {
-    if (inst < SORT_TAB_MAX)
+    if ((inst >= 0) && (inst < SORT_TAB_MAX))
     {
 	tmpcfg->st[inst].autoselect = autoselect;
     }
@@ -498,6 +602,19 @@ void prefs_window_set_show_non_updated (gboolean val)
     tmpcfg->show_non_updated = val;
 }
 
+void prefs_window_set_display_toolbar (gboolean val)
+{
+    GtkWidget *w1 = lookup_widget (prefs_window, "cfg_toolbar_style_icons");
+    GtkWidget *w2 = lookup_widget (prefs_window, "cfg_toolbar_style_text");
+    GtkWidget *w3 = lookup_widget (prefs_window, "cfg_toolbar_style_both");
+
+    tmpcfg->display_toolbar = val;
+
+    gtk_widget_set_sensitive (w1, val);
+    gtk_widget_set_sensitive (w2, val);
+    gtk_widget_set_sensitive (w3, val);
+}
+
 void prefs_window_set_save_sorted_order (gboolean val)
 {
     tmpcfg->save_sorted_order = val;
@@ -506,4 +623,9 @@ void prefs_window_set_save_sorted_order (gboolean val)
 void prefs_window_set_sort_tab_num (gint num)
 {
     tmpcfg->sort_tab_num = num;
+}
+
+void prefs_window_set_toolbar_style (GtkToolbarStyle style)
+{
+    tmpcfg->toolbar_style = style;
 }

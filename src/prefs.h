@@ -76,8 +76,11 @@ struct cfg
   gboolean show_updated;        /* show update notification ?*/
   gboolean show_non_updated;    /* show update notification ?*/
   gboolean save_sorted_order;   /* save order after sort automatically? */
+  gboolean display_toolbar;     /* should toolbar be displayed */
+  GtkToolbarStyle toolbar_style;/* style of toolbar */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
+  gint last_prefs_page;         /* last page selected in prefs window */
   gchar *xmms_path;
 };
 
@@ -157,9 +160,15 @@ gboolean prefs_get_show_updated (void);
 void prefs_set_show_updated (gboolean val);
 gboolean prefs_get_show_non_updated (void);
 void prefs_set_show_non_updated (gboolean val);
+gboolean prefs_get_display_toolbar (void);
+void prefs_set_display_toolbar (gboolean val);
 gboolean prefs_get_save_sorted_order (void);
 void prefs_set_save_sorted_order (gboolean val);
 gint prefs_get_sort_tab_num (void);
-void prefs_set_sort_tab_num (gint i);
+void prefs_set_sort_tab_num (gint i, gboolean update_display);
+GtkToolbarStyle prefs_get_toolbar_style (void);
+void prefs_set_toolbar_style (GtkToolbarStyle i);
+gint prefs_get_last_prefs_page (void);
+void prefs_set_last_prefs_page (gint i);
 void prefs_set_xmms_path(const gchar *xmms);
 #endif __PREFS_H__

@@ -70,7 +70,7 @@ main (int argc, char *argv[])
   srand(time(NULL));
   gtkpod_window = create_gtkpod ();
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
-  create_display (gtkpod_window);
+  display_create (gtkpod_window);
   create_mpl ();     /* needs at least the master playlist */
   if(prefs_get_auto_import())
       handle_import();

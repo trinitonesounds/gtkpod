@@ -136,8 +136,9 @@ enum {
 };
 
 
-void create_display (GtkWidget *gtkpod);
-void cleanup_display (void);
+void display_create (GtkWidget *gtkpod);
+void display_cleanup (void);
+void display_show_hide_toolbar (void);
 
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);

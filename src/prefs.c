@@ -171,8 +171,11 @@ struct cfg *cfg_new(void)
     mycfg->show_duplicates = TRUE;
     mycfg->show_updated = TRUE;
     mycfg->show_non_updated = TRUE;
+    mycfg->display_toolbar = TRUE;
+    mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->save_sorted_order = FALSE;
     mycfg->sort_tab_num = 2;
+    mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     mycfg->xmms_path = which("xmms");
     return(mycfg);
@@ -297,7 +300,15 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "sort_tab_num") == 0)
 	  {
-	      prefs_set_sort_tab_num(atoi(arg));
+	      prefs_set_sort_tab_num(atoi(arg), FALSE);
+	  }
+	  else if(g_ascii_strcasecmp (line, "toolbar_style") == 0)
+	  {
+	      prefs_set_toolbar_style(atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "last_prefs_page") == 0)
+	  {
+	      prefs_set_last_prefs_page(atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "backups") == 0)
 	  {
@@ -326,6 +337,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "show_non_updated") == 0)
 	  {
 	      prefs_set_show_non_updated((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "display_toolbar") == 0)
+	  {
+	      prefs_set_display_toolbar((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
@@ -519,6 +534,8 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
     }
     fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
+    fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
+    fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
@@ -527,6 +544,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "show_duplicates=%d\n",prefs_get_show_duplicates());
     fprintf(fp, "show_updated=%d\n",prefs_get_show_updated());
     fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
+    fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "save_sorted_order=%d\n",prefs_get_save_sorted_order());
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n"));
     fprintf(fp, _("#               confirmation non-scrolled, dirbrowser\n"));
@@ -1109,6 +1127,17 @@ void prefs_set_show_non_updated (gboolean val)
     cfg->show_non_updated = val;
 }
 
+gboolean prefs_get_display_toolbar (void)
+{
+    return cfg->display_toolbar;
+}
+
+void prefs_set_display_toolbar (gboolean val)
+{
+    cfg->display_toolbar = val;
+    display_show_hide_toolbar ();
+}
+
 gboolean prefs_get_save_sorted_order (void)
 {
     return cfg->save_sorted_order;
@@ -1124,17 +1153,53 @@ gint prefs_get_sort_tab_num (void)
     return cfg->sort_tab_num;
 }
 
-void prefs_set_sort_tab_num (gint i)
+void prefs_set_sort_tab_num (gint i, gboolean update_display)
 {
     if ((i>=0) && (i<=SORT_TAB_MAX))
     {
 	if (cfg->sort_tab_num != i)
 	{
 	    cfg->sort_tab_num = i;
-	    st_show_visible ();
+	    if (update_display) st_show_visible ();
 	}
     }
 }
+
+GtkToolbarStyle prefs_get_toolbar_style (void)
+{
+    return cfg->toolbar_style;
+}
+
+void prefs_set_toolbar_style (GtkToolbarStyle i)
+{
+    switch (i)
+    {
+    case GTK_TOOLBAR_ICONS:
+    case GTK_TOOLBAR_TEXT:
+    case GTK_TOOLBAR_BOTH:
+	break;
+    case GTK_TOOLBAR_BOTH_HORIZ:
+	i = GTK_TOOLBAR_BOTH;
+	break;
+    default:  /* illegal -- ignore */
+	printf (_("prefs_set_toolbar_style: illegal style '%d' ignored\n"), i);
+	return;
+    }
+
+    cfg->toolbar_style = i;
+    display_show_hide_toolbar ();
+}
+
+gint prefs_get_last_prefs_page (void)
+{
+    return cfg->last_prefs_page;
+}
+
+void prefs_set_last_prefs_page (gint i)
+{
+    cfg->last_prefs_page = i;
+}
+
 void prefs_set_xmms_path(const gchar *xmms)
 {
     if (g_file_test (xmms, G_FILE_TEST_IS_REGULAR) == TRUE)
