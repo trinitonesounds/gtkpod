@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 23:22:21 JST jcs>
+/* Time-stamp: <2004-03-25 22:33:40 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -450,9 +450,6 @@ void handle_import (void)
 
     gtkpod_tracks_statusbar_update();
 
-    /* run update of offline playcounts */
-    parse_offline_playcount ();
-
     if (n != get_nr_of_tracks ())
     { /* Import was successfull, block menu item and button */
 	display_disable_gtkpod_import_buttons();
@@ -461,6 +458,10 @@ void handle_import (void)
      * all duplicate tracks currently in the database */
     prefs_set_md5tracks (md5tracks);
     destroy_extendedinfohash (); /* delete hash information (if set up) */
+
+    /* run update of offline playcounts */
+    parse_offline_playcount ();
+
     release_widgets ();
     display_set_check_ipod_menu ();/* taking care about 'Check IPOD files'mi */
 }

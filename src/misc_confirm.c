@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 23:12:04 JST jcs>
+/* Time-stamp: <2004-03-25 22:27:16 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -624,14 +624,11 @@ void ipod_directories_head (gboolean modal)
 gboolean
 gtkpod_main_quit(void)
 {
-    GtkWidget *dialog;
     gint result = GTK_RESPONSE_YES;
-
-
 
     if (!files_are_saved ())
     {
-	dialog = gtk_message_dialog_new (
+	GtkWidget *dialog = gtk_message_dialog_new (
 	    GTK_WINDOW (gtkpod_window),
 	    GTK_DIALOG_DESTROY_WITH_PARENT,
 	    GTK_MESSAGE_WARNING,

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 23:20:23 JST jcs>
+/* Time-stamp: <2004-03-25 22:36:32 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1749,7 +1749,14 @@ gchar * resolve_path(const gchar *root,const gchar * const * components) {
 
    ------------------------------------------------------------ */
 
-
+/* Read the ~/.gtkpod/offline_playcount file and adjust the
+   playcounts. The tracks will first be matched by their md5 sum, if
+   that fails, by their filename.
+   If tracks could not be matched, the user will be queried whether to
+   forget about them or write them back into the offline_playcount
+   file. 
+   FIXME: confirmation is not nice -- two windows are opened, and the
+   contents of the "warning window" cannot be scrolled. */
 void parse_offline_playcount (void)
 {
     gchar *cfgdir = prefs_get_cfgdir ();
@@ -1759,8 +1766,9 @@ void parse_offline_playcount (void)
     if (g_file_test (offlplyc, G_FILE_TEST_EXISTS))
     {
 	FILE *file = fopen (offlplyc, "r+");
+	size_t len = 0;  /* how many bytes are written */
 	gchar *buf;
-	GString *gstr;
+	GString *gstr, *gstr_filenames;
 	if (!file)
 	{
 	    gtkpod_warning (_("Could not open '%s' for reading and writing.\n"),
@@ -1777,6 +1785,9 @@ void parse_offline_playcount (void)
 	}
 	buf = g_malloc (2*PATH_MAX);
 	gstr = g_string_sized_new (PATH_MAX);
+	/* not used yet -- but can be used for better confirmation
+	   dialog: */
+	gstr_filenames = g_string_sized_new (PATH_MAX);
 	while (fgets (buf, 2*PATH_MAX, file))
 	{
 	    gchar *buf_utf8 = charset_to_utf8 (buf);
@@ -1823,28 +1834,53 @@ void parse_offline_playcount (void)
 	    if (track_increase_playcount (md5, filename, 1) == FALSE)
 	    {   /* didn't find the track -> store */
 		gchar *filename_utf8 = charset_to_utf8 (filename);
-		g_string_append (gstr, buf);
-		/* FIXME: offer possibility to remove track from file */
-		gtkpod_warning (_("Couldn't find track '%s' for playcount adjustment . Adjustment deferred.\n"), filename_utf8);
+		if (gstr->len == 0)
+		{
+		    gtkpod_warning (_("Couldn't find track for playcount adjustment:\n"));
+		}
+		gtkpod_warning ("%s\n", filename_utf8);
+		g_string_append (gstr_filenames, filename_utf8);
+		g_string_append (gstr_filenames, "\n");
 		g_free (filename_utf8);
+		g_string_append (gstr, buf);
 	    }
 	  cont:
 	    g_free (buf_utf8);
 	    g_free (md5);
 	    g_free (filename);
 	}
+
+	/* rewind file pointer to beginning */
 	rewind (file);
 	if (gstr->len != 0)
 	{
-	    if (fwrite (gstr->str, sizeof (gchar), gstr->len, file) != gstr->len)
+	    gint result;
+	    GtkWidget *dialog;
+
+	    gtkpod_warning ("\n");
+
+	    dialog = gtk_message_dialog_new (
+		GTK_WINDOW (gtkpod_window),
+		GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_WARNING,
+		GTK_BUTTONS_YES_NO,
+		_("Some tracks played offline could not be found in the iTunesDB.\nOK to remove them from the offline playcount file?"));
+	    result = gtk_dialog_run (GTK_DIALOG (dialog));
+	    gtk_widget_destroy (dialog);
+
+	    if (result != GTK_RESPONSE_YES)
 	    {
-		gtkpod_warning (_("Error writing to '%s'.\n"), offlplyc);
+		len = fwrite (gstr->str, sizeof (gchar), gstr->len, file);
+		if (len != gstr->len)
+		{
+		    gtkpod_warning (_("Error writing to '%s'.\n"), offlplyc);
+		}
 	    }
 	}
-	/* truncate the offline_playcount file */
-	ftruncate (fileno (file), gstr->len);
+	ftruncate (fileno (file), len);
 	fclose (file);
 	g_string_free (gstr, TRUE);
+	g_string_free (gstr_filenames, TRUE);
 	g_free (buf);
     }
     g_free (cfgdir);
