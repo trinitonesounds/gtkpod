@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-07 00:12+0900\n"
+"POT-Creation-Date: 2004-12-11 15:31+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1102,7 +1102,7 @@ msgid "Unable to open '%s' for reading\n"
 msgstr ""
 
 #. create the dialog window
-#: src/file_export.c:365 src/file_itunesdb.c:818 src/tools.c:145
+#: src/file_export.c:365 src/file_itunesdb.c:822 src/tools.c:145
 msgid "Information"
 msgstr ""
 
@@ -1126,7 +1126,7 @@ msgid_plural "Copied %d of %d tracks."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/file_export.c:466 src/file_itunesdb.c:989 src/tools.c:304
+#: src/file_export.c:466 src/file_itunesdb.c:993 src/tools.c:304
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr ""
@@ -1243,46 +1243,46 @@ msgstr ""
 msgid "Import aborted.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:643
+#: src/file_itunesdb.c:647
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:655
+#: src/file_itunesdb.c:659
 msgid "Aborted writing of extended info.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:829
+#: src/file_itunesdb.c:833
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
 msgstr ""
 
-#: src/file_itunesdb.c:842
+#: src/file_itunesdb.c:846
 msgid "deleting..."
 msgstr ""
 
-#: src/file_itunesdb.c:909
+#: src/file_itunesdb.c:913
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr ""
 
 #. we now have as much space as we're gonna have, copy files to ipod
-#: src/file_itunesdb.c:915
+#: src/file_itunesdb.c:919
 msgid "preparing to copy..."
 msgstr ""
 
-#: src/file_itunesdb.c:972
+#: src/file_itunesdb.c:976
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/file_itunesdb.c:999
+#: src/file_itunesdb.c:1003
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr ""
 
-#: src/file_itunesdb.c:1051 src/misc_playlist.c:864
+#: src/file_itunesdb.c:1055 src/misc_playlist.c:864
 msgid ""
 "You did not import the existing iTunesDB. This is most likely incorrect and "
 "will result in the loss of the existing database.\n"
@@ -1292,34 +1292,34 @@ msgid ""
 "again.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:1077
+#: src/file_itunesdb.c:1081
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:1090
+#: src/file_itunesdb.c:1094
 msgid "Now writing iTunesDB. Please wait..."
 msgstr ""
 
-#: src/file_itunesdb.c:1116
+#: src/file_itunesdb.c:1120
 msgid "Error writing iTunesDB to iPod. Export aborted!"
 msgstr ""
 
-#: src/file_itunesdb.c:1124
+#: src/file_itunesdb.c:1128
 msgid "Extended information not written"
 msgstr ""
 
-#: src/file_itunesdb.c:1132
+#: src/file_itunesdb.c:1136
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr ""
 
-#: src/file_itunesdb.c:1140
+#: src/file_itunesdb.c:1144
 msgid "Syncing contacts and calendar..."
 msgstr ""
 
-#: src/file_itunesdb.c:1160
+#: src/file_itunesdb.c:1164
 msgid "iPod Database Saved"
 msgstr ""
 
@@ -3419,7 +3419,7 @@ msgid ""
 "the mp4v2 library.\n"
 msgstr ""
 
-#: src/playlist.c:1189
+#: src/playlist.c:1203
 #, c-format
 msgid "Added %d+ tracks to playlist '%s'"
 msgid_plural "Added %d+ tracks to playlist '%s'"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-07 00:12+0900\n"
+"POT-Creation-Date: 2004-12-11 15:31+0900\n"
 "PO-Revision-Date: 2004-12-06 21:40+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
@@ -1152,7 +1152,7 @@ msgid "Unable to open '%s' for reading\n"
 msgstr "Kann '%s' nicht zum Lesen öffnen.\n"
 
 #. create the dialog window
-#: src/file_export.c:365 src/file_itunesdb.c:818 src/tools.c:145
+#: src/file_export.c:365 src/file_itunesdb.c:822 src/tools.c:145
 msgid "Information"
 msgstr "Information"
 
@@ -1176,7 +1176,7 @@ msgid_plural "Copied %d of %d tracks."
 msgstr[0] "%d von insgesamt %d Stück kopiert."
 msgstr[1] "%d von insgesamt %d Stücken kopiert."
 
-#: src/file_export.c:466 src/file_itunesdb.c:989 src/tools.c:304
+#: src/file_export.c:466 src/file_itunesdb.c:993 src/tools.c:304
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (noch %d:%02d:%02d)"
@@ -1318,18 +1318,18 @@ msgstr "Das Einlesen der Offline-iPod-Datenbank schlug fehl"
 msgid "Import aborted.\n"
 msgstr "Einlesen abgebrochen\n"
 
-#: src/file_itunesdb.c:643
+#: src/file_itunesdb.c:647
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr ""
 "Datei '%s' konnte nicht zum Schreiben der erweiterten Infos geöffnet "
 "werden.\n"
 
-#: src/file_itunesdb.c:655
+#: src/file_itunesdb.c:659
 msgid "Aborted writing of extended info.\n"
 msgstr "Schreiben der erweiterten Infos abgebrochen.\n"
 
-#: src/file_itunesdb.c:829
+#: src/file_itunesdb.c:833
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
@@ -1337,33 +1337,33 @@ msgstr ""
 "Zum Abbrechen bitte anklicken.\n"
 "Der Export kann zu einem späteren Zeitpunkt fortgesetzt werden."
 
-#: src/file_itunesdb.c:842
+#: src/file_itunesdb.c:846
 msgid "deleting..."
 msgstr "Entferne gelöschte Tracks..."
 
-#: src/file_itunesdb.c:909
+#: src/file_itunesdb.c:913
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr ""
 "Einige Dateien konnten nicht vom iPod gelöscht werden. Export abgebrochen!"
 
 #. we now have as much space as we're gonna have, copy files to ipod
-#: src/file_itunesdb.c:915
+#: src/file_itunesdb.c:919
 msgid "preparing to copy..."
 msgstr "Vorbereitung zum Kopieren..."
 
-#: src/file_itunesdb.c:972
+#: src/file_itunesdb.c:976
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
 msgstr[0] "%d von insgesamt %d Stück kopiert."
 msgstr[1] "%d von insgesamt %d Stücken kopiert."
 
-#: src/file_itunesdb.c:999
+#: src/file_itunesdb.c:1003
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr ""
 "Einige Stücke wurden nicht auf den iPod übertragen. Export abgebrochen!"
 
-#: src/file_itunesdb.c:1051 src/misc_playlist.c:864
+#: src/file_itunesdb.c:1055 src/misc_playlist.c:864
 msgid ""
 "You did not import the existing iTunesDB. This is most likely incorrect and "
 "will result in the loss of the existing database.\n"
@@ -1380,7 +1380,7 @@ msgstr ""
 "'Abbrechen', um abzubrechen. Wenn Sie den Vorgang abbrechen, können Sie die "
 "existierende Datenbank einlesen, bevor Sie erneut abgleichen.\n"
 
-#: src/file_itunesdb.c:1077
+#: src/file_itunesdb.c:1081
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1388,28 +1388,28 @@ msgstr ""
 "Die iPod Verzeichnisstruktur muß vorhanden sein bevor Daten auf den iPod "
 "kopiert werden können.\n"
 
-#: src/file_itunesdb.c:1090
+#: src/file_itunesdb.c:1094
 msgid "Now writing iTunesDB. Please wait..."
 msgstr "Schreibe iTunesDB. Bitte warten..."
 
-#: src/file_itunesdb.c:1116
+#: src/file_itunesdb.c:1120
 msgid "Error writing iTunesDB to iPod. Export aborted!"
 msgstr "Fehler beim Schreiben der iTunesDB auf dem iPod. Export abgebrochen!"
 
-#: src/file_itunesdb.c:1124
+#: src/file_itunesdb.c:1128
 msgid "Extended information not written"
 msgstr "Erweiterte Informationen wurden nicht geschrieben"
 
-#: src/file_itunesdb.c:1132
+#: src/file_itunesdb.c:1136
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Die Datei mit den erweiterten Informationen wurde nicht gefunden: '%s'"
 
-#: src/file_itunesdb.c:1140
+#: src/file_itunesdb.c:1144
 msgid "Syncing contacts and calendar..."
 msgstr "Gleiche Kontakte und Kalender ab..."
 
-#: src/file_itunesdb.c:1160
+#: src/file_itunesdb.c:1164
 msgid "iPod Database Saved"
 msgstr "iPod Datenbank gespeichert"
 
@@ -3810,7 +3810,7 @@ msgstr ""
 "werden ohne die mp4v2 Bibliothek nicht unterstützt. Sie müssen gtkpod "
 "zusammen mit der mp4v2 Bibliothek übersetzen.\n"
 
-#: src/playlist.c:1189
+#: src/playlist.c:1203
 #, c-format
 msgid "Added %d+ tracks to playlist '%s'"
 msgid_plural "Added %d+ tracks to playlist '%s'"

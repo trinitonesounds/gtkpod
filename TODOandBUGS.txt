@@ -215,14 +215,28 @@ BUGLIST:
 
 
 ----------
-When moving column in track view
-
-(gtkpod:18557): Gtk-CRITICAL **: file gtktreeview.c: line 5641 (gtk_tree_view_drag_begin): assertion `path != NULL' failed
-
-(gtkpod:18557): Gdk-CRITICAL **: file gdkwindow-x11.c: line 1264 (gdk_window_hide): assertion `window != NULL' failed
-
-Then: segmentation fault.
-
+tamagucci at fastwebnet.it, gerald.miller at morris.com
+> Second, here's my story: 
+> I copied some mp3 files to a directory on ipod while at my windows PC at 
+> home because I like gtkpod better than the bundled windows software. I 
+> took my ipod to work and plugged it and ran gtkpod. 
+> 
+> I grabbed my files off the ipod and tried to import them into the iTunes 
+> database. When I was done, I unhooked my iPod and tried to listen to the 
+> songs... but it would just skip each one. 
+> 
+> I thought that maybe it didn't _really_ copy the mp3 into the iTunes 
+> database because it thought the songs were already on the iPod. To test, 
+> I copied the mp3s to my local hard drive and tried to sync again. 
+> Success! This time everything worked as it should. 
+> 
+> I do think I'm a couple of revisions behind on gtkpod, but I wanted to 
+> see if you were aware of this issue. 
+> 
+> Thanks for writing this software, 
+> and thanks for letting it be free, =) 
 
 Please add/report bugs as you find them (jcsjcs at users dot
 sourceforge dot net).
+
+

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-12-07 00:12+0900\n"
-"PO-Revision-Date: 2004-08-21 19:03+0200\n"
+"POT-Creation-Date: 2004-12-11 15:31+0900\n"
+"PO-Revision-Date: 2004-12-09 18:40+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
-"X-Generator: KBabel 1.9\n"
+"X-Generator: KBabel 1.10\n"
 
 #: src/callbacks.c:234
 #, c-format
@@ -37,6 +37,9 @@ msgid ""
 "would be useful, please contact the author.\n"
 "\n"
 msgstr ""
+"Den här typen av drag och släpp (%d) stöds inte (ännu). Om du anser att den "
+"vore användbart att implementera, kontakta gärna upphovsmannen.\n"
+"\n"
 
 #: src/callbacks.c:416 src/callbacks.c:460
 msgid "Preferences not updated"
@@ -361,9 +364,8 @@ msgid "Delete From iPod"
 msgstr "Ta bort från iPod"
 
 #: src/context_menus.c:358 src/context_menus.c:371
-#, fuzzy
 msgid "Edit Smart Playlist"
-msgstr "Tom spellista"
+msgstr "Redigera smart spellista"
 
 #: src/context_menus.c:365
 msgid "Delete But Keep Tracks"
@@ -502,11 +504,11 @@ msgstr "Taktslag per minut"
 
 #: src/display_songs.c:106 src/display_spl.c:90
 msgid "Kind"
-msgstr ""
+msgstr "Sort"
 
 #: src/display_songs.c:107 src/display_spl.c:104
 msgid "Grouping"
-msgstr ""
+msgstr "Gruppering"
 
 #: src/display_songs.c:116
 msgid "Track Nr. and total number of tracks on CD"
@@ -577,6 +579,10 @@ msgid ""
 "unsorted state.\n"
 "\n"
 msgstr ""
+"Kan inte göra spårvyn osorterad, beroende på ett fel i GTK-biblioteket du "
+"använder (%d.%d.%d < 2.5.4). Så snart du sorterat spårvyn kan du inte gå "
+"tillbaka till det osorterade tillståndet.\n"
+"\n"
 
 #: src/display_songs.c:1376
 msgid "#"
@@ -656,23 +662,23 @@ msgstr "Senast ändrad"
 
 #: src/display_spl.c:64
 msgid "days"
-msgstr ""
+msgstr "dagar"
 
 #: src/display_spl.c:65
 msgid "weeks"
-msgstr ""
+msgstr "veckor"
 
 #: src/display_spl.c:66
 msgid "months"
-msgstr ""
+msgstr "månader"
 
 #: src/display_spl.c:73
 msgid "kbps"
-msgstr ""
+msgstr "kbps"
 
 #: src/display_spl.c:74
 msgid "Hz"
-msgstr ""
+msgstr "Hz"
 
 #: src/display_spl.c:75 src/display_spl.c:160 src/info.c:605
 msgid "MB"
@@ -680,43 +686,39 @@ msgstr "Mibyte"
 
 #: src/display_spl.c:76
 msgid "secs"
-msgstr ""
+msgstr "sekunder"
 
 #: src/display_spl.c:91
-#, fuzzy
 msgid "Date modified"
-msgstr "Ändringstid"
+msgstr "Ändringsdatum"
 
 #: src/display_spl.c:92
 msgid "Track number"
-msgstr ""
+msgstr "Spårnummer"
 
 #: src/display_spl.c:93
-#, fuzzy
 msgid "Size"
-msgstr "Filstorlek"
+msgstr "Storlek"
 
 #: src/display_spl.c:95
 msgid "Comment"
-msgstr ""
+msgstr "Kommentar"
 
 #: src/display_spl.c:96
 msgid "Date added"
-msgstr ""
+msgstr "Tillagd datum"
 
 #: src/display_spl.c:99
-#, fuzzy
 msgid "Last played"
 msgstr "Senast spelad"
 
 #: src/display_spl.c:100
 msgid "Disc number"
-msgstr ""
+msgstr "Skivnummer"
 
 #: src/display_spl.c:102
-#, fuzzy
 msgid "Compilation"
-msgstr "Information"
+msgstr "Samling"
 
 #: src/display_spl.c:105 src/interface.c:796 src/itunesdb.c:920
 msgid "Playlist"
@@ -724,159 +726,145 @@ msgstr "Spellista"
 
 #: src/display_spl.c:111
 msgid "contains"
-msgstr ""
+msgstr "innehåller"
 
 #: src/display_spl.c:112
 msgid "does not contain"
-msgstr ""
+msgstr "innehåller inte"
 
 #: src/display_spl.c:113 src/display_spl.c:122 src/display_spl.c:132
 #: src/display_spl.c:151
-#, fuzzy
 msgid "is"
-msgstr "Diverse"
+msgstr "är"
 
 #: src/display_spl.c:114 src/display_spl.c:123 src/display_spl.c:133
 #: src/display_spl.c:152
 msgid "is not"
-msgstr ""
+msgstr "är inte"
 
 #: src/display_spl.c:115
 msgid "starts with"
-msgstr ""
+msgstr "börjar med"
 
 #: src/display_spl.c:116
 msgid "ends with"
-msgstr ""
+msgstr "slutar med"
 
 #: src/display_spl.c:124
 msgid "is greater than"
-msgstr ""
+msgstr "är större än"
 
 #: src/display_spl.c:125
 msgid "is less than"
-msgstr ""
+msgstr "är mindre än"
 
 #: src/display_spl.c:126 src/display_spl.c:138
 msgid "is in the range"
-msgstr ""
+msgstr "är i intervallet"
 
 #: src/display_spl.c:134
 msgid "is after"
-msgstr ""
+msgstr "är efter"
 
 #: src/display_spl.c:135
 msgid "is before"
-msgstr ""
+msgstr "är före"
 
 #: src/display_spl.c:136
 msgid "in the last"
-msgstr ""
+msgstr "i sista"
 
 #: src/display_spl.c:137
 msgid "not in the last"
-msgstr ""
+msgstr "inte i sista"
 
 #: src/display_spl.c:144
 msgid "is set"
-msgstr ""
+msgstr "är satt"
 
 #: src/display_spl.c:145
 msgid "is not set"
-msgstr ""
+msgstr "är inte satt"
 
 #: src/display_spl.c:159
 msgid "minutes"
-msgstr ""
+msgstr "minuter"
 
 #: src/display_spl.c:161
-#, fuzzy
 msgid "tracks"
-msgstr "Spår"
+msgstr "spår"
 
 #: src/display_spl.c:162
 msgid "hours"
-msgstr ""
+msgstr "timmar"
 
 #: src/display_spl.c:163 src/info.c:605
 msgid "GB"
 msgstr "Gibyte"
 
 #: src/display_spl.c:170
-#, fuzzy
 msgid "random order"
-msgstr "Slumpmässig (%d)"
+msgstr "slumpmässig ordning"
 
 #: src/display_spl.c:171
-#, fuzzy
 msgid "title"
-msgstr "Titel"
+msgstr "titel"
 
 #: src/display_spl.c:172
-#, fuzzy
 msgid "album"
-msgstr "Album"
+msgstr "album"
 
 #: src/display_spl.c:173
-#, fuzzy
 msgid "artist"
-msgstr "Artist"
+msgstr "artist"
 
 #: src/display_spl.c:174
-#, fuzzy
 msgid "genre"
-msgstr "Genre"
+msgstr "genre"
 
 #: src/display_spl.c:175
-#, fuzzy
 msgid "most recently added"
-msgstr "Spår som nyligen spelats"
+msgstr "senast tillagd"
 
 #: src/display_spl.c:176
 msgid "least recently added"
-msgstr ""
+msgstr "tidigast tillagd"
 
 #: src/display_spl.c:177
-#, fuzzy
 msgid "most often played"
-msgstr "Spelningstid"
+msgstr "mest spelad"
 
 #: src/display_spl.c:178
-#, fuzzy
 msgid "least often played"
-msgstr "Senast spelad"
+msgstr "minst spelad"
 
 #: src/display_spl.c:179
-#, fuzzy
 msgid "most recently played"
-msgstr "Spår som nyligen spelats"
+msgstr "senast spelad"
 
 #: src/display_spl.c:180
-#, fuzzy
 msgid "least recently played"
-msgstr "Spår som nyligen spelats"
+msgstr "tidigast spelad"
 
 #: src/display_spl.c:181
 msgid "highest rating"
-msgstr ""
+msgstr "högst betyg"
 
 #: src/display_spl.c:182
-#, fuzzy
 msgid "lowest rating"
-msgstr "Sortera"
+msgstr "lägst betyg"
 
 #: src/display_spl.c:960 src/display_spl.c:975
-#, fuzzy
 msgid "to"
-msgstr "Stoppa"
+msgstr "till"
 
 #: src/display_spl.c:1182
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: src/display_spl.c:1189
 msgid "+"
-msgstr ""
+msgstr "+"
 
 #: src/display_spl.c:1389 src/misc_playlist.c:60 src/misc_playlist.c:62
 #: src/misc_playlist.c:82 src/misc_playlist.c:84 src/misc_playlist.c:405
@@ -890,26 +878,24 @@ msgid "Unknown token '%s' in template '%s'\n"
 msgstr "Okänd beteckning '%s' i mallen '%s'\n"
 
 #: src/file.c:686
-#, fuzzy, c-format
+#, c-format
 msgid "Local filename not valid (%s)"
-msgstr ""
-"Inget giltigt filnamn för: %s\n"
-"\n"
+msgstr "Lokalt filnamn inte giltigt (%s)"
 
 #: src/file.c:739
 #, c-format
 msgid "No information found for user '%s' in '%s'"
-msgstr ""
+msgstr "Ingen information hittades för användaren '%s' i '%s'"
 
 #: src/file.c:746
 #, c-format
 msgid "mserv data file (%s) not available for track (%s)"
-msgstr ""
+msgstr "Datafilen från mserv (%s) är inte tillgänglig för spåret (%s)"
 
 #: src/file.c:754
 #, c-format
 msgid "Track (%s) not in mserv music root directory (%s)"
-msgstr ""
+msgstr "Spåret (%s) finns inte i mserv rotkatalog för musik (%s)"
 
 #: src/file.c:893 src/file.c:935
 msgid "Nothing to update"
@@ -927,7 +913,7 @@ msgstr "Uppdaterar markerade spår med information från fil."
 #: src/file.c:944
 #, c-format
 msgid "Retrieving mserv data %s"
-msgstr ""
+msgstr "Hämtar data från mserv %s"
 
 #. no path available
 #: src/file.c:950 src/file.c:1530
@@ -935,9 +921,8 @@ msgid "no filename available"
 msgstr "inget filnamn tillgängligt"
 
 #: src/file.c:955
-#, fuzzy
 msgid "Updated selected tracks with data from mserv."
-msgstr "Uppdaterar markerade spår med information från fil."
+msgstr "Uppdaterar markerade spår med data från mserv."
 
 #: src/file.c:1015
 #, c-format
@@ -1044,14 +1029,14 @@ msgstr "Uppdatering av spår lyckades"
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
 "No mserv information could be retrieved for the following %d tracks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ingen information kunde hämtas från mserv för följande spår"
+msgstr[1] "Ingen information kunde hämtas från mserv för följande %d spår"
 
 #. gint id,
 #. gboolean modal,
 #: src/file.c:1439
 msgid "mserv data retrieval problem"
-msgstr ""
+msgstr "Problem att hämta data från mserv"
 
 #: src/file.c:1575
 msgid "file not found"
@@ -1137,7 +1122,7 @@ msgid "Unable to open '%s' for reading\n"
 msgstr "Kan inte öppna '%s' för läsning.\n"
 
 #. create the dialog window
-#: src/file_export.c:365 src/file_itunesdb.c:818 src/tools.c:145
+#: src/file_export.c:365 src/file_itunesdb.c:822 src/tools.c:145
 msgid "Information"
 msgstr "Information"
 
@@ -1161,7 +1146,7 @@ msgid_plural "Copied %d of %d tracks."
 msgstr[0] "Kopierade %d av %d spår."
 msgstr[1] "Kopierade %d av %d spår."
 
-#: src/file_export.c:466 src/file_itunesdb.c:989 src/tools.c:304
+#: src/file_export.c:466 src/file_itunesdb.c:993 src/tools.c:304
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d:%02d kvar)"
@@ -1205,7 +1190,7 @@ msgstr "Kunde inte öppna \"iTunesDB.ext\" för att läsa utökad information.\n
 
 #: src/file_itunesdb.c:229
 msgid "Could not create hash value from itunesdb\n"
-msgstr ""
+msgstr "Kunde inte skapa checksumma från itunesdb\n"
 
 #: src/file_itunesdb.c:243
 #, c-format
@@ -1301,16 +1286,16 @@ msgstr "Import av nerkopplad iPod-databas misslyckades"
 msgid "Import aborted.\n"
 msgstr "Import avbruten.\n"
 
-#: src/file_itunesdb.c:643
+#: src/file_itunesdb.c:647
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "Kunde inte öppna \"%s\" för att skriva utökad information.\n"
 
-#: src/file_itunesdb.c:655
+#: src/file_itunesdb.c:659
 msgid "Aborted writing of extended info.\n"
 msgstr "Avbröt skrivning av utökad information.\n"
 
-#: src/file_itunesdb.c:829
+#: src/file_itunesdb.c:833
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
@@ -1318,32 +1303,31 @@ msgstr ""
 "Tryck på knappen för att avbryta.\n"
 "Exporten kan fortsättas vid ett senare tillfälle."
 
-#: src/file_itunesdb.c:842
+#: src/file_itunesdb.c:846
 msgid "deleting..."
 msgstr "tar bort..."
 
-#: src/file_itunesdb.c:909
+#: src/file_itunesdb.c:913
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "Vissa spår kunde inte tas bort från iPod. Export avbruten."
 
 #. we now have as much space as we're gonna have, copy files to ipod
-#: src/file_itunesdb.c:915
+#: src/file_itunesdb.c:919
 msgid "preparing to copy..."
 msgstr "förbereder kopiering..."
 
-#: src/file_itunesdb.c:972
+#: src/file_itunesdb.c:976
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
 msgstr[0] "Kopierade %d av %d nya spår."
 msgstr[1] "Kopierade %d av %d nya spår."
 
-#: src/file_itunesdb.c:999
+#: src/file_itunesdb.c:1003
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Vissa spår skrevs inte till iPod. Export avbruten."
 
-#: src/file_itunesdb.c:1051 src/misc_playlist.c:864
-#, fuzzy
+#: src/file_itunesdb.c:1055 src/misc_playlist.c:864
 msgid ""
 "You did not import the existing iTunesDB. This is most likely incorrect and "
 "will result in the loss of the existing database.\n"
@@ -1356,9 +1340,10 @@ msgstr ""
 "och orsakar förlust av den befintliga databasen.\n"
 "\n"
 "Klicka på 'Ok' om du vill fortsätta ändå eller 'Avbryt' för att avbryta. Om "
-"du avbryter, kan du importera befintlig databas innan du exporterar igen.\n"
+"du avbryter, kan du importera befintlig databas innan du använder den här "
+"funktionen igen.\n"
 
-#: src/file_itunesdb.c:1077
+#: src/file_itunesdb.c:1081
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1366,28 +1351,28 @@ msgstr ""
 "Katalogstrukturen i iPod måste finnas innan synkronisering av iPod kan "
 "utföras.\n"
 
-#: src/file_itunesdb.c:1090
+#: src/file_itunesdb.c:1094
 msgid "Now writing iTunesDB. Please wait..."
 msgstr "Skriver nu iTunes databas. Vänta..."
 
-#: src/file_itunesdb.c:1116
+#: src/file_itunesdb.c:1120
 msgid "Error writing iTunesDB to iPod. Export aborted!"
 msgstr "Fel vid skrivning av iTunes databas till iPod. Export avbruten."
 
-#: src/file_itunesdb.c:1124
+#: src/file_itunesdb.c:1128
 msgid "Extended information not written"
 msgstr "Utökad information skrevs inte"
 
-#: src/file_itunesdb.c:1132
+#: src/file_itunesdb.c:1136
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Filen med utökad information inte borttagen: '%s'"
 
-#: src/file_itunesdb.c:1140
+#: src/file_itunesdb.c:1144
 msgid "Syncing contacts and calendar..."
 msgstr "Synkronisera kontakter och kalender..."
 
-#: src/file_itunesdb.c:1160
+#: src/file_itunesdb.c:1164
 msgid "iPod Database Saved"
 msgstr "iPod-databas sparad"
 
@@ -1543,9 +1528,8 @@ msgid "Selected _Tracks"
 msgstr "Markerade s_pår"
 
 #: src/interface.c:291
-#, fuzzy
 msgid "Update _mserv Data from File"
-msgstr "_Uppdatera spår från fil"
+msgstr "Uppdatera _mserv data från fil"
 
 #: src/interface.c:314
 msgid "_Synchronize Directories"
@@ -1592,9 +1576,8 @@ msgid "Empty Playlist"
 msgstr "Tom spellista"
 
 #: src/interface.c:446 src/interface.c:5354 src/misc_playlist.c:85
-#, fuzzy
 msgid "Smart Playlist"
-msgstr "Tom spellista"
+msgstr "Smart spellista"
 
 #: src/interface.c:450
 msgid "Random Playlist from Displayed Tracks"
@@ -1629,9 +1612,8 @@ msgid "One for each Year"
 msgstr "En för varje år"
 
 #: src/interface.c:482
-#, fuzzy
 msgid "One for each Rating"
-msgstr "En för varje artist"
+msgstr "En för varje betyg"
 
 #: src/interface.c:486
 msgid "Best Rated Tracks"
@@ -2028,19 +2010,19 @@ msgstr "Taggläsning"
 
 #: src/interface.c:1906
 msgid "Use mserv database to fill in additional information"
-msgstr ""
+msgstr "Använd mserv databas för att fylla i ytterligare information"
 
 #: src/interface.c:1909 src/interface.c:1978
 msgid "Currently only rating is supported."
-msgstr ""
+msgstr "För närvarande stöds bara ett betyg"
 
 #: src/interface.c:1915
 msgid "Music Root: "
-msgstr ""
+msgstr "Musikrot: "
 
 #: src/interface.c:1927
 msgid "mserv database lookup will be done for music in this directory."
-msgstr ""
+msgstr "Uppslagning av musik för mserv databasen görs i den här katalogen."
 
 #: src/interface.c:1929 src/interface.c:1949 src/interface.c:2534
 #: src/interface.c:2554 src/interface.c:2589 src/interface.c:2633
@@ -2050,28 +2032,27 @@ msgstr "..."
 
 #: src/interface.c:1935
 msgid "mserv Root: "
-msgstr ""
+msgstr "Rot för mserv: "
 
 #: src/interface.c:1947
 msgid "Root directory of mserv database (trackinfo root)."
-msgstr ""
+msgstr "Rotkatalog för mserv databasen (rot för spårinformation)."
 
 #: src/interface.c:1955
 msgid "Username: "
-msgstr ""
+msgstr "Användarnamn: "
 
 #: src/interface.c:1967
 msgid "Username to be used for mserv database lookup."
-msgstr ""
+msgstr "Användarnamn att använda vid uppslagning i mserv databasen."
 
 #: src/interface.c:1973
 msgid "Show information about problems when accessing mserv"
-msgstr ""
+msgstr "Visa information om problem vid använding av mserv"
 
 #: src/interface.c:1980
-#, fuzzy
 msgid "mserv"
-msgstr "Kompositör"
+msgstr "mserv"
 
 #: src/interface.c:1994
 msgid ""
@@ -2176,12 +2157,11 @@ msgid "Sorting"
 msgstr "Sortera"
 
 #: src/interface.c:2332
-#, fuzzy
 msgid ""
 "Temporarily disable sorting when changing playlist\n"
 "or tab entry (faster!)"
 msgstr ""
-"Blockera skärmen när spellistor\n"
+"Inaktivera sortering tillfälligt när spellistor\n"
 "eller flikar ändras (snabbare)"
 
 #: src/interface.c:2335
@@ -2189,6 +2169,9 @@ msgid ""
 "It is much faster to sort the display after all tracks have been added. Some "
 "people might feel irritated by this behaviour and should uncheck this option."
 msgstr ""
+"Det går mycket snabbare att sortera skärmen efter alla spår har lagts till. "
+"Några personer kanske känner sig irriterade av detta beteende, och kan då "
+"avmarkera alternativet."
 
 #: src/interface.c:2337
 msgid ""
@@ -2199,14 +2182,14 @@ msgstr ""
 "eller flikar ändras (snabbare)"
 
 #: src/interface.c:2340
-#, fuzzy
 msgid ""
 "The display can be blocked after changing a selection. The display update is "
 "faster, but you have to wait until it's finished. When using this option, "
 "sorting is also temporarily disabled (see option above)."
 msgstr ""
 "Skärmen kan blockeras efter en markering ändrats. Skärmuppdateringen blir "
-"snabbare, men du måste vänta till den är klar."
+"snabbare, men du måste vänta till den är klar. När du använder det här "
+"alternativet är sortering också tillfälligt avstängd (se alternativet ovan)."
 
 #: src/interface.c:2342
 msgid "Misc"
@@ -2856,49 +2839,46 @@ msgstr ""
 "snabbt synkronisera innehållet i iPod."
 
 #: src/interface.c:5374
-#, fuzzy
 msgid "Playlist name:"
-msgstr "Typ av spellista:"
+msgstr "Spellistans namn:"
 
 #: src/interface.c:5390
 msgid "Match al_l of the following"
-msgstr ""
+msgstr "Matcha a_lla följande"
 
 #: src/interface.c:5396
 msgid "Match an_y of the following"
-msgstr ""
+msgstr "Matcha _någon av följande"
 
 #: src/interface.c:5402
 msgid "_Ignore rules"
-msgstr ""
+msgstr "_Ignorera regler"
 
 #: src/interface.c:5418
-#, fuzzy
 msgid "Rules"
-msgstr "Filer"
+msgstr "Regler"
 
 #: src/interface.c:5429
 msgid "_Limit to"
-msgstr ""
+msgstr "_Begränsa till"
 
 #: src/interface.c:5443
-#, fuzzy
 msgid "   Sort by:"
-msgstr "Sorteringsflik: "
+msgstr "   Sortera enligt:"
 
 #: src/interface.c:5455
 msgid "Match only _checked tracks"
-msgstr ""
+msgstr "Matcha bara _kryssmarkerade spår"
 
 #: src/interface.c:5463
 msgid "Live _updating"
-msgstr ""
+msgstr "_Uppdatering under tiden"
 
 #. New action!
 #: src/itunesdb.c:413
 #, c-format
 msgid "Unknown action (%d) in smart playlist will be ignored.\n"
-msgstr ""
+msgstr "Okänd åtgärd (%d) i smart spellista kommer att ignoreras.\n"
 
 #: src/itunesdb.c:754
 #, c-format
@@ -2906,6 +2886,8 @@ msgid ""
 "Length of smart playlist rule field (%d) not as expected. Trying to continue "
 "anyhow.\n"
 msgstr ""
+"Regelfältets längd (%d) i den smarta spellistan är inte den förväntade. "
+"Försöker fortsätta ändå.\n"
 
 #: src/itunesdb.c:789
 #, c-format
@@ -2913,6 +2895,9 @@ msgid ""
 "Encountered unknown MHOD type (%d) while parsing the iTunesDB. Ignoring.\n"
 "\n"
 msgstr ""
+"Stötte på okänd MHOD-typ (%d) under tolkning av iTunes databas. Ignorerar "
+"den.\n"
+"\n"
 
 #: src/itunesdb.c:918
 msgid "Master-PL"
@@ -2985,9 +2970,9 @@ msgid "Hashed file is 0 bytes long\n"
 msgstr "Filen med checksumma har storleken 0 byte\n"
 
 #: src/md5.c:211
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open '%s' to calculate MD5 checksum: %s\n"
-msgstr "Kunde inte öppna '%s' för att beräkna MD5-checksumma.\n"
+msgstr "Kunde inte öppna '%s' för att beräkna MD5-checksumma: %s\n"
 
 #: src/misc.c:67
 #, c-format
@@ -3161,17 +3146,19 @@ msgstr ""
 #. J"urgen!
 #: src/misc.c:123
 msgid "Flavio Stanchina: bugfixes\n"
-msgstr ""
+msgstr "Flavio Stanchina: felrättningar\n"
 
 #: src/misc.c:125
 msgid ""
 "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
 "the title\n"
 msgstr ""
+"Chris Micacchi: ignorera 'the' och liknande i titelns början vid sortering\n"
 
 #: src/misc.c:127
 msgid "Steve Jay: use statvfs() instead of df (better portability, faster)\n"
 msgstr ""
+"Steve Jay: använd statvfs() istället för df (bättre flyttbarhet, snabbare)\n"
 
 #: src/misc.c:130
 msgid ""
@@ -3200,6 +3187,8 @@ msgid ""
 "    iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
 "code for smart playlists is based on his C++-classes.\n"
 msgstr ""
+"    iPod.cpp, iPod.h av Samuel Wood (sam punkt wood snabela gmail punkt "
+"com): viss kod för smarta spellistor är baserad på hans C++ klasser.\n"
 
 #: src/misc.c:140
 msgid "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
@@ -3250,7 +3239,7 @@ msgstr ""
 
 #: src/misc.c:170
 msgid "Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"
-msgstr ""
+msgstr "Svenska: Stefan Asserhäll (stefan asserhall snabela comhem punkt se)\n"
 
 #: src/misc.c:266
 #, c-format
@@ -3513,6 +3502,8 @@ msgid ""
 "Auto Store of track view disabled.\n"
 "\n"
 msgstr ""
+"Automatisk lagring av spårvy inaktiverad.\n"
+"\n"
 
 #: src/misc_playlist.c:340
 msgid "Not Listed"
@@ -3735,7 +3726,7 @@ msgstr ""
 "inte utan biblioteket mp4v2. Du måste kompilera källkoden för gtkpod "
 "tillsammans med biblioteket mp4v2.\n"
 
-#: src/playlist.c:1189
+#: src/playlist.c:1203
 #, c-format
 msgid "Added %d+ tracks to playlist '%s'"
 msgid_plural "Added %d+ tracks to playlist '%s'"
@@ -3915,14 +3906,12 @@ msgid "Please select command to sync calendar"
 msgstr "Välj kommando för att synkronisera kalender"
 
 #: src/prefs_window.c:91
-#, fuzzy
 msgid "Select the mserv music root directory"
-msgstr "Välj målkatalog för export"
+msgstr "Välj mserv rotkatalog för musik"
 
 #: src/prefs_window.c:92
-#, fuzzy
 msgid "Select the mserv trackinfo root directory"
-msgstr "Välj målkatalog för export"
+msgstr "Välj mserv rotkatalog för spårinformation"
 
 #: src/prefs_window.c:706
 #, c-format
@@ -4057,19 +4046,3 @@ msgstr "Kunde inte öppna '%s' för läsning.\n"
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s verkar inte vara en wav-fil som stöds.\n"
-
-#~ msgid " Format for time display:"
-#~ msgstr " Format för tidsvisning:"
-
-#~ msgid ""
-#~ "For a full description of options please see 'man 3 strftime'. Default "
-#~ "is: '%k:%M %d %b %g'."
-#~ msgstr ""
-#~ "Se 'man 3 strftime' för en fullständig beskrivning av väljare. Förval är "
-#~ "'%k:%M %d %b %g'."
-
-#~ msgid "prefs_set_st_sort: illegal type '%d' ignored\n"
-#~ msgstr "prefs_set_st_sort: felaktig typ '%d' ignoreras\n"
-
-#~ msgid "prefs_set_tm_sort: illegal type '%d' ignored\n"
-#~ msgstr "prefs_set_tm_sort: felaktig typ '%d' ignoreras\n"

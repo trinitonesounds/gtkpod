@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-06 23:29:22 jcs>
+/* Time-stamp: <2004-12-14 00:43:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -687,7 +687,7 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
 
     mpl = get_playlist_by_nr (0);  /* contains all tracks */
 
-    spl_populate (spl_orig, mpl->members);
+    spl_update (spl_orig, mpl->members);
 
     if (pm_get_selected_playlist () == spl_orig)
     {   /* redisplay */
@@ -928,7 +928,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
     spl_orig =  g_object_get_data (G_OBJECT (spl_window), "spl_orig");
     g_return_val_if_fail (spl_orig, NULL);
 
-    at = itunesdb_spl_get_action_type (splr->field, splr->action);
+    at = itb_splr_get_action_type (splr);
     g_return_val_if_fail (at != splat_unknown, NULL);
     g_return_val_if_fail (at != splat_invalid, NULL);
 
@@ -947,7 +947,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	index = comboentry_index_from_id (splfield_units, splr->field);
 	if (index != -1)
 	{
-	    label = gtk_label_new (splfield_units[index].str);
+	    label = gtk_label_new (_(splfield_units[index].str));
 	    gtk_widget_show (label);
 	    gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 	}
@@ -965,7 +965,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	index = comboentry_index_from_id (splfield_units, splr->field);
 	if (index != -1)
 	{
-	    label = gtk_label_new (splfield_units[index].str);
+	    label = gtk_label_new (_(splfield_units[index].str));
 	    gtk_widget_show (label);
 	    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	}
@@ -980,7 +980,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	index = comboentry_index_from_id (splfield_units, splr->field);
 	if (index != -1)
 	{
-	    label = gtk_label_new (splfield_units[index].str);
+	    label = gtk_label_new (_(splfield_units[index].str));
 	    gtk_widget_show (label);
 	    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	}
@@ -1092,7 +1092,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 
     /* Combobox for action */
     /* ------------------- */
-    ft = itunesdb_spl_get_field_type (splr->field);
+    ft = itb_splr_get_field_type (splr);
     g_return_if_fail (ft != splft_unknown);
     snprintf (name, WNLEN, "spl_actioncombo%d", row);
     combobox = g_object_get_data (G_OBJECT (table), name);
@@ -1152,7 +1152,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 
     /* input fields (range, string, date...) */
     /* ------------------------------------- */
-    at = itunesdb_spl_get_action_type (splr->field, splr->action);
+    at = itb_splr_get_action_type (splr);
     g_return_if_fail (at != splat_unknown);
     g_return_if_fail (at != splat_invalid);
     snprintf (name, WNLEN, "spl_actionhbox%d", row);

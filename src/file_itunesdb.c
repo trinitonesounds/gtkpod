@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-19 00:02:23 jcs>
+/* Time-stamp: <2004-12-07 10:39:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -502,7 +502,11 @@ void handle_import (void)
     /* run update of offline playcounts */
     parse_offline_playcount ();
 
-    display_set_check_ipod_menu ();/* taking care about 'Check IPOD files'mi */
+    /* Update all smart playlists */
+    spl_update_all ();
+
+    /* taking care about 'Check IPOD files'mi */
+    display_set_check_ipod_menu ();
 
     space_data_update ();          /* update space display */
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-07 00:12:04 jcs>
+/* Time-stamp: <2004-12-14 00:21:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -334,9 +334,8 @@ void itunesdb_rename_files (const gchar *dirname);
 gboolean itunesdb_copy_track_to_ipod (const gchar *path, Track *track,
 				      const gchar *pcfile);
 /* smart playlist functions */
-SPLFieldType itunesdb_spl_get_field_type (const SPLField field);
-SPLActionType itunesdb_spl_get_action_type (const SPLField field,
-					    const SPLAction action);
+SPLFieldType itb_splr_get_field_type (const SPLRule *splr);
+SPLActionType itb_splr_get_action_type (const SPLRule *splr);
 
 gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s);
 gboolean itunesdb_cp (const gchar *from_file, const gchar *to_file);
@@ -346,4 +345,6 @@ void itunesdb_convert_filename_ipod2fs (gchar *ipod_file);
 Track *itunesdb_new_track (void);
 time_t itunesdb_time_mac_to_host (guint64 mactime);
 guint64 itunesdb_time_host_to_mac (time_t time);
+
+void itb_splr_validate (SPLRule *splr);
 #endif

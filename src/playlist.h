@@ -74,7 +74,8 @@ void splr_remove (Playlist *pl, SPLRule *splr);
 SPLRule *splr_new (void);
 void splr_add (Playlist *pl, SPLRule *splr, gint pos);
 SPLRule *splr_add_new (Playlist *pl, gint pos);
-void spl_populate (Playlist *spl, GList *tracks);
+void spl_update (Playlist *spl, GList *tracks);
+void spl_update_all (void);
 
 
 guint32 get_nr_of_tracks_in_playlist (Playlist *plitem);

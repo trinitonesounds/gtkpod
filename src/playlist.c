@@ -693,8 +693,8 @@ gboolean splr_eval (SPLRule *splr, Track *track)
     g_return_val_if_fail (splr != NULL, FALSE);
     g_return_val_if_fail (track != NULL, FALSE);
 
-    ft = itunesdb_spl_get_field_type (splr->field);
-    at = itunesdb_spl_get_action_type (splr->field, splr->action);
+    ft = itb_splr_get_field_type (splr);
+    at = itb_splr_get_action_type (splr);
 
     g_return_val_if_fail (at != splat_invalid, FALSE);
 
@@ -953,7 +953,7 @@ static gint compLowestRating (Track *a, Track *b)
     return a->rating - b->rating;
 }
 
-void spl_populate (Playlist *spl, GList *tracks)
+void spl_update (Playlist *spl, GList *tracks)
 {
     GList *gl;
     GList *sel_tracks = NULL;
@@ -1155,6 +1155,20 @@ void spl_populate (Playlist *spl, GList *tracks)
 	sel_tracks = NULL;
     }
 }
+
+
+
+/* update all smart playlists */
+void spl_update_all (void)
+{
+    Playlist *mpl;
+
+    mpl = get_playlist_by_nr (0);
+    g_return_if_fail (mpl);
+
+    g_list_foreach (playlists, (GFunc)spl_update, mpl->members);
+}
+
 
 
 /* end of code based on Samuel Wood's work */

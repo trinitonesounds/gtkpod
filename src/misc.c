@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-12-07 00:12:05 jcs>
+|  Time-stamp: <2004-12-11 15:53:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -373,33 +373,35 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 		}
 		if (g_file_test (decoded_file, G_FILE_TEST_IS_REGULAR))
 		{   /* regular file */
-		    gint decoded_len = strlen (decoded_file);
-		    if (decoded_len >= 4)
+		    gint ftype = determine_file_type (decoded_file);
+		    switch (ftype)
 		    {
-			if (strcasecmp (&decoded_file[decoded_len-4],
-					".mp3") == 0)
-			{   /* mp3 file */
-			    if (!pl)
-			    {  /* no playlist yet -- create new one */
-				pl = add_new_pl_user_name (NULL,
-							   pl_pos);
-				if (!pl)  break; /* while (*filesp) */
-			    }
-			    add_track_by_filename (decoded_file, pl,
-						  prefs_get_add_recursively (),
+		    case FILE_TYPE_MP3:
+		    case FILE_TYPE_M4A:
+		    case FILE_TYPE_M4P:
+		    case FILE_TYPE_M4B:
+		    case FILE_TYPE_WAV:
+			if (!pl)
+			{  /* no playlist yet -- create new one */
+			    pl = add_new_pl_user_name (NULL,
+						       pl_pos);
+			    if (!pl)  break; /* while (*filesp) */
+			}
+			add_track_by_filename (decoded_file, pl,
+					       prefs_get_add_recursively (),
+					       trackaddfunc, data);
+			added = TRUE;
+			break;
+		    case FILE_TYPE_M3U:
+		    case FILE_TYPE_PLS:
+			add_playlist_by_filename (decoded_file,
+						  pl_playlist,
 						  trackaddfunc, data);
-			    added = TRUE;
-			}
-			else if ((strcasecmp (&decoded_file[decoded_len-4],
-					      ".plu") == 0) ||
-				 (strcasecmp (&decoded_file[decoded_len-4],
-					      ".m3u") == 0))
-			{
-			    add_playlist_by_filename (decoded_file,
-						      pl_playlist,
-						      trackaddfunc, data);
-			    added = TRUE;
-			}
+			added = TRUE;
+			break;
+		    case FILE_TYPE_ERROR:
+		    case FILE_TYPE_UNKNOWN:
+			break;
 		    }
 		}
 		g_free (decoded_file);

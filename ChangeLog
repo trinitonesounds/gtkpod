@@ -1,14 +1,22 @@
 gtkpod V0.86.CVS
-	Support for iTunes' "checked" field.
+        BUGFIX: drag and drop was only implemented for mp3 files, not
+        for m4a, m4p, m4b, and wav files (thanks to Chris Micacchi for
+        pointing it out and supplying a first fix).
 
-	When sorting ignore 'the' and similar at the beginning of the
-	title (thanks to Chris Micacchi)
+	IMPROVEMENT: Support for iTunes' "checked", filedescriptor (kind),
+	and grouping fields.
 
-	Use statvfs() instead of a call to the external command "df"
-	to determine the free space on the iPod (thanks to Steve Jay)
+	IMPROVEMENT: When sorting ignore 'the' and similar at the
+	beginning of the title (thanks to Chris Micacchi)
 
-	The fields "time_modified/played/created" can now be edited
-	from within the track view.
+	IMPROVEMENT: Use statvfs() instead of a call to the external
+	command "df" to determine the free space on the iPod (thanks
+	to Steve Jay)
+
+	IMPROVEMENT: The fields "time_modified/played/created" can now
+	be edited from within the track view.
+
+	UPDATE: Swedish translation catalog
 
 gtkpod V0.85.0
 	BUGFIX: when clicking onto the column header of the track
