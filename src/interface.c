@@ -1042,10 +1042,8 @@ create_confirm_window (void)
   GtkWidget *vbox7;
   GtkWidget *scroller;
   GtkWidget *text;
+  GtkWidget *option_hbox;
   GtkWidget *option_vbox;
-  GtkWidget *option_hbox1;
-  GtkWidget *option_hbox2;
-  GtkWidget *hbox14;
   GtkWidget *never_again;
   GtkWidget *hbuttonbox4;
   GtkWidget *ok;
@@ -1083,25 +1081,17 @@ create_confirm_window (void)
   gtk_widget_show (text);
   gtk_container_add (GTK_CONTAINER (scroller), text);
 
+  option_hbox = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (option_hbox);
+  gtk_box_pack_start (GTK_BOX (vbox6), option_hbox, FALSE, FALSE, 0);
+
   option_vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (option_vbox);
-  gtk_box_pack_start (GTK_BOX (vbox6), option_vbox, FALSE, FALSE, 2);
-
-  option_hbox1 = gtk_hbox_new (TRUE, 0);
-  gtk_widget_show (option_hbox1);
-  gtk_box_pack_start (GTK_BOX (option_vbox), option_hbox1, FALSE, FALSE, 0);
-
-  option_hbox2 = gtk_hbox_new (TRUE, 0);
-  gtk_widget_show (option_hbox2);
-  gtk_box_pack_start (GTK_BOX (option_vbox), option_hbox2, FALSE, FALSE, 0);
-
-  hbox14 = gtk_hbox_new (TRUE, 0);
-  gtk_widget_show (hbox14);
-  gtk_box_pack_start (GTK_BOX (option_vbox), hbox14, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (option_hbox), option_vbox, FALSE, FALSE, 0);
 
   never_again = gtk_check_button_new_with_mnemonic (_("Never show this dialogue again"));
   gtk_widget_show (never_again);
-  gtk_box_pack_start (GTK_BOX (hbox14), never_again, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (option_vbox), never_again, FALSE, FALSE, 0);
 
   hbuttonbox4 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox4);
@@ -1131,10 +1121,8 @@ create_confirm_window (void)
   GLADE_HOOKUP_OBJECT (confirm_window, vbox7, "vbox7");
   GLADE_HOOKUP_OBJECT (confirm_window, scroller, "scroller");
   GLADE_HOOKUP_OBJECT (confirm_window, text, "text");
+  GLADE_HOOKUP_OBJECT (confirm_window, option_hbox, "option_hbox");
   GLADE_HOOKUP_OBJECT (confirm_window, option_vbox, "option_vbox");
-  GLADE_HOOKUP_OBJECT (confirm_window, option_hbox1, "option_hbox1");
-  GLADE_HOOKUP_OBJECT (confirm_window, option_hbox2, "option_hbox2");
-  GLADE_HOOKUP_OBJECT (confirm_window, hbox14, "hbox14");
   GLADE_HOOKUP_OBJECT (confirm_window, never_again, "never_again");
   GLADE_HOOKUP_OBJECT (confirm_window, hbuttonbox4, "hbuttonbox4");
   GLADE_HOOKUP_OBJECT (confirm_window, ok, "ok");

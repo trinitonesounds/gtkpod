@@ -329,7 +329,7 @@ gboolean gtkpod_confirmation (gint id,
     gtk_window_set_default_size (GTK_WINDOW (window), defx, defy);
 
     /* Set "Option 1" checkbox */
-    w = lookup_widget (window, "option_hbox1");
+    w = lookup_widget (window, "option_vbox");
     if (w && option1_handler && option1_text)
     {
 	gboolean state, invert;
@@ -355,7 +355,7 @@ gboolean gtkpod_confirmation (gint id,
     }
 
     /* Set "Option 2" checkbox */
-    w = lookup_widget (window, "option_hbox2");
+    w = lookup_widget (window, "option_vbox");
     if (w && option2_handler && option2_text)
     {
 	gboolean state, invert;
