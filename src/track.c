@@ -757,21 +757,32 @@ void handle_import (void)
 }
 
 
-gboolean write_tags_to_file (Song *song)
+/* Write changed tags to file.
+   "tag_id": specify which tags should be changed (one of
+   S_... defined in song.h) */
+gboolean write_tags_to_file (Song *song, gint tag_id)
 {
     File_Tag *filetag;
     gint i, len;
     gchar *ipod_file, *ipod_fullpath, track[20];
 
     filetag = g_malloc0 (sizeof (File_Tag));
-    filetag->album = song->album;
-    filetag->artist = song->artist;
-    filetag->title = song->title;
-    filetag->genre = song->genre;
-    filetag->comment = song->comment;
-    snprintf(track, 20, "%d", song->track_nr);
-    filetag->track = track;
-    if (song->pc_path_locale && strlen (song->pc_path_locale) > 0)
+    if ((tag_id == S_ALL) || (tag_id = S_ALBUM))
+	filetag->album = song->album;
+    if ((tag_id == S_ALL) || (tag_id = S_ARTIST))
+	filetag->artist = song->artist;
+    if ((tag_id == S_ALL) || (tag_id = S_TITLE))
+	filetag->title = song->title;
+    if ((tag_id == S_ALL) || (tag_id = S_GENRE))
+	filetag->genre = song->genre;
+    if ((tag_id == S_ALL) || (tag_id = S_COMMENT))
+	filetag->comment = song->comment;
+    if ((tag_id == S_ALL) || (tag_id = S_TRACK_NR))
+    {
+	snprintf(track, 20, "%d", song->track_nr);
+	filetag->track = track;
+    }
+    if (song->pc_path_locale && (strlen (song->pc_path_locale) > 0))
       {
 	if (Id3tag_Write_File_Tag (song->pc_path_locale, filetag) == FALSE)
 	  {
@@ -781,7 +792,7 @@ gboolean write_tags_to_file (Song *song)
       }
     if (song->transferred &&
 	song->ipod_path &&
-	g_utf8_strlen (song->ipod_path, -1) > 0)
+	(g_utf8_strlen (song->ipod_path, -1) > 0))
       {
 	/* need to get ipod filename */
 	ipod_file = g_locale_from_utf8 (song->ipod_path, -1, NULL, NULL, NULL);

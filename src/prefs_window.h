@@ -31,7 +31,8 @@ void prefs_window_save(void);
 void prefs_window_create(void);
 void prefs_window_cancel(void);
 void prefs_window_set_md5songs_active(gboolean val);
-void prefs_window_set_writeid3_active(gboolean val);
+void prefs_window_set_id3_write(gboolean val);
+void prefs_window_set_id3_writeall(gboolean val);
 void prefs_window_set_mount_point(const gchar *mp);
 
 void prefs_window_set_song_list_all(gboolean val);

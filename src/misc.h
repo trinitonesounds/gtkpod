@@ -57,6 +57,9 @@ void gtkpod_main_window_set_active(gboolean active);
 void gtkpod_statusbar_init(GtkWidget *);
 void gtkpod_statusbar_message(const gchar *message);
 
+gint SM_to_S (gint sm);
+gint ST_to_S (gint st);
+
 void gtkpod_songs_statusbar_init(GtkWidget*);
 void gtkpod_songs_statusbar_update(void);
 void ipod_directories_head (void);

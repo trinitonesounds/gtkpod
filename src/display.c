@@ -1110,7 +1110,15 @@ st_cell_edited (GtkCellRendererText *renderer,
 	      }
 	    pm_song_changed (song);
 	    /* If prefs say to write changes to file, do so */
-	    if (cfg->writeid3) write_tags_to_file (song);
+	    if (prefs_get_id3_write ())
+	    {
+		gint tag_id;
+		/* should we update all ID3 tags or just the one
+		   changed? */
+		if (prefs_get_id3_writeall ()) tag_id = S_ALL;
+		else		               tag_id = ST_to_S (column);
+		write_tags_to_file (song, tag_id);
+	    }
 	  }
 	  g_list_free (members);
 	  data_changed (); /* indicate that data has changed */
@@ -1295,7 +1303,7 @@ static void sm_add_song_to_song_model (Song *song)
 		      SM_COLUMN_ARTIST, song,
 		      SM_COLUMN_ALBUM, song,
 		      SM_COLUMN_GENRE, song,
-		      SM_COLUMN_TRACK, song,
+		      SM_COLUMN_TRACK_NR, song,
 		      SM_COLUMN_IPOD_ID, song,
 		      SM_COLUMN_PC_PATH, song,
 		      SM_COLUMN_TRANSFERRED, song,
@@ -1446,7 +1454,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
 	  changed = TRUE;
 	}
       break;
-    case SM_COLUMN_TRACK:
+    case SM_COLUMN_TRACK_NR:
       track_text = g_strdup_printf("%d", song->track_nr);
       if (g_utf8_collate(track_text, new_text) != 0)
       {
@@ -1464,7 +1472,15 @@ sm_cell_edited (GtkCellRendererText *renderer,
       data_changed ();        /* indicate that data has changed */
     }
   /* If anything changed and prefs say to write changes to file, do so */
-  if (changed && cfg->writeid3) write_tags_to_file (song);
+  if (changed && prefs_get_id3_write ())
+  {
+      gint tag_id;
+      /* should we update all ID3 tags or just the one
+	 changed? */
+      if (prefs_get_id3_writeall ()) tag_id = S_ALL;
+      else		             tag_id = SM_to_S (column);
+      write_tags_to_file (song, tag_id);
+  }
   gtk_tree_path_free (path);
 }
 
@@ -1505,7 +1521,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
       g_object_set (G_OBJECT (renderer), "text", song->genre, 
 		    "editable", TRUE, NULL);
       break;
-    case SM_COLUMN_TRACK:
+    case SM_COLUMN_TRACK_NR:
       if (song->track_nr >= 0)
 	{
 	  snprintf (text, 10, "%d", song->track_nr);
@@ -1631,7 +1647,7 @@ gint sm_data_compare_func (GtkTreeModel *model,
 	case SM_COLUMN_GENRE:
 	    return g_utf8_collate (g_utf8_casefold (song1->genre, -1),
 		    g_utf8_casefold (song2->genre, -1));
-	case SM_COLUMN_TRACK:
+	case SM_COLUMN_TRACK_NR:
 	    return song1->track_nr - song2->track_nr;
 	case SM_COLUMN_IPOD_ID:
 	    return song1->ipod_id - song2->ipod_id;
@@ -1667,7 +1683,7 @@ sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 	    case SM_COLUMN_ARTIST:
 	    case SM_COLUMN_ALBUM:
 	    case SM_COLUMN_GENRE:
-	    case SM_COLUMN_TRACK:
+	    case SM_COLUMN_TRACK_NR:
 		sm_rows_reordered_callback();
 		break;
 	    default:
@@ -1772,7 +1788,7 @@ static void add_song_columns ()
   gtk_tree_view_append_column (song_treeview, column);
   
   /* track column */
-  col_id = SM_COLUMN_TRACK;
+  col_id = SM_COLUMN_TRACK_NR;
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (sm_cell_edited), model);
@@ -1882,7 +1898,7 @@ static GtkTreeModel *create_song_model (void)
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
 	  SM_COLUMN_GENRE, sm_data_compare_func, NULL, NULL);
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
-	  SM_COLUMN_TRACK, sm_data_compare_func, NULL, NULL);
+	  SM_COLUMN_TRACK_NR, sm_data_compare_func, NULL, NULL);
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
 	  SM_COLUMN_IPOD_ID, sm_data_compare_func, NULL, NULL);
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
@@ -1971,7 +1987,7 @@ sm_show_preferred_columns(void)
     {
 	if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_ALBUM)))
 	    gtk_tree_view_column_set_visible(tvc, TRUE);
-	if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TRACK)))
+	if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TRACK_NR)))
 	    gtk_tree_view_column_set_visible(tvc, TRUE);
 	if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_GENRE)))
 	    gtk_tree_view_column_set_visible(tvc, TRUE);
@@ -1986,7 +2002,7 @@ sm_show_preferred_columns(void)
 	else
 	    gtk_tree_view_column_set_visible(tvc, FALSE);
 	
-	tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TRACK);
+	tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TRACK_NR);
 	if(prefs_get_song_list_show_track())
 	    gtk_tree_view_column_set_visible(tvc, TRUE);
 	else

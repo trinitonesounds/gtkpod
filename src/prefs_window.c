@@ -88,11 +88,19 @@ prefs_window_create(void)
 	}
 	if((w = lookup_widget(prefs_window, "cfg_md5songs")))
 	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), tmpcfg->md5songs);
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->md5songs);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_writeid3")))
+	if((w = lookup_widget(prefs_window, "cfg_id3_write")))
 	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), tmpcfg->writeid3);
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->id3_write);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_id3_writeall")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->id3_writeall);
+	    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_delete_playlist")))
 	{
@@ -191,7 +199,8 @@ prefs_window_save(void)
     gint i;
 
     prefs_set_md5songs_active(tmpcfg->md5songs);
-    prefs_set_writeid3_active(tmpcfg->writeid3);
+    prefs_set_id3_write(tmpcfg->id3_write);
+    prefs_set_id3_writeall(tmpcfg->id3_writeall);
     prefs_set_mount_point(tmpcfg->ipod_mount);
     prefs_set_charset(tmpcfg->charset);
     prefs_set_auto_import(tmpcfg->autoimport);
@@ -231,14 +240,18 @@ prefs_window_set_md5songs_active(gboolean val)
 }
 
 /**
- * prefs_window_set_writeid3_active
+ * prefs_window_set_id3_write
  * @val - truth value of whether or not we should allow id3 tags to be
  * interactively changed, changes temp variable
  */
 void
-prefs_window_set_writeid3_active(gboolean val)
+prefs_window_set_id3_write(gboolean val)
 {
-    tmpcfg->writeid3 = val;
+    GtkWidget *w;
+
+    tmpcfg->id3_write = val;
+    if((w = lookup_widget(prefs_window, "cfg_id3_writeall")))
+	gtk_widget_set_sensitive (w, val);
 }
 
 /**
@@ -396,4 +409,9 @@ void prefs_window_set_tag_autoset (gint category, gboolean autoset)
 {
     if (category < SM_NUM_TAGS_PREFS)
 	tmpcfg->tag_autoset[category] = autoset;
+}
+
+void prefs_window_set_id3_writeall (gboolean val)
+{
+    tmpcfg->id3_writeall = val;
 }

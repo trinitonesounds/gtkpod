@@ -914,7 +914,8 @@ create_prefs_window (void)
   GtkWidget *charset_combo_entry;
   GtkWidget *cfg_autoimport;
   GtkWidget *cfg_md5songs;
-  GtkWidget *cfg_writeid3;
+  GtkWidget *cfg_id3_write;
+  GtkWidget *cfg_id3_writeall;
   GtkWidget *cfg_keep_backups;
   GtkWidget *cfg_write_extended;
   GtkWidget *frame5;
@@ -1004,9 +1005,13 @@ create_prefs_window (void)
   gtk_widget_show (cfg_md5songs);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_md5songs, FALSE, FALSE, 0);
 
-  cfg_writeid3 = gtk_check_button_new_with_mnemonic (_("Change the ID3 tags when modified in gtkpod\n(on disk and on the ipod)"));
-  gtk_widget_show (cfg_writeid3);
-  gtk_box_pack_start (GTK_BOX (vbox3), cfg_writeid3, FALSE, FALSE, 0);
+  cfg_id3_write = gtk_check_button_new_with_mnemonic (_("Change the ID3 tags when modified in gtkpod\n(on disk and on the ipod)"));
+  gtk_widget_show (cfg_id3_write);
+  gtk_box_pack_start (GTK_BOX (vbox3), cfg_id3_write, FALSE, FALSE, 0);
+
+  cfg_id3_writeall = gtk_check_button_new_with_mnemonic (_("Update all tags (not only changed ones)"));
+  gtk_widget_show (cfg_id3_writeall);
+  gtk_box_pack_start (GTK_BOX (vbox3), cfg_id3_writeall, FALSE, FALSE, 0);
 
   cfg_keep_backups = gtk_check_button_new_with_mnemonic (_("Keep a backup of the iTunesDB in ~/.gtkpod/"));
   gtk_widget_show (cfg_keep_backups);
@@ -1175,8 +1180,11 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_md5songs, "toggled",
                     G_CALLBACK (on_cfg_md5songs_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_writeid3, "toggled",
-                    G_CALLBACK (on_cfg_writeid3_toggled),
+  g_signal_connect ((gpointer) cfg_id3_write, "toggled",
+                    G_CALLBACK (on_cfg_id3_write_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_id3_writeall, "toggled",
+                    G_CALLBACK (on_cfg_id3_writeall_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_keep_backups, "toggled",
                     G_CALLBACK (on_cfg_keep_backups_toggled),
@@ -1228,7 +1236,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, charset_combo_entry, "charset_combo_entry");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_autoimport, "cfg_autoimport");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5songs, "cfg_md5songs");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_writeid3, "cfg_writeid3");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_write, "cfg_id3_write");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_writeall, "cfg_id3_writeall");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_keep_backups, "cfg_keep_backups");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_extended, "cfg_write_extended");
   GLADE_HOOKUP_OBJECT (prefs_window, frame5, "frame5");

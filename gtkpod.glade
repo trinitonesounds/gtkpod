@@ -1513,7 +1513,7 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkCheckButton" id="cfg_writeid3">
+	    <widget class="GtkCheckButton" id="cfg_id3_write">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Change the ID3 tags when modified in gtkpod
@@ -1523,7 +1523,26 @@
 	      <property name="active">False</property>
 	      <property name="inconsistent">False</property>
 	      <property name="draw_indicator">True</property>
-	      <signal name="toggled" handler="on_cfg_writeid3_toggled" last_modification_time="Sat, 21 Dec 2002 23:29:16 GMT"/>
+	      <signal name="toggled" handler="on_cfg_id3_write_toggled" last_modification_time="Wed, 29 Jan 2003 13:30:48 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkCheckButton" id="cfg_id3_writeall">
+	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="label" translatable="yes">Update all tags (not only changed ones)</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="active">False</property>
+	      <property name="inconsistent">False</property>
+	      <property name="draw_indicator">True</property>
+	      <signal name="toggled" handler="on_cfg_id3_writeall_toggled" last_modification_time="Wed, 29 Jan 2003 13:31:40 GMT"/>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>

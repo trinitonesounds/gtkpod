@@ -39,7 +39,19 @@
 #include "misc.h"
 #include "display.h"
 
+/* global config struct */
+/* FIXME: make me static */
 struct cfg *cfg = NULL;
+
+/* enum for reading of options */
+enum {
+  GP_HELP,
+  GP_MOUNT,
+  GP_ID3_WRITE,
+  GP_MD5SONGS,
+  GP_AUTO,
+  GP_OFFLINE
+};
 
 #define ISSPACE(a) (((a)==9) || ((a)==' '))    /* TAB, SPACE */
 
@@ -50,7 +62,7 @@ static void usage (FILE *file)
   fprintf(file, _("  -m path:      define the mountpoint of your iPod\n"));
   fprintf(file, _("  --mountpoint: same as \"-m\".\n"));
   fprintf(file, _("  -w:           write changed ID3 tags to file\n"));
-  fprintf(file, _("  --writeid3:   same as \"-w\".\n"));
+  fprintf(file, _("  --id3_write:   same as \"-w\".\n"));
   fprintf(file, _("  -c:           check files automagically for duplicates\n"));
   fprintf(file, _("  --md5:        same as \"-c\".\n"));
   fprintf(file, _("  -a:           import database automatically after start.\n"));
@@ -98,6 +110,8 @@ struct cfg *cfg_new(void)
     mycfg->offline = FALSE;
     mycfg->keep_backups = TRUE;
     mycfg->write_extended_info = TRUE;
+    mycfg->id3_write = FALSE;
+    mycfg->id3_writeall = FALSE;
     mycfg->size_gtkpod.x = 600;
     mycfg->size_gtkpod.y = 500;
     mycfg->size_conf_sw.x = 300;
@@ -163,7 +177,11 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "id3") == 0)
 	  {
-	      prefs_set_writeid3_active((gboolean)atoi(arg));
+	      prefs_set_id3_write((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "id3_all") == 0)
+	  {
+	      prefs_set_id3_writeall((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
 	  {
@@ -320,8 +338,8 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       { "help",        no_argument,	NULL, GP_HELP },
       { "m",           required_argument,	NULL, GP_MOUNT },
       { "mountpoint",  required_argument,	NULL, GP_MOUNT },
-      { "w",           no_argument,	NULL, GP_WRITEID3 },
-      { "writeid3",    no_argument,	NULL, GP_WRITEID3 },
+      { "w",           no_argument,	NULL, GP_ID3_WRITE },
+      { "id3_write",    no_argument,	NULL, GP_ID3_WRITE },
       { "c",           no_argument,	NULL, GP_MD5SONGS },
       { "md5",	       no_argument,	NULL, GP_MD5SONGS },
       { "o",           no_argument,	NULL, GP_OFFLINE },
@@ -347,8 +365,8 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 	g_free (cfg->ipod_mount);
 	cfg->ipod_mount = g_strdup (optarg);
 	break;
-      case GP_WRITEID3:
-	cfg->writeid3 = TRUE;
+      case GP_ID3_WRITE:
+	cfg->id3_write = TRUE;
 	break;
       case GP_MD5SONGS:
 	cfg->md5songs = TRUE;
@@ -389,7 +407,8 @@ write_prefs_to_file_desc(FILE *fp)
     } else {
 	fprintf(fp, "charset=\n");
     }
-    fprintf(fp, "id3=%d\n",cfg->writeid3);
+    fprintf(fp, "id3=%d\n", prefs_get_id3_write ());
+    fprintf(fp, "id3_all=%d\n", prefs_get_id3_writeall ());
     fprintf(fp, "md5=%d\n",cfg->md5songs);
     fprintf(fp, "album=%d\n",prefs_get_song_list_show_album());
     fprintf(fp, "track=%d\n",prefs_get_song_list_show_track());
@@ -535,10 +554,27 @@ void prefs_set_md5songs_active(gboolean active)
     cfg->md5songs = active;
 }
 
-void prefs_set_writeid3_active(gboolean active)
+void prefs_set_id3_write(gboolean active)
 {
-    cfg->writeid3 = active;
+    cfg->id3_write = active;
 }
+
+gboolean prefs_get_id3_write(void)
+{
+    return cfg->id3_write;
+}
+
+void prefs_set_id3_writeall(gboolean active)
+{
+    cfg->id3_writeall = active;
+}
+
+gboolean prefs_get_id3_writeall(void)
+{
+    return cfg->id3_writeall;
+}
+
+
 
 /* song list opts */
 void prefs_set_song_list_show_all(gboolean val)
@@ -637,7 +673,7 @@ void prefs_print(void)
     fprintf(fp, "GtkPod Preferences\n");
     fprintf(fp, "Mount Point:\t%s\n", cfg->ipod_mount);
     fprintf(fp, "Interactive ID3:\t");
-    if(cfg->writeid3)
+    if(cfg->id3_write)
 	fprintf(fp, "%s\n", on);
     else
 	fprintf(fp, "%s\n", off);

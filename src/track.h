@@ -67,6 +67,25 @@ typedef struct
   gchar   *md5_hash;         /* md5 hash of file (or NULL)         */
 } Song;
 
+/* A means to address the fields by uniform IDs. May be extended as
+ * needed */
+enum {
+    S_ALL,      /* all fields */
+    S_ALBUM,
+    S_ARTIST,
+    S_TITLE,
+    S_GENRE,
+    S_COMMENT,
+    S_COMPOSER,
+    S_FDESC,
+    S_PC_PATH,
+    S_IPOD_PATH,
+    S_IPOD_ID,
+    S_TRACK_NR,
+    S_TRANSFERRED,
+    S_NONE
+};
+
 void free_song(Song *song);
 gboolean add_song (Song *song);
 void remove_song (Song *song);
@@ -77,7 +96,7 @@ Song *get_song_by_nr (guint32 n);
 Song *get_song_by_id (guint32 id);
 gboolean add_song_by_filename (gchar *name);
 gboolean add_directory_recursively (gchar *name);
-gboolean write_tags_to_file(Song *s);
+gboolean write_tags_to_file(Song *s, gint tag_id);
 void handle_import (void);
 void handle_export (void);
 gboolean files_are_saved (void);

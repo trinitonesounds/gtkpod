@@ -98,8 +98,8 @@ on_cfg_md5songs_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_cfg_writeid3_toggled                (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
+on_cfg_id3_write_toggled                (GtkToggleButton *togglebutton,
+                                         gpointer         user_data);
 
 void
 on_prefs_ok_clicked                    (GtkButton       *button,
@@ -243,4 +243,8 @@ on_gtkpod_status_realize               (GtkWidget       *widget,
 
 void
 on_songs_statusbar_realize             (GtkWidget       *widget,
+                                        gpointer         user_data);
+
+void
+on_cfg_id3_writeall_toggled            (GtkToggleButton *togglebutton,
                                         gpointer         user_data);

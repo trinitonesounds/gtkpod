@@ -54,7 +54,8 @@ struct cfg
 {
   gchar    *ipod_mount;   /* mount point of iPod */
   gchar    *charset;      /* CHARSET to use with file operations */
-  gboolean writeid3;      /* should changes to ID3 tags be written to file */
+  gboolean id3_write;     /* should changes to ID3 tags be written to file */
+  gboolean id3_writeall;  /* should all ID3 tags be updated */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */
   gboolean autoimport;	  /* whether or not to automatically import files */
   struct {
@@ -81,16 +82,7 @@ struct cfg
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 };
 
-/* enum for reading of options */
-enum {
-  GP_HELP,
-  GP_MOUNT,
-  GP_WRITEID3,
-  GP_MD5SONGS,
-  GP_AUTO,
-  GP_OFFLINE
-};
-
+/* FIXME: make the global struct obsolete! */
 extern struct cfg *cfg;
 
 gchar *prefs_get_cfgdir (void);
@@ -117,7 +109,8 @@ void prefs_set_song_list_show_artist(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
 void prefs_set_md5songs_active(gboolean active);
-void prefs_set_writeid3_active(gboolean active);
+void prefs_set_id3_write(gboolean active);
+void prefs_set_id3_writeall(gboolean active);
 void prefs_set_last_dir_browse(gchar * dir);
 void prefs_set_last_dir_export(gchar * dir);
 void prefs_set_charset (gchar *charset);
@@ -143,6 +136,8 @@ gboolean prefs_get_song_list_show_genre(void);
 gboolean prefs_get_song_list_show_artist(void);
 gboolean prefs_get_song_playlist_deletion(void);
 gboolean prefs_get_song_ipod_file_deletion(void);
+gboolean prefs_get_id3_write(void);
+gboolean prefs_get_id3_writeall(void);
 gchar *prefs_get_ipod_mount (void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);

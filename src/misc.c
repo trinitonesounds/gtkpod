@@ -386,6 +386,45 @@ gtkpod_songs_statusbar_update(void)
 
 }
 
+
+/* translates a SM_COLUMN_... (defined in display.h) into a
+ * S_... (defined in song.h). Returns -1 in case a translation is not
+ * possible */
+gint SM_to_S (gint sm)
+{
+    switch (sm)
+    {
+    case SM_COLUMN_TITLE:       return S_TITLE;
+    case SM_COLUMN_ARTIST:      return S_ARTIST;
+    case SM_COLUMN_ALBUM:       return S_ALBUM;
+    case SM_COLUMN_GENRE:       return S_GENRE;
+    case SM_COLUMN_TRACK_NR:    return S_TRACK_NR;
+    case SM_COLUMN_IPOD_ID:     return S_IPOD_ID;
+    case SM_COLUMN_PC_PATH:     return S_PC_PATH;
+    case SM_COLUMN_TRANSFERRED: return S_TRANSFERRED;
+    case SM_COLUMN_NONE:        return S_NONE;
+    }
+    return -1;
+}
+
+
+/* translates a ST_CAT_... (defined in display.h) into a
+ * S_... (defined in song.h). Returns -1 in case a translation is not
+ * possible */
+gint ST_to_S (gint st)
+{
+    switch (st)
+    {
+    case ST_CAT_TITLE:       return S_TITLE;
+    case ST_CAT_ARTIST:      return S_ARTIST;
+    case ST_CAT_ALBUM:       return S_ALBUM;
+    case ST_CAT_GENRE:       return S_GENRE;
+    }
+    return -1;
+}
+
+
+
 /*------------------------------------------------------------------*\
  *                                                                  *
  *             Create iPod directory hierarchy                      *

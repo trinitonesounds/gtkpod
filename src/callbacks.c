@@ -288,10 +288,10 @@ on_cfg_md5songs_toggled                (GtkToggleButton *togglebutton,
 
 
 void
-on_cfg_writeid3_toggled                (GtkToggleButton *togglebutton,
+on_cfg_id3_write_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    prefs_window_set_writeid3_active(gtk_toggle_button_get_active(togglebutton));
+    prefs_window_set_id3_write(gtk_toggle_button_get_active(togglebutton));
 }
 
 
@@ -710,3 +710,11 @@ on_songs_statusbar_realize             (GtkWidget       *widget,
 {
     gtkpod_songs_statusbar_init(widget);
 }
+
+void
+on_cfg_id3_writeall_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_id3_writeall(gtk_toggle_button_get_active(togglebutton));
+}
+
