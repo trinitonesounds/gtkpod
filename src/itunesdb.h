@@ -38,6 +38,7 @@
 
 #include "song.h"
 #include "playlist.h"
+
 enum {
   MHOD_ID_TITLE = 1,
   MHOD_ID_PATH = 2,

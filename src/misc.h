@@ -41,8 +41,10 @@
 #define gtkpod_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
 #define C_FREE(a) if(a) g_free(a); a=NULL
 
-
+/* pointer to main window */
 extern GtkWidget *gtkpod_window;
+/* indicates whether widgets are currently blocked */
+extern gboolean widgets_blocked;
 
 void create_add_files_fileselector (void);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
@@ -66,4 +68,8 @@ void ipod_directories_head (void);
 void delete_playlist_head (void);
 void delete_song_head (void);
 
+void create_blocked_widget_list (void);
+void destroy_blocked_widget_list (void);
+void block_widgets (void);
+void release_widgets (void);
 #endif __MISC_H__

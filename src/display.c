@@ -41,13 +41,15 @@
 #include "interface.h"
 #include "misc.h"
 
+/* pointer to the treeview for the song display */
 static GtkTreeView *song_treeview = NULL;
+/* pointer to the treeview for the playlist display */
 static GtkTreeView *playlist_treeview = NULL;
-       /* pointer to the columns used in the song display */
+/* array with pointers to the columns used in the song display */
 static GtkTreeViewColumn *sm_columns[SM_NUM_COLUMNS];
-
+/* array with pointers to the sorttabs */
 static SortTab *sorttab[SORT_TAB_NUM];
-
+/* pointer to the currently selected playlist */
 static Playlist *current_playlist = NULL;
 
 static void sm_song_changed (Song *song);
@@ -60,6 +62,7 @@ static void st_remove_song (Song *song, guint32 inst);
 static void st_init (gint32 new_category, guint32 inst);
 
 static void pm_dnd_advertise(GtkTreeView *v);
+
 /* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
 /* ---------------------------------------------------------------- */
@@ -1935,18 +1938,24 @@ static void create_song_listview (GtkWidget *gtkpod)
 
 
 /* Create the different listviews to display the various information */
-void create_listviews (GtkWidget *gtkpod)
+void create_display (GtkWidget *gtkpod)
 {
   create_song_listview (gtkpod);
   create_sort_tabs (gtkpod);
   create_playlist_listview (gtkpod);
+  /* set certain sizes, positions, widths... to default values */
+  display_set_default_sizes ();
+  /* Make list of widgets that are turned insensitve during
+     import/export/add_directory etc. */
+  create_blocked_widget_list ();
 }
 
 
 /* Clean up used memory (when quitting the program) */
-void cleanup_listviews (void)
+void cleanup_display (void)
 {
   cleanup_sort_tabs ();
+  destroy_blocked_widget_list ();
 }
 
 /*
@@ -2144,3 +2153,5 @@ void display_update_default_sizes (void)
 	}
     }
 }
+
+

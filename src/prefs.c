@@ -133,6 +133,7 @@ struct cfg *cfg_new(void)
     mycfg->tag_autoset[SM_COLUMN_ARTIST] = TRUE;
     mycfg->tag_autoset[SM_COLUMN_ALBUM] = TRUE;
     mycfg->tag_autoset[SM_COLUMN_TITLE] = TRUE;
+    mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     return(mycfg);
 }
 
@@ -983,4 +984,17 @@ void prefs_set_paned_pos (gint i, gint pos)
 {
     if (i < PANED_NUM)
 	cfg->paned_pos[i] = pos;
+}
+
+
+/* A value of "0" will set the default defined in misc.c */
+void prefs_set_statusbar_timeout (guint32 val)
+{
+    if (val == 0)  val = STATUSBAR_TIMEOUT;
+    cfg->statusbar_timeout = val;
+}
+
+guint32 prefs_get_statusbar_timeout (void)
+{
+    return cfg->statusbar_timeout;
 }

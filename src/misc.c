@@ -40,20 +40,46 @@
 #include "itunesdb.h"
 #include "display.h"
 #include "confirmation.h"
-#include "threads.h"
+#include "prefs_window.h"
+#include "dirbrowser.h"
 
 GtkWidget *gtkpod_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
 static GtkWidget *gtkpod_statusbar = NULL;
 static GtkWidget *gtkpod_songs_statusbar = NULL;
-static gboolean gtkpod_statusbar_timeout_cb(gpointer data);
+
+/* --------------------------------------------------------------*/
+/* list with the widgets that are turned insensitive during import/export...*/
+static GList *blocked_widgets = NULL;
+/* are widgets blocked at the moment? */
+gboolean widgets_blocked = FALSE;
+struct blocked_widget { /* struct to be kept in blocked_widgets */
+    GtkWidget *widget;   /* widget that has been turned insensitive */
+    gboolean  sensitive; /* state of the widget before */
+};
+/* --------------------------------------------------------------*/
+
+/* turn the file selector insensitive (if it's open) */
+static void block_file_selector (void)
+{
+    if (file_selector)
+	gtk_widget_set_sensitive (file_selector, FALSE);
+}
+
+/* turn the file selector sensitive (if it's open) */
+static void release_file_selector (void)
+{
+    if (file_selector)
+	gtk_widget_set_sensitive (file_selector, TRUE);
+}
 
 static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 {
   gchar **names;
   gint i;
 
+  block_widgets ();
   names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
   for (i=0; names[i] != NULL; ++i)
     {
@@ -63,6 +89,7 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
     }
   gtkpod_statusbar_message(_("Successly Added Files"));
   gtkpod_songs_statusbar_update();
+  release_widgets ();
   g_strfreev (names);
 }
 
@@ -273,10 +300,9 @@ gtkpod_main_quit(void)
   remove_all_playlists ();  /* first remove playlists, then songs!
 		    (otherwise non-existing songs may be accessed) */
   remove_all_songs ();
-  cleanup_listviews ();
+  cleanup_display ();
   write_prefs (); /* FIXME: how can we avoid saving options set by
 		   * command line? */
-  gtkpod_thread_pool_free();
   gtk_main_quit ();
 }
 
@@ -324,40 +350,19 @@ gtkpod_statusbar_clear(gpointer data)
     
 }
 
-static gboolean 
-gtkpod_statusbar_timeout_cb(gpointer data)
-{
-    if(GTK_WIDGET_SENSITIVE(gtkpod_window))
-    {
-	gtkpod_statusbar_message((gchar*)data);
-	return(FALSE);
-    }
-    return(TRUE);
-}
 void
 gtkpod_statusbar_message(const gchar *message)
 {
-    return;
     if(gtkpod_statusbar)
     {
 	gchar buf[PATH_MAX];
+	guint context = 1;
 	     
 	snprintf(buf, PATH_MAX, "  %s", message);
-	gtkpod_warning("%s\n", message);
-#if 0
-	if(GTK_WIDGET_SENSITIVE(gtkpod_window))
-	{
-	    guint context = 1;
-	    gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
-	    gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
-	    gtk_timeout_add(STATUSBAR_TIMEOUT, (GtkFunction)
-			    gtkpod_statusbar_clear, NULL);
-	}
-	else
-	{
-	    g_timeout_add(500, gtkpod_statusbar_timeout_cb, (gpointer)message);
-	}
-#endif
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
+	gtk_timeout_add(prefs_get_statusbar_timeout (), (GtkFunction)
+			gtkpod_statusbar_clear, NULL);
     }
 }
 
@@ -421,6 +426,115 @@ gint ST_to_S (gint st)
     case ST_CAT_GENRE:       return S_GENRE;
     }
     return -1;
+}
+
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Functions for blocking widgets                       *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+/* function to add one widget to the blocked_widgets list */
+static void add_blocked_widget (gchar *name)
+{
+    GtkWidget *w;
+    struct blocked_widget *bw;
+
+    if((w = lookup_widget(gtkpod_window,  name)))
+    {
+	bw = g_malloc0 (sizeof (struct blocked_widget));
+	bw->widget = w;
+	/* we don't have to set the sensitive flag right now. It's
+	 * done in "block_widgets ()" */
+	blocked_widgets = g_list_append (blocked_widgets, bw);
+    }
+}
+
+
+/* Create a list of widgets that are to be turned insensitive when
+ * importing/exporting, adding songs or directories etc.
+ * This list contains the menu an all buttons */
+void create_blocked_widget_list (void)
+{
+    if (blocked_widgets == NULL)
+    {
+	add_blocked_widget ("menubar");
+	add_blocked_widget ("toolbar");
+    }
+    widgets_blocked = FALSE;
+}
+
+/* Release memory taken by "create_blocked_widget_list()" */
+void destroy_blocked_widget_list (void)
+{
+    while (blocked_widgets)
+    {
+	g_free (blocked_widgets->data);
+	blocked_widgets = g_list_remove_link (blocked_widgets, blocked_widgets);
+    }
+}
+
+/* called by block_widgets() and release_widgets() */
+/* "block": TRUE = block, FALSE = release */
+static void do_block_widgets (gboolean block)
+{
+    static gint count = 0; /* how many times are the widgets blocked? */
+    GList *l;
+    struct blocked_widget *bw;
+
+    if (block)
+    { /* we must block the widgets */
+	++count;  /* increase number of locks */
+	if (!widgets_blocked)
+	{ /* only block widgets, if they are not already blocked */
+	    for (l = blocked_widgets; l; l = l->next)
+	    {
+		bw = (struct blocked_widget *)l->data;
+		/* remember the state the widget was in before */
+		bw->sensitive = GTK_WIDGET_SENSITIVE (bw->widget);
+		gtk_widget_set_sensitive (bw->widget, FALSE);
+	    }
+	    block_prefs_window ();
+	    block_file_selector ();
+	    block_dirbrowser ();
+	    widgets_blocked = TRUE;
+	}
+    }
+    else
+    { /* release the widgets if --count == 0 */
+	if (widgets_blocked)
+	{ /* only release widgets, if they are blocked */
+	    --count;
+	    if (count == 0)
+	    {
+		for (l = blocked_widgets; l; l = l->next)
+		{
+		    bw = (struct blocked_widget *)l->data;
+		    gtk_widget_set_sensitive (bw->widget, bw->sensitive);
+		}
+		release_prefs_window ();
+		release_file_selector ();
+		release_dirbrowser ();
+		widgets_blocked = FALSE;
+	    }
+	}
+    }
+}
+
+
+/* Block widgets (turn insensitive) listed in "blocked_widgets" */
+void block_widgets (void)
+{
+    do_block_widgets (TRUE);
+}
+
+/* Release widgets (i.e. return them to their state before
+   "block_widgets() was called */
+void release_widgets (void)
+{
+    do_block_widgets (FALSE);
 }
 
 

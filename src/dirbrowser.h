@@ -23,7 +23,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+    void block_dirbrowser (void);
+    void release_dirbrowser (void);
     void create_dir_browser (void);
 #ifdef __cplusplus
 };

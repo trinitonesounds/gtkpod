@@ -45,7 +45,6 @@
 #include "md5.h"
 #include "file_export.h"
 #include "charset.h"
-/*#include "threads.h"*/
 
 void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
@@ -67,7 +66,6 @@ void
 on_export_itunes1_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-/*    gtkpod_thread_pool_exec(THREAD_WRITE_ITUNES);*/
   handle_export ();
 }
 
@@ -76,7 +74,7 @@ void
 on_quit1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  gtkpod_main_quit ();
+  if (!widgets_blocked) gtkpod_main_quit ();
 }
 
 
@@ -114,7 +112,6 @@ void
 on_export_itunes1_button               (GtkButton       *button,
                                         gpointer         user_data)
 {
-/*    gtkpod_thread_pool_exec(THREAD_WRITE_ITUNES);*/
   handle_export ();
 }
 
@@ -123,7 +120,7 @@ on_gtkpod_delete_event                 (GtkWidget       *widget,
                                         GdkEvent        *event,
                                         gpointer         user_data)
 {
-  gtkpod_main_quit ();
+  if (!widgets_blocked) gtkpod_main_quit ();
   return FALSE;
 }
 
@@ -321,7 +318,7 @@ void
 on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    prefs_window_create(); 
+    if(!widgets_blocked)  prefs_window_create(); 
 }
 
 void
@@ -368,7 +365,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 
     mods = event->state;
 
-    if(mods & GDK_CONTROL_MASK)
+    if(!widgets_blocked && (mods & GDK_CONTROL_MASK))
     {
 	switch(event->keyval)
 	{
@@ -395,7 +392,7 @@ on_song_treeview_key_release_event     (GtkWidget       *widget,
     guint mods;
     mods = event->state;
 
-    if(mods & GDK_CONTROL_MASK)
+    if(!widgets_blocked && (mods & GDK_CONTROL_MASK))
     {
 	switch(event->keyval)
 	{
@@ -486,7 +483,6 @@ void
 on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-/*    gtkpod_thread_pool_exec(THREAD_READ_ITUNES);*/
   handle_import ();
 }
 
@@ -495,7 +491,6 @@ void
 on_import_button_clicked               (GtkButton       *button,
                                         gpointer         user_data)
 {
-/*    gtkpod_thread_pool_exec(THREAD_READ_ITUNES);*/
   handle_import ();
 }
 

@@ -54,16 +54,22 @@ void create_mpl (void);
 void add_new_playlist (void);
 void free_playlist(Playlist *playlist);
 void create_playlist (Playlist *plitem);
+Playlist *it_add_playlist (Playlist *plitem);
 Playlist *add_playlist (Playlist *plitem);
+void it_add_songid_to_playlist (Playlist *plitem, guint32 id);
 void add_songid_to_playlist (Playlist *plitem, guint32 id);
 void add_song_to_playlist (Playlist *plitem, Song *song);
 void remove_songid_from_playlist (Playlist *plitem, guint32 id);
 void remove_song_from_playlist (Playlist *plitem, Song *song);
 void remove_playlist (Playlist *playlist);
 void remove_all_playlists (void);
+#define it_get_nr_of_playlists get_nr_of_playlists
 guint32 get_nr_of_playlists (void);
+#define it_get_playlist_by_nr get_playlist_by_nr
 Playlist *get_playlist_by_nr (guint32 n);
+#define it_get_nr_of_songs_in_playlist get_nr_of_songs_in_playlist
 guint32 get_nr_of_songs_in_playlist (Playlist *plitem);
+Song *it_get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
 Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
 void reset_playlists_to_new_list(GList *new_l);
 

@@ -33,6 +33,7 @@
 #include "prefs.h"
 #include "playlist.h"
 #include "display.h"
+#include "misc.h"
 #include "support.h"
 
 
@@ -239,3 +240,27 @@ reset_playlists_to_new_list(GList *new_l)
     playlists = new_l;
 }
 
+
+/* ------------------------------------------------------------------- */
+/* functions used by itunesdb (so we can refresh the display during
+ * import */
+void it_add_songid_to_playlist (Playlist *plitem, guint32 id)
+{
+    add_songid_to_playlist (plitem, id);
+    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+}
+
+Song *it_get_song_in_playlist_by_nr (Playlist *plitem, guint32 n)
+{
+    Song *song = get_song_in_playlist_by_nr (plitem, n);
+    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+    return song;
+}
+
+Playlist *it_add_playlist (Playlist *plitem)
+{
+    Playlist *pl = add_playlist (plitem);
+    gtkpod_songs_statusbar_update();
+    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+    return pl;
+}

@@ -39,8 +39,8 @@
    programm is responsible to keep a representation of the data.
 
    For each song itunesdb_parse() will pass a filled out Song structure
-   to "add_song()", which has to be provided. The minimal Song
-   structure looks like this (feel free to have add_song() do with it
+   to "it_add_song()", which has to be provided. The minimal Song
+   structure looks like this (feel free to have it_add_song() do with it
    as it pleases -- and yes, you are responsible to free the memory):
 
    typedef struct
@@ -73,7 +73,7 @@
    provide utf8 versions of the above utf16 strings. You must then add
    members "gchar *album"... to the Song structure.
 
-   For each new playlist in the iTunesDB, add_playlist() is
+   For each new playlist in the iTunesDB, it_add_playlist() is
    called with a pointer to the following Playlist struct:
 
    typedef struct
@@ -85,16 +85,16 @@
    Again, by #defining ITUNESDB_PROVIDE_UTF8, a member "gchar *name"
    will be initialized with a utf8 version of the playlist name.
 
-   add_playlist() must return a pointer under which it wants the
-   playlist to be referenced when add_song_to_playlist() is called.
+   it_add_playlist() must return a pointer under which it wants the
+   playlist to be referenced when it_add_song_to_playlist() is called.
 
-   For each song in the playlist, add_songid_to_playlist() is called
+   For each song in the playlist, it_add_songid_to_playlist() is called
    with the above mentioned pointer to the playlist and the songid to
    be added.
 
-   gboolean add_song (Song *song);
-   Playlist *add_playlist (Playlist *plitem);
-   void add_songid_to_playlist (Playlist *plitem, guint32 id);
+   gboolean it_add_song (Song *song);
+   Playlist *it_add_playlist (Playlist *plitem);
+   void it_add_songid_to_playlist (Playlist *plitem, guint32 id);
 
 
    *** Writing the iTunesDB ***
@@ -105,14 +105,14 @@
    It uses the following functions to retrieve the data necessary data
    from memory:
 
-   guint get_nr_of_songs (void);
-   Song *get_song_by_nr (guint32 n);
-   guint32 get_nr_of_playlists (void);
-   Playlist *get_playlist_by_nr (guint32 n);
-   guint32 get_nr_of_songs_in_playlist (Playlist *plitem);
-   Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
+   guint it_get_nr_of_songs (void);
+   Song *it_get_song_by_nr (guint32 n);
+   guint32 it_get_nr_of_playlists (void);
+   Playlist *it_get_playlist_by_nr (guint32 n);
+   guint32 it_get_nr_of_songs_in_playlist (Playlist *plitem);
+   Song *it_get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
 
-   The master playlist is expected to be "get_playlist_by_nr(0)". Only
+   The master playlist is expected to be "it_get_playlist_by_nr(0)". Only
    the utf16 strings in the Playlist and Song struct are being used.
 
    Please note that non-transferred songs are not automatically
@@ -325,7 +325,7 @@ static glong get_pl(FILE *file, glong seek)
   plitem->type = pltype;
 
   /* create new playlist */
-  plitem = add_playlist(plitem);
+  plitem = it_add_playlist(plitem);
 
   n = 0;  /* number of songs read */
   while (n < songnum)
@@ -337,7 +337,7 @@ static glong get_pl(FILE *file, glong seek)
       if (cmp_n_bytes (data, "mhip", 4) == TRUE)
 	{
 	  ref = get4int(file, seek+24);
-	  add_songid_to_playlist(plitem, ref);
+	  it_add_songid_to_playlist(plitem, ref);
 	  ++n;
 	}
       seek += get4int (file, seek+8);
@@ -445,13 +445,13 @@ static glong get_nod_a(FILE *file, glong seek)
 	 }
      }
     }
-  add_song (song);
+  it_add_song (song);
   return seek;   /* no more black magic */
 }
 
 
 /* Parse the iTunesDB and store the songs 
-   using add_song () defined in song.c. 
+   using it_addsong () defined in song.c. 
    Returns TRUE on success, FALSE on error.
    "path" should point to the mount point of the
    iPod, e.e. "/mnt/ipod" */
@@ -476,7 +476,7 @@ gboolean itunesdb_parse_file (gchar *filename)
   glong seek;
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, get_nr_of_songs ());
+  fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, it_get_nr_of_songs ());
 #endif
 
   itunes = fopen (filename, "r");
@@ -523,7 +523,7 @@ gboolean itunesdb_parse_file (gchar *filename)
 
   if (itunes != NULL)     fclose (itunes);
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "exit:  %4d\n", get_nr_of_songs ());
+  fprintf(stderr, "exit:  %4d\n", it_get_nr_of_songs ());
 #endif 
   return result;
 }
@@ -849,7 +849,7 @@ write_mhsd_one(FILE *file)
     guint32 i, song_num, mhod_num;
     glong mhsd_seek, mhit_seek, mhlt_seek; 
 
-    song_num = get_nr_of_songs();
+    song_num = it_get_nr_of_songs();
 
     mhsd_seek = ftell (file);  /* get position of mhsd header */
     mk_mhsd (file, 1);         /* write header: type 1: song  */
@@ -857,7 +857,7 @@ write_mhsd_one(FILE *file)
     mk_mhlt (file, song_num);  /* write header with nr. of songs */
     for (i=0; i<song_num; ++i)  /* Write each song */
     {
-	if((song = get_song_by_nr (i)) == 0)
+	if((song = it_get_song_by_nr (i)) == 0)
 	{
 	    g_warning ("Invalid song Index!\n");
 	    break;
@@ -920,14 +920,14 @@ write_playlist(FILE *file, Playlist *pl)
     gunichar2 empty = 0;
     
     mhyp_seek = ftell(file);
-    n = get_nr_of_songs_in_playlist (pl);
+    n = it_get_nr_of_songs_in_playlist (pl);
 #if ITUNESDB_DEBUG
   fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, n);
 #endif    
     mk_mhyp(file, pl->name_utf16, pl->type, n);  
     for (i=0; i<n; ++i)
     {
-        if((s = get_song_in_playlist_by_nr (pl, i)))
+        if((s = it_get_song_in_playlist_by_nr (pl, i)))
 	{
 	    mk_mhip(file, s->ipod_id);
 	    mk_mhod(file, MHOD_ID_PLAYLIST, &empty, s->ipod_id); 
@@ -938,7 +938,7 @@ write_playlist(FILE *file, Playlist *pl)
 
 
 
-/* Expects the master playlist to be (get_playlist_by_nr (0)) */
+/* Expects the master playlist to be (it_get_playlist_by_nr (0)) */
 static void
 write_mhsd_two(FILE *file)
 {
@@ -948,11 +948,11 @@ write_mhsd_two(FILE *file)
     mhsd_seek = ftell (file);  /* get position of mhsd header */
     mk_mhsd (file, 2);         /* write header: type 2: playlists  */
     mhlp_seek = ftell (file);
-    playlists = get_nr_of_playlists();
+    playlists = it_get_nr_of_playlists();
     mk_mhlp (file, playlists);
     for(i = 0; i < playlists; i++)
     { 
-	write_playlist(file, get_playlist_by_nr(i));
+	write_playlist(file, it_get_playlist_by_nr(i));
     }
     fix_mhlp (file, mhlp_seek, playlists);
     fix_mhsd (file, mhsd_seek, ftell (file));

@@ -43,7 +43,6 @@
 #include "display.h"
 #include "prefs.h"
 #include "md5.h"
-#include "threads.h"
 
 int
 main (int argc, char *argv[])
@@ -67,14 +66,11 @@ main (int argc, char *argv[])
   srand(time(NULL));
   gtkpod_window = create_gtkpod ();
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
-  create_listviews (gtkpod_window);
+  create_display (gtkpod_window);
   create_mpl ();     /* needs at least the master playlist */
   md5_unique_file_init (NULL); /* init for duplicate detection */
-  gtkpod_thread_pool_init();
   if(prefs_get_auto_import())
-/*    gtkpod_thread_pool_exec(THREAD_READ_ITUNES);*/
       handle_import();
-  display_set_default_sizes ();
   gtk_widget_show (gtkpod_window);
   gtk_main ();
   return 0;

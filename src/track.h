@@ -87,11 +87,14 @@ enum {
 };
 
 void free_song(Song *song);
+gboolean it_add_song (Song *song);
 gboolean add_song (Song *song);
 void remove_song (Song *song);
 void remove_all_songs (void);
 GList *get_song_list (void);
+#define it_get_nr_of_songs get_nr_of_songs
 guint get_nr_of_songs (void);
+Song *it_get_song_by_nr (guint32 n);
 Song *get_song_by_nr (guint32 n);
 Song *get_song_by_id (guint32 id);
 gboolean add_song_by_filename (gchar *name);

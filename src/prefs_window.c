@@ -55,6 +55,22 @@ static void on_cfg_tag_autoset_toggled (GtkToggleButton *togglebutton,
 	gtk_toggle_button_get_active(togglebutton));
 }
 
+
+/* turn the prefs window insensitive (if it's open) */
+void block_prefs_window (void)
+{
+    if (prefs_window)
+	gtk_widget_set_sensitive (prefs_window, FALSE);
+}
+
+/* turn the prefs window sensitive (if it's open) */
+void release_prefs_window (void)
+{
+    if (prefs_window)
+	gtk_widget_set_sensitive (prefs_window, TRUE);
+}
+
+
 /**
  * create_gtk_prefs_window
  * Create, Initialize, and Show the preferences window
@@ -187,7 +203,6 @@ prefs_window_cancel(void)
     tmpcfg =NULL;
     prefs_window = NULL;
 }
-
 /**
  * save_gtkpod_prefs_window
  * UI has requested preferences update(by clicking ok on the prefs window)

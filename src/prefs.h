@@ -79,7 +79,9 @@ struct cfg
   struct win_size size_conf;    /* last size of gtkpod main window */
   gint sm_col_width[SM_NUM_COLUMNS_PREFS]; /* width colums in song model */
   gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
-  gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
+  gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements
+				 * */
+  guint32 statusbar_timeout;    /* timeout for statusbar messages */
 };
 
 /* FIXME: make the global struct obsolete! */
@@ -121,6 +123,7 @@ void prefs_set_size_conf (gint x, gint y);
 void prefs_set_sm_col_width (gint col, gint width);
 void prefs_set_tag_autoset (gint category, gboolean autoset);
 void prefs_set_paned_pos (gint i, gint pos);
+void prefs_set_statusbar_timeout (guint32 val);
 
 gboolean prefs_get_offline(void);
 gboolean prefs_get_keep_backups(void);
@@ -146,5 +149,6 @@ void prefs_get_size_conf (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
 gint prefs_get_paned_pos (gint i);
+guint32 prefs_get_statusbar_timeout (void);
 
 #endif __PREFS_H__

@@ -31,7 +31,7 @@ create_gtkpod (void)
 {
   GtkWidget *gtkpod;
   GtkWidget *vbox1;
-  GtkWidget *menubar1;
+  GtkWidget *menubar;
   GtkWidget *menuitem10;
   GtkWidget *menuitem10_menu;
   GtkWidget *import_itunes_mi;
@@ -85,7 +85,7 @@ create_gtkpod (void)
   GtkWidget *menuitem13_menu;
   GtkWidget *about1;
   GtkWidget *image182;
-  GtkWidget *toolbar2;
+  GtkWidget *toolbar;
   GtkWidget *tmp_toolbar_icon;
   GtkWidget *import_button;
   GtkWidget *button2;
@@ -140,13 +140,13 @@ create_gtkpod (void)
   gtk_widget_show (vbox1);
   gtk_container_add (GTK_CONTAINER (gtkpod), vbox1);
 
-  menubar1 = gtk_menu_bar_new ();
-  gtk_widget_show (menubar1);
-  gtk_box_pack_start (GTK_BOX (vbox1), menubar1, FALSE, FALSE, 0);
+  menubar = gtk_menu_bar_new ();
+  gtk_widget_show (menubar);
+  gtk_box_pack_start (GTK_BOX (vbox1), menubar, FALSE, FALSE, 0);
 
   menuitem10 = gtk_menu_item_new_with_mnemonic (_("_File"));
   gtk_widget_show (menuitem10);
-  gtk_container_add (GTK_CONTAINER (menubar1), menuitem10);
+  gtk_container_add (GTK_CONTAINER (menubar), menuitem10);
 
   menuitem10_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem10), menuitem10_menu);
@@ -224,7 +224,7 @@ create_gtkpod (void)
 
   menuitem11 = gtk_menu_item_new_with_mnemonic (_("_Edit"));
   gtk_widget_show (menuitem11);
-  gtk_container_add (GTK_CONTAINER (menubar1), menuitem11);
+  gtk_container_add (GTK_CONTAINER (menubar), menuitem11);
 
   menuitem11_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem11), menuitem11_menu);
@@ -276,7 +276,7 @@ create_gtkpod (void)
 
   item1 = gtk_menu_item_new_with_mnemonic (_("_View"));
   gtk_widget_show (item1);
-  gtk_container_add (GTK_CONTAINER (menubar1), item1);
+  gtk_container_add (GTK_CONTAINER (menubar), item1);
 
   item1_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (item1), item1_menu);
@@ -345,7 +345,7 @@ create_gtkpod (void)
 
   menuitem13 = gtk_menu_item_new_with_mnemonic (_("_Help"));
   gtk_widget_show (menuitem13);
-  gtk_container_add (GTK_CONTAINER (menubar1), menuitem13);
+  gtk_container_add (GTK_CONTAINER (menubar), menuitem13);
 
   menuitem13_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem13), menuitem13_menu);
@@ -358,59 +358,59 @@ create_gtkpod (void)
   gtk_widget_show (image182);
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (about1), image182);
 
-  toolbar2 = gtk_toolbar_new ();
-  gtk_widget_show (toolbar2);
-  gtk_box_pack_start (GTK_BOX (vbox1), toolbar2, FALSE, FALSE, 0);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_BOTH);
+  toolbar = gtk_toolbar_new ();
+  gtk_widget_show (toolbar);
+  gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-goto-top", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar2)));
-  import_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2),
+  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-goto-top", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  import_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Import"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar2)->children)->data))->label), TRUE);
+  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
   gtk_widget_show (import_button);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar2)));
-  button2 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2),
+  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  button2 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Files"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar2)->children)->data))->label), TRUE);
+  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
   gtk_widget_show (button2);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar2)));
-  button3 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2),
+  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  button3 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Dirs"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar2)->children)->data))->label), TRUE);
+  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
   gtk_widget_show (button3);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-justify-left", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar2)));
-  button4 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2),
+  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-justify-left", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  button4 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("New PL"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar2)->children)->data))->label), TRUE);
+  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
   gtk_widget_show (button4);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-goto-bottom", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar2)));
-  button5 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2),
+  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-goto-bottom", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  button5 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Export"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar2)->children)->data))->label), TRUE);
+  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
   gtk_widget_show (button5);
 
   paned0 = gtk_hpaned_new ();
@@ -692,7 +692,7 @@ create_gtkpod (void)
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (gtkpod, gtkpod, "gtkpod");
   GLADE_HOOKUP_OBJECT (gtkpod, vbox1, "vbox1");
-  GLADE_HOOKUP_OBJECT (gtkpod, menubar1, "menubar1");
+  GLADE_HOOKUP_OBJECT (gtkpod, menubar, "menubar");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem10, "menuitem10");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem10_menu, "menuitem10_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, import_itunes_mi, "import_itunes_mi");
@@ -746,7 +746,7 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13_menu, "menuitem13_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, about1, "about1");
   GLADE_HOOKUP_OBJECT (gtkpod, image182, "image182");
-  GLADE_HOOKUP_OBJECT (gtkpod, toolbar2, "toolbar2");
+  GLADE_HOOKUP_OBJECT (gtkpod, toolbar, "toolbar");
   GLADE_HOOKUP_OBJECT (gtkpod, import_button, "import_button");
   GLADE_HOOKUP_OBJECT (gtkpod, button2, "button2");
   GLADE_HOOKUP_OBJECT (gtkpod, button3, "button3");

@@ -27,6 +27,8 @@
 
 #include <gtk/gtk.h>
 
+void block_prefs_window (void);
+void release_prefs_window (void);
 void prefs_window_save(void);
 void prefs_window_create(void);
 void prefs_window_cancel(void);

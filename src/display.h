@@ -106,10 +106,8 @@ enum  {
   PM_NUM_COLUMNS
 };
 
-
-void create_listviews (GtkWidget *gtkpod);
-void destroy_listview (void);
-void cleanup_listviews(void);
+void create_display (GtkWidget *gtkpod);
+void cleanup_display (void);
 
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist);
@@ -133,4 +131,5 @@ Playlist* get_currently_selected_playlist(void);
 GList* get_currently_selected_songs(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
+
 #endif __TREE_H__

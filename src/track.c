@@ -249,21 +249,24 @@ gboolean add_directory_recursively (gchar *name)
 
   if (name == NULL) return TRUE;
   if (g_file_test (name, G_FILE_TEST_IS_REGULAR))
-    return (add_song_by_filename (name));
-  if (g_file_test (name, G_FILE_TEST_IS_DIR)) {
-    dir = g_dir_open (name, 0, NULL);
-    if (dir != NULL) {
-      do {
-	next = g_dir_read_name (dir);
-	if (next != NULL)
-	  {
-	    nextfull = concat_dir (name, next);
-	    result &= add_directory_recursively (nextfull);
-	    g_free (nextfull);
-	  }
-      } while (next != NULL);
-      g_dir_close (dir);
-    }
+      return (add_song_by_filename (name));
+  if (g_file_test (name, G_FILE_TEST_IS_DIR))
+  {
+      block_widgets ();
+      dir = g_dir_open (name, 0, NULL);
+      if (dir != NULL) {
+	  do {
+	      next = g_dir_read_name (dir);
+	      if (next != NULL)
+	      {
+		  nextfull = concat_dir (name, next);
+		  result &= add_directory_recursively (nextfull);
+		  g_free (nextfull);
+	      }
+	  } while (next != NULL);
+	  g_dir_close (dir);
+      }
+      release_widgets ();
   }
   return TRUE;
 }
@@ -275,6 +278,8 @@ gboolean add_directory_recursively (gchar *name)
 /* Not nice: currently only accepts files ending on .mp3 */
 gboolean add_song_by_filename (gchar *name)
 {
+  static gint count = 0; /* do a gtkpod_songs_statusbar_update() every
+			    10 songs */
   Song *song;
   File_Tag *filetag;
   gint len;
@@ -369,6 +374,7 @@ gboolean add_song_by_filename (gchar *name)
 			 name);
 	  g_free (filetag);
 	  g_free (song);
+	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 	  return FALSE;
 	}
       }
@@ -385,9 +391,16 @@ gboolean add_song_by_filename (gchar *name)
 	  add_song_to_playlist (NULL, song);
 	  /* indicate that non-transferred files exist */
 	  data_changed ();
+	  ++count;
+	  if (count >= 10)  /* update every ten songs added */
+	  {
+	      gtkpod_songs_statusbar_update();
+	      count = 0;
+	  }
       }
     }
   g_free (filetag);
+  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   return TRUE;
 }
 
@@ -460,6 +473,8 @@ Song *get_song_by_id (guint32 id)
    Returns TRUE on success, FALSE if some error occured */
 gboolean flush_songs (void)
 {
+  gint count, n;
+  gchar *buf;
   Song  *song;
   GList *gl_song;
   gchar *filename = NULL;
@@ -482,18 +497,44 @@ gboolean flush_songs (void)
       }
       free_song(song);
       gl_song->data = NULL;
+      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
   g_list_free(pending_deletion);
   pending_deletion = NULL;  
 
-  /* we now have as much space as we're gonna have, copy files to ipod */
+  /* count number of songs to be transferred */
+  n = 0;
   gl_song = g_list_first (songs);
   while (gl_song != NULL) {
     song = (Song *)gl_song->data;
-    result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
+    if (!song->transferred)
+	++n;
     gl_song = g_list_next (gl_song);
+    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
-    
+  /* we now have as much space as we're gonna have, copy files to ipod */
+  count = 0; /* songs transferred */
+  gl_song = g_list_first (songs);
+  while (gl_song != NULL) {
+    song = (Song *)gl_song->data;
+    if (!song->transferred)
+    {
+	result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
+	++count;
+	if (count == 1)  /* we need longer timeout */
+	    prefs_set_statusbar_timeout (1<<31);
+	if (count == n)  /* we need to reset timeout */
+	    prefs_set_statusbar_timeout (0);
+	buf = g_strdup_printf (ngettext (_("Copied %d of %d new song."),
+					 _("Copied %d of %d new songs."), n),
+			       count, n);
+	gtkpod_statusbar_message(buf);
+	g_free (buf);
+    }
+    gl_song = g_list_next (gl_song);
+    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+  }
+
   return result;
 }
 
@@ -684,8 +725,10 @@ void handle_import (void)
 	return;
     }
 
+
     n = get_nr_of_songs (); /* how many songs are alread there? */
 
+    block_widgets ();
     if (!cfg->offline)
     { /* iPod is connected */
 	if (prefs_get_write_extended_info())
@@ -732,6 +775,7 @@ void handle_import (void)
 	{
 	    gtkpod_warning (_("Import aborted.\n"));
 	    return;
+	    release_widgets ();
 	}
     }
 
@@ -751,9 +795,8 @@ void handle_import (void)
 	/*we need to tell the display that the ID has changed */
 	pm_song_changed (song);
     }
-    /*
     gtkpod_songs_statusbar_update();
-    */
+    release_widgets ();
 }
 
 
@@ -937,6 +980,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
       if (song->md5_hash)
 	fprintf (fp, "md5_hash=%s\n", song->md5_hash);
       fprintf (fp, "transferred=%d\n", song->transferred);
+      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
     }
   if (prefs_get_offline())
   { /* we are offline and also need to export the list of songs that
@@ -948,6 +992,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 	  fprintf (fp, "id=000\n");  /* our sign for songs pending
 					deletion */
 	  fprintf (fp, "filename_ipod=%s\n", song->ipod_path);
+	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
       }
   }
   fprintf (fp, "id=xxx\n");
@@ -962,6 +1007,8 @@ void handle_export (void)
   gchar *ipt, *ipe, *cft=NULL, *cfe=NULL, *cfgdir;
   gboolean success = TRUE;
 
+
+  block_widgets (); /* block user input */
   cfgdir = prefs_get_cfgdir ();
   ipt = concat_dir (cfg->ipod_mount, "iPod_Control/iTunes/iTunesDB");
   ipe = concat_dir (cfg->ipod_mount, "iPod_Control/iTunes/iTunesDB.ext");
@@ -1040,6 +1087,8 @@ void handle_export (void)
   C_FREE (cfe);
   C_FREE (ipt);
   C_FREE (ipe);
+
+  release_widgets (); /* Allow input again */
 }
 
 
@@ -1053,4 +1102,22 @@ gboolean files_are_saved (void)
 void data_changed (void)
 {
   files_saved = FALSE;
+}
+
+
+/* ------------------------------------------------------------------- */
+/* functions used by itunesdb (so we can refresh the display during
+ * import */
+gboolean it_add_song (Song *song)
+{
+    gboolean result = add_song (song);
+    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+    return result;
+}
+
+Song *it_get_song_by_nr (guint32 n)
+{
+    Song *song = get_song_by_nr (n);
+    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+    return song;
 }

@@ -126,7 +126,7 @@ static char *ofolder[] =
 
 static GdkPixmap *folder_pixmap = NULL, *ofolder_pixmap;
 static GdkBitmap *folder_mask, *ofolder_mask;
-static GtkWidget *browser = NULL;
+static GtkWidget *dirbrowser = NULL;
 
 static GtkWidget *xmms_create_dir_browser(gchar * title, gchar * current_path, GtkSelectionMode mode, void (*handler) (gchar *));
 
@@ -142,6 +142,19 @@ struct dirnode
  * functions added for gtkpod                                   *
  * ------------------------------------------------------------ */
 
+/* turn the dirbrowser insensitive (if it's open) */
+void block_dirbrowser (void)
+{
+    if (dirbrowser)
+	gtk_widget_set_sensitive (dirbrowser, FALSE);
+}
+
+/* turn the dirbrowser sensitive (if it's open) */
+void release_dirbrowser (void)
+{
+    if (dirbrowser)
+	gtk_widget_set_sensitive (dirbrowser, TRUE);
+}
 /* Callback after one directory has been added */
 static void add_dir_selected (gchar *dir)
 {
@@ -152,20 +165,20 @@ static void add_dir_selected (gchar *dir)
 
 void create_dir_browser (void)
 {
-    if(browser)  return;
-    browser = xmms_create_dir_browser (
+    if(dirbrowser)  return;
+    dirbrowser = xmms_create_dir_browser (
 	_("Select directory to add recursively"),
 	cfg->last_dir.browse,
 	GTK_SELECTION_MULTIPLE,
 	add_dir_selected);
-    gtk_widget_show (browser);
+    gtk_widget_show (dirbrowser);
 }
 
 /* called when the file selector is closed */
 static void add_dir_close (GtkWidget *w1, GtkWidget *w2)
 {
-    if (browser)   gtk_widget_destroy(browser),
-    browser = NULL;
+    if (dirbrowser)   gtk_widget_destroy(dirbrowser),
+    dirbrowser = NULL;
 }
 
 
