@@ -23,6 +23,52 @@
 |  This product is not supported/written/published by Apple!
 */
 
+/* -------------------------------------------------------------------
+ *
+ * HOWTO add a new_option to the prefs dialog
+ *
+ * - add the desired option to the prefs window using glade-2
+ *
+ * - set the default value of new_option in cfg_new() in prefs.c
+ *
+ * - add function prefs_get_new_option() and
+ *   prefs_set_new_option() to prefs.[ch]. These functions are
+ *   called from within gtkpod to query/set the state of the option.
+ *   prefs_set_new_option() should verify that the value passed is
+ *   valid. 
+ *
+ * - add a function prefs_window_set_new_option to
+ *   prefs_window.[ch]. This function is called from the callback
+ *   functions in callback.c to set the state of the option. The value
+ *   is applied to the actual prefs when pressing the "OK" or "Apply"
+ *   button in the prefs window.
+ *
+ * - if your option is a pointer to data, make sure the data is copied
+ *   in clone_prefs() in prefs.c
+ *
+ * - add code to prefs_window_create() in prefs_window.c to set the
+ *   correct state of the option in the prefs window.
+ *
+ * - add code to prefs_window_set() in prefs_window.c to actually take
+ *   over the new state when closing the prefs window
+ *
+ * - add code to write_prefs_to_file_desc() to write the state of
+ *   new_option to the prefs file
+ *
+ * - add code to read_prefs_from_file_desc() to read the
+ *   new_option from the prefs file
+ *
+ * - if you want new_option to be a command line option as well, add
+ *   code to usage() and read_prefs()
+ *
+ * ---------------------------------------------------------------- */
+
+/* FIXME: simplify code to make adding of new options easier:
+                  prefs_window_create()
+                  write_prefs_to_file_desc()
+                  read_prefs_from_file_desc()
+*/
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -152,7 +198,7 @@ struct cfg *cfg_new(void)
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     mycfg->play_now_path = g_strdup ("xmms -p %s");
-    mycfg->play_enqueue_path = g_strdup ("xmms xmms -e %s");
+    mycfg->play_enqueue_path = g_strdup ("xmms -e %s");
     mycfg->automount = FALSE;
     return(mycfg);
 }
@@ -374,30 +420,46 @@ read_prefs_from_file_desc(FILE *fp)
 }
 
 
+/* we first read from /etc/gtkpod/prefs and then overwrite the
+   settings with ~/.gtkpod/prefs */
 void
 read_prefs_defaults(void)
 {
   gchar *cfgdir = NULL;
   gchar filename[PATH_MAX+1];
   FILE *fp = NULL;
-  
-  if ((cfgdir = prefs_get_cfgdir ())) {
-    {
+  gboolean have_prefs = FALSE;
+
+  cfgdir = prefs_get_cfgdir ();
+  if (cfgdir)
+  {
       snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
       filename[PATH_MAX] = 0;
       if(g_file_test(filename, G_FILE_TEST_EXISTS))
-	{
+      {
 	  if((fp = fopen(filename, "r")))
-	    {
+	  {
 	      read_prefs_from_file_desc(fp);
 	      fclose(fp);
-	    }
+	      have_prefs = TRUE; /* read prefs */
+	  }
 	  else
-	    {
+	  {
 	      gtkpod_warning(_("Unable to open config file \"%s\" for reading\n"), filename);
-	    }
-	}
-    }
+	  }
+      }
+  }
+  if (!have_prefs)
+  {
+      snprintf (filename, PATH_MAX, "/etc/gtkpod/prefs");
+      if (g_file_test (filename, G_FILE_TEST_EXISTS))
+      {
+	  if((fp = fopen(filename, "r")))
+	  {
+	      read_prefs_from_file_desc(fp);
+	      fclose(fp);
+	  }
+      }
   }
   C_FREE (cfgdir);
 }

@@ -143,12 +143,10 @@ do_command_on_entries (gchar *command, gchar *what)
     if (!next)
     {
 	str = g_strdup (command);
-	command = "";  /* what is left over from the command */
     }
     else
     {
         str = g_strndup (command, next-command);
-	command = next; /* what is left over from the command */
     }
     while (g_ascii_isspace (*command))  ++command;
     /* get the full path */

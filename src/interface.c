@@ -1498,7 +1498,7 @@ create_new_prefs_window (void)
   play_enqueue_path_entry = gtk_entry_new ();
   gtk_widget_show (play_enqueue_path_entry);
   gtk_box_pack_start (GTK_BOX (vbox34), play_enqueue_path_entry, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, play_enqueue_path_entry, _("For example, 'xmms xmms -e %s' will append the selected songs to xmms' current playlist."), NULL);
+  gtk_tooltips_set_tip (tooltips, play_enqueue_path_entry, _("For example, 'xmms -e %s' will append the selected songs to xmms' current playlist."), NULL);
 
   label43 = gtk_label_new (_("Song Playing"));
   gtk_widget_show (label43);
@@ -1546,6 +1546,7 @@ create_new_prefs_window (void)
   cfg_automount_ipod = gtk_check_button_new_with_mnemonic (_("Handle mounting/unmounting of iPod drive"));
   gtk_widget_show (cfg_automount_ipod);
   gtk_box_pack_start (GTK_BOX (vbox33), cfg_automount_ipod, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_automount_ipod, _("On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount <ipod mountpoint>' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."), NULL);
 
   label42 = gtk_label_new (_("Misc"));
   gtk_widget_show (label42);

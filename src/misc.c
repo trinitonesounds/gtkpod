@@ -33,6 +33,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <errno.h>
 #include "song.h"
 #include "interface.h"
@@ -496,6 +497,7 @@ gtkpod_main_quit(void)
 			 * command line? */
 			/* Tag them as dirty?  seems nasty */
 	unmount_ipod();
+	call_script ("gtkpod.out");
 	gtk_main_quit ();
 	return FALSE;
     }
@@ -1279,19 +1281,26 @@ mount_ipod(void)
     if(prefs_get_automount())
     {
 	gchar *str = NULL;
+
 	if((str = prefs_get_ipod_mount()))
 	{
-	    switch(fork())
+	    pid_t pid, tpid;
+	    int status;
+
+	    pid = fork ();
+	    switch (pid)
 	    {
-		case 0:
-		    execl("/bin/mount", "mount", str, NULL);
-		    exit(0);
-		    break;
-		default:
-		    break;
-	
+	    case 0: /* child */
+		execl("/bin/mount", "mount", str, NULL);
+		exit(0);
+		break;
+	    case -1: /* parent and error */
+		break;
+	    default: /* parent -- let's wait for the child to terminate */
+		tpid = waitpid (pid, &status, WNOHANG|WUNTRACED);
+		/* we could evaluate tpid and status now */
+		break;
 	    }
-	    sleep(1);
 	    g_free(str);
 	}
     }
@@ -1304,18 +1313,84 @@ unmount_ipod(void)
 	gchar *str = NULL;
 	if((str = prefs_get_ipod_mount()))
 	{
-	    switch(fork())
+	    pid_t pid, tpid;
+	    int status;
+
+	    pid = fork ();
+	    switch(pid)
 	    {
-		case 0:
-		    execl("/bin/umount", "umount", str, NULL);
-		    exit(0);
-		    break;
-		default:
-		    break;
-	
+	    case 0:
+		execl("/bin/umount", "umount", str, NULL);
+		exit(0);
+		break;
+	    case -1: /* parent and error */
+		break;
+	    default: /* parent -- let's wait for the child to terminate */
+		tpid = waitpid (pid, &status, WNOHANG|WUNTRACED);
+		/* we could evaluate tpid and status now */
+		break;
 	    }
-	    sleep(1);
 	    g_free(str);
 	}
     }
+}
+
+
+/***************************************************************************
+ * gtkpod.in,out calls
+ *
+ **************************************************************************/
+
+/* tries to call "/bin/sh @script" */
+static void do_script (gchar *script)
+{
+    if (script)
+    {
+	pid_t pid, tpid;
+	int status;
+
+	pid = fork ();
+	switch (pid)
+	{
+	case 0: /* child */
+	    execl("/bin/sh", "sh", script, NULL);
+	    exit(0);
+	break;
+	case -1: /* parent and error */
+	break;
+	default: /* parent -- let's wait for the child to terminate */
+	    tpid = waitpid (pid, &status, WNOHANG|WUNTRACED);
+	    /* we could evaluate tpid and status now */
+	    break;
+	}
+    }
+}
+
+
+/* tries to execute "/bin/sh ~/.gtkpod/@script" or
+ * "/bin/sh /etc/gtkpod/@script" if the former does not exist */
+void call_script (gchar *script)
+{
+    gchar *cfgdir;
+    gchar *file;
+
+    if (!script) return;
+
+    cfgdir =  prefs_get_cfgdir ();
+    file = concat_dir (cfgdir, script);
+    if (g_file_test (file, G_FILE_TEST_EXISTS))
+    {
+	do_script (file);
+    }
+    else
+    {
+	C_FREE (file);
+	file = concat_dir ("/etc/gtkpod/", script);
+	if (g_file_test (file, G_FILE_TEST_EXISTS))
+	{
+	    do_script (file);
+	}
+    }
+    C_FREE (file);
+    C_FREE (cfgdir);
 }

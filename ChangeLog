@@ -1,4 +1,17 @@
 gtkpod V0.43-CVS
+	IMPROVEMENT: option to mount the ipod on startup and unmount it on
+	exit.
+
+	IMPROVEMENT: mount/unmount ipod directory on startup/exit, and/or
+	execute ~/.gtkpod/gtkpod.in,out (or /etc/gtkpod/gtkpod.in,out if
+	the former doesn't exist) on startup/exit. First gtkpod.in is
+	executed, then the ipod is mounted (if this option is
+	activated). On exit, it's the other way round.
+
+	IMPROVEMENT: read global prefs /etc/gtkpod/prefs if
+	~/.gtkpod/prefs does not exist. Useful, e.g. to set a machine-wide
+	default mountpoint for the ipod.
+
 	IMPROVEMENT: "Add Songs" and "Add Directory" has a new default
 	behaviour. They will now add songs/directories to the currently
 	selected playlist. If no playlist is selected, they add to the

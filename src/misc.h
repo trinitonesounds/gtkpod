@@ -87,5 +87,6 @@ void update_blocked_widget (GtkWidget *w, gboolean sens);
 
 void mount_ipod(void);
 void unmount_ipod(void);
+void call_script (gchar *script);
 
 #endif __MISC_H__

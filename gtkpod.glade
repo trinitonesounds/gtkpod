@@ -2898,7 +2898,7 @@ entry (faster!)</property>
 		      <child>
 			<widget class="GtkEntry" id="play_enqueue_path_entry">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">For example, 'xmms xmms -e %s' will append the selected songs to xmms' current playlist.</property>
+			  <property name="tooltip" translatable="yes">For example, 'xmms -e %s' will append the selected songs to xmms' current playlist.</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>
 			  <property name="visibility">True</property>
@@ -3082,6 +3082,7 @@ entry (faster!)</property>
 		      <child>
 			<widget class="GtkCheckButton" id="cfg_automount_ipod">
 			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">On startup gtkpod will call 'mount &lt;ipod mountpoint&gt;', on exit a 'umount &lt;ipod mountpoint&gt;' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts.</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Handle mounting/unmounting of iPod drive</property>
 			  <property name="use_underline">True</property>

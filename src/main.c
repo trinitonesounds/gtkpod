@@ -62,21 +62,20 @@ main (int argc, char *argv[])
 
   add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
 
-  /*
-   * The following code was added by Glade to create one of each component
-   * (except popup menus), just so that you see something after building
-   * the project. Delete any components that you don't want shown initially.
-   */
   srand(time(NULL));
+
   gtkpod_window = create_gtkpod ();
+
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
   display_create (gtkpod_window);
   create_mpl ();     /* needs at least the master playlist */
-  if(prefs_get_automount())
-      mount_ipod();
-  if(prefs_get_auto_import())
-      handle_import();
+
+  /* stuff to be done before starting gtkpod */
+  call_script ("gtkpod.in");
+  if(prefs_get_automount())      mount_ipod();
+  if(prefs_get_auto_import())    handle_import();
   gtk_widget_show (gtkpod_window);
   gtk_main ();
+  /* all the cleanup is already done in gtkpod_main_quit() in misc.c */
   return 0;
 }
