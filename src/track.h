@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-25 00:31:15 jcs>
+/* Time-stamp: <2003-08-09 23:46:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -64,6 +64,7 @@ typedef struct
   gint32  tracks;            /* number of tracks      */
   gint32  year;              /* year                  */
   gint32  bitrate;           /* bitrate               */
+  gint32  volume;            /* volume adjustment between -100 and +100 */
   guint32 time_played;       /* time of last play  (Mac type)           */
   guint32 time_modified;     /* time of last modification  (Mac type)   */
   guint32 rating;            /* star rating (stars * RATING_STEP (20))  */
@@ -102,6 +103,7 @@ typedef enum {
     S_RATING,
     S_TIME_PLAYED,
     S_TIME_MODIFIED,
+    S_VOLUME,
 } S_item;
 
 void free_song(Song *song);

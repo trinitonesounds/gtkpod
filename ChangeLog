@@ -1,4 +1,8 @@
 gtkpod V0.53-CVS
+	NEW FEATURE: adjust volume of each track individually by using
+	iPod's per-track volume adjust feature (implemted through a new
+	column in the song view).
+
 	NEW FEATURE: automatically create a playlist for each
 	album/artist/genre/composer in your collection (thanks to Chris
 	Cutler).

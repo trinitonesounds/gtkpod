@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-02 16:33:33 jcs>
+/* Time-stamp: <2003-08-09 23:44:49 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -451,6 +451,7 @@ static glong get_mhit(FILE *file, glong seek)
   song->tracks = get4int(file, seek+48);      /* nr of tracks     */
   song->year = get4int(file, seek+52);        /* year             */
   song->bitrate = get4int(file, seek+56);     /* bitrate          */
+  song->volume = get4int(file, seek+64);      /* volume adjust    */
   song->playcount = get4int(file, seek+80);   /* playcount        */
   song->time_played = get4int(file, seek+88); /* last time played */
   song->cd_nr = get4int(file, seek+92);       /* CD nr            */
@@ -992,8 +993,9 @@ static void mk_mhit (FILE *file, Song *song)
   put_4int_cur (file, song->year);    /* the year                   */
   put_4int_cur (file, song->bitrate); /* bitrate                    */
   put_4int_cur (file, 0xac440000);    /* ?                          */
-  put_n0_cur (file, 4);               /* dummy space                */
-  put_4int_cur (file, song->playcount);/* playcount                  */
+  put_4int_cur (file, song->volume);  /* volume adjust              */
+  put_n0_cur (file, 3);               /* dummy space                */
+  put_4int_cur (file, song->playcount);/* playcount                 */
   put_4int_cur (file, 0);             /* dummy space                */
   put_4int_cur (file, song->time_played); /* last time played       */
   put_4int_cur (file, song->cd_nr);   /* CD number                  */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-07 23:13:56 jcs>
+/* Time-stamp: <2003-08-09 23:54:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -102,6 +102,7 @@ void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter)
 			SM_COLUMN_RATING, song,
 			SM_COLUMN_TIME_PLAYED, song,
 			SM_COLUMN_TIME_MODIFIED, song,
+			SM_COLUMN_VOLUME, song,
 			-1);
 }
 
@@ -280,7 +281,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   gboolean changed;        
   gboolean multi_edit;
 
-  guint32 nr;
+  gint32 nr;
   gchar **itemp_utf8; 
   gunichar2 **itemp_utf16; 
   gint sel_rows_num;
@@ -356,6 +357,14 @@ sm_cell_edited (GtkCellRendererText *renderer,
         break;
      case SM_COLUMN_TIME_PLAYED:
      case SM_COLUMN_TIME_MODIFIED:
+        break;
+     case SM_COLUMN_VOLUME:
+        nr = atoi (new_text);
+        if ((nr <= 100) && (nr >= -100) && (nr != song->volume))
+        {
+	    song->volume = nr;
+	    changed = TRUE;
+        }
         break;
      default:
         g_warning ("Programming error: sm_cell_edited: unknown song cell (%d) edited\n", column);
@@ -502,6 +511,13 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 /* 		    "editable", TRUE, */
 		    "xalign", 0.0, NULL);
       C_FREE (buf);
+      break;
+  case SM_COLUMN_VOLUME:
+      snprintf (text, 20, "%d", song->volume);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
       break;
   default:
       g_warning ("Programming error: unknown column in sm_cell_data_func: %d\n", column);
@@ -745,8 +761,8 @@ sm_get_all_songs(void)
 
 /* Function used to compare two cells during sorting (song view) */
 gint sm_data_compare_func (GtkTreeModel *model,
-			GtkTreeIter *a,
 			GtkTreeIter *b,
+			GtkTreeIter *a,
 			gpointer user_data)
 {
   Song *song1;
@@ -793,6 +809,8 @@ gint sm_data_compare_func (GtkTreeModel *model,
   case SM_COLUMN_TIME_PLAYED:
   case SM_COLUMN_TIME_MODIFIED:
       return time_get_time (song1, sm_item) - time_get_time (song2, sm_item);
+  case  SM_COLUMN_VOLUME:
+      return song1->volume - song2->volume;
   default:
       g_warning ("Programming error: sm_data_compare_func: no sort method for column %d\n", column);
       break;
@@ -926,6 +944,9 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
       text = _("Modified");
       editable = FALSE;
       break;
+  case SM_COLUMN_VOLUME:
+      text = _("Volume");
+      break;
   case SM_NUM_COLUMNS:
       break;
   }
@@ -994,7 +1015,8 @@ void sm_create_treeview (void)
 			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER));
+			  G_TYPE_POINTER, G_TYPE_POINTER,
+			  G_TYPE_POINTER));
   gtk_tree_view_set_model (song_treeview, GTK_TREE_MODEL (model));
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (song_treeview), TRUE);
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (song_treeview),

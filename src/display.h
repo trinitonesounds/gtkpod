@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-03 15:24:22 jcs>
+/* Time-stamp: <2003-08-09 23:44:49 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -144,6 +144,7 @@ typedef enum  {
   SM_COLUMN_RATING,
   SM_COLUMN_TIME_PLAYED,
   SM_COLUMN_TIME_MODIFIED,
+  SM_COLUMN_VOLUME,
   SM_NUM_COLUMNS
 } SM_item;
 
