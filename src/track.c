@@ -648,7 +648,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    }
 	    else if (sei == NULL)
 	    {
-		gtkpod_warning (_("%s:\nFormat error:%s\n"), name, buf);
+		gtkpod_warning (_("%s:\nFormat error: %s\n"), name, buf);
 		success = FALSE;
 		break;
 	    }

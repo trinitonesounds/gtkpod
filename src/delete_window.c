@@ -148,9 +148,11 @@ create_ipod_song_deletion_interface(void)
     GtkWidget *w = NULL;
     gchar *buf;
     gchar *song_name = NULL;
+    gint n;
 
     song_name = get_current_selected_song_name();
-    buf = _("Are you sure you want to delete the following songs\ncompletely from your ipod?");
+    n = g_list_length (selected_songs);
+    buf = ngettext ("Are you sure you want to delete the following song\ncompletely from your ipod?", "Are you sure you want to delete the following songs\ncompletely from your ipod?", n);
     if(buf && (w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
     if(song_name && (w = lookup_widget(confirmation_window, "msg_label")))
@@ -173,9 +175,11 @@ create_playlist_song_deletion_interface(const gchar *pl_name)
     GtkWidget *w = NULL;
     gchar *buf;
     gchar *song_name = NULL;
+    gint n;
 
     song_name = get_current_selected_song_name();
-    buf = g_strdup_printf(_("Are you sure you want to delete the following songs\nfrom the playlist \"%s\"?"), pl_name);
+    n = g_list_length (selected_songs);
+    buf = g_strdup_printf(ngettext ("Are you sure you want to delete the following song\nfrom the playlist \"%s\"?", "Are you sure you want to delete the following songs\nfrom the playlist \"%s\"?", n), pl_name);
     if(buf && (w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
     if(song_name && (w = lookup_widget(confirmation_window, "msg_label")))

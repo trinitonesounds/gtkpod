@@ -50,7 +50,7 @@ static Playlist *current_playlist = NULL;
 
 static void sm_song_changed (Song *song);
 static void sm_remove_song (Song *song);
-static void sm_remove_all_song (void);
+static void sm_remove_all_songs (void);
 static void sm_add_song_to_song_model (Song *song);
 static void st_song_changed (Song *song, gboolean removed, guint32 inst);
 static void st_add_song (Song *song, gboolean final, guint32 inst);
@@ -481,7 +481,7 @@ static gint st_get_instance (GtkNotebook *notebook)
       if (sorttab[i] && (sorttab[i]->notebook == notebook)) return i;
       ++i;
     }
-  g_warning (_("Programming error (st_get_instance): notebook could not be found.\n"));
+  g_warning ("Programming error (st_get_instance): notebook could not be found.\n");
   return -1;
 }
 
@@ -883,7 +883,7 @@ static void st_init (gint32 new_category, guint32 inst)
 
   if (inst == SORT_TAB_NUM)
     {
-      sm_remove_all_song ();
+      sm_remove_all_songs ();
     }
   else
     {
@@ -1298,7 +1298,7 @@ static void sm_remove_song (Song *song)
 
 
 /* Remove all songs from the display model */
-static void sm_remove_all_song (void)
+static void sm_remove_all_songs (void)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (song_treeview);
   GtkTreeIter iter;
@@ -1711,7 +1711,7 @@ static void add_song_columns ()
   /* ipod_id column */
   renderer = gtk_cell_renderer_text_new ();
   g_object_set_data (G_OBJECT (renderer), "column", (gint *)SM_COLUMN_IPOD_ID);
-  column = gtk_tree_view_column_new_with_attributes (_("Ipod ID"), renderer,
+  column = gtk_tree_view_column_new_with_attributes (_("iPod ID"), renderer,
 						    NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
@@ -1751,7 +1751,7 @@ static void add_song_columns ()
   renderer = gtk_cell_renderer_toggle_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
 	      (gint*)SM_COLUMN_NONE);
-  column = gtk_tree_view_column_new_with_attributes (_("Gtkpod"), renderer,
+  column = gtk_tree_view_column_new_with_attributes ("gtkpod", renderer,
 						    NULL);
   gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_NONE);
   gtk_tree_view_column_set_resizable (column, TRUE);

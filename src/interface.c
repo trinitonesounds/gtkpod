@@ -922,7 +922,7 @@ create_prefs_window (void)
   GtkWidget *label16;
 
   prefs_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (prefs_window), _("Gtkpod Preferences..."));
+  gtk_window_set_title (GTK_WINDOW (prefs_window), _("gtkpod Preferences"));
 
   frame1 = gtk_frame_new (NULL);
   gtk_widget_show (frame1);
@@ -937,7 +937,7 @@ create_prefs_window (void)
   gtk_widget_show (hbox1);
   gtk_box_pack_start (GTK_BOX (vbox3), hbox1, FALSE, TRUE, 0);
 
-  label17 = gtk_label_new (_("Ipod Mount Point:"));
+  label17 = gtk_label_new (_("iPod Mount Point:"));
   gtk_widget_show (label17);
   gtk_box_pack_start (GTK_BOX (hbox1), label17, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label17), GTK_JUSTIFY_LEFT);
@@ -965,15 +965,15 @@ create_prefs_window (void)
   gtk_widget_show (charset_combo_entry);
   gtk_editable_set_editable (GTK_EDITABLE (charset_combo_entry), FALSE);
 
-  cfg_autoimport = gtk_check_button_new_with_mnemonic (_("Automatically Import ItunesDB on startup"));
+  cfg_autoimport = gtk_check_button_new_with_mnemonic (_("Automatically Import iTunesDB on startup"));
   gtk_widget_show (cfg_autoimport);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_autoimport, FALSE, FALSE, 0);
 
-  cfg_md5songs = gtk_check_button_new_with_mnemonic (_("Don't Allow File Duplication(slower import)"));
+  cfg_md5songs = gtk_check_button_new_with_mnemonic (_("Don't Allow File Duplication (slower import)"));
   gtk_widget_show (cfg_md5songs);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_md5songs, FALSE, FALSE, 0);
 
-  cfg_writeid3 = gtk_check_button_new_with_mnemonic (_("Change the ID3 Tags when modified in Gtkpod\n(on disk and on the ipod)"));
+  cfg_writeid3 = gtk_check_button_new_with_mnemonic (_("Change the ID3 Tags when modified in gtkpod\n(on disk and on the ipod)"));
   gtk_widget_show (cfg_writeid3);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_writeid3, FALSE, FALSE, 0);
 
@@ -981,7 +981,7 @@ create_prefs_window (void)
   gtk_widget_show (cfg_keep_backups);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_keep_backups, FALSE, FALSE, 0);
 
-  cfg_write_extended = gtk_check_button_new_with_mnemonic (_("Write extended information (PC filenames,\nMD5 hashes to disk)"));
+  cfg_write_extended = gtk_check_button_new_with_mnemonic (_("Write extended information (PC filenames,\nMD5 hashes)"));
   gtk_widget_show (cfg_write_extended);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_write_extended, FALSE, FALSE, 0);
 
@@ -1005,7 +1005,7 @@ create_prefs_window (void)
   gtk_widget_show (cfg_delete_track_from_ipod);
   gtk_box_pack_start (GTK_BOX (vbox7), cfg_delete_track_from_ipod, FALSE, FALSE, 0);
 
-  label19 = gtk_label_new (_("Delete Confirmation"));
+  label19 = gtk_label_new (_("Delete Confirmation "));
   gtk_widget_show (label19);
   gtk_frame_set_label_widget (GTK_FRAME (frame3), label19);
   gtk_label_set_justify (GTK_LABEL (label19), GTK_JUSTIFY_LEFT);
@@ -1067,7 +1067,7 @@ create_prefs_window (void)
   gtk_widget_show (cfg_song_list_track);
   gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_track, FALSE, FALSE, 0);
 
-  label18 = gtk_label_new (_("Displayed Song Attributes"));
+  label18 = gtk_label_new (_("Displayed Song Attributes "));
   gtk_widget_show (label18);
   gtk_frame_set_label_widget (GTK_FRAME (frame2), label18);
   gtk_label_set_justify (GTK_LABEL (label18), GTK_JUSTIFY_LEFT);
@@ -1087,7 +1087,7 @@ create_prefs_window (void)
   gtk_container_add (GTK_CONTAINER (hbuttonbox3), button7);
   GTK_WIDGET_SET_FLAGS (button7, GTK_CAN_DEFAULT);
 
-  label16 = gtk_label_new (_("Gtkpod Preferences: "));
+  label16 = gtk_label_new (_("gtkpod Preferences: "));
   gtk_widget_show (label16);
   gtk_frame_set_label_widget (GTK_FRAME (frame1), label16);
   gtk_label_set_justify (GTK_LABEL (label16), GTK_JUSTIFY_LEFT);

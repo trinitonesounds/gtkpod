@@ -52,11 +52,9 @@ static void usage (FILE *file)
   fprintf(file, _("  --writeid3:   same as \"-w\".\n"));
   fprintf(file, _("  -c:           check files automagically for duplicates\n"));
   fprintf(file, _("  --md5:        same as \"-c\".\n"));
-  fprintf(file, _("  --auto:       import database automatically after start.\n"));
-  fprintf(file, _("  -a:           same as \"--auto\".\n"));
-  fprintf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n"));
-  fprintf(file, _("                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n"));
-  fprintf(file, _("                used with \"Offline\" deactivated.\n"));
+  fprintf(file, _("  -a:           import database automatically after start.\n"));
+  fprintf(file, _("  --auto:       same as \"-a\".\n"));
+  fprintf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n                used with \"Offline\" deactivated.\n"));
   fprintf(file, _("  --offline:    same as \"-o\".\n"));
 }
 

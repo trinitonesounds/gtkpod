@@ -1295,7 +1295,7 @@
 
 <widget class="GtkWindow" id="prefs_window">
   <property name="visible">True</property>
-  <property name="title" translatable="yes">Gtkpod Preferences...</property>
+  <property name="title" translatable="yes">gtkpod Preferences</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
@@ -1326,7 +1326,7 @@
 	      <child>
 		<widget class="GtkLabel" id="label17">
 		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">Ipod Mount Point:</property>
+		  <property name="label" translatable="yes">iPod Mount Point:</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">False</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1447,7 +1447,7 @@
 	    <widget class="GtkCheckButton" id="cfg_autoimport">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
-	      <property name="label" translatable="yes">Automatically Import ItunesDB on startup</property>
+	      <property name="label" translatable="yes">Automatically Import iTunesDB on startup</property>
 	      <property name="use_underline">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="active">False</property>
@@ -1466,7 +1466,7 @@
 	    <widget class="GtkCheckButton" id="cfg_md5songs">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
-	      <property name="label" translatable="yes">Don't Allow File Duplication(slower import)</property>
+	      <property name="label" translatable="yes">Don't Allow File Duplication (slower import)</property>
 	      <property name="use_underline">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="active">False</property>
@@ -1485,7 +1485,7 @@
 	    <widget class="GtkCheckButton" id="cfg_writeid3">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
-	      <property name="label" translatable="yes">Change the ID3 Tags when modified in Gtkpod
+	      <property name="label" translatable="yes">Change the ID3 Tags when modified in gtkpod
 (on disk and on the ipod)</property>
 	      <property name="use_underline">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
@@ -1525,7 +1525,7 @@
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Write extended information (PC filenames,
-MD5 hashes to disk)</property>
+MD5 hashes)</property>
 	      <property name="use_underline">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="active">False</property>
@@ -1615,7 +1615,7 @@ MD5 hashes to disk)</property>
 	      <child>
 		<widget class="GtkLabel" id="label19">
 		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">Delete Confirmation</property>
+		  <property name="label" translatable="yes">Delete Confirmation </property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">False</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1858,7 +1858,7 @@ MD5 hashes to disk)</property>
 	      <child>
 		<widget class="GtkLabel" id="label18">
 		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">Displayed Song Attributes</property>
+		  <property name="label" translatable="yes">Displayed Song Attributes </property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">False</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1923,7 +1923,7 @@ MD5 hashes to disk)</property>
       <child>
 	<widget class="GtkLabel" id="label16">
 	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">Gtkpod Preferences: </property>
+	  <property name="label" translatable="yes">gtkpod Preferences: </property>
 	  <property name="use_underline">False</property>
 	  <property name="use_markup">False</property>
 	  <property name="justify">GTK_JUSTIFY_LEFT</property>

@@ -1,5 +1,5 @@
 /*
-|  Copyright (C) 2002 Jorg Schuler <jcsjcs at sourceforge.net>
+|  Copyright (C) 2002 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
 |  URL: 
@@ -157,7 +157,7 @@ void open_about_window ()
 {
   GtkLabel *about_label;
   gchar *buffer_text, *label_text;
-  GtkTextView *about_credit_textview;
+  GtkTextView *textview;
 
   if (about_window != NULL) return;
   about_window = create_gtkpod_about_window ();
@@ -166,20 +166,27 @@ void open_about_window ()
   gtk_label_set_text (about_label, label_text);
   g_free (label_text);
   buffer_text = g_strdup_printf ("%s\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s",
-				 _("(C) 2002 Jörg Schuler (jcsjcs at sourceforge.net)"),
-				 _("\t\tCorey Donohoe(atmos at atmos.org)"),
-				 _("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."),
+				 _("    (C) 2002 - 2003\n    Jörg Schuler (jcsjcs at users.sourceforge.net)"),
+				 _("    Corey Donohoe (atmos at atmos.org)"),
+				 _("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA."),
 				 _("The code handling the reading and writing of the iTunesDB was ported from mktunes.pl of the gnuPod package written by Adrian Ulrich (http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipode). Adrian Ulrich ported the playlist part."),
 				 _("This program borrows code from the following projects:"),
-				 _("  xmms: dirbrowser\n  easytag: reading of ID3 tags\n  GNOMAD: playlength detection"),
+				 _("  xmms:    dirbrowser\n  easytag: reading and writing of ID3 tags\n  GNOMAD:  playlength detection"),
 				 _("The GUI was created with the help of glade-2."));
-  about_credit_textview = GTK_TEXT_VIEW (lookup_widget (about_window, "credits_textview"));
-  gtk_text_buffer_set_text (gtk_text_view_get_buffer (about_credit_textview),
+  textview = GTK_TEXT_VIEW (lookup_widget (about_window, "credits_textview"));
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (textview),
 			    buffer_text, -1);
   g_free (buffer_text);
+
+  buffer_text = g_strdup_printf ("%s",
+				 _("German: Jörg Schuler (jcsjcs at users.sourceforge.net)"));
+  textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (textview),
+			    buffer_text, -1);
+  g_free (buffer_text);
+
   gtk_widget_show (about_window);
 }
-
 
 void close_about_window (void)
 {
