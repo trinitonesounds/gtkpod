@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-30 14:39:54 jcs>
+/* Time-stamp: <2005-02-05 17:26:12 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,7 +38,7 @@
 #include <string.h>
 
 #include "charset.h"
-#include "itunesdb.h"
+#include "itdb.h"
 #include "misc.h"
 #include "prefs.h"
 #include "support.h"
@@ -254,7 +254,7 @@ time_t time_get_time (Track *track, TM_item tm_item)
 	mactime = 0;
 	break;
     }
-    return (itunesdb_time_mac_to_host (mactime));
+    return (itdb_time_mac_to_host (mactime));
 }
 
 
@@ -268,7 +268,7 @@ gchar *time_field_to_string (Track *track, TM_item tm_item)
 /* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
 void time_set_time (Track *track, time_t time, TM_item tm_item)
 {
-    guint32 mactime = itunesdb_time_host_to_mac (time);
+    guint32 mactime = itdb_time_host_to_mac (time);
 
     if (track) switch (tm_item)
     {

@@ -83,10 +83,11 @@ void display_updated (Track *track, gchar *txt);
 void display_mserv_problems (Track *track, gchar *txt);
 void handle_import_main (void);
 void handle_import_merge_first_ipod (void);
-void handle_import (iTunesDB *old_itdb, gchar *mp,
-		    gchar *itdb_name, gint pos);
+void handle_import (iTunesDB *old_itdb, const gchar *mp,
+		    const gchar *itdb_name, gint pos);
 void handle_export (void);
 void data_changed (iTunesDB *itdb);
+gboolean files_are_saved (void);
 gchar *get_track_name_on_disk_verified (Track *track);
 gchar* get_track_name_on_disk(Track *s);
 gchar* get_track_name_on_ipod(Track *s);

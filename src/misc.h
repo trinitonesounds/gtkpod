@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-05 23:36:27 jcs>
+/* Time-stamp: <2005-02-05 16:16:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -90,7 +90,8 @@ void delete_playlist_head (gboolean delete_full);
 void delete_track_head (gboolean delete_full);
 void delete_entry_head (gint inst, gboolean delete_full);
 
-void delete_populate_settings (Playlist *pl, GList *selected_trackids,
+void delete_populate_settings (iTunesDB *itdb, Playlist *pl,
+			       GList *selected_trackids,
 			       gchar **label, gchar **title,
 			       gboolean *confirm_again,
 			       ConfHandlerOpt *confirm_again_handler,

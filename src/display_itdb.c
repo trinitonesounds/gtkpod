@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-22 13:09:24 jcs>
+/* Time-stamp: <2005-02-05 16:52:49 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -251,6 +251,7 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
 	itdb_track_add (itdb, track);
 	result = track;
     }
+    data_changed (itdb);
     return result;
 }
 
@@ -276,6 +277,7 @@ void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos)
 
     itdb_playlist_add (itdb, pl, pos);
     pm_add_playlist (pl, pos);
+    data_changed (itdb);
 }
 
 /* create new playlist with title @name and add to @itdb and to
@@ -291,9 +293,23 @@ Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
     pl = gp_playlist_new (name, spl);
     itdb_playlist_add (itdb, pl, pos);
     pm_add_playlist (pl, pos);
+    data_changed (itdb);
     return pl;
 }
 
+
+/* Remove a playlist from the itdb and from the display */
+void gp_playlist_remove (Playlist *pl)
+{
+    iTunesDB *itdb;
+
+    g_return_if_fail (pl);
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
+    pm_remove_playlist (pl, TRUE);
+    itdb_playlist_remove (pl);
+    data_changed (itdb);
+}
 
 
 /* This function removes the track "track" from the
@@ -304,8 +320,11 @@ Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
    from memory completely */
 void gp_playlist_remove_track (Playlist *plitem, Track *track)
 {
+    iTunesDB *itdb;
+
     g_return_if_fail (track);
-    g_return_if_fail (track->itdb);
+    itdb = track->itdb;
+    g_return_if_fail (itdb);
 
     if (plitem == NULL)  plitem = itdb_playlist_mpl (track->itdb);
     g_return_if_fail (plitem);
@@ -326,6 +345,7 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
 	}
 	itdb_track_remove (track);
     }
+    data_changed (itdb);
 }
 
 /* This function appends the track "track" to the
@@ -346,6 +366,8 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
 
     pl->members = g_list_append (pl->members, track);
     if (display)  pm_add_track (pl, track, TRUE);
+
+    data_changed (itdb);
 }
 
 
@@ -375,14 +397,6 @@ void gp_track_validate_entries (Track *track)
     g_free (etr->year_str);
     etr->year_str = g_strdup_printf ("%d", track->year);
 }
-
-
-/* Make sure all structs (iTunesDB, Playlist, Track) have the
- * Extra*Data set */
-
-void gp_validate_itdb (iTunesDB *itdb)
-
-
 
 
 void init_data (GtkWidget *window)

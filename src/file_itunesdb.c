@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-22 14:01:07 jcs>
+/* Time-stamp: <2005-02-05 17:25:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -394,7 +394,8 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
  * @mp: mount point of iPod (if reading an iPod iTunesDB)
  * @itdb_name: name of iTunesDB (if reading a local file browser) */
 /* Return value: a new iTunesDB structure or NULL in case of an error */
-iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *mp, gchar *itdb_name)
+iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
+			  const gchar *mp, const gchar *itdb_name)
 {
     gchar *cfgdir;
     GList *gl;
@@ -575,9 +576,27 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *mp, gchar *itdb_name)
 
 /* Convenience function: 
    Merges the first GP_ITDB_TYPE_IPOD itdb with the new one. */
-MUST FIXME:
 void handle_import_merge_first_ipod (void)
 {
+    struct itdbs_head *itdbs_head;
+    GList *gl;
+    iTunesDB *itdb = NULL;
+
+    g_return_if_fail (gtkpod_window);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_if_fail (itdbs_head);
+
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	itdb = gl->data;
+	g_return_if_fail (itdb);
+	if (itdb->usertype == GP_ITDB_TYPE_IPOD) break;
+	itdb = NULL;
+    }
+
+    g_return_if_fail (itdb);
+    handle_import (itdb, prefs_get_ipod_mount(), NULL, 0);
 }
 
 
@@ -587,8 +606,8 @@ void handle_import_merge_first_ipod (void)
  * @itdb_name: name of iTunesDB (if reading a local file browser)
  * @pos: insert at which position (ignored if @old_itdb is set)
  */
-void handle_import (iTunesDB *old_itdb, gchar *mp,
-		    gchar *itdb_name, gint pos)
+void handle_import (iTunesDB *old_itdb, const gchar *mp,
+		    const gchar *itdb_name, gint pos)
 {
     iTunesDB *new_itdb;
 
@@ -702,11 +721,15 @@ void gp_info_deleted_tracks (iTunesDB *itdb,
 
     for (gl=pending_deletion; gl; gl=gl->next)
     {
-	Track tr = gl->data;
+	ExtraTrackData *etr;
+	Track *tr = gl->data;
 	g_return_if_fail (tr);
+	etr = tr->userdata;
+	g_return_if_fail (tr);
+
 	if (tr->transferred)
 	{
-	    if (size)  *size += tr->size - et->oldsize;
+	    if (size)  *size += tr->size - etr->oldsize;
 	}
 	if (num)   *num += 1;
     }
@@ -1373,6 +1396,8 @@ void handle_export (void)
     gboolean success = TRUE;
     struct itdbs_head *itdbs_head;
 
+    g_return_if_fail (gtkpod_window);
+
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
 				    "itdbs_head");
     g_return_if_fail (itdbs_head);
@@ -1420,4 +1445,29 @@ void data_changed (iTunesDB *itdb)
     eitdb->data_changed = TRUE;
 
     space_data_update ();
+}
+
+
+/* Check if all files are saved (i.e. none of the itdbs has the
+ * data_changed flag set */
+gboolean files_are_saved (void)
+{
+    struct itdbs_head *itdbs_head;
+    gboolean changed = FALSE;
+    GList *gl;
+
+    g_return_val_if_fail (gtkpod_window, TRUE);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_val_if_fail (itdbs_head, TRUE);
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	ExtraiTunesDBData *eitdb;
+	g_return_val_if_fail (itdb, !changed);
+	eitdb = itdb->userdata;
+	g_return_val_if_fail (eitdb, !changed);
+	changed |= eitdb->data_changed;
+    }
+    return !changed;
 }

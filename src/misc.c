@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-01-05 23:36:27 jcs>
+|  Time-stamp: <2005-02-05 00:55:10 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -41,6 +41,7 @@
 #include "misc.h"
 #include "prefs.h"
 #include "support.h"
+#include "misc_track.h"
 
 
 #define DEBUG_MISC 0
@@ -991,9 +992,11 @@ static gchar *select_template (Track *track, const gchar *p)
     gchar **templates, **tplp;
     gchar *tname, *ext = NULL;
     gchar *result;
+    ExtraTrackData *etr;
 
-    if (!track) return (strdup (""));
-
+    g_return_val_if_fail (track, strdup (""));
+    etr = track->userdata;
+    g_return_val_if_fail (etr, strdup (""));
     tname = get_track_name_on_disk (track);
     if (!tname) return (NULL);         /* this should not happen... */
     ext = strrchr (tname, '.');        /* pointer to filename extension */
@@ -1005,7 +1008,7 @@ static gchar *select_template (Track *track, const gchar *p)
 	if (strcmp (*tplp, "%o") == 0)
 	{   /* this is only a valid extension if the original filename
 	       is present */
-	    if (track->pc_path_locale && strlen(track->pc_path_locale))  break;
+	    if (etr->pc_path_locale && strlen(etr->pc_path_locale))  break;
 	}
 	else if (strrchr (*tplp, '.') == NULL)
 	{   /* this templlate does not have an extension and therefore
@@ -1047,8 +1050,11 @@ gchar *get_string_from_template (Track *track,
     gchar *p, *res_utf8;
     gchar *basename = NULL;
     gchar *template;
+    ExtraTrackData *etr;
 
     g_return_val_if_fail (track && full_template, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
 
     template = select_template (track, full_template);
 
@@ -1076,8 +1082,8 @@ gchar *get_string_from_template (Track *track,
     result = g_string_new ("");
 
     /* try to get the original filename */
-    if (track->pc_path_utf8)
-	basename = g_path_get_basename (track->pc_path_utf8);
+    if (etr->pc_path_utf8)
+	basename = g_path_get_basename (etr->pc_path_utf8);
 
     p=template;
     while (*p != '\0') {

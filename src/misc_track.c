@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-01-22 13:42:44 jcs>
+|  Time-stamp: <2005-02-05 15:54:41 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -32,6 +32,16 @@
 #endif
 
 #include "display_itdb.h"
+#include "md5.h"
+#include "prefs.h"
+#include "misc.h"
+#include "misc_track.h"
+#include "support.h"
+#include "info.h"
+#include "charset.h"
+#include <math.h>
+#include <string.h>
+
 
 /* ------------------------------------------------------------ *\
 |                                                                |
@@ -99,8 +109,12 @@ void gp_hash_tracks_itdb (iTunesDB *itdb)
 void gp_hash_tracks (void)
 {
     GList *gl;
+    struct itdbs_head *itdbs_head;
 
-    g_assert (itdbs_head);
+    g_return_if_fail (gtkpod_window);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_if_fail (itdbs_head);
 
     block_widgets ();
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
@@ -195,8 +209,12 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 
    if (oldtrack && track)
    {
+       ExtraTrackData *oldetr = oldtrack->userdata;
+       ExtraTrackData *etr = track->userdata;
        iTunesDB *itdb = oldtrack->itdb;
        g_return_if_fail (itdb);
+       g_return_if_fail (oldetr);
+       g_return_if_fail (etr);
 
        if (prefs_get_show_duplicates ())
        {
@@ -235,15 +253,11 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 
        /* Update filename if new track has filename set (should be
 	* always!?) */
-       if (track->pc_path_locale)
+       if (etr->pc_path_locale)
        {
-	   ExtraTrackData *oldetr = oldtrack->userdata;
-	   ExtraTrackData *etr = track->userdata;
-	   g_return_if_fail (oldetr);
-	   g_return_if_fail (etr);
-	   g_free (oldtrack->pc_path_locale);
+	   g_free (oldetr->pc_path_locale);
 	   g_free (oldetr->pc_path_utf8);
-	   oldtrack->pc_path_locale = g_strdup (track->pc_path_locale);
+	   oldetr->pc_path_locale = g_strdup (etr->pc_path_locale);
 	   oldetr->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
        }
        if (itdb_playlist_contains_track (NULL, track))
@@ -261,7 +275,6 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 	       if (itdb_playlist_contains_track (pl, track))
 	       {
 		   gp_playlist_remove_track (pl, track);
-	       {
 		   if (!itdb_playlist_contains_track (pl, oldtrack))
 		       gp_playlist_add_track (pl, oldtrack, TRUE);
 	       }
@@ -275,6 +288,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
        data_changed (itdb);
    }
 }
+
 
 /**
  * Register all tracks in the md5 hash and remove duplicates (while
@@ -302,7 +316,7 @@ void gp_itdb_hash (iTunesDB *itdb)
    /* populate the hash table */
    while ((track = g_list_nth_data (itdb->tracks, track_nr)))
    {
-       oldtrack = md5_track_exists_insert (track);
+       oldtrack = md5_track_exists_insert (itdb, track);
        ++count;
 /*        printf("%d:%d:%p:%p\n", count, track_nr, track, oldtrack); */
        if (!prefs_get_block_display() &&
@@ -317,7 +331,7 @@ void gp_itdb_hash (iTunesDB *itdb)
        }
        if (oldtrack)
        {
-	   remove_duplicate (oldtrack, track);
+	   gp_duplicate_remove (oldtrack, track);
        }
        else
        { /* if we removed a track (above), we don't need to increment
@@ -403,8 +417,11 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item)
 {
     gchar **result = NULL;
+    ExtraTrackData *etr;
 
     g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
 
     switch (t_item)
     {
@@ -436,7 +453,7 @@ gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item)
 	result = &track->ipod_path;
 	break;
     case T_YEAR:
-	result = &track->year_str;
+	result = &etr->year_str;
 	break;
     default:
 	g_return_val_if_reached (NULL);
@@ -508,14 +525,14 @@ void gp_info_nontransferred_tracks (iTunesDB *itdb,
 
     for (gl = itdb->tracks; gl; gl=gl->next)
     {
-	Track tr = gl->data;
+	Track *tr = gl->data;
 	ExtraTrackData *etr;
 	g_return_if_fail (tr);
 	etr = tr->userdata;
 	g_return_if_fail (etr);
 	if (!tr->transferred)
 	{
-	    if (size)  *size += tr->size - et->oldsize;
+	    if (size)  *size += tr->size - etr->oldsize;
 	    if (num)   *num += 1;
 	}
     }
@@ -532,30 +549,47 @@ void gp_info_nontransferred_tracks (iTunesDB *itdb,
 \*------------------------------------------------------------------*/
 
 /* DND: add a list of iPod IDs to Playlist @pl */
+/* FIXME: not yet implemented */
 void add_idlist_to_playlist (Playlist *pl, gchar *string)
 {
+    g_warning ("DND for idlist not yet supported\n\n");
+    g_return_if_reached ();
+#if 0
     guint32 id = 0;
-    gchar *str = g_strdup (string);
+    gchar *str;
+    iTunesDB *fromitdb, *toitdb;
 
-    if (!pl) return;
+    g_return_if_fail (pl);
+    toitdb = pl->itdb;
+    g_return_if_fail (toitdb);
+
+    str = g_strdup (string);
+
     while(parse_ipod_id_from_string(&str,&id))
     {
+	Track *tr = itdb
 	add_trackid_to_playlist(pl, id, TRUE);
     }
     data_changed();
     g_free (str);
+#endif
 }
 
-/* DND: add a list of files to Playlist @pl.  @pl: playlist to add to
-   or NULL. If NULL, a "New Playlist" will be created for adding
-   tracks and when adding a playlist file, a playlist with the name of the
-   playlist file will be added.
+/* DND: add a list of files to Playlist @pl.
+
+   @pl: playlist to add to or NULL. If NULL, a "New Playlist" will be
+   created for adding tracks and when adding a playlist file, a
+   playlist with the name of the playlist file will be added.
+
    @trackaddfunc: passed on to add_track_by_filename() etc. */
-void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
+void add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
+				 gchar *str, gint pl_pos,
 				 AddTrackFunc trackaddfunc, gpointer data)
 {
     gchar **files = NULL, **filesp = NULL;
     Playlist *pl_playlist = pl; /* playlist for playlist file */
+
+    g_return_if_fail (itdb);
 
     if (!str)  return;
 
@@ -603,7 +637,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 			pl = add_new_pl_user_name (NULL, pl_pos);
 			if (!pl)  break; /* while (*filesp) */
 		    }
-		    add_directory_by_name (decoded_file, pl,
+		    add_directory_by_name (itdb, decoded_file, pl,
 					   prefs_get_add_recursively (),
 					   trackaddfunc, data);
 		    added = TRUE;
@@ -624,14 +658,14 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 						       pl_pos);
 			    if (!pl)  break; /* while (*filesp) */
 			}
-			add_track_by_filename (decoded_file, pl,
+			add_track_by_filename (itdb, decoded_file, pl,
 					       prefs_get_add_recursively (),
 					       trackaddfunc, data);
 			added = TRUE;
 			break;
 		    case FILE_TYPE_M3U:
 		    case FILE_TYPE_PLS:
-			add_playlist_by_filename (decoded_file,
+			add_playlist_by_filename (itdb, decoded_file,
 						  pl_playlist,
 						  trackaddfunc, data);
 			added = TRUE;
@@ -657,7 +691,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
     /* display log updated tracks */
     display_updated (NULL, NULL);
     /* display log of detected duplicates */
-    remove_duplicate (NULL, NULL);
+    gp_duplicate_remove (NULL, NULL);
 
     release_widgets ();
 }
@@ -696,7 +730,7 @@ void gp_do_selected_entry (void (*do_func)(GList *tracks), gint inst)
 
     g_return_if_fail (do_func);
 
-    g_return_if_fail ((inst >= 0) && (inst <= prefs_get_sort_tab_num));
+    g_return_if_fail ((inst >= 0) && (inst <= prefs_get_sort_tab_num()));
 
     entry = st_get_selected_entry (inst);
     if (entry == NULL)
@@ -708,7 +742,7 @@ void gp_do_selected_entry (void (*do_func)(GList *tracks), gint inst)
     { /* make a list with all trackids in this entry */
 	Track *track = gl->data;
 	g_return_if_fail (track);
-	selected_trackids = g_list_append (selected_tracks, track);
+	selected_tracks = g_list_append (selected_tracks, track);
     }
     do_func (selected_tracks);
     g_list_free (selected_tracks);
@@ -762,6 +796,6 @@ gchar *get_track_info (Track *track)
 	return g_strdup (track->artist);
     if ((track->composer && strlen(track->composer)))
 	return g_strdup (track->composer);
-    return g_strdup_printf ("iPod ID: %d", track->ipod_id);
+    return g_strdup_printf ("iPod ID: %d", track->id);
 }
 

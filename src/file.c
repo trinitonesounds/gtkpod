@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-12 00:48:07 jcs>
+/* Time-stamp: <2005-02-05 16:15:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1106,7 +1106,7 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 
     if (prefs_get_sync_remove ())
     {   /* remove tracks that are no longer present in the dirs */
-	GList *track_list = NULL;
+	GList *tracklist = NULL;
 	GList *gl;
 
 	/* add all tracks that are no longer present in the dirs */
@@ -1120,22 +1120,22 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		if (g_hash_table_lookup (hash, dirname) &&
 		    !g_file_test (tr->pc_path_locale, G_FILE_TEST_EXISTS))
 		{
-		    track_list = g_list_append (track_list, tr);
+		    tracklist = g_list_append (tracklist, tr);
 		}
 		g_free (dirname);
 	    }
 	}
-	if (track_list != NULL)
+	if (tracklist != NULL)
 	{
 	    gchar *label, *title;
 	    GString *str;
 	    /* populate "title" and "label" */
-	    delete_populate_settings (NULL, track_list,
+	    delete_populate_settings (itdb, NULL, tracklist,
 				      &label, &title,
 				      NULL, NULL, NULL);
 	    /* create a list of tracks */
 	    str = g_string_sized_new (2000);
-	    for(gl=track_list; gl; gl=gl->next)
+	    for(gl=tracklist; gl; gl=gl->next)
 	    {
 		ExtraTrackData *etr;
 		Track *tr = gl->data;
