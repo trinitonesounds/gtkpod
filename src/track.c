@@ -292,6 +292,7 @@ gboolean add_song_by_filename (gchar *name)
   File_Tag *filetag;
   gint len;
   gchar str[PATH_MAX];
+  mp3metadata_t *mp3meta;
 
   if (name == NULL) return TRUE;
 
@@ -372,9 +373,16 @@ gboolean add_song_by_filename (gchar *name)
 	}
       song->songlen = filetag->songlen;
       song->size = filetag->size;
-      if (song->songlen == 0) {
-	song->songlen = length_from_file (name, song->size);
-	if (song->songlen == 0) {
+      mp3meta = get_mp3metadata_from_file (name, song->size);
+      if (mp3meta)
+      {
+	  song->bitrate = mp3meta->Bitrate;
+	  if (song->songlen == 0)
+	      song->songlen = mp3meta->PlayLength * 1000;
+	  g_free (mp3meta);
+      }
+      if (song->songlen == 0)
+      {
 	  /* Songs with zero play length are ignored by iPod... */
 	  gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
 			 name);
@@ -382,7 +390,6 @@ gboolean add_song_by_filename (gchar *name)
 	  g_free (song);
 	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 	  return FALSE;
-	}
       }
       song->ipod_id = 0;
       song->transferred = FALSE;

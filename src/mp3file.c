@@ -92,20 +92,6 @@ static char *VersionNameA[5] = { "-",  "1",  "2",  "-",  "2.5"};
 
 #define FRAMES_AND_BYTES (FRAMES_FLAG | BYTES_FLAG)
 
-typedef struct 
-{
-  short Layer;
-  int Bitrate;
-  int SampleFrequency;
-  int PlayLength;
-  int Mode;
-  int FileSize;
-  int Frames;             // number of frames in mp3
-  int VbrScale;           // vbr scale. if not found, then this is -1
-  short Version;          // Mpeg Version
-  short VariableBitrate;  // true, if bitrate is variable
-} mp3metadata_t;
-
 /* Get the big endian representation from a
  * character buffer */
 static int ExtractI4(unsigned char *buf)
@@ -227,17 +213,18 @@ static void get_header_info(unsigned char* head, mp3metadata_t *mp3meta)
   /* g_print("Header with bitrate %u filesize %u and length %u...\n", mp3meta->Bitrate, mp3meta->FileSize, mp3meta->PlayLength); */
 }
 
-static mp3metadata_t get_metadata(FILE *mp3file, size_t mp3filesize)
+static mp3metadata_t *get_metadata(FILE *mp3file, size_t mp3filesize)
 {
   unsigned char head[4096];
   size_t readbytes, i, FrameCount;
 #define NUMFRAMES 8 // number of headers to look for
   static mp3metadata_t mp3meta[NUMFRAMES];
-  static mp3metadata_t returnmeta;
+  mp3metadata_t *returnmeta;
 
   /* Clear all metadata posts */
   memset(&mp3meta, 0, sizeof(mp3meta));
-  memset(&returnmeta, 0, sizeof(returnmeta));
+  returnmeta = g_malloc0 (sizeof (mp3metadata_t));
+
   /* Set all header frames file sizes to mp3filesize */
   for (i = 0; i < NUMFRAMES; i++) {
     mp3meta[i].FileSize = mp3filesize;
@@ -272,33 +259,35 @@ static mp3metadata_t get_metadata(FILE *mp3file, size_t mp3filesize)
   if (FrameCount>0)
     {
       /* Copy the 1. frame, for the data */
-      memcpy(&returnmeta, &mp3meta[0], sizeof(mp3metadata_t));
+      memcpy(returnmeta, &mp3meta[0], sizeof(mp3metadata_t));
       /* now adjust the bitrate if MPEG Version 2.5: */
-      if (returnmeta.Version == 4)
+      if (returnmeta->Version == 4)
 	{
 	  int br = 0;
 	  for (i=0; i<FrameCount; i++)
 	    br += mp3meta[i].Bitrate;
-	  returnmeta.Bitrate = br/FrameCount;
+	  returnmeta->Bitrate = br/FrameCount;
 	}
     }
   
   /* Calculate the playlength */
-  returnmeta.PlayLength = (returnmeta.Bitrate==0)?0:((returnmeta.FileSize)*8)/returnmeta.Bitrate;
+  returnmeta->PlayLength = (returnmeta->Bitrate==0)?0:((returnmeta->FileSize)*8)/returnmeta->Bitrate;
   return returnmeta;
 }
 
-guint32 length_from_file(gchar *path, guint32 filesize)
+
+/* you need to g_free the returned metadata */
+mp3metadata_t *get_mp3metadata_from_file(gchar *path, guint32 filesize)
 {
   size_t size = 0;
   size_t length = 0;
   FILE *InFile;
   unsigned char buf[10];
   gint i;
-  mp3metadata_t mp3meta;
+  mp3metadata_t *mp3meta;
 
   if (!filesize)
-    return 0;
+    return NULL;
   else
     size = filesize;
 
@@ -336,6 +325,5 @@ guint32 length_from_file(gchar *path, guint32 filesize)
   mp3meta = get_metadata(InFile, size);
   fclose(InFile);
   /* g_print("%s is %u seconds long.\n", path, mp3meta.PlayLength); */
-
-  return mp3meta.PlayLength * 1000;
+  return mp3meta;
 }

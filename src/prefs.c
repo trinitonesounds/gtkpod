@@ -132,13 +132,11 @@ struct cfg *cfg_new(void)
     {
 	mycfg->tag_autoset[i] = FALSE;
     }
+    mycfg->tag_autoset[SM_COLUMN_TITLE] = TRUE;
     for (i=0; i<PANED_NUM; ++i)
     {
 	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
     }
-    mycfg->tag_autoset[SM_COLUMN_ARTIST] = TRUE;
-    mycfg->tag_autoset[SM_COLUMN_ALBUM] = TRUE;
-    mycfg->tag_autoset[SM_COLUMN_TITLE] = TRUE;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     return(mycfg);
 }
@@ -950,7 +948,7 @@ gchar *prefs_get_cfgdir (void)
       cfgdir = concat_dir (str, ".gtkpod");
       if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
 	{
-	  if(!mkdir(cfgdir, 0755))
+	  if(mkdir(cfgdir, 0755) == -1)
 	    {
 	      gtkpod_warning(_("Unable to \"mkdir %s\"\n"), cfgdir);
 	      C_FREE (cfgdir); /*defined in misc.h*/

@@ -1,3 +1,9 @@
+gtkpod V0.42 20-Feb-2003
+	Improvement: display update can now be interrupted, selection
+	changed at any time.
+
+	Bugfix: gtkpod now sets bitrate (average bitrate for VBR)
+
 gtkpod V0.41+ 01-Feb-2003 to 04-Feb-2003
         Improvement: export can be interrupted and be continued at a later
 	time. gtkpod will (hopefully) correctly remember which songs have
@@ -21,7 +27,7 @@ gtkpod V0.41+ 01-Feb-2003 to 04-Feb-2003
 	background"
 
 	Bugfix: sometimes deleted songs were not removed from the
-	display. Changing tags then could crash program
+	display. Changing tags then could crash the program
 
 	Bugfix: convert filenames ot UTF8 based on the charset chosen in
 	the options window

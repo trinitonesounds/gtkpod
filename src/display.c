@@ -57,9 +57,10 @@ typedef void (*br_callback)(gpointer user_data1, gpointer user_data2);
 static void block_selection (gint inst);
 static void release_selection (gint inst);
 static void add_selection_callback (gint inst, br_callback brc, gpointer user_data1, gpointer user_data2);
+static gboolean selection_callback_timeout (gpointer data);
 static gint stop_add = SORT_TAB_NUM;
 
-
+/* used for display organization */
 static void sm_song_changed (Song *song);
 static void sm_remove_song (Song *song);
 static void sm_remove_all_songs (void);
@@ -105,6 +106,8 @@ pm_dnd_advertise(GtkTreeView *v)
     if(!v) return;
     gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
 					    GDK_ACTION_COPY);
+    gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
+					    target_size, GDK_ACTION_COPY);
 }
 
 static void st_dnd_advertise (GtkTreeView *v)
@@ -1158,7 +1161,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 
   inst = st_get_instance_from_notebook (notebook);
   if (inst == -1) return; /* invalid notebook */
-  if (stop_add <= inst)  return;
+  if (stop_add <= (gint)inst)  return;
   st = sorttab[inst];
   /* re-initialize current instance */
   st_init (page, inst);
@@ -1180,14 +1183,14 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
       /* add all songs previously present to sort tab */
       for (i=0; i<n; ++i)
       {
-	  if (stop_add <= inst)  break;
+	  if (stop_add <= (gint)inst)  break;
 	  song = (Song *)g_list_nth_data (copy, i);
 	  st_add_song (song, FALSE, inst);
 	  while (((i%10) == 0) &&
 		 !prefs_get_block_display() && gtk_events_pending ())
 	      gtk_main_iteration ();
       }
-      if (n && (stop_add > inst)) st_add_song (NULL, TRUE, inst);
+      if (n && (stop_add > (gint)inst)) st_add_song (NULL, TRUE, inst);
       if (!prefs_get_block_display ())
       {
 	  while (gtk_events_pending ())      gtk_main_iteration ();
@@ -1216,11 +1219,9 @@ void st_page_selected (GtkNotebook *notebook, guint page)
 void st_redisplay (guint32 inst)
 {
     if (!(inst < SORT_TAB_NUM)) return; /* error! */
-    block_widgets (); /* might take a while, so we'll do refreshs */
     if (sorttab[inst])
 	st_page_selected (sorttab[inst]->notebook,
 			  sorttab[inst]->current_category);
-    release_widgets ();
 }
 
 /* Start sorting */
@@ -1268,7 +1269,8 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   /* printf("selected instance %d, entry %x (was: %x)\n", inst,
    * new_entry, st->current_entry);*/
   if (new_entry == st->current_entry) return; /* important: otherwise
-						 st_add_song will not work correctly */
+						 st_add_song will not
+						 work correctly */
   /* initialize next instance */
   st_init (-1, inst+1);
   st->current_entry = new_entry;
@@ -1278,14 +1280,14 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       if (!prefs_get_block_display ())  block_selection (inst);
       for (i=0; i<n; ++i)
       { /* add all member songs to next instance */
-	  if (stop_add <= inst) break;
+	  if (stop_add <= (gint)inst) break;
 	  song = (Song *)g_list_nth_data (new_entry->members, i);
 	  st_add_song (song, FALSE, inst+1);
 	  while (((i%10) == 0) &&
 		 !prefs_get_block_display() && gtk_events_pending ())
 	      gtk_main_iteration ();
       }
-      if (stop_add > inst)  st_add_song (NULL, TRUE, inst+1);
+      if (stop_add > (gint)inst)  st_add_song (NULL, TRUE, inst+1);
       if (!prefs_get_block_display ())
       {
 	  while (gtk_events_pending ())	  gtk_main_iteration ();
@@ -1530,7 +1532,7 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
 /* Create sort tabs */
 static void create_sort_tabs (GtkWidget *gtkpod)
 {
-  gint inst;
+  gint inst, page;
   gchar *name;
 
   /* we count downward here because the smaller sort tabs might try to
@@ -1542,8 +1544,9 @@ static void create_sort_tabs (GtkWidget *gtkpod)
       sorttab[inst]->notebook = GTK_NOTEBOOK (lookup_widget (gtkpod, name));
       g_free (name);
       st_create_listview (gtkpod, inst);
-      gtk_notebook_set_current_page (sorttab[inst]->notebook,
-				     prefs_get_st_category(inst));
+      page = prefs_get_st_category (inst);
+      gtk_notebook_set_current_page (sorttab[inst]->notebook, page);
+      st_init (page, inst);
     }
 }
 
@@ -2459,7 +2462,8 @@ void display_update_default_sizes (void)
 enum {
     BR_BLOCK,
     BR_RELEASE,
-    BR_ADD
+    BR_ADD,
+    BR_CALL,
 };
 
 /* called by block_selection() and release_selection */
@@ -2471,12 +2475,13 @@ static void block_release_selection (gint inst, gint action,
     static gint count_st[SORT_TAB_NUM];
     static gint count_pl = 0;
     static GtkWidget *stop_button = NULL;
-    gint i;
     /* instance that has a pending callback */
     static gint level = SORT_TAB_NUM; /* no level -> no registered callback */
     static br_callback r_brc;
     static gpointer r_user_data1;
     static gpointer r_user_data2;
+    static guint timeout_id = 0;
+    gint i;
 
     /* lookup stop_button */
     if (stop_button == NULL)
@@ -2528,17 +2533,35 @@ static void block_release_selection (gint inst, gint action,
     case BR_ADD:
 	if (((inst == -1) && (count_pl == 0)) ||
 	    ((inst >= 0) && (count_st[inst] == 0)))
-	{ /* OK, we can just call the desired function */
+	{ /* OK, we could just call the desired function because there
+	    is nothing to be stopped. However, due to a bug or a
+            inevitability of gtk+, if we interrupt the selection
+	    process with a gtk_main_iteration() call the button
+	    release event will be "discarded". Therefore we register
+	    the call here and have it activated with a timeout
+	    function. */
 	    if (level > inst)
 	    {
-		level = SORT_TAB_NUM;
-		brc (user_data1, user_data2);
+		level = inst;
+		r_brc = brc;
+		r_user_data1 = user_data1;
+		r_user_data2 = user_data2;
+		if (timeout_id == 0)
+		{
+		    timeout_id = 
+			gtk_idle_add_priority (G_PRIORITY_HIGH,
+					       selection_callback_timeout,
+					       NULL);
+		}	       
 	    }
 	}
 	else
 	{
 	    if (inst < level)
-	    {   /* We need to emit a stop_add signal */
+	    {   /* Once the functions have stopped, down to the
+		specified level/instance, the desired function is
+		called (about 15 lines up: r_brc (...)) */
+		/* We need to emit a stop_add signal */
 		stop_add = inst;
 		/* and safe the callback data */
 		level = inst;
@@ -2546,6 +2569,26 @@ static void block_release_selection (gint inst, gint action,
 		r_user_data1 = user_data1;
 		r_user_data2 = user_data2;
 	    }
+	}
+	break;
+    case BR_CALL:
+	if (timeout_id)
+	{
+	    gtk_timeout_remove (timeout_id);
+	    timeout_id = 0;
+	}
+	if (level == SORT_TAB_NUM) break;  /* hmm... what happened to
+					      our callback? */
+	if (((level == -1) && (count_pl == 0)) ||
+	    ((level >= 0) && (count_st[level] == 0)))
+	{ /* Let's call the callback function */
+		level = SORT_TAB_NUM;
+		r_brc (r_user_data1, r_user_data2);
+	}
+	else
+	{ /* This is strange and should not happen -- let's forget
+	   * about the callback */
+	    level = SORT_TAB_NUM;
 	}
 	break;
     default:
@@ -2578,8 +2621,18 @@ void stop_display_update (gint inst)
     stop_add = inst;
 }
 
+/* registers @brc to be called as soon as all functions down to
+   instance @inst have been stopped */
 static void add_selection_callback (gint inst, br_callback brc,
 				    gpointer user_data1, gpointer user_data2)
 {
     block_release_selection (inst, BR_ADD, brc, user_data1, user_data2);
+}
+
+/* Called as a high priority timeout to initiate the callback of @brc
+   in the last function */
+static gboolean selection_callback_timeout (gpointer data)
+{
+    block_release_selection (0, BR_CALL, NULL, NULL, NULL);
+    return FALSE;
 }
