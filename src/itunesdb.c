@@ -947,7 +947,7 @@ write_mhsd_two(FILE *file)
     { 
 	write_playlist(file, get_playlist_by_nr(i));
     }
-    fix_mhlp (file, mhlp_seek, ftell (file));
+    fix_mhlp (file, mhlp_seek, playlists);
     fix_mhsd (file, mhsd_seek, ftell (file));
 }
 
