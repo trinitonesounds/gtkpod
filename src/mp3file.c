@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-17 17:28:47 jcs>
+/* Time-stamp: <2004-02-01 14:58:37 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -403,7 +403,7 @@ mp3info *mp3file_get_info (gchar *filename)
     FILE *fp;
 
     if ( !( fp=fopen(filename,"r") ) ) {
-	fprintf(stderr,"Error opening MP3: %s",filename);
+	gtkpod_warning (_("Error opening MP3 file '%s'"),filename);
     } else {
 	mp3 = g_malloc0 (sizeof (mp3info));
 	mp3->filename=filename;
@@ -974,13 +974,19 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 
     /* Find the encoding used for the field */
     field = id3_frame_field (frame, 0);
+/*     printf ("field: %p\n", field); */
     if (field && (id3_field_type (field) == ID3_FIELD_TYPE_TEXTENCODING))
+    {
 	encoding = field->number.value;
+/* 	printf ("encoding: %d\n", encoding); */
+    }
 
     if (frame_name == ID3_FRAME_COMMENT)
         field = id3_frame_field (frame, 3);
     else
         field = id3_frame_field (frame, 1);
+
+/*     printf ("field: %p\n", field); */
 
     if (!field) return NULL;
 
@@ -988,6 +994,8 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
         string = id3_field_getfullstring (field);
     else
         string = id3_field_getstrings (field, 0); 
+
+/*     printf ("string: %p\n", string); */
 
     if (!string) return NULL;
 
@@ -1299,7 +1307,6 @@ Track *file_get_mp3_info (gchar *name)
     mp3info *mp3info;
 
     track = g_malloc0 (sizeof (Track));
-
     if (prefs_get_readtags() && (id3_tag_read (name, &filetag) == TRUE))
     {
 	struct stat si;

@@ -1,26 +1,26 @@
-/* Time-stamp: <2004-01-25 18:25:30 jcs>
+/* Time-stamp: <2004-02-01 23:14:10 JST jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -52,6 +52,8 @@ void prefs_window_set_mount_point (const gchar *mp);
 void prefs_window_set_play_now_path (const gchar *path);
 void prefs_window_set_play_enqueue_path (const gchar *path);
 void prefs_window_set_mp3gain_path (const gchar *path);
+void prefs_window_set_sync_contacts_path (const gchar *path);
+void prefs_window_set_sync_calendar_path (const gchar *path);
 void prefs_window_set_time_format (const gchar *format);
 void prefs_window_set_keep_backups (gboolean active);
 void prefs_window_set_write_extended_info (gboolean active);
@@ -81,6 +83,7 @@ void prefs_window_set_sort_tab_num (gint num);
 void prefs_window_set_automount (gboolean val);
 void prefs_window_set_export_template (const gchar *mp);
 void prefs_window_set_write_gaintag (gboolean val);
+void prefs_window_set_concal_autosync (gboolean val);
 void prefs_window_set_special_export_charset (gboolean val);
 
 void sort_window_create (void);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-27 00:03:07 jcs>
+/* Time-stamp: <2004-02-02 00:15:10 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,17 +30,10 @@
 #  include <config.h>
 #endif
 
-#include <errno.h>
-#include <fcntl.h>
 #include <gtk/gtk.h>
-#include <linux/cdrom.h>
-#include <scsi/scsi.h>
-#include <scsi/scsi_ioctl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/mount.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include "charset.h"
@@ -259,10 +252,10 @@ gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
     /* sanity */
     if (!rel_dir || !*rel_dir)
 	return g_build_filename (base_dir, rel_dir, NULL);
-                                 /* this constellation is nonsense... */
+				 /* this constellation is nonsense... */
     if ((*rel_dir == '/') || (*rel_dir == '~'))
 	return g_strdup (rel_dir);             /* rel_dir is absolute */
-                                               /* make absolute path */
+					       /* make absolute path */
     return g_build_filename (base_dir, rel_dir, NULL);
 }
 
@@ -513,7 +506,7 @@ void close_about_window (void)
  * @s - address of the character string we're parsing (gets updated)
  * @id - pointer the ipod id parsed from the string
  * Returns FALSE when the string is empty, TRUE when the string can still be
- * 	parsed
+ *	parsed
  */
 gboolean
 parse_ipod_id_from_string(gchar **s, guint32 *id)
@@ -575,36 +568,36 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
     files = g_strsplit (str, "\n", -1);
     if (files)
     {
-        filesp = files;
+	filesp = files;
 	while (*filesp)
 	{
 	    gboolean added = FALSE;
-            gint file_len = -1;
+	    gint file_len = -1;
 
-            gchar *file = NULL;
-            gchar *decoded_file = NULL;
+	    gchar *file = NULL;
+	    gchar *decoded_file = NULL;
 
-            file = *filesp;
-            /* file is in uri form (the ones we're looking for are
-               file:///), file can include the \n or \r\n, which isn't
-               a valid character of the filename and will cause the
-               uri decode / file test to fail, so we'll cut it off if
-               its there. */
-            file_len = strlen (file);
-            if (file_len && (file[file_len-1] == '\n'))
-            {
-                file[file_len-1] = 0;
+	    file = *filesp;
+	    /* file is in uri form (the ones we're looking for are
+	       file:///), file can include the \n or \r\n, which isn't
+	       a valid character of the filename and will cause the
+	       uri decode / file test to fail, so we'll cut it off if
+	       its there. */
+	    file_len = strlen (file);
+	    if (file_len && (file[file_len-1] == '\n'))
+	    {
+		file[file_len-1] = 0;
 		--file_len;
-            }
-            if (file_len && (file[file_len-1] == '\r'))
-            {
-                file[file_len-1] = 0;
+	    }
+	    if (file_len && (file[file_len-1] == '\r'))
+	    {
+		file[file_len-1] = 0;
 		--file_len;
-            }
+	    }
 
-            decoded_file = filename_from_uri (file, NULL, NULL);
-            if (decoded_file != NULL)
-            {
+	    decoded_file = filename_from_uri (file, NULL, NULL);
+	    if (decoded_file != NULL)
+	    {
 		if (g_file_test (decoded_file, G_FILE_TEST_IS_DIR))
 		{   /* directory */
 		    if (!pl)
@@ -623,7 +616,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 		    if (decoded_len >= 4)
 		    {
 			if (strcasecmp (&decoded_file[decoded_len-4],
-                                        ".mp3") == 0)
+					".mp3") == 0)
 			{   /* mp3 file */
 			    if (!pl)
 			    {  /* no playlist yet -- create new one */
@@ -637,18 +630,18 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 			    added = TRUE;
 			}
 			else if ((strcasecmp (&decoded_file[decoded_len-4],
-                                              ".plu") == 0) ||
+					      ".plu") == 0) ||
 				 (strcasecmp (&decoded_file[decoded_len-4],
-                                              ".m3u") == 0))
+					      ".m3u") == 0))
 			{
 			    add_playlist_by_filename (decoded_file,
-                                                      pl_playlist,
+						      pl_playlist,
 						      trackaddfunc, data);
 			    added = TRUE;
 			}
 		    }
-                }
-                g_free (decoded_file);
+		}
+		g_free (decoded_file);
 	    }
 	    if (!added)
 	    {
@@ -1133,7 +1126,7 @@ void ipod_directories_head (void)
 			 FALSE,               /* gboolean modal, */
 			 _("Create iPod directories"), /* title */
 			 _("OK to create the following directories?"),
-		         str->str,
+			 str->str,
 			 NULL, 0, NULL,      /* option 1 */
 			 NULL, 0, NULL,      /* option 2 */
 			 TRUE,               /* gboolean confirm_again, */
@@ -1596,6 +1589,18 @@ void delete_entry_head (gint inst, gboolean delete_full)
  *
  * ------------------------------------------------------------ */
 
+/* This code does not work with FreeBSD -- let me know if you know a
+ * way around it. */
+
+#if (HAVE_LINUX_CDROM_H && HAVE_SCSI_SCSI_H && HAVE_SCSI_SCSI_IOCTL_H)
+#include <linux/cdrom.h>
+#include <scsi/scsi.h>
+#include <scsi/scsi_ioctl.h>
+#include <sys/mount.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <fcntl.h>
+
 static gchar *getdevicename(const gchar *mount)
 {
     if(mount) {
@@ -1682,7 +1687,7 @@ static void eject_ipod(gchar *ipod_device)
 	  int fd = open (ipod_device, O_RDONLY|O_NONBLOCK);
 	  if (fd == -1)
 	  {
-/* 	      fprintf(stderr, "Unable to open '%s' to eject.\n",ipod_device); */
+/*	      fprintf(stderr, "Unable to open '%s' to eject.\n",ipod_device); */
 	      /* just ignore the error, i.e. if we don't have write access */
 	  }
 	  else
@@ -1694,6 +1699,15 @@ static void eject_ipod(gchar *ipod_device)
 	  }
      }
 }
+#else
+static gchar *getdevicename(const gchar *mount)
+{
+    return NULL;
+}
+static void eject_ipod(gchar *ipod_device)
+{
+}
+#endif
 
 /* ------------------------------------------------------------
  *                    end of eject code
@@ -1899,7 +1913,7 @@ do_command_on_entries (const gchar *command, const gchar *what,
     }
     else
     {
-        str = g_strndup (command, next-command);
+	str = g_strndup (command, next-command);
     }
     while (g_ascii_isspace (*command))  ++command;
     /* get the full path */
@@ -2442,12 +2456,12 @@ void generate_category_playlists (T_item cat)
 
     for(i = 0; i < get_nr_of_tracks_in_playlist (master_pl) ; i++)
     {
-        Track *track = g_list_nth_data (master_pl->members, i);
-        Playlist *cat_pl = NULL;
+	Track *track = g_list_nth_data (master_pl->members, i);
+	Playlist *cat_pl = NULL;
 	gint j;
-        gchar *category = NULL;
+	gchar *category = NULL;
 	gchar *track_cat = NULL;
-        int playlists_len = get_nr_of_playlists();
+	int playlists_len = get_nr_of_playlists();
 
 	track_cat = track_get_item_utf8 (track, cat);
 
@@ -2520,19 +2534,19 @@ Playlist *generate_playlist_with_name (GList *tracks,gchar *pl_name){
 
     if(n>0)
     {
-        pl = add_new_playlist (pl_name, -1);
-        for (l=tracks; l; l=l->next)
-        {
-            Track *track = (Track *)l->data;
-            add_track_to_playlist (pl, track, TRUE);
-        }
-        str = g_strdup_printf (ngettext ("Created playlist '%s' with %d track.",
+	pl = add_new_playlist (pl_name, -1);
+	for (l=tracks; l; l=l->next)
+	{
+	    Track *track = (Track *)l->data;
+	    add_track_to_playlist (pl, track, TRUE);
+	}
+	str = g_strdup_printf (ngettext ("Created playlist '%s' with %d track.",
 				     "Created playlist '%s' with %d tracks.",
 				     n), pl_name, n);
     }
     else
     { /* n==0 */
-        str = g_strdup_printf (_("No tracks available, playlist not created"));
+	str = g_strdup_printf (_("No tracks available, playlist not created"));
     }
     gtkpod_statusbar_message (str);
     gtkpod_tracks_statusbar_update();
@@ -2549,7 +2563,7 @@ Playlist *generate_new_playlist (GList *tracks)
 /* look at the add_ranked_playlist help:
  * BEWARE this function shouldn't be used*/
 static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
-                                  GCompareFunc comparefunc)
+				  GCompareFunc comparefunc)
 {
    GList *tracks=NULL;
    gint f=0;
@@ -2561,14 +2575,14 @@ static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
       i=1; /* for get_next_track() */
       if (track && (!insertfunc || insertfunc (track)))
       {
-         tracks = g_list_insert_sorted (tracks, track, comparefunc);
-         ++f;
-         if (tracks_nr && (f>tracks_nr))
-         {   /*cut the tail*/
-            tracks = g_list_remove(tracks,
-                   g_list_nth_data(tracks, tracks_nr));
-            --f;
-         }
+	 tracks = g_list_insert_sorted (tracks, track, comparefunc);
+	 ++f;
+	 if (tracks_nr && (f>tracks_nr))
+	 {   /*cut the tail*/
+	    tracks = g_list_remove(tracks,
+		   g_list_nth_data(tracks, tracks_nr));
+	    --f;
+	 }
       }
    }
    return tracks;
@@ -2881,8 +2895,8 @@ gunichar2 *utf16_strdup (gunichar2 *utf16)
 /* compare @str1 and @str2 case-sensitively only */
 gint str_cmp (gconstpointer str1, gconstpointer str2, gpointer data)
 {
-/* 	return compare_string_case_insensitive((gchar *)str1, (gchar *)str2); */
-        return strcmp((gchar *)str1, (gchar *)str2);
+/*	return compare_string_case_insensitive((gchar *)str1, (gchar *)str2); */
+	return strcmp((gchar *)str1, (gchar *)str2);
 }
 
 static void treeKeyDestroy(gpointer key) { g_free(key); }
@@ -2920,29 +2934,29 @@ void check_db (void)
     GDir  *dir_des = NULL;
 
     gchar *pathtrack=NULL
-        , *ipod_filename = NULL
-        , *ipod_dir = NULL
-        , *ipod_fulldir = NULL
-        , *buf = NULL;
+	, *ipod_filename = NULL
+	, *ipod_dir = NULL
+	, *ipod_fulldir = NULL
+	, *buf = NULL;
 
     Playlist* pl_orphaned = NULL,
-        * pl_dangling = NULL;
+	* pl_dangling = NULL;
 
     gpointer foundtrack ;
 
     gint  h = 0
-        , i
-        , norphaned = 0;
+	, i
+	, norphaned = 0;
 
     gchar ** tokens;
     static GString *str_danggood = NULL
-        , *str_dangbad = NULL;
+	, *str_dangbad = NULL;
 
 
     gchar * IPOD_MUSICFILES_DIR;
     IPOD_MUSICFILES_DIR=g_strdup_printf("%s%c%s%cMusic%c",
-                                        prefs_get_ipod_mount(), G_DIR_SEPARATOR,
-                                        IPOD_CONTROL_DIR, G_DIR_SEPARATOR,G_DIR_SEPARATOR);
+					prefs_get_ipod_mount(), G_DIR_SEPARATOR,
+					IPOD_CONTROL_DIR, G_DIR_SEPARATOR,G_DIR_SEPARATOR);
 
     prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
     block_widgets();
@@ -2952,21 +2966,21 @@ void check_db (void)
 
     /* put all files in the hash table */
     files_known = g_tree_new_full (str_cmp, NULL,
-                                   treeKeyDestroy, treeValueDestroy);
+				   treeKeyDestroy, treeValueDestroy);
     while((track=get_next_track(h)))
     {
-        h=1;
-        if (!track->transferred) continue; /* we don't want to report not transfered files
-                                            * as dandgling */
-        tokens = g_strsplit(track->ipod_path,":",4);
-/* 	fprintf(stdout,"File %s\n", track->ipod_path); */
-        fflush(stdout);
-        if (ntokens(tokens)>=4)
-            pathtrack=g_strdup (tokens[3]);
-        else
-            fprintf(stderr, "Report the bug please: shouldn't be 0 at %s:%d\n",__FILE__,__LINE__);
-        g_tree_insert (files_known, pathtrack, track);
-        g_strfreev(tokens);
+	h=1;
+	if (!track->transferred) continue; /* we don't want to report not transfered files
+					    * as dandgling */
+	tokens = g_strsplit(track->ipod_path,":",4);
+/*	fprintf(stdout,"File %s\n", track->ipod_path); */
+	fflush(stdout);
+	if (ntokens(tokens)>=4)
+	    pathtrack=g_strdup (tokens[3]);
+	else
+	    fprintf(stderr, "Report the bug please: shouldn't be 0 at %s:%d\n",__FILE__,__LINE__);
+	g_tree_insert (files_known, pathtrack, track);
+	g_strfreev(tokens);
     }
 
     gtkpod_statusbar_message(_("Checking iPOD files against known files in DB"));
@@ -2975,58 +2989,58 @@ void check_db (void)
 
     for(h=0;h<IPOD_MUSIC_DIRS;h++)
     {
-        /* directory name */
-        ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
-        ipod_fulldir=g_strdup_printf("%s%s",IPOD_MUSICFILES_DIR,ipod_dir); /* full path */
+	/* directory name */
+	ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
+	ipod_fulldir=g_strdup_printf("%s%s",IPOD_MUSICFILES_DIR,ipod_dir); /* full path */
 
-        dir_des=g_dir_open(ipod_fulldir,0,NULL);
+	dir_des=g_dir_open(ipod_fulldir,0,NULL);
 
-        /* this shouldn't happend, but you never know */
-        if (dir_des!=NULL)
-        {
-            while ((ipod_filename=g_strdup(g_dir_read_name(dir_des))))
-                /* we have a file in the directory*/
-            {
-                pathtrack=g_strdup_printf("%s%c%s", ipod_dir, ':', ipod_filename);
-                if ( g_tree_lookup_extended (files_known, pathtrack,
-                                             &foundtrack, &foundtrack) )
-                { /* file is not orphaned */
-                    g_tree_remove(files_known, pathtrack); /* we don't need this any more */
-                }
-                else
-                {  /* Now deal with orphaned... */
-                    gchar * fn_orphaned;
-/* 		    printf("Found orphaned file %s\n", pathtrack); */
-                    if (!norphaned)
+	/* this shouldn't happend, but you never know */
+	if (dir_des!=NULL)
+	{
+	    while ((ipod_filename=g_strdup(g_dir_read_name(dir_des))))
+		/* we have a file in the directory*/
+	    {
+		pathtrack=g_strdup_printf("%s%c%s", ipod_dir, ':', ipod_filename);
+		if ( g_tree_lookup_extended (files_known, pathtrack,
+					     &foundtrack, &foundtrack) )
+		{ /* file is not orphaned */
+		    g_tree_remove(files_known, pathtrack); /* we don't need this any more */
+		}
+		else
+		{  /* Now deal with orphaned... */
+		    gchar * fn_orphaned;
+/*		    printf("Found orphaned file %s\n", pathtrack); */
+		    if (!norphaned)
 		    {
 			gchar *str = g_strdup_printf ("[%s]", _("Orphaned"));
-                        pl_orphaned = get_newplaylist_by_name(str);
+			pl_orphaned = get_newplaylist_by_name(str);
 			g_free (str);
 		    }
 
-                    norphaned++;
+		    norphaned++;
 
 
-                    fn_orphaned = g_strdup_printf("%s%s%c%s",
-                                                  IPOD_MUSICFILES_DIR,
-                                                  ipod_dir, G_DIR_SEPARATOR,
-                                                  ipod_filename);
+		    fn_orphaned = g_strdup_printf("%s%s%c%s",
+						  IPOD_MUSICFILES_DIR,
+						  ipod_dir, G_DIR_SEPARATOR,
+						  ipod_filename);
 
-                    add_track_by_filename( fn_orphaned, pl_orphaned,
-                                           FALSE, NULL, NULL);
-                }
-                g_free(ipod_filename);
-                g_free(pathtrack);
-            }
-        }
-        g_free(dir_des);
-        g_free(ipod_dir);
-        g_free(ipod_fulldir);
-        process_gtk_events_blocked();
+		    add_track_by_filename( fn_orphaned, pl_orphaned,
+					   FALSE, NULL, NULL);
+		}
+		g_free(ipod_filename);
+		g_free(pathtrack);
+	    }
+	}
+	g_free(dir_des);
+	g_free(ipod_dir);
+	g_free(ipod_fulldir);
+	process_gtk_events_blocked();
     }
 
     buf=g_strdup_printf(_("Found %d orphaned and %d dangling files. Processing..."),
-                        norphaned, g_tree_nnodes(files_known));
+			norphaned, g_tree_nnodes(files_known));
 
     gtkpod_statusbar_message(buf);
     gtkpod_tracks_statusbar_update();
@@ -3037,7 +3051,7 @@ void check_db (void)
     if (g_tree_nnodes(files_known) > 0)
     {
 	gchar *str = g_strdup_printf ("[%s]", _("Dangling"));
-        pl_dangling = get_newplaylist_by_name(str);
+	pl_dangling = get_newplaylist_by_name(str);
 	g_free (str);
     }
 
@@ -3046,45 +3060,45 @@ void check_db (void)
 
     str_danggood = g_string_sized_new(2000);
     g_string_printf(str_danggood,
-                    _("Dangling tracks with files on PC (to be copied):\n"));
+		    _("Dangling tracks with files on PC (to be copied):\n"));
 
     str_dangbad  = g_string_sized_new(2000);
     g_string_printf(str_dangbad,
-                    _("Dangling tracks with NO files on PC (to be removed):\n"));
+		    _("Dangling tracks with NO files on PC (to be removed):\n"));
 
 
     /* Now lets analyze sort dangling links to ones which have files
        on physical disk and the ones which don't */
     for(i = 0; i < get_nr_of_tracks_in_playlist (pl_dangling) ; i++)
     {
-        Track *track = get_track_in_playlist_by_nr (pl_dangling, i);
-        gchar *filehash = NULL;
-        if (track->pc_path_locale && *track->pc_path_locale &&   /* file is specified */
-            g_file_test (track->pc_path_locale, G_FILE_TEST_EXISTS) && /* file exists */
-            track->md5_hash &&                           /* md5 defined for the track */
-            (!strcmp ((filehash=md5_hash_on_file_name (track->pc_path_locale)),
-                      track->md5_hash)))   /* and md5 of the file is the same as in the
-                                            * track info */
-        { /* Original file is present on PC and has the same md5*/
-            track->transferred=FALSE; /* yes - we need to transfer it */
-            update_track_from_file(track); /* please update information for the sake of it */
-            g_string_append_printf
-                (str_danggood,"%s %s-%s(%d)\n%s\n",_("Track"),
-                 track->artist, track->title, track->ipod_id, track->pc_path_locale);
-            data_changed();
-        }
-        else
-        { /* Doesn't exist */
-            g_string_append_printf
-                (str_dangbad,"%s %s-%s(%d)\n%s\n",_("Track"),
-                 track->artist, track->title, track->ipod_id, track->pc_path_locale);
+	Track *track = get_track_in_playlist_by_nr (pl_dangling, i);
+	gchar *filehash = NULL;
+	if (track->pc_path_locale && *track->pc_path_locale &&   /* file is specified */
+	    g_file_test (track->pc_path_locale, G_FILE_TEST_EXISTS) && /* file exists */
+	    track->md5_hash &&                           /* md5 defined for the track */
+	    (!strcmp ((filehash=md5_hash_on_file_name (track->pc_path_locale)),
+		      track->md5_hash)))   /* and md5 of the file is the same as in the
+					    * track info */
+	{ /* Original file is present on PC and has the same md5*/
+	    track->transferred=FALSE; /* yes - we need to transfer it */
+	    update_track_from_file(track); /* please update information for the sake of it */
+	    g_string_append_printf
+		(str_danggood,"%s %s-%s(%d)\n%s\n",_("Track"),
+		 track->artist, track->title, track->ipod_id, track->pc_path_locale);
+	    data_changed();
+	}
+	else
+	{ /* Doesn't exist */
+	    g_string_append_printf
+		(str_dangbad,"%s %s-%s(%d)\n%s\n",_("Track"),
+		 track->artist, track->title, track->ipod_id, track->pc_path_locale);
 
-            remove_track_from_playlist(NULL, track); /* remove track from everywhere */
-            remove_track(track); /* seems to be fine fnct for this case */
-            data_changed();
-        }
+	    remove_track_from_playlist(NULL, track); /* remove track from everywhere */
+	    remove_track(track); /* seems to be fine fnct for this case */
+	    data_changed();
+	}
 
-        if (filehash) g_free(filehash); /* 'if' probably is not necc. due to g_... but */
+	if (filehash) g_free(filehash); /* 'if' probably is not necc. due to g_... but */
     }
 
     if (pl_dangling || pl_orphaned) data_changed();

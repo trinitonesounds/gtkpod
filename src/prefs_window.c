@@ -1,26 +1,26 @@
-/* Time-stamp: <2004-01-25 18:25:31 jcs>
+/* Time-stamp: <2004-02-01 23:23:34 JST jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -121,7 +121,7 @@ prefs_window_create(void)
     if(!prefs_window)
     {
 	GtkWidget *w = NULL;
-	
+
 	if(!tmpcfg && !origcfg)
 	{
 	    tmpcfg = clone_prefs();
@@ -186,6 +186,28 @@ prefs_window_create(void)
 		  the text we might get a callback destroying the old
 		  value... */
 		gchar *buf = g_strdup (tmpcfg->mp3gain_path);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
+	if((w = lookup_widget(prefs_window, "sync_contacts_path_entry")))
+	{
+	    if (tmpcfg->sync_contacts_path)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->sync_contacts_path);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
+	if((w = lookup_widget(prefs_window, "sync_calendar_path_entry")))
+	{
+	    if (tmpcfg->sync_calendar_path)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->sync_calendar_path);
 		gtk_entry_set_text(GTK_ENTRY(w), buf);
 		g_free (buf);
 	    }
@@ -454,7 +476,7 @@ prefs_window_create(void)
 	    }
 	    g_free (buf);
 	}
-	
+
 	if((w = lookup_widget(prefs_window, "cfg_keep_backups")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -488,12 +510,23 @@ prefs_window_create(void)
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->write_gaintag);
-        }
+	}
+	if((w = lookup_widget(prefs_window, "concal_autosync")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->concal_autosync);
+	}
+	if((w = lookup_widget(prefs_window, "concal_label")))
+	{
+	    gchar *str = g_strdup_printf (_("Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release."), PKGDATADIR G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
+	    gtk_label_set_text (GTK_LABEL (w), str);
+	    g_free (str);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_special_export_charset")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->special_export_charset);
-        }
+	}
 	prefs_window_show_hide_tooltips ();
 	gtk_widget_show(prefs_window);
     }
@@ -505,7 +538,7 @@ prefs_window_create(void)
  * UI has requested preferences update(by clicking ok on the prefs window)
  * Frees the tmpcfg variable
  */
-static void 
+static void
 prefs_window_set(void)
 {
     if (tmpcfg)
@@ -520,6 +553,8 @@ prefs_window_set(void)
 	prefs_set_play_now_path(tmpcfg->play_now_path);
 	prefs_set_play_enqueue_path(tmpcfg->play_enqueue_path);
 	prefs_set_mp3gain_path(tmpcfg->mp3gain_path);
+	prefs_set_sync_contacts_path(tmpcfg->sync_contacts_path);
+	prefs_set_sync_calendar_path(tmpcfg->sync_calendar_path);
 	prefs_set_time_format(tmpcfg->time_format);
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_auto_import(tmpcfg->autoimport);
@@ -572,6 +607,7 @@ prefs_window_set(void)
 	prefs_set_automount(tmpcfg->automount);
 	prefs_set_export_template(tmpcfg->export_template);
 	prefs_set_write_gaintag(tmpcfg->write_gaintag);
+	prefs_set_concal_autosync(tmpcfg->concal_autosync);
 	prefs_set_special_export_charset(tmpcfg->special_export_charset);
 
 	tm_show_preferred_columns();
@@ -707,6 +743,16 @@ prefs_window_apply (void)
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mp3gain_path ());
 	/* tmpcfg gets set by the "changed" callback */
     }
+    if((w = lookup_widget(prefs_window, "sync_contacts_path_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_sync_contacts_path ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
+    if((w = lookup_widget(prefs_window, "sync_calendar_path_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_sync_calendar_path ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
     if((w = lookup_widget(prefs_window, "time_format_entry")))
     {
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_time_format ());
@@ -727,7 +773,7 @@ prefs_window_apply (void)
 /**
  * prefs_window_set_md5tracks
  * @val - truth value of whether or not we should use the md5 hash to
- * prevent file duplication. changes temp variable 
+ * prevent file duplication. changes temp variable
  */
 void
 prefs_window_set_md5tracks(gboolean val)
@@ -806,6 +852,20 @@ void prefs_window_set_mp3gain_path(const gchar *path)
     tmpcfg->mp3gain_path = g_strdup (path);
 }
 
+void prefs_window_set_sync_contacts_path(const gchar *path)
+{
+    if (!path) return;
+    g_free (tmpcfg->sync_contacts_path);
+    tmpcfg->sync_contacts_path = g_strdup (path);
+}
+
+void prefs_window_set_sync_calendar_path(const gchar *path)
+{
+    if (!path) return;
+    g_free (tmpcfg->sync_calendar_path);
+    tmpcfg->sync_calendar_path = g_strdup (path);
+}
+
 void prefs_window_set_time_format(const gchar *format)
 {
     if (!format) return;
@@ -822,19 +882,19 @@ void prefs_window_set_write_extended_info(gboolean active)
   tmpcfg->write_extended_info = active;
 }
 
-void 
+void
 prefs_window_set_delete_track_ipod(gboolean val)
 {
     tmpcfg->deletion.ipod_file = val;
 }
 
-void 
+void
 prefs_window_set_delete_track_playlist(gboolean val)
 {
     tmpcfg->deletion.track = val;
 }
 
-void 
+void
 prefs_window_set_sync_remove_confirm(gboolean val)
 {
     tmpcfg->deletion.syncing = val;
@@ -1039,6 +1099,12 @@ prefs_window_set_write_gaintag(gboolean val)
 }
 
 void
+prefs_window_set_concal_autosync(gboolean val)
+{
+    tmpcfg->concal_autosync = val;
+}
+
+void
 prefs_window_set_special_export_charset(gboolean val)
 {
     tmpcfg->special_export_charset = val;
@@ -1215,7 +1281,7 @@ static TM_item sort_window_get_sort_col (void)
 	    if (strcmp (gettext (tm_col_strings[i]), str) == 0)  break;
     if ((i<0) || (i>= TM_NUM_COLUMNS))
     {
-	fprintf (stderr, 
+	fprintf (stderr,
 		 "Programming error: cal_get_category () -- item not found.\n");
 	/* set to something reasonable at least */
 	i = TM_COLUMN_TITLE;

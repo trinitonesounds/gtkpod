@@ -1,26 +1,26 @@
-/* Time-stamp: <2004-01-25 18:25:31 jcs>
+/* Time-stamp: <2004-02-01 23:14:10 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -66,7 +66,7 @@ struct cfg
     gchar *sp_played_state;  /* current "played" string */
     gboolean sp_modified;    /* consider last modified? */
     gchar *sp_modified_state;/* current "modified" string */
-    gboolean sp_autodisplay; /* display automatically? */ 
+    gboolean sp_autodisplay; /* display automatically? */
   } st[SORT_TAB_MAX];
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
@@ -127,6 +127,8 @@ struct cfg
   gchar *play_now_path;         /* path for 'Play Now' */
   gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
   gchar *mp3gain_path;          /* path for the mp3gain executable */
+  gchar *sync_contacts_path;    /* path for the sync_contacts executable */
+  gchar *sync_calendar_path;    /* path for the sync_calendar executable */
   gchar *time_format;           /* time format for strftime() */
   gchar *export_template;       /* filename for files exported from ipod */
   gboolean automount;		/* whether we should mount/unmount the ipod */
@@ -134,8 +136,9 @@ struct cfg
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_track;     /* not played track in Highest rated playlist?*/
   gboolean special_export_charset; /* use original charset or specified one? */
-  gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/ 
+  gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   gboolean write_gaintag;       /* should we append the mp3gain's tag to the mp3files?*/
+  gboolean concal_autosync;     /* sync contacts and calendar on iTunesDB sync? */
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -282,6 +285,10 @@ void prefs_set_play_enqueue_path (const gchar *path);
 const gchar *prefs_get_play_enqueue_path (void);
 void prefs_set_mp3gain_path (const gchar *path);
 const gchar *prefs_get_mp3gain_path (void);
+void prefs_set_sync_contacts_path (const gchar *path);
+const gchar *prefs_get_sync_contacts_path (void);
+void prefs_set_sync_calendar_path (const gchar *path);
+const gchar *prefs_get_sync_calendar_path (void);
 void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);
@@ -318,6 +325,8 @@ void prefs_set_export_template (char* state);
 const char* prefs_get_export_template (void);
 void prefs_set_write_gaintag(gboolean val);
 gboolean prefs_get_write_gaintag(void);
+void prefs_set_concal_autosync(gboolean val);
+gboolean prefs_get_concal_autosync(void);
 void prefs_set_special_export_charset(gboolean val);
 gboolean prefs_get_special_export_charset(void);
 #endif

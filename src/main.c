@@ -61,7 +61,7 @@ main (int argc, char *argv[])
 
   gtk_init (&argc, &argv);
 
-  add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
+  add_pixmap_directory (PKGDATADIR G_DIR_SEPARATOR_S "pixmaps");
 
   srand(time(NULL));
 

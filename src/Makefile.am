@@ -2,9 +2,9 @@
 
 AM_CFLAGS = @PACKAGE_CFLAGS@
 
-INCLUDES = \
-	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
-	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
+INCLUDES = @PACKAGE_CFLAGS@ \
+	   -DPKGDATADIR=\""$(pkgdatadir)\"" \
+	   -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
 
 bin_PROGRAMS = gtkpod
 

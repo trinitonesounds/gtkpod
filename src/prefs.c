@@ -1,26 +1,26 @@
-/* Time-stamp: <2004-01-25 18:34:11 jcs>
+/* Time-stamp: <2004-02-01 23:14:11 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -40,7 +40,7 @@
  *   prefs_set_new_option() to prefs.[ch]. These functions are
  *   called from within gtkpod to query/set the state of the option.
  *   prefs_set_new_option() should verify that the value passed is
- *   valid. 
+ *   valid.
  *
  * - add a function prefs_window_set_new_option to
  *   prefs_window.[ch]. This function is called from the callback
@@ -69,9 +69,9 @@
  * ---------------------------------------------------------------- */
 
 /* FIXME: simplify code to make adding of new options easier:
-                  prefs_window_create()
-                  write_prefs_to_file_desc()
-                  read_prefs_from_file_desc()
+		  prefs_window_create()
+		  write_prefs_to_file_desc()
+		  read_prefs_from_file_desc()
 */
 
 /* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
@@ -242,8 +242,12 @@ struct cfg *cfg_new(void)
     mycfg->play_now_path = g_strdup ("xmms -p %s");
     mycfg->play_enqueue_path = g_strdup ("xmms -e %s");
     mycfg->mp3gain_path = g_strdup ("");
+    mycfg->sync_contacts_path = g_strdup ("");
+    mycfg->sync_calendar_path = g_strdup ("");
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
     mycfg->export_template = g_strdup ("%o;%a - %t.mp3;%t.wav");
+    mycfg->write_gaintag = FALSE;
+    mycfg->concal_autosync = FALSE;
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
@@ -307,6 +311,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "mp3gain_path") == 0)
 	  {
 	      prefs_set_mp3gain_path (arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "sync_contacts_path") == 0)
+	  {
+	      prefs_set_sync_contacts_path (arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "sync_calendar_path") == 0)
+	  {
+	      prefs_set_sync_calendar_path (arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "time_format") == 0)
 	  {
@@ -372,62 +384,62 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint i = atoi (line+13);
 	      prefs_set_st_autoselect (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "st_category", 11) == 0)
 	  {
 	      gint i = atoi (line+11);
 	      prefs_set_st_category (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_or", 4) == 0)
 	  {
 	      gint i = atoi (line+4);
 	      prefs_set_sp_or (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_rating_cond", 14) == 0)
 	  {
 	      gint i = atoi (line+14);
 	      prefs_set_sp_cond (i, T_RATING, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_playcount_cond", 17) == 0)
 	  {
 	      gint i = atoi (line+17);
 	      prefs_set_sp_cond (i, T_PLAYCOUNT, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_played_cond", 14) == 0)
 	  {
 	      gint i = atoi (line+14);
 	      prefs_set_sp_cond (i, T_TIME_PLAYED, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_modified_cond", 16) == 0)
 	  {
 	      gint i = atoi (line+16);
 	      prefs_set_sp_cond (i, T_TIME_MODIFIED, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_rating_state", 15) == 0)
 	  {
 	      gint i = atoi (line+15);
 	      prefs_set_sp_rating_state (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_playcount_low", 16) == 0)
 	  {
 	      gint i = atoi (line+16);
 	      prefs_set_sp_playcount_low (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_playcount_high", 17) == 0)
 	  {
 	      gint i = atoi (line+17);
 	      prefs_set_sp_playcount_high (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_played_state", 15) == 0)
 	  {
 	      gint i = atoi (line+15);
 	      prefs_set_sp_entry (i, T_TIME_PLAYED, arg);
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_modified_state", 17) == 0)
 	  {
 	      gint i = atoi (line+17);
 	      prefs_set_sp_entry (i, T_TIME_MODIFIED, arg);
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "sp_autodisplay", 14) == 0)
 	  {
 	      gint i = atoi (line+14);
@@ -442,12 +454,12 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint i = atoi (line+12);
 	      prefs_set_tm_col_width (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "tag_autoset", 11) == 0)
 	  {
 	      gint i = atoi (line+11);
 	      prefs_set_autosettags (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strcasecmp (line, "readtags") == 0)
 	  {
 	      prefs_set_readtags((gboolean)atoi(arg));
@@ -468,17 +480,17 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint i = atoi (line+11);
 	      prefs_set_col_visible (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "col_order", 9) == 0)
 	  {
 	      gint i = atoi (line+9);
 	      prefs_set_col_order (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strncasecmp (line, "paned_pos_", 10) == 0)
 	  {
 	      gint i = atoi (line+10);
 	      prefs_set_paned_pos (i, atoi (arg));
-	  }      
+	  }
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
 	      prefs_set_offline((gboolean)atoi(arg));
@@ -583,11 +595,11 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_not_played_track((gboolean)atoi(arg));
 	  }
-       	  else if((g_ascii_strcasecmp (line, "misc_track_nr") == 0) ||
+	  else if((g_ascii_strcasecmp (line, "misc_track_nr") == 0) ||
 		  (g_ascii_strcasecmp (line, "misc_song_nr") == 0))
-       	  {
-       	      prefs_set_misc_track_nr(atoi(arg));
-       	  }
+	  {
+	      prefs_set_misc_track_nr(atoi(arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "update_charset") == 0)
 	  {
 	      prefs_set_update_charset((gboolean)atoi(arg));
@@ -679,15 +691,19 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
 	  {
 	      prefs_set_write_gaintag ((gboolean)atoi(arg));
-	  }                                                                
+	  }
+	  else if(g_ascii_strcasecmp (line, "concal_autosync") == 0)
+	  {
+	      prefs_set_concal_autosync ((gboolean)atoi(arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
 	      prefs_set_special_export_charset ((gboolean)atoi(arg));
-	  }                                                                
+	  }
 	  else
 	  {
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
-	  }	      
+	  }
 	  g_free(line);
 	}
     }
@@ -815,14 +831,14 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       { "auto",        no_argument,	NULL, GP_AUTO },
       { 0, 0, 0, 0 }
     };
-  
+
   if (cfg != NULL) discard_prefs ();
-  
+
   cfg = cfg_new();
   read_prefs_defaults();
 
   while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
-    switch(opt) 
+    switch(opt)
       {
       case GP_HELP:
 	usage(stdout);
@@ -868,6 +884,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "play_now_path=%s\n", cfg->play_now_path);
     fprintf(fp, "play_enqueue_path=%s\n", cfg->play_enqueue_path);
     fprintf(fp, "mp3gain_path=%s\n", cfg->mp3gain_path);
+    fprintf(fp, "sync_contacts_path=%s\n", cfg->sync_contacts_path);
+    fprintf(fp, "sync_calendar_path=%s\n", cfg->sync_calendar_path);
     fprintf(fp, "time_format=%s\n", cfg->time_format);
     fprintf(fp, "export_template=%s\n", cfg->export_template);
     if (cfg->charset)
@@ -975,10 +993,11 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
+    fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
     fprintf (fp, "special_export_charset=%d\n", cfg->special_export_charset);
 }
 
-void 
+void
 write_prefs (void)
 {
     gchar filename[PATH_MAX+1];
@@ -1028,6 +1047,8 @@ void cfg_free(struct cfg *c)
       g_free (c->play_now_path);
       g_free (c->play_enqueue_path);
       g_free (c->mp3gain_path);
+      g_free (c->sync_contacts_path);
+      g_free (c->sync_calendar_path);
       g_free (c->time_format);
       g_free (c->export_template);
       g_free (c);
@@ -1052,7 +1073,7 @@ get_dirname_of_filename(const gchar *file)
 	buf = g_strdup (file);
     else
 	buf = g_path_get_dirname (file);
-	
+
     len = strlen (buf);
     if (len && (buf[len-1] == '/'))	result = buf;
     else
@@ -1267,6 +1288,10 @@ struct cfg *clone_prefs(void)
 	    result->play_enqueue_path = g_strdup(cfg->play_enqueue_path);
 	if(cfg->mp3gain_path)
 	    result->mp3gain_path = g_strdup(cfg->mp3gain_path);
+	if(cfg->sync_contacts_path)
+	    result->sync_contacts_path = g_strdup(cfg->sync_contacts_path);
+	if(cfg->sync_calendar_path)
+	    result->sync_calendar_path = g_strdup(cfg->sync_calendar_path);
 	if(cfg->time_format)
 	    result->time_format = g_strdup(cfg->time_format);
 	if (cfg->export_template)
@@ -1962,8 +1987,8 @@ void prefs_set_last_prefs_page (gint i)
 /* validate the the play_path @path and return a valid copy that has
  * to be freed with g_free when it's not needed any more. */
 /* Rules: - only one '%'
-          - must be '%s'
-          - removes all invalid '%' */
+	  - must be '%s'
+	  - removes all invalid '%' */
 gchar *prefs_validate_play_path (const gchar *path)
 {
     const gchar *pp;
@@ -2051,6 +2076,42 @@ const gchar *prefs_get_mp3gain_path (void)
     return cfg->mp3gain_path;
 }
 
+void prefs_set_sync_contacts_path (const gchar *path)
+{
+    C_FREE (cfg->sync_contacts_path);
+    if (path)
+    {
+	cfg->sync_contacts_path = g_strstrip (g_strdup (path));
+    }
+    else
+    {
+	cfg->sync_contacts_path = g_strdup ("");
+    }
+}
+
+const gchar *prefs_get_sync_contacts_path (void)
+{
+    return cfg->sync_contacts_path;
+}
+
+void prefs_set_sync_calendar_path (const gchar *path)
+{
+    C_FREE (cfg->sync_calendar_path);
+    if (path)
+    {
+	cfg->sync_calendar_path = g_strstrip (g_strdup (path));
+    }
+    else
+    {
+	cfg->sync_calendar_path = g_strdup ("");
+    }
+}
+
+const gchar *prefs_get_sync_calendar_path (void)
+{
+    return cfg->sync_calendar_path;
+}
+
 void prefs_set_time_format (const gchar *format)
 {
     if (format)
@@ -2065,7 +2126,7 @@ gchar *prefs_get_time_format (void)
     return cfg->time_format;
 }
 
-gboolean 
+gboolean
 prefs_get_automount (void)
 {
     return cfg->automount;
@@ -2077,7 +2138,7 @@ prefs_set_automount(gboolean val)
     cfg->automount = val;
 }
 
-gboolean 
+gboolean
 prefs_get_info_window(void)
 {
     return cfg->info_window;
@@ -2199,16 +2260,16 @@ void prefs_set_sp_rating_state (guint32 inst, guint32 state)
 {
     if (inst < SORT_TAB_MAX)
 	/* only keep the 'RATING_MAX+1' lowest bits */
-        cfg->st[inst].sp_rating_state = (state & ((1<<(RATING_MAX+1))-1));
+	cfg->st[inst].sp_rating_state = (state & ((1<<(RATING_MAX+1))-1));
     else
-        fprintf (stderr, "prefs_set_sp_rating_state(): inst=%d\n", inst);
+	fprintf (stderr, "prefs_set_sp_rating_state(): inst=%d\n", inst);
 }
 
 
 guint32 prefs_get_sp_rating_state (guint32 inst)
 {
     if (inst < SORT_TAB_MAX)
-        return cfg->st[inst].sp_rating_state;
+	return cfg->st[inst].sp_rating_state;
     fprintf (stderr, "prefs_get_sp_rating_state(): inst=%d\n", inst);
     return 0;
 }
@@ -2357,6 +2418,16 @@ gboolean prefs_get_write_gaintag(void)
 void prefs_set_write_gaintag(gboolean val)
 {
     cfg->write_gaintag = val;
+}
+
+gboolean prefs_get_concal_autosync(void)
+{
+    return(cfg->concal_autosync);
+}
+
+void prefs_set_concal_autosync(gboolean val)
+{
+    cfg->concal_autosync = val;
 }
 
 gboolean prefs_get_special_export_charset(void)
