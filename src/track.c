@@ -40,8 +40,15 @@
 #include "itunesdb.h"
 #include "display.h"
 
+/* List with all the songs */
 GList *songs = NULL;
+/* List with songs pending deletion */
 static GList *pending_deletion = NULL;
+/* Flag to indicate if it's safe to quit (i.e. all songs exported or
+   at least a offline database written). It's state is changed in
+   handle_export() and add_song_by_filename(). It's state can be
+   accessed by the public function file_are_saved(). */
+static gboolean files_saved = TRUE;
 
 static guint32 free_ipod_id (guint32 id);
 
@@ -356,8 +363,10 @@ gboolean add_song_by_filename (gchar *name)
 	}
       if(add_song (song))                   /* add song to memory */
       {
-	  add_song_to_playlist (NULL, song);  
 	  /* add song to master playlist */
+	  add_song_to_playlist (NULL, song);
+	  /* indicate that non-transferred files exist */
+	  data_changed ();
       }
     }
   g_free (filetag);
@@ -886,78 +895,90 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 /* used to handle export of database */
 void handle_export (void)
 {
-  gchar *name1, *name2, *cfgdir;
-  gboolean success;
+  gchar *ipt, *ipe, *cft=NULL, *cfe=NULL, *cfgdir;
+  gboolean success = TRUE;
+
+  cfgdir = prefs_get_cfgdir ();
+  ipt = concat_dir (cfg->ipod_mount, "iPod_Control/iTunes/iTunesDB");
+  ipe = concat_dir (cfg->ipod_mount, "iPod_Control/iTunes/iTunesDB.ext");
+  if (cfgdir)
+    {
+      cft = concat_dir (cfgdir, "iTunesDB");
+      cfe = concat_dir (cfgdir, "iTunesDB.ext");
+    }
 
   if(!cfg->offline)
     {
       /* write songs to iPod */
-      if (flush_songs () == FALSE) return;
-      /* write iTunesDB to iPod */
-      if (itunesdb_write (cfg->ipod_mount) == FALSE) return;
-      /* write extended info (PC filenames, md5 hash) to iPod */
-      if (cfg->write_extended_info)
+      if (!(success=flush_songs ()))
+	  gtkpod_warning (_("Could not write songs to iPod. Export aborted!\n"));
+      /* else: write iTunesDB to iPod */
+      else if (!(success=itunesdb_write (cfg->ipod_mount)))
+	  gtkpod_warning (_("Error writing iTunesDB to iPod. Export aborted!\n"));
+      /* else: write extended info (PC filenames, md5 hash) to iPod */
+      else if (cfg->write_extended_info)
 	{
-	  name1 = concat_dir (cfg->ipod_mount,
-			      "iPod_Control/iTunes/iTunesDB.ext");
-	  name2 = concat_dir (cfg->ipod_mount,
-			      "iPod_Control/iTunes/iTunesDB");
-	  success = write_extended_info (name1, name2);
-	  g_free (name1);
-	  g_free (name2);
-	  if (!success) return;
+	  if(!(success = write_extended_info (ipe, ipt)))
+	    gtkpod_warning (_("Extended information not written\n"));
 	}
-      /* copy files to ~/.gtkpod */
-      if (cfg->keep_backups)
+      /* else: delete extended information file, if it exists */
+      else if (g_file_test (ipe, G_FILE_TEST_EXISTS))
 	{
-	  if ((cfgdir = prefs_get_cfgdir ()))
+	  if (remove (ipe) != 0)
 	    {
-	      name1 = concat_dir (cfg->ipod_mount,
-				  "iPod_Control/iTunes/iTunesDB");
-	      name2 = concat_dir (cfgdir, "iTunesDB");
-	      success = cp (name1, name2);
-	      g_free (name1);
-	      g_free (name2);
+	      gtkpod_warning (_("Could not delete extended information file: \"%s\"\n"), ipe);
+	    }
+	}
+      /* if everything was successful, copy files to ~/.gtkpod */
+      if (success && cfg->keep_backups)
+	{
+	  if (cfgdir)
+	    {
+	      success = cp (ipt, cft);
 	      if (success && cfg->write_extended_info)
-		{
-		  name1 = concat_dir (cfg->ipod_mount,
-				      "iPod_Control/iTunes/iTunesDB.ext");
-		  name2 = concat_dir (cfgdir, "iTunesDB.ext");
-		  success = cp (name1, name2);
-		  g_free (name1);
-		  g_free (name2);
-		}
+		success = cp (ipe, cfe);
 	    }
 	  if ((cfgdir == NULL) || (!success))
-	    {
-	      gtkpod_warning (_("Backups could not be created!\n"));
-	    }
-	  C_FREE (cfgdir);
+	    gtkpod_warning (_("Backups could not be created!\n"));
 	}
+      if (success && !cfg->keep_backups && cfgdir)
+	cleanup_backup_and_extended_files ();
     }
   else
     { /* we are offline -> only write database to ~/.gtkpod */
       /* offline implies "extended information" */
-      if ((cfgdir = prefs_get_cfgdir ()))
+      if (cfgdir)
 	{
-	  name1 = concat_dir (cfgdir, "iTunesDB");
-	  success = itunesdb_write_to_file (name1);
-	  g_free (name1);
+	  success = itunesdb_write_to_file (cft);
 	  if (success)
-	    {
-	      name1 = concat_dir (cfgdir, "iTunesDB.ext");
-	      name2 = concat_dir (cfgdir, "iTunesDB");
-	      success = write_extended_info (name1, name2);
-	      g_free (name1);
-	      g_free (name2);
-	    }
+	    success = write_extended_info (cfe, cft);
 	}
       if ((cfgdir == NULL) || (!success))
 	{
 	  gtkpod_warning (_("Export not successful!\n"));
+	  success = FALSE;
 	}
-      C_FREE (cfgdir);
     }
+
+  /* indicate that files and/or database is saved */
+  if (success)   files_saved = TRUE;
+
+  C_FREE (cfgdir);
+  C_FREE (cft);
+  C_FREE (cfe);
+  C_FREE (ipt);
+  C_FREE (ipe);
 }
 
 
+/* make state of "files_saved" available to functions */
+gboolean files_are_saved (void)
+{
+  return files_saved;
+}
+
+/* set the state of "files_saved" to FALSE */
+void data_changed (void)
+{
+  files_saved = FALSE;
+}

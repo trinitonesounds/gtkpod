@@ -86,14 +86,14 @@ GList *get_song_list (void);
 guint get_nr_of_songs (void);
 Song *get_song_by_nr (guint32 n);
 Song *get_song_by_id (guint32 id);
-gboolean flush_songs (void);
 gboolean add_song_by_filename (gchar *name);
 gboolean add_directory_recursively (gchar *name);
 gboolean write_tags_to_file(Song *s);
 void handle_import (void);
 void handle_export (void);
+gboolean files_are_saved (void);
+void data_changed (void);
 gchar* get_song_name_on_disk(Song *s);
 gchar* get_preferred_song_name_format(Song *s);
 void remove_song_from_ipod_by_id(guint32 id);
-
 #endif __SONG_H__

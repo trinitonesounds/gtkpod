@@ -334,11 +334,16 @@ pm_cell_edited (GtkCellRendererText *renderer,
   switch (column)
     {
     case PM_COLUMN_PLAYLIST:
-      g_free (playlist->name);
-      g_free (playlist->name_utf16);
-      playlist->name = g_strdup (new_text);
-      playlist->name_utf16 = g_utf8_to_utf16 (new_text, -1,
-					      NULL, NULL, NULL);
+      /* We only do something, if the name actually got changed */
+      if (g_utf8_collate (playlist->name, new_text) != 0)
+	{
+	  g_free (playlist->name);
+	  g_free (playlist->name_utf16);
+	  playlist->name = g_strdup (new_text);
+	  playlist->name_utf16 = g_utf8_to_utf16 (new_text, -1,
+						  NULL, NULL, NULL);
+	  data_changed ();
+	}
       break;
     }
   gtk_tree_path_free (path);
@@ -1019,6 +1024,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	    if (cfg->writeid3) write_tags_to_file (song);
 	  }
 	  g_list_free (members);
+	  data_changed (); /* indicate that data has changed */
 	}
       break;
     }
@@ -1358,7 +1364,11 @@ sm_cell_edited (GtkCellRendererText *renderer,
       fprintf(stderr, "Unknown song cell edited with value %d\n", column);
       break;
     }
-  if (changed) pm_song_changed (song); /* notify playlist model... */
+  if (changed)
+    {
+      pm_song_changed (song); /* notify playlist model... */
+      data_changed ();        /* indicate that data has changed */
+    }
   /* If anything changed and prefs say to write changes to file, do so */
   if (changed && cfg->writeid3) write_tags_to_file (song);
   gtk_tree_path_free (path);

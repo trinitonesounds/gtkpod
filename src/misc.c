@@ -181,6 +181,32 @@ parse_ipod_id_from_string(gchar **s, guint32 *id)
     return(FALSE);
 }
 
+void cleanup_backup_and_extended_files (void)
+{
+  gchar *cfgdir, *cft, *cfe;
+
+  cfgdir = prefs_get_cfgdir ();
+  /* in offline mode, there are no backup files! */
+  if (cfgdir && !cfg->offline)
+    {
+      cft = concat_dir (cfgdir, "iTunesDB");
+      cfe = concat_dir (cfgdir, "iTunesDB.ext");
+      if (!cfg->write_extended_info)
+	/* delete extended info file from computer */
+	if (g_file_test (cfe, G_FILE_TEST_EXISTS))
+	  if (remove (cfe) != 0)
+	    gtkpod_warning (_("Could not delete backup file: \"%s\"\n"), cfe);
+      if (!cfg->keep_backups)
+	if(g_file_test (cft, G_FILE_TEST_EXISTS))
+	  if (remove (cft) != 0)
+	    gtkpod_warning (_("Could not delete backup file: \"%s\"\n"), cft);
+      g_free (cft);
+      g_free (cfe);
+    }
+  C_FREE (cfgdir);
+}
+
+
 /**
  * gtkpod_main_quit
  */

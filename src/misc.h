@@ -42,6 +42,7 @@ gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
 void open_about_window (void);
 void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
+void cleanup_backup_and_extended_files (void);
 void gtkpod_main_quit(void);
 
 #endif __UTILS_H__

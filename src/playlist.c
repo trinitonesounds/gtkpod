@@ -47,6 +47,7 @@ void add_new_playlist (void)
   plitem->name = g_strdup ("New Playlist");
   plitem->name_utf16 = g_utf8_to_utf16 (plitem->name, -1, NULL, NULL, NULL);
   add_playlist (plitem);
+  data_changed (); /* indicate that data has changed in memory */
 }
 
 
