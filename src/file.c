@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-07 00:15:34 jcs>
+/* Time-stamp: <2003-11-08 01:34:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -358,24 +358,16 @@ void update_charset_info (Track *track)
 {
     if (track)
     {
-	G_CONST_RETURN gchar *charset = prefs_get_charset ();
+	const gchar *charset = prefs_get_charset ();
 	C_FREE (track->charset);
 	if (!charset || !strlen (charset))
 	{    /* use standard locale charset */
 	    g_get_charset (&charset);
 	}
-	/* Test for Japanese auto detection. "Japanese Autodetection"
-	   is not a valid charset. Here try to replace it with the
-	   encoding detected when reading the track */
-	if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
-	{
-	    if (track->auto_charset)  track->charset = track->auto_charset;
-	    track->auto_charset = NULL;
-	}
-	else
+	/* only set charset if it's not GTKPOD_JAPAN_AUTOMATIC */
+	if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) != 0))
 	{
 	    track->charset = g_strdup (charset);
-	    track->auto_charset = NULL;
 	}
     }
 }
@@ -404,10 +396,7 @@ Track *copy_new_info (Track *from, Track *to)
     C_FREE (to->fdesc_utf16);
     C_FREE (to->pc_path_utf8);
     C_FREE (to->pc_path_locale);
-    C_FREE (to->ipod_path);
-    C_FREE (to->ipod_path_utf16);
     C_FREE (to->charset);
-    C_FREE (to->auto_charset);
     /* copy strings */
     to->album = g_strdup (from->album);
     to->album_utf16 = utf16_strdup (from->album_utf16);
@@ -423,12 +412,9 @@ Track *copy_new_info (Track *from, Track *to)
     to->composer_utf16 = utf16_strdup (from->composer_utf16);
     to->fdesc = g_strdup (from->fdesc);
     to->fdesc_utf16 = utf16_strdup (from->fdesc_utf16);
-    to->ipod_path = g_strdup (from->ipod_path);
-    to->ipod_path_utf16 = utf16_strdup (from->ipod_path_utf16);
     to->album = g_strdup (from->album);
     to->album_utf16 = utf16_strdup (from->album_utf16);
     to->charset = g_strdup (from->charset);
-    to->auto_charset = g_strdup (from->auto_charset);
     to->size = from->size;
     to->tracklen = from->tracklen;
     to->cd_nr = from->cd_nr;
@@ -457,12 +443,12 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     if (g_file_test (name, G_FILE_TEST_IS_DIR)) return NULL;
     if (!g_file_test (name, G_FILE_TEST_EXISTS)) return NULL;
 
+    /* reset the auto detection charset (see explanation in charset.c */
+    charset_reset_auto ();
+
     /* check for filetype */
     len = strlen (name);
     if (len < 4) return NULL;
-
-    /* reset the auto detection charset (see explanation in charset.c */
-    charset_reset_auto ();
 
     if (strcasecmp (&name[len-4], ".mp3") == 0)
 	nti = file_get_mp3_info (name);
@@ -474,6 +460,13 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     if (nti)
     {
 	FILE *file;
+	if (nti->charset == NULL)
+	{   /* Fill in currently used charset. Try if auto_charset is
+	     * set first. If not, use the currently set charset. */
+	    nti->charset = charset_get_auto ();
+	    if (nti->charset == NULL)
+		update_charset_info (nti);
+	}
 	/* set path file information */
 	nti->pc_path_utf8 = charset_to_utf8 (name);
 	nti->pc_path_locale = g_strdup (name);
@@ -489,11 +482,6 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	{  /* estimate bitrate */
 	    if (nti->tracklen)
 		nti->bitrate = nti->size * 8 / nti->tracklen;
-	}
-	if (nti->charset == NULL)
-	{   /* fill in currently used charset */
-	    nti->auto_charset = charset_get_auto ();
-	    update_charset_info (nti);
 	}
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);
@@ -1120,7 +1108,7 @@ void update_track_from_file (Track *track)
 
     /* remember if charset was set */
     if (track->charset)  charset_set = TRUE;
-    else                charset_set = FALSE;
+    else                 charset_set = FALSE;
 
     if (!prefs_get_update_charset () && charset_set)
     {   /* we should use the initial charset for the update */
@@ -1130,10 +1118,6 @@ void update_track_from_file (Track *track)
 	}
 	/* use the charset used when first importing the track */
 	prefs_set_charset (track->charset);
-    }
-    else
-    {   /* we should update the track->charset information */
-	update_charset_info (track);
     }
 
     if (track->pc_path_locale)
@@ -1348,13 +1332,33 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
  *                                                                  *
 \*------------------------------------------------------------------*/
 
+
+/* Call the correct tag writing function for the filename @name */
+static gboolean file_write_info (gchar *name, Track *track, T_item tag_id)
+{
+    if (name && track)
+    {
+	gchar *suff = strrchr (name, '.');
+	if (suff)
+	{
+	    if (strcasecmp (suff, ".mp3") == 0)
+		return file_write_mp3_info (name, track, tag_id);
+	    if (strcasecmp (suff, ".m4a") == 0)
+		return file_write_mp4_info (name, track, tag_id);
+	    if (strcasecmp (suff, ".m4p") == 0)
+		return file_write_mp4_info (name, track, tag_id);
+	}
+    }
+    return FALSE;
+}
+
+
 /* Write changed tags to file.
    "tag_id": specify which tags should be changed (one of
    T_... defined in track.h) */
 gboolean write_tags_to_file (Track *track, T_item tag_id)
 {
-    File_Tag *filetag;
-    gchar *ipod_fullpath, trackstring[20];
+    gchar *ipod_fullpath;
     gchar *prefs_charset = NULL;
     Track *oldtrack;
     gboolean track_charset_set;
@@ -1379,46 +1383,30 @@ gboolean write_tags_to_file (Track *track, T_item tag_id)
 	update_charset_info (track);
     }
 
-    filetag = g_malloc0 (sizeof (File_Tag));
-    if ((tag_id == T_ALL) || (tag_id == T_ALBUM))
-	filetag->album = track->album;
-    if ((tag_id == T_ALL) || (tag_id == T_ARTIST))
-	filetag->artist = track->artist;
-    if ((tag_id == T_ALL) || (tag_id == T_TITLE))
-	filetag->title = track->title;
-    if ((tag_id == T_ALL) || (tag_id == T_GENRE))
-	filetag->genre = track->genre;
-    if ((tag_id == T_ALL) || (tag_id == T_COMPOSER))
-	filetag->composer = track->composer;
-    if ((tag_id == T_ALL) || (tag_id == T_COMMENT))
-	filetag->comment = track->comment;
-    if ((tag_id == T_ALL) || (tag_id == T_TRACK_NR))
-    {
-	snprintf(trackstring, 20, "%d", track->track_nr);
-	filetag->trackstring = trackstring;
-    }
     if (track->pc_path_locale && (strlen (track->pc_path_locale) > 0))
-      {
-	if (Id3tag_Write_File_Tag (track->pc_path_locale, filetag) == FALSE)
-	  {
+    {
+	if (file_write_info (
+		track->pc_path_locale, track, tag_id) == FALSE)
+	{
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    track->pc_path_locale);
-	  }
-      }
+	}
+    }
     if (!prefs_get_offline () &&
 	track->transferred &&
 	track->ipod_path &&
 	(g_utf8_strlen (track->ipod_path, -1) > 0))
-      {
+    {
 	/* need to get ipod filename */
 	ipod_fullpath = get_track_name_on_ipod (track);
-	if (Id3tag_Write_File_Tag (ipod_fullpath, filetag) == FALSE)
-	  {
+	if (file_write_info (
+		track->pc_path_locale, track, tag_id) == FALSE)
+	{
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    ipod_fullpath);
-	  }
+	}
 	g_free (ipod_fullpath);
-      }
+    }
     /* remove track from md5 hash and reinsert it (hash value has changed!) */
     md5_track_removed (track);
     C_FREE (track->md5_hash);  /* need to remove the old value manually! */
@@ -1428,7 +1416,6 @@ gboolean write_tags_to_file (Track *track, T_item tag_id)
 	remove_duplicate (track, oldtrack);
 	md5_track_exists_insert (track);
     }
-    g_free (filetag);
 
     if (!prefs_get_write_charset () && track_charset_set)
     {   /* reset charset */

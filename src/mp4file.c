@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-07 00:24:53 jcs>
+/* Time-stamp: <2003-11-08 01:43:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -25,6 +25,10 @@
 |
 |  $Id$
 */
+
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 #include "mp4file.h"
 #include "song.h"
@@ -73,8 +77,15 @@
    file.c
 
    You also have to write a function to write TAGs back to the
-   file. The description will follow once the interface is cleaned
-   up (i.e. defined).
+   file. That function should be named 
+
+   gboolean file_write_xxx_info (gchar *filename, Track *track, T_item tag_id)
+
+   and return TRUE on success or FALSE on error. In that case it
+   should log an error message using gtkpod_warning().
+
+   @tag_id determines which TAGs of @track out of the list above is to
+   be updated. If @tag_id==T_ALL, upudate all (supported) TAGs.
 
    ------------------------------------------------------------ */
 
@@ -190,10 +201,25 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 
     return track;
 }
+
+
+gboolean file_write_mp4_info (gchar *filename, Track *track, T_item tag_id)
+{
+    gtkpod_warning (_("m4a/m4p metadata writing not yet supported.\n"));
+    return FALSE;
+}
+
 #else
 /* Use our own code to read some information from mp4 files */
 Track *file_get_mp4_info (gchar *name)
 {
+    gtkpod_warning (_("m4a/m4p not yet supported without the mp4v2 library.\n"));
     return NULL;
+}
+
+gboolean file_write_mp4_info (gchar *filename, Track *track, T_item tag_id)
+{
+    gtkpod_warning (_("m4a/m4p metadata writing not yet supported.\n"));
+    return FALSE;
 }
 #endif

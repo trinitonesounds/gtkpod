@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-03 21:30:36 jcs>
+/* Time-stamp: <2003-11-08 00:56:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2599,6 +2599,44 @@ void most_listened_pl(void)
     gchar *str = g_strdup_printf (_("Most Listened (%d)"), tracks_nr);
     update_ranked_playlist (str, tracks_nr,
 			    Most_Listened_IF, Most_Listened_CF);
+    g_free (str);
+}
+
+
+/* ------------------------------------------------------------ */
+/* Generate a new playlist containing all songs never listened to. */
+
+/* Sort Function: determines the order of the generated playlist */
+
+/* NOTE: THE USE OF 'COMP' ARE NECESSARY FOR THE TIME_PLAYED COMPARES
+   WHERE A SIGN OVERFLOW MAY OCCUR BECAUSE OF THE 32 BIT UNSIGNED MAC
+   TIMESTAMPS. */
+static gint Never_Listened_CF (gconstpointer aa, gconstpointer bb)
+{
+    gint result = 0;
+    const Track *a = aa;
+    const Track *b = bb;
+
+    if (a && b)
+    {
+	result = COMP (b->rating, a->rating);
+    }
+    return result;
+}
+
+/* Insert function: determines whether a track is entered into the playlist */
+static gboolean Never_Listened_IF (Track *track)
+{
+    if (track)   return (track->playcount == 0);
+    return      FALSE;
+}
+
+void never_listened_pl(void)
+{
+    gint tracks_nr = 0; /* no limit */
+    gchar *str = g_strdup_printf (_("Never Listened"));
+    update_ranked_playlist (str, tracks_nr,
+			    Never_Listened_IF, Never_Listened_CF);
     g_free (str);
 }
 

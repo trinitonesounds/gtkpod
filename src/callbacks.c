@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-26 00:49:02 jcs>
+/* Time-stamp: <2003-11-08 00:51:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1475,6 +1475,14 @@ on_most_listened_tracks1_activate       (GtkMenuItem     *menuitem,
 
 
 void
+on_all_tracks_never_listened_to1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    never_listened_pl();
+}
+
+void
 on_most_rated_tracks_playlist_s1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
@@ -1788,3 +1796,4 @@ on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
 {
     nm_new_tracks ();
 }
+

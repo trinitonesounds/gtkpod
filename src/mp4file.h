@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-03 21:37:37 jcs>
+/* Time-stamp: <2003-11-08 01:43:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,5 +31,6 @@
 
 #include "song.h"
 
+gboolean file_write_mp4_info (gchar *filename, Track *track, T_item tag_id);
 Track *file_get_mp4_info (gchar *name);
 #endif

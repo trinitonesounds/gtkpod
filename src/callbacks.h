@@ -663,3 +663,8 @@ on_normalize_all_tracks                (GtkMenuItem     *menuitem,
 void
 on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_all_tracks_never_listened_to1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

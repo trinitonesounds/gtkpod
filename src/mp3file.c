@@ -1,10 +1,67 @@
-/* mp3file.c
+/* Time-stamp: <2003-11-08 01:25:54 jcs>
 |
-|  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
-|  compile "standalone" with the gtkpod project. 2003/05/11
+|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Part of the gtkpod project.
+| 
+|  URL:  http://gtkpod.sourceforge.net/
+| 
+|  This program is free software; you can redistribute it and/or modify
+|  it under the terms of the GNU General Public License as published by
+|  the Free Software Foundation; either version 2 of the License, or
+|  (at your option) any later version.
+| 
+|  This program is distributed in the hope that it will be useful,
+|  but WITHOUT ANY WARRANTY; without even the implied warranty of
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+|  GNU General Public License for more details.
+| 
+|  You should have received a copy of the GNU General Public License
+|  along with this program; if not, write to the Free Software
+|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+| 
+|  iTunes and iPod are trademarks of Apple
+| 
+|  This product is not supported/written/published by Apple!
 |
 |  $Id$
 */
+
+/* This code in the first section is taken from the mp3info
+ * project. Only the code needed for the playlength calculation has
+ * been extracted */
+
+/* The code in the second section of this file is taken from the
+ * mpg123 code used in xmms-1.2.7 (Input/mpg123). Only the code needed
+ * for the playlength calculation has been extracted */
+
+/* The code in the third section of this file is original gtkpod
+ * code. */ 
+
+/* The code in the forth section of this file is taken from
+ * easytag. */
+
+/****************
+ * Declarations *
+ ****************/
+
+#include <glib.h>
+/*
+ * Description of each item of the TagList list
+ */
+typedef struct _File_Tag File_Tag;
+struct _File_Tag
+{
+    gchar *title;          /* Title of track */
+    gchar *artist;         /* Artist name */
+    gchar *album;          /* Album name */
+    gchar *year;           /* Year of track */
+    gchar *trackstring;    /* Position of track in the album */
+    gchar *track_total;    /* The number of tracks for the album (ex: 12/20) */
+    gchar *genre;          /* Genre of song */
+    gchar *comment;        /* Comment */
+    gchar *composer;	   /* Composer */
+    guint32 songlen;       /* Length of file in ms */
+};
 
 /* This code is taken from the mp3info code. Only the code needed for
  * the playlength calculation has been extracted */
@@ -38,14 +95,6 @@
 			 Johannes Overmann <overmann@iname.com>
 
 */
-
-/* The code in the second section of this file is taken from the
- * mpg123 code used in xmms-1.2.7 (Input/mpg123). Only the code needed
- * for the playlength calculation has been extracted */
-
-/* The code in the third section of this file is original gtkpod
- * code. */ 
-
 
 #include <string.h>
 #include <stdio.h>
@@ -914,6 +963,7 @@ guint get_track_time (gchar *path)
 
 ---------------------------------------------------------------------- */
 
+gboolean Id3tag_Read_File_Tag  (gchar *filename, File_Tag *FileTag);
 
 /* Return a Track structure with all information read from the mp3
    file filled in */
@@ -1012,9 +1062,6 @@ Track *file_get_mp3_info (gchar *name)
 		track->bitrate = (float)track->size*8/track->tracklen;
 	}
 
-	/* set charset used */
-	update_charset_info (track);
-
 	if (track->tracklen == 0)
 	{
 	    /* Tracks with zero play length are ignored by iPod... */
@@ -1029,7 +1076,7 @@ Track *file_get_mp3_info (gchar *name)
 
 
 
-/* Time-stamp: <2003-11-06 00:28:24 jcs>
+/*
 |
 |  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
 |  compile "standalone" with the gtkpod project. 2002/11/24
@@ -1037,7 +1084,7 @@ Track *file_get_mp3_info (gchar *name)
 |  length of song in ms. 2002/11/28.
 |  Modified character conversion handling. Jan 2003
 |
-|  $Id$
+|
 */
 
 
@@ -1232,8 +1279,6 @@ guchar   Id3tag_String_To_Genre (gchar *genre);
  * Declarations *
  ****************/
 #define ID3V2_MAX_STRING_LEN 4096
- /* USE_CHARACTER_SET_TRANSLATION impemented by charset_from/to_utf8 () */
-#define USE_CHARACTER_SET_TRANSLATION TRUE
 #define NUMBER_TRACK_FORMATED FALSE
 #define STRIP_TAG_WHEN_EMPTY_FIELDS FALSE
 #define WRITE_ID3V1_TAG TRUE
@@ -1323,17 +1368,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                 if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
                      && string != NULL )
                 {
-                    if (USE_CHARACTER_SET_TRANSLATION)
-                    {
-		        string1 = convert_from_file_to_user(string);
-                        /* Strip_String(string1);*/
-                        FileTag->title = g_strdup(string1);
-                        g_free(string1);
-                    }else
-                    {
-		        /* Strip_String(string);*/
-                        FileTag->title = g_strdup(string);
-                    }
+		    string1 = convert_from_file_to_user(string);
+		    FileTag->title = g_strdup(string1);
+		    g_free(string1);
                 }
             }
         }
@@ -1349,17 +1386,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                 if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
                      && string != NULL )
                 {
-                    if (USE_CHARACTER_SET_TRANSLATION)
-                    {
-		        string1 = convert_from_file_to_user(string);
-                        /* Strip_String(string1);*/
-                        FileTag->artist = g_strdup(string1);
-                        g_free(string1);
-                    }else
-                    {
-		        /* Strip_String(string); */
-                        FileTag->artist = g_strdup(string);
-                    }
+		    string1 = convert_from_file_to_user(string);
+		    FileTag->artist = g_strdup(string1);
+		    g_free(string1);
                 }
             }
         }
@@ -1375,17 +1404,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                 if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
                      && string != NULL )
                 {
-                    if (USE_CHARACTER_SET_TRANSLATION)
-                    {
-                        string1 = convert_from_file_to_user(string);
-                        /* Strip_String(string1);*/
-                        FileTag->album = g_strdup(string1);
-                        g_free(string1);
-                    }else
-                    {
-		        /* Strip_String(string); */
-                        FileTag->album = g_strdup(string);
-                    }
+		    string1 = convert_from_file_to_user(string);
+		    FileTag->album = g_strdup(string1);
+		    g_free(string1);
                 }
             }
         }
@@ -1428,17 +1449,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                     *tmp_str = 0;
                     /* End of fix for id3lib 3.7.x */
 
-                    if (USE_CHARACTER_SET_TRANSLATION)
-                    {
-                        string1 = convert_from_file_to_user(string);
-                        /* Strip_String(string1);*/
-                        FileTag->year = g_strdup(string1);
-                        g_free(string1);
-                    }else
-                    {
-		        /* Strip_String(string);*/
-                        FileTag->year = g_strdup(string);
-                    }
+		    string1 = convert_from_file_to_user(string);
+		    FileTag->year = g_strdup(string1);
+		    g_free(string1);
                 }
             }
         }
@@ -1453,17 +1466,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                 if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
                      && string != NULL )
                 {
-                    if (USE_CHARACTER_SET_TRANSLATION)
-                    {
-                        string1 = convert_from_file_to_user(string);
-                        /* Strip_String(string1);*/
-                        FileTag->composer = g_strdup(string1);
-                        g_free(string1);
-                    }else
-                    {
-		        /* Strip_String(string); */
-                        FileTag->composer = g_strdup(string);
-                    }
+		    string1 = convert_from_file_to_user(string);
+		    FileTag->composer = g_strdup(string1);
+		    g_free(string1);
                 }
             }
         }
@@ -1479,53 +1484,27 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                 if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
                      && string != NULL )
                 {
-                    
-		  /* Strip_String(string);*/
-
-                    if (USE_CHARACTER_SET_TRANSLATION)
-                    {
-                        string1 = convert_from_file_to_user(string);
-                        string2 = strchr(string1,'/');
-                        if (NUMBER_TRACK_FORMATED)
-                        {
-                            if (string2)
-                            {
+		    string1 = convert_from_file_to_user(string);
+		    string2 = strchr(string1,'/');
+		    if (NUMBER_TRACK_FORMATED)
+		    {
+			if (string2)
+			{
 			    FileTag->track_total = g_strdup_printf("%.2d",atoi(string2+1)); /* Just to have numbers like this : '01', '05', '12', ...*/
-                                *string2 = '\0';
-                            }
-                            FileTag->trackstring = g_strdup_printf("%.2d",atoi(string1)); /* Just to have numbers like this : '01', '05', '12', ... */
-                        }else
-                        {
-                            if (string2)
-                            {
-                                FileTag->track_total = g_strdup(string2+1);
-                                *string2 = '\0';
-                            }
-                            FileTag->trackstring = g_strdup(string1);
-                        }
-                        g_free(string1);
-                    }else
-                    {
-                        string2 = strchr(string,'/');
-                        if (NUMBER_TRACK_FORMATED)
-                        {
-                            if (string2)
-                            {
-			    FileTag->track_total = g_strdup_printf("%.2d",atoi(string2+1)); /* Just to have numbers like this : '01', '05', '12', ...*/
-                                *string2 = '\0';
-                            }
-                            FileTag->trackstring = g_strdup_printf("%.2d",atoi(string)); /* Just to have numbers like this : '01', '05', '12', ...*/
-                        }else
-                            {
-                            if (string2)
-                            {
-                                FileTag->track_total = g_strdup(string2+1);
-                                *string2 = '\0';
-                            }
-                            FileTag->trackstring = g_strdup(string);
-                        }
-                    }
-                }
+			    *string2 = '\0';
+			}
+			FileTag->trackstring = g_strdup_printf("%.2d",atoi(string1)); /* Just to have numbers like this : '01', '05', '12', ... */
+		    }else
+		    {
+			if (string2)
+			{
+			    FileTag->track_total = g_strdup(string2+1);
+			    *string2 = '\0';
+			}
+			FileTag->trackstring = g_strdup(string1);
+		    }
+		    g_free(string1);
+		}
             }
         }
 
@@ -1551,58 +1530,32 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                     {
     
                         /* Convert a genre written as '(3)Dance' into 'Dance' */
-                        if (USE_CHARACTER_SET_TRANSLATION)
-                        {
-                            string1 = convert_from_file_to_user(tmp+1);
-                            FileTag->genre = g_strdup(string1);
-                            g_free(string1);
-                        }else
-                        {
-                            FileTag->genre = g_strdup(tmp+1);
-                        }
+			string1 = convert_from_file_to_user(tmp+1);
+			FileTag->genre = g_strdup(string1);
+			g_free(string1);
 
                     }else if ( (string[0]=='(') && (tmp=strchr(string,')')) )
                     {
     
                         /* Convert a genre written as '(3)' into 'Dance' */
                         *tmp = 0;
-                        if (USE_CHARACTER_SET_TRANSLATION)
-                        {
-                            string1 = convert_from_file_to_user(Id3tag_Genre_To_String(atoi(string+1)));
-                            FileTag->genre = g_strdup(string1);
-                            g_free(string1);
-                        }else
-                        {
-                            FileTag->genre = g_strdup(Id3tag_Genre_To_String(atoi(string+1)));
-                        }
+			string1 = convert_from_file_to_user(Id3tag_Genre_To_String(atoi(string+1)));
+			FileTag->genre = g_strdup(string1);
+			g_free(string1);
 
                     }else if ( strspn(string, "0123456789") == strlen(string) )
 		    {
                         /* Convert a genre written as '3' into 'Dance' */
-                        if (USE_CHARACTER_SET_TRANSLATION)
-                        {
-                            string1 = convert_from_file_to_user(Id3tag_Genre_To_String(atoi(string)));
-                            FileTag->genre = g_strdup(string1);
-                            g_free(string1);
-                        }else
-                        {
-                            FileTag->genre = g_strdup(Id3tag_Genre_To_String(atoi(string)));
-                        }
-
+			string1 = convert_from_file_to_user(Id3tag_Genre_To_String(atoi(string)));
+			FileTag->genre = g_strdup(string1);
+			g_free(string1);
                     }else
                     {
 
                         /* Genre is already written as 'Dance' */
-                            if (USE_CHARACTER_SET_TRANSLATION)
-                        {
-                            string1 = convert_from_file_to_user(string);
-                            FileTag->genre = g_strdup(string1);
-                            g_free(string1);
-                        }else
-                        {
-                            FileTag->genre = g_strdup(string);
-                        }
-
+			string1 = convert_from_file_to_user(string);
+			FileTag->genre = g_strdup(string1);
+			g_free(string1);
                     }
                 }
             }
@@ -1620,17 +1573,10 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                 if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
                      && string != NULL )
                 {
-                    if (USE_CHARACTER_SET_TRANSLATION)
-                    {
-                        string1 = convert_from_file_to_user(string);
-                        /*Strip_String(string1);*/
-                        FileTag->comment = g_strdup(string1);
-                        g_free(string1);
-                    }else
-                    {
-		        /*Strip_String(string);*/
-                        FileTag->comment = g_strdup(string);
-                    }
+		    string1 = convert_from_file_to_user(string);
+		    /*Strip_String(string1);*/
+		    FileTag->comment = g_strdup(string1);
+		    g_free(string1);
                 }
             }
             /*if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_DESCRIPTION)) )
@@ -1657,9 +1603,10 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
 
 
 /*
- * Write the ID3 tags to the file. Returns TRUE on success, else 0.
+ * Write the ID3 tags specified by @tag_id to the file. Returns TRUE
+ * on success, else FALSE.
  */
-gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
+gboolean file_write_mp3_info (gchar *filename, Track *track, T_item tag_id)
 {
     FILE     *file;
     ID3Tag   *id3_tag = NULL;
@@ -1703,11 +1650,12 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
         /*********
          * Title *
          *********/
-        if (FileTag->title)
+        if ((tag_id == T_ALL) || (tag_id == T_TITLE))
 	{
-	    if (g_utf8_strlen(FileTag->title, -1)>0 )
+	    if (track->title && g_utf8_strlen(track->title, -1)>0 )
 	    {
-		/* To avoid problem with a corrupted field, we remove it before to creat a new one. */
+		/* To avoid problem with a corrupted field, we remove
+		 * it before to creat a new one. */
 		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TITLE)) )
 		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
 		id3_frame = ID3Frame_NewID(ID3FID_TITLE);
@@ -1715,15 +1663,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
 		
 		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
 		{
-		    if (USE_CHARACTER_SET_TRANSLATION)
-		    {
-			string = convert_from_user_to_file(FileTag->title);
-			ID3Field_SetASCII(id3_field,string);
-			g_free(string);
-		    }else
-		    {
-			ID3Field_SetASCII(id3_field,FileTag->title);
-		    }
+		    string = convert_from_user_to_file(track->title);
+		    ID3Field_SetASCII(id3_field,string);
+		    g_free(string);
 		}
 	    } else
 	    {
@@ -1736,9 +1678,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
         /**********
          * Artist *
          **********/
-        if (FileTag->artist)
+        if ((tag_id == T_ALL) || (tag_id == T_ARTIST))
 	{
-	    if (g_utf8_strlen(FileTag->artist, -1)>0 )
+	    if (track->artist && g_utf8_strlen(track->artist, -1)>0 )
 	    {
 		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_LEADARTIST)) )
 		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
@@ -1747,15 +1689,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
 		
 		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
 		{
-		    if (USE_CHARACTER_SET_TRANSLATION)
-		    {
-			string = convert_from_user_to_file(FileTag->artist);
-			ID3Field_SetASCII(id3_field,string);
-			g_free(string);
-		    }else
-		    {
-			ID3Field_SetASCII(id3_field,FileTag->artist);
-		    }
+		    string = convert_from_user_to_file(track->artist);
+		    ID3Field_SetASCII(id3_field,string);
+		    g_free(string);
 		}
 	    } else
 	    {
@@ -1768,9 +1704,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
         /*********
          * Album *
          *********/
-        if (FileTag->album)
+        if ((tag_id == T_ALL) || (tag_id == T_ALBUM))
 	{
-	    if (g_utf8_strlen(FileTag->album, -1)>0 )
+	    if (track->album && g_utf8_strlen(track->album, -1)>0 )
 	    {
 		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
 		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
@@ -1779,15 +1715,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
 		
 		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
 		{
-		    if (USE_CHARACTER_SET_TRANSLATION)
-		    {
-			string = convert_from_user_to_file(FileTag->album);
-			ID3Field_SetASCII(id3_field,string);
-			g_free(string);
-		    }else
-		    {
-			ID3Field_SetASCII(id3_field,FileTag->album);
-		    }
+		    string = convert_from_user_to_file(track->album);
+		    ID3Field_SetASCII(id3_field,string);
+		    g_free(string);
 		}
 	    } else
 	    {
@@ -1800,9 +1730,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
         /************
          * Composer *
          ************/
-        if (FileTag->composer)
+        if ((tag_id == T_ALL) || (tag_id == T_COMPOSER))
 	{
-	    if (g_utf8_strlen(FileTag->composer, -1)>0 )
+	    if (track->composer && g_utf8_strlen(track->composer, -1)>0 )
 	    {
 		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMPOSER)) )
 		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
@@ -1811,15 +1741,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
 		
 		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
 		{
-		    if (USE_CHARACTER_SET_TRANSLATION)
-		    {
-			string = convert_from_user_to_file(FileTag->composer);
-			ID3Field_SetASCII(id3_field,string);
-			g_free(string);
-		    }else
-		    {
-			ID3Field_SetASCII(id3_field,FileTag->composer);
-		    }
+		    string = convert_from_user_to_file(track->composer);
+		    ID3Field_SetASCII(id3_field,string);
+		    g_free(string);
 		}
 	    } else
 	    {
@@ -1832,47 +1756,34 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
         /*************************
          * Track and Total Track *
          *************************/
-        if (FileTag->trackstring)
+        if ((tag_id == T_ALL) || (tag_id == T_TRACK_NR))
 	{
-	    if (strlen(FileTag->trackstring)>0 )
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TRACKNUM)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-		id3_frame = ID3Frame_NewID(ID3FID_TRACKNUM);
-		ID3Tag_AttachFrame(id3_tag,id3_frame);
+	    if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TRACKNUM)) )
+		ID3Tag_RemoveFrame(id3_tag,id3_frame);
+	    id3_frame = ID3Frame_NewID(ID3FID_TRACKNUM);
+	    ID3Tag_AttachFrame(id3_tag,id3_frame);
 		
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-		{
-		    if ( FileTag->track_total && strlen(FileTag->track_total)>0 )
-			string1 = g_strconcat(FileTag->trackstring,"/",FileTag->track_total,NULL);
-		    else
-			string1 = g_strdup(FileTag->trackstring);
-		    
-		    if (USE_CHARACTER_SET_TRANSLATION)
-		    {
-			string = convert_from_user_to_file(string1);
-			ID3Field_SetASCII(id3_field,string);
-			g_free(string);
-		    }else
-		    {
-			ID3Field_SetASCII(id3_field,string1);
-		    }
-		    g_free(string1);
-		}
-	    } else
+	    if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
 	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TRACKNUM)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-		has_track = 0;
+		if (track->cds)
+		    string1 = g_strdup_printf ("%d/%d",
+					       track->cd_nr, track->cds);
+		else
+		    string1 = g_strdup_printf ("%d", track->cd_nr);
+
+		string = convert_from_user_to_file(string1);
+		ID3Field_SetASCII(id3_field,string);
+		g_free(string);
+		g_free(string1);
 	    }
 	}
 
         /*********
          * Genre *
          *********/
-        if (FileTag->genre)
+        if ((tag_id == T_ALL) || (tag_id == T_GENRE))
 	{
-	    if (g_utf8_strlen(FileTag->genre, -1)>0 )
+	    if (track->genre && g_utf8_strlen(track->genre, -1)>0 )
 	    {
 		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_CONTENTTYPE)) )
 		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
@@ -1883,17 +1794,10 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
 		{
 		    gchar *tmp_genre;
 		    
-		    if (USE_CHARACTER_SET_TRANSLATION)
-		    {
-			string = convert_from_user_to_file(FileTag->genre);
-			tmp_genre = g_strdup_printf("(%d)%s",Id3tag_String_To_Genre(string),string);
-			ID3Field_SetASCII(id3_field,tmp_genre);
-			g_free(string);
-		    }else
-		    {
-			tmp_genre = g_strdup_printf("(%d)%s",Id3tag_String_To_Genre(FileTag->genre),FileTag->genre);
-			ID3Field_SetASCII(id3_field,tmp_genre);
-		    }
+		    string = convert_from_user_to_file(track->genre);
+		    tmp_genre = g_strdup_printf("(%d)%s",Id3tag_String_To_Genre(string),string);
+		    ID3Field_SetASCII(id3_field,tmp_genre);
+		    g_free(string);
 		    g_free(tmp_genre);
 		}
 		
@@ -1909,9 +1813,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
         /***********
          * Comment *
          ***********/
-        if (FileTag->comment)
+        if ((tag_id == T_ALL) || (tag_id == T_COMMENT))
 	{
-	    if (g_utf8_strlen(FileTag->comment, -1)>0 )
+	    if (track->comment && g_utf8_strlen(track->comment, -1)>0 )
 	    {
 		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMMENT)) )
 		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
@@ -1920,15 +1824,9 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
 		
 		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
 		{
-		    if (USE_CHARACTER_SET_TRANSLATION)
-		    {
-			string = convert_from_user_to_file(FileTag->comment);
-			ID3Field_SetASCII(id3_field,string);
-			g_free(string);
-		    }else
-		    {
-			ID3Field_SetASCII(id3_field,FileTag->comment);
-		    }
+		    string = convert_from_user_to_file(track->comment);
+		    ID3Field_SetASCII(id3_field,string);
+		    g_free(string);
 		}
 		/* These 2 following fields allow synchronisation between id3v2 and id3v1 tags with id3lib */
 		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_DESCRIPTION)))

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-05 00:42:16 jcs>
+/* Time-stamp: <2003-11-07 23:26:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -73,7 +73,6 @@ free_track(Track *track)
       g_free (track->md5_hash);
       g_free (track->hostname);
       g_free (track->charset);
-      g_free (track->auto_charset);
       g_free (track);
     }
 }

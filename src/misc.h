@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-03 20:55:38 jcs>
+/* Time-stamp: <2003-11-08 00:51:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -130,6 +130,7 @@ Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name);
 Playlist *generate_playlist (GList *tracks, gchar *pl_name);
 Playlist *generate_new_playlist (GList *tracks);
 void most_listened_pl (void);
+void never_listened_pl (void);
 void last_listened_pl(void);
 void most_rated_pl(void);
 void since_last_pl(void);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-07 00:08:09 jcs>
+/* Time-stamp: <2003-11-07 23:25:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -76,7 +76,6 @@ typedef struct
   gboolean transferred;      /* has file been transferred to iPod?      */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)              */
   gchar   *charset;          /* charset used for ID3 tags               */
-  gchar   *auto_charset;     /* charset detected by auto-detection code */
 } Track;
 
 /* one star is how much (track->rating) */
