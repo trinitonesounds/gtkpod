@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-05 00:51:07 jcs>
+/* Time-stamp: <2004-10-05 23:01:24 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -134,7 +134,7 @@ static void on_cfg_col_visible_toggled (GtkToggleButton *togglebutton,
 }
 
 
-/* Close all open path fileselectors */
+/* Close all open path filechoosers */
 static void path_close_windows (void)
 {
     gint i;
@@ -149,21 +149,8 @@ static void path_close_windows (void)
 }
 
 
-/* cancel button on path fileselector window was pressed */
-static void on_path_cancel (GtkFileChooser *fc, PathType i)
-{
-    g_return_if_fail (i>=0 && i<PATH_NUM);
-
-    if (path_filechooser[i])
-    {
-	gtk_widget_destroy (path_filechooser[i]);
-	path_filechooser[i] = NULL;
-    }
-}
-
-
 /* ok button on path fileselector window was pressed */
-static void on_path_ok (GtkFileChooser *fc, PathType i)
+static void on_path_ok (PathType i)
 {
     g_return_if_fail (i>=0 && i<PATH_NUM);
 
@@ -201,19 +188,19 @@ static void on_fc_response (GtkFileChooser *fc,
 			    gint response,
 			    PathType i)
 {
-    g_return_if_fail (i>=0 && i<PATH_NUM);
+    g_return_if_fail (i>=0 && i<PATH_NUM && path_filechooser[i]);
 
     switch (response)
     {
     case GTK_RESPONSE_CANCEL:
-	on_path_cancel (fc, i);
+	gtk_widget_destroy (path_filechooser[i]);
+	path_filechooser[i] = NULL;
 	break;
     case GTK_RESPONSE_ACCEPT:
-	on_path_ok (fc, i);
+	on_path_ok (i);
 	break;
     case GTK_RESPONSE_NONE:
     case GTK_RESPONSE_DELETE_EVENT:
-/*	on_path_delete (fc, i);*/
 	path_filechooser[i] = NULL;
 	break;
     default:
@@ -223,6 +210,8 @@ static void on_fc_response (GtkFileChooser *fc,
 }
 
 
+/* one of the "..." buttons has been pressed -> open a file chooser
+   dialog and let the user select a file or directory */
 static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 {
     PathType i = (PathType)user_data;
@@ -250,7 +239,8 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
     g_signal_connect (fc, "response",
 		      G_CALLBACK (on_fc_response),
 		      (gpointer)i);
-    /* find first whitespace separating path from command line arguments */
+    /* find first whitespace separating path from command line
+     * arguments */
     path = tmpcfg->path[i];
     pathp = strchr (path, ' ');
     if (pathp)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:10:03 jcs>
+/* Time-stamp: <2004-10-05 23:13:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -240,7 +240,7 @@ void on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 				GtkTreeIter *i, gpointer data);
 void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				GtkTreeIter *i, gpointer data);
-TimeInfo *st_update_date_interval_from_string (guint32 inst,
+TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 					       T_item item,
 					       gboolean force_update);
 void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter);

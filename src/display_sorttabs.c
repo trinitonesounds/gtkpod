@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 21:23:38 jcs>
+/* Time-stamp: <2004-10-05 23:16:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -91,7 +91,7 @@ static void sp_remove_all_members (guint32 inst)
 
 /* Return a pointer to ti_created, ti_modified or ti_played. Returns
    NULL if either inst or item are out of range */
-static TimeInfo *st_get_timeinfo_ptr (guint32 inst, T_item item)
+static TimeInfo *sp_get_timeinfo_ptr (guint32 inst, T_item item)
 {
     if (inst >= SORT_TAB_MAX)
     {
@@ -124,7 +124,7 @@ static TimeInfo *st_get_timeinfo_ptr (guint32 inst, T_item item)
    message again, if necessary */
 /* Return value: pointer to the corresponding TimeInfo struct (for
    convenience) or NULL if error occured */
-TimeInfo *st_update_date_interval_from_string (guint32 inst,
+TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 					       T_item item,
 					       gboolean force_update)
 {
@@ -134,7 +134,7 @@ TimeInfo *st_update_date_interval_from_string (guint32 inst,
     if (inst >= SORT_TAB_MAX) return NULL;
 
     st = sorttab[inst];
-    ti = st_get_timeinfo_ptr (inst, item);
+    ti = sp_get_timeinfo_ptr (inst, item);
 
     if (ti)
     {
@@ -160,12 +160,12 @@ TimeInfo *st_update_date_interval_from_string (guint32 inst,
  * IS_INSIDE:  track's timestamp is inside the specified interval
  * IS_OUTSIDE: track's timestamp is outside the specified interval
  */
-static IntervalState st_check_time (guint32 inst, T_item item, Track *track)
+static IntervalState sp_check_time (guint32 inst, T_item item, Track *track)
 {
     TimeInfo *ti;
     IntervalState result = IS_ERROR;
 
-    ti = st_update_date_interval_from_string (inst, T_TIME_PLAYED, FALSE);
+    ti = sp_update_date_interval_from_string (inst, item, FALSE);
     if (ti && ti->valid)
     {
 	guint32 stamp = track_get_timestamp (track, item);
@@ -241,7 +241,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     /* time played */
     if (prefs_get_sp_cond (inst, T_TIME_PLAYED))
     {
-	IntervalState result = st_check_time (inst, T_TIME_PLAYED, track);
+	IntervalState result = sp_check_time (inst, T_TIME_PLAYED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
@@ -249,7 +249,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     /* time modified */
     if (prefs_get_sp_cond (inst, T_TIME_MODIFIED))
     {
-	IntervalState result = st_check_time (inst, T_TIME_MODIFIED, track);
+	IntervalState result = sp_check_time (inst, T_TIME_MODIFIED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
@@ -257,7 +257,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     /* time created */
     if (prefs_get_sp_cond (inst, T_TIME_CREATED))
     {
-	IntervalState result = st_check_time (inst, T_TIME_CREATED, track);
+	IntervalState result = sp_check_time (inst, T_TIME_CREATED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
@@ -2909,7 +2909,7 @@ static void cal_apply_data (GtkWidget *cal)
     /* Get selected category (played, modified or created) */
     item = cal_get_category (cal);
     /* Get pointer to corresponding TimeInfo struct */
-    ti = st_get_timeinfo_ptr (inst, item);
+    ti = sp_get_timeinfo_ptr (inst, item);
 
     if (ti)
     {
@@ -3088,7 +3088,7 @@ void cal_open_calendar (gint inst, T_item item)
     /* Make sure we use the current contents of the entry */
     sp_store_sp_entries (inst);
     /* set calendar */
-    ti = st_update_date_interval_from_string (inst, item, TRUE);
+    ti = sp_update_date_interval_from_string (inst, item, TRUE);
     /* set the calendar if we have a valid TimeInfo */
     if (ti)
     {
