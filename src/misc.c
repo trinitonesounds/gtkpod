@@ -496,7 +496,8 @@ gtkpod_main_quit(void)
 	write_prefs (); /* FIXME: how can we avoid saving options set by
 			 * command line? */
 			/* Tag them as dirty?  seems nasty */
-	unmount_ipod();
+	if(prefs_get_automount())
+	    unmount_ipod();
 	call_script ("gtkpod.out");
 	gtk_main_quit ();
 	return FALSE;
@@ -1275,21 +1276,23 @@ void delete_entry_head (gint inst)
  * Mount Calls
  *
  **************************************************************************/
+/**
+ * mount_ipod - attempt to mount the ipod to prefs_get_ipod_mount() This
+ * does not check prefs to see if the current prefs want gtkpod itself to
+ * mount the ipod drive, that should be checked before making this call.
+ */
 void
 mount_ipod(void)
 {
-    if(prefs_get_automount())
+    gchar *str = NULL;
+    if((str = prefs_get_ipod_mount()))
     {
-	gchar *str = NULL;
+	pid_t pid, tpid;
+	int status;
 
-	if((str = prefs_get_ipod_mount()))
+	pid = fork ();
+	switch (pid)
 	{
-	    pid_t pid, tpid;
-	    int status;
-
-	    pid = fork ();
-	    switch (pid)
-	    {
 	    case 0: /* child */
 		execl("/bin/mount", "mount", str, NULL);
 		exit(0);
@@ -1297,41 +1300,46 @@ mount_ipod(void)
 	    case -1: /* parent and error */
 		break;
 	    default: /* parent -- let's wait for the child to terminate */
-		tpid = waitpid (pid, &status, WNOHANG|WUNTRACED);
+		tpid = waitpid (pid, &status, 0);
 		/* we could evaluate tpid and status now */
 		break;
-	    }
-	    g_free(str);
 	}
+	g_free(str);
     }
 }
+/**
+ * mount_ipod - attempt to mount the ipod to prefs_get_ipod_mount()
+ */
+/**
+ * umount_ipod - attempt to unmount the ipod from prefs_get_ipod_mount()
+ * This does not check prefs to see if the current prefs want gtkpod itself
+ * to unmount the ipod drive, that should be checked before making this
+ * call.
+ */
 void
 unmount_ipod(void)
 {
-    if(prefs_get_automount())
+    gchar *str = NULL;
+    if((str = prefs_get_ipod_mount()))
     {
-	gchar *str = NULL;
-	if((str = prefs_get_ipod_mount()))
-	{
-	    pid_t pid, tpid;
-	    int status;
+	pid_t pid, tpid;
+	int status;
 
-	    pid = fork ();
-	    switch(pid)
-	    {
-	    case 0:
+	pid = fork ();
+	switch (pid)
+	{
+	    case 0: /* child */
 		execl("/bin/umount", "umount", str, NULL);
 		exit(0);
 		break;
 	    case -1: /* parent and error */
 		break;
 	    default: /* parent -- let's wait for the child to terminate */
-		tpid = waitpid (pid, &status, WNOHANG|WUNTRACED);
+		tpid = waitpid (pid, &status, 0);
 		/* we could evaluate tpid and status now */
 		break;
-	    }
-	    g_free(str);
 	}
+	g_free(str);
     }
 }
 
@@ -1359,7 +1367,7 @@ static void do_script (gchar *script)
 	case -1: /* parent and error */
 	break;
 	default: /* parent -- let's wait for the child to terminate */
-	    tpid = waitpid (pid, &status, WNOHANG|WUNTRACED);
+	    tpid = waitpid (pid, &status, 0);
 	    /* we could evaluate tpid and status now */
 	    break;
 	}
