@@ -458,29 +458,27 @@ static gint st_get_instance (GtkNotebook *notebook)
 }
 
 
-/* Append playlist to the playlist model. If it's the first entry,
-   we select it, causing a callback that will reset the next
-   instance */
+/* Append playlist to the playlist model. If it's the first entry, we
+   select it, causing a callback that will reset the next instance.
+   Concerning selection: it takes a long time to display a long list
+   of songs. Therefore we have an option "don't select "All"
+   automatically in first sort tab". In if this option is activated,
+   we don't select anything automatically in the first sort tab and
+   instead init the next instance manually. */
 static void st_add_entry (TabEntry *entry, guint32 inst)
 {
-  GtkTreeIter iter;
-  GtkTreeModel *model;
-  GtkTreeSelection *selection;
-  SortTab *st;
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    GtkTreeSelection *selection;
+    SortTab *st;
 
-  st = sorttab[inst];
-  model = st->model;
-  g_return_if_fail (model != NULL);
-  gtk_list_store_append (GTK_LIST_STORE (model), &iter);
-  gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-		      ST_COLUMN_ENTRY, entry, -1);
-  st->entries = g_list_append (st->entries, entry);
-  if (st->current_entry == NULL)
-    {
-      selection = gtk_tree_view_get_selection
-	(st->treeview[st->current_category]);
-      gtk_tree_selection_select_iter (selection, &iter);
-    }
+    st = sorttab[inst];
+    model = st->model;
+    g_return_if_fail (model != NULL);
+    gtk_list_store_append (GTK_LIST_STORE (model), &iter);
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			ST_COLUMN_ENTRY, entry, -1);
+    st->entries = g_list_append (st->entries, entry);
 }
 
 /* Used by st_remove_entry_from_model() to remove entry from model by calling
@@ -727,17 +725,23 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
   GtkTreeIter iter;
 
   if (inst == SORT_TAB_NUM)
-    {  /* just add to song model */
+  {  /* just add to song model */
       if (song != NULL)    sm_add_song_to_song_model (song);
-    }
+  }
   else
-    {
+  {
       st = sorttab[inst];
       if (song != NULL)
-	{
+      {
 	  /* add song to "All" (master) entry */
 	  entry = g_list_nth_data (st->entries, 0);
-	  g_return_if_fail (entry != NULL);
+	  if (entry == NULL)
+	  { /* doesn't exist yet -- let's create it */
+	      entry = g_malloc0 (sizeof (TabEntry));
+	      entry->name = g_strdup (_("All"));
+	      entry->master = TRUE;
+	      st_add_entry (entry, inst);
+	  }
 	  entry->members = g_list_append (entry->members, song);
 	  /* Check whether entry of same name already exists */
 	  entryname = st_get_entryname (song, inst);
@@ -752,51 +756,70 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	  /* add song to entry members list */
 	  entry->members = g_list_append (entry->members, song); 
 	  if (final)   /* only one song was added -> add to next instance */
-	    {
-	      /* add if "All" or "entry" is selected */
-	      if (st->current_entry->master || (st->current_entry == entry))
-		{
-		  st_add_song (song, final, inst+1);
-		}
-	    }
-	}
-      else
-	{ /* We land here after a set of songs has been added. We try to
-	     see if the old selection matches one of the new entries then
-	     select either the previously selected entry or "All" */
-	  if (final)
-	    { /* should always be final! */
-	      entry = st_get_entry_by_name (st->lastselection[st->current_category],
-				    inst);
-	      if (entry == NULL)
-		{ /* Entry was not previously selected -> set to "All" */
-		  entry = g_list_nth_data (st->entries, 0);
-		  g_return_if_fail (entry != NULL); /* Programming error! */
-		}
-	      if (!gtk_tree_model_get_iter_first (st->model, &iter))
-		{
-		  g_warning ("Programming error: st_add_song: iter invalid\n");
-		  return;
-		}
-	      /* printf("Instance %d looking for entry %x\n", inst, entry);*/
-	      do {
-	        gtk_tree_model_get (st->model, &iter, 
-				    ST_COLUMN_ENTRY, &iter_entry,
-				    -1);
-		if (iter_entry == entry)
+	  {
+	      if ((st->current_entry == NULL) && prefs_get_st_autoselect (inst))
+	      { /* auto-select entry "All" */
+		  st->current_entry = g_list_nth_data (st->entries, 0);
+		  if (!gtk_tree_model_get_iter_first (st->model, &iter))
 		  {
-		    selection = gtk_tree_view_get_selection
-		      (st->treeview[st->current_category]);
-		    /* We may need to unselect the previous selection */
-		    /* printf("Instance %d: Un-Selecting entry %x\n", inst, iter_entry);*/
-		    gtk_tree_selection_unselect_all (selection);
-		    /* printf("Instance %d: Selecting entry %x\n", inst, iter_entry);*/
-		    gtk_tree_selection_select_iter (selection, &iter);
-		    break;
+		      g_warning ("Programming error: st_add_song: iter invalid\n");
+		      return;
 		  }
-	      } while (gtk_tree_model_iter_next (st->model, &iter));
-	    }
-	}
+		  selection = gtk_tree_view_get_selection
+		      (st->treeview[st->current_category]);
+		  gtk_tree_selection_select_iter (selection, &iter);
+	      }
+	      /* add if "All" or "entry" is selected */
+	      else if (st->current_entry &&
+		  (st->current_entry->master || (st->current_entry == entry)))
+	      {
+		  st_add_song (song, final, inst+1);
+	      }
+	  }
+      }
+      else
+      { /* We land here after a set of songs has been added. We try to
+	   see if the old selection matches one of the new entries then
+	   select either the previously selected entry or "All" */
+	  if (final)
+	  { /* should always be final! */
+	      entry = st_get_entry_by_name (st->lastselection[st->current_category],
+					    inst);
+	      if (entry == NULL)
+	      { /* Entry was not previously selected -> set to "All" */
+		  if (prefs_get_st_autoselect (inst))
+		  {
+		      entry = g_list_nth_data (st->entries, 0);
+		      g_warning ("Programming error: st_add_song: entry == NULL\n");
+		  }
+	      }
+	      if (entry)
+	      {
+		  if (!gtk_tree_model_get_iter_first (st->model, &iter))
+		  {
+		      g_warning ("Programming error: st_add_song: iter invalid\n");
+		      return;
+		  }
+		  /* printf("Instance %d looking for entry %x\n", inst, entry);*/
+		  do {
+		      gtk_tree_model_get (st->model, &iter, 
+					  ST_COLUMN_ENTRY, &iter_entry,
+					  -1);
+		      if (iter_entry == entry)
+		      {
+			  selection = gtk_tree_view_get_selection
+			      (st->treeview[st->current_category]);
+			  /* We may need to unselect the previous selection */
+			  /* printf("Instance %d: Un-Selecting entry %x\n", inst, iter_entry);*/
+			  gtk_tree_selection_unselect_all (selection);
+			  /* printf("Instance %d: Selecting entry %x\n", inst, iter_entry);*/
+			  gtk_tree_selection_select_iter (selection, &iter);
+			  break;
+		      }
+		  } while (gtk_tree_model_iter_next (st->model, &iter));
+	      }
+	  }
+      }
     }
 }
 
@@ -868,10 +891,7 @@ static void st_init (gint32 new_category, guint32 inst)
 	  st->current_category = new_category;
 	}
       st_remove_all_entries (inst);
-      entry = g_malloc0 (sizeof (TabEntry));
-      entry->name = g_strdup (_("All"));
-      entry->master = TRUE;
-      st_add_entry (entry, inst);
+      st_init (-1, inst+1);
     }
 }
 
@@ -951,8 +971,6 @@ static void st_selection_changed (GtkTreeSelection *selection,
 		      ST_COLUMN_ENTRY, &new_entry,
 		      -1);
   /*  printf("selected instance %d, entry %x (was: %x)\n", inst, new_entry, st->current_entry);*/
-  /* no change in selection -- strange! */
-  /* if (new_entry == st->current_entry) return; */
   /* initialize next instance */
   st_init (-1, inst+1);
   st->current_entry = new_entry;

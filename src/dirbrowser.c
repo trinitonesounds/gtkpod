@@ -436,7 +436,7 @@ static GtkWidget *xmms_create_dir_browser(char *title, char *current_path, GtkSe
 			}
 			if (!node)
 				break;
-			if (!GTK_CTREE_ROW(node)->is_leaf && dir[i + 1])
+			if (!GTK_CTREE_ROW(node)->is_leaf && dir[i+1] && *dir[i+1])
 				gtk_ctree_expand(ctree, node);
 			else
 			{

@@ -60,14 +60,13 @@ static void usage (FILE *file)
   fprintf(file, _("  --offline:    same as \"-o\".\n"));
 }
 
-struct cfg*
-cfg_new(void)
+struct cfg *cfg_new(void)
 {
     struct cfg *mycfg = NULL;
     gchar buf[PATH_MAX], *str;
+    gint i;
 
     mycfg = g_malloc0 (sizeof (struct cfg));
-    memset(mycfg, 0, sizeof(struct cfg));
     if(getcwd(buf, PATH_MAX))
     {
 	mycfg->last_dir.browse = g_strdup_printf ("%s/", buf);
@@ -91,6 +90,8 @@ cfg_new(void)
     mycfg->deletion.song = TRUE;
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
+    mycfg->autoimport = FALSE;
+    for (i=0; i<SORT_TAB_NUM; ++i)   mycfg->st_autoselect[i] = TRUE;
     mycfg->offline = FALSE;
     mycfg->keep_backups = TRUE;
     mycfg->write_extended_info = TRUE;
@@ -127,79 +128,84 @@ read_prefs_from_file_desc(FILE *fp)
 	  /* skip whitespace */
 	  while (ISSPACE(*arg)) ++arg;
 	  if(g_ascii_strcasecmp (line, "mp") == 0)
-	    {
+	  {
 	      gchar mount_point[PATH_MAX];
 	      snprintf(mount_point, PATH_MAX, "%s", arg);
 	      prefs_set_mount_point(mount_point);
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "charset") == 0)
-	    {
+	  {
 		if(strlen (arg))      prefs_set_charset(arg);
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "id3") == 0)
-	    {
+	  {
 	      prefs_set_writeid3_active((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
-	    {
+	  {
 	      prefs_set_md5songs_active((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "album") == 0)
-	    {
+	  {
 	      prefs_set_song_list_show_album((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "track") == 0)
-	    {
+	  {
 	      prefs_set_song_list_show_track((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "genre") == 0)
-	    {
+	  {
 	      prefs_set_song_list_show_genre((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "artist") == 0)
-	    {
+	  {
 	      prefs_set_song_list_show_artist((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "delete_file") == 0)
-	    {
+	  {
 	      prefs_set_song_playlist_deletion((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "delete_playlist") == 0)
-	    {
+	  {
 	      prefs_set_playlist_deletion((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "delete_ipod") == 0)
-	    {
+	  {
 	      prefs_set_song_ipod_file_deletion((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "auto_import") == 0)
-	    {
+	  {
 	      prefs_set_auto_import((gboolean)atoi(arg));
-	    }
+	  }
+	  else if(g_ascii_strncasecmp (line, "st_autoselect", 13) == 0)
+	  {
+	      gint i = atoi (line+13);
+	      prefs_set_st_autoselect (i, atoi (arg));
+	  }      
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
-	    {
+	  {
 	      prefs_set_offline((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "backups") == 0)
-	    {
+	  {
 	      prefs_set_keep_backups((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "extended_info") == 0)
-	    {
+	  {
 	      prefs_set_write_extended_info((gboolean)atoi(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "dir_browse") == 0)
-	    {
+	  {
 	      prefs_set_last_dir_browse(strdup(arg));
-	    }
+	  }
 	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
-	    {
+	  {
 	      prefs_set_last_dir_export(strdup(arg));
-	    }
+	  }
 	  else
-	    {
+	  {
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
-	    }	      
+	  }	      
 	  g_free(line);
 	}
     }
@@ -299,6 +305,8 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 static void
 write_prefs_to_file_desc(FILE *fp)
 {
+    gint i;
+
     if(!fp)
 	fp = stderr;
     
@@ -319,6 +327,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
     fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
+    for (i=0; i<SORT_TAB_NUM; ++i)
+	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
@@ -402,13 +412,8 @@ void prefs_set_last_dir_browse(gchar *file)
 {
     if (file)
     {
-	gchar *tmp = NULL;
 	C_FREE(cfg->last_dir.browse);
-	if((tmp = get_dirname_of_filename(file)))
-	{
-	    cfg->last_dir.browse = g_strdup_printf("%s/", tmp);
-	    g_free(tmp);
-	}
+	cfg->last_dir.browse = get_dirname_of_filename(file);
     }
 }
 
@@ -442,8 +447,7 @@ void prefs_set_writeid3_active(gboolean active)
 }
 
 /* song list opts */
-void 
-prefs_set_song_list_show_all(gboolean val)
+void prefs_set_song_list_show_all(gboolean val)
 {
 
     if(val)
@@ -462,41 +466,42 @@ prefs_set_song_list_show_all(gboolean val)
     }
 }
 
-void 
-prefs_set_song_list_show_artist(gboolean val)
+void prefs_set_song_list_show_artist(gboolean val)
 {
     cfg->song_list_show.artist = val;
 }
 
-void 
-prefs_set_song_list_show_album(gboolean val)
+void prefs_set_song_list_show_album(gboolean val)
 {
     cfg->song_list_show.album = val;
 }
-void 
-prefs_set_song_list_show_track(gboolean val)
+
+void prefs_set_song_list_show_track(gboolean val)
 {
     cfg->song_list_show.track = val;
 }
-void 
-prefs_set_song_list_show_genre(gboolean val)
+
+void prefs_set_song_list_show_genre(gboolean val)
 {
     cfg->song_list_show.genre = val;
 }
+
 gboolean prefs_get_offline(void)
 {
   return cfg->offline;
 }
+
 gboolean prefs_get_keep_backups(void)
 {
   return cfg->keep_backups;
 }
+
 gboolean prefs_get_write_extended_info(void)
 {
   return cfg->write_extended_info;
 }
-gboolean 
-prefs_get_song_list_show_all(void)
+
+gboolean prefs_get_song_list_show_all(void)
 {
     if((cfg->song_list_show.artist == FALSE) &&
 	(cfg->song_list_show.album == FALSE) &&
@@ -506,28 +511,30 @@ prefs_get_song_list_show_all(void)
     else
 	return(FALSE);
 }
-gboolean 
-prefs_get_song_list_show_artist(void)
+
+gboolean prefs_get_song_list_show_artist(void)
 {
     return(cfg->song_list_show.artist);
 }
-gboolean 
-prefs_get_song_list_show_album(void)
+
+gboolean prefs_get_song_list_show_album(void)
 {
     return(cfg->song_list_show.album);
 }
-gboolean 
-prefs_get_song_list_show_track(void)
+
+gboolean prefs_get_song_list_show_track(void)
 {
     return(cfg->song_list_show.track); 
 }
-gboolean 
-prefs_get_song_list_show_genre(void)
+
+gboolean prefs_get_song_list_show_genre(void)
 {
     return(cfg->song_list_show.genre); 
 }
-void
-prefs_print(void)
+
+
+
+void prefs_print(void)
 {
     FILE *fp = stderr;
     gchar *on = "On";
@@ -581,38 +588,32 @@ prefs_print(void)
 	fprintf(fp, "%s\n", off);
 }
 
-void 
-prefs_set_playlist_deletion(gboolean val)
+void prefs_set_playlist_deletion(gboolean val)
 {
     cfg->deletion.playlist = val;
 }
 
-gboolean 
-prefs_get_playlist_deletion(void)
+gboolean prefs_get_playlist_deletion(void)
 {
     return(cfg->deletion.playlist);
 }
 
-void 
-prefs_set_song_playlist_deletion(gboolean val)
+void prefs_set_song_playlist_deletion(gboolean val)
 {
     cfg->deletion.song = val;
 }
 
-gboolean 
-prefs_get_song_playlist_deletion(void)
+gboolean prefs_get_song_playlist_deletion(void)
 {
     return(cfg->deletion.song);
 }
 
-void 
-prefs_set_song_ipod_file_deletion(gboolean val)
+void prefs_set_song_ipod_file_deletion(gboolean val)
 {
     cfg->deletion.ipod_file = val;
 }
 
-gboolean 
-prefs_get_song_ipod_file_deletion(void)
+gboolean prefs_get_song_ipod_file_deletion(void)
 {
     return(cfg->deletion.ipod_file);
 }
@@ -634,37 +635,22 @@ void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
 }
 
 
-gchar * prefs_get_charset (void)
+gchar *prefs_get_charset (void)
 {
     return cfg->charset;
 }
 
-struct cfg*
-clone_prefs(void)
+struct cfg *clone_prefs(void)
 {
     struct cfg *result = NULL;
 
     if(cfg)
     {
-	result = g_malloc0 (sizeof (struct cfg));
-	result->md5songs = cfg->md5songs;
-	result->writeid3 = cfg->writeid3;
-	result->autoimport = cfg->autoimport;
-	result->ipod_mount = g_strdup(cfg->ipod_mount);
-	result->charset = g_strdup(cfg->charset);
-	result->offline = cfg->offline;
-	result->keep_backups = cfg->keep_backups;
-	result->write_extended_info = cfg->write_extended_info;
-	    
-	result->song_list_show.artist = prefs_get_song_list_show_artist();
-	result->song_list_show.album = prefs_get_song_list_show_album();
-	result->song_list_show.track= prefs_get_song_list_show_track();
-	result->song_list_show.genre = prefs_get_song_list_show_genre();
-	
-	result->deletion.song = cfg->deletion.song;
-	result->deletion.playlist = cfg->deletion.playlist;
-	result->deletion.ipod_file = cfg->deletion.ipod_file;
-	
+	result = g_memdup (cfg, sizeof (struct cfg));
+	if (cfg->ipod_mount)
+	    result->ipod_mount = g_strdup(cfg->ipod_mount);
+	if (cfg->charset)
+	    result->charset = g_strdup(cfg->charset);
 	if(cfg->last_dir.browse)
 	    result->last_dir.browse = g_strdup(cfg->last_dir.browse);
 	if(cfg->last_dir.browse)
@@ -675,18 +661,35 @@ clone_prefs(void)
     return(result);
 }
 
-gboolean
-prefs_get_auto_import(void)
+gboolean prefs_get_auto_import(void)
 {
     return(cfg->autoimport);
 }
 
-void
-prefs_set_auto_import(gboolean val)
+void prefs_set_auto_import(gboolean val)
 {
     cfg->autoimport = val;
 }
 
+gboolean prefs_get_st_autoselect (guint32 inst)
+{
+    if (inst < SORT_TAB_NUM)
+    {
+	return cfg->st_autoselect[inst];
+    }
+    else
+    {
+	return TRUE; /* hmm.... this should not happen... */
+    }
+}
+
+void prefs_set_st_autoselect (guint32 inst, gboolean autoselect)
+{
+    if (inst < SORT_TAB_NUM)
+    {
+	cfg->st_autoselect[inst] = autoselect;
+    }
+}
 
 /* Returns "$HOME/.gtkpod" or NULL if dir does not exist and cannot be
    created. You must g_free the string after use */

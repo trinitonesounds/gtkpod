@@ -712,3 +712,12 @@ on_re_init1_menu                       (GtkMenuItem     *menuitem,
     st_redisplay (1);
 }
 
+
+void
+on_cfg_st_autoselect_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_st_autoselect(
+	(guint32)user_data,
+	gtk_toggle_button_get_active(togglebutton));
+}

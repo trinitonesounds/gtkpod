@@ -28,6 +28,7 @@
 #include "prefs_window.h"
 #include "song.h"
 #include "interface.h"
+#include "callbacks.h"
 #include "support.h"
 #include "charset.h"
 
@@ -43,6 +44,8 @@ static void prefs_window_song_list_init(void);
 void
 prefs_window_create(void)
 {
+    gint i;
+
     if(!prefs_window)
     {
 	GtkWidget *w = NULL;
@@ -53,9 +56,8 @@ prefs_window_create(void)
 	}
 	else
 	{
-	    fprintf(stderr, "tmpcfg is not NULL wtf !!\n");
+	    fprintf(stderr, "Programming error: tmpcfg is not NULL wtf !!\n");
 	}
-	
 	prefs_window = create_prefs_window();
 	if((w = lookup_widget(prefs_window, "cfg_mount_point")))
 	{
@@ -92,6 +94,24 @@ prefs_window_create(void)
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->autoimport);
+	}
+	for (i=0; i<SORT_TAB_NUM; ++i)
+	{
+	    gchar *buf;
+	    buf = g_strdup_printf ("cfg_st_autoselect%d", i);
+	    if((w = lookup_widget(prefs_window,  buf)))
+	    {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					     tmpcfg->st_autoselect[i]);
+		/* glade makes a "GTK_OBJECT (i)" which segfaults
+		   because it's not GTK object. So we have to set up
+		   the signal handlers ourselves */
+		g_signal_connect ((gpointer)w,
+				  "toggled",
+				  G_CALLBACK (on_cfg_st_autoselect_toggled),
+				  (gpointer)i);
+	    }
+	    g_free (buf);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_keep_backups")))
 	{
@@ -130,11 +150,15 @@ prefs_window_cancel(void)
 void 
 prefs_window_save(void)
 {
+    gint i;
+
     prefs_set_md5songs_active(tmpcfg->md5songs);
     prefs_set_writeid3_active(tmpcfg->writeid3);
     prefs_set_mount_point(tmpcfg->ipod_mount);
     prefs_set_charset(tmpcfg->charset);
     prefs_set_auto_import(tmpcfg->autoimport);
+    for (i=0; i<SORT_TAB_NUM; ++i)
+	prefs_set_st_autoselect (i, tmpcfg->st_autoselect[i]);
     prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
     prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
@@ -315,4 +339,12 @@ prefs_window_set_auto_import(gboolean val)
 void prefs_window_set_charset (gchar *charset)
 {
     prefs_cfg_set_charset (tmpcfg, charset);
+}
+
+void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
+{
+    if (inst < SORT_TAB_NUM)
+    {
+	tmpcfg->st_autoselect[inst] = autoselect;
+    }
 }
