@@ -79,7 +79,7 @@ static gint32 nm_get_soundcheck (Track *track)
 	if (track->radio_gain_set) 
 	    sc = replaygain_to_soundcheck (track->radio_gain);
     }
-    
+
     return sc;
 }
 
@@ -334,7 +334,8 @@ void nm_tracks_list(GList *list)
 typedef enum
 {
     SYNC_CONTACTS,
-    SYNC_CALENDAR
+    SYNC_CALENDAR,
+    SYNC_NOTES
 } SyncType;
 
 
@@ -392,6 +393,9 @@ static gboolean tools_sync_script (SyncType type)
 	break;
     case SYNC_CALENDAR:
 	script = g_strdup (prefs_get_path (PATH_SYNC_CALENDAR));
+	break;
+    case SYNC_NOTES:
+	script = g_strdup (prefs_get_path (PATH_SYNC_NOTES));
 	break;
     default:
 	fprintf (stderr, "Programming error: tools_sync_script () called with %d\n", type);
@@ -470,6 +474,20 @@ static gboolean tools_sync_script (SyncType type)
     return TRUE;
 }
 
+gboolean tools_sync_all (void)
+{
+    gboolean x;
+    x = tools_sync_script (SYNC_CALENDAR);
+    if (!x) {
+	return x;
+    }
+    tools_sync_script (SYNC_CONTACTS);
+    if (!x) {
+	return x;
+    }
+    return tools_sync_script (SYNC_NOTES);
+}
+
 gboolean tools_sync_contacts (void)
 {
     return tools_sync_script (SYNC_CONTACTS);
@@ -480,6 +498,10 @@ gboolean tools_sync_calendar (void)
     return tools_sync_script (SYNC_CALENDAR);
 }
 
+gboolean tools_sync_notes (void)
+{
+    return tools_sync_script (SYNC_NOTES);
+}
 
 /* ------------------------------------------------------------
 

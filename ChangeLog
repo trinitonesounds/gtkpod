@@ -18,6 +18,16 @@ gtkpod V0.86.CVS
 
 	UPDATE: Swedish translation catalog
 
+	Added scripts sync_evolution, sync_evocalendar and sync_notes
+	to synchronise Contacts, Calendar and Tasks from Evolution
+	and to synchronise Notes with anything in the folder ~/ipod_notes.
+	Added field for notes sync path in Preferences. Added Sync Notes
+	and Sync All to the Tools menu.
+
+	Added option to create a playlist for each rating (Unrated,
+	and Rated 1..5).
+
+	
 gtkpod V0.85.0
 	BUGFIX: when clicking onto the column header of the track
 	treeview three times and moving sidewards with the mouse at

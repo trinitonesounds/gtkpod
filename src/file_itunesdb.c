@@ -1141,11 +1141,13 @@ void handle_export (void)
       if (prefs_get_concal_autosync ())
       {
 	  const gchar *str;
-	  gtkpod_statusbar_message (_("Syncing contacts and calendar..."));
+	  gtkpod_statusbar_message (_("Syncing contacts, calendar and notes..."));
 	  str = prefs_get_path (PATH_SYNC_CONTACTS);
 	  if (str && *str)    tools_sync_contacts ();
 	  str = prefs_get_path (PATH_SYNC_CALENDAR);
 	  if (str && *str)    tools_sync_calendar ();
+	  str = prefs_get_path (PATH_SYNC_NOTES);
+	  if (str && *str)    tools_sync_notes ();
       }
       g_free (ipt);
       g_free (ipe);

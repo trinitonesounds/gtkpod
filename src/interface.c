@@ -163,8 +163,10 @@ create_gtkpod (void)
   GtkWidget *normalize_all_tracks;
   GtkWidget *normalize_newly_added_tracks;
   GtkWidget *trennlinie5;
+  GtkWidget *sync_all;
   GtkWidget *sync_contacts;
   GtkWidget *sync_calendar;
+  GtkWidget *sync_notes;
   GtkWidget *menuitem13;
   GtkWidget *menuitem13_menu;
   GtkWidget *about1;
@@ -741,6 +743,11 @@ create_gtkpod (void)
   gtk_container_add (GTK_CONTAINER (tools1_menu), trennlinie5);
   gtk_widget_set_sensitive (trennlinie5, FALSE);
 
+  sync_all = gtk_menu_item_new_with_mnemonic (_("Synchronize All"));
+  gtk_widget_show (sync_all);
+  gtk_container_add (GTK_CONTAINER (tools1_menu), sync_all);
+  gtk_tooltips_set_tip (tooltips, sync_all, _("Synchronise Contacts, Calendar and Notes"), NULL);
+
   sync_contacts = gtk_menu_item_new_with_mnemonic (_("Synchronize Contacts"));
   gtk_widget_show (sync_contacts);
   gtk_container_add (GTK_CONTAINER (tools1_menu), sync_contacts);
@@ -748,6 +755,10 @@ create_gtkpod (void)
   sync_calendar = gtk_menu_item_new_with_mnemonic (_("Synchronize Calendar"));
   gtk_widget_show (sync_calendar);
   gtk_container_add (GTK_CONTAINER (tools1_menu), sync_calendar);
+
+  sync_notes = gtk_menu_item_new_with_mnemonic (_("Synchronize Notes"));
+  gtk_widget_show (sync_notes);
+  gtk_container_add (GTK_CONTAINER (tools1_menu), sync_notes);
 
   menuitem13 = gtk_menu_item_new_with_mnemonic (_("_Help"));
   gtk_widget_show (menuitem13);
@@ -1078,11 +1089,17 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) normalize_newly_added_tracks, "activate",
                     G_CALLBACK (on_normalize_newly_added_tracks),
                     NULL);
+  g_signal_connect ((gpointer) sync_all, "activate",
+                    G_CALLBACK (on_sync_all_activate),
+                    NULL);
   g_signal_connect ((gpointer) sync_contacts, "activate",
                     G_CALLBACK (on_sync_contacts_activate),
                     NULL);
   g_signal_connect ((gpointer) sync_calendar, "activate",
                     G_CALLBACK (on_sync_calendar_activate),
+                    NULL);
+  g_signal_connect ((gpointer) sync_notes, "activate",
+                    G_CALLBACK (on_sync_notes_activate),
                     NULL);
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about1_activate),
@@ -1243,8 +1260,10 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, normalize_all_tracks, "normalize_all_tracks");
   GLADE_HOOKUP_OBJECT (gtkpod, normalize_newly_added_tracks, "normalize_newly_added_tracks");
   GLADE_HOOKUP_OBJECT (gtkpod, trennlinie5, "trennlinie5");
+  GLADE_HOOKUP_OBJECT (gtkpod, sync_all, "sync_all");
   GLADE_HOOKUP_OBJECT (gtkpod, sync_contacts, "sync_contacts");
   GLADE_HOOKUP_OBJECT (gtkpod, sync_calendar, "sync_calendar");
+  GLADE_HOOKUP_OBJECT (gtkpod, sync_notes, "sync_notes");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13, "menuitem13");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13_menu, "menuitem13_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, about1, "about1");
@@ -1607,6 +1626,10 @@ create_prefs_window (void)
   GtkWidget *hbox56;
   GtkWidget *sync_calendar_path_entry;
   GtkWidget *sync_calendar_path_button;
+  GtkWidget *label175;
+  GtkWidget *hbox66;
+  GtkWidget *sync_notes_path_entry;
+  GtkWidget *sync_notes_path_button;
   GtkWidget *concal_autosync;
   GtkWidget *label157;
   GtkWidget *label24;
@@ -2660,11 +2683,31 @@ create_prefs_window (void)
   gtk_widget_show (sync_calendar_path_button);
   gtk_box_pack_start (GTK_BOX (hbox56), sync_calendar_path_button, FALSE, FALSE, 0);
 
+  label175 = gtk_label_new (_("Command to be called to synchronize notes:"));
+  gtk_widget_show (label175);
+  gtk_box_pack_start (GTK_BOX (vbox59), label175, FALSE, FALSE, 2);
+  GTK_WIDGET_SET_FLAGS (label175, GTK_CAN_FOCUS);
+  gtk_label_set_selectable (GTK_LABEL (label175), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label175), 0.01, 0.5);
+
+  hbox66 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox66);
+  gtk_box_pack_start (GTK_BOX (vbox59), hbox66, TRUE, TRUE, 0);
+
+  sync_notes_path_entry = gtk_entry_new ();
+  gtk_widget_show (sync_notes_path_entry);
+  gtk_box_pack_start (GTK_BOX (hbox66), sync_notes_path_entry, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, sync_notes_path_entry, _("Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod."), NULL);
+
+  sync_notes_path_button = gtk_button_new_with_mnemonic (_("..."));
+  gtk_widget_show (sync_notes_path_button);
+  gtk_box_pack_start (GTK_BOX (hbox66), sync_notes_path_button, FALSE, FALSE, 0);
+
   concal_autosync = gtk_check_button_new_with_mnemonic (_("Call automatically when synchronizing iTunesDB"));
   gtk_widget_show (concal_autosync);
   gtk_box_pack_start (GTK_BOX (vbox59), concal_autosync, FALSE, FALSE, 2);
 
-  label157 = gtk_label_new (_("Contacts / Calendar"));
+  label157 = gtk_label_new (_("Contacts / Calendar / Notes"));
   gtk_widget_show (label157);
   gtk_frame_set_label_widget (GTK_FRAME (frame31), label157);
   GTK_WIDGET_SET_FLAGS (label157, GTK_CAN_FOCUS);
@@ -3056,6 +3099,10 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, hbox56, "hbox56");
   GLADE_HOOKUP_OBJECT (prefs_window, sync_calendar_path_entry, "sync_calendar_path_entry");
   GLADE_HOOKUP_OBJECT (prefs_window, sync_calendar_path_button, "sync_calendar_path_button");
+  GLADE_HOOKUP_OBJECT (prefs_window, label175, "label175");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox66, "hbox66");
+  GLADE_HOOKUP_OBJECT (prefs_window, sync_notes_path_entry, "sync_notes_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, sync_notes_path_button, "sync_notes_path_button");
   GLADE_HOOKUP_OBJECT (prefs_window, concal_autosync, "concal_autosync");
   GLADE_HOOKUP_OBJECT (prefs_window, label157, "label157");
   GLADE_HOOKUP_OBJECT (prefs_window, label24, "label24");
@@ -3212,7 +3259,7 @@ create_special_sorttab (void)
   gtk_widget_show (hbox23);
   gtk_box_pack_start (GTK_BOX (hbox15), hbox23, TRUE, TRUE, 0);
 
-  sp_playcount_low_adj = gtk_adjustment_new (1, 0, 2.14748e+09, 1, 10, 10);
+  sp_playcount_low_adj = gtk_adjustment_new (1, 0, 2147480000, 1, 10, 10);
   sp_playcount_low = gtk_spin_button_new (GTK_ADJUSTMENT (sp_playcount_low_adj), 1, 0);
   gtk_widget_show (sp_playcount_low);
   gtk_box_pack_start (GTK_BOX (hbox23), sp_playcount_low, TRUE, TRUE, 0);
@@ -3224,7 +3271,7 @@ create_special_sorttab (void)
   GTK_WIDGET_SET_FLAGS (label54, GTK_CAN_FOCUS);
   gtk_label_set_selectable (GTK_LABEL (label54), TRUE);
 
-  sp_playcount_high_adj = gtk_adjustment_new (1, -1, 2.14748e+09, 1, 10, 10);
+  sp_playcount_high_adj = gtk_adjustment_new (1, -1, 2147480000, 1, 10, 10);
   sp_playcount_high = gtk_spin_button_new (GTK_ADJUSTMENT (sp_playcount_high_adj), 1, 0);
   gtk_widget_show (sp_playcount_high);
   gtk_box_pack_start (GTK_BOX (hbox23), sp_playcount_high, TRUE, TRUE, 0);

@@ -1934,6 +1934,15 @@ on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
     check_db();
 }
 
+
+void
+on_sync_all_activate                   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+	tools_sync_all ();
+}
+
+
 void
 on_sync_calendar_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
@@ -1949,6 +1958,14 @@ on_sync_contacts_activate              (GtkMenuItem     *menuitem,
     tools_sync_contacts ();
 }
 
+
+void
+on_sync_notes_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+	tools_sync_notes ();
+
+}
 
 void
 on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
@@ -2011,6 +2028,7 @@ void
 on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-
+    each_rating_pl();
 }
+
 

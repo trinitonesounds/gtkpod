@@ -46,8 +46,10 @@
 void nm_new_tracks (void);
 void nm_tracks_list (GList *list);
 
+gboolean tools_sync_all (void);
 gboolean tools_sync_contacts (void);
 gboolean tools_sync_calendar (void);
+gboolean tools_sync_notes (void);
 
 void do_command_on_entries (const gchar *command, const gchar *what,
 			    GList *selected_tracks);

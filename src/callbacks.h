@@ -670,6 +670,9 @@ on_parsetags_toggled                   (GtkToggleButton *togglebutton,
 void
 on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data);
+void
+on_sync_all_activate                   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
 
 void
 on_sync_calendar_activate              (GtkMenuItem     *menuitem,
@@ -678,6 +681,11 @@ on_sync_calendar_activate              (GtkMenuItem     *menuitem,
 void
 on_sync_contacts_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data);
+
+
+void
+on_sync_notes_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
 
 void
 on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
@@ -754,3 +762,4 @@ on_smart_playlist_activate             (GtkMenuItem     *menuitem,
 void
 on_cfg_startup_messages                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+

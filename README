@@ -750,6 +750,8 @@ NOTE: replace "vfat" with "hfsplus" if you use a hfs-formatted iPod.
    - chmod +rx /etc/hotplug/ieee1394/sbp2
    - copy rescan-scsi-bus.sh to /etc/hotplug/ieee1394 from
      http://www.garloff.de/kurt/linux/rescan-scsi-bus.sh
+   - just to be sure: restart hotplug:
+	/etc/init.d/hotplug restart
 
 6) Connect your iPod to your computer and wait until you see something
    like the following on your system log (you can use the 'dmesg'

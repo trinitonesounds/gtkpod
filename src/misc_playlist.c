@@ -106,7 +106,7 @@ void add_new_pl_or_spl_user_name (gchar *dflt, gint position)
 \*------------------------------------------------------------------*/
 
 /* used for special playlist creation */
-typedef gboolean (*PL_InsertFunc)(Track *track);
+typedef gboolean (*PL_InsertFunc)(Track *track, gpointer userdata);
 
 /* generate_category_playlists: Create a playlist for each category
    @cat (T_ARTIST, T_ALBUM, T_GENRE, T_COMPOSER) */
@@ -414,7 +414,8 @@ Playlist *generate_new_playlist (GList *tracks)
 /* look at the add_ranked_playlist help:
  * BEWARE this function shouldn't be used by other functions */
 static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
-				  GCompareFunc comparefunc)
+				  GCompareFunc comparefunc,
+				  gpointer userdata)
 {
    GList *tracks=NULL;
    gint f=0;
@@ -424,7 +425,7 @@ static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
    while ((track=get_next_track(i)))
    {
       i=1; /* for get_next_track() */
-      if (track && (!insertfunc || insertfunc (track)))
+      if (track && (!insertfunc || insertfunc (track,userdata)))
       {
 	 tracks = g_list_insert_sorted (tracks, track, comparefunc);
 	 ++f;
@@ -451,11 +452,12 @@ static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
  */
 static Playlist *update_ranked_playlist(gchar *str, gint tracks_nr,
 				     PL_InsertFunc insertfunc,
-				     GCompareFunc comparefunc)
+				     GCompareFunc comparefunc,
+				     gpointer userdata)
 {
     Playlist *result = NULL;
     gchar *pl_name = g_strdup_printf ("[%s]", str);
-    GList *tracks = create_ranked_glist(tracks_nr,insertfunc,comparefunc);
+    GList *tracks = create_ranked_glist(tracks_nr,insertfunc,comparefunc,userdata);
     gint f;
     f=g_list_length(tracks);
 
@@ -496,7 +498,7 @@ static gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
 }
 
 /* Insert function: determines whether a track is entered into the playlist */
-static gboolean Most_Listened_IF (Track *track)
+static gboolean Most_Listened_IF (Track *track, gpointer userdata)
 {
     if (track)   return (track->playcount != 0);
     return      FALSE;
@@ -507,7 +509,7 @@ void most_listened_pl(void)
     gint tracks_nr = prefs_get_misc_track_nr();
     gchar *str = g_strdup_printf (_("Most Listened (%d)"), tracks_nr);
     update_ranked_playlist (str, tracks_nr,
-			    Most_Listened_IF, Most_Listened_CF);
+			    Most_Listened_IF, Most_Listened_CF, (gpointer)0 );
     g_free (str);
 }
 
@@ -534,7 +536,7 @@ static gint Never_Listened_CF (gconstpointer aa, gconstpointer bb)
 }
 
 /* Insert function: determines whether a track is entered into the playlist */
-static gboolean Never_Listened_IF (Track *track)
+static gboolean Never_Listened_IF (Track *track, gpointer userdata)
 {
     if (track)   return (track->playcount == 0);
     return      FALSE;
@@ -545,7 +547,7 @@ void never_listened_pl(void)
     gint tracks_nr = 0; /* no limit */
     gchar *str = g_strdup_printf (_("Never Listened"));
     update_ranked_playlist (str, tracks_nr,
-			    Never_Listened_IF, Never_Listened_CF);
+			    Never_Listened_IF, Never_Listened_CF, (gpointer)0 );
     g_free (str);
 }
 
@@ -571,7 +573,7 @@ static gint Most_Rated_CF (gconstpointer aa, gconstpointer bb)
 }
 
 /* Insert function: determines whether a track is entered into the playlist */
-static gboolean Most_Rated_IF (Track *track)
+static gboolean Most_Rated_IF (Track *track, gpointer userdata)
 {
     if (track) return ((track->playcount != 0) || prefs_get_not_played_track());
     return FALSE;
@@ -582,8 +584,52 @@ void most_rated_pl(void)
     gint tracks_nr = prefs_get_misc_track_nr();
     gchar *str =  g_strdup_printf (_("Best Rated (%d)"), tracks_nr);
     update_ranked_playlist (str, tracks_nr,
-			    Most_Rated_IF, Most_Rated_CF);
+			    Most_Rated_IF, Most_Rated_CF, (gpointer)0 );
     g_free (str);
+}
+
+
+/* ------------------------------------------------------------ */
+/* Generate 6 playlists,one for each rating 1..5 and unrated    */
+
+
+/* Sort Function: determines the order of the generated playlist */
+static gint All_Ratings_CF (gconstpointer aa, gconstpointer bb)
+{
+    gint result = 0;
+    const Track *a = aa;
+    const Track *b = bb;
+
+    if (a && b)
+    {
+	result = COMP (b->playcount, a->playcount);
+	if (result == 0) result = COMP (b->time_played, a->time_played);
+    }
+    return result;
+}
+
+
+/* Insert function: determines whether a track is entered into the playlist */
+static gboolean All_Ratings_IF (Track *track, gpointer user_data)
+{
+    gint playlist_nr = (gint)user_data;
+    if (track) return (track->rating == playlist_nr*20);
+    return FALSE;
+}
+
+
+void each_rating_pl(void)
+{
+	gchar *str = _("Unrated tracks");
+	gint playlist_nr;
+	for (playlist_nr = 0; playlist_nr < 6; playlist_nr ++ ) {
+		if (playlist_nr > 0) 
+		{
+			str = g_strdup_printf (_("Rated %d"), playlist_nr);
+		} 
+    	update_ranked_playlist (str, 0,All_Ratings_IF, All_Ratings_CF, (gpointer)playlist_nr);
+	}
+  	g_free (str);
 }
 
 
@@ -608,7 +654,7 @@ static gint Last_Listened_CF (gconstpointer aa, gconstpointer bb)
 }
 
 /* Insert function: determines whether a track is entered into the playlist */
-static gboolean Last_Listened_IF (Track *track)
+static gboolean Last_Listened_IF (Track *track, gpointer userdata)
 {
     if (track)   return (track->playcount != 0);
     return      FALSE;
@@ -619,7 +665,7 @@ void last_listened_pl(void)
     gint tracks_nr = prefs_get_misc_track_nr();
     gchar *str = g_strdup_printf (_("Recent (%d)"), tracks_nr);
     update_ranked_playlist (str, tracks_nr,
-			    Last_Listened_IF, Last_Listened_CF);
+			    Last_Listened_IF, Last_Listened_CF, (gpointer)0);
     g_free (str);
 }
 
@@ -647,7 +693,7 @@ static gint since_last_CF (gconstpointer aa, gconstpointer bb)
 }
 
 /* Insert function: determines whether a track is entered into the playlist */
-static gboolean since_last_IF (Track *track)
+static gboolean since_last_IF (Track *track, gpointer userdata)
 {
     if (track && (track->recent_playcount != 0))  return TRUE;
     else                                        return FALSE;
@@ -656,7 +702,7 @@ static gboolean since_last_IF (Track *track)
 void since_last_pl(void)
 {
     update_ranked_playlist (_("Last Time"), 0,
-			    since_last_IF, since_last_CF);
+			    since_last_IF, since_last_CF, (gpointer)0);
 }
 
 

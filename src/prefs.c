@@ -259,6 +259,7 @@ struct cfg *cfg_new(void)
 	case PATH_MP3GAIN:
 	case PATH_SYNC_CONTACTS:
 	case PATH_SYNC_CALENDAR:
+	case PATH_SYNC_NOTES:
 	case PATH_MSERV_MUSIC_ROOT:
 	    mycfg->path[i] = g_strdup (""); break;
 	case PATH_MSERV_TRACKINFO_ROOT:
@@ -2157,6 +2158,7 @@ void prefs_set_path (PathType i, const gchar *path)
 	break;
     case PATH_SYNC_CONTACTS:
     case PATH_SYNC_CALENDAR:
+    case PATH_SYNC_NOTES:
 	g_free (cfg->path[i]);
 	cfg->path[i] = prefs_validate_path (path, "i");
 	break;

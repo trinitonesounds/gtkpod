@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-06 23:42:59 jcs>
+/* Time-stamp: <2004-12-29 18:25:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -146,6 +146,7 @@ void never_listened_pl (void);
 void last_listened_pl(void);
 void most_rated_pl(void);
 void since_last_pl(void);
+void each_rating_pl (void);
 
 guint32 utf16_strlen (gunichar2 *utf16);
 gunichar2 *utf16_strdup (gunichar2 *utf16);

@@ -1165,6 +1165,16 @@
 		  </child>
 
 		  <child>
+		    <widget class="GtkMenuItem" id="sync_all">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Synchronise Contacts, Calendar and Notes</property>
+		      <property name="label" translatable="yes">Synchronize All</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_sync_all_activate" last_modification_time="Thu, 16 Dec 2004 00:15:04 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
 		    <widget class="GtkMenuItem" id="sync_contacts">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Synchronize Contacts</property>
@@ -1179,6 +1189,15 @@
 		      <property name="label" translatable="yes">Synchronize Calendar</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_sync_calendar_activate" last_modification_time="Sun, 01 Feb 2004 10:51:37 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkMenuItem" id="sync_notes">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Synchronize Notes</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_sync_notes_activate" last_modification_time="Thu, 16 Dec 2004 00:15:04 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -4985,7 +5004,7 @@ or tab entry (faster!)</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
 				  <property name="selectable">True</property>
-				  <property name="xalign">0.01</property>
+				  <property name="xalign">0.00999999977648</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
 				  <property name="ypad">0</property>
@@ -5056,7 +5075,7 @@ or tab entry (faster!)</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
 				  <property name="selectable">True</property>
-				  <property name="xalign">0.01</property>
+				  <property name="xalign">0.00999999977648</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
 				  <property name="ypad">0</property>
@@ -5170,7 +5189,7 @@ or tab entry (faster!)</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
 				  <property name="selectable">True</property>
-				  <property name="xalign">0.01</property>
+				  <property name="xalign">0.00999999977648</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
 				  <property name="ypad">0</property>
@@ -5292,7 +5311,7 @@ or tab entry (faster!)</property>
 				  <property name="justify">GTK_JUSTIFY_FILL</property>
 				  <property name="wrap">True</property>
 				  <property name="selectable">True</property>
-				  <property name="xalign">0.01</property>
+				  <property name="xalign">0.00999999977648</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
 				  <property name="ypad">0</property>
@@ -5314,7 +5333,7 @@ or tab entry (faster!)</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
 				  <property name="selectable">True</property>
-				  <property name="xalign">0.01</property>
+				  <property name="xalign">0.00999999977648</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
 				  <property name="ypad">0</property>
@@ -5385,7 +5404,7 @@ or tab entry (faster!)</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
 				  <property name="selectable">True</property>
-				  <property name="xalign">0.01</property>
+				  <property name="xalign">0.00999999977648</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
 				  <property name="ypad">0</property>
@@ -5447,6 +5466,77 @@ or tab entry (faster!)</property>
 			      </child>
 
 			      <child>
+				<widget class="GtkLabel" id="label175">
+				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
+				  <property name="label" translatable="yes">Command to be called to synchronize notes:</property>
+				  <property name="use_underline">False</property>
+				  <property name="use_markup">False</property>
+				  <property name="justify">GTK_JUSTIFY_LEFT</property>
+				  <property name="wrap">False</property>
+				  <property name="selectable">True</property>
+				  <property name="xalign">0.00999999977648</property>
+				  <property name="yalign">0.5</property>
+				  <property name="xpad">0</property>
+				  <property name="ypad">0</property>
+				</widget>
+				<packing>
+				  <property name="padding">2</property>
+				  <property name="expand">False</property>
+				  <property name="fill">False</property>
+				</packing>
+			      </child>
+
+			      <child>
+				<widget class="GtkHBox" id="hbox66">
+				  <property name="visible">True</property>
+				  <property name="homogeneous">False</property>
+				  <property name="spacing">0</property>
+
+				  <child>
+				    <widget class="GtkEntry" id="sync_notes_path_entry">
+				      <property name="visible">True</property>
+				      <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
+				      <property name="can_focus">True</property>
+				      <property name="editable">True</property>
+				      <property name="visibility">True</property>
+				      <property name="max_length">0</property>
+				      <property name="text" translatable="yes"></property>
+				      <property name="has_frame">True</property>
+				      <property name="invisible_char">*</property>
+				      <property name="activates_default">False</property>
+				    </widget>
+				    <packing>
+				      <property name="padding">0</property>
+				      <property name="expand">True</property>
+				      <property name="fill">True</property>
+				    </packing>
+				  </child>
+
+				  <child>
+				    <widget class="GtkButton" id="sync_notes_path_button">
+				      <property name="visible">True</property>
+				      <property name="can_focus">True</property>
+				      <property name="label" translatable="yes">...</property>
+				      <property name="use_underline">True</property>
+				      <property name="relief">GTK_RELIEF_NORMAL</property>
+				      <property name="focus_on_click">True</property>
+				    </widget>
+				    <packing>
+				      <property name="padding">0</property>
+				      <property name="expand">False</property>
+				      <property name="fill">False</property>
+				    </packing>
+				  </child>
+				</widget>
+				<packing>
+				  <property name="padding">0</property>
+				  <property name="expand">True</property>
+				  <property name="fill">True</property>
+				</packing>
+			      </child>
+
+			      <child>
 				<widget class="GtkCheckButton" id="concal_autosync">
 				  <property name="visible">True</property>
 				  <property name="can_focus">True</property>
@@ -5472,7 +5562,7 @@ or tab entry (faster!)</property>
 			    <widget class="GtkLabel" id="label157">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Contacts / Calendar</property>
+			      <property name="label" translatable="yes">Contacts / Calendar / Notes</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -5867,7 +5957,7 @@ or tab entry (faster!)</property>
 			  <property name="update_policy">GTK_UPDATE_ALWAYS</property>
 			  <property name="snap_to_ticks">False</property>
 			  <property name="wrap">False</property>
-			  <property name="adjustment">1 0 2.14748e+09 1 10 10</property>
+			  <property name="adjustment">1 0 2147480000 1 10 10</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -5909,7 +5999,7 @@ or tab entry (faster!)</property>
 			  <property name="update_policy">GTK_UPDATE_ALWAYS</property>
 			  <property name="snap_to_ticks">False</property>
 			  <property name="wrap">False</property>
-			  <property name="adjustment">1 -1 2.14748e+09 1 10 10</property>
+			  <property name="adjustment">1 -1 2147480000 1 10 10</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -8318,7 +8408,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">True</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0.04</property>
+		      <property name="xalign">0.0399999991059</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>

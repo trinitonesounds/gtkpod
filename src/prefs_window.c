@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-16 22:08:27 jcs>
+/* Time-stamp: <2004-12-29 18:13:35 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -68,6 +68,7 @@ static const gchar *path_button_names[] =
     "sync_calendar_path_button",
     "mserv_music_root_button",
     "mserv_trackinfo_root_button",
+    "sync_notes_path_button",
     NULL
 };
 const gchar *path_entry_names[] =
@@ -79,6 +80,7 @@ const gchar *path_entry_names[] =
     "sync_calendar_path_entry",
     "mserv_music_root_entry",
     "mserv_trackinfo_root_entry",
+    "sync_notes_path_entry",
     NULL
 };
 static const gchar *path_fileselector_titles[] =
@@ -95,6 +97,7 @@ static const gchar *path_fileselector_titles[] =
 static const GtkFileChooserAction path_type[] =
 {
     GTK_FILE_CHOOSER_ACTION_OPEN,  /* select file */
+    GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,

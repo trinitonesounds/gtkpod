@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-16 22:08:29 jcs>
+/* Time-stamp: <2004-12-29 18:13:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -48,6 +48,7 @@ typedef enum
     PATH_SYNC_CALENDAR,
     PATH_MSERV_MUSIC_ROOT,
     PATH_MSERV_TRACKINFO_ROOT,
+    PATH_SYNC_NOTES,
     PATH_NUM
 } PathType;
 

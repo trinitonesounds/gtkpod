@@ -197,6 +197,8 @@ BUGLIST:
 > > be recognized and none of my dates will show up. Any help?
   JCS: works with 2nd generation -- testing needed with 4th
   generation!
+  CG : Works with 4th generation and evolution export - need a copy of
+  the original ics file and the version on the ipod
 
 - special sorttab does not do date sorting correctly.
 
