@@ -39,8 +39,33 @@
 #include "display.h"
 
 GList *songs = NULL;
+static GList *pending_deletion = NULL;
 
 static guint32 free_ipod_id (guint32 id);
+
+void
+free_song(Song *song)
+{
+  if (song->album)            g_free (song->album);
+  if (song->artist)           g_free (song->artist);
+  if (song->title)            g_free (song->title);
+  if (song->genre)            g_free (song->genre);
+  if (song->comment)          g_free (song->comment);
+  if (song->composer)         g_free (song->composer);
+  if (song->fdesc)            g_free (song->fdesc);
+  if (song->album_utf16)      g_free (song->album_utf16);
+  if (song->artist_utf16)     g_free (song->artist_utf16);
+  if (song->title_utf16)      g_free (song->title_utf16);
+  if (song->genre_utf16)      g_free (song->genre_utf16);
+  if (song->comment_utf16)    g_free (song->comment_utf16);
+  if (song->composer_utf16)   g_free (song->composer_utf16);
+  if (song->fdesc_utf16)      g_free (song->fdesc_utf16);
+  if (song->pc_path_utf8)     g_free (song->pc_path_utf8);
+  if (song->pc_path_locale)   g_free (song->pc_path_locale);
+  if (song->ipod_path)        g_free (song->ipod_path);
+  if (song->ipod_path_utf16)  g_free (song->ipod_path_utf16);
+  g_free (song);
+}
 
 /* Append song to the list */
 /* Note: adding to the display model is the responsibility of
@@ -78,7 +103,10 @@ gboolean add_song (Song *song)
     if (song->ipod_path == NULL)       song->ipod_path = g_strdup ("");
     if (song->ipod_path_utf16 == NULL) song->ipod_path_utf16 = g_malloc0 (sz);
     
-    song->ipod_id = free_ipod_id (0);  /* keep track of highest ID used */
+    if(!song->ipod_id) 
+	song->ipod_id = free_ipod_id (0);  /* keep track of highest ID used */
+    else
+	song->ipod_id = free_ipod_id(song->ipod_id);
     
     songs = g_list_append (songs, song);
     result = TRUE;
@@ -86,6 +114,29 @@ gboolean add_song (Song *song)
   return(result);
 }
 
+/**
+ * remove_song_from_ipod_by_id - in order to delete a song from the system
+ * we need to keep track of the Songs we want to delete next time we export
+ * the id. 
+ * @id - the Song id we want to delete
+ */
+void
+remove_song_from_ipod_by_id(guint32 id)
+{
+    if(id > 50)
+    {
+	Song *s = NULL;
+	if((s = get_song_by_id(id)))
+	{
+	    songs = g_list_remove(songs, s);
+	    pending_deletion = g_list_append(pending_deletion, s);
+	    if(cfg->md5songs)
+		song_removed_from_ipod(s);
+	    fprintf(stderr, "Removing %s-%s(%d) and added to deletion list\n",
+		    s->title, s->artist, id);
+	}
+    }
+}
 
 /* Add all files in directory and subdirectories.
    If name is a regular file, just add that.
@@ -233,25 +284,7 @@ void remove_song (Song *song)
 {
   /*  remove_song_from_model (song); Must be done by playlist handling! */
   songs = g_list_remove (songs, song);
-  if (song->album)            g_free (song->album);
-  if (song->artist)           g_free (song->artist);
-  if (song->title)            g_free (song->title);
-  if (song->genre)            g_free (song->genre);
-  if (song->comment)          g_free (song->comment);
-  if (song->composer)         g_free (song->composer);
-  if (song->fdesc)            g_free (song->fdesc);
-  if (song->album_utf16)      g_free (song->album_utf16);
-  if (song->artist_utf16)     g_free (song->artist_utf16);
-  if (song->title_utf16)      g_free (song->title_utf16);
-  if (song->genre_utf16)      g_free (song->genre_utf16);
-  if (song->comment_utf16)    g_free (song->comment_utf16);
-  if (song->composer_utf16)   g_free (song->composer_utf16);
-  if (song->fdesc_utf16)      g_free (song->fdesc_utf16);
-  if (song->pc_path_utf8)     g_free (song->pc_path_utf8);
-  if (song->pc_path_locale)   g_free (song->pc_path_locale);
-  if (song->ipod_path)        g_free (song->ipod_path);
-  if (song->ipod_path_utf16)  g_free (song->ipod_path_utf16);
-  g_free (song);
+  free_song(song);
 }
 
 
@@ -314,16 +347,40 @@ Song *get_song_by_id (guint32 id)
    Returns TRUE on success, FALSE if some error occured */
 gboolean flush_songs (void)
 {
-  GList *gl_song;
   Song  *song;
+  GList *gl_song;
+  gchar *filename = NULL;
   gboolean result = TRUE;
+  
+  /* lets clean up those pending deletions */
+  for(gl_song = pending_deletion; gl_song; gl_song = gl_song->next)
+  {
+      song = (Song*)gl_song->data;
+      if((filename = get_song_name_on_disk(song)))
+      {
+	  if(g_strstr_len(filename, strlen(cfg->ipod_mount), cfg->ipod_mount))
+	  {
+	      remove(filename);
+	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", song->artist,
+						    song->title, song->ipod_id,
+						    filename);
+	  }
+	  g_free(filename);
+      }
+      free_song(song);
+      gl_song->data = NULL;
+  }
+  g_list_free(pending_deletion);
+  pending_deletion = NULL;  
 
+  /* we now have as much space as we're gonna have, copy files to ipod */
   gl_song = g_list_first (songs);
   while (gl_song != NULL) {
     song = (Song *)gl_song->data;
     result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
     gl_song = g_list_next (gl_song);
   }
+    
   return result;
 }
 

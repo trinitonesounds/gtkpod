@@ -81,9 +81,9 @@ cfg_new(void)
     {
 	mycfg->ipod_mount = g_strdup ("/mnt");
     }
-    mycfg->deletion.song = FALSE;
-    mycfg->deletion.playlist = FALSE;
-    mycfg->deletion.ipod_file = FALSE;
+    mycfg->deletion.song = TRUE;
+    mycfg->deletion.playlist = TRUE;
+    mycfg->deletion.ipod_file = TRUE;
     return(mycfg);
 }
 

@@ -133,6 +133,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <support.h>
+#include <stdlib.h>
 
 #include "misc.h"
 #include "itunesdb.h"
@@ -140,6 +141,7 @@
 /* We instruct itunesdb_parse to provide utf8 versions of the strings */
 #define ITUNESDB_PROVIDE_UTF8
 
+#define ITUNESDB_DEBUG 0
 /* call itunesdb_parse () to read the iTunesDB  */
 /* call itunesdb_write () to write the iTunesDB */
 
@@ -227,7 +229,9 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
   gunichar2 *entry_utf16;
   gint32 xl;
 
-  /*printf("get_mhod seek: %x\n", seek);*/
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "get_mhod seek: %x\n", (int)seek);
+#endif
 
   if (seek_get_n_bytes (file, data, seek, 4) != 4) 
     {
@@ -243,7 +247,9 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
   *mty = get4int (file, seek+12);     /* mhod_id number */
   xl = get4int (file, seek+28);       /* entry length   */
 
-  /*printf("ml: %x mty: %x, xl: %x\n", *ml, *mty, xl);*/
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "ml: %x mty: %x, xl: %x\n", *ml, *mty, xl);
+#endif
 
   entry_utf16 = g_malloc (xl+2);
   if (seek_get_n_bytes (file, (gchar *)entry_utf16, seek+40, xl) != xl) {
@@ -274,7 +280,10 @@ static glong get_pl(FILE *file, glong seek)
   gchar data[4];
 
 
-  /* printf("mhyp seek: %x\n", seek);*/
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "mhyp seek: %x\n", (int)seek);
+#endif
+
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
   if (cmp_n_bytes (data, "mhyp", 4) == FALSE)      return -1; /* not pl */
   pltype = get4int (file, seek+20);  /* Type of playlist (1= MPL) */
@@ -303,10 +312,12 @@ static glong get_pl(FILE *file, glong seek)
       seek += zip;
     }
 
-#if 0
-  printf("pln: %s(%d Tracks) \n", plname_utf8, (int)songnum);
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "pln: %s(%d Tracks) \n", plname_utf8, (int)songnum);
 #endif
+
   plitem = g_malloc0 (sizeof (Playlist));
+
 #ifdef ITUNESDB_PROVIDE_UTF8
   plitem->name = plname_utf8;
 #endif ITUNESDB_PROVIDE_UTF8
@@ -346,7 +357,9 @@ static glong get_nod_a(FILE *file, glong seek)
   gint type;
   gint zip = 0;
 
-  /*printf("get_nod_a seek: %x\n", seek);*/
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "get_nod_a seek: %x\n", (int)seek);
+#endif
 
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
   if (cmp_n_bytes (data, "mhit", 4) == FALSE ) return -1; /* we are lost! */
@@ -451,9 +464,12 @@ gboolean itunesdb_parse (gchar *path)
   gchar data[8];
   glong seek;
 
-  printf("enter: %4d\n", get_nr_of_songs ());
 
   filename = concat_dir (path, "iPod_Control/iTunes/iTunesDB");
+
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, get_nr_of_songs ());
+#endif
 
   itunes = fopen (filename, "r");
   do { /* dummy loop for easier error handling */
@@ -485,7 +501,10 @@ gboolean itunesdb_parse (gchar *path)
     /* Parse Playlists */
     /* FIXME: maybe better to skip the headers until we find "mhyp" */
     seek = get4int(itunes, 112) + 292; /* start position of playlists */
-    /* printf("iTunesDB part2 starts at: %x\n", seek);*/
+
+#if ITUNESDB_DEBUG
+    fprintf(stderr, "iTunesDB part2 starts at: %x\n", (int)seek);
+#endif
     
     while(seek != -1) {
      seek = get_pl(itunes, seek);
@@ -496,7 +515,9 @@ gboolean itunesdb_parse (gchar *path)
 
   if (filename != NULL)   g_free (filename);
   if (itunes != NULL)     fclose (itunes);
-  printf("exit:  %4d\n", get_nr_of_songs ());
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "exit:  %4d\n", get_nr_of_songs ());
+#endif 
   return result;
 }
 
@@ -893,15 +914,17 @@ write_playlist(FILE *file, Playlist *pl)
     
     mhyp_seek = ftell(file);
     n = get_nr_of_songs_in_playlist (pl);
-#if 0
+#if ITUNESDB_DEBUG
   fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, n);
 #endif    
     mk_mhyp(file, pl->name_utf16, pl->type, n);  
     for (i=0; i<n; ++i)
     {
-        s = get_song_in_playlist_by_nr (pl, i);
-	mk_mhip(file, s->ipod_id);
-	mk_mhod(file, MHOD_ID_PLAYLIST, &empty, s->ipod_id); 
+        if((s = get_song_in_playlist_by_nr (pl, i)))
+	{
+	    mk_mhip(file, s->ipod_id);
+	    mk_mhod(file, MHOD_ID_PLAYLIST, &empty, s->ipod_id); 
+	}
     }
    fix_mhyp (file, mhyp_seek, ftell(file));
 }
@@ -957,6 +980,10 @@ gboolean itunesdb_write (gchar *path)
 
     filename = concat_dir (path, "iPod_Control/iTunes/iTunesDB");
 
+#if ITUNESDB_DEBUG
+    fprintf(stderr, "Writing to %s\n", filename);
+#endif
+
     if((file = fopen (filename, "w+")))
     {
 	write_it (file);
@@ -983,7 +1010,7 @@ gboolean itunesdb_write (gchar *path)
    "song->ipod_path_utf8" and "song->ipod_path_utf16" */
 gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 {
-  static gint dir_num = 0;   /* next dir to use. FIXME: should be random! */
+  gint dir_num = 0;
   FILE *file_in = NULL;
   FILE *file_out = NULL;
   gchar *ipod_file, *ipod_fullfile;
@@ -997,12 +1024,17 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
       g_warning ("Programming error: copy_song_to_ipod () called NULL-song\n");
       return FALSE;
     }
+  dir_num = (int) (19.0*rand()/(RAND_MAX));
+
   /* The iPod seems to need the .mp3 ending to play the song.
      Of course the following line should be changed once gtkpod
      also supports other formats. */
   ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d.mp3",
 			       dir_num, song->ipod_id);
-  printf("ipod_file: %s\n", ipod_file);
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "ipod_file: %s\n", ipod_file);
+#endif
+
   ipod_fullfile = concat_dir (path, ipod_file+1);
   do { /* dummy loop for easier error handling */
     file_in = fopen (pcfile, "r");
@@ -1060,9 +1092,6 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
       song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
 					       -1, NULL, NULL, NULL);
       song->transferred = TRUE;
-      /* increase dir to use next time */
-      ++dir_num;
-      if (dir_num == 20) dir_num = 0;
     }
   g_free (ipod_file);
   g_free (ipod_fullfile);

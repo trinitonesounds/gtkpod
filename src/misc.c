@@ -35,7 +35,7 @@
 #include "prefs.h"
 #include "support.h"
 #include "itunesdb.h"
-
+#include "display.h"
 
 static GtkWidget *about_window = NULL;
 
@@ -158,7 +158,7 @@ void close_about_window (void)
 /* parse a bunch of ipod ids delimited by \n
  * @s - address of the character string we're parsing
  * @id - pointer the ipod id parsed from the string
- * returns FALSE when the string is empty, TRUE when the string can still be
+ * Returns FALSE when the string is empty, TRUE when the string can still be
  * 	parsed
  */
 gboolean
@@ -189,4 +189,17 @@ parse_ipod_id_from_string(gchar **s, guint32 *id)
 	return(TRUE);
     }
     return(FALSE);
+}
+
+/**
+ * gtkpod_main_quit
+ */
+void
+gtkpod_main_quit(void)
+{
+    cleanup_listviews(NULL);
+    remove_all_songs ();
+    remove_all_playlists ();
+    write_prefs ();
+    gtk_main_quit ();
 }

@@ -147,13 +147,17 @@ void remove_song_from_playlist (Playlist *plitem, Song *song)
   if (g_list_find (plitem->members, song) == NULL) return; /* not a member */
           /* This is checked to make it easier for the display model
 	     and so we know whether we have to decrease plitem->num */
-  plitem->members = g_list_remove (plitem->members, song);
   /*  --plitem->num;  */ /* decrease song counter */
-  pm_remove_song (plitem, song);
   if (plitem->type == PL_TYPE_MPL)
     { /* if it's the MPL, we remove the song permanently */
-      remove_song (song);
+      /* remove_song (song); */
+      remove_song_from_ipod_by_id(song->ipod_id);	
     }
+  else
+  {
+    plitem->members = g_list_remove (plitem->members, song);
+  }
+  pm_remove_song (plitem, song);
 }
 
 /* Returns the number of playlists

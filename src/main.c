@@ -32,6 +32,8 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "interface.h"
 #include "misc.h"
@@ -63,13 +65,12 @@ main (int argc, char *argv[])
    * the project. Delete any components that you don't want shown initially.
    */
   if (!read_prefs (argc, argv)) return 0;
+  srand(time(NULL));
   gtkpod = create_gtkpod ();
   create_listviews (gtkpod);
   create_mpl ();     /* needs at least the master playlist */
   gtk_widget_show (gtkpod);
   gtk_main ();
-  write_prefs ();
-  cleanup_listviews (gtkpod);
   return 0;
 }
 

@@ -1,0 +1,62 @@
+/*========================================================================*/
+Changes - Dec 31 2002
+    * You can free up space on your ipod now by deleting songs from the
+      master playlist. I somehow broke playlist writes, and it's really
+      inconsistent, needs some more looking at.
+
+File Modification:
+
+configure.in - version bump, file deletion from your ipod should work
+
+display.c - 
+    * made the playlist model select a sensible "next" when a playlist
+    is deleted from the model.
+    * don't allow renaming of the main playlist
+
+itunesdb.c - 
+    * added a variable to allow for read/write debugging.  it's either
+      "REALLY verbose or none at all, set ITUNESDB_DEBUG to 1 to get output
+    * change the copy_song_to_ipod function to randomly choose a directory
+      to write to.  this is better because it's random and should be evenly
+      distributing it ? Saw it as a todo and did it.
+
+main.c -
+    * seed the random number generator on start with time(NULL)
+    * remove some of the cleanup code after gtk_main_quit to consolidate
+      cleaning into gtkpod_main_quit
+
+misc.c -
+    * added gtkpod_main_quit to clean up all the data structures on exit.
+    * I'm getting weird errors on exit, as far as I can tell the code isn't
+      doing what i'm coding. if you notice any difference between quiting
+      with ctrl-q and clicking the "close" button in your wm, please let me
+      know.
+
+misc.h -
+    * added gtkpod_main_quit to the header
+
+playlist.c - 
+    * fixed remove_song_from_playlist so it handles file deletions from the
+      ipod too.
+
+prefs.c -
+    * cfg_new - more sane defaults asks permission before deleting anything
+
+song.c -
+    * added a free_song function just to clean up the file structure.  It
+      seems like we might benefit from breaking up the concept of a song and
+      the way we manage it in gtkpod... 
+    * fixed add_song so it can handle registering songs passed to it by the
+      itunes db during parsing.  a bug i introduced =(
+    * added remove_song_from_ipod_by_id it appens itself to a static
+      "pending deletion" list in song.c  This means we don't delete anything
+      unless we tell the ipod to export, so you can exit without saving and
+      not commit to changes you made.
+    * modified flush_songs - so it deletes all the files that are pending
+      deletion before it copies them to the disk.  a little bit of math and
+      we could relay the disk usage to the user via the status bar
+
+song.h
+    * added free_song to the header
+    * added remove_song_from_ipod_by_id to the header
+/*========================================================================*/

@@ -23,8 +23,6 @@
 |  This product is not supported/written/published by Apple!
 */
 
-/* TODO: remove_playlist -> make new selection on receipt of the "delete" signal */
-
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -206,7 +204,30 @@ void pm_remove_playlist (Playlist *playlist)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
   if (model != NULL)
-    gtk_tree_model_foreach (model, pm_delete_playlist, playlist);
+  {
+    GtkTreeIter i;
+    GtkTreeSelection *ts = NULL;
+    
+    /* 
+     * get the currently selected playlist from the playlist view  and its
+     * iterator 
+     */
+    ts = gtk_tree_view_get_selection(playlist_treeview);
+    if((gtk_tree_selection_get_selected(ts, NULL, &i)))
+    {
+	/* if we can't select the next iterator, grab the first one*/
+	if(!(gtk_tree_model_iter_next(model, &i)))
+	{
+		gtk_tree_model_get_iter_first(model, &i);
+	}
+    
+	/* find the pl and delete it */
+	gtk_tree_model_foreach (model, pm_delete_playlist, playlist);
+	
+	/* select our new found iter !!! */
+	gtk_tree_selection_select_iter(ts, &i);
+    }
+  }
 }
 
 
@@ -332,8 +353,15 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   switch (column)
     {  /* We only have one column, so this code is overkill... */
     case PM_COLUMN_PLAYLIST: 
-      g_object_set (G_OBJECT (renderer), "text", playlist->name, 
+      if(playlist->type == 0) 
+      {
+	g_object_set (G_OBJECT (renderer), "text", playlist->name, 
 		    "editable", TRUE, NULL);
+      }
+      else	/* no renaming of master playlist */
+      {
+	g_object_set (G_OBJECT (renderer), "text", playlist->name, NULL);
+      }
       break;
     }
 }
