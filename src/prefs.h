@@ -126,6 +126,7 @@ gboolean prefs_get_song_list_show_genre(void);
 gboolean prefs_get_song_list_show_artist(void);
 gboolean prefs_get_song_playlist_deletion(void);
 gboolean prefs_get_song_ipod_file_deletion(void);
+gchar *prefs_get_ipod_mount (void);
 gchar * prefs_get_charset (void);
 
 #endif __PREFS_H__

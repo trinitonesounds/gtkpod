@@ -205,6 +205,47 @@ create_playlist_deletion_interface(const gchar *pl_name)
     if(buf) g_free(buf);
 }
 
+static void create_ipod_dir_interface()
+{
+    GtkWidget *w = NULL;
+    gchar *mp;
+    GString *str;
+    gint i;
+
+    confirmation_window = create_create_confirmation();
+    mp = prefs_get_ipod_mount ();
+    if (mp)
+    {
+	if (strlen (mp) > 0)
+	{ /* make sure the mount point does not end in "/" */
+	    if (mp[strlen (mp) - 1] == '/')
+		mp[strlen (mp) - 1] = 0;
+	}
+    }
+    else
+    {
+	mp = g_strdup ("");
+    }
+    str = g_string_sized_new (2000);
+    g_string_append_printf (str, "%s/iPod_Control\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control/Music\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control/iTunes\n", mp);
+    for(i = 0; i < 20; i++)
+    {
+	g_string_append_printf (str, "%s/iPod_Control/Music/F%02d\n", mp, i);
+    }
+    if((w = lookup_widget(confirmation_window, "msg_label")))
+	set_message_label_to_string(w, str->str);
+    g_string_free (str, TRUE);
+    if((w = lookup_widget(confirmation_window, "msg_label_title")))
+	gtk_label_set_text(GTK_LABEL(w),
+			   _("OK to create the following directories?"));
+    gtk_window_set_title(GTK_WINDOW(confirmation_window),
+			 _("Create iPod directories"));
+    gtk_widget_show(confirmation_window);
+}
+
+
 /**
  * confirmation_window_create - Build a file deletion dialog
  * @window_type - The type of deletion it is, see the enum in delete_window
@@ -221,12 +262,12 @@ confirmation_window_create(int window_type)
     if(!confirmation_window)
     {
 	confirmation_type = window_type;
-	    
-	pl_name = get_current_selected_playlist_name();
-	if (pl_name) switch(confirmation_type)
+
+	switch(confirmation_type)
 	{
 	    case CONFIRMATION_WINDOW_PLAYLIST:
-		if(selected_playlist->type == PL_TYPE_NORM)
+		pl_name = get_current_selected_playlist_name();
+		if(pl_name && selected_playlist->type == PL_TYPE_NORM)
 		{
 		    confirmation_window = create_delete_confirmation_pl();
 		    if(prefs_get_playlist_deletion())
@@ -245,7 +286,8 @@ confirmation_window_create(int window_type)
 		break;
 	    case CONFIRMATION_WINDOW_SONG:
 		selected_songs = get_currently_selected_songs();
-		if (!selected_songs)
+		pl_name = get_current_selected_playlist_name();
+		if (!selected_songs || !pl_name)
 		{  /* no songs selected */
 		    confirmation_window_cleanup();
 		    break;
@@ -287,6 +329,9 @@ confirmation_window_create(int window_type)
 			}
 		    }
 		}
+		break;
+	    case CONFIRMATION_WINDOW_CREATE_IPOD_DIRS:
+		create_ipod_dir_interface();
 		break;
 	    default:
 		fprintf(stderr, "Programming error: Unknown confirmation Ok clicked\n");
@@ -349,6 +394,8 @@ void confirmation_window_ok_clicked(void)
 		    s = (Song *) l->data;
 		    remove_song_from_playlist(selected_playlist, s);
 		}
+		break;
+	    case CONFIRMATION_WINDOW_CREATE_IPOD_DIRS:
 		break;
 	    default:
 		fprintf(stderr, "Programming error: Unknown confirmation Ok clicked\n");

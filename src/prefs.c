@@ -746,3 +746,10 @@ gchar *prefs_get_cfgdir (void)
     }
   return cfgdir;
 }
+
+/* Returns the ipod_mount. You must g_free the string after use */
+gchar *prefs_get_ipod_mount (void)
+{
+    if (cfg->ipod_mount)  return g_strdup (cfg->ipod_mount);
+    else                  return NULL;
+}

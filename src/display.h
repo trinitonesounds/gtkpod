@@ -110,7 +110,7 @@ void st_sort (guint32 inst, GtkSortType order);
 void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				 GtkTreeIter *i, gpointer data);
 
-guint sm_get_displayed_rows_nr(void);
+guint sm_get_nr_of_songs(void);
 void sm_rows_reordered_callback(void);
 void sm_show_preferred_columns(void);
 void cleanup_listviews(void);

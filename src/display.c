@@ -1541,12 +1541,12 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 }
 
 /**
- * sm_get_display_rows_nr - get the number of songs displayed currently in
- * the song model
- * Returns - the number of songs displayed currently
+ * sm_get_nr_of_songs - get the number of songs displayed
+ * currently in the song model Returns - the number of songs displayed
+ * currently
  */
 guint
-sm_get_displayed_rows_nr(void)
+sm_get_nr_of_songs(void)
 {
     GtkTreeIter i;
     guint result = 0;
@@ -1882,8 +1882,8 @@ static void create_song_listview (GtkWidget *gtkpod)
 void create_listviews (GtkWidget *gtkpod)
 {
   create_song_listview (gtkpod);
-  create_playlist_listview (gtkpod);
   create_sort_tabs (gtkpod);
+  create_playlist_listview (gtkpod);
 }
 
 

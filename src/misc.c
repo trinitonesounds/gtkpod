@@ -374,6 +374,7 @@ void
 gtkpod_songs_statusbar_init(GtkWidget *w)
 {
     gtkpod_songs_statusbar = w;
+    gtkpod_songs_statusbar_update();
 }
 
 void 
@@ -381,14 +382,15 @@ gtkpod_songs_statusbar_update(void)
 {
     if(gtkpod_songs_statusbar)
     {
-	guint displayed;
-	gchar buf[PATH_MAX];
+	gchar *buf;
 
-	displayed = sm_get_displayed_rows_nr();
-	snprintf(buf, PATH_MAX, "  Songs: %d Displayed / %d Total", 
-		displayed, get_nr_of_songs());
+	buf = g_strdup_printf (_(" P:%d S:%d/%d"),
+			       get_nr_of_playlists () - 1,
+			       sm_get_nr_of_songs (),
+			       get_nr_of_songs ());
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_songs_statusbar), 1);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_songs_statusbar), 1,  buf);
+	g_free (buf);
     }
 
 }
