@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-05 00:37:03 jcs>
+/* Time-stamp: <2003-11-06 00:28:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -452,7 +452,7 @@ static glong get_mhit(FILE *file, glong seek)
   track->rating = get4int(file, seek+28) >> 24;/* rating           */
   track->time_modified = get4int(file, seek+32);/* modification time    */
   track->size = get4int(file, seek+36);        /* file size        */
-  track->tracklen = get4int(file, seek+40);     /* time             */
+  track->tracklen = get4int(file, seek+40);    /* time             */
   track->track_nr = get4int(file, seek+44);    /* track number     */
   track->tracks = get4int(file, seek+48);      /* nr of tracks     */
   track->year = get4int(file, seek+52);        /* year             */

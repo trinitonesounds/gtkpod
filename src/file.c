@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-05 00:58:51 jcs>
+/* Time-stamp: <2003-11-06 00:36:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,7 +37,6 @@
 #include <ctype.h>
 #include <time.h>
 #include "file.h"
-#include "id3_tag.h"
 #include "mp3file.h"
 #include "mp4file.h"
 #include "itunesdb.h"
@@ -482,6 +481,12 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    fseek (file, 0, SEEK_END);
 	    nti->size = ftell (file); /* get the filesize in bytes */
 	    fclose(file);
+	}
+	printf ("bitrate: %d\n", nti->bitrate);
+	if (nti->bitrate == 0)
+	{  /* estimate bitrate */
+	    if (nti->tracklen)
+		nti->bitrate = nti->size * 8 / nti->tracklen;
 	}
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);

@@ -39,7 +39,6 @@
 #include "misc.h"
 #include "file.h"
 #include "support.h"
-#include "id3_tag.h"
 
 
 GList *playlists;
