@@ -40,7 +40,7 @@ dnl we need 'flex'
 AM_PROG_LEX
 
 dnl Add the languages which your application supports here.
-ALL_LINGUAS="de fr ja"
+ALL_LINGUAS="de fr it ja"
 AM_GLIB_GNU_GETTEXT
 
 dnl Check if we have to supply getopt_long
