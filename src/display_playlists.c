@@ -565,7 +565,7 @@ gint pm_data_compare_func (GtkTreeModel *model,
   if (playlist2->type == PL_TYPE_MPL) return (corr);
 
   /* compare the two entries */
-  return compare_string (playlist1->name, playlist2->name);
+  return compare_string (playlist2->name, playlist1->name);
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-14 19:17:33 jcs>
+/* Time-stamp: <2004-11-15 22:56:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -308,6 +308,25 @@ static gint arg_comp (const gchar *line, const gchar *arg, gint *off)
 }
 
 
+/* sort order was reversed between V0.82_CVS and V0.83.CVS */
+static gint correct_sort (gint sort)
+{
+    if (cfg && (cfg->version < 0.83))
+    {
+	switch (sort)
+	{
+	case SORT_ASCENDING:
+	    sort = SORT_DESCENDING;
+	    break;
+	case SORT_DESCENDING:
+	    sort = SORT_ASCENDING;
+	    break;
+	}
+    }
+    return sort;
+}
+
+
 static void
 read_prefs_from_file_desc(FILE *fp)
 {
@@ -601,16 +620,19 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "pm_sort") == 0)
 	  {
-	      prefs_set_pm_sort(atoi(arg));
+	      gint sort = correct_sort (atoi(arg));
+	      prefs_set_pm_sort(sort);
 	  }
 	  else if(g_ascii_strcasecmp (line, "st_sort") == 0)
 	  {
-	      prefs_set_st_sort(atoi(arg));
+	      gint sort = correct_sort (atoi(arg));
+	      prefs_set_st_sort(sort);
 	  }
 	  else if((g_ascii_strcasecmp (line, "tm_sort_") == 0) ||
 		  (g_ascii_strcasecmp (line, "sm_sort_") == 0))
 	  {
-	      prefs_set_tm_sort(atoi(arg));
+	      gint sort = correct_sort (atoi(arg));
+	      prefs_set_tm_sort(sort);
 	  }
 	  else if((g_ascii_strcasecmp (line, "tm_sortcol") == 0) ||
 		  (g_ascii_strcasecmp (line, "sm_sortcol") == 0))

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-15 00:24:34 jcs>
+/* Time-stamp: <2004-11-15 22:32:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -984,53 +984,53 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
-      return compare_string (track_get_item_utf8 (track1, TM_to_T (tm_item)),
-			     track_get_item_utf8 (track2, TM_to_T (tm_item)));
+      return compare_string (track_get_item_utf8 (track2, TM_to_T (tm_item)),
+			     track_get_item_utf8 (track1, TM_to_T (tm_item)));
   case TM_COLUMN_TRACK_NR:
-      cmp = track1->tracks - track2->tracks;
-      if (cmp == 0) cmp = track1->track_nr - track2->track_nr;
+      cmp = track2->tracks - track1->tracks;
+      if (cmp == 0) cmp = track2->track_nr - track1->track_nr;
       return cmp;
   case TM_COLUMN_CD_NR:
-      cmp = track1->cds - track2->cds;
-      if (cmp == 0) cmp = track1->cd_nr - track2->cd_nr;
+      cmp = track2->cds - track1->cds;
+      if (cmp == 0) cmp = track2->cd_nr - track1->cd_nr;
       return cmp;
   case TM_COLUMN_IPOD_ID:
-      return track1->ipod_id - track2->ipod_id;
+      return track2->ipod_id - track1->ipod_id;
   case TM_COLUMN_PC_PATH:
-      return g_utf8_collate (track1->pc_path_utf8, track2->pc_path_utf8);
+      return g_utf8_collate (track2->pc_path_utf8, track1->pc_path_utf8);
   case TM_COLUMN_IPOD_PATH:
-      return g_utf8_collate (track1->ipod_path, track2->ipod_path);
+      return g_utf8_collate (track2->ipod_path, track1->ipod_path);
   case TM_COLUMN_TRANSFERRED:
-      if(track1->transferred == track2->transferred) return 0;
-      if(track1->transferred == TRUE) return 1;
+      if(track2->transferred == track1->transferred) return 0;
+      if(track2->transferred == TRUE) return 1;
       else return -1;
   case TM_COLUMN_SIZE:
-      return track1->size - track2->size;
+      return track2->size - track1->size;
   case TM_COLUMN_TRACKLEN:
-      return track1->tracklen - track2->tracklen;
+      return track2->tracklen - track1->tracklen;
   case TM_COLUMN_BITRATE:
-      return track1->bitrate - track2->bitrate;
+      return track2->bitrate - track1->bitrate;
   case TM_COLUMN_SAMPLERATE:
-      return track1->samplerate - track2->samplerate;
+      return track2->samplerate - track1->samplerate;
   case TM_COLUMN_BPM:
-      return track1->BPM - track2->BPM;
+      return track2->BPM - track1->BPM;
   case TM_COLUMN_PLAYCOUNT:
-      return track1->playcount - track2->playcount;
+      return track2->playcount - track1->playcount;
   case  TM_COLUMN_RATING:
-      return track1->rating - track2->rating;
+      return track2->rating - track1->rating;
   case TM_COLUMN_TIME_CREATED:
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
-      return COMP (time_get_time (track1, tm_item),
-		   time_get_time (track2, tm_item));
+      return COMP (time_get_time (track2, tm_item),
+		   time_get_time (track1, tm_item));
   case  TM_COLUMN_VOLUME:
-      return track1->volume - track2->volume;
+      return track2->volume - track1->volume;
   case  TM_COLUMN_SOUNDCHECK:
       /* If soundcheck is unset (0) use 0 dB (1000) */
-      return (track1->soundcheck? track1->soundcheck:1000) - 
-	  (track2->soundcheck? track2->soundcheck:1000);
+      return (track2->soundcheck? track2->soundcheck:1000) - 
+	  (track1->soundcheck? track1->soundcheck:1000);
   case TM_COLUMN_YEAR:
-      return track1->year - track2->year;
+      return track2->year - track1->year;
   default:
       g_warning ("Programming error: tm_data_compare_func: no sort method for tm_item %d\n", tm_item);
       break;
@@ -1119,12 +1119,12 @@ static void tm_unsort (void)
 		 GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
 		 GTK_SORT_ASCENDING);
 	    tm_adopt_order_in_sorttab ();
-	    tm_sort_counter (-1);
 	}
 	else
 	{
 	    gtkpod_warning (_("Cannot unsort track view because of a bug in the GTK lib you are using (%d.%d.%d < 2.5.4). Once you sort the track view, you cannot go back to the unsorted state.\n\n"), gtk_major_version, gtk_minor_version, gtk_micro_version);
 	}
+	tm_sort_counter (-1);
     }
 }
 

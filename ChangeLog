@@ -1,4 +1,4 @@
-gtkpod V0.82-CVS
+gtkpod V0.83.CVS
 	BUGFIX: when clicking onto the column header of the track
 	treeview three times and moving sidewards with the mouse at
 	the same time, gtkpod crashed. Crashing was due to a bad
@@ -42,6 +42,9 @@ gtkpod V0.82-CVS
 
 	BUGFIX: when copying track to the iPod, the free space
 	indication became bigger and bigger during the process.
+
+	BUGFIX: Ascending and descending were interchanged in the sort
+	window.
 
 	NEW FEATURE: Implemented Michael Rolig's patch/idea to access
 	mserv data for the rating. Still needs testing as I don't use

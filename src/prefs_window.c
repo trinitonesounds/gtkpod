@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-04 21:47:45 jcs>
+/* Time-stamp: <2004-11-15 22:23:12 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -223,7 +223,7 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
     g_return_if_fail (i>=0 && i<PATH_NUM);
 
     if (path_filechooser[i])
-    {  /* filechooser already open --> simply raise to top */
+    {  /* filechooser already open --> simply raise to the top */
 	gdk_window_raise(path_filechooser[i]->window);
 	return;
     }
@@ -1296,7 +1296,11 @@ prefs_window_set_unused_gboolean3(gboolean val)
  */
 void sort_window_create (void)
 {
-    if (!sort_window)
+    if (sort_window)
+    {  /* sort options already open --> simply raise to the top */
+	gdk_window_raise(sort_window->window);
+    }
+    else
     {
 	GList *collist = NULL;
 	GtkWidget *w;
@@ -1389,10 +1393,20 @@ void sort_window_update (void)
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	w = lookup_widget (sort_window, "tm_none");
+	switch (tmpsortcfg->tm_sort)
+	{
+	case SORT_ASCENDING:
+	    w = lookup_widget (sort_window, "tm_ascend");
+	    break;
+	case SORT_DESCENDING:
+	    w = lookup_widget (sort_window, "tm_descend");
+	    break;
+	case SORT_NONE:
+	    w = lookup_widget (sort_window, "tm_none");
+	    break;
+	}
 	if (w)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 (tmpsortcfg->tm_sort == SORT_NONE));
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
 	w = lookup_widget (sort_window, "pm_autostore");
 	if (w)
@@ -1403,6 +1417,7 @@ void sort_window_update (void)
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpsortcfg->tm_autostore);
+
 	if((w = lookup_widget(sort_window, "cfg_case_sensitive")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-14 23:52:03 jcs>
+/* Time-stamp: <2004-11-15 22:32:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1847,7 +1847,7 @@ gint st_data_compare_func (GtkTreeModel *model,
   if (entry2->master) return (corr);
 
   /* compare the two entries */
-  return compare_string (entry1->name, entry2->name);
+  return compare_string (entry2->name, entry1->name);
 }
 
 /* Stop editing. If @cancel is TRUE, the edited value will be
