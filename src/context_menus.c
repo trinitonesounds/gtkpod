@@ -143,11 +143,11 @@ static void
 delete_entries(GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	delete_playlist_head();
+	delete_playlist_head (FALSE);
     else if(selected_entry)
-	delete_entry_head(entry_inst, NULL);
+	delete_entry_head (entry_inst, FALSE);
     else if(selected_tracks)
-	delete_track_head(NULL);
+	delete_track_head (FALSE);
 }
 
 /**
@@ -162,15 +162,14 @@ delete_entries_full(GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
     {
-	delete_track_head (get_playlist_by_nr (0));
-	remove_playlist (selected_playlist);
+	delete_playlist_head (TRUE);
     }
     else if (selected_entry)
     {
-	delete_entry_head (entry_inst, get_playlist_by_nr (0));
+	delete_entry_head (entry_inst, TRUE);
     }
     else if (selected_tracks)
-	delete_track_head (get_playlist_by_nr (0));
+	delete_track_head (TRUE);
 }
 
 static void

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 23:05:50 jcs>
+/* Time-stamp: <2003-11-27 22:30:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -343,7 +343,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "delete_playlist") == 0)
 	  {
-	      prefs_set_playlist_deletion((gboolean)atoi(arg));
+	      /* ignore -- no longer supported as of 0.61-CVS */
 	  }
 	  else if(g_ascii_strcasecmp (line, "delete_ipod") == 0)
 	  {
@@ -826,7 +826,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, _("# delete confirmation\n"));
     fprintf(fp, "delete_file=%d\n",prefs_get_track_playlist_deletion());
-    fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_track_ipod_file_deletion());
     fprintf(fp, "sync_remove_confirm=%d\n",prefs_get_sync_remove_confirm());
     fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
@@ -1119,16 +1118,6 @@ gboolean prefs_get_keep_backups(void)
 gboolean prefs_get_write_extended_info(void)
 {
   return cfg->write_extended_info;
-}
-
-void prefs_set_playlist_deletion(gboolean val)
-{
-    cfg->deletion.playlist = val;
-}
-
-gboolean prefs_get_playlist_deletion(void)
-{
-    return(cfg->deletion.playlist);
 }
 
 void prefs_set_track_playlist_deletion(gboolean val)

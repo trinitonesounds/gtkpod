@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-23 23:52:50 jcs>
+/* Time-stamp: <2003-11-27 22:30:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -172,7 +172,6 @@ void prefs_set_auto_import(gboolean val);
 void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
 void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
-void prefs_set_playlist_deletion(gboolean val);
 void prefs_set_track_playlist_deletion(gboolean val);
 void prefs_set_track_ipod_file_deletion(gboolean val);
 void prefs_set_sync_remove_confirm(gboolean val);
@@ -213,7 +212,6 @@ gboolean prefs_get_auto_import(void);
 gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
-gboolean prefs_get_playlist_deletion(void);
 gboolean prefs_get_track_playlist_deletion(void);
 gboolean prefs_get_track_ipod_file_deletion(void);
 gboolean prefs_get_sync_remove_confirm(void);

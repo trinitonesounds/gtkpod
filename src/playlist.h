@@ -66,6 +66,7 @@ void add_track_to_playlist (Playlist *plitem, Track *track, gboolean display);
 gboolean remove_trackid_from_playlist (Playlist *plitem, guint32 id);
 gboolean remove_track_from_playlist (Playlist *plitem, Track *track);
 gboolean track_is_in_playlist (Playlist *plitem, Track *track);
+guint32 track_is_in_playlists (Track *track);
 void move_playlist (Playlist *playlist, gint pos);
 void remove_playlist (Playlist *playlist);
 void remove_all_playlists (void);

@@ -13,6 +13,10 @@ gtkpod V0.61-CVS
 	different entries for "Delete from iPod" and "Delete from
 	Playlist".
 
+	IMPROVEMENT: when deleting tracks completely from the iPod, the
+	confirmation dialog also displays the number of playlists the
+	tracks are members of.
+
 	IMPROVEMENT: When adding existing tracks:
 	 Until now the default action when adding tracks that already
 	 exist (identical full filename) was to add it again (they were

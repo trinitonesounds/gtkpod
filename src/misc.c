@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-26 23:19:51 jcs>
+/* Time-stamp: <2003-11-27 23:36:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1153,6 +1153,7 @@ static void delete_playlist_ok (gpointer user_data1, gpointer user_data2)
     Playlist *selected_playlist = (Playlist *)user_data1;
     gchar *buf;
 
+    if (!selected_playlist) return;
     buf = g_strdup_printf (_("Deleted playlist '%s'"),
 			   selected_playlist->name);
     remove_playlist (selected_playlist);
@@ -1162,12 +1163,46 @@ static void delete_playlist_ok (gpointer user_data1, gpointer user_data2)
     data_changed ();
 }
 
-void delete_playlist_head (void)
+/* ok handler for delete playlist including tracks */
+/* @user_data1 is the selected playlist, @user_data2 are the selected tracks */
+static void delete_playlist_full_ok (gpointer user_data1, gpointer user_data2)
 {
+    Playlist *selected_playlist = (Playlist *)user_data1;
+    GList *l, *selected_trackids = user_data2;
+    guint32 n;
     gchar *buf;
-    Playlist *pl = NULL;
 
-    pl = pm_get_selected_playlist();
+    if (!selected_playlist) return;
+    n = g_list_length (selected_trackids);
+    buf = g_strdup_printf (ngettext ("Deleted playlist '%s' including %d member track", "Deleted playlist '%s' including %d member tracks", n), 
+			   selected_playlist->name, n);
+    /* remove tracks */
+    for (l = selected_trackids; l; l = l->next)
+	remove_trackid_from_playlist (NULL, (guint32)l->data);
+    /* remove playlist */
+    remove_playlist (selected_playlist);
+
+    gtkpod_statusbar_message (buf);
+    g_list_free (selected_trackids);
+    g_free (buf);
+    /* mark data as changed */
+    data_changed ();
+}
+
+/* cancel handler for delete track */
+/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
+static void delete_playlist_cancel (gpointer user_data1, gpointer user_data2)
+{
+    GList *selected_trackids = user_data2;
+
+    g_list_free (selected_trackids);
+}
+
+/* delete currently selected playlist
+   @delete_full: if TRUE, member songs are removed from the iPod */
+void delete_playlist_head (gboolean delete_full)
+{
+    Playlist *pl = pm_get_selected_playlist();
     if (!pl)
     { /* no playlist selected */
 	gtkpod_statusbar_message (_("No playlist selected."));
@@ -1178,26 +1213,67 @@ void delete_playlist_head (void)
 	gtkpod_statusbar_message (_("Cannot delete master playlist."));
 	return;
     }
-    
-    buf = g_strdup_printf(_("Are you sure you want to delete the playlist '%s'?"), pl->name);
 
-    gtkpod_confirmation
-	(-1,                   /* gint id, */
-	 TRUE,                 /* gboolean modal, */
-	 _("Delete Playlist?"), /* title */
-	 buf,                   /* label */
-	 NULL,                  /* scrolled text */
-	 NULL, 0, NULL,         /* option 1 */
-	 NULL, 0, NULL,         /* option 2 */
-	 prefs_get_playlist_deletion (),   /* gboolean confirm_again, */
-	 prefs_set_playlist_deletion, /* ConfHandlerOpt confirm_again_handler,*/
-	 delete_playlist_ok, /* ConfHandler ok_handler,*/
-	 CONF_NO_BUTTON,     /* don't show "Apply" button */
-	 NULL,               /* cancel_handler,*/
-	 pl,                 /* gpointer user_data1,*/
-	 NULL);              /* gpointer user_data2,*/
+    if (delete_full)
+    { /* remove tracks and playlist from iPod */
+	GString *str;
+	gchar *label, *title;
+	gboolean confirm_again;
+	ConfHandlerOpt confirm_again_handler;
+	GList *gl, *selected_trackids=NULL;
+	guint32 n = 0;
 
-    g_free (buf);
+	for (gl=pl->members; gl; gl=gl->next)
+	{
+	    Track *s=(Track *)gl->data;
+	    selected_trackids = g_list_append (selected_trackids,
+					       (gpointer)s->ipod_id);
+	    ++n;
+	}
+	delete_populate_settings (NULL, selected_trackids,
+				  NULL, &title,
+				  &confirm_again, &confirm_again_handler,
+				  &str);
+	label = g_strdup_printf (ngettext ("Are you sure you want to delete playlist '%s' and the following track completely from your ipod? The number of playlists this track is a member of is indicated in parentheses.", "Are you sure you want to delete playlist '%s' and the following tracks completely from your ipod? The number of playlists the tracks are member of is indicated in parentheses.", n), pl->name);
+	gtkpod_confirmation
+	    (-1,                     /* gint id, */
+	     TRUE,                   /* gboolean modal, */
+	     title,                  /* title */
+	     label,                  /* label */
+	     str->str,               /* scrolled text */
+	     NULL, 0, NULL,          /* option 1 */
+	     NULL, 0, NULL,          /* option 2 */
+	     confirm_again,          /* gboolean confirm_again, */
+	     confirm_again_handler,  /* ConfHandlerOpt confirm_again_handler,*/
+	     delete_playlist_full_ok,/* ConfHandler ok_handler,*/
+	     CONF_NO_BUTTON,         /* don't show "Apply" button */
+	     delete_playlist_cancel, /* cancel_handler,*/
+	     pl,                     /* gpointer user_data1,*/
+	     selected_trackids);     /* gpointer user_data2,*/
+	g_free (label);
+	g_string_free (str, TRUE);
+    }
+    else
+    { /* remove only playlist, keep tracks */
+	gchar *buf = g_strdup_printf(_("Are you sure you want to delete the playlist '%s'?"), pl->name);
+
+	gtkpod_confirmation
+	    (-1,                   /* gint id, */
+	     TRUE,                 /* gboolean modal, */
+	     _("Delete Playlist?"), /* title */
+	     buf,                   /* label */
+	     NULL,                  /* scrolled text */
+	     NULL, 0, NULL,         /* option 1 */
+	     NULL, 0, NULL,         /* option 2 */
+	     prefs_get_track_playlist_deletion (),/* confirm_again, */
+	     prefs_set_track_playlist_deletion, /* confirm_again_handler,*/
+	     delete_playlist_ok, /* ConfHandler ok_handler,*/
+	     CONF_NO_BUTTON,     /* don't show "Apply" button */
+	     NULL,               /* cancel_handler,*/
+	     pl,                 /* gpointer user_data1,*/
+	     NULL);              /* gpointer user_data2,*/
+	g_free (buf);
+    }
 }
 
 
@@ -1227,7 +1303,7 @@ void delete_populate_settings (Playlist *pl, GList *selected_trackids,
     if(pl->type == PL_TYPE_MPL)
     {
 	if (label)
-	    *label = g_strdup (ngettext ("Are you sure you want to delete the following track\ncompletely from your ipod?", "Are you sure you want to delete the following tracks\ncompletely from your ipod?", n));
+	    *label = g_strdup (ngettext ("Are you sure you want to delete the following track completely from your ipod? The number of playlists this track is a member of is indicated in parentheses.", "Are you sure you want to delete the following tracks completely from your ipod? The number of playlists the tracks are member of is indicated in parentheses.", n));
 	if (title)
 	    *title = ngettext ("Delete Track Completely?",
 			       "Delete Tracks Completey?", n);
@@ -1239,7 +1315,7 @@ void delete_populate_settings (Playlist *pl, GList *selected_trackids,
     else /* normal playlist */
     {
 	if (label)
-	    *label = g_strdup_printf(ngettext ("Are you sure you want to delete the following track\nfrom the playlist \"%s\"?", "Are you sure you want to delete the following tracks\nfrom the playlist \"%s\"?", n), pl->name);
+	    *label = g_strdup_printf(ngettext ("Are you sure you want to delete the following track from the playlist \"%s\"?", "Are you sure you want to delete the following tracks from the playlist \"%s\"?", n), pl->name);
 	if (title)
 	    *title = ngettext ("Delete Track From Playlist?",
 			       "Delete Tracks From Playlist?", n);
@@ -1257,7 +1333,9 @@ void delete_populate_settings (Playlist *pl, GList *selected_trackids,
 	{
 	    s = get_track_by_id ((guint32)l->data);
 	    if (s)
-		g_string_append_printf (*str, "%s-%s\n", s->artist, s->title);
+		g_string_append_printf (*str, "%s-%s (%d)\n",
+					s->artist, s->title,
+					track_is_in_playlists (s));
 	}
     }
 }
@@ -1315,16 +1393,19 @@ static void delete_track_cancel (gpointer user_data1, gpointer user_data2)
 }
 
 
-/* call with @pl = NULL for currently selected playlist */
-void delete_track_head (Playlist *pl)
+/* Deletes selected tracks from current playlist.
+   @full_delete: if TRUE, tracks are removed from the iPod completely */
+void delete_track_head (gboolean full_delete)
 {
+    Playlist *pl;
     GList *selected_trackids;
     GString *str;
     gchar *label, *title;
     gboolean confirm_again;
     ConfHandlerOpt confirm_again_handler;
 
-    if (pl == NULL)  pl = pm_get_selected_playlist();
+    if (full_delete) pl = get_playlist_by_nr (0);
+    else             pl = pm_get_selected_playlist();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
 	gtkpod_statusbar_message (_("No playlist selected."));
@@ -1414,9 +1495,13 @@ static void delete_entry_cancel (gpointer user_data1, gpointer user_data2)
 }
 
 
-/* if @pl == NULL, the currently selected playlist will be selected */
-void delete_entry_head (gint inst, Playlist *pl)
+/* deletes the currently selected entry from the current playlist 
+   @inst: selected entry of which instance?
+   @delete_full: if true, member songs are removed from the iPod
+   completely */
+void delete_entry_head (gint inst, gboolean delete_full)
 {
+    Playlist *pl;
     GList *selected_trackids=NULL;
     GString *str;
     gchar *label, *title;
@@ -1426,7 +1511,8 @@ void delete_entry_head (gint inst, Playlist *pl)
     GList *gl;
 
     if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
-    if (pl == NULL)    pl = pm_get_selected_playlist();
+    if (delete_full)  pl = get_playlist_by_nr (0);
+    else              pl = pm_get_selected_playlist();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
 	gtkpod_statusbar_message (_("No playlist selected."));
@@ -1481,7 +1567,7 @@ void delete_entry_head (gint inst, Playlist *pl)
 	 CONF_NO_BUTTON,       /* don't show "Apply" button */
 	 delete_entry_cancel,  /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
-	 selected_trackids);      /* gpointer user_data2,*/
+	 selected_trackids);   /* gpointer user_data2,*/
 
     g_free (label);
     g_string_free (str, TRUE);

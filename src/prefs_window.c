@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 15:02:12 jcs>
+/* Time-stamp: <2003-11-27 22:30:01 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -321,11 +321,6 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->add_recursively);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_delete_playlist")))
-	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					    tmpcfg->deletion.playlist);
-	}
 	if((w = lookup_widget(prefs_window, "cfg_delete_track_from_playlist")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -502,7 +497,6 @@ prefs_window_set(void)
 	prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
 	prefs_set_track_playlist_deletion(tmpcfg->deletion.track);
 	prefs_set_track_ipod_file_deletion(tmpcfg->deletion.ipod_file);
-	prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
 	prefs_set_sync_remove_confirm(tmpcfg->deletion.syncing);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
 	prefs_set_keep_backups(tmpcfg->keep_backups);
@@ -761,12 +755,6 @@ void prefs_window_set_keep_backups(gboolean active)
 void prefs_window_set_write_extended_info(gboolean active)
 {
   tmpcfg->write_extended_info = active;
-}
-
-void 
-prefs_window_set_delete_playlist(gboolean val)
-{
-    tmpcfg->deletion.playlist = val;
 }
 
 void 

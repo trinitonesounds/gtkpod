@@ -1238,7 +1238,7 @@ create_confirm_window (void)
 
   label = gtk_label_new (_("label21"));
   gtk_widget_show (label);
-  gtk_box_pack_start (GTK_BOX (vbox6), label, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox6), label, FALSE, TRUE, 6);
   GTK_WIDGET_SET_FLAGS (label, GTK_CAN_FOCUS);
   gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
@@ -1469,7 +1469,6 @@ create_prefs_window (void)
   GtkWidget *label69;
   GtkWidget *frame11;
   GtkWidget *vbox24;
-  GtkWidget *cfg_delete_playlist;
   GtkWidget *cfg_delete_track_from_playlist;
   GtkWidget *cfg_delete_track_from_ipod;
   GtkWidget *cfg_sync_remove_confirm2;
@@ -2287,15 +2286,11 @@ create_prefs_window (void)
   gtk_container_add (GTK_CONTAINER (frame11), vbox24);
   gtk_container_set_border_width (GTK_CONTAINER (vbox24), 5);
 
-  cfg_delete_playlist = gtk_check_button_new_with_mnemonic (_("Before removing playlists"));
-  gtk_widget_show (cfg_delete_playlist);
-  gtk_box_pack_start (GTK_BOX (vbox24), cfg_delete_playlist, FALSE, FALSE, 0);
-
-  cfg_delete_track_from_playlist = gtk_check_button_new_with_mnemonic (_("Before removing tracks from playlist"));
+  cfg_delete_track_from_playlist = gtk_check_button_new_with_mnemonic (_("Before removing playlists or tracks from a playlist"));
   gtk_widget_show (cfg_delete_track_from_playlist);
   gtk_box_pack_start (GTK_BOX (vbox24), cfg_delete_track_from_playlist, FALSE, FALSE, 0);
 
-  cfg_delete_track_from_ipod = gtk_check_button_new_with_mnemonic (_("Before removing tracks completely from iPod"));
+  cfg_delete_track_from_ipod = gtk_check_button_new_with_mnemonic (_("Before removing tracks completely from the iPod"));
   gtk_widget_show (cfg_delete_track_from_ipod);
   gtk_box_pack_start (GTK_BOX (vbox24), cfg_delete_track_from_ipod, FALSE, FALSE, 0);
 
@@ -2531,9 +2526,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_write_gaintag, "toggled",
                     G_CALLBACK (on_cfg_write_gaintag_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_delete_playlist, "toggled",
-                    G_CALLBACK (on_cfg_delete_playlist_toggled),
-                    NULL);
   g_signal_connect ((gpointer) cfg_delete_track_from_playlist, "toggled",
                     G_CALLBACK (on_cfg_delete_track_from_playlist_toggled),
                     NULL);
@@ -2720,7 +2712,6 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label69, "label69");
   GLADE_HOOKUP_OBJECT (prefs_window, frame11, "frame11");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox24, "vbox24");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_playlist, "cfg_delete_playlist");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_track_from_playlist, "cfg_delete_track_from_playlist");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_track_from_ipod, "cfg_delete_track_from_ipod");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_sync_remove_confirm2, "cfg_sync_remove_confirm2");

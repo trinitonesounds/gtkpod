@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-26 23:07:32 jcs>
+/* Time-stamp: <2003-11-27 22:08:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -77,9 +77,9 @@ T_item ST_to_T (ST_CAT_item st);
 gchar *get_track_info (Track *track);
 
 void ipod_directories_head (void);
-void delete_playlist_head (void);
-void delete_track_head (Playlist *pl);
-void delete_entry_head (gint inst, Playlist *pl);
+void delete_playlist_head (gboolean delete_full);
+void delete_track_head (gboolean delete_full);
+void delete_entry_head (gint inst, gboolean delete_full);
 
 void delete_populate_settings (Playlist *pl, GList *selected_trackids,
 			       gchar **label, gchar **title,

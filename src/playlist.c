@@ -194,6 +194,22 @@ gboolean track_is_in_playlist (Playlist *plitem, Track *track)
     return TRUE;
 }
 
+/* returns in how many playlists (other than the MPL) @track is a
+   member of */
+guint32 track_is_in_playlists (Track *track)
+{
+    guint32 res = 0;
+
+    if (playlists)
+    {
+	GList *gl;
+	for (gl=playlists->next; gl; gl=gl->next)
+	{
+	    if (track_is_in_playlist ((Playlist *)gl->data, track)) ++res;
+	}	    
+    }
+    return res;
+}
 
 /* Returns the number of playlists
    (including the MPL, which is nr. 0) */

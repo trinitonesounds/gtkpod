@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-27 00:01:54 jcs>
+/* Time-stamp: <2003-11-27 23:12:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -489,9 +489,6 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
     {
 	switch(event->keyval)
 	{
-	    case GDK_d:
-		delete_playlist_head ();
-		break;
 	    case GDK_u:
 		do_selected_playlist (update_trackids);
 		break;
@@ -520,7 +517,7 @@ on_track_treeview_key_release_event     (GtkWidget       *widget,
 	switch(event->keyval)
 	{
 	    case GDK_d:
-		delete_track_head (NULL);
+		delete_track_head (FALSE);
 		break;
 	    case GDK_u:
 		do_selected_tracks (update_trackids);
@@ -530,15 +527,6 @@ on_track_treeview_key_release_event     (GtkWidget       *widget,
 	}
     }
     return FALSE;
-}
-
-
-void
-on_cfg_delete_playlist_toggled         (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_delete_playlist(
-	    gtk_toggle_button_get_active(togglebutton));
 }
 
 
@@ -677,7 +665,7 @@ void
 on_delete_tracks_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    delete_track_head (NULL);
+    delete_track_head (FALSE);
 }
 
 
@@ -685,7 +673,7 @@ void
 on_delete_playlist_activate                (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    delete_playlist_head ();
+    delete_playlist_head (FALSE);
 }
 
 void
@@ -695,14 +683,14 @@ on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Delete selected entry of which sort tab?"));
 
-    if (inst != -1)   delete_entry_head (inst, NULL);
+    if (inst != -1)   delete_entry_head (inst, FALSE);
 }
 
 void
 on_delete_full_tracks_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-     delete_track_head (get_playlist_by_nr (0));
+     delete_track_head (TRUE);
 }
 
 
@@ -710,8 +698,7 @@ void
 on_delete_full_playlist_activate                (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    delete_track_head (get_playlist_by_nr (0));
-    remove_playlist (pm_get_selected_playlist ());
+    delete_playlist_head (TRUE);
 }
 
 void
@@ -723,7 +710,7 @@ on_delete_full_tab_entry_activate           (GtkMenuItem     *menuitem,
 
     if (inst != -1)
     {
-	delete_entry_head (inst, get_playlist_by_nr (0));
+	delete_entry_head (inst, TRUE);
     }
 }
 
@@ -805,7 +792,7 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 	{
 	    case GDK_d:
 		delete_entry_head (st_get_instance_from_treeview (
-				       GTK_TREE_VIEW (widget)), NULL);
+				       GTK_TREE_VIEW (widget)), FALSE);
 		break;
 	    case GDK_u:
 		do_selected_entry (update_trackids,
