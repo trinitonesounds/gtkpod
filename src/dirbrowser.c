@@ -162,7 +162,7 @@ static void add_dir_selected (gchar *dir)
 {
     if (dir)
     {
-	add_directory_recursively (dir, NULL);
+	add_directory_recursively (dir, NULL, NULL, NULL);
 	prefs_set_last_dir_browse(dir);
 	gtkpod_songs_statusbar_update();
     }

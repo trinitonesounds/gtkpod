@@ -87,7 +87,11 @@ static GHashTable *extendedinfohash = NULL;
  * It will then add all songs listed in @plfile. If set in the prefs,
  * duplicates will be detected (and the song already present in the
  * database will be added to the playlist instead). */
-gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem)
+/* @addsongfunc: if != NULL this will be called instead of
+   "add_song_to_playlist () -- used for dropping songs at a specific
+   position in the song view */
+gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
+				   AddSongFunc addsongfunc, gpointer data)
 {
     enum {
 	PLT_M3U,   /* M3U playlist file */
@@ -161,13 +165,15 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem)
 	    /* assume comments start with ';' or '#' */
 	    if ((*bufp == ';') || (*bufp == '#')) break;
 	    /* assume the rest of the line is a filename */
-	    if (add_song_by_filename (bufp, plitem)) ++songs;
+	    if (add_song_by_filename (bufp, plitem, addsongfunc, data))
+		++songs;
 	    break;
 	case PLT_M3U:
 	    /* comments start with '#' */
 	    if (*bufp == '#') break;
 	    /* assume the rest of the line is a filename */
-	    if (add_song_by_filename (bufp, plitem)) ++songs;
+	    if (add_song_by_filename (bufp, plitem, addsongfunc, data))
+		++songs;
 	    break;
 	case PLT_PLS:
 	    /* I don't know anything about pls playlist files and just
@@ -182,7 +188,8 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem)
 	    { /* looks like a file entry */
 		bufp = strchr (bufp, '=');
 		if (bufp) ++bufp;
-		if (add_song_by_filename (bufp, plitem)) ++songs;
+		if (add_song_by_filename (bufp, plitem, addsongfunc, data))
+		    ++songs;
 	    }
 	    break;
 	}
@@ -211,7 +218,11 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem)
 /* Not nice: the return value has not much meaning. TRUE: all files
  * were added successfully. FALSE: some files could not be
    added (e.g: duplicates)  */
-gboolean add_directory_recursively (gchar *name, Playlist *plitem)
+/* @addsongfunc: if != NULL this will be called instead of
+   "add_song_to_playlist () -- used for dropping songs at a specific
+   position in the song view */
+gboolean add_directory_recursively (gchar *name, Playlist *plitem,
+				    AddSongFunc addsongfunc, gpointer data)
 {
   GDir *dir;
   G_CONST_RETURN gchar *next;
@@ -220,7 +231,7 @@ gboolean add_directory_recursively (gchar *name, Playlist *plitem)
 
   if (name == NULL) return TRUE;
   if (g_file_test (name, G_FILE_TEST_IS_REGULAR))
-      return (add_song_by_filename (name, plitem));
+      return (add_song_by_filename (name, plitem, addsongfunc, data));
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
       block_widgets ();
@@ -231,7 +242,8 @@ gboolean add_directory_recursively (gchar *name, Playlist *plitem)
 	      if (next != NULL)
 	      {
 		  nextfull = concat_dir (name, next);
-		  result &= add_directory_recursively (nextfull, plitem);
+		  result &= add_directory_recursively (nextfull, plitem,
+						       addsongfunc, data);
 		  g_free (nextfull);
 	      }
 	  } while (next != NULL);
@@ -322,7 +334,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
     /* check if filename ends on ".mp3" */
     len = strlen (name);
     if (len < 4) return NULL;
-    if (strcmp (&name[len-4], ".mp3") != 0) return NULL;
+    if (strcasecmp (&name[len-4], ".mp3") != 0) return NULL;
 
     filetag = g_malloc0 (sizeof (File_Tag));
     if (Id3tag_Read_File_Tag (name, filetag) == TRUE)
@@ -414,7 +426,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
        have to worry about it when we are handling the strings */
     /* exception: md5_hash and hostname: these may be NULL. */
     validate_entries (song);
-    if (song && song->songlen == 0)
+    if (song && (song->songlen == 0))
     {
 	/* Songs with zero play length are ignored by iPod... */
 	gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
@@ -722,7 +734,11 @@ void update_song_from_file (Song *song)
    @name is in the current locale
    If @plitem != NULL, add song to plitem as well (unless it's the MPL) */
 /* Not nice: currently only accepts files ending on .mp3 */
-gboolean add_song_by_filename (gchar *name, Playlist *plitem)
+/* @addsongfunc: if != NULL this will be called instead of
+   "add_song_to_playlist () -- used for dropping songs at a specific
+   position in the song view */
+gboolean add_song_by_filename (gchar *name, Playlist *plitem,
+			       AddSongFunc addsongfunc, gpointer data)
 {
   static gint count = 0; /* do a gtkpod_songs_statusbar_update() every
 			    10 songs */
@@ -734,17 +750,17 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
 
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
-      return add_directory_recursively (name, NULL);
+      return add_directory_recursively (name, NULL, addsongfunc, data);
   }
 
   /* check if file is a playlist */
   len = strlen (name);
   if (len >= 4)
   {
-      if ((strcmp (&name[len-4], ".pls") == 0) ||
-	  (strcmp (&name[len-4], ".m3u") == 0))
+      if ((strcasecmp (&name[len-4], ".pls") == 0) ||
+	  (strcasecmp (&name[len-4], ".m3u") == 0))
       {
-	  return add_playlist_by_filename (name, plitem);
+	  return add_playlist_by_filename (name, plitem, addsongfunc, data);
       }
   }
 
@@ -759,7 +775,12 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       {
 	  update_song_from_file (oldsong);
 	  if (plitem && (plitem->type != PL_TYPE_MPL))
-	      add_song_to_playlist (plitem, oldsong, TRUE, -1);
+	  {
+	      if (addsongfunc)
+		  addsongfunc (plitem, oldsong, data);
+	      else
+		  add_song_to_playlist (plitem, oldsong, TRUE);
+	  }
 	  free_song (song);
 	  song = NULL;
       }
@@ -779,12 +800,33 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       added_song = add_song (song);
       if(added_song)                   /* add song to memory */
       {
-	  /* add song to master playlist (if it hasn't been done before) */
-	  if (added_song == song) add_song_to_playlist (NULL, added_song,
-							TRUE, -1);
-	  /* add song to specified playlist, but not to MPL */
-	  if (plitem && (plitem->type != PL_TYPE_MPL))
-	      add_song_to_playlist (plitem, added_song, TRUE, -1);
+	  if (addsongfunc)
+	  {
+	      if (!plitem || (plitem->type == PL_TYPE_MPL))
+	      {   /* add song to master playlist (if it hasn't been
+		   * done before) */
+		  if (added_song == song) addsongfunc (plitem, added_song,
+						       data);
+	      }
+	      else
+	      {   /* (plitem != NULL) && (type == NORM) */
+		  /* add song to master playlist (if it hasn't been
+		   * done before) */
+		  if (added_song == song)
+		      add_song_to_playlist (NULL, added_song, TRUE);
+		  /* add song to specified playlist */
+		  addsongfunc (plitem, added_song, data);
+	      }
+	  }
+	  else  /* no addsongfunc */
+	  {
+	      /* add song to master playlist (if it hasn't been done before) */
+	      if (added_song == song) add_song_to_playlist (NULL, added_song,
+							    TRUE);
+	      /* add song to specified playlist, but not to MPL */
+	      if (plitem && (plitem->type != PL_TYPE_MPL))
+		  add_song_to_playlist (plitem, added_song, TRUE);
+	  }
 	  /* indicate that non-transferred files exist */
 	  data_changed ();
 	  ++count;

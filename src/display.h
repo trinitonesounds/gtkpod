@@ -75,6 +75,7 @@ typedef struct {
   guint current_category;            /* current page (category) selected) */
   GtkTreeModel *model;               /* pointer to model used */
   GtkNotebook *notebook;             /* pointer to notebook used */
+  GtkWidget *window[ST_CAT_NUM];     /* pointer to window holding treeview */
   GtkTreeView *treeview[ST_CAT_NUM]; /* pointer to treeviews used */
   GList *entries;                    /* list with entries */
   TabEntry *current_entry;           /* pointer to currently selected entry */
@@ -125,7 +126,8 @@ enum  {
 /* Drag and drop types */
 enum {
     DND_GTKPOD_IDLIST = 1000,
-    DND_GTKPOD_PATHLIST,
+    DND_GTKPOD_SM_PATHLIST,
+    DND_GTKPOD_PM_PATHLIST,
     DND_TEXT_PLAIN
 };
 
@@ -156,8 +158,13 @@ void on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 				GtkTreeIter *i, gpointer data);
 void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				GtkTreeIter *i, gpointer data);
+void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter);
 guint sm_get_nr_of_songs(void);
 void sm_rows_reordered_callback(void);
+gboolean sm_move_pathlist (gchar *data, GtkTreePath *path,
+			   GtkTreeViewDropPosition pos);
+gboolean sm_add_filelist (gchar *data, GtkTreePath *path,
+			  GtkTreeViewDropPosition pos);
 void sm_show_preferred_columns(void);
 
 Playlist* get_currently_selected_playlist(void);

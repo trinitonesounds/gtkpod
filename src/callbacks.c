@@ -230,12 +230,13 @@ on_playlist_treeview_drag_data_received
 		if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
 		    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
 		{ /* drop into existing playlist */
-		    add_text_plain_to_playlist (pl, data->data, 0);
+		    add_text_plain_to_playlist (pl, data->data, 0, NULL, NULL);
 		    gtk_drag_finish (drag_context, TRUE, FALSE, time);
 		}
 		else
 		{ /* drop between playlists */
-		    add_text_plain_to_playlist (NULL, data->data, position);
+		    add_text_plain_to_playlist (NULL, data->data, position,
+						NULL, NULL);
 		    gtk_drag_finish (drag_context, TRUE, FALSE, time);
 		}
 	    }
@@ -263,7 +264,7 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
     GtkTreeSelection *ts = NULL;
     GString *reply = g_string_sized_new (2000);
 
-    printf("info: %d\n", info);
+    /* printf("sm drag get info: %d\n", info);*/
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
     {
 	switch (info)
@@ -272,7 +273,7 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_sm_dnd_get_id_foreach, reply);
 	    break;
-	case DND_GTKPOD_PATHLIST:
+	case DND_GTKPOD_SM_PATHLIST:
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_sm_dnd_get_path_foreach, reply);
 	    break;
@@ -501,40 +502,32 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
                                         guint            time,
                                         gpointer         user_data)
 {
-    GtkTreeIter i;
-    GtkWidget *w = NULL;
     GtkTreePath *path = NULL;
     GtkTreeModel *model = NULL;
     GtkTreeViewDropPosition pos = 0;
+    gboolean result = FALSE;
+
+    /* printf ("sm drop received info: %d\n", info); */
 
     /* sometimes we get empty dnd data, ignore */
     if(widgets_blocked || (!data) || (data->length < 0)) return;
-
-    /* allow us to drop only onto ourselves =) */
-    w = gtk_drag_get_source_widget(drag_context);
-    if(w != widget) return;
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
 
-    /* drop AFTER instead of dropping ON */
-    if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
-	(pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
-	pos = GTK_TREE_VIEW_DROP_AFTER;
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
     if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
-					 x, y, &path, &pos) &&
-       gtk_tree_model_get_iter(model, &i, path))
+					 x, y, &path, &pos))
     {
 	switch (info)
 	{
-	case DND_GTKPOD_PATHLIST:
-	    printf ("pathlist not supported yet\n");
+	case DND_GTKPOD_SM_PATHLIST:
+	    result = sm_move_pathlist (data->data, path, pos);
 	    break;
 	case DND_GTKPOD_IDLIST:
 	    printf ("idlist not supported yet\n");
 	    break;
 	case DND_TEXT_PLAIN:
-	    printf ("text/plain not supported yet\n");
+	    result = sm_add_filelist (data->data, path, pos);
 	    break;
 	default:
 	    printf ("unknown drop not supported\n");

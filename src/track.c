@@ -34,7 +34,6 @@
 #include "misc.h"
 #include "support.h"
 #include "md5.h"
-//#include "display.h"
 #include "confirmation.h"
 #include "charset.h"
 #include "file.h"
@@ -439,7 +438,7 @@ void remove_duplicate (Song *oldsong, Song *song)
 	       if (remove_song_from_playlist (pl, song))
 	       {
 		   if (!song_is_in_playlist (pl, oldsong))
-		       add_song_to_playlist (pl, oldsong, TRUE, -1);
+		       add_song_to_playlist (pl, oldsong, TRUE);
 	       }
 	   }
 	   /* remove song from MPL, i.e. from the ipod */

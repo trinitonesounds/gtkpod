@@ -96,7 +96,7 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
   for (i=0; names[i] != NULL; ++i)
   {
-      add_song_by_filename (names[i], NULL);
+      add_song_by_filename (names[i], NULL, NULL, NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
   }
@@ -175,7 +175,7 @@ static void add_playlists_ok_button (GtkWidget *button, GtkFileSelection *select
   names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
   for (i=0; names[i] != NULL; ++i)
     {
-      add_playlist_by_filename (names[i], NULL);
+      add_playlist_by_filename (names[i], NULL, NULL, NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
     }
@@ -344,16 +344,18 @@ void add_idlist_to_playlist (Playlist *pl, gchar *str)
     if (!pl) return;
     while(parse_ipod_id_from_string(&str,&id))
     {
-	add_songid_to_playlist(pl, id, TRUE, -1);
+	add_songid_to_playlist(pl, id, TRUE);
     }
     data_changed();
 }
 
 /* DND: add a list of files to Playlist @pl.  @pl: playlist to add to
    or NULL. If NULL, a "New Playlist" will be created for adding
-   songs. When adding a playlist file, a playlist with the name of the
-   playlist file will be added */
-void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position)
+   songs and when adding a playlist file, a playlist with the name of the
+   playlist file will be added.
+   @songaddfunc: passed on to add_song_by_filename() etc. */
+void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
+				 AddSongFunc songaddfunc, gpointer data)
 {
     gchar **files = NULL, **filesp = NULL;
     gchar *file = NULL;
@@ -361,7 +363,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position)
 
     if (!str)  return;
 
-    /*   printf("pl: %x, position: %d\n%s\n", pl, position, str);*/
+    /*   printf("pl: %x, pl_pos: %d\n%s\n", pl, pl_pos, str);*/
 
     block_widgets ();
     files = g_strsplit (str, "\n", -1);
@@ -381,9 +383,9 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position)
 		{   /* directory */
 		    if (!pl)
 		    {  /* no playlist yet -- create new one */
-			pl = add_new_playlist (_("New Playlist"), position);
+			pl = add_new_playlist (_("New Playlist"), pl_pos);
 		    }
-		    add_directory_recursively (file, pl);
+		    add_directory_recursively (file, pl, songaddfunc, data);
 		    added = TRUE;
 		}
 		if (g_file_test (file, G_FILE_TEST_IS_REGULAR))
@@ -392,20 +394,21 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position)
 
 		    if (len >= 4)
 		    {
-			if (strcmp (&file[len-4], ".mp3") == 0)
+			if (strcasecmp (&file[len-4], ".mp3") == 0)
 			{   /* mp3 file */
 			    if (!pl)
 			    {  /* no playlist yet -- create new one */
 				pl = add_new_playlist (
-				    _("New Playlist"), position);
+				    _("New Playlist"), pl_pos);
 			    }
-			    add_song_by_filename (file, pl);
+			    add_song_by_filename (file, pl, songaddfunc, data);
 			    added = TRUE;
 			}
-			else if ((strcmp (&file[len-4], ".plu") == 0) ||
-				 (strcmp (&file[len-4], ".m3u") == 0))
+			else if ((strcasecmp (&file[len-4], ".plu") == 0) ||
+				 (strcasecmp (&file[len-4], ".m3u") == 0))
 			{
-			    add_playlist_by_filename (file, pl_playlist);
+			    add_playlist_by_filename (file, pl_playlist,
+						      songaddfunc, data);
 			    added = TRUE;
 			}
 		    }
@@ -413,7 +416,8 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position)
 	    }
 	    if (!added)
 	    {
-		gtkpod_warning (_("drag and drop: ignored '%s'"), *filesp);
+		if (strlen (*filesp) != 0)
+		    gtkpod_warning (_("drag and drop: ignored '%s'"), *filesp);
 	    }
 	    ++filesp;
 	}

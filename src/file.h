@@ -35,9 +35,14 @@
 #include "song.h"
 #include "playlist.h"
 
-gboolean add_song_by_filename (gchar *name, Playlist *plitem);
-gboolean add_directory_recursively (gchar *name, Playlist *plitem);
-gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem);
+typedef void (*AddSongFunc)(Playlist *plitem, Song *song, gpointer data);
+
+gboolean add_song_by_filename (gchar *name, Playlist *plitem,
+			       AddSongFunc addsongfunc, gpointer data);
+gboolean add_directory_recursively (gchar *name, Playlist *plitem,
+				    AddSongFunc addsongfunc, gpointer data);
+gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
+				   AddSongFunc addsongfunc, gpointer data);
 gboolean write_tags_to_file(Song *s, S_item tag_id);
 void update_song_from_file (Song *song);
 void update_selected_songs (void);

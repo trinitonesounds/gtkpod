@@ -32,6 +32,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include "file.h"
 #include "song.h"
 #include "playlist.h"
 #include "display.h"
@@ -58,7 +59,8 @@ void open_about_window (void);
 void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
 void add_idlist_to_playlist (Playlist *pl, gchar *str);
-void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position);
+void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position,
+				 AddSongFunc songaddfunc, gpointer data);
 void cleanup_backup_and_extended_files (void);
 gboolean gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);

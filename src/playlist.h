@@ -58,8 +58,8 @@ void create_playlist (Playlist *plitem);
 Playlist *it_add_playlist (Playlist *plitem);
 Playlist *add_playlist (Playlist *plitem, gint position);
 void it_add_songid_to_playlist (Playlist *plitem, guint32 id);
-void add_songid_to_playlist (Playlist *plitem, guint32 id, gboolean display, gint position);
-void add_song_to_playlist (Playlist *plitem, Song *song, gboolean display, gint position);
+void add_songid_to_playlist (Playlist *plitem, guint32 id, gboolean display);
+void add_song_to_playlist (Playlist *plitem, Song *song, gboolean display);
 gboolean remove_songid_from_playlist (Playlist *plitem, guint32 id);
 gboolean remove_song_from_playlist (Playlist *plitem, Song *song);
 gboolean song_is_in_playlist (Playlist *plitem, Song *song);
@@ -74,6 +74,5 @@ guint32 get_nr_of_songs_in_playlist (Playlist *plitem);
 Song *it_get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
 Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
 void reset_playlists_to_new_list(GList *new_l);
-void  playlist_renumber_songs (Playlist *pl);
 
 #endif __PLAYLIST_H__
