@@ -34,4 +34,5 @@
 #include <time.h>
 
 time_t dp_parse (gchar *str, gboolean lower_margin);
+void dp2_parse (gchar *str);
 #endif 
