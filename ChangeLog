@@ -1,4 +1,4 @@
-gtkpod V0.81-CVS
+gtkpod V0.82-CVS
 	BUGFIX: handling of orphaned tracks that had been added to the
 	ipod again are now handled correctly.
 
@@ -13,6 +13,10 @@ gtkpod V0.81-CVS
 	BUGFIX: gain tags written by mp3gain were never read
 	correctly. Normalization using mp3gain was therefore
 	impossible. Didn't anyone ever use that feature?!
+
+	NEW FEATURE: registering playcounts when tracks are played on
+	the local machine is now possible (actually it was already
+	possible in V0.80, but now the README explains how to do it).
 
 	IMPROVEMENT: Added "Time Created" support to special sorttab,
 	track display and iTunesDB. (Before only "modified" and

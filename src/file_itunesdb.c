@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 23:59:51 jcs>
+/* Time-stamp: <2004-07-25 17:15:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -60,10 +60,10 @@ struct track_extended_info
     gchar *ipod_path;
     gint32 oldsize;
     guint32 playcount;
-    guint32 rating;
+    guint32 rating;        /* still read but never written */
     guint32 peak_signal;
-    gint    radio_gain;
-    gint    audiophile_gain;
+    gdouble radio_gain;
+    gdouble audiophile_gain;
     gboolean peak_signal_set;
     gboolean radio_gain_set;
     gboolean audiophile_gain_set;
@@ -137,15 +137,21 @@ void fill_in_extended_info (Track *track)
 	  track->peak_signal_set = sei->peak_signal_set;
 	  track->peak_signal = sei->peak_signal;
       }
-      if (sei->radio_gain_set)
+      if (extendedinfoversion > 0.81)
       {
-	  track->radio_gain_set = sei->radio_gain_set;
-	  track->radio_gain = sei->radio_gain;
-      }
-      if (sei->audiophile_gain_set)
-      {
-	  track->audiophile_gain_set = sei->audiophile_gain_set;
-	  track->audiophile_gain = sei->audiophile_gain;
+	  /* before 0.82 we used gint instead of double, so re-reading
+	     the tags is safer (0.81 was CVS only and was a bit messed
+	     up for a while) */
+	  if (sei->radio_gain_set)
+	  {
+	      track->radio_gain_set = sei->radio_gain_set;
+	      track->radio_gain = sei->radio_gain;
+	  }
+	  if (sei->audiophile_gain_set)
+	  {
+	      track->audiophile_gain_set = sei->audiophile_gain_set;
+	      track->audiophile_gain = sei->audiophile_gain;
+	  }
       }
       /* FIXME: This means that the rating can never be reset to 0
        * by the iPod */
@@ -354,12 +360,12 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    else if (g_ascii_strcasecmp (line, "radio_gain") == 0)
 	    {
 		sei->radio_gain_set = TRUE;
-		sei->radio_gain = atoi (arg);
+		sei->radio_gain = g_ascii_strtod (arg, NULL);
 	    }
 	    else if (g_ascii_strcasecmp (line, "audiophile_gain") == 0)
 	    {
 		sei->audiophile_gain_set = TRUE;
-		sei->audiophile_gain = atoi (arg);
+		sei->audiophile_gain = g_ascii_strtod (arg, NULL);
 	    }
     }
     g_free (md5);
@@ -471,7 +477,8 @@ void handle_import (void)
 }
 
 
-/* Like get_track_name_on_disk(), but verifies the track actually exists
+/* Like get_track_name_on_disk(), but verifies the track actually
+   exists.
    Must g_free return value after use */
 gchar *get_track_name_on_disk_verified (Track *track)
 {
@@ -479,13 +486,16 @@ gchar *get_track_name_on_disk_verified (Track *track)
 
     if (track)
     {
-	name = get_track_name_on_ipod (track);
-	if (name)
+	if (!prefs_get_offline ())
 	{
-	    if (!g_file_test (name, G_FILE_TEST_EXISTS))
+	    name = get_track_name_on_ipod (track);
+	    if (name)
 	    {
-		g_free (name);
-		name = NULL;
+		if (!g_file_test (name, G_FILE_TEST_EXISTS))
+		{
+		    g_free (name);
+		    name = NULL;
+		}
 	    }
 	}
 	if(!name && track->pc_path_locale && (*track->pc_path_locale))
@@ -594,11 +604,23 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
       if (!track->transferred && track->oldsize)
 	  fprintf (fp, "oldsize=%d\n", track->oldsize);
       if (track->peak_signal_set)
-	  fprintf (fp, "peak_signal=%u\n", track->peak_signal);
+      {
+	  gchar buf[20];
+	  g_ascii_dtostr (buf, 20, (gdouble)track->peak_signal);
+	  fprintf (fp, "peak_signal=%s\n", buf);
+      }
       if (track->radio_gain_set)
-	  fprintf (fp, "radio_gain=%f.2\n", track->radio_gain);
+      {
+	  gchar buf[20];
+	  g_ascii_dtostr (buf, 20, track->radio_gain);
+	  fprintf (fp, "radio_gain=%s\n", buf);
+      }
       if (track->audiophile_gain_set)
-	  fprintf (fp, "audiophile_gain=%f.2\n", track->audiophile_gain);
+      {
+	  gchar buf[20];
+	  g_ascii_dtostr (buf, 20, track->audiophile_gain);
+	  fprintf (fp, "audiophile_gain=%s\n", buf);
+      }
       fprintf (fp, "transferred=%d\n", track->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
@@ -702,7 +724,7 @@ static gboolean flush_tracks (void)
   gboolean result = TRUE;
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
-  time_t diff, start, mins, secs;
+  time_t diff, start, fullsecs, hrs, mins, secs;
   gchar *progtext = NULL;
 
 #ifdef G_THREADS_ENABLED
@@ -879,12 +901,15 @@ static gboolean flush_tracks (void)
 					    (gdouble) count/n);
 
 	      diff = time(NULL) - start;
-	      mins = ((diff*n/count)-diff+5)/60;
-	      secs = ((((diff*n/count)-diff+5) % 60) / 5) * 5;
+	      fullsecs = (diff*n/count)-diff+5;
+	      hrs  = fullsecs / 3600;
+	      mins = (fullsecs % 3600) / 60;
+	      secs = ((fullsecs % 60) / 5) * 5;
 	      /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
-	      progtext = g_strdup_printf (_("%d%% (%d:%02d left)"),
-					  count*100/n, (int)mins, (int)secs);
+	      progtext = g_strdup_printf (
+		  _("%d%% (%d:%02d:%02d left)"),
+		  count*100/n, (int)hrs, (int)mins, (int)secs);
               gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
 					progtext);
 	      g_free (progtext);

@@ -790,6 +790,9 @@ pm_get_selected_playlist(void)
 				PM_COLUMN_PLAYLIST, &result, -1);
 	}
     }
+    /* playlist was just changed -- wait until current_playlist is
+       updated. */
+    if (result != current_playlist)  result=NULL;
     return result;
 }
 

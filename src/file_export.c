@@ -560,7 +560,7 @@ file_export_do(void)
 	gdouble copied = 0;  /* number of bytes copied */
 	gdouble fraction;    /* fraction copied (copied/total) */
 	gboolean result = TRUE;
-	time_t diff, start, mins, secs;
+	time_t diff, start, fullsecs, hrs, mins, secs;
 
 	dialog = gtk_dialog_new_with_buttons (_("Information"),
 					      GTK_WINDOW (gtkpod_window),
@@ -656,12 +656,15 @@ file_export_do(void)
 	    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
 					  fraction);
 	    diff = time(NULL) - start;
-	    mins = ((diff/fraction)-diff+5)/60;
-	    secs = ((((time_t)(diff/fraction)-diff+5) % 60) / 5) * 5;
+	    fullsecs = (diff/fraction)-diff+5;
+	    hrs  = fullsecs / 3600;
+	    mins = (fullsecs % 3600) / 60;
+	    secs = ((fullsecs % 60) / 5) * 5;
 	    /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
-	    progtext = g_strdup_printf (_("%.0f%% (%d:%02d) left"),
-					100*fraction, (int)mins, (int)secs);
+	    progtext = g_strdup_printf (
+		_("%d%% (%d:%02d:%02d left)"),
+		(int)(100*fraction), (int)hrs, (int)mins, (int)secs);
 	    gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
 				      progtext);
 	    g_free (progtext);

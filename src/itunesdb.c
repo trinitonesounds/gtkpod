@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 13:50:09 jcs>
+/* Time-stamp: <2004-07-25 14:56:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -77,7 +77,7 @@
      gint32  year;              /+ year                  +/
      gint32  bitrate;           /+ bitrate               +/
      gint32  volume;            /+ volume adjustment     +/
-     gint32  soundcheck;        /+ volume adjustment "soundcheck"   +/
+     guint32 soundcheck;        /+ volume adjustment "soundcheck"   +/
      guint32 time_created;      /+ time when added (Mac type)       +/
      guint32 time_played;       /+ time of last play (Mac type)     +/
      guint32 time_modified;     /+ time of last modific. (Mac type) +/

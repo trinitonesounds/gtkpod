@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 00:38:07 jcs>
+/* Time-stamp: <2004-07-25 17:12:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -642,6 +642,8 @@ TabEntry *st_get_selected_entry (gint inst)
 				ST_COLUMN_ENTRY, &result, -1);
 	}
     }
+    /* wait until current_entry was updated */
+    if (result != sorttab[inst]->current_entry) result=NULL;
     return result;
 }
 

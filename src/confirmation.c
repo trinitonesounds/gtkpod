@@ -452,22 +452,30 @@ GtkResponseType gtkpod_confirmation (gint id,
 	gtk_widget_hide (w);
     }
 
-    /* Hide OK button */
-    if ((w = lookup_widget (window, "ok")))
+    /* Hide and set "default" button that can be activated by pressing
+       ENTER in the window (usually OK)*/
+    /* Hide or default CANCEL button */
+    if ((w = lookup_widget (window, "cancel")))
     {
-	if (!ok_handler)      gtk_widget_hide (w);
+	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default (w);
+	if (!cancel_handler)  gtk_widget_hide (w);
     }
 
-    /* Hide Apply button */
+    /* Hide or default APPLY button */
     if ((w = lookup_widget (window, "apply")))
     {
+	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default (w);
 	if (!apply_handler)   gtk_widget_hide (w);
     }
 
-    /* Hide Cancel button */
-    if ((w = lookup_widget (window, "cancel")))
+    /* Hide or default OK button */
+    if ((w = lookup_widget (window, "ok")))
     {
-	if (!cancel_handler)  gtk_widget_hide (w);
+	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default (w);
+	if (!ok_handler)     gtk_widget_hide (w);
     }
 
     /* Connect Close window */

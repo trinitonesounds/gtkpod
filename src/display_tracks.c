@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-20 00:39:15 jcs>
+/* Time-stamp: <2004-07-25 22:13:21 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -128,8 +128,8 @@ const gchar *tm_col_tooltips[] = {
     N_("CD Nr. and total number of CDS in set"),
     N_("Time track has been created (timestamp of file)"),
     N_("Name of file on the iPod"),                    /* 20 */
-    N_("Volume adjust -- you need to activate "
-       "'soundcheck' on the iPod"),
+    N_("Volume adjust in dB (replay gain) -- "
+       "you need to activate 'soundcheck' on the iPod"),
     NULL,
     N_("Supposedly something that tells the iPod to "
        "increase or decrease the playback speed"),
@@ -501,7 +501,8 @@ tm_cell_edited (GtkCellRendererText *renderer,
         }
         break;
      case TM_COLUMN_SOUNDCHECK:
-        nr = atoi (new_text);
+	nr = replaygain_to_soundcheck (atof (new_text));
+/* 	printf("%d : %f\n", nr, atof (new_text)); */
         if (nr != track->soundcheck)
         {
 	    track->soundcheck = nr;
@@ -707,7 +708,11 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_SOUNDCHECK:
-      snprintf (text, 20, "%d", track->soundcheck);
+/*       printf ("%p:%f : %d\n", track, */
+/* 	      soundcheck_to_replaygain (track->soundcheck), */
+/* 	      track->soundcheck); */
+      snprintf (text, 20, "%0.2f",
+		soundcheck_to_replaygain (track->soundcheck));
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
@@ -978,25 +983,14 @@ void tm_stop_editing (gboolean cancel)
 }
 
 
-/* Function used to compare two cells during sorting (track view) */
-gint tm_data_compare_func (GtkTreeModel *model,
-			GtkTreeIter *b,
-			GtkTreeIter *a,
-			gpointer user_data)
+
+/* Function to compare @tm_item of @track1 and @track2. Used by
+   tm_data_compare_func() */
+static gint tm_data_compare (Track *track1, Track *track2,
+			     TM_item tm_item)
 {
-  Track *track1;
-  Track *track2;
-  gint column;
-  TM_item tm_item;
-  GtkSortType order;
   gint cmp;
 
-  gtk_tree_model_get (model, a, READOUT_COL, &track1, -1);
-  gtk_tree_model_get (model, b, READOUT_COL, &track2, -1);
-  if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
-					   &column, &order) == FALSE) return 0;
-  tm_item = (TM_item) column;
-  /*printf ("tm_comp: %d\n", tm_item);*/
   switch (tm_item)
   {
   case TM_COLUMN_TITLE:
@@ -1046,25 +1040,40 @@ gint tm_data_compare_func (GtkTreeModel *model,
   case  TM_COLUMN_VOLUME:
       return track1->volume - track2->volume;
   case  TM_COLUMN_SOUNDCHECK:
-      return track1->soundcheck - track2->soundcheck;
+      /* If soundcheck is unset (0) use 0 dB (1000) */
+      return (track1->soundcheck? track1->soundcheck:1000) - 
+	  (track2->soundcheck? track2->soundcheck:1000);
   case TM_COLUMN_YEAR:
       return track1->year - track2->year;
   default:
-      g_warning ("Programming error: tm_data_compare_func: no sort method for column %d\n", column);
+      g_warning ("Programming error: tm_data_compare_func: no sort method for tm_item %d\n", tm_item);
       break;
   }
   return 0;
 }
 
 
-gint default_comp  (GtkTreeModel *model,
-		    GtkTreeIter *a,
-		    GtkTreeIter *b,
-		    gpointer user_data)
+/* Function used to compare two cells during sorting (track view) */
+gint tm_data_compare_func (GtkTreeModel *model,
+			GtkTreeIter *b,
+			GtkTreeIter *a,
+			gpointer user_data)
 {
-    return 0;
-}
+  Track *track1;
+  Track *track2;
+  gint column;
+  GtkSortType order;
+  gint result;
 
+  gtk_tree_model_get (model, a, READOUT_COL, &track1, -1);
+  gtk_tree_model_get (model, b, READOUT_COL, &track2, -1);
+  if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
+					   &column, &order) == FALSE)
+      return 0;
+
+  result = tm_data_compare (track1, track2, column);
+  return result;
+}
 
 
 /* set/read the counter used to remember how often the sort column has

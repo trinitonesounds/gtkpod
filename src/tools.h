@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 22:25:45 jcs>
+/* Time-stamp: <2004-07-25 13:09:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,6 +35,11 @@
 
 #include <gtk/gtk.h>
 #include "track.h"
+
+/* appears to be missing prior to glib 2.4 */
+#ifndef G_MININT32
+#define G_MININT32	((gint32)  0x80000000)
+#endif
 
 #define TRACKVOLERROR G_MININT32
 

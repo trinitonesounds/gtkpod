@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 00:32:03 jcs>
+/* Time-stamp: <2004-07-25 14:56:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -136,5 +136,6 @@ void do_selected_tracks (void (*do_func)(GList *trackids));
 void do_selected_entry (void (*do_func)(GList *trackids), gint inst);
 void do_selected_playlist (void (*do_func)(GList *trackids));
 
-gint32 replaygain_to_soundcheck (gdouble gain);
+guint32 replaygain_to_soundcheck (gdouble gain);
+gdouble soundcheck_to_replaygain (guint32 soundcheck);
 #endif

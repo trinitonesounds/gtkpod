@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 23:49:32 jcs>
+/* Time-stamp: <2004-07-25 16:11:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -470,14 +470,18 @@ get_drive_stats_from_df(const gchar *mp)
 /* update space_ipod_free and space_ipod_used */
 static void th_space_update (void)
 {
-    gchar *mp, *line;
+    gchar *mp=NULL, *line=NULL;
     gchar **tokens = NULL;
 
-    g_mutex_lock (space_mutex);
-    mp = g_strdup (space_mp);
-    g_mutex_unlock (space_mutex);
+    /* don't read info when in offline mode */
+    if (!prefs_get_offline ())
+    {
+	g_mutex_lock (space_mutex);
+	mp = g_strdup (space_mp);
+	g_mutex_unlock (space_mutex);
 
-    line = get_drive_stats_from_df(mp);
+	line = get_drive_stats_from_df (mp);
+    }
 
     g_mutex_lock (space_mutex);
 
@@ -490,6 +494,7 @@ static void th_space_update (void)
     }
     else
     {
+	/* this is set even if offline mode */
 	space_ipod_free = 0;
 	space_ipod_used = 0;
 	space_uptodate = FALSE;  /* this way we will detect when the

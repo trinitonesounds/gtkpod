@@ -34,6 +34,7 @@ for details.
      - Extracting tag information from the filename
      - Checking iPod's files
      - Restoring your iPod after file system error
+     - Playcounts & Rating
      - About filenames
   - Icons for window managers
   - Connecting iPod to a Linux box:
@@ -240,8 +241,12 @@ choose "Update Track Info From File" from the Edit menu. Since gtkpod
 needs to know the filename of the track, the "Extended Information
 File" (see above) is needed.
 
+"Update" will also re-read the replay-gain tags from disk, if
+available, and set the soundcheck field. If no replay-gain tag is
+available, the soundcheck field will be erased.
+
 You can also select entries in the sort tab or entire playlists for
-refresh. 
+refresh.
 
 
 Synchronize Directories
@@ -270,33 +275,42 @@ avoids unnecessary copying of unchanged tracks.
 Volume Normalization
 --------------------
 
-The iPod allows to individually increase or decrease the volume on a
-track-to-track basis using a "volume tag".
+There are two fields in the iTunesDB that allow to adjust the volume
+of an individual track: the volume field (a signed integer) and the
+soundcheck field (in dB). The volume is always active, whereas the
+soundcheck field is only active when you select 'soundcheck' on the
+iPod. Further, the soundcheck field only affects the earphone output
+but not the line output of the iPod.
 
-gtkpod uses 'mp3gain' (mp3gain.sourceforge.net) to do the volume
-normalization. You need to install mp3gain in the default path or set
-the full path in the 'Tools' section of the preferences dialog.
+gtkpod will set the soundcheck according to the replay-gain tag set in
+your mp3 file. Newer versions of 'lame' automatically include the
+replay-gain tag when encoding. In that case the soundcheck field will
+be filled in when you first import a track.
 
-For each song passed to mp3gain the volume adjustment needed to
-achieve the "normal" volume level is determined and stored on the iPod
-the next time the iTunesDB is written. Since this calculation takes
-quite a long time, an option to write the gain information into the
-mp3 file itself is also available.
+If no replay-gain tag is set, you can use the function 'Normalize
+Volume' to call mp3gain (mp3gain.sourceforge.net) to calculate the
+gain and write a replay-gain tag. Since this procedure is very time
+consuming, it is not done automatically during import. You need to
+install mp3gain in the default path or set the full path in the
+'Tools' section of the preferences dialog. If the iPod is connected,
+the tag is written to the file stored on the iPod. If the iPod is not
+connected (i.e. in 'offline mode') the original file on the PC is used
+if the filename is available (requires the extended information file
+iTunesDB.ext).
 
-At this time the "album gain" functionality of mp3gain is not
-supported. "Album gain" means that the volume of all tracks of one
-album is adjusted by the same gain, such that the relative volume
-level remains the same. It is planned to realize this in the next
-version.
-
-Please note that the conversion between mp3gain's gain level and the
-iPod's volume level is not well established yet. If you think the
-results are strange, please play around with nm_gain_to_volume() in
-normalize.c and tell me if you can improve it.
+At this time "album gain" functionality is not supported. "Album gain"
+means that the volume of all tracks of one album is adjusted by the
+same gain, such that the relative volume level remains the same. It is
+planned to realize this in on of the next versions.
 
 Also, please be aware that tracks are not normalized on a 'per
 playlist' fashion. If a track is normalized, it's normalized in all
 playlists it is a member of.
+
+Once the replay-gain tag has been read, it is stored in the extended
+information file 'iTunesDB.ext'. When you call 'Normalize volume'
+again, the stored value will be used to re-populate the soundcheck
+field. Use 'Update Track' to re-read the tag from the file.
 
 
 Offline Mode
@@ -328,7 +342,7 @@ date.
 
 
 Export of Tracks
----------------
+----------------
 
 - mark the tracks you want to export and select "Export Files to Disk"
   from the menu
@@ -451,6 +465,47 @@ didn't move or remove any of the original tracks on your harddrive, and
 the charset information was stored correctly.
 
 
+Playcounts & Rating
+-------------------
+
+Whenever you play a track completely on the iPod (firmware version 1.3
+or higher) a counter in a the "Play Counts" file will be increased by
+one. The same file also contains the rating you can set with the 3rd
+generation iPods.
+
+This file appears to be deleted whenever the iPod resets itself --
+e.g. because you disconnect it from the computer. Therefore, be
+careful... Charging the iPod seems to do no harm.
+
+When gtkpod is started, it will also read this file and incorporate
+the information into the iTunesDB that can be written back to the
+iPod.
+
+There has been several requests to also register playcounts when
+playing a track on the local machine. This is possible by calling
+gtkpod as "gtkpod -p <filename>".
+
+If gtkpod is already running, the playcount of that track there will
+be increased by one. If gtkpod is not already running, the playcount
+will be registered in ~/.gtkpod/offline_playcount. This file will be
+read the next time you import the iTunesDB from your iPod, and the
+playcounts will be updated accordingly.
+
+Please note that if you start several instances of gtkpod, only the
+first instance will register playcounts through "gtkpod -p".
+
+Now all you have to do is tell your favorite player to call gtkpod
+with the filename of the played track.
+
+For xmms this is possible as of July 18th, 2004 (CVS
+version). Versions before that (including 1.2.10) only allow you to
+have an external program called at the beginning of a track. Our patch
+allows to have an external program called also at the end of a track.
+
+In each case you will need to activate the "General Plugin" called
+"song_change" and configure it to call 'gtkpod -p "%f"'.
+
+
 About filenames (excerpt from the GTK2 release notes):
 ------------------------------------------------------
 * The assumption of GLib and GTK+ by default is that filenames on the
@@ -496,6 +551,9 @@ provided in $(datadir)/pixmaps (usually
 
 Currently the following files are available:
 
+  gtkpod-icon-32.png
+  gtkpod-icon-32x32.png
+  gtkpod-icon-32x32-2.png
   gtkpod-icon-48.png
   gtkpod-icon-48x48.png
   gtkpod-icon-64x64.png

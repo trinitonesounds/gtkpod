@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 23:58:17 jcs>
+/* Time-stamp: <2004-07-25 14:25:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -129,7 +129,7 @@ void nm_tracks_list(GList *list)
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *track_label;
   GtkWidget *image, *hbox;
-  time_t diff, start, mins, secs;
+  time_t diff, start, fullsecs, hrs, mins, secs;
   gchar *buf, *progtext = NULL;
 
 #ifdef G_THREADS_ENABLED
@@ -294,12 +294,15 @@ void nm_tracks_list(GList *list)
 				   (gdouble) count/n);
 
      diff = time(NULL) - start;
-     mins = ((diff*n/count)-diff)/60;
-     secs = ((((diff*n/count)-diff) % 60) / 5) * 5;
+     fullsecs = (diff*n/count)-diff;
+     hrs  = fullsecs / 3600;
+     mins = (fullsecs % 3600) / 60;
+     secs = ((fullsecs % 60) / 5) * 5;
      /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
-     progtext = g_strdup_printf (_("%d%% (%d:%02d left)"),
-				 count*100/n, (int)mins, (int)secs);
+     progtext = g_strdup_printf (
+	 _("%d%% (%d:%02d:%02d left)"),
+	 count*100/n, (int)hrs, (int)mins, (int)secs);
      gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
 			       progtext);
      g_free (progtext);

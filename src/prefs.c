@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 23:49:32 jcs>
+/* Time-stamp: <2004-07-25 16:11:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1179,6 +1179,7 @@ get_dirname_of_filename(const gchar *file)
 
 void prefs_set_offline(gboolean active)
 {
+  if (cfg->offline != active)   space_data_update ();
   cfg->offline = active;
   info_update_totals_view_space ();
 }

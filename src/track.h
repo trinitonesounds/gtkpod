@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 00:21:40 jcs>
+/* Time-stamp: <2004-07-25 14:56:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -69,7 +69,7 @@ typedef struct
   gint32  year;              /* year                   */
   gchar   *year_str;         /* year as string -- always identical to year */
   gint32  volume;            /* volume adjustment              */
-  gint32  soundcheck;        /* volume adjustment "soundcheck" */
+  guint32 soundcheck;        /* volume adjustment "soundcheck" */
   guint32 peak_signal;	     /* LAME Peak Signal * 0x800000    */
   gdouble radio_gain;	     /* RadioGain in dB
 				(as defined by www.replaygain.org) */

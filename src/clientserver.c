@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 00:13:50 JST jcs>
+/* Time-stamp: <2004-07-26 00:46:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -203,7 +203,7 @@ void server_setup (void)
 	if (bind(ssock, (struct sockaddr *)saddr,
 		 sizeof(struct sockaddr_un)) != -1)
 	{
-    listen(ssock, 5);
+	    listen(ssock, 5);
 	    /* socket must be non-blocking -- otherwise
 	       received_message() will block */
 	    fcntl (ssock, F_SETFL, O_NONBLOCK);

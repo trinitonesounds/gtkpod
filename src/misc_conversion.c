@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 00:32:02 jcs>
+/* Time-stamp: <2004-07-25 19:36:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -476,22 +476,23 @@ filename_from_uri (const char *uri,
 }
 
 
+/* exp10() and log10() are gnu extensions */
+#ifndef exp10
+#define exp10(x) (exp((x)*log(10)))
+#endif
 
+#ifndef log10
+#define log10(x) (log(x)/log(10))
+#endif
 
-gint32 replaygain_to_soundcheck(gdouble replaygain)
+guint32 replaygain_to_soundcheck(gdouble replaygain)
 {
-    gdouble tv;
-    gint32 soundcheck = 0;
-
-/*    tv = ((double) replaygain) / (5.0 * log10(2.0));*/
     /* according to Samuel Wood -- thanks! */
-    /* exp10() is a gnu extension, therefore I substituted exp10(x)
-       with exp(x*log(10)) */
-    tv = 1000 * exp (-(double)replaygain * log(10) * 0.1);
+    return floor (1000. * exp10 (-replaygain * 0.1) + 0.5);
+}
 
-    soundcheck =  floor(tv + 0.5);
-		
-/* 		printf("radio_gain: %i\n", track->radio_gain); */
-/* 		printf("soundcheck: %i\n", track->soundcheck); */
-    return soundcheck;
+gdouble soundcheck_to_replaygain(guint32 soundcheck)
+{
+    if (soundcheck == 0) return 0;  /* unset should be 0 dB */
+    return (-10. * log10 (soundcheck/1000.));
 }

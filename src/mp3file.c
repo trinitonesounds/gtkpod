@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 00:32:04 jcs>
+/* Time-stamp: <2004-07-25 13:30:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1822,6 +1822,7 @@ gboolean mp3_get_gain (gchar *path, Track *track)
 	track->peak_signal_set = FALSE;
 
 	mp3_get_track_lame_replaygain(path, track);
+/* 	printf ("%d:%d\n", track->radio_gain_set, track->peak_signal_set); */
 	if (track->radio_gain_set && track->peak_signal_set) return TRUE;
 	mp3_get_track_ape_replaygain(path, track);
 	if (track->radio_gain_set) return TRUE;
