@@ -1,6 +1,14 @@
 gtkpod V0.42+ 21-Feb-2003 - 
-        BUGFIX: some "third party" iTunesDB could not be read (hang after
-	reading the songs and before adding the playlists).
+        Preventive BUGFIX: in the code to import the iTunesDB all absolute
+	references to positions in the iTunesDB were removed. Instead
+	itunesdb.c now uses the header information to find the headers it
+	needs. This should make it more reliable to read third party
+	iTunesDB. This was also part of the problem with the ephpod import
+	problem below (the other half of the problem was ephpod's not
+	really conformant way of writing the database).
+
+        BUGFIX: some iTunesDBs produced by ephpod could not be read (hang
+	after reading the songs and before adding the playlists).
         
 	New Feature: update song information from file when adding songs
 	with identical filename (option)
