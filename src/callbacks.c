@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-13 21:02:04 jcs>
+/* Time-stamp: <2003-06-15 01:55:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -23,6 +23,8 @@
 | 
 |  This product is not supported/written/published by Apple!
 */
+
+/* Most function prototypes in this file were written by glade2. */
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -1354,3 +1356,30 @@ on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
 {
     prefs_window_set_sort_tab_num (gtk_spin_button_get_value (spinbutton));
 }
+
+void
+on_tooltips_menu_activate              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    prefs_set_display_tooltips_main (
+	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
+}
+
+
+void
+on_cfg_display_tooltips_main_toggled   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_display_tooltips_main (
+	gtk_toggle_button_get_active (togglebutton));
+}
+
+
+void
+on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_display_tooltips_prefs (
+	gtk_toggle_button_get_active (togglebutton));
+}
+

@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-14 14:17:07 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -61,6 +62,7 @@ void st_set_default_sizes (void);
 void st_update_default_sizes (void);
 void st_adopt_order_in_playlist (void);
 void sm_update_default_sizes (void);
+void st_show_hide_tooltips (void);
 
 
 /* Drag and drop definitions */

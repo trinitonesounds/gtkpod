@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-14 14:15:10 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -107,11 +108,11 @@ typedef struct {
   gboolean unselected;               /* unselected item since last st_init? */
   /* The following are used for "special" categories (ST_CAT_SPECIAL) */
   GList *members;                    /* list of members (songs) */
-  gboolean is_go;                    /* pass new members on (i.e. display)
-				      * automatically */
+  gboolean is_go;                    /* pass new members on automatically */
   TimeInfo ti_created,               /* Sort information for creation, */
       ti_modified,                   /* modification and played time */
-      ti_played;                    
+      ti_played;
+    GtkTooltips *sp_tooltips;          /* pointer to tooltips in special st */
 } SortTab;
 
 /* "Column numbers" in sort tab model */
@@ -227,6 +228,7 @@ GList* sm_get_selected_songids(void);
 GList* sm_get_selected_songs(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
+void display_show_hide_tooltips (void);
 void sm_store_col_order (void);
 
 void stop_display_update (gint inst);

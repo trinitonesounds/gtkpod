@@ -1,5 +1,33 @@
-#include <gtk/gtk.h>
+/* Time-stamp: <2003-06-14 00:36:41 jcs>
+|
+|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Part of the gtkpod project.
+| 
+|  URL: http://gtkpod.sourceforge.net/
+| 
+|  This program is free software; you can redistribute it and/or modify
+|  it under the terms of the GNU General Public License as published by
+|  the Free Software Foundation; either version 2 of the License, or
+|  (at your option) any later version.
+| 
+|  This program is distributed in the hope that it will be useful,
+|  but WITHOUT ANY WARRANTY; without even the implied warranty of
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+|  GNU General Public License for more details.
+| 
+|  You should have received a copy of the GNU General Public License
+|  along with this program; if not, write to the Free Software
+|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+| 
+|  iTunes and iPod are trademarks of Apple
+| 
+|  This product is not supported/written/published by Apple!
+*/
 
+
+/* Most function definitions in this file were written by glade 2 */
+
+#include <gtk/gtk.h>
 
 gboolean
 on_gtkpod_delete_event                 (GtkWidget       *widget,
@@ -473,4 +501,16 @@ on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
 
 void
 on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_tooltips_menu_activate              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_cfg_display_tooltips_main_toggled   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
                                         gpointer         user_data);

@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-15 02:26:20 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -94,11 +95,13 @@ struct cfg
   gboolean sync_remove;         /* delete tracks removed from synced dirs? */
   gboolean save_sorted_order;   /* save order after sort automatically? */
   gboolean display_toolbar;     /* should toolbar be displayed */
+  GtkToolbarStyle toolbar_style;/* style of toolbar */
+  gboolean display_tooltips_main; /* should tooltips be displayed (main) */
+  gboolean display_tooltips_prefs;/* should toolbar be displayed (prefs) */
   gboolean update_charset;      /* Update charset when updating song? */
   gboolean write_charset;       /* Add directories recursively? */
   gboolean add_recursively;     /* Update charset when writing song? */
   gboolean case_sensitive;     /* Should sorting be case-sensitive? */
-  GtkToolbarStyle toolbar_style;/* style of toolbar */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
@@ -233,4 +236,8 @@ gint32 prefs_get_sp_playcount_low (guint32 inst);
 gint32 prefs_get_sp_playcount_high (guint32 inst);
 void prefs_set_sp_playcount_low (guint32 inst, gint32 limit);
 void prefs_set_sp_playcount_high (guint32 inst, gint32 limit);
+void prefs_set_display_tooltips_main (gboolean state);
+gboolean prefs_get_display_tooltips_main (void);
+void prefs_set_display_tooltips_prefs (gboolean state);
+gboolean prefs_get_display_tooltips_prefs (void);
 #endif

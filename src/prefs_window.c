@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-15 02:02:29 jcs>
+|
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
 | 
@@ -83,6 +84,22 @@ void release_prefs_window (void)
 	gtk_widget_set_sensitive (prefs_window, TRUE);
 }
 
+
+/* make the tooltips visible or hide it depending on the value set in
+ * the prefs (tooltips_prefs) */
+void prefs_window_show_hide_tooltips (void)
+{
+    if (prefs_window)
+    {
+	GtkTooltips *tt = GTK_TOOLTIPS (lookup_widget (prefs_window,
+						      "tooltips"));
+	if (tt)
+	{
+	    if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
+	    else                                     gtk_tooltips_disable (tt);
+	}
+    }
+}
 
 /**
  * create_gtk_prefs_window
@@ -217,6 +234,16 @@ prefs_window_create(void)
 	    if (tmpcfg->toolbar_style == GTK_TOOLBAR_BOTH)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 	    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_display_tooltips_main")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->display_tooltips_main);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_display_tooltips_prefs")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->display_tooltips_prefs);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_update_charset")))
 	{
@@ -386,6 +413,7 @@ prefs_window_create(void)
 				       prefs_get_sort_tab_num ());
 	    prefs_window_set_sort_tab_num (tmpcfg->sort_tab_num);
 	}
+	prefs_window_show_hide_tooltips ();
 	gtk_widget_show(prefs_window);
     }
 }
@@ -446,6 +474,8 @@ prefs_window_set(void)
 	prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
+	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
+	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
@@ -756,6 +786,16 @@ void prefs_window_set_display_toolbar (gboolean val)
     gtk_widget_set_sensitive (w1, val);
     gtk_widget_set_sensitive (w2, val);
     gtk_widget_set_sensitive (w3, val);
+}
+
+void prefs_window_set_display_tooltips_main (gboolean val)
+{
+    tmpcfg->display_tooltips_main = val;
+}
+
+void prefs_window_set_display_tooltips_prefs (gboolean val)
+{
+    tmpcfg->display_tooltips_prefs = val;
 }
 
 void prefs_window_set_update_charset (gboolean val)

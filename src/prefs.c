@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-15 02:28:50 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -222,11 +223,13 @@ struct cfg *cfg_new(void)
     mycfg->show_sync_dirs = TRUE;
     mycfg->sync_remove = TRUE;
     mycfg->display_toolbar = TRUE;
+    mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
+    mycfg->display_tooltips_main = TRUE;
+    mycfg->display_tooltips_prefs = TRUE;
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
     mycfg->add_recursively = TRUE;
     mycfg->case_sensitive = FALSE;
-    mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->save_sorted_order = FALSE;
     mycfg->sort_tab_num = 2;
     mycfg->last_prefs_page = 0;
@@ -489,6 +492,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "display_toolbar") == 0)
 	  {
 	      prefs_set_display_toolbar((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "display_tooltips_main") == 0)
+	  {
+	      prefs_set_display_tooltips_main((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "display_tooltips_prefs") == 0)
+	  {
+	      prefs_set_display_tooltips_prefs((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "update_charset") == 0)
 	  {
@@ -768,7 +779,6 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
     }
     fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
-    fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
@@ -781,6 +791,11 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "show_sync_dirs=%d\n",prefs_get_show_sync_dirs());
     fprintf(fp, "sync_remove=%d\n",prefs_get_sync_remove());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
+    fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
+    fprintf(fp, "display_tooltips_main=%d\n",
+	    prefs_get_display_tooltips_main());
+    fprintf(fp, "display_tooltips_prefs=%d\n",
+	    prefs_get_display_tooltips_prefs());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
@@ -1502,6 +1517,28 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
 
     cfg->toolbar_style = i;
     display_show_hide_toolbar ();
+}
+
+void prefs_set_display_tooltips_main (gboolean state)
+{
+    cfg->display_tooltips_main = state;
+    display_show_hide_tooltips ();
+}
+
+gboolean prefs_get_display_tooltips_main (void)
+{
+    return cfg->display_tooltips_main;
+}
+
+void prefs_set_display_tooltips_prefs (gboolean state)
+{
+    cfg->display_tooltips_prefs = state;
+    display_show_hide_tooltips ();
+}
+
+gboolean prefs_get_display_tooltips_prefs (void)
+{
+    return cfg->display_tooltips_prefs;
 }
 
 gint prefs_get_last_prefs_page (void)

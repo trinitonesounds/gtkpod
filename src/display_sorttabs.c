@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-13 00:46:43 jcs>
+/* Time-stamp: <2003-06-14 14:06:45 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2034,7 +2034,12 @@ static void st_create_special (gint inst, GtkWidget *window)
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_autodisplay (inst));
 
-
+      /* Safe pointer to tooltips */
+      st->sp_tooltips = GTK_TOOLTIPS (lookup_widget (special, "tooltips"));
+      /* Show / don't show tooltips */
+      if (prefs_get_display_tooltips_main ())
+	    gtk_tooltips_enable (st->sp_tooltips);
+      else  gtk_tooltips_disable (st->sp_tooltips);
       /* we don't need this any more */
       gtk_widget_destroy (special);
 }
@@ -2285,6 +2290,28 @@ void st_update_default_sizes (void)
 	    if (st_paned[i])
 		prefs_set_paned_pos (i + PANED_NUM_GLADE,
 				     gtk_paned_get_position (st_paned[i]));
+	}
+    }
+}
+
+
+/* make the tooltips visible or hide it depending on the value set in
+ * the prefs (tooltips_main) (called by display_show_hide_tooltips() */
+void st_show_hide_tooltips (void)
+{
+    gint i;
+
+    for (i=0; i<SORT_TAB_MAX; ++i)
+    {
+	if (sorttab[i])
+	{
+	    GtkTooltips *tt = sorttab[i]->sp_tooltips;
+	    if (tt)
+	    {
+		if (prefs_get_display_tooltips_main ())
+		       gtk_tooltips_enable (tt);
+		else   gtk_tooltips_disable (tt);
+	    }
 	}
     }
 }

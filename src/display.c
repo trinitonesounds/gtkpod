@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-15 02:31:51 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -27,12 +28,13 @@
 #  include <config.h>
 #endif
 
-#include "display_private.h"
-#include "support.h"
-#include "misc.h"
 #include <string.h>
 #include <stdlib.h>
+#include "display_private.h"
 #include "prefs.h"
+#include "prefs_window.h"
+#include "misc.h"
+#include "support.h"
 
 
 /* used for stopping of display refresh */
@@ -135,6 +137,8 @@ void display_create (GtkWidget *gtkpod)
     if (stop_button) gtk_widget_hide (stop_button);
     /* Hide/Show the toolbar */
     display_show_hide_toolbar ();
+    /* Hide/Show tooltips */
+    display_show_hide_tooltips ();
     /* change standard g_print () handler */
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
 }
@@ -202,6 +206,36 @@ void display_show_hide_toolbar (void)
 	gtk_widget_hide (tb);
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), FALSE);
     }
+}
+
+/* make the tooltips visible or hide it depending on the value set in
+ * the prefs (tooltips_main) */
+void display_show_hide_tooltips (void)
+{
+    /* so far only tooltips in the toolbar are used... */
+    GtkTooltips *tt = NULL; /* = GTK_TOOLTIPS (lookup_widget (gtkpod_window,
+      "tooltips")); */
+    GtkCheckMenuItem *mi = GTK_CHECK_MENU_ITEM (
+	lookup_widget (gtkpod_window, "tooltips_menu"));
+    GtkToolbar *tb = GTK_TOOLBAR (lookup_widget (gtkpod_window, "toolbar"));
+
+
+    if (prefs_get_display_tooltips_main ())
+    {
+	if (tt)  gtk_tooltips_enable (tt);
+	if (mi)  gtk_check_menu_item_set_active (mi, TRUE);
+	if (tb)  gtk_toolbar_set_tooltips (tb, TRUE);
+    }
+    else
+    {
+	if (tt)  gtk_tooltips_disable (tt);
+	if (mi)  gtk_check_menu_item_set_active (mi, FALSE);
+	if (tb)  gtk_toolbar_set_tooltips (tb, FALSE);
+    }
+    /* Show/Hide tooltips of the special sorttabs */
+    st_show_hide_tooltips ();
+    /* Show/Hide tooltips of the prefs window */
+    prefs_window_show_hide_tooltips ();
 }
 
 
