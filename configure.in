@@ -31,6 +31,12 @@ AC_DEFINE_UNQUOTED([IS_GTKPOD], 1, [Define this to indicate we are compiling gtk
 dnl we need 'flex'
 AM_PROG_LEX
 
+dnl Retrieve the path of mount and umount binaries
+AC_PATH_PROG(MOUNT, mount)
+AC_SUBST(MOUNT)
+AC_PATH_PROG(UMOUNT, umount)
+AC_SUBST(UMOUNT)
+
 dnl Add the languages which your application supports here.
 ALL_LINGUAS="de fr it ja"
 AM_GLIB_GNU_GETTEXT

@@ -1737,7 +1737,7 @@ mount_ipod(void)
 	switch (pid)
 	{
 	    case 0: /* child */
-		execl("/bin/mount", "mount", str, NULL);
+		execl(MOUNT_BIN, "mount", str, NULL);
 		exit(0);
 		break;
 	    case -1: /* parent and error */
@@ -1772,7 +1772,7 @@ unmount_ipod(void)
 	switch (pid)
 	{
 	    case 0: /* child */
-		execl("/bin/umount", "umount", str, NULL);
+		execl(UMOUNT_BIN, "umount", str, NULL);
 		exit(0);
 		break;
 	    case -1: /* parent and error */

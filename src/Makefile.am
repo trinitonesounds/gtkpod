@@ -3,6 +3,8 @@
 AM_CFLAGS = @PACKAGE_CFLAGS@
 
 INCLUDES = @PACKAGE_CFLAGS@ \
+	   -DMOUNT_BIN=\""@MOUNT@\"" \
+	   -DUMOUNT_BIN=\""@UMOUNT@\"" \
 	   -DPKGDATADIR=\""$(pkgdatadir)\"" \
 	   -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
 
