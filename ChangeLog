@@ -22,7 +22,7 @@ gtkpod V0.53-CVS
 	files with relative paths.
 
 	IMPROVEMENT: context menus more intuitive, context menus will no
-	longer trigger edit mode (usually).
+	longer trigger edit mode (most of the time).
 
 	IMPROVEMENT: the function copying songs to the iPod used a "large"
 	amount of stack memory (roughly 66000 Bytes) which crashed some

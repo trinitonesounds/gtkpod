@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-27 01:11:19 jcs>
+/* Time-stamp: <2003-09-28 16:59:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,7 +34,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
-#include <wait.h>
+#include <sys/wait.h>
 #include <stdlib.h>
 #include "normalize.h"
 #include "misc.h"
