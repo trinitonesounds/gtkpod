@@ -496,11 +496,33 @@ static gint pm_sort_counter (gint inc)
 }
 
 
+/* Helper function: add all playlists to playlist model */
+void pm_add_all_playlists (void)
+{
+    GList *gl_itdb;    
+    struct itdbs_head *itdbs_head;
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_if_fail (itdbs_head);
+    for (gl_itdb=itdbs_head->itdbs; gl_itdb; gl_itdb=gl_itdb->next)
+    {
+	iTunesDB *itdb = gl_itdb->data;
+	g_return_if_fail (itdb);
+	GList *gl_pl;
+	for (gl_pl=itdb->playlists; gl_pl; gl_pl=gl_pl->next)
+	{
+	    Playlist *pl = gl_pl->data;
+	    g_return_if_fail (pl);
+	    pm_add_playlist (pl, -1);
+	}
+    }
+}
+
+
 /* "unsort" the playlist view without causing the sort tabs to be
    touched. */
 static void pm_unsort ()
 {
-    gint i,n;
     Playlist *cur_pl;
 
     pm_selection_blocked = TRUE;
@@ -513,11 +535,8 @@ static void pm_unsort ()
     pm_set_selected_playlist (cur_pl);
 
     /* add playlists back to model (without selecting) */
-    n = get_nr_of_playlists ();
-    for (i=0; i<n; ++i)
-    {
-	pm_add_playlist (get_playlist_by_nr (i), -1);
-    }
+    pm_add_all_playlists ();
+
     pm_selection_blocked = FALSE;
     /* reset sort counter */
     pm_sort_counter (-1);
@@ -583,24 +602,44 @@ pm_rows_reordered (void)
 
     if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(playlist_treeview))))
     {
-	GtkTreeIter i;
-	gboolean valid = FALSE;
-	gint pos = 0;
+	GtkTreeIter parent;
+	gboolean p_valid;
 
-	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
-	while(valid)
+	p_valid = gtk_tree_model_get_iter_first(tm, &parent);
+	while(p_valid)
 	{
+	    guint32 pos;
 	    Playlist *pl;
+	    iTunesDB *itdb;
+	    GtkTreeIter child;
+	    gboolean c_valid;
 
-	    gtk_tree_model_get(tm, &i, 0, &pl, -1); 
-	    if (get_playlist_by_nr (pos) != pl)
+	    /* get master playlist */
+	    gtk_tree_model_get (tm, &parent, PM_COLUMN_PLAYLIST, &pl, -1); 
+	    g_return_if_fail (pl);
+	    g_return_if_fail (pl->type == ITDB_PL_TYPE_MPL);
+	    itdb = pl->itdb;
+	    g_return_if_fail (itdb);
+
+	    pos = 1;
+	    /* get all children */
+	    c_valid = gtk_tree_model_iter_children (tm, &child, &parent);
+	    while (c_valid)
 	    {
-		/* move the playlist to indicated position */
-		move_playlist (pl, pos);
-		data_changed ();
+		gtk_tree_model_get (tm, &child,
+				    PM_COLUMN_PLAYLIST, &pl, -1);
+		g_return_if_fail (pl);
+		if (itdb_playlist_by_nr (itdb, pos) != pl)
+		{
+		    /* move the playlist to indicated position */
+		    g_return_if_fail (pl->type != ITDB_PL_TYPE_MPL);
+		    itdb_playlist_move (pl, pos);
+		    data_changed (itdb);
+		}
+		++pos;
+		c_valid = gtk_tree_model_iter_next (tm, &child);
 	    }
-	    valid = gtk_tree_model_iter_next(tm, &i);
-	    ++pos;
+	    p_valid = gtk_tree_model_iter_next (tm, &parent);
 	}
     }
 }
@@ -663,11 +702,8 @@ pm_cell_edited (GtkCellRendererText *renderer,
       if (g_utf8_collate (playlist->name, new_text) != 0)
 	{
 	  g_free (playlist->name);
-	  g_free (playlist->name_utf16);
 	  playlist->name = g_strdup (new_text);
-	  playlist->name_utf16 = g_utf8_to_utf16 (new_text, -1,
-						  NULL, NULL, NULL);
-	  data_changed ();
+	  data_changed (playlist->itdb);
 	}
       break;
     }
@@ -947,20 +983,21 @@ on_pm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 			 GtkTreeIter *i, gpointer data)
 {
     Playlist *pl;
+    GList *gl;
     GString *idlist = (GString *)data;
 
-    gtk_tree_model_get (tm, i, PM_COLUMN_PLAYLIST, &pl, -1);
-    if(pl && idlist)
-    {
-	GList *l;
-	Track *s;
+    g_return_if_fail (tm);
+    g_return_if_fail (i);
+    g_return_if_fail (data);
 
-	/* add all member-ids of entry to idlist */
-	for (l=pl->members; l; l=l->next)
-	{
-	    s = (Track *)l->data;
-	    g_string_append_printf (idlist, "%d\n", s->ipod_id);
-	}
+    gtk_tree_model_get (tm, i, PM_COLUMN_PLAYLIST, &pl, -1);
+    g_return_if_fail (pl);
+
+    /* add all member-ids of entry to idlist */
+    for (gl=pl->members; gl; gl=gl->next)
+    {
+	Track *tr = gl->data;
+	g_string_append_printf (idlist, "%d\n", tr->id);
     }
 }
 
@@ -972,25 +1009,25 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 			   GtkTreeIter *iter, gpointer data)
 {
     Playlist *pl;
+    GList *gl;
     GString *filelist = (GString *)data;
+
+    g_return_if_fail (tm);
+    g_return_if_fail (iter);
+    g_return_if_fail (data);
 
     /* get current playlist */
     gtk_tree_model_get(tm, iter, PM_COLUMN_PLAYLIST, &pl, -1); 
-    if (pl && filelist)
-    {
-	Track *track;
-	gchar *name;
-	GList *l;
+    g_return_if_fail (pl);
 
-	for (l=pl->members; l; l=l->next)
+    for (gl=pl->members; gl; gl=gl->next)
+    {
+	Track *track = gl->data;
+	gchar *name = get_track_name_on_disk_verified (track);
+	if (name)
 	{
-	    track = (Track *)l->data;
-	    name = get_track_name_on_disk_verified (track);
-	    if (name)
-	    {
-		g_string_append_printf (filelist, "file:%s\n", name);
-		g_free (name);
-	    }
+	    g_string_append_printf (filelist, "file:%s\n", name);
+	    g_free (name);
 	}
     }
 }

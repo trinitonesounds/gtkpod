@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-06 00:03:26 jcs>
+/* Time-stamp: <2005-01-07 00:07:54 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,6 +35,12 @@
 
 #include <itdb.h>
 #include <gtk/gtk.h>
+
+
+struct itdbs_head
+{
+    GList *itdbs;
+};
 
 typedef struct
 {

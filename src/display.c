@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 22:56:24 jcs>
+/* Time-stamp: <2005-01-07 00:08:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -173,7 +173,7 @@ void display_create (GtkWidget *gtkpod)
     SORT_TAB_MAX+1: all sort tabs */
 void display_reset (gint inst)
 {
-    gint i,n;
+    gint i;
     Playlist *cur_pl;
 
     /* remember */
@@ -193,13 +193,9 @@ void display_reset (gint inst)
 	    st_remove_all_entries_from_model (i);
     }
 
-    /* add playlists back to model (without selecting) */
     pm_set_selected_playlist (cur_pl);
-    n = get_nr_of_playlists ();
-    for (i=0; i<n; ++i)
-    {
-	pm_add_playlist (get_playlist_by_nr (i), -1);
-    }
+    /* add playlists back to model (without selecting) */
+    pm_add_all_playlists ();
 }
 
 

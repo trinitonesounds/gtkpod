@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-06 00:16:36 jcs>
+/* Time-stamp: <2005-01-07 00:07:54 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -44,11 +44,7 @@
 
 /* A struct containing a list with available iTunesDBs. A pointer to
    this struct is stored in gtkpod_window as itdbs_head */
-static struct itdbs_head
-{
-    GList *itdbs;
-} *itdbs_head = NULL;
-
+static struct itdbs_head *itdbs_head = NULL;
 
 void gp_itdb_extra_destroy (ExtraiTunesDBData *eitdb)
 {
@@ -144,7 +140,7 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
     g_return_if_fail (track);
     g_return_if_fail (track->itdb);
 
-    if (plitem == NULL)  plitem = itdb_mpl (track->itdb);
+    if (plitem == NULL)  plitem = itdb_playlist_mpl (track->itdb);
     g_return_if_fail (plitem);
 
     pm_remove_track (plitem, track);
@@ -178,7 +174,7 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
     itdb = pl->itdb;
     g_return_if_fail (itdb);
 
-    if (pl == NULL)  pl = itdb_mpl (itdb);
+    if (pl == NULL)  pl = itdb_playlist_mpl (itdb);
     g_return_if_fail (pl);
 
     pl->members = g_list_append (pl->members, track);
@@ -237,7 +233,7 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 
 	if (md5) track = md5_md5_exists (itdb, md5);
 	else     track = md5_file_exists (itdb, file, TRUE);
-	if (!track)	  track = gp_track_by_filename (itdb, file);
+	if (!track)	  track = itdb_track_by_filename (itdb, file);
 	if (track)
 	{
 	    gchar *buf1, *buf;

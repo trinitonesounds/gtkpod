@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-06 00:23:52 jcs>
+/* Time-stamp: <2005-01-07 00:59:12 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1060,6 +1060,17 @@ void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos)
 
 
 
+/* move playlist @pl to position @pos */
+void itdb_playlist_move (Itdb_Playlist *pl, guint32 pos)
+{
+    g_return_if_fail (pl);
+    g_return_if_fail (pl->itdb);
+
+    itdb->playlists = g_list_remove (itdb->playlists, pl);
+    itdb->playlists = g_list_insert (itdb->playlists, pl, pos);
+}
+
+
 /* Remove playlist @pl and free memory */
 void itdb_playlist_remove (Itdb_Playlist *pl)
 {
@@ -1192,6 +1203,16 @@ Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id)
 	if (pl->id == id)  return pl;
     }
     return NULL;
+}
+
+
+/* Return playlist at position @num in @itdb */
+Itdb_Playlist *itdb_playlist_by_nr (Itdb_iTunesDB *itdb, guint32 num)
+{
+    g_return_val_if_fail (itdb, NULL);
+    Itdb_Playlist *pl = g_list_nth_data (itdb->playlists, num);
+    g_return_val_if_fail (pl, NULL);
+    return pl;
 }
 
 
