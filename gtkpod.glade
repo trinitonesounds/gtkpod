@@ -1520,7 +1520,7 @@
 	    <widget class="GtkVBox" id="vbox14">
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
-	      <property name="spacing">0</property>
+	      <property name="spacing">4</property>
 
 	      <child>
 		<widget class="GtkFrame" id="frame6">
@@ -1624,7 +1624,7 @@
 		  <child>
 		    <widget class="GtkLabel" id="label26">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">iTunesDB</property>
+		      <property name="label" translatable="yes">Import</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1642,7 +1642,7 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
@@ -2059,7 +2059,7 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
@@ -2233,49 +2233,10 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
-
-	      <child>
-		<placeholder/>
-	      </child>
-
-	      <child>
-		<placeholder/>
-	      </child>
-	    </widget>
-	    <packing>
-	      <property name="tab_expand">False</property>
-	      <property name="tab_fill">True</property>
-	    </packing>
-	  </child>
-
-	  <child>
-	    <widget class="GtkLabel" id="label23">
-	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">_Import</property>
-	      <property name="use_underline">True</property>
-	      <property name="use_markup">False</property>
-	      <property name="justify">GTK_JUSTIFY_LEFT</property>
-	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
-	      <property name="xalign">0.5</property>
-	      <property name="yalign">0.5</property>
-	      <property name="xpad">0</property>
-	      <property name="ypad">0</property>
-	    </widget>
-	    <packing>
-	      <property name="type">tab</property>
-	    </packing>
-	  </child>
-
-	  <child>
-	    <widget class="GtkVBox" id="vbox20">
-	      <property name="visible">True</property>
-	      <property name="homogeneous">False</property>
-	      <property name="spacing">0</property>
 
 	      <child>
 		<widget class="GtkFrame" id="frame9">
@@ -2339,7 +2300,7 @@
 		  <child>
 		    <widget class="GtkLabel" id="label31">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">iTunesDB</property>
+		      <property name="label" translatable="yes">Export</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2357,147 +2318,9 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkFrame" id="frame10">
-		  <property name="visible">True</property>
-		  <property name="label_xalign">0</property>
-		  <property name="label_yalign">0.5</property>
-		  <property name="shadow_type">GTK_SHADOW_ETCHED_OUT</property>
-
-		  <child>
-		    <widget class="GtkVBox" id="vbox22">
-		      <property name="visible">True</property>
-		      <property name="homogeneous">False</property>
-		      <property name="spacing">0</property>
-
-		      <child>
-			<widget class="GtkCheckButton" id="cfg_id3_write">
-			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">The tags are written to the files on your harddrive and on the ipod (if available).</property>
-			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">Write ID3 tags to disk when modified in gtkpod</property>
-			  <property name="use_underline">True</property>
-			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="active">False</property>
-			  <property name="inconsistent">False</property>
-			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_id3_write_toggled" last_modification_time="Wed, 29 Jan 2003 13:30:48 GMT"/>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">False</property>
-			  <property name="fill">False</property>
-			</packing>
-		      </child>
-
-		      <child>
-			<widget class="GtkTable" id="table3">
-			  <property name="visible">True</property>
-			  <property name="n_rows">2</property>
-			  <property name="n_columns">1</property>
-			  <property name="homogeneous">False</property>
-			  <property name="row_spacing">0</property>
-			  <property name="column_spacing">0</property>
-
-			  <child>
-			    <widget class="GtkCheckButton" id="cfg_id3_writeall">
-			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Normally only the tag you changed is written to disk.</property>
-			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Update all tags (not only changed ones)</property>
-			      <property name="use_underline">True</property>
-			      <property name="relief">GTK_RELIEF_NORMAL</property>
-			      <property name="active">False</property>
-			      <property name="inconsistent">False</property>
-			      <property name="draw_indicator">True</property>
-			      <signal name="toggled" handler="on_cfg_id3_writeall_toggled" last_modification_time="Wed, 29 Jan 2003 13:31:40 GMT"/>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">1</property>
-			      <property name="top_attach">0</property>
-			      <property name="bottom_attach">1</property>
-			      <property name="x_padding">20</property>
-			      <property name="x_options">fill</property>
-			      <property name="y_options"></property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkCheckButton" id="cfg_write_charset">
-			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Normally the charset specified when first importing the song will be used to write the tags. If you have chosen a wrong charset when first importing a song, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see above) and songs imported before V0.51 will have no charset stored -- the charset specified in the Input section will be used at first.</property>
-			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Use selected charset (on the 'Import' page)
- when writing tags</property>
-			      <property name="use_underline">True</property>
-			      <property name="relief">GTK_RELIEF_NORMAL</property>
-			      <property name="active">False</property>
-			      <property name="inconsistent">False</property>
-			      <property name="draw_indicator">True</property>
-			      <signal name="toggled" handler="on_cfg_write_charset_toggled" last_modification_time="Sat, 05 Apr 2003 06:42:41 GMT"/>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">1</property>
-			      <property name="top_attach">1</property>
-			      <property name="bottom_attach">2</property>
-			      <property name="x_padding">20</property>
-			      <property name="x_options">fill</property>
-			      <property name="y_options"></property>
-			    </packing>
-			  </child>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">False</property>
-			  <property name="fill">False</property>
-			</packing>
-		      </child>
-
-		      <child>
-			<placeholder/>
-		      </child>
-
-		      <child>
-			<placeholder/>
-		      </child>
-		    </widget>
-		  </child>
-
-		  <child>
-		    <widget class="GtkLabel" id="label32">
-		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Songs</property>
-		      <property name="use_underline">False</property>
-		      <property name="use_markup">False</property>
-		      <property name="justify">GTK_JUSTIFY_LEFT</property>
-		      <property name="wrap">False</property>
-		      <property name="selectable">False</property>
-		      <property name="xalign">0.5</property>
-		      <property name="yalign">0.5</property>
-		      <property name="xpad">0</property>
-		      <property name="ypad">0</property>
-		    </widget>
-		    <packing>
-		      <property name="type">label_item</property>
-		    </packing>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="padding">0</property>
-		  <property name="expand">True</property>
-		  <property name="fill">True</property>
-		</packing>
-	      </child>
-
-	      <child>
-		<placeholder/>
 	      </child>
 
 	      <child>
@@ -2511,9 +2334,9 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkLabel" id="label24">
+	    <widget class="GtkLabel" id="label23">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">_Export</property>
+	      <property name="label" translatable="yes">_Import/Export</property>
 	      <property name="use_underline">True</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2533,7 +2356,7 @@
 	    <widget class="GtkVBox" id="vbox23">
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
-	      <property name="spacing">0</property>
+	      <property name="spacing">4</property>
 
 	      <child>
 		<widget class="GtkFrame" id="frame16">
@@ -2681,7 +2504,7 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
@@ -2764,7 +2587,7 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
@@ -2864,7 +2687,7 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
@@ -3554,7 +3377,7 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
@@ -3592,97 +3415,33 @@
 	    <widget class="GtkVBox" id="vbox32">
 	      <property name="visible">True</property>
 	      <property name="homogeneous">False</property>
-	      <property name="spacing">0</property>
+	      <property name="spacing">4</property>
 
 	      <child>
-		<widget class="GtkFrame" id="frame18">
+		<widget class="GtkFrame" id="frame10">
 		  <property name="visible">True</property>
 		  <property name="label_xalign">0</property>
 		  <property name="label_yalign">0.5</property>
 		  <property name="shadow_type">GTK_SHADOW_ETCHED_OUT</property>
 
 		  <child>
-		    <widget class="GtkVBox" id="vbox34">
+		    <widget class="GtkVBox" id="vbox22">
 		      <property name="visible">True</property>
 		      <property name="homogeneous">False</property>
 		      <property name="spacing">0</property>
 
 		      <child>
-			<widget class="GtkLabel" id="label44">
+			<widget class="GtkCheckButton" id="cfg_id3_write">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Command Line for 'Play Now':</property>
-			  <property name="use_underline">False</property>
-			  <property name="use_markup">False</property>
-			  <property name="justify">GTK_JUSTIFY_LEFT</property>
-			  <property name="wrap">False</property>
-			  <property name="selectable">False</property>
-			  <property name="xalign">0.01</property>
-			  <property name="yalign">0.5</property>
-			  <property name="xpad">0</property>
-			  <property name="ypad">0</property>
-			</widget>
-			<packing>
-			  <property name="padding">2</property>
-			  <property name="expand">False</property>
-			  <property name="fill">False</property>
-			</packing>
-		      </child>
-
-		      <child>
-			<widget class="GtkEntry" id="play_now_path_entry">
-			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing.</property>
+			  <property name="tooltip" translatable="yes">The tags are written to the files on your harddrive and on the ipod (if available).</property>
 			  <property name="can_focus">True</property>
-			  <property name="editable">True</property>
-			  <property name="visibility">True</property>
-			  <property name="max_length">0</property>
-			  <property name="text" translatable="yes"></property>
-			  <property name="has_frame">True</property>
-			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
-			  <signal name="changed" handler="on_play_now_path_entry_changed" last_modification_time="Sun, 16 Mar 2003 13:57:45 GMT"/>
-			</widget>
-			<packing>
-			  <property name="padding">2</property>
-			  <property name="expand">False</property>
-			  <property name="fill">False</property>
-			</packing>
-		      </child>
-
-		      <child>
-			<widget class="GtkLabel" id="label45">
-			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Command Line for 'Enqueue'</property>
-			  <property name="use_underline">False</property>
-			  <property name="use_markup">False</property>
-			  <property name="justify">GTK_JUSTIFY_LEFT</property>
-			  <property name="wrap">False</property>
-			  <property name="selectable">False</property>
-			  <property name="xalign">0.01</property>
-			  <property name="yalign">0.5</property>
-			  <property name="xpad">0</property>
-			  <property name="ypad">0</property>
-			</widget>
-			<packing>
-			  <property name="padding">4</property>
-			  <property name="expand">False</property>
-			  <property name="fill">False</property>
-			</packing>
-		      </child>
-
-		      <child>
-			<widget class="GtkEntry" id="play_enqueue_path_entry">
-			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">For example, 'xmms -e %s' will append (enqueue) the selected songs to xmms' current playlist.</property>
-			  <property name="can_focus">True</property>
-			  <property name="editable">True</property>
-			  <property name="visibility">True</property>
-			  <property name="max_length">0</property>
-			  <property name="text" translatable="yes"></property>
-			  <property name="has_frame">True</property>
-			  <property name="invisible_char" translatable="yes">*</property>
-			  <property name="activates_default">False</property>
-			  <signal name="changed" handler="on_play_enqueue_path_entry_changed" last_modification_time="Sun, 16 Mar 2003 13:57:55 GMT"/>
+			  <property name="label" translatable="yes">Write ID3 tags to disk when modified in gtkpod</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="on_cfg_id3_write_toggled" last_modification_time="Wed, 29 Jan 2003 13:30:48 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -3692,15 +3451,136 @@
 		      </child>
 
 		      <child>
-			<placeholder/>
+			<widget class="GtkTable" id="table3">
+			  <property name="visible">True</property>
+			  <property name="n_rows">2</property>
+			  <property name="n_columns">1</property>
+			  <property name="homogeneous">False</property>
+			  <property name="row_spacing">0</property>
+			  <property name="column_spacing">0</property>
+
+			  <child>
+			    <widget class="GtkCheckButton" id="cfg_id3_writeall">
+			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Normally only the tag you changed is written to disk.</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">Update all tags (not only changed ones)</property>
+			      <property name="use_underline">True</property>
+			      <property name="relief">GTK_RELIEF_NORMAL</property>
+			      <property name="active">False</property>
+			      <property name="inconsistent">False</property>
+			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_id3_writeall_toggled" last_modification_time="Wed, 29 Jan 2003 13:31:40 GMT"/>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">1</property>
+			      <property name="top_attach">0</property>
+			      <property name="bottom_attach">1</property>
+			      <property name="x_padding">20</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkCheckButton" id="cfg_write_charset">
+			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Normally the charset specified when first importing the song will be used to write the tags. If you have chosen a wrong charset when first importing a song, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see above) and songs imported before V0.51 will have no charset stored -- the charset specified in the Input section will be used at first.</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">Use selected charset (on the 'Import' page)
+ when writing tags</property>
+			      <property name="use_underline">True</property>
+			      <property name="relief">GTK_RELIEF_NORMAL</property>
+			      <property name="active">False</property>
+			      <property name="inconsistent">False</property>
+			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_write_charset_toggled" last_modification_time="Sat, 05 Apr 2003 06:42:41 GMT"/>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">1</property>
+			      <property name="top_attach">1</property>
+			      <property name="bottom_attach">2</property>
+			      <property name="x_padding">20</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkCheckButton" id="cfg_multi_edit">
+			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">If you select several songs in the song list and edit a tag of the first song, the tags in the other songs are updated as well.</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Use 'Multi-Edit' for song selections</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="on_cfg_multi_edit_toggled" last_modification_time="Sun, 15 Jun 2003 14:24:50 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkTable" id="table7">
+			  <property name="visible">True</property>
+			  <property name="n_rows">1</property>
+			  <property name="n_columns">1</property>
+			  <property name="homogeneous">False</property>
+			  <property name="row_spacing">0</property>
+			  <property name="column_spacing">0</property>
+
+			  <child>
+			    <widget class="GtkCheckButton" id="cfg_multi_edit_title">
+			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Usually you don't want to set the title of several songs to the same text. This option might avoid unwanted results (especially since there is no 'undo' yet).</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">Use 'Multi-Edit' also for title field</property>
+			      <property name="use_underline">True</property>
+			      <property name="relief">GTK_RELIEF_NORMAL</property>
+			      <property name="active">False</property>
+			      <property name="inconsistent">False</property>
+			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_multi_edit_title_toggled" last_modification_time="Sun, 15 Jun 2003 14:25:15 GMT"/>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">1</property>
+			      <property name="top_attach">0</property>
+			      <property name="bottom_attach">1</property>
+			      <property name="x_padding">20</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
 		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkLabel" id="label43">
+		    <widget class="GtkLabel" id="label32">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Song Playing</property>
+		      <property name="label" translatable="yes">Song Editing</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -3718,9 +3598,13 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
+	      </child>
+
+	      <child>
+		<placeholder/>
 	      </child>
 
 	      <child>
@@ -3837,7 +3721,7 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
@@ -3876,23 +3760,7 @@
 		      </child>
 
 		      <child>
-			<widget class="GtkCheckButton" id="cfg_automount_ipod">
-			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">On startup gtkpod will call 'mount &lt;ipod mountpoint&gt;', on exit a 'umount &lt;ipod mountpoint&gt;' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts.</property>
-			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">Handle mounting/unmounting of iPod drive</property>
-			  <property name="use_underline">True</property>
-			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="active">False</property>
-			  <property name="inconsistent">False</property>
-			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_automount_ipod_toggled" last_modification_time="Tue, 18 Mar 2003 05:27:40 GMT"/>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">False</property>
-			  <property name="fill">False</property>
-			</packing>
+			<placeholder/>
 		      </child>
 
 		      <child>
@@ -3922,9 +3790,242 @@
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
-		  <property name="expand">True</property>
+		  <property name="expand">False</property>
 		  <property name="fill">True</property>
 		</packing>
+	      </child>
+
+	      <child>
+		<placeholder/>
+	      </child>
+	    </widget>
+	    <packing>
+	      <property name="tab_expand">False</property>
+	      <property name="tab_fill">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkLabel" id="label">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">_Edit</property>
+	      <property name="use_underline">True</property>
+	      <property name="use_markup">False</property>
+	      <property name="justify">GTK_JUSTIFY_LEFT</property>
+	      <property name="wrap">False</property>
+	      <property name="selectable">False</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xpad">0</property>
+	      <property name="ypad">0</property>
+	    </widget>
+	    <packing>
+	      <property name="type">tab</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkVBox" id="vbox20">
+	      <property name="visible">True</property>
+	      <property name="homogeneous">False</property>
+	      <property name="spacing">4</property>
+
+	      <child>
+		<widget class="GtkFrame" id="frame18">
+		  <property name="visible">True</property>
+		  <property name="label_xalign">0</property>
+		  <property name="label_yalign">0.5</property>
+		  <property name="shadow_type">GTK_SHADOW_ETCHED_OUT</property>
+
+		  <child>
+		    <widget class="GtkVBox" id="vbox34">
+		      <property name="visible">True</property>
+		      <property name="homogeneous">False</property>
+		      <property name="spacing">0</property>
+
+		      <child>
+			<widget class="GtkLabel" id="label44">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">Command Line for 'Play Now':</property>
+			  <property name="use_underline">False</property>
+			  <property name="use_markup">False</property>
+			  <property name="justify">GTK_JUSTIFY_LEFT</property>
+			  <property name="wrap">False</property>
+			  <property name="selectable">False</property>
+			  <property name="xalign">0.01</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+			<packing>
+			  <property name="padding">2</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkEntry" id="play_now_path_entry">
+			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing.</property>
+			  <property name="can_focus">True</property>
+			  <property name="editable">True</property>
+			  <property name="visibility">True</property>
+			  <property name="max_length">0</property>
+			  <property name="text" translatable="yes"></property>
+			  <property name="has_frame">True</property>
+			  <property name="invisible_char" translatable="yes">*</property>
+			  <property name="activates_default">False</property>
+			  <signal name="changed" handler="on_play_now_path_entry_changed" last_modification_time="Sun, 16 Mar 2003 13:57:45 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">2</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkLabel" id="label45">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">Command Line for 'Enqueue'</property>
+			  <property name="use_underline">False</property>
+			  <property name="use_markup">False</property>
+			  <property name="justify">GTK_JUSTIFY_LEFT</property>
+			  <property name="wrap">False</property>
+			  <property name="selectable">False</property>
+			  <property name="xalign">0.01</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+			<packing>
+			  <property name="padding">4</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkEntry" id="play_enqueue_path_entry">
+			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">For example, 'xmms -e %s' will append (enqueue) the selected songs to xmms' current playlist.</property>
+			  <property name="can_focus">True</property>
+			  <property name="editable">True</property>
+			  <property name="visibility">True</property>
+			  <property name="max_length">0</property>
+			  <property name="text" translatable="yes"></property>
+			  <property name="has_frame">True</property>
+			  <property name="invisible_char" translatable="yes">*</property>
+			  <property name="activates_default">False</property>
+			  <signal name="changed" handler="on_play_enqueue_path_entry_changed" last_modification_time="Sun, 16 Mar 2003 13:57:55 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkFrame" id="frame20">
+			  <property name="visible">True</property>
+			  <property name="label_xalign">0</property>
+			  <property name="label_yalign">0.5</property>
+			  <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+
+			  <child>
+			    <widget class="GtkVBox" id="vbox39">
+			      <property name="visible">True</property>
+			      <property name="homogeneous">False</property>
+			      <property name="spacing">0</property>
+
+			      <child>
+				<widget class="GtkCheckButton" id="cfg_automount_ipod">
+				  <property name="visible">True</property>
+				  <property name="tooltip" translatable="yes">On startup gtkpod will call 'mount &lt;ipod mountpoint&gt;', on exit a 'umount &lt;ipod mountpoint&gt;' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts.</property>
+				  <property name="can_focus">True</property>
+				  <property name="label" translatable="yes">Handle mounting/unmounting of iPod drive</property>
+				  <property name="use_underline">True</property>
+				  <property name="relief">GTK_RELIEF_NORMAL</property>
+				  <property name="active">False</property>
+				  <property name="inconsistent">False</property>
+				  <property name="draw_indicator">True</property>
+				  <signal name="toggled" handler="on_cfg_automount_ipod_toggled" last_modification_time="Tue, 18 Mar 2003 05:27:40 GMT"/>
+				</widget>
+				<packing>
+				  <property name="padding">0</property>
+				  <property name="expand">False</property>
+				  <property name="fill">False</property>
+				</packing>
+			      </child>
+
+			      <child>
+				<placeholder/>
+			      </child>
+
+			      <child>
+				<placeholder/>
+			      </child>
+			    </widget>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="label56">
+			      <property name="visible">True</property>
+			      <property name="label" translatable="yes">Misc</property>
+			      <property name="use_underline">False</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">False</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="type">label_item</property>
+			    </packing>
+			  </child>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">True</property>
+			</packing>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="label43">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Song Playing</property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="type">label_item</property>
+		    </packing>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">False</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<placeholder/>
 	      </child>
 
 	      <child>
@@ -3942,7 +4043,7 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkLabel" id="label">
+	    <widget class="GtkLabel" id="label24">
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">_Misc</property>
 	      <property name="use_underline">True</property>

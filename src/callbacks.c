@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 01:55:24 jcs>
+/* Time-stamp: <2003-06-16 00:14:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,7 +35,6 @@
 #include <stdlib.h>
 
 #include "callbacks.h"
-#include "interface.h"
 #include "support.h"
 
 #include "misc.h"
@@ -1380,6 +1379,24 @@ on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     prefs_window_set_display_tooltips_prefs (
+	gtk_toggle_button_get_active (togglebutton));
+}
+
+
+void
+on_cfg_multi_edit_toggled              (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_multi_edit (
+	gtk_toggle_button_get_active (togglebutton));
+}
+
+
+void
+on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_multi_edit_title (
 	gtk_toggle_button_get_active (togglebutton));
 }
 

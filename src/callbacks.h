@@ -514,3 +514,11 @@ on_cfg_display_tooltips_main_toggled   (GtkToggleButton *togglebutton,
 void
 on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_cfg_multi_edit_toggled              (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-14 14:15:10 jcs>
+/* Time-stamp: <2003-06-15 13:46:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -107,7 +107,8 @@ typedef struct {
   GHashTable *entry_hash;            /* table for quick find of tab entries */
   gboolean unselected;               /* unselected item since last st_init? */
   /* The following are used for "special" categories (ST_CAT_SPECIAL) */
-  GList *members;                    /* list of members (songs) */
+  GList *sp_members;                 /* list of songs in sorttab */
+  GList *sp_selected;                /* list of songs selected */
   gboolean is_go;                    /* pass new members on automatically */
   TimeInfo ti_created,               /* Sort information for creation, */
       ti_modified,                   /* modification and played time */
@@ -177,6 +178,7 @@ void display_create (GtkWidget *gtkpod);
 void display_cleanup (void);
 void display_show_hide_toolbar (void);
 void display_reset (gint inst);
+GList *display_get_selection (guint32 inst);
 
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);

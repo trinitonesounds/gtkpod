@@ -17,7 +17,7 @@
 
 #include "callbacks.h"
 #include "interface.h"
-#include "support.h"
+#include "support_.h"
 
 #define GLADE_HOOKUP_OBJECT(component,widget,name) \
   g_object_set_data_full (G_OBJECT (component), name, \
@@ -1189,21 +1189,12 @@ create_prefs_window (void)
   GtkWidget *vbox19;
   GtkWidget *tag_autoset0;
   GtkWidget *label30;
-  GtkWidget *label23;
-  GtkWidget *vbox20;
   GtkWidget *frame9;
   GtkWidget *vbox21;
   GtkWidget *cfg_write_extended;
   GtkWidget *cfg_keep_backups;
   GtkWidget *label31;
-  GtkWidget *frame10;
-  GtkWidget *vbox22;
-  GtkWidget *cfg_id3_write;
-  GtkWidget *table3;
-  GtkWidget *cfg_id3_writeall;
-  GtkWidget *cfg_write_charset;
-  GtkWidget *label32;
-  GtkWidget *label24;
+  GtkWidget *label23;
   GtkWidget *vbox23;
   GtkWidget *frame16;
   GtkWidget *vbox31;
@@ -1267,13 +1258,16 @@ create_prefs_window (void)
   GtkWidget *label38;
   GtkWidget *label25;
   GtkWidget *vbox32;
-  GtkWidget *frame18;
-  GtkWidget *vbox34;
-  GtkWidget *label44;
-  GtkWidget *play_now_path_entry;
-  GtkWidget *label45;
-  GtkWidget *play_enqueue_path_entry;
-  GtkWidget *label43;
+  GtkWidget *frame10;
+  GtkWidget *vbox22;
+  GtkWidget *cfg_id3_write;
+  GtkWidget *table3;
+  GtkWidget *cfg_id3_writeall;
+  GtkWidget *cfg_write_charset;
+  GtkWidget *cfg_multi_edit;
+  GtkWidget *table7;
+  GtkWidget *cfg_multi_edit_title;
+  GtkWidget *label32;
   GtkWidget *frame11;
   GtkWidget *vbox24;
   GtkWidget *cfg_delete_playlist;
@@ -1284,9 +1278,21 @@ create_prefs_window (void)
   GtkWidget *frame17;
   GtkWidget *vbox33;
   GtkWidget *cfg_save_sorted_order;
-  GtkWidget *cfg_automount_ipod;
   GtkWidget *label42;
   GtkWidget *label;
+  GtkWidget *vbox20;
+  GtkWidget *frame18;
+  GtkWidget *vbox34;
+  GtkWidget *label44;
+  GtkWidget *play_now_path_entry;
+  GtkWidget *label45;
+  GtkWidget *play_enqueue_path_entry;
+  GtkWidget *frame20;
+  GtkWidget *vbox39;
+  GtkWidget *cfg_automount_ipod;
+  GtkWidget *label56;
+  GtkWidget *label43;
+  GtkWidget *label24;
   GtkWidget *hbuttonbox5;
   GtkWidget *prefs_apply;
   GtkWidget *prefs_cancel;
@@ -1306,13 +1312,13 @@ create_prefs_window (void)
   gtk_widget_show (notebook);
   gtk_box_pack_start (GTK_BOX (vbox13), notebook, TRUE, TRUE, 0);
 
-  vbox14 = gtk_vbox_new (FALSE, 0);
+  vbox14 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox14);
   gtk_container_add (GTK_CONTAINER (notebook), vbox14);
 
   frame6 = gtk_frame_new (NULL);
   gtk_widget_show (frame6);
-  gtk_box_pack_start (GTK_BOX (vbox14), frame6, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox14), frame6, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame6), GTK_SHADOW_ETCHED_OUT);
 
   vbox15 = gtk_vbox_new (FALSE, 0);
@@ -1339,14 +1345,14 @@ create_prefs_window (void)
   gtk_widget_show (cfg_autoimport);
   gtk_box_pack_start (GTK_BOX (vbox15), cfg_autoimport, FALSE, FALSE, 0);
 
-  label26 = gtk_label_new (_("iTunesDB"));
+  label26 = gtk_label_new (_("Import"));
   gtk_widget_show (label26);
   gtk_frame_set_label_widget (GTK_FRAME (frame6), label26);
   gtk_label_set_justify (GTK_LABEL (label26), GTK_JUSTIFY_LEFT);
 
   frame7 = gtk_frame_new (NULL);
   gtk_widget_show (frame7);
-  gtk_box_pack_start (GTK_BOX (vbox14), frame7, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox14), frame7, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame7), GTK_SHADOW_ETCHED_OUT);
 
   vbox16 = gtk_vbox_new (FALSE, 0);
@@ -1459,7 +1465,7 @@ create_prefs_window (void)
 
   frame8 = gtk_frame_new (NULL);
   gtk_widget_show (frame8);
-  gtk_box_pack_start (GTK_BOX (vbox14), frame8, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox14), frame8, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame8), GTK_SHADOW_ETCHED_OUT);
 
   hbox10 = gtk_hbox_new (FALSE, 0);
@@ -1503,18 +1509,9 @@ create_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame8), label30);
   gtk_label_set_justify (GTK_LABEL (label30), GTK_JUSTIFY_LEFT);
 
-  label23 = gtk_label_new_with_mnemonic (_("_Import"));
-  gtk_widget_show (label23);
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 0), label23);
-  gtk_label_set_justify (GTK_LABEL (label23), GTK_JUSTIFY_LEFT);
-
-  vbox20 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox20);
-  gtk_container_add (GTK_CONTAINER (notebook), vbox20);
-
   frame9 = gtk_frame_new (NULL);
   gtk_widget_show (frame9);
-  gtk_box_pack_start (GTK_BOX (vbox20), frame9, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox14), frame9, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame9), GTK_SHADOW_ETCHED_OUT);
 
   vbox21 = gtk_vbox_new (FALSE, 0);
@@ -1530,60 +1527,23 @@ create_prefs_window (void)
   gtk_widget_show (cfg_keep_backups);
   gtk_box_pack_start (GTK_BOX (vbox21), cfg_keep_backups, FALSE, FALSE, 0);
 
-  label31 = gtk_label_new (_("iTunesDB"));
+  label31 = gtk_label_new (_("Export"));
   gtk_widget_show (label31);
   gtk_frame_set_label_widget (GTK_FRAME (frame9), label31);
   gtk_label_set_justify (GTK_LABEL (label31), GTK_JUSTIFY_LEFT);
 
-  frame10 = gtk_frame_new (NULL);
-  gtk_widget_show (frame10);
-  gtk_box_pack_start (GTK_BOX (vbox20), frame10, TRUE, TRUE, 0);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame10), GTK_SHADOW_ETCHED_OUT);
+  label23 = gtk_label_new_with_mnemonic (_("_Import/Export"));
+  gtk_widget_show (label23);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 0), label23);
+  gtk_label_set_justify (GTK_LABEL (label23), GTK_JUSTIFY_LEFT);
 
-  vbox22 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox22);
-  gtk_container_add (GTK_CONTAINER (frame10), vbox22);
-
-  cfg_id3_write = gtk_check_button_new_with_mnemonic (_("Write ID3 tags to disk when modified in gtkpod"));
-  gtk_widget_show (cfg_id3_write);
-  gtk_box_pack_start (GTK_BOX (vbox22), cfg_id3_write, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_id3_write, _("The tags are written to the files on your harddrive and on the ipod (if available)."), NULL);
-
-  table3 = gtk_table_new (2, 1, FALSE);
-  gtk_widget_show (table3);
-  gtk_box_pack_start (GTK_BOX (vbox22), table3, FALSE, FALSE, 0);
-
-  cfg_id3_writeall = gtk_check_button_new_with_mnemonic (_("Update all tags (not only changed ones)"));
-  gtk_widget_show (cfg_id3_writeall);
-  gtk_table_attach (GTK_TABLE (table3), cfg_id3_writeall, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 20, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_id3_writeall, _("Normally only the tag you changed is written to disk."), NULL);
-
-  cfg_write_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (on the 'Import' page)\n when writing tags"));
-  gtk_widget_show (cfg_write_charset);
-  gtk_table_attach (GTK_TABLE (table3), cfg_write_charset, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 20, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_write_charset, _("Normally the charset specified when first importing the song will be used to write the tags. If you have chosen a wrong charset when first importing a song, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see above) and songs imported before V0.51 will have no charset stored -- the charset specified in the Input section will be used at first."), NULL);
-
-  label32 = gtk_label_new (_("Songs"));
-  gtk_widget_show (label32);
-  gtk_frame_set_label_widget (GTK_FRAME (frame10), label32);
-  gtk_label_set_justify (GTK_LABEL (label32), GTK_JUSTIFY_LEFT);
-
-  label24 = gtk_label_new_with_mnemonic (_("_Export"));
-  gtk_widget_show (label24);
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 1), label24);
-  gtk_label_set_justify (GTK_LABEL (label24), GTK_JUSTIFY_LEFT);
-
-  vbox23 = gtk_vbox_new (FALSE, 0);
+  vbox23 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox23);
   gtk_container_add (GTK_CONTAINER (notebook), vbox23);
 
   frame16 = gtk_frame_new (NULL);
   gtk_widget_show (frame16);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame16, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame16, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame16), GTK_SHADOW_ETCHED_OUT);
 
   vbox31 = gtk_vbox_new (FALSE, 0);
@@ -1629,7 +1589,7 @@ create_prefs_window (void)
 
   frame19 = gtk_frame_new (NULL);
   gtk_widget_show (frame19);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame19, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame19, FALSE, TRUE, 0);
 
   vbox38 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox38);
@@ -1650,7 +1610,7 @@ create_prefs_window (void)
 
   frame12 = gtk_frame_new (NULL);
   gtk_widget_show (frame12);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame12, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame12, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame12), GTK_SHADOW_ETCHED_OUT);
 
   vbox25 = gtk_vbox_new (FALSE, 0);
@@ -1827,7 +1787,7 @@ create_prefs_window (void)
 
   frame15 = gtk_frame_new (NULL);
   gtk_widget_show (frame15);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame15, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame15, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame15), GTK_SHADOW_ETCHED_OUT);
 
   vbox30 = gtk_vbox_new (FALSE, 0);
@@ -1851,52 +1811,69 @@ create_prefs_window (void)
 
   label25 = gtk_label_new_with_mnemonic (_("_Display"));
   gtk_widget_show (label25);
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label25);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 1), label25);
   gtk_label_set_justify (GTK_LABEL (label25), GTK_JUSTIFY_LEFT);
 
-  vbox32 = gtk_vbox_new (FALSE, 0);
+  vbox32 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox32);
   gtk_container_add (GTK_CONTAINER (notebook), vbox32);
 
-  frame18 = gtk_frame_new (NULL);
-  gtk_widget_show (frame18);
-  gtk_box_pack_start (GTK_BOX (vbox32), frame18, TRUE, TRUE, 0);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame18), GTK_SHADOW_ETCHED_OUT);
+  frame10 = gtk_frame_new (NULL);
+  gtk_widget_show (frame10);
+  gtk_box_pack_start (GTK_BOX (vbox32), frame10, FALSE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame10), GTK_SHADOW_ETCHED_OUT);
 
-  vbox34 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox34);
-  gtk_container_add (GTK_CONTAINER (frame18), vbox34);
+  vbox22 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox22);
+  gtk_container_add (GTK_CONTAINER (frame10), vbox22);
 
-  label44 = gtk_label_new (_("Command Line for 'Play Now':"));
-  gtk_widget_show (label44);
-  gtk_box_pack_start (GTK_BOX (vbox34), label44, FALSE, FALSE, 2);
-  gtk_label_set_justify (GTK_LABEL (label44), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label44), 0.01, 0.5);
+  cfg_id3_write = gtk_check_button_new_with_mnemonic (_("Write ID3 tags to disk when modified in gtkpod"));
+  gtk_widget_show (cfg_id3_write);
+  gtk_box_pack_start (GTK_BOX (vbox22), cfg_id3_write, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_id3_write, _("The tags are written to the files on your harddrive and on the ipod (if available)."), NULL);
 
-  play_now_path_entry = gtk_entry_new ();
-  gtk_widget_show (play_now_path_entry);
-  gtk_box_pack_start (GTK_BOX (vbox34), play_now_path_entry, FALSE, FALSE, 2);
-  gtk_tooltips_set_tip (tooltips, play_now_path_entry, _("For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing."), NULL);
+  table3 = gtk_table_new (2, 1, FALSE);
+  gtk_widget_show (table3);
+  gtk_box_pack_start (GTK_BOX (vbox22), table3, FALSE, FALSE, 0);
 
-  label45 = gtk_label_new (_("Command Line for 'Enqueue'"));
-  gtk_widget_show (label45);
-  gtk_box_pack_start (GTK_BOX (vbox34), label45, FALSE, FALSE, 4);
-  gtk_label_set_justify (GTK_LABEL (label45), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label45), 0.01, 0.5);
+  cfg_id3_writeall = gtk_check_button_new_with_mnemonic (_("Update all tags (not only changed ones)"));
+  gtk_widget_show (cfg_id3_writeall);
+  gtk_table_attach (GTK_TABLE (table3), cfg_id3_writeall, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_id3_writeall, _("Normally only the tag you changed is written to disk."), NULL);
 
-  play_enqueue_path_entry = gtk_entry_new ();
-  gtk_widget_show (play_enqueue_path_entry);
-  gtk_box_pack_start (GTK_BOX (vbox34), play_enqueue_path_entry, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, play_enqueue_path_entry, _("For example, 'xmms -e %s' will append (enqueue) the selected songs to xmms' current playlist."), NULL);
+  cfg_write_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (on the 'Import' page)\n when writing tags"));
+  gtk_widget_show (cfg_write_charset);
+  gtk_table_attach (GTK_TABLE (table3), cfg_write_charset, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_write_charset, _("Normally the charset specified when first importing the song will be used to write the tags. If you have chosen a wrong charset when first importing a song, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see above) and songs imported before V0.51 will have no charset stored -- the charset specified in the Input section will be used at first."), NULL);
 
-  label43 = gtk_label_new (_("Song Playing"));
-  gtk_widget_show (label43);
-  gtk_frame_set_label_widget (GTK_FRAME (frame18), label43);
-  gtk_label_set_justify (GTK_LABEL (label43), GTK_JUSTIFY_LEFT);
+  cfg_multi_edit = gtk_check_button_new_with_mnemonic (_("Use 'Multi-Edit' for song selections"));
+  gtk_widget_show (cfg_multi_edit);
+  gtk_box_pack_start (GTK_BOX (vbox22), cfg_multi_edit, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_multi_edit, _("If you select several songs in the song list and edit a tag of the first song, the tags in the other songs are updated as well."), NULL);
+
+  table7 = gtk_table_new (1, 1, FALSE);
+  gtk_widget_show (table7);
+  gtk_box_pack_start (GTK_BOX (vbox22), table7, FALSE, FALSE, 0);
+
+  cfg_multi_edit_title = gtk_check_button_new_with_mnemonic (_("Use 'Multi-Edit' also for title field"));
+  gtk_widget_show (cfg_multi_edit_title);
+  gtk_table_attach (GTK_TABLE (table7), cfg_multi_edit_title, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_multi_edit_title, _("Usually you don't want to set the title of several songs to the same text. This option might avoid unwanted results (especially since there is no 'undo' yet)."), NULL);
+
+  label32 = gtk_label_new (_("Song Editing"));
+  gtk_widget_show (label32);
+  gtk_frame_set_label_widget (GTK_FRAME (frame10), label32);
+  gtk_label_set_justify (GTK_LABEL (label32), GTK_JUSTIFY_LEFT);
 
   frame11 = gtk_frame_new (NULL);
   gtk_widget_show (frame11);
-  gtk_box_pack_start (GTK_BOX (vbox32), frame11, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox32), frame11, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame11), GTK_SHADOW_ETCHED_OUT);
 
   vbox24 = gtk_vbox_new (FALSE, 0);
@@ -1927,7 +1904,7 @@ create_prefs_window (void)
 
   frame17 = gtk_frame_new (NULL);
   gtk_widget_show (frame17);
-  gtk_box_pack_start (GTK_BOX (vbox32), frame17, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox32), frame17, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame17), GTK_SHADOW_ETCHED_OUT);
 
   vbox33 = gtk_vbox_new (FALSE, 0);
@@ -1939,20 +1916,78 @@ create_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox33), cfg_save_sorted_order, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_save_sorted_order, _("Alternatively you can use the menu item 'Save Displayed Song Order' to save the sort order."), NULL);
 
-  cfg_automount_ipod = gtk_check_button_new_with_mnemonic (_("Handle mounting/unmounting of iPod drive"));
-  gtk_widget_show (cfg_automount_ipod);
-  gtk_box_pack_start (GTK_BOX (vbox33), cfg_automount_ipod, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_automount_ipod, _("On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount <ipod mountpoint>' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."), NULL);
-
   label42 = gtk_label_new (_("Misc"));
   gtk_widget_show (label42);
   gtk_frame_set_label_widget (GTK_FRAME (frame17), label42);
   gtk_label_set_justify (GTK_LABEL (label42), GTK_JUSTIFY_LEFT);
 
-  label = gtk_label_new_with_mnemonic (_("_Misc"));
+  label = gtk_label_new_with_mnemonic (_("_Edit"));
   gtk_widget_show (label);
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 3), label);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label);
   gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
+
+  vbox20 = gtk_vbox_new (FALSE, 4);
+  gtk_widget_show (vbox20);
+  gtk_container_add (GTK_CONTAINER (notebook), vbox20);
+
+  frame18 = gtk_frame_new (NULL);
+  gtk_widget_show (frame18);
+  gtk_box_pack_start (GTK_BOX (vbox20), frame18, FALSE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame18), GTK_SHADOW_ETCHED_OUT);
+
+  vbox34 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox34);
+  gtk_container_add (GTK_CONTAINER (frame18), vbox34);
+
+  label44 = gtk_label_new (_("Command Line for 'Play Now':"));
+  gtk_widget_show (label44);
+  gtk_box_pack_start (GTK_BOX (vbox34), label44, FALSE, FALSE, 2);
+  gtk_label_set_justify (GTK_LABEL (label44), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label44), 0.01, 0.5);
+
+  play_now_path_entry = gtk_entry_new ();
+  gtk_widget_show (play_now_path_entry);
+  gtk_box_pack_start (GTK_BOX (vbox34), play_now_path_entry, FALSE, FALSE, 2);
+  gtk_tooltips_set_tip (tooltips, play_now_path_entry, _("For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing."), NULL);
+
+  label45 = gtk_label_new (_("Command Line for 'Enqueue'"));
+  gtk_widget_show (label45);
+  gtk_box_pack_start (GTK_BOX (vbox34), label45, FALSE, FALSE, 4);
+  gtk_label_set_justify (GTK_LABEL (label45), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label45), 0.01, 0.5);
+
+  play_enqueue_path_entry = gtk_entry_new ();
+  gtk_widget_show (play_enqueue_path_entry);
+  gtk_box_pack_start (GTK_BOX (vbox34), play_enqueue_path_entry, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, play_enqueue_path_entry, _("For example, 'xmms -e %s' will append (enqueue) the selected songs to xmms' current playlist."), NULL);
+
+  frame20 = gtk_frame_new (NULL);
+  gtk_widget_show (frame20);
+  gtk_box_pack_start (GTK_BOX (vbox34), frame20, FALSE, TRUE, 0);
+
+  vbox39 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox39);
+  gtk_container_add (GTK_CONTAINER (frame20), vbox39);
+
+  cfg_automount_ipod = gtk_check_button_new_with_mnemonic (_("Handle mounting/unmounting of iPod drive"));
+  gtk_widget_show (cfg_automount_ipod);
+  gtk_box_pack_start (GTK_BOX (vbox39), cfg_automount_ipod, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_automount_ipod, _("On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount <ipod mountpoint>' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."), NULL);
+
+  label56 = gtk_label_new (_("Misc"));
+  gtk_widget_show (label56);
+  gtk_frame_set_label_widget (GTK_FRAME (frame20), label56);
+  gtk_label_set_justify (GTK_LABEL (label56), GTK_JUSTIFY_LEFT);
+
+  label43 = gtk_label_new (_("Song Playing"));
+  gtk_widget_show (label43);
+  gtk_frame_set_label_widget (GTK_FRAME (frame18), label43);
+  gtk_label_set_justify (GTK_LABEL (label43), GTK_JUSTIFY_LEFT);
+
+  label24 = gtk_label_new_with_mnemonic (_("_Misc"));
+  gtk_widget_show (label24);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 3), label24);
+  gtk_label_set_justify (GTK_LABEL (label24), GTK_JUSTIFY_LEFT);
 
   hbuttonbox5 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox5);
@@ -2022,15 +2057,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_keep_backups, "toggled",
                     G_CALLBACK (on_cfg_keep_backups_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_id3_write, "toggled",
-                    G_CALLBACK (on_cfg_id3_write_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) cfg_id3_writeall, "toggled",
-                    G_CALLBACK (on_cfg_id3_writeall_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) cfg_write_charset, "toggled",
-                    G_CALLBACK (on_cfg_write_charset_toggled),
-                    NULL);
   g_signal_connect ((gpointer) cfg_display_toolbar, "toggled",
                     G_CALLBACK (on_cfg_display_toolbar_toggled),
                     NULL);
@@ -2064,11 +2090,20 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_block_display, "toggled",
                     G_CALLBACK (on_cfg_block_display_toggled),
                     NULL);
-  g_signal_connect ((gpointer) play_now_path_entry, "changed",
-                    G_CALLBACK (on_play_now_path_entry_changed),
+  g_signal_connect ((gpointer) cfg_id3_write, "toggled",
+                    G_CALLBACK (on_cfg_id3_write_toggled),
                     NULL);
-  g_signal_connect ((gpointer) play_enqueue_path_entry, "changed",
-                    G_CALLBACK (on_play_enqueue_path_entry_changed),
+  g_signal_connect ((gpointer) cfg_id3_writeall, "toggled",
+                    G_CALLBACK (on_cfg_id3_writeall_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_write_charset, "toggled",
+                    G_CALLBACK (on_cfg_write_charset_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_multi_edit, "toggled",
+                    G_CALLBACK (on_cfg_multi_edit_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_multi_edit_title, "toggled",
+                    G_CALLBACK (on_cfg_multi_edit_title_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_delete_playlist, "toggled",
                     G_CALLBACK (on_cfg_delete_playlist_toggled),
@@ -2084,6 +2119,12 @@ create_prefs_window (void)
                     NULL);
   g_signal_connect ((gpointer) cfg_save_sorted_order, "toggled",
                     G_CALLBACK (on_cfg_save_sorted_order_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) play_now_path_entry, "changed",
+                    G_CALLBACK (on_play_now_path_entry_changed),
+                    NULL);
+  g_signal_connect ((gpointer) play_enqueue_path_entry, "changed",
+                    G_CALLBACK (on_play_enqueue_path_entry_changed),
                     NULL);
   g_signal_connect ((gpointer) cfg_automount_ipod, "toggled",
                     G_CALLBACK (on_cfg_automount_ipod_toggled),
@@ -2147,21 +2188,12 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, vbox19, "vbox19");
   GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset0, "tag_autoset0");
   GLADE_HOOKUP_OBJECT (prefs_window, label30, "label30");
-  GLADE_HOOKUP_OBJECT (prefs_window, label23, "label23");
-  GLADE_HOOKUP_OBJECT (prefs_window, vbox20, "vbox20");
   GLADE_HOOKUP_OBJECT (prefs_window, frame9, "frame9");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox21, "vbox21");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_extended, "cfg_write_extended");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_keep_backups, "cfg_keep_backups");
   GLADE_HOOKUP_OBJECT (prefs_window, label31, "label31");
-  GLADE_HOOKUP_OBJECT (prefs_window, frame10, "frame10");
-  GLADE_HOOKUP_OBJECT (prefs_window, vbox22, "vbox22");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_write, "cfg_id3_write");
-  GLADE_HOOKUP_OBJECT (prefs_window, table3, "table3");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_writeall, "cfg_id3_writeall");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_charset, "cfg_write_charset");
-  GLADE_HOOKUP_OBJECT (prefs_window, label32, "label32");
-  GLADE_HOOKUP_OBJECT (prefs_window, label24, "label24");
+  GLADE_HOOKUP_OBJECT (prefs_window, label23, "label23");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox23, "vbox23");
   GLADE_HOOKUP_OBJECT (prefs_window, frame16, "frame16");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox31, "vbox31");
@@ -2223,13 +2255,16 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label38, "label38");
   GLADE_HOOKUP_OBJECT (prefs_window, label25, "label25");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox32, "vbox32");
-  GLADE_HOOKUP_OBJECT (prefs_window, frame18, "frame18");
-  GLADE_HOOKUP_OBJECT (prefs_window, vbox34, "vbox34");
-  GLADE_HOOKUP_OBJECT (prefs_window, label44, "label44");
-  GLADE_HOOKUP_OBJECT (prefs_window, play_now_path_entry, "play_now_path_entry");
-  GLADE_HOOKUP_OBJECT (prefs_window, label45, "label45");
-  GLADE_HOOKUP_OBJECT (prefs_window, play_enqueue_path_entry, "play_enqueue_path_entry");
-  GLADE_HOOKUP_OBJECT (prefs_window, label43, "label43");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame10, "frame10");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox22, "vbox22");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_write, "cfg_id3_write");
+  GLADE_HOOKUP_OBJECT (prefs_window, table3, "table3");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_writeall, "cfg_id3_writeall");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_charset, "cfg_write_charset");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_multi_edit, "cfg_multi_edit");
+  GLADE_HOOKUP_OBJECT (prefs_window, table7, "table7");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_multi_edit_title, "cfg_multi_edit_title");
+  GLADE_HOOKUP_OBJECT (prefs_window, label32, "label32");
   GLADE_HOOKUP_OBJECT (prefs_window, frame11, "frame11");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox24, "vbox24");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_playlist, "cfg_delete_playlist");
@@ -2240,9 +2275,21 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, frame17, "frame17");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox33, "vbox33");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_save_sorted_order, "cfg_save_sorted_order");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
   GLADE_HOOKUP_OBJECT (prefs_window, label42, "label42");
   GLADE_HOOKUP_OBJECT (prefs_window, label, "label");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox20, "vbox20");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame18, "frame18");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox34, "vbox34");
+  GLADE_HOOKUP_OBJECT (prefs_window, label44, "label44");
+  GLADE_HOOKUP_OBJECT (prefs_window, play_now_path_entry, "play_now_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, label45, "label45");
+  GLADE_HOOKUP_OBJECT (prefs_window, play_enqueue_path_entry, "play_enqueue_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame20, "frame20");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox39, "vbox39");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
+  GLADE_HOOKUP_OBJECT (prefs_window, label56, "label56");
+  GLADE_HOOKUP_OBJECT (prefs_window, label43, "label43");
+  GLADE_HOOKUP_OBJECT (prefs_window, label24, "label24");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox5, "hbuttonbox5");
   GLADE_HOOKUP_OBJECT (prefs_window, prefs_apply, "prefs_apply");
   GLADE_HOOKUP_OBJECT (prefs_window, prefs_cancel, "prefs_cancel");

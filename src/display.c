@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 02:31:51 jcs>
+/* Time-stamp: <2003-06-15 23:47:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -271,6 +271,40 @@ void display_update_default_sizes (void)
     sm_update_default_sizes ();
     st_update_default_sizes ();
 }
+
+
+
+/* Utility function: returns a copy of the songs currently
+   selected. This means:
+ 
+   @inst == -1:
+      return list of songs in selected playlist
+
+   @inst == 0 ... prefs_get_sort_tab_num () - 1:
+      return list of songs in passed on to the next instance: selected
+      tab entry (normal sort tab) or songs matching specified
+      conditions in a special sort tab
+
+   @inst >= prefs_get_sort_tab_num ():
+      return list of songs selected in the song view
+
+   You must g_list_free() the list after use.
+*/
+GList *display_get_selection (guint32 inst)
+{
+    if (inst == -1)
+    {
+	Playlist *pl = pm_get_selected_playlist ();
+	if (pl)  return g_list_copy (pl->members);
+	else     return NULL;
+    }
+    if ((inst >= 0) && (inst < prefs_get_sort_tab_num ()))
+	return g_list_copy (st_get_selected_members (inst));
+    if (inst >= prefs_get_sort_tab_num ())
+	return sm_get_selected_songs ();
+    return NULL;
+}
+
 
 
 /* ------------------------------------------------------------

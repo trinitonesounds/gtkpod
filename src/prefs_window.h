@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 02:01:59 jcs>
+/* Time-stamp: <2003-06-15 23:45:19 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -63,6 +63,8 @@ void prefs_window_set_sync_remove (gboolean val);
 void prefs_window_set_display_toolbar (gboolean val);
 void prefs_window_set_display_tooltips_main (gboolean val);
 void prefs_window_set_display_tooltips_prefs (gboolean val);
+void prefs_window_set_multi_edit (gboolean val);
+void prefs_window_set_multi_edit_title (gboolean val);
 void prefs_window_set_update_charset (gboolean val);
 void prefs_window_set_write_charset (gboolean val);
 void prefs_window_set_add_recursively (gboolean val);

@@ -10,7 +10,8 @@ gtkpod V0.52-CVS
 
 	NEW FEATURE: If you mark several songs and change a tag in the
 	first one, the corresponding tag in the other songs will be
-	changed as well. Patch provided by Ramesh Dharan. Thanks!
+	changed as well (must activate in the prefs menu). Patch provided
+	by Ramesh Dharan. Thanks!
 
 	IMPROVEMENT: added auto-dection of Japanese encoding (thanks
 	to Hiroshi Kawashima).

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 02:28:50 jcs>
+/* Time-stamp: <2003-06-15 23:49:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -238,6 +238,8 @@ struct cfg *cfg_new(void)
     mycfg->play_enqueue_path = g_strdup ("xmms -e %s");
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
     mycfg->automount = FALSE;
+    mycfg->multi_edit = FALSE;
+    mycfg->multi_edit_title = TRUE;
     return(mycfg);
 }
 
@@ -500,6 +502,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "display_tooltips_prefs") == 0)
 	  {
 	      prefs_set_display_tooltips_prefs((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "multi_edit") == 0)
+	  {
+	      prefs_set_multi_edit((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "multi_edit_title") == 0)
+	  {
+	      prefs_set_multi_edit_title((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "update_charset") == 0)
 	  {
@@ -796,6 +806,8 @@ write_prefs_to_file_desc(FILE *fp)
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
 	    prefs_get_display_tooltips_prefs());
+    fprintf(fp, "multi_edit=%d\n", prefs_get_multi_edit());
+    fprintf(fp, "multi_edit_title=%d\n", prefs_get_multi_edit_title());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
@@ -1539,6 +1551,26 @@ void prefs_set_display_tooltips_prefs (gboolean state)
 gboolean prefs_get_display_tooltips_prefs (void)
 {
     return cfg->display_tooltips_prefs;
+}
+
+void prefs_set_multi_edit (gboolean state)
+{
+    cfg->multi_edit = state;
+}
+
+gboolean prefs_get_multi_edit (void)
+{
+    return cfg->multi_edit;
+}
+
+void prefs_set_multi_edit_title (gboolean state)
+{
+    cfg->multi_edit_title = state;
+}
+
+gboolean prefs_get_multi_edit_title (void)
+{
+    return cfg->multi_edit_title;
 }
 
 gint prefs_get_last_prefs_page (void)

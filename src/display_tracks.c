@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-14 00:36:42 jcs>
+/* Time-stamp: <2003-06-16 00:14:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,7 +39,6 @@
 #include "display_private.h"
 #include "song.h"
 #include "playlist.h"
-#include "interface.h"
 #include "callbacks.h"
 #include "misc.h"
 #include "file.h"
@@ -244,7 +243,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   Song *song; 
   SM_item column; 
   gboolean changed;        
-  gboolean edit_first_only;  
+  gboolean multi_edit;
 
   guint32 nr;
   gchar **itemp_utf8; 
@@ -255,14 +254,16 @@ sm_cell_edited (GtkCellRendererText *renderer,
 
 
   column = (SM_item) g_object_get_data(G_OBJECT(renderer), "column");
-  edit_first_only = (column == SM_COLUMN_TITLE); 
+  multi_edit = prefs_get_multi_edit ();
+  if (column == SM_COLUMN_TITLE)
+      multi_edit &= prefs_get_multi_edit_title ();
   selection = gtk_tree_view_get_selection(song_treeview); 
   row_list = gtk_tree_selection_get_selected_rows(selection, &model); 
   
   /*printf("sm_cell_edited: column: %d  song:%lx\n", column, song);*/
 
   for (row_node = g_list_first(row_list); 
-       row_node != NULL && !(edit_first_only && row_node != g_list_first(row_list)); 
+       row_node && (multi_edit || (row_node == g_list_first(row_list))); 
        row_node = g_list_next(row_node))
   {
      gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) row_node->data); 

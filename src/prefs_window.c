@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 02:02:29 jcs>
+/* Time-stamp: <2003-06-15 23:45:18 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -245,6 +245,17 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->display_tooltips_prefs);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_multi_edit")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->multi_edit);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_multi_edit_title")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->multi_edit_title);
+	    gtk_widget_set_sensitive (w, tmpcfg->multi_edit);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_update_charset")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -476,6 +487,8 @@ prefs_window_set(void)
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
 	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
+	prefs_set_multi_edit (tmpcfg->multi_edit);
+	prefs_set_multi_edit_title (tmpcfg->multi_edit_title);
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
@@ -796,6 +809,19 @@ void prefs_window_set_display_tooltips_main (gboolean val)
 void prefs_window_set_display_tooltips_prefs (gboolean val)
 {
     tmpcfg->display_tooltips_prefs = val;
+}
+
+void prefs_window_set_multi_edit (gboolean val)
+{
+    GtkWidget *w = lookup_widget (prefs_window, "cfg_multi_edit_title");
+
+    tmpcfg->multi_edit = val;
+    gtk_widget_set_sensitive (w, val);
+}
+
+void prefs_window_set_multi_edit_title (gboolean val)
+{
+    tmpcfg->multi_edit_title = val;
 }
 
 void prefs_window_set_update_charset (gboolean val)

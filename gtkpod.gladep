@@ -5,4 +5,5 @@
   <name>Gtkpod</name>
   <program_name>gtkpod</program_name>
   <gnome_support>FALSE</gnome_support>
+  <support_header_file>support_.h</support_header_file>
 </glade-project>

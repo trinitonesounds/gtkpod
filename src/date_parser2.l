@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-|  Time-stamp: <2003-06-12 22:18:53 jcs>
+|  Time-stamp: <2003-06-15 23:49:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -27,6 +27,7 @@
 
 %{
 #include <stdlib.h>
+#include <string.h>
 #include "date_parser.h"
 #include "misc.h"
 #include "support.h"

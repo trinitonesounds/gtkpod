@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-14 14:06:45 jcs>
+/* Time-stamp: <2003-06-15 14:19:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -56,6 +56,7 @@ typedef enum {
     IS_ERROR,   /* error parsing date string (or wrong parameters)    */
 } IntervalState;
 
+
 /* ---------------------------------------------------------------- */
 /* Section for sort tab display (special sort tab)                  */
 /* ---------------------------------------------------------------- */
@@ -71,8 +72,12 @@ static void sp_remove_all_members (guint32 inst)
 
     st = sorttab[inst];
 
-    g_list_free (st->members);
-    st->members = NULL;
+    if (!st)  return;
+
+    g_list_free (st->sp_members);
+    st->sp_members = NULL;
+    g_list_free (st->sp_selected);
+    st->sp_selected = NULL;
 }
 
 
@@ -276,19 +281,23 @@ static void st_add_song_special (Song *song, gboolean final,
     if (song != NULL)
     {
 	/* Add song to member list */
-	st->members = g_list_append (st->members, song);
+	st->sp_members = g_list_append (st->sp_members, song);
 	/* Check if song is to be passed on to next sort tab */
 	if (st->is_go || prefs_get_sp_autodisplay (inst))
 	{   /* Check if song matches sort criteria to be displayed */
 	    if (sp_check_song (song, inst))
+	    {
+		st->sp_selected = g_list_append (st->sp_selected, song);
 		st_add_song (song, final, display, inst+1);
+	    }
 	}
     }
     if (!song && final)
     {
 	if (st->is_go || prefs_get_sp_autodisplay (inst))
 	    st_add_song (NULL, final, display, inst+1);
-    }    
+	
+    }
 }
 
 
@@ -311,10 +320,14 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
     /* remember that "Display" was already pressed */
     st->is_go = TRUE;
 
+    /* Clear the sp_selected list */
+    g_list_free (st->sp_selected);
+    st->sp_selected = NULL;
+
     /* initialize next instance */
     st_init (-1, inst+1);
 
-    if (st->members)
+    if (st->sp_members)
     {
 	GTimeVal time;
 	float max_count = REFRESH_INIT_COUNT;
@@ -327,12 +340,15 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 	    block_selection (inst);
 	    g_get_current_time (&time);
 	}
-	for (gl=st->members; gl; gl=gl->next)
+	for (gl=st->sp_members; gl; gl=gl->next)
 	{ /* add all member songs to next instance */
 	    Song *song = (Song *)gl->data;
 	    if (stop_add <= (gint)inst) break;
 	    if (sp_check_song (song, inst))
+	    {
+		st->sp_selected = g_list_append (st->sp_selected, song);
 		st_add_song (song, FALSE, TRUE, inst+1);
+	    }
 	    --count;
 	    if ((count < 0) && !prefs_get_block_display ())
 	    {
@@ -420,12 +436,12 @@ static void st_remove_song_special (Song *song, guint32 inst)
     if (st->current_category != ST_CAT_SPECIAL) return;
 
     /* Remove song from member list */
-    link = g_list_find (st->members, song);
+    link = g_list_find (st->sp_members, song);
     if (link)
     {   /* only remove song from next sort tab if it was a member of
 	   this sort tab (slight performance improvement when being
 	   called with non-existing songs */
-	st->members = g_list_delete_link (st->members, link);
+	st->sp_members = g_list_delete_link (st->sp_members, link);
 	st_remove_song (song, inst+1);
     }
 }
@@ -436,7 +452,6 @@ static void st_song_changed_special (Song *song,
 				     gboolean removed, guint32 inst)
 {
     SortTab *st;
-    GList *link;
 
     /* Sanity */
     if (inst >= prefs_get_sort_tab_num ())  return;
@@ -446,25 +461,42 @@ static void st_song_changed_special (Song *song,
     /* Sanity */
     if (st->current_category != ST_CAT_SPECIAL) return;
 
-    link = g_list_find (st->members, song);
-    if (link)
-    {   /* only remove song from next sort tab if it was a member of
-	   this sort tab (slight performance improvement when being
-	   called with non-existing songs */
+    if (g_list_find (st->sp_members, song))
+    {   /* only do anything if @song was a member of this sort tab
+	   (slight performance improvement when being called with
+	   non-existing songs */
 	if (removed)
 	{
 	    /* Remove song from member list */
-	    st->members = g_list_delete_link (st->members, link);
-	    st_song_changed (song, removed, inst+1);
+	    st->sp_members = g_list_remove (st->sp_members, song);
+	    if (g_list_find (st->sp_selected, song))
+	    {   /* only remove from next sort tab if it was passed on */
+		st->sp_selected = g_list_remove (st->sp_selected, song);
+		st_song_changed (song, TRUE, inst+1);
+	    }
 	}
 	else
 	{
-	    /* SP FIXME!! */
-	    /* for now I simply remove always and then add if
-	       appropriate */
-	    st_song_changed (song, TRUE, inst+1);
-	    if (sp_check_song (song, inst))
-		st_add_song (song, TRUE, TRUE, inst+1);
+	    if (g_list_find (st->sp_selected, song))
+	    {   /* song is being passed on to next sort tab */
+		if (sp_check_song (song, inst))
+		{   /* only changed */
+		    st_song_changed (song, FALSE, inst+1);
+		}
+		else
+		{   /* has to be removed */
+		    st->sp_selected = g_list_remove (st->sp_selected, song);
+		    st_song_changed (song, TRUE, inst+1);
+		}
+	    }
+	    else
+	    {   /* song is not being passed on to next sort tab */
+		if (sp_check_song (song, inst))
+		{   /* add to next sort tab */
+		    st->sp_selected = g_list_append (st->sp_selected, song);
+		    st_add_song (song, TRUE, TRUE, inst+1);
+		}
+	    }		
 	}
     }
 }
@@ -481,7 +513,7 @@ void sp_conditions_changed (guint32 inst)
 
     st = sorttab[inst];
     /* Sanity */
-    if (st->current_category != ST_CAT_SPECIAL) return;
+    if (!st || st->current_category != ST_CAT_SPECIAL) return;
 
     /* Only redisplay if data is actually being passed on to the next
        sort tab */
@@ -495,6 +527,36 @@ void sp_conditions_changed (guint32 inst)
 /* ---------------------------------------------------------------- */
 /* Section for sort tab display (normal and general)                */
 /* ---------------------------------------------------------------- */
+
+
+/* return a pointer to the list of members selected in the sort tab
+   @inst. For a normal sort tab this is
+   sorttab[inst]->current_entry->members, for a special sort tab this
+   is sorttab[inst]->sp_selected.
+   You must not g_list_free() the returned list */
+GList *st_get_selected_members (guint32 inst)
+{
+    SortTab *st;
+
+    /* Sanity */
+    if (inst >= prefs_get_sort_tab_num ())  return NULL;
+
+    st = sorttab[inst];
+
+    /* Sanity */
+    if (!st) return NULL;
+
+    if (st->current_category != ST_CAT_SPECIAL)
+    {
+	if (st->current_entry)    return st->current_entry->members;
+	else                      return NULL;
+    }
+    else
+    {
+	return st->sp_selected;
+    }
+}
+
 
 /* Get the instance of the sort tab that corresponds to
    "notebook". Returns -1 if sort tab could not be found
@@ -1298,8 +1360,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   }
   else
   {
-      if (sorttab[inst-1] && sorttab[inst-1]->current_entry)
-	  copy = sorttab[inst-1]->current_entry->members;
+      copy = st_get_selected_members (inst-1);
   }
   if (copy)
   {
@@ -1368,6 +1429,7 @@ void st_page_selected (GtkNotebook *notebook, guint page)
   guint32 inst;
 
   inst = st_get_instance_from_notebook (notebook);
+/*   printf ("st_page_selected: inst: %d, page: %d\n", inst, page); */
   if (inst == -1) return; /* invalid notebook */
   /* inst-1: changing a page in the first sort tab is like selecting a
      new playlist and so on. Therefore we subtract 1 from the

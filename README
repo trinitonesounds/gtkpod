@@ -41,11 +41,13 @@ written by iTunes.
     use startup/shutdown scripts)
   - Known bugs
 
-*----------------------------------*
-|                                  |
-|  Connecting iPod to a Linux box  |
-|                                  |
-*----------------------------------*
+*--------------------------------------------------*
+|                                                  |
+|  Connecting iPod to a Linux box (kernel 2.4.20)  |
+|  (connecting to 2.4.21 seems to work slightly    |
+|   differently -- see below )                     |
+|                                                  |
+*--------------------------------------------------*
 
 1) You need a Windows iPod. See e.g.
 
@@ -127,6 +129,101 @@ Nov 28 21:58:39 hatarakibachi kernel:  sda: sda1 sda2
 
 11) Disconnect the iPod from your computer.
 
+
+*--------------------------------------------------*
+|                                                  |
+|  Connecting iPod to a Linux box (kernel 2.4.21)  |
+|  (may also work with 2.4.20, but I didn't try)   |
+|                                                  |
+*--------------------------------------------------*
+
+1) You need a Windows iPod. See e.g.
+
+http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipode
+
+for information about how to convert your mac iPod to a windows iPod.
+
+2) Get kernel source and configure
+Needed configuration:
+
+    * Code maturity level options - y
+    * SCSI support - y
+    * SCSI disk support - y
+    * IEEE1394 (FireWire)/IEEE 1394 (FireWire) support (Experimental) - y
+    * OHCI-1394 support - y
+    * SBP-2 support - m (important to use module -- if someone finds
+      out how to use hotplug with sbp2 compiled in, let me know)
+
+3) Create /mnt/ipod:
+
+   mkdir /mnt/ipod
+
+4) Add a line to /etc/fstab. You should edit uid to match your user
+   id. Also, /dev/sda2 may not be appropriate, if you have other scsi
+   devices.
+
+/dev/sda2	/mnt/ipod	vfat rw,user,noauto,noatime,errors=remount 0 0
+
+NOTE: Some users have had problems with newer versions of mount(newer than
+mount-2.11h) The following fstab entry might work better for you.
+
+/dev/sda2	/mnt/ipod	vfat rw,user,noauto,noatime,shortname=winnt 0 0
+
+5) Install the hotplug utilities
+   (http://linux-hotplug.sourceforge.net/, debian package: 'hotplug')
+
+   (If you don't want to use the hotplug utilities, you must call the
+   rescan-scsi-bus.sh (see below) by hand after loading the sbp2
+   module. This is different from 2.4.20.)
+
+5a) Add the ieee1394 hotplug support (described at
+    http://www.linux1394.org/faq.html#hotplug):
+
+   - copy ieee1394.agent to /etc/hotplug/ from
+     http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/linux-hotplug/admin/etc/hotplug/
+   - mkdir /etc/hotplug/ieee1394
+   - create /etc/hotplug/ieee1394/sbp2:
+       #!/bin/bash
+       if [ "${ACTION}" = "add" ]; then
+	 . /etc/hotplug/ieee1394/rescan-scsi-bus.sh
+       else
+	 . /etc/hotplug/ieee1394/rescan-scsi-bus.sh -r
+       fi
+   - copy rescan-scsi-bus.sh to /etc/hotplug/ieee1394 from
+     http://www.garloff.de/kurt/linux/rescan-scsi-bus.sh
+
+6) Connect your iPod to your computer and wait until you see something
+   like the following on your system log (you can use the 'dmesg'
+   command to check).
+
+Jun 15 17:13:53 hatarakibachi kernel: ieee1394: Node 00:1023 changed to 01:1023
+Jun 15 17:13:55 hatarakibachi kernel: ieee1394: Node 01:1023 changed to 00:1023
+Jun 15 17:13:57 hatarakibachi kernel: ieee1394: sbp2: Logged into SBP-2 device
+Jun 15 17:13:57 hatarakibachi kernel: ieee1394: Device added: Node[00:1023]  GUID[000a2700020680b5]  [Apple Computer, Inc.]
+Jun 15 17:13:57 hatarakibachi kernel: ieee1394: Node 00:1023 changed to 01:1023
+Jun 15 17:13:57 hatarakibachi kernel: scsi singledevice 0 0 0 0
+Jun 15 17:13:57 hatarakibachi kernel:   Vendor: Apple     Model: iPod              Rev: 1.30
+Jun 15 17:13:57 hatarakibachi kernel:   Type:   Direct-Access                      ANSI SCSI revision: 02
+Jun 15 17:13:57 hatarakibachi kernel: Attached scsi removable disk sda at scsi0, channel 0, id 0, lun 0
+Jun 15 17:13:57 hatarakibachi kernel: SCSI device sda: 39062520 512-byte hdwr sectors (20000 MB)
+Jun 15 17:13:57 hatarakibachi kernel: sda: test WP failed, assume Write Enabled
+Jun 15 17:13:58 hatarakibachi kernel:  sda: sda1 sda2
+Jun 15 17:13:58 hatarakibachi kernel: scsi singledevice 0 0 1 0
+...
+
+7) Mount the iPod hard drive
+
+   mount /mnt/ipod
+
+8) do whatever you need to do (e.g. start gtkpod, see below)
+
+9) Unmount the iPod:
+
+    umount /mnt/ipod
+
+10) Disconnect the iPod from your computer (ignore the "Do not
+    disconnect" message -- as long as you wait for the 'unmount' to
+    command to finish properly, everything should be fine).
 
 
 
