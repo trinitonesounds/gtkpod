@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 02:58:00 jcs>
+/* Time-stamp: <2005-02-13 21:58:53 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -464,6 +464,8 @@ void init_data (GtkWidget *window)
     pl = gp_playlist_new (_("gtkpod"), FALSE);
     pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
     gp_playlist_add (itdb, pl, -1);
+    g_return_if_fail (itdb->userdata);
+    ((ExtraiTunesDBData *)itdb->userdata)->data_changed = FALSE;
 
     itdb = gp_itdb_new ();
     itdb->usertype = GP_ITDB_TYPE_LOCAL;
@@ -471,6 +473,7 @@ void init_data (GtkWidget *window)
     pl = gp_playlist_new (_("Local"), FALSE);
     pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
     gp_playlist_add (itdb, pl, -1);
+    ((ExtraiTunesDBData *)itdb->userdata)->data_changed = FALSE;
 }
 
 

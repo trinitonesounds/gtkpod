@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-20 00:33:10 jcs>
+/* Time-stamp: <2005-02-13 21:42:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -46,8 +46,7 @@ void itdb_track_add (Itdb_iTunesDB *itdb, Itdb_Track *track, gint32 pos)
 {
     g_return_if_fail (itdb);
     g_return_if_fail (track);
-    g_return_if_fail (track->userdata && !track->userdata_duplicate);
-    g_return_if_fail (track->userdata && !track->userdata_destroy);
+    g_return_if_fail (!track->userdata || track->userdata_duplicate);
 
     track->itdb = itdb;
 
@@ -105,7 +104,7 @@ Itdb_Track *itdb_track_duplicate (Itdb_Track *tr)
     Itdb_Track *tr_dup;
 
     g_return_val_if_fail (tr, NULL);
-    g_return_val_if_fail (tr->userdata && !tr->userdata_duplicate, NULL);
+    g_return_val_if_fail (!tr->userdata || tr->userdata_duplicate, NULL);
 
     tr_dup = g_new0 (Itdb_Track, 1);
     memcpy (tr_dup, tr, sizeof (Itdb_Track));

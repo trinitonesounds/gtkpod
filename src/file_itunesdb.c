@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 02:23:35 jcs>
+/* Time-stamp: <2005-02-13 21:50:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -403,8 +403,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
     iTunesDB *itdb = NULL;
     GError *error = NULL;
 
-    g_return_val_if_fail (mp || itdb_name, NULL);
-    g_return_val_if_fail (!prefs_get_offline() && !mp, NULL);
+    g_return_val_if_fail (mp || itdb || prefs_get_offline(), NULL);
 
     if (prefs_get_offline() || itdb_name)
     { /* offline - requires extended info */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-22 13:52:42 jcs>
+/* Time-stamp: <2005-02-13 21:42:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -661,8 +661,8 @@ void itdb_free (Itdb_iTunesDB *itdb)
 iTunesDB *itdb_duplicate (Itdb_iTunesDB *itdb)
 {
     g_return_val_if_fail (itdb, NULL);
-    g_return_val_if_fail (itdb->userdata &&
-			  !itdb->userdata_duplicate, NULL);
+    g_return_val_if_fail (!itdb->userdata ||
+			  itdb->userdata_duplicate, NULL);
     /* FIXME: not yet implemented */
     g_return_val_if_reached (NULL);
 }

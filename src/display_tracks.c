@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 22:57:57 jcs>
+/* Time-stamp: <2005-02-13 21:54:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -159,9 +159,9 @@ void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter)
     if (into_iter)
 	iter = *into_iter;
     else
-	gtk_tree_store_append (GTK_TREE_STORE (model), &iter, NULL);
+	gtk_list_store_append (GTK_LIST_STORE (model), &iter);
 
-    gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 			READOUT_COL, track, -1);
 }
 
@@ -1755,10 +1755,10 @@ static void tm_list_store_move (GtkListStore *store,
     /* get the content (track) of the row to move */
     gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
     /* remove the old row */
-    gtk_tree_store_remove (GTK_TREE_STORE (model), iter);
+    gtk_list_store_remove (GTK_LIST_STORE (model), iter);
 
     /* set the content of the new row */
-    gtk_tree_store_set (GTK_TREE_STORE (model), &new_iter,
+    gtk_list_store_set (GTK_LIST_STORE (model), &new_iter,
 			READOUT_COL, track, -1);
 }
 

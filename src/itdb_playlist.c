@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-09 00:33:17 jcs>
+/* Time-stamp: <2005-02-13 21:45:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -946,7 +946,7 @@ Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl)
     GList *gl;
 
     g_return_val_if_fail (pl, NULL);
-    g_return_val_if_fail (pl->userdata && !pl->userdata_duplicate, NULL);
+    g_return_val_if_fail (!pl->userdata || pl->userdata_duplicate, NULL);
 
     pl_dup = g_new0 (Itdb_Playlist, 1);
     memcpy (pl_dup, pl, sizeof (Itdb_Playlist));
@@ -1064,8 +1064,7 @@ void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos)
 {
     g_return_if_fail (itdb);
     g_return_if_fail (pl);
-    g_return_if_fail (pl->userdata && !pl->userdata_duplicate);
-    g_return_if_fail (pl->userdata && !pl->userdata_destroy);
+    g_return_if_fail (!pl->userdata || pl->userdata_duplicate);
 
     pl->itdb = itdb;
 
@@ -1274,7 +1273,7 @@ Itdb_Playlist *itdb_playlist_mpl (Itdb_iTunesDB *itdb)
     g_return_val_if_fail (pl, NULL);
 
     /* mpl is guaranteed to be at first position... */
-    g_return_val_if_fail (pl->type != ITDB_PL_TYPE_MPL, NULL);
+    g_return_val_if_fail (pl->type == ITDB_PL_TYPE_MPL, NULL);
 
     return pl;
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-22 13:51:43 jcs>
+/* Time-stamp: <2005-02-13 21:47:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -265,7 +265,7 @@ static iTunesDB *get_itdb_local (void)
     g_return_val_if_fail (gtkpod_window, NULL);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
 				    "itdbs_head");
-    g_return_val_if_fail (itdbs_head, NULL);
+    if (!itdbs_head) return NULL;
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
 	iTunesDB *itdb = gl->data;
@@ -288,7 +288,7 @@ static iTunesDB *get_itdb_ipod (void)
     g_return_val_if_fail (gtkpod_window, NULL);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
 				    "itdbs_head");
-    g_return_val_if_fail (itdbs_head, NULL);
+    if (!itdbs_head) return NULL;
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
 	iTunesDB *itdb = gl->data;
@@ -328,11 +328,11 @@ void info_update_totals_view (void)
 	pl = itdb_playlist_mpl (itdb);
 	g_return_if_fail (pl);
 	fill_in_info (pl->members, &tracks, &playtime, &filesize);
-	fill_label_uint ("total_playlistslocal",
+	fill_label_uint ("total_playlists_local",
 			 itdb_playlists_number (itdb)-1);
-	fill_label_uint ("total_trackslocal", tracks);
-	fill_label_time ("total_playtimelocal", playtime);
-	fill_label_size ("total_filesizelocal", filesize);
+	fill_label_uint ("total_tracks_local", tracks);
+	fill_label_time ("total_playtime_local", playtime);
+	fill_label_size ("total_filesize_local", filesize);
     }
     info_update_totals_view_space ();
 }
@@ -452,7 +452,9 @@ gtkpod_tracks_statusbar_update(void)
 	{
 	    itdb = get_itdb_ipod ();
 	}
-	g_return_if_fail (itdb);
+	/* gets called before itdbs are setup up -> fail silently */
+/*	g_return_if_fail (itdb);*/
+	if (!itdb) return;
 	
 	buf = g_strdup_printf (_(" P:%d S:%d/%d"),
 			       itdb_playlists_number (itdb) - 1,
