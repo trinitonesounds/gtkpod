@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-15 23:57:23 jcs>
+/* Time-stamp: <2004-09-20 20:26:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -267,7 +267,7 @@ struct cfg *cfg_new(void)
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
     mycfg->unused_gboolean3 = FALSE;
     mycfg->concal_autosync = FALSE;
-    mycfg->unused_gboolean1 = FALSE;
+    mycfg->tmp_disable_sort = TRUE;
     mycfg->unused_gboolean2 = FALSE;
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
@@ -787,9 +787,9 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_concal_autosync ((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "unused_gboolean1") == 0)
+	  else if(g_ascii_strcasecmp (line, "tmp_disable_sort") == 0)
 	  {
-	      prefs_set_unused_gboolean1 ((gboolean)atoi(arg));
+	      prefs_set_tmp_disable_sort ((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "unused_gboolean2") == 0)
 	  {
@@ -1083,7 +1083,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
     prefs_write_hash_values (fp);
-/*     fprintf (fp, "unused_gboolean1=%d\n", cfg->unused_gboolean1); */
+     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
 /*     fprintf (fp, "unused_gboolean2=%d\n", cfg->unused_gboolean2); */
 /*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
 }
@@ -2434,14 +2434,21 @@ void prefs_set_concal_autosync(gboolean val)
     cfg->concal_autosync = val;
 }
 
-gboolean prefs_get_unused_gboolean1(void)
+gboolean prefs_get_tmp_disable_sort(void)
 {
-    return(cfg->unused_gboolean1);
+    return(cfg->tmp_disable_sort);
 }
 
-void prefs_set_unused_gboolean1(gboolean val)
+void prefs_set_tmp_disable_sort(gboolean val)
 {
-    cfg->unused_gboolean1 = val;
+    cfg->tmp_disable_sort = val;
+}
+
+/* sorting gets disabled temporarily if either of the options
+   'tmp_disable_sort' or 'block_display' is checked */
+gboolean prefs_get_disable_sorting(void)
+{
+    return (prefs_get_block_display() || prefs_get_tmp_disable_sort());
 }
 
 gboolean prefs_get_unused_gboolean2(void)

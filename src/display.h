@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-15 23:57:24 jcs>
+/* Time-stamp: <2004-09-20 20:10:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -199,6 +199,7 @@ void display_show_hide_toolbar (void);
 void display_reset (gint inst);
 GList *display_get_selection (guint32 inst);
 GList *display_get_selected_members (gint inst);
+void display_enable_disable_view_sort (gboolean enable);
 
 Playlist* pm_get_selected_playlist(void);
 void pm_remove_playlist (Playlist *playlist, gboolean select);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-16 00:18:01 jcs>
+/* Time-stamp: <2004-09-20 20:05:39 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -655,12 +655,12 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->concal_autosync);
 	}
-/* 	if((w = lookup_widget(prefs_window, "unused_gboolean1"))) */
-/* 	{ */
-/* 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), */
-/* 					 tmpcfg->unused_gboolean1); */
-/* 	} */
-/* 	if((w = lookup_widget(prefs_window, "unused_gboolean2"))) */
+	if((w = lookup_widget(prefs_window, "cfg_tmp_disable_sort")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->tmp_disable_sort);
+	}
+/* 	if((w = lookup_widget(prefs_window, "cfg_unused_gboolean2"))) */
 /* 	{ */
 /* 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), */
 /* 					 tmpcfg->unused_gboolean2); */
@@ -753,7 +753,7 @@ prefs_window_set(void)
 	prefs_set_add_recursively(tmpcfg->add_recursively);
 	prefs_set_automount(tmpcfg->automount);
 	prefs_set_concal_autosync(tmpcfg->concal_autosync);
-	prefs_set_unused_gboolean1(tmpcfg->unused_gboolean1);
+	prefs_set_tmp_disable_sort(tmpcfg->tmp_disable_sort);
 	prefs_set_unused_gboolean2(tmpcfg->unused_gboolean2);
 	prefs_set_unused_gboolean3(tmpcfg->unused_gboolean3);
 
@@ -1202,9 +1202,9 @@ prefs_window_set_concal_autosync(gboolean val)
 }
 
 void
-prefs_window_set_unused_gboolean1(gboolean val)
+prefs_window_set_tmp_disable_sort(gboolean val)
 {
-    tmpcfg->unused_gboolean1 = val;
+    tmpcfg->tmp_disable_sort = val;
 }
 
 void

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-21 18:54:03 jcs>
+/* Time-stamp: <2004-09-20 20:27:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -64,6 +64,7 @@ struct cfg
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   gboolean update_existing; /* when adding track, update existing track */
   gboolean block_display;   /* block display during change of selection? */
+  gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
   gboolean autoimport;	    /* whether or not to automatically import files */
   struct
   {
@@ -161,7 +162,6 @@ enum
     SORT_DESCENDING = GTK_SORT_DESCENDING,
     SORT_NONE = 10*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
 };
-
 
 
 gchar *prefs_get_cfgdir (void);
@@ -323,13 +323,16 @@ void prefs_set_unused_gboolean3(gboolean val);
 gboolean prefs_get_unused_gboolean3(void);
 void prefs_set_concal_autosync(gboolean val);
 gboolean prefs_get_concal_autosync(void);
-void prefs_set_unused_gboolean1(gboolean val);
-gboolean prefs_get_unused_gboolean1(void);
+void prefs_set_tmp_disable_sort(gboolean val);
+gboolean prefs_get_tmp_disable_sort(void);
 void prefs_set_unused_gboolean2(gboolean val);
 gboolean prefs_get_unused_gboolean2(void);
+
+gboolean prefs_get_disable_sorting(void);
 
 void prefs_set_string_value (const gchar *key, const gchar *value);
 void prefs_set_int_value (const gchar *key, gint value);
 gboolean prefs_get_string_value (const gchar *key, gchar **value);
 gboolean prefs_get_int_value (const gchar *key, gint *value);
+
 #endif

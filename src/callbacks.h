@@ -716,3 +716,7 @@ on_playlist_file_tab_entry_activate    (GtkMenuItem     *menuitem,
 void
 on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

@@ -172,6 +172,7 @@ void pm_add_playlist (Playlist *playlist, gint position)
   }
 }
 
+
 /* Used by pm_remove_playlist() to remove playlist from model by calling
    gtk_tree_model_foreach () */ 
 static gboolean pm_delete_playlist_fe (GtkTreeModel *model,
@@ -339,6 +340,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      block_selection (-1);
 	      g_get_current_time (&time);
 	  }
+	  tm_enable_disable_view_sort (FALSE);
 	  for (gl=new_playlist->members; gl; gl=gl->next)
 	  { /* add all tracks to sort tab 0 */
 	      Track *track = gl->data;
@@ -361,6 +363,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	      }
 	  }
+	  tm_enable_disable_view_sort (TRUE);
 	  if (stop_add != -1) st_add_track (NULL, TRUE, TRUE, 0);
 	  if (!prefs_get_block_display ())
 	  {

@@ -9,6 +9,9 @@ gtkpod V0.82-CVS
 	and the patch can also be downloaded at
 	gtkpod.sourceforge.net/gtkliststore_c.diff
 
+	BUGFIX: When using "block display during updates" the display
+	was still updated during import. Fixed.
+
 	BUGFIX: when writing tags to file the track tag was
 	deleted.
 
@@ -49,6 +52,9 @@ gtkpod V0.82-CVS
 	before (for security I'm using the iPod as a non-buffered
 	device). A back-upped version of the iTunesDB is now always
 	written to ~/.gtkpod.
+
+	IMPROVEMENT: Speeded up display of sorted views. Thanks to
+	Stefan Asserhäll for the idea and valuable input.
 
 	IMPROVEMENT: Moved some options from the preferences dialog to
 	the file chooser dialog where you need them. gtkpod now

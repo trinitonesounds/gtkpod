@@ -48,7 +48,7 @@
 		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2711">
+			<widget class="GtkImage" id="image2791">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-top</property>
 			  <property name="icon_size">1</property>
@@ -69,7 +69,7 @@
 		      <signal name="activate" handler="on_add_files1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2712">
+			<widget class="GtkImage" id="image2792">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -90,7 +90,7 @@
 		      <signal name="activate" handler="on_add_directory1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2713">
+			<widget class="GtkImage" id="image2793">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -111,7 +111,7 @@
 		      <signal name="activate" handler="on_add_playlist1_activate" last_modification_time="Fri, 21 Feb 2003 14:49:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2714">
+			<widget class="GtkImage" id="image2794">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -132,7 +132,7 @@
 		      <signal name="activate" handler="on_export_itunes1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2715">
+			<widget class="GtkImage" id="image2795">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-bottom</property>
 			  <property name="icon_size">1</property>
@@ -158,7 +158,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2716">
+			<widget class="GtkImage" id="image2796">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -210,7 +210,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2717">
+			<widget class="GtkImage" id="image2797">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -268,7 +268,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2718">
+			<widget class="GtkImage" id="image2798">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -320,7 +320,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2719">
+			<widget class="GtkImage" id="image2799">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -395,7 +395,7 @@
 		      <signal name="activate" handler="on_ipod_directories_menu" last_modification_time="Sat, 18 Jan 2003 02:10:39 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2720">
+			<widget class="GtkImage" id="image2800">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-execute</property>
 			  <property name="icon_size">1</property>
@@ -415,7 +415,6 @@
 		      <property name="label" translatable="yes">_Check iPod's Files</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_check_ipod_files_activate" last_modification_time="Sat, 24 Jan 2004 09:02:49 GMT"/>
-		      <accelerator key="c" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK" signal="activate"/>
 		    </widget>
 		  </child>
 
@@ -454,7 +453,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2721">
+			<widget class="GtkImage" id="image2801">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-copy</property>
 			  <property name="icon_size">1</property>
@@ -628,9 +627,10 @@
 		      <property name="label" translatable="yes">_Sorting</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_sorting_activate" last_modification_time="Mon, 22 Sep 2003 08:00:42 GMT"/>
+		      <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2722">
+			<widget class="GtkImage" id="image2802">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-sort-ascending</property>
 			  <property name="icon_size">1</property>
@@ -649,9 +649,10 @@
 		      <property name="label" translatable="yes">_Save Displayed Track Order</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_save_track_order1_activate" last_modification_time="Sat, 08 Mar 2003 13:45:01 GMT"/>
+		      <accelerator key="s" modifiers="GDK_CONTROL_MASK | GDK_SHIFT_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2723">
+			<widget class="GtkImage" id="image2803">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-justify-fill</property>
 			  <property name="icon_size">1</property>
@@ -677,7 +678,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2724">
+			<widget class="GtkImage" id="image2804">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -729,7 +730,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2725">
+			<widget class="GtkImage" id="image2805">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -789,7 +790,7 @@
 		      <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2726">
+			<widget class="GtkImage" id="image2806">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -854,7 +855,7 @@
 		      <signal name="activate" handler="on_more_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2727">
+			<widget class="GtkImage" id="image2807">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -875,7 +876,7 @@
 		      <signal name="activate" handler="on_less_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2728">
+			<widget class="GtkImage" id="image2808">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-remove</property>
 			  <property name="icon_size">1</property>
@@ -917,7 +918,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2729">
+			<widget class="GtkImage" id="image2809">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -969,7 +970,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2730">
+			<widget class="GtkImage" id="image2810">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -1132,7 +1133,7 @@
 		      <signal name="activate" handler="on_about1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2731">
+			<widget class="GtkImage" id="image2811">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-info</property>
 			  <property name="icon_size">1</property>
@@ -3960,9 +3961,31 @@
 			      </child>
 
 			      <child>
+				<widget class="GtkCheckButton" id="cfg_tmp_disable_sort">
+				  <property name="visible">True</property>
+				  <property name="tooltip" translatable="yes">It is much faster to sort the display after all tracks have been added. Some people might feel irritated by this behaviour and should uncheck this option.</property>
+				  <property name="can_focus">True</property>
+				  <property name="label" translatable="yes">Temporarily disable sorting when changing playlist
+or tab entry (faster!)</property>
+				  <property name="use_underline">True</property>
+				  <property name="relief">GTK_RELIEF_NORMAL</property>
+				  <property name="focus_on_click">True</property>
+				  <property name="active">False</property>
+				  <property name="inconsistent">False</property>
+				  <property name="draw_indicator">True</property>
+				  <signal name="toggled" handler="on_cfg_temporarily_disable_sorting" last_modification_time="Mon, 20 Sep 2004 10:59:24 GMT"/>
+				</widget>
+				<packing>
+				  <property name="padding">0</property>
+				  <property name="expand">False</property>
+				  <property name="fill">False</property>
+				</packing>
+			      </child>
+
+			      <child>
 				<widget class="GtkCheckButton" id="cfg_block_display">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">The display can be blocked after changing a selection. The display update is faster, but you have to wait until it's finished.</property>
+				  <property name="tooltip" translatable="yes">The display can be blocked after changing a selection. The display update is faster, but you have to wait until it's finished. When using this option, sorting is also temporarily disabled (see option above).</property>
 				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">Block display when changing playlist or tab
  entry (faster!)</property>
@@ -3979,10 +4002,6 @@
 				  <property name="expand">False</property>
 				  <property name="fill">False</property>
 				</packing>
-			      </child>
-
-			      <child>
-				<placeholder/>
 			      </child>
 
 			      <child>

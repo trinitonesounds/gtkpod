@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-21 17:32:47 jcs>
+/* Time-stamp: <2004-09-20 20:13:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,6 +33,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "charset.h"
+#include "display.h"
 #include "file.h"
 #include "itunesdb.h"
 #include "md5.h"
@@ -398,7 +399,7 @@ void handle_import (void)
 
     n = get_nr_of_tracks (); /* how many tracks are already there? */
 
-    block_widgets ();
+    if (!prefs_get_block_display ())  block_widgets ();
     if (!prefs_get_offline())
     { /* iPod is connected */
 	const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL};
@@ -416,10 +417,12 @@ void handle_import (void)
 		    gtkpod_warning (_("Extended info will not be used.\n"));
 		}
 	    }
+	    display_enable_disable_view_sort (FALSE);
 	    if(itunesdb_parse (ipod_mount_filename))
 		gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
 	    else
 		gtkpod_statusbar_message(_("iPod Database Import Failed"));
+	    display_enable_disable_view_sort (TRUE);
 	}
 	else
 	{
@@ -446,6 +449,7 @@ void handle_import (void)
 		{
 		    gtkpod_warning (_("Extended info will not be used. If you have non-transferred tracks,\nthese will be lost.\n"));
 		}
+		display_enable_disable_view_sort (FALSE);
 		if(itunesdb_parse_file (name_db))
 		{
 		    gtkpod_statusbar_message(
@@ -456,6 +460,7 @@ void handle_import (void)
 		    gtkpod_statusbar_message(
 			_("Offline iPod Database Import Failed"));
 		}
+		display_enable_disable_view_sort (TRUE);
 	    }
 	    else
 	    {
@@ -494,7 +499,7 @@ void handle_import (void)
 
     space_data_update ();          /* update space display */
 
-    release_widgets ();
+    if (!prefs_get_block_display ())  release_widgets ();
 }
 
 

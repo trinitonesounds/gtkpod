@@ -1,7 +1,5 @@
 TODO:
 
-- Randomize playlist!
-
 - Give status when adjusting offline_playcount after import of
   database (can take quite a while even for only 90 tracks).
 

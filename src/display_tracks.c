@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-16 00:28:52 jcs>
+/* Time-stamp: <2004-09-20 20:27:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1466,6 +1466,81 @@ void tm_update_default_sizes (void)
 	    prefs_set_tm_col_width (i,
 				    gtk_tree_view_column_get_width (col));
 	}
+    }
+}
+
+
+/* Compare function to avoid sorting */
+static gint tm_nosort_comp (GtkTreeModel *model,
+			    GtkTreeIter *a,
+			    GtkTreeIter *b,
+			    gpointer user_data)
+{
+    return 0;
+}
+
+
+/* Disable sorting of the view during lengthy updates. */
+/* @enable: TRUE: enable, FALSE: disable */
+void tm_enable_disable_view_sort (gboolean enable)
+{
+    static gint disable_count = 0;
+
+    if (enable)
+    {
+	disable_count--;
+	if (disable_count < 0)
+	    fprintf (stderr, "Programming error: disable_count < 0\n");
+	if (disable_count == 0 && track_treeview)
+	{
+	    if ((prefs_get_tm_sort() != SORT_NONE) &&
+		prefs_get_disable_sorting ())
+	    {
+		/* Re-enable sorting */
+		GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
+		if (BROKEN_GTK_TREE_SORT)
+		{
+		    gtk_tree_sortable_set_sort_func (
+			GTK_TREE_SORTABLE (model),
+			prefs_get_tm_sortcol (),
+			tm_data_compare_func, NULL, NULL);
+		}
+		else
+		{
+		    gtk_tree_sortable_set_sort_column_id (
+			GTK_TREE_SORTABLE (model),
+			prefs_get_tm_sortcol (),
+			prefs_get_tm_sort ());
+		}
+	    }
+	}
+    }
+    else
+    {
+	if (disable_count == 0 && track_treeview)
+	{
+	    if ((prefs_get_tm_sort() != SORT_NONE) &&
+		prefs_get_disable_sorting ())
+	    {
+		/* Disable sorting */
+		GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
+		if (BROKEN_GTK_TREE_SORT)
+		{
+		    gtk_tree_sortable_set_sort_func (
+			GTK_TREE_SORTABLE (model),
+			prefs_get_tm_sortcol (),
+			tm_nosort_comp, NULL, NULL);
+		}
+		else
+		{
+		    gtk_tree_sortable_set_sort_column_id (
+			GTK_TREE_SORTABLE (model),
+			GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
+			prefs_get_tm_sort ());
+		}
+	    }
+	}
+	disable_count++;
     }
 }
 

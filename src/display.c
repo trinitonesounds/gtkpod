@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-07 23:42:01 jcs>
+/* Time-stamp: <2004-09-20 20:11:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -689,4 +689,16 @@ gboolean selection_callback_timeout (gpointer data)
 {
     block_release_selection (0, BR_CALL, NULL, NULL, NULL);
     return FALSE;
+}
+
+
+
+/* Put all treeviews into the unsorted state (@enable=FALSE) or back
+   to the sorted state (@enable=TRUE) */
+/* Indicates that we begin adding playlists from iTunesDB.
+   This is a good time to stop sorting display. */
+void display_enable_disable_view_sort (gboolean enable)
+{
+    st_enable_disable_view_sort (enable);
+    tm_enable_disable_view_sort (enable);
 }

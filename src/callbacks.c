@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-15 22:32:15 jcs>
+/* Time-stamp: <2004-09-20 20:04:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1935,3 +1935,12 @@ on_randomize_current_playlist_activate (GtkMenuItem     *menuitem,
 {
     randomize_current_playlist();
 }
+
+void
+on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_tmp_disable_sort (
+	gtk_toggle_button_get_active(togglebutton));
+}
+
