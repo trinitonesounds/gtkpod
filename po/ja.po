@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-10-05 00:25+0900\n"
+"POT-Creation-Date: 2003-10-05 23:35+0900\n"
 "PO-Revision-Date: 2003-09-19 00:35+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"

@@ -1,4 +1,4 @@
-gtkpod V0.53-CVS
+gtkpod V0.60
 	NEW FEATURE: normalize song volume (using mp3gain). Uses iPod's
 	volume adjust feature rather than modifying the mp3 file.
 

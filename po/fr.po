@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
-"POT-Creation-Date: 2003-10-05 00:25+0900\n"
+"POT-Creation-Date: 2003-10-05 23:35+0900\n"
 "PO-Revision-Date: 2003-08-03 14:24+0100\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
