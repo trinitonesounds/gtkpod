@@ -747,6 +747,7 @@ void handle_import (void)
     }
     
     gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
+    gtkpod_songs_statusbar_update();
     /* setup our md5 hashness for unique files */
     /* if(cfg->md5songs)    done with add_song ();
        unique_file_repository_init(get_song_list()); */

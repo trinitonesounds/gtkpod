@@ -146,6 +146,7 @@ static void add_dir_selected (gchar *dir)
 {
   add_directory_recursively (dir);
   prefs_set_last_dir_browse(dir);
+  gtkpod_songs_statusbar_update();
 }
 
 void create_dir_browser (void)

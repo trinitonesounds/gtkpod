@@ -125,7 +125,9 @@ create_gtkpod (void)
   GtkWidget *label15;
   GtkWidget *scrolledwindow11;
   GtkWidget *song_treeview;
+  GtkWidget *hbox5;
   GtkWidget *gtkpod_status;
+  GtkWidget *songs_statusbar;
   GtkAccelGroup *accel_group;
 
   accel_group = gtk_accel_group_new ();
@@ -568,9 +570,21 @@ create_gtkpod (void)
                               GDK_a, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
+  hbox5 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox5);
+  gtk_box_pack_start (GTK_BOX (vbox1), hbox5, FALSE, TRUE, 0);
+
   gtkpod_status = gtk_statusbar_new ();
   gtk_widget_show (gtkpod_status);
-  gtk_box_pack_start (GTK_BOX (vbox1), gtkpod_status, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox5), gtkpod_status, TRUE, TRUE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (gtkpod_status), 1);
+  gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR (gtkpod_status), FALSE);
+
+  songs_statusbar = gtk_statusbar_new ();
+  gtk_widget_show (songs_statusbar);
+  gtk_box_pack_start (GTK_BOX (hbox5), songs_statusbar, FALSE, TRUE, 0);
+  gtk_widget_set_size_request (songs_statusbar, 175, 20);
+  gtk_container_set_border_width (GTK_CONTAINER (songs_statusbar), 1);
 
   g_signal_connect ((gpointer) gtkpod, "delete_event",
                     G_CALLBACK (on_gtkpod_delete_event),
@@ -671,6 +685,9 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) gtkpod_status, "realize",
                     G_CALLBACK (on_gtkpod_status_realize),
                     NULL);
+  g_signal_connect ((gpointer) songs_statusbar, "realize",
+                    G_CALLBACK (on_songs_statusbar_realize),
+                    NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (gtkpod, gtkpod, "gtkpod");
@@ -768,7 +785,9 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, label15, "label15");
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow11, "scrolledwindow11");
   GLADE_HOOKUP_OBJECT (gtkpod, song_treeview, "song_treeview");
+  GLADE_HOOKUP_OBJECT (gtkpod, hbox5, "hbox5");
   GLADE_HOOKUP_OBJECT (gtkpod, gtkpod_status, "gtkpod_status");
+  GLADE_HOOKUP_OBJECT (gtkpod, songs_statusbar, "songs_statusbar");
 
   gtk_window_add_accel_group (GTK_WINDOW (gtkpod), accel_group);
 

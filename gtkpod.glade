@@ -1072,15 +1072,45 @@
       </child>
 
       <child>
-	<widget class="GtkStatusbar" id="gtkpod_status">
+	<widget class="GtkHBox" id="hbox5">
 	  <property name="visible">True</property>
-	  <property name="has_resize_grip">True</property>
-	  <signal name="realize" handler="on_gtkpod_status_realize" last_modification_time="Sun, 19 Jan 2003 19:38:08 GMT"/>
+	  <property name="homogeneous">False</property>
+	  <property name="spacing">0</property>
+
+	  <child>
+	    <widget class="GtkStatusbar" id="gtkpod_status">
+	      <property name="border_width">1</property>
+	      <property name="visible">True</property>
+	      <property name="has_resize_grip">False</property>
+	      <signal name="realize" handler="on_gtkpod_status_realize" last_modification_time="Sun, 19 Jan 2003 19:38:08 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">True</property>
+	      <property name="fill">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkStatusbar" id="songs_statusbar">
+	      <property name="border_width">1</property>
+	      <property name="width_request">175</property>
+	      <property name="height_request">20</property>
+	      <property name="visible">True</property>
+	      <property name="has_resize_grip">True</property>
+	      <signal name="realize" handler="on_songs_statusbar_realize" last_modification_time="Mon, 20 Jan 2003 03:18:33 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">True</property>
+	    </packing>
+	  </child>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>
 	  <property name="expand">False</property>
-	  <property name="fill">False</property>
+	  <property name="fill">True</property>
 	</packing>
       </child>
     </widget>

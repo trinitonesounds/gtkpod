@@ -44,6 +44,7 @@ static GtkWidget *main_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
 static GtkWidget *gtkpod_statusbar = NULL;
+static GtkWidget *gtkpod_songs_statusbar = NULL;
 
 static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 {
@@ -57,6 +58,8 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
       if(!i)
 	  prefs_set_last_dir_browse(names[i]);
     }
+  gtkpod_statusbar_message(_("Successly Added Files"));
+  gtkpod_songs_statusbar_update();
   g_strfreev (names);
 }
 
@@ -64,6 +67,7 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 static void add_files_close (GtkWidget *w1, GtkWidget *w2)
 {
     if (file_selector)    gtk_widget_destroy(file_selector),
+    gtkpod_songs_statusbar_update();
     file_selector = NULL;
 }
 
@@ -302,11 +306,10 @@ register_gtkpod_main_window(GtkWidget *win)
     main_window = win;
 }
 
-#define GTKPOD_MKDIR(buf) { \
+#define GTKPOD_MKDIR(buf, result) { \
     if((mkdir(buf, 0755) != 0)) \
     { \
-	if(errno != EEXIST) \
-	    return(FALSE); \
+	result = FALSE; \
     } \
 }
 
@@ -314,21 +317,22 @@ gboolean
 create_ipod_directories(const gchar *ipod_dir)
 {
     int i = 0;
+    gboolean result = TRUE;
     gchar buf[PATH_MAX];
     
     snprintf(buf, PATH_MAX, "%s/iPod_Control", ipod_dir);
-    GTKPOD_MKDIR(buf);
+    GTKPOD_MKDIR(buf, result);
     snprintf(buf, PATH_MAX, "%s/iPod_Control/Music", ipod_dir);
-    GTKPOD_MKDIR(buf);
+    GTKPOD_MKDIR(buf, result);
     snprintf(buf, PATH_MAX, "%s/iPod_Control/iTunes", ipod_dir);
-    GTKPOD_MKDIR(buf);
+    GTKPOD_MKDIR(buf, result);
     
     for(i = 0; i < 20; i++)
     {
 	snprintf(buf, PATH_MAX, "%s/iPod_Control/Music/F%02d", ipod_dir, i);
-	GTKPOD_MKDIR(buf);
+	GTKPOD_MKDIR(buf, result);
     }
-    return(TRUE);
+    return(result);
 }
 
 void
@@ -364,4 +368,27 @@ gtkpod_statusbar_message(const gchar *message)
 	gtk_timeout_add(STATUSBAR_TIMEOUT, (GtkFunction) gtkpod_statusbar_clear,
 		NULL);
     }
+}
+
+void 
+gtkpod_songs_statusbar_init(GtkWidget *w)
+{
+    gtkpod_songs_statusbar = w;
+}
+
+void 
+gtkpod_songs_statusbar_update(void)
+{
+    if(gtkpod_songs_statusbar)
+    {
+	guint displayed;
+	gchar buf[PATH_MAX];
+
+	displayed = sm_get_displayed_rows_nr();
+	snprintf(buf, PATH_MAX, "  Songs: %d Displayed / %d Total", 
+		displayed, get_nr_of_songs());
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_songs_statusbar), 1);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_songs_statusbar), 1,  buf);
+    }
+
 }

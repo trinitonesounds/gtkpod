@@ -86,39 +86,6 @@ on_new_playlist1_activate              (GtkMenuItem     *menuitem,
   add_new_playlist ();
 }
 
-
-void
-on_cut1_activate                       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-
-}
-
-
-void
-on_copy1_activate                      (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-
-}
-
-
-void
-on_paste1_activate                     (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-
-}
-
-
-void
-on_delete1_activate                    (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-
-}
-
-
 void
 on_about1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
@@ -247,8 +214,8 @@ on_playlist_treeview_drag_data_received
 	}
 	else
 	{
-	    fprintf(stderr, "Unknown treepath droppage or badly "
-			    "positioned drop\n");
+	    gtkpod_statusbar_message(_(
+			"Badly positioned file drop, items not copied"));
 	}
     }
 }
@@ -293,6 +260,7 @@ on_prefs_window_delete_event           (GtkWidget       *widget,
                                         gpointer         user_data)
 {
   prefs_window_cancel ();
+  gtkpod_statusbar_message(_("Preferences not updated"));
   return FALSE;
 }
 
@@ -343,6 +311,7 @@ on_prefs_cancel_clicked                (GtkButton       *button,
                                         gpointer         user_data)
 {
     prefs_window_cancel();
+    gtkpod_statusbar_message(_("Preferences not updated"));
 }
 
 
@@ -580,7 +549,7 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 
     /* sometimes we get empty dnd data, ignore */
     if((!data) || (data->length < 0)) return;
-    /* allow us to drag only onto ourselves =) */
+    /* allow us to drop only onto ourselves =) */
     w = gtk_drag_get_source_widget(drag_context);
     if(w != widget) return;
     /* yet another check, i think it's an 8 bit per byte check */
@@ -698,7 +667,15 @@ void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    create_ipod_directories(cfg->ipod_mount);
+    gchar buf[PATH_MAX];
+
+    if(create_ipod_directories(cfg->ipod_mount))
+	snprintf(buf, PATH_MAX, "%s %s", 
+	    _("Successfully Created iPod Directories in"), cfg->ipod_mount);
+    else
+	snprintf(buf, PATH_MAX, "%s %s", 
+	    _("Problem Creating iPod Directories in"), cfg->ipod_mount);
+    gtkpod_statusbar_message(buf);
 }
 
 
@@ -766,3 +743,10 @@ on_gtkpod_status_realize               (GtkWidget       *widget,
     gtkpod_statusbar_init(widget);
 }
 
+
+void
+on_songs_statusbar_realize             (GtkWidget       *widget,
+                                        gpointer         user_data)
+{
+    gtkpod_songs_statusbar_init(widget);
+}

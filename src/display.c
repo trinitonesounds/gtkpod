@@ -276,6 +276,7 @@ static void pm_selection_changed (GtkTreeSelection *selection,
       st_add_song (song, FALSE, 0);
     }
   if (n != 0) st_add_song (NULL, TRUE, 0);
+  gtkpod_songs_statusbar_update();
 }
 
 void
@@ -1028,6 +1029,7 @@ static void st_selection_changed (GtkTreeSelection *selection,
       st_add_song (song, FALSE, inst+1);
     }
   if (n != 0)  st_add_song (NULL, TRUE, inst+1);
+  gtkpod_songs_statusbar_update();
 }
 
 
@@ -1539,6 +1541,31 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 }
 
 /**
+ * sm_get_display_rows_nr - get the number of songs displayed currently in
+ * the song model
+ * Returns - the number of songs displayed currently
+ */
+guint
+sm_get_displayed_rows_nr(void)
+{
+    GtkTreeIter i;
+    guint result = 0;
+    gboolean valid = FALSE;
+    GtkTreeModel *tm = NULL;
+			    
+    if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(song_treeview))))
+    {
+	if((valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i)))
+	{
+	    result++;
+	    while((valid = gtk_tree_model_iter_next(tm,&i)))
+		result++;
+	}
+    }
+    return(result);
+
+}
+/**
  * If/When we can ever trap songview changes this code *should* reorder all
  * user defined playlists to match the listing on screen
  */
@@ -1560,7 +1587,7 @@ sm_rows_reordered_callback(void)
 	
 	if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(song_treeview))))
 	{
-	    valid =gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
+	    valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
 	    while(valid)
 	    {
 		gtk_tree_model_get(tm, &i, 0, &new_song, -1); 

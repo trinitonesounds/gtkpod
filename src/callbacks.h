@@ -27,22 +27,6 @@ on_new_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_cut1_activate                       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_copy1_activate                      (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_paste1_activate                     (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_delete1_activate                    (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
 on_about1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
@@ -276,4 +260,8 @@ on_cfg_st_autoselect_toggled           (GtkToggleButton *togglebutton,
 
 void
 on_gtkpod_status_realize               (GtkWidget       *widget,
+                                        gpointer         user_data);
+
+void
+on_songs_statusbar_realize             (GtkWidget       *widget,
                                         gpointer         user_data);
