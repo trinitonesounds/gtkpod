@@ -579,6 +579,21 @@ static void pm_add_columns ()
   gtk_tree_view_append_column (playlist_treeview, column);
 }
 
+
+/* Start sorting */
+void pm_sort (GtkSortType order)
+{
+    GtkTreeModel *model;
+
+    if (playlist_treeview)
+    {
+	model = gtk_tree_view_get_model (playlist_treeview);
+	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
+					      PM_COLUMN_PLAYLIST, order);
+    }
+}
+
+
 static gboolean
 pm_button_release(GtkWidget *w, GdkEventButton *e, gpointer data)
 {

@@ -535,11 +535,14 @@ disable_gtkpod_import_buttons(void)
    0...prefs_get_sort_tab_number()-1: selected tab */
 gint get_sort_tab_number (gchar *text)
 {
+    static gint last_nr = 1;
     GtkWidget *mdialog;
     GtkDialog *dialog;
     GtkWidget *combo;
     gint result;
-    gint nr;
+    gint i, nr;
+    GList *list=NULL, *lnk;
+    gchar buf[20], *bufp;
 
     mdialog = gtk_message_dialog_new (
 	GTK_WINDOW (gtkpod_window),
@@ -554,7 +557,28 @@ gint get_sort_tab_number (gchar *text)
     gtk_widget_show (combo);
     gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), combo);
 
+    /* Create list */
+    for (i=1; i<=prefs_get_sort_tab_num (); ++i)
+    {
+	bufp = g_strdup_printf ("%d", i);
+	list = g_list_append (list, bufp);
+    }
+
+    /* set pull down items */
+    gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
+    /* set standard entry */
+    snprintf (buf, 20, "%d", last_nr);
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), buf);
+
     result = gtk_dialog_run (GTK_DIALOG (mdialog));
+
+    /* free the list */
+    for (lnk = list; lnk; lnk = lnk->next)
+    {
+	C_FREE (lnk->data);
+    }
+    g_list_free (list);
+    list = NULL;
 
     if (result == GTK_RESPONSE_CANCEL)
     {
@@ -562,7 +586,11 @@ gint get_sort_tab_number (gchar *text)
     }
     else
     {
-	nr = 0;
+	bufp = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry),
+				      0, -1);
+	nr = atoi (bufp)-1;
+	last_nr = nr;
+	C_FREE (bufp);
     }
 
     gtk_widget_destroy (mdialog);

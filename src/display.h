@@ -147,6 +147,7 @@ void pm_add_song (Playlist *playlist, Song *song, gboolean display);
 void pm_name_changed (Playlist *playlist);
 void pm_song_changed (Song *song);
 void pm_select_playlist_reinit(Playlist *playlist);
+void pm_sort (GtkSortType order);
 
 void st_page_selected (GtkNotebook *notebook, guint page);
 void st_redisplay (guint32 inst);

@@ -195,30 +195,6 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_re_init0_menu                       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_re_init1_menu                       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_alphabetize0_up_menu                (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_alphabetize0_down_menu              (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_alphabetize1_up_menu                (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_alphabetize1_down_menu              (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
 on_gtkpod_status_realize               (GtkWidget       *widget,
                                         gpointer         user_data);
 
@@ -244,14 +220,6 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
                                         gpointer         user_data);
 
 void
-on_delete_st0_activate                 (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_delete_st1_activate                 (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
 on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
@@ -274,14 +242,6 @@ on_add_playlist1_activate              (GtkMenuItem     *menuitem,
 void
 on_songs_in_selected_playlist1_activate
                                         (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_tab_entry_1_activate                (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_tab_entry_2_activate                (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -357,10 +317,6 @@ on_alpha_sort_tab0_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_alpha_songs0_activate               (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
 on_alpha_playlist1_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
@@ -369,13 +325,13 @@ on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_alpha_songs1_activate               (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
 on_tab_entry_activate                  (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
 on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_redraw_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data);

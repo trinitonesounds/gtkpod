@@ -580,57 +580,6 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 {
     ipod_directories_head ();
 }
-
-
-void
-on_alphabetize0_up_menu                   (GtkMenuItem     *menuitem,
-					   gpointer         user_data)
-{
-    get_sort_tab_number ("How are you?");
-    st_sort (0, GTK_SORT_ASCENDING);
-}
-
-
-void
-on_alphabetize0_down_menu                   (GtkMenuItem     *menuitem,
-					     gpointer         user_data)
-{
-    st_sort (0, GTK_SORT_DESCENDING);
-}
-
-
-void
-on_re_init0_menu                       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    st_redisplay (0);
-}
-
-
-void
-on_alphabetize1_up_menu                   (GtkMenuItem     *menuitem,
-					   gpointer         user_data)
-{
-    st_sort (1, GTK_SORT_ASCENDING);
-}
-
-
-void
-on_alphabetize1_down_menu                   (GtkMenuItem     *menuitem,
-					     gpointer         user_data)
-{
-    st_sort (1, GTK_SORT_DESCENDING);
-}
-
-
-void
-on_re_init1_menu                       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    st_redisplay (1);
-}
-
-
 void
 on_gtkpod_status_realize               (GtkWidget       *widget,
                                         gpointer         user_data)
@@ -715,23 +664,6 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
   return FALSE;
 }
 
-/* delete selected entry in sort tab 0 */
-void
-on_delete_st0_activate                 (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    delete_entry_head (0);
-}
-
-
-/* delete selected entry in sort tab 1 */
-void
-on_delete_st1_activate                 (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    delete_entry_head (1);
-}
-
 void
 on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
@@ -790,23 +722,6 @@ on_songs_in_selected_playlist1_activate
 {
     update_selected_playlist ();
 }
-
-
-void
-on_tab_entry_1_activate                (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    update_selected_entry (0);
-}
-
-
-void
-on_tab_entry_2_activate                (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    update_selected_entry (1);
-}
-
 
 void
 on_selected_songs1_activate            (GtkMenuItem     *menuitem,
@@ -954,7 +869,7 @@ void
 on_alpha_playlists0_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-
+    pm_sort (GTK_SORT_ASCENDING);
 }
 
 
@@ -962,15 +877,10 @@ void
 on_alpha_sort_tab0_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    get_sort_tab_number (_("Which sort tab?"));
-}
+    gint inst = get_sort_tab_number (
+	_("Sort which sort tab in ascending order?"));
 
-
-void
-on_alpha_songs0_activate               (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-
+    if (inst != -1) st_sort (inst, GTK_SORT_ASCENDING);
 }
 
 
@@ -978,7 +888,7 @@ void
 on_alpha_playlist1_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-
+    pm_sort (GTK_SORT_DESCENDING);
 }
 
 
@@ -986,23 +896,23 @@ void
 on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    gint inst = get_sort_tab_number (
+	_("Sort which sort tab in descending order?"));
+
+    if (inst != -1) st_sort (inst, GTK_SORT_DESCENDING);
 
 }
 
 
-void
-on_alpha_songs1_activate               (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-
-}
-
-
+/* update songs in tab entry */
 void
 on_tab_entry_activate                  (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    gint inst = get_sort_tab_number (
+	_("Update selected entry of which sort tab?"));
 
+    if (inst != -1) update_selected_entry (inst);
 }
 
 
@@ -1010,6 +920,17 @@ void
 on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    gint inst = get_sort_tab_number (
+	_("Delete selected entry of which sort tab?"));
 
+    if (inst != -1)   delete_entry_head (inst);
+}
+
+
+void
+on_redraw_activate                     (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    st_redisplay (0);
 }
 
