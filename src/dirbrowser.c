@@ -155,6 +155,7 @@ void release_dirbrowser (void)
     if (dirbrowser)
 	gtk_widget_set_sensitive (dirbrowser, TRUE);
 }
+
 /* Callback after one directory has been added */
 static void add_dir_selected (gchar *dir)
 {
@@ -185,8 +186,15 @@ void create_dir_browser (void)
 /* called when the file selector is closed */
 static void add_dir_close (GtkWidget *w1, GtkWidget *w2)
 {
-    if (dirbrowser)   gtk_widget_destroy(dirbrowser),
-    dirbrowser = NULL;
+    if (dirbrowser)
+    {
+	gint x,y;
+	gtk_window_get_size (GTK_WINDOW (dirbrowser), &x, &y);
+	/* stor size for next time */
+	prefs_set_size_dirbr (x, y);
+	gtk_widget_destroy(dirbrowser);
+	dirbrowser = NULL;
+    }
 }
 
 
@@ -357,9 +365,11 @@ static GtkWidget *xmms_create_dir_browser(char *title, char *current_path, GtkSe
 	GtkCTreeNode *root_node, *node, *selected_node = NULL;
 	GtkCTree *ctree;
 	struct dirnode *dirnode;
+	gint x,y;
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_default_size(GTK_WINDOW(window), 300, 400);
+	prefs_get_size_dirbr (&x, &y);
+	gtk_window_set_default_size(GTK_WINDOW(window), x, y);
 	gtk_window_set_title(GTK_WINDOW(window), title);
 	gtk_container_border_width(GTK_CONTAINER(window), 10);
 

@@ -590,9 +590,6 @@ create_gtkpod (void)
   gtk_widget_show (song_treeview);
   gtk_container_add (GTK_CONTAINER (scrolledwindow11), song_treeview);
   gtk_widget_set_events (song_treeview, GDK_KEY_RELEASE_MASK);
-  gtk_widget_add_accelerator (song_treeview, "select_all", accel_group,
-                              GDK_a, GDK_CONTROL_MASK,
-                              GTK_ACCEL_VISIBLE);
 
   hbox5 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox5);

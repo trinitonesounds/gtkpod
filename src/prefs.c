@@ -119,6 +119,8 @@ struct cfg *cfg_new(void)
     mycfg->size_conf_sw.y = 300;
     mycfg->size_conf.x = 300;
     mycfg->size_conf.y = -1;
+    mycfg->size_dirbr.x = 300;
+    mycfg->size_dirbr.y = 400;
     for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
     {
 	mycfg->sm_col_width[i] = 80;
@@ -290,6 +292,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_size_conf (-2, atoi (arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "size_dirbr.x") == 0)
+	  {
+	      prefs_set_size_dirbr (atoi (arg), -2);
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_dirbr.y") == 0)
+	  {
+	      prefs_set_size_dirbr (-2, atoi (arg));
+	  }
 	  else
 	  {
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
@@ -448,7 +458,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_conf_sw.y=%d\n", cfg->size_conf_sw.y);
     fprintf (fp, "size_conf.x=%d\n", cfg->size_conf.x);
     fprintf (fp, "size_conf.y=%d\n", cfg->size_conf.y);
-    
+    fprintf (fp, "size_dirbr.x=%d\n", cfg->size_dirbr.x);
+    fprintf (fp, "size_dirbr.y=%d\n", cfg->size_dirbr.y);
 }
 
 void 
@@ -943,6 +954,14 @@ void prefs_set_size_conf (gint x, gint y)
     if (y != -2) cfg->size_conf.y = y;
 }
 
+/* Sets the default size for the dirbrowser window. -2 means:
+ * don't change the current size */
+void prefs_set_size_dirbr (gint x, gint y)
+{
+    if (x != -2) cfg->size_dirbr.x = x;
+    if (y != -2) cfg->size_dirbr.y = y;
+}
+
 /* Writes the current default size for the gtkpod window in "x" and
    "y" */
 void prefs_get_size_gtkpod (gint *x, gint *y)
@@ -965,6 +984,15 @@ void prefs_get_size_conf (gint *x, gint *y)
 {
     *x = cfg->size_conf.x;
     *y = cfg->size_conf.y;
+}
+
+
+/* Writes the current default size for the dirbrowser window in
+   "x" and "y" */
+void prefs_get_size_dirbr (gint *x, gint *y)
+{
+    *x = cfg->size_dirbr.x;
+    *y = cfg->size_dirbr.y;
 }
 
 

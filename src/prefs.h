@@ -77,6 +77,7 @@ struct cfg
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
   struct win_size size_conf_sw; /* last size of gtkpod main window */
   struct win_size size_conf;    /* last size of gtkpod main window */
+  struct win_size size_dirbr;   /* last size of dirbrowser window */
   gint sm_col_width[SM_NUM_COLUMNS_PREFS]; /* width colums in song model */
   gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements
@@ -120,6 +121,7 @@ void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_size_gtkpod (gint x, gint y);
 void prefs_set_size_conf_sw (gint x, gint y);
 void prefs_set_size_conf (gint x, gint y);
+void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_sm_col_width (gint col, gint width);
 void prefs_set_tag_autoset (gint category, gboolean autoset);
 void prefs_set_paned_pos (gint i, gint pos);
@@ -146,6 +148,7 @@ gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);
 void prefs_get_size_conf_sw (gint *x, gint *y);
 void prefs_get_size_conf (gint *x, gint *y);
+void prefs_get_size_dirbr (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
 gboolean prefs_get_md5songs(void);
