@@ -858,8 +858,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem,
 gboolean write_tags_to_file (Song *song, S_item tag_id)
 {
     File_Tag *filetag;
-    gint i, len;
-    gchar *ipod_file, *ipod_fullpath, track[20];
+    gchar *ipod_fullpath, track[20];
     Song *oldsong;
 
     filetag = g_malloc0 (sizeof (File_Tag));
@@ -892,20 +891,12 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 	(g_utf8_strlen (song->ipod_path, -1) > 0))
       {
 	/* need to get ipod filename */
-	ipod_file = g_locale_from_utf8 (song->ipod_path, -1, NULL, NULL, NULL);
-	/* FIXME? locale might be utf8 again, but filename should always be
-	   "US-ASCII", so we could just forget about utf8_to_locale() */
-	len = strlen (ipod_file);
-	for (i=0; i<len; ++i)     /* replace ':' by '/' */
-	  if (ipod_file[i] == ':')  ipod_file[i] = '/';
-	/* ipod_file+1: ipod_file always starts with ":", i.e. "/" */
-	ipod_fullpath = concat_dir (cfg->ipod_mount, ipod_file+1);
+	ipod_fullpath = get_song_name_on_ipod (song);
 	if (Id3tag_Write_File_Tag (ipod_fullpath, filetag) == FALSE)
 	  {
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    ipod_fullpath);
 	  }
-	g_free (ipod_file);
 	g_free (ipod_fullpath);
       }
     /* remove song from md5 hash and reinsert it (hash value has changed!) */
@@ -1248,29 +1239,27 @@ gchar* get_song_name_on_disk(Song *s)
     return(result);
 }
 
-/* same as get_song_name_on_disk(), but only return a valid path to a
-   song on the ipod. Must be g_free'd. */
+
+/* Return the full iPod filename as stored in @s.
+   @s: song
+   Return value: full filename to @s on the iPod or NULL if no
+   filename is set in @s. NOTE: the file does not necessarily
+   exist. NOTE: the in itunesdb.c code works around a problem on some
+   systems (see below) and might return a filename with different case
+   than the original filename. Don't copy it back to @s */
 gchar *get_song_name_on_ipod (Song *s)
 {
     gchar *result = NULL;
 
-    if(s)
+    if(s &&  !prefs_get_offline ())
     {
-	if(!prefs_get_offline () &&
-	   s->ipod_path &&
-	   (strlen(s->ipod_path) > 0))
-	{
-	    guint i = 0, size = 0;
-	    gchar *buf = g_strdup (s->ipod_path);
-	    size = strlen(buf);
-	    for(i = 0; i < size; i++)
-		if(buf[i] == ':') buf[i] = '/';
-	    result = concat_dir(cfg->ipod_mount, buf);
-	    g_free (buf);
-	}
+	gchar *path = prefs_get_ipod_mount ();
+	result = itunesdb_get_song_name_on_ipod (path, s);
+	C_FREE (path);
     }
     return(result);
 }
+
 
 
 /**
