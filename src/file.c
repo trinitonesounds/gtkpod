@@ -95,6 +95,49 @@ static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
 static float extendedinfoversion = 0.0;
 
+/* values bwlow -1 are private to individual functions */
+enum {
+	FILE_TYPE_ERROR = -1,
+	FILE_TYPE_UNKNOWN = 0,
+	FILE_TYPE_MP3,
+	FILE_TYPE_MP4,
+	FILE_TYPE_WAV,
+	FILE_TYPE_M3U,
+	FILE_TYPE_PLS
+} file_type;
+
+
+/* Determine the type of a file. 
+ *
+ * Currently this is done by checking the end of the filename. An improved
+ * version should probably only fall back to that method if everything else
+ * fails.
+ * -jlt
+ */
+
+static int determine_file_type(gchar *path)
+{
+	gchar *path_utf8, *suf;
+	int type = FILE_TYPE_UNKNOWN;
+	
+	if (!path) return FILE_TYPE_ERROR;
+	
+    	path_utf8 = charset_to_utf8 (path);
+        suf = path_utf8 + strlen(path_utf8) - 4;
+	if (suf < path_utf8) return FILE_TYPE_UNKNOWN;
+	
+	/* since we are checking only for equality strcasecmp should be
+	 * sufficient */
+	if (g_strcasecmp (suf, ".mp3") == 0) type = FILE_TYPE_MP3;
+	if (g_strcasecmp (suf, ".mp4") == 0) type = FILE_TYPE_MP4;
+	if (g_strcasecmp (suf, ".wav") == 0) type = FILE_TYPE_WAV;
+	if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
+	if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
+
+	g_free(path_utf8);
+	return type;
+}
+
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -116,15 +159,10 @@ static float extendedinfoversion = 0.0;
 gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 				   AddTrackFunc addtrackfunc, gpointer data)
 {
-    enum {
-	PLT_M3U,   /* M3U playlist file */
-	PLT_PLS,   /* PLS playlist file */
-	PLT_MISC   /* something else -- assume it works the same as M3U */
-    };
     gchar *bufp, *plfile_utf8;
     gchar *dirname = NULL, *plname = NULL;
     gchar buf[PATH_MAX];
-    gint type = PLT_MISC; /* type of playlist file */
+    gint type = FILE_TYPE_UNKNOWN; /* type of playlist file */
     gint line, tracks;
     FILE *fp;
     gboolean error;
@@ -140,26 +178,30 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
     plfile_utf8 = charset_to_utf8 (plfile);
 
     plname = g_path_get_basename (plfile_utf8);
+    g_free (plfile_utf8);
+
     bufp = g_strrstr (plname, "."); /* find last occurence of '.' */
     if (bufp)
     {
 	*bufp = 0;          /* truncate playlist name */
-	++bufp;
-	if (compare_string_case_insensitive (bufp, "m3u") == 0)
-	    type = PLT_M3U;
-	else if (compare_string_case_insensitive (bufp, "pls") == 0)
-	    type = PLT_PLS;
-	else if (compare_string_case_insensitive (bufp, "mp3") == 0)
-	{
-	    /* FIXME: Status */
-	    g_free (plname);
-	    return FALSE;  /* definitely not! */
-	}
-	else if (compare_string_case_insensitive (bufp, "wav") == 0)
-	{
-	    /* FIXME: Status */
-	    g_free (plname);
-	    return FALSE;  /* definitely not! */
+	type = determine_file_type(plfile);
+	switch (type) {
+	    case FILE_TYPE_ERROR:
+ 	    case FILE_TYPE_MP3:
+	    case FILE_TYPE_MP4:
+	    case FILE_TYPE_WAV:
+	        /* FIXME: Status */
+		g_free(plname);
+		return FALSE;
+
+	    case FILE_TYPE_M3U:
+	    case FILE_TYPE_PLS:
+		break;
+	    
+	    case FILE_TYPE_UNKNOWN:
+		/* assume M3U style */
+		type = -2;
+		break;
 	}
     }
 
@@ -171,7 +213,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	return FALSE;  /* definitely not! */
     }
     /* create playlist (if none is specified) */
-    if (!plitem)   plitem = add_new_playlist (plname, -1);
+    if (!plitem)  plitem = add_new_playlist (plname, -1);
     C_FREE (plname);
 
     /* need dirname if playlist file contains relative paths */
@@ -191,7 +233,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	if((len>0) && (bufp[len-1] == 0x0a))  bufp[len-1] = 0;
 	switch (type)
 	{
-	case PLT_MISC:
+	case -2:
 	    /* skip whitespace */
 	    while (isspace (*bufp)) ++bufp;
 	    /* assume comments start with ';' or '#' */
@@ -203,7 +245,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 				      addtrackfunc, data))
 		++tracks;
 	    break;
-	case PLT_M3U:
+	case FILE_TYPE_M3U:
 	    /* comments start with '#' */
 	    if (*bufp == '#') break;
 	    /* assume the rest of the line is a filename */
@@ -213,7 +255,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 				      addtrackfunc, data))
 		++tracks;
 	    break;
-	case PLT_PLS:
+	case FILE_TYPE_PLS:
 	    /* I don't know anything about pls playlist files and just
 	       looked at one example produced by xmms -- please
 	       correct the code if you know more */
@@ -695,14 +737,15 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     len = strlen (name);
     if (len < 4) return NULL;
 
-    if (strcasecmp (&name[len-4], ".mp3") == 0)
-	nti = file_get_mp3_info (name);
-    if (strcasecmp (&name[len-4], ".m4p") == 0)
-	nti = file_get_mp4_info (name);
-    if (strcasecmp (&name[len-4], ".m4a") == 0)
-	nti = file_get_mp4_info (name);
-    if (strcasecmp (&name[len-4], ".wav") == 0)
-	nti = file_get_wav_info (name);
+    switch (determine_file_type(name)) {
+	case FILE_TYPE_MP3: nti = file_get_mp3_info (name); break;
+	case FILE_TYPE_MP4: nti = file_get_mp4_info (name); break;
+	case FILE_TYPE_WAV: nti = file_get_wav_info (name); break;
+	case FILE_TYPE_UNKNOWN:
+	case FILE_TYPE_M3U:
+	case FILE_TYPE_PLS:
+	case FILE_TYPE_ERROR: nti = NULL;
+    }
 
     if (nti)
     {
@@ -1462,7 +1505,7 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 			    10 tracks */
   Track *oldtrack;
   gchar str[PATH_MAX];
-  gchar *basename, *suffix;
+  gchar *basename;
 
   if (name == NULL) return TRUE;
 
@@ -1472,14 +1515,15 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
   }
 
   /* check if file is a playlist */
-  suffix = strrchr (name, '.');
-  if (suffix)
-  {
-      if ((strcasecmp (suffix, ".pls") == 0) ||
-	  (strcasecmp (suffix, ".m3u") == 0))
-      {
-	  return add_playlist_by_filename (name, plitem, addtrackfunc, data);
-      }
+  switch (determine_file_type(name)) {
+	  case FILE_TYPE_M3U:
+	  case FILE_TYPE_PLS:
+		  return add_playlist_by_filename (name, plitem, addtrackfunc, data);
+	  case FILE_TYPE_MP3:
+	  case FILE_TYPE_MP4:
+	  case FILE_TYPE_UNKNOWN:
+	  case FILE_TYPE_ERROR:
+		  break;
   }
 
   /* print a message about which file is being processed */
@@ -1607,17 +1651,18 @@ static gboolean file_write_info (gchar *name, Track *track)
 {
     if (name && track)
     {
-	gchar *suff = strrchr (name, '.');
-	if (suff)
-	{
-	    if (strcasecmp (suff, ".mp3") == 0)
+        switch (determine_file_type(name)) {
+	    case FILE_TYPE_MP3:
 		return file_write_mp3_info (name, track);
-	    if (strcasecmp (suff, ".m4a") == 0)
+	    case FILE_TYPE_MP4:
 		return file_write_mp4_info (name, track);
-	    if (strcasecmp (suff, ".m4p") == 0)
-		return file_write_mp4_info (name, track);
-	    if (strcasecmp (suff, ".wav") == 0)
+	    case FILE_TYPE_WAV:
 		return file_write_wav_info (name, track);
+	    case FILE_TYPE_M3U:
+	    case FILE_TYPE_PLS:
+	    case FILE_TYPE_UNKNOWN:
+	    case FILE_TYPE_ERROR:
+		break;
 	}
     }
     return FALSE;
