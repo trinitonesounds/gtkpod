@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-03 19:42:24 jcs>
+/* Time-stamp: <2003-11-07 00:08:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -56,10 +56,10 @@ typedef struct
   gunichar2 *ipod_path_utf16;/* name of file on iPod: uses ":" instead of "/"*/
   gchar   *pc_path_utf8;     /* PC filename in utf8 encoding   */
   gchar   *pc_path_locale;   /* PC filename in locale encoding */
-  guint32 ipod_id;           /* unique ID of track     */
+  guint32 ipod_id;           /* unique ID of track    */
   gint32  size;              /* size of file in bytes */
   gint32  oldsize;           /* used when updating tracks: size on iPod */
-  gint32  tracklen;          /* Length of track in ms  */
+  gint32  tracklen;          /* Length of track in ms */
   gint32  cd_nr;             /* CD number             */
   gint32  cds;               /* number of CDs         */
   gint32  track_nr;          /* track number          */
@@ -70,8 +70,8 @@ typedef struct
   guint32 time_played;       /* time of last play  (Mac type)           */
   guint32 time_modified;     /* time of last modification  (Mac type)   */
   guint32 rating;            /* star rating (stars * RATING_STEP (20))  */
-  guint32 playcount;         /* number of times track was played         */
-  guint32 recent_playcount;  /* times track was played since last sync   */
+  guint32 playcount;         /* number of times track was played        */
+  guint32 recent_playcount;  /* times track was played since last sync  */
   gchar   *hostname;         /* name of host this file has been imported on */
   gboolean transferred;      /* has file been transferred to iPod?      */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)              */

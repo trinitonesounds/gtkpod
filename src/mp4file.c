@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-05 23:06:51 jcs>
+/* Time-stamp: <2003-11-07 00:24:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -32,11 +32,59 @@
 #include "misc.h"
 #include "support.h"
 
+/* ------------------------------------------------------------
+
+   Info on how to implement new file formats.
+
+   You need to supply a function
+
+   Track *file_get_xxx_info (gchar *filename)
+
+   that returns a new Track structure with as many of the following
+   fields filled in (in UTF8):
+
+   gchar   *album;            /+ album (utf8)          +/
+   gchar   *artist;           /+ artist (utf8)         +/
+   gchar   *title;            /+ title (utf8)          +/
+   gchar   *genre;            /+ genre (utf8)          +/
+   gchar   *comment;          /+ comment (utf8)        +/
+   gchar   *composer;         /+ Composer (utf8)       +/
+   gchar   *fdesc;            /+ Format description (utf8) +/
+   gint32  tracklen;          /+ Length of track in ms +/
+   gint32  cd_nr;             /+ CD number             +/
+   gint32  cds;               /+ number of CDs         +/
+   gint32  track_nr;          /+ track number          +/
+   gint32  tracks;            /+ number of tracks      +/
+   gint32  year;              /+ year                  +/
+   gint32  bitrate;           /+ bitrate               +/
+   gchar   *charset;          /+ charset used for tags +/
+
+   Please note that the iPod will only play as much of the track as
+   specified in "tracklen".
+
+   You don't have to fill in the value for charset if you use the
+   default charset (i.e. you use charset_to_utf8() to convert to
+   UTF8). Otherwise please specify the charset used.
+
+   When an error occurs, the function returns NULL and logs an error
+   message using gtkpod_warning().
+
+   You need to add your handler to get_track_info_from_file() in
+   file.c
+
+   You also have to write a function to write TAGs back to the
+   file. The description will follow once the interface is cleaned
+   up (i.e. defined).
+
+   ------------------------------------------------------------ */
+
+
+
 #ifdef HAVE_LIBMP4V2
 /* Use mp4v2 from the mpeg4ip project to handle mp4 (m4a, m4p) files
    (http://mpeg4ip.sourceforge.net/) */
-/* Copyright note: code for file_get_mp4_info() was essentially copied
- * from mp4info.cpp of the mpeg4ip project */
+/* Copyright note: code for file_get_mp4_info() is based on
+ * mp4info.cpp of the mpeg4ip project */
 
 
 #include "mp4.h"
@@ -79,43 +127,31 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 	    if (MP4GetMetadataName(mp4File, &value) && value != NULL)
 	    {
 		track->title = charset_to_utf8 (value);
-		if (!track->auto_charset)
-		    track->auto_charset = charset_check_auto (value);
 		g_free(value);
 	    }
 	    if (MP4GetMetadataArtist(mp4File, &value) && value != NULL)
 	    {
 		track->artist = charset_to_utf8 (value);
-		if (!track->auto_charset)
-		    track->auto_charset = charset_check_auto (value);
 		g_free(value);
 	    }
 	    if (MP4GetMetadataWriter(mp4File, &value) && value != NULL)
 	    {
 		track->composer = charset_to_utf8 (value);
-		if (!track->auto_charset)
-		    track->auto_charset = charset_check_auto (value);
 		g_free(value);
 	    }
 	    if (MP4GetMetadataComment(mp4File, &value) && value != NULL)
 	    {
 		track->comment = charset_to_utf8 (value);
-		if (!track->auto_charset)
-		    track->auto_charset = charset_check_auto (value);
 		g_free(value);
 	    }
 	    if (MP4GetMetadataYear(mp4File, &value) && value != NULL)
 	    {
 		track->year = atoi (value);
-		if (!track->auto_charset)
-		    track->auto_charset = charset_check_auto (value);
 		g_free(value);
 	    }
 	    if (MP4GetMetadataAlbum(mp4File, &value) && value != NULL)
 	    {
 		track->album = charset_to_utf8 (value);
-		if (!track->auto_charset)
-		    track->auto_charset = charset_check_auto (value);
 		g_free(value);
 	    }
 	    if (MP4GetMetadataTrack(mp4File, &numvalue, &numvalue2))
@@ -131,8 +167,6 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 	    if (MP4GetMetadataGenre(mp4File, &value) && value != NULL)
 	    {
 		track->genre = charset_to_utf8 (value);
-		if (!track->auto_charset)
-		    track->auto_charset = charset_check_auto (value);
 		g_free(value);
 	    }
 	}

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-06 00:36:05 jcs>
+/* Time-stamp: <2003-11-07 00:15:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -461,6 +461,9 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     len = strlen (name);
     if (len < 4) return NULL;
 
+    /* reset the auto detection charset (see explanation in charset.c */
+    charset_reset_auto ();
+
     if (strcasecmp (&name[len-4], ".mp3") == 0)
 	nti = file_get_mp3_info (name);
     if (strcasecmp (&name[len-4], ".m4p") == 0)
@@ -482,11 +485,15 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    nti->size = ftell (file); /* get the filesize in bytes */
 	    fclose(file);
 	}
-	printf ("bitrate: %d\n", nti->bitrate);
 	if (nti->bitrate == 0)
 	{  /* estimate bitrate */
 	    if (nti->tracklen)
 		nti->bitrate = nti->size * 8 / nti->tracklen;
+	}
+	if (nti->charset == NULL)
+	{   /* fill in currently used charset */
+	    nti->auto_charset = charset_get_auto ();
+	    update_charset_info (nti);
 	}
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:13:25 jcs>
+/* Time-stamp: <2003-11-07 00:18:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,13 +37,19 @@
 #include "misc.h"
 #include "support.h"
 
+/* If Japanese auto-conversion is being used, this variable is being
+   set with each call of charset_to_utf8(). You can get a copy of its
+   value by calling charset_get_auto().
+   This variable will only be reset by calling charset_reset_auto(). */
+static const gchar *auto_charset = NULL;
+
 typedef struct {
 	gchar *descr;
 	gchar *name;
 } CharsetInfo;
 
 
-const CharsetInfo charset_info[] = { 
+static const CharsetInfo charset_info[] = { 
     {N_("Arabic (IBM-864)"),                  "IBM864"        },
     {N_("Arabic (ISO-8859-6)"),               "ISO-8859-6"    },
     {N_("Arabic (Windows-1256)"),             "windows-1256"  },
@@ -258,7 +264,7 @@ gchar *charset_to_description (gchar *charset)
 
 /* code for automatic detection of Japanese char-subset donated by
    Hiroshi Kawashima */
-gchar *charset_check_k_code (G_CONST_RETURN guchar *p)
+static const gchar *charset_check_k_code (const guchar *p)
 {
     while (p && *p && (*p != '\n'))
     {
@@ -280,9 +286,9 @@ gchar *charset_check_k_code (G_CONST_RETURN guchar *p)
 }
 
 /* same as check_k_code, but defaults to "EUC-JP" if no match is found */
-gchar *charset_check_k_code_with_default (G_CONST_RETURN guchar *p)
+static const gchar *charset_check_k_code_with_default (const guchar *p)
 {
-    gchar *result=NULL;
+    const gchar *result=NULL;
 
     if (p)       result = charset_check_k_code (p);
     if (!result) result = "EUC-JP";
@@ -292,9 +298,9 @@ gchar *charset_check_k_code_with_default (G_CONST_RETURN guchar *p)
 
 /* return the charset actually used for the "auto detection"
  * feature. So far only Japanese Auto Detecion is implemented */
-gchar *charset_check_auto (gchar *str)
+static const gchar *charset_check_auto (const gchar *str)
 {
-    G_CONST_RETURN gchar *charset;
+    const gchar *charset;
 
     if (str == NULL) return NULL; /* sanity */
     charset = prefs_get_charset ();
@@ -303,19 +309,40 @@ gchar *charset_check_auto (gchar *str)
     return NULL;
 }
 
+/* See description at the definition of gchar *auto_charset; for
+   details */
+gchar *charset_get_auto (void)
+{
+    return g_strdup (auto_charset);
+}
+
+void charset_reset_auto (void)
+{
+    auto_charset = NULL;
+}
+
+
 /* Convert "str" (in the charset specified in cfg->charset) to
  * utf8. If cfg->charset is NULL, "str" is assumed to be in the
  * current locale charset */
 /* Must free the returned string yourself */
-gchar *charset_to_utf8 (G_CONST_RETURN gchar *str)
+gchar *charset_to_utf8 (const gchar *str)
 {
-    G_CONST_RETURN gchar *charset;
+    const gchar *charset;
 
     if (str == NULL) return NULL;  /* sanity */
-    charset = prefs_get_charset ();
-    if (!charset || !strlen (charset))
-    {    /* use standard locale charset */
-	g_get_charset (&charset);
+    charset = charset_check_auto (str);
+    if (charset)
+    {
+	auto_charset = charset;
+    }
+    else
+    {
+	charset = prefs_get_charset ();
+	if (!charset || !strlen (charset))
+	{    /* use standard locale charset */
+	    g_get_charset (&charset);
+	}
     }
     return charset_to_charset ((gchar *)charset, "UTF-8", str);
 }
@@ -325,9 +352,9 @@ gchar *charset_to_utf8 (G_CONST_RETURN gchar *str)
  * cfg->charset. If cfg->charset is NULL, "str" is converted to the
  * current locale charset */
 /* Must free the returned string yourself */
-gchar *charset_from_utf8 (G_CONST_RETURN gchar *str)
+gchar *charset_from_utf8 (const gchar *str)
 {
-    G_CONST_RETURN gchar *charset;
+    const gchar *charset;
 
     if (str == NULL) return NULL;  /* sanity */
     charset = prefs_get_charset ();
@@ -342,9 +369,9 @@ gchar *charset_from_utf8 (G_CONST_RETURN gchar *str)
  * this is NULL, try cfg->charset. If cfg->charset is also NULL, "str"
  * is converted to the current locale charset */
 /* Must free the returned string yourself */
-gchar *charset_track_charset_from_utf8 (Track *s, G_CONST_RETURN gchar *str)
+gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
 {
-    G_CONST_RETURN gchar *charset;
+    const gchar *charset;
 
     if (str == NULL) return NULL;  /* sanity */
     if (s && s->charset && strlen (s->charset))
@@ -360,8 +387,9 @@ gchar *charset_track_charset_from_utf8 (Track *s, G_CONST_RETURN gchar *str)
 /* Convert "str" from "from_charset" to "to_charset", trying to skip
    illegal character as best as possible */
 /* Must free the returned string yourself */
-gchar *charset_to_charset (gchar *from_charset, gchar *to_charset,
-			   G_CONST_RETURN gchar *str)
+gchar *charset_to_charset (const gchar *from_charset,
+			   const gchar *to_charset,
+			   const gchar *str)
 {
     gchar *ret;
     gssize len;

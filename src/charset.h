@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:12:37 jcs>
+/* Time-stamp: <2003-11-07 00:18:44 jcs>
 |
 |  Copyright (C) 2002 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -40,15 +40,14 @@
 #define GTKPOD_JAPAN_AUTOMATIC "gtkpod-japan-automatic"
 
 void charset_init_combo (GtkCombo *combo);
-gchar *charset_check_auto (gchar *string);
-gchar *charset_check_k_code (G_CONST_RETURN guchar *p);
-gchar *charset_check_k_code_with_default (G_CONST_RETURN guchar *p);
 gchar *charset_from_description (gchar *descr);
 gchar *charset_to_description (gchar *charset);
-gchar *charset_to_utf8 (G_CONST_RETURN gchar *str);
-gchar *charset_from_utf8 (G_CONST_RETURN gchar *str);
-gchar *charset_track_charset_from_utf8 (Track *s, G_CONST_RETURN gchar *str);
-gchar *charset_to_charset (gchar *from_charset, gchar *to_charset,
-			   G_CONST_RETURN gchar *str);
-
+gchar *charset_to_utf8 (const gchar *str);
+gchar *charset_from_utf8 (const gchar *str);
+gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str);
+gchar *charset_to_charset (const gchar *from_charset,
+			   const gchar *to_charset,
+			   const gchar *str);
+gchar *charset_get_auto (void);
+void charset_reset_auto (void);
 #endif 

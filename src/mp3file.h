@@ -92,8 +92,6 @@ struct _File_Tag
     gchar *comment;        /* Comment */
     gchar *composer;	   /* Composer */
     guint32 songlen;       /* Length of file in ms */
-    gchar *auto_charset;   /* in case of auto-detection: which charset
-			      was used? */
 };
 
 

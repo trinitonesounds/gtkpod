@@ -992,7 +992,6 @@ Track *file_get_mp3_info (gchar *name)
 	    track->tracks = atoi(filetag.track_total);
 	    g_free (filetag.track_total);
 	}
-	track->auto_charset = filetag.auto_charset;
     }
 
     if (track)
@@ -1330,9 +1329,6 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /* Strip_String(string1);*/
                         FileTag->title = g_strdup(string1);
                         g_free(string1);
-			if (!FileTag->auto_charset)
-			    FileTag->auto_charset = 
-				charset_check_auto (string);
                     }else
                     {
 		        /* Strip_String(string);*/
@@ -1359,9 +1355,6 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /* Strip_String(string1);*/
                         FileTag->artist = g_strdup(string1);
                         g_free(string1);
-			if (!FileTag->auto_charset)
-			    FileTag->auto_charset = 
-				charset_check_auto (string);
                     }else
                     {
 		        /* Strip_String(string); */
@@ -1388,9 +1381,6 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /* Strip_String(string1);*/
                         FileTag->album = g_strdup(string1);
                         g_free(string1);
-			if (!FileTag->auto_charset)
-			    FileTag->auto_charset = 
-				charset_check_auto (string);
                     }else
                     {
 		        /* Strip_String(string); */
@@ -1469,9 +1459,6 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /* Strip_String(string1);*/
                         FileTag->composer = g_strdup(string1);
                         g_free(string1);
-			if (!FileTag->auto_charset)
-			    FileTag->auto_charset = 
-				charset_check_auto (string);
                     }else
                     {
 		        /* Strip_String(string); */
@@ -1639,9 +1626,6 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /*Strip_String(string1);*/
                         FileTag->comment = g_strdup(string1);
                         g_free(string1);
-			if (!FileTag->auto_charset)
-			    FileTag->auto_charset = 
-				charset_check_auto (string);
                     }else
                     {
 		        /*Strip_String(string);*/
