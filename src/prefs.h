@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-27 22:30:00 jcs>
+/* Time-stamp: <2003-11-29 12:37:45 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -90,7 +90,7 @@ struct cfg
   } last_dir;	          /* last directories used by the fileselections */
   struct
   {
-      gboolean track, playlist, ipod_file, syncing;
+      gboolean track, ipod_file, syncing;
   } deletion;
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
   struct win_size size_cal;     /* last size of calendar window */
@@ -121,6 +121,7 @@ struct cfg
   gint last_prefs_page;         /* last page selected in prefs window */
   gchar *play_now_path;         /* path for 'Play Now' */
   gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
+  gchar *mp3gain_path;          /* path for the mp3gain executable */
   gchar *time_format;           /* time format for strftime() */
   gchar *filename_format;       /* filename for files exported from ipod */
   gboolean automount;		/* whether we should mount/unmount the ipod */
@@ -146,7 +147,7 @@ enum
 
 
 /* FIXME: make the global struct obsolete! */
-extern struct cfg *cfg;
+/*extern struct cfg *cfg;*/
 
 gchar *prefs_get_cfgdir (void);
 void prefs_print(void);
@@ -181,7 +182,9 @@ void prefs_set_block_display(gboolean active);
 void prefs_set_id3_write(gboolean active);
 void prefs_set_id3_writeall(gboolean active);
 void prefs_set_last_dir_browse(const gchar * dir);
+const gchar *prefs_get_last_dir_browse(void);
 void prefs_set_last_dir_export(const gchar * dir);
+const gchar *prefs_get_last_dir_export(void);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_size_gtkpod (gint x, gint y);
@@ -217,7 +220,7 @@ gboolean prefs_get_track_ipod_file_deletion(void);
 gboolean prefs_get_sync_remove_confirm(void);
 gboolean prefs_get_id3_write(void);
 gboolean prefs_get_id3_writeall(void);
-gchar *prefs_get_ipod_mount (void);
+const gchar *prefs_get_ipod_mount (void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);
 void prefs_get_size_cal (gint *x, gint *y);
@@ -262,9 +265,11 @@ gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
 gchar *prefs_validate_play_path (const gchar *path);
 void prefs_set_play_now_path (const gchar *path);
-gchar *prefs_get_play_now_path (void);
+const gchar *prefs_get_play_now_path (void);
 void prefs_set_play_enqueue_path (const gchar *path);
-gchar *prefs_get_play_enqueue_path (void);
+const gchar *prefs_get_play_enqueue_path (void);
+void prefs_set_mp3gain_path (const gchar *path);
+const gchar *prefs_get_mp3gain_path (void);
 void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);

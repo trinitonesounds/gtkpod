@@ -1,10 +1,10 @@
 gtkpod V0.61-CVS
-	NEW FEATURE: import of AAC files (.m4a and .m4p) supported,
-	provided the mp4v2 library from the mpeg4ip project
+	NEW FEATURE: import of AAC files (.m4a) supported, provided the
+	mp4v2 library from the mpeg4ip project
 	(mpeg4ip.sourceforge.net) is available during the compilation of
-	gtkpod. Writing tags to AAC files is also supported.
-	Unfortunately .m4p files are not played by the iPod. .m4a files
-	work fine.
+	gtkpod. Writing tags to AAC files is also supported.  .m4p files
+	can also be imported, but they are not played by the iPod. .m4a
+	files work fine.
 
 	NEW FEATURE: info window showing total file size, play
 	time etc. can be opened.
@@ -17,27 +17,29 @@ gtkpod V0.61-CVS
 	confirmation dialog also displays the number of playlists the
 	tracks are members of.
 
-	IMPROVEMENT: When adding existing tracks:
-	 Until now the default action when adding tracks that already
-	 exist (identical full filename) was to add it again (they were
-	 refused by the duplicate detection, but that took a long time),
-	 or to update the track information (option).
+	IMPROVEMENT: Quick sync possible using "Add Tracks".
+	  Details:
 
-	 Now the default action is to skip existing tracks (identical
-	 filename) or to update the track information (option). Thus, by
-	 default, only new tracks are read, allowing quick synchronization
-	 of entire directories.
+	  Until now the default action when adding tracks that already
+	  exist (identical full filename) was to add it again (they were
+	  rejected by the duplicate detection, but that took a long time),
+	  or to update the track information (option).
+
+	  Now the default action is to skip existing tracks (identical
+	  filename) or to update the track information (option). Thus, by
+	  default, only new tracks are read, allowing quick
+	  synchronization of entire directories.
 
 	IMPROVEMENT: In the past, using programs other than gtkpod to
 	transfer files voided the extended information file. gtkpod will
 	not try to use the MD5 checksums stored in the extended
 	information file to match up the data when this occurs.
 
-	IMPROVEMENT: Year is now supported as track view column and as
-	sort tab type.
+	IMPROVEMENT: The 'year' tag is now supported as track view column
+	and as sort tab type.
 
 	IMPROVEMENT: The tags for track number and total number of tracks
-	is displayed as nn/nn in the track view, and can also be entered
+	are displayed as nn/nn in the track view, and can also be entered
 	as such.
 
 	IMPROVEMENT: The tags for CD number and total number of CDs can
@@ -51,6 +53,10 @@ gtkpod V0.61-CVS
 
 	BUGFIX: "Unsort" (clicking sort column three times) of track
 	view failed if last sort tab was a "special" sort tab.
+
+	BUGFIX: updated ID3 tag reading code from easytag's new
+	version. Please also note that id3lib V3.7.3 seems to crash gtkpod
+	every once in a while. V3.8.3 appears to be more stable.
 
 gtkpod V0.60
 	NEW FEATURE: normalize song volume (using mp3gain). Uses iPod's

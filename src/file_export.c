@@ -377,7 +377,7 @@ export_files_ok_button_clicked(GtkWidget *w, gpointer data)
 	if(name)
 	{
 	    prefs_set_last_dir_export (name);
-	    file_export.dest_dir = g_strdup (cfg->last_dir.export);
+	    file_export.dest_dir = g_strdup (prefs_get_last_dir_export ());
 	    file_export_do();
 	}
 	else file_export_cleanup ();
@@ -404,7 +404,7 @@ file_export_init(GList *tracks)
 	gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION(w),
 						FALSE);
 	gtk_file_selection_set_filename(GTK_FILE_SELECTION(w),
-					cfg->last_dir.export);
+					prefs_get_last_dir_export ());
 	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(w)->ok_button),
 		"clicked", G_CALLBACK(export_files_ok_button_clicked), w);
 	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(w)->cancel_button),

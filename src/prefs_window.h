@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-27 22:30:01 jcs>
+/* Time-stamp: <2003-11-29 12:48:15 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -46,6 +46,7 @@ void prefs_window_set_id3_writeall (gboolean val);
 void prefs_window_set_mount_point (const gchar *mp);
 void prefs_window_set_play_now_path (const gchar *path);
 void prefs_window_set_play_enqueue_path (const gchar *path);
+void prefs_window_set_mp3gain_path (const gchar *path);
 void prefs_window_set_time_format (const gchar *format);
 void prefs_window_set_keep_backups (gboolean active);
 void prefs_window_set_write_extended_info (gboolean active);

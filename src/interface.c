@@ -89,15 +89,6 @@ create_gtkpod (void)
   GtkWidget *most_recent_played_tracks;
   GtkWidget *played_since_last_time1;
   GtkWidget *separator1;
-  GtkWidget *normalize_tracks1;
-  GtkWidget *normalize_tracks1_menu;
-  GtkWidget *normalize_selected_playlist;
-  GtkWidget *normalize_selected_tab_entry;
-  GtkWidget *normalize_selected_tracks;
-  GtkWidget *normalize_displayed_tracks;
-  GtkWidget *normalize_all_tracks;
-  GtkWidget *normalize_newly_added_tracks;
-  GtkWidget *trennlinie4;
   GtkWidget *sorting1;
   GtkWidget *image2208;
   GtkWidget *save_track_order1;
@@ -142,6 +133,15 @@ create_gtkpod (void)
   GtkWidget *enqueue_playlist_menu;
   GtkWidget *enqueue_tab_entry_menu;
   GtkWidget *enqueue_tracks_menu;
+  GtkWidget *trennlinie4;
+  GtkWidget *normalize_tracks1;
+  GtkWidget *normalize_tracks1_menu;
+  GtkWidget *normalize_selected_playlist;
+  GtkWidget *normalize_selected_tab_entry;
+  GtkWidget *normalize_selected_tracks;
+  GtkWidget *normalize_displayed_tracks;
+  GtkWidget *normalize_all_tracks;
+  GtkWidget *normalize_newly_added_tracks;
   GtkWidget *menuitem13;
   GtkWidget *menuitem13_menu;
   GtkWidget *about1;
@@ -408,42 +408,6 @@ create_gtkpod (void)
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), separator1);
   gtk_widget_set_sensitive (separator1, FALSE);
 
-  normalize_tracks1 = gtk_menu_item_new_with_mnemonic (_("_Normalize Volume"));
-  gtk_widget_show (normalize_tracks1);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), normalize_tracks1);
-
-  normalize_tracks1_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (normalize_tracks1), normalize_tracks1_menu);
-
-  normalize_selected_playlist = gtk_menu_item_new_with_mnemonic (_("Selected _Playlist"));
-  gtk_widget_show (normalize_selected_playlist);
-  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_selected_playlist);
-
-  normalize_selected_tab_entry = gtk_menu_item_new_with_mnemonic (_("Selected Tab _Entry"));
-  gtk_widget_show (normalize_selected_tab_entry);
-  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_selected_tab_entry);
-
-  normalize_selected_tracks = gtk_menu_item_new_with_mnemonic (_("Selected _Tracks"));
-  gtk_widget_show (normalize_selected_tracks);
-  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_selected_tracks);
-
-  normalize_displayed_tracks = gtk_menu_item_new_with_mnemonic (_("_Displayed Tracks"));
-  gtk_widget_show (normalize_displayed_tracks);
-  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_displayed_tracks);
-
-  normalize_all_tracks = gtk_menu_item_new_with_mnemonic (_("_All Tracks"));
-  gtk_widget_show (normalize_all_tracks);
-  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_all_tracks);
-
-  normalize_newly_added_tracks = gtk_menu_item_new_with_mnemonic (_("_Newly Added Tracks"));
-  gtk_widget_show (normalize_newly_added_tracks);
-  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_newly_added_tracks);
-
-  trennlinie4 = gtk_menu_item_new ();
-  gtk_widget_show (trennlinie4);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), trennlinie4);
-  gtk_widget_set_sensitive (trennlinie4, FALSE);
-
   sorting1 = gtk_image_menu_item_new_with_mnemonic (_("_Sorting"));
   gtk_widget_show (sorting1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), sorting1);
@@ -618,6 +582,42 @@ create_gtkpod (void)
   enqueue_tracks_menu = gtk_menu_item_new_with_mnemonic (_("Selected _Tracks"));
   gtk_widget_show (enqueue_tracks_menu);
   gtk_container_add (GTK_CONTAINER (enqueue_menu_menu), enqueue_tracks_menu);
+
+  trennlinie4 = gtk_menu_item_new ();
+  gtk_widget_show (trennlinie4);
+  gtk_container_add (GTK_CONTAINER (tools1_menu), trennlinie4);
+  gtk_widget_set_sensitive (trennlinie4, FALSE);
+
+  normalize_tracks1 = gtk_menu_item_new_with_mnemonic (_("_Normalize Volume"));
+  gtk_widget_show (normalize_tracks1);
+  gtk_container_add (GTK_CONTAINER (tools1_menu), normalize_tracks1);
+
+  normalize_tracks1_menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (normalize_tracks1), normalize_tracks1_menu);
+
+  normalize_selected_playlist = gtk_menu_item_new_with_mnemonic (_("Selected _Playlist"));
+  gtk_widget_show (normalize_selected_playlist);
+  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_selected_playlist);
+
+  normalize_selected_tab_entry = gtk_menu_item_new_with_mnemonic (_("Selected Tab _Entry"));
+  gtk_widget_show (normalize_selected_tab_entry);
+  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_selected_tab_entry);
+
+  normalize_selected_tracks = gtk_menu_item_new_with_mnemonic (_("Selected _Tracks"));
+  gtk_widget_show (normalize_selected_tracks);
+  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_selected_tracks);
+
+  normalize_displayed_tracks = gtk_menu_item_new_with_mnemonic (_("_Displayed Tracks"));
+  gtk_widget_show (normalize_displayed_tracks);
+  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_displayed_tracks);
+
+  normalize_all_tracks = gtk_menu_item_new_with_mnemonic (_("_All Tracks"));
+  gtk_widget_show (normalize_all_tracks);
+  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_all_tracks);
+
+  normalize_newly_added_tracks = gtk_menu_item_new_with_mnemonic (_("_Newly Added Tracks"));
+  gtk_widget_show (normalize_newly_added_tracks);
+  gtk_container_add (GTK_CONTAINER (normalize_tracks1_menu), normalize_newly_added_tracks);
 
   menuitem13 = gtk_menu_item_new_with_mnemonic (_("_Help"));
   gtk_widget_show (menuitem13);
@@ -848,24 +848,6 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) played_since_last_time1, "activate",
                     G_CALLBACK (on_played_since_last_time1_activate),
                     NULL);
-  g_signal_connect ((gpointer) normalize_selected_playlist, "activate",
-                    G_CALLBACK (on_normalize_selected_playlist_activate),
-                    NULL);
-  g_signal_connect ((gpointer) normalize_selected_tab_entry, "activate",
-                    G_CALLBACK (on_normalize_selected_tab_entry_activate),
-                    NULL);
-  g_signal_connect ((gpointer) normalize_selected_tracks, "activate",
-                    G_CALLBACK (on_normalize_selected_tracks_activate),
-                    NULL);
-  g_signal_connect ((gpointer) normalize_displayed_tracks, "activate",
-                    G_CALLBACK (on_normalize_displayed_tracks_activate),
-                    NULL);
-  g_signal_connect ((gpointer) normalize_all_tracks, "activate",
-                    G_CALLBACK (on_normalize_all_tracks),
-                    NULL);
-  g_signal_connect ((gpointer) normalize_newly_added_tracks, "activate",
-                    G_CALLBACK (on_normalize_newly_added_tracks),
-                    NULL);
   g_signal_connect ((gpointer) sorting1, "activate",
                     G_CALLBACK (on_sorting_activate),
                     NULL);
@@ -928,6 +910,24 @@ create_gtkpod (void)
                     NULL);
   g_signal_connect ((gpointer) enqueue_tracks_menu, "activate",
                     G_CALLBACK (on_enqueue_tracks_activate),
+                    NULL);
+  g_signal_connect ((gpointer) normalize_selected_playlist, "activate",
+                    G_CALLBACK (on_normalize_selected_playlist_activate),
+                    NULL);
+  g_signal_connect ((gpointer) normalize_selected_tab_entry, "activate",
+                    G_CALLBACK (on_normalize_selected_tab_entry_activate),
+                    NULL);
+  g_signal_connect ((gpointer) normalize_selected_tracks, "activate",
+                    G_CALLBACK (on_normalize_selected_tracks_activate),
+                    NULL);
+  g_signal_connect ((gpointer) normalize_displayed_tracks, "activate",
+                    G_CALLBACK (on_normalize_displayed_tracks_activate),
+                    NULL);
+  g_signal_connect ((gpointer) normalize_all_tracks, "activate",
+                    G_CALLBACK (on_normalize_all_tracks),
+                    NULL);
+  g_signal_connect ((gpointer) normalize_newly_added_tracks, "activate",
+                    G_CALLBACK (on_normalize_newly_added_tracks),
                     NULL);
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about1_activate),
@@ -1024,15 +1024,6 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, most_recent_played_tracks, "most_recent_played_tracks");
   GLADE_HOOKUP_OBJECT (gtkpod, played_since_last_time1, "played_since_last_time1");
   GLADE_HOOKUP_OBJECT (gtkpod, separator1, "separator1");
-  GLADE_HOOKUP_OBJECT (gtkpod, normalize_tracks1, "normalize_tracks1");
-  GLADE_HOOKUP_OBJECT (gtkpod, normalize_tracks1_menu, "normalize_tracks1_menu");
-  GLADE_HOOKUP_OBJECT (gtkpod, normalize_selected_playlist, "normalize_selected_playlist");
-  GLADE_HOOKUP_OBJECT (gtkpod, normalize_selected_tab_entry, "normalize_selected_tab_entry");
-  GLADE_HOOKUP_OBJECT (gtkpod, normalize_selected_tracks, "normalize_selected_tracks");
-  GLADE_HOOKUP_OBJECT (gtkpod, normalize_displayed_tracks, "normalize_displayed_tracks");
-  GLADE_HOOKUP_OBJECT (gtkpod, normalize_all_tracks, "normalize_all_tracks");
-  GLADE_HOOKUP_OBJECT (gtkpod, normalize_newly_added_tracks, "normalize_newly_added_tracks");
-  GLADE_HOOKUP_OBJECT (gtkpod, trennlinie4, "trennlinie4");
   GLADE_HOOKUP_OBJECT (gtkpod, sorting1, "sorting1");
   GLADE_HOOKUP_OBJECT (gtkpod, image2208, "image2208");
   GLADE_HOOKUP_OBJECT (gtkpod, save_track_order1, "save_track_order1");
@@ -1077,6 +1068,15 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, enqueue_playlist_menu, "enqueue_playlist_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, enqueue_tab_entry_menu, "enqueue_tab_entry_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, enqueue_tracks_menu, "enqueue_tracks_menu");
+  GLADE_HOOKUP_OBJECT (gtkpod, trennlinie4, "trennlinie4");
+  GLADE_HOOKUP_OBJECT (gtkpod, normalize_tracks1, "normalize_tracks1");
+  GLADE_HOOKUP_OBJECT (gtkpod, normalize_tracks1_menu, "normalize_tracks1_menu");
+  GLADE_HOOKUP_OBJECT (gtkpod, normalize_selected_playlist, "normalize_selected_playlist");
+  GLADE_HOOKUP_OBJECT (gtkpod, normalize_selected_tab_entry, "normalize_selected_tab_entry");
+  GLADE_HOOKUP_OBJECT (gtkpod, normalize_selected_tracks, "normalize_selected_tracks");
+  GLADE_HOOKUP_OBJECT (gtkpod, normalize_displayed_tracks, "normalize_displayed_tracks");
+  GLADE_HOOKUP_OBJECT (gtkpod, normalize_all_tracks, "normalize_all_tracks");
+  GLADE_HOOKUP_OBJECT (gtkpod, normalize_newly_added_tracks, "normalize_newly_added_tracks");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13, "menuitem13");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13_menu, "menuitem13_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, about1, "about1");
@@ -1325,6 +1325,7 @@ create_prefs_window (void)
   GtkWidget *hbox8;
   GtkWidget *label27;
   GtkWidget *cfg_mount_point;
+  GtkWidget *cfg_automount_ipod;
   GtkWidget *cfg_autoimport;
   GtkWidget *label26;
   GtkWidget *frame7;
@@ -1463,10 +1464,6 @@ create_prefs_window (void)
   GtkWidget *label68;
   GtkWidget *cfg_not_played_track;
   GtkWidget *label67;
-  GtkWidget *frame22;
-  GtkWidget *vbox49;
-  GtkWidget *cfg_write_gaintag;
-  GtkWidget *label69;
   GtkWidget *frame11;
   GtkWidget *vbox24;
   GtkWidget *cfg_delete_track_from_playlist;
@@ -1484,10 +1481,12 @@ create_prefs_window (void)
   GtkWidget *label45;
   GtkWidget *play_enqueue_path_entry;
   GtkWidget *label43;
-  GtkWidget *frame24;
-  GtkWidget *vbox51;
-  GtkWidget *cfg_automount_ipod;
-  GtkWidget *label73;
+  GtkWidget *frame22;
+  GtkWidget *vbox49;
+  GtkWidget *label148;
+  GtkWidget *mp3gain_path_entry;
+  GtkWidget *cfg_write_gaintag;
+  GtkWidget *label69;
   GtkWidget *label24;
   GtkWidget *hbuttonbox5;
   GtkWidget *prefs_apply;
@@ -1549,6 +1548,11 @@ create_prefs_window (void)
   gtk_widget_show (cfg_mount_point);
   gtk_box_pack_start (GTK_BOX (hbox8), cfg_mount_point, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_mount_point, _("Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar."), NULL);
+
+  cfg_automount_ipod = gtk_check_button_new_with_mnemonic (_("Handle mounting/unmounting of iPod drive"));
+  gtk_widget_show (cfg_automount_ipod);
+  gtk_box_pack_start (GTK_BOX (vbox15), cfg_automount_ipod, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_automount_ipod, _("On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount <ipod mountpoint>' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."), NULL);
 
   cfg_autoimport = gtk_check_button_new_with_mnemonic (_("Automatically import iTunesDB on startup"));
   gtk_widget_show (cfg_autoimport);
@@ -2255,27 +2259,6 @@ create_prefs_window (void)
   gtk_label_set_justify (GTK_LABEL (label67), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label67), TRUE);
 
-  frame22 = gtk_frame_new (NULL);
-  gtk_widget_show (frame22);
-  gtk_box_pack_start (GTK_BOX (vbox32), frame22, FALSE, TRUE, 0);
-
-  vbox49 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox49);
-  gtk_container_add (GTK_CONTAINER (frame22), vbox49);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox49), 5);
-
-  cfg_write_gaintag = gtk_check_button_new_with_mnemonic (_("Write information about suggested gain level to file"));
-  gtk_widget_show (cfg_write_gaintag);
-  gtk_box_pack_start (GTK_BOX (vbox49), cfg_write_gaintag, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_write_gaintag, _("mp3gain can add a special tag to the mp3 file. This tag will save much time when normalizing a second time. As with all write operations there is a small change that your files get damaged! Note: gtkpod will use the mp3 file stored on the iPod if that's available (not in offline mode and file transferred). Otherwise it will use the original file on your harddisk."), NULL);
-
-  label69 = gtk_label_new (_("Normalization"));
-  gtk_widget_show (label69);
-  gtk_frame_set_label_widget (GTK_FRAME (frame22), label69);
-  GTK_WIDGET_SET_FLAGS (label69, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label69), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (label69), TRUE);
-
   frame11 = gtk_frame_new (NULL);
   gtk_widget_show (frame11);
   gtk_box_pack_start (GTK_BOX (vbox32), frame11, FALSE, TRUE, 0);
@@ -2368,28 +2351,41 @@ create_prefs_window (void)
   gtk_label_set_justify (GTK_LABEL (label43), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label43), TRUE);
 
-  frame24 = gtk_frame_new (NULL);
-  gtk_widget_show (frame24);
-  gtk_box_pack_start (GTK_BOX (vbox20), frame24, FALSE, TRUE, 0);
+  frame22 = gtk_frame_new (NULL);
+  gtk_widget_show (frame22);
+  gtk_box_pack_start (GTK_BOX (vbox20), frame22, FALSE, TRUE, 0);
 
-  vbox51 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox51);
-  gtk_container_add (GTK_CONTAINER (frame24), vbox51);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox51), 5);
+  vbox49 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox49);
+  gtk_container_add (GTK_CONTAINER (frame22), vbox49);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox49), 5);
 
-  cfg_automount_ipod = gtk_check_button_new_with_mnemonic (_("Handle mounting/unmounting of iPod drive"));
-  gtk_widget_show (cfg_automount_ipod);
-  gtk_box_pack_start (GTK_BOX (vbox51), cfg_automount_ipod, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_automount_ipod, _("On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount <ipod mountpoint>' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."), NULL);
+  label148 = gtk_label_new (_("Exact path for the 'mp3gain' executable:"));
+  gtk_widget_show (label148);
+  gtk_box_pack_start (GTK_BOX (vbox49), label148, FALSE, FALSE, 0);
+  GTK_WIDGET_SET_FLAGS (label148, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label148), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label148), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label148), 0.01, 0.5);
 
-  label73 = gtk_label_new (_("Misc"));
-  gtk_widget_show (label73);
-  gtk_frame_set_label_widget (GTK_FRAME (frame24), label73);
-  GTK_WIDGET_SET_FLAGS (label73, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label73), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (label73), TRUE);
+  mp3gain_path_entry = gtk_entry_new ();
+  gtk_widget_show (mp3gain_path_entry);
+  gtk_box_pack_start (GTK_BOX (vbox49), mp3gain_path_entry, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, mp3gain_path_entry, _("You only need to specify this if your 'mp3gain' executable is not in your default path. Example: '/usr/local/bimbam/mp3gain'."), NULL);
 
-  label24 = gtk_label_new_with_mnemonic (_("_Misc"));
+  cfg_write_gaintag = gtk_check_button_new_with_mnemonic (_("Write information about suggested gain level to file"));
+  gtk_widget_show (cfg_write_gaintag);
+  gtk_box_pack_start (GTK_BOX (vbox49), cfg_write_gaintag, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_write_gaintag, _("mp3gain can add a special tag to the mp3 file. This tag will save much time when normalizing a second time. As with all write operations there is a small change that your files get damaged! Note: gtkpod will use the mp3 file stored on the iPod if that's available (not in offline mode and file transferred). Otherwise it will use the original file on your harddisk."), NULL);
+
+  label69 = gtk_label_new (_("Volume Normalization"));
+  gtk_widget_show (label69);
+  gtk_frame_set_label_widget (GTK_FRAME (frame22), label69);
+  GTK_WIDGET_SET_FLAGS (label69, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label69), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label69), TRUE);
+
+  label24 = gtk_label_new_with_mnemonic (_("_Tools"));
   gtk_widget_show (label24);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 3), label24);
   gtk_label_set_justify (GTK_LABEL (label24), GTK_JUSTIFY_LEFT);
@@ -2420,6 +2416,9 @@ create_prefs_window (void)
                     NULL);
   g_signal_connect ((gpointer) cfg_mount_point, "changed",
                     G_CALLBACK (on_cfg_mount_point_changed),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_automount_ipod, "toggled",
+                    G_CALLBACK (on_cfg_automount_ipod_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_autoimport, "toggled",
                     G_CALLBACK (on_cfg_autoimport_toggled),
@@ -2523,9 +2522,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_not_played_track, "toggled",
                     G_CALLBACK (on_cfg_not_played_track_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_write_gaintag, "toggled",
-                    G_CALLBACK (on_cfg_write_gaintag_toggled),
-                    NULL);
   g_signal_connect ((gpointer) cfg_delete_track_from_playlist, "toggled",
                     G_CALLBACK (on_cfg_delete_track_from_playlist_toggled),
                     NULL);
@@ -2541,8 +2537,11 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) play_enqueue_path_entry, "changed",
                     G_CALLBACK (on_play_enqueue_path_entry_changed),
                     NULL);
-  g_signal_connect ((gpointer) cfg_automount_ipod, "toggled",
-                    G_CALLBACK (on_cfg_automount_ipod_toggled),
+  g_signal_connect ((gpointer) mp3gain_path_entry, "changed",
+                    G_CALLBACK (on_mp3gain_entry_changed),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_write_gaintag, "toggled",
+                    G_CALLBACK (on_cfg_write_gaintag_toggled),
                     NULL);
   g_signal_connect ((gpointer) prefs_apply, "clicked",
                     G_CALLBACK (on_prefs_apply_clicked),
@@ -2571,6 +2570,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, hbox8, "hbox8");
   GLADE_HOOKUP_OBJECT (prefs_window, label27, "label27");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_mount_point, "cfg_mount_point");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_autoimport, "cfg_autoimport");
   GLADE_HOOKUP_OBJECT (prefs_window, label26, "label26");
   GLADE_HOOKUP_OBJECT (prefs_window, frame7, "frame7");
@@ -2706,10 +2706,6 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label68, "label68");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_not_played_track, "cfg_not_played_track");
   GLADE_HOOKUP_OBJECT (prefs_window, label67, "label67");
-  GLADE_HOOKUP_OBJECT (prefs_window, frame22, "frame22");
-  GLADE_HOOKUP_OBJECT (prefs_window, vbox49, "vbox49");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_gaintag, "cfg_write_gaintag");
-  GLADE_HOOKUP_OBJECT (prefs_window, label69, "label69");
   GLADE_HOOKUP_OBJECT (prefs_window, frame11, "frame11");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox24, "vbox24");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_track_from_playlist, "cfg_delete_track_from_playlist");
@@ -2727,10 +2723,12 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label45, "label45");
   GLADE_HOOKUP_OBJECT (prefs_window, play_enqueue_path_entry, "play_enqueue_path_entry");
   GLADE_HOOKUP_OBJECT (prefs_window, label43, "label43");
-  GLADE_HOOKUP_OBJECT (prefs_window, frame24, "frame24");
-  GLADE_HOOKUP_OBJECT (prefs_window, vbox51, "vbox51");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
-  GLADE_HOOKUP_OBJECT (prefs_window, label73, "label73");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame22, "frame22");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox49, "vbox49");
+  GLADE_HOOKUP_OBJECT (prefs_window, label148, "label148");
+  GLADE_HOOKUP_OBJECT (prefs_window, mp3gain_path_entry, "mp3gain_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_gaintag, "cfg_write_gaintag");
+  GLADE_HOOKUP_OBJECT (prefs_window, label69, "label69");
   GLADE_HOOKUP_OBJECT (prefs_window, label24, "label24");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox5, "hbuttonbox5");
   GLADE_HOOKUP_OBJECT (prefs_window, prefs_apply, "prefs_apply");

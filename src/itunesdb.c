@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 13:10:01 jcs>
+/* Time-stamp: <2003-11-29 12:09:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -625,7 +625,7 @@ static void reset_playcounts (void)
 /* Read the Play Count file (formed by adding "Play Counts" to the
  * directory contained in @filename) and set up the GList *playcounts
  * */
-static void init_playcounts (gchar *filename)
+static void init_playcounts (const gchar *filename)
 {
   gchar *dirname = g_path_get_dirname (filename);
   gchar *plcname = g_build_filename (dirname, "Play Counts", NULL);
@@ -695,7 +695,7 @@ static void init_playcounts (gchar *filename)
    "path" should point to the mount point of the iPod,
    e.e. "/mnt/ipod" */
 /* Support for playlists should be added later */
-gboolean itunesdb_parse (gchar *path)
+gboolean itunesdb_parse (const gchar *path)
 {
   gchar *filename = NULL;
   gboolean result;
@@ -707,7 +707,7 @@ gboolean itunesdb_parse (gchar *path)
 }
 
 /* Same as itunesdb_parse(), but let's specify the filename directly */
-gboolean itunesdb_parse_file (gchar *filename)
+gboolean itunesdb_parse_file (const gchar *filename)
 {
   FILE *itunes = NULL;
   gboolean result = FALSE;
@@ -1306,7 +1306,7 @@ write_it (FILE *file)
    Returns TRUE on success, FALSE on error.
    "path" should point to the mount point of the
    iPod, e.e. "/mnt/ipod" */
-gboolean itunesdb_write (gchar *path)
+gboolean itunesdb_write (const gchar *path)
 {
     gchar *filename = NULL;
     gboolean result = FALSE;
@@ -1318,7 +1318,7 @@ gboolean itunesdb_write (gchar *path)
 }
 
 /* Same as itnuesdb_write (), but you specify the filename directly */
-gboolean itunesdb_write_to_file (gchar *filename)
+gboolean itunesdb_write_to_file (const gchar *filename)
 {
   FILE *file = NULL;
   gboolean result = FALSE;
@@ -1365,7 +1365,9 @@ gboolean itunesdb_write_to_file (gchar *filename)
    cycled through. The filename is constructed from
    "track->ipod_id": "gtkpod_id" and written to
    "track->ipod_path_utf8" and "track->ipod_path_utf16" */
-gboolean itunesdb_copy_track_to_ipod (gchar *path, Track *track, gchar *pcfile)
+gboolean itunesdb_copy_track_to_ipod (const gchar *path,
+				      Track *track,
+				      const gchar *pcfile)
 {
   static gint dir_num = -1;
   gchar *ipod_file = NULL, *ipod_fullfile = NULL;
@@ -1472,7 +1474,7 @@ gboolean itunesdb_copy_track_to_ipod (gchar *path, Track *track, gchar *pcfile)
    exist. NOTE: this code works around a problem on some systems (see
    below) and might return a filename with different case than the
    original filename. Don't copy it back to @s */
-gchar *itunesdb_get_track_name_on_ipod (gchar *path, Track *s)
+gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s)
 {
     gchar *result = NULL;
 
@@ -1518,7 +1520,7 @@ gchar *itunesdb_get_track_name_on_ipod (gchar *path, Track *s)
 
 /* Copy file "from_file" to "to_file".
    Returns TRUE on success, FALSE otherwise */
-gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
+gboolean itunesdb_cp (const gchar *from_file, const gchar *to_file)
 {
   gchar *data=g_malloc (ITUNESDB_COPYBLK);
   glong bread, bwrite;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-27 23:10:17 jcs>
+/* Time-stamp: <2003-11-29 12:48:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -370,6 +370,10 @@ on_play_enqueue_path_entry_changed     (GtkEditable     *editable,
                                         gpointer         user_data);
 
 void
+on_mp3gain_entry_changed               (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
 on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
@@ -689,3 +693,4 @@ on_gtkpod_info_delete_event            (GtkWidget       *widget,
 void
 on_info_close_clicked                  (GtkButton       *button,
                                         gpointer         user_data);
+

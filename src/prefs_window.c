@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-27 22:30:01 jcs>
+/* Time-stamp: <2003-11-29 13:18:41 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -175,6 +175,17 @@ prefs_window_create(void)
 		  the text we might get a callback destroying the old
 		  value... */
 		gchar *buf = g_strdup (tmpcfg->play_enqueue_path);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
+	if((w = lookup_widget(prefs_window, "mp3gain_path_entry")))
+	{
+	    if (tmpcfg->mp3gain_path)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->mp3gain_path);
 		gtk_entry_set_text(GTK_ENTRY(w), buf);
 		g_free (buf);
 	    }
@@ -480,6 +491,7 @@ prefs_window_set(void)
 	prefs_set_mount_point(tmpcfg->ipod_mount);
 	prefs_set_play_now_path(tmpcfg->play_now_path);
 	prefs_set_play_enqueue_path(tmpcfg->play_enqueue_path);
+	prefs_set_mp3gain_path(tmpcfg->mp3gain_path);
 	prefs_set_time_format(tmpcfg->time_format);
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_auto_import(tmpcfg->autoimport);
@@ -649,6 +661,11 @@ prefs_window_apply (void)
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_play_enqueue_path ());
 	/* tmpcfg gets set by the "changed" callback */
     }
+    if((w = lookup_widget(prefs_window, "mp3gain_path_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mp3gain_path ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
     if((w = lookup_widget(prefs_window, "time_format_entry")))
     {
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_time_format ());
@@ -739,6 +756,13 @@ void prefs_window_set_play_enqueue_path(const gchar *path)
     if (!path) return;
     g_free (tmpcfg->play_enqueue_path);
     tmpcfg->play_enqueue_path = g_strdup (path);
+}
+
+void prefs_window_set_mp3gain_path(const gchar *path)
+{
+    if (!path) return;
+    g_free (tmpcfg->mp3gain_path);
+    tmpcfg->mp3gain_path = g_strdup (path);
 }
 
 void prefs_window_set_time_format(const gchar *format)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 22:31:07 jcs>
+/* Time-stamp: <2003-11-29 13:00:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -134,7 +134,7 @@ gint nm_get_gain(Track *track)
     gchar *filename=NULL; /*track's filename*/
     gchar *mp3gain_path;
     gchar *mp3gain_exec;
-    gchar *mp3gain_set;
+    const gchar *mp3gain_set;
     gchar *buf;
     GString* gain_output;
     pid_t pid,tpid;
@@ -142,17 +142,16 @@ gint nm_get_gain(Track *track)
     k=0;
     n=0;
 
-    /* see if full path to mp3gain was set using the MP3GAIN
-       environment variable */
-    mp3gain_set = getenv ("MP3GAIN");
+    /* see if full path to mp3gain was set using the prefs dialogue */
+    mp3gain_set = prefs_get_mp3gain_path ();
     /* use default if not */
-    if (!mp3gain_set) mp3gain_set = "mp3gain";
+    if (!mp3gain_set || !(*mp3gain_set)) mp3gain_set = "mp3gain";
     /* find full path */
     mp3gain_path = which (mp3gain_set);
     /* show error message if mp3gain cannot be found */
     if (!mp3gain_path)
     {
-	gtkpod_warning ("Could not find mp3gain. I tried to use the following executable: '%s'.\n\nIf the mp3gain executable is not in your path or named differently, you can set the environment variable 'MP3GAIN' to the full path to be used.\n\nIf you do not have mp3gain installed, you can download it from http://www.sourceforge.net/projects/mp3gain.", mp3gain_set);
+	gtkpod_warning (_("Could not find mp3gain. I tried to use the following executable: '%s'.\n\nIf the mp3gain executable is not in your path or named differently, you can set the full path in the 'Tools' section of the preferences dialog.\n\nIf you do not have mp3gain installed, you can download it from http://www.sourceforge.net/projects/mp3gain."), mp3gain_set);
 	return gain;
     }
 

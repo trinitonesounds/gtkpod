@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-27 22:30:00 jcs>
+/* Time-stamp: <2003-11-29 13:23:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -103,8 +103,7 @@
 #include "support.h"
 
 /* global config struct */
-/* FIXME: make me static */
-struct cfg *cfg = NULL;
+static struct cfg *cfg = NULL;
 
 /* enum for reading of options */
 enum {
@@ -164,7 +163,6 @@ struct cfg *cfg_new(void)
     }
     mycfg->charset = NULL;
     mycfg->deletion.track = TRUE;
-    mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
     mycfg->deletion.syncing = TRUE;
     mycfg->md5tracks = FALSE;
@@ -243,6 +241,7 @@ struct cfg *cfg_new(void)
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     mycfg->play_now_path = g_strdup ("xmms -p %s");
     mycfg->play_enqueue_path = g_strdup ("xmms -e %s");
+    mycfg->mp3gain_path = g_strdup ("");
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
     mycfg->filename_format = g_strdup ("%A/%d/%t - %n.mp3");
     mycfg->automount = FALSE;
@@ -304,6 +303,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "play_enqueue_path") == 0)
 	  {
 	      prefs_set_play_enqueue_path (arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "mp3gain_path") == 0)
+	  {
+	      prefs_set_mp3gain_path (arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "time_format") == 0)
 	  {
@@ -811,6 +814,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "mountpoint=%s\n", cfg->ipod_mount);
     fprintf(fp, "play_now_path=%s\n", cfg->play_now_path);
     fprintf(fp, "play_enqueue_path=%s\n", cfg->play_enqueue_path);
+    fprintf(fp, "mp3gain_path=%s\n", cfg->mp3gain_path);
     fprintf(fp, "time_format=%s\n", cfg->time_format);
     fprintf(fp, "filename_format=%s\n", cfg->filename_format);
     if (cfg->charset)
@@ -957,16 +961,17 @@ void discard_prefs ()
 void cfg_free(struct cfg *c)
 {
     if(c)
-    { /* C_FREE defined in misc.h */
-      C_FREE (c->ipod_mount);
-      C_FREE (c->charset);
-      C_FREE (c->last_dir.browse);
-      C_FREE (c->last_dir.export);
-      C_FREE (c->play_now_path);
-      C_FREE (c->play_enqueue_path);
-      C_FREE (c->time_format);
-      C_FREE (c->filename_format);
-      C_FREE (c);
+    {
+      g_free (c->ipod_mount);
+      g_free (c->charset);
+      g_free (c->last_dir.browse);
+      g_free (c->last_dir.export);
+      g_free (c->play_now_path);
+      g_free (c->play_enqueue_path);
+      g_free (c->mp3gain_path);
+      g_free (c->time_format);
+      g_free (c->filename_format);
+      g_free (c);
     }
 }
 
@@ -1020,6 +1025,10 @@ void prefs_set_last_dir_browse(const gchar *file)
 	cfg->last_dir.browse = get_dirname_of_filename(file);
     }
 }
+const gchar *prefs_get_last_dir_browse(void)
+{
+    return cfg->last_dir.browse;
+}
 
 void prefs_set_last_dir_export(const gchar *file)
 {
@@ -1028,6 +1037,10 @@ void prefs_set_last_dir_export(const gchar *file)
 	g_free(cfg->last_dir.export);
 	cfg->last_dir.export = get_dirname_of_filename(file);
     }
+}
+const char *prefs_get_last_dir_export(void)
+{
+    return cfg->last_dir.export;
 }
 
 void prefs_set_mount_point(const gchar *mp)
@@ -1192,6 +1205,8 @@ struct cfg *clone_prefs(void)
 	    result->play_now_path = g_strdup(cfg->play_now_path);
 	if(cfg->play_enqueue_path)
 	    result->play_enqueue_path = g_strdup(cfg->play_enqueue_path);
+	if(cfg->mp3gain_path)
+	    result->mp3gain_path = g_strdup(cfg->mp3gain_path);
 	if(cfg->time_format)
 	    result->time_format = g_strdup(cfg->time_format);
 	if (cfg->filename_format)
@@ -1324,11 +1339,10 @@ gchar *prefs_get_cfgdir (void)
   return cfgdir;
 }
 
-/* Returns the ipod_mount. You must g_free the string after use */
-gchar *prefs_get_ipod_mount (void)
+/* Returns the ipod_mount. Don't modify it! */
+const gchar *prefs_get_ipod_mount (void)
 {
-    if (cfg->ipod_mount)  return g_strdup (cfg->ipod_mount);
-    else                  return NULL;
+    return cfg->ipod_mount;
 }
 
 /* Sets the default size for the gtkpod window. -2 means: don't change
@@ -1833,7 +1847,7 @@ gchar *prefs_validate_play_path (const gchar *path)
     gchar *npp, *npath=NULL;
     gint num;
 
-    if ((!path) || (strlen (path) == 0)) return NULL;
+    if ((!path) || (strlen (path) == 0)) return g_strdup ("");
 
     npath = g_malloc0 (strlen (path)+1); /* new path can only be shorter
 					    than old path */
@@ -1880,7 +1894,7 @@ void prefs_set_play_now_path (const gchar *path)
     cfg->play_now_path = prefs_validate_play_path (path);
 }
 
-gchar *prefs_get_play_now_path (void)
+const gchar *prefs_get_play_now_path (void)
 {
     return cfg->play_now_path;
 }
@@ -1891,9 +1905,27 @@ void prefs_set_play_enqueue_path (const gchar *path)
     cfg->play_enqueue_path = prefs_validate_play_path (path);
 }
 
-gchar *prefs_get_play_enqueue_path (void)
+const gchar *prefs_get_play_enqueue_path (void)
 {
     return cfg->play_enqueue_path;
+}
+
+void prefs_set_mp3gain_path (const gchar *path)
+{
+    C_FREE (cfg->mp3gain_path);
+    if (path)
+    {
+	cfg->mp3gain_path = g_strstrip (g_strdup (path));
+    }
+    else
+    {
+	cfg->mp3gain_path = g_strdup ("");
+    }
+}
+
+const gchar *prefs_get_mp3gain_path (void)
+{
+    return cfg->mp3gain_path;
 }
 
 void prefs_set_time_format (const gchar *format)

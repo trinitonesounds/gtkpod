@@ -131,7 +131,7 @@ static GdkPixmap *folder_pixmap = NULL, *ofolder_pixmap;
 static GdkBitmap *folder_mask, *ofolder_mask;
 static GtkWidget *dirbrowser = NULL;
 
-static GtkWidget *xmms_create_dir_browser(gchar * title, gchar * current_path, GtkSelectionMode mode, void (*handler) (gchar *));
+static GtkWidget *xmms_create_dir_browser(const gchar * title, const gchar * current_path, GtkSelectionMode mode, void (*handler) (gchar *));
 
 struct dirnode
 {
@@ -187,7 +187,7 @@ void dirbrowser_create (void)
     if(dirbrowser)  return;
     dirbrowser = xmms_create_dir_browser (
 	_("Select directory to add recursively"),
-	cfg->last_dir.browse,
+	prefs_get_last_dir_browse (),
 	GTK_SELECTION_MULTIPLE,
 	add_dir_selected);
     gtk_widget_show (dirbrowser);
@@ -368,7 +368,7 @@ static void ok_clicked(GtkWidget *widget, GtkWidget *tree)
 	add_dir_close (widget, tree);
 }
 
-static GtkWidget *xmms_create_dir_browser(char *title, char *current_path, GtkSelectionMode mode, void (*handler) (char *))
+static GtkWidget *xmms_create_dir_browser(const char *title, const char *current_path, GtkSelectionMode mode, void (*handler) (char *))
 {
 	GtkWidget *window, *scroll_win, *tree, *vbox, *bbox, *ok, *cancel, *sep;
 	char *root_text = "/", *text = "";

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:15:06 jcs>
+/* Time-stamp: <2003-11-29 12:08:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -56,13 +56,14 @@ enum {
 
 #define ITUNESDB_COPYBLK 65536      /* blocksize for cp () */
 
-gboolean itunesdb_parse (gchar *path);
-gboolean itunesdb_parse_file (gchar *filename);
-gboolean itunesdb_write (gchar *path);
-gboolean itunesdb_write_to_file (gchar *filename);
-gboolean itunesdb_copy_track_to_ipod (gchar *path, Track *track, gchar *pcfile);
-gchar *itunesdb_get_track_name_on_ipod (gchar *path, Track *s);
-gboolean itunesdb_cp (gchar *from_file, gchar *to_file);
+gboolean itunesdb_parse (const gchar *path);
+gboolean itunesdb_parse_file (const gchar *filename);
+gboolean itunesdb_write (const gchar *path);
+gboolean itunesdb_write_to_file (const gchar *filename);
+gboolean itunesdb_copy_track_to_ipod (const gchar *path, Track *track,
+				      const gchar *pcfile);
+gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s);
+gboolean itunesdb_cp (const gchar *from_file, const gchar *to_file);
 guint32 itunesdb_time_get_mac_time (void);
 time_t itunesdb_time_mac_to_host (guint32 mactime);
 guint32 itunesdb_time_host_to_mac (time_t time);

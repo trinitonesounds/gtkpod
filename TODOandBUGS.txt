@@ -7,8 +7,6 @@ TODO:
 > "Track number", "Artist", "Album" then get everything sorted by
 > album-artist-track. (request by David Helder)
 
-- display total time of displayed songs (info window?)
-
 - immediate copying of added tracks to the iPod (when reading tracks
   over a slow network they will still be in the buffer memory and
   won't have to read over the network twice if they are copied right
@@ -19,10 +17,10 @@ TODO:
 - reconstruction of iPod contents after file system corruption
   (Edward?)
 
-- replacement of libid3 with libid3tag
-    (reading "Country I" with 229 tracks without duplicate recognition
-     JCS statistics:
-     libid3tag: 74/63 sec (with display), 44 sec (without display)).
+- replacement of libid3 with libid3tag 
+   (JCS statistics: reading "Country I" with 229 tracks without
+   duplicate recognition libid3tag: 74/63 sec (with display), 44 sec
+   (without display)).
 
 - album support (normalize all tracks of an album with the same gain)
    for volume normalization
@@ -34,15 +32,6 @@ TODO:
 - set Album/Artist etc. from filename (user configurable). Example: 
        artist/album/01-track1.mp3 ...
        01_album_artist_track ...
-
-- for genre (etc.) playlists: have confirmation dialogue before
-  removing old playlists (Chris Cutler?)
-
-- currently iTunesDB.ext uses iPodIDs to match data between
-  iTunesDB.ext and iTunesDB. If another program (like ephpod) writes
-  the iTunesDB the iPodIDs change and data cannot be matched any
-  more -> allow to match data using the MD5 checksums to partially
-  recover the extended information
 
 - add more progress dialogues
 
@@ -60,9 +49,6 @@ Please feel free to submit further features.
 
 
 BUGLIST:
-
-- Confirmation does not work with "Remove Playlist including
-  tracks"
 
 - don't write iTunesDB if no tracks are imported.
 

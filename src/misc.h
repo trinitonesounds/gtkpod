@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-27 22:08:50 jcs>
+/* Time-stamp: <2003-11-29 12:39:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -95,7 +95,8 @@ void mount_ipod(void);
 void unmount_ipod(void);
 void call_script (gchar *script);
 
-void do_command_on_entries (gchar *command, gchar *what, GList *selected_tracks);
+void do_command_on_entries (const gchar *command, const gchar *what,
+			    GList *selected_tracks);
 void play_tracks (GList *selected_tracks);
 void enqueue_tracks (GList *selected_tracks);
 

@@ -263,7 +263,7 @@ track-to-track basis using a "volume tag".
 
 gtkpod uses 'mp3gain' (mp3gain.sourceforge.net) to do the volume
 normalization. You need to install mp3gain in the default path or set
-the environment variable MP3GAIN to the full path.
+the full path in the 'Tools' section of the preferences dialog.
 
 For each song passed to mp3gain the volume adjustment needed to
 achieve the "normal" volume level is determined and stored on the iPod

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-27 23:36:04 jcs>
+/* Time-stamp: <2003-11-29 12:43:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -141,7 +141,7 @@ void create_add_files_fileselector (void)
     gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (file_selector),
 					    TRUE);
     gtk_file_selection_set_filename(GTK_FILE_SELECTION (file_selector),
-				    cfg->last_dir.browse);
+				    prefs_get_last_dir_browse ());
 
     g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
 		      "clicked",
@@ -213,7 +213,7 @@ void create_add_playlists_fileselector (void)
     gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (pl_file_selector),
 					    TRUE);
     gtk_file_selection_set_filename(GTK_FILE_SELECTION (pl_file_selector),
-				    cfg->last_dir.browse);
+				    prefs_get_last_dir_browse ());
 
     g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->ok_button),
 		      "clicked",
@@ -665,16 +665,16 @@ void cleanup_backup_and_extended_files (void)
 
   cfgdir = prefs_get_cfgdir ();
   /* in offline mode, there are no backup files! */
-  if (cfgdir && !cfg->offline)
+  if (cfgdir && !prefs_get_offline ())
     {
       cft = g_build_filename (cfgdir, "iTunesDB", NULL);
       cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
-      if (!cfg->write_extended_info)
+      if (!prefs_get_write_extended_info ())
 	/* delete extended info file from computer */
 	if (g_file_test (cfe, G_FILE_TEST_EXISTS))
 	  if (remove (cfe) != 0)
 	    gtkpod_warning (_("Could not delete backup file: \"%s\"\n"), cfe);
-      if (!cfg->keep_backups)
+      if (!prefs_get_keep_backups())
 	if(g_file_test (cft, G_FILE_TEST_EXISTS))
 	  if (remove (cft) != 0)
 	    gtkpod_warning (_("Could not delete backup file: \"%s\"\n"), cft);
@@ -1096,9 +1096,9 @@ void ipod_directories_head (void)
     gchar *mp;
     GString *str;
 
-    mp = prefs_get_ipod_mount ();
-    if (mp)
+    if (prefs_get_ipod_mount ())
     {
+	mp = g_strdup (prefs_get_ipod_mount ());
 	if (strlen (mp) > 0)
 	{ /* make sure the mount point does not end in "/" */
 	    if (mp[strlen (mp) - 1] == '/')
@@ -1585,8 +1585,8 @@ void delete_entry_head (gint inst, gboolean delete_full)
 void
 mount_ipod(void)
 {
-    gchar *str = NULL;
-    if((str = prefs_get_ipod_mount()))
+    const gchar *str = prefs_get_ipod_mount ();
+    if(str)
     {
 	pid_t pid, tpid;
 	int status;
@@ -1605,7 +1605,6 @@ mount_ipod(void)
 		/* we could evaluate tpid and status now */
 		break;
 	}
-	g_free(str);
     }
 }
 
@@ -1621,8 +1620,8 @@ mount_ipod(void)
 void
 unmount_ipod(void)
 {
-    gchar *str = NULL;
-    if((str = prefs_get_ipod_mount()))
+    const gchar *str = prefs_get_ipod_mount ();
+    if(str)
     {
 	pid_t pid, tpid;
 	int status;
@@ -1641,7 +1640,6 @@ unmount_ipod(void)
 		/* we could evaluate tpid and status now */
 		break;
 	}
-	g_free(str);
     }
 }
 
@@ -1748,7 +1746,8 @@ which(const gchar *exe)
  *
  */
 void 
-do_command_on_entries (gchar *command, gchar *what, GList *selected_tracks)
+do_command_on_entries (const gchar *command, const gchar *what,
+		       GList *selected_tracks)
 {
     GList *l;
     gchar *str, *commandc, *next;
@@ -1793,7 +1792,7 @@ do_command_on_entries (gchar *command, gchar *what, GList *selected_tracks)
     g_ptr_array_add (args, commandc);
     do
     {
-	gchar *next;
+	const gchar *next;
 	gboolean end;
 
 	next = strchr (command, ' ');

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-26 23:23:22 jcs>
+/* Time-stamp: <2003-11-29 11:58:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -492,11 +492,10 @@ static glong
 get_ipod_used_space(void)
 {
     glong result = 0;
-    gchar *line = NULL;
     gchar **tokens = NULL;
-    gchar *mp = prefs_get_ipod_mount ();
+    gchar *line = get_drive_stats_from_df(prefs_get_ipod_mount ());
     
-    if((line = get_drive_stats_from_df(mp)))
+    if(line)
     {
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
@@ -506,7 +505,6 @@ get_ipod_used_space(void)
 	}
     }
     g_free(line);
-    g_free (mp);
     return(result);
 }
 #endif
@@ -516,11 +514,10 @@ static double
 get_ipod_free_space(void)
 {
     double result = 0;
-    gchar *line = NULL;
     gchar **tokens = NULL;
-    gchar *mp = prefs_get_ipod_mount ();
+    gchar *line = get_drive_stats_from_df(prefs_get_ipod_mount ());
 
-    if((line = get_drive_stats_from_df(mp)))
+    if(line)
     {
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
@@ -530,7 +527,6 @@ get_ipod_free_space(void)
 	}
     }
     g_free(line);
-    g_free(mp);
     return(result);
 }
 
