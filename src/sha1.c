@@ -69,7 +69,7 @@ static void process_block_sha1(sha1 * message);
     for(i = 0; i < 20; i++) \
 	d[i] = 0x01; \
     d[20] = 0x00; \
-    free(d); \
+    g_free(d); \
     d = NULL; \
 }
 
@@ -117,8 +117,7 @@ do_hash_on_file(FILE * fp)
 
    if (fp)
    {
-      digest = (u_char *) malloc(sizeof(u_char) * 41);
-      memset(digest, 0, sizeof(u_char) * 41);
+      digest = (u_char *) g_malloc0(sizeof(u_char) * 41);
       bread = fread(file_chunk, 1, PATH_MAX * blocks, fp);
       hash = sha1_hash(file_chunk, bread);
       for (x = 0; x < 20; x++)
@@ -284,11 +283,11 @@ sha1_hash(const u_char * text, u_int32_t len)
    chunk x;
    chunk temp_len = len;
    const u_char *temp_text = text;
-   u_char *digest = (u_char *) malloc(sizeof(u_char) * 21);
-   sha1 *message = (sha1 *) malloc(sizeof(sha1));
+   u_char *digest = (u_char *) g_malloc(sizeof(u_char) * 21);
+   sha1 *message = (sha1 *) g_malloc(sizeof(sha1));
 
-   message->blockdata = (block *) malloc(sizeof(block));
-   message->H = (hblock *) malloc(sizeof(hblock));
+   message->blockdata = (block *) g_malloc(sizeof(block));
+   message->H = (hblock *) g_malloc(sizeof(hblock));
    message->H->chunkblock[0] = 0x67452301;
    message->H->chunkblock[1] = 0xefcdab89;
    message->H->chunkblock[2] = 0x98badcfe;
@@ -327,9 +326,9 @@ sha1_hash(const u_char * text, u_int32_t len)
    for (x = 0; x < 20; x++)
       digest[x] = message->H->charblock[x];
    digest[20] = 0x00;
-   free(message->blockdata);
-   free(message->H);
-   free(message);
+   g_free(message->blockdata);
+   g_free(message->H);
+   g_free(message);
    return (digest);
 }
 

@@ -95,30 +95,6 @@ cfg_new(void)
     return(mycfg);
 }
 
-static gchar*
-prefs_readline(char *buf, int maxlen, int *last)
-{
-    gchar *result = NULL;
-    int begin = PATH_MAX;
-    int i = 0;
-    
-    if((buf) && (buf[begin] != '#')) /* allow comments */
-    {
-	for(i = 0;((i < maxlen) && (buf[i] != '\n')); i++)
-	{
-	    if((begin > i) && ((buf[i] != ' ') || (buf[i] != '\0'))) 
-		begin = i;
-	}
-	if((i > 0) && (i <= maxlen))
-	{
-	    int len = (i - begin);
-	    result = g_malloc0(len + 1);
-	    snprintf(result, len + 1, "%s", &buf[begin]);
-	    *last +=  i;
-	}
-    }
-    return(result);
-}
 
 static void
 read_prefs_from_file_desc(FILE *fp)
@@ -429,7 +405,11 @@ void prefs_set_last_dir_file_export_for_filename(gchar *file)
 void prefs_set_mount_point(const gchar *mp)
 {
     if(cfg->ipod_mount) g_free(cfg->ipod_mount);
-    cfg->ipod_mount = g_strdup(mp);
+    /* if new mount point starts with "~/", we replace it with the
+       home directory */
+    if (strncmp ("~/", mp, 2) == 0)
+      cfg->ipod_mount = concat_dir (g_get_home_dir (), mp+2);
+    else cfg->ipod_mount = g_strdup(mp);
 }
 
 void prefs_set_md5songs_active(gboolean active)
