@@ -5,8 +5,8 @@ src/charset.c
 src/clientserver.c
 src/confirmation.c
 src/context_menus.c
-src/date_parser.c
-src/date_parser2.c
+src/date_parser.l
+src/date_parser2.l
 src/dirbrowser.c
 src/display.c
 src/display_playlists.c
