@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 22:40:47 jcs>
+/* Time-stamp: <2005-02-12 02:43:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -42,7 +42,7 @@
 
 #define TRACKVOLERROR G_MININT32
 
-void nm_new_tracks (void);
+void nm_new_tracks (iTunesDB *itdb);
 void nm_tracks_list (GList *list);
 
 gboolean tools_sync_all (void);

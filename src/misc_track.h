@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-05 15:50:27 jcs>
+/* Time-stamp: <2005-02-12 02:26:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,7 +34,9 @@
 #endif
 
 void gp_duplicate_remove (Track *oldtrack, Track *track);
-void gp_itdb_hash_tracks (iTunesDB *itdb);
+void gp_md5_hash_tracks_itdb (iTunesDB *itdb);
+void gp_md5_hash_tracks (void);
+void gp_md5_free_hash (void);
 Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename);
 gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item);
 gchar *track_get_item_utf8 (Track *track, T_item t_item);

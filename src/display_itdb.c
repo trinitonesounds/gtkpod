@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-09 00:29:27 jcs>
+/* Time-stamp: <2005-02-12 02:58:00 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,6 +31,7 @@
 #endif
 
 #include <math.h>
+#include <string.h>
 
 #include "display_itdb.h"
 #include "display.h"
@@ -38,6 +39,7 @@
 #include "support.h"
 #include "file.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "info.h"
 #include "prefs.h"
 
@@ -76,7 +78,7 @@ void gp_playlist_extra_destroy (ExtraPlaylistData *epl)
 
 ExtraPlaylistData *gp_playlist_extra_duplicate (ExtraPlaylistData *epl)
 {
-    ExtraPlaylistData *epl_dup = NULL
+    ExtraPlaylistData *epl_dup = NULL;
 
     if (epl)
     {
@@ -101,7 +103,7 @@ void gp_track_extra_destroy (ExtraTrackData *etrack)
 
 ExtraTrackData *gp_track_extra_duplicate (ExtraTrackData *etr)
 {
-    ExtraPlaylistData *etr_dup = NULL
+    ExtraTrackData *etr_dup = NULL;
 
     if (etr)
     {
@@ -217,7 +219,7 @@ void gp_track_add_extra (Track *track)
 
     if (!track->userdata);
     {
-	ExtraTrackDAta *etr = g_new0 (ExtraTrackData, 1);
+	ExtraTrackData *etr = g_new0 (ExtraTrackData, 1);
 	track->userdata = etr;
 	track->userdata_destroy =
 	    (ItdbUserDataDestroyFunc)gp_track_extra_destroy;
@@ -248,7 +250,7 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
 	   have to worry about it when we are handling the strings */
 	/* exception: md5_hash, hostname, charset: these may be NULL. */
 	gp_track_validate_entries (track);
-	itdb_track_add (itdb, track);
+	itdb_track_add (itdb, track, -1);
 	result = track;
     }
     data_changed (itdb);
@@ -297,18 +299,65 @@ Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
     return pl;
 }
 
+/** If playlist @pl_name doesn't exist, then it will be created
+ * and added to the tail of playlists, otherwise pointer to an existing
+ * playlist will be returned
+ */
+Playlist *gp_playlist_by_name_or_add (iTunesDB *itdb, gchar *pl_name,
+				      gboolean spl)
+{
+    Playlist *pl = NULL;
+
+    g_return_val_if_fail (itdb, pl);
+    g_return_val_if_fail (pl_name, pl);
+    pl = itdb_playlist_by_name (itdb, pl_name);
+    if (pl)
+    {   /* check if the it's the same type (spl or normal) */
+	if (pl->is_spl == spl) return pl;
+    }
+    /* Create a new playlist */
+    pl = gp_playlist_add_new (itdb, pl_name, spl, -1);
+    return pl;
+}
+
 
 /* Remove a playlist from the itdb and from the display */
 void gp_playlist_remove (Playlist *pl)
 {
-    iTunesDB *itdb;
-
     g_return_if_fail (pl);
-    itdb = pl->itdb;
-    g_return_if_fail (itdb);
+    g_return_if_fail (pl->itdb);
     pm_remove_playlist (pl, TRUE);
+    data_changed (pl->itdb);
     itdb_playlist_remove (pl);
-    data_changed (itdb);
+}
+
+
+/* FIXME: this is a bit dangerous. . . we delete all
+ * playlists with titles @pl_name and return how many
+ * pl have been removed.
+ ***/
+guint gp_playlist_remove_by_name (iTunesDB *itdb, gchar *pl_name)
+{
+    guint i;
+    guint pl_removed=0;
+
+    g_return_val_if_fail (itdb, pl_removed);
+
+    for(i=1; i < itdb_playlists_number(itdb); i++)
+    {
+	Playlist *pl = itdb_playlist_by_nr (itdb, i);
+	g_return_val_if_fail (pl, pl_removed);
+	g_return_val_if_fail (pl->name, pl_removed);
+        if(strcmp (pl->name, pl_name) == 0)
+        {
+            gp_playlist_remove (pl);
+	    /* we just deleted the ith element of playlists, so
+	     * we must examine the new ith element. */
+            pl_removed++;
+            i--;
+        }
+    }
+    return pl_removed;
 }
 
 
@@ -343,6 +392,7 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
 	    pm_remove_track (pl, track);
 	    itdb_playlist_remove_track (pl, track);
 	}
+	md5_track_remove (track);
 	itdb_track_remove (track);
     }
     data_changed (itdb);
@@ -370,7 +420,7 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
 
 /* Make sure all strings are initialised -- that way we don't
    have to worry about it when we are handling the strings.
-/* exception: md5_hash, hostname and charset: these may be NULL. */
+   exception: md5_hash, hostname and charset: these may be NULL. */
 void gp_track_validate_entries (Track *track)
 {
     ExtraTrackData *etr;
@@ -388,7 +438,7 @@ void gp_track_validate_entries (Track *track)
     if (!track->fdesc)           track->fdesc = g_strdup ("");
     if (!track->grouping)        track->grouping = g_strdup ("");
     if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
-    if (!track->pc_path_locale)  track->pc_path_locale = g_strdup ("");
+    if (!etr->pc_path_locale)    etr->pc_path_locale = g_strdup ("");
     if (!track->ipod_path)       track->ipod_path = g_strdup ("");
     /* Make sure year_str is identical to year */
     g_free (etr->year_str);
@@ -447,7 +497,7 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 
 	if (md5) track = md5_md5_exists (itdb, md5);
 	else     track = md5_file_exists (itdb, file, TRUE);
-	if (!track)	  track = itdb_track_by_filename (itdb, file);
+	if (!track)	  track = gp_track_by_filename (itdb, file);
 	if (track)
 	{
 	    gchar *buf1, *buf;
@@ -468,7 +518,6 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 
 /* determine "active" itdb -- it's either the itdb of the playlist
  * currently selected, or the first itdb if none is selected */
-
 iTunesDB *gp_get_active_itdb (void)
 {
     Playlist *pl = pm_get_selected_playlist ();
@@ -483,11 +532,33 @@ iTunesDB *gp_get_active_itdb (void)
     }
 
     /* Otherwise choose the first itdb */
-    g_return_if_fail (gtkpod_window);
+    g_return_val_if_fail (gtkpod_window, NULL);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
 				    "itdbs_head");
-    g_return_if_fail (itdbs_head);
+    g_return_val_if_fail (itdbs_head, NULL);
     g_return_val_if_fail (itdbs_head->itdbs, NULL);
     g_return_val_if_fail (itdbs_head->itdbs->data, NULL);
     return itdbs_head->itdbs->data;
+}
+
+
+/* get the "ipod" itdb, that's the first itdb with
+   type==GP_ITDB_TYPE_IPOD. Returns NULL and prints error when no
+   matching itdb can be found */
+iTunesDB *gp_get_ipod_itdb (void)
+{
+    struct itdbs_head *itdbs_head;
+    GList *gl;
+
+    g_return_val_if_fail (gtkpod_window, NULL);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_val_if_fail (itdbs_head, NULL);
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_val_if_fail (itdb, NULL);
+	if (itdb->usertype == GP_ITDB_TYPE_IPOD)  return itdb;
+    }
+    g_return_val_if_reached (NULL);
 }

@@ -25,14 +25,7 @@ itdb_SOURCES = \
 itdb_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
 gtkpod_SOURCES = \
-    misc_playlist.c \
-    mp3file.c mp3file.h \
-    mp4file.c mp4file.h \
-    prefs.c prefs.h \
-    prefs_window.c prefs_window.h \
     tools.c tools.h \
-    support.c support.h \
-    wavfile.c wavfile.h \
     charset.c charset.h \
     clientserver.c clientserver.h \
     confirmation.c confirmation.h \
@@ -53,6 +46,13 @@ gtkpod_SOURCES = \
     misc.c misc.h \
     misc_track.c misc_track.h \
     misc_confirm.c misc_conversion.c misc_input.c \
+    misc_playlist.c \
+    mp3file.c mp3file.h \
+    mp4file.c mp4file.h \
+    prefs.c prefs.h \
+    prefs_window.c prefs_window.h \
+    support.c support.h \
+    wavfile.c wavfile.h \
     callbacks.c callbacks.h
 
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@

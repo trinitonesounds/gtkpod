@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-12 00:48:06 jcs>
+/* Time-stamp: <2005-02-12 02:25:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -99,8 +99,8 @@
 #include "clientserver.h"
 #include "display.h"
 #include "info.h"
-#include "md5.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "prefs.h"
 #include "support.h"
 
@@ -1276,18 +1276,25 @@ void prefs_set_ipod_mount(const gchar *mp)
    hash table */
 void prefs_set_md5tracks (gboolean active)
 {
+    struct itdbs_head *itdbs_head;
+
+    g_return_if_fail (gtkpod_window);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_if_fail (itdbs_head);
+
     if (cfg->md5tracks && !active)
     { /* md5 checksums have been turned off */
-	cfg->md5tracks = active;
-	md5_unique_file_free ();
+	cfg->md5tracks = FALSE;
+	gp_md5_free_hash ();
     }
     if (!cfg->md5tracks && active)
     { /* md5 checksums have been turned on */
-	cfg->md5tracks = active; /* must be set before calling
-				   hash_tracks() */
-	gp_itdb_hash_tracks ();
+	cfg->md5tracks = TRUE; /* must be set before calling
+				  gp_md5_hash_tracks() */
+	gp_md5_hash_tracks ();
 	/* display duplicates */
-	remove_duplicate (NULL, NULL);
+	gp_duplicate_remove (NULL, NULL);
     }
 }
 

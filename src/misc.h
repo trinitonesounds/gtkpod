@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-09 00:22:08 jcs>
+/* Time-stamp: <2005-02-12 01:40:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -133,22 +133,22 @@ void generate_category_playlists (iTunesDB *itdb, T_item cat);
 Playlist *generate_displayed_playlist (void);
 Playlist *generate_selected_playlist (void);
 void randomize_current_playlist (void);
-Playlist *generate_random_playlist (void);
-Playlist *generate_not_listed_playlist (void);
-Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name,
-				       gboolean del_old);
-Playlist *generate_new_playlist (GList *tracks);
-void most_listened_pl (void);
-void never_listened_pl (void);
-void last_listened_pl(void);
-void most_rated_pl(void);
-void since_last_pl(void);
-void each_rating_pl (void);
+Playlist *generate_random_playlist (iTunesDB *itdb);
+Playlist *generate_not_listed_playlist (iTunesDB *itdb);
+Playlist *generate_playlist_with_name (iTunesDB *itdb, GList *tracks,
+				       gchar *pl_name, gboolean del_old);
+Playlist *generate_new_playlist (iTunesDB *itdb, GList *tracks);
+void most_listened_pl (iTunesDB *itdb);
+void never_listened_pl (iTunesDB *itdb);
+void last_listened_pl(iTunesDB *itdb);
+void most_rated_pl(iTunesDB *itdb);
+void since_last_pl(iTunesDB *itdb);
+void each_rating_pl (iTunesDB *itdb);
 
 guint32 utf16_strlen (gunichar2 *utf16);
 gunichar2 *utf16_strdup (gunichar2 *utf16);
 
-void check_db (void);
+void check_db (iTunesDB *db);
 
 guint32 replaygain_to_soundcheck (gdouble gain);
 gdouble soundcheck_to_replaygain (guint32 soundcheck);

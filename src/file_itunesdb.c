@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-05 17:25:11 jcs>
+/* Time-stamp: <2005-02-12 02:23:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -515,7 +515,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
     /* delete hash information (if present) */
     destroy_extendedinfohash ();
     /* find duplicates */
-    gp_itdb_hash_tracks (itdb);
+    gp_md5_hash_tracks_itdb (itdb);
 
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);

@@ -41,6 +41,7 @@ static guint entry_inst = -1;
 static GList *selected_tracks = NULL;
 static Playlist *selected_playlist = NULL;
 static TabEntry *selected_entry = NULL; 
+static iTunesDB *active_itdb = NULL;
 /* types of context menus (PM/ST/TM) */
 typedef enum {
     CM_PM = 0,
@@ -123,11 +124,11 @@ static void
 update_entries(GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	do_selected_playlist (update_trackids);
+	gp_do_selected_playlist (update_tracks);
     else if(selected_entry)
-	do_selected_entry (update_trackids, entry_inst);
+	gp_do_selected_entry (update_tracks, entry_inst);
     else if(selected_tracks)
-	do_selected_tracks (update_trackids);
+	gp_do_selected_tracks (update_tracks);
 }
 
 /*
@@ -140,11 +141,11 @@ static void
 sync_dirs_entries(GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	do_selected_playlist (sync_trackids);
+	gp_do_selected_playlist (sync_tracks);
     else if(selected_entry)
-	do_selected_entry (sync_trackids, entry_inst);
+	gp_do_selected_entry (sync_tracks, entry_inst);
     else if(selected_tracks)
-	do_selected_tracks (sync_trackids);
+	gp_do_selected_tracks (sync_tracks);
 }
 
 /**
@@ -203,7 +204,7 @@ static void edit_spl (GtkMenuItem *mi, gpointer data)
 static void
 create_playlist_from_entries (GtkMenuItem *mi, gpointer data)
 {
-    generate_new_playlist (selected_tracks);
+    generate_new_playlist (active_itdb, selected_tracks);
 }
 
 /**
@@ -451,6 +452,7 @@ tm_context_menu_init(void)
 
     selected_entry = NULL; 
     selected_playlist = NULL;
+    active_itdb = gp_get_active_itdb ();
     entry_inst = -1;
     if (selected_tracks)  g_list_free (selected_tracks);
     selected_tracks = tm_get_selected_tracks();
@@ -474,6 +476,7 @@ pm_context_menu_init(void)
     selected_entry = NULL;
     entry_inst = -1;
     selected_playlist = pm_get_selected_playlist();
+    active_itdb = gp_get_active_itdb ();
     if(selected_playlist)
     {
 	selected_tracks = g_list_copy (selected_playlist->members);
@@ -495,6 +498,7 @@ st_context_menu_init(gint inst)
     selected_tracks = NULL;
     selected_playlist = NULL;
     selected_entry = st_get_selected_entry (inst);
+    active_itdb = gp_get_active_itdb ();
     if(selected_entry)
     {
 	entry_inst = inst;

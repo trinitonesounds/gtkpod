@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-08 23:59:09 jcs>
+/* Time-stamp: <2005-02-12 02:10:54 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -125,6 +125,7 @@ void gp_itdb_add_extra (iTunesDB *itdb);
 void gp_itdb_add_extra_full (iTunesDB *itdb);
 
 Track *gp_track_new (void);
+#define gp_track_free itdb_track_free
 Track *gp_track_add (iTunesDB *itdb, Track *track);
 void gp_track_add_extra (Track *track);
 void gp_track_validate_entries (Track *track);
@@ -132,8 +133,11 @@ void gp_track_validate_entries (Track *track);
 Playlist *gp_playlist_new (const gchar *title, gboolean spl);
 void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos);
 void gp_playlist_remove (Playlist *pl);
+guint gp_playlist_remove_by_name (iTunesDB *itdb, gchar *pl_name);
 Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
 			       gboolean spl, gint32 pos);
+Playlist *gp_playlist_by_name_or_add (iTunesDB *itdb, gchar *pl_name,
+				      gboolean spl);
 void gp_playlist_remove_track (Playlist *plitem, Track *track);
 void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display);
 
@@ -141,4 +145,5 @@ void gp_playlist_add_extra (Playlist *pl);
 
 gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num);
 iTunesDB *gp_get_active_itdb (void);
+iTunesDB *gp_get_ipod_itdb (void);
 #endif

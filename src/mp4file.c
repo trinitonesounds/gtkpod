@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 01:15:34 jcs>
+/* Time-stamp: <2005-02-12 02:13:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,12 +31,11 @@
 #endif
 
 #include "charset.h"
-#include "itunesdb.h"
+#include "itdb.h"
 #include "misc.h"
 #include "mp4file.h"
 #include "prefs.h"
 #include "support.h"
-#include "track.h"
 
 /* ------------------------------------------------------------
 
@@ -135,6 +134,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mp4.h"
+#undef PACKAGE
+#undef VERSION
 /* need to include config.h again because mp4.h seems to #undef
    PACKAGE */
 #include <config.h>

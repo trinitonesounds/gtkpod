@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-09 00:33:15 jcs>
+/* Time-stamp: <2005-02-12 02:01:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -203,7 +203,8 @@ void generate_category_playlists (iTunesDB *itdb, T_item cat)
 Playlist *generate_displayed_playlist (void)
 {
     GList *tracks = tm_get_all_tracks ();
-    Playlist *result = generate_new_playlist (tracks);
+    Playlist *result = generate_new_playlist (gp_get_active_itdb (),
+					      tracks);
     g_list_free (tracks);
     return result;
 }
@@ -214,7 +215,8 @@ Playlist *generate_displayed_playlist (void)
 Playlist *generate_selected_playlist (void)
 {
     GList *tracks = tm_get_selected_tracks ();
-    Playlist *result = generate_new_playlist (tracks);
+    Playlist *result = generate_new_playlist (gp_get_active_itdb (),
+					      tracks);
     g_list_free (tracks);
     return result;
 }
@@ -223,7 +225,7 @@ Playlist *generate_selected_playlist (void)
 /* Generates a playlist containing a random selection of
    prefs_get_misc_track_nr() tracks in random order from the currently
    displayed tracks */
-Playlist *generate_random_playlist (void)
+Playlist *generate_random_playlist (iTunesDB *itdb)
 {
     GRand *grand = g_rand_new ();
     Playlist *new_pl = NULL;
@@ -245,7 +247,7 @@ Playlist *generate_random_playlist (void)
     }
     pl_name1 = g_strdup_printf (_("Random (%d)"), tracks_max);
     pl_name = g_strdup_printf ("[%s]", pl_name1);
-    new_pl = generate_playlist_with_name (rtracks, pl_name, TRUE);
+    new_pl = generate_playlist_with_name (itdb, rtracks, pl_name, TRUE);
     g_free (pl_name1);
     g_free (pl_name);
     g_list_free (tracks);
@@ -289,28 +291,30 @@ static void not_listed_make_track_list (gpointer key, gpointer track,
    playlist.
    For this, playlists starting with a "[" (generated playlists) are
    being ignored. */
-Playlist *generate_not_listed_playlist (void)
+Playlist *generate_not_listed_playlist (iTunesDB *itdb)
 {
-    GHashTable *hash = g_hash_table_new (NULL, NULL);
+    GHashTable *hash;
     GList *gl, *tracks=NULL;
-    guint32 pl_nr, i;
+    guint32 i;
     gchar *pl_name;
     Playlist *new_pl, *pl;
 
+    g_return_val_if_fail (itdb, NULL);
+
     /* Create hash with all track/track pairs */
-    pl = get_playlist_by_nr (0);
-    if (pl)
+    pl = itdb_playlist_mpl (itdb);
+    g_return_val_if_fail (pl, NULL);
+    hash = g_hash_table_new (NULL, NULL);
+    for (gl=pl->members; gl != NULL; gl=gl->next)
     {
-	for (gl=pl->members; gl != NULL; gl=gl->next)
-	{
-	    g_hash_table_insert (hash, gl->data, gl->data);
-	}
+	g_hash_table_insert (hash, gl->data, gl->data);
     }
     /* remove all tracks that are members of other playlists */
-    pl_nr = get_nr_of_playlists ();
-    for (i=1; i<pl_nr; ++i)
+    i=1;
+    do
     {
-	pl = get_playlist_by_nr (i);
+	pl = itdb_playlist_by_nr (itdb, i);
+	++i;
 	/* skip playlists starting with a '[' */
 	if (pl && pl->name && (pl->name[0] != '['))
 	{
@@ -319,7 +323,7 @@ Playlist *generate_not_listed_playlist (void)
 		g_hash_table_remove (hash, gl->data);
 	    }
 	}
-    }
+    } while (pl);
 
     g_hash_table_foreach (hash, not_listed_make_track_list, &tracks);
     g_hash_table_destroy (hash);
@@ -327,7 +331,7 @@ Playlist *generate_not_listed_playlist (void)
 
     pl_name = g_strdup_printf ("[%s]", _("Not Listed"));
 
-    new_pl = generate_playlist_with_name (tracks, pl_name, TRUE);
+    new_pl = generate_playlist_with_name (itdb, tracks, pl_name, TRUE);
     g_free (pl_name);
     g_list_free (tracks);
     return new_pl;
@@ -337,12 +341,14 @@ Playlist *generate_not_listed_playlist (void)
 /* Generate a playlist consisting of the tracks in @tracks
  * with @name name. If @del_old ist TRUE, delete any old playlist with
  * the same name. */
-Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name,
-				       gboolean del_old)
+Playlist *generate_playlist_with_name (iTunesDB *itdb,GList *tracks,
+				       gchar *pl_name, gboolean del_old)
 {
     Playlist *new_pl=NULL;
     gint n = g_list_length (tracks);
     gchar *str;
+
+    g_return_val_if_fail (itdb, new_pl);
 
     if(n>0)
     {
@@ -352,18 +358,26 @@ Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name,
 	{
 	    /* currently selected playlist */
 	    Playlist *sel_pl= pm_get_selected_playlist ();
-
+	    if (sel_pl->itdb != itdb)
+	    {   /* different itdb */
+		sel_pl = NULL;
+	    }
 	    /* remove all playlists with named @plname */
-	    remove_playlist_by_name (pl_name);
+	    gp_playlist_remove_by_name (itdb, pl_name);
 	    /* check if we deleted the selected playlist */
-	    if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
+	    if (sel_pl)
+	    {
+		if (g_list_find (itdb->playlists, sel_pl) == NULL)
+		    select = TRUE;
+	    }
 	}
-
-	new_pl = add_new_playlist (pl_name, -1, FALSE);
+	new_pl = gp_playlist_add_new (itdb, pl_name, FALSE, -1);
+	g_return_val_if_fail (new_pl, new_pl);
 	for (l=tracks; l; l=l->next)
 	{
-	    Track *track = (Track *)l->data;
-	    add_track_to_playlist (new_pl, track, TRUE);
+	    Track *track = l->data;
+	    g_return_val_if_fail (track, new_pl);
+	    gp_playlist_add_track (new_pl, track, TRUE);
 	}
 	str = g_strdup_printf (
 	    ngettext ("Created playlist '%s' with %d track.",
@@ -387,7 +401,7 @@ Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name,
 
 /* Generate a playlist named "New Playlist" consisting of the tracks
  * in @tracks. */
-Playlist *generate_new_playlist (GList *tracks)
+Playlist *generate_new_playlist (iTunesDB *itdb, GList *tracks)
 {
     gchar *name = get_user_string (
 	_("New Playlist"),
@@ -395,35 +409,38 @@ Playlist *generate_new_playlist (GList *tracks)
 	_("New Playlist"),
 	NULL, NULL);
     if (name)
-	return generate_playlist_with_name (tracks, name, FALSE);
+	return generate_playlist_with_name (itdb, tracks, name, FALSE);
     return NULL;
 }
 
 /* look at the add_ranked_playlist help:
  * BEWARE this function shouldn't be used by other functions */
-static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
+static GList *create_ranked_glist(iTunesDB *itdb, gint tracks_nr,
+				  PL_InsertFunc insertfunc,
 				  GCompareFunc comparefunc,
 				  gpointer userdata)
 {
    GList *tracks=NULL;
    gint f=0;
-   gint i=0;
-   Track *track=NULL;
+   GList *gl;
 
-   while ((track=get_next_track(i)))
+   g_return_val_if_fail (itdb, tracks);
+
+   for (gl=itdb->tracks; gl; gl=gl->next)
    {
-      i=1; /* for get_next_track() */
-      if (track && (!insertfunc || insertfunc (track,userdata)))
-      {
-	 tracks = g_list_insert_sorted (tracks, track, comparefunc);
-	 ++f;
-	 if (tracks_nr && (f>tracks_nr))
-	 {   /*cut the tail*/
-	    tracks = g_list_remove(tracks,
-		   g_list_nth_data(tracks, tracks_nr));
-	    --f;
-	 }
-      }
+       Track *track = gl->data;
+       g_return_val_if_fail (track, tracks);
+       if (track && (!insertfunc || insertfunc (track, userdata)))
+       {
+	   tracks = g_list_insert_sorted (tracks, track, comparefunc);
+	   ++f;
+	   if (tracks_nr && (f>tracks_nr))
+	   {   /*cut the tail*/
+	       tracks = g_list_remove(tracks,
+				      g_list_nth_data(tracks, tracks_nr));
+	       --f;
+	   }
+       }
    }
    return tracks;
 }
@@ -438,21 +455,25 @@ static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
  *
  * Return value: the newly created playlist
  */
-static Playlist *update_ranked_playlist(gchar *str, gint tracks_nr,
-				     PL_InsertFunc insertfunc,
-				     GCompareFunc comparefunc,
-				     gpointer userdata)
+static Playlist *update_ranked_playlist(iTunesDB *itdb,
+					gchar *str, gint tracks_nr,
+					PL_InsertFunc insertfunc,
+					GCompareFunc comparefunc,
+					gpointer userdata)
 {
     Playlist *result = NULL;
     gchar *pl_name = g_strdup_printf ("[%s]", str);
-    GList *tracks = create_ranked_glist(tracks_nr,insertfunc,comparefunc,userdata);
-    gint f;
-    f=g_list_length(tracks);
+    GList *tracks;
 
-    if (f != 0)
+    g_return_val_if_fail (itdb, result);
+
+    tracks = create_ranked_glist(itdb, tracks_nr,
+				 insertfunc, comparefunc, userdata);
+
+    if (tracks)
     /* else generate_playlist_with_name prints something*/
     {
-	result = generate_playlist_with_name (tracks, pl_name, TRUE);
+	result = generate_playlist_with_name (itdb, tracks, pl_name, TRUE);
     }
     g_list_free (tracks);
     g_free (pl_name);
@@ -492,11 +513,14 @@ static gboolean Most_Listened_IF (Track *track, gpointer userdata)
     return      FALSE;
 }
 
-void most_listened_pl(void)
+void most_listened_pl (iTunesDB *itdb)
 {
     gint tracks_nr = prefs_get_misc_track_nr();
-    gchar *str = g_strdup_printf (_("Most Listened (%d)"), tracks_nr);
-    update_ranked_playlist (str, tracks_nr,
+    gchar *str;
+
+    g_return_if_fail (itdb);
+    str = g_strdup_printf (_("Most Listened (%d)"), tracks_nr);
+    update_ranked_playlist (itdb, str, tracks_nr,
 			    Most_Listened_IF, Most_Listened_CF, (gpointer)0 );
     g_free (str);
 }
@@ -530,11 +554,14 @@ static gboolean Never_Listened_IF (Track *track, gpointer userdata)
     return      FALSE;
 }
 
-void never_listened_pl(void)
+void never_listened_pl (iTunesDB *itdb)
 {
-    gint tracks_nr = 0; /* no limit */
-    gchar *str = g_strdup_printf (_("Never Listened"));
-    update_ranked_playlist (str, tracks_nr,
+    gint tracks_nr = 0;  /* no limit */
+    gchar *str;
+
+    g_return_if_fail (itdb);
+    str = g_strdup_printf (_("Never Listened"));
+    update_ranked_playlist (itdb, str, tracks_nr,
 			    Never_Listened_IF, Never_Listened_CF, (gpointer)0 );
     g_free (str);
 }
@@ -567,11 +594,14 @@ static gboolean Most_Rated_IF (Track *track, gpointer userdata)
     return FALSE;
 }
 
-void most_rated_pl(void)
+void most_rated_pl (iTunesDB *itdb)
 {
     gint tracks_nr = prefs_get_misc_track_nr();
-    gchar *str =  g_strdup_printf (_("Best Rated (%d)"), tracks_nr);
-    update_ranked_playlist (str, tracks_nr,
+    gchar *str;
+
+    g_return_if_fail (itdb);
+    str =  g_strdup_printf (_("Best Rated (%d)"), tracks_nr);
+    update_ranked_playlist (itdb, str, tracks_nr,
 			    Most_Rated_IF, Most_Rated_CF, (gpointer)0 );
     g_free (str);
 }
@@ -606,18 +636,24 @@ static gboolean All_Ratings_IF (Track *track, gpointer user_data)
 }
 
 
-void each_rating_pl(void)
+void each_rating_pl(iTunesDB *itdb)
 {
-	gchar *str = _("Unrated tracks");
-	gint playlist_nr;
-	for (playlist_nr = 0; playlist_nr < 6; playlist_nr ++ ) {
-		if (playlist_nr > 0) 
-		{
-			str = g_strdup_printf (_("Rated %d"), playlist_nr);
-		} 
-    	update_ranked_playlist (str, 0,All_Ratings_IF, All_Ratings_CF, (gpointer)playlist_nr);
-	}
-  	g_free (str);
+    gchar *str;
+    gint playlist_nr;
+
+    g_return_if_fail (itdb);
+    str = _("Unrated tracks");
+    for (playlist_nr = 0; playlist_nr < 6; playlist_nr ++ )
+    {
+	if (playlist_nr > 0) 
+	{
+	    str = g_strdup_printf (_("Rated %d"), playlist_nr);
+	} 
+    	update_ranked_playlist (itdb, str, 0,
+				All_Ratings_IF, All_Ratings_CF,
+				(gpointer)playlist_nr);
+    }
+    g_free (str);
 }
 
 
@@ -648,11 +684,14 @@ static gboolean Last_Listened_IF (Track *track, gpointer userdata)
     return      FALSE;
 }
 
-void last_listened_pl(void)
+void last_listened_pl (iTunesDB *itdb)
 {
     gint tracks_nr = prefs_get_misc_track_nr();
-    gchar *str = g_strdup_printf (_("Recent (%d)"), tracks_nr);
-    update_ranked_playlist (str, tracks_nr,
+    gchar *str;
+
+    g_return_if_fail (itdb);
+    str = g_strdup_printf (_("Recent (%d)"), tracks_nr);
+    update_ranked_playlist (itdb, str, tracks_nr,
 			    Last_Listened_IF, Last_Listened_CF, (gpointer)0);
     g_free (str);
 }
@@ -687,9 +726,10 @@ static gboolean since_last_IF (Track *track, gpointer userdata)
     else                                        return FALSE;
 }
 
-void since_last_pl(void)
+void since_last_pl (iTunesDB *itdb)
 {
-    update_ranked_playlist (_("Last Time"), 0,
+    g_return_if_fail (itdb);
+    update_ranked_playlist (itdb, _("Last Time"), 0,
 			    since_last_IF, since_last_CF, (gpointer)0);
 }
 
@@ -742,12 +782,21 @@ gboolean remove_dangling (gpointer key, gpointer value, gpointer pl_dangling)
     Track *track = (Track*)value;
     GList **l_dangling = ((GList **)pl_dangling);
     gchar *filehash = NULL;
-    gint lind=                 /* to which list belongs */
-	(track->pc_path_locale && *track->pc_path_locale &&   /* file is specified */
-	 g_file_test (track->pc_path_locale, G_FILE_TEST_EXISTS) && /* file exists */
-	 track->md5_hash &&                           /* md5 defined for the track */
+    gint lind;
+    ExtraTrackData *etr;
+
+    g_return_val_if_fail (l_dangling, FALSE);
+    g_return_val_if_fail (track, FALSE);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, FALSE);
+
+
+    lind =                 /* to which list belongs */
+	(etr->pc_path_locale && *etr->pc_path_locale &&   /* file is specified */
+	 g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS) && /* file exists */
+	 etr->md5_hash &&                           /* md5 defined for the track */
 	 (!strcmp ((filehash=md5_hash_on_filename (
-			track->pc_path_locale, FALSE)), track->md5_hash)));
+			etr->pc_path_locale, FALSE)), etr->md5_hash)));
     /* and md5 of the file is the same as in the track info */
     /* 1 - Original file is present on PC and has the same md5*/
     /* 0 - Doesn't exist */
@@ -772,71 +821,93 @@ void process_gtk_events_blocked()
 
 
 
-/* Frees memory busy by the lists containing tracks stored in @user_data1
- * Frees @user_data1 and @user_data2*/
+/* Frees memory busy by the lists containing tracks stored in
+   @user_data1 */
 static void
-check_db_danglingcancel  (gpointer user_data1, gpointer user_data2)
+check_db_danglingcancel0  (gpointer user_data1, gpointer user_data2)
 {
-    gint *i=((gint*)user_data2);
     g_list_free((GList *)user_data1);
-    if (*i==0)
-	gtkpod_statusbar_message (_("Removal of dangling tracks with no files on PC was canceled."));
-    else
-	gtkpod_statusbar_message (_("Handling of dangling tracks with files on PC was canceled."));
-    g_free(i);
+    gtkpod_statusbar_message (_("Removal of dangling tracks with no files on PC was canceled."));
+}
+
+
+/* Frees memory busy by the lists containing tracks stored in
+   @user_data1 */
+static void
+check_db_danglingcancel1  (gpointer user_data1, gpointer user_data2)
+{
+    g_list_free((GList *)user_data1);
+    gtkpod_statusbar_message (_("Handling of dangling tracks with files on PC was canceled."));
 }
 
 
 /* To be called for ok to remove dangling Tracks with with no files linked.
  * Frees @user_data1 and @user_data2*/
 static void
-check_db_danglingok (gpointer user_data1, gpointer user_data2)
+check_db_danglingok0 (gpointer user_data1, gpointer user_data2)
 {
     GList *tlist = ((GList *)user_data1);
     GList *l_dangling = tlist;
-    gint *i=((gint*)user_data2);
+    iTunesDB *itdb = user_data2;
+
+    g_return_if_fail (itdb);
     /* traverse the list and append to the str */
     for (tlist = g_list_first(tlist);
 	 tlist != NULL;
 	 tlist = g_list_next(tlist))
     {
-	Track *track = (Track*)(tlist->data);
-	if (*i==0)
-	{
-/*            printf("Removing track %d\n", track->ipod_id); */
-	    remove_track_from_playlist(NULL, track); /* remove track from everywhere */
-	    remove_track(track); /* seems to be fine fnct for this case */
-	    unmark_track_for_deletion (track); /* otherwise it will try to remove non-existing ipod file */
-	}
-	else
-	{
-/*            printf("Handling track %d\n", track->ipod_id); */
-	    track->transferred=FALSE; /* yes - we need to transfer it */
+	Track *track = tlist->data;
+	g_return_if_fail (track);
+	
+        /* printf("Removing track %d\n", track->ipod_id); */
+	gp_playlist_remove_track (NULL, track); /* remove track from everywhere */
+	unmark_track_for_deletion (track); /* otherwise it will try to remove non-existing ipod file */
+    }
+    g_list_free(l_dangling);
+    data_changed (itdb);
+    gtkpod_statusbar_message (_("Dangling tracks with no files on PC were removed."));
+}
+
+
+
+/* To be called for ok to remove dangling Tracks with with no files linked.
+ * Frees @user_data1 and @user_data2*/
+static void
+check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
+{
+    GList *tlist = ((GList *)user_data1);
+    GList *l_dangling = tlist;
+    iTunesDB *itdb = user_data2;
+
+    g_return_if_fail (itdb);
+
+    /* traverse the list and append to the str */
+    for (tlist = g_list_first(tlist);
+	 tlist != NULL;
+	 tlist = g_list_next(tlist))
+    {
+	Track *track = tlist->data;
+	g_return_if_fail (track);
+        /* printf("Handling track %d\n", track->ipod_id); */
+	track->transferred=FALSE; /* yes - we need to transfer it */
 /*            g_free(track->ipod_path);      */ /* need to reset ipod's path so it doesn't try to locate it there */
 /*            track->ipod_path=NULL;         */ /* zero it out */
 /*            update_track_from_file(track); */ /* please update information from the file */
-	}
     }
     g_list_free(l_dangling);
-    data_changed();
-    if (*i==0)
-	gtkpod_statusbar_message (_("Dangling tracks with no files on PC were removed."));
-    else
-	gtkpod_statusbar_message (_("Dangling tracks with files on PC were handled."));
-    g_free(i);
+    data_changed (itdb);
+    gtkpod_statusbar_message (_("Dangling tracks with files on PC were handled."));
 }
 
 
 
 /* checks iTunesDB for presence of dangling links and checks IPODs Music directory
  * on subject of orphaned files */
-void check_db (void)
+void check_db (iTunesDB *itdb)
 {
 
     void glist_list_tracks (GList * tlist, GString * str)
 	{
-	    Track *track = NULL;
-
 	    if (str==NULL)
 	    {
 		fprintf(stderr, "Report the bug please: shouldn't be NULL at %s:%d\n",__FILE__,__LINE__);
@@ -847,21 +918,22 @@ void check_db (void)
 		 tlist != NULL;
 		 tlist = g_list_next(tlist))
 	    {
-		track = (Track*)(tlist->data);
+		ExtraTrackData *etr;
+		Track *track = tlist->data;
+		g_return_if_fail (track);
+		etr = track->userdata;
+		g_return_if_fail (etr);
 		g_string_append_printf
 		    (str,"%s(%d) %s-%s -> %s\n",_("Track"),
-		     track->ipod_id, track->artist,  track->title,  track->pc_path_utf8);
+		     track->id, track->artist,  track->title,  etr->pc_path_utf8);
 	    }
 	} /* end of glist_list_tracks */
 
     GTree *files_known = NULL;
-    Track *track = NULL;
     GDir  *dir_des = NULL;
 
     gchar *pathtrack=NULL;
     gchar *ipod_filename = NULL;
-    gchar *ipod_dir = NULL;
-    gchar *ipod_fulldir = NULL;
     gchar *buf = NULL;
 #   define localdebug  0      /* may be later becomes more general verbose param */
     Playlist* pl_orphaned = NULL;
@@ -871,19 +943,21 @@ void check_db (void)
     /* 0 - Doesn't exist */
 
     gpointer foundtrack ;
-
-    gint  h = 0
-	, i
-	, norphaned = 0
-	, ndangling = 0;
-
+    gint h,i;
+    gint norphaned = 0;
+    gint ndangling = 0;
     gchar ** tokens;
     gchar *ipod_path_as_filename = charset_from_utf8 (prefs_get_ipod_mount ());
-    const gchar * music[] = {"iPod_Control","Music",NULL,NULL,};
+    ExtraiTunesDBData *eitdb;
+    GList *gl;
+
+    g_return_if_fail (itdb);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
 
     /* If an iTunesDB exists on the iPod, the user probably is making
        a mistake and we should tell him about it */
-    if (!file_itunesdb_read())
+    if (!eitdb->itdb_imported)
     {
 	const gchar *itunes_components[] = {"iPod_Control", "iTunes", NULL};
 	gchar *itunes_filename = resolve_path(ipod_path_as_filename,
@@ -917,10 +991,11 @@ void check_db (void)
     /* put all files in the hash table */
     files_known = g_tree_new_full (str_cmp, NULL,
 				   treeKeyDestroy, treeValueDestroy);
-    while((track=get_next_track(h)))
+    for (gl=itdb->tracks; gl; gl=gl->next)
     {
+	Track *track = gl->data;
         gint ntok=0;
-	h=1;
+	g_return_if_fail (track);
         /* we don't want to report non-transferred files as dandgling */
 	if (!track->transferred) continue; 
 	tokens = g_strsplit(track->ipod_path,":",(track->ipod_path[0]==':'?4:3));
@@ -945,10 +1020,13 @@ void check_db (void)
     for(h=0;h<IPOD_MUSIC_DIRS;h++)
     {
 	/* directory name */
-	ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
-                    music[2] = ipod_dir;
-	ipod_fulldir=resolve_path(ipod_path_as_filename,music); /* full path */
-
+	/* FIXME: should not depend on IPOD_MUSIC_DIRS */
+	gchar *ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
+	gchar *ipod_fulldir;
+	const gchar * music[] = {"iPod_Control","Music", NULL, NULL,};
+	music[2] = ipod_dir;
+	/* full path */
+	ipod_fulldir = resolve_path(ipod_path_as_filename,music);
 	if(ipod_fulldir && (dir_des=g_dir_open(ipod_fulldir,0,NULL))) {
 	    while ((ipod_filename=g_strdup(g_dir_read_name(dir_des))))
 		/* we have a file in the directory*/
@@ -982,22 +1060,24 @@ void check_db (void)
 		    if (!pl_orphaned)
 		    {
 			gchar *str = g_strdup_printf ("[%s]", _("Orphaned"));
-			pl_orphaned = get_newplaylist_by_name(str, FALSE);
+			pl_orphaned = gp_playlist_by_name_or_add (
+			    itdb, str, FALSE);
 			g_free (str);
 		    }
 
 		    norphaned++;
 
                     if (localdebug) fprintf(stdout,"to orphaned ");
-		    if ((dupl_track = md5_file_exists (fn_orphaned, TRUE)))
+		    if ((dupl_track = md5_file_exists (itdb, fn_orphaned,
+						       TRUE)))
 		    {  /* This orphan has already been added again.
 			  It will be removed with the next sync */
-			Track *track = itunesdb_new_track ();
+			Track *track = gp_track_new ();
 			gchar *fn_utf8 = charset_to_utf8 (fn_orphaned);
 			track->ipod_path = g_strdup_printf (
 			    ":iPod_Control:Music:%s:%s",
 			    num_str, ipod_filename);
-			validate_entries (track);
+			gp_track_validate_entries (track);
 			mark_track_for_deletion (track);
 			gtkpod_warning (_(
 			 "The following orphaned file had already "
@@ -1008,7 +1088,8 @@ void check_db (void)
 		    }
 		    else
 		    {
-			add_track_by_filename(fn_orphaned, pl_orphaned,
+			add_track_by_filename(itdb,
+					      fn_orphaned, pl_orphaned,
 					      FALSE, NULL, NULL);
 		    }
 		    g_free (fn_orphaned);
@@ -1042,16 +1123,14 @@ void check_db (void)
 
     for (i=0;i<2;i++)
     {
-	GString * str_dangs = g_string_sized_new(2000);
+	GString *str_dangs = g_string_sized_new(2000);
 	gint ndang=0;
-	gint *k = g_malloc(sizeof(gint));
-	*k=i; /* to pass inside the _confirmation */
 
 	glist_list_tracks(l_dangling[i], str_dangs); /* compose String list of the tracks */
 	ndang = g_list_length(l_dangling[i]);
 	if (ndang)
 	{
-	    if (i)
+	    if (i==1)
 		buf = g_strdup_printf (
 		    ngettext ("The following dangling track has a file on PC.\nPress OK to have them transfered from the file on next Sync, CANCEL to leave it as is.",
 			      "The following %d dangling tracks have files on PC.\nPress OK to have them transfered from the files on next Sync, CANCEL to leave them as is.",
@@ -1063,7 +1142,7 @@ void check_db (void)
 			      ndang), ndang);
 
 	    if (gtkpod_confirmation
-		((i?CONF_ID_DANGLING1:CONF_ID_DANGLING0), /* we want unique window for each */
+		((i==1?CONF_ID_DANGLING1:CONF_ID_DANGLING0), /* we want unique window for each */
 		 FALSE,         /* gboolean modal, */
 		 _("Dangling Tracks"), /* title */
 		 buf,           /* label */
@@ -1072,28 +1151,27 @@ void check_db (void)
 		 NULL, 0, NULL, /* option 2 */
 		 TRUE,          /* gboolean confirm_again, */
 		 NULL,          /* ConfHandlerOpt confirm_again_handler,*/
-		 check_db_danglingok, /* ConfHandler ok_handler,*/
+		 i==1?check_db_danglingok1:check_db_danglingok0, /* ConfHandler ok_handler,*/
 		 NULL,          /* don't show "Apply" button */
-		 check_db_danglingcancel, /* cancel_handler,*/
+		 i==1?check_db_danglingcancel1:check_db_danglingcancel0, /* cancel_handler,*/
 		 l_dangling[i], /* gpointer user_data1,*/
-		 k)             /* gpointer user_data2,*/
+		 itdb)             /* gpointer user_data2,*/
 		== GTK_RESPONSE_REJECT)
 	    {   /* free memory */
 		g_list_free(l_dangling[i]);
-		g_free(k);
 	    }
 	    g_free (buf);
 	    g_string_free (str_dangs, TRUE);
 	}
     }
 
-    if (pl_orphaned) data_changed();
-    g_free(ipod_path_as_filename);
-    g_tree_destroy(files_known);
-    buf=g_strdup_printf(_("Found %d orphaned and %d dangling files. Done."),
-			norphaned, ndangling);
+    if (pl_orphaned) data_changed (itdb);
+    g_free (ipod_path_as_filename);
+    g_tree_destroy (files_known);
+    buf = g_strdup_printf (_("Found %d orphaned and %d dangling files. Done."),
+			   norphaned, ndangling);
     gtkpod_statusbar_message(buf);
     g_free (buf);
     prefs_set_statusbar_timeout (0);
-    release_widgets();
+    release_widgets ();
 }

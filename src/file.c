@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-05 16:15:59 jcs>
+/* Time-stamp: <2005-02-12 03:07:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -649,7 +649,7 @@ Track *copy_new_info (Track *from, Track *to)
     C_FREE (to->composer);
     C_FREE (to->fdesc);
     C_FREE (eto->pc_path_utf8);
-    C_FREE (to->pc_path_locale);
+    C_FREE (eto->pc_path_locale);
     C_FREE (eto->charset);
     /* copy strings */
     to->album = g_strdup (from->album);
@@ -660,7 +660,7 @@ Track *copy_new_info (Track *from, Track *to)
     to->composer = g_strdup (from->composer);
     to->fdesc = g_strdup (from->fdesc);
     eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
-    to->pc_path_locale = g_strdup (from->pc_path_locale);
+    eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
     eto->charset = g_strdup (efrom->charset);
     to->size = from->size;
     to->tracklen = from->tracklen;
@@ -839,7 +839,7 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	}
 	/* set path file information */
 	enti->pc_path_utf8 = charset_to_utf8 (name);
-	nti->pc_path_locale = g_strdup (name);
+	enti->pc_path_locale = g_strdup (name);
 	/* set length of file */
 	file = fopen (name, "r");
 	if (file)
@@ -958,12 +958,17 @@ void mserv_from_file_tracks (GList *selected_tracks)
     block_widgets ();
     for (gl = selected_tracks; gl; gl=gl->next)
     {
+	ExtraTrackData *etr;
+	gchar *buf;
 	Track *track = gl->data;
-	gchar *buf = g_strdup_printf (_("Retrieving mserv data %s"), get_track_info (track));
+	g_return_if_fail (track);
+	etr = track->userdata;
+	g_return_if_fail (etr);
+	buf = g_strdup_printf (_("Retrieving mserv data %s"), get_track_info (track));
 	gtkpod_statusbar_message (buf);
 	g_free (buf);
-	if (track->pc_path_locale && *track->pc_path_locale)
-	    update_mserv_data_from_file (track->pc_path_locale, track);
+	if (etr->pc_path_locale && *etr->pc_path_locale)
+	    update_mserv_data_from_file (etr->pc_path_locale, track);
 	else
 	    display_mserv_problems (track, _("no filename available"));
     }
@@ -1112,13 +1117,17 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 	/* add all tracks that are no longer present in the dirs */
 	for (gl=itdb->tracks; gl; gl=gl->next)
 	{
+	    ExtraTrackData *etr;
 	    Track *tr = gl->data;
 	    g_return_if_fail (tr);
-	    if (tr->pc_path_locale && *tr->pc_path_locale)
+	    etr = tr->userdata;
+	    g_return_if_fail (etr);
+
+	    if (etr->pc_path_locale && *etr->pc_path_locale)
 	    {
-		gchar *dirname = g_path_get_dirname (tr->pc_path_locale);
+		gchar *dirname = g_path_get_dirname (etr->pc_path_locale);
 		if (g_hash_table_lookup (hash, dirname) &&
-		    !g_file_test (tr->pc_path_locale, G_FILE_TEST_EXISTS))
+		    !g_file_test (etr->pc_path_locale,G_FILE_TEST_EXISTS))
 		{
 		    tracklist = g_list_append (tracklist, tr);
 		}
@@ -1163,12 +1172,12 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		 NULL,                 /* don't show "Apply" button */
 		 sync_remove_cancel,   /* cancel_handler,*/
 		 NULL,                 /* gpointer user_data1,*/
-		 track_list);          /* gpointer user_data2,*/
+		 tracklist);           /* gpointer user_data2,*/
 
 	    g_free (label);
 	    g_string_free (str, TRUE);
 	}
-	else sync_remove_cancel (hash, track_list);
+	else sync_remove_cancel (hash, tracklist);
     }
     else
     {
@@ -1242,9 +1251,9 @@ void sync_tracks (GList *selected_tracks)
 	etr = track->userdata;
 	g_return_if_fail (etr);
 
-	if (track && track->pc_path_locale && *track->pc_path_locale)
+	if (etr->pc_path_locale && *etr->pc_path_locale)
 	{
-	    gchar *dirname = g_path_get_dirname (track->pc_path_locale);
+	    gchar *dirname = g_path_get_dirname (etr->pc_path_locale);
 
 	    ++dirnum;
 	    if (g_file_test (dirname, G_FILE_TEST_IS_DIR))
@@ -1558,14 +1567,14 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	prefs_set_charset (etr->charset);
     }
 
-    if (track->pc_path_locale)
+    if (etr->pc_path_locale)
     {   /* need to copy because we cannot pass track->pc_path_locale to
 	get_track_info_from_file () since track->pc_path gets g_freed
 	there */
-	trackpath = g_strdup (track->pc_path_locale);
+	trackpath = g_strdup (etr->pc_path_locale);
     }
 
-    if (!(track->pc_path_locale && *track->pc_path_locale))
+    if (!(etr->pc_path_locale && *etr->pc_path_locale))
     { /* no path available */
 	display_non_updated (track, _("no filename available"));
     }
@@ -1697,7 +1706,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
   C_FREE (basename);
 
   /* Check if there exists already a track with the same filename */
-  oldtrack = itdb_track_by_filename (itdb, name);
+  oldtrack = gp_track_by_filename (itdb, name);
   /* If a track already exists in the database, either update it or
      just add it to the current playlist (if it doesn't already exist) */
   if (oldtrack)
@@ -1866,13 +1875,13 @@ gboolean write_tags_to_file (Track *track)
 	update_charset_info (track);
     }
 
-    if (track->pc_path_locale && (strlen (track->pc_path_locale) > 0))
+    if (etr->pc_path_locale && (strlen (etr->pc_path_locale) > 0))
     {
 	if (file_write_info (
-		track->pc_path_locale, track) == FALSE)
+		etr->pc_path_locale, track) == FALSE)
 	{
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
-			    track->pc_path_locale);
+			    etr->pc_path_locale);
 	}
     }
     if (!prefs_get_offline () &&
@@ -1917,20 +1926,22 @@ gboolean write_tags_to_file (Track *track)
  * @s - The Track data structure we want the on disk file for
  * Returns - the filename for this Track. Must be g_free'd.
  */
-gchar* get_track_name_on_disk(Track *s)
+gchar* get_track_name_on_disk(Track *tr)
 {
+    ExtraTrackData *etr;
     gchar *result = NULL;
 
-    if(s)
+    g_return_val_if_fail (tr, result);
+    etr = tr->userdata;
+    g_return_val_if_fail (etr, result);
+
+    result = get_track_name_on_ipod (tr);
+    if(!result &&
+       (etr->pc_path_locale) && (strlen(etr->pc_path_locale) > 0))
     {
-	result = get_track_name_on_ipod (s);
-	if(!result &&
-	   (s->pc_path_locale) && (strlen(s->pc_path_locale) > 0))
-	{
-	    result = g_strdup (s->pc_path_locale);
-	}
+	result = g_strdup (etr->pc_path_locale);
     }
-    return(result);
+    return result;
 }
 
 

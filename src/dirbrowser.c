@@ -128,6 +128,8 @@ static char *ofolder[] =
 static GdkPixmap *folder_pixmap = NULL, *ofolder_pixmap;
 static GdkBitmap *folder_mask, *ofolder_mask;
 static GtkWidget *dirbrowser = NULL;
+static iTunesDB *active_itdb = NULL;
+
 
 static GtkWidget *xmms_create_dir_browser(const gchar * title, const gchar * current_path, GtkSelectionMode mode, void (*handler) (gchar *));
 
@@ -160,10 +162,12 @@ void dirbrowser_release (void)
 /* Callback after one directory has been added */
 static void add_dir_selected (gchar *dir)
 {
+    g_return_if_fail (active_itdb);
+
     if (dir)
     {
 	Playlist *plitem = pm_get_selected_playlist ();
-	add_directory_by_name (dir, plitem,
+	add_directory_by_name (active_itdb, dir, plitem,
 			       prefs_get_add_recursively (),
 			       NULL, NULL);
 	prefs_set_last_dir_browse(dir);
@@ -182,7 +186,12 @@ static void add_dir_selected (gchar *dir)
 
 void dirbrowser_create (void)
 {
-    if(dirbrowser)  return;
+    if (dirbrowser)
+    {   /* file selector already open -- raise to the top */
+	gdk_window_raise (dirbrowser->window);
+	return;
+    }
+    active_itdb = gp_get_active_itdb ();
     dirbrowser = xmms_create_dir_browser (
 	_("Select directory to add recursively"),
 	prefs_get_last_dir_browse (),

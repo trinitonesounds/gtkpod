@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-09 00:21:44 jcs>
+/* Time-stamp: <2005-02-12 03:21:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -40,11 +40,12 @@
 #include "charset.h"
 #include "dirbrowser.h"
 #include "display.h"
+#include "display_itdb.h"
 #include "file.h"
 #include "info.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "tools.h"
-#include "playlist.h"
 #include "prefs.h"
 #include "prefs_window.h"
 #include "support.h"
@@ -209,7 +210,12 @@ tracks_moved_or_copied     (GdkDragContext  *context, gchar *tracks)
 	gint n=0;
 	gchar *buf = NULL;
 	gchar *ptr = tracks;
+	iTunesDB *itdb;
 	Playlist *pl = pm_get_selected_playlist ();
+
+	g_return_if_fail (pl);
+	itdb = pl->itdb;
+	g_return_if_fail (itdb);
 
 	/* count the number of tracks */
 	while ((ptr=strchr (ptr, '\n')))
@@ -218,7 +224,7 @@ tracks_moved_or_copied     (GdkDragContext  *context, gchar *tracks)
 	    ++ptr;
 	}
 
-	if (pl && (pl->type == ITDB_PL_TYPE_NORM) &&
+	if ((pl->type == ITDB_PL_TYPE_NORM) &&
 	    (context->action == GDK_ACTION_MOVE))
 	{
 	    guint32 id = 0;
@@ -234,7 +240,7 @@ tracks_moved_or_copied     (GdkDragContext  *context, gchar *tracks)
 		ngettext ("Moved one track",
 			  "Moved %d tracks", n), n);
 	}
-	else if (pl)
+	else
 	{
 	    buf = g_strdup_printf (
 		ngettext ("Copied one track",
@@ -490,7 +496,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 	switch(event->keyval)
 	{
 	    case GDK_u:
-		do_selected_playlist (update_tracks);
+		gp_do_selected_playlist (update_tracks);
 		break;
 	    case GDK_n:
 		add_new_pl_or_spl_user_name (gp_get_active_itdb(),
@@ -521,7 +527,7 @@ on_track_treeview_key_release_event     (GtkWidget       *widget,
 		delete_track_head (FALSE);
 		break;
 	    case GDK_u:
-		do_selected_tracks (update_tracks);
+		gp_do_selected_tracks (update_tracks);
 		break;
 	    default:
 		break;
@@ -581,7 +587,7 @@ void
 on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-  handle_import ();
+  handle_import_merge_first_ipod ();
 }
 
 
@@ -589,7 +595,7 @@ void
 on_import_button_clicked               (GtkButton       *button,
 					gpointer         user_data)
 {
-  handle_import ();
+  handle_import_merge_first_ipod ();
 }
 
 
@@ -766,7 +772,7 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 				       GTK_TREE_VIEW (widget)), FALSE);
 		break;
 	    case GDK_u:
-		do_selected_entry (update_tracks,
+		gp_do_selected_entry (update_tracks,
 				   st_get_instance_from_treeview (
 				       GTK_TREE_VIEW (widget)));
 		break;
@@ -819,7 +825,7 @@ void
 on_update_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
-    do_selected_playlist (update_tracks);
+    gp_do_selected_playlist (update_tracks);
 }
 
 /* update tracks in tab entry */
@@ -830,14 +836,14 @@ on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Update selected entry of which sort tab?"));
 
-    if (inst != -1) do_selected_entry (update_tracks, inst);
+    if (inst != -1) gp_do_selected_entry (update_tracks, inst);
 }
 
 void
 on_update_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
-    do_selected_tracks (update_tracks);
+    gp_do_selected_tracks (update_tracks);
 }
 
 
@@ -846,7 +852,7 @@ on_mserv_from_file_playlist_menu_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    do_selected_playlist (mserv_from_file_tracks);
+    gp_do_selected_playlist (mserv_from_file_tracks);
 }
 
 
@@ -857,7 +863,7 @@ on_mserv_from_file_entry_menu_activate (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Update selected entry of which sort tab?"));
 
-    if (inst != -1) do_selected_entry (mserv_from_file_tracks, inst);
+    if (inst != -1) gp_do_selected_entry (mserv_from_file_tracks, inst);
 }
 
 
@@ -866,7 +872,7 @@ on_mserv_from_file_tracks_menu_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    do_selected_tracks (mserv_from_file_tracks);
+    gp_do_selected_tracks (mserv_from_file_tracks);
 }
 
 
@@ -903,7 +909,7 @@ void
 on_sync_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
-    do_selected_playlist (sync_tracks);
+    gp_do_selected_playlist (sync_tracks);
 }
 
 /* sync tracks in tab entry */
@@ -914,14 +920,14 @@ on_sync_tab_entry_activate        (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Sync dirs of selected entry in which sort tab?"));
 
-    if (inst != -1) do_selected_entry (sync_tracks, inst);
+    if (inst != -1) gp_do_selected_entry (sync_tracks, inst);
 }
 
 void
 on_sync_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
-    do_selected_tracks (sync_tracks);
+    gp_do_selected_tracks (sync_tracks);
 }
 
 
@@ -1496,7 +1502,7 @@ void
 on_smart_playlist_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    spl_edit_new (NULL, -1);
+    spl_edit_new (gp_get_active_itdb(), NULL, -1);
 }
 
 void
@@ -1554,7 +1560,7 @@ void
 on_most_listened_tracks1_activate       (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    most_listened_pl();
+    most_listened_pl(gp_get_active_itdb());
 }
 
 
@@ -1563,7 +1569,7 @@ on_all_tracks_never_listened_to1_activate
 					(GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    never_listened_pl();
+    never_listened_pl(gp_get_active_itdb());
 }
 
 void
@@ -1571,7 +1577,7 @@ on_most_rated_tracks_playlist_s1_activate
 					(GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    most_rated_pl();
+    most_rated_pl(gp_get_active_itdb());
 }
 
 
@@ -1579,14 +1585,14 @@ void
 on_most_recent_played_tracks_activate   (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    last_listened_pl();
+    last_listened_pl(gp_get_active_itdb());
 }
 
 void
 on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    since_last_pl();
+    since_last_pl(gp_get_active_itdb());
 }
 
 
@@ -1850,8 +1856,12 @@ void
 on_normalize_all_tracks                (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    Playlist *plitem = get_playlist_by_nr (0);
-    nm_tracks_list (plitem->members);
+    iTunesDB *itdb = gp_get_active_itdb ();
+    Playlist *mpl;
+    g_return_if_fail (itdb);
+    mpl = itdb_playlist_mpl (itdb);
+    g_return_if_fail (mpl);
+    nm_tracks_list (mpl->members);
 }
 
 
@@ -1859,7 +1869,7 @@ void
 on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    nm_new_tracks ();
+    nm_new_tracks (gp_get_active_itdb ());
 }
 
 
@@ -1940,7 +1950,7 @@ void
 on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    check_db();
+    check_db (gp_get_ipod_itdb());
 }
 
 
@@ -1989,7 +1999,7 @@ on_all_tracks_not_listed_in_any_playlist1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    generate_not_listed_playlist ();
+    generate_not_listed_playlist (gp_get_active_itdb ());
 }
 
 
@@ -1997,8 +2007,7 @@ void
 on_random_playlist_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    generate_random_playlist();
-
+    generate_random_playlist(gp_get_active_itdb ());
 }
 
 
@@ -2029,7 +2038,7 @@ void
 on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    each_rating_pl();
+    each_rating_pl (gp_get_active_itdb ());
 }
 
 

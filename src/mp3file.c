@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 01:15:33 jcs>
+/* Time-stamp: <2005-02-12 02:10:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -105,7 +105,7 @@ struct _File_Tag
 
 #include "mp3file.h"
 #include "charset.h"
-#include "itunesdb.h"
+#include "itdb.h"
 #include "file.h"
 #include "misc.h"
 #include "support.h"
@@ -1337,6 +1337,11 @@ static gint lame_vcmp(gchar a[5], gchar b[5]) {
 static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
 	char oc, nc;
 	gint gain;
+	ExtraTrackData *etr;
+
+	g_return_if_fail (track);
+	etr = track->userdata;
+	g_return_if_fail (etr);
 
 	/* check originator */
 	oc = (buf[0] & 0x1c) >> 2;
@@ -1359,17 +1364,17 @@ static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
 
 	switch (nc) {
 		case 0x20:
-			if (track->radio_gain_set) return;
-			track->radio_gain = (gdouble)gain / 10;
-			track->radio_gain_set = TRUE;
-/*			printf("radio_gain (lame): %i\n", track->radio_gain); */
+			if (etr->radio_gain_set) return;
+			etr->radio_gain = (gdouble)gain / 10;
+			etr->radio_gain_set = TRUE;
+/*			printf("radio_gain (lame): %i\n", etr->radio_gain); */
 			break;
 		case 0x40:
-			if (track->audiophile_gain_set) return;
-			track->audiophile_gain = (gdouble)gain / 10;
-			track->audiophile_gain_set = TRUE;
+			if (etr->audiophile_gain_set) return;
+			etr->audiophile_gain = (gdouble)gain / 10;
+			etr->audiophile_gain_set = TRUE;
 /*			printf("audiophile_gain (lame): %i\n", 
-					track->audiophile_gain);*/
+					etr->audiophile_gain);*/
 			break;
 	}
 }
@@ -1413,17 +1418,21 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 
 	FILE *file = NULL;
 	char buf[4], version[5];
-
 	int gain_adjust = 0;
 	int sideinfo;
 	guint32 ps;
+	ExtraTrackData *etr;
 
-	track->radio_gain = 0;
-	track->audiophile_gain = 0;
-	track->peak_signal = 0;
-	track->radio_gain_set = FALSE;
-	track->audiophile_gain_set = FALSE;
-	track->peak_signal_set = FALSE;
+	g_return_val_if_fail (track, FALSE);
+	etr = track->userdata;
+	g_return_val_if_fail (etr, FALSE);
+
+	etr->radio_gain = 0;
+	etr->audiophile_gain = 0;
+	etr->peak_signal = 0;
+	etr->radio_gain_set = FALSE;
+	etr->audiophile_gain_set = FALSE;
+	etr->peak_signal_set = FALSE;
 	
 	if (!path)
 		goto rg_fail;
@@ -1514,18 +1523,18 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	/* Don't know when fixed-point PeakSingleAmplitude
 	 * was introduced exactly. 3.94b will be used for now.) */
 	if ((lame_vcmp(version, "3.94b") >= 0)) {
-		if ((!track->peak_signal_set) && ps) {
-			track->peak_signal = ps;
-			track->peak_signal_set = TRUE;
+		if ((!etr->peak_signal_set) && ps) {
+			etr->peak_signal = ps;
+			etr->peak_signal_set = TRUE;
 /*			printf("peak_signal (lame): %f\n", (double)
-					track->peak_signal / 0x800000);*/
+					etr->peak_signal / 0x800000);*/
 		}
 	} else {
 		float f = *((float *) (void *) (&ps)) * 0x800000;
-		track->peak_signal = (guint32) f;
+		etr->peak_signal = (guint32) f;
 		/* I would like to see an example of that. */
 /*		printf("peak_signal (lame floating point): %f. PLEASE report.\n", 
-				(double) track->peak_signal / 0x800000);*/
+				(double) etr->peak_signal / 0x800000);*/
 	}
 
 	/*
@@ -1542,13 +1551,13 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 		goto rg_fail;
 
 	/* radio gain */
-	read_lame_replaygain(buf, track, gain_adjust);
+	read_lame_replaygain (buf, track, gain_adjust);
 
 	if (fread(&buf[0], 1, 2, file) != 2)
 		goto rg_fail;
 
 	/* audiophile gain */
-	read_lame_replaygain(buf, track, gain_adjust);
+	read_lame_replaygain (buf, track, gain_adjust);
 
 	fclose(file);
 	return TRUE;
@@ -1591,10 +1600,13 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 	guint32 entry_length = 0;
 	guint32 entries;
 	double d;
+	ExtraTrackData *etr;
 
-	if (!path)
-		goto rg_fail;
-	
+	g_return_val_if_fail (track, FALSE);
+	etr = track->userdata;
+	g_return_val_if_fail (etr, FALSE);
+	g_return_val_if_fail (path, FALSE);
+
 	file = fopen (path, "r");
 
 	/* check for ID3v1 Tag */
@@ -1658,7 +1670,7 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 		goto rg_fail;
 	
 	for (i = 0; i < entries; i++) {
-		if (track->radio_gain_set && track->peak_signal_set) break;
+		if (etr->radio_gain_set && etr->peak_signal_set) break;
 		pos = pos2 + entry_length;
 		if (pos > data_length - 10) break;
 		
@@ -1673,7 +1685,7 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 		if (entry_length + 1 > sizeof(buf))
 			continue;
 /* 		printf ("%s:%d:%d\n",&dbuf[pos], pos2, pos); */
-		if (!track->radio_gain_set && !strcasecmp(&dbuf[pos],
+		if (!etr->radio_gain_set && !strcasecmp(&dbuf[pos],
 					"REPLAYGAIN_TRACK_GAIN")) {
 			memcpy(buf, &dbuf[pos2], entry_length);
 			buf[entry_length] = '\0';
@@ -1682,14 +1694,14 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 /* 			printf("%f\n", d); */
 			if ((ep == buf + entry_length - 3) 
 					&& (!strncasecmp(ep, " dB", 3))) {
-			    track->radio_gain = d;
-				track->radio_gain_set = TRUE;
-/*				printf("radio_gain (ape): %i\n", track->radio_gain);*/
+			    etr->radio_gain = d;
+				etr->radio_gain_set = TRUE;
+/*				printf("radio_gain (ape): %i\n", etr->radio_gain);*/
 			}
 			
 			continue;
 		}
-		if (!track->peak_signal_set && !strcasecmp(&dbuf[pos],
+		if (!etr->peak_signal_set && !strcasecmp(&dbuf[pos],
 					"REPLAYGAIN_TRACK_PEAK")) {
 			memcpy(buf, &dbuf[pos2], entry_length);
 			buf[entry_length] = '\0';
@@ -1697,9 +1709,9 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 			d = g_ascii_strtod(buf, &ep);
 			if (ep == buf + entry_length) {
 				d *= 0x800000;
-				track->peak_signal = (guint32) floor(d + 0.5);
-				track->peak_signal_set = TRUE;
-/*				printf("peak_signal (ape): %f\n", (double) track->peak_signal / 0x800000);*/
+				etr->peak_signal = (guint32) floor(d + 0.5);
+				etr->peak_signal_set = TRUE;
+/*				printf("peak_signal (ape): %f\n", (double) etr->peak_signal / 0x800000);*/
 			}
 
 			continue;
@@ -1828,20 +1840,26 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
 
 gboolean mp3_get_gain (gchar *path, Track *track) 
 {
-	track->radio_gain_set = FALSE;
-	track->audiophile_gain_set = FALSE;
-	track->peak_signal_set = FALSE;
+    ExtraTrackData *etr;
 
-	mp3_get_track_lame_replaygain(path, track);
-/* 	printf ("%d:%d\n", track->radio_gain_set, track->peak_signal_set); */
-	if (track->radio_gain_set && track->peak_signal_set) return TRUE;
-	mp3_get_track_ape_replaygain(path, track);
-	if (track->radio_gain_set) return TRUE;
+    g_return_val_if_fail (track, FALSE);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, FALSE);
+
+    etr->radio_gain_set = FALSE;
+    etr->audiophile_gain_set = FALSE;
+    etr->peak_signal_set = FALSE;
+
+    mp3_get_track_lame_replaygain (path, track);
+/*    printf ("%d:%d\n", track->radio_gain_set, track->peak_signal_set); */
+    if (etr->radio_gain_set && etr->peak_signal_set) return TRUE;
+    mp3_get_track_ape_replaygain (path, track);
+    if (etr->radio_gain_set) return TRUE;
 	    
-	if (mp3_calc_gain(path, track))
-	    mp3_get_track_ape_replaygain(path, track);
-	if (track->radio_gain_set) return TRUE;
-	return FALSE;
+    if (mp3_calc_gain (path, track))
+	mp3_get_track_ape_replaygain (path, track);
+    if (etr->radio_gain_set) return TRUE;
+    return FALSE;
 }
 
 
@@ -1855,17 +1873,23 @@ gboolean mp3_get_gain (gchar *path, Track *track)
 
 gboolean mp3_read_gain (gchar *path, Track *track) 
 {
-	track->radio_gain_set = FALSE;
-	track->audiophile_gain_set = FALSE;
-	track->peak_signal_set = FALSE;
+    ExtraTrackData *etr;
 
-	mp3_get_track_lame_replaygain(path, track);
-	if (track->radio_gain_set && track->peak_signal_set) return TRUE;
-	
-	mp3_get_track_ape_replaygain(path, track);
-	if (track->radio_gain_set) return TRUE;
-	    
-	return FALSE;
+    g_return_val_if_fail (track, FALSE);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, FALSE);
+
+    etr->radio_gain_set = FALSE;
+    etr->audiophile_gain_set = FALSE;
+    etr->peak_signal_set = FALSE;
+
+    mp3_get_track_lame_replaygain(path, track);
+    if (etr->radio_gain_set && etr->peak_signal_set) return TRUE;
+
+    mp3_get_track_ape_replaygain(path, track);
+    if (etr->radio_gain_set) return TRUE;
+    
+    return FALSE;
 }
 
 
@@ -1973,7 +1997,7 @@ Track *mp3_get_file_info (gchar *name)
 	/* Tracks with zero play length are ignored by iPod... */
 	gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
 			name);
-	free_track (track);
+	gp_track_free (track);
 	track = NULL;
     }
 

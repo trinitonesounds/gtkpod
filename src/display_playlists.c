@@ -515,7 +515,7 @@ void pm_add_itdb (iTunesDB *itdb, gint pos)
     {
 	Playlist *pl = gl_pl->data;
 	g_return_if_fail (pl);
-	if (pl->playlist->type == ITDB_PL_TYPE_MPL)
+	if (pl->type == ITDB_PL_TYPE_MPL)
 	     pm_add_playlist (pl, pos);
 	else pm_add_playlist (pl, -1);
     }
@@ -540,7 +540,7 @@ void pm_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
 	   same itdb */
 	ExtraPlaylistData *epl = old_pl->userdata;
 	g_return_if_fail (epl);
-	if (epl->itdb == old_itdb)
+	if (old_pl->itdb == old_itdb)
 	    old_pl_name = g_strdup (old_pl->name);
     }
 
@@ -564,7 +564,7 @@ void pm_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
     /* reselect old playlist if still available */
     if (old_pl_name)
     {
-	Playlist *pl = itdb_playlist_by_name (new_itdb, name);
+	Playlist *pl = itdb_playlist_by_name (new_itdb, old_pl_name);
 	if (pl) pm_select_playlist (pl);
     }
 }    
@@ -593,11 +593,11 @@ void pm_add_all_playlists (void)
  * freed by calling gtk_tree_path_free() */
 GtkTreePath *pm_get_path (Playlist *pl)
 {
-    struct
+    struct userdata
     {
 	Playlist *pl;
 	GtkTreePath *path;
-    } userdata;
+    };
     GtkTreeModel *model;
     struct userdata userdata;
     static gboolean pm_get_path_fe (GtkTreeModel *model,
@@ -626,7 +626,7 @@ GtkTreePath *pm_get_path (Playlist *pl)
     userdata.path = NULL;
 
     /* find the pl and fill in path */
-    gtk_tree_model_foreach (model, pm_select_playlist_fe, &userdata);
+    gtk_tree_model_foreach (model, pm_get_path_fe, &userdata);
 
     return userdata.path;
 }

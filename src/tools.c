@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-04 21:47:44 jcs>
+/* Time-stamp: <2005-02-12 02:43:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -70,16 +70,17 @@ static gboolean mutex_data = FALSE;
 /* will get the volume either from mp3gain or from LAME's ReplayGain */
 static gint32 nm_get_soundcheck (Track *track)
 {
+    ExtraTrackData *etr;
     gint32 sc = TRACKVOLERROR;
-    if (track)
-    {
 
-	if (!track->radio_gain_set)
-	    get_gain (track);
-	if (track->radio_gain_set) 
-	    sc = replaygain_to_soundcheck (track->radio_gain);
-    }
+    g_return_val_if_fail (track, sc);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, sc);
 
+    if (!etr->radio_gain_set)
+	get_gain (track);
+    if (etr->radio_gain_set) 
+	sc = replaygain_to_soundcheck (etr->radio_gain);
     return sc;
 }
 
@@ -99,21 +100,23 @@ static gpointer th_nm_get_soundcheck (gpointer track)
 #endif
 
 /* normalize the newly inserted tracks (i.e. non-transferred tracks) */
-void nm_new_tracks (void)
+void nm_new_tracks (iTunesDB *itdb)
 {
     GList *tracks=NULL;
-    gint i=0;
-    Track *track;
+    GList *gl;
 
-    while ((track=get_next_track(i)))
+    g_return_if_fail (itdb);
+
+    for (gl=itdb->tracks; gl; gl=gl->next)
     {
-	i=1; /* for get_next_track() */
+	Track *track = gl->data;
+	g_return_if_fail (track);
 	if(!track->transferred)
 	{
-	    tracks = g_list_append(tracks, track);
+	    tracks = g_list_append (tracks, track);
 	}
     }
-    nm_tracks_list(tracks);
+    nm_tracks_list (tracks);
     g_list_free (tracks);
 }
 
@@ -122,7 +125,7 @@ static void normalization_abort(gboolean *abort)
    *abort=TRUE;
 }
 
-void nm_tracks_list(GList *list)
+void nm_tracks_list (GList *list)
 {
   gint count, succ_count, n, nrs;
   gint32 new_soundcheck = 0;
@@ -284,7 +287,7 @@ void nm_tracks_list(GList *list)
 	 {
 	     track->soundcheck = new_soundcheck;
 	     pm_track_changed (track);
-	     data_changed ();
+	     data_changed (track->itdb);
 	 }
      }
      /*end normalization*/

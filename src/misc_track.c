@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-02-09 00:14:34 jcs>
+|  Time-stamp: <2005-02-12 03:08:44 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -53,7 +53,7 @@
  * Register all tracks in the md5 hash and remove duplicates (while
  * preserving playlists)
  */
-void gp_hash_tracks_itdb (iTunesDB *itdb)
+void gp_md5_hash_tracks_itdb (iTunesDB *itdb)
 {
    gint ns, count;
    gchar *buf;
@@ -106,7 +106,7 @@ void gp_hash_tracks_itdb (iTunesDB *itdb)
  * Call gp_hash_tracks_itdb() for each itdb.
  *
  */
-void gp_hash_tracks (void)
+void gp_md5_hash_tracks (void)
 {
     GList *gl;
     struct itdbs_head *itdbs_head;
@@ -119,9 +119,41 @@ void gp_hash_tracks (void)
     block_widgets ();
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
-	gp_hash_tracks_itdb (gl->data);
+	gp_md5_hash_tracks_itdb (gl->data);
     }
     release_widgets ();
+}
+
+
+/**
+ * Call md5_free() for each itdb and delete md5 checksums in all tracks.
+ *
+ */
+void gp_md5_free_hash (void)
+{
+    void rm_md5 (gpointer track, gpointer user_data)
+	{
+	    ExtraTrackData *etr;
+	    g_return_if_fail (track);
+	    etr = ((Track *)track)->userdata;
+	    g_return_if_fail (etr);
+	    C_FREE (etr->md5_hash);
+	}
+    GList *gl;
+    struct itdbs_head *itdbs_head;
+
+    g_return_if_fail (gtkpod_window);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_if_fail (itdbs_head);
+
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_if_fail (itdb);
+	md5_free (itdb);
+	g_list_foreach (itdb->tracks, rm_md5, NULL);
+    }
 }
 
 

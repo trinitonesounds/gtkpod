@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 23:50:29 jcs>
+/* Time-stamp: <2005-02-12 03:01:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1891,7 +1891,7 @@ gboolean tm_add_filelist (gchar *data,
     asf->pos = pos;
     /* add the files to playlist -- but have tm_addtrackfunc() called
        for every added track */
-    add_text_plain_to_playlist (current_playlist, use_data, 0,
+    add_text_plain_to_playlist (itdb, current_playlist, use_data, 0,
 				tm_addtrackfunc, asf);
     tm_rows_reordered ();
     g_free (asf);

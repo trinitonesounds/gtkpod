@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-29 18:13:35 jcs>
+/* Time-stamp: <2005-02-12 02:38:10 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -35,7 +35,7 @@
 #include "prefs.h"
 #include "prefs_window.h"
 #include "support.h"
-#include "track.h"
+#include "display_itdb.h"
 
 static GtkWidget *prefs_window = NULL;
 static GtkWidget *sort_window = NULL;
@@ -768,10 +768,6 @@ prefs_window_set(void)
 	prefs_set_show_updated(tmpcfg->show_updated);
 	prefs_set_show_non_updated(tmpcfg->show_non_updated);
 	prefs_set_show_sync_dirs(tmpcfg->show_sync_dirs);
-	/* we delete all stored md5 checksums if the md5 checksumming got
-	   disabled */
-	if (prefs_get_md5tracks() && !tmpcfg->md5tracks)
-	    clear_md5_hash_from_tracks ();
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
 	prefs_set_update_existing(tmpcfg->update_existing);
