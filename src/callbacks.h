@@ -66,6 +66,14 @@ on_sorttab_switch_page                 (GtkNotebook     *notebook,
                                         gpointer         user_data);
 
 void
+on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
+                                        GdkDragContext  *drag_context,
+                                        GtkSelectionData *data,
+                                        guint            info,
+                                        guint            time,
+                                        gpointer         user_data);
+
+void
 on_playlist_treeview_drag_data_received
                                         (GtkWidget       *widget,
                                         GdkDragContext  *drag_context,
@@ -240,12 +248,12 @@ on_add_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_songs_in_selected_playlist1_activate
+on_update_songs_in_selected_playlist1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_selected_songs1_activate            (GtkMenuItem     *menuitem,
+on_update_selected_songs1_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -325,13 +333,13 @@ on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_tab_entry_activate                  (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
+on_update_tab_entry_activate                  (GtkMenuItem     *menuitem,
+					       gpointer         user_data);
 
 void
 on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_redraw_activate                     (GtkMenuItem     *menuitem,
+on_reset_sorting_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);

@@ -162,7 +162,8 @@ static void add_dir_selected (gchar *dir)
 {
     if (dir)
     {
-	add_directory_recursively (dir, NULL, NULL, NULL);
+	Playlist *plitem = get_currently_selected_playlist ();
+	add_directory_recursively (dir, plitem, NULL, NULL);
 	prefs_set_last_dir_browse(dir);
 	gtkpod_songs_statusbar_update();
     }

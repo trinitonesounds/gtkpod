@@ -112,12 +112,11 @@ typedef enum  {
   SM_COLUMN_IPOD_ID,
   SM_COLUMN_PC_PATH,
   SM_COLUMN_TRANSFERRED,
-  SM_COLUMN_NONE,
   SM_NUM_COLUMNS
 } SM_item;
 
 /* number of colums for prefs size storage */
-#define SM_NUM_COLUMNS_PREFS (SM_NUM_COLUMNS-1)
+#define SM_NUM_COLUMNS_PREFS SM_NUM_COLUMNS
 /* number of entries with "autoset empty tag to filename " feature */
 #define SM_NUM_TAGS_PREFS (5)
 
@@ -139,6 +138,7 @@ enum {
 void display_create (GtkWidget *gtkpod);
 void display_cleanup (void);
 void display_show_hide_toolbar (void);
+void display_reset (void);
 
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);
@@ -146,11 +146,9 @@ void pm_remove_song (Playlist *playlist, Song *song);
 void pm_add_song (Playlist *playlist, Song *song, gboolean display);
 void pm_name_changed (Playlist *playlist);
 void pm_song_changed (Song *song);
-void pm_select_playlist_reinit(Playlist *playlist);
 void pm_sort (GtkSortType order);
 
 void st_page_selected (GtkNotebook *notebook, guint page);
-void st_redisplay (guint32 inst);
 void st_sort (guint32 inst, GtkSortType order);
 void st_remove_entry (TabEntry *entry, guint32 inst);
 gint st_get_instance_from_treeview (GtkTreeView *tv);
@@ -159,16 +157,23 @@ TabEntry *st_get_selected_entry (gint inst);
 
 void on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 			      GtkTreeIter *i, gpointer data);
-void on_sm_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-				GtkTreeIter *i, gpointer data);
+void on_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			     GtkTreeIter *i, gpointer data);
 void on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+				GtkTreeIter *i, gpointer data);
+void on_pm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			      GtkTreeIter *i, gpointer data);
+void on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				GtkTreeIter *i, gpointer data);
 void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				GtkTreeIter *i, gpointer data);
 void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter);
 guint sm_get_nr_of_songs(void);
-void sm_rows_reordered_callback(void);
+void sm_rows_reordered(void);
+void pm_rows_reordered(void);
 gboolean sm_move_pathlist (gchar *data, GtkTreePath *path,
+			   GtkTreeViewDropPosition pos);
+gboolean pm_move_pathlist (gchar *data, GtkTreePath *path,
 			   GtkTreeViewDropPosition pos);
 gboolean sm_add_filelist (gchar *data, GtkTreePath *path,
 			  GtkTreeViewDropPosition pos);

@@ -1,4 +1,13 @@
 gtkpod V0.43-CVS
+	IMPROVEMENT: "Add Songs" and "Add Directory" has a new default
+	behaviour. They will now add songs/directories to the currently
+	selected playlist. If no playlist is selected, they add to the
+	master playlist.
+	"Add Playlist" will still create a new playlist before adding the
+	songs into it. Also, when playlist files are added with "Add
+	Songs" or "Add Directory" and no playlist is selected, a new
+	playlist will be selected for each playlist file.
+
 	IMPROVEMENT: user settable: save song order after sort action
 	automatically?
 

@@ -225,7 +225,20 @@ Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n)
 void remove_playlist (Playlist *playlist)
 {
   pm_remove_playlist (playlist, TRUE);
+  data_changed ();
   free_playlist(playlist);
+}
+
+/* Move @playlist to the position @pos. It will not move the master
+ * playlist, and will not move anything before the master playlist */
+void move_playlist (Playlist *playlist, gint pos)
+{
+    if (!playlist) return;
+    if (pos == 0)  return; /* don't move before MPL */
+
+    if (playlist->type == PL_TYPE_MPL)  return; /* don't move MPL */
+    playlists = g_list_remove (playlists, playlist);
+    playlists = g_list_insert (playlists, playlist, pos);
 }
 
 /**
@@ -253,17 +266,6 @@ void remove_all_playlists (void)
       pm_remove_playlist (playlist, FALSE);
       free_playlist (playlist);
     }
-}
-
-/**
- *
- * @new_l - the new list we want our internal represenation to be set to
- */
-void 
-reset_playlists_to_new_list(GList *new_l)
-{
-    if(playlists) g_list_free(playlists);
-    playlists = new_l;
 }
 
 

@@ -35,73 +35,71 @@ create_gtkpod (void)
   GtkWidget *menuitem10;
   GtkWidget *menuitem10_menu;
   GtkWidget *import_itunes_mi;
-  GtkWidget *image600;
+  GtkWidget *image721;
   GtkWidget *add_files1;
-  GtkWidget *image601;
+  GtkWidget *image722;
   GtkWidget *add_directory1;
-  GtkWidget *image602;
+  GtkWidget *image723;
   GtkWidget *add_playlist1;
-  GtkWidget *image603;
+  GtkWidget *image724;
   GtkWidget *export_itunes1;
-  GtkWidget *image604;
+  GtkWidget *image725;
   GtkWidget *export_files_to_disk1;
-  GtkWidget *image605;
+  GtkWidget *image726;
   GtkWidget *separatormenuitem1;
   GtkWidget *offline_menu;
   GtkWidget *trennlinie1;
   GtkWidget *ipod_directories;
-  GtkWidget *image606;
+  GtkWidget *image727;
   GtkWidget *trennlinie3;
   GtkWidget *quit1;
   GtkWidget *menuitem11;
   GtkWidget *menuitem11_menu;
   GtkWidget *new_playlist1;
-  GtkWidget *image607;
+  GtkWidget *image728;
   GtkWidget *separator1;
   GtkWidget *alphabetize0;
-  GtkWidget *image608;
+  GtkWidget *image729;
   GtkWidget *alphabetize0_menu;
   GtkWidget *alpha_playlists0;
   GtkWidget *alpha_sort_tab0;
   GtkWidget *alphabetize1;
-  GtkWidget *image609;
+  GtkWidget *image730;
   GtkWidget *alphabetize1_menu;
   GtkWidget *alpha_playlists1;
   GtkWidget *alpha_sort_tab1;
+  GtkWidget *reset_sorting;
+  GtkWidget *image731;
   GtkWidget *save_song_order1;
-  GtkWidget *image610;
+  GtkWidget *image732;
   GtkWidget *separator3;
   GtkWidget *update_song_info_from_file1;
-  GtkWidget *image611;
+  GtkWidget *image733;
   GtkWidget *update_song_info_from_file1_menu;
   GtkWidget *songs_in_selected_playlist1;
   GtkWidget *songs_in_selected_tab_entry1;
   GtkWidget *selected_songs1;
   GtkWidget *separator4;
+  GtkWidget *delete1;
+  GtkWidget *image734;
+  GtkWidget *delete1_menu;
   GtkWidget *delete_playlist1;
-  GtkWidget *image612;
   GtkWidget *delete_selected_tab_entry1;
-  GtkWidget *image613;
   GtkWidget *delete_song;
-  GtkWidget *image614;
   GtkWidget *separator2;
   GtkWidget *edit_preferences1;
-  GtkWidget *image615;
+  GtkWidget *image735;
   GtkWidget *item1;
   GtkWidget *item1_menu;
   GtkWidget *toolbar_menu;
-  GtkWidget *sort_tabs1;
-  GtkWidget *sort_tabs1_menu;
   GtkWidget *more_sort_tabs;
-  GtkWidget *image616;
+  GtkWidget *image736;
   GtkWidget *less_sort_tabs;
-  GtkWidget *image617;
-  GtkWidget *re_init0;
-  GtkWidget *image618;
+  GtkWidget *image737;
   GtkWidget *menuitem13;
   GtkWidget *menuitem13_menu;
   GtkWidget *about1;
-  GtkWidget *image619;
+  GtkWidget *image738;
   GtkWidget *toolbar;
   GtkWidget *tmp_toolbar_icon;
   GtkWidget *import_button;
@@ -112,8 +110,7 @@ create_gtkpod (void)
   GtkWidget *export_button;
   GtkWidget *stop_button;
   GtkWidget *paned0;
-  GtkWidget *scrolledwindow8;
-  GtkWidget *playlist_treeview;
+  GtkWidget *playlist_window;
   GtkWidget *paned1;
   GtkWidget *song_window;
   GtkWidget *hbox5;
@@ -146,49 +143,49 @@ create_gtkpod (void)
   gtk_widget_show (import_itunes_mi);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), import_itunes_mi);
 
-  image600 = gtk_image_new_from_stock ("gtk-goto-top", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image600);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (import_itunes_mi), image600);
+  image721 = gtk_image_new_from_stock ("gtk-goto-top", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image721);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (import_itunes_mi), image721);
 
   add_files1 = gtk_image_menu_item_new_with_mnemonic (_("Add _Files"));
   gtk_widget_show (add_files1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), add_files1);
 
-  image601 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image601);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (add_files1), image601);
+  image722 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image722);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (add_files1), image722);
 
   add_directory1 = gtk_image_menu_item_new_with_mnemonic (_("Add _Directory"));
   gtk_widget_show (add_directory1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), add_directory1);
 
-  image602 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image602);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (add_directory1), image602);
+  image723 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image723);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (add_directory1), image723);
 
   add_playlist1 = gtk_image_menu_item_new_with_mnemonic (_("Add _Playlist"));
   gtk_widget_show (add_playlist1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), add_playlist1);
 
-  image603 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image603);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (add_playlist1), image603);
+  image724 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image724);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (add_playlist1), image724);
 
   export_itunes1 = gtk_image_menu_item_new_with_mnemonic (_("_Export iTunes"));
   gtk_widget_show (export_itunes1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), export_itunes1);
 
-  image604 = gtk_image_new_from_stock ("gtk-goto-bottom", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image604);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (export_itunes1), image604);
+  image725 = gtk_image_new_from_stock ("gtk-goto-bottom", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image725);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (export_itunes1), image725);
 
   export_files_to_disk1 = gtk_image_menu_item_new_with_mnemonic (_("Export Files _to Disk"));
   gtk_widget_show (export_files_to_disk1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), export_files_to_disk1);
 
-  image605 = gtk_image_new_from_stock ("gtk-floppy", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image605);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (export_files_to_disk1), image605);
+  image726 = gtk_image_new_from_stock ("gtk-floppy", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image726);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (export_files_to_disk1), image726);
 
   separatormenuitem1 = gtk_menu_item_new ();
   gtk_widget_show (separatormenuitem1);
@@ -208,9 +205,9 @@ create_gtkpod (void)
   gtk_widget_show (ipod_directories);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), ipod_directories);
 
-  image606 = gtk_image_new_from_stock ("gtk-execute", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image606);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (ipod_directories), image606);
+  image727 = gtk_image_new_from_stock ("gtk-execute", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image727);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (ipod_directories), image727);
 
   trennlinie3 = gtk_menu_item_new ();
   gtk_widget_show (trennlinie3);
@@ -232,9 +229,9 @@ create_gtkpod (void)
   gtk_widget_show (new_playlist1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), new_playlist1);
 
-  image607 = gtk_image_new_from_stock ("gtk-justify-left", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image607);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_playlist1), image607);
+  image728 = gtk_image_new_from_stock ("gtk-justify-left", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image728);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_playlist1), image728);
 
   separator1 = gtk_menu_item_new ();
   gtk_widget_show (separator1);
@@ -245,9 +242,9 @@ create_gtkpod (void)
   gtk_widget_show (alphabetize0);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), alphabetize0);
 
-  image608 = gtk_image_new_from_stock ("gtk-sort-ascending", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image608);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (alphabetize0), image608);
+  image729 = gtk_image_new_from_stock ("gtk-sort-ascending", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image729);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (alphabetize0), image729);
 
   alphabetize0_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (alphabetize0), alphabetize0_menu);
@@ -264,9 +261,9 @@ create_gtkpod (void)
   gtk_widget_show (alphabetize1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), alphabetize1);
 
-  image609 = gtk_image_new_from_stock ("gtk-sort-descending", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image609);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (alphabetize1), image609);
+  image730 = gtk_image_new_from_stock ("gtk-sort-descending", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image730);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (alphabetize1), image730);
 
   alphabetize1_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (alphabetize1), alphabetize1_menu);
@@ -279,35 +276,43 @@ create_gtkpod (void)
   gtk_widget_show (alpha_sort_tab1);
   gtk_container_add (GTK_CONTAINER (alphabetize1_menu), alpha_sort_tab1);
 
-  save_song_order1 = gtk_image_menu_item_new_with_mnemonic (_("Save Displayed Song Order"));
+  reset_sorting = gtk_image_menu_item_new_with_mnemonic (_("_Reset Sorting"));
+  gtk_widget_show (reset_sorting);
+  gtk_container_add (GTK_CONTAINER (menuitem11_menu), reset_sorting);
+
+  image731 = gtk_image_new_from_stock ("gtk-refresh", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image731);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (reset_sorting), image731);
+
+  save_song_order1 = gtk_image_menu_item_new_with_mnemonic (_("_Save Displayed Song Order"));
   gtk_widget_show (save_song_order1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), save_song_order1);
 
-  image610 = gtk_image_new_from_stock ("gtk-justify-fill", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image610);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (save_song_order1), image610);
+  image732 = gtk_image_new_from_stock ("gtk-justify-fill", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image732);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (save_song_order1), image732);
 
   separator3 = gtk_menu_item_new ();
   gtk_widget_show (separator3);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), separator3);
   gtk_widget_set_sensitive (separator3, FALSE);
 
-  update_song_info_from_file1 = gtk_image_menu_item_new_with_mnemonic (_("_Update Song Info from File"));
+  update_song_info_from_file1 = gtk_image_menu_item_new_with_mnemonic (_("_Update Songs from File"));
   gtk_widget_show (update_song_info_from_file1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), update_song_info_from_file1);
 
-  image611 = gtk_image_new_from_stock ("gtk-refresh", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image611);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (update_song_info_from_file1), image611);
+  image733 = gtk_image_new_from_stock ("gtk-refresh", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image733);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (update_song_info_from_file1), image733);
 
   update_song_info_from_file1_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (update_song_info_from_file1), update_song_info_from_file1_menu);
 
-  songs_in_selected_playlist1 = gtk_menu_item_new_with_mnemonic (_("Songs in Selected _Playlist"));
+  songs_in_selected_playlist1 = gtk_menu_item_new_with_mnemonic (_("Selected _Playlist"));
   gtk_widget_show (songs_in_selected_playlist1);
   gtk_container_add (GTK_CONTAINER (update_song_info_from_file1_menu), songs_in_selected_playlist1);
 
-  songs_in_selected_tab_entry1 = gtk_menu_item_new_with_mnemonic (_("Songs in Selected _Tab Entry"));
+  songs_in_selected_tab_entry1 = gtk_menu_item_new_with_mnemonic (_("Selected _Tab Entry"));
   gtk_widget_show (songs_in_selected_tab_entry1);
   gtk_container_add (GTK_CONTAINER (update_song_info_from_file1_menu), songs_in_selected_tab_entry1);
 
@@ -320,29 +325,28 @@ create_gtkpod (void)
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), separator4);
   gtk_widget_set_sensitive (separator4, FALSE);
 
-  delete_playlist1 = gtk_image_menu_item_new_with_mnemonic (_("Delete Selected _Playlist"));
+  delete1 = gtk_image_menu_item_new_with_mnemonic (_("_Delete"));
+  gtk_widget_show (delete1);
+  gtk_container_add (GTK_CONTAINER (menuitem11_menu), delete1);
+
+  image734 = gtk_image_new_from_stock ("gtk-delete", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image734);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (delete1), image734);
+
+  delete1_menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (delete1), delete1_menu);
+
+  delete_playlist1 = gtk_menu_item_new_with_mnemonic (_("Selected _Playlist"));
   gtk_widget_show (delete_playlist1);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), delete_playlist1);
+  gtk_container_add (GTK_CONTAINER (delete1_menu), delete_playlist1);
 
-  image612 = gtk_image_new_from_stock ("gtk-delete", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image612);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (delete_playlist1), image612);
-
-  delete_selected_tab_entry1 = gtk_image_menu_item_new_with_mnemonic (_("Delete Selected _Tab Entry"));
+  delete_selected_tab_entry1 = gtk_menu_item_new_with_mnemonic (_("Selected _Tab Entry"));
   gtk_widget_show (delete_selected_tab_entry1);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), delete_selected_tab_entry1);
+  gtk_container_add (GTK_CONTAINER (delete1_menu), delete_selected_tab_entry1);
 
-  image613 = gtk_image_new_from_stock ("gtk-delete", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image613);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (delete_selected_tab_entry1), image613);
-
-  delete_song = gtk_image_menu_item_new_with_mnemonic (_("Delete Selected _Songs"));
+  delete_song = gtk_menu_item_new_with_mnemonic (_("Selected _Songs"));
   gtk_widget_show (delete_song);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), delete_song);
-
-  image614 = gtk_image_new_from_stock ("gtk-delete", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image614);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (delete_song), image614);
+  gtk_container_add (GTK_CONTAINER (delete1_menu), delete_song);
 
   separator2 = gtk_menu_item_new ();
   gtk_widget_show (separator2);
@@ -356,9 +360,9 @@ create_gtkpod (void)
                               GDK_p, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
-  image615 = gtk_image_new_from_stock ("gtk-preferences", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image615);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (edit_preferences1), image615);
+  image735 = gtk_image_new_from_stock ("gtk-preferences", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image735);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (edit_preferences1), image735);
 
   item1 = gtk_menu_item_new_with_mnemonic (_("_View"));
   gtk_widget_show (item1);
@@ -371,36 +375,21 @@ create_gtkpod (void)
   gtk_widget_show (toolbar_menu);
   gtk_container_add (GTK_CONTAINER (item1_menu), toolbar_menu);
 
-  sort_tabs1 = gtk_menu_item_new_with_mnemonic (_("_Sort Tabs"));
-  gtk_widget_show (sort_tabs1);
-  gtk_container_add (GTK_CONTAINER (item1_menu), sort_tabs1);
-
-  sort_tabs1_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (sort_tabs1), sort_tabs1_menu);
-
   more_sort_tabs = gtk_image_menu_item_new_with_mnemonic (_("_More Sort Tabs"));
   gtk_widget_show (more_sort_tabs);
-  gtk_container_add (GTK_CONTAINER (sort_tabs1_menu), more_sort_tabs);
+  gtk_container_add (GTK_CONTAINER (item1_menu), more_sort_tabs);
 
-  image616 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image616);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (more_sort_tabs), image616);
+  image736 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image736);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (more_sort_tabs), image736);
 
   less_sort_tabs = gtk_image_menu_item_new_with_mnemonic (_("_Less Sort Tabs"));
   gtk_widget_show (less_sort_tabs);
-  gtk_container_add (GTK_CONTAINER (sort_tabs1_menu), less_sort_tabs);
+  gtk_container_add (GTK_CONTAINER (item1_menu), less_sort_tabs);
 
-  image617 = gtk_image_new_from_stock ("gtk-remove", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image617);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (less_sort_tabs), image617);
-
-  re_init0 = gtk_image_menu_item_new_with_mnemonic (_("_Redraw"));
-  gtk_widget_show (re_init0);
-  gtk_container_add (GTK_CONTAINER (item1_menu), re_init0);
-
-  image618 = gtk_image_new_from_stock ("gtk-refresh", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image618);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (re_init0), image618);
+  image737 = gtk_image_new_from_stock ("gtk-remove", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image737);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (less_sort_tabs), image737);
 
   menuitem13 = gtk_menu_item_new_with_mnemonic (_("_Help"));
   gtk_widget_show (menuitem13);
@@ -413,9 +402,9 @@ create_gtkpod (void)
   gtk_widget_show (about1);
   gtk_container_add (GTK_CONTAINER (menuitem13_menu), about1);
 
-  image619 = gtk_image_new_from_stock ("gtk-dialog-info", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image619);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (about1), image619);
+  image738 = gtk_image_new_from_stock ("gtk-dialog-info", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image738);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (about1), image738);
 
   toolbar = gtk_toolbar_new ();
   gtk_widget_show (toolbar);
@@ -496,15 +485,10 @@ create_gtkpod (void)
   gtk_box_pack_start (GTK_BOX (vbox1), paned0, TRUE, TRUE, 0);
   gtk_paned_set_position (GTK_PANED (paned0), 150);
 
-  scrolledwindow8 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_show (scrolledwindow8);
-  gtk_paned_pack1 (GTK_PANED (paned0), scrolledwindow8, FALSE, TRUE);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow8), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-  playlist_treeview = gtk_tree_view_new ();
-  gtk_widget_show (playlist_treeview);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow8), playlist_treeview);
-  gtk_widget_set_events (playlist_treeview, GDK_KEY_RELEASE_MASK);
+  playlist_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (playlist_window);
+  gtk_paned_pack1 (GTK_PANED (paned0), playlist_window, FALSE, TRUE);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (playlist_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   paned1 = gtk_vpaned_new ();
   gtk_widget_show (paned1);
@@ -577,17 +561,20 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) alpha_sort_tab1, "activate",
                     G_CALLBACK (on_alpha_sort_tab1_activate),
                     NULL);
+  g_signal_connect ((gpointer) reset_sorting, "activate",
+                    G_CALLBACK (on_reset_sorting_activate),
+                    NULL);
   g_signal_connect ((gpointer) save_song_order1, "activate",
                     G_CALLBACK (on_save_song_order1_activate),
                     NULL);
   g_signal_connect ((gpointer) songs_in_selected_playlist1, "activate",
-                    G_CALLBACK (on_songs_in_selected_playlist1_activate),
+                    G_CALLBACK (on_update_songs_in_selected_playlist1_activate),
                     NULL);
   g_signal_connect ((gpointer) songs_in_selected_tab_entry1, "activate",
-                    G_CALLBACK (on_tab_entry_activate),
+                    G_CALLBACK (on_update_tab_entry_activate),
                     NULL);
   g_signal_connect ((gpointer) selected_songs1, "activate",
-                    G_CALLBACK (on_selected_songs1_activate),
+                    G_CALLBACK (on_update_selected_songs1_activate),
                     NULL);
   g_signal_connect ((gpointer) delete_playlist1, "activate",
                     G_CALLBACK (on_delete_playlist_menu),
@@ -609,9 +596,6 @@ create_gtkpod (void)
                     NULL);
   g_signal_connect ((gpointer) less_sort_tabs, "activate",
                     G_CALLBACK (on_less_sort_tabs_activate),
-                    NULL);
-  g_signal_connect ((gpointer) re_init0, "activate",
-                    G_CALLBACK (on_redraw_activate),
                     NULL);
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about1_activate),
@@ -637,12 +621,6 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) stop_button, "clicked",
                     G_CALLBACK (on_stop_button_clicked),
                     NULL);
-  g_signal_connect ((gpointer) playlist_treeview, "drag_data_received",
-                    G_CALLBACK (on_playlist_treeview_drag_data_received),
-                    NULL);
-  g_signal_connect_after ((gpointer) playlist_treeview, "key_release_event",
-                          G_CALLBACK (on_playlist_treeview_key_release_event),
-                          NULL);
   g_signal_connect ((gpointer) gtkpod_status, "realize",
                     G_CALLBACK (on_gtkpod_status_realize),
                     NULL);
@@ -657,73 +635,71 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem10, "menuitem10");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem10_menu, "menuitem10_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, import_itunes_mi, "import_itunes_mi");
-  GLADE_HOOKUP_OBJECT (gtkpod, image600, "image600");
+  GLADE_HOOKUP_OBJECT (gtkpod, image721, "image721");
   GLADE_HOOKUP_OBJECT (gtkpod, add_files1, "add_files1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image601, "image601");
+  GLADE_HOOKUP_OBJECT (gtkpod, image722, "image722");
   GLADE_HOOKUP_OBJECT (gtkpod, add_directory1, "add_directory1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image602, "image602");
+  GLADE_HOOKUP_OBJECT (gtkpod, image723, "image723");
   GLADE_HOOKUP_OBJECT (gtkpod, add_playlist1, "add_playlist1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image603, "image603");
+  GLADE_HOOKUP_OBJECT (gtkpod, image724, "image724");
   GLADE_HOOKUP_OBJECT (gtkpod, export_itunes1, "export_itunes1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image604, "image604");
+  GLADE_HOOKUP_OBJECT (gtkpod, image725, "image725");
   GLADE_HOOKUP_OBJECT (gtkpod, export_files_to_disk1, "export_files_to_disk1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image605, "image605");
+  GLADE_HOOKUP_OBJECT (gtkpod, image726, "image726");
   GLADE_HOOKUP_OBJECT (gtkpod, separatormenuitem1, "separatormenuitem1");
   GLADE_HOOKUP_OBJECT (gtkpod, offline_menu, "offline_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, trennlinie1, "trennlinie1");
   GLADE_HOOKUP_OBJECT (gtkpod, ipod_directories, "ipod_directories");
-  GLADE_HOOKUP_OBJECT (gtkpod, image606, "image606");
+  GLADE_HOOKUP_OBJECT (gtkpod, image727, "image727");
   GLADE_HOOKUP_OBJECT (gtkpod, trennlinie3, "trennlinie3");
   GLADE_HOOKUP_OBJECT (gtkpod, quit1, "quit1");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem11, "menuitem11");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem11_menu, "menuitem11_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, new_playlist1, "new_playlist1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image607, "image607");
+  GLADE_HOOKUP_OBJECT (gtkpod, image728, "image728");
   GLADE_HOOKUP_OBJECT (gtkpod, separator1, "separator1");
   GLADE_HOOKUP_OBJECT (gtkpod, alphabetize0, "alphabetize0");
-  GLADE_HOOKUP_OBJECT (gtkpod, image608, "image608");
+  GLADE_HOOKUP_OBJECT (gtkpod, image729, "image729");
   GLADE_HOOKUP_OBJECT (gtkpod, alphabetize0_menu, "alphabetize0_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, alpha_playlists0, "alpha_playlists0");
   GLADE_HOOKUP_OBJECT (gtkpod, alpha_sort_tab0, "alpha_sort_tab0");
   GLADE_HOOKUP_OBJECT (gtkpod, alphabetize1, "alphabetize1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image609, "image609");
+  GLADE_HOOKUP_OBJECT (gtkpod, image730, "image730");
   GLADE_HOOKUP_OBJECT (gtkpod, alphabetize1_menu, "alphabetize1_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, alpha_playlists1, "alpha_playlists1");
   GLADE_HOOKUP_OBJECT (gtkpod, alpha_sort_tab1, "alpha_sort_tab1");
+  GLADE_HOOKUP_OBJECT (gtkpod, reset_sorting, "reset_sorting");
+  GLADE_HOOKUP_OBJECT (gtkpod, image731, "image731");
   GLADE_HOOKUP_OBJECT (gtkpod, save_song_order1, "save_song_order1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image610, "image610");
+  GLADE_HOOKUP_OBJECT (gtkpod, image732, "image732");
   GLADE_HOOKUP_OBJECT (gtkpod, separator3, "separator3");
   GLADE_HOOKUP_OBJECT (gtkpod, update_song_info_from_file1, "update_song_info_from_file1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image611, "image611");
+  GLADE_HOOKUP_OBJECT (gtkpod, image733, "image733");
   GLADE_HOOKUP_OBJECT (gtkpod, update_song_info_from_file1_menu, "update_song_info_from_file1_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, songs_in_selected_playlist1, "songs_in_selected_playlist1");
   GLADE_HOOKUP_OBJECT (gtkpod, songs_in_selected_tab_entry1, "songs_in_selected_tab_entry1");
   GLADE_HOOKUP_OBJECT (gtkpod, selected_songs1, "selected_songs1");
   GLADE_HOOKUP_OBJECT (gtkpod, separator4, "separator4");
+  GLADE_HOOKUP_OBJECT (gtkpod, delete1, "delete1");
+  GLADE_HOOKUP_OBJECT (gtkpod, image734, "image734");
+  GLADE_HOOKUP_OBJECT (gtkpod, delete1_menu, "delete1_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, delete_playlist1, "delete_playlist1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image612, "image612");
   GLADE_HOOKUP_OBJECT (gtkpod, delete_selected_tab_entry1, "delete_selected_tab_entry1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image613, "image613");
   GLADE_HOOKUP_OBJECT (gtkpod, delete_song, "delete_song");
-  GLADE_HOOKUP_OBJECT (gtkpod, image614, "image614");
   GLADE_HOOKUP_OBJECT (gtkpod, separator2, "separator2");
   GLADE_HOOKUP_OBJECT (gtkpod, edit_preferences1, "edit_preferences1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image615, "image615");
+  GLADE_HOOKUP_OBJECT (gtkpod, image735, "image735");
   GLADE_HOOKUP_OBJECT (gtkpod, item1, "item1");
   GLADE_HOOKUP_OBJECT (gtkpod, item1_menu, "item1_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, toolbar_menu, "toolbar_menu");
-  GLADE_HOOKUP_OBJECT (gtkpod, sort_tabs1, "sort_tabs1");
-  GLADE_HOOKUP_OBJECT (gtkpod, sort_tabs1_menu, "sort_tabs1_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, more_sort_tabs, "more_sort_tabs");
-  GLADE_HOOKUP_OBJECT (gtkpod, image616, "image616");
+  GLADE_HOOKUP_OBJECT (gtkpod, image736, "image736");
   GLADE_HOOKUP_OBJECT (gtkpod, less_sort_tabs, "less_sort_tabs");
-  GLADE_HOOKUP_OBJECT (gtkpod, image617, "image617");
-  GLADE_HOOKUP_OBJECT (gtkpod, re_init0, "re_init0");
-  GLADE_HOOKUP_OBJECT (gtkpod, image618, "image618");
+  GLADE_HOOKUP_OBJECT (gtkpod, image737, "image737");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13, "menuitem13");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13_menu, "menuitem13_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, about1, "about1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image619, "image619");
+  GLADE_HOOKUP_OBJECT (gtkpod, image738, "image738");
   GLADE_HOOKUP_OBJECT (gtkpod, toolbar, "toolbar");
   GLADE_HOOKUP_OBJECT (gtkpod, import_button, "import_button");
   GLADE_HOOKUP_OBJECT (gtkpod, add_files_button, "add_files_button");
@@ -733,8 +709,7 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, export_button, "export_button");
   GLADE_HOOKUP_OBJECT (gtkpod, stop_button, "stop_button");
   GLADE_HOOKUP_OBJECT (gtkpod, paned0, "paned0");
-  GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow8, "scrolledwindow8");
-  GLADE_HOOKUP_OBJECT (gtkpod, playlist_treeview, "playlist_treeview");
+  GLADE_HOOKUP_OBJECT (gtkpod, playlist_window, "playlist_window");
   GLADE_HOOKUP_OBJECT (gtkpod, paned1, "paned1");
   GLADE_HOOKUP_OBJECT (gtkpod, song_window, "song_window");
   GLADE_HOOKUP_OBJECT (gtkpod, hbox5, "hbox5");

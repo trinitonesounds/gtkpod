@@ -91,12 +91,14 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 {
   gchar **names;
   gint i;
+  Playlist *plitem;
 
   block_widgets ();
   names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
+  plitem = get_currently_selected_playlist ();
   for (i=0; names[i] != NULL; ++i)
   {
-      add_song_by_filename (names[i], NULL, NULL, NULL);
+      add_song_by_filename (names[i], plitem, NULL, NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
   }
@@ -540,7 +542,7 @@ gint get_sort_tab_number (gchar *text)
     GtkDialog *dialog;
     GtkWidget *combo;
     gint result;
-    gint i, nr;
+    gint i, nr, stn;
     GList *list=NULL, *lnk;
     gchar buf[20], *bufp;
 
@@ -557,8 +559,9 @@ gint get_sort_tab_number (gchar *text)
     gtk_widget_show (combo);
     gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), combo);
 
+    stn = prefs_get_sort_tab_num ();
     /* Create list */
-    for (i=1; i<=prefs_get_sort_tab_num (); ++i)
+    for (i=1; i<=stn; ++i)
     {
 	bufp = g_strdup_printf ("%d", i);
 	list = g_list_append (list, bufp);
@@ -567,6 +570,8 @@ gint get_sort_tab_number (gchar *text)
     /* set pull down items */
     gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
     /* set standard entry */
+    if (last_nr > stn) last_nr = 1;  /* maybe the stn has become
+					smaller... */
     snprintf (buf, 20, "%d", last_nr);
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), buf);
 
@@ -589,7 +594,7 @@ gint get_sort_tab_number (gchar *text)
 	bufp = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry),
 				      0, -1);
 	nr = atoi (bufp)-1;
-	last_nr = nr;
+	last_nr = nr+1;
 	C_FREE (bufp);
     }
 
@@ -679,7 +684,6 @@ S_item SM_to_S (SM_item sm)
     case SM_COLUMN_IPOD_ID:     return S_IPOD_ID;
     case SM_COLUMN_PC_PATH:     return S_PC_PATH;
     case SM_COLUMN_TRANSFERRED: return S_TRANSFERRED;
-    case SM_COLUMN_NONE:        return S_NONE;
     case SM_NUM_COLUMNS:        return -1;
     }
     return -1;

@@ -1060,8 +1060,6 @@ SM_item prefs_get_col_order (gint pos)
 {
     if (pos < SM_NUM_COLUMNS_PREFS)
 	return cfg->col_order[pos];
-    if (pos == SM_COLUMN_NONE)
-	return SM_NUM_COLUMNS_PREFS;  /* this column is always at the end */
     return -1;
 }
 

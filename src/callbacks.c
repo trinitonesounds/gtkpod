@@ -160,6 +160,41 @@ on_sorttab_switch_page                 (GtkNotebook     *notebook,
 
 
 void
+on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
+                                        GdkDragContext  *drag_context,
+                                        GtkSelectionData *data,
+                                        guint            info,
+                                        guint            time,
+                                        gpointer         user_data)
+{
+    GtkTreeSelection *ts = NULL;
+    GString *reply = g_string_sized_new (2000);
+
+    /* printf("sm drag get info: %d\n", info);*/
+    if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
+    {
+	switch (info)
+	{
+	case DND_GTKPOD_IDLIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_pm_dnd_get_id_foreach, reply);
+	    break;
+	case DND_GTKPOD_PM_PATHLIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_dnd_get_path_foreach, reply);
+	    break;
+	case DND_TEXT_PLAIN:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_pm_dnd_get_file_foreach, reply);
+	    break;
+	}
+    }
+    gtk_selection_data_set(data, data->target, 8, reply->str, reply->len);
+    g_string_free (reply, TRUE);
+}
+
+
+void
 on_playlist_treeview_drag_data_received
                                         (GtkWidget       *widget,
                                         GdkDragContext  *drag_context,
@@ -171,7 +206,6 @@ on_playlist_treeview_drag_data_received
                                         gpointer         user_data)
 {
     GtkTreeIter i;
-    GtkWidget *w = NULL;
     GtkTreePath *path = NULL;
     GtkTreeModel *model = NULL;
     GtkTreeViewDropPosition pos = 0;
@@ -180,9 +214,6 @@ on_playlist_treeview_drag_data_received
 
     /* sometimes we get empty dnd data, ignore */
     if((!data) || (data->length < 0)) return;
-    /* don't allow us to drag onto ourselves =) */
-    w = gtk_drag_get_source_widget(drag_context);
-    if(w == widget) return;
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
     if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
@@ -242,6 +273,13 @@ on_playlist_treeview_drag_data_received
 	    }
 	    else gtk_drag_finish (drag_context, FALSE, FALSE, time);
 	    break;
+	case DND_GTKPOD_PM_PATHLIST:
+	    /* dont allow moves before MPL */
+	    position = atoi (gtk_tree_path_to_string (path));
+	    if (position == 0)  pos = GTK_TREE_VIEW_DROP_AFTER;
+	    pm_move_pathlist (data->data, path, pos);
+	    gtk_drag_finish (drag_context, TRUE, FALSE, time);
+	    break;
 	default:
 	    puts ("not yet implemented");
 	    gtk_drag_finish (drag_context, FALSE, FALSE, time);
@@ -275,7 +313,7 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
 	    break;
 	case DND_GTKPOD_SM_PATHLIST:
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_sm_dnd_get_path_foreach, reply);
+				    on_dnd_get_path_foreach, reply);
 	    break;
 	case DND_TEXT_PLAIN:
 	    gtk_tree_selection_selected_foreach(ts,
@@ -716,16 +754,15 @@ on_add_playlist1_activate              (GtkMenuItem     *menuitem,
 }
 
 void
-on_songs_in_selected_playlist1_activate
-                                        (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
+on_update_songs_in_selected_playlist1_activate (GtkMenuItem     *menuitem,
+						gpointer         user_data)
 {
     update_selected_playlist ();
 }
 
 void
-on_selected_songs1_activate            (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
+on_update_selected_songs1_activate            (GtkMenuItem     *menuitem,
+					       gpointer         user_data)
 {
     update_selected_songs ();
 }
@@ -743,7 +780,8 @@ void
 on_save_song_order1_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    sm_rows_reordered_callback ();
+    sm_rows_reordered ();
+    pm_rows_reordered ();
 }
 
 
@@ -906,8 +944,8 @@ on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
 
 /* update songs in tab entry */
 void
-on_tab_entry_activate                  (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
+on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
 {
     gint inst = get_sort_tab_number (
 	_("Update selected entry of which sort tab?"));
@@ -928,9 +966,8 @@ on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
 
 
 void
-on_redraw_activate                     (GtkMenuItem     *menuitem,
+on_reset_sorting_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    st_redisplay (0);
+    display_reset ();
 }
-
