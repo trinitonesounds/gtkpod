@@ -66,10 +66,6 @@ struct _File_Tag
  **************/
 gboolean Id3tag_Read_File_Tag  (gchar *filename, File_Tag *FileTag);
 gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag);
-
-gchar   *Id3tag_Genre_To_String (unsigned char genre_code);
-guchar   Id3tag_String_To_Genre (gchar *genre);
-
 #define ID3V2_MAX_STRING_LEN 4096
 
 #endif /* __ID3TAG_H__ */

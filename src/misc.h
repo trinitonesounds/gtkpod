@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-08 23:32:10 jcs>
+/* Time-stamp: <2003-08-11 21:31:49 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -122,5 +122,10 @@ void generate_selected_playlist (void);
 void generate_new_playlist (GList *songs);
 void generate_new_playlist_with_name (GList *songs, gchar *pl_name);
 void generate_playlist (GList *songs, gchar *pl_name);
+void add_ranked_playlist(gchar *pl_name,guint songs_nr, GCompareFunc comparefunc,gboolean played_only);
+void generate_new_playlist (GList *songs);
 void most_listened_pl (void);
+void last_listened_pl(void);
+void most_rated_pl(void);
+void rebuild_iTunesDB(void);
 #endif

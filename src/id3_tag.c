@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 23:03:48 jcs>
+/* Time-stamp: <2003-08-10 22:04:36 jcs>
 |
 |  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
 |  compile "standalone" with the gtkpod project. 2002/11/24
@@ -42,6 +42,9 @@
 #include "charset.h"
 #include "support.h"
 
+
+gchar   *Id3tag_Genre_To_String (unsigned char genre_code);
+guchar   Id3tag_String_To_Genre (gchar *genre);
 
 /****************
  * Declarations *

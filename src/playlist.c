@@ -277,6 +277,31 @@ void remove_all_playlists (void)
 }
 
 
+/* FIXME: this is a bit dangerous. . . we delete all
+ * playlists with titles @pl_name and return how many
+ * pl have been removed.
+ * */
+guint remove_pl_by_name(gchar *pl_name){
+    Playlist *pl;
+    guint i;
+    guint pl_removed=0;
+    
+    for(i = 1; i < get_nr_of_playlists(); i++)
+    {
+        pl = get_playlist_by_nr (i);
+        if(pl->name && (strcmp (pl->name, pl_name) == 0))
+        {
+            remove_playlist(pl);
+         /* we just deleted the ith element of playlists, so
+          * we must examine the new ith element. */
+            pl_removed++;
+            i--;
+        }
+    }
+    return pl_removed;
+}
+
+
 /* ------------------------------------------------------------------- */
 /* functions used by itunesdb (so we can refresh the display during
  * import */

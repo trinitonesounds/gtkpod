@@ -407,7 +407,7 @@ msgstr "Playcount"
 
 #: src/display_songs.c:919 src/interface.c:1697 src/interface.c:2556
 msgid "Rating"
-msgstr "Bewertung"
+msgstr "Bewrtng"
 
 #: src/display_songs.c:922 src/interface.c:2562
 msgid "Played"

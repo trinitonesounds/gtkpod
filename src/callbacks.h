@@ -549,3 +549,20 @@ on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
 void
 on_add_most_played_songs__pl1_activate (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_most_listened_songs1_activate       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_most_rated_songs_playlist_s1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_most_recent_played_songs_activate   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_rebuild_ipod_db1_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

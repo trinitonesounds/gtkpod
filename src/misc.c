@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-09 23:46:56 jcs>
+/* Time-stamp: <2003-08-11 21:37:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2330,24 +2330,8 @@ void generate_category_playlists (S_item cat)
     /* sanity */
     if (qualifier == NULL) return;
 
-    /* FIXME: this is a bit dangerous. . . we delete all
-     * playlists with titles that start with '[<qualifier>' and end 
-     * with ']'.  We assume that they are previously generated
-     * (and possibly out of date) genre playlists. */
-    str = g_strdup_printf ("[%s ", qualifier);
-    for(i = 1; i < get_nr_of_playlists(); i++)
-    {
-        Playlist *pl = get_playlist_by_nr (i);
-
-        if(pl->name && (strncmp (pl->name, str, strlen (str)) == 0) &&
-	   (pl->name[strlen(pl->name)-1] == ']'))
-	{
-            remove_playlist(pl);
-            /* we just deleted the ith element of playlists, so
-             * we must examine the new ith element. */
-            i--;
-        }
-    }
+    str = g_strdup_printf ("[%s] ", qualifier);
+    remove_pl_by_name(str);
     C_FREE (str);
 
     master_pl = get_playlist_by_nr (0);
@@ -2466,8 +2450,9 @@ void generate_new_playlist (GList *songs)
 
 /* generate a new playlist named @pl_name, containing @songs_nr songs and
  * using @comparefunction to set an order.
- * songs_nr can be any number in the 1-[guint limit] range. 0 is reserved for no limit*/
-void add_ranked_playlist(gchar *pl_name,guint songs_nr, GCompareFunc comparefunc){
+ * songs_nr can be any number in the 1-[guint limit] range. 0 is reserved for no limit
+ * if @played_only is true than all the songs in the generated pl must have been played.*/
+void add_ranked_playlist(gchar *pl_name,guint songs_nr, GCompareFunc comparefunc,gboolean played_only){
    GList *songs=NULL;
    guint f=0;
    guint i=0;
@@ -2476,7 +2461,12 @@ void add_ranked_playlist(gchar *pl_name,guint songs_nr, GCompareFunc comparefunc
    while((song=get_next_song(i))){
        i=1;
        if(song!=NULL){
-           if((song->playcount)){ /*add in order (first element-> most listened)*/
+/* played_only  playcount       result=(!played)||(playcount)
+ * 1            0               0       don't let a non-played song enter a "played only" pl"
+ * 1            1               1       a played song can enter a "played only" pl
+ * 0            0               1       no limit, every song can enter
+ * 0            1               1       same as above*/
+           if((!played_only||(song->playcount))){ /*add in order (first element-> most listened)*/
               songs=g_list_insert_sorted(songs,song,comparefunc);
               f++;
               if(songs_nr&&f>songs_nr){ /*cut the tail*/
@@ -2493,7 +2483,7 @@ void add_ranked_playlist(gchar *pl_name,guint songs_nr, GCompareFunc comparefunc
 }
 
 /*CF->Confront Function*/
-gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
+static gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
 {
     gint result=0;
     const Song *a = aa;
@@ -2508,14 +2498,69 @@ gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
     return result;
 }
 
-/* Generate a new playlist containing the most listened (playcount
- * reverse order) songs. to enter this playlist a song must have >0
- * in the playcount field. */
-void most_listened_pl(void)
+/*CF->Confront Function*/
+static gint Most_Rated_CF (gconstpointer aa, gconstpointer bb)
 {
-    gchar *str = g_strdup_printf (_("Most listened (%d)"), 25);
+    gint result=0;
+    const Song *a = aa;
+    const Song *b = bb;
+    
+    if (a && b)
+    {
+	result = b->rating - a->rating;
+	if (result == 0) result = b->playcount - a->playcount;
+	if (result == 0) result = b->time_played - a->time_played;
+    }
+    return result;
+}
+
+/*CF->Confront Function*/
+static gint Last_Listened_CF (gconstpointer aa, gconstpointer bb)
+{
+    gint result=0;
+    const Song *a = aa;
+    const Song *b = bb;
+
+    if (a && b)
+    {
+	result = b->time_played - a->time_played;
+	if (result == 0) result = b->rating - a->rating;
+	if (result == 0) result = b->playcount - a->playcount;
+    }
+    return result;
+}
+
+/*update a ranked playlist according the iPod content,
+ * @str is the playlist's name (no [ or ])*/
+void update_ranked_playlist(gchar *str,gint songs_nr,gboolean played_only,GCompareFunc CompFunc){
     gchar *str2 = g_strdup_printf ("[%s]", str);
-    add_ranked_playlist(str2, 25, Most_Listened_CF);
-    g_free (str);
+    remove_pl_by_name(str2);
+    add_ranked_playlist(str2, songs_nr, CompFunc,TRUE);
     g_free (str2);
 }
+
+/* Generate a new playlist containing the most listened (playcount
+ * reverse order) songs. to enter this playlist a song must have been
+ * played */
+void most_listened_pl(void)
+{
+    gint songs_nr=25;
+    update_ranked_playlist(g_strdup_printf (_("Most Listened (%d)"), songs_nr),songs_nr,TRUE,Most_Listened_CF);
+}
+
+/* Generate a new playlist containing the most rated (rate 
+ * reverse order) songs. */
+void most_rated_pl(void)
+{
+    gint songs_nr=25;
+    update_ranked_playlist(g_strdup_printf (_("Best Rated (%d)"), songs_nr),songs_nr,TRUE,Most_Rated_CF);
+}
+
+/* Generate a new playlist containing the last listened (last time play 
+ * reverse order) songs. */
+void last_listened_pl(void)
+{
+    gint songs_nr=25;
+    update_ranked_playlist(g_strdup_printf (_("Recent (%d)"), songs_nr),songs_nr,TRUE,Last_Listened_CF);
+}
+
