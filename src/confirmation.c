@@ -54,63 +54,63 @@ typedef struct {
 } ConfData;
 
 
+
+/* cleanup hash, store window size */
+static void cleanup (gpointer id)
+{
+    ConfData *cd;
+
+    cd = g_hash_table_lookup (id_hash, &id);
+    if (cd)
+    {
+	gint defx, defy;
+	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
+	if (cd->scrolled)
+	    prefs_set_size_conf_sw (defx, defy);
+	else
+	    prefs_set_size_conf (defx, defy);
+	gtk_widget_destroy (cd->window);
+	g_hash_table_remove (id_hash, &id);
+    }
+}
+
+
 static void on_ok_clicked (GtkWidget *w, gpointer id)
 {
     ConfData *cd;
-    gint defx, defy;
 
     cd = g_hash_table_lookup (id_hash, &id);
     if (cd)
     {
 	if (cd->ok_handler)
 	    cd->ok_handler (cd->user_data1, cd->user_data2);
-	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
-	if (cd->scrolled)
-	    prefs_set_size_conf_sw (defx, defy);
-	else
-	    prefs_set_size_conf (defx, defy);
-	gtk_widget_destroy (cd->window);
-	g_hash_table_remove (id_hash, &id);
+	cleanup (id);
     }
 }
 
 static void on_apply_clicked (GtkWidget *w, gpointer id)
 {
     ConfData *cd;
-    gint defx, defy;
 
     cd = g_hash_table_lookup (id_hash, &id);
     if (cd)
     {
 	if (cd->apply_handler)
 	    cd->apply_handler (cd->user_data1, cd->user_data2);
-	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
-	if (cd->scrolled)
-	    prefs_set_size_conf_sw (defx, defy);
-	else
-	    prefs_set_size_conf (defx, defy);
-	gtk_widget_destroy (cd->window);
-	g_hash_table_remove (id_hash, &id);
+	cleanup (id);
     }
 }
 
 static void on_cancel_clicked (GtkWidget *w, gpointer id)
 {
     ConfData *cd;
-    gint defx, defy;
 
     cd = g_hash_table_lookup (id_hash, &id);
     if (cd)
     {
 	if (cd->cancel_handler)
 	    cd->cancel_handler (cd->user_data1, cd->user_data2);
-	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
-	if (cd->scrolled)
-	    prefs_set_size_conf_sw (defx, defy);
-	else
-	    prefs_set_size_conf (defx, defy);
-	gtk_widget_destroy (cd->window);
-	g_hash_table_remove (id_hash, &id);
+	cleanup (id);
     }
 }
 
@@ -119,34 +119,6 @@ static void on_cancel_clicked (GtkWidget *w, gpointer id)
    action is required */
 void CONF_NULL_HANDLER (gpointer d1, gpointer d2)
 {
-}
-
-
-static void on_response (GtkWidget *w, gint response, gpointer id)
-{
-    ConfData *cd;
-/*     printf ("r: %d, i: %d\n", response, id); */
-    cd = g_hash_table_lookup (id_hash, &id);
-    if (cd)
-    {
-	switch (response)
-	{
-	case GTK_RESPONSE_OK:
-	    on_ok_clicked (w, id);
-	    break;
-	case GTK_RESPONSE_NONE:
-	case GTK_RESPONSE_CANCEL:
-	    on_cancel_clicked (w, id);
-	    break;
-	case GTK_RESPONSE_APPLY:
-	    on_apply_clicked (w, id);
-	    break;
-	default:
-	    g_warning ("Programming error: resonse '%d' received in on_response()\n", response);
-	    on_cancel_clicked (w, id);
-	    break;
-	}
-    }
 }
 
 
@@ -194,6 +166,33 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
     }
 }
 
+static void on_response (GtkWidget *w, gint response, gpointer id)
+{
+    ConfData *cd;
+/*     printf ("r: %d, i: %d\n", response, id); */
+    cd = g_hash_table_lookup (id_hash, &id);
+    if (cd)
+    {
+	switch (response)
+	{
+	case GTK_RESPONSE_OK:
+	    on_ok_clicked (w, id);
+	    break;
+	case GTK_RESPONSE_NONE:
+	case GTK_RESPONSE_CANCEL:
+	    on_cancel_clicked (w, id);
+	    break;
+	case GTK_RESPONSE_APPLY:
+	    on_apply_clicked (w, id);
+	    break;
+	default:
+	    g_warning ("Programming error: resonse '%d' received in on_response()\n", response);
+	    on_cancel_clicked (w, id);
+	    break;
+	}
+    }
+}
+
 
 /* gtkpod_confirmation(): open a confirmation window with the
    information given. If "OK" is clicked, ok_handler() is called,
@@ -224,6 +223,8 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
    @ok_handler:     function to be called when the OK button is pressed
    @apply_handler:  function to be called when the Apply button is pressed
    @cancel_handler: function to be called when the cancel button is pressed
+	   Note: in modal windows, the ok_, apply_, and cancel_handlers
+	   must be set to CONF_NULL_HANDLER if the button is to be shown.
    @user_data1:     first argument to be passed to the ConfHandler
    @user_data1:     second argument to be passed to the ConfHandler
 
@@ -233,29 +234,44 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
    Pass CONF_NULL_HANDLER if you want the corresponding button to be
    shown, but don't want to specify a handler.
 
-   return value:
-   FALSE: no window was opened because another window with the same ID
-          is already open. Text was appended.
-   TRUE:  either a window was opened, or ok_handler() was called
-          directly. */
-gboolean gtkpod_confirmation (gint id,
-			      gboolean modal,
-			      gchar *title,
-			      gchar *label,
-			      gchar *text,
-			      gchar *option1_text,
-			      CONF_STATE option1_state,
-			      ConfHandlerOpt option1_handler,
-			      gchar *option2_text,
-			      CONF_STATE option2_state,
-			      ConfHandlerOpt option2_handler,
-			      gboolean confirm_again,
-			      ConfHandlerOpt confirm_again_handler,
-			      ConfHandler ok_handler,
-			      ConfHandler apply_handler,
-			      ConfHandler cancel_handler,
-			      gpointer user_data1,
-			      gpointer user_data2)
+   Return value:
+
+   non-modal dialogs:
+
+     GTK_RESPONSE_REJECT: no window was opened because another window
+     with the same ID is already open. Text was appended.
+
+     GTK_RESPONSE_ACCEPT: either a window was opened, or ok_handler()
+     was called directly.
+
+   modal dialogs:
+
+     GTK_RESPONSE_REJECT: no window was opened because another window
+     with the same ID is already open. Text was appended. 
+
+     GTK_RESPONSE_OK, GTK_RESPONSE_CANCEL, GTK_RESPONSE_APPLY:
+     OK/CANCEL/APPLY pressed. If the window is closed by the user,
+     GTK_RESPONSE_CANCEL will be returned.
+ */
+
+GtkResponseType gtkpod_confirmation (gint id,
+				     gboolean modal,
+				     gchar *title,
+				     gchar *label,
+				     gchar *text,
+				     gchar *option1_text,
+				     CONF_STATE option1_state,
+				     ConfHandlerOpt option1_handler,
+				     gchar *option2_text,
+				     CONF_STATE option2_state,
+				     ConfHandlerOpt option2_handler,
+				     gboolean confirm_again,
+				     ConfHandlerOpt confirm_again_handler,
+				     ConfHandler ok_handler,
+				     ConfHandler apply_handler,
+				     ConfHandler cancel_handler,
+				     gpointer user_data1,
+				     gpointer user_data2)
 {
     GtkWidget *window, *w;
     ConfData *cd;
@@ -295,7 +311,7 @@ gboolean gtkpod_confirmation (gint id,
 		gtk_text_view_scroll_mark_onscreen (GTK_TEXT_VIEW (w),
                                     gtk_text_buffer_get_insert (tb));
 	    }
-	    return FALSE;
+	    return GTK_RESPONSE_REJECT;
 	}
     }
     else /* find free ID */
@@ -311,9 +327,10 @@ gboolean gtkpod_confirmation (gint id,
     if (!confirm_again)
     { /* This question was supposed to be asked "never again" ("don't
 	 confirm again" -- so we just call the ok_handler */
-	if (ok_handler)
+	if (ok_handler && !modal)
 	    ok_handler (user_data1, user_data2);
-	return TRUE;
+	if (!modal)  return GTK_RESPONSE_ACCEPT;
+	else         return GTK_RESPONSE_OK;
     }
 
     window = create_confirm_dialog ();
@@ -463,7 +480,16 @@ gboolean gtkpod_confirmation (gint id,
     {
 	/* use gtk_dialog_run() to block the application */
 	gint response = gtk_dialog_run (GTK_DIALOG (window));
-	on_response (window, response, (gpointer) id);
+	/* cleanup hash, store window size */
+	cleanup ((gpointer)id);
+	switch (response)
+	{
+	case GTK_RESPONSE_OK:
+	case GTK_RESPONSE_APPLY:
+	    return response;
+	default:
+	    return GTK_RESPONSE_CANCEL;
+	}
     }
     else
     {
@@ -473,7 +499,6 @@ gboolean gtkpod_confirmation (gint id,
 			  G_CALLBACK (on_response),
 			  (gpointer) id);
 	gtk_widget_show (window);
+	return GTK_RESPONSE_ACCEPT;
     }
-
-    return TRUE;
 }

@@ -46,24 +46,24 @@ typedef enum {
     CONF_STATE_INVERT_FALSE,
 } CONF_STATE;
 
-gboolean gtkpod_confirmation (gint id,
-			      gboolean modal,
-			      gchar *title,
-			      gchar *label,
-			      gchar *text,
-			      gchar *option1_text,
-			      CONF_STATE option1_state,
-			      ConfHandlerOpt option1_handler,
-			      gchar *option2_text,
-			      CONF_STATE option2_state,
-			      ConfHandlerOpt option2_handler,
-			      gboolean never_again,
-			      ConfHandlerOpt confirm_again_handler,
-			      ConfHandler ok_handler,
-			      ConfHandler apply_handler,
-			      ConfHandler cancel_handler,
-			      gpointer user_data1,
-			      gpointer user_data2);
+GtkResponseType gtkpod_confirmation (gint id,
+				     gboolean modal,
+				     gchar *title,
+				     gchar *label,
+				     gchar *text,
+				     gchar *option1_text,
+				     CONF_STATE option1_state,
+				     ConfHandlerOpt option1_handler,
+				     gchar *option2_text,
+				     CONF_STATE option2_state,
+				     ConfHandlerOpt option2_handler,
+				     gboolean never_again,
+				     ConfHandlerOpt confirm_again_handler,
+				     ConfHandler ok_handler,
+				     ConfHandler apply_handler,
+				     ConfHandler cancel_handler,
+				     gpointer user_data1,
+				     gpointer user_data2);
 
 /* predefined IDs for use with gtkpod_confirmation() */
 enum {

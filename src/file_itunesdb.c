@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-25 22:33:40 JST jcs>
+/* Time-stamp: <2004-03-31 00:37:00 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -917,7 +917,7 @@ void handle_export (void)
       /* check if iPod directories are present */
       if (!ipod_dirs_present ())
       {   /* no -- create them */
-	  ipod_directories_head (TRUE);
+	  ipod_directories_head ();
 	  /* if still not present abort */
 	  if (!ipod_dirs_present ())
 	  {

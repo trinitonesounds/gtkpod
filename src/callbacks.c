@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:19:11 JST jcs>
+/* Time-stamp: <2004-03-31 00:36:58 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -718,7 +718,7 @@ void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    ipod_directories_head (FALSE);
+    ipod_directories_head ();
 }
 void
 on_gtkpod_status_realize               (GtkWidget       *widget,

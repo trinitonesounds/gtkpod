@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-29 23:44:41 JST jcs>
+/* Time-stamp: <2004-03-31 00:47:21 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -260,42 +260,6 @@ gtkpod_main_window_set_active(gboolean active)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* ok handler for delete tab entry */
-/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
-static void delete_entry_ok (gpointer user_data1, gpointer user_data2)
-{
-    Playlist *pl = user_data1;
-    GList *selected_trackids = user_data2;
-    TabEntry *entry;
-    guint32 inst;
-
-    /* We put the instance at the first position in
-     * selected_tracks. Retrieve it and delete it from the list */
-    inst = (guint32)g_list_nth_data (selected_trackids, 0);
-    selected_trackids = g_list_remove (selected_trackids, (gpointer)inst);
-    /* Same with the selected entry */
-    entry = g_list_nth_data (selected_trackids, 0);
-    selected_trackids = g_list_remove (selected_trackids, entry);
-
-    /* Delete the tracks */
-    delete_track_ok (pl, selected_trackids);
-    /* Delete the entry */
-    st_remove_entry (entry, inst);
-    /* mark data as changed */
-    data_changed ();
-}
-
-
-/* cancel handler for delete tab entry */
-/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
-static void delete_entry_cancel (gpointer user_data1, gpointer user_data2)
-{
-    GList *selected_trackids = user_data2;
-
-    g_list_free (selected_trackids);
-}
-
-
 /* deletes the currently selected entry from the current playlist
    @inst: selected entry of which instance?
    @delete_full: if true, member songs are removed from the iPod
@@ -310,6 +274,7 @@ void delete_entry_head (gint inst, gboolean delete_full)
     ConfHandlerOpt confirm_again_handler;
     TabEntry *entry;
     GList *gl;
+    GtkResponseType response;
 
     if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
     if (delete_full)  pl = get_playlist_by_nr (0);
@@ -347,14 +312,8 @@ void delete_entry_head (gint inst, gboolean delete_full)
 			      &label, &title,
 			      &confirm_again, &confirm_again_handler,
 			      &str);
-    /* add "entry" to beginning of the "selected_trackids" list -- we can
-     * only pass two args, so this is the easiest way */
-    selected_trackids = g_list_prepend (selected_trackids, entry);
-    /* add "inst" the same way */
-    selected_trackids = g_list_prepend (selected_trackids, (gpointer)inst);
-
     /* open window */
-    gtkpod_confirmation
+    response = gtkpod_confirmation
 	(-1,                   /* gint id, */
 	 TRUE,                 /* gboolean modal, */
 	 title,                /* title */
@@ -364,11 +323,26 @@ void delete_entry_head (gint inst, gboolean delete_full)
 	 NULL, 0, NULL,        /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
 	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
-	 delete_entry_ok,      /* ConfHandler ok_handler,*/
+	 CONF_NULL_HANDLER,    /* ConfHandler ok_handler,*/
 	 NULL,                 /* don't show "Apply" button */
-	 delete_entry_cancel,  /* cancel_handler,*/
-	 pl,                   /* gpointer user_data1,*/
-	 selected_trackids);   /* gpointer user_data2,*/
+	 CONF_NULL_HANDLER,    /* cancel_handler,*/
+	 NULL,                 /* gpointer user_data1,*/
+	 NULL);                /* gpointer user_data2,*/
+
+    switch (response)
+    {
+    case GTK_RESPONSE_OK:
+	/* Delete the tracks */
+	delete_track_ok (pl, selected_trackids);
+	/* Delete the entry */
+	st_remove_entry (entry, inst);
+	/* mark data as changed */
+	data_changed ();
+	break;
+    default:
+	g_list_free (selected_trackids);
+	break;
+    }
 
     g_free (label);
     g_string_free (str, TRUE);
@@ -425,20 +399,14 @@ static void delete_playlist_full_ok (gpointer user_data1, gpointer user_data2)
     data_changed ();
 }
 
-/* cancel handler for delete track */
-/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
-static void delete_playlist_cancel (gpointer user_data1, gpointer user_data2)
-{
-    GList *selected_trackids = user_data2;
-
-    g_list_free (selected_trackids);
-}
-
 /* delete currently selected playlist
    @delete_full: if TRUE, member songs are removed from the iPod */
 void delete_playlist_head (gboolean delete_full)
 {
     Playlist *pl = pm_get_selected_playlist();
+    GtkResponseType response = GTK_RESPONSE_NONE;
+    GList *selected_trackids = NULL;
+
     if (!pl)
     { /* no playlist selected */
 	gtkpod_statusbar_message (_("No playlist selected."));
@@ -456,7 +424,7 @@ void delete_playlist_head (gboolean delete_full)
 	gchar *label, *title;
 	gboolean confirm_again;
 	ConfHandlerOpt confirm_again_handler;
-	GList *gl, *selected_trackids=NULL;
+	GList *gl;
 	guint32 n = 0;
 
 	for (gl=pl->members; gl; gl=gl->next)
@@ -471,7 +439,7 @@ void delete_playlist_head (gboolean delete_full)
 				  &confirm_again, &confirm_again_handler,
 				  &str);
 	label = g_strdup_printf (ngettext ("Are you sure you want to delete playlist '%s' and the following track completely from your ipod? The number of playlists this track is a member of is indicated in parentheses.", "Are you sure you want to delete playlist '%s' and the following tracks completely from your ipod? The number of playlists the tracks are member of is indicated in parentheses.", n), pl->name);
-	gtkpod_confirmation
+	response = gtkpod_confirmation
 	    (-1,                     /* gint id, */
 	     TRUE,                   /* gboolean modal, */
 	     title,                  /* title */
@@ -481,11 +449,11 @@ void delete_playlist_head (gboolean delete_full)
 	     NULL, 0, NULL,          /* option 2 */
 	     confirm_again,          /* gboolean confirm_again, */
 	     confirm_again_handler,  /* ConfHandlerOpt confirm_again_handler,*/
-	     delete_playlist_full_ok,/* ConfHandler ok_handler,*/
+	     CONF_NULL_HANDLER,      /* ConfHandler ok_handler,*/
 	     NULL,                   /* don't show "Apply" button */
-	     delete_playlist_cancel, /* cancel_handler,*/
-	     pl,                     /* gpointer user_data1,*/
-	     selected_trackids);     /* gpointer user_data2,*/
+	     CONF_NULL_HANDLER,      /* cancel_handler,*/
+	     NULL,                   /* gpointer user_data1,*/
+	     NULL);                  /* gpointer user_data2,*/
 	g_free (label);
 	g_string_free (str, TRUE);
     }
@@ -493,9 +461,9 @@ void delete_playlist_head (gboolean delete_full)
     { /* remove only playlist, keep tracks */
 	gchar *buf = g_strdup_printf(_("Are you sure you want to delete the playlist '%s'?"), pl->name);
 
-	gtkpod_confirmation
-	    (-1,                   /* gint id, */
-	     TRUE,                 /* gboolean modal, */
+	response = gtkpod_confirmation
+	    (-1,                    /* gint id, */
+	     TRUE,                  /* gboolean modal, */
 	     _("Delete Playlist?"), /* title */
 	     buf,                   /* label */
 	     NULL,                  /* scrolled text */
@@ -503,12 +471,22 @@ void delete_playlist_head (gboolean delete_full)
 	     NULL, 0, NULL,         /* option 2 */
 	     prefs_get_track_playlist_deletion (),/* confirm_again, */
 	     prefs_set_track_playlist_deletion, /* confirm_again_handler,*/
-	     delete_playlist_ok, /* ConfHandler ok_handler,*/
-	     NULL,               /* don't show "Apply" button */
-	     CONF_NULL_HANDLER,  /* cancel_handler,*/
-	     pl,                 /* gpointer user_data1,*/
-	     NULL);              /* gpointer user_data2,*/
+	     CONF_NULL_HANDLER,     /* ConfHandler ok_handler,*/
+	     NULL,                  /* don't show "Apply" button */
+	     CONF_NULL_HANDLER,     /* cancel_handler,*/
+	     NULL,                  /* gpointer user_data1,*/
+	     NULL);                 /* gpointer user_data2,*/
 	g_free (buf);
+    }
+    switch (response)
+    {
+    case GTK_RESPONSE_OK:
+	if (delete_full)   delete_playlist_full_ok (pl, selected_trackids);
+	else               delete_playlist_ok (pl, NULL);
+	break;
+    default:
+	g_list_free (selected_trackids);
+	break;
     }
 }
 
@@ -521,9 +499,8 @@ void delete_playlist_head (gboolean delete_full)
 \*------------------------------------------------------------------*/
 /* ok handler for ipod directory creation */
 /* @user_data1 is the mount point of the iPod */
-static void ipod_directories_ok (gpointer user_data1, gpointer user_data2)
+static void ipod_directories_ok (gchar *mp)
 {
-    gchar *mp = user_data1;
     gboolean success = TRUE;
     gchar pbuf[PATH_MAX+1];
     gchar *buf;
@@ -553,25 +530,17 @@ static void ipod_directories_ok (gpointer user_data1, gpointer user_data2)
 	    buf = g_strdup_printf (_("Problem creating iPod directories in '%s'."), mp);
 	gtkpod_statusbar_message(buf);
 	g_free (buf);
-	g_free (mp);
     }
 }
 
 
-/* cancel handler for ipod directory creation */
-static void ipod_directories_cancel (gpointer user_data1, gpointer user_data2)
-{
-    g_free (user_data1);
-}
-
-
 /* Pop up the confirmation window for creation of ipod directory
-   hierarchy. @modal: make the window modal, i.e. block gtkpod until
-   the dialog is closed. */
-void ipod_directories_head (gboolean modal)
+   hierarchy. */
+void ipod_directories_head (void)
 {
     gchar *mp;
     GString *str;
+    GtkResponseType response;
 
     if (prefs_get_ipod_mount ())
     {
@@ -595,23 +564,30 @@ void ipod_directories_head (gboolean modal)
     g_string_append_printf (str, "%s/iPod_Control/Music/F00\n...\n", mp);
     g_string_append_printf (str, "%s/iPod_Control/Music/F19\n", mp);
 
-    if (!gtkpod_confirmation (CONF_ID_IPOD_DIR,    /* gint id, */
-			 modal,               /* gboolean modal, */
+    response = gtkpod_confirmation (CONF_ID_IPOD_DIR,    /* gint id, */
+			 TRUE,               /* gboolean modal, */
 			 _("Create iPod directories"), /* title */
 			 _("OK to create the following directories?"),
 			 str->str,
-			 NULL, 0, NULL,      /* option 1 */
-			 NULL, 0, NULL,      /* option 2 */
-			 TRUE,               /* gboolean confirm_again, */
+			 NULL, 0, NULL,       /* option 1 */
+			 NULL, 0, NULL,       /* option 2 */
+			 TRUE,                /* gboolean confirm_again, */
 			 NULL, /* ConfHandlerOpt confirm_again_handler, */
-			 ipod_directories_ok, /* ConfHandler ok_handler,*/
+			 CONF_NULL_HANDLER,   /* ConfHandler ok_handler,*/
 			 NULL,                /* don't show "Apply" */
-			 ipod_directories_cancel, /* cancel_handler,*/
+			 CONF_NULL_HANDLER,   /* cancel_handler,*/
 			 mp,                  /* gpointer user_data1,*/
-			 NULL))               /* gpointer user_data2,*/
-    { /* creation failed */
-	g_free (mp);
+			 NULL);               /* gpointer
+					       * user_data2,*/
+    switch (response)
+    {
+    case GTK_RESPONSE_OK:
+	ipod_directories_ok (mp);
+	break;
+    default:
+	break;
     }
+    g_free (mp);
     g_string_free (str, TRUE);
 }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-29 23:44:41 JST jcs>
+/* Time-stamp: <2004-03-31 00:48:52 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1092,7 +1092,7 @@ No valid directories have been found. Sync aborted.\n"));
 	GString *str = g_string_sized_new (2000);
 	/* build a string with all directories in the hash */
 	g_hash_table_foreach (hash, sync_add_dir_to_string, str);
-	if (!gtkpod_confirmation (
+	if (gtkpod_confirmation (
 		-1,                     /* gint id, */
 		FALSE,                  /* gboolean modal, */
 		_("Synchronize directories"), /* title */
@@ -1106,7 +1106,8 @@ No valid directories have been found. Sync aborted.\n"));
 		NULL,                   /* don't show "Apply" */
 		sync_dir_cancel,        /* cancel_handler,*/
 		hash,                   /* gpointer user_data1,*/
-		pm_get_selected_playlist())) /* gpointer user_data2,*/
+		pm_get_selected_playlist()) /* gpointer user_data2,*/
+	    != GTK_RESPONSE_ACCEPT)
 	{ /* creation failed */
 	    g_hash_table_destroy (hash);
 	}
@@ -1754,9 +1755,7 @@ gchar * resolve_path(const gchar *root,const gchar * const * components) {
    that fails, by their filename.
    If tracks could not be matched, the user will be queried whether to
    forget about them or write them back into the offline_playcount
-   file. 
-   FIXME: confirmation is not nice -- two windows are opened, and the
-   contents of the "warning window" cannot be scrolled. */
+   file. */
 void parse_offline_playcount (void)
 {
     gchar *cfgdir = prefs_get_cfgdir ();
@@ -1785,8 +1784,6 @@ void parse_offline_playcount (void)
 	}
 	buf = g_malloc (2*PATH_MAX);
 	gstr = g_string_sized_new (PATH_MAX);
-	/* not used yet -- but can be used for better confirmation
-	   dialog: */
 	gstr_filenames = g_string_sized_new (PATH_MAX);
 	while (fgets (buf, 2*PATH_MAX, file))
 	{
@@ -1834,11 +1831,10 @@ void parse_offline_playcount (void)
 	    if (track_increase_playcount (md5, filename, 1) == FALSE)
 	    {   /* didn't find the track -> store */
 		gchar *filename_utf8 = charset_to_utf8 (filename);
-		if (gstr->len == 0)
-		{
-		    gtkpod_warning (_("Couldn't find track for playcount adjustment:\n"));
-		}
-		gtkpod_warning ("%s\n", filename_utf8);
+/* 		if (gstr->len == 0) */
+/* 		{ */
+/* 		    gtkpod_warning (_("Couldn't find track for playcount adjustment:\n")); */
+/* 		} */
 		g_string_append (gstr_filenames, filename_utf8);
 		g_string_append (gstr_filenames, "\n");
 		g_free (filename_utf8);
@@ -1854,21 +1850,23 @@ void parse_offline_playcount (void)
 	rewind (file);
 	if (gstr->len != 0)
 	{
-	    gint result;
-	    GtkWidget *dialog;
+	    gint result = gtkpod_confirmation
+	    (-1,                    /* gint id, */
+	     TRUE,                  /* gboolean modal, */
+	     _("Remove offline playcounts?"), /* title */
+	     _("Some tracks played offline could not be found in the iTunesDB. OK to remove them from the offline playcount file?"),   /* label */
+	     gstr_filenames->str,   /* scrolled text */
+	     NULL, 0, NULL,         /* option 1 */
+	     NULL, 0, NULL,         /* option 2 */
+	     TRUE,                  /* confirm_again, */
+	     NULL,                  /* confirm_again_handler,*/
+	     CONF_NULL_HANDLER,     /* ConfHandler ok_handler,*/
+	     NULL,                  /* don't show "Apply" button */
+	     CONF_NULL_HANDLER,     /* cancel_handler,*/
+	     NULL,                  /* gpointer user_data1,*/
+	     NULL);                 /* gpointer user_data2,*/
 
-	    gtkpod_warning ("\n");
-
-	    dialog = gtk_message_dialog_new (
-		GTK_WINDOW (gtkpod_window),
-		GTK_DIALOG_DESTROY_WITH_PARENT,
-		GTK_MESSAGE_WARNING,
-		GTK_BUTTONS_YES_NO,
-		_("Some tracks played offline could not be found in the iTunesDB.\nOK to remove them from the offline playcount file?"));
-	    result = gtk_dialog_run (GTK_DIALOG (dialog));
-	    gtk_widget_destroy (dialog);
-
-	    if (result != GTK_RESPONSE_YES)
+	    if (result != GTK_RESPONSE_OK)
 	    {
 		len = fwrite (gstr->str, sizeof (gchar), gstr->len, file);
 		if (len != gstr->len)
