@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-| Time-stamp: <2003-06-13 00:47:24 jcs>
+| Time-stamp: <2003-06-15 12:40:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -97,17 +97,26 @@
 DIGIT     [0-9]
 NUM       {DIGIT}+
 /* definitions for time formats */
-TIMESHORT {NUM}":"{NUM}            /* e.g. 8:54               */
-TIMEFULL  {NUM}":"{NUM}":"{NUM}    /* e.g. 8:54:23            */
-DATESHORT {NUM}"/"{NUM}            /* e.g. 9/6 (for June 9th) */
-DATEFULL  {NUM}"/"{NUM}"/"{NUM}    /* e.g. 9/6/3  or 9/6/2003 */
-RELTIME_S [+-]{TIMESHORT}          /* e.g. -8:54              */
-RELTIME_F [+-]{TIMEFULL}           /* e.g. +8:54.23           */
-RELTIME   ({NUM}[smhdwMy])+        /* e.g. 5d6m3s             */
-SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
+/* e.g. 8:54               */
+TIMESHORT {NUM}":"{NUM}
+/* e.g. 8:54:23            */
+TIMEFULL  {NUM}":"{NUM}":"{NUM}
+/* e.g. 9/6 (for June 9th) */
+DATESHORT {NUM}"/"{NUM}
+/* e.g. 9/6/3  or 9/6/2003 */
+DATEFULL  {NUM}"/"{NUM}"/"{NUM}
+/* e.g. -8:54              */
+RELTIME_S [+-]{TIMESHORT}
+/* e.g. +8:54.23           */
+RELTIME_F [+-]{TIMEFULL}
+/* e.g. 5d6m3s             */
+RELTIME   ({NUM}[smhdwMy])+
+/* e.g. -3M5d              */
+SRELTIME  [+-]{RELTIME}
+
 %%
 
-{TIMESHORT}	{
+{TIMESHORT}    {
     gchar *ptr1 = yytext;
     struct tm *lt = localtime (&tstamp);
     lt->tm_hour = strtol (ptr1, &ptr1, 10);
