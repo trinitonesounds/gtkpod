@@ -71,11 +71,11 @@ gint determine_file_type(gchar *path)
 	    /* since we are exclusively checking for equality strcasecmp
 	     * should be sufficient */
 	    if (g_strcasecmp (suf, ".mp3") == 0) type = FILE_TYPE_MP3;
-	    if (g_strcasecmp (suf, ".m4a") == 0) type = FILE_TYPE_M4A;
-	    if (g_strcasecmp (suf, ".m4p") == 0) type = FILE_TYPE_M4P;
-	    if (g_strcasecmp (suf, ".wav") == 0) type = FILE_TYPE_WAV;
-	    if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
-	    if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
+	    else if (g_strcasecmp (suf, ".m4a") == 0) type = FILE_TYPE_M4A;
+	    else if (g_strcasecmp (suf, ".m4p") == 0) type = FILE_TYPE_M4P;
+	    else if (g_strcasecmp (suf, ".wav") == 0) type = FILE_TYPE_WAV;
+	    else if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
+	    else if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
 	}
 
 	g_free(path_utf8);
