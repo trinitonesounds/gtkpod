@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-12 00:18:00 JST jcs>
+/* Time-stamp: <2004-03-12 23:42:37 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -445,6 +445,9 @@ Alex Tribble: iPod eject patch\n"),
 Yaroslav Halchenko: Orphaned and dangling tracks handling\n"),
 		       _("\
 Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"),
+		       "\n\n",
+		       _("\
+Ero Carrera: Filename validation and quick sync when copying tracks from the iPod\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n"),

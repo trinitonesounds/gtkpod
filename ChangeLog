@@ -21,6 +21,10 @@ gtkpod V0.73-CVS
 	IMPROVEMENT: included 	Andrew Huntwork's patch to fix issues
 	concerning case-sensitivity of filenames under some conditions.
 
+	IMPROVEMENT: included Ero Carrera's patch to validate the filename
+	when copying tracks from the iPod and to make a quick sync of the
+	iPod's contents.
+
 	IMPROVEMENT: when importing the iTunesDB automatically on
 	startup, no window was opened until the import was
 	finished. Thanks to Andrew Huntwork the window now opens

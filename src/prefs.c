@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-01 23:14:11 JST jcs>
+/* Time-stamp: <2004-03-12 23:34:00 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -248,6 +248,8 @@ struct cfg *cfg_new(void)
     mycfg->export_template = g_strdup ("%o;%a - %t.mp3;%t.wav");
     mycfg->write_gaintag = FALSE;
     mycfg->concal_autosync = FALSE;
+    mycfg->fix_path = TRUE;
+    mycfg->export_check_existing = FALSE;
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
@@ -680,6 +682,14 @@ read_prefs_from_file_desc(FILE *fp)
 	      if (cfg->version >= 0.73)
 		  prefs_set_size_info (-2, atoi (arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "export_check_existing") == 0)
+	  {
+	      prefs_set_export_check_existing (atoi (arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "fix_path") == 0)
+	  {
+	      prefs_set_fix_path (atoi (arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "automount") == 0)
 	  {
 	      prefs_set_automount (atoi (arg));
@@ -990,6 +1000,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_prefs.y=%d\n", cfg->size_prefs.y);
     fprintf (fp, "size_info.x=%d\n", cfg->size_info.x);
     fprintf (fp, "size_info.y=%d\n", cfg->size_info.y);
+    fprintf (fp, "export_check_existing=%d\n", cfg->export_check_existing);
+    fprintf (fp, "fix_path=%d\n", cfg->fix_path);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
@@ -2127,9 +2139,31 @@ gchar *prefs_get_time_format (void)
 }
 
 gboolean
+prefs_get_export_check_existing (void)
+{
+    return cfg->export_check_existing;
+}
+gboolean 
+prefs_get_fix_path (void)
+{
+    return cfg->fix_path;
+}
+
+gboolean 
 prefs_get_automount (void)
 {
     return cfg->automount;
+}
+void
+
+prefs_set_export_check_existing(gboolean val)
+{
+    cfg->export_check_existing = val;
+}void
+
+prefs_set_fix_path(gboolean val)
+{
+    cfg->fix_path = val;
 }
 void
 

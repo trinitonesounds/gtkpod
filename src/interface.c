@@ -1359,10 +1359,12 @@ create_prefs_window (void)
   GtkWidget *label31;
   GtkWidget *frame23;
   GtkWidget *vbox50;
-  GtkWidget *table9;
+  GtkWidget *hbox51;
   GtkWidget *label70;
   GtkWidget *cfg_export_template;
   GtkWidget *cfg_special_export_charset;
+  GtkWidget *cfg_export_check_existing;
+  GtkWidget *cfg_fix_path;
   GtkWidget *label72;
   GtkWidget *label23;
   GtkWidget *scrolledwindow6;
@@ -1805,29 +1807,25 @@ create_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox14), frame23, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame23), GTK_SHADOW_ETCHED_OUT);
 
-  vbox50 = gtk_vbox_new (TRUE, 0);
+  vbox50 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox50);
   gtk_container_add (GTK_CONTAINER (frame23), vbox50);
   gtk_container_set_border_width (GTK_CONTAINER (vbox50), 5);
 
-  table9 = gtk_table_new (1, 2, FALSE);
-  gtk_widget_show (table9);
-  gtk_box_pack_start (GTK_BOX (vbox50), table9, FALSE, FALSE, 0);
+  hbox51 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox51);
+  gtk_box_pack_start (GTK_BOX (vbox50), hbox51, FALSE, FALSE, 0);
 
   label70 = gtk_label_new (_("Filename Format: "));
   gtk_widget_show (label70);
-  gtk_table_attach (GTK_TABLE (table9), label70, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+  gtk_box_pack_start (GTK_BOX (hbox51), label70, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label70, GTK_CAN_FOCUS);
   gtk_label_set_selectable (GTK_LABEL (label70), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label70), 0, 0.5);
 
   cfg_export_template = gtk_entry_new ();
   gtk_widget_show (cfg_export_template);
-  gtk_table_attach (GTK_TABLE (table9), cfg_export_template, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+  gtk_box_pack_start (GTK_BOX (hbox51), cfg_export_template, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_export_template, _("Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, the character '%': %%."), NULL);
   gtk_entry_set_text (GTK_ENTRY (cfg_export_template), _(" "));
 
@@ -1835,6 +1833,16 @@ create_prefs_window (void)
   gtk_widget_show (cfg_special_export_charset);
   gtk_box_pack_start (GTK_BOX (vbox50), cfg_special_export_charset, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_special_export_charset, _("Normally the charset specified when first importing the track will be used for the filename. If you set this option you can set a different charset with the charset selector above ('Adding/Updating/Syncing'). Note: the charset info is stored in the extended information file (see 'Writing of the iTunesDB' above). Tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used."), NULL);
+
+  cfg_export_check_existing = gtk_check_button_new_with_mnemonic (_("Check for existing files when copying from iPod."));
+  gtk_widget_show (cfg_export_check_existing);
+  gtk_box_pack_start (GTK_BOX (vbox50), cfg_export_check_existing, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_export_check_existing, _("When copying from iPod no check is performed on whether the destination file exists. Enabling this option will make gtkpod check whether the length of the destination file is the same as the file in the iPod. If so the file is skipped, allowing a quick sync of the iPod's contents."), NULL);
+
+  cfg_fix_path = gtk_check_button_new_with_mnemonic (_("Fix exported filenames/directories."));
+  gtk_widget_show (cfg_fix_path);
+  gtk_box_pack_start (GTK_BOX (vbox50), cfg_fix_path, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_fix_path, _("Some filesystems do not support certain characters in file/directory names i.e. \"*:<>?\\|/ , this option will substitute those with underscore '_'."), NULL);
 
   label72 = gtk_label_new (_("Copying from iPod"));
   gtk_widget_show (label72);
@@ -2547,6 +2555,12 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_special_export_charset, "toggled",
                     G_CALLBACK (on_cfg_special_export_charset_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_export_check_existing, "toggled",
+                    G_CALLBACK (on_cfg_export_check_existing_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_fix_path, "toggled",
+                    G_CALLBACK (on_cfg_fix_path_toggled),
+                    NULL);
   g_signal_connect ((gpointer) time_format_entry, "changed",
                     G_CALLBACK (on_cfg_time_format_changed),
                     NULL);
@@ -2709,10 +2723,12 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label31, "label31");
   GLADE_HOOKUP_OBJECT (prefs_window, frame23, "frame23");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox50, "vbox50");
-  GLADE_HOOKUP_OBJECT (prefs_window, table9, "table9");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox51, "hbox51");
   GLADE_HOOKUP_OBJECT (prefs_window, label70, "label70");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_export_template, "cfg_export_template");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_special_export_charset, "cfg_special_export_charset");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_export_check_existing, "cfg_export_check_existing");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_fix_path, "cfg_fix_path");
   GLADE_HOOKUP_OBJECT (prefs_window, label72, "label72");
   GLADE_HOOKUP_OBJECT (prefs_window, label23, "label23");
   GLADE_HOOKUP_OBJECT (prefs_window, scrolledwindow6, "scrolledwindow6");

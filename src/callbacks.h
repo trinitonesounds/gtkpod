@@ -370,6 +370,14 @@ on_mp3gain_entry_changed               (GtkEditable     *editable,
 					gpointer         user_data);
 
 void
+on_cfg_export_check_existing_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_fix_path_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
 on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
@@ -742,4 +750,12 @@ on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
 void
 on_all_tracks_not_listed_in_any_playlist1_activate
                                         (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_cfg_export_check_existing_toggled   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_fix_path                       (GtkToggleButton *togglebutton,
                                         gpointer         user_data);

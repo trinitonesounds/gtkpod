@@ -2589,17 +2589,14 @@
 			    <widget class="GtkVBox" id="vbox50">
 			      <property name="border_width">5</property>
 			      <property name="visible">True</property>
-			      <property name="homogeneous">True</property>
+			      <property name="homogeneous">False</property>
 			      <property name="spacing">0</property>
 
 			      <child>
-				<widget class="GtkTable" id="table9">
+				<widget class="GtkHBox" id="hbox51">
 				  <property name="visible">True</property>
-				  <property name="n_rows">1</property>
-				  <property name="n_columns">2</property>
 				  <property name="homogeneous">False</property>
-				  <property name="row_spacing">0</property>
-				  <property name="column_spacing">0</property>
+				  <property name="spacing">0</property>
 
 				  <child>
 				    <widget class="GtkLabel" id="label70">
@@ -2617,12 +2614,9 @@
 				      <property name="ypad">0</property>
 				    </widget>
 				    <packing>
-				      <property name="left_attach">0</property>
-				      <property name="right_attach">1</property>
-				      <property name="top_attach">0</property>
-				      <property name="bottom_attach">1</property>
-				      <property name="x_options">fill</property>
-				      <property name="y_options"></property>
+				      <property name="padding">0</property>
+				      <property name="expand">False</property>
+				      <property name="fill">False</property>
 				    </packing>
 				  </child>
 
@@ -2641,11 +2635,9 @@
 				      <signal name="changed" handler="on_cfg_export_template_changed" last_modification_time="Sun, 25 Jan 2004 09:27:58 GMT"/>
 				    </widget>
 				    <packing>
-				      <property name="left_attach">1</property>
-				      <property name="right_attach">2</property>
-				      <property name="top_attach">0</property>
-				      <property name="bottom_attach">1</property>
-				      <property name="y_options"></property>
+				      <property name="padding">0</property>
+				      <property name="expand">True</property>
+				      <property name="fill">True</property>
 				    </packing>
 				  </child>
 				</widget>
@@ -2669,6 +2661,46 @@
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
 				  <signal name="toggled" handler="on_cfg_special_export_charset_toggled" last_modification_time="Sun, 07 Sep 2003 11:19:29 GMT"/>
+				</widget>
+				<packing>
+				  <property name="padding">0</property>
+				  <property name="expand">False</property>
+				  <property name="fill">False</property>
+				</packing>
+			      </child>
+
+			      <child>
+				<widget class="GtkCheckButton" id="cfg_export_check_existing">
+				  <property name="visible">True</property>
+				  <property name="tooltip" translatable="yes">When copying from iPod no check is performed on whether the destination file exists. Enabling this option will make gtkpod check whether the length of the destination file is the same as the file in the iPod. If so the file is skipped, allowing a quick sync of the iPod's contents.</property>
+				  <property name="can_focus">True</property>
+				  <property name="label" translatable="yes">Check for existing files when copying from iPod.</property>
+				  <property name="use_underline">True</property>
+				  <property name="relief">GTK_RELIEF_NORMAL</property>
+				  <property name="active">False</property>
+				  <property name="inconsistent">False</property>
+				  <property name="draw_indicator">True</property>
+				  <signal name="toggled" handler="on_cfg_export_check_existing_toggled" last_modification_time="Sun, 07 Sep 2003 11:19:29 GMT"/>
+				</widget>
+				<packing>
+				  <property name="padding">0</property>
+				  <property name="expand">False</property>
+				  <property name="fill">False</property>
+				</packing>
+			      </child>
+
+			      <child>
+				<widget class="GtkCheckButton" id="cfg_fix_path">
+				  <property name="visible">True</property>
+				  <property name="tooltip" translatable="yes">Some filesystems do not support certain characters in file/directory names i.e. &quot;*:&lt;&gt;?\|/ , this option will substitute those with underscore '_'.</property>
+				  <property name="can_focus">True</property>
+				  <property name="label" translatable="yes">Fix exported filenames/directories.</property>
+				  <property name="use_underline">True</property>
+				  <property name="relief">GTK_RELIEF_NORMAL</property>
+				  <property name="active">False</property>
+				  <property name="inconsistent">False</property>
+				  <property name="draw_indicator">True</property>
+				  <signal name="toggled" handler="on_cfg_fix_path_toggled" last_modification_time="Sun, 07 Sep 2003 11:19:29 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>

@@ -41,6 +41,8 @@
 #include <sys/types.h>
 #include <string.h>
 
+
+gchar *fix_path(const gchar *orig);
 /**
  * READ_WRITE_BLOCKSIZE - how many bytes we read per fread/fwrite call
  */
@@ -143,6 +145,7 @@ track_get_export_filename (Track *track)
     while (*p != '\0') {
 	if (*p == '%') {
 	    gchar* tmp = NULL;
+	    gchar *fixtmp = NULL;
 	    p++;
 	    switch (*p) {
 	    case 'o':
@@ -208,9 +211,17 @@ track_get_export_filename (Track *track)
 				*p, template);
 		break;
 	    }
-	    if (tmp) {
+	    if (tmp)
+	    {
+		if(prefs_get_fix_path())
+		{
+		    fixtmp = fix_path (tmp);
+		    tmp = fixtmp;
+		}
 		result = g_string_append (result, tmp);
 		tmp = NULL;
+		g_free (fixtmp);
+		fixtmp = NULL;
 	    }
 	}
 	else 
@@ -322,6 +333,21 @@ copy_file_fd(FILE *from, FILE *to)
     return(result);
 }
 
+
+/* Return TRUE if the file @dest exists and is of same size as @from */
+static gboolean
+file_is_ok(gchar *from, gchar *dest)
+{
+    struct stat st_from, st_dest;
+
+    if(stat(dest, &st_dest) == -1)    	      return FALSE;
+    if(stat(from, &st_from) == -1)            return FALSE;
+
+    if(st_from.st_size == st_dest.st_size)    return TRUE;
+
+    return FALSE;
+}
+
 /**
  * copy_file - copy the filename on disk named file, to
  * the destination file dest.  Both names are FULL pathnames to the file
@@ -335,6 +361,9 @@ copy_file(gchar *file, gchar *dest)
     gboolean result = FALSE;
     FILE *from = NULL, *to = NULL;
     
+    if(prefs_get_export_check_existing() && file_is_ok(file, dest))
+    	return TRUE;
+	
     if((from = fopen(file, "r")))
     {
 	if((to = fopen(dest, "w")))
@@ -481,3 +510,41 @@ file_export_init(GList *tracks)
 	gtk_widget_show(w);
     }
 }
+
+
+/*
+|  Copyright (C) 2004 Ero Carrera <ero at dkbza.org>
+|  (Confirmed that code is placed under GPL. JCS. 12 March 2004)
+*/
+
+/**
+ * Check if supported char and return substitute.
+ */
+static gchar check_char(gchar c)
+{
+        gint i;
+        gchar invalid[]={'"', '*', ':', '<', '>', '?', '\\', '|', '/'};
+        for(i=0; i<9; i++)
+                if(c==invalid[i])
+                        return '_';
+        return c;
+}
+
+/**
+ * Process a path. It will substitute all the invalid characters.
+ */
+gchar *fix_path(const gchar *orig)
+{
+        gint i, l;
+        gchar *new;
+
+        if(orig == NULL)         return NULL;
+        new = g_strdup(orig);
+        for(i=0, l=strlen(orig); i<l; i++)
+	{
+	    new[i]=check_char(new[i]);
+        }
+        return new;
+}
+
+/* End of code originally supplied by Ero Carrera */

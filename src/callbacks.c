@@ -1042,6 +1042,20 @@ on_mp3gain_entry_changed               (GtkEditable     *editable,
 
 
 void
+on_cfg_export_check_existing_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_export_check_existing(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
+on_cfg_fix_path_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_fix_path(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
 on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {

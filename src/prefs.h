@@ -132,6 +132,8 @@ struct cfg
   gchar *time_format;           /* time format for strftime() */
   gchar *export_template;       /* filename for files exported from ipod */
   gboolean automount;		/* whether we should mount/unmount the ipod */
+  gboolean fix_path;		/* whether we fix files for a FAT or not */
+  gboolean export_check_existing;/* whether we check for existing files on export or not */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_track;     /* not played track in Highest rated playlist?*/
@@ -215,6 +217,8 @@ void prefs_set_col_order (gint pos, TM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
 void prefs_set_automount(gboolean val);
+void prefs_set_fix_path(gboolean val);
+void prefs_set_export_check_existing(gboolean val);
 void prefs_set_info_window(gboolean val);
 
 gboolean prefs_get_offline(void);
@@ -292,6 +296,8 @@ const gchar *prefs_get_sync_calendar_path (void);
 void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);
+gboolean prefs_get_fix_path (void);
+gboolean prefs_get_export_check_existing (void);
 gboolean prefs_get_info_window (void);
 void prefs_set_sp_or (guint32 inst, gboolean state);
 gboolean prefs_get_sp_or (guint32 inst);
