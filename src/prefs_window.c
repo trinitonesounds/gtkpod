@@ -38,17 +38,6 @@ static void prefs_window_song_list_init(void);
  * Create, Initialize, and Show the preferences window
  * allocate a static cfg struct for temporary variables
  */
-static void
-copy_cfg_songs_list_to_tmpcfg_songs_list(void)
-{
-    if(tmpcfg)
-    {
-	tmpcfg->song_list_show.artist = prefs_get_song_list_show_artist();
-	tmpcfg->song_list_show.album = prefs_get_song_list_show_album();
-	tmpcfg->song_list_show.track= prefs_get_song_list_show_track();
-	tmpcfg->song_list_show.genre = prefs_get_song_list_show_genre();
-    }
-}
 void
 prefs_window_create(void)
 {
@@ -58,13 +47,7 @@ prefs_window_create(void)
 	
 	if(!tmpcfg)
 	{
-	    tmpcfg = g_malloc0 (sizeof (struct cfg));
-	    memset(tmpcfg, 0, sizeof(struct cfg));
-	    tmpcfg->md5songs = cfg->md5songs;
-	    tmpcfg->writeid3 = cfg->writeid3;
-	    tmpcfg->ipod_mount = g_strdup(cfg->ipod_mount);
-	    
-	    copy_cfg_songs_list_to_tmpcfg_songs_list();
+	    tmpcfg = clone_prefs();
 	}
 	else
 	{
@@ -83,6 +66,21 @@ prefs_window_create(void)
 	if((w = lookup_widget(prefs_window, "cfg_writeid3")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), tmpcfg->writeid3);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_delete_playlist")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->deletion.playlist);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_delete_track_from_playlist")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->deletion.song);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_delete_track_from_ipod")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->deletion.ipod_file);
 	}
 	prefs_window_song_list_init();
 	gtk_widget_show(prefs_window);
@@ -118,6 +116,10 @@ prefs_window_save(void)
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
     prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
     prefs_set_song_list_show_artist(tmpcfg->song_list_show.artist);
+    prefs_set_song_playlist_deletion(tmpcfg->deletion.song);
+    prefs_set_song_ipod_file_deletion(tmpcfg->deletion.ipod_file);
+    prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
+    
     cfg_free(tmpcfg);
     tmpcfg =NULL;
     if(prefs_window)
@@ -251,4 +253,22 @@ void
 prefs_window_set_song_list_artist(gboolean val)
 {
     tmpcfg->song_list_show.artist = val;
+}
+
+void 
+prefs_window_set_delete_playlist(gboolean val)
+{
+    tmpcfg->deletion.playlist = val;
+}
+
+void 
+prefs_window_set_delete_song_ipod(gboolean val)
+{
+    tmpcfg->deletion.ipod_file = val;
+}
+
+void 
+prefs_window_set_delete_song_playlist(gboolean val)
+{
+    tmpcfg->deletion.song = val;
 }

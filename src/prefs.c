@@ -64,11 +64,13 @@ cfg_new(void)
     {
 	mycfg->last_dir.dir_browse = g_strdup_printf ("%s/", buf);
 	mycfg->last_dir.file_browse = g_strdup_printf ("%s/", buf);
+	mycfg->last_dir.file_export = g_strdup_printf ("%s/", buf);
     }
     else
     {
 	mycfg->last_dir.dir_browse = g_strdup ("~/");
 	mycfg->last_dir.file_browse = g_strdup ("~/");
+	mycfg->last_dir.file_export = g_strdup ("~/");
     }
     if((str = getenv("IPOD_MOUNTPOINT")))
     {
@@ -79,6 +81,9 @@ cfg_new(void)
     {
 	mycfg->ipod_mount = g_strdup ("/mnt");
     }
+    mycfg->deletion.song = FALSE;
+    mycfg->deletion.playlist = FALSE;
+    mycfg->deletion.ipod_file = FALSE;
     return(mycfg);
 }
 
@@ -310,6 +315,7 @@ void cfg_free(struct cfg *c)
       g_free (c->ipod_mount);
       g_free (c->last_dir.dir_browse);
       g_free (c->last_dir.file_browse);
+      g_free (c->last_dir.file_export);
       g_free (c);
     }
 }
@@ -352,6 +358,11 @@ void prefs_set_last_dir_dir_browse_for_filename(gchar *file)
     cfg->last_dir.dir_browse = get_dirname_of_filename(file);
 }
 
+void prefs_set_last_dir_file_export_for_filename(gchar *file)
+{
+    if(cfg->last_dir.file_export) g_free(cfg->last_dir.file_export);
+    cfg->last_dir.file_export = get_dirname_of_filename(file);
+}
 
 void prefs_set_mount_point(const gchar *mp)
 {
@@ -525,4 +536,36 @@ gboolean
 prefs_get_song_ipod_file_deletion(void)
 {
     return(cfg->deletion.ipod_file);
+}
+
+struct cfg*
+clone_prefs(void)
+{
+    struct cfg *result = NULL;
+
+    if(cfg)
+    {
+	result = g_malloc0 (sizeof (struct cfg));
+	memset(result, 0, sizeof(struct cfg));
+	result->md5songs = cfg->md5songs;
+	result->writeid3 = cfg->writeid3;
+	result->ipod_mount = g_strdup(cfg->ipod_mount);
+	    
+	result->song_list_show.artist = prefs_get_song_list_show_artist();
+	result->song_list_show.album = prefs_get_song_list_show_album();
+	result->song_list_show.track= prefs_get_song_list_show_track();
+	result->song_list_show.genre = prefs_get_song_list_show_genre();
+	
+	result->deletion.song = cfg->deletion.song;
+	result->deletion.playlist = cfg->deletion.playlist;
+	result->deletion.ipod_file = cfg->deletion.ipod_file;
+	
+	if(cfg->last_dir.dir_browse)
+	    result->last_dir.dir_browse = g_strdup(cfg->last_dir.dir_browse);
+	if(cfg->last_dir.file_browse)
+	    result->last_dir.file_browse = g_strdup(cfg->last_dir.file_browse);
+	if(cfg->last_dir.file_export)
+	    result->last_dir.file_export = g_strdup(cfg->last_dir.file_export);
+    }
+    return(result);
 }

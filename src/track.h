@@ -78,4 +78,6 @@ gboolean add_directory_recursively (gchar *name);
 gboolean write_tags_to_file(Song *s);
 void handle_import_itunes (void);
 gchar* get_song_name_on_disk(Song *s);
+gchar* get_preferred_song_name_format(Song *s);
+
 #endif __SONG_H__

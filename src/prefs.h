@@ -54,7 +54,7 @@ struct cfg
   } song_list_show; /* what columns are displayed in the song list */	
   /* last directories used by the fileselections */
   struct {
-      gchar *dir_browse, *file_browse;
+      gchar *dir_browse, *file_browse, *file_export;
   } last_dir;	
   struct {
       gboolean song, playlist, ipod_file;
@@ -72,15 +72,17 @@ enum {
 extern struct cfg *cfg;
 
 void prefs_print(void);
-gboolean read_prefs (int argc, char *argv[]);
 void cfg_free(struct cfg *c);
 void write_prefs (void);
 void discard_prefs (void);
+struct cfg* clone_prefs(void);
 void prefs_set_mount_point(const gchar *mp);
+gboolean read_prefs (int argc, char *argv[]);
 void prefs_set_md5songs_active(gboolean active);
 void prefs_set_writeid3_active(gboolean active);
 void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
 void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
+void prefs_set_last_dir_file_export_for_filename(gchar * dir);
 
 void prefs_set_playlist_deletion(gboolean val);
 void prefs_set_song_list_show_all(gboolean val);

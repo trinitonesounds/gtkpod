@@ -43,7 +43,7 @@ create_gtkpod (void)
   GtkWidget *menuitem11;
   GtkWidget *menuitem11_menu;
   GtkWidget *new_playlist1;
-  GtkWidget *image5;
+  GtkWidget *image7;
   GtkWidget *separator1;
   GtkWidget *cut1;
   GtkWidget *copy1;
@@ -51,7 +51,8 @@ create_gtkpod (void)
   GtkWidget *delete1;
   GtkWidget *separator2;
   GtkWidget *edit_preferences1;
-  GtkWidget *image6;
+  GtkWidget *image8;
+  GtkWidget *export_files_to_disk;
   GtkWidget *menuitem12;
   GtkWidget *menuitem13;
   GtkWidget *menuitem13_menu;
@@ -156,9 +157,9 @@ create_gtkpod (void)
   gtk_widget_show (new_playlist1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), new_playlist1);
 
-  image5 = gtk_image_new_from_stock ("gtk-justify-left", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image5);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_playlist1), image5);
+  image7 = gtk_image_new_from_stock ("gtk-justify-left", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image7);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_playlist1), image7);
 
   separator1 = gtk_menu_item_new ();
   gtk_widget_show (separator1);
@@ -193,9 +194,13 @@ create_gtkpod (void)
                               GDK_p, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
-  image6 = gtk_image_new_from_stock ("gtk-preferences", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image6);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (edit_preferences1), image6);
+  image8 = gtk_image_new_from_stock ("gtk-preferences", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image8);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (edit_preferences1), image8);
+
+  export_files_to_disk = gtk_menu_item_new_with_mnemonic (_("Export Files to Disk"));
+  gtk_widget_show (export_files_to_disk);
+  gtk_container_add (GTK_CONTAINER (menuitem11_menu), export_files_to_disk);
 
   menuitem12 = gtk_menu_item_new_with_mnemonic (_("_View"));
   gtk_widget_show (menuitem12);
@@ -464,6 +469,9 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) edit_preferences1, "activate",
                     G_CALLBACK (on_edit_preferences1_activate),
                     NULL);
+  g_signal_connect ((gpointer) export_files_to_disk, "activate",
+                    G_CALLBACK (on_export_files_to_disk_activate),
+                    NULL);
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about1_activate),
                     NULL);
@@ -516,7 +524,7 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem11, "menuitem11");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem11_menu, "menuitem11_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, new_playlist1, "new_playlist1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image5, "image5");
+  GLADE_HOOKUP_OBJECT (gtkpod, image7, "image7");
   GLADE_HOOKUP_OBJECT (gtkpod, separator1, "separator1");
   GLADE_HOOKUP_OBJECT (gtkpod, cut1, "cut1");
   GLADE_HOOKUP_OBJECT (gtkpod, copy1, "copy1");
@@ -524,7 +532,8 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, delete1, "delete1");
   GLADE_HOOKUP_OBJECT (gtkpod, separator2, "separator2");
   GLADE_HOOKUP_OBJECT (gtkpod, edit_preferences1, "edit_preferences1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image6, "image6");
+  GLADE_HOOKUP_OBJECT (gtkpod, image8, "image8");
+  GLADE_HOOKUP_OBJECT (gtkpod, export_files_to_disk, "export_files_to_disk");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem12, "menuitem12");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13, "menuitem13");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13_menu, "menuitem13_menu");
@@ -701,6 +710,12 @@ create_prefs_window (void)
   GtkWidget *cfg_song_list_genre;
   GtkWidget *cfg_song_list_track;
   GtkWidget *label18;
+  GtkWidget *frame3;
+  GtkWidget *vbox7;
+  GtkWidget *cfg_delete_playlist;
+  GtkWidget *cfg_delete_track_from_playlist;
+  GtkWidget *cfg_delete_track_from_ipod;
+  GtkWidget *label19;
   GtkWidget *hbuttonbox3;
   GtkWidget *button6;
   GtkWidget *button7;
@@ -741,7 +756,7 @@ create_prefs_window (void)
 
   frame2 = gtk_frame_new (NULL);
   gtk_widget_show (frame2);
-  gtk_box_pack_start (GTK_BOX (vbox3), frame2, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox3), frame2, FALSE, TRUE, 0);
 
   hbox2 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox2);
@@ -780,9 +795,34 @@ create_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame2), label18);
   gtk_label_set_justify (GTK_LABEL (label18), GTK_JUSTIFY_LEFT);
 
+  frame3 = gtk_frame_new (NULL);
+  gtk_widget_show (frame3);
+  gtk_box_pack_start (GTK_BOX (vbox3), frame3, TRUE, TRUE, 0);
+
+  vbox7 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox7);
+  gtk_container_add (GTK_CONTAINER (frame3), vbox7);
+
+  cfg_delete_playlist = gtk_check_button_new_with_mnemonic (_("Before Removing Playlists"));
+  gtk_widget_show (cfg_delete_playlist);
+  gtk_box_pack_start (GTK_BOX (vbox7), cfg_delete_playlist, FALSE, FALSE, 0);
+
+  cfg_delete_track_from_playlist = gtk_check_button_new_with_mnemonic (_("Before Removing Tracks From Playlist"));
+  gtk_widget_show (cfg_delete_track_from_playlist);
+  gtk_box_pack_start (GTK_BOX (vbox7), cfg_delete_track_from_playlist, FALSE, FALSE, 0);
+
+  cfg_delete_track_from_ipod = gtk_check_button_new_with_mnemonic (_("Before Removing Tracks Completely From Ipod"));
+  gtk_widget_show (cfg_delete_track_from_ipod);
+  gtk_box_pack_start (GTK_BOX (vbox7), cfg_delete_track_from_ipod, FALSE, FALSE, 0);
+
+  label19 = gtk_label_new (_("Delete Confirmation"));
+  gtk_widget_show (label19);
+  gtk_frame_set_label_widget (GTK_FRAME (frame3), label19);
+  gtk_label_set_justify (GTK_LABEL (label19), GTK_JUSTIFY_LEFT);
+
   hbuttonbox3 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox3);
-  gtk_box_pack_start (GTK_BOX (vbox3), hbuttonbox3, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox3), hbuttonbox3, FALSE, FALSE, 0);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox3), GTK_BUTTONBOX_SPREAD);
 
   button6 = gtk_button_new_with_mnemonic (_("Ok"));
@@ -827,6 +867,15 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_song_list_track, "toggled",
                     G_CALLBACK (on_cfg_song_list_track_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_delete_playlist, "toggled",
+                    G_CALLBACK (on_cfg_delete_playlist_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_delete_track_from_playlist, "toggled",
+                    G_CALLBACK (on_cfg_delete_track_from_playlist_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_delete_track_from_ipod, "toggled",
+                    G_CALLBACK (on_cfg_delete_track_from_ipod_toggled),
+                    NULL);
   g_signal_connect ((gpointer) button6, "clicked",
                     G_CALLBACK (on_prefs_ok_clicked),
                     NULL);
@@ -853,6 +902,12 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_genre, "cfg_song_list_genre");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_track, "cfg_song_list_track");
   GLADE_HOOKUP_OBJECT (prefs_window, label18, "label18");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame3, "frame3");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox7, "vbox7");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_playlist, "cfg_delete_playlist");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_track_from_playlist, "cfg_delete_track_from_playlist");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_track_from_ipod, "cfg_delete_track_from_ipod");
+  GLADE_HOOKUP_OBJECT (prefs_window, label19, "label19");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox3, "hbuttonbox3");
   GLADE_HOOKUP_OBJECT (prefs_window, button6, "button6");
   GLADE_HOOKUP_OBJECT (prefs_window, button7, "button7");

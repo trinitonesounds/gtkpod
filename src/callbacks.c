@@ -44,6 +44,7 @@
 #include "prefs_window.h"
 #include "md5.h"
 #include "delete_window.h"
+#include "file_export.h"
 
 void
 on_import_itunes1_activate             (GtkMenuItem     *menuitem,
@@ -499,5 +500,41 @@ on_delete_confirmation_delete_event    (GtkWidget       *widget,
 {
     confirmation_window_cancel_clicked();
     return FALSE;
+}
+
+
+void
+on_export_files_to_disk_activate       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    file_export_init(NULL, NULL, get_currently_selected_songs());
+}
+
+
+void
+on_cfg_delete_playlist_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_delete_playlist(
+	    gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_cfg_delete_track_from_playlist_toggled
+                                        (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_delete_song_playlist(
+	    gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_delete_song_ipod(
+	    gtk_toggle_button_get_active(togglebutton));
 }
 

@@ -187,3 +187,20 @@ gboolean
 on_delete_confirmation_delete_event    (GtkWidget       *widget,
                                         GdkEvent        *event,
                                         gpointer         user_data);
+
+void
+on_export_files_to_disk_activate       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_cfg_delete_playlist_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_delete_track_from_playlist_toggled
+                                        (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

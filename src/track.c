@@ -477,3 +477,28 @@ gchar* get_song_name_on_disk(Song *s)
 
 }
 
+/**
+ * get_preferred_song_name_format - useful for generating the preferred
+ * output filename for any track.  
+ * FIXME Eventually this should check your prefs for the displayed
+ * attributes in the song model and generate track names based on that
+ * @s - The Song reference we're generating the filename for
+ * Returns - The preferred filename, you must free it yourself.
+ */
+gchar *
+get_preferred_song_name_format(Song *s)
+{
+    gchar buf[PATH_MAX];
+    gchar *result = NULL;
+    if(s)
+    {
+	if(s->track_nr < 10)
+	    snprintf(buf, PATH_MAX, "0%d-%s-%s.mp3", s->track_nr,
+						s->title,s->artist);
+	else
+	    snprintf(buf, PATH_MAX, "%d-%s-%s.mp3", s->track_nr,
+						s->title,s->artist);
+	result = g_strdup(buf);
+    }
+    return(result);
+}

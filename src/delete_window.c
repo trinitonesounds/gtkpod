@@ -172,11 +172,11 @@ confirmation_window_create(int window_type)
 		{
 		    if(prefs_get_playlist_deletion())
 		    {
-			confirmation_window_ok_clicked();
+			create_playlist_deletion_interface(pl_name);
 		    }
 		    else
 		    {
-			create_playlist_deletion_interface(pl_name);
+			confirmation_window_ok_clicked();
 		    }
 		}
 		else
@@ -190,11 +190,11 @@ confirmation_window_create(int window_type)
 		    confirmation_type = CONFIRMATION_WINDOW_SONG_FROM_IPOD;
 		    if(prefs_get_song_ipod_file_deletion())
 		    {
-			confirmation_window_ok_clicked();
+			create_ipod_song_deletion_interface();
 		    }
 		    else
 		    {
-			create_ipod_song_deletion_interface();
+			confirmation_window_ok_clicked();
 		    }
 		}
 		else
@@ -202,11 +202,11 @@ confirmation_window_create(int window_type)
 		    confirmation_type = CONFIRMATION_WINDOW_SONG_FROM_PLAYLIST;
 		    if(prefs_get_song_playlist_deletion())
 		    {
-			confirmation_window_ok_clicked();
+			create_playlist_song_deletion_interface(pl_name);
 		    }
 		    else
 		    {
-			create_playlist_song_deletion_interface(pl_name);
+			confirmation_window_ok_clicked();
 		    }
 		}
 		break;
@@ -243,16 +243,23 @@ void confirmation_window_cancel_clicked(void)
 }
 void confirmation_window_prefs_toggled(gboolean val)
 {
+    gboolean myval = FALSE;
+
+    if(val == TRUE)
+	myval = FALSE;
+    else
+	myval = TRUE;
+
     switch(confirmation_type)
     {
 	case CONFIRMATION_WINDOW_PLAYLIST:
-	    prefs_set_playlist_deletion(val);
+	    prefs_set_playlist_deletion(myval);
 	    break;
 	case CONFIRMATION_WINDOW_SONG_FROM_PLAYLIST:
-	    prefs_set_song_playlist_deletion(val);
+	    prefs_set_song_playlist_deletion(myval);
 	    break;
 	case CONFIRMATION_WINDOW_SONG_FROM_IPOD:
-	    prefs_set_song_ipod_file_deletion(val);
+	    prefs_set_song_ipod_file_deletion(myval);
 	    break;
 	default:
 	    fprintf(stderr, "Unknown confirmation toggled\n");

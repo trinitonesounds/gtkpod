@@ -23,7 +23,8 @@ gtkpod_SOURCES = \
 	dirbrowser.c dirbrowser.h \
 	md5.c md5.h \
 	prefs_window.c prefs_window.h \
-	delete_window.c delete_window.h
+	delete_window.c delete_window.h \
+	file_export.c file_export.h
 
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS)
 
