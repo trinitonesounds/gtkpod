@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-07 00:18:44 jcs>
+/* Time-stamp: <2004-02-04 21:19:22 JST jcs>
 |
 |  Copyright (C) 2002 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,7 +35,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
-#include "song.h"
+#include "track.h"
 
 #define GTKPOD_JAPAN_AUTOMATIC "gtkpod-japan-automatic"
 

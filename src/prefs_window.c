@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-01 23:23:34 JST jcs>
+/* Time-stamp: <2004-02-04 21:19:16 JST jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -30,7 +30,7 @@
 #include <string.h>
 #include "prefs.h"
 #include "prefs_window.h"
-#include "song.h"
+#include "track.h"
 #include "interface.h"
 #include "callbacks.h"
 #include "support.h"

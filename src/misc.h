@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-26 23:01:58 jcs>
+/* Time-stamp: <2004-02-04 21:30:37 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,7 +36,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include "file.h"
-#include "song.h"
+#include "track.h"
 #include "playlist.h"
 #include "display.h"
 #include "confirmation.h"
@@ -94,11 +94,6 @@ void update_blocked_widget (GtkWidget *w, gboolean sens);
 void mount_ipod(void);
 void unmount_ipod(void);
 void call_script (gchar *script);
-
-void do_command_on_entries (const gchar *command, const gchar *what,
-			    GList *selected_tracks);
-void play_tracks (GList *selected_tracks);
-void enqueue_tracks (GList *selected_tracks);
 
 void delete_track_ok (gpointer user_data1, gpointer user_data2);
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-03 22:16:49 JST jcs>
+/* Time-stamp: <2004-02-04 21:30:36 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,7 +34,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "song.h"
+#include "track.h"
 
 #define TRACKGAINERROR -200
 
@@ -46,4 +46,9 @@ gint nm_volumne_to_gain (gint volume);
 
 gboolean tools_sync_contacts (void);
 gboolean tools_sync_calendar (void);
+
+void do_command_on_entries (const gchar *command, const gchar *what,
+			    GList *selected_tracks);
+void tools_play_tracks (GList *selected_tracks);
+void tools_enqueue_tracks (GList *selected_tracks);
 #endif

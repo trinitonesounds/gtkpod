@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-03 22:16:48 JST jcs>
+/* Time-stamp: <2004-02-04 21:19:19 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,7 +39,7 @@
 #  include <config.h>
 #endif
 
-#include "song.h"
+#include "track.h"
 #include "playlist.h"
 
 gboolean itunesdb_parse (const gchar *path);

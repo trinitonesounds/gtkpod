@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 13:05:16 jcs>
+/* Time-stamp: <2004-02-04 21:21:22 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,7 +34,7 @@
 #endif
  
 #include <gtk/gtk.h>
-#include "song.h"
+#include "track.h"
 
 /* info window */
 void info_open_window (void);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-03 23:21:30 JST jcs>
+/* Time-stamp: <2004-02-04 21:30:36 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -44,7 +44,7 @@
 #include "file_export.h"
 #include "info.h"
 #include "misc.h"
-#include "normalize.h"
+#include "tools.h"
 #include "playlist.h"
 #include "prefs.h"
 #include "prefs_window.h"
@@ -1111,7 +1111,7 @@ on_play_playlist_activate              (GtkMenuItem     *menuitem,
 {
     Playlist *pl = pm_get_selected_playlist ();
     if (pl)
-	play_tracks (pl->members);
+	tools_play_tracks (pl->members);
     else
 	gtkpod_statusbar_message (_("No playlist selected"));
 }
@@ -1136,7 +1136,7 @@ on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
 	g_free (str);
 	return;
     }
-    play_tracks (entry->members);
+    tools_play_tracks (entry->members);
 }
 
 
@@ -1147,7 +1147,7 @@ on_play_tracks_activate                 (GtkMenuItem     *menuitem,
     GList *tracks = tm_get_selected_tracks ();
     if (tracks)
     {
-	play_tracks (tracks);
+	tools_play_tracks (tracks);
 	g_list_free (tracks);
 	tracks = NULL;
     }
@@ -1162,7 +1162,7 @@ on_enqueue_playlist_activate           (GtkMenuItem     *menuitem,
 {
     Playlist *pl = pm_get_selected_playlist ();
     if (pl)
-	enqueue_tracks (pl->members);
+	tools_enqueue_tracks (pl->members);
     else
 	gtkpod_statusbar_message (_("No playlist selected"));
 }
@@ -1187,7 +1187,7 @@ on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
 	g_free (str);
 	return;
     }
-    enqueue_tracks (entry->members);
+    tools_enqueue_tracks (entry->members);
 }
 
 
@@ -1198,7 +1198,7 @@ on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
     GList *tracks = tm_get_selected_tracks ();
     if (tracks)
     {
-	enqueue_tracks (tracks);
+	tools_enqueue_tracks (tracks);
 	g_list_free (tracks);
 	tracks = NULL;
     }

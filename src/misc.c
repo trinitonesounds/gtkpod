@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-02 21:42:57 JST jcs>
+/* Time-stamp: <2004-02-04 21:30:37 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -48,7 +48,7 @@
 #include "playlist.h"
 #include "prefs.h"
 #include "prefs_window.h"
-#include "song.h"
+#include "track.h"
 #include "support.h"
 
 
@@ -1878,137 +1878,6 @@ which(const gchar *exe)
     }
     C_FREE(which_exec);
     return(result);
-}
-
-/*
- * do_command_on_entries - execute @play on tracks in @selected_tracks
- * @play: the command to execute (e.g. "xmms -e %s")
- * @what: e.g. "Enqueue" or "Play Now" (used for error messages)
- * @selected tracks: list of tracks to to be placed in the command line
- * at the position of "%s"
- *
- */
-void
-do_command_on_entries (const gchar *command, const gchar *what,
-		       GList *selected_tracks)
-{
-    GList *l;
-    gchar *str, *commandc, *next;
-    gboolean percs = FALSE; /* did "%s" already appear? */
-    GPtrArray *args;
-
-    if ((!command) || (strlen (command) == 0))
-    {
-	gchar *buf = g_strdup_printf (_("No command set for '%s'"), what);
-	gtkpod_statusbar_message (buf);
-	C_FREE (buf);
-	return;
-    }
-
-    /* find the command itself -- separated by ' ' */
-    next = strchr (command, ' ');
-    if (!next)
-    {
-	str = g_strdup (command);
-    }
-    else
-    {
-	str = g_strndup (command, next-command);
-    }
-    while (g_ascii_isspace (*command))  ++command;
-    /* get the full path */
-    commandc = which (str);
-    if (!commandc)
-    {
-	gchar *buf = g_strdup_printf (_("Could not find command '%s' specified for '%s'"),
-				      str, what);
-	gtkpod_statusbar_message (buf);
-	C_FREE (buf);
-	C_FREE (str);
-	return;
-    }
-    C_FREE (str);
-
-    /* Create the command line */
-    args = g_ptr_array_sized_new (g_list_length (selected_tracks) + 10);
-    /* first the full path */
-    g_ptr_array_add (args, commandc);
-    do
-    {
-	const gchar *next;
-	gboolean end;
-
-	next = strchr (command, ' ');
-	if (next == NULL) next = command + strlen (command);
-
-	if (next == command)  end = TRUE;
-	else                  end = FALSE;
-
-	if (!end && (strncmp (command, "%s", 2) != 0))
-	{   /* current token is not "%s" */
-	    gchar *buf;
-	    buf = g_strndup (command, next-command);
-	    g_ptr_array_add (args, buf);
-	}
-	else if (!percs)
-	{
-	    for(l = selected_tracks; l; l = l->next)
-	    {
-		if((str = get_track_name_on_disk_verified((Track*)l->data)))
-		    g_ptr_array_add (args, str);
-	    }
-	    percs = TRUE; /* encountered a '%s' */
-	}
-	command = next;
-	/* skip whitespace */
-	while (g_ascii_isspace (*command))  ++command;
-    } while (*command);
-    /* need NULL pointer */
-    g_ptr_array_add (args, NULL);
-
-    switch(fork())
-    {
-    case 0: /* we are the child */
-    {
-	gchar **argv = (gchar **)args->pdata;
-#if DEBUG_MISC
-	gchar **bufp = argv;
-	while (*bufp)	{ puts (*bufp); ++bufp;	}
-#endif
-	execv(argv[0], &argv[1]);
-	g_ptr_array_free (args, TRUE);
-	exit(0);
-	break;
-    }
-    case -1: /* we are the parent, fork() failed  */
-	g_ptr_array_free (args, TRUE);
-	break;
-    default: /* we are the parent, everything's fine */
-	break;
-    }
-}
-
-
-/*
- * play_entries_now - play the entries currently selected in xmms
- * @selected_tracks: list of tracks to be played
- */
-void play_tracks (GList *selected_tracks)
-{
-    do_command_on_entries (prefs_get_play_now_path (),
-			   _("Play Now"),
-			   selected_tracks);
-}
-
-/*
- * play_entries_now - play the entries currently selected in xmms
- * @selected_tracks: list of tracks to be played
- */
-void enqueue_tracks (GList *selected_tracks)
-{
-    do_command_on_entries (prefs_get_play_enqueue_path (),
-			   _("Enqueue"),
-			   selected_tracks);
 }
 
 

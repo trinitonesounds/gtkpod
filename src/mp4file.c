@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-24 20:00:41 jcs>
+/* Time-stamp: <2004-02-04 21:21:21 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,7 +31,7 @@
 #endif
 
 #include "mp4file.h"
-#include "song.h"
+#include "track.h"
 #include "charset.h"
 #include "misc.h"
 #include "prefs.h"

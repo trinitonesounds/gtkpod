@@ -34,7 +34,7 @@
 #include "misc.h"
 #include "support.h"
 #include "prefs.h"
-#include "song.h"
+#include "track.h"
 #include "charset.h"
 #include "file.h"
 

@@ -27,7 +27,7 @@
 #ifndef _GTKPOD_FILE_EXPORT_H_
 #define _GTKPOD_FILE_EXPORT_H_
 
-#include "song.h"
+#include "track.h"
 #include <glib.h>
 
 /**

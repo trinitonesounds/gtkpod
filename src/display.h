@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-26 23:01:57 jcs>
+/* Time-stamp: <2004-02-04 21:21:22 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,7 +35,7 @@
 
 #include <gtk/gtk.h>
 #include "info.h"
-#include "song.h"
+#include "track.h"
 #include "playlist.h"
 
 /* Categories in each sort tab (page numbers) */

@@ -34,7 +34,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
-#include "song.h"
+#include "track.h"
 #include "playlist.h"
 
 typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);

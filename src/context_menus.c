@@ -31,11 +31,11 @@
 #include "support.h"
 #include "prefs.h"
 #include "display.h"
-#include "song.h"
+#include "track.h"
 #include "playlist.h"
 #include "misc.h"
 #include "file_export.h"
-#include "normalize.h"
+#include "tools.h"
 
 static guint entry_inst = -1;
 static GList *selected_tracks = NULL;
@@ -85,7 +85,7 @@ edit_entries(GtkButton *b, gpointer data)
 static void 
 play_entries_now (GtkMenuItem *mi, gpointer data)
 {
-    play_tracks (selected_tracks);
+    tools_play_tracks (selected_tracks);
 }
 
 /*
@@ -96,7 +96,7 @@ play_entries_now (GtkMenuItem *mi, gpointer data)
 static void 
 play_entries_enqueue (GtkMenuItem *mi, gpointer data)
 {
-    enqueue_tracks (selected_tracks);
+    tools_enqueue_tracks (selected_tracks);
 }
 
 

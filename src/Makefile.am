@@ -30,11 +30,11 @@ gtkpod_SOURCES = \
 	misc.c misc.h \
 	mp3file.c mp3file.h \
 	mp4file.c mp4file.h \
-	normalize.c normalize.h \
 	playlist.c playlist.h \
 	prefs.c prefs.h \
 	prefs_window.c prefs_window.h \
-	song.c song.h \
+	tools.c tools.h \
+	track.c track.h \
 	support.c support.h \
 	wavfile.c wavfile.h \
 	callbacks.c callbacks.h

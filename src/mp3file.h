@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-12 17:28:15 jcs>
+/* Time-stamp: <2004-02-04 21:19:17 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -29,7 +29,7 @@
 #ifndef MP3FILEH_INCLUDED
 #define MP3FILEH_INCLUDED 1
 
-#include "song.h"
+#include "track.h"
 
 gboolean file_write_mp3_info (gchar *filename, Track *track);
 Track *file_get_mp3_info (gchar *name);

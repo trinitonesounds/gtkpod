@@ -36,7 +36,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "song.h"
+#include "track.h"
 
 typedef struct
 {
