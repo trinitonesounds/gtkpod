@@ -32,8 +32,9 @@ for details.
      - Export of Tracks
      - Encoding of ID3 tags (charsets)
      - Extracting tag information from the filename
-     - About filenames
+     - Checking iPod's files
      - Restoring your iPod after file system error
+     - About filenames
   - Icons for window managers
   - Connecting iPod to a Linux box:
   - Sick of loading the sbp2 modules by hand? (an example of how to
@@ -404,6 +405,28 @@ if artist and title are separated by an underscore.
 
 You can also omit the trailing ".mp3" if you want the template to
 apply to all files instead of only to mp3 files.
+
+
+Checking iPod's Files
+---------------------
+For whatever reason -- it may happen that tracks are present in your
+iTunesDB that are no longer present on the iPod (dangling tracks), or
+that tracks are on the iPod but not in the iTunesDB (orphaned
+tracks).
+
+The function "Checking iPod's Files" under the "File" menu will
+identify both types and take the following actions:
+
+Orphaned tracks:
+A new playlist "[Orphaned]" will be created with all orphaned tracks
+in it. The only exception are orphaned tracks that would become
+duplicates (if duplicate detection is activated). Those are marked for
+deletion with the next sync.
+
+Dangling tracks:
+These tracks will be marked for deletion with the next sync unless the
+original PC file is still available. In that case you can have them
+restored with the next sync.
 
 
 Restoring your iPod after file system error

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 23:24:15 jcs>
+/* Time-stamp: <2004-07-19 01:00:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -183,6 +183,8 @@ struct cfg *cfg_new(void)
 	mycfg->st[i].sp_played_state = g_strdup (">4w");
 	mycfg->st[i].sp_modified = FALSE;
 	mycfg->st[i].sp_modified_state = g_strdup ("<1d");
+	mycfg->st[i].sp_created = FALSE;
+	mycfg->st[i].sp_created_state = g_strdup ("<1d");
 	mycfg->st[i].sp_autodisplay = FALSE;
     }
     mycfg->mpl_autoselect = TRUE;
@@ -285,12 +287,30 @@ struct cfg *cfg_new(void)
     return(mycfg);
 }
 
+
+/* Compare strlen(@arg) chars of @arg with @line. Return strlen (@arg)
+   in @off */
+static gint arg_comp (const gchar *line, const gchar *arg, gint *off)
+{
+    if (arg && line)
+    {
+	*off = strlen (arg);
+	return g_ascii_strncasecmp (line, arg, *off);
+    }
+    else
+    {
+	*off = 0;
+	return 0;
+    }
+}
+
+
 static void
 read_prefs_from_file_desc(FILE *fp)
 {
     gchar buf[PATH_MAX];
     gchar *line, *arg, *bufp;
-    gint len;
+    gint len, off;
 
     if(fp)
     {
@@ -321,9 +341,9 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_ipod_mount (arg);
 	  }
-	  else if(g_ascii_strncasecmp (line, "toolpath", 8) == 0)
+	  else if(arg_comp (line, "toolpath", &off) == 0)
 	  {
-	      gint i = atoi (line+8);
+	      gint i = atoi (line+off);
 	      prefs_set_toolpath (i, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
@@ -429,84 +449,94 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "st_autoselect", 13) == 0)
+	  else if(arg_comp (line, "st_autoselect", &off) == 0)
 	  {
-	      gint i = atoi (line+13);
+	      gint i = atoi (line+off);
 	      prefs_set_st_autoselect (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "st_category", 11) == 0)
+	  else if(arg_comp (line, "st_category", &off) == 0)
 	  {
-	      gint i = atoi (line+11);
+	      gint i = atoi (line+off);
 	      prefs_set_st_category (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_or", 4) == 0)
+	  else if(arg_comp (line, "sp_or", &off) == 0)
 	  {
-	      gint i = atoi (line+4);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_or (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_rating_cond", 14) == 0)
+	  else if(arg_comp (line, "sp_rating_cond", &off) == 0)
 	  {
-	      gint i = atoi (line+14);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_cond (i, T_RATING, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_playcount_cond", 17) == 0)
+	  else if(arg_comp (line, "sp_playcount_cond", &off) == 0)
 	  {
-	      gint i = atoi (line+17);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_cond (i, T_PLAYCOUNT, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_played_cond", 14) == 0)
+	  else if(arg_comp (line, "sp_played_cond", &off) == 0)
 	  {
-	      gint i = atoi (line+14);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_cond (i, T_TIME_PLAYED, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_modified_cond", 16) == 0)
+	  else if(arg_comp (line, "sp_modified_cond", &off) == 0)
 	  {
-	      gint i = atoi (line+16);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_cond (i, T_TIME_MODIFIED, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_rating_state", 15) == 0)
+	  else if(arg_comp (line, "sp_created_cond", &off) == 0)
 	  {
-	      gint i = atoi (line+15);
+	      gint i = atoi (line+off);
+	      prefs_set_sp_cond (i, T_TIME_CREATED, atoi (arg));
+	  }
+	  else if(arg_comp (line, "sp_rating_state", &off) == 0)
+	  {
+	      gint i = atoi (line+off);
 	      prefs_set_sp_rating_state (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_playcount_low", 16) == 0)
+	  else if(arg_comp (line, "sp_playcount_low", &off) == 0)
 	  {
-	      gint i = atoi (line+16);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_playcount_low (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_playcount_high", 17) == 0)
+	  else if(arg_comp (line, "sp_playcount_high", &off) == 0)
 	  {
-	      gint i = atoi (line+17);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_playcount_high (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_played_state", 15) == 0)
+	  else if(arg_comp (line, "sp_played_state", &off) == 0)
 	  {
-	      gint i = atoi (line+15);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_entry (i, T_TIME_PLAYED, arg);
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_modified_state", 17) == 0)
+	  else if(arg_comp (line, "sp_modified_state", &off) == 0)
 	  {
-	      gint i = atoi (line+17);
+	      gint i = atoi (line+off);
 	      prefs_set_sp_entry (i, T_TIME_MODIFIED, arg);
 	  }
-	  else if(g_ascii_strncasecmp (line, "sp_autodisplay", 14) == 0)
+	  else if(arg_comp (line, "sp_created_state", &off) == 0)
 	  {
-	      gint i = atoi (line+14);
+	      gint i = atoi (line+off);
+	      prefs_set_sp_entry (i, T_TIME_CREATED, arg);
+	  }
+	  else if(arg_comp (line, "sp_autodisplay", &off) == 0)
+	  {
+	      gint i = atoi (line+off);
 	      prefs_set_sp_autodisplay (i, atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "mpl_autoselect") == 0)
 	  {
 	      prefs_set_mpl_autoselect((gboolean)atoi(arg));
 	  }
-	  else if((g_ascii_strncasecmp (line, "tm_col_width", 12) == 0) ||
+	  else if((arg_comp (line, "tm_col_width", &off) == 0) ||
 		  (g_ascii_strncasecmp (line, "sm_col_width", 12) == 0))
 	  {
-	      gint i = atoi (line+12);
+	      gint i = atoi (line+off);
 	      prefs_set_tm_col_width (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "tag_autoset", 11) == 0)
+	  else if(arg_comp (line, "tag_autoset", &off) == 0)
 	  {
-	      gint i = atoi (line+11);
+	      gint i = atoi (line+off);
 	      prefs_set_autosettags (i, atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "readtags") == 0)
@@ -525,19 +555,19 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_parsetags_template(strdup(arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "col_visible", 11) == 0)
+	  else if(arg_comp (line, "col_visible", &off) == 0)
 	  {
-	      gint i = atoi (line+11);
+	      gint i = atoi (line+off);
 	      prefs_set_col_visible (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "col_order", 9) == 0)
+	  else if(arg_comp (line, "col_order", &off) == 0)
 	  {
-	      gint i = atoi (line+9);
+	      gint i = atoi (line+off);
 	      prefs_set_col_order (i, atoi (arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "paned_pos_", 10) == 0)
+	  else if(arg_comp (line, "paned_pos_", &off) == 0)
 	  {
-	      gint i = atoi (line+10);
+	      gint i = atoi (line+off);
 	      prefs_set_paned_pos (i, atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
@@ -977,6 +1007,8 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_PLAYED));
 	fprintf(fp, "sp_modified_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_MODIFIED));
 	fprintf(fp, "sp_modified_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_MODIFIED));
+	fprintf(fp, "sp_created_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_CREATED));
+	fprintf(fp, "sp_created_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_CREATED));
 	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
     }
     fprintf(fp, _("# autoselect master playlist?\n"));
@@ -2203,6 +2235,9 @@ void prefs_set_sp_cond (guint32 inst, T_item t_item, gboolean state)
 	case T_TIME_MODIFIED:
 	    cfg->st[inst].sp_modified = state;
 	    break;
+	case T_TIME_CREATED:
+	    cfg->st[inst].sp_created = state;
+	    break;
 	default:
 	    /* programming error */
 	    fprintf (stderr, "prefs_set_sp_cond(): inst=%d, !t_item=%d!\n",
@@ -2234,6 +2269,8 @@ gboolean prefs_get_sp_cond (guint32 inst, T_item t_item)
 	    return cfg->st[inst].sp_played;
 	case T_TIME_MODIFIED:
 	    return cfg->st[inst].sp_modified;
+	case T_TIME_CREATED:
+	    return cfg->st[inst].sp_created;
 	default:
 	    /* programming error */
 	    fprintf (stderr, "prefs_get_sp_cond(): inst=%d !t_item=%d!\n",
@@ -2317,6 +2354,10 @@ void prefs_set_sp_entry (guint32 inst, T_item t_item, const gchar *str)
 	    g_free (cfg->st[inst].sp_modified_state);
 	    cfg->st[inst].sp_modified_state = cstr;
 	    break;
+	case T_TIME_CREATED:
+	    g_free (cfg->st[inst].sp_created_state);
+	    cfg->st[inst].sp_created_state = cstr;
+	    break;
 	default:
 	    /* programming error */
 	    g_free (cstr);
@@ -2349,6 +2390,9 @@ gchar *prefs_get_sp_entry (guint32 inst, T_item t_item)
 	    break;
 	case T_TIME_MODIFIED:
 	    result = cfg->st[inst].sp_modified_state;
+	    break;
+	case T_TIME_CREATED:
+	    result = cfg->st[inst].sp_created_state;
 	    break;
 	default:
 	    /* programming error */

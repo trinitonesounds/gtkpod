@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-04-09 22:47:28 JST jcs>
+/* Time-stamp: <2004-07-18 23:34:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,7 +34,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/file.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
+
 
 #include "charset.h"
 #include "clientserver.h"
@@ -706,6 +709,7 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 
     if (nti)
     {
+	struct stat si;
 	FILE *file;
 	if (nti->charset == NULL)
 	{   /* Fill in currently used charset. Try if auto_charset is
@@ -751,6 +755,11 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    track = nti;
 	    nti = NULL;
 	}
+	/* Set modification date to *now* */
+	track->time_modified = itunesdb_time_get_mac_time ();
+	/* Set creation date to modification date of file */
+	if (stat (name, &si) == 0)
+	    track->time_created = itunesdb_time_host_to_mac (si.st_mtime);
     }
 
     while (widgets_blocked && gtk_events_pending ())

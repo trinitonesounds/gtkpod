@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 23:13:50 JST jcs>
+/* Time-stamp: <2004-07-18 23:24:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -58,12 +58,14 @@ T_item TM_to_T (TM_item sm)
     case TM_COLUMN_CD_NR:         return T_CD_NR;
     case TM_COLUMN_IPOD_ID:       return T_IPOD_ID;
     case TM_COLUMN_PC_PATH:       return T_PC_PATH;
+    case TM_COLUMN_IPOD_PATH:     return T_IPOD_PATH;
     case TM_COLUMN_TRANSFERRED:   return T_TRANSFERRED;
     case TM_COLUMN_SIZE:          return T_SIZE;
     case TM_COLUMN_TRACKLEN:      return T_TRACKLEN;
     case TM_COLUMN_BITRATE:       return T_BITRATE;
     case TM_COLUMN_PLAYCOUNT:     return T_PLAYCOUNT;
     case TM_COLUMN_RATING:        return T_RATING;
+    case TM_COLUMN_TIME_CREATED:  return T_TIME_CREATED;
     case TM_COLUMN_TIME_PLAYED:   return T_TIME_PLAYED;
     case TM_COLUMN_TIME_MODIFIED: return T_TIME_MODIFIED;
     case TM_COLUMN_VOLUME:        return T_VOLUME;
@@ -126,6 +128,9 @@ time_t time_get_time (Track *track, TM_item tm_item)
 
     if (track) switch (tm_item)
     {
+    case TM_COLUMN_TIME_CREATED:
+	mactime = track->time_created;
+	break;
     case TM_COLUMN_TIME_PLAYED:
 	mactime = track->time_played;
 	break;
@@ -154,6 +159,9 @@ void time_set_time (Track *track, time_t time, TM_item tm_item)
 
     if (track) switch (tm_item)
     {
+    case TM_COLUMN_TIME_CREATED:
+	track->time_created = mactime;
+	break;
     case TM_COLUMN_TIME_PLAYED:
 	track->time_played = mactime;
 	break;

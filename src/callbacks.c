@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 23:20:54 jcs>
+/* Time-stamp: <2004-07-19 00:46:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1250,6 +1250,7 @@ on_sp_cond_button_toggled            (GtkToggleButton *togglebutton,
     guint32 inst = (guint32)user_data & SP_MASK;
     T_item cond = (guint32)user_data >> SP_SHIFT;
 
+/*     printf ("%d/%d/%d\n",inst,cond,gtk_toggle_button_get_active (togglebutton)); */
     prefs_set_sp_cond (inst, cond,
 		       gtk_toggle_button_get_active (togglebutton));
     sp_conditions_changed (inst);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-04-10 23:46:39 JST jcs>
+/* Time-stamp: <2004-07-19 00:11:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -160,8 +160,8 @@ void validate_entries (Track *track)
 
 /**
  * remove_track_from_ipod - in order to delete a track from the system
- * we need to keep track of the Tracks we want to delete next time we export
- * the id.
+ * we need to keep track of the Tracks we want to delete next time we
+ * export the id.
  * @track - the Track id we want to delete
  */
 void
@@ -549,6 +549,8 @@ void remove_duplicate (Track *oldtrack, Track *track)
 				      track->time_modified);
        /* Set 'played' timestamp */
        oldtrack->time_played =  MAX (oldtrack->time_played, track->time_played);
+       /* Set 'created' timestamp */
+       oldtrack->time_created =  MIN (oldtrack->time_created, track->time_created);
 
        /* Update filename if new track has filename set */
        if (track->pc_path_locale && *oldtrack->pc_path_locale)
@@ -710,6 +712,8 @@ guint32 *track_get_timestamp_ptr (Track *track, T_item t_item)
 	    return &track->time_played;
 	  case T_TIME_MODIFIED:
 	    return &track->time_modified;
+	  case T_TIME_CREATED:
+	    return &track->time_created;
 	default:
 	    break;
 	}

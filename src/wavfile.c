@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:26:06 JST jcs>
+/* Time-stamp: <2004-07-18 22:53:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,10 +30,11 @@
 #  include <config.h>
 #endif
 
-#include "wavfile.h"
 #include "charset.h"
+#include "itunesdb.h"
 #include "misc.h"
 #include "support.h"
+#include "wavfile.h"
 
 #include <string.h>
 
@@ -158,9 +159,10 @@ Track *wav_get_file_info (gchar *filename)
 	fseek(wav_file->file, len, SEEK_CUR);
     }
 
-    track = g_malloc0 (sizeof (Track));
+    track = itunesdb_new_track ();
 
     track->bitrate = wav_file->samples_per_sec * wav_file->channels * wav_file->bits_per_sample;
+    track->samplerate = wav_file->samples_per_sec;
     track->tracklen = 1000 * ((double)8*len / track->bitrate);
     track->bitrate /= 1000; /* change to kbps */
     track->fdesc = g_strdup ("WAV audio file");

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-04-10 23:46:38 JST jcs>
+/* Time-stamp: <2004-07-18 22:33:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,36 +38,38 @@
 
 typedef struct
 {
-  gchar   *album;            /* album (utf8)          */
-  gchar   *artist;           /* artist (utf8)         */
-  gchar   *title;            /* title (utf8)          */
-  gchar   *genre;            /* genre (utf8)          */
-  gchar   *comment;          /* comment (utf8)        */
-  gchar   *composer;         /* Composer (utf8)       */
-  gchar   *fdesc;            /* ? (utf8)              */
+  gchar   *album;            /* album (utf8)           */
+  gchar   *artist;           /* artist (utf8)          */
+  gchar   *title;            /* title (utf8)           */
+  gchar   *genre;            /* genre (utf8)           */
+  gchar   *comment;          /* comment (utf8)         */
+  gchar   *composer;         /* Composer (utf8)        */
+  gchar   *fdesc;            /* ? (utf8)               */
   gchar   *ipod_path;        /* name of file on iPod: uses ":" instead of "/"*/
-  gunichar2 *album_utf16;    /* album (utf16)         */
-  gunichar2 *artist_utf16;   /* artist (utf16)        */
-  gunichar2 *title_utf16;    /* title (utf16)         */
-  gunichar2 *genre_utf16;    /* genre (utf16)         */
-  gunichar2 *comment_utf16;  /* comment (utf16)       */
-  gunichar2 *composer_utf16; /* Composer (utf16)      */
-  gunichar2 *fdesc_utf16;    /* ? (utf16)             */
+  gunichar2 *album_utf16;    /* album (utf16)          */
+  gunichar2 *artist_utf16;   /* artist (utf16)         */
+  gunichar2 *title_utf16;    /* title (utf16)          */
+  gunichar2 *genre_utf16;    /* genre (utf16)          */
+  gunichar2 *comment_utf16;  /* comment (utf16)        */
+  gunichar2 *composer_utf16; /* Composer (utf16)       */
+  gunichar2 *fdesc_utf16;    /* ? (utf16)              */
   gunichar2 *ipod_path_utf16;/* name of file on iPod: uses ":" instead of "/"*/
   gchar   *pc_path_utf8;     /* PC filename in utf8 encoding   */
   gchar   *pc_path_locale;   /* PC filename in locale encoding */
-  guint32 ipod_id;           /* unique ID of track    */
-  gint32  size;              /* size of file in bytes */
+  guint32 ipod_id;           /* unique ID of track     */
+  gint32  size;              /* size of file in bytes  */
   gint32  oldsize;           /* used when updating tracks: size on iPod */
-  gint32  tracklen;          /* Length of track in ms */
-  gint32  cd_nr;             /* CD number             */
-  gint32  cds;               /* number of CDs         */
-  gint32  track_nr;          /* track number          */
-  gint32  tracks;            /* number of tracks      */
-  gint32  bitrate;           /* bitrate               */
-  gint32  year;              /* year                  */
+  gint32  tracklen;          /* Length of track in ms  */
+  gint32  cd_nr;             /* CD number              */
+  gint32  cds;               /* number of CDs          */
+  gint32  track_nr;          /* track number           */
+  gint32  tracks;            /* number of tracks       */
+  gint32  bitrate;           /* bitrate                */
+  guint16 samplerate;        /* samplerate (CD: 44100) */
+  gint32  year;              /* year                   */
   gchar   *year_str;         /* year as string -- always identical to year */
-  gint32  volume;            /* volume adjustment between -100 and +100    */
+  gint32  volume;            /* volume adjustment */
+  gint32  soundcheck;        /* volume adjustment "soundcheck" */
   guint32 peak_signal;	     /* LAME Peak Signal * 0x800000 */
   gint    radio_gain;	     /* RadioGain in dB*10 (as defined by www.replaygain.org) */
   gint    audiophile_gain;   /* AudiophileGain in dB*10 
@@ -75,15 +77,28 @@ typedef struct
   gboolean peak_signal_set;  /* has the peak signal been set?       */
   gboolean radio_gain_set;   /* has the radio gain been set?        */
   gboolean audiophile_gain_set;/* has the audiophile gain been set? */
-  guint32 time_played;       /* time of last play  (Mac type)              */
-  guint32 time_modified;     /* time of last modification  (Mac type)      */
+  guint32 time_created;      /* time when added (Mac type)          */
+  guint32 time_played;       /* time of last play (Mac type)        */
+  guint32 time_modified;     /* time of last modification (Mac type)*/
   guint32 rating;            /* star rating (stars * RATING_STEP (20))     */
+  guint32 app_rating;        /* star rating set by appl. (not iPod) */
   guint32 playcount;         /* number of times track was played           */
   guint32 recent_playcount;  /* times track was played since last sync     */
   gchar   *hostname;         /* name of host this file has been imported on*/
   gboolean transferred;      /* has file been transferred to iPod?         */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)                 */
-  gchar   *charset;          /* charset used for ID3 tags                  */
+  gchar   *charset;          /* charset used for ID3 tags
+   */
+/* present in the mhit but not used by gtkpod yet */
+  guint16 type;
+  guint16 compilation;
+  guint32 unk020, unk024, unk084, unk100, unk108, unk112, unk116, unk124;
+  guint32 unk128, unk132, unk136, unk140, unk144, unk148, unk152;
+  guint32 starttime;
+  guint32 stoptime;
+  guint32 checked;
+    guint32 BPM;
+
 } Track;
 
 /* one star is how much (track->rating) */
@@ -111,6 +126,7 @@ typedef enum {
     T_BITRATE,
     T_PLAYCOUNT,
     T_RATING,
+    T_TIME_CREATED,
     T_TIME_PLAYED,
     T_TIME_MODIFIED,
     T_VOLUME,

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 13:33:46 JST jcs>
+/* Time-stamp: <2004-07-19 01:07:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -71,27 +71,35 @@ static GtkTargetEntry tm_drop_types [] = {
 };
 
 
+/* Note: the toggle buttons for tag_autoset and display_col in the
+ * prefs_window are named after the the TM_COLUM_* numbers defined in
+ * display.h (Title: tag_autoset0, Artist: tag_autoset1 etc.). Since
+ * the labels to the buttons are set in prefs_window.c when creating
+ * the window, you only need to name the buttons in the intended order
+ * using glade-2. There is no need to label them. */
 /* Strings associated to the column headers */
 const gchar *tm_col_strings[] = {
-    N_("Title"),
+    N_("Title"),             /*  0 */
     N_("Artist"),
     N_("Album"),
     N_("Genre"),
     N_("Composer"),
-    N_("Track Nr (#)"),
+    N_("Track Nr (#)"),      /*  5 */
     N_("iPod ID"),
     N_("PC File"),
     N_("Transferred"),
     N_("File Size"),
-    N_("Play Time"),
+    N_("Play Time"),         /* 10 */
     N_("Bitrate"),
     N_("Playcount"),
     N_("Rating"),
     N_("Time played"),
-    N_("Time modified"),
+    N_("Time modified"),     /* 15 */
     N_("Volume"),
     N_("Year"),
     N_("CD Nr"),
+    N_("Time created"),
+    N_("iPod File"),         /* 20 */
     NULL };
 
 
@@ -447,6 +455,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
            changed = TRUE;
         }
         break;
+     case TM_COLUMN_TIME_CREATED:
      case TM_COLUMN_TIME_PLAYED:
      case TM_COLUMN_TIME_MODIFIED:
         break;
@@ -553,6 +562,9 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_PC_PATH:
       g_object_set (G_OBJECT (renderer), "text", track->pc_path_utf8, NULL);
       break;
+  case TM_COLUMN_IPOD_PATH:
+      g_object_set (G_OBJECT (renderer), "text", track->ipod_path, NULL);
+      break;
   case TM_COLUMN_TRANSFERRED:
       g_object_set (G_OBJECT (renderer), "active", track->transferred, NULL);
       break;
@@ -598,6 +610,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
+  case TM_COLUMN_TIME_CREATED:
       buf = time_field_to_string (track, column);
       g_object_set (G_OBJECT (renderer),
 		    "text", buf,
@@ -918,6 +931,8 @@ gint tm_data_compare_func (GtkTreeModel *model,
       return track1->ipod_id - track2->ipod_id;
   case TM_COLUMN_PC_PATH:
       return g_utf8_collate (track1->pc_path_utf8, track2->pc_path_utf8);
+  case TM_COLUMN_IPOD_PATH:
+      return g_utf8_collate (track1->ipod_path, track2->ipod_path);
   case TM_COLUMN_TRANSFERRED:
       if(track1->transferred == track2->transferred) return 0;
       if(track1->transferred == TRUE) return 1;
@@ -932,6 +947,7 @@ gint tm_data_compare_func (GtkTreeModel *model,
       return track1->playcount - track2->playcount;
   case  TM_COLUMN_RATING:
       return track1->rating - track2->rating;
+  case TM_COLUMN_TIME_CREATED:
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
       return COMP (time_get_time (track1, tm_item),
@@ -1111,6 +1127,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       editable = FALSE;
       break;
   case TM_COLUMN_PC_PATH:
+  case TM_COLUMN_IPOD_PATH:
       editable = FALSE;
       break;
   case TM_COLUMN_TRANSFERRED:
@@ -1137,6 +1154,10 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       break;
   case TM_COLUMN_TIME_MODIFIED:
       text = _("Modified");
+      editable = FALSE;
+      break;
+  case TM_COLUMN_TIME_CREATED:
+      text = _("Created");
       editable = FALSE;
       break;
   case TM_COLUMN_YEAR:

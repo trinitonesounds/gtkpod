@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 23:21:45 JST jcs>
+/* Time-stamp: <2004-07-18 22:33:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -76,10 +76,11 @@
      gint32  tracks;            /+ number of tracks      +/
      gint32  year;              /+ year                  +/
      gint32  bitrate;           /+ bitrate               +/
-     guint32 time_played;       /+ time of last play  (Mac type)         +/
-     guint32 time_modified;     /+ time of last modification  (Mac type) +/
-     guint32 rating;            /+ star rating (stars * 20)              +/
-     guint32 playcount;         /+ number of times track was played      +/
+     guint32 time_created;      /+ time when added (Mac type)       +/
+     guint32 time_played;       /+ time of last play (Mac type)     +/
+     guint32 time_modified;     /+ time of last modific. (Mac type) +/
+     guint32 rating;            /+ star rating (stars * 20)         +/
+     guint32 playcount;         /+ number of times track was played +/
      guint32 recent_playcount;  /+ times track was played since last sync+/
      gboolean transferred;      /+ has file been transferred to iPod?    +/
    } Track;
@@ -457,6 +458,7 @@ static glong get_mhit(FILE *file, glong seek)
   gint type;
   gint zip = 0;
   struct playcount *playcount;
+  guint32 temp;
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "get_mhit seek: %x\n", (int)seek);
@@ -465,22 +467,53 @@ static glong get_mhit(FILE *file, glong seek)
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
   if (cmp_n_bytes (data, "mhit", 4) == FALSE ) return -1; /* we are lost! */
 
-  track = g_malloc0 (sizeof (Track));
+  track = itunesdb_new_track ();
 
-  track->ipod_id = get4int(file, seek+16);     /* iPod ID          */
-  track->rating = get4int(file, seek+28) >> 24;/* rating           */
-  track->time_modified = get4int(file, seek+32);/* modification time    */
-  track->size = get4int(file, seek+36);        /* file size        */
-  track->tracklen = get4int(file, seek+40);    /* time             */
-  track->track_nr = get4int(file, seek+44);    /* track number     */
-  track->tracks = get4int(file, seek+48);      /* nr of tracks     */
-  track->year = get4int(file, seek+52);        /* year             */
-  track->bitrate = get4int(file, seek+56);     /* bitrate          */
-  track->volume = get4int(file, seek+64);      /* volume adjust    */
-  track->playcount = get4int(file, seek+80);   /* playcount        */
-  track->time_played = get4int(file, seek+88); /* last time played */
-  track->cd_nr = get4int(file, seek+92);       /* CD nr            */
-  track->cds = get4int(file, seek+96);         /* CD nr of..       */
+  track->ipod_id = get4int(file, seek+16);       /* iPod ID          */
+  track->unk020 = get4int (file, seek+20);
+  track->unk024 = get4int (file, seek+24);
+  track->rating = get4int (file, seek+28)>>24;   /* rating          */
+  temp = get4int (file, seek+32);
+  track->compilation = (temp & 0x00ff0000) >> 16;
+  track->type = temp & 0x0000ffff;
+  track->time_created = get4int(file, seek+32);  /* creation time    */
+  track->size = get4int(file, seek+36);          /* file size        */
+  track->tracklen = get4int(file, seek+40);      /* time             */
+  track->track_nr = get4int(file, seek+44);      /* track number     */
+  track->tracks = get4int(file, seek+48);        /* nr of tracks     */
+  track->year = get4int(file, seek+52);          /* year             */
+  track->bitrate = get4int(file, seek+56);       /* bitrate          */
+  track->samplerate = get4int(file,seek+60)>>16; /* sample rate      */
+  track->volume = get4int(file, seek+64);        /* volume adjust    */
+  track->starttime = get4int (file, seek+68);
+  track->stoptime = get4int (file, seek+72);
+  track->soundcheck = get4int (file, seek+76);   /* soundcheck       */
+  track->playcount = get4int (file, seek+80);    /* playcount        */
+  track->unk084 = get4int (file, seek+84);
+  track->time_played = get4int(file, seek+88);   /* last time played */
+  track->cd_nr = get4int(file, seek+92);         /* CD nr            */
+  track->cds = get4int(file, seek+96);           /* CD nr of..       */
+  track->unk100 = get4int (file, seek+100);
+  track->time_modified = get4int(file, seek+104);/* last mod. time   */
+  track->unk108 = get4int (file, seek+108);
+  track->unk112 = get4int (file, seek+112);
+  track->unk116 = get4int (file, seek+116);
+  temp = get4int (file, seek+120);
+  track->BPM = temp >> 16;
+  track->app_rating = (temp & 0xff00)>> 8;/* The rating set by * the
+					     application, as opposed to
+					     the rating set on the iPod
+					     itself */
+  track->checked = temp & 0xff;           /* Checked/Unchecked: 0/1 */
+  track->unk124 = get4int (file, seek+124);
+  track->unk128 = get4int (file, seek+128);
+  track->unk132 = get4int (file, seek+132);
+  track->unk136 = get4int (file, seek+136);
+  track->unk140 = get4int (file, seek+140);
+  track->unk144 = get4int (file, seek+144);
+  track->unk148 = get4int (file, seek+148);
+  track->unk152 = get4int (file, seek+152);
+
   track->transferred = TRUE;                   /* track is on iPod! */
 
 #if ITUNESDB_MHIT_DEBUG
@@ -1008,28 +1041,47 @@ static void mk_mhit (FILE *file, Track *track)
   put_4int_cur (file, 156);  /* header size */
   put_4int_cur (file, -1);   /* size of whole mhit -- fill in later */
   put_4int_cur (file, -1);   /* nr of mhods in this mhit -- later   */
-  put_4int_cur (file, track->ipod_id); /* track index number          */
-  put_4int_cur (file, 1);
-  put_4int_cur (file, 0);
-  put_4int_cur (file, 257 | track->rating<<24);  /* type, rating     */
-  put_4int_cur (file, track->time_modified); /* timestamp             */
-  put_4int_cur (file, track->size);    /* filesize                   */
-  put_4int_cur (file, track->tracklen); /* length of track in ms       */
+  put_4int_cur (file, track->ipod_id); /* track index number
+					* */
+  put_4int_cur (file, track->unk020);
+  put_4int_cur (file, track->unk024);
+  put_4int_cur (file, (track->rating << 24) |
+		(track->compilation << 16) |
+		(track->type & 0x0000ffff));/* rating, compil., type */
+
+  put_4int_cur (file, track->time_created); /* timestamp             */
+  put_4int_cur (file, track->size);    /* filesize                  */
+  put_4int_cur (file, track->tracklen); /* length of track in ms     */
   put_4int_cur (file, track->track_nr);/* track number               */
   put_4int_cur (file, track->tracks);  /* number of tracks           */
   put_4int_cur (file, track->year);    /* the year                   */
   put_4int_cur (file, track->bitrate); /* bitrate                    */
-  put_4int_cur (file, 0xac440000);    /* ?                          */
+  put_4int_cur (file, track->samplerate << 16);
   put_4int_cur (file, track->volume);  /* volume adjust              */
-  put_n0_cur (file, 3);               /* dummy space                */
+  put_4int_cur (file, track->starttime);
+  put_4int_cur (file, track->stoptime);
+  put_4int_cur (file, track->soundcheck);
   put_4int_cur (file, track->playcount);/* playcount                 */
-  put_4int_cur (file, 0);             /* dummy space                */
+  put_4int_cur (file, track->unk084);
   put_4int_cur (file, track->time_played); /* last time played       */
   put_4int_cur (file, track->cd_nr);   /* CD number                  */
   put_4int_cur (file, track->cds);     /* number of CDs              */
-  put_4int_cur (file, 0);             /* hardcoded space            */
-  put_4int_cur (file, itunesdb_time_get_mac_time ()); /* current timestamp */
-  put_n0_cur (file, 12);              /* dummy space                */
+  put_4int_cur (file, track->unk100);
+  put_4int_cur (file, track->time_modified); /* timestamp            */
+  put_4int_cur (file, track->unk108);
+  put_4int_cur (file, track->unk112);
+  put_4int_cur (file, track->unk116);
+  put_4int_cur (file, (track->BPM << 16) |
+		((track->app_rating & 0xff) << 8) |
+		(track->checked & 0xff));
+  put_4int_cur (file, track->unk124);
+  put_4int_cur (file, track->unk128);
+  put_4int_cur (file, track->unk132);
+  put_4int_cur (file, track->unk136);
+  put_4int_cur (file, track->unk140);
+  put_4int_cur (file, track->unk144);
+  put_4int_cur (file, track->unk148);
+  put_4int_cur (file, track->unk152);
 }
 
 
@@ -1398,6 +1450,15 @@ void itunesdb_convert_filename_fs2ipod (gchar *ipod_file)
 void itunesdb_convert_filename_ipod2fs (gchar *ipod_file)
 {
     g_strdelimit (ipod_file, ":", G_DIR_SEPARATOR);
+}
+
+/* create a new track structure with the "unknowns" filled in correctly
+ * */ 
+Track *itunesdb_new_track (void)
+{
+    Track *track = g_malloc0 (sizeof (Track));
+    track->unk020 = 1;
+    return track;
 }
 
 /* Copy one track to the ipod. The PC-Filename is

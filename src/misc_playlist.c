@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-05-16 14:52:35 JST jcs>
+/* Time-stamp: <2004-07-18 21:10:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -32,6 +32,7 @@
 
 #include <string.h>
 #include "charset.h"
+#include "itunesdb.h"
 #include "md5.h"
 #include "misc.h"
 #include "prefs.h"
@@ -767,7 +768,7 @@ void check_db (void)
 		track = (Track*)(tlist->data);
 		g_string_append_printf
 		    (str,"%s(%d) %s-%s -> %s\n",_("Track"),
-		     track->ipod_id, track->artist,  track->title,  track->pc_path_locale);
+		     track->ipod_id, track->artist,  track->title,  track->pc_path_utf8);
 	    }
 	} /* end of glist_list_tracks */
 
@@ -781,7 +782,6 @@ void check_db (void)
     gchar *ipod_fulldir = NULL;
     gchar *buf = NULL;
 #   define localdebug  0      /* may be later becomes more general verbose param */
-
     Playlist* pl_orphaned = NULL;
     GList * l_dangling[2] = {NULL, NULL}; /* 2 kinds of dangling tracks: with approp
 					   * files and without */
@@ -816,8 +816,8 @@ void check_db (void)
     {
         gint ntok=0;
 	h=1;
-	if (!track->transferred) continue; /* we don't want to report not transfered files
-					    * as dandgling */
+        /* we don't want to report non-transfered files as dandgling */
+	if (!track->transferred) continue; 
 	tokens = g_strsplit(track->ipod_path,":",(track->ipod_path[0]==':'?4:3));
         ntok=ntokens(tokens);
 	if (ntok>=3)
@@ -863,9 +863,18 @@ void check_db (void)
 		}
 		else
 		{  /* Now deal with orphaned... */
-		    gchar * fn_orphaned;
-		    /* printf("Found orphaned file %s\n", pathtrack); */
-		    if (!norphaned)
+		    gchar *fn_orphaned;
+		    gchar *num_str = g_strdup_printf ("F%02d", h);
+		    Track *dupl_track;
+
+		    const gchar *dcomps[] =
+			{ "iPod_Control", "Music", num_str,
+			  ipod_filename, NULL };
+
+		    fn_orphaned = resolve_path (
+			prefs_get_ipod_mount(), dcomps);
+
+		    if (!pl_orphaned)
 		    {
 			gchar *str = g_strdup_printf ("[%s]", _("Orphaned"));
 			pl_orphaned = get_newplaylist_by_name(str);
@@ -874,12 +883,31 @@ void check_db (void)
 
 		    norphaned++;
 
-		    fn_orphaned = g_strdup_printf("%s%ciPod_Control%cMusic%cF%02d%c%s",
-		      prefs_get_ipod_mount(), G_DIR_SEPARATOR, G_DIR_SEPARATOR,
-                                              G_DIR_SEPARATOR,h, G_DIR_SEPARATOR,ipod_filename);
                     if (localdebug) fprintf(stdout,"to orphaned ");
-		    add_track_by_filename( fn_orphaned, pl_orphaned,
-					   FALSE, NULL, NULL);
+		    if ((dupl_track = md5_file_exists (fn_orphaned, TRUE)))
+		    {  /* This orphan has already been added again.
+			  It will be removed with the next sync */
+			Track *track = itunesdb_new_track ();
+			gchar *fn_utf8 = charset_to_utf8 (fn_orphaned);
+			track->ipod_path = g_strdup_printf (
+			    ":iPod_Control:Music:%s:%s",
+			    num_str, ipod_filename);
+			validate_entries (track);
+			mark_track_for_deletion (track);
+			gtkpod_warning (_(
+			 "The following orphaned file had already "
+			 "been added to the iPod again. It will be "
+			 "removed with the next sync:\n%s\n\n"),
+			 fn_utf8);
+			g_free (fn_utf8);
+		    }
+		    else
+		    {
+			add_track_by_filename(fn_orphaned, pl_orphaned,
+					      FALSE, NULL, NULL);
+		    }
+		    g_free (fn_orphaned);
+		    g_free (num_str);
 		}
                 if (localdebug) fprintf(stdout," done\n");
 
@@ -898,7 +926,6 @@ void check_db (void)
     buf=g_strdup_printf(_("Found %d orphaned and %d dangling files. Processing..."),
 			norphaned, ndangling);
 
-/*    printf("Found %d dangling files\n", g_tree_nnodes(files_known)); */
     gtkpod_statusbar_message(buf);
     gtkpod_tracks_statusbar_update();
 
@@ -921,13 +948,13 @@ void check_db (void)
 	{
 	    if (i)
 		buf = g_strdup_printf (
-		    ngettext ("The following dandling track has a file on PC.\nPress OK to have them transfered from the file on next Sync, CANCEL to leave it as is.",
-			      "The following %d dandling tracks have files on PC.\nPress OK to have them transfered from the files on next Sync, CANCEL to leave them as is.",
+		    ngettext ("The following dangling track has a file on PC.\nPress OK to have them transfered from the file on next Sync, CANCEL to leave it as is.",
+			      "The following %d dangling tracks have files on PC.\nPress OK to have them transfered from the files on next Sync, CANCEL to leave them as is.",
 			      ndang), ndang);
 	    else
 		buf = g_strdup_printf (
-		    ngettext ("The following dandling track doesn't have file on PC. \nPress OK to remove it, CANCEL to leave it as is.",
-			      "The following %d dandling tracks do not have files on PC. \nPress OK to remove them, CANCEL to leave them. as is",
+		    ngettext ("The following dangling track doesn't have file on PC. \nPress OK to remove it, CANCEL to leave it as is.",
+			      "The following %d dangling tracks do not have files on PC. \nPress OK to remove them, CANCEL to leave them. as is",
 			      ndang), ndang);
 
 	    if (gtkpod_confirmation
@@ -961,6 +988,7 @@ void check_db (void)
     buf=g_strdup_printf(_("Found %d orphaned and %d dangling files. Done."),
 			norphaned, ndangling);
     gtkpod_statusbar_message(buf);
+    g_free (buf);
     prefs_set_statusbar_timeout (0);
     release_widgets();
 }

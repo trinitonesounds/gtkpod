@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 18:14:10 jcs>
+/* Time-stamp: <2004-07-18 23:25:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -94,15 +94,15 @@ struct _File_Tag
 
 */
 
-#include <string.h>
+#include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <errno.h>
 #include <string.h>
-#include <ctype.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "mp3file.h"
 #include "charset.h"
 #include "itunesdb.h"
@@ -148,10 +148,6 @@ typedef struct {
     gint frames;
     gint badframes;
 } mp3info;
-
-/* These are for mp3info code */
-static gint mp3file_header_bitrate(mp3header *h);
-static int mp3file_header_frequency(mp3header *h);
 
 /* This is for xmms code */
 static guint get_track_time(gchar *path);
@@ -202,6 +198,16 @@ gchar *mode_text[] = {
 gchar *emphasis_text[] = {
   "none", "50/15 microsecs", "reserved", "CCITT J 17"
 };
+
+
+static gint mp3file_header_bitrate(mp3header *h) {
+	return bitrate[h->version & 1][3-h->layer][h->bitrate-1];
+}
+
+
+static gint mp3file_header_frequency(mp3header *h) {
+	return frequencies[h->version][h->freq];
+}
 
 
 void get_mp3_info(mp3info *mp3)
@@ -353,15 +359,6 @@ gint frame_length(mp3header *header) {
 		    (frame_size_index[3-header->layer]*((header->version&1)+1)*
 		    mp3file_header_bitrate(header)/mp3file_header_frequency(header))+
 		    header->padding : 1;
-}
-
-static gint mp3file_header_bitrate(mp3header *h) {
-	return bitrate[h->version & 1][3-h->layer][h->bitrate-1];
-}
-
-
-static gint mp3file_header_frequency(mp3header *h) {
-	return frequencies[h->version][h->freq];
 }
 
 gint sameConstant(mp3header *h1, mp3header *h2) {
@@ -1876,15 +1873,9 @@ Track *mp3_get_file_info (gchar *name)
     File_Tag filetag;
     mp3info *mp3info;
 
-    track = g_malloc0 (sizeof (Track));
+    track = itunesdb_new_track ();
     if (prefs_get_readtags() && (id3_tag_read (name, &filetag) == TRUE))
     {
-	struct stat si;
-
-	/* Set modification date to modification date of file */
-	if (stat (name, &si) == 0)
-	    track->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
-
 	track->fdesc = g_strdup ("MPEG audio file");
 
 	if (filetag.album)
@@ -1955,6 +1946,7 @@ Track *mp3_get_file_info (gchar *name)
     {
 	track->tracklen = mp3info->milliseconds;
 	track->bitrate = (gint)(mp3info->vbr_average);
+ 	track->samplerate = mp3file_header_frequency (&mp3info->header);
 	g_free (mp3info);
     }
     /* Fall back to xmms code if tracklen is 0 */

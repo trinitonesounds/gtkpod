@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:27:18 JST jcs>
+/* Time-stamp: <2004-07-18 22:48:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,12 +30,13 @@
 #  include <config.h>
 #endif
 
-#include "mp4file.h"
-#include "track.h"
 #include "charset.h"
+#include "itunesdb.h"
 #include "misc.h"
+#include "mp4file.h"
 #include "prefs.h"
 #include "support.h"
+#include "track.h"
 
 /* ------------------------------------------------------------
 
@@ -63,6 +64,7 @@
    gint32  year;              /+ year                  +/
    gint32  tracklen;          /+ Length of track in ms +/
    gint32  bitrate;           /+ bitrate in kbps       +/
+   guint16 samplerate;        /+ e.g.: CD is 44100     +/
 
    If prefs_get_tag_readtags() returns FALSE you only should fill in
    tracklen, bitrate and fdesc
@@ -135,11 +137,13 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 						    trackDuration,
 						    MP4_MSECS_TIME_SCALE);
 	    guint32 avgBitRate = MP4GetTrackBitRate(mp4File, trackId);
+	    guint32 samplerate = MP4GetTrackTimeScale(mp4File, trackId);
 
-	    track = g_malloc0 (sizeof (Track));
+	    track = itunesdb_new_track ();
 
 	    track->tracklen = msDuration;
 	    track->bitrate = avgBitRate/1000;
+	    track->samplerate = samplerate;
 	    value = strrchr (mp4FileName, '.');
 	    if (value)
 	    {

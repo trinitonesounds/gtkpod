@@ -48,7 +48,7 @@
 		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2654">
+			<widget class="GtkImage" id="image2673">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-top</property>
 			  <property name="icon_size">1</property>
@@ -69,7 +69,7 @@
 		      <signal name="activate" handler="on_add_files1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2655">
+			<widget class="GtkImage" id="image2674">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -90,7 +90,7 @@
 		      <signal name="activate" handler="on_add_directory1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2656">
+			<widget class="GtkImage" id="image2675">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -111,7 +111,7 @@
 		      <signal name="activate" handler="on_add_playlist1_activate" last_modification_time="Fri, 21 Feb 2003 14:49:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2657">
+			<widget class="GtkImage" id="image2676">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -132,7 +132,7 @@
 		      <signal name="activate" handler="on_export_itunes1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2658">
+			<widget class="GtkImage" id="image2677">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-bottom</property>
 			  <property name="icon_size">1</property>
@@ -146,7 +146,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="separator3">
+		    <widget class="GtkSeparatorMenuItem" id="separator3">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -158,7 +158,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2659">
+			<widget class="GtkImage" id="image2678">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -210,7 +210,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2660">
+			<widget class="GtkImage" id="image2679">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -256,7 +256,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="separator6">
+		    <widget class="GtkSeparatorMenuItem" id="separator6">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -268,7 +268,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2661">
+			<widget class="GtkImage" id="image2680">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -314,7 +314,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="separator7">
+		    <widget class="GtkSeparatorMenuItem" id="separator7">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -330,7 +330,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="trennlinie1">
+		    <widget class="GtkSeparatorMenuItem" id="trennlinie1">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -343,7 +343,7 @@
 		      <signal name="activate" handler="on_ipod_directories_menu" last_modification_time="Sat, 18 Jan 2003 02:10:39 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2662">
+			<widget class="GtkImage" id="image2681">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-execute</property>
 			  <property name="icon_size">1</property>
@@ -360,7 +360,7 @@
 		    <widget class="GtkMenuItem" id="check_ipod_files_mi">
 		      <property name="visible">True</property>
 		      <property name="tooltip" translatable="yes">Find orphan files (files with no track info in DB) and dangling tracks (tracks with no corresponding files on iPOD)</property>
-		      <property name="label" translatable="yes">_Check iPOD Files</property>
+		      <property name="label" translatable="yes">_Check iPod's Files</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="on_check_ipod_files_activate" last_modification_time="Sat, 24 Jan 2004 09:02:49 GMT"/>
 		      <accelerator key="c" modifiers="GDK_CONTROL_MASK | GDK_MOD1_MASK" signal="activate"/>
@@ -368,7 +368,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="trennlinie3">
+		    <widget class="GtkSeparatorMenuItem" id="trennlinie3">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -402,7 +402,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2663">
+			<widget class="GtkImage" id="image2682">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-copy</property>
 			  <property name="icon_size">1</property>
@@ -565,7 +565,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="separator1">
+		    <widget class="GtkSeparatorMenuItem" id="separator1">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -578,7 +578,7 @@
 		      <signal name="activate" handler="on_sorting_activate" last_modification_time="Mon, 22 Sep 2003 08:00:42 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2664">
+			<widget class="GtkImage" id="image2683">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-sort-ascending</property>
 			  <property name="icon_size">1</property>
@@ -599,7 +599,7 @@
 		      <signal name="activate" handler="on_save_track_order1_activate" last_modification_time="Sat, 08 Mar 2003 13:45:01 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2665">
+			<widget class="GtkImage" id="image2684">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-justify-fill</property>
 			  <property name="icon_size">1</property>
@@ -613,7 +613,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="separator4">
+		    <widget class="GtkSeparatorMenuItem" id="separator4">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -625,7 +625,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2666">
+			<widget class="GtkImage" id="image2685">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -677,7 +677,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2667">
+			<widget class="GtkImage" id="image2686">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -723,7 +723,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="separator2">
+		    <widget class="GtkSeparatorMenuItem" id="separator2">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -737,7 +737,7 @@
 		      <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2668">
+			<widget class="GtkImage" id="image2687">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -802,7 +802,7 @@
 		      <signal name="activate" handler="on_more_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2669">
+			<widget class="GtkImage" id="image2688">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -823,7 +823,7 @@
 		      <signal name="activate" handler="on_less_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2670">
+			<widget class="GtkImage" id="image2689">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-remove</property>
 			  <property name="icon_size">1</property>
@@ -865,7 +865,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2671">
+			<widget class="GtkImage" id="image2690">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -917,7 +917,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2672">
+			<widget class="GtkImage" id="image2691">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -963,7 +963,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="trennlinie4">
+		    <widget class="GtkSeparatorMenuItem" id="trennlinie4">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -1036,7 +1036,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkMenuItem" id="trennlinie5">
+		    <widget class="GtkSeparatorMenuItem" id="trennlinie5">
 		      <property name="visible">True</property>
 		    </widget>
 		  </child>
@@ -1080,7 +1080,7 @@
 		      <signal name="activate" handler="on_about1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2673">
+			<widget class="GtkImage" id="image2692">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-info</property>
 			  <property name="icon_size">1</property>
@@ -2970,7 +2970,27 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible14">
+					<widget class="GtkCheckButton" id="col_visible16">
+					  <property name="visible">True</property>
+					  <property name="tooltip" translatable="yes">Relative volume adjustment between -100 and +100</property>
+					  <property name="can_focus">True</property>
+					  <property name="label" translatable="yes"></property>
+					  <property name="use_underline">True</property>
+					  <property name="relief">GTK_RELIEF_NORMAL</property>
+					  <property name="focus_on_click">True</property>
+					  <property name="active">False</property>
+					  <property name="inconsistent">False</property>
+					  <property name="draw_indicator">True</property>
+					</widget>
+					<packing>
+					  <property name="padding">0</property>
+					  <property name="expand">False</property>
+					  <property name="fill">False</property>
+					</packing>
+				      </child>
+
+				      <child>
+					<widget class="GtkCheckButton" id="col_visible19">
 					  <property name="visible">True</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
@@ -2989,9 +3009,8 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible16">
+					<widget class="GtkCheckButton" id="col_visible12">
 					  <property name="visible">True</property>
-					  <property name="tooltip" translatable="yes">Relative volume adjustment between -100 and +100</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
 					  <property name="use_underline">True</property>
@@ -3041,7 +3060,7 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible5">
+					<widget class="GtkCheckButton" id="col_visible6">
 					  <property name="visible">True</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
@@ -3079,6 +3098,25 @@
 				      </child>
 
 				      <child>
+					<widget class="GtkCheckButton" id="col_visible17">
+					  <property name="visible">True</property>
+					  <property name="can_focus">True</property>
+					  <property name="label" translatable="yes"></property>
+					  <property name="use_underline">True</property>
+					  <property name="relief">GTK_RELIEF_NORMAL</property>
+					  <property name="focus_on_click">True</property>
+					  <property name="active">False</property>
+					  <property name="inconsistent">False</property>
+					  <property name="draw_indicator">True</property>
+					</widget>
+					<packing>
+					  <property name="padding">0</property>
+					  <property name="expand">False</property>
+					  <property name="fill">False</property>
+					</packing>
+				      </child>
+
+				      <child>
 					<widget class="GtkCheckButton" id="col_visible15">
 					  <property name="visible">True</property>
 					  <property name="can_focus">True</property>
@@ -3098,9 +3136,8 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible17">
+					<widget class="GtkCheckButton" id="col_visible13">
 					  <property name="visible">True</property>
-					  <property name="tooltip" translatable="yes">Relative volume adjustment between -100 and +100</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
 					  <property name="use_underline">True</property>
@@ -3150,7 +3187,7 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible6">
+					<widget class="GtkCheckButton" id="col_visible7">
 					  <property name="visible">True</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
@@ -3188,7 +3225,7 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible12">
+					<widget class="GtkCheckButton" id="col_visible18">
 					  <property name="visible">True</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
@@ -3207,9 +3244,8 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible18">
+					<widget class="GtkCheckButton" id="col_visible14">
 					  <property name="visible">True</property>
-					  <property name="tooltip" translatable="yes">Relative volume adjustment between -100 and +100</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
 					  <property name="use_underline">True</property>
@@ -3224,6 +3260,10 @@
 					  <property name="expand">False</property>
 					  <property name="fill">False</property>
 					</packing>
+				      </child>
+
+				      <child>
+					<placeholder/>
 				      </child>
 				    </widget>
 				    <packing>
@@ -3259,7 +3299,7 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible7">
+					<widget class="GtkCheckButton" id="col_visible20">
 					  <property name="visible">True</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
@@ -3297,7 +3337,7 @@
 				      </child>
 
 				      <child>
-					<widget class="GtkCheckButton" id="col_visible13">
+					<widget class="GtkCheckButton" id="col_visible5">
 					  <property name="visible">True</property>
 					  <property name="can_focus">True</property>
 					  <property name="label" translatable="yes"></property>
@@ -3313,6 +3353,10 @@
 					  <property name="expand">False</property>
 					  <property name="fill">False</property>
 					</packing>
+				      </child>
+
+				      <child>
+					<placeholder/>
 				      </child>
 
 				      <child>
@@ -5328,7 +5372,7 @@
 	  <child>
 	    <widget class="GtkTable" id="table6">
 	      <property name="visible">True</property>
-	      <property name="n_rows">4</property>
+	      <property name="n_rows">5</property>
 	      <property name="n_columns">2</property>
 	      <property name="homogeneous">False</property>
 	      <property name="row_spacing">0</property>
@@ -5788,6 +5832,100 @@
 		  <property name="top_attach">3</property>
 		  <property name="bottom_attach">4</property>
 		  <property name="x_padding">2</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkHBox" id="hbox57">
+		  <property name="visible">True</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">0</property>
+
+		  <child>
+		    <widget class="GtkEntry" id="sp_created_entry">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">'DD/MM/YYYY HH:MM &lt; d &lt; DD/MM/YYYY HH:MM' or similar. Press 'enter' when finished.</property>
+		      <property name="can_focus">True</property>
+		      <property name="editable">True</property>
+		      <property name="visibility">True</property>
+		      <property name="max_length">0</property>
+		      <property name="text" translatable="yes"></property>
+		      <property name="has_frame">True</property>
+		      <property name="invisible_char" translatable="yes">*</property>
+		      <property name="activates_default">False</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="label159">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes"></property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkButton" id="sp_created_cal_button">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">Calendar</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">2</property>
+		  <property name="top_attach">4</property>
+		  <property name="bottom_attach">5</property>
+		  <property name="x_options">fill</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkCheckButton" id="sp_created_button">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="label" translatable="yes">Created</property>
+		  <property name="use_underline">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="focus_on_click">True</property>
+		  <property name="active">False</property>
+		  <property name="inconsistent">False</property>
+		  <property name="draw_indicator">True</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">0</property>
+		  <property name="right_attach">1</property>
+		  <property name="top_attach">4</property>
+		  <property name="bottom_attach">5</property>
 		  <property name="x_options">fill</property>
 		  <property name="y_options"></property>
 		</packing>

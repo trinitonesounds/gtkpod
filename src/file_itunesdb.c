@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 18:14:10 jcs>
+/* Time-stamp: <2004-07-18 20:55:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -295,7 +295,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		    else
 		    { /* this is a deleted track that hasn't yet been
 		         removed from the iPod's hard drive */
-			Track *track = g_malloc0 (sizeof (Track));
+			Track *track = itunesdb_new_track ();
 			track->ipod_path = g_strdup (sei->ipod_path);
 			pending_deletion = g_list_append (pending_deletion,
 							  track);
@@ -529,8 +529,8 @@ void mark_track_for_deletion (Track *track)
     pending_deletion = g_list_append(pending_deletion, track);
 }
 
-/* It might be necessary to unmark for deletion like in case of dangling tracks
-   with no real files on ipod */
+/* It might be necessary to unmark for deletion like in case of
+   dangling tracks with no real files on ipod */
 void unmark_track_for_deletion (Track *track)
 {
     if (track != NULL)
