@@ -81,7 +81,8 @@ enum  {
   SM_COLUMN_TRACK,
   SM_COLUMN_IPOD_ID,
   SM_COLUMN_PC_PATH,
-  /*  SM_COLUMN_TRANSFERRED,*/
+  SM_COLUMN_TRANSFERRED,
+  SM_COLUMN_NONE,
   SM_NUM_COLUMNS
 };
 
@@ -109,6 +110,7 @@ void st_sort (guint32 inst, GtkSortType order);
 void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				 GtkTreeIter *i, gpointer data);
 
+void sm_rows_reordered_callback(void);
 void sm_show_preferred_columns(void);
 void cleanup_listviews(void);
 

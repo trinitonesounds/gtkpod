@@ -614,6 +614,7 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 			guint insert_index = -1;
 			GList *new_list = NULL, *members = NULL, *l = NULL;
 
+			sm_rows_reordered_callback();
 			members = g_list_copy(current_pl->members);
 			/* build a list of songs to append */
 			while(parse_ipod_id_from_string(&str,&id))
