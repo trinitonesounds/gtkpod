@@ -54,6 +54,10 @@ main (int argc, char *argv[])
   textdomain (GETTEXT_PACKAGE);
 #endif
 
+#ifdef G_THREADS_ENABLED
+  g_thread_init (NULL);
+#endif
+
   gtk_init (&argc, &argv);
 
   add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");

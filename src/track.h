@@ -104,6 +104,7 @@ void handle_export (void);
 gboolean files_are_saved (void);
 void data_changed (void);
 gchar* get_song_name_on_disk(Song *s);
+gchar* get_song_name_on_ipod(Song *s);
 gchar* get_preferred_song_name_format(Song *s);
 void remove_song_from_ipod (Song *song);
 void hash_songs(void);

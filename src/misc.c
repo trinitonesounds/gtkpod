@@ -355,17 +355,13 @@ gtkpod_statusbar_init(GtkWidget *sb)
 static gint
 gtkpod_statusbar_clear(gpointer data)
 {
-    gint result = 0;
-
     if(gtkpod_statusbar)
     {
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), 1);
-	result = 1;
     }
     statusbar_timeout_id = 0; /* indicate that timeout handler is
 				 clear (0 cannot be a handler id) */
-    return(result);
-    
+    return FALSE;
 }
 
 void

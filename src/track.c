@@ -69,6 +69,11 @@ static gboolean files_saved = TRUE;
 
 static guint32 free_ipod_id (guint32 id);
 
+/* Thread specific */
+static  GMutex *mutex = NULL;
+static GCond  *cond = NULL;
+static gboolean mutex_data = FALSE;
+
 /* Used to keep the "extended information" until the iTunesDB is 
    loaded */
 static GHashTable *extendedinfohash = NULL;
@@ -209,7 +214,7 @@ gboolean add_song (Song *song)
     if(!song->ipod_id) 
 	song->ipod_id = free_ipod_id (0);  /* keep track of highest ID used */
     else
-	song->ipod_id = free_ipod_id(song->ipod_id);
+	free_ipod_id(song->ipod_id);
     
     songs = g_list_append (songs, song);
     result = TRUE;
@@ -458,6 +463,41 @@ Song *get_song_by_id (guint32 id)
 }
 
 
+#ifdef G_THREADS_ENABLED
+/* Threaded remove file */
+static gpointer th_remove (gpointer filename)
+{
+    int result;
+
+    result = remove ((gchar *)filename);
+    g_mutex_lock (mutex);
+    mutex_data = TRUE; /* signal that thread will end */
+    g_cond_signal (cond);
+    g_mutex_unlock (mutex);
+    return (gpointer)result;
+}
+/* Threaded copy of ipod song */
+static gpointer th_copy (gpointer song)
+{
+    gboolean result;
+
+    result = copy_song_to_ipod (cfg->ipod_mount,
+				(Song *)song,
+				((Song *)song)->pc_path_locale);
+    g_mutex_lock (mutex);
+    mutex_data = TRUE;   /* signal that thread will end */
+    g_cond_signal (cond);
+    g_mutex_unlock (mutex);
+    return (gpointer)result;
+}
+#endif G_THREADS_ENABLED
+
+/* This function is called when the user presses the abort button
+ * during flush_songs() */
+static void flush_songs_abort (gboolean *abort)
+{
+    *abort = TRUE;
+}
 
 /* Flushes all non-transferred songs to the iPod filesystem
    Returns TRUE on success, FALSE if some error occured */
@@ -469,28 +509,75 @@ gboolean flush_songs (void)
   GList *gl_song;
   gchar *filename = NULL;
   gboolean result = TRUE;
-  
+  gboolean abort = FALSE;
+  GtkWidget *dialog;
+
+#ifdef G_THREADS_ENABLED
+  GThread *thread = NULL;
+  GTimeVal time;
+  if (!mutex) mutex = g_mutex_new ();
+  if (!cond) cond = g_cond_new ();
+#endif
+
+  /* Set up dialogue to abort */
+  dialog = gtk_message_dialog_new (
+      GTK_WINDOW (gtkpod_window),
+      GTK_DIALOG_DESTROY_WITH_PARENT,
+      GTK_MESSAGE_INFO,
+      GTK_BUTTONS_CANCEL,
+      _("Press button to abort.\nExport can be continued at a later time."));
+  /* Indicate that user wants to abort */
+  g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
+			    G_CALLBACK (flush_songs_abort),
+			    &abort);
+  gtk_widget_show (dialog);
+  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+
   /* lets clean up those pending deletions */
-  for(gl_song = pending_deletion; gl_song; gl_song = gl_song->next)
+  while (!abort && pending_deletion)
   {
-      song = (Song*)gl_song->data;
-      if((filename = get_song_name_on_disk(song)))
+      song = (Song*)pending_deletion->data;
+      if((filename = get_song_name_on_ipod(song)))
       {
 	  if(g_strstr_len(filename, strlen(cfg->ipod_mount), cfg->ipod_mount))
 	  {
+#ifdef G_THREADS_ENABLED
+	      mutex_data = FALSE;
+	      thread = g_thread_create (th_remove, filename, FALSE, NULL);
+	      if (thread)
+	      {
+		  g_mutex_lock (mutex);
+		  do
+		  {
+		      while (widgets_blocked && gtk_events_pending ())
+			  gtk_main_iteration ();
+		      /* wait a maximum of 10 ms */
+		      g_get_current_time (&time);
+		      g_time_val_add (&time, 20000);
+		      g_cond_timed_wait (cond, mutex, &time);
+		  } while(!mutex_data);
+		  g_mutex_unlock (mutex);
+		  result &= (gboolean)g_thread_join (thread);
+	      }
+	      else {
+		  printf ("Thread creation failed, falling back to default.\n");
+		  remove (filename);
+	      }
+#else
 	      remove(filename);
 /*	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", song->artist,
 						    song->title, song->ipod_id,
 						    filename);*/
+#endif G_THREADS_ENABLED
 	  }
 	  g_free(filename);
       }
       free_song(song);
-      gl_song->data = NULL;
+      pending_deletion = g_list_delete_link (pending_deletion, pending_deletion);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
-  g_list_free(pending_deletion);
-  pending_deletion = NULL;  
+
+  /* we now have as much space as we're gonna have, copy files to ipod */
 
   /* count number of songs to be transferred */
   n = 0;
@@ -502,17 +589,41 @@ gboolean flush_songs (void)
     gl_song = g_list_next (gl_song);
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
-  /* we now have as much space as we're gonna have, copy files to ipod */
+
   count = 0; /* songs transferred */
   gl_song = g_list_first (songs);
-  while (gl_song != NULL) {
+  while (!abort && gl_song) {
     song = (Song *)gl_song->data;
     if (!song->transferred)
     {
+#ifdef G_THREADS_ENABLED
+	mutex_data = FALSE;
+	thread = g_thread_create (th_copy, song, TRUE, NULL);
+	if (thread)
+	{
+	    g_mutex_lock (mutex);
+	    do
+	    {
+		while (widgets_blocked && gtk_events_pending ())
+		    gtk_main_iteration ();
+		/* wait a maximum of 10 ms */
+		g_get_current_time (&time);
+		g_time_val_add (&time, 20000);
+		g_cond_timed_wait (cond, mutex, &time);
+	    } while(!mutex_data);
+	    g_mutex_unlock (mutex);
+	    result &= (gboolean)g_thread_join (thread);
+	}
+	else {
+	    printf ("Thread creation failed, falling back to default.\n");
+	    result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
+	}
+#else
 	result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
+#endif G_THREADS_ENABLED
 	++count;
 	if (count == 1)  /* we need longer timeout */
-	    prefs_set_statusbar_timeout (1000000);
+	    prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
 	if (count == n)  /* we need to reset timeout */
 	    prefs_set_statusbar_timeout (0);
 	buf = g_strdup_printf (ngettext ("Copied %d of %d new song.",
@@ -521,10 +632,12 @@ gboolean flush_songs (void)
 	gtkpod_statusbar_message(buf);
 	g_free (buf);
     }
-    gl_song = g_list_next (gl_song);
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-  }
-
+    gl_song = g_list_next (gl_song);
+  } /* while (gl_song) */
+  prefs_set_statusbar_timeout (0);
+  gtk_widget_destroy (dialog);
+  if (abort)      result = FALSE;   /* negative result if user aborted */
   return result;
 }
 
@@ -874,7 +987,8 @@ gboolean write_tags_to_file (Song *song, gint tag_id)
    That's how it keeps track of the largest ID used. */
 static guint32 free_ipod_id (guint32 id)
 {
-  static gint32 max_id = 52; /* the lowest valid ID is 53 */
+  static gint32 max_id = 1; /* the lowest valid ID is 2 (Musicmatch,
+			      * itunes: 53 ) */
 
   if (id > max_id)     max_id = id;
   if (id == 0)   ++max_id;
@@ -895,6 +1009,24 @@ gchar* get_song_name_on_disk(Song *s)
 
     if(s)
     {
+	result = get_song_name_on_ipod (s);
+	if(!result &&
+	   (s->pc_path_locale) && (strlen(s->pc_path_locale) > 0))
+	{
+	    result = g_strdup (s->pc_path_locale);
+	} 
+    }
+    return(result);
+}
+
+/* same as get_song_name_on_disk(), but only return a valid path to a
+   song on the ipod */
+gchar *get_song_name_on_ipod (Song *s)
+{
+    gchar *result = NULL;
+
+    if(s)
+    {
 	if(!prefs_get_offline () &&
 	   s->ipod_path &&
 	   (strlen(s->ipod_path) > 0))
@@ -907,13 +1039,10 @@ gchar* get_song_name_on_disk(Song *s)
 	    result = concat_dir(cfg->ipod_mount, buf);
 	    g_free (buf);
 	}
-	else if((s->pc_path_locale) && (strlen(s->pc_path_locale) > 0))
-	{
-	    result = g_strdup (s->pc_path_locale);
-	} 
     }
     return(result);
 }
+
 
 /**
  * get_preferred_song_name_format - useful for generating the preferred
@@ -1019,7 +1148,7 @@ void handle_export (void)
 {
   gchar *ipt, *ipe, *cft=NULL, *cfe=NULL, *cfgdir;
   gboolean success = TRUE;
-
+  gchar *buf;
 
   block_widgets (); /* block user input */
   cfgdir = prefs_get_cfgdir ();
@@ -1035,22 +1164,24 @@ void handle_export (void)
     {
       /* write songs to iPod */
       if (!(success=flush_songs ()))
-	  gtkpod_warning (_("Could not write songs to iPod. Export aborted!\n"));
+	  gtkpod_statusbar_message (_("Some songs were not written to iPod. Export aborted!"));
       /* else: write iTunesDB to iPod */
       else if (!(success=itunesdb_write (cfg->ipod_mount)))
-	  gtkpod_warning (_("Error writing iTunesDB to iPod. Export aborted!\n"));
+	  gtkpod_statusbar_message (_("Error writing iTunesDB to iPod. Export aborted!"));
       /* else: write extended info (PC filenames, md5 hash) to iPod */
       else if (prefs_get_write_extended_info ())
 	{
 	  if(!(success = write_extended_info (ipe, ipt)))
-	    gtkpod_warning (_("Extended information not written\n"));
+	    gtkpod_statusbar_message (_("Extended information not written"));
 	}
       /* else: delete extended information file, if it exists */
       else if (g_file_test (ipe, G_FILE_TEST_EXISTS))
 	{
 	  if (remove (ipe) != 0)
-	    {
-	      gtkpod_warning (_("Could not delete extended information file: \"%s\"\n"), ipe);
+	  {
+	      buf = g_strdup_printf (_("Extended information file not deleted: '%s\'"), ipe);
+	      gtkpod_statusbar_message (buf);
+	      g_free (buf);
 	    }
 	}
       /* if everything was successful, copy files to ~/.gtkpod */
@@ -1063,7 +1194,7 @@ void handle_export (void)
 		success = cp (ipe, cfe);
 	    }
 	  if ((cfgdir == NULL) || (!success))
-	    gtkpod_warning (_("Backups could not be created!\n"));
+	    gtkpod_statusbar_message (_("Backups could not be created!"));
 	}
       if (success && !prefs_get_keep_backups() && cfgdir)
 	cleanup_backup_and_extended_files ();
@@ -1079,7 +1210,7 @@ void handle_export (void)
 	}
       if ((cfgdir == NULL) || (!success))
 	{
-	  gtkpod_warning (_("Export not successful!\n"));
+	  gtkpod_statusbar_message (_("Export not successful!"));
 	  success = FALSE;
 	}
     }
