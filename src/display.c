@@ -2559,10 +2559,52 @@ static void  sm_list_store_move_after (GtkListStore *store,
 {
     sm_list_store_move (store, iter, position, FALSE);
 }
+
+static void pm_list_store_move (GtkListStore *store,
+				 GtkTreeIter  *iter,
+				 GtkTreeIter  *position,
+				 gboolean     before)
+{
+    GtkTreeIter new_iter;
+    Playlist *playlist = NULL;
+    GtkTreeModel *model;
+
+    /* insert new row before or after @position */
+    if (before)  gtk_list_store_insert_before (store, &new_iter, position);
+    else         gtk_list_store_insert_after (store, &new_iter, position);
+
+    model = gtk_tree_view_get_model (playlist_treeview);
+
+    /* get the content (playlist) of the row to move */
+    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
+    /* remove the old row */
+    gtk_list_store_remove (GTK_LIST_STORE (model), iter);
+    /* set the content of the new row */
+    gtk_list_store_set (GTK_LIST_STORE (model), &new_iter,
+			PM_COLUMN_PLAYLIST, playlist, -1);
+}
+
+
+static void  pm_list_store_move_before (GtkListStore *store,
+					 GtkTreeIter  *iter,
+					 GtkTreeIter  *position)
+{
+    pm_list_store_move (store, iter, position, TRUE);
+}
+
+
+static void  pm_list_store_move_after (GtkListStore *store,
+					GtkTreeIter  *iter,
+					GtkTreeIter  *position)
+{
+    pm_list_store_move (store, iter, position, FALSE);
+}
 #else
 /* starting V2.2 convenient gtk functions exist */
 #define sm_list_store_move_before gtk_list_store_move_before
 #define sm_list_store_move_after gtk_list_store_move_after
+#define pm_list_store_move_before gtk_list_store_move_before
+#define pm_list_store_move_after gtk_list_store_move_after
 #endif
 
 
@@ -2601,7 +2643,7 @@ static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	++pathp;
     }
     g_strfreev (paths);
-    /* Move the iters in iterlist before or after */
+    /* Move the iters in iterlist before or after @to_iter */
     switch (pos)
     {
     case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
@@ -2611,8 +2653,12 @@ static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	{
 	    link = g_list_last (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
-	    sm_list_store_move_after (GTK_LIST_STORE (model),
-				       from_iter, &to_iter);
+	    if (treeview == song_treeview)
+		sm_list_store_move_after (GTK_LIST_STORE (model),
+					  from_iter, &to_iter);
+	    if (treeview == playlist_treeview)
+		pm_list_store_move_after (GTK_LIST_STORE (model),
+					  from_iter, &to_iter);
 	    iterlist = g_list_remove_link (iterlist, link);
 	    g_free (from_iter);
 	}
@@ -2622,8 +2668,12 @@ static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	{
 	    link = g_list_first (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
-	    sm_list_store_move_before (GTK_LIST_STORE (model),
-					from_iter, &to_iter);
+	    if (treeview == song_treeview)
+		sm_list_store_move_before (GTK_LIST_STORE (model),
+					   from_iter, &to_iter);
+	    if (treeview == playlist_treeview)
+		pm_list_store_move_before (GTK_LIST_STORE (model),
+					   from_iter, &to_iter);
 	    iterlist = g_list_remove_link (iterlist, link);
 	    g_free (from_iter);
 	}
