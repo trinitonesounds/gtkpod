@@ -39,14 +39,9 @@
 
 static GtkWidget *main_window = NULL;
 static GtkWidget *about_window = NULL;
-
-
-/* Callback after one directory has been added */
-void add_dir_selected (gchar *dir)
-{
-  add_directory_recursively (dir);
-  prefs_set_last_dir_dir_browse_for_filename(dir);
-}
+static GtkWidget *file_selector = NULL;
+static gchar *lc_ctype_def = NULL;
+  
 
 static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 {
@@ -58,40 +53,56 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
     {
       add_song_by_filename (names[i]);
       if(!i)
-	  prefs_set_last_dir_file_browse_for_filename(names[i]);
+	  prefs_set_last_dir_browse(names[i]);
     }
   g_strfreev (names);
 }
 
-void create_add_files_fileselector (gchar *startdir)
+/* called when the file selector is closed */
+static void add_files_close (GtkWidget *w1, GtkWidget *w2)
 {
-  GtkWidget *file_selector;
-    
+    if (file_selector)    gtk_widget_destroy(file_selector),
+    file_selector = NULL;
+    locale_reset (); /* reset locale to what it was before the file
+		      * operations started */
+}
+
+
+void create_add_files_fileselector (void)
+{
+    if (file_selector) return; /* file selector already open -- abort */
     /* Create the selector */
-   file_selector = gtk_file_selection_new (_("Select files or directories to add."));
-   gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (file_selector),
-					   TRUE);
-   gtk_file_selection_set_filename(GTK_FILE_SELECTION (file_selector),
-				   startdir);
+    locale_set (prefs_get_lc_ctype ()); /* Set locale for file operations */
+    file_selector = gtk_file_selection_new (_("Select files or directories to add."));
+    gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (file_selector),
+					    TRUE);
+    gtk_file_selection_set_filename(GTK_FILE_SELECTION (file_selector),
+				    cfg->last_dir.browse);
 
-   g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
-                     "clicked",
-                     G_CALLBACK (add_files_ok_button),
-                     file_selector);
-   			   
-   /* Ensure that the dialog box is destroyed when the user clicks a button. */
-   g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
-                             "clicked",
-                             G_CALLBACK (gtk_widget_destroy), 
-                             (gpointer) file_selector); 
+    g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
+		      "clicked",
+		      G_CALLBACK (add_files_ok_button),
+		      file_selector);
 
-   g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->cancel_button),
-                             "clicked",
-                             G_CALLBACK (gtk_widget_destroy),
-                             (gpointer) file_selector); 
-   
-   /* Display that dialog */
-   gtk_widget_show (file_selector);
+    /* Ensure that file_selector is set to NULL when window is deleted */
+    g_signal_connect_swapped (GTK_OBJECT (file_selector),
+			      "delete_event",
+			      G_CALLBACK (add_files_close), 
+			      (gpointer) file_selector); 
+
+    /* Ensure that the dialog box is deleted when the user clicks a button. */
+    g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
+			      "clicked",
+			      G_CALLBACK (add_files_close), 
+			      (gpointer) file_selector); 
+
+    g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->cancel_button),
+			      "clicked",
+			      G_CALLBACK (add_files_close),
+			      (gpointer) file_selector); 
+
+    /* Display that dialog */
+    gtk_widget_show (file_selector);
 }
 
 
@@ -254,23 +265,22 @@ register_gtkpod_main_window(GtkWidget *win)
 }
 
 
+
+
 /* Sets up the locales to choose from in the "combo". It presets the
    locale stored in cfg->locale (or "System locale" if none is set
    there */
-void init_locale_combo (GtkCombo *combo)
+void locale_init_combo (GtkCombo *combo)
 {
     gchar *current_lc_ctype;
-
+    
     static GList *lc_ctypes = NULL; /* list with choices -- takes a while to
-				   * initialize, so we only do it once */
-
-    if ((cfg->lc_ctype == NULL) || (strlen (cfg->lc_ctype) == 0))
+				     * initialize, so we only do it once */
+    
+    current_lc_ctype = prefs_get_lc_ctype ();
+    if ((current_lc_ctype == NULL) || (strlen (current_lc_ctype) == 0))
     {
 	current_lc_ctype = _("System Locale");
-    }
-    else
-    {
-	current_lc_ctype = prefs_get_lc_ctype ();
     }
     if (lc_ctypes == NULL)
     { /* set up list with locales */
@@ -286,4 +296,86 @@ void init_locale_combo (GtkCombo *combo)
     gtk_combo_set_popdown_strings (GTK_COMBO (combo), lc_ctypes); 
     /* set standard entry */
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), current_lc_ctype);
+}
+
+
+/* checks if the current locale is "valid" */
+gboolean locale_check_string(gchar *lc_ctype)
+{
+    gchar *lcd = NULL;
+    gboolean result = TRUE;
+
+    if (!lc_ctype || !strlen (lc_ctype)) return FALSE;
+    /* don't store the standard "System Locale" */
+    if (g_utf8_collate (g_utf8_casefold (lc_ctype, -1), 
+			g_utf8_casefold (_("System Locale"), -1)) != 0)
+    {
+	/* get the current setting */
+	lcd = setlocale (LC_CTYPE, NULL);
+	if (lcd) lcd = g_strdup (lcd);  /* must copy -- will be
+					 * overwritten by subsequent
+					 * setlocale() calls) */
+	/* check if it's a legal locale */
+	if (setlocale (LC_CTYPE, lc_ctype) == NULL)
+	{
+	    gtkpod_warning (_("Locale not supported: %s\n"), lc_ctype);
+	    result = FALSE;
+	}
+	/* reset the locale */
+	if (lcd)
+	{
+	    setlocale (LC_CTYPE, lcd);
+	}
+	else
+	{
+	    setlocale (LC_CTYPE, "");
+	}
+    }
+    else
+    { /* we never set "System Locale" -- instead a NULL pointer should
+         be stored. So we simply claim it's an invalid string, but do
+         not print an error message */ 
+	result = FALSE;
+    }
+    C_FREE (lcd);
+    return result;
+}
+
+
+/* temporarily sets LC_CTYPE to "lc_ctype" */
+void locale_set (gchar *lc_ctype)
+{
+  const char *charset;
+    /* if we have no default value set, retrieve the current setting */
+    if ((lc_ctype == NULL) || (strlen (lc_ctype) == 0))  return;
+    if (lc_ctype_def == NULL)
+    {
+	lc_ctype_def = setlocale (LC_CTYPE, NULL);
+        /* must copy -- will be overwritten by subsequent setlocale()
+	 * calls) */
+	if (lc_ctype_def)  lc_ctype_def = g_strdup (lc_ctype_def);
+    }
+    if (setlocale (LC_CTYPE, lc_ctype) == NULL)
+    {
+	gtkpod_warning (_("Locale not supported: %s\n"), lc_ctype);
+	locale_reset ();
+    }
+
+    g_get_charset (&charset);
+/*    printf("Current charset:%s\n", charset);*/
+}
+
+
+/* resets LC_CTYPE to it's original value */
+void locale_reset (void)
+{
+    if (lc_ctype_def)
+    {
+	setlocale (LC_CTYPE, lc_ctype_def);
+	C_FREE (lc_ctype_def);
+    }
+    else
+    {	
+	setlocale (LC_CTYPE, "");
+    }
 }

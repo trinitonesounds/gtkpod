@@ -63,7 +63,7 @@ prefs_window_create(void)
 	}
 	if((w = lookup_widget(prefs_window, "locale_combo")))
 	{
-	    init_locale_combo (GTK_COMBO (w));
+	    locale_init_combo (GTK_COMBO (w));
 	}
 	if((w = lookup_widget(prefs_window, "cfg_md5songs")))
 	{
@@ -314,27 +314,5 @@ prefs_window_set_auto_import(gboolean val)
 
 void prefs_window_set_lc_ctype (gchar *lc_ctype)
 {
-    if (tmpcfg->lc_ctype)
-    { /* don't change anything, if there's nothing to change */
-	if (strcmp (tmpcfg->lc_ctype, lc_ctype) == 0) return;
-	g_free (tmpcfg->lc_ctype);
-	tmpcfg->lc_ctype = NULL;
-    }
-    /* don't store the standard "system locale" */
-    if (g_utf8_collate (g_utf8_casefold (lc_ctype, -1), 
-			g_utf8_casefold (_("System Locale"), -1)) != 0)
-    {
-	/* check if it's a legal locale */
-	if (setlocale (LC_CTYPE, lc_ctype))
-	{
-	    tmpcfg->lc_ctype = g_strdup (lc_ctype);
-	}
-	else
-	{
-	    gtkpod_warning (_("Locale not supported: %s\n"), lc_ctype);
-	}
-	/* reset the locale */
-	if (tmpcfg->lc_ctype_startup)
-	    setlocale (LC_CTYPE, tmpcfg->lc_ctype_startup);
-    }
+    prefs_cfg_set_lc_ctype (tmpcfg, lc_ctype);
 }

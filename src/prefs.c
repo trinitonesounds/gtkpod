@@ -40,6 +40,7 @@
 
 struct cfg *cfg = NULL;
 
+#define ISSPACE(a) (((a)==9) || ((a)==' '))    /* TAB, SPACE */
 
 static void usage (FILE *file)
 {
@@ -69,15 +70,13 @@ cfg_new(void)
     memset(mycfg, 0, sizeof(struct cfg));
     if(getcwd(buf, PATH_MAX))
     {
-	mycfg->last_dir.dir_browse = g_strdup_printf ("%s/", buf);
-	mycfg->last_dir.file_browse = g_strdup_printf ("%s/", buf);
-	mycfg->last_dir.file_export = g_strdup_printf ("%s/", buf);
+	mycfg->last_dir.browse = g_strdup_printf ("%s/", buf);
+	mycfg->last_dir.export = g_strdup_printf ("%s/", buf);
     }
     else
     {
-	mycfg->last_dir.dir_browse = g_strdup ("~/");
-	mycfg->last_dir.file_browse = g_strdup ("~/");
-	mycfg->last_dir.file_export = g_strdup ("~/");
+	mycfg->last_dir.browse = g_strdup ("~/");
+	mycfg->last_dir.export = g_strdup ("~/");
     }
     if((str = getenv("IPOD_MOUNTPOINT")))
     {
@@ -89,7 +88,6 @@ cfg_new(void)
 	mycfg->ipod_mount = g_strdup ("/mnt");
     }
     mycfg->lc_ctype = NULL;
-    mycfg->lc_ctype_startup = g_strdup (setlocale (LC_CTYPE, NULL));
     mycfg->deletion.song = TRUE;
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
@@ -121,13 +119,13 @@ read_prefs_from_file_desc(FILE *fp)
 	    }
 	  /* skip whitespace */
 	  bufp = buf;
-	  while (isblank (*bufp)) ++bufp;
+	  while (ISSPACE(*bufp)) ++bufp;
 	  line = g_strndup (buf, arg-bufp);
 	  ++arg;
 	  len = strlen (arg); /* remove newline */
 	  if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
 	  /* skip whitespace */
-	  while (isblank (*arg)) ++arg;
+	  while (ISSPACE(*arg)) ++arg;
 	  if(g_ascii_strcasecmp (line, "mp") == 0)
 	    {
 	      gchar mount_point[PATH_MAX];
@@ -192,15 +190,11 @@ read_prefs_from_file_desc(FILE *fp)
 	    }
 	  else if(g_ascii_strcasecmp (line, "dir_browse") == 0)
 	    {
-	      prefs_set_last_dir_dir_browse_for_filename(strdup(arg));
+	      prefs_set_last_dir_browse(strdup(arg));
 	    }
-	  else if(g_ascii_strcasecmp (line, "file_browse") == 0)
+	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
 	    {
-	      prefs_set_last_dir_file_browse_for_filename(strdup(arg));
-	    }
-	  else if(g_ascii_strcasecmp (line, "file_export") == 0)
-	    {
-	      prefs_set_last_dir_file_export_for_filename(strdup(arg));
+	      prefs_set_last_dir_export(strdup(arg));
 	    }
 	  else
 	    {
@@ -305,18 +299,18 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 static void
 write_prefs_to_file_desc(FILE *fp)
 {
+    gchar *lcd;
+
     if(!fp)
 	fp = stderr;
     
     fprintf(fp, "mp=%s\n", cfg->ipod_mount);
     /* only write the locale if it's 1) set 2) non-zero length 3) not
-     * "System Locale" 4) not the same as on startup */
+     * identical to the system locale */
+    lcd = setlocale (LC_CTYPE, NULL); /* get current system locale */
     if (cfg->lc_ctype &&
 	strlen (cfg->lc_ctype) &&
-	(g_utf8_collate (g_utf8_casefold (cfg->lc_ctype, -1), 
-			 g_utf8_casefold (_("System Locale"), -1)) != 0) &&
-	(!cfg->lc_ctype_startup || 
-	 strcmp (cfg->lc_ctype, cfg->lc_ctype_startup) != 0))
+	(!lcd || strcmp (cfg->lc_ctype, lcd) != 0))
     {
 	fprintf(fp, "lc_ctype=%s\n", cfg->lc_ctype);
     } else {
@@ -335,9 +329,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
-    fprintf(fp, "dir_browse=%s\n",cfg->last_dir.dir_browse);
-    fprintf(fp, "file_browse=%s\n",cfg->last_dir.file_browse);
-    fprintf(fp, "file_export=%s\n",cfg->last_dir.file_export);
+    fprintf(fp, "dir_browse=%s\n",cfg->last_dir.browse);
+    fprintf(fp, "dir_export=%s\n",cfg->last_dir.export);
 }
 
 void 
@@ -385,10 +378,8 @@ void cfg_free(struct cfg *c)
     { /* C_FREE defined in misc.h */
       C_FREE (c->ipod_mount);
       C_FREE (c->lc_ctype);
-      C_FREE (c->lc_ctype_startup);
-      C_FREE (c->last_dir.dir_browse);
-      C_FREE (c->last_dir.file_browse);
-      C_FREE (c->last_dir.file_export);
+      C_FREE (c->last_dir.browse);
+      C_FREE (c->last_dir.export);
       C_FREE (c);
     }
 }
@@ -414,22 +405,22 @@ void prefs_set_write_extended_info(gboolean active)
 {
   cfg->write_extended_info = active;
 }
-void prefs_set_last_dir_file_browse_for_filename(gchar *file)
+void prefs_set_last_dir_browse(gchar *file)
 {
-    if(cfg->last_dir.file_browse) g_free(cfg->last_dir.file_browse);
-    cfg->last_dir.file_browse = get_dirname_of_filename(file);
+    if (file)
+    {
+	if(cfg->last_dir.browse) g_free(cfg->last_dir.browse);
+	cfg->last_dir.browse = get_dirname_of_filename(file);
+    }
 }
 
-void prefs_set_last_dir_dir_browse_for_filename(gchar *file)
+void prefs_set_last_dir_export(gchar *file)
 {
-    if(cfg->last_dir.dir_browse) g_free(cfg->last_dir.dir_browse);
-    cfg->last_dir.dir_browse = get_dirname_of_filename(file);
-}
-
-void prefs_set_last_dir_file_export_for_filename(gchar *file)
-{
-    if(cfg->last_dir.file_export) g_free(cfg->last_dir.file_export);
-    cfg->last_dir.file_export = get_dirname_of_filename(file);
+    if (file)
+    {
+	if(cfg->last_dir.export) g_free(cfg->last_dir.export);
+	cfg->last_dir.export = get_dirname_of_filename(file);
+    }
 }
 
 void prefs_set_mount_point(const gchar *mp)
@@ -630,9 +621,24 @@ prefs_get_song_ipod_file_deletion(void)
 
 void prefs_set_lc_ctype (gchar *lc_ctype)
 {
-    C_FREE (cfg->lc_ctype);
-    cfg->lc_ctype = g_strdup (lc_ctype);
+    prefs_cfg_set_lc_ctype (cfg, lc_ctype);
 }
+
+
+void prefs_cfg_set_lc_ctype (struct cfg *cfgd, gchar *lc_ctype)
+{
+    if (cfgd->lc_ctype)
+    { /* don't change anything, if there's nothing to change */
+	if (lc_ctype && strcmp (cfgd->lc_ctype, lc_ctype) == 0) return;
+	g_free (cfgd->lc_ctype);
+	cfgd->lc_ctype = NULL;
+    } /* set the new string, if it's non-NULL and a supported locale */
+    if (lc_ctype && locale_check_string (lc_ctype))
+	cfgd->lc_ctype = g_strdup (lc_ctype);
+}
+
+
+
 
 gchar * prefs_get_lc_ctype (void)
 {
@@ -651,7 +657,6 @@ clone_prefs(void)
 	result->writeid3 = cfg->writeid3;
 	result->autoimport = cfg->autoimport;
 	result->ipod_mount = g_strdup(cfg->ipod_mount);
-	result->lc_ctype_startup = g_strdup (cfg->lc_ctype_startup);
 	result->lc_ctype = g_strdup(cfg->lc_ctype);
 	result->offline = cfg->offline;
 	result->keep_backups = cfg->keep_backups;
@@ -666,12 +671,12 @@ clone_prefs(void)
 	result->deletion.playlist = cfg->deletion.playlist;
 	result->deletion.ipod_file = cfg->deletion.ipod_file;
 	
-	if(cfg->last_dir.dir_browse)
-	    result->last_dir.dir_browse = g_strdup(cfg->last_dir.dir_browse);
-	if(cfg->last_dir.file_browse)
-	    result->last_dir.file_browse = g_strdup(cfg->last_dir.file_browse);
-	if(cfg->last_dir.file_export)
-	    result->last_dir.file_export = g_strdup(cfg->last_dir.file_export);
+	if(cfg->last_dir.browse)
+	    result->last_dir.browse = g_strdup(cfg->last_dir.browse);
+	if(cfg->last_dir.browse)
+	    result->last_dir.browse = g_strdup(cfg->last_dir.browse);
+	if(cfg->last_dir.export)
+	    result->last_dir.export = g_strdup(cfg->last_dir.export);
     }
     return(result);
 }

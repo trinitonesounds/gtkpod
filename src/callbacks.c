@@ -50,7 +50,7 @@ void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  create_add_files_fileselector (cfg->last_dir.file_browse);
+    create_add_files_fileselector ();
 }
 
 
@@ -58,13 +58,7 @@ void
 on_add_directory1_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  GtkWidget *browser;
-
-  browser = xmms_create_dir_browser (_("Select directory to add recursively"),
-				     cfg->last_dir.file_browse,
-				     GTK_SELECTION_SINGLE,
-				     add_dir_selected);
-  gtk_widget_show (browser);
+  create_dir_browser ();
 }
 
 
@@ -136,7 +130,7 @@ void
 on_add_files1_button                   (GtkButton       *button,
                                         gpointer         user_data)
 {
-  create_add_files_fileselector (cfg->last_dir.file_browse);
+  create_add_files_fileselector ();
 }
 
 
@@ -144,14 +138,9 @@ void
 on_add_directory1_button               (GtkButton       *button,
                                         gpointer         user_data)
 {
-  GtkWidget *browser;
-
-  browser = xmms_create_dir_browser (_("Select directory to add recursively"),
-				     cfg->last_dir.dir_browse,
-				     GTK_SELECTION_SINGLE,
-				     add_dir_selected);
-  gtk_widget_show (browser);
+  create_dir_browser ();
 }
+
 void
 on_export_itunes1_button               (GtkButton       *button,
                                         gpointer         user_data)

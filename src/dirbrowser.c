@@ -1,6 +1,7 @@
 /*
 |  Changed by Jorg Schuler <jcsjcs at sourceforge.net> to compile
 |  "standalone" with the gtkpod project. 2002/11/24
+|  Added functions for "locale" settability and UTF8 support (2003/01/11)
 */
 
 /*  XMMS - Cross-platform multimedia player
@@ -28,6 +29,9 @@
 #endif
 
 #include "support.h"
+#include "prefs.h"
+#include "song.h"
+#include "misc.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -120,12 +124,54 @@ static char *ofolder[] =
 
 static GdkPixmap *folder_pixmap = NULL, *ofolder_pixmap;
 static GdkBitmap *folder_mask, *ofolder_mask;
+static GtkWidget *browser = NULL;
+
+static GtkWidget *xmms_create_dir_browser(gchar * title, gchar * current_path, GtkSelectionMode mode, void (*handler) (gchar *));
 
 struct dirnode
 {
 	unsigned int scanned : 1;
 	char *path;
 };
+
+
+/* ------------------------------------------------------------ *
+ * functions added for gtkpod                                   *
+ * ------------------------------------------------------------ */
+
+/* Callback after one directory has been added */
+static void add_dir_selected (gchar *dir)
+{
+  add_directory_recursively (dir);
+  prefs_set_last_dir_browse(dir);
+}
+
+void create_dir_browser (void)
+{
+    if(browser)  return;
+    locale_set (prefs_get_lc_ctype ()); /* Set locale for file operations */
+/*    printf("Current Locale: %s\n", setlocale (LC_CTYPE, NULL));*/
+    browser = xmms_create_dir_browser (
+	_("Select directory to add recursively"),
+	cfg->last_dir.browse,
+	GTK_SELECTION_SINGLE,
+	add_dir_selected);
+    gtk_widget_show (browser);
+}
+
+/* called when the file selector is closed */
+static void add_dir_close (GtkWidget *w1, GtkWidget *w2)
+{
+    if (browser)   gtk_widget_destroy(browser),
+    browser = NULL;
+    locale_reset (); /* reset locale to what it was before the file
+		      * operations started */
+}
+
+
+/* ------------------------------------------------------------ *
+ * end of added functions                                       *
+ * ------------------------------------------------------------ */
 
 static gboolean check_for_subdir(char *path)
 {
@@ -168,6 +214,7 @@ static void add_dir(GtkCTree *tree, GtkCTreeNode *pnode, char* parent, char *dir
 {
 	struct stat statbuf;
 	char *path;
+	gchar *dir_utf8;
 
 	/* Don't show hidden dirs, nor . and .. */
 	if (dir[0] == '.')
@@ -182,10 +229,12 @@ static void add_dir(GtkCTree *tree, GtkCTreeNode *pnode, char* parent, char *dir
 		struct dirnode *dirnode = g_malloc0(sizeof (struct dirnode));
 		dirnode->path = g_strconcat(path, "/", NULL);
  		has_subdir = check_for_subdir(dirnode->path);
-		node = gtk_ctree_insert_node(tree, pnode, NULL, &dir,
+		dir_utf8 = g_locale_to_utf8 (dir, -1, NULL, NULL, NULL);
+		node = gtk_ctree_insert_node(tree, pnode, NULL, &dir_utf8,
 					     NODE_SPACING, folder_pixmap,
 					     folder_mask, ofolder_pixmap,
 					     ofolder_mask, !has_subdir, FALSE);
+		g_free (dir_utf8);
 		gtk_ctree_node_set_row_data_full(tree, node, dirnode,
 						 destroy_cb);
 		if (has_subdir)
@@ -271,11 +320,10 @@ static void ok_clicked(GtkWidget *widget, GtkWidget *tree)
 			handler(dirnode->path);
 		list_node = g_list_next(list_node);
 	}
-	gtk_widget_destroy(window);
-
+	add_dir_close (widget, tree);
 }
 
-GtkWidget *xmms_create_dir_browser(char *title, char *current_path, GtkSelectionMode mode, void (*handler) (char *))
+static GtkWidget *xmms_create_dir_browser(char *title, char *current_path, GtkSelectionMode mode, void (*handler) (char *))
 {
 	GtkWidget *window, *scroll_win, *tree, *vbox, *bbox, *ok, *cancel, *sep;
 	char *root_text = "/", *text = "";
@@ -359,7 +407,7 @@ GtkWidget *xmms_create_dir_browser(char *title, char *current_path, GtkSelection
 	GTK_WIDGET_SET_FLAGS(cancel, GTK_CAN_DEFAULT);
 	gtk_box_pack_start(GTK_BOX(bbox), cancel, TRUE, TRUE, 0);
 	gtk_signal_connect_object(GTK_OBJECT(cancel), "clicked",
-				  GTK_SIGNAL_FUNC(gtk_widget_destroy),
+				  GTK_SIGNAL_FUNC(add_dir_close),
 				  GTK_OBJECT(window));
 	gtk_widget_show(cancel);
 

@@ -160,7 +160,7 @@ gboolean add_song (Song *song)
 
   if((str = song_exists_on_ipod(song)))
   {
-    gtkpod_warning (_("Song (%s) already exists on iPod! (%s)\n"), song->pc_path_locale, str);
+    gtkpod_warning (_("Song (%s) already exists on iPod! (%s)\n"), song->pc_path_utf8, str);
     free_song(song);
   }
   else

@@ -235,7 +235,7 @@ file_export_init(gchar *dir, gchar *title,GList *songs)
     if(!title) 
 	title = g_strdup("gtkpod_export/");
     if(!dir) 
-	snprintf(buf, PATH_MAX, "%s%s", cfg->last_dir.file_export, title);
+	snprintf(buf, PATH_MAX, "%s%s", cfg->last_dir.export, title);
     else
 	snprintf(buf, PATH_MAX, "%s%s", dir, title);
     

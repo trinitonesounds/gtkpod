@@ -48,7 +48,6 @@ struct cfg
 {
   gchar    *ipod_mount;   /* mount point of iPod */
   gchar    *lc_ctype;      /* LC_CTYPE to use with file operations */
-  gchar  *lc_ctype_startup;/* LC_CTYPE set when program started */
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */	
   gboolean autoimport;	  /* whether or not to automatically import files */
@@ -60,7 +59,7 @@ struct cfg
   } song_list_show; /* what columns are displayed in the song list */	
   /* last directories used by the fileselections */
   struct {
-      gchar *dir_browse, *file_browse, *file_export;
+      gchar *browse, *export;
   } last_dir;	
   struct {
       gboolean song, playlist, ipod_file;
@@ -102,10 +101,10 @@ void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
 void prefs_set_md5songs_active(gboolean active);
 void prefs_set_writeid3_active(gboolean active);
-void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
-void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
-void prefs_set_last_dir_file_export_for_filename(gchar * dir);
+void prefs_set_last_dir_browse(gchar * dir);
+void prefs_set_last_dir_export(gchar * dir);
 void prefs_set_lc_ctype (gchar *lc_ctype);
+void prefs_cfg_set_lc_ctype (struct cfg *cfg, gchar *lc_ctype);
 
 gboolean prefs_get_offline(void);
 gboolean prefs_get_keep_backups(void);

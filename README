@@ -146,3 +146,16 @@ About filenames (excerpt from the GTK2 release notes):
 
   Best integration of GTK+-2.0 with the environment is achieved by 
   using a UTF-8 locale.
+
+
+About setting the locale
+------------------------
+
+Due to a caching problem with glib2's g_get_charset() function,
+changing the locale after g_get_charset() has already been called,
+will not affect the glib's conversion routines (they will use the
+cached charset instead).
+
+As a consequence, changing the locale in the prefs window after a file
+selection or directory selection dialog has been opened, has no
+effect. This problem has been resolved with version 2.1.5 of glib2.
