@@ -564,16 +564,20 @@ static gboolean st_recategorize_song (Song *song, guint32 inst)
      - remove the song from the sort tab
      - if song was in the entry currently selected, notify next instance
        ("removed")
-  "removed": song has been removed from sort tab. This is different from
-  st_remove_song, because we will not notify the song model: it might confuse
-  the user if the song, whose tabs he/she just edited, disappeared from the
-  display */
+  "removed": song has been removed from sort tab. This is different
+  from st_remove_song, because we will not notify the song model if a
+  song has been removed: it might confuse the user if the song, whose
+  tabs he/she just edited, disappeared from the display */
 static void st_song_changed (Song *song, gboolean removed, guint32 inst)
 {
   SortTab *st;
   TabEntry *master, *entry;
 
-  if (inst == SORT_TAB_NUM)   return;  /* we don't notify the song model */
+  if (inst == SORT_TAB_NUM)
+    {
+      sm_song_changed (song);
+      return;
+    }
   st = sorttab[inst];
   master = g_list_nth_data (st->entries, 0);
   if (master == NULL) return; /* should not happen */
