@@ -474,7 +474,7 @@ void
 on_export_files_to_disk_activate       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    file_export_init(NULL, NULL, get_currently_selected_songs());
+    file_export_init(get_currently_selected_songs());
 }
 
 

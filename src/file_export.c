@@ -22,28 +22,34 @@
 | 
 |  This product is not supported/written/published by Apple!
 */
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
 #include "file_export.h"
 #include "prefs.h"
+#include "support.h"
 #include <limits.h>
 #include <stdio.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
-
 /**
  * READ_WRITE_BLOCKSIZE - how many bytes we read per fread/fwrite call
  */
-#define READ_WRITE_BLOCKSIZE (PATH_MAX * 16)
+#define READ_WRITE_BLOCKSIZE 65536
 
 /**
  * Private Variables for this subsystem
- * @title - The title of the export directory
+ * @dest_dir - The export directory we're putting the files in
  * @songs - A GList of Song* references to export
+ * @fs - the file selection dialog
  */
 static struct {
-    gchar *title;
     GList *songs;
+    gchar *dest_dir;
+    GtkWidget *fs;
 } file_export;
 
 /** chop_filename - Remove non-unix friendly characters from the fielname
@@ -73,24 +79,16 @@ chop_filename(const gchar *filename)
 }
 
 /**
- * file_export_private_data_reinit - Initialize the file_export members
- * @title - full path to the output folder
- * @songs - the GList we need to save to iterate over the songs
- */
-static void
-file_export_private_data_reinit(gchar *title, GList *songs)
-{
-    file_export.title = g_strdup(title);
-    file_export.songs = songs;
-}
-/**
  * file_export_cleanup - Free all data structures used by this subsystem
+ * set all relevant pointers back to NULL
  */
 static void
 file_export_cleanup(void)
 {
-    if(file_export.title) g_free(file_export.title);
+    if(file_export.dest_dir) g_free(file_export.dest_dir);
     if(file_export.songs) g_list_free(file_export.songs);
+    if(file_export.fs) gtk_widget_destroy(file_export.fs);
+    memset(&file_export, 0, sizeof(file_export));
 }
 
 /**
@@ -194,8 +192,8 @@ static gboolean
 write_song(Song *s)
 {
     gchar *tmp = NULL;
-    gchar *dest_file = NULL;
     gchar buf[PATH_MAX];
+    gchar *dest_file = NULL;
     gchar *from_file = NULL;
     gboolean result = FALSE;
     
@@ -204,7 +202,7 @@ write_song(Song *s)
 	dest_file = chop_filename(tmp);
 	g_free(tmp);
 	from_file = get_song_name_on_disk(s);
-	snprintf(buf, PATH_MAX, "%s%s", file_export.title, dest_file); 
+	snprintf(buf, PATH_MAX, "%s/%s", file_export.dest_dir, dest_file); 
 	if(copy_file_from_file_to_dest(from_file, buf))
 	    result = TRUE;
 	g_free(from_file);
@@ -214,69 +212,96 @@ write_song(Song *s)
 }
 
 /**
- * export_file_init - Export files off of your ipod to an arbitrary
- * directory
- * @dir - the directory the export folder resides in, with final '/' 
- * @title - the folder name in dir, with final '/'
- * @songs - GList with data of type (Song*)
- * Returns - TRUE on successful write, FALSE otherwise
+ * file_export_do - if we get the "Ok" from the file selection we wanna
+ * write the files out to disk
  */
-gboolean
-file_export_init(gchar *dir, gchar *title,GList *songs)
+static void
+file_export_do(void)
 {
     Song *s = NULL;
     GList *l = NULL;
-    gboolean result = FALSE;
-    gchar buf[PATH_MAX];
-
-    file_export.title = NULL;
-    file_export.songs = NULL;
     
-    if(!title) 
-	title = g_strdup("gtkpod_export/");
-    if(!dir) 
-	snprintf(buf, PATH_MAX, "%s%s", cfg->last_dir.export, title);
-    else
-	snprintf(buf, PATH_MAX, "%s%s", dir, title);
-    
-    file_export_private_data_reinit(buf, songs);
-    if(!g_file_test(buf, G_FILE_TEST_IS_DIR))
-    {
-	if((mkdir(buf, 0755)) == 0)
-	{
-	    fprintf(stderr, "Created dir %s\n", buf);
-	}
-	else
-	{
-	    switch(errno)
-	    {
-		case EPERM:
-		    fprintf(stderr, "Bad perms for mkdir\n");
-		    break;
-		default:
-		    fprintf(stderr, "Creation error %d\n", errno);
-		    break;
-	    }
-	    return(FALSE);
-	}
-    }
-    if(songs)
+    if(file_export.songs)
     {
 	for(l = file_export.songs; l; l = l->next)
 	{
 	    s = (Song*)l->data;
-	    if(write_song(s))
-	    {
-		fprintf(stderr, "Wrote %s-%s\n", s->artist, s->title);	
-	    }
-	    else
-	    {
+	    if(!write_song(s))
 		fprintf(stderr, "Failed to write %s-%s\n", s->artist, s->title);	
-	    }
 	    l->data = NULL;
 	}
-	result = TRUE;
     }
     file_export_cleanup();
-    return(result);
+}
+
+/**
+ * export_files_cancel_button_clicked - when the user aborts the file
+ * exporting or the file selection receives a delete_event
+ * @w - the button clicked
+ * @data - a pointer to the fileselection
+ */
+static void
+export_files_cancel_button_clicked(GtkWidget *w, gpointer data)
+{
+    file_export_cleanup();
+}
+
+/**
+ * export_files_ok_button_clicked - when the user clicks the "Ok" button on
+ * the export file selection
+ * @w - the button clicked
+ * @data - a pointer to the fileselection
+ */
+static void
+export_files_ok_button_clicked(GtkWidget *w, gpointer data)
+{
+    if((w) && (data))
+    {
+	gchar **name = NULL;
+	if((name = gtk_file_selection_get_selections(GTK_FILE_SELECTION(data))))
+	{
+	    if(name[0])
+	    {
+		if(g_file_test(name[0], G_FILE_TEST_IS_DIR))
+		    file_export.dest_dir = g_strdup(name[0]);
+		else
+		    file_export.dest_dir = g_path_get_dirname(name[0]);
+
+		fprintf(stderr, "Selected %s\n", file_export.dest_dir);
+		g_strfreev(name);
+		file_export_do();
+	    }
+	}
+    }
+}
+
+/**
+ * export_file_init - Export files off of your ipod to an arbitrary
+ * directory, specified by the file selection dialog
+ * @songs - GList with data of type (Song*) we want to write 
+ */
+void
+file_export_init(GList *songs)
+{
+    GtkWidget *w = NULL;
+
+    if(!file_export.fs)
+    {
+	file_export.songs = songs;
+	w = gtk_file_selection_new(_("Select Export Destination Directory"));
+	gtk_file_selection_set_filename(GTK_FILE_SELECTION(w),
+					cfg->last_dir.export);
+	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(w)->ok_button),
+		"clicked", G_CALLBACK(export_files_ok_button_clicked), w);
+	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(w)->cancel_button),
+		"clicked", G_CALLBACK(export_files_cancel_button_clicked), w);
+	g_signal_connect(GTK_OBJECT(w), "delete_event",
+		G_CALLBACK(export_files_cancel_button_clicked), w);
+	gtk_widget_show(w);
+	file_export.fs = w;
+    }
+    else if(songs) 
+    {
+	    g_list_free(songs);
+    }
 }

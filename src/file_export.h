@@ -31,11 +31,8 @@
 /**
  * export_file_init - Export files off of your ipod to an arbitrary
  * directory
- * @dir - the directory the export folder resides in
- * @title - the folder name in dir
  * @songs - GList with data of type (Song*)
- * Returns - TRUE on successful write, FALSE otherwise
  */
-gboolean file_export_init(gchar *dir, gchar *title, GList *songs);
+void file_export_init(GList *songs);
 
 #endif
