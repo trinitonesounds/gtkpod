@@ -1296,6 +1296,7 @@ Track *file_get_mp3_info (gchar *name)
 {
     Track *track = NULL;
     File_Tag filetag;
+    mp3info *mp3info;
 
     track = g_malloc0 (sizeof (Track));
 
@@ -1370,7 +1371,7 @@ Track *file_get_mp3_info (gchar *name)
     }
 
     /* Get additional info (play time and bitrate */
-    mp3info *mp3info = mp3file_get_info (name);
+    mp3info = mp3file_get_info (name);
     if (mp3info)
     {
 	track->tracklen = mp3info->milliseconds;
