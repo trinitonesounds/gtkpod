@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-02 21:53:36 jcs>
+/* Time-stamp: <2004-11-19 00:02:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -226,7 +226,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     md5 = md5_hash_on_filename (itunes, FALSE);
     if (!md5)
     {
-	g_warning ("Programming error: Could not create hash value from itunesdb\n");
+	gtkpod_warning (_("Could not create hash value from itunesdb\n"));
 	fclose (fp);
 	return FALSE;
     }

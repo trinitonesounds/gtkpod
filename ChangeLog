@@ -3,14 +3,8 @@ gtkpod V0.83.CVS
 	treeview three times and moving sidewards with the mouse at
 	the same time, gtkpod crashed. Crashing was due to a bad
 	workaround of a bug in the GTK+-library. Removed workaround
-	and instead submitted a patch for GTK+. Until the patch has
-	been accepted, unsorting will not work. The bug report is
-	available at http://bugzilla.gnome.org/show_bug.cgi?id=152414
-	and the patch can also be downloaded at
-	gtkpod.sourceforge.net/gtkliststore_c.diff.
-	"#define BROKEN_GTK_TREE_SORT 0" in misc.h if you have applied
-	the patch or use "#define BROKEN_GTK_TREE_SORT 1" if you are
-	using a broken GTK+-library.
+	and instead submitted a bug report against GTK+. The bug has
+	been fixed in version 2.5.4 of the GTK+ library.
 
 	BUGFIX: When using "block display during updates" the display
 	was still updated during import. Fixed.

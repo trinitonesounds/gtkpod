@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-15 00:14:45 jcs>
+/* Time-stamp: <2004-11-15 23:14:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -52,17 +52,6 @@
      (gtk_major_version == (major) && gtk_minor_version > (minor)) || \
      (gtk_major_version == (major) && gtk_minor_version == (minor) && \
       gtk_micro_version >= (micro)))
-/* tree sort cannot be unsorted by choosing the default sort
- * column. Set to 1 if it's broken, 0 if it's not broken */
-#define BROKEN_GTK_TREE_SORT (!RUNTIME_GTK_CHECK_VERSION(2,5,4))
-
-/* This was defined in 2.5.4 -- as I want to detect whether
-   GTK_TREE_SORT is BROKEN at run-time (see above), I need to define
-   it here in case it's not defined */
-#ifndef GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID 
-#define GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID (-2)
-#endif
-
 
 /* compare a and b, return sign (a-b) -- it has to be this way rather
    than just calculate a-b, because a and b might be unsigned... */

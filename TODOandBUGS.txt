@@ -209,6 +209,11 @@ BUGLIST:
 - when deleting an entry in the last sort tab (of 2) sometimes gtkpod
   crashes
 
+
+> '** (gtkpod:3839): WARNING **: Programming error: Could not create hash
+> value from itunesdb' -> not an error -- reading of file failed!
+
+
 ----------
 When moving column in track view
 
