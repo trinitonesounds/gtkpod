@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 19:12:25 jcs>
+/* Time-stamp: <2003-10-26 00:49:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -204,7 +204,7 @@ on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
 static void
 tracks_moved_or_copied     (GdkDragContext  *context, gchar *trackids)
 {
-     printf ("ttracks_moved_or_copied ts/dc/action: %p/%d\n", context, context?context->action:0); 
+/*      printf ("ttracks_moved_or_copied ts/dc/action: %p/%d\n", context, context?context->action:0);  */
     if(trackids && context)
     {
 	gint n=0;

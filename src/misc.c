@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-05 00:25:11 jcs>
+/* Time-stamp: <2003-10-26 00:49:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -505,7 +505,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 					   trackaddfunc, data);
 		    added = TRUE;
 		}
-		if (g_file_test (file, G_FILE_TEST_IS_REGULAR))
+		if (g_file_test (decoded_file, G_FILE_TEST_IS_REGULAR))
 		{   /* regular file */
 		    gint decoded_len = strlen (decoded_file);
 		    if (decoded_len >= 4)

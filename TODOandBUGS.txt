@@ -1,5 +1,30 @@
 TODO:
 
+- stable column sorting:
+> BTW, the other thing that bothers me about gtkpod is that column sorting
+> isn't stable.  AFAIK, gtk doesn't have a stable column sorting option. 
+> Do you know of a good way to do this?  Basically I'd like to click
+> "Track number", "Artist", "Album" then get everything sorted by
+> album-artist-track. (request by David Helder)
+
+- sync should take into consideration new dirs:
+
+> Like many grip users, I store my mp3's in a directory hierarchy,
+> i.e.  mymp3s/<artist>/<album>/<track number>-<track name>.mp3, so
+> the synchronise function was only checking albums which were already
+> there last time it looked.  What would be great is if the
+> synchronize function would synchronize recursively from the
+> _original_ directory (rather like 'add dir'), rather than using the
+> individual leafs of the hierarchy.
+> Alternatively, 'add dir' could be improved to skip files already
+> mentioned in the extended database,.  Or, possibly, this could take
+> place with a check of a modification timestamp (this could really
+> speed things up!) (request by Jonathan C. Ross)
+
+- immediate copying of added tracks to the iPod (when reading tracks
+  over a slow network they will still be in the buffer memory and
+  won't have to read over the network twice if they are copied right
+  away) (request by Seth Arnold)
 
 - playlist creation for orphaned tracks (Sam?)
 

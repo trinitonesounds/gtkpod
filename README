@@ -33,7 +33,8 @@ Inc., registered in the U.S. and other countries.
 
 *--------------------------------------------------*
 |                                                  |
-|  Connecting iPod to a Linux box (kernel 2.4.20)  |
+|  Connecting iPod to a Linux box using IEEE 1394  |
+|  (kernel 2.4.20)                                 |
 |  (connecting to 2.4.21 seems to work slightly    |
 |   differently -- see below )                     |
 |                                                  |
@@ -127,7 +128,8 @@ Nov 28 21:58:39 hatarakibachi kernel:  sda: sda1 sda2
 
 *--------------------------------------------------*
 |                                                  |
-|  Connecting iPod to a Linux box (kernel 2.4.21)  |
+|  Connecting iPod to a Linux box (IEEE 1394)      |
+|  (kernel 2.4.21)                                 |
 |  (may also work with 2.4.20, but I didn't try)   |
 |                                                  |
 *--------------------------------------------------*
@@ -226,6 +228,35 @@ Jun 15 17:13:58 hatarakibachi kernel: scsi singledevice 0 0 1 0
 10) Disconnect the iPod from your computer (ignore the "Do not
     disconnect" message -- as long as you wait for the 'unmount' to
     command to finish properly, everything should be fine).
+
+
+
+*--------------------------------------------------*
+|                                                  |
+|  Connecting iPod to a Linux box (USB)            |
+|                                                  |
+*--------------------------------------------------*
+
+I don't have much information about this so far (I don't own a third
+generation iPod). Please help me to fill in the gaps.
+
+Stephen Drye sent me the following note:
+
+"I've figured out how to get a USB-connected iPod recognized...:
+
+The trick to it is that you have to 
+
+- plug the iPod in
+
+- it'll fail to be recognized by the SCSI subsystem
+
+- now, even though your ipod says not to, unplug the USB cord and
+  immediately plug it back in.
+
+- since the iPod's hdd was already spun up, the SCSI subsystem now
+  recognizes it and mounts it as /dev/sda
+
+- You can then mount /dev/sda2 to /mnt/ipod as normal."
 
 
 
