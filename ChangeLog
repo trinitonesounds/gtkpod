@@ -16,6 +16,9 @@ gtkpod V0.52-CVS
 	utf8 sort should work fine, case-sensitive may not work entirely
 	as expected with some charsets.
 
+	BUGFIX: display free size correctly even if more than 4294967295
+	(or maybe just half that many?) Bytes are free on the iPod.
+
 	BUGFIX: drag-and-drop: gtkpod should now correctly handle files
 	with "special" characters (like spaces...) that are escaped in the
 	DND URI. (Thanks to Walter Bell).

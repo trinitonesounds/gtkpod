@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-25 22:24:27 jcs>
+/* Time-stamp: <2003-06-26 23:08:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1742,7 +1742,7 @@ get_drive_stats_from_df(const gchar *mp)
     gchar *result = NULL;
     guint bytes_read = 0;
 
-    snprintf(buf, PATH_MAX, "df -k | grep %s", mp);
+    snprintf(buf, PATH_MAX, "df -k -P | grep %s", mp);
     if((fp = popen(buf, "r")))
     {
 	if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
@@ -1770,12 +1770,13 @@ get_drive_stats_from_df(const gchar *mp)
     return(result);
 }
 
+/* @size: size in kB (block of 1024 Bytes) */
 static gchar* 
 get_filesize_in_bytes(glong size)
 {
     guint i = 0;
     gchar *result = NULL;
-    double newsize = size;
+    double newsize = (double)size * 1024;
     gchar *sizes[] = { _("Bytes"), _("kB"), _("MB"), _("GB"), _("TB"), NULL };
 
     while((fabs(newsize) > 1000) && (i<4))
@@ -1804,8 +1805,8 @@ get_ipod_used_space(void)
     {
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
-	    if(tokens[2]) 
-		result = atol(tokens[2]) * 1024;
+	    if(tokens[0] && tokens[1] && tokens[2]) 
+		result = atol(tokens[2]);
 	    g_strfreev(tokens);
 	}
     }
@@ -1814,6 +1815,8 @@ get_ipod_used_space(void)
     return(result);
 }
 #endif
+
+/* get free space in kB (block of 1024 Bytes) */
 static glong
 get_ipod_free_space(void)
 {
@@ -1826,8 +1829,8 @@ get_ipod_free_space(void)
     {
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
-	    if(tokens[3]) 
-		result = atol(tokens[3]) * 1024;
+	    if(tokens[0] && tokens[1] && tokens[2] && tokens[3]) 
+		result = atol(tokens[3]);
 	    g_strfreev(tokens);
 	}
     }
@@ -1841,7 +1844,7 @@ gtkpod_space_statusbar_update(void)
 {
     if(gtkpod_space_statusbar)
     {
-	gchar *buf;
+	gchar *buf = NULL;
 	gchar *str = NULL;
 	glong left, pending;
 

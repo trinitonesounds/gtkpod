@@ -37,6 +37,7 @@ written by iTunes.
      - Export of Songs
      - Encoding of ID3 tags (charsets)
      - About filenames
+     - Restoring your iPod after file system error
   - Sick of loading the sbp2 modules by hand? (an example of how to
     use startup/shutdown scripts)
   - Known bugs
@@ -526,6 +527,27 @@ set when writing or updating/syncing. The default charset is "EUC-JP"
 -- it will be used when the charset cannot be autodetected, as well as
 when writing tags if a specific charset could not be determined
 before.
+
+
+Restoring your iPod after file system error
+-------------------------------------------
+If iPod's file system gets corrpted and you need to reformat your
+iPod, there is a way to restore the contents semi-automatically if you
+have been using the "backup to ~/.gtkpod" and "write extended
+information file" (iTunesDB.ext) options:
+
+1) Replace all the "transferred=1" to "transferred=0" in
+~/.gtkpod/iTunesDB.ext.
+
+2) Import the iTunesDB in "Offline" mode
+
+3) Switch Offline off again
+
+4) Export iTunesDB
+
+This should restore your iPod to what it was before, provided you
+didn't move or remove any of the original songs on your harddrive, and
+the charset information was stored correctly.
 
 
 About filenames (excerpt from the GTK2 release notes):
