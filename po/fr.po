@@ -407,7 +407,7 @@ msgstr "Compt. lecture"
 
 #: src/display_songs.c:919 src/interface.c:1697 src/interface.c:2556
 msgid "Rating"
-msgstr "Taux"
+msgstr "Note"
 
 #: src/display_songs.c:922 src/interface.c:2562
 msgid "Played"
@@ -419,11 +419,11 @@ msgstr "Modifié le"
 
 #: src/display_sorttabs.c:176
 msgid "'Played' condition ignored because of error."
-msgstr "Condition 'Joué' ignoré à cause d'une erreur."
+msgstr "Condition 'Joué le' ignoré à cause d'une erreur."
 
 #: src/display_sorttabs.c:179
 msgid "'Modified' condition ignored because of error."
-msgstr "Condition 'Modifié' ignoré à cause d'une erreur."
+msgstr "Condition 'Modifié le' ignoré à cause d'une erreur."
 
 #: src/display_sorttabs.c:1083
 msgid "All"
@@ -458,7 +458,7 @@ msgstr "Aucune donnée à traiter"
 #: src/file.c:557
 #, c-format
 msgid "Updating %s"
-msgstr "%s mis à jour"
+msgstr "%s en cours de mise à jour"
 
 #: src/file.c:572
 msgid "Updated selected songs with info from file."
@@ -506,7 +506,6 @@ msgstr "'%s' n'existe pas. Ignoré.\n"
 
 #. no directory names available
 #: src/file.c:859
-#, fuzzy
 msgid ""
 "No directory names were stored. Make sure that you enable 'Write extended "
 "information' in the Export section of the preferences at the time of "
@@ -516,7 +515,7 @@ msgid ""
 "allow file duplication') in the Import section and add the directories you "
 "want to sync again.\n"
 msgstr ""
-"Aucun nom de répertoire n'est stocké. Soyez sûr que vous ayez activé "
+"Aucun nom de répertoire n'est stocké. Soyez sûr que vous avez activé "
 "'Ecriture des infos étendues' dans l'onglet Export des préférences.\n"
 "\n"
 "Pour synchroniser les répertoires maintenant, activez la 'détection des "
@@ -589,7 +588,7 @@ msgstr "format non supporté"
 #: src/file.c:1386 src/file.c:1399
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
-msgstr "Impossible de trouver le fichier pixmap: %s\n"
+msgstr "Ne peut changer les tags du fichier: %s\n"
 
 #: src/file.c:1507 src/file.c:1521
 #, c-format
@@ -617,7 +616,7 @@ msgid ""
 "Expected \"itunesdb_hash=\" but got:\"%s\"\n"
 msgstr ""
 "%s:\n"
-"L'empreinte attendue du fichier itunesdb est \"%s\"\n"
+"\"itunesdb_hash=\" attendue mais reçue:\"%s\"\n"
 
 #: src/file.c:1596
 #, c-format
@@ -646,7 +645,7 @@ msgid ""
 "these will be lost.\n"
 msgstr ""
 "Les infos étendues ne seront pas utilisées. Si vous avez des morceaux non,\n"
-"transféré, elles seront perdues.\n"
+"transférés, elles seront perdues.\n"
 
 #: src/file.c:1683
 msgid "Offline iPod Database Successfully Imported"
@@ -694,7 +693,7 @@ msgstr "Erreur lors de l'écriture de iTunesDB sur l'iPod. Export annulé!"
 
 #: src/file.c:2153
 msgid "Extended information not written"
-msgstr "Infos étendues non stockées"
+msgstr "Infos étendues non écrites"
 
 #: src/file.c:2160
 #, c-format
@@ -703,7 +702,7 @@ msgstr "Fichier d'infos étendues non supprimé: '%s'"
 
 #: src/file.c:2176
 msgid "Backups could not be created!"
-msgstr "Les sauvegardes ne peuvent être créées!"
+msgstr "Les sauvegardes ne peuvent pas être créées!"
 
 #: src/file.c:2192
 msgid "Export not successful!"
@@ -936,20 +935,20 @@ msgstr "Zone de _tri sélectionnée"
 #: src/interface.c:243 src/interface.c:266 src/interface.c:294
 #: src/interface.c:458 src/interface.c:539 src/interface.c:562
 msgid "Selected _Songs"
-msgstr "_Morceaux sélectionnés"
+msgstr "Morceaux _sélectionnés"
 
 #: src/interface.c:247
 #, fuzzy
 msgid "_Synchronize Directories"
-msgstr "Synchroniser les répertoires"
+msgstr "_Synchroniser les répertoires"
 
 #: src/interface.c:275
 msgid "Copy _Tracks from iPod"
-msgstr ""
+msgstr "Copier les morceaux de l'iPod"
 
 #: src/interface.c:303
 msgid "_Offline"
-msgstr "_Mode Déconnecté"
+msgstr "M_ode Déconnecté"
 
 #: src/interface.c:312
 msgid "_Create iPod's Directories"
@@ -960,38 +959,36 @@ msgid "_Edit"
 msgstr "_Edition"
 
 #: src/interface.c:336
-#, fuzzy
 msgid "_Create Playlists"
-msgstr "Créer une nouvelle liste de lecture"
+msgstr "_Créer une nouvelle liste de lecture"
 
 #: src/interface.c:347
-#, fuzzy
 msgid "Empty Playlist"
-msgstr "Liste de lecture"
+msgstr "Vider la liste de lecture"
 
 #: src/interface.c:351
 msgid "Playlist Containing Displayed Songs"
-msgstr ""
+msgstr "Liste de lecture contenant les morceaux affichés"
 
 #: src/interface.c:355
 msgid "Playlist Containing Selected Songs"
-msgstr ""
+msgstr "Liste de lecture contenant les morceaux sélectionnés"
 
 #: src/interface.c:359
 msgid "One Playlist for each Artist"
-msgstr ""
+msgstr "Une liste de lecture par artiste"
 
 #: src/interface.c:363
 msgid "One Playlist for each Album"
-msgstr ""
+msgstr "Une liste de lecture par album"
 
 #: src/interface.c:367
 msgid "One Playlist for each Genre"
-msgstr ""
+msgstr "Une liste de lecture par genre"
 
 #: src/interface.c:371
 msgid "One Playlist for each Composer"
-msgstr ""
+msgstr "Une liste de lecture par compositeur"
 
 #: src/interface.c:380
 msgid "_Alphabetize"
@@ -1265,7 +1262,7 @@ msgstr "Afficher la liste des morceaux qui peuvent être mis à jour"
 
 #: src/interface.c:1488
 msgid "Display info about non-updated songs"
-msgstr "Afficher les infos qui n'ont pas été mises à jour"
+msgstr "Afficher les infos des morceaux qui n'ont pas été mis à jour"
 
 #: src/interface.c:1493
 msgid "Display a list of songs that could not be updated."
@@ -1330,7 +1327,7 @@ msgstr ""
 
 #: src/interface.c:1590
 msgid "Keep a backup of the iTunesDB in ~/.gtkpod/"
-msgstr "Garder une copie de la base iTunesDB dans ~/.gtkpod/"
+msgstr "Faire une copie de sauvegarde de la base iTunesDB dans ~/.gtkpod/"
 
 #: src/interface.c:1599
 msgid "_Import/Export"
@@ -1604,7 +1601,6 @@ msgstr ""
 "morceaux sélectionnés et commencera la lecture."
 
 #: src/interface.c:2013
-#, fuzzy
 msgid "Command Line for 'Enqueue':"
 msgstr "Ligne de commande pour 'Mettre dans la file d'attente':"
 
@@ -1619,7 +1615,7 @@ msgstr ""
 
 #: src/interface.c:2032
 msgid "Handle mounting/unmounting of iPod drive"
-msgstr "Gérer le montage/démontage de l'iPod"
+msgstr "Gérer automatiquement le montage/démontage de l'iPod"
 
 #: src/interface.c:2035
 msgid ""
@@ -1894,7 +1890,6 @@ msgstr ""
 "\n"
 
 #: src/misc.c:326
-#, fuzzy
 msgid ""
 "Patches were supplied by the following people (list may be incomplete -- "
 "please contact me)\n"
@@ -1912,13 +1907,14 @@ msgstr ""
 "Adrian Ulrich: portage du code de gestion des listes de lecture\n"
 "Walter Bell: correction de la gestion des URIs avec des caractères "
 "d'échappement\n"
-"\n"
 
 #: src/misc.c:333
 msgid ""
 "Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
 "Chris Cutler: automatic creation of various playlist types\n"
 msgstr ""
+"Sam Clegg: nom des fichiers lors de l'export de morceaux à partir de l'iPod\n"
+"Chris Cutler: création automatique des listes de lecture par type\n"
 
 #: src/misc.c:337
 msgid ""
@@ -1950,11 +1946,11 @@ msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 msgstr "Allemand: Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 
 #: src/misc.c:362
-#, fuzzy
 msgid ""
 "Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
 "net)\n"
-msgstr "Allemand: Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+msgstr "Italien: Edward Matteucci (edward_matteucc at users dot sourceforge "
+"dot net)\n"
 
 #: src/misc.c:364
 msgid "Japanese: Ayako Sano\n"
@@ -1962,12 +1958,12 @@ msgstr "Japonais: Ayako Sano\n"
 
 #: src/misc.c:366
 msgid "Japanese: Kentaro Fukuchi (fukuchi at is dot titech dot ac dot jp)\n"
-msgstr ""
+msgstr "Japonais: Kentaro Fukuchi (fukuchi at is dot titech dot ac dot jp)\n"
 
 #: src/misc.c:531
-#, fuzzy, c-format
+#, c-format
 msgid "drag and drop: ignored '%s'\n"
-msgstr "Glisser/déposer: ignoré '%s'"
+msgstr "Glisser/déposer: ignoré '%s'\n"
 
 #: src/misc.c:562 src/misc.c:566
 #, c-format
@@ -2095,12 +2091,12 @@ msgstr "Suppression de %d morceaux de l'iPod"
 #: src/misc.c:1267
 #, c-format
 msgid "Deleted song from playlist '%s'"
-msgstr "Musique supprimée de la liste de lecture '%s'"
+msgstr "Morceau supprimé de la liste de lecture '%s'"
 
 #: src/misc.c:1267
 #, c-format
 msgid "Deleted songs from playlist '%s'"
-msgstr "Musiques supprimées de la liste de lecture '%s'"
+msgstr "Morceaux supprimés de la liste de lecture '%s'"
 
 #. no songs selected
 #: src/misc.c:1305 src/misc.c:2439
@@ -2154,60 +2150,59 @@ msgstr " %s en attente"
 #: src/misc.c:2195
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
-msgstr "L'URI « %s » n'est pas une URI absolue utilisant le schema de fichier"
+msgstr "L'URI '%s' n'est pas une URI absolue utilisant le schema de fichier"
 
 #: src/misc.c:2205
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
-msgstr "L'URI de fichier local « %s » peut ne pas inclure un  « # »"
+msgstr "L'URI de fichier local '%s' peut ne pas inclure un '#'"
 
 #: src/misc.c:2222
 #, c-format
 msgid "The URI '%s' is invalid"
-msgstr "L'URI « %s » est invalide"
+msgstr "L'URI '%s' est invalide"
 
 #: src/misc.c:2234
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
-msgstr "Le nom d'hôte de l'URI « %s » est invalide"
+msgstr "Le nom d'hôte de l'URI '%s' est invalide"
 
 #: src/misc.c:2250
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
-msgstr "L'URI « %s » contient des caractères d'échappements invalides"
+msgstr "L'URI '%s' contient des caractères d'échappements invalides"
 
 #: src/misc.c:2323
 msgid "AR:"
-msgstr ""
+msgstr "AR:"
 
 #: src/misc.c:2326
 msgid "AL:"
-msgstr ""
+msgstr "AL:"
 
 #: src/misc.c:2329
 msgid "GE:"
-msgstr ""
+msgstr "GE:"
 
 #: src/misc.c:2332
 msgid "CO:"
-msgstr ""
+msgstr "CO:"
 
 #: src/misc.c:2381
 msgid "Unknown"
-msgstr ""
+msgstr "Inconnu"
 
 #. no songs displayed
 #: src/misc.c:2422
-#, fuzzy
 msgid "No songs displayed."
-msgstr "Aucun morceau sélectionné."
+msgstr "Aucun morceau affiché."
 
 #: src/misc.c:2462
-#, fuzzy, c-format
+#, c-format
 msgid "Created new playlist with %d song."
 msgid_plural "Created new playlist with %d songs."
-msgstr[0] "Créer une nouvelle liste de lecture"
-msgstr[1] "Créer une nouvelle liste de lecture"
+msgstr[0] "Créer une nouvelle liste de lecture avec %d morceau."
+msgstr[1] "Créer une nouvelle liste de lecture avec %d morceaux."
 
 #: src/playlist.c:308
 #, c-format
@@ -2235,7 +2230,7 @@ msgstr "  --mountpoint: identique a \"-m\".\n"
 
 #: src/prefs.c:126
 msgid "  -w:           write changed ID3 tags to file\n"
-msgstr "  -w:           mets a jour les fichiers dont les tags ont changes\n"
+msgstr "  -w:           met a jour les fichiers dont les tags ont changes\n"
 
 #: src/prefs.c:127
 msgid "  --id3_write:   same as \"-w\".\n"
@@ -2354,7 +2349,7 @@ msgstr "Impossible de lancer \"mkdir %s\"\n"
 #: src/prefs.c:1544
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
-msgstr ""
+msgstr "prefs_set_toolbar_style: style '%d' non reconnu\n"
 
 #: src/prefs.c:1628 src/prefs.c:1635
 #, c-format
@@ -2366,8 +2361,8 @@ msgstr "'%s': seulement une '%%s' autorisée.\n"
 #, c-format
 msgid "Hashed %d of %d song."
 msgid_plural "Hashed %d of %d songs."
-msgstr[0] "%d sur %d morceau traité"
-msgstr[1] "%d sur %d morceaux traités"
+msgstr[0] "%d morceau traité sur %d"
+msgstr[1] "%d morceaux traités sur %d"
 
 #: src/song.c:443
 #, c-format
