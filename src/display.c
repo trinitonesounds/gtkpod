@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-25 23:05:55 jcs>
+/* Time-stamp: <2003-10-03 00:15:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -92,7 +92,7 @@ gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	{
 	    link = g_list_last (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
-	    if (tvt == SONG_TREEVIEW)
+	    if (tvt == TRACK_TREEVIEW)
 		sm_list_store_move_after (GTK_LIST_STORE (model),
 					  from_iter, &to_iter);
 	    if (tvt == PLAYLIST_TREEVIEW)
@@ -108,7 +108,7 @@ gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	    link = g_list_first (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
 
-	    if (tvt == SONG_TREEVIEW)
+	    if (tvt == TRACK_TREEVIEW)
 		sm_list_store_move_before (GTK_LIST_STORE (model),
 					   from_iter, &to_iter);
 	    if (tvt == PLAYLIST_TREEVIEW)
@@ -119,7 +119,7 @@ gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	}
 	break;
     }
-    if (tvt == SONG_TREEVIEW)      sm_rows_reordered ();
+    if (tvt == TRACK_TREEVIEW)      sm_rows_reordered ();
     if (tvt == PLAYLIST_TREEVIEW)  pm_rows_reordered ();
     return TRUE;
 }
@@ -148,13 +148,13 @@ void display_create (GtkWidget *gtkpod)
     sm_sort (prefs_get_sm_sortcol (), prefs_get_sm_sort ());
 }
 
-/* redisplay the entire display (playlists, sort tabs, song view) and
+/* redisplay the entire display (playlists, sort tabs, track view) and
  * reset the sorted treeviews to normal (according to @inst) */
 /* @inst: which treeviews should be reset to normal?
    -2: all treeviews
    -1: only playlist
     0...SORT_TAB_MAX-1: sort tab of instance @inst
-    SORT_TAB_MAX: song treeview 
+    SORT_TAB_MAX: track treeview 
     SORT_TAB_MAX+1: all sort tabs */
 void display_reset (gint inst)
 {
@@ -168,7 +168,7 @@ void display_reset (gint inst)
     if ((inst == -2) || (inst == -1))	pm_remove_all_playlists (TRUE);
     else                                pm_remove_all_playlists (FALSE);
 
-    /* reset the sort tabs and song view */
+    /* reset the sort tabs and track view */
     st_init (-1, 0);
 
     /* reset "sortable" */
@@ -264,7 +264,7 @@ void display_set_default_sizes (void)
 /* update the cfg structure (preferences) with the current sizes /
    positions:
    x,y size of main window
-   column widths of song model
+   column widths of track model
    position of GtkPaned elements */
 void display_update_default_sizes (void)
 {
@@ -282,19 +282,19 @@ void display_update_default_sizes (void)
 
 
 
-/* Utility function: returns a copy of the songs currently
+/* Utility function: returns a copy of the tracks currently
    selected. This means:
  
    @inst == -1:
-      return list of songs in selected playlist
+      return list of tracks in selected playlist
 
    @inst == 0 ... prefs_get_sort_tab_num () - 1:
-      return list of songs in passed on to the next instance: selected
-      tab entry (normal sort tab) or songs matching specified
+      return list of tracks in passed on to the next instance: selected
+      tab entry (normal sort tab) or tracks matching specified
       conditions in a special sort tab
 
    @inst >= prefs_get_sort_tab_num ():
-      return list of songs selected in the song view
+      return list of tracks selected in the track view
 
    You must g_list_free() the list after use.
 */
@@ -309,7 +309,7 @@ GList *display_get_selection (guint32 inst)
     if ((inst >= 0) && (inst < prefs_get_sort_tab_num ()))
 	return g_list_copy (st_get_selected_members (inst));
     if (inst >= prefs_get_sort_tab_num ())
-	return sm_get_selected_songs ();
+	return sm_get_selected_tracks ();
     return NULL;
 }
 

@@ -166,12 +166,12 @@ md5_hash_on_file(FILE * fp)
 }
 
 /**
- * Generate a unique hash for the Song passed in
- * @s - The Song data structure, we want to hash based on the file on disk
+ * Generate a unique hash for the Track passed in
+ * @s - The Track data structure, we want to hash based on the file on disk
  * Returns - an SHA1 hash in string format, is the hex output from the hash
  */
 static gchar *
-md5_hash_song(Song * s)
+md5_hash_track(Track * s)
 {
    FILE *fp;
    gchar *result = NULL;
@@ -214,16 +214,16 @@ md5_unique_file_free(void)
 }
 
 /**
- * Check to see if a song has already been added to the ipod
- * @s - the Song we want to know about. If the song does not exist, it
+ * Check to see if a track has already been added to the ipod
+ * @s - the Track we want to know about. If the track does not exist, it
  * is inserted into the hash.
- * Returns a pointer to the duplicate song. 
+ * Returns a pointer to the duplicate track. 
  */
-Song *
-md5_song_exists_insert(Song * s)
+Track *
+md5_track_exists_insert(Track * s)
 {
    gchar *val = NULL;
-   Song *song = NULL;
+   Track *track = NULL;
 
    if (prefs_get_md5tracks ())
    {
@@ -232,10 +232,10 @@ md5_song_exists_insert(Song * s)
 	   filehash = g_hash_table_new_full(g_str_hash, g_str_equal,
 					    g_free, NULL);
        }
-       val = md5_hash_song(s);
+       val = md5_hash_track(s);
        if (val != NULL)
        {
-	   if ((song = g_hash_table_lookup(filehash, val)))
+	   if ((track = g_hash_table_lookup(filehash, val)))
 	   {
 	       g_free(val);
 	   }
@@ -248,46 +248,46 @@ md5_song_exists_insert(Song * s)
 	   }
        }
    }
-   return song;
+   return track;
 }
 
 /**
- * Check to see if a song has already been added to the ipod
- * @s - the Song we want to know about.
- * Returns a pointer to the duplicate song. 
+ * Check to see if a track has already been added to the ipod
+ * @s - the Track we want to know about.
+ * Returns a pointer to the duplicate track. 
  */
-Song *
-md5_song_exists(Song * s)
+Track *
+md5_track_exists(Track * s)
 {
-   Song *song = NULL;
+   Track *track = NULL;
 
    if (prefs_get_md5tracks() && filehash)
    {
-       gchar *val = md5_hash_song(s);
+       gchar *val = md5_hash_track(s);
        if (val != NULL)
        {
-	   song = g_hash_table_lookup(filehash, val);
+	   track = g_hash_table_lookup(filehash, val);
 	   g_free (val);
        }
    }
-   return song;
+   return track;
 }
 
 /**
- * Free the specified song from the ipod's unique file hash
- * @s - The Song that's being freed from the ipod
+ * Free the specified track from the ipod's unique file hash
+ * @s - The Track that's being freed from the ipod
  */
 void
-md5_song_removed(Song * s)
+md5_track_removed(Track * s)
 {
     gchar *val = NULL;
-    Song *song = NULL;
+    Track *track = NULL;
 
-    if ((prefs_get_md5tracks ()) && (filehash) && (s) && (val = md5_hash_song(s)))
+    if ((prefs_get_md5tracks ()) && (filehash) && (s) && (val = md5_hash_track(s)))
     {
-	if ((song = g_hash_table_lookup(filehash, val)))
+	if ((track = g_hash_table_lookup(filehash, val)))
 	{
-	    if (song == s) /* only remove if it's the same song */
+	    if (track == s) /* only remove if it's the same track */
 		g_hash_table_remove(filehash, val);
 	}
 	g_free(val);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 15:57:39 jcs>
+/* Time-stamp: <2003-10-03 00:12:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -57,7 +57,7 @@ typedef enum {
 /* Number defined with glade ("paned%d") */
 enum {
     PANED_PLAYLIST = 0,
-    PANED_SONGLIST,
+    PANED_TRACKLIST,
     PANED_STATUS1,
     PANED_STATUS2,
     PANED_NUM_GLADE
@@ -80,7 +80,7 @@ enum {
 typedef struct {
   gchar *name;
   gboolean master; /* set if this is the "All" entry */
-  GList *members;  /* GList with member songs (pointer to "Song") */
+  GList *members;  /* GList with member tracks (pointer to "Track") */
 } TabEntry;
 
 /* struct for time info (created, played, modified) */
@@ -96,7 +96,7 @@ typedef struct {
 /* struct with data corresponding to each sort tab */
 typedef struct {
   guint current_category;            /* current page (category) selected) */
-  gboolean final;                    /* have all songs been added? */
+  gboolean final;                    /* have all tracks been added? */
   GtkWidget *window[ST_CAT_NUM];     /* pointer to scrolled window */
   /* The following are used for "normal" categories (not ST_CAT_SPECIAL) */
   GtkTreeModel *model;               /* pointer to model used */
@@ -108,8 +108,8 @@ typedef struct {
   GHashTable *entry_hash;            /* table for quick find of tab entries */
   gboolean unselected;               /* unselected item since last st_init? */
   /* The following are used for "special" categories (ST_CAT_SPECIAL) */
-  GList *sp_members;                 /* list of songs in sorttab */
-  GList *sp_selected;                /* list of songs selected */
+  GList *sp_members;                 /* list of tracks in sorttab */
+  GList *sp_selected;                /* list of tracks selected */
   gboolean is_go;                    /* pass new members on automatically */
   TimeInfo ti_modified, ti_played;   /* Sort information for modification
                                         (file time stamp) and played time */
@@ -122,14 +122,14 @@ typedef enum  {
   ST_NUM_COLUMNS
 } ST_item;
 
-/* Column numbers in song model */
+/* Column numbers in track model */
 /* Note: the toggle buttons for tag_autoset and display_col
  * in the prefs_window are
  * named after the numbers (Title: tag_autoset0, Artist: tag_autoset1
  * etc.). Since the labels to the buttons are set in prefs_window.c
  * when creating the window, you only need to make sure the displayed
  * order is what you want */
-/* Note: the sm_col_strings[] in display_songs.c are ordered according
+/* Note: the sm_col_strings[] in display_tracks.c are ordered according
    to this enum list. Therefore, if you change the order, you must
    also adjust the order of the sm_col_strings[] array. */
 typedef enum  {
@@ -143,7 +143,7 @@ typedef enum  {
   SM_COLUMN_PC_PATH,
   SM_COLUMN_TRANSFERRED,
   SM_COLUMN_SIZE,
-  SM_COLUMN_SONGLEN,
+  SM_COLUMN_TRACKLEN,
   SM_COLUMN_BITRATE,
   SM_COLUMN_PLAYCOUNT,
   SM_COLUMN_RATING,
@@ -187,10 +187,10 @@ Playlist* pm_get_selected_playlist(void);
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);
 void pm_select_playlist (Playlist *playlist);
-void pm_remove_song (Playlist *playlist, Song *song);
-void pm_add_song (Playlist *playlist, Song *song, gboolean display);
+void pm_remove_track (Playlist *playlist, Track *track);
+void pm_add_track (Playlist *playlist, Track *track, gboolean display);
 void pm_name_changed (Playlist *playlist);
-void pm_song_changed (Song *song);
+void pm_track_changed (Track *track);
 void pm_sort (GtkSortType order);
 void pm_stop_editing (gboolean cancel);
 gboolean pm_move_pathlist (gchar *data, GtkTreePath *path,
@@ -224,8 +224,8 @@ void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 TimeInfo *st_update_date_interval_from_string (guint32 inst,
 					       S_item item,
 					       gboolean force_update);
-void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter);
-guint sm_get_nr_of_songs(void);
+void sm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter);
+guint sm_get_nr_of_tracks(void);
 void sm_rows_reordered(void);
 void pm_rows_reordered(void);
 gboolean sm_move_pathlist (gchar *data, GtkTreePath *path,
@@ -237,10 +237,10 @@ void sm_show_preferred_columns(void);
 void sm_store_col_order (void);
 
 void sm_sort (SM_item col, GtkSortType order);
-GList* sm_get_selected_songids(void);
-GList* sm_get_selected_songs(void);
-GList* sm_get_all_songids(void);
-GList* sm_get_all_songs(void);
+GList* sm_get_selected_trackids(void);
+GList* sm_get_selected_tracks(void);
+GList* sm_get_all_trackids(void);
+GList* sm_get_all_tracks(void);
 
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-22 21:25:19 jcs>
+/* Time-stamp: <2003-10-03 00:11:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -56,10 +56,10 @@ typedef struct
   gunichar2 *ipod_path_utf16;/* name of file on iPod: uses ":" instead of "/"*/
   gchar   *pc_path_utf8;     /* PC filename in utf8 encoding   */
   gchar   *pc_path_locale;   /* PC filename in locale encoding */
-  guint32 ipod_id;           /* unique ID of song     */
+  guint32 ipod_id;           /* unique ID of track     */
   gint32  size;              /* size of file in bytes */
-  gint32  oldsize;           /* used when updating songs: size on iPod */
-  gint32  songlen;           /* Length of song in ms  */
+  gint32  oldsize;           /* used when updating tracks: size on iPod */
+  gint32  tracklen;           /* Length of track in ms  */
   gint32  cd_nr;             /* CD number             */
   gint32  cds;               /* number of CDs         */
   gint32  track_nr;          /* track number          */
@@ -70,21 +70,21 @@ typedef struct
   guint32 time_played;       /* time of last play  (Mac type)           */
   guint32 time_modified;     /* time of last modification  (Mac type)   */
   guint32 rating;            /* star rating (stars * RATING_STEP (20))  */
-  guint32 playcount;         /* number of times song was played         */
-  guint32 recent_playcount;  /* times song was played since last sync   */
+  guint32 playcount;         /* number of times track was played         */
+  guint32 recent_playcount;  /* times track was played since last sync   */
   gchar   *hostname;         /* name of host this file has been imported on */
   gboolean transferred;      /* has file been transferred to iPod?      */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)              */
   gchar   *charset;          /* charset used for ID3 tags               */
   gchar   *auto_charset;     /* charset detected by auto-detection code */
-} Song;
+} Track;
 
-/* one star is how much (song->rating) */
+/* one star is how much (track->rating) */
 #define RATING_STEP 20
 
 /* A means to address the fields by uniform IDs. May be extended as
- * needed. You should extend "song_get_item_pointer()" defined in
- * song.c as well. */
+ * needed. You should extend "track_get_item_pointer()" defined in
+ * track.c as well. */
 typedef enum {
     S_ALL = 0,      /* all fields */
     S_ALBUM,
@@ -100,7 +100,7 @@ typedef enum {
     S_TRACK_NR,
     S_TRANSFERRED,
     S_SIZE,
-    S_SONGLEN,
+    S_TRACKLEN,
     S_BITRATE,
     S_PLAYCOUNT,
     S_RATING,
@@ -109,31 +109,31 @@ typedef enum {
     S_VOLUME,
 } S_item;
 
-void free_song(Song *song);
-gboolean it_add_song (Song *song);
-Song *add_song (Song *song);
-void validate_entries (Song *song);
-void remove_song (Song *song);
-void remove_all_songs (void);
-#define it_get_nr_of_songs get_nr_of_songs
-guint get_nr_of_songs (void);
-guint get_nr_of_nontransferred_songs (void);
-glong get_filesize_of_nontransferred_songs (void);
-Song *it_get_song_by_nr (guint32 n);
-Song *get_next_song (gint i);
-Song *get_song_by_nr (guint32 n);
-Song *get_song_by_id (guint32 id);
-Song *get_song_by_filename (gchar *name);
-void remove_song_from_ipod (Song *song);
-void hash_songs(void);
-void remove_duplicate (Song *oldsong, Song *song);
-void clear_md5_hash_from_songs (void);
+void free_track(Track *track);
+gboolean it_add_track (Track *track);
+Track *add_track (Track *track);
+void validate_entries (Track *track);
+void remove_track (Track *track);
+void remove_all_tracks (void);
+#define it_get_nr_of_tracks get_nr_of_tracks
+guint get_nr_of_tracks (void);
+guint get_nr_of_nontransferred_tracks (void);
+glong get_filesize_of_nontransferred_tracks (void);
+Track *it_get_track_by_nr (guint32 n);
+Track *get_next_track (gint i);
+Track *get_track_by_nr (guint32 n);
+Track *get_track_by_id (guint32 id);
+Track *get_track_by_filename (gchar *name);
+void remove_track_from_ipod (Track *track);
+void hash_tracks(void);
+void remove_duplicate (Track *oldtrack, Track *track);
+void clear_md5_hash_from_tracks (void);
 void renumber_ipod_ids ();
-gchar **song_get_item_pointer_utf8 (Song *song, S_item s_item);
-gchar *song_get_item_utf8 (Song *song, S_item s_item);
-gunichar2 **song_get_item_pointer_utf16 (Song *song, S_item s_item);
-gunichar2 *song_get_item_utf16 (Song *song, S_item s_item);
-guint32 *song_get_timestamp_ptr (Song *song, S_item s_item);
-guint32 song_get_timestamp (Song *song, S_item s_item);
-gboolean song_is_valid (Song *song);
+gchar **track_get_item_pointer_utf8 (Track *track, S_item s_item);
+gchar *track_get_item_utf8 (Track *track, S_item s_item);
+gunichar2 **track_get_item_pointer_utf16 (Track *track, S_item s_item);
+gunichar2 *track_get_item_utf16 (Track *track, S_item s_item);
+guint32 *track_get_timestamp_ptr (Track *track, S_item s_item);
+guint32 track_get_timestamp (Track *track, S_item s_item);
+gboolean track_is_valid (Track *track);
 #endif 

@@ -34,8 +34,8 @@
 gchar *md5_hash_on_file(FILE *fp);
 /* Any calls to thes following functions immediately return if md5sums
  * is not on */
-Song *md5_song_exists(Song *s);
-Song *md5_song_exists_insert(Song *s);
-void md5_song_removed(Song *s);
+Track *md5_track_exists(Track *s);
+Track *md5_track_exists_insert(Track *s);
+void md5_track_removed(Track *s);
 void md5_unique_file_free(void);
 #endif

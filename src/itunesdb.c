@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-07 20:52:57 jcs>
+/* Time-stamp: <2003-10-03 00:20:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -48,13 +48,13 @@
    available and the playcounts, star rating and the time last played
    is updated.
 
-   For each song itunesdb_parse() will pass a filled out Song structure
-   to "it_add_song()", which has to be provided. The return value is
+   For each track itunesdb_parse() will pass a filled out Track structure
+   to "it_add_track()", which has to be provided. The return value is
    TRUE on success and FALSE on error. At the time being, the return
    value is ignored, however.
 
-   The minimal Song structure looks like this (feel free to have
-   it_add_song() do with it as it pleases -- and yes, you are
+   The minimal Track structure looks like this (feel free to have
+   it_add_track() do with it as it pleases -- and yes, you are
    responsible to free the memory):
 
    typedef struct
@@ -67,9 +67,9 @@
      gunichar2 *composer_utf16; /+ Composer (utf16)      +/
      gunichar2 *fdesc_utf16;    /+ ? (utf16)             +/
      gunichar2 *ipod_path_utf16;/+ name of file on iPod: uses ":" instead of "/" +/
-     guint32 ipod_id;           /+ unique ID of song     +/
+     guint32 ipod_id;           /+ unique ID of track     +/
      gint32  size;              /+ size of file in bytes +/
-     gint32  songlen;           /+ Length of song in ms  +/
+     gint32  tracklen;           /+ Length of track in ms  +/
      gint32  cd_nr;             /+ CD number             +/
      gint32  cds;               /+ number of CDs         +/
      gint32  track_nr;          /+ track number          +/
@@ -79,12 +79,12 @@
      guint32 time_played;       /+ time of last play  (Mac type)         +/
      guint32 time_modified;     /+ time of last modification  (Mac type) +/
      guint32 rating;            /+ star rating (stars * 20)              +/
-     guint32 playcount;         /+ number of times song was played       +/
-     guint32 recent_playcount;  /+ times song was played since last sync +/
+     guint32 playcount;         /+ number of times track was played       +/
+     guint32 recent_playcount;  /+ times track was played since last sync +/
      gboolean transferred;      /+ has file been transferred to iPod?    +/
-   } Song;
+   } Track;
 
-   "transferred" will be set to TRUE because all songs read from a
+   "transferred" will be set to TRUE because all tracks read from a
    iTunesDB are obviously (or hopefully) already transferred to the
    iPod.
 
@@ -93,7 +93,7 @@
 
    By #defining ITUNESDB_PROVIDE_UTF8, itunesdb_parse() will also
    provide utf8 versions of the above utf16 strings. You must then add
-   members "gchar *album"... to the Song structure.
+   members "gchar *album"... to the Track structure.
 
    For each new playlist in the iTunesDB, it_add_playlist() is
    called with a pointer to the following Playlist struct:
@@ -108,15 +108,15 @@
    will be initialized with a utf8 version of the playlist name.
 
    it_add_playlist() must return a pointer under which it wants the
-   playlist to be referenced when it_add_song_to_playlist() is called.
+   playlist to be referenced when it_add_track_to_playlist() is called.
 
-   For each song in the playlist, it_add_songid_to_playlist() is called
-   with the above mentioned pointer to the playlist and the songid to
+   For each track in the playlist, it_add_trackid_to_playlist() is called
+   with the above mentioned pointer to the playlist and the trackid to
    be added.
 
-   gboolean it_add_song (Song *song);
+   gboolean it_add_track (Track *track);
    Playlist *it_add_playlist (Playlist *plitem);
-   void it_add_songid_to_playlist (Playlist *plitem, guint32 id);
+   void it_add_trackid_to_playlist (Playlist *plitem, guint32 id);
 
 
    *** Writing the iTunesDB ***
@@ -130,20 +130,20 @@
    It uses the following functions to retrieve the data necessary data
    from memory:
 
-   guint it_get_nr_of_songs (void);
-   Song *it_get_song_by_nr (guint32 n);
+   guint it_get_nr_of_tracks (void);
+   Track *it_get_track_by_nr (guint32 n);
    guint32 it_get_nr_of_playlists (void);
    Playlist *it_get_playlist_by_nr (guint32 n);
-   guint32 it_get_nr_of_songs_in_playlist (Playlist *plitem);
-   Song *it_get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
+   guint32 it_get_nr_of_tracks_in_playlist (Playlist *plitem);
+   Track *it_get_track_in_playlist_by_nr (Playlist *plitem, guint32 n);
 
    The master playlist is expected to be "it_get_playlist_by_nr(0)". Only
-   the utf16 strings in the Playlist and Song struct are being used.
+   the utf16 strings in the Playlist and Track struct are being used.
 
-   Please note that non-transferred songs are not automatically
+   Please note that non-transferred tracks are not automatically
    transferred to the iPod. A function
 
-   gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
+   gboolean itunesdb_copy_track_to_ipod (gchar *path, Track *track, gchar *pcfile)
 
    is provided to help you do that, however.
 
@@ -334,7 +334,7 @@ static glong get_pl(FILE *file, glong seek)
 #ifdef ITUNESDB_PROVIDE_UTF8
   gchar *plname_utf8;
 #endif
-  guint32 type, pltype, songnum, n;
+  guint32 type, pltype, tracknum, n;
   guint32 nextseek;
   gint32 zip;
   Playlist *plitem;
@@ -352,7 +352,7 @@ static glong get_pl(FILE *file, glong seek)
   /* Some Playlists have added 256 to their type -- I don't know what
      it's for, so we just ignore it for now -> & 0xff */
   pltype = get4int (file, seek+20) & 0xff;  /* Type of playlist (1= MPL) */
-  songnum = get4int (file, seek+16); /* number of songs in playlist */
+  tracknum = get4int (file, seek+16); /* number of tracks in playlist */
   nextseek = seek + get4int (file, seek+8); /* possible begin of next PL */
   zip = get4int (file, seek+4); /* length of header */
   if (zip == 0) return -1;      /* error! */
@@ -390,7 +390,7 @@ static glong get_pl(FILE *file, glong seek)
 
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "pln: %s(%d Tracks) \n", plname_utf8, (int)songnum);
+  fprintf(stderr, "pln: %s(%d Tracks) \n", plname_utf8, (int)tracknum);
 #endif
 
   plitem = g_malloc0 (sizeof (Playlist));
@@ -408,17 +408,17 @@ static glong get_pl(FILE *file, glong seek)
   fprintf(stderr, "added pl: %s", plname_utf8);
 #endif
 
-  n = 0;  /* number of songs read */
-  while (n < songnum)
+  n = 0;  /* number of tracks read */
+  while (n < tracknum)
     {
       /* We read the mhip headers and skip everything else. If we
-	 find a mhyp header before n==songnum, something is wrong */
+	 find a mhyp header before n==tracknum, something is wrong */
       if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
       if (cmp_n_bytes (data, "mhyp", 4) == TRUE) return -1; /* Wrong!!! */
       if (cmp_n_bytes (data, "mhip", 4) == TRUE)
 	{
 	  ref = get4int(file, seek+24);
-	  it_add_songid_to_playlist(plitem, ref);
+	  it_add_trackid_to_playlist(plitem, ref);
 	  ++n;
 	}
       seek += get4int (file, seek+8);
@@ -429,7 +429,7 @@ static glong get_pl(FILE *file, glong seek)
 
 static glong get_mhit(FILE *file, glong seek)
 {
-  Song *song;
+  Track *track;
   gchar data[4];
 #ifdef ITUNESDB_PROVIDE_UTF8
   gchar *entry_utf8;
@@ -446,23 +446,23 @@ static glong get_mhit(FILE *file, glong seek)
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
   if (cmp_n_bytes (data, "mhit", 4) == FALSE ) return -1; /* we are lost! */
 
-  song = g_malloc0 (sizeof (Song));
+  track = g_malloc0 (sizeof (Track));
 
-  song->ipod_id = get4int(file, seek+16);     /* iPod ID          */
-  song->rating = get4int(file, seek+28) >> 24;/* rating           */
-  song->time_modified = get4int(file, seek+32);/* modification time    */
-  song->size = get4int(file, seek+36);        /* file size        */
-  song->songlen = get4int(file, seek+40);     /* time             */
-  song->track_nr = get4int(file, seek+44);    /* track number     */
-  song->tracks = get4int(file, seek+48);      /* nr of tracks     */
-  song->year = get4int(file, seek+52);        /* year             */
-  song->bitrate = get4int(file, seek+56);     /* bitrate          */
-  song->volume = get4int(file, seek+64);      /* volume adjust    */
-  song->playcount = get4int(file, seek+80);   /* playcount        */
-  song->time_played = get4int(file, seek+88); /* last time played */
-  song->cd_nr = get4int(file, seek+92);       /* CD nr            */
-  song->cds = get4int(file, seek+96);         /* CD nr of..       */
-  song->transferred = TRUE;                   /* song is on iPod! */
+  track->ipod_id = get4int(file, seek+16);     /* iPod ID          */
+  track->rating = get4int(file, seek+28) >> 24;/* rating           */
+  track->time_modified = get4int(file, seek+32);/* modification time    */
+  track->size = get4int(file, seek+36);        /* file size        */
+  track->tracklen = get4int(file, seek+40);     /* time             */
+  track->track_nr = get4int(file, seek+44);    /* track number     */
+  track->tracks = get4int(file, seek+48);      /* nr of tracks     */
+  track->year = get4int(file, seek+52);        /* year             */
+  track->bitrate = get4int(file, seek+56);     /* bitrate          */
+  track->volume = get4int(file, seek+64);      /* volume adjust    */
+  track->playcount = get4int(file, seek+80);   /* playcount        */
+  track->time_played = get4int(file, seek+88); /* last time played */
+  track->cd_nr = get4int(file, seek+92);       /* CD nr            */
+  track->cds = get4int(file, seek+96);         /* CD nr of..       */
+  track->transferred = TRUE;                   /* track is on iPod! */
 
 #if ITUNESDB_MHIT_DEBUG
 time_t time_mac_to_host (guint32 mactime);
@@ -482,7 +482,7 @@ gchar *time_time_to_string (time_t time);
       printf_mhit ( 32, "timestamp file");
       printf_mhit_time ( 32, "timestamp file");
       printf_mhit ( 36, "size");
-      printf_mhit ( 40, "songlen (ms)");
+      printf_mhit ( 40, "tracklen (ms)");
       printf_mhit ( 44, "track_nr");
       printf_mhit ( 48, "total tracks");
       printf_mhit ( 52, "year");
@@ -533,51 +533,51 @@ gchar *time_time_to_string (time_t time);
 	 {
 	 case MHOD_ID_ALBUM:
 #ifdef ITUNESDB_PROVIDE_UTF8
-	   song->album = entry_utf8;
+	   track->album = entry_utf8;
 #endif 
-	   song->album_utf16 = entry_utf16;
+	   track->album_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_ARTIST:
 #ifdef ITUNESDB_PROVIDE_UTF8
-	   song->artist = entry_utf8;
+	   track->artist = entry_utf8;
 #endif
-	   song->artist_utf16 = entry_utf16;
+	   track->artist_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_TITLE:
 #ifdef ITUNESDB_PROVIDE_UTF8
-	   song->title = entry_utf8;
+	   track->title = entry_utf8;
 #endif
-	   song->title_utf16 = entry_utf16;
+	   track->title_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_GENRE:
 #ifdef ITUNESDB_PROVIDE_UTF8
-	   song->genre = entry_utf8;
+	   track->genre = entry_utf8;
 #endif
-	   song->genre_utf16 = entry_utf16;
+	   track->genre_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_PATH:
 #ifdef ITUNESDB_PROVIDE_UTF8
-	   song->ipod_path = entry_utf8;
+	   track->ipod_path = entry_utf8;
 #endif
-	   song->ipod_path_utf16 = entry_utf16;
+	   track->ipod_path_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_FDESC:
 #ifdef ITUNESDB_PROVIDE_UTF8
-	   song->fdesc = entry_utf8;
+	   track->fdesc = entry_utf8;
 #endif
-	   song->fdesc_utf16 = entry_utf16;
+	   track->fdesc_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_COMMENT:
 #ifdef ITUNESDB_PROVIDE_UTF8
-	   song->comment = entry_utf8;
+	   track->comment = entry_utf8;
 #endif
-	   song->comment_utf16 = entry_utf16;
+	   track->comment_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_COMPOSER:
 #ifdef ITUNESDB_PROVIDE_UTF8
-	   song->composer = entry_utf8;
+	   track->composer = entry_utf8;
 #endif
-	   song->composer_utf16 = entry_utf16;
+	   track->composer_utf16 = entry_utf16;
 	   break;
 	 default: /* unknown entry -- discard */
 #ifdef ITUNESDB_PROVIDE_UTF8
@@ -592,13 +592,13 @@ gchar *time_time_to_string (time_t time);
   playcount = get_next_playcount ();
   if (playcount)
   {
-      if (playcount->rating)  song->rating = playcount->rating;
-      if (playcount->time_played) song->time_played = playcount->time_played;
-      song->playcount += playcount->playcount;
-      song->recent_playcount = playcount->playcount;
+      if (playcount->rating)  track->rating = playcount->rating;
+      if (playcount->time_played) track->time_played = playcount->time_played;
+      track->playcount += playcount->playcount;
+      track->recent_playcount = playcount->playcount;
       g_free (playcount);
   }
-  it_add_song (song);
+  it_add_track (track);
   return seek;   /* no more black magic */
 }
 
@@ -687,8 +687,8 @@ static void init_playcounts (gchar *filename)
 }
 
 
-/* Parse the iTunesDB and store the songs using it_addsong () defined
-   in song.c.
+/* Parse the iTunesDB and store the tracks using it_addtrack () defined
+   in track.c.
    Returns TRUE on success, FALSE on error.
    "path" should point to the mount point of the iPod,
    e.e. "/mnt/ipod" */
@@ -711,11 +711,11 @@ gboolean itunesdb_parse_file (gchar *filename)
   gboolean result = FALSE;
   gchar data[8];
   glong seek=0, pl_mhsd=0;
-  guint32 zip, nr_songs=0, nr_playlists=0;
+  guint32 zip, nr_tracks=0, nr_playlists=0;
   gboolean swapped_mhsd = FALSE;
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, it_get_nr_of_songs ());
+  fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, it_get_nr_of_tracks ());
 #endif
 
   if (!filename) return FALSE;
@@ -755,7 +755,7 @@ gboolean itunesdb_parse_file (gchar *filename)
 	  if (cmp_n_bytes (data, "mhsd", 4) == TRUE)
 	  { /* mhsd header -> determine start of playlists */
 	      if (get4int (itunes, seek + 12) == 1)
-	      { /* OK, songlist, save start of playlists */
+	      { /* OK, tracklist, save start of playlists */
 		  if (!swapped_mhsd)
 		      pl_mhsd = seek + get4int (itunes, seek+8);
 	      }
@@ -773,21 +773,21 @@ gboolean itunesdb_parse_file (gchar *filename)
 		  }
 	      }
 	      else
-	      { /* neither playlist nor song MHSD --> skip it */
+	      { /* neither playlist nor track MHSD --> skip it */
 		  seek += get4int (itunes, seek+8);
 	      }
 	  }
 	  if (cmp_n_bytes (data, "mhlt", 4) == TRUE)
-	  { /* mhlt header -> number of songs */
-	      nr_songs = get4int (itunes, seek+8);
-	      if (nr_songs == 0)
-	      {   /* no songs -- skip directly to next mhsd */
+	  { /* mhlt header -> number of tracks */
+	      nr_tracks = get4int (itunes, seek+8);
+	      if (nr_tracks == 0)
+	      {   /* no tracks -- skip directly to next mhsd */
 		  result = TRUE;
 		  break;
 	      }
 	  }
 	  if (cmp_n_bytes (data, "mhit", 4) == TRUE)
-	  { /* mhit header -> start of songs*/
+	  { /* mhit header -> start of tracks*/
 	      result = TRUE;
 	      break;
 	  }
@@ -803,7 +803,7 @@ gboolean itunesdb_parse_file (gchar *filename)
       init_playcounts (filename);
 
       /* get every file entry */
-      if (nr_songs)  while(seek != -1) {
+      if (nr_tracks)  while(seek != -1) {
 	  /* get_mhit returns where it's guessing the next MHIT,
 	     if it fails, it returns '-1' */
 	  seek = get_mhit (itunes, seek);
@@ -850,7 +850,7 @@ gboolean itunesdb_parse_file (gchar *filename)
 
   if (itunes != NULL)     fclose (itunes);
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "exit:  %4d\n", it_get_nr_of_songs ());
+  fprintf(stderr, "exit:  %4d\n", it_get_nr_of_tracks ());
 #endif 
   return result;
 }
@@ -958,7 +958,7 @@ static void mk_mhsd (FILE *file, guint32 type)
   put_data_cur (file, "mhsd", 4);
   put_4int_cur (file, 96);   /* Headersize */
   put_4int_cur (file, -1);   /* size of whole mhsd -- fill in later */
-  put_4int_cur (file, type); /* type: 1 = song, 2 = playlist */
+  put_4int_cur (file, type); /* type: 1 = track, 2 = playlist */
   put_n0_cur (file, 20);    /* dummy space */
 }  
 
@@ -972,41 +972,41 @@ static void fix_mhsd (FILE *file, glong mhsd_seek, glong cur)
 
 
 /* Write out the mhlt header. */
-static void mk_mhlt (FILE *file, guint32 song_num)
+static void mk_mhlt (FILE *file, guint32 track_num)
 {
   put_data_cur (file, "mhlt", 4);
   put_4int_cur (file, 92);         /* Headersize */
-  put_4int_cur (file, song_num);   /* songs in this itunesdb */
+  put_4int_cur (file, track_num);   /* tracks in this itunesdb */
   put_n0_cur (file, 20);           /* dummy space */
 }  
 
 
 /* Write out the mhit header. Size will be written later */
-static void mk_mhit (FILE *file, Song *song)
+static void mk_mhit (FILE *file, Track *track)
 {
   put_data_cur (file, "mhit", 4);
   put_4int_cur (file, 156);  /* header size */
   put_4int_cur (file, -1);   /* size of whole mhit -- fill in later */
   put_4int_cur (file, -1);   /* nr of mhods in this mhit -- later   */
-  put_4int_cur (file, song->ipod_id); /* song index number          */
+  put_4int_cur (file, track->ipod_id); /* track index number          */
   put_4int_cur (file, 1);
   put_4int_cur (file, 0);
-  put_4int_cur (file, 257 | song->rating<<24);  /* type, rating     */
-  put_4int_cur (file, song->time_modified); /* timestamp             */
-  put_4int_cur (file, song->size);    /* filesize                   */
-  put_4int_cur (file, song->songlen); /* length of song in ms       */
-  put_4int_cur (file, song->track_nr);/* track number               */
-  put_4int_cur (file, song->tracks);  /* number of tracks           */
-  put_4int_cur (file, song->year);    /* the year                   */
-  put_4int_cur (file, song->bitrate); /* bitrate                    */
+  put_4int_cur (file, 257 | track->rating<<24);  /* type, rating     */
+  put_4int_cur (file, track->time_modified); /* timestamp             */
+  put_4int_cur (file, track->size);    /* filesize                   */
+  put_4int_cur (file, track->tracklen); /* length of track in ms       */
+  put_4int_cur (file, track->track_nr);/* track number               */
+  put_4int_cur (file, track->tracks);  /* number of tracks           */
+  put_4int_cur (file, track->year);    /* the year                   */
+  put_4int_cur (file, track->bitrate); /* bitrate                    */
   put_4int_cur (file, 0xac440000);    /* ?                          */
-  put_4int_cur (file, song->volume);  /* volume adjust              */
+  put_4int_cur (file, track->volume);  /* volume adjust              */
   put_n0_cur (file, 3);               /* dummy space                */
-  put_4int_cur (file, song->playcount);/* playcount                 */
+  put_4int_cur (file, track->playcount);/* playcount                 */
   put_4int_cur (file, 0);             /* dummy space                */
-  put_4int_cur (file, song->time_played); /* last time played       */
-  put_4int_cur (file, song->cd_nr);   /* CD number                  */
-  put_4int_cur (file, song->cds);     /* number of CDs              */
+  put_4int_cur (file, track->time_played); /* last time played       */
+  put_4int_cur (file, track->cd_nr);   /* CD number                  */
+  put_4int_cur (file, track->cds);     /* number of CDs              */
   put_4int_cur (file, 0);             /* hardcoded space            */
   put_4int_cur (file, itunesdb_time_get_mac_time ()); /* current timestamp */
   put_n0_cur (file, 12);              /* dummy space                */
@@ -1025,7 +1025,7 @@ static void fix_mhit (FILE *file, glong mhit_seek, glong cur, gint mhod_num)
 /* Write out one mhod header.
      type: see enum of MHMOD_IDs;
      string: utf16 string to pack
-     fqid: will be used for playlists -- use 1 for songs */
+     fqid: will be used for playlists -- use 1 for tracks */
 static void mk_mhod (FILE *file, guint32 type,
 		     gunichar2 *string, guint32 fqid)
 {
@@ -1125,13 +1125,13 @@ static void mk_weired (FILE *file)
 
 /* Write out the mhyp header. Size will be written later */
 static void mk_mhyp (FILE *file, gunichar2 *listname,
-		     guint32 type, guint32 song_num)
+		     guint32 type, guint32 track_num)
 {
   put_data_cur (file, "mhyp", 4);      /* header                   */
   put_4int_cur (file, 108);            /* length		   */
   put_4int_cur (file, -1);             /* size -> later            */
   put_4int_cur (file, 2);              /* ?                        */
-  put_4int_cur (file, song_num);       /* number of songs in plist */
+  put_4int_cur (file, track_num);       /* number of tracks in plist */
   put_4int_cur (file, type);           /* 1 = main, 0 = visible    */
   put_4int_cur (file, 0);              /* ?                        */
   put_4int_cur (file, 0);              /* ?                        */
@@ -1158,7 +1158,7 @@ static void mk_mhip (FILE *file, guint32 id)
   put_4int_cur (file, 76);
   put_4int_cur (file, 1);
   put_4int_cur (file, 0);
-  put_4int_cur (file, id);  /* song id in playlist */
+  put_4int_cur (file, id);  /* track id in playlist */
   put_4int_cur (file, id);  /* ditto.. don't know the difference, but this
                                seems to work. Maybe a special ID used for
 			       playlists? */
@@ -1168,64 +1168,64 @@ static void mk_mhip (FILE *file, guint32 id)
 static void
 write_mhsd_one(FILE *file)
 {
-    Song *song;
-    guint32 i, song_num, mhod_num;
+    Track *track;
+    guint32 i, track_num, mhod_num;
     glong mhsd_seek, mhit_seek, mhlt_seek; 
 
-    song_num = it_get_nr_of_songs();
+    track_num = it_get_nr_of_tracks();
 
     mhsd_seek = ftell (file);  /* get position of mhsd header */
-    mk_mhsd (file, 1);         /* write header: type 1: song  */
+    mk_mhsd (file, 1);         /* write header: type 1: track  */
     mhlt_seek = ftell (file);  /* get position of mhlt header */
-    mk_mhlt (file, song_num);  /* write header with nr. of songs */
-    for (i=0; i<song_num; ++i)  /* Write each song */
+    mk_mhlt (file, track_num);  /* write header with nr. of tracks */
+    for (i=0; i<track_num; ++i)  /* Write each track */
     {
-	if((song = it_get_song_by_nr (i)) == 0)
+	if((track = it_get_track_by_nr (i)) == 0)
 	{
-	    g_warning ("Invalid song Index!\n");
+	    g_warning ("Invalid track Index!\n");
 	    break;
 	}
 	mhit_seek = ftell (file);
-	mk_mhit (file, song);
+	mk_mhit (file, track);
 	mhod_num = 0;
-	if (utf16_strlen (song->title_utf16) != 0)
+	if (utf16_strlen (track->title_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_TITLE, song->title_utf16, 1);
+	    mk_mhod (file, MHOD_ID_TITLE, track->title_utf16, 1);
 	    ++mhod_num;
 	}
-	if (utf16_strlen (song->ipod_path_utf16) != 0)
+	if (utf16_strlen (track->ipod_path_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_PATH, song->ipod_path_utf16, 1);
+	    mk_mhod (file, MHOD_ID_PATH, track->ipod_path_utf16, 1);
 	    ++mhod_num;
 	}
-	if (utf16_strlen (song->album_utf16) != 0)
+	if (utf16_strlen (track->album_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_ALBUM, song->album_utf16, 1);
+	    mk_mhod (file, MHOD_ID_ALBUM, track->album_utf16, 1);
 	    ++mhod_num;
 	}
-	if (utf16_strlen (song->artist_utf16) != 0)
+	if (utf16_strlen (track->artist_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_ARTIST, song->artist_utf16, 1);
+	    mk_mhod (file, MHOD_ID_ARTIST, track->artist_utf16, 1);
 	    ++mhod_num;
 	}
-	if (utf16_strlen (song->genre_utf16) != 0)
+	if (utf16_strlen (track->genre_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_GENRE, song->genre_utf16, 1);
+	    mk_mhod (file, MHOD_ID_GENRE, track->genre_utf16, 1);
 	    ++mhod_num;
 	}
-	if (utf16_strlen (song->fdesc_utf16) != 0)
+	if (utf16_strlen (track->fdesc_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_FDESC, song->fdesc_utf16, 1);
+	    mk_mhod (file, MHOD_ID_FDESC, track->fdesc_utf16, 1);
 	    ++mhod_num;
 	}
-	if (utf16_strlen (song->comment_utf16) != 0)
+	if (utf16_strlen (track->comment_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_COMMENT, song->comment_utf16, 1);
+	    mk_mhod (file, MHOD_ID_COMMENT, track->comment_utf16, 1);
 	    ++mhod_num;
 	}
-	if (utf16_strlen (song->composer_utf16) != 0)
+	if (utf16_strlen (track->composer_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_COMPOSER, song->composer_utf16, 1);
+	    mk_mhod (file, MHOD_ID_COMPOSER, track->composer_utf16, 1);
 	    ++mhod_num;
 	}
         /* Fill in the missing items of the mhit header */
@@ -1237,20 +1237,20 @@ write_mhsd_one(FILE *file)
 static void
 write_playlist(FILE *file, Playlist *pl)
 {
-    Song *s;
+    Track *s;
     guint32 i, n;
     glong mhyp_seek;
     gunichar2 empty = 0;
     
     mhyp_seek = ftell(file);
-    n = it_get_nr_of_songs_in_playlist (pl);
+    n = it_get_nr_of_tracks_in_playlist (pl);
 #if ITUNESDB_DEBUG
   fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, n);
 #endif    
     mk_mhyp(file, pl->name_utf16, pl->type, n);  
     for (i=0; i<n; ++i)
     {
-        if((s = it_get_song_in_playlist_by_nr (pl, i)))
+        if((s = it_get_track_in_playlist_by_nr (pl, i)))
 	{
 	    mk_mhip(file, s->ipod_id);
 	    mk_mhod(file, MHOD_ID_PLAYLIST, &empty, s->ipod_id); 
@@ -1290,7 +1290,7 @@ write_it (FILE *file)
 
     mhbd_seek = 0;             
     mk_mhbd (file);            
-    write_mhsd_one(file);		/* write songs mhsd */
+    write_mhsd_one(file);		/* write tracks mhsd */
     write_mhsd_two(file);		/* write playlists mhsd */
     fix_mhbd (file, mhbd_seek, ftell (file));
     return TRUE;
@@ -1298,7 +1298,7 @@ write_it (FILE *file)
 
 
 /* Write out an iTunesDB.
-   Note: only the _utf16 entries in the Song-struct are used
+   Note: only the _utf16 entries in the Track-struct are used
    An existing "Play Counts" file is renamed to "Play Counts.bak" if
    the export was successful.
    Returns TRUE on success, FALSE on error.
@@ -1356,14 +1356,14 @@ gboolean itunesdb_write_to_file (gchar *filename)
   return result;
 }
 
-/* Copy one song to the ipod. The PC-Filename is
+/* Copy one track to the ipod. The PC-Filename is
    "pcfile" and is taken literally.
    "path" is assumed to be the mountpoint of the iPod.
    For storage, the directories "f00 ... f19" will be
    cycled through. The filename is constructed from
-   "song->ipod_id": "gtkpod_id" and written to
-   "song->ipod_path_utf8" and "song->ipod_path_utf16" */
-gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
+   "track->ipod_id": "gtkpod_id" and written to
+   "track->ipod_path_utf8" and "track->ipod_path_utf16" */
+gboolean itunesdb_copy_track_to_ipod (gchar *path, Track *track, gchar *pcfile)
 {
   static gint dir_num = -1;
   gchar *ipod_file = NULL, *ipod_fullfile = NULL;
@@ -1374,27 +1374,27 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
   if (path) pathlen = strlen (path); /* length of path in bytes */
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "Entered itunesdb_copy_song_to_ipod: '%s', %p, '%s'\n", path, song, pcfile);
+  fprintf(stderr, "Entered itunesdb_copy_track_to_ipod: '%s', %p, '%s'\n", path, track, pcfile);
 #endif
   if (dir_num == -1) dir_num = (gint) (19.0*rand()/(RAND_MAX));
-  if(song->transferred == TRUE) return TRUE; /* nothing to do */
-  if (song == NULL)
+  if(track->transferred == TRUE) return TRUE; /* nothing to do */
+  if (track == NULL)
     {
-      g_warning ("Programming error: copy_song_to_ipod () called NULL-song\n");
+      g_warning ("Programming error: copy_track_to_ipod () called NULL-track\n");
       return FALSE;
     }
 
-  /* If song->ipod_path exists, we use that one instead. */
-  ipod_fullfile = itunesdb_get_track_name_on_ipod (path, song);
+  /* If track->ipod_path exists, we use that one instead. */
+  ipod_fullfile = itunesdb_get_track_name_on_ipod (path, track);
   if (!ipod_fullfile) do
   { /* we need to loop until we find a unused filename */
       if (ipod_file)     g_free(ipod_file);
       if (ipod_fullfile) g_free(ipod_fullfile);
-      /* The iPod seems to need the .mp3 ending to play the song.
+      /* The iPod seems to need the .mp3 ending to play the track.
 	 Of course the following line should be changed once gtkpod
 	 also supports other formats. */
       ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d.mp3",
-				   dir_num, song->ipod_id + oops);
+				   dir_num, track->ipod_id + oops);
       ipod_fullfile = g_build_filename (path, ipod_file+1, NULL);
       /* There is a case-sensitivity problem on some systems (see note
        * at itunesdb_get_track_name_on_ipod (). The following code
@@ -1431,7 +1431,7 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
   if (success)
   {
       gint i, len;
-      song->transferred = TRUE;
+      track->transferred = TRUE;
       ++dir_num;
       if (dir_num == 20) dir_num = 0;
       if (ipod_file)
@@ -1440,11 +1440,11 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 	  for (i=0; i<len; ++i)     /* replace '/' by ':' */
 	      if (ipod_file[i] == '/')  ipod_file[i] = ':';
 #ifdef ITUNESDB_PROVIDE_UTF8
-	  if (song->ipod_path) g_free (song->ipod_path);
-	  song->ipod_path = g_strdup (ipod_file);
+	  if (track->ipod_path) g_free (track->ipod_path);
+	  track->ipod_path = g_strdup (ipod_file);
 #endif
-	  if (song->ipod_path_utf16) g_free (song->ipod_path_utf16);
-	  song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
+	  if (track->ipod_path_utf16) g_free (track->ipod_path_utf16);
+	  track->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
 						   -1, NULL, NULL, NULL);
       }
   }
@@ -1455,14 +1455,14 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 
 
 /* Return the full iPod filename as stored in @s.
-   @s: song
+   @s: track
    @path: mount point of the iPod file system
    Return value: full filename to @s on the iPod or NULL if no
    filename is set in @s. NOTE: the file does not necessarily
    exist. NOTE: this code works around a problem on some systems (see
    below) and might return a filename with different case than the
    original filename. Don't copy it back to @s */
-gchar *itunesdb_get_track_name_on_ipod (gchar *path, Song *s)
+gchar *itunesdb_get_track_name_on_ipod (gchar *path, Track *s)
 {
     gchar *result = NULL;
 

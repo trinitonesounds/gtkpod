@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-19 23:35:11 jcs>
+/* Time-stamp: <2003-10-03 00:13:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -67,7 +67,7 @@ void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
 void add_idlist_to_playlist (Playlist *pl, gchar *str);
 void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position,
-				 AddSongFunc songaddfunc, gpointer data);
+				 AddTrackFunc trackaddfunc, gpointer data);
 void cleanup_backup_and_extended_files (void);
 gboolean gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);
@@ -79,16 +79,16 @@ void gtkpod_space_statusbar_init(GtkWidget *w);
 
 S_item SM_to_S (SM_item sm);
 S_item ST_to_S (ST_CAT_item st);
-gchar *get_song_info (Song *song);
+gchar *get_track_info (Track *track);
 
-void gtkpod_songs_statusbar_init(GtkWidget*);
-void gtkpod_songs_statusbar_update(void);
+void gtkpod_tracks_statusbar_init(GtkWidget*);
+void gtkpod_tracks_statusbar_update(void);
 void ipod_directories_head (void);
 void delete_playlist_head (void);
-void delete_song_head (void);
+void delete_track_head (void);
 void delete_entry_head (gint inst);
 
-void delete_populate_settings (Playlist *pl, GList *selected_songids,
+void delete_populate_settings (Playlist *pl, GList *selected_trackids,
 			       gchar **label, gchar **title,
 			       gboolean *confirm_again,
 			       ConfHandlerOpt *confirm_again_handler,
@@ -102,18 +102,18 @@ void mount_ipod(void);
 void unmount_ipod(void);
 void call_script (gchar *script);
 
-void do_command_on_entries (gchar *command, gchar *what, GList *selected_songs);
-void play_songs (GList *selected_songs);
-void enqueue_songs (GList *selected_songs);
+void do_command_on_entries (gchar *command, gchar *what, GList *selected_tracks);
+void play_tracks (GList *selected_tracks);
+void enqueue_tracks (GList *selected_tracks);
 
-void delete_song_ok (gpointer user_data1, gpointer user_data2);
+void delete_track_ok (gpointer user_data1, gpointer user_data2);
 
 void gtkpod_warning (const gchar *format, ...);
 
 gchar *time_time_to_string (time_t time);
-time_t time_get_time (Song *song, SM_item sm_item);
-gchar *time_field_to_string (Song *song, SM_item sm_item);
-void time_set_time (Song *song, time_t time, SM_item sm_item);
+time_t time_get_time (Track *track, SM_item sm_item);
+gchar *time_field_to_string (Track *track, SM_item sm_item);
+void time_set_time (Track *track, time_t time, SM_item sm_item);
 
 gint compare_string (gchar *str1, gchar *str2);
 gint compare_string_case_insensitive (gchar *str1, gchar *str2);
@@ -125,10 +125,10 @@ gchar *filename_from_uri (const char *uri,
 void generate_category_playlists (S_item cat);
 Playlist *generate_displayed_playlist (void);
 Playlist *generate_selected_playlist (void);
-Playlist *generate_new_playlist (GList *songs);
-Playlist *generate_playlist_with_name (GList *songs, gchar *pl_name);
-Playlist *generate_playlist (GList *songs, gchar *pl_name);
-Playlist *generate_new_playlist (GList *songs);
+Playlist *generate_new_playlist (GList *tracks);
+Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name);
+Playlist *generate_playlist (GList *tracks, gchar *pl_name);
+Playlist *generate_new_playlist (GList *tracks);
 void most_listened_pl (void);
 void last_listened_pl(void);
 void most_rated_pl(void);

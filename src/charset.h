@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-29 09:38:54 jcs>
+/* Time-stamp: <2003-10-03 00:12:37 jcs>
 |
 |  Copyright (C) 2002 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -47,7 +47,7 @@ gchar *charset_from_description (gchar *descr);
 gchar *charset_to_description (gchar *charset);
 gchar *charset_to_utf8 (G_CONST_RETURN gchar *str);
 gchar *charset_from_utf8 (G_CONST_RETURN gchar *str);
-gchar *charset_song_charset_from_utf8 (Song *s, G_CONST_RETURN gchar *str);
+gchar *charset_track_charset_from_utf8 (Track *s, G_CONST_RETURN gchar *str);
 gchar *charset_to_charset (gchar *from_charset, gchar *to_charset,
 			   G_CONST_RETURN gchar *str);
 

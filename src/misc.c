@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 00:18:37 jcs>
+/* Time-stamp: <2003-10-03 00:11:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -60,7 +60,7 @@ static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
 static GtkWidget *pl_file_selector = NULL;
 static GtkWidget *gtkpod_statusbar = NULL;
-static GtkWidget *gtkpod_songs_statusbar = NULL;
+static GtkWidget *gtkpod_tracks_statusbar = NULL;
 static GtkWidget *gtkpod_space_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
 
@@ -70,7 +70,7 @@ static glong get_ipod_used_space(void);
 #endif
 
 /* used for special playlist creation */
-typedef gboolean (*PL_InsertFunc)(Song *song);
+typedef gboolean (*PL_InsertFunc)(Track *track);
 
 /* --------------------------------------------------------------*/
 /* are widgets blocked at the moment? */
@@ -116,20 +116,20 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   plitem = pm_get_selected_playlist ();
   for (i=0; names[i] != NULL; ++i)
   {
-      add_song_by_filename (names[i], plitem,
+      add_track_by_filename (names[i], plitem,
 			    prefs_get_add_recursively (),
 			    NULL, NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
   }
-  /* clear log of non-updated songs */
+  /* clear log of non-updated tracks */
   display_non_updated ((void *)-1, NULL);
-  /* display log of updated songs */
+  /* display log of updated tracks */
   display_updated (NULL, NULL);
   /* display log of detected duplicates */
   remove_duplicate (NULL, NULL);
   gtkpod_statusbar_message(_("Successly Added Files"));
-  gtkpod_songs_statusbar_update();
+  gtkpod_tracks_statusbar_update();
   release_widgets ();
   g_strfreev (names);
 }
@@ -138,7 +138,7 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 static void add_files_close (GtkWidget *w1, GtkWidget *w2)
 {
     if (file_selector)    gtk_widget_destroy(file_selector),
-    gtkpod_songs_statusbar_update();
+    gtkpod_tracks_statusbar_update();
     file_selector = NULL;
 }
 
@@ -201,7 +201,7 @@ static void add_playlists_ok_button (GtkWidget *button, GtkFileSelection *select
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
     }
-  gtkpod_songs_statusbar_update();
+  gtkpod_tracks_statusbar_update();
   release_widgets ();
   g_strfreev (names);
 }
@@ -210,7 +210,7 @@ static void add_playlists_ok_button (GtkWidget *button, GtkFileSelection *select
 static void add_playlists_close (GtkWidget *w1, GtkWidget *w2)
 {
     if (pl_file_selector)    gtk_widget_destroy(pl_file_selector),
-    gtkpod_songs_statusbar_update();
+    gtkpod_tracks_statusbar_update();
     pl_file_selector = NULL;
 }
 
@@ -322,7 +322,7 @@ You should have received a copy of the GNU General Public License along with thi
 		       _("\
 Patches were supplied by the following people (list may be incomplete -- please contact me)\n\n"),
 		       _("\
-Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n"),
+Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"),
 		       _("\
 Hiroshi Kawashima: Japanese charset autodetecion feature\n"),
 		       _("\
@@ -437,18 +437,18 @@ void add_idlist_to_playlist (Playlist *pl, gchar *str)
     if (!pl) return;
     while(parse_ipod_id_from_string(&str,&id))
     {
-	add_songid_to_playlist(pl, id, TRUE);
+	add_trackid_to_playlist(pl, id, TRUE);
     }
     data_changed();
 }
 
 /* DND: add a list of files to Playlist @pl.  @pl: playlist to add to
    or NULL. If NULL, a "New Playlist" will be created for adding
-   songs and when adding a playlist file, a playlist with the name of the
+   tracks and when adding a playlist file, a playlist with the name of the
    playlist file will be added.
-   @songaddfunc: passed on to add_song_by_filename() etc. */
+   @trackaddfunc: passed on to add_track_by_filename() etc. */
 void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
-				 AddSongFunc songaddfunc, gpointer data)
+				 AddTrackFunc trackaddfunc, gpointer data)
 {
     gchar **files = NULL, **filesp = NULL;
     Playlist *pl_playlist = pl; /* playlist for playlist file */
@@ -500,7 +500,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 		    }
 		    add_directory_by_name (decoded_file, pl,
 					   prefs_get_add_recursively (),
-					   songaddfunc, data);
+					   trackaddfunc, data);
 		    added = TRUE;
 		}
 		if (g_file_test (file, G_FILE_TEST_IS_REGULAR))
@@ -517,9 +517,9 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
                                                        _("New Playlist"),
                                                        pl_pos);
 			    }
-			    add_song_by_filename (decoded_file, pl,
+			    add_track_by_filename (decoded_file, pl,
 						  prefs_get_add_recursively (),
-						  songaddfunc, data);
+						  trackaddfunc, data);
 			    added = TRUE;
 			}
 			else if ((strcasecmp (&decoded_file[decoded_len-4],
@@ -529,7 +529,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 			{
 			    add_playlist_by_filename (decoded_file,
                                                       pl_playlist,
-						      songaddfunc, data);
+						      trackaddfunc, data);
 			    added = TRUE;
 			}
 		    }
@@ -545,9 +545,9 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 	}
 	g_strfreev (files);
     }
-    /* display log of non-updated songs */
+    /* display log of non-updated tracks */
     display_non_updated (NULL, NULL);
-    /* display log updated songs */
+    /* display log updated tracks */
     display_updated (NULL, NULL);
     /* display log of detected duplicates */
     remove_duplicate (NULL, NULL);
@@ -610,9 +610,9 @@ gtkpod_main_quit(void)
     if (result == GTK_RESPONSE_YES)
     {
 	remove_all_playlists ();  /* first remove playlists, then
-				   * songs! (otherwise non-existing
-				   *songs may be accessed) */
-	remove_all_songs ();
+				   * tracks! (otherwise non-existing
+				   *tracks may be accessed) */
+	remove_all_tracks ();
 	display_cleanup ();
 	write_prefs (); /* FIXME: how can we avoid saving options set by
 			 * command line? */
@@ -814,23 +814,23 @@ gtkpod_statusbar_message(const gchar *message)
 }
 
 void
-gtkpod_songs_statusbar_init(GtkWidget *w)
+gtkpod_tracks_statusbar_init(GtkWidget *w)
 {
-    gtkpod_songs_statusbar = w;
-    gtkpod_songs_statusbar_update();
+    gtkpod_tracks_statusbar = w;
+    gtkpod_tracks_statusbar_update();
 }
 
 void 
-gtkpod_songs_statusbar_update(void)
+gtkpod_tracks_statusbar_update(void)
 {
-    if(gtkpod_songs_statusbar)
+    if(gtkpod_tracks_statusbar)
     {
 	gchar *buf;
 	
 	buf = g_strdup_printf (_(" P:%d S:%d/%d"), get_nr_of_playlists
-		() - 1, sm_get_nr_of_songs (), get_nr_of_songs ());
-	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_songs_statusbar), 1);
-	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_songs_statusbar), 1,  buf);
+		() - 1, sm_get_nr_of_tracks (), get_nr_of_tracks ());
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1,  buf);
 	g_free (buf);
     }
 
@@ -838,7 +838,7 @@ gtkpod_songs_statusbar_update(void)
 
 
 /* translates a SM_COLUMN_... (defined in display.h) into a
- * S_... (defined in song.h). Returns -1 in case a translation is not
+ * S_... (defined in track.h). Returns -1 in case a translation is not
  * possible */
 S_item SM_to_S (SM_item sm)
 {
@@ -854,7 +854,7 @@ S_item SM_to_S (SM_item sm)
     case SM_COLUMN_PC_PATH:       return S_PC_PATH;
     case SM_COLUMN_TRANSFERRED:   return S_TRANSFERRED;
     case SM_COLUMN_SIZE:          return S_SIZE;
-    case SM_COLUMN_SONGLEN:       return S_SONGLEN;
+    case SM_COLUMN_TRACKLEN:       return S_TRACKLEN;
     case SM_COLUMN_BITRATE:       return S_BITRATE;
     case SM_COLUMN_PLAYCOUNT:     return S_PLAYCOUNT;
     case SM_COLUMN_RATING:        return S_RATING;
@@ -868,7 +868,7 @@ S_item SM_to_S (SM_item sm)
 
 
 /* translates a ST_CAT_... (defined in display.h) into a
- * S_... (defined in song.h). Returns -1 in case a translation is not
+ * S_... (defined in track.h). Returns -1 in case a translation is not
  * possible */
 S_item ST_to_S (ST_CAT_item st)
 {
@@ -885,20 +885,20 @@ S_item ST_to_S (ST_CAT_item st)
     return -1;
 }
 
-/* return some sensible input about the "song". Yo must free the
+/* return some sensible input about the "track". Yo must free the
  * return string after use. */
-gchar *get_song_info (Song *song)
+gchar *get_track_info (Track *track)
 {
-    if (!song) return NULL;
-    if (song->pc_path_utf8 && strlen(song->pc_path_utf8))
-	return g_path_get_basename (song->pc_path_utf8);
-    else if ((song->title && strlen(song->title)))
-	return g_strdup (song->title);
-    else if ((song->album && strlen(song->album)))
-	return g_strdup (song->album);
-    else if ((song->artist && strlen(song->artist)))
-	return g_strdup (song->artist);
-    return g_strdup_printf ("iPod ID: %d", song->ipod_id);
+    if (!track) return NULL;
+    if (track->pc_path_utf8 && strlen(track->pc_path_utf8))
+	return g_path_get_basename (track->pc_path_utf8);
+    else if ((track->title && strlen(track->title)))
+	return g_strdup (track->title);
+    else if ((track->album && strlen(track->album)))
+	return g_strdup (track->album);
+    else if ((track->artist && strlen(track->artist)))
+	return g_strdup (track->artist);
+    return g_strdup_printf ("iPod ID: %d", track->ipod_id);
 }
 
 /*------------------------------------------------------------------*\
@@ -942,7 +942,7 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
     struct blocked_widget *bw;
 
     /* Create a list of widgets that are to be turned insensitive when
-     * importing/exporting, adding songs or directories etc. */
+     * importing/exporting, adding tracks or directories etc. */
     if (bws == NULL)
     {
 	bws = add_blocked_widget (bws, "menubar");
@@ -1198,56 +1198,56 @@ void delete_playlist_head (void)
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *             Delete Songs                                         *
+ *             Delete Tracks                                         *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
 
-/* This is the same for delete_song_head() and delete_st_head(), so I
+/* This is the same for delete_track_head() and delete_st_head(), so I
  * moved it here to make changes easier */
-void delete_populate_settings (Playlist *pl, GList *selected_songids,
+void delete_populate_settings (Playlist *pl, GList *selected_trackids,
 			       gchar **label, gchar **title,
 			       gboolean *confirm_again,
 			       ConfHandlerOpt *confirm_again_handler,
 			       GString **str)
 {
-    Song *s;
+    Track *s;
     GList *l;
     guint n;
 
     /* write title and label */
-    n = g_list_length (selected_songids);
+    n = g_list_length (selected_trackids);
     if (!pl) pl = get_playlist_by_nr (0); /* NULL,0: MPL */
     if(pl->type == PL_TYPE_MPL)
     {
 	if (label)
-	    *label = g_strdup (ngettext ("Are you sure you want to delete the following song\ncompletely from your ipod?", "Are you sure you want to delete the following songs\ncompletely from your ipod?", n));
+	    *label = g_strdup (ngettext ("Are you sure you want to delete the following track\ncompletely from your ipod?", "Are you sure you want to delete the following tracks\ncompletely from your ipod?", n));
 	if (title)
-	    *title = ngettext (_("Delete Song Completely?"), _("Delete Songs Completey?"), n);
+	    *title = ngettext (_("Delete Track Completely?"), _("Delete Tracks Completey?"), n);
 	if (confirm_again)
-	    *confirm_again = prefs_get_song_ipod_file_deletion ();
+	    *confirm_again = prefs_get_track_ipod_file_deletion ();
 	if (confirm_again_handler)
-	    *confirm_again_handler = prefs_set_song_ipod_file_deletion;
+	    *confirm_again_handler = prefs_set_track_ipod_file_deletion;
     }
     else /* normal playlist */
     {
 	if (label)
-	    *label = g_strdup_printf(ngettext ("Are you sure you want to delete the following song\nfrom the playlist \"%s\"?", "Are you sure you want to delete the following songs\nfrom the playlist \"%s\"?", n), pl->name);
+	    *label = g_strdup_printf(ngettext ("Are you sure you want to delete the following track\nfrom the playlist \"%s\"?", "Are you sure you want to delete the following tracks\nfrom the playlist \"%s\"?", n), pl->name);
 	if (title)
-	    *title = ngettext (_("Delete Song From Playlist?"), _("Delete Songs From Playlist?"), n);
+	    *title = ngettext (_("Delete Track From Playlist?"), _("Delete Tracks From Playlist?"), n);
 	if (confirm_again)
-	    *confirm_again = prefs_get_song_playlist_deletion ();
+	    *confirm_again = prefs_get_track_playlist_deletion ();
 	if (confirm_again_handler)
-	    *confirm_again_handler = prefs_set_song_playlist_deletion;
+	    *confirm_again_handler = prefs_set_track_playlist_deletion;
     }
 
-    /* Write names of songs */
+    /* Write names of tracks */
     if (str)
     {
 	*str = g_string_sized_new (2000);
-	for(l = selected_songids; l; l = l->next)
+	for(l = selected_trackids; l; l = l->next)
 	{
-	    s = get_song_by_id ((guint32)l->data);
+	    s = get_track_by_id ((guint32)l->data);
 	    if (s)
 		g_string_append_printf (*str, "%s-%s\n", s->artist, s->title);
 	}
@@ -1255,12 +1255,12 @@ void delete_populate_settings (Playlist *pl, GList *selected_songids,
 }
 
 
-/* ok handler for delete song */
-/* @user_data1 the selected playlist, @user_data2 are the selected songs */
-void delete_song_ok (gpointer user_data1, gpointer user_data2)
+/* ok handler for delete track */
+/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
+void delete_track_ok (gpointer user_data1, gpointer user_data2)
 {
     Playlist *pl = user_data1;
-    GList *selected_songids = user_data2;
+    GList *selected_trackids = user_data2;
     gint n;
     gchar *buf;
     GList *l;
@@ -1270,39 +1270,39 @@ void delete_song_ok (gpointer user_data1, gpointer user_data2)
     {
 	pl = get_playlist_by_nr (0);  /* NULL,0 = MPL */
     }
-    if (!selected_songids)
+    if (!selected_trackids)
 	return;
 
-    n = g_list_length (selected_songids); /* nr of songs to be deleted */
+    n = g_list_length (selected_trackids); /* nr of tracks to be deleted */
     if (pl->type == PL_TYPE_MPL)
     {
-	buf = g_strdup_printf (ngettext (_("Deleted one song completely from iPod"), _("Deleted %d songs completely from iPod"), n), n);
+	buf = g_strdup_printf (ngettext (_("Deleted one track completely from iPod"), _("Deleted %d tracks completely from iPod"), n), n);
     }
     else /* normal playlist */
     {
-	buf = g_strdup_printf (ngettext (_("Deleted song from playlist '%s'"), _("Deleted songs from playlist '%s'"), n), pl->name);
+	buf = g_strdup_printf (ngettext (_("Deleted track from playlist '%s'"), _("Deleted tracks from playlist '%s'"), n), pl->name);
     }
 
-    for (l = selected_songids; l; l = l->next)
-	remove_songid_from_playlist (pl, (guint32)l->data);
+    for (l = selected_trackids; l; l = l->next)
+	remove_trackid_from_playlist (pl, (guint32)l->data);
 
     gtkpod_statusbar_message (buf);
-    g_list_free (selected_songids);
+    g_list_free (selected_trackids);
     g_free (buf);
 }
 
-/* cancel handler for delete song */
-/* @user_data1 the selected playlist, @user_data2 are the selected songs */
-static void delete_song_cancel (gpointer user_data1, gpointer user_data2)
+/* cancel handler for delete track */
+/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
+static void delete_track_cancel (gpointer user_data1, gpointer user_data2)
 {
-    GList *selected_songids = user_data2;
+    GList *selected_trackids = user_data2;
 
-    g_list_free (selected_songids);
+    g_list_free (selected_trackids);
 }
 
-void delete_song_head (void)
+void delete_track_head (void)
 {
-    GList *selected_songids;
+    GList *selected_trackids;
     Playlist *pl;
     GString *str;
     gchar *label, *title;
@@ -1315,13 +1315,13 @@ void delete_song_head (void)
 	gtkpod_statusbar_message (_("No playlist selected."));
 	return;
     }
-    selected_songids = sm_get_selected_songids();
-    if (selected_songids == NULL)
-    {  /* no songs selected */
-	gtkpod_statusbar_message (_("No songs selected."));
+    selected_trackids = sm_get_selected_trackids();
+    if (selected_trackids == NULL)
+    {  /* no tracks selected */
+	gtkpod_statusbar_message (_("No tracks selected."));
 	return;
     }
-    delete_populate_settings (pl, selected_songids,
+    delete_populate_settings (pl, selected_trackids,
 			      &label, &title,
 			      &confirm_again, &confirm_again_handler,
 			      &str);
@@ -1336,11 +1336,11 @@ void delete_song_head (void)
 	 NULL, 0, NULL,        /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
 	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
-	 delete_song_ok,       /* ConfHandler ok_handler,*/
+	 delete_track_ok,       /* ConfHandler ok_handler,*/
 	 CONF_NO_BUTTON,       /* don't show "Apply" button */
-	 delete_song_cancel,   /* cancel_handler,*/
+	 delete_track_cancel,   /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
-	 selected_songids);    /* gpointer user_data2,*/
+	 selected_trackids);    /* gpointer user_data2,*/
 
     g_free (label);
     g_string_free (str, TRUE);
@@ -1359,47 +1359,47 @@ gtkpod_main_window_set_active(gboolean active)
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *             Delete songs in st entry                             *
+ *             Delete tracks in st entry                             *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
 /* ok handler for delete tab entry */
-/* @user_data1 the selected playlist, @user_data2 are the selected songs */
+/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
 static void delete_entry_ok (gpointer user_data1, gpointer user_data2)
 {
     Playlist *pl = user_data1;
-    GList *selected_songids = user_data2;
+    GList *selected_trackids = user_data2;
     TabEntry *entry;
     guint32 inst;
 
     /* We put the instance at the first position in
-     * selected_songs. Retrieve it and delete it from the list */
-    inst = (guint32)g_list_nth_data (selected_songids, 0);
-    selected_songids = g_list_remove (selected_songids, (gpointer)inst);
+     * selected_tracks. Retrieve it and delete it from the list */
+    inst = (guint32)g_list_nth_data (selected_trackids, 0);
+    selected_trackids = g_list_remove (selected_trackids, (gpointer)inst);
     /* Same with the selected entry */
-    entry = g_list_nth_data (selected_songids, 0);
-    selected_songids = g_list_remove (selected_songids, entry);
+    entry = g_list_nth_data (selected_trackids, 0);
+    selected_trackids = g_list_remove (selected_trackids, entry);
 
-    /* Delete the songs */
-    delete_song_ok (pl, selected_songids);
+    /* Delete the tracks */
+    delete_track_ok (pl, selected_trackids);
     /* Delete the entry */
     st_remove_entry (entry, inst);
 }
 
 
 /* cancel handler for delete tab entry */
-/* @user_data1 the selected playlist, @user_data2 are the selected songs */
+/* @user_data1 the selected playlist, @user_data2 are the selected tracks */
 static void delete_entry_cancel (gpointer user_data1, gpointer user_data2)
 {
-    GList *selected_songids = user_data2;
+    GList *selected_trackids = user_data2;
 
-    g_list_free (selected_songids);
+    g_list_free (selected_trackids);
 }
 
 
 void delete_entry_head (gint inst)
 {
-    GList *selected_songids=NULL;
+    GList *selected_trackids=NULL;
     Playlist *pl;
     GString *str;
     gchar *label, *title;
@@ -1427,27 +1427,27 @@ void delete_entry_head (gint inst)
 	return;
     }
     if (entry->members == NULL)
-    {  /* no songs in entry -> just remove entry */
+    {  /* no tracks in entry -> just remove entry */
 	if (!entry->master)  st_remove_entry (entry, inst);
 	else   gtkpod_statusbar_message (_("Cannot remove entry 'All'"));
 	return;
     }
     for (gl=entry->members; gl; gl=gl->next)
     {
-	Song *s=(Song *)gl->data;
-	selected_songids = g_list_append (selected_songids,
+	Track *s=(Track *)gl->data;
+	selected_trackids = g_list_append (selected_trackids,
 					  (gpointer)s->ipod_id);
     }
 
-    delete_populate_settings (pl, selected_songids,
+    delete_populate_settings (pl, selected_trackids,
 			      &label, &title,
 			      &confirm_again, &confirm_again_handler,
 			      &str);
-    /* add "entry" to beginning of the "selected_songids" list -- we can
+    /* add "entry" to beginning of the "selected_trackids" list -- we can
      * only pass two args, so this is the easiest way */
-    selected_songids = g_list_prepend (selected_songids, entry);
+    selected_trackids = g_list_prepend (selected_trackids, entry);
     /* add "inst" the same way */
-    selected_songids = g_list_prepend (selected_songids, (gpointer)inst);
+    selected_trackids = g_list_prepend (selected_trackids, (gpointer)inst);
 
     /* open window */
     gtkpod_confirmation
@@ -1464,7 +1464,7 @@ void delete_entry_head (gint inst)
 	 CONF_NO_BUTTON,       /* don't show "Apply" button */
 	 delete_entry_cancel,  /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
-	 selected_songids);      /* gpointer user_data2,*/
+	 selected_trackids);      /* gpointer user_data2,*/
 
     g_free (label);
     g_string_free (str, TRUE);
@@ -1605,7 +1605,7 @@ void call_script (gchar *script)
 
 
 /***************************************************************************
- * play / enqueue / general "do command on selected songs" stuff
+ * play / enqueue / general "do command on selected tracks" stuff
  *
  **************************************************************************/
 
@@ -1637,15 +1637,15 @@ which(const gchar *exe)
 }
 
 /*
- * do_command_on_entries - execute @play on songs in @selected_songs
+ * do_command_on_entries - execute @play on tracks in @selected_tracks
  * @play: the command to execute (e.g. "xmms -e %s")
  * @what: e.g. "Enqueue" or "Play Now" (used for error messages)
- * @selected songs: list of songs to to be placed in the command line
+ * @selected tracks: list of tracks to to be placed in the command line
  * at the position of "%s"
  *
  */
 void 
-do_command_on_entries (gchar *command, gchar *what, GList *selected_songs)
+do_command_on_entries (gchar *command, gchar *what, GList *selected_tracks)
 {
     GList *l;
     gchar *str, *commandc, *next;
@@ -1685,7 +1685,7 @@ do_command_on_entries (gchar *command, gchar *what, GList *selected_songs)
     C_FREE (str);
 
     /* Create the command line */
-    args = g_ptr_array_sized_new (g_list_length (selected_songs) + 10);
+    args = g_ptr_array_sized_new (g_list_length (selected_tracks) + 10);
     /* first the full path */
     g_ptr_array_add (args, commandc);
     do
@@ -1707,9 +1707,9 @@ do_command_on_entries (gchar *command, gchar *what, GList *selected_songs)
 	}
 	else if (!percs)
 	{
-	    for(l = selected_songs; l; l = l->next)
+	    for(l = selected_tracks; l; l = l->next)
 	    {
-		if((str = get_track_name_on_disk_verified((Song*)l->data)))
+		if((str = get_track_name_on_disk_verified((Track*)l->data)))
 		    g_ptr_array_add (args, str);
 	    }
 	    percs = TRUE; /* encountered a '%s' */
@@ -1746,24 +1746,24 @@ do_command_on_entries (gchar *command, gchar *what, GList *selected_songs)
 
 /*
  * play_entries_now - play the entries currently selected in xmms
- * @selected_songs: list of songs to be played
+ * @selected_tracks: list of tracks to be played
  */
-void play_songs (GList *selected_songs)
+void play_tracks (GList *selected_tracks)
 {
     do_command_on_entries (prefs_get_play_now_path (),
 			   _("Play Now"),
-			   selected_songs);
+			   selected_tracks);
 }
 
 /*
  * play_entries_now - play the entries currently selected in xmms
- * @selected_songs: list of songs to be played
+ * @selected_tracks: list of tracks to be played
  */
-void enqueue_songs (GList *selected_songs)
+void enqueue_tracks (GList *selected_tracks)
 {
     do_command_on_entries (prefs_get_play_enqueue_path (),
 			   _("Enqueue"),
-			   selected_songs);
+			   selected_tracks);
 }
 
 
@@ -1888,8 +1888,8 @@ gtkpod_space_statusbar_update(void)
 	gchar *str = NULL;
 	glong left, pending;
 
-	left = get_ipod_free_space() + get_filesize_of_deleted_songs ();
-	pending = get_filesize_of_nontransferred_songs();
+	left = get_ipod_free_space() + get_filesize_of_deleted_tracks ();
+	pending = get_filesize_of_nontransferred_tracks();
 	if((left-pending) > 0)
 	{
 	    str = get_filesize_in_bytes(left - pending);
@@ -1944,17 +1944,17 @@ gchar *time_time_to_string (time_t time)
 
 
 /* get the timestamp SM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
-time_t time_get_time (Song *song, SM_item sm_item)
+time_t time_get_time (Track *track, SM_item sm_item)
 {
     guint32 mactime = 0;
 
-    if (song) switch (sm_item)
+    if (track) switch (sm_item)
     {
     case SM_COLUMN_TIME_PLAYED:
-	mactime = song->time_played;
+	mactime = track->time_played;
 	break;
     case SM_COLUMN_TIME_MODIFIED:
-	mactime = song->time_modified;
+	mactime = track->time_modified;
 	break;
     default:
 	mactime = 0;
@@ -1965,24 +1965,24 @@ time_t time_get_time (Song *song, SM_item sm_item)
 
 
 /* hopefully obvious */
-gchar *time_field_to_string (Song *song, SM_item sm_item)
+gchar *time_field_to_string (Track *track, SM_item sm_item)
 {
-    return (time_time_to_string (time_get_time (song, sm_item)));
+    return (time_time_to_string (time_get_time (track, sm_item)));
 }
 
 
 /* get the timestamp SM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
-void time_set_time (Song *song, time_t time, SM_item sm_item)
+void time_set_time (Track *track, time_t time, SM_item sm_item)
 {
     guint32 mactime = itunesdb_time_host_to_mac (time);
 
-    if (song) switch (sm_item)
+    if (track) switch (sm_item)
     {
     case SM_COLUMN_TIME_PLAYED:
-	song->time_played = mactime;
+	track->time_played = mactime;
 	break;
     case SM_COLUMN_TIME_MODIFIED:
-	song->time_modified = mactime;
+	track->time_modified = mactime;
 	break;
     default:
 	break;
@@ -2360,21 +2360,21 @@ void generate_category_playlists (S_item cat)
 
     master_pl = get_playlist_by_nr (0);
 
-    for(i = 0; i < get_nr_of_songs_in_playlist (master_pl) ; i++)
+    for(i = 0; i < get_nr_of_tracks_in_playlist (master_pl) ; i++)
     {
-        Song *song = g_list_nth_data (master_pl->members, i);
+        Track *track = g_list_nth_data (master_pl->members, i);
         Playlist *cat_pl = NULL;
 	gint j;
         gchar *category = NULL;
-	gchar *song_cat = NULL;
+	gchar *track_cat = NULL;
         int playlists_len = get_nr_of_playlists();
 
-	song_cat = song_get_item_utf8 (song, cat);
+	track_cat = track_get_item_utf8 (track, cat);
 
-	if (song_cat)
+	if (track_cat)
 	{
-	    /* some songs have empty strings in the genre field */
-	    if(song_cat[0] == '\0')
+	    /* some tracks have empty strings in the genre field */
+	    if(track_cat[0] == '\0')
 	    {
 		category = g_strdup_printf ("[%s %s]",
 					    qualifier, _("Unknown"));
@@ -2382,7 +2382,7 @@ void generate_category_playlists (S_item cat)
 	    else
 	    {
 		category = g_strdup_printf ("[%s %s]",
-					    qualifier, song_cat);
+					    qualifier, track_cat);
 	    }
 
 	    /* look for category playlist */
@@ -2402,49 +2402,49 @@ void generate_category_playlists (S_item cat)
 		cat_pl = add_new_playlist(category, -1);
 	    }
 
-	    add_song_to_playlist(cat_pl, song, TRUE);
+	    add_track_to_playlist(cat_pl, track, TRUE);
 	    C_FREE (category);
 	}
     }
-    gtkpod_songs_statusbar_update();
+    gtkpod_tracks_statusbar_update();
 }
 
-/* Generate a new playlist containing all the songs currently
+/* Generate a new playlist containing all the tracks currently
    displayed */
 Playlist *generate_displayed_playlist (void)
 {
-    GList *songs = sm_get_all_songs ();
-    Playlist *result = generate_new_playlist (songs);
-    g_list_free (songs);
+    GList *tracks = sm_get_all_tracks ();
+    Playlist *result = generate_new_playlist (tracks);
+    g_list_free (tracks);
     return result;
 }
 
 
-/* Generate a new playlist containing all the songs currently
+/* Generate a new playlist containing all the tracks currently
    selected */
 Playlist *generate_selected_playlist (void)
 {
-    GList *songs = sm_get_selected_songs ();
-    Playlist *result = generate_new_playlist (songs);
-    g_list_free (songs);
+    GList *tracks = sm_get_selected_tracks ();
+    Playlist *result = generate_new_playlist (tracks);
+    g_list_free (tracks);
     return result;
 }
 
-/* Generate a playlist consisting of the songs in @songs
+/* Generate a playlist consisting of the tracks in @tracks
  * with @name name */
-Playlist *generate_playlist_with_name (GList *songs,gchar *pl_name){
+Playlist *generate_playlist_with_name (GList *tracks,gchar *pl_name){
     GList *l;
     Playlist *pl=NULL;
-    gint n = g_list_length (songs);
+    gint n = g_list_length (tracks);
     gchar *str;
 
     if(n>0)
     {
         pl = add_new_playlist (pl_name, -1);
-        for (l=songs; l; l=l->next)
+        for (l=tracks; l; l=l->next)
         {
-            Song *song = (Song *)l->data;
-            add_song_to_playlist (pl, song, TRUE);
+            Track *track = (Track *)l->data;
+            add_track_to_playlist (pl, track, TRUE);
         }
         str = g_strdup_printf (ngettext ("Created playlist '%s' with %d track.",
 				     "Created playlist '%s' with %d tracks.",
@@ -2455,82 +2455,82 @@ Playlist *generate_playlist_with_name (GList *songs,gchar *pl_name){
         str = g_strdup_printf (_("No tracks available, playlist not created"));
     }
     gtkpod_statusbar_message (str);
-    gtkpod_songs_statusbar_update();
+    gtkpod_tracks_statusbar_update();
     g_free (str);
     return pl;
 }
 
-/* Generate a playlist named "New Playlist" consisting of the songs in @songs. */
-Playlist *generate_new_playlist (GList *songs)
+/* Generate a playlist named "New Playlist" consisting of the tracks in @tracks. */
+Playlist *generate_new_playlist (GList *tracks)
 {
-    return generate_playlist_with_name (songs, _("New Playlist"));
+    return generate_playlist_with_name (tracks, _("New Playlist"));
 }
 
 /* look at the add_ranked_playlist help:
  * BEWARE this function shouldn't be used*/
-static GList *create_ranked_glist(gint songs_nr,PL_InsertFunc insertfunc,
+static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
                                   GCompareFunc comparefunc)
 {
-   GList *songs=NULL;
+   GList *tracks=NULL;
    gint f=0;
    gint i=0;
-   Song *song=NULL;
+   Track *track=NULL;
   
-   while ((song=get_next_song(i)))
+   while ((track=get_next_track(i)))
    {
-      i=1; /* for get_next_song() */
-      if (song && (!insertfunc || insertfunc (song)))
+      i=1; /* for get_next_track() */
+      if (track && (!insertfunc || insertfunc (track)))
       {
-         songs = g_list_insert_sorted (songs, song, comparefunc);
+         tracks = g_list_insert_sorted (tracks, track, comparefunc);
          ++f;
-         if (songs_nr && (f>songs_nr))
+         if (tracks_nr && (f>tracks_nr))
          {   /*cut the tail*/
-            songs = g_list_remove(songs,
-                   g_list_nth_data(songs, songs_nr));
+            tracks = g_list_remove(tracks,
+                   g_list_nth_data(tracks, tracks_nr));
             --f;
          }
       }
    }
-   return songs;
+   return tracks;
 }
-/* Generate a new playlist named @pl_name, containing @songs_nr songs.
+/* Generate a new playlist named @pl_name, containing @tracks_nr tracks.
  *
- * @insertfunc: determines which songs to enter into the new playlist.
- *              If @insertfunc is NULL, all songs are added.
- * @comparefunc: determines order of songs
- * @songs_nr: max. number of songs in playlist or 0 for no limit.
+ * @insertfunc: determines which tracks to enter into the new playlist.
+ *              If @insertfunc is NULL, all tracks are added.
+ * @comparefunc: determines order of tracks
+ * @tracks_nr: max. number of tracks in playlist or 0 for no limit.
  *
  * Return value: the newly created playlist
  */
-static Playlist *add_ranked_playlist(gchar *pl_name, gint songs_nr,
+static Playlist *add_ranked_playlist(gchar *pl_name, gint tracks_nr,
 				     PL_InsertFunc insertfunc,
 				     GCompareFunc comparefunc)
 {
     Playlist *result = NULL;
-    GList *songs = create_ranked_glist(songs_nr,insertfunc,comparefunc);
+    GList *tracks = create_ranked_glist(tracks_nr,insertfunc,comparefunc);
     gint f;
-    f=g_list_length(songs);
+    f=g_list_length(tracks);
 
     if (f != 0)
     /* else generate_playlist_with_name prints something*/
     {
 #if 0
 	GList *sl;
-	for (sl=songs; sl; sl=sl->next)
+	for (sl=tracks; sl; sl=sl->next)
 	{
-	    Song *s=sl->data;
+	    Track *s=sl->data;
 	    printf ("%ud\n", s->time_played);
 	}
 #endif
-	result = generate_playlist_with_name (songs, pl_name);
+	result = generate_playlist_with_name (tracks, pl_name);
     }
-    g_list_free (songs);
+    g_list_free (tracks);
     return result;
 }
 
  /*update a ranked playlist according the iPod content,
  * @str is the playlist's name (no [ or ])*/
-static void update_ranked_playlist(gchar *str, gint songs_nr,
+static void update_ranked_playlist(gchar *str, gint tracks_nr,
 				   PL_InsertFunc insertfunc,
 				   GCompareFunc compfunc)
 {
@@ -2544,7 +2544,7 @@ static void update_ranked_playlist(gchar *str, gint songs_nr,
     remove_playlist_by_name (str2);
     /* check if we deleted the selected playlist */
     if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
-    new_pl = add_ranked_playlist (str2, songs_nr, insertfunc, compfunc);
+    new_pl = add_ranked_playlist (str2, tracks_nr, insertfunc, compfunc);
     if (select)
     {   /* need to select newly created playlist because the old
 	 * selection was deleted */
@@ -2555,7 +2555,7 @@ static void update_ranked_playlist(gchar *str, gint songs_nr,
 
 /* ------------------------------------------------------------ */
 /* Generate a new playlist containing the most listened (playcount
- * reverse order) songs. to enter this playlist a song must have been
+ * reverse order) tracks. to enter this playlist a track must have been
  * played */
 
 /* Sort Function: determines the order of the generated playlist */
@@ -2566,8 +2566,8 @@ static void update_ranked_playlist(gchar *str, gint songs_nr,
 static gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
 {
     gint result = 0;
-    const Song *a = aa;
-    const Song *b = bb;
+    const Track *a = aa;
+    const Track *b = bb;
 
     if (a && b)
     {
@@ -2578,18 +2578,18 @@ static gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
     return result;
 }
 
-/* Insert function: determines whether a song is entered into the playlist */
-static gboolean Most_Listened_IF (Song *song)
+/* Insert function: determines whether a track is entered into the playlist */
+static gboolean Most_Listened_IF (Track *track)
 {
-    if (song)   return (song->playcount != 0);
+    if (track)   return (track->playcount != 0);
     return      FALSE;
 }
 
 void most_listened_pl(void)
 {
-    gint songs_nr = prefs_get_misc_track_nr();
-    gchar *str = g_strdup_printf (_("Most Listened (%d)"), songs_nr);
-    update_ranked_playlist (str, songs_nr,
+    gint tracks_nr = prefs_get_misc_track_nr();
+    gchar *str = g_strdup_printf (_("Most Listened (%d)"), tracks_nr);
+    update_ranked_playlist (str, tracks_nr,
 			    Most_Listened_IF, Most_Listened_CF);
     g_free (str);
 }
@@ -2597,14 +2597,14 @@ void most_listened_pl(void)
 
 /* ------------------------------------------------------------ */
 /* Generate a new playlist containing the most rated (rate 
- * reverse order) songs. */
+ * reverse order) tracks. */
 
 /* Sort Function: determines the order of the generated playlist */
 static gint Most_Rated_CF (gconstpointer aa, gconstpointer bb)
 {
     gint result = 0;
-    const Song *a = aa;
-    const Song *b = bb;
+    const Track *a = aa;
+    const Track *b = bb;
     
     if (a && b)
     {
@@ -2615,18 +2615,18 @@ static gint Most_Rated_CF (gconstpointer aa, gconstpointer bb)
     return result;
 }
 
-/* Insert function: determines whether a song is entered into the playlist */
-static gboolean Most_Rated_IF (Song *song)
+/* Insert function: determines whether a track is entered into the playlist */
+static gboolean Most_Rated_IF (Track *track)
 {
-    if (song) return ((song->playcount != 0) || prefs_get_not_played_song());
+    if (track) return ((track->playcount != 0) || prefs_get_not_played_track());
     return FALSE;
 }
 
 void most_rated_pl(void)
 {
-    gint songs_nr = prefs_get_misc_track_nr();
-    gchar *str =  g_strdup_printf (_("Best Rated (%d)"), songs_nr);
-    update_ranked_playlist (str, songs_nr,
+    gint tracks_nr = prefs_get_misc_track_nr();
+    gchar *str =  g_strdup_printf (_("Best Rated (%d)"), tracks_nr);
+    update_ranked_playlist (str, tracks_nr,
 			    Most_Rated_IF, Most_Rated_CF);
     g_free (str);
 }
@@ -2634,14 +2634,14 @@ void most_rated_pl(void)
 
 /* ------------------------------------------------------------ */
 /* Generate a new playlist containing the last listened (last time play 
- * reverse order) songs. */
+ * reverse order) tracks. */
 
 /* Sort Function: determines the order of the generated playlist */
 static gint Last_Listened_CF (gconstpointer aa, gconstpointer bb)
 {
     gint result = 0;
-    const Song *a = aa;
-    const Song *b = bb;
+    const Track *a = aa;
+    const Track *b = bb;
 
     if (a && b)
     {
@@ -2652,25 +2652,25 @@ static gint Last_Listened_CF (gconstpointer aa, gconstpointer bb)
     return result;
 }
 
-/* Insert function: determines whether a song is entered into the playlist */
-static gboolean Last_Listened_IF (Song *song)
+/* Insert function: determines whether a track is entered into the playlist */
+static gboolean Last_Listened_IF (Track *track)
 {
-    if (song)   return (song->playcount != 0);
+    if (track)   return (track->playcount != 0);
     return      FALSE;
 }
 
 void last_listened_pl(void)
 {
-    gint songs_nr = prefs_get_misc_track_nr();
-    gchar *str = g_strdup_printf (_("Recent (%d)"), songs_nr);
-    update_ranked_playlist (str, songs_nr,
+    gint tracks_nr = prefs_get_misc_track_nr();
+    gchar *str = g_strdup_printf (_("Recent (%d)"), tracks_nr);
+    update_ranked_playlist (str, tracks_nr,
 			    Last_Listened_IF, Last_Listened_CF);
     g_free (str);
 }
 
 
 /* ------------------------------------------------------------ */
-/* Generate a new playlist containing the songs listened to since the
+/* Generate a new playlist containing the tracks listened to since the
  * last time the iPod was connected to a computer (and the playcount
  * file got wiped) */
 
@@ -2678,8 +2678,8 @@ void last_listened_pl(void)
 static gint since_last_CF (gconstpointer aa, gconstpointer bb)
 {
     gint result = 0;
-    const Song *a = aa;
-    const Song *b = bb;
+    const Track *a = aa;
+    const Track *b = bb;
 
     if (a && b)
     {
@@ -2691,10 +2691,10 @@ static gint since_last_CF (gconstpointer aa, gconstpointer bb)
     return result;
 }
 
-/* Insert function: determines whether a song is entered into the playlist */
-static gboolean since_last_IF (Song *song)
+/* Insert function: determines whether a track is entered into the playlist */
+static gboolean since_last_IF (Track *track)
 {
-    if (song && (song->recent_playcount != 0))  return TRUE;
+    if (track && (track->recent_playcount != 0))  return TRUE;
     else                                        return FALSE;
 }
 
@@ -2707,8 +2707,8 @@ void since_last_pl(void)
 static gint relative_path_CF (gconstpointer aa, gconstpointer bb)
 {
    gint result = 0;
-   const Song *a = aa;
-   const Song *b = bb;
+   const Track *a = aa;
+   const Track *b = bb;
 
    if (a && b)
    {
@@ -2734,32 +2734,32 @@ void recover_db(void)
 /********************************
  * DELETE DEAD FILES's SECTION
  ********************************/
-   Song *song=NULL;
-   gchar *pathsong=NULL;
-   GList *ghost_songs=NULL;
+   Track *track=NULL;
+   gchar *pathtrack=NULL;
+   GList *ghost_tracks=NULL;
    gint g=0;
-   while((song=get_next_song(g)))
+   while((track=get_next_track(g)))
    {
       g=1;
-      pathsong=get_track_name_on_ipod(song);
-      if(!g_file_test(pathsong,G_FILE_TEST_IS_REGULAR))
+      pathtrack=get_track_name_on_ipod(track);
+      if(!g_file_test(pathtrack,G_FILE_TEST_IS_REGULAR))
       {
-         ghost_songs=g_list_append(ghost_songs,song);
+         ghost_tracks=g_list_append(ghost_tracks,track);
          changed=TRUE;
       }
    }
 
-   /*take care of this "ghost" songs*/
-   if(g_list_length(ghost_songs)!=0)
+   /*take care of this "ghost" tracks*/
+   if(g_list_length(ghost_tracks)!=0)
    {
-      delete_song_ok(NULL,ghost_songs); /*NULL== erase from MPL*/
+      delete_track_ok(NULL,ghost_tracks); /*NULL== erase from MPL*/
    }
    /*free everything*/
-   g_free(pathsong);
-   free_song(song);
-   song=NULL;
-   g_list_free(ghost_songs);
-   ghost_songs=NULL;
+   g_free(pathtrack);
+   free_track(track);
+   track=NULL;
+   g_list_free(ghost_tracks);
+   ghost_tracks=NULL;
 
 
 }void iani(void){gboolean changed=FALSE;
@@ -2767,13 +2767,13 @@ void recover_db(void)
 /**************************
  * ORPHANED FILES's SECTION
  **************************/
-   Song *ipod_song=NULL; /*an existing non lost song*/
-   gchar *ipod_filename=NULL; /*the ipod's song filename 
+   Track *ipod_track=NULL; /*an existing non lost track*/
+   gchar *ipod_filename=NULL; /*the ipod's track filename 
       * this file exists but we don't know if it has an iTunesDB entry*/
    gchar *ipod_validfile=NULL; /*not lost file */
    
-   Song *lost_song=NULL; /*an existing song that has no entry in the iTunesDB*/
-   gchar *lostfile_fullpath=NULL; /*the lost song's fullpath*/
+   Track *lost_track=NULL; /*an existing track that has no entry in the iTunesDB*/
+   gchar *lostfile_fullpath=NULL; /*the lost track's fullpath*/
    gboolean found;
    gchar *ipod_dir = NULL;
    GDir *dir_des;
@@ -2788,7 +2788,7 @@ void recover_db(void)
    gint h;
    gboolean lost_pl_exist=FALSE;
    gchar *mp=g_strdup(prefs_get_ipod_mount());
-   Playlist *lost_pl=NULL; /*a pl containing all the losts songs*/
+   Playlist *lost_pl=NULL; /*a pl containing all the losts tracks*/
 
    for(h=0;h<20;h++)
    {
@@ -2803,7 +2803,7 @@ void recover_db(void)
          /*<TODO>*/
          /*FIXME:
           * we can create a path ordered glist 
-          * containing all the songs in the iTunesDB
+          * containing all the tracks in the iTunesDB
           * and search the possibly lost files
           * in this list using a much less
           * expensive algoritm
@@ -2820,15 +2820,15 @@ void recover_db(void)
          found=FALSE;
          
          min=0;
-         /*if "max=1" while doesn't start but we need lost_song*/
-         lost_song=g_list_nth_data(ranked_list,min);
+         /*if "max=1" while doesn't start but we need lost_track*/
+         lost_track=g_list_nth_data(ranked_list,min);
          max=g_list_length(ranked_list)-1;
          while (min<max)
          {
             mean = (min+max)/2;
-            lost_song=g_list_nth_data(ranked_list,mean);
+            lost_track=g_list_nth_data(ranked_list,mean);
             /*work?*/
-            if (strcmp(lostfile_fullpath,lost_song->ipod_path)>0)
+            if (strcmp(lostfile_fullpath,lost_track->ipod_path)>0)
             {
                min = mean+1;
             }
@@ -2837,10 +2837,10 @@ void recover_db(void)
                max = mean;
             }
          }
-         if (strcmp(lostfile_fullpath,lost_song->ipod_path)!=0)
+         if (strcmp(lostfile_fullpath,lost_track->ipod_path)!=0)
          {
-            free_song(lost_song);
-            lost_song = NULL;
+            free_track(lost_track);
+            lost_track = NULL;
             found=FALSE;
          }
          else
@@ -2849,32 +2849,32 @@ void recover_db(void)
          }
 #else         
          found=FALSE;
-         ipod_song=get_next_song(0);
-         while(!found&&ipod_song!=NULL)
+         ipod_track=get_next_track(0);
+         while(!found&&ipod_track!=NULL)
          {
-            ipod_validfile=get_track_name_on_ipod(ipod_song);
+            ipod_validfile=get_track_name_on_ipod(ipod_track);
             if(strcmp(ipod_validfile,lostfile_fullpath)==0)
             {
                found=TRUE;
             }
             else
             {
-               ipod_song=get_next_song(1);
+               ipod_track=get_next_track(1);
             }
          /*</TODO>*/
-         } /*end of while(!found&&song!=NULL)*/
+         } /*end of while(!found&&track!=NULL)*/
 #endif
-         if(!found)/*it's a lost song, add it in the iTunesDB*/
+         if(!found)/*it's a lost track, add it in the iTunesDB*/
          {
             if(!lost_pl_exist) /*create a lost files' pl*/
             {
-               lost_pl=add_new_playlist(g_strdup(_("Lost songs")),-1);
+               lost_pl=add_new_playlist(g_strdup(_("Lost tracks")),-1);
                lost_pl_exist=TRUE;
             }
             /*add an iTunesDB entry to the iTunesDB and to the lost_pl*/
-            lost_song=get_song_info_from_file (lostfile_fullpath,lost_song);
-            add_song_to_playlist(NULL,lost_song,TRUE); /*MPL*/
-            add_song_to_playlist(lost_pl,lost_song,TRUE); /*lost_pl*/
+            lost_track=get_track_info_from_file (lostfile_fullpath,lost_track);
+            add_track_to_playlist(NULL,lost_track,TRUE); /*MPL*/
+            add_track_to_playlist(lost_pl,lost_track,TRUE); /*lost_pl*/
             changed=TRUE;
          }
       } /*end of while(filename!=NULL)*/
@@ -2885,16 +2885,16 @@ void recover_db(void)
    g_free(lostfile_fullpath);
    g_free(ipod_filename);
    g_free(ipod_dir);
-   free_song(ipod_song);
-   ipod_song=NULL;
-   free_song(lost_song);
-   lost_song=NULL;
-   free_playlist(lost_pl); /*a pl containing all the losts songs*/
+   free_track(ipod_track);
+   ipod_track=NULL;
+   free_track(lost_track);
+   lost_track=NULL;
+   free_playlist(lost_pl); /*a pl containing all the losts tracks*/
    g_free(ipod_validfile);
    g_free(mp);
    
    //GDir *dir_des;
-   //Song *ipod_song=NULL; /*an existing non lost song*/
+   //Track *ipod_track=NULL; /*an existing non lost track*/
 
 /***************************
  * NEWS TO THE WORLD SECTION

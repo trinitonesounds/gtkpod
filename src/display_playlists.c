@@ -64,26 +64,26 @@ static GtkTargetEntry pm_drop_types [] = {
 /* ---------------------------------------------------------------- */
 
 
-/* remove a song from a current playlist (model) */
-void pm_remove_song (Playlist *playlist, Song *song)
+/* remove a track from a current playlist (model) */
+void pm_remove_track (Playlist *playlist, Track *track)
 {
   /* notify sort tab if currently selected playlist is affected */
   if (current_playlist && 
       ((playlist == current_playlist) ||
        (current_playlist->type == PL_TYPE_MPL)))
   {
-      st_remove_song (song, 0);
+      st_remove_track (track, 0);
   }
 }
 
 
-/* Add song to the display if it's in the currently displayed playlist.
- * @display: TRUE: add to song model (i.e. display it) */
-void pm_add_song (Playlist *playlist, Song *song, gboolean display)
+/* Add track to the display if it's in the currently displayed playlist.
+ * @display: TRUE: add to track model (i.e. display it) */
+void pm_add_track (Playlist *playlist, Track *track, gboolean display)
 {
     if (playlist == current_playlist)
     {
-	st_add_song (song, TRUE, display, 0); /* Add to first sort tab */
+	st_add_track (track, TRUE, display, 0); /* Add to first sort tab */
     }
 }
 
@@ -115,21 +115,21 @@ void pm_name_changed (Playlist *playlist)
 }
 
 
-/* If a song got changed (i.e. it's ID3 entries have changed), we check
+/* If a track got changed (i.e. it's ID3 entries have changed), we check
    if it's in the currently displayed playlist, and if yes, we notify the
    first sort tab of a change */
-void pm_song_changed (Song *song)
+void pm_track_changed (Track *track)
 {
   gint i,n;
 
   if (!current_playlist) return;
-  /* Check if song is member of current playlist */
-  n = get_nr_of_songs_in_playlist (current_playlist);
+  /* Check if track is member of current playlist */
+  n = get_nr_of_tracks_in_playlist (current_playlist);
   for (i=0; i<n; ++i)
     {
-      if (song == get_song_in_playlist_by_nr (current_playlist, i))
+      if (track == get_track_in_playlist_by_nr (current_playlist, i))
 	{  /* It's a member! Let's notify the first sort tab */
-	  st_song_changed (song, FALSE, 0);
+	  st_track_changed (track, FALSE, 0);
 	  break;
 	}
     }
@@ -256,7 +256,7 @@ void pm_remove_all_playlists (gboolean clear_sort)
   if(clear_sort &&
      gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order))
-  { /* recreate song treeview to unset sorted column */
+  { /* recreate track treeview to unset sorted column */
       if (column >= 0)
       {
 	  pm_create_treeview ();
@@ -340,14 +340,14 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      g_get_current_time (&time);
 	  }
 	  for (gl=new_playlist->members; gl; gl=gl->next)
-	  { /* add all songs to sort tab 0 */
-	      Song *song = gl->data;
+	  { /* add all tracks to sort tab 0 */
+	      Track *track = gl->data;
 	      if (stop_add == -1)  break;
-	      st_add_song (song, FALSE, TRUE, 0);
+	      st_add_track (track, FALSE, TRUE, 0);
 	      --count;
 	      if ((count < 0) && !prefs_get_block_display ())
 	      {
-		  gtkpod_songs_statusbar_update();
+		  gtkpod_tracks_statusbar_update();
 		  while (gtk_events_pending ())       gtk_main_iteration ();
 		  ms = get_ms_since (&time, TRUE);
 		  /* first time takes significantly longer, so we adjust
@@ -361,14 +361,14 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	      }
 	  }
-	  if (stop_add != -1) st_add_song (NULL, TRUE, TRUE, 0);
+	  if (stop_add != -1) st_add_track (NULL, TRUE, TRUE, 0);
 	  if (!prefs_get_block_display ())
 	  {
 	      while (gtk_events_pending ())	      gtk_main_iteration ();
 	      release_selection (-1);
 	  }
       }
-      gtkpod_songs_statusbar_update();
+      gtkpod_tracks_statusbar_update();
   }
 #if DEBUG_TIMING
   g_get_current_time (&time);
@@ -476,7 +476,7 @@ void pm_sort (GtkSortType order)
 }
 
 /**
- * pm_song_column_button_clicked
+ * pm_track_column_button_clicked
  * @tvc - the tree view colum that was clicked
  * @data - ignored user data
  * When the sort button is clicked we want to update our internal playlist
@@ -484,7 +484,7 @@ void pm_sort (GtkSortType order)
  * If the button was clicked three times, the sort order is undone.
  */
 static void
-pm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
+pm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 {
     gint cnt = pm_sort_counter (1);
     if (cnt >= 3)
@@ -583,7 +583,7 @@ pm_cell_edited (GtkCellRendererText *renderer,
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, column, &playlist, -1);
 
-  /*printf("pm_cell_edited: column: %d  song:%lx\n", column, song);*/
+  /*printf("pm_cell_edited: column: %d  track:%lx\n", column, track);*/
 
   switch (column)
     {
@@ -660,7 +660,7 @@ static void pm_add_columns ()
 				   pm_data_compare_func, column, NULL);
   gtk_tree_view_column_set_clickable(column, TRUE);
   g_signal_connect (G_OBJECT (column), "clicked",
-		    G_CALLBACK (pm_song_column_button_clicked),
+		    G_CALLBACK (pm_track_column_button_clicked),
 				(gpointer)PM_COLUMN_PLAYLIST);
   gtk_tree_view_append_column (playlist_treeview, column);
 }
@@ -863,7 +863,7 @@ void  pm_list_store_move_after (GtkListStore *store,
 #endif
 
 
-/* move pathlist for song treeview */
+/* move pathlist for track treeview */
 gboolean pm_move_pathlist (gchar *data,
 			   GtkTreePath *path,
 			   GtkTreeViewDropPosition pos)
@@ -872,7 +872,7 @@ gboolean pm_move_pathlist (gchar *data,
 }
 
 /*
- * utility function for appending ipod song ids for playlist
+ * utility function for appending ipod track ids for playlist
  */
 void 
 on_pm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
@@ -885,19 +885,19 @@ on_pm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     if(pl && idlist)
     {
 	GList *l;
-	Song *s;
+	Track *s;
 
 	/* add all member-ids of entry to idlist */
 	for (l=pl->members; l; l=l->next)
 	{
-	    s = (Song *)l->data;
+	    s = (Track *)l->data;
 	    g_string_append_printf (idlist, "%d\n", s->ipod_id);
 	}
     }
 }
 
 /*
- * utility function for appending file for song view (DND)
+ * utility function for appending file for track view (DND)
  */
 void 
 on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
@@ -910,13 +910,13 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     gtk_tree_model_get(tm, iter, PM_COLUMN_PLAYLIST, &pl, -1); 
     if (pl && filelist)
     {
-	Song *s;
+	Track *s;
 	gchar *name;
 	GList *l;
 
 	for (l=pl->members; l; l=l->next)
 	{
-	    s = (Song *)l->data;
+	    s = (Track *)l->data;
 	    name = get_track_name_on_disk_verified (s);
 	    if (name)
 	    {

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-29 22:52:33 jcs>
+/* Time-stamp: <2003-10-03 00:25:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -182,7 +182,7 @@ gboolean id3_tag_read (gchar *filename, Id3tag *tag)
 	string = id3_get_string (id3tag, "TLEN");
 	if (string) 
 	{
-            tag->songlen = (guint32) strtoul (string, 0, 10);
+            tag->tracklen = (guint32) strtoul (string, 0, 10);
 	    g_free (string);
 	}
 
@@ -195,7 +195,7 @@ gboolean id3_tag_read (gchar *filename, Id3tag *tag)
 	        tag->track_total = g_strdup_printf ("%.2d", atoi (string2+1));
 	        *string2 = '\0';
 	    }
-	    tag->track = g_strdup_printf ("%.2d", atoi (string));
+	    tag->trackstring = g_strdup_printf ("%.2d", atoi (string));
             g_free(string);
 	}
     }
@@ -235,12 +235,13 @@ gboolean id3_tag_write (gchar *filename, Id3tag *tag)
 
         if (tag->track_total && strlen (tag->track_total) > 0)
 	{
-	    char* string = g_strconcat (tag->track,"/",tag->track_total,NULL);
+	    char* string = g_strconcat (tag->trackstring,
+					"/",tag->track_total,NULL);
     	    id3_set_string (id3tag, ID3_FRAME_TRACK, string);
 	    g_free(string);
 	}
 	else
-	    id3_set_string (id3tag, ID3_FRAME_TRACK, tag->track);
+	    id3_set_string (id3tag, ID3_FRAME_TRACK, tag->trackstring);
     }
 
     if (id3_file_update(id3file) != 0)

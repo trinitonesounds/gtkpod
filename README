@@ -11,7 +11,7 @@ Inc., registered in the U.S. and other countries.
   - Connecting iPod to a Linux box:
   - Using gtkpod
   - Features
-     - Songs
+     - Tracks
      - Sort Tabs
      - Playlists
      - Drag and Drop
@@ -19,11 +19,11 @@ Inc., registered in the U.S. and other countries.
      - Preferences File
      - Startup and Shutdown scripts
      - Extended Information File
-     - Refresh (Update) Song Info From File
+     - Refresh (Update) Track Info From File
      - Synchronize Directories
      - Volume Normalization
      - Offline Mode
-     - Export of Songs
+     - Export of Tracks
      - Encoding of ID3 tags (charsets)
      - About filenames
      - Restoring your iPod after file system error
@@ -266,21 +266,21 @@ by hand?" further down.
 |                                  |
 *----------------------------------*
 
-Songs
+Tracks
 -----
 
-- You can add individual songs, entire directories recursively, or
+- You can add individual tracks, entire directories recursively, or
   existing playlists using "Add Files". A file selection dialogue will
   appear.
 - You can add directories recursively using "Add Dirs". A directory
   selection dialogue will appear.
 - You can add existing playlists using "Add Playlists"
-- You can delete songs by marking them and pressing the "Ctrl-d" . If
-  you delete songs from the master playlist (the topmost playlist,
-  called "gtkpod" by default).  You can also delete songs by selecting them,
-  and using "Delete Song" in the Edit menu.
-- You can update ID3 tags of selected songs in gtkpod from the mp3
-  file by pressing "Ctrl-u" or choose "Update song info from file" in
+- You can delete tracks by marking them and pressing the "Ctrl-d" . If
+  you delete tracks from the master playlist (the topmost playlist,
+  called "gtkpod" by default).  You can also delete tracks by selecting them,
+  and using "Delete Track" in the Edit menu.
+- You can update ID3 tags of selected tracks in gtkpod from the mp3
+  file by pressing "Ctrl-u" or choose "Update track info from file" in
   the Edit menu.
 - You can rename ID3 tags by editing the fields in gtkpod. You can
   change an entire group of ID3 tags by editing an entry in the sort
@@ -293,11 +293,11 @@ Songs
 Sort Tabs
 ---------
 
-- The two notebooks above the song display are called "Sort Tabs"
-- They allow you to filter which songs to display
+- The two notebooks above the track display are called "Sort Tabs"
+- They allow you to filter which tracks to display
 - If you edit an entry in the sort tab, the corresponding entry in all
-  associated songs will be updated as well. When writing the tags to
-  disk as well, updating of a large number of songs may take a while
+  associated tracks will be updated as well. When writing the tags to
+  disk as well, updating of a large number of tracks may take a while
 
 
 Playlists
@@ -307,7 +307,7 @@ Playlists
   the playlist listview.
 - You can also create playlists by adding an existing playlist file
   with "Add file" or "Add playlist".
-- You can add songs to playlists by marking the songs you want to add,
+- You can add tracks to playlists by marking the tracks you want to add,
   and then dragging them onto the playlist.
 - You can rename playlists.
 - You can delete playlists by selecting the desired playlist and pressing
@@ -319,29 +319,29 @@ Drag and Drop
 
 Drag and Drop can be used in several ways:
 
-- Drag songs from the song view _onto_ an existing playlist: the songs
+- Drag tracks from the track view _onto_ an existing playlist: the tracks
   will be added to that playlist.
-- Drag songs from the song view _between_ two existing playlists or
+- Drag tracks from the track view _between_ two existing playlists or
   behind the last playlist: a new playlist will be created and the
-  songs will be added to that playlist.
-- Drag an entry of a sort tab _onto_ an existing playlist: all songs
+  tracks will be added to that playlist.
+- Drag an entry of a sort tab _onto_ an existing playlist: all tracks
   matching the entry will be added to that playlist.
 - Drag an entry of a sort tab _between_ two existing playlists or
   behind the last playlist: a new playlist will be created and all
-  songs matching the entry will be added to that playlist.
-- Drag songs, directories, or playlist files _onto_ an existing
-  playlist: all songs as well as the contents of playlist files will
+  tracks matching the entry will be added to that playlist.
+- Drag tracks, directories, or playlist files _onto_ an existing
+  playlist: all tracks as well as the contents of playlist files will
   be added to that playlist.
-- Drag songs or directories _between_ two existing playlists or behind
-  the last playlist: a new playlist will be created and all songs will
+- Drag tracks or directories _between_ two existing playlists or behind
+  the last playlist: a new playlist will be created and all tracks will
   be added to that playlist.
 - Drag playlist files _between_ two existing playlists or behind the
   last playlist: for each playlist file a new playlist named after the
-  file will be created and the corresponding songs will be added to
+  file will be created and the corresponding tracks will be added to
   that playlist.
-- Drag songs, directories, or playlist files into the song view (note:
-  something must be displayed in the songview before you can drop into
-  it -- drop onto the correpsonding playlist otherwise.): the songs
+- Drag tracks, directories, or playlist files into the track view (note:
+  something must be displayed in the trackview before you can drop into
+  it -- drop onto the correpsonding playlist otherwise.): the tracks
   will be inserted into the corresponding playlist at the position you
   dropped them.
 
@@ -387,7 +387,7 @@ If a duplicate is detected, gtkpod will print out the the filenames
 of the duplicate files. If the filename of the already existing file
 is not available (it is not stored in the iTunes database, see
 "Extended Information File" below), other available information of
-the song is printed.
+the track is printed.
 
 
 Extended Information File
@@ -395,7 +395,7 @@ Extended Information File
 
 Some (I believe) essential information is not stored in Apple's iTunes
 database. You can therefore instruct gtkpod to write an additional
-file (iTunesDB.ext) with extended information. For each song it stores
+file (iTunesDB.ext) with extended information. For each track it stores
 
   - MD5 hash
   - filename in the locale's encoding
@@ -411,21 +411,21 @@ import of an existing iTunes database when using duplicate detection,
 since the MD5 checksums do not have to be re-calculated.
 
 Using an extended information file will also allow modification of ID3
-tags in the song files after the initial import, because the full
+tags in the track files after the initial import, because the full
 filenames are still available.
 
 The extended information file is also used for the "Offline Mode"
 described below.
 
 
-Refresh (Update) Song Info From File
+Refresh (Update) Track Info From File
 ------------------------------------
 
 If you have changed the ID3 tags of your original file, you can update
 the ID3 tags stored in gtkpod without removing and re-adding the
-song. Simply select the song to be updated and press "Ctrl-u" or
-choose "Update Song Info From File" from the Edit menu. Since gtkpod
-needs to know the filename of the song, the "Extended Information
+track. Simply select the track to be updated and press "Ctrl-u" or
+choose "Update Track Info From File" from the Edit menu. Since gtkpod
+needs to know the filename of the track, the "Extended Information
 File" (see above) is needed.
 
 You can also select entries in the sort tab or entire playlists for
@@ -436,23 +436,23 @@ Synchronize Directories
 -----------------------
 
 If you have added files to directories or changed files in directories
-you have previously added songs from, you can use the "Synchronize
+you have previously added tracks from, you can use the "Synchronize
 Dirs" utility to update your iTunesDB.
 
-"Synchronize Dirs" will use the selected songs to make a list of
+"Synchronize Dirs" will use the selected tracks to make a list of
 directories to update, so you should activate the "Write Extended
 Information" option in the export section of the preferences
 dialogue.
 
-It will then add all non-existing songs in those directories and
-update (see "Refresh") all existing songs. The songs are also added to
+It will then add all non-existing tracks in those directories and
+update (see "Refresh") all existing tracks. The tracks are also added to
 the currently selected playlist, if they aren't already a member.
 
-Songs that have been removed from the directory will not be removed
+Tracks that have been removed from the directory will not be removed
 from the iTunesDB.
 
 For best results you should also activate duplicate detection. This
-avoids unnecessary copying of unchanged songs.
+avoids unnecessary copying of unchanged tracks.
 
 Volume Normalization
 --------------------
@@ -477,11 +477,11 @@ option in the "Files" menu. (The import and export of your iTunes
 database will then be done from or to ~/.gtkpod/.) Then import your
 iTunes database.
 
-You can modify (add songs, add playlists, modify playlists, delete
-playlists, delete songs) as usual. When you export your iTunesDB, it
+You can modify (add tracks, add playlists, modify playlists, delete
+playlists, delete tracks) as usual. When you export your iTunesDB, it
 will be written to ~/.gtkpod/ along with an extended information file
 (even if you have not chosen that option in the prefs menu), tagging
-the songs not yet transferred.
+the tracks not yet transferred.
 
 Next time around you can import the database as described above,
 switch off the offline mode, and export the iTunes database to your
@@ -489,10 +489,10 @@ iPod. The contents of your iPod hard drive are then brought up to
 date.
 
 
-Export of Songs
+Export of Tracks
 ---------------
 
-- mark the songs you want to export and select "Export Files to Disk"
+- mark the tracks you want to export and select "Export Files to Disk"
   from the menu
 - A file selection dialog window appears and you can choose the directory
   you'd like the selected files to be written to.
@@ -531,7 +531,7 @@ iPod, there is a way to restore the contents semi-automatically if you
 have been using the "backup to ~/.gtkpod" and "write extended
 information file" (iTunesDB.ext) options:
 
-1) Make gtkpod think it still needs to copy the songs 
+1) Make gtkpod think it still needs to copy the tracks 
   
 $ perl -p -i -e 's/transferred=1/transferred=0/g' ~/.gtkpod/iTunesDB.ext
 
@@ -542,7 +542,7 @@ $ perl -p -i -e 's/transferred=1/transferred=0/g' ~/.gtkpod/iTunesDB.ext
 4) Export iTunesDB
 
 This should restore your iPod to what it was before, provided you
-didn't move or remove any of the original songs on your harddrive, and
+didn't move or remove any of the original tracks on your harddrive, and
 the charset information was stored correctly.
 
 
@@ -693,7 +693,7 @@ Good Luck.
 *----------------------------------*
 
 
-- Display of large number of songs is awfully slow (mainly because of
+- Display of large number of tracks is awfully slow (mainly because of
   the use of the standard GTK2 tree views) -> deactivate "Automatically
   select "All" in first sort tab" and/or deactivate "Automatically
   select master playlist". You could also "block the display" to speed

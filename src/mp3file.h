@@ -95,5 +95,5 @@ int mp3file_header_frequency(mp3header *h);
 mp3info *mp3file_get_info (gchar *name);
 
 /* This is for xmms code */
-guint get_song_time(gchar *path);
+guint get_track_time(gchar *path);
 #endif

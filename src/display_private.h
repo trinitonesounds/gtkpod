@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 14:06:58 jcs>
+/* Time-stamp: <2003-10-03 00:15:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,8 +39,8 @@
 #define DEBUG_TIMING 0
 /* print info when callbacks are initialized */
 #define DEBUG_CB_INIT 0
-/* print info when adding songs */
-#define DEBUG_ADD_SONG 0
+/* print info when adding tracks */
+#define DEBUG_ADD_TRACK 0
 
 /* used for stopping of display refresh */
 typedef void (*br_callback)(gpointer user_data1, gpointer user_data2);
@@ -55,14 +55,14 @@ void pm_create_treeview (void);
 void pm_set_selected_playlist(Playlist *pl);
 void pm_remove_all_playlists (gboolean clear_sort);
 void sm_create_treeview (void);
-void sm_song_changed (Song *song);
-void sm_remove_song (Song *song);
-void sm_remove_all_songs (gboolean clear_sort);
+void sm_track_changed (Track *track);
+void sm_remove_track (Track *track);
+void sm_remove_all_tracks (gboolean clear_sort);
 void st_remove_all_entries_from_model (guint32 inst);
-void st_song_changed (Song *song, gboolean removed, guint32 inst);
-void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst);
+void st_track_changed (Track *track, gboolean removed, guint32 inst);
+void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst);
 void st_create_tabs (void);
-void st_remove_song (Song *song, guint32 inst);
+void st_remove_track (Track *track, guint32 inst);
 void st_init (ST_CAT_item new_category, guint32 inst);
 void st_create_notebook (gint inst);
 void st_redisplay (guint32 inst);
@@ -88,7 +88,7 @@ struct asf_data
 
 typedef enum
 {
-    SONG_TREEVIEW,
+    TRACK_TREEVIEW,
     PLAYLIST_TREEVIEW,
     SORTTAB_TREEVIEW
 } TreeViewType;

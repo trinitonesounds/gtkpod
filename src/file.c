@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-02 23:56:42 jcs>
+/* Time-stamp: <2003-10-03 00:25:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -48,7 +48,7 @@
 #include "confirmation.h"
 
 /* only used when reading extended info from file */
-struct song_extended_info
+struct track_extended_info
 {
     guint ipod_id;
     gchar *pc_path_locale;
@@ -62,9 +62,9 @@ struct song_extended_info
     guint32 rating;
     gboolean transferred;
 };
-/* List with songs pending deletion */
+/* List with tracks pending deletion */
 static GList *pending_deletion = NULL;
-/* Flag to indicate if it's safe to quit (i.e. all songs exported or
+/* Flag to indicate if it's safe to quit (i.e. all tracks exported or
    at least a offline database written). It's state is set to TRUE in
    handle_export().  It's state can be accessed by the public function
    file_are_saved(). It can be set to FALSE by calling
@@ -91,16 +91,16 @@ static float extendedinfoversion = 0.0;
 
 /* Add all files specified in playlist @plfile. Will create a new
  * playlist with the name "basename (plfile)", even if one of the same
- * name already exists (if @plitem is != NULL, all songs will be added
+ * name already exists (if @plitem is != NULL, all tracks will be added
  * to @plitem and no new playlist will be created).
- * It will then add all songs listed in @plfile. If set in the prefs,
- * duplicates will be detected (and the song already present in the
+ * It will then add all tracks listed in @plfile. If set in the prefs,
+ * duplicates will be detected (and the track already present in the
  * database will be added to the playlist instead). */
-/* @addsongfunc: if != NULL this will be called instead of
-   "add_song_to_playlist () -- used for dropping songs at a specific
-   position in the song view */
+/* @addtrackfunc: if != NULL this will be called instead of
+   "add_track_to_playlist () -- used for dropping tracks at a specific
+   position in the track view */
 gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
-				   AddSongFunc addsongfunc, gpointer data)
+				   AddTrackFunc addtrackfunc, gpointer data)
 {
     enum {
 	PLT_M3U,   /* M3U playlist file */
@@ -111,7 +111,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
     gchar *dirname = NULL, *plname = NULL;
     gchar buf[PATH_MAX];
     gint type = PLT_MISC; /* type of playlist file */
-    gint line, songs;
+    gint line, tracks;
     FILE *fp;
     gboolean error;
 
@@ -167,7 +167,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
        all of these are line based -- add different code for different
        playlist files */
     line = 0; /* nr of line being read */
-    songs = 0; /* nr of songs added */
+    tracks = 0; /* nr of tracks added */
     error = FALSE;
     while (!error && fgets (buf, PATH_MAX, fp))
     {
@@ -184,20 +184,20 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	    if ((*bufp == ';') || (*bufp == '#')) break;
 	    /* assume the rest of the line is a filename */
 	    filename = concat_dir_if_relative (dirname, bufp);
-	    if (add_song_by_filename (filename, plitem,
+	    if (add_track_by_filename (filename, plitem,
 				      prefs_get_add_recursively (),
-				      addsongfunc, data))
-		++songs;
+				      addtrackfunc, data))
+		++tracks;
 	    break;
 	case PLT_M3U:
 	    /* comments start with '#' */
 	    if (*bufp == '#') break;
 	    /* assume the rest of the line is a filename */
 	    filename = concat_dir_if_relative (dirname, bufp);
-	    if (add_song_by_filename (filename, plitem,
+	    if (add_track_by_filename (filename, plitem,
 				      prefs_get_add_recursively (),
-				      addsongfunc, data))
-		++songs;
+				      addtrackfunc, data))
+		++tracks;
 	    break;
 	case PLT_PLS:
 	    /* I don't know anything about pls playlist files and just
@@ -213,10 +213,10 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 		bufp = strchr (bufp, '=');
 		if (bufp) ++bufp;
 		filename = concat_dir_if_relative (dirname, bufp);
-		if (add_song_by_filename (filename, plitem,
+		if (add_track_by_filename (filename, plitem,
 					  prefs_get_add_recursively (),
-					  addsongfunc, data))
-		    ++songs;
+					  addtrackfunc, data))
+		    ++tracks;
 	    }
 	    break;
 	}
@@ -243,18 +243,18 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 /* Add all files in directory and subdirectories.
    If @name is a regular file, just add that.
    If @name == NULL, just return
-   If @plitem != NULL, add songs also to Playlist @plitem
+   If @plitem != NULL, add tracks also to Playlist @plitem
    @descend: TRUE: add recursively
              FALSE: don't enter subdirectories */
 /* Not nice: the return value has not much meaning. TRUE: all files
  * were added successfully. FALSE: some files could not be
    added (e.g: duplicates)  */
-/* @addsongfunc: if != NULL this will be called instead of
-   "add_song_to_playlist () -- used for dropping songs at a specific
-   position in the song view */
+/* @addtrackfunc: if != NULL this will be called instead of
+   "add_track_to_playlist () -- used for dropping tracks at a specific
+   position in the track view */
 gboolean add_directory_by_name (gchar *name, Playlist *plitem,
 				gboolean descend,
-				AddSongFunc addsongfunc, gpointer data)
+				AddTrackFunc addtrackfunc, gpointer data)
 {
   gboolean result = TRUE;
 
@@ -274,7 +274,7 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
 		      !g_file_test (nextfull, G_FILE_TEST_IS_DIR))
 		      result &= add_directory_by_name (nextfull, plitem,
 						       descend,
-						       addsongfunc, data);
+						       addtrackfunc, data);
 		  g_free (nextfull);
 	      }
 	  } while (next != NULL);
@@ -284,7 +284,7 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
   }
   else
   {
-      result = add_song_by_filename (name, plitem, descend, addsongfunc, data);
+      result = add_track_by_filename (name, plitem, descend, addtrackfunc, data);
   }
   return result;
 }
@@ -293,7 +293,7 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *      Helper function for add_song_by_filename ()                 *
+ *      Helper function for add_track_by_filename ()                 *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
@@ -310,34 +310,34 @@ static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
 /* Set entry "column" (SM_COLUMN_TITLE etc) according to filename */
 /* TODO: make the TAG extraction more intelligent -- if possible, this
    should be user configurable. */
-static void set_entry_from_filename (Song *song, gint column)
+static void set_entry_from_filename (Track *track, gint column)
 {
     gchar *str;
 
     if (prefs_get_tag_autoset (column) &&
-	song->pc_path_utf8 && strlen (song->pc_path_utf8))
+	track->pc_path_utf8 && strlen (track->pc_path_utf8))
     {
 	switch (column)
 	{
 	case SM_COLUMN_TITLE:
-	    str = g_path_get_basename (song->pc_path_utf8);
-	    set_entry (&song->title, &song->title_utf16, str);
+	    str = g_path_get_basename (track->pc_path_utf8);
+	    set_entry (&track->title, &track->title_utf16, str);
 	    break;
 	case SM_COLUMN_ALBUM:
-	    str = g_path_get_basename (song->pc_path_utf8);
-	    set_entry (&song->album, &song->album_utf16, str);
+	    str = g_path_get_basename (track->pc_path_utf8);
+	    set_entry (&track->album, &track->album_utf16, str);
 	    break;
 	case SM_COLUMN_ARTIST:
-	    str = g_path_get_basename (song->pc_path_utf8);
-	    set_entry (&song->artist, &song->artist_utf16, str);
+	    str = g_path_get_basename (track->pc_path_utf8);
+	    set_entry (&track->artist, &track->artist_utf16, str);
 	    break;
 	case SM_COLUMN_GENRE:
-	    str = g_path_get_basename (song->pc_path_utf8);
-	    set_entry (&song->genre, &song->genre_utf16, str);
+	    str = g_path_get_basename (track->pc_path_utf8);
+	    set_entry (&track->genre, &track->genre_utf16, str);
 	    break;
 	case SM_COLUMN_COMPOSER:
-	    str = g_path_get_basename (song->pc_path_utf8);
-	    set_entry (&song->composer, &song->composer_utf16, str);
+	    str = g_path_get_basename (track->pc_path_utf8);
+	    set_entry (&track->composer, &track->composer_utf16, str);
 	    break;
 	}
     }
@@ -346,46 +346,46 @@ static void set_entry_from_filename (Song *song, gint column)
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *      Fill in song struct with data from file                     *
+ *      Fill in track struct with data from file                     *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* update the song->charset info with the currently used charset */
-static void update_charset_info (Song *song)
+/* update the track->charset info with the currently used charset */
+static void update_charset_info (Track *track)
 {
-    if (song)
+    if (track)
     {
 	G_CONST_RETURN gchar *charset = prefs_get_charset ();
-	C_FREE (song->charset);
+	C_FREE (track->charset);
 	if (!charset || !strlen (charset))
 	{    /* use standard locale charset */
 	    g_get_charset (&charset);
 	}
 	/* Test for Japanese auto detection. "Japanese Autodetection"
 	   is not a valid charset. Here try to replace it with the
-	   encoding detected when reading the song */
+	   encoding detected when reading the track */
 	if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
 	{
-	    if (song->auto_charset)  song->charset = song->auto_charset;
-	    song->auto_charset = NULL;
+	    if (track->auto_charset)  track->charset = track->auto_charset;
+	    track->auto_charset = NULL;
 	}
 	else
 	{
-	    song->charset = g_strdup (charset);
-	    song->auto_charset = NULL;
+	    track->charset = g_strdup (charset);
+	    track->auto_charset = NULL;
 	}
     }
 }
 
 
-/* Fills the supplied @or_song with data from the file @name. If
- * @or_song is NULL, a new song struct is created The entries
+/* Fills the supplied @or_track with data from the file @name. If
+ * @or_track is NULL, a new track struct is created The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists */ 
-/* turns NULL on error, a pointer to the Song otherwise */
-Song *get_song_info_from_file (gchar *name, Song *or_song)
+/* turns NULL on error, a pointer to the Track otherwise */
+Track *get_track_info_from_file (gchar *name, Track *or_track)
 {
-    Song *song = NULL;
+    Track *track = NULL;
     Id3tag filetag;
     mp3info *mp3info;
     gint len;
@@ -404,213 +404,213 @@ Song *get_song_info_from_file (gchar *name, Song *or_song)
     {
 	struct stat si;
 
-	if (or_song)    song = or_song;
-	else            song = g_malloc0 (sizeof (Song));
+	if (or_track)    track = or_track;
+	else            track = g_malloc0 (sizeof (Track));
 
-	C_FREE (song->pc_path_utf8);
-	C_FREE (song->pc_path_locale);
-	song->pc_path_utf8 = charset_to_utf8 (name);
-	song->pc_path_locale = g_strdup (name);
+	C_FREE (track->pc_path_utf8);
+	C_FREE (track->pc_path_locale);
+	track->pc_path_utf8 = charset_to_utf8 (name);
+	track->pc_path_locale = g_strdup (name);
 
 	/* Set modification date to modification date of file */
 	if (stat (name, &si) == 0)
-	    song->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
+	    track->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
 
-	C_FREE (song->fdesc);
-	C_FREE (song->fdesc_utf16);
-	song->fdesc = g_strdup ("MPEG audio file");
-	song->fdesc_utf16 = g_utf8_to_utf16 (song->fdesc, -1, NULL, NULL, NULL);
-	C_FREE (song->album);
-	C_FREE (song->album_utf16);
+	C_FREE (track->fdesc);
+	C_FREE (track->fdesc_utf16);
+	track->fdesc = g_strdup ("MPEG audio file");
+	track->fdesc_utf16 = g_utf8_to_utf16 (track->fdesc, -1, NULL, NULL, NULL);
+	C_FREE (track->album);
+	C_FREE (track->album_utf16);
 	if (filetag.album)
 	{
-	    song->album = filetag.album;
-	    song->album_utf16 = g_utf8_to_utf16 (song->album, -1, NULL, NULL, NULL);
+	    track->album = filetag.album;
+	    track->album_utf16 = g_utf8_to_utf16 (track->album, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (song, SM_COLUMN_ALBUM);
+	else set_entry_from_filename (track, SM_COLUMN_ALBUM);
 
-	C_FREE (song->artist);
-	C_FREE (song->artist_utf16);
+	C_FREE (track->artist);
+	C_FREE (track->artist_utf16);
 	if (filetag.artist)
 	{
-	    song->artist = filetag.artist;
-	    song->artist_utf16 = g_utf8_to_utf16 (song->artist, -1, NULL, NULL, NULL);
+	    track->artist = filetag.artist;
+	    track->artist_utf16 = g_utf8_to_utf16 (track->artist, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (song, SM_COLUMN_ARTIST);
+	else set_entry_from_filename (track, SM_COLUMN_ARTIST);
 
-	C_FREE (song->title);
-	C_FREE (song->title_utf16);
+	C_FREE (track->title);
+	C_FREE (track->title_utf16);
 	if (filetag.title)
 	{
-	    song->title = filetag.title;
-	    song->title_utf16 = g_utf8_to_utf16 (song->title, -1, NULL, NULL, NULL);
+	    track->title = filetag.title;
+	    track->title_utf16 = g_utf8_to_utf16 (track->title, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (song, SM_COLUMN_TITLE);
+	else set_entry_from_filename (track, SM_COLUMN_TITLE);
 
-	C_FREE (song->genre);
-	C_FREE (song->genre_utf16);
+	C_FREE (track->genre);
+	C_FREE (track->genre_utf16);
 	if (filetag.genre)
 	{
-	    song->genre = filetag.genre;
-	    song->genre_utf16 = g_utf8_to_utf16 (song->genre, -1, NULL, NULL, NULL);
+	    track->genre = filetag.genre;
+	    track->genre_utf16 = g_utf8_to_utf16 (track->genre, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (song, SM_COLUMN_GENRE);
+	else set_entry_from_filename (track, SM_COLUMN_GENRE);
 
-	C_FREE (song->composer);
-	C_FREE (song->composer_utf16);
+	C_FREE (track->composer);
+	C_FREE (track->composer_utf16);
 	if (filetag.composer)
 	{
-	    song->composer = filetag.composer;
-	    song->composer_utf16 = g_utf8_to_utf16 (song->composer, -1, NULL, NULL, NULL);
+	    track->composer = filetag.composer;
+	    track->composer_utf16 = g_utf8_to_utf16 (track->composer, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (song, SM_COLUMN_COMPOSER);
+	else set_entry_from_filename (track, SM_COLUMN_COMPOSER);
 
-	C_FREE (song->comment);
-	C_FREE (song->comment_utf16);
+	C_FREE (track->comment);
+	C_FREE (track->comment_utf16);
 	if (filetag.comment)
 	{
-	    song->comment = filetag.comment;
-	    song->comment_utf16 = g_utf8_to_utf16 (song->comment, -1, NULL, NULL, NULL);
+	    track->comment = filetag.comment;
+	    track->comment_utf16 = g_utf8_to_utf16 (track->comment, -1, NULL, NULL, NULL);
 	}
 	if (filetag.year == NULL)
 	{
-	    song->year = 0;
+	    track->year = 0;
 	}
 	else
 	{
-	    song->year = atoi(filetag.year);
+	    track->year = atoi(filetag.year);
 	    g_free (filetag.year);
 	}
 
-	if (filetag.track == NULL)
+	if (filetag.trackstring == NULL)
 	{
-	    song->track_nr = 0;
+	    track->track_nr = 0;
 	}
 	else
 	{
-	    song->track_nr = atoi(filetag.track);
-	    g_free (filetag.track);
+	    track->track_nr = atoi(filetag.trackstring);
+	    g_free (filetag.trackstring);
 	}
 
 	if (filetag.track_total == NULL)
 	{
-	    song->tracks = 0;
+	    track->tracks = 0;
 	}
 	else
 	{
-	    song->tracks = atoi(filetag.track_total);
+	    track->tracks = atoi(filetag.track_total);
 	    g_free (filetag.track_total);
 	}
-	song->size = filetag.size;
-	song->auto_charset = filetag.auto_charset;
+	track->size = filetag.size;
+	track->auto_charset = filetag.auto_charset;
     }
 
-    if (song)
+    if (track)
     {
 	/* Get additional info (play time and bitrate */
 	mp3info = mp3file_get_info (name);
 	if (mp3info)
 	{
-	    song->songlen = mp3info->milliseconds;
-	    song->bitrate = (gint)(mp3info->vbr_average);
+	    track->tracklen = mp3info->milliseconds;
+	    track->bitrate = (gint)(mp3info->vbr_average);
 	    g_free (mp3info);
 	}
-	/* Fall back to xmms code if songlen is 0 */
-	if (song->songlen == 0)
+	/* Fall back to xmms code if tracklen is 0 */
+	if (track->tracklen == 0)
 	{
-	    song->songlen = get_song_time (name);
-	    if (song->songlen)
-		song->bitrate = (float)song->size*8/song->songlen;
+	    track->tracklen = get_track_time (name);
+	    if (track->tracklen)
+		track->bitrate = (float)track->size*8/track->tracklen;
 	}
 
 	/* set charset used */
-	update_charset_info (song);
+	update_charset_info (track);
 
 	/* Make sure all strings are initialised -- that way we don't 
 	   have to worry about it when we are handling the strings */
 	/* exception: md5_hash, charset and hostname: these may be NULL. */
-	validate_entries (song);
+	validate_entries (track);
 
-	if (song->songlen == 0)
+	if (track->tracklen == 0)
 	{
-	    /* Songs with zero play length are ignored by iPod... */
+	    /* Tracks with zero play length are ignored by iPod... */
 	    gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
 			    name);
-	    if (!or_song)
-	    {  /* don't delete the song that was passed to us */
-		g_free (song);
+	    if (!or_track)
+	    {  /* don't delete the track that was passed to us */
+		g_free (track);
 	    }
-	    song = NULL;
+	    track = NULL;
 	    while (widgets_blocked && gtk_events_pending ())
 		gtk_main_iteration ();
 	}
     }
-    return song;
+    return track;
 }
 
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *      Update Song Data from File                                  *
+ *      Update Track Data from File                                  *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
 
 /* reads info from file and updates the ID3 tags of
-   @selected_songids. */
-void update_songids (GList *selected_songids)
+   @selected_trackids. */
+void update_trackids (GList *selected_trackids)
 {
     GList *gl_id;
 
-    if (g_list_length (selected_songids) == 0)
+    if (g_list_length (selected_trackids) == 0)
     {
 	gtkpod_statusbar_message(_("Nothing to update"));
 	return;
     }
 
     block_widgets ();
-    for (gl_id = selected_songids; gl_id; gl_id = gl_id->next)
+    for (gl_id = selected_trackids; gl_id; gl_id = gl_id->next)
     {
 	guint32 id = (guint32)gl_id->data;
-	Song *song = get_song_by_id (id);
-	gchar *buf = g_strdup_printf (_("Updating %s"), get_song_info (song));
+	Track *track = get_track_by_id (id);
+	gchar *buf = g_strdup_printf (_("Updating %s"), get_track_info (track));
 	gtkpod_statusbar_message (buf);
 	g_free (buf);
-	update_song_from_file (song);
+	update_track_from_file (track);
     }
     release_widgets ();
-    /* display log of non-updated songs */
+    /* display log of non-updated tracks */
     display_non_updated (NULL, NULL);
-    /* display log of updated songs */
+    /* display log of updated tracks */
     display_updated (NULL, NULL);
     /* display log of detected duplicates */
     remove_duplicate (NULL, NULL);
-    gtkpod_statusbar_message(_("Updated selected songs with info from file."));
+    gtkpod_statusbar_message(_("Updated selected tracks with info from file."));
 }
 
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *      Sync Song Dirs                                              *
+ *      Sync Track Dirs                                              *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* Callback for adding songs (makes sure song isn't added to playlist
+/* Callback for adding tracks (makes sure track isn't added to playlist
  * again if it already exists */
-static void sync_addsongfunc (Playlist *plitem, Song *song, gpointer data)
+static void sync_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 {
-    if (!song) return;
+    if (!track) return;
     if (!plitem) plitem = get_playlist_by_nr (0); /* NULL/0: MPL */
 
-    /* only add if @song isn't already a member of the current
+    /* only add if @track isn't already a member of the current
        playlist */
-    if (!g_list_find (plitem->members, song))
-	add_song_to_playlist (plitem, song, TRUE);
+    if (!g_list_find (plitem->members, track))
+	add_track_to_playlist (plitem, track, TRUE);
 }
 
 
 /* Synchronize the directory @key (gchar *dir). Called by
- * sync_songids().
+ * sync_trackids().
  * @user_data: selected playlist */
 static void sync_dir (gpointer key,
 		      gpointer value,
@@ -651,7 +651,7 @@ static void sync_dir (gpointer key,
     g_free (dir_utf8);
 
     /* sync dir */
-    add_directory_by_name (dir, pl, FALSE, sync_addsongfunc, NULL);
+    add_directory_by_name (dir, pl, FALSE, sync_addtrackfunc, NULL);
 
     /* reset charset */
     if (!prefs_get_update_charset () && charset)
@@ -661,16 +661,16 @@ static void sync_dir (gpointer key,
 
 
 /* ok handler for sync_remove */
-/* @user_data1 is NULL, @user_data2 are the selected songids */
+/* @user_data1 is NULL, @user_data2 are the selected trackids */
 static void sync_remove_ok (gpointer user_data1, gpointer user_data2)
 {
     if (prefs_get_sync_remove ())
-	delete_song_ok (NULL, user_data2);
+	delete_track_ok (NULL, user_data2);
 }
 
 
 /* cancel handler for sync_remove */
-/* @user_data1 is NULL, @user_data2 are the selected songids */
+/* @user_data1 is NULL, @user_data2 are the selected trackids */
 static void sync_remove_cancel (gpointer user_data1, gpointer user_data2)
 {
     GList *id_list = user_data2;
@@ -702,9 +702,9 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     /* reset "update existing" */
     prefs_set_update_existing (update);
 
-    /* display log of non-updated songs */
+    /* display log of non-updated tracks */
     display_non_updated (NULL, NULL);
-    /* display log updated songs */
+    /* display log updated tracks */
     display_updated (NULL, NULL);
     /* display log of detected duplicates */
     remove_duplicate (NULL, NULL);
@@ -714,11 +714,11 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 	GList *id_list = NULL;
 	GString *str;
 	gchar *label, *title;
-	Song *s;
+	Track *s;
 	GList *l;
 
-	/* add all songs that are no longer present in the dirs */
-	for (s=get_next_song (0); s; s=get_next_song (1))
+	/* add all tracks that are no longer present in the dirs */
+	for (s=get_next_track (0); s; s=get_next_track (1))
 	{
 	    if (s->pc_path_locale && *s->pc_path_locale)
 	    {
@@ -737,11 +737,11 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 	    delete_populate_settings (NULL, id_list,
 				      &label, &title,
 				      NULL, NULL, NULL);
-	    /* create a list of songs */
+	    /* create a list of tracks */
 	    str = g_string_sized_new (2000);
 	    for(l = id_list; l; l=l->next)
 	    {
-		s = get_song_by_id ((guint32)l->data);
+		s = get_track_by_id ((guint32)l->data);
 		if (s)
 		    g_string_append_printf (str, "%s (%s-%s)\n",
 					    s->pc_path_utf8,
@@ -790,7 +790,7 @@ static void sync_dir_cancel (gpointer user_data1, gpointer user_data2)
 
 
 /* Append @key (gchar *dir) to GString *user_data. Called by
- * sync_songids(). Charset to use is @value. If @value is not set, use
+ * sync_trackids(). Charset to use is @value. If @value is not set, use
  * the charset specified in the preferences */
 static void sync_add_dir_to_string  (gpointer key,
 				     gpointer value,
@@ -814,16 +814,16 @@ static void sync_add_dir_to_string  (gpointer key,
 
 
 /* Sync all directories referred to by the pc_path_locale entries in
-   the selected songs */
-void sync_songids (GList *selected_songids)
+   the selected tracks */
+void sync_trackids (GList *selected_trackids)
 {
     GHashTable *hash;
     GList *gl_id;
     guint32 dirnum = 0;
 
-    if (g_list_length (selected_songids) == 0)
+    if (g_list_length (selected_trackids) == 0)
     {
-	gtkpod_statusbar_message (_("No songs in selection"));
+	gtkpod_statusbar_message (_("No tracks in selection"));
 	return;
     }
 
@@ -832,23 +832,23 @@ void sync_songids (GList *selected_songids)
        */
     hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 
-    /* Get the dirs of all songs selected and enter them into the hash
+    /* Get the dirs of all tracks selected and enter them into the hash
        table if the dir exists. Using a hash table automatically
        removes duplicates */
-    for (gl_id = selected_songids; gl_id; gl_id = gl_id->next)
+    for (gl_id = selected_trackids; gl_id; gl_id = gl_id->next)
     {
 	guint32 id = (guint32)gl_id->data;
-	Song *song = get_song_by_id (id);
-	if (song && song->pc_path_locale && *song->pc_path_locale)
+	Track *track = get_track_by_id (id);
+	if (track && track->pc_path_locale && *track->pc_path_locale)
 	{
-	    gchar *dirname = g_path_get_dirname (song->pc_path_locale);
+	    gchar *dirname = g_path_get_dirname (track->pc_path_locale);
 
 	    ++dirnum;
 	    if (g_file_test (dirname, G_FILE_TEST_IS_DIR))
 	    {
-		if (song->charset && *song->charset)
+		if (track->charset && *track->charset)
 		{   /* charset set -- just insert the entry */
-		    gchar *charset = g_strdup (song->charset);
+		    gchar *charset = g_strdup (track->charset);
 		    g_hash_table_insert (hash, dirname, charset);
 		}
 		else
@@ -910,31 +910,31 @@ No valid directories have been found. Sync aborted.\n"));
 /*------------------------------------------------------------------*\
  *                                                                  *
  *  Generic functions to "do" things on selected playlist / entry   *
- *  / songs                                                         *
+ *  / tracks                                                         *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* Make a list of all selected songs and call @do_func with that list
+/* Make a list of all selected tracks and call @do_func with that list
    as argument */
-void do_selected_songs (void (*do_func)(GList *songids))
+void do_selected_tracks (void (*do_func)(GList *trackids))
 {
-    GList *selected_songids = NULL;
+    GList *selected_trackids = NULL;
 
     if (!do_func) return;
 
-    /* I'm using ids instead of "Song *" -pointer because it would be
-     * possible that a song gets removed during the process */
-    selected_songids = sm_get_selected_songids();
-    do_func (selected_songids);
-    g_list_free (selected_songids);
+    /* I'm using ids instead of "Track *" -pointer because it would be
+     * possible that a track gets removed during the process */
+    selected_trackids = sm_get_selected_trackids();
+    do_func (selected_trackids);
+    g_list_free (selected_trackids);
 }
 
 
-/* Make a list of all songs in the currently selected entry of sort
+/* Make a list of all tracks in the currently selected entry of sort
    tab @inst and call @do_func with that list as argument */
-void do_selected_entry (void (*do_func)(GList *songids), gint inst)
+void do_selected_entry (void (*do_func)(GList *trackids), gint inst)
 {
-    GList *selected_songids = NULL;
+    GList *selected_trackids = NULL;
     TabEntry *entry;
     GList *gl;
 
@@ -949,22 +949,22 @@ void do_selected_entry (void (*do_func)(GList *songids), gint inst)
 	return;
     }
     for (gl=entry->members; gl; gl=gl->next)
-    { /* make a list with all songids in this entry */
-	Song *song = (Song *)gl->data;
-	if (song)
-	    selected_songids = g_list_append (selected_songids,
-					      (gpointer)song->ipod_id);
+    { /* make a list with all trackids in this entry */
+	Track *track = (Track *)gl->data;
+	if (track)
+	    selected_trackids = g_list_append (selected_trackids,
+					      (gpointer)track->ipod_id);
     }
-    do_func (selected_songids);
-    g_list_free (selected_songids);
+    do_func (selected_trackids);
+    g_list_free (selected_trackids);
 }
 
 
-/* Make a list of the songs in the current playlist and call @do_func
+/* Make a list of the tracks in the current playlist and call @do_func
    with that list as argument */
-void do_selected_playlist (void (*do_func)(GList *songids))
+void do_selected_playlist (void (*do_func)(GList *trackids))
 {
-    GList *selected_songids = NULL;
+    GList *selected_trackids = NULL;
     Playlist *pl;
     GList *gl;
 
@@ -977,40 +977,40 @@ void do_selected_playlist (void (*do_func)(GList *songids))
 	return;
     }
     for (gl=pl->members; gl; gl=gl->next)
-    { /* make a list with all songids in this entry */
-	Song *song = (Song *)gl->data;
-	if (song)
-	    selected_songids = g_list_append (selected_songids,
-					      (gpointer)song->ipod_id);
+    { /* make a list with all trackids in this entry */
+	Track *track = (Track *)gl->data;
+	if (track)
+	    selected_trackids = g_list_append (selected_trackids,
+					      (gpointer)track->ipod_id);
     }
-    do_func (selected_songids);
-    g_list_free (selected_songids);
+    do_func (selected_trackids);
+    g_list_free (selected_trackids);
 }
 
 
-/* Logs songs (@song) that could not be updated from file for some
-   reason. Pop up a window with the log by calling with @song = NULL,
-   or remove the log by calling with @song = -1.
+/* Logs tracks (@track) that could not be updated from file for some
+   reason. Pop up a window with the log by calling with @track = NULL,
+   or remove the log by calling with @track = -1.
    @txt (if available)w is added as an explanation as to why it was
-   impossible to update the song */
-void display_non_updated (Song *song, gchar *txt)
+   impossible to update the track */
+void display_non_updated (Track *track, gchar *txt)
 {
    gchar *buf;
-   static gint song_nr = 0;
+   static gint track_nr = 0;
    static GString *str = NULL;
 
-   if ((song == NULL) && str)
+   if ((track == NULL) && str)
    {
        if (prefs_get_show_non_updated() && str->len)
-       { /* Some songs have not been updated. Print a notice */
+       { /* Some tracks have not been updated. Print a notice */
 	   buf = g_strdup_printf (
-	       ngettext ("The following song could not be updated",
-			 "The following %d songs could not be updated",
-			 song_nr), song_nr);
+	       ngettext ("The following track could not be updated",
+			 "The following %d tracks could not be updated",
+			 track_nr), track_nr);
 	   gtkpod_confirmation
 	       (-1,                 /* gint id, */
 		FALSE,              /* gboolean modal, */
-		_("Failed Song Update"),   /* title */
+		_("Failed Track Update"),   /* title */
 		buf,                /* label */
 		str->str,           /* scrolled text */
 		NULL, 0, NULL,          /* option 1 */
@@ -1027,54 +1027,54 @@ void display_non_updated (Song *song, gchar *txt)
        display_non_updated ((void *)-1, NULL);
    }
 
-   if (song == (void *)-1)
+   if (track == (void *)-1)
    { /* clean up */
        if (str)       g_string_free (str, TRUE);
        str = NULL;
-       song_nr = 0;
-       gtkpod_songs_statusbar_update();
+       track_nr = 0;
+       gtkpod_tracks_statusbar_update();
    }
-   else if (prefs_get_show_non_updated() && song)
+   else if (prefs_get_show_non_updated() && track)
    {
        /* add info about it to str */
-       buf = get_song_info (song);
+       buf = get_track_info (track);
        if (!str)
        {
-	   song_nr = 0;
+	   track_nr = 0;
 	   str = g_string_sized_new (2000); /* used to keep record of
-					     * non-updated songs */
+					     * non-updated tracks */
        }
        if (txt) g_string_append_printf (str, "%s (%s)\n", buf, txt);
        else     g_string_append_printf (str, "%s\n", buf);
        g_free (buf);
-       ++song_nr; /* count songs */
+       ++track_nr; /* count tracks */
    }
 }
 
 
-/* Logs songs (@song) that could be updated from file. Pop up a window
-   with the log by calling with @song = NULL, or remove the log by
-   calling with @song = -1.
+/* Logs tracks (@track) that could be updated from file. Pop up a window
+   with the log by calling with @track = NULL, or remove the log by
+   calling with @track = -1.
    @txt (if available)w is added as an explanation as to why it was
-   impossible to update the song */
-void display_updated (Song *song, gchar *txt)
+   impossible to update the track */
+void display_updated (Track *track, gchar *txt)
 {
    gchar *buf;
-   static gint song_nr = 0;
+   static gint track_nr = 0;
    static GString *str = NULL;
 
-   if (prefs_get_show_updated() && (song == NULL) && str)
+   if (prefs_get_show_updated() && (track == NULL) && str)
    {
        if (str->len)
-       { /* Some songs have been updated. Print a notice */
+       { /* Some tracks have been updated. Print a notice */
 	   buf = g_strdup_printf (
-	       ngettext ("The following song has been updated",
-			 "The following %d songs have been updated",
-			 song_nr), song_nr);
+	       ngettext ("The following track has been updated",
+			 "The following %d tracks have been updated",
+			 track_nr), track_nr);
 	   gtkpod_confirmation
 	       (-1,                 /* gint id, */
 		FALSE,              /* gboolean modal, */
-		_("Successful Song Update"),   /* title */
+		_("Successful Track Update"),   /* title */
 		buf,                /* label */
 		str->str,           /* scrolled text */
 		NULL, 0, NULL,          /* option 1 */
@@ -1091,36 +1091,36 @@ void display_updated (Song *song, gchar *txt)
        display_updated ((void *)-1, NULL);
    }
 
-   if (song == (void *)-1)
+   if (track == (void *)-1)
    { /* clean up */
        if (str)       g_string_free (str, TRUE);
        str = NULL;
-       song_nr = 0;
-       gtkpod_songs_statusbar_update();
+       track_nr = 0;
+       gtkpod_tracks_statusbar_update();
    }
-   else if (prefs_get_show_updated() && song)
+   else if (prefs_get_show_updated() && track)
    {
        /* add info about it to str */
-       buf = get_song_info (song);
+       buf = get_track_info (track);
        if (!str)
        {
-	   song_nr = 0;
+	   track_nr = 0;
 	   str = g_string_sized_new (2000); /* used to keep record of
-					     * non-updated songs */
+					     * non-updated tracks */
        }
        if (txt) g_string_append_printf (str, "%s (%s)\n", buf, txt);
        else     g_string_append_printf (str, "%s\n", buf);
        g_free (buf);
-       ++song_nr; /* count songs */
+       ++track_nr; /* count tracks */
    }
 }
 
 
-/* Update information of @song from data in original file. This
+/* Update information of @track from data in original file. This
    requires that the original filename is available, and that the file
    exists.
 
-   A list of non-updated songs can be displayed by calling
+   A list of non-updated tracks can be displayed by calling
    display_non_updated (NULL, NULL). This list can be deleted by
    calling display_non_updated ((void *)-1, NULL);
 
@@ -1128,22 +1128,22 @@ void display_updated (Song *song, gchar *txt)
    a list of those can be displayed by calling "remove_duplicate
    (NULL, NULL)", that list can be deleted by calling
    "remove_duplicate (NULL, (void *)-1)"*/
-void update_song_from_file (Song *song)
+void update_track_from_file (Track *track)
 {
-    Song *oldsong;
+    Track *oldtrack;
     gchar *prefs_charset = NULL;
-    gchar *songpath = NULL;
+    gchar *trackpath = NULL;
     gint32 oldsize = 0;
     gboolean charset_set;
 
-    if (!song) return;
+    if (!track) return;
 
-    /* remember size of song on iPod */
-    if (song->transferred) oldsize = song->size;
+    /* remember size of track on iPod */
+    if (track->transferred) oldsize = track->size;
     else                   oldsize = 0;
 
     /* remember if charset was set */
-    if (song->charset)  charset_set = TRUE;
+    if (track->charset)  charset_set = TRUE;
     else                charset_set = FALSE;
 
     if (!prefs_get_update_charset () && charset_set)
@@ -1152,73 +1152,73 @@ void update_song_from_file (Song *song)
 	{   /* remember the charset originally set */
 	    prefs_charset = g_strdup (prefs_get_charset ());
 	}
-	/* use the charset used when first importing the song */
-	prefs_set_charset (song->charset);
+	/* use the charset used when first importing the track */
+	prefs_set_charset (track->charset);
     }
     else
-    {   /* we should update the song->charset information */
-	update_charset_info (song);
+    {   /* we should update the track->charset information */
+	update_charset_info (track);
     }
 
-    if (song->pc_path_locale)
-    {   /* need to copy because we cannot pass song->pc_path_locale to
-	get_song_info_from_file () since song->pc_path gets g_freed
+    if (track->pc_path_locale)
+    {   /* need to copy because we cannot pass track->pc_path_locale to
+	get_track_info_from_file () since track->pc_path gets g_freed
 	there */
-	songpath = g_strdup (song->pc_path_locale);
+	trackpath = g_strdup (track->pc_path_locale);
     }
 
-    if (!(song->pc_path_locale && *song->pc_path_locale))
+    if (!(track->pc_path_locale && *track->pc_path_locale))
     { /* no path available */
-	display_non_updated (song, _("no filename available"));
+	display_non_updated (track, _("no filename available"));
     }
-    else if (get_song_info_from_file (songpath, song))
+    else if (get_track_info_from_file (trackpath, track))
     { /* update successfull */
-	/* remove song from md5 hash and reinsert it
+	/* remove track from md5 hash and reinsert it
 	   (hash value may have changed!) */
-	gchar *oldhash = song->md5_hash;
-	md5_song_removed (song);
-	song->md5_hash = NULL;  /* need to remove the old value manually! */
-	oldsong = md5_song_exists_insert (song);
-	if (oldsong) { /* song exists, remove old song
+	gchar *oldhash = track->md5_hash;
+	md5_track_removed (track);
+	track->md5_hash = NULL;  /* need to remove the old value manually! */
+	oldtrack = md5_track_exists_insert (track);
+	if (oldtrack) { /* track exists, remove old track
 			  and register the new version */
-	    md5_song_removed (oldsong);
-	    remove_duplicate (song, oldsong);
-	    md5_song_exists_insert (song);
+	    md5_track_removed (oldtrack);
+	    remove_duplicate (track, oldtrack);
+	    md5_track_exists_insert (track);
 	}
-	/* song may have to be copied to iPod on next export */
+	/* track may have to be copied to iPod on next export */
 	/* since it will copied under the same name as before, we
 	   don't have to manually remove it */
-	if (oldhash && song->md5_hash)
-	{   /* do we really have to copy the song again? */
-	    if (strcmp (oldhash, song->md5_hash) != 0)
+	if (oldhash && track->md5_hash)
+	{   /* do we really have to copy the track again? */
+	    if (strcmp (oldhash, track->md5_hash) != 0)
 	    {
-		song->transferred = FALSE;
+		track->transferred = FALSE;
 		data_changed ();
 	    }
 	}
 	else
 	{   /* no hash available -- copy! */
-	    song->transferred = FALSE;
+	    track->transferred = FALSE;
 	    data_changed ();
 	}
-	/* set old size if song has to be transferred (for free space
+	/* set old size if track has to be transferred (for free space
 	 * calculation) */
-	if (!song->transferred) song->oldsize = oldsize;
+	if (!track->transferred) track->oldsize = oldsize;
 	/* notify display model */
-	pm_song_changed (song);
-	display_updated (song, NULL);
+	pm_track_changed (track);
+	display_updated (track, NULL);
         C_FREE (oldhash);
     }
     else
-    { /* update not successful -- log this song for later display */
-	if (g_file_test (songpath,
+    { /* update not successful -- log this track for later display */
+	if (g_file_test (trackpath,
 			 G_FILE_TEST_EXISTS) == FALSE)
 	{
-	    display_non_updated (song, _("file not found"));
+	    display_non_updated (track, _("file not found"));
 	}
 	else
 	{
-	    display_non_updated (song, _("format not supported"));
+	    display_non_updated (track, _("format not supported"));
 	}
     }
 
@@ -1226,7 +1226,7 @@ void update_song_from_file (Song *song)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }
-    C_FREE (songpath);
+    C_FREE (trackpath);
 
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 }
@@ -1238,22 +1238,22 @@ void update_song_from_file (Song *song)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* Append file @name to the list of songs.
+/* Append file @name to the list of tracks.
    @name is in the current locale
-   @plitem: if != NULL, add song to plitem as well (unless it's the MPL)
+   @plitem: if != NULL, add track to plitem as well (unless it's the MPL)
    descend: TRUE:  add directories recursively
             FALSE: add contents of directories passed but don't descend
                    into its subdirectories */
 /* Not nice: currently only accepts files ending on .mp3 */
-/* @addsongfunc: if != NULL this will be called instead of
-   "add_song_to_playlist () -- used for dropping songs at a specific
-   position in the song view */
-gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
-			       AddSongFunc addsongfunc, gpointer data)
+/* @addtrackfunc: if != NULL this will be called instead of
+   "add_track_to_playlist () -- used for dropping tracks at a specific
+   position in the track view */
+gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
+			       AddTrackFunc addtrackfunc, gpointer data)
 {
-  static gint count = 0; /* do a gtkpod_songs_statusbar_update() every
-			    10 songs */
-  Song *song;
+  static gint count = 0; /* do a gtkpod_tracks_statusbar_update() every
+			    10 tracks */
+  Track *track;
   gchar str[PATH_MAX];
   gchar *basename;
   gint len;
@@ -1262,7 +1262,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
-      return add_directory_by_name (name, NULL, descend, addsongfunc, data);
+      return add_directory_by_name (name, NULL, descend, addtrackfunc, data);
   }
 
   /* check if file is a playlist */
@@ -1272,7 +1272,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
       if ((strcasecmp (&name[len-4], ".pls") == 0) ||
 	  (strcasecmp (&name[len-4], ".m3u") == 0))
       {
-	  return add_playlist_by_filename (name, plitem, addsongfunc, data);
+	  return add_playlist_by_filename (name, plitem, addtrackfunc, data);
       }
   }
 
@@ -1288,75 +1288,75 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
   }
   C_FREE (basename);
 
-  song = get_song_info_from_file (name, NULL);
+  track = get_track_info_from_file (name, NULL);
 
-  if (song && prefs_get_update_existing ())
+  if (track && prefs_get_update_existing ())
   {  /* If a file is added again, update the information of the
-      * existing song */
-      Song *oldsong = get_song_by_filename (name);
+      * existing track */
+      Track *oldtrack = get_track_by_filename (name);
 
-      if (oldsong)
+      if (oldtrack)
       {
-	  update_song_from_file (oldsong);
+	  update_track_from_file (oldtrack);
 	  if (plitem && (plitem->type != PL_TYPE_MPL))
 	  {
-	      if (addsongfunc)
-		  addsongfunc (plitem, oldsong, data);
+	      if (addtrackfunc)
+		  addtrackfunc (plitem, oldtrack, data);
 	      else
-		  add_song_to_playlist (plitem, oldsong, TRUE);
+		  add_track_to_playlist (plitem, oldtrack, TRUE);
 	  }
-	  free_song (song);
-	  song = NULL;
+	  free_track (track);
+	  track = NULL;
       }
   }
 
-  if (song)
+  if (track)
   {
-      Song *added_song = NULL;
+      Track *added_track = NULL;
 
-      song->ipod_id = 0;
-      song->transferred = FALSE;
+      track->ipod_id = 0;
+      track->transferred = FALSE;
       if (gethostname (str, PATH_MAX-2) == 0)
       {
 	  str[PATH_MAX-1] = 0;
-	  song->hostname = g_strdup (str);
+	  track->hostname = g_strdup (str);
       }
-      added_song = add_song (song);
-      if(added_song)                   /* add song to memory */
+      added_track = add_track (track);
+      if(added_track)                   /* add track to memory */
       {
-	  if (addsongfunc)
+	  if (addtrackfunc)
 	  {
 	      if (!plitem || (plitem->type == PL_TYPE_MPL))
-	      {   /* add song to master playlist (if it hasn't been
+	      {   /* add track to master playlist (if it hasn't been
 		   * done before) */
-		  if (added_song == song) addsongfunc (plitem, added_song,
+		  if (added_track == track) addtrackfunc (plitem, added_track,
 						       data);
 	      }
 	      else
 	      {   /* (plitem != NULL) && (type == NORM) */
-		  /* add song to master playlist (if it hasn't been
+		  /* add track to master playlist (if it hasn't been
 		   * done before) */
-		  if (added_song == song)
-		      add_song_to_playlist (NULL, added_song, TRUE);
-		  /* add song to specified playlist */
-		  addsongfunc (plitem, added_song, data);
+		  if (added_track == track)
+		      add_track_to_playlist (NULL, added_track, TRUE);
+		  /* add track to specified playlist */
+		  addtrackfunc (plitem, added_track, data);
 	      }
 	  }
-	  else  /* no addsongfunc */
+	  else  /* no addtrackfunc */
 	  {
-	      /* add song to master playlist (if it hasn't been done before) */
-	      if (added_song == song) add_song_to_playlist (NULL, added_song,
+	      /* add track to master playlist (if it hasn't been done before) */
+	      if (added_track == track) add_track_to_playlist (NULL, added_track,
 							    TRUE);
-	      /* add song to specified playlist, but not to MPL */
+	      /* add track to specified playlist, but not to MPL */
 	      if (plitem && (plitem->type != PL_TYPE_MPL))
-		  add_song_to_playlist (plitem, added_song, TRUE);
+		  add_track_to_playlist (plitem, added_track, TRUE);
 	  }
 	  /* indicate that non-transferred files exist */
 	  data_changed ();
 	  ++count;
-	  if (count >= 10)  /* update every ten songs added */
+	  if (count >= 10)  /* update every ten tracks added */
 	  {
-	      gtkpod_songs_statusbar_update();
+	      gtkpod_tracks_statusbar_update();
 	      count = 0;
 	  }
       }
@@ -1374,68 +1374,68 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 
 /* Write changed tags to file.
    "tag_id": specify which tags should be changed (one of
-   S_... defined in song.h) */
-gboolean write_tags_to_file (Song *song, S_item tag_id)
+   S_... defined in track.h) */
+gboolean write_tags_to_file (Track *track, S_item tag_id)
 {
     Id3tag *filetag;
-    gchar *ipod_fullpath, track[20];
+    gchar *ipod_fullpath, trackstring[20];
     gchar *prefs_charset = NULL;
-    Song *oldsong;
-    gboolean song_charset_set;
+    Track *oldtrack;
+    gboolean track_charset_set;
 
-    if (!song) return FALSE;
+    if (!track) return FALSE;
 
     /* if we are to use the charset used when first importing
-       the song, change the prefs settings temporarily */
-    if (song->charset)  song_charset_set = TRUE;
-    else                song_charset_set = FALSE;
-    if (!prefs_get_write_charset () && song_charset_set)
+       the track, change the prefs settings temporarily */
+    if (track->charset)  track_charset_set = TRUE;
+    else                track_charset_set = FALSE;
+    if (!prefs_get_write_charset () && track_charset_set)
     {   /* we should use the initial charset for the update */
 	if (prefs_get_charset ())
 	{   /* remember the charset originally set */
 	    prefs_charset = g_strdup (prefs_get_charset ());
 	}
-	/* use the charset used when first importing the song */
-	prefs_set_charset (song->charset);
+	/* use the charset used when first importing the track */
+	prefs_set_charset (track->charset);
     }
     else
-    {   /* we should update the song->charset information */
-	update_charset_info (song);
+    {   /* we should update the track->charset information */
+	update_charset_info (track);
     }
 
     filetag = g_malloc0 (sizeof (Id3tag));
     if ((tag_id == S_ALL) || (tag_id == S_ALBUM))
-	filetag->album = song->album;
+	filetag->album = track->album;
     if ((tag_id == S_ALL) || (tag_id == S_ARTIST))
-	filetag->artist = song->artist;
+	filetag->artist = track->artist;
     if ((tag_id == S_ALL) || (tag_id == S_TITLE))
-	filetag->title = song->title;
+	filetag->title = track->title;
     if ((tag_id == S_ALL) || (tag_id == S_GENRE))
-	filetag->genre = song->genre;
+	filetag->genre = track->genre;
     if ((tag_id == S_ALL) || (tag_id == S_COMPOSER))
-	filetag->composer = song->composer;
+	filetag->composer = track->composer;
     if ((tag_id == S_ALL) || (tag_id == S_COMMENT))
-	filetag->comment = song->comment;
+	filetag->comment = track->comment;
     if ((tag_id == S_ALL) || (tag_id == S_TRACK_NR))
     {
-	snprintf(track, 20, "%d", song->track_nr);
-	filetag->track = track;
+	snprintf(trackstring, 20, "%d", track->track_nr);
+	filetag->trackstring = trackstring;
     }
-    if (song->pc_path_locale && (strlen (song->pc_path_locale) > 0))
+    if (track->pc_path_locale && (strlen (track->pc_path_locale) > 0))
       {
-	if (id3_tag_write (song->pc_path_locale, filetag) == FALSE)
+	if (id3_tag_write (track->pc_path_locale, filetag) == FALSE)
 	  {
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
-			    song->pc_path_locale);
+			    track->pc_path_locale);
 	  }
       }
     if (!prefs_get_offline () &&
-	song->transferred &&
-	song->ipod_path &&
-	(g_utf8_strlen (song->ipod_path, -1) > 0))
+	track->transferred &&
+	track->ipod_path &&
+	(g_utf8_strlen (track->ipod_path, -1) > 0))
       {
 	/* need to get ipod filename */
-	ipod_fullpath = get_track_name_on_ipod (song);
+	ipod_fullpath = get_track_name_on_ipod (track);
 	if (id3_tag_write (ipod_fullpath, filetag) == FALSE)
 	  {
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
@@ -1443,18 +1443,18 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 	  }
 	g_free (ipod_fullpath);
       }
-    /* remove song from md5 hash and reinsert it (hash value has changed!) */
-    md5_song_removed (song);
-    C_FREE (song->md5_hash);  /* need to remove the old value manually! */
-    oldsong = md5_song_exists_insert (song);
-    if (oldsong) { /* song exists, remove and register the new version */
-	md5_song_removed (oldsong);
-	remove_duplicate (song, oldsong);
-	md5_song_exists_insert (song);
+    /* remove track from md5 hash and reinsert it (hash value has changed!) */
+    md5_track_removed (track);
+    C_FREE (track->md5_hash);  /* need to remove the old value manually! */
+    oldtrack = md5_track_exists_insert (track);
+    if (oldtrack) { /* track exists, remove and register the new version */
+	md5_track_removed (oldtrack);
+	remove_duplicate (track, oldtrack);
+	md5_track_exists_insert (track);
     }
     g_free (filetag);
 
-    if (!prefs_get_write_charset () && song_charset_set)
+    if (!prefs_get_write_charset () && track_charset_set)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }
@@ -1470,35 +1470,35 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 \*------------------------------------------------------------------*/
 
 
-/* fills in extended info if available (called from add_song()) */
-void fill_in_extended_info (Song *song)
+/* fills in extended info if available (called from add_track()) */
+void fill_in_extended_info (Track *track)
 {
   gint ipod_id;
-  struct song_extended_info *sei;
+  struct track_extended_info *sei;
 
-  if (extendedinfohash && song->ipod_id)
+  if (extendedinfohash && track->ipod_id)
     {
-      ipod_id = song->ipod_id;
+      ipod_id = track->ipod_id;
       sei = g_hash_table_lookup (extendedinfohash, &ipod_id);
       if (sei) /* found info for this id! */
 	{
-	  if (sei->pc_path_locale && !song->pc_path_locale)
-	      song->pc_path_locale = g_strdup (sei->pc_path_locale);
-	  if (sei->pc_path_utf8 && !song->pc_path_utf8)
-	      song->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
-	  if (sei->md5_hash && !song->md5_hash)
-	      song->md5_hash = g_strdup (sei->md5_hash);
-	  if (sei->charset && !song->charset)
-	      song->charset = g_strdup (sei->charset);
-	  if (sei->hostname && !song->hostname)
-	      song->hostname = g_strdup (sei->hostname);
-	  song->oldsize = sei->oldsize;
-	  song->playcount += sei->playcount;
+	  if (sei->pc_path_locale && !track->pc_path_locale)
+	      track->pc_path_locale = g_strdup (sei->pc_path_locale);
+	  if (sei->pc_path_utf8 && !track->pc_path_utf8)
+	      track->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
+	  if (sei->md5_hash && !track->md5_hash)
+	      track->md5_hash = g_strdup (sei->md5_hash);
+	  if (sei->charset && !track->charset)
+	      track->charset = g_strdup (sei->charset);
+	  if (sei->hostname && !track->hostname)
+	      track->hostname = g_strdup (sei->hostname);
+	  track->oldsize = sei->oldsize;
+	  track->playcount += sei->playcount;
 	  /* FIXME: This means that the rating can never be reset to 0
 	   * by the iPod */
-	  if (song->rating == 0)
-	      song->rating = sei->rating;
-	  song->transferred = sei->transferred;
+	  if (track->rating == 0)
+	      track->rating = sei->rating;
+	  track->transferred = sei->transferred;
 	  g_hash_table_remove (extendedinfohash, &ipod_id);
 	}
     }
@@ -1508,7 +1508,7 @@ void fill_in_extended_info (Song *song)
 /* Used to free the memory of hash data */
 static void hash_delete (gpointer data)
 {
-    struct song_extended_info *sei = data;
+    struct track_extended_info *sei = data;
 
     if (sei)
     {
@@ -1533,7 +1533,7 @@ static void destroy_extendedinfohash (void)
 /* Read extended info from "name" and check if "itunes" is the
    corresponding iTunesDB (using the itunes_hash value in "name").
    The data is stored in a hash table with the ipod_id as key.
-   This hash table is used by add_song() to fill in missing information */
+   This hash table is used by add_track() to fill in missing information */
 /* Return TRUE on success, FALSE otherwise */
 static gboolean read_extended_info (gchar *name, gchar *itunes)
 {
@@ -1541,7 +1541,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     gboolean success = TRUE;
     gboolean expect_hash;
     gint len;
-    struct song_extended_info *sei = NULL;
+    struct track_extended_info *sei = NULL;
     FILE *fp, *fpit;
 
 
@@ -1620,19 +1620,19 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 					     &sei->ipod_id, sei);
 		    }
 		    else
-		    { /* this is a deleted song that hasn't yet been
+		    { /* this is a deleted track that hasn't yet been
 		         removed from the iPod's hard drive */
-			Song *song = g_malloc0 (sizeof (Song));
-			song->ipod_path = g_strdup (sei->ipod_path);
+			Track *track = g_malloc0 (sizeof (Track));
+			track->ipod_path = g_strdup (sei->ipod_path);
 			pending_deletion = g_list_append (pending_deletion,
-							  song);
+							  track);
 			hash_delete ((gpointer)sei); /* free sei */
 		    }
 		    sei = NULL;
 		}
 		if (strcmp (arg, "xxx") != 0)
 		{
-		    sei = g_malloc0 (sizeof (struct song_extended_info));
+		    sei = g_malloc0 (sizeof (struct track_extended_info));
 		    sei->ipod_id = atoi (arg);
 		}
 	    }
@@ -1698,7 +1698,7 @@ void handle_import (void)
     md5tracks = prefs_get_md5tracks ();
     prefs_set_md5tracks (FALSE);
 
-    n = get_nr_of_songs (); /* how many songs are alread there? */
+    n = get_nr_of_tracks (); /* how many tracks are alread there? */
 
     block_widgets ();
     if (!cfg->offline)
@@ -1732,7 +1732,7 @@ void handle_import (void)
 	    g_free (name1);
 	    if (!success) 
 	    {
-		gtkpod_warning (_("Extended info will not be used. If you have non-transferred songs,\nthese will be lost.\n"));
+		gtkpod_warning (_("Extended info will not be used. If you have non-transferred tracks,\nthese will be lost.\n"));
 	    }
 	    if(itunesdb_parse_file (name2))
 		gtkpod_statusbar_message(
@@ -1752,32 +1752,32 @@ void handle_import (void)
     }
     destroy_extendedinfohash (); /* delete hash information (if set up) */
 
-    /* We need to make sure that the songs that already existed
+    /* We need to make sure that the tracks that already existed
        in the DB when we called itunesdb_parse() do not duplicate
        any existing ID */
     renumber_ipod_ids ();
 
-    gtkpod_songs_statusbar_update();
-    if (n != get_nr_of_songs ())
+    gtkpod_tracks_statusbar_update();
+    if (n != get_nr_of_tracks ())
     { /* Import was successfull, block menu item and button */
 	disable_gtkpod_import_buttons();
     }
     /* reset duplicate detection -- this will also detect and correct
-     * all duplicate songs currently in the database */
+     * all duplicate tracks currently in the database */
     prefs_set_md5tracks (md5tracks);
     release_widgets ();
 }
 
 
-/* Like get_track_name_on_disk(), but verifies the song actually exists
+/* Like get_track_name_on_disk(), but verifies the track actually exists
    Must g_free return value after use */
-gchar *get_track_name_on_disk_verified (Song *song)
+gchar *get_track_name_on_disk_verified (Track *track)
 {
     gchar *name = NULL;
 
-    if (song)
+    if (track)
     {
-	name = get_track_name_on_ipod (song);
+	name = get_track_name_on_ipod (track);
 	if (name)
 	{
 	    if (!g_file_test (name, G_FILE_TEST_EXISTS))
@@ -1786,10 +1786,10 @@ gchar *get_track_name_on_disk_verified (Song *song)
 		name = NULL;
 	    }
 	}
-	if(!name && song->pc_path_locale && (*song->pc_path_locale))
+	if(!name && track->pc_path_locale && (*track->pc_path_locale))
 	{
-	    if (g_file_test (song->pc_path_locale, G_FILE_TEST_EXISTS))
-		name = g_strdup (song->pc_path_locale);
+	    if (g_file_test (track->pc_path_locale, G_FILE_TEST_EXISTS))
+		name = g_strdup (track->pc_path_locale);
 	} 
     }
     return name;
@@ -1797,13 +1797,13 @@ gchar *get_track_name_on_disk_verified (Song *song)
 
 /**
  * get_track_name_on_disk
- * Function to retrieve the filename on disk for the specified Song.  It
+ * Function to retrieve the filename on disk for the specified Track.  It
  * returns the valid filename whether the file has been copied to the ipod,
- * or has yet to be copied.  So it's useful for file operations on a song.
- * @s - The Song data structure we want the on disk file for
- * Returns - the filename for this Song. Must be g_free'd.
+ * or has yet to be copied.  So it's useful for file operations on a track.
+ * @s - The Track data structure we want the on disk file for
+ * Returns - the filename for this Track. Must be g_free'd.
  */
-gchar* get_track_name_on_disk(Song *s)
+gchar* get_track_name_on_disk(Track *s)
 {
     gchar *result = NULL;
 
@@ -1821,13 +1821,13 @@ gchar* get_track_name_on_disk(Song *s)
 
 
 /* Return the full iPod filename as stored in @s.
-   @s: song
+   @s: track
    Return value: full filename to @s on the iPod or NULL if no
    filename is set in @s. NOTE: the file does not necessarily
    exist. NOTE: the in itunesdb.c code works around a problem on some
    systems (see below) and might return a filename with different case
    than the original filename. Don't copy it back to @s */
-gchar *get_track_name_on_ipod (Song *s)
+gchar *get_track_name_on_ipod (Track *s)
 {
     gchar *result = NULL;
 
@@ -1846,19 +1846,19 @@ gchar *get_track_name_on_ipod (Song *s)
  * get_preferred_track_name_format - useful for generating the preferred
  * output filename for any track.  
  * FIXME Eventually this should check your prefs for the displayed
- * attributes in the song model and generate track names based on that
- * @s - The Song reference we're generating the filename for
+ * attributes in the track model and generate track names based on that
+ * @s - The Track reference we're generating the filename for
  * Returns - The preferred filename, you must free it yourself.
  */
 gchar *
-get_preferred_track_name_format (Song *s)
+get_preferred_track_name_format (Track *s)
 {
     gchar *result = NULL;
     if (s)
     {
-	gchar *artist = charset_song_charset_from_utf8 (s, s->artist);
-	gchar *album = charset_song_charset_from_utf8 (s, s->album);
-	gchar *title = charset_song_charset_from_utf8 (s, s->title);
+	gchar *artist = charset_track_charset_from_utf8 (s, s->artist);
+	gchar *album = charset_track_charset_from_utf8 (s, s->album);
+	gchar *title = charset_track_charset_from_utf8 (s, s->title);
 	result = g_strdup_printf ("%s-%s-%02d-%s.mp3",
 				  artist, album, s->track_nr, title);
 	g_free (artist);
@@ -1871,30 +1871,30 @@ get_preferred_track_name_format (Song *s)
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *      Functions concerning deletion of songs                      *
+ *      Functions concerning deletion of tracks                      *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
 
-/* in Bytes, minus the space taken by songs that will be overwritten
+/* in Bytes, minus the space taken by tracks that will be overwritten
  * during copying (returns kB) */
-glong get_filesize_of_deleted_songs(void)
+glong get_filesize_of_deleted_tracks(void)
 {
     double n = 0;
-    Song *song;
-    GList *gl_song;
+    Track *track;
+    GList *gl_track;
 
-    for (gl_song = pending_deletion; gl_song; gl_song=gl_song->next)
+    for (gl_track = pending_deletion; gl_track; gl_track=gl_track->next)
     {
-	song = (Song *)gl_song->data;
-	if (song->transferred)   n += song->size;
+	track = (Track *)gl_track->data;
+	if (track->transferred)   n += track->size;
     }
     return n/1024;
 }
 
-void mark_song_for_deletion (Song *song)
+void mark_track_for_deletion (Track *track)
 {
-    pending_deletion = g_list_append(pending_deletion, song);
+    pending_deletion = g_list_append(pending_deletion, track);
 }
 
 
@@ -1911,7 +1911,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 {
   FILE *fp, *fpit;
   guint n,i;
-  Song *song;
+  Track *track;
   gchar *md5;
 
   fp = fopen (name, "w");
@@ -1943,36 +1943,36 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
       return FALSE;
   }
   fprintf (fp, "version=%s\n", VERSION);
-  n = get_nr_of_songs ();
+  n = get_nr_of_tracks ();
   for (i=0; i<n; ++i)
   {
-      song = get_song_by_nr (i);
-      fprintf (fp, "id=%d\n", song->ipod_id);
-      if (song->hostname)
-	  fprintf (fp, "hostname=%s\n", song->hostname);
-      if (strlen (song->pc_path_locale) != 0)
-	  fprintf (fp, "filename_locale=%s\n", song->pc_path_locale);
-      if (strlen (song->pc_path_utf8) != 0)
-	  fprintf (fp, "filename_utf8=%s\n", song->pc_path_utf8);
-      if (song->md5_hash)
-	  fprintf (fp, "md5_hash=%s\n", song->md5_hash);
-      if (song->charset)
-	  fprintf (fp, "charset=%s\n", song->charset);
-      if (!song->transferred && song->oldsize)
-	  fprintf (fp, "oldsize=%d\n", song->oldsize);
-      fprintf (fp, "transferred=%d\n", song->transferred);
+      track = get_track_by_nr (i);
+      fprintf (fp, "id=%d\n", track->ipod_id);
+      if (track->hostname)
+	  fprintf (fp, "hostname=%s\n", track->hostname);
+      if (strlen (track->pc_path_locale) != 0)
+	  fprintf (fp, "filename_locale=%s\n", track->pc_path_locale);
+      if (strlen (track->pc_path_utf8) != 0)
+	  fprintf (fp, "filename_utf8=%s\n", track->pc_path_utf8);
+      if (track->md5_hash)
+	  fprintf (fp, "md5_hash=%s\n", track->md5_hash);
+      if (track->charset)
+	  fprintf (fp, "charset=%s\n", track->charset);
+      if (!track->transferred && track->oldsize)
+	  fprintf (fp, "oldsize=%d\n", track->oldsize);
+      fprintf (fp, "transferred=%d\n", track->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
   if (prefs_get_offline())
-  { /* we are offline and also need to export the list of songs that
+  { /* we are offline and also need to export the list of tracks that
        are to be deleted */
-      GList *gl_song;
-      for(gl_song = pending_deletion; gl_song; gl_song = gl_song->next)
+      GList *gl_track;
+      for(gl_track = pending_deletion; gl_track; gl_track = gl_track->next)
       {
-	  song = (Song*)gl_song->data;
-	  fprintf (fp, "id=000\n");  /* our sign for songs pending
+	  track = (Track*)gl_track->data;
+	  fprintf (fp, "id=000\n");  /* our sign for tracks pending
 					deletion */
-	  fprintf (fp, "filename_ipod=%s\n", song->ipod_path);
+	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
 	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
       }
   }
@@ -1996,17 +1996,17 @@ static gpointer th_remove (gpointer filename)
     g_mutex_unlock (mutex);
     return (gpointer)result;
 }
-/* Threaded copy of ipod song */
+/* Threaded copy of ipod track */
 static gpointer th_copy (gpointer s)
 {
     gboolean result;
-    Song *song = (Song *)s;
+    Track *track = (Track *)s;
 
-    result = itunesdb_copy_song_to_ipod (cfg->ipod_mount,
-					 song,
-					 song->pc_path_locale);
+    result = itunesdb_copy_track_to_ipod (cfg->ipod_mount,
+					 track,
+					 track->pc_path_locale);
     /* delete old size */
-    if (song->transferred) song->oldsize = 0;
+    if (track->transferred) track->oldsize = 0;
     g_mutex_lock (mutex);
     mutex_data = TRUE;   /* signal that thread will end */
     g_cond_signal (cond);
@@ -2016,19 +2016,19 @@ static gpointer th_copy (gpointer s)
 #endif 
 
 /* This function is called when the user presses the abort button
- * during flush_songs() */
-static void flush_songs_abort (gboolean *abort)
+ * during flush_tracks() */
+static void flush_tracks_abort (gboolean *abort)
 {
     *abort = TRUE;
 }
 
-/* Flushes all non-transferred songs to the iPod filesystem
+/* Flushes all non-transferred tracks to the iPod filesystem
    Returns TRUE on success, FALSE if some error occured */
-gboolean flush_songs (void)
+gboolean flush_tracks (void)
 {
   gint count, n, nrs;
   gchar *buf;
-  Song  *song;
+  Track  *track;
   gchar *filename = NULL;
   gint rmres;
   gboolean result = TRUE;
@@ -2077,7 +2077,7 @@ gboolean flush_songs (void)
 
   /* Indicate that user wants to abort */
   g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
-			    G_CALLBACK (flush_songs_abort),
+			    G_CALLBACK (flush_tracks_abort),
 			    &abort);
 
   /* Add the image/label + progress bar to dialog */
@@ -2092,8 +2092,8 @@ gboolean flush_songs (void)
   /* lets clean up those pending deletions */
   while (!abort && pending_deletion)
   {
-      song = (Song*)pending_deletion->data;
-      if((filename = get_track_name_on_ipod(song)))
+      track = (Track*)pending_deletion->data;
+      if((filename = get_track_name_on_ipod(track)))
       {
 	  if(g_strstr_len(filename, strlen(cfg->ipod_mount), cfg->ipod_mount))
 	  {
@@ -2123,21 +2123,21 @@ gboolean flush_songs (void)
 #else
 	      rmres = remove(filename);
 	      if (rmres == -1) result = FALSE;
-/*	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", song->artist,
-						    song->title, song->ipod_id,
+/*	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", track->artist,
+						    track->title, track->ipod_id,
 						    filename);*/
 #endif 
 	  }
 	  g_free(filename);
       }
-      free_song(song);
+      free_track(track);
       pending_deletion = g_list_delete_link (pending_deletion, pending_deletion);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
   if (abort) result = FALSE;
   if (result == FALSE)
   {
-      gtkpod_statusbar_message (_("Some songs could not be deleted from the iPod. Export aborted!"));
+      gtkpod_statusbar_message (_("Some tracks could not be deleted from the iPod. Export aborted!"));
   }
   else
   {
@@ -2148,19 +2148,19 @@ gboolean flush_songs (void)
       g_free (progtext);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 
-      /* count number of songs to be transferred */
-      n = get_nr_of_nontransferred_songs ();
+      /* count number of tracks to be transferred */
+      n = get_nr_of_nontransferred_tracks ();
       if (n != 0)  disable_gtkpod_import_buttons();
-      count = 0; /* songs transferred */
+      count = 0; /* tracks transferred */
       nrs = 0;
       start = time(NULL);
-      while (!abort &&  (song = get_song_by_nr (nrs))) {
+      while (!abort &&  (track = get_track_by_nr (nrs))) {
 	  ++nrs;
-	  if (!song->transferred)
+	  if (!track->transferred)
 	  {
 #ifdef G_THREADS_ENABLED
 	      mutex_data = FALSE;
-	      thread = g_thread_create (th_copy, song, TRUE, NULL);
+	      thread = g_thread_create (th_copy, track, TRUE, NULL);
 	      if (thread)
 	      {
 		  g_mutex_lock (mutex);
@@ -2178,16 +2178,16 @@ gboolean flush_songs (void)
 	      }
 	      else {
 		  g_warning ("Thread creation failed, falling back to default.\n");
-		  result &= itunesdb_copy_song_to_ipod (cfg->ipod_mount,
-							song, song->pc_path_locale);
+		  result &= itunesdb_copy_track_to_ipod (cfg->ipod_mount,
+							track, track->pc_path_locale);
 		  /* delete old size */
-		  if (song->transferred) song->oldsize = 0;
+		  if (track->transferred) track->oldsize = 0;
 	      }
 #else
-	      result &= itunesdb_copy_song_to_ipod (cfg->ipod_mount,
-						    song, song->pc_path_locale);
+	      result &= itunesdb_copy_track_to_ipod (cfg->ipod_mount,
+						    track, track->pc_path_locale);
 	      /* delete old size */
-	      if (song->transferred) song->oldsize = 0;
+	      if (track->transferred) track->oldsize = 0;
 
 #endif 
 	      ++count;
@@ -2195,8 +2195,8 @@ gboolean flush_songs (void)
 		  prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
 	      if (count == n)  /* we need to reset timeout */
 		  prefs_set_statusbar_timeout (0);
-	      buf = g_strdup_printf (ngettext ("Copied %d of %d new song.",
-					       "Copied %d of %d new songs.", n),
+	      buf = g_strdup_printf (ngettext ("Copied %d of %d new track.",
+					       "Copied %d of %d new tracks.", n),
 				     count, n);
 	      gtkpod_statusbar_message(buf);
 	      g_free (buf);
@@ -2216,10 +2216,10 @@ gboolean flush_songs (void)
 	      g_free (progtext);
 	  }
 	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-      } /* while (gl_song) */
+      } /* while (gl_track) */
       if (abort)      result = FALSE;   /* negative result if user aborted */
       if (result == FALSE)
-	  gtkpod_statusbar_message (_("Some songs were not written to iPod. Export aborted!"));
+	  gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
   }
   prefs_set_statusbar_timeout (0);
   gtk_widget_destroy (dialog);
@@ -2247,8 +2247,8 @@ void handle_export (void)
 
   if(!prefs_get_offline ())
     {
-      /* write songs to iPod */
-      if ((success=flush_songs ()))
+      /* write tracks to iPod */
+      if ((success=flush_tracks ()))
       { /* write iTunesDB to iPod */
 	  if (!(success=itunesdb_write (cfg->ipod_mount)))
 	      gtkpod_statusbar_message (_("Error writing iTunesDB to iPod. Export aborted!"));

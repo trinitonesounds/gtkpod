@@ -50,11 +50,11 @@
 /**
  * Private Variables for this subsystem
  * @dest_dir - The export directory we're putting the files in
- * @songs - A GList of Song* references to export
+ * @tracks - A GList of Track* references to export
  * @fs - the file selection dialog
  */
 static struct {
-    GList *songs;
+    GList *tracks;
     gchar *dest_dir;
     GtkWidget *fs;
 } file_export;
@@ -62,13 +62,13 @@ static struct {
 
 /**
  * get_preferred_filename - useful for generating the preferred
- * @param Song the song
- * @return the file filename (including directories) for this Song
+ * @param Track the track
+ * @return the file filename (including directories) for this Track
  * based on the users preferences.  The returned char* must be freed
  * by the caller.
  */
 static gchar *
-song_get_export_filename (Song *song)
+track_get_export_filename (Track *track)
 {
     GString *result;
     char *res_utf8, *res_cs = NULL;
@@ -77,13 +77,13 @@ song_get_export_filename (Song *song)
     gboolean original=FALSE; /* indicate whether original filename is
 			      * being used */
 
-    if (!song) return NULL; 
+    if (!track) return NULL; 
     result = g_string_new ("");
 
     p = prefs_get_filename_format ();
 
     /* try to get an extension */
-    str = get_track_name_on_disk (song);
+    str = get_track_name_on_disk (track);
     if (str)
     {
 	gchar *s = strrchr (str, '.');
@@ -94,8 +94,8 @@ song_get_export_filename (Song *song)
     /* if (!extension)   extension = g_strdup (".mp3");*/
 
     /* try to get the original filename */
-    if (song->pc_path_utf8)
-	basename = g_path_get_basename (song->pc_path_utf8);
+    if (track->pc_path_utf8)
+	basename = g_path_get_basename (track->pc_path_utf8);
 
     while (*p != '\0') {
 	if (*p == '%') {
@@ -110,27 +110,27 @@ song_get_export_filename (Song *song)
 		}
 		break;
 	    case 'A':
-		tmp = song_get_item_utf8 (song, S_ARTIST);
+		tmp = track_get_item_utf8 (track, S_ARTIST);
 		break;
 	    case 'd':
-		tmp = song_get_item_utf8 (song, S_ALBUM);
+		tmp = track_get_item_utf8 (track, S_ALBUM);
 		break;
 	    case 'n':
-		tmp = song_get_item_utf8 (song, S_TITLE);
+		tmp = track_get_item_utf8 (track, S_TITLE);
 		break;
 	    case 't':
 		tmp = dummy;
-		if (song->tracks == 0)
-		    sprintf (tmp, "%.2d", song->track_nr);
-		else if (song->tracks < 10)
-		    sprintf(tmp, "%.1d", song->track_nr);
-		else if (song->tracks < 100)
-		    sprintf (tmp, "%.2d", song->track_nr);
-		else if (song->tracks < 1000)
-		    sprintf (tmp, "%.3d", song->track_nr);
+		if (track->tracks == 0)
+		    sprintf (tmp, "%.2d", track->track_nr);
+		else if (track->tracks < 10)
+		    sprintf(tmp, "%.1d", track->track_nr);
+		else if (track->tracks < 100)
+		    sprintf (tmp, "%.2d", track->track_nr);
+		else if (track->tracks < 1000)
+		    sprintf (tmp, "%.3d", track->track_nr);
 		else {
 		    g_print ("wow, more that 1000 tracks!");
-		    sprintf (tmp,"%.4d", song->track_nr);
+		    sprintf (tmp,"%.4d", track->track_nr);
 		}
 		break;
 	    default:
@@ -162,8 +162,8 @@ song_get_export_filename (Song *song)
 	res_cs = charset_from_utf8 (res_utf8);
     }
     else
-    {   /* use the charset stored in song->charset */
-	res_cs = charset_song_charset_from_utf8 (song, res_utf8);
+    {   /* use the charset stored in track->charset */
+	res_cs = charset_track_charset_from_utf8 (track, res_utf8);
     }
     C_FREE (res_utf8);
     return res_cs;
@@ -200,7 +200,7 @@ static void
 file_export_cleanup(void)
 {
     if(file_export.dest_dir) g_free(file_export.dest_dir);
-    if(file_export.songs) g_list_free(file_export.songs);
+    if(file_export.tracks) g_list_free(file_export.tracks);
     if(file_export.fs) gtk_widget_destroy(file_export.fs);
     memset(&file_export, 0, sizeof(file_export));
 }
@@ -298,19 +298,19 @@ copy_file(gchar *file, gchar *dest)
 }
 
 /**
- * write_song_to_dir - copy the Song* to the desired output file
- * @s - The Song reference we're manipulating
+ * write_track_to_dir - copy the Track* to the desired output file
+ * @s - The Track reference we're manipulating
  * Returns - TRUE on success, FALSE on failure
  */
 static gboolean
-write_song(Song *s)
+write_track(Track *s)
 {
     gchar *from_file = NULL;
     gchar *dest_file = NULL;
     gchar buf[PATH_MAX];
     gboolean result = FALSE;
     
-    if((dest_file = song_get_export_filename(s)))
+    if((dest_file = track_get_export_filename(s)))
     {
 	from_file = get_track_name_on_disk(s);
 	g_snprintf(buf, PATH_MAX, "%s/%s", file_export.dest_dir, dest_file); 
@@ -331,17 +331,17 @@ write_song(Song *s)
 static void
 file_export_do(void)
 {
-    Song *s = NULL;
+    Track *s = NULL;
     GList *l = NULL;
     
-    if(file_export.songs)
+    if(file_export.tracks)
     {
-	for(l = file_export.songs; l; l = l->next)
+	for(l = file_export.tracks; l; l = l->next)
 	{
-	    s = (Song*)l->data;
-	    if (song_is_valid (s))
+	    s = (Track*)l->data;
+	    if (track_is_valid (s))
 	    {
-		if(!write_song(s))
+		if(!write_track(s))
 		    gtkpod_warning (_("Failed to write %s-%s\n"), s->artist, s->title);	
 		l->data = NULL;
 	    }
@@ -389,18 +389,18 @@ export_files_ok_button_clicked(GtkWidget *w, gpointer data)
 /**
  * export_file_init - Export files off of your ipod to an arbitrary
  * directory, specified by the file selection dialog
- * @songs - GList with data of type (Song*) we want to write 
+ * @tracks - GList with data of type (Track*) we want to write 
  */
 void
-file_export_init(GList *songs)
+file_export_init(GList *tracks)
 {
     GtkWidget *w = NULL;
 
     if(!file_export.fs)
     {
-	/* FIXME: we should besser use an ID list since songs might be
+	/* FIXME: we should besser use an ID list since tracks might be
 	   removed during the procedure of selecting a directory */
-	file_export.songs = g_list_copy (songs);
+	file_export.tracks = g_list_copy (tracks);
 	w = gtk_file_selection_new(_("Select Export Destination Directory"));
 	gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION(w),
 						FALSE);

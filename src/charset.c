@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-29 09:38:37 jcs>
+/* Time-stamp: <2003-10-03 00:13:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -342,7 +342,7 @@ gchar *charset_from_utf8 (G_CONST_RETURN gchar *str)
  * this is NULL, try cfg->charset. If cfg->charset is also NULL, "str"
  * is converted to the current locale charset */
 /* Must free the returned string yourself */
-gchar *charset_song_charset_from_utf8 (Song *s, G_CONST_RETURN gchar *str)
+gchar *charset_track_charset_from_utf8 (Track *s, G_CONST_RETURN gchar *str)
 {
     G_CONST_RETURN gchar *charset;
 

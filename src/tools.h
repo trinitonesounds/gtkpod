@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 17:46:31 jcs>
+/* Time-stamp: <2003-10-03 00:13:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,11 +36,11 @@
 #include <gtk/gtk.h>
 #include "song.h"
 
-#define SONGGAINERROR -200
+#define TRACKGAINERROR -200
 
-void nm_new_songs (void);
-void nm_songs_list (GList *list);
-gint nm_get_gain (Song *song);
+void nm_new_tracks (void);
+void nm_tracks_list (GList *list);
+gint nm_get_gain (Track *track);
 gint nm_gain_to_volumne (gint gain);
 gint nm_volumne_to_gain (gint volume);
 #endif

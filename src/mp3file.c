@@ -773,7 +773,7 @@ void I_step_two(real fraction[2][SBLIMIT], unsigned int balloc[2 * SBLIMIT],
 	}
 }
 
-static guint get_song_time_file(FILE * file)
+static guint get_track_time_file(FILE * file)
 {
 	guint32 head;
 	guchar tmp[4], *buf;
@@ -820,14 +820,14 @@ static guint get_song_time_file(FILE * file)
 	return 0;
 }
 
-guint get_song_time (gchar *path)
+guint get_track_time (gchar *path)
 {
     guint result = 0;
 
     if (path)
     {
 	FILE *file = fopen (path, "r");
-	result = get_song_time_file (file);
+	result = get_track_time_file (file);
 	if (file) fclose (file);
     }
     return result;

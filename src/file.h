@@ -37,36 +37,36 @@
 #include "song.h"
 #include "playlist.h"
 
-typedef void (*AddSongFunc)(Playlist *plitem, Song *song, gpointer data);
+typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
 
-gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
-			       AddSongFunc addsongfunc, gpointer data);
+gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
+			       AddTrackFunc addtrackfunc, gpointer data);
 gboolean add_directory_by_name (gchar *name, Playlist *plitem, 
 				gboolean descend,
-				AddSongFunc addsongfunc, gpointer data);
+				AddTrackFunc addtrackfunc, gpointer data);
 gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
-				   AddSongFunc addsongfunc, gpointer data);
-gboolean write_tags_to_file(Song *s, S_item tag_id);
-void update_song_from_file (Song *song);
-void do_selected_songs (void (*do_func)(GList *songids));
-void do_selected_entry (void (*do_func)(GList *songids), gint inst);
-void do_selected_playlist (void (*do_func)(GList *songids));
-void update_songids (GList *selected_songids);
-void sync_songids (GList *selected_songids);
-void display_non_updated (Song *song, gchar *txt);
-void display_updated (Song *song, gchar *txt);
+				   AddTrackFunc addtrackfunc, gpointer data);
+gboolean write_tags_to_file(Track *s, S_item tag_id);
+void update_track_from_file (Track *track);
+void do_selected_tracks (void (*do_func)(GList *trackids));
+void do_selected_entry (void (*do_func)(GList *trackids), gint inst);
+void do_selected_playlist (void (*do_func)(GList *trackids));
+void update_trackids (GList *selected_trackids);
+void sync_trackids (GList *selected_trackids);
+void display_non_updated (Track *track, gchar *txt);
+void display_updated (Track *track, gchar *txt);
 void handle_import (void);
 void handle_export (void);
 gboolean files_are_saved (void);
 void data_changed (void);
-gchar *get_track_name_on_disk_verified (Song *song);
-gchar* get_track_name_on_disk(Song *s);
-gchar* get_track_name_on_ipod(Song *s);
-gchar* get_preferred_track_name_format(Song *s);
-void mark_song_for_deletion (Song *song);
-void fill_in_extended_info (Song *song);
-glong get_filesize_of_deleted_songs(void);
-Song *get_song_info_from_file (gchar *name, Song *or_song);
+gchar *get_track_name_on_disk_verified (Track *track);
+gchar* get_track_name_on_disk(Track *s);
+gchar* get_track_name_on_ipod(Track *s);
+gchar* get_preferred_track_name_format(Track *s);
+void mark_track_for_deletion (Track *track);
+void fill_in_extended_info (Track *track);
+glong get_filesize_of_deleted_tracks(void);
+Track *get_track_info_from_file (gchar *name, Track *or_track);
 
 
 #endif

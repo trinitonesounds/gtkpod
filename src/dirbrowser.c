@@ -169,13 +169,13 @@ static void add_dir_selected (gchar *dir)
 			       prefs_get_add_recursively (),
 			       NULL, NULL);
 	prefs_set_last_dir_browse(dir);
-	gtkpod_songs_statusbar_update();
+	gtkpod_tracks_statusbar_update();
     }
     else
     {
-	/* clear log of non-updated songs */
+	/* clear log of non-updated tracks */
 	display_non_updated ((void *)-1, NULL);
-	/* display log of updated songs */
+	/* display log of updated tracks */
 	display_updated (NULL, NULL);
 	/* display log of detected duplicates */
 	remove_duplicate (NULL, NULL);

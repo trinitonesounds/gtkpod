@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 16:02:40 jcs>
+/* Time-stamp: <2003-10-03 00:15:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -56,8 +56,8 @@ static GtkTargetEntry st_drag_types [] = {
 };
 
 typedef enum {
-    IS_INSIDE,  /* song's timestamp is inside the specified interval  */
-    IS_OUTSIDE, /* song's timestamp is outside the specified interval */
+    IS_INSIDE,  /* track's timestamp is inside the specified interval  */
+    IS_OUTSIDE, /* track's timestamp is outside the specified interval */
     IS_ERROR,   /* error parsing date string (or wrong parameters)    */
 } IntervalState;
 
@@ -149,15 +149,15 @@ TimeInfo *st_update_date_interval_from_string (guint32 inst,
 }	
 
 
-/* check if @song's timestamp is within the interval given for @item.
+/* check if @track's timestamp is within the interval given for @item.
  *
  * Return value:
  *
  * IS_ERROR:   error parsing date string (or wrong parameters)
- * IS_INSIDE:  song's timestamp is inside the specified interval
- * IS_OUTSIDE: song's timestamp is outside the specified interval
+ * IS_INSIDE:  track's timestamp is inside the specified interval
+ * IS_OUTSIDE: track's timestamp is outside the specified interval
  */
-static IntervalState st_check_time (guint32 inst, S_item item, Song *song)
+static IntervalState st_check_time (guint32 inst, S_item item, Track *track)
 {
     TimeInfo *ti;
     IntervalState result = IS_ERROR;
@@ -165,7 +165,7 @@ static IntervalState st_check_time (guint32 inst, S_item item, Song *song)
     ti = st_update_date_interval_from_string (inst, S_TIME_PLAYED, FALSE);
     if (ti && ti->valid)
     {
-	guint32 stamp = song_get_timestamp (song, item);
+	guint32 stamp = track_get_timestamp (track, item);
 	if (stamp && (ti->lower <= stamp) && (stamp <= ti->upper))
 	      result = IS_INSIDE;
 	else  result = IS_OUTSIDE;
@@ -188,15 +188,15 @@ static IntervalState st_check_time (guint32 inst, S_item item, Song *song)
 }
 
 
-/* decide whether or not @song satisfies the conditions specified in
+/* decide whether or not @track satisfies the conditions specified in
  * the special sort tab of instance @inst.
  * Return value:  TRUE: satisfies, FALSE: does not satisfy */
-static gboolean sp_check_song (Song *song, guint32 inst)
+static gboolean sp_check_track (Track *track, guint32 inst)
 {
     gboolean sp_or = prefs_get_sp_or (inst);
     gboolean result, cond, checked=FALSE;
 
-    if (!song) return FALSE;
+    if (!track) return FALSE;
 
     /* Initial state depends on logical operation */
     if (sp_or) result = FALSE;  /* OR  */
@@ -207,7 +207,7 @@ static gboolean sp_check_song (Song *song, guint32 inst)
     {
 	/* checked = TRUE: at least one condition was checked */
 	checked = TRUE;
-	cond = prefs_get_sp_rating_n (inst, song->rating/RATING_STEP);
+	cond = prefs_get_sp_rating_n (inst, track->rating/RATING_STEP);
 	/* If one of the two combinations occur, we can take a
 	   shortcut and stop checking the other conditions */
 	if (sp_or && cond)       return TRUE;
@@ -225,7 +225,7 @@ static gboolean sp_check_song (Song *song, guint32 inst)
 	   limit" the logic works fine */
 	guint32 high = prefs_get_sp_playcount_high (inst);
 	checked = TRUE;
-	if ((low <= song->playcount) && (song->playcount <= high))
+	if ((low <= track->playcount) && (track->playcount <= high))
 	    cond = TRUE;
 	else
 	    cond = FALSE;
@@ -235,7 +235,7 @@ static gboolean sp_check_song (Song *song, guint32 inst)
     /* time played */
     if (prefs_get_sp_cond (inst, S_TIME_PLAYED))
     {
-	IntervalState result = st_check_time (inst, S_TIME_PLAYED, song);
+	IntervalState result = st_check_time (inst, S_TIME_PLAYED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
@@ -243,7 +243,7 @@ static gboolean sp_check_song (Song *song, guint32 inst)
     /* time modified */
     if (prefs_get_sp_cond (inst, S_TIME_MODIFIED))
     {
-	IntervalState result = st_check_time (inst, S_TIME_MODIFIED, song);
+	IntervalState result = st_check_time (inst, S_TIME_MODIFIED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
@@ -253,8 +253,8 @@ static gboolean sp_check_song (Song *song, guint32 inst)
 }
 
 
-/* called by st_add_song(): add a song to ST_CAT_SPECIAL */
-static void st_add_song_special (Song *song, gboolean final,
+/* called by st_add_track(): add a track to ST_CAT_SPECIAL */
+static void st_add_track_special (Track *track, gboolean final,
 				 gboolean display, guint32 inst)
 {
     SortTab *st;
@@ -272,24 +272,24 @@ static void st_add_song_special (Song *song, gboolean final,
 
     st->final = final;
 
-    if (song != NULL)
+    if (track != NULL)
     {
-	/* Add song to member list */
-	st->sp_members = g_list_append (st->sp_members, song);
-	/* Check if song is to be passed on to next sort tab */
+	/* Add track to member list */
+	st->sp_members = g_list_append (st->sp_members, track);
+	/* Check if track is to be passed on to next sort tab */
 	if (st->is_go || prefs_get_sp_autodisplay (inst))
-	{   /* Check if song matches sort criteria to be displayed */
-	    if (sp_check_song (song, inst))
+	{   /* Check if track matches sort criteria to be displayed */
+	    if (sp_check_track (track, inst))
 	    {
-		st->sp_selected = g_list_append (st->sp_selected, song);
-		st_add_song (song, final, display, inst+1);
+		st->sp_selected = g_list_append (st->sp_selected, track);
+		st_add_track (track, final, display, inst+1);
 	    }
 	}
     }
-    if (!song && final)
+    if (!track && final)
     {
 	if (st->is_go || prefs_get_sp_autodisplay (inst))
-	    st_add_song (NULL, final, display, inst+1);
+	    st_add_track (NULL, final, display, inst+1);
 	
     }
 }
@@ -335,18 +335,18 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 	    g_get_current_time (&time);
 	}
 	for (gl=st->sp_members; gl; gl=gl->next)
-	{ /* add all member songs to next instance */
-	    Song *song = (Song *)gl->data;
+	{ /* add all member tracks to next instance */
+	    Track *track = (Track *)gl->data;
 	    if (stop_add <= (gint)inst) break;
-	    if (sp_check_song (song, inst))
+	    if (sp_check_track (track, inst))
 	    {
-		st->sp_selected = g_list_append (st->sp_selected, song);
-		st_add_song (song, FALSE, TRUE, inst+1);
+		st->sp_selected = g_list_append (st->sp_selected, track);
+		st_add_track (track, FALSE, TRUE, inst+1);
 	    }
 	    --count;
 	    if ((count < 0) && !prefs_get_block_display ())
 	    {
-		gtkpod_songs_statusbar_update();
+		gtkpod_tracks_statusbar_update();
 		while (gtk_events_pending ())       gtk_main_iteration ();
 		ms = get_ms_since (&time, TRUE);
 		/* first time takes significantly longer, so we adjust
@@ -361,14 +361,14 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 	    }
 	}
 	if (stop_add > (gint)inst)
-	    st_add_song (NULL, TRUE, st->final, inst+1);
+	    st_add_track (NULL, TRUE, st->final, inst+1);
 	if (!prefs_get_block_display ())
 	{
 	    while (gtk_events_pending ())	  gtk_main_iteration ();
 	    release_selection (inst);
 	}
     }
-    gtkpod_songs_statusbar_update();
+    gtkpod_tracks_statusbar_update();
 #if DEBUG_TIMING
     g_get_current_time (&time);
     printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
@@ -428,8 +428,8 @@ void sp_go (guint32 inst)
 }
     
 
-/* called by st_remove_song() */
-static void st_remove_song_special (Song *song, guint32 inst)
+/* called by st_remove_track() */
+static void st_remove_track_special (Track *track, guint32 inst)
 {
     SortTab *st;
     GList *link;
@@ -442,20 +442,20 @@ static void st_remove_song_special (Song *song, guint32 inst)
     /* Sanity */
     if (st->current_category != ST_CAT_SPECIAL) return;
 
-    /* Remove song from member list */
-    link = g_list_find (st->sp_members, song);
+    /* Remove track from member list */
+    link = g_list_find (st->sp_members, track);
     if (link)
-    {   /* only remove song from next sort tab if it was a member of
+    {   /* only remove track from next sort tab if it was a member of
 	   this sort tab (slight performance improvement when being
-	   called with non-existing songs */
+	   called with non-existing tracks */
 	st->sp_members = g_list_delete_link (st->sp_members, link);
-	st_remove_song (song, inst+1);
+	st_remove_track (track, inst+1);
     }
 }
 
 
-/* called by st_song_changed */
-static void st_song_changed_special (Song *song,
+/* called by st_track_changed */
+static void st_track_changed_special (Track *track,
 				     gboolean removed, guint32 inst)
 {
     SortTab *st;
@@ -468,40 +468,40 @@ static void st_song_changed_special (Song *song,
     /* Sanity */
     if (st->current_category != ST_CAT_SPECIAL) return;
 
-    if (g_list_find (st->sp_members, song))
-    {   /* only do anything if @song was a member of this sort tab
+    if (g_list_find (st->sp_members, track))
+    {   /* only do anything if @track was a member of this sort tab
 	   (slight performance improvement when being called with
-	   non-existing songs */
+	   non-existing tracks */
 	if (removed)
 	{
-	    /* Remove song from member list */
-	    st->sp_members = g_list_remove (st->sp_members, song);
-	    if (g_list_find (st->sp_selected, song))
+	    /* Remove track from member list */
+	    st->sp_members = g_list_remove (st->sp_members, track);
+	    if (g_list_find (st->sp_selected, track))
 	    {   /* only remove from next sort tab if it was passed on */
-		st->sp_selected = g_list_remove (st->sp_selected, song);
-		st_song_changed (song, TRUE, inst+1);
+		st->sp_selected = g_list_remove (st->sp_selected, track);
+		st_track_changed (track, TRUE, inst+1);
 	    }
 	}
 	else
 	{
-	    if (g_list_find (st->sp_selected, song))
-	    {   /* song is being passed on to next sort tab */
-		if (sp_check_song (song, inst))
+	    if (g_list_find (st->sp_selected, track))
+	    {   /* track is being passed on to next sort tab */
+		if (sp_check_track (track, inst))
 		{   /* only changed */
-		    st_song_changed (song, FALSE, inst+1);
+		    st_track_changed (track, FALSE, inst+1);
 		}
 		else
 		{   /* has to be removed */
-		    st->sp_selected = g_list_remove (st->sp_selected, song);
-		    st_song_changed (song, TRUE, inst+1);
+		    st->sp_selected = g_list_remove (st->sp_selected, track);
+		    st_track_changed (track, TRUE, inst+1);
 		}
 	    }
 	    else
-	    {   /* song is not being passed on to next sort tab */
-		if (sp_check_song (song, inst))
+	    {   /* track is not being passed on to next sort tab */
+		if (sp_check_track (track, inst))
 		{   /* add to next sort tab */
-		    st->sp_selected = g_list_append (st->sp_selected, song);
-		    st_add_song (song, TRUE, TRUE, inst+1);
+		    st->sp_selected = g_list_append (st->sp_selected, track);
+		    st_add_track (track, TRUE, TRUE, inst+1);
 		}
 	    }		
 	}
@@ -732,7 +732,7 @@ void st_remove_all_entries_from_model (guint32 inst)
       if((prefs_get_st_sort () == SORT_NONE) &&
 	 gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (st->model),
 					       &column, &order))
-      { /* recreate song treeview to unset sorted column */
+      { /* recreate track treeview to unset sorted column */
 	  if (column >= 0)
 	  {
 	      st_create_notebook (inst);
@@ -758,7 +758,7 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
     SortTab *st = sorttab[inst];
 
     if (!entry) return;
-    /* is the entry empty (contains no songs)? */
+    /* is the entry empty (contains no tracks)? */
     if (g_list_length (entry->members) != 0) return;
     /* if the entry is the master entry 'All' -> the tab is empty,
        re-init tab */
@@ -816,28 +816,28 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
 
 /* Get the correct name for the entry according to currently
    selected category (page). Do _not_ g_free() the return value! */
-static gchar *st_get_entryname (Song *song, guint32 inst)
+static gchar *st_get_entryname (Track *track, guint32 inst)
 {
     S_item s_item = ST_to_S (sorttab[inst]->current_category);
 
-    return song_get_item_utf8 (song, s_item);
+    return track_get_item_utf8 (track, s_item);
 }
 
 
-/* Returns the entry "song" is stored in or NULL. The master entry
+/* Returns the entry "track" is stored in or NULL. The master entry
    "All" is skipped */
-static TabEntry *st_get_entry_by_song (Song *song, guint32 inst)
+static TabEntry *st_get_entry_by_track (Track *track, guint32 inst)
 {
   GList *entries;
   TabEntry *entry;
   guint i;
 
-  if (song == NULL) return NULL;
+  if (track == NULL) return NULL;
   entries = sorttab[inst]->entries;
   i=1; /* skip master entry, which is supposed to be at first position */
   while ((entry = (TabEntry *)g_list_nth_data (entries, i)) != NULL)
     {
-      if (g_list_find (entry->members, song) != NULL)   break; /* found! */
+      if (g_list_find (entry->members, track) != NULL)   break; /* found! */
       ++i;
     }
   return entry;
@@ -868,30 +868,30 @@ static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
 }
 
 
-/* moves a song from the entry it is currently in to the one it
+/* moves a track from the entry it is currently in to the one it
    should be in according to its tags (if a Tag had been changed).
-   Returns TRUE, if song has been moved, FALSE otherwise */
+   Returns TRUE, if track has been moved, FALSE otherwise */
 /* 07 Feb 2003: I decided that recategorizing is a bad thing: the
-   current code only moves the songs "up" in the entry list, so it's
+   current code only moves the tracks "up" in the entry list, so it's
    incomplete. More important: it leaves the display in an
-   inconsistent state: the songs are not removed from the
-   songview (this would confuse the user). But if he changes the entry
-   again, nothing happens to the songs displayed, because they are no
+   inconsistent state: the tracks are not removed from the
+   trackview (this would confuse the user). But if he changes the entry
+   again, nothing happens to the tracks displayed, because they are no
    longer members. Merging the two identical entries is no option
    either, because that takes away the possibility to easily "undo"
    what you have just done. It's also not intuitive if you have
-   additional songs appear on the screen. JCS */
-static gboolean st_recategorize_song (Song *song, guint32 inst)
+   additional tracks appear on the screen. JCS */
+static gboolean st_recategorize_track (Track *track, guint32 inst)
 {
 #if 0
   TabEntry *oldentry, *newentry;
   gchar *entryname;
 
-  oldentry = st_get_entry_by_song (song, inst);
+  oldentry = st_get_entry_by_track (track, inst);
   /*  printf("%d: recat_oldentry: %x\n", inst, oldentry);*/
-  /* should not happen: song is not in sort tab */
+  /* should not happen: track is not in sort tab */
   if (oldentry == NULL) return FALSE;
-  entryname = st_get_entryname (song, inst);
+  entryname = st_get_entryname (track, inst);
   newentry = st_get_entry_by_name (entryname, inst);
   if (newentry == NULL)
     { /* not found, create new one */
@@ -901,11 +901,11 @@ static gboolean st_recategorize_song (Song *song, guint32 inst)
       st_add_entry (newentry, inst);
     }
   if (newentry != oldentry)
-    { /* song category changed */
-      /* add song to entry members list */
-      newentry->members = g_list_append (newentry->members, song); 
-      /* remove song from old entry members list */
-      oldentry->members = g_list_remove (oldentry->members, song);
+    { /* track category changed */
+      /* add track to entry members list */
+      newentry->members = g_list_append (newentry->members, track); 
+      /* remove track from old entry members list */
+      oldentry->members = g_list_remove (oldentry->members, track);
       /*  printf("%d: recat_return_TRUE\n", inst);*/
       return TRUE;
     }
@@ -916,8 +916,8 @@ static gboolean st_recategorize_song (Song *song, guint32 inst)
 
 
 
-/* called by st_song_changed */
-static void st_song_changed_normal (Song *song, gboolean removed, guint32 inst)
+/* called by st_track_changed */
+static void st_track_changed_normal (Track *track, gboolean removed, guint32 inst)
 {
     SortTab *st;
     TabEntry *master, *entry;
@@ -925,43 +925,43 @@ static void st_song_changed_normal (Song *song, gboolean removed, guint32 inst)
     st = sorttab[inst];
     master = g_list_nth_data (st->entries, 0);
     if (master == NULL) return; /* should not happen */
-    /* if song is not in tab, don't proceed (should not happen) */
-    if (g_list_find (master->members, song) == NULL) return;
+    /* if track is not in tab, don't proceed (should not happen) */
+    if (g_list_find (master->members, track) == NULL) return;
     if (removed)
     {
-	/* remove "song" from master entry "All" */
-	master->members = g_list_remove (master->members, song);
-	/* find entry which other entry contains the song... */
-	entry = st_get_entry_by_song (song, inst);
+	/* remove "track" from master entry "All" */
+	master->members = g_list_remove (master->members, track);
+	/* find entry which other entry contains the track... */
+	entry = st_get_entry_by_track (track, inst);
 	/* ...and remove it */
-	if (entry) entry->members = g_list_remove (entry->members, song);
+	if (entry) entry->members = g_list_remove (entry->members, track);
 	if ((st->current_entry == entry) || (st->current_entry == master))
-	    st_song_changed (song, TRUE, inst+1);
+	    st_track_changed (track, TRUE, inst+1);
     }
     else
     {
 	if (st->current_entry &&
-	    g_list_find (st->current_entry->members, song) != NULL)
-	{ /* "song" is in currently selected entry */
+	    g_list_find (st->current_entry->members, track) != NULL)
+	{ /* "track" is in currently selected entry */
 	    if (!st->current_entry->master)
 	    { /* it's not the master list */
-		if (st_recategorize_song (song, inst))
-		    st_song_changed (song, TRUE, inst+1);
-		else st_song_changed (song, FALSE, inst+1);
+		if (st_recategorize_track (track, inst))
+		    st_track_changed (track, TRUE, inst+1);
+		else st_track_changed (track, FALSE, inst+1);
 	    }
 	    else
 	    { /* master entry ("All") is currently selected */
-		st_recategorize_song (song, inst);
-		st_song_changed (song, FALSE, inst+1);
+		st_recategorize_track (track, inst);
+		st_track_changed (track, FALSE, inst+1);
 	    }
 	}
 	else
-	{ /* "song" is not in an entry currently selected */
-	    if (st_recategorize_song (song, inst))
-	    { /* song was moved to a different entry */
-		if (st_get_entry_by_song (song, inst) == st->current_entry)
+	{ /* "track" is not in an entry currently selected */
+	    if (st_recategorize_track (track, inst))
+	    { /* track was moved to a different entry */
+		if (st_get_entry_by_track (track, inst) == st->current_entry)
 		{ /* this entry is selected! */
-		    st_add_song (song, TRUE, TRUE, inst+1);
+		    st_add_track (track, TRUE, TRUE, inst+1);
 		}
 	    }
 	}
@@ -970,9 +970,9 @@ static void st_song_changed_normal (Song *song, gboolean removed, guint32 inst)
 
 
 
-/* Some tags of a song currently stored in a sort tab have been changed.
+/* Some tags of a track currently stored in a sort tab have been changed.
    - if not "removed"
-     - if the song is in the entry currently selected:
+     - if the track is in the entry currently selected:
        - remove entry and put into correct category
        - if current entry != "All":
          - if sort category changed:
@@ -981,24 +981,24 @@ static void st_song_changed_normal (Song *song, gboolean removed, guint32 inst)
 	   - notify next sort tab ("not removed")
        - if current entry == "All":
          - notify next sort tab ("not removed")
-     - if the song is not in the entry currently selected (I don't know
+     - if the track is not in the entry currently selected (I don't know
        how that could happen, though):
        - if sort category changed: remove entry and put into correct category
-       - if this "correct" category is selected, call st_add_song for next
+       - if this "correct" category is selected, call st_add_track for next
          instance.
    - if "removed"
-     - remove the song from the sort tab
-     - if song was in the entry currently selected, notify next instance
+     - remove the track from the sort tab
+     - if track was in the entry currently selected, notify next instance
        ("removed")
-  "removed": song has been removed from sort tab. This is different
-  from st_remove_song, because we will not notify the song model if a
-  song has been removed: it might confuse the user if the song, whose
+  "removed": track has been removed from sort tab. This is different
+  from st_remove_track, because we will not notify the track model if a
+  track has been removed: it might confuse the user if the track, whose
   tabs he/she just edited, disappeared from the display */
-void st_song_changed (Song *song, gboolean removed, guint32 inst)
+void st_track_changed (Track *track, gboolean removed, guint32 inst)
 {
   if (inst == prefs_get_sort_tab_num ())
     {
-      sm_song_changed (song);
+      sm_track_changed (track);
       return;
     }
   else if (inst < prefs_get_sort_tab_num ())
@@ -1010,10 +1010,10 @@ void st_song_changed (Song *song, gboolean removed, guint32 inst)
       case ST_CAT_GENRE:
       case ST_CAT_COMPOSER:
       case ST_CAT_TITLE:
-	  st_song_changed_normal (song, removed, inst);
+	  st_track_changed_normal (track, removed, inst);
 	  break;
       case ST_CAT_SPECIAL:
-	  st_song_changed_special (song, removed, inst);
+	  st_track_changed_special (track, removed, inst);
 	  break;
       case ST_CAT_NUM:
 	  break;
@@ -1022,13 +1022,13 @@ void st_song_changed (Song *song, gboolean removed, guint32 inst)
 }
 
 
-/* Reorders the songs stored in the sort tabs according to the order
+/* Reorders the tracks stored in the sort tabs according to the order
  * in the selected playlist. This has to be done e.g. if we change the
- * order in the song view.
+ * order in the track view.
  * 
  * Right now I simply delete all members of all tab entries, then add
- * the songs again without having them added to the song view. For my
- * 2459 songs that takes approx. 1.3 seconds (850 MHz AMD Duron) */
+ * the tracks again without having them added to the track view. For my
+ * 2459 tracks that takes approx. 1.3 seconds (850 MHz AMD Duron) */
 void st_adopt_order_in_playlist (void)
 {
     gint inst;
@@ -1041,27 +1041,27 @@ void st_adopt_order_in_playlist (void)
 	    time.tv_sec % 3600, time.tv_usec);
 #endif
 
-    /* first delete all songs in all visible sort tabs */
+    /* first delete all tracks in all visible sort tabs */
     for (inst = 0; inst< prefs_get_sort_tab_num (); ++inst)
     {
 	SortTab *st = sorttab[inst];
 	GList *link;
 	for (link=st->entries; link; link=link->next)
-	{   /* in each entry delete all songs */
+	{   /* in each entry delete all tracks */
 	    TabEntry *entry = (TabEntry *)link->data;
 	    g_list_free (entry->members);
 	    entry->members = NULL;
 	}
     }
 
-    /* now add the songs again, without adding them to the song view */
+    /* now add the tracks again, without adding them to the track view */
     if (current_playlist)
     {
 	GList *link;
 
 	for (link=current_playlist->members; link; link=link->next)
 	{
-	    st_add_song ((Song *)link->data, FALSE, FALSE, 0);
+	    st_add_track ((Track *)link->data, FALSE, FALSE, 0);
 	}
     }
 #if DEBUG_TIMING
@@ -1072,8 +1072,8 @@ void st_adopt_order_in_playlist (void)
 }
 
 
-/* called by st_add_song() */
-static void st_add_song_normal (Song *song, gboolean final,
+/* called by st_add_track() */
+static void st_add_track_normal (Track *track, gboolean final,
 				gboolean display, guint32 inst)
 {
     SortTab *st;
@@ -1087,12 +1087,12 @@ static void st_add_song_normal (Song *song, gboolean final,
     st = sorttab[inst];
     st->final = final;
 
-/*       if (song)   printf ("%d: add song: %s\n", inst, song->title); */
-/*       else        printf ("%d: add song: %p\n", inst, song); */
+/*       if (track)   printf ("%d: add track: %s\n", inst, track->title); */
+/*       else        printf ("%d: add track: %p\n", inst, track); */
 
-    if (song != NULL)
+    if (track != NULL)
     {
-	/* add song to "All" (master) entry */
+	/* add track to "All" (master) entry */
 	master_entry = g_list_nth_data (st->entries, 0);
 	if (master_entry == NULL)
 	{ /* doesn't exist yet -- let's create it */
@@ -1100,11 +1100,11 @@ static void st_add_song_normal (Song *song, gboolean final,
 	    master_entry->name = g_strdup (_("All"));
 	    master_entry->master = TRUE;
 	    st_add_entry (master_entry, inst);
-	    first = TRUE; /* this is the first song */
+	    first = TRUE; /* this is the first track */
 	}
-	master_entry->members = g_list_append (master_entry->members, song);
+	master_entry->members = g_list_append (master_entry->members, track);
 	/* Check whether entry of same name already exists */
-	entryname = st_get_entryname (song, inst);
+	entryname = st_get_entryname (track, inst);
 	entry = st_get_entry_by_name (entryname, inst);
 	if (entry == NULL)
 	{ /* not found, create new one */
@@ -1113,13 +1113,13 @@ static void st_add_song_normal (Song *song, gboolean final,
 	    entry->master = FALSE;
 	    st_add_entry (entry, inst);
 	}
-	/* add song to entry members list */
-	entry->members = g_list_append (entry->members, song);
-	/* add song to next tab if "entry" is selected */
+	/* add track to entry members list */
+	entry->members = g_list_append (entry->members, track);
+	/* add track to next tab if "entry" is selected */
 	if (st->current_entry &&
 	    ((st->current_entry->master) || (entry == st->current_entry)))
 	{
-	    st_add_song (song, final, display, inst+1);
+	    st_add_track (track, final, display, inst+1);
 	}
 	/* check if we should select some entry */
 	if (!st->current_entry)
@@ -1127,7 +1127,7 @@ static void st_add_song_normal (Song *song, gboolean final,
 	    if (st->lastselection[st->current_category] == NULL)
 	    {
 		/* no last selection -- check if we should select "All" */
-		/* only select "All" when currently adding the first song */
+		/* only select "All" when currently adding the first track */
 		if (first && prefs_get_st_autoselect (inst))
 		{
 		    select_entry = master_entry;
@@ -1147,7 +1147,7 @@ static void st_add_song_normal (Song *song, gboolean final,
 	    }
 	}
     }
-    /* select "All" if it's the last song added, no entry currently
+    /* select "All" if it's the last track added, no entry currently
        selected (including "select_entry", which is to be selected" and
        prefs_get_st_autoselect() allows us to select "All" */
     if (final && !st->current_entry && !select_entry &&
@@ -1161,7 +1161,7 @@ static void st_add_song_normal (Song *song, gboolean final,
 /* 	  printf("%d: selecting: %p: %s\n", inst, select_entry, select_entry->name); */
 	if (!gtk_tree_model_get_iter_first (st->model, &iter))
 	{
-	    g_warning ("Programming error: st_add_song: iter invalid\n");
+	    g_warning ("Programming error: st_add_track: iter invalid\n");
 	    return;
 	}
 	do {
@@ -1180,34 +1180,34 @@ static void st_add_song_normal (Song *song, gboolean final,
 	    }
 	} while (gtk_tree_model_iter_next (st->model, &iter));
     }
-    else if (!song && final)
+    else if (!track && final)
     {
-	st_add_song (NULL, final, display, inst+1);
+	st_add_track (NULL, final, display, inst+1);
     }
 }
 
-/* Add song to sort tab. If the song matches the currently
+/* Add track to sort tab. If the track matches the currently
    selected sort criteria, it will be passed on to the next
-   sort tab. The last sort tab will pass the song on to the
-   song model (currently two sort tabs).
-   When the first song is added, the "All" entry is created.
+   sort tab. The last sort tab will pass the track on to the
+   track model (currently two sort tabs).
+   When the first track is added, the "All" entry is created.
    If prefs_get_st_autoselect(inst) is true, the "All" entry is
    automatically selected, if there was no former selection
-   @display: TRUE: add to song model (i.e. display it) */
-void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst)
+   @display: TRUE: add to track model (i.e. display it) */
+void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)
 {
   static gint count = 0;
 
-#if DEBUG_ADD_SONG
-  printf ("st_add_song: inst: %d, final: %d, display: %d, song: %p\n",
-	  inst, final, display, song);
+#if DEBUG_ADD_TRACK
+  printf ("st_add_track: inst: %d, final: %d, display: %d, track: %p\n",
+	  inst, final, display, track);
 #endif
 
   if (inst == prefs_get_sort_tab_num ())
-  {  /* just add to song model */
-      if ((song != NULL) && display)    sm_add_song_to_song_model (song, NULL);
+  {  /* just add to track model */
+      if ((track != NULL) && display)    sm_add_track_to_track_model (track, NULL);
       if (final || (++count % 20 == 0))
-	  gtkpod_songs_statusbar_update();
+	  gtkpod_tracks_statusbar_update();
   }
   else if (inst < prefs_get_sort_tab_num ())
   {
@@ -1218,10 +1218,10 @@ void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst)
       case ST_CAT_GENRE:
       case ST_CAT_COMPOSER:
       case ST_CAT_TITLE:
-	  st_add_song_normal (song, final, display, inst);
+	  st_add_track_normal (track, final, display, inst);
 	  break;
       case ST_CAT_SPECIAL:
-	  st_add_song_special (song, final, display, inst);
+	  st_add_track_special (track, final, display, inst);
 	  break;
       case ST_CAT_NUM:
 	  break;
@@ -1230,36 +1230,36 @@ void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst)
 }
 
 
-/* called by st_remove_song() */
-static void st_remove_song_normal (Song *song, guint32 inst)
+/* called by st_remove_track() */
+static void st_remove_track_normal (Track *track, guint32 inst)
 {
     TabEntry *master, *entry;
     SortTab *st = sorttab[inst];
 
     master = g_list_nth_data (st->entries, 0);
     if (master == NULL) return; /* should not happen! */
-    /* remove "song" from master entry "All" */
-    master->members = g_list_remove (master->members, song);
-    /* find entry which other entry contains the song... */
-    entry = st_get_entry_by_song (song, inst);
+    /* remove "track" from master entry "All" */
+    master->members = g_list_remove (master->members, track);
+    /* find entry which other entry contains the track... */
+    entry = st_get_entry_by_track (track, inst);
     /* ...and remove it */
-    if (entry) entry->members = g_list_remove (entry->members, song);
-    st_remove_song (song, inst+1);
+    if (entry) entry->members = g_list_remove (entry->members, track);
+    st_remove_track (track, inst+1);
 }
 
 
-/* Remove song from sort tab. If the song matches the currently
+/* Remove track from sort tab. If the track matches the currently
    selected sort criteria, it will be passed on to the next
    sort tab (i.e. removed).
    The last sort tab will remove the
-   song from the song model (currently two sort tabs). */
-/* 02. Feb 2003: bugfix: song is always passed on to the next sort
+   track from the track model (currently two sort tabs). */
+/* 02. Feb 2003: bugfix: track is always passed on to the next sort
  * tab: it might have been recategorized, but still be displayed. JCS */
-void st_remove_song (Song *song, guint32 inst)
+void st_remove_track (Track *track, guint32 inst)
 {
     if (inst == prefs_get_sort_tab_num ())
     {
-	sm_remove_song (song);
+	sm_remove_track (track);
     }
     else if (inst < prefs_get_sort_tab_num ())
     {
@@ -1270,10 +1270,10 @@ void st_remove_song (Song *song, guint32 inst)
 	case ST_CAT_GENRE:
 	case ST_CAT_COMPOSER:
 	case ST_CAT_TITLE:
-	    st_remove_song_normal (song, inst);
+	    st_remove_track_normal (track, inst);
 	    break;
 	case ST_CAT_SPECIAL:
-	    st_remove_song_special (song, inst);
+	    st_remove_track_special (track, inst);
 	    break;
 	case ST_CAT_NUM:
 	    break;
@@ -1292,8 +1292,8 @@ void st_init (ST_CAT_item new_category, guint32 inst)
 {
   if (inst == prefs_get_sort_tab_num ())
   {
-      sm_remove_all_songs (TRUE);
-      gtkpod_songs_statusbar_update ();
+      sm_remove_all_tracks (TRUE);
+      gtkpod_tracks_statusbar_update ();
       return;
   }
   if (inst < prefs_get_sort_tab_num ())
@@ -1303,7 +1303,7 @@ void st_init (ST_CAT_item new_category, guint32 inst)
       if (st == NULL) return; /* could happen during initialisation */
       sp_store_sp_entries (inst); /* store sp entries (if applicable) */
       st->unselected = FALSE; /* nothing was unselected so far */
-      st->final = TRUE;       /* all songs are added */
+      st->final = TRUE;       /* all tracks are added */
       st->is_go = FALSE;      /* did not press "Display" yet (special) */
 #if 0
       if (st->current_entry != NULL)
@@ -1383,7 +1383,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   st_init (page, inst);
   /* write back old is_go state if page hasn't changed (redisplay) */
   if (page == oldpage)  st->is_go = is_go;
-  /* Get list of songs to re-insert */
+  /* Get list of tracks to re-insert */
   if (inst == 0)
   {
       if (current_playlist)  copy = current_playlist->members;
@@ -1405,16 +1405,16 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 	  block_selection (inst-1);
 	  g_get_current_time (&time);
       }
-      /* add all songs previously present to sort tab */
+      /* add all tracks previously present to sort tab */
       for (gl=copy; gl; gl=gl->next)
       {
-	  Song *song = gl->data;
+	  Track *track = gl->data;
 	  if (stop_add < (gint)inst)  break;
-	  st_add_song (song, FALSE, TRUE, inst);
+	  st_add_track (track, FALSE, TRUE, inst);
 	  --count;
 	  if ((count < 0) && !prefs_get_block_display ())
 	  {
-	      gtkpod_songs_statusbar_update();
+	      gtkpod_tracks_statusbar_update();
 	      while (gtk_events_pending ())       gtk_main_iteration ();
 	      ms = get_ms_since (&time, TRUE);
 	      /* first time takes significantly longer, so we adjust
@@ -1434,7 +1434,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 	  /* if playlist is not source, get final flag from
 	   * corresponding sorttab */
 	  if ((inst > 0) && (sorttab[inst-1])) final = sorttab[inst-1]->final;
-	  st_add_song (NULL, final, TRUE, inst);
+	  st_add_track (NULL, final, TRUE, inst);
       }
       if (!prefs_get_block_display ())
       {
@@ -1596,14 +1596,14 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      g_get_current_time (&time);
 	  }
 	  for (gl=new_entry->members; gl; gl=gl->next)
-	  { /* add all member songs to next instance */
-	      Song *song = gl->data;
+	  { /* add all member tracks to next instance */
+	      Track *track = gl->data;
 	      if (stop_add <= (gint)inst) break;
-	      st_add_song (song, FALSE, TRUE, inst+1);
+	      st_add_track (track, FALSE, TRUE, inst+1);
 	      --count;
 	      if ((count < 0) && !prefs_get_block_display ())
 	      {
-		  gtkpod_songs_statusbar_update();
+		  gtkpod_tracks_statusbar_update();
 		  while (gtk_events_pending ())       gtk_main_iteration ();
 		  ms = get_ms_since (&time, TRUE);
 		  /* first time takes significantly longer, so we adjust
@@ -1618,14 +1618,14 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      }
 	  }
 	  if (stop_add > (gint)inst)
-	      st_add_song (NULL, TRUE, st->final, inst+1);
+	      st_add_track (NULL, TRUE, st->final, inst+1);
 	  if (!prefs_get_block_display ())
 	  {
 	      while (gtk_events_pending ())	  gtk_main_iteration ();
 	      release_selection (inst);
 	  }
       }
-      gtkpod_songs_statusbar_update();
+      gtkpod_tracks_statusbar_update();
   }
 #if DEBUG_TIMING
   g_get_current_time (&time);
@@ -1699,7 +1699,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	     already exist */
 	  if (g_hash_table_lookup (st->entry_hash, entry->name) == NULL)
 	      g_hash_table_insert (st->entry_hash, entry->name, entry);
-	  /* Now we look up all the songs and change the ID3 Tag as well */
+	  /* Now we look up all the tracks and change the ID3 Tag as well */
 	  /* We make a copy of the current members list, as it may change
              during the process */
 	  members = g_list_copy (entry->members);
@@ -1708,16 +1708,16 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  if (prefs_get_id3_write ())   block_widgets ();
 	  for (i=0; i<n; ++i)
 	  {
-	      Song *song = (Song *)g_list_nth_data (members, i);
+	      Track *track = (Track *)g_list_nth_data (members, i);
 	      S_item s_item = ST_to_S (sorttab[inst]->current_category);
-	      gchar **itemp_utf8 = song_get_item_pointer_utf8 (song, s_item);
-	      gunichar2 **itemp_utf16 = song_get_item_pointer_utf16(song, s_item);
+	      gchar **itemp_utf8 = track_get_item_pointer_utf8 (track, s_item);
+	      gunichar2 **itemp_utf16 = track_get_item_pointer_utf16(track, s_item);
 	      g_free (*itemp_utf8);
 	      g_free (*itemp_utf16);
 	      *itemp_utf8 = g_strdup (new_text);
 	      *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
-	      song->time_modified = itunesdb_time_get_mac_time ();
-	      pm_song_changed (song);
+	      track->time_modified = itunesdb_time_get_mac_time ();
+	      pm_track_changed (track);
 	      /* If prefs say to write changes to file, do so */
 	      if (prefs_get_id3_write ())
 	      {
@@ -1726,7 +1726,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 		     changed? */
 		  if (prefs_get_id3_writeall ()) tag_id = S_ALL;
 		  else		                 tag_id = s_item;
-		  write_tags_to_file (song, tag_id);
+		  write_tags_to_file (track, tag_id);
 		  while (widgets_blocked && gtk_events_pending ())
 		      gtk_main_iteration ();
 	      }
@@ -1996,7 +1996,7 @@ st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
     return(FALSE);
 }
 
-/* Create songs listview */
+/* Create tracks listview */
 static void st_create_listview (gint inst)
 {
   GtkTreeViewColumn *column;
@@ -2469,7 +2469,7 @@ void st_show_hide_tooltips (void)
 
 
 /*
- * utility function for appending ipod song ids for st treeview callback
+ * utility function for appending ipod track ids for st treeview callback
  */
 void 
 on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
@@ -2483,12 +2483,12 @@ on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     if(entry && idlist)
     {
 	GList *l;
-	Song *s;
+	Track *s;
 
 	/* add all member-ids of entry to idlist */
 	for (l=entry->members; l; l=l->next)
 	{
-	    s = (Song *)l->data;
+	    s = (Track *)l->data;
 	    g_string_append_printf (idlist, "%d\n", s->ipod_id);
 	}
     }

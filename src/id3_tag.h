@@ -36,13 +36,13 @@ typedef struct
     gchar *artist;         /* Artist name */
     gchar *album;          /* Album name */
     gchar *year;           /* Year of track */
-    gchar *track;          /* Position of track in the album */
+    gchar *trackstring;    /* Position of track in the album */
     gchar *track_total;    /* The number of tracks for the album (ex: 12/20) */
-    gchar *genre;          /* Genre of song */
+    gchar *genre;          /* Genre of track */
     gchar *comment;        /* Comment */
     gchar *composer;	   /* Composer */
     guint32 size;          /* Size of file in bytes */
-    guint32 songlen;       /* Length of file in ms */
+    guint32 tracklen;      /* Length of file in ms */
     GList *other;          /* List of unsupported fields (used for ogg only) */
     gchar *auto_charset;   /* in case of auto-detection: which charset
 			      was used? */

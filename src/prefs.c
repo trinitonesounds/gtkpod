@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-02 23:32:59 jcs>
+/* Time-stamp: <2003-10-03 00:09:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -162,7 +162,7 @@ struct cfg *cfg_new(void)
 	mycfg->ipod_mount = g_strdup ("/mnt/ipod");
     }
     mycfg->charset = NULL;
-    mycfg->deletion.song = TRUE;
+    mycfg->deletion.track = TRUE;
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
     mycfg->deletion.syncing = TRUE;
@@ -247,7 +247,7 @@ struct cfg *cfg_new(void)
     mycfg->automount = FALSE;
     mycfg->multi_edit = FALSE;
     mycfg->multi_edit_title = TRUE;
-    mycfg->not_played_song = TRUE;
+    mycfg->not_played_track = TRUE;
     mycfg->misc_track_nr = 25;
     mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.st_sort = SORT_NONE;
@@ -337,7 +337,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "delete_file") == 0)
 	  {
-	      prefs_set_song_playlist_deletion((gboolean)atoi(arg));
+	      prefs_set_track_playlist_deletion((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "delete_playlist") == 0)
 	  {
@@ -345,7 +345,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "delete_ipod") == 0)
 	  {
-	      prefs_set_song_ipod_file_deletion((gboolean)atoi(arg));
+	      prefs_set_track_ipod_file_deletion((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "sync_remove_confirm") == 0)
 	  {
@@ -545,9 +545,9 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_multi_edit_title((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "not_played_song") == 0)
+	  else if(g_ascii_strcasecmp (line, "not_played_track") == 0)
 	  {
-	      prefs_set_not_played_song((gboolean)atoi(arg));
+	      prefs_set_not_played_track((gboolean)atoi(arg));
 	  }
        	  else if(g_ascii_strcasecmp (line, "misc_track_nr") == 0)
        	  {
@@ -792,7 +792,7 @@ write_prefs_to_file_desc(FILE *fp)
     /* update column widths, x,y-size of main window and GtkPaned
      * positions */
     display_update_default_sizes ();
-    /* update order of song view columns */
+    /* update order of track view columns */
     sm_store_col_order ();
 
     fprintf(fp, "version=%s\n", VERSION);
@@ -813,9 +813,9 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "update_existing=%d\n",prefs_get_update_existing ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, _("# delete confirmation\n"));
-    fprintf(fp, "delete_file=%d\n",prefs_get_song_playlist_deletion());
+    fprintf(fp, "delete_file=%d\n",prefs_get_track_playlist_deletion());
     fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
-    fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
+    fprintf(fp, "delete_ipod=%d\n",prefs_get_track_ipod_file_deletion());
     fprintf(fp, "sync_remove_confirm=%d\n",prefs_get_sync_remove_confirm());
     fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
@@ -848,7 +848,7 @@ write_prefs_to_file_desc(FILE *fp)
 	if (i < SM_NUM_TAGS_PREFS)
 	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_tag_autoset (i));
     }	
-    fprintf(fp, _("# position of sliders (paned): playlists, above songs,\n# between sort tabs, and in statusbar.\n"));
+    fprintf(fp, _("# position of sliders (paned): playlists, above tracks,\n# between sort tabs, and in statusbar.\n"));
     for (i=0; i<PANED_NUM; ++i)
     {
 	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
@@ -880,7 +880,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "multi_edit=%d\n", prefs_get_multi_edit());
     fprintf(fp, "multi_edit_title=%d\n", prefs_get_multi_edit_title());
     fprintf(fp, "misc_track_nr=%d\n", prefs_get_misc_track_nr());
-    fprintf(fp, "not_played_song=%d\n", prefs_get_not_played_song());
+    fprintf(fp, "not_played_track=%d\n", prefs_get_not_played_track());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
@@ -1041,8 +1041,8 @@ void prefs_set_md5tracks(gboolean active)
     if (!cfg->md5tracks && active)
     { /* md5 checksums have been turned on */
 	cfg->md5tracks = active; /* must be set before calling
-				   hash_songs() */
-	hash_songs ();
+				   hash_tracks() */
+	hash_tracks ();
     }
 }
 
@@ -1118,22 +1118,22 @@ gboolean prefs_get_playlist_deletion(void)
     return(cfg->deletion.playlist);
 }
 
-void prefs_set_song_playlist_deletion(gboolean val)
+void prefs_set_track_playlist_deletion(gboolean val)
 {
-    cfg->deletion.song = val;
+    cfg->deletion.track = val;
 }
 
-gboolean prefs_get_song_playlist_deletion(void)
+gboolean prefs_get_track_playlist_deletion(void)
 {
-    return(cfg->deletion.song);
+    return(cfg->deletion.track);
 }
 
-void prefs_set_song_ipod_file_deletion(gboolean val)
+void prefs_set_track_ipod_file_deletion(gboolean val)
 {
     cfg->deletion.ipod_file = val;
 }
 
-gboolean prefs_get_song_ipod_file_deletion(void)
+gboolean prefs_get_track_ipod_file_deletion(void)
 {
     return(cfg->deletion.ipod_file);
 }
@@ -1159,14 +1159,14 @@ void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
     C_FREE (cfgd->charset);
     if (charset && strlen (charset))
 	cfgd->charset = g_strdup (charset);
-    printf ("set_charset: '%s'\n", charset);	
+/*     printf ("set_charset: '%s'\n", charset);	 */
 }
 
 
 gchar *prefs_get_charset (void)
 {
     return cfg->charset;
-    printf ("get_charset: '%s'\n", cfg->charset);
+/*     printf ("get_charset: '%s'\n", cfg->charset); */
 }
 
 struct cfg *clone_prefs(void)
@@ -1281,7 +1281,7 @@ void prefs_set_mpl_autoselect (gboolean autoselect)
 }
 
 
-/* retrieve the width of the song display columns. "col": one of the
+/* retrieve the width of the track display columns. "col": one of the
    SM_COLUMN_... */
 gint prefs_get_sm_col_width (gint col)
 {
@@ -1291,7 +1291,7 @@ gint prefs_get_sm_col_width (gint col)
 		   SM_NUM_COLUMNS) */
 }
 
-/* set the width of the song display columns. "col": one of the
+/* set the width of the track display columns. "col": one of the
    SM_COLUMN_..., "width": current width */
 void prefs_set_sm_col_width (gint col, gint width)
 {
@@ -1780,14 +1780,14 @@ gboolean prefs_get_multi_edit (void)
     return cfg->multi_edit;
 }
 
-void prefs_set_not_played_song (gboolean state)
+void prefs_set_not_played_track (gboolean state)
 {
-    cfg->not_played_song = state;
+    cfg->not_played_track = state;
 }
 
-gboolean prefs_get_not_played_song (void)
+gboolean prefs_get_not_played_track (void)
 {
-    return cfg->not_played_song;
+    return cfg->not_played_track;
 }
 
 void prefs_set_misc_track_nr (gint state)

@@ -33,8 +33,8 @@
 /**
  * export_file_init - Export files off of your ipod to an arbitrary
  * directory
- * @songs - GList with data of type (Song*)
+ * @tracks - GList with data of type (Track*)
  */
-void file_export_init(GList *songs);
+void file_export_init(GList *tracks);
 
 #endif

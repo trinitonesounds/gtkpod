@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 23:40:50 jcs>
+/* Time-stamp: <2003-10-03 00:20:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -49,7 +49,7 @@ static gboolean mutex_data = FALSE;
 
 
 /* I'm not sure how exactly to calculate between iPod's volume tag and
- * mp3gain's gain. The following worked fine with 2 (two) songs...
+ * mp3gain's gain. The following worked fine with 2 (two) tracks...
  * Change here if you know better. */
 gint nm_gain_to_volume (gint gain)
 {
@@ -72,10 +72,10 @@ gint nm_volume_to_gain (gint volume)
  * we want to extract only the right file's MP3GAIN
  *
  * BEWARE: mp3gain doesn't separate stdout/stderror */
-static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *songsfile)
+static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
 {
    gint found=FALSE;
-   gint gain=SONGGAINERROR;
+   gint gain=TRACKGAINERROR;
    /*they are just pointers, don't need to be freed*/
    gchar *filename=NULL;
    gchar *num=NULL;
@@ -87,7 +87,7 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *songsfile)
       printf("mp3gain_stdout %s",mp3gain_stdout);
       printf("filename %s",filename);
 #endif
-      if(strcmp((gchar *)songsfile,filename)==0)
+      if(strcmp((gchar *)tracksfile,filename)==0)
       {
          num=strtok(NULL,"\t");
          strcat(num,"\0");
@@ -106,9 +106,9 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *songsfile)
    return gain;
 }
 
-/* this function return the @song gain in dB */
+/* this function return the @track gain in dB */
 /* mp3gain version 1.4.2 */
-gint nm_get_gain(Song *song)
+gint nm_get_gain(Track *track)
 {
    /*pipe's definition*/
     enum {
@@ -120,9 +120,9 @@ gint nm_get_gain(Song *song)
     };
     gint k,n;  /*for's counter*/
     gint len = 0;
-    gint gain = SONGGAINERROR;
+    gint gain = TRACKGAINERROR;
     gint fdpipe[2];  /*a pipe*/
-    gchar *filename=NULL; /*song's filename*/
+    gchar *filename=NULL; /*track's filename*/
     gchar *mp3gain_path;
     gchar *mp3gain_exec;
     gchar *mp3gain_set;
@@ -155,10 +155,10 @@ gint nm_get_gain(Song *song)
     if (!mp3gain_path)
     {
 	gtkpod_warning (_("Could not find mp3gain executable."));
-	return SONGGAINERROR;
+	return TRACKGAINERROR;
     }
 
-    filename=get_track_name_on_disk_verified (song);
+    filename=get_track_name_on_disk_verified (track);
    
     /*create the pipe*/
     pipe(fdpipe);
@@ -211,10 +211,10 @@ gint nm_get_gain(Song *song)
 }
 
 #ifdef G_THREADS_ENABLED
-/* Threaded getSongGain*/
-static gpointer th_nm_get_gain (gpointer song)
+/* Threaded getTrackGain*/
+static gpointer th_nm_get_gain (gpointer track)
 {
-   gint gain=nm_get_gain((Song *)song);
+   gint gain=nm_get_gain((Track *)track);
    g_mutex_lock (mutex);
    mutex_data = TRUE; /* signal that thread will end */
    g_cond_signal (cond);
@@ -223,23 +223,23 @@ static gpointer th_nm_get_gain (gpointer song)
 }
 #endif 
 
-/* normalize the newly inserted songs (i.e. non-transferred songs) */
-void nm_new_songs (void)
+/* normalize the newly inserted tracks (i.e. non-transferred tracks) */
+void nm_new_tracks (void)
 {
-    GList *songs=NULL;
+    GList *tracks=NULL;
     gint i=0;
-    Song *song;
+    Track *track;
 
-    while ((song=get_next_song(i)))
+    while ((track=get_next_track(i)))
     {
-	i=1; /* for get_next_song() */
-	if(!song->transferred)
+	i=1; /* for get_next_track() */
+	if(!track->transferred)
 	{
-	    songs = g_list_append(songs, song);
+	    tracks = g_list_append(tracks, track);
 	}
     }
-    nm_songs_list(songs);
-    g_list_free (songs);
+    nm_tracks_list(tracks);
+    g_list_free (tracks);
 }
 
 static void normalization_abort(gboolean *abort)
@@ -247,11 +247,11 @@ static void normalization_abort(gboolean *abort)
    *abort=TRUE;
 }
 
-void nm_songs_list(GList *list)
+void nm_tracks_list(GList *list)
 {
   gint count, n, nrs;
   gchar *buf;
-  Song  *song;
+  Track  *track;
   gint new_gain=0;
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
@@ -311,9 +311,9 @@ void nm_songs_list(GList *list)
 
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 
-  /* count number of songs to be normalized */
+  /* count number of tracks to be normalized */
   n = g_list_length(list);
-  count = 0; /* songs normalized */
+  count = 0; /* tracks normalized */
   nrs = 0;
   abort = FALSE;
   start = time(NULL);
@@ -325,12 +325,12 @@ void nm_songs_list(GList *list)
   }
   while (!abort &&  (list!=NULL)) /*FIXME:change it in a do-while cycle*/
   {
-     song=list->data;
-     if (song->transferred)
+     track=list->data;
+     if (track->transferred)
      {
 #ifdef G_THREADS_ENABLED
         mutex_data = FALSE;
-	thread = g_thread_create (th_nm_get_gain, song, TRUE, NULL);
+	thread = g_thread_create (th_nm_get_gain, track, TRUE, NULL);
 	if (thread)
 	{
            gboolean first_abort = TRUE;
@@ -363,23 +363,23 @@ void nm_songs_list(GList *list)
         else
         {
            g_warning ("Thread creation failed, falling back to default.\n");
-           new_gain=nm_get_gain(song);
+           new_gain=nm_get_gain(track);
         }
 #else
-        new_gain=nm_get_gain(song);
+        new_gain=nm_get_gain(track);
 #endif 
 
 /*normalization part*/
-        if(new_gain == SONGGAINERROR)
+        if(new_gain == TRACKGAINERROR)
         {
            abort=TRUE;
         }
         else
         {
-           if(nm_gain_to_volume (new_gain) != song->volume)
+           if(nm_gain_to_volume (new_gain) != track->volume)
            {
-              song->volume = nm_gain_to_volume (new_gain);
-	      pm_song_changed (song);
+              track->volume = nm_gain_to_volume (new_gain);
+	      pm_track_changed (track);
 	      data_changed ();
            }
         }
@@ -389,8 +389,8 @@ void nm_songs_list(GList *list)
         if (count == 1)  /* we need ***much*** longer timeout */
            prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
 
-        buf = g_strdup_printf (ngettext ("Normalized %d of %d new song.",
-					       "Normalized %d of %d new songs.", n),
+        buf = g_strdup_printf (ngettext ("Normalized %d of %d new track.",
+					       "Normalized %d of %d new tracks.", n),
                                          count, n);
         gtkpod_statusbar_message(buf);
         g_free (buf);
@@ -411,7 +411,7 @@ void nm_songs_list(GList *list)
      } /*end if transferred*/
 
      if (abort && (count != n))
-        gtkpod_statusbar_message (_("Some songs were not normalized. Normalization aborted!"));
+        gtkpod_statusbar_message (_("Some tracks were not normalized. Normalization aborted!"));
      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
      list=g_list_next(list);
   } /*end while*/

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 23:10:08 jcs>
+/* Time-stamp: <2003-10-03 00:20:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -411,7 +411,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 		delete_playlist_head ();
 		break;
 	    case GDK_u:
-		do_selected_playlist (update_songids);
+		do_selected_playlist (update_trackids);
 		break;
 	    case GDK_n:
 		add_new_playlist (_("New Playlist"), -1);
@@ -438,10 +438,10 @@ on_track_treeview_key_release_event     (GtkWidget       *widget,
 	switch(event->keyval)
 	{
 	    case GDK_d:
-		delete_song_head ();
+		delete_track_head ();
 		break;
 	    case GDK_u:
-		do_selected_songs (update_songids);
+		do_selected_tracks (update_trackids);
 		break;
 	    default:
 		break;
@@ -465,7 +465,7 @@ on_cfg_delete_track_from_playlist_toggled
                                         (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    prefs_window_set_delete_song_playlist(
+    prefs_window_set_delete_track_playlist(
 	    gtk_toggle_button_get_active(togglebutton));
 }
 
@@ -474,7 +474,7 @@ void
 on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    prefs_window_set_delete_song_ipod(
+    prefs_window_set_delete_track_ipod(
 	    gtk_toggle_button_get_active(togglebutton));
 }
 
@@ -569,7 +569,7 @@ on_track_treeview_drag_data_received    (GtkWidget       *widget,
 	    result = sm_add_filelist (data->data, path, pos);
 	    break;
 	default:
-	    g_warning ("Programming error: on song_treeview_drag_data_received: unknown drop: not supported: %d\n", info);
+	    g_warning ("Programming error: on track_treeview_drag_data_received: unknown drop: not supported: %d\n", info);
 	    break;
 	}
 	gtk_tree_path_free(path);
@@ -594,7 +594,7 @@ void
 on_delete_tracks_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    delete_song_head ();
+    delete_track_head ();
 }
 
 
@@ -633,7 +633,7 @@ void
 on_tracks_statusbar_realize             (GtkWidget       *widget,
                                         gpointer         user_data)
 {
-    gtkpod_songs_statusbar_init(widget);
+    gtkpod_tracks_statusbar_init(widget);
 }
 
 void
@@ -696,7 +696,7 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 				       GTK_TREE_VIEW (widget)));
 		break;
 	    case GDK_u:
-		do_selected_entry (update_songids,
+		do_selected_entry (update_trackids,
 				   st_get_instance_from_treeview (
 				       GTK_TREE_VIEW (widget)));
 		break;
@@ -749,10 +749,10 @@ void
 on_update_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
-    do_selected_playlist (update_songids);
+    do_selected_playlist (update_trackids);
 }
 
-/* update songs in tab entry */
+/* update tracks in tab entry */
 void
 on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
@@ -760,14 +760,14 @@ on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Update selected entry of which sort tab?"));
 
-    if (inst != -1) do_selected_entry (update_songids, inst);
+    if (inst != -1) do_selected_entry (update_trackids, inst);
 }
 
 void
 on_update_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
-    do_selected_songs (update_songids);
+    do_selected_tracks (update_trackids);
 }
 
 
@@ -775,10 +775,10 @@ void
 on_sync_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
-    do_selected_playlist (sync_songids);
+    do_selected_playlist (sync_trackids);
 }
 
-/* sync songs in tab entry */
+/* sync tracks in tab entry */
 void
 on_sync_tab_entry_activate        (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
@@ -786,14 +786,14 @@ on_sync_tab_entry_activate        (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Sync dirs of selected entry in which sort tab?"));
 
-    if (inst != -1) do_selected_entry (sync_songids, inst);
+    if (inst != -1) do_selected_entry (sync_trackids, inst);
 }
 
 void
 on_sync_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
-    do_selected_songs (sync_songids);
+    do_selected_tracks (sync_trackids);
 }
 
 
@@ -989,16 +989,16 @@ void
 on_export_tracks_activate     (GtkMenuItem     *menuitem,
 			      gpointer         user_data)
 {
-    GList *songs = sm_get_selected_songs ();
+    GList *tracks = sm_get_selected_tracks ();
 
-    if (songs)
+    if (tracks)
     {
-	file_export_init(songs);
-	g_list_free (songs);
+	file_export_init(tracks);
+	g_list_free (tracks);
     }
     else
     {
-	gtkpod_statusbar_message (_("No songs selected"));
+	gtkpod_statusbar_message (_("No tracks selected"));
     }
 }
 
@@ -1009,7 +1009,7 @@ on_play_playlist_activate              (GtkMenuItem     *menuitem,
 {
     Playlist *pl = pm_get_selected_playlist ();
     if (pl)
-	play_songs (pl->members);
+	play_tracks (pl->members);
     else
 	gtkpod_statusbar_message (_("No playlist selected"));
 }
@@ -1022,7 +1022,7 @@ on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
     TabEntry *entry;
     gint inst;
 
-    inst = get_sort_tab_number (_("Play songs in selected entry of which sort tab?"));
+    inst = get_sort_tab_number (_("Play tracks in selected entry of which sort tab?"));
     if (inst == -1) return;
 
     entry = st_get_selected_entry (inst);
@@ -1034,7 +1034,7 @@ on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
 	g_free (str);
 	return;
     }
-    play_songs (entry->members);
+    play_tracks (entry->members);
 }
 
 
@@ -1042,15 +1042,15 @@ void
 on_play_tracks_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    GList *songs = sm_get_selected_songs ();
-    if (songs)
+    GList *tracks = sm_get_selected_tracks ();
+    if (tracks)
     {
-	play_songs (songs);
-	g_list_free (songs);
-	songs = NULL;
+	play_tracks (tracks);
+	g_list_free (tracks);
+	tracks = NULL;
     }
     else
-	gtkpod_statusbar_message (_("No songs selected"));
+	gtkpod_statusbar_message (_("No tracks selected"));
 }
 
 
@@ -1060,7 +1060,7 @@ on_enqueue_playlist_activate           (GtkMenuItem     *menuitem,
 {
     Playlist *pl = pm_get_selected_playlist ();
     if (pl)
-	enqueue_songs (pl->members);
+	enqueue_tracks (pl->members);
     else
 	gtkpod_statusbar_message (_("No playlist selected"));
 }
@@ -1073,7 +1073,7 @@ on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
     TabEntry *entry;
     gint inst;
 
-    inst = get_sort_tab_number (_("Enqueue songs in selected entry of which sort tab?"));
+    inst = get_sort_tab_number (_("Enqueue tracks in selected entry of which sort tab?"));
     if (inst == -1) return;
 
     entry = st_get_selected_entry (inst);
@@ -1085,7 +1085,7 @@ on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
 	g_free (str);
 	return;
     }
-    enqueue_songs (entry->members);
+    enqueue_tracks (entry->members);
 }
 
 
@@ -1093,15 +1093,15 @@ void
 on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    GList *songs = sm_get_selected_songs ();
-    if (songs)
+    GList *tracks = sm_get_selected_tracks ();
+    if (tracks)
     {
-	enqueue_songs (songs);
-	g_list_free (songs);
-	songs = NULL;
+	enqueue_tracks (tracks);
+	g_list_free (tracks);
+	tracks = NULL;
     }
     else
-	gtkpod_statusbar_message (_("No songs selected"));
+	gtkpod_statusbar_message (_("No tracks selected"));
 }
 
 
@@ -1440,7 +1440,7 @@ void
 on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    prefs_window_set_not_played_song (
+    prefs_window_set_not_played_track (
 	gtk_toggle_button_get_active (togglebutton));
 }
 
@@ -1643,7 +1643,7 @@ on_normalize_selected_playlist_activate
 {
     Playlist *pl = pm_get_selected_playlist ();
     if (pl)
-	nm_songs_list (pl->members);
+	nm_tracks_list (pl->members);
     else
 	gtkpod_statusbar_message (_("No playlist selected"));
 }
@@ -1657,13 +1657,13 @@ on_normalize_selected_tab_entry_activate
     TabEntry *entry;
     gint inst;
 
-    inst = get_sort_tab_number (_("Normalize songs in selected entry of which sort tab?"));
+    inst = get_sort_tab_number (_("Normalize tracks in selected entry of which sort tab?"));
     if (inst == -1) return;
 
     entry = st_get_selected_entry (inst);
     if (entry)
     {
-	nm_songs_list (entry->members);
+	nm_tracks_list (entry->members);
     }
     else
     {
@@ -1680,9 +1680,9 @@ void
 on_normalize_selected_tracks_activate   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-   GList *songs = sm_get_selected_songs ();
-   nm_songs_list (songs);
-   g_list_free (songs);
+   GList *tracks = sm_get_selected_tracks ();
+   nm_tracks_list (tracks);
+   g_list_free (tracks);
 }
 
 
@@ -1690,9 +1690,9 @@ void
 on_normalize_displayed_tracks_activate  (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    GList *songs = sm_get_all_songs ();
-    nm_songs_list (songs);
-    g_list_free (songs);
+    GList *tracks = sm_get_all_tracks ();
+    nm_tracks_list (tracks);
+    g_list_free (tracks);
 }
 
 
@@ -1701,7 +1701,7 @@ on_normalize_all_tracks                (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     Playlist *plitem = get_playlist_by_nr (0);
-    nm_songs_list (plitem->members);
+    nm_tracks_list (plitem->members);
 }
 
 
@@ -1709,5 +1709,5 @@ void
 on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    nm_new_songs ();
+    nm_new_tracks ();
 }

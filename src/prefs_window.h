@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 00:08:11 jcs>
+/* Time-stamp: <2003-10-03 00:23:05 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -50,8 +50,8 @@ void prefs_window_set_time_format (const gchar *format);
 void prefs_window_set_keep_backups (gboolean active);
 void prefs_window_set_write_extended_info (gboolean active);
 void prefs_window_set_delete_playlist (gboolean val);
-void prefs_window_set_delete_song_ipod (gboolean val);
-void prefs_window_set_delete_song_playlist (gboolean val);
+void prefs_window_set_delete_track_ipod (gboolean val);
+void prefs_window_set_delete_track_playlist (gboolean val);
 void prefs_window_set_sync_remove_confirm (gboolean val);
 void prefs_window_set_auto_import (gboolean val);
 void prefs_window_set_charset (gchar *charset);
@@ -67,7 +67,7 @@ void prefs_window_set_display_tooltips_prefs (gboolean val);
 void prefs_window_set_multi_edit (gboolean val);
 void prefs_window_set_multi_edit_title (gboolean val);
 void prefs_window_set_misc_track_nr (gint val);
-void prefs_window_set_not_played_song (gboolean val);
+void prefs_window_set_not_played_track (gboolean val);
 void prefs_window_set_update_charset (gboolean val);
 void prefs_window_set_write_charset (gboolean val);
 void prefs_window_set_add_recursively (gboolean val);

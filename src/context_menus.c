@@ -38,7 +38,7 @@
 #include "normalize.h"
 
 static guint entry_inst = -1;
-static GList *selected_songs = NULL;
+static GList *selected_tracks = NULL;
 static Playlist *selected_playlist = NULL;
 static TabEntry *selected_entry = NULL; 
 /* types of context menus (PM/ST/SM) */
@@ -58,12 +58,12 @@ typedef enum {
 static void 
 export_entries(GtkWidget *w, gpointer data)
 {
-    if(selected_songs)
-	file_export_init(selected_songs);
+    if(selected_tracks)
+	file_export_init(selected_tracks);
 }
 
 /**
- * edit_entries - open a dialog to edit the song(s) or playlist
+ * edit_entries - open a dialog to edit the track(s) or playlist
  * @mi - the menu item selected
  * @data - Ignored, should be NULL
  * FIXME: How this should work needs to be decided
@@ -85,7 +85,7 @@ edit_entries(GtkButton *b, gpointer data)
 static void 
 play_entries_now (GtkMenuItem *mi, gpointer data)
 {
-    play_songs (selected_songs);
+    play_tracks (selected_tracks);
 }
 
 /*
@@ -96,7 +96,7 @@ play_entries_now (GtkMenuItem *mi, gpointer data)
 static void 
 play_entries_enqueue (GtkMenuItem *mi, gpointer data)
 {
-    enqueue_songs (selected_songs);
+    enqueue_tracks (selected_tracks);
 }
 
 
@@ -109,11 +109,11 @@ static void
 update_entries(GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	do_selected_playlist (update_songids);
+	do_selected_playlist (update_trackids);
     else if(selected_entry)
-	do_selected_entry (update_songids, entry_inst);
-    else if(selected_songs)
-	do_selected_songs (update_songids);
+	do_selected_entry (update_trackids, entry_inst);
+    else if(selected_tracks)
+	do_selected_tracks (update_trackids);
 }
 
 /*
@@ -126,16 +126,16 @@ static void
 sync_dirs_entries(GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	do_selected_playlist (sync_songids);
+	do_selected_playlist (sync_trackids);
     else if(selected_entry)
-	do_selected_entry (sync_songids, entry_inst);
-    else if(selected_songs)
-	do_selected_songs (sync_songids);
+	do_selected_entry (sync_trackids, entry_inst);
+    else if(selected_tracks)
+	do_selected_tracks (sync_trackids);
 }
 
 /**
  * delete_entries - delete the currently selected entry, be it a playlist,
- * items in a sort tab, or songs
+ * items in a sort tab, or tracks
  * @mi - the menu item selected
  * @data - ignored, should be NULL
  */
@@ -146,14 +146,14 @@ delete_entries(GtkMenuItem *mi, gpointer data)
 	delete_playlist_head();
     else if(selected_entry)
 	delete_entry_head(entry_inst);
-    else if(selected_songs)
-	delete_song_head();
+    else if(selected_tracks)
+	delete_track_head();
 }
 
 static void
 create_playlist_from_entries (GtkMenuItem *mi, gpointer data)
 {
-    generate_new_playlist (selected_songs);
+    generate_new_playlist (selected_tracks);
 }
 
 /**
@@ -187,11 +187,11 @@ alphabetize(GtkMenuItem *mi, gpointer data)
 static void normalize_entries (GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	nm_songs_list (selected_playlist->members);
+	nm_tracks_list (selected_playlist->members);
     else if(selected_entry)
-	nm_songs_list (selected_entry->members);
-    else if(selected_songs)
-	nm_songs_list (selected_songs);
+	nm_tracks_list (selected_entry->members);
+    else if(selected_tracks)
+	nm_tracks_list (selected_tracks);
 }
 
 
@@ -253,9 +253,9 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (normalize_entries));
 	hookup_mi (menu[type], _("Delete"), "gtk-delete",
 		   G_CALLBACK (delete_entries));
-	/* FIXME: once we can find out in which song column the
+	/* FIXME: once we can find out in which track column the
 	   context menu was activated, we should offer the following
-	   options to the song view context menu as well */
+	   options to the track view context menu as well */
 
 	if ((type == CM_ST) || (type == CM_SM))
 	{
@@ -293,7 +293,7 @@ create_context_menu(CM_type type)
 }
 
 /**
- * sm_context_menu_init - initialize the right click menu for songs
+ * sm_context_menu_init - initialize the right click menu for tracks
  */
 void
 sm_context_menu_init(void)
@@ -305,9 +305,9 @@ sm_context_menu_init(void)
     selected_entry = NULL; 
     selected_playlist = NULL;
     entry_inst = -1;
-    if (selected_songs)  g_list_free (selected_songs);
-    selected_songs = sm_get_selected_songs();
-    if(selected_songs)
+    if (selected_tracks)  g_list_free (selected_tracks);
+    selected_tracks = sm_get_selected_tracks();
+    if(selected_tracks)
     {
 	create_context_menu (CM_SM);
     }
@@ -322,14 +322,14 @@ pm_context_menu_init(void)
 
     pm_stop_editing (TRUE);
 
-    if (selected_songs)  g_list_free (selected_songs);
-    selected_songs = NULL;
+    if (selected_tracks)  g_list_free (selected_tracks);
+    selected_tracks = NULL;
     selected_entry = NULL;
     entry_inst = -1;
     selected_playlist = pm_get_selected_playlist();
     if(selected_playlist)
     {
-	selected_songs = g_list_copy (selected_playlist->members);
+	selected_tracks = g_list_copy (selected_playlist->members);
 	create_context_menu (CM_PM);
     }
 }
@@ -344,14 +344,14 @@ st_context_menu_init(gint inst)
 
     st_stop_editing (inst, TRUE);
 
-    if (selected_songs)  g_list_free (selected_songs);
-    selected_songs = NULL;
+    if (selected_tracks)  g_list_free (selected_tracks);
+    selected_tracks = NULL;
     selected_playlist = NULL;
     selected_entry = st_get_selected_entry (inst);
     if(selected_entry)
     {
 	entry_inst = inst;
-	selected_songs = g_list_copy (selected_entry->members);
+	selected_tracks = g_list_copy (selected_entry->members);
 	create_context_menu (CM_ST);
     }
 }

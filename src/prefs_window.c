@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 00:08:13 jcs>
+/* Time-stamp: <2003-10-03 00:20:40 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -273,7 +273,7 @@ prefs_window_create(void)
 	if((w = lookup_widget(prefs_window, "cfg_not_played_track")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpcfg->not_played_song);
+					 tmpcfg->not_played_track);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_misc_track_nr")))
 	{
@@ -329,7 +329,7 @@ prefs_window_create(void)
 	if((w = lookup_widget(prefs_window, "cfg_delete_track_from_playlist")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					    tmpcfg->deletion.song);
+					    tmpcfg->deletion.track);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_delete_track_from_ipod")))
 	{
@@ -500,8 +500,8 @@ prefs_window_set(void)
 	    prefs_set_col_visible (i, tmpcfg->col_visible[i]);
 	}
 	prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
-	prefs_set_song_playlist_deletion(tmpcfg->deletion.song);
-	prefs_set_song_ipod_file_deletion(tmpcfg->deletion.ipod_file);
+	prefs_set_track_playlist_deletion(tmpcfg->deletion.track);
+	prefs_set_track_ipod_file_deletion(tmpcfg->deletion.ipod_file);
 	prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
 	prefs_set_sync_remove_confirm(tmpcfg->deletion.syncing);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
@@ -509,7 +509,7 @@ prefs_window_set(void)
 	/* we delete all stored md5 checksums if the md5 checksumming got
 	   disabled */
 	if (prefs_get_md5tracks() && !tmpcfg->md5tracks)
-	    clear_md5_hash_from_songs ();
+	    clear_md5_hash_from_tracks ();
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
 	prefs_set_update_existing(tmpcfg->update_existing);
@@ -527,7 +527,7 @@ prefs_window_set(void)
 	prefs_set_multi_edit (tmpcfg->multi_edit);
 	prefs_set_multi_edit_title (tmpcfg->multi_edit_title);
 	prefs_set_misc_track_nr (tmpcfg->misc_track_nr);
-	prefs_set_not_played_song (tmpcfg->not_played_song);
+	prefs_set_not_played_track (tmpcfg->not_played_track);
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
@@ -770,15 +770,15 @@ prefs_window_set_delete_playlist(gboolean val)
 }
 
 void 
-prefs_window_set_delete_song_ipod(gboolean val)
+prefs_window_set_delete_track_ipod(gboolean val)
 {
     tmpcfg->deletion.ipod_file = val;
 }
 
 void 
-prefs_window_set_delete_song_playlist(gboolean val)
+prefs_window_set_delete_track_playlist(gboolean val)
 {
-    tmpcfg->deletion.song = val;
+    tmpcfg->deletion.track = val;
 }
 
 void 
@@ -899,9 +899,9 @@ void prefs_window_set_update_charset (gboolean val)
     tmpcfg->update_charset = val;
 }
 
-void prefs_window_set_not_played_song (gboolean val)
+void prefs_window_set_not_played_track (gboolean val)
 {
-    tmpcfg->not_played_song = val;
+    tmpcfg->not_played_track = val;
 }
 
 void prefs_window_set_misc_track_nr (gint val)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-02 23:35:57 jcs>
+/* Time-stamp: <2003-10-03 00:09:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -47,8 +47,8 @@ struct cfg
   gchar    *charset;      /* CHARSET to use with file operations */
   gboolean id3_write;     /* should changes to ID3 tags be written to file */
   gboolean id3_writeall;  /* should all ID3 tags be updated */
-  gboolean md5tracks;	  /* don't allow song duplication on your ipod */
-  gboolean update_existing;/* when adding song, update existing song */
+  gboolean md5tracks;	  /* don't allow track duplication on your ipod */
+  gboolean update_existing;/* when adding track, update existing track */
   gboolean block_display; /* block display during change of selection? */
   gboolean autoimport;	  /* whether or not to automatically import files */
   struct
@@ -89,7 +89,7 @@ struct cfg
   } last_dir;	          /* last directories used by the fileselections */
   struct
   {
-      gboolean song, playlist, ipod_file, syncing;
+      gboolean track, playlist, ipod_file, syncing;
   } deletion;
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
   struct win_size size_cal;     /* last size of calendar window */
@@ -97,8 +97,8 @@ struct cfg
   struct win_size size_conf;    /* last size of conf window */
   struct win_size size_dirbr;   /* last size of dirbrowser window */
   struct win_size size_prefs;   /* last size of prefs window */
-  gint sm_col_width[SM_NUM_COLUMNS];    /* width colums in song model */
-  gboolean col_visible[SM_NUM_COLUMNS]; /* displayed song model colums */
+  gint sm_col_width[SM_NUM_COLUMNS];    /* width colums in track model */
+  gboolean col_visible[SM_NUM_COLUMNS]; /* displayed track model colums */
   SM_item col_order[SM_NUM_COLUMNS];    /* order of columns */
   gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
@@ -112,8 +112,8 @@ struct cfg
   GtkToolbarStyle toolbar_style;/* style of toolbar */
   gboolean display_tooltips_main; /* should tooltips be displayed (main) */
   gboolean display_tooltips_prefs;/* should toolbar be displayed (prefs) */
-  gboolean update_charset;      /* Update charset when updating song? */
-  gboolean write_charset;       /* Use selected charset when writing song? */
+  gboolean update_charset;      /* Update charset when updating track? */
+  gboolean write_charset;       /* Use selected charset when writing track? */
   gboolean add_recursively;     /* Add directories recursively? */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
@@ -125,9 +125,9 @@ struct cfg
   gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
-  gboolean not_played_song;     /* not played song in Highest rated playlist?*/
+  gboolean not_played_track;     /* not played track in Highest rated playlist?*/
   gboolean special_export_charset; /* use original charset or specified one? */
-  gint misc_track_nr;            /* song's nr in the Highest rated, most played and most recently played pl*/ 
+  gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/ 
   gboolean write_gaintag;       /* should we append the mp3gain's tag to the mp3files?*/
   float version;                /* version of gtkpod writing the cfg file */
 };
@@ -172,8 +172,8 @@ void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
 void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_playlist_deletion(gboolean val);
-void prefs_set_song_playlist_deletion(gboolean val);
-void prefs_set_song_ipod_file_deletion(gboolean val);
+void prefs_set_track_playlist_deletion(gboolean val);
+void prefs_set_track_ipod_file_deletion(gboolean val);
 void prefs_set_sync_remove_confirm(gboolean val);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_update_existing(gboolean active);
@@ -212,8 +212,8 @@ gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
 gboolean prefs_get_playlist_deletion(void);
-gboolean prefs_get_song_playlist_deletion(void);
-gboolean prefs_get_song_ipod_file_deletion(void);
+gboolean prefs_get_track_playlist_deletion(void);
+gboolean prefs_get_track_ipod_file_deletion(void);
 gboolean prefs_get_sync_remove_confirm(void);
 gboolean prefs_get_id3_write(void);
 gboolean prefs_get_id3_writeall(void);
@@ -292,8 +292,8 @@ void prefs_set_multi_edit (gboolean state);
 gboolean prefs_get_multi_edit (void);
 void prefs_set_misc_track_nr (gint state);
 gint prefs_get_misc_track_nr (void);
-void prefs_set_not_played_song (gboolean state);
-gboolean prefs_get_not_played_song (void);
+void prefs_set_not_played_track (gboolean state);
+gboolean prefs_get_not_played_track (void);
 void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
 void prefs_set_filename_format (char* state);
