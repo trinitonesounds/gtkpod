@@ -70,4 +70,5 @@ double get_filesize_of_deleted_tracks (guint32 *num);
 Track *get_track_info_from_file (gchar *name, Track *or_track);
 void update_charset_info (Track *track);
 gchar *resolve_path(const gchar *,const gchar * const *);
+void parse_offline_playcount (void);
 #endif

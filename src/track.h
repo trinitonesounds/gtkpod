@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-22 22:42:31 JST jcs>
+/* Time-stamp: <2004-03-23 23:46:37 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -145,5 +145,5 @@ gunichar2 *track_get_item_utf16 (Track *track, T_item t_item);
 guint32 *track_get_timestamp_ptr (Track *track, T_item t_item);
 guint32 track_get_timestamp (Track *track, T_item t_item);
 gboolean track_is_valid (Track *track);
-gboolean track_increase_playcount (gchar *file, gint num);
+gboolean track_increase_playcount (gchar *md5, gchar *file, gint num);
 #endif

@@ -34,7 +34,8 @@
 gchar *md5_hash_on_filename (gchar *name, gboolean silent);
 /* Any calls to the following functions immediately return if md5sums
  * is not on */
-Track *md5_file_exists (gchar *file);
+Track *md5_file_exists (gchar *file, gboolean silent);
+Track *md5_md5_exists (gchar *md5);
 Track *md5_track_exists(Track *s);
 Track *md5_track_exists_insert(Track *s);
 void md5_track_removed(Track *s);

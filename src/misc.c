@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-22 00:14:57 JST jcs>
+/* Time-stamp: <2004-03-23 22:12:13 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2416,6 +2416,48 @@ Playlist *generate_selected_playlist (void)
 }
 
 
+/* Generates a playlist containing a random selection of
+   prefs_get_misc_track_nr() tracks in random order from the currently
+   displayed tracks */
+Playlist *generate_random_playlist (void)
+{
+    GRand *grand = g_rand_new ();
+    Playlist *new_pl = NULL;
+    gchar *pl_name, *pl_name1;
+    GList *rtracks = NULL;
+    GList *tracks = tm_get_all_tracks ();
+    gint tracks_max = prefs_get_misc_track_nr();
+    gint tracks_nr = 0;
+
+
+    while (tracks && (tracks_nr < tracks_max))
+    {
+	/* get random number between 0 and g_list_length()-1 */
+	gint rn = g_rand_int_range (grand, 0, g_list_length (tracks));
+	GList *random = g_list_nth (tracks, rn);
+	rtracks = g_list_append (rtracks, random->data);
+	tracks = g_list_delete_link (tracks, random);
+	++tracks_nr;
+    }
+    pl_name1 = g_strdup_printf (_("Random (%d)"), tracks_max);
+    pl_name = g_strdup_printf ("[%s]", pl_name1);
+    new_pl = generate_playlist_with_name (rtracks, pl_name, TRUE);
+    g_free (pl_name1);
+    g_free (pl_name);
+    g_list_free (tracks);
+    g_list_free (rtracks);
+    g_rand_free (grand);
+    return new_pl;
+}
+
+
+Playlist *randomize_current_playlist (void) 
+{
+    fprintf (stderr, "Not implemented yet.\n");
+    return NULL;
+}
+
+
 static void not_listed_make_track_list (gpointer key, gpointer track,
 					gpointer tracks)
 {
@@ -2432,8 +2474,7 @@ Playlist *generate_not_listed_playlist (void)
     GList *gl, *tracks=NULL;
     guint32 pl_nr, i;
     gchar *pl_name;
-    Playlist *sel_pl, *new_pl, *pl;
-    gboolean select = FALSE;
+    Playlist *new_pl, *pl;
 
     /* Create hash with all track/track pairs */
     pl = get_playlist_by_nr (0);
@@ -2465,61 +2506,79 @@ Playlist *generate_not_listed_playlist (void)
 
     pl_name = g_strdup_printf ("[%s]", _("Not Listed"));
 
-    /* currently selected playlist */
-    sel_pl= pm_get_selected_playlist ();
-    /* remove all playlists with named pl_name */
-    remove_playlist_by_name (pl_name);
-    /* check if we deleted the selected playlist */
-    if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
-    new_pl = generate_playlist_with_name (tracks, pl_name);
-    if (new_pl && select)
-    {   /* need to select newly created playlist because the old
-	 * selection was deleted */
-	pm_select_playlist (new_pl);
-    }
+    new_pl = generate_playlist_with_name (tracks, pl_name, TRUE);
     g_free (pl_name);
+    g_list_free (tracks);
     return new_pl;
 }
 
 
 /* Generate a playlist consisting of the tracks in @tracks
- * with @name name */
-Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name){
-    GList *l;
-    Playlist *pl=NULL;
+ * with @name name. If @del_old ist TRUE, delete any old playlist with
+ * the same name. */
+Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name,
+				       gboolean del_old)
+{
+    Playlist *new_pl=NULL;
     gint n = g_list_length (tracks);
     gchar *str;
 
     if(n>0)
     {
-	pl = add_new_playlist (pl_name, -1);
+	gboolean select = FALSE;
+	GList *l;
+	if (del_old)
+	{
+	    /* currently selected playlist */
+	    Playlist *sel_pl= pm_get_selected_playlist ();
+
+	    /* remove all playlists with named @plname */
+	    remove_playlist_by_name (pl_name);
+	    /* check if we deleted the selected playlist */
+	    if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
+	}
+
+	new_pl = add_new_playlist (pl_name, -1);
 	for (l=tracks; l; l=l->next)
 	{
 	    Track *track = (Track *)l->data;
-	    add_track_to_playlist (pl, track, TRUE);
+	    add_track_to_playlist (new_pl, track, TRUE);
 	}
-	str = g_strdup_printf (ngettext ("Created playlist '%s' with %d track.",
-				     "Created playlist '%s' with %d tracks.",
-				     n), pl_name, n);
+	str = g_strdup_printf (
+	    ngettext ("Created playlist '%s' with %d track.",
+		      "Created playlist '%s' with %d tracks.",
+		      n), pl_name, n);
+	if (new_pl && select)
+	{   /* need to select newly created playlist because the old
+	     * selection was deleted */
+	    pm_select_playlist (new_pl);
+	}
     }
     else
-    { /* n==0 */
+    {   /* n==0 */
 	str = g_strdup_printf (_("No tracks available, playlist not created"));
     }
     gtkpod_statusbar_message (str);
     gtkpod_tracks_statusbar_update();
     g_free (str);
-    return pl;
+    return new_pl;
 }
 
-/* Generate a playlist named "New Playlist" consisting of the tracks in @tracks. */
+/* Generate a playlist named "New Playlist" consisting of the tracks
+ * in @tracks. */
 Playlist *generate_new_playlist (GList *tracks)
 {
-    return generate_playlist_with_name (tracks, _("New Playlist"));
+    gchar *name = get_user_string (
+	_("New Playlist"),
+	_("Please enter a name for the new playlist"),
+	_("New Playlist"));
+    if (name)
+	return generate_playlist_with_name (tracks, name, FALSE);
+    return NULL;
 }
 
 /* look at the add_ranked_playlist help:
- * BEWARE this function shouldn't be used*/
+ * BEWARE this function shouldn't be used by other functions */
 static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
 				  GCompareFunc comparefunc)
 {
@@ -2545,8 +2604,10 @@ static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
    }
    return tracks;
 }
-/* Generate a new playlist named @pl_name, containing @tracks_nr tracks.
+/* Generate or update a playlist named @pl_name, containing
+ * @tracks_nr tracks.
  *
+ * @str is the playlist's name (no [ or ])
  * @insertfunc: determines which tracks to enter into the new playlist.
  *              If @insertfunc is NULL, all tracks are added.
  * @comparefunc: determines order of tracks
@@ -2554,11 +2615,12 @@ static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
  *
  * Return value: the newly created playlist
  */
-static Playlist *add_ranked_playlist(gchar *pl_name, gint tracks_nr,
+static Playlist *update_ranked_playlist(gchar *str, gint tracks_nr,
 				     PL_InsertFunc insertfunc,
 				     GCompareFunc comparefunc)
 {
     Playlist *result = NULL;
+    gchar *pl_name = g_strdup_printf ("[%s]", str);
     GList *tracks = create_ranked_glist(tracks_nr,insertfunc,comparefunc);
     gint f;
     f=g_list_length(tracks);
@@ -2566,44 +2628,13 @@ static Playlist *add_ranked_playlist(gchar *pl_name, gint tracks_nr,
     if (f != 0)
     /* else generate_playlist_with_name prints something*/
     {
-#if 0
-	GList *sl;
-	for (sl=tracks; sl; sl=sl->next)
-	{
-	    Track *s=sl->data;
-	    printf ("%ud\n", s->time_played);
-	}
-#endif
-	result = generate_playlist_with_name (tracks, pl_name);
+	result = generate_playlist_with_name (tracks, pl_name, TRUE);
     }
     g_list_free (tracks);
+    g_free (pl_name);
     return result;
 }
 
- /*update a ranked playlist according the iPod content,
- * @str is the playlist's name (no [ or ])*/
-static void update_ranked_playlist(gchar *str, gint tracks_nr,
-				   PL_InsertFunc insertfunc,
-				   GCompareFunc compfunc)
-{
-    gchar *str2 = g_strdup_printf ("[%s]", str);
-    Playlist *sel_pl, *new_pl;
-    gboolean select = FALSE;
-
-    /* currently selected playlist */
-    sel_pl= pm_get_selected_playlist ();
-    /* remove all playlists with named @str2 */
-    remove_playlist_by_name (str2);
-    /* check if we deleted the selected playlist */
-    if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
-    new_pl = add_ranked_playlist (str2, tracks_nr, insertfunc, compfunc);
-    if (new_pl && select)
-    {   /* need to select newly created playlist because the old
-	 * selection was deleted */
-	pm_select_playlist (new_pl);
-    }
-    g_free (str2);
-}
 
 /* ------------------------------------------------------------ */
 /* Generate a new playlist containing the most listened (playcount

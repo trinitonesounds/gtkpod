@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-22 23:05:26 JST jcs>
+/* Time-stamp: <2004-03-24 00:59:50 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -739,28 +739,36 @@ guint32 track_get_timestamp (Track *track, T_item t_item)
 
 
 /* Increase playcount of filename <file> by <num>. If md5 is activated,
-   use md5 to find the track. Otherwise use the filename
+   use md5 to find the track. Otherwise use the filename. If @md5 is
+   set, this value is used directly to look up the track in the
+   database (instead of calculating it from the file.
+
    Return value:
    TRUE: OK
    FALSE: file could not be found. */
-gboolean track_increase_playcount (gchar *file, gint num)
+gboolean track_increase_playcount (gchar *md5, gchar *file, gint num)
 {
     gboolean result = FALSE;
     Track *track = NULL;
 
-    track = md5_file_exists (file);
+    if (md5) track = md5_md5_exists (md5);
+    else     track = md5_file_exists (file, TRUE);
     if (!track)	  track = get_track_by_filename (file);
     if (track)
     {
+	gchar *buf1, *buf;
 	track->playcount += num;
 	data_changed ();
 	pm_track_changed (track);
+	buf1 = get_track_info (track);
+	buf = g_strdup_printf (_("Increased playcount for '%s'"), buf1);
+	gtkpod_statusbar_message (buf);
+	g_free (buf);
+	g_free (buf1);
 	result = TRUE;
     }
     return result;
 }
-
-
 
 
 /* ------------------------------------------------------------------- */

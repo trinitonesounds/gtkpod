@@ -43,7 +43,7 @@
 		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2521">
+			<widget class="GtkImage" id="image2654">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-top</property>
 			  <property name="icon_size">1</property>
@@ -64,7 +64,7 @@
 		      <signal name="activate" handler="on_add_files1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2522">
+			<widget class="GtkImage" id="image2655">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -85,7 +85,7 @@
 		      <signal name="activate" handler="on_add_directory1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2523">
+			<widget class="GtkImage" id="image2656">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -106,7 +106,7 @@
 		      <signal name="activate" handler="on_add_playlist1_activate" last_modification_time="Fri, 21 Feb 2003 14:49:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2524">
+			<widget class="GtkImage" id="image2657">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -127,7 +127,7 @@
 		      <signal name="activate" handler="on_export_itunes1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2525">
+			<widget class="GtkImage" id="image2658">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-bottom</property>
 			  <property name="icon_size">1</property>
@@ -153,7 +153,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2526">
+			<widget class="GtkImage" id="image2659">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -205,7 +205,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2527">
+			<widget class="GtkImage" id="image2660">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -263,7 +263,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2528">
+			<widget class="GtkImage" id="image2661">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -338,7 +338,7 @@
 		      <signal name="activate" handler="on_ipod_directories_menu" last_modification_time="Sat, 18 Jan 2003 02:10:39 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2529">
+			<widget class="GtkImage" id="image2662">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-execute</property>
 			  <property name="icon_size">1</property>
@@ -397,7 +397,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2530">
+			<widget class="GtkImage" id="image2663">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-copy</property>
 			  <property name="icon_size">1</property>
@@ -417,6 +417,15 @@
 			      <property name="label" translatable="yes">Empty Playlist</property>
 			      <property name="use_underline">True</property>
 			      <signal name="activate" handler="on_new_playlist1_activate" last_modification_time="Sun, 03 Aug 2003 03:58:25 GMT"/>
+			    </widget>
+			  </child>
+
+			  <child>
+			    <widget class="GtkMenuItem" id="random_playlist">
+			      <property name="visible">True</property>
+			      <property name="label" translatable="yes">Random Playlist from Displayed Tracks</property>
+			      <property name="use_underline">True</property>
+			      <signal name="activate" handler="on_random_playlist_activate" last_modification_time="Fri, 19 Mar 2004 17:27:51 GMT"/>
 			    </widget>
 			  </child>
 
@@ -542,6 +551,15 @@
 		  </child>
 
 		  <child>
+		    <widget class="GtkMenuItem" id="randomize_current_playlist">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Randomize Current Playlist</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_randomize_current_playlist_activate" last_modification_time="Fri, 19 Mar 2004 17:27:51 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
 		    <widget class="GtkMenuItem" id="separator1">
 		      <property name="visible">True</property>
 		    </widget>
@@ -555,7 +573,7 @@
 		      <signal name="activate" handler="on_sorting_activate" last_modification_time="Mon, 22 Sep 2003 08:00:42 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2531">
+			<widget class="GtkImage" id="image2664">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-sort-ascending</property>
 			  <property name="icon_size">1</property>
@@ -576,7 +594,7 @@
 		      <signal name="activate" handler="on_save_track_order1_activate" last_modification_time="Sat, 08 Mar 2003 13:45:01 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2532">
+			<widget class="GtkImage" id="image2665">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-justify-fill</property>
 			  <property name="icon_size">1</property>
@@ -602,7 +620,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2533">
+			<widget class="GtkImage" id="image2666">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -654,7 +672,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2534">
+			<widget class="GtkImage" id="image2667">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -714,7 +732,7 @@
 		      <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2535">
+			<widget class="GtkImage" id="image2668">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -779,7 +797,7 @@
 		      <signal name="activate" handler="on_more_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2536">
+			<widget class="GtkImage" id="image2669">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -800,7 +818,7 @@
 		      <signal name="activate" handler="on_less_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2537">
+			<widget class="GtkImage" id="image2670">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-remove</property>
 			  <property name="icon_size">1</property>
@@ -842,7 +860,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2538">
+			<widget class="GtkImage" id="image2671">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -894,7 +912,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2539">
+			<widget class="GtkImage" id="image2672">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -1057,7 +1075,7 @@
 		      <signal name="activate" handler="on_about1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2540">
+			<widget class="GtkImage" id="image2673">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-info</property>
 			  <property name="icon_size">1</property>
@@ -1917,24 +1935,7 @@
 			      </child>
 
 			      <child>
-				<widget class="GtkCheckButton" id="mp3_volume_from_radio_gain">
-				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">It is possible to use the value of LAME's ReplayGain to normalize the volume (you need to tell LAME to store that information). The exact conversion factor between ReplayGain and iPod's volume tag is not known yet -- your input is appreciated.</property>
-				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">Use LAME's ReplayGain to set the volume tag
- when reading mp3 files.</property>
-				  <property name="use_underline">True</property>
-				  <property name="relief">GTK_RELIEF_NORMAL</property>
-				  <property name="active">False</property>
-				  <property name="inconsistent">False</property>
-				  <property name="draw_indicator">True</property>
-				  <signal name="toggled" handler="on_mp3_volume_from_radio_gain" last_modification_time="Sun, 14 Mar 2004 03:38:06 GMT"/>
-				</widget>
-				<packing>
-				  <property name="padding">0</property>
-				  <property name="expand">False</property>
-				  <property name="fill">False</property>
-				</packing>
+				<placeholder/>
 			      </child>
 
 			      <child>
@@ -4634,7 +4635,7 @@
 			      <child>
 				<widget class="GtkEntry" id="mp3gain_path_entry">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">You only need to specify this if your 'mp3gain' executable is not in your default path. Example: '/usr/local/bimbam/mp3gain'. The exact conversion factor between mp3gain's gain value and iPod's volume tag is not known yet -- your input is appreciated.</property>
+				  <property name="tooltip" translatable="yes">You only need to specify this if your 'mp3gain' executable is not in your default path. Example: '/usr/local/foo/mp3gain'. mp3gain will write the calculated gain value back to the file -- if you don't want this, set this entry to /bin/true or similar. mp3gain is only called if appropriate tags are not already set by your encoder. E.g. lame version 0.95 already writes the gain values into tags. The exact conversion factor between mp3gain's gain value and iPod's volume tag is not known yet -- your input is appreciated.</property>
 				  <property name="can_focus">True</property>
 				  <property name="editable">True</property>
 				  <property name="visibility">True</property>
@@ -4653,44 +4654,11 @@
 			      </child>
 
 			      <child>
-				<widget class="GtkCheckButton" id="cfg_write_gaintag">
-				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">mp3gain can add a special tag to the mp3 file. This tag will save much time when normalizing a second time. As with all write operations there is a small change that your files get damaged! Note: gtkpod will use the mp3 file stored on the iPod if that's available (not in offline mode and file transferred). Otherwise it will use the original file on your harddisk.</property>
-				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">Write information about suggested gain level to file</property>
-				  <property name="use_underline">True</property>
-				  <property name="relief">GTK_RELIEF_NORMAL</property>
-				  <property name="active">False</property>
-				  <property name="inconsistent">False</property>
-				  <property name="draw_indicator">True</property>
-				  <signal name="toggled" handler="on_cfg_write_gaintag_toggled" last_modification_time="Tue, 02 Sep 2003 15:51:30 GMT"/>
-				</widget>
-				<packing>
-				  <property name="padding">0</property>
-				  <property name="expand">False</property>
-				  <property name="fill">False</property>
-				</packing>
+				<placeholder/>
 			      </child>
 
 			      <child>
-				<widget class="GtkCheckButton" id="mp3gain_use_radio_gain">
-				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">It is possible to use the value of LAME's ReplayGain to normalize the volume (you need to tell LAME to store that information). This is potentially faster than using mp3gain. The exact conversion factor between ReplayGain and iPod's volume tag is not known yet -- your input is appreciated.</property>
-				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">If available use LAME's ReplayGain tag instead
- of mp3gain.</property>
-				  <property name="use_underline">True</property>
-				  <property name="relief">GTK_RELIEF_NORMAL</property>
-				  <property name="active">False</property>
-				  <property name="inconsistent">False</property>
-				  <property name="draw_indicator">True</property>
-				  <signal name="toggled" handler="on_mp3gain_use_replaygain" last_modification_time="Sun, 14 Mar 2004 03:45:50 GMT"/>
-				</widget>
-				<packing>
-				  <property name="padding">0</property>
-				  <property name="expand">False</property>
-				  <property name="fill">False</property>
-				</packing>
+				<placeholder/>
 			      </child>
 			    </widget>
 			  </child>

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-12 00:10:39 JST jcs>
+/* Time-stamp: <2004-03-23 21:36:20 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -116,10 +116,11 @@ gchar *filename_from_uri (const char *uri,
 void generate_category_playlists (T_item cat);
 Playlist *generate_displayed_playlist (void);
 Playlist *generate_selected_playlist (void);
+Playlist *randomize_current_playlist (void);
+Playlist *generate_random_playlist (void);
 Playlist *generate_not_listed_playlist (void);
-Playlist *generate_new_playlist (GList *tracks);
-Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name);
-Playlist *generate_playlist (GList *tracks, gchar *pl_name);
+Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name,
+				       gboolean del_old);
 Playlist *generate_new_playlist (GList *tracks);
 void most_listened_pl (void);
 void never_listened_pl (void);

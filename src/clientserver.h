@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 21:43:06 JST jcs>
+/* Time-stamp: <2004-03-24 00:14:12 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,6 +30,9 @@
 #define CLIENTSERVERH_INCLUDED 1
 
 #include <glib.h>
+
+extern const gchar *SOCKET_TEST;
+extern const gchar *SOCKET_PLYC;
 
 void server_setup (void);
 void server_shutdown (void);

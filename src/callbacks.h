@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-01 23:25:59 JST jcs>
+/* Time-stamp: <2004-03-23 22:50:48 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -574,10 +574,6 @@ on_cfg_normalization_level_changed     (GtkEditable     *editable,
 					gpointer         user_data);
 
 void
-on_cfg_write_gaintag_toggled           (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
 on_cfg_special_export_charset_toggled  (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
@@ -761,9 +757,9 @@ on_cfg_fix_path                       (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_mp3_volume_from_radio_gain          (GtkToggleButton *togglebutton,
+on_random_playlist_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_mp3gain_use_replaygain              (GtkToggleButton *togglebutton,
+on_randomize_current_playlist_activate (GtkMenuItem     *menuitem,
                                         gpointer         user_data);

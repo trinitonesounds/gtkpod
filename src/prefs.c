@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-22 23:00:04 JST jcs>
+/* Time-stamp: <2004-03-23 22:48:49 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -252,10 +252,10 @@ struct cfg *cfg_new(void)
     mycfg->sync_calendar_path = g_strdup ("");
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
     mycfg->export_template = g_strdup ("%o;%a - %t.mp3;%t.wav");
-    mycfg->write_gaintag = FALSE;
+    mycfg->unused_gboolean3 = FALSE;
     mycfg->concal_autosync = FALSE;
-    mycfg->mp3_volume_from_radio_gain = FALSE;
-    mycfg->mp3gain_use_radio_gain = FALSE;
+    mycfg->unused_gboolean1 = FALSE;
+    mycfg->unused_gboolean2 = FALSE;
     mycfg->fix_path = TRUE;
     mycfg->export_check_existing = FALSE;
     mycfg->automount = FALSE;
@@ -740,19 +740,23 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
 	  {
-	      prefs_set_write_gaintag ((gboolean)atoi(arg));
+	      /* ignore -- not used any more */
+	  }
+	  else if(g_ascii_strcasecmp (line, "unused_gboolean3") == 0)
+	  {
+	      prefs_set_unused_gboolean3 ((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "concal_autosync") == 0)
 	  {
 	      prefs_set_concal_autosync ((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "mp3_volume_from_radio_gain") == 0)
+	  else if(g_ascii_strcasecmp (line, "unused_gboolean1") == 0)
 	  {
-	      prefs_set_mp3_volume_from_radio_gain ((gboolean)atoi(arg));
+	      prefs_set_unused_gboolean1 ((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "mp3gain_use_radio_gain") == 0)
+	  else if(g_ascii_strcasecmp (line, "unused_gboolean2") == 0)
 	  {
-	      prefs_set_mp3gain_use_radio_gain ((gboolean)atoi(arg));
+	      prefs_set_unused_gboolean2 ((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
@@ -1034,11 +1038,11 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "fix_path=%d\n", cfg->fix_path);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
-    fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
     fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
-    fprintf (fp, "mp3_volume_from_radio_gain=%d\n", cfg->mp3_volume_from_radio_gain);
-    fprintf (fp, "mp3gain_use_radio_gain=%d\n", cfg->mp3gain_use_radio_gain);
     fprintf (fp, "special_export_charset=%d\n", cfg->special_export_charset);
+/*     fprintf (fp, "unused_gboolean1=%d\n", cfg->unused_gboolean1); */
+/*     fprintf (fp, "unused_gboolean2=%d\n", cfg->unused_gboolean2); */
+/*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
 }
 
 void
@@ -2477,16 +2481,6 @@ void prefs_set_export_template(char* val)
     cfg->export_template = g_strdup(val);
 }
 
-gboolean prefs_get_write_gaintag(void)
-{
-    return(cfg->write_gaintag);
-}
-
-void prefs_set_write_gaintag(gboolean val)
-{
-    cfg->write_gaintag = val;
-}
-
 gboolean prefs_get_concal_autosync(void)
 {
     return(cfg->concal_autosync);
@@ -2495,26 +2489,6 @@ gboolean prefs_get_concal_autosync(void)
 void prefs_set_concal_autosync(gboolean val)
 {
     cfg->concal_autosync = val;
-}
-
-gboolean prefs_get_mp3_volume_from_radio_gain(void)
-{
-    return(cfg->mp3_volume_from_radio_gain);
-}
-
-void prefs_set_mp3_volume_from_radio_gain(gboolean val)
-{
-    cfg->mp3_volume_from_radio_gain = val;
-}
-
-gboolean prefs_get_mp3gain_use_radio_gain(void)
-{
-    return(cfg->mp3gain_use_radio_gain);
-}
-
-void prefs_set_mp3gain_use_radio_gain(gboolean val)
-{
-    cfg->mp3gain_use_radio_gain = val;
 }
 
 gboolean prefs_get_special_export_charset(void)
@@ -2526,3 +2500,34 @@ void prefs_set_special_export_charset(gboolean val)
 {
     cfg->special_export_charset = val;
 }
+
+gboolean prefs_get_unused_gboolean1(void)
+{
+    return(cfg->unused_gboolean1);
+}
+
+void prefs_set_unused_gboolean1(gboolean val)
+{
+    cfg->unused_gboolean1 = val;
+}
+
+gboolean prefs_get_unused_gboolean2(void)
+{
+    return(cfg->unused_gboolean2);
+}
+
+void prefs_set_unused_gboolean2(gboolean val)
+{
+    cfg->unused_gboolean2 = val;
+}
+
+gboolean prefs_get_unused_gboolean3(void)
+{
+    return(cfg->unused_gboolean3);
+}
+
+void prefs_set_unused_gboolean3(gboolean val)
+{
+    cfg->unused_gboolean3 = val;
+}
+

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-22 22:45:28 JST jcs>
+/* Time-stamp: <2004-03-24 00:58:30 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,13 +30,16 @@
 #  include <config.h>
 #endif
 
+#include <ctype.h>
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <ctype.h>
+#include <sys/file.h>
 #include <time.h>
+#include <unistd.h>
+
 #include "charset.h"
+#include "clientserver.h"
 #include "confirmation.h"
 #include "file.h"
 #include "info.h"
@@ -45,9 +48,9 @@
 #include "misc.h"
 #include "mp3file.h"
 #include "mp4file.h"
-#include "tools.h"
 #include "prefs.h"
 #include "support.h"
+#include "tools.h"
 #include "wavfile.h"
 
 /* only used when reading extended info from file */
@@ -2057,6 +2060,10 @@ void handle_import (void)
     renumber_ipod_ids ();
 
     gtkpod_tracks_statusbar_update();
+
+    /* run update of offline playcounts */
+    parse_offline_playcount ();
+
     if (n != get_nr_of_tracks ())
     { /* Import was successfull, block menu item and button */
 	display_disable_gtkpod_import_buttons();
@@ -2576,6 +2583,10 @@ void handle_export (void)
   
 
   block_widgets (); /* block user input */
+  /* read offline playcounts -- in case we added some tracks we can
+     now handle */
+  parse_offline_playcount ();
+
   cfgdir = prefs_get_cfgdir ();
   if (cfgdir)
   {
@@ -2792,3 +2803,113 @@ gchar * resolve_path(const gchar *root,const gchar * const * components) {
   return NULL;
 }
 
+
+
+
+/* ------------------------------------------------------------
+
+        Reading of offline playcount file
+
+   ------------------------------------------------------------ */
+
+
+void parse_offline_playcount (void)
+{
+    gchar *cfgdir = prefs_get_cfgdir ();
+    gchar *offlplyc = g_strdup_printf (
+	"%s%c%s", cfgdir, G_DIR_SEPARATOR, "offline_playcount");
+
+    if (g_file_test (offlplyc, G_FILE_TEST_EXISTS))
+    {
+	FILE *file = fopen (offlplyc, "r+");
+	gchar *buf;
+	GString *gstr;
+	if (!file)
+	{
+	    gtkpod_warning (_("Could not open '%s' for reading and writing.\n"),
+		       offlplyc);
+	    g_free (offlplyc);
+	    return;
+	}
+	if (flock (fileno (file), LOCK_EX) != 0)
+	{
+	    gtkpod_warning (_("Could not obtain lock on '%s'.\n"), offlplyc);
+	    fclose (file);
+	    g_free (offlplyc);
+	    return;
+	}
+	buf = g_malloc (2*PATH_MAX);
+	gstr = g_string_sized_new (PATH_MAX);
+	while (fgets (buf, 2*PATH_MAX, file))
+	{
+	    gchar *buf_utf8 = charset_to_utf8 (buf);
+	    gchar *md5=NULL;
+	    gchar *filename=NULL;
+	    gchar *ptr1, *ptr2;
+	    /* skip strings that do not start with "PLCT:" */
+	    if (strncmp (buf, SOCKET_PLYC, strlen (SOCKET_PLYC)) != 0)
+	    {
+		gtkpod_warning (_("Malformed line in '%s': %s\n"), offlplyc, buf);
+		goto cont;
+	    }
+	    /* start of MD5 string */
+	    ptr1 = buf + strlen (SOCKET_PLYC);
+	    /* end of MD5 string */
+	    ptr2 = strchr (ptr1, ' ');
+	    if (ptr2 == NULL)
+	    {   /* error! */
+		gtkpod_warning (_("Malformed line in '%s': %s\n"),
+				offlplyc, buf_utf8);
+		goto cont;
+	    }
+	    if (ptr1 != ptr2)    md5 = g_strndup (ptr1, ptr2-ptr1);
+	    /* start of filename */
+	    ptr1 = ptr2 + 1;
+	    /* end of filename string */
+	    ptr2 = strchr (ptr1, '\n');
+	    if (ptr2 == NULL)
+	    {   /* error! */
+		gtkpod_warning (_("Malformed line in '%s': %s\n"),
+				offlplyc, buf_utf8);
+		goto cont;
+	    }
+	    if (ptr1 != ptr2)
+	    {
+		filename = g_strndup (ptr1, ptr2-ptr1);
+	    }
+	    else
+	    {   /* error! */
+		gtkpod_warning (_("Malformed line in '%s': %s\n"),
+				offlplyc, buf_utf8);
+		goto cont;
+	    }
+	    if (track_increase_playcount (md5, filename, 1) == FALSE)
+	    {   /* didn't find the track -> store */
+		gchar *filename_utf8 = charset_to_utf8 (filename);
+		g_string_append (gstr, buf);
+		/* FIXME: offer possibility to remove track from file */
+		gtkpod_warning (_("Couldn't find track '%s' for playcount adjustment . Adjustment deferred.\n"), filename_utf8);
+		g_free (filename_utf8);
+	    }
+	  cont:
+	    g_free (buf_utf8);
+	    g_free (md5);
+	    g_free (filename);
+	}
+	rewind (file);
+	if (gstr->len != 0)
+	{
+	    if (fwrite (gstr->str, sizeof (gchar), gstr->len, file) != gstr->len)
+	    {
+		gtkpod_warning (_("Error writing to '%s'.\n"), offlplyc);
+	    }
+	}
+	/* truncate the offline_playcount file */
+	ftruncate (fileno (file), gstr->len);
+	fclose (file);
+	g_string_free (gstr, TRUE);
+	g_free (buf);
+    }
+    g_free (cfgdir);
+    g_free (offlplyc);
+}

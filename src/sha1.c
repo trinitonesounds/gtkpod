@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>
+#include "charset.h"
 #include "md5.h"
 #include "file.h"
 #include "prefs.h"
@@ -204,9 +205,11 @@ gchar *md5_hash_on_filename (gchar *name, gboolean silent)
 	{
 	    if (!silent)
 	    {
+		gchar *name_utf8=charset_to_utf8 (name);
 		gtkpod_warning (
 		    _("Could not open '%s' to calculate MD5 checksum.\n"),
-		    name);
+		    name_utf8);
+		g_free (name_utf8);
 	    }
 	}
 	else
@@ -298,12 +301,12 @@ md5_track_exists(Track * s)
  * Returns a pointer to the duplicate track using md5 for
  * identification. If md5 checksums are off, NULL is returned.
  */
-Track *md5_file_exists (gchar *file)
+Track *md5_file_exists (gchar *file, gboolean silent)
 {
     Track *track = NULL;
     if (prefs_get_md5tracks() && filehash && file)
     {
-	gchar *val = md5_hash_on_filename (file, FALSE);
+	gchar *val = md5_hash_on_filename (file, silent);
 	if (val)
 	{
 	   track = g_hash_table_lookup(filehash, val);
@@ -313,6 +316,22 @@ Track *md5_file_exists (gchar *file)
    return track;
 }
 
+
+/**
+ * Check to see if a track has already been added to the ipod
+ * @md5 - the md5 we want to know about.
+ * Returns a pointer to the duplicate track using md5 for
+ * identification. If md5 checksums are off, NULL is returned.
+ */
+Track *md5_md5_exists (gchar *md5)
+{
+    Track *track = NULL;
+    if (prefs_get_md5tracks() && filehash && md5)
+    {
+	track = g_hash_table_lookup(filehash, md5);
+    }
+    return track;
+}
 
 /**
  * Free the specified track from the ipod's unique file hash

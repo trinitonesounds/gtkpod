@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-22 22:22:32 JST jcs>
+/* Time-stamp: <2004-03-24 00:13:50 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -50,9 +50,8 @@ static gint ssock=-1;
 static struct sockaddr_un *saddr = NULL;
 static guint inp_handler;
 
-#define BUFSIZE 1024
-static const gchar *SOCKET_TEST="TEST:";
-static const gchar *SOCKET_PLYC="PLYC:";
+const gchar *SOCKET_TEST="TEST:";
+const gchar *SOCKET_PLYC="PLYC:";
 
 /* set the path to the socket name */
 static void set_path (struct sockaddr_un *saddr)
@@ -143,13 +142,13 @@ void received_message (gpointer data, gint source, GdkInputCondition condition)
     gchar *buf;
 /*    printf("received message\n");*/
 
-    buf = g_malloc (BUFSIZE);
+    buf = g_malloc (PATH_MAX);
     while ((csock = accept(source, 0, 0)) != -1)
     {
 	do
 	{
-	    bzero(buf, BUFSIZE);
-	    if ((rval = read(csock, buf, BUFSIZE)) < 0)
+	    bzero(buf, PATH_MAX);
+	    if ((rval = read(csock, buf, PATH_MAX)) < 0)
 	    {
 		fprintf(stderr,"server: read error: %s",strerror(errno));
 		continue;
@@ -167,7 +166,7 @@ void received_message (gpointer data, gint source, GdkInputCondition condition)
 		if (strncmp (buf, SOCKET_PLYC, strlen (SOCKET_PLYC)) == 0)
 		{
 		    gchar *file = buf + strlen (SOCKET_PLYC);
-		    if (track_increase_playcount (file, 1) == FALSE)
+		    if (track_increase_playcount (NULL, file, 1) == FALSE)
 		    {   /* didn't find the track --> write to
 			   offline_playcount */
 			register_playcount (file);
@@ -284,3 +283,6 @@ gboolean client_playcount (gchar *file)
     }
     return TRUE;
 }
+
+
+
