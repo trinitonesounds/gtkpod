@@ -23,8 +23,8 @@
 |  This product is not supported/written/published by Apple!
 */
 
-#ifndef __TREE_H__
-#define __TREE_H__
+#ifndef __DISPLAY_H__
+#define __DISPLAY_H__
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -154,7 +154,8 @@ enum {
     DND_TEXT_PLAIN
 };
 
-
+/* used for the ST_CAT_SPECIAL user_data (see st_create_special and
+ * the corresponding signal functions) */
 #define SP_SHIFT 9
 #define SP_MASK ((1<<SP_SHIFT)-1)
 
