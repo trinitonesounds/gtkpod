@@ -1,3 +1,22 @@
+gtkpod V0.73-CVS
+	NEW FEATURE: added support for WAV audio files
+
+	IMPROVEMENT: can specify several templates to scan the filename
+	for tags using the ';' as a separator
+
+	IMPROVEMENT: can specify several templates for the export
+	filename. gtkpod selects according to the extension given.
+
+	IMPROVEMENT: streamlined layout of info window
+
+	IMPROVEMENT: send 'eject' to the iPod after unmounting. This only
+	works if the user has write access to the device file
+	(e.g. /dev/sda2)
+
+	BUGFIX: Fixed compile error when compiling without mp4 support
+
+	BUGFIX: Fixed compile error when compiling with gcc 2.95
+
 gtkpod V0.72
         NEW FEATURE: tags can now be set from the filename using a
 	template like "%a - %A/%T %t.mp3".

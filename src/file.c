@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-18 00:21:20 jcs>
+/* Time-stamp: <2004-01-25 18:06:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -47,6 +47,7 @@
 #include "mp4file.h"
 #include "prefs.h"
 #include "support.h"
+#include "wavfile.h"
 
 /* only used when reading extended info from file */
 struct track_extended_info
@@ -308,24 +309,32 @@ static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
   *entry_utf16 = g_utf8_to_utf16 (*entry_utf8, -1, NULL, NULL, NULL);
 }
 
-/* parse the filename of @track and extract the tags as specified in
-   prefs_get_parsetags_template() */
-static void parse_filename (Track *track)
+
+/* parse the file with name @filename (UTF8) and fill extract the tags
+ * to @trackas specified in @template. @track can be NULL if you just
+ * want to verify the template */
+static gboolean parse_filename_with_template (Track *track,
+					      gchar *filename,
+					      const gchar *template)
 {
     GList *tokens=NULL, *gl;
-    const gchar *template;
     gchar *tpl, *fn;
     gchar *sps, *sp, *str;
+    gboolean parse_error = FALSE;
 
-    template = prefs_get_parsetags_template ();
-    if (!template) return;
+    if (!template || !filename) return FALSE;
+
+#ifdef DEBUG
+    printf ("fn: '%s', tpl: '%s'\n", filename, template);
+#endif
+
     /* If the template starts with a '%.' (except for '%%') we add a
        '/' in front so that the field has a boundary */
     if ((template[0] == '%') && (template[1] != '%'))
 	 tpl = g_strdup_printf ("%c%s", G_DIR_SEPARATOR, template);
     else tpl = g_strdup (template);
 
-    fn = g_strdup (track->pc_path_utf8);
+    fn = g_strdup (filename);
 
     /* We split the template into tokens. Each token starting with a
        '%' and two chars long specifies a field ('%.'), otherwise it's
@@ -380,14 +389,18 @@ static void parse_filename (Track *track)
 	    GList *gln = gl->next;
 	    if (gln)
 	    {
-		gboolean parse_error = FALSE;
 		gchar *itm;
 		gchar *next_token = gln->data;
 		/* find next token so we can determine where the
 		   current field ends */
 		gchar *fnp = g_strrstr (fn, next_token);
  
-		if (!fnp)   break;
+		if (!fnp)
+		{
+		    parse_error = TRUE;
+		    break;
+		}
+
 		/* truncate the filename (for the next token) */
 		fnp[0] = 0;
 		/* adjust fnp to point to the start of the field */
@@ -399,36 +412,49 @@ static void parse_filename (Track *track)
 		switch (token[1])
 		{
 		case 'a': /* artist */
-		    if (!track->artist || prefs_get_parsetags_overwrite ())
+		    if (track &&
+			(!track->artist || prefs_get_parsetags_overwrite ()))
 			set_entry (&track->artist, &track->artist_utf16, itm);
 		    break;
 		case 'A': /* album */
-		    if (!track->album || prefs_get_parsetags_overwrite ())
+		    if (track &&
+			(!track->album || prefs_get_parsetags_overwrite ()))
 			set_entry (&track->album, &track->album_utf16, itm);
 		    break;
 		case 'c': /* composer */
-		    if (!track->composer || prefs_get_parsetags_overwrite ())
+		    if (track &&
+			(!track->composer || prefs_get_parsetags_overwrite ()))
 			set_entry (&track->composer, &track->composer_utf16,
 				   itm);
 		    break;
 		case 't': /* title */
-		    if (!track->title || prefs_get_parsetags_overwrite ())
+		    if (track && 
+			(!track->title || prefs_get_parsetags_overwrite ()))
 			set_entry (&track->title, &track->title_utf16, itm);
 		    break;
 		case 'g': /* genre */
 		case 'G': /* genre */
-		    if (!track->genre || prefs_get_parsetags_overwrite ())
+		    if (track &&
+			(!track->genre || prefs_get_parsetags_overwrite ()))
 			set_entry (&track->genre, &track->genre_utf16, itm);
 		    break;
 		case 'T': /* track */
-		    if (track->track_nr == 0 
-			|| prefs_get_parsetags_overwrite ())
+		    if (track &&
+			((track->track_nr == 0) ||
+			 prefs_get_parsetags_overwrite ()))
 			track->track_nr = atoi (itm);
 		    g_free (itm);
 		    break;
 		case 'C': /* CD */
-		    if (track->cd_nr == 0 || prefs_get_parsetags_overwrite ())
+		    if (track &&
+			(track->cd_nr == 0 || prefs_get_parsetags_overwrite ()))
 			track->cd_nr = atoi (itm);
+		    g_free (itm);
+		    break;
+		case 'Y': /* year */
+		    if (track &&
+			(track->year == 0 || prefs_get_parsetags_overwrite ()))
+			track->year = atoi (itm);
 		    g_free (itm);
 		    break;
 		case '*': /* placeholder to skip a field */
@@ -436,19 +462,32 @@ static void parse_filename (Track *track)
 		    break;
 		default:
 		    g_free (itm);
+		    gtkpod_warning (_("Unknown token '%s' in template '%s'\n"),
+				    token, template);
 		    parse_error = TRUE;
+		    break;
 		}
 		if (parse_error) break;
 		gl = gln->next;
 	    }
-	    else break;
+	    else
+	    { /* if (gln)...else... */
+		break;
+	    }
 	}
 	else
 	{   /* skip text */
 	    gchar *fnp = g_strrstr (fn, token);
-	    if (!fnp)  break;  /* could not match */
+	    if (!fnp)
+	    {
+		parse_error = TRUE;
+		break;  /* could not match */
+	    }
 	    if (fnp - fn + strlen (fnp) != strlen (fn))
+	    {
+		parse_error = TRUE;
 		break; /* not at the last position */
+	    }
 	    fnp[0] = 0;
 	    gl = gl->next;
 	}
@@ -458,8 +497,30 @@ static void parse_filename (Track *track)
     g_free (tpl);
     g_list_foreach (tokens, (GFunc)g_free, NULL);
     g_list_free (tokens);
+    return (!parse_error);
 }
 
+/* parse the filename of @track and extract the tags as specified in
+   prefs_get_parsetags_template(). Several templates can be separated
+   with the "," character. */
+static void parse_filename (Track *track)
+{
+    const gchar *template;
+    gchar **templates, **tplp;
+
+    template = prefs_get_parsetags_template ();
+    if (!template) return;
+    templates = g_strsplit (template, ";", 0);
+    tplp = templates;
+    while (*tplp)
+    {
+	if (parse_filename_with_template (NULL, track->pc_path_utf8, *tplp))
+	    break;
+	++tplp;
+    }
+    if (*tplp)  parse_filename_with_template (track, track->pc_path_utf8, *tplp);
+    g_strfreev (templates);
+}
 
 /* Set entry "column" (TM_COLUMN_TITLE etc) according to filename */
 /* TODO: make the TAG extraction more intelligent -- if possible, this
@@ -622,6 +683,8 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	nti = file_get_mp4_info (name);
     if (strcasecmp (&name[len-4], ".m4a") == 0)
 	nti = file_get_mp4_info (name);
+    if (strcasecmp (&name[len-4], ".wav") == 0)
+	nti = file_get_wav_info (name);
 
     if (nti)
     {
@@ -1519,6 +1582,8 @@ static gboolean file_write_info (gchar *name, Track *track)
 		return file_write_mp4_info (name, track);
 	    if (strcasecmp (suff, ".m4p") == 0)
 		return file_write_mp4_info (name, track);
+	    if (strcasecmp (suff, ".wav") == 0)
+		return file_write_wav_info (name, track);
 	}
     }
     return FALSE;

@@ -41,12 +41,20 @@ dnl (providing getopt_long*) will be included into the binary.
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)]) 
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
 
-dnl Check for libmp4v2
-AC_SEARCH_LIBS(MP4FileInfo, ["mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++"],[have_mp4v2="yes -- will build with aac support" AC_DEFINE_UNQUOTED(HAVE_LIBMP4V2, 1, ["Define to 1 if you have the mp4v2 library"])],have_mp4v2="***no -- will build without aac support")
-
 dnl Check for libid3tag
 AC_CHECK_LIB([id3tag], [id3_tag_new], ,
              AC_MSG_ERROR([*** id3tag lib not found]))
+
+dnl Check for libmp4v2 (and mp4.h)
+AC_SEARCH_LIBS(MP4FileInfo,
+	["mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++"],
+	[AC_CHECK_HEADER(mp4.h,
+	  [have_mp4v2="yes -- will build with aac support" AC_DEFINE_UNQUOTED(HAVE_LIBMP4V2, 1, ["Define to 1 if you have the mp4v2 library"])],
+	  [echo "*** mp4.h cannot be found. Check your mp4v2 installation."])])
+
+if test "y$have_mp4v2" = "y"; then
+	have_mp4v2="*** no -- will build without aac support"
+fi
 
 
 AC_OUTPUT([

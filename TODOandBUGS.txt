@@ -1,5 +1,10 @@
 TODO:
 
+- Tools->Export Adresses and Export Contacts (simply calls external
+  scripts)
+
+- "adjust volume by ...%" functionality
+
 - stable column sorting:
 > BTW, the other thing that bothers me about gtkpod is that column sorting
 > isn't stable.  AFAIK, gtk doesn't have a stable column sorting option. 

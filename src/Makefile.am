@@ -36,6 +36,7 @@ gtkpod_SOURCES = \
 	prefs_window.c prefs_window.h \
 	song.c song.h \
 	support.c support.h \
+	wavfile.c wavfile.h \
 	callbacks.c callbacks.h
 
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@

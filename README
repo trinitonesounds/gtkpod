@@ -168,10 +168,12 @@ After reading the preferences file gtkpod will try to execute
 exist) during startup. This is done before attempting to mount the
 iPod directory (optional) or read the iTunesDB (optional)).
 
-When leaving the program gtkpod will try to execute
-~/.gtkpod/gtkpod.out (or /etc/gtkpod/gtkpod.out if the former doesn't
-exist). This is done after attempting to unmount the iPod directory
-(optional).
+When leaving the program, gtkpod can unmount the iPod for you
+(option). In this case, gtkpod will also try to send an "eject"
+command to the iPod. For this to work, however, you need write access
+to the device file (e.g. /dev/sda2). After this the following scripts
+will be executed: ~/.gtkpod/gtkpod.out (or /etc/gtkpod/gtkpod.out if
+the former doesn't exist).
 
 Please see the section "Sick of loading the sbp2 modules by hand?" for
 an example of how to use this functionality.
@@ -323,6 +325,11 @@ Export of Tracks
   from the menu
 - A file selection dialog window appears and you can choose the directory
   you'd like the selected files to be written to.
+- You can specify the output filename in the prefs dialog by
+  specifying a template (e.g. "%A/%a - %t"). You can specify multiple
+  templates for different file formats by separating them by a
+  semicolon (e.g. "%A/%a - %t.mp3;%t.wav"). See the tooltip in the
+  prefs dialog for a list of identifiers.
 
 
 Encoding of ID3 tags (charsets)
@@ -572,6 +579,7 @@ Needed configuration:
     * OHCI-1394 support - y
     * SBP-2 support - m (important to use module -- if someone finds
       out how to use hotplug with sbp2 compiled in, let me know)
+      (With 2.6.1 compiling sbp2 in seems to work fine.)
 
 3) Create /mnt/ipod:
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-17 17:21:43 jcs>
+/* Time-stamp: <2004-01-25 18:25:31 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -146,13 +146,13 @@ prefs_window_create(void)
 		g_free (buf);
 	    }
 	}
-	if((w = lookup_widget(prefs_window, "cfg_filename_format")))
+	if((w = lookup_widget(prefs_window, "cfg_export_template")))
 	{
-	    if (tmpcfg->filename_format)
+	    if (tmpcfg->export_template)
 	    {  /* we should copy the new path first because by setting
 		  the text we might get a callback destroying the old
 		  value... */
-		gchar *buf = g_strdup (tmpcfg->filename_format);
+		gchar *buf = g_strdup (tmpcfg->export_template);
 		gtk_entry_set_text(GTK_ENTRY(w), buf);
 		g_free (buf);
 	    }
@@ -570,7 +570,7 @@ prefs_window_set(void)
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
 	prefs_set_automount(tmpcfg->automount);
-	prefs_set_filename_format(tmpcfg->filename_format);
+	prefs_set_export_template(tmpcfg->export_template);
 	prefs_set_write_gaintag(tmpcfg->write_gaintag);
 	prefs_set_special_export_charset(tmpcfg->special_export_charset);
 
@@ -1026,10 +1026,10 @@ void prefs_window_set_automount(gboolean val)
 }
 
 void
-prefs_window_set_filename_format(const gchar *val)
+prefs_window_set_export_template(const gchar *val)
 {
-    g_free (tmpcfg->filename_format);
-    tmpcfg->filename_format = g_strdup(val);
+    g_free (tmpcfg->export_template);
+    tmpcfg->export_template = g_strdup(val);
 }
 
 void

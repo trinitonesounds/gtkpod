@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-29 12:43:25 jcs>
+/* Time-stamp: <2004-01-25 19:30:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,14 +30,19 @@
 #  include <config.h>
 #endif
 
+#include <errno.h>
+#include <fcntl.h>
 #include <gtk/gtk.h>
+#include <linux/cdrom.h>
+#include <scsi/scsi.h>
+#include <scsi/scsi_ioctl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#include <sys/mount.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <errno.h>
+#include <unistd.h>
 #include "charset.h"
 #include "confirmation.h"
 #include "dirbrowser.h"
@@ -439,6 +444,8 @@ Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress dialogu
 Edward Matteucci: debugging, special playlist creation, most of the volume normalizing code\n"),
 		       _("\
 Jens Lautenbach: some optical improvements\n"),
+		       _("\
+Alex Tribble: iPod eject patch\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n"),
@@ -721,7 +728,9 @@ gtkpod_main_quit(void)
 			 * command line? */
 			/* Tag them as dirty?  seems nasty */
 	if(prefs_get_automount())
-	    unmount_ipod();
+	{
+	    unmount_ipod ();
+	}
 	call_script ("gtkpod.out");
 	gtk_main_quit ();
 	return FALSE;
@@ -1573,6 +1582,122 @@ void delete_entry_head (gint inst, gboolean delete_full)
     g_string_free (str, TRUE);
 }
 
+
+/* ------------------------------------------------------------
+ *
+ * Code to "eject" the iPod.
+ *
+ * Large parts of this code are Copyright (C) 1994-2001 Jeff Tranter
+ * (tranter at pobox.com).  Repackaged to only include scsi eject code
+ * by Alex Tribble (prat at rice.edu). Integrated into gtkpod by Jorg
+ * Schuler (jcsjcs at users.sourceforge.net)
+ *
+ * ------------------------------------------------------------ */
+
+static gchar *getdevicename(const gchar *mount)
+{
+    if(mount) {
+	gchar device[256], point[256];
+	FILE *fp = fopen("/proc/mounts","r");
+	if (!fp)
+	    return NULL;
+	do {
+	    fscanf(fp, "%255s %255s %*s %*s %*s %*s", device, point);
+	    if( strcmp(mount,point) == 0 ) {
+		fclose(fp);
+		return strdup(device);
+	    }
+	} while(!feof(fp));
+	fclose(fp);
+    }
+    return NULL;
+}
+
+/*
+ * Eject using CDROMEJECT ioctl. Return TRUE if successful, FALSE otherwise.
+ */
+static gboolean EjectCdrom(int fd)
+{
+	int status;
+
+	status = ioctl(fd, CDROMEJECT);
+	return (status == 0);
+}
+
+/*
+ * Eject using SCSI commands. Return TRUE if successful, FALSE otherwise.
+ */
+static gboolean EjectScsi(int fd)
+{
+    int status;
+    struct sdata {
+	int inlen;
+	int outlen;
+	char cmd[256];
+    } scsi_cmd;
+
+    scsi_cmd.inlen = 0;
+    scsi_cmd.outlen = 0;
+    scsi_cmd.cmd[0] = ALLOW_MEDIUM_REMOVAL;
+    scsi_cmd.cmd[1] = 0;
+    scsi_cmd.cmd[2] = 0;
+    scsi_cmd.cmd[3] = 0;
+    scsi_cmd.cmd[4] = 0;
+    scsi_cmd.cmd[5] = 0;
+    status = ioctl(fd, SCSI_IOCTL_SEND_COMMAND, (void *)&scsi_cmd);
+    if (status != 0)	return FALSE;
+
+    scsi_cmd.inlen = 0;
+    scsi_cmd.outlen = 0;
+    scsi_cmd.cmd[0] = START_STOP;
+    scsi_cmd.cmd[1] = 0;
+    scsi_cmd.cmd[2] = 0;
+    scsi_cmd.cmd[3] = 0;
+    scsi_cmd.cmd[4] = 1;
+    scsi_cmd.cmd[5] = 0;
+    status = ioctl(fd, SCSI_IOCTL_SEND_COMMAND, (void *)&scsi_cmd);
+    if (status != 0)	return FALSE;
+
+    scsi_cmd.inlen = 0;
+    scsi_cmd.outlen = 0;
+    scsi_cmd.cmd[0] = START_STOP;
+    scsi_cmd.cmd[1] = 0;
+    scsi_cmd.cmd[2] = 0;
+    scsi_cmd.cmd[3] = 0;
+    scsi_cmd.cmd[4] = 2;
+    scsi_cmd.cmd[5] = 0;
+    status = ioctl(fd, SCSI_IOCTL_SEND_COMMAND, (void *)&scsi_cmd);
+    if (status != 0)	return FALSE;
+
+    status = ioctl(fd, BLKRRPART);
+    return (status == 0);
+}
+
+static void eject_ipod(gchar *ipod_device)
+{
+     if(ipod_device)
+     {
+	  int fd = open (ipod_device, O_RDONLY|O_NONBLOCK);
+	  if (fd == -1)
+	  {
+/* 	      fprintf(stderr, "Unable to open '%s' to eject.\n",ipod_device); */
+	      /* just ignore the error, i.e. if we don't have write access */
+	  }
+	  else
+	  {
+	      /* 2G seems to need EjectCdrom(), 3G EjectScsi()? */
+	      if (!EjectCdrom (fd))
+		  EjectScsi (fd);
+	      close (fd);
+	  }
+     }
+}
+
+/* ------------------------------------------------------------
+ *                    end of eject code
+ * ------------------------------------------------------------ */
+
+
 /***************************************************************************
  * Mount Calls
  *
@@ -1609,18 +1734,18 @@ mount_ipod(void)
 }
 
 /**
- * mount_ipod - attempt to mount the ipod to prefs_get_ipod_mount()
- */
-/**
  * umount_ipod - attempt to unmount the ipod from prefs_get_ipod_mount()
  * This does not check prefs to see if the current prefs want gtkpod itself
  * to unmount the ipod drive, that should be checked before making this
  * call.
+ * After unmounting, an attempt to send the "eject" signal is
+ * made. Errors are ignored.
  */
 void
 unmount_ipod(void)
 {
     const gchar *str = prefs_get_ipod_mount ();
+    gchar *ipod_device = getdevicename (prefs_get_ipod_mount());
     if(str)
     {
 	pid_t pid, tpid;
@@ -1637,10 +1762,12 @@ unmount_ipod(void)
 		break;
 	    default: /* parent -- let's wait for the child to terminate */
 		tpid = waitpid (pid, &status, 0);
+		eject_ipod (ipod_device);
 		/* we could evaluate tpid and status now */
 		break;
 	}
     }
+    g_free (ipod_device);
 }
 
 

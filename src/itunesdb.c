@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-29 12:09:39 jcs>
+/* Time-stamp: <2004-01-25 18:08:12 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -858,9 +858,9 @@ gboolean itunesdb_parse_file (const gchar *filename)
 }
 
 
-/* up to here we had the routines for reading the iTunesDB                */
+/* up to here we had the functions for reading the iTunesDB               */
 /* ---------------------------------------------------------------------- */
-/* from here on we have the routines for writing the iTunesDB             */
+/* from here on we have the functions for writing the iTunesDB            */
 
 /* Name of the device in utf16 */
 gunichar2 ipod_name[] = { 'g', 't', 'k', 'p', 'o', 'd', 0 };
@@ -1239,7 +1239,6 @@ write_mhsd_one(FILE *file)
 static void
 write_playlist(FILE *file, Playlist *pl)
 {
-    Track *s;
     guint32 i, n;
     glong mhyp_seek;
     gunichar2 empty = 0;
@@ -1252,10 +1251,11 @@ write_playlist(FILE *file, Playlist *pl)
     mk_mhyp(file, pl->name_utf16, pl->type, n);  
     for (i=0; i<n; ++i)
     {
-        if((s = it_get_track_in_playlist_by_nr (pl, i)))
+	Track *track;
+        if((track = it_get_track_in_playlist_by_nr (pl, i)))
 	{
-	    mk_mhip(file, s->ipod_id);
-	    mk_mhod(file, MHOD_ID_PLAYLIST, &empty, s->ipod_id); 
+	    mk_mhip(file, track->ipod_id);
+	    mk_mhod(file, MHOD_ID_PLAYLIST, &empty, track->ipod_id); 
 	}
     }
    fix_mhyp (file, mhyp_seek, ftell(file));
@@ -1466,25 +1466,22 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
 }
 
 
-/* Return the full iPod filename as stored in @s.
+/* Return the full iPod filename as stored in @trac.
    @s: track
    @path: mount point of the iPod file system
-   Return value: full filename to @s on the iPod or NULL if no
-   filename is set in @s. NOTE: the file does not necessarily
+   Return value: full filename to @track on the iPod or NULL if no
+   filename is set in @track. NOTE: the file does not necessarily
    exist. NOTE: this code works around a problem on some systems (see
    below) and might return a filename with different case than the
-   original filename. Don't copy it back to @s */
-gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s)
+   original filename. Don't copy it back to @track */
+gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *track)
 {
     gchar *result = NULL;
 
-    if(s && s->ipod_path && *s->ipod_path)
+    if(track && track->ipod_path && *track->ipod_path)
     {
-	guint i = 0, size = 0;
-	gchar *buf = g_strdup (s->ipod_path);
-	size = strlen(buf);
-	for(i = 0; i < size; i++)
-	    if(buf[i] == ':') buf[i] = G_DIR_SEPARATOR;
+	gchar *buf = g_strdup (track->ipod_path);
+	g_strdelimit (buf, ":", G_DIR_SEPARATOR);
 	result = g_build_filename (path, buf, NULL);
 	/* There seems to be a problem with some distributions
 	   (kernel versions or whatever -- even identical version
@@ -1504,7 +1501,7 @@ gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s)
 		gchar *result2;
 		bufp[7] = 'f'; /* change the 'F' to 'f' */
 		result2 = g_build_filename (path, buf, NULL);
-		if (g_file_test (result, G_FILE_TEST_EXISTS))
+		if (g_file_test (result2, G_FILE_TEST_EXISTS))
 		{
 		    g_free (result);
 		    result = result2;

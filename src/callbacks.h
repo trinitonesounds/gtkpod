@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-17 17:05:10 jcs>
+/* Time-stamp: <2004-01-25 18:28:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -558,7 +558,7 @@ on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_cfg_filename_format_changed            (GtkEditable     *editable,
+on_cfg_export_template_changed            (GtkEditable     *editable,
                                         gpointer         user_data);
 
 void

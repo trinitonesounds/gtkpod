@@ -59,6 +59,51 @@ static struct {
 } file_export;
 
 
+gchar *get_export_filename_template (Track *track)
+{
+    const gchar *p = prefs_get_export_template ();
+    gchar **templates, **tplp;
+    gchar *tname, *ext = NULL;
+    gchar *result;
+
+    if (!track) return (strdup (""));
+
+    tname = get_track_name_on_disk (track);
+    if (!tname) return (NULL);         /* this should not happen... */
+    ext = strrchr (tname, '.');        /* pointer to filename extension */
+
+    templates = g_strsplit (p, ";", 0);
+    tplp = templates;
+    while (*tplp)
+    {
+	if (strcmp (*tplp, "%o") == 0)
+	{   /* this is only a valid extension if the original filename
+	       is present */
+	    if (track->pc_path_locale && strlen(track->pc_path_locale))  break;
+	}
+	else if (strrchr (*tplp, '.') == NULL)
+	{   /* this templlate does not have an extension and therefore
+	     * matches */
+	    if (ext)
+	    {   /* if we have an extension, add it */
+		gchar *str = g_strdup_printf ("%s%s", *tplp, ext);
+		g_free (*tplp);
+		*tplp = str;
+	    }
+	    break;
+	}
+	else if (ext && (strlen (*tplp) >= strlen (ext)))
+	{  /* this template is valid if the extensions match */
+	    if (strcmp (&((*tplp)[strlen (*tplp) - strlen (ext)]), ext) == 0)
+		break;
+	}
+	++tplp;
+    }
+    result = g_strdup (*tplp);
+    g_strfreev (templates);
+    return result;
+}
+
 /**
  * get_preferred_filename - useful for generating the preferred
  * @param Track the track
@@ -70,35 +115,34 @@ static gchar *
 track_get_export_filename (Track *track)
 {
     GString *result;
-    char *res_utf8, *res_cs = NULL;
-    char dummy[10];
-    char *p, *str, *extension=NULL, *basename = NULL;
+    gchar *res_utf8, *res_cs = NULL;
+    gchar dummy[100];
+    gchar *p, *template, *basename = NULL;
     gboolean original=FALSE; /* indicate whether original filename is
 			      * being used */
 
     if (!track) return NULL; 
-    result = g_string_new ("");
 
-    p = prefs_get_filename_format ();
+    template = get_export_filename_template (track);
 
-    /* try to get an extension */
-    str = get_track_name_on_disk (track);
-    if (str)
+    if (!template)
     {
-	gchar *s = strrchr (str, '.');
-	if (s)     extension = g_strdup (s);
-	C_FREE (str);
+	gchar *fn = get_track_name_on_disk (track);
+	gtkpod_warning (_("Output filename template ('%s') does not match the file '%s'\n"), prefs_get_export_template (), fn ? fn:"");
+	g_free (fn);
+	return NULL;
     }
-    /* well... we need some default */
-    /* if (!extension)   extension = g_strdup (".mp3");*/
+
+    result = g_string_new ("");
 
     /* try to get the original filename */
     if (track->pc_path_utf8)
 	basename = g_path_get_basename (track->pc_path_utf8);
 
+    p=template;
     while (*p != '\0') {
 	if (*p == '%') {
-	    char* tmp = NULL;
+	    gchar* tmp = NULL;
 	    p++;
 	    switch (*p) {
 	    case 'o':
@@ -152,14 +196,16 @@ track_get_export_filename (Track *track)
 		    sprintf (tmp,"%.4d", track->track_nr);
 		}
 		break;
+	    case 'Y':
+		tmp = dummy;
+		sprintf (tmp, "%4d", track->year);
+		break;
 	    case '%':
 		tmp = "%";
 		break;
 	    default:
-		/* 
-		 * [FIXME] add more cases here and an error message for 
-		 * the default case
-		 */
+		gtkpod_warning (_("Unknown token '%%%c' in template '%s'"),
+				*p, template);
 		break;
 	    }
 	    if (tmp) {
@@ -171,13 +217,8 @@ track_get_export_filename (Track *track)
 	    result = g_string_append_c (result, *p);
 	p++;
     }
-    C_FREE (basename);
-    /* add the extension */
-    if (!original && extension)
-	result = g_string_append (result, extension);
-    C_FREE (extension);
     /* get the utf8 version of the filename */
-    res_utf8 = g_string_free (result,FALSE);
+    res_utf8 = g_string_free (result, FALSE);
     /* convert it to the charset */
     if (prefs_get_special_export_charset ())
     {   /* use the specified charset */
@@ -187,7 +228,9 @@ track_get_export_filename (Track *track)
     {   /* use the charset stored in track->charset */
 	res_cs = charset_track_charset_from_utf8 (track, res_utf8);
     }
-    C_FREE (res_utf8);
+    g_free (basename);
+    g_free (res_utf8);
+    g_free (template);
     return res_cs;
 }
 
@@ -327,21 +370,21 @@ copy_file(gchar *file, gchar *dest)
 static gboolean
 write_track(Track *s)
 {
-    gchar *from_file = NULL;
     gchar *dest_file = NULL;
-    gchar buf[PATH_MAX];
     gboolean result = FALSE;
     
     if((dest_file = track_get_export_filename(s)))
     {
-	from_file = get_track_name_on_disk(s);
-	g_snprintf(buf, PATH_MAX, "%s/%s", file_export.dest_dir, dest_file); 
-	if (make_dirs(buf)) {
-	    if(copy_file(from_file, buf))
+	gchar *from_file = get_track_name_on_disk(s);
+	gchar *filename = g_build_filename (file_export.dest_dir,
+					    dest_file, NULL);
+	if (make_dirs(filename)) {
+	    if(copy_file(from_file, filename))
 	        result = TRUE;
 	}
 	g_free(from_file);
 	g_free(dest_file);
+	g_free(filename);
     }
     return(result);
 }
@@ -364,7 +407,7 @@ file_export_do(void)
 	    if (track_is_valid (s))
 	    {
 		if(!write_track(s))
-		    gtkpod_warning (_("Failed to write %s-%s\n"), s->artist, s->title);	
+		    gtkpod_warning (_("Failed to write '%s-%s'\n"), s->artist, s->title);	
 		l->data = NULL;
 	    }
 	}

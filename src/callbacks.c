@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-17 17:21:43 jcs>
+/* Time-stamp: <2004-01-25 18:28:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1556,11 +1556,11 @@ on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
 
 
 void
-on_cfg_filename_format_changed            (GtkEditable     *editable,
+on_cfg_export_template_changed            (GtkEditable     *editable,
                                         gpointer         user_data)
 {
     gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_filename_format(buf);
+    prefs_window_set_export_template(buf);
     g_free (buf);
 }
 

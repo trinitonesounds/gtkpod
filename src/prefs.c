@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-17 23:50:05 jcs>
+/* Time-stamp: <2004-01-25 18:34:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -197,8 +197,8 @@ struct cfg *cfg_new(void)
     mycfg->size_dirbr.y = 400;
     mycfg->size_prefs.x = -1;
     mycfg->size_prefs.y = 480;
-    mycfg->size_info.x = 300;
-    mycfg->size_info.y = 470;
+    mycfg->size_info.x = 510;
+    mycfg->size_info.y = 300;
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	mycfg->tm_col_width[i] = 80;
@@ -219,7 +219,7 @@ struct cfg *cfg_new(void)
     mycfg->readtags = TRUE;
     mycfg->parsetags = FALSE;
     mycfg->parsetags_overwrite = FALSE;
-    mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3");
+    mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3;%t.wav");
     for (i=0; i<PANED_NUM; ++i)
     {
 	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
@@ -243,7 +243,7 @@ struct cfg *cfg_new(void)
     mycfg->play_enqueue_path = g_strdup ("xmms -e %s");
     mycfg->mp3gain_path = g_strdup ("");
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
-    mycfg->filename_format = g_strdup ("%a/%A/%T - %t.mp3");
+    mycfg->export_template = g_strdup ("%o;%a - %t.mp3;%t.wav");
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
@@ -313,8 +313,12 @@ read_prefs_from_file_desc(FILE *fp)
 	      prefs_set_time_format (arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "filename_format") == 0)
+	  {  /* changed to "export_template" in 0.74 */
+	      prefs_set_export_template (arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "export_template") == 0)
 	  {
-	      prefs_set_filename_format (arg);
+	      prefs_set_export_template (arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "charset") == 0)
 	  {
@@ -654,11 +658,15 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "size_info.x") == 0)
 	  {
-	      prefs_set_size_info (atoi (arg), -2);
+	      /* changed layout of info window between 0.72 and 0.73 */
+	      if (cfg->version >= 0.73)
+		  prefs_set_size_info (atoi (arg), -2);
 	  }
 	  else if(g_ascii_strcasecmp (line, "size_info.y") == 0)
 	  {
-	      prefs_set_size_info (-2, atoi (arg));
+	      /* changed layout of info window between 0.72 and 0.73 */
+	      if (cfg->version >= 0.73)
+		  prefs_set_size_info (-2, atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "automount") == 0)
 	  {
@@ -744,8 +752,8 @@ read_prefs_defaults(void)
   }
   if (cfg->version < 0.72)
   {
-      /* changed the meaning of the %x in filename_format */
-      gchar *sp = cfg->filename_format;
+      /* changed the meaning of the %x in export_template */
+      gchar *sp = cfg->export_template;
       if (sp) while (*sp)
       {
 	  if (sp[0] == '%')
@@ -861,7 +869,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "play_enqueue_path=%s\n", cfg->play_enqueue_path);
     fprintf(fp, "mp3gain_path=%s\n", cfg->mp3gain_path);
     fprintf(fp, "time_format=%s\n", cfg->time_format);
-    fprintf(fp, "filename_format=%s\n", cfg->filename_format);
+    fprintf(fp, "export_template=%s\n", cfg->export_template);
     if (cfg->charset)
     {
 	fprintf(fp, "charset=%s\n", cfg->charset);
@@ -1021,7 +1029,7 @@ void cfg_free(struct cfg *c)
       g_free (c->play_enqueue_path);
       g_free (c->mp3gain_path);
       g_free (c->time_format);
-      g_free (c->filename_format);
+      g_free (c->export_template);
       g_free (c);
     }
 }
@@ -1261,8 +1269,8 @@ struct cfg *clone_prefs(void)
 	    result->mp3gain_path = g_strdup(cfg->mp3gain_path);
 	if(cfg->time_format)
 	    result->time_format = g_strdup(cfg->time_format);
-	if (cfg->filename_format)
-	    result->filename_format = g_strdup(cfg->filename_format);
+	if (cfg->export_template)
+	    result->export_template = g_strdup(cfg->export_template);
 	if (cfg->parsetags_template)
 	    result->parsetags_template = g_strdup(cfg->parsetags_template);
     }
@@ -2330,15 +2338,15 @@ void prefs_set_sp_playcount_high (guint32 inst, gint32 limit)
 	fprintf (stderr, "prefs_set_sp_playcount_high(): !inst=%d!\n", inst);
 }
 
-char* prefs_get_filename_format(void)
+const gchar* prefs_get_export_template(void)
 {
-    return(cfg->filename_format);
+    return(cfg->export_template);
 }
 
-void prefs_set_filename_format(char* val)
+void prefs_set_export_template(char* val)
 {
-    g_free(cfg->filename_format);
-    cfg->filename_format = g_strdup(val);
+    g_free(cfg->export_template);
+    cfg->export_template = g_strdup(val);
 }
 
 gboolean prefs_get_write_gaintag(void)

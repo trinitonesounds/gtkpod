@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-17 17:03:20 jcs>
+/* Time-stamp: <2004-01-25 18:25:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -128,7 +128,7 @@ struct cfg
   gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
   gchar *mp3gain_path;          /* path for the mp3gain executable */
   gchar *time_format;           /* time format for strftime() */
-  gchar *filename_format;       /* filename for files exported from ipod */
+  gchar *export_template;       /* filename for files exported from ipod */
   gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
@@ -314,8 +314,8 @@ void prefs_set_not_played_track (gboolean state);
 gboolean prefs_get_not_played_track (void);
 void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
-void prefs_set_filename_format (char* state);
-char* prefs_get_filename_format (void);
+void prefs_set_export_template (char* state);
+const char* prefs_get_export_template (void);
 void prefs_set_write_gaintag(gboolean val);
 gboolean prefs_get_write_gaintag(void);
 void prefs_set_special_export_charset(gboolean val);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-20 00:21:26 jcs>
+/* Time-stamp: <2004-01-24 20:00:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -62,7 +62,7 @@
    gint32  tracks;            /+ number of tracks      +/
    gint32  year;              /+ year                  +/
    gint32  tracklen;          /+ Length of track in ms +/
-   gint32  bitrate;           /+ bitrate               +/
+   gint32  bitrate;           /+ bitrate in kbps       +/
 
    If prefs_get_tag_readtags() returns FALSE you only should fill in
    tracklen, bitrate and fdesc
@@ -124,12 +124,12 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 	if (trackType && (strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0))
 	{
 	    gchar *value;
-	    uint16_t numvalue, numvalue2;
+	    guint16 numvalue, numvalue2;
 	    MP4Duration trackDuration = MP4GetTrackDuration(mp4File, trackId);
 	    double msDuration = UINT64_TO_DOUBLE(
 		MP4ConvertFromTrackDuration(mp4File, trackId, 
 					    trackDuration, MP4_MSECS_TIME_SCALE));
-	    u_int32_t avgBitRate = MP4GetTrackBitRate(mp4File, trackId);
+	    guint32 avgBitRate = MP4GetTrackBitRate(mp4File, trackId);
 
 	    track = g_malloc0 (sizeof (Track));
 
@@ -240,10 +240,10 @@ gboolean file_write_mp4_info (gchar *mp4FileName, Track *track)
 	    gchar *m_year = NULL;
 	    gchar *m_album = NULL, *m_genre = NULL;*/
 	    gchar *m_tool = NULL;
-/*	    u_int16_t m_track, m_tracks, m_disk, m_disks; */
-	    u_int16_t m_tempo;
-	    u_int8_t *m_covert = NULL, m_cpl;
-	    u_int32_t m_size;
+/*	    guint16 m_track, m_tracks, m_disk, m_disks; */
+	    guint16 m_tempo;
+	    guint8 *m_covert = NULL, m_cpl;
+	    guint32 m_size;
 /*	    gboolean has_track = MP4GetMetadataTrack (mp4File,
 						      &m_track, &m_tracks);
 	    gboolean has_disk = MP4GetMetadataDisk (mp4File,
@@ -335,7 +335,7 @@ gboolean file_write_mp4_info (gchar *mp4FileName, Track *track)
 }
 
 #else
-/* Use our own code to read some information from mp4 files */
+/* We don't support mp4 without the mp4v2 library */
 Track *file_get_mp4_info (gchar *name)
 {
     gtkpod_warning (_("Import of '%s' failed: m4a/m4p not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), name);
