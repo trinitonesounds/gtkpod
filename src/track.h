@@ -79,7 +79,7 @@ typedef struct
  * needed. You should extend "song_get_item_pointer()" defined in
  * song.c as well. */
 typedef enum {
-    S_ALL,      /* all fields */
+    S_ALL = 0,      /* all fields */
     S_ALBUM,
     S_ARTIST,
     S_TITLE,

@@ -2232,7 +2232,12 @@ create_special (void)
   GtkWidget *sp_rating4;
   GtkWidget *sp_rating5;
   GtkWidget *hbox15;
-  GtkWidget *sp_playcount_entry;
+  GtkWidget *hbox23;
+  GtkObject *sp_playcount_low_adj;
+  GtkWidget *sp_playcount_low;
+  GtkWidget *label54;
+  GtkObject *sp_playcount_high_adj;
+  GtkWidget *sp_playcount_high;
   GtkWidget *hbox17;
   GtkWidget *sp_played_entry;
   GtkWidget *label49;
@@ -2338,10 +2343,26 @@ create_special (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  sp_playcount_entry = gtk_entry_new ();
-  gtk_widget_show (sp_playcount_entry);
-  gtk_box_pack_start (GTK_BOX (hbox15), sp_playcount_entry, TRUE, TRUE, 0);
-  gtk_tooltips_set_tip (tooltips, sp_playcount_entry, _("'5 < c < 10' or '<5' etc. Press 'enter' when finished."), NULL);
+  hbox23 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox23);
+  gtk_box_pack_start (GTK_BOX (hbox15), hbox23, TRUE, TRUE, 0);
+
+  sp_playcount_low_adj = gtk_adjustment_new (1, 0, 2.14748e+09, 1, 10, 10);
+  sp_playcount_low = gtk_spin_button_new (GTK_ADJUSTMENT (sp_playcount_low_adj), 1, 0);
+  gtk_widget_show (sp_playcount_low);
+  gtk_box_pack_start (GTK_BOX (hbox23), sp_playcount_low, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, sp_playcount_low, _("Select '0' for no lower limit."), NULL);
+
+  label54 = gtk_label_new (_(" <= cts <= "));
+  gtk_widget_show (label54);
+  gtk_box_pack_start (GTK_BOX (hbox23), label54, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label54), GTK_JUSTIFY_LEFT);
+
+  sp_playcount_high_adj = gtk_adjustment_new (1, -1, 2.14748e+09, 1, 10, 10);
+  sp_playcount_high = gtk_spin_button_new (GTK_ADJUSTMENT (sp_playcount_high_adj), 1, 0);
+  gtk_widget_show (sp_playcount_high);
+  gtk_box_pack_start (GTK_BOX (hbox23), sp_playcount_high, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, sp_playcount_high, _("Select '-1' for no upper limit."), NULL);
 
   hbox17 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox17);
@@ -2408,6 +2429,7 @@ create_special (void)
   gtk_table_attach (GTK_TABLE (table6), sp_playcount_button, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 2, 0);
+  gtk_tooltips_set_tip (tooltips, sp_playcount_button, _("Specify interval"), NULL);
 
   sp_rating_button = gtk_check_button_new_with_mnemonic (_("Rating"));
   gtk_widget_show (sp_rating_button);
@@ -2486,7 +2508,10 @@ create_special (void)
   GLADE_HOOKUP_OBJECT (special, sp_rating4, "sp_rating4");
   GLADE_HOOKUP_OBJECT (special, sp_rating5, "sp_rating5");
   GLADE_HOOKUP_OBJECT (special, hbox15, "hbox15");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_entry, "sp_playcount_entry");
+  GLADE_HOOKUP_OBJECT (special, hbox23, "hbox23");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_low, "sp_playcount_low");
+  GLADE_HOOKUP_OBJECT (special, label54, "label54");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_high, "sp_playcount_high");
   GLADE_HOOKUP_OBJECT (special, hbox17, "hbox17");
   GLADE_HOOKUP_OBJECT (special, sp_played_entry, "sp_played_entry");
   GLADE_HOOKUP_OBJECT (special, label49, "label49");

@@ -171,7 +171,8 @@ struct cfg *cfg_new(void)
 	mycfg->st[i].sp_rating = FALSE;
 	mycfg->st[i].sp_rating_state = 0;
 	mycfg->st[i].sp_playcount = FALSE;
-	mycfg->st[i].sp_playcount_state = g_strdup ("<1");
+	mycfg->st[i].sp_playcount_low = 0;
+	mycfg->st[i].sp_playcount_high = -1;
 	mycfg->st[i].sp_played = FALSE;
 	mycfg->st[i].sp_played_state = g_strdup (">4w");
 	mycfg->st[i].sp_modified = FALSE;
@@ -344,40 +345,45 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+4);
 	      prefs_set_sp_or (i, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "sp_rating", 9) == 0)
+	  else if(g_ascii_strncasecmp (line, "sp_rating_cond", 14) == 0)
 	  {
-	      gint i = atoi (line+9);
+	      gint i = atoi (line+14);
 	      prefs_set_sp_cond (i, S_RATING, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "sp_playcount", 12) == 0)
+	  else if(g_ascii_strncasecmp (line, "sp_playcount_cond", 17) == 0)
 	  {
-	      gint i = atoi (line+12);
+	      gint i = atoi (line+17);
 	      prefs_set_sp_cond (i, S_PLAYCOUNT, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "sp_played", 9) == 0)
+	  else if(g_ascii_strncasecmp (line, "sp_played_cond", 14) == 0)
 	  {
-	      gint i = atoi (line+9);
+	      gint i = atoi (line+14);
 	      prefs_set_sp_cond (i, S_TIME_PLAYED, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "sp_modified", 11) == 0)
+	  else if(g_ascii_strncasecmp (line, "sp_modified_cond", 16) == 0)
 	  {
-	      gint i = atoi (line+11);
+	      gint i = atoi (line+16);
 	      prefs_set_sp_cond (i, S_TIME_MODIFIED, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "sp_create", 9) == 0)
+	  else if(g_ascii_strncasecmp (line, "sp_create_cond", 14) == 0)
 	  {
-	      gint i = atoi (line+9);
+	      gint i = atoi (line+14);
 	      prefs_set_sp_cond (i, S_TIME_CREATE, atoi (arg));
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_rating_state", 15) == 0)
 	  {
 	      gint i = atoi (line+15);
-	      prefs_set_sp_entry (i, S_RATING, arg);
+	      prefs_set_sp_rating_state (i, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "sp_playcount_state", 18) == 0)
+	  else if(g_ascii_strncasecmp (line, "sp_playcount_low", 16) == 0)
 	  {
-	      gint i = atoi (line+18);
-	      prefs_set_sp_entry (i, S_PLAYCOUNT, arg);
+	      gint i = atoi (line+16);
+	      prefs_set_sp_playcount_low (i, atoi (arg));
+	  }      
+	  else if(g_ascii_strncasecmp (line, "sp_playcount_high", 17) == 0)
+	  {
+	      gint i = atoi (line+17);
+	      prefs_set_sp_playcount_high (i, atoi (arg));
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_played_state", 15) == 0)
 	  {
@@ -730,15 +736,16 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
 	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
 	fprintf(fp, "sp_or%d=%d\n", i, prefs_get_sp_or (i));
-	fprintf(fp, "sp_rating%d=%d\n", i, prefs_get_sp_cond (i, S_RATING));
+	fprintf(fp, "sp_rating_cond%d=%d\n", i, prefs_get_sp_cond (i, S_RATING));
 	fprintf(fp, "sp_rating_state%d=%d\n", i, prefs_get_sp_rating_state(i));
-	fprintf(fp, "sp_playcount%d=%d\n", i, prefs_get_sp_cond (i, S_PLAYCOUNT));
-	fprintf(fp, "sp_playcount_state%d=%s\n", i, prefs_get_sp_entry (i, S_PLAYCOUNT));
-	fprintf(fp, "sp_played%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_PLAYED));
+	fprintf(fp, "sp_playcount_cond%d=%d\n", i, prefs_get_sp_cond (i, S_PLAYCOUNT));
+	fprintf(fp, "sp_playcount_low%d=%d\n", i, prefs_get_sp_playcount_low (i));
+	fprintf(fp, "sp_playcount_high%d=%d\n", i, prefs_get_sp_playcount_high (i));
+	fprintf(fp, "sp_played_cond%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_PLAYED));
 	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, S_TIME_PLAYED));
-	fprintf(fp, "sp_modified%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_MODIFIED));
+	fprintf(fp, "sp_modified_cond%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_MODIFIED));
 	fprintf(fp, "sp_modified_state%d=%s\n", i, prefs_get_sp_entry (i, S_TIME_MODIFIED));
-	fprintf(fp, "sp_create%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_CREATE));
+	fprintf(fp, "sp_create_cond%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_CREATE));
 	fprintf(fp, "sp_create_state%d=%s\n", i, prefs_get_sp_entry (i, S_TIME_CREATE));
 	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
     }
@@ -1641,12 +1648,17 @@ void prefs_set_sp_cond (guint32 inst, S_item s_item, gboolean state)
 	    break;
 	default:
 	    /* programming error */
-	    fprintf (stderr, "prefs_set_sp_cond(): s_item=%d\n", s_item);
+	    fprintf (stderr, "prefs_set_sp_cond(): inst=%d, !s_item=%d!\n",
+		     inst, s_item);
 	    break;
 	}
     }
-    /* programming error */
-    fprintf (stderr, "prefs_set_sp_cond(): inst=%d\n", inst);
+    else
+    {
+	/* programming error */
+	fprintf (stderr, "prefs_set_sp_cond(): !inst=%d! s_item=%d\n",
+		 inst, s_item);
+    }
 }
 
 
@@ -1669,12 +1681,17 @@ gboolean prefs_get_sp_cond (guint32 inst, S_item s_item)
 	    return cfg->st[inst].sp_create;
 	default:
 	    /* programming error */
-	    fprintf (stderr, "prefs_get_sp_cond(): s_item=%d\n", s_item);
+	    fprintf (stderr, "prefs_get_sp_cond(): inst=%d !s_item=%d!\n",
+		     inst, s_item);
 	    break;
 	}
     }
-    /* programming error */
-    fprintf (stderr, "prefs_get_sp_cond(): inst=%d\n", inst);
+    else
+    {
+	/* programming error */
+	fprintf (stderr, "prefs_get_sp_cond(): !inst=%d! s_item=%d\n",
+		 inst, s_item);
+    }
     return FALSE;
 }
 
@@ -1728,34 +1745,40 @@ guint32 prefs_get_sp_rating_state (guint32 inst)
 
 void prefs_set_sp_entry (guint32 inst, S_item s_item, gchar *str)
 {
-    if ((inst < SORT_TAB_MAX) && str)
+    if (inst < SORT_TAB_MAX)
     {
+	gchar *cstr = NULL;
+
+	if (str)  cstr = g_strdup (str);
+
 	switch (s_item)
 	{
-	case S_PLAYCOUNT:
-	    g_free (cfg->st[inst].sp_playcount_state);
-	    cfg->st[inst].sp_playcount_state = g_strdup (str);
-	    break;
 	case S_TIME_PLAYED:
 	    g_free (cfg->st[inst].sp_played_state);
-	    cfg->st[inst].sp_played_state = g_strdup (str);
+	    cfg->st[inst].sp_played_state = cstr;
 	    break;
 	case S_TIME_MODIFIED:
 	    g_free (cfg->st[inst].sp_modified_state);
-	    cfg->st[inst].sp_modified_state = g_strdup (str);
+	    cfg->st[inst].sp_modified_state = cstr;
 	    break;
 	case S_TIME_CREATE:
 	    g_free (cfg->st[inst].sp_create_state);
-	    cfg->st[inst].sp_create_state = g_strdup (str);
+	    cfg->st[inst].sp_create_state = cstr;
 	    break;
 	default:
 	    /* programming error */
-	    fprintf (stderr, "prefs_set_sp_entry(): s_item=%d\n", s_item);
+	    g_free (cstr);
+	    fprintf (stderr, "prefs_set_sp_entry(): inst=%d !s_item=%d!\n",
+		     inst, s_item);
 	    break;
 	}
     }
-    /* programming error */
-    fprintf (stderr, "prefs_set_sp_entry(): inst=%d\n", inst);
+    else
+    {
+	/* programming error */
+	fprintf (stderr, "prefs_set_sp_entry(): !inst=%d! s_item=%d\n",
+		 inst, s_item);
+    }
 }
 
 
@@ -1765,8 +1788,6 @@ gchar *prefs_get_sp_entry (guint32 inst, S_item s_item)
     {
 	switch (s_item)
 	{
-	case S_PLAYCOUNT:
-	    return cfg->st[inst].sp_playcount_state;
 	case S_TIME_PLAYED:
 	    return cfg->st[inst].sp_played_state;
 	case S_TIME_MODIFIED:
@@ -1775,12 +1796,12 @@ gchar *prefs_get_sp_entry (guint32 inst, S_item s_item)
 	    return cfg->st[inst].sp_create_state;
 	default:
 	    /* programming error */
-	    fprintf (stderr, "prefs_get_sp_entry(): s_item=%d\n", s_item);
+	    fprintf (stderr, "prefs_get_sp_entry(): !s_item=%d!\n", s_item);
 	    break;
 	}
     }
     /* programming error */
-    fprintf (stderr, "prefs_get_sp_entry(): inst=%d\n", inst);
+    fprintf (stderr, "prefs_get_sp_entry(): !inst=%d!\n", inst);
     return NULL;
 }
 
@@ -1790,7 +1811,7 @@ void prefs_set_sp_autodisplay (guint32 inst, gboolean state)
     if (inst < SORT_TAB_MAX)
 	cfg->st[inst].sp_autodisplay = state;
     else
-	fprintf (stderr, "prefs_set_sp_autoselect(): inst=%d\n", inst);
+	fprintf (stderr, "prefs_set_sp_autodisplay(): !inst=%d!\n", inst);
 }
 
 
@@ -1799,6 +1820,44 @@ gboolean prefs_get_sp_autodisplay (guint32 inst)
     if (inst < SORT_TAB_MAX)
 	return cfg->st[inst].sp_autodisplay;
     else
-	fprintf (stderr, "prefs_set_sp_autoselect(): inst=%d\n", inst);
+	fprintf (stderr, "prefs_get_sp_autodisplay(): !inst=%d!\n", inst);
     return FALSE;
+}
+
+
+gint32 prefs_get_sp_playcount_low (guint32 inst)
+{
+    if (inst < SORT_TAB_MAX)
+	return cfg->st[inst].sp_playcount_low;
+    else
+	fprintf (stderr, "prefs_get_sp_playcount_low(): !inst=%d!\n", inst);
+    return 0;
+}
+
+
+gint32 prefs_get_sp_playcount_high (guint32 inst)
+{
+    if (inst < SORT_TAB_MAX)
+	return cfg->st[inst].sp_playcount_high;
+    else
+	fprintf (stderr, "prefs_get_sp_playcount_high(): !inst=%d!\n", inst);
+    return (guint32)-1;
+}
+
+
+void prefs_set_sp_playcount_low (guint32 inst, gint32 limit)
+{
+    if (inst < SORT_TAB_MAX)
+	cfg->st[inst].sp_playcount_low = limit;
+    else
+	fprintf (stderr, "prefs_set_sp_playcount_low(): !inst=%d!\n", inst);
+}
+
+
+void prefs_set_sp_playcount_high (guint32 inst, gint32 limit)
+{
+    if (inst < SORT_TAB_MAX)
+	cfg->st[inst].sp_playcount_high = limit;
+    else
+	fprintf (stderr, "prefs_set_sp_playcount_high(): !inst=%d!\n", inst);
 }

@@ -56,7 +56,8 @@ struct cfg
     gboolean sp_rating;       /* consider rating? */
     guint32  sp_rating_state; /* pass which rating? (1 star: bit 1...) */
     gboolean sp_playcount;    /* consider playcount? */
-    gchar *sp_playcount_state;/* current playcount string */
+    guint sp_playcount_low;   /* lower limit for playcounts */
+    guint sp_playcount_high;  /* higher limit for playcounts */
     gboolean sp_played;       /* consider last played? */
     gchar *sp_played_state;   /* current "played" string */
     gboolean sp_modified;     /* consider last modified? */
@@ -228,5 +229,8 @@ void prefs_set_sp_entry (guint32 inst, S_item s_item, gchar *str);
 gchar *prefs_get_sp_entry (guint32 inst, S_item s_item);
 void prefs_set_sp_autodisplay (guint32 inst, gboolean state);
 gboolean prefs_get_sp_autodisplay (guint32 inst);
-
+gint32 prefs_get_sp_playcount_low (guint32 inst);
+gint32 prefs_get_sp_playcount_high (guint32 inst);
+void prefs_set_sp_playcount_low (guint32 inst, gint32 limit);
+void prefs_set_sp_playcount_high (guint32 inst, gint32 limit);
 #endif

@@ -1257,7 +1257,10 @@ void
 on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+    guint32 inst = (guint32)user_data & SP_MASK;
 
+    prefs_set_sp_or (inst, gtk_toggle_button_get_active (togglebutton));
+    sp_conditions_changed (inst);
 }
 
 
@@ -1265,14 +1268,25 @@ void
 on_sp_cond_button_toggled            (GtkToggleButton *togglebutton,
 				      gpointer         user_data)
 {
+    guint32 inst = (guint32)user_data & SP_MASK;
+    S_item cond = (guint32)user_data >> SP_SHIFT;
 
+    prefs_set_sp_cond (inst, cond,
+		       gtk_toggle_button_get_active (togglebutton));
+    sp_conditions_changed (inst);
 }
 
 void
 on_sp_rating_n_toggled                 (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+    guint32 inst = (guint32)user_data & SP_MASK;
+    guint32 n = (guint32)user_data >> SP_SHIFT;
 
+    prefs_set_sp_rating_n (inst, n,
+			   gtk_toggle_button_get_active (togglebutton));
+    if (prefs_get_sp_cond (inst, S_RATING))
+	sp_conditions_changed (inst);
 }
 
 
@@ -1296,7 +1310,8 @@ void
 on_sp_go_clicked                       (GtkButton       *button,
                                         gpointer         user_data)
 {
-
+    guint32 inst = (guint32)user_data & SP_MASK;
+    sp_go (inst);
 }
 
 
@@ -1304,6 +1319,35 @@ void
 on_sp_go_always_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+    guint32 inst = (guint32)user_data & SP_MASK;
+    gboolean state = gtk_toggle_button_get_active (togglebutton);
 
+    /* display data if autodisplay is turned on */
+    if (state)  on_sp_go_clicked (NULL, user_data);
+    prefs_set_sp_autodisplay(inst, state);
 }
 
+void
+on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+
+    prefs_set_sp_playcount_low (inst,
+				gtk_spin_button_get_value (spinbutton));
+    if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
+	sp_conditions_changed (inst);
+}
+
+
+void
+on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+
+    prefs_set_sp_playcount_high (inst,
+				 gtk_spin_button_get_value (spinbutton));
+    if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
+	sp_conditions_changed (inst);
+}

@@ -466,3 +466,11 @@ on_sp_go_clicked                       (GtkButton       *button,
 void
 on_sp_go_always_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);

@@ -85,16 +85,20 @@ typedef struct {
 /* struct with data corresponding to each sort tab */
 typedef struct {
   guint current_category;            /* current page (category) selected) */
+  gboolean final;                    /* have all songs been added? */
+  GtkWidget *window[ST_CAT_NUM];     /* pointer to scrolled window */
+  /* The following are used for "normal" categories (not ST_CAT_SPECIAL) */
   GtkTreeModel *model;               /* pointer to model used */
   GtkNotebook *notebook;             /* pointer to notebook used */
-  GtkWidget *window[ST_CAT_NUM];     /* pointer to window holding treeview */
   GtkTreeView *treeview[ST_CAT_NUM]; /* pointer to treeviews used */
   GList *entries;                    /* list with entries */
   TabEntry *current_entry;           /* pointer to currently selected entry */
   gchar *lastselection[ST_CAT_NUM];  /* name of entry last selected */
   GHashTable *entry_hash;            /* table for quick find of tab entries */
   gboolean unselected;               /* unselected item since last st_init? */
-  gboolean final;                    /* have all songs been added? */
+  /* The following are used for "special" categories (ST_CAT_SPECIAL) */
+  GList *members;                    /* list of members */
+  gboolean is_go;                    /* pass new members on (display) automatically */
 } SortTab;
 
 /* "Column numbers" in sort tab model */
@@ -151,6 +155,9 @@ enum {
 };
 
 
+#define SP_SHIFT 9
+#define SP_MASK ((1<<SP_SHIFT)-1)
+
 void display_create (GtkWidget *gtkpod);
 void display_cleanup (void);
 void display_show_hide_toolbar (void);
@@ -171,6 +178,8 @@ gint st_get_instance_from_treeview (GtkTreeView *tv);
 void st_show_visible (void);
 void st_arrange_visible_sort_tabs (void);
 TabEntry *st_get_selected_entry (gint inst);
+void sp_go (guint32 inst);
+void sp_conditions_changed (guint32 inst);
 
 void on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 			      GtkTreeIter *i, gpointer data);
