@@ -34,8 +34,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
-#include "track.h"
-#include "playlist.h"
+#include "itdb.h"
 
 
 /* values below -1 are private to individual functions */

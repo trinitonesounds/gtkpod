@@ -75,7 +75,8 @@ main (int argc, char *argv[])
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
 
   display_create (gtkpod_window);
-  create_mpl ();     /* needs at least the master playlist */
+
+  init_data (gtkpod_window);   /* setup base data */
 
   /* stuff to be done before starting gtkpod */
   call_script ("gtkpod.in");

@@ -27,9 +27,7 @@
 #ifndef _GTKPOD_MD5_H_
 #define _GTKPOD_MD5_H_
 
-#include "track.h"
-#include <glib.h>
-
+#include "itdb.h"
 
 gchar *md5_hash_on_filename (gchar *name, gboolean silent);
 /* Any calls to the following functions immediately return if md5sums

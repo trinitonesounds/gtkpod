@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-14 00:21:08 jcs>
+/* Time-stamp: <2005-01-03 22:41:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,8 +39,8 @@
 #  include <config.h>
 #endif
 
-#include "track.h"
 #include <time.h>
+#include <glib.h>
 
 /* We instruct itunesdb_parse to provide utf8 versions of the strings */
 #define ITUNESDB_PROVIDE_UTF8
@@ -272,10 +272,7 @@ typedef struct SPLRule
 {
     guint32 field;
     guint32 action;
-    gunichar2 *string_utf16;   /* data in UTF16 */
-#ifdef ITUNESDB_PROVIDE_UTF8
     gchar *string;             /* data in UTF8  */
-#endif
     /* from and to are pretty stupid.. if it's a date type of field,
        then
          value = 0x2dae2dae2dae2dae,
@@ -309,42 +306,186 @@ typedef struct SPLRules
 } SPLRules;
 
 
+typedef void (* ItdbUserDataDestroyFunc) (gpointer userdata);
+
 typedef struct
 {
-    gunichar2 *name_utf16;/* name of playlist in UTF16     */
-#ifdef ITUNESDB_PROVIDE_UTF8
+    GList *tracks;
+    GList *playlists;
+    gchar *filename;
+    gchar *mountpoint;
+    guint32 version;
+    guint64 id;
+    /* below is for use by application */
+    guint64 usertype;
+    gpointer userdata;
+    ItdbUserDataDestroyFunc userdata_destroy; /* function called to free
+						 userdata */
+} Itdb_iTunesDB;
+
+
+typedef struct
+{
+    Itdb_iTunesDB *itdb;  /* pointer to iTunesDB (for convenience) */
     gchar *name;          /* name of playlist in UTF8      */
-#endif
     guint32 type;         /* PL_TYPE_MPL: master play list */
     gint  num;            /* number of tracks in playlist  */
     GList *members;       /* tracks in playlist (Track *)  */
     gboolean is_spl;      /* smart playlist?               */
+    guint32 timestamp;    /* some timestamp                */
     guint64 id;           /* playlist ID                   */
+    guint32 unk036, unk040, unk044;
     SPLPref splpref;      /* smart playlist prefs          */
     SPLRules splrules;    /* rules for smart playlists     */
-    glong size;           /* not used by itunesdb.c        */
-} Playlist;
+    /* below is for use by application */
+    guint64 usertype;
+    gpointer userdata;
+    ItdbUserDataDestroyFunc userdata_destroy; /* function called to free
+						 userdata */
+} Itdb_Playlist;
 
 
-gboolean itunesdb_parse (const gchar *path);
-gboolean itunesdb_parse_file (const gchar *filename);
-gboolean itunesdb_write (const gchar *path);
-gboolean itunesdb_write_to_file (const gchar *filename);
-void itunesdb_rename_files (const gchar *dirname);
-gboolean itunesdb_copy_track_to_ipod (const gchar *path, Track *track,
-				      const gchar *pcfile);
+typedef struct
+{
+  Itdb_iTunesDB *itdb;       /* pointer to iTunesDB (for convenience) */
+  gchar   *album;            /* album (utf8)           */
+  gchar   *artist;           /* artist (utf8)          */
+  gchar   *title;            /* title (utf8)           */
+  gchar   *genre;            /* genre (utf8)           */
+  gchar   *comment;          /* comment (utf8)         */
+  gchar   *composer;         /* Composer (utf8)        */
+  gchar   *fdesc;            /* eg. "MP3-File"...(utf8)*/
+  gchar   *grouping;         /* ? (utf8)               */
+  gchar   *pc_path;          /* path on PC (local encoding).
+				Attention: not stored in iTunesDB!    */
+  gchar   *ipod_path;        /* name of file on iPod: uses ":"
+				instead of "/"                        */
+  guint32 id;                /* unique ID of track     */
+  gint32  size;              /* size of file in bytes  */
+  gint32  tracklen;          /* Length of track in ms  */
+  gint32  cd_nr;             /* CD number              */
+  gint32  cds;               /* number of CDs          */
+  gint32  track_nr;          /* track number           */
+  gint32  tracks;            /* number of tracks       */
+  gint32  bitrate;           /* bitrate                */
+  guint16 samplerate;        /* samplerate (CD: 44100) */
+  gint32  year;              /* year                   */
+  gint32  volume;            /* volume adjustment              */
+  guint32 soundcheck;        /* volume adjustment "soundcheck" */
+  guint32 time_created;      /* time when added (Mac type)          */
+  guint32 time_played;       /* time of last play (Mac type)        */
+  guint32 time_modified;     /* time of last modification (Mac type)*/
+  guint32 bookmark_time;     /* bookmark set for (AudioBook) in ms  */
+  guint32 rating;            /* star rating (stars * RATING_STEP (20))     */
+  guint32 playcount;         /* number of times track was played    */
+  guint32 recent_playcount;  /* times track was played since last sync     */
+  gboolean transferred;      /* has file been transferred to iPod?  */
+  gint16 BPM;                /* supposed to vary the playback speed */
+  guint8  app_rating;        /* star rating set by appl. (not iPod) */
+  guint16 type;
+  guint8  compilation;
+  guint32 starttime;
+  guint32 stoptime;
+  guint8  checked;
+  guint64 dbid;              /* unique database ID */
+/* present in the mhit but not used by gtkpod yet */
+  guint32 unk020, unk024, unk084, unk100, unk124;
+  guint32 unk128, unk132, unk136, unk140, unk144, unk148, unk152;
+  /* below is for use by application */
+  guint64 usertype;
+  gpointer userdata;
+  ItdbUserDataDestroyFunc userdata_destroy; /* function called to free
+					       userdata */
+} Itdb_Track;
+/* !Don't forget to add fields read from the file to copy_new_info() in
+ * file.c! */
+
+/* one star is how much (track->rating) */
+#define RATING_STEP 20
+
+
+/* Error codes */
+typedef enum
+{
+    ITDB_FILE_ERROR_SEEK,      /* file corrupt: illegal seek occured */
+    ITDB_FILE_ERROR_CORRUPT,   /* file corrupt   */
+    ITDB_FILE_ERROR_NOTFOUND,  /* file not found */
+    ITDB_FILE_ERROR_RENAME,    /* file could not be renamed    */
+    ITDB_FILE_ERROR_ITDB_CORRUPT /* iTunesDB in memory corrupt */
+} ItdbFileError;
+
+/* make life easier */
+#ifdef ITDB_USE_ABBREV
+    typedef Itdb_iTunesDB iTunesDB;
+    typedef Itdb_Playlist Playlist;
+    typedef Itdb_Track Track;
+#endif
+
+/* Error domain */
+#define ITDB_FILE_ERROR itdb_file_error_quark ()
+GQuark     itdb_file_error_quark      (void);
+
+/* functions for reading/writing database, general itdb functions */
+Itdb_iTunesDB *itdb_parse (const gchar *mp, GError **error);
+Itdb_iTunesDB *itdb_parse_file (const gchar *filename, GError **error);
+gboolean itdb_write (Itdb_iTunesDB *itdb, const gchar *mp, GError **error);
+gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
+			  GError **error);
+Itdb_iTunesDB *itdb_new (void);
+void itdb_free (Itdb_iTunesDB *itdb);
+
+/* general file functions */
+gchar * itdb_resolve_path (const gchar *root,
+			   const gchar * const * components);
+gboolean itdb_rename_files (const gchar *mp, GError **error);
+gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
+				GError **error);
+gboolean itdb_cp (const gchar *from_file, const gchar *to_file,
+		  GError **error);
+void itdb_filename_fs2ipod (gchar *filename);
+void itdb_filename_ipod2fs (gchar *ipod_file);
+gchar *itdb_filename_on_ipod (const gchar *path, Itdb_Track *track);
+
+/* track functions */
+Itdb_Track *itdb_track_new (void);
+void itdb_track_free (Itdb_Track *track);
+void itdb_track_add (Itdb_iTunesDB *itdb, Itdb_Track *track, gint32 pos);
+void itdb_track_remove (Itdb_Track *track);
+void itdb_track_unlink (Itdb_Track *track);
+Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id);
+guint32 itdb_track_number (Itdb_Playlist *pl);
+
+/* playlist functions */
+Itdb_Playlist *itdb_playlist_new (const gchar *title, gboolean spl);
+void itdb_playlist_free (Itdb_Playlist *pl);
+void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos);
+void itdb_playlist_remove (Itdb_Playlist *pl);
+void itdb_playlist_unlink (Itdb_Playlist *pl);
+Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl);
+void itdb_playlist_add_track (Itdb_Playlist *pl,
+			      Itdb_Track *track, gint32 pos);
+void itdb_playlist_add_trackid (Itdb_Playlist *pl,
+				guint32 id, gint32 pos);
+Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id);
+gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *track);
+guint32 itdb_playlist_number (Itdb_iTunesDB *itdb);
+
 /* smart playlist functions */
-SPLFieldType itb_splr_get_field_type (const SPLRule *splr);
-SPLActionType itb_splr_get_action_type (const SPLRule *splr);
+SPLFieldType itdb_splr_get_field_type (const SPLRule *splr);
+SPLActionType itdb_splr_get_action_type (const SPLRule *splr);
+void itdb_splr_validate (SPLRule *splr);
+void itdb_splr_remove (Itdb_Playlist *pl, SPLRule *splr);
+SPLRule *itdb_splr_new (void);
+void itdb_splr_add (Itdb_Playlist *pl, SPLRule *splr, gint pos);
+SPLRule *itdb_splr_add_new (Itdb_Playlist *pl, gint pos);
+void itunesdb_spl_copy_rules (Itdb_Playlist *dest, Itdb_Playlist *src);
+gboolean itdb_splr_eval (Itdb_iTunesDB *itdb, SPLRule *splr, Itdb_Track *track);
+void itdb_spl_update (Itdb_iTunesDB *itdb, Itdb_Playlist *spl);
+void itdb_spl_update_all (Itdb_iTunesDB *itdb);
 
-gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s);
-gboolean itunesdb_cp (const gchar *from_file, const gchar *to_file);
-guint64 itunesdb_time_get_mac_time (void);
-void itunesdb_convert_filename_fs2ipod (gchar *ipod_file);
-void itunesdb_convert_filename_ipod2fs (gchar *ipod_file);
-Track *itunesdb_new_track (void);
-time_t itunesdb_time_mac_to_host (guint64 mactime);
-guint64 itunesdb_time_host_to_mac (time_t time);
+/* time functions */
+guint64 itdb_time_get_mac_time (void);
+time_t itdb_time_mac_to_host (guint64 mactime);
+guint64 itdb_time_host_to_mac (time_t time);
 
-void itb_splr_validate (SPLRule *splr);
 #endif

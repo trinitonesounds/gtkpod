@@ -31,11 +31,10 @@
 #include "display.h"
 #include "file.h"
 #include "misc.h"
-#include "playlist.h"
 #include "prefs.h"
 #include "support.h"
 #include "tools.h"
-#include "track.h"
+#include "itdb.h"
 
 static guint entry_inst = -1;
 static GList *selected_tracks = NULL;

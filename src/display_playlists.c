@@ -120,38 +120,70 @@ void pm_name_changed (Playlist *playlist)
    first sort tab of a change */
 void pm_track_changed (Track *track)
 {
-  gint i,n;
-
   if (!current_playlist) return;
   /* Check if track is member of current playlist */
-  n = get_nr_of_tracks_in_playlist (current_playlist);
-  for (i=0; i<n; ++i)
-    {
-      if (track == get_track_in_playlist_by_nr (current_playlist, i))
-	{  /* It's a member! Let's notify the first sort tab */
-	  st_track_changed (track, FALSE, 0);
-	  break;
-	}
-    }
+  if (g_list_find (current_playlist->members, track))
+      st_track_changed (track, FALSE, 0);
 }
 
 
 /* Append playlist to the playlist model */
 /* If @position = -1: append to end */
 /* If @position >=0: insert at that position */
-void pm_add_playlist (Playlist *playlist, gint position)
+void pm_add_playlist (Playlist *playlist, gint pos)
 {
+  GtkTreeIter mpl_iter;
+  GtkTreeIter *mpl = NULL;
   GtkTreeIter iter;
   GtkTreeModel *model;
   GtkTreeSelection *selection;
 
-  model = gtk_tree_view_get_model (playlist_treeview);
-  g_return_if_fail (model != NULL);
+  g_assert (playlist_treeview);
+  g_return_if_fail (playlist);
 
-  if (position == -1)  gtk_list_store_append (GTK_LIST_STORE (model), &iter);
-  else  gtk_list_store_insert (GTK_LIST_STORE (model), &iter, position);
-  gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-		      PM_COLUMN_PLAYLIST, playlist, -1);
+  model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
+  g_return_if_fail (model);
+
+  if (playlist->type == PL_TYPE_MPL)
+  {   /* MPLs are always added top-level and at the end */
+      mpl = NULL;
+      pos = -1;
+  }
+  else
+  {   /* We need to find the iter with the mpl in it */
+      if (gtk_tree_model_get_iter_first (model, &mpl_iter))
+      {
+	  do
+	  {
+	      Playlist *pl;
+	      gtk_tree_model_get (model, &mpl_iter,
+				  PM_COLUMN_PLAYLIST, &pl, -1);
+	      g_return_fail (pl);
+	      if (pl->itdb == playlist->itdb)
+	      {
+		  mpl = &mpl_iter;
+	      }
+	  } while ((mpl == NULL) &&
+		   gtk_tree_model_iter_next (model, &mpl_iter));
+      }
+      if (!mpl)
+      {
+	  g_warning ("Programming error: need to add mpl before adding normal playlists.\n");
+      }
+  }
+
+  if (pos == -1)
+  {
+      gtk_tree_store_append (model, &iter, mpl);
+  }
+  else
+  {
+      gtk_tree_store_insert (model, &iter, mpl, pos);
+  }
+  gtk_tree_store_set (model, &iter,
+		      PM_COLUMN_PLAYLIST, playlist,
+		      -1);
+
   /* If the current_playlist is "playlist", we select it. This can
      happen during a display_reset */
   if (current_playlist == playlist)
@@ -184,7 +216,7 @@ static gboolean pm_delete_playlist_fe (GtkTreeModel *model,
 
   gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   if(playlist == (Playlist *)data) {
-    gtk_list_store_remove (GTK_LIST_STORE (model), iter);
+    gtk_tree_store_remove (GTK_TREE_STORE (model), iter);
     return TRUE;
   }
   return FALSE;
@@ -252,7 +284,7 @@ void pm_remove_all_playlists (gboolean clear_sort)
 
   while (gtk_tree_model_get_iter_first (model, &iter))
   {
-      gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
+      gtk_tree_store_remove (GTK_TREE_STORE (model), &iter);
   }
   if(clear_sort &&
      gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
@@ -798,7 +830,7 @@ pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
 /* Create playlist listview */
 void pm_create_treeview (void)
 {
-  GtkTreeModel *model;
+  GtkTreeStore *model;
   GtkTreeSelection *selection;
   GtkWidget *playlist_window;
   GtkWidget *tree;
@@ -807,7 +839,8 @@ void pm_create_treeview (void)
   /* destroy old treeview */
   if (playlist_treeview)
   {
-      /* FIXME: how do we delete the model? */
+      model = GTK_TREE_STORE (gtk_tree_view_get_model (playlist_treeview));
+      g_object_unref (model);
       gtk_widget_destroy (GTK_WIDGET (playlist_treeview));
       playlist_treeview = NULL;
   }
@@ -819,8 +852,8 @@ void pm_create_treeview (void)
   gtk_container_add (GTK_CONTAINER (playlist_window), tree);
 
   /* create model */
-  model =   GTK_TREE_MODEL (gtk_list_store_new (PM_NUM_COLUMNS,
-						G_TYPE_POINTER));
+  model =   gtk_tree_store_new (PM_NUM_COLUMNS, G_TYPE_POINTER);
+
   /* set tree model */
   gtk_tree_view_set_model (playlist_treeview, GTK_TREE_MODEL (model));
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (playlist_treeview), TRUE);
@@ -896,67 +929,6 @@ pm_set_selected_playlist(Playlist *pl)
 /* ---------------------------------------------------------------- */
 /* Section for drag and drop                                        */
 /* ---------------------------------------------------------------- */
-
-#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))
-/* gtk_list_store_move_*() was introduced in 2.2, so we have to
- * emulate for 2.0 <= V < 2.2 (we require at least 2.0 anyway) */
-static void pm_list_store_move (GtkListStore *store,
-				 GtkTreeIter  *iter,
-				 GtkTreeIter  *position,
-				 gboolean     before)
-{
-    GtkTreeIter new_iter;
-    Playlist *playlist = NULL;
-    GtkTreeModel *model;
-
-    /* insert new row before or after @position */
-    if (before)  gtk_list_store_insert_before (store, &new_iter, position);
-    else         gtk_list_store_insert_after (store, &new_iter, position);
-
-    model = gtk_tree_view_get_model (playlist_treeview);
-
-    /* get the content (playlist) of the row to move */
-    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
-    /* remove the old row */
-    gtk_list_store_remove (GTK_LIST_STORE (model), iter);
-    /* set the content of the new row */
-    gtk_list_store_set (GTK_LIST_STORE (model), &new_iter,
-			PM_COLUMN_PLAYLIST, playlist, -1);
-}
-
-
-void  pm_list_store_move_before (GtkListStore *store,
-					 GtkTreeIter  *iter,
-					 GtkTreeIter  *position)
-{
-    pm_list_store_move (store, iter, position, TRUE);
-}
-
-
-void  pm_list_store_move_after (GtkListStore *store,
-					GtkTreeIter  *iter,
-					GtkTreeIter  *position)
-{
-    pm_list_store_move (store, iter, position, FALSE);
-}
-#else
-/* starting V2.2 convenient gtk functions exist */
-void  pm_list_store_move_before (GtkListStore *store,
-					 GtkTreeIter  *iter,
-					 GtkTreeIter  *position)
-{
-    gtk_list_store_move_before (store, iter, position);
-}
-
-
-void  pm_list_store_move_after (GtkListStore *store,
-					GtkTreeIter  *iter,
-					GtkTreeIter  *position)
-{
-    gtk_list_store_move_after (store, iter, position);
-}
-#endif
-
 
 /* move pathlist for track treeview */
 gboolean pm_move_pathlist (gchar *data,

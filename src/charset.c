@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-15 22:51:18 jcs>
+/* Time-stamp: <2005-01-03 22:25:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -371,11 +371,18 @@ gchar *charset_from_utf8 (const gchar *str)
 /* Must free the returned string yourself */
 gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
 {
-    const gchar *charset;
+    const gchar *charset = NULL;
+    ExtraTrackData *etd;
+
+    g_return_val_if_fail (s, NULL);
+    g_return_val_if_fail (s->userdata, NULL);
 
     if (str == NULL) return NULL;  /* sanity */
-    if (s && s->charset && strlen (s->charset))
-	   charset = s->charset;
+
+    etd = s->userdata;
+
+    if (etd->charset && strlen (etd->charset))
+	   charset = etd->charset;
     else   charset = prefs_get_charset ();
     if (!charset || !strlen (charset))
     {    /* use standard locale charset */

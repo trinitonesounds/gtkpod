@@ -34,7 +34,7 @@
 #include "misc.h"
 #include "support.h"
 #include "prefs.h"
-#include "track.h"
+#include "itdb.h"
 #include "charset.h"
 #include "file.h"
 

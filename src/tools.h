@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 13:09:07 jcs>
+/* Time-stamp: <2005-01-03 22:40:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,8 +33,7 @@
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include "track.h"
+#include <glib.h>
 
 /* appears to be missing prior to glib 2.4 */
 #ifndef G_MININT32

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-09 23:32:13 jcs>
+/* Time-stamp: <2005-01-03 22:27:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -29,9 +29,12 @@
 #ifndef CLIENTSERVERH_INCLUDED
 #define CLIENTSERVERH_INCLUDED 1
 
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
 #include <glib.h>
 #include <sys/file.h>
-#include "config.h"
 
 extern const gchar *SOCKET_TEST;
 extern const gchar *SOCKET_PLYC;

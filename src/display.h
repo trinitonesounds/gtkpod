@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-30 12:58:34 jcs>
+/* Time-stamp: <2005-01-03 22:21:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,9 +34,8 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "info.h"
-#include "track.h"
-#include "playlist.h"
+#include "itdb.h"
+#include "display_itdb.h"
 
 /* pointer to main window */
 extern GtkWidget *gtkpod_window;
