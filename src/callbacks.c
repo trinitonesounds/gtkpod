@@ -586,7 +586,7 @@ void
 on_alphabetize0_up_menu                   (GtkMenuItem     *menuitem,
 					   gpointer         user_data)
 {
-    get_sort_tab_nunber ("How are you?");
+    get_sort_tab_number ("How are you?");
     st_sort (0, GTK_SORT_ASCENDING);
 }
 
