@@ -29,6 +29,103 @@
 |  This product is not supported/written/published by Apple!
 */
 
+/* Some notes on how to use the functions in this file:
+
+
+   *** Reading the iTunesDB ***
+
+   gboolean itunesdb_parse (gchar *path); /* path to mountpoint /
+   will read an iTunesDB and pass the data over to your program. Your
+   programm is responsible to keep a representation of the data.
+
+   For each song itunesdb_parse() will pass a filled out Song structure
+   to "add_song()", which has to be provided. The minimal Song
+   structure looks like this (feel free to have add_song() do with it
+   as it pleases -- and yes, you are responsible to free the memory):
+
+   typedef struct
+   {
+     gunichar2 *album_utf16;    /* album (utf16)         /
+     gunichar2 *artist_utf16;   /* artist (utf16)        /
+     gunichar2 *title_utf16;    /* title (utf16)         /
+     gunichar2 *genre_utf16;    /* genre (utf16)         /
+     gunichar2 *comment_utf16;  /* comment (utf16)       /
+     gunichar2 *composer_utf16; /* Composer (utf16)      /
+     gunichar2 *fdesc_utf16;    /* ? (utf16)             /
+     gunichar2 *ipod_path_utf16;/* name of file on iPod: uses ":" instead of "/" /
+     guint32 ipod_id;           /* unique ID of song     /
+     gint32  size;              /* size of file in bytes /
+     gint32  songlen;           /* Length of song in ms  /
+     gint32  cd_nr;             /* CD number             /
+     gint32  cds;               /* number of CDs         /
+     gint32  track_nr;          /* track number          /
+     gint32  tracks;            /* number of tracks      /
+     gint32  year;              /* year                  /
+     gint32  bitrate;           /* bitrate               /
+     gboolean transferred;      /* has file been transferred to iPod? /
+   } Song;
+
+   "transferred" will be set to TRUE because all songs read from a
+   iTunesDB are obviously (or hopefully) already transferred to the
+   iPod.
+
+   By #defining ITUNESDB_PROVIDE_UTF8, itunesdb_parse() will also
+   provide utf8 versions of the above utf16 strings. You must then add
+   members "gchar *album"... to the Song structure.
+
+   For each new playlist in the iTunesDB, add_playlist() is
+   called with a pointer to the following Playlist struct:
+
+   typedef struct
+   {
+     gunichar2 *name_utf16;
+     guint32 type;         /* 1: master play list (PL_TYPE_MPL) /
+   } Playlist;
+
+   Again, by #defining ITUNESDB_PROVIDE_UTF8, a member "gchar *name"
+   will be initialized with a utf8 version of the playlist name.
+
+   add_playlist() must return a pointer under which it wants the
+   playlist to be referenced when add_song_to_playlist() is called.
+
+   For each song in the playlist, add_songid_to_playlist() is called
+   with the above mentioned pointer to the playlist and the songid to
+   be added.
+
+   void add_song (Song *song);
+   Playlist *add_playlist (Playlist *plitem);
+   void add_songid_to_playlist (Playlist *plitem, guint32 id);
+
+
+   *** Writing the iTunesDB ***
+
+   gboolean itunesdb_write (gchar *path), /* path to mountpoint /
+   will write an updated version of the iTunesDB.
+
+   It uses the following functions to retrieve the data necessary data
+   from memory:
+
+   guint get_nr_of_songs (void);
+   Song *get_song_by_nr (guint32 n);
+   guint32 get_nr_of_playlists (void);
+   Playlist *get_playlist_by_nr (guint32 n);
+   guint32 get_nr_of_songs_in_playlist (Playlist *plitem);
+   Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
+
+   The master playlist is expected to be "get_playlist_by_nr(0)". Only
+   the utf16 strings in the Playlist and Song struct are being used.
+
+   Please note that non-transferred songs are not automatically
+   transferred to the iPod. A function
+
+   gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
+
+   is provided to help you do that, however.
+
+   Jorg Schuler, 19.12.2002 */
+
+
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -40,6 +137,8 @@
 #include "misc.h"
 #include "itunesdb.h"
 
+/* We instruct itunesdb_parse to provide utf8 versions of the strings */
+#define ITUNESDB_PROVIDE_UTF8
 
 /* call itunesdb_parse () to read the iTunesDB  */
 /* call itunesdb_write () to write the iTunesDB */
@@ -163,7 +262,9 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 static glong get_pl(FILE *file, glong seek) 
 {
   gunichar2 *foo, *plname_utf16;
+#ifdef ITUNESDB_PROVIDE_UTF8
   gchar *plname_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
   guint32 type, pltype, songnum, n;
   guint32 nextseek;
   gint32 zip;
@@ -185,19 +286,28 @@ static glong get_pl(FILE *file, glong seek)
   if (zip == -1)
     {   /* we did not read a valid mhod header -> name is invalid */
         /* we simply make up our own name */
-      if (pltype == 1)	  plname_utf8 = g_strdup (_("Master-PL"));
-      else                plname_utf8 = g_strdup (_("Playlist"));
-      plname_utf16 = g_utf8_to_utf16 (plname_utf8, -1, NULL, NULL, NULL);
+      if (pltype == 1)
+	plname_utf16 = g_utf8_to_utf16 (_("Master-PL"),
+					-1, NULL, NULL, NULL);
+      else plname_utf16 = g_utf8_to_utf16 (_("Playlist"),
+					    -1, NULL, NULL, NULL);
+#ifdef ITUNESDB_PROVIDE_UTF8
+      plname_utf8 = g_utf16_to_utf8 (plname_utf16, -1, NULL, NULL, NULL);
+#endif ITUNESDB_PROVIDE_UTF8
     }
   else
     {
+#ifdef ITUNESDB_PROVIDE_UTF8
       plname_utf8 = g_utf16_to_utf8(plname_utf16, -1, NULL, NULL, NULL);
+#endif ITUNESDB_PROVIDE_UTF8
       seek += zip;
     }
 
   printf("pln: %s(%d Tracks) \n", plname_utf8, (int)songnum);
   plitem = g_malloc0 (sizeof (Playlist));
+#ifdef ITUNESDB_PROVIDE_UTF8
   plitem->name = plname_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
   plitem->name_utf16 = plname_utf16;
   plitem->type = pltype;
 
@@ -227,7 +337,9 @@ static glong get_nod_a(FILE *file, glong seek)
 {
   Song *song;
   gchar data[4];
+#ifdef ITUNESDB_PROVIDE_UTF8
   gchar *entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
   gunichar2 *entry_utf16;
   gint type;
   gint zip = 0;
@@ -256,43 +368,63 @@ static glong get_nod_a(FILE *file, glong seek)
      seek += zip;
      entry_utf16 = get_mhod (file, seek, &zip, &type);
      if (entry_utf16 != NULL) {
+#ifdef ITUNESDB_PROVIDE_UTF8
        entry_utf8 = g_utf16_to_utf8 (entry_utf16, -1, NULL, NULL, NULL);
+#endif ITUNESDB_PROVIDE_UTF8
        switch (type)
 	 {
 	 case MHOD_ID_ALBUM:
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   song->album = entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
 	   song->album_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_ARTIST:
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   song->artist = entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
 	   song->artist_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_TITLE:
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   song->title = entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
 	   song->title_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_GENRE:
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   song->genre = entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
 	   song->genre_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_PATH:
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   song->ipod_path = entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
 	   song->ipod_path_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_FDESC:
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   song->fdesc = entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
 	   song->fdesc_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_COMMENT:
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   song->comment = entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
 	   song->comment_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_COMPOSER:
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   song->composer = entry_utf8;
+#endif ITUNESDB_PROVIDE_UTF8
 	   song->composer_utf16 = entry_utf16;
 	   break;
 	 default: /* unknown entry -- discard */
+#ifdef ITUNESDB_PROVIDE_UTF8
 	   g_free (entry_utf8);
+#endif ITUNESDB_PROVIDE_UTF8
 	   g_free (entry_utf16);
 	   break;
 	 }
@@ -750,7 +882,7 @@ write_mhsd_one(FILE *file)
 }
 
 static void
-write_playlist(FILE *file, Playlist *pl, guint32 ismain)
+write_playlist(FILE *file, Playlist *pl)
 {
     Song *s;
     GList *l;
@@ -763,10 +895,7 @@ write_playlist(FILE *file, Playlist *pl, guint32 ismain)
 #if 1
   fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, n);
 #endif    
-    if(ismain)
-	mk_mhyp(file, pl->name_utf16, 0, n);  
-    else
-	mk_mhyp(file, ipod_name, 1, n); 
+    mk_mhyp(file, pl->name_utf16, pl->type, n);  
     for (i=0; i<n; ++i)
     {
         s = get_song_in_playlist_by_nr (pl, i);
@@ -776,6 +905,9 @@ write_playlist(FILE *file, Playlist *pl, guint32 ismain)
    fix_mhyp (file, mhyp_seek, ftell(file));
 }
 
+
+
+/* Expects the master playlist to be (get_playlist_by_nr (0)) */
 static void
 write_mhsd_two(FILE *file)
 {
@@ -789,11 +921,12 @@ write_mhsd_two(FILE *file)
     mk_mhlp (file, playlists + 1);
     for(i = 0; i < playlists; i++)
     { 
-	write_playlist(file, get_playlist_by_nr(i), i);
+	write_playlist(file, get_playlist_by_nr(i));
     }
     fix_mhlp (file, mhlp_seek, ftell (file));
     fix_mhsd (file, mhsd_seek, ftell (file));
 }
+
 
 /* Do the actual writing to the iTunesDB */
 gboolean 
@@ -841,13 +974,13 @@ gboolean itunesdb_write (gchar *path)
 /* Does this really belong here? -- Maybe, because it
    requires knowledge of the iPod's filestructure */
 /* Copy one song to the ipod. The PC-Filename is
-   "song->pc_path_locale" and is taken literally.
+   "pcfile" and is taken literally.
    "path" is assumed to be the mountpoint of the iPod.
    For storage, the directories "f00 ... f19" will be
    cycled through. The filename is constructed from
    "song->ipod_id": "gtkpod_id" and written to
    "song->ipod_path_utf8" and "song->ipod_path_utf16" */
-gboolean copy_song_to_ipod (gchar *path, Song *song)
+gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 {
   static gint dir_num = 0;   /* next dir to use. FIXME: should be random! */
   FILE *file_in = NULL;
@@ -871,10 +1004,10 @@ gboolean copy_song_to_ipod (gchar *path, Song *song)
   printf("ipod_file: %s\n", ipod_file);
   ipod_fullfile = concat_dir (path, ipod_file+1);
   do { /* dummy loop for easier error handling */
-    file_in = fopen (song->pc_path_locale, "r");
+    file_in = fopen (pcfile, "r");
     if (file_in == NULL)
       {
-	gtkpod_warning (_("Could not open PC file \"%s\" for reading.\n"), song->pc_path_locale);
+	gtkpod_warning (_("Could not open PC file \"%s\" for reading.\n"), pcfile);
 	success = FALSE;
 	break;
       }
@@ -920,7 +1053,9 @@ gboolean copy_song_to_ipod (gchar *path, Song *song)
       len = strlen (ipod_file);
       for (i=0; i<len; ++i)     /* replace '/' by ':' */
 	if (ipod_file[i] == '/')  ipod_file[i] = ':';
+#ifdef ITUNESDB_PROVIDE_UTF8
       song->ipod_path = g_locale_to_utf8 (ipod_file, -1, NULL, NULL, NULL);
+#endif ITUNESDB_PROVIDE_UTF8
       song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
 					       -1, NULL, NULL, NULL);
       song->transferred = TRUE;

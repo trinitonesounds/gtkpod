@@ -44,6 +44,7 @@ enum {
   ST_CAT_ARTIST = 0,
   ST_CAT_ALBUM,
   ST_CAT_GENRE,
+  ST_CAT_TITLE,
   ST_CAT_NUM
 };
 

@@ -54,6 +54,5 @@ enum {
 
 gboolean itunesdb_parse (gchar *file);
 gboolean itunesdb_write (gchar *file);
-gboolean copy_song_to_ipod (gchar *path, Song *song);
-
+gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile);
 #endif __ITUNESDB_H__

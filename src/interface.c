@@ -75,6 +75,9 @@ create_gtkpod (void)
   GtkWidget *scrolledwindow13;
   GtkWidget *st0_cat2_treeview;
   GtkWidget *label10;
+  GtkWidget *scrolledwindow16;
+  GtkWidget *st0_cat3_treeview;
+  GtkWidget *label14;
   GtkWidget *sorttab1;
   GtkWidget *scrolledwindow15;
   GtkWidget *st1_cat0_treeview;
@@ -85,6 +88,9 @@ create_gtkpod (void)
   GtkWidget *scrolledwindow10;
   GtkWidget *st1_cat2_treeview;
   GtkWidget *label13;
+  GtkWidget *scrolledwindow17;
+  GtkWidget *st1_cat3_treeview;
+  GtkWidget *label15;
   GtkWidget *scrolledwindow11;
   GtkWidget *song_treeview;
   GtkWidget *statusbar1;
@@ -307,6 +313,19 @@ create_gtkpod (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab0), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab0), 2), label10);
   gtk_label_set_justify (GTK_LABEL (label10), GTK_JUSTIFY_LEFT);
 
+  scrolledwindow16 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow16);
+  gtk_container_add (GTK_CONTAINER (sorttab0), scrolledwindow16);
+
+  st0_cat3_treeview = gtk_tree_view_new ();
+  gtk_widget_show (st0_cat3_treeview);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow16), st0_cat3_treeview);
+
+  label14 = gtk_label_new (_("Title"));
+  gtk_widget_show (label14);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab0), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab0), 3), label14);
+  gtk_label_set_justify (GTK_LABEL (label14), GTK_JUSTIFY_LEFT);
+
   sorttab1 = gtk_notebook_new ();
   gtk_widget_show (sorttab1);
   gtk_paned_pack2 (GTK_PANED (hpaned2), sorttab1, TRUE, TRUE);
@@ -349,6 +368,19 @@ create_gtkpod (void)
   gtk_widget_show (label13);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab1), 2), label13);
   gtk_label_set_justify (GTK_LABEL (label13), GTK_JUSTIFY_LEFT);
+
+  scrolledwindow17 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow17);
+  gtk_container_add (GTK_CONTAINER (sorttab1), scrolledwindow17);
+
+  st1_cat3_treeview = gtk_tree_view_new ();
+  gtk_widget_show (st1_cat3_treeview);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow17), st1_cat3_treeview);
+
+  label15 = gtk_label_new (_("Title"));
+  gtk_widget_show (label15);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab1), 3), label15);
+  gtk_label_set_justify (GTK_LABEL (label15), GTK_JUSTIFY_LEFT);
 
   scrolledwindow11 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow11);
@@ -466,6 +498,9 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow13, "scrolledwindow13");
   GLADE_HOOKUP_OBJECT (gtkpod, st0_cat2_treeview, "st0_cat2_treeview");
   GLADE_HOOKUP_OBJECT (gtkpod, label10, "label10");
+  GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow16, "scrolledwindow16");
+  GLADE_HOOKUP_OBJECT (gtkpod, st0_cat3_treeview, "st0_cat3_treeview");
+  GLADE_HOOKUP_OBJECT (gtkpod, label14, "label14");
   GLADE_HOOKUP_OBJECT (gtkpod, sorttab1, "sorttab1");
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow15, "scrolledwindow15");
   GLADE_HOOKUP_OBJECT (gtkpod, st1_cat0_treeview, "st1_cat0_treeview");
@@ -476,6 +511,9 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow10, "scrolledwindow10");
   GLADE_HOOKUP_OBJECT (gtkpod, st1_cat2_treeview, "st1_cat2_treeview");
   GLADE_HOOKUP_OBJECT (gtkpod, label13, "label13");
+  GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow17, "scrolledwindow17");
+  GLADE_HOOKUP_OBJECT (gtkpod, st1_cat3_treeview, "st1_cat3_treeview");
+  GLADE_HOOKUP_OBJECT (gtkpod, label15, "label15");
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow11, "scrolledwindow11");
   GLADE_HOOKUP_OBJECT (gtkpod, song_treeview, "song_treeview");
   GLADE_HOOKUP_OBJECT (gtkpod, statusbar1, "statusbar1");

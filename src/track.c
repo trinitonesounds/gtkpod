@@ -293,19 +293,20 @@ Song *get_song_by_id (guint32 id)
 
 
 /* Flushes all non-transferred songs to the iPod filesystem
-   Returns TRUE on success, FALSE otherwise */
+   Returns TRUE on success, FALSE if some error occured */
 gboolean flush_songs (void)
 {
   GList *gl_song;
   Song  *song;
+  gboolean result = TRUE;
 
   gl_song = g_list_first (songs);
   while (gl_song != NULL) {
     song = (Song *)gl_song->data;
-    if (copy_song_to_ipod (cfg->ipod_mount, song) == FALSE)  return FALSE;
+    result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
     gl_song = g_list_next (gl_song);
   }
-  return TRUE;
+  return result;
 }
 
 

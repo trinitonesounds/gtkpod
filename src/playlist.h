@@ -40,10 +40,7 @@ typedef struct
 {
   gchar *name;
   gunichar2 *name_utf16;
-  guint32 ref;
-  guint32 pos;
   guint32 type;         /* 1: master play list (PL_TYPE_MPL) */
-  guint32 num;          /* number of songs in playlist */
   GList *members;       /* songs in playlist (Song *) */
 } Playlist;
 

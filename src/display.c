@@ -461,6 +461,8 @@ static gchar *st_get_entryname (Song *song, guint32 inst)
       return song->album;
     case ST_CAT_GENRE:
       return song->genre;
+    case ST_CAT_TITLE:
+      return song->title;
     }
   g_warning ("Programming error: st_get_entryname: undefined category\n");
   return NULL;
@@ -521,10 +523,13 @@ static gboolean st_recategorize_song (Song *song, guint32 inst)
   gchar *entryname;
 
   oldentry = st_get_entry_by_song (song, inst);
+  /*  printf("%d: recat_oldentry: %x\n", inst, oldentry);*/
 /* should not happen: song is not in sort tab */
   if (oldentry == NULL) return FALSE;
   entryname = st_get_entryname (song, inst);
+  /*  printf("%d: recat_entryname: %s\n", inst, entryname);*/
   newentry = st_get_entry_by_name (entryname, inst);
+  /*  printf("%d: recat_newentry: %x\n", inst, newentry);*/
   if (newentry == NULL)
     { /* not found, create new one */
       newentry = g_malloc0 (sizeof (TabEntry));
@@ -538,8 +543,10 @@ static gboolean st_recategorize_song (Song *song, guint32 inst)
       newentry->members = g_list_append (newentry->members, song); 
       /* remove song from old entry members list */
       oldentry->members = g_list_remove (oldentry->members, song);
+      /*  printf("%d: recat_return_TRUE\n", inst);*/
       return TRUE;
     }
+  /*  printf("%d: recat_return_FALSE\n", inst);*/
   return FALSE;
 }
 
@@ -872,6 +879,7 @@ st_cell_edited (GtkCellRendererText *renderer,
   gint column;
   gint i, n, inst;
   Song *song;
+  GList *members;
 
   inst = (guint32)data;
   model = sorttab[inst]->model;
@@ -891,9 +899,12 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  g_free (entry->name);
 	  entry->name = g_strdup (new_text);
 	  /* Now we look up all the songs and change the ID3 Tag as well */
-	  n = g_list_length (entry->members);
+	  /* We make a copy of the current members list, as it may change
+             during the process */
+	  members = g_list_copy (entry->members);
+	  n = g_list_length (members);
 	  for (i=0; i<n; ++i) {
-	    song = (Song *)g_list_nth_data (entry->members, i);
+	    song = (Song *)g_list_nth_data (members, i);
 	    /*printf("%d/%d: %x\n", i+1, n, song);*/
 	    switch (sorttab[inst]->current_category)
 	      {
@@ -918,11 +929,19 @@ st_cell_edited (GtkCellRendererText *renderer,
 		song->genre_utf16 = g_utf8_to_utf16 (new_text, -1,
 						      NULL, NULL, NULL);
 		break;
+	      case ST_CAT_TITLE:
+		g_free (song->title);
+		g_free (song->title_utf16);
+		song->title = g_strdup (new_text);
+		song->title_utf16 = g_utf8_to_utf16 (new_text, -1,
+						      NULL, NULL, NULL);
+		break;
 	      }
 	    pm_song_changed (song);
 	    /* If prefs say to write changes to file, do so */
 	    if (cfg->writeid3) write_tags_to_file (song);
 	  }
+	  g_list_free (members);
 	}
       break;
     }
@@ -1172,8 +1191,10 @@ static gboolean sm_model_song_changed (GtkTreeModel *model,
 static void sm_song_changed (Song *song)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (song_treeview);
+  /*  printf("sm_song_changed enter\n");*/
   if (model != NULL)
     gtk_tree_model_foreach (model, sm_model_song_changed, song);
+  /*  printf("sm_song_changed exit\n");*/
 }
 
 
