@@ -40,6 +40,18 @@
 #include "itunesdb.h"
 #include "display.h"
 
+/* only used when reading extended info from file */
+struct song_extended_info
+{
+    guint ipod_id;
+    gchar *pc_path_locale;
+    gchar *pc_path_utf8;
+    gchar *md5_hash;
+    gchar *hostname;
+    gchar *ipod_path;
+    gboolean transferred;
+};
+
 /* List with all the songs */
 GList *songs = NULL;
 /* List with songs pending deletion */
@@ -158,7 +170,7 @@ gboolean add_song (Song *song)
 	}
     }
 
-  if((str = song_exists_on_ipod(song)))
+  if((str = md5_song_exists_on_ipod(song)))
   {
     gtkpod_warning (_("Song (%s) already exists on iPod! (%s)\n"), song->pc_path_utf8, str);
     free_song(song);
@@ -209,15 +221,20 @@ remove_song_from_ipod_by_id(guint32 id)
 {
     if(id > 50)
     {
-	Song *s = NULL;
-	if((s = get_song_by_id(id)))
+	Song *song = NULL;
+	if((song = get_song_by_id(id)))
 	{
-	    songs = g_list_remove(songs, s);
-	    pending_deletion = g_list_append(pending_deletion, s);
-	    if(cfg->md5songs)
-		song_removed_from_ipod(s);
-	    fprintf(stderr, "Removing %s-%s(%d) and added to deletion list\n",
-		    s->title, s->artist, id);
+	    if (song->transferred)
+	    {
+		songs = g_list_remove(songs, song);
+		pending_deletion = g_list_append(pending_deletion, song);
+		if(cfg->md5songs)
+		    md5_song_removed_from_ipod(song);
+	    }
+	    else
+	    {
+		remove_song (song);
+	    }
 	}
     }
 }
@@ -459,9 +476,9 @@ gboolean flush_songs (void)
 	  if(g_strstr_len(filename, strlen(cfg->ipod_mount), cfg->ipod_mount))
 	  {
 	      remove(filename);
-	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", song->artist,
+/*	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", song->artist,
 						    song->title, song->ipod_id,
-						    filename);
+						    filename);*/
 	  }
 	  g_free(filename);
       }
@@ -488,38 +505,40 @@ gboolean flush_songs (void)
    (i.e. because an iTunesDB had been imported before) */
 static gboolean itunes_import_ok (void)
 {
-  GList *gl_song;
-  Song  *song;
+    GList *gl_song;
+    Song  *song;
 
-  gl_song = g_list_first (songs);
-  while (gl_song != NULL) {
-    song = (Song *)gl_song->data;
-    if (song->transferred) break;
-    gl_song = g_list_next (gl_song);
-  }
-  if (gl_song != NULL) return FALSE;
-  return TRUE;
+    gl_song = g_list_first (songs);
+    while (gl_song != NULL) {
+	song = (Song *)gl_song->data;
+	if (song->transferred) break;
+	gl_song = g_list_next (gl_song);
+    }
+    if (gl_song != NULL) return FALSE;
+    return TRUE;
 }
 
 /* Used to free the memory of hash data */
 static void hash_delete (gpointer data)
 {
-  struct song_extended_info *sei = data;
+    struct song_extended_info *sei = data;
 
-  if (sei)
+    if (sei)
     {
-      C_FREE (sei->pc_path_locale);
-      C_FREE (sei->md5_hash);
-      C_FREE (sei->hostname);
-      g_free (sei);
+	C_FREE (sei->pc_path_locale);
+	C_FREE (sei->pc_path_utf8);
+	C_FREE (sei->md5_hash);
+	C_FREE (sei->hostname);
+	C_FREE (sei->ipod_path);
+	g_free (sei);
     }
 }
 
 static void destroy_extendedinfohash (void)
 {
-  if (extendedinfohash)
-    g_hash_table_destroy (extendedinfohash);
-  extendedinfohash = NULL;
+    if (extendedinfohash)
+	g_hash_table_destroy (extendedinfohash);
+    extendedinfohash = NULL;
 }
 
 /* Read extended info from "name" and check if "itunes" is the
@@ -529,195 +548,207 @@ static void destroy_extendedinfohash (void)
 /* Return TRUE on success, FALSE otherwise */
 static gboolean read_extended_info (gchar *name, gchar *itunes)
 {
-  gchar *md5, buf[PATH_MAX], *arg, *line, *bufp;
-  gboolean success = TRUE;
-  gboolean expect_hash;
-  gint len;
-  struct song_extended_info *sei = NULL;
-  FILE *fp, *fpit;
+    gchar *md5, buf[PATH_MAX], *arg, *line, *bufp;
+    gboolean success = TRUE;
+    gboolean expect_hash;
+    gint len;
+    struct song_extended_info *sei = NULL;
+    FILE *fp, *fpit;
 
 
-  fpit = fopen (itunes, "r");
-  if (!fpit)
+    fpit = fopen (itunes, "r");
+    if (!fpit)
     {
-      gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
-		      itunes);
-      return FALSE;
+	gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
+			itunes);
+	return FALSE;
     }
-  md5 = do_hash_on_file (fpit);
-  fclose (fpit);
-  if (!md5)
+    md5 = md5_hash_on_file (fpit);
+    fclose (fpit);
+    if (!md5)
     {
-      fprintf (stderr, "Programming error: Could not create hash value from itunesdb\n");
-      return FALSE;
+	fprintf (stderr, "Programming error: Could not create hash value from itunesdb\n");
+	return FALSE;
     }
-  fp = fopen (name, "r");
-  if (!fp)
+    fp = fopen (name, "r");
+    if (!fp)
     {
-      gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
-		      name);
-      g_free (md5);
-      return FALSE;
+	gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
+			name);
+	g_free (md5);
+	return FALSE;
     }
-  /* Create hash table */
-  if (extendedinfohash) destroy_extendedinfohash ();
-  extendedinfohash = g_hash_table_new_full (g_int_hash, g_int_equal,
-					    NULL, hash_delete);
-  expect_hash = TRUE; /* next we expect the hash value (checksum) */
-  while (success && fgets (buf, PATH_MAX, fp))
+    /* Create hash table */
+    if (extendedinfohash) destroy_extendedinfohash ();
+    extendedinfohash = g_hash_table_new_full (g_int_hash, g_int_equal,
+					      NULL, hash_delete);
+    expect_hash = TRUE; /* next we expect the hash value (checksum) */
+    while (success && fgets (buf, PATH_MAX, fp))
     {
-      /* allow comments */
-      if ((buf[0] == ';') || (buf[0] == '#')) continue;
-      arg = strchr (buf, '=');
-      if (!arg || (arg == buf))
+	/* allow comments */
+	if ((buf[0] == ';') || (buf[0] == '#')) continue;
+	arg = strchr (buf, '=');
+	if (!arg || (arg == buf))
 	{
-	  gtkpod_warning (_("Error while reading extended info: %s\n"), buf);
-	  continue;
+	    gtkpod_warning (_("Error while reading extended info: %s\n"), buf);
+	    continue;
 	}
-      /* skip whitespace (isblank() is a GNU extension... */
-      bufp = buf;
-      while ((*bufp == ' ') || (*bufp == 0x09)) ++bufp;
-      line = g_strndup (buf, arg-bufp);
-      ++arg;
-      len = strlen (arg); /* remove newline */
-      if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
-      if (expect_hash)
+	/* skip whitespace (isblank() is a GNU extension... */
+	bufp = buf;
+	while ((*bufp == ' ') || (*bufp == 0x09)) ++bufp;
+	line = g_strndup (buf, arg-bufp);
+	++arg;
+	len = strlen (arg); /* remove newline */
+	if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
+	if (expect_hash)
 	{
-	  if(g_ascii_strcasecmp (line, "itunesdb_hash") == 0)
+	    if(g_ascii_strcasecmp (line, "itunesdb_hash") == 0)
 	    {
-	      if (strcmp (arg, md5) != 0)
+		if (strcmp (arg, md5) != 0)
 		{
-		  gtkpod_warning (_("iTunesDB (%s)\ndoes not match checksum in extended information file (%s)\n"), itunes, name);
-		  success = FALSE;
-		  break;
+		    gtkpod_warning (_("iTunesDB (%s)\ndoes not match checksum in extended information file (%s)\n"), itunes, name);
+		    success = FALSE;
+		    break;
 		}
-	      else
-		expect_hash = FALSE;
+		else expect_hash = FALSE;
 	    }
-	  else
+	    else
 	    {
-	      gtkpod_warning (_("%s:\nExpected \"itunesdb_hash=\" but got:\"%s\"\n"), name, buf);
-	      success = FALSE;
-	      break;
+		gtkpod_warning (_("%s:\nExpected \"itunesdb_hash=\" but got:\"%s\"\n"), name, buf);
+		success = FALSE;
+		break;
 	    }
 	}
-      else
-	if(g_ascii_strcasecmp (line, "id") == 0)
-	  { /* found new id */
-	    if (sei)
-	      {
-		g_hash_table_insert (extendedinfohash,
-				     &sei->ipod_id, sei);
-		sei = NULL;
-	      }
-	    if (strcmp (arg, "xxx") != 0)
-	      {
-		sei = g_malloc0 (sizeof (struct song_extended_info));
-		sei->ipod_id = atoi (arg);
-	      }
-	  }
-	else if (sei == NULL)
-	  {
-	    gtkpod_warning (_("%s:\nFormat error:%s\n"), name, buf);
-	    success = FALSE;
-	    break;
-	  }
-	else if (g_ascii_strcasecmp (line, "hostname") == 0)
-	    sei->hostname = g_strdup (arg);
-	else if (g_ascii_strcasecmp (line, "filename_locale") == 0)
-	  sei->pc_path_locale = g_strdup (arg);
-	else if (g_ascii_strcasecmp (line, "filename_utf8") == 0)
-	  sei->pc_path_utf8 = g_strdup (arg);
-	else if (g_ascii_strcasecmp (line, "md5_hash") == 0)
-	    sei->md5_hash = g_strdup (arg);
-	else if (g_ascii_strcasecmp (line, "transferred") == 0)
-	  sei->transferred = atoi (arg);
+	else
+	    if(g_ascii_strcasecmp (line, "id") == 0)
+	    { /* found new id */
+		if (sei)
+		{
+		    if (sei->ipod_id != 0)
+		    { /* normal extended information */
+			g_hash_table_insert (extendedinfohash,
+					     &sei->ipod_id, sei);
+		    }
+		    else
+		    { /* this is a deleted song that hasn't yet been
+		         removed from the iPod's hard drive */
+			Song *song = g_malloc0 (sizeof (Song));
+			song->ipod_path = g_strdup (sei->ipod_path);
+			pending_deletion = g_list_append (pending_deletion,
+							  song);
+			hash_delete ((gpointer)sei); /* free sei */
+		    }
+		    sei = NULL;
+		}
+		if (strcmp (arg, "xxx") != 0)
+		{
+		    sei = g_malloc0 (sizeof (struct song_extended_info));
+		    sei->ipod_id = atoi (arg);
+		}
+	    }
+	    else if (sei == NULL)
+	    {
+		gtkpod_warning (_("%s:\nFormat error:%s\n"), name, buf);
+		success = FALSE;
+		break;
+	    }
+	    else if (g_ascii_strcasecmp (line, "hostname") == 0)
+		sei->hostname = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "filename_locale") == 0)
+		sei->pc_path_locale = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "filename_utf8") == 0)
+		sei->pc_path_utf8 = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "md5_hash") == 0)
+		sei->md5_hash = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
+		sei->transferred = atoi (arg);
+	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
+		sei->ipod_path = g_strdup (arg);
     }
-  g_free (md5);
-  fclose (fp);
-  if (!success) destroy_extendedinfohash ();
-  return success;
+    g_free (md5);
+    fclose (fp);
+    if (!success) destroy_extendedinfohash ();
+    return success;
 }
 
 
 /* Handle the function "Import iTunesDB" */
 void handle_import (void)
 {
-  gchar *name1, *name2, *cfgdir;
-  gboolean success;
-  guint32 n,i;
-  Song *song;
+    gchar *name1, *name2, *cfgdir;
+    gboolean success;
+    guint32 n,i;
+    Song *song;
 
-  if (itunes_import_ok () == FALSE)
+    if (itunes_import_ok () == FALSE)
     {
-      gtkpod_warning (_("You cannot import an iTunesDB again!\n"));
-      return;
+	gtkpod_warning (_("You cannot import an iTunesDB again!\n"));
+	return;
     }
 
-  n = get_nr_of_songs (); /* how many songs are alread there? */
+    n = get_nr_of_songs (); /* how many songs are alread there? */
 
-  if (!cfg->offline)
-    {
-      if (cfg->write_extended_info)
+    if (!cfg->offline)
+    { /* iPod is connected */
+	if (prefs_get_write_extended_info())
 	{
-	  name1 = concat_dir (cfg->ipod_mount,
-			      "iPod_Control/iTunes/iTunesDB.ext");
-	  name2 = concat_dir (cfg->ipod_mount,
-			      "iPod_Control/iTunes/iTunesDB");
-	  success = read_extended_info (name1, name2);
-	  g_free (name1);
-	  g_free (name2);
-	  if (!success) 
+	    name1 = concat_dir (cfg->ipod_mount,
+				"iPod_Control/iTunes/iTunesDB.ext");
+	    name2 = concat_dir (cfg->ipod_mount,
+				"iPod_Control/iTunes/iTunesDB");
+	    success = read_extended_info (name1, name2);
+	    g_free (name1);
+	    g_free (name2);
+	    if (!success) 
 	    {
-	      gtkpod_warning (_("Extended info will not be used.\n"));
+		gtkpod_warning (_("Extended info will not be used.\n"));
 	    }
 	}
-      itunesdb_parse (cfg->ipod_mount);
-      /* destroy extendindinfohash */
+	itunesdb_parse (cfg->ipod_mount);
     }
-  else
+    else
     { /* offline - requires extended info */
-      if ((cfgdir = prefs_get_cfgdir ()))
+	if ((cfgdir = prefs_get_cfgdir ()))
 	{
-	  name1 = concat_dir (cfgdir, "/iTunesDB.ext");
-	  name2 = concat_dir (cfgdir, "iTunesDB");
-	  success = read_extended_info (name1, name2);
-	  g_free (name1);
-	  if (!success) 
+	    name1 = concat_dir (cfgdir, "/iTunesDB.ext");
+	    name2 = concat_dir (cfgdir, "iTunesDB");
+	    success = read_extended_info (name1, name2);
+	    g_free (name1);
+	    if (!success) 
 	    {
-	      gtkpod_warning (_("Extended info will not be used. If you have non-transferred songs,\nthese will be lost.\n"));
+		gtkpod_warning (_("Extended info will not be used. If you have non-transferred songs,\nthese will be lost.\n"));
 	    }
-	  itunesdb_parse_file (name2);
-	  g_free (name2);
-	  g_free (cfgdir);
+	    itunesdb_parse_file (name2);
+	    g_free (name2);
+	    g_free (cfgdir);
 	}
-      else
+	else
 	{
-	  gtkpod_warning (_("Import aborted.\n"));
-	  return;
+	    gtkpod_warning (_("Import aborted.\n"));
+	    return;
 	}
     }
 
-  destroy_extendedinfohash (); /* delete hash information (if available) */
+    destroy_extendedinfohash (); /* delete hash information (if available) */
 
-  if (itunes_import_ok () == FALSE)
+    if (itunes_import_ok () == FALSE)
     { /* Import was successfull, block menu item and button */
-      disable_gtkpod_import_buttons();
+	disable_gtkpod_import_buttons();
     }
-  /* We need to make sure that the songs that already existed
-     in the DB when we called itunesdb_parse() do not duplicate
-     any existing ID */
-  for (i=0; i<n; ++i)
+    /* We need to make sure that the songs that already existed
+       in the DB when we called itunesdb_parse() do not duplicate
+       any existing ID */
+    for (i=0; i<n; ++i)
     {
-      song = get_song_by_nr (i);
-      song->ipod_id = free_ipod_id (0);
-      /*we need to tell the display that the ID has changed */
-      pm_song_changed (song);
+	song = get_song_by_nr (i);
+	song->ipod_id = free_ipod_id (0);
+	/*we need to tell the display that the ID has changed */
+	pm_song_changed (song);
     }
   
-  /* setup our md5 hashness for unique files */
-  /* if(cfg->md5songs)    done with add_song ();
-     unique_file_repository_init(get_song_list()); */
+    /* setup our md5 hashness for unique files */
+    /* if(cfg->md5songs)    done with add_song ();
+       unique_file_repository_init(get_song_list()); */
 }
 
 
@@ -861,7 +892,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
       fclose (fp);
       return FALSE;
     }
-  md5 = do_hash_on_file (fpit);
+  md5 = md5_hash_on_file (fpit);
   fclose (fpit);
   if (md5)
     {
@@ -889,6 +920,18 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 	fprintf (fp, "md5_hash=%s\n", song->md5_hash);
       fprintf (fp, "transferred=%d\n", song->transferred);
     }
+  if (prefs_get_offline())
+  { /* we are offline and also need to export the list of songs that
+       are to be deleted */
+      GList *gl_song;
+      for(gl_song = pending_deletion; gl_song; gl_song = gl_song->next)
+      {
+	  song = (Song*)gl_song->data;
+	  fprintf (fp, "id=000\n");  /* our sign for songs pending
+					deletion */
+	  fprintf (fp, "filename_ipod=%s\n", song->ipod_path);
+      }
+  }
   fprintf (fp, "id=xxx\n");
   fclose (fp);
   return TRUE;
@@ -910,7 +953,7 @@ void handle_export (void)
       cfe = concat_dir (cfgdir, "iTunesDB.ext");
     }
 
-  if(!cfg->offline)
+  if(!prefs_get_offline ())
     {
       /* write songs to iPod */
       if (!(success=flush_songs ()))
@@ -919,7 +962,7 @@ void handle_export (void)
       else if (!(success=itunesdb_write (cfg->ipod_mount)))
 	  gtkpod_warning (_("Error writing iTunesDB to iPod. Export aborted!\n"));
       /* else: write extended info (PC filenames, md5 hash) to iPod */
-      else if (cfg->write_extended_info)
+      else if (prefs_get_write_extended_info ())
 	{
 	  if(!(success = write_extended_info (ipe, ipt)))
 	    gtkpod_warning (_("Extended information not written\n"));
@@ -933,18 +976,18 @@ void handle_export (void)
 	    }
 	}
       /* if everything was successful, copy files to ~/.gtkpod */
-      if (success && cfg->keep_backups)
+      if (success && prefs_get_keep_backups ())
 	{
 	  if (cfgdir)
 	    {
 	      success = cp (ipt, cft);
-	      if (success && cfg->write_extended_info)
+	      if (success && prefs_get_write_extended_info())
 		success = cp (ipe, cfe);
 	    }
 	  if ((cfgdir == NULL) || (!success))
 	    gtkpod_warning (_("Backups could not be created!\n"));
 	}
-      if (success && !cfg->keep_backups && cfgdir)
+      if (success && !prefs_get_keep_backups() && cfgdir)
 	cleanup_backup_and_extended_files ();
     }
   else

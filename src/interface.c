@@ -35,9 +35,15 @@ create_gtkpod (void)
   GtkWidget *menuitem10;
   GtkWidget *menuitem10_menu;
   GtkWidget *import_itunes_mi;
+  GtkWidget *image26;
   GtkWidget *add_files1;
+  GtkWidget *image27;
   GtkWidget *add_directory1;
+  GtkWidget *image28;
   GtkWidget *export_itunes1;
+  GtkWidget *image29;
+  GtkWidget *export_files_to_disk1;
+  GtkWidget *image30;
   GtkWidget *separatormenuitem1;
   GtkWidget *offline_menu;
   GtkWidget *trennlinie1;
@@ -45,17 +51,15 @@ create_gtkpod (void)
   GtkWidget *menuitem11;
   GtkWidget *menuitem11_menu;
   GtkWidget *new_playlist1;
-  GtkWidget *image10;
+  GtkWidget *image31;
   GtkWidget *separator1;
-  GtkWidget *cut1;
-  GtkWidget *copy1;
-  GtkWidget *paste1;
-  GtkWidget *delete1;
+  GtkWidget *delete_song;
+  GtkWidget *image32;
+  GtkWidget *delete_playlist1;
+  GtkWidget *image33;
   GtkWidget *separator2;
   GtkWidget *edit_preferences1;
-  GtkWidget *image11;
-  GtkWidget *export_files_to_disk;
-  GtkWidget *menuitem12;
+  GtkWidget *image34;
   GtkWidget *menuitem13;
   GtkWidget *menuitem13_menu;
   GtkWidget *about1;
@@ -123,21 +127,45 @@ create_gtkpod (void)
   menuitem10_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem10), menuitem10_menu);
 
-  import_itunes_mi = gtk_menu_item_new_with_mnemonic (_("_Import iTunes"));
+  import_itunes_mi = gtk_image_menu_item_new_with_mnemonic (_("_Import iTunes"));
   gtk_widget_show (import_itunes_mi);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), import_itunes_mi);
 
-  add_files1 = gtk_menu_item_new_with_mnemonic (_("Add _Files"));
+  image26 = gtk_image_new_from_stock ("gtk-goto-top", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image26);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (import_itunes_mi), image26);
+
+  add_files1 = gtk_image_menu_item_new_with_mnemonic (_("Add _Files"));
   gtk_widget_show (add_files1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), add_files1);
 
-  add_directory1 = gtk_menu_item_new_with_mnemonic (_("Add _Directory"));
+  image27 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image27);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (add_files1), image27);
+
+  add_directory1 = gtk_image_menu_item_new_with_mnemonic (_("Add _Directory"));
   gtk_widget_show (add_directory1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), add_directory1);
 
-  export_itunes1 = gtk_menu_item_new_with_mnemonic (_("_Export iTunes"));
+  image28 = gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image28);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (add_directory1), image28);
+
+  export_itunes1 = gtk_image_menu_item_new_with_mnemonic (_("_Export iTunes"));
   gtk_widget_show (export_itunes1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), export_itunes1);
+
+  image29 = gtk_image_new_from_stock ("gtk-goto-bottom", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image29);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (export_itunes1), image29);
+
+  export_files_to_disk1 = gtk_image_menu_item_new_with_mnemonic (_("Export Files to Disk"));
+  gtk_widget_show (export_files_to_disk1);
+  gtk_container_add (GTK_CONTAINER (menuitem10_menu), export_files_to_disk1);
+
+  image30 = gtk_image_new_from_stock ("gtk-floppy", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image30);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (export_files_to_disk1), image30);
 
   separatormenuitem1 = gtk_menu_item_new ();
   gtk_widget_show (separatormenuitem1);
@@ -168,30 +196,30 @@ create_gtkpod (void)
   gtk_widget_show (new_playlist1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), new_playlist1);
 
-  image10 = gtk_image_new_from_stock ("gtk-justify-left", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image10);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_playlist1), image10);
+  image31 = gtk_image_new_from_stock ("gtk-justify-left", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image31);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_playlist1), image31);
 
   separator1 = gtk_menu_item_new ();
   gtk_widget_show (separator1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), separator1);
   gtk_widget_set_sensitive (separator1, FALSE);
 
-  cut1 = gtk_image_menu_item_new_from_stock ("gtk-cut", accel_group);
-  gtk_widget_show (cut1);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), cut1);
+  delete_song = gtk_image_menu_item_new_with_mnemonic (_("Delete Selected Songs"));
+  gtk_widget_show (delete_song);
+  gtk_container_add (GTK_CONTAINER (menuitem11_menu), delete_song);
 
-  copy1 = gtk_image_menu_item_new_from_stock ("gtk-copy", accel_group);
-  gtk_widget_show (copy1);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), copy1);
+  image32 = gtk_image_new_from_stock ("gtk-delete", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image32);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (delete_song), image32);
 
-  paste1 = gtk_image_menu_item_new_from_stock ("gtk-paste", accel_group);
-  gtk_widget_show (paste1);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), paste1);
+  delete_playlist1 = gtk_image_menu_item_new_with_mnemonic (_("Delete Selected Playlist"));
+  gtk_widget_show (delete_playlist1);
+  gtk_container_add (GTK_CONTAINER (menuitem11_menu), delete_playlist1);
 
-  delete1 = gtk_image_menu_item_new_from_stock ("gtk-delete", accel_group);
-  gtk_widget_show (delete1);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), delete1);
+  image33 = gtk_image_new_from_stock ("gtk-delete", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image33);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (delete_playlist1), image33);
 
   separator2 = gtk_menu_item_new ();
   gtk_widget_show (separator2);
@@ -205,17 +233,9 @@ create_gtkpod (void)
                               GDK_p, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
-  image11 = gtk_image_new_from_stock ("gtk-preferences", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image11);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (edit_preferences1), image11);
-
-  export_files_to_disk = gtk_menu_item_new_with_mnemonic (_("Export Files to Disk"));
-  gtk_widget_show (export_files_to_disk);
-  gtk_container_add (GTK_CONTAINER (menuitem11_menu), export_files_to_disk);
-
-  menuitem12 = gtk_menu_item_new_with_mnemonic (_("_View"));
-  gtk_widget_show (menuitem12);
-  gtk_container_add (GTK_CONTAINER (menubar1), menuitem12);
+  image34 = gtk_image_new_from_stock ("gtk-preferences", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image34);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (edit_preferences1), image34);
 
   menuitem13 = gtk_menu_item_new_with_mnemonic (_("_Help"));
   gtk_widget_show (menuitem13);
@@ -459,6 +479,9 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) export_itunes1, "activate",
                     G_CALLBACK (on_export_itunes1_activate),
                     NULL);
+  g_signal_connect ((gpointer) export_files_to_disk1, "activate",
+                    G_CALLBACK (on_export_files_to_disk_activate),
+                    NULL);
   g_signal_connect ((gpointer) offline_menu, "activate",
                     G_CALLBACK (on_offline1_activate),
                     NULL);
@@ -468,23 +491,14 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) new_playlist1, "activate",
                     G_CALLBACK (on_new_playlist1_activate),
                     NULL);
-  g_signal_connect ((gpointer) cut1, "activate",
-                    G_CALLBACK (on_cut1_activate),
+  g_signal_connect ((gpointer) delete_song, "activate",
+                    G_CALLBACK (on_delete_song_menu),
                     NULL);
-  g_signal_connect ((gpointer) copy1, "activate",
-                    G_CALLBACK (on_copy1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) paste1, "activate",
-                    G_CALLBACK (on_paste1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) delete1, "activate",
-                    G_CALLBACK (on_delete1_activate),
+  g_signal_connect ((gpointer) delete_playlist1, "activate",
+                    G_CALLBACK (on_delete_playlist_menu),
                     NULL);
   g_signal_connect ((gpointer) edit_preferences1, "activate",
                     G_CALLBACK (on_edit_preferences1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) export_files_to_disk, "activate",
-                    G_CALLBACK (on_export_files_to_disk_activate),
                     NULL);
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about1_activate),
@@ -533,9 +547,15 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem10, "menuitem10");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem10_menu, "menuitem10_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, import_itunes_mi, "import_itunes_mi");
+  GLADE_HOOKUP_OBJECT (gtkpod, image26, "image26");
   GLADE_HOOKUP_OBJECT (gtkpod, add_files1, "add_files1");
+  GLADE_HOOKUP_OBJECT (gtkpod, image27, "image27");
   GLADE_HOOKUP_OBJECT (gtkpod, add_directory1, "add_directory1");
+  GLADE_HOOKUP_OBJECT (gtkpod, image28, "image28");
   GLADE_HOOKUP_OBJECT (gtkpod, export_itunes1, "export_itunes1");
+  GLADE_HOOKUP_OBJECT (gtkpod, image29, "image29");
+  GLADE_HOOKUP_OBJECT (gtkpod, export_files_to_disk1, "export_files_to_disk1");
+  GLADE_HOOKUP_OBJECT (gtkpod, image30, "image30");
   GLADE_HOOKUP_OBJECT (gtkpod, separatormenuitem1, "separatormenuitem1");
   GLADE_HOOKUP_OBJECT (gtkpod, offline_menu, "offline_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, trennlinie1, "trennlinie1");
@@ -543,17 +563,15 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem11, "menuitem11");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem11_menu, "menuitem11_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, new_playlist1, "new_playlist1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image10, "image10");
+  GLADE_HOOKUP_OBJECT (gtkpod, image31, "image31");
   GLADE_HOOKUP_OBJECT (gtkpod, separator1, "separator1");
-  GLADE_HOOKUP_OBJECT (gtkpod, cut1, "cut1");
-  GLADE_HOOKUP_OBJECT (gtkpod, copy1, "copy1");
-  GLADE_HOOKUP_OBJECT (gtkpod, paste1, "paste1");
-  GLADE_HOOKUP_OBJECT (gtkpod, delete1, "delete1");
+  GLADE_HOOKUP_OBJECT (gtkpod, delete_song, "delete_song");
+  GLADE_HOOKUP_OBJECT (gtkpod, image32, "image32");
+  GLADE_HOOKUP_OBJECT (gtkpod, delete_playlist1, "delete_playlist1");
+  GLADE_HOOKUP_OBJECT (gtkpod, image33, "image33");
   GLADE_HOOKUP_OBJECT (gtkpod, separator2, "separator2");
   GLADE_HOOKUP_OBJECT (gtkpod, edit_preferences1, "edit_preferences1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image11, "image11");
-  GLADE_HOOKUP_OBJECT (gtkpod, export_files_to_disk, "export_files_to_disk");
-  GLADE_HOOKUP_OBJECT (gtkpod, menuitem12, "menuitem12");
+  GLADE_HOOKUP_OBJECT (gtkpod, image34, "image34");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13, "menuitem13");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13_menu, "menuitem13_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, about1, "about1");
@@ -1009,7 +1027,7 @@ create_delete_confirmation (void)
   delete_confirmation = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_container_set_border_width (GTK_CONTAINER (delete_confirmation), 6);
   gtk_window_set_title (GTK_WINDOW (delete_confirmation), _("window1"));
-  gtk_window_set_default_size (GTK_WINDOW (delete_confirmation), 300, -1);
+  gtk_window_set_default_size (GTK_WINDOW (delete_confirmation), 300, 300);
 
   vbox6 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox6);
@@ -1022,7 +1040,7 @@ create_delete_confirmation (void)
 
   msg_label_scroller = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (msg_label_scroller);
-  gtk_box_pack_start (GTK_BOX (vbox6), msg_label_scroller, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox6), msg_label_scroller, TRUE, TRUE, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (msg_label_scroller), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (msg_label_scroller), GTK_SHADOW_IN);
 
@@ -1041,7 +1059,7 @@ create_delete_confirmation (void)
 
   hbuttonbox4 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox4);
-  gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox4, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox4, FALSE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox4), 2);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox4), GTK_BUTTONBOX_SPREAD);
 
@@ -1081,5 +1099,82 @@ create_delete_confirmation (void)
   GLADE_HOOKUP_OBJECT (delete_confirmation, delete_cancel, "delete_cancel");
 
   return delete_confirmation;
+}
+
+GtkWidget*
+create_delete_confirmation_pl (void)
+{
+  GtkWidget *delete_confirmation_pl;
+  GtkWidget *vbox6;
+  GtkWidget *msg_label_title;
+  GtkWidget *hbox3;
+  GtkWidget *prefs_request;
+  GtkWidget *hbuttonbox4;
+  GtkWidget *delete_ok;
+  GtkWidget *delete_cancel;
+
+  delete_confirmation_pl = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_container_set_border_width (GTK_CONTAINER (delete_confirmation_pl), 6);
+  gtk_window_set_title (GTK_WINDOW (delete_confirmation_pl), _("window1"));
+  gtk_window_set_default_size (GTK_WINDOW (delete_confirmation_pl), 300, -1);
+
+  vbox6 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox6);
+  gtk_container_add (GTK_CONTAINER (delete_confirmation_pl), vbox6);
+
+  msg_label_title = gtk_label_new (_("label21"));
+  gtk_widget_show (msg_label_title);
+  gtk_box_pack_start (GTK_BOX (vbox6), msg_label_title, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (msg_label_title), GTK_JUSTIFY_LEFT);
+
+  hbox3 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (hbox3);
+  gtk_box_pack_start (GTK_BOX (vbox6), hbox3, FALSE, TRUE, 2);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox3), 2);
+
+  prefs_request = gtk_check_button_new_with_mnemonic (_("Never ask this Again"));
+  gtk_widget_show (prefs_request);
+  gtk_box_pack_start (GTK_BOX (hbox3), prefs_request, FALSE, FALSE, 0);
+
+  hbuttonbox4 = gtk_hbutton_box_new ();
+  gtk_widget_show (hbuttonbox4);
+  gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox4, FALSE, TRUE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox4), 2);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox4), GTK_BUTTONBOX_SPREAD);
+
+  delete_ok = gtk_button_new_with_mnemonic (_("Ok"));
+  gtk_widget_show (delete_ok);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox4), delete_ok);
+  GTK_WIDGET_SET_FLAGS (delete_ok, GTK_CAN_DEFAULT);
+
+  delete_cancel = gtk_button_new_with_mnemonic (_("Cancel"));
+  gtk_widget_show (delete_cancel);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox4), delete_cancel);
+  GTK_WIDGET_SET_FLAGS (delete_cancel, GTK_CAN_DEFAULT);
+
+  g_signal_connect ((gpointer) delete_confirmation_pl, "delete_event",
+                    G_CALLBACK (on_delete_confirmation_delete_event),
+                    NULL);
+  g_signal_connect ((gpointer) prefs_request, "toggled",
+                    G_CALLBACK (on_prefs_request_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) delete_ok, "clicked",
+                    G_CALLBACK (on_delete_ok_clicked),
+                    NULL);
+  g_signal_connect ((gpointer) delete_cancel, "clicked",
+                    G_CALLBACK (on_delete_cancel_clicked),
+                    NULL);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (delete_confirmation_pl, delete_confirmation_pl, "delete_confirmation_pl");
+  GLADE_HOOKUP_OBJECT (delete_confirmation_pl, vbox6, "vbox6");
+  GLADE_HOOKUP_OBJECT (delete_confirmation_pl, msg_label_title, "msg_label_title");
+  GLADE_HOOKUP_OBJECT (delete_confirmation_pl, hbox3, "hbox3");
+  GLADE_HOOKUP_OBJECT (delete_confirmation_pl, prefs_request, "prefs_request");
+  GLADE_HOOKUP_OBJECT (delete_confirmation_pl, hbuttonbox4, "hbuttonbox4");
+  GLADE_HOOKUP_OBJECT (delete_confirmation_pl, delete_ok, "delete_ok");
+  GLADE_HOOKUP_OBJECT (delete_confirmation_pl, delete_cancel, "delete_cancel");
+
+  return delete_confirmation_pl;
 }
 

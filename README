@@ -286,9 +286,9 @@ the charset set in the preference dialogue).
 Known bugs
 ----------
 
-- Menu: Many items don't work yet.
-- Offline mode: files marked for deletion are not removed from iPod
-  (will be fixed before release)
+- CRITICAL: remove_song_from_playlist does not remove song from all
+  existing playlists if song is removed from MPL (may cause segfault
+  if those songs are accessed from another playlist)
 - Display of large number of songs is awfully slow (mainly because of
   the use of the standard GTK2 tree views)
 - No safety dialogue when quitting gtkpod without exporting the

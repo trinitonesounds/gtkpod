@@ -106,13 +106,13 @@ get_filesize_for_file_descriptor(FILE *fp)
 }
 
 /**
- * do_hash_on_file - read PATH_MAX * NR_PATH_MAX_BLOCKS bytes from the file
+ * md5_hash_on_file - read PATH_MAX * NR_PATH_MAX_BLOCKS bytes from the file
  * and ask sha1 for a hash of it, convert this hash to a string of hex output
  * @fp - an open file descriptor to read from
  * Returns - A Hash String - you handle memory returned
  */
 gchar *
-do_hash_on_file(FILE * fp)
+md5_hash_on_file(FILE * fp)
 {
    gchar *result = NULL;
 
@@ -182,7 +182,7 @@ hash_song(Song * s)
       {
          if ((fp = fopen(filename, "r")))
          {
-            result = do_hash_on_file(fp);
+            result = md5_hash_on_file(fp);
             fclose(fp);
          }
          else
@@ -200,7 +200,7 @@ hash_song(Song * s)
  * @songlist - A GList with data attribute of type Song *
  */
 void
-unique_file_repository_init(GList * songlist)
+md5_unique_file_init(GList * songlist)
 {
    Song *s = NULL;
    GList *l = NULL;
@@ -209,14 +209,14 @@ unique_file_repository_init(GList * songlist)
    if (cfg->md5songs)
    {
       if (filehash)
-         unique_file_repository_free();
+         md5_unique_file_free();
       filehash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
       /* populate the hash table */
       for (l = songlist; l; l = l->next)
       {
 	  s = (Song *) l->data;
-	  if((val = song_exists_on_ipod(s)))
+	  if((val = md5_song_exists_on_ipod(s)))
 	      g_free(val);	
 	  /* 
 	   * TODO could eventually be used to detect duplicates if the user
@@ -231,7 +231,7 @@ unique_file_repository_init(GList * songlist)
  * Free up the dynamically allocated memory in this table
  */
 void
-unique_file_repository_free(void)
+md5_unique_file_free(void)
 {
    if ((cfg->md5songs) && (filehash))
    {
@@ -244,10 +244,11 @@ unique_file_repository_free(void)
  * Check to see if a song has already been added to the ipod
  * @s - the Song we want to know about
  * Returns the filename (or other tag) if the song is already 
- * on the ipod, NULL otherwise
+ * on the ipod, NULL otherwise. Don't free the result. Use it
+ * _before_ you free the song "s".
  */
 gchar *
-song_exists_on_ipod(Song * s)
+md5_song_exists_on_ipod(Song * s)
 {
    gchar *val = NULL;
    gchar *result = NULL;
@@ -289,7 +290,7 @@ song_exists_on_ipod(Song * s)
  * @s - The Song that's being freed from the ipod
  */
 void
-song_removed_from_ipod(Song * s)
+md5_song_removed_from_ipod(Song * s)
 {
    gchar *val = NULL;
 

@@ -111,5 +111,4 @@ void cleanup_listviews(void);
 
 Playlist* get_currently_selected_playlist(void);
 GList* get_currently_selected_songs(void);
-
 #endif __TREE_H__

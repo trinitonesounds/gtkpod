@@ -31,20 +31,10 @@
 #include "song.h"
 #include <stdio.h>
 
-/**
- * FIXME: Internationalize?
- */
-static gchar *messages[] = {
-    "Are you sure you want to delete the following"
-};
-
-/**
- * FIXME: Internationalize?
- */
 static gchar *titles[] = {
-    "Delete Playlist?",
-    "Delete Song Completely?",
-    "Delete Song From Playlist?",
+    N_("Delete Playlist?"),
+    N_("Delete Song Completely?"),
+    N_("Delete Song From Playlist?"),
 };
 
 /**
@@ -99,7 +89,7 @@ get_current_selected_song_name(void)
     gchar buf[PATH_MAX];
     gchar *result = NULL;
     
-    selected_songs = get_currently_selected_songs();
+    if(!selected_songs)   selected_songs = get_currently_selected_songs();
     for(l = selected_songs; l; l = l->next)
     {
 	s = (Song*)l->data;
@@ -127,7 +117,7 @@ confirmation_window_cleanup(void)
 {
     GList *l = NULL;
     confirmation_type = 0;
-    gtk_widget_destroy(confirmation_window);
+    if (confirmation_window) gtk_widget_destroy(confirmation_window);
     confirmation_window = NULL;
     for(l = selected_songs; l; l = l->next)
     {
@@ -161,21 +151,18 @@ static void
 create_ipod_song_deletion_interface(void)
 {
     GtkWidget *w = NULL;
-    gchar buf[PATH_MAX];
+    gchar *buf;
     gchar *song_name = NULL;
 
     song_name = get_current_selected_song_name();
-    snprintf(buf, PATH_MAX, "%s songs completely from your ipod?",
-	    messages[0]);
-    
-    if((w = lookup_widget(confirmation_window, "msg_label_title")))
+    buf = _("Are you sure you want to delete the following songs\ncompletely from your ipod?");
+    if(buf && (w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
-    if((w = lookup_widget(confirmation_window, "msg_label")))
+    if(song_name && (w = lookup_widget(confirmation_window, "msg_label")))
 	set_message_label_to_string(w, song_name);
-    gtk_widget_show(confirmation_window);
     gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[1]);
-    if(song_name) g_free(song_name);
     gtk_widget_show(confirmation_window);
+    if(song_name) g_free(song_name);
 }
 
 /**
@@ -189,37 +176,33 @@ static void
 create_playlist_song_deletion_interface(const gchar *pl_name)
 {
     GtkWidget *w = NULL;
-    gchar buf[PATH_MAX];
+    gchar *buf;
     gchar *song_name = NULL;
 
     song_name = get_current_selected_song_name();
-    snprintf(buf, PATH_MAX, "%s songs from the playlist %s?  ", messages[0],
-	    pl_name);
-    if((w = lookup_widget(confirmation_window, "msg_label_title")))
+    buf = g_strdup_printf(_("Are you sure you want to delete the following songs\nfrom the playlist \"%s\"?"), pl_name);
+    if(buf && (w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
-    if((w = lookup_widget(confirmation_window, "msg_label")))
+    if(song_name && (w = lookup_widget(confirmation_window, "msg_label")))
 	set_message_label_to_string(w, song_name);
-    gtk_widget_show(confirmation_window);
     gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[2]);
-    
-    if(song_name) g_free(song_name);
     gtk_widget_show(confirmation_window);
+    if(song_name) g_free(song_name);
+    if(buf) g_free(buf);
 }
 
 void
 create_playlist_deletion_interface(const gchar *pl_name)
 {
     GtkWidget *w = NULL;
-    gchar buf[PATH_MAX];
+    gchar *buf;
 
-    snprintf(buf, PATH_MAX, "%s the playlist %s?", messages[0], pl_name);
-    if((w = lookup_widget(confirmation_window, "msg_label_title")))
+    buf = g_strdup_printf(_("Are you sure you want to delete the playlist \"%s\"?"), pl_name);
+    if(buf && (w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
-    if((w = lookup_widget(confirmation_window, "msg_label_scroller")))
-	gtk_widget_hide(w);
-    gtk_widget_show(confirmation_window);
     gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[0]);
     gtk_widget_show(confirmation_window);
+    if(buf) g_free(buf);
 }
 
 /**
@@ -238,14 +221,14 @@ confirmation_window_create(int window_type)
     if(!confirmation_window)
     {
 	confirmation_type = window_type;
-	confirmation_window = create_delete_confirmation();
 	    
 	pl_name = get_current_selected_playlist_name();
-	switch(confirmation_type)
+	if (pl_name) switch(confirmation_type)
 	{
 	    case CONFIRMATION_WINDOW_PLAYLIST:
-		if(selected_playlist->type != PL_TYPE_MPL)
+		if(selected_playlist->type == PL_TYPE_NORM)
 		{
+		    confirmation_window = create_delete_confirmation_pl();
 		    if(prefs_get_playlist_deletion())
 		    {
 			create_playlist_deletion_interface(pl_name);
@@ -261,6 +244,13 @@ confirmation_window_create(int window_type)
 		}
 		break;
 	    case CONFIRMATION_WINDOW_SONG:
+		selected_songs = get_currently_selected_songs();
+		if (!selected_songs)
+		{  /* no songs selected */
+		    confirmation_window_cleanup();
+		    break;
+		}
+		confirmation_window = create_delete_confirmation();
 		if(selected_playlist->type == PL_TYPE_MPL)
 		{
 		    confirmation_type = CONFIRMATION_WINDOW_SONG_FROM_IPOD;
@@ -299,7 +289,7 @@ confirmation_window_create(int window_type)
 		}
 		break;
 	    default:
-		fprintf(stderr, "Unknown confirmation Ok clicked\n");
+		fprintf(stderr, "Programming error: Unknown confirmation Ok clicked\n");
 		break;
 	}
 	if(pl_name) g_free(pl_name);
@@ -338,7 +328,7 @@ void confirmation_window_ok_clicked(void)
 		}
 		break;
 	    default:
-		fprintf(stderr, "Unknown confirmation Ok clicked\n");
+		fprintf(stderr, "Programming error: Unknown confirmation Ok clicked\n");
 		break;
 	}
     }
@@ -369,7 +359,7 @@ void confirmation_window_prefs_toggled(gboolean val)
 	    prefs_set_song_ipod_file_deletion(myval);
 	    break;
 	default:
-	    fprintf(stderr, "Unknown confirmation toggled\n");
+	    fprintf(stderr, "Programming error: Unknown confirmation toggled\n");
 	    break;
     }
 }

@@ -69,7 +69,7 @@ main (int argc, char *argv[])
   if (!read_prefs (gtkpod, argc, argv)) return 0;
   create_listviews (gtkpod);
   create_mpl ();     /* needs at least the master playlist */
-  unique_file_repository_init (NULL); /* init for duplicate detection */
+  md5_unique_file_init (NULL); /* init for duplicate detection */
   register_gtkpod_main_window(gtkpod);
   if(prefs_get_auto_import())
     handle_import();

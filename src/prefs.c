@@ -53,7 +53,7 @@ static void usage (FILE *file)
   fprintf(file, _("  -c:           check files automagically for duplicates\n"));
   fprintf(file, _("  --md5:        same as \"-c\".\n"));
   fprintf(file, _("  --auto:       import database automatically after start.\n"));
-  fprintf(file, _("  -a:           same as \"-a\".\n"));
+  fprintf(file, _("  -a:           same as \"--auto\".\n"));
   fprintf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n"));
   fprintf(file, _("                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n"));
   fprintf(file, _("                used with \"Offline\" deactivated.\n"));
@@ -403,8 +403,7 @@ void prefs_set_last_dir_browse(gchar *file)
     if (file)
     {
 	gchar *tmp = NULL;
-	if(cfg->last_dir.browse) 
-	    g_free(cfg->last_dir.browse);
+	C_FREE(cfg->last_dir.browse);
 	if((tmp = get_dirname_of_filename(file)))
 	{
 	    cfg->last_dir.browse = g_strdup_printf("%s/", tmp);

@@ -233,3 +233,11 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 void
 on_charset_combo_entry_changed         (GtkEditable     *editable,
                                         gpointer         user_data);
+
+void
+on_delete_song_menu                    (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_delete_playlist_menu                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

@@ -67,17 +67,6 @@ typedef struct
   gchar   *md5_hash;         /* md5 hash of file (or NULL)         */
 } Song;
 
-/* only used when reading extended info from file */
-struct song_extended_info
-{
-  guint ipod_id;
-  gchar *pc_path_locale;
-  gchar *pc_path_utf8;
-  gchar *md5_hash;
-  gchar *hostname;
-  gboolean transferred;
-};
-
 void free_song(Song *song);
 gboolean add_song (Song *song);
 void remove_song (Song *song);
