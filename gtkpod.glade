@@ -3723,7 +3723,7 @@
 			  <child>
 			    <widget class="GtkSpinButton" id="cfg_misc_song_nr">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Number of songs in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'.</property>
+			      <property name="tooltip" translatable="yes">Number of songs in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'. 0 means no song's nr limit</property>
 			      <property name="can_focus">True</property>
 			      <property name="climb_rate">1</property>
 			      <property name="digits">0</property>
@@ -3779,7 +3779,7 @@
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Also include songs never played
-in generated playlists</property>
+in &quot;Best Rated&quot; playlist</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="active">False</property>

@@ -1990,7 +1990,7 @@ create_prefs_window (void)
   gtk_table_attach (GTK_TABLE (table8), cfg_misc_song_nr, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_misc_song_nr, _("Number of songs in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_misc_song_nr, _("Number of songs in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'. 0 means no songs' nr limit"), NULL);
 
   label68 = gtk_label_new (_(" Number of songs in generated playlists: "));
   gtk_widget_show (label68);
@@ -2000,7 +2000,7 @@ create_prefs_window (void)
   gtk_label_set_justify (GTK_LABEL (label68), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label68), 0, 0.5);
 
-  cfg_not_played_song = gtk_check_button_new_with_mnemonic (_("Also include songs never played\nin generated playlists"));
+  cfg_not_played_song = gtk_check_button_new_with_mnemonic (_("Also include songs never played\nin \"Best Rated\" playlist"));
   gtk_widget_show (cfg_not_played_song);
   gtk_box_pack_start (GTK_BOX (vbox48), cfg_not_played_song, FALSE, FALSE, 0);
 
