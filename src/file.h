@@ -37,7 +37,7 @@
 
 gboolean add_song_by_filename (gchar *name, Playlist *plitem);
 gboolean add_directory_recursively (gchar *name, Playlist *plitem);
-gboolean add_playlist_by_filename (gchar *name);
+gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem);
 gboolean write_tags_to_file(Song *s, gint tag_id);
 void update_song_from_file (Song *song);
 void update_selected_songs (void);

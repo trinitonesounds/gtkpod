@@ -29,6 +29,7 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#include <stdlib.h>
 
 #include "callbacks.h"
 #include "interface.h"
@@ -79,7 +80,7 @@ void
 on_new_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  add_new_playlist (_("New Playlist"));
+  add_new_playlist (_("New Playlist"), -1);
 }
 
 void
@@ -145,7 +146,7 @@ void
 on_new_playlist_button                 (GtkButton       *button,
                                         gpointer         user_data)
 {
-  add_new_playlist (_("New Playlist"));
+  add_new_playlist (_("New Playlist"), -1);
 }
 
 void
@@ -171,9 +172,11 @@ on_playlist_treeview_drag_data_received
 {
     GtkTreeIter i;
     GtkWidget *w = NULL;
-    GtkTreePath *tp = NULL;
-    GtkTreeModel *tm = NULL;
+    GtkTreePath *path = NULL;
+    GtkTreeModel *model = NULL;
     GtkTreeViewDropPosition pos = 0;
+    gint position = -1;
+    Playlist *pl = NULL;
 
     /* sometimes we get empty dnd data, ignore */
     if((!data) || (data->length < 0)) return;
@@ -182,40 +185,68 @@ on_playlist_treeview_drag_data_received
     if(w == widget) return;
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
-
-    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget), x, y, &tp,
-		&pos))
+    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
+					 x, y, &path, &pos))
     {
-	/* 
-	 * ensure a valid tree path, and that we're dropping ON a playlist
-	 * not between 
-	 */
-	if((tp) && ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
-	    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))) 
+	model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+	if(gtk_tree_model_get_iter(model, &i, path))
 	{
-	    tm = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-	    if(gtk_tree_model_get_iter(tm, &i, tp))
+	    gtk_tree_model_get(model, &i, 0, &pl, -1);
+	}
+	/* get position of current path */
+	position = atoi (gtk_tree_path_to_string (path));
+	/* adjust position */
+	if (pos == GTK_TREE_VIEW_DROP_AFTER)  ++position;
+	/* don't allow drop _before_ MPL */
+	if (position == 0) ++position;
+	switch (info)
+	{
+	case DND_GTKPOD_IDLIST:
+	    if(pl)
 	    {
-		Playlist *pl = NULL;
-		gtk_tree_model_get(tm, &i, 0, &pl, -1);
-		if((pl) && (pl->type == PL_TYPE_NORM))
-		{
-		    gchar *str = data->data;
-		    guint32 id = 0;
-		    while(parse_ipod_id_from_string(&str,&id))
+		if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
+		    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
+		{ /* drop into existing playlist */
+		    if (pl->type == PL_TYPE_NORM)
 		    {
-			add_songid_to_playlist(pl, id);
+			add_idlist_to_playlist (pl, data->data);
+			gtk_drag_finish (drag_context, TRUE, FALSE, time);
 		    }
-		    data_changed();
+		    else gtk_drag_finish (drag_context, FALSE, FALSE, time);
+		}
+		else
+		{ /* drop between playlists */
+		    Playlist *plitem = NULL;
+		    plitem = add_new_playlist (_("New Playlist"), position);
+		    add_idlist_to_playlist (plitem, data->data);
+		    gtk_drag_finish (drag_context, TRUE, FALSE, time);
 		}
 	    }
-	    gtk_tree_path_free(tp);
+	    else gtk_drag_finish (drag_context, FALSE, FALSE, time);
+	    break;
+	case DND_TEXT_PLAIN:
+	    if(pl)
+	    {
+		if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
+		    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
+		{ /* drop into existing playlist */
+		    add_text_plain_to_playlist (pl, data->data, 0);
+		    gtk_drag_finish (drag_context, TRUE, FALSE, time);
+		}
+		else
+		{ /* drop between playlists */
+		    add_text_plain_to_playlist (NULL, data->data, position);
+		    gtk_drag_finish (drag_context, TRUE, FALSE, time);
+		}
+	    }
+	    else gtk_drag_finish (drag_context, FALSE, FALSE, time);
+	    break;
+	default:
+	    puts ("not yet implemented");
+	    gtk_drag_finish (drag_context, FALSE, FALSE, time);
+	    break;
 	}
-	else
-	{
-	    gtkpod_statusbar_message(_(
-			"Badly positioned file drop, items not copied"));
-	}
+	gtk_tree_path_free(path);
     }
 }
 
@@ -233,7 +264,7 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
 
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
     {
-	if(info == 1000)	/* gtkpod/file */
+	if(info == DND_GTKPOD_IDLIST)
 	{
 	    GString *reply = g_string_sized_new (2000);
 	    gtk_tree_selection_selected_foreach(ts,
@@ -245,7 +276,7 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
 	    }
 	    g_string_free (reply, TRUE);
 	}
-	else if(info == 1001)
+	else if(info == DND_TEXT_PLAIN)
 	{
 	    fprintf(stderr, "received file of type \"text/plain\"\n");
 	}
@@ -333,7 +364,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 		update_selected_playlist ();
 		break;
 	    case GDK_n:
-		add_new_playlist (_("New Playlist"));
+		add_new_playlist (_("New Playlist"), -1);
 		break;
 	    default:
 		break;
@@ -469,9 +500,10 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 {
     GtkTreeIter i;
     GtkWidget *w = NULL;
-    GtkTreePath *tp = NULL;
-    GtkTreeModel *tm = NULL;
+    GtkTreePath *path = NULL;
+    GtkTreeModel *model = NULL;
     GtkTreeViewDropPosition pos = 0;
+
     /* sometimes we get empty dnd data, ignore */
     if(widgets_blocked || (!data) || (data->length < 0)) return;
 
@@ -481,21 +513,21 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
 
-    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget), x, y, &tp,
+    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget), x, y, &path,
 		&pos))
     {
 	/* 
 	 * ensure a valid tree path, and that we're dropping BEFORE or AFTER
 	 * a track not onto
 	 */
-	if((tp) && ((pos == GTK_TREE_VIEW_DROP_BEFORE) ||
+	if((path) && ((pos == GTK_TREE_VIEW_DROP_BEFORE) ||
 	    (pos == GTK_TREE_VIEW_DROP_AFTER))) 
 	{
-	    tm = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-	    if(gtk_tree_model_get_iter(tm, &i, tp))
+	    model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+	    if(gtk_tree_model_get_iter(model, &i, path))
 	    {
 		Song *s = NULL;
-		gtk_tree_model_get(tm, &i, 0, &s, -1);
+		gtk_tree_model_get(model, &i, 0, &s, -1);
 		if(s)
 		{
 		    guint32 id = 0;
@@ -548,7 +580,7 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 		    }
 		}
 	    }
-	    gtk_tree_path_free(tp);
+	    gtk_tree_path_free(path);
 	}
     }
 }
@@ -674,7 +706,7 @@ on_st_treeview_drag_data_get           (GtkWidget       *widget,
     
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
     {
-	if(info == 1000)	/* gtkpod/file */
+	if(info == DND_GTKPOD_IDLIST)	/* gtkpod/file */
 	{
 	    GString *reply = g_string_sized_new (2000);
 	    gtk_tree_selection_selected_foreach(ts,
@@ -686,7 +718,7 @@ on_st_treeview_drag_data_get           (GtkWidget       *widget,
 	    }
 	    g_string_free (reply, TRUE);
 	}
-	else if(info == 1001)
+	else if(info == DND_TEXT_PLAIN)
 	{
 	    fprintf(stderr, "received file of type \"text/plain\"\n");
 	}
@@ -831,3 +863,17 @@ on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
     prefs_window_set_update_existing(
 	gtk_toggle_button_get_active(togglebutton));
 }
+
+void
+on_song_window_drag_data_received      (GtkWidget       *widget,
+                                        GdkDragContext  *drag_context,
+                                        gint             x,
+                                        gint             y,
+                                        GtkSelectionData *data,
+                                        guint            info,
+                                        guint            time,
+                                        gpointer         user_data)
+{
+    printf("was here\n");
+}
+

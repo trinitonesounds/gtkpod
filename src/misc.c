@@ -175,7 +175,7 @@ static void add_playlists_ok_button (GtkWidget *button, GtkFileSelection *select
   names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
   for (i=0; names[i] != NULL; ++i)
     {
-      add_playlist_by_filename (names[i]);
+      add_playlist_by_filename (names[i], NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
     }
@@ -365,6 +365,45 @@ parse_ipod_id_from_string(gchar **s, guint32 *id)
     }
     return FALSE;
 }
+
+
+
+/* DND: add a list of iPod IDs to Playlist @pl */
+void add_idlist_to_playlist (Playlist *pl, gchar *str)
+{
+    guint32 id = 0;
+	    
+    if (!pl) return;
+    while(parse_ipod_id_from_string(&str,&id))
+    {
+	add_songid_to_playlist(pl, id);
+    }
+    data_changed();
+}
+
+/* DND: add a list of files to Playlist @pl.  @pl: playlist to add to
+   or NULL. If NULL, a "New Playlist" will be created for adding
+   songs. When adding a playlist file, a playlist with the name of the
+   playlist file will be added */
+void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position)
+{
+    gchar **files, **filesp;
+
+    if (!str)  return;
+
+    files = g_strsplit (str, "\n", -1);
+    if (files)
+    {
+	filesp = files;
+	while (*filesp)
+	{
+	    puts (*filesp);
+	    ++filesp;
+	}
+	g_strfreev (files);
+    }
+}
+
 
 void cleanup_backup_and_extended_files (void)
 {

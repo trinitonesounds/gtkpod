@@ -51,11 +51,11 @@ enum { /* types for playlist->type */
 };
 
 void create_mpl (void);
-Playlist *add_new_playlist (gchar *plname);
+Playlist *add_new_playlist (gchar *plname, gint position);
 void free_playlist(Playlist *playlist);
 void create_playlist (Playlist *plitem);
 Playlist *it_add_playlist (Playlist *plitem);
-Playlist *add_playlist (Playlist *plitem);
+Playlist *add_playlist (Playlist *plitem, gint position);
 void it_add_songid_to_playlist (Playlist *plitem, guint32 id);
 void add_songid_to_playlist (Playlist *plitem, guint32 id);
 void add_song_to_playlist (Playlist *plitem, Song *song);

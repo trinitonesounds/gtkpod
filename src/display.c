@@ -72,7 +72,28 @@ static void st_add_song (Song *song, gboolean final, guint32 inst);
 static void st_remove_song (Song *song, guint32 inst);
 static void st_init (gint32 new_category, guint32 inst);
 
-static void pm_dnd_advertise(GtkTreeView *v);
+/* Drag and drop definitions */
+#define TARGET_NR(a) (guint)(sizeof(a)/sizeof(GtkTargetEntry));
+#define DND_GTKPOD_IDLIST_TYPE "application/gtkpod-idlist"
+static GtkTargetEntry drag_types [] = {
+    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { "text/plain", 0, DND_TEXT_PLAIN },
+    { "STRING", 0, DND_TEXT_PLAIN }
+};
+static guint drag_size = TARGET_NR (drag_types);
+static GtkTargetEntry drop_types_all [] = {
+    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { "text/plain", 0, DND_TEXT_PLAIN },
+    { "STRING", 0, DND_TEXT_PLAIN }
+};
+static guint drop_size_all = TARGET_NR (drop_types_all);
+/* static GtkTargetEntry drop_types_plain [] = { */
+/*     { "text/plain", 0, DND_TEXT_PLAIN }, */
+/*     { "STRING", 0, DND_TEXT_PLAIN } */
+/* }; */
+/* static guint drop_size_plain = TARGET_NR (drop_types_plain); */
+#undef TARGET_NR
+#undef DND_GTKPOD_IDLIST_TYPE
 
 /* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
@@ -100,54 +121,6 @@ void pm_add_song (Playlist *playlist, Song *song)
 	st_add_song (song, TRUE, 0); /* Add to first sort tab */
     }
 }
-
-/* advertise dnd for the playlist model GtkTreeView
- */
-static void
-pm_dnd_advertise(GtkTreeView *v)
-{
-    GtkTargetEntry target[] = {
-	{ "gtkpod/file", 0, 1000 },
-	{ "text/plain", 0, 1001 }
-    };
-    guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
-
-    if(!v) return;
-    gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
-					    GDK_ACTION_COPY);
-    gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
-					    target_size, GDK_ACTION_COPY);
-}
-
-static void st_dnd_advertise (GtkTreeView *v)
-{
-    GtkTargetEntry target[] = {
-	{ "gtkpod/file", 0, 1000 },
-	{ "text/plain", 0, 1001 }
-    };
-    guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
-
-    if(!v) return;
-    gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
-					    target_size, GDK_ACTION_COPY);
-}
-
-static void
-sm_dnd_advertise(GtkTreeView *v)
-{
-    GtkTargetEntry target[] = {
-	{ "gtkpod/file", 0, 1000 },
-	{ "text/plain", 0, 1001 }
-    };
-    guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
-
-    if(!v) return;
-    gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
-					    target_size, GDK_ACTION_COPY);
-    gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
-					    GDK_ACTION_COPY);
-}
-
 
 /* Used by model_playlist_name_changed() to find the playlist that
    changed name. If found, emit a "row changed" signal to display the change */
@@ -199,7 +172,9 @@ void pm_song_changed (Song *song)
 
 
 /* Append playlist to the playlist model */
-void pm_add_playlist (Playlist *playlist)
+/* If @position = -1: append to end */
+/* If @position >=0: insert at that position */
+void pm_add_playlist (Playlist *playlist, gint position)
 {
   GtkTreeIter iter;
   GtkTreeModel *model;
@@ -208,7 +183,8 @@ void pm_add_playlist (Playlist *playlist)
   model = gtk_tree_view_get_model (playlist_treeview);
   g_return_if_fail (model != NULL);
 
-  gtk_list_store_append (GTK_LIST_STORE (model), &iter);
+  if (position == -1)  gtk_list_store_append (GTK_LIST_STORE (model), &iter);
+  else  gtk_list_store_insert (GTK_LIST_STORE (model), &iter, position);
   gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 		      PM_COLUMN_PLAYLIST, playlist, -1);
   /* If it's the first playlist (no playlist selected AND playlist ist
@@ -598,7 +574,17 @@ static void pm_create_listview (GtkWidget *gtkpod)
   g_signal_connect (G_OBJECT (selection), "changed",
 		    G_CALLBACK (pm_selection_changed), NULL);
   pm_add_columns ();
-  pm_dnd_advertise(playlist_treeview);
+  gtk_tree_view_enable_model_drag_dest (playlist_treeview,
+					drop_types_all, drop_size_all, 
+					GDK_ACTION_COPY);
+  /* need the gtk_drag_dest_set() with no actions ("0") so that the
+     data_received callback gets the correct info value. This is most
+     likely a bug... */
+  gtk_drag_dest_set (GTK_WIDGET (playlist_treeview), 0,
+		     drop_types_all, drop_size_all, 
+		     GDK_ACTION_COPY);
+  gtk_drag_source_set (GTK_WIDGET (playlist_treeview), GDK_BUTTON1_MASK,
+		       drag_types, drag_size, GDK_ACTION_COPY);
 }
 
 
@@ -1669,11 +1655,13 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
       renderer = gtk_cell_renderer_text_new ();
       g_signal_connect (G_OBJECT (renderer), "edited",
 			G_CALLBACK (st_cell_edited), GINT_TO_POINTER(inst));
-      g_object_set_data (G_OBJECT (renderer), "column", (gint *)ST_COLUMN_ENTRY);
+      g_object_set_data (G_OBJECT (renderer), "column",
+			 (gint *)ST_COLUMN_ENTRY);
       column = gtk_tree_view_column_new ();
       gtk_tree_view_column_pack_start (column, renderer, TRUE);
       column = gtk_tree_view_column_new_with_attributes ("", renderer, NULL);
-      gtk_tree_view_column_set_cell_data_func (column, renderer, st_cell_data_func, NULL, NULL);
+      gtk_tree_view_column_set_cell_data_func (column, renderer,
+					       st_cell_data_func, NULL, NULL);
       gtk_tree_view_column_set_sort_column_id (column, ST_COLUMN_ENTRY);
       gtk_tree_view_column_set_resizable (column, TRUE);
       gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
@@ -1682,7 +1670,8 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
 				       st_data_compare_func, column, NULL);
       gtk_tree_view_append_column (treeview, column);
       gtk_tree_view_set_headers_visible (treeview, FALSE);
-      st_dnd_advertise(treeview);
+      gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
+			   drag_types, drag_size, GDK_ACTION_COPY);
     }
 }
 
@@ -2275,7 +2264,16 @@ static void sm_create_listview (GtkWidget *gtkpod)
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (song_treeview),
 			       GTK_SELECTION_MULTIPLE);
   sm_add_columns ();
-  sm_dnd_advertise(song_treeview);
+  gtk_drag_source_set (GTK_WIDGET (song_treeview), GDK_BUTTON1_MASK,
+		       drag_types, drag_size, GDK_ACTION_COPY);
+  gtk_tree_view_enable_model_drag_dest(song_treeview, drop_types_all,
+				       drop_size_all, GDK_ACTION_COPY);
+  /* need the gtk_drag_dest_set() with no actions ("0") so that the
+     data_received callback gets the correct info value. This is most
+     likely a bug... */
+  gtk_drag_dest_set (GTK_WIDGET (song_treeview), 0,
+		     drop_types_all, drop_size_all, 
+		     GDK_ACTION_COPY);
 }
 
 

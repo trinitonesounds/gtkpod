@@ -56,6 +56,8 @@ float get_ms_since (GTimeVal *old_time, gboolean update);
 void open_about_window (void);
 void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
+void add_idlist_to_playlist (Playlist *pl, gchar *str);
+void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position);
 void cleanup_backup_and_extended_files (void);
 gboolean gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);

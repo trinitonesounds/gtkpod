@@ -82,11 +82,12 @@ static GHashTable *extendedinfohash = NULL;
 
 /* Add all files specified in playlist @plfile. Will create a new
  * playlist with the name "basename (plfile)", even if one of the same
- * name already exists.
+ * name already exists (if @plitem is != NULL, all songs will be added
+ * to @plitem and no new playlist will be created).
  * It will then add all songs listed in @plfile. If set in the prefs,
  * duplicates will be detected (and the song already present in the
  * database will be added to the playlist instead). */
-gboolean add_playlist_by_filename (gchar *plfile)
+gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem)
 {
     enum {
 	PLT_M3U,   /* M3U playlist file */
@@ -95,7 +96,6 @@ gboolean add_playlist_by_filename (gchar *plfile)
     };
     gchar *plname, *bufp, *plfile_utf8;
     gchar buf[PATH_MAX];
-    Playlist *plitem;
     gint type = PLT_MISC; /* type of playlist file */
     gint line, songs;
     FILE *fp;
@@ -139,8 +139,8 @@ gboolean add_playlist_by_filename (gchar *plfile)
 	/* FIXME: Status */
 	return FALSE;  /* definitely not! */
     }
-    /* create playlist */
-    plitem = add_new_playlist (plname);
+    /* create playlist (if none is specified) */
+    if (!plitem)   plitem = add_new_playlist (plname, -1);
 
     /* for now assume that all playlist files will be line-based
        all of these are line based -- add different code for different
@@ -720,7 +720,7 @@ void update_song_from_file (Song *song)
 
 /* Append file @name to the list of songs.
    @name is in the current locale
-   If @plitem != NULL, add song to plitem as well */
+   If @plitem != NULL, add song to plitem as well (unless it's the MPL) */
 /* Not nice: currently only accepts files ending on .mp3 */
 gboolean add_song_by_filename (gchar *name, Playlist *plitem)
 {
@@ -744,7 +744,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       if ((strcmp (&name[len-4], ".pls") == 0) ||
 	  (strcmp (&name[len-4], ".m3u") == 0))
       {
-	  return add_playlist_by_filename (name);
+	  return add_playlist_by_filename (name, plitem);
       }
   }
 
@@ -777,8 +777,9 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       {
 	  /* add song to master playlist (if it hasn't been done before) */
 	  if (added_song == song) add_song_to_playlist (NULL, added_song);
-	  /* add song to specified playlist */
-	  if (plitem)  add_song_to_playlist (plitem, added_song);
+	  /* add song to specified playlist, but not to MPL */
+	  if (plitem && (plitem->type != PL_TYPE_MPL))
+	      add_song_to_playlist (plitem, added_song);
 	  /* indicate that non-transferred files exist */
 	  data_changed ();
 	  ++count;

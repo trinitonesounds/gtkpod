@@ -41,7 +41,7 @@
 GList *playlists;
 
 /* Creates a new playlist */
-Playlist *add_new_playlist (gchar *plname)
+Playlist *add_new_playlist (gchar *plname, gint position)
 {
   Playlist *plitem;
 
@@ -50,7 +50,7 @@ Playlist *add_new_playlist (gchar *plname)
   plitem->name = g_strdup (plname);
   plitem->name_utf16 = g_utf8_to_utf16 (plname, -1, NULL, NULL, NULL);
   data_changed (); /* indicate that data has changed in memory */
-  return add_playlist (plitem);
+  return add_playlist (plitem, position);
 }
 
 
@@ -64,7 +64,7 @@ void create_mpl (void)
   plitem->type = PL_TYPE_MPL;  /* MPL! */
   plitem->name = g_strdup ("gtkpod");
   plitem->name_utf16 = g_utf8_to_utf16 (plitem->name, -1, NULL, NULL, NULL);
-  add_playlist (plitem);
+  add_playlist (plitem, -1);
 }
 
 /* This function stores the new "plitem" in the global list
@@ -74,30 +74,33 @@ void create_mpl (void)
    If "plitem" is a master playlist, and another MPL
    already exists, only the name of the new playlist is copied
    and a pointer to the original MPL is returned. This pointer
-   has to be used for consequent calls of add_song(id)_to_playlist() */
-Playlist *add_playlist (Playlist *plitem)
+   has to be used for consequent calls of add_song(id)_to_playlist()
+   */
+/* @position: if != -1, playlist will be inserted at that position */
+Playlist *add_playlist (Playlist *plitem, gint position)
 {
-  Playlist *mpl;
+    Playlist *mpl;
 
-  if (plitem->type == PL_TYPE_MPL)
+    if (plitem->type == PL_TYPE_MPL)
     {
-      /* it's the MPL */
-      mpl = get_playlist_by_nr (0);
-      if (mpl != NULL)
+	/* it's the MPL */
+	mpl = get_playlist_by_nr (0);
+	if (mpl != NULL)
 	{
-	  if (mpl->name)       g_free (mpl->name);
-	  if (mpl->name_utf16) g_free (mpl->name_utf16);
-	  mpl->name = plitem->name;
-	  mpl->name_utf16 = plitem->name_utf16;
-	  g_free (plitem);
-	  pm_name_changed (mpl);  /* Tell the model about the
-                                                 name change */
-	  return mpl;
+	    if (mpl->name)       g_free (mpl->name);
+	    if (mpl->name_utf16) g_free (mpl->name_utf16);
+	    mpl->name = plitem->name;
+	    mpl->name_utf16 = plitem->name_utf16;
+	    g_free (plitem);
+	    pm_name_changed (mpl);  /* Tell the model about the
+				       name change */
+	    return mpl;
 	}
     }
-  playlists = g_list_append (playlists, plitem);
-  pm_add_playlist (plitem);
-  return plitem;
+    if (position == -1)  playlists = g_list_append (playlists, plitem);
+    else  playlists = g_list_insert (playlists, plitem, position);
+    pm_add_playlist (plitem, position);
+    return plitem;
 }
 
 /* This function appends the song with id "id" to the 
@@ -312,7 +315,7 @@ Song *it_get_song_in_playlist_by_nr (Playlist *plitem, guint32 n)
 
 Playlist *it_add_playlist (Playlist *plitem)
 {
-    Playlist *pl = add_playlist (plitem);
+    Playlist *pl = add_playlist (plitem, -1);
     gtkpod_songs_statusbar_update();
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
     return pl;

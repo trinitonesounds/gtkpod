@@ -120,11 +120,18 @@ enum  {
   PM_NUM_COLUMNS
 };
 
+/* Drag and drop types */
+enum {
+    DND_GTKPOD_IDLIST = 1000,
+    DND_TEXT_PLAIN
+};
+
+
 void create_display (GtkWidget *gtkpod);
 void cleanup_display (void);
 
 void pm_remove_playlist (Playlist *playlist, gboolean select);
-void pm_add_playlist (Playlist *playlist);
+void pm_add_playlist (Playlist *playlist, gint position);
 void pm_remove_song (Playlist *playlist, Song *song);
 void pm_add_song (Playlist *playlist, Song *song);
 void pm_name_changed (Playlist *playlist);

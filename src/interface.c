@@ -148,7 +148,7 @@ create_gtkpod (void)
   GtkWidget *scrolledwindow19;
   GtkWidget *st1_cat4_treeview;
   GtkWidget *label24;
-  GtkWidget *scrolledwindow11;
+  GtkWidget *song_window;
   GtkWidget *song_treeview;
   GtkWidget *hbox5;
   GtkWidget *gtkpod_status;
@@ -695,14 +695,14 @@ create_gtkpod (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab1), 4), label24);
   gtk_label_set_justify (GTK_LABEL (label24), GTK_JUSTIFY_LEFT);
 
-  scrolledwindow11 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_show (scrolledwindow11);
-  gtk_paned_pack2 (GTK_PANED (paned2), scrolledwindow11, TRUE, TRUE);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow11), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  song_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (song_window);
+  gtk_paned_pack2 (GTK_PANED (paned2), song_window, TRUE, TRUE);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (song_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   song_treeview = gtk_tree_view_new ();
   gtk_widget_show (song_treeview);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow11), song_treeview);
+  gtk_container_add (GTK_CONTAINER (song_window), song_treeview);
 
   hbox5 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox5);
@@ -1029,7 +1029,7 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow19, "scrolledwindow19");
   GLADE_HOOKUP_OBJECT (gtkpod, st1_cat4_treeview, "st1_cat4_treeview");
   GLADE_HOOKUP_OBJECT (gtkpod, label24, "label24");
-  GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow11, "scrolledwindow11");
+  GLADE_HOOKUP_OBJECT (gtkpod, song_window, "song_window");
   GLADE_HOOKUP_OBJECT (gtkpod, song_treeview, "song_treeview");
   GLADE_HOOKUP_OBJECT (gtkpod, hbox5, "hbox5");
   GLADE_HOOKUP_OBJECT (gtkpod, gtkpod_status, "gtkpod_status");
