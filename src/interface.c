@@ -1360,6 +1360,14 @@ create_prefs_window (void)
   GtkWidget *table7;
   GtkWidget *cfg_multi_edit_title;
   GtkWidget *label32;
+  GtkWidget *frame21;
+  GtkWidget *vbox48;
+  GtkWidget *table8;
+  GtkObject *cfg_misc_song_nr_adj;
+  GtkWidget *cfg_misc_song_nr;
+  GtkWidget *label68;
+  GtkWidget *cfg_not_played_song;
+  GtkWidget *label67;
   GtkWidget *frame11;
   GtkWidget *vbox24;
   GtkWidget *cfg_delete_playlist;
@@ -1964,6 +1972,43 @@ create_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame10), label32);
   gtk_label_set_justify (GTK_LABEL (label32), GTK_JUSTIFY_LEFT);
 
+  frame21 = gtk_frame_new (NULL);
+  gtk_widget_show (frame21);
+  gtk_box_pack_start (GTK_BOX (vbox32), frame21, FALSE, TRUE, 0);
+
+  vbox48 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox48);
+  gtk_container_add (GTK_CONTAINER (frame21), vbox48);
+
+  table8 = gtk_table_new (1, 2, FALSE);
+  gtk_widget_show (table8);
+  gtk_box_pack_start (GTK_BOX (vbox48), table8, TRUE, TRUE, 0);
+
+  cfg_misc_song_nr_adj = gtk_adjustment_new (25, 0, 100, 1, 10, 10);
+  cfg_misc_song_nr = gtk_spin_button_new (GTK_ADJUSTMENT (cfg_misc_song_nr_adj), 1, 0);
+  gtk_widget_show (cfg_misc_song_nr);
+  gtk_table_attach (GTK_TABLE (table8), cfg_misc_song_nr, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_misc_song_nr, _("Number of songs in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'."), NULL);
+
+  label68 = gtk_label_new (_(" Number of songs in generated playlists: "));
+  gtk_widget_show (label68);
+  gtk_table_attach (GTK_TABLE (table8), label68, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label68), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label68), 0, 0.5);
+
+  cfg_not_played_song = gtk_check_button_new_with_mnemonic (_("Also include songs never played\nin generated playlists"));
+  gtk_widget_show (cfg_not_played_song);
+  gtk_box_pack_start (GTK_BOX (vbox48), cfg_not_played_song, FALSE, FALSE, 0);
+
+  label67 = gtk_label_new (_("Miscellaneous Playlist"));
+  gtk_widget_show (label67);
+  gtk_frame_set_label_widget (GTK_FRAME (frame21), label67);
+  gtk_label_set_justify (GTK_LABEL (label67), GTK_JUSTIFY_LEFT);
+
   frame11 = gtk_frame_new (NULL);
   gtk_widget_show (frame11);
   gtk_box_pack_start (GTK_BOX (vbox32), frame11, FALSE, TRUE, 0);
@@ -2198,6 +2243,12 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_multi_edit_title, "toggled",
                     G_CALLBACK (on_cfg_multi_edit_title_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_misc_song_nr, "value_changed",
+                    G_CALLBACK (on_cfg_misc_song_nr_value_changed),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_not_played_song, "toggled",
+                    G_CALLBACK (on_cfg_not_played_song_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_delete_playlist, "toggled",
                     G_CALLBACK (on_cfg_delete_playlist_toggled),
                     NULL);
@@ -2358,6 +2409,13 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, table7, "table7");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_multi_edit_title, "cfg_multi_edit_title");
   GLADE_HOOKUP_OBJECT (prefs_window, label32, "label32");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame21, "frame21");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox48, "vbox48");
+  GLADE_HOOKUP_OBJECT (prefs_window, table8, "table8");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_misc_song_nr, "cfg_misc_song_nr");
+  GLADE_HOOKUP_OBJECT (prefs_window, label68, "label68");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_not_played_song, "cfg_not_played_song");
+  GLADE_HOOKUP_OBJECT (prefs_window, label67, "label67");
   GLADE_HOOKUP_OBJECT (prefs_window, frame11, "frame11");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox24, "vbox24");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_playlist, "cfg_delete_playlist");

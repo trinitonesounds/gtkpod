@@ -1,0 +1,52 @@
+TODO:
+
+- playlist creation for orphaned tracks (Sam?)
+
+- reconstruction of iPod contents after file system corruption
+  (Edward?)
+
+- replacement of libid3 with libid3tag
+
+- volume normalization support
+
+- gtkpod-like browse of file system contents
+
+- miscellaneous special playlists (most recently listend, most
+  listened, highest rank...) -> Edward
+
+- upload text notes to iPod
+
+- for genre (etc.) playlists: have confirmation dialogue before
+  removing old playlists (Chris Cutler?)
+
+- currently iTunesDB.ext uses iPodIDs to match data between
+  iTunesDB.ext and iTunesDB. If another program (like ephpod) writes
+  the iTunesDB the iPodIDs change and data cannot be matched any
+  more -> allow to match data using the MD5 checksums to partially
+  recover the extended information
+
+- add more progress dialogues
+
+- play song and enqueue song should update playcount and last played
+  song's field. (Should be done by some plugin that tells gtkpod when
+  a song has been played -- using either filename or md5 checksum).
+
+- add an option to let the user decide if all the gtkpod's
+  playlist must be update on export.
+
+Please feel free to submit further features.
+
+BUGLIST:
+
+- when updating songs the free space indicator gets smaller and
+  smaller even no new songs are added
+
+- when updating songs (add a large directory with sub dirs
+  recursively) at end a requester pops up saying that it updated far
+  more songs than are actually in the directories
+
+- during a long operation (menues are blocked) the user can still edit
+  the song data. This could potentially crash gtkpod -> need a way to
+  block editing as well without blocking navigating.
+
+Please add bugs as you find them.

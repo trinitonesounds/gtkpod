@@ -2544,23 +2544,24 @@ void update_ranked_playlist(gchar *str,gint songs_nr,gboolean played_only,GCompa
  * played */
 void most_listened_pl(void)
 {
-    gint songs_nr=25;
-    update_ranked_playlist(g_strdup_printf (_("Most Listened (%d)"), songs_nr),songs_nr,TRUE,Most_Listened_CF);
+    gint songs_nr=prefs_get_misc_song_nr();
+    gboolean not_played=prefs_get_not_played_song();
+    update_ranked_playlist(g_strdup_printf (_("Most Listened (%d)"), songs_nr),songs_nr,not_played,Most_Listened_CF);
 }
 
 /* Generate a new playlist containing the most rated (rate 
  * reverse order) songs. */
 void most_rated_pl(void)
 {
-    gint songs_nr=25;
-    update_ranked_playlist(g_strdup_printf (_("Best Rated (%d)"), songs_nr),songs_nr,TRUE,Most_Rated_CF);
+    gint songs_nr=prefs_get_misc_song_nr();
+    update_ranked_playlist(g_strdup_printf (_("Best Rated (%d)"), songs_nr),songs_nr,FALSE,Most_Rated_CF);
 }
 
 /* Generate a new playlist containing the last listened (last time play 
  * reverse order) songs. */
 void last_listened_pl(void)
 {
-    gint songs_nr=25;
-    update_ranked_playlist(g_strdup_printf (_("Recent (%d)"), songs_nr),songs_nr,TRUE,Last_Listened_CF);
+    gint songs_nr=prefs_get_misc_song_nr();
+    update_ranked_playlist(g_strdup_printf (_("Recent (%d)"), songs_nr),songs_nr,FALSE,Last_Listened_CF);
 }
 

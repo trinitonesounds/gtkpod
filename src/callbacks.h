@@ -566,3 +566,11 @@ on_most_recent_played_songs_activate   (GtkMenuItem     *menuitem,
 void
 on_rebuild_ipod_db1_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_cfg_misc_song_nr_value_changed      (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_not_played_song_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

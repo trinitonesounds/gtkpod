@@ -250,6 +250,19 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->multi_edit);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_not_played_song")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->not_played_song);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_misc_song_nr")))
+	{
+	    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
+				       0, 100);
+	    gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
+				       prefs_get_misc_song_nr ());
+	    prefs_window_set_misc_song_nr (tmpcfg->misc_song_nr);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_multi_edit_title")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -492,6 +505,8 @@ prefs_window_set(void)
 	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
 	prefs_set_multi_edit (tmpcfg->multi_edit);
 	prefs_set_multi_edit_title (tmpcfg->multi_edit_title);
+	prefs_set_misc_song_nr (tmpcfg->misc_song_nr);
+	prefs_set_not_played_song (tmpcfg->not_played_song);
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
@@ -830,6 +845,16 @@ void prefs_window_set_multi_edit_title (gboolean val)
 void prefs_window_set_update_charset (gboolean val)
 {
     tmpcfg->update_charset = val;
+}
+
+void prefs_window_set_not_played_song (gboolean val)
+{
+    tmpcfg->not_played_song = val;
+}
+
+void prefs_window_set_misc_song_nr (gint val)
+{
+    tmpcfg->misc_song_nr = val;
 }
 
 void prefs_window_set_write_charset (gboolean val)

@@ -65,6 +65,8 @@ void prefs_window_set_display_tooltips_main (gboolean val);
 void prefs_window_set_display_tooltips_prefs (gboolean val);
 void prefs_window_set_multi_edit (gboolean val);
 void prefs_window_set_multi_edit_title (gboolean val);
+void prefs_window_set_misc_song_nr (gint val);
+void prefs_window_set_not_played_song (gboolean val);
 void prefs_window_set_update_charset (gboolean val);
 void prefs_window_set_write_charset (gboolean val);
 void prefs_window_set_add_recursively (gboolean val);

@@ -1491,3 +1491,19 @@ on_rebuild_ipod_db1_activate           (GtkMenuItem     *menuitem,
 /*    rebuild_iTunesDB();*/
 }
 
+
+void
+on_cfg_misc_song_nr_value_changed      (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_misc_song_nr (gtk_spin_button_get_value (spinbutton));
+}
+
+void
+on_cfg_not_played_song_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_not_played_song (
+	gtk_toggle_button_get_active (togglebutton));
+}
+

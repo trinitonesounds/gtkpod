@@ -111,6 +111,8 @@ struct cfg
   gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
+  gboolean not_played_song;     /* not played song in Highest rated playlist? */
+  gint misc_song_nr;            /* song's nr in the Highest rated, most played and most recently played pl*/ 
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -246,6 +248,10 @@ void prefs_set_display_tooltips_prefs (gboolean state);
 gboolean prefs_get_display_tooltips_prefs (void);
 void prefs_set_multi_edit (gboolean state);
 gboolean prefs_get_multi_edit (void);
+void prefs_set_misc_song_nr (gint state);
+gint prefs_get_misc_song_nr (void);
+gboolean prefs_get_not_played_song (void);
+void prefs_set_not_played_song (gboolean);
 void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
 void prefs_set_filename_format (char* state);
