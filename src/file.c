@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-04 23:49:05 jcs>
+/* Time-stamp: <2004-10-06 00:14:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1906,20 +1906,23 @@ gchar *get_track_name_on_ipod (Track *s)
      difference is made between upper and lower case under
      some special circumstances. As in
      "/iPod_Control/Music/F00" and "/iPod_Control/Music/f00
-     "... If the former filename does not exist, we try to find an existing
-     case insensitive match for each component of the filename. 
-     If we can find such a match, we return it.  Otherwise, we return NULL.*/
+     "... If the former filename does not exist, we try to find an
+     existing case insensitive match for each component of the
+     filename.  If we can find such a match, we return it.  Otherwise,
+     we return NULL.*/
      
-   /* We start by assuming that the ipod mount point exists.  Then, for each
-    * component c of track->ipod_path, we try to find an entry d in good_path that
-    * is case-insensitively equal to c.  If we find d, we append d to good_path and make
-    * the result the new good_path.  Otherwise, we quit and return
-   NULL.
-   @root: in local encoding, @components: in utf8
+   /* We start by assuming that the ipod mount point exists.  Then,
+    * for each component c of track->ipod_path, we try to find an
+    * entry d in good_path that is case-insensitively equal to c.  If
+    * we find d, we append d to good_path and make the result the new
+    * good_path.  Otherwise, we quit and return NULL.  @root: in local
+    * encoding, @components: in utf8
  */
 gchar * resolve_path(const gchar *root,const gchar * const * components) {
   gchar *good_path = g_strdup(root);
   guint32 i;
+
+  if (!root) return NULL;
     
   for(i = 0 ; components[i] ; i++) {
     GDir *cur_dir;

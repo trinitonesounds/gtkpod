@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 22:14:06 jcs>
+/* Time-stamp: <2004-10-06 00:15:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1571,13 +1571,15 @@ gboolean itunesdb_write_to_file (const gchar *filename)
 
 void itunesdb_rename_files (const gchar *dirname)
 {
+    const gchar *db_itd[] =  {"iPod_Control", "iTunes", NULL};
     const gchar *db_plc_o[] = {"Play Counts", NULL};
-    const gchar *db_plc_n[] = {"Play Counts.bak", NULL};
     const gchar *db_otg[] = {"OTGPlaylistInfo", NULL};
-    gchar *plcname_o = resolve_path (dirname, db_plc_o);
-    gchar *plcname_n = resolve_path (dirname, db_plc_n);
-    gchar *otgname = resolve_path (dirname, db_otg);
-
+    gchar *itunesdir = resolve_path (dirname, db_itd);
+    gchar *plcname_o = resolve_path (itunesdir, db_plc_o);
+    gchar *plcname_n = g_build_filename (itunesdir, 
+					 "Play Counts.bak", NULL);
+    gchar *otgname = resolve_path (itunesdir, db_otg);
+/*    printf ("%s\n%s\n%s\n%s\n\n", itunesdir, plcname_o, plcname_n, otgname);*/
     /* rename "Play Counts" to "Play Counts.bak" */
     if (plcname_o)
     {
@@ -1599,6 +1601,7 @@ void itunesdb_rename_files (const gchar *dirname)
     g_free (plcname_o);
     g_free (plcname_n);
     g_free (otgname);
+    g_free (itunesdir);
 }
 
 /* Convert string from casual PC file name to iPod iTunesDB format
