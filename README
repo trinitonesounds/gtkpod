@@ -455,7 +455,7 @@ ipod mount point is /mnt/ipod and your ipod is detected as /dev/sda
  * Step 3 *
 /**********/
 Then setup your /etc/gtkpod/gtkpod.in file to load the module when gtkpod is
-exited
+started.
 Example /etc/gtkpod/gtkpod.in
 ------------------------------- Begin Here ---------------------------------
 
@@ -468,7 +468,7 @@ sudo /sbin/modprobe sbp2 sbp2_force_inquiry_hack=1
 /**********/
 
 Then setup your /etc/gtkpod/gtkpod.out file to unload the module when gtkpod
-is exited
+is exited.
 Example /etc/gtkpod/gtkpod.out
 ------------------------------- Begin Here ---------------------------------
 
