@@ -240,17 +240,17 @@ on_playlist_treeview_drag_data_received
 		    {
 			add_songid_to_playlist(pl, id);
 		    }
+		    data_changed();
 		}
 	    }
 	    gtk_tree_path_free(tp);
 	}
 	else
 	{
-	    fprintf(stderr, "Unknown treepath droppage or badly positioned
-				drop\n");
+	    fprintf(stderr, "Unknown treepath droppage or badly "
+			    "positioned drop\n");
 	}
     }
-    fprintf(stderr, "Playlist dnd receieved\n");
 }
 
 
@@ -604,21 +604,57 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 		if(s)
 		{
 		    guint32 id = 0;
+		    Song *new_song = NULL;
+		    Playlist *current_pl = NULL;
 		    gchar *str = g_strdup(data->data);
-		    
-		    while(parse_ipod_id_from_string(&str,&id))
+		   
+		    if((current_pl = get_currently_selected_playlist()) &&
+			    (current_pl->type != PL_TYPE_MPL))
 		    {
-			switch(pos)
+			guint insert_index = -1;
+			GList *new_list = NULL, *members = NULL, *l = NULL;
+
+			members = g_list_copy(current_pl->members);
+			/* build a list of songs to append */
+			while(parse_ipod_id_from_string(&str,&id))
 			{
-			    case GTK_TREE_VIEW_DROP_BEFORE:
-				fprintf(stderr, "Dropped %d before %d\n", id, s->ipod_id);	
-				break;
-			    case GTK_TREE_VIEW_DROP_AFTER:
-				fprintf(stderr, "Dropped %d after %d\n", id, s->ipod_id);	
-				break;
-			    default:
-				break;
+			    if((new_song = get_song_by_id(id)))
+			    {
+				members = g_list_remove(members, new_song);
+				new_list = g_list_append(new_list, new_song);
+			    }
 			}
+
+			/* find where we wanna put the new tracks */
+			if((insert_index = g_list_index(members, s)) != -1)
+			{
+			    switch(pos)
+			    {
+				case GTK_TREE_VIEW_DROP_AFTER:
+				    insert_index++;
+				case GTK_TREE_VIEW_DROP_BEFORE:
+				    for(l = new_list; l; l = l->next)
+				    {
+					new_song = (Song*)l->data;
+					members = g_list_insert(members,
+						new_song, insert_index++);
+				    }
+				    break;
+				default:
+				    break;
+			    }
+			}
+			if(new_list) 
+			    g_list_free(new_list);
+			if(current_pl->members) 
+			    g_list_free(current_pl->members);
+			current_pl->members = members;
+			pm_select_playlist_reinit(current_pl);
+			data_changed();
+		    }
+		    else
+		    {
+			g_free(str);
 		    }
 		}
 	    }

@@ -245,7 +245,6 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 }
 
 
-
 /* Callback function called when the selection
    of the playlist view has changed */
 static void pm_selection_changed (GtkTreeSelection *selection,
@@ -276,6 +275,33 @@ static void pm_selection_changed (GtkTreeSelection *selection,
       st_add_song (song, FALSE, 0);
     }
   st_add_song (NULL, TRUE, 0);
+}
+
+void
+pm_select_playlist_reinit(Playlist *pl)
+{
+    GtkTreeIter i;
+    GtkTreeModel *tm = NULL;
+    Playlist *playlist = NULL;
+    GtkTreeSelection *ts = NULL;
+
+    if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(playlist_treeview))))
+    {
+	if(gtk_tree_selection_get_selected(ts, &tm, &i))
+	{
+	    gtk_tree_model_get (tm, &i, PM_COLUMN_PLAYLIST, &playlist, -1);
+	    /*
+	    gtk_tree_model_sort_reset_default_sort_func(
+						GTK_TREE_MODEL_SORT(tm));
+	     */
+	    if((playlist) && (playlist == pl))
+		pm_selection_changed(ts, NULL); 
+	}
+    }
+    else
+    {
+	fprintf(stderr, "Nothing is selected currently in Playlist Tree\n");
+    }
 }
 
 /* Function used to compare two cells during sorting (playlist view) */
@@ -469,7 +495,6 @@ static void st_add_entry (TabEntry *entry, guint32 inst)
 {
     GtkTreeIter iter;
     GtkTreeModel *model;
-    GtkTreeSelection *selection;
     SortTab *st;
 
     st = sorttab[inst];
@@ -789,7 +814,7 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	      { /* Entry was not previously selected -> set to "All" */
 		  if (prefs_get_st_autoselect (inst))
 		  {
-		      entry = g_list_nth_data (st->entries, 0);
+		      if((entry = g_list_nth_data (st->entries, 0)) == NULL)
 		      g_warning ("Programming error: st_add_song: entry == NULL\n");
 		  }
 	      }
@@ -860,7 +885,6 @@ static void st_remove_song (Song *song, guint32 inst)
    left unchanged (used by st_page_changed). */
 static void st_init (gint32 new_category, guint32 inst)
 {
-  TabEntry *entry;
   SortTab *st;
   gint cat;
 
@@ -1485,8 +1509,47 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
     }
 }
 
-
-
+/**
+ * If/When we can ever trap songview changes this code *should* reorder all
+ * user defined playlists to match the listing on screen
+ */
+/*
+static void
+sm_rows_reordered_callback(void)
+{
+    Song *new_song = NULL;
+    Playlist *current_pl = NULL;
+		    
+    if((current_pl = get_currently_selected_playlist()))
+    {
+	GtkTreeIter i;
+	gboolean valid = FALSE;
+	GtkTreeModel *tm = NULL;
+	GList *new_list = NULL, *l = NULL;
+			    
+	if(current_pl->type == PL_TYPE_MPL) 
+	    return;
+	
+	if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(song_treeview))))
+	{
+	    valid =gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
+	    while(valid)
+	    {
+		gtk_tree_model_get(tm, &i, 0, &new_song, -1); 
+		new_list = g_list_append(new_list, new_song);
+		valid = gtk_tree_model_iter_next(tm, &i);
+	    }
+	    for(l = new_list; l; l = l->next)
+	    {
+		new_song = (Song*)l->data;
+		fprintf(stderr, "%s\n", new_song->title);
+	    }
+	    g_list_free(current_pl->members);
+	    current_pl->members = new_list;
+	}
+    }
+}
+*/
 
 /* Function used to compare two cells during sorting (song view) */
 gint sm_data_compare_func (GtkTreeModel *model,
