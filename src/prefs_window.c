@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 01:37:45 jcs>
+/* Time-stamp: <2004-08-21 18:54:03 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -327,17 +327,6 @@ prefs_window_create(void)
 		g_free (buf);
 	    }
 	}
-	if((w = lookup_widget(prefs_window, "cfg_export_template")))
-	{
-	    if (tmpcfg->export_template)
-	    {  /* we should copy the new path first because by setting
-		  the text we might get a callback destroying the old
-		  value... */
-		gchar *buf = g_strdup (tmpcfg->export_template);
-		gtk_entry_set_text(GTK_ENTRY(w), buf);
-		g_free (buf);
-	    }
-	}
 	if((w = lookup_widget(prefs_window, "time_format_entry")))
 	{
 	    if (tmpcfg->time_format)
@@ -648,11 +637,6 @@ prefs_window_create(void)
 	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
 					   prefs_get_last_prefs_page ());
 	}
-	if ((w = lookup_widget (prefs_window, "cfg_export_check_existing")))
-	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					    prefs_get_export_check_existing());
-	}
 	if ((w = lookup_widget (prefs_window, "cfg_automount_ipod")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -691,11 +675,6 @@ prefs_window_create(void)
 	    gchar *str = g_strdup_printf (_("Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release."), PKGDATADIR G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
 	    gtk_label_set_text (GTK_LABEL (w), str);
 	    g_free (str);
-	}
-	if((w = lookup_widget(prefs_window, "cfg_special_export_charset")))
-	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpcfg->special_export_charset);
 	}
 	prefs_window_show_hide_tooltips ();
 	gtk_widget_show(prefs_window);
@@ -772,11 +751,8 @@ prefs_window_set(void)
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
-	prefs_set_export_check_existing(tmpcfg->export_check_existing);
 	prefs_set_automount(tmpcfg->automount);
-	prefs_set_export_template(tmpcfg->export_template);
 	prefs_set_concal_autosync(tmpcfg->concal_autosync);
-	prefs_set_special_export_charset(tmpcfg->special_export_charset);
 	prefs_set_unused_gboolean1(tmpcfg->unused_gboolean1);
 	prefs_set_unused_gboolean2(tmpcfg->unused_gboolean2);
 	prefs_set_unused_gboolean3(tmpcfg->unused_gboolean3);
@@ -1214,33 +1190,15 @@ void prefs_window_set_toolbar_style (GtkToolbarStyle style)
     tmpcfg->toolbar_style = style;
 }
 
-void prefs_window_set_export_check_existing(gboolean val)
-{
-    tmpcfg->export_check_existing = val;
-}
-
 void prefs_window_set_automount(gboolean val)
 {
     tmpcfg->automount = val;
 }
 
 void
-prefs_window_set_export_template(const gchar *val)
-{
-    g_free (tmpcfg->export_template);
-    tmpcfg->export_template = g_strdup(val);
-}
-
-void
 prefs_window_set_concal_autosync(gboolean val)
 {
     tmpcfg->concal_autosync = val;
-}
-
-void
-prefs_window_set_special_export_charset(gboolean val)
-{
-    tmpcfg->special_export_charset = val;
 }
 
 void

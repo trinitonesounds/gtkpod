@@ -51,9 +51,15 @@ enum {
 	FILE_TYPE_PLS
 };
 
-typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
+typedef enum
+{
+    SOURCE_PREFER_LOCAL = 0,
+    SOURCE_LOCAL,
+    SOURCE_IPOD
+} FileSource;
 
-void file_export_init(GList *tracks);
+
+typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
 
 gint determine_file_type(gchar *path);
 gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
@@ -76,6 +82,7 @@ void data_changed (void);
 gchar *get_track_name_on_disk_verified (Track *track);
 gchar* get_track_name_on_disk(Track *s);
 gchar* get_track_name_on_ipod(Track *s);
+gchar *get_track_name_from_source (Track *track, FileSource source);
 gchar* get_preferred_track_name_format(Track *s);
 void mark_track_for_deletion (Track *track);
 void unmark_track_for_deletion (Track *track);
@@ -87,4 +94,14 @@ gchar *resolve_path(const gchar *,const gchar * const *);
 void parse_offline_playcount (void);
 
 gboolean get_gain(Track *track);
+
+
+/* file_export.c */
+void export_files_init(GList *tracks);
+void export_playlist_file_init (GList *tracks);
+/* needed to adapt the prefs structure */
+extern const gchar *EXPORT_FILES_SPECIAL_CHARSET;
+extern const gchar *EXPORT_FILES_CHECK_EXISTING;
+extern const gchar *EXPORT_FILES_PATH;
+extern const gchar *EXPORT_FILES_TPL;
 #endif

@@ -79,14 +79,6 @@ TODO:
 
 - add more progress dialogues (in general!)
 
-- play track and enqueue track should update playcount and last played
-  track's field. (Should be done by some plugin that tells gtkpod when
-  a track has been played -- using either filename or md5
-  checksum. Stefan Jol: "Perhaps the coverviewer plugin is a good
-  basis.  It's a plugin that searches the internet for a picture of
-  the cover with the song title and artist info. It's written in
-  python.").
-
 - add an option to let the user decide if all the gtkpod's
   playlist must be updated on export.
 
@@ -122,6 +114,16 @@ BUGLIST:
 
 - when deleting an entry in the last sort tab (of 2) sometimes gtkpod
   crashes
+
+----------
+When moving column in track view
+
+(gtkpod:18557): Gtk-CRITICAL **: file gtktreeview.c: line 5641 (gtk_tree_view_drag_begin): assertion `path != NULL' failed
+
+(gtkpod:18557): Gdk-CRITICAL **: file gdkwindow-x11.c: line 1264 (gdk_window_hide): assertion `window != NULL' failed
+
+Then: segmentation fault.
+
 
 Please add/report bugs as you find them (jcsjcs at users dot
 sourceforge dot net).

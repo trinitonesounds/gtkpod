@@ -724,3 +724,15 @@ void
 on_randomize_current_playlist_activate (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
+
+void
+on_playlist_file_playlist_activate     (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_playlist_file_tab_entry_activate    (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

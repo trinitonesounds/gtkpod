@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 01:37:47 jcs>
+/* Time-stamp: <2004-08-21 18:54:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,6 +37,8 @@
 #include "prefs_window.h"
 #include "display.h"
 
+
+/* Different paths that can be set in the prefs window */
 typedef enum
 {
     PATH_PLAY_NOW = 0,
@@ -46,6 +48,7 @@ typedef enum
     PATH_SYNC_CALENDAR,
     PATH_NUM
 } PathType;
+
 
 struct win_size {
     gint x;
@@ -98,7 +101,7 @@ struct cfg
 				   filenames etc? */
   struct
   {
-      gchar *browse, *export;
+      gchar *browse;
   } last_dir;	          /* last directories used by the fileselections */
   struct
   {
@@ -138,13 +141,10 @@ struct cfg
   gint last_prefs_page;         /* last page selected in prefs window */
   gchar *toolpath[PATH_NUM];    /* path for 'Play Now...' (see PathType) */
   gchar *time_format;           /* time format for strftime() */
-  gchar *export_template;       /* filename for files exported from ipod */
   gboolean automount;		/* whether we should mount/unmount the ipod */
-  gboolean export_check_existing;/* whether we check for existing files on export or not */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
-  gboolean special_export_charset; /* use original charset or specified one? */
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   gboolean concal_autosync;     /* sync contacts and calendar on iTunesDB sync? */
   gboolean unused_gboolean1;    /* unused */
@@ -208,8 +208,6 @@ void prefs_set_parsetags_template (const gchar *tpl);
 const gchar *prefs_get_parsetags_template (void);
 void prefs_set_last_dir_browse (const gchar * dir);
 const gchar *prefs_get_last_dir_browse (void);
-void prefs_set_last_dir_export(const gchar * dir);
-const gchar *prefs_get_last_dir_export(void);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_size_gtkpod (gint x, gint y);
@@ -225,7 +223,6 @@ void prefs_set_col_order (gint pos, TM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
 void prefs_set_automount(gboolean val);
-void prefs_set_export_check_existing(gboolean val);
 void prefs_set_info_window(gboolean val);
 
 gboolean prefs_get_offline(void);
@@ -293,7 +290,6 @@ const gchar *prefs_get_toolpath (PathType type);
 void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);
-gboolean prefs_get_export_check_existing (void);
 gboolean prefs_get_info_window (void);
 void prefs_set_sp_or (guint32 inst, gboolean state);
 gboolean prefs_get_sp_or (guint32 inst);
@@ -323,8 +319,6 @@ void prefs_set_not_played_track (gboolean state);
 gboolean prefs_get_not_played_track (void);
 void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
-void prefs_set_export_template (char* state);
-const char* prefs_get_export_template (void);
 void prefs_set_unused_gboolean3(gboolean val);
 gboolean prefs_get_unused_gboolean3(void);
 void prefs_set_concal_autosync(gboolean val);
@@ -333,6 +327,9 @@ void prefs_set_unused_gboolean1(gboolean val);
 gboolean prefs_get_unused_gboolean1(void);
 void prefs_set_unused_gboolean2(gboolean val);
 gboolean prefs_get_unused_gboolean2(void);
-void prefs_set_special_export_charset(gboolean val);
-gboolean prefs_get_special_export_charset(void);
+
+void prefs_set_string_value (const gchar *key, const gchar *value);
+void prefs_set_int_value (const gchar *key, gint value);
+gboolean prefs_get_string_value (const gchar *key, gchar **value);
+gboolean prefs_get_int_value (const gchar *key, gint *value);
 #endif

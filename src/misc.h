@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 14:56:46 jcs>
+/* Time-stamp: <2004-08-21 20:13:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -47,6 +47,10 @@
 /* compare a and b, return sign (a-b) -- it has to be this way rather
    than just calculate a-b, because a and b might be unsigned... */
 #define COMP(a,b) (a<b ? -1:a>b ? +1:0)
+
+/* Response for the Apply button (we cannot use GTK_RESPONSE_APPLY)
+ * because that is only emitted if a filename is present */
+enum { RESPONSE_APPLY = 5 };
 
 /* indicates whether widgets are currently blocked */
 extern gboolean widgets_blocked;
@@ -138,4 +142,38 @@ void do_selected_playlist (void (*do_func)(GList *trackids));
 
 guint32 replaygain_to_soundcheck (gdouble gain);
 gdouble soundcheck_to_replaygain (guint32 soundcheck);
+
+
+void option_set_radio_button (GtkWidget *win,
+			      const gchar *prefs_string,
+			      const gchar **widgets,
+			      gint dflt);
+gint option_get_radio_button (GtkWidget *win,
+			      const gchar *prefs_string,
+			      const gchar **widgets);
+void option_set_folder (GtkFileChooser *fc,
+			const gchar *prefs_string);
+void option_get_folder (GtkFileChooser *fc,
+			const gchar *prefs_string,
+			gchar **value);
+void option_set_filename (GtkFileChooser *fc,
+			  const gchar *prefs_string);
+void option_get_filename (GtkFileChooser *fc,
+			  const gchar *prefs_string,
+			  gchar **value);
+void option_set_string (GtkWidget *win,
+			const gchar *name,
+			const gchar *dflt);
+void option_get_string (GtkWidget *win,
+			const gchar *name,
+			gchar **value);
+void option_set_toggle_button (GtkWidget *win,
+			       const gchar *name,
+			       gboolean dflt);
+gboolean option_get_toggle_button (GtkWidget *win,
+				   const gchar *name);
+
+gchar *get_string_from_template (Track *track,
+				 const gchar *full_template,
+				 gboolean is_filename);
 #endif

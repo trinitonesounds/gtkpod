@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-08-15 01:41:17 jcs>
+|  Time-stamp: <2004-08-21 20:15:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -852,3 +852,498 @@ gchar *get_track_info (Track *track)
 
 
 
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *  Generic functions to handle options in pop-up requesters        *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+
+
+/* Set the toggle button to active that is specified by @prefs_string
+   (integer value). If no parameter is set in the prefs, use
+   @dflt. The corresponding widget names are stored in an array
+   @widgets and are member of @win */
+void option_set_radio_button (GtkWidget *win,
+			      const gchar *prefs_string,
+			      const gchar **widgets,
+			      gint dflt)
+{
+    gint wnum, num=0;
+    GtkWidget *w;
+
+    g_return_if_fail (win && prefs_string && widgets);
+
+    /* number of available widgets */
+    num=0;
+    while (widgets[num]) ++num;
+
+    if (!prefs_get_int_value (prefs_string, &wnum))
+	wnum = dflt;
+
+    if ((wnum >= num) || (wnum < 0))
+    {
+	fprintf (stderr, "Programming error: wnum > num (%d,%d,%s)\n",
+		 wnum, num, prefs_string);
+	/* set to reasonable default value */
+	prefs_set_int_value (prefs_string, 0);
+	wnum = 0;
+    }
+    w = lookup_widget (win, widgets[wnum]);
+    if (w)
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+}
+
+
+/* Retrieve which toggle button was activated and store the state in
+ * the prefs */
+gint option_get_radio_button (GtkWidget *win,
+			      const gchar *prefs_string,
+			      const gchar **widgets)
+{
+    gint i;
+
+    g_return_val_if_fail (win && prefs_string && widgets, 0);
+
+    for (i=0; widgets[i]; ++i)
+    {
+	GtkWidget *w = lookup_widget (win, widgets[i]);
+	if (w)
+	{
+	    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)))
+		break;
+	}
+    }
+    if (!widgets[i])
+    {
+	fprintf (stderr, "Programming error: no active toggle button (%s)", prefs_string);
+	/* set reasonable default */
+	i=0;
+    }
+    prefs_set_int_value (prefs_string, i);
+    return i;
+}
+
+
+/* Set the current folder to what is stored in the prefs */
+void option_set_folder (GtkFileChooser *fc, const gchar *prefs_string)
+{
+    gchar *folder;
+
+    g_return_if_fail (fc && prefs_string);
+
+    prefs_get_string_value (prefs_string, &folder);
+    if (!folder)
+	folder = g_strdup (g_get_home_dir ());
+    gtk_file_chooser_set_current_folder (fc, folder);
+    g_free (folder);
+}
+
+
+/* Retrieve the current folder and write it to the prefs */
+/* If @value is != NULL, a copy of the folder is placed into
+   @value. It has to be g_free()d after use */
+void option_get_folder (GtkFileChooser *fc,
+			const gchar *prefs_string,
+			gchar **value)
+{
+    gchar *folder;
+
+    g_return_if_fail (fc && prefs_string);
+
+    folder = gtk_file_chooser_get_current_folder (fc);
+    prefs_set_string_value (prefs_string, folder);
+
+    if (value) *value = folder;
+    else       g_free (folder);
+}
+
+
+/* Set the current filename to what is stored in the prefs */
+void option_set_filename (GtkFileChooser *fc, const gchar *prefs_string)
+{
+    gchar *filename;
+
+    g_return_if_fail (fc && prefs_string);
+
+    prefs_get_string_value (prefs_string, &filename);
+    if (!filename)
+	filename = g_strdup (g_get_home_dir ());
+    gtk_file_chooser_set_current_name (fc, filename);
+    g_free (filename);
+}
+
+
+/* Retrieve the current filename and write it to the prefs */
+/* If @value is != NULL, a copy of the filename is placed into
+   @value. It has to be g_free()d after use */
+void option_get_filename (GtkFileChooser *fc,
+			  const gchar *prefs_string,
+			  gchar **value)
+{
+    gchar *filename;
+
+    g_return_if_fail (fc && prefs_string);
+
+    filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(fc));
+    prefs_set_string_value (prefs_string, filename);
+
+    if (value) *value = filename;
+    else       g_free (filename);
+}
+
+
+/* Set the string entry @name to the prefs value stored in @name or
+   to @default if @name is not yet defined. */
+void option_set_string (GtkWidget *win,
+			const gchar *name,
+			const gchar *dflt)
+{
+    gchar *string;
+    GtkWidget *entry;
+
+    g_return_if_fail (win && name && dflt);
+
+    prefs_get_string_value (name, &string);
+
+    if (!string)
+	string = g_strdup (dflt);
+
+    entry = lookup_widget (win, name);
+
+    if (entry)
+	gtk_entry_set_text(GTK_ENTRY(entry), string);
+
+    g_free (string);
+}
+
+/* Retrieve the current content of the string entry @name and write it
+ * to the prefs (@name) */
+/* If @value is != NULL, a copy of the string is placed into
+   @value. It has to be g_free()d after use */
+void option_get_string (GtkWidget *win,
+			const gchar *name,
+			gchar **value)
+{
+    GtkWidget *entry;
+
+    g_return_if_fail (win && name);
+
+    entry = lookup_widget (win, name);
+    if (entry)
+    {
+	const gchar *str = gtk_entry_get_text (GTK_ENTRY (entry));
+	prefs_set_string_value (name, str);
+	if (value) *value = g_strdup (str);
+    }
+}
+
+
+/* Set the state of toggle button @name to the prefs value stored in
+   @name or to @default if @name is not yet defined. */
+void option_set_toggle_button (GtkWidget *win,
+			       const gchar *name,
+			       gboolean dflt)
+{
+    gboolean active;
+    GtkWidget *button;
+
+    g_return_if_fail (win && name);
+
+    if (!prefs_get_int_value (name, &active))
+	active = dflt;
+
+    button = lookup_widget (win, name);
+
+    if (button)
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(button),
+				      active);
+}
+
+/* Retrieve the current state of the toggle button @name and write it
+ * to the prefs (@name) */
+/* Return value: the current state */
+gboolean option_get_toggle_button (GtkWidget *win,
+				   const gchar *name)
+{
+    gboolean active = FALSE;
+    GtkWidget *button;
+
+    g_return_val_if_fail (win && name, active);
+
+    button = lookup_widget (win, name);
+
+    if (button)
+    {
+	active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(button));
+	prefs_set_int_value (name, active);
+    }
+    return active;
+}
+
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *  Functions to create string/filename from a template             *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+
+
+/*
+|  Copyright (C) 2004 Ero Carrera <ero at dkbza.org>
+|
+|  Placed under GPL in agreement with Ero Carrera. (JCS -- 12 March 2004)
+*/
+
+/**
+ * Check if supported char and return substitute.
+ */
+static gchar check_char(gchar c)
+{
+    gint i;
+    static const gchar 
+	invalid[]={'"', '*', ':', '<', '>', '?', '\\', '|', '/', 0};
+    static const gchar
+	replace[]={'_', '_', '-', '_', '_', '_', '-',  '-', '-', 0};
+    for(i=0; invalid[i]!=0; i++)
+	if(c==invalid[i])  return replace[i];
+    return c;
+}
+
+/**
+ * Process a path. It will substitute all the invalid characters.
+ * The changes are made within the original string. A pointer to the
+ * original string is returned.
+ */
+static gchar *fix_path(gchar *orig)
+{
+        if(orig)
+	{
+	    gchar *op = orig;
+	    while (*op)
+	    {
+		*op = check_char(*op);
+		++op;
+	    }
+	}
+	return orig;
+}
+
+/* End of code originally supplied by Ero Carrera */
+
+
+/* Match a list of templates @p separated by ';' with the type of the
+   filename. E.g. '%s.mp3;%t.wav' will return '%s.mp3' if @track is an
+   mp3 file, or '%t.wav' if @track is a wav file. If no template can
+   be matched, an empty string is returned. */
+static gchar *select_template (Track *track, const gchar *p)
+{
+    gchar **templates, **tplp;
+    gchar *tname, *ext = NULL;
+    gchar *result;
+
+    if (!track) return (strdup (""));
+
+    tname = get_track_name_on_disk (track);
+    if (!tname) return (NULL);         /* this should not happen... */
+    ext = strrchr (tname, '.');        /* pointer to filename extension */
+
+    templates = g_strsplit (p, ";", 0);
+    tplp = templates;
+    while (*tplp)
+    {
+	if (strcmp (*tplp, "%o") == 0)
+	{   /* this is only a valid extension if the original filename
+	       is present */
+	    if (track->pc_path_locale && strlen(track->pc_path_locale))  break;
+	}
+	else if (strrchr (*tplp, '.') == NULL)
+	{   /* this templlate does not have an extension and therefore
+	     * matches */
+	    if (ext)
+	    {   /* if we have an extension, add it */
+		gchar *str = g_strdup_printf ("%s%s", *tplp, ext);
+		g_free (*tplp);
+		*tplp = str;
+	    }
+	    break;
+	}
+	else if (ext && (strlen (*tplp) >= strlen (ext)))
+	{  /* this template is valid if the extensions match */
+	    if (strcmp (&((*tplp)[strlen (*tplp) - strlen (ext)]), ext) == 0)
+		break;
+	}
+	++tplp;
+    }
+    result = g_strdup (*tplp);
+    g_strfreev (templates);
+    return result;
+}
+
+
+/* Return a string for @track built according to @full_template.
+   @full_template can contain several templates separated by ';',
+   e.g. '%s.mp3;%t.wav'. The correct one is selected using
+   select_template() defined above.
+   If @is_filename is TRUE, potentially harmful characters are
+   replaced in an attempt to create a valid filename.
+   If @is_filename is FALSE, the extension (e.g. '.mp3' will be
+   removed). */
+gchar *get_string_from_template (Track *track,
+				 const gchar *full_template,
+				 gboolean is_filename)
+{
+    GString *result;
+    gchar *p, *res_utf8;
+    gchar *basename = NULL;
+    gchar *template;
+
+    g_return_val_if_fail (track && full_template, NULL);
+
+    template = select_template (track, full_template);
+
+    if (!template)
+    {
+	gchar *fn = get_track_name_on_disk (track);
+	gtkpod_warning (_("Template ('%s') does not match file type '%s'\n"), full_template, fn ? fn:"");
+	g_free (fn);
+	return NULL;
+    }
+
+    if (!is_filename)
+    {   /* remove an extension, if present ('.???' or '.????'  at the
+	   end) */
+	gchar *pnt = strrchr (template, '.');
+	if (pnt)
+	{
+	    if (pnt == template+strlen(template)-3)
+		*pnt = 0;
+	    if (pnt == template+strlen(template)-4)
+		*pnt = 0;
+	}
+    }
+
+    result = g_string_new ("");
+
+    /* try to get the original filename */
+    if (track->pc_path_utf8)
+	basename = g_path_get_basename (track->pc_path_utf8);
+
+    p=template;
+    while (*p != '\0') {
+	if (*p == '%') {
+	    const gchar* tmp = NULL;
+	    gchar dummy[100];
+	    p++;
+	    switch (*p) {
+	    case 'o':
+		if (basename)
+		{
+		    tmp = basename;
+		}
+		break;
+	    case 'a':
+		tmp = track_get_item_utf8 (track, T_ARTIST);
+		break;
+	    case 'A':
+		tmp = track_get_item_utf8 (track, T_ALBUM);
+		break;
+	    case 't':
+		tmp = track_get_item_utf8 (track, T_TITLE);
+		break;
+	    case 'c':
+		tmp = track_get_item_utf8 (track, T_COMPOSER);
+		break;
+	    case 'g':
+	    case 'G':
+		tmp = track_get_item_utf8 (track, T_GENRE);
+		break;
+	    case 'C':
+		if (track->cds == 0)
+		    sprintf (dummy, "%.2d", track->cd_nr);
+		else if (track->cds < 10)
+		    sprintf(dummy, "%.1d", track->cd_nr);
+		else if (track->cds < 100)
+		    sprintf (dummy, "%.2d", track->cd_nr);
+		else if (track->cds < 1000)
+		    sprintf (dummy, "%.3d", track->cd_nr);
+		else
+		    sprintf (dummy,"%.4d", track->cd_nr);
+		tmp = dummy;
+		break;
+	    case 'T':
+		if (track->tracks == 0)
+		    sprintf (dummy, "%.2d", track->track_nr);
+		else if (track->tracks < 10)
+		    sprintf(dummy, "%.1d", track->track_nr);
+		else if (track->tracks < 100)
+		    sprintf (dummy, "%.2d", track->track_nr);
+		else if (track->tracks < 1000)
+		    sprintf (dummy, "%.3d", track->track_nr);
+		else
+		    sprintf (dummy,"%.4d", track->track_nr);
+		tmp = dummy;
+		break;
+	    case 'Y':
+		sprintf (dummy, "%4d", track->year);
+		tmp = dummy;
+		break;
+	    case '%':
+		tmp = "%";
+		break;
+	    default:
+		gtkpod_warning (_("Unknown token '%%%c' in template '%s'"),
+				*p, template);
+		break;
+	    }
+	    if (tmp)
+	    {
+		gchar *tmpcp = g_strdup (tmp);
+		if (is_filename)
+		{
+		    /* remove potentially illegal/harmful characters */
+		    fix_path (tmpcp);
+		    /* strip spaces to avoid problems with vfat */
+		    g_strstrip (tmpcp);
+		    /* append to current string */
+		}
+		result = g_string_append (result, tmpcp);
+		tmp = NULL;
+		g_free (tmpcp);
+	    }
+	}
+	else 
+	    result = g_string_append_c (result, *p);
+	p++;
+    }
+    /* get the utf8 version of the filename */
+    res_utf8 = g_string_free (result, FALSE);
+
+    if (is_filename)
+    {   /* remove white space before the filename extension
+	   (last '.') */
+	gchar *ext = strrchr (res_utf8, '.');
+	gchar *extst = NULL;
+	if (ext)
+	{
+	    extst = g_strdup (ext);
+	    *ext = '\0';
+	}
+	g_strstrip (res_utf8);
+	if (extst)
+	{
+	    /* The following strcat() is safe because g_strstrip()
+	       does not increase the original string size. Therefore
+	       the result of the strcat() call will not be longer than
+	       the original string. */
+	    strcat (res_utf8, extst);
+	    g_free (extst);
+	}
+    }
+
+    return res_utf8;
+}

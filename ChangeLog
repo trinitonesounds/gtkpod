@@ -17,17 +17,27 @@ gtkpod V0.82-CVS
 	correctly. Normalization using mp3gain was therefore
 	impossible. Didn't anyone ever use that feature?!
 
+	BUGFIX: when copying track to the iPod, the free space
+	indication became bigger and bigger during the process.
+
 	NEW FEATURE: support for On-The-Go Playlists. They will show
 	up as "OTG Playlist 1" etc.
+
+	NEW FEATURE: export of PLS or M3U file including meta data.
 	
 	NEW FEATURE: registering playcounts when tracks are played on
 	the local machine is now possible (actually it was already
 	possible in V0.80, but now the README explains how to do it).
 
 	IMPROVEMENT: Speeded up writing of iTunesDB. For me it is now
-	around one second instead of 38 seconds before (for security
-	I'm using the iPod as a non-buffered device). A back-upped
-	version of the iTunesDB is now always written to ~/.gtkpod.
+	between 1 and 15 seconds instead of between 20 and 40 seconds
+	before (for security I'm using the iPod as a non-buffered
+	device). A back-upped version of the iTunesDB is now always
+	written to ~/.gtkpod.
+
+	IMPROVEMENT: Moved some options from the preferences dialog to
+	the file chooser dialog where you need them. gtkpod now
+	requires GTK2.4 to compile.
 
 	IMPROVEMENT: Added "Time Created" support to special sorttab,
 	track display and iTunesDB. (Before only "modified" and

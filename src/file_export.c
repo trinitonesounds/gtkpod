@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2004-08-21 20:21:54 jcs>
+|
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
 | 
@@ -32,6 +33,7 @@
 #include "prefs.h"
 #include "file.h"
 #include "charset.h"
+#include "interface.h"
 #include "support.h"
 #include <limits.h>
 #include <stdio.h>
@@ -42,22 +44,21 @@
 #include <math.h>
 
 
+/* Structure to keep all necessary information */
+struct fcd
+{
+    GList *tracks;  /* tracks to be written */
+    GtkWidget *fc;  /* file chooser */
+    GtkWidget *win; /* glade widget to lookup widgets by name */
+    gpointer user_data; 
+};
+
+
 /**
  * READ_WRITE_BLOCKSIZE - how many bytes we read per fread/fwrite call
  */
 #define READ_WRITE_BLOCKSIZE 65536
 
-/**
- * Private Variables for this subsystem
- * @dest_dir - The export directory we're putting the files in
- * @tracks - A GList of Track* references to export
- * @fs - the file selection dialog
- */
-static struct {
-    GList *tracks;
-    gchar *dest_dir;
-    GtkWidget *fs;
-} file_export;
 
 #ifdef G_THREADS_ENABLED
 /* Thread specific */
@@ -67,252 +68,6 @@ static gboolean mutex_data = FALSE;
 #endif
 
 
-
-/*
-|  Copyright (C) 2004 Ero Carrera <ero at dkbza.org>
-|
-|  Placed under GPL in agreement with Ero Carrera. (JCS -- 12 March 2004)
-*/
-
-/**
- * Check if supported char and return substitute.
- */
-static gchar check_char(gchar c)
-{
-    gint i;
-    static const gchar 
-	invalid[]={'"', '*', ':', '<', '>', '?', '\\', '|', '/', 0};
-    static const gchar
-	replace[]={'_', '_', '-', '_', '_', '_', '-',  '-', '-', 0};
-    for(i=0; invalid[i]!=0; i++)
-	if(c==invalid[i])  return replace[i];
-    return c;
-}
-
-/**
- * Process a path. It will substitute all the invalid characters.
- * The changes are made within the original string. A pointer to the
- * original string is returned.
- */
-gchar *fix_path(gchar *orig)
-{
-        if(orig)
-	{
-	    gchar *op = orig;
-	    while (*op)
-	    {
-		*op = check_char(*op);
-		++op;
-	    }
-	}
-	return orig;
-}
-
-/* End of code originally supplied by Ero Carrera */
-
-
-
-gchar *get_export_filename_template (Track *track)
-{
-    const gchar *p = prefs_get_export_template ();
-    gchar **templates, **tplp;
-    gchar *tname, *ext = NULL;
-    gchar *result;
-
-    if (!track) return (strdup (""));
-
-    tname = get_track_name_on_disk (track);
-    if (!tname) return (NULL);         /* this should not happen... */
-    ext = strrchr (tname, '.');        /* pointer to filename extension */
-
-    templates = g_strsplit (p, ";", 0);
-    tplp = templates;
-    while (*tplp)
-    {
-	if (strcmp (*tplp, "%o") == 0)
-	{   /* this is only a valid extension if the original filename
-	       is present */
-	    if (track->pc_path_locale && strlen(track->pc_path_locale))  break;
-	}
-	else if (strrchr (*tplp, '.') == NULL)
-	{   /* this templlate does not have an extension and therefore
-	     * matches */
-	    if (ext)
-	    {   /* if we have an extension, add it */
-		gchar *str = g_strdup_printf ("%s%s", *tplp, ext);
-		g_free (*tplp);
-		*tplp = str;
-	    }
-	    break;
-	}
-	else if (ext && (strlen (*tplp) >= strlen (ext)))
-	{  /* this template is valid if the extensions match */
-	    if (strcmp (&((*tplp)[strlen (*tplp) - strlen (ext)]), ext) == 0)
-		break;
-	}
-	++tplp;
-    }
-    result = g_strdup (*tplp);
-    g_strfreev (templates);
-    return result;
-}
-
-/**
- * get_preferred_filename - useful for generating the preferred
- * @param Track the track
- * @return the file filename (including directories) for this Track
- * based on the users preferences.  The returned char* must be freed
- * by the caller.
- */
-static gchar *
-track_get_export_filename (Track *track)
-{
-    GString *result;
-    gchar *res_utf8, *res_cs = NULL;
-    gchar dummy[100];
-    gchar *p, *template, *basename = NULL;
-    gboolean original=FALSE; /* indicate whether original filename is
-			      * being used */
-
-    if (!track) return NULL; 
-
-    template = get_export_filename_template (track);
-
-    if (!template)
-    {
-	gchar *fn = get_track_name_on_disk (track);
-	gtkpod_warning (_("Output filename template ('%s') does not match the file '%s'\n"), prefs_get_export_template (), fn ? fn:"");
-	g_free (fn);
-	return NULL;
-    }
-
-    result = g_string_new ("");
-
-    /* try to get the original filename */
-    if (track->pc_path_utf8)
-	basename = g_path_get_basename (track->pc_path_utf8);
-
-    p=template;
-    while (*p != '\0') {
-	if (*p == '%') {
-	    const gchar* tmp = NULL;
-	    p++;
-	    switch (*p) {
-	    case 'o':
-		if (basename)
-		{
-		    tmp = basename;
-		    original = TRUE;
-		}
-		break;
-	    case 'a':
-		tmp = track_get_item_utf8 (track, T_ARTIST);
-		break;
-	    case 'A':
-		tmp = track_get_item_utf8 (track, T_ALBUM);
-		break;
-	    case 't':
-		tmp = track_get_item_utf8 (track, T_TITLE);
-		break;
-	    case 'c':
-		tmp = track_get_item_utf8 (track, T_COMPOSER);
-		break;
-	    case 'g':
-	    case 'G':
-		tmp = track_get_item_utf8 (track, T_GENRE);
-		break;
-	    case 'C':
-		if (track->cds == 0)
-		    sprintf (dummy, "%.2d", track->cd_nr);
-		else if (track->cds < 10)
-		    sprintf(dummy, "%.1d", track->cd_nr);
-		else if (track->cds < 100)
-		    sprintf (dummy, "%.2d", track->cd_nr);
-		else if (track->cds < 1000)
-		    sprintf (dummy, "%.3d", track->cd_nr);
-		else
-		    sprintf (dummy,"%.4d", track->cd_nr);
-		tmp = dummy;
-		break;
-	    case 'T':
-		if (track->tracks == 0)
-		    sprintf (dummy, "%.2d", track->track_nr);
-		else if (track->tracks < 10)
-		    sprintf(dummy, "%.1d", track->track_nr);
-		else if (track->tracks < 100)
-		    sprintf (dummy, "%.2d", track->track_nr);
-		else if (track->tracks < 1000)
-		    sprintf (dummy, "%.3d", track->track_nr);
-		else
-		    sprintf (dummy,"%.4d", track->track_nr);
-		tmp = dummy;
-		break;
-	    case 'Y':
-		sprintf (dummy, "%4d", track->year);
-		tmp = dummy;
-		break;
-	    case '%':
-		tmp = "%";
-		break;
-	    default:
-		gtkpod_warning (_("Unknown token '%%%c' in template '%s'"),
-				*p, template);
-		break;
-	    }
-	    if (tmp)
-	    {
-		gchar *tmpcp = g_strdup (tmp);
-		/* remove potentially illegal/harmful characters */
-		fix_path (tmpcp);
-		/* strip spaces to avoid problems with vfat */
-		g_strstrip (tmpcp);
-		/* append to current string */
-		result = g_string_append (result, tmpcp);
-		tmp = NULL;
-		g_free (tmpcp);
-	    }
-	}
-	else 
-	    result = g_string_append_c (result, *p);
-	p++;
-    }
-    /* get the utf8 version of the filename */
-    res_utf8 = g_string_free (result, FALSE);
-    if (res_utf8)
-    {  /* always TRUE! -- but needed to define ext and extst here (gcc2.95) */
-    /* remove white space before the filename extension (last '.') */
-	gchar *ext = strrchr (res_utf8, '.');
-	gchar *extst = NULL;
-	if (ext)
-	{
-	    extst = g_strdup (ext);
-	    *ext = '\0';
-	}
-	g_strstrip (res_utf8);
-	if (extst)
-	{
-	    /* The following strcat() is safe because g_strstrip()
-	       does not increase the original string size. Therefore
-	       the result of the strcat() call will not be longer than
-	       the original string. */
-	    strcat (res_utf8, extst);
-	    g_free (extst);
-	}
-    }
-    /* convert it to the charset */
-    if (prefs_get_special_export_charset ())
-    {   /* use the specified charset */
-	res_cs = charset_from_utf8 (res_utf8);
-    }
-    else
-    {   /* use the charset stored in track->charset */
-	res_cs = charset_track_charset_from_utf8 (track, res_utf8);
-    }
-    g_free (basename);
-    g_free (res_utf8);
-    g_free (template);
-    return res_cs;
-}
 
 /**
  * Recursively make directories in the given filename.
@@ -335,20 +90,6 @@ mkdirhier(char* filename)
 		p++;
 	}
 	return TRUE;
-}
-
-/**
- * file_export_cleanup - Free all data structures used by this subsystem
- * set all relevant pointers back to NULL
- */
-static void
-file_export_cleanup(void)
-{
-    if(file_export.dest_dir) g_free(file_export.dest_dir);
-    if(file_export.tracks) g_list_free(file_export.tracks);
-    if(file_export.fs) gtk_widget_destroy(file_export.fs);
-    memset(&file_export, 0, sizeof(file_export));
-    release_widgets ();
 }
 
 /**
@@ -431,8 +172,11 @@ copy_file(gchar *file, gchar *dest)
 {
     gboolean result = FALSE;
     FILE *from = NULL, *to = NULL;
+    gboolean check_existing;
+
+    prefs_get_int_value (EXPORT_FILES_CHECK_EXISTING, &check_existing);
     
-    if(prefs_get_export_check_existing() && file_is_ok(file, dest))
+    if(check_existing && file_is_ok(file, dest))
     	return TRUE;
 	
     if((from = fopen(file, "r")))
@@ -462,6 +206,65 @@ copy_file(gchar *file, gchar *dest)
     return(result);
 }
 
+
+
+
+/* This function is called when the user presses the abort button
+ * during flush_tracks() */
+static void write_tracks_abort (gboolean *abort)
+{
+    *abort = TRUE;
+}
+
+
+/* Strings for prefs settings */
+/* use original charset or specified one? */
+const gchar *EXPORT_FILES_SPECIAL_CHARSET="export_files_special_charset";
+/* whether we check for existing files on export or not */
+const gchar *EXPORT_FILES_CHECK_EXISTING="export_files_check_existing";
+const gchar *EXPORT_FILES_PATH="export_files_path";
+const gchar *EXPORT_FILES_TPL="export_files_template";
+/* Default prefs settings */
+const gchar *EXPORT_FILES_TPL_DFLT="%o;%a - %t.mp3;%t.wav";
+
+
+
+/**
+ * get_preferred_filename - useful for generating the preferred
+ * @param Track the track
+ * @return the file filename (including directories) for this Track
+ * based on the users preferences.  The returned char* must be freed
+ * by the caller.
+ */
+static gchar *
+track_get_export_filename (Track *track)
+{
+    gchar *res_utf8, *res_cs = NULL;
+    gchar *template;
+    gboolean special_charset;
+
+    g_return_val_if_fail (track, NULL);
+
+    prefs_get_string_value (EXPORT_FILES_TPL, &template);
+    res_utf8 = get_string_from_template (track, template, TRUE);
+    C_FREE (template);
+
+    prefs_get_int_value (EXPORT_FILES_SPECIAL_CHARSET, &special_charset);
+
+    /* convert it to the charset */
+    if (special_charset)
+    {   /* use the specified charset */
+	res_cs = charset_from_utf8 (res_utf8);
+    }
+    else
+    {   /* use the charset stored in track->charset */
+	res_cs = charset_track_charset_from_utf8 (track, res_utf8);
+    }
+    g_free (res_utf8);
+    return res_cs;
+}
+
+
 /**
  * write_track_to_dir - copy the Track* to the desired output file
  * @s - The Track reference we're manipulating
@@ -476,26 +279,30 @@ write_track(Track *s)
     if((dest_file = track_get_export_filename(s)))
     {
 	gchar *from_file = get_track_name_on_disk(s);
-	gchar *filename = g_build_filename (file_export.dest_dir,
-					    dest_file, NULL);
+	gchar *filename, *dest_dir;
+
+	prefs_get_string_value (EXPORT_FILES_PATH, &dest_dir);
+	filename = g_build_filename (dest_dir, dest_file, NULL);
+
 	if (mkdirhier(filename)) {
 	    if(copy_file(from_file, filename))
 	        result = TRUE;
 	}
 	g_free(from_file);
 	g_free(dest_file);
+	g_free(dest_dir);
 	g_free(filename);
     }
     return(result);
 }
 
-
-
 #ifdef G_THREADS_ENABLED
 /* Threaded write_track */
 static gpointer th_write_track (gpointer s)
 {
-    gboolean result = write_track ((Track *)s);
+    gboolean result = FALSE;
+
+    result = write_track ((Track *)s);
 
     g_mutex_lock (mutex);
     mutex_data = TRUE;   /* signal that thread will end */
@@ -506,20 +313,8 @@ static gpointer th_write_track (gpointer s)
 }
 #endif
 
-/* This function is called when the user presses the abort button
- * during flush_tracks() */
-static void write_tracks_abort (gboolean *abort)
-{
-    *abort = TRUE;
-}
 
-
-/**
- * file_export_do - if we get the "Ok" from the file selection we wanna
- * write the files out to disk
- */
-static void
-file_export_do(void)
+static void export_files_write (struct fcd *fcd)
 {
     GList *l = NULL;
     gint n;
@@ -532,20 +327,12 @@ file_export_do(void)
     if (!cond) cond = g_cond_new ();
 #endif
 
-    /* close the file requester */
-    if(file_export.fs)
-    {
-	gtk_widget_destroy (file_export.fs);
-	file_export.fs = NULL;
-    }
-
-
-    block_widgets ();
+    g_return_if_fail (fcd && fcd->win && fcd->fc);
 
     abort = FALSE;
-    n = g_list_length (file_export.tracks);
+    n = g_list_length (fcd->tracks);
     /* calculate total length to be copied */
-    for(l = file_export.tracks; l && !abort; l = l->next)
+    for(l = fcd->tracks; l && !abort; l = l->next)
     {
 	Track *s = (Track*)l->data;
 	total += s->size;
@@ -604,7 +391,7 @@ file_export_do(void)
 
 	while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 	start = time(NULL);
-	for(l = file_export.tracks; l && !abort; l = l->next)
+	for(l = fcd->tracks; l && !abort; l = l->next)
 	{
 	    Track *s = (Track*)l->data;
 	    gchar *buf;
@@ -674,74 +461,443 @@ file_export_do(void)
 	if (!result || abort)
 	    gtkpod_statusbar_message (_("Some tracks were not copied."));
     }
-    file_export_cleanup();
+}
+/*     gboolean special_charset, check_existing; */
+/*     gchar *template, *dirname; */
+
+/*     g_return_if_fail (fcd && fcd->fc); */
+
+/*     num = g_list_length (fcd->tracks); */
+
+/*     prefs_get_int_value (EXPORT_FILES_SPECIAL_CHARSET, &special_charset); */
+/*     prefs_get_int_value (EXPORT_FILES_CHECK_EXISTING, &check_existing); */
+/*     prefs_get_string_value (EXPORT_PLAYLIST_FILE_TPL, &template); */
+/*     if (!template) */
+/* 	template = g_strdup (EXPORT_PLAYLIST_FILE_TPL_DFLT); */
+/*     dirname = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(fcd->fc)); */
+
+
+/******************************************************************
+   export_files_cleanup - free memory taken up by the fcd structure.
+ ******************************************************************/
+static void export_files_cleanup (struct fcd *fcd)
+{
+    g_return_if_fail (fcd);
+    g_list_free (fcd->tracks);
+    if (fcd->win)  gtk_widget_destroy (fcd->win);
+    g_free (fcd);
     release_widgets ();
 }
 
-/**
- * export_files_cancel_button_clicked - when the user aborts the file
- * exporting or the file selection receives a delete_event
- * @w - the button clicked
- * @data - a pointer to the fileselection
- */
-static void
-export_files_cancel_button_clicked(GtkWidget *w, gpointer data)
+
+/******************************************************************
+   export_files_retrieve_options - retrieve options and store
+   them in the prefs.
+ ******************************************************************/
+static void export_files_retrieve_options (struct fcd *fcd)
 {
-    file_export_cleanup();
+    g_return_if_fail (fcd && fcd->win && fcd->fc);
+
+    option_get_toggle_button (fcd->win,
+			      EXPORT_FILES_SPECIAL_CHARSET);
+    option_get_toggle_button (fcd->win,
+			      EXPORT_FILES_CHECK_EXISTING);
+    option_get_string (fcd->win, EXPORT_FILES_TPL, NULL);
+    option_get_filename (GTK_FILE_CHOOSER (fcd->fc),
+			 EXPORT_FILES_PATH, NULL);
 }
 
-/**
- * export_files_ok_button_clicked - when the user clicks the "Ok" button on
- * the export file selection
- * @w - the button clicked
- * @data - a pointer to the fileselection
- */
-static void
-export_files_ok_button_clicked(GtkWidget *w, gpointer data)
+
+/******************************************************************
+   export_files_response - handle the response codes accordingly.
+ ******************************************************************/
+static void export_files_response (GtkDialog *fc,
+				   gint response,
+				   struct fcd *fcd)
 {
-    if((w) && (data))
+/*     printf ("received response code: %d\n", response); */
+    switch (response)
     {
-	const gchar *name;
-	name = gtk_file_selection_get_filename (GTK_FILE_SELECTION(data));
-	if(name)
+    case RESPONSE_APPLY:
+	export_files_retrieve_options (fcd);
+	break;
+    case GTK_RESPONSE_ACCEPT:
+	export_files_retrieve_options (fcd);
+	export_files_write (fcd);
+	export_files_cleanup (fcd);
+	gtk_widget_destroy (GTK_WIDGET (fc));
+	break;
+    case GTK_RESPONSE_CANCEL:
+	export_files_cleanup (fcd);
+	gtk_widget_destroy (GTK_WIDGET (fc));
+	break;
+    case GTK_RESPONSE_DELETE_EVENT:
+	export_files_cleanup (fcd);
+	break;
+    default:
+	fprintf (stderr, "Programming error: export_files_response(): unknown response '%d'\n", response);
+	break;
+    }
+}
+
+
+/******************************************************************
+   export_files_init - Export files off of your ipod to an arbitrary
+   directory, specified by the file chooser dialog
+   @tracks - GList with data of type (Track*) we want to write 
+ ******************************************************************/
+void export_files_init (GList *tracks)
+{
+    GtkWidget *win = create_export_files_options ();
+    GtkWidget *options = lookup_widget (win, "options_frame");
+    struct fcd *fcd = g_malloc0 (sizeof (struct fcd));
+    GtkWidget *fc = gtk_file_chooser_dialog_new (
+	_("Select Export Destination Directory"),
+	NULL,
+	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	GTK_STOCK_APPLY, RESPONSE_APPLY,
+	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+	NULL);
+
+    /* Information needed to clean up later */
+    fcd->tracks = g_list_copy (tracks);
+    fcd->win = win;
+    fcd->fc = fc;
+
+    /* according to GTK FAQ: move a widget to a new parent */
+    gtk_widget_ref (options);
+    gtk_container_remove (GTK_CONTAINER (win), options);
+    gtk_widget_unref (options);
+
+    /* set extra options */
+    gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (fc),
+				       options);
+
+    /* set last folder */
+    option_set_folder (GTK_FILE_CHOOSER (fc),
+		       EXPORT_FILES_PATH);
+    /* set toggle button "charset" */
+    option_set_toggle_button (win, EXPORT_FILES_SPECIAL_CHARSET, FALSE);
+    /* set toggle button "check for existing files" */
+    option_set_toggle_button (win, EXPORT_FILES_CHECK_EXISTING, TRUE);
+
+    /* set last template */
+    option_set_string (win, EXPORT_FILES_TPL, EXPORT_FILES_TPL_DFLT);
+
+    /* catch response codes */
+    g_signal_connect (fc, "response",
+		      G_CALLBACK (export_files_response),
+		      fcd);
+
+    gtk_widget_show (fc);
+    block_widgets ();
+}
+
+
+
+
+
+
+/*------------------------------------------------------------------
+
+  Code to export a playlist file
+
+  ------------------------------------------------------------------*/
+
+
+/* Options for the export playlist file file chooser */
+typedef enum
+{
+    EXPORT_PLAYLIST_FILE_TYPE_M3U = 0,
+    EXPORT_PLAYLIST_FILE_TYPE_PLS
+} ExportPlaylistFileType;
+
+/* Strings for the widgets involved */
+const gchar *ExportPlaylistFileTypeW[] = {
+    "type_m3u", "type_pls", NULL };
+/* order must be identical to 'FileSource' enum in file.h */
+const gchar *ExportPlaylistFileSourceW[] = {
+    "source_prefer_local", "source_local", "source_ipod", NULL };
+
+/* Strings for prefs settings */
+const gchar *EXPORT_PLAYLIST_FILE_TYPE="export_playlist_file_type";
+const gchar *EXPORT_PLAYLIST_FILE_SOURCE="export_playlist_file_source";
+const gchar *EXPORT_PLAYLIST_FILE_PATH="export_playlist_file_path";
+const gchar *EXPORT_PLAYLIST_FILE_TPL="export_playlist_file_template";
+
+/* Default prefs settings */
+const gchar *EXPORT_PLAYLIST_FILE_TPL_DFLT="%a - %t";
+
+
+/******************************************************************
+   export_playlist_file_cleanup - free memory taken up by the fcd
+   structure.
+ ******************************************************************/
+static void export_playlist_file_cleanup (struct fcd *fcd)
+{
+    g_return_if_fail (fcd);
+    g_list_free (fcd->tracks);
+    if (fcd->win)  gtk_widget_destroy (fcd->win);
+    g_free (fcd);
+    release_widgets ();
+}
+
+
+/******************************************************************
+   export_playlist_file_retrieve_options - retrieve options and store
+   them in the prefs.
+ ******************************************************************/
+static void export_playlist_file_retrieve_options (struct fcd *fcd)
+{
+    g_return_if_fail (fcd && fcd->win && fcd->fc);
+
+    option_get_radio_button (fcd->win,
+			     EXPORT_PLAYLIST_FILE_TYPE,
+			     ExportPlaylistFileTypeW);
+    option_get_radio_button (fcd->win,
+			     EXPORT_PLAYLIST_FILE_SOURCE,
+			     ExportPlaylistFileSourceW);
+    option_get_string (fcd->win, EXPORT_PLAYLIST_FILE_TPL, NULL);
+    option_get_folder (GTK_FILE_CHOOSER (fcd->fc),
+		       EXPORT_PLAYLIST_FILE_PATH, NULL);
+}
+
+
+/******************************************************************
+   export_playlist_file_write - write out a playlist file (filename is
+   retrieved from the file chooser dialog, options are retrieved from
+   the prefs system
+ ******************************************************************/
+static void export_playlist_file_write (struct fcd *fcd)
+{
+    guint num;
+    gint type, source;
+    gchar *template, *fname;
+    FILE *file;
+
+    g_return_if_fail (fcd && fcd->fc);
+
+    num = g_list_length (fcd->tracks);
+
+    prefs_get_int_value (EXPORT_PLAYLIST_FILE_TYPE, &type);
+    prefs_get_int_value (EXPORT_PLAYLIST_FILE_SOURCE, &source);
+    prefs_get_string_value (EXPORT_PLAYLIST_FILE_TPL, &template);
+    if (!template)
+	template = g_strdup (EXPORT_PLAYLIST_FILE_TPL_DFLT);
+
+    fname = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(fcd->fc));
+
+    file = fopen (fname, "w");
+
+    if (file)
+    {
+	guint i,n;
+	gchar *buf;
+
+	switch (type)
 	{
-	    prefs_set_last_dir_export (name);
-	    file_export.dest_dir = g_strdup (prefs_get_last_dir_export ());
-	    file_export_do();
+	case EXPORT_PLAYLIST_FILE_TYPE_M3U:
+	    fprintf (file, "#EXTM3U\n");
+	    break;
+	case EXPORT_PLAYLIST_FILE_TYPE_PLS:
+	    fprintf (file, "[playlist]\n");
+	    break;
 	}
-	else file_export_cleanup ();
+
+	for (n=0,i=0; i<num; ++i)
+	{
+	    Track *track = g_list_nth_data (fcd->tracks, i);
+	    gchar *infotext_utf8 = get_string_from_template (track,
+							     template,
+							     FALSE);
+	    gchar *filename = get_track_name_from_source (track,
+							  source);
+	    gchar *infotext;
+
+	    if (infotext_utf8)
+	    {
+		infotext = charset_from_utf8 (infotext_utf8);
+		C_FREE (infotext_utf8);
+	    }
+	    else
+	    {
+		infotext = g_strdup ("");
+	    }
+
+	    if (filename)
+	    {
+		++n;  /* number of verified tracks */
+
+		switch (type)
+		{
+		case EXPORT_PLAYLIST_FILE_TYPE_M3U:
+		    fprintf (file, "#EXTINF:%d,%s\n",
+			     (track->tracklen+990)/1000, infotext);
+		    fprintf (file, "%s\n", filename);
+		    break;
+		case EXPORT_PLAYLIST_FILE_TYPE_PLS:
+		    fprintf (file, "File%d=%s\n", n, filename);
+		    fprintf (file, "Title%d=%s\n", n, infotext);
+		    fprintf (file, "Length%d=%d\n", n,
+			     (track->tracklen+990)/1000);
+		    break;
+		}
+	    }
+	    else
+	    {
+		gtkpod_warning (_("No valid filename for: %s\n\n"), infotext);
+	    }
+	    g_free (infotext);
+	    g_free (filename);
+	}
+	switch (type)
+	{
+	case EXPORT_PLAYLIST_FILE_TYPE_M3U:
+	    break;
+	case EXPORT_PLAYLIST_FILE_TYPE_PLS:
+	    fprintf (file, "NumberOfEntries=%d\n", n);
+	    fprintf (file, "Version=2\n");
+	    break;
+	}
+	fclose (file);
+	buf = g_strdup_printf (
+	    ngettext ("Created playlist with one track.",
+		      "Created playlist with %d tracks.", n), n);
+	gtkpod_statusbar_message (buf);
+	g_free (buf);
     }
-}
-
-
-/**
- * export_file_init - Export files off of your ipod to an arbitrary
- * directory, specified by the file selection dialog
- * @tracks - GList with data of type (Track*) we want to write 
- */
-void
-file_export_init(GList *tracks)
-{
-    GtkWidget *w = NULL;
-
-    if(!file_export.fs)
+    else
     {
-	file_export.tracks = g_list_copy (tracks);
-	w = gtk_file_selection_new(_("Select Export Destination Directory"));
-	gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION(w),
-						FALSE);
-	gtk_file_selection_set_filename(GTK_FILE_SELECTION(w),
-					prefs_get_last_dir_export ());
-	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(w)->ok_button),
-		"clicked", G_CALLBACK(export_files_ok_button_clicked), w);
-	g_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(w)->cancel_button),
-		"clicked", G_CALLBACK(export_files_cancel_button_clicked), w);
-	g_signal_connect(GTK_OBJECT(w), "delete_event",
-		G_CALLBACK(export_files_cancel_button_clicked), w);
-	file_export.fs = w;
-	gtk_widget_show(w);
-	block_widgets ();
+	gtkpod_warning (_("Could not open '%s' for writing (%s).\n\n"),
+			fname, g_strerror (errno));
+    }
+    g_free (template);
+    g_free (fname);
+}
+    
+
+
+/******************************************************************
+   export_playlist_file_response - handle the response codes
+   accordingly.
+ ******************************************************************/
+static void export_playlist_file_response (GtkDialog *fc,
+					   gint response,
+					   struct fcd *fcd)
+{
+/*     printf ("received response code: %d\n", response); */
+    switch (response)
+    {
+    case RESPONSE_APPLY:
+	export_playlist_file_retrieve_options (fcd);
+	break;
+    case GTK_RESPONSE_ACCEPT:
+	export_playlist_file_retrieve_options (fcd);
+	export_playlist_file_write (fcd);
+	export_playlist_file_cleanup (fcd);
+	gtk_widget_destroy (GTK_WIDGET (fc));
+	break;
+    case GTK_RESPONSE_CANCEL:
+	export_playlist_file_cleanup (fcd);
+	gtk_widget_destroy (GTK_WIDGET (fc));
+	break;
+    case GTK_RESPONSE_DELETE_EVENT:
+	export_playlist_file_cleanup (fcd);
+	break;
+    default:
+	fprintf (stderr, "Programming error: export_playlist_file_response(): unknown response '%d'\n", response);
+	break;
     }
 }
 
 
+/******************************************************************
+   export_playlist_file_init - Create a playlist file to a location
+   specified by the file selection dialog.
+   @tracks: GList with tracks to be in playlist file.
+ ******************************************************************/
+void export_playlist_file_init (GList *tracks)
+{
+    GtkWidget *win = create_export_playlist_file_options ();
+    GtkWidget *options = lookup_widget (win, "options_frame");
+    struct fcd *fcd = g_malloc0 (sizeof (struct fcd));
+    GtkWidget *fc = gtk_file_chooser_dialog_new (
+	_("Create Playlist File"),
+	NULL,
+	GTK_FILE_CHOOSER_ACTION_SAVE,
+	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	GTK_STOCK_APPLY, RESPONSE_APPLY,
+	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+	NULL);
+
+    /* Information needed to clean up later */
+    fcd->tracks = g_list_copy (tracks);
+    fcd->win = win;
+    fcd->fc = fc;
+
+    /* according to GTK FAQ: move a widget to a new parent */
+    gtk_widget_ref (options);
+    gtk_container_remove (GTK_CONTAINER (win), options);
+    gtk_widget_unref (options);
+
+    /* set extra options */
+    gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (fc),
+				       options);
+
+    /* set last folder */
+    option_set_folder (GTK_FILE_CHOOSER (fc),
+		       EXPORT_PLAYLIST_FILE_PATH);
+    /* set last type */
+    option_set_radio_button (win, EXPORT_PLAYLIST_FILE_TYPE,
+			     ExportPlaylistFileTypeW, 0);
+    /* set last source */
+    option_set_radio_button (win, EXPORT_PLAYLIST_FILE_SOURCE,
+			     ExportPlaylistFileSourceW, 0);
+    /* set last template */
+    option_set_string (win, EXPORT_PLAYLIST_FILE_TPL,
+		       EXPORT_PLAYLIST_FILE_TPL_DFLT);
+
+    /* catch response codes */
+    g_signal_connect (fc, "response",
+		      G_CALLBACK (export_playlist_file_response),
+		      fcd);
+
+    gtk_widget_show (fc);
+    block_widgets ();
+}
+
+
+/*
+Playlists examples:
+
+	Simple M3U playlist:  
+	 
+	
+	C:\My Music\Pink Floyd\1979---The_Wall_CD1\1.In_The_Flesh.mp3  
+	C:\My Music\Pink Floyd\1979---The_Wall_CD1\10.One_Of_My_Turns.mp3  
+	
+
+	Extended M3U playlist:  
+	
+
+	#EXTM3U  
+	#EXTINF:199,Pink Floyd - In The Flesh  
+	R:\Music\Pink Floyd\1979---The_Wall_CD1\1.In_The_Flesh.mp3  
+	#EXTINF:217,Pink Floyd - One Of My Turns  
+	R:\Music\Pink Floyd\1979---The_Wall_CD1\10.One_Of_My_Turns.mp3  
+	
+
+	PLS playlist:  
+	 
+	
+	[playlist]  
+	File1=C:\My Music\Pink Floyd\1979---The_Wall_CD1\1.In_The_Flesh.mp3  
+	Title1=Pink Floyd - In The Flesh  
+	Length1=199  
+	File2=C:\My Music\Pink Floyd\1979---The_Wall_CD1\10.One_Of_My_Turns.mp3  
+	Title2=Pink Floyd - One Of My Turns  
+	Length2=217  
+	NumberOfEntries=2  
+	Version=2  
+*/

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 01:37:46 jcs>
+/* Time-stamp: <2004-08-21 20:03:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -989,13 +989,6 @@ on_cfg_toolbar_style_icons_toggled      (GtkToggleButton *togglebutton,
 }
 
 void
-on_cfg_export_check_existing_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_export_check_existing(gtk_toggle_button_get_active(togglebutton));
-}
-
-void
 on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1014,7 +1007,7 @@ on_export_playlist_activate  (GtkMenuItem     *menuitem,
 	gtkpod_statusbar_message (_("No playlist selected"));
 	return;
     }
-    file_export_init (pl->members);
+    export_files_init (pl->members);
 }
 
 
@@ -1037,7 +1030,7 @@ on_export_tab_entry_activate (GtkMenuItem     *menuitem,
 	g_free (str);
 	return;
     }
-    file_export_init (entry->members);
+    export_files_init (entry->members);
 }
 
 
@@ -1049,7 +1042,7 @@ on_export_tracks_activate     (GtkMenuItem     *menuitem,
 
     if (tracks)
     {
-	file_export_init(tracks);
+	export_files_init(tracks);
 	g_list_free (tracks);
     }
     else
@@ -1058,6 +1051,61 @@ on_export_tracks_activate     (GtkMenuItem     *menuitem,
     }
 }
 
+
+void
+on_playlist_file_playlist_activate     (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+
+    if (!pl)
+    {
+	gtkpod_statusbar_message (_("No playlist selected"));
+	return;
+    }
+    export_playlist_file_init (pl->members);
+}
+
+
+void
+on_playlist_file_tab_entry_activate    (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Create playlist file from selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    export_playlist_file_init (entry->members);
+}
+
+
+void
+on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    GList *tracks = tm_get_selected_tracks ();
+
+    if (tracks)
+    {
+	export_playlist_file_init(tracks);
+	g_list_free (tracks);
+    }
+    else
+    {
+	gtkpod_statusbar_message (_("No tracks selected"));
+    }
+}
 
 void
 on_play_playlist_activate              (GtkMenuItem     *menuitem,
@@ -1501,16 +1549,6 @@ on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
 	gtk_toggle_button_get_active (togglebutton));
 }
 
-
-
-void
-on_cfg_export_template_changed            (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_export_template(buf);
-    g_free (buf);
-}
 
 
 void

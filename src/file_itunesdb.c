@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 01:56:49 jcs>
+/* Time-stamp: <2004-08-21 17:32:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -528,6 +528,44 @@ gchar *get_track_name_on_disk_verified (Track *track)
     return name;
 }
 
+
+/* Get track name from source @source */
+gchar *get_track_name_from_source (Track *track, FileSource source)
+{
+    gchar *result = NULL;
+
+    g_return_val_if_fail (track != NULL, result);
+
+    switch (source)
+    {
+    case SOURCE_PREFER_LOCAL:
+	if (track->pc_path_locale && (*track->pc_path_locale))
+	{
+	    if (g_file_test (track->pc_path_locale,G_FILE_TEST_EXISTS))
+	    {
+		result = g_strdup (track->pc_path_locale);
+	    }
+	}
+	if (!result) result = get_track_name_on_ipod (track);
+	break;
+    case SOURCE_LOCAL:
+	if (track->pc_path_locale && (*track->pc_path_locale))
+	{
+	    if (g_file_test (track->pc_path_locale,G_FILE_TEST_EXISTS))
+	    {
+		result = g_strdup (track->pc_path_locale);
+	    }
+	}
+	break;
+    case SOURCE_IPOD:
+	result = get_track_name_on_ipod (track);
+	break;
+    }
+    return result;
+}
+
+
+
 /*------------------------------------------------------------------*\
  *                                                                  *
  *      Functions concerning deletion of tracks                      *
@@ -907,6 +945,9 @@ static gboolean flush_tracks (void)
 	      if (track->transferred) track->oldsize = 0;
 	      g_free (mount);
 #endif
+	      data_changed (); /* otherwise new free space status from
+	      iPod is never read and free space keeps increasing while
+	      we copy more and more files to the iPod */
 	      ++count;
 	      if (count == 1)  /* we need longer timeout */
 		  prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);

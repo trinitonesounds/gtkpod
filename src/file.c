@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 15:50:14 jcs>
+/* Time-stamp: <2004-08-21 00:26:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -217,12 +217,16 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	    else if (strncasecmp (bufp, "File", 4) == 0)
 	    { /* looks like a file entry */
 		bufp = strchr (bufp, '=');
-		if (bufp) ++bufp;
-		filename = concat_dir_if_relative (dirname, bufp);
-		if (add_track_by_filename (filename, plitem,
-					  prefs_get_add_recursively (),
-					  addtrackfunc, data))
-		    ++tracks;
+		if (bufp)
+		{
+		    ++bufp;
+		    filename = concat_dir_if_relative (dirname, bufp);
+		    if (add_track_by_filename
+			(filename, plitem,
+			 prefs_get_add_recursively (),
+			 addtrackfunc, data))
+			++tracks;
+		}
 	    }
 	    break;
 	}
@@ -1893,7 +1897,7 @@ void parse_offline_playcount (void)
 	    (-1,                    /* gint id, */
 	     TRUE,                  /* gboolean modal, */
 	     _("Remove offline playcounts?"), /* title */
-	     _("Some tracks played offline could not be found in the iTunesDB. OK to remove them from the offline playcount file?"),   /* label */
+	     _("Some tracks played offline could not be found in the iTunesDB. Press 'OK' to remove them from the offline playcount file, 'Cancel' to keep them."),   /* label */
 	     gstr_filenames->str,   /* scrolled text */
 	     NULL, 0, NULL,         /* option 1 */
 	     NULL, 0, NULL,         /* option 2 */

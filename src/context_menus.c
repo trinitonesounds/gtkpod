@@ -59,8 +59,22 @@ static void
 export_entries(GtkWidget *w, gpointer data)
 {
     if(selected_tracks)
-	file_export_init(selected_tracks);
+	export_files_init(selected_tracks);
 }
+
+/**
+ * create_playlist_file - write a playlist file containing the
+ * currently selected tracks.
+ * @mi - the menu item selected
+ * @data - ignored, shoould be NULL
+ */
+static void 
+create_playlist_file(GtkWidget *w, gpointer data)
+{
+    if(selected_tracks)
+	export_playlist_file_init(selected_tracks);
+}
+
 
 /**
  * edit_entries - open a dialog to edit the track(s) or playlist
@@ -270,6 +284,8 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (play_entries_enqueue));
 	hookup_mi (menu[type], _("Copy from iPod"), "gtk-floppy",
 		   G_CALLBACK (export_entries));
+	hookup_mi (menu[type], _("Create Playlist File"), "gtk-floppy",
+		   G_CALLBACK (create_playlist_file));
 	hookup_mi (menu[type], _("Update"), "gtk-refresh",
 		   G_CALLBACK (update_entries));
 	hookup_mi (menu[type], _("Sync Dirs"), "gtk-refresh",
@@ -299,7 +315,7 @@ create_context_menu(CM_type type)
 	}
 	if ((type == CM_ST) || (type == CM_TM))
 	{
-	    hookup_mi (menu[type], _("Create Playlist"), "gtk-justify-left",
+	    hookup_mi (menu[type], _("Create new Playlist"), "gtk-justify-left",
 		       G_CALLBACK (create_playlist_from_entries));
 	    mi_d[type] = hookup_mi (menu[type], _("Delete From Playlist"),
 				    "gtk-delete",

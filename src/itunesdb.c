@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 01:41:17 jcs>
+/* Time-stamp: <2004-08-15 20:58:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -207,7 +207,7 @@
 #define ITUNESDB_DEBUG 0
 #define ITUNESDB_MHIT_DEBUG 0
 
-#define ITUNESDB_COPYBLK 65536      /* blocksize for cp () */
+#define ITUNESDB_COPYBLK 262144      /* blocksize for cp () */
 
 /* list with the contents of the Play Count file for use when
  * importing the iTunesDB */

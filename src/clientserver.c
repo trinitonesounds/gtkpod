@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-26 00:46:36 jcs>
+/* Time-stamp: <2004-08-15 21:33:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -96,7 +96,7 @@ static gboolean socket_used ()
 /* append the filename <file> to ~/.gtkpod/offline_playcount */
 static gboolean register_playcount (gchar *file)
 {
-    if (file)
+    if (file && *file)
     {
 	gchar *cfgdir = prefs_get_cfgdir ();
 
@@ -106,7 +106,7 @@ static gboolean register_playcount (gchar *file)
 		"%s%c%s", cfgdir, G_DIR_SEPARATOR, "offline_playcount");
 	    int fd = open (offlplyc, O_WRONLY|O_CREAT|O_APPEND,
 			   S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
-	    if (fd)
+	    if (fd != -1)
 	    {
 		if (flock (fd, LOCK_EX) == 0)
 		{

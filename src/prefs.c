@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 01:41:37 jcs>
+/* Time-stamp: <2004-08-21 19:16:48 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -104,6 +104,9 @@
 #include "prefs.h"
 #include "support.h"
 
+/* static function declarations */
+static void prefs_write_hash_values (FILE *fp);
+
 /* config struct */
 static struct cfg *cfg = NULL;
 
@@ -143,12 +146,10 @@ struct cfg *cfg_new(void)
     if(getcwd(buf, PATH_MAX))
     {
 	mycfg->last_dir.browse = g_strdup_printf ("%s/", buf);
-	mycfg->last_dir.export = g_strdup_printf ("%s/", buf);
     }
     else
     {
 	mycfg->last_dir.browse = g_strdup ("~/");
-	mycfg->last_dir.export = g_strdup ("~/");
     }
     if((str = getenv("IPOD_MOUNTPOINT")))
     {
@@ -264,12 +265,10 @@ struct cfg *cfg_new(void)
 	}
     }
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
-    mycfg->export_template = g_strdup ("%o;%a - %t.mp3;%t.wav");
     mycfg->unused_gboolean3 = FALSE;
     mycfg->concal_autosync = FALSE;
     mycfg->unused_gboolean1 = FALSE;
     mycfg->unused_gboolean2 = FALSE;
-    mycfg->export_check_existing = FALSE;
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
@@ -368,11 +367,10 @@ read_prefs_from_file_desc(FILE *fp)
 		 autoconvert -- just ignore it */
 	      if (strcmp (arg, "%a - %a/%T - %T.mp3") != 0)
 	      {
-		  prefs_set_export_template (arg);
 		  if (cfg->version < 0.72)
 		  {
 		      /* changed the meaning of the %x in export_template */
-		      gchar *sp = cfg->export_template;
+		      gchar *sp = arg;
 		      if (sp) while (*sp)
 		      {
 			  if (sp[0] == '%')
@@ -397,6 +395,7 @@ read_prefs_from_file_desc(FILE *fp)
 			  ++sp;
 		      }
 		  }
+		  prefs_set_string_value (EXPORT_FILES_TPL, arg);
 	      }
 	  }
 	  else if(g_ascii_strcasecmp (line, "charset") == 0)
@@ -626,7 +625,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
 	  {
-	      prefs_set_last_dir_export(strdup(arg));
+	      prefs_set_string_value (EXPORT_FILES_PATH, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "show_duplicates") == 0)
 	  {
@@ -760,7 +759,8 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "export_check_existing") == 0)
 	  {
-	      prefs_set_export_check_existing (atoi (arg));
+	      prefs_set_int_value (EXPORT_FILES_CHECK_EXISTING,
+				   atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "fix_path") == 0)
 	  {
@@ -797,11 +797,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
-	      prefs_set_special_export_charset ((gboolean)atoi(arg));
+	      prefs_set_int_value (EXPORT_FILES_SPECIAL_CHARSET,
+				   atoi (arg));
 	  }
 	  else
-	  {
-	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
+	  {   /* All leftover options will be stored into the prefs
+		 setting hash (generic options -- should have had this
+		 idea much sooner... */
+	      prefs_set_string_value (line, arg);
 	  }
 	  g_free(line);
 	}
@@ -974,7 +977,6 @@ write_prefs_to_file_desc(FILE *fp)
 	g_free (buf);
     }
     fprintf(fp, "time_format=%s\n", cfg->time_format);
-    fprintf(fp, "export_template=%s\n", cfg->export_template);
     if (cfg->charset)
     {
 	fprintf(fp, "charset=%s\n", cfg->charset);
@@ -1037,7 +1039,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
     fprintf(fp, "dir_browse=%s\n",cfg->last_dir.browse);
-    fprintf(fp, "dir_export=%s\n",cfg->last_dir.export);
     fprintf(fp, "show_duplicates=%d\n",prefs_get_show_duplicates());
     fprintf(fp, "show_updated=%d\n",prefs_get_show_updated());
     fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
@@ -1078,11 +1079,10 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_prefs.y=%d\n", cfg->size_prefs.y);
     fprintf (fp, "size_info.x=%d\n", cfg->size_info.x);
     fprintf (fp, "size_info.y=%d\n", cfg->size_info.y);
-    fprintf (fp, "export_check_existing=%d\n", cfg->export_check_existing);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
-    fprintf (fp, "special_export_charset=%d\n", cfg->special_export_charset);
+    prefs_write_hash_values (fp);
 /*     fprintf (fp, "unused_gboolean1=%d\n", cfg->unused_gboolean1); */
 /*     fprintf (fp, "unused_gboolean2=%d\n", cfg->unused_gboolean2); */
 /*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
@@ -1136,11 +1136,9 @@ void cfg_free(struct cfg *c)
       g_free (c->ipod_mount);
       g_free (c->charset);
       g_free (c->last_dir.browse);
-      g_free (c->last_dir.export);
       for (i=0; i<PATH_NUM; ++i)
 	  g_free (c->toolpath[i]);
       g_free (c->time_format);
-      g_free (c->export_template);
       g_free (c);
     }
 }
@@ -1196,19 +1194,6 @@ void prefs_set_last_dir_browse(const gchar *file)
 const gchar *prefs_get_last_dir_browse(void)
 {
     return cfg->last_dir.browse;
-}
-
-void prefs_set_last_dir_export(const gchar *file)
-{
-    if (file)
-    {
-	g_free(cfg->last_dir.export);
-	cfg->last_dir.export = get_dirname_of_filename(file);
-    }
-}
-const char *prefs_get_last_dir_export(void)
-{
-    return cfg->last_dir.export;
 }
 
 void prefs_set_ipod_mount(const gchar *mp)
@@ -1365,16 +1350,10 @@ struct cfg *clone_prefs(void)
 	    result->charset = g_strdup(cfg->charset);
 	if(cfg->last_dir.browse)
 	    result->last_dir.browse = g_strdup(cfg->last_dir.browse);
-	if(cfg->last_dir.browse)
-	    result->last_dir.browse = g_strdup(cfg->last_dir.browse);
-	if(cfg->last_dir.export)
-	    result->last_dir.export = g_strdup(cfg->last_dir.export);
 	for (i=0; i<PATH_NUM; ++i)
 	    if (cfg->toolpath[i])  result->toolpath[i] = g_strdup (cfg->toolpath[i]);
 	if(cfg->time_format)
 	    result->time_format = g_strdup(cfg->time_format);
-	if (cfg->export_template)
-	    result->export_template = g_strdup(cfg->export_template);
 	if (cfg->parsetags_template)
 	    result->parsetags_template = g_strdup(cfg->parsetags_template);
     }
@@ -2161,23 +2140,12 @@ gchar *prefs_get_time_format (void)
     return cfg->time_format;
 }
 
-gboolean
-prefs_get_export_check_existing (void)
-{
-    return cfg->export_check_existing;
-}
-
 gboolean 
 prefs_get_automount (void)
 {
     return cfg->automount;
 }
 void
-
-prefs_set_export_check_existing(gboolean val)
-{
-    cfg->export_check_existing = val;
-}void
 
 prefs_set_automount(gboolean val)
 {
@@ -2457,17 +2425,6 @@ void prefs_set_sp_playcount_high (guint32 inst, gint32 limit)
 	fprintf (stderr, "prefs_set_sp_playcount_high(): !inst=%d!\n", inst);
 }
 
-const gchar* prefs_get_export_template(void)
-{
-    return(cfg->export_template);
-}
-
-void prefs_set_export_template(char* val)
-{
-    g_free(cfg->export_template);
-    cfg->export_template = g_strdup(val);
-}
-
 gboolean prefs_get_concal_autosync(void)
 {
     return(cfg->concal_autosync);
@@ -2476,16 +2433,6 @@ gboolean prefs_get_concal_autosync(void)
 void prefs_set_concal_autosync(gboolean val)
 {
     cfg->concal_autosync = val;
-}
-
-gboolean prefs_get_special_export_charset(void)
-{
-    return(cfg->special_export_charset);
-}
-
-void prefs_set_special_export_charset(gboolean val)
-{
-    cfg->special_export_charset = val;
 }
 
 gboolean prefs_get_unused_gboolean1(void)
@@ -2518,3 +2465,97 @@ void prefs_set_unused_gboolean3(gboolean val)
     cfg->unused_gboolean3 = val;
 }
 
+
+/* ------------------------------------------------------------
+
+   Functions for generic preferences settings
+
+   ------------------------------------------------------------ */
+
+GHashTable *prefs_hash = NULL;
+
+/* Set a string setting (e.g. @key="export_path") to @value */
+void prefs_set_string_value (const gchar *key, const gchar *value)
+{
+    if (!key)  return;
+
+    if (!prefs_hash)
+	prefs_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
+					    g_free, g_free);
+
+    if (!value)
+    {
+	g_hash_table_remove (prefs_hash, key);
+    }
+    else
+    {
+	g_hash_table_insert (prefs_hash,
+			     g_strdup (key), g_strdup (value));
+    }
+}
+
+
+/* Set a integer setting (e.g. @key="file_type") to @value */
+void prefs_set_int_value (const gchar *key, gint value)
+{
+    gchar *str;
+
+    if (!key)  return;
+
+    str = g_strdup_printf ("%d", value);
+    prefs_set_string_value (key, str);
+    g_free (str);
+}
+
+
+/* Retrieve a string setting. @value will be filled with a copy of the
+ * value. */
+/* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
+ * @value is set to NULL */
+gboolean prefs_get_string_value (const gchar *key, gchar **value)
+{
+    *value = NULL;
+    if (prefs_hash && key)
+    {
+	*value = g_strdup (g_hash_table_lookup (prefs_hash, key));
+    }
+    return (*value != NULL);
+}
+
+
+/* Retrieve an integer setting. @value will be filled with the stored
+ * integer value. */
+/* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
+ * @value is set to 0 */
+gboolean prefs_get_int_value (const gchar *key, gint *value)
+{
+    *value = 0;
+    if (prefs_hash && key)
+    {
+	gchar *str = g_hash_table_lookup (prefs_hash, key);
+	if (str)
+	{
+	    *value = atoi (str);
+	    return TRUE;
+	}
+    }
+    return FALSE;
+}
+
+
+/* used by prefs_write_hash_value () */
+static void prefs_write_hash_func (gpointer key, gpointer value,
+				   gpointer fp)
+{
+    g_return_if_fail (key && value && fp);
+    fprintf ((FILE *)fp, "%s=%s\n", (gchar *)key, (gchar *)value);
+}
+
+
+/* write the values in the hash table out into the preferences file
+   @fp */
+static void prefs_write_hash_values (FILE *fp)
+{
+    if (prefs_hash)
+	g_hash_table_foreach (prefs_hash, prefs_write_hash_func, fp);
+}

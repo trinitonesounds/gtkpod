@@ -10,3 +10,5 @@ GtkWidget* create_calendar_window (void);
 GtkWidget* create_sort_window (void);
 GtkWidget* create_gtkpod_info (void);
 GtkWidget* create_confirm_dialog (void);
+GtkWidget* create_export_playlist_file_options (void);
+GtkWidget* create_export_files_options (void);
