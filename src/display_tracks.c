@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-16 00:14:23 jcs>
+/* Time-stamp: <2003-06-16 22:15:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -226,7 +226,37 @@ void sm_song_changed (Song *song)
 
 
 
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))
+/* gtk_tree_selection_get_selected_rows() was introduced in 2.2 */
+struct gtsgsr
+{
+    GtkTreeModel **model;
+    GList        **list;
+};
 
+void  gtssf  (GtkTreeModel *model,
+	      GtkTreePath *path,
+	      GtkTreeIter *iter,
+	      gpointer data)
+{
+    struct gtsgsr *gts = data;
+    *gts->model = model;
+    *gts->list = g_list_append (*gts->list, gtk_tree_path_copy (path));
+}
+
+GList *gtk_tree_selection_get_selected_rows (GtkTreeSelection *selection,
+                                             GtkTreeModel     **model)
+{
+    struct gtsgsr gts;
+    GList *list = NULL;
+
+    gts.model = model;
+    gts.list = &list;
+
+    gtk_tree_selection_selected_foreach (selection, gtssf, &gts);
+    return list;
+} 
+#endif
 
 /* Called when editable cell is being edited. Stores new data to
    the song list. Eventually the ID3 tags in the corresponding
@@ -249,8 +279,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   gchar **itemp_utf8; 
   gunichar2 **itemp_utf16; 
 
-  GList *row_list; 
-  GList *row_node; 
+  GList *row_list, *row_node, *first; 
 
 
   column = (SM_item) g_object_get_data(G_OBJECT(renderer), "column");
@@ -262,8 +291,10 @@ sm_cell_edited (GtkCellRendererText *renderer,
   
   /*printf("sm_cell_edited: column: %d  song:%lx\n", column, song);*/
 
-  for (row_node = g_list_first(row_list); 
-       row_node && (multi_edit || (row_node == g_list_first(row_list))); 
+  first = g_list_first (row_list);
+
+  for (row_node = first; 
+       row_node && (multi_edit || (row_node == first)); 
        row_node = g_list_next(row_node))
   {
      gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) row_node->data); 
