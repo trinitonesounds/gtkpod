@@ -597,7 +597,7 @@ gint pm_data_compare_func (GtkTreeModel *model,
   if (playlist2->type == PL_TYPE_MPL) return (corr);
 
   /* compare the two entries */
-  return compare_string (playlist2->name, playlist1->name);
+  return compare_string (playlist1->name, playlist2->name);
 }
 
 
@@ -662,14 +662,21 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   switch (column)
     {  /* We only have one column, so this code is overkill... */
     case PM_COLUMN_PLAYLIST: 
-	g_object_set (G_OBJECT (renderer),
-		      "text", playlist->name, 
-		      "editable", TRUE,
-		      "foreground", NULL,
-		      NULL);
 	if (playlist->type == PL_TYPE_MPL)
-	{ /* mark MPL in red */
-	    g_object_set (G_OBJECT (renderer), "foreground", "red", NULL);
+	{   /* mark MPL */
+	    g_object_set (G_OBJECT (renderer),
+			  "text", playlist->name, 
+			  "editable", TRUE,
+			  "weight", PANGO_WEIGHT_BOLD,
+			  NULL);
+	}
+	else
+	{
+	    g_object_set (G_OBJECT (renderer),
+			  "text", playlist->name, 
+			  "editable", TRUE,
+			  "weight", PANGO_WEIGHT_NORMAL,
+			  NULL);
 	}
 	break;
     }

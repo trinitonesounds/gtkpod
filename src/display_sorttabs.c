@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-15 22:32:42 jcs>
+/* Time-stamp: <2004-12-18 13:12:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1807,7 +1807,6 @@ static void st_cell_data_func (GtkTreeViewColumn *tree_column,
 {
   TabEntry *entry;
   gint column;
-  gboolean editable;
 
   column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get (model, iter, ST_COLUMN_ENTRY, &entry, -1);
@@ -1815,10 +1814,22 @@ static void st_cell_data_func (GtkTreeViewColumn *tree_column,
   switch (column)
     {  /* We only have one column, so this code is overkill... */
     case ST_COLUMN_ENTRY:
-      if (entry->master) editable = FALSE;
-      else               editable = TRUE;
-      g_object_set (G_OBJECT (renderer), "text", entry->name,
-		    "editable", editable, NULL);
+      if (entry->master)
+      {   /* mark the "All" entry */
+	  g_object_set (G_OBJECT (renderer),
+			"text", entry->name,
+			"editable", FALSE,
+			"weight", PANGO_WEIGHT_BOLD,
+			NULL);
+      }
+      else
+      {
+	  g_object_set (G_OBJECT (renderer),
+			"text", entry->name,
+			"editable", TRUE,
+			"weight", PANGO_WEIGHT_NORMAL,
+			NULL);
+      }
       break;
     }
 }
@@ -1854,9 +1865,9 @@ gint st_data_compare_func (GtkTreeModel *model,
   st = sorttab[inst];
   switch ( st->current_category ) {
     case ST_CAT_ARTIST:
-	return compare_string_fuzzy (entry2->name, entry1->name);
+	return compare_string_fuzzy (entry1->name, entry2->name);
     default:
-	return compare_string (entry2->name, entry1->name);
+	return compare_string (entry1->name, entry2->name);
   }
 }
 
