@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 19:11:18 jcs>
+/* Time-stamp: <2004-06-27 23:24:15 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -649,11 +649,6 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    prefs_get_export_check_existing());
 	}
-	if ((w = lookup_widget (prefs_window, "cfg_fix_path")))
-	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					    prefs_get_fix_path());
-	}
 	if ((w = lookup_widget (prefs_window, "cfg_automount_ipod")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -774,7 +769,6 @@ prefs_window_set(void)
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
-	prefs_set_fix_path(tmpcfg->fix_path);
 	prefs_set_export_check_existing(tmpcfg->export_check_existing);
 	prefs_set_automount(tmpcfg->automount);
 	prefs_set_export_template(tmpcfg->export_template);
@@ -1224,11 +1218,6 @@ void prefs_window_set_toolbar_style (GtkToolbarStyle style)
 void prefs_window_set_export_check_existing(gboolean val)
 {
     tmpcfg->export_check_existing = val;
-}
-
-void prefs_window_set_fix_path(gboolean val)
-{
-    tmpcfg->fix_path = val;
 }
 
 void prefs_window_set_automount(gboolean val)

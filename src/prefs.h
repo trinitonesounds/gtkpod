@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 18:11:02 jcs>
+/* Time-stamp: <2004-06-27 23:22:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -139,7 +139,6 @@ struct cfg
   gchar *time_format;           /* time format for strftime() */
   gchar *export_template;       /* filename for files exported from ipod */
   gboolean automount;		/* whether we should mount/unmount the ipod */
-  gboolean fix_path;		/* whether we fix files for a FAT or not */
   gboolean export_check_existing;/* whether we check for existing files on export or not */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
@@ -226,7 +225,6 @@ void prefs_set_col_order (gint pos, TM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
 void prefs_set_automount(gboolean val);
-void prefs_set_fix_path(gboolean val);
 void prefs_set_export_check_existing(gboolean val);
 void prefs_set_info_window(gboolean val);
 
@@ -296,7 +294,6 @@ const gchar *prefs_get_toolpath (PathType type);
 void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);
-gboolean prefs_get_fix_path (void);
 gboolean prefs_get_export_check_existing (void);
 gboolean prefs_get_info_window (void);
 void prefs_set_sp_or (guint32 inst, gboolean state);

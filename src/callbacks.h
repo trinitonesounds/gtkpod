@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 14:37:50 jcs>
+/* Time-stamp: <2004-06-27 23:20:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -351,10 +351,6 @@ on_cfg_toolbar_style_icons_toggled     (GtkToggleButton *togglebutton,
 
 void
 on_cfg_export_check_existing_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_cfg_fix_path_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 18:51:04 jcs>
+/* Time-stamp: <2004-06-27 23:24:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -268,7 +268,6 @@ struct cfg *cfg_new(void)
     mycfg->concal_autosync = FALSE;
     mycfg->unused_gboolean1 = FALSE;
     mycfg->unused_gboolean2 = FALSE;
-    mycfg->fix_path = TRUE;
     mycfg->export_check_existing = FALSE;
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
@@ -736,7 +735,8 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "fix_path") == 0)
 	  {
-	      prefs_set_fix_path (atoi (arg));
+	      /* ignore -- wie always fix the export path (replace
+	       * non-compatible chars) */
 	  }
 	  else if(g_ascii_strcasecmp (line, "automount") == 0)
 	  {
@@ -1049,7 +1049,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_info.x=%d\n", cfg->size_info.x);
     fprintf (fp, "size_info.y=%d\n", cfg->size_info.y);
     fprintf (fp, "export_check_existing=%d\n", cfg->export_check_existing);
-    fprintf (fp, "fix_path=%d\n", cfg->fix_path);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
@@ -2144,11 +2143,6 @@ prefs_get_export_check_existing (void)
 {
     return cfg->export_check_existing;
 }
-gboolean 
-prefs_get_fix_path (void)
-{
-    return cfg->fix_path;
-}
 
 gboolean 
 prefs_get_automount (void)
@@ -2161,12 +2155,6 @@ prefs_set_export_check_existing(gboolean val)
 {
     cfg->export_check_existing = val;
 }void
-
-prefs_set_fix_path(gboolean val)
-{
-    cfg->fix_path = val;
-}
-void
 
 prefs_set_automount(gboolean val)
 {

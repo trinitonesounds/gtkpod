@@ -1354,7 +1354,6 @@ create_prefs_window (void)
   GtkWidget *cfg_export_template;
   GtkWidget *cfg_special_export_charset;
   GtkWidget *cfg_export_check_existing;
-  GtkWidget *cfg_fix_path;
   GtkWidget *label72;
   GtkWidget *label23;
   GtkWidget *scrolledwindow6;
@@ -1837,11 +1836,6 @@ create_prefs_window (void)
   gtk_widget_show (cfg_export_check_existing);
   gtk_box_pack_start (GTK_BOX (vbox50), cfg_export_check_existing, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_export_check_existing, _("When copying from iPod no check is performed on whether the destination file exists. Enabling this option will make gtkpod check whether the length of the destination file is the same as the file in the iPod. If so the file is skipped, allowing a quick sync of the iPod's contents."), NULL);
-
-  cfg_fix_path = gtk_check_button_new_with_mnemonic (_("Fix exported filenames/directories."));
-  gtk_widget_show (cfg_fix_path);
-  gtk_box_pack_start (GTK_BOX (vbox50), cfg_fix_path, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_fix_path, _("Some filesystems do not support certain characters in file/directory names i.e. \"*:<>?\\|/ , this option will substitute those with underscore '_'."), NULL);
 
   label72 = gtk_label_new (_("Copying from iPod"));
   gtk_widget_show (label72);
@@ -2592,9 +2586,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_export_check_existing, "toggled",
                     G_CALLBACK (on_cfg_export_check_existing_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_fix_path, "toggled",
-                    G_CALLBACK (on_cfg_fix_path_toggled),
-                    NULL);
   g_signal_connect ((gpointer) time_format_entry, "changed",
                     G_CALLBACK (on_cfg_time_format_changed),
                     NULL);
@@ -2744,7 +2735,6 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_export_template, "cfg_export_template");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_special_export_charset, "cfg_special_export_charset");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_export_check_existing, "cfg_export_check_existing");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_fix_path, "cfg_fix_path");
   GLADE_HOOKUP_OBJECT (prefs_window, label72, "label72");
   GLADE_HOOKUP_OBJECT (prefs_window, label23, "label23");
   GLADE_HOOKUP_OBJECT (prefs_window, scrolledwindow6, "scrolledwindow6");

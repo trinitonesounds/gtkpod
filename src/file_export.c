@@ -262,7 +262,7 @@ track_get_export_filename (Track *track)
 	    if (tmp)
 	    {
 		gchar *tmpcp = g_strdup (tmp);
-		if(prefs_get_fix_path())   fix_path (tmpcp);
+		fix_path (tmpcp);
 		result = g_string_append (result, tmpcp);
 		tmp = NULL;
 		g_free (tmpcp);

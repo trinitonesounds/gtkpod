@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 16:56:39 jcs>
+/* Time-stamp: <2004-06-27 23:24:14 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -80,7 +80,6 @@ void prefs_window_set_add_recursively (gboolean val);
 void prefs_window_set_toolbar_style (GtkToolbarStyle val);
 void prefs_window_set_sort_tab_num (gint num);
 void prefs_window_set_export_check_existing (gboolean val);
-void prefs_window_set_fix_path (gboolean val);
 void prefs_window_set_automount (gboolean val);
 void prefs_window_set_export_template (const gchar *mp);
 void prefs_window_set_concal_autosync (gboolean val);
