@@ -1,2 +1,0 @@
-?package(gtkpod):needs=X11 section=Apps/Sound\
-  title="gtkpod" command="/usr/bin/gtkpod" 
