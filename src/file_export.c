@@ -28,6 +28,7 @@
 
 #include "file_export.h"
 #include "prefs.h"
+#include "file.h"
 #include "support.h"
 #include <limits.h>
 #include <stdio.h>

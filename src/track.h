@@ -89,22 +89,19 @@ enum {
 void free_song(Song *song);
 gboolean it_add_song (Song *song);
 Song *add_song (Song *song);
+void validate_entries (Song *song);
 void remove_song (Song *song);
 void remove_all_songs (void);
 #define it_get_nr_of_songs get_nr_of_songs
 guint get_nr_of_songs (void);
+guint get_nr_of_nontransferred_songs (void);
 Song *it_get_song_by_nr (guint32 n);
 Song *get_song_by_nr (guint32 n);
 Song *get_song_by_id (guint32 id);
-void handle_import (void);
-void handle_export (void);
-gboolean files_are_saved (void);
-void data_changed (void);
-gchar* get_song_name_on_disk(Song *s);
-gchar* get_song_name_on_ipod(Song *s);
-gchar* get_preferred_song_name_format(Song *s);
+Song *get_song_by_filename (gchar *name);
 void remove_song_from_ipod (Song *song);
 void hash_songs(void);
 void remove_duplicate (Song *oldsong, Song *song);
 void clear_md5_hash_from_songs (void);
+void renumber_ipod_ids ();
 #endif __SONG_H__

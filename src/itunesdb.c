@@ -1030,8 +1030,9 @@ gboolean itunesdb_write_to_file (gchar *filename)
 gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 {
   static gint dir_num = -1;
-  gchar *ipod_file, *ipod_fullfile;
+  gchar *ipod_file = NULL, *ipod_fullfile = NULL;
   gboolean success;
+  gint32 oops = 0;
 
   if (dir_num == -1) dir_num = (gint) (19.0*rand()/(RAND_MAX));
   if(song->transferred == TRUE) return TRUE; /* nothing to do */
@@ -1041,32 +1042,54 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
       return FALSE;
     }
 
-  /* The iPod seems to need the .mp3 ending to play the song.
-     Of course the following line should be changed once gtkpod
-     also supports other formats. */
-  ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d.mp3",
-			       dir_num, song->ipod_id);
+
+  /* If song->ipod_path exists, we use that one instead. */
+  if (song->ipod_path && *song->ipod_path)
+  {
+      gint i, len;
+      ipod_file = g_strdup (song->ipod_path);
+      len = strlen (ipod_file);
+      for (i=0; i<len; ++i)     /* replace ':' by '/' */
+	  if (ipod_file[i] == ':')  ipod_file[i] = '/';
+      if (*ipod_file == '/') ipod_fullfile = concat_dir (path, ipod_file+1);
+      else                   ipod_fullfile = concat_dir (path, ipod_file);
+  }
+  else do
+  { /* we need to loop until we find a unused filename */
+      if (ipod_file)     g_free(ipod_file);
+      if (ipod_fullfile) g_free(ipod_fullfile);
+      /* The iPod seems to need the .mp3 ending to play the song.
+	 Of course the following line should be changed once gtkpod
+	 also supports other formats. */
+      ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d.mp3",
+				   dir_num, song->ipod_id + oops);
+      ipod_fullfile = concat_dir (path, ipod_file+1);
+      if (oops == 0)   oops += 90000;
+      else             ++oops;
+  } while (g_file_test (ipod_fullfile, G_FILE_TEST_EXISTS));
+
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "ipod_file: %s\n", ipod_file);
+  fprintf(stderr, "ipod_fullfile: %s\n", ipod_fullfile);
 #endif
 
-  ipod_fullfile = concat_dir (path, ipod_file+1);
   success = cp (pcfile, ipod_fullfile);
   if (success)
-    { /* need to store ipod_filename */
+  { /* need to store ipod_filename */
       gint i, len;
       len = strlen (ipod_file);
       for (i=0; i<len; ++i)     /* replace '/' by ':' */
-	if (ipod_file[i] == '/')  ipod_file[i] = ':';
+	  if (ipod_file[i] == '/')  ipod_file[i] = ':';
 #ifdef ITUNESDB_PROVIDE_UTF8
+      if (song->ipod_path) g_free (song->ipod_path);
       song->ipod_path = g_strdup (ipod_file);
 #endif ITUNESDB_PROVIDE_UTF8
+      if (song->ipod_path_utf16) g_free (song->ipod_path_utf16);
       song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
 					       -1, NULL, NULL, NULL);
       song->transferred = TRUE;
       ++dir_num;
       if (dir_num == 20) dir_num = 0;
-    }
+  }
   g_free (ipod_file);
   g_free (ipod_fullfile);
   return success;

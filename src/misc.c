@@ -95,13 +95,17 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   block_widgets ();
   names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
   for (i=0; names[i] != NULL; ++i)
-    {
+  {
       add_song_by_filename (names[i], NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
-    }
-  remove_duplicate (NULL, NULL); /* display message about duplicate
-				  * songs, if duplicates were detected */
+  }
+  /* clear log of non-updated songs */
+  display_non_updated ((void *)-1, NULL);
+  /* display log of updated songs */
+  display_updated (NULL, NULL);
+  /* display log of detected duplicates */
+  remove_duplicate (NULL, NULL);
   gtkpod_statusbar_message(_("Successly Added Files"));
   gtkpod_songs_statusbar_update();
   release_widgets ();
@@ -421,10 +425,16 @@ disable_gtkpod_import_buttons(void)
 	if((w = lookup_widget(gtkpod_window, "import_button")))
 	{
 	    gtk_widget_set_sensitive(w, FALSE);
+	    /* in case this widget has been blocked, we need to tell
+	       update the desired state upon release */
+	    update_blocked_widget (w, FALSE);
 	}
 	if((w = lookup_widget(gtkpod_window, "import_itunes_mi")))
 	{
 	    gtk_widget_set_sensitive(w, FALSE);
+	    /* in case this widget has been blocked, we need to tell
+	       update the desired state upon release */
+	    update_blocked_widget (w, FALSE);
 	}
     }
 }
@@ -550,6 +560,12 @@ gchar *get_song_info (Song *song)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
+enum {
+    BR_BLOCK,
+    BR_RELEASE,
+    BR_UPDATE
+};
+
 /* function to add one widget to the blocked_widgets list */
 static GList *add_blocked_widget (GList *blocked_widgets, gchar *name)
 {
@@ -569,7 +585,7 @@ static GList *add_blocked_widget (GList *blocked_widgets, gchar *name)
 
 /* called by block_widgets() and release_widgets() */
 /* "block": TRUE = block, FALSE = release */
-static void block_release_widgets (gboolean block)
+static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 {
     /* list with the widgets that are turned insensitive during
        import/export...*/
@@ -586,13 +602,16 @@ static void block_release_widgets (gboolean block)
 	bws = add_blocked_widget (bws, "import_button");
 	bws = add_blocked_widget (bws, "add_files_button");
 	bws = add_blocked_widget (bws, "add_dirs_button");
+	bws = add_blocked_widget (bws, "add_PL_button");
 	bws = add_blocked_widget (bws, "new_PL_button");
 	bws = add_blocked_widget (bws, "export_button");
 	widgets_blocked = FALSE;
     }
 
-    if (block)
-    { /* we must block the widgets */
+    switch (action)
+    {
+    case BR_BLOCK:
+	/* we must block the widgets */
 	++count;  /* increase number of locks */
 	if (!widgets_blocked)
 	{ /* only block widgets, if they are not already blocked */
@@ -608,9 +627,9 @@ static void block_release_widgets (gboolean block)
 	    block_dirbrowser ();
 	    widgets_blocked = TRUE;
 	}
-    }
-    else
-    { /* release the widgets if --count == 0 */
+	break;
+    case BR_RELEASE:
+	/* release the widgets if --count == 0 */
 	if (widgets_blocked)
 	{ /* only release widgets, if they are blocked */
 	    --count;
@@ -627,6 +646,21 @@ static void block_release_widgets (gboolean block)
 		widgets_blocked = FALSE;
 	    }
 	}
+	break;
+    case BR_UPDATE:
+	if (widgets_blocked)
+	{ /* only update widgets, if they are blocked */
+	    for (l = bws; l; l = l->next)
+	    { /* find the required widget */
+		bw = (struct blocked_widget *)l->data;
+		if (bw->widget == w)
+		{ /* found -> set to new desired state */
+		    bw->sensitive = sens;
+		    break;
+		}
+	    }
+	}
+	break;
     }
 }
 
@@ -634,17 +668,20 @@ static void block_release_widgets (gboolean block)
 /* Block widgets (turn insensitive) listed in "bws" */
 void block_widgets (void)
 {
-    block_release_widgets (TRUE);
+    block_release_widgets (BR_BLOCK, NULL, FALSE);
 }
 
 /* Release widgets (i.e. return them to their state before
    "block_widgets() was called */
 void release_widgets (void)
 {
-    block_release_widgets (FALSE);
+    block_release_widgets (BR_RELEASE, NULL, FALSE);
 }
 
-
+void update_blocked_widget (GtkWidget *w, gboolean sens)
+{
+    block_release_widgets (BR_UPDATE, w, sens);
+}
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -803,6 +840,7 @@ void delete_playlist_head (void)
 
     g_free (buf);
 }
+
 
 
 /*------------------------------------------------------------------*\

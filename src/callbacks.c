@@ -36,10 +36,8 @@
 
 #include "misc.h"
 #include "prefs.h"
-#include "itunesdb.h"
 #include "dirbrowser.h"
-#include "song.h"
-#include "playlist.h"
+#include "file.h"
 #include "display.h"
 #include "prefs_window.h"
 #include "file_export.h"
@@ -367,6 +365,9 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 	    case GDK_d:
 		delete_playlist_head ();
 		break;
+	    case GDK_u:
+		update_selected_playlist ();
+		break;
 	    case GDK_n:
 		add_new_playlist (_("New Playlist"));
 		break;
@@ -394,12 +395,14 @@ on_song_treeview_key_release_event     (GtkWidget       *widget,
 	    case GDK_d:
 		delete_song_head ();
 		break;
+	    case GDK_u:
+		update_selected_songs ();
+		break;
 	    default:
 		break;
 	}
-
     }
-  return FALSE;
+    return FALSE;
 }
 
 
@@ -744,6 +747,10 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 		delete_entry_head (st_get_instance_from_treeview (
 				       GTK_TREE_VIEW (widget)));
 		break;
+	    case GDK_u:
+		update_selected_entry (st_get_instance_from_treeview (
+					   GTK_TREE_VIEW (widget)));
+		break;
 	    default:
 		break;
 	}
@@ -819,3 +826,45 @@ on_add_playlist1_activate              (GtkMenuItem     *menuitem,
 {
     create_add_playlists_fileselector ();
 }
+
+void
+on_songs_in_selected_playlist1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    update_selected_playlist ();
+}
+
+
+void
+on_tab_entry_1_activate                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    update_selected_entry (0);
+}
+
+
+void
+on_tab_entry_2_activate                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    update_selected_entry (1);
+}
+
+
+void
+on_selected_songs1_activate            (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    update_selected_songs ();
+}
+
+
+void
+on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_update_existing(
+	gtk_toggle_button_get_active(togglebutton));
+}
+

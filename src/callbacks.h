@@ -289,3 +289,24 @@ on_add_PL_button_clicked               (GtkButton       *button,
 void
 on_add_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_songs_in_selected_playlist1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_tab_entry_1_activate                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_tab_entry_2_activate                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_selected_songs1_activate            (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

@@ -1,3 +1,19 @@
+gtkpod V0.42+ 21-Feb-2003 - 
+        New Feature: update song information from file when adding songs
+	with identical filename (option)
+	
+        New Feature: update song information from file of selected songs
+	(ctrl-u and menu item)
+
+	BUGFIX: copy_song_to_ipod() there was a <5% chance that songs were
+	overwritten by new songs during the copy process, if you deleted
+	songs before adding new songs.
+
+        BUGFIX: Deleting songs from the iPod only worked if you exported
+	the iTunesDB twice.
+	
+	New Feature: Add Playlists (m3u and pls)
+
 gtkpod V0.42 20-Feb-2003
         Bugfix: on first start gtkpod complained it could not create
 	~/.gtkpod even though it could... (and vice versa).

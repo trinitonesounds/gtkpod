@@ -34,6 +34,7 @@
 #include "playlist.h"
 #include "display.h"
 #include "misc.h"
+#include "file.h"
 #include "support.h"
 
 

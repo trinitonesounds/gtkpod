@@ -40,9 +40,9 @@
 #include "support.h"
 
 #include "playlist.h"
+#include "file.h"
 #include "display.h"
 #include "prefs.h"
-#include "md5.h"
 
 int
 main (int argc, char *argv[])

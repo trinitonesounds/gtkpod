@@ -42,7 +42,7 @@
 		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image199">
+			<widget class="GtkImage" id="image311">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-top</property>
 			  <property name="icon_size">1</property>
@@ -63,7 +63,7 @@
 		      <signal name="activate" handler="on_add_files1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image200">
+			<widget class="GtkImage" id="image312">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -84,7 +84,7 @@
 		      <signal name="activate" handler="on_add_directory1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image201">
+			<widget class="GtkImage" id="image313">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -105,7 +105,7 @@
 		      <signal name="activate" handler="on_add_playlist1_activate" last_modification_time="Fri, 21 Feb 2003 14:49:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image202">
+			<widget class="GtkImage" id="image314">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -126,7 +126,7 @@
 		      <signal name="activate" handler="on_export_itunes1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image203">
+			<widget class="GtkImage" id="image315">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-bottom</property>
 			  <property name="icon_size">1</property>
@@ -147,7 +147,7 @@
 		      <signal name="activate" handler="on_export_files_to_disk_activate" last_modification_time="Fri, 17 Jan 2003 15:04:16 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image204">
+			<widget class="GtkImage" id="image316">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -190,7 +190,7 @@
 		      <signal name="activate" handler="on_ipod_directories_menu" last_modification_time="Sat, 18 Jan 2003 02:10:39 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image205">
+			<widget class="GtkImage" id="image317">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-execute</property>
 			  <property name="icon_size">1</property>
@@ -239,7 +239,7 @@
 		      <signal name="activate" handler="on_new_playlist1_activate" last_modification_time="Thu, 05 Dec 2002 12:10:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image206">
+			<widget class="GtkImage" id="image318">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-justify-left</property>
 			  <property name="icon_size">1</property>
@@ -259,6 +259,86 @@
 		  </child>
 
 		  <child>
+		    <widget class="GtkImageMenuItem" id="update_song_info_from_file1">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">_Update Song Info from File</property>
+		      <property name="use_underline">True</property>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image319">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-refresh</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+
+		      <child>
+			<widget class="GtkMenu" id="update_song_info_from_file1_menu">
+
+			  <child>
+			    <widget class="GtkMenuItem" id="songs_in_selected_playlist1">
+			      <property name="visible">True</property>
+			      <property name="label" translatable="yes">Songs in Selected _Playlist</property>
+			      <property name="use_underline">True</property>
+			      <signal name="activate" handler="on_songs_in_selected_playlist1_activate" last_modification_time="Sat, 22 Feb 2003 09:38:26 GMT"/>
+			    </widget>
+			  </child>
+
+			  <child>
+			    <widget class="GtkMenuItem" id="songs_in_selected_tab_entry1">
+			      <property name="visible">True</property>
+			      <property name="label" translatable="yes">Songs in Selected _Tab Entry</property>
+			      <property name="use_underline">True</property>
+
+			      <child>
+				<widget class="GtkMenu" id="songs_in_selected_tab_entry1_menu">
+
+				  <child>
+				    <widget class="GtkMenuItem" id="tab_entry_1">
+				      <property name="visible">True</property>
+				      <property name="label" translatable="yes">Sort Tab _1</property>
+				      <property name="use_underline">True</property>
+				      <signal name="activate" handler="on_tab_entry_1_activate" last_modification_time="Sat, 22 Feb 2003 09:38:26 GMT"/>
+				    </widget>
+				  </child>
+
+				  <child>
+				    <widget class="GtkMenuItem" id="tab_entry_2">
+				      <property name="visible">True</property>
+				      <property name="label" translatable="yes">Sort Tab _2</property>
+				      <property name="use_underline">True</property>
+				      <signal name="activate" handler="on_tab_entry_2_activate" last_modification_time="Sat, 22 Feb 2003 09:38:26 GMT"/>
+				    </widget>
+				  </child>
+				</widget>
+			      </child>
+			    </widget>
+			  </child>
+
+			  <child>
+			    <widget class="GtkMenuItem" id="selected_songs1">
+			      <property name="visible">True</property>
+			      <property name="label" translatable="yes">Selected _Songs</property>
+			      <property name="use_underline">True</property>
+			      <signal name="activate" handler="on_selected_songs1_activate" last_modification_time="Sat, 22 Feb 2003 09:38:26 GMT"/>
+			    </widget>
+			  </child>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkMenuItem" id="separator3">
+		      <property name="visible">True</property>
+		    </widget>
+		  </child>
+
+		  <child>
 		    <widget class="GtkImageMenuItem" id="delete_playlist1">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Delete Selected _Playlist</property>
@@ -266,7 +346,7 @@
 		      <signal name="activate" handler="on_delete_playlist_menu" last_modification_time="Fri, 17 Jan 2003 15:04:16 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image207">
+			<widget class="GtkImage" id="image320">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -286,7 +366,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image208">
+			<widget class="GtkImage" id="image321">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -330,7 +410,7 @@
 		      <signal name="activate" handler="on_delete_song_menu" last_modification_time="Fri, 17 Jan 2003 15:04:16 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image209">
+			<widget class="GtkImage" id="image322">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -358,7 +438,7 @@
 		      <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image210">
+			<widget class="GtkImage" id="image323">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -401,7 +481,7 @@
 			      <signal name="activate" handler="on_alphabetize0_up_menu" last_modification_time="Sat, 18 Jan 2003 04:57:46 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image211">
+				<widget class="GtkImage" id="image324">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-sort-ascending</property>
 				  <property name="icon_size">1</property>
@@ -422,7 +502,7 @@
 			      <signal name="activate" handler="on_alphabetize0_down_menu" last_modification_time="Sat, 18 Jan 2003 04:57:46 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image212">
+				<widget class="GtkImage" id="image325">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-sort-descending</property>
 				  <property name="icon_size">1</property>
@@ -443,7 +523,7 @@
 			      <signal name="activate" handler="on_re-init0_menu" last_modification_time="Sat, 18 Jan 2003 02:33:52 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image213">
+				<widget class="GtkImage" id="image326">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-refresh</property>
 				  <property name="icon_size">1</property>
@@ -477,7 +557,7 @@
 			      <signal name="activate" handler="on_alphabetize1_up_menu" last_modification_time="Sat, 18 Jan 2003 04:57:46 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image214">
+				<widget class="GtkImage" id="image327">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-sort-ascending</property>
 				  <property name="icon_size">1</property>
@@ -498,7 +578,7 @@
 			      <signal name="activate" handler="on_alphabetize1_down_menu" last_modification_time="Sat, 18 Jan 2003 04:57:46 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image215">
+				<widget class="GtkImage" id="image328">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-sort-descending</property>
 				  <property name="icon_size">1</property>
@@ -519,7 +599,7 @@
 			      <signal name="activate" handler="on_re-init1_menu" last_modification_time="Sat, 18 Jan 2003 02:33:52 GMT"/>
 
 			      <child internal-child="image">
-				<widget class="GtkImage" id="image216">
+				<widget class="GtkImage" id="image329">
 				  <property name="visible">True</property>
 				  <property name="stock">gtk-refresh</property>
 				  <property name="icon_size">1</property>
@@ -557,7 +637,7 @@
 		      <signal name="activate" handler="on_about1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image217">
+			<widget class="GtkImage" id="image330">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-info</property>
 			  <property name="icon_size">1</property>
@@ -1482,6 +1562,7 @@
 	      <child>
 		<widget class="GtkEntry" id="cfg_mount_point">
 		  <property name="visible">True</property>
+		  <property name="tooltip" translatable="yes">Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar.</property>
 		  <property name="can_focus">True</property>
 		  <property name="editable">True</property>
 		  <property name="visibility">True</property>
@@ -1545,6 +1626,7 @@
 		  <child internal-child="entry">
 		    <widget class="GtkEntry" id="charset_combo_entry">
 		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">gtkpod expects the ID3 tags and the filenames to be in the encoding specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' operation. 'System Charset' is the charset used by your current locale.</property>
 		      <property name="can_focus">True</property>
 		      <property name="editable">False</property>
 		      <property name="visibility">True</property>
@@ -1600,6 +1682,7 @@
 	  <child>
 	    <widget class="GtkCheckButton" id="cfg_md5songs">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Duplicate Recognition is based on a md5 hash over the file.</property>
 	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Don't allow file duplication (slower import)</property>
 	      <property name="use_underline">True</property>
@@ -1617,11 +1700,32 @@
 	  </child>
 
 	  <child>
+	    <widget class="GtkCheckButton" id="cfg_update_existing">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">If the filename (full path) of an existing song matches that of a song to be added, this option allows you to update the information of the existing song rather than adding the song again. Please note that this option is different from the option above: duplicates are completely identical, having the same filename still allows for different ID3 tags. On export the updated song is copied to the iPod overwriting the old version.</property>
+	      <property name="can_focus">True</property>
+	      <property name="label" translatable="yes">When adding dirs/files, update information of
+existing songs with identical filenames</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="active">False</property>
+	      <property name="inconsistent">False</property>
+	      <property name="draw_indicator">True</property>
+	      <signal name="toggled" handler="on_cfg_update_existing_toggled" last_modification_time="Sat, 22 Feb 2003 14:31:49 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
 	    <widget class="GtkCheckButton" id="cfg_id3_write">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">The tags are written to the files on your harddrive and on the ipod (if available).</property>
 	      <property name="can_focus">True</property>
-	      <property name="label" translatable="yes">Change the ID3 tags when modified in gtkpod
-(on disk and on the ipod)</property>
+	      <property name="label" translatable="yes">Write ID3 tags to disk when modified in gtkpod</property>
 	      <property name="use_underline">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="active">False</property>
@@ -1639,6 +1743,7 @@
 	  <child>
 	    <widget class="GtkCheckButton" id="cfg_id3_writeall">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Normally only the tag you changed is written to disk.</property>
 	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Update all tags (not only changed ones)</property>
 	      <property name="use_underline">True</property>
@@ -1677,6 +1782,7 @@
 	  <child>
 	    <widget class="GtkCheckButton" id="cfg_write_extended">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Highly recommended for faster import when taking advantage of the duplication recognition. Also, having the PC filenames allows writing changed ID3 tags to disk, and even to reconstruct your ipod's contents in case of file system corruption (change the &quot;transferred=&quot; entries in your backuped database).</property>
 	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Write extended information (PC filenames,
 MD5 hashes)</property>
@@ -1697,9 +1803,10 @@ MD5 hashes)</property>
 	  <child>
 	    <widget class="GtkCheckButton" id="cfg_block_display">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">The display can be blocked after changing a selection. The display update is faster, but you have to wait until it's finished.</property>
 	      <property name="can_focus">True</property>
-	      <property name="label" translatable="yes">Block display when changing playlist or
-tab entry (faster!)</property>
+	      <property name="label" translatable="yes">Block display when changing playlist or tab
+entry (faster!)</property>
 	      <property name="use_underline">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="active">False</property>
@@ -1869,6 +1976,7 @@ tab entry (faster!)</property>
 		  <child>
 		    <widget class="GtkCheckButton" id="cfg_mpl_autoselect">
 		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">If you don't select the master playlist automatically, the initial database import is much faster because the display dosn't have to be updated.</property>
 		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes">...master playlist</property>
 		      <property name="use_underline">True</property>

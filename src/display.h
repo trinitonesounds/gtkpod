@@ -133,6 +133,7 @@ void sm_rows_reordered_callback(void);
 void sm_show_preferred_columns(void);
 
 Playlist* get_currently_selected_playlist(void);
+GList* get_currently_selected_songids(void);
 GList* get_currently_selected_songs(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);

@@ -168,8 +168,12 @@ static void add_dir_selected (gchar *dir)
     }
     else
     {
-	remove_duplicate (NULL, NULL); /* display message about duplicate
-					* songs, if duplicates were detected */
+	/* clear log of non-updated songs */
+	display_non_updated ((void *)-1, NULL);
+	/* display log of updated songs */
+	display_updated (NULL, NULL);
+	/* display log of detected duplicates */
+	remove_duplicate (NULL, NULL);
     }
 }
 

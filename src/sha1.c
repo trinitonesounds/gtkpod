@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include "md5.h"
+#include "file.h"
 #include "prefs.h"
 #include "misc.h"
 #include "support.h"
@@ -210,11 +211,12 @@ md5_unique_file_free(void)
 
 /**
  * Check to see if a song has already been added to the ipod
- * @s - the Song we want to know about
- * Returns a pointer to the duplicate song.
+ * @s - the Song we want to know about. If the song does not exist, it
+ * is inserted into the hash.
+ * Returns a pointer to the duplicate song. 
  */
 Song *
-md5_song_exists(Song * s)
+md5_song_exists_insert(Song * s)
 {
    gchar *val = NULL;
    Song *song = NULL;
@@ -240,6 +242,28 @@ md5_song_exists(Song * s)
 	       s->md5_hash = g_strdup(val);
 	       g_hash_table_insert(filehash, val, s);
 	   }
+       }
+   }
+   return song;
+}
+
+/**
+ * Check to see if a song has already been added to the ipod
+ * @s - the Song we want to know about.
+ * Returns a pointer to the duplicate song. 
+ */
+Song *
+md5_song_exists(Song * s)
+{
+   Song *song = NULL;
+
+   if (prefs_get_md5songs() && filehash)
+   {
+       gchar *val = md5_hash_song(s);
+       if (val != NULL)
+       {
+	   song = g_hash_table_lookup(filehash, val);
+	   g_free (val);
        }
    }
    return song;

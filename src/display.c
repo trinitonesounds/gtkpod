@@ -1212,7 +1212,10 @@ void st_page_selected (GtkNotebook *notebook, guint page)
 
   inst = st_get_instance_from_notebook (notebook);
   if (inst == -1) return; /* invalid notebook */
-  add_selection_callback (inst, st_page_selected_cb,
+  /* inst-1: changing a page in the first sort tab is like selecting a
+     new playlist and so on. Therefore we subtract 1 from the
+     instance. */
+  add_selection_callback (inst-1, st_page_selected_cb,
 			  (gpointer)notebook, (gpointer)page);
 }
 
@@ -2347,13 +2350,43 @@ get_currently_selected_playlist(void)
     return(current_playlist);
 }
 
-void
+static void
+on_selected_songids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
+				 GtkTreeIter *i, gpointer data)
+{
+    Song *s = NULL;
+    GList *l = *((GList**)data);
+    gtk_tree_model_get(tm, i, 0, &s, -1);
+    /* can call on 0 cause s is consistent across all of the columns */
+    if(s)
+    {
+	l = g_list_append(l, (gpointer)s->ipod_id);
+	*((GList**)data) = l;
+    }
+}
+
+GList *
+get_currently_selected_songids(void)
+{
+    GList *result = NULL;
+    GtkTreeSelection *ts = NULL;
+
+    if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(song_treeview))))
+    {
+	gtk_tree_selection_selected_foreach(ts,on_selected_songids_list_foreach,
+					    &result);
+    }
+    return(result);
+}
+
+
+static void
 on_selected_songs_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
 				 GtkTreeIter *i, gpointer data)
 {
     Song *s = NULL;
     GList *l = *((GList**)data);
-    gtk_tree_model_get(tm, i, 0, &s, -1); 
+    gtk_tree_model_get(tm, i, 0, &s, -1);
     /* can call on 0 cause s is consistent across all of the columns */
     if(s)
     {

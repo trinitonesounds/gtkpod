@@ -101,6 +101,7 @@ struct cfg *cfg_new(void)
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
     mycfg->md5songs = FALSE;
+    mycfg->update_existing = FALSE;
     mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_NUM; ++i)
@@ -189,6 +190,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
 	  {
 	      prefs_set_md5songs((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "update_existing") == 0)
+	  {
+	      prefs_set_update_existing((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
 	  {
@@ -428,8 +433,9 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "id3=%d\n", prefs_get_id3_write ());
     fprintf(fp, "id3_all=%d\n", prefs_get_id3_writeall ());
-    fprintf(fp, "md5=%d\n",cfg->md5songs);
-    fprintf(fp, "block_display=%d\n",cfg->block_display);
+    fprintf(fp, "md5=%d\n",prefs_get_md5songs ());
+    fprintf(fp, "update_existing=%d\n",prefs_get_update_existing ());
+    fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, "album=%d\n",prefs_get_song_list_show_album());
     fprintf(fp, "track=%d\n",prefs_get_song_list_show_track());
     fprintf(fp, "genre=%d\n",prefs_get_song_list_show_genre());
@@ -525,9 +531,25 @@ void cfg_free(struct cfg *c)
 static gchar *
 get_dirname_of_filename(gchar *file)
 {
-  if (g_file_test(file, G_FILE_TEST_IS_DIR))
-    return g_strdup (file);
-  else return g_path_get_dirname (file);
+    gint len;
+    gchar *buf, *result = NULL;
+
+    if (!file) return NULL;
+
+    if (g_file_test(file, G_FILE_TEST_IS_DIR))
+	buf = g_strdup (file);
+    else
+	buf = g_path_get_dirname (file);
+	
+    len = strlen (buf);
+    if (len && (buf[len-1] == '/'))
+	result = buf;
+    else
+    {
+	result = g_strdup_printf ("%s/", buf);
+	g_free (buf);
+    }
+    return result;
 }
 
 
@@ -592,6 +614,16 @@ void prefs_set_md5songs(gboolean active)
 gboolean prefs_get_md5songs(void)
 {
     return cfg->md5songs;
+}
+
+void prefs_set_update_existing(gboolean active)
+{
+    cfg->update_existing = active;
+}
+
+gboolean prefs_get_update_existing(void)
+{
+    return cfg->update_existing;
 }
 
 /* Should the display be blocked (be insenstive) while it is updated
@@ -712,62 +744,6 @@ gboolean prefs_get_song_list_show_track(void)
 gboolean prefs_get_song_list_show_genre(void)
 {
     return(cfg->song_list_show.genre); 
-}
-
-
-
-void prefs_print(void)
-{
-    FILE *fp = stderr;
-    gchar *on = "On";
-    gchar *off = "Off";
-    
-    fprintf(fp, "GtkPod Preferences\n");
-    fprintf(fp, "Mount Point:\t%s\n", cfg->ipod_mount);
-    fprintf(fp, "Interactive ID3:\t");
-    if(cfg->id3_write)
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
-    
-    fprintf(fp, "MD5 Songs:\t");
-    if(cfg->md5songs)
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
-    
-    fprintf(fp, "Auto Import:\t");
-    if(cfg->autoimport)
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
-    
-    fprintf(fp, "Song List Options:\n");
-    fprintf(fp, "  Show All Attributes: ");
-    if(prefs_get_song_list_show_all())
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
-    fprintf(fp, "  Show Album: ");
-    if(prefs_get_song_list_show_album())
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
-    fprintf(fp, "  Show Track: ");
-    if(prefs_get_song_list_show_track())
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
-    fprintf(fp, "  Show Genre: ");
-    if(prefs_get_song_list_show_genre())
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
-    fprintf(fp, "  Show Artist: ");
-    if(prefs_get_song_list_show_artist())
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
 }
 
 void prefs_set_playlist_deletion(gboolean val)

@@ -57,6 +57,7 @@ struct cfg
   gboolean id3_write;     /* should changes to ID3 tags be written to file */
   gboolean id3_writeall;  /* should all ID3 tags be updated */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */
+  gboolean update_existing;/* when adding song, update existing song */
   gboolean block_display; /* block display during change of selection? */
   gboolean autoimport;	  /* whether or not to automatically import files */
   struct {
@@ -115,6 +116,7 @@ void prefs_set_song_list_show_artist(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
 void prefs_set_md5songs(gboolean active);
+void prefs_set_update_existing(gboolean active);
 void prefs_set_block_display(gboolean active);
 void prefs_set_id3_write(gboolean active);
 void prefs_set_id3_writeall(gboolean active);
@@ -157,6 +159,7 @@ void prefs_get_size_dirbr (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
 gboolean prefs_get_md5songs(void);
+gboolean prefs_get_update_existing(void);
 gboolean prefs_get_block_display(void);
 gint prefs_get_paned_pos (gint i);
 guint32 prefs_get_statusbar_timeout (void);

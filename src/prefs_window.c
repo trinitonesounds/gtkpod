@@ -107,6 +107,11 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->md5songs);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_update_existing")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->update_existing);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_block_display")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -251,6 +256,7 @@ prefs_window_save(void)
 	clear_md5_hash_from_songs ();
     /* this call well automatically destroy/setup the md5 hash table */
     prefs_set_md5songs(tmpcfg->md5songs);
+    prefs_set_update_existing(tmpcfg->update_existing);
     prefs_set_block_display(tmpcfg->block_display);
 
     cfg_free(tmpcfg);
@@ -275,6 +281,12 @@ void
 prefs_window_set_block_display(gboolean val)
 {
     tmpcfg->block_display = val;
+}
+
+void
+prefs_window_set_update_existing(gboolean val)
+{
+    tmpcfg->update_existing = val;
 }
 
 /**
