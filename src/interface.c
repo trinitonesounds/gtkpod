@@ -1135,9 +1135,9 @@ create_confirm_window (void)
 }
 
 GtkWidget*
-create_new_prefs_window (void)
+create_prefs_window (void)
 {
-  GtkWidget *new_prefs_window;
+  GtkWidget *prefs_window;
   GtkWidget *vbox13;
   GtkWidget *notebook;
   GtkWidget *vbox14;
@@ -1281,12 +1281,12 @@ create_new_prefs_window (void)
 
   tooltips = gtk_tooltips_new ();
 
-  new_prefs_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (new_prefs_window), _("Preferences"));
+  prefs_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (prefs_window), _("Preferences"));
 
   vbox13 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox13);
-  gtk_container_add (GTK_CONTAINER (new_prefs_window), vbox13);
+  gtk_container_add (GTK_CONTAINER (prefs_window), vbox13);
 
   notebook = gtk_notebook_new ();
   gtk_widget_show (notebook);
@@ -1943,7 +1943,7 @@ create_new_prefs_window (void)
   gtk_container_add (GTK_CONTAINER (hbuttonbox5), prefs_ok);
   GTK_WIDGET_SET_FLAGS (prefs_ok, GTK_CAN_DEFAULT);
 
-  g_signal_connect ((gpointer) new_prefs_window, "delete_event",
+  g_signal_connect ((gpointer) prefs_window, "delete_event",
                     G_CALLBACK (on_prefs_window_delete_event),
                     NULL);
   g_signal_connect ((gpointer) cfg_mount_point, "changed",
@@ -2067,147 +2067,486 @@ create_new_prefs_window (void)
   gtk_label_set_mnemonic_widget (GTK_LABEL (label47), cfg_mount_point);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (new_prefs_window, new_prefs_window, "new_prefs_window");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox13, "vbox13");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, notebook, "notebook");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox14, "vbox14");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame6, "frame6");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox15, "vbox15");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox8, "hbox8");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label27, "label27");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_mount_point, "cfg_mount_point");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_autoimport, "cfg_autoimport");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label26, "label26");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame7, "frame7");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox16, "vbox16");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox9, "hbox9");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label29, "label29");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, charset_combo, "charset_combo");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, charset_combo_entry, "charset_combo_entry");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_update_charset, "cfg_update_charset");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_add_recursively, "cfg_add_recursively");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_md5songs, "cfg_md5songs");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, table2, "table2");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_show_duplicates, "cfg_show_duplicates");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_update_existing, "cfg_update_existing");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, table1, "table1");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_show_updated, "cfg_show_updated");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_show_non_updated, "cfg_show_non_updated");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label46, "label46");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, table5, "table5");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_show_sync_dirs, "cfg_show_sync_dirs");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_sync_remove, "cfg_sync_remove");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_sync_remove_confirm, "cfg_sync_remove_confirm");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label28, "label28");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame8, "frame8");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox10, "hbox10");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox17, "vbox17");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, tag_autoset1, "tag_autoset1");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, tag_autoset3, "tag_autoset3");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox18, "vbox18");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, tag_autoset2, "tag_autoset2");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, tag_autoset4, "tag_autoset4");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox19, "vbox19");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, tag_autoset0, "tag_autoset0");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label30, "label30");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label23, "label23");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox20, "vbox20");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame9, "frame9");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox21, "vbox21");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_write_extended, "cfg_write_extended");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_keep_backups, "cfg_keep_backups");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label31, "label31");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame10, "frame10");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox22, "vbox22");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_id3_write, "cfg_id3_write");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, table3, "table3");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_id3_writeall, "cfg_id3_writeall");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_write_charset, "cfg_write_charset");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label32, "label32");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label24, "label24");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox23, "vbox23");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame16, "frame16");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox31, "vbox31");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_display_toolbar, "cfg_display_toolbar");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, table4, "table4");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_toolbar_style_both, "cfg_toolbar_style_both");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_toolbar_style_text, "cfg_toolbar_style_text");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_toolbar_style_icons, "cfg_toolbar_style_icons");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label39, "label39");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame12, "frame12");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox25, "vbox25");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox11, "hbox11");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label35, "label35");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo, "sort_tab_num_combo");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo_entry, "sort_tab_num_combo_entry");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label34, "label34");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame14, "frame14");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox36, "vbox36");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox12, "hbox12");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox27, "vbox27");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible1, "col_visible1");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible4, "col_visible4");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible8, "col_visible8");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible14, "col_visible14");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible12, "col_visible12");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox28, "vbox28");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible2, "col_visible2");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible5, "col_visible5");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible9, "col_visible9");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible15, "col_visible15");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible13, "col_visible13");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox29, "vbox29");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible0, "col_visible0");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible6, "col_visible6");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible10, "col_visible10");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible16, "col_visible16");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox35, "vbox35");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible3, "col_visible3");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible7, "col_visible7");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible11, "col_visible11");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox13, "hbox13");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label47, "label47");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, time_format_entry, "time_format_entry");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label37, "label37");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame13, "frame13");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_vbox, "autoselect_vbox");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_mpl_autoselect, "cfg_mpl_autoselect");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label40, "label40");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_hbox, "autoselect_hbox");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label36, "label36");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame15, "frame15");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox30, "vbox30");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_case_sensitive, "cfg_case_sensitive");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_block_display, "cfg_block_display");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label38, "label38");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label25, "label25");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox32, "vbox32");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame18, "frame18");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox34, "vbox34");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label44, "label44");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, play_now_path_entry, "play_now_path_entry");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label45, "label45");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, play_enqueue_path_entry, "play_enqueue_path_entry");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label43, "label43");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame11, "frame11");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox24, "vbox24");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_playlist, "cfg_delete_playlist");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_track_from_playlist, "cfg_delete_track_from_playlist");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_track_from_ipod, "cfg_delete_track_from_ipod");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_sync_remove_confirm2, "cfg_sync_remove_confirm2");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label33, "label33");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame17, "frame17");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox33, "vbox33");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_save_sorted_order, "cfg_save_sorted_order");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label42, "label42");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label, "label");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, hbuttonbox5, "hbuttonbox5");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, prefs_apply, "prefs_apply");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, prefs_cancel, "prefs_cancel");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, prefs_ok, "prefs_ok");
-  GLADE_HOOKUP_OBJECT_NO_REF (new_prefs_window, tooltips, "tooltips");
+  GLADE_HOOKUP_OBJECT_NO_REF (prefs_window, prefs_window, "prefs_window");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox13, "vbox13");
+  GLADE_HOOKUP_OBJECT (prefs_window, notebook, "notebook");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox14, "vbox14");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame6, "frame6");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox15, "vbox15");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox8, "hbox8");
+  GLADE_HOOKUP_OBJECT (prefs_window, label27, "label27");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_mount_point, "cfg_mount_point");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_autoimport, "cfg_autoimport");
+  GLADE_HOOKUP_OBJECT (prefs_window, label26, "label26");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame7, "frame7");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox16, "vbox16");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox9, "hbox9");
+  GLADE_HOOKUP_OBJECT (prefs_window, label29, "label29");
+  GLADE_HOOKUP_OBJECT (prefs_window, charset_combo, "charset_combo");
+  GLADE_HOOKUP_OBJECT (prefs_window, charset_combo_entry, "charset_combo_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_update_charset, "cfg_update_charset");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_add_recursively, "cfg_add_recursively");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5songs, "cfg_md5songs");
+  GLADE_HOOKUP_OBJECT (prefs_window, table2, "table2");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_duplicates, "cfg_show_duplicates");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_update_existing, "cfg_update_existing");
+  GLADE_HOOKUP_OBJECT (prefs_window, table1, "table1");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_updated, "cfg_show_updated");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_non_updated, "cfg_show_non_updated");
+  GLADE_HOOKUP_OBJECT (prefs_window, label46, "label46");
+  GLADE_HOOKUP_OBJECT (prefs_window, table5, "table5");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_sync_dirs, "cfg_show_sync_dirs");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_sync_remove, "cfg_sync_remove");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_sync_remove_confirm, "cfg_sync_remove_confirm");
+  GLADE_HOOKUP_OBJECT (prefs_window, label28, "label28");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame8, "frame8");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox10, "hbox10");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox17, "vbox17");
+  GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset1, "tag_autoset1");
+  GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset3, "tag_autoset3");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox18, "vbox18");
+  GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset2, "tag_autoset2");
+  GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset4, "tag_autoset4");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox19, "vbox19");
+  GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset0, "tag_autoset0");
+  GLADE_HOOKUP_OBJECT (prefs_window, label30, "label30");
+  GLADE_HOOKUP_OBJECT (prefs_window, label23, "label23");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox20, "vbox20");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame9, "frame9");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox21, "vbox21");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_extended, "cfg_write_extended");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_keep_backups, "cfg_keep_backups");
+  GLADE_HOOKUP_OBJECT (prefs_window, label31, "label31");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame10, "frame10");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox22, "vbox22");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_write, "cfg_id3_write");
+  GLADE_HOOKUP_OBJECT (prefs_window, table3, "table3");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_writeall, "cfg_id3_writeall");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_charset, "cfg_write_charset");
+  GLADE_HOOKUP_OBJECT (prefs_window, label32, "label32");
+  GLADE_HOOKUP_OBJECT (prefs_window, label24, "label24");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox23, "vbox23");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame16, "frame16");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox31, "vbox31");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_display_toolbar, "cfg_display_toolbar");
+  GLADE_HOOKUP_OBJECT (prefs_window, table4, "table4");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_toolbar_style_both, "cfg_toolbar_style_both");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_toolbar_style_text, "cfg_toolbar_style_text");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_toolbar_style_icons, "cfg_toolbar_style_icons");
+  GLADE_HOOKUP_OBJECT (prefs_window, label39, "label39");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame12, "frame12");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox25, "vbox25");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox11, "hbox11");
+  GLADE_HOOKUP_OBJECT (prefs_window, label35, "label35");
+  GLADE_HOOKUP_OBJECT (prefs_window, sort_tab_num_combo, "sort_tab_num_combo");
+  GLADE_HOOKUP_OBJECT (prefs_window, sort_tab_num_combo_entry, "sort_tab_num_combo_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, label34, "label34");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame14, "frame14");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox36, "vbox36");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox12, "hbox12");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox27, "vbox27");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible1, "col_visible1");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible4, "col_visible4");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible8, "col_visible8");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible14, "col_visible14");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible12, "col_visible12");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox28, "vbox28");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible2, "col_visible2");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible5, "col_visible5");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible9, "col_visible9");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible15, "col_visible15");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible13, "col_visible13");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox29, "vbox29");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible0, "col_visible0");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible6, "col_visible6");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible10, "col_visible10");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible16, "col_visible16");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox35, "vbox35");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible3, "col_visible3");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible7, "col_visible7");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible11, "col_visible11");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox13, "hbox13");
+  GLADE_HOOKUP_OBJECT (prefs_window, label47, "label47");
+  GLADE_HOOKUP_OBJECT (prefs_window, time_format_entry, "time_format_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, label37, "label37");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame13, "frame13");
+  GLADE_HOOKUP_OBJECT (prefs_window, autoselect_vbox, "autoselect_vbox");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_mpl_autoselect, "cfg_mpl_autoselect");
+  GLADE_HOOKUP_OBJECT (prefs_window, label40, "label40");
+  GLADE_HOOKUP_OBJECT (prefs_window, autoselect_hbox, "autoselect_hbox");
+  GLADE_HOOKUP_OBJECT (prefs_window, label36, "label36");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame15, "frame15");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox30, "vbox30");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_case_sensitive, "cfg_case_sensitive");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_block_display, "cfg_block_display");
+  GLADE_HOOKUP_OBJECT (prefs_window, label38, "label38");
+  GLADE_HOOKUP_OBJECT (prefs_window, label25, "label25");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox32, "vbox32");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame18, "frame18");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox34, "vbox34");
+  GLADE_HOOKUP_OBJECT (prefs_window, label44, "label44");
+  GLADE_HOOKUP_OBJECT (prefs_window, play_now_path_entry, "play_now_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, label45, "label45");
+  GLADE_HOOKUP_OBJECT (prefs_window, play_enqueue_path_entry, "play_enqueue_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, label43, "label43");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame11, "frame11");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox24, "vbox24");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_playlist, "cfg_delete_playlist");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_track_from_playlist, "cfg_delete_track_from_playlist");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_track_from_ipod, "cfg_delete_track_from_ipod");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_sync_remove_confirm2, "cfg_sync_remove_confirm2");
+  GLADE_HOOKUP_OBJECT (prefs_window, label33, "label33");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame17, "frame17");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox33, "vbox33");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_save_sorted_order, "cfg_save_sorted_order");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
+  GLADE_HOOKUP_OBJECT (prefs_window, label42, "label42");
+  GLADE_HOOKUP_OBJECT (prefs_window, label, "label");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox5, "hbuttonbox5");
+  GLADE_HOOKUP_OBJECT (prefs_window, prefs_apply, "prefs_apply");
+  GLADE_HOOKUP_OBJECT (prefs_window, prefs_cancel, "prefs_cancel");
+  GLADE_HOOKUP_OBJECT (prefs_window, prefs_ok, "prefs_ok");
+  GLADE_HOOKUP_OBJECT_NO_REF (prefs_window, tooltips, "tooltips");
 
-  return new_prefs_window;
+  return prefs_window;
+}
+
+GtkWidget*
+create_special (void)
+{
+  GtkWidget *special;
+  GtkWidget *scrolledwindow4;
+  GtkWidget *vbox37;
+  GtkWidget *hbox20;
+  GtkWidget *label52;
+  GtkWidget *sp_any_button;
+  GSList *sp_any_button_group = NULL;
+  GtkWidget *sp_all_button;
+  GtkWidget *hseparator1;
+  GtkWidget *table6;
+  GtkWidget *sp_playcount_button;
+  GtkWidget *sp_played_button;
+  GtkWidget *sp_modified_button;
+  GtkWidget *sp_created_button;
+  GtkWidget *hbox14;
+  GtkWidget *sp_rating_0;
+  GtkWidget *sp_rating_1;
+  GtkWidget *sp_rating_2;
+  GtkWidget *sp_rating_3;
+  GtkWidget *sp_rating_4;
+  GtkWidget *sp_rating_5;
+  GtkWidget *hbox15;
+  GtkWidget *sp_playcount_left_entry;
+  GtkWidget *combo1;
+  GtkWidget *sp_playcount_left_combo_entry;
+  GtkWidget *label48;
+  GtkWidget *combo2;
+  GtkWidget *sp_playcount_right_combo_entry;
+  GtkWidget *sp_playcount_right_entry;
+  GtkWidget *hbox17;
+  GtkWidget *sp_played_entry;
+  GtkWidget *label49;
+  GtkWidget *sp_played_cal_button;
+  GtkWidget *sp_rating_button;
+  GtkWidget *hbox18;
+  GtkWidget *sp_modified_entry;
+  GtkWidget *label50;
+  GtkWidget *sp_modified_cal_button;
+  GtkWidget *hbox19;
+  GtkWidget *sp_created_entry;
+  GtkWidget *label51;
+  GtkWidget *sp_created_cal_button;
+  GtkTooltips *tooltips;
+
+  tooltips = gtk_tooltips_new ();
+
+  special = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (special), _("Special"));
+
+  scrolledwindow4 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow4);
+  gtk_container_add (GTK_CONTAINER (special), scrolledwindow4);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow4), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  vbox37 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox37);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow4), vbox37);
+
+  hbox20 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox20);
+  gtk_box_pack_start (GTK_BOX (vbox37), hbox20, FALSE, TRUE, 0);
+
+  label52 = gtk_label_new (_(" Logic Operation: "));
+  gtk_widget_show (label52);
+  gtk_box_pack_start (GTK_BOX (hbox20), label52, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label52), GTK_JUSTIFY_LEFT);
+
+  sp_any_button = gtk_radio_button_new_with_mnemonic (NULL, _("Any (OR)"));
+  gtk_widget_show (sp_any_button);
+  gtk_box_pack_start (GTK_BOX (hbox20), sp_any_button, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sp_any_button), sp_any_button_group);
+  sp_any_button_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sp_any_button));
+
+  sp_all_button = gtk_radio_button_new_with_mnemonic (NULL, _("All (AND)"));
+  gtk_widget_show (sp_all_button);
+  gtk_box_pack_start (GTK_BOX (hbox20), sp_all_button, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sp_all_button), sp_any_button_group);
+  sp_any_button_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sp_all_button));
+
+  hseparator1 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator1);
+  gtk_box_pack_start (GTK_BOX (vbox37), hseparator1, FALSE, TRUE, 2);
+
+  table6 = gtk_table_new (5, 2, FALSE);
+  gtk_widget_show (table6);
+  gtk_box_pack_start (GTK_BOX (vbox37), table6, TRUE, TRUE, 0);
+
+  sp_playcount_button = gtk_check_button_new_with_mnemonic (_("Playcount"));
+  gtk_widget_show (sp_playcount_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_playcount_button, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  sp_played_button = gtk_check_button_new_with_mnemonic (_("Last played"));
+  gtk_widget_show (sp_played_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_played_button, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_tooltips_set_tip (tooltips, sp_played_button, _("DD/MM/YYYY HH:MM or similar"), NULL);
+
+  sp_modified_button = gtk_check_button_new_with_mnemonic (_("Last modified"));
+  gtk_widget_show (sp_modified_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_modified_button, 0, 1, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  sp_created_button = gtk_check_button_new_with_mnemonic (_("Created"));
+  gtk_widget_show (sp_created_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_created_button, 0, 1, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  hbox14 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox14);
+  gtk_table_attach (GTK_TABLE (table6), hbox14, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  sp_rating_0 = gtk_check_button_new_with_mnemonic (_("0"));
+  gtk_widget_show (sp_rating_0);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_0, FALSE, FALSE, 0);
+
+  sp_rating_1 = gtk_check_button_new_with_mnemonic (_("1"));
+  gtk_widget_show (sp_rating_1);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_1, FALSE, FALSE, 0);
+
+  sp_rating_2 = gtk_check_button_new_with_mnemonic (_("2"));
+  gtk_widget_show (sp_rating_2);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_2, FALSE, FALSE, 0);
+
+  sp_rating_3 = gtk_check_button_new_with_mnemonic (_("3"));
+  gtk_widget_show (sp_rating_3);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_3, FALSE, FALSE, 0);
+
+  sp_rating_4 = gtk_check_button_new_with_mnemonic (_("4"));
+  gtk_widget_show (sp_rating_4);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_4, FALSE, FALSE, 0);
+
+  sp_rating_5 = gtk_check_button_new_with_mnemonic (_("5"));
+  gtk_widget_show (sp_rating_5);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_5, FALSE, FALSE, 0);
+
+  hbox15 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox15);
+  gtk_table_attach (GTK_TABLE (table6), hbox15, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  sp_playcount_left_entry = gtk_entry_new ();
+  gtk_widget_show (sp_playcount_left_entry);
+  gtk_box_pack_start (GTK_BOX (hbox15), sp_playcount_left_entry, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (sp_playcount_left_entry, 1, -2);
+  gtk_entry_set_max_length (GTK_ENTRY (sp_playcount_left_entry), 5);
+
+  combo1 = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (combo1)->popwin),
+                     "GladeParentKey", combo1);
+  gtk_widget_show (combo1);
+  gtk_box_pack_start (GTK_BOX (hbox15), combo1, TRUE, TRUE, 0);
+
+  sp_playcount_left_combo_entry = GTK_COMBO (combo1)->entry;
+  gtk_widget_show (sp_playcount_left_combo_entry);
+  gtk_widget_set_size_request (sp_playcount_left_combo_entry, 1, -2);
+
+  label48 = gtk_label_new (_(" Count "));
+  gtk_widget_show (label48);
+  gtk_box_pack_start (GTK_BOX (hbox15), label48, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label48), GTK_JUSTIFY_LEFT);
+
+  combo2 = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (combo2)->popwin),
+                     "GladeParentKey", combo2);
+  gtk_widget_show (combo2);
+  gtk_box_pack_start (GTK_BOX (hbox15), combo2, TRUE, TRUE, 0);
+
+  sp_playcount_right_combo_entry = GTK_COMBO (combo2)->entry;
+  gtk_widget_show (sp_playcount_right_combo_entry);
+  gtk_widget_set_size_request (sp_playcount_right_combo_entry, 1, -2);
+
+  sp_playcount_right_entry = gtk_entry_new ();
+  gtk_widget_show (sp_playcount_right_entry);
+  gtk_box_pack_start (GTK_BOX (hbox15), sp_playcount_right_entry, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (sp_playcount_right_entry, 1, -2);
+
+  hbox17 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox17);
+  gtk_table_attach (GTK_TABLE (table6), hbox17, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  sp_played_entry = gtk_entry_new ();
+  gtk_widget_show (sp_played_entry);
+  gtk_box_pack_start (GTK_BOX (hbox17), sp_played_entry, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (sp_played_entry, 1, -2);
+
+  label49 = gtk_label_new ("");
+  gtk_widget_show (label49);
+  gtk_box_pack_start (GTK_BOX (hbox17), label49, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label49), GTK_JUSTIFY_LEFT);
+
+  sp_played_cal_button = gtk_button_new_with_mnemonic (_("Calendar"));
+  gtk_widget_show (sp_played_cal_button);
+  gtk_box_pack_start (GTK_BOX (hbox17), sp_played_cal_button, FALSE, FALSE, 0);
+
+  sp_rating_button = gtk_check_button_new_with_mnemonic (_("Rating"));
+  gtk_widget_show (sp_rating_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_rating_button, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  hbox18 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox18);
+  gtk_table_attach (GTK_TABLE (table6), hbox18, 1, 2, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  sp_modified_entry = gtk_entry_new ();
+  gtk_widget_show (sp_modified_entry);
+  gtk_box_pack_start (GTK_BOX (hbox18), sp_modified_entry, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (sp_modified_entry, 1, -2);
+
+  label50 = gtk_label_new ("");
+  gtk_widget_show (label50);
+  gtk_box_pack_start (GTK_BOX (hbox18), label50, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label50), GTK_JUSTIFY_LEFT);
+
+  sp_modified_cal_button = gtk_button_new_with_mnemonic (_("Calendar"));
+  gtk_widget_show (sp_modified_cal_button);
+  gtk_box_pack_start (GTK_BOX (hbox18), sp_modified_cal_button, FALSE, FALSE, 0);
+
+  hbox19 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox19);
+  gtk_table_attach (GTK_TABLE (table6), hbox19, 1, 2, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  sp_created_entry = gtk_entry_new ();
+  gtk_widget_show (sp_created_entry);
+  gtk_box_pack_start (GTK_BOX (hbox19), sp_created_entry, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (sp_created_entry, 1, -2);
+
+  label51 = gtk_label_new ("");
+  gtk_widget_show (label51);
+  gtk_box_pack_start (GTK_BOX (hbox19), label51, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label51), GTK_JUSTIFY_LEFT);
+
+  sp_created_cal_button = gtk_button_new_with_mnemonic (_("Calendar"));
+  gtk_widget_show (sp_created_cal_button);
+  gtk_box_pack_start (GTK_BOX (hbox19), sp_created_cal_button, FALSE, FALSE, 0);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (special, special, "special");
+  GLADE_HOOKUP_OBJECT (special, scrolledwindow4, "scrolledwindow4");
+  GLADE_HOOKUP_OBJECT (special, vbox37, "vbox37");
+  GLADE_HOOKUP_OBJECT (special, hbox20, "hbox20");
+  GLADE_HOOKUP_OBJECT (special, label52, "label52");
+  GLADE_HOOKUP_OBJECT (special, sp_any_button, "sp_any_button");
+  GLADE_HOOKUP_OBJECT (special, sp_all_button, "sp_all_button");
+  GLADE_HOOKUP_OBJECT (special, hseparator1, "hseparator1");
+  GLADE_HOOKUP_OBJECT (special, table6, "table6");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_button, "sp_playcount_button");
+  GLADE_HOOKUP_OBJECT (special, sp_played_button, "sp_played_button");
+  GLADE_HOOKUP_OBJECT (special, sp_modified_button, "sp_modified_button");
+  GLADE_HOOKUP_OBJECT (special, sp_created_button, "sp_created_button");
+  GLADE_HOOKUP_OBJECT (special, hbox14, "hbox14");
+  GLADE_HOOKUP_OBJECT (special, sp_rating_0, "sp_rating_0");
+  GLADE_HOOKUP_OBJECT (special, sp_rating_1, "sp_rating_1");
+  GLADE_HOOKUP_OBJECT (special, sp_rating_2, "sp_rating_2");
+  GLADE_HOOKUP_OBJECT (special, sp_rating_3, "sp_rating_3");
+  GLADE_HOOKUP_OBJECT (special, sp_rating_4, "sp_rating_4");
+  GLADE_HOOKUP_OBJECT (special, sp_rating_5, "sp_rating_5");
+  GLADE_HOOKUP_OBJECT (special, hbox15, "hbox15");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_left_entry, "sp_playcount_left_entry");
+  GLADE_HOOKUP_OBJECT (special, combo1, "combo1");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_left_combo_entry, "sp_playcount_left_combo_entry");
+  GLADE_HOOKUP_OBJECT (special, label48, "label48");
+  GLADE_HOOKUP_OBJECT (special, combo2, "combo2");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_right_combo_entry, "sp_playcount_right_combo_entry");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_right_entry, "sp_playcount_right_entry");
+  GLADE_HOOKUP_OBJECT (special, hbox17, "hbox17");
+  GLADE_HOOKUP_OBJECT (special, sp_played_entry, "sp_played_entry");
+  GLADE_HOOKUP_OBJECT (special, label49, "label49");
+  GLADE_HOOKUP_OBJECT (special, sp_played_cal_button, "sp_played_cal_button");
+  GLADE_HOOKUP_OBJECT (special, sp_rating_button, "sp_rating_button");
+  GLADE_HOOKUP_OBJECT (special, hbox18, "hbox18");
+  GLADE_HOOKUP_OBJECT (special, sp_modified_entry, "sp_modified_entry");
+  GLADE_HOOKUP_OBJECT (special, label50, "label50");
+  GLADE_HOOKUP_OBJECT (special, sp_modified_cal_button, "sp_modified_cal_button");
+  GLADE_HOOKUP_OBJECT (special, hbox19, "hbox19");
+  GLADE_HOOKUP_OBJECT (special, sp_created_entry, "sp_created_entry");
+  GLADE_HOOKUP_OBJECT (special, label51, "label51");
+  GLADE_HOOKUP_OBJECT (special, sp_created_cal_button, "sp_created_cal_button");
+  GLADE_HOOKUP_OBJECT_NO_REF (special, tooltips, "tooltips");
+
+  return special;
+}
+
+GtkWidget*
+create_menu1 (void)
+{
+  GtkWidget *menu1;
+
+  menu1 = gtk_menu_new ();
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (menu1, menu1, "menu1");
+
+  return menu1;
+}
+
+GtkWidget*
+create_inputdialog1 (void)
+{
+  GtkWidget *inputdialog1;
+  GtkWidget *save_button1;
+  GtkWidget *close_button1;
+
+  inputdialog1 = gtk_input_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW (inputdialog1), _("Eingabe"));
+
+  save_button1 = GTK_INPUT_DIALOG (inputdialog1)->save_button;
+  gtk_widget_show (save_button1);
+  GTK_WIDGET_SET_FLAGS (save_button1, GTK_CAN_DEFAULT);
+
+  close_button1 = GTK_INPUT_DIALOG (inputdialog1)->close_button;
+  gtk_widget_show (close_button1);
+  GTK_WIDGET_SET_FLAGS (close_button1, GTK_CAN_DEFAULT);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (inputdialog1, inputdialog1, "inputdialog1");
+  GLADE_HOOKUP_OBJECT_NO_REF (inputdialog1, save_button1, "save_button1");
+  GLADE_HOOKUP_OBJECT_NO_REF (inputdialog1, close_button1, "close_button1");
+
+  return inputdialog1;
 }
 

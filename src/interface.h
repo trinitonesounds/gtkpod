@@ -5,4 +5,7 @@
 GtkWidget* create_gtkpod (void);
 GtkWidget* create_gtkpod_about_window (void);
 GtkWidget* create_confirm_window (void);
-GtkWidget* create_new_prefs_window (void);
+GtkWidget* create_prefs_window (void);
+GtkWidget* create_special (void);
+GtkWidget* create_menu1 (void);
+GtkWidget* create_inputdialog1 (void);

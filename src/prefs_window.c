@@ -131,7 +131,7 @@ prefs_window_create(void)
 	    g_warning ("Programming error: tmpcfg is not NULL wtf !!\n");
 	    return;
 	}
-	prefs_window = create_new_prefs_window();
+	prefs_window = create_prefs_window();
 	if((w = lookup_widget(prefs_window, "cfg_mount_point")))
 	{
 	    if (tmpcfg->ipod_mount)
