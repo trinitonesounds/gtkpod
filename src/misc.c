@@ -29,6 +29,9 @@
 
 #include <gtk/gtk.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
 #include "song.h"
 #include "interface.h"
 #include "misc.h"
@@ -289,4 +292,34 @@ void
 register_gtkpod_main_window(GtkWidget *win)
 {
     main_window = win;
+}
+
+#define GTKPOD_MKDIR(buf) { \
+    if((mkdir(buf, 0755) != 0)) \
+    { \
+	if(errno != EEXIST) \
+	    return(FALSE); \
+    } \
+}
+
+gboolean
+create_ipod_directories(const gchar *ipod_dir)
+{
+    int i = 0;
+    gchar buf[PATH_MAX];
+    
+    snprintf(buf, PATH_MAX, "%s/iPod_Control", ipod_dir);
+    GTKPOD_MKDIR(buf);
+    snprintf(buf, PATH_MAX, "%s/iPod_Control/Music", ipod_dir);
+    GTKPOD_MKDIR(buf);
+    snprintf(buf, PATH_MAX, "%s/iPod_Control/iTunes", ipod_dir);
+    GTKPOD_MKDIR(buf);
+    
+    for(i = 0; i < 20; i++)
+    {
+	snprintf(buf, PATH_MAX, "%s/iPod_Control/Music/F%02d", ipod_dir, i);
+	fprintf(stderr, "Making %s\n", buf);
+	GTKPOD_MKDIR(buf);
+    }
+    return(TRUE);
 }

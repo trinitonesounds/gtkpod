@@ -49,4 +49,6 @@ void cleanup_backup_and_extended_files (void);
 void gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);
 void register_gtkpod_main_window(GtkWidget *win);
+gboolean create_ipod_directories(const gchar *ipod_dir);
+
 #endif __MISC_H__

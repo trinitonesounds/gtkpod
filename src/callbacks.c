@@ -698,7 +698,7 @@ void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-
+    create_ipod_directories(cfg->ipod_mount);
 }
 
 
