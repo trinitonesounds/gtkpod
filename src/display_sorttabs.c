@@ -49,6 +49,11 @@ static GtkTargetEntry st_drag_types [] = {
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 
+typedef enum {
+    IS_INSIDE,  /* song's timestamp is inside the specified interval  */
+    IS_OUTSIDE, /* song's timestamp is outside the specified interval */
+    IS_ERROR,   /* error parsing date string (or wrong parameters)    */
+} IntervalState;
 
 /* ---------------------------------------------------------------- */
 /* Section for sort tab display (special sort tab)                  */
@@ -72,11 +77,11 @@ static void sp_remove_all_members (guint32 inst)
 
 /* Return a pointer to ti_created, ti_modified or ti_played. Returns
    NULL if either inst or item are out of range */
-static TimeInfo *st_get_timeinfo (guint32 inst, S_item item)
+static TimeInfo *st_get_timeinfo_ptr (guint32 inst, S_item item)
 {
     if (inst >= SORT_TAB_MAX)
     {
-	fprintf (stderr, "Programming error: st_get_timeinfo: inst out of range: %d\n", inst);
+	fprintf (stderr, "Programming error: st_get_timeinfo_ptr: inst out of range: %d\n", inst);
     }
     else
     {
@@ -90,7 +95,7 @@ static TimeInfo *st_get_timeinfo (guint32 inst, S_item item)
 	case S_TIME_CREATED:
 	    return &st->ti_created;
 	default:
-	    fprintf (stderr, "Programming error: st_get_timeinfo: item invalid: %d\n", item);
+	    fprintf (stderr, "Programming error: st_get_timeinfo_ptr: item invalid: %d\n", item);
 	}
     }
     return NULL;
@@ -103,32 +108,76 @@ static TimeInfo *st_get_timeinfo (guint32 inst, S_item item)
    @force_update: usually the update is only performed if the string
    has changed. TRUE will re-evaluate the string (and print an error
    message again, if necessary */
-void st_update_date_interval_from_string (guint32 inst,
-					  S_item item,
-					  gboolean force_update)
+/* Return value: pointer to the corresponding TimeInfo struct (for
+   convenience) or NULL if error occured */
+TimeInfo *st_update_date_interval_from_string (guint32 inst,
+					       S_item item,
+					       gboolean force_update)
 {
-    gchar *new_string;
     SortTab *st;
     TimeInfo *ti;
 
-    if (inst >= prefs_get_sort_tab_num ()) return;
+    if (inst >= prefs_get_sort_tab_num ()) return NULL;
 
     st = sorttab[inst];
+    ti = st_get_timeinfo_ptr (inst, item);
 
-    ti = st_get_timeinfo (inst, item);
+    if (ti)
+    {
+	gchar *new_string = prefs_get_sp_entry (inst, item);
 
-    if (ti == NULL) return;
-
-    new_string = prefs_get_sp_entry (inst, item);
-
-    if (force_update || !ti->int_str ||
-	(strcmp (new_string, ti->int_str) != 0))
-    {   /* Re-evaluate the interval */
-	g_free (ti->int_str);
-	ti->int_str = g_strdup (new_string);
-	dp2_parse (ti);
+	if (force_update || !ti->int_str ||
+	    (strcmp (new_string, ti->int_str) != 0))
+	{   /* Re-evaluate the interval */
+	    g_free (ti->int_str);
+	    ti->int_str = g_strdup (new_string);
+	    dp2_parse (ti);
+	}
     }
+    return ti;
 }	
+
+
+/* check if @song's timestamp is within the interval given for @item.
+ *
+ * Return value:
+ *
+ * IS_ERROR:   error parsing date string (or wrong parameters)
+ * IS_INSIDE:  song's timestamp is inside the specified interval
+ * IS_OUTSIDE: song's timestamp is outside the specified interval
+ */
+static IntervalState st_check_time (guint32 inst, S_item item, Song *song)
+{
+    TimeInfo *ti;
+    IntervalState result = IS_ERROR;
+
+    ti = st_update_date_interval_from_string (inst, S_TIME_PLAYED, FALSE);
+    if (ti && ti->valid)
+    {
+	guint32 stamp = song_get_timestamp (song, item);
+	if (stamp && (ti->low <= stamp) && (stamp <= ti->high))
+	      result = IS_INSIDE;
+	else  result = IS_OUTSIDE;
+    }
+    if (result == IS_ERROR)
+    {
+	switch (item)
+	{
+	case S_TIME_PLAYED:
+	    gtkpod_statusbar_message (_("'Played' condition ignored because of error."));
+	    break;
+	case S_TIME_MODIFIED:
+	    gtkpod_statusbar_message (_("'Modified' condition ignored because of error."));
+	    break;
+	case S_TIME_CREATED:
+	    gtkpod_statusbar_message (_("'Imported' condition ignored because of error."));
+	    break;
+	default:
+	    break;
+	}
+    }
+    return result;
+}
 
 
 /* decide whether or not @song satisfies the conditions specified in
@@ -175,7 +224,30 @@ static gboolean sp_check_song (Song *song, guint32 inst)
 	if (sp_or && cond)       return TRUE;
 	if ((!sp_or) && (!cond)) return FALSE;
     }
-    /* SP FIXME: date functions */
+    /* time played */
+    if (prefs_get_sp_cond (inst, S_TIME_PLAYED))
+    {
+	IntervalState result = st_check_time (inst, S_TIME_PLAYED, song);
+	if (sp_or && (result == IS_INSIDE))      return TRUE;
+	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
+	if (result != IS_ERROR)                  checked = TRUE;
+    }
+    /* time created */
+    if (prefs_get_sp_cond (inst, S_TIME_CREATED))
+    {
+	IntervalState result = st_check_time (inst, S_TIME_CREATED, song);
+	if (sp_or && (result == IS_INSIDE))      return TRUE;
+	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
+	if (result != IS_ERROR)                  checked = TRUE;
+    }
+    /* time modified */
+    if (prefs_get_sp_cond (inst, S_TIME_MODIFIED))
+    {
+	IntervalState result = st_check_time (inst, S_TIME_MODIFIED, song);
+	if (sp_or && (result == IS_INSIDE))      return TRUE;
+	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
+	if (result != IS_ERROR)                  checked = TRUE;
+    }
     if (checked) return result;
     else         return FALSE;
 }
@@ -310,16 +382,19 @@ void sp_go (guint32 inst)
     if (st->current_category != ST_CAT_SPECIAL) return;
 
     /* check if members are already displayed */
-    if (st->is_go || prefs_get_sp_autodisplay (inst))  return;
+    /* if (st->is_go || prefs_get_sp_autodisplay (inst))  return; */
 
     /* Make sure the information typed into the entries is actually
      * being used (maybe the user 'forgot' to press enter */
     buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_created.entry), 0, -1);
     prefs_set_sp_entry (inst, S_TIME_CREATED, buf);
+    g_free (buf);
     buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_modified.entry), 0, -1);
     prefs_set_sp_entry (inst, S_TIME_MODIFIED, buf);
+    g_free (buf);
     buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_played.entry), 0, -1);
     prefs_set_sp_entry (inst, S_TIME_PLAYED, buf);
+    g_free (buf);
 
     /* Instead of handling the selection directly, we add a
        "callback". Currently running display updates will be stopped
@@ -333,6 +408,7 @@ void sp_go (guint32 inst)
 static void st_remove_song_special (Song *song, guint32 inst)
 {
     SortTab *st;
+    GList *link;
 
     /* Sanity */
     if (inst >= prefs_get_sort_tab_num ())  return;
@@ -341,7 +417,16 @@ static void st_remove_song_special (Song *song, guint32 inst)
 
     /* Sanity */
     if (st->current_category != ST_CAT_SPECIAL) return;
-    /* SP FIXME!! */
+
+    /* Remove song from member list */
+    link = g_list_find (st->members, song);
+    if (link)
+    {   /* only remove song from next sort tab if it was a member of
+	   this sort tab (slight performance improvement when being
+	   called with non-existing songs */
+	st->members = g_list_delete_link (st->members, link);
+	st_remove_song (song, inst+1);
+    }
 }
 
 
@@ -350,6 +435,7 @@ static void st_song_changed_special (Song *song,
 				     gboolean removed, guint32 inst)
 {
     SortTab *st;
+    GList *link;
 
     /* Sanity */
     if (inst >= prefs_get_sort_tab_num ())  return;
@@ -358,7 +444,28 @@ static void st_song_changed_special (Song *song,
 
     /* Sanity */
     if (st->current_category != ST_CAT_SPECIAL) return;
-    /* SP FIXME!! */
+
+    link = g_list_find (st->members, song);
+    if (link)
+    {   /* only remove song from next sort tab if it was a member of
+	   this sort tab (slight performance improvement when being
+	   called with non-existing songs */
+	if (removed)
+	{
+	    /* Remove song from member list */
+	    st->members = g_list_delete_link (st->members, link);
+	    st_song_changed (song, removed, inst+1);
+	}
+	else
+	{
+	    /* SP FIXME!! */
+	    /* for now I simply remove always and then add if
+	       appropriate */
+	    st_song_changed (song, TRUE, inst+1);
+	    if (sp_check_song (song, inst))
+		st_add_song (song, TRUE, TRUE, inst+1);
+	}
+    }
 }
 
 
@@ -1787,7 +1894,7 @@ static void st_create_listview (gint inst)
    signals */
 static void st_create_special (gint inst, GtkWidget *window)
 {
-      GtkWidget *special = create_special ();
+      GtkWidget *special = create_special_sorttab ();
       GtkWidget *viewport = lookup_widget (special, "special_viewport");
       GtkWidget *w;
       SortTab   *st = sorttab[inst];
@@ -1857,8 +1964,6 @@ static void st_create_special (gint inst, GtkWidget *window)
       
       /* PLAYED */
       w = lookup_widget (special, "sp_played_button");
-      /* NOT YET IMPLEMENTED */
-      gtk_widget_set_sensitive (w, FALSE);
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			(gpointer)((S_TIME_PLAYED<<SP_SHIFT) + inst));
@@ -1879,8 +1984,6 @@ static void st_create_special (gint inst, GtkWidget *window)
 
       /* MODIFIED */
       w = lookup_widget (special, "sp_modified_button");
-      /* NOT YET IMPLEMENTED */
-      gtk_widget_set_sensitive (w, FALSE);
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
@@ -1901,8 +2004,6 @@ static void st_create_special (gint inst, GtkWidget *window)
 
       /* CREATED */
       w = lookup_widget (special, "sp_created_button");
-      /* NOT YET IMPLEMENTED */
-      gtk_widget_set_sensitive (w, FALSE);
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			(gpointer)((S_TIME_CREATED<<SP_SHIFT) + inst));

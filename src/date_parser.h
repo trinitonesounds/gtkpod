@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-11 23:47:49 jcs>
+/* Time-stamp: <2003-06-12 23:57:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,6 +35,10 @@
 #include <time.h>
 #include <display.h>
 
-time_t dp_parse (gchar *dp_str, gboolean lower_margin, gboolean strict);
+/* Set to "1" if debugging output is desired */
+#define DP_DEBUG 0
+
+gboolean dp_parse (gchar *dp_str, time_t *result,
+		   gboolean lower_margin, gboolean strict);
 void dp2_parse (TimeInfo *ti);
 #endif 

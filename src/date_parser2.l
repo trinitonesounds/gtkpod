@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-|  Time-stamp: <2003-06-12 00:00:13 jcs>
+|  Time-stamp: <2003-06-12 22:18:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -26,8 +26,6 @@
 */
 
 %{
-/* Set to "1" if debugging output is desired */
-#define DP_DEBUG 1
 #include <stdlib.h>
 #include "date_parser.h"
 #include "misc.h"
@@ -41,6 +39,13 @@
     static time_t lower_stamp, upper_stamp;
 /* Pointer to input string to be parsed */
     static gchar *dp_strp = NULL;
+/* type of interval */
+    typedef enum {
+	INT_NORMAL=0,    /* normal interval */
+	INT_NO_LOWER=2,  /* interval with no lower limit */
+	INT_NO_UPPER=4,  /* interval with no upper limit */
+    } IntervalType;
+    static IntervalType dp_int_type;
 /* We don't read from a stream but from a string buffer. This macro
    will copy a maximum of @max_size chars from dp_strp to @buf,
    writing the number of chars copied into @result. If no characters
@@ -86,9 +91,9 @@ DATECHARS [^<>=]+
 #if DP_DEBUG
     printf ("<: '%s'\n", yytext);
 #endif
-    lower_stamp = 0;
+    dp_int_type |= INT_NO_LOWER;
     strp = strchr (yytext, '<');
-    if (strp)  upper_stamp = dp_parse (strp+1, FALSE, TRUE);
+    if (strp)  dp_error = !dp_parse (strp+1, &upper_stamp, FALSE, TRUE);
     else       dp_error = TRUE;
 }
 
@@ -97,10 +102,9 @@ DATECHARS [^<>=]+
 #if DP_DEBUG
     printf (">: '%s'\n", yytext);
 #endif
-    lower_stamp = -1;
-    upper_stamp = -1;
+    dp_int_type |= INT_NO_UPPER;
     strp = strchr (yytext, '>');
-    if (strp) lower_stamp = dp_parse (strp+1, TRUE, TRUE);
+    if (strp) dp_error = !dp_parse (strp+1, &lower_stamp, TRUE, TRUE);
     else      dp_error = TRUE;
 }
 
@@ -112,8 +116,9 @@ DATECHARS [^<>=]+
     strp = strchr (yytext, '=');
     if (strp)
     {
-	lower_stamp = dp_parse (strp+1, TRUE, FALSE);
-	upper_stamp = dp_parse (strp+1, FALSE, FALSE);
+	dp_error = !dp_parse (strp+1, &lower_stamp, TRUE, FALSE);
+	if (!dp_error)
+	    dp_error = !dp_parse (strp+1, &upper_stamp, FALSE, FALSE);
     }
     else      dp_error = TRUE;
     
@@ -156,10 +161,11 @@ static void dp_ll (gchar *str)
     if (strp)
     {
 	*strp = 0;
-	lower_stamp = dp_parse (str, TRUE, TRUE);
+	dp_error = !dp_parse (str, &lower_stamp, TRUE, TRUE);
 	strp = strchr (strp+1, '<');
-	if (strp)  upper_stamp = dp_parse (strp+1, FALSE, TRUE);
-	else       dp_error = TRUE;
+	if (!dp_error && strp)
+	      dp_error = !dp_parse (strp+1, &upper_stamp, FALSE, TRUE);
+	else  dp_error = TRUE;
     }
     else  dp_error = TRUE;
 }
@@ -176,10 +182,11 @@ static void dp_LL (gchar *str)
     if (strp)
     {
 	*strp = 0;
-	upper_stamp = dp_parse (str, FALSE, TRUE);
+	dp_error = !dp_parse (str, &upper_stamp, FALSE, TRUE);
 	strp = strchr (strp+1, '>');
-	if (strp)  lower_stamp = dp_parse (strp+1, TRUE, TRUE);
-	else       dp_error = TRUE;
+	if (!dp_error && strp)
+	      dp_error = !dp_parse (strp+1, &lower_stamp, TRUE, TRUE);
+	else  dp_error = TRUE;
     }
     else  dp_error = TRUE;
 }
@@ -196,6 +203,8 @@ void dp2_parse (TimeInfo *ti)
     /* no error occured (yet) */
     dp_error = FALSE;
     dp_construct_error = FALSE;
+    /* set interval type to normal */
+    dp_int_type = INT_NORMAL;
     /* parse the string */
     yylex ();
     /* free memory */
@@ -208,14 +217,19 @@ void dp2_parse (TimeInfo *ti)
     if (dp_error)
     {   /* error occured -> invalidate TimeInfo */
 	ti->valid = FALSE;
+	ti->low = 0;
+	ti->high = 0;
     }
     else
     {   /* no error occured -> set the information accordingly */
 	ti->valid = TRUE;
-	ti->low = time_host_to_mac (lower_stamp);
-	ti->high = time_host_to_mac (upper_stamp);
+	if (dp_int_type & INT_NO_LOWER) ti->low = 0;
+	else   	ti->low = time_host_to_mac (lower_stamp);
+	if (dp_int_type & INT_NO_UPPER) ti->high = -1; /* -1 = 2^32-1 */
+	else    ti->high = time_host_to_mac (upper_stamp);
     }
 #if DP_DEBUG
-    printf ("valid: %d, low: %u, high: %u\n", ti->valid, ti->low, ti->high);
+    printf ("valid: %d, int_type: %d, low: %u, high: %u\n",
+	    ti->valid, dp_int_type, ti->low, ti->high);
 #endif
 }

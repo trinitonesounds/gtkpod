@@ -639,6 +639,39 @@ gunichar2 *song_get_item_utf16 (Song *song, S_item s_item)
 }
 
 
+/* return a pointer to the specified timestamp. @s_item is one of (the
+   applicable) S_* defined in song.h.  If the parameters are illegal,
+   "0" is returned. */
+guint32 *song_get_timestamp_ptr (Song *song, S_item s_item)
+{
+    if (song)
+    {
+	switch (s_item)
+	{
+	  case S_TIME_PLAYED:
+	    return &song->time_played;
+	  case S_TIME_CREATED:
+	    return &song->time_created;
+	  case S_TIME_MODIFIED:
+	    return &song->time_modified;
+	default:
+	    break;
+	}
+    }
+    return NULL;
+}
+
+
+/* return the specified timestamp. @s_item is one of
+   (the * applicable) S_* defined in song.h. If the parameters are
+   illegal, "0" is returned. */
+guint32 song_get_timestamp (Song *song, S_item s_item)
+{
+    guint32 *ptr = song_get_timestamp_ptr (song, s_item);
+    if (ptr)  return *ptr;
+    else      return 0;
+}
+
 
 /* ------------------------------------------------------------------- */
 /* functions used by itunesdb (so we can refresh the display during

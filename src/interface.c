@@ -2212,9 +2212,9 @@ create_prefs_window (void)
 }
 
 GtkWidget*
-create_special (void)
+create_special_sorttab (void)
 {
-  GtkWidget *special;
+  GtkWidget *special_sorttab;
   GtkWidget *special_viewport;
   GtkWidget *vbox37;
   GtkWidget *hbox20;
@@ -2267,12 +2267,12 @@ create_special (void)
 
   tooltips = gtk_tooltips_new ();
 
-  special = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (special), _("Special"));
+  special_sorttab = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (special_sorttab), _("Special"));
 
   special_viewport = gtk_viewport_new (NULL, NULL);
   gtk_widget_show (special_viewport);
-  gtk_container_add (GTK_CONTAINER (special), special_viewport);
+  gtk_container_add (GTK_CONTAINER (special_sorttab), special_viewport);
 
   vbox37 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox37);
@@ -2449,7 +2449,7 @@ create_special (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 2, 0);
 
-  sp_created_button = gtk_check_button_new_with_mnemonic (_("Created"));
+  sp_created_button = gtk_check_button_new_with_mnemonic (_("Imported"));
   gtk_widget_show (sp_created_button);
   gtk_table_attach (GTK_TABLE (table6), sp_created_button, 0, 1, 4, 5,
                     (GtkAttachOptions) (GTK_FILL),
@@ -2485,60 +2485,60 @@ create_special (void)
   gtk_box_pack_start (GTK_BOX (hbox22), label53, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label53), GTK_JUSTIFY_LEFT);
 
-  sp_go_always = gtk_check_button_new_with_mnemonic (_("Display automatically"));
+  sp_go_always = gtk_check_button_new_with_mnemonic (_("Start display automatically"));
   gtk_widget_show (sp_go_always);
   gtk_box_pack_start (GTK_BOX (hbox21), sp_go_always, FALSE, FALSE, 2);
-  gtk_tooltips_set_tip (tooltips, sp_go_always, _("Automatically display songs that match the criteria entered above."), NULL);
+  gtk_tooltips_set_tip (tooltips, sp_go_always, _("Automatically start displaying songs that match the criteria entered above. If not selected, you must press 'Display' or change any of the values above."), NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (special, special, "special");
-  GLADE_HOOKUP_OBJECT (special, special_viewport, "special_viewport");
-  GLADE_HOOKUP_OBJECT (special, vbox37, "vbox37");
-  GLADE_HOOKUP_OBJECT (special, hbox20, "hbox20");
-  GLADE_HOOKUP_OBJECT (special, label52, "label52");
-  GLADE_HOOKUP_OBJECT (special, sp_or_button, "sp_or_button");
-  GLADE_HOOKUP_OBJECT (special, sp_and_button, "sp_and_button");
-  GLADE_HOOKUP_OBJECT (special, hseparator1, "hseparator1");
-  GLADE_HOOKUP_OBJECT (special, table6, "table6");
-  GLADE_HOOKUP_OBJECT (special, hbox14, "hbox14");
-  GLADE_HOOKUP_OBJECT (special, sp_rating0, "sp_rating0");
-  GLADE_HOOKUP_OBJECT (special, sp_rating1, "sp_rating1");
-  GLADE_HOOKUP_OBJECT (special, sp_rating2, "sp_rating2");
-  GLADE_HOOKUP_OBJECT (special, sp_rating3, "sp_rating3");
-  GLADE_HOOKUP_OBJECT (special, sp_rating4, "sp_rating4");
-  GLADE_HOOKUP_OBJECT (special, sp_rating5, "sp_rating5");
-  GLADE_HOOKUP_OBJECT (special, hbox15, "hbox15");
-  GLADE_HOOKUP_OBJECT (special, hbox23, "hbox23");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_low, "sp_playcount_low");
-  GLADE_HOOKUP_OBJECT (special, label54, "label54");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_high, "sp_playcount_high");
-  GLADE_HOOKUP_OBJECT (special, hbox17, "hbox17");
-  GLADE_HOOKUP_OBJECT (special, sp_played_entry, "sp_played_entry");
-  GLADE_HOOKUP_OBJECT (special, label49, "label49");
-  GLADE_HOOKUP_OBJECT (special, sp_played_cal_button, "sp_played_cal_button");
-  GLADE_HOOKUP_OBJECT (special, hbox18, "hbox18");
-  GLADE_HOOKUP_OBJECT (special, sp_modified_entry, "sp_modified_entry");
-  GLADE_HOOKUP_OBJECT (special, label50, "label50");
-  GLADE_HOOKUP_OBJECT (special, sp_modified_cal_button, "sp_modified_cal_button");
-  GLADE_HOOKUP_OBJECT (special, hbox19, "hbox19");
-  GLADE_HOOKUP_OBJECT (special, sp_created_entry, "sp_created_entry");
-  GLADE_HOOKUP_OBJECT (special, label51, "label51");
-  GLADE_HOOKUP_OBJECT (special, sp_created_cal_button, "sp_created_cal_button");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_button, "sp_playcount_button");
-  GLADE_HOOKUP_OBJECT (special, sp_rating_button, "sp_rating_button");
-  GLADE_HOOKUP_OBJECT (special, sp_played_button, "sp_played_button");
-  GLADE_HOOKUP_OBJECT (special, sp_modified_button, "sp_modified_button");
-  GLADE_HOOKUP_OBJECT (special, sp_created_button, "sp_created_button");
-  GLADE_HOOKUP_OBJECT (special, hseparator2, "hseparator2");
-  GLADE_HOOKUP_OBJECT (special, hbox21, "hbox21");
-  GLADE_HOOKUP_OBJECT (special, sp_go, "sp_go");
-  GLADE_HOOKUP_OBJECT (special, alignment1, "alignment1");
-  GLADE_HOOKUP_OBJECT (special, hbox22, "hbox22");
-  GLADE_HOOKUP_OBJECT (special, image1056, "image1056");
-  GLADE_HOOKUP_OBJECT (special, label53, "label53");
-  GLADE_HOOKUP_OBJECT (special, sp_go_always, "sp_go_always");
-  GLADE_HOOKUP_OBJECT_NO_REF (special, tooltips, "tooltips");
+  GLADE_HOOKUP_OBJECT_NO_REF (special_sorttab, special_sorttab, "special_sorttab");
+  GLADE_HOOKUP_OBJECT (special_sorttab, special_viewport, "special_viewport");
+  GLADE_HOOKUP_OBJECT (special_sorttab, vbox37, "vbox37");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox20, "hbox20");
+  GLADE_HOOKUP_OBJECT (special_sorttab, label52, "label52");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_or_button, "sp_or_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_and_button, "sp_and_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hseparator1, "hseparator1");
+  GLADE_HOOKUP_OBJECT (special_sorttab, table6, "table6");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox14, "hbox14");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_rating0, "sp_rating0");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_rating1, "sp_rating1");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_rating2, "sp_rating2");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_rating3, "sp_rating3");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_rating4, "sp_rating4");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_rating5, "sp_rating5");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox15, "hbox15");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox23, "hbox23");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_playcount_low, "sp_playcount_low");
+  GLADE_HOOKUP_OBJECT (special_sorttab, label54, "label54");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_playcount_high, "sp_playcount_high");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox17, "hbox17");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_played_entry, "sp_played_entry");
+  GLADE_HOOKUP_OBJECT (special_sorttab, label49, "label49");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_played_cal_button, "sp_played_cal_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox18, "hbox18");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_modified_entry, "sp_modified_entry");
+  GLADE_HOOKUP_OBJECT (special_sorttab, label50, "label50");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_modified_cal_button, "sp_modified_cal_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox19, "hbox19");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_created_entry, "sp_created_entry");
+  GLADE_HOOKUP_OBJECT (special_sorttab, label51, "label51");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_created_cal_button, "sp_created_cal_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_playcount_button, "sp_playcount_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_rating_button, "sp_rating_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_played_button, "sp_played_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_modified_button, "sp_modified_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_created_button, "sp_created_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hseparator2, "hseparator2");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox21, "hbox21");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_go, "sp_go");
+  GLADE_HOOKUP_OBJECT (special_sorttab, alignment1, "alignment1");
+  GLADE_HOOKUP_OBJECT (special_sorttab, hbox22, "hbox22");
+  GLADE_HOOKUP_OBJECT (special_sorttab, image1056, "image1056");
+  GLADE_HOOKUP_OBJECT (special_sorttab, label53, "label53");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_go_always, "sp_go_always");
+  GLADE_HOOKUP_OBJECT_NO_REF (special_sorttab, tooltips, "tooltips");
 
-  return special;
+  return special_sorttab;
 }
 

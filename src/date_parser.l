@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-| Time-stamp: <2003-06-12 00:03:12 jcs>
+| Time-stamp: <2003-06-12 22:14:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,8 +30,6 @@
  * below. */
 
 %{
-/* Set to "1" if debugging output is desired */
-#define DP_DEBUG 1
 #include <stdlib.h>
 #include "date_parser.h"
 #include "misc.h"
@@ -43,6 +41,8 @@
     static gboolean parsed_time;
     /* are we reading a lower bound (TRUE) or upper bound (FALSE) */
     static gboolean lower;
+    /* did an error occur? */
+    static gboolean dp_error;
     /* should relative dates be read strictly (TRUE: no changing of seconds
      * to 0 or 59 when minutes are set) or not. It's only set to FALSE
      * for the "=..." format. */
@@ -213,6 +213,7 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     ++ptr1;
     mins = strtol (ptr1, &ptr1, 10);
     tstamp += sign * (hours*3600 + mins*60);
+    if (DP_MIN < reltime)   reltime = DP_MIN;
 #if DP_DEBUG
     printf ("[+-]{TIMESHORT} '%s'\n", yytext);
     printf ("tstamp: %d: %s", (int)tstamp, ctime (&tstamp));
@@ -231,6 +232,7 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     ++ptr1;
     secs = strtol (ptr1, &ptr1, 10);
     tstamp += sign * (hours*3600 + mins*60 + secs);
+    reltime = DP_SEC;
 #if DP_DEBUG
     printf ("[+-]{TIMEFULL} '%s'\n", yytext);
     printf ("tstamp: %d: %s", (int)tstamp, ctime (&tstamp));
@@ -255,7 +257,10 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
 
 [ \t]*      /* ignore */
 
-.           gtkpod_warning (_("Date format error: unrecognized character: '%s'\n"), yytext );
+.           {
+    gtkpod_warning (_("Date format error: unrecognized character: '%s'\n"), yytext );
+    dp_error = TRUE;
+}
 
 %%
 
@@ -303,6 +308,17 @@ static void dp_reltime (gchar *str, gint32 sign)
 	++ptr1;
     }
     tstamp += sign*secs;
+#if DP_DEBUG
+    printf ("secs: %d, tstamp: %d: %s", (int)secs, (int)tstamp, ctime (&tstamp));
+#endif
+}
+
+
+/* after reading the date string check if we should round down the
+   interval (round if reltime is not supposed to be strict and no
+   absolute time string has been parsed */
+static void round_reltime (void)
+{
     if (!rel_strict && !parsed_time)
     {   /* Round this datestamp to make a lower/upper margin */
 	struct tm *lt = localtime (&tstamp);
@@ -379,10 +395,10 @@ static void dp_reltime (gchar *str, gint32 sign)
 	    break;
 	}
 	tstamp = mktime (lt);
-    }
 #if DP_DEBUG
-    printf ("secs: %d, tstamp: %d: %s", (int)secs, (int)tstamp, ctime (&tstamp));
+	printf ("tstamp: %d: %s", (int)tstamp, ctime (&tstamp));
 #endif
+    }
 }
 
 /* dp_parse() will take one date specification (like 9/6/03, or -5d,
@@ -391,21 +407,45 @@ static void dp_reltime (gchar *str, gint32 sign)
  *
  * @dp_str: the string to parse 
  *
+ * @result: the parsed timestamp is written into here
+ *
  * @lower_margin: if TRUE, absolute time or date values are "rounded
  * down" (e.g. "9/6/03" would compute to "June 6 2003, 0:00:00"),
  * otherwise the are rounded up (e.g. "9/6/03" would compute to "June
  * 6 2003, 23:59:59"). Similarily, "8:05" would either compute to
  * "8:05:00" or "8:05:59" depending on whether the lower or upper
- * boundary is to be determined. */
-time_t dp_parse (gchar *dp_str, gboolean lower_margin, gboolean strict)
+ * boundary is to be determined.
+ *
+ * @strict: should relative dates be read strictly (TRUE: no changing
+ * of seconds to 0 or 59 when minutes are set, etc.) or not. Actually,
+ * it's only set to FALSE * for the "=..." format.
+ *
+ * Return value:
+ *
+ * TRUE:  no error occured
+ * FALSE: error occured
+ */
+gboolean dp_parse (gchar *dp_str, time_t *result,
+		   gboolean lower_margin, gboolean strict)
 {
     dp_strp = dp_str;
     /* set timestamp to current time */
     tstamp = time (NULL);
+    /* did not yet parse any absolute time string */
     parsed_time = FALSE;
+    /* did not yet parse any relative time string */
+    reltime = DP_INF;
+    /* no error occured (yet) */
+    dp_error = FALSE;
+    /* set parameters */
     lower = lower_margin;
     rel_strict = strict;
-    reltime = DP_INF;
+    /* call lexer */
     yylex ();
-    return tstamp;
+    /* round relative time up or down, if necessary */
+    round_reltime ();
+    /* set the result */
+    *result = tstamp;
+    /* return the (inverted) error variable */
+    return !dp_error;
 }

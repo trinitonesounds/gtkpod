@@ -207,9 +207,9 @@ void on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 				GtkTreeIter *i, gpointer data);
 void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				GtkTreeIter *i, gpointer data);
-void st_update_date_interval_from_string (guint32 inst,
-					  S_item item,
-					  gboolean force_update);
+TimeInfo *st_update_date_interval_from_string (guint32 inst,
+					       S_item item,
+					       gboolean force_update);
 void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter);
 guint sm_get_nr_of_songs(void);
 void sm_rows_reordered(void);

@@ -3948,7 +3948,7 @@
   </child>
 </widget>
 
-<widget class="GtkWindow" id="special">
+<widget class="GtkWindow" id="special_sorttab">
   <property name="visible">True</property>
   <property name="title" translatable="yes">Special</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
@@ -4581,7 +4581,7 @@
 		<widget class="GtkCheckButton" id="sp_created_button">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">Created</property>
+		  <property name="label" translatable="yes">Imported</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="active">False</property>
@@ -4696,9 +4696,9 @@
 	      <child>
 		<widget class="GtkCheckButton" id="sp_go_always">
 		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Automatically display songs that match the criteria entered above.</property>
+		  <property name="tooltip" translatable="yes">Automatically start displaying songs that match the criteria entered above. If not selected, you must press 'Display' or change any of the values above.</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">Display automatically</property>
+		  <property name="label" translatable="yes">Start display automatically</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="active">False</property>

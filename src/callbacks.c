@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-11 23:40:51 jcs>
+/* Time-stamp: <2003-06-12 23:57:38 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1302,6 +1302,7 @@ on_sp_entry_activate             (GtkEditable     *editable,
     prefs_set_sp_entry (inst, item, buf);
     g_free (buf);
     st_update_date_interval_from_string (inst, item, TRUE);
+/*     if (prefs_get_sp_autodisplay (inst))  sp_go (inst); */
     sp_go (inst);
 }
 
