@@ -1744,6 +1744,101 @@ gboolean mp3_read_gain_tags(gchar *path, Track *track)
 }
 
 
+
+/* ----------------------------------------------------------------------
+
+	      mp3gain code
+
+---------------------------------------------------------------------- */
+
+#include <sys/wait.h>
+#include <fcntl.h>
+
+
+/* this function initiates mp3gain on a given track and causes it to write the
+ * Radio Replay Gain and Peak to an Ape Tag */
+
+/* mp3gain version 1.4.2 */
+gboolean mp3_calc_gain (gchar *path)
+{
+    gint k,n;  /*for's counter*/
+    gchar *mp3gain_path;
+    gchar *mp3gain_exec;
+    const gchar *mp3gain_set;
+    pid_t pid,tpid;
+    int ret = 2;
+    int status;
+    int errsv;
+    int fdnull;
+
+    k=0;
+    n=0;
+
+    /* see if full path to mp3gain was set using the prefs dialogue */
+    mp3gain_set = prefs_get_mp3gain_path ();
+    /* use default if not */
+    if (!mp3gain_set || !(*mp3gain_set)) mp3gain_set = "mp3gain";
+    /* find full path */
+    mp3gain_path = which (mp3gain_set);
+    /* show error message if mp3gain cannot be found */
+    if (!mp3gain_path)
+    {
+	gtkpod_warning (_("Could not find mp3gain. I tried to use the following "
+				"executable: '%s'.\n\nIf the mp3gain executable "
+				"is not in your path or named differently, you "
+				"can set the full path in the 'Tools' section of "
+				"the preferences dialog.\n\nIf you do not have "
+				"mp3gain installed, you can download it from "
+				"http://www.sourceforge.net/projects/mp3gain."),
+			mp3gain_set);
+	return FALSE;
+    }
+
+    mp3gain_exec = g_path_get_basename (mp3gain_path);
+
+    /*fork*/
+    pid=fork();
+
+    /*and cast mp3gain*/
+    switch (pid)
+    {
+    case -1: /* parent and error, now what?*/
+	break;
+    case 0: /*child*/
+	/* redirect output to /dev/null */
+	if ((fdnull = open("/dev/null", O_WRONLY | O_NDELAY)) != -1) {
+		dup2(fdnull, fileno(stdout));
+	}
+	
+	/* this call may add a tag to the mp3file!! */
+        execl(mp3gain_path, mp3gain_exec, 
+			"-q", /* quiet */
+			"-k", /* set ReplayGain so that clipping is prevented */
+			path, NULL);
+	errsv = errno;
+        fprintf(stderr, "execl() failed: %s\n", strerror(errsv));
+	/* mp3gain (can) return 1 on success. So only values greater 1 can
+	 * designate failure. */
+	exit(2);
+    default: /*parent*/
+	tpid = waitpid (pid, &status, 0); /*wait mp3gain termination */
+	if WIFEXITED(status) ret = WEXITSTATUS(status);
+	if (ret > 1) gtkpod_warning (_("Execution of mp3gain ('%s') failed."),
+			mp3gain_set);
+	break;
+    }/*end switch*/
+
+    /*free everything left*/
+    g_free (mp3gain_path);
+    g_free (mp3gain_exec);
+
+    /*and happily return the right value*/
+    return (ret > 1) ? FALSE : TRUE;
+}
+
+
+
+
 /* ----------------------------------------------------------------------
 
 	      From here starts original gtkpod code

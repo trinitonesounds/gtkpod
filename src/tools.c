@@ -31,11 +31,8 @@
 #endif
 
 
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <sys/wait.h>
-#include <fcntl.h>
+#include <string.h>
 #include <unistd.h>
 #include <errno.h>
 #include "info.h"
@@ -53,10 +50,10 @@ enum {
     READ = 0,
     WRITE = 1
 };
+
 enum {
     BUFLEN = 1000,
 };
-
 
 /* ------------------------------------------------------------
 
@@ -90,90 +87,10 @@ static gint32 replaygain_to_volume(gint replaygain)
 }
 
 
-/* this function returns the @track volume */
-/* mp3gain version 1.4.2 */
-static gboolean nm_mp3gain_calc_gain (Track *track)
+
+static gboolean calc_gain(gchar *path) 
 {
-    gint k,n;  /*for's counter*/
-    gchar *filename=NULL; /*track's filename*/
-    gchar *mp3gain_path;
-    gchar *mp3gain_exec;
-    const gchar *mp3gain_set;
-    gchar *buf;
-    pid_t pid,tpid;
-    int ret = 2;
-    int status;
-    int errsv;
-    int fdnull;
-
-    k=0;
-    n=0;
-
-    /* see if full path to mp3gain was set using the prefs dialogue */
-    mp3gain_set = prefs_get_mp3gain_path ();
-    /* use default if not */
-    if (!mp3gain_set || !(*mp3gain_set)) mp3gain_set = "mp3gain";
-    /* find full path */
-    mp3gain_path = which (mp3gain_set);
-    /* show error message if mp3gain cannot be found */
-    if (!mp3gain_path)
-    {
-	gtkpod_warning (_("Could not find mp3gain. I tried to use the following executable: '%s'.\n\nIf the mp3gain executable is not in your path or named differently, you can set the full path in the 'Tools' section of the preferences dialog.\n\nIf you do not have mp3gain installed, you can download it from http://www.sourceforge.net/projects/mp3gain."), mp3gain_set);
-	return FALSE;
-    }
-
-    mp3gain_exec = g_path_get_basename (mp3gain_path);
-
-    buf = g_malloc (BUFLEN);
-
-    filename=get_track_name_on_disk_verified (track);
-
-    /*fork*/
-    pid=fork();
-
-    /*and cast mp3gain*/
-    switch (pid)
-    {
-    case -1: /* parent and error, now what?*/
-	break;
-    case 0: /*child*/
-	/* redirect output to /dev/null */
-	if ((fdnull = open("/dev/null", O_WRONLY | O_NDELAY)) != -1) {
-		dup2(fdnull, fileno(stdout));
-	}
-	
-	/* this call may add a tag to the mp3file!! */
-        execl(mp3gain_path, mp3gain_exec, 
-			"-q", /* quiet */
-			"-k", /* set ReplayGain so that clipping is prevented */
-			filename, NULL);
-	errsv = errno;
-        fprintf(stderr, "execl() failed: %s\n", strerror(errsv));
-	/* mp3gain (can) return 1 on success. So only values greater 1 can
-	 * designate failure. */
-	exit(2);
-    default: /*parent*/
-	tpid = waitpid (pid, &status, 0); /*wait mp3gain termination */
-	if WIFEXITED(status) ret = WEXITSTATUS(status);
-	if (ret > 1) gtkpod_warning (_("Execution of mp3gain ('%s') failed."),
-			mp3gain_set);
-	break;
-    }/*end switch*/
-
-    /*free everything left*/
-    g_free (filename);
-    g_free (mp3gain_path);
-    g_free (mp3gain_exec);
-    g_free (buf);
-
-    /*and happily return the right value*/
-    return (ret > 1) ? FALSE : TRUE;
-}
-
-
-static gboolean calc_gain(Track *track) 
-{
-	return nm_mp3gain_calc_gain(track);
+	return mp3_calc_gain(path);
 }
 
 
@@ -196,7 +113,7 @@ static gint32 nm_get_volume (Track *track)
 	if (track->radio_gain_set) 
 		return replaygain_to_volume (track->radio_gain);
 	    
-	if (calc_gain (track)) {
+	if (calc_gain (path)) {
 	    read_gain_tags (path, track);
 	    if (track->radio_gain_set) 
 		    return replaygain_to_volume (track->radio_gain);
@@ -533,9 +450,8 @@ static gboolean tools_sync_script (SyncType type)
     case -1: /* parent and error, now what?*/
 	break;
     case 0: /*child*/
-	close(1); /*close stdout*/
-	dup2(fdpipe[WRITE],fileno(stdout));
 	close(fdpipe[READ]);
+	dup2(fdpipe[WRITE],fileno(stdout));
 	close(fdpipe[WRITE]);
 	execv(script_path, argv);
 	break;

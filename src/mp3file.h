@@ -34,5 +34,6 @@
 gboolean file_write_mp3_info (gchar *filename, Track *track);
 Track *file_get_mp3_info (gchar *name);
 gboolean mp3_read_gain_tags(gchar *path, Track *track);
+gboolean mp3_calc_gain (gchar *path);
 
 #endif
