@@ -185,6 +185,7 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
     pid_t pid,tpid;
     int ret = 2;
     int status;
+    int errsv;
 
     k=0;
     n=0;
@@ -224,7 +225,7 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
 			"-o", /* database friendly output */
 /*			">/dev/bull", */
 			filename, NULL);
-	int errsv = errno;
+	errsv = errno;
         fprintf(stderr, "execl() failed: %s\n", strerror(errsv));
 	/* mp3gain (can) return 1 on success. So only values greater 1 can
 	 * designate failure. */
