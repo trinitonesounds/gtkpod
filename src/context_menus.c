@@ -59,10 +59,11 @@
     gtk_menu_append(_m, _mi); \
 }
 
+static guint entry_inst = -1;
 static GtkWidget *menu = NULL;
 static GList *selected_songs = NULL;
 static Playlist *selected_playlist = NULL;
-
+static TabEntry *selected_entry = NULL; 
 /**
  * export_entries - export the currently selected files to disk
  * @mi - the menu item selected
@@ -138,6 +139,8 @@ update_entries(GtkMenuItem *mi, gpointer data)
 {
     if(selected_playlist)
 	update_selected_playlist();
+    else if(selected_entry)
+	update_selected_entry(entry_inst);
     else if(selected_songs)
 	update_selected_songs();
 }
@@ -153,6 +156,8 @@ delete_entries(GtkMenuItem *mi, gpointer data)
 {
     if(selected_playlist)
 	delete_playlist_head();
+    else if(selected_entry)
+	delete_entry_head(entry_inst);
     else if(selected_songs)
 	delete_song_head();
 }
@@ -164,8 +169,9 @@ create_sm_menu(void)
     {
 	GtkWidget *w = NULL;
 	menu =  gtk_menu_new();
-
+#if 0
 	HOOKUP(menu, w, _("Edit"), edit_entries);
+#endif
 	HOOKUP(menu, w, _("Play"), play_entries);
 	HOOKUP(menu, w, _("Export"), export_entries);
 	HOOKUP(menu, w, _("Update"), update_entries);
@@ -181,7 +187,9 @@ create_sm_menu(void)
 void
 sm_context_menu_init(void)
 {
+    selected_entry = NULL; 
     selected_playlist = NULL;
+    entry_inst = -1;
     if((selected_songs = get_currently_selected_songs()))
 	create_sm_menu();
 }
@@ -192,6 +200,8 @@ void
 pm_context_menu_init(void)
 {
     selected_songs = NULL;
+    selected_entry = NULL; 
+    entry_inst = -1;
     if((selected_playlist = get_currently_selected_playlist()) && 
 	    (selected_playlist->type != PL_TYPE_MPL))
 	create_sm_menu();
@@ -201,11 +211,15 @@ pm_context_menu_init(void)
  * FIXME: This needs to be hooked in.
  */
 void
-st_context_menu_init(void)
+st_context_menu_init(gint inst)
 {
     selected_songs = NULL;
     selected_playlist = NULL;
-    /*
-    create_sm_menu();
-    */
+    selected_entry = NULL;
+    if((selected_entry = st_get_selected_entry(inst)))
+    {
+	entry_inst = inst;
+	selected_songs = selected_entry->members;
+	create_sm_menu();
+    }
 }

@@ -1775,6 +1775,23 @@ static void st_create_paned (void)
     }
 }
 
+static gboolean
+st_button_release_event(GtkWidget *w, GdkEventButton *e, gpointer data)
+{
+    if(w && e)
+    {
+	switch(e->button)
+	{
+	    case 3:
+		st_context_menu_init((gint)data);
+		break;
+	    default:
+		break;
+	}
+	
+    }
+    return(FALSE);
+}
 
 /* Create songs listview */
 static void st_create_listview (gint inst)
@@ -1828,6 +1845,8 @@ static void st_create_listview (gint inst)
       gtk_tree_view_set_headers_visible (treeview, FALSE);
       gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
 		      st_drag_types, TGNR (st_drag_types), GDK_ACTION_COPY);
+      g_signal_connect (G_OBJECT (treeview), "button-release-event",
+			G_CALLBACK (st_button_release_event), GINT_TO_POINTER(inst));
     }
 }
 
