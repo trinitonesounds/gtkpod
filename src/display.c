@@ -2401,7 +2401,7 @@ static gint comp_int (gconstpointer a, gconstpointer b)
 void
 sm_rows_reordered (void)
 {
-    Playlist *current_pl = get_currently_selected_playlist();
+    Playlist *current_pl = pm_get_selected_playlist();
     gboolean changed = FALSE;
 		    
     if(current_pl)
@@ -3241,7 +3241,7 @@ sm_show_preferred_columns(void)
 }
 
 Playlist*
-get_currently_selected_playlist(void)
+pm_get_selected_playlist(void)
 {
     return(current_playlist);
 }
@@ -3292,7 +3292,7 @@ on_selected_songs_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
 }
 
 GList *
-get_currently_selected_songs(void)
+sm_get_selected_songs(void)
 {
     GList *result = NULL;
     GtkTreeSelection *ts = NULL;

@@ -45,20 +45,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-/* Macro to attach menu items to your context menu */
-/* @_m - the GtkMenu we're attaching to
- * @_mi - a GtkWidget we're gonna hook into the menu
- * @_str - a gchar* with the menu label
- * @_func - the callback for when the item is selected
- */
-#define HOOKUP(_m, _mi, _str, _func) { \
-    _mi = gtk_menu_item_new_with_label(_str); \
-    gtk_widget_show(_mi); \
-    gtk_widget_set_sensitive(_mi, TRUE); \
-    g_signal_connect(G_OBJECT(_mi), "activate", G_CALLBACK(_func), NULL); \
-    gtk_menu_append(_m, _mi); \
-}
-
 static guint entry_inst = -1;
 static GtkWidget *menu = NULL;
 static GList *selected_songs = NULL;
@@ -274,21 +260,38 @@ delete_entries(GtkMenuItem *mi, gpointer data)
 	delete_song_head();
 }
 
+
+/* Attach a menu item to your context menu */
+/* @m - the GtkMenu we're attaching to
+ * @str - a gchar* with the menu label
+ * @func - the callback for when the item is selected
+ * @mi - the GtkWidget we're gonna hook into the menu
+ */
+GtkWidget *hookup_mi (GtkWidget *m, gchar *str, GCallback func)
+{
+    GtkWidget *mi = gtk_menu_item_new_with_label(str);
+    gtk_widget_show(mi);
+    gtk_widget_set_sensitive(mi, TRUE);
+    g_signal_connect(G_OBJECT(mi), "activate", func, NULL);
+    gtk_menu_append(m, mi);
+    return mi;
+}
+
+
 void
 create_sm_menu(void)
 {
     if(!menu)
     {
-	GtkWidget *w = NULL;
 	menu =  gtk_menu_new();
 #if 0
-	HOOKUP(menu, w, _("Edit"), edit_entries);
+	hookup_mi (menu, _("Edit"), G_CALLBACK (edit_entries));
 #endif
-	HOOKUP(menu, w, _("Play Now"), play_entries_now);
-	HOOKUP(menu, w, _("Enqueue"), play_entries_enqueue);
-	HOOKUP(menu, w, _("Export"), export_entries);
-	HOOKUP(menu, w, _("Update"), update_entries);
-	HOOKUP(menu, w, _("Delete"), delete_entries);
+	hookup_mi (menu, _("Play Now"), G_CALLBACK (play_entries_now));
+	hookup_mi (menu, _("Enqueue"), G_CALLBACK (play_entries_enqueue));
+	hookup_mi (menu, _("Export"), G_CALLBACK (export_entries));
+	hookup_mi (menu, _("Update"), G_CALLBACK (update_entries));
+	hookup_mi (menu, _("Delete"), G_CALLBACK (delete_entries));
     }
     gtk_menu_popup(GTK_MENU(menu), NULL, NULL,
 	    NULL, NULL, 3, gtk_get_current_event_time()); 
@@ -304,7 +307,7 @@ sm_context_menu_init(void)
     selected_playlist = NULL;
     entry_inst = -1;
     if (selected_songs)  g_list_free (selected_songs);
-    selected_songs = get_currently_selected_songs();
+    selected_songs = sm_get_selected_songs();
     if(selected_songs)
     {
 	create_sm_menu();
@@ -320,7 +323,7 @@ pm_context_menu_init(void)
     selected_songs = NULL;
     selected_entry = NULL;
     entry_inst = -1;
-    selected_playlist = get_currently_selected_playlist();
+    selected_playlist = pm_get_selected_playlist();
     if(selected_playlist)
     {
 	selected_songs = g_list_copy (selected_playlist->members);

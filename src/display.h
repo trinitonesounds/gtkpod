@@ -179,9 +179,9 @@ gboolean sm_add_filelist (gchar *data, GtkTreePath *path,
 			  GtkTreeViewDropPosition pos);
 void sm_show_preferred_columns(void);
 
-Playlist* get_currently_selected_playlist(void);
+Playlist* pm_get_selected_playlist(void);
 GList* get_currently_selected_songids(void);
-GList* get_currently_selected_songs(void);
+GList* sm_get_selected_songs(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
 void sm_store_col_order (void);

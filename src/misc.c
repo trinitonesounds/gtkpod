@@ -96,7 +96,7 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 
   block_widgets ();
   names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
-  plitem = get_currently_selected_playlist ();
+  plitem = pm_get_selected_playlist ();
   for (i=0; names[i] != NULL; ++i)
   {
       add_song_by_filename (names[i], plitem, NULL, NULL);
@@ -983,7 +983,7 @@ void delete_playlist_head (void)
     gchar *buf;
     Playlist *pl = NULL;
 
-    pl = get_currently_selected_playlist();
+    pl = pm_get_selected_playlist();
     if (!pl)
     { /* no playlist selected */
 	gtkpod_statusbar_message (_("No playlist selected."));
@@ -1121,13 +1121,13 @@ void delete_song_head (void)
     gboolean confirm_again;
     ConfHandlerCA confirm_again_handler;
 
-    pl = get_currently_selected_playlist();
+    pl = pm_get_selected_playlist();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
 	gtkpod_statusbar_message (_("No playlist selected."));
 	return;
     }
-    selected_songs = get_currently_selected_songs();
+    selected_songs = sm_get_selected_songs();
     if (selected_songs == NULL)
     {  /* no songs selected */
 	gtkpod_statusbar_message (_("No songs selected."));
@@ -1218,7 +1218,7 @@ void delete_entry_head (gint inst)
     TabEntry *entry;
 
     if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
-    pl = get_currently_selected_playlist();
+    pl = pm_get_selected_playlist();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
 	gtkpod_statusbar_message (_("No playlist selected."));

@@ -137,10 +137,6 @@ on_song_treeview_key_release_event     (GtkWidget       *widget,
                                         gpointer         user_data);
 
 void
-on_export_files_to_disk_activate       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
 on_cfg_delete_playlist_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
@@ -354,4 +350,16 @@ on_play_enqueue_path_entry_changed     (GtkEditable     *editable,
 
 void
 on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_export_selected_playlist1_activate  (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_export_selected_tab_entry1_activate (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_export_selected_songs2_activate     (GtkMenuItem     *menuitem,
                                         gpointer         user_data);

@@ -453,14 +453,6 @@ on_song_treeview_key_release_event     (GtkWidget       *widget,
 
 
 void
-on_export_files_to_disk_activate       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    file_export_init(get_currently_selected_songs());
-}
-
-
-void
 on_cfg_delete_playlist_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
@@ -999,5 +991,60 @@ on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     prefs_window_set_automount(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_export_selected_playlist1_activate  (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    GList *songs;
+    Playlist *pl = pm_get_selected_playlist ();
+
+    if (!pl)
+    {
+	gtkpod_statusbar_message (_("No playlist selected"));
+	return;
+    }
+    songs = g_list_copy (pl->members);
+    file_export_init (songs);  /* will free the songs list */
+}
+
+
+void
+on_export_selected_tab_entry1_activate (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+    GList *songs;
+
+    inst = get_sort_tab_number (_("Export selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    songs = g_list_copy (entry->members);
+    file_export_init (songs);  /* will free the songs list */
+}
+
+
+void
+on_export_selected_songs2_activate     (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    GList *songs = sm_get_selected_songs ();
+
+    if (songs)
+	file_export_init(songs);
+    else
+	gtkpod_statusbar_message (_("No songs selected"));
 }
 

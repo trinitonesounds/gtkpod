@@ -526,7 +526,7 @@ void update_selected_playlist (void)
     Playlist *pl;
     GList *gl;
 
-    pl = get_currently_selected_playlist();
+    pl = pm_get_selected_playlist();
     if (!pl)
     { /* no playlist selected */
 	gtkpod_statusbar_message (_("No playlist selected."));
