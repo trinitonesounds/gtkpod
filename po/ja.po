@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-06-26 23:42+0900\n"
+"POT-Creation-Date: 2003-06-29 15:38+0900\n"
 "PO-Revision-Date: 2003-04-12 01:13+0900\n"
 "Last-Translator: Ayako Sano <@>\n"
 "Language-Team: n/a\n"
@@ -295,11 +295,11 @@ msgstr "確認ダイアログ"
 msgid "Edit"
 msgstr "編集（_E）"
 
-#: src/context_menus.c:243 src/misc.c:1714
+#: src/context_menus.c:243 src/misc.c:1710
 msgid "Play Now"
 msgstr ""
 
-#: src/context_menus.c:245 src/misc.c:1725
+#: src/context_menus.c:245 src/misc.c:1721
 msgid "Enqueue"
 msgstr ""
 
@@ -359,72 +359,72 @@ msgstr "キャンセル"
 msgid "Playlists"
 msgstr "再生リスト"
 
-#: src/display_songs.c:815 src/display_sorttabs.c:2142 src/interface.c:1502
+#: src/display_songs.c:822 src/display_sorttabs.c:2159 src/interface.c:1502
 #: src/interface.c:1600
 msgid "Title"
 msgstr "タイトル"
 
-#: src/display_songs.c:818 src/display_sorttabs.c:2130 src/interface.c:1478
+#: src/display_songs.c:825 src/display_sorttabs.c:2147 src/interface.c:1478
 #: src/interface.c:1560
 msgid "Artist"
 msgstr "アーティスト"
 
-#: src/display_songs.c:821 src/display_sorttabs.c:2133 src/interface.c:1490
+#: src/display_songs.c:828 src/display_sorttabs.c:2150 src/interface.c:1490
 #: src/interface.c:1580
 msgid "Album"
 msgstr "アルバム"
 
-#: src/display_songs.c:824 src/display_sorttabs.c:2136 src/interface.c:1482
+#: src/display_songs.c:831 src/display_sorttabs.c:2153 src/interface.c:1482
 #: src/interface.c:1620
 msgid "Genre"
 msgstr "ジャンル"
 
-#: src/display_songs.c:827 src/interface.c:1494 src/interface.c:1564
+#: src/display_songs.c:834 src/interface.c:1494 src/interface.c:1564
 msgid "Composer"
 msgstr "作曲家"
 
-#: src/display_songs.c:830
+#: src/display_songs.c:837
 msgid "#"
 msgstr "#"
 
-#: src/display_songs.c:833
+#: src/display_songs.c:840
 msgid "ID"
 msgstr "ID"
 
-#: src/display_songs.c:837 src/interface.c:1624
+#: src/display_songs.c:844 src/interface.c:1624
 msgid "PC File"
 msgstr "PCファイル"
 
-#: src/display_songs.c:841
+#: src/display_songs.c:848
 msgid "Trnsfrd"
 msgstr "転送"
 
-#: src/display_songs.c:846 src/interface.c:1588
+#: src/display_songs.c:853 src/interface.c:1588
 msgid "File Size"
 msgstr ""
 
-#: src/display_songs.c:850
+#: src/display_songs.c:857
 #, fuzzy
 msgid "Time"
 msgstr "タイトル"
 
-#: src/display_songs.c:854 src/interface.c:1628
+#: src/display_songs.c:861 src/interface.c:1628
 msgid "Bitrate"
 msgstr ""
 
-#: src/display_songs.c:858 src/interface.c:1612 src/interface.c:2484
+#: src/display_songs.c:865 src/interface.c:1612 src/interface.c:2484
 msgid "Playcount"
 msgstr ""
 
-#: src/display_songs.c:861 src/interface.c:1632 src/interface.c:2491
+#: src/display_songs.c:868 src/interface.c:1632 src/interface.c:2491
 msgid "Rating"
 msgstr ""
 
-#: src/display_songs.c:864 src/interface.c:2497
+#: src/display_songs.c:871 src/interface.c:2497
 msgid "Played"
 msgstr ""
 
-#: src/display_songs.c:868 src/interface.c:2503
+#: src/display_songs.c:875 src/interface.c:2503
 msgid "Modified"
 msgstr ""
 
@@ -436,23 +436,23 @@ msgstr ""
 msgid "'Modified' condition ignored because of error."
 msgstr ""
 
-#: src/display_sorttabs.c:1079
+#: src/display_sorttabs.c:1083
 msgid "All"
 msgstr "全て"
 
-#: src/display_sorttabs.c:2139
+#: src/display_sorttabs.c:2156
 msgid "Comp."
 msgstr "作曲家"
 
-#: src/display_sorttabs.c:2145 src/interface.c:2348
+#: src/display_sorttabs.c:2162 src/interface.c:2348
 msgid "Special"
 msgstr ""
 
-#: src/display_sorttabs.c:2406
+#: src/display_sorttabs.c:2423
 msgid "Last Played"
 msgstr ""
 
-#: src/display_sorttabs.c:2407
+#: src/display_sorttabs.c:2424
 msgid "Last Modified"
 msgstr ""
 
@@ -547,12 +547,12 @@ msgid "OK to synchronize the following directories?"
 msgstr "次のディレクトリを作成していいですか？"
 
 #. no entry selected
-#: src/file.c:916 src/misc.c:1386
+#: src/file.c:916 src/misc.c:1382
 msgid "No entry selected."
 msgstr "選択されていません"
 
 #. no playlist selected
-#: src/file.c:944 src/misc.c:1123 src/misc.c:1275 src/misc.c:1375
+#: src/file.c:944 src/misc.c:1123 src/misc.c:1271 src/misc.c:1371
 msgid "No playlist selected."
 msgstr "再生リストは選択されていません"
 
@@ -1992,75 +1992,75 @@ msgid "Deleted songs from playlist '%s'"
 msgstr "再生リスト'%s'から曲を削除"
 
 #. no songs selected
-#: src/misc.c:1281
+#: src/misc.c:1277
 msgid "No songs selected."
 msgstr "どの曲も選択されていません"
 
-#: src/misc.c:1392
+#: src/misc.c:1388
 msgid "Cannot remove entry 'All'"
 msgstr "エントリーを削除できません"
 
-#: src/misc.c:1617
+#: src/misc.c:1613
 #, c-format
 msgid "No command set for '%s'"
 msgstr ""
 
-#: src/misc.c:1638
+#: src/misc.c:1634
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
 msgstr ""
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "Bytes"
 msgstr ""
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "kB"
 msgstr ""
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "MB"
 msgstr ""
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "GB"
 msgstr ""
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "TB"
 msgstr ""
 
-#: src/misc.c:1856
+#: src/misc.c:1852
 #, c-format
 msgid " %s Free"
 msgstr ""
 
-#: src/misc.c:1861
+#: src/misc.c:1857
 #, c-format
 msgid " %s Pending"
 msgstr ""
 
-#: src/misc.c:2171
+#: src/misc.c:2167
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr ""
 
-#: src/misc.c:2181
+#: src/misc.c:2177
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr ""
 
-#: src/misc.c:2198
+#: src/misc.c:2194
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr ""
 
-#: src/misc.c:2210
+#: src/misc.c:2206
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr ""
 
-#: src/misc.c:2226
+#: src/misc.c:2222
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr ""

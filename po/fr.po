@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
-"POT-Creation-Date: 2003-06-26 23:42+0900\n"
-"PO-Revision-Date: 2003-06-21 15:53+0200\n"
+"POT-Creation-Date: 2003-06-29 15:38+0900\n"
+"PO-Revision-Date: 2003-06-29 15:52+0900\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -288,11 +288,11 @@ msgstr "Fenêtre de confirmation"
 msgid "Edit"
 msgstr "Edition"
 
-#: src/context_menus.c:243 src/misc.c:1714
+#: src/context_menus.c:243 src/misc.c:1710
 msgid "Play Now"
 msgstr "Jouer maintenant"
 
-#: src/context_menus.c:245 src/misc.c:1725
+#: src/context_menus.c:245 src/misc.c:1721
 msgid "Enqueue"
 msgstr "Mettre dans la file d'attente"
 
@@ -349,71 +349,71 @@ msgstr "Annuler"
 msgid "Playlists"
 msgstr "Listes de lecture"
 
-#: src/display_songs.c:815 src/display_sorttabs.c:2142 src/interface.c:1502
+#: src/display_songs.c:822 src/display_sorttabs.c:2159 src/interface.c:1502
 #: src/interface.c:1600
 msgid "Title"
 msgstr "Titre"
 
-#: src/display_songs.c:818 src/display_sorttabs.c:2130 src/interface.c:1478
+#: src/display_songs.c:825 src/display_sorttabs.c:2147 src/interface.c:1478
 #: src/interface.c:1560
 msgid "Artist"
 msgstr "Artiste"
 
-#: src/display_songs.c:821 src/display_sorttabs.c:2133 src/interface.c:1490
+#: src/display_songs.c:828 src/display_sorttabs.c:2150 src/interface.c:1490
 #: src/interface.c:1580
 msgid "Album"
 msgstr "Album"
 
-#: src/display_songs.c:824 src/display_sorttabs.c:2136 src/interface.c:1482
+#: src/display_songs.c:831 src/display_sorttabs.c:2153 src/interface.c:1482
 #: src/interface.c:1620
 msgid "Genre"
 msgstr "Genre"
 
-#: src/display_songs.c:827 src/interface.c:1494 src/interface.c:1564
+#: src/display_songs.c:834 src/interface.c:1494 src/interface.c:1564
 msgid "Composer"
 msgstr "Compositeur"
 
-#: src/display_songs.c:830
+#: src/display_songs.c:837
 msgid "#"
 msgstr "#"
 
-#: src/display_songs.c:833
+#: src/display_songs.c:840
 msgid "ID"
 msgstr "Id"
 
-#: src/display_songs.c:837 src/interface.c:1624
+#: src/display_songs.c:844 src/interface.c:1624
 msgid "PC File"
 msgstr "Fichier PC"
 
-#: src/display_songs.c:841
+#: src/display_songs.c:848
 msgid "Trnsfrd"
 msgstr "Transféré"
 
-#: src/display_songs.c:846 src/interface.c:1588
+#: src/display_songs.c:853 src/interface.c:1588
 msgid "File Size"
 msgstr "Taille du fichier"
 
-#: src/display_songs.c:850
+#: src/display_songs.c:857
 msgid "Time"
 msgstr "Durée"
 
-#: src/display_songs.c:854 src/interface.c:1628
+#: src/display_songs.c:861 src/interface.c:1628
 msgid "Bitrate"
 msgstr "Taux d'échantillonnage"
 
-#: src/display_songs.c:858 src/interface.c:1612 src/interface.c:2484
+#: src/display_songs.c:865 src/interface.c:1612 src/interface.c:2484
 msgid "Playcount"
 msgstr "Compt. lecture"
 
-#: src/display_songs.c:861 src/interface.c:1632 src/interface.c:2491
+#: src/display_songs.c:868 src/interface.c:1632 src/interface.c:2491
 msgid "Rating"
 msgstr "Taux"
 
-#: src/display_songs.c:864 src/interface.c:2497
+#: src/display_songs.c:871 src/interface.c:2497
 msgid "Played"
 msgstr "Joué"
 
-#: src/display_songs.c:868 src/interface.c:2503
+#: src/display_songs.c:875 src/interface.c:2503
 msgid "Modified"
 msgstr "Modifié"
 
@@ -425,24 +425,24 @@ msgstr "Condition 'Joué' ignoré à cause d'une erreur."
 msgid "'Modified' condition ignored because of error."
 msgstr "Condition 'Modifié' ignoré à cause d'une erreur."
 
-#: src/display_sorttabs.c:1079
+#: src/display_sorttabs.c:1083
 msgid "All"
 msgstr "Tous"
 
-#: src/display_sorttabs.c:2139
+#: src/display_sorttabs.c:2156
 msgid "Comp."
 msgstr "Comp."
 
-#: src/display_sorttabs.c:2145 src/interface.c:2348
+#: src/display_sorttabs.c:2162 src/interface.c:2348
 msgid "Special"
 msgstr "Spécial"
 
-#: src/display_sorttabs.c:2406
+#: src/display_sorttabs.c:2423
 #, fuzzy
 msgid "Last Played"
 msgstr "Joué"
 
-#: src/display_sorttabs.c:2407
+#: src/display_sorttabs.c:2424
 #, fuzzy
 msgid "Last Modified"
 msgstr "Modifié"
@@ -538,12 +538,12 @@ msgid "OK to synchronize the following directories?"
 msgstr "Prêt à synchroniser les répertoires suivants ?"
 
 #. no entry selected
-#: src/file.c:916 src/misc.c:1386
+#: src/file.c:916 src/misc.c:1382
 msgid "No entry selected."
 msgstr "Aucun élément sélectionné."
 
 #. no playlist selected
-#: src/file.c:944 src/misc.c:1123 src/misc.c:1275 src/misc.c:1375
+#: src/file.c:944 src/misc.c:1123 src/misc.c:1271 src/misc.c:1371
 msgid "No playlist selected."
 msgstr "Pas de liste de lecture sélectionnée"
 
@@ -2052,78 +2052,78 @@ msgid "Deleted songs from playlist '%s'"
 msgstr "Musiques supprimées de la liste de lecture '%s'"
 
 #. no songs selected
-#: src/misc.c:1281
+#: src/misc.c:1277
 msgid "No songs selected."
 msgstr "Aucun morceau sélectionné."
 
-#: src/misc.c:1392
+#: src/misc.c:1388
 msgid "Cannot remove entry 'All'"
 msgstr "Ne peut enlever l'entrée 'Tous'"
 
-#: src/misc.c:1617
+#: src/misc.c:1613
 #, c-format
 msgid "No command set for '%s'"
 msgstr "Aucune commande renseignée pour '%s'"
 
-#: src/misc.c:1638
+#: src/misc.c:1634
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
 msgstr "Impossible d'éxécuter la commande '%s' spécifiée pour '%s'"
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "Bytes"
 msgstr "Octets"
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "kB"
 msgstr "ko"
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "MB"
 msgstr "Mo"
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "GB"
 msgstr "Go"
 
-#: src/misc.c:1780
+#: src/misc.c:1776
 msgid "TB"
 msgstr "To"
 
-#: src/misc.c:1856
+#: src/misc.c:1852
 #, c-format
 msgid " %s Free"
 msgstr " %s de libre"
 
-#: src/misc.c:1861
+#: src/misc.c:1857
 #, c-format
 msgid " %s Pending"
 msgstr " %s en attente"
 
-#: src/misc.c:2171
+#: src/misc.c:2167
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
-msgstr ""
+msgstr "L'URI « %s » n'est pas une URI absolue utilisant le schema de fichier"
 
-#: src/misc.c:2181
+#: src/misc.c:2177
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
-msgstr ""
+msgstr "L'URI de fichier local « %s » peut ne pas inclure un  « # »"
 
-#: src/misc.c:2198
+#: src/misc.c:2194
 #, c-format
 msgid "The URI '%s' is invalid"
-msgstr ""
+msgstr "L'URI « %s » est invalide"
 
-#: src/misc.c:2210
+#: src/misc.c:2206
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
-msgstr ""
+msgstr "Le nom d'hôte de l'URI « %s » est invalide"
 
-#: src/misc.c:2226
+#: src/misc.c:2222
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
-msgstr ""
+msgstr "L'URI « %s » contient des caractères d'échappements invalides"
 
 #: src/playlist.c:306
 #, c-format
