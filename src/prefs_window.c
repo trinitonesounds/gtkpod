@@ -125,7 +125,7 @@ prefs_window_create(void)
 	{
 	    fprintf(stderr, "Programming error: tmpcfg is not NULL wtf !!\n");
 	}
-	prefs_window = create_prefs_window();
+	prefs_window = create_new_prefs_window();
 	if((w = lookup_widget(prefs_window, "cfg_mount_point")))
 	{
 	    gtk_entry_set_text(GTK_ENTRY(w), g_strdup(tmpcfg->ipod_mount));
@@ -148,16 +148,19 @@ prefs_window_create(void)
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_duplicates);
+	    if (!tmpcfg->md5songs) gtk_widget_set_sensitive (w, FALSE);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_show_updated")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_updated);
+	    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_show_non_updated")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_non_updated);
+	    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_save_sorted_order")))
 	{
@@ -352,7 +355,11 @@ prefs_window_save(void)
 void
 prefs_window_set_md5songs(gboolean val)
 {
+    GtkWidget *w;
+
     tmpcfg->md5songs = val;
+    if((w = lookup_widget(prefs_window, "cfg_show_duplicates")))
+	gtk_widget_set_sensitive (w, val);
 }
 
 void
@@ -364,7 +371,13 @@ prefs_window_set_block_display(gboolean val)
 void
 prefs_window_set_update_existing(gboolean val)
 {
+    GtkWidget *w;
+
     tmpcfg->update_existing = val;
+    if((w = lookup_widget(prefs_window, "cfg_show_updated")))
+	gtk_widget_set_sensitive (w, val);
+    if((w = lookup_widget(prefs_window, "cfg_show_non_updated")))
+	gtk_widget_set_sensitive (w, val);
 }
 
 /**

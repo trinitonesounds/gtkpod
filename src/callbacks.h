@@ -310,3 +310,15 @@ on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
 void
 on_sort_tab_num_combo_entry_changed    (GtkEditable     *editable,
                                         gpointer         user_data);
+
+void
+on_prefs_apply_clicked                 (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_prefs_cancel_clicked                (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_prefs_ok_clicked                    (GtkButton       *button,
+                                        gpointer         user_data);

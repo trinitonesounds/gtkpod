@@ -342,6 +342,13 @@ on_prefs_cancel_clicked                (GtkButton       *button,
 
 
 void
+on_prefs_apply_clicked                 (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    printf ("not yet implemented\n");
+}
+
+void
 on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
