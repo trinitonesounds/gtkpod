@@ -225,6 +225,25 @@ Song *get_song_by_nr (guint32 n)
   return g_list_nth_data (songs, n);
 }
 
+/* Gets the next song (i=1) or the first song (i=0)
+   This function is optimized for speed, caching a pointer to the last
+   link returned.
+   Make sure that the list of songs does not get changed during
+   ceonsecutive calls with i=1 or this function might crash. */
+Song *get_next_song (gint i)
+{
+    static GList *lastlink = NULL;
+    Song *result;
+
+    if (i==0)           lastlink = songs;
+    else if (lastlink)  lastlink = lastlink->next;
+
+    if (lastlink)       result = (Song *)lastlink->data;
+    else                result = NULL;
+
+    return result;
+}	
+
 
 /* Returns the song with ID "id". We need to get the last occurence of
  * "id" in case we're currently importing the iTunesDB. In that case
@@ -408,8 +427,8 @@ void remove_duplicate (Song *oldsong, Song *song)
 		_("Duplicate detection"),/* title */
 		buf,                     /* label */
 		str->str,                /* scrolled text */
-		NULL, FALSE, NULL,  /* option 1 */
-		NULL, FALSE, NULL,  /* option 2 */
+		NULL, 0, NULL,      /* option 1 */
+		NULL, 0, NULL,      /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
 		NULL,               /* ConfHandlerCA confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/

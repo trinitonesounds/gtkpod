@@ -577,6 +577,27 @@ static void sync_dir (gpointer key,
 }
 
 
+/* ok handler for sync_remove */
+/* @user_data1 is NULL, @user_data2 are the selected songids */
+static void sync_remove_ok (gpointer user_data1, gpointer user_data2)
+{
+    if (prefs_get_sync_remove ())
+	delete_song_ok (NULL, user_data2);
+}
+
+
+/* cancel handler for sync_remove */
+/* @user_data1 is NULL, @user_data2 are the selected songids */
+static void sync_remove_cancel (gpointer user_data1, gpointer user_data2)
+{
+    GList *id_list = user_data2;
+
+    g_list_free (id_list);
+
+    gtkpod_statusbar_message (_("Syncing completed. No files deleted."));
+}
+
+
 static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 {
     GHashTable *hash = (GHashTable *)user_data1;
@@ -597,10 +618,6 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     /* reset "update existing" */
     prefs_set_update_existing (update);
 
-    /* destroy the hash table (and free the memory taken by the
-       dirnames */
-    g_hash_table_destroy (hash);
-
     /* display log of non-updated songs */
     display_non_updated (NULL, NULL);
     /* display log updated songs */
@@ -608,7 +625,74 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     /* display log of detected duplicates */
     remove_duplicate (NULL, NULL);
 
-    gtkpod_statusbar_message (_("Syncing completed"));
+    if (prefs_get_sync_remove ())
+    {   /* remove tracks that are no longer present in the dirs */
+	GList *id_list = NULL;
+	GString *str;
+	gchar *label, *title;
+	Song *s;
+	GList *l;
+
+	/* add all songs that are no longer present in the dirs */
+	for (s=get_next_song (0); s; s=get_next_song (1))
+	{
+	    if (s->pc_path_locale && *s->pc_path_locale)
+	    {
+		gchar *dirname = g_path_get_dirname (s->pc_path_locale);
+		if (g_hash_table_lookup (hash, dirname) &&
+		    !g_file_test (s->pc_path_locale, G_FILE_TEST_EXISTS))
+		{
+		    id_list = g_list_append (id_list, (gpointer)s->ipod_id);
+		}
+	    }
+	}
+	if (g_list_length (id_list) > 0)
+	{
+	    /* populate "title" and "label" */
+	    delete_populate_settings (NULL, id_list,
+				      &label, &title,
+				      NULL, NULL, NULL);
+	    /* create a list of songs */
+	    str = g_string_sized_new (2000);
+	    for(l = id_list; l; l=l->next)
+	    {
+		s = get_song_by_id ((guint32)l->data);
+		if (s)
+		    g_string_append_printf (str, "%s (%s-%s)\n",
+					    s->pc_path_utf8,
+					    s->artist, s->title);
+	    }
+	    /* open window */
+	    gtkpod_confirmation
+		(-1,                   /* gint id, */
+		 FALSE,                /* gboolean modal, */
+		 title,                /* title */
+		 label,                /* label */
+		 str->str,             /* scrolled text */
+		 _("Never delete any files when syncing"),/* opt 1 text */
+		 CONF_STATE_INVERT_FALSE,                 /* opt 1 state */
+		 prefs_set_sync_remove,                   /* opt 1 handler */
+		 NULL, 0, NULL,        /* option 2 */
+		 prefs_get_sync_remove_confirm(), /* gboolean confirm_again, */
+		 prefs_set_sync_remove_confirm,   /* confirm_again_handler,*/
+		 sync_remove_ok,       /* ConfHandler ok_handler,*/
+		 CONF_NO_BUTTON,       /* don't show "Apply" button */
+		 sync_remove_cancel,   /* cancel_handler,*/
+		 NULL,                 /* gpointer user_data1,*/
+		 id_list);             /* gpointer user_data2,*/
+
+	    g_free (label);
+	    g_string_free (str, TRUE);
+	}
+	else sync_remove_cancel (hash, id_list);
+    }
+    else
+    {
+	gtkpod_statusbar_message (_("Syncing completed."));
+    }
+    /* destroy the hash table (and free the memory taken by the
+       dirnames */
+    g_hash_table_destroy (hash);
 }
 
 
@@ -720,8 +804,8 @@ No valid directories have been found. Sync aborted.\n"));
 		_("Synchronize directories"), /* title */
 		_("OK to synchronize the following directories?"),
 		str->str,               /* text */
-		NULL, FALSE, NULL,      /* option 1 */
-		NULL, FALSE, NULL,      /* option 2 */
+		NULL, 0, NULL,          /* option 1 */
+		NULL, 0, NULL,          /* option 2 */
 		prefs_get_show_sync_dirs(),/* gboolean confirm_again, */
 		prefs_set_show_sync_dirs,/* confirm_again_handler*/
 		sync_dir_ok,            /* ConfHandler ok_handler,*/
@@ -843,8 +927,8 @@ void display_non_updated (Song *song, gchar *txt)
 		_("Failed Song Update"),   /* title */
 		buf,                /* label */
 		str->str,           /* scrolled text */
-		NULL, FALSE, NULL,      /* option 1 */
-		NULL, FALSE, NULL,      /* option 2 */
+		NULL, 0, NULL,          /* option 1 */
+		NULL, 0, NULL,          /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
 		prefs_set_show_non_updated,/* confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/
@@ -907,8 +991,8 @@ void display_updated (Song *song, gchar *txt)
 		_("Successful Song Update"),   /* title */
 		buf,                /* label */
 		str->str,           /* scrolled text */
-		NULL, FALSE, NULL,      /* option 1 */
-		NULL, FALSE, NULL,      /* option 2 */
+		NULL, 0, NULL,          /* option 1 */
+		NULL, 0, NULL,          /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
 		prefs_set_show_updated,/* confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/

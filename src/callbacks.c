@@ -1215,3 +1215,21 @@ on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
     prefs_window_set_add_recursively(
 	gtk_toggle_button_get_active(togglebutton));
 }
+
+void
+on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_sync_remove(
+	gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_sync_remove_confirm(
+	gtk_toggle_button_get_active(togglebutton));
+}
+

@@ -148,6 +148,7 @@ struct cfg *cfg_new(void)
     mycfg->deletion.song = TRUE;
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
+    mycfg->deletion.syncing = TRUE;
     mycfg->md5songs = FALSE;
     mycfg->update_existing = FALSE;
     mycfg->block_display = FALSE;
@@ -194,6 +195,7 @@ struct cfg *cfg_new(void)
     mycfg->show_updated = TRUE;
     mycfg->show_non_updated = TRUE;
     mycfg->show_sync_dirs = TRUE;
+    mycfg->sync_remove = TRUE;
     mycfg->display_toolbar = TRUE;
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
@@ -285,6 +287,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_song_ipod_file_deletion((gboolean)atoi(arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "sync_remove_confirm") == 0)
+	  {
+	      prefs_set_sync_remove_confirm((gboolean)atoi(arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "auto_import") == 0)
 	  {
 	      prefs_set_auto_import((gboolean)atoi(arg));
@@ -375,6 +381,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "show_sync_dirs") == 0)
 	  {
 	      prefs_set_show_sync_dirs((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "sync_remove") == 0)
+	  {
+	      prefs_set_sync_remove((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "display_toolbar") == 0)
 	  {
@@ -588,6 +598,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "delete_file=%d\n",prefs_get_song_playlist_deletion());
     fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
+    fprintf(fp, "sync_remove_confirm=%d\n",prefs_get_sync_remove_confirm());
     fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
@@ -625,6 +636,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "show_updated=%d\n",prefs_get_show_updated());
     fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
     fprintf(fp, "show_sync_dirs=%d\n",prefs_get_show_sync_dirs());
+    fprintf(fp, "sync_remove=%d\n",prefs_get_sync_remove());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
@@ -868,6 +880,16 @@ void prefs_set_song_ipod_file_deletion(gboolean val)
 gboolean prefs_get_song_ipod_file_deletion(void)
 {
     return(cfg->deletion.ipod_file);
+}
+
+void prefs_set_sync_remove_confirm(gboolean val)
+{
+    cfg->deletion.syncing = val;
+}
+
+gboolean prefs_get_sync_remove_confirm(void)
+{
+    return(cfg->deletion.syncing);
 }
 
 void prefs_set_charset (gchar *charset)
@@ -1220,6 +1242,16 @@ gboolean prefs_get_show_sync_dirs (void)
 void prefs_set_show_sync_dirs (gboolean val)
 {
     cfg->show_sync_dirs = val;
+}
+
+gboolean prefs_get_sync_remove (void)
+{
+    return cfg->sync_remove;
+}
+
+void prefs_set_sync_remove (gboolean val)
+{
+    cfg->sync_remove = val;
 }
 
 gboolean prefs_get_display_toolbar (void)

@@ -39,7 +39,9 @@ typedef struct {
     GtkWidget *window;
     gboolean  scrolled;
     ConfHandlerOpt option1_handler;
+    gboolean option1_invert;
     ConfHandlerOpt option2_handler;
+    gboolean option2_invert;
     ConfHandlerOpt confirm_again_handler;
     ConfHandler ok_handler;
     ConfHandler apply_handler;
@@ -129,7 +131,11 @@ static void on_option1_toggled (GtkToggleButton *t, gpointer id)
     if (cd)
     {
 	if (cd->option1_handler)
-	    cd->option1_handler (gtk_toggle_button_get_active(t));
+	{
+	    gboolean state = gtk_toggle_button_get_active(t);
+	    if (cd->option1_invert)  cd->option1_handler (!state);
+	    else                     cd->option1_handler (state);
+	}
     }
 }
 
@@ -141,7 +147,11 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
     if (cd)
     {
 	if (cd->option2_handler)
-	    cd->option2_handler (gtk_toggle_button_get_active(t));
+	{
+	    gboolean state = gtk_toggle_button_get_active(t);
+	    if (cd->option2_invert)  cd->option2_handler (!state);
+	    else                     cd->option2_handler (state);
+	}
     }
 }
 
@@ -162,7 +172,10 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
    @label: the text on the top of the window
    @text:  the text displayed in a scrolled window
    @option_text: text for the option checkbox (or NULL)
-   @option_state: initial state of the option
+   @option_state: initial state of the option + a flag indicating
+           whether the handler should be called with the inverse state
+           of the toggle button: CONF_STATE_TRUE, CONF_STATE_FALSE,
+	   CONF_STATE_INVERT_TRUE, CONF_STATE_INVERT_FALSE
    @option_handler: callback for the option (is called with the
            current state of the toggle box)
    @confirm_again:    state of the "confirm again" flag
@@ -188,10 +201,10 @@ gboolean gtkpod_confirmation (gint id,
 			      gchar *label,
 			      gchar *text,
 			      gchar *option1_text,
-			      gboolean option1_state,
+			      CONF_STATE option1_state,
 			      ConfHandlerOpt option1_handler,
 			      gchar *option2_text,
-			      gboolean option2_state,
+			      CONF_STATE option2_state,
 			      ConfHandlerOpt option2_handler,
 			      gboolean confirm_again,
 			      ConfHandlerOpt confirm_again_handler,
@@ -316,15 +329,25 @@ gboolean gtkpod_confirmation (gint id,
     gtk_window_set_default_size (GTK_WINDOW (window), defx, defy);
 
     /* Set "Option 1" checkbox */
-    w = lookup_widget (window, "option_vbox");
+    w = lookup_widget (window, "option_hbox1");
     if (w && option1_handler && option1_text)
     {
+	gboolean state, invert;
 	GtkWidget *option1_button =
 	    gtk_check_button_new_with_mnemonic (option1_text);
+
+	if ((option1_state==CONF_STATE_INVERT_TRUE) ||
+	    (option1_state==CONF_STATE_TRUE))  state = TRUE;
+	else                                   state = FALSE;
+	if ((option1_state==CONF_STATE_INVERT_FALSE) ||
+	    (option1_state==CONF_STATE_INVERT_TRUE))  invert = TRUE;
+	else                                          invert = FALSE;
+	cd->option1_invert = invert;
+
 	gtk_widget_show (option1_button);
-	gtk_box_pack_start (GTK_BOX (w), option1_button, FALSE, FALSE, 2);
+	gtk_box_pack_start (GTK_BOX (w), option1_button, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(option1_button),
-				     option1_state);
+				     state);
 	g_signal_connect ((gpointer)option1_button,
 			  "toggled",
 			  G_CALLBACK (on_option1_toggled),
@@ -332,15 +355,25 @@ gboolean gtkpod_confirmation (gint id,
     }
 
     /* Set "Option 2" checkbox */
-    w = lookup_widget (window, "option_vbox");
+    w = lookup_widget (window, "option_hbox2");
     if (w && option2_handler && option2_text)
     {
+	gboolean state, invert;
 	GtkWidget *option2_button =
 	    gtk_check_button_new_with_mnemonic (option2_text);
+
+	if ((option2_state==CONF_STATE_INVERT_TRUE) ||
+	    (option2_state==CONF_STATE_TRUE))  state = TRUE;
+	else                                   state = FALSE;
+	if ((option2_state==CONF_STATE_INVERT_FALSE) ||
+	    (option2_state==CONF_STATE_INVERT_TRUE))  invert = TRUE;
+	else                                          invert = FALSE;
+	cd->option2_invert = invert;
+
 	gtk_widget_show (option2_button);
-	gtk_box_pack_start (GTK_BOX (w), option2_button, FALSE, FALSE, 2);
+	gtk_box_pack_start (GTK_BOX (w), option2_button, FALSE, FALSE, 0);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(option2_button),
-				     option2_state);
+				     state);
 	g_signal_connect ((gpointer)option2_button,
 			  "toggled",
 			  G_CALLBACK (on_option2_toggled),

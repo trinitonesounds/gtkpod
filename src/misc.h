@@ -36,6 +36,7 @@
 #include "song.h"
 #include "playlist.h"
 #include "display.h"
+#include "confirmation.h"
 
 #define STATUSBAR_TIMEOUT 4200
 
@@ -77,6 +78,12 @@ void delete_playlist_head (void);
 void delete_song_head (void);
 void delete_entry_head (gint inst);
 
+void delete_populate_settings (Playlist *pl, GList *selected_songids,
+			       gchar **label, gchar **title,
+			       gboolean *confirm_again,
+			       ConfHandlerOpt *confirm_again_handler,
+			       GString **str);
+
 void block_widgets (void);
 void release_widgets (void);
 void update_blocked_widget (GtkWidget *w, gboolean sens);
@@ -88,6 +95,8 @@ void call_script (gchar *script);
 void do_command_on_entries (gchar *command, gchar *what, GList *selected_songs);
 void play_songs (GList *selected_songs);
 void enqueue_songs (GList *selected_songs);
+
+void delete_song_ok (gpointer user_data1, gpointer user_data2);
 
 void gtkpod_warning (const gchar *format, ...);
 #endif __MISC_H__

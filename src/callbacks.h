@@ -422,3 +422,11 @@ on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
 void
 on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

@@ -202,6 +202,11 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_sync_dirs);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_sync_remove")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->sync_remove);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_display_toolbar")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -276,6 +281,17 @@ prefs_window_create(void)
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->deletion.ipod_file);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_sync_remove_confirm")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->deletion.syncing);
+	    gtk_widget_set_sensitive (w, tmpcfg->sync_remove);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_sync_remove_confirm2")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->deletion.syncing);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_autoimport")))
 	{
@@ -414,6 +430,7 @@ prefs_window_set(void)
 	prefs_set_song_playlist_deletion(tmpcfg->deletion.song);
 	prefs_set_song_ipod_file_deletion(tmpcfg->deletion.ipod_file);
 	prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
+	prefs_set_sync_remove_confirm(tmpcfg->deletion.syncing);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
 	prefs_set_keep_backups(tmpcfg->keep_backups);
 	/* we delete all stored md5 checksums if the md5 checksumming got
@@ -429,6 +446,7 @@ prefs_window_set(void)
 	prefs_set_show_updated(tmpcfg->show_updated);
 	prefs_set_show_non_updated(tmpcfg->show_non_updated);
 	prefs_set_show_sync_dirs(tmpcfg->show_sync_dirs);
+	prefs_set_sync_remove(tmpcfg->sync_remove);
 	prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
@@ -641,6 +659,12 @@ prefs_window_set_delete_song_playlist(gboolean val)
     tmpcfg->deletion.song = val;
 }
 
+void 
+prefs_window_set_sync_remove_confirm(gboolean val)
+{
+    tmpcfg->deletion.syncing = val;
+}
+
 void
 prefs_window_set_auto_import(gboolean val)
 {
@@ -701,6 +725,15 @@ void prefs_window_set_show_non_updated (gboolean val)
 void prefs_window_set_show_sync_dirs (gboolean val)
 {
     tmpcfg->show_sync_dirs = val;
+}
+
+void prefs_window_set_sync_remove (gboolean val)
+{
+    GtkWidget *w;
+
+    tmpcfg->sync_remove = val;
+    if((w = lookup_widget(prefs_window, "cfg_sync_remove_confirm")))
+	gtk_widget_set_sensitive (w, val);
 }
 
 void prefs_window_set_display_toolbar (gboolean val)

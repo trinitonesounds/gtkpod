@@ -657,8 +657,8 @@ void gtkpod_warning (const gchar *format, ...)
 			 _("Warning"),              /* title */
 			 _("The following has occured:"),
 			 text,                /* text to be displayed */
-			 NULL, FALSE, NULL,   /* option 1 */
-			 NULL, FALSE, NULL,   /* option 2 */
+			 NULL, 0, NULL,       /* option 1 */
+			 NULL, 0, NULL,       /* option 2 */
 			 TRUE,                /* gboolean confirm_again, */
 			 NULL, /* ConfHandlerOpt confirm_again_handler, */
 			 NULL, /* ConfHandler ok_handler,*/
@@ -1014,8 +1014,8 @@ void ipod_directories_head (void)
 			 _("Create iPod directories"), /* title */
 			 _("OK to create the following directories?"),
 		         str->str,
-			 NULL, FALSE, NULL,  /* option 1 */
-			 NULL, FALSE, NULL,  /* option 2 */
+			 NULL, 0, NULL,      /* option 1 */
+			 NULL, 0, NULL,      /* option 2 */
 			 TRUE,               /* gboolean confirm_again, */
 			 NULL, /* ConfHandlerOpt confirm_again_handler, */
 			 ipod_directories_ok, /* ConfHandler ok_handler,*/
@@ -1076,8 +1076,8 @@ void delete_playlist_head (void)
 	 _("Delete Playlist?"), /* title */
 	 buf,                   /* label */
 	 NULL,                  /* scrolled text */
-	 NULL, FALSE, NULL,     /* option 1 */
-	 NULL, FALSE, NULL,     /* option 2 */
+	 NULL, 0, NULL,         /* option 1 */
+	 NULL, 0, NULL,         /* option 2 */
 	 prefs_get_playlist_deletion (),   /* gboolean confirm_again, */
 	 prefs_set_playlist_deletion, /* ConfHandlerOpt confirm_again_handler,*/
 	 delete_playlist_ok, /* ConfHandler ok_handler,*/
@@ -1100,7 +1100,7 @@ void delete_playlist_head (void)
 
 /* This is the same for delete_song_head() and delete_st_head(), so I
  * moved it here to make changes easier */
-void delete_populate_settings (Playlist *pl, GList *selected_songs,
+void delete_populate_settings (Playlist *pl, GList *selected_songids,
 			       gchar **label, gchar **title,
 			       gboolean *confirm_again,
 			       ConfHandlerOpt *confirm_again_handler,
@@ -1111,39 +1111,51 @@ void delete_populate_settings (Playlist *pl, GList *selected_songs,
     guint n;
 
     /* write title and label */
-    n = g_list_length (selected_songs);
+    n = g_list_length (selected_songids);
+    if (!pl) pl = get_playlist_by_nr (0); /* NULL,0: MPL */
     if(pl->type == PL_TYPE_MPL)
     {
-	*label = g_strdup (ngettext ("Are you sure you want to delete the following song\ncompletely from your ipod?", "Are you sure you want to delete the following songs\ncompletely from your ipod?", n));
-	*title = ngettext (_("Delete Song Completely?"), _("Delete Songs Completey?"), n);
-	*confirm_again = prefs_get_song_ipod_file_deletion ();
-	*confirm_again_handler = prefs_set_song_ipod_file_deletion;
+	if (label)
+	    *label = g_strdup (ngettext ("Are you sure you want to delete the following song\ncompletely from your ipod?", "Are you sure you want to delete the following songs\ncompletely from your ipod?", n));
+	if (title)
+	    *title = ngettext (_("Delete Song Completely?"), _("Delete Songs Completey?"), n);
+	if (confirm_again)
+	    *confirm_again = prefs_get_song_ipod_file_deletion ();
+	if (confirm_again_handler)
+	    *confirm_again_handler = prefs_set_song_ipod_file_deletion;
     }
     else /* normal playlist */
     {
-	*label = g_strdup_printf(ngettext ("Are you sure you want to delete the following song\nfrom the playlist \"%s\"?", "Are you sure you want to delete the following songs\nfrom the playlist \"%s\"?", n), pl->name);
-	*title = ngettext (_("Delete Song From Playlist?"), _("Delete Songs From Playlist?"), n);
-	*confirm_again = prefs_get_song_playlist_deletion ();
-	*confirm_again_handler = prefs_set_song_playlist_deletion;
+	if (label)
+	    *label = g_strdup_printf(ngettext ("Are you sure you want to delete the following song\nfrom the playlist \"%s\"?", "Are you sure you want to delete the following songs\nfrom the playlist \"%s\"?", n), pl->name);
+	if (title)
+	    *title = ngettext (_("Delete Song From Playlist?"), _("Delete Songs From Playlist?"), n);
+	if (confirm_again)
+	    *confirm_again = prefs_get_song_playlist_deletion ();
+	if (confirm_again_handler)
+	    *confirm_again_handler = prefs_set_song_playlist_deletion;
     }
 
     /* Write names of songs */
-    *str = g_string_sized_new (2000);
-    for(l = selected_songs; l; l = l->next)
+    if (str)
     {
-	s = (Song*)l->data;
-	g_string_append_printf (*str, "%s-%s\n", s->artist, s->title);
+	*str = g_string_sized_new (2000);
+	for(l = selected_songids; l; l = l->next)
+	{
+	    s = get_song_by_id ((guint32)l->data);
+	    if (s)
+		g_string_append_printf (*str, "%s-%s\n", s->artist, s->title);
+	}
     }
 }
 
 
-
 /* ok handler for delete song */
 /* @user_data1 the selected playlist, @user_data2 are the selected songs */
-static void delete_song_ok (gpointer user_data1, gpointer user_data2)
+void delete_song_ok (gpointer user_data1, gpointer user_data2)
 {
     Playlist *pl = user_data1;
-    GList *selected_songs = user_data2;
+    GList *selected_songids = user_data2;
     gint n;
     gchar *buf;
     GList *l;
@@ -1151,14 +1163,12 @@ static void delete_song_ok (gpointer user_data1, gpointer user_data2)
     /* sanity checks */
     if (!pl)
     {
-	if (selected_songs)
-	    g_list_free (selected_songs);
-	return;
+	pl = get_playlist_by_nr (0);  /* NULL,0 = MPL */
     }
-    if (!selected_songs)
+    if (!selected_songids)
 	return;
 
-    n = g_list_length (selected_songs); /* nr of songs to be deleted */
+    n = g_list_length (selected_songids); /* nr of songs to be deleted */
     if (pl->type == PL_TYPE_MPL)
     {
 	buf = g_strdup_printf (ngettext (_("Deleted one song completely from iPod"), _("Deleted %d songs completely from iPod"), n), n);
@@ -1168,13 +1178,15 @@ static void delete_song_ok (gpointer user_data1, gpointer user_data2)
 	buf = g_strdup_printf (ngettext (_("Deleted song from playlist '%s'"), _("Deleted songs from playlist '%s'"), n), pl->name);
     }
 
-    for (l = selected_songs; l; l = l->next)
+    for (l = selected_songids; l; l = l->next)
     {
-	remove_song_from_playlist(pl, (Song *)l->data);
+	Song *s = get_song_by_id ((guint32)l->data);
+	if (s)
+	    remove_song_from_playlist(pl, s);
     }
 
     gtkpod_statusbar_message (buf);
-    g_list_free (selected_songs);
+    g_list_free (selected_songids);
     g_free (buf);
 }
 
@@ -1182,14 +1194,14 @@ static void delete_song_ok (gpointer user_data1, gpointer user_data2)
 /* @user_data1 the selected playlist, @user_data2 are the selected songs */
 static void delete_song_cancel (gpointer user_data1, gpointer user_data2)
 {
-    GList *selected_songs = user_data2;
+    GList *selected_songids = user_data2;
 
-    g_list_free (selected_songs);
+    g_list_free (selected_songids);
 }
 
 void delete_song_head (void)
 {
-    GList *selected_songs;
+    GList *selected_songids;
     Playlist *pl;
     GString *str;
     gchar *label, *title;
@@ -1202,32 +1214,32 @@ void delete_song_head (void)
 	gtkpod_statusbar_message (_("No playlist selected."));
 	return;
     }
-    selected_songs = sm_get_selected_songs();
-    if (selected_songs == NULL)
+    selected_songids = sm_get_selected_songids();
+    if (selected_songids == NULL)
     {  /* no songs selected */
 	gtkpod_statusbar_message (_("No songs selected."));
 	return;
     }
-    delete_populate_settings (pl, selected_songs,
+    delete_populate_settings (pl, selected_songids,
 			      &label, &title,
 			      &confirm_again, &confirm_again_handler,
 			      &str);
     /* open window */
     gtkpod_confirmation
 	(-1,                   /* gint id, */
-	 TRUE,                 /* gboolean modal, */
+	 FALSE,                /* gboolean modal, */
 	 title,                /* title */
 	 label,                /* label */
 	 str->str,             /* scrolled text */
-	 NULL, FALSE, NULL,    /* option 1 */
-	 NULL, FALSE, NULL,    /* option 2 */
+	 NULL, 0, NULL,        /* option 1 */
+	 NULL, 0, NULL,        /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
 	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
 	 delete_song_ok,       /* ConfHandler ok_handler,*/
 	 CONF_NO_BUTTON,       /* don't show "Apply" button */
 	 delete_song_cancel,   /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
-	 selected_songs);      /* gpointer user_data2,*/
+	 selected_songids);    /* gpointer user_data2,*/
 
     g_free (label);
     g_string_free (str, TRUE);
@@ -1255,20 +1267,20 @@ gtkpod_main_window_set_active(gboolean active)
 static void delete_entry_ok (gpointer user_data1, gpointer user_data2)
 {
     Playlist *pl = user_data1;
-    GList *selected_songs = user_data2;
+    GList *selected_songids = user_data2;
     TabEntry *entry;
     guint32 inst;
 
     /* We put the instance at the first position in
      * selected_songs. Retrieve it and delete it from the list */
-    inst = (guint32)g_list_nth_data (selected_songs, 0);
-    selected_songs = g_list_remove (selected_songs, (gpointer)inst);
+    inst = (guint32)g_list_nth_data (selected_songids, 0);
+    selected_songids = g_list_remove (selected_songids, (gpointer)inst);
     /* Same with the selected entry */
-    entry = g_list_nth_data (selected_songs, 0);
-    selected_songs = g_list_remove (selected_songs, entry);
+    entry = g_list_nth_data (selected_songids, 0);
+    selected_songids = g_list_remove (selected_songids, entry);
 
     /* Delete the songs */
-    delete_song_ok (pl, selected_songs);
+    delete_song_ok (pl, selected_songids);
     /* Delete the entry */
     st_remove_entry (entry, inst);
 }
@@ -1278,21 +1290,22 @@ static void delete_entry_ok (gpointer user_data1, gpointer user_data2)
 /* @user_data1 the selected playlist, @user_data2 are the selected songs */
 static void delete_entry_cancel (gpointer user_data1, gpointer user_data2)
 {
-    GList *selected_songs = user_data2;
+    GList *selected_songids = user_data2;
 
-    g_list_free (selected_songs);
+    g_list_free (selected_songids);
 }
 
 
 void delete_entry_head (gint inst)
 {
-    GList *selected_songs;
+    GList *selected_songids=NULL;
     Playlist *pl;
     GString *str;
     gchar *label, *title;
     gboolean confirm_again;
     ConfHandlerOpt confirm_again_handler;
     TabEntry *entry;
+    GList *gl;
 
     if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
     pl = pm_get_selected_playlist();
@@ -1318,17 +1331,22 @@ void delete_entry_head (gint inst)
 	else   gtkpod_statusbar_message (_("Cannot remove entry 'All'"));
 	return;
     }
-    selected_songs = g_list_copy (entry->members);
+    for (gl=entry->members; gl; gl=gl->next)
+    {
+	Song *s=(Song *)gl->data;
+	selected_songids = g_list_append (selected_songids,
+					  (gpointer)s->ipod_id);
+    }
 
-    delete_populate_settings (pl, selected_songs,
+    delete_populate_settings (pl, selected_songids,
 			      &label, &title,
 			      &confirm_again, &confirm_again_handler,
 			      &str);
-    /* add "entry" to beginning of the "selected_songs" list -- we can
+    /* add "entry" to beginning of the "selected_songids" list -- we can
      * only pass two args, so this is the easiest way */
-    selected_songs = g_list_prepend (selected_songs, entry);
+    selected_songids = g_list_prepend (selected_songids, entry);
     /* add "inst" the same way */
-    selected_songs = g_list_prepend (selected_songs, (gpointer)inst);
+    selected_songids = g_list_prepend (selected_songids, (gpointer)inst);
 
     /* open window */
     gtkpod_confirmation
@@ -1337,15 +1355,15 @@ void delete_entry_head (gint inst)
 	 title,                /* title */
 	 label,                /* label */
 	 str->str,             /* scrolled text */
-	 NULL, FALSE, NULL,    /* option 1 */
-	 NULL, FALSE, NULL,    /* option 2 */
+	 NULL, 0, NULL,        /* option 1 */
+	 NULL, 0, NULL,        /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
 	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
 	 delete_entry_ok,      /* ConfHandler ok_handler,*/
 	 CONF_NO_BUTTON,       /* don't show "Apply" button */
 	 delete_entry_cancel,  /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
-	 selected_songs);      /* gpointer user_data2,*/
+	 selected_songids);      /* gpointer user_data2,*/
 
     g_free (label);
     g_string_free (str, TRUE);

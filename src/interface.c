@@ -1043,6 +1043,8 @@ create_confirm_window (void)
   GtkWidget *scroller;
   GtkWidget *text;
   GtkWidget *option_vbox;
+  GtkWidget *option_hbox1;
+  GtkWidget *option_hbox2;
   GtkWidget *hbox14;
   GtkWidget *never_again;
   GtkWidget *hbuttonbox4;
@@ -1085,9 +1087,17 @@ create_confirm_window (void)
   gtk_widget_show (option_vbox);
   gtk_box_pack_start (GTK_BOX (vbox6), option_vbox, FALSE, FALSE, 2);
 
+  option_hbox1 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (option_hbox1);
+  gtk_box_pack_start (GTK_BOX (option_vbox), option_hbox1, FALSE, FALSE, 0);
+
+  option_hbox2 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (option_hbox2);
+  gtk_box_pack_start (GTK_BOX (option_vbox), option_hbox2, FALSE, FALSE, 0);
+
   hbox14 = gtk_hbox_new (TRUE, 0);
   gtk_widget_show (hbox14);
-  gtk_box_pack_start (GTK_BOX (vbox6), hbox14, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (option_vbox), hbox14, FALSE, FALSE, 0);
 
   never_again = gtk_check_button_new_with_mnemonic (_("Never show this dialogue again"));
   gtk_widget_show (never_again);
@@ -1122,6 +1132,8 @@ create_confirm_window (void)
   GLADE_HOOKUP_OBJECT (confirm_window, scroller, "scroller");
   GLADE_HOOKUP_OBJECT (confirm_window, text, "text");
   GLADE_HOOKUP_OBJECT (confirm_window, option_vbox, "option_vbox");
+  GLADE_HOOKUP_OBJECT (confirm_window, option_hbox1, "option_hbox1");
+  GLADE_HOOKUP_OBJECT (confirm_window, option_hbox2, "option_hbox2");
   GLADE_HOOKUP_OBJECT (confirm_window, hbox14, "hbox14");
   GLADE_HOOKUP_OBJECT (confirm_window, never_again, "never_again");
   GLADE_HOOKUP_OBJECT (confirm_window, hbuttonbox4, "hbuttonbox4");
@@ -1153,6 +1165,7 @@ create_new_prefs_window (void)
   GtkWidget *charset_combo;
   GtkWidget *charset_combo_entry;
   GtkWidget *cfg_update_charset;
+  GtkWidget *cfg_add_recursively;
   GtkWidget *cfg_md5songs;
   GtkWidget *table2;
   GtkWidget *cfg_show_duplicates;
@@ -1163,7 +1176,8 @@ create_new_prefs_window (void)
   GtkWidget *label46;
   GtkWidget *table5;
   GtkWidget *cfg_show_sync_dirs;
-  GtkWidget *cfg_add_recursively;
+  GtkWidget *cfg_sync_remove;
+  GtkWidget *cfg_sync_remove_confirm;
   GtkWidget *label28;
   GtkWidget *frame8;
   GtkWidget *hbox10;
@@ -1208,12 +1222,6 @@ create_new_prefs_window (void)
   GtkWidget *sort_tab_num_combo;
   GtkWidget *sort_tab_num_combo_entry;
   GtkWidget *label34;
-  GtkWidget *frame13;
-  GtkWidget *autoselect_vbox;
-  GtkWidget *cfg_mpl_autoselect;
-  GtkWidget *label40;
-  GtkWidget *autoselect_hbox;
-  GtkWidget *label36;
   GtkWidget *frame14;
   GtkWidget *hbox12;
   GtkWidget *vbox27;
@@ -1232,6 +1240,12 @@ create_new_prefs_window (void)
   GtkWidget *col_visible8;
   GtkWidget *col_visible11;
   GtkWidget *label37;
+  GtkWidget *frame13;
+  GtkWidget *autoselect_vbox;
+  GtkWidget *cfg_mpl_autoselect;
+  GtkWidget *label40;
+  GtkWidget *autoselect_hbox;
+  GtkWidget *label36;
   GtkWidget *frame15;
   GtkWidget *vbox30;
   GtkWidget *cfg_block_display;
@@ -1250,13 +1264,14 @@ create_new_prefs_window (void)
   GtkWidget *cfg_delete_playlist;
   GtkWidget *cfg_delete_track_from_playlist;
   GtkWidget *cfg_delete_track_from_ipod;
+  GtkWidget *cfg_sync_remove_confirm2;
   GtkWidget *label33;
   GtkWidget *frame17;
   GtkWidget *vbox33;
   GtkWidget *cfg_save_sorted_order;
   GtkWidget *cfg_automount_ipod;
   GtkWidget *label42;
-  GtkWidget *label41;
+  GtkWidget *label;
   GtkWidget *hbuttonbox5;
   GtkWidget *prefs_apply;
   GtkWidget *prefs_cancel;
@@ -1283,6 +1298,7 @@ create_new_prefs_window (void)
   frame6 = gtk_frame_new (NULL);
   gtk_widget_show (frame6);
   gtk_box_pack_start (GTK_BOX (vbox14), frame6, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame6), GTK_SHADOW_ETCHED_OUT);
 
   vbox15 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox15);
@@ -1314,6 +1330,7 @@ create_new_prefs_window (void)
   frame7 = gtk_frame_new (NULL);
   gtk_widget_show (frame7);
   gtk_box_pack_start (GTK_BOX (vbox14), frame7, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame7), GTK_SHADOW_ETCHED_OUT);
 
   vbox16 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox16);
@@ -1344,6 +1361,11 @@ create_new_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_charset, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_update_charset, _("Normally the charset specified when first importing the song will be used to update the song information. If you have chosen a wrong charset when first importing a song and want to correct it using the \"Update Song\" function, you must check this option. Note: charset info is stored in the extended information file (see Export) and songs imported before V0.51 will have no charset stored -- the charset specified above will be used at first."), NULL);
 
+  cfg_add_recursively = gtk_check_button_new_with_mnemonic (_("Add directories recursively"));
+  gtk_widget_show (cfg_add_recursively);
+  gtk_box_pack_start (GTK_BOX (vbox16), cfg_add_recursively, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_add_recursively, _("If you check this, gtkpod will descend into subdirectories recursively."), NULL);
+
   cfg_md5songs = gtk_check_button_new_with_mnemonic (_("Don't allow file duplication"));
   gtk_widget_show (cfg_md5songs);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_md5songs, FALSE, FALSE, 0);
@@ -1360,7 +1382,7 @@ create_new_prefs_window (void)
                     (GtkAttachOptions) (0), 20, 0);
   gtk_tooltips_set_tip (tooltips, cfg_show_duplicates, _("Display the list of duplicates that have been detected after adding files."), NULL);
 
-  cfg_update_existing = gtk_check_button_new_with_mnemonic (_("When adding dirs/files, update information of\nexisting songs with identical filenames"));
+  cfg_update_existing = gtk_check_button_new_with_mnemonic (_("When adding dirs/files, update information of\n existing songs with identical filenames"));
   gtk_widget_show (cfg_update_existing);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_existing, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_update_existing, _("If the filename (full path) of an existing song matches that of a song to be added, this option allows you to update the information of the existing song rather than adding the song again. Please note that this option is different from the option above: duplicates are completely identical, having the same filename still allows for different ID3 tags. On export the updated song is copied to the iPod overwriting the old version."), NULL);
@@ -1389,7 +1411,7 @@ create_new_prefs_window (void)
   gtk_label_set_justify (GTK_LABEL (label46), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label46), 0, 0.5);
 
-  table5 = gtk_table_new (2, 1, FALSE);
+  table5 = gtk_table_new (3, 1, FALSE);
   gtk_widget_show (table5);
   gtk_box_pack_start (GTK_BOX (vbox16), table5, FALSE, FALSE, 0);
 
@@ -1399,12 +1421,21 @@ create_new_prefs_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 20, 0);
 
-  cfg_add_recursively = gtk_check_button_new_with_mnemonic (_("Add directories recursively"));
-  gtk_widget_show (cfg_add_recursively);
-  gtk_box_pack_start (GTK_BOX (vbox16), cfg_add_recursively, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_add_recursively, _("If you check this, gtkpod will descend into subdirectories recursively."), NULL);
+  cfg_sync_remove = gtk_check_button_new_with_mnemonic (_("Delete tracks that have been removed"));
+  gtk_widget_show (cfg_sync_remove);
+  gtk_table_attach (GTK_TABLE (table5), cfg_sync_remove, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_sync_remove, _("If you check this option, tracks that have been removed from the synced directories will be removed from the iPod as well."), NULL);
 
-  label28 = gtk_label_new (_("Adding/Syncinc/Updating"));
+  cfg_sync_remove_confirm = gtk_check_button_new_with_mnemonic (_("Confirm before removing tracks"));
+  gtk_widget_show (cfg_sync_remove_confirm);
+  gtk_table_attach (GTK_TABLE (table5), cfg_sync_remove_confirm, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_sync_remove_confirm, _("This is the same option as in 'Misc/Delete Confirmation'"), NULL);
+
+  label28 = gtk_label_new (_("Adding/Updating/Syncing"));
   gtk_widget_show (label28);
   gtk_frame_set_label_widget (GTK_FRAME (frame7), label28);
   gtk_label_set_justify (GTK_LABEL (label28), GTK_JUSTIFY_LEFT);
@@ -1412,6 +1443,7 @@ create_new_prefs_window (void)
   frame8 = gtk_frame_new (NULL);
   gtk_widget_show (frame8);
   gtk_box_pack_start (GTK_BOX (vbox14), frame8, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame8), GTK_SHADOW_ETCHED_OUT);
 
   hbox10 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox10);
@@ -1466,12 +1498,13 @@ create_new_prefs_window (void)
   frame9 = gtk_frame_new (NULL);
   gtk_widget_show (frame9);
   gtk_box_pack_start (GTK_BOX (vbox20), frame9, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame9), GTK_SHADOW_ETCHED_OUT);
 
   vbox21 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox21);
   gtk_container_add (GTK_CONTAINER (frame9), vbox21);
 
-  cfg_write_extended = gtk_check_button_new_with_mnemonic (_("Write extended information (PC filenames,\nMD5 hashes, charset). Recommended."));
+  cfg_write_extended = gtk_check_button_new_with_mnemonic (_("Write extended information (PC filenames,\n MD5 hashes, charset). Recommended."));
   gtk_widget_show (cfg_write_extended);
   gtk_box_pack_start (GTK_BOX (vbox21), cfg_write_extended, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_write_extended, _("Highly recommended for faster import when taking advantage of the duplication recognition. Also, having the PC filenames allows writing changed ID3 tags to disk, and even to reconstruct your ipod's contents in case of file system corruption (change the \"transferred=\" entries in your backuped database)."), NULL);
@@ -1488,6 +1521,7 @@ create_new_prefs_window (void)
   frame10 = gtk_frame_new (NULL);
   gtk_widget_show (frame10);
   gtk_box_pack_start (GTK_BOX (vbox20), frame10, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame10), GTK_SHADOW_ETCHED_OUT);
 
   vbox22 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox22);
@@ -1509,7 +1543,7 @@ create_new_prefs_window (void)
                     (GtkAttachOptions) (0), 20, 0);
   gtk_tooltips_set_tip (tooltips, cfg_id3_writeall, _("Normally only the tag you changed is written to disk."), NULL);
 
-  cfg_write_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (in the input section)\nwhen writing tags"));
+  cfg_write_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (in the input section)\n when writing tags"));
   gtk_widget_show (cfg_write_charset);
   gtk_table_attach (GTK_TABLE (table3), cfg_write_charset, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
@@ -1533,6 +1567,7 @@ create_new_prefs_window (void)
   frame16 = gtk_frame_new (NULL);
   gtk_widget_show (frame16);
   gtk_box_pack_start (GTK_BOX (vbox23), frame16, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame16), GTK_SHADOW_ETCHED_OUT);
 
   vbox31 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox31);
@@ -1578,6 +1613,7 @@ create_new_prefs_window (void)
   frame12 = gtk_frame_new (NULL);
   gtk_widget_show (frame12);
   gtk_box_pack_start (GTK_BOX (vbox23), frame12, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame12), GTK_SHADOW_ETCHED_OUT);
 
   vbox25 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox25);
@@ -1607,38 +1643,10 @@ create_new_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame12), label34);
   gtk_label_set_justify (GTK_LABEL (label34), GTK_JUSTIFY_LEFT);
 
-  frame13 = gtk_frame_new (NULL);
-  gtk_widget_show (frame13);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame13, FALSE, TRUE, 0);
-
-  autoselect_vbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (autoselect_vbox);
-  gtk_container_add (GTK_CONTAINER (frame13), autoselect_vbox);
-
-  cfg_mpl_autoselect = gtk_check_button_new_with_mnemonic (_("...master playlist"));
-  gtk_widget_show (cfg_mpl_autoselect);
-  gtk_box_pack_start (GTK_BOX (autoselect_vbox), cfg_mpl_autoselect, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_mpl_autoselect, _("If you don't select the master playlist automatically, the initial database import is much faster because the display dosn't have to be updated."), NULL);
-
-  label40 = gtk_label_new (_("...entry 'All' in sort tab..."));
-  gtk_widget_show (label40);
-  gtk_box_pack_start (GTK_BOX (autoselect_vbox), label40, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label40), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label40), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (label40), 20, 0);
-
-  autoselect_hbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (autoselect_hbox);
-  gtk_box_pack_start (GTK_BOX (autoselect_vbox), autoselect_hbox, TRUE, TRUE, 0);
-
-  label36 = gtk_label_new (_("Automatically select..."));
-  gtk_widget_show (label36);
-  gtk_frame_set_label_widget (GTK_FRAME (frame13), label36);
-  gtk_label_set_justify (GTK_LABEL (label36), GTK_JUSTIFY_LEFT);
-
   frame14 = gtk_frame_new (NULL);
   gtk_widget_show (frame14);
   gtk_box_pack_start (GTK_BOX (vbox23), frame14, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame14), GTK_SHADOW_ETCHED_OUT);
 
   hbox12 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox12);
@@ -1709,15 +1717,46 @@ create_new_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame14), label37);
   gtk_label_set_justify (GTK_LABEL (label37), GTK_JUSTIFY_LEFT);
 
+  frame13 = gtk_frame_new (NULL);
+  gtk_widget_show (frame13);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame13, FALSE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame13), GTK_SHADOW_ETCHED_OUT);
+
+  autoselect_vbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (autoselect_vbox);
+  gtk_container_add (GTK_CONTAINER (frame13), autoselect_vbox);
+
+  cfg_mpl_autoselect = gtk_check_button_new_with_mnemonic (_("...master playlist"));
+  gtk_widget_show (cfg_mpl_autoselect);
+  gtk_box_pack_start (GTK_BOX (autoselect_vbox), cfg_mpl_autoselect, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_mpl_autoselect, _("If you don't select the master playlist automatically, the initial database import is much faster because the display dosn't have to be updated."), NULL);
+
+  label40 = gtk_label_new (_("...entry 'All' in sort tab..."));
+  gtk_widget_show (label40);
+  gtk_box_pack_start (GTK_BOX (autoselect_vbox), label40, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label40), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label40), 0, 0.5);
+  gtk_misc_set_padding (GTK_MISC (label40), 20, 0);
+
+  autoselect_hbox = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (autoselect_hbox);
+  gtk_box_pack_start (GTK_BOX (autoselect_vbox), autoselect_hbox, TRUE, TRUE, 0);
+
+  label36 = gtk_label_new (_("Automatically select..."));
+  gtk_widget_show (label36);
+  gtk_frame_set_label_widget (GTK_FRAME (frame13), label36);
+  gtk_label_set_justify (GTK_LABEL (label36), GTK_JUSTIFY_LEFT);
+
   frame15 = gtk_frame_new (NULL);
   gtk_widget_show (frame15);
   gtk_box_pack_start (GTK_BOX (vbox23), frame15, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame15), GTK_SHADOW_ETCHED_OUT);
 
   vbox30 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox30);
   gtk_container_add (GTK_CONTAINER (frame15), vbox30);
 
-  cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\nentry (faster!)"));
+  cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\n entry (faster!)"));
   gtk_widget_show (cfg_block_display);
   gtk_box_pack_start (GTK_BOX (vbox30), cfg_block_display, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_block_display, _("The display can be blocked after changing a selection. The display update is faster, but you have to wait until it's finished."), NULL);
@@ -1739,6 +1778,7 @@ create_new_prefs_window (void)
   frame18 = gtk_frame_new (NULL);
   gtk_widget_show (frame18);
   gtk_box_pack_start (GTK_BOX (vbox32), frame18, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame18), GTK_SHADOW_ETCHED_OUT);
 
   vbox34 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox34);
@@ -1774,6 +1814,7 @@ create_new_prefs_window (void)
   frame11 = gtk_frame_new (NULL);
   gtk_widget_show (frame11);
   gtk_box_pack_start (GTK_BOX (vbox32), frame11, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame11), GTK_SHADOW_ETCHED_OUT);
 
   vbox24 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox24);
@@ -1791,6 +1832,11 @@ create_new_prefs_window (void)
   gtk_widget_show (cfg_delete_track_from_ipod);
   gtk_box_pack_start (GTK_BOX (vbox24), cfg_delete_track_from_ipod, FALSE, FALSE, 0);
 
+  cfg_sync_remove_confirm2 = gtk_check_button_new_with_mnemonic (_("Before removing tracks completely when\n synchronizing directories"));
+  gtk_widget_show (cfg_sync_remove_confirm2);
+  gtk_box_pack_start (GTK_BOX (vbox24), cfg_sync_remove_confirm2, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_sync_remove_confirm2, _("This option only has only meaning of you activate the 'Delete Tracks Removed from Disk' option in the 'Import/Syncing Dirs' section."), NULL);
+
   label33 = gtk_label_new (_("Delete Confirmation "));
   gtk_widget_show (label33);
   gtk_frame_set_label_widget (GTK_FRAME (frame11), label33);
@@ -1799,6 +1845,7 @@ create_new_prefs_window (void)
   frame17 = gtk_frame_new (NULL);
   gtk_widget_show (frame17);
   gtk_box_pack_start (GTK_BOX (vbox32), frame17, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame17), GTK_SHADOW_ETCHED_OUT);
 
   vbox33 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox33);
@@ -1819,10 +1866,10 @@ create_new_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame17), label42);
   gtk_label_set_justify (GTK_LABEL (label42), GTK_JUSTIFY_LEFT);
 
-  label41 = gtk_label_new (_("Misc"));
-  gtk_widget_show (label41);
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 3), label41);
-  gtk_label_set_justify (GTK_LABEL (label41), GTK_JUSTIFY_LEFT);
+  label = gtk_label_new (_("Misc"));
+  gtk_widget_show (label);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 3), label);
+  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
 
   hbuttonbox5 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox5);
@@ -1859,6 +1906,9 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) cfg_update_charset, "toggled",
                     G_CALLBACK (on_cfg_update_charset_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_add_recursively, "toggled",
+                    G_CALLBACK (on_cfg_add_recursively_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_md5songs, "toggled",
                     G_CALLBACK (on_cfg_md5songs_toggled),
                     NULL);
@@ -1877,8 +1927,11 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) cfg_show_sync_dirs, "toggled",
                     G_CALLBACK (on_cfg_show_sync_dirs_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_add_recursively, "toggled",
-                    G_CALLBACK (on_cfg_add_recursively_toggled),
+  g_signal_connect ((gpointer) cfg_sync_remove, "toggled",
+                    G_CALLBACK (on_cfg_sync_remove_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_sync_remove_confirm, "toggled",
+                    G_CALLBACK (on_cfg_sync_remove_confirm_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_write_extended, "toggled",
                     G_CALLBACK (on_cfg_write_extended_info_toggled),
@@ -1931,6 +1984,9 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) cfg_delete_track_from_ipod, "toggled",
                     G_CALLBACK (on_cfg_delete_track_from_ipod_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_sync_remove_confirm2, "toggled",
+                    G_CALLBACK (on_cfg_sync_remove_confirm_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_save_sorted_order, "toggled",
                     G_CALLBACK (on_cfg_save_sorted_order_toggled),
                     NULL);
@@ -1966,6 +2022,7 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, charset_combo, "charset_combo");
   GLADE_HOOKUP_OBJECT (new_prefs_window, charset_combo_entry, "charset_combo_entry");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_update_charset, "cfg_update_charset");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_add_recursively, "cfg_add_recursively");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_md5songs, "cfg_md5songs");
   GLADE_HOOKUP_OBJECT (new_prefs_window, table2, "table2");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_show_duplicates, "cfg_show_duplicates");
@@ -1976,7 +2033,8 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, label46, "label46");
   GLADE_HOOKUP_OBJECT (new_prefs_window, table5, "table5");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_show_sync_dirs, "cfg_show_sync_dirs");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_add_recursively, "cfg_add_recursively");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_sync_remove, "cfg_sync_remove");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_sync_remove_confirm, "cfg_sync_remove_confirm");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label28, "label28");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame8, "frame8");
   GLADE_HOOKUP_OBJECT (new_prefs_window, hbox10, "hbox10");
@@ -2020,12 +2078,6 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo, "sort_tab_num_combo");
   GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo_entry, "sort_tab_num_combo_entry");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label34, "label34");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame13, "frame13");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_vbox, "autoselect_vbox");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_mpl_autoselect, "cfg_mpl_autoselect");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label40, "label40");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_hbox, "autoselect_hbox");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label36, "label36");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame14, "frame14");
   GLADE_HOOKUP_OBJECT (new_prefs_window, hbox12, "hbox12");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox27, "vbox27");
@@ -2044,6 +2096,12 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible8, "col_visible8");
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible11, "col_visible11");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label37, "label37");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, frame13, "frame13");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_vbox, "autoselect_vbox");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_mpl_autoselect, "cfg_mpl_autoselect");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label40, "label40");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_hbox, "autoselect_hbox");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label36, "label36");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame15, "frame15");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox30, "vbox30");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_block_display, "cfg_block_display");
@@ -2062,13 +2120,14 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_playlist, "cfg_delete_playlist");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_track_from_playlist, "cfg_delete_track_from_playlist");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_track_from_ipod, "cfg_delete_track_from_ipod");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_sync_remove_confirm2, "cfg_sync_remove_confirm2");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label33, "label33");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame17, "frame17");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox33, "vbox33");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_save_sorted_order, "cfg_save_sorted_order");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label42, "label42");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label41, "label41");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label, "label");
   GLADE_HOOKUP_OBJECT (new_prefs_window, hbuttonbox5, "hbuttonbox5");
   GLADE_HOOKUP_OBJECT (new_prefs_window, prefs_apply, "prefs_apply");
   GLADE_HOOKUP_OBJECT (new_prefs_window, prefs_cancel, "prefs_cancel");

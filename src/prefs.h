@@ -61,7 +61,7 @@ struct cfg
       gchar *browse, *export;
   } last_dir;	          /* last directories used by the fileselections */
   struct {
-      gboolean song, playlist, ipod_file;
+      gboolean song, playlist, ipod_file, syncing;
   } deletion;
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
   struct win_size size_conf_sw; /* last size of conf window (scrolled) */
@@ -76,7 +76,8 @@ struct cfg
   gboolean show_duplicates;     /* show duplicate notification ?*/
   gboolean show_updated;        /* show update notification ?*/
   gboolean show_non_updated;    /* show update notification ?*/
-  gboolean show_sync_dirs;      /* show dirs to be synced ?*/
+  gboolean show_sync_dirs;      /* show dirs to be synced ? */
+  gboolean sync_remove;         /* delete tracks removed from synced dirs? */
   gboolean save_sorted_order;   /* save order after sort automatically? */
   gboolean display_toolbar;     /* should toolbar be displayed */
   gboolean update_charset;      /* Update charset when updating song? */
@@ -113,6 +114,7 @@ void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_playlist_deletion(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
+void prefs_set_sync_remove_confirm(gboolean val);
 void prefs_set_md5songs(gboolean active);
 void prefs_set_update_existing(gboolean active);
 void prefs_set_block_display(gboolean active);
@@ -144,6 +146,7 @@ guint prefs_get_st_category (guint32 inst);
 gboolean prefs_get_playlist_deletion(void);
 gboolean prefs_get_song_playlist_deletion(void);
 gboolean prefs_get_song_ipod_file_deletion(void);
+gboolean prefs_get_sync_remove_confirm(void);
 gboolean prefs_get_id3_write(void);
 gboolean prefs_get_id3_writeall(void);
 gchar *prefs_get_ipod_mount (void);
@@ -169,6 +172,8 @@ gboolean prefs_get_show_non_updated (void);
 void prefs_set_show_non_updated (gboolean val);
 gboolean prefs_get_show_sync_dirs (void);
 void prefs_set_show_sync_dirs (gboolean val);
+gboolean prefs_get_sync_remove (void);
+void prefs_set_sync_remove (gboolean val);
 gboolean prefs_get_display_toolbar (void);
 void prefs_set_display_toolbar (gboolean val);
 gboolean prefs_get_update_charset (void);

@@ -1,5 +1,6 @@
 gtkpod V0.51-CVS
-	NEW FEATURE: Synchronize directories.
+	NEW FEATURE: Synchronize directories (removed songs can be deleted
+	automatically).
 
         IMPROVEMENT: added all supported charsets provided by "iconv
 	--list" to the list of charsets to choose from. Code assumes that

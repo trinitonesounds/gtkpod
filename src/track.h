@@ -102,6 +102,7 @@ guint get_nr_of_songs (void);
 guint get_nr_of_nontransferred_songs (void);
 glong get_filesize_of_nontransferred_songs (void);
 Song *it_get_song_by_nr (guint32 n);
+Song *get_next_song (gint i);
 Song *get_song_by_nr (guint32 n);
 Song *get_song_by_id (guint32 id);
 Song *get_song_by_filename (gchar *name);
