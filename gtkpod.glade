@@ -1118,7 +1118,7 @@
 	      <child>
 		<widget class="GtkLabel" id="label20">
 		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">Locale for file operations:</property>
+		  <property name="label" translatable="yes">Charset (ID3, files):</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">False</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1137,7 +1137,7 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkCombo" id="locale_combo">
+		<widget class="GtkCombo" id="charset_combo">
 		  <property name="visible">True</property>
 		  <property name="value_in_list">False</property>
 		  <property name="allow_empty">True</property>
@@ -1146,7 +1146,7 @@
 		  <property name="enable_arrows_always">False</property>
 
 		  <child internal-child="entry">
-		    <widget class="GtkEntry" id="locale_combo_entry">
+		    <widget class="GtkEntry" id="charset_combo_entry">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="editable">False</property>
@@ -1156,12 +1156,12 @@
 		      <property name="has_frame">True</property>
 		      <property name="invisible_char" translatable="yes">*</property>
 		      <property name="activates_default">False</property>
-		      <signal name="changed" handler="on_locale_combo_entry_changed" last_modification_time="Fri, 10 Jan 2003 16:28:13 GMT"/>
+		      <signal name="changed" handler="on_charset_combo_entry_changed" last_modification_time="Tue, 14 Jan 2003 13:53:44 GMT"/>
 		    </widget>
 		  </child>
 
 		  <child internal-child="list">
-		    <widget class="GtkList" id="locale_combo_list">
+		    <widget class="GtkList" id="charset_combo_list">
 		      <property name="visible">True</property>
 		      <property name="selection_mode">GTK_SELECTION_BROWSE</property>
 		    </widget>
