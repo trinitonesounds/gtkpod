@@ -38,7 +38,7 @@ static GHashTable *id_hash = NULL;
 typedef struct {
     GtkWidget *window;
     gboolean  scrolled;
-    ConfHandlerNA never_again_handler;
+    ConfHandlerCA confirm_again_handler;
     ConfHandler ok_handler;
     ConfHandler cancel_handler;
     gpointer user_data1;
@@ -93,8 +93,8 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
     cd = g_hash_table_lookup (id_hash, &id);
     if (cd)
     {
-	if (cd->never_again_handler)
-	    cd->never_again_handler (gtk_toggle_button_get_active(t));
+	if (cd->confirm_again_handler)
+	    cd->confirm_again_handler (!gtk_toggle_button_get_active(t));
     }
 }
 
@@ -102,17 +102,19 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
    information given. If "OK" is clicked, ok_handler() is called,
    otherwise cancel_handler() is called, each with the parameters
    "user_data1" and "user_data2". Use "NULL" if you want to
-   omit a parameter. If "never_again" is TRUE, ok_handler() is called
+   omit a parameter. If "confirm_again" is FALSE, ok_handler() is called
    directly.
 
-   @id:    an ID: only one window with a given id can be open
+   @id:    an ID: only one window with a given positive id can be
+           open. Use negative ID if you don't care how many windows
+	   are open at the same time (e.g. because they are modal)
    @modal: should the window be modal (i.e. block the program)?
    @title: title of the window
    @label: the text on the top of the window
    @text:  the text displayed in a scrolled window
-   @never_again:    state of the "never ask again" flag
-   @never_again_handler: callback for the checkbox (is called with the
-                    current state of the toggle box)
+   @confirm_again:    state of the "confirm again" flag
+   @confirm_again_handler: callback for the checkbox (is called with the
+                    inverted current state of the toggle box)
    @ok_handler:     function to be called when the OK button is pressed
    @cancel_handler: function to be called when the cancel button is pressed
    @user_data1:     first argument to be passed to the ConfHandler
@@ -128,8 +130,8 @@ gboolean gtkpod_confirmation (gint id,
 			      gchar *title,
 			      gchar *label,
 			      gchar *text,
-			      gboolean never_again,
-			      ConfHandlerNA never_again_handler,
+			      gboolean confirm_again,
+			      ConfHandlerCA confirm_again_handler,
 			      ConfHandler ok_handler,
 			      ConfHandler cancel_handler,
 			      gpointer user_data1,
@@ -146,14 +148,26 @@ gboolean gtkpod_confirmation (gint id,
 	id_hash = g_hash_table_new_full (g_int_hash, g_int_equal,
 					      g_free, g_free);
     }
-    if ((cd = g_hash_table_lookup (id_hash, &id)))
-    { /* window with same ID already open -- return */
-	return FALSE;
+    if (id >= 0)
+    {
+	if ((cd = g_hash_table_lookup (id_hash, &id)))
+	{ /* window with same ID already open -- return */
+	    return FALSE;
+	}
+    }
+    else /* find free ID */
+    {
+	id = 0;
+	do
+	{
+	    --id;
+	    cd = g_hash_table_lookup (id_hash, &id);
+	} while (cd != NULL);
     }
 
-    if (never_again)
-    { /* This question was supposed to be asked "never again" -- so we
-	 just call the ok_handler */
+    if (!confirm_again)
+    { /* This question was supposed to be asked "never again" ("don't
+	 confirm again" -- so we just call the ok_handler */
 	ok_handler (user_data1, user_data2);
 	return TRUE;
     }
@@ -166,7 +180,7 @@ gboolean gtkpod_confirmation (gint id,
     *idp = id;
     cd = g_malloc (sizeof (ConfData));
     cd->window = window;
-    cd->never_again_handler = never_again_handler;
+    cd->confirm_again_handler = confirm_again_handler;
     cd->ok_handler = ok_handler;
     cd->cancel_handler = cancel_handler;
     cd->user_data1 = user_data1;
@@ -209,10 +223,10 @@ gboolean gtkpod_confirmation (gint id,
 
     /* Set "Never Again" checkbox */
     w = lookup_widget(window, "never_again");
-    if (w && never_again_handler)
+    if (w && confirm_again_handler)
     { /* connect signal */
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     never_again);
+				     !confirm_again);
 	g_signal_connect ((gpointer)w,
 			  "toggled",
 			  G_CALLBACK (on_never_again_toggled),

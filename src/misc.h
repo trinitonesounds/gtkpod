@@ -60,4 +60,6 @@ void gtkpod_statusbar_message(const gchar *message);
 void gtkpod_songs_statusbar_init(GtkWidget*);
 void gtkpod_songs_statusbar_update(void);
 void ipod_directories_head (void);
+void delete_playlist_head (void);
+void delete_song_head (void);
 #endif __MISC_H__

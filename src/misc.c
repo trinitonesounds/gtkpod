@@ -448,8 +448,8 @@ void ipod_directories_head (void)
 			 _("Create iPod directories"), /* title */
 			 _("OK to create the following directories?"),
 			 str->str,
-			 FALSE,               /* gboolean never_again, */
-			 NULL, /* ConfHandlerNA never_again_handler, */
+			 TRUE,               /* gboolean confirm_again, */
+			 NULL, /* ConfHandlerCA confirm_again_handler, */
 			 ipod_directories_ok, /* ConfHandler ok_handler,*/
 			 ipod_directories_cancel, /* cancel_handler,*/
 			 mp,                  /* gpointer user_data1,*/
@@ -460,3 +460,186 @@ void ipod_directories_head (void)
     g_string_free (str, TRUE);
 }
 
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Delete Playlist                                      *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+/* ok handler for delete playlist */
+/* @user_data1 is the selected playlist */
+static void delete_playlist_ok (gpointer user_data1, gpointer user_data2)
+{
+    Playlist *selected_playlist = (Playlist *)user_data1;
+    gchar *buf;
+
+    buf = g_strdup_printf (_("Deleted playlist '%s'"),
+			   selected_playlist->name);
+    remove_playlist (selected_playlist);
+    gtkpod_statusbar_message (buf);
+    g_free (buf);
+}
+
+void delete_playlist_head (void)
+{
+    gchar *buf;
+    Playlist *pl = NULL;
+
+    pl = get_currently_selected_playlist();
+    if (!pl)
+    { /* no playlist selected */
+	gtkpod_statusbar_message (_("No playlist selected."));
+	return;
+    }
+    if (pl->type == PL_TYPE_MPL)
+    { /* master playlist */
+	gtkpod_statusbar_message (_("Cannot delete master playlist."));
+	return;
+    }
+    
+    buf = g_strdup_printf(_("Are you sure you want to delete the playlist '%s'?"), pl->name);
+
+    gtkpod_confirmation
+	(-1,                   /* gint id, */
+	 TRUE,                 /* gboolean modal, */
+	 _("Delete Playlist?"), /* title */
+	 buf,                   /* label */
+	 NULL,                  /* scrolled text */
+	 prefs_get_playlist_deletion (),   /* gboolean confirm_again, */
+	 prefs_set_playlist_deletion, /* ConfHandlerCA confirm_again_handler,*/
+	 delete_playlist_ok, /* ConfHandler ok_handler,*/
+	 NULL,               /* cancel_handler,*/
+	 pl,                 /* gpointer user_data1,*/
+	 NULL);              /* gpointer user_data2,*/
+
+    g_free (buf);
+}
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Delete Songs                                         *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+/* ok handler for delete song */
+/* @user_data1 the selected playlist, @user_data2 are the selected songs */
+static void delete_song_ok (gpointer user_data1, gpointer user_data2)
+{
+    Playlist *pl = user_data1;
+    GList *selected_songs = user_data2;
+    gint n;
+    gchar *buf;
+    GList *l;
+
+    /* sanity checks */
+    if (!pl)
+    {
+	if (selected_songs)
+	    g_list_free (selected_songs);
+	return;
+    }
+    if (!selected_songs)
+	return;
+
+    n = g_list_length (selected_songs);
+    if (pl->type == PL_TYPE_MPL)
+    {
+	buf = g_strdup_printf (ngettext (_("Deleted one song completely from iPod"), _("Deleted %d songs completely from iPod"), n), n);
+    }
+    else /* normal playlist */
+    {
+	buf = g_strdup_printf (ngettext (_("Deleted song from playlist '%s'"), _("Deleted songs from playlist '%s'"), n), pl->name);
+    }
+
+    for (l = selected_songs; l; l = l->next)
+    {
+	remove_song_from_playlist(pl, (Song *)l->data);
+    }
+
+    gtkpod_statusbar_message (buf);
+    g_list_free (selected_songs);
+    g_free (buf);
+}
+
+/* cancel handler for delete song */
+/* @user_data1 the selected playlist, @user_data2 are the selected songs */
+static void delete_song_cancel (gpointer user_data1, gpointer user_data2)
+{
+    GList *selected_songs = user_data2;
+
+    g_list_free (selected_songs);
+}
+
+void delete_song_head (void)
+{
+    GList *selected_songs;
+    Playlist *pl;
+    Song *s;
+    GList *l;
+    gint n;
+    GString *str;
+    gchar *label, *title;
+    gboolean confirm_again;
+    ConfHandlerCA confirm_again_handler;
+
+    selected_songs = get_currently_selected_songs();
+    pl = get_currently_selected_playlist();
+    if (selected_songs == NULL)
+    {  /* no songs selected */
+	g_list_free (selected_songs);
+	gtkpod_statusbar_message (_("No songs selected."));
+	return;
+    }
+    if (pl == NULL)
+    { /* no playlist??? Cannot happen, but... */
+	g_list_free (selected_songs);
+	gtkpod_statusbar_message (_("No playlist selected."));
+	return;
+    }
+
+    /* write title and label */
+    n = g_list_length (selected_songs);
+    if(pl->type == PL_TYPE_MPL)
+    {
+	label = g_strdup (ngettext ("Are you sure you want to delete the following song\ncompletely from your ipod?", "Are you sure you want to delete the following songs\ncompletely from your ipod?", n));
+	title = ngettext (_("Delete Song Completely?"), _("Delete Songs Completey?"), n);
+	confirm_again = prefs_get_song_ipod_file_deletion ();
+	confirm_again_handler = prefs_set_song_ipod_file_deletion;
+    }
+    else /* normal playlist */
+    {
+	label = g_strdup_printf(ngettext ("Are you sure you want to delete the following song\nfrom the playlist \"%s\"?", "Are you sure you want to delete the following songs\nfrom the playlist \"%s\"?", n), pl->name);
+	title = ngettext (_("Delete Song From Playlist?"), _("Delete Songs From Playlist?"), n);
+	confirm_again = prefs_get_song_playlist_deletion ();
+	confirm_again_handler = prefs_set_song_playlist_deletion;
+    }
+
+    /* Write names of songs */
+    str = g_string_sized_new (2000);
+    for(l = selected_songs; l; l = l->next)
+    {
+	s = (Song*)l->data;
+	g_string_append_printf (str, "%s-%s\n", s->artist, s->title);
+    }
+
+    /* open window */
+    gtkpod_confirmation
+	(-1,                   /* gint id, */
+	 TRUE,                 /* gboolean modal, */
+	 title,                /* title */
+	 label,                /* label */
+	 str->str,             /* scrolled text */
+	 confirm_again,        /* gboolean confirm_again, */
+	 confirm_again_handler,/* ConfHandlerCA confirm_again_handler,*/
+	 delete_song_ok,       /* ConfHandler ok_handler,*/
+	 delete_song_cancel,   /* cancel_handler,*/
+	 pl,                   /* gpointer user_data1,*/
+	 selected_songs);      /* gpointer user_data2,*/
+
+    g_free (label);
+    g_string_free (str, TRUE);
+}

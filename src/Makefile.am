@@ -10,7 +10,6 @@ bin_PROGRAMS = gtkpod
 gtkpod_SOURCES = \
 	charset.c charset.h \
 	confirmation.c confirmation.h \
-	delete_window.c delete_window.h \
 	dirbrowser.c dirbrowser.h \
 	display.c display.h \
 	file_export.c file_export.h \

@@ -34,7 +34,7 @@
 #include <gtk/gtk.h>
 
 typedef void (*ConfHandler)(gpointer user_data1, gpointer user_data2);
-typedef void (*ConfHandlerNA)(gboolean state);
+typedef void (*ConfHandlerCA)(gboolean state);
 
 gboolean gtkpod_confirmation (gint id,
 			      gboolean modal,
@@ -42,7 +42,7 @@ gboolean gtkpod_confirmation (gint id,
 			      gchar *label,
 			      gchar *text,
 			      gboolean never_again,
-			      ConfHandlerNA never_again_handler,
+			      ConfHandlerCA confirm_again_handler,
 			      ConfHandler ok_handler,
 			      ConfHandler cancel_handler,
 			      gpointer user_data1,

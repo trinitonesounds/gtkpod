@@ -43,7 +43,6 @@
 #include "display.h"
 #include "prefs_window.h"
 #include "md5.h"
-#include "delete_window.h"
 #include "file_export.h"
 #include "charset.h"
 
@@ -371,7 +370,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 	switch(event->keyval)
 	{
 	    case GDK_d:
-		confirmation_window_create(CONFIRMATION_WINDOW_PLAYLIST);
+		delete_playlist_head ();
 		break;
 	    case GDK_n:
 		add_new_playlist ();
@@ -398,7 +397,7 @@ on_song_treeview_key_release_event     (GtkWidget       *widget,
 	switch(event->keyval)
 	{
 	    case GDK_d:
-		confirmation_window_create(CONFIRMATION_WINDOW_SONG);
+		delete_song_head ();
 		break;
 	    default:
 		break;
@@ -406,41 +405,6 @@ on_song_treeview_key_release_event     (GtkWidget       *widget,
 
     }
   return FALSE;
-}
-
-
-void
-on_prefs_request_toggled               (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    confirmation_window_prefs_toggled(gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_delete_ok_clicked                   (GtkButton       *button,
-                                        gpointer         user_data)
-{
-    confirmation_window_ok_clicked();
-}
-
-
-void
-on_delete_cancel_clicked               (GtkButton       *button,
-                                        gpointer         user_data)
-{
-    confirmation_window_cancel_clicked();
-
-}
-
-
-gboolean
-on_delete_confirmation_delete_event    (GtkWidget       *widget,
-                                        GdkEvent        *event,
-                                        gpointer         user_data)
-{
-    confirmation_window_cancel_clicked();
-    return FALSE;
 }
 
 
@@ -651,7 +615,7 @@ void
 on_delete_song_menu                    (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    confirmation_window_create(CONFIRMATION_WINDOW_SONG);
+    delete_song_head ();
 }
 
 
@@ -659,7 +623,7 @@ void
 on_delete_playlist_menu                (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    confirmation_window_create(CONFIRMATION_WINDOW_PLAYLIST);
+    delete_playlist_head ();
 }
 
 

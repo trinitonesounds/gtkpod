@@ -389,7 +389,6 @@ gboolean add_song_by_filename (gchar *name)
 /* Remove song from the list. */
 void remove_song (Song *song)
 {
-  /*  remove_song_from_model (song); Must be done by playlist handling! */
   songs = g_list_remove (songs, song);
   md5_song_removed (song);
   free_song(song);
