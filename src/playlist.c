@@ -133,7 +133,7 @@ void remove_songid_from_playlist (Playlist *plitem, guint32 id)
 
   song = get_song_by_id (id);
   /* printf ("id: %4d song: %x\n", id, song); */
-  pm_remove_song (plitem, song);
+  remove_song_from_playlist (plitem, song);
 }
 
 /* This function removes the song "song" from the 
@@ -144,21 +144,28 @@ void remove_songid_from_playlist (Playlist *plitem, guint32 id)
    from memory completely */
 void remove_song_from_playlist (Playlist *plitem, Song *song)
 {
-  if (plitem == NULL)  plitem = get_playlist_by_nr (0);
-  if (g_list_find (plitem->members, song) == NULL) return; /* not a member */
-          /* This is checked to make it easier for the display model
-	     and so we know whether we have to decrease plitem->num */
-  /*  --plitem->num;  */ /* decrease song counter */
-  if (plitem->type == PL_TYPE_MPL)
+    if (song == NULL) return;
+    if (plitem == NULL)  plitem = get_playlist_by_nr (0);
+    if (g_list_find (plitem->members, song) == NULL) return; /* not a member */
+    /* This is checked to make it easier for the display model
+       and so we know whether we have to decrease plitem->num */
+    /*  --plitem->num;  */ /* decrease song counter */
+    if (plitem->type == PL_TYPE_MPL)
     { /* if it's the MPL, we remove the song permanently */
-      /* remove_song (song); */
-      remove_song_from_ipod_by_id(song->ipod_id);	
+	gint i, n;
+	n = get_nr_of_playlists ();
+	for (i = 1; i<n; ++i)
+	{  /* first we remove the song from all other playlists (i=1:
+	    * skip MPL or we loop */
+	    remove_song_from_playlist (get_playlist_by_nr (i), song);
+	}
+	remove_song_from_ipod_by_id(song->ipod_id);	
     }
-  else
-  {
-    plitem->members = g_list_remove (plitem->members, song);
-  }
-  pm_remove_song (plitem, song);
+    else
+    {
+	plitem->members = g_list_remove (plitem->members, song);
+    }
+    pm_remove_song (plitem, song);
 }
 
 /* Returns the number of playlists

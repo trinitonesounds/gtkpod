@@ -286,14 +286,8 @@ the charset set in the preference dialogue).
 Known bugs
 ----------
 
-- CRITICAL: remove_song_from_playlist does not remove song from all
-  existing playlists if song is removed from MPL (may cause segfault
-  if those songs are accessed from another playlist)
 - Display of large number of songs is awfully slow (mainly because of
   the use of the standard GTK2 tree views) -> deactivate "Automatically
   select "All" in first sort tab"
-- comments in display.c concerning sort tabs are out of date
-- sort tab code produces "programming error" output (seems to be
-  working, though)
 - No safety dialogue when quitting gtkpod without exporting the
   database

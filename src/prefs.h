@@ -52,8 +52,10 @@ struct cfg
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */
   gboolean autoimport;	  /* whether or not to automatically import files */
-     /* automatically select "All" in first sort tab? */
-  gboolean st_autoselect[SORT_TAB_NUM];
+  struct {
+    gboolean autoselect;  /* automatically select "All" in sort tab? */
+    guint    category;    /* which category was selected last? */
+  } st[SORT_TAB_NUM];
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
   gboolean write_extended_info; /* write additional file with PC filenames etc? */
@@ -94,6 +96,7 @@ void prefs_set_keep_backups(gboolean active);
 void prefs_set_write_extended_info(gboolean active);
 void prefs_set_auto_import(gboolean val);
 void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
+void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_playlist_deletion(gboolean val);
 void prefs_set_song_list_show_all(gboolean val);
 void prefs_set_song_list_show_track(gboolean val);
@@ -114,6 +117,7 @@ gboolean prefs_get_keep_backups(void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_auto_import(void);
 gboolean prefs_get_st_autoselect (guint32 inst);
+guint prefs_get_st_category (guint32 inst);
 gboolean prefs_get_playlist_deletion(void);
 gboolean prefs_get_song_list_show_all(void);
 gboolean prefs_get_song_list_show_album(void);

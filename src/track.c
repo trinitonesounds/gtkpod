@@ -710,7 +710,7 @@ void handle_import (void)
     { /* offline - requires extended info */
 	if ((cfgdir = prefs_get_cfgdir ()))
 	{
-	    name1 = concat_dir (cfgdir, "/iTunesDB.ext");
+	    name1 = concat_dir (cfgdir, "iTunesDB.ext");
 	    name2 = concat_dir (cfgdir, "iTunesDB");
 	    success = read_extended_info (name1, name2);
 	    g_free (name1);
@@ -731,7 +731,7 @@ void handle_import (void)
 
     destroy_extendedinfohash (); /* delete hash information (if available) */
 
-    if (itunes_import_ok () == FALSE)
+    if (n != get_nr_of_songs ())
     { /* Import was successfull, block menu item and button */
 	disable_gtkpod_import_buttons();
     }

@@ -102,7 +102,7 @@ prefs_window_create(void)
 	    if((w = lookup_widget(prefs_window,  buf)))
 	    {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					     tmpcfg->st_autoselect[i]);
+					     tmpcfg->st[i].autoselect);
 		/* glade makes a "GTK_OBJECT (i)" which segfaults
 		   because it's not GTK object. So we have to set up
 		   the signal handlers ourselves */
@@ -157,8 +157,10 @@ prefs_window_save(void)
     prefs_set_mount_point(tmpcfg->ipod_mount);
     prefs_set_charset(tmpcfg->charset);
     prefs_set_auto_import(tmpcfg->autoimport);
-    for (i=0; i<SORT_TAB_NUM; ++i)
-	prefs_set_st_autoselect (i, tmpcfg->st_autoselect[i]);
+    for (i=0; i<SORT_TAB_NUM; ++i) {
+	prefs_set_st_autoselect (i, tmpcfg->st[i].autoselect);
+	prefs_set_st_category (i, tmpcfg->st[i].category);
+    }
     prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
     prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
@@ -345,6 +347,6 @@ void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
 {
     if (inst < SORT_TAB_NUM)
     {
-	tmpcfg->st_autoselect[inst] = autoselect;
+	tmpcfg->st[inst].autoselect = autoselect;
     }
 }

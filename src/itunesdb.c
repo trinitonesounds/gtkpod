@@ -1055,7 +1055,7 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
       for (i=0; i<len; ++i)     /* replace '/' by ':' */
 	if (ipod_file[i] == '/')  ipod_file[i] = ':';
 #ifdef ITUNESDB_PROVIDE_UTF8
-      song->ipod_path = g_locale_to_utf8 (ipod_file, -1, NULL, NULL, NULL);
+      song->ipod_path = g_strdup (ipod_file);
 #endif ITUNESDB_PROVIDE_UTF8
       song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
 					       -1, NULL, NULL, NULL);

@@ -91,7 +91,11 @@ struct cfg *cfg_new(void)
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
     mycfg->autoimport = FALSE;
-    for (i=0; i<SORT_TAB_NUM; ++i)   mycfg->st_autoselect[i] = TRUE;
+    for (i=0; i<SORT_TAB_NUM; ++i)
+    {
+	mycfg->st[i].autoselect = TRUE;
+	mycfg->st[i].category = (i<ST_CAT_NUM ? i:0);
+    }
     mycfg->offline = FALSE;
     mycfg->keep_backups = TRUE;
     mycfg->write_extended_info = TRUE;
@@ -181,6 +185,11 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint i = atoi (line+13);
 	      prefs_set_st_autoselect (i, atoi (arg));
+	  }      
+	  else if(g_ascii_strncasecmp (line, "st_category", 11) == 0)
+	  {
+	      gint i = atoi (line+11);
+	      prefs_set_st_category (i, atoi (arg));
 	  }      
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
@@ -328,7 +337,10 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
     fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
     for (i=0; i<SORT_TAB_NUM; ++i)
+    {
 	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
+	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
+    }	
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
@@ -675,7 +687,7 @@ gboolean prefs_get_st_autoselect (guint32 inst)
 {
     if (inst < SORT_TAB_NUM)
     {
-	return cfg->st_autoselect[inst];
+	return cfg->st[inst].autoselect;
     }
     else
     {
@@ -687,7 +699,31 @@ void prefs_set_st_autoselect (guint32 inst, gboolean autoselect)
 {
     if (inst < SORT_TAB_NUM)
     {
-	cfg->st_autoselect[inst] = autoselect;
+	cfg->st[inst].autoselect = autoselect;
+    }
+}
+
+guint prefs_get_st_category (guint32 inst)
+{
+    if (inst < SORT_TAB_NUM)
+    {
+	return cfg->st[inst].category;
+    }
+    else
+    {
+	return TRUE; /* hmm.... this should not happen... */
+    }
+}
+
+void prefs_set_st_category (guint32 inst, guint category)
+{
+    if ((inst < SORT_TAB_NUM) && (category < ST_CAT_NUM))
+    {
+	cfg->st[inst].category = category;
+    }
+    else
+    {
+	gtkpod_warning ("Category nr (%d) or sorttab nr (%d) out of range.\n", category, inst);
     }
 }
 

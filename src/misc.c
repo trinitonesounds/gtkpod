@@ -105,16 +105,47 @@ void create_add_files_fileselector (void)
 
 /* Concats "dir" and "file" into full filename, taking
    into account that "dir" may or may not end with "/".
-   You must free the return string after use */
+   You must free the return string after use
+   This code tries to take into account some stupid constellations
+   when either "dir" or "file" is not set, or file starts with a "/"
+   (taken as absolute path) etc.  */
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
 {
-  if (file[strlen(file)-1] == '/')
-    {
-      return g_strdup_printf ("%s%s", dir, file);
+    if (file && (*file == '/'))
+    { /* we consider filenames starting with "/" to be absolute ->
+	 discard the dir part. */
+	return g_strdup (file);
     }
-  else
+    if (dir)
     {
-      return g_strdup_printf ("%s/%s", dir, file);
+	if (strlen (dir) != 0)
+	{	    
+	    if(dir[strlen(dir)-1] == '/')
+	    { /* "dir" ends with "/" */
+		if (file)
+		    return g_strdup_printf ("%s%s", dir, file);
+		else
+		    return g_strdup (dir);
+	    }
+	    else
+	    { /* "dir" does not end with "/" */
+		if (file)
+		    return g_strdup_printf ("%s/%s", dir, file);
+		else
+		    return g_strdup_printf ("%s/", dir);
+	    }
+	}
+	else
+	{ /* strlen (dir) == 0 */
+	    return g_strdup (file);
+	}
+    }
+    else
+    { /* dir == NULL */
+	if (file)
+	    return g_strdup (file);
+	else
+	    return g_strdup (""); /* how stupid can the caller be... */
     }
 }
 

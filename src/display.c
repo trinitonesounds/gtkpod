@@ -31,14 +31,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <support.h>
 #include <limits.h>
 
+#include "support.h"
 #include "prefs.h"
 #include "display.h"
 #include "song.h"
 #include "playlist.h"
 #include "interface.h"
+#include "misc.h"
 
 static GtkTreeView *song_treeview = NULL;
 static GtkTreeView *playlist_treeview = NULL;
@@ -274,7 +275,7 @@ static void pm_selection_changed (GtkTreeSelection *selection,
       song = get_song_in_playlist_by_nr (new_playlist, i);
       st_add_song (song, FALSE, 0);
     }
-  st_add_song (NULL, TRUE, 0);
+  if (n != 0) st_add_song (NULL, TRUE, 0);
 }
 
 void
@@ -300,7 +301,7 @@ pm_select_playlist_reinit(Playlist *pl)
     }
     else
     {
-	fprintf(stderr, "Nothing is selected currently in Playlist Tree\n");
+	gtkpod_warning (_("Nothing is selected currently in Playlist Tree\n"));
     }
 }
 
@@ -475,8 +476,7 @@ static gint st_get_instance (GtkNotebook *notebook)
   gint i=0;
   while (i<SORT_TAB_NUM)
     {
-      if (sorttab[i] == NULL) return -1; /* gtk_main_quit() selects one of the notebooks, but the memory has already been deleted... */
-      if (sorttab[i]->notebook == notebook) return i;
+      if (sorttab[i] && (sorttab[i]->notebook == notebook)) return i;
       ++i;
     }
   g_warning (_("Programming error (st_get_instance): notebook could not be found.\n"));
@@ -484,13 +484,7 @@ static gint st_get_instance (GtkNotebook *notebook)
 }
 
 
-/* Append playlist to the playlist model. If it's the first entry, we
-   select it, causing a callback that will reset the next instance.
-   Concerning selection: it takes a long time to display a long list
-   of songs. Therefore we have an option "don't select "All"
-   automatically in first sort tab". In if this option is activated,
-   we don't select anything automatically in the first sort tab and
-   instead init the next instance manually. */
+/* Append playlist to the playlist model. */
 static void st_add_entry (TabEntry *entry, guint32 inst)
 {
     GtkTreeIter iter;
@@ -528,7 +522,7 @@ static gboolean st_delete_entry_from_model (GtkTreeModel *model,
 static void st_remove_entry (TabEntry *entry, guint32 inst)
 {
   GtkTreeModel *model = sorttab[inst]->model;
-  if (model != NULL)
+  if (model && entry)
     {
       if (entry == sorttab[inst]->current_entry)
 	{
@@ -537,7 +531,7 @@ static void st_remove_entry (TabEntry *entry, guint32 inst)
       gtk_tree_model_foreach (model, st_delete_entry_from_model, entry);
       sorttab[inst]->entries = g_list_remove (sorttab[inst]->entries, entry);
       g_list_free (entry->members);
-      if (entry->name) g_free (entry->name);
+      C_FREE (entry->name);
       g_free (entry);
     }
 }
@@ -583,7 +577,6 @@ static TabEntry *st_get_entry_by_song (Song *song, guint32 inst)
   TabEntry *entry;
   guint i;
 
-  /*  printf("%d: looking for song: %x\n", inst, song);*/
   if (song == NULL) return NULL;
   entries = sorttab[inst]->entries;
   i=1; /* skip master entry, which is supposed to be at first position */
@@ -604,17 +597,14 @@ static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
   TabEntry *entry;
   guint i;
 
-  /*  printf("%d: looking for entry: %s\n", inst, name);*/
   if (name == NULL) return NULL;
   entries = sorttab[inst]->entries;
   i=1; /* skip master entry, which is supposed to be at first position */
   while ((entry = (TabEntry *)g_list_nth_data (entries, i)) != NULL)
     {
-      /*      printf("    comparing with entry: %s\n", entry->name);*/
       if (g_utf8_collate (entry->name, name) == 0)   break; /* found! */
       ++i;
     }
-  /*  printf("    returning entry: %x\n", entry);*/
   return entry;
 }
 
@@ -625,7 +615,6 @@ static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
 static gboolean st_recategorize_song (Song *song, guint32 inst)
 {
   TabEntry *oldentry, *newentry;
-  /* SortTab *st = sorttab[inst]; */
   gchar *entryname;
 
   oldentry = st_get_entry_by_song (song, inst);
@@ -633,9 +622,7 @@ static gboolean st_recategorize_song (Song *song, guint32 inst)
   /* should not happen: song is not in sort tab */
   if (oldentry == NULL) return FALSE;
   entryname = st_get_entryname (song, inst);
-  /*  printf("%d: recat_entryname: %s\n", inst, entryname);*/
   newentry = st_get_entry_by_name (entryname, inst);
-  /*  printf("%d: recat_newentry: %x\n", inst, newentry);*/
   if (newentry == NULL)
     { /* not found, create new one */
       newentry = g_malloc0 (sizeof (TabEntry));
@@ -740,7 +727,10 @@ static void st_song_changed (Song *song, gboolean removed, guint32 inst)
 /* Add song to sort tab. If the song matches the currently
    selected sort criteria, it will be passed on to the next
    sort tab. The last sort tab will pass the song on to the
-   song model (currently two sort tabs). */
+   song model (currently two sort tabs).
+   When the first song is added, the "All" entry is created.
+   If prefs_get_st_autoselect(inst) is true, the "All" entry is
+   automatically selected, if there was no former selection */
 static void st_add_song (Song *song, gboolean final, guint32 inst)
 {
   TabEntry *entry, *iter_entry;
@@ -782,7 +772,7 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	  entry->members = g_list_append (entry->members, song); 
 	  if (final)   /* only one song was added -> add to next instance */
 	  {
-	      if ((st->current_entry == NULL) && prefs_get_st_autoselect (inst))
+	      if (!st->current_entry && prefs_get_st_autoselect (inst))
 	      { /* auto-select entry "All" */
 		  st->current_entry = g_list_nth_data (st->entries, 0);
 		  if (!gtk_tree_model_get_iter_first (st->model, &iter))
@@ -797,7 +787,9 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	      /* add if "All" or "entry" is selected */
 	      else if (st->current_entry &&
 		  (st->current_entry->master || (st->current_entry == entry)))
-	      {
+	      { /* note: the "else if" is correct, because the song
+		   gets added through the selection process above
+		   otherwise */
 		  st_add_song (song, final, inst+1);
 	      }
 	  }
@@ -879,10 +871,9 @@ static void st_remove_song (Song *song, guint32 inst)
 }
 
 
-/* Init a sort tab: all current entries are removed. The next sort
-   tab is initialized automatically because the new entry "All" gets
-   selected. Set new_category to -1 if the current category is to be
-   left unchanged (used by st_page_changed). */
+/* Init a sort tab: all current entries are removed. The next sort tab
+   is initialized as well (st_init (-1, inst+1)).  Set new_category to
+   -1 if the current category is to be left unchanged */
 static void st_init (gint32 new_category, guint32 inst)
 {
   SortTab *st;
@@ -895,13 +886,10 @@ static void st_init (gint32 new_category, guint32 inst)
   else
     {
       st = sorttab[inst];
+      if (st == NULL) return; /* could happen during initialisation */
       cat = st->current_category;
       /* Copy selected entry name if not master */
-      if (st->lastselection[cat])
-	{
-	  g_free (st->lastselection[cat]);
-	  st->lastselection[cat] = NULL;
-	}
+      C_FREE (st->lastselection[cat]);
       if (st->current_entry != NULL)
 	{
 	  if (!st->current_entry->master)
@@ -913,6 +901,7 @@ static void st_init (gint32 new_category, guint32 inst)
       if (new_category != -1)
 	{
 	  st->current_category = new_category;
+	  prefs_set_st_category (inst, new_category);
 	}
       st_remove_all_entries (inst);
       st_init (-1, inst+1);
@@ -948,7 +937,7 @@ void st_page_selected (GtkNotebook *notebook, guint page)
       song = (Song *)g_list_nth_data (copy, i);
       st_add_song (song, FALSE, inst);
     }
-  st_add_song (NULL, TRUE, inst);
+  if (n != 0) st_add_song (NULL, TRUE, inst);
   g_list_free (copy);
 }
 
@@ -1004,7 +993,7 @@ static void st_selection_changed (GtkTreeSelection *selection,
       song = (Song *)g_list_nth_data (new_entry->members, i);
       st_add_song (song, FALSE, inst+1);
     }
-  st_add_song (NULL, TRUE, inst+1);
+  if (n != 0)  st_add_song (NULL, TRUE, inst+1);
 }
 
 
@@ -1212,17 +1201,20 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
 /* Create sort tabs */
 static void create_sort_tabs (GtkWidget *gtkpod)
 {
-  gint i;
+  gint inst;
   gchar *name;
 
-  for (i=0; i<SORT_TAB_NUM; ++i)
+  /* we count downward here because the smaller sort tabs might try to
+     initialize the higher one's -> create the higher ones first */
+  for (inst=SORT_TAB_NUM-1; inst>=0; --inst)
     {
-      sorttab[i] = g_malloc0 (sizeof (SortTab));
-      name = g_strdup_printf ("sorttab%d", i);
-      sorttab[i]->notebook = GTK_NOTEBOOK (lookup_widget (gtkpod, name));
+      sorttab[inst] = g_malloc0 (sizeof (SortTab));
+      name = g_strdup_printf ("sorttab%d", inst);
+      sorttab[inst]->notebook = GTK_NOTEBOOK (lookup_widget (gtkpod, name));
       g_free (name);
-      st_create_listview (gtkpod, i);
-      gtk_notebook_set_current_page (sorttab[i]->notebook, i<ST_CAT_NUM ? i:0);
+      st_create_listview (gtkpod, inst);
+      gtk_notebook_set_current_page (sorttab[inst]->notebook,
+				     prefs_get_st_category(inst));
     }
 }
 
