@@ -95,6 +95,7 @@ void parse_offline_playcount (void);
 
 gboolean get_gain(Track *track);
 
+gboolean file_itunesdb_read (void);
 
 /* file_export.c */
 void export_files_init(GList *tracks);

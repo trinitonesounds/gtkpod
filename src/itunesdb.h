@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-14 16:40:56 jcs>
+/* Time-stamp: <2004-09-20 22:10:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -53,6 +53,7 @@ gboolean itunesdb_parse (const gchar *path);
 gboolean itunesdb_parse_file (const gchar *filename);
 gboolean itunesdb_write (const gchar *path);
 gboolean itunesdb_write_to_file (const gchar *filename);
+void itunesdb_rename_files (const gchar *dirname);
 gboolean itunesdb_copy_track_to_ipod (const gchar *path, Track *track,
 				      const gchar *pcfile);
 gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s);

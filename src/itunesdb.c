@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 20:58:40 jcs>
+/* Time-stamp: <2004-09-20 22:14:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -162,6 +162,14 @@
    guint32 itunesdb_time_host_to_mac (time_t time);
    void itunesdb_convert_filename_fs2ipod(gchar *ipod_file);
    void itunesdb_convert_filename_ipod2fs(gchar *ipod_file);
+
+   void itunesdb_rename_files (const gchar *dirname);
+
+   (Renames/removes some files on the iPod (Playcounts, OTG
+   semaphore). Needs to be called if you write the iTunesDB not
+   directly to the iPod but to some other location and then manually
+   copy the file from there to the iPod. That's much faster in the
+   case of using an iPod mounted in sync'ed mode.)
 
    Define "itunesdb_warning()" as you need (or simply use g_print and
    change the default g_print handler with g_set_print_handler() as is
@@ -1553,38 +1561,44 @@ gboolean itunesdb_write_to_file (const gchar *filename)
     }
   if (result == TRUE)
   {
-      const gchar *db_plc_o[] = {"Play Counts", NULL};
-      const gchar *db_plc_n[] = {"Play Counts.bak", NULL};
-      const gchar *db_otg[] = {"OTGPlaylistInfo", NULL};
       gchar *dirname = g_path_get_dirname (filename);
-      gchar *plcname_o = resolve_path (dirname, db_plc_o);
-      gchar *plcname_n = resolve_path (dirname, db_plc_n);
-      gchar *otgname = resolve_path (dirname, db_otg);
-
-      /* rename "Play Counts" to "Play Counts.bak" */
-      if (plcname_o)
-      {
-	  if (rename (plcname_o, plcname_n) == -1)
-	  {   /* an error occured */
-	      itunesdb_warning (_("Error renaming '%s' to '%s' (%s).\n"),
-				plcname_o, plcname_n, g_strerror (errno));
-	  }
-      }
-      /* remove "OTGPlaylistInfo" (the iPod will remove the remaining
-       * files */
-      if (otgname)
-      {
-	  if (unlink (otgname) == -1)
-	  {   /* an error occured */
-	      itunesdb_warning (_("Error removing '%s'.\n"), otgname);
-	  }
-      }
+      itunesdb_rename_files (dirname);
       g_free (dirname);
-      g_free (plcname_o);
-      g_free (plcname_n);
-      g_free (otgname);
   }
   return result;
+}
+
+
+void itunesdb_rename_files (const gchar *dirname)
+{
+    const gchar *db_plc_o[] = {"Play Counts", NULL};
+    const gchar *db_plc_n[] = {"Play Counts.bak", NULL};
+    const gchar *db_otg[] = {"OTGPlaylistInfo", NULL};
+    gchar *plcname_o = resolve_path (dirname, db_plc_o);
+    gchar *plcname_n = resolve_path (dirname, db_plc_n);
+    gchar *otgname = resolve_path (dirname, db_otg);
+
+    /* rename "Play Counts" to "Play Counts.bak" */
+    if (plcname_o)
+    {
+	if (rename (plcname_o, plcname_n) == -1)
+	{   /* an error occured */
+	    itunesdb_warning (_("Error renaming '%s' to '%s' (%s).\n"),
+			      plcname_o, plcname_n, g_strerror (errno));
+	}
+    }
+    /* remove "OTGPlaylistInfo" (the iPod will remove the remaining
+     * files */
+    if (otgname)
+    {
+	if (unlink (otgname) == -1)
+	{   /* an error occured */
+	    itunesdb_warning (_("Error removing '%s'.\n"), otgname);
+	}
+    }
+    g_free (plcname_o);
+    g_free (plcname_n);
+    g_free (otgname);
 }
 
 /* Convert string from casual PC file name to iPod iTunesDB format

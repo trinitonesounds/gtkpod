@@ -15,6 +15,10 @@ gtkpod V0.82-CVS
 	BUGFIX: When using "block display during updates" the display
 	was still updated during import. Fixed.
 
+	BUGFIX: The menu item "Check iPod's Files" was not reliably
+	activated. It's now always selectable when not in offline
+	mode.
+
 	BUGFIX: when writing tags to file the track tag was
 	deleted.
 

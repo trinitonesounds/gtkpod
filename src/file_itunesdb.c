@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:13:53 jcs>
+/* Time-stamp: <2004-09-20 23:12:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -93,6 +93,12 @@ static gboolean mutex_data = FALSE;
 static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
 static float extendedinfoversion = 0.0;
+
+
+gboolean file_itunesdb_read (void)
+{
+    return itunesdb_read;
+}
 
 
 /* fills in extended info if available (called from add_track()) */
@@ -1008,7 +1014,7 @@ void handle_export (void)
       cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
   }
 
-  if (!itunesdb_read)
+  if (!file_itunesdb_read())
   {   /* No iTunesDB was read but user wants to export current
          data. If an iTunesDB is present on the iPod or in cfgdir,
 	 this is most likely an error. We should tell the user */
@@ -1037,7 +1043,7 @@ void handle_export (void)
 	    GTK_DIALOG_DESTROY_WITH_PARENT,
 	    GTK_MESSAGE_WARNING,
 	    GTK_BUTTONS_OK_CANCEL,
-	    _("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before exporting again.\n"));
+	    _("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before calling this function again.\n"));
 	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
 	gtk_widget_destroy (dialog);
 	if (result == GTK_RESPONSE_CANCEL)
@@ -1132,9 +1138,12 @@ void handle_export (void)
 	  str = prefs_get_toolpath (PATH_SYNC_CALENDAR);
 	  if (str && *str)    tools_sync_calendar ();
       }
-      C_FREE(ipod_path_as_filename);
       g_free (ipt);
       g_free (ipe);
+      /* move old playcount file etc out of the way */
+      if (success)
+	  itunesdb_rename_files (ipod_path_as_filename);
+      g_free (ipod_path_as_filename);
   }
 
   /* indicate that files and/or database is saved */

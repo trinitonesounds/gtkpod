@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-16 00:28:51 jcs>
+/* Time-stamp: <2004-09-20 23:11:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -813,12 +813,35 @@ void check_db (void)
 	, ndangling = 0;
 
     gchar ** tokens;
-    gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
-    gchar *ipod_path_as_filename =
-        g_filename_from_utf8(mount,-1,NULL,NULL,NULL);
+    gchar *ipod_path_as_filename = charset_from_utf8 (prefs_get_ipod_mount ());
     const gchar * music[] = {"iPod_Control","Music",NULL,NULL,};
 
-    g_free (mount);
+    /* If an iTunesDB exists on the iPod, the user probably is making
+       a mistake and we should tell him about it */
+    if (!file_itunesdb_read())
+    {
+	const gchar *itunes_components[] = {"iPod_Control", "iTunes", NULL};
+	gchar *itunes_filename = resolve_path(ipod_path_as_filename,
+					      itunes_components);
+	if (g_file_test (itunes_filename, G_FILE_TEST_EXISTS))
+	{
+	    GtkWidget *dialog = gtk_message_dialog_new (
+		GTK_WINDOW (gtkpod_window),
+		GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_WARNING,
+		GTK_BUTTONS_OK_CANCEL,
+		_("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before calling this function again.\n"));
+	    gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+	    gtk_widget_destroy (dialog);
+	    if (result == GTK_RESPONSE_CANCEL)
+	    {
+		g_free (ipod_path_as_filename);
+		g_free (itunes_filename);
+		return;
+	    }
+	}
+	g_free (itunes_filename);
+    }
 
     prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
     block_widgets();
