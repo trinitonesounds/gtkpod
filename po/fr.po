@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.61-CVS\n"
 "POT-Creation-Date: 2003-11-16 00:57+0900\n"
-"PO-Revision-Date: 2003-11-21 14:24+0100\n"
+"PO-Revision-Date: 2003-11-21 22:22+0900\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -15,12 +15,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
 #: src/callbacks.c:235
+#, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] "Un morceau déplacé"
 msgstr[1] "%d morceaux déplacés"
 
 #: src/callbacks.c:241
+#, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "Un morceau copié"
@@ -63,9 +65,8 @@ msgid "No entry selected in Sort Tab %d"
 msgstr "Aucune entrée sélectionnée dans la zone de tri %d"
 
 #: src/callbacks.c:1085 src/callbacks.c:1137 src/callbacks.c:1188
-#, fuzzy
 msgid "No tracks selected"
-msgstr "Aucun morceau sélectionné."
+msgstr "Aucun morceau sélectionné"
 
 #: src/callbacks.c:1109
 msgid "Play tracks in selected entry of which sort tab?"
@@ -526,7 +527,6 @@ msgid "Syncing aborted"
 msgstr "Synchronisation annulée"
 
 #: src/file.c:793
-#, fuzzy
 msgid "No tracks in selection"
 msgstr "Aucun morceau sélectionné"
 
@@ -684,8 +684,8 @@ msgstr ""
 "Pas de checksum MD5 des fichiers individuels.\n"
 "\n"
 "Pour éviter cette situation dans le futur, activer la détection des doublons "
-"(afin de générer les checksums MD5) ou bien éviter d'utiliser votre iPod avec "
-"d'autres programmes que gtkpod.\n"
+"(afin de générer les checksums MD5) ou bien éviter d'utiliser votre iPod "
+"avec d'autres programmes que gtkpod.\n"
 "\n"
 
 #: src/file.c:1728
@@ -801,7 +801,7 @@ msgstr "Base de l'iPod sauvegardée"
 #: src/file_export.c:184
 #, c-format
 msgid "Error creating %s: %s\n"
-msgstr "Erreur à la création de \"%s\".\n"
+msgstr "Erreur à la création de \"%s\" (%s)\n"
 
 #: src/file_export.c:284
 #, c-format
@@ -1220,10 +1220,9 @@ msgstr ""
 "celui utilisé pour la mise à jour. Pour corriger un mauvais codage "
 "sélectionné à l'import initial d'un morceau, cocher cette option pour le "
 "modifier lors de la mise à jour de ce morceau. Note: les infos sur le codage "
-"sont stockées dans un fichier d'information étendu et "
-"les morceaux importés avant la version 0.51 de gtkpod n'utilisait pas ce "
-"fichier. Ce sera le codage spécifié ici qui sera utilisé en cas de mise à "
-"jour de ces morceaux."
+"sont stockées dans un fichier d'information étendu et les morceaux importés "
+"avant la version 0.51 de gtkpod n'utilisait pas ce fichier. Ce sera le "
+"codage spécifié ici qui sera utilisé en cas de mise à jour de ces morceaux."
 
 #: src/interface.c:1545
 msgid "Add directories recursively"
@@ -1231,7 +1230,8 @@ msgstr "Ajouter les répertoires récursivement"
 
 #: src/interface.c:1548
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
-msgstr "Si vous cochez cette case, gtkpod parcourera les sous-répertoires "
+msgstr ""
+"Si vous cochez cette case, gtkpod parcourera les sous-répertoires "
 "récursivement."
 
 #: src/interface.c:1550
@@ -1341,10 +1341,10 @@ msgid ""
 "case of file system corruption (change the \"transferred=\" entries in your "
 "backuped database)."
 msgstr ""
-"Cette option est plus que recommandée pour des raisons de performance lors de "
-"l'import en prenant en compte les doublons. De plus, cela permet de mettre à "
-"jour les tags ID3 des fichiers sur disque, et de restaurer le contenu de "
-"votre iPod en cas de corruption du système de fichiers."
+"Cette option est plus que recommandée pour des raisons de performance lors "
+"de l'import en prenant en compte les doublons. De plus, cela permet de "
+"mettre à jour les tags ID3 des fichiers sur disque, et de restaurer le "
+"contenu de votre iPod en cas de corruption du système de fichiers."
 
 #: src/interface.c:1686
 msgid "Keep a backup of the iTunesDB in ~/.gtkpod/"
@@ -1364,10 +1364,10 @@ msgid ""
 "n' or '%o'. %A: artist; %d: album; %n: title; %t: track nr; %o: original "
 "filename (needs extended information file)"
 msgstr ""
-"Détermine le format du nom de fichier des morceaux que vous copiez de l'iPod,"
-" par exemple '%A/%d/%t - %n' or '%o'. %A: artiste; %d: album; %n: titre; %t: "
-"numéro de piste; %o: nom de fichier original (nécessite le fichier d'infos "
-"étendues)"
+"Détermine le format du nom de fichier des morceaux que vous copiez de "
+"l'iPod, par exemple '%A/%d/%t - %n' or '%o'. %A: artiste; %d: album; %n: "
+"titre; %t: numéro de piste; %o: nom de fichier original (nécessite le "
+"fichier d'infos étendues)"
 
 #: src/interface.c:1723
 msgid " "
@@ -1559,10 +1559,9 @@ msgstr ""
 "celui utilisé pour la mise à jour. Pour corriger un mauvais codage "
 "sélectionné à l'import initial d'un morceau, cocher cette option pour le "
 "modifier lors de la mise à jour de ce morceau. Note: les infos sur le codage "
-"sont stockées dans un fichier d'information étendu et "
-"les morceaux importés avant la version 0.51 de gtkpod n'utilisait pas ce "
-"fichier. Ce sera le codage spécifié ici qui sera utilisé en cas de mise à "
-"jour de ces morceaux."
+"sont stockées dans un fichier d'information étendu et les morceaux importés "
+"avant la version 0.51 de gtkpod n'utilisait pas ce fichier. Ce sera le "
+"codage spécifié ici qui sera utilisé en cas de mise à jour de ces morceaux."
 
 #: src/interface.c:2107
 msgid "Use 'Multi-Edit' for track selections"
@@ -1607,7 +1606,8 @@ msgstr "_Nombre de morceaux dans les listes de lecture générées: "
 
 #: src/interface.c:2157
 msgid "Also include tracks never played in \"Best Rated\" playlist"
-msgstr "Inclure aussi les morceaux jamais joués dans la liste de lecture \n"
+msgstr ""
+"Inclure aussi les morceaux jamais joués dans la liste de lecture \n"
 "des morceaux les mieux notés"
 
 #: src/interface.c:2161
@@ -1651,7 +1651,8 @@ msgstr "Avant de supprimer complètement les morceaux de l'iPod"
 msgid ""
 "Before removing tracks completely when\n"
 " synchronizing directories"
-msgstr "Avant de supprimer complètement les morceaux \n"
+msgstr ""
+"Avant de supprimer complètement les morceaux \n"
 "lors des synchronisations des répertoires"
 
 #: src/interface.c:2210
@@ -1904,10 +1905,10 @@ msgid ""
 "choose the 'Save Displayed Track Order' from the 'Edit' menu or select 'Auto "
 "Store' above."
 msgstr ""
-"Note: l'ordre des morceaux est toujours enregistré sur l'iPod lors du glisser/"
-"déposer. Afin de trier par ordre alphabétique sur l'iPod, vous devez cliquer "
-"sur le menu 'Edition' puis 'Sauver l'ordre de tri des morceaux affichés' ou "
-"l'option 'Sauver automatiquement' ci-dessus."
+"Note: l'ordre des morceaux est toujours enregistré sur l'iPod lors du "
+"glisser/déposer. Afin de trier par ordre alphabétique sur l'iPod, vous devez "
+"cliquer sur le menu 'Edition' puis 'Sauver l'ordre de tri des morceaux "
+"affichés' ou l'option 'Sauver automatiquement' ci-dessus."
 
 #: src/itunesdb.c:384
 msgid "Master-PL"
@@ -2062,8 +2063,9 @@ msgstr ""
 
 #: src/misc.c:429
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"
-msgstr "Ramesh Dharan: Edition multiple (edition de tags de plusieurs fichiers "
-"en même temps\n"
+msgstr ""
+"Ramesh Dharan: Edition multiple (edition de tags de plusieurs fichiers en "
+"même temps\n"
 
 #: src/misc.c:431
 msgid "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
@@ -2071,21 +2073,20 @@ msgstr "Hiroshi Kawashima: Détection automatique du codage japonais\n"
 
 #: src/misc.c:433
 msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"
-msgstr "Adrian Ulrich: portage du code de liste de lecture à partir de mktunes"
-".pl\n"
+msgstr ""
+"Adrian Ulrich: portage du code de liste de lecture à partir de mktunes.pl\n"
 
 #: src/misc.c:435
 msgid ""
 "Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
 "newlines at the end\n"
 msgstr ""
-"Walter Bell: correction de la gestion des URIs avec des caractères d'échappe"
-"ment\n"
+"Walter Bell: correction de la gestion des URIs avec des caractères "
+"d'échappement\n"
 
 #: src/misc.c:437
 msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
 msgstr "Sam Clegg: définition des noms de fichier à l'export de morceaux\n"
-
 
 #: src/misc.c:439
 msgid "Chris Cutler: automatic creation of various playlist types\n"
@@ -2169,7 +2170,6 @@ msgid "Japanese: Ayako Sano\n"
 msgstr "Japonais: Ayako Sano\n"
 
 #: src/misc.c:482
-#, fuzzy
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 msgstr "Japonais: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 
@@ -2560,7 +2560,8 @@ msgid ""
 "mp4v2 library. You must compile the gtkpod source together with the mp4v2 "
 "library.\n"
 msgstr ""
-"Mise à jour des données m4a/m4p annulée: pas de support des formats m4a/m4p\n"
+"Mise à jour des données m4a/m4p annulée (\"%s\"): pas de support des formats "
+"m4a/m4p\n"
 "Vous devez compiler gtkpod avec la bibliothèque mp4v2.\n"
 
 #: src/normalize.c:165
@@ -2644,7 +2645,6 @@ msgid "  --auto:       same as '-a'.\n"
 msgstr "  --auto:       identique a '-a'.\n"
 
 #: src/prefs.c:134
-#, fuzzy
 msgid ""
 "  -o:           use offline mode. No changes are exported to the iPod,\n"
 "                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
@@ -2720,9 +2720,9 @@ msgid "Settings are not saved.\n"
 msgstr "Réglages non sauvés.\n"
 
 #: src/prefs.c:935
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to open '%s' for writing\n"
-msgstr "Impossible d'ouvrir en lecture \"%s\"\n"
+msgstr "Impossible d'ouvrir en écriture \"%s\"\n"
 
 #: src/prefs.c:1274
 #, c-format
@@ -2767,14 +2767,15 @@ msgstr "'%s': seulement une '%%s' autorisée.\n"
 
 #. update for count == 1, 21, 41 ... and for count == n
 #: src/song.c:398
-#, fuzzy, c-format
+#, c-format
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
-msgstr[0] "%d morceau traité sur %d"
-msgstr[1] "%d morceaux traités sur %d"
+msgstr[0] "%d morceau traité sur %d."
+msgstr[1] "%d morceaux traités sur %d."
 
+# y, c-format
 #: src/song.c:460
-#y, c-format
+#, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] "Le morceau suivant est en double et a été supprimé."
@@ -2803,141 +2804,3 @@ msgstr "Détection de doublon"
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Impossible de trouver le fichier pixmap: %s"
-
-#~ msgid ""
-#~ "iTunesDB (%s)\n"
-#~ "does not match checksum in extended information file (%s)\n"
-#~ msgstr ""
-#~ "iTunesDB (%s)\n"
-#~ "ne correspond pas au checksum du fichier d'infos étendues (%s)\n"
-
-#~ msgid "Removed tag of '%s'\n"
-#~ msgstr "Tag supprimé de '%s'\n"
-
-#~ msgid "Unable to open file \"%s\"\n"
-#~ msgstr "Impossible d'ouvrir le fichier \"%s\"\n"
-
-#~ msgid "Delete Tracks Completey?"
-#~ msgstr "Supprimer complètement les morceaux ?"
-
-#~ msgid "Delete Tracks From Playlist?"
-#~ msgstr "Supprimer les morceaux de la liste de lecture ?"
-
-#~ msgid "Deleted %d tracks completely from iPod"
-#~ msgstr "Suppression de %d morceaux de l'iPod"
-
-#~ msgid "Deleted tracks from playlist '%s'"
-#~ msgstr "Morceau supprimé de la liste de lecture '%s'"
-
-#~ msgid "No songs selected"
-#~ msgstr "Aucun morceau sélectionné"
-
-#~ msgid "Deleted songs from playlist '%s'"
-#~ msgstr "Morceaux supprimés de la liste de lecture '%s'"
-
-#~ msgid "No songs selected."
-#~ msgstr "Aucun morceau sélectionné."
-
-#~ msgid "Sort which sort tab in ascending order?"
-#~ msgstr "Trier en ordre alphabétique quelle zone ?"
-
-#~ msgid "Sort which sort tab in descending order?"
-#~ msgstr "Trier en ordre inverse alphabétique de quelle zone ?"
-
-#~ msgid "Reset"
-#~ msgstr "Réinitialiser"
-
-#~ msgid "_Alphabetize"
-#~ msgstr "Trier par ordre _alphabétique"
-
-#~ msgid "_Playlists"
-#~ msgstr "_Listes de lecture"
-
-#~ msgid "_Sort Tab"
-#~ msgstr "_Zone de tri"
-
-#~ msgid "Alphabeti_ze"
-#~ msgstr "Trier par ordre _inverse alphabétique"
-
-#~ msgid "Automatically save song order after sorting."
-#~ msgstr "Sauver automatiquement l'ordre de tri des chansons"
-
-#~ msgid ""
-#~ "Alternatively you can use the menu item 'Save Displayed Song Order' to "
-#~ "save the sort order."
-#~ msgstr "Vous pouvez aussi utiliser le menu 'Sauver l'ordre de tri' "
-
-#~ msgid "Miscellaneous Playlist"
-#~ msgstr "Liste de lecture aléatoire"
-
-#~ msgid "Apply"
-#~ msgstr "Appliquer"
-
-#~ msgid ""
-#~ "Patches were supplied by the following people (list may be incomplete -- "
-#~ "please contact me)\n"
-#~ "\n"
-#~ "Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n"
-#~ "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
-#~ "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"
-#~ "Walter Bell: correct handling of DND URIs with escaped characters and/or "
-#~ "cr/newlines at the end\n"
-#~ msgstr ""
-#~ "Les patches ont été soumis par les personnes suivantes (liste peut être "
-#~ "incomplète -- contactez-moi)\n"
-#~ "\n"
-#~ "Ramesh Dharan: edition multiple (edition de plusieurs tags en un coup)\n"
-#~ "Adrian Ulrich: portage du code de gestion des listes de lecture\n"
-#~ "Walter Bell: correction de la gestion des URIs avec des caractères "
-#~ "d'échappement\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
-#~ "Chris Cutler: automatic creation of various playlist types\n"
-#~ "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
-#~ "dialogue during sync\n"
-#~ "Edward Matteucci: debugging, special playlist creation\n"
-#~ msgstr ""
-#~ "Sam Clegg: nom des fichiers lors de l'export de morceaux à partir de "
-#~ "l'iPod\n"
-#~ "Chris Cutler: création automatique des listes de lecture par type\n"
-
-#~ msgid ""
-#~ "This program borrows code from the following projects:\n"
-#~ "    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
-#~ "(http://www.gnu.org/software/gnupod/)\n"
-#~ "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
-#~ "    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
-#~ "    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge."
-#~ "net)\n"
-#~ "\n"
-#~ "The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
-#~ msgstr ""
-#~ "Cette application empreinte du code des projets suivants :\n"
-#~ "    mp3info: detection de la durée des mp3\n"
-#~ "    xmms:    l'explorateur de fichier, detection de la durée des mp3 "
-#~ "(http://www.xmms.org)\n"
-#~ "    easytag: gestion des tags ID3 (http://easytag.sourceforge.net)\n"
-#~ "\n"
-#~ "L'interface graphique a été crée avec l'application glade-2 (http://glade."
-#~ "gnome.org/)."
-
-#~ msgid "Export"
-#~ msgstr "Exporter"
-
-#~ msgid "_Import/Export"
-#~ msgstr "_Import/Export"
-
-#, fuzzy
-#~ msgid "No tracks displayed."
-#~ msgstr "Aucun morceau affiché."
-
-#~ msgid "_Export iTunes"
-#~ msgstr "_Exporter vers l'iPod"
-
-#~ msgid "Export Files _to Disk"
-#~ msgstr "Exporter vers le disque"
-
-#~ msgid "_New Playlist"
-#~ msgstr "_Nouvelle liste de lecture"
