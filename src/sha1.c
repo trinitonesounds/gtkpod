@@ -74,10 +74,12 @@ do_hash_on_file(FILE *fp)
 	 */
 	for(i = 0; i < 20; i++)
 	{
-	    last += snprintf(&buf[last], 4,"%x", md[i]);
+	  /* This should produce a string 40 long */
+	    last += snprintf(&buf[last], 4,"%02x", md[i]);
 	}
 	buf[last] = '\0';
 	result = g_strdup(buf);
+	printf ("%s\n", buf);
     }
     return(result);
 }
@@ -94,19 +96,26 @@ hash_song(Song *s)
     gchar *result = NULL;
     gchar *filename = NULL;
     
-    if((s) && (filename = get_song_name_on_disk(s)))
-    {
-	if ((fp = fopen(filename, "r")))
-	{
-	    result = do_hash_on_file(fp);
-	    fclose(fp);
-	}
-	else
-	{
-	    fprintf(stderr, "Unable to open file %s\n", filename);
-	}
-	g_free(filename);
-    }
+    if(s != NULL)
+       {
+	 if (s->md5_hash != NULL)
+	   {
+	     result = g_strdup (s->md5_hash);
+	   }
+	 else if ((filename = get_song_name_on_disk(s)) != NULL)
+	   {
+	     if ((fp = fopen(filename, "r")))
+	       {
+		 result = do_hash_on_file(fp);
+		 fclose(fp);
+	       }
+	     else
+	       {
+		 fprintf(stderr, "Unable to open file %s\n", filename);
+	       }
+	     g_free(filename);
+	   }
+       }
     return(result);
 }
 
@@ -131,11 +140,16 @@ unique_file_repository_init(GList *songlist)
 	for(l = songlist; l; l = l->next)
 	{
 	    s = (Song*)l->data;
-	    if((val = hash_song(s)))
+	    if ((val = hash_song(s)) != NULL)
+	      {
 		g_hash_table_insert(filehash, val, s);
+		if (s->md5_hash == NULL)
+		  s->md5_hash = g_strdup (val);
+	      }
 	}
     }
 }
+
 
 /**
  * Free up the dynamically allocated memory in this table
@@ -158,17 +172,23 @@ song_exists_on_ipod(Song *s)
     gchar *val = NULL;
     gboolean result = FALSE;
 
-    if((cfg->md5songs) && (filehash) && (val = hash_song(s)))
-    {
-	if(g_hash_table_lookup(filehash, val))
-	{
-	    result = TRUE;
-	}
-	else	/* if it doesn't exist we register it in the hash */
-	{
-	    g_hash_table_insert(filehash, val, s);
-	}
-    }
+    if((cfg->md5songs) && (filehash))
+      {
+	val = hash_song(s);
+	if (val != NULL)
+	  {
+	    if(g_hash_table_lookup(filehash, val))
+	      {
+		result = TRUE;
+	      }
+	    else	/* if it doesn't exist we register it in the hash */
+	      {
+		if (s->md5_hash == NULL)
+		  s->md5_hash = g_strdup (val);
+		g_hash_table_insert(filehash, val, s);
+	      }
+	  }
+      }
     return(result);
 }
 

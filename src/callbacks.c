@@ -88,8 +88,7 @@ void
 on_quit1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  remove_all_songs ();
-  gtk_main_quit ();
+  gtkpod_main_quit ();
 }
 
 
@@ -181,9 +180,7 @@ on_gtkpod_delete_event                 (GtkWidget       *widget,
                                         GdkEvent        *event,
                                         gpointer         user_data)
 {
-  remove_all_playlists ();
-  remove_all_songs ();
-  gtk_main_quit ();
+  gtkpod_main_quit ();
   return FALSE;
 }
 

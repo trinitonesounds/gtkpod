@@ -203,6 +203,7 @@ read_prefs_defaults(void)
     }
 
 }
+
 /* Read Preferences and initialise the cfg-struct */
 gboolean read_prefs (int argc, char *argv[])
 {
@@ -224,8 +225,8 @@ gboolean read_prefs (int argc, char *argv[])
   if (cfg != NULL) discard_prefs ();
   
   cfg = cfg_new();
-    
   read_prefs_defaults();
+
   while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
     switch(opt) 
       {

@@ -42,6 +42,7 @@
 #include "playlist.h"
 #include "display.h"
 #include "prefs.h"
+#include "md5.h"
 
 int
 main (int argc, char *argv[])
@@ -69,6 +70,7 @@ main (int argc, char *argv[])
   gtkpod = create_gtkpod ();
   create_listviews (gtkpod);
   create_mpl ();     /* needs at least the master playlist */
+  unique_file_repository_init (NULL); /* init for duplicate detection */
   gtk_widget_show (gtkpod);
   gtk_main ();
   return 0;

@@ -64,6 +64,7 @@ free_song(Song *song)
   if (song->pc_path_locale)   g_free (song->pc_path_locale);
   if (song->ipod_path)        g_free (song->ipod_path);
   if (song->ipod_path_utf16)  g_free (song->ipod_path_utf16);
+  if (song->md5_hash)         g_free (song->md5_hash);
   g_free (song);
 }
 
@@ -78,7 +79,7 @@ gboolean add_song (Song *song)
   if(song_exists_on_ipod(song))
   {
     fprintf(stderr, "song already exists on ipod !!!\n");
-    remove_song(song);
+    free_song(song);
   }
   else
   {
@@ -435,8 +436,8 @@ void handle_import_itunes (void)
 	}
 	
       /* setup our md5 hashness for unique files */
-      if(cfg->md5songs)
-	unique_file_repository_init(get_song_list());
+      /* if(cfg->md5songs)    done with add_song ();
+	 unique_file_repository_init(get_song_list()); */
     }
 }
 
@@ -516,22 +517,18 @@ gchar* get_song_name_on_disk(Song *s)
     {
 	if((s->ipod_path) && (strlen(s->ipod_path) > 0))
 	{
-	    result = g_strdup_printf("%s%s",cfg->ipod_mount, s->ipod_path);
-	}
-	else if(strlen(s->pc_path_utf8) > 0)
-	{
-	    result = g_strdup_printf("%s",s->pc_path_utf8);
-	} 
-	if(result)
-	{
 	    guint i = 0, size = 0;
+	    result = concat_dir(cfg->ipod_mount, s->ipod_path);
 	    size = strlen(result);
 	    for(i = 0; i < size; i++)
 		if(result[i] == ':') result[i] = '/';
 	}
+	else if((s->pc_path_locale) && (strlen(s->pc_path_locale) > 0))
+	{
+	    result = g_strdup_printf("%s",s->pc_path_locale);
+	} 
     }
     return(result);
-
 }
 
 /**

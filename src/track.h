@@ -63,6 +63,7 @@ typedef struct
   gint32  year;              /* year                  */
   gint32  bitrate;           /* bitrate               */
   gboolean transferred;      /* has file been transferred to iPod? */
+  gchar   *md5_hash;         /* md5 hash of file (or NULL)         */
 } Song;
 
 void free_song(Song *song);

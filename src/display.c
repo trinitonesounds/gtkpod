@@ -906,6 +906,7 @@ static void st_selection_changed (GtkTreeSelection *selection,
 
   inst = (guint32) user_data;
   st = sorttab[inst];
+  if (st == NULL) return;
   if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
     return; /* no selection -- strange! */
   gtk_tree_model_get (model, &iter, 
@@ -1652,7 +1653,7 @@ void create_listviews (GtkWidget *gtkpod)
 
 
 /* Clean up used memory (when quitting the program) */
-void cleanup_listviews (GtkWidget *gtkpod)
+void cleanup_listviews (void)
 {
   cleanup_sort_tabs ();
 }
