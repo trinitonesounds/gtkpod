@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 22:53:52 jcs>
+/* Time-stamp: <2003-06-28 19:17:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -398,6 +398,10 @@ static void sp_store_sp_entries (gint inst)
 void sp_go (guint32 inst)
 {
     SortTab *st;
+
+#if DEBUG_CB_INIT
+    printf ("st_go: inst: %d\n", inst);
+#endif
 
     /* Sanity */
     if (inst >= prefs_get_sort_tab_num ())  return;
@@ -1177,6 +1181,11 @@ void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst)
 {
   static gint count = 0;
 
+#if DEBUG_ADD_SONG
+  printf ("st_add_song: inst: %d, final: %d, display: %d, song: %p\n",
+	  inst, final, display, song);
+#endif
+
   if (inst == prefs_get_sort_tab_num ())
   {  /* just add to song model */
       if ((song != NULL) && display)    sm_add_song_to_song_model (song, NULL);
@@ -1330,9 +1339,9 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 {
   GtkNotebook *notebook = (GtkNotebook *)user_data1;
   guint page = (guint)user_data2;
+  guint32 inst = st_get_instance_from_notebook (notebook);
   guint oldpage;
   gboolean is_go;
-  guint32 inst;
   GList *copy = NULL;
   SortTab *st;
   Playlist *current_playlist = pm_get_selected_playlist ();
@@ -1340,11 +1349,11 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 #if DEBUG_TIMING
   GTimeVal time;
   g_get_current_time (&time);
-  printf ("st_page_selected_cb enter: %ld.%06ld sec\n",
+  printf ("st_page_selected_cb enter (inst: %d, page: %d): %ld.%06ld sec\n",
+	  inst, page,
 	  time.tv_sec % 3600, time.tv_usec);
 #endif
 
-  inst = st_get_instance_from_notebook (notebook);
 /*  printf("ps%d: cat: %d\n", inst, page);*/
 
   if (inst == -1) return; /* invalid notebook */
@@ -1418,7 +1427,8 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   }
 #if DEBUG_TIMING
   g_get_current_time (&time);
-  printf ("st_page_selected_cb exit:  %ld.%06ld sec\n",
+  printf ("st_page_selected_cb exit (inst: %d, page: %d):  %ld.%06ld sec\n",
+	  inst, page,
 	  time.tv_sec % 3600, time.tv_usec);
 #endif
 }
@@ -1433,7 +1443,9 @@ void st_page_selected (GtkNotebook *notebook, guint page)
   guint32 inst;
 
   inst = st_get_instance_from_notebook (notebook);
-/*   printf ("st_page_selected: inst: %d, page: %d\n", inst, page); */
+#if DEBUG_CB_INIT
+  printf ("st_page_selected: inst: %d, page: %d\n", inst, page);
+#endif
   if (inst == -1) return; /* invalid notebook */
   /* inst-1: changing a page in the first sort tab is like selecting a
      new playlist and so on. Therefore we subtract 1 from the
@@ -1491,11 +1503,11 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   TabEntry *new_entry;
   SortTab *st;
 
-#if DEBUG_TIMING
+#if DEBUG_TIMING || DEBUG_CB_INIT
   GTimeVal time;
   g_get_current_time (&time);
-  printf ("st_selection_changed_cb enter: %ld.%06ld sec\n",
-	  time.tv_sec % 3600, time.tv_usec);
+  printf ("st_selection_changed_cb enter (inst: %d): %ld.%06ld sec\n",
+	  inst, time.tv_sec % 3600, time.tv_usec);
 #endif
 
 /*   printf("st_s_c_cb %d: entered\n", inst); */
@@ -1594,9 +1606,14 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 static void st_selection_changed (GtkTreeSelection *selection,
 				  gpointer user_data)
 {
-/*     printf("st_s_c\n"); */
+#if DEBUG_CB_INIT
+    printf("st_s_c enter (inst: %d)\n", (gint)user_data);
+#endif
     add_selection_callback ((gint)user_data, st_selection_changed_cb,
 			    (gpointer)selection, user_data);
+#if DEBUG_CB_INIT
+    printf("st_s_c exit (inst: %d)\n", (gint)user_data);
+#endif
 }
 
 

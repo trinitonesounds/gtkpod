@@ -31,6 +31,13 @@ gtkpod V0.52-CVS
 	BUGFIX: can now choose zero sort tabs in the prefs dialogue
 	(instead of the minimum one) -- why didn't anyone tell me?
 
+	BUGFIX: when deleting songs, sometimes adjacent songs got edited
+	(took title or artist... of the deleted song). Hopefully fixed --
+	please report.
+
+	BUGFIX: after reordering columns in the song view, the selection
+	of which columns are to be displayed went haywire -- fixed.
+
 	BUGFIX: fixed memory holes in pm_data_compare_func(),
 	st_data_compare_func(), sm_data_compare_func(),
 	get_ipod_used_space(), get_ipod_free_space(),

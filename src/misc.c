@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-26 23:08:20 jcs>
+/* Time-stamp: <2003-06-29 13:40:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1240,11 +1240,7 @@ void delete_song_ok (gpointer user_data1, gpointer user_data2)
     }
 
     for (l = selected_songids; l; l = l->next)
-    {
-	Song *s = get_song_by_id ((guint32)l->data);
-	if (s)
-	    remove_song_from_playlist(pl, s);
-    }
+	remove_songid_from_playlist (pl, (guint32)l->data);
 
     gtkpod_statusbar_message (buf);
     g_list_free (selected_songids);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 23:45:18 jcs>
+/* Time-stamp: <2003-06-29 12:11:56 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -442,6 +442,9 @@ prefs_window_set(void)
 
     if (tmpcfg)
     {
+	/* Need this in case user reordered column order (we don't
+	 * catch the reorder signal) */
+	sm_store_col_order ();
 	prefs_set_id3_write(tmpcfg->id3_write);
 	prefs_set_id3_writeall(tmpcfg->id3_writeall);
 	prefs_set_mount_point(tmpcfg->ipod_mount);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 13:46:10 jcs>
+/* Time-stamp: <2003-06-28 19:18:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -32,6 +32,13 @@
 #endif
 
 #include "display.h"
+
+/* print some timing info for tuning purposes */
+#define DEBUG_TIMING 0
+/* print info when callbacks are initialized */
+#define DEBUG_CB_INIT 0
+/* print info when adding songs */
+#define DEBUG_ADD_SONG 0
 
 /* used for stopping of display refresh */
 typedef void (*br_callback)(gpointer user_data1, gpointer user_data2);

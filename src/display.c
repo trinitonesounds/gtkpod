@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 23:47:55 jcs>
+/* Time-stamp: <2003-06-28 15:34:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -320,6 +320,21 @@ enum {
     BR_CALL,
 };
 
+
+#if DEBUG_CB_INIT
+static gchar *act_to_str (gint action)
+{
+    switch (action)
+    {
+    case BR_BLOCK: return ("BLOCK");
+    case BR_RELEASE: return ("RELEASE");
+    case BR_ADD: return ("ADD");
+    case BR_CALL: return ("CALL");
+    }
+    return "\"\"";
+}
+#endif
+
 /* called by block_selection() and release_selection */
 static void block_release_selection (gint inst, gint action,
 				     br_callback brc,
@@ -336,6 +351,12 @@ static void block_release_selection (gint inst, gint action,
     static gpointer r_user_data2;
     static guint timeout_id = 0;
     gint i;
+
+#if DEBUG_CB_INIT
+    printf ("block_release_selection: inst: %d, action: %s, callback: %p\n  user1: %p, user2: %d\n", inst, act_to_str (action), brc, user_data1, (guint)user_data2);
+    printf ("  enter: level: %d, count_pl: %d, cst0: %d, cst1: %d\n",
+	    level, count_pl, count_st[0], count_st[1]);
+#endif
 
     /* lookup stop_button */
     if (stop_button == NULL)
@@ -376,6 +397,21 @@ static void block_release_selection (gint inst, gint action,
 	/* check if we have to call a callback */
 	if (level < SORT_TAB_MAX)
 	{
+	    /* don't call it directly -- let's first return to the
+	       calling function */
+/* 	    if (timeout_id == 0) */
+/* 	    { */
+/* 		timeout_id =  */
+/* 		    gtk_idle_add_priority (G_PRIORITY_HIGH_IDLE, */
+/* 					   selection_callback_timeout, */
+/* 					   NULL); */
+/* 	    } */
+	    /* remove timeout function just to be sure */
+	    if (timeout_id)
+	    {
+		gtk_timeout_remove (timeout_id);
+		timeout_id = 0;
+	    }
 	    if (((level == -1) && (count_pl == 0)) ||
 		((level >= 0) && (count_st[level] == 0)))
 	    {
@@ -398,7 +434,7 @@ static void block_release_selection (gint inst, gint action,
 	    function. */
 	    /* We overwrite an older callback of the same level or
 	     * higher  */
-	    if (level >= inst)
+	    if (inst <= level)
 	    {
 		level = inst;
 		r_brc = brc;
@@ -407,15 +443,15 @@ static void block_release_selection (gint inst, gint action,
 		if (timeout_id == 0)
 		{
 		    timeout_id = 
-			gtk_idle_add_priority (G_PRIORITY_HIGH,
+			gtk_idle_add_priority (G_PRIORITY_HIGH_IDLE,
 					       selection_callback_timeout,
 					       NULL);
-		}	       
+		}
 	    }
 	}
 	else
 	{
-	    if (inst < level)
+	    if (inst <= level)
 	    {   /* Once the functions have stopped, down to the
 		specified level/instance, the desired function is
 		called (about 15 lines up: r_brc (...)) */
@@ -426,6 +462,13 @@ static void block_release_selection (gint inst, gint action,
 		r_brc = brc;
 		r_user_data1 = user_data1;
 		r_user_data2 = user_data2;
+		/* don't let a timeout snatch away this callback
+		 * before all functions have stopped */
+		if (timeout_id)
+		{
+		    gtk_timeout_remove (timeout_id);
+		    timeout_id = 0;
+		}
 	    }
 	}
 	break;
@@ -453,6 +496,10 @@ static void block_release_selection (gint inst, gint action,
 	g_warning ("Programming error: unknown BR_...: %d\n", action);
 	break;
     }
+#if DEBUG_CB_INIT
+    printf ("   exit: level: %d, count_pl: %d, cst0: %d, cst1: %d\n",
+	    level, count_pl, count_st[0], count_st[1]);
+#endif
 }
 
 /* Will block the possibility to select another playlist / sort tab

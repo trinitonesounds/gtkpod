@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-26 22:45:39 jcs>
+/* Time-stamp: <2003-06-29 13:47:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -118,9 +118,15 @@ static gboolean sm_delete_song (GtkTreeModel *model,
   Song *song;
 
   gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &song, -1);
-  if(song == (Song *)data) {
-    gtk_list_store_remove (GTK_LIST_STORE (model), iter);
-    return TRUE;
+  if(song == (Song *)data)
+  {
+      GtkTreeSelection *selection = gtk_tree_view_get_selection
+	  (song_treeview);
+/*       printf("unselect...\n"); */
+      gtk_tree_selection_unselect_iter (selection, iter);
+/*       printf("...unselect done\n"); */
+      gtk_list_store_remove (GTK_LIST_STORE (model), iter);
+      return TRUE;
   }
   return FALSE;
 }
@@ -289,7 +295,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   selection = gtk_tree_view_get_selection(song_treeview); 
   row_list = gtk_tree_selection_get_selected_rows(selection, &model); 
   
-  /*printf("sm_cell_edited: column: %d  song:%lx\n", column, song);*/
+/*   printf("sm_cell_edited: column: %d  song:%p\n", column, song); */
 
   sel_rows_num = g_list_length (row_list);
 
@@ -355,6 +361,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
         g_warning ("Programming error: sm_cell_edited: unknown song cell (%d) edited\n", column);
         break;
      }
+/*      printf ("  changed: %d\n", changed); */
      if (changed)
      {
         song->time_modified = itunesdb_time_get_mac_time ();

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 22:53:53 jcs>
+/* Time-stamp: <2003-06-27 23:16:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -68,8 +68,6 @@ enum {
 /* max. number of stars */
 #define RATING_MAX 5
 
-/* print some timing info for tuning purposes */
-#define DEBUG_TIMING 0
 /* time between display refreshs in ms */
 #define REFRESH_MS 200
 /* initial count number between display refreshs -- will be
