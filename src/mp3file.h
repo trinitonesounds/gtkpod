@@ -34,5 +34,6 @@ typedef struct
 } mp3metadata_t;
 
 mp3metadata_t *get_mp3metadata_from_file(gchar *path, guint32 filesize);
+guint get_song_time(gchar *path);
 
 #endif
