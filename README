@@ -413,7 +413,7 @@ by checking the "Use selected charset also when updating or syncing
 tracks" and "Use selected charset when writing tags" options. The
 default charset is "EUC-JP" -- it will be used when the charset cannot
 be autodetected, as well as when writing tags if a specific charset
-could not be determined.
+could not be determined before.
 
 
 About filenames (excerpt from the GTK2 release notes):

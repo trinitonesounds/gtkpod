@@ -2195,6 +2195,11 @@ void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter)
 			SM_COLUMN_SIZE, song,
 			SM_COLUMN_SONGLEN, song,
 			SM_COLUMN_BITRATE, song,
+			SM_COLUMN_PLAYCOUNT, song,
+			SM_COLUMN_RATING, song,
+			SM_COLUMN_TIME_CREATE, song,
+			SM_COLUMN_TIME_PLAYED, song,
+			SM_COLUMN_TIME_MODIFIED, song,
 			-1);
 }
 
@@ -2335,7 +2340,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   Song *song;
   SM_item column;
   gboolean changed = FALSE; /* really changed anything? */
-  gchar *track_text = NULL;
+  guint32 nr;
   gchar **itemp_utf8 = NULL;
   gunichar2 **itemp_utf16 = NULL;
 
@@ -2366,12 +2371,32 @@ sm_cell_edited (GtkCellRendererText *renderer,
       }
       break;
   case SM_COLUMN_TRACK_NR:
-      track_text = g_strdup_printf("%d", song->track_nr);
-      if (g_utf8_collate(track_text, new_text) != 0)
+      nr = atoi (new_text);
+      if ((nr >= 0) && (nr != song->track_nr))
       {
-	  song->track_nr = atoi(new_text);
+	  song->track_nr = nr;
 	  changed = TRUE;
       }
+      break;
+  case SM_COLUMN_PLAYCOUNT:
+      nr = atoi (new_text);
+      if ((nr >= 0) && (nr != song->playcount))
+      {
+	  song->playcount = nr;
+	  changed = TRUE;
+      }
+      break;
+  case SM_COLUMN_RATING:
+      nr = atoi (new_text);
+      if ((nr >= 0) && (nr <= 5) && (nr != song->rating))
+      {
+	  song->rating = nr*20;
+	  changed = TRUE;
+      }
+      break;
+  case SM_COLUMN_TIME_CREATE:
+  case SM_COLUMN_TIME_PLAYED:
+  case SM_COLUMN_TIME_MODIFIED:
       break;
   default:
       g_warning ("Programming error: sm_cell_edited: unknown song cell (%d) edited\n", column);
@@ -2413,6 +2438,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
   Song *song;
   SM_item column;
   gchar text[21];
+  gchar *buf = NULL;
   gchar *item_utf8 = NULL;
 
   column = (SM_item)g_object_get_data (G_OBJECT (renderer), "column");
@@ -2486,6 +2512,30 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "xalign", 1.0, NULL);
+      break;
+  case SM_COLUMN_PLAYCOUNT:
+      snprintf (text, 20, "%d", song->playcount);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
+      break;
+  case SM_COLUMN_RATING:
+      snprintf (text, 20, "%d", song->rating/20);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
+      break;
+  case SM_COLUMN_TIME_CREATE:
+  case SM_COLUMN_TIME_PLAYED:
+  case SM_COLUMN_TIME_MODIFIED:
+      buf = time_field_to_string (song, column);
+      g_object_set (G_OBJECT (renderer),
+		    "text", buf,
+		    "editable", TRUE,
+		    "xalign", 0.0, NULL);
+      C_FREE (buf);
       break;
   default:
       g_warning ("Programming error: unknown column in sm_cell_data_func: %d\n", column);
@@ -3032,7 +3082,7 @@ sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 
 /* Add one column at position @pos. This code is used over and over
    by sm_add_column() -- therefore I put it into a separate function */
-static GtkTreeViewColumn *sm_add_text_column (gint col_id,
+static GtkTreeViewColumn *sm_add_text_column (SM_item col_id,
 					      gchar *name,
 					      GtkCellRenderer *renderer,
 					      gboolean editable,
@@ -3075,57 +3125,79 @@ static GtkTreeViewColumn *sm_add_text_column (gint col_id,
 static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
 {
   GtkTreeViewColumn *col = NULL;
-  GtkCellRenderer *renderer;
-/*  static GtkTooltips *tooltips = NULL;*/
+  gchar *text = NULL;
+  gboolean editable = TRUE;          /* default */
+  GtkCellRenderer *renderer = NULL;  /* default */
 
-/*  if (!tooltips)  tooltips = gtk_tooltips_new ();*/
+  if ((sm_item) < 0 || (sm_item >= SM_NUM_COLUMNS))  return NULL;
 
   switch (sm_item)
   {
   case SM_COLUMN_TITLE:
-      col = sm_add_text_column (SM_COLUMN_TITLE, _("Title"), NULL, TRUE, pos);
+      text = _("Title");
       break;
   case SM_COLUMN_ARTIST:
-      col = sm_add_text_column (SM_COLUMN_ARTIST, _("Artist"), NULL, TRUE, pos);
+      text = _("Artist");
       break;
   case SM_COLUMN_ALBUM:
-      col = sm_add_text_column (SM_COLUMN_ALBUM, _("Album"), NULL, TRUE, pos);
+      text = _("Album");
       break;
   case SM_COLUMN_GENRE:
-      col = sm_add_text_column (SM_COLUMN_GENRE, _("Genre"), NULL, TRUE, pos);
+      text = _("Genre");
       break;
   case SM_COLUMN_COMPOSER:
-      col = sm_add_text_column (SM_COLUMN_COMPOSER, _("Composer"), NULL, TRUE, pos);
+      text = _("Composer");
       break;
   case SM_COLUMN_TRACK_NR:
-      col = sm_add_text_column (SM_COLUMN_TRACK_NR, _("#"), NULL, TRUE, pos);
+      text = _("#");
       break;
   case SM_COLUMN_IPOD_ID:
-      col = sm_add_text_column (SM_COLUMN_IPOD_ID, _("ID"), NULL, FALSE, pos);
+      text = _("ID");
+      editable = FALSE;
       break;
   case SM_COLUMN_PC_PATH:
-      col = sm_add_text_column (SM_COLUMN_PC_PATH, _("PC File"), NULL, FALSE, pos);
+      text = _("PC File");
+      editable = FALSE;
       break;
   case SM_COLUMN_TRANSFERRED:
+      text = _("Trnsfrd");
+      editable = FALSE;
       renderer = gtk_cell_renderer_toggle_new ();
-      col = sm_add_text_column (SM_COLUMN_TRANSFERRED, _("Trnsfrd"),
-			  renderer, FALSE, pos);
       break;
   case SM_COLUMN_SIZE:
-      col = sm_add_text_column (SM_COLUMN_SIZE, _("File Size"), NULL, FALSE, pos);
+      text = _("File Size");
+      editable = FALSE;
       break;
   case SM_COLUMN_SONGLEN:
-      col = sm_add_text_column (SM_COLUMN_SONGLEN, _("Time"), NULL, FALSE, pos);
+      text = _("Time");
+      editable = FALSE;
       break;
   case SM_COLUMN_BITRATE:
-      col = sm_add_text_column (SM_COLUMN_BITRATE, _("Bitrate"), NULL, FALSE, pos);
-/*      gtk_tooltips_set_tip (tooltips, GTK_WIDGET (col),
-			    _("Average Bitrate"),
-			    NULL);*/
+      text = _("Bitrate");
+      editable = FALSE;
       break;
-    case SM_NUM_COLUMNS:
+  case SM_COLUMN_PLAYCOUNT:
+      text = _("Playcount");
+      break;
+  case SM_COLUMN_RATING:
+      text = _("Rating");
+      break;
+  case SM_COLUMN_TIME_CREATE:
+      text = _("Imported");
+      editable = FALSE;
+      break;
+  case SM_COLUMN_TIME_PLAYED:
+      text = _("Played");
+      editable = FALSE;
+      break;
+  case SM_COLUMN_TIME_MODIFIED:
+      text = _("Modified");
+      editable = FALSE;
+      break;
+  case SM_NUM_COLUMNS:
       break;
   }
+  col = sm_add_text_column (sm_item, text, renderer, editable, pos);
   if (col && (pos != -1))
       gtk_tree_view_column_set_visible (col,
 					prefs_get_col_visible (sm_item));
@@ -3188,7 +3260,9 @@ static void sm_create_treeview (void)
 			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER));
+			  G_TYPE_POINTER, G_TYPE_POINTER,
+			  G_TYPE_POINTER, G_TYPE_POINTER,
+			  G_TYPE_POINTER, G_TYPE_POINTER));
   gtk_tree_view_set_model (song_treeview, GTK_TREE_MODEL (model));
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (song_treeview), TRUE);
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (song_treeview),

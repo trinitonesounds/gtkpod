@@ -89,6 +89,7 @@ struct cfg
   gint last_prefs_page;         /* last page selected in prefs window */
   gchar *play_now_path;         /* path for 'Play Now' */
   gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
+  gchar *time_format;           /* time format for strftime() */
   gboolean automount;		/* whether we should mount/unmount the ipod */
   float version;                /* version of gtkpod writing the cfg file */
 };
@@ -196,6 +197,8 @@ void prefs_set_play_now_path (const gchar *path);
 gchar *prefs_get_play_now_path (void);
 void prefs_set_play_enqueue_path (const gchar *path);
 gchar *prefs_get_play_enqueue_path (void);
+void prefs_set_time_format (const gchar *format);
+gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount(void);
 
 #endif __PREFS_H__

@@ -1233,3 +1233,13 @@ on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
 	gtk_toggle_button_get_active(togglebutton));
 }
 
+
+void
+on_cfg_time_format_changed             (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    gchar *buf = gtk_editable_get_chars(editable,0, -1);
+    prefs_window_set_time_format (buf);
+    g_free (buf);
+}
+

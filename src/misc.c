@@ -748,19 +748,24 @@ S_item SM_to_S (SM_item sm)
 {
     switch (sm)
     {
-    case SM_COLUMN_TITLE:       return S_TITLE;
-    case SM_COLUMN_ARTIST:      return S_ARTIST;
-    case SM_COLUMN_ALBUM:       return S_ALBUM;
-    case SM_COLUMN_GENRE:       return S_GENRE;
-    case SM_COLUMN_COMPOSER:    return S_COMPOSER;
-    case SM_COLUMN_TRACK_NR:    return S_TRACK_NR;
-    case SM_COLUMN_IPOD_ID:     return S_IPOD_ID;
-    case SM_COLUMN_PC_PATH:     return S_PC_PATH;
-    case SM_COLUMN_TRANSFERRED: return S_TRANSFERRED;
-    case SM_COLUMN_SIZE:        return S_SIZE;
-    case SM_COLUMN_SONGLEN:     return S_SONGLEN;
-    case SM_COLUMN_BITRATE:     return S_BITRATE;
-    case SM_NUM_COLUMNS:        return -1;
+    case SM_COLUMN_TITLE:         return S_TITLE;
+    case SM_COLUMN_ARTIST:        return S_ARTIST;
+    case SM_COLUMN_ALBUM:         return S_ALBUM;
+    case SM_COLUMN_GENRE:         return S_GENRE;
+    case SM_COLUMN_COMPOSER:      return S_COMPOSER;
+    case SM_COLUMN_TRACK_NR:      return S_TRACK_NR;
+    case SM_COLUMN_IPOD_ID:       return S_IPOD_ID;
+    case SM_COLUMN_PC_PATH:       return S_PC_PATH;
+    case SM_COLUMN_TRANSFERRED:   return S_TRANSFERRED;
+    case SM_COLUMN_SIZE:          return S_SIZE;
+    case SM_COLUMN_SONGLEN:       return S_SONGLEN;
+    case SM_COLUMN_BITRATE:       return S_BITRATE;
+    case SM_COLUMN_PLAYCOUNT:     return S_PLAYCOUNT;
+    case SM_COLUMN_RATING:        return S_RATING;
+    case SM_COLUMN_TIME_CREATE:   return S_TIME_CREATE;
+    case SM_COLUMN_TIME_PLAYED:   return S_TIME_PLAYED;
+    case SM_COLUMN_TIME_MODIFIED: return S_TIME_MODIFIED;
+    case SM_NUM_COLUMNS:          return -1;
     }
     return -1;
 }
@@ -1023,7 +1028,7 @@ void ipod_directories_head (void)
 			 CONF_NO_BUTTON,      /* don't show "Apply" */
 			 ipod_directories_cancel, /* cancel_handler,*/
 			 mp,                  /* gpointer user_data1,*/
-			 NULL))              /* gpointer user_data2,*/
+			 NULL))               /* gpointer user_data2,*/
     { /* creation failed */
 	g_free (mp);
     }
@@ -1738,8 +1743,9 @@ get_ipod_used_space(void)
     glong result = 0;
     gchar *line = NULL;
     gchar **tokens = NULL;
+    gchar *mp = prefs_get_ipod_mount ();
     
-    if((line = get_drive_stats_from_df(prefs_get_ipod_mount())))
+    if((line = get_drive_stats_from_df(mp)))
     {
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
@@ -1749,6 +1755,7 @@ get_ipod_used_space(void)
 	}
     }
     g_free(line);
+    g_free (mp);
     return(result);
 }
 #endif
@@ -1758,7 +1765,9 @@ get_ipod_free_space(void)
     glong result = 0;
     gchar *line = NULL;
     gchar **tokens = NULL;
-    if((line = get_drive_stats_from_df(prefs_get_ipod_mount())))
+    gchar *mp = prefs_get_ipod_mount ();
+
+    if((line = get_drive_stats_from_df(mp)))
     {
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
@@ -1768,6 +1777,7 @@ get_ipod_free_space(void)
 	}
     }
     g_free(line);
+    g_free(mp);
     return(result);
 }
 
@@ -1812,7 +1822,7 @@ gtkpod_space_statusbar_init(GtkWidget *w)
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *                       Mac timestamp stuff                        *
+ *                       Timestamp stuff                            *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
@@ -1828,16 +1838,92 @@ guint32 time_get_mac_time (void)
 /* convert Macintosh timestamp to host system time stamp -- modify
  * this function if necessary to port to host systems with different
  * start of Epoch */
+/* A "null" time will not be converted */
 time_t time_mac_to_host (guint32 mactime)
 {
-    return (time_t)(mactime - 2082844800);
+    if (mactime != 0)  return (time_t)(mactime - 2082844800);
+    else               return 0;
 }
 
 
 /* convert host system timestamp to Macintosh time stamp -- modify
  * this function if necessary to port to host systems with different
  * start of Epoch */
+/* A "null" time will not be converted */
 guint32 time_host_to_mac (time_t time)
 {
-    return (guint32)(time + 2082844800);
+    if (time != 0)    return (guint32)(time + 2082844800);
+    else              return 0;
+}
+
+
+/* converts the time mac stamp @time to a string (max. length:
+ * PATH_MAX). You must g_free the return value */
+gchar *time_time_to_string (time_t time)
+{
+    gchar *format = prefs_get_time_format ();
+
+    if (time && format)
+    {
+	gchar buf[PATH_MAX+1];
+	struct tm *tm = localtime (&time);
+	size_t size = strftime (buf, PATH_MAX, format, tm);
+	buf[size] = 0;
+	return g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+    }
+    return g_strdup ("--");
+}
+
+
+
+/* get the timestamp SM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
+time_t time_get_time (Song *song, SM_item sm_item)
+{
+    guint32 mactime = 0;
+
+    if (song) switch (sm_item)
+    {
+    case SM_COLUMN_TIME_CREATE:
+	mactime = song->time_create;
+	break;
+    case SM_COLUMN_TIME_PLAYED:
+	mactime = song->time_played;
+	break;
+    case SM_COLUMN_TIME_MODIFIED:
+	mactime = song->time_modified;
+	break;
+    default:
+	mactime = 0;
+	break;
+    }
+    return (time_mac_to_host (mactime));
+}
+
+
+/* hopefully obvious */
+gchar *time_field_to_string (Song *song, SM_item sm_item)
+{
+    return (time_time_to_string (time_get_time (song, sm_item)));
+}
+
+
+/* get the timestamp SM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
+void time_set_time (Song *song, time_t time, SM_item sm_item)
+{
+    guint32 mactime = time_host_to_mac (time);
+
+    if (song) switch (sm_item)
+    {
+    case SM_COLUMN_TIME_CREATE:
+	song->time_create = mactime;
+	break;
+    case SM_COLUMN_TIME_PLAYED:
+	song->time_played = mactime;
+	break;
+    case SM_COLUMN_TIME_MODIFIED:
+	song->time_modified = mactime;
+	break;
+    default:
+	break;
+    }
 }

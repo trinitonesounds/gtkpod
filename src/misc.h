@@ -104,5 +104,9 @@ void gtkpod_warning (const gchar *format, ...);
 guint32 time_get_mac_time (void);
 time_t time_mac_to_host (guint32 mactime);
 guint32 time_host_to_mac (time_t time);
+gchar *time_time_to_string (time_t time);
+time_t time_get_time (Song *song, SM_item sm_item);
+gchar *time_field_to_string (Song *song, SM_item sm_item);
+void time_set_time (Song *song, time_t time, SM_item sm_item);
 
 #endif __MISC_H__

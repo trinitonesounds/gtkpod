@@ -42,7 +42,7 @@
    programm is responsible to keep a representation of the data.
 
    The information given in the "Play Counts" file is also read if
-   availablew and the playcounts, star rating and the time last played
+   available and the playcounts, star rating and the time last played
    is updated.
 
    For each song itunesdb_parse() will pass a filled out Song structure
@@ -118,6 +118,9 @@
    gboolean itunesdb_write (gchar *path), /+ path to mountpoint +/
    will write an updated version of the iTunesDB.
 
+   The "Play Counts" file is renamed to "Play Counts.bak" if it exists
+   to avoid it being read multiple times.
+
    It uses the following functions to retrieve the data necessary data
    from memory:
 
@@ -160,10 +163,10 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
-#include <support.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "support.h"
 #include "itunesdb.h"
 
 #ifdef IS_GTKPOD
@@ -487,7 +490,10 @@ static glong get_nod_a(FILE *file, glong seek)
   song->tracks = get4int(file, seek+48);      /* nr of tracks     */
   song->year = get4int(file, seek+52);        /* year             */
   song->bitrate = get4int(file, seek+56);     /* bitrate          */
-  song->transferred = TRUE;                   /* song is on iPod! */
+  song->time_create = get4int(file, seek+32); /* creation time    */
+  song->time_played = get4int(file, seek+84); /* last time played */
+  song->time_modified = get4int(file, seek+100);/* modification time */
+  song->transferred = TRUE;                   /* song is on iPod!    */
 
   seek += get4int (file, seek+4);             /* 1st mhod starts here! */
   while(zip != -1)
@@ -954,7 +960,9 @@ static void mk_mhit (FILE *file, Song *song)
   put_4int_cur (file, song->year);    /* the year                   */
   put_4int_cur (file, song->bitrate); /* bitrate                    */
   put_4int_cur (file, 0xac440000);    /* ?                          */
-  put_n0_cur (file, 7);               /* dummy space                */
+  put_n0_cur (file, 5);               /* dummy space                */
+  put_4int_cur (file, song->time_played); /* last time played       */
+  put_4int_cur (file, 0);             /* ?                          */
   put_4int_cur (file, song->cd_nr);   /* CD number                  */
   put_4int_cur (file, song->cds);     /* number of CDs              */
   put_4int_cur (file, 0);             /* hardcoded space            */
@@ -1249,6 +1257,8 @@ write_it (FILE *file)
 
 /* Write out an iTunesDB.
    Note: only the _utf16 entries in the Song-struct are used
+   An existing "Play Counts" file is renamed to "Play Counts.bak" if
+   the export was successful.
    Returns TRUE on success, FALSE on error.
    "path" should point to the mount point of the
    iPod, e.e. "/mnt/ipod" */
@@ -1284,6 +1294,20 @@ gboolean itunesdb_write_to_file (gchar *filename)
       itunesdb_warning (_("Could not open iTunesDB \"%s\" for writing.\n"),
 		      filename);
     }
+  if (result == TRUE)
+  {   /* rename "Play Counts" to "Play Counts.bak" */
+      gchar *dirname = g_path_get_dirname (filename);
+      gchar *plcname_o = itunesdb_concat_dir (dirname, "Play Counts");
+      gchar *plcname_n = itunesdb_concat_dir (dirname, "Play Counts.bak");
+      if (rename (plcname_o, plcname_n) == -1)
+      {   /* an error occured */
+	  itunesdb_warning (_("Error renaming '%s' to '%s' (errno: %d).\n"),
+			    plcname_o, plcname_n, errno);
+      }
+      g_free (dirname);
+      g_free (plcname_o);
+      g_free (plcname_n);
+  }
   return result;
 }
 

@@ -165,6 +165,17 @@ prefs_window_create(void)
 		g_free (buf);
 	    }
 	}
+	if((w = lookup_widget(prefs_window, "time_format_entry")))
+	{
+	    if (tmpcfg->time_format)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->time_format);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
 	if((w = lookup_widget(prefs_window, "charset_combo")))
 	{
 	    charset_init_combo (GTK_COMBO (w));
@@ -413,6 +424,7 @@ prefs_window_set(void)
 	prefs_set_mount_point(tmpcfg->ipod_mount);
 	prefs_set_play_now_path(tmpcfg->play_now_path);
 	prefs_set_play_enqueue_path(tmpcfg->play_enqueue_path);
+	prefs_set_time_format(tmpcfg->time_format);
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_auto_import(tmpcfg->autoimport);
 	for (i=0; i<SORT_TAB_MAX; ++i) {
@@ -554,6 +566,11 @@ prefs_window_apply (void)
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_play_enqueue_path ());
 	/* tmpcfg gets set by the "changed" callback */
     }
+    if((w = lookup_widget(prefs_window, "time_format_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_time_format ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
 }
 
 
@@ -614,22 +631,29 @@ prefs_window_set_id3_write(gboolean val)
 void
 prefs_window_set_mount_point(const gchar *mp)
 {
-    if(tmpcfg->ipod_mount) g_free(tmpcfg->ipod_mount);
+    g_free (tmpcfg->ipod_mount);
     tmpcfg->ipod_mount = g_strdup(mp);
 }
 
 void prefs_window_set_play_now_path(const gchar *path)
 {
     if (!path) return;
-    if (tmpcfg->play_now_path) g_free (tmpcfg->play_now_path);
+    g_free (tmpcfg->play_now_path);
     tmpcfg->play_now_path = g_strdup (path);
 }
 
 void prefs_window_set_play_enqueue_path(const gchar *path)
 {
     if (!path) return;
-    if (tmpcfg->play_enqueue_path) g_free (tmpcfg->play_enqueue_path);
+    g_free (tmpcfg->play_enqueue_path);
     tmpcfg->play_enqueue_path = g_strdup (path);
+}
+
+void prefs_window_set_time_format(const gchar *format)
+{
+    if (!format) return;
+    g_free (tmpcfg->time_format);
+    tmpcfg->time_format = g_strdup (format);
 }
 
 void prefs_window_set_keep_backups(gboolean active)

@@ -430,3 +430,7 @@ on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
 void
 on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_cfg_time_format_changed             (GtkEditable     *editable,
+                                        gpointer         user_data);

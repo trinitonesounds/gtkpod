@@ -94,7 +94,12 @@ typedef enum {
     S_TRANSFERRED,
     S_SIZE,
     S_SONGLEN,
-    S_BITRATE
+    S_BITRATE,
+    S_PLAYCOUNT,
+    S_RATING,
+    S_TIME_CREATE,
+    S_TIME_PLAYED,
+    S_TIME_MODIFIED,
 } S_item;
 
 void free_song(Song *song);

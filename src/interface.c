@@ -1213,22 +1213,32 @@ create_new_prefs_window (void)
   GtkWidget *sort_tab_num_combo_entry;
   GtkWidget *label34;
   GtkWidget *frame14;
+  GtkWidget *vbox36;
   GtkWidget *hbox12;
   GtkWidget *vbox27;
   GtkWidget *col_visible1;
-  GtkWidget *col_visible3;
-  GtkWidget *col_visible6;
-  GtkWidget *col_visible9;
+  GtkWidget *col_visible4;
+  GtkWidget *col_visible8;
+  GtkWidget *col_visible14;
+  GtkWidget *col_visible12;
   GtkWidget *vbox28;
   GtkWidget *col_visible2;
-  GtkWidget *col_visible4;
-  GtkWidget *col_visible7;
-  GtkWidget *col_visible10;
+  GtkWidget *col_visible5;
+  GtkWidget *col_visible9;
+  GtkWidget *col_visible15;
+  GtkWidget *col_visible13;
   GtkWidget *vbox29;
   GtkWidget *col_visible0;
-  GtkWidget *col_visible5;
-  GtkWidget *col_visible8;
+  GtkWidget *col_visible6;
+  GtkWidget *col_visible10;
+  GtkWidget *col_visible16;
+  GtkWidget *vbox35;
+  GtkWidget *col_visible3;
+  GtkWidget *col_visible7;
   GtkWidget *col_visible11;
+  GtkWidget *hbox13;
+  GtkWidget *label47;
+  GtkWidget *cfg_time_format_entry;
   GtkWidget *label37;
   GtkWidget *frame13;
   GtkWidget *autoselect_vbox;
@@ -1640,9 +1650,13 @@ create_new_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox23), frame14, TRUE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame14), GTK_SHADOW_ETCHED_OUT);
 
+  vbox36 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox36);
+  gtk_container_add (GTK_CONTAINER (frame14), vbox36);
+
   hbox12 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox12);
-  gtk_container_add (GTK_CONTAINER (frame14), hbox12);
+  gtk_box_pack_start (GTK_BOX (vbox36), hbox12, TRUE, TRUE, 0);
 
   vbox27 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox27);
@@ -1652,17 +1666,21 @@ create_new_prefs_window (void)
   gtk_widget_show (col_visible1);
   gtk_box_pack_start (GTK_BOX (vbox27), col_visible1, FALSE, FALSE, 0);
 
-  col_visible3 = gtk_check_button_new_with_mnemonic (_("Genre"));
-  gtk_widget_show (col_visible3);
-  gtk_box_pack_start (GTK_BOX (vbox27), col_visible3, FALSE, FALSE, 0);
+  col_visible4 = gtk_check_button_new_with_mnemonic (_("Composer"));
+  gtk_widget_show (col_visible4);
+  gtk_box_pack_start (GTK_BOX (vbox27), col_visible4, FALSE, FALSE, 0);
 
-  col_visible6 = gtk_check_button_new_with_mnemonic (_("iPod ID"));
-  gtk_widget_show (col_visible6);
-  gtk_box_pack_start (GTK_BOX (vbox27), col_visible6, FALSE, FALSE, 0);
+  col_visible8 = gtk_check_button_new_with_mnemonic (_("Transferred"));
+  gtk_widget_show (col_visible8);
+  gtk_box_pack_start (GTK_BOX (vbox27), col_visible8, FALSE, FALSE, 0);
 
-  col_visible9 = gtk_check_button_new_with_mnemonic (_("File Size"));
-  gtk_widget_show (col_visible9);
-  gtk_box_pack_start (GTK_BOX (vbox27), col_visible9, FALSE, FALSE, 0);
+  col_visible14 = gtk_check_button_new_with_mnemonic (_("Time created"));
+  gtk_widget_show (col_visible14);
+  gtk_box_pack_start (GTK_BOX (vbox27), col_visible14, FALSE, FALSE, 0);
+
+  col_visible12 = gtk_check_button_new_with_mnemonic (_("Playcount"));
+  gtk_widget_show (col_visible12);
+  gtk_box_pack_start (GTK_BOX (vbox27), col_visible12, FALSE, FALSE, 0);
 
   vbox28 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox28);
@@ -1672,17 +1690,21 @@ create_new_prefs_window (void)
   gtk_widget_show (col_visible2);
   gtk_box_pack_start (GTK_BOX (vbox28), col_visible2, FALSE, FALSE, 0);
 
-  col_visible4 = gtk_check_button_new_with_mnemonic (_("Composer"));
-  gtk_widget_show (col_visible4);
-  gtk_box_pack_start (GTK_BOX (vbox28), col_visible4, FALSE, FALSE, 0);
+  col_visible5 = gtk_check_button_new_with_mnemonic (_("Track Nr (#)"));
+  gtk_widget_show (col_visible5);
+  gtk_box_pack_start (GTK_BOX (vbox28), col_visible5, FALSE, FALSE, 0);
 
-  col_visible7 = gtk_check_button_new_with_mnemonic (_("PC File"));
-  gtk_widget_show (col_visible7);
-  gtk_box_pack_start (GTK_BOX (vbox28), col_visible7, FALSE, FALSE, 0);
+  col_visible9 = gtk_check_button_new_with_mnemonic (_("File Size"));
+  gtk_widget_show (col_visible9);
+  gtk_box_pack_start (GTK_BOX (vbox28), col_visible9, FALSE, FALSE, 0);
 
-  col_visible10 = gtk_check_button_new_with_mnemonic (_("Play Time"));
-  gtk_widget_show (col_visible10);
-  gtk_box_pack_start (GTK_BOX (vbox28), col_visible10, FALSE, FALSE, 0);
+  col_visible15 = gtk_check_button_new_with_mnemonic (_("Time played"));
+  gtk_widget_show (col_visible15);
+  gtk_box_pack_start (GTK_BOX (vbox28), col_visible15, FALSE, FALSE, 0);
+
+  col_visible13 = gtk_check_button_new_with_mnemonic (_("Rating"));
+  gtk_widget_show (col_visible13);
+  gtk_box_pack_start (GTK_BOX (vbox28), col_visible13, FALSE, FALSE, 0);
 
   vbox29 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox29);
@@ -1692,17 +1714,49 @@ create_new_prefs_window (void)
   gtk_widget_show (col_visible0);
   gtk_box_pack_start (GTK_BOX (vbox29), col_visible0, FALSE, FALSE, 0);
 
-  col_visible5 = gtk_check_button_new_with_mnemonic (_("Track Number (#)"));
-  gtk_widget_show (col_visible5);
-  gtk_box_pack_start (GTK_BOX (vbox29), col_visible5, FALSE, FALSE, 0);
+  col_visible6 = gtk_check_button_new_with_mnemonic (_("iPod ID"));
+  gtk_widget_show (col_visible6);
+  gtk_box_pack_start (GTK_BOX (vbox29), col_visible6, FALSE, FALSE, 0);
 
-  col_visible8 = gtk_check_button_new_with_mnemonic (_("Transferred"));
-  gtk_widget_show (col_visible8);
-  gtk_box_pack_start (GTK_BOX (vbox29), col_visible8, FALSE, FALSE, 0);
+  col_visible10 = gtk_check_button_new_with_mnemonic (_("Play Time"));
+  gtk_widget_show (col_visible10);
+  gtk_box_pack_start (GTK_BOX (vbox29), col_visible10, FALSE, FALSE, 0);
+
+  col_visible16 = gtk_check_button_new_with_mnemonic (_("Time modified"));
+  gtk_widget_show (col_visible16);
+  gtk_box_pack_start (GTK_BOX (vbox29), col_visible16, FALSE, FALSE, 0);
+
+  vbox35 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox35);
+  gtk_box_pack_start (GTK_BOX (hbox12), vbox35, TRUE, TRUE, 0);
+
+  col_visible3 = gtk_check_button_new_with_mnemonic (_("Genre"));
+  gtk_widget_show (col_visible3);
+  gtk_box_pack_start (GTK_BOX (vbox35), col_visible3, FALSE, FALSE, 0);
+
+  col_visible7 = gtk_check_button_new_with_mnemonic (_("PC File"));
+  gtk_widget_show (col_visible7);
+  gtk_box_pack_start (GTK_BOX (vbox35), col_visible7, FALSE, FALSE, 0);
 
   col_visible11 = gtk_check_button_new_with_mnemonic (_("Bitrate"));
   gtk_widget_show (col_visible11);
-  gtk_box_pack_start (GTK_BOX (vbox29), col_visible11, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox35), col_visible11, FALSE, FALSE, 0);
+
+  hbox13 = gtk_hbox_new (FALSE, 4);
+  gtk_widget_show (hbox13);
+  gtk_box_pack_start (GTK_BOX (vbox36), hbox13, TRUE, TRUE, 0);
+
+  label47 = gtk_label_new_with_mnemonic (_(" Format for time display:"));
+  gtk_widget_show (label47);
+  gtk_box_pack_start (GTK_BOX (hbox13), label47, FALSE, FALSE, 0);
+  GTK_WIDGET_SET_FLAGS (label47, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label47), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label47), TRUE);
+
+  cfg_time_format_entry = gtk_entry_new ();
+  gtk_widget_show (cfg_time_format_entry);
+  gtk_box_pack_start (GTK_BOX (hbox13), cfg_time_format_entry, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_time_format_entry, _("For a full description of options please see 'man 3 strftime'. Default is: '%k:%M %d %b %g'."), NULL);
 
   label37 = gtk_label_new (_("Displayed Song Attributes "));
   gtk_widget_show (label37);
@@ -1955,6 +2009,9 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) sort_tab_num_combo_entry, "changed",
                     G_CALLBACK (on_sort_tab_num_combo_entry_changed),
                     NULL);
+  g_signal_connect ((gpointer) cfg_time_format_entry, "changed",
+                    G_CALLBACK (on_cfg_time_format_changed),
+                    NULL);
   g_signal_connect ((gpointer) cfg_mpl_autoselect, "toggled",
                     G_CALLBACK (on_cfg_mpl_autoselect_toggled),
                     NULL);
@@ -1998,6 +2055,7 @@ create_new_prefs_window (void)
   gtk_label_set_mnemonic_widget (GTK_LABEL (label27), cfg_mount_point);
   gtk_label_set_mnemonic_widget (GTK_LABEL (label29), charset_combo_entry);
   gtk_label_set_mnemonic_widget (GTK_LABEL (label35), sort_tab_num_combo_entry);
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label47), cfg_mount_point);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (new_prefs_window, new_prefs_window, "new_prefs_window");
@@ -2075,22 +2133,32 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo_entry, "sort_tab_num_combo_entry");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label34, "label34");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame14, "frame14");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox36, "vbox36");
   GLADE_HOOKUP_OBJECT (new_prefs_window, hbox12, "hbox12");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox27, "vbox27");
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible1, "col_visible1");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible3, "col_visible3");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible6, "col_visible6");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible9, "col_visible9");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible4, "col_visible4");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible8, "col_visible8");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible14, "col_visible14");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible12, "col_visible12");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox28, "vbox28");
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible2, "col_visible2");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible4, "col_visible4");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible7, "col_visible7");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible10, "col_visible10");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible5, "col_visible5");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible9, "col_visible9");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible15, "col_visible15");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible13, "col_visible13");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox29, "vbox29");
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible0, "col_visible0");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible5, "col_visible5");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible8, "col_visible8");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible6, "col_visible6");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible10, "col_visible10");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible16, "col_visible16");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox35, "vbox35");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible3, "col_visible3");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible7, "col_visible7");
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible11, "col_visible11");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox13, "hbox13");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label47, "label47");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_time_format_entry, "cfg_time_format_entry");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label37, "label37");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame13, "frame13");
   GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_vbox, "autoselect_vbox");
