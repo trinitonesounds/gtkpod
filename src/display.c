@@ -1703,6 +1703,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	      g_free (*itemp_utf16);
 	      *itemp_utf8 = g_strdup (new_text);
 	      *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
+	      song->time_modified = time_get_mac_time ();
 	      pm_song_changed (song);
 	      /* If prefs say to write changes to file, do so */
 	      if (prefs_get_id3_write ())
@@ -2378,6 +2379,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   }
   if (changed)
   {
+      song->time_modified = time_get_mac_time ();
       pm_song_changed (song); /* notify playlist model... */
       data_changed ();        /* indicate that data has changed */
   }

@@ -604,10 +604,22 @@ gunichar2 *song_get_item_utf16 (Song *song, S_item s_item)
 gboolean it_add_song (Song *song)
 {
     static gint count = 0;
-    Song *result = add_song (song);
+    Song *result;
+
+    /* fix timestamp (up to V0.51 I used a dummy timestamp -- replace
+       that with the current time) */
+    if (song && (song->time_create == 0x8c3abf9b))
+	song->time_create = time_get_mac_time ();
+    if (song && (song->time_modified == 0x8c3abf9b))
+	song->time_modified = 0;
+
+    result = add_song (song);
+
     ++count;
     if ((count % 20) == 0)     gtkpod_songs_statusbar_update();
+
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+
     if (result) return TRUE;
     else        return FALSE;
 }

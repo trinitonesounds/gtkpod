@@ -63,10 +63,13 @@ typedef struct
   gint32  tracks;            /* number of tracks      */
   gint32  year;              /* year                  */
   gint32  bitrate;           /* bitrate               */
-  gchar   *hostname;         /* name of host this file has been imported from */
-  gboolean transferred;      /* has file been transferred to iPod? */
-  gchar   *md5_hash;         /* md5 hash of file (or NULL)         */
-  gchar   *charset;          /* charset used for ID3 tags */
+  guint32 time_create;       /* time of creation (Mac type)             */
+  guint32 time_played;       /* time of last play  (Mac type)           */
+  guint32 time_modified;     /* time of last modification  (Mac type)   */
+  gchar   *hostname;         /* name of host this file has been imported on */
+  gboolean transferred;      /* has file been transferred to iPod?      */
+  gchar   *md5_hash;         /* md5 hash of file (or NULL)              */
+  gchar   *charset;          /* charset used for ID3 tags               */
   gchar   *auto_charset;     /* charset detected by auto-detection code */
 } Song;
 

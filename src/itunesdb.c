@@ -69,7 +69,10 @@
      gint32  tracks;            /+ number of tracks      +/
      gint32  year;              /+ year                  +/
      gint32  bitrate;           /+ bitrate               +/
-     gboolean transferred;      /+ has file been transferred to iPod? +/
+     guint32 time_create;       /+ time of creation (Mac type)           +/
+     guint32 time_played;       /+ time of last play  (Mac type)         +/
+     guint32 time_modified;     /+ time of last modification  (Mac type) +/
+     gboolean transferred;      /+ has file been transferred to iPod?    +/
    } Song;
 
    "transferred" will be set to TRUE because all songs read from a
@@ -715,14 +718,6 @@ static guint32 utf16_strlen (gunichar2 *utf16)
 }
 
 
-/* return dummy mac time stamp -- maybe we can improve later */
-/* iPod doesn't seem to care...? */
-static gint32 mactime()
-{
-  return 0x8c3abf9b;
-}
-
-
 /* Write 4-byte-integer "n" in correct order to "data".
    "data" must be sufficiently long ... */
 static void store4int (guint32 n, guchar *data)
@@ -842,7 +837,7 @@ static void mk_mhit (FILE *file, Song *song)
   put_4int_cur (file, 1);
   put_4int_cur (file, 0);
   put_4int_cur (file, 256);           /* type                       */
-  put_4int_cur (file, mactime());     /* timestamp                  */
+  put_4int_cur (file, song->time_create); /* timestamp              */
   put_4int_cur (file, song->size);    /* filesize                   */
   put_4int_cur (file, song->songlen); /* length of song in ms       */
   put_4int_cur (file, song->track_nr);/* track number               */
@@ -854,7 +849,7 @@ static void mk_mhit (FILE *file, Song *song)
   put_4int_cur (file, song->cd_nr);   /* CD number                  */
   put_4int_cur (file, song->cds);     /* number of CDs              */
   put_4int_cur (file, 0);             /* hardcoded space            */
-  put_4int_cur (file, mactime());     /* timestamp                  */
+  put_4int_cur (file, song->time_modified); /* timestamp            */
   put_n0_cur (file, 12);              /* dummy space                */
 }  
 

@@ -1808,3 +1808,36 @@ gtkpod_space_statusbar_init(GtkWidget *w)
     gtkpod_space_statusbar_update();
     gtk_timeout_add(5000, (GtkFunction) gtkpod_space_statusbar_update, NULL);
 }
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                       Mac timestamp stuff                        *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+guint32 time_get_mac_time (void)
+{
+    GTimeVal time;
+
+    g_get_current_time (&time);
+    return (guint32)(time.tv_sec + 2082844800);
+}
+
+
+/* convert Macintosh timestamp to host system time stamp -- modify
+ * this function if necessary to port to host systems with different
+ * start of Epoch */
+time_t time_mac_to_host (guint32 mactime)
+{
+    return (time_t)(mactime - 2082844800);
+}
+
+
+/* convert host system timestamp to Macintosh time stamp -- modify
+ * this function if necessary to port to host systems with different
+ * start of Epoch */
+guint32 time_host_to_mac (time_t time)
+{
+    return (guint32)(time + 2082844800);
+}

@@ -384,6 +384,13 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	song->pc_path_utf8 = charset_to_utf8 (name);
 	song->pc_path_locale = g_strdup (name);
 
+	if (song->time_create == 0) song->time_create = time_get_mac_time ();
+	else                        song->time_modified = time_get_mac_time ();
+
+	C_FREE (song->fdesc);
+	C_FREE (song->fdesc_utf16);
+	song->fdesc = g_strdup ("MPEG audio file");
+	song->fdesc_utf16 = g_utf8_to_utf16 (song->fdesc, -1, NULL, NULL, NULL);
 	C_FREE (song->album);
 	C_FREE (song->album_utf16);
 	if (filetag->album)
@@ -461,41 +468,45 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
     }
     g_free (filetag);
 
-    /* Get additional info (play time and bitrate */
-    mp3info = mp3file_get_info (name);
-    if (mp3info)
+    if (song)
     {
-	song->songlen = mp3info->milliseconds;
-	song->bitrate = (gint)(mp3info->vbr_average * 1000);
-	g_free (mp3info);
-    }
-    /* Fall back to xmms code if songlen is 0 */
-    if (song->songlen == 0)
-    {
-	song->songlen = get_song_time (name);
-	if (song->songlen)
-	    song->bitrate = (float)song->size*8000/song->songlen;
-    }
-
-    /* set charset used */
-    update_charset_info (song);
-
-    /* Make sure all strings are initialised -- that way we don't 
-       have to worry about it when we are handling the strings */
-    /* exception: md5_hash, charset and hostname: these may be NULL. */
-    validate_entries (song);
-
-    if (song && (song->songlen == 0))
-    {
-	/* Songs with zero play length are ignored by iPod... */
-	gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
-			name);
-	if (!or_song)
-	{  /* don't delete the song that was passed to us */
-	    g_free (song);
+	/* Get additional info (play time and bitrate */
+	mp3info = mp3file_get_info (name);
+	if (mp3info)
+	{
+	    song->songlen = mp3info->milliseconds;
+	    song->bitrate = (gint)(mp3info->vbr_average * 1000);
+	    g_free (mp3info);
 	}
-	song = NULL;
-	while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+	/* Fall back to xmms code if songlen is 0 */
+	if (song->songlen == 0)
+	{
+	    song->songlen = get_song_time (name);
+	    if (song->songlen)
+		song->bitrate = (float)song->size*8000/song->songlen;
+	}
+
+	/* set charset used */
+	update_charset_info (song);
+
+	/* Make sure all strings are initialised -- that way we don't 
+	   have to worry about it when we are handling the strings */
+	/* exception: md5_hash, charset and hostname: these may be NULL. */
+	validate_entries (song);
+
+	if (song->songlen == 0)
+	{
+	    /* Songs with zero play length are ignored by iPod... */
+	    gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
+			    name);
+	    if (!or_song)
+	    {  /* don't delete the song that was passed to us */
+		g_free (song);
+	    }
+	    song = NULL;
+	    while (widgets_blocked && gtk_events_pending ())
+		gtk_main_iteration ();
+	}
     }
     return song;
 }

@@ -37,6 +37,7 @@
 #include "playlist.h"
 #include "display.h"
 #include "confirmation.h"
+#include "time.h"
 
 #define STATUSBAR_TIMEOUT 4200
 
@@ -99,4 +100,9 @@ void enqueue_songs (GList *selected_songs);
 void delete_song_ok (gpointer user_data1, gpointer user_data2);
 
 void gtkpod_warning (const gchar *format, ...);
+
+guint32 time_get_mac_time (void);
+time_t time_mac_to_host (guint32 mactime);
+guint32 time_host_to_mac (time_t time);
+
 #endif __MISC_H__
