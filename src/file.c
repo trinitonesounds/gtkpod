@@ -2958,3 +2958,35 @@ void parse_offline_playcount (void)
     g_free (cfgdir);
     g_free (offlplyc);
 }
+
+gboolean calc_gain(gchar *path) 
+{
+	switch (determine_file_type(path)) {
+		case FILE_TYPE_MP3: return mp3_calc_gain(path);
+		case FILE_TYPE_MP4: /* FIXME */
+		case FILE_TYPE_WAV: /* FIXME */
+		case FILE_TYPE_M3U: 
+		case FILE_TYPE_PLS: 
+		case FILE_TYPE_UNKNOWN: 
+		case FILE_TYPE_ERROR: 
+				    break;
+	}
+	return FALSE;
+}
+
+
+gboolean read_gain_tags(gchar *path, Track *track) 
+{
+	switch (determine_file_type(path)) {
+		case FILE_TYPE_MP3: return mp3_read_gain_tags(path, track);
+		case FILE_TYPE_MP4: /* FIXME */
+		case FILE_TYPE_WAV: /* FIXME */
+		case FILE_TYPE_M3U: 
+		case FILE_TYPE_PLS: 
+		case FILE_TYPE_UNKNOWN: 
+		case FILE_TYPE_ERROR: 
+				    break;
+	}
+	return FALSE;
+}
+

@@ -87,19 +87,6 @@ static gint32 replaygain_to_volume(gint replaygain)
 }
 
 
-
-static gboolean calc_gain(gchar *path) 
-{
-	return mp3_calc_gain(path);
-}
-
-
-static gboolean read_gain_tags(gchar *path, Track *track) 
-{
-	return mp3_read_gain_tags(path, track);
-}
-
-
 /* will get the volume either from mp3gain or from LAME's ReplayGain */
 static gint32 nm_get_volume (Track *track)
 {

@@ -71,4 +71,7 @@ Track *get_track_info_from_file (gchar *name, Track *or_track);
 void update_charset_info (Track *track);
 gchar *resolve_path(const gchar *,const gchar * const *);
 void parse_offline_playcount (void);
+
+gboolean calc_gain(gchar *path);
+gboolean read_gain_tags(gchar *path, Track *track);
 #endif
