@@ -36,6 +36,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "info.h"
+#include "math.h"
 #include "misc.h"
 #include "mp3file.h"
 #include "tools.h"
@@ -92,6 +93,37 @@ static gint nm_volume_to_gain (gint32 volume)
 }
 #endif
 
+/* 
+ * replaygain_to_vol - convert ReplayGain to iPod volume. 
+ * @replaygain: ReplayGain Volume (RadioGain or AudiophileGain) in dB
+ *
+ * Conversion should give the exact same results as above mp3gain to volme
+ * calculations.
+ *
+ * FIXME: Conversion seems to be incorrect (according to subjective impression).
+ * FIXME: What are the limits for the volume? The above suggested 100 seems not
+ * to be enough for all tracks.
+ */
+
+static gint32 replaygain_to_volume(gint replaygain)
+{
+    double tv;
+    gint32 volume = 0;
+
+    tv = ((double) replaygain) / (5.0 * log10(2.0));
+    volume =  floor(tv + 0.5);
+		
+    if (volume < -500) {
+	volume = -500;
+    } else {
+	if (volume > 500) volume = 500;
+    }
+/* 		printf("radio_gain: %i\n", track->radio_gain); */
+/* 		printf("volume: %i\n", track->volume); */
+    return volume;
+}
+
+
 /* parse the mp3gain stdout to search the mp3gain output:
  *
  * mp3gain stdout for a single file is something like this:
@@ -120,7 +152,7 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
       if(strcmp((gchar *)tracksfile,filename)==0)
       {
 	 num=strtok(NULL,"\t");
-	 strcat(num,"\0");
+	 strcat(num,"\0"); /* jlt: this should not be necessary */
 	 gain=atoi(num);
 	 found=TRUE;
       }
@@ -244,7 +276,7 @@ static gint32 nm_get_volume (Track *track)
 	    }
 	    if (track->radio_gain_set)
 	    {
-		volume = mp3_get_volume_from_radio_gain (track->radio_gain);
+		volume = replaygain_to_volume (track->radio_gain);
 	    }
 	}
 	if (!prefs_get_mp3gain_use_radio_gain () || !track->radio_gain_set)
@@ -770,4 +802,6 @@ void tools_enqueue_tracks (GList *selected_tracks)
 			   _("Enqueue"),
 			   selected_tracks);
 }
+
+
 

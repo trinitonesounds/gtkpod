@@ -1298,37 +1298,14 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
  * Provided under GPL according to Jens Taprogge. (JCS -- 12 March 2004)
  */
 
-#define TAG_FOOTER	0x10
-#define LAME_OFFSET	0x74
+#define TAG_FOOTER		0x10
+#define LAME_OFFSET		0x74
 #define SIDEINFO_MPEG1_MONO	17
 #define SIDEINFO_MPEG1_MULTI	32
 #define SIDEINFO_MPEG2_MONO	9
 #define SIDEINFO_MPEG2_MULTI	17
-
-
-/* Return the track volume. 
- * FIXME: Conversion seems to be incorrect (according to
- * subjective impression). */
-gint32 mp3_get_volume_from_radio_gain (gint radio_gain)
-{
-    double tv;
-    gint32 volume = 0;
-
-    tv = (double)radio_gain / (5.0 * log10(2.0));
-    volume =  floor(tv + 0.5);
-		
-    if (volume < -500)
-    {
-	volume = -500;
-    }
-    else
-    {
-	if (volume > 500) volume = 500;
-    }
-/* 		printf("radio_gain: %i\n", track->radio_gain); */
-/* 		printf("volume: %i\n", track->volume); */
-    return volume;
-}
+#define ID3V1_SIZE		0x80
+#define APE_FOOTER_SIZE 	0x20
 
 
 static gint lame_vcmp(gchar a[5], gchar b[5]) {
@@ -1336,17 +1313,27 @@ static gint lame_vcmp(gchar a[5], gchar b[5]) {
 
 	r = strncmp(a, b, 4);
 	if (r) return r;
+
+	if (a[4] == b[4]) return 0;
+
+	/* check for '.': indicates subminor version */
+	if (a[4] == '.') return 1;
+	if (b[4] == '.') return -1;
 	
 	/* check for alpha or beta versions */
 	if (a[4] == ' ') return 1;
 	if (b[4] == ' ') return -1;
+
+	/* check for alpha, beta etc. indicated by a, b... */
 	return strncmp(&a[4], &b[4], 1);
 }
+
 
 static gboolean check_originator(char buf[]) {
 	char oc = (buf[0] & 0x1c) >> 2;
 	return ((oc > 0) && (oc <= 3)) ? TRUE : FALSE;
 }
+
 
 static gboolean check_invalid(char buf[]) {
 	/* This would be a value of -0.
@@ -1357,6 +1344,23 @@ static gboolean check_invalid(char buf[]) {
 			((buf[1] & 0xff) == 0x0)) ?
 		TRUE : FALSE;
 }
+
+
+static inline guint32 parse_ape_uint32(char *buf) {
+	return (buf[0] & 0xff) | (buf[1] & 0xff) << 8 
+		| (buf[2] & 0xff) << 16 | (buf[3] & 0xff) << 24;
+}
+
+/* 
+ * mp3_get_track_lame_replaygain - read the specified file and scan for LAME Tag
+ * ReplayGain information.
+ *
+ * @path: localtion of the file
+ * @track: structure holding track information
+ *
+ * FIXME: Are there other encoders writing a LAME Tag using a different magic
+ * string?
+ */
 
 gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 {
@@ -1437,7 +1441,11 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 			(fread(&buf[0], 1, 4, file) != 4))
 		goto rg_fail;
 	
-	/* Is this really a Xing or Info Header? */
+	/* Is this really a Xing or Info Header? 
+	 * FIXME: Apparently (according to madplay sources) there is a different
+	 * possible location for the Xing header ("due to an unfortunate
+	 * historical event"). I do not thing we need to care though since
+	 * RaplayGain information is only conatined in recent files.  */
 	if (strncmp(buf, "Xing", 4) && strncmp(buf, "Info", 4))
 		goto rg_fail;
 
@@ -1449,17 +1457,19 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 		goto rg_fail;
 	
 	/* Check LAME Version (Dont know when fixed-point PeakSingleAmplitude
-	 * was introduced exactly. 3.94b will be used for now.) */
+	 * was introduced exactly. 3.94b will be used for now.) 
+	 * FIXME: Skip really old versions altogether. */
 	if (fread(version, 1, 5, file) != 5)
 		goto rg_fail;
 	
 	if (fseek(file, 0x2, SEEK_CUR) || (fread(buf, 1, 4, file) != 4))
 		goto rg_fail;
 
-	ps = ((buf[0] & 0xff) << 24) | ((buf[1] & 0xff)<< 16) | 
-	    ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);
+	/* get the peak signal. FIXME: check if it is set at all */
+	ps = (buf[0] & 0xff) << 24 | (buf[1] & 0xff) << 16 
+		| (buf[2] & 0xff) << 8 | (buf[3] & 0xff);
 	
-	if ((lame_vcmp(version, "3.94b") > 0)) {
+	if ((lame_vcmp(version, "3.94b") >= 0)) {
 		track->peak_signal = ps;
 	} else {
 		float f = *((float *) (void *) (&ps)) * 0x800000;
@@ -1471,9 +1481,8 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	/*
 	 * Versions prior to 3.95.1 used a reference volume of 83dB.
 	 * (As compared to the currently used 89dB.)
-	 * FIXME: How to check the version correclty?
 	 */
-	if ((lame_vcmp(version, "3.95 ") < 0)) {
+	if ((lame_vcmp(version, "3.95.") < 0)) {
 		gain_adjust = 60;
 /*		fprintf(stderr, "Old lame version (%c%c%c%c%c). Adjusting gain.\n",
 				version[0], version[1], version[2], version[3], version[4]); */
@@ -1492,10 +1501,10 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 		track->radio_gain += gain_adjust;
 		track->radio_gain_set = TRUE;
 
-		if (prefs_get_mp3_volume_from_radio_gain ()) 
+/*		if (prefs_get_mp3_volume_from_radio_gain ()) 
 		        track->volume = mp3_get_volume_from_radio_gain
 				(track->radio_gain);
-	}
+*/	}
 	
 	if (fread(&buf[0], 1, 2, file) != 2)
 		goto rg_fail;
@@ -1522,6 +1531,139 @@ rg_fail:
 	return FALSE;
 }
 
+
+/* 
+ * mp3_get_track_ape_replaygain - read the specified file and scan for Ape Tag
+ * ReplayGain information.
+ *
+ * @path: localtion of the file
+ * @track: structure holding track information
+ *
+ * The function only modifies the gains if they have not previously been set.
+ */
+
+gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
+{
+	/* The Ape Tag is located a t the end of the file. Or at least that
+	 * seems where it can most likely be found. Either it is at the very end
+	 * or before a trailing ID3v1 Tag. Those are the two locations we check
+	 * for now. If you find files that have the Tags located in different
+	 * positions please let me know. */
+
+	FILE *file = NULL;
+	char buf[16];
+	char *dbuf = NULL, *ep;
+
+	int offset = 0;
+	int i;
+	int pos = 0, pos2 = 0;
+	guint32 version;
+	guint32 data_length;
+	guint32 entry_length = 0;
+	guint32 entries;
+	double d;
+
+	if (!path)
+		goto rg_fail;
+	
+	file = fopen (path, "r");
+
+	/* check for ID3v1 Tag */
+	if (fseek(file, -ID3V1_SIZE, SEEK_END) ||
+			fread(&buf, 1, 3, file) != 3)
+		goto rg_fail;
+	if (!strncmp(buf, "TAG", 3)) offset -= ID3V1_SIZE;
+
+	/* check for APE Tag */
+	if (fseek(file, -APE_FOOTER_SIZE + offset, SEEK_END) ||
+			fread(&buf, 1, 8, file) != 8)
+		goto rg_fail;
+	if (strncmp(buf, "APETAGEX", 8)) goto rg_fail;
+
+	/* Check the version of the tag. 1000 and 2000 (v1.0 and 2.0) are the
+	 * only ones I know about. Make suer things do not break in the future.
+	 * */
+	if (fread(&buf, 1, 4, file) != 4)
+		goto rg_fail;
+	version = parse_ape_uint32(buf);
+	if (version != 1000 && version != 2000)
+		goto rg_fail;
+
+	/* determine data length */
+	if (fread(&buf, 1, 4, file) != 4)
+		goto rg_fail;
+	data_length = parse_ape_uint32(buf) - APE_FOOTER_SIZE;
+
+	/* determine number of entries */
+	if (fread(&buf, 1, 4, file) != 4)
+		goto rg_fail;
+	entries = parse_ape_uint32(buf);
+
+	/* seek to first entry and read the whole buffer*/
+	if (fseek(file, -APE_FOOTER_SIZE + offset - data_length, SEEK_END))
+		goto rg_fail;
+	if (!(dbuf = malloc(data_length)))
+		goto rg_fail;
+	if (fread(dbuf, 1, data_length, file) != data_length)
+		goto rg_fail;
+	
+	for (i = 0; i < entries; i++) {
+		if (track->radio_gain_set && track->peak_signal_set) break;
+		pos = pos2 + entry_length;
+		if (pos > data_length - 10) break;
+		
+		entry_length = parse_ape_uint32(&dbuf[pos]); pos += 4;
+		pos += 4;
+		
+		pos2 = pos;
+		while (dbuf[pos2] && pos2 < data_length) pos2++;
+		if (pos2 == data_length) break;
+		pos2++;
+		
+		if (entry_length + 1 > sizeof(buf))
+			continue;
+		
+		if (!track->radio_gain_set && !strncasecmp(&dbuf[pos],
+					"REPLAYGAIN_TRACK_GAIN", pos2 - pos)) {
+			memcpy(buf, &dbuf[pos2], entry_length);
+			buf[entry_length] = '\0';
+			
+			d = strtod(buf, &ep);
+			if ((ep == buf + entry_length - 3) && (!strncasecmp(ep, " dB", 3))) {
+				d *= 10;
+				track->radio_gain = (guint32) floor(d + 0.5);
+				track->radio_gain_set = TRUE;
+			}
+			
+			continue;
+		}
+		if (!track->peak_signal_set && !strncasecmp(&dbuf[pos],
+					"REPLAYGAIN_TRACK_PEAK", pos2 - pos)) {
+			memcpy(buf, &dbuf[pos2], entry_length);
+			buf[entry_length] = '\0';
+			
+			d = strtod(buf, &ep);
+			if (ep == buf + entry_length) {
+				d *= 0x800000;
+				track->peak_signal = (guint32) floor(d + 0.5);
+				track->peak_signal_set = TRUE;
+			}
+
+			continue;
+		}
+	}
+
+	free(dbuf);
+	fclose(file);
+	return TRUE;
+
+rg_fail:
+	if (dbuf)
+		free(dbuf);
+	if (file)
+		fclose(file);
+	return FALSE;
+}
 /* ----------------------------------------------------------------------
 
 	      From here starts original gtkpod code
@@ -1608,6 +1750,7 @@ Track *file_get_mp3_info (gchar *name)
     }
 
     mp3_get_track_lame_replaygain(name, track);
+    mp3_get_track_ape_replaygain(name, track);
 
     /* Get additional info (play time and bitrate */
     mp3info = mp3file_get_info (name);

@@ -33,6 +33,5 @@
 
 gboolean file_write_mp3_info (gchar *filename, Track *track);
 Track *file_get_mp3_info (gchar *name);
-gint32 mp3_get_volume_from_radio_gain (gint radio_gain);
 gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track);
 #endif
