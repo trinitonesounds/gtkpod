@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
-"POT-Creation-Date: 2003-10-03 23:43+0900\n"
+"POT-Creation-Date: 2003-10-05 00:25+0900\n"
 "PO-Revision-Date: 2003-07-16 16:16+0900\n"
 "Last-Translator: Edward Matteucci <edward_matteucc@users.sourceforge.net>\n"
 "Language-Team: none\n"
@@ -17,67 +17,81 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. no playlist yet -- create new one
-#: src/callbacks.c:148 src/callbacks.c:250 src/callbacks.c:417
-#: src/callbacks.c:1346 src/misc.c:499 src/misc.c:517 src/misc.c:2472
+#: src/callbacks.c:149 src/callbacks.c:322 src/callbacks.c:493
+#: src/callbacks.c:1423 src/misc.c:501 src/misc.c:519 src/misc.c:2474
 msgid "New Playlist"
 msgstr "Nuova Playlist"
 
-#: src/callbacks.c:334 src/callbacks.c:378
+#: src/callbacks.c:235
+#, fuzzy, c-format
+msgid "Moved one track"
+msgid_plural "Moved %d tracks"
+msgstr[0] "Copiato %d di %d di una nuova canzone"
+msgstr[1] "Copiato %d di %d di nuove canzoni"
+
+#: src/callbacks.c:241
+#, fuzzy, c-format
+msgid "Copied one track"
+msgid_plural "Copied %d tracks"
+msgstr[0] "Copiato %d di %d di una nuova canzone"
+msgstr[1] "Copiato %d di %d di nuove canzoni"
+
+#: src/callbacks.c:410 src/callbacks.c:454
 msgid "Preferences not updated"
 msgstr "Preferenze non aggiornate"
 
-#: src/callbacks.c:387
+#: src/callbacks.c:463
 msgid "Preferences applied"
 msgstr "Preferenze applicate"
 
-#: src/callbacks.c:613
+#: src/callbacks.c:690
 msgid "Delete selected entry of which sort tab?"
 msgstr "Cancellare le voci selezionate di quale blocco di ordinamento?"
 
-#: src/callbacks.c:761
+#: src/callbacks.c:838
 msgid "Update selected entry of which sort tab?"
 msgstr "Aggiornare la voce selezionata di quale blocco di ordinamento?"
 
-#: src/callbacks.c:787
+#: src/callbacks.c:864
 msgid "Sync dirs of selected entry in which sort tab?"
 msgstr ""
 "Sincronizza le directory delle voci selezionate in quale blocco di "
 "ordinamento?"
 
-#: src/callbacks.c:958 src/callbacks.c:1014 src/callbacks.c:1065
-#: src/callbacks.c:1648
+#: src/callbacks.c:1035 src/callbacks.c:1091 src/callbacks.c:1142
+#: src/callbacks.c:1725
 msgid "No playlist selected"
 msgstr "Nessuna playlist selezionata"
 
-#: src/callbacks.c:972
+#: src/callbacks.c:1049
 msgid "Export selected entry of which sort tab?"
 msgstr "Esportare la voce selezionata di quale blocco di ordinamento?"
 
-#: src/callbacks.c:978 src/callbacks.c:1031 src/callbacks.c:1082
-#: src/callbacks.c:1670
+#: src/callbacks.c:1055 src/callbacks.c:1108 src/callbacks.c:1159
+#: src/callbacks.c:1747
 #, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "Nessuna voce selezionata nel blocco di ordinamento %d"
 
-#: src/callbacks.c:1001 src/callbacks.c:1053 src/callbacks.c:1104
+#: src/callbacks.c:1078 src/callbacks.c:1130 src/callbacks.c:1181
 #, fuzzy
 msgid "No tracks selected"
 msgstr "Nessuna voce selezionata."
 
-#: src/callbacks.c:1025
+#: src/callbacks.c:1102
 #, fuzzy
 msgid "Play tracks in selected entry of which sort tab?"
 msgstr ""
 "Riproduci le canzoni nella voce selezionata di quale blocco di ordinamento?"
 
-#: src/callbacks.c:1076
+#: src/callbacks.c:1153
 #, fuzzy
 msgid "Enqueue tracks in selected entry of which sort tab?"
 msgstr ""
 "Metti in coda le canzoni nella voce selezionata di quale blocco di "
 "ordinamento?"
 
-#: src/callbacks.c:1660
+#: src/callbacks.c:1737
 #, fuzzy
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr ""
@@ -297,11 +311,11 @@ msgstr "Finestra di conferma"
 msgid "Edit"
 msgstr "Modifica"
 
-#: src/context_menus.c:242 src/misc.c:1760
+#: src/context_menus.c:242 src/misc.c:1762
 msgid "Play Now"
 msgstr "Suona"
 
-#: src/context_menus.c:244 src/misc.c:1771
+#: src/context_menus.c:244 src/misc.c:1773
 msgid "Enqueue"
 msgstr "Metti in coda"
 
@@ -356,19 +370,19 @@ msgstr "Cancella"
 msgid "Playlists"
 msgstr "Playlist"
 
-#: src/display_songs.c:74 src/display_sorttabs.c:2243 src/interface.c:1651
+#: src/display_songs.c:74 src/display_sorttabs.c:2244 src/interface.c:1651
 msgid "Title"
 msgstr "Titolo"
 
-#: src/display_songs.c:75 src/display_sorttabs.c:2231 src/interface.c:1627
+#: src/display_songs.c:75 src/display_sorttabs.c:2232 src/interface.c:1627
 msgid "Artist"
 msgstr "Artista"
 
-#: src/display_songs.c:76 src/display_sorttabs.c:2234 src/interface.c:1639
+#: src/display_songs.c:76 src/display_sorttabs.c:2235 src/interface.c:1639
 msgid "Album"
 msgstr "Album"
 
-#: src/display_songs.c:77 src/display_sorttabs.c:2237 src/interface.c:1631
+#: src/display_songs.c:77 src/display_sorttabs.c:2238 src/interface.c:1631
 msgid "Genre"
 msgstr "Genere"
 
@@ -465,19 +479,19 @@ msgstr "Condizione 'Modificato' ignorata a causa di un errore."
 msgid "All"
 msgstr "Tutti"
 
-#: src/display_sorttabs.c:2240
+#: src/display_sorttabs.c:2241
 msgid "Comp."
 msgstr "Comp."
 
-#: src/display_sorttabs.c:2246 src/interface.c:2677
+#: src/display_sorttabs.c:2247 src/interface.c:2677
 msgid "Special"
 msgstr "Speciale"
 
-#: src/display_sorttabs.c:2508
+#: src/display_sorttabs.c:2509
 msgid "Last Played"
 msgstr "Suonato"
 
-#: src/display_sorttabs.c:2509
+#: src/display_sorttabs.c:2510
 msgid "Last Modified"
 msgstr "Modificato"
 
@@ -578,12 +592,12 @@ msgid "OK to synchronize the following directories?"
 msgstr "Vuoi sincronizzare le seguenti directory?"
 
 #. no entry selected
-#: src/file.c:948 src/misc.c:1432
+#: src/file.c:948 src/misc.c:1434
 msgid "No entry selected."
 msgstr "Nessuna voce selezionata."
 
 #. no playlist selected
-#: src/file.c:976 src/misc.c:1167 src/misc.c:1321 src/misc.c:1421
+#: src/file.c:976 src/misc.c:1169 src/misc.c:1323 src/misc.c:1423
 msgid "No playlist selected."
 msgstr "Nessuna playlist selezionata."
 
@@ -2201,7 +2215,10 @@ msgid ""
 msgstr ""
 
 #: src/misc.c:338
-msgid "Edward Matteucci: debugging, special playlist creation\n"
+#, fuzzy
+msgid ""
+"Edward Matteucci: debugging, special playlist creation, most of the volume "
+"normalizing code\n"
 msgstr "Edward Matteucci: debugging, creazione delle playlist speciali\n"
 
 #: src/misc.c:340
@@ -2273,17 +2290,17 @@ msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 msgstr ""
 "Giapponese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 
-#: src/misc.c:542
+#: src/misc.c:544
 #, fuzzy, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "drag and drop: ignorato '%s'"
 
-#: src/misc.c:573 src/misc.c:577
+#: src/misc.c:575 src/misc.c:579
 #, c-format
 msgid "Could not delete backup file: \"%s\"\n"
 msgstr "Impossibile cancellare il file di backup: \"%s\"\n"
 
-#: src/misc.c:605
+#: src/misc.c:607
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"
@@ -2293,26 +2310,26 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:754
+#: src/misc.c:756
 msgid "Warning"
 msgstr "Attenzione"
 
 #. title
-#: src/misc.c:755
+#: src/misc.c:757
 msgid "The following has occured:"
 msgstr "Si è verificato l'errore seguente:"
 
-#: src/misc.c:830
+#: src/misc.c:832
 #, c-format
 msgid " P:%d S:%d/%d"
 msgstr " P:%d S:%d/%d"
 
-#: src/misc.c:1071
+#: src/misc.c:1073
 #, c-format
 msgid "Successfully created iPod directories in '%s'."
 msgstr "Directory dell'iPod create con successo ('%s')."
 
-#: src/misc.c:1073
+#: src/misc.c:1075
 #, c-format
 msgid "Problem creating iPod directories in '%s'."
 msgstr ""
@@ -2320,37 +2337,37 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:1119
+#: src/misc.c:1121
 msgid "Create iPod directories"
 msgstr "Crea le directory dell'iPod"
 
 #. title
-#: src/misc.c:1120
+#: src/misc.c:1122
 msgid "OK to create the following directories?"
 msgstr "Creare le directory seguenti?"
 
-#: src/misc.c:1152
+#: src/misc.c:1154
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "Playlist cancellata '%s'"
 
 #. master playlist
-#: src/misc.c:1172
+#: src/misc.c:1174
 msgid "Cannot delete master playlist."
 msgstr "Impossibile cancellare la playlist principale"
 
-#: src/misc.c:1176
+#: src/misc.c:1178
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "Sei sicuro di voler cancellare la playlist '%s'"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:1181
+#: src/misc.c:1183
 msgid "Delete Playlist?"
 msgstr "Cancella la playlist?"
 
-#: src/misc.c:1224
+#: src/misc.c:1226
 #, fuzzy
 msgid ""
 "Are you sure you want to delete the following track\n"
@@ -2365,14 +2382,14 @@ msgstr[1] ""
 "Sei sicuro di voler eliminare completamente le seguenti canzoni\n"
 "dal tuo ipod?"
 
-#: src/misc.c:1226
+#: src/misc.c:1228
 #, fuzzy
 msgid "Delete Track Completely?"
 msgid_plural "Delete Tracks Completey?"
 msgstr[0] "Cancella la canzone completamente?"
 msgstr[1] "Cancella la canzone completamente?"
 
-#: src/misc.c:1236
+#: src/misc.c:1238
 #, fuzzy, c-format
 msgid ""
 "Are you sure you want to delete the following track\n"
@@ -2387,21 +2404,21 @@ msgstr[1] ""
 "Sei sicuro di voler eliminare completamente le seguenti canzoni\n"
 "dalla playlist \"%s\"?"
 
-#: src/misc.c:1238
+#: src/misc.c:1240
 #, fuzzy
 msgid "Delete Track From Playlist?"
 msgid_plural "Delete Tracks From Playlist?"
 msgstr[0] "Cancella la canzone dalla playlist?"
 msgstr[1] "Cancella la canzone dalla playlist?"
 
-#: src/misc.c:1282
+#: src/misc.c:1284
 #, fuzzy, c-format
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
 msgstr[0] "Cancella una canzone completamente dall'iPod"
 msgstr[1] "Cancella una canzone completamente dall'iPod"
 
-#: src/misc.c:1288
+#: src/misc.c:1290
 #, fuzzy, c-format
 msgid "Deleted track from playlist '%s'"
 msgid_plural "Deleted tracks from playlist '%s'"
@@ -2409,101 +2426,101 @@ msgstr[0] "Cancella la canzone dalla playlist '%s'"
 msgstr[1] "Cancella la canzone dalla playlist '%s'"
 
 #. no tracks selected
-#: src/misc.c:1327
+#: src/misc.c:1329
 #, fuzzy
 msgid "No tracks selected."
 msgstr "Nessuna voce selezionata."
 
-#: src/misc.c:1438
+#: src/misc.c:1440
 msgid "Cannot remove entry 'All'"
 msgstr "Impossibile rimuovere la voce 'Tutti'"
 
-#: src/misc.c:1663
+#: src/misc.c:1665
 #, c-format
 msgid "No command set for '%s'"
 msgstr "Nessun comando impostato per '%s'"
 
-#: src/misc.c:1684
+#: src/misc.c:1686
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
 msgstr "Impossibile trovare il comando '%s' specificato per '%s'"
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "Bytes"
 msgstr "Byte"
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "kB"
 msgstr "kB"
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "MB"
 msgstr "MB"
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "GB"
 msgstr "GB"
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "TB"
 msgstr "TB"
 
-#: src/misc.c:1902
+#: src/misc.c:1904
 #, c-format
 msgid " %s Free"
 msgstr "%s Liberi"
 
-#: src/misc.c:1907
+#: src/misc.c:1909
 #, c-format
 msgid " %s Pending"
 msgstr " %s Pendenti"
 
-#: src/misc.c:2217
+#: src/misc.c:2219
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr "La URI '%s' non è una URI assoluto usando lo schema dei file"
 
-#: src/misc.c:2227
+#: src/misc.c:2229
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr "La URI del file locale '%s' non può includere '#'"
 
-#: src/misc.c:2244
+#: src/misc.c:2246
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr "La URI '%s' non è valida"
 
-#: src/misc.c:2256
+#: src/misc.c:2258
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr "Il nome dell'host della URI '%s' non è valido"
 
-#: src/misc.c:2272
+#: src/misc.c:2274
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "La URI '%s' contiene caratteri non validi che sono stati saltati"
 
-#: src/misc.c:2345
+#: src/misc.c:2347
 msgid "AR:"
 msgstr "AR:"
 
-#: src/misc.c:2348
+#: src/misc.c:2350
 msgid "AL:"
 msgstr "AL:"
 
-#: src/misc.c:2351
+#: src/misc.c:2353
 msgid "GE:"
 msgstr "GE:"
 
-#: src/misc.c:2354
+#: src/misc.c:2356
 msgid "CO:"
 msgstr "CO:"
 
-#: src/misc.c:2386
+#: src/misc.c:2388
 msgid "Unknown"
 msgstr "Sconosciuto"
 
-#: src/misc.c:2455
+#: src/misc.c:2457
 #, fuzzy, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
@@ -2511,31 +2528,31 @@ msgstr[0] "Crea nuova Playlist"
 msgstr[1] "Crea nuova Playlist"
 
 #. n==0
-#: src/misc.c:2461
+#: src/misc.c:2463
 msgid "No tracks available, playlist not created"
 msgstr "Nessuna traccia disponibile, la playlist non è stata creata"
 
-#: src/misc.c:2597
+#: src/misc.c:2599
 #, c-format
 msgid "Most Listened (%d)"
 msgstr "Più sentite (%d)"
 
-#: src/misc.c:2634
+#: src/misc.c:2636
 #, c-format
 msgid "Best Rated (%d)"
 msgstr ""
 
-#: src/misc.c:2671
+#: src/misc.c:2673
 #, c-format
 msgid "Recent (%d)"
 msgstr "Recenti (%d)"
 
-#: src/misc.c:2709
+#: src/misc.c:2711
 #, fuzzy
 msgid "Last Time"
 msgstr "Durata"
 
-#: src/misc.c:2877
+#: src/misc.c:2889
 #, fuzzy
 msgid "Lost tracks"
 msgstr "Tracce con il voto migliore"
@@ -2609,69 +2626,69 @@ msgstr ""
 msgid "  --offline:    same as '-o'.\n"
 msgstr " --offline:    come '-o'.\n"
 
-#: src/prefs.c:278 src/prefs.c:638
+#: src/prefs.c:278 src/prefs.c:644
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "Errore nella lettura delle preferenze: %s\n"
 
-#: src/prefs.c:671
+#: src/prefs.c:677
 #, fuzzy, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr "Impossibile aprire il file di configurazione '%s' in lettura\n"
 
-#: src/prefs.c:774
+#: src/prefs.c:780
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "Opzione sconosciuta: %s\n"
 
-#: src/prefs.c:815
+#: src/prefs.c:821
 msgid "# delete confirmation\n"
 msgstr "# conferma la cancellazione\n"
 
-#: src/prefs.c:821
+#: src/prefs.c:827
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
 "#blocco di ordinamento: seleziona 'Tutti', ultima pagina selezionata "
 "(=category)\n"
 
-#: src/prefs.c:838
+#: src/prefs.c:844
 msgid "# autoselect master playlist?\n"
 msgstr "# seleziona automaticamente la playlist principale?\n"
 
-#: src/prefs.c:840
+#: src/prefs.c:846
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr "# titolo=0, artista, album, genere, compositore\n"
 
-#: src/prefs.c:841
+#: src/prefs.c:847
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr "# traccia_num=5, ipod_id, pc_path, trasferita\n"
 
-#: src/prefs.c:842
+#: src/prefs.c:848
 msgid "# autoset: set empty tag to filename?\n"
 msgstr "# impostazione: impostare un tag vuoto al posto del nome del file?\n"
 
-#: src/prefs.c:851
+#: src/prefs.c:857
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
 "# between sort tabs, and in statusbar.\n"
 msgstr ""
 
-#: src/prefs.c:888
+#: src/prefs.c:894
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser, prefs\n"
 msgstr ""
 
-#: src/prefs.c:916
+#: src/prefs.c:922
 msgid "Settings are not saved.\n"
 msgstr "Impostazioni non salvate.\n"
 
-#: src/prefs.c:929
+#: src/prefs.c:935
 #, fuzzy, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "Impossibile aprire '%s' per la scrittura\n"
 
-#: src/prefs.c:1268
+#: src/prefs.c:1274
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
@@ -2679,36 +2696,36 @@ msgstr ""
 " Preferenze: Categoria num (%d<%d?) o blocco di ordinamento num (%d<%d?) "
 "fuori limite.\n"
 
-#: src/prefs.c:1317
+#: src/prefs.c:1323
 #, fuzzy, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "Impossibile eseguire 'mkdir %s'\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1649
+#: src/prefs.c:1655
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: stile non legale '%d' ignorato\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1691
+#: src/prefs.c:1697
 #, fuzzy, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: stile non legale '%d' ignorato\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1712
+#: src/prefs.c:1718
 #, fuzzy, c-format
 msgid "prefs_set_st_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: stile non legale '%d' ignorato\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1733
+#: src/prefs.c:1739
 #, fuzzy, c-format
-msgid "prefs_set_sm_sort: illegal type '%d' ignored\n"
+msgid "prefs_set_tm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: stile non legale '%d' ignorato\n"
 
-#: src/prefs.c:1847 src/prefs.c:1854
+#: src/prefs.c:1853 src/prefs.c:1860
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr "'%s': è permesso solo un '%%s'.\n"

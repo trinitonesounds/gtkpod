@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 18:59:07 jcs>
+/* Time-stamp: <2003-10-05 00:25:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -336,7 +336,7 @@ Chris Cutler: automatic creation of various playlist types\n"),
 		       _("\
 Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress dialogue during sync\n"),
 		       _("\
-Edward Matteucci: debugging, special playlist creation\n"),
+Edward Matteucci: debugging, special playlist creation, most of the volume normalizing code\n"),
 		       _("\
 Jens Lautenbach: some optical improvements\n"),
 		       "\n\n",

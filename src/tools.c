@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:20:41 jcs>
+/* Time-stamp: <2003-10-05 00:25:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -53,7 +53,15 @@ static gboolean mutex_data = FALSE;
  * Change here if you know better. */
 gint nm_gain_to_volume (gint gain)
 {
-    return 10*gain;
+    gint vol;
+
+    vol = 10*gain;
+
+    /* volume level is -100...+100 */
+    if (vol > 100)  vol = 100;
+    if (vol < -100) vol = -100;
+
+    return vol;
 }
 
 gint nm_volume_to_gain (gint volume)

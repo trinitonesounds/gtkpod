@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-10-03 23:43+0900\n"
+"POT-Creation-Date: 2003-10-05 00:25+0900\n"
 "PO-Revision-Date: 2003-09-19 00:35+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -17,62 +17,76 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. no playlist yet -- create new one
-#: src/callbacks.c:148 src/callbacks.c:250 src/callbacks.c:417
-#: src/callbacks.c:1346 src/misc.c:499 src/misc.c:517 src/misc.c:2472
+#: src/callbacks.c:149 src/callbacks.c:322 src/callbacks.c:493
+#: src/callbacks.c:1423 src/misc.c:501 src/misc.c:519 src/misc.c:2474
 msgid "New Playlist"
 msgstr "新規プレイリスト"
 
-#: src/callbacks.c:334 src/callbacks.c:378
+#: src/callbacks.c:235
+#, fuzzy, c-format
+msgid "Moved one track"
+msgid_plural "Moved %d tracks"
+msgstr[0] "%d曲中 %d曲をコピーしました。"
+msgstr[1] "%d曲中 %d曲をコピーしました。"
+
+#: src/callbacks.c:241
+#, fuzzy, c-format
+msgid "Copied one track"
+msgid_plural "Copied %d tracks"
+msgstr[0] "%d曲中 %d曲をコピーしました。"
+msgstr[1] "%d曲中 %d曲をコピーしました。"
+
+#: src/callbacks.c:410 src/callbacks.c:454
 msgid "Preferences not updated"
 msgstr "設定は更新されません"
 
-#: src/callbacks.c:387
+#: src/callbacks.c:463
 msgid "Preferences applied"
 msgstr "設定を適用しました"
 
-#: src/callbacks.c:613
+#: src/callbacks.c:690
 msgid "Delete selected entry of which sort tab?"
 msgstr "どちらのソートタブの選択されたものを削除しますか？"
 
-#: src/callbacks.c:761
+#: src/callbacks.c:838
 msgid "Update selected entry of which sort tab?"
 msgstr "とちらのソートタブの選択されたものを更新しますか？"
 
-#: src/callbacks.c:787
+#: src/callbacks.c:864
 msgid "Sync dirs of selected entry in which sort tab?"
 msgstr "とちらのソートタブの選択されたディレクトリを更新しますか？"
 
-#: src/callbacks.c:958 src/callbacks.c:1014 src/callbacks.c:1065
-#: src/callbacks.c:1648
+#: src/callbacks.c:1035 src/callbacks.c:1091 src/callbacks.c:1142
+#: src/callbacks.c:1725
 msgid "No playlist selected"
 msgstr "プレイリストが選択されていません"
 
-#: src/callbacks.c:972
+#: src/callbacks.c:1049
 msgid "Export selected entry of which sort tab?"
 msgstr "とちらのソートタブの選択されたものをエクスポートしますか？"
 
-#: src/callbacks.c:978 src/callbacks.c:1031 src/callbacks.c:1082
-#: src/callbacks.c:1670
+#: src/callbacks.c:1055 src/callbacks.c:1108 src/callbacks.c:1159
+#: src/callbacks.c:1747
 #, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "ソートタブ %d 内では何も選択されていません"
 
-#: src/callbacks.c:1001 src/callbacks.c:1053 src/callbacks.c:1104
+#: src/callbacks.c:1078 src/callbacks.c:1130 src/callbacks.c:1181
 #, fuzzy
 msgid "No tracks selected"
 msgstr "何も選択されていません。"
 
-#: src/callbacks.c:1025
+#: src/callbacks.c:1102
 #, fuzzy
 msgid "Play tracks in selected entry of which sort tab?"
 msgstr "とちらのソートタブの選択されたものを演奏しますか？"
 
-#: src/callbacks.c:1076
+#: src/callbacks.c:1153
 #, fuzzy
 msgid "Enqueue tracks in selected entry of which sort tab?"
 msgstr "どちらのソートタブの選択されたものを演奏キューに加えますか？"
 
-#: src/callbacks.c:1660
+#: src/callbacks.c:1737
 #, fuzzy
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "とちらのソートタブの選択されたものを演奏しますか？"
@@ -291,11 +305,11 @@ msgstr "確認"
 msgid "Edit"
 msgstr "編集"
 
-#: src/context_menus.c:242 src/misc.c:1760
+#: src/context_menus.c:242 src/misc.c:1762
 msgid "Play Now"
 msgstr "今すぐ演奏"
 
-#: src/context_menus.c:244 src/misc.c:1771
+#: src/context_menus.c:244 src/misc.c:1773
 msgid "Enqueue"
 msgstr "演奏キューに加える"
 
@@ -349,19 +363,19 @@ msgstr "キャンセル"
 msgid "Playlists"
 msgstr "再生リスト"
 
-#: src/display_songs.c:74 src/display_sorttabs.c:2243 src/interface.c:1651
+#: src/display_songs.c:74 src/display_sorttabs.c:2244 src/interface.c:1651
 msgid "Title"
 msgstr "タイトル"
 
-#: src/display_songs.c:75 src/display_sorttabs.c:2231 src/interface.c:1627
+#: src/display_songs.c:75 src/display_sorttabs.c:2232 src/interface.c:1627
 msgid "Artist"
 msgstr "アーティスト"
 
-#: src/display_songs.c:76 src/display_sorttabs.c:2234 src/interface.c:1639
+#: src/display_songs.c:76 src/display_sorttabs.c:2235 src/interface.c:1639
 msgid "Album"
 msgstr "アルバム"
 
-#: src/display_songs.c:77 src/display_sorttabs.c:2237 src/interface.c:1631
+#: src/display_songs.c:77 src/display_sorttabs.c:2238 src/interface.c:1631
 msgid "Genre"
 msgstr "ジャンル"
 
@@ -457,19 +471,19 @@ msgstr "「変更時刻」の条件はエラーのために無視されました。"
 msgid "All"
 msgstr "全て"
 
-#: src/display_sorttabs.c:2240
+#: src/display_sorttabs.c:2241
 msgid "Comp."
 msgstr "作曲者"
 
-#: src/display_sorttabs.c:2246 src/interface.c:2677
+#: src/display_sorttabs.c:2247 src/interface.c:2677
 msgid "Special"
 msgstr "スペシャル"
 
-#: src/display_sorttabs.c:2508
+#: src/display_sorttabs.c:2509
 msgid "Last Played"
 msgstr "最後に演奏した時刻"
 
-#: src/display_sorttabs.c:2509
+#: src/display_sorttabs.c:2510
 msgid "Last Modified"
 msgstr "最後に変更した時刻"
 
@@ -568,12 +582,12 @@ msgid "OK to synchronize the following directories?"
 msgstr "以下のディレクトリで同期処理をしてもよろしいですか?"
 
 #. no entry selected
-#: src/file.c:948 src/misc.c:1432
+#: src/file.c:948 src/misc.c:1434
 msgid "No entry selected."
 msgstr "何も選択されていません。"
 
 #. no playlist selected
-#: src/file.c:976 src/misc.c:1167 src/misc.c:1321 src/misc.c:1421
+#: src/file.c:976 src/misc.c:1169 src/misc.c:1323 src/misc.c:1423
 msgid "No playlist selected."
 msgstr "プレイリストが選択されていません。"
 
@@ -2147,7 +2161,9 @@ msgid ""
 msgstr ""
 
 #: src/misc.c:338
-msgid "Edward Matteucci: debugging, special playlist creation\n"
+msgid ""
+"Edward Matteucci: debugging, special playlist creation, most of the volume "
+"normalizing code\n"
 msgstr ""
 
 #: src/misc.c:340
@@ -2206,17 +2222,17 @@ msgstr ""
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 msgstr ""
 
-#: src/misc.c:542
+#: src/misc.c:544
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "ドラッグアンドドロップ: '%s'は無視します\n"
 
-#: src/misc.c:573 src/misc.c:577
+#: src/misc.c:575 src/misc.c:579
 #, c-format
 msgid "Could not delete backup file: \"%s\"\n"
 msgstr "バックアップファイルが削除できません: \"%s\"\n"
 
-#: src/misc.c:605
+#: src/misc.c:607
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"
@@ -2226,63 +2242,63 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:754
+#: src/misc.c:756
 msgid "Warning"
 msgstr "警告"
 
 #. title
-#: src/misc.c:755
+#: src/misc.c:757
 msgid "The following has occured:"
 msgstr "以下の問題が発生しました:"
 
-#: src/misc.c:830
+#: src/misc.c:832
 #, c-format
 msgid " P:%d S:%d/%d"
 msgstr ""
 
-#: src/misc.c:1071
+#: src/misc.c:1073
 #, c-format
 msgid "Successfully created iPod directories in '%s'."
 msgstr "'%s' にiPodのディレクトリを作成しました。"
 
-#: src/misc.c:1073
+#: src/misc.c:1075
 #, c-format
 msgid "Problem creating iPod directories in '%s'."
 msgstr "'%s' にiPodのディレクトリを作成する際に問題が発生しました。"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:1119
+#: src/misc.c:1121
 msgid "Create iPod directories"
 msgstr "iPodの初期設定"
 
 #. title
-#: src/misc.c:1120
+#: src/misc.c:1122
 msgid "OK to create the following directories?"
 msgstr "以下のディレクトリを作成してもいいですか?"
 
-#: src/misc.c:1152
+#: src/misc.c:1154
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "プレイリスト '%s' を削除"
 
 #. master playlist
-#: src/misc.c:1172
+#: src/misc.c:1174
 msgid "Cannot delete master playlist."
 msgstr "マスタープレイリストは削除できません。"
 
-#: src/misc.c:1176
+#: src/misc.c:1178
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "プレイリスト '%s' を本当に削除してもいいですか?"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:1181
+#: src/misc.c:1183
 msgid "Delete Playlist?"
 msgstr "プレイリストを削除しますか?"
 
-#: src/misc.c:1224
+#: src/misc.c:1226
 #, fuzzy
 msgid ""
 "Are you sure you want to delete the following track\n"
@@ -2293,13 +2309,13 @@ msgid_plural ""
 msgstr[0] "以下の曲をiPodから完全に削除してもよろしいですか?"
 msgstr[1] "以下の曲をiPodから完全に削除してもよろしいですか?"
 
-#: src/misc.c:1226
+#: src/misc.c:1228
 #, fuzzy
 msgid "Delete Track Completely?"
 msgid_plural "Delete Tracks Completey?"
 msgstr[0] "この曲を完全に削除しますか?"
 
-#: src/misc.c:1236
+#: src/misc.c:1238
 #, fuzzy, c-format
 msgid ""
 "Are you sure you want to delete the following track\n"
@@ -2310,120 +2326,120 @@ msgid_plural ""
 msgstr[0] "以下の曲をプレイリスト \"%s\" から削除してもよろしいですか?"
 msgstr[1] "以下の曲をプレイリスト \"%s\" から削除してもよろしいですか?"
 
-#: src/misc.c:1238
+#: src/misc.c:1240
 #, fuzzy
 msgid "Delete Track From Playlist?"
 msgid_plural "Delete Tracks From Playlist?"
 msgstr[0] "この曲をプレイリストから削除しますか?"
 
-#: src/misc.c:1282
+#: src/misc.c:1284
 #, fuzzy, c-format
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
 msgstr[0] "iPodから1曲完全に削除しました"
 
-#: src/misc.c:1288
+#: src/misc.c:1290
 #, fuzzy, c-format
 msgid "Deleted track from playlist '%s'"
 msgid_plural "Deleted tracks from playlist '%s'"
 msgstr[0] "プレイリスト '%s' から曲を削除しました"
 
 #. no tracks selected
-#: src/misc.c:1327
+#: src/misc.c:1329
 #, fuzzy
 msgid "No tracks selected."
 msgstr "何も選択されていません。"
 
-#: src/misc.c:1438
+#: src/misc.c:1440
 msgid "Cannot remove entry 'All'"
 msgstr "'全て' の項目を削除することはできません"
 
-#: src/misc.c:1663
+#: src/misc.c:1665
 #, c-format
 msgid "No command set for '%s'"
 msgstr "'%s' のためのコマンドが設定されていません"
 
-#: src/misc.c:1684
+#: src/misc.c:1686
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
 msgstr "'%s' のためのコマンド '%s' が見付かりません"
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "Bytes"
 msgstr "バイト"
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "kB"
 msgstr ""
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "MB"
 msgstr ""
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "GB"
 msgstr ""
 
-#: src/misc.c:1826
+#: src/misc.c:1828
 msgid "TB"
 msgstr ""
 
-#: src/misc.c:1902
+#: src/misc.c:1904
 #, c-format
 msgid " %s Free"
 msgstr "%s 空き"
 
-#: src/misc.c:1907
+#: src/misc.c:1909
 #, c-format
 msgid " %s Pending"
 msgstr "%s 不足"
 
-#: src/misc.c:2217
+#: src/misc.c:2219
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr "指定されたURI '%s' はfileスキームが設定されていない、不完全なURIです"
 
-#: src/misc.c:2227
+#: src/misc.c:2229
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr "ローカルファイルを指すURI '%s' には '#' は含まれてはなりません"
 
-#: src/misc.c:2244
+#: src/misc.c:2246
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr "指定されたURI '%s' は不正です"
 
-#: src/misc.c:2256
+#: src/misc.c:2258
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr "指定されたURI '%s' のホスト名が不正です"
 
-#: src/misc.c:2272
+#: src/misc.c:2274
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "指定されたURI '%s' は不正なエスケープ文字を含んでいます"
 
-#: src/misc.c:2345
+#: src/misc.c:2347
 msgid "AR:"
 msgstr ""
 
-#: src/misc.c:2348
+#: src/misc.c:2350
 msgid "AL:"
 msgstr ""
 
-#: src/misc.c:2351
+#: src/misc.c:2353
 msgid "GE:"
 msgstr ""
 
-#: src/misc.c:2354
+#: src/misc.c:2356
 msgid "CO:"
 msgstr ""
 
-#: src/misc.c:2386
+#: src/misc.c:2388
 msgid "Unknown"
 msgstr "不明"
 
-#: src/misc.c:2455
+#: src/misc.c:2457
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
@@ -2431,30 +2447,30 @@ msgstr[0] "新しくプレイリスト'%s'(%d曲)を作成しました"
 msgstr[1] "新しくプレイリスト'%s'(%d曲)を作成しました"
 
 #. n==0
-#: src/misc.c:2461
+#: src/misc.c:2463
 msgid "No tracks available, playlist not created"
 msgstr "曲が見付からないので、プレイリストは作れません"
 
-#: src/misc.c:2597
+#: src/misc.c:2599
 #, c-format
 msgid "Most Listened (%d)"
 msgstr "良く聴く曲 (%d)"
 
-#: src/misc.c:2634
+#: src/misc.c:2636
 #, c-format
 msgid "Best Rated (%d)"
 msgstr "評価の高い曲 (%d)"
 
-#: src/misc.c:2671
+#: src/misc.c:2673
 #, c-format
 msgid "Recent (%d)"
 msgstr "最近聴いた曲 (%d)"
 
-#: src/misc.c:2709
+#: src/misc.c:2711
 msgid "Last Time"
 msgstr "前回以降"
 
-#: src/misc.c:2877
+#: src/misc.c:2889
 #, fuzzy
 msgid "Lost tracks"
 msgstr "評価の高い曲"
@@ -2522,103 +2538,103 @@ msgstr ""
 msgid "  --offline:    same as '-o'.\n"
 msgstr "  --offline:    '-o'と同じ\n"
 
-#: src/prefs.c:278 src/prefs.c:638
+#: src/prefs.c:278 src/prefs.c:644
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "設定ファイルの以下の行に誤りがあります: %s\n"
 
-#: src/prefs.c:671
+#: src/prefs.c:677
 #, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr "設定ファイル \"%s\" を開けません\n"
 
-#: src/prefs.c:774
+#: src/prefs.c:780
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "不明なオプション: %s\n"
 
-#: src/prefs.c:815
+#: src/prefs.c:821
 msgid "# delete confirmation\n"
 msgstr ""
 
-#: src/prefs.c:821
+#: src/prefs.c:827
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
 
-#: src/prefs.c:838
+#: src/prefs.c:844
 msgid "# autoselect master playlist?\n"
 msgstr ""
 
-#: src/prefs.c:840
+#: src/prefs.c:846
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr ""
 
-#: src/prefs.c:841
+#: src/prefs.c:847
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr ""
 
-#: src/prefs.c:842
+#: src/prefs.c:848
 msgid "# autoset: set empty tag to filename?\n"
 msgstr ""
 
-#: src/prefs.c:851
+#: src/prefs.c:857
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
 "# between sort tabs, and in statusbar.\n"
 msgstr ""
 
-#: src/prefs.c:888
+#: src/prefs.c:894
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser, prefs\n"
 msgstr ""
 
-#: src/prefs.c:916
+#: src/prefs.c:922
 msgid "Settings are not saved.\n"
 msgstr "設定は保存されません。\n"
 
-#: src/prefs.c:929
+#: src/prefs.c:935
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "ファイル \"%s\" を開けません\n"
 
-#: src/prefs.c:1268
+#: src/prefs.c:1274
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " 設定: カテゴリーの数 (%d<%d?) か、ソートタブの数 (%d<%d?) が多過ぎます。\n"
 
-#: src/prefs.c:1317
+#: src/prefs.c:1323
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "\"mkdir %s\" を実行できませんでした\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1649
+#: src/prefs.c:1655
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1691
+#: src/prefs.c:1697
 #, fuzzy, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1712
+#: src/prefs.c:1718
 #, fuzzy, c-format
 msgid "prefs_set_st_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1733
+#: src/prefs.c:1739
 #, fuzzy, c-format
-msgid "prefs_set_sm_sort: illegal type '%d' ignored\n"
+msgid "prefs_set_tm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
-#: src/prefs.c:1847 src/prefs.c:1854
+#: src/prefs.c:1853 src/prefs.c:1860
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr "'%s': '%%s' は一つまでしか使えません。\n"

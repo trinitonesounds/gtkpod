@@ -458,11 +458,37 @@ from the iTunesDB.
 For best results you should also activate duplicate detection. This
 avoids unnecessary copying of unchanged tracks.
 
+
 Volume Normalization
 --------------------
 
-FIXME
+The iPod allows to individually increase or decrease the volume on a
+track-to-track basis using a "volume tag".
 
+gtkpod uses 'mp3gain' (mp3gain.sourceforge.net) to do the volume
+normalization. You need to install mp3gain in the default path or set
+the environment variable MP3GAIN to the full path.
+
+For each song passed to mp3gain the volume adjustment needed to
+achieve the "normal" volume level is determined and stored on the iPod
+the next time the iTunesDB is written. Since this calculation takes
+quite a long time, an option to write the gain information into the
+mp3 file itself is also available.
+
+At this time the "album gain" functionality of mp3gain is not
+supported. "Album gain" means that the volume of all tracks of one
+album is adjusted by the same gain, such that the relative volume
+level remains the same. It is planned to realize this in the next
+version.
+
+Please note that the conversion between mp3gain's gain level and the
+iPod's volume level is not well established yet. If you think the
+results are strange, please play around with nm_gain_to_volume() in
+normalize.c and tell me if you can improve it.
+
+Also, please be aware that tracks are not normalized on a 'per
+playlist' fashion. If a track is normalized, it's normalized in all
+playlists it is a member of.
 
 
 Offline Mode
