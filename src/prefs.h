@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 13:09:12 jcs>
+/* Time-stamp: <2004-01-17 17:03:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -43,40 +43,40 @@ struct win_size {
 
 struct cfg
 {
-  gchar    *ipod_mount;   /* mount point of iPod */
-  gchar    *charset;      /* CHARSET to use with file operations */
-  gboolean id3_write;     /* should changes to ID3 tags be written to file */
-  gboolean id3_writeall;  /* should all ID3 tags be updated */
-  gboolean md5tracks;	  /* don't allow track duplication on your ipod */
-  gboolean update_existing;/* when adding track, update existing track */
-  gboolean block_display; /* block display during change of selection? */
-  gboolean autoimport;	  /* whether or not to automatically import files */
+  gchar    *ipod_mount;     /* mount point of iPod */
+  gchar    *charset;        /* CHARSET to use with file operations */
+  gboolean id3_write;       /* should changes to ID3 tags be written to file */
+  gboolean id3_write_id3v24;/* should all ID3 tags be updated */
+  gboolean md5tracks;	    /* don't allow track duplication on your ipod */
+  gboolean update_existing; /* when adding track, update existing track */
+  gboolean block_display;   /* block display during change of selection? */
+  gboolean autoimport;	    /* whether or not to automatically import files */
   struct
   {
-    gboolean autoselect;      /* automatically select "All" in sort tab? */
-    guint    category;        /* which category was selected last? */
+    gboolean autoselect;     /* automatically select "All" in sort tab? */
+    guint    category;       /* which category was selected last? */
     /* the following fields are for the "special" tab */
-    gboolean sp_or;           /* logic operation: OR? (FALSE: AND) */
-    gboolean sp_rating;       /* consider rating? */
-    guint32  sp_rating_state; /* pass which rating? (1 star: bit 1...) */
-    gboolean sp_playcount;    /* consider playcount? */
-    guint sp_playcount_low;   /* lower limit for playcounts */
-    guint sp_playcount_high;  /* higher limit for playcounts */
-    gboolean sp_played;       /* consider last played? */
-    gchar *sp_played_state;   /* current "played" string */
-    gboolean sp_modified;     /* consider last modified? */
-    gchar *sp_modified_state; /* current "modified" string */
-    gboolean sp_autodisplay;  /* display automatically? */ 
+    gboolean sp_or;          /* logic operation: OR? (FALSE: AND) */
+    gboolean sp_rating;      /* consider rating? */
+    guint32  sp_rating_state;/* pass which rating? (1 star: bit 1...) */
+    gboolean sp_playcount;   /* consider playcount? */
+    guint sp_playcount_low;  /* lower limit for playcounts */
+    guint sp_playcount_high; /* higher limit for playcounts */
+    gboolean sp_played;      /* consider last played? */
+    gchar *sp_played_state;  /* current "played" string */
+    gboolean sp_modified;    /* consider last modified? */
+    gchar *sp_modified_state;/* current "modified" string */
+    gboolean sp_autodisplay; /* display automatically? */ 
   } st[SORT_TAB_MAX];
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
-    gint pm_sort;             /* sort type for playlists           */
-    gint st_sort;             /* sort type for sort tabs           */
-    gint tm_sort;             /* sort type for tracks              */
-    TM_item tm_sortcol;       /* sort column for tracks            */
-    gboolean pm_autostore;    /* save sort order automatically?    */
-    gboolean tm_autostore;    /* save sort order automatically?    */
-    gboolean case_sensitive;  /* Should sorting be case-sensitive? */
+    gint pm_sort;            /* sort type for playlists           */
+    gint st_sort;            /* sort type for sort tabs           */
+    gint tm_sort;            /* sort type for tracks              */
+    TM_item tm_sortcol;      /* sort column for tracks            */
+    gboolean pm_autostore;   /* save sort order automatically?    */
+    gboolean tm_autostore;   /* save sort order automatically?    */
+    gboolean case_sensitive; /* Should sorting be case-sensitive? */
   } sortcfg;
   gboolean info_window;   /* is info window open (will then open on restart */
   gboolean mpl_autoselect;/* select mpl automatically? */
@@ -102,7 +102,11 @@ struct cfg
   gint tm_col_width[TM_NUM_COLUMNS];    /* width colums in track model */
   gboolean col_visible[TM_NUM_COLUMNS]; /* displayed track model colums */
   TM_item col_order[TM_NUM_COLUMNS];    /* order of columns */
-  gboolean tag_autoset[TM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
+  gboolean readtags;            /* Read tags from file contents? */
+  gboolean parsetags;           /* Get tags by parsing filename? */
+  gchar   *parsetags_template;  /* template for parsing tags */
+  gboolean parsetags_overwrite; /* Overwrite tags already set? */
+  gboolean autosettags[TM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 
   gboolean show_duplicates;     /* show duplicate notification ?*/
@@ -147,9 +151,6 @@ enum
 
 
 
-/* FIXME: make the global struct obsolete! */
-/*extern struct cfg *cfg;*/
-
 gchar *prefs_get_cfgdir (void);
 void prefs_print(void);
 void cfg_free(struct cfg *c);
@@ -180,10 +181,20 @@ void prefs_set_sync_remove_confirm(gboolean val);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_update_existing(gboolean active);
 void prefs_set_block_display(gboolean active);
-void prefs_set_id3_write(gboolean active);
-void prefs_set_id3_writeall(gboolean active);
-void prefs_set_last_dir_browse(const gchar * dir);
-const gchar *prefs_get_last_dir_browse(void);
+void prefs_set_id3_write (gboolean active);
+void prefs_set_id3_write_id3v24 (gboolean active);
+void prefs_set_readtags (gboolean active);
+gboolean prefs_get_readtags(void);
+void prefs_set_parsetags (gboolean active);
+gboolean prefs_get_parsetags(void);
+void prefs_set_parsetags_overwrite (gboolean active);
+gboolean prefs_get_parsetags_overwrite(void);
+void prefs_set_autosettags (gint category, gboolean autoset);
+gboolean prefs_get_autosettags (gint category);
+void prefs_set_parsetags_template (const gchar *tpl);
+const gchar *prefs_get_parsetags_template (void);
+void prefs_set_last_dir_browse (const gchar * dir);
+const gchar *prefs_get_last_dir_browse (void);
 void prefs_set_last_dir_export(const gchar * dir);
 const gchar *prefs_get_last_dir_export(void);
 void prefs_set_charset (gchar *charset);
@@ -196,7 +207,6 @@ void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_size_prefs (gint x, gint y);
 void prefs_set_size_info (gint x, gint y);
 void prefs_set_tm_col_width (gint col, gint width);
-void prefs_set_tag_autoset (gint category, gboolean autoset);
 void prefs_set_col_visible (TM_item tm_item, gboolean visible);
 void prefs_set_col_order (gint pos, TM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
@@ -221,7 +231,7 @@ gboolean prefs_get_track_playlist_deletion(void);
 gboolean prefs_get_track_ipod_file_deletion(void);
 gboolean prefs_get_sync_remove_confirm(void);
 gboolean prefs_get_id3_write(void);
-gboolean prefs_get_id3_writeall(void);
+gboolean prefs_get_id3_write_id3v24(void);
 const gchar *prefs_get_ipod_mount (void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);
@@ -232,7 +242,6 @@ void prefs_get_size_dirbr (gint *x, gint *y);
 void prefs_get_size_prefs (gint *x, gint *y);
 void prefs_get_size_info (gint *x, gint *y);
 gint prefs_get_tm_col_width (gint col);
-gboolean prefs_get_tag_autoset (gint category);
 gboolean prefs_get_col_visible (TM_item tm_item);
 TM_item prefs_get_col_order (gint pos);
 gboolean prefs_get_md5tracks(void);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-29 12:49:05 jcs>
+/* Time-stamp: <2004-01-17 17:21:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -734,14 +734,6 @@ on_tracks_statusbar_realize             (GtkWidget       *widget,
 {
     gtkpod_tracks_statusbar_init(widget);
 }
-
-void
-on_cfg_id3_writeall_toggled            (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_id3_writeall(gtk_toggle_button_get_active(togglebutton));
-}
-
 
 void
 on_st_treeview_drag_data_get           (GtkWidget       *widget,
@@ -1857,3 +1849,48 @@ on_info_close_clicked                  (GtkButton       *button,
     info_close_window ();
 }
 
+
+void
+on_cfg_write_id3v24_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_id3_write_id3v24
+	(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_readtags_toggled                    (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_readtags
+	(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_parsetags_template_changed             (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    gchar *buf = gtk_editable_get_chars (editable,0, -1);
+    prefs_window_set_parsetags_template (buf);
+    g_free (buf);
+}
+
+
+void
+on_parsetags_overwrite_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_parsetags_overwrite
+	(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_parsetags_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_parsetags
+	(gtk_toggle_button_get_active(togglebutton));
+}

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-29 12:48:15 jcs>
+/* Time-stamp: <2004-01-17 17:05:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -242,10 +242,6 @@ on_gtkpod_status_realize               (GtkWidget       *widget,
 
 void
 on_tracks_statusbar_realize             (GtkWidget       *widget,
-                                        gpointer         user_data);
-
-void
-on_cfg_id3_writeall_toggled            (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
@@ -694,3 +690,23 @@ void
 on_info_close_clicked                  (GtkButton       *button,
                                         gpointer         user_data);
 
+
+void
+on_cfg_write_id3v24_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_readtags_toggled                    (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_parsetags_template_changed             (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_parsetags_overwrite_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_parsetags_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

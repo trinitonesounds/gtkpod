@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-12-07 15:07:02 jcs>
+/* Time-stamp: <2004-01-17 17:37:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -109,8 +109,6 @@ static struct cfg *cfg = NULL;
 enum {
   GP_HELP,
   GP_MOUNT,
-  GP_ID3_WRITE,
-  GP_MD5TRACKS,
   GP_AUTO,
   GP_OFFLINE
 };
@@ -125,10 +123,6 @@ static void usage (FILE *file)
   usage_fpf(file, _("  -h, --help:   display this message\n"));
   usage_fpf(file, _("  -m path:      define the mountpoint of your iPod\n"));
   usage_fpf(file, _("  --mountpoint: same as '-m'.\n"));
-  usage_fpf(file, _("  -w:           write changed ID3 tags to file\n"));
-  usage_fpf(file, _("  --id3_write:   same as '-w'.\n"));
-  usage_fpf(file, _("  -c:           check files automagically for duplicates\n"));
-  usage_fpf(file, _("  --md5:        same as '-c'.\n"));
   usage_fpf(file, _("  -a:           import database automatically after start.\n"));
   usage_fpf(file, _("  --auto:       same as '-a'.\n"));
   usage_fpf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n                used with 'Offline' deactivated.\n"));
@@ -190,7 +184,7 @@ struct cfg *cfg_new(void)
     mycfg->keep_backups = TRUE;
     mycfg->write_extended_info = TRUE;
     mycfg->id3_write = FALSE;
-    mycfg->id3_writeall = FALSE;
+    mycfg->id3_write_id3v24 = FALSE;
     mycfg->size_gtkpod.x = 600;
     mycfg->size_gtkpod.y = 500;
     mycfg->size_cal.x = 500;
@@ -219,9 +213,13 @@ struct cfg *cfg_new(void)
     mycfg->col_visible[TM_COLUMN_RATING] = TRUE;
     for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
     {
-	mycfg->tag_autoset[i] = FALSE;
+	mycfg->autosettags[i] = FALSE;
     }
-    mycfg->tag_autoset[TM_COLUMN_TITLE] = TRUE;
+    mycfg->autosettags[TM_COLUMN_TITLE] = TRUE;
+    mycfg->readtags = TRUE;
+    mycfg->parsetags = FALSE;
+    mycfg->parsetags_overwrite = FALSE;
+    mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3");
     for (i=0; i<PANED_NUM; ++i)
     {
 	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
@@ -328,7 +326,11 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "id3_all") == 0)
 	  {
-	      prefs_set_id3_writeall((gboolean)atoi(arg));
+	      /* obsoleted since 0.71 */
+	  }
+	  else if(g_ascii_strcasecmp (line, "id3_write_id3v24") == 0)
+	  {
+	      prefs_set_id3_write_id3v24((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
 	  {
@@ -440,8 +442,24 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strncasecmp (line, "tag_autoset", 11) == 0)
 	  {
 	      gint i = atoi (line+11);
-	      prefs_set_tag_autoset (i, atoi (arg));
+	      prefs_set_autosettags (i, atoi (arg));
 	  }      
+	  else if(g_ascii_strcasecmp (line, "readtags") == 0)
+	  {
+	      prefs_set_readtags((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "parsetags") == 0)
+	  {
+	      prefs_set_parsetags((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "parsetags_overwrite") == 0)
+	  {
+	      prefs_set_parsetags_overwrite((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "parsetags_template") == 0)
+	  {
+	      prefs_set_parsetags_template(strdup(arg));
+	  }
 	  else if(g_ascii_strncasecmp (line, "col_visible", 11) == 0)
 	  {
 	      gint i = atoi (line+11);
@@ -756,11 +774,6 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       { "help",        no_argument,	NULL, GP_HELP },
       { "m",           required_argument,	NULL, GP_MOUNT },
       { "mountpoint",  required_argument,	NULL, GP_MOUNT },
-      { "w",           no_argument,	NULL, GP_ID3_WRITE },
-      { "id3_write",   no_argument,	NULL, GP_ID3_WRITE },
-      { "c",           no_argument,	NULL, GP_MD5TRACKS },
-      { "md5",	       no_argument,	NULL, GP_MD5TRACKS },
-      { "o",           no_argument,	NULL, GP_OFFLINE },
       { "offline",     no_argument,	NULL, GP_OFFLINE },
       { "a",           no_argument,	NULL, GP_AUTO },
       { "auto",        no_argument,	NULL, GP_AUTO },
@@ -782,12 +795,6 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       case GP_MOUNT:
 	g_free (cfg->ipod_mount);
 	cfg->ipod_mount = g_strdup (optarg);
-	break;
-      case GP_ID3_WRITE:
-	cfg->id3_write = TRUE;
-	break;
-      case GP_MD5TRACKS:
-	cfg->md5tracks = TRUE;
 	break;
       case GP_AUTO:
 	cfg->autoimport = TRUE;
@@ -834,7 +841,7 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "charset=\n");
     }
     fprintf(fp, "id3=%d\n", prefs_get_id3_write ());
-    fprintf(fp, "id3_all=%d\n", prefs_get_id3_writeall ());
+    fprintf(fp, "id3_write_id3v24=%d\n", prefs_get_id3_write_id3v24 ());
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "update_existing=%d\n",prefs_get_update_existing ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
@@ -871,8 +878,12 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "col_visible%d=%d\n",  i, prefs_get_col_visible (i));
 	fprintf(fp, "col_order%d=%d\n",  i, prefs_get_col_order (i));
 	if (i < TM_NUM_TAGS_PREFS)
-	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_tag_autoset (i));
-    }	
+	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_autosettags (i));
+    }
+    fprintf(fp, "readtags=%d\n", prefs_get_readtags());
+    fprintf(fp, "parsetags=%d\n", prefs_get_parsetags());
+    fprintf(fp, "parsetags_overwrite=%d\n", prefs_get_parsetags_overwrite());
+    fprintf(fp, "parsetags_template=%s\n",cfg->parsetags_template);
     fprintf(fp, _("# position of sliders (paned): playlists, above tracks,\n# between sort tabs, and in statusbar.\n"));
     for (i=0; i<PANED_NUM; ++i)
     {
@@ -1121,14 +1132,14 @@ gboolean prefs_get_id3_write(void)
     return cfg->id3_write;
 }
 
-void prefs_set_id3_writeall(gboolean active)
+void prefs_set_id3_write_id3v24(gboolean active)
 {
-    cfg->id3_writeall = active;
+    cfg->id3_write_id3v24 = active;
 }
 
-gboolean prefs_get_id3_writeall(void)
+gboolean prefs_get_id3_write_id3v24(void)
 {
-    return cfg->id3_writeall;
+    return cfg->id3_write_id3v24;
 }
 
 gboolean prefs_get_offline(void)
@@ -1224,6 +1235,8 @@ struct cfg *clone_prefs(void)
 	    result->time_format = g_strdup(cfg->time_format);
 	if (cfg->filename_format)
 	    result->filename_format = g_strdup(cfg->filename_format);
+	if (cfg->parsetags_template)
+	    result->parsetags_template = g_strdup(cfg->parsetags_template);
     }
     return(result);
 }
@@ -1475,21 +1488,66 @@ void prefs_get_size_info (gint *x, gint *y)
 
 /* Should empty tags be set to filename? -- "category": one of the
    TM_COLUMN_..., "autoset": new value */
-void prefs_set_tag_autoset (gint category, gboolean autoset)
+void prefs_set_autosettags (gint category, gboolean autoset)
 {
     if (category < TM_NUM_TAGS_PREFS)
-	cfg->tag_autoset[category] = autoset;
+	cfg->autosettags[category] = autoset;
 }
 
 
 /* Should empty tags be set to filename? -- "category": one of the
    TM_COLUMN_... */
-gboolean prefs_get_tag_autoset (gint category)
+gboolean prefs_get_autosettags (gint category)
 {
     if (category < TM_NUM_TAGS_PREFS)
-	return cfg->tag_autoset[category];
+	return cfg->autosettags[category];
     return FALSE;
 }
+
+void prefs_set_readtags(gboolean active)
+{
+  cfg->readtags = active;
+}
+
+gboolean prefs_get_readtags(void)
+{
+  return cfg->readtags;
+}
+
+void prefs_set_parsetags(gboolean active)
+{
+  cfg->parsetags = active;
+}
+
+gboolean prefs_get_parsetags(void)
+{
+  return cfg->parsetags;
+}
+
+void prefs_set_parsetags_overwrite(gboolean active)
+{
+  cfg->parsetags_overwrite = active;
+}
+
+gboolean prefs_get_parsetags_overwrite(void)
+{
+  return cfg->parsetags_overwrite;
+}
+
+const gchar *prefs_get_parsetags_template (void)
+{
+    return cfg->parsetags_template;
+}
+
+void prefs_set_parsetags_template (const gchar *tpl)
+{
+    if (tpl)
+    {
+	g_free(cfg->parsetags_template);
+	cfg->parsetags_template = g_strdup (tpl);
+    }
+}
+
 
 /* Display column tm_item @visible: new value */
 void prefs_set_col_visible (TM_item tm_item, gboolean visible)

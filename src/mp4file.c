@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-13 23:22:38 jcs>
+/* Time-stamp: <2004-01-17 17:29:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,6 +34,7 @@
 #include "song.h"
 #include "charset.h"
 #include "misc.h"
+#include "prefs.h"
 #include "support.h"
 
 /* ------------------------------------------------------------
@@ -54,14 +55,17 @@
    gchar   *comment;          /+ comment (utf8)        +/
    gchar   *composer;         /+ Composer (utf8)       +/
    gchar   *fdesc;            /+ Format description (utf8) +/
-   gint32  tracklen;          /+ Length of track in ms +/
+   gchar   *charset;          /+ charset used for tags +/
    gint32  cd_nr;             /+ CD number             +/
    gint32  cds;               /+ number of CDs         +/
    gint32  track_nr;          /+ track number          +/
    gint32  tracks;            /+ number of tracks      +/
    gint32  year;              /+ year                  +/
+   gint32  tracklen;          /+ Length of track in ms +/
    gint32  bitrate;           /+ bitrate               +/
-   gchar   *charset;          /+ charset used for tags +/
+
+   If prefs_get_tag_readtags() returns FALSE you only should fill in
+   tracklen, bitrate and fdesc
 
    Please note that the iPod will only play as much of the track as
    specified in "tracklen".
@@ -139,50 +143,53 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 		if (strcmp (value, ".m4p") == 0)
 		    track->fdesc = g_strdup ("Protected AAC audio file");
 	    }
-	    if (MP4GetMetadataName(mp4File, &value) && value != NULL)
+	    if (prefs_get_readtags ())
 	    {
-		track->title = charset_to_utf8 (value);
-		g_free(value);
-	    }
-	    if (MP4GetMetadataArtist(mp4File, &value) && value != NULL)
-	    {
-		track->artist = charset_to_utf8 (value);
-		g_free(value);
-	    }
-	    if (MP4GetMetadataWriter(mp4File, &value) && value != NULL)
-	    {
-		track->composer = charset_to_utf8 (value);
-		g_free(value);
-	    }
-	    if (MP4GetMetadataComment(mp4File, &value) && value != NULL)
-	    {
-		track->comment = charset_to_utf8 (value);
-		g_free(value);
-	    }
-	    if (MP4GetMetadataYear(mp4File, &value) && value != NULL)
-	    {
-		track->year = atoi (value);
-		g_free(value);
-	    }
-	    if (MP4GetMetadataAlbum(mp4File, &value) && value != NULL)
-	    {
-		track->album = charset_to_utf8 (value);
-		g_free(value);
-	    }
-	    if (MP4GetMetadataTrack(mp4File, &numvalue, &numvalue2))
-	    {
-		track->track_nr = numvalue;
-		track->tracks = numvalue2;
-	    }
-	    if (MP4GetMetadataDisk(mp4File, &numvalue, &numvalue2))
-	    {
-		track->cd_nr = numvalue;
-		track->cds = numvalue2;
-	    }
-	    if (MP4GetMetadataGenre(mp4File, &value) && value != NULL)
-	    {
-		track->genre = charset_to_utf8 (value);
-		g_free(value);
+		if (MP4GetMetadataName(mp4File, &value) && value != NULL)
+		{
+		    track->title = charset_to_utf8 (value);
+		    g_free(value);
+		}
+		if (MP4GetMetadataArtist(mp4File, &value) && value != NULL)
+		{
+		    track->artist = charset_to_utf8 (value);
+		    g_free(value);
+		}
+		if (MP4GetMetadataWriter(mp4File, &value) && value != NULL)
+		{
+		    track->composer = charset_to_utf8 (value);
+		    g_free(value);
+		}
+		if (MP4GetMetadataComment(mp4File, &value) && value != NULL)
+		{
+		    track->comment = charset_to_utf8 (value);
+		    g_free(value);
+		}
+		if (MP4GetMetadataYear(mp4File, &value) && value != NULL)
+		{
+		    track->year = atoi (value);
+		    g_free(value);
+		}
+		if (MP4GetMetadataAlbum(mp4File, &value) && value != NULL)
+		{
+		    track->album = charset_to_utf8 (value);
+		    g_free(value);
+		}
+		if (MP4GetMetadataTrack(mp4File, &numvalue, &numvalue2))
+		{
+		    track->track_nr = numvalue;
+		    track->tracks = numvalue2;
+		}
+		if (MP4GetMetadataDisk(mp4File, &numvalue, &numvalue2))
+		{
+		    track->cd_nr = numvalue;
+		    track->cds = numvalue2;
+		}
+		if (MP4GetMetadataGenre(mp4File, &value) && value != NULL)
+		{
+		    track->genre = charset_to_utf8 (value);
+		    g_free(value);
+		}
 	    }
 	}
 	else
@@ -207,7 +214,7 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 }
 
 
-gboolean file_write_mp4_info (gchar *mp4FileName, Track *track, T_item tag_id)
+gboolean file_write_mp4_info (gchar *mp4FileName, Track *track)
 {
     gboolean result = TRUE;
     MP4FileHandle mp4File = MP4Modify(mp4FileName, 0, FALSE);
@@ -228,148 +235,79 @@ gboolean file_write_mp4_info (gchar *mp4FileName, Track *track, T_item tag_id)
 	     * you have to delete all meta data before modifying
 	     * it. Therefore we have to read it first to avoid data
 	     * loss. (Bug present in mpeg4ip-1.0RC1.) */
-	    gchar *m_name = NULL, *m_artist = NULL;
+/*	    gchar *m_name = NULL, *m_artist = NULL;
 	    gchar *m_writer = NULL, *m_comment = NULL;
-	    gchar *m_tool = NULL, *m_year = NULL;
-	    gchar *m_album = NULL, *m_genre = NULL;
-	    u_int16_t m_track, m_tracks, m_disk, m_disks, m_tempo;
+	    gchar *m_year = NULL;
+	    gchar *m_album = NULL, *m_genre = NULL;*/
+	    gchar *m_tool = NULL;
+/*	    u_int16_t m_track, m_tracks, m_disk, m_disks; */
+	    u_int16_t m_tempo;
 	    u_int8_t *m_covert = NULL, m_cpl;
 	    u_int32_t m_size;
-	    gboolean has_track = MP4GetMetadataTrack (mp4File,
+/*	    gboolean has_track = MP4GetMetadataTrack (mp4File,
 						      &m_track, &m_tracks);
 	    gboolean has_disk = MP4GetMetadataDisk (mp4File,
-						    &m_disk, &m_disks);
+	    &m_disk, &m_disks);*/
 	    gboolean has_tempo = MP4GetMetadataTempo (mp4File,
 						      &m_tempo);
 	    gboolean has_compilation = MP4GetMetadataCompilation (mp4File,
 								  &m_cpl);
-	    MP4GetMetadataName (mp4File, &m_name);
+/*	    MP4GetMetadataName (mp4File, &m_name);
 	    MP4GetMetadataArtist (mp4File, &m_artist);
 	    MP4GetMetadataWriter (mp4File, &m_writer);
 	    MP4GetMetadataComment (mp4File, &m_comment);
-	    MP4GetMetadataTool (mp4File, &m_tool);
 	    MP4GetMetadataYear (mp4File, &m_year);
 	    MP4GetMetadataAlbum (mp4File, &m_album);
-	    MP4GetMetadataGenre (mp4File, &m_genre);
+	    MP4GetMetadataGenre (mp4File, &m_genre);*/
+	    MP4GetMetadataTool (mp4File, &m_tool);
 	    MP4GetMetadataCoverArt (mp4File, &m_covert, &m_size);
 	    MP4MetadataDelete (mp4File);
 #endif
-	    if ((tag_id == T_ALL) || (tag_id == T_TITLE))
-	    {
-		value = charset_from_utf8 (track->title);
-		MP4SetMetadataName (mp4File, value);
-		g_free (value);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (m_name) MP4SetMetadataName (mp4File, m_name);
-	    }
-#endif
-	    if ((tag_id == T_ALL) || (tag_id == T_ARTIST))
-	    {
-		value = charset_from_utf8 (track->artist);
-		MP4SetMetadataArtist (mp4File, value);
-		g_free (value);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (m_artist) MP4SetMetadataArtist (mp4File, m_artist);
-	    }
-#endif
-	    if ((tag_id == T_ALL) || (tag_id == T_COMPOSER))
-	    {
-		value = charset_from_utf8 (track->composer);
-		MP4SetMetadataWriter (mp4File, value);
-		g_free (value);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (m_writer) MP4SetMetadataWriter (mp4File, m_writer);
-	    }
-#endif
-	    if ((tag_id == T_ALL) || (tag_id == T_COMMENT))
-	    {
-		value = charset_from_utf8 (track->comment);
-		MP4SetMetadataComment (mp4File, value);
-		g_free (value);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (m_comment) MP4SetMetadataComment (mp4File, m_comment);
-	    }
-#endif
-	    if ((tag_id == T_ALL) || (tag_id == T_YEAR))
-	    {
-		value = g_strdup_printf ("%d", track->year);
-		MP4SetMetadataYear (mp4File, value);
-		g_free (value);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (m_year) MP4SetMetadataYear (mp4File, m_year);
-	    }
-#endif
-	    if ((tag_id == T_ALL) || (tag_id == T_ALBUM))
-	    {
-		value = charset_from_utf8 (track->album);
-		MP4SetMetadataAlbum (mp4File, value);
-		g_free (value);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (m_album) MP4SetMetadataAlbum (mp4File, m_album);
-	    }
-#endif
-	    if ((tag_id == T_ALL) || (tag_id == T_TRACK_NR))
-	    {
-		MP4SetMetadataTrack (mp4File, track->track_nr, track->tracks);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (has_track) MP4SetMetadataTrack (mp4File, m_track, m_tracks);
-	    }
-#endif
-	    if ((tag_id == T_ALL) || (tag_id == T_CD_NR))
-	    {
-		MP4SetMetadataDisk (mp4File, track->cd_nr, track->cds);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (has_disk) MP4SetMetadataDisk (mp4File, m_disk, m_disks);
-	    }
-#endif
-	    if ((tag_id == T_ALL) || (tag_id == T_GENRE))
-	    {
-		value = charset_from_utf8 (track->genre);
-		MP4SetMetadataGenre (mp4File, value);
-		g_free (value);
-	    }
-#if MP4V2_HAS_METADATA_BUG
-	    else
-	    {
-		if (m_genre) MP4SetMetadataGenre (mp4File, m_genre);
-	    }
+	    value = charset_from_utf8 (track->title);
+	    MP4SetMetadataName (mp4File, value);
+	    g_free (value);
 
+	    value = charset_from_utf8 (track->artist);
+	    MP4SetMetadataArtist (mp4File, value);
+	    g_free (value);
+
+	    value = charset_from_utf8 (track->composer);
+	    MP4SetMetadataWriter (mp4File, value);
+	    g_free (value);
+
+	    value = charset_from_utf8 (track->comment);
+	    MP4SetMetadataComment (mp4File, value);
+	    g_free (value);
+
+	    value = g_strdup_printf ("%d", track->year);
+	    MP4SetMetadataYear (mp4File, value);
+	    g_free (value);
+
+	    value = charset_from_utf8 (track->album);
+	    MP4SetMetadataAlbum (mp4File, value);
+	    g_free (value);
+
+	    MP4SetMetadataTrack (mp4File, track->track_nr, track->tracks);
+
+	    MP4SetMetadataDisk (mp4File, track->cd_nr, track->cds);
+
+	    value = charset_from_utf8 (track->genre);
+	    MP4SetMetadataGenre (mp4File, value);
+	    g_free (value);
+
+#if MP4V2_HAS_METADATA_BUG
 	    if (has_tempo) MP4SetMetadataTempo (mp4File, m_tempo);
 	    if (has_compilation) MP4SetMetadataCompilation (mp4File, m_cpl);
 	    if (m_tool)     MP4SetMetadataTool (mp4File, m_tool);
 	    if (m_covert)   MP4SetMetadataCoverArt (mp4File, m_covert, m_size);
-	    g_free (m_name);
+/*	    g_free (m_name);
 	    g_free (m_artist);
 	    g_free (m_writer);
 	    g_free (m_comment);
-	    g_free (m_tool);
 	    g_free (m_year);
 	    g_free (m_album);
-	    g_free (m_genre);
+	    g_free (m_genre);*/
+	    g_free (m_tool);
 	    g_free (m_covert);
 #endif
 	}

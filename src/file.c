@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 10:53:26 jcs>
+/* Time-stamp: <2004-01-17 17:47:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -299,7 +299,7 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* Used by set_entry_from_filename() */
+/* Used by set_entry_from_filename() and parse_filename() */
 static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
 {
   C_FREE (*entry_utf8);
@@ -308,6 +308,140 @@ static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
   *entry_utf16 = g_utf8_to_utf16 (*entry_utf8, -1, NULL, NULL, NULL);
 }
 
+static void parse_filename (Track *track)
+{
+    GList *tokens=NULL, *gl;
+    const gchar *template;
+    gchar *tpl, *fn;
+    gchar *sps, *sp, *str;
+
+    template = prefs_get_parsetags_template ();
+    if (!template) return;
+    if ((template[0] == '%') && (template[1] != '%'))
+	 tpl = g_strdup_printf ("%c%s", G_DIR_SEPARATOR, template);
+    else tpl = g_strdup (template);
+
+    fn = g_strdup (track->pc_path_utf8);
+
+    sps = tpl;
+    while ((sp = strchr (sps, '%')))
+    {
+	if (sps != sp)
+	    tokens = g_list_prepend (tokens, g_strndup (sps, sp-sps));
+	if (sp[1] != '%')
+	{
+	    tokens = g_list_prepend (tokens, g_strndup (sp, 2));
+	}
+	else
+	{
+	    tokens = g_list_prepend (tokens, g_strdup ("%"));
+	}
+	if (!sp[1]) break;
+	sps = sp+2;
+    }
+    if (sps[0] != 0)
+	tokens = g_list_prepend (tokens, g_strdup (sps));
+
+    str = g_list_nth_data (tokens, 0);
+    if (str && (strchr (str, '.') == NULL))
+    {
+	gchar *str = strrchr (fn, '.');
+	if (str) str[0] = 0;
+    }
+
+#ifdef DEBUG
+    puts (tpl);
+    for (gl=tokens; gl; gl=gl->next)
+	puts (gl->data);
+    puts (fn);
+#endif
+
+    gl = tokens;
+    while (gl)
+    {
+	gchar *token = gl->data;
+	if ((token[0] == '%') && (strlen (token) == 2))
+	{   /* handle tag item */
+	    GList *gln = gl->next;
+	    if (gln)
+	    {
+		gchar *itm;
+		gchar *next_token = gln->data;
+		gchar *fnp = g_strrstr (fn, next_token);
+		gboolean parse_error = FALSE;
+		
+		if (!fnp)   break;
+		fnp[0] = 0;
+		fnp = fnp + strlen (next_token);
+#ifdef DEBUG
+		printf ("%s: '%s'\n", token, fnp);
+#endif
+		itm = g_strdup (fnp);
+		switch (token[1])
+		{
+		case 'a': /* artist */
+		    if (!track->artist || prefs_get_parsetags_overwrite ())
+			set_entry (&track->artist, &track->artist_utf16, itm);
+		    break;
+		case 'A': /* album */
+		    if (!track->album || prefs_get_parsetags_overwrite ())
+			set_entry (&track->album, &track->album_utf16, itm);
+		    break;
+		case 'c': /* composer */
+		    if (!track->composer || prefs_get_parsetags_overwrite ())
+			set_entry (&track->composer, &track->composer_utf16,
+				   itm);
+		    break;
+		case 't': /* title */
+		    if (!track->title || prefs_get_parsetags_overwrite ())
+			set_entry (&track->title, &track->title_utf16, itm);
+		    break;
+		case 'g': /* genre */
+		case 'G': /* genre */
+		    if (!track->genre || prefs_get_parsetags_overwrite ())
+			set_entry (&track->genre, &track->genre_utf16, itm);
+		    break;
+		case 'T': /* track */
+		    if (track->track_nr == 0 
+			|| prefs_get_parsetags_overwrite ())
+			track->track_nr = atoi (itm);
+		    g_free (itm);
+		    break;
+		case 'C': /* CD */
+		    if (track->cd_nr == 0 || prefs_get_parsetags_overwrite ())
+			track->cd_nr = atoi (itm);
+		    g_free (itm);
+		    break;
+		case '*': /* placeholder to skip a field */
+		    g_free (itm);
+		    break;
+		default:
+		    g_free (itm);
+		    parse_error = TRUE;
+		}
+		if (parse_error) break;
+		gl = gln->next;
+	    }
+	    else break;
+	}
+	else
+	{   /* skip text */
+	    gchar *fnp = g_strrstr (fn, token);
+	    if (!fnp)  break;  /* could not match */
+	    if (fnp - fn + strlen (fnp) != strlen (fn))
+		break; /* not at the last position */
+	    fnp[0] = 0;
+	    gl = gl->next;
+	}
+    }
+
+    g_free (fn);
+    g_free (tpl);
+    g_list_foreach (tokens, (GFunc)g_free, NULL);
+    g_list_free (tokens);
+}
+
+
 /* Set entry "column" (TM_COLUMN_TITLE etc) according to filename */
 /* TODO: make the TAG extraction more intelligent -- if possible, this
    should be user configurable. */
@@ -315,7 +449,7 @@ static void set_entry_from_filename (Track *track, gint column)
 {
     gchar *str;
 
-    if (prefs_get_tag_autoset (column) &&
+    if (prefs_get_autosettags (column) &&
 	track->pc_path_utf8 && strlen (track->pc_path_utf8))
     {
 	switch (column)
@@ -347,11 +481,20 @@ static void set_entry_from_filename (Track *track, gint column)
 
 static void set_unset_entries_from_filename (Track *track)
 {
-    if (!track->album)    set_entry_from_filename (track, TM_COLUMN_ALBUM);
-    if (!track->artist)   set_entry_from_filename (track, TM_COLUMN_ARTIST);
-    if (!track->title)    set_entry_from_filename (track, TM_COLUMN_TITLE);
-    if (!track->genre)    set_entry_from_filename (track, TM_COLUMN_GENRE);
-    if (!track->composer) set_entry_from_filename (track, TM_COLUMN_COMPOSER);
+    /* try to fill tags from filename */
+    if (prefs_get_parsetags ())
+	parse_filename (track);
+    /* fill up what is left unset */
+    if (!track->album && prefs_get_autosettags (TM_COLUMN_ALBUM))
+	set_entry_from_filename (track, TM_COLUMN_ALBUM);
+    if (!track->artist && prefs_get_autosettags (TM_COLUMN_ARTIST))
+	set_entry_from_filename (track, TM_COLUMN_ARTIST);
+    if (!track->title && prefs_get_autosettags (TM_COLUMN_TITLE))
+	set_entry_from_filename (track, TM_COLUMN_TITLE);
+    if (!track->genre && prefs_get_autosettags (TM_COLUMN_GENRE))
+	set_entry_from_filename (track, TM_COLUMN_GENRE);
+    if (!track->composer && prefs_get_autosettags (TM_COLUMN_COMPOSER))
+	set_entry_from_filename (track, TM_COLUMN_COMPOSER);
 }
 
 
@@ -1344,7 +1487,7 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 
 
 /* Call the correct tag writing function for the filename @name */
-static gboolean file_write_info (gchar *name, Track *track, T_item tag_id)
+static gboolean file_write_info (gchar *name, Track *track)
 {
     if (name && track)
     {
@@ -1352,21 +1495,19 @@ static gboolean file_write_info (gchar *name, Track *track, T_item tag_id)
 	if (suff)
 	{
 	    if (strcasecmp (suff, ".mp3") == 0)
-		return file_write_mp3_info (name, track, tag_id);
+		return file_write_mp3_info (name, track);
 	    if (strcasecmp (suff, ".m4a") == 0)
-		return file_write_mp4_info (name, track, tag_id);
+		return file_write_mp4_info (name, track);
 	    if (strcasecmp (suff, ".m4p") == 0)
-		return file_write_mp4_info (name, track, tag_id);
+		return file_write_mp4_info (name, track);
 	}
     }
     return FALSE;
 }
 
 
-/* Write changed tags to file.
-   "tag_id": specify which tags should be changed (one of
-   T_... defined in track.h) */
-gboolean write_tags_to_file (Track *track, T_item tag_id)
+/* Write tags to file */
+gboolean write_tags_to_file (Track *track)
 {
     gchar *ipod_fullpath;
     gchar *prefs_charset = NULL;
@@ -1396,7 +1537,7 @@ gboolean write_tags_to_file (Track *track, T_item tag_id)
     if (track->pc_path_locale && (strlen (track->pc_path_locale) > 0))
     {
 	if (file_write_info (
-		track->pc_path_locale, track, tag_id) == FALSE)
+		track->pc_path_locale, track) == FALSE)
 	{
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    track->pc_path_locale);
@@ -1410,7 +1551,7 @@ gboolean write_tags_to_file (Track *track, T_item tag_id)
 	/* need to get ipod filename */
 	ipod_fullpath = get_track_name_on_ipod (track);
 	if (file_write_info (
-		track->pc_path_locale, track, tag_id) == FALSE)
+		track->pc_path_locale, track) == FALSE)
 	{
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    ipod_fullpath);

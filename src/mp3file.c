@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-11 22:54:26 jcs>
+/* Time-stamp: <2004-01-17 17:28:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -160,7 +160,7 @@ int mp3file_header_frequency(mp3header *h);
 mp3info *mp3file_get_info (gchar *name);
 
 /* This is for xmms code */
-guint get_track_time(gchar *path);
+static guint get_track_time(gchar *path);
 
 
 
@@ -941,7 +941,7 @@ static guint get_track_time_file(FILE * file)
 	return 0;
 }
 
-guint get_track_time (gchar *path)
+static guint get_track_time (gchar *path)
 {
     guint result = 0;
 
@@ -955,994 +955,332 @@ guint get_track_time (gchar *path)
 }
 
 
+/* libid3tag stuff */
+
+#include <id3tag.h>
+#include "prefs.h"
 
 
-/*
-|
-|  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
-|  compile with the gtkpod project. 2002/11/24
-|  Changed by Jorg Schuler to also determine size of file and
-|  length of song in ms. 2002/11/28.
-|  Modified character conversion handling. Jan 2003
-|  Slimlined code and removed file size determination. Nov 2003
-|
-*/
-
-
-/* id3tag.c - 2001/02/16 */
-/*
- *  EasyTAG - Tag editor for MP3 and OGG files
- *  Copyright (C) 2001-2002  Jerome Couderc <j.couderc@ifrance.com>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
-
-#include <id3.h>
-
-/* genres.h - EasyTAG - Jerome Couderc 2000/05/29 */
-/* GENRE_MAX is the last genre number that can be used */
-#define GENRE_MAX ( sizeof(id3_genres)/sizeof(id3_genres[0]) - 1 )
-#define ID3_INVALID_GENRE 255
-
-
-/* 
- * Do not sort genres!!
- * Last Update: 2000/04/30
- */
-static char *id3_genres[] =
+static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 {
-	"Blues",		/* 0 */
-	"Classic Rock",
-	"Country",
-	"Dance",
-	"Disco",
-	"Funk",			/* 5 */
-	"Grunge",
-	"Hip-Hop", 
-	"Jazz",
-	"Metal",
-	"New Age",		/* 10 */		
-	"Oldies",
-	"Other", 
-	"Pop",
-	"R&B",
-	"Rap",			/* 15 */
-	"Reggae", 
-	"Rock",
-	"Techno",
-	"Industrial",
-	"Alternative", 		/* 20 */
-	"Ska",
-	"Death Metal", 
-	"Pranks",
-	"Soundtrack",
-	"Euro-Techno", 		/* 25 */
-	"Ambient",
-	"Trip-Hop", 
-	"Vocal",
-	"Jazz+Funk", 
-	"Fusion",		/* 30 */
-	"Trance",
-	"Classical",
-	"Instrumental", 
-	"Acid",
-	"House",		/* 35 */
-	"Game",
-	"Sound Clip", 
-	"Gospel",
-	"Noise",
-	"Altern Rock", 		/* 40 */
-	"Bass",
-	"Soul",
-	"Punk",
-	"Space",
-	"Meditative",		/* 45 */
-	"Instrumental Pop",
-	"Instrumental Rock", 
-	"Ethnic",
-	"Gothic",
-	"Darkwave",		/* 50 */
-	"Techno-Industrial", 
-	"Electronic", 
-	"Pop-Folk",
-	"Eurodance", 
-	"Dream",		/* 55 */
-	"Southern Rock", 
-	"Comedy", 
-	"Cult",
-	"Gangsta",
-	"Top 40",		/* 60 */
-	"Christian Rap", 
-	"Pop/Funk", 
-	"Jungle",
-	"Native American", 
-	"Cabaret",		/* 65 */
-	"New Wave",
-	"Psychadelic", 
-	"Rave",
-	"Showtunes", 
-	"Trailer",		/* 70 */
-	"Lo-Fi",
-	"Tribal",
-	"Acid Punk",
-	"Acid Jazz", 
-	"Polka",		/* 75 */
-	"Retro",
-	"Musical",
-	"Rock & Roll", 
-	"Hard Rock", 
-	"Folk",			/* 80 */
-	"Folk/Rock",
-	"National Folk", 
-	"Fast Fusion",
-	"Swing",
-	"Bebob",		/* 85 */
-	"Latin",
-	"Revival",
-	"Celtic",
-	"Bluegrass",
-	"Avantgarde",		/* 90 */
-	"Gothic Rock",
-	"Progressive Rock",
-	"Psychedelic Rock", 
-	"Symphonic Rock", 
-	"Slow Rock",		/* 95 */
-	"Big Band", 
-	"Chorus",
-	"Easy Listening", 
-	"Acoustic", 
-	"Humour",		/* 100 */
-	"Speech",
-	"Chanson", 
-	"Opera",
-	"Chamber Music", 
-	"Sonata",		/* 105 */
-	"Symphony",
-	"Booty Bass", 
-	"Primus",
-	"Porn Groove", 
-	"Satire",		/* 110 */
-	"Slow Jam", 
-	"Club",
-	"Tango",
-	"Samba",
-	"Folklore",		/* 115 */
-	"Ballad",
-	"Power Ballad",
-	"Rhythmic Soul",
-	"Freestyle",
-	"Duet",			/* 120 */
-	"Punk Rock",
-	"Drum Solo",
-	"A Capella",
-	"Euro-House",
-	"Dance Hall",		/* 125 */
-	"Goa",
-	"Drum & Bass",
-	"Club-House",
-	"Hardcore",
-	"Terror",		/* 130 */
-	"Indie",
-	"BritPop",
-	"Negerpunk",
-	"Polsk Punk",
-	"Beat",			/* 135 */
-	"Christian Gangsta Rap",
-	"Heavy Metal",
-	"Black Metal",
-	"Crossover",
-	"Contemporary Christian",/* 140 */
-	"Christian Rock",
-	"Merengue",
-	"Salsa",
-	"Thrash Metal",
-	"Anime",		/* 145 */
-	"JPop",
-	"Synthpop"
-};
+    const id3_ucs4_t *string;
+    struct id3_frame *frame;
+    union id3_field *field;
+    gchar *utf8 = NULL;
+    enum id3_field_textencoding encoding = ID3_FIELD_TEXTENCODING_ISO_8859_1;
 
-static gchar   *Id3tag_Genre_To_String (unsigned char genre_code);
-static guchar   Id3tag_String_To_Genre (gchar *genre);
+    frame = id3_tag_findframe (tag, frame_name, 0);
+    if (!frame) return NULL;
 
-/****************
- * Declarations *
- ****************/
-#define ID3V2_MAX_STRING_LEN 4096
-#define NUMBER_TRACK_FORMATED FALSE
-#define STRIP_TAG_WHEN_EMPTY_FIELDS FALSE
-#define WRITE_ID3V1_TAG TRUE
-#define WRITE_ID3V2_TAG TRUE
+    /* Find the encoding used for the field */
+    field = id3_frame_field (frame, 0);
+    if (field && (id3_field_type (field) == ID3_FIELD_TYPE_TEXTENCODING))
+	encoding = field->number.value;
 
-/**************
- * Prototypes *
- **************/
-static gchar *Id3tag_Get_Error_Message(ID3_Err error);
-#if 0
-static gint   Id3tag_Get_Id3v2_Version (gchar *filename);
-#endif
-static ID3_C_EXPORT size_t ID3Tag_Link_1       (ID3Tag *id3tag, const char *filename);
-static ID3_C_EXPORT size_t ID3Field_GetASCII_1 (const ID3Field *field, char *buffer, size_t maxChars, size_t itemNum);
+    if (frame_name == ID3_FRAME_COMMENT)
+        field = id3_frame_field (frame, 3);
+    else
+        field = id3_frame_field (frame, 1);
 
-/*************
- * Functions *
- *************/
+    if (!field) return NULL;
 
+    if (frame_name == ID3_FRAME_COMMENT)
+        string = id3_field_getfullstring (field);
+    else
+        string = id3_field_getstrings (field, 0); 
 
-/*
- * Delete spaces at the end and the beginning of the string 
- */
-static void Strip_String (gchar *string)
+    if (!string) return NULL;
+
+    if (frame_name == ID3_FRAME_GENRE) 
+       string = id3_genre_name (string);
+
+    if (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1)
+    {
+	/* ISO_8859_1 is just a "marker" -- most people just drop
+	   whatever coding system they are using into it, so we use
+	   charset_to_utf8() to convert to utf8 */
+	id3_latin1_t *raw = id3_ucs4_latin1duplicate (string);
+	utf8 = charset_to_utf8 (raw);
+	g_free (raw);
+    }
+    else
+    {
+	/* Standard unicode is being used -- we won't have to worry
+	   about charsets then. */
+	utf8 = id3_ucs4_utf8duplicate (string);
+    }
+    return utf8;
+}
+ 
+static void id3_set_string (struct id3_tag *tag, const char *frame_name, const char *data, enum id3_field_textencoding encoding)
 {
-    if (!string) return;
-    string = g_strstrip(string);
+    int res;
+    struct id3_frame *frame;
+    union id3_field *field;
+    id3_ucs4_t *ucs4;
+
+    if (data == NULL) 
+	return;
+
+/*    printf ("updating id3 (enc: %d): %s: %s\n", encoding, frame_name, data);*/
+
+    /*
+     * An empty string removes the frame altogether.
+     */
+    if (strlen(data) == 0)
+    {
+/*	printf("removing ID3 frame: %s\n", frame_name);*/
+        while ((frame = id3_tag_findframe (tag, frame_name, 0)))
+ 	    id3_tag_detachframe (tag, frame);
+	return;
+    }
+
+    frame = id3_tag_findframe (tag, frame_name, 0);
+    if (!frame) 
+    {
+/*	puts("new frame!");*/
+	frame = id3_frame_new (frame_name);
+	id3_tag_attachframe (tag, frame);
+    }
+
+    if (frame_name == ID3_FRAME_COMMENT)
+    {
+	field = id3_frame_field (frame, 3);
+	field->type = ID3_FIELD_TYPE_STRINGFULL;
+    }
+    else
+    {
+	field = id3_frame_field (frame, 1);
+	field->type = ID3_FIELD_TYPE_STRINGLIST;
+    }
+    
+    /* Use the specified text encoding */
+    id3_field_settextencoding(field, encoding);
+
+    if (frame_name == ID3_FRAME_GENRE)
+    {
+	id3_ucs4_t *tmp_ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
+	int index = id3_genre_number (tmp_ucs4);
+	if (index != -1)
+	{
+	    /* valid genre -- simply store the genre number */
+	    gchar *tmp = g_strdup_printf("%d", index);
+	    ucs4 = id3_latin1_ucs4duplicate (tmp);
+	    g_free (tmp);
+	}
+	else
+	{
+	    /* oups -- not a valid genre -- save the entire genre string */
+	    if (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1)
+	    {
+		/* we read 'ISO_8859_1' to stand for 'any locale
+		   charset' -- most programs seem to work that way */
+		id3_latin1_t *raw = charset_from_utf8 (data);
+		ucs4 = id3_latin1_ucs4duplicate (raw);
+		g_free (raw);
+	    }
+	    else
+	    {
+		/* Yeah! We use unicode encoding and won't have to
+		   worry about charsets */
+		ucs4 = tmp_ucs4;
+		tmp_ucs4 = NULL;
+	    }
+	}
+	g_free (tmp_ucs4);
+    }
+    else
+    {
+	if (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1)
+	{
+	    /* we read 'ISO_8859_1' to stand for 'any locale charset'
+	       -- most programs seem to work that way */
+	    id3_latin1_t *raw = charset_from_utf8 (data);
+	    ucs4 = id3_latin1_ucs4duplicate (raw);
+	    g_free (raw);
+	}
+	else
+	{
+	    /* Yeah! We use unicode encoding and won't have to
+	       worry about charsets */
+	    ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
+	}
+    }
+
+    if (frame_name == ID3_FRAME_COMMENT)
+        res = id3_field_setfullstring (field, ucs4);
+    else 
+        res = id3_field_setstrings (field, 1, &ucs4);
+
+    g_free (ucs4);
+
+    if (res != 0)
+	g_print(_("Error setting ID3 field: %s\n"), frame_name);
 }
 
 
-/*
- * Read id3v1.x / id3v2 tag and load data into the File_Tag structure using id3lib functions.
- * Returns TRUE on success, else FALSE.
- * If a tag entry exists (ex: title), we allocate memory, else value stays to NULL
+/***
+ * Reads id3v1.x / id3v2 tag and load data into the Id3tag structure.
+ * If a tag entry exists (ex: title), we allocate memory, else value 
+ * stays to NULL
+ * @returns: TRUE on success, else FALSE.
  */
-gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
+gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 {
-    ID3Tag *id3_tag = NULL;    /* Tag defined by the id3lib */
-    gchar  *string, *string1, *string2;
+    struct id3_file *id3file;
+    struct id3_tag *id3tag;
+    gchar* string;
+    gchar* string2;
 
-
-    if (!filename || !FileTag)
+    if (!filename || !tag)
         return FALSE;
 
-    memset (FileTag, 0, sizeof (File_Tag));
+    memset (tag, 0, sizeof (File_Tag));
 
-    /* Get data from tag */
-    if ( (id3_tag = ID3Tag_New()) )
+    if (!(id3file = id3_file_open (filename, ID3_FILE_MODE_READONLY)))
     {
-        ID3Frame *id3_frame;
-        ID3Field *id3_field;
-        size_t offset;
-        luint num_chars;
-        guint field_num = 0; /* First field */
-
-        /* Link the file to the tag */
-        offset = ID3Tag_Link_1(id3_tag,filename);
-
-        /* Protection against invalid ID3v2 tag, for example ID3v2.4 in
-         * id3lib-3.8.0 : if offset is not nul and the tag contains no
-         * frame, may be an invalid id3v2 tag. So we read the id3v1 tag */
-#       if ( (ID3LIB_MAJOR >= 3) && (ID3LIB_MINOR >= 8)  )
-            if ( offset!=0 && ID3Tag_NumFrames(id3_tag)==0 )
-                offset = ID3Tag_LinkWithFlags(id3_tag,filename,ID3TT_ID3V1);
-#       endif
-
-        string = g_malloc(ID3V2_MAX_STRING_LEN+1);
-
-
-        /*********
-         * Title *
-         *********/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TITLE)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-	      /* FIX ME : 'ID3FrameInfo_NumFields' would be better...
-                 Note: if 'num_chars' is equal to 0, then the field is empty or corrupted! */
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-		    FileTag->title = charset_to_utf8(string);
-                }
-            }
-        }
-
-
-        /**********
-         * Artist *
-         **********/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_LEADARTIST)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-		    FileTag->artist = charset_to_utf8(string);
-                }
-            }
-        }
-
-
-        /*********
-         * Album *
-         *********/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-		    FileTag->album = charset_to_utf8(string);
-                }
-            }
-        }
-
-
-        /***********
-         * SONGLEN *
-         ***********/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_SONGLEN)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-		  FileTag->songlen = (guint32)strtoul (string, NULL, 10);
-                }
-            }
-        }
-
-
-        /********
-         * Year *
-         ********/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_YEAR)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-                    gchar *tmp_str;
-
-                    Strip_String(string);
-
-                    /* Fix for id3lib 3.7.x: if the id3v1.x tag was filled with spaces
-                     * instead of zeroes, then the year field contains garbages! */
-                    tmp_str = string;
-                    while (isdigit(*tmp_str)) tmp_str++;
-                    *tmp_str = 0;
-                    /* End of fix for id3lib 3.7.x */
-
-		    string1 = charset_to_utf8(string);
-		    FileTag->year = g_strdup(string1);
-		    g_free(string1);
-                }
-            }
-        }
-
-        /************
-         * Composer *
-         ************/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMPOSER)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-		    FileTag->composer = charset_to_utf8(string);
-                }
-            }
-        }
-
-
-        /*************************
-         * Track and Total Track *
-         *************************/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TRACKNUM)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-		    string1 = charset_to_utf8(string);
-		    string2 = strchr(string1,'/');
-		    if (NUMBER_TRACK_FORMATED)
-		    {
-			if (string2)
-			{
-			    FileTag->track_total = g_strdup_printf("%.2d",atoi(string2+1)); /* Just to have numbers like this : '01', '05', '12', ...*/
-			    *string2 = '\0';
-			}
-			FileTag->trackstring = g_strdup_printf("%.2d",atoi(string1)); /* Just to have numbers like this : '01', '05', '12', ... */
-		    }else
-		    {
-			if (string2)
-			{
-			    FileTag->track_total = g_strdup(string2+1);
-			    *string2 = '\0';
-			}
-			FileTag->trackstring = g_strdup(string1);
-		    }
-		    g_free(string1);
-		}
-            }
-        }
-
-
-        /*********
-         * Genre *
-         *********/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_CONTENTTYPE)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-                /*
-                 * We manipulate only the name of the genre
-                 */
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-                    gchar *tmp;
-
-                    /*Strip_String(string);*/
-
-                    if ( (string[0]=='(') && (tmp=strchr(string,')')) && (strlen((tmp+1))>0) )
-                    {
-    
-                        /* Convert a genre written as '(3)Dance' into 'Dance' */
-			string1 = charset_to_utf8(tmp+1);
-			FileTag->genre = g_strdup(string1);
-			g_free(string1);
-
-                    }else if ( (string[0]=='(') && (tmp=strchr(string,')')) )
-                    {
-    
-                        /* Convert a genre written as '(3)' into 'Dance' */
-                        *tmp = 0;
-			FileTag->genre = charset_to_utf8(Id3tag_Genre_To_String(atoi(string+1)));
-
-                    }else if ( strspn(string, "0123456789") == strlen(string) )
-		    {
-                        /* Convert a genre written as '3' into 'Dance' */
-			FileTag->genre = charset_to_utf8(Id3tag_Genre_To_String(atoi(string)));
-                    }else
-                    {
-
-                        /* Genre is already written as 'Dance' */
-			FileTag->genre = charset_to_utf8(string);
-                    }
-                }
-            }
-        }
-
-
-
-        /***********
-         * Comment *
-         ***********/
-        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMMENT)) )
-        {
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
-            {
-                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
-                     && string != NULL )
-                {
-		    FileTag->comment = charset_to_utf8(string);
-                }
-            }
-            /*if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_DESCRIPTION)) )
-            {
-                gchar *comment1 = g_malloc0(MAX_STRING_LEN+1);
-                num_chars = ID3Field_GetASCII(id3_field,comment1,MAX_STRING_LEN,Item_Num);
-                g_free(comment1);
-            }
-            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_LANGUAGE)) )
-            {
-                gchar *comment2 = g_malloc0(MAX_STRING_LEN+1);
-                num_chars = ID3Field_GetASCII(id3_field,comment2,MAX_STRING_LEN,Item_Num);
-                g_free(comment2);
-            }*/
-	}
-        g_free(string);
-
-        /* Free allocated data */
-        ID3Tag_Delete(id3_tag);
+	gchar *fbuf = charset_to_utf8 (filename);
+        g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+        return FALSE;
     }
 
+    if ((id3tag = id3_file_tag(id3file)))
+    {
+        tag->title = id3_get_string (id3tag, ID3_FRAME_TITLE);
+        tag->artist = id3_get_string (id3tag, ID3_FRAME_ARTIST);
+        tag->album = id3_get_string (id3tag, ID3_FRAME_ALBUM);
+        tag->year = id3_get_string (id3tag, ID3_FRAME_YEAR);
+        tag->composer = id3_get_string (id3tag, "TCOM");
+        tag->comment = id3_get_string (id3tag, ID3_FRAME_COMMENT);
+	tag->genre = id3_get_string (id3tag, ID3_FRAME_GENRE);
+
+	string = id3_get_string (id3tag, "TLEN");
+	if (string) 
+	{
+            tag->songlen = (guint32) strtoul (string, 0, 10);
+	    g_free (string);
+	}
+
+	string = id3_get_string (id3tag, ID3_FRAME_TRACK);
+	if (string)
+	{
+	    string2 = strchr(string,'/');
+	    if (string2)
+	    {
+	        tag->track_total = g_strdup_printf ("%.2d", atoi (string2+1));
+	        *string2 = '\0';
+	    }
+	    tag->trackstring = g_strdup_printf ("%.2d", atoi (string));
+            g_free(string);
+	}
+    }
+
+    id3_file_close (id3file);
     return TRUE;
 }
 
-
-/*
- * Write the ID3 tags specified by @tag_id to the file. Returns TRUE
- * on success, else FALSE.
- */
-gboolean file_write_mp3_info (gchar *filename, Track *track, T_item tag_id)
+static enum id3_field_textencoding get_encoding_of (struct id3_tag *tag, const char *frame_name)
 {
-    FILE     *file;
-    ID3Tag   *id3_tag = NULL;
-    ID3_Err   error_strip_id3v1  = ID3E_NoError;
-    ID3_Err   error_strip_id3v2  = ID3E_NoError;
-    ID3_Err   error_update_id3v1 = ID3E_NoError;
-    ID3_Err   error_update_id3v2 = ID3E_NoError;
-    gint error = 0;
-    gint number_of_frames;
+    struct id3_frame *frame;
+    enum id3_field_textencoding encoding = -1;
 
-    /* Test to know if we can write into the file */
-    if ( (file=fopen(filename,"r+"))==NULL )
+    frame = id3_tag_findframe (tag, frame_name, 0);
+    if (frame)
+    {
+	union id3_field *field = id3_frame_field (frame, 0);
+	if (field && (id3_field_type (field) == ID3_FIELD_TYPE_TEXTENCODING))
+	    encoding = field->number.value;
+    }
+    return encoding;
+}
+
+/* Find out which encoding is being used. If in doubt, return
+ * latin1. This code assumes that the same encoding is used in all
+ * fields.  */
+static enum id3_field_textencoding get_encoding (struct id3_tag *tag)
+{
+    enum id3_field_textencoding enc;
+
+    enc = get_encoding_of (tag, ID3_FRAME_TITLE);
+    if (enc != -1) return enc;
+    enc = get_encoding_of (tag, ID3_FRAME_ARTIST);
+    if (enc != -1) return enc;
+    enc = get_encoding_of (tag, ID3_FRAME_ALBUM);
+    if (enc != -1) return enc;
+    enc = get_encoding_of (tag, "TCOM");
+    if (enc != -1) return enc;
+    enc = get_encoding_of (tag, ID3_FRAME_COMMENT);
+    if (enc != -1) return enc;
+    enc = get_encoding_of (tag, ID3_FRAME_YEAR);
+    if (enc != -1) return enc;
+    return ID3_FIELD_TEXTENCODING_ISO_8859_1;
+}
+
+
+/**
+ * Write the ID3 tags to the file.
+ * @returns: TRUE on success, else FALSE.
+ */
+gboolean file_write_mp3_info (gchar *filename, Track *track)
+{
+    struct id3_tag* id3tag;
+    struct id3_file* id3file;
+    gint error = 0;
+
+    id3file = id3_file_open (filename, ID3_FILE_MODE_READWRITE);
+    if (!id3file)
     {
 	gchar *fbuf = charset_to_utf8 (filename);
-	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+        g_print(_("ERROR while opening file: '%s' (%s).\n"),
 		fbuf, g_strerror(errno));
 	g_free (fbuf);
-	return FALSE;
+        return FALSE;
     }
-    fclose(file);
 
-    /* We get again the tag from the file to keep also unused data (by EasyTAG), then
-     * we replace the changed data */
-    if ( (id3_tag = ID3Tag_New()) )
+    if ((id3tag = id3_file_tag(id3file)))
     {
-        ID3Frame *id3_frame;
-        ID3Field *id3_field;
-        gchar *string, *string1;
+	char *string1;
 
-        ID3Tag_Link(id3_tag,filename);
+	enum id3_field_textencoding encoding;
 
-        /*********
-         * Title *
-         *********/
-        if ((tag_id == T_ALL) || (tag_id == T_TITLE))
-	{
-	    if (track->title && g_utf8_strlen(track->title, -1)>0 )
-	    {
-		/* To avoid problem with a corrupted field, we remove
-		 * it before to creat a new one. */
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TITLE)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-		id3_frame = ID3Frame_NewID(ID3FID_TITLE);
-		ID3Tag_AttachFrame(id3_tag,id3_frame);
-		
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-		{
-		    string = charset_from_utf8(track->title);
-		    ID3Field_SetASCII(id3_field,string);
-		    g_free(string);
-		}
-	    } else
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TITLE)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-	    }
-	}
+	/* use the same coding as before... */
+	encoding = get_encoding (id3tag);
+	/* ...unless it's ISO_8859_1 and prefs say we should use
+	   unicode (i.e. ID3v2.4) */
+	if (prefs_get_id3_write_id3v24 () &&
+	    (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1))
+	    encoding = ID3_FIELD_TEXTENCODING_UTF_8;
 
-        /**********
-         * Artist *
-         **********/
-        if ((tag_id == T_ALL) || (tag_id == T_ARTIST))
-	{
-	    if (track->artist && g_utf8_strlen(track->artist, -1)>0 )
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_LEADARTIST)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-		id3_frame = ID3Frame_NewID(ID3FID_LEADARTIST);
-		ID3Tag_AttachFrame(id3_tag,id3_frame);
-		
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-		{
-		    string = charset_from_utf8(track->artist);
-		    ID3Field_SetASCII(id3_field,string);
-		    g_free(string);
-		}
-	    } else
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_LEADARTIST)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-	    }
-	}
-
-        /*********
-         * Album *
-         *********/
-        if ((tag_id == T_ALL) || (tag_id == T_ALBUM))
-	{
-	    if (track->album && g_utf8_strlen(track->album, -1)>0 )
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-		id3_frame = ID3Frame_NewID(ID3FID_ALBUM);
-		ID3Tag_AttachFrame(id3_tag,id3_frame);
-		
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-		{
-		    string = charset_from_utf8(track->album);
-		    ID3Field_SetASCII(id3_field,string);
-		    g_free(string);
-		}
-	    } else
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-	    }
-	}
-
-        /************
-         * Composer *
-         ************/
-        if ((tag_id == T_ALL) || (tag_id == T_COMPOSER))
-	{
-	    if (track->composer && g_utf8_strlen(track->composer, -1)>0 )
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMPOSER)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-		id3_frame = ID3Frame_NewID(ID3FID_COMPOSER);
-		ID3Tag_AttachFrame(id3_tag,id3_frame);
-		
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-		{
-		    string = charset_from_utf8(track->composer);
-		    ID3Field_SetASCII(id3_field,string);
-		    g_free(string);
-		}
-	    } else
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMPOSER)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-	    }
-	}
-
-        /*************************
-         * Track and Total Track *
-         *************************/
-        if ((tag_id == T_ALL) || (tag_id == T_TRACK_NR))
-	{
-	    if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TRACKNUM)) )
-		ID3Tag_RemoveFrame(id3_tag,id3_frame);
-	    id3_frame = ID3Frame_NewID(ID3FID_TRACKNUM);
-	    ID3Tag_AttachFrame(id3_tag,id3_frame);
-		
-	    if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-	    {
-		if (track->cds)
-		    string1 = g_strdup_printf ("%d/%d",
-					       track->cd_nr, track->cds);
-		else
-		    string1 = g_strdup_printf ("%d", track->cd_nr);
-
-		string = charset_from_utf8(string1);
-		ID3Field_SetASCII(id3_field,string);
-		g_free(string);
-		g_free(string1);
-	    }
-	}
-
-        /*********
-         * Genre *
-         *********/
-        if ((tag_id == T_ALL) || (tag_id == T_GENRE))
-	{
-	    if (track->genre && g_utf8_strlen(track->genre, -1)>0 )
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_CONTENTTYPE)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-		id3_frame = ID3Frame_NewID(ID3FID_CONTENTTYPE);
-		ID3Tag_AttachFrame(id3_tag,id3_frame);
-		
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-		{
-		    gchar *tmp_genre;
-		    
-		    string = charset_from_utf8(track->genre);
-		    tmp_genre = g_strdup_printf("(%d)%s",Id3tag_String_To_Genre(string),string);
-		    ID3Field_SetASCII(id3_field,tmp_genre);
-		    g_free(string);
-		    g_free(tmp_genre);
-		}
-		
-	    } else
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_CONTENTTYPE)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-	    }
-	}
-
-
-        /***********
-         * Comment *
-         ***********/
-        if ((tag_id == T_ALL) || (tag_id == T_COMMENT))
-	{
-	    if (track->comment && g_utf8_strlen(track->comment, -1)>0 )
-	    {
-		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMMENT)) )
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-		id3_frame = ID3Frame_NewID(ID3FID_COMMENT);
-		ID3Tag_AttachFrame(id3_tag,id3_frame);
-		
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-		{
-		    string = charset_from_utf8(track->comment);
-		    ID3Field_SetASCII(id3_field,string);
-		    g_free(string);
-		}
-		/* These 2 following fields allow synchronisation between id3v2 and id3v1 tags with id3lib */
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_DESCRIPTION)))
-		{
-		    ID3Field_SetASCII(id3_field,"ID3v1 Comment");
-		}
-		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_LANGUAGE)))
-		{
-		    ID3Field_SetASCII(id3_field,"XXX");
-		}
-	    } else
-	    {
-		while ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMMENT)) )  /* Delete all comment fields*/
-		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
-	    }
-	}
-
-        /********
-         * Year *
-         ********/
-	if ((tag_id == T_ALL) || (tag_id == T_YEAR))
-	{
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_YEAR)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            id3_frame = ID3Frame_NewID(ID3FID_YEAR);
-            ID3Tag_AttachFrame(id3_tag,id3_frame);
-
-            if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-            {
-		string = g_strdup_printf ("%d", track->year);
-		ID3Field_SetASCII(id3_field,string);
-		g_free(string);
-            }
-        }
-
-        /* Set padding when tag was changed, for faster writing */
-        ID3Tag_SetPadding(id3_tag,TRUE);
-        /* FIXME!! : How to add padding during the first writing of tag */
-
-        /*********************************
-         * Update id3v1.x and id3v2 tags *
-         *********************************/
-         /* Get the number of frames into the tag, cause if it is
-          * equal to 0, id3lib-3.7.12 doesn't update the tag */
-         number_of_frames = ID3Tag_NumFrames(id3_tag);
-
-	 /* It's better to remove the id3v1 tag before, to synchronize
-	  * it with the id3v2 tag (else id3lib doesn't do it
-	  * correctly)
-	  */
-	 error_strip_id3v1 = ID3Tag_Strip(id3_tag,ID3TT_ID3V1);
-
-	 /* ID3v1 tag */
-	 if (WRITE_ID3V1_TAG && number_of_frames!=0)
-	 {
-	     error_update_id3v1 = ID3Tag_UpdateByTagType(id3_tag,ID3TT_ID3V1);
-	     if (error_update_id3v1 != ID3E_NoError)
-	     {
-		 g_print(_("Error while updating ID3v1 tag of '%s' (%s)\n"),g_basename(filename),Id3tag_Get_Error_Message(error_update_id3v1));
-		 error++;
-	     }
-	 }else
-	 {
-	     error_strip_id3v1 = ID3Tag_Strip(id3_tag,ID3TT_ID3V1);
-	     if (error_strip_id3v1 != ID3E_NoError)
-	     {
-		 g_print(_("Error while removing ID3v1 tag of '%s' (%s)\n"),g_basename(filename),Id3tag_Get_Error_Message(error_strip_id3v1));
-		 error++;
-	     }
-	 }
-
-	 /* ID3v2 tag */
-	 if (WRITE_ID3V2_TAG && number_of_frames!=0)
-	 {
-	     error_update_id3v2 = ID3Tag_UpdateByTagType(id3_tag,ID3TT_ID3V2);
-	     if (error_update_id3v2 != ID3E_NoError)
-	     {
-		 g_print(_("Error while updating ID3v2 tag of '%s' (%s)\n"),g_basename(filename),Id3tag_Get_Error_Message(error_update_id3v2));
-		 error++;
-	     }
-	 }else
-	 {
-	     error_strip_id3v2 = ID3Tag_Strip(id3_tag,ID3TT_ID3V2);
-	     if (error_strip_id3v2 != ID3E_NoError)
-	     {
-		 g_print(_("Error while removing ID3v2 tag of '%s' (%s)\n"),g_basename(filename),Id3tag_Get_Error_Message(error_strip_id3v2));
-		 error++;
-	     }
-	 }
-            
-	 /*            if (error == 0)
-		       g_print(_("Updated tag of '%s'\n"),g_basename(filename));*/
-       
-	 /* Free allocated data */
-	 ID3Tag_Delete(id3_tag);
+	id3_set_string (id3tag, ID3_FRAME_TITLE, track->title, encoding);
+	id3_set_string (id3tag, ID3_FRAME_ARTIST, track->artist, encoding);
+	id3_set_string (id3tag, ID3_FRAME_ALBUM, track->album, encoding);
+	id3_set_string (id3tag, ID3_FRAME_GENRE, track->genre, encoding);
+	id3_set_string (id3tag, ID3_FRAME_COMMENT, track->comment, encoding);
+	id3_set_string (id3tag, "TCOM", track->composer, encoding);
+	if (track->cds)
+	    string1 = g_strdup_printf ("%d/%d",
+				       track->cd_nr, track->cds);
+	else
+	    string1 = g_strdup_printf ("%d", track->cd_nr);
+	id3_set_string (id3tag, ID3_FRAME_TRACK, string1, encoding);
+	g_free(string1);
     }
+
+    if (id3_file_update(id3file) != 0)
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+        g_print(_("ERROR while writing tag to file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+        return FALSE;
+    }
+
+    id3_file_close (id3file);
 
     if (error) return FALSE;
     else       return TRUE;
-}
-
-
-#if 0
-/*
- * Return the sub version of the ID3v2 tag, for example id3v2.2, id3v2.3
- */
-static gint Id3tag_Get_Id3v2_Version (gchar *filename)
-{
-    FILE *file;
-	guchar tmp[4];
-
-    if ( filename!=NULL && (file=fopen(filename,"r"))!=NULL )
-    {
-        fseek(file,0,SEEK_SET);
-        if (fread(tmp,1,4, file) != 4)
-            return -1;
-
-        if (tmp[0] == 'I' && tmp[1] == 'D' && tmp[2] == '3' && tmp[3] < 0xFF)
-        {
-            fclose(file);
-            return (gint)tmp[3];
-        }else
-        {
-            return -1;
-        }
-    }else
-    {
-        return -1;
-    }
-}
-#endif
-
-static gchar *Id3tag_Get_Error_Message(ID3_Err error)
-{
-    switch (error)
-    {
-        case ID3E_NoError:
-            return _("No error reported");
-        case ID3E_NoMemory:
-            return _("No available memory");
-        case ID3E_NoData:
-            return _("No data to parse");
-        case ID3E_BadData:
-            return _("Improperly formatted data");
-        case ID3E_NoBuffer:
-            return _("No buffer to write to");
-        case ID3E_SmallBuffer:
-            return _("Buffer is too small");
-        case ID3E_InvalidFrameID:
-            return _("Invalid frame ID");
-        case ID3E_FieldNotFound:
-            return _("Requested field not found");
-        case ID3E_UnknownFieldType:
-            return _("Unknown field type");
-        case ID3E_TagAlreadyAttached:
-            return _("Tag is already attached to a file");
-        case ID3E_InvalidTagVersion:
-            return _("Invalid tag version");
-        case ID3E_NoFile:
-            return _("No file to parse");
-        case ID3E_ReadOnly:
-            return _("Attempting to write to a read-only file");
-        case ID3E_zlibError:
-            return _("Error in compression/uncompression");
-        default:
-            return _("Unknown error message!");
-    }
-    
-}
-
-
-
-/*
- * Returns the corresponding genre value of the input string (for ID3v1.x),
- * else returns 0xFF(unknown genre, but not invalid).
- */
-static guchar Id3tag_String_To_Genre (gchar *genre)
-{
-    gint i;
-
-    for (i=0; i<GENRE_MAX; i++)
-        if (strcasecmp(genre,id3_genres[i])==0)
-            return (guchar)i;
-    return (guchar)0xFF;
-}
-
-
-/*
- * Returns the name of a genre code if found
- * Three states for genre code :
- *    - defined (0 to GENRE_MAX)
- *    - undefined/unknown (GENRE_MAX+1 to ID3_INVALID_GENRE-1)
- *    - invalid (>ID3_INVALID_GENRE)
- */
-static gchar *Id3tag_Genre_To_String (unsigned char genre_code)
-{
-    if (genre_code>=ID3_INVALID_GENRE)    /* empty */
-        return "";
-    else if (genre_code>GENRE_MAX)        /* unknown tag */
-        return "Unknown";
-    else                                  /* known tag */
-        return id3_genres[genre_code];
-}
-
-
-
-/*
- * As the ID3Tag_Link function of id3lib-3.8.0pre2 returns the ID3v1 tags
- * when a file has both ID3v1 and ID3v2 tags, we first try to explicitely
- * get the ID3v2 tags with ID3Tag_LinkWithFlags and, if we cannot get them,
- * fall back to the ID3v1 tags.
- * (Written by Holger Schemel).
- */
-static ID3_C_EXPORT size_t ID3Tag_Link_1 (ID3Tag *id3tag, const char *filename)
-{
-    size_t offset;
-
-#   if ( (ID3LIB_MAJOR >= 3) && (ID3LIB_MINOR >= 8) && (ID3LIB_PATCH >= 1) ) // Same test used in Id3tag_Read_File_Tag to use ID3Tag_HasTagType
-        /* No problem of priority, so we link the file with the both tags
-         * to manage => ID3Tag_HasTagType works correctly */
-        offset = ID3Tag_LinkWithFlags(id3tag,filename,ID3TT_ID3V1 | ID3TT_ID3V2);
-#   elif ( (ID3LIB_MAJOR >= 3) && (ID3LIB_MINOR >= 8) )
-        /* Version 3.8.0pre2 gives priority to tag id3v1 instead of id3v2, so we
-         * try to fix it by linking the file with the id3v2 tag first. This bug 
-         * was fixed in the final version of 3.8.0 but we can't know it... */
-        /* First, try to get the ID3v2 tags */
-        offset = ID3Tag_LinkWithFlags(id3tag,filename,ID3TT_ID3V2);
-        if (offset == 0)
-        {
-            /* No ID3v2 tags available => try to get the ID3v1 tags */
-            offset = ID3Tag_LinkWithFlags(id3tag,filename,ID3TT_ID3V1);
-        }
-#   else
-        /* Function 'ID3Tag_LinkWithFlags' is not defined up to id3lib-.3.7.13 */
-        offset = ID3Tag_Link(id3tag,filename);
-#   endif
-    //g_print("ID3 TAG SIZE: %d\t%s\n",offset,g_basename(filename));
-    return offset;
-}
-
-
-/*
- * As the ID3Field_GetASCII function differs with the version of id3lib, we must redefine it.
- */
-static ID3_C_EXPORT size_t ID3Field_GetASCII_1(const ID3Field *field, char *buffer, size_t maxChars, size_t itemNum)
-{
-
-    /* Defined by id3lib:   ID3LIB_MAJOR_VERSION, ID3LIB_MINOR_VERSION, ID3LIB_PATCH_VERSION
-     * Defined by autoconf: ID3LIB_MAJOR,         ID3LIB_MINOR,         ID3LIB_PATCH
-     *
-     * <= 3.7.12 : first item num is 1 for ID3Field_GetASCII
-     *  = 3.7.13 : first item num is 0 for ID3Field_GetASCII
-     * >= 3.8.0  : doesn't need item num for ID3Field_GetASCII
-     */
-  /*g_print("id3lib version: %d.%d.%d\n",ID3LIB_MAJOR,ID3LIB_MINOR,ID3LIB_PATCH);*/
-#    if (ID3LIB_MAJOR >= 3)
-         /* (>= 3.x.x) */
-#        if (ID3LIB_MINOR <= 7)
-             /* (3.0.0 to 3.7.x) */
-#            if (ID3LIB_PATCH >= 13)
-                 /* (>= 3.7.13) */
-                 return ID3Field_GetASCII(field,buffer,maxChars,itemNum);
-#            else
-                 return ID3Field_GetASCII(field,buffer,maxChars,itemNum+1);
-#            endif
-#        else
-		 /* (>= to 3.8.0) */
-		 /*return ID3Field_GetASCII(field,buffer,maxChars); */
-             return ID3Field_GetASCIIItem(field,buffer,maxChars,itemNum);
-#        endif
-#    else
-	     /* Not tested (< 3.x.x) */
-         return ID3Field_GetASCII(field,buffer,maxChars,itemNum+1);
-#    endif
 }
 
 
@@ -1959,11 +1297,11 @@ Track *file_get_mp3_info (gchar *name)
     Track *track = NULL;
     File_Tag filetag;
 
-    if (Id3tag_Read_File_Tag (name, &filetag) == TRUE)
+    track = g_malloc0 (sizeof (Track));
+
+    if (prefs_get_readtags() && (id3_tag_read (name, &filetag) == TRUE))
     {
 	struct stat si;
-
-	track = g_malloc0 (sizeof (Track));
 
 	/* Set modification date to modification date of file */
 	if (stat (name, &si) == 0)
@@ -2031,32 +1369,30 @@ Track *file_get_mp3_info (gchar *name)
 	}
     }
 
-    if (track)
+    /* Get additional info (play time and bitrate */
+    mp3info *mp3info = mp3file_get_info (name);
+    if (mp3info)
     {
-	/* Get additional info (play time and bitrate */
-	mp3info *mp3info = mp3file_get_info (name);
-	if (mp3info)
-	{
-	    track->tracklen = mp3info->milliseconds;
-	    track->bitrate = (gint)(mp3info->vbr_average);
-	    g_free (mp3info);
-	}
-	/* Fall back to xmms code if tracklen is 0 */
-	if (track->tracklen == 0)
-	{
-	    track->tracklen = get_track_time (name);
-	    if (track->tracklen)
-		track->bitrate = (float)track->size*8/track->tracklen;
-	}
-
-	if (track->tracklen == 0)
-	{
-	    /* Tracks with zero play length are ignored by iPod... */
-	    gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
-			    name);
-	    free_track (track);
-	    track = NULL;
-	}
+	track->tracklen = mp3info->milliseconds;
+	track->bitrate = (gint)(mp3info->vbr_average);
+	g_free (mp3info);
     }
+    /* Fall back to xmms code if tracklen is 0 */
+    if (track->tracklen == 0)
+    {
+	track->tracklen = get_track_time (name);
+	if (track->tracklen)
+	    track->bitrate = (float)track->size*8/track->tracklen;
+    }
+
+    if (track->tracklen == 0)
+    {
+	/* Tracks with zero play length are ignored by iPod... */
+	gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
+			name);
+	free_track (track);
+	track = NULL;
+    }
+
     return track;
 }

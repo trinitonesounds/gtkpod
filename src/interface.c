@@ -1342,17 +1342,26 @@ create_prefs_window (void)
   GtkWidget *cfg_md5tracks;
   GtkWidget *table2;
   GtkWidget *cfg_show_duplicates;
+  GtkWidget *hseparator43;
   GtkWidget *cfg_update_existing;
   GtkWidget *table1;
   GtkWidget *cfg_show_updated;
   GtkWidget *cfg_show_non_updated;
+  GtkWidget *hseparator44;
   GtkWidget *label46;
   GtkWidget *table5;
   GtkWidget *cfg_show_sync_dirs;
   GtkWidget *cfg_sync_remove;
   GtkWidget *cfg_sync_remove_confirm;
   GtkWidget *label28;
-  GtkWidget *frame8;
+  GtkWidget *frame30;
+  GtkWidget *vbox55;
+  GtkWidget *readtags;
+  GtkWidget *parsetags;
+  GtkWidget *table23;
+  GtkWidget *parsetags_template;
+  GtkWidget *parsetags_overwrite;
+  GtkWidget *label152;
   GtkWidget *hbox10;
   GtkWidget *vbox17;
   GtkWidget *tag_autoset1;
@@ -1362,7 +1371,7 @@ create_prefs_window (void)
   GtkWidget *tag_autoset4;
   GtkWidget *vbox19;
   GtkWidget *tag_autoset0;
-  GtkWidget *label30;
+  GtkWidget *label151;
   GtkWidget *frame9;
   GtkWidget *vbox21;
   GtkWidget *cfg_write_extended;
@@ -1453,8 +1462,8 @@ create_prefs_window (void)
   GtkWidget *vbox22;
   GtkWidget *cfg_id3_write;
   GtkWidget *table3;
-  GtkWidget *cfg_id3_writeall;
   GtkWidget *cfg_write_charset;
+  GtkWidget *cfg_id3_write_id3v24;
   GtkWidget *cfg_multi_edit;
   GtkWidget *table7;
   GtkWidget *cfg_multi_edit_title;
@@ -1626,6 +1635,10 @@ create_prefs_window (void)
                     (GtkAttachOptions) (0), 20, 0);
   gtk_tooltips_set_tip (tooltips, cfg_show_duplicates, _("Display the list of duplicates that have been detected after adding files."), NULL);
 
+  hseparator43 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator43);
+  gtk_box_pack_start (GTK_BOX (vbox16), hseparator43, FALSE, FALSE, 0);
+
   cfg_update_existing = gtk_check_button_new_with_mnemonic (_("When adding dirs/files, update information of\n existing tracks with identical filenames"));
   gtk_widget_show (cfg_update_existing);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_existing, FALSE, FALSE, 0);
@@ -1633,7 +1646,7 @@ create_prefs_window (void)
 
   table1 = gtk_table_new (2, 1, FALSE);
   gtk_widget_show (table1);
-  gtk_box_pack_start (GTK_BOX (vbox16), table1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox16), table1, TRUE, TRUE, 0);
 
   cfg_show_updated = gtk_check_button_new_with_mnemonic (_("Display info about updated tracks"));
   gtk_widget_show (cfg_show_updated);
@@ -1649,6 +1662,10 @@ create_prefs_window (void)
                     (GtkAttachOptions) (0), 20, 0);
   gtk_tooltips_set_tip (tooltips, cfg_show_non_updated, _("Display a list of tracks that could not be updated."), NULL);
 
+  hseparator44 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator44);
+  gtk_box_pack_start (GTK_BOX (vbox16), hseparator44, FALSE, FALSE, 0);
+
   label46 = gtk_label_new (_("When syncing directories"));
   gtk_widget_show (label46);
   gtk_box_pack_start (GTK_BOX (vbox16), label46, FALSE, FALSE, 0);
@@ -1659,7 +1676,7 @@ create_prefs_window (void)
 
   table5 = gtk_table_new (3, 1, FALSE);
   gtk_widget_show (table5);
-  gtk_box_pack_start (GTK_BOX (vbox16), table5, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox16), table5, TRUE, TRUE, 0);
 
   cfg_show_sync_dirs = gtk_check_button_new_with_mnemonic (_("Confirm list of directories"));
   gtk_widget_show (cfg_show_sync_dirs);
@@ -1688,14 +1705,49 @@ create_prefs_window (void)
   gtk_label_set_justify (GTK_LABEL (label28), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label28), TRUE);
 
-  frame8 = gtk_frame_new (NULL);
-  gtk_widget_show (frame8);
-  gtk_box_pack_start (GTK_BOX (vbox14), frame8, FALSE, TRUE, 0);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame8), GTK_SHADOW_ETCHED_OUT);
+  frame30 = gtk_frame_new (NULL);
+  gtk_widget_show (frame30);
+  gtk_box_pack_start (GTK_BOX (vbox14), frame30, TRUE, TRUE, 0);
+
+  vbox55 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox55);
+  gtk_container_add (GTK_CONTAINER (frame30), vbox55);
+
+  readtags = gtk_check_button_new_with_mnemonic (_("Read tags from file contents (e.g. ID3 tags in MP3 files)"));
+  gtk_widget_show (readtags);
+  gtk_box_pack_start (GTK_BOX (vbox55), readtags, FALSE, FALSE, 0);
+
+  parsetags = gtk_check_button_new_with_mnemonic (_("Use this template to parse filename to fill in tags"));
+  gtk_widget_show (parsetags);
+  gtk_box_pack_start (GTK_BOX (vbox55), parsetags, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, parsetags, _("artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, %*: skip data. Example: %a - %A/%T %t.mp3"), NULL);
+
+  table23 = gtk_table_new (2, 1, FALSE);
+  gtk_widget_show (table23);
+  gtk_box_pack_start (GTK_BOX (vbox55), table23, TRUE, TRUE, 0);
+
+  parsetags_template = gtk_entry_new ();
+  gtk_widget_show (parsetags_template);
+  gtk_table_attach (GTK_TABLE (table23), parsetags_template, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+
+  parsetags_overwrite = gtk_check_button_new_with_mnemonic (_("Overwrite tags that are already set."));
+  gtk_widget_show (parsetags_overwrite);
+  gtk_table_attach (GTK_TABLE (table23), parsetags_overwrite, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+
+  label152 = gtk_label_new (_("As a last resort set the following tags to the filaneme if they are (still) empty:"));
+  gtk_widget_show (label152);
+  gtk_box_pack_start (GTK_BOX (vbox55), label152, FALSE, FALSE, 4);
+  gtk_label_set_justify (GTK_LABEL (label152), GTK_JUSTIFY_LEFT);
+  gtk_label_set_line_wrap (GTK_LABEL (label152), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label152), 0, 0.5);
 
   hbox10 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox10);
-  gtk_container_add (GTK_CONTAINER (frame8), hbox10);
+  gtk_box_pack_start (GTK_BOX (vbox55), hbox10, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbox10), 5);
 
   vbox17 = gtk_vbox_new (FALSE, 0);
@@ -1730,12 +1782,10 @@ create_prefs_window (void)
   gtk_widget_show (tag_autoset0);
   gtk_box_pack_start (GTK_BOX (vbox19), tag_autoset0, FALSE, FALSE, 0);
 
-  label30 = gtk_label_new (_("Automatically Set Empty ID3-Tags To Filename?"));
-  gtk_widget_show (label30);
-  gtk_frame_set_label_widget (GTK_FRAME (frame8), label30);
-  GTK_WIDGET_SET_FLAGS (label30, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label30), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (label30), TRUE);
+  label151 = gtk_label_new (_("Tag Reading"));
+  gtk_widget_show (label151);
+  gtk_frame_set_label_widget (GTK_FRAME (frame30), label151);
+  gtk_label_set_justify (GTK_LABEL (label151), GTK_JUSTIFY_LEFT);
 
   frame9 = gtk_frame_new (NULL);
   gtk_widget_show (frame9);
@@ -2179,16 +2229,9 @@ create_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox22), cfg_id3_write, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_id3_write, _("The tags are written to the files on your harddrive and on the ipod (if available)."), NULL);
 
-  table3 = gtk_table_new (2, 1, FALSE);
+  table3 = gtk_table_new (3, 1, FALSE);
   gtk_widget_show (table3);
   gtk_box_pack_start (GTK_BOX (vbox22), table3, FALSE, FALSE, 0);
-
-  cfg_id3_writeall = gtk_check_button_new_with_mnemonic (_("Update all tags (not only changed ones)"));
-  gtk_widget_show (cfg_id3_writeall);
-  gtk_table_attach (GTK_TABLE (table3), cfg_id3_writeall, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 20, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_id3_writeall, _("Normally only the tag you changed is written to disk."), NULL);
 
   cfg_write_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (on the 'Import' page)\n when writing tags"));
   gtk_widget_show (cfg_write_charset);
@@ -2196,6 +2239,13 @@ create_prefs_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 20, 0);
   gtk_tooltips_set_tip (tooltips, cfg_write_charset, _("Normally the charset specified when first importing the track will be used to write the tags. If you have chosen a wrong charset when first importing a track, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see 'Writing of the iTunesDB' on the 'Input/Output' page) and tracks imported before V0.51 will have no charset stored -- the charset specified on the 'Input/Output' page will be used."), NULL);
+
+  cfg_id3_write_id3v24 = gtk_check_button_new_with_mnemonic (_("Always write ID3v2.4 tags (only applies to MP3)"));
+  gtk_widget_show (cfg_id3_write_id3v24);
+  gtk_table_attach (GTK_TABLE (table3), cfg_id3_write_id3v24, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_id3_write_id3v24, _("This is the way to go, but maybe not all programs support it yet. ID3v2.4 uses unicode to store the tags, so you won't have to worry about charsets any more. gtkpod will use UTF8 encoding as this will not increase the size of pure ASCII tags. ID3v2.2/4 tags will also be written if they are already present in the file to write to."), NULL);
 
   cfg_multi_edit = gtk_check_button_new_with_mnemonic (_("Use 'Multi-Edit' for track selections"));
   gtk_widget_show (cfg_multi_edit);
@@ -2459,6 +2509,18 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_sync_remove_confirm, "toggled",
                     G_CALLBACK (on_cfg_sync_remove_confirm_toggled),
                     NULL);
+  g_signal_connect ((gpointer) readtags, "toggled",
+                    G_CALLBACK (on_readtags_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) parsetags, "toggled",
+                    G_CALLBACK (on_parsetags_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) parsetags_template, "changed",
+                    G_CALLBACK (on_parsetags_template_changed),
+                    NULL);
+  g_signal_connect ((gpointer) parsetags_overwrite, "toggled",
+                    G_CALLBACK (on_parsetags_overwrite_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_write_extended, "toggled",
                     G_CALLBACK (on_cfg_write_extended_info_toggled),
                     NULL);
@@ -2507,11 +2569,11 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_id3_write, "toggled",
                     G_CALLBACK (on_cfg_id3_write_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_id3_writeall, "toggled",
-                    G_CALLBACK (on_cfg_id3_writeall_toggled),
-                    NULL);
   g_signal_connect ((gpointer) cfg_write_charset, "toggled",
                     G_CALLBACK (on_cfg_write_charset_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_id3_write_id3v24, "toggled",
+                    G_CALLBACK (on_cfg_write_id3v24_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_multi_edit, "toggled",
                     G_CALLBACK (on_cfg_multi_edit_toggled),
@@ -2587,17 +2649,26 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5tracks, "cfg_md5tracks");
   GLADE_HOOKUP_OBJECT (prefs_window, table2, "table2");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_duplicates, "cfg_show_duplicates");
+  GLADE_HOOKUP_OBJECT (prefs_window, hseparator43, "hseparator43");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_update_existing, "cfg_update_existing");
   GLADE_HOOKUP_OBJECT (prefs_window, table1, "table1");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_updated, "cfg_show_updated");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_non_updated, "cfg_show_non_updated");
+  GLADE_HOOKUP_OBJECT (prefs_window, hseparator44, "hseparator44");
   GLADE_HOOKUP_OBJECT (prefs_window, label46, "label46");
   GLADE_HOOKUP_OBJECT (prefs_window, table5, "table5");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_sync_dirs, "cfg_show_sync_dirs");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_sync_remove, "cfg_sync_remove");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_sync_remove_confirm, "cfg_sync_remove_confirm");
   GLADE_HOOKUP_OBJECT (prefs_window, label28, "label28");
-  GLADE_HOOKUP_OBJECT (prefs_window, frame8, "frame8");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame30, "frame30");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox55, "vbox55");
+  GLADE_HOOKUP_OBJECT (prefs_window, readtags, "readtags");
+  GLADE_HOOKUP_OBJECT (prefs_window, parsetags, "parsetags");
+  GLADE_HOOKUP_OBJECT (prefs_window, table23, "table23");
+  GLADE_HOOKUP_OBJECT (prefs_window, parsetags_template, "parsetags_template");
+  GLADE_HOOKUP_OBJECT (prefs_window, parsetags_overwrite, "parsetags_overwrite");
+  GLADE_HOOKUP_OBJECT (prefs_window, label152, "label152");
   GLADE_HOOKUP_OBJECT (prefs_window, hbox10, "hbox10");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox17, "vbox17");
   GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset1, "tag_autoset1");
@@ -2607,7 +2678,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset4, "tag_autoset4");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox19, "vbox19");
   GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset0, "tag_autoset0");
-  GLADE_HOOKUP_OBJECT (prefs_window, label30, "label30");
+  GLADE_HOOKUP_OBJECT (prefs_window, label151, "label151");
   GLADE_HOOKUP_OBJECT (prefs_window, frame9, "frame9");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox21, "vbox21");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_extended, "cfg_write_extended");
@@ -2696,8 +2767,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, vbox22, "vbox22");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_write, "cfg_id3_write");
   GLADE_HOOKUP_OBJECT (prefs_window, table3, "table3");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_writeall, "cfg_id3_writeall");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_charset, "cfg_write_charset");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_write_id3v24, "cfg_id3_write_id3v24");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_multi_edit, "cfg_multi_edit");
   GLADE_HOOKUP_OBJECT (prefs_window, table7, "table7");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_multi_edit_title, "cfg_multi_edit_title");

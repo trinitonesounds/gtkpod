@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 13:05:16 jcs>
+/* Time-stamp: <2004-01-17 17:21:43 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -47,7 +47,7 @@ static struct sortcfg *origsortcfg = NULL;
 static GtkWidget *autoselect_widget[SORT_TAB_MAX];
 
 static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
-static void prefs_window_set_tag_autoset (gint category, gboolean autoset);
+static void prefs_window_set_autosettags (gint category, gboolean autoset);
 static void prefs_window_set_col_visible (gint column, gboolean visible);
 
 static void on_cfg_st_autoselect_toggled (GtkToggleButton *togglebutton,
@@ -58,10 +58,10 @@ static void on_cfg_st_autoselect_toggled (GtkToggleButton *togglebutton,
 	gtk_toggle_button_get_active(togglebutton));
 }
 
-static void on_cfg_tag_autoset_toggled (GtkToggleButton *togglebutton,
+static void on_cfg_autosettags_toggled (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    prefs_window_set_tag_autoset (
+    prefs_window_set_autosettags (
 	(guint32)user_data,
 	gtk_toggle_button_get_active(togglebutton));
 }
@@ -315,10 +315,10 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->id3_write);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_id3_writeall")))
+	if((w = lookup_widget(prefs_window, "cfg_id3_write_id3v24")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpcfg->id3_writeall);
+					 tmpcfg->id3_write_id3v24);
 	    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_write_charset")))
@@ -394,16 +394,44 @@ prefs_window_create(void)
 	    if((w = lookup_widget(prefs_window,  buf)))
 	    {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					     tmpcfg->tag_autoset[i]);
+					     tmpcfg->autosettags[i]);
 		/* glade makes a "GTK_OBJECT (i)" which segfaults
 		   because "i" is not a GTK object. So we have to set up
 		   the signal handlers ourselves */
 		g_signal_connect ((gpointer)w,
 				  "toggled",
-				  G_CALLBACK (on_cfg_tag_autoset_toggled),
+				  G_CALLBACK (on_cfg_autosettags_toggled),
 				  (gpointer)i);
 	    }
 	    g_free (buf);
+	}
+	if((w = lookup_widget(prefs_window, "readtags")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->readtags);
+	}
+	if((w = lookup_widget(prefs_window, "parsetags")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->parsetags);
+	}
+	if((w = lookup_widget(prefs_window, "parsetags_overwrite")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->parsetags_overwrite);
+	    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
+	}
+	if((w = lookup_widget(prefs_window, "parsetags_template")))
+	{
+	    if (tmpcfg->parsetags_template)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->parsetags_template);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
 	}
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{
@@ -487,7 +515,7 @@ prefs_window_set(void)
 	 * catch the reorder signal) */
 	tm_store_col_order ();
 	prefs_set_id3_write(tmpcfg->id3_write);
-	prefs_set_id3_writeall(tmpcfg->id3_writeall);
+	prefs_set_id3_write_id3v24(tmpcfg->id3_write_id3v24);
 	prefs_set_mount_point(tmpcfg->ipod_mount);
 	prefs_set_play_now_path(tmpcfg->play_now_path);
 	prefs_set_play_enqueue_path(tmpcfg->play_enqueue_path);
@@ -500,8 +528,12 @@ prefs_window_set(void)
 	    prefs_set_st_category (i, tmpcfg->st[i].category);
 	}
 	for (i=0; i<TM_NUM_TAGS_PREFS; ++i) {
-	    prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
+	    prefs_set_autosettags (i, tmpcfg->autosettags[i]);
 	}
+	prefs_set_readtags(tmpcfg->readtags);
+	prefs_set_parsetags(tmpcfg->parsetags);
+	prefs_set_parsetags_overwrite(tmpcfg->parsetags_overwrite);
+	prefs_set_parsetags_template(tmpcfg->parsetags_template);
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{
 	    prefs_set_col_visible (i, tmpcfg->col_visible[i]);
@@ -736,7 +768,7 @@ prefs_window_set_id3_write(gboolean val)
     GtkWidget *w;
 
     tmpcfg->id3_write = val;
-    if((w = lookup_widget(prefs_window, "cfg_id3_writeall")))
+    if((w = lookup_widget(prefs_window, "cfg_id3_write_id3v24")))
 	gtk_widget_set_sensitive (w, val);
     if((w = lookup_widget(prefs_window, "cfg_write_charset")))
 	gtk_widget_set_sensitive (w, val);
@@ -833,10 +865,41 @@ void prefs_window_set_mpl_autoselect (gboolean autoselect)
     tmpcfg->mpl_autoselect = autoselect;
 }
 
-void prefs_window_set_tag_autoset (gint category, gboolean autoset)
+void prefs_window_set_autosettags (gint category, gboolean autoset)
 {
     if (category < TM_NUM_TAGS_PREFS)
-	tmpcfg->tag_autoset[category] = autoset;
+	tmpcfg->autosettags[category] = autoset;
+}
+
+void
+prefs_window_set_readtags(gboolean val)
+{
+    tmpcfg->readtags = val;
+}
+
+void
+prefs_window_set_parsetags(gboolean val)
+{
+    GtkWidget *w;
+
+    tmpcfg->parsetags = val;
+    if((w = lookup_widget(prefs_window, "parsetags_overwrite")))
+	gtk_widget_set_sensitive (w, val);
+    if((w = lookup_widget(prefs_window, "parsetags_template")))
+	gtk_widget_set_sensitive (w, val);
+}
+
+void
+prefs_window_set_parsetags_overwrite(gboolean val)
+{
+    tmpcfg->parsetags_overwrite = val;
+}
+
+void
+prefs_window_set_parsetags_template(const gchar *val)
+{
+    g_free (tmpcfg->parsetags_template);
+    tmpcfg->parsetags_template = g_strdup(val);
 }
 
 void prefs_window_set_col_visible (gint column, gboolean visible)
@@ -845,9 +908,9 @@ void prefs_window_set_col_visible (gint column, gboolean visible)
 	tmpcfg->col_visible[column] = visible;
 }
 
-void prefs_window_set_id3_writeall (gboolean val)
+void prefs_window_set_id3_write_id3v24 (gboolean val)
 {
-    tmpcfg->id3_writeall = val;
+    tmpcfg->id3_write_id3v24 = val;
 }
 
 void prefs_window_set_show_duplicates (gboolean val)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 12:37:12 jcs>
+/* Time-stamp: <2004-01-12 17:27:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1741,12 +1741,12 @@ st_cell_edited (GtkCellRendererText *renderer,
 	      /* If prefs say to write changes to file, do so */
 	      if (prefs_get_id3_write ())
 	      {
-		  T_item tag_id;
+		  /* T_item tag_id;*/
 		  /* should we update all ID3 tags or just the one
-		     changed? */
-		  if (prefs_get_id3_writeall ()) tag_id = T_ALL;
-		  else		                 tag_id = t_item;
-		  write_tags_to_file (track, tag_id);
+		     changed? -- obsoleted in 0.71 */
+/*		  if (prefs_get_id3_writeall ()) tag_id = T_ALL;
+		  else		                 tag_id = t_item;*/
+		  write_tags_to_file (track);
 		  while (widgets_blocked && gtk_events_pending ())
 		      gtk_main_iteration ();
 	      }

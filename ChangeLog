@@ -1,3 +1,16 @@
+gtkpod V0.71-CVS-libid3tag
+        NEW FEATURE: tags can now be set from the filename using a
+	template like "%a - %A/%T %t.mp3".
+
+	IMPROVEMENT: read and write ID3v2.4 tags. This has been achieved
+	by migrating to the id3tag library. Using ID3v2.4 tags with
+	unicode encoding takes away the need to worry about which encoding
+	is used for the tags. Old "broken"-style locale charset encodings
+	in tags are still supported, of course.
+
+	BUGFIX: configure script was broken -- even though mp4 support was
+	configured in, gtkpod was built without :-(
+
 gtkpod V0.70
 	NEW FEATURE: import of AAC files (.m4a) supported, provided the
 	mp4v2 library from the mpeg4ip project

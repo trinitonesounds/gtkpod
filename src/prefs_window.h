@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 13:05:17 jcs>
+/* Time-stamp: <2004-01-17 17:19:06 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -39,11 +39,15 @@ void prefs_window_apply (void);
 void prefs_window_cancel (void);
 void prefs_window_create (void);
 void prefs_window_delete (void);
+void prefs_window_set_readtags (gboolean val);
+void prefs_window_set_parsetags (gboolean val);
+void prefs_window_set_parsetags_overwrite (gboolean val);
+void prefs_window_set_parsetags_template (const gchar *mp);
 void prefs_window_set_md5tracks (gboolean val);
 void prefs_window_set_update_existing (gboolean val);
 void prefs_window_set_block_display (gboolean val);
 void prefs_window_set_id3_write (gboolean val);
-void prefs_window_set_id3_writeall (gboolean val);
+void prefs_window_set_id3_write_id3v24 (gboolean val);
 void prefs_window_set_mount_point (const gchar *mp);
 void prefs_window_set_play_now_path (const gchar *path);
 void prefs_window_set_play_enqueue_path (const gchar *path);

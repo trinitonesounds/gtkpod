@@ -128,7 +128,6 @@ track_get_export_filename (Track *track)
 		else if (track->tracks < 1000)
 		    sprintf (tmp, "%.3d", track->track_nr);
 		else {
-		    g_print ("wow, more that 1000 tracks!");
 		    sprintf (tmp,"%.4d", track->track_nr);
 		}
 		break;
