@@ -35,6 +35,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <errno.h>
 #include "info.h"
 #include "math.h"
 #include "misc.h"
@@ -176,15 +177,14 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
 static gboolean nm_mp3gain_calc_gain (Track *track)
 {
     gint k,n;  /*for's counter*/
-    gint len = 0;
-    gint fdpipe[2];  /*a pipe*/
     gchar *filename=NULL; /*track's filename*/
     gchar *mp3gain_path;
     gchar *mp3gain_exec;
     const gchar *mp3gain_set;
     gchar *buf;
-    GString* gain_output;
     pid_t pid,tpid;
+    int ret = 2;
+    int status;
 
     k=0;
     n=0;
@@ -205,13 +205,10 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
     mp3gain_exec = g_path_get_basename (mp3gain_path);
 
     buf = g_malloc (BUFLEN);
-    gain_output = g_string_sized_new (BUFLEN);
 
     filename=get_track_name_on_disk_verified (track);
 
-    /*create the pipe*/
-    pipe(fdpipe);
-    /*than fork*/
+    /*fork*/
     pid=fork();
 
     /*and cast mp3gain*/
@@ -220,11 +217,6 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
     case -1: /* parent and error, now what?*/
 	break;
     case 0: /*child*/
-	close(1); /*close stdout*/
-	dup2(fdpipe[WRITE],fileno(stdout));
-	close(fdpipe[READ]);
-	close(fdpipe[WRITE]);
-        
 	/* this call may add a tag to the mp3file!! */
         execl(mp3gain_path, mp3gain_exec, 
 /*			"-q", *//* quiet */
@@ -232,17 +224,16 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
 			"-o", /* database friendly output */
 /*			">/dev/bull", */
 			filename, NULL);
-	
-	break;
+	int errsv = errno;
+        fprintf(stderr, "execl() failed: %s\n", strerror(errsv));
+	/* mp3gain (can) return 1 on success. So only values greater 1 can
+	 * designate failure. */
+	exit(2);
     default: /*parent*/
-	close(fdpipe[WRITE]);
-	tpid = waitpid (pid, NULL, 0); /*wait mp3gain termination */
-	do
-	{
-	    len = read (fdpipe[READ], buf, BUFLEN);
-	    if (len > 0) g_string_append_len (gain_output, buf, len);
-	} while (len > 0);
-	close(fdpipe[READ]);
+	tpid = waitpid (pid, &status, 0); /*wait mp3gain termination */
+	if WIFEXITED(status) ret = WEXITSTATUS(status);
+	if (ret > 1) gtkpod_warning (_("Execution of mp3gain ('%s') failed."),
+			mp3gain_set);
 	break;
     }/*end switch*/
 
@@ -251,10 +242,9 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
     g_free (mp3gain_path);
     g_free (mp3gain_exec);
     g_free (buf);
-    g_string_free (gain_output, TRUE);
 
     /*and happily return the right value*/
-    return TRUE;
+    return (ret > 1) ? FALSE : TRUE;
 }
 
 
