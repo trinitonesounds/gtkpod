@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-|  Time-stamp: <2003-06-15 23:49:57 jcs>
+|  Time-stamp: <2003-06-19 21:20:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,6 +30,7 @@
 #include <string.h>
 #include "date_parser.h"
 #include "misc.h"
+#include "itunesdb.h"
 #include "support.h"
 /* Will be set to TRUE if error occured */
     static gboolean dp_error;
@@ -225,9 +226,9 @@ void dp2_parse (TimeInfo *ti)
     {   /* no error occured -> set the information accordingly */
 	ti->valid = TRUE;
 	if (dp_int_type & INT_NO_LOWER) ti->low = 0;
-	else   	ti->low = time_host_to_mac (lower_stamp);
+	else   	ti->low = itunesdb_time_host_to_mac (lower_stamp);
 	if (dp_int_type & INT_NO_UPPER) ti->high = -1; /* -1 = 2^32-1 */
-	else    ti->high = time_host_to_mac (upper_stamp);
+	else    ti->high = itunesdb_time_host_to_mac (upper_stamp);
     }
 #if DP_DEBUG
     printf ("valid: %d, int_type: %d, low: %u, high: %u\n",

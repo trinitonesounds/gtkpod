@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 14:19:19 jcs>
+/* Time-stamp: <2003-06-20 00:12:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,6 +36,7 @@
 #include "interface.h"
 #include "callbacks.h"
 #include "date_parser.h"
+#include "itunesdb.h"
 #include <string.h>
 
 /* array with pointers to the sort tabs */
@@ -98,8 +99,6 @@ static TimeInfo *st_get_timeinfo_ptr (guint32 inst, S_item item)
 	    return &st->ti_played;
 	case S_TIME_MODIFIED:
 	    return &st->ti_modified;
-	case S_TIME_CREATED:
-	    return &st->ti_created;
 	default:
 	    fprintf (stderr, "Programming error: st_get_timeinfo_ptr: item invalid: %d\n", item);
 	}
@@ -175,9 +174,6 @@ static IntervalState st_check_time (guint32 inst, S_item item, Song *song)
 	case S_TIME_MODIFIED:
 	    gtkpod_statusbar_message (_("'Modified' condition ignored because of error."));
 	    break;
-	case S_TIME_CREATED:
-	    gtkpod_statusbar_message (_("'Imported' condition ignored because of error."));
-	    break;
 	default:
 	    break;
 	}
@@ -217,13 +213,12 @@ static gboolean sp_check_song (Song *song, guint32 inst)
     /* PLAYCOUNT */
     if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
     {
-	guint32 high = 0, low = 0;
-	checked = TRUE;
-	low = prefs_get_sp_playcount_low (inst);
+	guint32 low = prefs_get_sp_playcount_low (inst);
 	/* "-1" will translate into about 4 billion because I use
 	   guint32 instead of gint32. Since 4 billion means "no upper
 	   limit" the logic works fine */
-	high = prefs_get_sp_playcount_high (inst);
+	guint32 high = prefs_get_sp_playcount_high (inst);
+	checked = TRUE;
 	if ((low <= song->playcount) && (song->playcount <= high))
 	    cond = TRUE;
 	else
@@ -235,14 +230,6 @@ static gboolean sp_check_song (Song *song, guint32 inst)
     if (prefs_get_sp_cond (inst, S_TIME_PLAYED))
     {
 	IntervalState result = st_check_time (inst, S_TIME_PLAYED, song);
-	if (sp_or && (result == IS_INSIDE))      return TRUE;
-	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
-	if (result != IS_ERROR)                  checked = TRUE;
-    }
-    /* time created */
-    if (prefs_get_sp_cond (inst, S_TIME_CREATED))
-    {
-	IntervalState result = st_check_time (inst, S_TIME_CREATED, song);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
@@ -404,9 +391,6 @@ void sp_go (guint32 inst)
 
     /* Make sure the information typed into the entries is actually
      * being used (maybe the user 'forgot' to press enter */
-    buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_created.entry), 0, -1);
-    prefs_set_sp_entry (inst, S_TIME_CREATED, buf);
-    g_free (buf);
     buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_modified.entry), 0, -1);
     prefs_set_sp_entry (inst, S_TIME_MODIFIED, buf);
     g_free (buf);
@@ -1659,7 +1643,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	      g_free (*itemp_utf16);
 	      *itemp_utf8 = g_strdup (new_text);
 	      *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
-	      song->time_modified = time_get_mac_time ();
+	      song->time_modified = itunesdb_time_get_mac_time ();
 	      pm_song_changed (song);
 	      /* If prefs say to write changes to file, do so */
 	      if (prefs_get_id3_write ())
@@ -2065,26 +2049,6 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
 			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
-
-      /* CREATED */
-      w = lookup_widget (special, "sp_created_button");
-      g_signal_connect ((gpointer)w,
-			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((S_TIME_CREATED<<SP_SHIFT) + inst));
-      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, S_TIME_CREATED));
-      w = lookup_widget (special, "sp_created_entry");
-      st->ti_created.entry = w;
-      gtk_entry_set_text (GTK_ENTRY (w),
-			  prefs_get_sp_entry (inst, S_TIME_CREATED));
-      g_signal_connect ((gpointer)w,
-			"activate", G_CALLBACK (on_sp_entry_activate),
-			(gpointer)((S_TIME_CREATED<<SP_SHIFT) + inst));
-      g_signal_connect ((gpointer)lookup_widget (special,
-						 "sp_created_cal_button"),
-			"clicked",
-			G_CALLBACK (on_sp_cal_button_clicked),
-			(gpointer)((S_TIME_CREATED<<SP_SHIFT) + inst));
 
 
       g_signal_connect ((gpointer)lookup_widget (special, "sp_go"),

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-16 00:15:05 jcs>
+/* Time-stamp: <2003-06-19 21:18:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -763,7 +763,6 @@ S_item SM_to_S (SM_item sm)
     case SM_COLUMN_BITRATE:       return S_BITRATE;
     case SM_COLUMN_PLAYCOUNT:     return S_PLAYCOUNT;
     case SM_COLUMN_RATING:        return S_RATING;
-    case SM_COLUMN_TIME_CREATED:  return S_TIME_CREATED;
     case SM_COLUMN_TIME_PLAYED:   return S_TIME_PLAYED;
     case SM_COLUMN_TIME_MODIFIED: return S_TIME_MODIFIED;
     case SM_NUM_COLUMNS:          return -1;
@@ -1828,36 +1827,7 @@ gtkpod_space_statusbar_init(GtkWidget *w)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-guint32 time_get_mac_time (void)
-{
-    GTimeVal time;
-
-    g_get_current_time (&time);
-    return (guint32)(time.tv_sec + 2082844800);
-}
-
-
-/* convert Macintosh timestamp to host system time stamp -- modify
- * this function if necessary to port to host systems with different
- * start of Epoch */
-/* A "0" time will not be converted */
-time_t time_mac_to_host (guint32 mactime)
-{
-    if (mactime != 0)  return ((time_t)mactime) - 2082844800;
-    else               return (time_t)mactime;
-}
-
-
-/* convert host system timestamp to Macintosh time stamp -- modify
- * this function if necessary to port to host systems with different
- * start of Epoch */
-guint32 time_host_to_mac (time_t time)
-{
-    return (guint32)(time + 2082844800);
-}
-
-
-/* converts the time mac stamp @time to a string (max. length:
+/* converts the time stamp @time to a string (max. length:
  * PATH_MAX). You must g_free the return value */
 gchar *time_time_to_string (time_t time)
 {
@@ -1883,9 +1853,6 @@ time_t time_get_time (Song *song, SM_item sm_item)
 
     if (song) switch (sm_item)
     {
-    case SM_COLUMN_TIME_CREATED:
-	mactime = song->time_created;
-	break;
     case SM_COLUMN_TIME_PLAYED:
 	mactime = song->time_played;
 	break;
@@ -1896,7 +1863,7 @@ time_t time_get_time (Song *song, SM_item sm_item)
 	mactime = 0;
 	break;
     }
-    return (time_mac_to_host (mactime));
+    return (itunesdb_time_mac_to_host (mactime));
 }
 
 
@@ -1910,13 +1877,10 @@ gchar *time_field_to_string (Song *song, SM_item sm_item)
 /* get the timestamp SM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
 void time_set_time (Song *song, time_t time, SM_item sm_item)
 {
-    guint32 mactime = time_host_to_mac (time);
+    guint32 mactime = itunesdb_time_host_to_mac (time);
 
     if (song) switch (sm_item)
     {
-    case SM_COLUMN_TIME_CREATED:
-	song->time_created = mactime;
-	break;
     case SM_COLUMN_TIME_PLAYED:
 	song->time_played = mactime;
 	break;

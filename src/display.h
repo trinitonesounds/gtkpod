@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 13:46:10 jcs>
+/* Time-stamp: <2003-06-19 21:07:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -110,10 +110,9 @@ typedef struct {
   GList *sp_members;                 /* list of songs in sorttab */
   GList *sp_selected;                /* list of songs selected */
   gboolean is_go;                    /* pass new members on automatically */
-  TimeInfo ti_created,               /* Sort information for creation, */
-      ti_modified,                   /* modification and played time */
-      ti_played;
-    GtkTooltips *sp_tooltips;          /* pointer to tooltips in special st */
+  TimeInfo ti_modified, ti_played;   /* Sort information for modification
+                                        (file time stamp) and played time */
+  GtkTooltips *sp_tooltips;          /* pointer to tooltips in special st */
 } SortTab;
 
 /* "Column numbers" in sort tab model */
@@ -144,7 +143,6 @@ typedef enum  {
   SM_COLUMN_BITRATE,
   SM_COLUMN_PLAYCOUNT,
   SM_COLUMN_RATING,
-  SM_COLUMN_TIME_CREATED,
   SM_COLUMN_TIME_PLAYED,
   SM_COLUMN_TIME_MODIFIED,
   SM_NUM_COLUMNS

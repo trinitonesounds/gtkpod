@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-18 00:08:20 jcs>
+/* Time-stamp: <2003-06-19 23:57:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -74,7 +74,6 @@
      gint32  tracks;            /+ number of tracks      +/
      gint32  year;              /+ year                  +/
      gint32  bitrate;           /+ bitrate               +/
-     guint32 time_created;      /+ time of creation (Mac type)           +/
      guint32 time_played;       /+ time of last play  (Mac type)         +/
      guint32 time_modified;     /+ time of last modification  (Mac type) +/
      guint32 rating;            /+ star rating (stars * 20)              +/
@@ -142,13 +141,14 @@
 
    is provided to help you do that, however.
 
-   The following two function most likely will also come in handy:
+   The following functions most likely will also come in handy:
 
    gchar *itunesdb_concat_dir (G_CONST_RETURN gchar *dir,
                                G_CONST_RETURN gchar *file);
    gboolean itunesdb_cp (gchar *from_file, gchar *to_file);
-
-   (pseudo-intelligent path/file concat and file copy)
+   guint32 itunesdb_time_get_mac_time (void);
+   time_t itunesdb_time_mac_to_host (guint32 mactime);
+   guint32 itunesdb_time_host_to_mac (time_t time);
 
    Define "itunesdb_warning()" as you need (or simply use g_print and
    change the default g_print handler with g_set_print_handler() as is
@@ -167,8 +167,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include "support.h"
+#include <time.h>
 #include "itunesdb.h"
+#include "support.h"
 
 #ifdef IS_GTKPOD
 /* we're being linked with gtkpod */
@@ -183,6 +184,7 @@
 #define ITUNESDB_PROVIDE_UTF8
 
 #define ITUNESDB_DEBUG 0
+#define ITUNESDB_MHIT_DEBUG 0
 /* call itunesdb_parse () to read the iTunesDB  */
 /* call itunesdb_write () to write the iTunesDB */
 
@@ -277,10 +279,10 @@ static gint seek_get_n_bytes (FILE *file, gchar *data, glong seek, gint n)
 
 /* Get the 4-byte-number stored at position "seek" in "file"
    (or -1 when an error occured) */
-static gint32 get4int(FILE *file, glong seek)
+static guint32 get4int(FILE *file, glong seek)
 {
   guchar data[4];
-  gint32 n;
+  guint32 n;
 
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
   n =  ((guint32)data[3]) << 24;
@@ -385,7 +387,9 @@ static glong get_pl(FILE *file, glong seek)
 
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
   if (cmp_n_bytes (data, "mhyp", 4) == FALSE)      return -1; /* not pl */
-  pltype = get4int (file, seek+20);  /* Type of playlist (1= MPL) */
+  /* Some Playlists have added 256 to their type -- I don't know what
+     it's for, so we just ignore it for now -> & 0xff */
+  pltype = get4int (file, seek+20) & 0xff;  /* Type of playlist (1= MPL) */
   songnum = get4int (file, seek+16); /* number of songs in playlist */
   nextseek = seek + get4int (file, seek+8); /* possible begin of next PL */
   zip = get4int (file, seek+4); /* length of header */
@@ -461,7 +465,7 @@ static glong get_pl(FILE *file, glong seek)
 }
 
 
-static glong get_nod_a(FILE *file, glong seek)
+static glong get_mhit(FILE *file, glong seek)
 {
   Song *song;
   gchar data[4];
@@ -474,7 +478,7 @@ static glong get_nod_a(FILE *file, glong seek)
   struct playcount *playcount;
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "get_nod_a seek: %x\n", (int)seek);
+  fprintf(stderr, "get_mhit seek: %x\n", (int)seek);
 #endif
 
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
@@ -484,18 +488,74 @@ static glong get_nod_a(FILE *file, glong seek)
 
   song->ipod_id = get4int(file, seek+16);     /* iPod ID          */
   song->rating = get4int(file, seek+28) >> 24;/* rating           */
-  song->time_created = get4int(file, seek+32);/* creation time    */
+  song->time_modified = get4int(file, seek+32);/* modification time    */
   song->size = get4int(file, seek+36);        /* file size        */
   song->songlen = get4int(file, seek+40);     /* time             */
   song->track_nr = get4int(file, seek+44);    /* track number     */
   song->tracks = get4int(file, seek+48);      /* nr of tracks     */
   song->year = get4int(file, seek+52);        /* year             */
   song->bitrate = get4int(file, seek+56);     /* bitrate          */
-  song->time_played = get4int(file, seek+84); /* last time played */
+  song->playcount = get4int(file, seek+80);   /* playcount        */
+  song->time_played = get4int(file, seek+88); /* last time played */
   song->cd_nr = get4int(file, seek+92);       /* CD nr            */
   song->cds = get4int(file, seek+96);         /* CD nr of..       */
-  song->time_modified = get4int(file, seek+104);/* modification time */
   song->transferred = TRUE;                   /* song is on iPod! */
+
+#if ITUNESDB_MHIT_DEBUG
+time_t time_mac_to_host (guint32 mactime);
+gchar *time_time_to_string (time_t time);
+#define printf_mhit(sk, str)  printf ("%3d: %d (%s)\n", sk, get4int (file, seek+sk), str);
+#define printf_mhit_time(sk, str) { gchar *buf = time_time_to_string (itunesdb_time_mac_to_host (get4int (file, seek+sk))); printf ("%3d: %s (%s)\n", sk, buf, str); g_free (buf); }
+  {
+      printf ("\nmhit: seek=%lu\n", seek);
+      printf_mhit (  4, "header size");
+      printf_mhit (  8, "mhit size");
+      printf_mhit ( 12, "nr of mhods");
+      printf_mhit ( 16, "iPod ID");
+      printf_mhit ( 20, "?");
+      printf_mhit ( 24, "?");
+      printf (" 28: %u (type)\n", get4int (file, seek+28) & 0xffffff);
+      printf (" 28: %u (rating)\n", get4int (file, seek+28) >> 24);
+      printf_mhit ( 32, "timestamp file");
+      printf_mhit_time ( 32, "timestamp file");
+      printf_mhit ( 36, "size");
+      printf_mhit ( 40, "songlen (ms)");
+      printf_mhit ( 44, "track_nr");
+      printf_mhit ( 48, "total tracks");
+      printf_mhit ( 52, "year");
+      printf_mhit ( 56, "bitrate");
+      printf_mhit ( 60, "sample rate");
+      printf (" 60: %u (sample rate LSB)\n", get4int (file, seek+60) & 0xffff);
+      printf (" 60: %u (sample rate HSB)\n", (get4int (file, seek+60) >> 16));
+      printf_mhit ( 64, "?");
+      printf_mhit ( 68, "?");
+      printf_mhit ( 72, "?");
+      printf_mhit ( 76, "?");
+      printf_mhit ( 80, "playcount");
+      printf_mhit ( 84, "?");
+      printf_mhit ( 88, "last played");
+      printf_mhit_time ( 88, "last played");
+      printf_mhit ( 92, "CD");
+      printf_mhit ( 96, "total CDs");
+      printf_mhit (100, "?");
+      printf_mhit (104, "?");
+      printf_mhit_time (104, "?");
+      printf_mhit (108, "?");
+      printf_mhit (112, "?");
+      printf_mhit (116, "?");
+      printf_mhit (120, "?");
+      printf_mhit (124, "?");
+      printf_mhit (128, "?");
+      printf_mhit (132, "?");
+      printf_mhit (136, "?");
+      printf_mhit (140, "?");
+      printf_mhit (144, "?");
+      printf_mhit (148, "?");
+      printf_mhit (152, "?");
+  }
+#undef printf_mhit_time
+#undef printf_mhit
+#endif
 
   seek += get4int (file, seek+4);             /* 1st mhod starts here! */
   while(zip != -1)
@@ -612,7 +672,9 @@ static void init_playcounts (gchar *filename)
   {
       gchar data[4];
       guint32 header_length, entry_length, entry_num, i=0;
+      time_t tt;
 
+      localtime (&tt);  /* set the ext. variable 'timezone' (see below) */
       if (seek_get_n_bytes (plycts, data, 0, 4) != 4)  break;
       if (cmp_n_bytes (data, "mhdp", 4) == FALSE)      break;
       header_length = get4int (plycts, 4);
@@ -636,6 +698,18 @@ static void init_playcounts (gchar *filename)
 				seek+entry_length-4, 4) != 4) break;
 	  playcount->playcount = get4int (plycts, seek);
 	  playcount->time_played = get4int (plycts, seek+4);
+          /* NOTE:
+	   *
+	   * The iPod (firmware 1.3) doesn't seem to use the timezone
+	   * information correctly -- no matter what you set iPod's
+	   * timezone to it will always record in UTC -- we need to
+	   * subtract the difference between current timezone and UTC
+	   * to get a correct display. 'timezone' (initialized above)
+	   * contains the difference in seconds.
+           */
+	  if (playcount->time_played)
+	      playcount->time_played += timezone;
+
 	  /* rating only exists if the entry length is at least 0x10 */
 	  if (entry_length >= 0x10)
 	      playcount->rating = get4int (plycts, seek+12);
@@ -766,9 +840,9 @@ gboolean itunesdb_parse_file (gchar *filename)
 
       /* get every file entry */
       if (nr_songs)  while(seek != -1) {
-	  /* get_nod_a returns where it's guessing the next MHIT,
+	  /* get_mhit returns where it's guessing the next MHIT,
 	     if it fails, it returns '-1' */
-	  seek = get_nod_a(itunes, seek);
+	  seek = get_mhit (itunes, seek);
       }
     
       /* next: playlists */
@@ -954,7 +1028,7 @@ static void mk_mhit (FILE *file, Song *song)
   put_4int_cur (file, 1);
   put_4int_cur (file, 0);
   put_4int_cur (file, 257 | song->rating<<24);  /* type, rating     */
-  put_4int_cur (file, song->time_created); /* timestamp             */
+  put_4int_cur (file, song->time_modified); /* timestamp             */
   put_4int_cur (file, song->size);    /* filesize                   */
   put_4int_cur (file, song->songlen); /* length of song in ms       */
   put_4int_cur (file, song->track_nr);/* track number               */
@@ -962,13 +1036,14 @@ static void mk_mhit (FILE *file, Song *song)
   put_4int_cur (file, song->year);    /* the year                   */
   put_4int_cur (file, song->bitrate); /* bitrate                    */
   put_4int_cur (file, 0xac440000);    /* ?                          */
-  put_n0_cur (file, 5);               /* dummy space                */
+  put_n0_cur (file, 4);               /* dummy space                */
+  put_4int_cur (file, song->playcount);/* playcount                  */
+  put_4int_cur (file, 0);             /* dummy space                */
   put_4int_cur (file, song->time_played); /* last time played       */
-  put_4int_cur (file, 0);             /* ?                          */
   put_4int_cur (file, song->cd_nr);   /* CD number                  */
   put_4int_cur (file, song->cds);     /* number of CDs              */
   put_4int_cur (file, 0);             /* hardcoded space            */
-  put_4int_cur (file, song->time_modified); /* timestamp            */
+  put_4int_cur (file, itunesdb_time_get_mac_time ()); /* current timestamp */
   put_n0_cur (file, 12);              /* dummy space                */
 }  
 
@@ -1535,4 +1610,38 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
       }
     }
   return success;
+}
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                       Timestamp stuff                            *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+guint32 itunesdb_time_get_mac_time (void)
+{
+    GTimeVal time;
+
+    g_get_current_time (&time);
+    return itunesdb_time_host_to_mac (time.tv_sec);
+}
+
+
+/* convert Macintosh timestamp to host system time stamp -- modify
+ * this function if necessary to port to host systems with different
+ * start of Epoch */
+/* A "0" time will not be converted */
+time_t itunesdb_time_mac_to_host (guint32 mactime)
+{
+    if (mactime != 0)  return ((time_t)mactime) - 2082844800;
+    else               return (time_t)mactime;
+}
+
+
+/* convert host system timestamp to Macintosh time stamp -- modify
+ * this function if necessary to port to host systems with different
+ * start of Epoch */
+guint32 itunesdb_time_host_to_mac (time_t time)
+{
+    return (guint32)(time + 2082844800);
 }

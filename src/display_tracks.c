@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-16 22:15:40 jcs>
+/* Time-stamp: <2003-06-19 22:40:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -43,7 +43,7 @@
 #include "misc.h"
 #include "file.h"
 #include "context_menus.h"
-
+#include "itunesdb.h"
 
 /* pointer to the treeview for the song display */
 static GtkTreeView *song_treeview = NULL;
@@ -100,7 +100,6 @@ void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter)
 			SM_COLUMN_BITRATE, song,
 			SM_COLUMN_PLAYCOUNT, song,
 			SM_COLUMN_RATING, song,
-			SM_COLUMN_TIME_CREATED, song,
 			SM_COLUMN_TIME_PLAYED, song,
 			SM_COLUMN_TIME_MODIFIED, song,
 			-1);
@@ -343,7 +342,6 @@ sm_cell_edited (GtkCellRendererText *renderer,
            changed = TRUE;
         }
         break;
-     case SM_COLUMN_TIME_CREATED:
      case SM_COLUMN_TIME_PLAYED:
      case SM_COLUMN_TIME_MODIFIED:
         break;
@@ -353,7 +351,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
      }
      if (changed)
      {
-        song->time_modified = time_get_mac_time ();
+        song->time_modified = itunesdb_time_get_mac_time ();
         pm_song_changed (song); /* notify playlist model... */
         data_changed ();        /* indicate that data has changed */
 
@@ -460,7 +458,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   case SM_COLUMN_BITRATE:
-      snprintf (text, 20, "%dk", song->bitrate/1000);
+      snprintf (text, 20, "%dk", song->bitrate);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "xalign", 1.0, NULL);
@@ -479,7 +477,6 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "editable", TRUE,
 		    "xalign", 1.0, NULL);
       break;
-  case SM_COLUMN_TIME_CREATED:
   case SM_COLUMN_TIME_PLAYED:
   case SM_COLUMN_TIME_MODIFIED:
       buf = time_field_to_string (song, column);
@@ -726,7 +723,6 @@ gint sm_data_compare_func (GtkTreeModel *model,
       return song1->playcount - song2->playcount;
   case  SM_COLUMN_RATING:
       return song1->rating - song2->rating;
-  case SM_COLUMN_TIME_CREATED:
   case SM_COLUMN_TIME_PLAYED:
   case SM_COLUMN_TIME_MODIFIED:
       return time_get_time (song1, sm_item) - time_get_time (song2, sm_item);
@@ -854,10 +850,6 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
       break;
   case SM_COLUMN_RATING:
       text = _("Rating");
-      break;
-  case SM_COLUMN_TIME_CREATED:
-      text = _("Imported");
-      editable = FALSE;
       break;
   case SM_COLUMN_TIME_PLAYED:
       text = _("Played");

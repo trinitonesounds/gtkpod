@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 23:47:52 jcs>
+/* Time-stamp: <2003-06-19 22:40:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -491,13 +491,6 @@ void remove_duplicate (Song *oldsong, Song *song)
 		     (2 * RATING_STEP)) * RATING_STEP;
        else
 	   oldsong->rating = MAX (oldsong->rating, song->rating);
-       /* Set 'created' timestamp */
-       if (oldsong->time_created && song->time_created)
-	   oldsong->time_created = MIN (oldsong->time_created,
-					song->time_created);
-       else 
-	   oldsong->time_created = MAX (oldsong->time_created,
-					song->time_created);
        /* Set 'modified' timestamp */
        oldsong->time_modified =  MAX (oldsong->time_modified,
 				      song->time_modified);
@@ -651,8 +644,6 @@ guint32 *song_get_timestamp_ptr (Song *song, S_item s_item)
 	{
 	  case S_TIME_PLAYED:
 	    return &song->time_played;
-	  case S_TIME_CREATED:
-	    return &song->time_created;
 	  case S_TIME_MODIFIED:
 	    return &song->time_modified;
 	default:
@@ -684,10 +675,12 @@ gboolean it_add_song (Song *song)
 
     /* fix timestamp (up to V0.51 I used a dummy timestamp -- replace
        that with the current time) */
-    if (song && (song->time_created == 0x8c3abf9b))
-	song->time_created = time_get_mac_time ();
     if (song && (song->time_modified == 0x8c3abf9b))
 	song->time_modified = 0;
+
+    /* fix bitrate (up to V0.51 I used bps instead of kbps) */
+    if (song && (song->bitrate >= 10000))
+	song->bitrate /= 1000;
 
     result = add_song (song);
 

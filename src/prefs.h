@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 23:45:19 jcs>
+/* Time-stamp: <2003-06-19 21:07:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -63,8 +63,6 @@ struct cfg
     gchar *sp_played_state;   /* current "played" string */
     gboolean sp_modified;     /* consider last modified? */
     gchar *sp_modified_state; /* current "modified" string */
-    gboolean sp_created;      /* consider last created? */
-    gchar *sp_created_state;   /* current "created" string */
     gboolean sp_autodisplay;  /* display automatically? */ 
 } st[SORT_TAB_MAX];
   gboolean mpl_autoselect;/* select mpl automatically? */

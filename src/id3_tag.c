@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-19 23:03:48 jcs>
+|
 |  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
 |  compile "standalone" with the gtkpod project. 2002/11/24
 |  Changed by Jorg Schuler to also determine size of file and
@@ -101,6 +102,8 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
 
     if (!filename || !FileTag)
         return FALSE;
+
+    memset (FileTag, 0, sizeof (File_Tag));
 
     if ( (file=fopen(filename,"r"))==NULL )
     {

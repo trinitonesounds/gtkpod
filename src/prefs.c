@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 23:49:56 jcs>
+/* Time-stamp: <2003-06-19 21:18:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -178,8 +178,6 @@ struct cfg *cfg_new(void)
 	mycfg->st[i].sp_played_state = g_strdup (">4w");
 	mycfg->st[i].sp_modified = FALSE;
 	mycfg->st[i].sp_modified_state = g_strdup ("<1d");
-	mycfg->st[i].sp_created = FALSE;
-	mycfg->st[i].sp_created_state = g_strdup ("<1h");
 	mycfg->st[i].sp_autodisplay = FALSE;
     }
     mycfg->mpl_autoselect = TRUE;
@@ -370,11 +368,6 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+16);
 	      prefs_set_sp_cond (i, S_TIME_MODIFIED, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "sp_created_cond", 14) == 0)
-	  {
-	      gint i = atoi (line+14);
-	      prefs_set_sp_cond (i, S_TIME_CREATED, atoi (arg));
-	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_rating_state", 15) == 0)
 	  {
 	      gint i = atoi (line+15);
@@ -399,11 +392,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint i = atoi (line+17);
 	      prefs_set_sp_entry (i, S_TIME_MODIFIED, arg);
-	  }      
-	  else if(g_ascii_strncasecmp (line, "sp_created_state", 15) == 0)
-	  {
-	      gint i = atoi (line+15);
-	      prefs_set_sp_entry (i, S_TIME_CREATED, arg);
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_autodisplay", 14) == 0)
 	  {
@@ -766,8 +754,6 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, S_TIME_PLAYED));
 	fprintf(fp, "sp_modified_cond%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_MODIFIED));
 	fprintf(fp, "sp_modified_state%d=%s\n", i, prefs_get_sp_entry (i, S_TIME_MODIFIED));
-	fprintf(fp, "sp_created_cond%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_CREATED));
-	fprintf(fp, "sp_created_state%d=%s\n", i, prefs_get_sp_entry (i, S_TIME_CREATED));
 	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
     }
     fprintf(fp, _("# autoselect master playlist?\n"));
@@ -1712,9 +1698,6 @@ void prefs_set_sp_cond (guint32 inst, S_item s_item, gboolean state)
 	case S_TIME_MODIFIED:
 	    cfg->st[inst].sp_modified = state;
 	    break;
-	case S_TIME_CREATED:
-	    cfg->st[inst].sp_created = state;
-	    break;
 	default:
 	    /* programming error */
 	    fprintf (stderr, "prefs_set_sp_cond(): inst=%d, !s_item=%d!\n",
@@ -1746,8 +1729,6 @@ gboolean prefs_get_sp_cond (guint32 inst, S_item s_item)
 	    return cfg->st[inst].sp_played;
 	case S_TIME_MODIFIED:
 	    return cfg->st[inst].sp_modified;
-	case S_TIME_CREATED:
-	    return cfg->st[inst].sp_created;
 	default:
 	    /* programming error */
 	    fprintf (stderr, "prefs_get_sp_cond(): inst=%d !s_item=%d!\n",
@@ -1831,10 +1812,6 @@ void prefs_set_sp_entry (guint32 inst, S_item s_item, gchar *str)
 	    g_free (cfg->st[inst].sp_modified_state);
 	    cfg->st[inst].sp_modified_state = cstr;
 	    break;
-	case S_TIME_CREATED:
-	    g_free (cfg->st[inst].sp_created_state);
-	    cfg->st[inst].sp_created_state = cstr;
-	    break;
 	default:
 	    /* programming error */
 	    g_free (cstr);
@@ -1867,9 +1844,6 @@ gchar *prefs_get_sp_entry (guint32 inst, S_item s_item)
 	    break;
 	case S_TIME_MODIFIED:
 	    result = cfg->st[inst].sp_modified_state;
-	    break;
-	case S_TIME_CREATED:
-	    result = cfg->st[inst].sp_created_state;
 	    break;
 	default:
 	    /* programming error */

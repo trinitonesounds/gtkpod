@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-17 23:41:25 jcs>
+/* Time-stamp: <2003-06-19 23:09:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -362,7 +362,7 @@ static void update_charset_info (Song *song)
 static Song *get_song_info_from_file (gchar *name, Song *or_song)
 {
     Song *song = NULL;
-    File_Tag *filetag;
+    File_Tag filetag;
     mp3info *mp3info;
     gint len;
 
@@ -376,9 +376,10 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
     if (len < 4) return NULL;
     if (strcasecmp (&name[len-4], ".mp3") != 0) return NULL;
 
-    filetag = g_malloc0 (sizeof (File_Tag));
-    if (Id3tag_Read_File_Tag (name, filetag) == TRUE)
+    if (Id3tag_Read_File_Tag (name, &filetag) == TRUE)
     {
+	struct stat si;
+
 	if (or_song)    song = or_song;
 	else            song = g_malloc0 (sizeof (Song));
 
@@ -387,8 +388,9 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	song->pc_path_utf8 = charset_to_utf8 (name);
 	song->pc_path_locale = g_strdup (name);
 
-	if (song->time_created == 0) song->time_created = time_get_mac_time ();
-	else                        song->time_modified = time_get_mac_time ();
+	/* Set modification date to modification date of file */
+	if (stat (name, &si) == 0)
+	    song->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
 
 	C_FREE (song->fdesc);
 	C_FREE (song->fdesc_utf16);
@@ -396,80 +398,79 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	song->fdesc_utf16 = g_utf8_to_utf16 (song->fdesc, -1, NULL, NULL, NULL);
 	C_FREE (song->album);
 	C_FREE (song->album_utf16);
-	if (filetag->album)
+	if (filetag.album)
 	{
-	    song->album = filetag->album;
+	    song->album = filetag.album;
 	    song->album_utf16 = g_utf8_to_utf16 (song->album, -1, NULL, NULL, NULL);
 	}
 	else set_entry_from_filename (song, SM_COLUMN_ALBUM);
 
 	C_FREE (song->artist);
 	C_FREE (song->artist_utf16);
-	if (filetag->artist)
+	if (filetag.artist)
 	{
-	    song->artist = filetag->artist;
+	    song->artist = filetag.artist;
 	    song->artist_utf16 = g_utf8_to_utf16 (song->artist, -1, NULL, NULL, NULL);
 	}
 	else set_entry_from_filename (song, SM_COLUMN_ARTIST);
 
 	C_FREE (song->title);
 	C_FREE (song->title_utf16);
-	if (filetag->title)
+	if (filetag.title)
 	{
-	    song->title = filetag->title;
+	    song->title = filetag.title;
 	    song->title_utf16 = g_utf8_to_utf16 (song->title, -1, NULL, NULL, NULL);
 	}
 	else set_entry_from_filename (song, SM_COLUMN_TITLE);
 
 	C_FREE (song->genre);
 	C_FREE (song->genre_utf16);
-	if (filetag->genre)
+	if (filetag.genre)
 	{
-	    song->genre = filetag->genre;
+	    song->genre = filetag.genre;
 	    song->genre_utf16 = g_utf8_to_utf16 (song->genre, -1, NULL, NULL, NULL);
 	}
 	else set_entry_from_filename (song, SM_COLUMN_GENRE);
 
 	C_FREE (song->comment);
 	C_FREE (song->comment_utf16);
-	if (filetag->comment)
+	if (filetag.comment)
 	{
-	    song->comment = filetag->comment;
+	    song->comment = filetag.comment;
 	    song->comment_utf16 = g_utf8_to_utf16 (song->comment, -1, NULL, NULL, NULL);
 	}
-	if (filetag->year == NULL)
+	if (filetag.year == NULL)
 	{
 	    song->year = 0;
 	}
 	else
 	{
-	    song->year = atoi(filetag->year);
-	    g_free (filetag->year);
+	    song->year = atoi(filetag.year);
+	    g_free (filetag.year);
 	}
 
-	if (filetag->track == NULL)
+	if (filetag.track == NULL)
 	{
 	    song->track_nr = 0;
 	}
 	else
 	{
-	    song->track_nr = atoi(filetag->track);
-	    g_free (filetag->track);
+	    song->track_nr = atoi(filetag.track);
+	    g_free (filetag.track);
 	}
 
-	if (filetag->track_total == NULL)
+	if (filetag.track_total == NULL)
 	{
 	    song->tracks = 0;
 	}
 	else
 	{
-	    song->tracks = atoi(filetag->track_total);
-	    g_free (filetag->track_total);
+	    song->tracks = atoi(filetag.track_total);
+	    g_free (filetag.track_total);
 	}
-	song->size = filetag->size;
-	song->auto_charset = filetag->auto_charset;
+	song->size = filetag.size;
+	song->auto_charset = filetag.auto_charset;
     }
-    g_free (filetag);
 
     if (song)
     {
@@ -478,7 +479,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	if (mp3info)
 	{
 	    song->songlen = mp3info->milliseconds;
-	    song->bitrate = (gint)(mp3info->vbr_average * 1000);
+	    song->bitrate = (gint)(mp3info->vbr_average);
 	    g_free (mp3info);
 	}
 	/* Fall back to xmms code if songlen is 0 */
@@ -486,7 +487,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	{
 	    song->songlen = get_song_time (name);
 	    if (song->songlen)
-		song->bitrate = (float)song->size*8000/song->songlen;
+		song->bitrate = (float)song->size*8/song->songlen;
 	}
 
 	/* set charset used */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 23:47:53 jcs>
+/* Time-stamp: <2003-06-19 21:07:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -102,9 +102,6 @@ void delete_song_ok (gpointer user_data1, gpointer user_data2);
 
 void gtkpod_warning (const gchar *format, ...);
 
-guint32 time_get_mac_time (void);
-time_t time_mac_to_host (guint32 mactime);
-guint32 time_host_to_mac (time_t time);
 gchar *time_time_to_string (time_t time);
 time_t time_get_time (Song *song, SM_item sm_item);
 gchar *time_field_to_string (Song *song, SM_item sm_item);
