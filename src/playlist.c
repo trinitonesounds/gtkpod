@@ -195,14 +195,23 @@ Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n)
    is removed from the GList *playlists */
 void remove_playlist (Playlist *playlist)
 {
-  pm_remove_playlist (playlist, FALSE);
+  pm_remove_playlist (playlist, TRUE);
+  free_playlist(playlist);
+}
+
+/**
+ * free_playlist - free the associated memory a playlist contains
+ * @playlist - the playlist we'd like to free
+ */
+void
+free_playlist(Playlist *playlist)
+{
   playlists = g_list_remove (playlists, playlist);
   if (playlist->name)            g_free (playlist->name);
   if (playlist->name_utf16)      g_free (playlist->name_utf16);
   g_list_free (playlist->members);
   g_free (playlist);
 }
-
 
   /* Remove all playlists from the list using remove_playlist () */
 void remove_all_playlists (void)
@@ -212,6 +221,7 @@ void remove_all_playlists (void)
   while (playlists != NULL)
     {
       playlist = g_list_nth_data (playlists, 0);
-      remove_playlist (playlist);
+      pm_remove_playlist (playlist, FALSE);
+      free_playlist (playlist);
     }
 }

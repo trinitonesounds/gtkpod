@@ -52,6 +52,7 @@ enum {
 
 void create_mpl (void);
 void add_new_playlist (void);
+void free_playlist(Playlist *playlist);
 void create_playlist (Playlist *plitem);
 Playlist *add_playlist (Playlist *plitem);
 void add_songid_to_playlist (Playlist *plitem, guint32 id);
