@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-05 23:16:43 jcs>
+/* Time-stamp: <2004-11-06 22:29:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1957,7 +1957,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 		    {
 			gtk_tree_sortable_set_sort_column_id (
 			    GTK_TREE_SORTABLE (st->model),
-			    GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
+			    GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
 			    prefs_get_st_sort ());
 		    }
 		}

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-06 00:15:30 jcs>
+/* Time-stamp: <2004-11-06 16:16:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -225,8 +225,10 @@ static GList *playcounts = NULL;
 struct playcount {
     guint32 playcount;
     guint32 time_played;
-    guint32 rating;
+    gint32 rating;
 };
+
+#define NO_PLAYCOUNT (-1)
 
 enum {
   MHOD_ID_TITLE = 1,
@@ -661,14 +663,14 @@ gchar *time_time_to_string (time_t time);
   playcount = get_next_playcount ();
   if (playcount)
   {
-      if (playcount->rating)  track->rating = playcount->rating;
+      if (playcount->rating != NO_PLAYCOUNT)  track->rating = playcount->rating;
       if (playcount->time_played) track->time_played = playcount->time_played;
       track->playcount += playcount->playcount;
       track->recent_playcount = playcount->playcount;
       g_free (playcount);
   }
   it_add_track (track);
-  return seek;   /* no more black magic */
+  return seek;
 }
 
 /* get next playcount, that is the first entry of GList
@@ -749,6 +751,8 @@ static void init_playcounts (const gchar *dirname)
 	  /* rating only exists if the entry length is at least 0x10 */
 	  if (entry_length >= 0x10)
 	      playcount->rating = get4int (plycts, seek+12);
+	  else
+	      playcount->rating = NO_PLAYCOUNT;
       }
       if (i == entry_num)  error = FALSE;
   } while (FALSE);

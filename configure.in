@@ -76,6 +76,10 @@ if test "y$have_mp4v2" = "y"; then
 	have_mp4v2="*** no -- will build without aac support"
 fi
 
+dnl Additional libs maybe needed when compiling under solaris
+AC_SEARCH_LIBS(bind,
+	      ["socket" "nsl" "socket -lnsl"])
+
 dnl Check for Linux-specific headers (so we can compile Linux-specific
 dnl stuff only when compiling under Linux)
 AC_CHECK_HEADERS(linux/cdrom.h scsi/scsi.h scsi/scsi_ioctl.h)

@@ -7,8 +7,6 @@ TODO:
 
 - Update calendar in special sort tab when changing category.
 
-- special sort tab 'modified' and 'created' does not work correctly.
-
 - Give status when adjusting offline_playcount after import of
   database (can take quite a while even for only 90 tracks).
 

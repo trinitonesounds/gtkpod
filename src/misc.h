@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-04 21:47:43 jcs>
+/* Time-stamp: <2004-11-06 22:31:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -42,12 +42,12 @@
 #include "confirmation.h"
 #include "time.h"
 
-#define C_FREE(a) {if(a) g_free(a); a=NULL;}
+#define C_FREE(a) {g_free(a); a=NULL;}
 
 /* tree sort cannot be unsorted by choosing the default sort column at
    least up to 2.4.9. Set to 1 if it's broken, 0 if it's not broken */
-/*#define BROKEN_GTK_TREE_SORT (!GTK_CHECK_VERSION (2,4,10))*/
-#define BROKEN_GTK_TREE_SORT 0
+#define BROKEN_GTK_TREE_SORT (!GTK_CHECK_VERSION (2,5,4))
+
 
 
 /* compare a and b, return sign (a-b) -- it has to be this way rather

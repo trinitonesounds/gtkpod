@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-04 22:52:34 jcs>
+/* Time-stamp: <2004-11-09 23:32:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -40,6 +40,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/file.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -64,11 +65,12 @@ int flock(int fd, int operation)
 
     switch (operation)
     {
-      LOCK_EX:
+    case LOCK_EX:
 	f.l_type = F_WRLCK;
-	return fcntl(fileno (file), F_SETLKW, &f);
+	return fcntl(fd, F_SETLKW, &f);
     default:
-	g_warning ("*** flock operation '%d' not implemented.\n");
+	g_warning ("*** flock operation '%d' not implemented.\n",
+		   operation);
 	return -1;
     }
 }
