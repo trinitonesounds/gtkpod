@@ -1,3 +1,8 @@
+gtkpod (0.51-0) unstable; urgency=low
+    * NEW FEATURE: display the amount of free space on the ipod
+
+ -- Corey Donohoe <atmos at atmos.org>  Sun, 30 Mar 2003 23:08:00 +0900
+
 gtkpod (0.50-1) unstable; urgency=low
     * NEW FEATURE: context sensitive popup menues (right mouse button
       click in playlist view, sort tabs or song view.
