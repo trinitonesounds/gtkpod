@@ -47,8 +47,17 @@
 %option noyywrap
 /* avoid compiler warning: `yyunput' defined but not used */
 %option nounput
-
+/* We have several parsers in one executable, so we must use the
+   prefix option to avoid name space clashes. Note that this only
+   works with flex, but not with lex. */
 %option prefix="lexdp2"
+/* Unfortunately, the prefix option also changes the output filename
+   and thereby breaks the automake script. Therefore I define the
+   output filename here. However, this is not portable -- on other
+   systems the default output filename expected by the automake
+   scripts may be lexyy.c or similar. To make the code portable again
+   (hopefully), I also define "LEX_OUTPUT_ROOT = lex.yy" in
+   Makefile.am */
 %option outfile="lex.yy.c"
 
 DATECHARS [^<>=]+

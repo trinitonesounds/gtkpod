@@ -23,6 +23,10 @@
 |  This product is not supported/written/published by Apple!
 */
 
+/* This parser (dp_parse()) will take one date specification (like
+ * 9/6/03, or -5d) and convert it into a timestamp. More details
+ * below. */
+
 %{
 #include <stdlib.h>
 #include "date_parser.h"
@@ -51,9 +55,19 @@
 %option noyywrap
 /* avoid compiler warning: `yyunput' defined but not used */
 %option nounput
-
+/* We have several parsers in one executable, so we must use the
+   prefix option to avoid name space clashes. Note that this only
+   works with flex, but not with lex. */
 %option prefix="lexdp"
+/* Unfortunately, the prefix option also changes the output filename
+   and thereby breaks the automake script. Therefore I define the
+   output filename here. However, this is not portable -- on other
+   systems the default output filename expected by the automake
+   scripts may be lexyy.c or similar. To make the code portable again
+   (hopefully), I also define "LEX_OUTPUT_ROOT = lex.yy" in
+   Makefile.am */
 %option outfile="lex.yy.c"
+
 
 DIGIT     [0-9]
 NUM       {DIGIT}+
@@ -75,7 +89,8 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     lt->tm_hour = strtol (ptr1, &ptr1, 10);
     ++ptr1;
     lt->tm_min = strtol (ptr1, &ptr1, 10);
-    lt->tm_sec = 0;
+    if (lower)    lt->tm_sec = 0;
+    else          lt->tm_sec = 59;
     tstamp = mktime (lt);
     parsed_time = TRUE;
     printf ("tstamp: %d: %s", (int)tstamp, asctime (lt));
@@ -243,6 +258,18 @@ static void dp_reltime (gchar *str, gint32 sign)
     printf ("secs: %d, tstamp: %d: %s", (int)secs, (int)tstamp, ctime (&tstamp));
 }
 
+/* dp_parse() will take one date specification (like 9/6/03, or -5d,
+ * for details have a look at the definitions above) and convert it
+ * into a timestamp.
+ *
+ * @dp_str: the string to parse 
+ *
+ * @lower_margin: if TRUE, absolute time or date values are "rounded
+ * down" (e.g. "9/6/03" would compute to "June 6 2003, 0:00:00"),
+ * otherwise the are rounded up (e.g. "9/6/03" would compute to "June
+ * 6 2003, 23:59:59"). Similarily, "8:05" would either compute to
+ * "8:05:00" or "8:05:59" depending on whether the lower or upper
+ * boundary is to be determined. */
 time_t dp_parse (gchar *dp_str, gboolean lower_margin)
 {
     dp_strp = dp_str;
