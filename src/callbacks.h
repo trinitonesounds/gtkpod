@@ -386,3 +386,7 @@ on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
 void
 on_enqueue_songs_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

@@ -317,9 +317,9 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+9);
 	      prefs_set_col_order (i, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "paned_pos_", 10) == 0)
+	  else if(g_ascii_strncasecmp (line, "paned_pos", 9) == 0)
 	  {
-	      gint i = atoi (line+10);
+	      gint i = atoi (line+9);
 	      prefs_set_paned_pos (i, atoi (arg));
 	  }      
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
@@ -462,6 +462,14 @@ read_prefs_defaults(void)
       }
   }
   C_FREE (cfgdir);
+  /* set statusbar paned to a decent value if unset */
+  if (prefs_get_paned_pos (PANED_STATUS) == -1)
+  {
+      gint x,y;
+      prefs_get_size_gtkpod (&x, &y);
+      /* set to about 3/4 of the window width */
+      if (x>0)   prefs_set_paned_pos (PANED_STATUS, 22*x/30);
+  }
 }
 
 /* Read Preferences and initialise the cfg-struct */
@@ -578,10 +586,10 @@ write_prefs_to_file_desc(FILE *fp)
 	if (i < SM_NUM_TAGS_PREFS)
 	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_tag_autoset (i));
     }	
-    fprintf(fp, _("# position of sliders (paned): playlists, above songs, between sort tabs\n"));
+    fprintf(fp, _("# position of sliders (paned): playlists, above songs,\n# between sort tabs, and in statusbar.\n"));
     for (i=0; i<PANED_NUM; ++i)
     {
-	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
+	fprintf(fp, "paned_pos%d=%d\n", i, prefs_get_paned_pos (i));
     }
     fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
@@ -596,8 +604,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "save_sorted_order=%d\n",prefs_get_save_sorted_order());
-    fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n"));
-    fprintf(fp, _("#               confirmation non-scrolled, dirbrowser\n"));
+    fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser\n"));
     fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
     fprintf (fp, "size_gtkpod.y=%d\n", cfg->size_gtkpod.y);
     fprintf (fp, "size_conf_sw.x=%d\n", cfg->size_conf_sw.x);
@@ -1121,6 +1128,7 @@ SM_item prefs_get_col_order (gint pos)
 }
 
 /* get position of GtkPaned element nr. "i" */
+/* return value: -1: don't change position */
 gint prefs_get_paned_pos (gint i)
 {
     if (i < PANED_NUM)

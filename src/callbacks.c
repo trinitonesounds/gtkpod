@@ -1148,3 +1148,11 @@ on_enqueue_songs_activate              (GtkMenuItem     *menuitem,
 	gtkpod_statusbar_message (_("No songs selected"));
 }
 
+
+void
+on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    st_arrange_visible_sort_tabs ();
+}
+

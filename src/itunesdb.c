@@ -1178,6 +1178,9 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
   gboolean success;
   gint32 oops = 0;
 
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "Entered itunesdb_copy_song_to_ipod: '%s', %p, '%s'\n", path, song, pcfile);
+#endif
   if (dir_num == -1) dir_num = (gint) (19.0*rand()/(RAND_MAX));
   if(song->transferred == TRUE) return TRUE; /* nothing to do */
   if (song == NULL)
@@ -1213,7 +1216,7 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
   } while (g_file_test (ipod_fullfile, G_FILE_TEST_EXISTS));
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "ipod_fullfile: %s\n", ipod_fullfile);
+  fprintf(stderr, "ipod_fullfile: '%s'\n", ipod_fullfile);
 #endif
 
   success = itunesdb_cp (pcfile, ipod_fullfile);
@@ -1250,6 +1253,10 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
   FILE *file_in = NULL;
   FILE *file_out = NULL;
 
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "Entered itunesdb_cp: '%s', '%s'\n", from_file, to_file);
+#endif
+
   do { /* dummy loop for easier error handling */
     file_in = fopen (from_file, "r");
     if (file_in == NULL)
@@ -1267,6 +1274,9 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
       }
     do {
       bread = fread (data, 1, ITUNESDB_COPYBLK, file_in);
+#if ITUNESDB_DEBUG
+      fprintf(stderr, "itunesdb_cp: read %ld bytes\n", bread);
+#endif
       if (bread == 0)
 	{
 	  if (feof (file_in) == 0)
@@ -1278,6 +1288,9 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
       else
 	{
 	  bwrite = fwrite (data, 1, bread, file_out);
+#if ITUNESDB_DEBUG
+      fprintf(stderr, "itunesdb_cp: wrote %ld bytes\n", bwrite);
+#endif
 	  if (bwrite != bread)
 	    {
 	      itunesdb_warning (_("Error writing PC file \"%s\"."),to_file);
@@ -1290,7 +1303,11 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
   if (file_out)
     {
       fclose (file_out);
-      if (!success) { /* error occured -> delete to_file */
+      if (!success)
+      { /* error occured -> delete to_file */
+#if ITUNESDB_DEBUG
+	  fprintf(stderr, "itunesdb_cp: copy unsuccessful, removing '%s'\n", to_file);
+#endif
 	remove (to_file);
       }
     }

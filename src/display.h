@@ -51,7 +51,12 @@ typedef enum {
  * these elements will be stored in the prefs file and be set to the
  * last value when starting gtkpod again */
 /* Number defined with glade ("paned%d") */
-#define PANED_NUM_GLADE 2
+enum {
+    PANED_PLAYLIST = 0,
+    PANED_SONGLIST,
+    PANED_STATUS,
+    PANED_NUM_GLADE
+};
 /* Number created in display.c (for sort tabs, stored in st_paned[]) */
 #define PANED_NUM_ST (SORT_TAB_MAX-1)
 /* Total number */
@@ -112,6 +117,8 @@ typedef enum  {
   SM_COLUMN_IPOD_ID,
   SM_COLUMN_PC_PATH,
   SM_COLUMN_TRANSFERRED,
+  SM_COLUMN_SIZE,
+  SM_COLUMN_SONGLEN,
   SM_NUM_COLUMNS
 } SM_item;
 
@@ -153,6 +160,7 @@ void st_sort (guint32 inst, GtkSortType order);
 void st_remove_entry (TabEntry *entry, guint32 inst);
 gint st_get_instance_from_treeview (GtkTreeView *tv);
 void st_show_visible (void);
+void st_arrange_visible_sort_tabs (void);
 TabEntry *st_get_selected_entry (gint inst);
 
 void on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 

@@ -84,6 +84,8 @@ typedef enum {
     S_IPOD_ID,
     S_TRACK_NR,
     S_TRANSFERRED,
+    S_SIZE,
+    S_SONGLEN
 } S_item;
 
 void free_song(Song *song);

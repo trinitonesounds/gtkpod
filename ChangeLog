@@ -1,5 +1,12 @@
-gtkpod V0.50
+gtkpod V0.50-CVS
+	NEW FEATURE: menu item "Arrange Sort Tabs" to make all visible
+	sort tabs the same size
 
+	IMPROVEMENT: new song column types: file size and play time
+
+	BUGFIX: fixed "dead" context menu "Alphabetize"
+
+gtkpod V0.50
 	NEW FEATURE: context sensitive popup menues (right mouse button
 	click in playlist view, sort tabs or song view.
 

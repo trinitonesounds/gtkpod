@@ -689,6 +689,8 @@ S_item SM_to_S (SM_item sm)
     case SM_COLUMN_IPOD_ID:     return S_IPOD_ID;
     case SM_COLUMN_PC_PATH:     return S_PC_PATH;
     case SM_COLUMN_TRANSFERRED: return S_TRANSFERRED;
+    case SM_COLUMN_SIZE:        return S_SIZE;
+    case SM_COLUMN_SONGLEN:     return S_SONGLEN;
     case SM_NUM_COLUMNS:        return -1;
     }
     return -1;

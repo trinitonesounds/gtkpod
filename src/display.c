@@ -70,7 +70,7 @@ static gint stop_add = SORT_TAB_MAX;
 static void pm_create_treeview (void);
 static void sm_song_changed (Song *song);
 static void sm_remove_song (Song *song);
-static void sm_remove_all_songs (void);
+static void sm_remove_all_songs (gboolean clear_sort);
 static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint position);
 static void sm_create_treeview (void);
 static void st_song_changed (Song *song, gboolean removed, guint32 inst);
@@ -588,7 +588,7 @@ static void pm_add_columns ()
   gtk_tree_view_column_set_clickable(column, TRUE);
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (pm_song_column_button_clicked),
-				(gpointer)SM_COLUMN_TITLE);
+				(gpointer)PM_COLUMN_PLAYLIST);
   gtk_tree_view_append_column (playlist_treeview, column);
 }
 
@@ -1334,7 +1334,7 @@ static void st_init (ST_CAT_item new_category, guint32 inst)
 
   if (inst == prefs_get_sort_tab_num ())
   {
-      sm_remove_all_songs ();
+      sm_remove_all_songs (TRUE);
       gtkpod_songs_statusbar_update ();
       return;
   }
@@ -1827,6 +1827,58 @@ void st_show_visible (void)
 }
 
 
+/* set the paned positions for the visible sort tabs in the prefs
+ * structure. This function is called when first creating the paned
+ * elements and from within st_arrange_visible_sort_tabs() */
+static void st_set_visible_sort_tab_paned (void)
+{
+    gint i, x, y, p0, num, width;
+
+    num = prefs_get_sort_tab_num ();
+    if (num > 0)
+    {
+	gchar *buf;
+	GtkWidget *w;
+
+	gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
+	buf = g_strdup_printf ("paned%d", PANED_PLAYLIST);
+	if((w = lookup_widget(gtkpod_window,  buf)))
+	{
+	    p0 = gtk_paned_get_position (GTK_PANED (w));
+	    width = (x-p0) / num;
+	    for (i=0; i<num; ++i)
+	    {
+		prefs_set_paned_pos (PANED_NUM_GLADE+i, width);
+	    }
+	}
+	g_free (buf);
+    }
+}
+
+
+/* Regularily arrange the visible sort tabs */
+void st_arrange_visible_sort_tabs (void)
+{
+    gint i, num;
+
+    num = prefs_get_sort_tab_num ();
+    if (num > 0)
+    {
+	st_set_visible_sort_tab_paned ();
+	for (i=0; i<num; ++i)
+	{
+	    if (prefs_get_paned_pos (PANED_NUM_GLADE + i) != -1)
+	    {
+		if (st_paned[i])
+		    gtk_paned_set_position (
+			st_paned[i], prefs_get_paned_pos (PANED_NUM_GLADE+i));
+	    }
+	}
+    }
+}
+
+
+
 /* Created paned elements for sorttabs */
 static void st_create_paned (void)
 {
@@ -1853,6 +1905,10 @@ static void st_create_paned (void)
 	}
 	st_paned[i] = GTK_PANED (paned);
     }
+    /* set position of visible paned to decent values if not already
+       set */
+    if (prefs_get_paned_pos (PANED_NUM_GLADE) == -1)
+	st_set_visible_sort_tab_paned ();
 }
 
 static gboolean
@@ -2128,6 +2184,8 @@ void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter)
 			SM_COLUMN_IPOD_ID, song,
 			SM_COLUMN_PC_PATH, song,
 			SM_COLUMN_TRANSFERRED, song,
+			SM_COLUMN_SIZE, song,
+			SM_COLUMN_SONGLEN, song,
 			-1);
 }
 
@@ -2164,7 +2222,7 @@ static void sm_remove_song (Song *song)
 /* Remove all songs from the display model */
 /* ATTENTION: the treeview and model might be changed by calling this
    function */
-static void sm_remove_all_songs (void)
+static void sm_remove_all_songs (gboolean clear_sort)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (song_treeview);
   GtkTreeIter iter;
@@ -2175,7 +2233,8 @@ static void sm_remove_all_songs (void)
   {
       gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
   }
-  if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
+  if(clear_sort &&
+     gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order))
   { /* recreate song treeview to unset sorted column */
       if (column >= 0)
@@ -2343,7 +2402,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 {
   Song *song;
   SM_item column;
-  gchar text[11];
+  gchar text[21];
   gchar *item_utf8 = NULL;
 
   column = (SM_item)g_object_get_data (G_OBJECT (renderer), "column");
@@ -2357,30 +2416,40 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
   case SM_COLUMN_GENRE:
   case SM_COLUMN_COMPOSER:
       item_utf8 = song_get_item_utf8 (song, SM_to_S (column));
-      g_object_set (G_OBJECT (renderer), "text", item_utf8, 
+      g_object_set (G_OBJECT (renderer),
+		    "text", item_utf8, 
 		    "editable", TRUE, NULL);
       break;
   case SM_COLUMN_TRACK_NR:
       if (song->track_nr >= 0)
       {
-	  snprintf (text, 10, "%d", song->track_nr);
-	  g_object_set (G_OBJECT (renderer), "text", text, "editable", TRUE,
-			NULL);
+	  snprintf (text, 20, "%d", song->track_nr);
+	  g_object_set (G_OBJECT (renderer),
+			"text", text,
+			"editable", TRUE,
+			"xalign", 1.0, NULL);
       } 
       else
       {
-	  g_object_set (G_OBJECT (renderer), "text", "0", NULL);
+	  g_object_set (G_OBJECT (renderer),
+			"text", "0",
+			"editable", TRUE,
+			"xalign", 1.0, NULL);
       }
       break;
   case SM_COLUMN_IPOD_ID:
       if (song->ipod_id != -1)
       {
-	  snprintf (text, 10, "%d", song->ipod_id);
-	  g_object_set (G_OBJECT (renderer), "text", text, NULL);
+	  snprintf (text, 20, "%d", song->ipod_id);
+	  g_object_set (G_OBJECT (renderer),
+			"text", text,
+			"xalign", 1.0, NULL);
       } 
       else
       {
-	  g_object_set (G_OBJECT (renderer), "text", "--", NULL);
+	  g_object_set (G_OBJECT (renderer),
+			"text", "--",
+			"xalign", 1.0, NULL);
       }
       break;
   case SM_COLUMN_PC_PATH:
@@ -2388,6 +2457,19 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   case SM_COLUMN_TRANSFERRED:
       g_object_set (G_OBJECT (renderer), "active", song->transferred, NULL);
+      break;
+  case SM_COLUMN_SIZE:
+      snprintf (text, 20, "%d", song->size);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "xalign", 1.0, NULL);
+      break;
+  case SM_COLUMN_SONGLEN:
+      snprintf (text, 20, "%d:%02d", song->songlen/60000,
+                                     (song->songlen/1000)%60);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "xalign", 1.0, NULL);
       break;
   default:
       gtkpod_warning("Unknown column in sm_cell_data_func: %d\n", column);
@@ -2903,6 +2985,10 @@ gint sm_data_compare_func (GtkTreeModel *model,
       if(song1->transferred == song2->transferred) return 0;
       if(song1->transferred == TRUE) return 1;
       else return -1;
+  case SM_COLUMN_SIZE:
+      return song1->size - song2->size;
+  case SM_COLUMN_SONGLEN:
+      return song1->songlen - song2->songlen;
   default:
       gtkpod_warning("No sort for column %d\n", column);
       break;
@@ -3004,6 +3090,12 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
       col = sm_add_text_column (SM_COLUMN_TRANSFERRED, _("Trnsfrd"),
 			  renderer, FALSE, pos);
       break;
+  case SM_COLUMN_SIZE:
+      col = sm_add_text_column (SM_COLUMN_SIZE, _("File Size"), NULL, FALSE, pos);
+      break;
+  case SM_COLUMN_SONGLEN:
+      col = sm_add_text_column (SM_COLUMN_SONGLEN, _("Time"), NULL, FALSE, pos);
+      break;
     case SM_NUM_COLUMNS:
       break;
   }
@@ -3064,6 +3156,7 @@ static void sm_create_treeview (void)
   /* create model */
   model = GTK_TREE_MODEL (
       gtk_list_store_new (SM_NUM_COLUMNS, G_TYPE_POINTER,
+			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
@@ -3175,7 +3268,8 @@ on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     GString *filelist = (GString *)data;
 
     gtk_tree_model_get(tm, i, SM_COLUMN_TITLE, &s, -1); 
-    /* can call on 0 cause s is consistent across all of the columns */
+    /* can call on SM_COLUMN_TITLE cause s is consistent across all of
+       the columns */
     if(s)
     {
 	g_string_append_printf (filelist, "%d\n", s->ipod_id);
@@ -3208,7 +3302,8 @@ on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     gchar *name;
 
     gtk_tree_model_get(tm, iter, SM_COLUMN_TITLE, &s, -1); 
-    /* can call on 0 cause s is consistent across all of the columns */
+    /* can call on SM_COLUMN_TITLE cause s is consistent across all of
+     * the columns */
     name = get_song_name_on_disk_verified (s);
     if (name)
     {
