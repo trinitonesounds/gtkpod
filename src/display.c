@@ -544,15 +544,14 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   switch (column)
     {  /* We only have one column, so this code is overkill... */
     case PM_COLUMN_PLAYLIST: 
-	g_object_set (G_OBJECT (renderer), "text", playlist->name, 
-		      "editable", TRUE, NULL);
+	g_object_set (G_OBJECT (renderer),
+		      "text", playlist->name, 
+		      "editable", TRUE,
+		      "foreground", NULL,
+		      NULL);
 	if (playlist->type == PL_TYPE_MPL)
 	{ /* mark MPL in red */
 	    g_object_set (G_OBJECT (renderer), "foreground", "red", NULL);
-	}
-	else
-	{
-	    g_object_set (G_OBJECT (renderer), "foreground", NULL, NULL);
 	}
 	break;
     }
