@@ -29,5 +29,6 @@ gtkpod_SOURCES = \
 	support.c support.h \
 	callbacks.c callbacks.h
 
-gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS)
+gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
+EXTRA_DIST = getopt.h

@@ -40,6 +40,12 @@ dnl Add the languages which your application supports here.
 ALL_LINGUAS="de ja"
 AM_GLIB_GNU_GETTEXT
 
+dnl Check if we have to supply getopt_long
+dnl If getopt_long_only is not available, getopt.c and getopt1.c
+dnl (providing getopt_long*) will be included into the binary.
+AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ([getopt])]) 
+AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ([getopt1])]) 
+
 dnl Id3lib librairies
 dnl Check which libs are required by id3lib
 AC_SEARCH_LIBS(ID3Tag_Link,"id3" "id3 -lstdc++" "id3 -lz" "id3 -lz -lstdc++",,AC_MSG_ERROR(id3lib not found))
@@ -92,6 +98,7 @@ Configuration for $PACKAGE $VERSION :
  GTK+ version .........: `pkg-config gtk+-2.0 --modversion`
  GThread version ......: `pkg-config gthread-2.0 --modversion`
  Id3lib version .......: $ID3LIB_MAJOR.$ID3LIB_MINOR.$ID3LIB_PATCH
+ LIBOBJ: ..............: $LIBOBJ
  NLS/gettext ..........: $USE_NLS
  Install path .........: $prefix
 

@@ -79,7 +79,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <getopt.h>
+#ifdef HAVE_GETOPT_LONG_ONLY
+#  include <getopt.h>
+#else
+#  include "getopt.h"
+#endif
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "prefs.h"
@@ -87,11 +91,6 @@
 #include "misc.h"
 #include "display.h"
 #include "md5.h"
-
-/* For OS with non-GNU getopt library */
-#ifndef getopt_long_only
-#define getopt_long_only getopt_long
-#endif
 
 /* global config struct */
 /* FIXME: make me static */
@@ -522,7 +521,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       { "m",           required_argument,	NULL, GP_MOUNT },
       { "mountpoint",  required_argument,	NULL, GP_MOUNT },
       { "w",           no_argument,	NULL, GP_ID3_WRITE },
-      { "id3_write",    no_argument,	NULL, GP_ID3_WRITE },
+      { "id3_write",   no_argument,	NULL, GP_ID3_WRITE },
       { "c",           no_argument,	NULL, GP_MD5SONGS },
       { "md5",	       no_argument,	NULL, GP_MD5SONGS },
       { "o",           no_argument,	NULL, GP_OFFLINE },
