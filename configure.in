@@ -4,7 +4,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.53)
 
 AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(gtkpod, 0.80)
+AM_INIT_AUTOMAKE(gtkpod, 0.80-2)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 AC_CANONICAL_HOST
@@ -31,7 +31,7 @@ if test "y$have_pkgconfig" = "y"; then
 fi
 
 dnl check for libs that are managed with pkg-config
-PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.0.0 gthread-2.0 >= 0.14.0 glib-2.0 > 2.0.0 id3tag >= 0.15],,[AC_MSG_FAILURE([*** $PACKAGE_PKG_ERRORS])])
+PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.4.0 gthread-2.0 >= 0.14.0 glib-2.0 > 2.0.0],,[AC_MSG_FAILURE([*** $PACKAGE_PKG_ERRORS])])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 
@@ -56,6 +56,10 @@ dnl If getopt_long_only is not available, getopt.c and getopt1.c
 dnl (providing getopt_long*) will be included into the binary.
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)]) 
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
+
+dnl Check for libid3tag
+AC_CHECK_LIB([id3tag], [id3_frame_field], ,
+             AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
 
 dnl Check for libmp4v2 (and mp4.h)
 AC_SEARCH_LIBS(MP4FileInfo,
@@ -90,7 +94,7 @@ Configuration for $PACKAGE $VERSION :
  Linker ...............: $CC $LDFLAGS $LIBS $PACKAGE_LIBS
  GTK2 version .........: `pkg-config gtk+-2.0 --modversion`
  GLib2/GThread version : `pkg-config gthread-2.0 --modversion`
- id3tag lib ...........: `pkg-config id3tag --modversion`
+ id3tag lib ...........: yes
  mp4v2 ................: $have_mp4v2
  NLS/gettext ..........: $USE_NLS
 

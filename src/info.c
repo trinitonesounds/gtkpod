@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-14 00:56:02 JST jcs>
+/* Time-stamp: <2004-07-07 23:40:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -389,6 +389,7 @@ void space_data_update (void)
 gboolean ipod_connected (void)
 {
     gboolean result;
+    g_return_val_if_fail (space_mutex!=NULL, FALSE);
     g_mutex_lock (space_mutex);
     if ((space_ipod_used == 0) && (space_ipod_free == 0)) result = FALSE;
     else                                                  result = TRUE;
@@ -468,8 +469,8 @@ static void th_space_update (void)
     if (line) tokens = g_strsplit(line, " ", 5);
     if (tokens && tokens[0] && tokens[1] && tokens[2] && tokens[3])
     {
-	space_ipod_free = g_strtod (tokens[3], NULL);
-	space_ipod_used = g_strtod (tokens[2], NULL);
+	space_ipod_free = g_strtod (tokens[3], NULL) * 1024;
+	space_ipod_used = g_strtod (tokens[2], NULL) * 1024;
 	space_uptodate = TRUE;
     }
     else
@@ -496,6 +497,7 @@ static gpointer th_space_thread (gpointer gp)
 }
 
 
+/* in Bytes */
 static gdouble get_ipod_free_space(void)
 {
     gdouble result;
@@ -506,6 +508,7 @@ static gdouble get_ipod_free_space(void)
 }
 
 #if 0
+/* in Bytes */
 static gdouble get_ipod_used_space(void)
 {
     gdouble result;
@@ -517,7 +520,7 @@ static gdouble get_ipod_used_space(void)
 #endif
 
 
-/* @size: size in kB (block of 1024 Bytes) */
+/* @size: size in B */
 gchar*
 get_filesize_as_string(gdouble size)
 {

@@ -1,3 +1,19 @@
+gtkpod V0.80-2
+	BUGFIX: gtkpod would crash right after startup if the info
+	window was open when stopping gtkpod the previous time.
+
+	BUGFIX: Fixed free space display: the digits were right, the
+	unit was wrong (B instead of kB, kB instead of MB, MB instead
+	of GB...).
+
+	PATCH: gtkpod will compile with GTK V2.0 (V0.80 needed GTK
+	V2.4)
+
+	PATCH: gtkpod should compile under Fedora without patch
+
+	PATCH: reverted to old-style check of id3tag-lib as id3tag.pc
+	is not included with the id3tag distribution by default
+	
 gtkpod V0.80
 	NEW FEATURE: Added support for WAV audio files
 

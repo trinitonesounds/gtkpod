@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-13 21:57:59 JST jcs>
+/* Time-stamp: <2004-07-07 23:42:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -150,17 +150,17 @@ void display_create (GtkWidget *gtkpod)
     tm_sort (prefs_get_tm_sortcol (), prefs_get_tm_sort ());
     /* activate the delete menus correctly */
     display_adjust_delete_menus ();
-    /* set the menu item for the info window correctly */
-    display_set_info_window_menu ();
     /* activate/deactive the menu item 'check iPod' */
     display_set_check_ipod_menu ();
     /* activate status bars */
     gtkpod_statusbar_init ();
     gtkpod_tracks_statusbar_init ();
     gtkpod_space_statusbar_init ();
+    /* set the menu item for the info window correctly */
+    /* CAREFUL: must be done after calling ..._space_statusbar_init() */
+    display_set_info_window_menu ();
     /* check if info window should be opened */
     if (prefs_get_info_window ())  info_open_window ();
-
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and
