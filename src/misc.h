@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-25 22:06:10 jcs>
+/* Time-stamp: <2003-07-13 15:56:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -52,6 +52,8 @@ extern gboolean widgets_blocked;
 void create_add_files_fileselector (void);
 void create_add_playlists_fileselector (void);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
+gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
+			       G_CONST_RETURN gchar *rel_dir);
 float get_ms_since (GTimeVal *old_time, gboolean update);
 gint get_sort_tab_number (gchar *text);
 void open_about_window (void);

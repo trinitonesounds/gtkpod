@@ -1,4 +1,9 @@
 gtkpod V0.53-CVS
+	IMPROVEMENT: handle adding of playlist files containing relative
+	files with relative paths.
+
+	BUGFIX: fixed memory holes in sync_songids(), sync_dir_ok().
+
 	BUGFIX: drag and drop URIs with cr/nl at the end are handled
 	correctly (thanks to Walter Bell).
 

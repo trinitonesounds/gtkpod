@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-07-13 01:25:16 jcs>
+/* Time-stamp: <2003-07-13 15:58:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -103,7 +103,8 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	PLT_PLS,   /* PLS playlist file */
 	PLT_MISC   /* something else -- assume it works the same as M3U */
     };
-    gchar *plname, *bufp, *plfile_utf8;
+    gchar *bufp, *plfile_utf8;
+    gchar *dirname = NULL, *plname = NULL;
     gchar buf[PATH_MAX];
     gint type = PLT_MISC; /* type of playlist file */
     gint line, songs;
@@ -133,11 +134,13 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	else if (compare_string_case_insensitive (bufp, "mp3") == 0)
 	{
 	    /* FIXME: Status */
+	    g_free (plname);
 	    return FALSE;  /* definitely not! */
 	}
 	else if (compare_string_case_insensitive (bufp, "wav") == 0)
 	{
 	    /* FIXME: Status */
+	    g_free (plname);
 	    return FALSE;  /* definitely not! */
 	}
     }
@@ -146,10 +149,15 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
     if (!(fp = fopen (plfile, "r")))
     {
 	/* FIXME: Status */
+	g_free (plname);
 	return FALSE;  /* definitely not! */
     }
     /* create playlist (if none is specified) */
     if (!plitem)   plitem = add_new_playlist (plname, -1);
+    C_FREE (plname);
+
+    /* need dirname if playlist file contains relative paths */
+    dirname = g_path_get_dirname (plfile);
 
     /* for now assume that all playlist files will be line-based
        all of these are line based -- add different code for different
@@ -160,6 +168,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
     while (!error && fgets (buf, PATH_MAX, fp))
     {
 	gchar *bufp = buf;
+	gchar *filename = NULL;
 	gint len = strlen (bufp); /* remove newline */
 	if((len>0) && (bufp[len-1] == 0x0a))  bufp[len-1] = 0;
 	switch (type)
@@ -170,7 +179,8 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	    /* assume comments start with ';' or '#' */
 	    if ((*bufp == ';') || (*bufp == '#')) break;
 	    /* assume the rest of the line is a filename */
-	    if (add_song_by_filename (bufp, plitem,
+	    filename = concat_dir_if_relative (dirname, bufp);
+	    if (add_song_by_filename (filename, plitem,
 				      prefs_get_add_recursively (),
 				      addsongfunc, data))
 		++songs;
@@ -179,7 +189,8 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	    /* comments start with '#' */
 	    if (*bufp == '#') break;
 	    /* assume the rest of the line is a filename */
-	    if (add_song_by_filename (bufp, plitem,
+	    filename = concat_dir_if_relative (dirname, bufp);
+	    if (add_song_by_filename (filename, plitem,
 				      prefs_get_add_recursively (),
 				      addsongfunc, data))
 		++songs;
@@ -197,7 +208,8 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	    { /* looks like a file entry */
 		bufp = strchr (bufp, '=');
 		if (bufp) ++bufp;
-		if (add_song_by_filename (bufp, plitem,
+		filename = concat_dir_if_relative (dirname, bufp);
+		if (add_song_by_filename (filename, plitem,
 					  prefs_get_add_recursively (),
 					  addsongfunc, data))
 		    ++songs;
@@ -205,8 +217,10 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	    break;
 	}
 	++line;
+	g_free (filename);
     }
     fclose (fp);
+    C_FREE (dirname);
 
     /* I don't think it's too interesting to pop up the list of
        duplicates -- but we should reset the list. */
@@ -698,6 +712,7 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		{
 		    id_list = g_list_append (id_list, (gpointer)s->ipod_id);
 		}
+		g_free (dirname);
 	    }
 	}
 	if (g_list_length (id_list) > 0)
@@ -836,6 +851,7 @@ void sync_songids (GList *selected_songids)
 		    gtkpod_warning (_("'%s' does not exist. Ignored.\n"),
 				    dirname);
 	    }
+	    g_free (dirname);
 	}
     }
     if (g_hash_table_size (hash) == 0)

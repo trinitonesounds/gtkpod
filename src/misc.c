@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-07-13 01:42:10 jcs>
+/* Time-stamp: <2003-07-13 15:56:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -257,6 +257,22 @@ gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
 {
     return itunesdb_concat_dir (dir, file);
 }
+
+/* Concats @base_dir and @rel_dir if and only if @rel_dir is not
+ * absolute (does not start with '~' or '/'). Otherwise simply return
+ * a copy of @rel_dir. Must free return value after use */
+gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
+			       G_CONST_RETURN gchar *rel_dir)
+{
+    /* sanity */
+    if (!rel_dir || !*rel_dir)
+	return concat_dir (base_dir, rel_dir); /* this constellation
+						  is nonsense... */
+    if ((*rel_dir == '/') || (*rel_dir == '~'))
+	return g_strdup (rel_dir);             /* rel_dir is absolute */
+    return concat_dir (base_dir, rel_dir);     /* make absolute path */
+}
+
 
 /* Calculate the time in ms passed since @old_time. @old_time is
    updated with the current time if @update is TRUE*/
