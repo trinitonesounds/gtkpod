@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 22:25:48 jcs>
+/* Time-stamp: <2004-07-22 22:59:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1940,14 +1940,21 @@ gboolean get_gain (Track *track)
     {
     case FILE_TYPE_MP3: 
 	result = mp3_get_gain (path, track);
+	break;
     case FILE_TYPE_M4A: /* FIXME */
     case FILE_TYPE_M4P: /* FIXME */
     case FILE_TYPE_M4B: /* FIXME */
     case FILE_TYPE_WAV: /* FIXME */
+    case FILE_TYPE_UNKNOWN: 
+	gtkpod_warning (
+	    _("Normalization failed: file type not supported.\n"));
+	break;
+    case FILE_TYPE_ERROR: 
+	gtkpod_warning (
+	    _("Normalization failed: file not available.\n"));
+	break;
     case FILE_TYPE_M3U: 
     case FILE_TYPE_PLS: 
-    case FILE_TYPE_UNKNOWN: 
-    case FILE_TYPE_ERROR: 
 	break;
     }
     g_free (path);

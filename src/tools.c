@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 22:27:19 jcs>
+/* Time-stamp: <2004-07-22 23:58:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -124,14 +124,13 @@ static void normalization_abort(gboolean *abort)
 
 void nm_tracks_list(GList *list)
 {
-  gint count, n, nrs;
-  gchar *buf;
-  Track  *track;
+  gint count, succ_count, n, nrs;
   gint32 new_soundcheck = 0;
   static gboolean abort;
-  GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
+  GtkWidget *dialog, *progress_bar, *label, *track_label;
+  GtkWidget *image, *hbox;
   time_t diff, start, mins, secs;
-  char *progtext = NULL;
+  gchar *buf, *progtext = NULL;
 
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
@@ -172,6 +171,11 @@ void nm_tracks_list(GList *list)
   gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
   g_free (progtext);
 
+  /* Create label for track name */
+  track_label = gtk_label_new (NULL);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  gtk_label_set_selectable (GTK_LABEL (label), TRUE);
+
   /* Indicate that user wants to abort */
   g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
 			    G_CALLBACK (normalization_abort),
@@ -181,6 +185,8 @@ void nm_tracks_list(GList *list)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
 		      hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+		      track_label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
 		      progress_bar, FALSE, FALSE, 0);
   gtk_widget_show_all (dialog);
 
@@ -188,7 +194,8 @@ void nm_tracks_list(GList *list)
 
   /* count number of tracks to be normalized */
   n = g_list_length(list);
-  count = 0; /* tracks normalized */
+  count = 0; /* tracks processed */
+  succ_count = 0;  /* tracks normalized */
   nrs = 0;
   abort = FALSE;
   start = time(NULL);
@@ -198,97 +205,116 @@ void nm_tracks_list(GList *list)
      /* FIXME we should tell something*/
 
   }
-  while (!abort &&  (list!=NULL)) /*FIXME:change it in a do-while cycle*/
+  else
   {
-     track=list->data;
-#ifdef G_THREADS_ENABLED
-	mutex_data = FALSE;
-	thread = g_thread_create (th_nm_get_soundcheck, track, TRUE, NULL);
-	if (thread)
-	{
-	   gboolean first_abort = TRUE;
-	   g_mutex_lock (mutex);
-	   do
-	   {
-	      while (widgets_blocked && gtk_events_pending ())
-		 gtk_main_iteration ();
-	      /* wait a maximum of 10 ms */
+      /* we need ***much*** longer timeout */
+      prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
+  }
+  while (!abort &&  (list!=NULL))
+  {
+     Track  *track = list->data;
+     gchar *label_buf = g_strdup_printf ("%d/%d", count, n);
+     gchar *sb_buf = g_strdup_printf (_("%s - %s"),
+				      track->artist, track->title);
 
-	      if (abort && first_abort)
-	      {
-		  first_abort = FALSE;
-		  progtext = g_strdup (_("Aborting..."));
-		  gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
-					    progtext);
-		  g_free (progtext);
-		  gtkpod_statusbar_message(_("Will abort after current mp3gain process ends."));
-		  while (widgets_blocked && gtk_events_pending ())
-		      gtk_main_iteration ();
-	      }
-	      g_get_current_time (&gtime);
-	      g_time_val_add (&gtime, 20000);
-	      g_cond_timed_wait (cond, mutex, &gtime);
-	   }
-	   while(!mutex_data);
-	   new_soundcheck = (gint)g_thread_join (thread);
-	   g_mutex_unlock (mutex);
-	}
-	else
-	{
-	   g_warning ("Thread creation failed, falling back to default.\n");
-	   new_soundcheck = nm_get_soundcheck (track);
-	}
+     gtk_label_set_text (GTK_LABEL (track_label), label_buf);
+     gtkpod_statusbar_message(sb_buf);
+     C_FREE (label_buf);
+     C_FREE (sb_buf);
+
+     while (widgets_blocked && gtk_events_pending ())
+	 gtk_main_iteration ();
+
+#ifdef G_THREADS_ENABLED
+     mutex_data = FALSE;
+     thread = g_thread_create (th_nm_get_soundcheck, track, TRUE, NULL);
+     if (thread)
+     {
+	 gboolean first_abort = TRUE;
+	 g_mutex_lock (mutex);
+	 do
+	 {
+	     while (widgets_blocked && gtk_events_pending ())
+		 gtk_main_iteration ();
+	     /* wait a maximum of 10 ms */
+
+	     if (abort && first_abort)
+	     {
+		 first_abort = FALSE;
+		 progtext = g_strdup (_("Aborting..."));
+		 gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
+					   progtext);
+		 g_free (progtext);
+		 gtkpod_statusbar_message(_("Will abort after current mp3gain process ends."));
+		 while (widgets_blocked && gtk_events_pending ())
+		     gtk_main_iteration ();
+	     }
+	     g_get_current_time (&gtime);
+	     g_time_val_add (&gtime, 20000);
+	     g_cond_timed_wait (cond, mutex, &gtime);
+	 }
+	 while(!mutex_data);
+	 new_soundcheck = (gint)g_thread_join (thread);
+	 g_mutex_unlock (mutex);
+     }
+     else
+     {
+	 g_warning ("Thread creation failed, falling back to default.\n");
+	 new_soundcheck = nm_get_soundcheck (track);
+     }
 #else
-	new_soundcheck = nm_get_soundcheck (track);
+     new_soundcheck = nm_get_soundcheck (track);
 #endif
 
-/*normalization part*/
-	if(new_soundcheck == TRACKVOLERROR)
-	{
-	   abort=TRUE;
-	}
-	else
-	{
-	    if(new_soundcheck != track->soundcheck)
-	    {
-		track->soundcheck = new_soundcheck;
-		pm_track_changed (track);
-		data_changed ();
-	    }
-	}
-/*end normalization*/
+     /*normalization part*/
+     if(new_soundcheck == TRACKVOLERROR)
+     {
+	 gchar *path = get_track_name_on_disk_verified (track);
+	 gchar *buf = g_strdup_printf (
+	     _("'%s-%s' (%s) could not be normalized.\n\n"),
+	     track->artist, track->title, path? path:"");
+	 gtkpod_warning (buf);
+	 g_free (path);
+	 g_free (buf);
+     }
+     else
+     {
+	 ++succ_count;
+	 if(new_soundcheck != track->soundcheck)
+	 {
+	     track->soundcheck = new_soundcheck;
+	     pm_track_changed (track);
+	     data_changed ();
+	 }
+     }
+     /*end normalization*/
 
-	++count;
-	if (count == 1)  /* we need ***much*** longer timeout */
-	   prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
+     ++count;
+     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
+				   (gdouble) count/n);
 
-	buf = g_strdup_printf (ngettext ("Normalized %d of %d new tracks.",
-					       "Normalized %d of %d new tracks.", n),
-					 count, n);
-	gtkpod_statusbar_message(buf);
-	g_free (buf);
-
-	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
-					(gdouble) count/n);
-
-	diff = time(NULL) - start;
-	mins = ((diff*n/count)-diff)/60;
-	secs = ((((diff*n/count)-diff) % 60) / 5) * 5;
-      /* don't bounce up too quickly (>10% change only) */
+     diff = time(NULL) - start;
+     mins = ((diff*n/count)-diff)/60;
+     secs = ((((diff*n/count)-diff) % 60) / 5) * 5;
+     /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
-	progtext = g_strdup_printf (_("%d%% (%d:%02d) left"),
-			  count*100/n, (int)mins, (int)secs);
-	gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
-					progtext);
-	g_free (progtext);
+     progtext = g_strdup_printf (_("%d%% (%d:%02d left)"),
+				 count*100/n, (int)mins, (int)secs);
+     gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
+			       progtext);
+     g_free (progtext);
 
-     if (abort && (count != n))
-	gtkpod_statusbar_message (_("Some tracks were not normalized. Normalization aborted!"));
      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
      list=g_list_next(list);
   } /*end while*/
 
   prefs_set_statusbar_timeout (0);
+
+  buf = g_strdup_printf (ngettext ("Normalized %d of %d tracks.",
+				   "Normalized %d of %d tracks.", n),
+			 count, n);
+  gtkpod_statusbar_message(buf);
+  g_free (buf);
 
   gtk_widget_destroy (dialog);
   release_widgets();

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-13 22:27:20 JST jcs>
+/* Time-stamp: <2004-07-22 23:49:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -51,6 +51,7 @@ void info_update_totals_view_space (void);
 #define STATUSBAR_TIMEOUT 4200
 void gtkpod_statusbar_init(void);
 void gtkpod_statusbar_message(const gchar *message);
+void gtkpod_statusbar_reset_timeout (void);
 void gtkpod_space_statusbar_init(void);
 void gtkpod_tracks_statusbar_init(void);
 void gtkpod_tracks_statusbar_update(void);

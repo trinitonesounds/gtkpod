@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 01:00:24 jcs>
+/* Time-stamp: <2004-07-22 23:49:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1757,6 +1757,7 @@ void prefs_set_statusbar_timeout (guint32 val)
 {
     if (val == 0)  val = STATUSBAR_TIMEOUT;
     cfg->statusbar_timeout = val;
+    gtkpod_statusbar_reset_timeout ();
 }
 
 guint32 prefs_get_statusbar_timeout (void)

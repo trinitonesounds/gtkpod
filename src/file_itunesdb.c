@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-22 00:24:55 jcs>
+/* Time-stamp: <2004-07-22 23:59:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -883,7 +883,7 @@ static gboolean flush_tracks (void)
 	      secs = ((((diff*n/count)-diff+5) % 60) / 5) * 5;
 	      /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
-	      progtext = g_strdup_printf (_("%d%% (%d:%02d) left"),
+	      progtext = g_strdup_printf (_("%d%% (%d:%02d left)"),
 					  count*100/n, (int)mins, (int)secs);
               gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
 					progtext);

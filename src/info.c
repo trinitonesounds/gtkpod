@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-07 23:40:03 jcs>
+/* Time-stamp: <2004-07-22 23:49:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -311,6 +311,18 @@ gtkpod_statusbar_clear(gpointer data)
     return FALSE;
 }
 
+
+void
+gtkpod_statusbar_reset_timeout (void)
+{
+    if (statusbar_timeout_id != 0) /* remove last timeout, if still present */
+	gtk_timeout_remove (statusbar_timeout_id);
+    statusbar_timeout_id = gtk_timeout_add(prefs_get_statusbar_timeout (),
+					   (GtkFunction) gtkpod_statusbar_clear,
+					   NULL);
+}
+
+
 void
 gtkpod_statusbar_message(const gchar *message)
 {
@@ -322,11 +334,7 @@ gtkpod_statusbar_message(const gchar *message)
 	snprintf(buf, PATH_MAX, "  %s", message);
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
-	if (statusbar_timeout_id != 0) /* remove last timeout, if still present */
-	    gtk_timeout_remove (statusbar_timeout_id);
-	statusbar_timeout_id = gtk_timeout_add(prefs_get_statusbar_timeout (),
-					       (GtkFunction) gtkpod_statusbar_clear,
-					       NULL);
+	gtkpod_statusbar_reset_timeout ();
     }
 }
 
@@ -370,9 +378,16 @@ gtkpod_tracks_statusbar_update(void)
    after locking. */
 void space_set_ipod_mount (const gchar *mp)
 {
+    g_return_if_fail (mp);
     if (space_mutex)  g_mutex_lock (space_mutex);
+
+    /* update the free space data if mount point changed */
+    if (!space_mp || (strcmp (space_mp, mp) != 0))
+	space_data_update ();
+
     g_free (space_mp);
     space_mp = g_strdup (mp);
+
     if (space_mutex)   g_mutex_unlock (space_mutex);
 }
 
