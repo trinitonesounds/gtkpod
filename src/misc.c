@@ -783,6 +783,7 @@ S_item ST_to_S (ST_CAT_item st)
     case ST_CAT_GENRE:       return S_GENRE;
     case ST_CAT_COMPOSER:    return S_COMPOSER;
     case ST_CAT_TITLE:       return S_TITLE;
+    case ST_CAT_SPECIAL:
     case ST_CAT_NUM:         return -1;
     }
     return -1;

@@ -438,3 +438,31 @@ on_cfg_time_format_changed             (GtkEditable     *editable,
 void
 on_cfg_case_sensitive_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_sp_rating_n_toggled                 (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_sp_entry_activate          (GtkEditable     *editable,
+			      gpointer         user_data);
+
+void
+on_sp_cal_button_clicked       (GtkButton       *button,
+				gpointer         user_data);
+
+void
+on_sp_cond_button_toggled         (GtkToggleButton *togglebutton,
+				   gpointer         user_data);
+
+void
+on_sp_go_clicked                       (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_sp_go_always_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

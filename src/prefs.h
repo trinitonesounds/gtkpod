@@ -51,7 +51,20 @@ struct cfg
   struct {
     gboolean autoselect;  /* automatically select "All" in sort tab? */
     guint    category;    /* which category was selected last? */
-  } st[SORT_TAB_MAX];
+    /* the following fields are for the "special" tab */
+    gboolean sp_or;           /* logic operation: OR? (FALSE: AND) */
+    gboolean sp_rating;       /* consider rating? */
+    guint32  sp_rating_state; /* pass which rating? (1 star: bit 1...) */
+    gboolean sp_playcount;    /* consider playcount? */
+    gchar *sp_playcount_state;/* current playcount string */
+    gboolean sp_played;       /* consider last played? */
+    gchar *sp_played_state;   /* current "played" string */
+    gboolean sp_modified;     /* consider last modified? */
+    gchar *sp_modified_state; /* current "modified" string */
+    gboolean sp_create;       /* consider last created? */
+    gchar *sp_create_state;   /* current "created" string */
+    gboolean sp_autodisplay;  /* display automatically? */ 
+} st[SORT_TAB_MAX];
   gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
@@ -203,5 +216,17 @@ gchar *prefs_get_play_enqueue_path (void);
 void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount(void);
+void prefs_set_sp_or (guint32 inst, gboolean state);
+gboolean prefs_get_sp_or (guint32 inst);
+void prefs_set_sp_cond (guint32 inst, S_item s_item, gboolean state);
+gboolean prefs_get_sp_cond (guint32 inst, S_item s_item);
+void prefs_set_sp_rating_n (guint32 inst, gint n, gboolean state);
+gboolean prefs_get_sp_rating_n (guint32 inst, gint n);
+void prefs_set_sp_rating_state (guint32 inst, guint32 state);
+guint32 prefs_get_sp_rating_state (guint32 inst);
+void prefs_set_sp_entry (guint32 inst, S_item s_item, gchar *str);
+gchar *prefs_get_sp_entry (guint32 inst, S_item s_item);
+void prefs_set_sp_autodisplay (guint32 inst, gboolean state);
+gboolean prefs_get_sp_autodisplay (guint32 inst);
 
 #endif

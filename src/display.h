@@ -41,6 +41,7 @@ typedef enum {
   ST_CAT_GENRE,
   ST_CAT_COMPOSER,
   ST_CAT_TITLE,
+  ST_CAT_SPECIAL,
   ST_CAT_NUM
 } ST_CAT_item;
 
@@ -63,7 +64,8 @@ enum {
 /* Total number */
 #define PANED_NUM (PANED_NUM_GLADE+PANED_NUM_ST)
 
-
+/* max. number of stars */
+#define RATING_MAX 5
 
 /* print some timing info for tuning purposes */
 #define DEBUG_TIMING 0

@@ -1951,50 +1951,141 @@ static void st_create_listview (gint inst)
   if (st->model)
   {
       /* FIXME: how do we delete the model? */
+      st->model = NULL;
   }
   liststore = gtk_list_store_new (ST_NUM_COLUMNS, G_TYPE_POINTER);
   model = GTK_TREE_MODEL (liststore);
   st->model = model;
   /* set tree views */
   for (i=0; i<ST_CAT_NUM; ++i)
-    {
-      treeview = st->treeview[i];
-      gtk_tree_view_set_model (treeview, model);
-      gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
-      gtk_tree_selection_set_mode (gtk_tree_view_get_selection (treeview),
-				   GTK_SELECTION_SINGLE);
-      selection = gtk_tree_view_get_selection (treeview);
-      g_signal_connect (G_OBJECT (selection), "changed",
-			G_CALLBACK (st_selection_changed), (gpointer)inst);
-      /* Add column */
-      renderer = gtk_cell_renderer_text_new ();
-      g_signal_connect (G_OBJECT (renderer), "edited",
-			G_CALLBACK (st_cell_edited), GINT_TO_POINTER(inst));
-      g_object_set_data (G_OBJECT (renderer), "column",
-			 (gint *)ST_COLUMN_ENTRY);
-      column = gtk_tree_view_column_new ();
-      gtk_tree_view_column_pack_start (column, renderer, TRUE);
-      column = gtk_tree_view_column_new_with_attributes ("", renderer, NULL);
-      gtk_tree_view_column_set_cell_data_func (column, renderer,
-					       st_cell_data_func, NULL, NULL);
-      gtk_tree_view_column_set_sort_column_id (column, ST_COLUMN_ENTRY);
-      gtk_tree_view_column_set_resizable (column, TRUE);
-      gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
-      gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (liststore),
-				       ST_COLUMN_ENTRY,
-				       st_data_compare_func, column, NULL);
-      gtk_tree_view_append_column (treeview, column);
-      gtk_tree_view_set_headers_visible (treeview, FALSE);
-      gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
-		      st_drag_types, TGNR (st_drag_types), GDK_ACTION_COPY);
-      g_signal_connect (G_OBJECT (treeview), "button-release-event",
-			G_CALLBACK (st_button_release_event), GINT_TO_POINTER(inst));
-    }
+  {
+      if (i != ST_CAT_SPECIAL)
+      {
+	  treeview = st->treeview[i];
+	  gtk_tree_view_set_model (treeview, model);
+	  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
+	  gtk_tree_selection_set_mode (gtk_tree_view_get_selection (treeview),
+				       GTK_SELECTION_SINGLE);
+	  selection = gtk_tree_view_get_selection (treeview);
+	  g_signal_connect (G_OBJECT (selection), "changed",
+			    G_CALLBACK (st_selection_changed), (gpointer)inst);
+	  /* Add column */
+	  renderer = gtk_cell_renderer_text_new ();
+	  g_signal_connect (G_OBJECT (renderer), "edited",
+			    G_CALLBACK (st_cell_edited), GINT_TO_POINTER(inst));
+	  g_object_set_data (G_OBJECT (renderer), "column",
+			     (gint *)ST_COLUMN_ENTRY);
+	  column = gtk_tree_view_column_new ();
+	  gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	  column = gtk_tree_view_column_new_with_attributes ("", renderer, NULL);
+	  gtk_tree_view_column_set_cell_data_func (column, renderer,
+						   st_cell_data_func, NULL, NULL);
+	  gtk_tree_view_column_set_sort_column_id (column, ST_COLUMN_ENTRY);
+	  gtk_tree_view_column_set_resizable (column, TRUE);
+	  gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
+	  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (liststore),
+					   ST_COLUMN_ENTRY,
+					   st_data_compare_func, column, NULL);
+	  gtk_tree_view_append_column (treeview, column);
+	  gtk_tree_view_set_headers_visible (treeview, FALSE);
+	  gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
+			       st_drag_types, TGNR (st_drag_types), GDK_ACTION_COPY);
+	  g_signal_connect (G_OBJECT (treeview), "button-release-event",
+			    G_CALLBACK (st_button_release_event), GINT_TO_POINTER(inst));
+      }
+  }
+}
+
+
+/* Create the "special" page in the notebook and connect all the
+   signals */
+static void st_create_special (gint inst, GtkWidget *window)
+{
+      GtkWidget *special = create_special ();
+      GtkWidget *viewport = lookup_widget (special, "special_viewport");
+      gint i;
+
+      gtk_widget_ref (viewport);
+      gtk_container_remove (GTK_CONTAINER (special), viewport);
+      gtk_container_add (GTK_CONTAINER (window), viewport);
+      gtk_widget_unref (viewport);
+
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_or_button"),
+			"toggled", G_CALLBACK (on_sp_or_button_toggled),
+			(gpointer)inst);
+
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_rating_button"),
+			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
+			(gpointer)((S_RATING<<9) + inst));
+      for (i=0; i<=RATING_MAX; ++i)
+      {
+	  gchar *buf = g_strdup_printf ("sp_rating%d", i);
+	  g_signal_connect ((gpointer)lookup_widget (special, buf),
+			    "toggled", G_CALLBACK (on_sp_rating_n_toggled),
+			    (gpointer)((i<<9) + inst));
+	  g_free (buf);
+      }
+
+      g_signal_connect ((gpointer)lookup_widget (special,
+						 "sp_playcount_button"),
+			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
+			(gpointer)((S_PLAYCOUNT<<9) + inst));
+      g_signal_connect ((gpointer)lookup_widget (special,
+						 "sp_playcount_entry"),
+			"activate", G_CALLBACK (on_sp_entry_activate),
+			(gpointer)((S_PLAYCOUNT<<9) + inst));
+
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_played_button"),
+			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
+			(gpointer)((S_TIME_PLAYED<<9) + inst));
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_played_entry"),
+			"activate", G_CALLBACK (on_sp_entry_activate),
+			(gpointer)((S_TIME_PLAYED<<9) + inst));
+      g_signal_connect ((gpointer)lookup_widget (special,
+						 "sp_played_cal_button"),
+			"clicked",
+			G_CALLBACK (on_sp_cal_button_clicked),
+			(gpointer)((S_TIME_PLAYED<<9) + inst));
+
+      g_signal_connect ((gpointer)lookup_widget (special,
+						 "sp_modified_button"),
+			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
+			(gpointer)((S_TIME_MODIFIED<<9) + inst));
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_modified_entry"),
+			"activate", G_CALLBACK (on_sp_entry_activate),
+			(gpointer)((S_TIME_MODIFIED<<9) + inst));
+      g_signal_connect ((gpointer)lookup_widget (special,
+						 "sp_modified_cal_button"),
+			"clicked",
+			G_CALLBACK (on_sp_cal_button_clicked),
+			(gpointer)((S_TIME_MODIFIED<<9) + inst));
+
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_created_button"),
+			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
+			(gpointer)((S_TIME_CREATE<<9) + inst));
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_created_entry"),
+			"activate", G_CALLBACK (on_sp_entry_activate),
+			(gpointer)((S_TIME_CREATE<<9) + inst));
+      g_signal_connect ((gpointer)lookup_widget (special,
+						 "sp_created_cal_button"),
+			"clicked",
+			G_CALLBACK (on_sp_cal_button_clicked),
+			(gpointer)((S_TIME_CREATE<<9) + inst));
+
+
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_go"),
+			"clicked", G_CALLBACK (on_sp_go_clicked),
+			(gpointer)inst);
+      g_signal_connect ((gpointer)lookup_widget (special, "sp_go_always"),
+			"toggled", G_CALLBACK (on_sp_go_always_toggled),
+			(gpointer)inst);
+
+      gtk_widget_destroy (special);
 }
 
 
 /* create the treeview for category @st_cat of instance @inst */
-static void st_create_treeview (gint inst, ST_CAT_item st_cat)
+static void st_create_page (gint inst, ST_CAT_item st_cat)
 {
   GtkWidget *st0_notebook;
   GtkWidget *st0_window0;
@@ -2023,10 +2114,6 @@ static void st_create_treeview (gint inst, ST_CAT_item st_cat)
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (st0_window0), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
       st->window[st_cat] = st0_window0;
   }
-  /* create treeview */
-  st0_cat0_treeview = gtk_tree_view_new ();
-  gtk_widget_show (st0_cat0_treeview);
-  gtk_container_add (GTK_CONTAINER (st0_window0), st0_cat0_treeview);
 
   switch (st_cat)
   {
@@ -2045,6 +2132,9 @@ static void st_create_treeview (gint inst, ST_CAT_item st_cat)
   case ST_CAT_TITLE:
       st0_label0 = gtk_label_new (_("Title"));
       break;
+  case ST_CAT_SPECIAL:
+      st0_label0 = gtk_label_new (_("Special"));
+      break;
   case ST_CAT_NUM: /* should not happen... */
       st0_label0 = gtk_label_new (("Programming Error"));
       break;
@@ -2052,28 +2142,40 @@ static void st_create_treeview (gint inst, ST_CAT_item st_cat)
   gtk_widget_show (st0_label0);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (st0_notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (st0_notebook), st_cat), st0_label0);
   gtk_label_set_justify (GTK_LABEL (st0_label0), GTK_JUSTIFY_LEFT);
-  g_signal_connect ((gpointer) st0_cat0_treeview, "drag_data_get",
-                    G_CALLBACK (on_st_treeview_drag_data_get),
-                    NULL);
-  g_signal_connect_after ((gpointer) st0_cat0_treeview, "key_release_event",
-                          G_CALLBACK (on_st_treeview_key_release_event),
-                          NULL);
 
-  st->treeview[st_cat] = GTK_TREE_VIEW (st0_cat0_treeview);
+  if (st_cat == ST_CAT_SPECIAL)
+  {
+      /* create special window */
+      st_create_special (inst, st0_window0);
+  }
+  else
+  {
+      /* create treeview */
+      st0_cat0_treeview = gtk_tree_view_new ();
+      gtk_widget_show (st0_cat0_treeview);
+      gtk_container_add (GTK_CONTAINER (st0_window0), st0_cat0_treeview);
+      g_signal_connect ((gpointer) st0_cat0_treeview, "drag_data_get",
+			G_CALLBACK (on_st_treeview_drag_data_get),
+			NULL);
+      g_signal_connect_after ((gpointer) st0_cat0_treeview, "key_release_event",
+			      G_CALLBACK (on_st_treeview_key_release_event),
+			      NULL);
+      st->treeview[st_cat] = GTK_TREE_VIEW (st0_cat0_treeview);
+  }
 }
 
-
-/* create all ST_CAT_NUM treeviews in sort tab of instance @inst, then
- * set the model */
-static void st_create_treeviews (gint inst)
+/* create all ST_CAT_NUM treeviews and the special page in sort tab of
+ * instance @inst, then set the model */
+static void st_create_pages (gint inst)
 {
-  st_create_treeview (inst, ST_CAT_ARTIST);
-  st_create_treeview (inst, ST_CAT_ALBUM);
-  st_create_treeview (inst, ST_CAT_GENRE);
-  st_create_treeview (inst, ST_CAT_COMPOSER);
-  st_create_treeview (inst, ST_CAT_TITLE);
+  st_create_page (inst, ST_CAT_ARTIST);
+  st_create_page (inst, ST_CAT_ALBUM);
+  st_create_page (inst, ST_CAT_GENRE);
+  st_create_page (inst, ST_CAT_COMPOSER);
+  st_create_page (inst, ST_CAT_TITLE);
+  st_create_page (inst, ST_CAT_SPECIAL);
   st_create_listview (inst);
-}  
+}
 
 
 /* Create notebook and fill in sorttab[@inst] */
@@ -2116,7 +2218,7 @@ static void st_create_notebook (gint inst)
                     NULL);
 
   st->notebook = GTK_NOTEBOOK (st0_notebook);
-  st_create_treeviews (inst);
+  st_create_pages (inst);
   page = prefs_get_st_category (inst);
   st->current_category = page;
   gtk_notebook_set_current_page (st->notebook, page);

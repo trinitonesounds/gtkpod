@@ -2215,39 +2215,28 @@ GtkWidget*
 create_special (void)
 {
   GtkWidget *special;
-  GtkWidget *scrolledwindow4;
+  GtkWidget *special_viewport;
   GtkWidget *vbox37;
   GtkWidget *hbox20;
   GtkWidget *label52;
-  GtkWidget *sp_any_button;
-  GSList *sp_any_button_group = NULL;
-  GtkWidget *sp_all_button;
+  GtkWidget *sp_or_button;
+  GSList *sp_or_button_group = NULL;
+  GtkWidget *sp_and_button;
   GtkWidget *hseparator1;
   GtkWidget *table6;
-  GtkWidget *sp_playcount_button;
-  GtkWidget *sp_played_button;
-  GtkWidget *sp_modified_button;
-  GtkWidget *sp_created_button;
   GtkWidget *hbox14;
-  GtkWidget *sp_rating_0;
-  GtkWidget *sp_rating_1;
-  GtkWidget *sp_rating_2;
-  GtkWidget *sp_rating_3;
-  GtkWidget *sp_rating_4;
-  GtkWidget *sp_rating_5;
+  GtkWidget *sp_rating0;
+  GtkWidget *sp_rating1;
+  GtkWidget *sp_rating2;
+  GtkWidget *sp_rating3;
+  GtkWidget *sp_rating4;
+  GtkWidget *sp_rating5;
   GtkWidget *hbox15;
-  GtkWidget *sp_playcount_left_entry;
-  GtkWidget *combo1;
-  GtkWidget *sp_playcount_left_combo_entry;
-  GtkWidget *label48;
-  GtkWidget *combo2;
-  GtkWidget *sp_playcount_right_combo_entry;
-  GtkWidget *sp_playcount_right_entry;
+  GtkWidget *sp_playcount_entry;
   GtkWidget *hbox17;
   GtkWidget *sp_played_entry;
   GtkWidget *label49;
   GtkWidget *sp_played_cal_button;
-  GtkWidget *sp_rating_button;
   GtkWidget *hbox18;
   GtkWidget *sp_modified_entry;
   GtkWidget *label50;
@@ -2256,6 +2245,19 @@ create_special (void)
   GtkWidget *sp_created_entry;
   GtkWidget *label51;
   GtkWidget *sp_created_cal_button;
+  GtkWidget *sp_playcount_button;
+  GtkWidget *sp_rating_button;
+  GtkWidget *sp_played_button;
+  GtkWidget *sp_modified_button;
+  GtkWidget *sp_created_button;
+  GtkWidget *hseparator2;
+  GtkWidget *hbox21;
+  GtkWidget *sp_go;
+  GtkWidget *alignment1;
+  GtkWidget *hbox22;
+  GtkWidget *image1056;
+  GtkWidget *label53;
+  GtkWidget *sp_go_always;
   GtkTooltips *tooltips;
 
   tooltips = gtk_tooltips_new ();
@@ -2263,14 +2265,13 @@ create_special (void)
   special = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (special), _("Special"));
 
-  scrolledwindow4 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_show (scrolledwindow4);
-  gtk_container_add (GTK_CONTAINER (special), scrolledwindow4);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow4), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  special_viewport = gtk_viewport_new (NULL, NULL);
+  gtk_widget_show (special_viewport);
+  gtk_container_add (GTK_CONTAINER (special), special_viewport);
 
   vbox37 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox37);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow4), vbox37);
+  gtk_container_add (GTK_CONTAINER (special_viewport), vbox37);
 
   hbox20 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox20);
@@ -2281,17 +2282,17 @@ create_special (void)
   gtk_box_pack_start (GTK_BOX (hbox20), label52, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label52), GTK_JUSTIFY_LEFT);
 
-  sp_any_button = gtk_radio_button_new_with_mnemonic (NULL, _("Any (OR)"));
-  gtk_widget_show (sp_any_button);
-  gtk_box_pack_start (GTK_BOX (hbox20), sp_any_button, FALSE, FALSE, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sp_any_button), sp_any_button_group);
-  sp_any_button_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sp_any_button));
+  sp_or_button = gtk_radio_button_new_with_mnemonic (NULL, _("Any (OR)"));
+  gtk_widget_show (sp_or_button);
+  gtk_box_pack_start (GTK_BOX (hbox20), sp_or_button, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sp_or_button), sp_or_button_group);
+  sp_or_button_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sp_or_button));
 
-  sp_all_button = gtk_radio_button_new_with_mnemonic (NULL, _("All (AND)"));
-  gtk_widget_show (sp_all_button);
-  gtk_box_pack_start (GTK_BOX (hbox20), sp_all_button, FALSE, FALSE, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sp_all_button), sp_any_button_group);
-  sp_any_button_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sp_all_button));
+  sp_and_button = gtk_radio_button_new_with_mnemonic (NULL, _("All (AND)"));
+  gtk_widget_show (sp_and_button);
+  gtk_box_pack_start (GTK_BOX (hbox20), sp_and_button, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sp_and_button), sp_or_button_group);
+  sp_or_button_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sp_and_button));
 
   hseparator1 = gtk_hseparator_new ();
   gtk_widget_show (hseparator1);
@@ -2299,32 +2300,7 @@ create_special (void)
 
   table6 = gtk_table_new (5, 2, FALSE);
   gtk_widget_show (table6);
-  gtk_box_pack_start (GTK_BOX (vbox37), table6, TRUE, TRUE, 0);
-
-  sp_playcount_button = gtk_check_button_new_with_mnemonic (_("Playcount"));
-  gtk_widget_show (sp_playcount_button);
-  gtk_table_attach (GTK_TABLE (table6), sp_playcount_button, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  sp_played_button = gtk_check_button_new_with_mnemonic (_("Last played"));
-  gtk_widget_show (sp_played_button);
-  gtk_table_attach (GTK_TABLE (table6), sp_played_button, 0, 1, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_tooltips_set_tip (tooltips, sp_played_button, _("DD/MM/YYYY HH:MM or similar"), NULL);
-
-  sp_modified_button = gtk_check_button_new_with_mnemonic (_("Last modified"));
-  gtk_widget_show (sp_modified_button);
-  gtk_table_attach (GTK_TABLE (table6), sp_modified_button, 0, 1, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  sp_created_button = gtk_check_button_new_with_mnemonic (_("Created"));
-  gtk_widget_show (sp_created_button);
-  gtk_table_attach (GTK_TABLE (table6), sp_created_button, 0, 1, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+  gtk_box_pack_start (GTK_BOX (vbox37), table6, FALSE, TRUE, 0);
 
   hbox14 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox14);
@@ -2332,29 +2308,29 @@ create_special (void)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  sp_rating_0 = gtk_check_button_new_with_mnemonic (_("0"));
-  gtk_widget_show (sp_rating_0);
-  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_0, FALSE, FALSE, 0);
+  sp_rating0 = gtk_check_button_new_with_mnemonic (_("0"));
+  gtk_widget_show (sp_rating0);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating0, FALSE, FALSE, 0);
 
-  sp_rating_1 = gtk_check_button_new_with_mnemonic (_("1"));
-  gtk_widget_show (sp_rating_1);
-  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_1, FALSE, FALSE, 0);
+  sp_rating1 = gtk_check_button_new_with_mnemonic (_("1"));
+  gtk_widget_show (sp_rating1);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating1, FALSE, FALSE, 0);
 
-  sp_rating_2 = gtk_check_button_new_with_mnemonic (_("2"));
-  gtk_widget_show (sp_rating_2);
-  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_2, FALSE, FALSE, 0);
+  sp_rating2 = gtk_check_button_new_with_mnemonic (_("2"));
+  gtk_widget_show (sp_rating2);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating2, FALSE, FALSE, 0);
 
-  sp_rating_3 = gtk_check_button_new_with_mnemonic (_("3"));
-  gtk_widget_show (sp_rating_3);
-  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_3, FALSE, FALSE, 0);
+  sp_rating3 = gtk_check_button_new_with_mnemonic (_("3"));
+  gtk_widget_show (sp_rating3);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating3, FALSE, FALSE, 0);
 
-  sp_rating_4 = gtk_check_button_new_with_mnemonic (_("4"));
-  gtk_widget_show (sp_rating_4);
-  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_4, FALSE, FALSE, 0);
+  sp_rating4 = gtk_check_button_new_with_mnemonic (_("4"));
+  gtk_widget_show (sp_rating4);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating4, FALSE, FALSE, 0);
 
-  sp_rating_5 = gtk_check_button_new_with_mnemonic (_("5"));
-  gtk_widget_show (sp_rating_5);
-  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating_5, FALSE, FALSE, 0);
+  sp_rating5 = gtk_check_button_new_with_mnemonic (_("5"));
+  gtk_widget_show (sp_rating5);
+  gtk_box_pack_start (GTK_BOX (hbox14), sp_rating5, FALSE, FALSE, 0);
 
   hbox15 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox15);
@@ -2362,41 +2338,10 @@ create_special (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  sp_playcount_left_entry = gtk_entry_new ();
-  gtk_widget_show (sp_playcount_left_entry);
-  gtk_box_pack_start (GTK_BOX (hbox15), sp_playcount_left_entry, TRUE, TRUE, 0);
-  gtk_widget_set_size_request (sp_playcount_left_entry, 1, -2);
-  gtk_entry_set_max_length (GTK_ENTRY (sp_playcount_left_entry), 5);
-
-  combo1 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo1)->popwin),
-                     "GladeParentKey", combo1);
-  gtk_widget_show (combo1);
-  gtk_box_pack_start (GTK_BOX (hbox15), combo1, TRUE, TRUE, 0);
-
-  sp_playcount_left_combo_entry = GTK_COMBO (combo1)->entry;
-  gtk_widget_show (sp_playcount_left_combo_entry);
-  gtk_widget_set_size_request (sp_playcount_left_combo_entry, 1, -2);
-
-  label48 = gtk_label_new (_(" Count "));
-  gtk_widget_show (label48);
-  gtk_box_pack_start (GTK_BOX (hbox15), label48, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label48), GTK_JUSTIFY_LEFT);
-
-  combo2 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo2)->popwin),
-                     "GladeParentKey", combo2);
-  gtk_widget_show (combo2);
-  gtk_box_pack_start (GTK_BOX (hbox15), combo2, TRUE, TRUE, 0);
-
-  sp_playcount_right_combo_entry = GTK_COMBO (combo2)->entry;
-  gtk_widget_show (sp_playcount_right_combo_entry);
-  gtk_widget_set_size_request (sp_playcount_right_combo_entry, 1, -2);
-
-  sp_playcount_right_entry = gtk_entry_new ();
-  gtk_widget_show (sp_playcount_right_entry);
-  gtk_box_pack_start (GTK_BOX (hbox15), sp_playcount_right_entry, TRUE, TRUE, 0);
-  gtk_widget_set_size_request (sp_playcount_right_entry, 1, -2);
+  sp_playcount_entry = gtk_entry_new ();
+  gtk_widget_show (sp_playcount_entry);
+  gtk_box_pack_start (GTK_BOX (hbox15), sp_playcount_entry, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, sp_playcount_entry, _("'5 < c < 10' or '<5' etc. Press 'enter' when finished."), NULL);
 
   hbox17 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox17);
@@ -2407,7 +2352,7 @@ create_special (void)
   sp_played_entry = gtk_entry_new ();
   gtk_widget_show (sp_played_entry);
   gtk_box_pack_start (GTK_BOX (hbox17), sp_played_entry, TRUE, TRUE, 0);
-  gtk_widget_set_size_request (sp_played_entry, 1, -2);
+  gtk_tooltips_set_tip (tooltips, sp_played_entry, _("'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when finished."), NULL);
 
   label49 = gtk_label_new ("");
   gtk_widget_show (label49);
@@ -2418,12 +2363,6 @@ create_special (void)
   gtk_widget_show (sp_played_cal_button);
   gtk_box_pack_start (GTK_BOX (hbox17), sp_played_cal_button, FALSE, FALSE, 0);
 
-  sp_rating_button = gtk_check_button_new_with_mnemonic (_("Rating"));
-  gtk_widget_show (sp_rating_button);
-  gtk_table_attach (GTK_TABLE (table6), sp_rating_button, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
   hbox18 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox18);
   gtk_table_attach (GTK_TABLE (table6), hbox18, 1, 2, 3, 4,
@@ -2433,7 +2372,7 @@ create_special (void)
   sp_modified_entry = gtk_entry_new ();
   gtk_widget_show (sp_modified_entry);
   gtk_box_pack_start (GTK_BOX (hbox18), sp_modified_entry, TRUE, TRUE, 0);
-  gtk_widget_set_size_request (sp_modified_entry, 1, -2);
+  gtk_tooltips_set_tip (tooltips, sp_modified_entry, _("'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when finished."), NULL);
 
   label50 = gtk_label_new ("");
   gtk_widget_show (label50);
@@ -2453,7 +2392,7 @@ create_special (void)
   sp_created_entry = gtk_entry_new ();
   gtk_widget_show (sp_created_entry);
   gtk_box_pack_start (GTK_BOX (hbox19), sp_created_entry, TRUE, TRUE, 0);
-  gtk_widget_set_size_request (sp_created_entry, 1, -2);
+  gtk_tooltips_set_tip (tooltips, sp_created_entry, _("'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when finished."), NULL);
 
   label51 = gtk_label_new ("");
   gtk_widget_show (label51);
@@ -2464,40 +2403,94 @@ create_special (void)
   gtk_widget_show (sp_created_cal_button);
   gtk_box_pack_start (GTK_BOX (hbox19), sp_created_cal_button, FALSE, FALSE, 0);
 
+  sp_playcount_button = gtk_check_button_new_with_mnemonic (_("Playcount"));
+  gtk_widget_show (sp_playcount_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_playcount_button, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 2, 0);
+
+  sp_rating_button = gtk_check_button_new_with_mnemonic (_("Rating"));
+  gtk_widget_show (sp_rating_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_rating_button, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 2, 0);
+
+  sp_played_button = gtk_check_button_new_with_mnemonic (_("Played"));
+  gtk_widget_show (sp_played_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_played_button, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 2, 0);
+
+  sp_modified_button = gtk_check_button_new_with_mnemonic (_("Modified"));
+  gtk_widget_show (sp_modified_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_modified_button, 0, 1, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 2, 0);
+
+  sp_created_button = gtk_check_button_new_with_mnemonic (_("Created"));
+  gtk_widget_show (sp_created_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_created_button, 0, 1, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 2, 0);
+
+  hseparator2 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator2);
+  gtk_box_pack_start (GTK_BOX (vbox37), hseparator2, FALSE, TRUE, 0);
+
+  hbox21 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox21);
+  gtk_box_pack_start (GTK_BOX (vbox37), hbox21, FALSE, FALSE, 0);
+
+  sp_go = gtk_button_new ();
+  gtk_widget_show (sp_go);
+  gtk_box_pack_start (GTK_BOX (hbox21), sp_go, FALSE, TRUE, 2);
+  gtk_tooltips_set_tip (tooltips, sp_go, _("Display songs that match the criteria entered above."), NULL);
+
+  alignment1 = gtk_alignment_new (0.5, 0.5, 0, 0);
+  gtk_widget_show (alignment1);
+  gtk_container_add (GTK_CONTAINER (sp_go), alignment1);
+
+  hbox22 = gtk_hbox_new (FALSE, 2);
+  gtk_widget_show (hbox22);
+  gtk_container_add (GTK_CONTAINER (alignment1), hbox22);
+
+  image1056 = gtk_image_new_from_stock ("gtk-execute", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1056);
+  gtk_box_pack_start (GTK_BOX (hbox22), image1056, FALSE, FALSE, 0);
+
+  label53 = gtk_label_new_with_mnemonic (_("_Display"));
+  gtk_widget_show (label53);
+  gtk_box_pack_start (GTK_BOX (hbox22), label53, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label53), GTK_JUSTIFY_LEFT);
+
+  sp_go_always = gtk_check_button_new_with_mnemonic (_("Display automatically"));
+  gtk_widget_show (sp_go_always);
+  gtk_box_pack_start (GTK_BOX (hbox21), sp_go_always, FALSE, FALSE, 2);
+  gtk_tooltips_set_tip (tooltips, sp_go_always, _("Automatically display songs that match the criteria entered above."), NULL);
+
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (special, special, "special");
-  GLADE_HOOKUP_OBJECT (special, scrolledwindow4, "scrolledwindow4");
+  GLADE_HOOKUP_OBJECT (special, special_viewport, "special_viewport");
   GLADE_HOOKUP_OBJECT (special, vbox37, "vbox37");
   GLADE_HOOKUP_OBJECT (special, hbox20, "hbox20");
   GLADE_HOOKUP_OBJECT (special, label52, "label52");
-  GLADE_HOOKUP_OBJECT (special, sp_any_button, "sp_any_button");
-  GLADE_HOOKUP_OBJECT (special, sp_all_button, "sp_all_button");
+  GLADE_HOOKUP_OBJECT (special, sp_or_button, "sp_or_button");
+  GLADE_HOOKUP_OBJECT (special, sp_and_button, "sp_and_button");
   GLADE_HOOKUP_OBJECT (special, hseparator1, "hseparator1");
   GLADE_HOOKUP_OBJECT (special, table6, "table6");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_button, "sp_playcount_button");
-  GLADE_HOOKUP_OBJECT (special, sp_played_button, "sp_played_button");
-  GLADE_HOOKUP_OBJECT (special, sp_modified_button, "sp_modified_button");
-  GLADE_HOOKUP_OBJECT (special, sp_created_button, "sp_created_button");
   GLADE_HOOKUP_OBJECT (special, hbox14, "hbox14");
-  GLADE_HOOKUP_OBJECT (special, sp_rating_0, "sp_rating_0");
-  GLADE_HOOKUP_OBJECT (special, sp_rating_1, "sp_rating_1");
-  GLADE_HOOKUP_OBJECT (special, sp_rating_2, "sp_rating_2");
-  GLADE_HOOKUP_OBJECT (special, sp_rating_3, "sp_rating_3");
-  GLADE_HOOKUP_OBJECT (special, sp_rating_4, "sp_rating_4");
-  GLADE_HOOKUP_OBJECT (special, sp_rating_5, "sp_rating_5");
+  GLADE_HOOKUP_OBJECT (special, sp_rating0, "sp_rating0");
+  GLADE_HOOKUP_OBJECT (special, sp_rating1, "sp_rating1");
+  GLADE_HOOKUP_OBJECT (special, sp_rating2, "sp_rating2");
+  GLADE_HOOKUP_OBJECT (special, sp_rating3, "sp_rating3");
+  GLADE_HOOKUP_OBJECT (special, sp_rating4, "sp_rating4");
+  GLADE_HOOKUP_OBJECT (special, sp_rating5, "sp_rating5");
   GLADE_HOOKUP_OBJECT (special, hbox15, "hbox15");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_left_entry, "sp_playcount_left_entry");
-  GLADE_HOOKUP_OBJECT (special, combo1, "combo1");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_left_combo_entry, "sp_playcount_left_combo_entry");
-  GLADE_HOOKUP_OBJECT (special, label48, "label48");
-  GLADE_HOOKUP_OBJECT (special, combo2, "combo2");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_right_combo_entry, "sp_playcount_right_combo_entry");
-  GLADE_HOOKUP_OBJECT (special, sp_playcount_right_entry, "sp_playcount_right_entry");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_entry, "sp_playcount_entry");
   GLADE_HOOKUP_OBJECT (special, hbox17, "hbox17");
   GLADE_HOOKUP_OBJECT (special, sp_played_entry, "sp_played_entry");
   GLADE_HOOKUP_OBJECT (special, label49, "label49");
   GLADE_HOOKUP_OBJECT (special, sp_played_cal_button, "sp_played_cal_button");
-  GLADE_HOOKUP_OBJECT (special, sp_rating_button, "sp_rating_button");
   GLADE_HOOKUP_OBJECT (special, hbox18, "hbox18");
   GLADE_HOOKUP_OBJECT (special, sp_modified_entry, "sp_modified_entry");
   GLADE_HOOKUP_OBJECT (special, label50, "label50");
@@ -2506,47 +2499,21 @@ create_special (void)
   GLADE_HOOKUP_OBJECT (special, sp_created_entry, "sp_created_entry");
   GLADE_HOOKUP_OBJECT (special, label51, "label51");
   GLADE_HOOKUP_OBJECT (special, sp_created_cal_button, "sp_created_cal_button");
+  GLADE_HOOKUP_OBJECT (special, sp_playcount_button, "sp_playcount_button");
+  GLADE_HOOKUP_OBJECT (special, sp_rating_button, "sp_rating_button");
+  GLADE_HOOKUP_OBJECT (special, sp_played_button, "sp_played_button");
+  GLADE_HOOKUP_OBJECT (special, sp_modified_button, "sp_modified_button");
+  GLADE_HOOKUP_OBJECT (special, sp_created_button, "sp_created_button");
+  GLADE_HOOKUP_OBJECT (special, hseparator2, "hseparator2");
+  GLADE_HOOKUP_OBJECT (special, hbox21, "hbox21");
+  GLADE_HOOKUP_OBJECT (special, sp_go, "sp_go");
+  GLADE_HOOKUP_OBJECT (special, alignment1, "alignment1");
+  GLADE_HOOKUP_OBJECT (special, hbox22, "hbox22");
+  GLADE_HOOKUP_OBJECT (special, image1056, "image1056");
+  GLADE_HOOKUP_OBJECT (special, label53, "label53");
+  GLADE_HOOKUP_OBJECT (special, sp_go_always, "sp_go_always");
   GLADE_HOOKUP_OBJECT_NO_REF (special, tooltips, "tooltips");
 
   return special;
-}
-
-GtkWidget*
-create_menu1 (void)
-{
-  GtkWidget *menu1;
-
-  menu1 = gtk_menu_new ();
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (menu1, menu1, "menu1");
-
-  return menu1;
-}
-
-GtkWidget*
-create_inputdialog1 (void)
-{
-  GtkWidget *inputdialog1;
-  GtkWidget *save_button1;
-  GtkWidget *close_button1;
-
-  inputdialog1 = gtk_input_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW (inputdialog1), _("Eingabe"));
-
-  save_button1 = GTK_INPUT_DIALOG (inputdialog1)->save_button;
-  gtk_widget_show (save_button1);
-  GTK_WIDGET_SET_FLAGS (save_button1, GTK_CAN_DEFAULT);
-
-  close_button1 = GTK_INPUT_DIALOG (inputdialog1)->close_button;
-  gtk_widget_show (close_button1);
-  GTK_WIDGET_SET_FLAGS (close_button1, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (inputdialog1, inputdialog1, "inputdialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (inputdialog1, save_button1, "save_button1");
-  GLADE_HOOKUP_OBJECT_NO_REF (inputdialog1, close_button1, "close_button1");
-
-  return inputdialog1;
 }
 
