@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-22 02:06:50 jcs>
+/* Time-stamp: <2004-11-22 15:24:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -257,24 +257,20 @@ typedef struct SPLPref
 				  conditions" check box */
     guint8  checklimits;       /* "Limit To..." check box */
     guint32 limittype;         /* See types defined above */
-    guint8  limitsort;         /* See types defined above */
+    guint32 limitsort;         /* See types defined above */
     guint32 limitvalue;        /* The value typed next to "Limit
 				  type" */
     guint8  matchcheckedonly;  /* "Match only checked songs" check
 				  box */
-    guint8  limitsort_opposite;/* Limit sort rule is reversed
-				  (e.g. limitsort ==
-				  LIMIT_HIGHEST_RATING really means
-				  LIMIT_LOWEST_RATING */
 } SPLPref;
 
 typedef struct SPLRule
 {
     guint32 field;
     guint32 action;
-    gunichar2 *string;    /* data in UTF16 */
+    gunichar2 *string_utf16;   /* data in UTF16 */
 #ifdef ITUNESDB_PROVIDE_UTF8
-    gchar *string_utf8;   /* data in UTF8  */
+    gchar *string;             /* data in UTF8  */
 #endif
     /* from and to are pretty stupid.. if it's a date type of field,
        then
@@ -292,11 +288,11 @@ typedef struct SPLRule
     guint64 tovalue;
     gint64 todate;
     guint64 tounits;
-    guint32 unk048;
     guint32 unk052;
     guint32 unk056;
     guint32 unk060;
     guint32 unk064;
+    guint32 unk068;
 } SPLRule;
 
 
@@ -332,6 +328,9 @@ gboolean itunesdb_write_to_file (const gchar *filename);
 void itunesdb_rename_files (const gchar *dirname);
 gboolean itunesdb_copy_track_to_ipod (const gchar *path, Track *track,
 				      const gchar *pcfile);
+/* smart playlist functions */
+enum SPLFieldType itunesdb_spl_get_field_type (const SPLField field);
+
 gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s);
 gboolean itunesdb_cp (const gchar *from_file, const gchar *to_file);
 guint32 itunesdb_time_get_mac_time (void);

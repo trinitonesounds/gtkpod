@@ -64,8 +64,6 @@ Playlist *get_playlist_by_nr (guint32 n);
 guint get_playlist_by_name(gchar *pl_name, guint startfrom);
 Playlist* get_newplaylist_by_name (gchar *pl_name, gboolean spl);
 
-#define it_get_nr_of_tracks_in_playlist get_nr_of_tracks_in_playlist
 guint32 get_nr_of_tracks_in_playlist (Playlist *plitem);
-Track *it_get_track_in_playlist_by_nr (Playlist *plitem, guint32 n);
 Track *get_track_in_playlist_by_nr (Playlist *plitem, guint32 n);
 #endif

@@ -111,8 +111,6 @@ Playlist *add_new_playlist (gchar *plname, gint position, gboolean spl)
 	  plitem->splpref.limitvalue = value;
       if (prefs_get_int_value ("spl_matchcheckedonly", &value))
 	  plitem->splpref.matchcheckedonly = value;
-      if (prefs_get_int_value ("spl_limitsort_opposite", &value))
-	  plitem->splpref.limitsort_opposite = value;
   }
   data_changed (); /* indicate that data has changed in memory */
   return add_playlist (plitem, position);
@@ -462,13 +460,6 @@ void it_add_trackid_to_playlist (Playlist *plitem, guint32 id)
 	printf("it_a_s ms: %f mc: %f\n", ms, max_count);
 #endif
     }
-}
-
-Track *it_get_track_in_playlist_by_nr (Playlist *plitem, guint32 n)
-{
-    Track *track = get_track_in_playlist_by_nr (plitem, n);
-    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-    return track;
 }
 
 Playlist *it_add_playlist (Playlist *plitem)

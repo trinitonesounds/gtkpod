@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-22 01:50:21 jcs>
+/* Time-stamp: <2004-11-22 17:46:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -137,8 +137,6 @@
    Track *it_get_track_by_nr (guint32 n);
    guint32 it_get_nr_of_playlists (void);
    Playlist *it_get_playlist_by_nr (guint32 n);
-   guint32 it_get_nr_of_tracks_in_playlist (Playlist *plitem);
-   Track *it_get_track_in_playlist_by_nr (Playlist *plitem, guint32 n);
 
    The master playlist is expected to be "it_get_playlist_by_nr(0)". Only
    the utf16 strings in the Playlist and Track struct are being used.
@@ -230,7 +228,7 @@ struct playcount {
 
 #define NO_PLAYCOUNT (-1)
 
-enum {
+enum MHOD_ID {
   MHOD_ID_TITLE = 1,
   MHOD_ID_PATH = 2,
   MHOD_ID_ALBUM = 3,
@@ -285,49 +283,38 @@ static gint seek_get_n_bytes (FILE *file, gchar *data, glong seek, gint n)
    in little endian encoding (or -1 when an error occured) */
 static guint32 get4lint(FILE *file, glong seek)
 {
-  guchar data[4];
-  guint32 n;
-
-  if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
-  n =  ((guint32)data[3]) << 24;
-  n += ((guint32)data[2]) << 16;
-  n += ((guint32)data[1]) << 8;
-  n += ((guint32)data[0]);
-  return n;
+    guint32 n;
+    if (seek_get_n_bytes (file, (gchar *)&n, seek, 4) != 4) return -1;
+#   if (G_BYTE_ORDER == G_BIG_ENDIAN)
+    n = GUINT32_SWAP_LE_BE (n);
+#   endif
+    return n;
 }
+
 
 /* Get the 4-byte-number stored at position "seek" in "file"
    in big endian encoding (or -1 when an error occured) */
 static guint32 get4bint(FILE *file, glong seek)
 {
-  guchar data[4];
-  guint32 n;
-
-  if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
-  n =  ((guint32)data[0]) << 24;
-  n += ((guint32)data[1]) << 16;
-  n += ((guint32)data[2]) << 8;
-  n += ((guint32)data[3]);
-  return n;
+    guint32 n;
+    if (seek_get_n_bytes (file, (gchar *)&n, seek, 4) != 4) return -1;
+#   if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
+    n = GUINT32_SWAP_LE_BE (n);
+#   endif
+    return n;
 }
 
 /* Get the 8-byte-number stored at position "seek" in "file"
    in big endian encoding (or -1 when an error occured) */
 static guint64 get8bint(FILE *file, glong seek)
 {
-  guchar data[8];
-  guint64 n;
+    guint64 n;
 
-  if (seek_get_n_bytes (file, data, seek, 8) != 8) return -1;
-  n =  ((guint64)data[0]) << 56;
-  n += ((guint64)data[1]) << 48;
-  n += ((guint64)data[2]) << 40;
-  n += ((guint64)data[3]) << 32;
-  n += ((guint64)data[4]) << 24;
-  n += ((guint64)data[5]) << 16;
-  n += ((guint64)data[6]) << 8;
-  n += ((guint64)data[7]);
-  return n;
+    if (seek_get_n_bytes (file, (gchar *)&n, seek, 8) != 8) return -1;
+#   if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
+    n = GUINT64_SWAP_LE_BE (n);
+#   endif
+    return n;
 }
 
 /* Get the 1-byte-number stored at position "seek" in "file"
@@ -344,33 +331,33 @@ static guint32 get1int(FILE *file, glong seek)
 
 
 
-/* Fix UTF16 String for BIGENDIAN machines (like PPC) */
-static gunichar2 *fixup_utf16(gunichar2 *utf16_string) {
+/* Fix little endian UTF16 String to correct byteorder if necessary
+ * (all strings in the iTunesDB are little endian except for the ones
+ * in smart playlists). */
+static gunichar2 *fixup_little_utf16(gunichar2 *utf16_string) {
 #if (G_BYTE_ORDER == G_BIG_ENDIAN)
 gint32 i;
  if (utf16_string)
  {
      for(i=0; i<utf16_strlen(utf16_string); i++)
      {
-	 utf16_string[i] = ((utf16_string[i]<<8) & 0xff00) |
-	     ((utf16_string[i]>>8) & 0xff);
+	 utf16_string[i] = GUINT16_SWAP_LE_BE (utf16_string[i]);
      }
  }
 #endif
 return utf16_string;
 }
 
-/* Fix UTF16 String (for smart playlists it has to be reversed for
- * little endian machines) */
-static gunichar2 *fixup_rev_utf16(gunichar2 *utf16_string) {
+/* Fix big endian UTF16 String to correct byteorder if necessary (only
+ * strings in smart playlists are big endian) */
+static gunichar2 *fixup_big_utf16(gunichar2 *utf16_string) {
 #if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
 gint32 i;
  if (utf16_string)
  {
      for(i=0; i<utf16_strlen(utf16_string); i++)
      {
-	 utf16_string[i] = ((utf16_string[i]<<8) & 0xff00) |
-	     ((utf16_string[i]>>8) & 0xff);
+	 utf16_string[i] = GUINT16_SWAP_LE_BE (utf16_string[i]);
      }
  }
 #endif
@@ -413,7 +400,7 @@ static gboolean spl_action_known (SPLAction action)
     return result;
 }
 
-enum SPLFieldType spl_get_field_type (const SPLField field)
+enum SPLFieldType itunesdb_spl_get_field_type (const SPLField field)
 {
     switch(field)
     {
@@ -484,6 +471,7 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
   gchar data[4];
   gunichar2 *entry_utf16 = NULL;
   SPLPref *splp = NULL;
+  guint8 limitsort_opposite;
   void *result = NULL;
   gint32 xl;
   gint32 header_length;
@@ -512,11 +500,11 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
   fprintf(stderr, "ml: %x mty: %x, xl: %x\n", *ml, *mty, xl);
 #endif
 
-  switch (*mty)
+  switch ((enum MHOD_ID)*mty)
   {
   case MHOD_ID_PLAYLIST:
   case MHOD_ID_MHYP:
-      /* these do not have a simple text string setting */
+      /* these are not yet supported */
       break;
   case MHOD_ID_TITLE:
   case MHOD_ID_PATH:
@@ -537,7 +525,7 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
       {
 	  entry_utf16[xl/2] = 0; /* add trailing 0 */
       }
-      fixup_utf16 (entry_utf16);
+      fixup_little_utf16 (entry_utf16);
       result = entry_utf16;
       break;
   case MHOD_ID_SPLPREF:  /* Settings for smart playlist */
@@ -549,10 +537,10 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
       splp->limitsort = get1int (file, seek+4);
       splp->limitvalue = get4lint (file, seek+8);
       splp->matchcheckedonly = get1int (file, seek+12);
-      splp->limitsort_opposite = get1int (file, seek+13);
+      limitsort_opposite = get1int (file, seek+13);
       /* if the opposite flag is on, set limitsort's high bit -- see
 	 note in itunesdb.h for more info */
-      if (splp->limitsort_opposite)
+      if (limitsort_opposite)
 	  splp->limitsort |= 0x80000000;
       result = splp;
       break;
@@ -577,23 +565,28 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 	      guint32 length;
 	      splr->field = get4bint (file, seek);
 	      splr->action = get4bint (file, seek+4);
-	      length = get4bint (file, seek+52);
-	      seek += 56;
+	      seek += 52;
+	      length = get4bint (file, seek);
 	      if (spl_action_known (splr->action))
 	      {
-		  gint ft = spl_get_field_type (splr->field);
+		  gint ft = itunesdb_spl_get_field_type (splr->field);
 		  if (ft == splft_String)
 		  {
-		      splr->string = g_malloc0 (length+2);
-		      if (seek_get_n_bytes (file, (gchar *)splr->string, seek, length) != length) 
+		      splr->string_utf16 = g_malloc0 (length+2);
+		      if (seek_get_n_bytes (file, (gchar *)splr->string_utf16, seek+4, length) != length) 
 		      {
-			  g_free (splr->string);
+			  g_free (splr->string_utf16);
 			  g_free (splr);
 			  splr = NULL;
 			  *ml = -1;
 			  break;  /* exits the "for (i...)" loop */
 		      }
-		      fixup_rev_utf16 (splr->string);
+		      fixup_big_utf16 (splr->string_utf16);
+#ifdef ITUNESDB_PROVIDE_UTF8
+		      splr->string = g_utf16_to_utf8 (
+			  splr->string_utf16, -1, NULL, NULL, NULL);
+/*		      puts(splr->string);*/
+#endif
 		  }
 		  else
 		  {
@@ -601,20 +594,20 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 		      {
 			  itunesdb_warning (_("Length of smart playlist rule field (%d) not as expected. Trying to continue anyhow.\n"), length);
 		      }
-		      splr->fromvalue = get8bint (file, seek);
-		      splr->fromdate = get8bint (file, seek+8);
-		      splr->fromunits = get8bint (file, seek+16);
-		      splr->tovalue = get8bint (file, seek+24);
-		      splr->todate = get8bint (file, seek+32);
-		      splr->tounits = get8bint (file, seek+40);
+		      splr->fromvalue = get8bint (file, seek+4);
+		      splr->fromdate = get8bint (file, seek+12);
+		      splr->fromunits = get8bint (file, seek+20);
+		      splr->tovalue = get8bint (file, seek+28);
+		      splr->todate = get8bint (file, seek+36);
+		      splr->tounits = get8bint (file, seek+44);
 		      /* SPLFIELD_PLAYLIST seem to use these unknowns*/
-		      splr->unk048 = get4bint (file, seek+48);
 		      splr->unk052 = get4bint (file, seek+52);
 		      splr->unk056 = get4bint (file, seek+56);
 		      splr->unk060 = get4bint (file, seek+60);
 		      splr->unk064 = get4bint (file, seek+64);
+		      splr->unk068 = get4bint (file, seek+68);
 		  }  
-		  seek += length;
+		  seek += length+4;
 	      }
 	      else
 	      {
@@ -626,6 +619,7 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 		  splrs->rules = g_list_append (splrs->rules, splr);
 	      } 
 	  }
+	  result = splrs;
       }
       else
       {
@@ -649,7 +643,7 @@ static gunichar2 *get_mhod_string (FILE *file, glong seek, gint32 *ml, gint32 *m
 
     *mty = get_mhod_type (file, seek, ml);
 
-    if (*ml != -1) switch (*mty)
+    if (*ml != -1) switch ((enum MHOD_ID)*mty)
     {
     case MHOD_ID_TITLE:
     case MHOD_ID_PATH:
@@ -660,6 +654,13 @@ static gunichar2 *get_mhod_string (FILE *file, glong seek, gint32 *ml, gint32 *m
     case MHOD_ID_COMMENT:
     case MHOD_ID_COMPOSER:
 	result = get_mhod (file, seek, ml, mty);
+	break;
+    case MHOD_ID_SPLPREF:
+    case MHOD_ID_SPLRULES:
+    case MHOD_ID_MHYP:
+    case MHOD_ID_PLAYLIST:
+	/* these do not have a string entry */
+	break;
     }
     return result;
 }
@@ -668,7 +669,7 @@ static gunichar2 *get_mhod_string (FILE *file, glong seek, gint32 *ml, gint32 *m
 static glong get_pl(FILE *file, glong seek)
 {
   guint32 type, tracknum, n;
-  guint32 nextseek;
+  glong nextseek;
   gint32 zip;
   Playlist *plitem = NULL;
   guint32 ref;
@@ -699,7 +700,7 @@ static glong get_pl(FILE *file, glong seek)
       seek += zip;
       if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
       type = get_mhod_type (file, seek, &zip);
-      if (zip != -1) switch (type)
+      if (zip != -1) switch ((enum MHOD_ID)type)
       {
       case MHOD_ID_PLAYLIST:
 	  /* here we could do something about the playlist sttings */
@@ -734,6 +735,18 @@ static glong get_pl(FILE *file, glong seek)
 	      splrules = NULL;
 	  }
 	  break;
+      case MHOD_ID_PATH:
+      case MHOD_ID_ALBUM:
+      case MHOD_ID_ARTIST:
+      case MHOD_ID_GENRE:
+      case MHOD_ID_FDESC:
+      case MHOD_ID_COMMENT:
+      case MHOD_ID_COMPOSER:
+	  /* these are not expected here */
+	  break;
+      case MHOD_ID_MHYP:
+	  /* this I don't know how to handle */
+	  break;
       }
   } while (zip != -1); /* read all MHODs */
 
@@ -750,7 +763,6 @@ static glong get_pl(FILE *file, glong seek)
   plitem->name = g_utf16_to_utf8 (plitem->name_utf16, -1,
 				  NULL, NULL, NULL);
 #endif
-
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "pln: %s(%d Tracks) \n", plname_utf8, (int)tracknum);
@@ -924,7 +936,7 @@ gchar *time_time_to_string (time_t time);
 #ifdef ITUNESDB_PROVIDE_UTF8
        entry_utf8 = g_utf16_to_utf8 (entry_utf16, -1, NULL, NULL, NULL);
 #endif
-       switch (type)
+       switch ((enum MHOD_ID)type)
 	 {
 	 case MHOD_ID_ALBUM:
 #ifdef ITUNESDB_PROVIDE_UTF8
@@ -1373,64 +1385,119 @@ gunichar2 ipod_name[] = { 'g', 't', 'k', 'p', 'o', 'd', 0 };
 static guint32 utf16_strlen (gunichar2 *utf16)
 {
   guint32 i=0;
-  while (utf16[i] != 0) ++i;
+  if (utf16)
+      while (utf16[i] != 0) ++i;
   return i;
-}
-
-
-/* Write 4-byte-integer "n" in correct order to "data".
-   "data" must be sufficiently long ... */
-static void store4int (guint32 n, guchar *data)
-{
-  data[3] = (n >> 24) & 0xff;
-  data[2] = (n >> 16) & 0xff;
-  data[1] = (n >>  8) & 0xff;
-  data[0] =  n & 0xff;
 }
 
 
 /* Write "data", "n" bytes long to current position in file.
    Returns TRUE on success, FALSE otherwise */
-static gboolean put_data_cur (FILE *file, gchar *data, gint n)
+static gboolean put_data (FILE *file, gchar *data, gint n)
 {
   if (fwrite (data, 1, n, file) != n) return FALSE;
   return TRUE;
 }
 
-/* Write 4-byte integer "n" to "file".
-   Returns TRUE on success, FALSE otherwise */
-static gboolean put_4int_cur (FILE *file, guint32 n)
-{
-  gchar data[4];
 
-  store4int (n, data);
-  return put_data_cur (file, data, 4);
+/* Write 1-byte integer "n" to "file".
+   Returns TRUE on success, FALSE otherwise */
+static gboolean put1int (FILE *file, guint8 n)
+{
+    return put_data (file, (gchar *)&n, 1);
 }
 
 
-/* Write 4-byte integer "n" to "file" at position "seek".
+/* Write 4-byte integer "n" to "file" in little endian order.
+   Returns TRUE on success, FALSE otherwise */
+static gboolean put4lint (FILE *file, guint32 n)
+{
+#   if (G_BYTE_ORDER == G_BIG_ENDIAN)
+    n = GUINT32_SWAP_LE_BE (n);
+#   endif
+    return put_data (file, (gchar *)&n, 4);
+}
+
+
+/* Write 4-byte integer "n" to "file" at position "seek" in little
+   endian order.
    After writing, the file position indicator is set
    to the end of the file.
    Returns TRUE on success, FALSE otherwise */
-static gboolean put_4int_seek (FILE *file, guint32 n, gint seek)
+static gboolean put4lint_seek (FILE *file, guint32 n, glong seek)
 {
   gboolean result;
 
   if (fseek (file, seek, SEEK_SET) != 0) return FALSE;
-  result = put_4int_cur (file, n);
+  result = put4lint (file, n);
   if (fseek (file, 0, SEEK_END) != 0) return FALSE;
   return result;
 }
 
 
+/* Write 4-byte integer "n" to "file" in big endian order.
+   Returns TRUE on success, FALSE otherwise */
+static gboolean put4bint (FILE *file, guint32 n)
+{
+#   if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
+    n = GUINT32_SWAP_LE_BE (n);
+#   endif
+    return put_data (file, (gchar *)&n, 4);
+}
+
+
+/* Write 8-byte integer "n" to "file" in big endian order.
+   Returns TRUE on success, FALSE otherwise */
+static gboolean put8bint (FILE *file, guint64 n)
+{
+#   if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
+    n = GUINT64_SWAP_LE_BE (n);
+#   endif
+    return put_data (file, (gchar *)&n, 8);
+}
+
+
+#if 0
+/* Write 4-byte integer "n" to "file" at position "seek" in big endian
+   order.
+   After writing, the file position indicator is set
+   to the end of the file.
+   Returns TRUE on success, FALSE otherwise */
+static gboolean put4bint_seek (FILE *file, guint32 n, glong seek)
+{
+  gboolean result;
+
+  if (fseek (file, seek, SEEK_SET) != 0) return FALSE;
+  result = put4bint (file, n);
+  if (fseek (file, 0, SEEK_END) != 0) return FALSE;
+  return result;
+}
+
+/* Write 8-byte integer "n" to "file" at position "seek" in big endian
+   order.
+   After writing, the file position indicator is set
+   to the end of the file.
+   Returns TRUE on success, FALSE otherwise */
+static gboolean put8bint_seek (FILE *file, guint64 n, glong seek)
+{
+  gboolean result;
+
+  if (fseek (file, seek, SEEK_SET) != 0) return FALSE;
+  result = put8bint (file, n);
+  if (fseek (file, 0, SEEK_END) != 0) return FALSE;
+  return result;
+}
+#endif
+
+
 /* Write "n" times 4-byte-zero at current position
    Returns TRUE on success, FALSE otherwise */
-static gboolean put_n0_cur (FILE*file, guint32 n)
+static gboolean put_n0 (FILE*file, guint32 n)
 {
   guint32 i;
   gboolean result = TRUE;
 
-  for (i=0; i<n; ++i)  result &= put_4int_cur (file, 0);
+  for (i=0; i<n; ++i)  result &= put4lint (file, 0);
   return result;
 }
 
@@ -1439,101 +1506,92 @@ static gboolean put_n0_cur (FILE*file, guint32 n)
 /* Write out the mhbd header. Size will be written later */
 static void mk_mhbd (FILE *file)
 {
-  put_data_cur (file, "mhbd", 4);
-  put_4int_cur (file, 104); /* header size */
-  put_4int_cur (file, -1);  /* size of whole mhdb -- fill in later */
-  put_4int_cur (file, 1);   /* ? */
-  put_4int_cur (file, 1);   /*  - changed to 2 from itunes2 to 3 ..
+  put_data (file, "mhbd", 4);
+  put4lint (file, 104); /* header size */
+  put4lint (file, -1);  /* size of whole mhdb -- fill in later */
+  put4lint (file, 1);   /* ? */
+  put4lint (file, 1);   /*  - changed to 2 from itunes2 to 3 ..
 				    version? We are iTunes version 1 ;) */
-  put_4int_cur (file, 2);   /* ? */
-  put_n0_cur (file, 20);    /* dummy space */
+  put4lint (file, 2);   /* ? */
+  put_n0 (file, 20);    /* dummy space */
 }
 
-/* Fill in the missing items of the mhsd header:
-   total size and number of mhods */
-static void fix_mhbd (FILE *file, glong mhbd_seek, glong cur)
+/* Fill in the length of a standard header */
+static void fix_header (FILE *file, glong header_seek, glong cur)
 {
-  put_4int_seek (file, cur-mhbd_seek, mhbd_seek+8); /* size of whole mhit */
+  put4lint_seek (file, cur-header_seek, header_seek+8);
 }
 
 
 /* Write out the mhsd header. Size will be written later */
 static void mk_mhsd (FILE *file, guint32 type)
 {
-  put_data_cur (file, "mhsd", 4);
-  put_4int_cur (file, 96);   /* Headersize */
-  put_4int_cur (file, -1);   /* size of whole mhsd -- fill in later */
-  put_4int_cur (file, type); /* type: 1 = track, 2 = playlist */
-  put_n0_cur (file, 20);    /* dummy space */
-}
-
-
-/* Fill in the missing items of the mhsd header:
-   total size and number of mhods */
-static void fix_mhsd (FILE *file, glong mhsd_seek, glong cur)
-{
-  put_4int_seek (file, cur-mhsd_seek, mhsd_seek+8); /* size of whole mhit */
+  put_data (file, "mhsd", 4);
+  put4lint (file, 96);   /* Headersize */
+  put4lint (file, -1);   /* size of whole mhsd -- fill in later */
+  put4lint (file, type); /* type: 1 = track, 2 = playlist */
+  put_n0 (file, 20);    /* dummy space */
 }
 
 
 /* Write out the mhlt header. */
 static void mk_mhlt (FILE *file, guint32 track_num)
 {
-  put_data_cur (file, "mhlt", 4);
-  put_4int_cur (file, 92);         /* Headersize */
-  put_4int_cur (file, track_num);   /* tracks in this itunesdb */
-  put_n0_cur (file, 20);           /* dummy space */
+  put_data (file, "mhlt", 4);
+  put4lint (file, 92);         /* Headersize */
+  put4lint (file, track_num);   /* tracks in this itunesdb */
+  put_n0 (file, 20);           /* dummy space */
 }
 
 
 /* Write out the mhit header. Size will be written later */
 static void mk_mhit (FILE *file, Track *track)
 {
-  put_data_cur (file, "mhit", 4);
-  put_4int_cur (file, 156);  /* header size */
-  put_4int_cur (file, -1);   /* size of whole mhit -- fill in later */
-  put_4int_cur (file, -1);   /* nr of mhods in this mhit -- later   */
-  put_4int_cur (file, track->ipod_id); /* track index number
+  put_data (file, "mhit", 4);
+  put4lint (file, 156);  /* header size */
+  put4lint (file, -1);   /* size of whole mhit -- fill in later */
+  put4lint (file, -1);   /* nr of mhods in this mhit -- later   */
+  put4lint (file, track->ipod_id); /* track index number
 					* */
-  put_4int_cur (file, track->unk020);
-  put_4int_cur (file, track->unk024);
-  put_4int_cur (file, (track->rating << 24) |
+  put4lint (file, track->unk020);
+  put4lint (file, track->unk024);
+  put4lint (file, (track->rating << 24) |
 		(track->compilation << 16) |
 		(track->type & 0x0000ffff));/* rating, compil., type */
 
-  put_4int_cur (file, track->time_created); /* timestamp             */
-  put_4int_cur (file, track->size);    /* filesize                  */
-  put_4int_cur (file, track->tracklen); /* length of track in ms     */
-  put_4int_cur (file, track->track_nr);/* track number               */
-  put_4int_cur (file, track->tracks);  /* number of tracks           */
-  put_4int_cur (file, track->year);    /* the year                   */
-  put_4int_cur (file, track->bitrate); /* bitrate                    */
-  put_4int_cur (file, track->samplerate << 16);
-  put_4int_cur (file, track->volume);  /* volume adjust              */
-  put_4int_cur (file, track->starttime);
-  put_4int_cur (file, track->stoptime);
-  put_4int_cur (file, track->soundcheck);
-  put_4int_cur (file, track->playcount);/* playcount                 */
-  put_4int_cur (file, track->unk084);
-  put_4int_cur (file, track->time_played); /* last time played       */
-  put_4int_cur (file, track->cd_nr);   /* CD number                  */
-  put_4int_cur (file, track->cds);     /* number of CDs              */
-  put_4int_cur (file, track->unk100);
-  put_4int_cur (file, track->time_modified); /* timestamp            */
-  put_4int_cur (file, track->unk108);
-  put_4int_cur (file, track->unk112);
-  put_4int_cur (file, track->unk116);
-  put_4int_cur (file, (track->BPM << 16) |
+  put4lint (file, track->time_created); /* timestamp             */
+  put4lint (file, track->size);    /* filesize                  */
+  put4lint (file, track->tracklen); /* length of track in ms     */
+  put4lint (file, track->track_nr);/* track number               */
+  put4lint (file, track->tracks);  /* number of tracks           */
+  put4lint (file, track->year);    /* the year                   */
+  put4lint (file, track->bitrate); /* bitrate                    */
+  put4lint (file, track->samplerate << 16);
+  put4lint (file, track->volume);  /* volume adjust              */
+  put4lint (file, track->starttime);
+  put4lint (file, track->stoptime);
+  put4lint (file, track->soundcheck);
+  put4lint (file, track->playcount);/* playcount                 */
+  put4lint (file, track->unk084);
+  put4lint (file, track->time_played); /* last time played       */
+  put4lint (file, track->cd_nr);   /* CD number                  */
+  put4lint (file, track->cds);     /* number of CDs              */
+  put4lint (file, track->unk100);
+  put4lint (file, track->time_modified); /* timestamp            */
+  put4lint (file, track->unk108);
+  put4lint (file, track->unk112);
+  put4lint (file, track->unk116);
+  put4lint (file, (track->BPM << 16) |
 		((track->app_rating & 0xff) << 8) |
 		(track->checked & 0xff));
-  put_4int_cur (file, track->unk124);
-  put_4int_cur (file, track->unk128);
-  put_4int_cur (file, track->unk132);
-  put_4int_cur (file, track->unk136);
-  put_4int_cur (file, track->unk140);
-  put_4int_cur (file, track->unk144);
-  put_4int_cur (file, track->unk148);
-  put_4int_cur (file, track->unk152);
+  put4lint (file, track->unk124);
+  put4lint (file, track->unk128);
+  put4lint (file, track->unk132);
+  put4lint (file, track->unk136);
+  put4lint (file, track->unk140);
+  put4lint (file, track->unk144);
+  put4lint (file, track->unk148);
+  put4lint (file, track->unk152);
 }
 
 
@@ -1541,70 +1599,177 @@ static void mk_mhit (FILE *file, Track *track)
    total size and number of mhods */
 static void fix_mhit (FILE *file, glong mhit_seek, glong cur, gint mhod_num)
 {
-  put_4int_seek (file, cur-mhit_seek, mhit_seek+8); /* size of whole mhit */
-  put_4int_seek (file, mhod_num, mhit_seek+12);     /* nr of mhods        */
+  put4lint_seek (file, cur-mhit_seek, mhit_seek+8); /* size of whole mhit */
+  put4lint_seek (file, mhod_num, mhit_seek+12);     /* nr of mhods        */
 }
 
 
 /* Write out one mhod header.
      type: see enum of MHMOD_IDs;
-     string: utf16 string to pack
-     fqid: will be used for playlists -- use 1 for tracks */
-static void mk_mhod (FILE *file, guint32 type,
-		     gunichar2 *string, guint32 fqid)
+     data: utf16 string to pack for text items
+           track ID for MHOD_ID_PLAYLIST
+           SPLPref for MHOD_ID_SPLPREF
+	   SPLRules for MHOD_ID_SPLRULES */
+static void mk_mhod (FILE *file, guint32 type, void *data)
 {
-  guint32 mod;
   guint32 len;
+  gunichar2 *string;
 
-  if (fqid == 1) mod = 40;   /* normal mhod */
-  else           mod = 44;   /* playlist entry */
-
-  len = utf16_strlen (string);         /* length of string in _words_     */
-
-  put_data_cur (file, "mhod", 4);      /* header                          */
-  put_4int_cur (file, 24);             /* size of header                  */
-  put_4int_cur (file, 2*len+mod);      /* size of header + body           */
-  put_4int_cur (file, type);           /* type of the entry               */
-  put_n0_cur (file, 2);                /* dummy space                     */
-  put_4int_cur (file, fqid);           /* refers to this ID if a PL item,
-					  otherwise always 1              */
-  put_4int_cur (file, 2*len);          /* size of string                  */
-  if (type < 100)
-    {                                     /* no PL mhod */
-      put_n0_cur (file, 2);               /* trash      */
+  switch ((enum MHOD_ID)type)
+  {
+  case MHOD_ID_TITLE:
+  case MHOD_ID_PATH:
+  case MHOD_ID_ALBUM:
+  case MHOD_ID_ARTIST:
+  case MHOD_ID_GENRE:
+  case MHOD_ID_FDESC:
+  case MHOD_ID_COMMENT:
+  case MHOD_ID_COMPOSER:
+      string = data;
+      len = utf16_strlen (string);/* length of string in words  */
+      put_data (file, "mhod", 4); /* header                     */
+      put4lint (file, 24);        /* size of header             */
+      put4lint (file, 2*len+40);  /* size of header + body      */
+      put4lint (file, type);      /* type of the entry          */
+      put_n0 (file, 2);           /* dummy space                */
+      /* end of header, start of data */
+      put4lint (file, 1);         /* always 1 for these MHOD_IDs*/
+      put4lint (file, 2*len);     /* size of string             */
+      put_n0 (file, 2);           /* unknown                    */
       /* FIXME: this assumes "string" is writable.
 	 However, this might not be the case,
 	 e.g. ipod_name might be in read-only mem. */
-      string = fixup_utf16(string);
-      put_data_cur (file, (gchar *)string, 2*len); /* the string */
-      string = fixup_utf16(string);
-    }
-  else
-    {
-      put_n0_cur (file, 3);     /* PL mhods are different ... */
-    }
+      if (len != 0)
+      {
+	  string = fixup_little_utf16(string);
+	  put_data (file, (gchar *)string, 2*len); /* the string */
+	  string = fixup_little_utf16(string);
+      }
+      break;
+  case MHOD_ID_PLAYLIST:
+      put_data (file, "mhod", 4); /* header                     */
+      put4lint (file, 24);        /* size of header             */
+      put4lint (file, 44);        /* size of header + body      */
+      put4lint (file, type);      /* type of the entry          */
+      put_n0 (file, 2);           /* unknown                    */
+      /* end of header, start of data */
+      put4lint (file, (guint32)data);/* track ID of playlist member*/
+      put_n0 (file, 4);           /* unknown                    */
+      break;
+  case MHOD_ID_SPLPREF:
+      if (data)
+      {
+	  SPLPref *splp = data;
+	  put_data (file, "mhod", 4); /* header                 */
+	  put4lint (file, 24);        /* size of header         */
+	  put4lint (file, 96);        /* size of header + body  */
+	  put4lint (file, type);      /* type of the entry      */
+	  put_n0 (file, 2);           /* unknown                */
+	  /* end of header, start of data */
+	  put1int (file, splp->liveupdate);
+	  put1int (file, splp->checkrules);
+	  put1int (file, splp->checklimits);
+	  put1int (file, splp->limittype);
+	  put1int (file, splp->limitsort & 0xff);
+	  put1int (file, 0);          /* unknown                */
+	  put1int (file, 0);          /* unknown                */
+	  put1int (file, 0);          /* unknown                */
+	  put4lint (file, splp->limitvalue);
+	  put1int (file, splp->matchcheckedonly);
+	  /* for the following see note at definitions of limitsort
+	     types in itunesdb.h */
+	  put1int (file, (splp->limitsort & 0x80000000) ? 1:0);
+	  put1int (file, 0);          /* unknown                */
+	  put1int (file, 0);          /* unknown                */
+	  put_n0 (file, 14);          /* unknown                */
+      }
+      break;
+  case MHOD_ID_SPLRULES:
+      if (data)
+      {
+	  SPLRules *splrs = data;
+	  glong header_seek = ftell (file); /* needed to fix length */
+	  GList *gl;
+	  gint numrules = g_list_length (splrs->rules);
+
+	  put_data (file, "mhod", 4); /* header                   */
+	  put4lint (file, 24);        /* size of header           */
+	  put4lint (file, -1);        /* total length, fix later  */
+	  put4lint (file, type);      /* type of the entry        */
+	  put_n0 (file, 2);           /* unknown                  */
+	  /* end of header, start of data */
+	  /* For some reason this is the only part of the iTunesDB
+	     that uses big endian */
+	  put_data (file, "SLst", 4);     /* header               */
+	  put4bint (file, splrs->unk004); /* unknown              */
+	  put4bint (file, numrules);
+	  put4bint (file, splrs->match_operator);
+	  put_n0 (file, 30);              /* unknown              */
+	  /* end of header, now follow the rules */
+	  for (gl=splrs->rules; gl; gl=gl->next)
+	  {
+	      SPLRule *splr = gl->data;
+	      gint ft = itunesdb_spl_get_field_type (splr->field);
+/*	      printf ("%p: field: %d ft: %d\n", splr, splr->field, ft);*/
+	      put4bint (file, splr->field);
+	      put4bint (file, splr->action);
+	      put_n0 (file, 11);          /* unknown              */
+	      if (ft == splft_String)
+	      {   /* write string-type rule */
+		  gint len = utf16_strlen (splr->string_utf16);
+		  put4bint (file, 2*len); /* length of string     */
+		  /* FIXME: this assumes string_utf16 is writable */
+		  fixup_big_utf16 (splr->string_utf16);
+		  put_data (file, (gchar *)splr->string_utf16, 2*len);
+		  fixup_big_utf16 (splr->string_utf16);
+	      }
+	      else
+	      {   /* write non-string-type rule */
+		  put4bint (file, 0x44); /* length of data        */
+		  /* data */
+		  put8bint (file, splr->fromvalue);
+		  put8bint (file, splr->fromdate);
+		  put8bint (file, splr->fromunits);
+		  put8bint (file, splr->tovalue);
+		  put8bint (file, splr->todate);
+		  put8bint (file, splr->tounits);
+		  put4bint (file, splr->unk052);
+		  put4bint (file, splr->unk056);
+		  put4bint (file, splr->unk060);
+		  put4bint (file, splr->unk064);
+		  put4bint (file, splr->unk068);
+	      }
+	  }
+	  /* insert length of mhod junk */
+	  fix_header (file, header_seek, ftell (file));
+      }
+      break;
+  case MHOD_ID_MHYP:
+      printf ("Cannot write mhod of type %d\n", type);
+      break;
+  }
 }
 
 
 /* Write out the mhlp header. Size will be written later */
 static void mk_mhlp (FILE *file, guint32 lists)
 {
-  put_data_cur (file, "mhlp", 4);      /* header                   */
-  put_4int_cur (file, 92);             /* size of header           */
-  put_4int_cur (file, lists);          /* playlists on iPod (including main!) */
-  put_n0_cur (file, 20);               /* dummy space              */
+  put_data (file, "mhlp", 4);      /* header                   */
+  put4lint (file, 92);             /* size of header           */
+  put4lint (file, lists);          /* playlists on iPod (including main!) */
+  put_n0 (file, 20);               /* dummy space              */
 }
 
 
-/* Fix the mhlp header */
+/* Fix the mhlp header (number of playlists) */
 static void fix_mhlp (FILE *file, glong mhlp_seek, gint playlist_num)
 {
-  put_4int_seek (file, playlist_num, mhlp_seek+8); /* nr of playlists    */
+  put4lint_seek (file, playlist_num, mhlp_seek+8); /* nr of playlists    */
 }
 
 
 
-/* Write out the "weird" header.
+/* Write out the long MHOD_ID_PLAYLIST mhod header.
    This seems to be an itunespref thing.. dunno know this
    but if we set everything to 0, itunes doesn't show any data
    even if you drag an mp3 to your ipod: nothing is shown, but itunes
@@ -1612,81 +1777,55 @@ static void fix_mhlp (FILE *file, glong mhlp_seek, gint playlist_num)
    .. so we create a hardcoded-pref.. this will change in future
    Seems to be a Preferences mhod, every PL has such a thing
    FIXME !!! */
-static void mk_weired (FILE *file)
+static void mk_long_mhod_id_playlist (FILE *file)
 {
-  put_data_cur (file, "mhod", 4);      /* header                   */
-  put_4int_cur (file, 0x18);           /* size of header  ?        */
-  put_4int_cur (file, 0x0288);         /* size of header + body    */
-  put_4int_cur (file, 0x64);           /* type of the entry        */
-  put_n0_cur (file, 6);
-  put_4int_cur (file, 0x010084);       /* ? */
-  put_4int_cur (file, 0x05);           /* ? */
-  put_4int_cur (file, 0x09);           /* ? */
-  put_4int_cur (file, 0x03);           /* ? */
-  put_4int_cur (file, 0x120001);       /* ? */
-  put_n0_cur (file, 3);
-  put_4int_cur (file, 0xc80002);       /* ? */
-  put_n0_cur (file, 3);
-  put_4int_cur (file, 0x3c000d);       /* ? */
-  put_n0_cur (file, 3);
-  put_4int_cur (file, 0x7d0004);       /* ? */
-  put_n0_cur (file, 3);
-  put_4int_cur (file, 0x7d0003);       /* ? */
-  put_n0_cur (file, 3);
-  put_4int_cur (file, 0x640008);       /* ? */
-  put_n0_cur (file, 3);
-  put_4int_cur (file, 0x640017);       /* ? */
-  put_4int_cur (file, 0x01);           /* bool? (visible? / colums?) */
-  put_n0_cur (file, 2);
-  put_4int_cur (file, 0x500014);       /* ? */
-  put_4int_cur (file, 0x01);           /* bool? (visible?) */
-  put_n0_cur (file, 2);
-  put_4int_cur (file, 0x7d0015);       /* ? */
-  put_4int_cur (file, 0x01);           /* bool? (visible?) */
-  put_n0_cur (file, 114);
+  put_data (file, "mhod", 4);      /* header                   */
+  put4lint (file, 0x18);           /* size of header  ?        */
+  put4lint (file, 0x0288);         /* size of header + body    */
+  put4lint (file,MHOD_ID_PLAYLIST);/* type of the entry        */
+  put_n0 (file, 6);
+  put4lint (file, 0x010084);       /* ? */
+  put4lint (file, 0x05);           /* ? */
+  put4lint (file, 0x09);           /* ? */
+  put4lint (file, 0x03);           /* ? */
+  put4lint (file, 0x120001);       /* ? */
+  put_n0 (file, 3);
+  put4lint (file, 0xc80002);       /* ? */
+  put_n0 (file, 3);
+  put4lint (file, 0x3c000d);       /* ? */
+  put_n0 (file, 3);
+  put4lint (file, 0x7d0004);       /* ? */
+  put_n0 (file, 3);
+  put4lint (file, 0x7d0003);       /* ? */
+  put_n0 (file, 3);
+  put4lint (file, 0x640008);       /* ? */
+  put_n0 (file, 3);
+  put4lint (file, 0x640017);       /* ? */
+  put4lint (file, 0x01);           /* bool? (visible? / colums?) */
+  put_n0 (file, 2);
+  put4lint (file, 0x500014);       /* ? */
+  put4lint (file, 0x01);           /* bool? (visible?) */
+  put_n0 (file, 2);
+  put4lint (file, 0x7d0015);       /* ? */
+  put4lint (file, 0x01);           /* bool? (visible?) */
+  put_n0 (file, 114);
 }
 
-
-/* Write out the mhyp header. Size will be written later */
-static void mk_mhyp (FILE *file, gunichar2 *listname,
-		     guint32 type, guint32 track_num)
-{
-  put_data_cur (file, "mhyp", 4);      /* header                   */
-  put_4int_cur (file, 108);            /* length		   */
-  put_4int_cur (file, -1);             /* size -> later            */
-  put_4int_cur (file, 2);              /* ?                        */
-  put_4int_cur (file, track_num);       /* number of tracks in plist */
-  put_4int_cur (file, type);           /* 1 = main, 0 = visible    */
-  put_4int_cur (file, 0);              /* ?                        */
-  put_4int_cur (file, 0);              /* ?                        */
-  put_4int_cur (file, 0);              /* ?                        */
-  put_n0_cur (file, 18);               /* dummy space              */
-  mk_weired (file);
-  mk_mhod (file, MHOD_ID_TITLE, listname, 1);
-}
-
-
-/* Fix the mhyp header */
-static void fix_mhyp (FILE *file, glong mhyp_seek, glong cur)
-{
-  put_4int_seek (file, cur-mhyp_seek, mhyp_seek+8);
-    /* size */
-}
 
 
 /* Header for new PL item */
 static void mk_mhip (FILE *file, guint32 id)
 {
-  put_data_cur (file, "mhip", 4);
-  put_4int_cur (file, 76);
-  put_4int_cur (file, 76);
-  put_4int_cur (file, 1);
-  put_4int_cur (file, 0);
-  put_4int_cur (file, id);  /* track id in playlist */
-  put_4int_cur (file, id);  /* ditto.. don't know the difference, but this
+  put_data (file, "mhip", 4);
+  put4lint (file, 76);
+  put4lint (file, 76);
+  put4lint (file, 1);
+  put4lint (file, 0);
+  put4lint (file, id);  /* track id in playlist */
+  put4lint (file, id);  /* ditto.. don't know the difference, but this
                                seems to work. Maybe a special ID used for
 			       playlists? */
-  put_n0_cur (file, 12);
+  put_n0 (file, 12);
 }
 
 static void
@@ -1714,73 +1853,90 @@ write_mhsd_one(FILE *file)
 	mhod_num = 0;
 	if (utf16_strlen (track->title_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_TITLE, track->title_utf16, 1);
+	    mk_mhod (file, MHOD_ID_TITLE, track->title_utf16);
 	    ++mhod_num;
 	}
 	if (utf16_strlen (track->ipod_path_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_PATH, track->ipod_path_utf16, 1);
+	    mk_mhod (file, MHOD_ID_PATH, track->ipod_path_utf16);
 	    ++mhod_num;
 	}
 	if (utf16_strlen (track->album_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_ALBUM, track->album_utf16, 1);
+	    mk_mhod (file, MHOD_ID_ALBUM, track->album_utf16);
 	    ++mhod_num;
 	}
 	if (utf16_strlen (track->artist_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_ARTIST, track->artist_utf16, 1);
+	    mk_mhod (file, MHOD_ID_ARTIST, track->artist_utf16);
 	    ++mhod_num;
 	}
 	if (utf16_strlen (track->genre_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_GENRE, track->genre_utf16, 1);
+	    mk_mhod (file, MHOD_ID_GENRE, track->genre_utf16);
 	    ++mhod_num;
 	}
 	if (utf16_strlen (track->fdesc_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_FDESC, track->fdesc_utf16, 1);
+	    mk_mhod (file, MHOD_ID_FDESC, track->fdesc_utf16);
 	    ++mhod_num;
 	}
 	if (utf16_strlen (track->comment_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_COMMENT, track->comment_utf16, 1);
+	    mk_mhod (file, MHOD_ID_COMMENT, track->comment_utf16);
 	    ++mhod_num;
 	}
 	if (utf16_strlen (track->composer_utf16) != 0)
 	{
-	    mk_mhod (file, MHOD_ID_COMPOSER, track->composer_utf16, 1);
+	    mk_mhod (file, MHOD_ID_COMPOSER, track->composer_utf16);
 	    ++mhod_num;
 	}
         /* Fill in the missing items of the mhit header */
 	fix_mhit (file, mhit_seek, ftell (file), mhod_num);
     }
-    fix_mhsd (file, mhsd_seek, ftell (file));
+    fix_header (file, mhsd_seek, ftell (file));
 }
 
+/* corresponds to mk_mhyp */
 static void
 write_playlist(FILE *file, Playlist *pl)
 {
-    guint32 i, n;
-    glong mhyp_seek;
-    gunichar2 empty = 0;
+    GList *gl;
+    glong mhyp_seek = ftell(file);
+    guint32 track_num = g_list_length (pl->members);
 
-    mhyp_seek = ftell(file);
-    n = it_get_nr_of_tracks_in_playlist (pl);
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, n);
+  fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, track_num);
 #endif
-    mk_mhyp(file, pl->name_utf16, pl->type, n);
-    for (i=0; i<n; ++i)
-    {
-	Track *track;
-        if((track = it_get_track_in_playlist_by_nr (pl, i)))
-	{
-	    mk_mhip(file, track->ipod_id);
-	    mk_mhod(file, MHOD_ID_PLAYLIST, &empty, track->ipod_id);
-	}
+
+    put_data (file, "mhyp", 4);    /* header                    */
+    put4lint (file, 108);          /* length		        */
+    put4lint (file, -1);           /* size -> later             */
+    if (pl->is_spl)
+	put4lint (file, 4);        /* ?                         */
+    else
+	put4lint (file, 2);        /* ?                         */
+    put4lint (file, track_num);    /* number of tracks in plist */
+    put4lint (file, pl->type);     /* 1 = main, 0 = visible     */
+    put4lint (file, 0);            /* ?                         */
+    put4lint (file, 0);            /* ?                         */
+    put4lint (file, 0);            /* ?                         */
+    put_n0 (file, 18);             /* ?                         */
+    mk_mhod (file, MHOD_ID_TITLE, pl->name_utf16);
+    mk_long_mhod_id_playlist (file);
+    if (pl->is_spl)
+    {  /* write the smart rules */
+	mk_mhod (file, MHOD_ID_SPLPREF, &pl->splpref);
+	mk_mhod (file, MHOD_ID_SPLRULES, &pl->splrules);
     }
-   fix_mhyp (file, mhyp_seek, ftell(file));
+    /* write hard-coded tracks */
+    for (gl=pl->members; gl; gl=gl->next)
+    {
+	Track *track = gl->data;
+	mk_mhip (file, track->ipod_id);
+	mk_mhod (file, MHOD_ID_PLAYLIST, (void *)track->ipod_id);
+    }
+   fix_header (file, mhyp_seek, ftell(file));
 }
 
 
@@ -1802,7 +1958,7 @@ write_mhsd_two(FILE *file)
 	write_playlist(file, it_get_playlist_by_nr(i));
     }
     fix_mhlp (file, mhlp_seek, playlists);
-    fix_mhsd (file, mhsd_seek, ftell (file));
+    fix_header (file, mhsd_seek, ftell (file));
 }
 
 
@@ -1816,7 +1972,7 @@ write_it (FILE *file)
     mk_mhbd (file);
     write_mhsd_one(file);		/* write tracks mhsd */
     write_mhsd_two(file);		/* write playlists mhsd */
-    fix_mhbd (file, mhbd_seek, ftell (file));
+    fix_header (file, mhbd_seek, ftell (file));
     return TRUE;
 }
 
