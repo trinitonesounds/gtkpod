@@ -758,3 +758,11 @@ on_cfg_st_autoselect_toggled           (GtkToggleButton *togglebutton,
 	(guint32)user_data,
 	gtk_toggle_button_get_active(togglebutton));
 }
+
+void
+on_gtkpod_status_realize               (GtkWidget       *widget,
+                                        gpointer         user_data)
+{
+    gtkpod_statusbar_init(widget);
+}
+

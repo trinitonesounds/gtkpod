@@ -1072,9 +1072,10 @@
       </child>
 
       <child>
-	<widget class="GtkStatusbar" id="statusbar1">
+	<widget class="GtkStatusbar" id="gtkpod_status">
 	  <property name="visible">True</property>
 	  <property name="has_resize_grip">True</property>
+	  <signal name="realize" handler="on_gtkpod_status_realize" last_modification_time="Sun, 19 Jan 2003 19:38:08 GMT"/>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>

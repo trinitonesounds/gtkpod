@@ -33,6 +33,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
+#define STATUSBAR_TIMEOUT 4200
 /* we receive UTF8 strings which should be translated to the locale
  * before printing */
 /* FIXME: write a popup for gtkpod_warning which holds all the
@@ -50,5 +51,8 @@ void gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);
 void register_gtkpod_main_window(GtkWidget *win);
 gboolean create_ipod_directories(const gchar *ipod_dir);
+
+void gtkpod_statusbar_init(GtkWidget *);
+void gtkpod_statusbar_message(const gchar *message);
 
 #endif __MISC_H__

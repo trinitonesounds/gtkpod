@@ -273,3 +273,7 @@ on_alphabetize1_down_menu              (GtkMenuItem     *menuitem,
 void
 on_cfg_st_autoselect_toggled           (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_gtkpod_status_realize               (GtkWidget       *widget,
+                                        gpointer         user_data);

@@ -125,7 +125,7 @@ create_gtkpod (void)
   GtkWidget *label15;
   GtkWidget *scrolledwindow11;
   GtkWidget *song_treeview;
-  GtkWidget *statusbar1;
+  GtkWidget *gtkpod_status;
   GtkAccelGroup *accel_group;
 
   accel_group = gtk_accel_group_new ();
@@ -568,9 +568,9 @@ create_gtkpod (void)
                               GDK_a, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
-  statusbar1 = gtk_statusbar_new ();
-  gtk_widget_show (statusbar1);
-  gtk_box_pack_start (GTK_BOX (vbox1), statusbar1, FALSE, FALSE, 0);
+  gtkpod_status = gtk_statusbar_new ();
+  gtk_widget_show (gtkpod_status);
+  gtk_box_pack_start (GTK_BOX (vbox1), gtkpod_status, FALSE, FALSE, 0);
 
   g_signal_connect ((gpointer) gtkpod, "delete_event",
                     G_CALLBACK (on_gtkpod_delete_event),
@@ -667,6 +667,9 @@ create_gtkpod (void)
                           NULL);
   g_signal_connect ((gpointer) song_treeview, "drag_data_received",
                     G_CALLBACK (on_song_treeview_drag_data_received),
+                    NULL);
+  g_signal_connect ((gpointer) gtkpod_status, "realize",
+                    G_CALLBACK (on_gtkpod_status_realize),
                     NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
@@ -765,7 +768,7 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, label15, "label15");
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow11, "scrolledwindow11");
   GLADE_HOOKUP_OBJECT (gtkpod, song_treeview, "song_treeview");
-  GLADE_HOOKUP_OBJECT (gtkpod, statusbar1, "statusbar1");
+  GLADE_HOOKUP_OBJECT (gtkpod, gtkpod_status, "gtkpod_status");
 
   gtk_window_add_accel_group (GTK_WINDOW (gtkpod), accel_group);
 

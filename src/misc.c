@@ -43,7 +43,7 @@
 static GtkWidget *main_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
-  
+static GtkWidget *gtkpod_statusbar = NULL;
 
 static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 {
@@ -329,4 +329,39 @@ create_ipod_directories(const gchar *ipod_dir)
 	GTKPOD_MKDIR(buf);
     }
     return(TRUE);
+}
+
+void
+gtkpod_statusbar_init(GtkWidget *sb)
+{
+    gtkpod_statusbar = sb;
+}
+
+static gint
+gtkpod_statusbar_clear(gpointer data)
+{
+    gint result = 0;
+
+    if(gtkpod_statusbar)
+    {
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), 1);
+	result = 1;
+    }
+    return(result);
+    
+}
+void
+gtkpod_statusbar_message(const gchar *message)
+{
+    if(gtkpod_statusbar)
+    {
+	gchar buf[PATH_MAX];
+	guint context = 1;
+	
+	snprintf(buf, PATH_MAX, "  %s", message);
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
+	gtk_timeout_add(STATUSBAR_TIMEOUT, (GtkFunction) gtkpod_statusbar_clear,
+		NULL);
+    }
 }

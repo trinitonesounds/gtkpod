@@ -22,6 +22,7 @@
 | 
 |  This product is not supported/written/published by Apple!
 */
+#include "misc.h"
 #include "delete_window.h"
 #include "display.h"
 #include "interface.h"
@@ -306,13 +307,27 @@ void confirmation_window_ok_clicked(void)
 
     if(selected_playlist)
     {
+	gchar buf[PATH_MAX];
+	guint songs_length = 0;
+
+	memset(&buf, 0, PATH_MAX);
+	songs_length = g_list_length(selected_songs);
 	switch(confirmation_type)
 	{
 	    case CONFIRMATION_WINDOW_PLAYLIST:
 		if(selected_playlist->type != PL_TYPE_MPL)
+		{
 		    remove_playlist(selected_playlist);
+		    snprintf(buf, PATH_MAX, "%s", (_("Deleted Playlist %s")));
+		}
 		break;
 	    case CONFIRMATION_WINDOW_SONG_FROM_IPOD:
+		if(songs_length > 1)	    
+		    snprintf(buf, PATH_MAX, "%s", 
+			    (_("Deleted Songs Completely from iPod")));
+		else if(songs_length >= 0)	    
+		    snprintf(buf, PATH_MAX, "%s", 
+			    (_("Deleted Song Completely from iPod")));
 		for (l = selected_songs; l; l = l->next)
 		{
 		    s = (Song *) l->data;
@@ -320,6 +335,14 @@ void confirmation_window_ok_clicked(void)
 		}
 		break;
 	    case CONFIRMATION_WINDOW_SONG_FROM_PLAYLIST:
+		if(songs_length > 1)	    
+		    snprintf(buf, PATH_MAX, "%s %s", 
+			    (_("Deleted Songs from Playlist")), 
+			    selected_playlist->name);
+		else if(songs_length >= 0)	    
+		    snprintf(buf, PATH_MAX, "%s %s", 
+			    (_("Deleted Song from Playlist")), 
+			    selected_playlist->name);
 		for (l = selected_songs; l; l = l->next)
 		{
 		    s = (Song *) l->data;
@@ -330,6 +353,8 @@ void confirmation_window_ok_clicked(void)
 		fprintf(stderr, "Programming error: Unknown confirmation Ok clicked\n");
 		break;
 	}
+	if(strlen(buf) > 0)
+	    gtkpod_statusbar_message(buf);
     }
     confirmation_window_cleanup();
 }

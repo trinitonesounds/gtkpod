@@ -745,7 +745,8 @@ void handle_import (void)
 	/*we need to tell the display that the ID has changed */
 	pm_song_changed (song);
     }
-  
+    
+    gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
     /* setup our md5 hashness for unique files */
     /* if(cfg->md5songs)    done with add_song ();
        unique_file_repository_init(get_song_list()); */
@@ -1007,7 +1008,11 @@ void handle_export (void)
     }
 
   /* indicate that files and/or database is saved */
-  if (success)   files_saved = TRUE;
+  if (success)   
+  {
+      files_saved = TRUE;
+      gtkpod_statusbar_message(_("iPod Database Saved"));
+  }
 
   C_FREE (cfgdir);
   C_FREE (cft);
