@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-27 01:39:00 jcs>
+/* Time-stamp: <2003-09-28 00:08:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -248,7 +248,7 @@ struct cfg *cfg_new(void)
     mycfg->multi_edit = FALSE;
     mycfg->multi_edit_title = TRUE;
     mycfg->not_played_song = TRUE;
-    mycfg->misc_song_nr = 25;
+    mycfg->misc_track_nr = 25;
     mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.st_sort = SORT_NONE;
     mycfg->sortcfg.sm_sort = SORT_NONE;
@@ -549,9 +549,9 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_not_played_song((gboolean)atoi(arg));
 	  }
-       	  else if(g_ascii_strcasecmp (line, "misc_song_nr") == 0)
+       	  else if(g_ascii_strcasecmp (line, "misc_track_nr") == 0)
        	  {
-       	      prefs_set_misc_song_nr(atoi(arg));
+       	      prefs_set_misc_track_nr(atoi(arg));
        	  }
 	  else if(g_ascii_strcasecmp (line, "update_charset") == 0)
 	  {
@@ -879,7 +879,7 @@ write_prefs_to_file_desc(FILE *fp)
 	    prefs_get_display_tooltips_prefs());
     fprintf(fp, "multi_edit=%d\n", prefs_get_multi_edit());
     fprintf(fp, "multi_edit_title=%d\n", prefs_get_multi_edit_title());
-    fprintf(fp, "misc_song_nr=%d\n", prefs_get_misc_song_nr());
+    fprintf(fp, "misc_track_nr=%d\n", prefs_get_misc_track_nr());
     fprintf(fp, "not_played_song=%d\n", prefs_get_not_played_song());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
@@ -1787,14 +1787,14 @@ gboolean prefs_get_not_played_song (void)
     return cfg->not_played_song;
 }
 
-void prefs_set_misc_song_nr (gint state)
+void prefs_set_misc_track_nr (gint state)
 {
-    cfg->misc_song_nr = state;
+    cfg->misc_track_nr = state;
 }
 
-gint prefs_get_misc_song_nr (void)
+gint prefs_get_misc_track_nr (void)
 {
-    return cfg->misc_song_nr;
+    return cfg->misc_track_nr;
 }
 
 void prefs_set_multi_edit_title (gboolean state)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-26 23:37:04 jcs>
+/* Time-stamp: <2003-09-28 00:18:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2587,7 +2587,7 @@ static gboolean Most_Listened_IF (Song *song)
 
 void most_listened_pl(void)
 {
-    gint songs_nr = prefs_get_misc_song_nr();
+    gint songs_nr = prefs_get_misc_track_nr();
     gchar *str = g_strdup_printf (_("Most Listened (%d)"), songs_nr);
     update_ranked_playlist (str, songs_nr,
 			    Most_Listened_IF, Most_Listened_CF);
@@ -2624,7 +2624,7 @@ static gboolean Most_Rated_IF (Song *song)
 
 void most_rated_pl(void)
 {
-    gint songs_nr = prefs_get_misc_song_nr();
+    gint songs_nr = prefs_get_misc_track_nr();
     gchar *str =  g_strdup_printf (_("Best Rated (%d)"), songs_nr);
     update_ranked_playlist (str, songs_nr,
 			    Most_Rated_IF, Most_Rated_CF);
@@ -2661,7 +2661,7 @@ static gboolean Last_Listened_IF (Song *song)
 
 void last_listened_pl(void)
 {
-    gint songs_nr = prefs_get_misc_song_nr();
+    gint songs_nr = prefs_get_misc_track_nr();
     gchar *str = g_strdup_printf (_("Recent (%d)"), songs_nr);
     update_ranked_playlist (str, songs_nr,
 			    Last_Listened_IF, Last_Listened_CF);

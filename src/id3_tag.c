@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-25 22:47:20 jcs>
+/* Time-stamp: <2003-09-28 00:34:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,10 +39,11 @@
 
 static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 {
-    id3_utf8_t *utf8;
     const id3_ucs4_t *string;
     struct id3_frame *frame;
     union id3_field *field;
+    gchar *utf8;
+    id3_latin1_t *raw;
 
     frame = id3_tag_findframe (tag, frame_name, 0);
     if (!frame) return NULL;
@@ -64,8 +65,11 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
     if (frame_name == ID3_FRAME_GENRE) 
        string = id3_genre_name (string);
 
-    utf8 = id3_ucs4_utf8duplicate (string);
-    return (gchar*) utf8;
+/*     utf8 = id3_ucs4_utf8duplicate (string); */
+    raw = id3_ucs4_latin1duplicate (string);
+    utf8 = charset_to_utf8 (raw);
+    g_free (raw);
+    return utf8;
 }
  
 static void id3_set_string (struct id3_tag *tag, const char *frame_name, const char *data)
@@ -110,7 +114,6 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
     }
 
     ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
-    printf ("%s\n", ucs4);
 
     if (frame_name == ID3_FRAME_GENRE)
     {

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-27 01:39:01 jcs>
+/* Time-stamp: <2003-09-28 00:08:11 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -66,7 +66,7 @@ void prefs_window_set_display_tooltips_main (gboolean val);
 void prefs_window_set_display_tooltips_prefs (gboolean val);
 void prefs_window_set_multi_edit (gboolean val);
 void prefs_window_set_multi_edit_title (gboolean val);
-void prefs_window_set_misc_song_nr (gint val);
+void prefs_window_set_misc_track_nr (gint val);
 void prefs_window_set_not_played_song (gboolean val);
 void prefs_window_set_update_charset (gboolean val);
 void prefs_window_set_write_charset (gboolean val);

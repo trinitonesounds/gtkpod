@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-27 01:41:47 jcs>
+/* Time-stamp: <2003-09-28 00:08:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1433,7 +1433,7 @@ void
 on_cfg_misc_track_nr_value_changed      (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-    prefs_window_set_misc_song_nr (gtk_spin_button_get_value (spinbutton));
+    prefs_window_set_misc_track_nr (gtk_spin_button_get_value (spinbutton));
 }
 
 void

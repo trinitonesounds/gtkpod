@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-27 01:39:00 jcs>
+/* Time-stamp: <2003-09-28 00:08:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -127,7 +127,7 @@ struct cfg
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_song;     /* not played song in Highest rated playlist?*/
   gboolean special_export_charset; /* use original charset or specified one? */
-  gint misc_song_nr;            /* song's nr in the Highest rated, most played and most recently played pl*/ 
+  gint misc_track_nr;            /* song's nr in the Highest rated, most played and most recently played pl*/ 
   gboolean write_gaintag;       /* should we append the mp3gain's tag to the mp3files?*/
   float version;                /* version of gtkpod writing the cfg file */
 };
@@ -290,8 +290,8 @@ void prefs_set_display_tooltips_prefs (gboolean state);
 gboolean prefs_get_display_tooltips_prefs (void);
 void prefs_set_multi_edit (gboolean state);
 gboolean prefs_get_multi_edit (void);
-void prefs_set_misc_song_nr (gint state);
-gint prefs_get_misc_song_nr (void);
+void prefs_set_misc_track_nr (gint state);
+gint prefs_get_misc_track_nr (void);
 void prefs_set_not_played_song (gboolean state);
 gboolean prefs_get_not_played_song (void);
 void prefs_set_multi_edit_title (gboolean state);

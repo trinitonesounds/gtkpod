@@ -77,9 +77,9 @@ main (int argc, char *argv[])
   if(prefs_get_automount())      mount_ipod();
   if(prefs_get_auto_import())    handle_import();
   gtk_widget_show (gtkpod_window);
-  gtkpod_confirmation (CONF_ID_GTKPOD_WARNING,    /* gint id, */
-		       FALSE,                     /* gboolean modal, */
-		       _("Warning"),              /* title */
+  gtkpod_confirmation (-1,                  /* gint id, */
+		       FALSE,               /* gboolean modal, */
+		       _("Warning"),        /* title */
 		       "Due to transition to libid3tag, charset support for reading/writing ID3 tags is temporarily broken in this CVS version (only US-ASCII will work). Please use the official release (0.52) or a CVS snapshot before 9/25 if you need charset support.",
 		       NULL,                /* text to be displayed */
 		       NULL, 0, NULL,       /* option 1 */
