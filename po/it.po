@@ -1,14 +1,15 @@
-# German language translation for gtkpod
-# Copyright (C) 2003 Jörg Schuler
-# Jörg Schuler <jcsjcs at users.sourceforge.net>, 2003.
+# Italian language translation for gtkpod.
+# Copyright (C) 2003 Edward Matteucci
+# This file is distributed under the same license as the gtkpod package.
+# Edward Matteucci <edward.matteucci@libero.it>, YEAR. 2003
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtkpod 0.52\n"
+"Project-Id-Version: gtkpod 0.52-cvs\n"
 "POT-Creation-Date: 2003-06-29 15:38+0900\n"
-"PO-Revision-Date: 2003-06-29 15:51+0900\n"
-"Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
+"PO-Revision-Date: 2003-07-04 21:05+0900\n"
+"Last-Translator: Edward Matteucci <edward.matteucci@libero.it>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,192 +20,192 @@ msgstr ""
 #: src/callbacks.c:85 src/callbacks.c:151 src/callbacks.c:253
 #: src/callbacks.c:420 src/misc.c:460 src/misc.c:478
 msgid "New Playlist"
-msgstr "Neue Playliste"
+msgstr "Nuova Playlist"
 
 #: src/callbacks.c:337 src/callbacks.c:381
 msgid "Preferences not updated"
-msgstr "Die Einstellungen wurden nicht übernommen"
+msgstr "Preferenze non aggiornate"
 
 #: src/callbacks.c:390
 msgid "Preferences applied"
-msgstr "Die Einstellungen wurden übernommen"
+msgstr "Preferenze applicate"
 
 #: src/callbacks.c:616
 msgid "Delete selected entry of which sort tab?"
-msgstr "Markierten Eintrag aus welchem Sort Tab löschen?"
+msgstr "Cancella"
 
 #: src/callbacks.c:764
 msgid "Update selected entry of which sort tab?"
-msgstr "Markierten Eintrag aus welchem Sort Tab aktualisieren?"
+msgstr ""
 
 #: src/callbacks.c:790
 msgid "Sync dirs of selected entry in which sort tab?"
-msgstr "Verzeichnisse aus welchem Sort Tab abgleichen?"
+msgstr ""
 
 #: src/callbacks.c:948
 msgid "Sort which sort tab in ascending order?"
-msgstr "Welchen Sort Tab in alphabetischer Reihenfolge sortieren?"
+msgstr ""
 
 #: src/callbacks.c:967
 msgid "Sort which sort tab in descending order?"
-msgstr "Welchen Sort Tab in alphabetisch umgekehrter Reihenfolge sortieren?"
+msgstr ""
 
 #: src/callbacks.c:1017 src/callbacks.c:1073 src/callbacks.c:1124
 msgid "No playlist selected"
-msgstr "Keine Playliste ausgewählt"
+msgstr "Nessuna playlist selezionata"
 
 #: src/callbacks.c:1031
 msgid "Export selected entry of which sort tab?"
-msgstr "Markierten Eintrag aus welchem Sort Tab aktualisieren?"
+msgstr ""
 
 #: src/callbacks.c:1037 src/callbacks.c:1090 src/callbacks.c:1141
 #, c-format
 msgid "No entry selected in Sort Tab %d"
-msgstr "Kein Eintrag im Sort Tab %d ausgewählt"
+msgstr ""
 
 #: src/callbacks.c:1060 src/callbacks.c:1112 src/callbacks.c:1163
 msgid "No songs selected"
-msgstr "Keine Stücke ausgewählt"
+msgstr "Nessuna canzone selezionata"
 
 #: src/callbacks.c:1084
 msgid "Play songs in selected entry of which sort tab?"
-msgstr "Stücke aus welchem Sort Tab abspielen?"
+msgstr ""
 
 #: src/callbacks.c:1135
 msgid "Enqueue songs in selected entry of which sort tab?"
-msgstr "Stücke aus welchem Sort Tab zum abspielen vormerken?"
+msgstr ""
 
 #: src/charset.c:45
 msgid "Arabic (IBM-864)"
-msgstr "Arabisch (IBM-864)"
+msgstr "Arabo (IBM-864)"
 
 #: src/charset.c:46
 msgid "Arabic (ISO-8859-6)"
-msgstr "Arabisch (ISO-8859-6)"
+msgstr "Arabo (ISO-8859-6)"
 
 #: src/charset.c:47
 msgid "Arabic (Windows-1256)"
-msgstr "Arabisch (Windows-1256)"
+msgstr "Arabo (Windows-1256)"
 
 #: src/charset.c:48
 msgid "Baltic (ISO-8859-13)"
-msgstr "Baltisch (ISO-8859-13)"
+msgstr "Baltico (ISO-8859-13)"
 
 #: src/charset.c:49
 msgid "Baltic (ISO-8859-4)"
-msgstr "Baltisch (ISO-8859-4)"
+msgstr "Baltico (ISO-8859-4)"
 
 #: src/charset.c:50
 msgid "Baltic (Windows-1257)"
-msgstr "Baltisch (Windows-1257)"
+msgstr "Baltico (Windows-1257)"
 
 #: src/charset.c:51
 msgid "Celtic (ISO-8859-14)"
-msgstr "Keltisch (ISO-8859-14)"
+msgstr "Celtico (ISO-8859-14)"
 
 #: src/charset.c:52
 msgid "Central European (IBM-852)"
-msgstr "Mitteleuropäisch (IBM-852)"
+msgstr "Europa Centrale (IBM-852)"
 
 #: src/charset.c:53
 msgid "Central European (ISO-8859-2)"
-msgstr "Mitteleuropäisch (ISO-8859-2)"
+msgstr "Europa Centrale (ISO-8859-2)"
 
 #: src/charset.c:54
 msgid "Central European (Windows-1250)"
-msgstr "Mitteleuropäisch (Windows-1250)"
+msgstr "Europa Centrale (Windows-1250)"
 
 #: src/charset.c:55
 msgid "Chinese Simplified (GB18030)"
-msgstr "Vereinfachtes Chinesisch (GB18030)"
+msgstr "Cinese Semplificato (GB18030)"
 
 #: src/charset.c:56
 msgid "Chinese Simplified (GB2312)"
-msgstr "Vereinfachtes Chinesisch (GB2312)"
+msgstr "Cinese Semplificato (GB2312)"
 
 #: src/charset.c:57
 msgid "Chinese Traditional (Big5)"
-msgstr "Traditionelles Chinesisch (Big5)"
+msgstr "Cinese Tradizionale (Big5)"
 
 #: src/charset.c:58
 msgid "Chinese Traditional (Big5-HKSCS)"
-msgstr "Traditionelles Chinesisch (Big5-HKSCS)"
+msgstr "Cinese Tradizionale (Big5-HKSCS)"
 
 #: src/charset.c:59
 msgid "Cyrillic (IBM-855)"
-msgstr "Kyrillisch (IBM-855)"
+msgstr "Cirillico (IBM-855)"
 
 #: src/charset.c:60
 msgid "Cyrillic (ISO-8859-5)"
-msgstr "Kyrillisch (ISO-8859-5)"
+msgstr "Cirillico (ISO-8859-5)"
 
 #: src/charset.c:61
 msgid "Cyrillic (ISO-IR-111)"
-msgstr "Kyrillisch (ISO-IR-111)"
+msgstr "Cirillico (ISO-IR-111)"
 
 #: src/charset.c:62
 msgid "Cyrillic (KOI8-R)"
-msgstr "Kyrillisch (KOI8-R)"
+msgstr "Cirillico (KOI8-R)"
 
 #: src/charset.c:63
 msgid "Cyrillic (Windows-1251)"
-msgstr "Kyrillisch (Windows-1251)"
+msgstr "Cirillico (Windows-1251)"
 
 #: src/charset.c:64
 msgid "Cyrillic/Russian (CP-866)"
-msgstr "Kyrillisch/Russisch (CP-866)"
+msgstr "Cirillico/Russo (CP-866)"
 
 #: src/charset.c:65
 msgid "Cyrillic/Ukrainian (KOI8-U)"
-msgstr "Kyrillisch/Ukrainisch (KOI8-U)"
+msgstr "Cirillico/Ucraino (KOI8-U)"
 
 #: src/charset.c:66
 msgid "English (US-ASCII)"
-msgstr "Englisch (US-ASCII)"
+msgstr "Inglese (US-ASCII)"
 
 #: src/charset.c:67
 msgid "Greek (ISO-8859-7)"
-msgstr "Griechisch (ISO-8859-7)"
+msgstr "Greco (ISO-8859-7)"
 
 #: src/charset.c:68
 msgid "Greek (Windows-1253)"
-msgstr "Griechisch (Windows-1253)"
+msgstr "Greco (Windows-1253)"
 
 #: src/charset.c:69
 msgid "Hebrew (IBM-862)"
-msgstr "Hebräisch (IBM-862)"
+msgstr "Ebraico (IBM-862)"
 
 #: src/charset.c:70
 msgid "Hebrew (Windows-1255)"
-msgstr "Hebräisch (Windows-1255)"
+msgstr "Ebraico (Windows-1255)"
 
 #: src/charset.c:71
 msgid "Japanese (automatic detection)"
-msgstr "Japanisch (automatische Detektion)"
+msgstr "Giapponese (automatico)"
 
 #: src/charset.c:72
 msgid "Japanese (EUC-JP)"
-msgstr "Japanisch (EUC-JP)"
+msgstr "Giapponese (EUC-JP)"
 
 #: src/charset.c:73
 msgid "Japanese (ISO-2022-JP)"
-msgstr "Japanisch (ISO-2022-JP)"
+msgstr "Giapponese (ISO-2022-JP)"
 
 #: src/charset.c:74
 msgid "Japanese (Shift_JIS)"
-msgstr "Japanisch (Shift_JIS)"
+msgstr "Giapponese (Shift_JIS)"
 
 #: src/charset.c:75
 msgid "Korean (EUC-KR)"
-msgstr "Koreanisch (EUC-KR)"
+msgstr "Coreano (EUC-KR)"
 
 #: src/charset.c:76
 msgid "Nordic (ISO-8859-10)"
-msgstr "Nordisch (ISO-8859-10)"
+msgstr "Nordico (ISO-8859-10)"
 
 #: src/charset.c:77
 msgid "South European (ISO-8859-3)"
-msgstr "Südeuropäisch (ISO-8859-3)"
+msgstr "Europa del sud (ISO-8859-3)"
 
 #: src/charset.c:78
 msgid "Thai (TIS-620)"
@@ -212,15 +213,15 @@ msgstr "Thai (TIS-620)"
 
 #: src/charset.c:79
 msgid "Turkish (IBM-857)"
-msgstr "Türkisch (IBM-857)"
+msgstr "Turco (IBM-857)"
 
 #: src/charset.c:80
 msgid "Turkish (ISO-8859-9)"
-msgstr "Türkisch (ISO-8859-9)"
+msgstr "Turco (ISO-8859-9)"
 
 #: src/charset.c:81
 msgid "Turkish (Windows-1254)"
-msgstr "Türkisch (Windows-1254)"
+msgstr "Turco (Windows-1254)"
 
 #: src/charset.c:82
 msgid "Unicode (UTF-7)"
@@ -248,116 +249,116 @@ msgstr "Unicode (UTF-32LE)"
 
 #: src/charset.c:88
 msgid "Vietnamese (VISCII)"
-msgstr "Vietnamesisch (VISCII)"
+msgstr "Vietnamita (VISCII)"
 
 #: src/charset.c:89
 msgid "Vietnamese (Windows-1258)"
-msgstr "Vietnamesisch (Windows-1258)"
+msgstr "Vietnamita (Windows-1258)"
 
 #: src/charset.c:90
 msgid "Visual Hebrew (ISO-8859-8)"
-msgstr "Visuelles Hebräisch (ISO-8859-8)"
+msgstr "Ebraico visuale (ISO-8859-8)"
 
 #: src/charset.c:91
 msgid "Western (IBM-850)"
-msgstr "Westlich (IBM-850)"
+msgstr "Europa occidentale (IBM-850)"
 
 #: src/charset.c:92
 msgid "Western (ISO-8859-1)"
-msgstr "Westlich (ISO-8859-1)"
+msgstr "Europa occidentale (ISO-8859-1)"
 
 #: src/charset.c:93
 msgid "Western (ISO-8859-15)"
-msgstr "Westlich (ISO-8859-15)"
+msgstr "EUropa occidentale (ISO-8859-15)"
 
 #: src/charset.c:94
 msgid "Western (Windows-1252)"
-msgstr "Westlich (Windows-1252)"
+msgstr "Europa occidentale (Windows-1252)"
 
 #. sanity!
 #. check for "System Charset" and return NULL
 #: src/charset.c:152 src/charset.c:162 src/charset.c:214
 msgid "System Charset"
-msgstr "System-Zeichensatz"
+msgstr "Codifica di sistmea"
 
 #: src/confirmation.c:302
 msgid "Confirmation Dialogue"
-msgstr "Sicherheitsabfrage"
+msgstr "Finestra di conferma"
 
 #: src/context_menus.c:241
 msgid "Edit"
-msgstr "Bearbeiten"
+msgstr "Modifica"
 
 #: src/context_menus.c:243 src/misc.c:1710
 msgid "Play Now"
-msgstr "Jetzt Spielen"
+msgstr "Suona"
 
 #: src/context_menus.c:245 src/misc.c:1721
 msgid "Enqueue"
-msgstr "Zum Abspielen Vormerken"
+msgstr "Metti in coda"
 
 #: src/context_menus.c:247 src/interface.c:601 src/interface.c:1529
 msgid "Export"
-msgstr "Exportieren"
+msgstr "Esporta"
 
 #: src/context_menus.c:249
 msgid "Update"
-msgstr "Aktualisieren"
+msgstr "Aggiorna"
 
 #: src/context_menus.c:251
 msgid "Sync Dirs"
-msgstr "Verzeichnisse abgleichen"
+msgstr "Sincronizza le directory"
 
 #: src/context_menus.c:253
 msgid "Delete"
-msgstr "Löschen"
+msgstr "Cancella"
 
 #: src/context_menus.c:269
 msgid "Alphabetize"
-msgstr "Sortieren"
+msgstr "Alfabetizza"
 
 #: src/context_menus.c:273
 msgid "Ascending"
-msgstr "Aufsteigend"
+msgstr "Ordine ascendente"
 
 #: src/context_menus.c:275
 msgid "Descending"
-msgstr "Absteigend"
+msgstr "ordine discendente"
 
 #: src/context_menus.c:277
 msgid "Reset"
-msgstr "Zurücksetzen"
+msgstr "Cancella"
 
 #: date_parser.l:270
 #, c-format
 msgid "Date format error: unrecognized character: '%s'\n"
-msgstr "Datums Formatvorgabefehler: unbekanntes Zeichen: '%s'\n"
+msgstr "Errore nel formato della data: carattere sconosciuto: '%s'\n"
 
 #: src/dirbrowser.c:187
 msgid "Select directory to add recursively"
-msgstr "Wählen Sie Verzeichnisse zum Hinzufügen"
+msgstr "Seleziona una directory da aggiungere ricorsivamente"
 
 #: src/dirbrowser.c:442 src/interface.c:1113
 msgid "Ok"
-msgstr "OK"
+msgstr "Ok"
 
 #: src/dirbrowser.c:451 src/interface.c:1123
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr "Cancella"
 
 #: src/display_playlists.c:519
 msgid "Playlists"
-msgstr "Playlisten"
+msgstr "Playlist"
 
 #: src/display_songs.c:822 src/display_sorttabs.c:2159 src/interface.c:1502
 #: src/interface.c:1600
 msgid "Title"
-msgstr "Titel"
+msgstr "Titolo"
 
 #: src/display_songs.c:825 src/display_sorttabs.c:2147 src/interface.c:1478
 #: src/interface.c:1560
 msgid "Artist"
-msgstr "Künstler"
+msgstr "Artista"
 
 #: src/display_songs.c:828 src/display_sorttabs.c:2150 src/interface.c:1490
 #: src/interface.c:1580
@@ -367,11 +368,11 @@ msgstr "Album"
 #: src/display_songs.c:831 src/display_sorttabs.c:2153 src/interface.c:1482
 #: src/interface.c:1620
 msgid "Genre"
-msgstr "Genre"
+msgstr "Genere"
 
 #: src/display_songs.c:834 src/interface.c:1494 src/interface.c:1564
 msgid "Composer"
-msgstr "Komponist"
+msgstr "Compositore"
 
 #: src/display_songs.c:837
 msgid "#"
@@ -383,19 +384,19 @@ msgstr "ID"
 
 #: src/display_songs.c:844 src/interface.c:1624
 msgid "PC File"
-msgstr "PC Datei"
+msgstr "File PC"
 
 #: src/display_songs.c:848
 msgid "Trnsfrd"
-msgstr "Übertragen"
+msgstr "Trasferito"
 
 #: src/display_songs.c:853 src/interface.c:1588
 msgid "File Size"
-msgstr "Dateigröße"
+msgstr "Dimensione"
 
 #: src/display_songs.c:857
 msgid "Time"
-msgstr "Zeit"
+msgstr "Durata"
 
 #: src/display_songs.c:861 src/interface.c:1628
 msgid "Bitrate"
@@ -403,78 +404,77 @@ msgstr "Bitrate"
 
 #: src/display_songs.c:865 src/interface.c:1612 src/interface.c:2484
 msgid "Playcount"
-msgstr "Playcount"
+msgstr "Conta riproduzioni"
 
 #: src/display_songs.c:868 src/interface.c:1632 src/interface.c:2491
 msgid "Rating"
-msgstr "Bewertung"
+msgstr "Voto"
 
 #: src/display_songs.c:871 src/interface.c:2497
 msgid "Played"
-msgstr "Gespielt"
+msgstr "Suonato"
 
 #: src/display_songs.c:875 src/interface.c:2503
 msgid "Modified"
-msgstr "Modifiziert"
+msgstr "Modificato"
 
 #: src/display_sorttabs.c:176
 msgid "'Played' condition ignored because of error."
-msgstr ""
-"Die Bedingung 'Zuletzt abgespielt' wurde aufgrund eines Fehlers ignoriert."
+msgstr "La condizione 'Suonato' è stata ignorata a causa di un errore"
 
 #: src/display_sorttabs.c:179
 msgid "'Modified' condition ignored because of error."
-msgstr ""
-"Die Bedingung 'Zuletzt modifiziert' wurde aufgrund eines Fehlers ignoriert."
+msgstr "Condizione 'Modificato' ignorata a causa di un errore."
 
 #: src/display_sorttabs.c:1083
 msgid "All"
-msgstr "Alle"
+msgstr "Tutti"
 
 #: src/display_sorttabs.c:2156
 msgid "Comp."
-msgstr "Komp."
+msgstr "Comp."
 
 #: src/display_sorttabs.c:2162 src/interface.c:2348
 msgid "Special"
-msgstr "Spezial"
+msgstr "Speciale"
 
 #: src/display_sorttabs.c:2423
+#, fuzzy
 msgid "Last Played"
-msgstr "Zuletzt Gespielt"
+msgstr "Suonato"
 
 #: src/display_sorttabs.c:2424
+#, fuzzy
 msgid "Last Modified"
-msgstr "Zuletzt Modifiziert"
+msgstr "Modificato"
 
 #. Songs with zero play length are ignored by iPod...
 #: src/file.c:504
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
-msgstr "Die Datei '%s' hat Null-Spielzeit und wird ignoriert.\n"
+msgstr "Il file \"%s\" ha durata zero. Ignorato.\n"
 
 #: src/file.c:534
 msgid "Nothing to update"
-msgstr "Nichts zum Aktualisieren"
+msgstr "Nulla da aggiornare"
 
 #: src/file.c:543
 #, c-format
 msgid "Updating %s"
-msgstr "Aktualisiere '%s'"
+msgstr "Aggiornamento di %s in corso"
 
 #: src/file.c:558
 msgid "Updated selected songs with info from file."
-msgstr ""
-"Die ausgewählten Stücke wurden mit Informationen aus der Datei aktualisiert."
+msgstr "Le canzoni sono state aggiornate con le informazioni dal file"
 
 #: src/file.c:618
 #, c-format
 msgid "Syncing directory '%s'"
-msgstr "Verzeichnis '%s' wird abgeglichen"
+msgstr "Sincronizzazione della directory '%s' in corso"
 
 #: src/file.c:650
 msgid "Syncing completed. No files deleted."
-msgstr "Abgleich beendet. Keine Dateien gelöscht."
+msgstr "Sincronizzazione completata. Nessun file cancellata."
 
 #. gint id,
 #. gboolean modal,
@@ -483,29 +483,29 @@ msgstr "Abgleich beendet. Keine Dateien gelöscht."
 #. scrolled text
 #: src/file.c:726
 msgid "Never delete any files when syncing"
-msgstr "Beim Abgleich nie Dateien löschen"
+msgstr "Non cancellare i file durante la sincronizzazione"
 
 #: src/file.c:745
 msgid "Syncing completed."
-msgstr "Abgleich beendet."
+msgstr "Sincronizzazione completata"
 
 #: src/file.c:757
 msgid "Syncing aborted"
-msgstr "Abgleich abgebrochen."
+msgstr "Sincronizzazione abortita"
 
 #: src/file.c:795
 msgid "No songs in selection"
-msgstr "Keine Stücke ausgewählt"
+msgstr "Nessuna canzone selezionata"
 
 #: src/file.c:833
 #, c-format
 msgid "'%s' is not a directory. Ignored.\n"
-msgstr "'%s' ist kein Verzeichnis und wird ignoriert.\n"
+msgstr "'%s' non =E8 una directory. Ignorata.\n"
 
 #: src/file.c:836
 #, c-format
 msgid "'%s' does not exist. Ignored.\n"
-msgstr "'%s' existiert nicht und wird ignoriert.\n"
+msgstr "'%s' non esiste. Ignorato.\n"
 
 #. no directory names available
 #: src/file.c:843
@@ -517,106 +517,102 @@ msgid ""
 "To synchronize directories now, activate the 'duplicate detection' in the "
 "Import section and add the directories you want to sync again.\n"
 msgstr ""
-"Es wurden keine Verzeichnisnamen gespeichert. Stellen Sie sicher, daß die "
-"Option 'Erweiterte Informationen Schreiben' in der Export-Sektion der "
-"Einstellungen zum Zeitpunkt des Dateiimports aktiviert ist.\n"
+"Nessun nome di directory è stato memorizzato. Assicurati di aver attivato "
+"al momento dell'importazione dei file 'Scrivi informazioni estese '"
+"tra le preferenze nella sezione Esportazione.\n"
 "\n"
-"Wenn Sie jetzt ein Verzeichnis abgleichen wollen, aktivieren Sie bitte die "
-"Option 'Duplikaterkennung' in der Import-Sektion und fügen anschließend die "
-"gewünschten Verzeichnisse erneut hinzu.\n"
+"Per sincronizzare le directory adesso, attiva il 'Rilevazione dei duplicati' "
+"nella sezione Importazione e aggiungi le directory che vuoi sincronizzare di nuovo.\n"
 
 #: src/file.c:847
 msgid "No valid directories have been found. Sync aborted.\n"
 msgstr ""
-"Es wurden keine gültigen Verzeichnisse gefunden. Abgleich wurde "
-"abgebrochen.\n"
+"Nessuna directory valida =E8 stata trovata. Sincronizzazione abortita.\n"
 
 #. gint id,
 #. gboolean modal,
 #: src/file.c:858
 msgid "Synchronize directories"
-msgstr "Verzeichnisse abgleichen"
+msgstr "Sincronizza le directory"
 
 #. title
 #: src/file.c:859
 msgid "OK to synchronize the following directories?"
-msgstr "Sollen die folgenden Verzeichnisse abgeglichen werden?"
+msgstr "Vuoi sincronizzare le seguenti directory?"
 
 #. no entry selected
 #: src/file.c:916 src/misc.c:1382
 msgid "No entry selected."
-msgstr "Kein Tab-Eintrag ausgewählt."
+msgstr "Nessuna voce selezionata."
 
 #. no playlist selected
 #: src/file.c:944 src/misc.c:1123 src/misc.c:1271 src/misc.c:1371
 msgid "No playlist selected."
-msgstr "Keine Playliste ausgewählt."
+msgstr "Nessuna playlist selezionata."
 
 #: src/file.c:975
 #, c-format
 msgid "The following song could not be updated"
 msgid_plural "The following %d songs could not be updated"
-msgstr[0] "Das folgende Stück konnte nicht aktualisiert werden"
-msgstr[1] "Die folgenden %d Stücke konnten nicht aktualisiert werden"
+msgstr[0] "La canzone seguente non può essere aggioranta"
+msgstr[1] "Le canzoni seguenti non possono essere aggiornate"
 
 #. gint id,
 #. gboolean modal,
 #: src/file.c:981
 msgid "Failed Song Update"
-msgstr "Aktualisierung fehlgeschlagen"
+msgstr "Aggiornamento delle canzoni fallito"
 
 #: src/file.c:1039
 #, c-format
 msgid "The following song has been updated"
 msgid_plural "The following %d songs have been updated"
-msgstr[0] "Das folgende Stück wurde aktualisiert"
-msgstr[1] "Die folgenden %d Stücke wurden aktualisiert"
+msgstr[0] "La canzone seguente sono state aggioranta"
+msgstr[1] "Le canzoni seguenti sono state aggiornate"
 
 #. gint id,
 #. gboolean modal,
 #: src/file.c:1045
 msgid "Successful Song Update"
-msgstr "Aktualisierung erfolgreich"
+msgstr "Aggiornamento delle canzoni completato con successo."
 
 #. no path available
 #: src/file.c:1137
 msgid "no filename available"
-msgstr "Es steht kein Dateiname zur Verfügung"
+msgstr "nessun nome di file disponibile"
 
 #: src/file.c:1175
 msgid "file not found"
-msgstr "Datei nicht gefunden"
+msgstr "File non trovato"
 
 #: src/file.c:1179
 msgid "format not supported"
-msgstr "Format wird nicht unterstützt"
+msgstr "Formato non supportato"
 
 #: src/file.c:1370 src/file.c:1383
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
-msgstr "Konnte Tags der Datei '%s' nicht ändern\n"
+msgstr "Impossibile cambiare il tag del file: %s\n"
 
 #: src/file.c:1491 src/file.c:1505
 #, c-format
 msgid "Could not open \"%s\" for reading extended info.\n"
-msgstr ""
-"Datei '%s' mit den erweiterten Infos konnte nicht zum Lesen geöffnet "
-"werden.\n"
+msgstr "Impossibile aprire \"%s\" per leggere le informazioni estese.\n"
 
 #: src/file.c:1522
 #, c-format
 msgid "Error while reading extended info: %s\n"
-msgstr "Fehler beim Lesen der erweiterten Informationen: '%s'\n"
+msgstr "Errore nella lettura delle informazioni estese: %s\n"
 
 #: src/file.c:1538
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "iTunesDB (%s)\n"
 "does not match checksum in extended information file (%s)\n"
 msgstr ""
-"iTunesDB (%s)\n"
-"paßt nicht zur Checksumme, die in den erweiterten Informationen (%s) "
-"gespeichert ist\n"
+"l'iTunesDB (%s)\n"
+"ha un checksum incompatibile con quello presente nelfile delle informazioni "
+"estese (%s)\n"
 
 #: src/file.c:1546
 #, c-format
@@ -625,7 +621,7 @@ msgid ""
 "Expected \"itunesdb_hash=\" but got:\"%s\"\n"
 msgstr ""
 "%s:\n"
-"'itunesdb_hash=' erwartet, aber '%s' gefunden\n"
+"Era atteso \"itunesdb_hash=\" ma ho trovato:'%s'\n"
 
 #: src/file.c:1580
 #, c-format
@@ -634,269 +630,269 @@ msgid ""
 "Format error: %s\n"
 msgstr ""
 "%s:\n"
-"Formatfehler: %s\n"
+"Errore nel formato: %s\n"
 
 #: src/file.c:1645
 msgid "Extended info will not be used.\n"
-msgstr "Erweiterte Informationen werden nicht verwendet.\n"
+msgstr "Le informazioni estese non verranno usate.\n"
 
 #: src/file.c:1649
 msgid "iPod Database Successfully Imported"
-msgstr "iPod Datenbank wurde erfolgreich eingelesen"
+msgstr "Database iPod importato con successo"
 
 #: src/file.c:1651
 msgid "iPod Database Import Failed"
-msgstr "Das Einlesen der iPod Datenbank schlug fehl"
+msgstr "Importazione del database dell'iPod fallito"
 
 #: src/file.c:1663
 msgid ""
 "Extended info will not be used. If you have non-transferred songs,\n"
 "these will be lost.\n"
 msgstr ""
-"Die erweiterten Informationen werden nicht verwendet. Nicht auf den iPod "
-"übertragene Stücke gehen verloren.\n"
+"Le informazioni estese non verranno usate. Se hai delle canzoni non "
+"trasferite,\n"
+"verrano perse.\n"
 
 #: src/file.c:1667
 msgid "Offline iPod Database Successfully Imported"
-msgstr "Die Offline-iPod-Datenbank wurde erfolgreich eingelesen"
+msgstr "Database offline dell'iPOd importato con successo"
 
 #: src/file.c:1670
 msgid "Offline iPod Database Import Failed"
-msgstr "Das Einlesen der Offline-iPod-Datenbank schlug fehl"
+msgstr "Fallita l'importazione del Database offline"
 
 #: src/file.c:1676
 msgid "Import aborted.\n"
-msgstr "Einlesen abgebrochen\n"
+msgstr "Importazione abortita.\n"
 
 #: src/file.c:1848 src/file.c:1855
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr ""
-"Datei '%s' konnte nicht zum Schreiben der erweiterten Infos geöffnet "
-"werden.\n"
+"Impossibile aprire \"%s\" per la scrittura delle informazioni estese.\n"
 
 #: src/file.c:1982
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
 msgstr ""
-"Zum Abbrechen bitte anklicken.\n"
-"Der Export kann zu einem späteren Zeitpunkt fortgesetzt werden."
+"Premi il bottone per abortire.\n"
+"l'esportazione può essere ultimata in un secondo momento."
 
 #: src/file.c:2038
 msgid "Some songs could not be deleted from the iPod. Export aborted!"
 msgstr ""
-"Einige Dateien konnten nicht vom iPod gelöscht werden. Export abgebrochen!"
+"Alcune canzoni non possono essere cancellate dall'iPod. Esportazione "
+"abortita!"
 
 #: src/file.c:2090
 #, c-format
 msgid "Copied %d of %d new song."
 msgid_plural "Copied %d of %d new songs."
-msgstr[0] "%d von insgesamt %d Stück kopiert."
-msgstr[1] "%d von insgesamt %d Stücken kopiert."
+msgstr[0] "Copiato %d di %d di una nuova canzone"
+msgstr[1] "Copiato %d di %d di nuove canzoni"
 
 #: src/file.c:2100
 msgid "Some songs were not written to iPod. Export aborted!"
-msgstr ""
-"Einige Stücke wurden nicht auf den iPod übertragen. Export abgebrochen!"
+msgstr "Alcune canzoni non sono state scritte sull'iPod. Esportazione abortita"
 
 #: src/file.c:2132
 msgid "Error writing iTunesDB to iPod. Export aborted!"
-msgstr "Fehler beim Schreiben der iTunesDB auf dem iPod. Export abgebrochen!"
+msgstr "Errore nella scrittura del iTunesDB sull'iPod. Esportazione abortito!"
 
 #: src/file.c:2137
 msgid "Extended information not written"
-msgstr "Erweiterte Informationen wurden nicht geschrieben"
+msgstr "Le informazioni estese non sono state scritte"
 
 #: src/file.c:2144
 #, c-format
 msgid "Extended information file not deleted: '%s'"
-msgstr "Die Datei mit den erweiterten Informationen wurde nicht gefunden: '%s'"
+msgstr "Il file delle informazioni estese non è stato cancellato: '%s'"
 
 #: src/file.c:2160
 msgid "Backups could not be created!"
-msgstr "Backups konnten nicht erstellt werden!"
+msgstr "Impossibile creare un backup!"
 
 #: src/file.c:2176
 msgid "Export not successful!"
-msgstr "Export war nicht erfolgreich!"
+msgstr "Esportazione conclusa senza successo!"
 
 #: src/file.c:2187
 msgid "iPod Database Saved"
-msgstr "iPod Datenbank gespeichert"
+msgstr "Database iPod salvato"
 
 #: src/file_export.c:174
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
-msgstr "Fehler beim Kopieren von '%s' nach '%s': Zugriffsfehler (%s)\n"
+msgstr "Errore nella copia di '%s' verso '%s': Errore nei permessi (%s)\n"
 
 #: src/file_export.c:176
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
-msgstr "Fehler beim Kopieren von '%s' nach '%s' (%s)\n"
+msgstr "Errore nella copia di '%s' verso '%s' (%s)\n"
 
 #: src/file_export.c:184
 #, c-format
 msgid "Unable to open '%s' for reading\n"
-msgstr "Kann '%s' nicht zum Lesen öffnen.\n"
+msgstr "Impossibile aprire '%s' in lettura\n"
 
 #: src/file_export.c:235
 #, c-format
 msgid "Failed to write %s-%s\n"
-msgstr "Konnte '%s-%s' nicht schreiben\n"
+msgstr "Impossibile scrivere %s-%s\n"
 
 #: src/file_export.c:294
 msgid "Select Export Destination Directory"
-msgstr "Wählen Sie das Zielverzeichnis für den Export aus"
+msgstr "Seleziona la directory di destinazione dell'esportazione"
 
 #: src/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s: die Option '%s' ist mehrdeutig\n"
+msgstr "%s: l'opzione '%s' è ambigua\n"
 
 #: src/getopt.c:706
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: die Option '--%s' läßt kein Argument zu\n"
+msgstr "%s: l'opzione `--%s' non ammette argomenti\n"
 
 #: src/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: die Option '%c%s' läßt kein Argument zu\n"
+msgstr "%s: l'opzione `%c%s' non ammette argomenti\n"
 
 #: src/getopt.c:729 src/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "%s: die Option '%s' benötigt ein Argument\n"
+msgstr "%s: l'opzione `%s' richiede un argomento\n"
 
 #. --option
 #: src/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: die Option '--%s' ist unbekannt\n"
+msgstr "%s: opzione sconosciuta `--%s'\n"
 
 #. +option or -option
 #: src/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s: die Option '%c%s' ist unbekannt\n"
+msgstr "%s: opzione sconosciuta `%c%s'\n"
 
 #. 1003.2 specifies the format of this message.
 #: src/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
-msgstr "%s: die Option '%c' ist nicht erlaubt\n"
+msgstr "%s: opzione illegale -- %c\n"
 
 #: src/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr "%s: die Option '%c' ist ungültig\n"
+msgstr "%s: opzione non valida -- %c\n"
 
 #. 1003.2 specifies the format of this message.
 #: src/getopt.c:821 src/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: die Option '%c' benötigt ein Argument\n"
+msgstr "%s: l'opzione richiede un argomento -- %c\n"
 
 #: src/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "%s: die Option '-W %s' ist mehrdeutig\n"
+msgstr "%s: l'opzione `-W %s' è ambigua\n"
 
 #: src/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s: die Option '-W %s' läßt keine Argumente zu\n"
+msgstr "%s: l'opzione `-W %s' non ammette argomenti\n"
 
 #: src/id3_tag.c:111 src/id3_tag.c:496
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
-msgstr "FEHLER beim Öffnen der Datei: '%s' (%s).\n"
+msgstr "ERRORE nell'apertura del file: '%s' (%s).\n"
 
 #: src/id3_tag.c:751
 #, c-format
 msgid "Removed tag of '%s'\n"
-msgstr "Tag von '%s' wurde entfernt\n"
+msgstr "Rimosso il tag di '%s'\n"
 
 #: src/id3_tag.c:755 src/id3_tag.c:782
 #, c-format
 msgid "Error while removing ID3v1 tag of '%s' (%s)\n"
-msgstr "Fehler beim Entfernen des IDv1-Tags von '%s' (%s)\n"
+msgstr "Errore nella rimozione del tag ID3v1 di '%s' (%s)\n"
 
 #: src/id3_tag.c:757 src/id3_tag.c:801
 #, c-format
 msgid "Error while removing ID3v2 tag of '%s' (%s)\n"
-msgstr "Fehler beim Entfernen des IDv2-Tags von '%s' (%s)\n"
+msgstr "Errore nella rimozione del tag ID3v2 di '%s' (%s)\n"
 
 #: src/id3_tag.c:774
 #, c-format
 msgid "Error while updating ID3v1 tag of '%s' (%s)\n"
-msgstr "Fehler beim Aktualisieren des ID3v1-Tags von '%s' (%s)\n"
+msgstr "Errore nell'aggiornamento del tag ID3v1 di '%s' (%s)\n"
 
 #: src/id3_tag.c:793
 #, c-format
 msgid "Error while updating ID3v2 tag of '%s' (%s)\n"
-msgstr "Fehler beim Aktualisieren des ID3v2-Tags von '%s' (%s)\n"
+msgstr "Errore nell'aggiornamento del tag ID3v2 di '%s' (%s)\n"
 
 #: src/id3_tag.c:856
 msgid "No error reported"
-msgstr "Kein Fehler gemeldet"
+msgstr "Nessun errore riportato"
 
 #: src/id3_tag.c:858
 msgid "No available memory"
-msgstr "Kein Speicher verfügbar"
+msgstr "Memoria non disponibile"
 
 #: src/id3_tag.c:860
 msgid "No data to parse"
-msgstr "Keine Daten zu analysieren"
+msgstr ""
 
 #: src/id3_tag.c:862
 msgid "Improperly formatted data"
-msgstr "Ungeeignet formatierte Daten"
+msgstr "Dati formattati impropiamente"
 
 #: src/id3_tag.c:864
 msgid "No buffer to write to"
-msgstr "Kein Schreibpuffer vorhanden"
+msgstr "Nessun buffer su cui scrivere"
 
 #: src/id3_tag.c:866
 msgid "Buffer is too small"
-msgstr "Puffer zu klein"
+msgstr "Il buffer è troppo piccolo"
 
 #: src/id3_tag.c:868
 msgid "Invalid frame ID"
-msgstr "Ungültige Frame-ID"
+msgstr "Frame ID non valido"
 
 #: src/id3_tag.c:870
 msgid "Requested field not found"
-msgstr "Angefordertes Feld nicht gefunden"
+msgstr "Campo richiesto non trovato"
 
 #: src/id3_tag.c:872
 msgid "Unknown field type"
-msgstr "Unbekannter Feldtyp"
+msgstr "Tipo di campo sconosciuto"
 
 #: src/id3_tag.c:874
 msgid "Tag is already attached to a file"
-msgstr "Tag hängt bereits an einer Datei"
+msgstr "Il tag è già associato al file"
 
 #: src/id3_tag.c:876
 msgid "Invalid tag version"
-msgstr "Ungültige Tag-Version"
+msgstr "Versione non valida del tag"
 
 #: src/id3_tag.c:878
 msgid "No file to parse"
-msgstr "Keine Datei zu analysieren"
+msgstr ""
 
 #: src/id3_tag.c:880
 msgid "Attempting to write to a read-only file"
-msgstr "Versuch, in eine schreibgeschützte Datei zu schreiben"
+msgstr "Tentativo di scrittura su un file in sola lettura"
 
 #: src/id3_tag.c:882
 msgid "Error in compression/uncompression"
-msgstr "Fehler beim Komprimieren/Dekomprimieren"
+msgstr "Errore in compressione/decompressione"
 
 #: src/id3_tag.c:884
 msgid "Unknown error message!"
-msgstr "Unbekannte Fehlermeldung!"
+msgstr "Messaggi di errore sconosciuto!"
 
 #: src/interface.c:153
 msgid "gtkpod"
@@ -904,54 +900,54 @@ msgstr "gtkpod"
 
 #: src/interface.c:164
 msgid "_File"
-msgstr "_Datei"
+msgstr "_File"
 
 #: src/interface.c:171
 msgid "_Import iTunes"
-msgstr "iTunes _Importieren"
+msgstr "_Import iTunes"
 
 #: src/interface.c:179
 msgid "Add _Files"
-msgstr "_Files hinzufügen"
+msgstr "Aggiungi _File"
 
 #: src/interface.c:187
 msgid "Add _Directory"
-msgstr "_Verzeichnisse hinzufügen"
+msgstr "Aggiungi _Directory"
 
 #: src/interface.c:195
 msgid "Add _Playlist"
-msgstr "_Playliste hinzufügen"
+msgstr "Aggiungi _Playlist"
 
 #: src/interface.c:203
 msgid "_Export iTunes"
-msgstr "iTunes _exportieren"
+msgstr "_Esporta iTunes"
 
 #: src/interface.c:216
 msgid "_Update Songs from File"
-msgstr "_Aktualiere ID3 Tags aus der Datei"
+msgstr "_Aggiorna le canzoni da un file"
 
 #: src/interface.c:227 src/interface.c:250 src/interface.c:278
 #: src/interface.c:411 src/interface.c:492 src/interface.c:515
 msgid "Selected _Playlist"
-msgstr "Ausgewählte _Playliste"
+msgstr "_Playlist selezionata"
 
 #: src/interface.c:231 src/interface.c:254 src/interface.c:282
 #: src/interface.c:415 src/interface.c:496 src/interface.c:519
 msgid "Selected _Tab Entry"
-msgstr "Ausgewählten _Tab Eintrag"
+msgstr ""
 
 #: src/interface.c:235 src/interface.c:258 src/interface.c:286
 #: src/interface.c:419 src/interface.c:500 src/interface.c:523
 msgid "Selected _Songs"
-msgstr "Ausgewählte _Stücke"
+msgstr "_Canzoni Selezionate"
 
 #: src/interface.c:239
 msgid "Synchronize Directories"
-msgstr "Verzeichnisse abgleichen"
+msgstr "Sincronizza le directory"
 
 #: src/interface.c:267
 msgid "Export Files _to Disk"
-msgstr "Stücke auf die Festplatte _kopieren"
+msgstr "Esporta i file _su disco"
 
 #: src/interface.c:295
 msgid "_Offline"
@@ -959,159 +955,159 @@ msgstr "_Offline"
 
 #: src/interface.c:304
 msgid "_Create iPod's Directories"
-msgstr "iPod-_Verzeichnisstruktur erstellen"
+msgstr "_Crea le directory dell'iPod"
 
 #: src/interface.c:321 src/interface.c:1919
 msgid "_Edit"
-msgstr "_Bearbeiten"
+msgstr "_Modifica"
 
 #: src/interface.c:328
 msgid "_New Playlist"
-msgstr "_Neue Playliste"
+msgstr "_Nuova playlist"
 
 #: src/interface.c:341
 msgid "_Alphabetize"
-msgstr "_Vorwärts sortieren"
+msgstr "_Ordina alfabeticamente"
 
 #: src/interface.c:352 src/interface.c:371
 msgid "_Playlists"
-msgstr "_Playlisten"
+msgstr "_Playlist"
 
 #: src/interface.c:356 src/interface.c:375
 msgid "_Sort Tab"
-msgstr "_Sort Tab"
+msgstr ""
 
 #: src/interface.c:360
 msgid "Alphabeti_ze"
-msgstr "_Rückwärts sortieren"
+msgstr "Ordina Alfabeticamen_te"
 
 #: src/interface.c:379
 msgid "_Reset Sorting"
-msgstr "Sortierung _aufheben"
+msgstr "_Cancella l'ordinamento"
 
 #: src/interface.c:387
 msgid "_Save Displayed Song Order"
-msgstr "Dargestellte Reihenfolge _speichern"
+msgstr "_Salva l'ordine delle canzoni"
 
 #: src/interface.c:400
 msgid "_Delete"
-msgstr "_Löschen"
+msgstr "_Cancella"
 
 #: src/interface.c:428
 msgid "_Edit Preferences"
-msgstr "_Einstellungen"
+msgstr "_Modifica le preferenze"
 
 #: src/interface.c:439
 msgid "_View"
-msgstr "_Ansicht"
+msgstr "_Visualizza"
 
 #: src/interface.c:446
 msgid "_Toolbar"
-msgstr "_Toolbar"
+msgstr "_Barra degli strumenti"
 
 #: src/interface.c:450
 msgid "_Tooltips"
-msgstr "_Tooltips"
+msgstr ""
 
 #: src/interface.c:454
 msgid "_More Sort Tabs"
-msgstr "_Mehr Sort Tabs"
+msgstr ""
 
 #: src/interface.c:462
 msgid "_Less Sort Tabs"
-msgstr "_Weniger Sort Tabs"
+msgstr ""
 
 #: src/interface.c:470
 msgid "_Arrange Sort Tabs"
-msgstr "Sort Tabs _Anordnen"
+msgstr ""
 
 #: src/interface.c:474
 msgid "_Tools"
-msgstr "_Werkzeuge"
+msgstr "_Strumenti"
 
 #: src/interface.c:481
 msgid "_Play Now"
-msgstr "_Jetzt Abspielen"
+msgstr "_Suona"
 
 #: src/interface.c:504
 msgid "_Enqueue"
-msgstr "Zum Abspielen _Vormerken"
+msgstr "_In Coda"
 
 #: src/interface.c:527
 msgid "_Help"
-msgstr "_Hilfe"
+msgstr "_Aiuto"
 
 #: src/interface.c:534
 msgid "_About"
-msgstr "_Über"
+msgstr "_A Proposito"
 
 #: src/interface.c:551 src/interface.c:1347
 msgid "Import"
-msgstr "Importieren"
+msgstr "Importa"
 
 #: src/interface.c:552
 msgid "Read Existing Database from Disk/iPod"
-msgstr "iTunes Datenbank von der Festplatte / dem iPod einlesen"
+msgstr "Leggi il database esistente dal disco/iPod"
 
 #: src/interface.c:561
 msgid "Files"
-msgstr "Dateien"
+msgstr "File"
 
 #: src/interface.c:562
 msgid "Add Files or Directories"
-msgstr "Wählen Sie hinzuzufügende Dateien oder Verzeichnisse aus."
+msgstr "Aggiungi file o directory"
 
 #: src/interface.c:571
 msgid "Dirs"
-msgstr "Verzeichnisse"
+msgstr "Dir"
 
 #: src/interface.c:572
 msgid "Add Directories Recursively"
-msgstr "Verzeichnisse rekursiv hinzufügen"
+msgstr "Aggiungi directory ricorsivamente"
 
 #: src/interface.c:581 src/itunesdb.c:422
 msgid "Playlist"
-msgstr "Playliste"
+msgstr "Playlist"
 
 #: src/interface.c:582
 msgid "Add playlist from file"
-msgstr "Playliste aus Datei hinzufügen"
+msgstr "Aggiungi playlist dal file"
 
 #: src/interface.c:591
 msgid "New PL"
-msgstr "Neue PL"
+msgstr "Nuova PL"
 
 #: src/interface.c:592
 msgid "Create New Playlist"
-msgstr "Neue Playliste erstellen"
+msgstr "Crea nuova Playlist"
 
 #: src/interface.c:602
 msgid "Write Changes to Disk/iPod"
-msgstr "Änderungen auf Festplatte / den iPod übertragen"
+msgstr "Scrivi le modifiche sul disco/iPod"
 
 #: src/interface.c:611
 msgid "Stop"
-msgstr "Stopp"
+msgstr "Stop"
 
 #: src/interface.c:612
 msgid "Stop Display Update"
-msgstr "Aktualisierung der Anzeige abbrechen"
+msgstr "Ferma l'aggiornamento della visualizzazione"
 
 #: src/interface.c:961
 msgid "About gtkpod"
-msgstr "Über gtkpod"
+msgstr "A proposito di gtkpod"
 
 #: src/interface.c:992
 msgid "Credits"
-msgstr "Danksagung"
+msgstr "Crediti"
 
 #: src/interface.c:1008
 msgid "Translators"
-msgstr "Übersetzer"
+msgstr "Traduttori"
 
 #: src/interface.c:1066
 msgid "window1"
-msgstr "Fenster1"
+msgstr "window1"
 
 #: src/interface.c:1072
 msgid "label21"
@@ -1119,32 +1115,34 @@ msgstr "label21"
 
 #: src/interface.c:1103
 msgid "Never show this dialogue again"
-msgstr "Diesen Dialog nie wieder zeigen"
+msgstr "Non mostrare mai più questa finestra"
 
 #: src/interface.c:1118
 msgid "Apply"
-msgstr "Anwenden"
+msgstr "Applica"
 
 #: src/interface.c:1304
 msgid "Preferences"
-msgstr "Einstellungen"
+msgstr "Preferenze"
 
 #: src/interface.c:1331
 msgid " iPod Mount _Point:"
-msgstr " iPod Mount _Point:"
+msgstr " _Punto di montaggio dell'iPod"
 
 #: src/interface.c:1341
 msgid ""
 "Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar."
-msgstr "Wo ist Ihr iPod gemountet? Für gewöhnlich unter '/mnt/ipod/'."
+msgstr ""
+"Dove monti di solito il filesystem del tuo iPod. Di solito  '/mnt/ipod' o "
+"qualcosa di simile."
 
 #: src/interface.c:1343
 msgid "Automatically import iTunesDB on startup"
-msgstr "Beim Starten iTunes-Datenbank automatisch importieren?"
+msgstr "Importa automaticamente l'iTunesDB all'avvio"
 
 #: src/interface.c:1365
 msgid " _Charset (ID3, files): "
-msgstr " _Zeichensatz (ID3, Dateinamen): "
+msgstr "_Charset (ID3, file):"
 
 #: src/interface.c:1378
 msgid ""
@@ -1152,19 +1150,18 @@ msgid ""
 "specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' "
 "operation. 'System Charset' is the charset used by your current locale."
 msgstr ""
-"gtkpod erwartet, daß die Filenamen und ID3 tags in der Kodierung vorliegen, "
-"die hier angegeben wird. Diese kann natürlich zwischen zwei Aufrufen von "
-"'Files hinzufügen' oder 'Verzeichnisse hinzufügen' geändert werden. "
-"'Systemzeichensatz' bezeichnet die Standardkodierung der aktuellen Locale."
+"gtkpod si aspetta che i tag ID3 e i nomi dei file siano nella stessa "
+"codificaspecificata qui. Puoi cambiarla per operazioni di 'aggiungi file' e "
+"'aggiungi directory'.'Codifica di sistema' è la codifica usata dal tuo "
+"sistema."
 
 #: src/interface.c:1381
 msgid ""
 "Use selected charset also when updating\n"
 " or syncing tracks"
 msgstr ""
-"Gewählten Zeichensatz auch verwenden wenn Stücke\n"
-" aktualisiert oder Verzeichnisse abgeglichen\n"
-" werden"
+"Usa la codifica selezionata anche quando aggiorni\n"
+"o sincronizzi le tracce"
 
 #: src/interface.c:1384
 msgid ""
@@ -1175,51 +1172,48 @@ msgid ""
 "information file (see Export) and songs imported before V0.51 will have no "
 "charset stored -- the charset specified above will be used at first."
 msgstr ""
-"Normalerweise wird der Zeichensatz, der beim ersten Einlesen spezifiziert "
-"wurde, auch verwendet, um ein Stück zu aktualisieren. Wenn Sie beim ersten "
-"Einlesen einen falschen Zeichensatz angegeben haben und dies nun mittels "
-"'Stücke aktualisieren' korrigieren wollen, müssen Sie diese Option "
-"auswählen. Bitte beachten Sie: die Information über den verwendeten "
-"Zeichensatz wird mit den erweiterten Informationen gespeichert (siehe "
-"'Export'). Stücke, die vor Version 0.51 eingelesen wurden, haben keine "
-"Informationen über den Zeichensatz gespeichert und der oben spezifizierte "
-"Zeichensatz wird verwendet."
+"Normalmente la codifica di sistema specificata al momento di importare la canzone "
+"verrà usata per aggiornare le informazioni sulla canzone. Se hai scelto la codifica "
+"sbagliata al momento della prima importazione e vuoi correggerla usando la funzione "
+"\"Aggiorna la canzone\" devi selezionare questa opzione. Nota: le informazioni sul "
+"carattere sono memorizzate nel file delle informazioni estese (vedi Esportazione) "
+"e le canzoni importate prima di V0.51 non avranno codifica memorizzata, verrà quindi "
+"usata la codifica qui sotto."
 
 #: src/interface.c:1386
 msgid "Add directories recursively"
-msgstr "Verzeichnisse rekursiv hinzufügen"
+msgstr "Aggiungi le directory ricorsivamente"
 
 #: src/interface.c:1389
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
-msgstr "Wenn Sie diese Option wählen werden Verzeichnisse rekursiv eingelesen."
+msgstr "Se selezioni questo, gtkpod discenderà nelle directory ricorsivamente."
 
 #: src/interface.c:1391
 msgid "Don't allow file duplication"
-msgstr "Mehrfaches Einlesen von Stücken verhindern"
+msgstr "Non permettere i file duplicati"
 
 #: src/interface.c:1394
 msgid "Duplicate Recognition is based on a md5 hash over the file."
-msgstr ""
-"Die Duplikatenerkennung basiert auf einem md5-Hash über die mp3-Stücke."
+msgstr "Il riconoscimento dei file duplicati è basato su un hash md5 sul file."
 
 #: src/interface.c:1400
 msgid "Display info about detected duplicates"
-msgstr "Information über erkannte Duplikate anzeigen"
+msgstr "Mostra infomrazioni sui file cancellati"
 
 #: src/interface.c:1405
 msgid ""
 "Display the list of duplicates that have been detected after adding files."
 msgstr ""
-"Eine Liste der Duplikate anzeigen, die während des Hinzufügens von Stücken "
-"erkannt wurden."
+"Mostra la lista dei duplicati che sono stati cancellati dopo l'aggiunta dei "
+"file."
 
 #: src/interface.c:1407
 msgid ""
 "When adding dirs/files, update information of\n"
 " existing songs with identical filenames"
 msgstr ""
-"Beim Hinzufügen von Stücken bereits eingelesene\n"
-"Stücke mit dem selben Dateinamen aktualisieren."
+"Quando aggiungi file/directory, aggiorna anche le informazioni sulle\n"
+" canzoni esistenti con nome identico"
 
 #: src/interface.c:1410
 msgid ""
@@ -1230,80 +1224,72 @@ msgid ""
 "filename still allows for different ID3 tags. On export the updated song is "
 "copied to the iPod overwriting the old version."
 msgstr ""
-"Wenn der Dateiname (inkl. Pfad) eines bereits eingelesenen Stückes identisch "
-"ist zum Dateinamen eines neu einzulesenden Stücks, dann erlaubt diese Option "
-"Ihnen das alte Stück zu überschreiben, anstelle das Stück zweifach "
-"einzulesen. Beachten Sie bitte, daß diese Option sich von der Option weiter "
-"oben unterscheidet: Duplikate sind vollkommen identisch, während es bei "
-"gleichen Filenamen vorkommen kann, daß sich die ID3 Tags oder das Musikstück "
-"selbs verändert hat. Beim Exportieren der iTunesDB wird die alte Datei auf "
-"dem iPod durch die neue Version überschrieben."
+"Se il nome del file (path completo) di una canzone esistente corrisponde a quella di una canzone "
+"aggiunta, questa opzione permette di aggiornare le informazioni della canzone esistente "
+"piuttosto che aggiungere di nuovo la canzone. Questa opzione è differente "
+"dalla opzione qui sotto: i duplicati sono completamente identici, avere lo stesso "
+"nome permette comunque di avere tag ID3 differenti. In esportazione le canzoni aggiornate "
+"verranno copiate sull'iPod sovrascrivendo la vecchia versione."
 
 #: src/interface.c:1416
 msgid "Display info about updated songs"
-msgstr "Informationen über aktualisierte Stücke anzeigen"
+msgstr "Mostra informazioni sulle canzoni aggiornate"
 
 #: src/interface.c:1421
 msgid "Display a list of songs that could actually be updated."
-msgstr ""
-"Nach dem Aktualisieren eine Liste derer Stücke anzeigen, die tatsächlich "
-"aktualisiert wurden."
+msgstr "Mostra una lista di canzoni che potrebbero essere aggiornate."
 
 #: src/interface.c:1423
 msgid "Display info about non-updated songs"
-msgstr "Informationen über nicht aktualisierte Stücke anzeigen"
+msgstr "Mostra informazioni a proposito di canzoni non aggiornate"
 
 #: src/interface.c:1428
 msgid "Display a list of songs that could not be updated."
-msgstr ""
-"Nach dem Aktualisieren eine Liste derer Stücke anzeigen, bei denen die "
-"Aktualisierung nicht vorgenommen werden konnte."
+msgstr "Mostra una lista di canzoni che non possono essere aggiorante."
 
 #: src/interface.c:1430
 msgid "When syncing directories"
-msgstr "Beim Abgleich von Verzeichnissen"
+msgstr "Durante la sincronizzazione delle directory"
 
 #: src/interface.c:1440
 msgid "Confirm list of directories"
-msgstr "Liste der Verzeichnisse bestätigen"
+msgstr "Conferma la lista delle directory"
 
 #: src/interface.c:1446
 msgid "Delete tracks that have been removed"
-msgstr "Stücke, die entfernt wurden, löschen"
+msgstr "Cancella le tracce che sono state rimosse"
 
 #: src/interface.c:1451
 msgid ""
 "If you check this option, tracks that have been removed from the synced "
 "directories will be removed from the iPod as well."
 msgstr ""
-"Wenn Sie diese Option wählen, werden Stücke, die aus den abzugleichenden "
-"Verzeichnissen entfernt wurden, auch auf dem iPod gelöscht."
+"Se selezioni questa opzione, le traccie che sono state rimosse dalle directory "
+"sincronizzate verranno rimosse anche dall'iPod."
 
 #: src/interface.c:1453
 msgid "Confirm before removing tracks"
-msgstr "Vor dem Entfernen von Stücken bestätigen"
+msgstr "Conferma prima di rimuovere le tracce"
 
 #: src/interface.c:1458
 msgid "This is the same option as in 'Misc/Delete Confirmation'"
-msgstr ""
-"Diese Option ist identisch zu der in 'Verschiedenes/Sicherheitsabfrage beim "
-"Löschen'"
+msgstr "Questa è la stessa opzione in 'Misc/Conferma la cancellazione'"
 
 #: src/interface.c:1460
 msgid "Adding/Updating/Syncing"
-msgstr "Hinzufügen/Aktualisieren/Abgleichen"
+msgstr "Aggiungi/Aggiorna/Sincronizza"
 
 #: src/interface.c:1506
 msgid "Automatically Set Empty ID3-Tags To Filename?"
-msgstr "Leere ID3-Tags mit dem Filename initialisieren?"
+msgstr "Imposta automaticamente un tag ID3 vuoto sul nome del file?"
 
 #: src/interface.c:1520
 msgid ""
 "Write extended information (PC filenames,\n"
 " MD5 hashes, charset). Recommended."
 msgstr ""
-"Erweiterte Informationen schreiben (PC Dateinamen,\n"
-"MD5-Prüfsummen, Zeichensatz). Empfohlen."
+"Scrivi informazioni estese (nome del file sul PC,\n"
+" hash MD5, codifica dei caratterit). Raccomandato."
 
 #: src/interface.c:1523
 msgid ""
@@ -1313,37 +1299,35 @@ msgid ""
 "case of file system corruption (change the \"transferred=\" entries in your "
 "backuped database)."
 msgstr ""
-"Diese Option wird dringend empfohlen, um einen schnelleren Import der "
-"iTunesDB bei eingeschalteter Duplikatenerkennung zu erreichen. Da außerdem "
-"die Originalfilenamen gespeichert werden, können Tag-Änderungen in das "
-"Originalfile übernommen werden, und es es sogar möglich, den Inhalt Ihres "
-"iPods im Falle eines Filesystemschadens (Neuformatierung des iPods) zu "
-"rekonstruieren (dazu müssen die 'transferred=' Einträge in der gesicherten "
-"Datenbank auf '0' gesetzt werden und 'offline' eingelesen werden)."
+"È altamente raccomandato per importazioni più veloci se si usa il riconiscimento "
+"dei duplicati. Inoltre, avere il nome del file permette di scrivere "
+"i tag ID3 cambiati anche sul disco, e perfino di ricostruire il contenuto dell'iPod "
+"nel caso di corruzioni del filesystem (cambia la voce \"transferred=\" nel backup"
+"del database)."
 
 #: src/interface.c:1525
 msgid "Keep a backup of the iTunesDB in ~/.gtkpod/"
-msgstr "Backup von iTunesDB in ~/.gtkpod/ erzeugen"
+msgstr "Tieni una copia di backup del tuo iTunesDB in ~/.gtkpod/"
 
 #: src/interface.c:1534
 msgid "_Import/Export"
-msgstr "_Import/Export"
+msgstr "_Importazione/Esportazione"
 
 #: src/interface.c:1568
 msgid "Transferred"
-msgstr "Übertragen"
+msgstr "Trasferiti"
 
 #: src/interface.c:1572
 msgid "Time played"
-msgstr "Gespielt"
+msgstr "Suonato il"
 
 #: src/interface.c:1584
 msgid "Track Nr (#)"
-msgstr "Stück Nr (#)"
+msgstr "Traccia Num"
 
 #: src/interface.c:1592
 msgid "Time modified"
-msgstr "Modifiziert"
+msgstr "Modificato il"
 
 #: src/interface.c:1604
 msgid "iPod ID"
@@ -1351,154 +1335,146 @@ msgstr "iPod ID"
 
 #: src/interface.c:1608
 msgid "Play Time"
-msgstr "Spielzeit"
+msgstr "Durata"
 
 #: src/interface.c:1640
 msgid " Format for time display:"
-msgstr " Format zur Darstellung der Zeit:"
+msgstr " Formato per data e ora "
 
 #: src/interface.c:1650
 msgid ""
 "For a full description of options please see 'man 3 strftime'. Default is: '%"
 "k:%M %d %b %g'."
 msgstr ""
-"Für eine komplette Beschreibung der Optionen konsultieren Sie bitte 'man 3 "
-"strftime'. Die Standardvorgabe ist '%k:%M %d %b %g'."
+"Per una descrizione completa delle opzioni vedi 'man 3 strftime'. Il default è: '%"
+"k:%M %d %b %g'."
 
 #: src/interface.c:1652
 msgid "Displayed Song Attributes "
-msgstr "Angezeigte Informationen "
+msgstr "Attributi delle canzoni mostrati "
 
 #: src/interface.c:1670
 msgid " _Number of sort tabs: "
-msgstr " _Anzahl der Sort Tabs: "
+msgstr ""
 
 #: src/interface.c:1681
 msgid "Sort Tabs"
-msgstr "Sort Tabs"
+msgstr ""
 
 #: src/interface.c:1695
 msgid "...master playlist"
-msgstr "...Hauptplayliste"
+msgstr "...playlist principale"
 
 #: src/interface.c:1698
 msgid ""
 "If you don't select the master playlist automatically, the initial database "
 "import is much faster because the display dosn't have to be updated."
 msgstr ""
-"Wenn die Haupt-Playliste nicht automatisch ausgewählt wird, verläuft der "
-"Import der iTunes-Datenbank zu Beginn deutlich schneller, da die Anzeige "
-"nicht aktualisiert werden muß."
+"Se non selezioni la playlist principale automaticamente, l'importazione iniziale "
+"del database sarà molto più veloce perchè non verrà aggiornata l'interfaccia."
 
 #: src/interface.c:1700
 msgid "...entry 'All' in sort tab..."
-msgstr "Eintrag 'Alle' im Sort Tab..."
+msgstr ""
 
 #: src/interface.c:1711
 msgid "Automatically select..."
-msgstr "Wähle automatisch "
+msgstr "Seleziona automaticamente..."
 
 #: src/interface.c:1725
 msgid "Display toolbar..."
-msgstr "Toolbar anzeigen..."
+msgstr "Mostra la barra degli strumenti..."
 
 #: src/interface.c:1733
 msgid "...both as icons and text"
-msgstr "...als Text und Graphik"
+msgstr "...come icone e come testo"
 
 #: src/interface.c:1741
 msgid "...as text"
-msgstr "...als Text"
+msgstr "...come testo"
 
 #: src/interface.c:1749
 msgid "...as icons"
-msgstr "...als Graphik"
+msgstr "...come icone"
 
 #: src/interface.c:1757
 msgid "Toolbar"
-msgstr "Toolbar"
+msgstr "Barra degli strumenti"
 
 #: src/interface.c:1770
 msgid "Display tooltips in main window"
-msgstr "Tooltips im Hauptfenster anzeigen"
+msgstr ""
 
 #: src/interface.c:1774
 msgid "Display tooltips in prefs window"
-msgstr "Tooltips im Einstellungs-Fenster anzeigen"
+msgstr ""
 
 #: src/interface.c:1778
 msgid "Tooltips"
-msgstr "Tooltips"
+msgstr ""
 
 #: src/interface.c:1792
 msgid "Sorting case sensitive"
-msgstr "Beim Sortieren Groß-/Kleinschreibung beachten"
+msgstr "Ordinamento case sensitive"
 
 #: src/interface.c:1795
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
 "sorting will not work well with most charsets."
 msgstr ""
-"Wenn diese Option aktiviert ist, wird beim Sortieren die Groß-/"
-"Kleinschreibung beachtet. Mit den meisten Zeichensätzen funktioniert diese "
-"Funktion jedoch nicht wie gewünscht."
+"Se selezionata, l'ordinamento sarà case sensitive. Nota: l'ordinamento case sensitve "
+"non funziona bene con la maggior parte delle codifiche."
 
 #: src/interface.c:1797
 msgid ""
 "Block display when changing playlist or tab\n"
 " entry (faster!)"
 msgstr ""
-"Anzeige nicht aktualisieren wenn eine neue Playliste\n"
-"oder ein neuer Tab-Eintrag gewählt wird (schneller!)"
 
 #: src/interface.c:1800
 msgid ""
 "The display can be blocked after changing a selection. The display update is "
 "faster, but you have to wait until it's finished."
 msgstr ""
-"Die Anzeige kann bis zur vollständigen Aktualisierung nach einer Änderung "
-"der Auswahl blockiert werden. Die Aktualisierung ist dann schneller, aber es "
-"muß gewartet werden, bis sich gtkpod wieder meldet."
+"La visualizzazione può essere bloccata dopo aver cambiato una seleezione. "
+"L'aggiornamento della visualizzazione sar� più veloce, ma bisogna aspettare "
+"il suo completamento."
 
 #: src/interface.c:1802 src/interface.c:1914 src/interface.c:1972
 msgid "Misc"
-msgstr "Verschiedenes"
+msgstr "Misc"
 
 #: src/interface.c:1807 src/interface.c:2534
 msgid "_Display"
-msgstr "_Anzeige"
+msgstr "_Visualizzazione"
 
 #: src/interface.c:1825
 msgid "Write ID3 tags to disk when modified in gtkpod"
-msgstr ""
-"ID3 Tags bei Änderungen in gtkpod ebenfalls auf\n"
-"der Festplatte und auf dem iPod ändern"
+msgstr "Scrivi i tag ID3 sul disco quando vengono modificati in gtkpod"
 
 #: src/interface.c:1828
 msgid ""
 "The tags are written to the files on your harddrive and on the ipod (if "
 "available)."
 msgstr ""
-"Die Tags werden in die Originalfiles auf der Festplatte und auch auf dem "
-"iPod (wenn angeschlossen) geschrieben."
+"I tag vengono scritti sui file nel tuo disco e sull'iPod (se "
+"disponibile)."
 
 #: src/interface.c:1834
 msgid "Update all tags (not only changed ones)"
-msgstr ""
-"Alle Tags neu schreiben\n"
-"(nicht nur die gerade geänderten)"
+msgstr "Aggiorna tutti i tag (non solo quelli cambiati)"
 
 #: src/interface.c:1839
 msgid "Normally only the tag you changed is written to disk."
-msgstr "Normalerweise wird nur derjenige Tag geschrieben, den verändert wurde."
+msgstr "Di solito solo i tag cambiati verranno scritti sul disco."
 
 #: src/interface.c:1841
 msgid ""
 "Use selected charset (on the 'Import' page)\n"
 " when writing tags"
 msgstr ""
-"Ausgewählten Zeichensatz (auf der Import-Seite)\n"
-" beim Schreiben von ID3-Tags verwenden"
+"Usa la codifica selezionata (nella pagina 'importazione')\n"
+" per la scrittura dei tag"
 
 #: src/interface.c:1846
 msgid ""
@@ -1509,32 +1485,27 @@ msgid ""
 "above) and songs imported before V0.51 will have no charset stored -- the "
 "charset specified in the Input section will be used at first."
 msgstr ""
-"Normalerweise wird der Zeichensatz, der beim ersten Einlesen des Stückes "
-"angegeben wurde, auch beim Schreiben der ID3-Tags verwendet. Wenn Sie beim "
-"ersten Einlesen einen falschen Zeichensatz angegeben haben und dies nun "
-"mittels 'Stücke aktualisieren' korrigieren wollen, müssen Sie diese Option "
-"zusammen mit dem richtigen Zeichensatz auswählen. Bitte beachten Sie: die "
-"Information über den verwendeten Zeichensatz wird mit den erweiterten "
-"Informationen gespeichert (siehe 'Export'). Stücke, die vor Version 0.51 "
-"eingelesen wurden, haben keine Informationen über den Zeichensatz "
-"gespeichert und der oben spezifizierte Zeichensatz wird verwendet."
+"Normalmente la codifica di sistema specificata al momento di importare la canzone "
+"verrà usata per scrivere il tag. Se hai scelto la codifica sbagliata al momento "
+"della prima importazione, devi selezionare qusta opzione insieme alla codifica giusto." "Nota: le informazioni sul carattere sono memorizzate nel file delle informazioni estese"
+"(vedi oltre) e le canzoni importate prima di V0.51 non avranno codifica memorizzata, "
+" verrà quindi usata la codifica specificata nella sezione Input."
 
 #: src/interface.c:1848
 msgid "Use 'Multi-Edit' for song selections"
-msgstr "'Multi-Edit' bei markierten Stücken verwenden"
+msgstr "Usa 'Multi-Edit' per le selezioni di file"
 
 #: src/interface.c:1851
 msgid ""
 "If you select several songs in the song list and edit a tag of the first "
 "song, the tags in the other songs are updated as well."
 msgstr ""
-"Wenn mehrere Stücke im der Stücke-Anzeige ausgewählt sind und ein Tag im "
-"ersten Stück geändert wird, wird das entsprechende Tag auch in den anderen "
-"Stücken aktualisiert."
+"Se selezioni diverse canzoni nella playlist e modifichi il tag della prima i "
+"tag delle altre verrà aggiornato."
 
 #: src/interface.c:1857
 msgid "Use 'Multi-Edit' also for title field"
-msgstr "'Multi-Edit' auch für das Titel-Feld verwenden"
+msgstr "Usa 'Multi-edit' anche per il campo titolo"
 
 #: src/interface.c:1862
 msgid ""
@@ -1542,64 +1513,61 @@ msgid ""
 "This option might avoid unwanted results (especially since there is no "
 "'undo' yet)."
 msgstr ""
-"Es kommt selten vor, daß die Titel mehrerer Stücke auf den selben Text "
-"gesetzt werden sollen. Diese Option verhindert möglicherweise ungewünschte "
-"Resultate, insbesondere da noch keine 'Undo'-Funktion existiert."
+"Di solito non è desiderabile usare lo stesso titolo per diverse canzoni. "
+"Questa opzione può evitare effetti non voluti (specialmente vista l'assenza "
+"della opzione 'Annulla')."
 
 #: src/interface.c:1864
 msgid "Song Editing"
-msgstr "Bearbeiten von Stücken"
+msgstr "Modifica della canzone"
 
 #: src/interface.c:1878
 msgid "Before removing playlists"
-msgstr "Vor dem Entfernen von Playlisten"
+msgstr "Prima di rimuovere le playlist"
 
 #: src/interface.c:1882
 msgid "Before removing tracks from playlist"
-msgstr "Vor dem Entfernen von Stücken aus einer Playliste"
+msgstr "Prima di rimuovere completamente le tracce dalla playlist"
 
 #: src/interface.c:1886
 msgid "Before removing tracks completely from iPod"
-msgstr "Vor dem vollständigen Löschen vom iPod"
+msgstr "Prima di rimuovere le tracce completamente dall'iPod"
 
 #: src/interface.c:1890
 msgid ""
 "Before removing tracks completely when\n"
 " synchronizing directories"
 msgstr ""
-"Vor dem vollständigen Löschen vom iPod beim\n"
-" Abgleich von Verzeichnissen"
+"Prima di rimuovere completamente le tracce nella\n"
+"sincronizzazione delle directory"
 
 #: src/interface.c:1893
 msgid ""
 "This option only has a meaning if you activate the 'Delete Tracks that have "
 "been Removed' option in the 'Import/Syncing Dirs' section."
 msgstr ""
-"Diese Option hat nur eine Bedeutung, wenn Sie die Option 'Stücke, die "
-"entfernt wurden, löschen' im 'Abgleich von Verzeichnissen'-Bereich auf der "
-"'Import'-Seite aktiviert haben."
+"Questa opzione ha senso solo se attivi prima l'opzione 'Cancella le traccie "
+"che sono state rimosse' nella sezioine 'Importazione/Sincronizzazione directory'"
 
 #: src/interface.c:1895
 msgid "Delete Confirmation "
-msgstr "Sicherheitsabfrage beim Löschen "
+msgstr "Conferma la cancellazione"
 
 #: src/interface.c:1909
 msgid "Automatically save song order after sorting."
-msgstr ""
-"Beim Sortieren die angezeigte Reihenfolge der Stücke\n"
-"automatisch übernehmen."
+msgstr "Salva automaticamente l'ordine delle canzoni dopo l'ordinamento."
 
 #: src/interface.c:1912
 msgid ""
 "Alternatively you can use the menu item 'Save Displayed Song Order' to save "
 "the sort order."
 msgstr ""
-"Alternativ dazu kann der Menü-Eintrag 'Dargestellte Reihenfolge Speichern' "
-"verwendet werden, um die Reihenfolge der Stücke zu übernehmen."
+"Alternativamente puoi anche usare l'opzione 'Salva l'ordine delle canzoni' "
+"per salvare l'ordine mostrato."
 
 #: src/interface.c:1937
 msgid "Command Line for 'Play Now':"
-msgstr "Kommandozeile für 'Jetzt abspielen'"
+msgstr "Riga di comando per 'Suona ora'"
 
 #: src/interface.c:1946
 #, c-format
@@ -1607,12 +1575,12 @@ msgid ""
 "For example, 'xmms -p %s' will clear xmms' current playlist, add the "
 "selected songs and start playing."
 msgstr ""
-"'xmms -p %s', z.B., löscht die aktuelle Playliste von xmms, fügt die "
-"ausgewählten Stücke hinzu und beginnt mit der Wiedergabe."
+"Per esempio, 'xmms -p %s' cancellerà la playlist attuale di xmms, aggiungerà "
+"la canzone selezionata e comincerà a suonarla."
 
 #: src/interface.c:1948
 msgid "Command Line for 'Enqueue'"
-msgstr "Kommandozeile für 'Zum Abspielen Vormerken'"
+msgstr "Riga di comando per 'Mettre in coda'"
 
 #: src/interface.c:1957
 #, c-format
@@ -1620,12 +1588,12 @@ msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected songs to xmms' "
 "current playlist."
 msgstr ""
-"'xmms -e %s', z.B., fügt die ausgewählten Stücke zur aktuellen Playlist von "
-"xmms hinzu."
+"Per esempio, 'xmms -e %s' appenderà (in coda) la canzone selezionata alla "
+"playlist corrente di xmms."
 
 #: src/interface.c:1967
 msgid "Handle mounting/unmounting of iPod drive"
-msgstr "Mount/Unmount des iPod-Verzeichnisses"
+msgstr "Gestisci montaggio/smontaggio del drive iPod"
 
 #: src/interface.c:1970
 msgid ""
@@ -1633,29 +1601,29 @@ msgid ""
 "<ipod mountpoint>' call is carried out. For more complicated arrangements "
 "please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."
 msgstr ""
-"Beim Start von gtkpod wird 'mount <ipod mountpoint>' ausgeführt, beim "
-"Beenden 'umount <ipod mountpoint>'. Für weitergehende Aktionen verwenden Sie "
-"bitte die Skripte '~/.gtkpod/gtkpod.in' und '~/.gtkpod/gtkpod.out'."
+"All'avvio gtkpod chiamerà 'mount <punto di montaggio>', all'uscita invece "
+"'umount <punto di montaggio>'. Per arrangiamenti più complessi."
 
 #: src/interface.c:1977
 msgid "Song Playing"
-msgstr "Wiedergabe"
+msgstr "Canzone in riproduzione"
 
 #: src/interface.c:1982
 msgid "_Misc"
-msgstr "_Verschiedenes"
+msgstr "_Misc"
 
 #: src/interface.c:2362
+#, fuzzy
 msgid " Logic: "
-msgstr "Logik:"
+msgstr "Operatori logici:"
 
 #: src/interface.c:2367
 msgid "Any (OR)"
-msgstr "Eines (ODER)"
+msgstr "Ognuno (OrR)"
 
 #: src/interface.c:2373
 msgid "All (AND)"
-msgstr "Alle (UND)"
+msgstr "Tutti (AND)"
 
 #: src/interface.c:2393
 msgid "0"
@@ -1683,52 +1651,53 @@ msgstr "5"
 
 #: src/interface.c:2431
 msgid "Select '0' for no lower limit."
-msgstr "'0' wählen für 'keine untere Schranke'."
+msgstr "Seleziona '0' per eliminare il limite inferiore."
 
 #: src/interface.c:2433
 msgid " <= cts <= "
-msgstr " <= num <= "
+msgstr " <= cts <= "
 
 #: src/interface.c:2442
 msgid "Select '-1' for no upper limit."
-msgstr "'-1' wählen für 'keine obere Schranke'."
+msgstr "Seleziona '-l' per nessun limite superire"
 
 #: src/interface.c:2453 src/interface.c:2473
 msgid ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
 "finished."
 msgstr ""
-"z.B. 'TT/MM/JJJJ SS:MM < d < TT/MM/JJJJ SS:MM' oder ähnliches. Nach der "
-"Eingabe bitte 'Return' drücken."
+"'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' o simile. Premi 'enter' quando "
+"hai finito."
 
 #: src/interface.c:2460 src/interface.c:2480 src/interface.c:2646
 msgid "Calendar"
-msgstr "Kalender"
+msgstr "Calendario"
 
 #: src/interface.c:2489
 msgid "Specify interval"
-msgstr "Intervall angeben"
+msgstr "Specifica l'intervallo"
 
 #: src/interface.c:2520
 msgid "Display songs that match the criteria entered above."
-msgstr "Stücke anzeigen, welche die oben genannten Kriterien erfüllen."
+msgstr "Mostra le canzoni che corrispondono ai criteri entrati qui sopra."
 
 #: src/interface.c:2539
 msgid "Start display automatically"
-msgstr "Anzeige automatisch starten"
+msgstr "Comincia "
 
 #: src/interface.c:2542
+#, fuzzy
 msgid ""
 "Automatically start displaying songs that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
 msgstr ""
-"Die Anzeige der Stücke, welche die oben genannten Kriterien erfüllen, "
-"automatisch starten. Wenn diese Option nicht aktiviert ist, müssen Sie "
-"'Anzeigen' drücken."
+"Visualizza automaticamente le canzoni che corrispondono ai criteri "
+"specificati qui sopra.Se non selezionati, devi premere 'Mostra' o cambiare "
+"almeno uno dei valori specificati qui sopra."
 
 #: src/interface.c:2668
 msgid "Sorttab: "
-msgstr "Sort Tab: "
+msgstr ""
 
 #: src/interface.c:2678
 msgid "     "
@@ -1736,19 +1705,21 @@ msgstr "     "
 
 #: src/interface.c:2683
 msgid "Category: "
-msgstr "Kategorie: "
+msgstr "Categoria: "
 
 #: src/interface.c:2702
+#, fuzzy
 msgid "Please specify a time interval"
-msgstr "Intervall angeben"
+msgstr "Specifica l'intervallo"
 
 #: src/interface.c:2722
 msgid "Lower Margin"
-msgstr "Untere Grenze"
+msgstr "Margine inferiore"
 
 #: src/interface.c:2745 src/interface.c:2811
+#, fuzzy
 msgid "Time:"
-msgstr "Zeit:"
+msgstr "Durata"
 
 #: src/interface.c:2760 src/interface.c:2826
 msgid ":"
@@ -1756,91 +1727,91 @@ msgstr ":"
 
 #: src/interface.c:2776
 msgid "No lower margin"
-msgstr "Keine untere Grenze"
+msgstr "Nessun margine inferiore"
 
 #: src/interface.c:2788
 msgid "Upper margin"
-msgstr "Obere Grenze"
+msgstr "Margine superiore"
 
 #: src/interface.c:2842
 msgid "No upper margin"
-msgstr "Keine obere Grenze"
+msgstr "Nessun margine superiore"
 
 #: src/itunesdb.c:420
 msgid "Master-PL"
-msgstr "Haupt-PL"
+msgstr "PL principale"
 
 #: src/itunesdb.c:764
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for reading.\n"
-msgstr "iTunesDB '%s' konnte nicht zum Lesen geöffnet werden.\n"
+msgstr "Impossibile aprire l'iTunesDB \"%s\" in lettura.\n"
 
 #: src/itunesdb.c:770
 #, c-format
 msgid "Error reading \"%s\".\n"
-msgstr "Fehler beim Lesen von '%s'.\n"
+msgstr "Errore nella lettura di \"%s\".\n"
 
 #: src/itunesdb.c:776
 #, c-format
 msgid "\"%s\" is not a iTunesDB.\n"
-msgstr "'%s' ist keine iTunesDB.\n"
+msgstr "\"%s\" non è un iTunesDB.\n"
 
 #: src/itunesdb.c:1371
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for writing.\n"
-msgstr "iTunesDB '%s' konnte nicht zum Schreiben geöffnet werden.\n"
+msgstr "Impossibile aprire il file iTunesDB \"%s\" in scrittura.\n"
 
 #. an error occured
 #: src/itunesdb.c:1383
 #, c-format
 msgid "Error renaming '%s' to '%s' (%s).\n"
-msgstr "Fehler beim Umbenennen von '%s' nach '%s' (%s)\n"
+msgstr "Errore nella rinominazione da '%s' a '%s' (%s).\n"
 
 #: src/itunesdb.c:1562
 #, c-format
 msgid "Could not open file \"%s\" for reading.\n"
-msgstr "Datei '%s' konnte nicht zum Lesen geöffnet werden.\n"
+msgstr "Impossibile aprire il file \"%s\" in scrittura.\n"
 
 #: src/itunesdb.c:1569
 #, c-format
 msgid "Could not open file \"%s\" for writing.\n"
-msgstr "Datei '%s' konnte nicht zum Schreiben geöffnet werden.\n"
+msgstr "Impossibile aprire il file \"%s\" in lettura.\n"
 
 #. error -- not end of file!
 #: src/itunesdb.c:1582
 #, c-format
 msgid "Error reading file \"%s\"."
-msgstr "Fehler beim Lesen der Datei '%s'."
+msgstr "Errore nella lettura del file \"%s\"."
 
 #: src/itunesdb.c:1594
 #, c-format
 msgid "Error writing PC file \"%s\"."
-msgstr "Fehler beim Schreiben der Datei '%s'."
+msgstr "Errore nella scrittura del file sul PC \"%s\"."
 
 #: src/md5.c:159
 msgid "Hashed file is 0 bytes long\n"
-msgstr "Das Files, für das eine Prüfsumme berechnet werden soll, ist leer.\n"
+msgstr "Il file di cui è stato calcolato l'hash è lungo 0 byte\n"
 
 #: src/md5.c:192
 #, c-format
 msgid "Unable to open file \"%s\"\n"
-msgstr "Kann '%s' nicht öffnen\n"
+msgstr "Impossibile aprire il file \"%s\"\n"
 
 #: src/misc.c:125
 msgid "Successly Added Files"
-msgstr "Dateien wurden erfolgreich hinzugefügt"
+msgstr "File aggiunti con successo"
 
 #. file selector already open -- abort
 #. Create the selector
 #: src/misc.c:144
 msgid "Select files or directories to add."
-msgstr "Wählen Sie hinzuzufügende Dateien oder Verzeichnisse aus."
+msgstr "Seleziona i file o le directory da aggiungere"
 
 #. file selector already open -- abort
 #. Create the selector
 #: src/misc.c:216
 msgid "Select Playlists to add."
-msgstr "Hinzuzufügende Playlisten auswählen."
+msgstr "Seleziona la playlist da aggiungere"
 
 #: src/misc.c:292
 #, c-format
@@ -1848,8 +1819,7 @@ msgid ""
 "gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod"
 "(tm)."
 msgstr ""
-"gtkpod Version %s: Plattformübergreifendes internationalisiertes GUI für "
-"Apples iPod(tm)."
+"gtkpod Versione %s: Interfaccia per l'Apple iPod (tm).multi-lingus e multi-piattaforma"
 
 #: src/misc.c:296
 msgid ""
@@ -1883,19 +1853,19 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
-"Dieses Programm ist freie Software. Sie können es unter den Bedingungen der "
-"GNU General Public License, wie von der Free Software Foundation "
-"veröffentlicht, weitergeben und/oder modifizieren, entweder gemäß Version 2 "
-"der Lizenz oder (nach Ihrer Option) jeder späteren Version.\n"
+"This program is free software; you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version.\n"
 "\n"
-"Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen "
-"von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die "
-"implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN "
-"BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details.\n"
 "\n"
-"Sie sollten eine Kopie der GNU General Public License zusammen mit diesem "
-"Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software "
-"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n"
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place, Suite 330, Boston, MA 02111-1307, USA.\n"
 "\n"
 "\n"
 
@@ -1911,14 +1881,13 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
-"Patches wurden von den folgenden Personen zur Verfügung gestellt (die Liste "
-"ist eventuell nicht vollständig -- bitte kontaktieren Sie mich)\n"
+"Le seguenti persone hanno contribuito con delle patch (la lista potrebbe essere incompleta -- "
+"per favore, contattatemi)\n"
 "\n"
-"Ramesh Dharan: 'Multi-Edit' (Tags mehrerer Stücke auf einmal ändern)\n"
-"Hiroshi Kawashima: Automatische Erkennung japanischer Zeichensätze\n"
-"Adrian Ulrich: Portierung des Playlisten-Codes von mktunes.pl nach itunesdb."
-"c\n"
-"Walter Bell: Korrekte Handhabung der kodierten DND URIs\n"
+"Ramesh Dharan: Multi-Edit (modifica i tags di diverse canzoni in una sola volta)\n"
+"Hiroshi Kawashima: autorilevamento della codifica del carattere giapponese\n"
+"Adrian Ulrich: porting del codice della playlist da mktunes.pl a itunesdb.c\n"
+"Walter Bell: manipolazione corretta del DND URIs con i caratteri di escape\n"
 "\n"
 "\n"
 
@@ -1934,58 +1903,56 @@ msgid ""
 "\n"
 "The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
 msgstr ""
-"Dieses Programm verwendet Code der folgenden Projekte:\n"
-"    gnutools: (mktunes.pl, nach C portiert) Schreiben und Lesen der iTunesDB "
+"Questo programma ha preso in prestio codice dai seguenti progetti:\n"
+"    gnutools: (mktunes.pl, portato dal C) lettura e scrittura del iTunesDB "
 "(http://www.gnu.org/software/gnupod/)\n"
-"    mp3info:  MP3-Spielzeit-Ermittlung (http://ibiblio.org/mp3info/)\n"
-"    xmms:     Verzeichnisbaum-Anzeige, MP3-Spielzeit-Ermittlung (http://www."
-"xmms.org)\n"
-"    easytag:  Lesen und Schreiben der ID3-Tgs (http://easytag.sourceforge."
+"    mp3info:  rilevazione della durata dei brani mp3 (http://ibiblio.org/mp3info/)\n"
+"    xmms:     dirbrowser, rilevazione della durata dei brani mp3 (http://www.xmms.org)\n"
+"    easytag:  lettura e scrittura del tag ID3 (http://easytag.sourceforge."
 "net)\n"
 "\n"
-"Die graphische Benutzeroberfläche wurde mit Hilfe von glade-2 (http://glade."
-"gnome.org/) erstellt."
+"La GUI è stata creata con l'aiuto di glade-2 (http://glade.gnome.org/)."
 
 #: src/misc.c:340
 msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-msgstr "Deutsch:     Jörg Schuler (jcsjcs at users dot sourceforge dot net)\n"
+msgstr "Tedesco:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 
 #: src/misc.c:342
 msgid "Japanese: Ayako Sano\n"
-msgstr "Japanisch:   Ayako Sano\n"
+msgstr "Giapponse: Ayako Sano\n"
 
 #: src/misc.c:344
 msgid "French:   David Le Brun (david at dyn-ns dot net)\n"
-msgstr "Französisch: David Le Brun (david at dyn-ns dot net)\n"
+msgstr "Francese:   David Le Brun (david at dyn-ns dot net)\n"
 
 #: src/misc.c:503
 #, c-format
 msgid "drag and drop: ignored '%s'"
-msgstr "Drag und Drop: '%s' ignoriert"
+msgstr ""
 
 #: src/misc.c:534 src/misc.c:538
 #, c-format
 msgid "Could not delete backup file: \"%s\"\n"
-msgstr "Konnte Sicherheitskopie nicht löschen: '%s'\n"
+msgstr "Impossibile cancellare il file di backup: \"%s\"\n"
 
 #: src/misc.c:564
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"
 msgstr ""
-"Änderungen wurden noch nicht gespeichert.\n"
-"Wollen Sie gtkpod trotzdem verlassen?"
+"Ci sono dei dati cambiati e non salvati.\n"
+"Uscire comunque da gtkpod?"
 
 #. gint id,
 #. gboolean modal,
 #: src/misc.c:713
 msgid "Warning"
-msgstr "Warnung"
+msgstr "Attenzione"
 
 #. title
 #: src/misc.c:714
 msgid "The following has occured:"
-msgstr "Folgendes ist passiert:"
+msgstr "Si è verificato l'errore seguente:"
 
 #: src/misc.c:789
 #, c-format
@@ -1995,44 +1962,45 @@ msgstr " P:%d S:%d/%d"
 #: src/misc.c:1027
 #, c-format
 msgid "Successfully created iPod directories in '%s'."
-msgstr "Die iPod-Verzeichnisstruktur wurde erfolgreich in '%s' angelegt."
+msgstr "Directory dell'iPod create con successo ('%s')."
 
 #: src/misc.c:1029
 #, c-format
 msgid "Problem creating iPod directories in '%s'."
-msgstr "Es trat ein Problem beim Erzeugen der iPod-Verzeichnisse in '%s' auf."
+msgstr ""
+"Problemi nella creazione della struttura della directory dell'iPod su '%s'"
 
 #. gint id,
 #. gboolean modal,
 #: src/misc.c:1075
 msgid "Create iPod directories"
-msgstr "iPod-Verzeichnisstruktur erstellen"
+msgstr "Crea le directory dell'iPod"
 
 #. title
 #: src/misc.c:1076
 msgid "OK to create the following directories?"
-msgstr "Sollen die folgenden Verzeichnisse erstellt werden?"
+msgstr "Creare le directory seguenti?"
 
 #: src/misc.c:1108
 #, c-format
 msgid "Deleted playlist '%s'"
-msgstr "Playliste '%s' gelöscht."
+msgstr "Playlist cancellata '%s'"
 
 #. master playlist
 #: src/misc.c:1128
 msgid "Cannot delete master playlist."
-msgstr "Die Hauptplayliste kann nicht gelöscht werden."
+msgstr "Impossibile cancellare la playlist principale"
 
 #: src/misc.c:1132
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
-msgstr "Sind Sie sicher, daß Sie die Playliste \"%s\" entfernen wollen?"
+msgstr "Sei sicuro di voler cancellare la playlist '%s'"
 
 #. gint id,
 #. gboolean modal,
 #: src/misc.c:1137
 msgid "Delete Playlist?"
-msgstr "Playliste löschen?"
+msgstr "Cancella la playlist?"
 
 #: src/misc.c:1180
 msgid ""
@@ -2041,20 +2009,18 @@ msgid ""
 msgid_plural ""
 "Are you sure you want to delete the following songs\n"
 "completely from your ipod?"
-msgstr[0] ""
-"Sind Sie sicher, daß Sie das folgende Stück\n"
-"vollständig vom iPod entfernen wollen?"
-msgstr[1] ""
-"Sind Sie sicher, daß Sie die folgenden Stücke\n"
-"vollständig vom iPod entfernen wollen?"
+msgstr[0] "Sei sicuro di voler eliminare completamente la seguente canzone\n"
+"dal tuo ipod?"
+msgstr[1] "Sei sicuro di voler eliminare completamente le seguenti canzoni\n"
+"dal tuo ipod?"
 
 #: src/misc.c:1182
 msgid "Delete Song Completely?"
-msgstr "Vollständig entfernen?"
+msgstr "Cancella la canzone completamente?"
 
 #: src/misc.c:1182
 msgid "Delete Songs Completey?"
-msgstr "Stücke vollständig entfernen?"
+msgstr "Cancella le canzoni completamente?"
 
 #: src/misc.c:1191
 #, c-format
@@ -2064,62 +2030,60 @@ msgid ""
 msgid_plural ""
 "Are you sure you want to delete the following songs\n"
 "from the playlist \"%s\"?"
-msgstr[0] ""
-"Sind Sie sicher, daß Sie das folgende Stück\n"
-"von der Playliste \"%s\" entfernen wollen?"
-msgstr[1] ""
-"Sind Sie sicher, daß Sie die folgenden Stücke\n"
-"von der Playliste \"%s\" entfernen wollen?"
+msgstr[0] "Sei sicuro di voler eliminare completamente la seguente canzone\n"
+"dalla playlist \"%s\"?"
+msgstr[1] "Sei sicuro di voler eliminare completamente le seguenti canzoni\n"
+"dalla playlist \"%s\"?"
 
 #: src/misc.c:1193
 msgid "Delete Song From Playlist?"
-msgstr "Von der Playliste entfernen?"
+msgstr "Cancella la canzone dalla playlist?"
 
 #: src/misc.c:1193
 msgid "Delete Songs From Playlist?"
-msgstr "Stücke von der Playliste entfernen?"
+msgstr "Cancella le canzoni dalla playlist?"
 
 #: src/misc.c:1235
 msgid "Deleted one song completely from iPod"
-msgstr "Ein Stück wurde komplett vom iPod entfernt."
+msgstr "Cancella una canzone completamente dall'iPod"
 
 #: src/misc.c:1235
 #, c-format
 msgid "Deleted %d songs completely from iPod"
-msgstr "%d Stücke wurden komplett vom iPod entfernt."
+msgstr "Cancella %d canzoni completamente dall'iPod"
 
 #: src/misc.c:1239
 #, c-format
 msgid "Deleted song from playlist '%s'"
-msgstr "Stück wurde von der Playliste '%s' entfernt."
+msgstr "Cancella la canzone dalla playlist '%s'"
 
 #: src/misc.c:1239
 #, c-format
 msgid "Deleted songs from playlist '%s'"
-msgstr "Die Stücke wurden von der Playliste '%s' entfernt."
+msgstr "Cancella le canzoni dalla playlist '%s'"
 
 #. no songs selected
 #: src/misc.c:1277
 msgid "No songs selected."
-msgstr "Keine Stücke ausgewählt."
+msgstr "Nessuna canzone selezionata."
 
 #: src/misc.c:1388
 msgid "Cannot remove entry 'All'"
-msgstr "Der Eintrag 'Alle' kann nicht entfernt werden"
+msgstr "Impossibile rimuovere l'entry 'Tutti'"
 
 #: src/misc.c:1613
 #, c-format
 msgid "No command set for '%s'"
-msgstr "Keine Befehlszeile spezifiziert für '%s'"
+msgstr "Nessun comando impostato per '%s'"
 
 #: src/misc.c:1634
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
-msgstr "Konnte das Kommando '%s' nicht finden (gesetzt für '%s')."
+msgstr "Impossibile trovare il comando '%s' specificato per '%s'"
 
 #: src/misc.c:1776
 msgid "Bytes"
-msgstr "Bytes"
+msgstr "Byte"
 
 #: src/misc.c:1776
 msgid "kB"
@@ -2140,85 +2104,85 @@ msgstr "TB"
 #: src/misc.c:1852
 #, c-format
 msgid " %s Free"
-msgstr " %s frei"
+msgstr "%s Liberi"
 
 #: src/misc.c:1857
 #, c-format
 msgid " %s Pending"
-msgstr " %s voll"
+msgstr " %s Pendenti"
 
 #: src/misc.c:2167
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
-msgstr "Der URI »%s« ist kein absoluter URI, der das Dateischema verwendet"
+msgstr "La URI '%s' non è una URI assoluto usando lo schema dei file"
 
 #: src/misc.c:2177
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
-msgstr "Der lokale URI »%s« darf kein »#« enthalten"
+msgstr "La URI del file locale '%s' non può includere '#'"
 
 #: src/misc.c:2194
 #, c-format
 msgid "The URI '%s' is invalid"
-msgstr "Der URI »%s« ist ungültig"
+msgstr "La URI '%s' non è valida"
 
 #: src/misc.c:2206
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
-msgstr "Der Rechnername der URI »%s« ist ungültig"
+msgstr "Il nome dell'host della URI '%s' non è valido"
 
 #: src/misc.c:2222
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
-msgstr "Der URI »%s« enthält ungültige Escape-Zeichen"
+msgstr "La URI '%s' contiene caratteri non validi che sono stati saltati"
 
 #: src/playlist.c:306
 #, c-format
 msgid "Added %d+ songs to playlist '%s'"
 msgid_plural "Added %d+ songs to playlist '%s'"
-msgstr[0] "%d+ Stücke wurden zur Playliste '%s' hinzugefügt."
-msgstr[1] "%d+ Stücke wurden zur Playliste '%s' hinzugefügt."
+msgstr[0] "Aggiunte %d+ canzoni alla playlist '%s'"
+msgstr[1] "Aggiunte %d+ canzoni alla playlist '%s'"
 
 #: src/prefs.c:118
 #, c-format
 msgid "gtkpod version %s usage:\n"
-msgstr "Benutzung von gtkpod %s:\n"
+msgstr "gtkpod versione %s:\n"
 
 #: src/prefs.c:119
 msgid "  -h, --help:   display this message\n"
-msgstr "  -h, --help:   diesen Text anzeigen\n"
+msgstr "  -h, --help:   mostra questo messaggio\n"
 
 #: src/prefs.c:120
 msgid "  -m path:      define the mountpoint of your iPod\n"
-msgstr "  -m <Pfad>:    Mountpoint für iPod angeben\n"
+msgstr "  -m path       definisci il punto di montaggio dl tuo iPod\n"
 
 #: src/prefs.c:121
 msgid "  --mountpoint: same as \"-m\".\n"
-msgstr "  --mountpoint: wie '-m'\n"
+msgstr "  --mountpoint: come \"-m\".\n"
 
 #: src/prefs.c:122
 msgid "  -w:           write changed ID3 tags to file\n"
-msgstr "  -w:           Änderungen von ID3 Tags auch in die Datei übernehmen\n"
+msgstr "  -w:           scrivi l'ID3 cambiato sul file\n"
 
 #: src/prefs.c:123
 msgid "  --id3_write:   same as \"-w\".\n"
-msgstr "  --id3_write:   wie '-w'\n"
+msgstr "  --id3_write:   come \"-w\".\n"
 
 #: src/prefs.c:124
 msgid "  -c:           check files automagically for duplicates\n"
-msgstr "  -c:           neue Dateien automatisch auf Duplikate untersuchen\n"
+msgstr "  -c:           controlla automagicamente la presenza di duplicati\n"
 
 #: src/prefs.c:125
 msgid "  --md5:        same as \"-c\".\n"
-msgstr "  --md5:        wie '-c'\n"
+msgstr "  --md5:       come \"-c\".\n"
 
 #: src/prefs.c:126
 msgid "  -a:           import database automatically after start.\n"
-msgstr "  -a:           iTunesDB automatisch importieren\n"
+msgstr "  -a:           importa il database automaticamente all'avvio.\n"
 
 #: src/prefs.c:127
 msgid "  --auto:       same as \"-a\".\n"
-msgstr "  --auto:       wie '-a'\n"
+msgstr "  --auto:       come \"-a\".\n"
 
 #: src/prefs.c:128
 msgid ""
@@ -2226,118 +2190,112 @@ msgid ""
 "                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n"
 "                used with \"Offline\" deactivated.\n"
 msgstr ""
-"  -o:        Offline-Modus benutzen. Änderungen werden nicht auf den iPod\n"
-"             geschrieben, sondern nach '~/.gtkpod/'. Der iPod wird "
-"aktualisiert,\n"
-"             wenn nicht im Offline-Modus exportiert wird.\n"
+"  -o:           usa la modalit=E0 offline. I cambiamenti non verranno "
+"esportati sull'iPod,\n"
+"                ma su ~/.gtkpod/. L'iPod verr=E0 aggiornato se verrà usato "
+"\"Esport\"\n"
+"                con \"Offline\" deattivato.\n"
 
 #: src/prefs.c:129
 msgid "  --offline:    same as \"-o\".\n"
-msgstr "  --offline:    wie '-o'\n"
+msgstr " --offline:    come \"-o\".\n"
 
 #: src/prefs.c:262 src/prefs.c:570
 #, c-format
 msgid "Error while reading prefs: %s\n"
-msgstr "Fehler beim Lesen der Vor-Einstellungen: %s\n"
+msgstr "Errore nella lettura delle preferenze: %s\n"
 
 #: src/prefs.c:603
 #, c-format
 msgid "Unable to open config file \"%s\" for reading\n"
-msgstr "Kann Datei '%s' mit den Einstellungen nicht lesen.\n"
+msgstr "Impossibile aprire il file di configurazione \"%s\" in lettura\n"
 
 #: src/prefs.c:706
 #, c-format
 msgid "Unknown option: %s\n"
-msgstr "Unbekannte Option: %s\n"
+msgstr "Opzione sconosciuta: %s\n"
 
 #: src/prefs.c:746
 msgid "# delete confirmation\n"
-msgstr "# Sicherheitsabfrage beim Löschen\n"
+msgstr "# conferma la cancellazione\n"
 
 #: src/prefs.c:752
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
-"# Sort Tab: 'Alle' automatisch wählen, letze gewählte Seite (=Kategorie)\n"
 
 #: src/prefs.c:769
 msgid "# autoselect master playlist?\n"
-msgstr "# Hauptplayliste automatisch auswählen?\n"
+msgstr "# seleziona automaticamente la playlist principale?\n"
 
 #: src/prefs.c:771
 msgid "# title=0, artist, album, genre, composer\n"
-msgstr "# Titel=0, Künstler, Album, Musikrichtung, Komponist\n"
+msgstr "# titolo=0, artista, album, genere, compositore\n"
 
 #: src/prefs.c:772
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
-msgstr "# Track_Nr=5, iPod_ID, PC_Pfad, Transferred\n"
+msgstr "# traccia_num=5, ipod_id, pc_path, transferita\n"
 
 #: src/prefs.c:773
 msgid "# autoset: set empty tag to filename?\n"
-msgstr "# autoset: Leere ID3-Tags mit dem Filenamen initialiseren?\n"
+msgstr "# impostazione: impostare un tag vuoto al posto del nome del file?\n"
 
 #: src/prefs.c:782
 msgid ""
 "# position of sliders (paned): playlists, above songs,\n"
 "# between sort tabs, and in statusbar.\n"
 msgstr ""
-"# Position der Schiebeelemente (paned): Playlisten,\n"
-"# über der Stückanzeige, zwischen den Sort Tabs\n"
 
 #: src/prefs.c:812
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser\n"
 msgstr ""
-"# Fenstergrößen: Hauptfenster, Bestätigungsfenster (gescrollt),\n"
-"#                Bestätigungsfenster (ungescrollt), Verzeichnisbaum\n"
 
 #: src/prefs.c:836
 msgid "Settings are not saved.\n"
-msgstr "Einstellungen nicht gespeichert.\n"
+msgstr "Impostazioni non salvate.\n"
 
 #: src/prefs.c:849
 #, c-format
 msgid "Unable to open \"%s\" for writing\n"
-msgstr "Kann '%s' nicht zum schreiben öffnen.\n"
+msgstr "Impossibile aprire \"%s\" per la scrittura\n"
 
 #: src/prefs.c:1165
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
-" Voreinstellungen: Kategorie (%d<%d?) oder SortTab (%d<%d?) außerhalb des "
-"erlabuten Bereichs.\n"
 
 #: src/prefs.c:1214
 #, c-format
 msgid "Unable to \"mkdir %s\"\n"
-msgstr "Kann 'mkdir %s' nicht ausführen.\n"
+msgstr "impossibile \"mkdir %s\"\n"
 
 #. illegal -- ignore
 #: src/prefs.c:1539
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
-msgstr "prefs_set_toolbar_style: ungültiger Stil '%d' ignoriert\n"
+msgstr "prefs_set_toolbar_style: stile non legale '%d' ignorato\n"
 
 #: src/prefs.c:1623 src/prefs.c:1630
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
-msgstr "'%s': '%%s' nur ein Mal erlaubt.\n"
+msgstr "'%s': =E8 permesso solo un '%%s'.\n"
 
 #. update for count == 1, 21, 41 ... and for count == n
 #: src/song.c:381
 #, c-format
 msgid "Hashed %d of %d song."
 msgid_plural "Hashed %d of %d songs."
-msgstr[0] "%d von insgesamt %d Stück indiziert."
-msgstr[1] "%d von insgesamt %d Stücken indiziert."
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/song.c:443
 #, c-format
 msgid "The following duplicate song has been removed."
 msgid_plural "The following %d duplicate songs have been removed."
-msgstr[0] "Das folgende doppelt eingelesene Stück wurde entfernt."
-msgstr[1] "Die folgenden %d doppelt eingelesenen Stücke wurden entfernt."
+msgstr[0] "La seguente canzone duplicata è stata rimossa."
+msgstr[1] "Le seguenti canzoni duplicate sono state rimosse."
 
 #: src/song.c:450
 #, c-format
@@ -2345,20 +2303,16 @@ msgid ""
 "The following duplicate song has not been added to the master play list."
 msgid_plural ""
 "The following %d duplicate songs have not been added to the master play list."
-msgstr[0] ""
-"Das folgende doppelt eingelesene Stück wurde nicht erneut zur Hauptplayliste "
-"hinzugefügt."
-msgstr[1] ""
-"Die folgenden %d doppelt eingelesenen Stücke wurden nicht erneut zur "
-"Hauptplayliste hinzugefügt."
+msgstr[0] "La seguente canzone duplicata non è stata aggiunta alla playlist principale"
+msgstr[1] "Le seguenti canzoni duplicate non sono state aggiunte alla playlist principale"
 
 #. gint id,
 #. gboolean modal,
 #: src/song.c:457
 msgid "Duplicate detection"
-msgstr "Duplikaterkennung"
+msgstr "Rilevazione dei duplicati"
 
 #: src/support.c:90 src/support.c:114
 #, c-format
 msgid "Couldn't find pixmap file: %s"
-msgstr "Konnte die Pixmap '%s' nicht finden."
+msgstr "Impossibile trovare il file pixmap: %s"
