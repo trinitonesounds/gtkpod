@@ -149,40 +149,35 @@ void create_add_files_fileselector (void)
    You must free the return string after use
    This code tries to take into account some stupid constellations
    when either "dir" or "file" is not set, or file starts with a "/"
-   (taken as absolute path) etc.  */
+   (ignore) etc.  */
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
 {
     if (file && (*file == '/'))
-    { /* we consider filenames starting with "/" to be absolute ->
-	 discard the dir part. */
-	return g_strdup (file);
+    { 
+	if (dir && (strlen (dir) > 0))
+	{
+	    return concat_dir (dir, file+1);
+	}
     }
-    if (dir)
-    {
-	if (strlen (dir) != 0)
-	{	    
-	    if(dir[strlen(dir)-1] == '/')
-	    { /* "dir" ends with "/" */
-		if (file)
-		    return g_strdup_printf ("%s%s", dir, file);
-		else
-		    return g_strdup (dir);
-	    }
+    if (dir && (strlen (dir) > 0))
+    {	    
+	if(dir[strlen(dir)-1] == '/')
+	{ /* "dir" ends with "/" */
+	    if (file)
+		return g_strdup_printf ("%s%s", dir, file);
 	    else
-	    { /* "dir" does not end with "/" */
-		if (file)
-		    return g_strdup_printf ("%s/%s", dir, file);
-		else
-		    return g_strdup_printf ("%s/", dir);
-	    }
+		return g_strdup (dir);
 	}
 	else
-	{ /* strlen (dir) == 0 */
-	    return g_strdup (file);
+	{ /* "dir" does not end with "/" */
+	    if (file)
+		return g_strdup_printf ("%s/%s", dir, file);
+	    else
+		return g_strdup_printf ("%s/", dir);
 	}
     }
     else
-    { /* dir == NULL */
+    { /* dir == NULL or 0-byte long */
 	if (file)
 	    return g_strdup (file);
 	else
@@ -216,8 +211,9 @@ void open_about_window ()
 			    buffer_text, -1);
   g_free (buffer_text);
 
-  buffer_text = g_strdup_printf ("%s",
-				 _("German: Jorg Schuler (jcsjcs at users.sourceforge.net)"));
+  buffer_text = g_strdup_printf ("%s\n%s",
+				 _("German:   Jorg Schuler (jcsjcs at users.sourceforge.net)"),
+				 _("Japanese: Ayako Sano"));
   textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));
   gtk_text_buffer_set_text (gtk_text_view_get_buffer (textview),
 			    buffer_text, -1);
@@ -805,21 +801,18 @@ void delete_song_head (void)
     gboolean confirm_again;
     ConfHandlerCA confirm_again_handler;
 
-    selected_songs = get_currently_selected_songs();
     pl = get_currently_selected_playlist();
-    if (selected_songs == NULL)
-    {  /* no songs selected */
-	g_list_free (selected_songs);
-	gtkpod_statusbar_message (_("No songs selected."));
-	return;
-    }
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
-	g_list_free (selected_songs);
 	gtkpod_statusbar_message (_("No playlist selected."));
 	return;
     }
-
+    selected_songs = get_currently_selected_songs();
+    if (selected_songs == NULL)
+    {  /* no songs selected */
+	gtkpod_statusbar_message (_("No songs selected."));
+	return;
+    }
     /* write title and label */
     n = g_list_length (selected_songs);
     if(pl->type == PL_TYPE_MPL)

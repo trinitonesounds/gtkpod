@@ -901,8 +901,11 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 
 /* Remove song from sort tab. If the song matches the currently
    selected sort criteria, it will be passed on to the next
-   sort tab (i.e. removed). The last sort tab will remove the
+   sort tab (i.e. removed).
+   The last sort tab will remove the
    song from the song model (currently two sort tabs). */
+/* 02. Feb 2003: bugfix: song is always passed on to the next sort
+ * tab: it might have been recategorized, but still be displayed. JCS */
 static void st_remove_song (Song *song, guint32 inst)
 {
   TabEntry *master, *entry;
@@ -923,8 +926,7 @@ static void st_remove_song (Song *song, guint32 inst)
       entry = st_get_entry_by_song (song, inst);
       /* ...and remove it */
       if (entry) entry->members = g_list_remove (entry->members, song);
-      if ((st->current_entry == entry) || (st->current_entry == master))
-	st_remove_song (song, inst+1);
+      st_remove_song (song, inst+1);
     }
 }
 
@@ -1095,6 +1097,8 @@ st_cell_edited (GtkCellRendererText *renderer,
              during the process */
 	  members = g_list_copy (entry->members);
 	  n = g_list_length (members);
+	  /* block user input if we write tags (might take a while) */
+	  if (prefs_get_id3_write ())   block_widgets ();
 	  for (i=0; i<n; ++i) {
 	    song = (Song *)g_list_nth_data (members, i);
 	    /*printf("%d/%d: %x\n", i+1, n, song);*/
@@ -1139,9 +1143,13 @@ st_cell_edited (GtkCellRendererText *renderer,
 		if (prefs_get_id3_writeall ()) tag_id = S_ALL;
 		else		               tag_id = ST_to_S (column);
 		write_tags_to_file (song, tag_id);
+		while (widgets_blocked && gtk_events_pending ())
+		    gtk_main_iteration ();
 	    }
 	  }
 	  g_list_free (members);
+	  /* allow user input again */
+	  if (prefs_get_id3_write ())   release_widgets ();
 	  /* display possible duplicates that have been removed */
 	  remove_duplicate (NULL, NULL);
 	  data_changed (); /* indicate that data has changed */

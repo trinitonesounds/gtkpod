@@ -334,7 +334,6 @@ static void ok_clicked(GtkWidget *widget, GtkWidget *tree)
 	void (*handler) (char *) = NULL;
 
 	window = gtk_object_get_user_data(GTK_OBJECT(widget));
-	gtk_widget_hide(window);
 	list_node = GTK_CLIST(tree)->selection;
 	while (list_node)
 	{
@@ -347,6 +346,7 @@ static void ok_clicked(GtkWidget *widget, GtkWidget *tree)
 	}
 	if (handler) handler(NULL); /* call once with "NULL" to
 				       indicate "end" */
+	gtk_widget_hide(window);
 	add_dir_close (widget, tree);
 }
 

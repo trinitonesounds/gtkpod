@@ -40,6 +40,7 @@
 #include "itunesdb.h"
 #include "display.h"
 #include "confirmation.h"
+#include "charset.h"
 
 /* only used when reading extended info from file */
 struct song_extended_info
@@ -304,9 +305,7 @@ gboolean add_song_by_filename (gchar *name)
   if (Id3tag_Read_File_Tag (name, filetag) == TRUE)
     {
       song = g_malloc0 (sizeof (Song));
-      /* to make g_filename_to_utf8 () work with filenames in latin1 etc.
-         export G_BROKEN_FILENAMES=1 in your shell.  See README for details. */
-      song->pc_path_utf8 = g_filename_to_utf8 (name, -1, NULL, NULL, NULL);
+      song->pc_path_utf8 = charset_to_utf8 (name);
       song->pc_path_locale = g_strdup (name);
       if (filetag->album)
 	{
@@ -513,7 +512,7 @@ gboolean flush_songs (void)
 	result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
 	++count;
 	if (count == 1)  /* we need longer timeout */
-	    prefs_set_statusbar_timeout (1<<31);
+	    prefs_set_statusbar_timeout (1000000);
 	if (count == n)  /* we need to reset timeout */
 	    prefs_set_statusbar_timeout (0);
 	buf = g_strdup_printf (ngettext ("Copied %d of %d new song.",
@@ -832,7 +831,8 @@ gboolean write_tags_to_file (Song *song, gint tag_id)
 			    song->pc_path_locale);
 	  }
       }
-    if (song->transferred &&
+    if (!prefs_get_offline () &&
+	song->transferred &&
 	song->ipod_path &&
 	(g_utf8_strlen (song->ipod_path, -1) > 0))
       {
@@ -892,19 +892,24 @@ static guint32 free_ipod_id (guint32 id)
 gchar* get_song_name_on_disk(Song *s)
 {
     gchar *result = NULL;
+
     if(s)
     {
-	if((s->ipod_path) && (strlen(s->ipod_path) > 0))
+	if(!prefs_get_offline () &&
+	   s->ipod_path &&
+	   (strlen(s->ipod_path) > 0))
 	{
 	    guint i = 0, size = 0;
-	    result = concat_dir(cfg->ipod_mount, s->ipod_path);
-	    size = strlen(result);
+	    gchar *buf = g_strdup (s->ipod_path);
+	    size = strlen(buf);
 	    for(i = 0; i < size; i++)
-		if(result[i] == ':') result[i] = '/';
+		if(buf[i] == ':') buf[i] = '/';
+	    result = concat_dir(cfg->ipod_mount, buf);
+	    g_free (buf);
 	}
 	else if((s->pc_path_locale) && (strlen(s->pc_path_locale) > 0))
 	{
-	    result = g_strdup_printf("%s",s->pc_path_locale);
+	    result = g_strdup (s->pc_path_locale);
 	} 
     }
     return(result);
