@@ -30,9 +30,10 @@
 
 /* Any calls to these functions immediately return if md5sums is not on */
 
-gboolean song_exists_on_ipod(Song *s);
+gchar *song_exists_on_ipod(Song *s);
 void unique_file_repository_init(GList *songlist);
 void unique_file_repository_free(void);
 void song_removed_from_ipod(Song *s);
+gchar *do_hash_on_file(FILE *fp);
 
 #endif

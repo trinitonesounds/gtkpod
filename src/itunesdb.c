@@ -458,14 +458,22 @@ static glong get_nod_a(FILE *file, glong seek)
 /* Support for playlists should be added later */
 gboolean itunesdb_parse (gchar *path)
 {
-  FILE *itunes = NULL;
   gchar *filename = NULL;
+  gboolean result;
+
+  filename = concat_dir (path, "iPod_Control/iTunes/iTunesDB");
+  result = itunesdb_parse_file (filename);
+  if (filename)  g_free (filename);
+  return result;
+}
+
+/* Same as itunesdb_parse(), but let's specify the filename directly */
+gboolean itunesdb_parse_file (gchar *filename)
+{
+  FILE *itunes = NULL;
   gboolean result = FALSE;
   gchar data[8];
   glong seek;
-
-
-  filename = concat_dir (path, "iPod_Control/iTunes/iTunesDB");
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, get_nr_of_songs ());
@@ -513,7 +521,6 @@ gboolean itunesdb_parse (gchar *path)
     result = TRUE;
   } while (FALSE);
 
-  if (filename != NULL)   g_free (filename);
   if (itunes != NULL)     fclose (itunes);
 #if ITUNESDB_DEBUG
   fprintf(stderr, "exit:  %4d\n", get_nr_of_songs ());

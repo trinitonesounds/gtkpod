@@ -76,6 +76,7 @@ enum {
 
 extern struct cfg *cfg;
 
+gchar *prefs_get_cfgdir (void);
 void prefs_print(void);
 void cfg_free(struct cfg *c);
 void write_prefs (void);

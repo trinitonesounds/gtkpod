@@ -62,9 +62,21 @@ typedef struct
   gint32  tracks;            /* number of tracks      */
   gint32  year;              /* year                  */
   gint32  bitrate;           /* bitrate               */
+  gchar   *hostname;         /* name of host this file has been imported from */
   gboolean transferred;      /* has file been transferred to iPod? */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)         */
 } Song;
+
+/* only used when reading extended info from file */
+struct song_extended_info
+{
+  guint ipod_id;
+  gchar *pc_path_locale;
+  gchar *pc_path_utf8;
+  gchar *md5_hash;
+  gchar *hostname;
+  gboolean transferred;
+};
 
 void free_song(Song *song);
 gboolean add_song (Song *song);
@@ -78,7 +90,8 @@ gboolean flush_songs (void);
 gboolean add_song_by_filename (gchar *name);
 gboolean add_directory_recursively (gchar *name);
 gboolean write_tags_to_file(Song *s);
-void handle_import_itunes (void);
+void handle_import (void);
+void handle_export (void);
 gchar* get_song_name_on_disk(Song *s);
 gchar* get_preferred_song_name_format(Song *s);
 void remove_song_from_ipod_by_id(guint32 id);

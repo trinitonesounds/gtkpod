@@ -365,7 +365,7 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   switch (column)
     {  /* We only have one column, so this code is overkill... */
     case PM_COLUMN_PLAYLIST: 
-      if(playlist->type == 0) 
+      if(playlist->type == PL_TYPE_NORM) 
       {
 	g_object_set (G_OBJECT (renderer), "text", playlist->name, 
 		    "editable", TRUE, NULL);

@@ -72,9 +72,8 @@ main (int argc, char *argv[])
   create_mpl ();     /* needs at least the master playlist */
   unique_file_repository_init (NULL); /* init for duplicate detection */
   if(prefs_get_auto_import())
-    handle_import_itunes();
+    handle_import();
   gtk_widget_show (gtkpod);
   gtk_main ();
   return 0;
 }
-

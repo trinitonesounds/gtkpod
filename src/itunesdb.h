@@ -53,6 +53,7 @@ enum {
 #define ITUNESDB_COPYBLK 65536      /* blocksize for cp () */
 
 gboolean itunesdb_parse (gchar *path);
+gboolean itunesdb_parse_file (gchar *filename);
 gboolean itunesdb_write (gchar *path);
 gboolean itunesdb_write_to_file (gchar *filename);
 gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile);

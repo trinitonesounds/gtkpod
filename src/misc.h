@@ -34,9 +34,8 @@
 #include <stdio.h>
 
 #define gtkpod_warning(...) fprintf (stderr, __VA_ARGS__)
+#define C_FREE(a) if(a) g_free(a); a=NULL
 
-void handle_import();
-void handle_export();
 void add_dir_selected (gchar *dir);
 void create_add_files_fileselector (gchar *startdir);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);

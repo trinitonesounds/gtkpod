@@ -125,6 +125,7 @@ read_prefs_from_file_desc(FILE *fp)
 {
     gchar buf[PATH_MAX];
     gchar *line, *arg, *bufp;
+    gint len;
 
     if(fp)
     {
@@ -143,6 +144,8 @@ read_prefs_from_file_desc(FILE *fp)
 	  while ((*bufp == ' ') || (*bufp == 0x09)) ++bufp;
 	  line = g_strndup (buf, arg-bufp);
 	  ++arg;
+	  len = strlen (arg); /* remove newline */
+	  if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
 	  if(g_ascii_strcasecmp (line, "mp") == 0)
 	    {
 	      gchar mount_point[PATH_MAX];
@@ -201,6 +204,18 @@ read_prefs_from_file_desc(FILE *fp)
 	    {
 	      prefs_set_write_extended_info((gboolean)atoi(arg));
 	    }
+	  else if(g_ascii_strcasecmp (line, "dir_browse") == 0)
+	    {
+	      prefs_set_last_dir_dir_browse_for_filename(strdup(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "file_browse") == 0)
+	    {
+	      prefs_set_last_dir_file_browse_for_filename(strdup(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "file_export") == 0)
+	    {
+	      prefs_set_last_dir_file_export_for_filename(strdup(arg));
+	    }
 	  else
 	    {
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
@@ -214,29 +229,29 @@ read_prefs_from_file_desc(FILE *fp)
 void
 read_prefs_defaults(void)
 {
-    gchar *cfgdir = NULL;
-    gchar filename[PATH_MAX+1], *str = NULL;
-    FILE *fp = NULL;
-
-    if((str = getenv("HOME")))
+  gchar *cfgdir = NULL;
+  gchar filename[PATH_MAX+1];
+  FILE *fp = NULL;
+  
+  if ((cfgdir = prefs_get_cfgdir ())) {
     {
-        cfgdir = concat_dir (str, ".gtkpod");
-	if(g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
+      snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
+      filename[PATH_MAX] = 0;
+      if(g_file_test(filename, G_FILE_TEST_EXISTS))
 	{
-	    snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
-	    filename[PATH_MAX] = 0;
-	    if((fp = fopen(filename, "r")))
+	  if((fp = fopen(filename, "r")))
 	    {
-		read_prefs_from_file_desc(fp);
-		fclose(fp);
+	      read_prefs_from_file_desc(fp);
+	      fclose(fp);
 	    }
-	    else
+	  else
 	    {
-		fprintf(stderr, "Unable to open %s for reading\n", filename);
+	      gtkpod_warning(_("Unable to open config file \"%s\" for reading\n"), filename);
 	    }
 	}
-	if (cfgdir) g_free (cfgdir);
     }
+  }
+  C_FREE (cfgdir);
 }
 
 /* Read Preferences and initialise the cfg-struct */
@@ -316,43 +331,41 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
+    fprintf(fp, "dir_browse=%s\n",cfg->last_dir.dir_browse);
+    fprintf(fp, "file_browse=%s\n",cfg->last_dir.file_browse);
+    fprintf(fp, "file_export=%s\n",cfg->last_dir.file_export);
 }
 
 void 
 write_prefs (void)
 {
-    gchar *cfgdir = NULL;
-    gchar filename[PATH_MAX+1], *str = NULL;
+    gchar filename[PATH_MAX+1];
+    gchar *cfgdir;
     FILE *fp = NULL;
 
-    if((str = getenv("HOME")))
-    {
-        cfgdir = concat_dir (str, ".gtkpod");
-	if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
-	{
-	    if(!mkdir(cfgdir, 0755))
-	    {
-		fprintf(stderr, "Unable to mkdir %s\n, Settings not saved\n",
-			cfgdir);
-	    }
-	}
-	else
-	{
-	  snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
-	  filename[PATH_MAX] = 0;
-	  if((fp = fopen(filename, "w")))
+    cfgdir = prefs_get_cfgdir ();
+    if(!cfgdir)
+      {
+	gtkpod_warning (_("Settings are not saved.\n"));
+      }
+    else
+      {
+	snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
+	filename[PATH_MAX] = 0;
+	if((fp = fopen(filename, "w")))
 	  {
 	    write_prefs_to_file_desc(fp);
 	    fclose(fp);
 	  }
-	  else
+	else
 	  {
-	    fprintf(stderr, "Unable to open %s for writing\n", filename);
+	    gtkpod_warning (_("Unable to open \"%s\" for writing\n"),
+			    filename);
 	  }
-	}
-	if (cfgdir) g_free (cfgdir);
-    }
+      }
+    C_FREE (cfgdir);
 }
+
 
 
 /* Free all memory including the cfg-struct itself. */
@@ -365,40 +378,23 @@ void discard_prefs ()
 void cfg_free(struct cfg *c)
 {
     if(c)
-    {
-      g_free (c->ipod_mount);
-      g_free (c->last_dir.dir_browse);
-      g_free (c->last_dir.file_browse);
-      g_free (c->last_dir.file_export);
-      g_free (c);
+    { /* C_FREE defined in misc.h */
+      C_FREE (c->ipod_mount);
+      C_FREE (c->last_dir.dir_browse);
+      C_FREE (c->last_dir.file_browse);
+      C_FREE (c->last_dir.file_export);
+      C_FREE (c);
     }
 }
 
 static gchar *
 get_dirname_of_filename(gchar *file)
 {
-   char *tok = NULL, *buf = NULL, filename[PATH_MAX];
-   gchar *result, dump[PATH_MAX];
-
-   snprintf(filename, PATH_MAX, "%s", file);
-   buf = (gchar *) malloc((sizeof(gchar) * PATH_MAX) + 1);
-
-   memset(buf, 0, sizeof(buf));
-   memset(dump, 0, PATH_MAX);
-
-   if ((tok = strtok(filename, "/")))
-   {
-      do
-      {
-         buf = strncat(buf, dump, PATH_MAX);
-         snprintf(dump, PATH_MAX, "/%s", tok);
-      }
-      while ((tok = strtok(NULL, "/")));
-   }
-   result = g_strdup_printf("%s/",buf);
-   g_free(buf);
-   return (result);
+  if (g_file_test(file, G_FILE_TEST_IS_DIR))
+    return g_strdup (file);
+  else return g_path_get_dirname (file);
 }
+
 
 void prefs_set_offline(gboolean active)
 {
@@ -630,7 +626,6 @@ clone_prefs(void)
     if(cfg)
     {
 	result = g_malloc0 (sizeof (struct cfg));
-	memset(result, 0, sizeof(struct cfg));
 	result->md5songs = cfg->md5songs;
 	result->writeid3 = cfg->writeid3;
 	result->autoimport = cfg->autoimport;
@@ -668,4 +663,27 @@ void
 prefs_set_auto_import(gboolean val)
 {
     cfg->autoimport = val;
+}
+
+
+/* Returns "$HOME/.gtkpod" or NULL if dir does not exist and cannot be
+   created. You must g_free the string after use */
+gchar *prefs_get_cfgdir (void)
+{
+  G_CONST_RETURN gchar *str;
+  gchar *cfgdir=NULL;
+
+  if((str = g_get_home_dir ()))
+    {
+      cfgdir = concat_dir (str, ".gtkpod");
+      if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
+	{
+	  if(!mkdir(cfgdir, 0755))
+	    {
+	      gtkpod_warning(_("Unable to \"mkdir %s\"\n"), cfgdir);
+	      C_FREE (cfgdir); /*defined in misc.h*/
+	    }
+	}
+    }
+  return cfgdir;
 }

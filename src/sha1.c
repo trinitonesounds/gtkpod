@@ -22,11 +22,14 @@
 | 
 |  This product is not supported/written/published by Apple!
 */
-#include "md5.h"
-#include "prefs.h"
+
 #include <stdio.h>
 #include <limits.h>
 #include <openssl/sha.h>
+#include "md5.h"
+#include "prefs.h"
+#include "misc.h"
+#include "support.h"
 
 /**
  * Create and manage a string hash for files on disk
@@ -53,17 +56,17 @@ static GHashTable *filehash = NULL;
  * @fp - an open file descriptor to read from
  * Returns - A Hash String
  */
-static gchar *
+gchar *
 do_hash_on_file(FILE *fp)
 {
     glong bread;
     gchar *result = NULL;
-    unsigned char md[20];
-    int blocks = NR_PATH_MAX_BLOCKS;		
+    unsigned char md[SHA_DIGEST_LENGTH]; /* 20 Bytes */
+    int blocks = NR_PATH_MAX_BLOCKS*2;
     char file_chunk[PATH_MAX * blocks];
 	    
-    bread = fread(file_chunk, sizeof(char), PATH_MAX * blocks, fp);
-    if(SHA1(file_chunk, PATH_MAX * blocks, &md[0]))
+    bread = fread(file_chunk, 1, PATH_MAX * blocks, fp);
+    if(SHA1(file_chunk, bread, &md[0]))
     {
 	char buf[PATH_MAX];		/* the copy buffer */
 	int i = 0, last = 0; 
@@ -110,7 +113,7 @@ hash_song(Song *s)
 	       }
 	     else
 	       {
-		 fprintf(stderr, "Unable to open file %s\n", filename);
+		 gtkpod_warning (_("Unable to open file \"%s\"\n"), filename);
 	       }
 	     g_free(filename);
 	   }
@@ -133,17 +136,17 @@ unique_file_repository_init(GList *songlist)
     {
 	if(filehash) 
 	    unique_file_repository_free();
-	filehash = g_hash_table_new(g_str_hash, g_str_equal);
-    
+	filehash = g_hash_table_new_full (g_str_hash, g_str_equal,
+					  g_free, NULL);
 	/* populate the hash table */
 	for(l = songlist; l; l = l->next)
 	{
 	    s = (Song*)l->data;
 	    if ((val = hash_song(s)) != NULL)
 	      {
-		g_hash_table_insert(filehash, val, s);
 		if (s->md5_hash == NULL)
 		  s->md5_hash = g_strdup (val);
+		g_hash_table_insert(filehash, val, s);
 	      }
 	}
     }
@@ -166,22 +169,32 @@ unique_file_repository_free(void)
 /**
  * Check to see if a song has already been added to the ipod
  * @s - the Song we want to know about
- * Returns TRUE if the song is already on the ipod, FALSE otherwise
+ * Returns the filename (or other tag) if the song is already 
+ * on the ipod, NULL otherwise
  */
-gboolean
-song_exists_on_ipod(Song *s)
+gchar *song_exists_on_ipod(Song *s)
 {
     gchar *val = NULL;
-    gboolean result = FALSE;
+    gchar *result = NULL;
+    Song *song;
 
     if((cfg->md5songs) && (filehash))
       {
 	val = hash_song(s);
 	if (val != NULL)
 	  {
-	    if(g_hash_table_lookup(filehash, val))
+	    if((song = g_hash_table_lookup(filehash, val)))
 	      {
-		result = TRUE;
+		g_free (val);
+		if (song->pc_path_utf8 && strlen(song->pc_path_utf8))
+		    result = song->pc_path_utf8;
+		else if ((song->title && strlen(song->title)))
+		    result = song->title;
+		else if ((song->album && strlen(song->album)))
+		    result = song->album;
+		else if ((song->artist && strlen(song->artist)))
+		    result = song->artist;
+		else result = "";
 	      }
 	    else	/* if it doesn't exist we register it in the hash */
 	      {
@@ -191,7 +204,7 @@ song_exists_on_ipod(Song *s)
 	      }
 	  }
       }
-    return(result);
+    return result;
 }
 
 /**
@@ -209,5 +222,6 @@ song_removed_from_ipod(Song *s)
 	{
 	    g_hash_table_remove(filehash, val);
 	}
+	g_free (val);
     }
 }

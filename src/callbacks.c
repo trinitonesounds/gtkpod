@@ -50,7 +50,7 @@ void
 on_import_itunes1_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  handle_import_itunes ();
+  handle_import ();
 }
 
 
@@ -144,7 +144,7 @@ void
 on_import_itunes1_button               (GtkButton       *button,
                                         gpointer         user_data)
 {
-  handle_import_itunes ();
+  handle_import ();
 }
 
 
@@ -258,7 +258,7 @@ on_playlist_treeview_drag_data_received
 	    {
 		Playlist *pl = NULL;
 		gtk_tree_model_get(tm, &i, 0, &pl, -1);
-		if((pl) && (!pl->type))
+		if((pl) && (pl->type == PL_TYPE_NORM))
 		{
 		    gchar *str = g_strdup(data->data);
 		    guint32 id = 0;

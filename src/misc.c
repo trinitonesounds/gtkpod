@@ -111,29 +111,6 @@ gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
 }
 
 
-
-/* used to handle export of database */
-void handle_export ()
-{
-  if(!cfg->offline)
-    {
-      /* write songs to iPod */
-      if (flush_songs () == FALSE) return;
-      /* write iTunesDB to iPod */
-      if (itunesdb_write (cfg->ipod_mount) == FALSE) return;
-      /* write extended info (PC filenames, md5 hash) to iPod */
-      if (cfg->write_extended_info)
-	;
-	/*if (write_extended_info () == FALSE) return;*/
-      /* copy files to ~/.gtkpod */
-      if (cfg->keep_backups)
-	{
-	  /* FIXME: copy files (too late for today) */
-	}
-    }
-}
-
-
 void open_about_window ()
 {
   GtkLabel *about_label;
@@ -210,7 +187,8 @@ parse_ipod_id_from_string(gchar **s, guint32 *id)
 void
 gtkpod_main_quit(void)
 {
-  remove_all_playlists ();
+  remove_all_playlists ();  /* first remove playlists, then songs!
+		    (otherwise non-existing songs may be accessed) */
   remove_all_songs ();
   cleanup_listviews ();
   write_prefs ();
