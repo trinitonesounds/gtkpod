@@ -30,12 +30,13 @@
 |  $Id$
 */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdio.h>
+#include <errno.h>
 #include <limits.h>
+#include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "charset.h"
 #include "md5.h"
 #include "file.h"
@@ -207,8 +208,8 @@ gchar *md5_hash_on_filename (gchar *name, gboolean silent)
 	    {
 		gchar *name_utf8=charset_to_utf8 (name);
 		gtkpod_warning (
-		    _("Could not open '%s' to calculate MD5 checksum.\n"),
-		    name_utf8);
+		    _("Could not open '%s' to calculate MD5 checksum: %s\n"),
+		    name_utf8, strerror(errno));
 		g_free (name_utf8);
 	    }
 	}

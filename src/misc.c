@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-08-22 18:32:44 jcs>
+|  Time-stamp: <2004-10-02 01:05:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -120,6 +120,9 @@ D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"),
 Jim Hall: Decent INSTALL file\n"),
 		       _("\
 Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/contacts to the iPod\n"),  /* Jürgen! */
+		       "\n",
+		       _("\
+Flavio Stanchina: bugfixes\n"),
 		       "\n",
 		       _("\
 Icons of buttons were made by Nicolas Chariot.\n\

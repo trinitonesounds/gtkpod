@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-20 01:07:47 jcs>
+/* Time-stamp: <2004-10-02 00:54:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -557,8 +557,9 @@ void remove_duplicate (Track *oldtrack, Track *track)
        /* Set 'created' timestamp */
        oldtrack->time_created =  MIN (oldtrack->time_created, track->time_created);
 
-       /* Update filename if new track has filename set */
-       if (track->pc_path_locale && *oldtrack->pc_path_locale)
+       /* Update filename if new track has filename set (should be
+	* always!?) */
+       if (track->pc_path_locale)
        {
 	   g_free (oldtrack->pc_path_locale);
 	   g_free (oldtrack->pc_path_utf8);

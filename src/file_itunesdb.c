@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 23:12:24 jcs>
+/* Time-stamp: <2004-09-20 23:24:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -95,6 +95,7 @@ static GHashTable *extendedinfohash_md5 = NULL;
 static float extendedinfoversion = 0.0;
 
 
+/* Has the iTunesDB already been read? */
 gboolean file_itunesdb_read (void)
 {
     return itunesdb_read;

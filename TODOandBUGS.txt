@@ -1,5 +1,14 @@
 TODO:
 
+- get_track_name_on_ipod (track): does not consider file sensitivity
+  problem.
+
+- Play Counts file not renamed when exporting database.
+
+- Update calendar in special sort tab when changing category.
+
+- special sort tab 'modified' and 'created' does not work correctly.
+
 - Give status when adjusting offline_playcount after import of
   database (can take quite a while even for only 90 tracks).
 
@@ -40,6 +49,26 @@ TODO:
    ready for a new setup.
 
    HTH.
+
+Torsten Curdt
+> * I love the type-and-filter-right-away search of iTunes!
+> * I miss the easy click-on-burn-audio-cd button
+>   (any way passing this over to the nautilus cdwriter?)
+  - doesn't DND work?
+> * The filter windows should also be key sensitive
+>   (typing "C" should make me jump to "C")
+> * the rating should be stars not a numbers. ...at least
+>   a control that is easier than entering a number
+> 
+
+David Dan
+> Right now I have a problem with books and other non music mp3s
+> playing while listening to all of my music.  Instead of moving all
+> of my music to a playlist, I thought it would be much better to have
+> a playlist called sometime like Only Music, that is generated
+> automatically when adding mp3s. This playlist would exclude certain
+> genres that are identified in the preferences.
+
 
 
 - stable column sorting:

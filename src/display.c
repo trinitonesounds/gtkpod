@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 23:09:14 jcs>
+/* Time-stamp: <2004-09-20 23:24:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -325,9 +325,7 @@ void display_set_check_ipod_menu (void)
     GtkWidget *w = NULL;
 
     if((w = lookup_widget(gtkpod_window, "check_ipod_files_mi")))
-        gtk_widget_set_sensitive(
-	    w,
-	    !prefs_get_offline());
+        gtk_widget_set_sensitive(w, !prefs_get_offline());
     else
         g_warning ("check_ipod_files_mi(): Programming error: widget check_ipod_files_mi must be found\n");
 }

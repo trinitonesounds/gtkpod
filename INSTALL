@@ -80,3 +80,17 @@ to compile gtkpod-0.80:
 	C compiler (gcc 3.3.4)
 	libstdc++5 (3.3.4)
 	gettext (0.14.1)  for internationalization
+
+------------------------------------------------------------
+Troubleshooting-FAQ:
+
+
+mpeg4ip-1.1 "PACKAGE undefined" (0.82-CVS, Juan J. Sierralta P.)
+
+Yesterday I got the CVS of gtkpod and tried to compile with MP4v2
+which fails since <mp4.h> undefine PACKAGE so GCC complains about
+PACKAGE undefined at calls to gtkpod_warning in mp4file.c.  I just
+added the #define after the #include <mp4.h> and it worked just fine,
+dont know which version are you using but I´m compiling against
+mpeg4ip-1.1.
+
