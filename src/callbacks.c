@@ -863,3 +863,16 @@ on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
 
 }
 
+
+void
+on_sort_tab_num_combo_entry_changed    (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    gchar *buf;
+    gint num;
+
+    buf = gtk_editable_get_chars (editable, 0, -1);
+    num = atoi (buf);
+    prefs_window_set_sort_tab_num (num);
+    C_FREE (buf);
+}

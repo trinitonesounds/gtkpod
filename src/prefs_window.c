@@ -80,6 +80,29 @@ void release_prefs_window (void)
 }
 
 
+/* create the entries in the sort tab num combo */
+static void set_sort_tab_num_combo (void)
+{
+    static GList *list = NULL;
+    gchar *bufp, buf[20];
+    GtkWidget *combo;
+    gint i;
+
+    if (!list) for (i=1; i<=SORT_TAB_MAX; ++i)
+    {
+	bufp = g_strdup_printf ("%d", i);
+	list = g_list_append (list, bufp);
+    }
+
+    combo = lookup_widget (prefs_window, "sort_tab_num_combo");
+    /* set pull down items */
+    gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
+    /* set standard entry */
+    snprintf (buf, 20, "%d", prefs_get_sort_tab_num ());
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), buf);
+}
+
+
 /**
  * create_gtk_prefs_window
  * Create, Initialize, and Show the preferences window
@@ -247,6 +270,7 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->write_extended_info);
 	}
+	set_sort_tab_num_combo ();
 	gtk_widget_show(prefs_window);
     }
 }
@@ -458,3 +482,7 @@ void prefs_window_set_save_sorted_order (gboolean val)
     tmpcfg->save_sorted_order = val;
 }
 
+void prefs_window_set_sort_tab_num (gint num)
+{
+    tmpcfg->sort_tab_num = num;
+}

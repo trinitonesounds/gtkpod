@@ -50,8 +50,10 @@ static GtkTreeView *song_treeview = NULL;
 static GtkTreeView *playlist_treeview = NULL;
 /* array with pointers to the columns used in the song display */
 static GtkTreeViewColumn *sm_columns[SM_NUM_COLUMNS];
-/* array with pointers to the sorttabs */
+/* array with pointers to the sort tabs */
 static SortTab *sorttab[SORT_TAB_MAX];
+/* pointer to paned elements holding the sort tabs */
+static GtkPaned *st_paned[PANED_NUM_ST];
 /* pointer to the currently selected playlist */
 static Playlist *current_playlist = NULL;
 
@@ -623,7 +625,7 @@ static gint st_get_instance_from_notebook (GtkNotebook *notebook)
 {
     gint i;
 
-    for(i=0; i<prefs_get_sort_tab_num (); ++i)
+    for(i=0; i<SORT_TAB_MAX; ++i)
     {
 	if (sorttab[i] && (sorttab[i]->notebook == notebook)) return i;
     }
@@ -640,7 +642,7 @@ gint st_get_instance_from_treeview (GtkTreeView *tv)
 {
     gint i,cat;
 
-    for(i=0; i<prefs_get_sort_tab_num (); ++i)
+    for(i=0; i<SORT_TAB_MAX; ++i)
     {
 	for(cat=0; cat<ST_CAT_NUM; ++cat)
 	{
@@ -654,7 +656,7 @@ gint st_get_instance_from_treeview (GtkTreeView *tv)
 /* returns the selected entry (used by delete_entry_head() */
 TabEntry *st_get_selected_entry (gint inst)
 {
-    if ((inst >= 0) && (inst < prefs_get_sort_tab_num ()) && sorttab[inst])
+    if ((inst >= 0) && (inst < SORT_TAB_MAX) && sorttab[inst])
 	return sorttab[inst]->current_entry;
     return NULL;
 }
@@ -970,50 +972,53 @@ static void st_song_changed (Song *song, gboolean removed, guint32 inst)
       sm_song_changed (song);
       return;
     }
-  st = sorttab[inst];
-  master = g_list_nth_data (st->entries, 0);
-  if (master == NULL) return; /* should not happen */
-  /* if song is not in tab, don't proceed (should not happen) */
-  if (g_list_find (master->members, song) == NULL) return;
-  if (removed)
-    {
-      /* remove "song" from master entry "All" */
-      master->members = g_list_remove (master->members, song);
-      /* find entry which other entry contains the song... */
-      entry = st_get_entry_by_song (song, inst);
-      /* ...and remove it */
-      if (entry) entry->members = g_list_remove (entry->members, song);
-      if ((st->current_entry == entry) || (st->current_entry == master))
-	st_song_changed (song, TRUE, inst+1);
-    }
-  else
-    {
-      if (st->current_entry &&
-	  g_list_find (st->current_entry->members, song) != NULL)
-	{ /* "song" is in currently selected entry */
-	  if (!st->current_entry->master)
-	    { /* it's not the master list */
-	      if (st_recategorize_song (song, inst))
-		st_song_changed (song, TRUE, inst+1);
-	      else st_song_changed (song, FALSE, inst+1);
-	    }
-	  else
-	    { /* master entry ("All") is currently selected */
-	      st_recategorize_song (song, inst);
-	      st_song_changed (song, FALSE, inst+1);
-	    }
-	}
+  else if (inst < prefs_get_sort_tab_num ())
+  {
+      st = sorttab[inst];
+      master = g_list_nth_data (st->entries, 0);
+      if (master == NULL) return; /* should not happen */
+      /* if song is not in tab, don't proceed (should not happen) */
+      if (g_list_find (master->members, song) == NULL) return;
+      if (removed)
+      {
+	  /* remove "song" from master entry "All" */
+	  master->members = g_list_remove (master->members, song);
+	  /* find entry which other entry contains the song... */
+	  entry = st_get_entry_by_song (song, inst);
+	  /* ...and remove it */
+	  if (entry) entry->members = g_list_remove (entry->members, song);
+	  if ((st->current_entry == entry) || (st->current_entry == master))
+	      st_song_changed (song, TRUE, inst+1);
+      }
       else
-	{ /* "song" is not in an entry currently selected */
-	  if (st_recategorize_song (song, inst))
-	    { /* song was moved to a different entry */
-	      if (st_get_entry_by_song (song, inst) == st->current_entry)
-		{ /* this entry is selected! */
-		  st_add_song (song, TRUE, TRUE, inst+1);
-		}
-	    }
-	}
-    }
+      {
+	  if (st->current_entry &&
+	      g_list_find (st->current_entry->members, song) != NULL)
+	  { /* "song" is in currently selected entry */
+	      if (!st->current_entry->master)
+	      { /* it's not the master list */
+		  if (st_recategorize_song (song, inst))
+		      st_song_changed (song, TRUE, inst+1);
+		  else st_song_changed (song, FALSE, inst+1);
+	      }
+	      else
+	      { /* master entry ("All") is currently selected */
+		  st_recategorize_song (song, inst);
+		  st_song_changed (song, FALSE, inst+1);
+	      }
+	  }
+	  else
+	  { /* "song" is not in an entry currently selected */
+	      if (st_recategorize_song (song, inst))
+	      { /* song was moved to a different entry */
+		  if (st_get_entry_by_song (song, inst) == st->current_entry)
+		  { /* this entry is selected! */
+		      st_add_song (song, TRUE, TRUE, inst+1);
+		  }
+	      }
+	  }
+      }
+  }
 }
 
 
@@ -1091,7 +1096,7 @@ static void st_add_song (Song *song, gboolean final, gboolean display, guint32 i
       if (final || (++count % 20 == 0))
 	  gtkpod_songs_statusbar_update();
   }
-  else
+  else if (inst < prefs_get_sort_tab_num ())
   {
       st = sorttab[inst];
       st->final = final;
@@ -1212,7 +1217,7 @@ static void st_remove_song (Song *song, guint32 inst)
     {
       sm_remove_song (song);
     }
-  else
+  else if (inst < prefs_get_sort_tab_num ())
     {
       st = sorttab[inst];
       master = g_list_nth_data (st->entries, 0);
@@ -1243,7 +1248,7 @@ static void st_init (gint32 new_category, guint32 inst)
       sm_remove_all_songs ();
       gtkpod_songs_statusbar_update ();
     }
-  else
+  else if (inst < prefs_get_sort_tab_num ())
     {
       st = sorttab[inst];
       if (st == NULL) return; /* could happen during initialisation */
@@ -1392,20 +1397,24 @@ void st_page_selected (GtkNotebook *notebook, guint page)
 /* Redisplay the sort tab "inst". Called from the menu item "Re-Init" */
 void st_redisplay (guint32 inst)
 {
-    if (!(inst < prefs_get_sort_tab_num ())) return; /* error! */
-    if (sorttab[inst])
-	st_page_selected (sorttab[inst]->notebook,
-			  sorttab[inst]->current_category);
+    if (inst < prefs_get_sort_tab_num ())
+    {
+	if (sorttab[inst])
+	    st_page_selected (sorttab[inst]->notebook,
+			      sorttab[inst]->current_category);
+    }
 }
 
 /* Start sorting */
 void st_sort (guint32 inst, GtkSortType order)
 {
-    if (!(inst < prefs_get_sort_tab_num ())) return; /* error! */
-    if (sorttab[inst])
-	gtk_tree_sortable_set_sort_column_id (
-	    GTK_TREE_SORTABLE (sorttab[inst]->model),
-	    ST_COLUMN_ENTRY, order);
+    if (inst < prefs_get_sort_tab_num ())
+    {
+	if (sorttab[inst])
+	    gtk_tree_sortable_set_sort_column_id (
+		GTK_TREE_SORTABLE (sorttab[inst]->model),
+		ST_COLUMN_ENTRY, order);
+    }
 }
 
 
@@ -1795,30 +1804,99 @@ static void st_create_treeview (gint inst, ST_CAT_item st_cat)
 }
 
 
+
+/* Make the appropriate number of sort tab instances visible */
+void st_show_visible (void)
+{
+    static gboolean active=FALSE;
+    gint i,n;
+
+    if (!st_paned[0] || active)  return;
+
+    /* indicate that we are currently using this function (we get
+     * called again when we call prefs_set_sort_tab_num()... */
+    active = TRUE;
+
+    /* first initialize (clear) all sorttabs */
+    n = prefs_get_sort_tab_num ();
+    prefs_set_sort_tab_num (SORT_TAB_MAX);
+    st_init (-1, 0);
+    prefs_set_sort_tab_num (n);
+
+    /* set the visible elements */
+    for (i=0; i<n; ++i)
+    {
+	gtk_widget_show (GTK_WIDGET (sorttab[i]->notebook));
+	if (i < PANED_NUM_ST)	gtk_widget_show (GTK_WIDGET (st_paned[i]));
+    }
+    /* set the invisible elements */
+    for (i=n; i<SORT_TAB_MAX; ++i)
+    {
+	gtk_widget_hide (GTK_WIDGET (sorttab[i]->notebook));
+	if (i < PANED_NUM_ST)	gtk_widget_hide (GTK_WIDGET (st_paned[i]));
+    }
+
+    /* redisplay */
+    st_redisplay (0);
+
+    /* finished */
+    active = FALSE;
+}
+
+
+/* Created paned elements for sorttabs */
+static void st_create_paned (void)
+{
+    gint i;
+
+    /* sanity check */
+    if (st_paned[0])  return;
+
+    for (i=0; i<PANED_NUM_ST; ++i)
+    {
+	GtkWidget *paned;
+
+	paned = gtk_hpaned_new ();
+	gtk_widget_show (paned);
+ 	if (i==0)
+	{
+	    GtkWidget *parent;
+	    parent = lookup_widget (gtkpod_window, "paned1");
+	    gtk_paned_pack1 (GTK_PANED (parent), paned, TRUE, TRUE);
+	}
+	else
+	{
+	    gtk_paned_pack2 (st_paned[i-1], paned, TRUE, TRUE);
+	}
+	st_paned[i] = GTK_PANED (paned);
+    }
+}
+
+
 /* Create notebook and fill in sorttab[@inst] */
 static void st_create_notebook (gint inst)
 {
   GtkWidget *st0_notebook;
-  GtkWidget *paned;
+  GtkPaned *paned;
   gint i;
-  gchar *name;
   SortTab *st = sorttab[inst];
 
   if (st->notebook)   gtk_widget_destroy (GTK_WIDGET (st->notebook));
 
+  /* paned elements exist? */
+  if (!st_paned[0])   st_create_paned ();
+
   st0_notebook = gtk_notebook_new ();
   gtk_widget_show (st0_notebook);
   /* which pane? */
-  if (inst == SORT_TAB_MAX-1)  i = inst;
-  else                         i = inst+1;
-  name = g_strdup_printf ("paned%d", i);
-  paned = lookup_widget (gtkpod_window, name);
-  g_free (name);
+  if (inst == SORT_TAB_MAX-1)  i = inst-1;
+  else                         i = inst;
+  paned = st_paned[i];
   /* how to pack? */
   if (inst == SORT_TAB_MAX-1)
-      gtk_paned_pack2 (GTK_PANED (paned), st0_notebook, TRUE, TRUE);
+      gtk_paned_pack2 (paned, st0_notebook, TRUE, TRUE);
   else
-      gtk_paned_pack1 (GTK_PANED (paned), st0_notebook, TRUE, TRUE);
+      gtk_paned_pack1 (paned, st0_notebook, FALSE, TRUE);
   gtk_notebook_set_scrollable (GTK_NOTEBOOK (st0_notebook), TRUE);
   g_signal_connect ((gpointer) st0_notebook, "switch_page",
                     G_CALLBACK (on_sorttab_switch_page),
@@ -1854,6 +1932,7 @@ static void st_create_tabs (GtkWidget *gtkpod)
       gtk_notebook_set_current_page (sorttab[inst]->notebook, page);
       st_init (page, inst);
     }
+  st_show_visible ();
 }
 
 /* Clean up the memory used by sort tabs (program quit). */
@@ -2654,12 +2733,17 @@ static void sm_add_columns (void)
 /* Create songs listview */
 static void sm_create_listview (void)
 {
-  GtkTreeModel *model;
+  GtkTreeModel *model = NULL;
   GtkWidget *song_window = lookup_widget (gtkpod_window, "song_window");
   GtkWidget *stv = gtk_tree_view_new ();
 
   /* create tree view */
-  if (song_treeview) gtk_widget_destroy (GTK_WIDGET (song_treeview));
+  if (song_treeview)
+  {   /* delete old tree view */
+      model = gtk_tree_view_get_model (song_treeview);
+      /* FIXME: how to delete model? */
+      gtk_widget_destroy (GTK_WIDGET (song_treeview));
+  }
   song_treeview = GTK_TREE_VIEW (stv);
   gtk_widget_show (stv);
   gtk_container_add (GTK_CONTAINER (song_window), stv);
@@ -2673,12 +2757,13 @@ static void sm_create_listview (void)
 		    G_CALLBACK (on_song_treeview_drag_data_received),
 		    NULL);
   /* create model */
-  model = GTK_TREE_MODEL (gtk_list_store_new (SM_NUM_COLUMNS, G_TYPE_POINTER,
-					      G_TYPE_POINTER, G_TYPE_POINTER,
-					      G_TYPE_POINTER, G_TYPE_POINTER,
-					      G_TYPE_POINTER, G_TYPE_POINTER,
-					      G_TYPE_POINTER, G_TYPE_POINTER,
-					      G_TYPE_POINTER));
+  model = GTK_TREE_MODEL (
+      gtk_list_store_new (SM_NUM_COLUMNS, G_TYPE_POINTER,
+			  G_TYPE_POINTER, G_TYPE_POINTER,
+			  G_TYPE_POINTER, G_TYPE_POINTER,
+			  G_TYPE_POINTER, G_TYPE_POINTER,
+			  G_TYPE_POINTER, G_TYPE_POINTER,
+			  G_TYPE_POINTER));
   gtk_tree_view_set_model (song_treeview, GTK_TREE_MODEL (model));
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (song_treeview), TRUE);
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (song_treeview),
@@ -2899,15 +2984,26 @@ void display_set_default_sizes (void)
     /* GtkPaned elements */
     if (gtkpod_window)
     {
-	for (i=0; i<PANED_NUM; ++i)
+	/* Elements defined with glade */
+	for (i=0; i<PANED_NUM_GLADE; ++i)
 	{
 	    if (prefs_get_paned_pos (i) != -1)
 	    {
 		buf = g_strdup_printf ("paned%d", i);
 		if((w = lookup_widget(gtkpod_window,  buf)))
-		    gtk_paned_set_position (GTK_PANED (w),
-					    prefs_get_paned_pos (i));
+		    gtk_paned_set_position (
+			GTK_PANED (w), prefs_get_paned_pos (i));
 		g_free (buf);
+	    }
+	}
+	/* Elements defined with display.c (sort tab hpaned) */
+	for (i=0; i<PANED_NUM_ST; ++i)
+	{
+	    if (prefs_get_paned_pos (PANED_NUM_GLADE + i) != -1)
+	    {
+		if (st_paned[i])
+		    gtk_paned_set_position (
+			st_paned[i], prefs_get_paned_pos (PANED_NUM_GLADE+i));
 	    }
 	}
     }
@@ -2947,7 +3043,8 @@ void display_update_default_sizes (void)
     /* GtkPaned elements */
     if (gtkpod_window)
     {
-	for (i=0; i<PANED_NUM; ++i)
+	/* Elements defined with glade */
+	for (i=0; i<PANED_NUM_GLADE; ++i)
 	{
 	    buf = g_strdup_printf ("paned%d", i);
 	    if((w = lookup_widget(gtkpod_window,  buf)))
@@ -2956,6 +3053,13 @@ void display_update_default_sizes (void)
 				     gtk_paned_get_position (GTK_PANED (w)));
 	    }
 	    g_free (buf);
+	}
+	/* Elements defined with display.c (sort tab hpaned) */
+	for (i=0; i<PANED_NUM_ST; ++i)
+	{
+	    if (st_paned[i])
+		prefs_set_paned_pos (i + PANED_NUM_GLADE,
+				     gtk_paned_get_position (st_paned[i]));
 	}
     }
 }

@@ -117,7 +117,6 @@ create_gtkpod (void)
   GtkWidget *paned0;
   GtkWidget *scrolledwindow8;
   GtkWidget *playlist_treeview;
-  GtkWidget *paned2;
   GtkWidget *paned1;
   GtkWidget *song_window;
   GtkWidget *hbox5;
@@ -521,19 +520,14 @@ create_gtkpod (void)
   gtk_container_add (GTK_CONTAINER (scrolledwindow8), playlist_treeview);
   gtk_widget_set_events (playlist_treeview, GDK_KEY_RELEASE_MASK);
 
-  paned2 = gtk_vpaned_new ();
-  gtk_widget_show (paned2);
-  gtk_paned_pack2 (GTK_PANED (paned0), paned2, TRUE, TRUE);
-  gtk_paned_set_position (GTK_PANED (paned2), 180);
-
-  paned1 = gtk_hpaned_new ();
+  paned1 = gtk_vpaned_new ();
   gtk_widget_show (paned1);
-  gtk_paned_pack1 (GTK_PANED (paned2), paned1, FALSE, FALSE);
-  gtk_paned_set_position (GTK_PANED (paned1), 0);
+  gtk_paned_pack2 (GTK_PANED (paned0), paned1, TRUE, TRUE);
+  gtk_paned_set_position (GTK_PANED (paned1), 180);
 
   song_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (song_window);
-  gtk_paned_pack2 (GTK_PANED (paned2), song_window, TRUE, TRUE);
+  gtk_paned_pack2 (GTK_PANED (paned1), song_window, TRUE, TRUE);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (song_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   hbox5 = gtk_hbox_new (FALSE, 0);
@@ -758,7 +752,6 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, paned0, "paned0");
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow8, "scrolledwindow8");
   GLADE_HOOKUP_OBJECT (gtkpod, playlist_treeview, "playlist_treeview");
-  GLADE_HOOKUP_OBJECT (gtkpod, paned2, "paned2");
   GLADE_HOOKUP_OBJECT (gtkpod, paned1, "paned1");
   GLADE_HOOKUP_OBJECT (gtkpod, song_window, "song_window");
   GLADE_HOOKUP_OBJECT (gtkpod, hbox5, "hbox5");
@@ -888,6 +881,10 @@ create_prefs_window (void)
   GtkWidget *label20;
   GtkWidget *charset_combo;
   GtkWidget *charset_combo_entry;
+  GtkWidget *hbox7;
+  GtkWidget *sort_tab_num_label;
+  GtkWidget *sort_tab_num_combo;
+  GtkWidget *sort_tab_num_combo_entry;
   GtkWidget *cfg_autoimport;
   GtkWidget *cfg_md5songs;
   GtkWidget *cfg_show_duplicates;
@@ -976,7 +973,7 @@ create_prefs_window (void)
   gtk_widget_show (hbox4);
   gtk_box_pack_start (GTK_BOX (vbox3), hbox4, TRUE, TRUE, 0);
 
-  label20 = gtk_label_new (_("Charset (ID3, files):"));
+  label20 = gtk_label_new (_("Charset (ID3, files): "));
   gtk_widget_show (label20);
   gtk_box_pack_start (GTK_BOX (hbox4), label20, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label20), GTK_JUSTIFY_LEFT);
@@ -991,6 +988,24 @@ create_prefs_window (void)
   gtk_widget_show (charset_combo_entry);
   gtk_tooltips_set_tip (tooltips, charset_combo_entry, _("gtkpod expects the ID3 tags and the filenames to be in the encoding specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' operation. 'System Charset' is the charset used by your current locale."), NULL);
   gtk_editable_set_editable (GTK_EDITABLE (charset_combo_entry), FALSE);
+
+  hbox7 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox7);
+  gtk_box_pack_start (GTK_BOX (vbox3), hbox7, TRUE, TRUE, 0);
+
+  sort_tab_num_label = gtk_label_new (_("Number of sort tabs: "));
+  gtk_widget_show (sort_tab_num_label);
+  gtk_box_pack_start (GTK_BOX (hbox7), sort_tab_num_label, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (sort_tab_num_label), GTK_JUSTIFY_LEFT);
+
+  sort_tab_num_combo = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (sort_tab_num_combo)->popwin),
+                     "GladeParentKey", sort_tab_num_combo);
+  gtk_widget_show (sort_tab_num_combo);
+  gtk_box_pack_start (GTK_BOX (hbox7), sort_tab_num_combo, TRUE, TRUE, 0);
+
+  sort_tab_num_combo_entry = GTK_COMBO (sort_tab_num_combo)->entry;
+  gtk_widget_show (sort_tab_num_combo_entry);
 
   cfg_autoimport = gtk_check_button_new_with_mnemonic (_("Automatically import iTunesDB on startup"));
   gtk_widget_show (cfg_autoimport);
@@ -1236,6 +1251,9 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) charset_combo_entry, "changed",
                     G_CALLBACK (on_charset_combo_entry_changed),
                     NULL);
+  g_signal_connect ((gpointer) sort_tab_num_combo_entry, "changed",
+                    G_CALLBACK (on_sort_tab_num_combo_entry_changed),
+                    NULL);
   g_signal_connect ((gpointer) cfg_autoimport, "toggled",
                     G_CALLBACK (on_cfg_autoimport_toggled),
                     NULL);
@@ -1302,6 +1320,10 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label20, "label20");
   GLADE_HOOKUP_OBJECT (prefs_window, charset_combo, "charset_combo");
   GLADE_HOOKUP_OBJECT (prefs_window, charset_combo_entry, "charset_combo_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox7, "hbox7");
+  GLADE_HOOKUP_OBJECT (prefs_window, sort_tab_num_label, "sort_tab_num_label");
+  GLADE_HOOKUP_OBJECT (prefs_window, sort_tab_num_combo, "sort_tab_num_combo");
+  GLADE_HOOKUP_OBJECT (prefs_window, sort_tab_num_combo_entry, "sort_tab_num_combo_entry");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_autoimport, "cfg_autoimport");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5songs, "cfg_md5songs");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_duplicates, "cfg_show_duplicates");

@@ -306,3 +306,7 @@ on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
 void
 on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_sort_tab_num_combo_entry_changed    (GtkEditable     *editable,
+                                        gpointer         user_data);

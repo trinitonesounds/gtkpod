@@ -146,7 +146,7 @@ struct cfg *cfg_new(void)
     mycfg->show_updated = TRUE;
     mycfg->show_non_updated = TRUE;
     mycfg->save_sorted_order = FALSE;
-    mycfg->sort_tab_num = SORT_TAB_MAX;
+    mycfg->sort_tab_num = 2;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     return(mycfg);
 }
@@ -260,9 +260,9 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+9);
 	      prefs_set_col_order (i, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "paned_pos", 9) == 0)
+	  else if(g_ascii_strncasecmp (line, "paned_pos_", 10) == 0)
 	  {
-	      gint i = atoi (line+9);
+	      gint i = atoi (line+10);
 	      prefs_set_paned_pos (i, atoi (arg));
 	  }      
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
@@ -490,7 +490,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# position of sliders (paned): playlists, between sort tabs, above songs\n"));
     for (i=0; i<PANED_NUM; ++i)
     {
-	fprintf(fp, "paned_pos%d=%d\n", i, prefs_get_paned_pos (i));
+	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
     }
     fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
@@ -802,7 +802,7 @@ gboolean prefs_get_st_autoselect (guint32 inst)
     }
     else
     {
-	return TRUE; /* hmm.... this should not happen... */
+	return TRUE;
     }
 }
 
@@ -1101,6 +1101,11 @@ gint prefs_get_sort_tab_num (void)
 void prefs_set_sort_tab_num (gint i)
 {
     if ((i>=0) && (i<=SORT_TAB_MAX))
-	cfg->sort_tab_num = i;
+    {
+	if (cfg->sort_tab_num != i)
+	{
+	    cfg->sort_tab_num = i;
+	    st_show_visible ();
+	}
+    }
 }
-

@@ -34,25 +34,6 @@
 #include "song.h"
 #include "playlist.h"
 
-/* Number of search tabs to be supported.
-   Note: the number of search tabs displayed on the screen
-   is not changed automatically! */
-#define SORT_TAB_MAX 2
-
-/* Number of GtkPaned elements in the main window. The positions of
- * these elements will be stored in the prefs file and be set to the
- * last value when starting gtkpod again */
-#define PANED_NUM 3
-
-
-/* print some timing info for tuning purposes */
-#define DEBUG_TIMING 0
-/* time between display refreshs in ms */
-#define REFRESH_MS 200
-/* initial count number between display refreshs -- will be
-   re-calculated to match the time interval specified above */
-#define REFRESH_INIT_COUNT 5
-
 /* Categories in each sort tab (page numbers) */
 typedef enum {
   ST_CAT_ARTIST = 0,
@@ -62,6 +43,29 @@ typedef enum {
   ST_CAT_TITLE,
   ST_CAT_NUM
 } ST_CAT_item;
+
+/* Number of search tabs to be supported. */
+#define SORT_TAB_MAX ST_CAT_NUM
+
+/* Number of GtkPaned elements in the main window. The positions of
+ * these elements will be stored in the prefs file and be set to the
+ * last value when starting gtkpod again */
+/* Number defined with glade ("paned%d") */
+#define PANED_NUM_GLADE 2
+/* Number created in display.c (for sort tabs, stored in st_paned[]) */
+#define PANED_NUM_ST (SORT_TAB_MAX-1)
+/* Total number */
+#define PANED_NUM (PANED_NUM_GLADE+PANED_NUM_ST)
+
+
+
+/* print some timing info for tuning purposes */
+#define DEBUG_TIMING 0
+/* time between display refreshs in ms */
+#define REFRESH_MS 200
+/* initial count number between display refreshs -- will be
+   re-calculated to match the time interval specified above */
+#define REFRESH_INIT_COUNT 5
 
 /* struct for each entry in sort tab */
 typedef struct {
@@ -148,6 +152,7 @@ void st_redisplay (guint32 inst);
 void st_sort (guint32 inst, GtkSortType order);
 void st_remove_entry (TabEntry *entry, guint32 inst);
 gint st_get_instance_from_treeview (GtkTreeView *tv);
+void st_show_visible (void);
 TabEntry *st_get_selected_entry (gint inst);
 
 void on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
