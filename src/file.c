@@ -1077,7 +1077,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     fclose (fpit);
     if (!md5)
     {
-	fprintf (stderr, "Programming error: Could not create hash value from itunesdb\n");
+	g_warning ("Programming error: Could not create hash value from itunesdb\n");
 	return FALSE;
     }
     fp = fopen (name, "r");
@@ -1418,7 +1418,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
     }
   else
     {
-      fprintf (stderr, "Programming error: Could not create hash value from itunesdb\n");
+      g_warning ("Programming error: Could not create hash value from itunesdb\n");
       fclose (fp);
       return FALSE;
     }
@@ -1559,7 +1559,7 @@ gboolean flush_songs (void)
 		  if (rmres == -1) result = FALSE;
 	      }
 	      else {
-		  printf ("Thread creation failed, falling back to default.\n");
+		  g_warning ("Thread creation failed, falling back to default.\n");
 		  remove (filename);
 	      }
 #else
@@ -1613,7 +1613,7 @@ gboolean flush_songs (void)
 		  result &= (gboolean)g_thread_join (thread);
 	      }
 	      else {
-		  printf ("Thread creation failed, falling back to default.\n");
+		  g_warning ("Thread creation failed, falling back to default.\n");
 		  result &= itunesdb_copy_song_to_ipod (cfg->ipod_mount,
 							song, song->pc_path_locale);
 	      }

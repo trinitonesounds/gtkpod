@@ -1277,7 +1277,7 @@ void delete_entry_head (gint inst)
     }
     if (inst == -1)
     { /* this should not happen... */
-	gtkpod_warning ("delete_entry_head(): Programming error: inst == -1\n");
+	g_warning ("delete_entry_head(): Programming error: inst == -1\n");
 	return;
     }
     entry = st_get_selected_entry (inst);

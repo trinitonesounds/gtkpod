@@ -155,7 +155,7 @@ md5_hash_on_file(FILE * fp)
        }
        else
        { 
-	  gtkpod_warning(_("Hashed File is 0 bytes\n"));
+	  gtkpod_warning(_("Hashed file is 0 bytes long\n"));
        }
    }
    return (result);

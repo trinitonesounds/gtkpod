@@ -957,7 +957,7 @@ void prefs_set_st_category (guint32 inst, guint category)
     }
     else
     {
-	gtkpod_warning ("Category nr (%d) or sorttab nr (%d) out of range.\n", category, inst);
+	gtkpod_warning (_(" Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"), category, ST_CAT_NUM, inst, SORT_TAB_MAX);
     }
 }
 
@@ -1145,7 +1145,7 @@ gint prefs_get_paned_pos (gint i)
 	return cfg->paned_pos[i];
     else
     {
-	fprintf (stderr, "Programming error: prefs_get_paned_pos: arg out of range (%d)\n", i);
+	g_warning ("Programming error: prefs_get_paned_pos: arg out of range (%d)\n", i);
 	return 100; /* something reasonable? */
     }
 }
@@ -1275,7 +1275,7 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
 	i = GTK_TOOLBAR_BOTH;
 	break;
     default:  /* illegal -- ignore */
-	printf (_("prefs_set_toolbar_style: illegal style '%d' ignored\n"), i);
+	gtkpod_warning (_("prefs_set_toolbar_style: illegal style '%d' ignored\n"), i);
 	return;
     }
 

@@ -563,13 +563,14 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 	    result = sm_move_pathlist (data->data, path, pos);
 	    break;
 	case DND_GTKPOD_IDLIST:
+	    /* is disabled in sm_drop_types anyhow (display.c) */
 	    printf ("idlist not supported yet\n");
 	    break;
 	case DND_TEXT_PLAIN:
 	    result = sm_add_filelist (data->data, path, pos);
 	    break;
 	default:
-	    printf ("unknown drop not supported\n");
+	    g_warning ("Programming error: on song_treeview_drag_data_received: unknown drop: not supported: %d\n", info);
 	    break;
 	}
 	gtk_tree_path_free(path);
@@ -670,7 +671,9 @@ on_st_treeview_drag_data_get           (GtkWidget       *widget,
 	}
 	else if(info == DND_TEXT_PLAIN)
 	{
-	    fprintf(stderr, "received file of type \"text/plain\"\n");
+	    /* FIXME: not implemented yet -- must also change
+	     * st_drag_types in display.c */
+	    g_warning ("Programming error: on_st_treeview_drag_data_get: received file of type 'text/plain'\n");
 	}
     }
 
@@ -726,20 +729,6 @@ on_stop_button_clicked                 (GtkButton       *button,
 {
     stop_display_update (-1);
 }
-
-#if 0
-gboolean
-on_playlist_treeview_button_release_event
-                                        (GtkWidget       *widget,
-                                        GdkEventButton  *event,
-                                        gpointer         user_data)
-{
-    printf ("Event delivered to %x\n", widget);
-    printf (" GDKType: %d, x/y: %f/%f, button: %d\n",
-	    event->type, event->x, event->y, event->button);
-    return FALSE;
-}
-#endif
 
 void
 on_add_PL_button_clicked               (GtkButton       *button,

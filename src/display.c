@@ -98,7 +98,7 @@ static GtkTargetEntry pm_drop_types [] = {
 };
 static GtkTargetEntry st_drag_types [] = {
     { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
-    { "text/plain", 0, DND_TEXT_PLAIN },
+/*    { "text/plain", 0, DND_TEXT_PLAIN },*/
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 static GtkTargetEntry sm_drag_types [] = {
@@ -109,7 +109,7 @@ static GtkTargetEntry sm_drag_types [] = {
 };
 static GtkTargetEntry sm_drop_types [] = {
     { DND_GTKPOD_SM_PATHLIST_TYPE, 0, DND_GTKPOD_SM_PATHLIST },
-    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+/*    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },*/
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -2046,7 +2046,7 @@ static void st_create_treeview (gint inst, ST_CAT_item st_cat)
   case ST_CAT_TITLE:
       st0_label0 = gtk_label_new (_("Title"));
       break;
-  case ST_CAT_NUM:
+  case ST_CAT_NUM: /* should not happen... */
       st0_label0 = gtk_label_new (("Programming Error"));
       break;
   }
@@ -2373,7 +2373,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
       }
       break;
   default:
-      fprintf(stderr, "Unknown song cell edited with value %d\n", column);
+      g_warning ("Programming error: sm_cell_edited: unknown song cell (%d) edited\n", column);
       break;
   }
   if (changed)
@@ -2486,7 +2486,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   default:
-      gtkpod_warning("Unknown column in sm_cell_data_func: %d\n", column);
+      g_warning ("Programming error: unknown column in sm_cell_data_func: %d\n", column);
       break;
   }
 }
@@ -2586,7 +2586,7 @@ sm_rows_reordered (void)
 		   could not be found in the selected playlist -> stop! */
 		if (position == -1)
 		{
-		    printf("Prgramming error (sm_rows_reordered_callback): song in song view was not in selected playlist\n");
+		    g_warning ("Programming error: sm_rows_reordered_callback: song in song view was not in selected playlist\n");
 		    break;
 		}
 		old_link = g_list_nth (current_pl->members, position);
@@ -3006,7 +3006,7 @@ gint sm_data_compare_func (GtkTreeModel *model,
   case SM_COLUMN_BITRATE:
       return song1->bitrate - song2->bitrate;
   default:
-      gtkpod_warning("No sort for column %d\n", column);
+      g_warning ("Programming error: sm_data_compare_func: no sort method for column %d\n", column);
       break;
   }
   return 0;
@@ -3593,7 +3593,7 @@ static void block_release_selection (gint inst, gint action,
     {
 	stop_button = lookup_widget (gtkpod_window, "stop_button");
 	if (stop_button == NULL)
-	    fprintf (stderr, "Programming error: stop_button not found\n");
+	    g_warning ("Programming error: stop_button not found\n");
     }
 
     switch (action)
@@ -3701,7 +3701,7 @@ static void block_release_selection (gint inst, gint action,
 	}
 	break;
     default:
-	fprintf (stderr, "Programming error: unknown BR_...: %d\n", action);
+	g_warning ("Programming error: unknown BR_...: %d\n", action);
 	break;
     }
 }

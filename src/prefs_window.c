@@ -128,7 +128,7 @@ prefs_window_create(void)
 	}
 	else
 	{
-	    fprintf(stderr, "Programming error: tmpcfg is not NULL wtf !!\n");
+	    g_warning ("Programming error: tmpcfg is not NULL wtf !!\n");
 	    return;
 	}
 	prefs_window = create_new_prefs_window();

@@ -123,7 +123,7 @@ copy_file_from_fd_to_fd(FILE *from, FILE *to)
 		{
 		    if((ferror(to) != 0))
 		    {
-			fprintf(stderr, "%d is errno writing\n", errno);
+/*			fprintf(stderr, "%d is errno writing\n", errno);*/
 			result = FALSE;
 		    }
 		    break;
@@ -169,9 +169,9 @@ copy_file_from_file_to_dest(gchar *file, gchar *dest)
 	    switch(errno)
 	    {
 		case EPERM:
-		    fprintf(stderr, "Permission Error\n");
+		    gtkpod_warning (_("Error copying '%s' to '%s': Permission Error (errno: %d)\n"), file, dest, errno);
 		default:
-		    fprintf(stderr, "Unable to open %s for writing\n", dest);
+		    gtkpod_warning (_("Error copying '%s' to '%s' (errno: %d)\n"), file, dest, errno);
 		    break;
 	    }
 	}
@@ -179,7 +179,7 @@ copy_file_from_file_to_dest(gchar *file, gchar *dest)
     }
     else
     {
-	fprintf(stderr, "Unable to open %s for reading\n", file);
+	gtkpod_warning (_("Unable to open '%s' for reading\n"), file);
     }
     return(result);
 }
@@ -228,7 +228,7 @@ file_export_do(void)
 	{
 	    s = (Song*)l->data;
 	    if(!write_song(s))
-		fprintf(stderr, "Failed to write %s-%s\n", s->artist, s->title);	
+		gtkpod_warning (_("Failed to write %s-%s\n"), s->artist, s->title);	
 	    l->data = NULL;
 	}
     }
