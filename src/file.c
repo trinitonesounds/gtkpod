@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-26 23:01:54 jcs>
+/* Time-stamp: <2004-02-04 00:00:09 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -45,6 +45,7 @@
 #include "misc.h"
 #include "mp3file.h"
 #include "mp4file.h"
+#include "normalize.h"
 #include "prefs.h"
 #include "support.h"
 #include "wavfile.h"
@@ -2530,6 +2531,15 @@ void handle_export (void)
 		  gtkpod_statusbar_message (buf);
 		  g_free (buf);
 	      }
+	  }
+	  if (prefs_get_concal_autosync ())
+	  {
+	      const gchar *str;
+	      gtkpod_statusbar_message (_("Syncing contacts and calendar..."));
+	      str = prefs_get_sync_contacts_path ();
+	      if (str && *str)    tools_sync_contacts ();
+	      str = prefs_get_sync_calendar_path ();
+	      if (str && *str)    tools_sync_calendar ();
 	  }
       }
       /* if everything was successful, copy files to ~/.gtkpod */

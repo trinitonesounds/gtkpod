@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:13:56 jcs>
+/* Time-stamp: <2004-02-03 22:16:49 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -43,4 +43,7 @@ void nm_tracks_list (GList *list);
 gint nm_get_gain (Track *track);
 gint nm_gain_to_volumne (gint gain);
 gint nm_volumne_to_gain (gint volume);
+
+gboolean tools_sync_contacts (void);
+gboolean tools_sync_calendar (void);
 #endif

@@ -1,6 +1,12 @@
 gtkpod V0.73-CVS
 	NEW FEATURE: added support for WAV audio files
 
+	NEW FEATURE: added support for syncing contacts and calendar from
+	existing applications to the iPod (on iTunesDB export and/or via
+	the Tools-menu). The sync is done by calling external scripts.
+	Only one script is included so far: kaddressbook_ipod. Please
+	submit more for inclusion into the next release.
+
 	IMPROVEMENT: can specify several templates to scan the filename
 	for tags using the ';' as a separator
 

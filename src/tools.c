@@ -1,26 +1,26 @@
-/* Time-stamp: <2003-11-29 13:00:17 jcs>
+/* Time-stamp: <2004-02-03 23:52:29 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -42,17 +42,34 @@
 #include "support.h"
 #include <stdlib.h>
 
+
+/*pipe's definition*/
+enum {
+    READ = 0,
+    WRITE = 1
+};
+enum {
+    BUFLEN = 1000,
+};
+
+
+/* ------------------------------------------------------------
+
+		     Normalize Volume
+
+   ------------------------------------------------------------ */
+
+
 #ifdef G_THREADS_ENABLED
 static  GMutex *mutex = NULL;
 static GCond  *cond = NULL;
 static gboolean mutex_data = FALSE;
 #endif
 
-
 /* I'm not sure how exactly to calculate between iPod's volume tag and
  * mp3gain's gain. The following worked fine with 2 (two) tracks...
  * Change here if you know better. */
-gint nm_gain_to_volume (gint gain)
+static gint nm_gain_to_volume (gint gain)
 {
     gint vol;
 
@@ -65,19 +82,22 @@ gint nm_gain_to_volume (gint gain)
     return vol;
 }
 
-gint nm_volume_to_gain (gint volume)
+#if 0
+/* if you change nm_gain_to_volume() also change this, even though it's
+   not used at the moment */
+static gint nm_volume_to_gain (gint volume)
 {
     return volume/10;
 }
-
+#endif
 
 /* parse the mp3gain stdout to search the mp3gain output:
- * 
+ *
  * mp3gain stdout for a single file is something like this:
  * FIRST LINE (header)
  * FILENAME\tMP3GAIN\tOTHER NOT INTERESTING OUTPUT\n
  * ALBUM\tALBUMGAIN\tOTHER OUTPUT\n
- * 
+ *
  * we want to extract only the right file's MP3GAIN
  *
  * BEWARE: mp3gain doesn't separate stdout/stderror */
@@ -88,7 +108,7 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
    /*they are just pointers, don't need to be freed*/
    gchar *filename=NULL;
    gchar *num=NULL;
-  
+
    filename=strtok((gchar *)mp3gain_stdout,"\t\n\0");
    while(!found&&filename!=NULL&&((gchar *)mp3gain_stdout)!=NULL)
    {
@@ -98,14 +118,14 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
 #endif
       if(strcmp((gchar *)tracksfile,filename)==0)
       {
-         num=strtok(NULL,"\t");
-         strcat(num,"\0");
-         gain=atoi(num);
-         found=TRUE;
+	 num=strtok(NULL,"\t");
+	 strcat(num,"\0");
+	 gain=atoi(num);
+	 found=TRUE;
       }
       else{
-         strtok(NULL,"\n\t\0");
-         filename=strtok(NULL,"\t\n\0");
+	 strtok(NULL,"\n\t\0");
+	 filename=strtok(NULL,"\t\n\0");
       }
 #ifdef MP3GAIN_PARSE_DEBUG
       printf("mp3gain_stdout %s",mp3gain_stdout);
@@ -119,14 +139,6 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
 /* mp3gain version 1.4.2 */
 gint nm_get_gain(Track *track)
 {
-   /*pipe's definition*/
-    enum {
-	READ = 0,
-	WRITE = 1
-    };
-    enum {
-	BUFLEN = 1000,
-    };
     gint k,n;  /*for's counter*/
     gint len = 0;
     gint gain = TRACKGAINERROR;
@@ -152,7 +164,7 @@ gint nm_get_gain(Track *track)
     if (!mp3gain_path)
     {
 	gtkpod_warning (_("Could not find mp3gain. I tried to use the following executable: '%s'.\n\nIf the mp3gain executable is not in your path or named differently, you can set the full path in the 'Tools' section of the preferences dialog.\n\nIf you do not have mp3gain installed, you can download it from http://www.sourceforge.net/projects/mp3gain."), mp3gain_set);
-	return gain;
+	return TRACKGAINERROR;
     }
 
     mp3gain_exec = g_path_get_basename (mp3gain_path);
@@ -160,19 +172,13 @@ gint nm_get_gain(Track *track)
     buf = g_malloc (BUFLEN);
     gain_output = g_string_sized_new (BUFLEN);
 
-    if (!mp3gain_path)
-    {
-	gtkpod_warning (_("Could not find mp3gain executable."));
-	return TRACKGAINERROR;
-    }
-
     filename=get_track_name_on_disk_verified (track);
-   
+
     /*create the pipe*/
     pipe(fdpipe);
     /*than fork*/
     pid=fork();
-	
+
     /*and cast mp3gain*/
     switch (pid)
     {
@@ -192,7 +198,7 @@ gint nm_get_gain(Track *track)
 	{
 	    execl(mp3gain_path, mp3gain_exec, "-s", "s", "-o", filename, NULL);
 	}
-	break; 
+	break;
     default: /*parent*/
 	close(fdpipe[WRITE]);
 	tpid = waitpid (pid, NULL, 0); /*wait mp3gain termination */
@@ -206,7 +212,7 @@ gint nm_get_gain(Track *track)
 	gain = parse_mp3gain_stdout(gain_output->str, filename);
 	break;
     }/*end switch*/
-    
+
     /*free everything left*/
     g_free (filename);
     g_free (mp3gain_path);
@@ -229,7 +235,7 @@ static gpointer th_nm_get_gain (gpointer track)
    g_mutex_unlock (mutex);
    return (gpointer)gain;
 }
-#endif 
+#endif
 
 /* normalize the newly inserted tracks (i.e. non-transferred tracks) */
 void nm_new_tracks (void)
@@ -277,13 +283,13 @@ void nm_tracks_list(GList *list)
 
   /* create the dialog window */
   dialog = gtk_dialog_new_with_buttons (_("Information"),
-                                         GTK_WINDOW (gtkpod_window),
-                                         GTK_DIALOG_DESTROY_WITH_PARENT,
-                                         GTK_STOCK_CANCEL,
-                                         GTK_RESPONSE_NONE,
-                                         NULL);
+					 GTK_WINDOW (gtkpod_window),
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_STOCK_CANCEL,
+					 GTK_RESPONSE_NONE,
+					 NULL);
 
-  
+
   /* emulate gtk_message_dialog_new */
   image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO,
 				    GTK_ICON_SIZE_DIALOG);
@@ -312,9 +318,9 @@ void nm_tracks_list(GList *list)
 
   /* Add the image/label + progress bar to dialog */
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-                      hbox, FALSE, FALSE, 0);
+		      hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-                      progress_bar, FALSE, FALSE, 0);
+		      progress_bar, FALSE, FALSE, 0);
   gtk_widget_show_all (dialog);
 
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
@@ -337,17 +343,17 @@ void nm_tracks_list(GList *list)
      if (track->transferred)
      {
 #ifdef G_THREADS_ENABLED
-        mutex_data = FALSE;
+	mutex_data = FALSE;
 	thread = g_thread_create (th_nm_get_gain, track, TRUE, NULL);
 	if (thread)
 	{
-           gboolean first_abort = TRUE;
-           g_mutex_lock (mutex);
+	   gboolean first_abort = TRUE;
+	   g_mutex_lock (mutex);
 	   do
-           {
-              while (widgets_blocked && gtk_events_pending ())
-                 gtk_main_iteration ();
-              /* wait a maximum of 10 ms */
+	   {
+	      while (widgets_blocked && gtk_events_pending ())
+		 gtk_main_iteration ();
+	      /* wait a maximum of 10 ms */
 
 	      if (abort && first_abort)
 	      {
@@ -360,66 +366,66 @@ void nm_tracks_list(GList *list)
 		  while (widgets_blocked && gtk_events_pending ())
 		      gtk_main_iteration ();
 	      }
-              g_get_current_time (&gtime);
-              g_time_val_add (&gtime, 20000);
+	      g_get_current_time (&gtime);
+	      g_time_val_add (&gtime, 20000);
 	      g_cond_timed_wait (cond, mutex, &gtime);
-           }
-           while(!mutex_data);
-           new_gain = (gint)g_thread_join (thread);
-           g_mutex_unlock (mutex);
-        }
-        else
-        {
-           g_warning ("Thread creation failed, falling back to default.\n");
-           new_gain=nm_get_gain(track);
-        }
+	   }
+	   while(!mutex_data);
+	   new_gain = (gint)g_thread_join (thread);
+	   g_mutex_unlock (mutex);
+	}
+	else
+	{
+	   g_warning ("Thread creation failed, falling back to default.\n");
+	   new_gain=nm_get_gain(track);
+	}
 #else
-        new_gain=nm_get_gain(track);
-#endif 
+	new_gain=nm_get_gain(track);
+#endif
 
 /*normalization part*/
-        if(new_gain == TRACKGAINERROR)
-        {
-           abort=TRUE;
-        }
-        else
-        {
-           if(nm_gain_to_volume (new_gain) != track->volume)
-           {
-              track->volume = nm_gain_to_volume (new_gain);
+	if(new_gain == TRACKGAINERROR)
+	{
+	   abort=TRUE;
+	}
+	else
+	{
+	   if(nm_gain_to_volume (new_gain) != track->volume)
+	   {
+	      track->volume = nm_gain_to_volume (new_gain);
 	      pm_track_changed (track);
 	      data_changed ();
-           }
-        }
+	   }
+	}
 /*end normalization*/
-        
-        ++count;
-        if (count == 1)  /* we need ***much*** longer timeout */
-           prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
 
-        buf = g_strdup_printf (ngettext ("Normalized %d of %d new track.",
+	++count;
+	if (count == 1)  /* we need ***much*** longer timeout */
+	   prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
+
+	buf = g_strdup_printf (ngettext ("Normalized %d of %d new track.",
 					       "Normalized %d of %d new tracks.", n),
-                                         count, n);
-        gtkpod_statusbar_message(buf);
-        g_free (buf);
+					 count, n);
+	gtkpod_statusbar_message(buf);
+	g_free (buf);
 
-        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
-                                        (gdouble) count/n);
+	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
+					(gdouble) count/n);
 
-        diff = time(NULL) - start;
-        mins = ((diff*n/count)-diff)/60;
-        secs = ((((diff*n/count)-diff) & 60) / 5) * 5;
+	diff = time(NULL) - start;
+	mins = ((diff*n/count)-diff)/60;
+	secs = ((((diff*n/count)-diff) & 60) / 5) * 5;
       /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
-        progtext = g_strdup_printf (_("%d%% (%d:%02d) left"),
-	 		  count*100/n, (int)mins, (int)secs);
-        gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
+	progtext = g_strdup_printf (_("%d%% (%d:%02d) left"),
+			  count*100/n, (int)mins, (int)secs);
+	gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
 					progtext);
 	g_free (progtext);
      } /*end if transferred*/
 
      if (abort && (count != n))
-        gtkpod_statusbar_message (_("Some tracks were not normalized. Normalization aborted!"));
+	gtkpod_statusbar_message (_("Some tracks were not normalized. Normalization aborted!"));
      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
      list=g_list_next(list);
   } /*end while*/
@@ -428,4 +434,162 @@ void nm_tracks_list(GList *list)
 
   gtk_widget_destroy (dialog);
   release_widgets();
+}
+
+
+
+/* ------------------------------------------------------------
+
+	    Synchronize Contacts / Calendar
+
+   ------------------------------------------------------------ */
+
+typedef enum
+{
+    SYNC_CONTACTS,
+    SYNC_CALENDAR
+} SyncType;
+
+
+/* replace %i in all strings of argv with prefs_get_ipod_mount() */
+static void tools_sync_replace_percent_i (gchar **argv)
+{
+    const gchar *ipod_mount = prefs_get_ipod_mount ();
+    gint ipod_mount_len = strlen (ipod_mount);
+    gint offset = 0;
+
+    while (argv && *argv)
+    {
+	gchar *str = *argv;
+	gchar *pi = strstr (str+offset, "%i");
+	if (pi)
+	{
+	    /* len: -2: replace "%i"; +1: trailing 0 */
+	    gint len = strlen (str) - 2 + ipod_mount_len + 1;
+	    gchar *new_str = g_malloc0 (sizeof (gchar) * len);
+	    strncpy (new_str, str, pi-str);
+	    strcpy (new_str + (pi-str), ipod_mount);
+	    strcpy (new_str + (pi-str) + ipod_mount_len, pi+2);
+	    g_free (str);
+	    str = new_str;
+	    *argv = new_str;
+	    /* set offset to point behind the inserted ipod_path in
+	       case ipod_path contains "%i" */
+	    offset = (pi-str) + ipod_mount_len;
+	}
+	else
+	{
+	    offset = 0;
+	    ++argv;
+	}
+    }
+}
+
+
+/* execute the specified script, giving out error/status messages on
+   the way */
+static gboolean tools_sync_script (SyncType type)
+{
+    gchar *script=NULL;
+    gchar *script_path, *buf;
+    gchar **argv = NULL;
+    GString *script_output;
+    gint fdpipe[2];  /*a pipe*/
+    gint len;
+    pid_t pid,tpid;
+
+    switch (type)
+    {
+    case SYNC_CONTACTS:
+	script = g_strdup (prefs_get_sync_contacts_path ());
+	break;
+    case SYNC_CALENDAR:
+	script = g_strdup (prefs_get_sync_calendar_path ());
+	break;
+    default:
+	fprintf (stderr, "Programming error: tools_sync_script () called with %d\n", type);
+	return FALSE;
+    }
+
+    /* remove leading and trailing whitespace */
+    if (script) g_strstrip (script);
+
+    if (!script || (strlen (script) == 0))
+    {
+	gtkpod_warning (_("Please specify the command to be called on the 'Tools' section of the preferences dialog.\n"));
+	g_free (script);
+	return FALSE;
+    }
+
+    argv = g_strsplit (script, " ", -1);
+
+    tools_sync_replace_percent_i (argv);
+
+    script_path = which (argv[0]);
+    if (!script_path)
+    {
+	gtkpod_warning (_("Could not find the command '%s'.\n\nPlease verify the setting in the 'Tools' section of the preferences dialog.\n\n"), argv[0]);
+	g_free (script);
+	g_strfreev (argv);
+	return FALSE;
+    }
+
+    /* set up arg list (first parameter should be basename of script */
+    g_free (argv[0]);
+    argv[0] = g_path_get_basename (script_path);
+
+    buf = g_malloc (BUFLEN);
+    script_output = g_string_sized_new (BUFLEN);
+
+    /*create the pipe*/
+    pipe(fdpipe);
+    /*than fork*/
+    pid=fork();
+
+    /*and cast mp3gain*/
+    switch (pid)
+    {
+    case -1: /* parent and error, now what?*/
+	break;
+    case 0: /*child*/
+	close(1); /*close stdout*/
+	dup2(fdpipe[WRITE],fileno(stdout));
+	close(fdpipe[READ]);
+	close(fdpipe[WRITE]);
+	execv(script_path, argv);
+	break;
+    default: /*parent*/
+	close(fdpipe[WRITE]);
+	tpid = waitpid (pid, NULL, 0); /*wait for script termination */
+	do
+	{
+	    len = read (fdpipe[READ], buf, BUFLEN);
+	    if (len > 0) g_string_append_len (script_output, buf, len);
+	} while (len > 0);
+	close(fdpipe[READ]);
+	/* display output in window, if any */
+	if (strlen (script_output->str))
+	{
+	    gtkpod_warning (_("'%s' returned the following output:\n%s\n"),
+			      script_path, script_output->str);
+	}
+	break;
+    } /*end switch*/
+
+    /*free everything left*/
+    g_free (script_path);
+    g_free (buf);
+    g_strfreev (argv);
+    g_string_free (script_output, TRUE);
+    return TRUE;
+}
+
+gboolean tools_sync_contacts (void)
+{
+    return tools_sync_script (SYNC_CONTACTS);
+}
+
+gboolean tools_sync_calendar (void)
+{
+    return tools_sync_script (SYNC_CALENDAR);
 }

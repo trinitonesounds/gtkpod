@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-01 23:55:19 JST jcs>
+/* Time-stamp: <2004-02-03 23:21:30 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1927,7 +1927,7 @@ void
 on_sync_calendar_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-
+    tools_sync_calendar ();
 }
 
 
@@ -1935,7 +1935,7 @@ void
 on_sync_contacts_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-
+    tools_sync_contacts ();
 }
 
 
@@ -1943,5 +1943,6 @@ void
 on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-
+    prefs_window_set_concal_autosync
+	(gtk_toggle_button_get_active(togglebutton));
 }

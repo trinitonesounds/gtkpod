@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-26 23:01:56 jcs>
+/* Time-stamp: <2004-02-03 22:16:48 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -41,20 +41,6 @@
 
 #include "song.h"
 #include "playlist.h"
-
-enum {
-  MHOD_ID_TITLE = 1,
-  MHOD_ID_PATH = 2,
-  MHOD_ID_ALBUM = 3,
-  MHOD_ID_ARTIST = 4,
-  MHOD_ID_GENRE = 5,
-  MHOD_ID_FDESC = 6,
-  MHOD_ID_COMMENT = 8,
-  MHOD_ID_COMPOSER = 12,
-  MHOD_ID_PLAYLIST = 100
-};
-
-#define ITUNESDB_COPYBLK 65536      /* blocksize for cp () */
 
 gboolean itunesdb_parse (const gchar *path);
 gboolean itunesdb_parse_file (const gchar *filename);
