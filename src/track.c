@@ -704,7 +704,10 @@ void handle_import (void)
 		gtkpod_warning (_("Extended info will not be used.\n"));
 	    }
 	}
-	itunesdb_parse (cfg->ipod_mount);
+	if(itunesdb_parse (cfg->ipod_mount))
+	    gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
+	else
+	    gtkpod_statusbar_message(_("iPod Database Import Failed"));
     }
     else
     { /* offline - requires extended info */
@@ -718,7 +721,13 @@ void handle_import (void)
 	    {
 		gtkpod_warning (_("Extended info will not be used. If you have non-transferred songs,\nthese will be lost.\n"));
 	    }
-	    itunesdb_parse_file (name2);
+	    if(itunesdb_parse_file (name2))
+		gtkpod_statusbar_message(
+			_("Extended iPod Database Successfully Imported"));
+	    else
+		gtkpod_statusbar_message(
+			_("Extended iPod Database Import Failed"));
+
 	    g_free (name2);
 	    g_free (cfgdir);
 	}
@@ -745,8 +754,6 @@ void handle_import (void)
 	/*we need to tell the display that the ID has changed */
 	pm_song_changed (song);
     }
-    
-    gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
     gtkpod_songs_statusbar_update();
     /* setup our md5 hashness for unique files */
     /* if(cfg->md5songs)    done with add_song ();

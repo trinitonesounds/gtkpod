@@ -667,15 +667,7 @@ void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    gchar buf[PATH_MAX];
     confirmation_window_create(CONFIRMATION_WINDOW_CREATE_IPOD_DIRS);
-/*    if(create_ipod_directories(cfg->ipod_mount))
-	snprintf(buf, PATH_MAX, "%s %s", 
-	    _("Successfully Created iPod Directories in"), cfg->ipod_mount);
-    else
-	snprintf(buf, PATH_MAX, "%s %s", 
-	    _("Problem Creating iPod Directories in"), cfg->ipod_mount);
-	    gtkpod_statusbar_message(buf);*/
 }
 
 
