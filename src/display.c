@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-28 15:34:54 jcs>
+/* Time-stamp: <2003-08-24 14:48:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -521,7 +521,7 @@ void release_selection (gint inst)
 
 /* Stops the display updates down to instance "inst". "-1" is the
  * playlist view */
-void stop_display_update (gint inst)
+void display_stop_update (gint inst)
 {
     stop_add = inst;
 }

@@ -576,17 +576,35 @@ void pm_sort (GtkSortType order)
     }
 }
 
+static void pm_select_current_position (gint x, gint y)
+{
+    if (playlist_treeview)
+    {
+	GtkTreePath *path;
+
+	gtk_tree_view_get_path_at_pos (playlist_treeview,
+				       x, y, &path, NULL, NULL, NULL);
+	if (path)
+	{
+	    GtkTreeSelection *ts = gtk_tree_view_get_selection
+		(playlist_treeview);
+	    gtk_tree_selection_select_path (ts, path);
+	    gtk_tree_path_free (path);
+	}
+    }
+}
 
 static gboolean
-pm_button_release(GtkWidget *w, GdkEventButton *e, gpointer data)
+pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
 {
     if(w && e)
     {
 	switch(e->button)
 	{
 	    case 3:
-		pm_context_menu_init();
-		break;
+		pm_select_current_position (e->x, e->y);
+		pm_context_menu_init ();
+		return TRUE;
 	    default:
 		break;
 	}
@@ -652,8 +670,8 @@ void pm_create_treeview (void)
   g_signal_connect_after ((gpointer) playlist_treeview, "key_release_event",
 			  G_CALLBACK (on_playlist_treeview_key_release_event),
 			  NULL);
-  g_signal_connect (G_OBJECT (playlist_treeview), "button-release-event",
-		    G_CALLBACK (pm_button_release), model);
+  g_signal_connect (G_OBJECT (playlist_treeview), "button-press-event",
+		    G_CALLBACK (pm_button_press), model);
 }
 
 
@@ -661,7 +679,25 @@ void pm_create_treeview (void)
 Playlist*
 pm_get_selected_playlist(void)
 {
-    return(current_playlist);
+/* return(current_playlist);*/
+/* we can't just return the "current_playlist" because the context
+   menus require the selection before "current_playlist" is updated */
+
+    Playlist *result = NULL;
+
+    if (playlist_treeview)
+    {
+	GtkTreeSelection *ts = gtk_tree_view_get_selection (playlist_treeview);
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+
+	if (gtk_tree_selection_get_selected (ts, &model, &iter))
+	{
+	    gtk_tree_model_get (model, &iter,
+				PM_COLUMN_PLAYLIST, &result, -1);
+	}
+    }
+    return result;
 }
 
 /* use with care!! */

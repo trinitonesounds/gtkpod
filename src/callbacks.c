@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-22 22:09:28 jcs>
+/* Time-stamp: <2003-08-24 14:48:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -724,7 +724,7 @@ void
 on_stop_button_clicked                 (GtkButton       *button,
                                         gpointer         user_data)
 {
-    stop_display_update (-1);
+    display_stop_update (-1);
 }
 
 void

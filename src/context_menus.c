@@ -305,6 +305,8 @@ sm_context_menu_init(void)
 {
     if (widgets_blocked) return;
 
+/*    sm_stop_editing (TRUE);*/
+
     selected_entry = NULL; 
     selected_playlist = NULL;
     entry_inst = -1;
@@ -343,10 +345,12 @@ st_context_menu_init(gint inst)
 {
     if (widgets_blocked) return;
 
+/*    st_stop_editing (inst, TRUE);*/
+
     if (selected_songs)  g_list_free (selected_songs);
     selected_songs = NULL;
     selected_playlist = NULL;
-    selected_entry = st_get_selected_entry(inst);
+    selected_entry = st_get_selected_entry (inst);
     if(selected_entry)
     {
 	entry_inst = inst;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-23 11:51:48 jcs>
+/* Time-stamp: <2003-08-24 21:44:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -759,6 +759,32 @@ sm_get_all_songs(void)
     return(result);
 }
 
+
+/* Stop editing. If @cancel is TRUE, the edited value will be
+   discarded (I have the feeling that the "discarding" part does not
+   work quite the way intended). */
+void sm_stop_editing (gboolean cancel)
+{
+    GtkTreeViewColumn *col;
+
+    if (!song_treeview)  return;
+
+    gtk_tree_view_get_cursor (song_treeview, NULL, &col);
+    if (col)
+    {
+	/* Before removing the widget we set multi_edit to FALSE. That
+	   way at most one entry will be changed */
+	gboolean me = prefs_get_multi_edit ();
+	if (!cancel && col->editable_widget)  
+	    gtk_cell_editable_editing_done (col->editable_widget);
+	prefs_set_multi_edit (FALSE);
+	if (col->editable_widget)
+	    gtk_cell_editable_remove_widget (col->editable_widget);
+	prefs_set_multi_edit (me);
+    }
+}
+
+
 /* Function used to compare two cells during sorting (song view) */
 gint sm_data_compare_func (GtkTreeModel *model,
 			GtkTreeIter *b,
@@ -971,16 +997,34 @@ static void sm_add_columns (void)
     sm_show_preferred_columns();
 }
 
+static void sm_select_current_position (gint x, gint y)
+{
+    if (song_treeview)
+    {
+	GtkTreePath *path;
+
+	gtk_tree_view_get_path_at_pos (song_treeview,
+				       x, y, &path, NULL, NULL, NULL);
+	if (path)
+	{
+	    GtkTreeSelection *ts = gtk_tree_view_get_selection (song_treeview);
+	    gtk_tree_selection_select_path (ts, path);
+	    gtk_tree_path_free (path);
+	}
+    }
+}
+
 static gboolean
-sm_button_release_event(GtkWidget *w, GdkEventButton *e, gpointer data)
+sm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 {
     if(w && e)
     {
 	switch(e->button)
 	{
 	    case 3:
-		sm_context_menu_init();
-		break;
+		sm_select_current_position (e->x, e->y);
+		sm_context_menu_init ();
+		return TRUE;
 	    default:
 		break;
 	}
@@ -1046,8 +1090,8 @@ void sm_create_treeview (void)
   g_signal_connect ((gpointer) stv, "drag_data_received",
 		    G_CALLBACK (on_song_treeview_drag_data_received),
 		    NULL);
-  g_signal_connect ((gpointer) song_treeview, "button-release-event",
-		    G_CALLBACK (sm_button_release_event),
+  g_signal_connect ((gpointer) song_treeview, "button-press-event",
+		    G_CALLBACK (sm_button_press_event),
 		    NULL);
 }
 
@@ -1314,4 +1358,3 @@ on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	g_free (name);
     }
 }
-

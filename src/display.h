@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-23 12:24:06 jcs>
+/* Time-stamp: <2003-08-24 22:03:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -178,6 +178,7 @@ void display_show_hide_toolbar (void);
 void display_reset (gint inst);
 GList *display_get_selection (guint32 inst);
 
+Playlist* pm_get_selected_playlist(void);
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);
 void pm_select_playlist (Playlist *playlist);
@@ -186,7 +187,10 @@ void pm_add_song (Playlist *playlist, Song *song, gboolean display);
 void pm_name_changed (Playlist *playlist);
 void pm_song_changed (Song *song);
 void pm_sort (GtkSortType order);
+gboolean pm_move_pathlist (gchar *data, GtkTreePath *path,
+			   GtkTreeViewDropPosition pos);
 
+void st_stop_editing (gint inst, gboolean cancel);
 void st_page_selected (GtkNotebook *notebook, guint page);
 void st_sort (guint32 inst, GtkSortType order);
 void st_remove_entry (TabEntry *entry, guint32 inst);
@@ -196,7 +200,6 @@ void st_arrange_visible_sort_tabs (void);
 TabEntry *st_get_selected_entry (gint inst);
 
 void cal_open_calendar (gint inst, S_item item);
-
 void sp_go (guint32 inst);
 void sp_conditions_changed (guint32 inst);
 
@@ -221,21 +224,19 @@ void sm_rows_reordered(void);
 void pm_rows_reordered(void);
 gboolean sm_move_pathlist (gchar *data, GtkTreePath *path,
 			   GtkTreeViewDropPosition pos);
-gboolean pm_move_pathlist (gchar *data, GtkTreePath *path,
-			   GtkTreeViewDropPosition pos);
 gboolean sm_add_filelist (gchar *data, GtkTreePath *path,
 			  GtkTreeViewDropPosition pos);
+void sm_stop_editing (gboolean cancel);
 void sm_show_preferred_columns(void);
+void sm_store_col_order (void);
 
-Playlist* pm_get_selected_playlist(void);
 GList* sm_get_selected_songids(void);
 GList* sm_get_selected_songs(void);
 GList* sm_get_all_songids(void);
 GList* sm_get_all_songs(void);
+
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
 void display_show_hide_tooltips (void);
-void sm_store_col_order (void);
-
-void stop_display_update (gint inst);
+void display_stop_update (gint inst);
 #endif 

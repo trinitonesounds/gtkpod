@@ -5,13 +5,16 @@ gtkpod V0.53-CVS
 
 	NEW FEATURE: automatically create a playlist for each
 	album/artist/genre/composer in your collection (thanks to Chris
-	Cutler).
+	Cutler), and other automatic playlist generations.
 
 	NEW FEATURE: menu items and context menu items to create new
 	playlist containing displayed songs or selected songs.
 
 	IMPROVEMENT: handle adding of playlist files containing
 	files with relative paths.
+
+	IMPROVEMENT: context menus more intuitive, context menus will no
+	longer trigger edit mode (usually).
 
 	IMPROVEMENT: the function copying songs to the iPod used a "large"
 	amount of stack memory (roughly 66000 Bytes) which crashed some

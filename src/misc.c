@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-24 00:54:34 jcs>
+/* Time-stamp: <2003-08-24 01:03:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2333,6 +2333,9 @@ void generate_category_playlists (S_item cat)
 
     /* sanity */
     if (qualifier == NULL) return;
+
+    /* FIXME: delete all playlists named '[<qualifier> .*]' and
+     * remember which playlist was selected if it gets deleted */
 
     master_pl = get_playlist_by_nr (0);
 

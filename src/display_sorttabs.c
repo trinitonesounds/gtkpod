@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-24 00:43:19 jcs>
+/* Time-stamp: <2003-08-24 22:03:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -600,12 +600,28 @@ gint st_get_instance_from_treeview (GtkTreeView *tv)
 }
 
 
-/* returns the selected entry (used by delete_entry_head() */
+/* returns the selected entry */
 TabEntry *st_get_selected_entry (gint inst)
 {
+    TabEntry *result = NULL;
+
     if ((inst >= 0) && (inst < SORT_TAB_MAX) && sorttab[inst])
-	return sorttab[inst]->current_entry;
-    return NULL;
+/*	return sorttab[inst]->current_entry;*/
+/* we can't just return the "->current_entry" because the context
+   menus require the selection before "->current_entry" is updated */
+    {
+	SortTab *st = sorttab[inst];
+	GtkTreeView *tv = st->treeview[st->current_category];
+	GtkTreeSelection *ts = gtk_tree_view_get_selection (tv);
+	GtkTreeIter iter;
+
+	if (gtk_tree_selection_get_selected (ts, NULL, &iter))
+	{
+	    gtk_tree_model_get (st->model, &iter,
+				ST_COLUMN_ENTRY, &result, -1);
+	}
+    }
+    return result;
 }
 
 
@@ -1765,6 +1781,52 @@ gint st_data_compare_func (GtkTreeModel *model,
   return compare_string (entry1->name, entry2->name);
 }
 
+/* Stop editing. If @cancel is TRUE, the edited value will be
+   discarded (I have the feeling that the "discarding" part does not
+   work quite the way intended). */
+void st_stop_editing (gint inst, gboolean cancel)
+{
+    if (inst < prefs_get_sort_tab_num ())
+    {
+	SortTab *st = sorttab[inst];
+	if (st)
+	{
+	    GtkTreeViewColumn *col;
+	    gtk_tree_view_get_cursor (st->treeview[st->current_category],
+				      NULL, &col);
+	    if (col)
+	    {
+		if (!cancel && col->editable_widget)  
+		    gtk_cell_editable_editing_done (col->editable_widget);
+		if (col->editable_widget)
+		    gtk_cell_editable_remove_widget (col->editable_widget);
+	    }
+	}
+    }
+}
+
+
+void st_select_current_position (gint inst, gint x, gint y)
+{
+    if (inst < prefs_get_sort_tab_num ())
+    {
+	SortTab *st = sorttab[inst];
+	if (st)
+	{
+	    GtkTreePath *path;
+	    GtkTreeView *tv = st->treeview[st->current_category];
+
+	    gtk_tree_view_get_path_at_pos (tv, x, y, &path, NULL, NULL, NULL);
+	    if (path)
+	    {
+		GtkTreeSelection *ts = gtk_tree_view_get_selection (tv);
+		gtk_tree_selection_select_path (ts, path);
+		gtk_tree_path_free (path);
+	    }
+	}
+    }
+}
+
 
 /* Make the appropriate number of sort tab instances visible */
 /* Also: make the menu items "more/less sort tabs" active/inactive as
@@ -1895,15 +1957,16 @@ static void st_create_paned (void)
 }
 
 static gboolean
-st_button_release_event(GtkWidget *w, GdkEventButton *e, gpointer data)
+st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 {
     if(w && e)
     {
 	switch(e->button)
 	{
 	    case 3:
+		st_select_current_position ((gint)data, e->x, e->y);
 		st_context_menu_init((gint)data);
-		break;
+		return TRUE;
 	    default:
 		break;
 	}
@@ -1967,8 +2030,8 @@ static void st_create_listview (gint inst)
 	  gtk_tree_view_set_headers_visible (treeview, FALSE);
 	  gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
 			       st_drag_types, TGNR (st_drag_types), GDK_ACTION_COPY);
-	  g_signal_connect (G_OBJECT (treeview), "button-release-event",
-			    G_CALLBACK (st_button_release_event), GINT_TO_POINTER(inst));
+	  g_signal_connect (G_OBJECT (treeview), "button-press-event",
+			    G_CALLBACK (st_button_press_event), GINT_TO_POINTER(inst));
       }
   }
 }
