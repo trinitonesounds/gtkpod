@@ -308,17 +308,23 @@ gboolean add_song_by_filename (gchar *name)
 	  song->album = filetag->album;
 	  song->album_utf16 = g_utf8_to_utf16 (song->album, -1, NULL, NULL, NULL);
 	}
-      else set_entry_from_filename (song, SM_COLUMN_ALBUM);
       if (filetag->artist)
 	{
 	  song->artist = filetag->artist;
 	  song->artist_utf16 = g_utf8_to_utf16 (song->artist, -1, NULL, NULL, NULL);
 	}
-      else set_entry_from_filename (song, SM_COLUMN_ARTIST);
       if (filetag->title)
 	{
-	  song->title = filetag->title;
-	  song->title_utf16 = g_utf8_to_utf16 (song->title, -1, NULL, NULL, NULL);
+	    if(strlen(filetag->title) > 0)
+	    {
+		song->title = filetag->title;
+		song->title_utf16 = g_utf8_to_utf16 (song->title, -1, NULL,
+			NULL, NULL); 
+	    }
+	    else
+	    {
+		set_entry_from_filename(song, SM_COLUMN_TITLE);
+	    }
 	}
       else set_entry_from_filename (song, SM_COLUMN_TITLE);
       if (filetag->genre)
@@ -752,7 +758,9 @@ void handle_import (void)
 	/*we need to tell the display that the ID has changed */
 	pm_song_changed (song);
     }
+    /*
     gtkpod_songs_statusbar_update();
+    */
     /* setup our md5 hashness for unique files */
     /* if(cfg->md5songs)    done with add_song ();
        unique_file_repository_init(get_song_list()); */
@@ -771,6 +779,7 @@ gboolean write_tags_to_file (Song *song)
     filetag->title = song->title;
     filetag->genre = song->genre;
     filetag->comment = song->comment;
+    filetag->track = g_strdup_printf("%d", song->track_nr);
     if (song->pc_path_locale && strlen (song->pc_path_locale) > 0)
       {
 	if (Id3tag_Write_File_Tag (song->pc_path_locale, filetag) == FALSE)
