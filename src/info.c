@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 16:11:18 jcs>
+/* Time-stamp: <2004-11-14 19:19:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -431,31 +431,37 @@ get_drive_stats_from_df(const gchar *mp)
 
     if (g_file_test (mp, G_FILE_TEST_EXISTS))
     {
-	snprintf(bufc, PATH_MAX, "df -k -P %s", mp);
-	if((fp = popen(bufc, "r")))
+	gchar *df_str = getenv ("GTKPOD_DF_COMMAND");
+	if (df_str == NULL) df_str = "df -k -P";
+	if (strlen (df_str))
 	{
-	    if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
+	    snprintf(bufc, PATH_MAX, "%s %s", df_str, mp);
+	    fp = popen(bufc, "r");
+	    if(fp)
 	    {
-		if((bufp = strchr (buf, '\n')))
+		if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
 		{
-		    int i = 0;
-		    int j = 0;
-		    gchar buf2[PATH_MAX+3];
-		    
-		    ++bufp; /* skip '\n' */
-		    while((i < bytes_read) && (j < PATH_MAX))
+		    if((bufp = strchr (buf, '\n')))
 		    {
-			while(!g_ascii_isspace(bufp[i]) && (j<PATH_MAX))
-			    buf2[j++] = bufp[i++];
-			buf2[j++] = ' ';
-			while(g_ascii_isspace(bufp[i]))
-			    i++;
+			int i = 0;
+			int j = 0;
+			gchar buf2[PATH_MAX+3];
+
+			++bufp; /* skip '\n' */
+			while((i < bytes_read) && (j < PATH_MAX))
+			{
+			    while(!g_ascii_isspace(bufp[i]) && (j<PATH_MAX))
+				buf2[j++] = bufp[i++];
+			    buf2[j++] = ' ';
+			    while(g_ascii_isspace(bufp[i]))
+				i++;
+			}
+			buf2[j] = '\0';
+			result = g_strdup_printf("%s", buf2);
 		    }
-		    buf2[j] = '\0';
-		    result = g_strdup_printf("%s", buf2);
 		}
+		pclose(fp);	
 	    }
-	    pclose(fp);	
 	}
     }
 #if 0

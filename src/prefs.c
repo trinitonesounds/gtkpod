@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-04 23:49:35 jcs>
+/* Time-stamp: <2004-11-14 19:17:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -936,6 +936,8 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
   cfg = cfg_new();
   read_prefs_defaults();
 
+  prefs_set_ipod_mount (getenv("IPOD_MOUNTPOINT"));
+
   while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
     switch(opt)
       {
@@ -1219,7 +1221,7 @@ const gchar *prefs_get_last_dir_browse(void)
 
 void prefs_set_ipod_mount(const gchar *mp)
 {
-    if (!mp) mp = ""; /* make sure we never set a NULL pointer */
+    if (!mp) return; /* ignore NULL pointer */
     if(cfg->ipod_mount) g_free(cfg->ipod_mount);
     /* if new mount point starts with "~/", we replace it with the
        home directory */

@@ -96,6 +96,11 @@ gtkpod V0.82-CVS
 	contains the iPod filename. This allows to find a certain
 	track even on systems not running gtkpod/gnupod/iTunes etc.
 
+	IMPROVEMENT: Some fixes for compilation under solaris. This
+	also led to the introduction of the environment variable
+	"GTKPOD_DF_COMMAND" that can be used to customize the df
+	command called to probe the free space of the iPod.
+
 gtkpod V0.80-2
 	BUGFIX: gtkpod would crash right after startup if the info
 	window was open when stopping gtkpod the previous time.
