@@ -266,8 +266,6 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   GtkTreeModel *model;
   GtkTreeIter  iter;
   Playlist *new_playlist;
-  Song *song;
-  guint32 n,i;
 
 #if DEBUG_TIMING
   GTimeVal time;
@@ -291,22 +289,23 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       st_init (-1, 0);
 
       current_playlist = new_playlist;
-      n = get_nr_of_songs_in_playlist (new_playlist);
-      if (n > 0)
+      if (new_playlist->members)
       {
 	  GTimeVal time;
 	  float max_count = REFRESH_INIT_COUNT;
 	  gint count = max_count - 1;
 	  float ms;
+	  GList *gl;
+
 	  if (!prefs_get_block_display ())
 	  {
 	      block_selection (-1);
 	      g_get_current_time (&time);
 	  }
-	  for (i=0; i<n; ++i)
+	  for (gl=new_playlist->members; gl; gl=gl->next)
 	  { /* add all songs to sort tab 0 */
+	      Song *song = gl->data;
 	      if (stop_add == -1)  break;
-	      song = get_song_in_playlist_by_nr (new_playlist, i);
 	      st_add_song (song, FALSE, TRUE, 0);
 	      --count;
 	      if ((count < 0) && !prefs_get_block_display ())

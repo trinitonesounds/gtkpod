@@ -74,9 +74,48 @@ static void sp_remove_all_members (guint32 inst)
  * Return value:  TRUE: satisfies, FALSE: does not satisfy */
 static gboolean sp_check_song (Song *song, guint32 inst)
 {
+    gboolean sp_or = prefs_get_sp_or (inst);
+    gboolean result, cond, checked=FALSE;
+
     if (!song) return FALSE;
-    /* SP FIXME!!! */
-    return TRUE;
+
+    /* Initial state depends on logical operation */
+    if (sp_or) result = FALSE;  /* OR  */
+    else       result = TRUE;   /* AND */
+
+    /* RATING */
+    if (prefs_get_sp_cond (inst, S_RATING))
+    {
+	/* checked = TRUE: at least one condition was checked */
+	checked = TRUE;
+	cond = prefs_get_sp_rating_n (inst, song->rating/20);
+	/* If one of the two combinations occur, we can take a
+	   shortcut and stop checking the other conditions */
+	if (sp_or && cond)       return TRUE;
+	if ((!sp_or) && (!cond)) return FALSE;
+	/* We don't have to calculate a new 'result' value because for
+	   the other two combinations it does not change */
+    }
+
+    /* PLAYCOUNT */
+    if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
+    {
+	checked = TRUE;
+	guint32 low = prefs_get_sp_playcount_low (inst);
+	/* "-1" will translate into about 4 billion because I use
+	   guint32 instead of gint32. Since 4 billion means "no upper
+	   limit" the logic works fine */
+	guint32 high = prefs_get_sp_playcount_high (inst);
+	if ((low <= song->playcount) && (song->playcount <= high))
+	    cond = TRUE;
+	else
+	    cond = FALSE;
+	if (sp_or && cond)       return TRUE;
+	if ((!sp_or) && (!cond)) return FALSE;
+    }
+    /* SP FIXME: date functions */
+    if (checked) return result;
+    else         return FALSE;
 }
 
 
@@ -92,7 +131,12 @@ static void st_add_song_special (Song *song, gboolean final,
     st = sorttab[inst];
 
     /* Sanity */
+    if (!st)  return;
+
+    /* Sanity */
     if (st->current_category != ST_CAT_SPECIAL) return;
+
+    st->final = final;
 
     if (song != NULL)
     {
@@ -113,7 +157,81 @@ static void st_add_song_special (Song *song, gboolean final,
 }
 
 
-/* FIXME: this will have to become a callback function */
+/* Callback for sp_go() */
+static void sp_go_cb (gpointer user_data1, gpointer user_data2)
+{
+    guint32 inst = (guint32)user_data1;
+    SortTab *st = sorttab[inst];
+
+#if DEBUG_TIMING
+    GTimeVal time;
+    g_get_current_time (&time);
+    printf ("sp_go_cb enter: %ld.%06ld sec\n",
+	    time.tv_sec % 3600, time.tv_usec);
+#endif
+
+    /* Sanity */
+    if (st == NULL) return;
+
+    /* remember that "Display" was already pressed */
+    st->is_go = TRUE;
+
+    /* initialize next instance */
+    st_init (-1, inst+1);
+
+    if (st->members)
+    {
+	GTimeVal time;
+	float max_count = REFRESH_INIT_COUNT;
+	gint count = max_count - 1;
+	float ms;
+	GList *gl;
+
+	if (!prefs_get_block_display ())
+	{
+	    block_selection (inst);
+	    g_get_current_time (&time);
+	}
+	for (gl=st->members; gl; gl=gl->next)
+	{ /* add all member songs to next instance */
+	    Song *song = (Song *)gl->data;
+	    if (stop_add <= (gint)inst) break;
+	    if (sp_check_song (song, inst))
+		st_add_song (song, FALSE, TRUE, inst+1);
+	    --count;
+	    if ((count < 0) && !prefs_get_block_display ())
+	    {
+		gtkpod_songs_statusbar_update();
+		while (gtk_events_pending ())       gtk_main_iteration ();
+		ms = get_ms_since (&time, TRUE);
+		/* first time takes significantly longer, so we adjust
+		   the max_count */
+		if (max_count == REFRESH_INIT_COUNT) max_count *= 2.5;
+		/* average the new and the old max_count */
+		max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
+		count = max_count - 1;
+#if DEBUG_TIMING
+		printf("st_s_c ms: %f mc: %f\n", ms, max_count);
+#endif
+	    }
+	}
+	if (stop_add > (gint)inst)
+	    st_add_song (NULL, TRUE, st->final, inst+1);
+	if (!prefs_get_block_display ())
+	{
+	    while (gtk_events_pending ())	  gtk_main_iteration ();
+	    release_selection (inst);
+	}
+    }
+    gtkpod_songs_statusbar_update();
+#if DEBUG_TIMING
+    g_get_current_time (&time);
+    printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
+	    time.tv_sec % 3600, time.tv_usec);
+#endif
+}
+
+
 /* display the members satisfying the conditions specified in the
  * special sort tab of instance @inst */
 void sp_go (guint32 inst)
@@ -131,23 +249,11 @@ void sp_go (guint32 inst)
     /* check if members are already displayed */
     if (st->is_go || prefs_get_sp_autodisplay (inst))  return;
 
-    /* just to be sure the display is all right */
-    st_init (-1, inst+1);
-
-    /* remember that "Display" was already pressed */
-    st->is_go = TRUE;
-
-    if (st->members)
-    {
-	GList *gl;
-	for (gl=st->members; gl; gl=gl->next)
-	{
-	    Song *song = gl->data;
-	    if (sp_check_song (song, inst))
-		st_add_song (song, FALSE, TRUE, inst+1);
-	}
-	st_add_song (NULL, TRUE, TRUE, inst+1);
-    }
+    /* Instead of handling the selection directly, we add a
+       "callback". Currently running display updates will be stopped
+       before the sp_go_cb is actually called */
+    add_selection_callback (inst, sp_go_cb,
+			    (gpointer)inst, NULL);
 }
     
 
@@ -983,8 +1089,6 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   guint32 inst;
   GList *copy = NULL;
   SortTab *st;
-  gint i,n;
-  Song *song;
   Playlist *current_playlist = pm_get_selected_playlist ();
 
 #if DEBUG_TIMING
@@ -1017,13 +1121,13 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
       if (sorttab[inst-1] && sorttab[inst-1]->current_entry)
 	  copy = sorttab[inst-1]->current_entry->members;
   }
-  n = g_list_length (copy);
-  if (n > 0)
+  if (copy)
   {
       GTimeVal time;
       float max_count = REFRESH_INIT_COUNT;
       gint count = max_count - 1;
       float ms;
+      GList *gl;
       /* block playlist view and all sort tab notebooks <= inst */
       if (!prefs_get_block_display ())
       {
@@ -1031,10 +1135,10 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 	  g_get_current_time (&time);
       }
       /* add all songs previously present to sort tab */
-      for (i=0; i<n; ++i)
+      for (gl=copy; gl; gl=gl->next)
       {
+	  Song *song = gl->data;
 	  if (stop_add < (gint)inst)  break;
-	  song = (Song *)g_list_nth_data (copy, i);
 	  st_add_song (song, FALSE, TRUE, inst);
 	  --count;
 	  if ((count < 0) && !prefs_get_block_display ())
@@ -1053,7 +1157,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	  }
       }
-      if (n && (stop_add >= (gint)inst))
+      if (stop_add >= (gint)inst)
       {
 	  gboolean final = TRUE;  /* playlist is always complete */
 	  /* if playlist is not source, get final flag from
@@ -1139,9 +1243,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   GtkTreeModel *model;
   GtkTreeIter  iter;
   TabEntry *new_entry;
-  Song *song;
   SortTab *st;
-  guint32 n,i;
 
 #if DEBUG_TIMING
   GTimeVal time;
@@ -1186,22 +1288,22 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       }
       st->unselected = FALSE;
 
-      n = g_list_length (new_entry->members); /* number of members */
-      if (n > 0)
+      if (new_entry->members)
       {
 	  GTimeVal time;
 	  float max_count = REFRESH_INIT_COUNT;
 	  gint count = max_count - 1;
 	  float ms;
+	  GList *gl;
 	  if (!prefs_get_block_display ())
 	  {
 	      block_selection (inst);
 	      g_get_current_time (&time);
 	  }
-	  for (i=0; i<n; ++i)
+	  for (gl=new_entry->members; gl; gl=gl->next)
 	  { /* add all member songs to next instance */
+	      Song *song = gl->data;
 	      if (stop_add <= (gint)inst) break;
-	      song = (Song *)g_list_nth_data (new_entry->members, i);
 	      st_add_song (song, FALSE, TRUE, inst+1);
 	      --count;
 	      if ((count < 0) && !prefs_get_block_display ())
@@ -1220,7 +1322,8 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	      }
 	  }
-	  if (stop_add > (gint)inst)  st_add_song (NULL, TRUE, st->final, inst+1);
+	  if (stop_add > (gint)inst)
+	      st_add_song (NULL, TRUE, st->final, inst+1);
 	  if (!prefs_get_block_display ())
 	  {
 	      while (gtk_events_pending ())	  gtk_main_iteration ();
@@ -1681,6 +1784,8 @@ static void st_create_special (gint inst, GtkWidget *window)
       
       /* PLAYED */
       w = lookup_widget (special, "sp_played_button");
+      /* NOT YET IMPLEMENTED */
+      gtk_widget_set_sensitive (w, FALSE);
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			(gpointer)((S_TIME_PLAYED<<SP_SHIFT) + inst));
@@ -1697,6 +1802,8 @@ static void st_create_special (gint inst, GtkWidget *window)
 
       /* MODIFIED */
       w = lookup_widget (special, "sp_modified_button");
+      /* NOT YET IMPLEMENTED */
+      gtk_widget_set_sensitive (w, FALSE);
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
@@ -1713,6 +1820,8 @@ static void st_create_special (gint inst, GtkWidget *window)
 
       /* CREATED */
       w = lookup_widget (special, "sp_created_button");
+      /* NOT YET IMPLEMENTED */
+      gtk_widget_set_sensitive (w, FALSE);
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			(gpointer)((S_TIME_CREATE<<SP_SHIFT) + inst));
