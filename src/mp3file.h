@@ -53,7 +53,6 @@
 #define MIN_FRAME_SIZE 21
 
 enum VBR_REPORT { VBR_VARIABLE, VBR_AVERAGE, VBR_MEDIAN };
-enum SCANTYPE { SCAN_NONE, SCAN_QUICK, SCAN_FULL };
 
 typedef struct {
     gulong sync;

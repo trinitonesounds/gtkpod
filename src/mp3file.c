@@ -50,7 +50,7 @@ gint frame_length(mp3header *header);
 gint sameConstant(mp3header *h1, mp3header *h2);
 gint get_first_header(mp3info *mp3,long startpos);
 gint get_next_header(mp3info *mp3);
-gint get_mp3_info(mp3info *mp3,gint scantype, gint fullscan_vbr);
+void get_mp3_info(mp3info *mp3);
 
 int layer_tab[4]= {0, 3, 2, 1};
 
@@ -86,9 +86,8 @@ gchar *emphasis_text[] = {
 };
 
 
-gint get_mp3_info(mp3info *mp3,gint scantype, gint fullscan_vbr)
+void get_mp3_info(mp3info *mp3)
 {
-  gint had_error = 0;
   gint frame_type[15]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   float milliseconds=0,total_rate=0;
   gint frames=0,frame_types=0,frames_so_far=0;
@@ -103,36 +102,33 @@ gint get_mp3_info(mp3info *mp3,gint scantype, gint fullscan_vbr)
   stat(mp3->filename,&filestat);
   mp3->datasize=filestat.st_size;
 
-  if(scantype == SCAN_FULL) {
-  	if(get_first_header(mp3,0L)) {
-		data_start=ftell(mp3->file);
-		while((bitrate=get_next_header(mp3))) {
-			frame_type[15-bitrate]++;
-			frames++;
-		}
-		memcpy(&header,&(mp3->header),sizeof(mp3header));
-		for(counter=0;counter<15;counter++) {
-			if(frame_type[counter]) {
-				frame_types++;
-				header.bitrate=counter;
-				frames_so_far += frame_type[counter];
-				milliseconds += (float)(8*frame_length(&header)*frame_type[counter])/
-				           (float)(mp3file_header_bitrate(&header));
-				total_rate += (float)((mp3file_header_bitrate(&header))*frame_type[counter]);
-				if((vbr_median == -1) && (frames_so_far >= frames/2))
-					vbr_median=counter;
-			}
-		}
-		mp3->milliseconds=(gint)(milliseconds+0.5);
-		mp3->header.bitrate=vbr_median;
-		mp3->vbr_average=total_rate/(float)frames;
-		mp3->frames=frames;
-		if(frame_types > 1) {
-			mp3->vbr=1;
-		}
-	}
+  if(get_first_header(mp3,0L)) {
+      data_start=ftell(mp3->file);
+      while((bitrate=get_next_header(mp3))) {
+	  frame_type[15-bitrate]++;
+	  frames++;
+      }
+      memcpy(&header,&(mp3->header),sizeof(mp3header));
+      for(counter=0;counter<15;counter++) {
+	  if(frame_type[counter]) {
+	      frame_types++;
+	      header.bitrate=counter;
+	      frames_so_far += frame_type[counter];
+	      milliseconds += (float)(8*frame_length(&header)*frame_type[counter])/
+		  (float)(mp3file_header_bitrate(&header));
+	      total_rate += (float)((mp3file_header_bitrate(&header))*frame_type[counter]);
+	      if((vbr_median == -1) && (frames_so_far >= frames/2))
+		  vbr_median=counter;
+	  }
+      }
+      mp3->milliseconds=(gint)(milliseconds+0.5);
+      mp3->header.bitrate=vbr_median;
+      mp3->vbr_average=total_rate/(float)frames;
+      mp3->frames=frames;
+      if(frame_types > 1) {
+	  mp3->vbr=1;
+      }
   }
-  return had_error;
 }
 
 
@@ -288,8 +284,8 @@ mp3info *mp3file_get_info (gchar *filename)
 	mp3 = g_malloc0 (sizeof (mp3info));
 	mp3->filename=filename;
 	mp3->file=fp;
-	get_mp3_info(mp3,SCAN_FULL,TRUE);
-	fclose(fp);
+	get_mp3_info (mp3);
+	fclose (fp);
     }
     return mp3;
 }

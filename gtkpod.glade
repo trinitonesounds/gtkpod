@@ -1016,6 +1016,7 @@
 	<widget class="GtkHPaned" id="paned2">
 	  <property name="visible">True</property>
 	  <property name="can_focus">True</property>
+	  <property name="position">0</property>
 
 	  <child>
 	    <widget class="GtkStatusbar" id="gtkpod_status">
@@ -1033,10 +1034,10 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkHBox" id="hbox13">
+	    <widget class="GtkHPaned" id="paned3">
 	      <property name="visible">True</property>
-	      <property name="homogeneous">False</property>
-	      <property name="spacing">0</property>
+	      <property name="can_focus">True</property>
+	      <property name="position">0</property>
 
 	      <child>
 		<widget class="GtkStatusbar" id="space_statusbar">
@@ -1048,9 +1049,8 @@
 		  <signal name="realize" handler="on_space_statusbar_realize" last_modification_time="Fri, 28 Mar 2003 01:16:42 GMT"/>
 		</widget>
 		<packing>
-		  <property name="padding">0</property>
-		  <property name="expand">True</property>
-		  <property name="fill">True</property>
+		  <property name="shrink">True</property>
+		  <property name="resize">False</property>
 		</packing>
 	      </child>
 
@@ -1064,15 +1064,14 @@
 		  <signal name="realize" handler="on_songs_statusbar_realize" last_modification_time="Mon, 20 Jan 2003 03:18:33 GMT"/>
 		</widget>
 		<packing>
-		  <property name="padding">0</property>
-		  <property name="expand">True</property>
-		  <property name="fill">True</property>
+		  <property name="shrink">True</property>
+		  <property name="resize">True</property>
 		</packing>
 	      </child>
 	    </widget>
 	    <packing>
 	      <property name="shrink">True</property>
-	      <property name="resize">False</property>
+	      <property name="resize">True</property>
 	    </packing>
 	  </child>
 	</widget>

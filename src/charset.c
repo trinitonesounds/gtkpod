@@ -157,9 +157,11 @@ void charset_init_combo (GtkCombo *combo)
 	    charsets = g_list_append (charsets, _(ci->descr));
 	    ++ci;
 	}
-	/* let's add all available charsets returned by "iconv
-	   --list" */
-	fp = popen ("iconv --list", "r");
+	/* let's add all available charsets returned by "iconv -l" */
+	/* The code assumes that "iconv -l" returns a list with the
+	   name of one charset in each line, each valid line being
+	   terminated by "//".  */
+	fp = popen ("iconv -l", "r");
 	if (fp)
 	{
 	    gchar buf[PATH_MAX];

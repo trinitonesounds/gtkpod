@@ -1,11 +1,6 @@
-gtkpod V0.51-CVS
+gtkpod V0.51
 	NEW FEATURE: Synchronize directories (removed songs can be deleted
 	automatically).
-
-        IMPROVEMENT: added all supported charsets provided by "iconv
-	--list" to the list of charsets to choose from. Code assumes that
-	"iconv --list" returns a list with the name of one charset in each
-	line, each valid line being terminated by "//".
 
 	NEW FEATURE: gtkpod remembers charset used when initially
 	importing a song and uses this when "updating" the song
@@ -17,8 +12,19 @@ gtkpod V0.51-CVS
 	NEW FEATURE: menu item "Arrange Sort Tabs" to make all visible
 	sort tabs the same size
 
+        IMPROVEMENT: gtkpod should now compile "out of the box" under
+	FreeBSD and NetBSD (some adaptions were necessary before).
+
+        IMPROVEMENT: added all supported charsets provided by "iconv
+	-l" to the list of charsets to choose from. Code assumes that
+	"iconv -l" returns a list with the name of one charset in each
+	line, each valid line being terminated by "//".
+
 	IMPROVEMENT: new song column types: file size, play time,
 	avg. bitrate
+
+	BUGFIX: changed playlength code to that used by mp3info. It's much
+	slower but seems to be more reliable.
 
 	BUGFIX: fixed "dead" context menu "Alphabetize"
 

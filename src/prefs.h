@@ -90,6 +90,7 @@ struct cfg
   gchar *play_now_path;         /* path for 'Play Now' */
   gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
   gboolean automount;		/* whether we should mount/unmount the ipod */
+  float version;                /* version of gtkpod writing the cfg file */
 };
 
 /* FIXME: make the global struct obsolete! */

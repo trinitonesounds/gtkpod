@@ -54,7 +54,8 @@ typedef enum {
 enum {
     PANED_PLAYLIST = 0,
     PANED_SONGLIST,
-    PANED_STATUS,
+    PANED_STATUS1,
+    PANED_STATUS2,
     PANED_NUM_GLADE
 };
 /* Number created in display.c (for sort tabs, stored in st_paned[]) */

@@ -249,7 +249,11 @@ read_prefs_from_file_desc(FILE *fp)
 	  if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
 	  /* skip whitespace */
 	  while (g_ascii_isspace(*arg)) ++arg;
-	  if(g_ascii_strcasecmp (line, "mountpoint") == 0)
+	  if(g_ascii_strcasecmp (line, "version") == 0)
+	  {
+	      cfg->version = g_ascii_strtod (arg, NULL);
+	  }
+	  else if(g_ascii_strcasecmp (line, "mountpoint") == 0)
 	  {
 	      prefs_set_mount_point (arg);
 	  }
@@ -339,9 +343,9 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+9);
 	      prefs_set_col_order (i, atoi (arg));
 	  }      
-	  else if(g_ascii_strncasecmp (line, "paned_pos", 9) == 0)
+	  else if(g_ascii_strncasecmp (line, "paned_pos_", 10) == 0)
 	  {
-	      gint i = atoi (line+9);
+	      gint i = atoi (line+10);
 	      prefs_set_paned_pos (i, atoi (arg));
 	  }      
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
@@ -504,13 +508,37 @@ read_prefs_defaults(void)
       }
   }
   C_FREE (cfgdir);
+  /* handle version changes in prefs */
+  if (cfg->version == 0.0)
+  {
+      /* most likely prefs file written by V0.50 */
+      /* I added two new PANED elements since V0.50 --> shift */
+      gint i;
+      for (i=PANED_NUM_ST-1; i>=0; --i)
+      {
+	  prefs_set_paned_pos (PANED_NUM_GLADE + i,
+			       prefs_get_paned_pos (PANED_NUM_GLADE + i - 2));
+      }
+      prefs_set_paned_pos (PANED_STATUS1, -1);
+      prefs_set_paned_pos (PANED_STATUS2, -1);
+  }
+  /* ... */
   /* set statusbar paned to a decent value if unset */
-  if (prefs_get_paned_pos (PANED_STATUS) == -1)
+  if (prefs_get_paned_pos (PANED_STATUS1) == -1)
   {
       gint x,y;
       prefs_get_size_gtkpod (&x, &y);
-      /* set to about 3/4 of the window width */
-      if (x>0)   prefs_set_paned_pos (PANED_STATUS, 22*x/30);
+      /* set to about 2/3 of the window width */
+      if (x>0)   prefs_set_paned_pos (PANED_STATUS1, 20*x/30);
+  }
+  /* set statusbar paned to a decent value if unset */
+  if (prefs_get_paned_pos (PANED_STATUS2) == -1)
+  {
+      gint x,y,p;
+      prefs_get_size_gtkpod (&x, &y);
+      p = prefs_get_paned_pos (PANED_STATUS1);
+      /* set to about half of the remaining window */
+      if (x>0)   prefs_set_paned_pos (PANED_STATUS2, (x-p)/2 );
   }
 }
 
@@ -590,6 +618,7 @@ write_prefs_to_file_desc(FILE *fp)
     /* update order of song view columns */
     sm_store_col_order ();
 
+    fprintf(fp, "version=%s\n", VERSION);
     fprintf(fp, "mountpoint=%s\n", cfg->ipod_mount);
     fprintf(fp, "play_now_path=%s\n", cfg->play_now_path);
     fprintf(fp, "play_enqueue_path=%s\n", cfg->play_enqueue_path);
@@ -632,7 +661,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# position of sliders (paned): playlists, above songs,\n# between sort tabs, and in statusbar.\n"));
     for (i=0; i<PANED_NUM; ++i)
     {
-	fprintf(fp, "paned_pos%d=%d\n", i, prefs_get_paned_pos (i));
+	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
     }
     fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());

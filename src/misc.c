@@ -302,7 +302,7 @@ You should have received a copy of the GNU General Public License along with thi
 The code handling the reading and writing of the iTunesDB was ported from mktunes.pl of the gnuPod package written by Adrian Ulrich (http://www.gnu.org/software/gnupod/). Adrian Ulrich ported the playlist part.\n\
 \n\
 This program borrows code from the following projects:\n\
-    mp3info: mp3 playlength detection\n\
+    mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)\n\
     xmms:    dirbrowser, mp3 playlength detection (http://www.xmms.org)\n\
     easytag: reading and writing of ID3 tags (http://easytag.sourceforge.net)\n\
 \n\
@@ -1682,7 +1682,7 @@ get_drive_stats_from_df(const gchar *mp)
     gchar *result = NULL;
     guint bytes_read = 0;
 
-    snprintf(buf, PATH_MAX, "df -B1 | grep %s", mp);
+    snprintf(buf, PATH_MAX, "df -k | grep %s", mp);
     if((fp = popen(buf, "r")))
     {
 	if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
@@ -1744,7 +1744,7 @@ get_ipod_used_space(void)
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
 	    if(tokens[2]) 
-		result = atol(tokens[2]);
+		result = atol(tokens[2]) * 1024;
 	    g_strfreev(tokens);
 	}
     }
@@ -1763,7 +1763,7 @@ get_ipod_free_space(void)
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
 	    if(tokens[3]) 
-		result = atol(tokens[3]);
+		result = atol(tokens[3]) * 1024;
 	    g_strfreev(tokens);
 	}
     }
