@@ -606,6 +606,11 @@ gboolean itunesdb_parse_file (gchar *filename)
 	  if (cmp_n_bytes (data, "mhlt", 4) == TRUE)
 	  { /* mhlt header -> number of songs */
 	      nr_songs = get4int (itunes, seek+8);
+	      if (nr_songs == 0)
+	      {   /* no songs -- skip directly to next mhsd */
+		  result = TRUE;
+		  break;
+	      }
 	  }
 	  if (cmp_n_bytes (data, "mhit", 4) == TRUE)
 	  { /* mhit header -> start of songs*/
@@ -621,7 +626,7 @@ gboolean itunesdb_parse_file (gchar *filename)
       /* now we should be at the first MHIT */
 
       /* get every file entry */
-      while(seek != -1) {
+      if (nr_songs)  while(seek != -1) {
 	  /* get_nod_a returns where it's guessing the next MHIT,
 	     if it fails, it returns '-1' */
 	  seek = get_nod_a(itunes, seek);

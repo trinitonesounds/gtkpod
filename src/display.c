@@ -1683,8 +1683,76 @@ gint st_data_compare_func (GtkTreeModel *model,
 }
 
 
+/* Make the appropriate number of sort tab instances visible */
+void st_show_visible (void)
+{
+    static gboolean active=FALSE;
+    gint i,n;
+
+    if (!st_paned[0] || active)  return;
+
+    /* indicate that we are currently using this function (we get
+     * called again when we call prefs_set_sort_tab_num()... */
+    active = TRUE;
+
+    /* first initialize (clear) all sorttabs */
+    n = prefs_get_sort_tab_num ();
+    prefs_set_sort_tab_num (SORT_TAB_MAX);
+    st_init (-1, 0);
+    prefs_set_sort_tab_num (n);
+
+    /* set the visible elements */
+    for (i=0; i<n; ++i)
+    {
+	gtk_widget_show (GTK_WIDGET (sorttab[i]->notebook));
+	if (i < PANED_NUM_ST)	gtk_widget_show (GTK_WIDGET (st_paned[i]));
+    }
+    /* set the invisible elements */
+    for (i=n; i<SORT_TAB_MAX; ++i)
+    {
+	gtk_widget_hide (GTK_WIDGET (sorttab[i]->notebook));
+	if (i < PANED_NUM_ST)	gtk_widget_hide (GTK_WIDGET (st_paned[i]));
+    }
+
+    /* redisplay */
+    st_redisplay (0);
+
+    /* finished */
+    active = FALSE;
+}
+
+
+/* Created paned elements for sorttabs */
+static void st_create_paned (void)
+{
+    gint i;
+
+    /* sanity check */
+    if (st_paned[0])  return;
+
+    for (i=0; i<PANED_NUM_ST; ++i)
+    {
+	GtkWidget *paned;
+
+	paned = gtk_hpaned_new ();
+	gtk_widget_show (paned);
+ 	if (i==0)
+	{
+	    GtkWidget *parent;
+	    parent = lookup_widget (gtkpod_window, "paned1");
+	    gtk_paned_pack1 (GTK_PANED (parent), paned, TRUE, TRUE);
+	}
+	else
+	{
+	    gtk_paned_pack2 (st_paned[i-1], paned, TRUE, TRUE);
+	}
+	st_paned[i] = GTK_PANED (paned);
+    }
+}
+
+
 /* Create songs listview */
-static void st_create_listview (GtkWidget *gtkpod, gint inst)
+static void st_create_listview (gint inst)
 {
   GtkTreeViewColumn *column;
   GtkCellRenderer *renderer;
@@ -1693,15 +1761,20 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
   GtkTreeView *treeview;
   GtkTreeSelection *selection;
   gint i;
+  SortTab *st = sorttab[inst];
 
   /* create model */
+  if (st->model)
+  {
+      /* FIXME: how do we delete the model? */
+  }
   liststore = gtk_list_store_new (ST_NUM_COLUMNS, G_TYPE_POINTER);
   model = GTK_TREE_MODEL (liststore);
-  sorttab[inst]->model = model;
-  /* set tree view */
+  st->model = model;
+  /* set tree views */
   for (i=0; i<ST_CAT_NUM; ++i)
     {
-      treeview = sorttab[inst]->treeview[i];
+      treeview = st->treeview[i];
       gtk_tree_view_set_model (treeview, model);
       gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
       gtk_tree_selection_set_mode (gtk_tree_view_get_selection (treeview),
@@ -1804,73 +1877,17 @@ static void st_create_treeview (gint inst, ST_CAT_item st_cat)
 }
 
 
-
-/* Make the appropriate number of sort tab instances visible */
-void st_show_visible (void)
+/* create all ST_CAT_NUM treeviews in sort tab of instance @inst, then
+ * set the model */
+static void st_create_treeviews (gint inst)
 {
-    static gboolean active=FALSE;
-    gint i,n;
-
-    if (!st_paned[0] || active)  return;
-
-    /* indicate that we are currently using this function (we get
-     * called again when we call prefs_set_sort_tab_num()... */
-    active = TRUE;
-
-    /* first initialize (clear) all sorttabs */
-    n = prefs_get_sort_tab_num ();
-    prefs_set_sort_tab_num (SORT_TAB_MAX);
-    st_init (-1, 0);
-    prefs_set_sort_tab_num (n);
-
-    /* set the visible elements */
-    for (i=0; i<n; ++i)
-    {
-	gtk_widget_show (GTK_WIDGET (sorttab[i]->notebook));
-	if (i < PANED_NUM_ST)	gtk_widget_show (GTK_WIDGET (st_paned[i]));
-    }
-    /* set the invisible elements */
-    for (i=n; i<SORT_TAB_MAX; ++i)
-    {
-	gtk_widget_hide (GTK_WIDGET (sorttab[i]->notebook));
-	if (i < PANED_NUM_ST)	gtk_widget_hide (GTK_WIDGET (st_paned[i]));
-    }
-
-    /* redisplay */
-    st_redisplay (0);
-
-    /* finished */
-    active = FALSE;
-}
-
-
-/* Created paned elements for sorttabs */
-static void st_create_paned (void)
-{
-    gint i;
-
-    /* sanity check */
-    if (st_paned[0])  return;
-
-    for (i=0; i<PANED_NUM_ST; ++i)
-    {
-	GtkWidget *paned;
-
-	paned = gtk_hpaned_new ();
-	gtk_widget_show (paned);
- 	if (i==0)
-	{
-	    GtkWidget *parent;
-	    parent = lookup_widget (gtkpod_window, "paned1");
-	    gtk_paned_pack1 (GTK_PANED (parent), paned, TRUE, TRUE);
-	}
-	else
-	{
-	    gtk_paned_pack2 (st_paned[i-1], paned, TRUE, TRUE);
-	}
-	st_paned[i] = GTK_PANED (paned);
-    }
-}
+  st_create_treeview (inst, ST_CAT_ARTIST);
+  st_create_treeview (inst, ST_CAT_ALBUM);
+  st_create_treeview (inst, ST_CAT_GENRE);
+  st_create_treeview (inst, ST_CAT_COMPOSER);
+  st_create_treeview (inst, ST_CAT_TITLE);
+  st_create_listview (inst);
+}  
 
 
 /* Create notebook and fill in sorttab[@inst] */
@@ -1903,12 +1920,7 @@ static void st_create_notebook (gint inst)
                     NULL);
 
   st->notebook = GTK_NOTEBOOK (st0_notebook);
-
-  st_create_treeview (inst, ST_CAT_ARTIST);
-  st_create_treeview (inst, ST_CAT_ALBUM);
-  st_create_treeview (inst, ST_CAT_GENRE);
-  st_create_treeview (inst, ST_CAT_COMPOSER);
-  st_create_treeview (inst, ST_CAT_TITLE);
+  st_create_treeviews (inst);
 }
 
 
@@ -1927,7 +1939,6 @@ static void st_create_tabs (GtkWidget *gtkpod)
 /*       sorttab[inst]->notebook = GTK_NOTEBOOK (lookup_widget (gtkpod, name)); */
 /*       g_free (name); */
       st_create_notebook (inst);
-      st_create_listview (gtkpod, inst);
       page = prefs_get_st_category (inst);
       gtk_notebook_set_current_page (sorttab[inst]->notebook, page);
       st_init (page, inst);
@@ -2371,6 +2382,57 @@ sm_rows_reordered_callback(void)
     }
 }
 
+
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))
+/* gtk_list_store_move_*() was introduced in 2.2, so we have to
+ * emulate for 2.0 <= V < 2.2 (we require at least 2.0 anyway) */
+static void sm_list_store_move (GtkListStore *store,
+				 GtkTreeIter  *iter,
+				 GtkTreeIter  *position,
+				 gboolean     before)
+{
+    GtkTreeIter new_iter;
+    Song *song = NULL;
+    GtkTreeModel *model;
+
+    /* insert new row before or after @position */
+    if (before)  gtk_list_store_insert_before (store, &new_iter, position);
+    else         gtk_list_store_insert_after (store, &new_iter, position);
+
+    model = gtk_tree_view_get_model (song_treeview);
+
+    /* get the content (song) of the row to move */
+    gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &song, -1);
+    /* remove the old row */
+    gtk_list_store_remove (GTK_LIST_STORE (model), iter);
+
+    /* set the content of the new row */
+    sm_add_song_to_song_model (song, &new_iter);
+}
+
+
+static void  sm_list_store_move_before (GtkListStore *store,
+					 GtkTreeIter  *iter,
+					 GtkTreeIter  *position)
+{
+    sm_list_store_move (store, iter, position, TRUE);
+}
+
+
+static void  sm_list_store_move_after (GtkListStore *store,
+					GtkTreeIter  *iter,
+					GtkTreeIter  *position)
+{
+    sm_list_store_move (store, iter, position, FALSE);
+}
+#else
+/* starting V2.2 convenient gtk functions exist */
+#define sm_list_store_move_before gtk_list_store_move_before
+#define sm_list_store_move_after gtk_list_store_move_after
+#endif
+
+
+
 /* Move the paths listed in @data before or after (according to @pos)
    @path. Used for DND */
 static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
@@ -2415,7 +2477,7 @@ static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	{
 	    link = g_list_last (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
-	    gtk_list_store_move_after (GTK_LIST_STORE (model),
+	    sm_list_store_move_after (GTK_LIST_STORE (model),
 				       from_iter, &to_iter);
 	    iterlist = g_list_remove_link (iterlist, link);
 	    g_free (from_iter);
@@ -2426,7 +2488,7 @@ static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	{
 	    link = g_list_first (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
-	    gtk_list_store_move_before (GTK_LIST_STORE (model),
+	    sm_list_store_move_before (GTK_LIST_STORE (model),
 					from_iter, &to_iter);
 	    iterlist = g_list_remove_link (iterlist, link);
 	    g_free (from_iter);
