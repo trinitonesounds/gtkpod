@@ -31,21 +31,48 @@
 #include "song.h"
 #include <stdio.h>
 
+/**
+ * FIXME: Internationalize?
+ */
 static gchar *messages[] = {
     "Are you sure you want to delete "
 };
 
+/**
+ * FIXME: Internationalize?
+ */
 static gchar *titles[] = {
     "Delete Playlist?",
     "Delete Song Completely?",
     "Delete Song From Playlist?",
 };
 
-static GtkWidget *confirmation_window = NULL;
+/**
+ * confirmation_type - the type of the current delete window in context
+ */
 static int confirmation_type = 0;
+/**
+ * selected_songs - A list of (Song*) that are references to the currently
+ * selected songs from the playlist
+ */
 static GList *selected_songs = NULL;
+/**
+ * selected_playlist - A references to a Playlist that is currently the
+ * selected playlist in the display model
+ */
 static Playlist *selected_playlist = NULL;
 
+/**
+ * confirmation_window - handle for the window widget
+ */
+static GtkWidget *confirmation_window = NULL;
+
+/**
+ * get_current_selected_playlist - Communicates with the display model to
+ * get the title of the playlist currently being displayed by the interface.
+ * Returns - an allocated string with the playlist's name, you must free
+ * this.
+ */ 
 static gchar *
 get_current_selected_playlist_name(void)
 {
@@ -60,6 +87,10 @@ get_current_selected_playlist_name(void)
     return(result);
 }
 
+/**
+ * get_current_selected_song_name - communicates with the display model and
+ * queries the interface to return the song(s) name(s) that are selected
+ */
 static gchar *
 get_current_selected_song_name(void)
 {
@@ -86,6 +117,11 @@ get_current_selected_song_name(void)
     return(result);
 }
 
+/**
+ * confirmation_window_cleanup - cleanup any structures used by this
+ * subsystem.
+ */
+
 static void
 confirmation_window_cleanup(void)
 {
@@ -103,6 +139,10 @@ confirmation_window_cleanup(void)
 
 }
 
+/**
+ * create_ipod_song_deleteion_interface - create a dialog window to delete
+ * all traces of an mp3 on your system.
+ */
 static void
 create_ipod_song_deletion_interface(void)
 {
@@ -121,6 +161,13 @@ create_ipod_song_deletion_interface(void)
     gtk_widget_show(confirmation_window);
 }
 
+/**
+ * create_playlist_song_deletion_interface - build the custom delete
+ * interface for a "delete song from playlist X" request.  X being any
+ * playlist on the ipod except for the master playlist.
+ * @pl_name - the name of the playlist so it can be displayed in the delete
+ * dialog
+ */
 static void
 create_playlist_song_deletion_interface(const gchar *pl_name)
 {
@@ -154,6 +201,14 @@ create_playlist_deletion_interface(const gchar *pl_name)
     gtk_widget_show(confirmation_window);
 }
 
+/**
+ * confirmation_window_create - Build a file deletion dialog
+ * @window_type - The type of deletion it is, see the enum in delete_window
+ * for the different window types.
+ * Build the dialog with the name of the playlist or file(s) you could be
+ * wanting to delete.   Whatever is requested to be deleted should be
+ * displayed to the user.
+ */
 void 
 confirmation_window_create(int window_type)
 {
@@ -194,7 +249,13 @@ confirmation_window_create(int window_type)
 		    }
 		    else
 		    {
-			confirmation_window_ok_clicked();
+			gchar *tmp = NULL;
+
+			if((tmp = get_current_selected_song_name()))
+			{
+			    confirmation_window_ok_clicked();
+			    g_free(tmp);
+			}
 		    }
 		}
 		else
@@ -206,7 +267,13 @@ confirmation_window_create(int window_type)
 		    }
 		    else
 		    {
-			confirmation_window_ok_clicked();
+			gchar *tmp = NULL;
+
+			if((tmp = get_current_selected_song_name()))
+			{
+			    confirmation_window_ok_clicked();
+			    g_free(tmp);
+			}
 		    }
 		}
 		break;
@@ -218,22 +285,41 @@ confirmation_window_create(int window_type)
     }
 }
 
+/**
+ * confirmation_window_ok_clicked - Handle an "Ok" request for a
+ * file/playlist delete dialog window.
+ */
 void confirmation_window_ok_clicked(void)
 {
-    switch(confirmation_type)
+    Song *s = NULL;
+    GList *l = NULL;
+
+    if(selected_playlist)
     {
-	case CONFIRMATION_WINDOW_PLAYLIST:
-	    fprintf(stderr, "Ok to delete this playlist\n");
-	    break;
-	case CONFIRMATION_WINDOW_SONG_FROM_IPOD:
-	    fprintf(stderr, "Ok to delete this song from ipod\n");
-	    break;
-	case CONFIRMATION_WINDOW_SONG_FROM_PLAYLIST:
-	    fprintf(stderr, "Ok to delete this song from playlist\n");
-	    break;
-	default:
-	    fprintf(stderr, "Unknown confirmation Ok clicked\n");
-	    break;
+	switch(confirmation_type)
+	{
+	    case CONFIRMATION_WINDOW_PLAYLIST:
+		if(selected_playlist->type != PL_TYPE_MPL)
+		    remove_playlist(selected_playlist);
+		break;
+	    case CONFIRMATION_WINDOW_SONG_FROM_IPOD:
+		for (l = selected_songs; l; l = l->next)
+		{
+		    s = (Song *) l->data;
+		    remove_song_from_playlist(NULL, s);
+		}
+		break;
+	    case CONFIRMATION_WINDOW_SONG_FROM_PLAYLIST:
+		for (l = selected_songs; l; l = l->next)
+		{
+		    s = (Song *) l->data;
+		    remove_song_from_playlist(selected_playlist, s);
+		}
+		break;
+	    default:
+		fprintf(stderr, "Unknown confirmation Ok clicked\n");
+		break;
+	}
     }
     confirmation_window_cleanup();
 }

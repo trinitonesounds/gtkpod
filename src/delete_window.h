@@ -27,6 +27,10 @@
 
 #include <gtk/gtk.h>
 
+/**
+ * CONFIRMATION_WINDOW_TYPES - the different types of delete file
+ * confirmation dialogs
+ */
 enum {
     CONFIRMATION_WINDOW_SONG = 0,
     CONFIRMATION_WINDOW_PLAYLIST,
@@ -36,7 +40,6 @@ enum {
 };
 
 void confirmation_window_create(int window_type);
-
 void confirmation_window_ok_clicked(void);
 void confirmation_window_cancel_clicked(void);
 void confirmation_window_prefs_toggled(gboolean val);
