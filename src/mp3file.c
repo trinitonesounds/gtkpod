@@ -1354,15 +1354,17 @@ static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
 
 	switch (nc) {
 		case 0x20:
+			if (track->radio_gain_set) return;
 			track->radio_gain = gain;
 			track->radio_gain_set = TRUE;
-			printf("radio_gain (lame): %i\n", track->radio_gain);
+			printf("radio_gain (lame): %i\n", track->radio_gain); 
 			break;
 		case 0x40:
+			if (track->audiophile_gain_set) return;
 			track->audiophile_gain = gain;
 			track->audiophile_gain_set = TRUE;
-			printf("audiophile_gain (lame): %i\n", 
-					track->audiophile_gain);
+/*			printf("audiophile_gain (lame): %i\n", 
+					track->audiophile_gain);*/
 			break;
 	}
 }
@@ -1492,21 +1494,22 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	if (fseek(file, 0x2, SEEK_CUR) || (fread(buf, 1, 4, file) != 4))
 		goto rg_fail;
 
-	/* get the peak signal. FIXME: check if it is set at all */
+	/* get the peak signal. */
 	ps = parse_lame_uint32(buf);
 	
 	if ((lame_vcmp(version, "3.94b") >= 0)) {
-		if (ps) {
+		if ((!track->peak_signal_set) && ps) {
 			track->peak_signal = ps;
 			track->peak_signal_set = TRUE;
-			printf("peak_signal (lame): %f\n", (double)
-					track->peak_signal / 0x800000);
+/*			printf("peak_signal (lame): %f\n", (double)
+					track->peak_signal / 0x800000);*/
 		}
 	} else {
 		float f = *((float *) (void *) (&ps)) * 0x800000;
 		track->peak_signal = (guint32) f;
-		printf("peak_signal (lame floating point): %f\n", 
-				(double) track->peak_signal / 0x800000);
+		/* I would like to see an example of that. */
+/*		printf("peak_signal (lame floating point): %f. PLEASE report.\n", 
+				(double) track->peak_signal / 0x800000);*/
 	}
 
 	/*
@@ -1642,7 +1645,7 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 				d *= 10;
 				track->radio_gain = (guint32) floor(d + 0.5);
 				track->radio_gain_set = TRUE;
-				printf("radio_gain (ape): %i\n", track->radio_gain);
+/*				printf("radio_gain (ape): %i\n", track->radio_gain);*/
 			}
 			
 			continue;
@@ -1657,7 +1660,7 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 				d *= 0x800000;
 				track->peak_signal = (guint32) floor(d + 0.5);
 				track->peak_signal_set = TRUE;
-				printf("peak_signal (ape): %f\n", (double) track->peak_signal / 0x800000);
+/*				printf("peak_signal (ape): %f\n", (double) track->peak_signal / 0x800000);*/
 			}
 
 			continue;
@@ -1761,11 +1764,11 @@ Track *file_get_mp3_info (gchar *name)
     }
 
     mp3_get_track_lame_replaygain(name, track);
-    track->peak_signal_set = FALSE;
+/*    track->peak_signal_set = FALSE;
     track->radio_gain_set = FALSE;
-    track->audiophile_gain_set = FALSE;
+    track->audiophile_gain_set = FALSE; */
     mp3_get_track_ape_replaygain(name, track);
-    printf("\n");
+/*    printf("\n");*/
 
     /* Get additional info (play time and bitrate */
     mp3info = mp3file_get_info (name);
