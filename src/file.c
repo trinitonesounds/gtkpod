@@ -1,26 +1,26 @@
-/* Time-stamp: <2004-01-25 18:06:40 jcs>
+/* Time-stamp: <2004-01-26 23:01:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -77,8 +77,8 @@ static gboolean files_saved = TRUE;
 static  GMutex *mutex = NULL;
 static GCond  *cond = NULL;
 static gboolean mutex_data = FALSE;
-#endif 
-/* Used to keep the "extended information" until the iTunesDB is 
+#endif
+/* Used to keep the "extended information" until the iTunesDB is
    loaded */
 static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
@@ -205,7 +205,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	case PLT_PLS:
 	    /* I don't know anything about pls playlist files and just
 	       looked at one example produced by xmms -- please
-	       correct the code if you know more */ 
+	       correct the code if you know more */
 	    if (line == 0)
 	    { /* check for "[playlist]" */
 		if (strncasecmp (bufp, "[playlist]", 10) != 0)
@@ -394,7 +394,7 @@ static gboolean parse_filename_with_template (Track *track,
 		/* find next token so we can determine where the
 		   current field ends */
 		gchar *fnp = g_strrstr (fn, next_token);
- 
+
 		if (!fnp)
 		{
 		    parse_error = TRUE;
@@ -428,7 +428,7 @@ static gboolean parse_filename_with_template (Track *track,
 				   itm);
 		    break;
 		case 't': /* title */
-		    if (track && 
+		    if (track &&
 			(!track->title || prefs_get_parsetags_overwrite ()))
 			set_entry (&track->title, &track->title_utf16, itm);
 		    break;
@@ -657,7 +657,7 @@ Track *copy_new_info (Track *from, Track *to)
 /* Fills the supplied @or_track with data from the file @name. If
  * @or_track is NULL, a new track struct is created The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
- * exists */ 
+ * exists */
 /* turns NULL on error, a pointer to the Track otherwise */
 Track *get_track_info_from_file (gchar *name, Track *orig_track)
 {
@@ -714,7 +714,7 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	}
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);
-	/* Make sure all strings are initialized -- that way we don't 
+	/* Make sure all strings are initialized -- that way we don't
 	   have to worry about it when we are handling the
 	   strings. Also, validate_entries() will fill in the utf16
 	   strings if that hasn't already been done. */
@@ -830,7 +830,7 @@ static void sync_dir (gpointer key,
 	}
 	/* use the charset used for the directory */
 	prefs_set_charset (charset);
-    }	
+    }
 
     /* report status */
     /* convert dir to UTF8. Use @charset if specified */
@@ -1504,10 +1504,26 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
       Track *track = get_track_info_from_file (name, NULL);
       if (track)
       {
-	  Track *added_track = NULL;
-
+          Track *added_track = NULL;
 	  track->ipod_id = 0;
-	  track->transferred = FALSE;
+
+	  /* does 'name' start with ipod_mount? */
+          if (strstr (name, prefs_get_ipod_mount ()) == name)
+          {   /* Yes */
+              track->transferred = TRUE;
+              track->ipod_path = g_strdup_printf ("%c%s", 
+						  G_DIR_SEPARATOR,
+						  strstr(track->pc_path_utf8,
+							 "iPod_Control"));
+              itunesdb_convert_filename_fs2ipod (track->ipod_path);
+              track->ipod_path_utf16 = g_utf8_to_utf16 (track->ipod_path,
+                                                        -1, NULL, NULL, NULL);
+          }
+	  else
+          {   /* No */
+              track->transferred = FALSE;
+          }
+
 	  if (gethostname (str, PATH_MAX-2) == 0)
 	  {
 	      str[PATH_MAX-1] = 0;
@@ -1523,7 +1539,7 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 		  if (!plitem || (plitem->type == PL_TYPE_MPL))
 		  {   /* add track to master playlist (if it hasn't been
 		       * done before) */
-		      if (added_track == track) 
+		      if (added_track == track)
 			  addtrackfunc (plitem, added_track, data);
 		  }
 		  else
@@ -1949,7 +1965,7 @@ void handle_import (void)
 	    success = read_extended_info (name1, name2);
 	    g_free (name1);
 	    g_free (name2);
-	    if (!success) 
+	    if (!success)
 	    {
 		gtkpod_warning (_("Extended info will not be used.\n"));
 	    }
@@ -1967,7 +1983,7 @@ void handle_import (void)
 	    name2 = g_build_filename (cfgdir, "iTunesDB", NULL);
 	    success = read_extended_info (name1, name2);
 	    g_free (name1);
-	    if (!success) 
+	    if (!success)
 	    {
 		gtkpod_warning (_("Extended info will not be used. If you have non-transferred tracks,\nthese will be lost.\n"));
 	    }
@@ -2002,6 +2018,7 @@ void handle_import (void)
     prefs_set_md5tracks (md5tracks);
     destroy_extendedinfohash (); /* delete hash information (if set up) */
     release_widgets ();
+    display_set_check_ipod_menu ();/* taking care about 'Check IPOD files'mi */
 }
 
 
@@ -2026,7 +2043,7 @@ gchar *get_track_name_on_disk_verified (Track *track)
 	{
 	    if (g_file_test (track->pc_path_locale, G_FILE_TEST_EXISTS))
 		name = g_strdup (track->pc_path_locale);
-	} 
+	}
     }
     return name;
 }
@@ -2050,7 +2067,7 @@ gchar* get_track_name_on_disk(Track *s)
 	   (s->pc_path_locale) && (strlen(s->pc_path_locale) > 0))
 	{
 	    result = g_strdup (s->pc_path_locale);
-	} 
+	}
     }
     return(result);
 }
@@ -2078,7 +2095,7 @@ gchar *get_track_name_on_ipod (Track *s)
 
 /**
  * get_preferred_track_name_format - useful for generating the preferred
- * output filename for any track.  
+ * output filename for any track.
  * FIXME Eventually this should check your prefs for the displayed
  * attributes in the track model and generate track names based on that
  * @s - The Track reference we're generating the filename for
@@ -2242,7 +2259,7 @@ static gpointer th_copy (gpointer s)
     g_mutex_unlock (mutex);
     return (gpointer)result;
 }
-#endif 
+#endif
 
 /* This function is called when the user presses the abort button
  * during flush_tracks() */
@@ -2359,7 +2376,7 @@ gboolean flush_tracks (void)
 /*	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", track->artist,
 						    track->title, track->ipod_id,
 						    filename);*/
-#endif 
+#endif
 	  }
 	  g_free(filename);
       }
@@ -2422,7 +2439,7 @@ gboolean flush_tracks (void)
 	      /* delete old size */
 	      if (track->transferred) track->oldsize = 0;
 
-#endif 
+#endif
 	      ++count;
 	      if (count == 1)  /* we need longer timeout */
 		  prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
@@ -2546,7 +2563,7 @@ void handle_export (void)
     }
 
   /* indicate that files and/or database is saved */
-  if (success)   
+  if (success)
   {
       files_saved = TRUE;
       /* block menu item and button */

@@ -710,3 +710,7 @@ on_parsetags_overwrite_toggled         (GtkToggleButton *togglebutton,
 void
 on_parsetags_toggled                   (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

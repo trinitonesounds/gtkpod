@@ -3,25 +3,25 @@
 |                2002-2003 Jörg Schuler  <jcsjcs at users.sourceforge.net>
 |
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -108,7 +108,7 @@ Playlist *add_playlist (Playlist *plitem, gint position)
     return plitem;
 }
 
-/* This function appends the track with id "id" to the 
+/* This function appends the track with id "id" to the
    playlist "plitem". It then lets the display model know.
    If "plitem" == NULL, add to master playlist
    @display: if TRUE, track is added the display.  Otherwise it's only
@@ -122,7 +122,7 @@ void add_trackid_to_playlist (Playlist *plitem, guint32 id, gboolean display)
   add_track_to_playlist (plitem, track, display);
 }
 
-/* This function appends the track "track" to the 
+/* This function appends the track "track" to the
    playlist "plitem". It then lets the display model know.
    If "plitem" == NULL, add to master playlist
    @display: if TRUE, track is added the display.  Otherwise it's only
@@ -139,7 +139,7 @@ void add_track_to_playlist (Playlist *plitem, Track *track, gboolean display)
   if (display)  pm_add_track (plitem, track, TRUE);
 }
 
-/* This function removes the track with id "id" from the 
+/* This function removes the track with id "id" from the
    playlist "plitem". It then lets the display model know.
    No action is taken if "track" is not in the playlist.
    If "plitem" == NULL, remove from master playlist */
@@ -152,11 +152,11 @@ gboolean remove_trackid_from_playlist (Playlist *plitem, guint32 id)
   return remove_track_from_playlist (plitem, track);
 }
 
-/* This function removes the track "track" from the 
+/* This function removes the track "track" from the
    playlist "plitem". It then lets the display model know.
    No action is taken if "track" is not in the playlist.
    If "plitem" == NULL, remove from master playlist.
-   If the track is removed from the MPL, it's also removed 
+   If the track is removed from the MPL, it's also removed
    from memory completely
 
    Return value: FALSE, if track was not a member, TRUE otherwise */
@@ -178,7 +178,7 @@ gboolean remove_track_from_playlist (Playlist *plitem, Track *track)
 	    * skip MPL or we loop */
 	    remove_track_from_playlist (get_playlist_by_nr (i), track);
 	}
-	remove_track_from_ipod (track);	
+	remove_track_from_ipod (track);
     }
     return TRUE; /* track was a member */
 }
@@ -206,7 +206,7 @@ guint32 track_is_in_playlists (Track *track)
 	for (gl=playlists->next; gl; gl=gl->next)
 	{
 	    if (track_is_in_playlist ((Playlist *)gl->data, track)) ++res;
-	}	    
+	}
     }
     return res;
 }
@@ -241,7 +241,7 @@ Track *get_track_in_playlist_by_nr (Playlist *plitem, guint32 n)
 }
 
 /**
- * 
+ *
  * You must free this yourself
  */
 /* Remove playlist from the list. First it's removed from any display
@@ -280,7 +280,7 @@ free_playlist(Playlist *playlist)
   g_free (playlist);
 }
 
-  /* Remove all playlists from the list using remove_playlist () */
+/* Remove all playlists from the list using remove_playlist () */
 void remove_all_playlists (void)
 {
   Playlist *playlist;
@@ -304,6 +304,50 @@ gboolean playlist_exists (Playlist *pl)
 }
 
 
+/** Searches through the playlists starting from position @startfrom
+ * and looking for playlist with name  @pl_name
+ * @return position of found playlist starting from 1.
+ * If it wasn't found - returns 0
+ */
+guint get_playlist_by_name(gchar *pl_name, guint startfrom)
+{
+    Playlist *pl;
+    guint pos = 0
+        , i;
+
+    if (startfrom==0) startfrom++;
+
+    for(i = startfrom; i < get_nr_of_playlists(); i++)
+    {
+        pl = get_playlist_by_nr (i);
+        if(pl->name && (strcmp (pl->name, pl_name) == 0))
+        {
+            pos = i;
+            break;
+        }
+    }
+    return pos;
+}
+
+
+/** If playlist @pl_name doesn't exist, then it will be created
+ * and added to the tail of playlists, otherwise pointer to an existing
+ * playlist will be returned
+ */
+Playlist* get_newplaylist_by_name (gchar *pl_name)
+{
+    Playlist *res = NULL;
+    guint plnum = get_playlist_by_name(pl_name, (guint) 0);
+
+    if (!plnum)
+        res = add_new_playlist(pl_name,-1);
+    else
+        res = get_playlist_by_nr(plnum);
+
+    return res;
+}
+
+
 /* FIXME: this is a bit dangerous. . . we delete all
  * playlists with titles @pl_name and return how many
  * pl have been removed.
@@ -312,7 +356,7 @@ guint remove_playlist_by_name(gchar *pl_name){
     Playlist *pl;
     guint i;
     guint pl_removed=0;
-    
+
     for(i = 1; i < get_nr_of_playlists(); i++)
     {
         pl = get_playlist_by_nr (i);

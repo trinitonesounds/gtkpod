@@ -1,32 +1,32 @@
-/* Time-stamp: <2004-01-25 18:08:12 jcs>
+/* Time-stamp: <2004-01-26 23:01:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  Most of the code in this file has been ported from the perl
 |  script "mktunes.pl" (part of the gnupod-tools collection) written
 |  by Adrian Ulrich <pab at blinkenlights.ch>.
 |
 |  gnupod-tools: http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipod
-| 
+|
 |  The code contained in this file is free software; you can redistribute
 |  it and/or modify it under the terms of the GNU Lesser General Public
 |  License as published by the Free Software Foundation; either version
 |  2.1 of the License, or (at your option) any later version.
-|  
+|
 |  This file is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 |  Lesser General Public License for more details.
-|  
+|
 |  You should have received a copy of the GNU Lesser General Public
 |  License along with this code; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -153,6 +153,8 @@
    guint32 itunesdb_time_get_mac_time (void);
    time_t itunesdb_time_mac_to_host (guint32 mactime);
    guint32 itunesdb_time_host_to_mac (time_t time);
+   void itunesdb_convert_filename_fs2ipod(gchar *ipod_file);
+   void itunesdb_convert_filename_ipod2fs(gchar *ipod_file);
 
    Define "itunesdb_warning()" as you need (or simply use g_print and
    change the default g_print handler with g_set_print_handler() as is
@@ -267,7 +269,7 @@ gint32 i;
  {
      for(i=0; i<utf16_strlen(utf16_string); i++)
      {
-	 utf16_string[i] = ((utf16_string[i]<<8) & 0xff00) | 
+	 utf16_string[i] = ((utf16_string[i]<<8) & 0xff00) |
 	     ((utf16_string[i]>>8) & 0xff);
      }
  }
@@ -289,7 +291,7 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
   fprintf(stderr, "get_mhod seek: %x\n", (int)seek);
 #endif
 
-  if (seek_get_n_bytes (file, data, seek, 4) != 4) 
+  if (seek_get_n_bytes (file, data, seek, 4) != 4)
     {
       *ml = -1;
       return NULL;
@@ -330,7 +332,7 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 
 
 /* get a PL, return pos where next PL should be, name and content */
-static glong get_pl(FILE *file, glong seek) 
+static glong get_pl(FILE *file, glong seek)
 {
   gunichar2 *plname_utf16 = NULL, *plname_utf16_maybe;
 #ifdef ITUNESDB_PROVIDE_UTF8
@@ -388,7 +390,7 @@ static glong get_pl(FILE *file, glong seek)
   }
 #ifdef ITUNESDB_PROVIDE_UTF8
   plname_utf8 = g_utf16_to_utf8 (plname_utf16, -1, NULL, NULL, NULL);
-#endif 
+#endif
 
 
 #if ITUNESDB_DEBUG
@@ -435,7 +437,7 @@ static glong get_mhit(FILE *file, glong seek)
   gchar data[4];
 #ifdef ITUNESDB_PROVIDE_UTF8
   gchar *entry_utf8;
-#endif 
+#endif
   gunichar2 *entry_utf16;
   gint type;
   gint zip = 0;
@@ -530,13 +532,13 @@ gchar *time_time_to_string (time_t time);
      if (entry_utf16 != NULL) {
 #ifdef ITUNESDB_PROVIDE_UTF8
        entry_utf8 = g_utf16_to_utf8 (entry_utf16, -1, NULL, NULL, NULL);
-#endif 
+#endif
        switch (type)
 	 {
 	 case MHOD_ID_ALBUM:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   track->album = entry_utf8;
-#endif 
+#endif
 	   track->album_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_ARTIST:
@@ -737,8 +739,8 @@ gboolean itunesdb_parse_file (const gchar *filename)
 	  break;
       }
       /* for(i=0; i<8; ++i)  printf("%02x ", data[i]); printf("\n");*/
-      if (cmp_n_bytes (data, "mhbd", 4) == FALSE) 
-      {  
+      if (cmp_n_bytes (data, "mhbd", 4) == FALSE)
+      {
 	  itunesdb_warning (_("\"%s\" is not a iTunesDB.\n"), filename);
 	  break;
       }
@@ -810,7 +812,7 @@ gboolean itunesdb_parse_file (const gchar *filename)
 	     if it fails, it returns '-1' */
 	  seek = get_mhit (itunes, seek);
       }
-    
+
       /* next: playlists */
       seek = pl_mhsd;
       do
@@ -842,18 +844,18 @@ gboolean itunesdb_parse_file (const gchar *filename)
 #if ITUNESDB_DEBUG
     fprintf(stderr, "iTunesDB part2 starts at: %x\n", (int)seek);
 #endif
-    
+
     while(seek != -1) {
 	seek = get_pl(itunes, seek);
     }
-    
+
     result = TRUE;
   } while (FALSE);
 
   if (itunes != NULL)     fclose (itunes);
 #if ITUNESDB_DEBUG
   fprintf(stderr, "exit:  %4d\n", it_get_nr_of_tracks ());
-#endif 
+#endif
   return result;
 }
 
@@ -940,7 +942,7 @@ static void mk_mhbd (FILE *file)
   put_4int_cur (file, 104); /* header size */
   put_4int_cur (file, -1);  /* size of whole mhdb -- fill in later */
   put_4int_cur (file, 1);   /* ? */
-  put_4int_cur (file, 1);   /*  - changed to 2 from itunes2 to 3 .. 
+  put_4int_cur (file, 1);   /*  - changed to 2 from itunes2 to 3 ..
 				    version? We are iTunes version 1 ;) */
   put_4int_cur (file, 2);   /* ? */
   put_n0_cur (file, 20);    /* dummy space */
@@ -962,7 +964,7 @@ static void mk_mhsd (FILE *file, guint32 type)
   put_4int_cur (file, -1);   /* size of whole mhsd -- fill in later */
   put_4int_cur (file, type); /* type: 1 = track, 2 = playlist */
   put_n0_cur (file, 20);    /* dummy space */
-}  
+}
 
 
 /* Fill in the missing items of the mhsd header:
@@ -980,7 +982,7 @@ static void mk_mhlt (FILE *file, guint32 track_num)
   put_4int_cur (file, 92);         /* Headersize */
   put_4int_cur (file, track_num);   /* tracks in this itunesdb */
   put_n0_cur (file, 20);           /* dummy space */
-}  
+}
 
 
 /* Write out the mhit header. Size will be written later */
@@ -1012,7 +1014,7 @@ static void mk_mhit (FILE *file, Track *track)
   put_4int_cur (file, 0);             /* hardcoded space            */
   put_4int_cur (file, itunesdb_time_get_mac_time ()); /* current timestamp */
   put_n0_cur (file, 12);              /* dummy space                */
-}  
+}
 
 
 /* Fill in the missing items of the mhit header:
@@ -1050,15 +1052,15 @@ static void mk_mhod (FILE *file, guint32 type,
   if (type < 100)
     {                                     /* no PL mhod */
       put_n0_cur (file, 2);               /* trash      */
-      /* FIXME: this assumes "string" is writable. 
+      /* FIXME: this assumes "string" is writable.
 	 However, this might not be the case,
 	 e.g. ipod_name might be in read-only mem. */
-      string = fixup_utf16(string); 
+      string = fixup_utf16(string);
       put_data_cur (file, (gchar *)string, 2*len); /* the string */
       string = fixup_utf16(string);
     }
   else
-    {                                     
+    {
       put_n0_cur (file, 3);     /* PL mhods are different ... */
     }
 }
@@ -1086,9 +1088,9 @@ static void fix_mhlp (FILE *file, glong mhlp_seek, gint playlist_num)
    This seems to be an itunespref thing.. dunno know this
    but if we set everything to 0, itunes doesn't show any data
    even if you drag an mp3 to your ipod: nothing is shown, but itunes
-   will copy the file! 
+   will copy the file!
    .. so we create a hardcoded-pref.. this will change in future
-   Seems to be a Preferences mhod, every PL has such a thing 
+   Seems to be a Preferences mhod, every PL has such a thing
    FIXME !!! */
 static void mk_weired (FILE *file)
 {
@@ -1164,7 +1166,7 @@ static void mk_mhip (FILE *file, guint32 id)
   put_4int_cur (file, id);  /* ditto.. don't know the difference, but this
                                seems to work. Maybe a special ID used for
 			       playlists? */
-  put_n0_cur (file, 12); 
+  put_n0_cur (file, 12);
 }
 
 static void
@@ -1172,7 +1174,7 @@ write_mhsd_one(FILE *file)
 {
     Track *track;
     guint32 i, track_num, mhod_num;
-    glong mhsd_seek, mhit_seek, mhlt_seek; 
+    glong mhsd_seek, mhit_seek, mhlt_seek;
 
     track_num = it_get_nr_of_tracks();
 
@@ -1242,20 +1244,20 @@ write_playlist(FILE *file, Playlist *pl)
     guint32 i, n;
     glong mhyp_seek;
     gunichar2 empty = 0;
-    
+
     mhyp_seek = ftell(file);
     n = it_get_nr_of_tracks_in_playlist (pl);
 #if ITUNESDB_DEBUG
   fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, n);
-#endif    
-    mk_mhyp(file, pl->name_utf16, pl->type, n);  
+#endif
+    mk_mhyp(file, pl->name_utf16, pl->type, n);
     for (i=0; i<n; ++i)
     {
 	Track *track;
         if((track = it_get_track_in_playlist_by_nr (pl, i)))
 	{
 	    mk_mhip(file, track->ipod_id);
-	    mk_mhod(file, MHOD_ID_PLAYLIST, &empty, track->ipod_id); 
+	    mk_mhod(file, MHOD_ID_PLAYLIST, &empty, track->ipod_id);
 	}
     }
    fix_mhyp (file, mhyp_seek, ftell(file));
@@ -1269,14 +1271,14 @@ write_mhsd_two(FILE *file)
 {
     guint32 playlists, i;
     glong mhsd_seek, mhlp_seek;
-  
+
     mhsd_seek = ftell (file);  /* get position of mhsd header */
     mk_mhsd (file, 2);         /* write header: type 2: playlists  */
     mhlp_seek = ftell (file);
     playlists = it_get_nr_of_playlists();
     mk_mhlp (file, playlists);
     for(i = 0; i < playlists; i++)
-    { 
+    {
 	write_playlist(file, it_get_playlist_by_nr(i));
     }
     fix_mhlp (file, mhlp_seek, playlists);
@@ -1285,13 +1287,13 @@ write_mhsd_two(FILE *file)
 
 
 /* Do the actual writing to the iTunesDB */
-gboolean 
+gboolean
 write_it (FILE *file)
 {
     glong mhbd_seek;
 
-    mhbd_seek = 0;             
-    mk_mhbd (file);            
+    mhbd_seek = 0;
+    mk_mhbd (file);
     write_mhsd_one(file);		/* write tracks mhsd */
     write_mhsd_two(file);		/* write playlists mhsd */
     fix_mhbd (file, mhbd_seek, ftell (file));
@@ -1356,6 +1358,22 @@ gboolean itunesdb_write_to_file (const gchar *filename)
       g_free (plcname_n);
   }
   return result;
+}
+
+/* Convert string from casual PC file name to iPod iTunesDB format
+ * using ':' instead of slashes
+ */
+void itunesdb_convert_filename_fs2ipod (gchar *ipod_file)
+{
+    g_strdelimit (ipod_file, G_DIR_SEPARATOR_S, ':');
+}
+
+/* Convert string from iPod iTunesDB format to casual PC file name
+ * using slashes instead of ':'
+ */
+void itunesdb_convert_filename_ipod2fs (gchar *ipod_file)
+{
+    g_strdelimit (ipod_file, ":", G_DIR_SEPARATOR);
 }
 
 /* Copy one track to the ipod. The PC-Filename is
@@ -1442,15 +1460,12 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
   success = itunesdb_cp (pcfile, ipod_fullfile);
   if (success)
   {
-      gint i, len;
       track->transferred = TRUE;
       ++dir_num;
       if (dir_num == 20) dir_num = 0;
       if (ipod_file)
       { /* need to store ipod_filename */
-	  len = strlen (ipod_file);
-	  for (i=0; i<len; ++i)     /* replace '/' by ':' */
-	      if (ipod_file[i] == '/')  ipod_file[i] = ':';
+          itunesdb_convert_filename_fs2ipod(ipod_file);
 #ifdef ITUNESDB_PROVIDE_UTF8
 	  if (track->ipod_path) g_free (track->ipod_path);
 	  track->ipod_path = g_strdup (ipod_file);
@@ -1481,7 +1496,7 @@ gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *track)
     if(track && track->ipod_path && *track->ipod_path)
     {
 	gchar *buf = g_strdup (track->ipod_path);
-	g_strdelimit (buf, ":", G_DIR_SEPARATOR);
+	itunesdb_convert_filename_ipod2fs (buf);
 	result = g_build_filename (path, buf, NULL);
 	/* There seems to be a problem with some distributions
 	   (kernel versions or whatever -- even identical version
@@ -1568,7 +1583,7 @@ gboolean itunesdb_cp (const gchar *from_file, const gchar *to_file)
 	      itunesdb_warning (_("Error writing PC file \"%s\".\n"),to_file);
 	      success = FALSE;
 	    }
-	} 
+	}
     } while (success && (bread != 0));
   } while (FALSE);
   if (file_in)  fclose (file_in);

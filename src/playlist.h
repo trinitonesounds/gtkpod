@@ -3,25 +3,25 @@
 |                2002-2003 Jörg Schuler  <jcsjcs at users.sourceforge.net>
 |
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -76,8 +76,11 @@ gboolean playlist_exists (Playlist *pl);
 guint32 get_nr_of_playlists (void);
 #define it_get_playlist_by_nr get_playlist_by_nr
 Playlist *get_playlist_by_nr (guint32 n);
+guint get_playlist_by_name(gchar *pl_name, guint startfrom);
+Playlist* get_newplaylist_by_name (gchar *pl_name);
+
 #define it_get_nr_of_tracks_in_playlist get_nr_of_tracks_in_playlist
 guint32 get_nr_of_tracks_in_playlist (Playlist *plitem);
 Track *it_get_track_in_playlist_by_nr (Playlist *plitem, guint32 n);
 Track *get_track_in_playlist_by_nr (Playlist *plitem, guint32 n);
-#endif 
+#endif

@@ -43,17 +43,17 @@
 #include "support.h"
 
 
-typedef u_int32_t chunk;
+typedef guint32 chunk;
 union _block
 {
-   u_int8_t charblock[64];
+   guint8 charblock[64];
    chunk chunkblock[16];
 };
 typedef union _block block;
 
 union _hblock
 {
-   u_int8_t charblock[20];
+   guint8 charblock[20];
    chunk chunkblock[5];
 };
 typedef union _hblock hblock;
@@ -65,7 +65,7 @@ struct _sha1
 };
 typedef struct _sha1 sha1;
 
-static u_int8_t *sha1_hash(const u_int8_t * text, u_int32_t len);
+static guint8 *sha1_hash(const guint8 * text, guint32 len);
 static void process_block_sha1(sha1 * message);
 
 #if BYTE_ORDER == LITTLE_ENDIAN
@@ -132,7 +132,7 @@ md5_hash_on_file(FILE * fp)
 
        if(fsize > 0)
        {
-	   u_int8_t *hash = NULL;
+	   guint8 *hash = NULL;
 	   int bread = 0, x = 0, last = 0;
 	   gchar file_chunk[chunk_size + sizeof(int)];
 	  
@@ -313,16 +313,16 @@ md5_track_removed(Track * s)
  * @len - the length of the data for our seed
  * Returns a unique 20 char array.
  */
-static u_int8_t *
-sha1_hash(const u_int8_t * text, u_int32_t len)
+static guint8 *
+sha1_hash(const guint8 * text, guint32 len)
 {
    chunk x;
    chunk temp_len = len;
-   const u_int8_t *temp_text = text;
-   u_int8_t *digest;
+   const guint8 *temp_text = text;
+   guint8 *digest;
    sha1 *message;
 
-   if((digest = (u_int8_t *) g_malloc0(sizeof(u_int8_t) * 21)) == NULL)
+   if((digest = (guint8 *) g_malloc0(sizeof(guint8) * 21)) == NULL)
        gtkpod_main_quit();	/* errno == ENOMEM */
    if((message = (sha1 *) g_malloc0(sizeof(sha1))) == NULL)
        gtkpod_main_quit();	/* errno == ENOMEM */
@@ -389,7 +389,7 @@ process_block_sha1(sha1 * message)
    chunk C;
    chunk D;
    chunk E;
-   chunk T;                     /* temp u_int32_t */
+   chunk T;                     /* temp guint32 */
    chunk K[] = { 0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6 };
 
    for (x = 0; x < 16; x++)

@@ -1,25 +1,25 @@
 /*
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -237,7 +237,7 @@ gboolean gtkpod_confirmation (gint id,
 	    {
 		GtkTextIter ti;
 		GtkTextBuffer *tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW(w));
-		if (!tb) 
+		if (!tb)
 		{   /* text buffer doesn't exist yet */
 		    GtkWidget *w1;
 		    tb = gtk_text_buffer_new(NULL);
@@ -252,7 +252,7 @@ gboolean gtkpod_confirmation (gint id,
 		gtk_text_buffer_get_end_iter (tb, &ti);
 		gtk_text_buffer_insert (tb, &ti, text, -1);
 		/* scroll window such that new text is visible */
-		gtk_text_view_scroll_mark_onscreen (GTK_TEXT_VIEW (w), 
+		gtk_text_view_scroll_mark_onscreen (GTK_TEXT_VIEW (w),
                                     gtk_text_buffer_get_insert (tb));
 	    }
 	    return FALSE;
@@ -435,7 +435,7 @@ gboolean gtkpod_confirmation (gint id,
     /* Connect Close window */
     g_signal_connect (GTK_OBJECT (window),
 		      "delete_event",
-		      G_CALLBACK (on_cancel_clicked), 
+		      G_CALLBACK (on_cancel_clicked),
 		      (gpointer) id);
 
     gtk_widget_show (window);

@@ -1,5 +1,14 @@
 TODO:
 
+Dangling/orphaned tracks
+    - Delete dangling tracks right away -- they can cause an error
+      message when exporting the iTunesDB. Instead display them in an
+      info window.
+
+    - Open a progress window to display information instead of the
+      statusbar messages.
+
+
 - Tools->Export Adresses and Export Contacts (simply calls external
   scripts)
 

@@ -1,26 +1,26 @@
-/* Time-stamp: <2003-11-30 13:05:17 jcs>
+/* Time-stamp: <2004-01-26 23:01:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -150,6 +150,8 @@ void display_create (GtkWidget *gtkpod)
     display_adjust_delete_menus ();
     /* set the menu item for the info window correctly */
     display_set_info_window_menu ();
+    /* activate/deactive the menu item 'check iPod' */
+    display_set_check_ipod_menu ();
     /* check if info window should be opened */
     if (prefs_get_info_window ())  info_open_window ();
 }
@@ -160,7 +162,7 @@ void display_create (GtkWidget *gtkpod)
    -2: all treeviews
    -1: only playlist
     0...SORT_TAB_MAX-1: sort tab of instance @inst
-    SORT_TAB_MAX: track treeview 
+    SORT_TAB_MAX: track treeview
     SORT_TAB_MAX+1: all sort tabs */
 void display_reset (gint inst)
 {
@@ -211,7 +213,7 @@ void
 display_disable_gtkpod_import_buttons(void)
 {
     GtkWidget *w = NULL;
-    
+
     if(gtkpod_window)
     {
 	if((w = lookup_widget(gtkpod_window, "import_button")))
@@ -308,6 +310,22 @@ void display_set_info_window_menu (void)
     }
 }
 
+/** Takes care about 'Check IPOD Files' Menu Item and makes it unavailable
+ * if gtkpod is offline or DB wasn't imported.
+ */
+void display_set_check_ipod_menu (void)
+{
+    GtkWidget *w = NULL
+        , *wi = lookup_widget(gtkpod_window, "import_itunes_mi") ;
+
+    if((w = lookup_widget(gtkpod_window, "check_ipod_files_mi")))
+        gtk_widget_set_sensitive(w,
+                                 !(widgets_blocked || prefs_get_offline() ||
+                                   !wi || GTK_WIDGET_IS_SENSITIVE(wi) ));
+    else
+        g_warning ("check_ipod_files_mi(): Programming error: widget check_ipod_files_mi must be found\n");
+}
+
 /* make the tooltips visible or hide it depending on the value set in
  * the prefs (tooltips_main) */
 void display_show_hide_tooltips (void)
@@ -380,7 +398,7 @@ void display_update_default_sizes (void)
 
 /* Utility function: returns a copy of the tracks currently
    selected. This means:
- 
+
    @inst == -1:
       return list of tracks in selected playlist
 
@@ -433,7 +451,7 @@ GList *display_get_selected_members (gint inst)
 
 /* ------------------------------------------------------------
 
-           Functions for stopping display update 
+           Functions for stopping display update
 
    ------------------------------------------------------------ */
 
@@ -566,7 +584,7 @@ static void block_release_selection (gint inst, gint action,
 		r_user_data2 = user_data2;
 		if (timeout_id == 0)
 		{
-		    timeout_id = 
+		    timeout_id =
 			gtk_idle_add_priority (G_PRIORITY_HIGH_IDLE,
 					       selection_callback_timeout,
 					       NULL);

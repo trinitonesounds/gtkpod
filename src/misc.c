@@ -1,26 +1,26 @@
-/* Time-stamp: <2004-01-25 19:30:35 jcs>
+/* Time-stamp: <2004-01-27 00:03:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -51,6 +51,7 @@
 #include "interface.h"
 #include "itunesdb.h"
 #include "misc.h"
+#include "playlist.h"
 #include "prefs.h"
 #include "prefs_window.h"
 #include "song.h"
@@ -156,19 +157,19 @@ void create_add_files_fileselector (void)
     /* Ensure that file_selector is set to NULL when window is deleted */
     g_signal_connect_swapped (GTK_OBJECT (file_selector),
 			      "delete_event",
-			      G_CALLBACK (add_files_close), 
-			      (gpointer) file_selector); 
+			      G_CALLBACK (add_files_close),
+			      (gpointer) file_selector);
 
     /* Ensure that the dialog box is deleted when the user clicks a button. */
     g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
 			      "clicked",
-			      G_CALLBACK (add_files_close), 
-			      (gpointer) file_selector); 
+			      G_CALLBACK (add_files_close),
+			      (gpointer) file_selector);
 
     g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->cancel_button),
 			      "clicked",
 			      G_CALLBACK (add_files_close),
-			      (gpointer) file_selector); 
+			      (gpointer) file_selector);
 
     /* Display that dialog */
     gtk_widget_show (file_selector);
@@ -229,18 +230,18 @@ void create_add_playlists_fileselector (void)
     g_signal_connect_swapped (GTK_OBJECT (pl_file_selector),
 			      "delete_event",
 			      G_CALLBACK (add_playlists_close),
-			      (gpointer) pl_file_selector); 
+			      (gpointer) pl_file_selector);
 
     /* Ensure that the dialog box is deleted when the user clicks a button. */
     g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->ok_button),
 			      "clicked",
-			      G_CALLBACK (add_playlists_close), 
-			      (gpointer) pl_file_selector); 
+			      G_CALLBACK (add_playlists_close),
+			      (gpointer) pl_file_selector);
 
     g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->cancel_button),
 			      "clicked",
 			      G_CALLBACK (add_playlists_close),
-			      (gpointer) pl_file_selector); 
+			      (gpointer) pl_file_selector);
 
     /* Display that dialog */
     gtk_widget_show (pl_file_selector);
@@ -446,6 +447,8 @@ Edward Matteucci: debugging, special playlist creation, most of the volume norma
 Jens Lautenbach: some optical improvements\n"),
 		       _("\
 Alex Tribble: iPod eject patch\n"),
+		       _("\
+Yaroslav Halchenko: Orphaned and dangling tracks handling\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n"),
@@ -541,7 +544,7 @@ void add_idlist_to_playlist (Playlist *pl, gchar *string)
 {
     guint32 id = 0;
     gchar *str = g_strdup (string);
-    
+
     if (!pl) return;
     while(parse_ipod_id_from_string(&str,&id))
     {
@@ -694,7 +697,7 @@ void cleanup_backup_and_extended_files (void)
 
 /**
  * gtkpod_main_quit
- * 
+ *
  * return value: FALSE if it's OK to quit.
  */
 gboolean
@@ -703,7 +706,7 @@ gtkpod_main_quit(void)
     GtkWidget *dialog;
     gint result = GTK_RESPONSE_YES;
 
-    
+
 
     if (!files_are_saved ())
     {
@@ -740,7 +743,7 @@ gtkpod_main_quit(void)
 
 /* Let the user select a sort tab number */
 /* @text: text to be displayed */
-/* return value: -1: user selected cancel 
+/* return value: -1: user selected cancel
    0...prefs_get_sort_tab_number()-1: selected tab */
 gint get_sort_tab_number (gchar *text)
 {
@@ -829,7 +832,7 @@ void gtkpod_warning (const gchar *format, ...)
     va_start (arg, format);
     text = g_strdup_vprintf (format, arg);
     va_end (arg);
-    
+
     gtkpod_confirmation (CONF_ID_GTKPOD_WARNING,    /* gint id, */
 			 FALSE,                     /* gboolean modal, */
 			 _("Warning"),              /* title */
@@ -1050,8 +1053,6 @@ void update_blocked_widget (GtkWidget *w, gboolean sens)
  *             Create iPod directory hierarchy                      *
  *                                                                  *
 \*------------------------------------------------------------------*/
-
-
 /* ok handler for ipod directory creation */
 /* @user_data1 is the mount point of the iPod */
 static void ipod_directories_ok (gpointer user_data1, gpointer user_data2)
@@ -1183,7 +1184,7 @@ static void delete_playlist_full_ok (gpointer user_data1, gpointer user_data2)
 
     if (!selected_playlist) return;
     n = g_list_length (selected_trackids);
-    buf = g_strdup_printf (ngettext ("Deleted playlist '%s' including %d member track", "Deleted playlist '%s' including %d member tracks", n), 
+    buf = g_strdup_printf (ngettext ("Deleted playlist '%s' including %d member track", "Deleted playlist '%s' including %d member tracks", n),
 			   selected_playlist->name, n);
     /* remove tracks */
     for (l = selected_trackids; l; l = l->next)
@@ -1504,7 +1505,7 @@ static void delete_entry_cancel (gpointer user_data1, gpointer user_data2)
 }
 
 
-/* deletes the currently selected entry from the current playlist 
+/* deletes the currently selected entry from the current playlist
    @inst: selected entry of which instance?
    @delete_full: if true, member songs are removed from the iPod
    completely */
@@ -1843,7 +1844,7 @@ void call_script (gchar *script)
  * @name - the executable we're trying to find the path for
  * Returns the path to the executable, NULL on not found
  */
-gchar* 
+gchar*
 which(const gchar *exe)
 {
     FILE *fp = NULL;
@@ -1872,7 +1873,7 @@ which(const gchar *exe)
  * at the position of "%s"
  *
  */
-void 
+void
 do_command_on_entries (const gchar *command, const gchar *what,
 		       GList *selected_tracks)
 {
@@ -2120,7 +2121,7 @@ has_case_prefix (const gchar *haystack, const gchar *needle)
       n++;
       h++;
     }
-  
+
   return *n == '\0';
 }
 
@@ -2133,9 +2134,9 @@ unescape_character (const char *scanner)
   first_digit = g_ascii_xdigit_value (scanner[0]);
   if (first_digit < 0)
     return -1;
-  
+
   second_digit = g_ascii_xdigit_value (scanner[1]);
-  if (second_digit < 0) 
+  if (second_digit < 0)
     return -1;
 
   return (first_digit << 4) | second_digit;
@@ -2150,7 +2151,7 @@ g_unescape_uri_string (const char *escaped,
   const gchar *in, *in_end;
   gchar *out, *result;
   int c;
-  
+
   if (escaped == NULL)
     return NULL;
 
@@ -2189,7 +2190,7 @@ g_unescape_uri_string (const char *escaped,
 
       *out++ = c;
     }
-  
+
   g_assert (out - result <= len);
   *out = '\0';
 
@@ -2241,7 +2242,7 @@ hostname_validate (const char *hostname)
       while (is_escalphanum (c) || c == '-');
       if (last_char == '-')
 	return FALSE;
-      
+
       /* if that was the last label, check that it was a toplabel */
       if (c == '\0' || (c == '.' && *p == '\0'))
 	return is_escalpha (first_char);
@@ -2258,10 +2259,10 @@ hostname_validate (const char *hostname)
  *            stored in this location.
  * @error: location to store the error occuring, or %NULL to ignore
  *         errors. Any of the errors in #GConvertError may occur.
- * 
+ *
  * Converts an escaped UTF-8 encoded URI to a local filename in the
- * encoding used for filenames. 
- * 
+ * encoding used for filenames.
+ *
  * Return value: a newly-allocated string holding the resulting
  *               filename, or %NULL on an error.
  **/
@@ -2290,7 +2291,7 @@ filename_from_uri (const char *uri,
 		   uri);
       return NULL;
     }
-  
+
   path_part = uri + strlen ("file:");
 
   if (strchr (path_part, '#') != NULL)
@@ -2300,8 +2301,8 @@ filename_from_uri (const char *uri,
 		   uri);
       return NULL;
     }
-	
-  if (has_case_prefix (path_part, "///")) 
+
+  if (has_case_prefix (path_part, "///"))
     path_part += 2;
   else if (has_case_prefix (path_part, "//"))
     {
@@ -2329,7 +2330,7 @@ filename_from_uri (const char *uri,
 		       uri);
 	  return NULL;
 	}
-      
+
       if (hostname)
 	*hostname = unescaped_hostname;
       else
@@ -2385,7 +2386,7 @@ filename_from_uri (const char *uri,
      g_filename_from_utf8() */
   result = charset_from_utf8 (filename + offs);
   g_free (filename);
-  
+
   return result;
 }
 
@@ -2553,7 +2554,7 @@ static GList *create_ranked_glist(gint tracks_nr,PL_InsertFunc insertfunc,
    gint f=0;
    gint i=0;
    Track *track=NULL;
-  
+
    while ((track=get_next_track(i)))
    {
       i=1; /* for get_next_track() */
@@ -2712,7 +2713,7 @@ void never_listened_pl(void)
 
 
 /* ------------------------------------------------------------ */
-/* Generate a new playlist containing the most rated (rate 
+/* Generate a new playlist containing the most rated (rate
  * reverse order) tracks. */
 
 /* Sort Function: determines the order of the generated playlist */
@@ -2721,7 +2722,7 @@ static gint Most_Rated_CF (gconstpointer aa, gconstpointer bb)
     gint result = 0;
     const Track *a = aa;
     const Track *b = bb;
-    
+
     if (a && b)
     {
 	result = COMP (b->rating, a->rating);
@@ -2749,7 +2750,7 @@ void most_rated_pl(void)
 
 
 /* ------------------------------------------------------------ */
-/* Generate a new playlist containing the last listened (last time play 
+/* Generate a new playlist containing the last listened (last time play
  * reverse order) tracks. */
 
 /* Sort Function: determines the order of the generated playlist */
@@ -2828,7 +2829,7 @@ void since_last_pl(void)
 --------                                                 ---------
 ------------------------------------------------------------------
    ------------------------------------------------------------ */
- 
+
 /* Get length of utf16 string in number of characters (words) */
 guint32 utf16_strlen (gunichar2 *utf16)
 {
@@ -2854,212 +2855,180 @@ gunichar2 *utf16_strdup (gunichar2 *utf16)
 }
 
 
-/* ------------------------------------------------------------
-------------------------------------------------------------------
---------                                                 ---------
---------  THE REST OF THE FILE IS COMMENTED-OUT (#IF 0)  ---------
---------                                                 ---------
-------------------------------------------------------------------
-   ------------------------------------------------------------ */
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                Find Orphans                                      *
+ *                                                                  *
+\*------------------------------------------------------------------*/
 
-#if 0
-static gint relative_path_CF (gconstpointer aa, gconstpointer bb)
+/******************************************************************************
+ * Attempt to do everything at once:
+ *  - find dangling links in iTunesDB
+ *  - find orphaned files in mounted directory
+ * Will be done by creating first a hash of all known in iTunesDB filenames,
+ * and then checking every file on HDD in the hash table. If it is present -
+ * remove from hashtable, if not present - it is orphaned. If at the end
+ * hashtable still has some elements - they're dangling...
+ *
+ * TODO: instead of using case-sensitive comparison function it might be better
+ *  just to convert all filenames to lowercase before doing any comparisons
+ ******************************************************************************/
+
+#define IPOD_MUSIC_DIRS 20
+#define IPOD_CONTROL_DIR "iPod_Control"
+
+/* compare @str1 and @str2 case-sensitively only */
+gint str_cmp (gconstpointer str1, gconstpointer str2, gpointer data)
 {
-   gint result = 0;
-   const Track *a = aa;
-   const Track *b = bb;
-
-   if (a && b)
-   {
-      result=strcmp(b->ipod_path,a->ipod_path);
-   }
-   return result;
+/* 	return compare_string_case_insensitive((gchar *)str1, (gchar *)str2); */
+        return strcmp((gchar *)str1, (gchar *)str2);
 }
 
-/* a function to recover the itunesdb from an 
- * inconsistent state (if some file get lost or
- * there are some not more existent files in the
- * iTunesDB)*/
-void recover_db(void)
+static void treeKeyDestroy(gpointer key) { g_free(key); }
+static void treeValueDestroy(gpointer value) { }
+
+
+/* call back function for traversing what is left from the tree -
+ * dangling files - files present in DB but not present physically on iPOD.
+ * It adds found tracks to the dandling list so user can see what is missing
+ * and then decide on what to do with them */
+gboolean remove_dangling (gpointer key, gpointer value, gpointer data)
 {
-/*BEWARE can broke the iTunesDB if it's run BEFORE uploading the iTunesdb*/
-/*this function can be divided in several section
- * every section is independent (can be placed in a
- * separate function). there is only one common value
- * */
-   /* THE COMMON VALUE*/
-   gboolean changed=FALSE; /*ths iTunesDB has been changed?*/
-   
-/********************************
- * DELETE DEAD FILES's SECTION
- ********************************/
-   Track *track=NULL;
-   gchar *pathtrack=NULL;
-   GList *ghost_tracks=NULL;
-   gint g=0;
-   while((track=get_next_track(g)))
-   {
-      g=1;
-      pathtrack=get_track_name_on_ipod(track);
-      if(!g_file_test(pathtrack,G_FILE_TEST_IS_REGULAR))
-      {
-         ghost_tracks=g_list_append(ghost_tracks,track);
-         changed=TRUE;
-      }
-   }
-
-   /*take care of this "ghost" tracks*/
-   if(g_list_length(ghost_tracks)!=0)
-   {
-      delete_track_ok(NULL,ghost_tracks); /*NULL== erase from MPL*/
-   }
-   /*free everything*/
-   g_free(pathtrack);
-   free_track(track);
-   track=NULL;
-   g_list_free(ghost_tracks);
-   ghost_tracks=NULL;
-
-
-}void iani(void){gboolean changed=FALSE;
-   
-/**************************
- * ORPHANED FILES's SECTION
- **************************/
-   Track *ipod_track=NULL; /*an existing non lost track*/
-   gchar *ipod_filename=NULL; /*the ipod's track filename 
-      * this file exists but we don't know if it has an iTunesDB entry*/
-   gchar *ipod_validfile=NULL; /*not lost file */
-   
-   Track *lost_track=NULL; /*an existing track that has no entry in the iTunesDB*/
-   gchar *lostfile_fullpath=NULL; /*the lost track's fullpath*/
-   gboolean found;
-   gchar *ipod_dir = NULL;
-   GDir *dir_des;
-
-#if 0 /*read the TODO below*/
-   gboolean ordered_exist=FALSE;
-   GList *ranked_list=NULL;
-   gint mean;
-   gint min,max;
-#endif
-
-   gint h;
-   gboolean lost_pl_exist=FALSE;
-   gchar *mp=g_strdup(prefs_get_ipod_mount());
-   Playlist *lost_pl=NULL; /*a pl containing all the losts tracks*/
-
-   for(h=0;h<20;h++)
-   {
-      /*directory name*/
-      ipod_dir=g_strdup_printf("%s/iPod_Control/Music/F%02d",mp, h);
-      dir_des=g_dir_open(ipod_dir,0,NULL);
-      /*this shouldn't happend, but you never know */
-      if(dir_des!=NULL){
-      while((ipod_filename=g_strdup(g_dir_read_name(dir_des))))/*we have a file in the directory*/
-      {
-         lostfile_fullpath=g_strdup_printf("%s/%s",ipod_dir,ipod_filename);
-         /*<TODO>*/
-         /*FIXME:
-          * we can create a path ordered glist 
-          * containing all the tracks in the iTunesDB
-          * and search the possibly lost files
-          * in this list using a much less
-          * expensive algoritm
-          *     TODO:
-          *     check the strcmp
-          *     investigate the SEGFAULT
-          */
-#if 0
-         if(!ordered_exist)
-         {
-            ordered_exist=TRUE;
-            ranked_list=create_ranked_glist(0,NULL,relative_path_CF); /*SEGFAULT!!!*/
-         }
-         found=FALSE;
-         
-         min=0;
-         /*if "max=1" while doesn't start but we need lost_track*/
-         lost_track=g_list_nth_data(ranked_list,min);
-         max=g_list_length(ranked_list)-1;
-         while (min<max)
-         {
-            mean = (min+max)/2;
-            lost_track=g_list_nth_data(ranked_list,mean);
-            /*work?*/
-            if (strcmp(lostfile_fullpath,lost_track->ipod_path)>0)
-            {
-               min = mean+1;
-            }
-            else
-            {
-               max = mean;
-            }
-         }
-         if (strcmp(lostfile_fullpath,lost_track->ipod_path)!=0)
-         {
-            free_track(lost_track);
-            lost_track = NULL;
-            found=FALSE;
-         }
-         else
-         {
-            found=TRUE;
-         }
-#else         
-         found=FALSE;
-         ipod_track=get_next_track(0);
-         while(!found&&ipod_track!=NULL)
-         {
-            ipod_validfile=get_track_name_on_ipod(ipod_track);
-            if(strcmp(ipod_validfile,lostfile_fullpath)==0)
-            {
-               found=TRUE;
-            }
-            else
-            {
-               ipod_track=get_next_track(1);
-            }
-         /*</TODO>*/
-         } /*end of while(!found&&track!=NULL)*/
-#endif
-         if(!found)/*it's a lost track, add it in the iTunesDB*/
-         {
-            if(!lost_pl_exist) /*create a lost files' pl*/
-            {
-               lost_pl=add_new_playlist(g_strdup(_("[Lost tracks]")),-1);
-               lost_pl_exist=TRUE;
-            }
-            /*add an iTunesDB entry to the iTunesDB and to the lost_pl*/
-            lost_track=get_track_info_from_file (lostfile_fullpath,lost_track);
-            add_track_to_playlist(NULL,lost_track,TRUE); /*MPL*/
-            add_track_to_playlist(lost_pl,lost_track,TRUE); /*lost_pl*/
-            changed=TRUE;
-         }
-      } /*end of while(filename!=NULL)*/
-      g_dir_close(dir_des);
-      }/*if*/
-   }/*end for*/
-
-   g_free(lostfile_fullpath);
-   g_free(ipod_filename);
-   g_free(ipod_dir);
-   free_track(ipod_track);
-   ipod_track=NULL;
-   free_track(lost_track);
-   lost_track=NULL;
-   free_playlist(lost_pl); /*a pl containing all the losts tracks*/
-   g_free(ipod_validfile);
-   g_free(mp);
-   
-   //GDir *dir_des;
-   //Track *ipod_track=NULL; /*an existing non lost track*/
-
-/***************************
- * NEWS TO THE WORLD SECTION
- ***************************/
-   if(changed)
-      data_changed();
-
+/*     printf("Found dangling item pointing file %s\n", ((Track*)value)->ipod_path); */
+    add_track_to_playlist((Playlist*) data, (Track*)value, TRUE);
+    return FALSE;               /* do not stop traversal */
 }
-#endif
+
+guint ntokens(gchar** tokens)
+{
+    guint n=0;
+    while (tokens[n]) n++;
+    return n;
+}
+
+/* checks iTunesDB for presence of dangling links and checks IPODs Music directory
+ * on subject of orphaned files */
+void check_db (void)
+{
+    GTree *files_known = NULL;
+    Track *track = NULL;
+    GDir  *dir_des = NULL;
+
+    gchar *pathtrack=NULL
+        , *ipod_filename = NULL
+        , *ipod_dir = NULL
+        , *ipod_fulldir = NULL
+        , *buf = NULL;
+
+    Playlist* pl_orphaned = NULL,
+        * pl_dangling = NULL;
+
+    gpointer foundtrack ;
+
+    gint  h = 0
+        , norphaned = 0;
+
+    gchar ** tokens;
+
+    gchar * IPOD_MUSICFILES_DIR;
+    IPOD_MUSICFILES_DIR=g_strdup_printf("%s%c%s%cMusic%c",
+                                        prefs_get_ipod_mount(), G_DIR_SEPARATOR,
+                                        IPOD_CONTROL_DIR, G_DIR_SEPARATOR,G_DIR_SEPARATOR);
+
+    gtkpod_statusbar_message(_("Creating a tree of known files"));
+    gtkpod_tracks_statusbar_update();
+
+    /* put all files in the hash table */
+    files_known = g_tree_new_full (str_cmp, NULL,
+                                   treeKeyDestroy, treeValueDestroy);
+    while((track=get_next_track(h)))
+    {
+        h=1;
+        tokens = g_strsplit(track->ipod_path,":",4);
+/* 	fprintf(stdout,"File %s\n", track->ipod_path); */
+        fflush(stdout);
+        if (ntokens(tokens)>=4)
+            pathtrack=g_strdup (tokens[3]);
+        else
+            fprintf(stderr, "Report the bug please: shouldn't be 0 at %s:%d",__FILE__,__LINE__);
+        g_tree_insert (files_known, pathtrack, track);
+        g_strfreev(tokens);
+    }
+
+    gtkpod_statusbar_message(_("Checking iPOD files against known files in DB"));
+    gtkpod_tracks_statusbar_update();
+
+    for(h=0;h<IPOD_MUSIC_DIRS;h++)
+    {
+        /* directory name */
+        ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
+        ipod_fulldir=g_strdup_printf("%s%s",IPOD_MUSICFILES_DIR,ipod_dir); /* full path */
+
+        dir_des=g_dir_open(ipod_fulldir,0,NULL);
+
+        /* this shouldn't happend, but you never know */
+        if (dir_des!=NULL)
+        {
+            while ((ipod_filename=g_strdup(g_dir_read_name(dir_des))))
+                /* we have a file in the directory*/
+            {
+                pathtrack=g_strdup_printf("%s%c%s", ipod_dir, ':', ipod_filename);
+                if ( g_tree_lookup_extended (files_known, pathtrack,
+                                             &foundtrack, &foundtrack) )
+                { /* file is not orphaned */
+                    g_tree_remove(files_known, pathtrack); /* we don't need this any more */
+                }
+                else
+                {  /* Now deal with orphaned... */
+                    gchar * fn_orphaned;
+/* 		    printf("Found orphaned file %s\n", pathtrack); */
+                    if (!norphaned)
+		    {
+			gchar *str = g_strdup_printf ("[%s]", _("Orphaned"));
+                        pl_orphaned = get_newplaylist_by_name(str);
+			g_free (str);
+		    }
+
+                    norphaned++;
+
+
+                    fn_orphaned = g_strdup_printf("%s%s%c%s",
+                                                  IPOD_MUSICFILES_DIR,
+                                                  ipod_dir, G_DIR_SEPARATOR,
+                                                  ipod_filename);
+
+                    add_track_by_filename( fn_orphaned, pl_orphaned,
+                                           FALSE, NULL, NULL);
+                }
+                g_free(ipod_filename);
+                g_free(pathtrack);
+            }
+        }
+        g_free(dir_des);
+        g_free(ipod_dir);
+        g_free(ipod_fulldir);
+    }
+
+    buf=g_strdup_printf(_("Found %d orphaned and %d dangling files"),
+                        norphaned, g_tree_nnodes(files_known));
+    gtkpod_statusbar_message(buf);
+    gtkpod_tracks_statusbar_update();
+
+    g_free(buf);
+
+    if (g_tree_nnodes(files_known) > 0)
+    {
+	gchar *str = g_strdup_printf ("[%s]", _("Dangling"));
+        pl_dangling = get_newplaylist_by_name(str);
+	g_free (str);
+    }
+
+    /* Traverse the tree - leftovers are dangling */
+    g_tree_foreach(files_known, remove_dangling, pl_dangling);
+
+    if (pl_dangling || pl_orphaned)
+        data_changed();
+
+    g_free(IPOD_MUSICFILES_DIR);
+    g_tree_destroy(files_known);
+}

@@ -2,25 +2,25 @@
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -100,15 +100,15 @@ Track *add_track (Track *track)
   }
   else
   {
-    /* Make sure all strings are initialised -- that way we don't 
+    /* Make sure all strings are initialised -- that way we don't
      have to worry about it when we are handling the strings */
     /* exception: md5_hash, hostname, charset: these may be NULL. */
     validate_entries (track);
-    if(!track->ipod_id) 
+    if(!track->ipod_id)
 	track->ipod_id = free_ipod_id (0);  /* keep track of highest ID used */
     else
 	free_ipod_id(track->ipod_id);
-    
+
     tracks = g_list_append (tracks, track);
     result = track;
   }
@@ -116,7 +116,7 @@ Track *add_track (Track *track)
 }
 
 
-/* Make sure all strings are initialised -- that way we don't 
+/* Make sure all strings are initialised -- that way we don't
    have to worry about it when we are handling the strings.
    If a corresponding utf16 string is not set, it will be created from
    the utf8 string */
@@ -135,7 +135,7 @@ void validate_entries (Track *track)
     if (track->pc_path_utf8 == NULL)    track->pc_path_utf8 = g_strdup ("");
     if (track->pc_path_locale == NULL)  track->pc_path_locale = g_strdup ("");
     if (track->ipod_path == NULL)       track->ipod_path = g_strdup ("");
-    if (track->album_utf16 == NULL)     
+    if (track->album_utf16 == NULL)
 	track->album_utf16 = g_utf8_to_utf16 (track->album, -1, NULL, NULL, NULL);
     if (track->artist_utf16 == NULL)
 	track->artist_utf16 = g_utf8_to_utf16 (track->artist, -1, NULL, NULL, NULL);
@@ -159,7 +159,7 @@ void validate_entries (Track *track)
 /**
  * remove_track_from_ipod - in order to delete a track from the system
  * we need to keep track of the Tracks we want to delete next time we export
- * the id. 
+ * the id.
  * @track - the Track id we want to delete
  */
 void
@@ -268,7 +268,7 @@ Track *get_next_track (gint i)
     else                result = NULL;
 
     return result;
-}	
+}
 
 
 /* Returns the track with ID "id". We need to get the last occurence of
@@ -428,7 +428,7 @@ void hash_tracks(void)
 /* This function removes a duplicate track "track" from memory while
  * preserving the playlists.
  *
- * The md5 hash is not modified.  
+ * The md5 hash is not modified.
  *
  * The playcount/recent_playcount are modified to show the cumulative
  * playcounts for that track.
@@ -463,7 +463,7 @@ void remove_duplicate (Track *oldtrack, Track *track)
        if (str->len)
        { /* Some tracks have been deleted. Print a notice */
 	   if (removed)
-	   {	       
+	   {
 	       buf = g_strdup_printf (
 		   ngettext ("The following duplicate track has been removed.",
 			     "The following %d duplicate tracks have been removed.",

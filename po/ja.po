@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-24 23:57+0900\n"
+"POT-Creation-Date: 2004-01-26 08:41+0900\n"
 "PO-Revision-Date: 2003-12-01 23:28+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -293,11 +293,11 @@ msgstr "確認"
 msgid "Edit"
 msgstr "編集"
 
-#: src/context_menus.c:267 src/misc.c:1856
+#: src/context_menus.c:267 src/misc.c:1983
 msgid "Play Now"
 msgstr "今すぐ演奏"
 
-#: src/context_menus.c:269 src/misc.c:1867
+#: src/context_menus.c:269 src/misc.c:1994
 msgid "Enqueue"
 msgstr "演奏キューに加える"
 
@@ -498,6 +498,11 @@ msgstr "最後に演奏した時刻"
 msgid "Last Modified"
 msgstr "最後に変更した時刻"
 
+#: src/file.c:465
+#, c-format
+msgid "Unknown token '%s' in template '%s'\n"
+msgstr ""
+
 #: src/file.c:760
 msgid "Nothing to update"
 msgstr "更新されるデータはありません"
@@ -585,12 +590,12 @@ msgid "OK to synchronize the following directories?"
 msgstr "以下のディレクトリで同期処理をしてもよろしいですか?"
 
 #. no entry selected
-#: src/file.c:1141 src/misc.c:1529
+#: src/file.c:1141 src/misc.c:1538
 msgid "No entry selected."
 msgstr "何も選択されていません。"
 
 #. no playlist selected
-#: src/file.c:1169 src/misc.c:1208 src/misc.c:1411 src/misc.c:1518
+#: src/file.c:1169 src/misc.c:1217 src/misc.c:1420 src/misc.c:1527
 msgid "No playlist selected."
 msgstr "プレイリストが選択されていません。"
 
@@ -808,32 +813,42 @@ msgstr "エクスポートに失敗しました!"
 msgid "iPod Database Saved"
 msgstr "iPodデータベースを保存しました"
 
-#: src/file_export.c:211
+#: src/file_export.c:131
+#, c-format
+msgid "Output filename template ('%s') does not match the file '%s'\n"
+msgstr ""
+
+#: src/file_export.c:207
+#, c-format
+msgid "Unknown token '%%%c' in template '%s'"
+msgstr ""
+
+#: src/file_export.c:250
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "'%s'の作成に失敗: %s\n"
 
-#: src/file_export.c:311
+#: src/file_export.c:350
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
 msgstr "'%s' を '%s' にコピー中にエラー発生: 許可がありません (%s)\n"
 
-#: src/file_export.c:313
+#: src/file_export.c:352
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "'%s' を '%s' にコピー中にエラー発生: (%s)\n"
 
-#: src/file_export.c:321
+#: src/file_export.c:360
 #, c-format
 msgid "Unable to open '%s' for reading\n"
 msgstr "'%s' を読み込みのために開くことができません\n"
 
-#: src/file_export.c:371
-#, c-format
-msgid "Failed to write %s-%s\n"
+#: src/file_export.c:410
+#, fuzzy, c-format
+msgid "Failed to write '%s-%s'\n"
 msgstr "次の曲の保存ができません: %s-%s\n"
 
-#: src/file_export.c:430
+#: src/file_export.c:469
 msgid "Select Export Destination Directory"
 msgstr "ファイルを保存するディレクトリを選択してください"
 
@@ -1454,10 +1469,12 @@ msgstr "ファイル名の書式: "
 #: src/interface.c:1845
 #, fuzzy
 msgid ""
-"Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %"
-"t' or '%o'.  Artist: %a, album: %A, composer: %c, title: %t, genre: %G, "
-"track nr: %T, CD nr: %C, year: %Y, original filename (requires extended "
-"information file): %o, the character '%': %%."
+"Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
+"mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod "
+"will determine which one to use by the filename extension given. Artist: %a, "
+"album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, "
+"year: %Y, original filename (requires extended information file): %o, the "
+"character '%': %%."
 msgstr ""
 "iPodからコピーした曲に付けられるファイル名を設定します。例:'%A/%d%t - %n' や "
 "'%o' など。%A: アーティスト; %n: タイトル; %t: トラックNo.; %o: 元のファイル"
@@ -1994,69 +2011,69 @@ msgstr ""
 "並べ換えによる曲順を iPod に保存するには、「編集」メニューの「現在の曲順を保"
 "存」の項目か、上の「自動保存」を有効にしてください。"
 
-#: src/interface.c:4198
+#: src/interface.c:4200
 msgid "gtkpod Info"
 msgstr ""
 
-#: src/interface.c:4326 src/interface.c:4356 src/interface.c:4396
+#: src/interface.c:4328 src/interface.c:4358 src/interface.c:4398
 msgid "      "
 msgstr ""
 
-#: src/interface.c:4510
+#: src/interface.c:4512
 msgid "Number of tracks"
 msgstr "曲数"
 
-#: src/interface.c:4520
+#: src/interface.c:4522
 msgid "Play time"
 msgstr "演奏時間"
 
-#: src/interface.c:4530
+#: src/interface.c:4532
 msgid "File size"
 msgstr "ファイルサイズ"
 
-#: src/interface.c:4540
+#: src/interface.c:4542
 msgid "Number of playlists"
 msgstr "プレイリストの数"
 
-#: src/interface.c:4550
+#: src/interface.c:4552
 msgid "Deleted tracks"
 msgstr "削除された曲"
 
-#: src/interface.c:4560
+#: src/interface.c:4562
 msgid "File size (deleted)"
 msgstr "削除されたファイルサイズ"
 
-#: src/interface.c:4570
+#: src/interface.c:4572
 msgid "Non-transfered tracks"
 msgstr "未転送の曲数"
 
-#: src/interface.c:4580
+#: src/interface.c:4582
 msgid "File size (non-transfered)"
 msgstr "未転送のファイルサイズ"
 
-#: src/interface.c:4590
+#: src/interface.c:4592
 msgid "Free space on iPod"
 msgstr "iPodの残り容量"
 
-#: src/interface.c:4600
+#: src/interface.c:4602
 msgid "Total"
 msgstr "合計"
 
-#: src/interface.c:4608
+#: src/interface.c:4610
 #, fuzzy
 msgid ""
 "Selected\n"
 "Playlist"
 msgstr "プレイリスト(_P)"
 
-#: src/interface.c:4616
+#: src/interface.c:4618
 #, fuzzy
 msgid ""
 "Displayed\n"
 "Tracks"
 msgstr "表示されている曲(_D)"
 
-#: src/interface.c:4624
+#: src/interface.c:4626
 #, fuzzy
 msgid ""
 "Selected\n"
@@ -2123,38 +2140,38 @@ msgstr "ファイルの大きさが 0 バイトです\n"
 msgid "Could not open '%s' to calculate MD5 checksum.\n"
 msgstr "'%s' を開けないため、MD5 チェックサムが計算できません。\n"
 
-#: src/misc.c:121
+#: src/misc.c:126
 msgid "Successly Added Files"
 msgstr "ファイルの追加に成功しました"
 
 #. file selector already open -- abort
 #. Create the selector
-#: src/misc.c:140
+#: src/misc.c:145
 msgid "Select files or directories to add."
 msgstr "追加するファイルまたはディレクトリを選択してください。"
 
 #. file selector already open -- abort
 #. Create the selector
-#: src/misc.c:212
+#: src/misc.c:217
 msgid "Select Playlists to add."
 msgstr "追加するプレイリストを選択してください。"
 
-#: src/misc.c:375 src/misc.c:377 src/misc.c:2417
+#: src/misc.c:380 src/misc.c:382 src/misc.c:2544
 msgid "New Playlist"
 msgstr "新規プレイリスト"
 
-#: src/misc.c:376
+#: src/misc.c:381
 msgid "Please enter a name for the new playlist"
 msgstr "新しいプレイリストの名前を入力してください"
 
-#: src/misc.c:404
+#: src/misc.c:409
 #, c-format
 msgid ""
 "gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod"
 "(tm)."
 msgstr ""
 
-#: src/misc.c:408
+#: src/misc.c:413
 msgid ""
 "(C) 2002 - 2003\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
@@ -2163,7 +2180,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/misc.c:414
+#: src/misc.c:419
 msgid ""
 "This program is free software; you can redistribute it and/or modify it "
 "under the terms of the GNU General Public License as published by the Free "
@@ -2197,118 +2214,122 @@ msgstr ""
 "\n"
 "\n"
 
-#: src/misc.c:422
+#: src/misc.c:427
 msgid ""
 "Patches were supplied by the following people (list may be incomplete -- "
 "please contact me)\n"
 "\n"
 msgstr ""
 
-#: src/misc.c:424
+#: src/misc.c:429
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"
 msgstr ""
 
-#: src/misc.c:426
+#: src/misc.c:431
 msgid "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
 msgstr ""
 
-#: src/misc.c:428
+#: src/misc.c:433
 msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"
 msgstr ""
 
-#: src/misc.c:430
+#: src/misc.c:435
 msgid ""
 "Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
 "newlines at the end\n"
 msgstr ""
 
-#: src/misc.c:432
+#: src/misc.c:437
 msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
 msgstr ""
 
-#: src/misc.c:434
+#: src/misc.c:439
 msgid "Chris Cutler: automatic creation of various playlist types\n"
 msgstr ""
 
-#: src/misc.c:436
+#: src/misc.c:441
 msgid ""
 "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
 "dialogue during sync\n"
 msgstr ""
 
-#: src/misc.c:438
+#: src/misc.c:443
 msgid ""
 "Edward Matteucci: debugging, special playlist creation, most of the volume "
 "normalizing code\n"
 msgstr ""
 
-#: src/misc.c:440
+#: src/misc.c:445
 msgid "Jens Lautenbach: some optical improvements\n"
 msgstr ""
 
-#: src/misc.c:443
+#: src/misc.c:447
+msgid "Alex Tribble: iPod eject patch\n"
+msgstr ""
+
+#: src/misc.c:450
 msgid "This program borrows code from the following projects:\n"
 msgstr ""
 
-#: src/misc.c:445
+#: src/misc.c:452
 msgid ""
 "    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
 "(http://www.gnu.org/software/gnupod/)\n"
 msgstr ""
 
-#: src/misc.c:447
+#: src/misc.c:454
 msgid "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
 msgstr ""
 
-#: src/misc.c:449
+#: src/misc.c:456
 msgid ""
 "    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
 msgstr ""
 
-#: src/misc.c:451
+#: src/misc.c:458
 msgid ""
 "    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge."
 "net)\n"
 msgstr ""
 
-#: src/misc.c:454
+#: src/misc.c:461
 msgid ""
 "The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
 msgstr ""
 
-#: src/misc.c:469
+#: src/misc.c:476
 msgid "French:   David Le Brun (david at dyn-ns dot net)\n"
 msgstr ""
 
-#: src/misc.c:471
+#: src/misc.c:478
 msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 msgstr ""
 
-#: src/misc.c:473
+#: src/misc.c:480
 msgid ""
 "Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
 "net)\n"
 msgstr ""
 
-#: src/misc.c:475
+#: src/misc.c:482
 msgid "Japanese: Ayako Sano\n"
 msgstr ""
 
-#: src/misc.c:477
+#: src/misc.c:484
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 msgstr ""
 
-#: src/misc.c:645
+#: src/misc.c:652
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "ドラッグアンドドロップ: '%s'は無視します\n"
 
-#: src/misc.c:676 src/misc.c:680
+#: src/misc.c:683 src/misc.c:687
 #, c-format
 msgid "Could not delete backup file: \"%s\"\n"
 msgstr "バックアップファイルが削除できません: \"%s\"\n"
 
-#: src/misc.c:708
+#: src/misc.c:715
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"
@@ -2318,53 +2339,53 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:826
+#: src/misc.c:835
 msgid "Warning"
 msgstr "警告"
 
 #. title
-#: src/misc.c:827
+#: src/misc.c:836
 msgid "The following has occured:"
 msgstr "以下の問題が発生しました:"
 
-#: src/misc.c:1075
+#: src/misc.c:1084
 #, c-format
 msgid "Successfully created iPod directories in '%s'."
 msgstr "'%s' にiPodのディレクトリを作成しました。"
 
-#: src/misc.c:1077
+#: src/misc.c:1086
 #, c-format
 msgid "Problem creating iPod directories in '%s'."
 msgstr "'%s' にiPodのディレクトリを作成する際に問題が発生しました。"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:1123
+#: src/misc.c:1132
 msgid "Create iPod directories"
 msgstr "iPodの初期設定"
 
 #. title
-#: src/misc.c:1124
+#: src/misc.c:1133
 msgid "OK to create the following directories?"
 msgstr "以下のディレクトリを作成してもいいですか?"
 
-#: src/misc.c:1157
+#: src/misc.c:1166
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "プレイリスト '%s' を削除"
 
-#: src/misc.c:1177
+#: src/misc.c:1186
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
 msgstr[0] "プレイリスト '%s'（%d 曲入り）を削除しました"
 
 #. master playlist
-#: src/misc.c:1213
+#: src/misc.c:1222
 msgid "Cannot delete master playlist."
 msgstr "マスタープレイリストは削除できません。"
 
-#: src/misc.c:1237
+#: src/misc.c:1246
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
@@ -2380,18 +2401,18 @@ msgstr[0] ""
 "るかを示しています。"
 
 #. remove only playlist, keep tracks
-#: src/misc.c:1258
+#: src/misc.c:1267
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "プレイリスト '%s' を本当に削除してもいいですか?"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:1263
+#: src/misc.c:1272
 msgid "Delete Playlist?"
 msgstr "プレイリストを削除しますか?"
 
-#: src/misc.c:1306
+#: src/misc.c:1315
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "ipod? The number of playlists this track is a member of is indicated in "
@@ -2404,12 +2425,12 @@ msgstr[0] ""
 "以下の曲をiPodから完全に削除してもよろしいですか?括弧の中の数字は、それぞれの"
 "曲がいくつのプレイリストに登録されているかを示しています。"
 
-#: src/misc.c:1308
+#: src/misc.c:1317
 msgid "Delete Track Completely?"
 msgid_plural "Delete Tracks Completey?"
 msgstr[0] "以下の曲を完全に削除しますか?"
 
-#: src/misc.c:1318
+#: src/misc.c:1327
 #, c-format
 msgid ""
 "Are you sure you want to delete the following track from the playlist \"%s\"?"
@@ -2418,123 +2439,123 @@ msgid_plural ""
 "\"?"
 msgstr[0] "以下の曲をプレイリスト \"%s\" から削除してもよろしいですか?"
 
-#: src/misc.c:1320
+#: src/misc.c:1329
 msgid "Delete Track From Playlist?"
 msgid_plural "Delete Tracks From Playlist?"
 msgstr[0] "以下の曲をプレイリストから削除しますか?"
 
-#: src/misc.c:1366
+#: src/misc.c:1375
 #, c-format
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
 msgstr[0] "iPodから1曲完全に削除しました"
 
-#: src/misc.c:1372
+#: src/misc.c:1381
 #, c-format
 msgid "Deleted track from playlist '%s'"
 msgid_plural "Deleted tracks from playlist '%s'"
 msgstr[0] "プレイリスト '%s' から曲を削除しました"
 
 #. no tracks selected
-#: src/misc.c:1417
+#: src/misc.c:1426
 msgid "No tracks selected."
 msgstr "曲が選択されていません。"
 
-#: src/misc.c:1535
+#: src/misc.c:1544
 msgid "Cannot remove entry 'All'"
 msgstr "'全て' の項目を削除することはできません"
 
-#: src/misc.c:1759
+#: src/misc.c:1886
 #, c-format
 msgid "No command set for '%s'"
 msgstr "'%s' のためのコマンドが設定されていません"
 
-#: src/misc.c:1780
+#: src/misc.c:1907
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
 msgstr "'%s' のためのコマンド '%s' が見付かりません"
 
-#: src/misc.c:2162
+#: src/misc.c:2289
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr "指定されたURI '%s' はfileスキームが設定されていない、不完全なURIです"
 
-#: src/misc.c:2172
+#: src/misc.c:2299
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr "ローカルファイルを指すURI '%s' には '#' は含まれてはなりません"
 
-#: src/misc.c:2189
+#: src/misc.c:2316
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr "指定されたURI '%s' は不正です"
 
-#: src/misc.c:2201
+#: src/misc.c:2328
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr "指定されたURI '%s' のホスト名が不正です"
 
-#: src/misc.c:2217
+#: src/misc.c:2344
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "指定されたURI '%s' は不正なエスケープ文字を含んでいます"
 
-#: src/misc.c:2290
+#: src/misc.c:2417
 msgid "AR:"
 msgstr ""
 
-#: src/misc.c:2293
+#: src/misc.c:2420
 msgid "AL:"
 msgstr ""
 
-#: src/misc.c:2296
+#: src/misc.c:2423
 msgid "GE:"
 msgstr ""
 
-#: src/misc.c:2299
+#: src/misc.c:2426
 msgid "CO:"
 msgstr ""
 
-#: src/misc.c:2331
+#: src/misc.c:2458
 msgid "Unknown"
 msgstr "不明"
 
-#: src/misc.c:2400
+#: src/misc.c:2527
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
 msgstr[0] "新しくプレイリスト'%s'(%d曲)を作成しました"
 
 #. n==0
-#: src/misc.c:2406
+#: src/misc.c:2533
 msgid "No tracks available, playlist not created"
 msgstr "曲が見付からないので、プレイリストは作れません"
 
-#: src/misc.c:2542
+#: src/misc.c:2669
 #, c-format
 msgid "Most Listened (%d)"
 msgstr "良く聴く曲 (%d)"
 
 #. no limit
-#: src/misc.c:2580
+#: src/misc.c:2707
 msgid "Never Listened"
 msgstr "聴いたことがない曲"
 
-#: src/misc.c:2617
+#: src/misc.c:2744
 #, c-format
 msgid "Best Rated (%d)"
 msgstr "評価の高い曲 (%d)"
 
-#: src/misc.c:2654
+#: src/misc.c:2781
 #, c-format
 msgid "Recent (%d)"
 msgstr "最近聴いた曲 (%d)"
 
-#: src/misc.c:2692
+#: src/misc.c:2819
 msgid "Last Time"
 msgstr "前回以降"
 
-#: src/misc.c:2903
+#: src/misc.c:3030
 msgid "[Lost tracks]"
 msgstr "[行方不明の曲]"
 
@@ -2554,7 +2575,7 @@ msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:1391
+#: src/mp3file.c:1392
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "ファイル \"%s\" は長さが0なので無視します。\n"
@@ -2689,103 +2710,103 @@ msgstr ""
 msgid "  --offline:    same as '-o'.\n"
 msgstr "  --offline:    '-o'と同じ\n"
 
-#: src/prefs.c:279 src/prefs.c:685
+#: src/prefs.c:279 src/prefs.c:689
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "設定ファイルの以下の行に誤りがあります: %s\n"
 
-#: src/prefs.c:718
+#: src/prefs.c:722
 #, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr "設定ファイル \"%s\" を開けません\n"
 
-#: src/prefs.c:838
+#: src/prefs.c:842
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "不明なオプション: %s\n"
 
-#: src/prefs.c:880
+#: src/prefs.c:884
 msgid "# delete confirmation\n"
 msgstr ""
 
-#: src/prefs.c:885
+#: src/prefs.c:889
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
 
-#: src/prefs.c:902
+#: src/prefs.c:906
 msgid "# autoselect master playlist?\n"
 msgstr ""
 
-#: src/prefs.c:904
+#: src/prefs.c:908
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr ""
 
-#: src/prefs.c:905
+#: src/prefs.c:909
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr ""
 
-#: src/prefs.c:906
+#: src/prefs.c:910
 msgid "# autoset: set empty tag to filename?\n"
 msgstr ""
 
-#: src/prefs.c:919
+#: src/prefs.c:923
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
 "# between sort tabs, and in statusbar.\n"
 msgstr ""
 
-#: src/prefs.c:956
+#: src/prefs.c:960
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser, prefs\n"
 msgstr ""
 
-#: src/prefs.c:987
+#: src/prefs.c:991
 msgid "Settings are not saved.\n"
 msgstr "設定は保存されません。\n"
 
-#: src/prefs.c:1000
+#: src/prefs.c:1004
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "ファイル \"%s\" を開けません\n"
 
-#: src/prefs.c:1343
+#: src/prefs.c:1347
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " 設定: カテゴリーの数 (%d<%d?) か、ソートタブの数 (%d<%d?) が多過ぎます。\n"
 
-#: src/prefs.c:1392
+#: src/prefs.c:1396
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "\"mkdir %s\" を実行できませんでした\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1784
+#: src/prefs.c:1788
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1826
+#: src/prefs.c:1830
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort: 不正な型 '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1847
+#: src/prefs.c:1851
 #, c-format
 msgid "prefs_set_st_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_st_sort: 不正な型 '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1868
+#: src/prefs.c:1872
 #, c-format
 msgid "prefs_set_tm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_tm_sort: 不正な型 '%d' は無視されました\n"
 
-#: src/prefs.c:1982 src/prefs.c:1989
+#: src/prefs.c:1986 src/prefs.c:1993
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr "'%s': '%%s' は一つまでしか使えません。\n"

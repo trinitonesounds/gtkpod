@@ -2,25 +2,25 @@
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -147,7 +147,7 @@ TimeInfo *st_update_date_interval_from_string (guint32 inst,
 	}
     }
     return ti;
-}	
+}
 
 
 /* check if @track's timestamp is within the interval given for @item.
@@ -291,7 +291,7 @@ static void st_add_track_special (Track *track, gboolean final,
     {
 	if (st->is_go || prefs_get_sp_autodisplay (inst))
 	    st_add_track (NULL, final, display, inst+1);
-	
+
     }
 }
 
@@ -427,7 +427,7 @@ void sp_go (guint32 inst)
     add_selection_callback (inst, sp_go_cb,
 			    (gpointer)inst, NULL);
 }
-    
+
 
 /* called by st_remove_track() */
 static void st_remove_track_special (Track *track, guint32 inst)
@@ -504,7 +504,7 @@ static void st_track_changed_special (Track *track,
 		    st->sp_selected = g_list_append (st->sp_selected, track);
 		    st_add_track (track, TRUE, TRUE, inst+1);
 		}
-	    }		
+	    }
 	}
     }
 }
@@ -653,7 +653,7 @@ static void st_add_entry (TabEntry *entry, guint32 inst)
 }
 
 /* Used by st_remove_entry_from_model() to remove entry from model by calling
-   gtk_tree_model_foreach () */ 
+   gtk_tree_model_foreach () */
 static gboolean st_delete_entry_from_model (GtkTreeModel *model,
 					    GtkTreePath *path,
 					    GtkTreeIter *iter,
@@ -693,7 +693,7 @@ static void st_remove_entry_from_model (TabEntry *entry, guint32 inst)
 	/* remove entry from hash */
 	if (st->entry_hash)
 	{
-	    TabEntry *hashed_entry = 
+	    TabEntry *hashed_entry =
 		(TabEntry *)g_hash_table_lookup (st->entry_hash, entry->name);
 	    if (hashed_entry == entry)
 		g_hash_table_remove (st->entry_hash, entry->name);
@@ -904,7 +904,7 @@ static gboolean st_recategorize_track (Track *track, guint32 inst)
   if (newentry != oldentry)
     { /* track category changed */
       /* add track to entry members list */
-      newentry->members = g_list_append (newentry->members, track); 
+      newentry->members = g_list_append (newentry->members, track);
       /* remove track from old entry members list */
       oldentry->members = g_list_remove (oldentry->members, track);
       /*  printf("%d: recat_return_TRUE\n", inst);*/
@@ -1027,7 +1027,7 @@ void st_track_changed (Track *track, gboolean removed, guint32 inst)
 /* Reorders the tracks stored in the sort tabs according to the order
  * in the selected playlist. This has to be done e.g. if we change the
  * order in the track view.
- * 
+ *
  * Right now I simply delete all members of all tab entries, then add
  * the tracks again without having them added to the track view. For my
  * 2459 tracks that takes approx. 1.3 seconds (850 MHz AMD Duron) */
@@ -1167,7 +1167,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 	    return;
 	}
 	do {
-	    gtk_tree_model_get (st->model, &iter, 
+	    gtk_tree_model_get (st->model, &iter,
 				ST_COLUMN_ENTRY, &iter_entry,
 				-1);
 	    if (iter_entry == select_entry)
@@ -1564,7 +1564,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   }
   else
   {   /* handle new selection */
-      gtk_tree_model_get (model, &iter, 
+      gtk_tree_model_get (model, &iter,
 			  ST_COLUMN_ENTRY, &new_entry,
 			  -1);
       /* printf("selected instance %d, entry %x (was: %x)\n", inst,
@@ -1703,7 +1703,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	      g_free (entry->name);
 	      entry->name = g_strdup (new_text);
 	  }
-	  
+
 	  /* re-insert into hash table if the same name doesn't
 	     already exist */
 	  if (g_hash_table_lookup (st->entry_hash, entry->name) == NULL)
@@ -1786,10 +1786,10 @@ static void st_cell_data_func (GtkTreeViewColumn *tree_column,
 
   switch (column)
     {  /* We only have one column, so this code is overkill... */
-    case ST_COLUMN_ENTRY: 
+    case ST_COLUMN_ENTRY:
       if (entry->master) editable = FALSE;
       else               editable = TRUE;
-      g_object_set (G_OBJECT (renderer), "text", entry->name, 
+      g_object_set (G_OBJECT (renderer), "text", entry->name,
 		    "editable", editable, NULL);
       break;
     }
@@ -1837,7 +1837,7 @@ void st_stop_editing (gint inst, gboolean cancel)
 				      NULL, &col);
 	    if (col)
 	    {
-		if (!cancel && col->editable_widget)  
+		if (!cancel && col->editable_widget)
 		    gtk_cell_editable_editing_done (col->editable_widget);
 		if (col->editable_widget)
 		    gtk_cell_editable_remove_widget (col->editable_widget);
@@ -2011,7 +2011,7 @@ st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 	    default:
 		break;
 	}
-	
+
     }
     return(FALSE);
 }
@@ -2108,7 +2108,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       {
 	  w = lookup_widget (special, "sp_and_button");
 	  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-      }	  
+      }
 
       /* RATING */
       w = lookup_widget (special, "sp_rating_button");
@@ -2150,7 +2150,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			(gpointer)inst);
       gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
 				 prefs_get_sp_playcount_high (inst));
-      
+
       /* PLAYED */
       w = lookup_widget (special, "sp_played_button");
       st->ti_played.active = w;
@@ -2496,8 +2496,8 @@ void st_show_hide_tooltips (void)
 /*
  * utility function for appending ipod track ids for st treeview callback
  */
-void 
-on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+void
+on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 			   GtkTreeIter *i, gpointer data)
 {
     TabEntry *entry;
@@ -2725,7 +2725,7 @@ static T_item cal_get_category (GtkWidget *cal)
     }
     return item;
 }
-	
+
 
 /* Returns a string "DD/MM/YYYY HH:MM". Data is taken from
  * @tm. Returns NULL if tm==NULL. You must g_free() the returned
@@ -2918,7 +2918,7 @@ void cal_open_calendar (gint inst, T_item item)
 	while (*bp)   catlist = g_list_append (catlist, gettext (*bp++));
     }
     w = lookup_widget (cal, "cat_combo");
-    gtk_combo_set_popdown_strings (GTK_COMBO (w), catlist); 
+    gtk_combo_set_popdown_strings (GTK_COMBO (w), catlist);
     /* set standard entry */
     if (item == T_TIME_PLAYED)
 	    str = gettext (cat_strings[CAT_STRING_PLAYED]);
@@ -2950,7 +2950,7 @@ void cal_open_calendar (gint inst, T_item item)
 			  "toggled",
 			  G_CALLBACK (cal_time_toggled),
 			  cal);
-	
+
 	cal_set_time (cal, LOWER_MARGIN, ti->lower);
 
 	/* Upper Margin */
