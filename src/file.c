@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 00:58:30 JST jcs>
+/* Time-stamp: <2004-03-24 20:37:43 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -95,16 +95,6 @@ static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
 static float extendedinfoversion = 0.0;
 
-/* values below -1 are private to individual functions */
-enum {
-	FILE_TYPE_ERROR = -1,
-	FILE_TYPE_UNKNOWN = 0,
-	FILE_TYPE_MP3,
-	FILE_TYPE_MP4,
-	FILE_TYPE_WAV,
-	FILE_TYPE_M3U,
-	FILE_TYPE_PLS
-};
 
 
 /* Determine the type of a file. 
@@ -115,23 +105,25 @@ enum {
  * -jlt
  */
 
-static int determine_file_type(gchar *path)
+gint determine_file_type(gchar *path)
 {
 	gchar *path_utf8, *suf;
-	int type = FILE_TYPE_UNKNOWN;
+	gint type = FILE_TYPE_UNKNOWN;
 	
 	if (!path) return FILE_TYPE_ERROR;
 	
     	path_utf8 = charset_to_utf8 (path);
-	suf = path_utf8 + strlen(path_utf8) - 4;
-	if (suf >= path_utf8) {
-		/* since we are exclusively checkinng for equality strcasecmp
-		 * should be sufficient */
-		if (g_strcasecmp (suf, ".mp3") == 0) type = FILE_TYPE_MP3;
-		if (g_strcasecmp (suf, ".mp4") == 0) type = FILE_TYPE_MP4;
-		if (g_strcasecmp (suf, ".wav") == 0) type = FILE_TYPE_WAV;
-		if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
-		if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
+	suf = strrchr (path_utf8, '.');
+	if (suf)
+	{
+	    /* since we are exclusively checking for equality strcasecmp
+	     * should be sufficient */
+	    if (g_strcasecmp (suf, ".mp3") == 0) type = FILE_TYPE_MP3;
+	    if (g_strcasecmp (suf, ".m4a") == 0) type = FILE_TYPE_M4A;
+	    if (g_strcasecmp (suf, ".m4p") == 0) type = FILE_TYPE_M4P;
+	    if (g_strcasecmp (suf, ".wav") == 0) type = FILE_TYPE_WAV;
+	    if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
+	    if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
 	}
 
 	g_free(path_utf8);
@@ -188,7 +180,8 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	switch (type) {
 	    case FILE_TYPE_ERROR:
  	    case FILE_TYPE_MP3:
-	    case FILE_TYPE_MP4:
+	    case FILE_TYPE_M4A:
+	    case FILE_TYPE_M4P:
 	    case FILE_TYPE_WAV:
 	        /* FIXME: Status */
 		g_free(plname);
@@ -738,13 +731,22 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     if (len < 4) return NULL;
 
     switch (determine_file_type(name)) {
-	case FILE_TYPE_MP3: nti = file_get_mp3_info (name); break;
-	case FILE_TYPE_MP4: nti = file_get_mp4_info (name); break;
-	case FILE_TYPE_WAV: nti = file_get_wav_info (name); break;
+	case FILE_TYPE_MP3:
+	    nti = file_get_mp3_info (name);
+	    break;
+	case FILE_TYPE_M4A:
+	case FILE_TYPE_M4P:
+	    nti = file_get_mp4_info (name);
+	    break;
+	case FILE_TYPE_WAV:
+	    nti = file_get_wav_info (name);
+	    break;
 	case FILE_TYPE_UNKNOWN:
 	case FILE_TYPE_M3U:
 	case FILE_TYPE_PLS:
-	case FILE_TYPE_ERROR: nti = NULL;
+	case FILE_TYPE_ERROR:
+	    nti = NULL;
+	    break;
     }
 
     if (nti)
@@ -1520,7 +1522,8 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 	  case FILE_TYPE_PLS:
 		  return add_playlist_by_filename (name, plitem, addtrackfunc, data);
 	  case FILE_TYPE_MP3:
-	  case FILE_TYPE_MP4:
+	  case FILE_TYPE_M4A:
+	  case FILE_TYPE_M4P:
 	  case FILE_TYPE_UNKNOWN:
 	  case FILE_TYPE_ERROR:
 		  break;
@@ -1654,7 +1657,8 @@ static gboolean file_write_info (gchar *name, Track *track)
         switch (determine_file_type(name)) {
 	    case FILE_TYPE_MP3:
 		return file_write_mp3_info (name, track);
-	    case FILE_TYPE_MP4:
+	    case FILE_TYPE_M4A:
+	    case FILE_TYPE_M4P:
 		return file_write_mp4_info (name, track);
 	    case FILE_TYPE_WAV:
 		return file_write_wav_info (name, track);
@@ -2963,7 +2967,8 @@ gboolean calc_gain(gchar *path)
 {
 	switch (determine_file_type(path)) {
 		case FILE_TYPE_MP3: return mp3_calc_gain(path);
-		case FILE_TYPE_MP4: /* FIXME */
+		case FILE_TYPE_M4A: /* FIXME */
+		case FILE_TYPE_M4P: /* FIXME */
 		case FILE_TYPE_WAV: /* FIXME */
 		case FILE_TYPE_M3U: 
 		case FILE_TYPE_PLS: 
@@ -2979,7 +2984,8 @@ gboolean read_gain_tags(gchar *path, Track *track)
 {
 	switch (determine_file_type(path)) {
 		case FILE_TYPE_MP3: return mp3_read_gain_tags(path, track);
-		case FILE_TYPE_MP4: /* FIXME */
+		case FILE_TYPE_M4A: /* FIXME */
+		case FILE_TYPE_M4P: /* FIXME */
 		case FILE_TYPE_WAV: /* FIXME */
 		case FILE_TYPE_M3U: 
 		case FILE_TYPE_PLS: 

@@ -37,8 +37,22 @@
 #include "track.h"
 #include "playlist.h"
 
+
+/* values below -1 are private to individual functions */
+enum {
+	FILE_TYPE_ERROR = -1,
+	FILE_TYPE_UNKNOWN = 0,
+	FILE_TYPE_MP3,
+	FILE_TYPE_M4A,
+	FILE_TYPE_M4P,
+	FILE_TYPE_WAV,
+	FILE_TYPE_M3U,
+	FILE_TYPE_PLS
+};
+
 typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
 
+gint determine_file_type(gchar *path);
 gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 			       AddTrackFunc addtrackfunc, gpointer data);
 gboolean add_directory_by_name (gchar *name, Playlist *plitem,
