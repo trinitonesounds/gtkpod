@@ -510,6 +510,10 @@ void remove_duplicate (Track *oldtrack, Track *track)
        /* Set 'played' timestamp */
        oldtrack->time_played =  MAX (oldtrack->time_played, track->time_played);
 
+       /* Set pc filename */
+       oldtrack->pc_path_utf8 = g_strdup (track->pc_path_utf8);
+       oldtrack->pc_path_locale = g_strdup (track->pc_path_locale);
+
        if (track_is_in_playlist (NULL, track))
        { /* track is already added to memory -> replace with "oldtrack" */
 	   /* check for "track" in all playlists (except for MPL) */
