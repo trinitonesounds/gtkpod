@@ -477,9 +477,8 @@ gint pm_data_compare_func (GtkTreeModel *model,
   if (playlist1->type == PL_TYPE_MPL) return (-corr);
   if (playlist2->type == PL_TYPE_MPL) return (corr);
 
-  /* otherwise just compare the entries */
-  return g_utf8_collate (g_utf8_casefold (playlist1->name, -1), 
-			     g_utf8_casefold (playlist2->name, -1));
+  /* compare the two entries */
+  return compare_string (playlist1->name, playlist2->name);
 }
 
 
@@ -1785,9 +1784,8 @@ gint st_data_compare_func (GtkTreeModel *model,
   if (entry1->master) return (-corr);
   if (entry2->master) return (corr);
 
-  /* Otherwise return the comparison */
-  return g_utf8_collate (g_utf8_casefold (entry1->name, -1), 
-			 g_utf8_casefold (entry2->name, -1));
+  /* compare the two entries */
+  return compare_string (entry1->name, entry2->name);
 }
 
 
@@ -2533,7 +2531,8 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
       buf = time_field_to_string (song, column);
       g_object_set (G_OBJECT (renderer),
 		    "text", buf,
-		    "editable", TRUE,
+/* don't know how to make it editable yet */
+/* 		    "editable", TRUE, */
 		    "xalign", 0.0, NULL);
       C_FREE (buf);
       break;
@@ -3022,7 +3021,6 @@ gint sm_data_compare_func (GtkTreeModel *model,
   gint column;
   SM_item sm_item;
   GtkSortType order;
-  gchar *item1_utf8, *item2_utf8;
 
   gtk_tree_model_get (model, a, SM_COLUMN_ALBUM, &song1, -1);
   gtk_tree_model_get (model, b, SM_COLUMN_ALBUM, &song2, -1);
@@ -3037,10 +3035,8 @@ gint sm_data_compare_func (GtkTreeModel *model,
   case SM_COLUMN_ALBUM:
   case SM_COLUMN_GENRE:
   case SM_COLUMN_COMPOSER:
-      item1_utf8 = song_get_item_utf8 (song1, SM_to_S (sm_item));
-      item2_utf8 = song_get_item_utf8 (song2, SM_to_S (sm_item));
-      return g_utf8_collate (g_utf8_casefold (item1_utf8, -1),
-			     g_utf8_casefold (item2_utf8, -1));
+      return compare_string (song_get_item_utf8 (song1, SM_to_S (sm_item)),
+			     song_get_item_utf8 (song2, SM_to_S (sm_item)));
   case SM_COLUMN_TRACK_NR:
       return song1->track_nr - song2->track_nr;
   case SM_COLUMN_IPOD_ID:
@@ -3057,6 +3053,14 @@ gint sm_data_compare_func (GtkTreeModel *model,
       return song1->songlen - song2->songlen;
   case SM_COLUMN_BITRATE:
       return song1->bitrate - song2->bitrate;
+  case SM_COLUMN_PLAYCOUNT:
+      return song1->playcount - song2->playcount;
+  case  SM_COLUMN_RATING:
+      return song1->rating - song2->rating;
+  case SM_COLUMN_TIME_CREATE:
+  case SM_COLUMN_TIME_PLAYED:
+  case SM_COLUMN_TIME_MODIFIED:
+      return time_get_time (song1, sm_item) - time_get_time (song2, sm_item);
   default:
       g_warning ("Programming error: sm_data_compare_func: no sort method for column %d\n", column);
       break;

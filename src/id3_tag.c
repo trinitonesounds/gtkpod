@@ -104,7 +104,10 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
 
     if ( (file=fopen(filename,"r"))==NULL )
     {
-        g_print(_("ERROR while opening file: '%s' (%s).\n"),filename,g_strerror(errno));
+	gchar *fbuf = charset_to_utf8 (filename);
+        g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
         return FALSE;
     }
     fseek (file, 0, SEEK_END);
@@ -486,8 +489,11 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
     /* Test to know if we can write into the file */
     if ( (file=fopen(filename,"r+"))==NULL )
     {
-      /*        g_print(_("ERROR while opening file: '%s' (%s).\n"),filename,g_strerror(errno));*/
-        return FALSE;
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
     }
     fclose(file);
 

@@ -1301,8 +1301,8 @@ gboolean itunesdb_write_to_file (gchar *filename)
       gchar *plcname_n = itunesdb_concat_dir (dirname, "Play Counts.bak");
       if (rename (plcname_o, plcname_n) == -1)
       {   /* an error occured */
-	  itunesdb_warning (_("Error renaming '%s' to '%s' (errno: %d).\n"),
-			    plcname_o, plcname_n, errno);
+	  itunesdb_warning (_("Error renaming '%s' to '%s' (%s).\n"),
+			    plcname_o, plcname_n, g_strerror (errno));
       }
       g_free (dirname);
       g_free (plcname_o);

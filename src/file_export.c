@@ -170,9 +170,9 @@ copy_file_from_file_to_dest(gchar *file, gchar *dest)
 	    switch(errno)
 	    {
 		case EPERM:
-		    gtkpod_warning (_("Error copying '%s' to '%s': Permission Error (errno: %d)\n"), file, dest, errno);
+		    gtkpod_warning (_("Error copying '%s' to '%s': Permission Error (%s)\n"), file, dest, g_strerror (errno));
 		default:
-		    gtkpod_warning (_("Error copying '%s' to '%s' (errno: %d)\n"), file, dest, errno);
+		    gtkpod_warning (_("Error copying '%s' to '%s' (%s)\n"), file, dest, g_strerror (errno));
 		    break;
 	    }
 	}

@@ -30,6 +30,7 @@
 #include <gtk/gtk.h>
 #include "prefs.h"
 #include "charset.h"
+#include "misc.h"
 #include "support.h"
 
 typedef struct {
@@ -239,8 +240,7 @@ gchar *charset_to_description (gchar *charset)
     ci = charset_info;
     while (ci->descr != NULL)
     {
-	if (g_utf8_collate (g_utf8_casefold (charset, -1),
-			    g_utf8_casefold (ci->name, -1)) == 0)
+	if (compare_string_case_insensitive (charset, ci->name) == 0)
 	{
 	    return g_strdup (_(ci->descr));
 	}
@@ -287,7 +287,7 @@ gchar *charset_check_k_code_with_default (guchar *p)
 
 
 /* return the charset actually used for the "auto detection"
- * feature. So far only Japanese Autodetecion is implemented */
+ * feature. So far only Japanese Auto Detecion is implemented */
 gchar *charset_check_auto (gchar *str)
 {
     G_CONST_RETURN gchar *charset;

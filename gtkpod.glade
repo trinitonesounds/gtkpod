@@ -3220,7 +3220,7 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkEntry" id="cfg_time_format_entry">
+			    <widget class="GtkEntry" id="time_format_entry">
 			      <property name="visible">True</property>
 			      <property name="tooltip" translatable="yes">For a full description of options please see 'man 3 strftime'. Default is: '%k:%M %d %b %g'.</property>
 			      <property name="can_focus">True</property>
@@ -3408,7 +3408,23 @@
 		      <property name="spacing">0</property>
 
 		      <child>
-			<placeholder/>
+			<widget class="GtkCheckButton" id="cfg_case_sensitive">
+			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">If checked, sorting will be case sensitive.</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Sorting case sensitive</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="on_cfg_case_sensitive_toggled" last_modification_time="Mon, 19 May 2003 12:49:39 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
 		      </child>
 
 		      <child>

@@ -1,4 +1,10 @@
 gtkpod V0.52-CVS
+	BUGFIX: fixed memory holes in pm_data_compare_func(),
+	st_data_compare_func(), sm_data_compare_func(),
+	get_ipod_used_space(), get_ipod_free_space(),
+	charset_to_description(), add_playlist_by_filename()
+	
+
 	IMPROVEMENT: added auto-dection of Japanese encoding (thanks
 	to Hiroshi Kawashima).
 

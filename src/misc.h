@@ -109,4 +109,6 @@ time_t time_get_time (Song *song, SM_item sm_item);
 gchar *time_field_to_string (Song *song, SM_item sm_item);
 void time_set_time (Song *song, time_t time, SM_item sm_item);
 
+gint compare_string (gchar *str1, gchar *str2);
+gint compare_string_case_insensitive (gchar *str1, gchar *str2);
 #endif __MISC_H__

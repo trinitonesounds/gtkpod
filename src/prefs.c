@@ -212,6 +212,7 @@ struct cfg *cfg_new(void)
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
     mycfg->add_recursively = TRUE;
+    mycfg->case_sensitive = TRUE;
     mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->save_sorted_order = FALSE;
     mycfg->sort_tab_num = 2;
@@ -422,6 +423,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "add_recursively") == 0)
 	  {
 	      prefs_set_add_recursively((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "case_sensitive") == 0)
+	  {
+	      prefs_set_case_sensitive((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
@@ -688,6 +693,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
+    fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
     fprintf(fp, "save_sorted_order=%d\n",prefs_get_save_sorted_order());
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser\n"));
     fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
@@ -1343,6 +1349,16 @@ gboolean prefs_get_add_recursively (void)
 void prefs_set_add_recursively (gboolean val)
 {
     cfg->add_recursively = val;
+}
+
+gboolean prefs_get_case_sensitive (void)
+{
+    return cfg->case_sensitive;
+}
+
+void prefs_set_case_sensitive (gboolean val)
+{
+    cfg->case_sensitive = val;
 }
 
 gboolean prefs_get_save_sorted_order (void)

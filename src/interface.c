@@ -1238,7 +1238,7 @@ create_new_prefs_window (void)
   GtkWidget *col_visible11;
   GtkWidget *hbox13;
   GtkWidget *label47;
-  GtkWidget *cfg_time_format_entry;
+  GtkWidget *time_format_entry;
   GtkWidget *label37;
   GtkWidget *frame13;
   GtkWidget *autoselect_vbox;
@@ -1248,6 +1248,7 @@ create_new_prefs_window (void)
   GtkWidget *label36;
   GtkWidget *frame15;
   GtkWidget *vbox30;
+  GtkWidget *cfg_case_sensitive;
   GtkWidget *cfg_block_display;
   GtkWidget *label38;
   GtkWidget *label25;
@@ -1753,10 +1754,10 @@ create_new_prefs_window (void)
   gtk_label_set_justify (GTK_LABEL (label47), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label47), TRUE);
 
-  cfg_time_format_entry = gtk_entry_new ();
-  gtk_widget_show (cfg_time_format_entry);
-  gtk_box_pack_start (GTK_BOX (hbox13), cfg_time_format_entry, TRUE, TRUE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_time_format_entry, _("For a full description of options please see 'man 3 strftime'. Default is: '%k:%M %d %b %g'."), NULL);
+  time_format_entry = gtk_entry_new ();
+  gtk_widget_show (time_format_entry);
+  gtk_box_pack_start (GTK_BOX (hbox13), time_format_entry, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, time_format_entry, _("For a full description of options please see 'man 3 strftime'. Default is: '%k:%M %d %b %g'."), NULL);
 
   label37 = gtk_label_new (_("Displayed Song Attributes "));
   gtk_widget_show (label37);
@@ -1801,6 +1802,11 @@ create_new_prefs_window (void)
   vbox30 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox30);
   gtk_container_add (GTK_CONTAINER (frame15), vbox30);
+
+  cfg_case_sensitive = gtk_check_button_new_with_mnemonic (_("Sorting case sensitive"));
+  gtk_widget_show (cfg_case_sensitive);
+  gtk_box_pack_start (GTK_BOX (vbox30), cfg_case_sensitive, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_case_sensitive, _("If checked, sorting will be case sensitive."), NULL);
 
   cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\n entry (faster!)"));
   gtk_widget_show (cfg_block_display);
@@ -2009,11 +2015,14 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) sort_tab_num_combo_entry, "changed",
                     G_CALLBACK (on_sort_tab_num_combo_entry_changed),
                     NULL);
-  g_signal_connect ((gpointer) cfg_time_format_entry, "changed",
+  g_signal_connect ((gpointer) time_format_entry, "changed",
                     G_CALLBACK (on_cfg_time_format_changed),
                     NULL);
   g_signal_connect ((gpointer) cfg_mpl_autoselect, "toggled",
                     G_CALLBACK (on_cfg_mpl_autoselect_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_case_sensitive, "toggled",
+                    G_CALLBACK (on_cfg_case_sensitive_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_block_display, "toggled",
                     G_CALLBACK (on_cfg_block_display_toggled),
@@ -2158,7 +2167,7 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible11, "col_visible11");
   GLADE_HOOKUP_OBJECT (new_prefs_window, hbox13, "hbox13");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label47, "label47");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_time_format_entry, "cfg_time_format_entry");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, time_format_entry, "time_format_entry");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label37, "label37");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame13, "frame13");
   GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_vbox, "autoselect_vbox");
@@ -2168,6 +2177,7 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, label36, "label36");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame15, "frame15");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox30, "vbox30");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_case_sensitive, "cfg_case_sensitive");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_block_display, "cfg_block_display");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label38, "label38");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label25, "label25");

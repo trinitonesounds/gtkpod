@@ -1243,3 +1243,12 @@ on_cfg_time_format_changed             (GtkEditable     *editable,
     g_free (buf);
 }
 
+
+void
+on_cfg_case_sensitive_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_case_sensitive(
+	gtk_toggle_button_get_active(togglebutton));
+}
+

@@ -123,16 +123,16 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
     {
 	*bufp = 0;          /* truncate playlist name */
 	++bufp;
-	if (g_utf8_collate (g_utf8_casefold (bufp, -1), "m3u") == 0)
+	if (compare_string_case_insensitive (bufp, "m3u") == 0)
 	    type = PLT_M3U;
-	else if (g_utf8_collate (g_utf8_casefold (bufp, -1), "pls") == 0)
+	else if (compare_string_case_insensitive (bufp, "pls") == 0)
 	    type = PLT_PLS;
-	else if (g_utf8_collate (g_utf8_casefold (bufp, -1), "mp3") == 0)
+	else if (compare_string_case_insensitive (bufp, "mp3") == 0)
 	{
 	    /* FIXME: Status */
 	    return FALSE;  /* definitely not! */
 	}
-	else if (g_utf8_collate (g_utf8_casefold (bufp, -1), "wav") == 0)
+	else if (compare_string_case_insensitive (bufp, "wav") == 0)
 	{
 	    /* FIXME: Status */
 	    return FALSE;  /* definitely not! */

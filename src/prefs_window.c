@@ -278,6 +278,11 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->add_recursively);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_case_sensitive")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->case_sensitive);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_delete_playlist")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -465,6 +470,7 @@ prefs_window_set(void)
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
+	prefs_set_case_sensitive(tmpcfg->case_sensitive);
 	prefs_set_automount(tmpcfg->automount);
 
 	sm_show_preferred_columns();
@@ -786,6 +792,11 @@ void prefs_window_set_write_charset (gboolean val)
 void prefs_window_set_add_recursively (gboolean val)
 {
     tmpcfg->add_recursively = val;
+}
+
+void prefs_window_set_case_sensitive (gboolean val)
+{
+    tmpcfg->case_sensitive = val;
 }
 
 void prefs_window_set_save_sorted_order (gboolean val)

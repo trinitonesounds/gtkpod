@@ -62,6 +62,7 @@ void prefs_window_set_display_toolbar (gboolean val);
 void prefs_window_set_update_charset (gboolean val);
 void prefs_window_set_write_charset (gboolean val);
 void prefs_window_set_add_recursively (gboolean val);
+void prefs_window_set_case_sensitive (gboolean val);
 void prefs_window_set_toolbar_style (GtkToolbarStyle val);
 void prefs_window_set_save_sorted_order (gboolean val);
 void prefs_window_set_sort_tab_num (gint num);

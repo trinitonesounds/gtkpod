@@ -1927,3 +1927,30 @@ void time_set_time (Song *song, time_t time, SM_item sm_item)
 	break;
     }
 }
+
+
+
+
+/* compare @str1 and @str2 case-sensitively or case-insensitively
+ * depending on prefs settings */
+gint compare_string (gchar *str1, gchar *str2)
+{
+    if (prefs_get_case_sensitive ())
+	return g_utf8_collate (str1, str2);
+    else
+	return compare_string_case_insensitive (str1, str2);
+}
+
+
+/* compare @str1 and @str2 case-sensitively or case-insensitively
+ * depending on prefs settings */
+gint compare_string_case_insensitive (gchar *str1, gchar *str2)
+{
+    gchar *string1 = g_utf8_casefold (str1, -1);
+    gchar *string2 = g_utf8_casefold (str2, -1);
+    gint result = g_utf8_collate (string1, string2);
+    puts ("insens");
+    g_free (string1);
+    g_free (string2);
+    return result;
+}
