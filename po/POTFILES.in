@@ -9,6 +9,7 @@ src/date_parser.l
 src/date_parser2.l
 src/dirbrowser.c
 src/display.c
+src/display_itdb.c
 src/display_playlists.c
 src/display_songs.c
 src/display_sorttabs.c
@@ -20,7 +21,10 @@ src/getopt.c
 src/getopt1.c
 src/info.c
 src/interface.c
-src/itunesdb.c
+src/itdb_itunesdb.c
+src/itdb_main.c
+src/itdb_playlist.c
+src/itdb_track.c
 src/main.c
 src/md5.c
 src/misc.c
@@ -28,12 +32,11 @@ src/misc_confirm.c
 src/misc_conversion.c
 src/misc_input.c
 src/misc_playlist.c
+src/misc_track.c
 src/mp3file.c
 src/mp4file.c
-src/playlist.c
 src/prefs.c
 src/prefs_window.c
 src/support.c
 src/tools.c
-src/track.c
 src/wavfile.c
