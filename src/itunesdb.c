@@ -143,8 +143,6 @@
 
    The following functions most likely will also come in handy:
 
-   gchar *itunesdb_concat_dir (G_CONST_RETURN gchar *dir,
-                               G_CONST_RETURN gchar *file);
    gboolean itunesdb_cp (gchar *from_file, gchar *to_file);
    guint32 itunesdb_time_get_mac_time (void);
    time_t itunesdb_time_mac_to_host (guint32 mactime);
@@ -202,48 +200,6 @@ struct playcount {
 static struct playcount *get_next_playcount (void);
 
 static guint32 utf16_strlen(gunichar2 *utf16_string);
-
-/* Concats "dir" and "file" into full filename, taking
-   into account that "dir" may or may not end with "/".
-   You must free the return string after use
-   This code tries to take into account some stupid constellations
-   when either "dir" or "file" is not set, or file starts with a "/"
-   (ignore) etc.  */
-gchar *itunesdb_concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
-{
-    if (file && (*file == '/'))
-    { 
-	if (dir && (strlen (dir) > 0))
-	{
-	    return itunesdb_concat_dir (dir, file+1);
-	}
-    }
-    if (dir && (strlen (dir) > 0))
-    {	    
-	if(dir[strlen(dir)-1] == '/')
-	{ /* "dir" ends with "/" */
-	    if (file)
-		return g_strdup_printf ("%s%s", dir, file);
-	    else
-		return g_strdup (dir);
-	}
-	else
-	{ /* "dir" does not end with "/" */
-	    if (file)
-		return g_strdup_printf ("%s/%s", dir, file);
-	    else
-		return g_strdup_printf ("%s/", dir);
-	}
-    }
-    else
-    { /* dir == NULL or 0-byte long */
-	if (file)
-	    return g_strdup (file);
-	else
-	    return g_strdup (""); /* how stupid can the caller be... */
-    }
-}
-
 
 /* Compare the two data. TRUE if identical */
 static gboolean cmp_n_bytes (gchar *data1, gchar *data2, gint n)
@@ -625,6 +581,7 @@ gchar *time_time_to_string (time_t time);
 	 }
      }
     }
+
   playcount = get_next_playcount ();
   if (playcount)
   {
@@ -636,7 +593,6 @@ gchar *time_time_to_string (time_t time);
   it_add_song (song);
   return seek;   /* no more black magic */
 }
-
 
 /* get next playcount, that is the first entry of GList
  * playcounts. This entry is removed from the list. You must free the
@@ -662,7 +618,7 @@ static void reset_playcounts (void)
 static void init_playcounts (gchar *filename)
 {
   gchar *dirname = g_path_get_dirname (filename);
-  gchar *plcname = itunesdb_concat_dir (dirname, "Play Counts");
+  gchar *plcname = g_build_filename (dirname, "Play Counts", NULL);
   FILE *plycts = fopen (plcname, "r");
   gboolean error = TRUE;
 
@@ -734,9 +690,9 @@ gboolean itunesdb_parse (gchar *path)
   gchar *filename = NULL;
   gboolean result;
 
-  filename = itunesdb_concat_dir (path, "iPod_Control/iTunes/iTunesDB");
+  filename = g_build_filename (path, "iPod_Control/iTunes/iTunesDB", NULL);
   result = itunesdb_parse_file (filename);
-  if (filename)  g_free (filename);
+  g_free (filename);
   return result;
 }
 
@@ -1344,9 +1300,9 @@ gboolean itunesdb_write (gchar *path)
     gchar *filename = NULL;
     gboolean result = FALSE;
 
-    filename = itunesdb_concat_dir (path, "iPod_Control/iTunes/iTunesDB");
+    filename = g_build_filename (path, "iPod_Control/iTunes/iTunesDB", NULL);
     result = itunesdb_write_to_file (filename);
-    if (filename != NULL) g_free (filename);
+    g_free (filename);
     return result;
 }
 
@@ -1374,8 +1330,8 @@ gboolean itunesdb_write_to_file (gchar *filename)
   if (result == TRUE)
   {   /* rename "Play Counts" to "Play Counts.bak" */
       gchar *dirname = g_path_get_dirname (filename);
-      gchar *plcname_o = itunesdb_concat_dir (dirname, "Play Counts");
-      gchar *plcname_n = itunesdb_concat_dir (dirname, "Play Counts.bak");
+      gchar *plcname_o = g_build_filename (dirname, "Play Counts", NULL);
+      gchar *plcname_n = g_build_filename (dirname, "Play Counts.bak", NULL);
       if (g_file_test (plcname_o, G_FILE_TEST_EXISTS))
       {
 	  if (rename (plcname_o, plcname_n) == -1)
@@ -1430,7 +1386,7 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 	 also supports other formats. */
       ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d.mp3",
 				   dir_num, song->ipod_id + oops);
-      ipod_fullfile = itunesdb_concat_dir (path, ipod_file+1);
+      ipod_fullfile = g_build_filename (path, ipod_file+1, NULL);
       /* There is a case-sensitivity problem on some systems (see note
        * at itunesdb_get_song_name_on_ipod (). The following code
        tries to work around it */
@@ -1507,8 +1463,8 @@ gchar *itunesdb_get_song_name_on_ipod (gchar *path, Song *s)
 	gchar *buf = g_strdup (s->ipod_path);
 	size = strlen(buf);
 	for(i = 0; i < size; i++)
-	    if(buf[i] == ':') buf[i] = '/';
-	result = itunesdb_concat_dir(path, buf);
+	    if(buf[i] == ':') buf[i] = G_DIR_SEPARATOR;
+	result = g_build_filename (path, buf, NULL);
 	/* There seems to be a problem with some distributions
 	   (kernel versions or whatever -- even identical version
 	   numbers don't don't show identical behaviour...): even
@@ -1526,7 +1482,7 @@ gchar *itunesdb_get_song_name_on_ipod (gchar *path, Song *s)
 	    {
 		gchar *result2;
 		bufp[7] = 'f'; /* change the 'F' to 'f' */
-		result2 = itunesdb_concat_dir(path, buf);
+		result2 = g_build_filename (path, buf, NULL);
 		if (g_file_test (result, G_FILE_TEST_EXISTS))
 		{
 		    g_free (result);

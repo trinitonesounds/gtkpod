@@ -942,7 +942,7 @@ void prefs_set_mount_point(const gchar *mp)
     /* if new mount point starts with "~/", we replace it with the
        home directory */
     if (strncmp ("~/", mp, 2) == 0)
-      cfg->ipod_mount = concat_dir (g_get_home_dir (), mp+2);
+      cfg->ipod_mount = g_build_filename (g_get_home_dir (), mp+2, NULL);
     else cfg->ipod_mount = g_strdup(mp);
 }
 
@@ -1211,7 +1211,7 @@ gchar *prefs_get_cfgdir (void)
 
   if((str = g_get_home_dir ()))
     {
-      cfgdir = concat_dir (str, ".gtkpod");
+      cfgdir = g_build_filename (str, ".gtkpod", NULL);
       if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
 	{
 	  if(mkdir(cfgdir, 0755) == -1)

@@ -37,6 +37,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <string.h>
+#include <glib/gprintf.h>
 
 /**
  * READ_WRITE_BLOCKSIZE - how many bytes we read per fread/fwrite call

@@ -60,7 +60,6 @@ gboolean itunesdb_write (gchar *path);
 gboolean itunesdb_write_to_file (gchar *filename);
 gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile);
 gchar *itunesdb_get_song_name_on_ipod (gchar *path, Song *s);
-gchar *itunesdb_concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
 gboolean itunesdb_cp (gchar *from_file, gchar *to_file);
 guint32 itunesdb_time_get_mac_time (void);
 time_t itunesdb_time_mac_to_host (guint32 mactime);

@@ -265,7 +265,7 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
 	      next = g_dir_read_name (dir);
 	      if (next != NULL)
 	      {
-		  gchar *nextfull = concat_dir (name, next);
+		  gchar *nextfull = g_build_filename (name, next, NULL);
 		  if (descend ||
 		      !g_file_test (nextfull, G_FILE_TEST_IS_DIR))
 		      result &= add_directory_by_name (nextfull, plitem,
@@ -1649,10 +1649,10 @@ void handle_import (void)
     { /* iPod is connected */
 	if (prefs_get_write_extended_info())
 	{
-	    name1 = concat_dir (cfg->ipod_mount,
-				"iPod_Control/iTunes/iTunesDB.ext");
-	    name2 = concat_dir (cfg->ipod_mount,
-				"iPod_Control/iTunes/iTunesDB");
+	    name1 = g_build_filename (cfg->ipod_mount,
+				"iPod_Control/iTunes/iTunesDB.ext", NULL);
+	    name2 = g_build_filename (cfg->ipod_mount,
+				"iPod_Control/iTunes/iTunesDB", NULL);
 	    success = read_extended_info (name1, name2);
 	    g_free (name1);
 	    g_free (name2);
@@ -1670,8 +1670,8 @@ void handle_import (void)
     { /* offline - requires extended info */
 	if ((cfgdir = prefs_get_cfgdir ()))
 	{
-	    name1 = concat_dir (cfgdir, "iTunesDB.ext");
-	    name2 = concat_dir (cfgdir, "iTunesDB");
+	    name1 = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
+	    name2 = g_build_filename (cfgdir, "iTunesDB", NULL);
 	    success = read_extended_info (name1, name2);
 	    g_free (name1);
 	    if (!success) 
@@ -2131,12 +2131,12 @@ void handle_export (void)
 
   block_widgets (); /* block user input */
   cfgdir = prefs_get_cfgdir ();
-  ipt = concat_dir (cfg->ipod_mount, "iPod_Control/iTunes/iTunesDB");
-  ipe = concat_dir (cfg->ipod_mount, "iPod_Control/iTunes/iTunesDB.ext");
+  ipt = g_build_filename (cfg->ipod_mount, "iPod_Control/iTunes/iTunesDB", NULL);
+  ipe = g_build_filename (cfg->ipod_mount, "iPod_Control/iTunes/iTunesDB.ext", NULL);
   if (cfgdir)
     {
-      cft = concat_dir (cfgdir, "iTunesDB");
-      cfe = concat_dir (cfgdir, "iTunesDB.ext");
+      cft = g_build_filename (cfgdir, "iTunesDB", NULL);
+      cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
     }
 
   if(!prefs_get_offline ())
@@ -2203,11 +2203,11 @@ void handle_export (void)
       gtkpod_statusbar_message(_("iPod Database Saved"));
   }
 
-  C_FREE (cfgdir);
-  C_FREE (cft);
-  C_FREE (cfe);
-  C_FREE (ipt);
-  C_FREE (ipe);
+  g_free (cfgdir);
+  g_free (cft);
+  g_free (cfe);
+  g_free (ipt);
+  g_free (ipe);
 
   release_widgets (); /* Allow input again */
 }

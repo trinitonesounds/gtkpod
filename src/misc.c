@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-08 23:37:04 jcs>
+/* Time-stamp: <2003-08-09 02:19:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -247,17 +247,6 @@ void create_add_playlists_fileselector (void)
 
 
 
-/* Concats "dir" and "file" into full filename, taking
-   into account that "dir" may or may not end with "/".
-   You must free the return string after use
-   This code tries to take into account some stupid constellations
-   when either "dir" or "file" is not set, or file starts with a "/"
-   (ignore) etc.  */
-gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
-{
-    return itunesdb_concat_dir (dir, file);
-}
-
 /* Concats @base_dir and @rel_dir if and only if @rel_dir is not
  * absolute (does not start with '~' or '/'). Otherwise simply return
  * a copy of @rel_dir. Must free return value after use */
@@ -266,11 +255,12 @@ gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
 {
     /* sanity */
     if (!rel_dir || !*rel_dir)
-	return concat_dir (base_dir, rel_dir); /* this constellation
-						  is nonsense... */
+	return g_build_filename (base_dir, rel_dir, NULL);
+                                 /* this constellation is nonsense... */
     if ((*rel_dir == '/') || (*rel_dir == '~'))
 	return g_strdup (rel_dir);             /* rel_dir is absolute */
-    return concat_dir (base_dir, rel_dir);     /* make absolute path */
+                                               /* make absolute path */
+    return g_build_filename (base_dir, rel_dir, NULL);
 }
 
 
@@ -553,8 +543,8 @@ void cleanup_backup_and_extended_files (void)
   /* in offline mode, there are no backup files! */
   if (cfgdir && !cfg->offline)
     {
-      cft = concat_dir (cfgdir, "iTunesDB");
-      cfe = concat_dir (cfgdir, "iTunesDB.ext");
+      cft = g_build_filename (cfgdir, "iTunesDB", NULL);
+      cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
       if (!cfg->write_extended_info)
 	/* delete extended info file from computer */
 	if (g_file_test (cfe, G_FILE_TEST_EXISTS))
@@ -1568,7 +1558,7 @@ void call_script (gchar *script)
     if (!script) return;
 
     cfgdir =  prefs_get_cfgdir ();
-    file = concat_dir (cfgdir, script);
+    file = g_build_filename (cfgdir, script, NULL);
     if (g_file_test (file, G_FILE_TEST_EXISTS))
     {
 	do_script (file);
@@ -1576,7 +1566,7 @@ void call_script (gchar *script)
     else
     {
 	C_FREE (file);
-	file = concat_dir ("/etc/gtkpod/", script);
+	file = g_build_filename ("/etc/gtkpod/", script, NULL);
 	if (g_file_test (file, G_FILE_TEST_EXISTS))
 	{
 	    do_script (file);
