@@ -47,6 +47,8 @@ enum {
 struct cfg
 {
   gchar    *ipod_mount;   /* mount point of iPod */
+  gchar    *lc_ctype;      /* LC_CTYPE to use with file operations */
+  gchar  *lc_ctype_startup;/* LC_CTYPE set when program started */
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */	
   gboolean autoimport;	  /* whether or not to automatically import files */
@@ -71,6 +73,7 @@ enum {
   GP_MOUNT,
   GP_WRITEID3,
   GP_MD5SONGS,
+  GP_AUTO,
   GP_OFFLINE
 };
 
@@ -84,11 +87,6 @@ void discard_prefs (void);
 struct cfg* clone_prefs(void);
 void prefs_set_mount_point(const gchar *mp);
 gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[]);
-void prefs_set_md5songs_active(gboolean active);
-void prefs_set_writeid3_active(gboolean active);
-void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
-void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
-void prefs_set_last_dir_file_export_for_filename(gchar * dir);
 
 void prefs_set_offline(gboolean active);
 void prefs_set_keep_backups(gboolean active);
@@ -102,6 +100,12 @@ void prefs_set_song_list_show_album(gboolean val);
 void prefs_set_song_list_show_artist(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
+void prefs_set_md5songs_active(gboolean active);
+void prefs_set_writeid3_active(gboolean active);
+void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
+void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
+void prefs_set_last_dir_file_export_for_filename(gchar * dir);
+void prefs_set_lc_ctype (gchar *lc_ctype);
 
 gboolean prefs_get_offline(void);
 gboolean prefs_get_keep_backups(void);
@@ -115,5 +119,6 @@ gboolean prefs_get_song_list_show_genre(void);
 gboolean prefs_get_song_list_show_artist(void);
 gboolean prefs_get_song_playlist_deletion(void);
 gboolean prefs_get_song_ipod_file_deletion(void);
+gchar * prefs_get_lc_ctype (void);
 
 #endif __PREFS_H__

@@ -632,3 +632,15 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
     }
 }
 
+
+void
+on_locale_combo_entry_changed          (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    gchar *txt;
+
+    txt = gtk_editable_get_chars (editable, 0, -1);
+    prefs_window_set_lc_ctype (txt);
+    g_free (txt);
+}
+

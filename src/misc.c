@@ -218,7 +218,8 @@ gtkpod_main_quit(void)
 		    (otherwise non-existing songs may be accessed) */
   remove_all_songs ();
   cleanup_listviews ();
-  write_prefs ();
+  write_prefs (); /* FIXME: how can we avoid saving options set by
+		   * command line? */
   gtk_main_quit ();
 }
 
@@ -250,4 +251,39 @@ void
 register_gtkpod_main_window(GtkWidget *win)
 {
     main_window = win;
+}
+
+
+/* Sets up the locales to choose from in the "combo". It presets the
+   locale stored in cfg->locale (or "System locale" if none is set
+   there */
+void init_locale_combo (GtkCombo *combo)
+{
+    gchar *current_lc_ctype;
+
+    static GList *lc_ctypes = NULL; /* list with choices -- takes a while to
+				   * initialize, so we only do it once */
+
+    if ((cfg->lc_ctype == NULL) || (strlen (cfg->lc_ctype) == 0))
+    {
+	current_lc_ctype = _("System Locale");
+    }
+    else
+    {
+	current_lc_ctype = prefs_get_lc_ctype ();
+    }
+    if (lc_ctypes == NULL)
+    { /* set up list with locales */
+	lc_ctypes = g_list_append (lc_ctypes, _("System Locale"));
+	/* later I want to get a list of available locales
+	   automatically -- that's what's going to take time to read */
+	lc_ctypes = g_list_append (lc_ctypes, "de_DE");
+	lc_ctypes = g_list_append (lc_ctypes, "ja_JP");
+	lc_ctypes = g_list_append (lc_ctypes, "en_US");
+	lc_ctypes = g_list_append (lc_ctypes, "de_JP");
+    }
+    /* set pull down items */
+    gtk_combo_set_popdown_strings (GTK_COMBO (combo), lc_ctypes); 
+    /* set standard entry */
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), current_lc_ctype);
 }

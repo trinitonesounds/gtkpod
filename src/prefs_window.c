@@ -22,12 +22,14 @@
 | 
 |  This product is not supported/written/published by Apple!
 */
+
+#include <stdio.h>
 #include "prefs.h"
 #include "prefs_window.h"
 #include "song.h"
 #include "interface.h"
 #include "support.h"
-#include <stdio.h>
+#include "misc.h"
 
 static GtkWidget *prefs_window = NULL;
 static struct cfg *tmpcfg = NULL;
@@ -58,6 +60,10 @@ prefs_window_create(void)
 	if((w = lookup_widget(prefs_window, "cfg_mount_point")))
 	{
 	    gtk_entry_set_text(GTK_ENTRY(w), g_strdup(tmpcfg->ipod_mount));
+	}
+	if((w = lookup_widget(prefs_window, "locale_combo")))
+	{
+	    init_locale_combo (GTK_COMBO (w));
 	}
 	if((w = lookup_widget(prefs_window, "cfg_md5songs")))
 	{
@@ -127,6 +133,7 @@ prefs_window_save(void)
     prefs_set_md5songs_active(tmpcfg->md5songs);
     prefs_set_writeid3_active(tmpcfg->writeid3);
     prefs_set_mount_point(tmpcfg->ipod_mount);
+    prefs_set_lc_ctype(tmpcfg->lc_ctype);
     prefs_set_auto_import(tmpcfg->autoimport);
     prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
@@ -175,7 +182,7 @@ void
 prefs_window_set_mount_point(const gchar *mp)
 {
     if(tmpcfg->ipod_mount) g_free(tmpcfg->ipod_mount);
-    tmpcfg->ipod_mount = g_strdup_printf("%s",mp);
+    tmpcfg->ipod_mount = g_strdup(mp);
 }
 
 /**
@@ -303,4 +310,31 @@ void
 prefs_window_set_auto_import(gboolean val)
 {
     tmpcfg->autoimport = val;
+}
+
+void prefs_window_set_lc_ctype (gchar *lc_ctype)
+{
+    if (tmpcfg->lc_ctype)
+    { /* don't change anything, if there's nothing to change */
+	if (strcmp (tmpcfg->lc_ctype, lc_ctype) == 0) return;
+	g_free (tmpcfg->lc_ctype);
+	tmpcfg->lc_ctype = NULL;
+    }
+    /* don't store the standard "system locale" */
+    if (g_utf8_collate (g_utf8_casefold (lc_ctype, -1), 
+			g_utf8_casefold (_("System Locale"), -1)) != 0)
+    {
+	/* check if it's a legal locale */
+	if (setlocale (LC_CTYPE, lc_ctype))
+	{
+	    tmpcfg->lc_ctype = g_strdup (lc_ctype);
+	}
+	else
+	{
+	    gtkpod_warning (_("Locale not supported: %s\n"), lc_ctype);
+	}
+	/* reset the locale */
+	if (tmpcfg->lc_ctype_startup)
+	    setlocale (LC_CTYPE, tmpcfg->lc_ctype_startup);
+    }
 }

@@ -23,8 +23,8 @@
 |  This product is not supported/written/published by Apple!
 */
 
-#ifndef __UTILS_H__
-#define __UTILS_H__
+#ifndef __MISC_H__
+#define __MISC_H__
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -46,4 +46,5 @@ void cleanup_backup_and_extended_files (void);
 void gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);
 void register_gtkpod_main_window(GtkWidget *win);
-#endif __UTILS_H__
+void init_locale_combo (GtkCombo *combo);
+#endif __MISC_H__

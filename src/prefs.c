@@ -51,6 +51,8 @@ static void usage (FILE *file)
   fprintf(file, _("  --writeid3:   same as \"-w\".\n"));
   fprintf(file, _("  -c:           check files automagically for duplicates\n"));
   fprintf(file, _("  --md5:        same as \"-c\".\n"));
+  fprintf(file, _("  --auto:       import database automatically after start.\n"));
+  fprintf(file, _("  -a:           same as \"-a\".\n"));
   fprintf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n"));
   fprintf(file, _("                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n"));
   fprintf(file, _("                used with \"Offline\" deactivated.\n"));
@@ -86,6 +88,8 @@ cfg_new(void)
     {
 	mycfg->ipod_mount = g_strdup ("/mnt");
     }
+    mycfg->lc_ctype = NULL;
+    mycfg->lc_ctype_startup = g_strdup (setlocale (LC_CTYPE, NULL));
     mycfg->deletion.song = TRUE;
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
@@ -115,18 +119,24 @@ read_prefs_from_file_desc(FILE *fp)
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
 	      continue;
 	    }
-	  /* skip whitespace (isblank() is a GNU extension... */
+	  /* skip whitespace */
 	  bufp = buf;
-	  while ((*bufp == ' ') || (*bufp == 0x09)) ++bufp;
+	  while (isblank (*bufp)) ++bufp;
 	  line = g_strndup (buf, arg-bufp);
 	  ++arg;
 	  len = strlen (arg); /* remove newline */
 	  if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
+	  /* skip whitespace */
+	  while (isblank (*arg)) ++arg;
 	  if(g_ascii_strcasecmp (line, "mp") == 0)
 	    {
 	      gchar mount_point[PATH_MAX];
 	      snprintf(mount_point, PATH_MAX, "%s", arg);
 	      prefs_set_mount_point(mount_point);
+	    }
+	  else if(g_ascii_strcasecmp (line, "lc_ctype") == 0)
+	    {
+		if(strlen (arg))      prefs_set_lc_ctype(arg);
 	    }
 	  else if(g_ascii_strcasecmp (line, "id3") == 0)
 	    {
@@ -248,6 +258,8 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       { "md5",	       no_argument,	NULL, GP_MD5SONGS },
       { "o",           no_argument,	NULL, GP_OFFLINE },
       { "offline",     no_argument,	NULL, GP_OFFLINE },
+      { "a",           no_argument,	NULL, GP_AUTO },
+      { "auto",        no_argument,	NULL, GP_AUTO },
       { 0, 0, 0, 0 }
     };
   
@@ -273,6 +285,9 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       case GP_MD5SONGS:
 	cfg->md5songs = TRUE;
 	break;
+      case GP_AUTO:
+	cfg->autoimport = TRUE;
+	break;
       case GP_OFFLINE:
 	cfg->offline = TRUE;
 	break;
@@ -294,6 +309,19 @@ write_prefs_to_file_desc(FILE *fp)
 	fp = stderr;
     
     fprintf(fp, "mp=%s\n", cfg->ipod_mount);
+    /* only write the locale if it's 1) set 2) non-zero length 3) not
+     * "System Locale" 4) not the same as on startup */
+    if (cfg->lc_ctype &&
+	strlen (cfg->lc_ctype) &&
+	(g_utf8_collate (g_utf8_casefold (cfg->lc_ctype, -1), 
+			 g_utf8_casefold (_("System Locale"), -1)) != 0) &&
+	(!cfg->lc_ctype_startup || 
+	 strcmp (cfg->lc_ctype, cfg->lc_ctype_startup) != 0))
+    {
+	fprintf(fp, "lc_ctype=%s\n", cfg->lc_ctype);
+    } else {
+	fprintf(fp, "lc_ctype=\n");
+    }
     fprintf(fp, "id3=%d\n",cfg->writeid3);
     fprintf(fp, "md5=%d\n",cfg->md5songs);
     fprintf(fp, "album=%d\n",prefs_get_song_list_show_album());
@@ -356,6 +384,8 @@ void cfg_free(struct cfg *c)
     if(c)
     { /* C_FREE defined in misc.h */
       C_FREE (c->ipod_mount);
+      C_FREE (c->lc_ctype);
+      C_FREE (c->lc_ctype_startup);
       C_FREE (c->last_dir.dir_browse);
       C_FREE (c->last_dir.file_browse);
       C_FREE (c->last_dir.file_export);
@@ -598,6 +628,17 @@ prefs_get_song_ipod_file_deletion(void)
     return(cfg->deletion.ipod_file);
 }
 
+void prefs_set_lc_ctype (gchar *lc_ctype)
+{
+    C_FREE (cfg->lc_ctype);
+    cfg->lc_ctype = g_strdup (lc_ctype);
+}
+
+gchar * prefs_get_lc_ctype (void)
+{
+    return cfg->lc_ctype;
+}
+
 struct cfg*
 clone_prefs(void)
 {
@@ -610,6 +651,8 @@ clone_prefs(void)
 	result->writeid3 = cfg->writeid3;
 	result->autoimport = cfg->autoimport;
 	result->ipod_mount = g_strdup(cfg->ipod_mount);
+	result->lc_ctype_startup = g_strdup (cfg->lc_ctype_startup);
+	result->lc_ctype = g_strdup(cfg->lc_ctype);
 	result->offline = cfg->offline;
 	result->keep_backups = cfg->keep_backups;
 	result->write_extended_info = cfg->write_extended_info;
