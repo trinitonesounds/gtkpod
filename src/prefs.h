@@ -204,4 +204,4 @@ void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount(void);
 
-#endif __PREFS_H__
+#endif

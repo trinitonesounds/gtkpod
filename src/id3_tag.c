@@ -140,7 +140,7 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
 #       if ( (ID3LIB_MAJOR >= 3) && (ID3LIB_MINOR >= 8)  )
             if ( offset!=0 && ID3Tag_NumFrames(id3_tag)==0 )
                 offset = ID3Tag_LinkWithFlags(id3_tag,filename,ID3TT_ID3V1);
-#       endif*/
+#       endif
 
         string = g_malloc(ID3V2_MAX_STRING_LEN+1);
 

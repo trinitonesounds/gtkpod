@@ -33,6 +33,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <limits.h>
+#include <string.h>
 #include "md5.h"
 #include "file.h"
 #include "prefs.h"

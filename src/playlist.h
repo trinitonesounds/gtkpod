@@ -76,4 +76,4 @@ guint32 get_nr_of_songs_in_playlist (Playlist *plitem);
 Song *it_get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
 Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
 
-#endif __PLAYLIST_H__
+#endif 

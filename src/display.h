@@ -202,4 +202,4 @@ void display_set_default_sizes (void);
 void sm_store_col_order (void);
 
 void stop_display_update (gint inst);
-#endif __TREE_H__
+#endif 

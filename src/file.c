@@ -69,7 +69,7 @@ static gboolean files_saved = TRUE;
 static  GMutex *mutex = NULL;
 static GCond  *cond = NULL;
 static gboolean mutex_data = FALSE;
-#endif G_THREADS_ENABLED
+#endif 
 /* Used to keep the "extended information" until the iTunesDB is 
    loaded */
 static GHashTable *extendedinfohash = NULL;
@@ -1927,7 +1927,7 @@ static gpointer th_copy (gpointer s)
     g_mutex_unlock (mutex);
     return (gpointer)result;
 }
-#endif G_THREADS_ENABLED
+#endif 
 
 /* This function is called when the user presses the abort button
  * during flush_songs() */
@@ -2008,7 +2008,7 @@ gboolean flush_songs (void)
 /*	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", song->artist,
 						    song->title, song->ipod_id,
 						    filename);*/
-#endif G_THREADS_ENABLED
+#endif 
 	  }
 	  g_free(filename);
       }
@@ -2065,7 +2065,7 @@ gboolean flush_songs (void)
 	      /* delete old size */
 	      if (song->transferred) song->oldsize = 0;
 
-#endif G_THREADS_ENABLED
+#endif 
 	      ++count;
 	      if (count == 1)  /* we need longer timeout */
 		  prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);

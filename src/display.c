@@ -340,7 +340,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   g_get_current_time (&time);
   printf ("pm_selection_changed_cb enter: %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
-#endif DEBUG_TIMING
+#endif
 
   if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
   {  /* no selection -> reset sort tabs */
@@ -404,7 +404,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   g_get_current_time (&time);
   printf ("pm_selection_changed_cb exit:  %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
-#endif DEBUG_TIMING
+#endif 
 }
 
 /* Callback function called when the selection
@@ -1132,7 +1132,7 @@ static void st_adopt_order_in_playlist ()
     g_get_current_time (&time);
     printf ("st_adopt_order_in_playlist enter: %ld.%06ld sec\n",
 	    time.tv_sec % 3600, time.tv_usec);
-#endif DEBUG_TIMING
+#endif
 
     /* first delete all songs in all visible sort tabs */
     for (inst = 0; inst< prefs_get_sort_tab_num (); ++inst)
@@ -1161,7 +1161,7 @@ static void st_adopt_order_in_playlist ()
     g_get_current_time (&time);
     printf ("st_adopt_order_in_playlist enter: %ld.%06ld sec\n",
 	    time.tv_sec % 3600, time.tv_usec);
-#endif DEBUG_TIMING
+#endif
 }
 
 
@@ -1401,7 +1401,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   g_get_current_time (&time);
   printf ("st_page_selected_cb enter: %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
-#endif DEBUG_TIMING
+#endif
 
   inst = st_get_instance_from_notebook (notebook);
 /*  printf("ps%d: cat: %d\n", inst, page);*/
@@ -1475,7 +1475,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   g_get_current_time (&time);
   printf ("st_page_selected_cb exit:  %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
-#endif DEBUG_TIMING
+#endif
 }
 
 
@@ -1537,7 +1537,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   g_get_current_time (&time);
   printf ("st_selection_changed_cb enter: %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
-#endif DEBUG_TIMING
+#endif
 
 /*   printf("st_s_c_cb %d: entered\n", inst); */
   st = sorttab[inst];
@@ -1622,7 +1622,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   g_get_current_time (&time);
   printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
-#endif DEBUG_TIMING
+#endif
 }
 
 

@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <string.h>
 
 /**
  * READ_WRITE_BLOCKSIZE - how many bytes we read per fread/fwrite call

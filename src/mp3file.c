@@ -44,6 +44,7 @@
 
 
 #include "mp3file.h"
+#include <string.h>
 
 gint get_header(FILE *file,mp3header *header);
 gint frame_length(mp3header *header);

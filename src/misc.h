@@ -111,4 +111,5 @@ void time_set_time (Song *song, time_t time, SM_item sm_item);
 
 gint compare_string (gchar *str1, gchar *str2);
 gint compare_string_case_insensitive (gchar *str1, gchar *str2);
-#endif __MISC_H__
+
+#endif 

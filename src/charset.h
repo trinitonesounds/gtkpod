@@ -44,4 +44,5 @@ gchar *charset_to_description (gchar *charset);
 gchar *charset_to_utf8 (gchar *str);
 gchar *charset_from_utf8 (gchar *str);
 gchar *charset_to_charset (gchar *from_charset, gchar *to_charset, gchar *str);
-#endif __CHARSET_H__
+
+#endif 

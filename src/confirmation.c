@@ -27,6 +27,7 @@
 #  include <config.h>
 #endif
 
+#include <string.h>
 #include "support.h"
 #include "confirmation.h"
 #include "prefs.h"

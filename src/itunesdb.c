@@ -368,7 +368,7 @@ static glong get_pl(FILE *file, glong seek)
   gunichar2 *plname_utf16 = NULL, *plname_utf16_maybe;
 #ifdef ITUNESDB_PROVIDE_UTF8
   gchar *plname_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
   guint32 type, pltype, songnum, n;
   guint32 nextseek;
   gint32 zip;
@@ -419,7 +419,7 @@ static glong get_pl(FILE *file, glong seek)
   }
 #ifdef ITUNESDB_PROVIDE_UTF8
   plname_utf8 = g_utf16_to_utf8 (plname_utf16, -1, NULL, NULL, NULL);
-#endif ITUNESDB_PROVIDE_UTF8
+#endif 
 
 
 #if ITUNESDB_DEBUG
@@ -430,7 +430,7 @@ static glong get_pl(FILE *file, glong seek)
 
 #ifdef ITUNESDB_PROVIDE_UTF8
   plitem->name = plname_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
   plitem->name_utf16 = plname_utf16;
   plitem->type = pltype;
 
@@ -466,7 +466,7 @@ static glong get_nod_a(FILE *file, glong seek)
   gchar data[4];
 #ifdef ITUNESDB_PROVIDE_UTF8
   gchar *entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif 
   gunichar2 *entry_utf16;
   gint type;
   gint zip = 0;
@@ -503,61 +503,61 @@ static glong get_nod_a(FILE *file, glong seek)
      if (entry_utf16 != NULL) {
 #ifdef ITUNESDB_PROVIDE_UTF8
        entry_utf8 = g_utf16_to_utf8 (entry_utf16, -1, NULL, NULL, NULL);
-#endif ITUNESDB_PROVIDE_UTF8
+#endif 
        switch (type)
 	 {
 	 case MHOD_ID_ALBUM:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   song->album = entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif 
 	   song->album_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_ARTIST:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   song->artist = entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	   song->artist_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_TITLE:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   song->title = entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	   song->title_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_GENRE:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   song->genre = entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	   song->genre_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_PATH:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   song->ipod_path = entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	   song->ipod_path_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_FDESC:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   song->fdesc = entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	   song->fdesc_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_COMMENT:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   song->comment = entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	   song->comment_utf16 = entry_utf16;
 	   break;
 	 case MHOD_ID_COMPOSER:
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   song->composer = entry_utf8;
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	   song->composer_utf16 = entry_utf16;
 	   break;
 	 default: /* unknown entry -- discard */
 #ifdef ITUNESDB_PROVIDE_UTF8
 	   g_free (entry_utf8);
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	   g_free (entry_utf16);
 	   break;
 	 }
@@ -1397,7 +1397,7 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 #ifdef ITUNESDB_PROVIDE_UTF8
 	  if (song->ipod_path) g_free (song->ipod_path);
 	  song->ipod_path = g_strdup (ipod_file);
-#endif ITUNESDB_PROVIDE_UTF8
+#endif
 	  if (song->ipod_path_utf16) g_free (song->ipod_path_utf16);
 	  song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
 						   -1, NULL, NULL, NULL);

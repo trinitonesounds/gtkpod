@@ -73,4 +73,4 @@ enum {
    be drawn */
 #define CONF_NO_BUTTON ((ConfHandler)-1)
 
-#endif __CONFIRMATION_H__
+#endif

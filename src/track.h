@@ -126,4 +126,5 @@ gchar **song_get_item_pointer_utf8 (Song *song, S_item s_item);
 gchar *song_get_item_utf8 (Song *song, S_item s_item);
 gunichar2 **song_get_item_pointer_utf16 (Song *song, S_item s_item);
 gunichar2 *song_get_item_utf16 (Song *song, S_item s_item);
-#endif __SONG_H__
+
+#endif 
