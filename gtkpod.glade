@@ -570,6 +570,7 @@
 	  <child>
 	    <widget class="button" id="import_button">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Read Existing Database from Disk/iPod</property>
 	      <property name="label" translatable="yes">Import</property>
 	      <property name="use_underline">True</property>
 	      <property name="stock_pixmap">gtk-goto-top</property>
@@ -578,8 +579,9 @@
 	  </child>
 
 	  <child>
-	    <widget class="button" id="button2">
+	    <widget class="button" id="add_files_button">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Add Files or Directories</property>
 	      <property name="label" translatable="yes">Files</property>
 	      <property name="use_underline">True</property>
 	      <property name="stock_pixmap">gtk-add</property>
@@ -588,8 +590,9 @@
 	  </child>
 
 	  <child>
-	    <widget class="button" id="button3">
+	    <widget class="button" id="add_dirs_button">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Add Directories Recursively</property>
 	      <property name="label" translatable="yes">Dirs</property>
 	      <property name="use_underline">True</property>
 	      <property name="stock_pixmap">gtk-add</property>
@@ -598,8 +601,9 @@
 	  </child>
 
 	  <child>
-	    <widget class="button" id="button4">
+	    <widget class="button" id="new_PL_button">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Create New Playlist</property>
 	      <property name="label" translatable="yes">New PL</property>
 	      <property name="use_underline">True</property>
 	      <property name="stock_pixmap">gtk-justify-left</property>
@@ -608,12 +612,23 @@
 	  </child>
 
 	  <child>
-	    <widget class="button" id="button5">
+	    <widget class="button" id="export_button">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Write Changes to Disk/iPod</property>
 	      <property name="label" translatable="yes">Export</property>
 	      <property name="use_underline">True</property>
 	      <property name="stock_pixmap">gtk-goto-bottom</property>
 	      <signal name="clicked" handler="on_export_itunes1_button" last_modification_time="Sat, 23 Nov 2002 03:49:31 GMT"/>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="button" id="stop_button">
+	      <property name="tooltip" translatable="yes">Stop Display Update</property>
+	      <property name="label" translatable="yes">Stop</property>
+	      <property name="use_underline">True</property>
+	      <property name="stock_pixmap">gtk-stop</property>
+	      <signal name="clicked" handler="on_stop_button_clicked" last_modification_time="Tue, 18 Feb 2003 05:40:30 GMT"/>
 	    </widget>
 	  </child>
 	</widget>

@@ -53,9 +53,11 @@ static SortTab *sorttab[SORT_TAB_NUM];
 static Playlist *current_playlist = NULL;
 
 /* used for stopping of display refresh */
+typedef void (*br_callback)(gpointer user_data1, gpointer user_data2);
 static void block_selection (gint inst);
 static void release_selection (gint inst);
-static gboolean stop_add = FALSE;
+static void add_selection_callback (gint inst, br_callback brc, gpointer user_data1, gpointer user_data2);
+static gint stop_add = SORT_TAB_NUM;
 
 
 static void sm_song_changed (Song *song);
@@ -276,11 +278,9 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 }
 
 
-/* Callback function called when the selection
-   of the playlist view has changed */
-static void pm_selection_changed (GtkTreeSelection *selection,
-				  gpointer user_data)
+static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 {
+  GtkTreeSelection *selection = (GtkTreeSelection *)user_data1;
   GtkTreeModel *model;
   GtkTreeIter  iter;
   Playlist *new_playlist;
@@ -307,17 +307,35 @@ static void pm_selection_changed (GtkTreeSelection *selection,
       if (!prefs_get_block_display ())  block_selection (-1);
       for (i=0; i<n; ++i)
       { /* add all songs to sort tab 0 */
-	  if (stop_add)  break;
+	  if (stop_add == -1)  break;
 	  song = get_song_in_playlist_by_nr (new_playlist, i);
 	  st_add_song (song, FALSE, 0);
-	  while (!prefs_get_block_display() && gtk_events_pending ())
+	  while (((i%10) == 0) &&
+		 !prefs_get_block_display() && gtk_events_pending ())
 	      gtk_main_iteration ();
       }
-      if (stop_add) st_add_song (NULL, TRUE, 0);
-      if (!prefs_get_block_display ())  release_selection (-1);
+      if (stop_add != -1) st_add_song (NULL, TRUE, 0);
+      if (!prefs_get_block_display ())
+      {
+	  while (gtk_events_pending ())	      gtk_main_iteration ();
+	  release_selection (-1);
+      }
   }
   gtkpod_songs_statusbar_update();
 }
+
+/* Callback function called when the selection
+   of the playlist view has changed */
+/* Instead of handling the selection directly, we add a
+   "callback". Currently running display updates will be stopped
+   before the pm_selection_changed_cb is actually called */
+static void pm_selection_changed (GtkTreeSelection *selection,
+				  gpointer user_data)
+{
+    add_selection_callback (-1, pm_selection_changed_cb,
+			    (gpointer)selection, user_data);
+}
+
 
 void
 pm_select_playlist_reinit(Playlist *pl)
@@ -1128,18 +1146,19 @@ static void st_init (gint32 new_category, guint32 inst)
 }
 
 
-/* Called when page in sort tab is selected */
-void st_page_selected (GtkNotebook *notebook, guint page)
+static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 {
+  GtkNotebook *notebook = (GtkNotebook *)user_data1;
+  guint page = (guint)user_data2;
   guint32 inst;
   GList *copy = NULL;
   SortTab *st;
   gint i,n;
   Song *song;
 
-  if (stop_add)  return;
   inst = st_get_instance_from_notebook (notebook);
   if (inst == -1) return; /* invalid notebook */
+  if (stop_add <= inst)  return;
   st = sorttab[inst];
   /* re-initialize current instance */
   st_init (page, inst);
@@ -1161,15 +1180,35 @@ void st_page_selected (GtkNotebook *notebook, guint page)
       /* add all songs previously present to sort tab */
       for (i=0; i<n; ++i)
       {
-	  if (stop_add)  break;
+	  if (stop_add <= inst)  break;
 	  song = (Song *)g_list_nth_data (copy, i);
 	  st_add_song (song, FALSE, inst);
-	  while (!prefs_get_block_display() && gtk_events_pending ())
+	  while (((i%10) == 0) &&
+		 !prefs_get_block_display() && gtk_events_pending ())
 	      gtk_main_iteration ();
       }
-      if (n && !stop_add) st_add_song (NULL, TRUE, inst);
-      if (!prefs_get_block_display ())  release_selection (inst);
+      if (n && (stop_add > inst)) st_add_song (NULL, TRUE, inst);
+      if (!prefs_get_block_display ())
+      {
+	  while (gtk_events_pending ())      gtk_main_iteration ();
+	  release_selection (inst);
+      }
   }
+}
+
+
+/* Called when page in sort tab is selected */
+/* Instead of handling the selection directly, we add a
+   "callback". Currently running display updates will be stopped
+   before the st_page_selected_cb is actually called */
+void st_page_selected (GtkNotebook *notebook, guint page)
+{
+  guint32 inst;
+
+  inst = st_get_instance_from_notebook (notebook);
+  if (inst == -1) return; /* invalid notebook */
+  add_selection_callback (inst, st_page_selected_cb,
+			  (gpointer)notebook, (gpointer)page);
 }
 
 
@@ -1194,20 +1233,18 @@ void st_sort (guint32 inst, GtkSortType order)
 	    ST_COLUMN_ENTRY, order);
 }
 
-/* Callback function called when the selection
-   of the sort tab view has changed */
-static void st_selection_changed (GtkTreeSelection *selection,
-				  gpointer user_data)
+
+static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 {
+  GtkTreeSelection *selection = (GtkTreeSelection *)user_data1;
+  guint32 inst = (guint32)user_data2;
   GtkTreeModel *model;
   GtkTreeIter  iter;
   TabEntry *new_entry;
   Song *song;
   SortTab *st;
   guint32 n,i;
-  guint32 inst;
 
-  inst = (guint32) user_data;
   /* printf("%d: entered\n", inst);*/
   st = sorttab[inst];
   if (st == NULL) return;
@@ -1241,16 +1278,34 @@ static void st_selection_changed (GtkTreeSelection *selection,
       if (!prefs_get_block_display ())  block_selection (inst);
       for (i=0; i<n; ++i)
       { /* add all member songs to next instance */
-	  if (stop_add) break;
+	  if (stop_add <= inst) break;
 	  song = (Song *)g_list_nth_data (new_entry->members, i);
 	  st_add_song (song, FALSE, inst+1);
-	  while (!prefs_get_block_display() && gtk_events_pending ())
+	  while (((i%10) == 0) &&
+		 !prefs_get_block_display() && gtk_events_pending ())
 	      gtk_main_iteration ();
       }
-      if (!stop_add)  st_add_song (NULL, TRUE, inst+1);
-      if (!prefs_get_block_display ())  release_selection (inst);
+      if (stop_add > inst)  st_add_song (NULL, TRUE, inst+1);
+      if (!prefs_get_block_display ())
+      {
+	  while (gtk_events_pending ())	  gtk_main_iteration ();
+	  release_selection (inst);
+      }
   }
   gtkpod_songs_statusbar_update();
+}
+
+
+/* Callback function called when the selection
+   of the sort tab view has changed */
+/* Instead of handling the selection directly, we add a
+   "callback". Currently running display updates will be stopped
+   before the st_selection_changed_cb is actually called */
+static void st_selection_changed (GtkTreeSelection *selection,
+				  gpointer user_data)
+{
+    add_selection_callback ((gint)user_data, st_selection_changed_cb,
+			    (gpointer)selection, user_data);
 }
 
 
@@ -2161,20 +2216,19 @@ static void create_song_listview (GtkWidget *gtkpod)
 }
 
 
-
-
-
 /* Create the different listviews to display the various information */
 void create_display (GtkWidget *gtkpod)
 {
-  create_song_listview (gtkpod);
-  create_sort_tabs (gtkpod);
-  create_playlist_listview (gtkpod);
-  /* set certain sizes, positions, widths... to default values */
-  display_set_default_sizes ();
-  /* Make list of widgets that are turned insensitve during
-     import/export/add_directory etc. */
-  create_blocked_widget_list ();
+    GtkWidget *stop_button;
+
+    create_song_listview (gtkpod);
+    create_sort_tabs (gtkpod);
+    create_playlist_listview (gtkpod);
+    /* set certain sizes, positions, widths... to default values */
+    display_set_default_sizes ();
+    /* Hide the "stop_button" */
+    stop_button = lookup_widget (gtkpod_window, "stop_button");
+    if (stop_button) gtk_widget_hide (stop_button);
 }
 
 
@@ -2182,7 +2236,6 @@ void create_display (GtkWidget *gtkpod)
 void cleanup_display (void)
 {
   cleanup_sort_tabs ();
-  destroy_blocked_widget_list ();
 }
 
 /*
@@ -2402,120 +2455,131 @@ void display_update_default_sizes (void)
            Functions for stopping display update 
 
    ------------------------------------------------------------ */
-struct timeout_data {
-    GtkWidget *dialog;
-    guint     id;
+
+enum {
+    BR_BLOCK,
+    BR_RELEASE,
+    BR_ADD
 };
 
-/* timeout function called after one second to display the abort
- * message */
-static gboolean add_songs_dialog (gpointer data)
-{
-    struct timeout_data *timeout = (struct timeout_data *)data;
-    gtk_widget_show (timeout->dialog);
-    timeout->id = 0;
-    return FALSE;
-}
-
-
-/* This function is called when the user presses the abort button
- * during a display refresh */
-static void add_songs_abort (gboolean *abort)
-{
-    *abort = TRUE;
-}
-
-
 /* called by block_selection() and release_selection */
-static void block_release_selection (gint inst, gboolean block)
+static void block_release_selection (gint inst, gint action,
+				     br_callback brc,
+				     gpointer user_data1,
+				     gpointer user_data2)
 {
-    static gboolean first_time = TRUE;
-    static struct timeout_data timeout;
     static gint count_st[SORT_TAB_NUM];
     static gint count_pl = 0;
+    static GtkWidget *stop_button = NULL;
     gint i;
+    /* instance that has a pending callback */
+    static gint level = SORT_TAB_NUM; /* no level -> no registered callback */
+    static br_callback r_brc;
+    static gpointer r_user_data1;
+    static gpointer r_user_data2;
 
-    if (first_time)
-    { /* just to be sure -- should be zero.... */
-	for (i=0; i<SORT_TAB_NUM; ++i)  count_st[i] = 0;
-	first_time = FALSE;
-	timeout.dialog = NULL;
-	timeout.id = 0;
-	stop_add = FALSE;
+    /* lookup stop_button */
+    if (stop_button == NULL)
+    {
+	stop_button = lookup_widget (gtkpod_window, "stop_button");
+	if (stop_button == NULL)
+	    fprintf (stderr, "Programming error: stop_button not found\n");
     }
 
-    if(block)
+    switch (action)
     {
+    case BR_BLOCK:
 	if (count_pl == 0)
 	{
 	    block_widgets ();
-	    gtk_widget_set_sensitive (GTK_WIDGET (playlist_treeview), FALSE);
+	    if (stop_button) gtk_widget_show (stop_button);
 	}
 	++count_pl;
 	for (i=0; (i<=inst) && (i<SORT_TAB_NUM); ++i)
 	{
-	    if (count_st[i] == 0)
-		gtk_widget_set_sensitive (GTK_WIDGET (sorttab[i]->notebook),
-					  FALSE);
 	    ++count_st[i];
 	}
-	/* Set up dialogue to abort */
-	if (!timeout.dialog)
-	{
-	    timeout.dialog = gtk_message_dialog_new (
-		GTK_WINDOW (gtkpod_window),
-		GTK_DIALOG_DESTROY_WITH_PARENT,
-		GTK_MESSAGE_INFO,
-		GTK_BUTTONS_CANCEL,
-		_("Click to abort display update.\n\nNot all songs will be displayed, but none are lost."));
-	    /* Indicate that user wants to abort */
-	    g_signal_connect_swapped (GTK_OBJECT (timeout.dialog), "response",
-				      G_CALLBACK (add_songs_abort),
-				      &stop_add);
-	    timeout.id = gtk_timeout_add (1800, add_songs_dialog, &timeout);
-	}
-    }
-    else
-    { /* release selection */
+	break;
+    case BR_RELEASE:
 	for (i=0; (i<=inst) && (i<SORT_TAB_NUM); ++i)
 	{
 	    --count_st[i];
-	    if (count_st[i] == 0)
-		gtk_widget_set_sensitive (GTK_WIDGET (sorttab[i]->notebook),
-					  TRUE);
+	    if ((count_st[i] == 0) && (stop_add == i))
+		stop_add = SORT_TAB_NUM;
 	}
 	--count_pl;
 	if (count_pl == 0)
 	{
-	    gtk_widget_set_sensitive (GTK_WIDGET (playlist_treeview), TRUE);
-	    if (timeout.id)
-	    { /* remove timeout function if still present */
-		gtk_timeout_remove (timeout.id);
-		timeout.id = 0;
-	    }
-	    if (timeout.dialog)
-	    { /* destroy dialog */
-		gtk_widget_destroy (timeout.dialog);
-		timeout.dialog = NULL;
-	    }
-	    stop_add = FALSE;
+	    if (stop_button) gtk_widget_hide (stop_button);
+	    stop_add = SORT_TAB_NUM;
 	    release_widgets ();
 	}
+	/* check if we have to call a callback */
+	if (level < SORT_TAB_NUM)
+	{
+	    if (((level == -1) && (count_pl == 0)) ||
+		((level >= 0) && (count_st[level] == 0)))
+	    {
+		level = SORT_TAB_NUM;
+		r_brc (r_user_data1, r_user_data2);
+	    }
+	}
+	break;
+    case BR_ADD:
+	if (((inst == -1) && (count_pl == 0)) ||
+	    ((inst >= 0) && (count_st[inst] == 0)))
+	{ /* OK, we can just call the desired function */
+	    if (level > inst)
+	    {
+		level = SORT_TAB_NUM;
+		brc (user_data1, user_data2);
+	    }
+	}
+	else
+	{
+	    if (inst < level)
+	    {   /* We need to emit a stop_add signal */
+		stop_add = inst;
+		/* and safe the callback data */
+		level = inst;
+		r_brc = brc;
+		r_user_data1 = user_data1;
+		r_user_data2 = user_data2;
+	    }
+	}
+	break;
+    default:
+	fprintf (stderr, "Programming error: unknown BR_...: %d\n", action);
+	break;
     }
 }
 
 /* Will block the possibility to select another playlist / sort tab
-   page / tab entry. Will also block the widgets and set up a timeout
-   dialogue popping up after 1.8 seconds offering to stop the update
+   page / tab entry. Will also block the widgets and activate the
+   "stop button" that can be pressed to stop the update
    process. "inst" is the sort tab instance up to which the selections
    should be blocked. "-1" corresponds to the playlist view */
 static void block_selection (gint inst)
 {
-    block_release_selection (inst, TRUE);
+    block_release_selection (inst, BR_BLOCK, NULL, NULL, NULL);
 }
 
 /* Makes selection possible again */
 static void release_selection (gint inst)
 {
-    block_release_selection (inst, FALSE);
+    block_release_selection (inst, BR_RELEASE, NULL, NULL, NULL);
+}
+
+
+/* Stops the display updates down to instance "inst". "-1" is the
+ * playlist view */
+void stop_display_update (gint inst)
+{
+    stop_add = inst;
+}
+
+static void add_selection_callback (gint inst, br_callback brc,
+				    gpointer user_data1, gpointer user_data2)
+{
+    block_release_selection (inst, BR_ADD, brc, user_data1, user_data2);
 }

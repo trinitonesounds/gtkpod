@@ -93,10 +93,11 @@ create_gtkpod (void)
   GtkWidget *toolbar;
   GtkWidget *tmp_toolbar_icon;
   GtkWidget *import_button;
-  GtkWidget *button2;
-  GtkWidget *button3;
-  GtkWidget *button4;
-  GtkWidget *button5;
+  GtkWidget *add_files_button;
+  GtkWidget *add_dirs_button;
+  GtkWidget *new_PL_button;
+  GtkWidget *export_button;
+  GtkWidget *stop_button;
   GtkWidget *paned0;
   GtkWidget *scrolledwindow8;
   GtkWidget *playlist_treeview;
@@ -392,50 +393,59 @@ create_gtkpod (void)
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Import"),
-                                NULL, NULL,
+                                _("Read Existing Database from Disk/iPod"), NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
   gtk_widget_show (import_button);
 
   tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  button2 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+  add_files_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Files"),
-                                NULL, NULL,
+                                _("Add Files or Directories"), NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
-  gtk_widget_show (button2);
+  gtk_widget_show (add_files_button);
 
   tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  button3 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+  add_dirs_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Dirs"),
-                                NULL, NULL,
+                                _("Add Directories Recursively"), NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
-  gtk_widget_show (button3);
+  gtk_widget_show (add_dirs_button);
 
   tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-justify-left", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  button4 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+  new_PL_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("New PL"),
-                                NULL, NULL,
+                                _("Create New Playlist"), NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
-  gtk_widget_show (button4);
+  gtk_widget_show (new_PL_button);
 
   tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-goto-bottom", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  button5 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+  export_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Export"),
-                                NULL, NULL,
+                                _("Write Changes to Disk/iPod"), NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
-  gtk_widget_show (button5);
+  gtk_widget_show (export_button);
+
+  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-stop", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  stop_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+                                GTK_TOOLBAR_CHILD_BUTTON,
+                                NULL,
+                                _("Stop"),
+                                _("Stop Display Update"), NULL,
+                                tmp_toolbar_icon, NULL, NULL);
+  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar)->children)->data))->label), TRUE);
 
   paned0 = gtk_hpaned_new ();
   gtk_widget_show (paned0);
@@ -675,17 +685,20 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) import_button, "clicked",
                     G_CALLBACK (on_import_button_clicked),
                     NULL);
-  g_signal_connect ((gpointer) button2, "clicked",
+  g_signal_connect ((gpointer) add_files_button, "clicked",
                     G_CALLBACK (on_add_files1_button),
                     NULL);
-  g_signal_connect ((gpointer) button3, "clicked",
+  g_signal_connect ((gpointer) add_dirs_button, "clicked",
                     G_CALLBACK (on_add_directory1_button),
                     NULL);
-  g_signal_connect ((gpointer) button4, "clicked",
+  g_signal_connect ((gpointer) new_PL_button, "clicked",
                     G_CALLBACK (on_new_playlist_button),
                     NULL);
-  g_signal_connect ((gpointer) button5, "clicked",
+  g_signal_connect ((gpointer) export_button, "clicked",
                     G_CALLBACK (on_export_itunes1_button),
+                    NULL);
+  g_signal_connect ((gpointer) stop_button, "clicked",
+                    G_CALLBACK (on_stop_button_clicked),
                     NULL);
   g_signal_connect ((gpointer) playlist_treeview, "drag_data_received",
                     G_CALLBACK (on_playlist_treeview_drag_data_received),
@@ -827,10 +840,11 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, image199, "image199");
   GLADE_HOOKUP_OBJECT (gtkpod, toolbar, "toolbar");
   GLADE_HOOKUP_OBJECT (gtkpod, import_button, "import_button");
-  GLADE_HOOKUP_OBJECT (gtkpod, button2, "button2");
-  GLADE_HOOKUP_OBJECT (gtkpod, button3, "button3");
-  GLADE_HOOKUP_OBJECT (gtkpod, button4, "button4");
-  GLADE_HOOKUP_OBJECT (gtkpod, button5, "button5");
+  GLADE_HOOKUP_OBJECT (gtkpod, add_files_button, "add_files_button");
+  GLADE_HOOKUP_OBJECT (gtkpod, add_dirs_button, "add_dirs_button");
+  GLADE_HOOKUP_OBJECT (gtkpod, new_PL_button, "new_PL_button");
+  GLADE_HOOKUP_OBJECT (gtkpod, export_button, "export_button");
+  GLADE_HOOKUP_OBJECT (gtkpod, stop_button, "stop_button");
   GLADE_HOOKUP_OBJECT (gtkpod, paned0, "paned0");
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow8, "scrolledwindow8");
   GLADE_HOOKUP_OBJECT (gtkpod, playlist_treeview, "playlist_treeview");

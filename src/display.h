@@ -137,4 +137,5 @@ GList* get_currently_selected_songs(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
 
+void stop_display_update (gint inst);
 #endif __TREE_H__

@@ -71,8 +71,6 @@ void delete_playlist_head (void);
 void delete_song_head (void);
 void delete_entry_head (gint inst);
 
-void create_blocked_widget_list (void);
-void destroy_blocked_widget_list (void);
 void block_widgets (void);
 void release_widgets (void);
 #endif __MISC_H__

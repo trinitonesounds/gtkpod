@@ -52,8 +52,6 @@ static GtkWidget *gtkpod_songs_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
 
 /* --------------------------------------------------------------*/
-/* list with the widgets that are turned insensitive during import/export...*/
-static GList *blocked_widgets = NULL;
 /* are widgets blocked at the moment? */
 gboolean widgets_blocked = FALSE;
 struct blocked_widget { /* struct to be kept in blocked_widgets */
@@ -468,7 +466,7 @@ gchar *get_song_info (Song *song)
 \*------------------------------------------------------------------*/
 
 /* function to add one widget to the blocked_widgets list */
-static void add_blocked_widget (gchar *name)
+static GList *add_blocked_widget (GList *blocked_widgets, gchar *name)
 {
     GtkWidget *w;
     struct blocked_widget *bw;
@@ -481,46 +479,39 @@ static void add_blocked_widget (gchar *name)
 	 * done in "block_widgets ()" */
 	blocked_widgets = g_list_append (blocked_widgets, bw);
     }
-}
-
-
-/* Create a list of widgets that are to be turned insensitive when
- * importing/exporting, adding songs or directories etc.
- * This list contains the menu an all buttons */
-void create_blocked_widget_list (void)
-{
-    if (blocked_widgets == NULL)
-    {
-	add_blocked_widget ("menubar");
-	add_blocked_widget ("toolbar");
-    }
-    widgets_blocked = FALSE;
-}
-
-/* Release memory taken by "create_blocked_widget_list()" */
-void destroy_blocked_widget_list (void)
-{
-    while (blocked_widgets)
-    {
-	g_free (blocked_widgets->data);
-	blocked_widgets = g_list_remove_link (blocked_widgets, blocked_widgets);
-    }
+    return blocked_widgets;
 }
 
 /* called by block_widgets() and release_widgets() */
 /* "block": TRUE = block, FALSE = release */
 static void block_release_widgets (gboolean block)
 {
+    /* list with the widgets that are turned insensitive during
+       import/export...*/
+    static GList *bws = NULL;
     static gint count = 0; /* how many times are the widgets blocked? */
     GList *l;
     struct blocked_widget *bw;
+
+    /* Create a list of widgets that are to be turned insensitive when
+     * importing/exporting, adding songs or directories etc. */
+    if (bws == NULL)
+    {
+	bws = add_blocked_widget (bws, "menubar");
+	bws = add_blocked_widget (bws, "import_button");
+	bws = add_blocked_widget (bws, "add_files_button");
+	bws = add_blocked_widget (bws, "add_dirs_button");
+	bws = add_blocked_widget (bws, "new_PL_button");
+	bws = add_blocked_widget (bws, "export_button");
+	widgets_blocked = FALSE;
+    }
 
     if (block)
     { /* we must block the widgets */
 	++count;  /* increase number of locks */
 	if (!widgets_blocked)
 	{ /* only block widgets, if they are not already blocked */
-	    for (l = blocked_widgets; l; l = l->next)
+	    for (l = bws; l; l = l->next)
 	    {
 		bw = (struct blocked_widget *)l->data;
 		/* remember the state the widget was in before */
@@ -540,7 +531,7 @@ static void block_release_widgets (gboolean block)
 	    --count;
 	    if (count == 0)
 	    {
-		for (l = blocked_widgets; l; l = l->next)
+		for (l = bws; l; l = l->next)
 		{
 		    bw = (struct blocked_widget *)l->data;
 		    gtk_widget_set_sensitive (bw->widget, bw->sensitive);
@@ -555,7 +546,7 @@ static void block_release_widgets (gboolean block)
 }
 
 
-/* Block widgets (turn insensitive) listed in "blocked_widgets" */
+/* Block widgets (turn insensitive) listed in "bws" */
 void block_widgets (void)
 {
     block_release_widgets (TRUE);

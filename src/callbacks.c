@@ -177,7 +177,6 @@ on_playlist_treeview_drag_data_received
     GtkTreeModel *tm = NULL;
     GtkTreeViewDropPosition pos = 0;
 
-    puts("here!");
     /* sometimes we get empty dnd data, ignore */
     if(widgets_blocked || (!data) || (data->length < 0)) return;
     /* don't allow us to drag onto ourselves =) */
@@ -784,3 +783,24 @@ on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
 {
     prefs_window_set_block_display(gtk_toggle_button_get_active(togglebutton));
 }
+
+void
+on_stop_button_clicked                 (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    stop_display_update (-1);
+}
+
+#if 0
+gboolean
+on_playlist_treeview_button_release_event
+                                        (GtkWidget       *widget,
+                                        GdkEventButton  *event,
+                                        gpointer         user_data)
+{
+    printf ("Event delivered to %x\n", widget);
+    printf (" GDKType: %d, x/y: %f/%f, button: %d\n",
+	    event->type, event->x, event->y, event->button);
+    return FALSE;
+}
+#endif
