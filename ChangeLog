@@ -1,12 +1,8 @@
 gtkpod V0.52-CVS
 	NEW FEATURE: Supports Playcounts, Ratings, Time Last Played /
-	Modified / Imported. The playcounts and ratings are read from the
+	Time Last Modified. The playcounts and ratings are read from the
 	'Play Count' file produced by iPod's firmware versions V1.3
-	(playcounts only) and V2.0 (playcounts and rating). Whileas the
-	timestamps are stored in the iTunesDB, I'm using the extended
-	information file for the playcounts and the ratings. Anyone: if
-	you have access to a iTunesDB written by itunes, please contact
-	me!
+	(playcounts only) and V2.0 (playcounts and rating).
 
 	NEW FEATURE: If you mark several songs and change a tag in the
 	first one, the corresponding tag in the other songs will be
@@ -20,9 +16,8 @@ gtkpod V0.52-CVS
 	utf8 sort should work fine, case-sensitive may not work entirely
 	as expected with some charsets.
 
-	BUGFIX: can now choose zero sort tabs as well in the prefs
-	dialogue (instead of the minimum one) -- why didn't anyone tell
-	me?
+	BUGFIX: can now choose zero sort tabs in the prefs dialogue
+	(instead of the minimum one) -- why didn't anyone tell me?
 
 	BUGFIX: fixed memory holes in pm_data_compare_func(),
 	st_data_compare_func(), sm_data_compare_func(),
