@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 23:21:43 JST jcs>
+/* Time-stamp: <2004-04-01 23:47:46 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -918,7 +918,7 @@ void check_db (void)
 			      "The following %d dandling tracks do not have files on PC. \nPress OK to remove them, CANCEL to leave them. as is",
 			      ndang), ndang);
 
-	    gtkpod_confirmation
+	    if (gtkpod_confirmation
 		((i?CONF_ID_DANGLING1:CONF_ID_DANGLING0), /* we want unique window for each */
 		 FALSE,         /* gboolean modal, */
 		 _("Dangling Tracks"), /* title */
@@ -932,7 +932,11 @@ void check_db (void)
 		 NULL,          /* don't show "Apply" button */
 		 check_db_danglingcancel, /* cancel_handler,*/
 		 l_dangling[i], /* gpointer user_data1,*/
-		 k);            /* gpointer user_data2,*/
+		 k)             /* gpointer user_data2,*/
+		== GTK_RESPONSE_REJECT)
+	    {   /* free memory */
+		g_list_free(l_dangling[i]);
+	    }
 	    g_free (buf);
 	    g_string_free (str_dangs, TRUE);
 	}

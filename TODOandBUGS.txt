@@ -1,8 +1,5 @@
 TODO:
 
-- fix memory leak in check_db (when confirmation window could not be
-  opened)
-
 - progress bar for copying songs from iPod
 
 Dangling/orphaned tracks
