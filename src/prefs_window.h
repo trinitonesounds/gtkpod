@@ -26,8 +26,6 @@
 #define _GTKPOD_PREFS_WINDOW_H
 
 #include <gtk/gtk.h>
-#include "interface.h"
-#include "support.h"
 
 void prefs_window_save(void);
 void prefs_window_create(void);
@@ -37,7 +35,6 @@ void prefs_window_set_writeid3_active(gboolean val);
 void prefs_window_set_mount_point(const gchar *mp);
 
 void prefs_window_set_song_list_all(gboolean val);
-void prefs_window_set_song_list_year(gboolean val);
 void prefs_window_set_song_list_album(gboolean val);
 void prefs_window_set_song_list_track(gboolean val);
 void prefs_window_set_song_list_genre(gboolean val);

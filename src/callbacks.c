@@ -41,6 +41,7 @@
 #include "playlist.h"
 #include "display.h"
 #include "prefs_window.h"
+#include "md5.h"
 
 void
 on_import_itunes1_activate             (GtkMenuItem     *menuitem,
@@ -355,6 +356,10 @@ on_prefs_ok_clicked                    (GtkButton       *button,
                                         gpointer         user_data)
 {
     prefs_window_save();
+    write_prefs();
+    if(cfg->md5songs)
+	unique_file_repository_init(get_song_list());
+    sm_show_preferred_columns();
 }
 
 
@@ -406,11 +411,4 @@ on_cfg_song_list_track_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     prefs_window_set_song_list_track(gtk_toggle_button_get_active(togglebutton));
-}
-
-void
-on_cfg_song_list_year_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_song_list_year(gtk_toggle_button_get_active(togglebutton));
 }

@@ -50,7 +50,7 @@ struct cfg
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */	
   struct {
-      gboolean artist, album, year, track, genre;
+      gboolean artist, album, track, genre;
   } song_list_show; /* what columns are displayed in the song list */	
   /* last directories used by the fileselections */
   struct {
@@ -80,14 +80,12 @@ void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
 void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
 
 void prefs_set_song_list_show_all(gboolean val);
-void prefs_set_song_list_show_year(gboolean val);
 void prefs_set_song_list_show_track(gboolean val);
 void prefs_set_song_list_show_genre(gboolean val);
 void prefs_set_song_list_show_album(gboolean val);
 void prefs_set_song_list_show_artist(gboolean val);
 
 gboolean prefs_get_song_list_show_all(void);
-gboolean prefs_get_song_list_show_year(void);
 gboolean prefs_get_song_list_show_album(void);
 gboolean prefs_get_song_list_show_track(void);
 gboolean prefs_get_song_list_show_genre(void);

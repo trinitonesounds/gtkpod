@@ -690,7 +690,6 @@ create_prefs_window (void)
   GtkWidget *vbox5;
   GtkWidget *cfg_song_list_genre;
   GtkWidget *cfg_song_list_track;
-  GtkWidget *cfg_song_list_year;
   GtkWidget *label18;
   GtkWidget *hbuttonbox3;
   GtkWidget *button6;
@@ -766,10 +765,6 @@ create_prefs_window (void)
   gtk_widget_show (cfg_song_list_track);
   gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_track, FALSE, FALSE, 0);
 
-  cfg_song_list_year = gtk_check_button_new_with_mnemonic (_("Year"));
-  gtk_widget_show (cfg_song_list_year);
-  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_year, FALSE, FALSE, 0);
-
   label18 = gtk_label_new (_("Displayed Song Attributes"));
   gtk_widget_show (label18);
   gtk_frame_set_label_widget (GTK_FRAME (frame2), label18);
@@ -822,9 +817,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_song_list_track, "toggled",
                     G_CALLBACK (on_cfg_song_list_track_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_song_list_year, "toggled",
-                    G_CALLBACK (on_cfg_song_list_year_toggled),
-                    NULL);
   g_signal_connect ((gpointer) button6, "clicked",
                     G_CALLBACK (on_prefs_ok_clicked),
                     NULL);
@@ -850,7 +842,6 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, vbox5, "vbox5");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_genre, "cfg_song_list_genre");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_track, "cfg_song_list_track");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_year, "cfg_song_list_year");
   GLADE_HOOKUP_OBJECT (prefs_window, label18, "label18");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox3, "hbuttonbox3");
   GLADE_HOOKUP_OBJECT (prefs_window, button6, "button6");

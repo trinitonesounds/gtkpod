@@ -74,12 +74,13 @@ enum  {
 
 /* Column numbers in song model */
 enum  {
-  SM_COLUMN_ALBUM = 0,
+  SM_COLUMN_TITLE = 0,
   SM_COLUMN_ARTIST,
-  SM_COLUMN_TITLE,
+  SM_COLUMN_ALBUM,
   SM_COLUMN_GENRE,
-  SM_COLUMN_PC_PATH,
+  SM_COLUMN_TRACK,
   SM_COLUMN_IPOD_ID,
+  SM_COLUMN_PC_PATH,
   /*  SM_COLUMN_TRANSFERRED,*/
   SM_NUM_COLUMNS
 };
@@ -105,6 +106,7 @@ void st_page_selected (GtkNotebook *notebook, guint page);
 void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				 GtkTreeIter *i, gpointer data);
 
+void sm_show_preferred_columns(void);
 void cleanup_listviews(GtkWidget *w);
 
 #endif __TREE_H__

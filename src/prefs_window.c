@@ -1,7 +1,32 @@
+/*
+|  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
+|  Part of the gtkpod project.
+| 
+|  URL: http://gtkpod.sourceforge.net/
+| 
+|  This program is free software; you can redistribute it and/or modify
+|  it under the terms of the GNU General Public License as published by
+|  the Free Software Foundation; either version 2 of the License, or
+|  (at your option) any later version.
+| 
+|  This program is distributed in the hope that it will be useful,
+|  but WITHOUT ANY WARRANTY; without even the implied warranty of
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+|  GNU General Public License for more details.
+| 
+|  You should have received a copy of the GNU General Public License
+|  along with this program; if not, write to the Free Software
+|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+| 
+|  iTunes and iPod are trademarks of Apple
+| 
+|  This product is not supported/written/published by Apple!
+*/
 #include "prefs.h"
 #include "prefs_window.h"
-#include "md5.h"
 #include "song.h"
+#include "interface.h"
+#include "support.h"
 #include <stdio.h>
 
 static GtkWidget *prefs_window = NULL;
@@ -20,7 +45,6 @@ copy_cfg_songs_list_to_tmpcfg_songs_list(void)
     {
 	tmpcfg->song_list_show.artist = prefs_get_song_list_show_artist();
 	tmpcfg->song_list_show.album = prefs_get_song_list_show_album();
-	tmpcfg->song_list_show.year = prefs_get_song_list_show_year();
 	tmpcfg->song_list_show.track= prefs_get_song_list_show_track();
 	tmpcfg->song_list_show.genre = prefs_get_song_list_show_genre();
     }
@@ -90,7 +114,6 @@ prefs_window_save(void)
     prefs_set_md5songs_active(tmpcfg->md5songs);
     prefs_set_writeid3_active(tmpcfg->writeid3);
     prefs_set_mount_point(tmpcfg->ipod_mount);
-    prefs_set_song_list_show_year(tmpcfg->song_list_show.year);
     prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
     prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
@@ -100,10 +123,6 @@ prefs_window_save(void)
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
-    if(cfg->md5songs)
-	unique_file_repository_init(get_song_list());
-    
-    prefs_print();
 }
 
 /**
@@ -161,9 +180,8 @@ void prefs_window_set_song_list_all(gboolean val)
 	"cfg_song_list_album",
 	"cfg_song_list_genre",
 	"cfg_song_list_track",
-	"cfg_song_list_year"
     };
-    guint i = 0, extra_size = 5;
+    guint i = 0, extra_size = 4;
     GtkWidget *w = NULL;
     
     if(val)
@@ -204,9 +222,6 @@ void prefs_window_set_song_list_all(gboolean val)
 		    case 3:
 			button_active = tmpcfg->song_list_show.track;
 			break;
-		    case 4:
-			button_active = tmpcfg->song_list_show.year;
-			break;
 		    default:
 			break;
 		}
@@ -217,11 +232,6 @@ void prefs_window_set_song_list_all(gboolean val)
     }
 }
 
-void 
-prefs_window_set_song_list_year(gboolean val)
-{
-    tmpcfg->song_list_show.year = val;
-}
 void 
 prefs_window_set_song_list_album(gboolean val)
 {

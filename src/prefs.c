@@ -32,6 +32,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <getopt.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "prefs.h"
 #include "support.h"
 
@@ -80,6 +82,109 @@ cfg_new(void)
     return(mycfg);
 }
 
+static gchar*
+prefs_readline(char *buf, int maxlen, int *last)
+{
+    gchar *result = NULL;
+    int begin = PATH_MAX;
+    int i = 0;
+    
+    if((buf) && (buf[begin] != '#')) /* allow comments */
+    {
+	for(i = 0;((i < maxlen) && (buf[i] != '\n')); i++)
+	{
+	    if((begin > i) && ((buf[i] != ' ') || (buf[i] != '\0'))) 
+		begin = i;
+	}
+	if((i > 0) && (i <= maxlen))
+	{
+	    int len = (i - begin);
+	    result = g_malloc0(len + 1);
+	    snprintf(result, len + 1, "%s", &buf[begin]);
+	    *last +=  i;
+	}
+    }
+    return(result);
+}
+static void
+read_prefs_from_file_desc(FILE *fp)
+{
+    gchar buf[PATH_MAX];
+    int length = 0, i = 0;
+
+    if(fp)
+    {
+	gchar *tags[] = {
+	    "mp=", "id3=", "md5=", "album=", "track=", "genre=", "artist=" 
+	};
+	gchar *line = NULL;
+	length = fread(buf, 1, PATH_MAX, fp);
+	
+	for(i = 0; i < length; i++)
+	{
+	    if((line = prefs_readline(&buf[i], length - i, &i)))
+	    {
+		if((g_strstr_len(line, strlen(tags[0]), tags[0])))
+		{
+		    gchar mount_point[PATH_MAX];
+		    snprintf(mount_point, PATH_MAX, "%s", &line[3]);
+		    prefs_set_mount_point(mount_point);
+		}
+		else if((g_strstr_len(line, strlen(tags[1]), tags[1])))
+		{
+		    prefs_set_writeid3_active((gboolean)atoi(&line[4]));
+		}
+		else if((g_strstr_len(line, strlen(tags[2]), tags[2])))
+		{
+		    prefs_set_md5songs_active((gboolean)atoi(&line[4]));
+		}
+		else if((g_strstr_len(line, strlen(tags[3]), tags[3])))
+		{
+		    prefs_set_song_list_show_album((gboolean)atoi(&line[6]));
+		}
+		else if((g_strstr_len(line, strlen(tags[4]), tags[4])))
+		{
+		    prefs_set_song_list_show_track((gboolean)atoi(&line[6]));
+		}
+		else if((g_strstr_len(line, strlen(tags[5]), tags[5])))
+		{
+		    prefs_set_song_list_show_genre((gboolean)atoi(&line[6]));
+		}
+		else if((g_strstr_len(line, strlen(tags[6]), tags[6])))
+		{
+		    prefs_set_song_list_show_artist((gboolean)atoi(&line[7]));
+		}
+		g_free(line);
+	    }
+	}
+    }
+}
+
+void
+read_prefs_defaults(void)
+{
+    gchar cfgdir[PATH_MAX], filename[PATH_MAX], *str = NULL;
+    FILE *fp = NULL;
+
+    if((str = getenv("HOME")))
+    {
+	snprintf(cfgdir, PATH_MAX, "%s/.gtkpod", str);
+	if(g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
+	{
+	    snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
+	    if((fp = fopen(filename, "r")))
+	    {
+		read_prefs_from_file_desc(fp);
+		fclose(fp);
+	    }
+	    else
+	    {
+		fprintf(stderr, "Unable to open %s for reading\n", filename);
+	    }
+	}
+    }
+
+}
 /* Read Preferences and initialise the cfg-struct */
 gboolean read_prefs (int argc, char *argv[])
 {
@@ -101,7 +206,8 @@ gboolean read_prefs (int argc, char *argv[])
   if (cfg != NULL) discard_prefs ();
   
   cfg = cfg_new();
-
+    
+  read_prefs_defaults();
   while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
     switch(opt) 
       {
@@ -128,11 +234,49 @@ gboolean read_prefs (int argc, char *argv[])
   return TRUE;
 }
 
-
-
-void write_prefs (void)
+static void
+write_prefs_to_file_desc(FILE *fp)
 {
-  
+    if(!fp)
+	fp = stderr;
+    
+    fprintf(fp, "mp=%s\n", cfg->ipod_mount);
+    fprintf(fp, "id3=%d\n",cfg->writeid3);
+    fprintf(fp, "md5=%d\n",cfg->md5songs);
+    fprintf(fp, "album=%d\n",prefs_get_song_list_show_album());
+    fprintf(fp, "track=%d\n",prefs_get_song_list_show_track());
+    fprintf(fp, "genre=%d\n",prefs_get_song_list_show_genre());
+    fprintf(fp, "artist=%d\n",prefs_get_song_list_show_artist());
+}
+
+void 
+write_prefs (void)
+{
+    gchar cfgdir[PATH_MAX], filename[PATH_MAX], *str = NULL;
+    FILE *fp = NULL;
+
+    if((str = getenv("HOME")))
+    {
+	snprintf(cfgdir, PATH_MAX, "%s/.gtkpod/", str);
+	if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
+	{
+	    if(!mkdir(cfgdir, 0755))
+	    {
+		fprintf(stderr, "Unable to mkdir %s\n, Settings not saved\n",
+			cfgdir);
+	    }
+	}
+	snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
+	if((fp = fopen(filename, "w")))
+	{
+	    write_prefs_to_file_desc(fp);
+	    fclose(fp);
+	}
+	else
+	{
+	    fprintf(stderr, "Unable to open %s for writing\n", filename);
+	}
+    }
 }
 
 
@@ -218,7 +362,6 @@ prefs_set_song_list_show_all(gboolean val)
     {
 	cfg->song_list_show.artist = TRUE;
 	cfg->song_list_show.album = TRUE;
-	cfg->song_list_show.year= TRUE;
 	cfg->song_list_show.track = TRUE;
 	cfg->song_list_show.genre = TRUE;
     }
@@ -226,7 +369,6 @@ prefs_set_song_list_show_all(gboolean val)
     {
 	cfg->song_list_show.artist = FALSE;
 	cfg->song_list_show.album = FALSE;
-	cfg->song_list_show.year= FALSE;
 	cfg->song_list_show.track = FALSE;
 	cfg->song_list_show.genre = FALSE;
     }
@@ -244,11 +386,6 @@ prefs_set_song_list_show_album(gboolean val)
     cfg->song_list_show.album = val;
 }
 void 
-prefs_set_song_list_show_year(gboolean val)
-{
-    cfg->song_list_show.year = val;
-}
-void 
 prefs_set_song_list_show_track(gboolean val)
 {
     cfg->song_list_show.track = val;
@@ -263,7 +400,6 @@ prefs_get_song_list_show_all(void)
 {
     if((cfg->song_list_show.artist == FALSE) &&
 	(cfg->song_list_show.album == FALSE) &&
-	(cfg->song_list_show.year == FALSE) &&
 	(cfg->song_list_show.track == FALSE) &&
 	(cfg->song_list_show.genre == FALSE))
 	return(TRUE);
@@ -279,11 +415,6 @@ gboolean
 prefs_get_song_list_show_album(void)
 {
     return(cfg->song_list_show.album);
-}
-gboolean 
-prefs_get_song_list_show_year(void)
-{
-    return(cfg->song_list_show.year);
 }
 gboolean 
 prefs_get_song_list_show_track(void)
@@ -324,11 +455,6 @@ prefs_print(void)
 	fprintf(fp, "%s\n", off);
     fprintf(fp, "  Show Album: ");
     if(prefs_get_song_list_show_album())
-	fprintf(fp, "%s\n", on);
-    else
-	fprintf(fp, "%s\n", off);
-    fprintf(fp, "  Show Year: ");
-    if(prefs_get_song_list_show_year())
 	fprintf(fp, "%s\n", on);
     else
 	fprintf(fp, "%s\n", off);
