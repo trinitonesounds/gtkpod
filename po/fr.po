@@ -438,14 +438,12 @@ msgid "Special"
 msgstr "Spécial"
 
 #: src/display_sorttabs.c:2423
-#, fuzzy
 msgid "Last Played"
-msgstr "Joué"
+msgstr "Dernière fois joué"
 
 #: src/display_sorttabs.c:2424
-#, fuzzy
 msgid "Last Modified"
-msgstr "Modifié"
+msgstr "Dernière fois modifié"
 
 #. Songs with zero play length are ignored by iPod...
 #: src/file.c:504
@@ -1606,15 +1604,15 @@ msgstr "_Divers"
 
 #: src/interface.c:2362
 msgid " Logic: "
-msgstr " Opération logique: "
+msgstr " Opérateur logique: "
 
 #: src/interface.c:2367
 msgid "Any (OR)"
-msgstr "Ou (OR)"
+msgstr "Ou"
 
 #: src/interface.c:2373
 msgid "All (AND)"
-msgstr "Et (AND)"
+msgstr "Et"
 
 #: src/interface.c:2393
 msgid "0"
@@ -1694,10 +1692,9 @@ msgstr "     "
 
 #: src/interface.c:2683
 msgid "Category: "
-msgstr "Catégorie: "
+msgstr "Date: "
 
 #: src/interface.c:2702
-#, fuzzy
 msgid "Please specify a time interval"
 msgstr "Spécifiez un intervalle de temps"
 
@@ -1707,7 +1704,7 @@ msgstr "Borne inférieure"
 
 #: src/interface.c:2745 src/interface.c:2811
 msgid "Time:"
-msgstr "Durée"
+msgstr "Heure"
 
 #: src/interface.c:2760 src/interface.c:2826
 msgid ":"
