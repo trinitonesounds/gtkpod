@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
-"POT-Creation-Date: 2003-06-21 13:05+0900\n"
+"POT-Creation-Date: 2003-06-22 22:41+0900\n"
 "PO-Revision-Date: 2003-06-21 15:53+0200\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
@@ -38,7 +38,8 @@ msgstr "Mettre à jour l'entrée sélectionnée de quelle zone de tri ?"
 
 #: src/callbacks.c:790
 msgid "Sync dirs of selected entry in which sort tab?"
-msgstr "Synchroniser les répertoires de l'entrée sélectionnée de quelle zone de tri ?"
+msgstr ""
+"Synchroniser les répertoires de l'entrée sélectionnée de quelle zone de tri ?"
 
 #: src/callbacks.c:948
 msgid "Sort which sort tab in ascending order?"
@@ -73,209 +74,209 @@ msgstr "Jouer les morceaux de l'entrée sélectionnée de quelle zone de tri ?"
 msgid "Enqueue songs in selected entry of which sort tab?"
 msgstr "Ajouter les morceaux de l'entrée sélectionnée de quelle zone de tri ?"
 
-#: src/charset.c:44
+#: src/charset.c:45
 msgid "Arabic (IBM-864)"
 msgstr "Arabe (IBM-864)"
 
-#: src/charset.c:45
+#: src/charset.c:46
 msgid "Arabic (ISO-8859-6)"
 msgstr "Arabe (ISO-8859-6)"
 
-#: src/charset.c:46
+#: src/charset.c:47
 msgid "Arabic (Windows-1256)"
 msgstr "Arabe (Windows-1256)"
 
-#: src/charset.c:47
+#: src/charset.c:48
 msgid "Baltic (ISO-8859-13)"
 msgstr "Balte (ISO-8859-13)"
 
-#: src/charset.c:48
+#: src/charset.c:49
 msgid "Baltic (ISO-8859-4)"
 msgstr "Balte (ISO-8859-4)"
 
-#: src/charset.c:49
+#: src/charset.c:50
 msgid "Baltic (Windows-1257)"
 msgstr "Balte (Windows-1257)"
 
-#: src/charset.c:50
+#: src/charset.c:51
 msgid "Celtic (ISO-8859-14)"
 msgstr "Celte (ISO-8859-14)"
 
-#: src/charset.c:51
+#: src/charset.c:52
 msgid "Central European (IBM-852)"
 msgstr "Europe centrale (IBM-852)"
 
-#: src/charset.c:52
+#: src/charset.c:53
 msgid "Central European (ISO-8859-2)"
 msgstr "Europe centrale (ISO-8859-2)"
 
-#: src/charset.c:53
+#: src/charset.c:54
 msgid "Central European (Windows-1250)"
 msgstr "Europe centrale (Windows-1250)"
 
-#: src/charset.c:54
+#: src/charset.c:55
 msgid "Chinese Simplified (GB18030)"
 msgstr "Chinois simplifié (GB18030)"
 
-#: src/charset.c:55
+#: src/charset.c:56
 msgid "Chinese Simplified (GB2312)"
 msgstr "Chinois simplifié (GB2312)"
 
-#: src/charset.c:56
+#: src/charset.c:57
 msgid "Chinese Traditional (Big5)"
 msgstr "Chinois traditionnel (Big5)"
 
-#: src/charset.c:57
+#: src/charset.c:58
 msgid "Chinese Traditional (Big5-HKSCS)"
 msgstr "Chinois traditionnel (Big5-HKSCS)"
 
-#: src/charset.c:58
+#: src/charset.c:59
 msgid "Cyrillic (IBM-855)"
 msgstr "Cyrillique (IBM-855)"
 
-#: src/charset.c:59
+#: src/charset.c:60
 msgid "Cyrillic (ISO-8859-5)"
 msgstr "Cyrillique (ISO-8859-5)"
 
-#: src/charset.c:60
+#: src/charset.c:61
 msgid "Cyrillic (ISO-IR-111)"
 msgstr "Cyrillique (ISO-IR-111)"
 
-#: src/charset.c:61
+#: src/charset.c:62
 msgid "Cyrillic (KOI8-R)"
 msgstr "Cyrillique (KOI8-R)"
 
-#: src/charset.c:62
+#: src/charset.c:63
 msgid "Cyrillic (Windows-1251)"
 msgstr "Cyrillique (Windows-1251)"
 
-#: src/charset.c:63
+#: src/charset.c:64
 msgid "Cyrillic/Russian (CP-866)"
 msgstr "Cyrillique/Russe (CP-866)"
 
-#: src/charset.c:64
+#: src/charset.c:65
 msgid "Cyrillic/Ukrainian (KOI8-U)"
 msgstr "Cyrillique/Ukrainien (KOI8-U)"
 
-#: src/charset.c:65
+#: src/charset.c:66
 msgid "English (US-ASCII)"
 msgstr "Anglais (US-ASCII)"
 
-#: src/charset.c:66
+#: src/charset.c:67
 msgid "Greek (ISO-8859-7)"
 msgstr "Grec (ISO-8859-7)"
 
-#: src/charset.c:67
+#: src/charset.c:68
 msgid "Greek (Windows-1253)"
 msgstr "Grec (Windows-1253)"
 
-#: src/charset.c:68
+#: src/charset.c:69
 msgid "Hebrew (IBM-862)"
 msgstr "Hébreu (IBM-862)"
 
-#: src/charset.c:69
+#: src/charset.c:70
 msgid "Hebrew (Windows-1255)"
 msgstr "Hébreu (Windows-1255)"
 
-#: src/charset.c:70
+#: src/charset.c:71
 msgid "Japanese (automatic detection)"
 msgstr "Japonais (détection automatique)"
 
-#: src/charset.c:71
+#: src/charset.c:72
 msgid "Japanese (EUC-JP)"
 msgstr "Japonais (EUC-JP)"
 
-#: src/charset.c:72
+#: src/charset.c:73
 msgid "Japanese (ISO-2022-JP)"
 msgstr "Japonais (ISO-2022-JP)"
 
-#: src/charset.c:73
+#: src/charset.c:74
 msgid "Japanese (Shift_JIS)"
 msgstr "Japonais (Shift_JIS)"
 
-#: src/charset.c:74
+#: src/charset.c:75
 msgid "Korean (EUC-KR)"
 msgstr "Coréen (EUC-KR)"
 
-#: src/charset.c:75
+#: src/charset.c:76
 msgid "Nordic (ISO-8859-10)"
 msgstr "Nordique (ISO-8859-10)"
 
-#: src/charset.c:76
+#: src/charset.c:77
 msgid "South European (ISO-8859-3)"
 msgstr "Europe du sud (ISO-8859-3)"
 
-#: src/charset.c:77
+#: src/charset.c:78
 msgid "Thai (TIS-620)"
 msgstr "Thaï (TIS-620)"
 
-#: src/charset.c:78
+#: src/charset.c:79
 msgid "Turkish (IBM-857)"
 msgstr "Turc (IBM-857)"
 
-#: src/charset.c:79
+#: src/charset.c:80
 msgid "Turkish (ISO-8859-9)"
 msgstr "Turc (ISO-8859-9)"
 
-#: src/charset.c:80
+#: src/charset.c:81
 msgid "Turkish (Windows-1254)"
 msgstr "Turc (Windows-1254)"
 
-#: src/charset.c:81
+#: src/charset.c:82
 msgid "Unicode (UTF-7)"
 msgstr "Unicode (UTF-7)"
 
-#: src/charset.c:82
+#: src/charset.c:83
 msgid "Unicode (UTF-8)"
 msgstr "Unicode (UTF-8)"
 
-#: src/charset.c:83
+#: src/charset.c:84
 msgid "Unicode (UTF-16BE)"
 msgstr "Unicode (UTF-16BE)"
 
-#: src/charset.c:84
+#: src/charset.c:85
 msgid "Unicode (UTF-16LE)"
 msgstr "Unicode (UTF-16LE)"
 
-#: src/charset.c:85
+#: src/charset.c:86
 msgid "Unicode (UTF-32BE)"
 msgstr "Unicode (UTF-32BE)"
 
-#: src/charset.c:86
+#: src/charset.c:87
 msgid "Unicode (UTF-32LE)"
 msgstr "Unicode (UTF-32LE)"
 
-#: src/charset.c:87
+#: src/charset.c:88
 msgid "Vietnamese (VISCII)"
 msgstr "Vietnamien (VISCII)"
 
-#: src/charset.c:88
+#: src/charset.c:89
 msgid "Vietnamese (Windows-1258)"
 msgstr "Vietnamien (Windows-1258)"
 
-#: src/charset.c:89
+#: src/charset.c:90
 msgid "Visual Hebrew (ISO-8859-8)"
 msgstr "Hébreu visuel (ISO-8859-8)"
 
-#: src/charset.c:90
+#: src/charset.c:91
 msgid "Western (IBM-850)"
 msgstr "Europe occidentale (IBM-850)"
 
-#: src/charset.c:91
+#: src/charset.c:92
 msgid "Western (ISO-8859-1)"
 msgstr "Europe occidentale (ISO-8859-1)"
 
-#: src/charset.c:92
+#: src/charset.c:93
 msgid "Western (ISO-8859-15)"
 msgstr "EUrope occidentale (ISO-8859-15)"
 
-#: src/charset.c:93
+#: src/charset.c:94
 msgid "Western (Windows-1252)"
 msgstr "Europe occidentale (Windows-1252)"
 
 #. sanity!
 #. check for "System Charset" and return NULL
-#: src/charset.c:151 src/charset.c:161 src/charset.c:213
+#: src/charset.c:152 src/charset.c:162 src/charset.c:214
 msgid "System Charset"
 msgstr "Codage"
 
@@ -348,93 +349,103 @@ msgstr "Annuler"
 msgid "Playlists"
 msgstr "Listes de lecture"
 
-#: src/display_songs.c:806 src/display_sorttabs.c:2121 src/interface.c:1502
+#: src/display_songs.c:815 src/display_sorttabs.c:2139 src/interface.c:1502
 #: src/interface.c:1600
 msgid "Title"
 msgstr "Titre"
 
-#: src/display_songs.c:809 src/display_sorttabs.c:2109 src/interface.c:1478
+#: src/display_songs.c:818 src/display_sorttabs.c:2127 src/interface.c:1478
 #: src/interface.c:1560
 msgid "Artist"
 msgstr "Artiste"
 
-#: src/display_songs.c:812 src/display_sorttabs.c:2112 src/interface.c:1490
+#: src/display_songs.c:821 src/display_sorttabs.c:2130 src/interface.c:1490
 #: src/interface.c:1580
 msgid "Album"
 msgstr "Album"
 
-#: src/display_songs.c:815 src/display_sorttabs.c:2115 src/interface.c:1482
+#: src/display_songs.c:824 src/display_sorttabs.c:2133 src/interface.c:1482
 #: src/interface.c:1620
 msgid "Genre"
 msgstr "Genre"
 
-#: src/display_songs.c:818 src/interface.c:1494 src/interface.c:1564
+#: src/display_songs.c:827 src/interface.c:1494 src/interface.c:1564
 msgid "Composer"
 msgstr "Compositeur"
 
-#: src/display_songs.c:821
+#: src/display_songs.c:830
 msgid "#"
 msgstr "#"
 
-#: src/display_songs.c:824
+#: src/display_songs.c:833
 msgid "ID"
 msgstr "Id"
 
-#: src/display_songs.c:828 src/interface.c:1624
+#: src/display_songs.c:837 src/interface.c:1624
 msgid "PC File"
 msgstr "Fichier PC"
 
-#: src/display_songs.c:832
+#: src/display_songs.c:841
 msgid "Trnsfrd"
 msgstr "Transféré"
 
-#: src/display_songs.c:837 src/interface.c:1588
+#: src/display_songs.c:846 src/interface.c:1588
 msgid "File Size"
 msgstr "Taille du fichier"
 
-#: src/display_songs.c:841
+#: src/display_songs.c:850
 msgid "Time"
 msgstr "Durée"
 
-#: src/display_songs.c:845 src/interface.c:1628
+#: src/display_songs.c:854 src/interface.c:1628
 msgid "Bitrate"
 msgstr "Taux d'échantillonnage"
 
-#: src/display_songs.c:849 src/interface.c:1612 src/interface.c:2484
+#: src/display_songs.c:858 src/interface.c:1612 src/interface.c:2484
 msgid "Playcount"
 msgstr "Compt. lecture"
 
-#: src/display_songs.c:852 src/interface.c:1632 src/interface.c:2491
+#: src/display_songs.c:861 src/interface.c:1632 src/interface.c:2491
 msgid "Rating"
 msgstr "Taux"
 
-#: src/display_songs.c:855 src/interface.c:2497
+#: src/display_songs.c:864 src/interface.c:2497
 msgid "Played"
 msgstr "Joué"
 
-#: src/display_songs.c:859 src/interface.c:2503
+#: src/display_songs.c:868 src/interface.c:2503
 msgid "Modified"
 msgstr "Modifié"
 
-#: src/display_sorttabs.c:172
+#: src/display_sorttabs.c:174
 msgid "'Played' condition ignored because of error."
 msgstr "Condition 'Joué' ignoré à cause d'une erreur."
 
-#: src/display_sorttabs.c:175
+#: src/display_sorttabs.c:177
 msgid "'Modified' condition ignored because of error."
 msgstr "Condition 'Modifié' ignoré à cause d'une erreur."
 
-#: src/display_sorttabs.c:1061
+#: src/display_sorttabs.c:1077
 msgid "All"
 msgstr "Tous"
 
-#: src/display_sorttabs.c:2118
+#: src/display_sorttabs.c:2136
 msgid "Comp."
 msgstr "Comp."
 
-#: src/display_sorttabs.c:2124 src/interface.c:2348
+#: src/display_sorttabs.c:2142 src/interface.c:2348
 msgid "Special"
 msgstr "Special"
+
+#: src/display_sorttabs.c:2403
+#, fuzzy
+msgid "Last Played"
+msgstr "Joué"
+
+#: src/display_sorttabs.c:2404
+#, fuzzy
+msgid "Last Modified"
+msgstr "Modifié"
 
 #. Songs with zero play length are ignored by iPod...
 #: src/file.c:504
@@ -537,6 +548,7 @@ msgid "No playlist selected."
 msgstr "Pas de liste de lecture sélectionnée"
 
 #: src/file.c:975
+#, c-format
 msgid "The following song could not be updated"
 msgid_plural "The following %d songs could not be updated"
 msgstr[0] "Le morceau suivant ne peut pas être mis à jour."
@@ -549,6 +561,7 @@ msgid "Failed Song Update"
 msgstr "Echec de la mise à jour du morceau"
 
 #: src/file.c:1039
+#, c-format
 msgid "The following song has been updated"
 msgid_plural "The following %d songs have been updated"
 msgstr[0] "Le morceau suivant a été mis à jour"
@@ -574,6 +587,7 @@ msgid "format not supported"
 msgstr "format non supporté"
 
 #: src/file.c:1370 src/file.c:1383
+#, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "Impossible de trouver le fichier pixmap: %s\n"
 
@@ -1110,8 +1124,7 @@ msgstr "Point de montage de l'iPod:"
 #: src/interface.c:1341
 msgid ""
 "Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar."
-msgstr ""
-"Point de montage de l'iPod. Habituellement '/mnt/ipod'"
+msgstr "Point de montage de l'iPod. Habituellement '/mnt/ipod'"
 
 #: src/interface.c:1343
 msgid "Automatically import iTunesDB on startup"
@@ -1162,7 +1175,9 @@ msgstr "Ajouter les répertoires récursivement"
 
 #: src/interface.c:1389
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
-msgstr "Si vous cochez cette case, gtkpod parcourera les sous-répertoires récursivement."
+msgstr ""
+"Si vous cochez cette case, gtkpod parcourera les sous-répertoires "
+"récursivement."
 
 #: src/interface.c:1391
 msgid "Don't allow file duplication"
@@ -1179,8 +1194,7 @@ msgstr "Afficher les infos au sujet des doublons"
 #: src/interface.c:1405
 msgid ""
 "Display the list of duplicates that have been detected after adding files."
-msgstr ""
-"Afficher la liste des doublons détectés lors de l'ajout de fichier."
+msgstr "Afficher la liste des doublons détectés lors de l'ajout de fichier."
 
 #: src/interface.c:1407
 msgid ""
@@ -1592,7 +1606,8 @@ msgid "_Misc"
 msgstr "_Divers"
 
 #: src/interface.c:2362
-msgid " Logic Operation: "
+#, fuzzy
+msgid " Logic: "
 msgstr " Opération logique: "
 
 #: src/interface.c:2367
@@ -1647,7 +1662,7 @@ msgstr ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' ou similaire. Appuyez 'Entrée' "
 "pour valider."
 
-#: src/interface.c:2460 src/interface.c:2480
+#: src/interface.c:2460 src/interface.c:2480 src/interface.c:2646
 msgid "Calendar"
 msgstr "Calendrier"
 
@@ -1670,6 +1685,49 @@ msgid ""
 msgstr ""
 "Affiche automatiquement les morceaux qui correspondent aux critères saisis."
 "En désactivant cette option, vous devrez appuyer sur 'Afficher'."
+
+#: src/interface.c:2668
+#, fuzzy
+msgid "Sorttab: "
+msgstr "Onglet de tri"
+
+#: src/interface.c:2678
+msgid "     "
+msgstr ""
+
+#: src/interface.c:2683
+msgid "Category: "
+msgstr ""
+
+#: src/interface.c:2702
+#, fuzzy
+msgid "Please specify a time interval"
+msgstr "Spécifier un intervalle"
+
+#: src/interface.c:2722
+msgid "Lower Margin"
+msgstr ""
+
+#: src/interface.c:2745 src/interface.c:2811
+#, fuzzy
+msgid "Time:"
+msgstr "Durée"
+
+#: src/interface.c:2760 src/interface.c:2826
+msgid ":"
+msgstr ""
+
+#: src/interface.c:2776
+msgid "No lower margin"
+msgstr ""
+
+#: src/interface.c:2788
+msgid "Upper margin"
+msgstr ""
+
+#: src/interface.c:2842
+msgid "No upper margin"
+msgstr ""
 
 #: src/itunesdb.c:420
 msgid "Master-PL"
@@ -1697,6 +1755,7 @@ msgstr "Ne peut ouvrir en écriture le fichier iTunesDB \"%s\".\n"
 
 #. an error occured
 #: src/itunesdb.c:1383
+#, c-format
 msgid "Error renaming '%s' to '%s' (%s).\n"
 msgstr "Impossible de copier '%s' vers '%s' (%s)\n"
 
@@ -1836,8 +1895,8 @@ msgid ""
 msgstr ""
 "Cette application empreinte du code des projets suivants :\n"
 "    mp3info: detection de la durée des mp3\n"
-"    xmms:    l'explorateur de fichier, detection de la durée des mp3 "
-"(http://www.xmms.org)\n"
+"    xmms:    l'explorateur de fichier, detection de la durée des mp3 (http://"
+"www.xmms.org)\n"
 "    easytag: gestion des tags ID3 (http://easytag.sourceforge.net)\n"
 "\n"
 "L'interface graphique a été crée avec l'application glade-2 (http://glade."
@@ -1938,8 +1997,10 @@ msgid ""
 msgid_plural ""
 "Are you sure you want to delete the following songs\n"
 "completely from your ipod?"
-msgstr[0] "Etes-vous sûr de vouloir supprimer le morceau suivant de votre ipod ?"
-msgstr[1] "Etes-vous sûr de vouloir supprimer les morceaux suivants de votre ipod ?"
+msgstr[0] ""
+"Etes-vous sûr de vouloir supprimer le morceau suivant de votre ipod ?"
+msgstr[1] ""
+"Etes-vous sûr de vouloir supprimer les morceaux suivants de votre ipod ?"
 
 #: src/misc.c:1161
 msgid "Delete Song Completely?"
@@ -1950,15 +2011,18 @@ msgid "Delete Songs Completey?"
 msgstr "Supprimer complètement les morceaux ?"
 
 #: src/misc.c:1170
+#, c-format
 msgid ""
 "Are you sure you want to delete the following song\n"
 "from the playlist \"%s\"?"
 msgid_plural ""
 "Are you sure you want to delete the following songs\n"
 "from the playlist \"%s\"?"
-msgstr[0] "Etes-vous sûr de vouloir supprimer le morceau\n"
+msgstr[0] ""
+"Etes-vous sûr de vouloir supprimer le morceau\n"
 "suivant de la liste de lecture '%s' ?"
-msgstr[1] "Etes-vous sûr de vouloir supprimer les morceaux\n"
+msgstr[1] ""
+"Etes-vous sûr de vouloir supprimer les morceaux\n"
 "suivants de la liste de lecture '%s' ?"
 
 #: src/misc.c:1172
@@ -2038,6 +2102,7 @@ msgid " %s Pending"
 msgstr " %s en attente"
 
 #: src/playlist.c:306
+#, c-format
 msgid "Added %d+ songs to playlist '%s'"
 msgid_plural "Added %d+ songs to playlist '%s'"
 msgstr[0] "%d morceau ajouté à la liste de lecture '%s'"
@@ -2100,46 +2165,46 @@ msgstr ""
 msgid "  --offline:    same as \"-o\".\n"
 msgstr "  --offline:    identique a \"-o\".\n"
 
-#: src/prefs.c:260 src/prefs.c:560
+#: src/prefs.c:262 src/prefs.c:570
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "Erreur lors de la lecture des options: %s\n"
 
-#: src/prefs.c:593
+#: src/prefs.c:603
 #, c-format
 msgid "Unable to open config file \"%s\" for reading\n"
 msgstr "Impossible d'ouvrir en lecture le fichier des options \"%s\"\n"
 
-#: src/prefs.c:696
+#: src/prefs.c:706
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "Option inconnue: %s\n"
 
-#: src/prefs.c:736
+#: src/prefs.c:746
 msgid "# delete confirmation\n"
 msgstr "# confirmation de suppression\n"
 
-#: src/prefs.c:742
+#: src/prefs.c:752
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr "# zones: choix 'All', dernière page sélectionnée (=categorie)\n"
 
-#: src/prefs.c:759
+#: src/prefs.c:769
 msgid "# autoselect master playlist?\n"
 msgstr "# sélection automatique de liste de lecture principale?\n"
 
-#: src/prefs.c:761
+#: src/prefs.c:771
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr "# titre=0, artiste, album, genre, compositeur\n"
 
-#: src/prefs.c:762
+#: src/prefs.c:772
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr "# no_piste=5, ipod_id, pc_path, transféré\n"
 
-#: src/prefs.c:763
+#: src/prefs.c:773
 msgid "# autoset: set empty tag to filename?\n"
 msgstr "# Définition automatique: mettre à vide les tags dans le fichier?\n"
 
-#: src/prefs.c:772
+#: src/prefs.c:782
 msgid ""
 "# position of sliders (paned): playlists, above songs,\n"
 "# between sort tabs, and in statusbar.\n"
@@ -2148,7 +2213,7 @@ msgstr ""
 "morceaux,\n"
 "# entre les zones et dans la barre de statut.\n"
 
-#: src/prefs.c:802
+#: src/prefs.c:812
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser\n"
@@ -2156,34 +2221,34 @@ msgstr ""
 "# tailles de fenêtre: fenêtre principale, confirmation avec défilement,\n"
 "#                     confirmation sans défilement, explorateur de fichiers\n"
 
-#: src/prefs.c:824
+#: src/prefs.c:836
 msgid "Settings are not saved.\n"
 msgstr "Réglages non sauvés.\n"
 
-#: src/prefs.c:837
+#: src/prefs.c:849
 #, c-format
 msgid "Unable to open \"%s\" for writing\n"
 msgstr "Impossible d'ouvrir en lecture \"%s\"\n"
 
-#: src/prefs.c:1154
+#: src/prefs.c:1166
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " Préférences: N° de catégorie (%d<%d?) ou n° de zone (%d<%d?) inexistant.\n"
 
-#: src/prefs.c:1203
+#: src/prefs.c:1215
 #, c-format
 msgid "Unable to \"mkdir %s\"\n"
 msgstr "Impossible de lancer \"mkdir %s\"\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1512
+#: src/prefs.c:1540
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr ""
 
-#: src/prefs.c:1596 src/prefs.c:1603
+#: src/prefs.c:1624 src/prefs.c:1631
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr "'%s': seulement une '%%s' autorisée.\n"
@@ -2212,7 +2277,8 @@ msgid_plural ""
 msgstr[0] ""
 "Le morceau (doublon) n'a pas été ajouté à la liste de lecture principale."
 msgstr[1] ""
-"Les morceaux (doublons) n'ont pas été ajoutés à la liste de lecture principale"
+"Les morceaux (doublons) n'ont pas été ajoutés à la liste de lecture "
+"principale"
 
 #. gint id,
 #. gboolean modal,

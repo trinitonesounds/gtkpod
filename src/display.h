@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 00:22:03 jcs>
+/* Time-stamp: <2003-06-22 22:53:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -87,9 +87,10 @@ typedef struct {
 typedef struct {
     gchar *int_str;   /* copy of string specified in the sort tab */
     gboolean valid;   /* is current string valid? */
-    guint32 low;      /* MAC timestamp for lower limit */
-    guint32 high;     /* MAC timestamp for upper limit ("-1": no limit) */
+    guint32 lower;    /* MAC timestamp for lower limit */
+    guint32 upper;    /* MAC timestamp for upper limit ("-1": no limit) */
     GtkWidget *entry; /* pointer to GtkEntry in sort tab */
+    GtkWidget *active;/* pointer to toggle button */
 } TimeInfo;
 
 /* struct with data corresponding to each sort tab */

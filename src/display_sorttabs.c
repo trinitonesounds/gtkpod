@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 01:58:19 jcs>
+/* Time-stamp: <2003-06-22 22:53:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -43,6 +43,8 @@
 static SortTab *sorttab[SORT_TAB_MAX];
 /* pointer to paned elements holding the sort tabs */
 static GtkPaned *st_paned[PANED_NUM_ST];
+
+static void sp_store_sp_entries (gint inst);
 
 /* Drag and drop definitions */
 static GtkTargetEntry st_drag_types [] = {
@@ -162,7 +164,7 @@ static IntervalState st_check_time (guint32 inst, S_item item, Song *song)
     if (ti && ti->valid)
     {
 	guint32 stamp = song_get_timestamp (song, item);
-	if (stamp && (ti->low <= stamp) && (stamp <= ti->high))
+	if (stamp && (ti->lower <= stamp) && (stamp <= ti->upper))
 	      result = IS_INSIDE;
 	else  result = IS_OUTSIDE;
     }
@@ -372,13 +374,30 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 #endif
 }
 
+/* save the contents of the entry to prefs */
+static void sp_store_sp_entries (gint inst)
+{
+    SortTab *st;
+
+    /* Sanity */
+    if (inst >= prefs_get_sort_tab_num ())  return;
+
+    st = sorttab[inst];
+
+    /* Sanity */
+    if (!st || (st->current_category != ST_CAT_SPECIAL)) return;
+
+    prefs_set_sp_entry (inst, S_TIME_MODIFIED,
+			gtk_entry_get_text (GTK_ENTRY(st->ti_modified.entry)));
+    prefs_set_sp_entry (inst, S_TIME_PLAYED,
+			gtk_entry_get_text (GTK_ENTRY(st->ti_played.entry)));
+}
 
 /* display the members satisfying the conditions specified in the
  * special sort tab of instance @inst */
 void sp_go (guint32 inst)
 {
     SortTab *st;
-    gchar *buf;
 
     /* Sanity */
     if (inst >= prefs_get_sort_tab_num ())  return;
@@ -393,12 +412,7 @@ void sp_go (guint32 inst)
 
     /* Make sure the information typed into the entries is actually
      * being used (maybe the user 'forgot' to press enter */
-    buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_modified.entry), 0, -1);
-    prefs_set_sp_entry (inst, S_TIME_MODIFIED, buf);
-    g_free (buf);
-    buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_played.entry), 0, -1);
-    prefs_set_sp_entry (inst, S_TIME_PLAYED, buf);
-    g_free (buf);
+    sp_store_sp_entries (inst);
 
     /* Instead of handling the selection directly, we add a
        "callback". Currently running display updates will be stopped
@@ -1261,6 +1275,7 @@ void st_init (ST_CAT_item new_category, guint32 inst)
       SortTab *st = sorttab[inst];
 
       if (st == NULL) return; /* could happen during initialisation */
+      sp_store_sp_entries (inst); /* store sp entries (if applicable) */
       st->unselected = FALSE; /* nothing was unselected so far */
       st->final = TRUE;       /* all songs are added */
       st->is_go = FALSE;      /* did not press "Display" yet (special) */
@@ -2016,6 +2031,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       
       /* PLAYED */
       w = lookup_widget (special, "sp_played_button");
+      st->ti_played.active = w;
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			(gpointer)((S_TIME_PLAYED<<SP_SHIFT) + inst));
@@ -2036,6 +2052,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 
       /* MODIFIED */
       w = lookup_widget (special, "sp_modified_button");
+      st->ti_modified.active = w;
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
@@ -2237,18 +2254,19 @@ void st_create_tabs (void)
 /* Clean up the memory used by sort tabs (program quit). */
 void st_cleanup (void)
 {
-  gint i,j;
-  for (i=0; i<SORT_TAB_MAX; ++i)
+    gint i,j;
+    for (i=0; i<SORT_TAB_MAX; ++i)
     {
-      if (sorttab[i] != NULL)
+	if (sorttab[i] != NULL)
 	{
-	  st_remove_all_entries_from_model (FALSE, i);
-	  for (j=0; j<ST_CAT_NUM; ++j)
+	    sp_store_sp_entries (i);
+	    st_remove_all_entries_from_model (FALSE, i);
+	    for (j=0; j<ST_CAT_NUM; ++j)
 	    {
 		C_FREE (sorttab[i]->lastselection[j]);
 	    }
-	  g_free (sorttab[i]);
-	  sorttab[i] = NULL;
+	    g_free (sorttab[i]);
+	    sorttab[i] = NULL;
 	}
     }
 }
@@ -2394,11 +2412,21 @@ enum {
     CAT_STRING_PLAYED = 0,
     CAT_STRING_MODIFIED = 1 };
 
+/* typedef to specify lower or upper margin */
+typedef enum {
+    LOWER_MARGIN,
+    UPPER_MARGIN
+} MarginType;
+
 
 /* Set the calendar @calendar, as well as spin buttons @hour and @min
- * according to @mactime */
-static void cal_set_time (GtkCalendar *cal, GtkSpinButton *hour,
-			  GtkSpinButton *min, guint32 mactime)
+ * according to @mactime. If @mactime is 0, check @no_margin
+ * togglebutton, otherwise uncheck it. */
+static void cal_set_time_widgets (GtkCalendar *cal,
+				  GtkSpinButton *hour,
+				  GtkSpinButton *min,
+				  GtkToggleButton *no_margin,
+				  guint32 mactime)
 {
     struct tm *tm;
     time_t tt = time (NULL);
@@ -2406,7 +2434,11 @@ static void cal_set_time (GtkCalendar *cal, GtkSpinButton *hour,
     /* 0, -1 are treated in a special way (no lower/upper margin
      * -> set calendar to current time */
     if ((mactime != 0) && (mactime != -1))
-           tt = itunesdb_time_mac_to_host (mactime);
+    {
+	tt = itunesdb_time_mac_to_host (mactime);
+	if (no_margin)  gtk_toggle_button_set_active (no_margin, FALSE);
+    }
+    else if (no_margin) gtk_toggle_button_set_active (no_margin, TRUE);
 
     tm = localtime (&tt);
 
@@ -2423,6 +2455,246 @@ static void cal_set_time (GtkCalendar *cal, GtkSpinButton *hour,
 }
 
 
+static void cal_set_time (GtkWidget *cal, MarginType type, guint32 mactime)
+{
+    GtkCalendar *calendar = NULL;
+    GtkSpinButton *hour = NULL;
+    GtkSpinButton *min = NULL;
+    GtkToggleButton *no_margin = NULL;
+
+    switch (type)
+    {
+    case LOWER_MARGIN:
+	calendar = GTK_CALENDAR (lookup_widget (cal, "lower_cal"));
+	hour = GTK_SPIN_BUTTON (lookup_widget (cal, "lower_hours"));
+	min = GTK_SPIN_BUTTON (lookup_widget (cal, "lower_minutes"));
+	no_margin = GTK_TOGGLE_BUTTON (lookup_widget (cal, "no_lower_margin"));
+	break;
+    case UPPER_MARGIN:
+	calendar = GTK_CALENDAR (lookup_widget (cal, "upper_cal"));
+	hour = GTK_SPIN_BUTTON (lookup_widget (cal, "upper_hours"));
+	min = GTK_SPIN_BUTTON (lookup_widget (cal, "upper_minutes"));
+	no_margin = GTK_TOGGLE_BUTTON (lookup_widget (cal, "no_upper_margin"));
+	break;
+    }
+    cal_set_time_widgets (calendar, hour, min, no_margin, mactime);
+}
+
+
+/* Extract data from calendar/time.
+ *
+ * Return value:
+ *
+ * pointer to 'struct tm' filled with the relevant data or NULL, if
+ * the button no_margin was selected.
+ *
+ * If @tm is != NULL, modify that instead.
+ *
+ * You must g_free() the retuned value.
+ */
+static struct tm *cal_get_time (GtkWidget *cal, MarginType type, struct tm *tm)
+{
+    GtkCalendar *calendar = NULL;
+    GtkSpinButton *hour = NULL;
+    GtkSpinButton *min = NULL;
+    GtkSpinButton *sec = NULL;
+    GtkToggleButton *no_margin = NULL;
+    GtkToggleButton *no_time = NULL;
+
+    switch (type)
+    {
+    case LOWER_MARGIN:
+	calendar = GTK_CALENDAR (lookup_widget (cal, "lower_cal"));
+	hour = GTK_SPIN_BUTTON (lookup_widget (cal, "lower_hours"));
+	min = GTK_SPIN_BUTTON (lookup_widget (cal, "lower_minutes"));
+	no_margin = GTK_TOGGLE_BUTTON (lookup_widget (cal, "no_lower_margin"));
+	no_time =  GTK_TOGGLE_BUTTON (lookup_widget (cal, "lower_time"));
+	break;
+    case UPPER_MARGIN:
+	calendar = GTK_CALENDAR (lookup_widget (cal, "upper_cal"));
+	hour = GTK_SPIN_BUTTON (lookup_widget (cal, "upper_hours"));
+	min = GTK_SPIN_BUTTON (lookup_widget (cal, "upper_minutes"));
+	no_margin = GTK_TOGGLE_BUTTON (lookup_widget (cal, "no_upper_margin"));
+	no_time =  GTK_TOGGLE_BUTTON (lookup_widget (cal, "upper_time"));
+	break;
+    }
+
+    if (!gtk_toggle_button_get_active (no_margin))
+    {
+	/* Initialize tm with current time and copy the result of
+	 * localtime() to persistent memory that can be g_free()'d */
+	time_t tt = time (NULL);
+	if (!tm)
+	{
+	    tm = g_malloc (sizeof (struct tm));
+	    memcpy (tm, localtime (&tt), sizeof (struct tm));
+	}
+
+	if (calendar)
+	{
+	    guint year, month, day;
+	    gtk_calendar_get_date (calendar, &year, &month, &day);
+	    tm->tm_year = year-1900;
+	    tm->tm_mon = month;
+	    tm->tm_mday = day;
+	}
+	if (gtk_toggle_button_get_active (no_time))
+	{
+	    if (hour)
+		tm->tm_hour = gtk_spin_button_get_value_as_int (hour);
+	    if (min)
+		tm->tm_min = gtk_spin_button_get_value_as_int (min);
+	    if (sec)
+		tm->tm_min = gtk_spin_button_get_value_as_int (sec);
+	}
+	else
+	{   /* use 0:00 for lower and 23:59 for upper margin */
+	    switch (type)
+	    {
+	    case LOWER_MARGIN:
+		if (hour) tm->tm_hour = 0;
+		if (min) tm->tm_min = 0;
+		if (sec) tm->tm_sec = 0;
+		break;
+	    case UPPER_MARGIN:
+		if (hour) tm->tm_hour = 23;
+		if (min) tm->tm_min = 59;
+		if (sec) tm->tm_sec = 59;
+		break;
+	    }
+	}
+    }
+    return tm;
+}
+
+
+/* get the category (S_TIME_PLAYED or S_TIME_MODIFIED) selected in the
+ * combo */
+static S_item cal_get_category (GtkWidget *cal)
+{
+    const gchar *str;
+    GtkWidget *w;
+    S_item item;
+    gint i = -1;
+
+    w = lookup_widget (cal, "cat_combo");
+    str = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w)->entry));
+    /* Check which string is selected in the combo */
+    if (str)
+	for (i=0; cat_strings[i]; ++i)
+	    if (strcmp (gettext (cat_strings[i]), str) == 0)  break;
+    switch (i)
+    {
+    case CAT_STRING_PLAYED:
+	item = S_TIME_PLAYED;
+	break;
+    case CAT_STRING_MODIFIED:
+	item = S_TIME_MODIFIED;
+	break;
+    default:
+	fprintf (stderr, "Programming error: cal_get_category () -- item not found.\n");
+	/* set to something reasonable at least */
+	item = S_TIME_PLAYED;
+    }
+    return item;
+}
+	
+
+/* Returns a string "DD/MM/YYYY HH:MM". Data is taken from
+ * @tm. Returns NULL if tm==NULL. You must g_free() the returned
+ * string */
+static gchar *cal_get_time_string (struct tm *tm)
+{
+    gchar *str = NULL;
+
+    if (tm)
+	str = g_strdup_printf ("%02d/%02d/%04d %d:%02d",
+			       tm->tm_mday, tm->tm_mon+1, 1900+tm->tm_year,
+			       tm->tm_hour, tm->tm_min);
+    return str;
+}
+
+
+/* Extract data from calendar/time and write it to the corresponding
+   entry in the specified sort tab */
+static void cal_apply_data (GtkWidget *cal)
+{
+    struct tm *lower, *upper;
+    TimeInfo *ti;
+    S_item item;
+    gint inst;
+
+    lower = cal_get_time (cal, LOWER_MARGIN, NULL);
+    upper = cal_get_time (cal, UPPER_MARGIN, NULL);
+
+    /* Get selected instance */
+    inst = gtk_spin_button_get_value_as_int (
+	GTK_SPIN_BUTTON (lookup_widget (cal, "sorttab_num_spin"))) - 1;
+    /* Get selected category (played or modified) */
+    item = cal_get_category (cal);
+    /* Get pointer to corresponding TimeInfo struct */
+    ti = st_get_timeinfo_ptr (inst, item);
+
+    if (ti)
+    {
+	GtkToggleButton *act = 	GTK_TOGGLE_BUTTON (ti->active);
+	/* is criteria currently checked (active)? */
+	gboolean active = gtk_toggle_button_get_active (act);
+	gchar *str = NULL;
+	gchar *str1 = cal_get_time_string (lower);
+	gchar *str2 = cal_get_time_string (upper);
+
+	if (!lower && !upper)
+	    if (!active) /* deactivate this criteria */
+		gtk_toggle_button_set_active (act, FALSE);
+	if (lower && !upper)
+	    str = g_strdup_printf ("> %s", str1);
+	if (!lower && upper)
+	    str = g_strdup_printf ("< %s", str2);
+	if (lower && upper)
+	    str = g_strdup_printf ("%s < < %s", str1, str2);
+	C_FREE (str1);
+	C_FREE (str2);
+
+	if (str)
+	{   /* set the new string if it's different */
+	    if (strcmp (str,
+			gtk_entry_get_text (GTK_ENTRY (ti->entry))) != 0)
+	    {
+		gtk_entry_set_text (GTK_ENTRY (ti->entry), str);
+		/* notification that contents have changed */
+		g_signal_emit_by_name (ti->entry, "activate");
+	    }
+	    g_free (str);
+	}
+	if (!active)
+	{   /* activate the criteria */
+	    gtk_toggle_button_set_active (act, TRUE);
+	}
+    }
+    g_free (lower);
+    g_free (upper);
+}
+
+
+
+/* Callback for 'Lower/Upper time ' buttons */
+static void cal_time_toggled (GtkToggleButton *togglebutton,
+			      gpointer         user_data)
+{
+    GtkWidget *cal = user_data;
+    gboolean sens = gtk_toggle_button_get_active (togglebutton);
+
+    if ((GtkWidget *)togglebutton == lookup_widget (cal, "lower_time"))
+    {
+	gtk_widget_set_sensitive (lookup_widget (cal, "lower_time_box"), sens);
+    }
+    if ((GtkWidget *)togglebutton == lookup_widget (cal, "upper_time"))
+    {
+	gtk_widget_set_sensitive (lookup_widget (cal, "upper_time_box"), sens);
+    }
+}
+
 /* Callback for 'No Lower/Upper Margin' buttons */
 static void cal_no_margin_toggled (GtkToggleButton *togglebutton,
 				   gpointer         user_data)
@@ -2432,13 +2704,11 @@ static void cal_no_margin_toggled (GtkToggleButton *togglebutton,
 
     if ((GtkWidget *)togglebutton == lookup_widget (cal, "no_lower_margin"))
     {
-	gtk_widget_set_sensitive (lookup_widget (cal, "lower_cal"), sens);
-	gtk_widget_set_sensitive (lookup_widget (cal, "lower_time"), sens);
+	gtk_widget_set_sensitive (lookup_widget (cal, "lower_cal_box"), sens);
     }
     if ((GtkWidget *)togglebutton == lookup_widget (cal, "no_upper_margin"))
     {
-	gtk_widget_set_sensitive (lookup_widget (cal, "upper_cal"), sens);
-	gtk_widget_set_sensitive (lookup_widget (cal, "upper_time"), sens);
+	gtk_widget_set_sensitive (lookup_widget (cal, "upper_cal_box"), sens);
     }
 }
 
@@ -2452,7 +2722,7 @@ static void cal_save_default_geometry (GtkWindow *cal)
     prefs_set_size_cal (x, y);
 }
 
-/* Callback for 'Delete event' */
+/* Callback for 'delete' event */
 static gboolean cal_delete_event (GtkWidget       *widget,
 				  GdkEvent        *event,
 				  gpointer         user_data)
@@ -2461,13 +2731,26 @@ static gboolean cal_delete_event (GtkWidget       *widget,
     return FALSE;
 }
 
-/* Callback for 'Cancel button' */
+/* Callback for 'Cancel' button */
 static void cal_cancel (GtkButton *button, gpointer user_data)
 {
     cal_save_default_geometry (GTK_WINDOW (user_data));
     gtk_widget_destroy (user_data);
 }
 
+/* Callback for 'Apply' button */
+static void cal_apply (GtkButton *button, gpointer user_data)
+{
+    cal_save_default_geometry (GTK_WINDOW (user_data));
+    cal_apply_data (GTK_WIDGET (user_data));
+}
+
+/* Callback for 'OK' button */
+static void cal_ok (GtkButton *button, gpointer user_data)
+{
+    cal_apply (button, user_data);
+    gtk_widget_destroy (user_data);
+}
 
 /* Open a calendar window. Preset the values for instance @inst,
    category @item (time played or time modified) */
@@ -2515,6 +2798,8 @@ void cal_open_calendar (gint inst, S_item item)
     else    str = gettext (cat_strings[CAT_STRING_MODIFIED]);
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
 
+    /* Make sure we use the current contents of the entry */
+    sp_store_sp_entries (inst);
     /* set calendar */
     ti = st_update_date_interval_from_string (inst, item, TRUE);
     /* set the calendar if we have a valid TimeInfo */
@@ -2522,8 +2807,8 @@ void cal_open_calendar (gint inst, S_item item)
     {
 	if (!ti->valid)
 	{   /* set to reasonable default */
-	    ti->low = 0;
-	    ti->high = 0;
+	    ti->lower = 0;
+	    ti->upper = 0;
 	}
 
 	/* Lower Margin */
@@ -2532,15 +2817,14 @@ void cal_open_calendar (gint inst, S_item item)
 			  "toggled",
 			  G_CALLBACK (cal_no_margin_toggled),
 			  cal);
-        /* lower margin? -> set checkbox and calendar accordingly */
-	if (ti->valid && (ti->low == 0))
-	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
-	else
-	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), FALSE);
-	cal_set_time (GTK_CALENDAR (lookup_widget (cal, "lower_cal")),
-		      GTK_SPIN_BUTTON (lookup_widget (cal, "lower_hours")),
-		      GTK_SPIN_BUTTON (lookup_widget (cal, "lower_minutes")),
-		      ti->low);
+	w = lookup_widget (cal, "lower_time");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+	g_signal_connect (w,
+			  "toggled",
+			  G_CALLBACK (cal_time_toggled),
+			  cal);
+	
+	cal_set_time (cal, LOWER_MARGIN, ti->lower);
 
 	/* Upper Margin */
 	w = lookup_widget (cal, "no_upper_margin");
@@ -2548,15 +2832,13 @@ void cal_open_calendar (gint inst, S_item item)
 			  "toggled",
 			  G_CALLBACK (cal_no_margin_toggled),
 			  cal);
-        /* upper margin? -> set checkbox and calendar accordingly */
-	if (ti->valid && (ti->high == -1))
-	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
-	else
-	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), FALSE);
-	cal_set_time (GTK_CALENDAR (lookup_widget (cal, "upper_cal")),
-		      GTK_SPIN_BUTTON (lookup_widget (cal, "upper_hours")),
-		      GTK_SPIN_BUTTON (lookup_widget (cal, "upper_minutes")),
-		      ti->high);
+	w = lookup_widget (cal, "upper_time");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+	g_signal_connect (w,
+			  "toggled",
+			  G_CALLBACK (cal_time_toggled),
+			  cal);
+	cal_set_time (cal, UPPER_MARGIN, ti->upper);
     }
 
     /* Connect delete-event */
@@ -2565,8 +2847,12 @@ void cal_open_calendar (gint inst, S_item item)
     /* Connect cancel-button */
     g_signal_connect (lookup_widget (cal, "cal_cancel"), "clicked",
 		      G_CALLBACK (cal_cancel), cal);
-
-
+    /* Connect apply-button */
+    g_signal_connect (lookup_widget (cal, "cal_apply"), "clicked",
+		      G_CALLBACK (cal_apply), cal);
+    /* Connect ok-button */
+    g_signal_connect (lookup_widget (cal, "cal_ok"), "clicked",
+		      G_CALLBACK (cal_ok), cal);
 
     gtk_widget_show (cal);
 }

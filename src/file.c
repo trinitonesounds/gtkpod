@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-21 21:37:56 jcs>
+/* Time-stamp: <2003-06-22 13:51:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1594,7 +1594,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    else if (g_ascii_strcasecmp (line, "oldsize") == 0)
 		sei->oldsize = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "playcount") == 0)
-		sei->playcount = atoi (arg);
+	    sei->playcount = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "rating") == 0)
 		sei->rating = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
@@ -1887,8 +1887,8 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 	fprintf (fp, "charset=%s\n", song->charset);
       if (!song->transferred && song->oldsize)
 	  fprintf (fp, "oldsize=%d\n", song->oldsize);
-      fprintf (fp, "playcount=%d\n", song->playcount);
-/* rating is now written in iTunesDB */
+/* rating and playcount are now written to iTunesDB */
+/*       fprintf (fp, "playcount=%d\n", song->playcount); */
 /*      fprintf (fp, "rating=%d\n", song->rating);*/
       fprintf (fp, "transferred=%d\n", song->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();

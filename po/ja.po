@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-06-21 13:05+0900\n"
+"POT-Creation-Date: 2003-06-22 22:41+0900\n"
 "PO-Revision-Date: 2003-04-12 01:13+0900\n"
 "Last-Translator: Ayako Sano <@>\n"
 "Language-Team: n/a\n"
@@ -80,209 +80,209 @@ msgstr "とちらのタブの選択されたエントリーを更新しますか？"
 msgid "Enqueue songs in selected entry of which sort tab?"
 msgstr "どちらのタブの選択されたエントリーを削除しますか？"
 
-#: src/charset.c:44
+#: src/charset.c:45
 msgid "Arabic (IBM-864)"
 msgstr "アラビア語 (IBM-864)"
 
-#: src/charset.c:45
+#: src/charset.c:46
 msgid "Arabic (ISO-8859-6)"
 msgstr "アラビア語 (ISO-8859-6)"
 
-#: src/charset.c:46
+#: src/charset.c:47
 msgid "Arabic (Windows-1256)"
 msgstr "アラビア語 (Windows-1256)"
 
-#: src/charset.c:47
+#: src/charset.c:48
 msgid "Baltic (ISO-8859-13)"
 msgstr "バルト語 (ISO-8859-13)"
 
-#: src/charset.c:48
+#: src/charset.c:49
 msgid "Baltic (ISO-8859-4)"
 msgstr "バルト語 (ISO-8859-4)"
 
-#: src/charset.c:49
+#: src/charset.c:50
 msgid "Baltic (Windows-1257)"
 msgstr "バルト語 (Windows-1257)"
 
-#: src/charset.c:50
+#: src/charset.c:51
 msgid "Celtic (ISO-8859-14)"
 msgstr "ケルト語 (ISO-8859-14)"
 
-#: src/charset.c:51
+#: src/charset.c:52
 msgid "Central European (IBM-852)"
 msgstr "中央ヨーロッパ (IBM-852)"
 
-#: src/charset.c:52
+#: src/charset.c:53
 msgid "Central European (ISO-8859-2)"
 msgstr "中央ヨーロッパ (ISO-8859-2)"
 
-#: src/charset.c:53
+#: src/charset.c:54
 msgid "Central European (Windows-1250)"
 msgstr "中央ヨーロッパ (Windows-1250)"
 
-#: src/charset.c:54
+#: src/charset.c:55
 msgid "Chinese Simplified (GB18030)"
 msgstr "中国語 簡体字 (GB18030)"
 
-#: src/charset.c:55
+#: src/charset.c:56
 msgid "Chinese Simplified (GB2312)"
 msgstr "中国語 簡体字 (GB2312)"
 
-#: src/charset.c:56
+#: src/charset.c:57
 msgid "Chinese Traditional (Big5)"
 msgstr "中国語 繁体字 (Big5)"
 
-#: src/charset.c:57
+#: src/charset.c:58
 msgid "Chinese Traditional (Big5-HKSCS)"
 msgstr "中国語 繁体字 (Big5-HKSCS)"
 
-#: src/charset.c:58
+#: src/charset.c:59
 msgid "Cyrillic (IBM-855)"
 msgstr "キリル語 (IBM-855)"
 
-#: src/charset.c:59
+#: src/charset.c:60
 msgid "Cyrillic (ISO-8859-5)"
 msgstr "キリル語 (ISO-8859-5)"
 
-#: src/charset.c:60
+#: src/charset.c:61
 msgid "Cyrillic (ISO-IR-111)"
 msgstr "キリル語 (ISO-IR-111)"
 
-#: src/charset.c:61
+#: src/charset.c:62
 msgid "Cyrillic (KOI8-R)"
 msgstr "キリル語 (KOI8-R)"
 
-#: src/charset.c:62
+#: src/charset.c:63
 msgid "Cyrillic (Windows-1251)"
 msgstr "キリル語 (Windows-1251)"
 
-#: src/charset.c:63
+#: src/charset.c:64
 msgid "Cyrillic/Russian (CP-866)"
 msgstr "キリル/ロシア語 (CP-866)"
 
-#: src/charset.c:64
+#: src/charset.c:65
 msgid "Cyrillic/Ukrainian (KOI8-U)"
 msgstr "キリル/ウクライナ語 (KOI8-U)"
 
-#: src/charset.c:65
+#: src/charset.c:66
 msgid "English (US-ASCII)"
 msgstr "英語 (US-ASCII)"
 
-#: src/charset.c:66
+#: src/charset.c:67
 msgid "Greek (ISO-8859-7)"
 msgstr "ギリシア語 (ISO-8859-7)"
 
-#: src/charset.c:67
+#: src/charset.c:68
 msgid "Greek (Windows-1253)"
 msgstr "ギリシア語 (Windows-1253)"
 
-#: src/charset.c:68
+#: src/charset.c:69
 msgid "Hebrew (IBM-862)"
 msgstr "ヘブライ語 (IBM-862)"
 
-#: src/charset.c:69
+#: src/charset.c:70
 msgid "Hebrew (Windows-1255)"
 msgstr "ヘブライ語 (Windows-1255)"
 
-#: src/charset.c:70
+#: src/charset.c:71
 msgid "Japanese (automatic detection)"
 msgstr ""
 
-#: src/charset.c:71
+#: src/charset.c:72
 msgid "Japanese (EUC-JP)"
 msgstr "日本語 (EUC-JP)"
 
-#: src/charset.c:72
+#: src/charset.c:73
 msgid "Japanese (ISO-2022-JP)"
 msgstr "日本語 (ISO-2022-JP)"
 
-#: src/charset.c:73
+#: src/charset.c:74
 msgid "Japanese (Shift_JIS)"
 msgstr "日本語 (Shift_JIS)"
 
-#: src/charset.c:74
+#: src/charset.c:75
 msgid "Korean (EUC-KR)"
 msgstr "韓国語 (EUC-KR)"
 
-#: src/charset.c:75
+#: src/charset.c:76
 msgid "Nordic (ISO-8859-10)"
 msgstr "北欧語 (ISO-8859-10)"
 
-#: src/charset.c:76
+#: src/charset.c:77
 msgid "South European (ISO-8859-3)"
 msgstr "南部ヨーロッパ語 (ISO-8859-3)"
 
-#: src/charset.c:77
+#: src/charset.c:78
 msgid "Thai (TIS-620)"
 msgstr "タイ語 (TIS-620)"
 
-#: src/charset.c:78
+#: src/charset.c:79
 msgid "Turkish (IBM-857)"
 msgstr "トルコ語 (IBM-857)"
 
-#: src/charset.c:79
+#: src/charset.c:80
 msgid "Turkish (ISO-8859-9)"
 msgstr "トルコ語 (ISO-8859-9)"
 
-#: src/charset.c:80
+#: src/charset.c:81
 msgid "Turkish (Windows-1254)"
 msgstr "トルコ語 (Windows-1254)"
 
-#: src/charset.c:81
+#: src/charset.c:82
 msgid "Unicode (UTF-7)"
 msgstr "Unicode (UTF-7)"
 
-#: src/charset.c:82
+#: src/charset.c:83
 msgid "Unicode (UTF-8)"
 msgstr "Unicode (UTF-8)"
 
-#: src/charset.c:83
+#: src/charset.c:84
 msgid "Unicode (UTF-16BE)"
 msgstr "Unicode (UTF-16BE)"
 
-#: src/charset.c:84
+#: src/charset.c:85
 msgid "Unicode (UTF-16LE)"
 msgstr "Unicode (UTF-16LE)"
 
-#: src/charset.c:85
+#: src/charset.c:86
 msgid "Unicode (UTF-32BE)"
 msgstr "Unicode (UTF-32BE)"
 
-#: src/charset.c:86
+#: src/charset.c:87
 msgid "Unicode (UTF-32LE)"
 msgstr "Unicode (UTF-32LE)"
 
-#: src/charset.c:87
+#: src/charset.c:88
 msgid "Vietnamese (VISCII)"
 msgstr "ベトナム語 (VISCII)"
 
-#: src/charset.c:88
+#: src/charset.c:89
 msgid "Vietnamese (Windows-1258)"
 msgstr "ベトナム語 (Windows-1258)"
 
-#: src/charset.c:89
+#: src/charset.c:90
 msgid "Visual Hebrew (ISO-8859-8)"
 msgstr "視覚芸術向けヘブライ語 (ISO-8859-8)"
 
-#: src/charset.c:90
+#: src/charset.c:91
 msgid "Western (IBM-850)"
 msgstr "西洋 (IBM-850)"
 
-#: src/charset.c:91
+#: src/charset.c:92
 msgid "Western (ISO-8859-1)"
 msgstr "西洋 (ISO-8859-1)"
 
-#: src/charset.c:92
+#: src/charset.c:93
 msgid "Western (ISO-8859-15)"
 msgstr "西洋 (ISO-8859-15)"
 
-#: src/charset.c:93
+#: src/charset.c:94
 msgid "Western (Windows-1252)"
 msgstr "西洋 (Windows-1252)"
 
 #. sanity!
 #. check for "System Charset" and return NULL
-#: src/charset.c:151 src/charset.c:161 src/charset.c:213
+#: src/charset.c:152 src/charset.c:162 src/charset.c:214
 msgid "System Charset"
 msgstr "システム文字"
 
@@ -359,93 +359,101 @@ msgstr "キャンセル"
 msgid "Playlists"
 msgstr "再生リスト"
 
-#: src/display_songs.c:806 src/display_sorttabs.c:2121 src/interface.c:1502
+#: src/display_songs.c:815 src/display_sorttabs.c:2139 src/interface.c:1502
 #: src/interface.c:1600
 msgid "Title"
 msgstr "タイトル"
 
-#: src/display_songs.c:809 src/display_sorttabs.c:2109 src/interface.c:1478
+#: src/display_songs.c:818 src/display_sorttabs.c:2127 src/interface.c:1478
 #: src/interface.c:1560
 msgid "Artist"
 msgstr "アーティスト"
 
-#: src/display_songs.c:812 src/display_sorttabs.c:2112 src/interface.c:1490
+#: src/display_songs.c:821 src/display_sorttabs.c:2130 src/interface.c:1490
 #: src/interface.c:1580
 msgid "Album"
 msgstr "アルバム"
 
-#: src/display_songs.c:815 src/display_sorttabs.c:2115 src/interface.c:1482
+#: src/display_songs.c:824 src/display_sorttabs.c:2133 src/interface.c:1482
 #: src/interface.c:1620
 msgid "Genre"
 msgstr "ジャンル"
 
-#: src/display_songs.c:818 src/interface.c:1494 src/interface.c:1564
+#: src/display_songs.c:827 src/interface.c:1494 src/interface.c:1564
 msgid "Composer"
 msgstr "作曲家"
 
-#: src/display_songs.c:821
+#: src/display_songs.c:830
 msgid "#"
 msgstr "#"
 
-#: src/display_songs.c:824
+#: src/display_songs.c:833
 msgid "ID"
 msgstr "ID"
 
-#: src/display_songs.c:828 src/interface.c:1624
+#: src/display_songs.c:837 src/interface.c:1624
 msgid "PC File"
 msgstr "PCファイル"
 
-#: src/display_songs.c:832
+#: src/display_songs.c:841
 msgid "Trnsfrd"
 msgstr "転送"
 
-#: src/display_songs.c:837 src/interface.c:1588
+#: src/display_songs.c:846 src/interface.c:1588
 msgid "File Size"
 msgstr ""
 
-#: src/display_songs.c:841
+#: src/display_songs.c:850
 #, fuzzy
 msgid "Time"
 msgstr "タイトル"
 
-#: src/display_songs.c:845 src/interface.c:1628
+#: src/display_songs.c:854 src/interface.c:1628
 msgid "Bitrate"
 msgstr ""
 
-#: src/display_songs.c:849 src/interface.c:1612 src/interface.c:2484
+#: src/display_songs.c:858 src/interface.c:1612 src/interface.c:2484
 msgid "Playcount"
 msgstr ""
 
-#: src/display_songs.c:852 src/interface.c:1632 src/interface.c:2491
+#: src/display_songs.c:861 src/interface.c:1632 src/interface.c:2491
 msgid "Rating"
 msgstr ""
 
-#: src/display_songs.c:855 src/interface.c:2497
+#: src/display_songs.c:864 src/interface.c:2497
 msgid "Played"
 msgstr ""
 
-#: src/display_songs.c:859 src/interface.c:2503
+#: src/display_songs.c:868 src/interface.c:2503
 msgid "Modified"
 msgstr ""
 
-#: src/display_sorttabs.c:172
+#: src/display_sorttabs.c:174
 msgid "'Played' condition ignored because of error."
 msgstr ""
 
-#: src/display_sorttabs.c:175
+#: src/display_sorttabs.c:177
 msgid "'Modified' condition ignored because of error."
 msgstr ""
 
-#: src/display_sorttabs.c:1061
+#: src/display_sorttabs.c:1077
 msgid "All"
 msgstr "全て"
 
-#: src/display_sorttabs.c:2118
+#: src/display_sorttabs.c:2136
 msgid "Comp."
 msgstr "作曲家"
 
-#: src/display_sorttabs.c:2124 src/interface.c:2348
+#: src/display_sorttabs.c:2142 src/interface.c:2348
 msgid "Special"
+msgstr ""
+
+#: src/display_sorttabs.c:2403
+msgid "Last Played"
+msgstr ""
+
+#: src/display_sorttabs.c:2404
+msgid "Last Modified"
 msgstr ""
 
 #. Songs with zero play length are ignored by iPod...
@@ -1568,7 +1576,7 @@ msgid "_Misc"
 msgstr ""
 
 #: src/interface.c:2362
-msgid " Logic Operation: "
+msgid " Logic: "
 msgstr ""
 
 #: src/interface.c:2367
@@ -1621,7 +1629,7 @@ msgid ""
 "finished."
 msgstr ""
 
-#: src/interface.c:2460 src/interface.c:2480
+#: src/interface.c:2460 src/interface.c:2480 src/interface.c:2646
 msgid "Calendar"
 msgstr ""
 
@@ -1641,6 +1649,48 @@ msgstr ""
 msgid ""
 "Automatically start displaying songs that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
+msgstr ""
+
+#: src/interface.c:2668
+#, fuzzy
+msgid "Sorttab: "
+msgstr "分類タブ"
+
+#: src/interface.c:2678
+msgid "     "
+msgstr ""
+
+#: src/interface.c:2683
+msgid "Category: "
+msgstr ""
+
+#: src/interface.c:2702
+msgid "Please specify a time interval"
+msgstr ""
+
+#: src/interface.c:2722
+msgid "Lower Margin"
+msgstr ""
+
+#: src/interface.c:2745 src/interface.c:2811
+#, fuzzy
+msgid "Time:"
+msgstr "タイトル"
+
+#: src/interface.c:2760 src/interface.c:2826
+msgid ":"
+msgstr ""
+
+#: src/interface.c:2776
+msgid "No lower margin"
+msgstr ""
+
+#: src/interface.c:2788
+msgid "Upper margin"
+msgstr ""
+
+#: src/interface.c:2842
+msgid "No upper margin"
 msgstr ""
 
 #: src/itunesdb.c:420
@@ -2052,86 +2102,86 @@ msgstr ""
 "--offline:     \"-o\".\n"
 "と同じ\n"
 
-#: src/prefs.c:260 src/prefs.c:560
+#: src/prefs.c:262 src/prefs.c:570
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "設定: %s読込み中にエラーです\n"
 
-#: src/prefs.c:593
+#: src/prefs.c:603
 #, c-format
 msgid "Unable to open config file \"%s\" for reading\n"
 msgstr "読込みの為の設定ファイル\"%s\"を開くことが出来ません\n"
 
-#: src/prefs.c:696
+#: src/prefs.c:706
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "不明なオプション: %s\n"
 
-#: src/prefs.c:736
+#: src/prefs.c:746
 msgid "# delete confirmation\n"
 msgstr "# 削除確認\n"
 
-#: src/prefs.c:742
+#: src/prefs.c:752
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr "# タブ：選択'全て',最後の選択したページ(=分類)\n"
 
-#: src/prefs.c:759
+#: src/prefs.c:769
 msgid "# autoselect master playlist?\n"
 msgstr "# マスター再生リストの自動選択？\n"
 
-#: src/prefs.c:761
+#: src/prefs.c:771
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr "# タイトル=0、アーティスト、アルバム、ジャンル、作曲家\n"
 
-#: src/prefs.c:762
+#: src/prefs.c:772
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr "# トラック_nr=5, ipod_id, pc_path, transferred\n"
 
-#: src/prefs.c:763
+#: src/prefs.c:773
 msgid "# autoset: set empty tag to filename?\n"
 msgstr "# 空のタグをファイル名に自動設定しますか？\n"
 
-#: src/prefs.c:772
+#: src/prefs.c:782
 #, fuzzy
 msgid ""
 "# position of sliders (paned): playlists, above songs,\n"
 "# between sort tabs, and in statusbar.\n"
 msgstr "# 位置：再生リスト、曲より上、タブの間\n"
 
-#: src/prefs.c:802
+#: src/prefs.c:812
 #, fuzzy
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser\n"
 msgstr "#              確認アンスクロール、dirbrowser\n"
 
-#: src/prefs.c:824
+#: src/prefs.c:836
 msgid "Settings are not saved.\n"
 msgstr "設定は保存されません\n"
 
-#: src/prefs.c:837
+#: src/prefs.c:849
 #, c-format
 msgid "Unable to open \"%s\" for writing\n"
 msgstr "書込みの為に\"%s\"を開くことが出来ません\n"
 
-#: src/prefs.c:1154
+#: src/prefs.c:1166
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 
-#: src/prefs.c:1203
+#: src/prefs.c:1215
 #, c-format
 msgid "Unable to \"mkdir %s\"\n"
 msgstr "\"mkdir %s\"を無効\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1512
+#: src/prefs.c:1540
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 
-#: src/prefs.c:1596 src/prefs.c:1603
+#: src/prefs.c:1624 src/prefs.c:1631
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr ""

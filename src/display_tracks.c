@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 22:40:20 jcs>
+/* Time-stamp: <2003-06-22 13:43:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -277,6 +277,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   guint32 nr;
   gchar **itemp_utf8; 
   gunichar2 **itemp_utf16; 
+  gint sel_rows_num;
 
   GList *row_list, *row_node, *first; 
 
@@ -289,6 +290,11 @@ sm_cell_edited (GtkCellRendererText *renderer,
   row_list = gtk_tree_selection_get_selected_rows(selection, &model); 
   
   /*printf("sm_cell_edited: column: %d  song:%lx\n", column, song);*/
+
+  sel_rows_num = g_list_length (row_list);
+
+  /* block widgets and update display if multi-edit is active */
+  if (multi_edit && (sel_rows_num > 1)) block_widgets ();
 
   first = g_list_first (row_list);
 
@@ -367,7 +373,10 @@ sm_cell_edited (GtkCellRendererText *renderer,
            remove_duplicate (NULL, NULL);
         }
      }
+     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
+
+  if (multi_edit && (sel_rows_num > 1)) release_widgets ();
 
   g_list_foreach(row_list, (GFunc) gtk_tree_path_free, NULL); 
   g_list_free(row_list); 

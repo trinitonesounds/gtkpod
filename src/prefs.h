@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 01:58:08 jcs>
+/* Time-stamp: <2003-06-22 22:18:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -231,7 +231,7 @@ void prefs_set_sp_rating_n (guint32 inst, gint n, gboolean state);
 gboolean prefs_get_sp_rating_n (guint32 inst, gint n);
 void prefs_set_sp_rating_state (guint32 inst, guint32 state);
 guint32 prefs_get_sp_rating_state (guint32 inst);
-void prefs_set_sp_entry (guint32 inst, S_item s_item, gchar *str);
+void prefs_set_sp_entry (guint32 inst, S_item s_item, const gchar *str);
 gchar *prefs_get_sp_entry (guint32 inst, S_item s_item);
 void prefs_set_sp_autodisplay (guint32 inst, gboolean state);
 gboolean prefs_get_sp_autodisplay (guint32 inst);

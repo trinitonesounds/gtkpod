@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 00:23:51 jcs>
+/* Time-stamp: <2003-06-22 21:47:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -589,8 +589,8 @@ on_charset_combo_entry_changed          (GtkEditable     *editable,
     descr = gtk_editable_get_chars (editable, 0, -1);
     charset = charset_from_description (descr);
     prefs_window_set_charset (charset);
-    C_FREE (descr);
-    C_FREE (charset);
+    g_free (descr);
+    g_free (charset);
 }
 
 void
@@ -1286,6 +1286,8 @@ on_sp_entry_activate             (GtkEditable     *editable,
     guint32 inst = (guint32)user_data & SP_MASK;
     S_item item = (guint32)user_data >> SP_SHIFT;
     gchar *buf = gtk_editable_get_chars(editable,0, -1);
+
+    printf ("sp_entry_activate inst: %d, item: %d\n", inst, item);
 
     prefs_set_sp_entry (inst, item, buf);
     g_free (buf);

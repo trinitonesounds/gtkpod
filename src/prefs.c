@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 01:58:08 jcs>
+/* Time-stamp: <2003-06-22 22:27:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -188,8 +188,8 @@ struct cfg *cfg_new(void)
     mycfg->id3_writeall = FALSE;
     mycfg->size_gtkpod.x = 600;
     mycfg->size_gtkpod.y = 500;
-    mycfg->size_cal.x = 455;
-    mycfg->size_cal.y = 290;
+    mycfg->size_cal.x = 500;
+    mycfg->size_cal.y = 350;
     mycfg->size_conf_sw.x = 300;
     mycfg->size_conf_sw.y = 300;
     mycfg->size_conf.x = 300;
@@ -1821,7 +1821,7 @@ guint32 prefs_get_sp_rating_state (guint32 inst)
 }
 
 
-void prefs_set_sp_entry (guint32 inst, S_item s_item, gchar *str)
+void prefs_set_sp_entry (guint32 inst, S_item s_item, const gchar *str)
 {
 /*    printf("psse: %d, %d, %s\n", inst, s_item, str);*/
     if (inst < SORT_TAB_MAX)
