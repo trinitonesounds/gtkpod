@@ -68,6 +68,7 @@ static GList *pending_deletion = NULL;
 static gboolean files_saved = TRUE;
 
 static guint32 free_ipod_id (guint32 id);
+static void reset_ipod_id (void);
 
 /* Thread specific */
 static  GMutex *mutex = NULL;
@@ -638,6 +639,7 @@ gboolean flush_songs (void)
   prefs_set_statusbar_timeout (0);
   gtk_widget_destroy (dialog);
   if (abort)      result = FALSE;   /* negative result if user aborted */
+  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   return result;
 }
 
@@ -819,8 +821,8 @@ void handle_import (void)
 {
     gchar *name1, *name2, *cfgdir;
     gboolean success, md5songs;
-    guint32 n,i;
-    Song *song;
+    guint32 n;
+    GList *gl_song;
 
     if (itunes_import_ok () == FALSE)
     {
@@ -891,12 +893,15 @@ void handle_import (void)
     /* We need to make sure that the songs that already existed
        in the DB when we called itunesdb_parse() do not duplicate
        any existing ID */
-    for (i=0; i<n; ++i)
+    /* Change: we simply re-ID all songs. That way we don't run into
+       trouble if some "funny" guy put a "-1" into the itunesDB */
+    reset_ipod_id (); /* reset lowest unused ipod ID */
+    for (gl_song = songs; gl_song; gl_song=gl_song->next)
     {
-	song = get_song_by_nr (i);
-	song->ipod_id = free_ipod_id (0);
-	/*we need to tell the display that the ID has changed */
-	pm_song_changed (song);
+	((Song *)gl_song->data)->ipod_id = free_ipod_id (0);
+	/*we need to tell the display that the ID has changed (if ID
+	 * is displayed) */
+	/* pm_song_changed (song);*/
     }
     gtkpod_songs_statusbar_update();
     if (n != get_nr_of_songs ())
@@ -980,6 +985,28 @@ gboolean write_tags_to_file (Song *song, gint tag_id)
 }
 
 
+
+/* used by free_ipod_id() and reset_ipod_id() */
+static guint32 get_id (guint32 id, gboolean reset)
+{
+  static gint32 max_id = 52; /* the lowest valid ID is 53 (itunes,
+			      * MusicMatch: 2 */
+
+  if (reset)
+  { /* reset ipod IDs */
+      max_id = 52;
+  }
+  else
+  { /* register ID */
+      if (id > max_id)     max_id = id;
+      if (id == 0)   ++max_id;
+  }
+  /* return lowest free ID (discarded if reset == TRUE) */
+  return max_id;
+}
+
+
+
 /*  Call with 0 to get a unused ID. It will be registered.
     Call with anything else to register a used ID. The highest ID use
     will then be returned */
@@ -987,12 +1014,13 @@ gboolean write_tags_to_file (Song *song, gint tag_id)
    That's how it keeps track of the largest ID used. */
 static guint32 free_ipod_id (guint32 id)
 {
-  static gint32 max_id = 1; /* the lowest valid ID is 2 (Musicmatch,
-			      * itunes: 53 ) */
+    return get_id (id, FALSE);
+}
 
-  if (id > max_id)     max_id = id;
-  if (id == 0)   ++max_id;
-  return max_id;
+/* reset lowest free ipod ID */
+static void reset_ipod_id (void)
+{
+    get_id (0, TRUE);
 }
 
 /**

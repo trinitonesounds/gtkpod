@@ -8,8 +8,8 @@ gtkpod V0.41+ 01-Feb-2003 to 04-Feb-2003
 	operations
 
         Bugfix: Kentaro Fukuchi pointed out that MusicMatch (at least the
-	Japanese version) distributes song IDs starting with 2 (and not
-	with 53). Fixed. If some other program start with 1 (reasonable),
+	Japanese version) uses song IDs starting with 2 (and not with
+	53). Fixed. If some other program start with 1 (reasonable),
 	please let me know.
         
 	Improvement: Delete works on entries in sort tabs now (ctrl-d and

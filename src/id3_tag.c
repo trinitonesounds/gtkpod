@@ -50,7 +50,7 @@
  /* USE_CHARACTER_SET_TRANSLATION impemented by charset_from/to_utf8 () */
 #define USE_CHARACTER_SET_TRANSLATION TRUE
 #define NUMBER_TRACK_FORMATED FALSE
-#define STRIP_TAG_WHEN_EMPTY_FIELDS TRUE
+#define STRIP_TAG_WHEN_EMPTY_FIELDS FALSE
 #define WRITE_ID3V1_TAG TRUE
 #define WRITE_ID3V2_TAG TRUE
 
@@ -485,173 +485,224 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
     {
         ID3Frame *id3_frame;
         ID3Field *id3_field;
-        gchar *string;
+        gchar *string, *string1;
 
         ID3Tag_Link(id3_tag,filename);
 
         /*********
          * Title *
          *********/
-        if (FileTag->title && g_utf8_strlen(FileTag->title, -1)>0 )
-        {
-	  /* To avoid problem with a corrupted field, we remove it before to creat a new one. */
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TITLE)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            id3_frame = ID3Frame_NewID(ID3FID_TITLE);
-            ID3Tag_AttachFrame(id3_tag,id3_frame);
-
-            if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-            {
-                if (USE_CHARACTER_SET_TRANSLATION)
-                {
-                    string = convert_from_user_to_file(FileTag->title);
-                    ID3Field_SetASCII(id3_field,string);
-                    g_free(string);
-                }else
-                {
-                    ID3Field_SetASCII(id3_field,FileTag->title);
-                }
-            }
-        } else
-        {
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TITLE)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            has_title = 0;
-        }
-
+        if (FileTag->title)
+	{
+	    if (g_utf8_strlen(FileTag->title, -1)>0 )
+	    {
+		/* To avoid problem with a corrupted field, we remove it before to creat a new one. */
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TITLE)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		id3_frame = ID3Frame_NewID(ID3FID_TITLE);
+		ID3Tag_AttachFrame(id3_tag,id3_frame);
+		
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
+		{
+		    if (USE_CHARACTER_SET_TRANSLATION)
+		    {
+			string = convert_from_user_to_file(FileTag->title);
+			ID3Field_SetASCII(id3_field,string);
+			g_free(string);
+		    }else
+		    {
+			ID3Field_SetASCII(id3_field,FileTag->title);
+		    }
+		}
+	    } else
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TITLE)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		has_title = 0;
+	    }
+	}
 
         /**********
          * Artist *
          **********/
-        if (FileTag->artist && g_utf8_strlen(FileTag->artist, -1)>0 )
-        {
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_LEADARTIST)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            id3_frame = ID3Frame_NewID(ID3FID_LEADARTIST);
-            ID3Tag_AttachFrame(id3_tag,id3_frame);
-
-            if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-            {
-                if (USE_CHARACTER_SET_TRANSLATION)
-                {
-                    string = convert_from_user_to_file(FileTag->artist);
-                    ID3Field_SetASCII(id3_field,string);
-                    g_free(string);
-                }else
-                {
-                    ID3Field_SetASCII(id3_field,FileTag->artist);
-                }
-            }
-        } else
-        {
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_LEADARTIST)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            has_artist = 0;
-        }
-
+        if (FileTag->artist)
+	{
+	    if (g_utf8_strlen(FileTag->artist, -1)>0 )
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_LEADARTIST)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		id3_frame = ID3Frame_NewID(ID3FID_LEADARTIST);
+		ID3Tag_AttachFrame(id3_tag,id3_frame);
+		
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
+		{
+		    if (USE_CHARACTER_SET_TRANSLATION)
+		    {
+			string = convert_from_user_to_file(FileTag->artist);
+			ID3Field_SetASCII(id3_field,string);
+			g_free(string);
+		    }else
+		    {
+			ID3Field_SetASCII(id3_field,FileTag->artist);
+		    }
+		}
+	    } else
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_LEADARTIST)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		has_artist = 0;
+	    }
+	}
 
         /*********
          * Album *
          *********/
-        if (FileTag->album && g_utf8_strlen(FileTag->album, -1)>0 )
-        {
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            id3_frame = ID3Frame_NewID(ID3FID_ALBUM);
-            ID3Tag_AttachFrame(id3_tag,id3_frame);
+        if (FileTag->album)
+	{
+	    if (g_utf8_strlen(FileTag->album, -1)>0 )
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		id3_frame = ID3Frame_NewID(ID3FID_ALBUM);
+		ID3Tag_AttachFrame(id3_tag,id3_frame);
+		
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
+		{
+		    if (USE_CHARACTER_SET_TRANSLATION)
+		    {
+			string = convert_from_user_to_file(FileTag->album);
+			ID3Field_SetASCII(id3_field,string);
+			g_free(string);
+		    }else
+		    {
+			ID3Field_SetASCII(id3_field,FileTag->album);
+		    }
+		}
+	    } else
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		has_album = 0;
+	    }
+	}
 
-            if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-            {
-                if (USE_CHARACTER_SET_TRANSLATION)
-                {
-                    string = convert_from_user_to_file(FileTag->album);
-                    ID3Field_SetASCII(id3_field,string);
-                    g_free(string);
-                }else
-                {
-                    ID3Field_SetASCII(id3_field,FileTag->album);
-                }
-            }
-        } else
-        {
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            has_album = 0;
-        }
+        /*************************
+         * Track and Total Track *
+         *************************/
+        if (FileTag->track)
+	{
+	    if (strlen(FileTag->track)>0 )
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TRACKNUM)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		id3_frame = ID3Frame_NewID(ID3FID_TRACKNUM);
+		ID3Tag_AttachFrame(id3_tag,id3_frame);
+		
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
+		{
+		    if ( FileTag->track_total && strlen(FileTag->track_total)>0 )
+			string1 = g_strconcat(FileTag->track,"/",FileTag->track_total,NULL);
+		    else
+			string1 = g_strdup(FileTag->track);
+		    
+		    if (USE_CHARACTER_SET_TRANSLATION)
+		    {
+			string = convert_from_user_to_file(string1);
+			ID3Field_SetASCII(id3_field,string);
+			g_free(string);
+		    }else
+		    {
+			ID3Field_SetASCII(id3_field,string1);
+		    }
+		    g_free(string1);
+		}
+	    } else
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_TRACKNUM)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		has_track = 0;
+	    }
+	}
 
         /*********
          * Genre *
          *********/
-        if (FileTag->genre && g_utf8_strlen(FileTag->genre, -1)>0 )
-        {
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_CONTENTTYPE)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            id3_frame = ID3Frame_NewID(ID3FID_CONTENTTYPE);
-            ID3Tag_AttachFrame(id3_tag,id3_frame);
-
-            if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-            {
-                gchar *tmp_genre;
-
-                if (USE_CHARACTER_SET_TRANSLATION)
-                {
-                    string = convert_from_user_to_file(FileTag->genre);
-                    tmp_genre = g_strdup_printf("(%d)%s",Id3tag_String_To_Genre(string),string);
-                    ID3Field_SetASCII(id3_field,tmp_genre);
-                    g_free(string);
-                }else
-                {
-                    tmp_genre = g_strdup_printf("(%d)%s",Id3tag_String_To_Genre(FileTag->genre),FileTag->genre);
-                    ID3Field_SetASCII(id3_field,tmp_genre);
-                }
-                g_free(tmp_genre);
-            }
-
-        } else
-        {
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_CONTENTTYPE)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            has_genre = 0;
-        }
+        if (FileTag->genre)
+	{
+	    if (g_utf8_strlen(FileTag->genre, -1)>0 )
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_CONTENTTYPE)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		id3_frame = ID3Frame_NewID(ID3FID_CONTENTTYPE);
+		ID3Tag_AttachFrame(id3_tag,id3_frame);
+		
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
+		{
+		    gchar *tmp_genre;
+		    
+		    if (USE_CHARACTER_SET_TRANSLATION)
+		    {
+			string = convert_from_user_to_file(FileTag->genre);
+			tmp_genre = g_strdup_printf("(%d)%s",Id3tag_String_To_Genre(string),string);
+			ID3Field_SetASCII(id3_field,tmp_genre);
+			g_free(string);
+		    }else
+		    {
+			tmp_genre = g_strdup_printf("(%d)%s",Id3tag_String_To_Genre(FileTag->genre),FileTag->genre);
+			ID3Field_SetASCII(id3_field,tmp_genre);
+		    }
+		    g_free(tmp_genre);
+		}
+		
+	    } else
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_CONTENTTYPE)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		has_genre = 0;
+	    }
+	}
 
 
         /***********
          * Comment *
          ***********/
-        if (FileTag->comment && g_utf8_strlen(FileTag->comment, -1)>0 )
-        {
-            if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMMENT)) )
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            id3_frame = ID3Frame_NewID(ID3FID_COMMENT);
-            ID3Tag_AttachFrame(id3_tag,id3_frame);
-
-            if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
-            {
-                if (USE_CHARACTER_SET_TRANSLATION)
-                {
-                    string = convert_from_user_to_file(FileTag->comment);
-                    ID3Field_SetASCII(id3_field,string);
-                    g_free(string);
-                }else
-                {
-                    ID3Field_SetASCII(id3_field,FileTag->comment);
-                }
-            }
-            /* These 2 following fields allow synchronisation between id3v2 and id3v1 tags with id3lib */
-            if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_DESCRIPTION)))
-            {
-                ID3Field_SetASCII(id3_field,"ID3v1 Comment");
-            }
-            if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_LANGUAGE)))
-            {
-                ID3Field_SetASCII(id3_field,"XXX");
-            }
-        } else
-        {
-	  while ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMMENT)) )  /* Delete all comment fields*/
-                ID3Tag_RemoveFrame(id3_tag,id3_frame);
-            has_comment = 0;
-        }
+        if (FileTag->comment)
+	{
+	    if (g_utf8_strlen(FileTag->comment, -1)>0 )
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMMENT)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		id3_frame = ID3Frame_NewID(ID3FID_COMMENT);
+		ID3Tag_AttachFrame(id3_tag,id3_frame);
+		
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
+		{
+		    if (USE_CHARACTER_SET_TRANSLATION)
+		    {
+			string = convert_from_user_to_file(FileTag->comment);
+			ID3Field_SetASCII(id3_field,string);
+			g_free(string);
+		    }else
+		    {
+			ID3Field_SetASCII(id3_field,FileTag->comment);
+		    }
+		}
+		/* These 2 following fields allow synchronisation between id3v2 and id3v1 tags with id3lib */
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_DESCRIPTION)))
+		{
+		    ID3Field_SetASCII(id3_field,"ID3v1 Comment");
+		}
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_LANGUAGE)))
+		{
+		    ID3Field_SetASCII(id3_field,"XXX");
+		}
+	    } else
+	    {
+		while ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMMENT)) )  /* Delete all comment fields*/
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		has_comment = 0;
+	    }
+	}
 
 
         /* Set padding when tag was changed, for faster writing */
