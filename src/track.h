@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:11:44 jcs>
+/* Time-stamp: <2003-10-04 00:20:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -86,28 +86,28 @@ typedef struct
  * needed. You should extend "track_get_item_pointer()" defined in
  * track.c as well. */
 typedef enum {
-    S_ALL = 0,      /* all fields */
-    S_ALBUM,
-    S_ARTIST,
-    S_TITLE,
-    S_GENRE,
-    S_COMMENT,
-    S_COMPOSER,
-    S_FDESC,
-    S_PC_PATH,
-    S_IPOD_PATH,
-    S_IPOD_ID,
-    S_TRACK_NR,
-    S_TRANSFERRED,
-    S_SIZE,
-    S_TRACKLEN,
-    S_BITRATE,
-    S_PLAYCOUNT,
-    S_RATING,
-    S_TIME_PLAYED,
-    S_TIME_MODIFIED,
-    S_VOLUME,
-} S_item;
+    T_ALL = 0,      /* all fields */
+    T_ALBUM,
+    T_ARTIST,
+    T_TITLE,
+    T_GENRE,
+    T_COMMENT,
+    T_COMPOSER,
+    T_FDESC,
+    T_PC_PATH,
+    T_IPOD_PATH,
+    T_IPOD_ID,
+    T_TRACK_NR,
+    T_TRANSFERRED,
+    T_SIZE,
+    T_TRACKLEN,
+    T_BITRATE,
+    T_PLAYCOUNT,
+    T_RATING,
+    T_TIME_PLAYED,
+    T_TIME_MODIFIED,
+    T_VOLUME,
+} T_item;
 
 void free_track(Track *track);
 gboolean it_add_track (Track *track);
@@ -129,11 +129,11 @@ void hash_tracks(void);
 void remove_duplicate (Track *oldtrack, Track *track);
 void clear_md5_hash_from_tracks (void);
 void renumber_ipod_ids ();
-gchar **track_get_item_pointer_utf8 (Track *track, S_item s_item);
-gchar *track_get_item_utf8 (Track *track, S_item s_item);
-gunichar2 **track_get_item_pointer_utf16 (Track *track, S_item s_item);
-gunichar2 *track_get_item_utf16 (Track *track, S_item s_item);
-guint32 *track_get_timestamp_ptr (Track *track, S_item s_item);
-guint32 track_get_timestamp (Track *track, S_item s_item);
+gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item);
+gchar *track_get_item_utf8 (Track *track, T_item t_item);
+gunichar2 **track_get_item_pointer_utf16 (Track *track, T_item t_item);
+gunichar2 *track_get_item_utf16 (Track *track, T_item t_item);
+guint32 *track_get_timestamp_ptr (Track *track, T_item t_item);
+guint32 track_get_timestamp (Track *track, T_item t_item);
 gboolean track_is_valid (Track *track);
 #endif 

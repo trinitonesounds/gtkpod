@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:09:14 jcs>
+/* Time-stamp: <2003-10-04 00:20:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -73,7 +73,7 @@ struct cfg
     gint pm_sort;             /* sort type for playlists           */
     gint st_sort;             /* sort type for sort tabs           */
     gint sm_sort;             /* sort type for tracks              */
-    SM_item sm_sortcol;       /* sort column for tracks            */
+    TM_item sm_sortcol;       /* sort column for tracks            */
     gboolean pm_autostore;    /* save sort order automatically?    */
     gboolean sm_autostore;    /* save sort order automatically?    */
     gboolean case_sensitive;  /* Should sorting be case-sensitive? */
@@ -97,10 +97,10 @@ struct cfg
   struct win_size size_conf;    /* last size of conf window */
   struct win_size size_dirbr;   /* last size of dirbrowser window */
   struct win_size size_prefs;   /* last size of prefs window */
-  gint sm_col_width[SM_NUM_COLUMNS];    /* width colums in track model */
-  gboolean col_visible[SM_NUM_COLUMNS]; /* displayed track model colums */
-  SM_item col_order[SM_NUM_COLUMNS];    /* order of columns */
-  gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
+  gint sm_col_width[TM_NUM_COLUMNS];    /* width colums in track model */
+  gboolean col_visible[TM_NUM_COLUMNS]; /* displayed track model colums */
+  TM_item col_order[TM_NUM_COLUMNS];    /* order of columns */
+  gboolean tag_autoset[TM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 
   gboolean show_duplicates;     /* show duplicate notification ?*/
@@ -162,7 +162,7 @@ void prefs_set_offline(gboolean active);
 void prefs_set_pm_sort (gint type);
 void prefs_set_sm_sort (gint type);
 void prefs_set_st_sort (gint type);
-void prefs_set_sm_sortcol (SM_item col);
+void prefs_set_sm_sortcol (TM_item col);
 void prefs_set_sm_autostore (gboolean active);
 void prefs_set_pm_autostore (gboolean active);
 void prefs_set_keep_backups(gboolean active);
@@ -192,8 +192,8 @@ void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_size_prefs (gint x, gint y);
 void prefs_set_sm_col_width (gint col, gint width);
 void prefs_set_tag_autoset (gint category, gboolean autoset);
-void prefs_set_col_visible (SM_item sm_item, gboolean visible);
-void prefs_set_col_order (gint pos, SM_item col);
+void prefs_set_col_visible (TM_item sm_item, gboolean visible);
+void prefs_set_col_order (gint pos, TM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
 void prefs_set_automount(gboolean val);
@@ -202,7 +202,7 @@ gboolean prefs_get_offline(void);
 gint prefs_get_pm_sort (void);
 gint prefs_get_st_sort (void);
 gint prefs_get_sm_sort (void);
-SM_item prefs_get_sm_sortcol (void);
+TM_item prefs_get_sm_sortcol (void);
 gboolean prefs_get_sm_autostore (void);
 gboolean prefs_get_pm_autostore (void);
 gboolean prefs_get_keep_backups(void);
@@ -227,8 +227,8 @@ void prefs_get_size_dirbr (gint *x, gint *y);
 void prefs_get_size_prefs (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
-gboolean prefs_get_col_visible (SM_item sm_item);
-SM_item prefs_get_col_order (gint pos);
+gboolean prefs_get_col_visible (TM_item sm_item);
+TM_item prefs_get_col_order (gint pos);
 gboolean prefs_get_md5tracks(void);
 gboolean prefs_get_update_existing(void);
 gboolean prefs_get_block_display(void);
@@ -270,14 +270,14 @@ gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount(void);
 void prefs_set_sp_or (guint32 inst, gboolean state);
 gboolean prefs_get_sp_or (guint32 inst);
-void prefs_set_sp_cond (guint32 inst, S_item s_item, gboolean state);
-gboolean prefs_get_sp_cond (guint32 inst, S_item s_item);
+void prefs_set_sp_cond (guint32 inst, T_item t_item, gboolean state);
+gboolean prefs_get_sp_cond (guint32 inst, T_item t_item);
 void prefs_set_sp_rating_n (guint32 inst, gint n, gboolean state);
 gboolean prefs_get_sp_rating_n (guint32 inst, gint n);
 void prefs_set_sp_rating_state (guint32 inst, guint32 state);
 guint32 prefs_get_sp_rating_state (guint32 inst);
-void prefs_set_sp_entry (guint32 inst, S_item s_item, const gchar *str);
-gchar *prefs_get_sp_entry (guint32 inst, S_item s_item);
+void prefs_set_sp_entry (guint32 inst, T_item t_item, const gchar *str);
+gchar *prefs_get_sp_entry (guint32 inst, T_item t_item);
 void prefs_set_sp_autodisplay (guint32 inst, gboolean state);
 gboolean prefs_get_sp_autodisplay (guint32 inst);
 gint32 prefs_get_sp_playcount_low (guint32 inst);

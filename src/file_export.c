@@ -110,13 +110,13 @@ track_get_export_filename (Track *track)
 		}
 		break;
 	    case 'A':
-		tmp = track_get_item_utf8 (track, S_ARTIST);
+		tmp = track_get_item_utf8 (track, T_ARTIST);
 		break;
 	    case 'd':
-		tmp = track_get_item_utf8 (track, S_ALBUM);
+		tmp = track_get_item_utf8 (track, T_ALBUM);
 		break;
 	    case 'n':
-		tmp = track_get_item_utf8 (track, S_TITLE);
+		tmp = track_get_item_utf8 (track, T_TITLE);
 		break;
 	    case 't':
 		tmp = dummy;

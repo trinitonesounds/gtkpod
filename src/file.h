@@ -46,7 +46,7 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
 				AddTrackFunc addtrackfunc, gpointer data);
 gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 				   AddTrackFunc addtrackfunc, gpointer data);
-gboolean write_tags_to_file(Track *s, S_item tag_id);
+gboolean write_tags_to_file(Track *s, T_item tag_id);
 void update_track_from_file (Track *track);
 void do_selected_tracks (void (*do_func)(GList *trackids));
 void do_selected_entry (void (*do_func)(GList *trackids), gint inst);

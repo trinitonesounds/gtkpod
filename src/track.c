@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:20:40 jcs>
+/* Time-stamp: <2003-10-04 00:17:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -548,36 +548,36 @@ void clear_md5_hash_from_tracks (void)
 }
 
 
-/* return the address of the UTF8 field @s_item. @s_item is one of
- * (the applicable) S_* defined in track.h */
-gchar **track_get_item_pointer_utf8 (Track *track, S_item s_item)
+/* return the address of the UTF8 field @t_item. @t_item is one of
+ * (the applicable) T_* defined in track.h */
+gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item)
 {
     gchar **result = NULL;
 
-    if (track) switch (s_item)
+    if (track) switch (t_item)
     {
-    case S_ALBUM:
+    case T_ALBUM:
 	result = &track->album;
 	break;
-    case S_ARTIST:
+    case T_ARTIST:
 	result = &track->artist;
 	break;
-    case S_TITLE:
+    case T_TITLE:
 	result = &track->title;
 	break;
-    case S_GENRE:
+    case T_GENRE:
 	result = &track->genre;
 	break;
-    case S_COMMENT:
+    case T_COMMENT:
 	result = &track->comment;
 	break;
-    case S_COMPOSER:
+    case T_COMPOSER:
 	result = &track->composer;
 	break;
-    case S_FDESC:
+    case T_FDESC:
 	result = &track->fdesc;
 	break;
-    case S_IPOD_PATH:
+    case T_IPOD_PATH:
 	result = &track->ipod_path;
 	break;
     default:
@@ -586,47 +586,47 @@ gchar **track_get_item_pointer_utf8 (Track *track, S_item s_item)
     return result;
 }
 
-/* return the UTF8 item @s_item. @s_item is one of
-   (the applicable) S_* defined in track.h */
-gchar *track_get_item_utf8 (Track *track, S_item s_item)
+/* return the UTF8 item @t_item. @t_item is one of
+   (the applicable) T_* defined in track.h */
+gchar *track_get_item_utf8 (Track *track, T_item t_item)
 {
-    gchar **address = track_get_item_pointer_utf8 (track, s_item);
+    gchar **address = track_get_item_pointer_utf8 (track, t_item);
 
     if (address) return *address;
     else         return NULL;
 }
 
 
-/* return the address of the UTF16 field @s_item. @s_item is one of
-(the * applicable) S_* defined in track.h */
-gunichar2 **track_get_item_pointer_utf16 (Track *track, S_item s_item)
+/* return the address of the UTF16 field @t_item. @t_item is one of
+(the * applicable) T_* defined in track.h */
+gunichar2 **track_get_item_pointer_utf16 (Track *track, T_item t_item)
 {
     gunichar2 **result = NULL;
 
-    if (track) switch (s_item)
+    if (track) switch (t_item)
     {
-    case S_ALBUM:
+    case T_ALBUM:
 	result = &track->album_utf16;
 	break;
-    case S_ARTIST:
+    case T_ARTIST:
 	result = &track->artist_utf16;
 	break;
-    case S_TITLE:
+    case T_TITLE:
 	result = &track->title_utf16;
 	break;
-    case S_GENRE:
+    case T_GENRE:
 	result = &track->genre_utf16;
 	break;
-    case S_COMMENT:
+    case T_COMMENT:
 	result = &track->comment_utf16;
 	break;
-    case S_COMPOSER:
+    case T_COMPOSER:
 	result = &track->composer_utf16;
 	break;
-    case S_FDESC:
+    case T_FDESC:
 	result = &track->fdesc_utf16;
 	break;
-    case S_IPOD_PATH:
+    case T_IPOD_PATH:
 	result = &track->ipod_path_utf16;
 	break;
     default:
@@ -635,29 +635,29 @@ gunichar2 **track_get_item_pointer_utf16 (Track *track, S_item s_item)
     return result;
 }
 
-/* return the UTF16 item @s_item. @s_item is one of
-(the * applicable) S_* defined in track.h */
-gunichar2 *track_get_item_utf16 (Track *track, S_item s_item)
+/* return the UTF16 item @t_item. @t_item is one of
+(the * applicable) T_* defined in track.h */
+gunichar2 *track_get_item_utf16 (Track *track, T_item t_item)
 {
-    gunichar2 **address = track_get_item_pointer_utf16 (track, s_item);
+    gunichar2 **address = track_get_item_pointer_utf16 (track, t_item);
 
     if (address) return *address;
     else         return NULL;
 }
 
 
-/* return a pointer to the specified timestamp. @s_item is one of (the
-   applicable) S_* defined in track.h.  If the parameters are illegal,
+/* return a pointer to the specified timestamp. @t_item is one of (the
+   applicable) T_* defined in track.h.  If the parameters are illegal,
    "0" is returned. */
-guint32 *track_get_timestamp_ptr (Track *track, S_item s_item)
+guint32 *track_get_timestamp_ptr (Track *track, T_item t_item)
 {
     if (track)
     {
-	switch (s_item)
+	switch (t_item)
 	{
-	  case S_TIME_PLAYED:
+	  case T_TIME_PLAYED:
 	    return &track->time_played;
-	  case S_TIME_MODIFIED:
+	  case T_TIME_MODIFIED:
 	    return &track->time_modified;
 	default:
 	    break;
@@ -667,12 +667,12 @@ guint32 *track_get_timestamp_ptr (Track *track, S_item s_item)
 }
 
 
-/* return the specified timestamp. @s_item is one of
-   (the * applicable) S_* defined in track.h. If the parameters are
+/* return the specified timestamp. @t_item is one of
+   (the * applicable) T_* defined in track.h. If the parameters are
    illegal, "0" is returned. */
-guint32 track_get_timestamp (Track *track, S_item s_item)
+guint32 track_get_timestamp (Track *track, T_item t_item)
 {
-    guint32 *ptr = track_get_timestamp_ptr (track, s_item);
+    guint32 *ptr = track_get_timestamp_ptr (track, t_item);
     if (ptr)  return *ptr;
     else      return 0;
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:13:25 jcs>
+/* Time-stamp: <2003-10-04 00:05:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -77,8 +77,8 @@ void gtkpod_statusbar_init(GtkWidget *);
 void gtkpod_statusbar_message(const gchar *message);
 void gtkpod_space_statusbar_init(GtkWidget *w);
 
-S_item SM_to_S (SM_item sm);
-S_item ST_to_S (ST_CAT_item st);
+T_item TM_to_T (TM_item sm);
+T_item ST_to_T (ST_CAT_item st);
 gchar *get_track_info (Track *track);
 
 void gtkpod_tracks_statusbar_init(GtkWidget*);
@@ -111,9 +111,9 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2);
 void gtkpod_warning (const gchar *format, ...);
 
 gchar *time_time_to_string (time_t time);
-time_t time_get_time (Track *track, SM_item sm_item);
-gchar *time_field_to_string (Track *track, SM_item sm_item);
-void time_set_time (Track *track, time_t time, SM_item sm_item);
+time_t time_get_time (Track *track, TM_item sm_item);
+gchar *time_field_to_string (Track *track, TM_item sm_item);
+void time_set_time (Track *track, time_t time, TM_item sm_item);
 
 gint compare_string (gchar *str1, gchar *str2);
 gint compare_string_case_insensitive (gchar *str1, gchar *str2);
@@ -122,7 +122,7 @@ gchar *filename_from_uri (const char *uri,
 			  char      **hostname,
 			  GError    **error);
 
-void generate_category_playlists (S_item cat);
+void generate_category_playlists (T_item cat);
 Playlist *generate_displayed_playlist (void);
 Playlist *generate_selected_playlist (void);
 Playlist *generate_new_playlist (GList *tracks);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:11:05 jcs>
+/* Time-stamp: <2003-10-04 00:14:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -837,48 +837,48 @@ gtkpod_tracks_statusbar_update(void)
 }
 
 
-/* translates a SM_COLUMN_... (defined in display.h) into a
- * S_... (defined in track.h). Returns -1 in case a translation is not
+/* translates a TM_COLUMN_... (defined in display.h) into a
+ * T_... (defined in track.h). Returns -1 in case a translation is not
  * possible */
-S_item SM_to_S (SM_item sm)
+T_item TM_to_T (TM_item sm)
 {
     switch (sm)
     {
-    case SM_COLUMN_TITLE:         return S_TITLE;
-    case SM_COLUMN_ARTIST:        return S_ARTIST;
-    case SM_COLUMN_ALBUM:         return S_ALBUM;
-    case SM_COLUMN_GENRE:         return S_GENRE;
-    case SM_COLUMN_COMPOSER:      return S_COMPOSER;
-    case SM_COLUMN_TRACK_NR:      return S_TRACK_NR;
-    case SM_COLUMN_IPOD_ID:       return S_IPOD_ID;
-    case SM_COLUMN_PC_PATH:       return S_PC_PATH;
-    case SM_COLUMN_TRANSFERRED:   return S_TRANSFERRED;
-    case SM_COLUMN_SIZE:          return S_SIZE;
-    case SM_COLUMN_TRACKLEN:       return S_TRACKLEN;
-    case SM_COLUMN_BITRATE:       return S_BITRATE;
-    case SM_COLUMN_PLAYCOUNT:     return S_PLAYCOUNT;
-    case SM_COLUMN_RATING:        return S_RATING;
-    case SM_COLUMN_TIME_PLAYED:   return S_TIME_PLAYED;
-    case SM_COLUMN_TIME_MODIFIED: return S_TIME_MODIFIED;
-    case SM_COLUMN_VOLUME:        return S_VOLUME;
-    case SM_NUM_COLUMNS:          return -1;
+    case TM_COLUMN_TITLE:         return T_TITLE;
+    case TM_COLUMN_ARTIST:        return T_ARTIST;
+    case TM_COLUMN_ALBUM:         return T_ALBUM;
+    case TM_COLUMN_GENRE:         return T_GENRE;
+    case TM_COLUMN_COMPOSER:      return T_COMPOSER;
+    case TM_COLUMN_TRACK_NR:      return T_TRACK_NR;
+    case TM_COLUMN_IPOD_ID:       return T_IPOD_ID;
+    case TM_COLUMN_PC_PATH:       return T_PC_PATH;
+    case TM_COLUMN_TRANSFERRED:   return T_TRANSFERRED;
+    case TM_COLUMN_SIZE:          return T_SIZE;
+    case TM_COLUMN_TRACKLEN:      return T_TRACKLEN;
+    case TM_COLUMN_BITRATE:       return T_BITRATE;
+    case TM_COLUMN_PLAYCOUNT:     return T_PLAYCOUNT;
+    case TM_COLUMN_RATING:        return T_RATING;
+    case TM_COLUMN_TIME_PLAYED:   return T_TIME_PLAYED;
+    case TM_COLUMN_TIME_MODIFIED: return T_TIME_MODIFIED;
+    case TM_COLUMN_VOLUME:        return T_VOLUME;
+    case TM_NUM_COLUMNS:          return -1;
     }
     return -1;
 }
 
 
 /* translates a ST_CAT_... (defined in display.h) into a
- * S_... (defined in track.h). Returns -1 in case a translation is not
+ * T_... (defined in track.h). Returns -1 in case a translation is not
  * possible */
-S_item ST_to_S (ST_CAT_item st)
+T_item ST_to_T (ST_CAT_item st)
 {
     switch (st)
     {
-    case ST_CAT_ARTIST:      return S_ARTIST;
-    case ST_CAT_ALBUM:       return S_ALBUM;
-    case ST_CAT_GENRE:       return S_GENRE;
-    case ST_CAT_COMPOSER:    return S_COMPOSER;
-    case ST_CAT_TITLE:       return S_TITLE;
+    case ST_CAT_ARTIST:      return T_ARTIST;
+    case ST_CAT_ALBUM:       return T_ALBUM;
+    case ST_CAT_GENRE:       return T_GENRE;
+    case ST_CAT_COMPOSER:    return T_COMPOSER;
+    case ST_CAT_TITLE:       return T_TITLE;
     case ST_CAT_SPECIAL:
     case ST_CAT_NUM:         return -1;
     }
@@ -1223,7 +1223,8 @@ void delete_populate_settings (Playlist *pl, GList *selected_trackids,
 	if (label)
 	    *label = g_strdup (ngettext ("Are you sure you want to delete the following track\ncompletely from your ipod?", "Are you sure you want to delete the following tracks\ncompletely from your ipod?", n));
 	if (title)
-	    *title = ngettext (_("Delete Track Completely?"), _("Delete Tracks Completey?"), n);
+	    *title = ngettext ("Delete Track Completely?",
+			       "Delete Tracks Completey?", n);
 	if (confirm_again)
 	    *confirm_again = prefs_get_track_ipod_file_deletion ();
 	if (confirm_again_handler)
@@ -1234,7 +1235,8 @@ void delete_populate_settings (Playlist *pl, GList *selected_trackids,
 	if (label)
 	    *label = g_strdup_printf(ngettext ("Are you sure you want to delete the following track\nfrom the playlist \"%s\"?", "Are you sure you want to delete the following tracks\nfrom the playlist \"%s\"?", n), pl->name);
 	if (title)
-	    *title = ngettext (_("Delete Track From Playlist?"), _("Delete Tracks From Playlist?"), n);
+	    *title = ngettext ("Delete Track From Playlist?",
+			       "Delete Tracks From Playlist?", n);
 	if (confirm_again)
 	    *confirm_again = prefs_get_track_playlist_deletion ();
 	if (confirm_again_handler)
@@ -1276,11 +1278,15 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
     n = g_list_length (selected_trackids); /* nr of tracks to be deleted */
     if (pl->type == PL_TYPE_MPL)
     {
-	buf = g_strdup_printf (ngettext (_("Deleted one track completely from iPod"), _("Deleted %d tracks completely from iPod"), n), n);
+	buf = g_strdup_printf (
+	    ngettext ("Deleted one track completely from iPod",
+		      "Deleted %d tracks completely from iPod", n), n);
     }
     else /* normal playlist */
     {
-	buf = g_strdup_printf (ngettext (_("Deleted track from playlist '%s'"), _("Deleted tracks from playlist '%s'"), n), pl->name);
+	buf = g_strdup_printf (
+	    ngettext ("Deleted track from playlist '%s'",
+		      "Deleted tracks from playlist '%s'", n), pl->name);
     }
 
     for (l = selected_trackids; l; l = l->next)
@@ -1943,17 +1949,17 @@ gchar *time_time_to_string (time_t time)
 
 
 
-/* get the timestamp SM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
-time_t time_get_time (Track *track, SM_item sm_item)
+/* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
+time_t time_get_time (Track *track, TM_item sm_item)
 {
     guint32 mactime = 0;
 
     if (track) switch (sm_item)
     {
-    case SM_COLUMN_TIME_PLAYED:
+    case TM_COLUMN_TIME_PLAYED:
 	mactime = track->time_played;
 	break;
-    case SM_COLUMN_TIME_MODIFIED:
+    case TM_COLUMN_TIME_MODIFIED:
 	mactime = track->time_modified;
 	break;
     default:
@@ -1965,23 +1971,23 @@ time_t time_get_time (Track *track, SM_item sm_item)
 
 
 /* hopefully obvious */
-gchar *time_field_to_string (Track *track, SM_item sm_item)
+gchar *time_field_to_string (Track *track, TM_item sm_item)
 {
     return (time_time_to_string (time_get_time (track, sm_item)));
 }
 
 
-/* get the timestamp SM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
-void time_set_time (Track *track, time_t time, SM_item sm_item)
+/* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
+void time_set_time (Track *track, time_t time, TM_item sm_item)
 {
     guint32 mactime = itunesdb_time_host_to_mac (time);
 
     if (track) switch (sm_item)
     {
-    case SM_COLUMN_TIME_PLAYED:
+    case TM_COLUMN_TIME_PLAYED:
 	track->time_played = mactime;
 	break;
-    case SM_COLUMN_TIME_MODIFIED:
+    case TM_COLUMN_TIME_MODIFIED:
 	track->time_modified = mactime;
 	break;
     default:
@@ -2320,31 +2326,31 @@ filename_from_uri (const char *uri,
 \*------------------------------------------------------------------*/
 
 /* generate_category_playlists: Create a playlist for each category
-   @cat (S_ARTIST, S_ALBUM, S_GENRE, S_COMPOSER) */
-void generate_category_playlists (S_item cat)
+   @cat (T_ARTIST, T_ALBUM, T_GENRE, T_COMPOSER) */
+void generate_category_playlists (T_item cat)
 {
     Playlist *master_pl;
     gint i;
     gchar *qualifier;
 
     /* sanity */
-    if ((cat != S_ARTIST) && (cat != S_ALBUM) &&
-	(cat != S_GENRE) && (cat != S_COMPOSER)) return;
+    if ((cat != T_ARTIST) && (cat != T_ALBUM) &&
+	(cat != T_GENRE) && (cat != T_COMPOSER)) return;
 
     /* Initialize the "qualifier". It is used to indicate the category of
        automatically generated playlists */
     switch (cat)
     {
-    case S_ARTIST:
+    case T_ARTIST:
 	qualifier = _("AR:");
 	break;
-    case S_ALBUM:
+    case T_ALBUM:
 	qualifier = _("AL:");
 	break;
-    case S_GENRE:
+    case T_GENRE:
 	qualifier = _("GE:");
 	break;
-    case S_COMPOSER:
+    case T_COMPOSER:
 	qualifier = _("CO:");
 	break;
     default:
@@ -2704,6 +2710,16 @@ void since_last_pl(void)
 			    since_last_IF, since_last_CF);
 }
 
+
+/* ------------------------------------------------------------
+------------------------------------------------------------------
+--------                                                 ---------
+--------  THE REST OF THE FILE IS COMMENTED-OUT (#IF 0)  ---------
+--------                                                 ---------
+------------------------------------------------------------------
+   ------------------------------------------------------------ */
+
+#if 0
 static gint relative_path_CF (gconstpointer aa, gconstpointer bb)
 {
    gint result = 0;
@@ -2903,3 +2919,4 @@ void recover_db(void)
       data_changed();
 
 }
+#endif

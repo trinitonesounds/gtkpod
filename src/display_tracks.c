@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:15:53 jcs>
+/* Time-stamp: <2003-10-04 00:12:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -50,19 +50,19 @@
 /* pointer to the treeview for the track display */
 static GtkTreeView *track_treeview = NULL;
 /* array with pointers to the columns used in the track display */
-static GtkTreeViewColumn *sm_columns[SM_NUM_COLUMNS];
+static GtkTreeViewColumn *sm_columns[TM_NUM_COLUMNS];
 
-static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint position);
+static GtkTreeViewColumn *sm_add_column (TM_item sm_item, gint position);
 
 /* Drag and drop definitions */
 static GtkTargetEntry sm_drag_types [] = {
-    { DND_GTKPOD_SM_PATHLIST_TYPE, 0, DND_GTKPOD_SM_PATHLIST },
+    { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
     { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 static GtkTargetEntry sm_drop_types [] = {
-    { DND_GTKPOD_SM_PATHLIST_TYPE, 0, DND_GTKPOD_SM_PATHLIST },
+    { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
 /*    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },*/
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
@@ -111,23 +111,23 @@ void sm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter)
 	gtk_list_store_append (GTK_LIST_STORE (model), &iter);
 
     gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-			SM_COLUMN_TITLE, track,
-			SM_COLUMN_ARTIST, track,
-			SM_COLUMN_ALBUM, track,
-			SM_COLUMN_GENRE, track,
-			SM_COLUMN_COMPOSER, track,
-			SM_COLUMN_TRACK_NR, track,
-			SM_COLUMN_IPOD_ID, track,
-			SM_COLUMN_PC_PATH, track,
-			SM_COLUMN_TRANSFERRED, track,
-			SM_COLUMN_SIZE, track,
-			SM_COLUMN_TRACKLEN, track,
-			SM_COLUMN_BITRATE, track,
-			SM_COLUMN_PLAYCOUNT, track,
-			SM_COLUMN_RATING, track,
-			SM_COLUMN_TIME_PLAYED, track,
-			SM_COLUMN_TIME_MODIFIED, track,
-			SM_COLUMN_VOLUME, track,
+			TM_COLUMN_TITLE, track,
+			TM_COLUMN_ARTIST, track,
+			TM_COLUMN_ALBUM, track,
+			TM_COLUMN_GENRE, track,
+			TM_COLUMN_COMPOSER, track,
+			TM_COLUMN_TRACK_NR, track,
+			TM_COLUMN_IPOD_ID, track,
+			TM_COLUMN_PC_PATH, track,
+			TM_COLUMN_TRANSFERRED, track,
+			TM_COLUMN_SIZE, track,
+			TM_COLUMN_TRACKLEN, track,
+			TM_COLUMN_BITRATE, track,
+			TM_COLUMN_PLAYCOUNT, track,
+			TM_COLUMN_RATING, track,
+			TM_COLUMN_TIME_PLAYED, track,
+			TM_COLUMN_TIME_MODIFIED, track,
+			TM_COLUMN_VOLUME, track,
 			-1);
 }
 
@@ -143,7 +143,7 @@ static gboolean sm_delete_track (GtkTreeModel *model,
 {
   Track *track;
 
-  gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &track, -1);
+  gtk_tree_model_get (model, iter, TM_COLUMN_ALBUM, &track, -1);
   if(track == (Track *)data)
   {
       GtkTreeSelection *selection = gtk_tree_view_get_selection
@@ -196,14 +196,14 @@ void sm_remove_all_tracks (gboolean clear_sort)
 
 
 /* find out at which position column @sm_item is displayed */
-/* static gint sm_get_col_position (SM_item sm_item) */
+/* static gint sm_get_col_position (TM_item sm_item) */
 /* { */
 /*     gint i; */
 /*     GtkTreeViewColumn *col; */
 
 /*     if (!track_treeview) return -1; */
 
-/*     for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i) */
+/*     for (i=0; i<TM_NUM_COLUMNS_PREFS; ++i) */
 /*     { */
 /* 	col = gtk_tree_view_get_column (track_treeview, i); */
 /* 	if (col->sort_column_id == sm_item) return i; */
@@ -218,7 +218,7 @@ void sm_store_col_order (void)
     gint i;
     GtkTreeViewColumn *col;
 
-    for (i=0; i<SM_NUM_COLUMNS; ++i)
+    for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	col = gtk_tree_view_get_column (track_treeview, i);
 	prefs_set_col_order (i, col->sort_column_id);
@@ -235,7 +235,7 @@ static gboolean sm_model_track_changed (GtkTreeModel *model,
 {
   Track *track;
 
-  gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &track, -1);
+  gtk_tree_model_get (model, iter, TM_COLUMN_ALBUM, &track, -1);
   if(track == (Track *)data) {
     gtk_tree_model_row_changed (model, path, iter);
     return TRUE;
@@ -302,7 +302,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   GtkTreeSelection *selection; 
   GtkTreeIter iter; 
   Track *track; 
-  SM_item column; 
+  TM_item column; 
   gboolean changed;        
   gboolean multi_edit;
 
@@ -314,9 +314,9 @@ sm_cell_edited (GtkCellRendererText *renderer,
   GList *row_list, *row_node, *first; 
 
 
-  column = (SM_item) g_object_get_data(G_OBJECT(renderer), "column");
+  column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
   multi_edit = prefs_get_multi_edit ();
-  if (column == SM_COLUMN_TITLE)
+  if (column == TM_COLUMN_TITLE)
       multi_edit &= prefs_get_multi_edit_title ();
   selection = gtk_tree_view_get_selection(track_treeview); 
   row_list = gtk_tree_selection_get_selected_rows(selection, &model); 
@@ -340,13 +340,13 @@ sm_cell_edited (GtkCellRendererText *renderer,
 
      switch(column) 
      {
-     case SM_COLUMN_TITLE:
-     case SM_COLUMN_ALBUM:
-     case SM_COLUMN_ARTIST:
-     case SM_COLUMN_GENRE:
-     case SM_COLUMN_COMPOSER:
-        itemp_utf8 = track_get_item_pointer_utf8 (track, SM_to_S (column));
-        itemp_utf16 = track_get_item_pointer_utf16 (track, SM_to_S (column));
+     case TM_COLUMN_TITLE:
+     case TM_COLUMN_ALBUM:
+     case TM_COLUMN_ARTIST:
+     case TM_COLUMN_GENRE:
+     case TM_COLUMN_COMPOSER:
+        itemp_utf8 = track_get_item_pointer_utf8 (track, TM_to_T (column));
+        itemp_utf16 = track_get_item_pointer_utf16 (track, TM_to_T (column));
         if (g_utf8_collate (*itemp_utf8, new_text) != 0)
         {
            g_free (*itemp_utf8);
@@ -356,7 +356,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
            changed = TRUE; 
         }
         break;
-     case SM_COLUMN_TRACK_NR:
+     case TM_COLUMN_TRACK_NR:
         nr = atoi (new_text);
         if ((nr >= 0) && (nr != track->track_nr))
         {
@@ -364,7 +364,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
            changed = TRUE; 
         }
         break;
-     case SM_COLUMN_PLAYCOUNT:
+     case TM_COLUMN_PLAYCOUNT:
         nr = atoi (new_text);
         if ((nr >= 0) && (nr != track->playcount))
         {
@@ -372,7 +372,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
            changed = TRUE; 
         }
         break;
-     case SM_COLUMN_RATING:
+     case TM_COLUMN_RATING:
         nr = atoi (new_text);
         if ((nr >= 0) && (nr <= 5) && (nr != track->rating))
         {
@@ -380,10 +380,10 @@ sm_cell_edited (GtkCellRendererText *renderer,
            changed = TRUE;
         }
         break;
-     case SM_COLUMN_TIME_PLAYED:
-     case SM_COLUMN_TIME_MODIFIED:
+     case TM_COLUMN_TIME_PLAYED:
+     case TM_COLUMN_TIME_MODIFIED:
         break;
-     case SM_COLUMN_VOLUME:
+     case TM_COLUMN_VOLUME:
         nr = atoi (new_text);
         if ((nr <= 100) && (nr >= -100) && (nr != track->volume))
         {
@@ -404,11 +404,11 @@ sm_cell_edited (GtkCellRendererText *renderer,
 
         if (prefs_get_id3_write()) 
         { 
-           S_item tag_id;
+           T_item tag_id;
            /* should we update all ID3 tags or just the one
               changed? */
-           if (prefs_get_id3_writeall ()) tag_id = S_ALL;
-           else                           tag_id = SM_to_S (column);
+           if (prefs_get_id3_writeall ()) tag_id = T_ALL;
+           else                           tag_id = TM_to_T (column);
            write_tags_to_file (track, tag_id);
            /* display possible duplicates that have been removed */
            remove_duplicate (NULL, NULL);
@@ -436,27 +436,27 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 			       gpointer           data)
 {
   Track *track;
-  SM_item column;
+  TM_item column;
   gchar text[21];
   gchar *buf = NULL;
   gchar *item_utf8 = NULL;
 
-  column = (SM_item)g_object_get_data (G_OBJECT (renderer), "column");
-  gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &track, -1);
+  column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
+  gtk_tree_model_get (model, iter, TM_COLUMN_ALBUM, &track, -1);
 
   switch (column)
   {
-  case SM_COLUMN_TITLE:
-  case SM_COLUMN_ARTIST:
-  case SM_COLUMN_ALBUM:
-  case SM_COLUMN_GENRE:
-  case SM_COLUMN_COMPOSER:
-      item_utf8 = track_get_item_utf8 (track, SM_to_S (column));
+  case TM_COLUMN_TITLE:
+  case TM_COLUMN_ARTIST:
+  case TM_COLUMN_ALBUM:
+  case TM_COLUMN_GENRE:
+  case TM_COLUMN_COMPOSER:
+      item_utf8 = track_get_item_utf8 (track, TM_to_T (column));
       g_object_set (G_OBJECT (renderer),
 		    "text", item_utf8, 
 		    "editable", TRUE, NULL);
       break;
-  case SM_COLUMN_TRACK_NR:
+  case TM_COLUMN_TRACK_NR:
       if (track->track_nr >= 0)
       {
 	  snprintf (text, 20, "%d", track->track_nr);
@@ -473,7 +473,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 			"xalign", 1.0, NULL);
       }
       break;
-  case SM_COLUMN_IPOD_ID:
+  case TM_COLUMN_IPOD_ID:
       if (track->ipod_id != -1)
       {
 	  snprintf (text, 20, "%d", track->ipod_id);
@@ -488,47 +488,47 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 			"xalign", 1.0, NULL);
       }
       break;
-  case SM_COLUMN_PC_PATH:
+  case TM_COLUMN_PC_PATH:
       g_object_set (G_OBJECT (renderer), "text", track->pc_path_utf8, NULL);
       break;
-  case SM_COLUMN_TRANSFERRED:
+  case TM_COLUMN_TRANSFERRED:
       g_object_set (G_OBJECT (renderer), "active", track->transferred, NULL);
       break;
-  case SM_COLUMN_SIZE:
+  case TM_COLUMN_SIZE:
       snprintf (text, 20, "%d", track->size);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "xalign", 1.0, NULL);
       break;
-  case SM_COLUMN_TRACKLEN:
+  case TM_COLUMN_TRACKLEN:
       snprintf (text, 20, "%d:%02d", track->tracklen/60000,
                                      (track->tracklen/1000)%60);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "xalign", 1.0, NULL);
       break;
-  case SM_COLUMN_BITRATE:
+  case TM_COLUMN_BITRATE:
       snprintf (text, 20, "%dk", track->bitrate);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "xalign", 1.0, NULL);
       break;
-  case SM_COLUMN_PLAYCOUNT:
+  case TM_COLUMN_PLAYCOUNT:
       snprintf (text, 20, "%d", track->playcount);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
 		    "xalign", 1.0, NULL);
       break;
-  case SM_COLUMN_RATING:
+  case TM_COLUMN_RATING:
       snprintf (text, 20, "%d", track->rating/RATING_STEP);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
 		    "xalign", 1.0, NULL);
       break;
-  case SM_COLUMN_TIME_PLAYED:
-  case SM_COLUMN_TIME_MODIFIED:
+  case TM_COLUMN_TIME_PLAYED:
+  case TM_COLUMN_TIME_MODIFIED:
       buf = time_field_to_string (track, column);
       g_object_set (G_OBJECT (renderer),
 		    "text", buf,
@@ -537,7 +537,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 0.0, NULL);
       C_FREE (buf);
       break;
-  case SM_COLUMN_VOLUME:
+  case TM_COLUMN_VOLUME:
       snprintf (text, 20, "%d", track->volume);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
@@ -820,49 +820,49 @@ gint sm_data_compare_func (GtkTreeModel *model,
   Track *track1;
   Track *track2;
   gint column;
-  SM_item sm_item;
+  TM_item sm_item;
   GtkSortType order;
 
-  gtk_tree_model_get (model, a, SM_COLUMN_ALBUM, &track1, -1);
-  gtk_tree_model_get (model, b, SM_COLUMN_ALBUM, &track2, -1);
+  gtk_tree_model_get (model, a, TM_COLUMN_ALBUM, &track1, -1);
+  gtk_tree_model_get (model, b, TM_COLUMN_ALBUM, &track2, -1);
   if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order) == FALSE) return 0;
-  sm_item = (SM_item) column;
+  sm_item = (TM_item) column;
   /*printf ("sm_comp: %d\n", sm_item);*/
   switch (sm_item)
   {
-  case SM_COLUMN_TITLE:
-  case SM_COLUMN_ARTIST:
-  case SM_COLUMN_ALBUM:
-  case SM_COLUMN_GENRE:
-  case SM_COLUMN_COMPOSER:
-      return compare_string (track_get_item_utf8 (track1, SM_to_S (sm_item)),
-			     track_get_item_utf8 (track2, SM_to_S (sm_item)));
-  case SM_COLUMN_TRACK_NR:
+  case TM_COLUMN_TITLE:
+  case TM_COLUMN_ARTIST:
+  case TM_COLUMN_ALBUM:
+  case TM_COLUMN_GENRE:
+  case TM_COLUMN_COMPOSER:
+      return compare_string (track_get_item_utf8 (track1, TM_to_T (sm_item)),
+			     track_get_item_utf8 (track2, TM_to_T (sm_item)));
+  case TM_COLUMN_TRACK_NR:
       return track1->track_nr - track2->track_nr;
-  case SM_COLUMN_IPOD_ID:
+  case TM_COLUMN_IPOD_ID:
       return track1->ipod_id - track2->ipod_id;
-  case SM_COLUMN_PC_PATH:
+  case TM_COLUMN_PC_PATH:
       return g_utf8_collate (track1->pc_path_utf8, track2->pc_path_utf8);
-  case SM_COLUMN_TRANSFERRED:
+  case TM_COLUMN_TRANSFERRED:
       if(track1->transferred == track2->transferred) return 0;
       if(track1->transferred == TRUE) return 1;
       else return -1;
-  case SM_COLUMN_SIZE:
+  case TM_COLUMN_SIZE:
       return track1->size - track2->size;
-  case SM_COLUMN_TRACKLEN:
+  case TM_COLUMN_TRACKLEN:
       return track1->tracklen - track2->tracklen;
-  case SM_COLUMN_BITRATE:
+  case TM_COLUMN_BITRATE:
       return track1->bitrate - track2->bitrate;
-  case SM_COLUMN_PLAYCOUNT:
+  case TM_COLUMN_PLAYCOUNT:
       return track1->playcount - track2->playcount;
-  case  SM_COLUMN_RATING:
+  case  TM_COLUMN_RATING:
       return track1->rating - track2->rating;
-  case SM_COLUMN_TIME_PLAYED:
-  case SM_COLUMN_TIME_MODIFIED:
+  case TM_COLUMN_TIME_PLAYED:
+  case TM_COLUMN_TIME_MODIFIED:
       return COMP (time_get_time (track1, sm_item),
 		   time_get_time (track2, sm_item));
-  case  SM_COLUMN_VOLUME:
+  case  TM_COLUMN_VOLUME:
       return track1->volume - track2->volume;
   default:
       g_warning ("Programming error: sm_data_compare_func: no sort method for column %d\n", column);
@@ -949,7 +949,7 @@ sm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 }
 
 
-void sm_sort (SM_item col, GtkSortType order)
+void sm_sort (TM_item col, GtkSortType order)
 {
     if (track_treeview)
     {
@@ -973,7 +973,7 @@ void sm_sort (SM_item col, GtkSortType order)
 
 /* Add one column at position @pos. This code is used over and over
    by sm_add_column() -- therefore I put it into a separate function */
-static GtkTreeViewColumn *sm_add_text_column (SM_item col_id,
+static GtkTreeViewColumn *sm_add_text_column (TM_item col_id,
 					      gchar *name,
 					      GtkCellRenderer *renderer,
 					      gboolean editable,
@@ -1013,64 +1013,64 @@ static GtkTreeViewColumn *sm_add_text_column (SM_item col_id,
 
 
 /* Adds the columns to our track_treeview */
-static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
+static GtkTreeViewColumn *sm_add_column (TM_item sm_item, gint pos)
 {
   GtkTreeViewColumn *col = NULL;
   gchar *text = NULL;
   gboolean editable = TRUE;          /* default */
   GtkCellRenderer *renderer = NULL;  /* default */
 
-  if ((sm_item) < 0 || (sm_item >= SM_NUM_COLUMNS))  return NULL;
+  if ((sm_item) < 0 || (sm_item >= TM_NUM_COLUMNS))  return NULL;
 
   text = gettext (sm_col_strings[sm_item]);
 
   switch (sm_item)
   {
-  case SM_COLUMN_TITLE:
-  case SM_COLUMN_ARTIST:
-  case SM_COLUMN_ALBUM:
-  case SM_COLUMN_GENRE:
-  case SM_COLUMN_COMPOSER:
-  case SM_COLUMN_VOLUME:
-  case SM_COLUMN_RATING:
+  case TM_COLUMN_TITLE:
+  case TM_COLUMN_ARTIST:
+  case TM_COLUMN_ALBUM:
+  case TM_COLUMN_GENRE:
+  case TM_COLUMN_COMPOSER:
+  case TM_COLUMN_VOLUME:
+  case TM_COLUMN_RATING:
       break;
-  case SM_COLUMN_TRACK_NR:
+  case TM_COLUMN_TRACK_NR:
       text = _("#");
       break;
-  case SM_COLUMN_IPOD_ID:
+  case TM_COLUMN_IPOD_ID:
       text = _("ID");
       editable = FALSE;
       break;
-  case SM_COLUMN_PC_PATH:
+  case TM_COLUMN_PC_PATH:
       editable = FALSE;
       break;
-  case SM_COLUMN_TRANSFERRED:
+  case TM_COLUMN_TRANSFERRED:
       text = _("Trnsfrd");
       editable = FALSE;
       renderer = gtk_cell_renderer_toggle_new ();
       break;
-  case SM_COLUMN_SIZE:
+  case TM_COLUMN_SIZE:
       editable = FALSE;
       break;
-  case SM_COLUMN_TRACKLEN:
+  case TM_COLUMN_TRACKLEN:
       text = _("Time");
       editable = FALSE;
       break;
-  case SM_COLUMN_BITRATE:
+  case TM_COLUMN_BITRATE:
       editable = FALSE;
       break;
-  case SM_COLUMN_PLAYCOUNT:
+  case TM_COLUMN_PLAYCOUNT:
       text = _("Plycnt");
       break;
-  case SM_COLUMN_TIME_PLAYED:
+  case TM_COLUMN_TIME_PLAYED:
       text = _("Played");
       editable = FALSE;
       break;
-  case SM_COLUMN_TIME_MODIFIED:
+  case TM_COLUMN_TIME_MODIFIED:
       text = _("Modified");
       editable = FALSE;
       break;
-  case SM_NUM_COLUMNS:
+  case TM_NUM_COLUMNS:
       break;
   }
   col = sm_add_text_column (sm_item, text, renderer, editable, pos);
@@ -1086,7 +1086,7 @@ static void sm_add_columns (void)
 {
     gint i;
 
-    for (i=0; i<SM_NUM_COLUMNS; ++i)
+    for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	sm_add_column (prefs_get_col_order (i), -1);
     }
@@ -1148,7 +1148,7 @@ void sm_create_treeview (void)
   gtk_container_add (GTK_CONTAINER (track_window), stv);
   /* create model */
   model = GTK_TREE_MODEL (
-      gtk_list_store_new (SM_NUM_COLUMNS, G_TYPE_POINTER,
+      gtk_list_store_new (TM_NUM_COLUMNS, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
 			  G_TYPE_POINTER, G_TYPE_POINTER,
@@ -1199,7 +1199,7 @@ sm_show_preferred_columns(void)
     gboolean visible;
     gint i;
     
-    for (i=0; i<SM_NUM_COLUMNS; ++i)
+    for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	tvc = gtk_tree_view_get_column (track_treeview, i);
 	visible = prefs_get_col_visible (prefs_get_col_order (i));
@@ -1217,7 +1217,7 @@ void sm_update_default_sizes (void)
     GtkTreeViewColumn *col;
 
     /* column widths */
-    for (i=0; i<SM_NUM_COLUMNS; ++i)
+    for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	col = sm_columns [i];
 	if (col)
@@ -1257,7 +1257,7 @@ static void sm_list_store_move (GtkListStore *store,
     model = gtk_tree_view_get_model (track_treeview);
 
     /* get the content (track) of the row to move */
-    gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &track, -1);
+    gtk_tree_model_get (model, iter, TM_COLUMN_ALBUM, &track, -1);
     /* remove the old row */
     gtk_list_store_remove (GTK_LIST_STORE (model), iter);
 
@@ -1414,8 +1414,8 @@ on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     Track *s;
     GString *filelist = (GString *)data;
 
-    gtk_tree_model_get(tm, i, SM_COLUMN_TITLE, &s, -1); 
-    /* can call on SM_COLUMN_TITLE cause s is consistent across all of
+    gtk_tree_model_get(tm, i, TM_COLUMN_TITLE, &s, -1); 
+    /* can call on TM_COLUMN_TITLE cause s is consistent across all of
        the columns */
     if(s)
     {
@@ -1448,8 +1448,8 @@ on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     GString *filelist = (GString *)data;
     gchar *name;
 
-    gtk_tree_model_get(tm, iter, SM_COLUMN_TITLE, &s, -1); 
-    /* can call on SM_COLUMN_TITLE cause s is consistent across all of
+    gtk_tree_model_get(tm, iter, TM_COLUMN_TITLE, &s, -1); 
+    /* can call on TM_COLUMN_TITLE cause s is consistent across all of
      * the columns */
     name = get_track_name_on_disk_verified (s);
     if (name)

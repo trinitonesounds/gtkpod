@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:15:30 jcs>
+/* Time-stamp: <2003-10-04 00:09:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -90,7 +90,7 @@ static void sp_remove_all_members (guint32 inst)
 
 /* Return a pointer to ti_created, ti_modified or ti_played. Returns
    NULL if either inst or item are out of range */
-static TimeInfo *st_get_timeinfo_ptr (guint32 inst, S_item item)
+static TimeInfo *st_get_timeinfo_ptr (guint32 inst, T_item item)
 {
     if (inst >= SORT_TAB_MAX)
     {
@@ -101,9 +101,9 @@ static TimeInfo *st_get_timeinfo_ptr (guint32 inst, S_item item)
 	SortTab *st = sorttab[inst];
 	switch (item)
 	{
-	case S_TIME_PLAYED:
+	case T_TIME_PLAYED:
 	    return &st->ti_played;
-	case S_TIME_MODIFIED:
+	case T_TIME_MODIFIED:
 	    return &st->ti_modified;
 	default:
 	    fprintf (stderr, "Programming error: st_get_timeinfo_ptr: item invalid: %d\n", item);
@@ -115,14 +115,14 @@ static TimeInfo *st_get_timeinfo_ptr (guint32 inst, S_item item)
 /* Update the date interval from the string provided by
    prefs_get_sp_entry() */
 /* @inst: instance
-   @item: S_TIME_PLAYED, or S_TIME_MODIFIED,
+   @item: T_TIME_PLAYED, or T_TIME_MODIFIED,
    @force_update: usually the update is only performed if the string
    has changed. TRUE will re-evaluate the string (and print an error
    message again, if necessary */
 /* Return value: pointer to the corresponding TimeInfo struct (for
    convenience) or NULL if error occured */
 TimeInfo *st_update_date_interval_from_string (guint32 inst,
-					       S_item item,
+					       T_item item,
 					       gboolean force_update)
 {
     SortTab *st;
@@ -157,12 +157,12 @@ TimeInfo *st_update_date_interval_from_string (guint32 inst,
  * IS_INSIDE:  track's timestamp is inside the specified interval
  * IS_OUTSIDE: track's timestamp is outside the specified interval
  */
-static IntervalState st_check_time (guint32 inst, S_item item, Track *track)
+static IntervalState st_check_time (guint32 inst, T_item item, Track *track)
 {
     TimeInfo *ti;
     IntervalState result = IS_ERROR;
 
-    ti = st_update_date_interval_from_string (inst, S_TIME_PLAYED, FALSE);
+    ti = st_update_date_interval_from_string (inst, T_TIME_PLAYED, FALSE);
     if (ti && ti->valid)
     {
 	guint32 stamp = track_get_timestamp (track, item);
@@ -174,10 +174,10 @@ static IntervalState st_check_time (guint32 inst, S_item item, Track *track)
     {
 	switch (item)
 	{
-	case S_TIME_PLAYED:
+	case T_TIME_PLAYED:
 	    gtkpod_statusbar_message (_("'Played' condition ignored because of error."));
 	    break;
-	case S_TIME_MODIFIED:
+	case T_TIME_MODIFIED:
 	    gtkpod_statusbar_message (_("'Modified' condition ignored because of error."));
 	    break;
 	default:
@@ -203,7 +203,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     else       result = TRUE;   /* AND */
 
     /* RATING */
-    if (prefs_get_sp_cond (inst, S_RATING))
+    if (prefs_get_sp_cond (inst, T_RATING))
     {
 	/* checked = TRUE: at least one condition was checked */
 	checked = TRUE;
@@ -217,7 +217,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     }
 
     /* PLAYCOUNT */
-    if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
+    if (prefs_get_sp_cond (inst, T_PLAYCOUNT))
     {
 	guint32 low = prefs_get_sp_playcount_low (inst);
 	/* "-1" will translate into about 4 billion because I use
@@ -233,17 +233,17 @@ static gboolean sp_check_track (Track *track, guint32 inst)
 	if ((!sp_or) && (!cond)) return FALSE;
     }
     /* time played */
-    if (prefs_get_sp_cond (inst, S_TIME_PLAYED))
+    if (prefs_get_sp_cond (inst, T_TIME_PLAYED))
     {
-	IntervalState result = st_check_time (inst, S_TIME_PLAYED, track);
+	IntervalState result = st_check_time (inst, T_TIME_PLAYED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
     }
     /* time modified */
-    if (prefs_get_sp_cond (inst, S_TIME_MODIFIED))
+    if (prefs_get_sp_cond (inst, T_TIME_MODIFIED))
     {
-	IntervalState result = st_check_time (inst, S_TIME_MODIFIED, track);
+	IntervalState result = st_check_time (inst, T_TIME_MODIFIED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
@@ -389,9 +389,9 @@ static void sp_store_sp_entries (gint inst)
     /* Sanity */
     if (!st || (st->current_category != ST_CAT_SPECIAL)) return;
 
-    prefs_set_sp_entry (inst, S_TIME_MODIFIED,
+    prefs_set_sp_entry (inst, T_TIME_MODIFIED,
 			gtk_entry_get_text (GTK_ENTRY(st->ti_modified.entry)));
-    prefs_set_sp_entry (inst, S_TIME_PLAYED,
+    prefs_set_sp_entry (inst, T_TIME_PLAYED,
 			gtk_entry_get_text (GTK_ENTRY(st->ti_played.entry)));
 }
 
@@ -818,9 +818,9 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
    selected category (page). Do _not_ g_free() the return value! */
 static gchar *st_get_entryname (Track *track, guint32 inst)
 {
-    S_item s_item = ST_to_S (sorttab[inst]->current_category);
+    T_item t_item = ST_to_T (sorttab[inst]->current_category);
 
-    return track_get_item_utf8 (track, s_item);
+    return track_get_item_utf8 (track, t_item);
 }
 
 
@@ -1709,9 +1709,9 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  for (i=0; i<n; ++i)
 	  {
 	      Track *track = (Track *)g_list_nth_data (members, i);
-	      S_item s_item = ST_to_S (sorttab[inst]->current_category);
-	      gchar **itemp_utf8 = track_get_item_pointer_utf8 (track, s_item);
-	      gunichar2 **itemp_utf16 = track_get_item_pointer_utf16(track, s_item);
+	      T_item t_item = ST_to_T (sorttab[inst]->current_category);
+	      gchar **itemp_utf8 = track_get_item_pointer_utf8 (track, t_item);
+	      gunichar2 **itemp_utf16 = track_get_item_pointer_utf16(track, t_item);
 	      g_free (*itemp_utf8);
 	      g_free (*itemp_utf16);
 	      *itemp_utf8 = g_strdup (new_text);
@@ -1721,11 +1721,11 @@ st_cell_edited (GtkCellRendererText *renderer,
 	      /* If prefs say to write changes to file, do so */
 	      if (prefs_get_id3_write ())
 	      {
-		  S_item tag_id;
+		  T_item tag_id;
 		  /* should we update all ID3 tags or just the one
 		     changed? */
-		  if (prefs_get_id3_writeall ()) tag_id = S_ALL;
-		  else		                 tag_id = s_item;
+		  if (prefs_get_id3_writeall ()) tag_id = T_ALL;
+		  else		                 tag_id = t_item;
 		  write_tags_to_file (track, tag_id);
 		  while (widgets_blocked && gtk_events_pending ())
 		      gtk_main_iteration ();
@@ -2093,9 +2093,9 @@ static void st_create_special (gint inst, GtkWidget *window)
       w = lookup_widget (special, "sp_rating_button");
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((S_RATING<<SP_SHIFT) + inst));
+			(gpointer)((T_RATING<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, S_RATING));
+				   prefs_get_sp_cond (inst, T_RATING));
       for (i=0; i<=RATING_MAX; ++i)
       {
 	  gchar *buf = g_strdup_printf ("sp_rating%d", i);
@@ -2112,9 +2112,9 @@ static void st_create_special (gint inst, GtkWidget *window)
       w = lookup_widget (special, "sp_playcount_button");
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((S_PLAYCOUNT<<SP_SHIFT) + inst));
+			(gpointer)((T_PLAYCOUNT<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, S_PLAYCOUNT));
+				   prefs_get_sp_cond (inst, T_PLAYCOUNT));
       w = lookup_widget (special, "sp_playcount_low");
       g_signal_connect ((gpointer)w,
 			"value_changed",
@@ -2135,42 +2135,42 @@ static void st_create_special (gint inst, GtkWidget *window)
       st->ti_played.active = w;
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((S_TIME_PLAYED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_PLAYED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, S_TIME_PLAYED));
+				   prefs_get_sp_cond (inst, T_TIME_PLAYED));
       w = lookup_widget (special, "sp_played_entry");
       st->ti_played.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
-			  prefs_get_sp_entry (inst, S_TIME_PLAYED));
+			  prefs_get_sp_entry (inst, T_TIME_PLAYED));
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
-			(gpointer)((S_TIME_PLAYED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_PLAYED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)lookup_widget (special,
 						 "sp_played_cal_button"),
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
-			(gpointer)((S_TIME_PLAYED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_PLAYED<<SP_SHIFT) + inst));
 
       /* MODIFIED */
       w = lookup_widget (special, "sp_modified_button");
       st->ti_modified.active = w;
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_MODIFIED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, S_TIME_MODIFIED));
+				   prefs_get_sp_cond (inst, T_TIME_MODIFIED));
       w = lookup_widget (special, "sp_modified_entry");
       st->ti_modified.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
-			  prefs_get_sp_entry (inst, S_TIME_MODIFIED));
+			  prefs_get_sp_entry (inst, T_TIME_MODIFIED));
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
-			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_MODIFIED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)lookup_widget (special,
 						 "sp_modified_cal_button"),
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
-			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_MODIFIED<<SP_SHIFT) + inst));
 
 
       g_signal_connect ((gpointer)lookup_widget (special, "sp_go"),
@@ -2670,13 +2670,13 @@ static struct tm *cal_get_time (GtkWidget *cal, MarginType type, struct tm *tm)
 }
 
 
-/* get the category (S_TIME_PLAYED or S_TIME_MODIFIED) selected in the
+/* get the category (T_TIME_PLAYED or T_TIME_MODIFIED) selected in the
  * combo */
-static S_item cal_get_category (GtkWidget *cal)
+static T_item cal_get_category (GtkWidget *cal)
 {
     const gchar *str;
     GtkWidget *w;
-    S_item item;
+    T_item item;
     gint i = -1;
 
     w = lookup_widget (cal, "cat_combo");
@@ -2688,15 +2688,15 @@ static S_item cal_get_category (GtkWidget *cal)
     switch (i)
     {
     case CAT_STRING_PLAYED:
-	item = S_TIME_PLAYED;
+	item = T_TIME_PLAYED;
 	break;
     case CAT_STRING_MODIFIED:
-	item = S_TIME_MODIFIED;
+	item = T_TIME_MODIFIED;
 	break;
     default:
 	fprintf (stderr, "Programming error: cal_get_category () -- item not found.\n");
 	/* set to something reasonable at least */
-	item = S_TIME_PLAYED;
+	item = T_TIME_PLAYED;
     }
     return item;
 }
@@ -2723,7 +2723,7 @@ static void cal_apply_data (GtkWidget *cal)
 {
     struct tm *lower, *upper;
     TimeInfo *ti;
-    S_item item;
+    T_item item;
     gint inst;
 
     lower = cal_get_time (cal, LOWER_MARGIN, NULL);
@@ -2856,7 +2856,7 @@ static void cal_ok (GtkButton *button, gpointer user_data)
 
 /* Open a calendar window. Preset the values for instance @inst,
    category @item (time played or time modified) */
-void cal_open_calendar (gint inst, S_item item)
+void cal_open_calendar (gint inst, T_item item)
 {
     SortTab *st;
     GtkWidget *w;
@@ -2895,7 +2895,7 @@ void cal_open_calendar (gint inst, S_item item)
     w = lookup_widget (cal, "cat_combo");
     gtk_combo_set_popdown_strings (GTK_COMBO (w), catlist); 
     /* set standard entry */
-    if (item == S_TIME_PLAYED)
+    if (item == T_TIME_PLAYED)
 	    str = gettext (cat_strings[CAT_STRING_PLAYED]);
     else    str = gettext (cat_strings[CAT_STRING_MODIFIED]);
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);

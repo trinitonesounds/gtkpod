@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:20:39 jcs>
+/* Time-stamp: <2003-10-04 00:18:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -310,7 +310,7 @@ on_track_treeview_drag_data_get         (GtkWidget       *widget,
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_sm_dnd_get_id_foreach, reply);
 	    break;
-	case DND_GTKPOD_SM_PATHLIST:
+	case DND_GTKPOD_TM_PATHLIST:
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_dnd_get_path_foreach, reply);
 	    break;
@@ -558,7 +558,7 @@ on_track_treeview_drag_data_received    (GtkWidget       *widget,
     {
 	switch (info)
 	{
-	case DND_GTKPOD_SM_PATHLIST:
+	case DND_GTKPOD_TM_PATHLIST:
 	    result = sm_move_pathlist (data->data, path, pos);
 	    break;
 	case DND_GTKPOD_IDLIST:
@@ -1191,7 +1191,7 @@ on_sp_cond_button_toggled            (GtkToggleButton *togglebutton,
 				      gpointer         user_data)
 {
     guint32 inst = (guint32)user_data & SP_MASK;
-    S_item cond = (guint32)user_data >> SP_SHIFT;
+    T_item cond = (guint32)user_data >> SP_SHIFT;
 
     prefs_set_sp_cond (inst, cond,
 		       gtk_toggle_button_get_active (togglebutton));
@@ -1207,7 +1207,7 @@ on_sp_rating_n_toggled                 (GtkToggleButton *togglebutton,
 
     prefs_set_sp_rating_n (inst, n,
 			   gtk_toggle_button_get_active (togglebutton));
-    if (prefs_get_sp_cond (inst, S_RATING))
+    if (prefs_get_sp_cond (inst, T_RATING))
 	sp_conditions_changed (inst);
 }
 
@@ -1217,7 +1217,7 @@ on_sp_entry_activate             (GtkEditable     *editable,
 				  gpointer         user_data)
 {
     guint32 inst = (guint32)user_data & SP_MASK;
-    S_item item = (guint32)user_data >> SP_SHIFT;
+    T_item item = (guint32)user_data >> SP_SHIFT;
     gchar *buf = gtk_editable_get_chars(editable,0, -1);
 
 /*    printf ("sp_entry_activate inst: %d, item: %d\n", inst, item);*/
@@ -1235,7 +1235,7 @@ on_sp_cal_button_clicked        (GtkButton       *button,
 				 gpointer         user_data)
 {
     guint32 inst = (guint32)user_data & SP_MASK;
-    S_item item = (guint32)user_data >> SP_SHIFT;
+    T_item item = (guint32)user_data >> SP_SHIFT;
 
     cal_open_calendar (inst, item);
 }
@@ -1270,7 +1270,7 @@ on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
 
     prefs_set_sp_playcount_low (inst,
 				gtk_spin_button_get_value (spinbutton));
-    if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
+    if (prefs_get_sp_cond (inst, T_PLAYCOUNT))
 	sp_conditions_changed (inst);
 }
 
@@ -1283,7 +1283,7 @@ on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
 
     prefs_set_sp_playcount_high (inst,
 				 gtk_spin_button_get_value (spinbutton));
-    if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
+    if (prefs_get_sp_cond (inst, T_PLAYCOUNT))
 	sp_conditions_changed (inst);
 }
 
@@ -1364,28 +1364,28 @@ void
 on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    generate_category_playlists (S_ARTIST);
+    generate_category_playlists (T_ARTIST);
 }
 
 void
 on_pl_for_each_album_activate         (GtkMenuItem     *menuitem,
 				       gpointer         user_data)
 {
-    generate_category_playlists (S_ALBUM);
+    generate_category_playlists (T_ALBUM);
 }
 
 void
 on_pl_for_each_genre_activate         (GtkMenuItem     *menuitem,
 				       gpointer         user_data)
 {
-    generate_category_playlists (S_GENRE);
+    generate_category_playlists (T_GENRE);
 }
 
 void
 on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
 					  gpointer         user_data)
 {
-    generate_category_playlists (S_COMPOSER);
+    generate_category_playlists (T_COMPOSER);
 }
 
 

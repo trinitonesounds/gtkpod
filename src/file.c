@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:25:41 jcs>
+/* Time-stamp: <2003-10-04 00:12:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -307,7 +307,7 @@ static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
   *entry_utf16 = g_utf8_to_utf16 (*entry_utf8, -1, NULL, NULL, NULL);
 }
 
-/* Set entry "column" (SM_COLUMN_TITLE etc) according to filename */
+/* Set entry "column" (TM_COLUMN_TITLE etc) according to filename */
 /* TODO: make the TAG extraction more intelligent -- if possible, this
    should be user configurable. */
 static void set_entry_from_filename (Track *track, gint column)
@@ -319,23 +319,23 @@ static void set_entry_from_filename (Track *track, gint column)
     {
 	switch (column)
 	{
-	case SM_COLUMN_TITLE:
+	case TM_COLUMN_TITLE:
 	    str = g_path_get_basename (track->pc_path_utf8);
 	    set_entry (&track->title, &track->title_utf16, str);
 	    break;
-	case SM_COLUMN_ALBUM:
+	case TM_COLUMN_ALBUM:
 	    str = g_path_get_basename (track->pc_path_utf8);
 	    set_entry (&track->album, &track->album_utf16, str);
 	    break;
-	case SM_COLUMN_ARTIST:
+	case TM_COLUMN_ARTIST:
 	    str = g_path_get_basename (track->pc_path_utf8);
 	    set_entry (&track->artist, &track->artist_utf16, str);
 	    break;
-	case SM_COLUMN_GENRE:
+	case TM_COLUMN_GENRE:
 	    str = g_path_get_basename (track->pc_path_utf8);
 	    set_entry (&track->genre, &track->genre_utf16, str);
 	    break;
-	case SM_COLUMN_COMPOSER:
+	case TM_COLUMN_COMPOSER:
 	    str = g_path_get_basename (track->pc_path_utf8);
 	    set_entry (&track->composer, &track->composer_utf16, str);
 	    break;
@@ -427,7 +427,7 @@ Track *get_track_info_from_file (gchar *name, Track *or_track)
 	    track->album = filetag.album;
 	    track->album_utf16 = g_utf8_to_utf16 (track->album, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (track, SM_COLUMN_ALBUM);
+	else set_entry_from_filename (track, TM_COLUMN_ALBUM);
 
 	C_FREE (track->artist);
 	C_FREE (track->artist_utf16);
@@ -436,7 +436,7 @@ Track *get_track_info_from_file (gchar *name, Track *or_track)
 	    track->artist = filetag.artist;
 	    track->artist_utf16 = g_utf8_to_utf16 (track->artist, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (track, SM_COLUMN_ARTIST);
+	else set_entry_from_filename (track, TM_COLUMN_ARTIST);
 
 	C_FREE (track->title);
 	C_FREE (track->title_utf16);
@@ -445,7 +445,7 @@ Track *get_track_info_from_file (gchar *name, Track *or_track)
 	    track->title = filetag.title;
 	    track->title_utf16 = g_utf8_to_utf16 (track->title, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (track, SM_COLUMN_TITLE);
+	else set_entry_from_filename (track, TM_COLUMN_TITLE);
 
 	C_FREE (track->genre);
 	C_FREE (track->genre_utf16);
@@ -454,7 +454,7 @@ Track *get_track_info_from_file (gchar *name, Track *or_track)
 	    track->genre = filetag.genre;
 	    track->genre_utf16 = g_utf8_to_utf16 (track->genre, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (track, SM_COLUMN_GENRE);
+	else set_entry_from_filename (track, TM_COLUMN_GENRE);
 
 	C_FREE (track->composer);
 	C_FREE (track->composer_utf16);
@@ -463,7 +463,7 @@ Track *get_track_info_from_file (gchar *name, Track *or_track)
 	    track->composer = filetag.composer;
 	    track->composer_utf16 = g_utf8_to_utf16 (track->composer, -1, NULL, NULL, NULL);
 	}
-	else set_entry_from_filename (track, SM_COLUMN_COMPOSER);
+	else set_entry_from_filename (track, TM_COLUMN_COMPOSER);
 
 	C_FREE (track->comment);
 	C_FREE (track->comment_utf16);
@@ -1374,8 +1374,8 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 
 /* Write changed tags to file.
    "tag_id": specify which tags should be changed (one of
-   S_... defined in track.h) */
-gboolean write_tags_to_file (Track *track, S_item tag_id)
+   T_... defined in track.h) */
+gboolean write_tags_to_file (Track *track, T_item tag_id)
 {
     File_Tag *filetag;
     gchar *ipod_fullpath, trackstring[20];
@@ -1404,19 +1404,19 @@ gboolean write_tags_to_file (Track *track, S_item tag_id)
     }
 
     filetag = g_malloc0 (sizeof (File_Tag));
-    if ((tag_id == S_ALL) || (tag_id == S_ALBUM))
+    if ((tag_id == T_ALL) || (tag_id == T_ALBUM))
 	filetag->album = track->album;
-    if ((tag_id == S_ALL) || (tag_id == S_ARTIST))
+    if ((tag_id == T_ALL) || (tag_id == T_ARTIST))
 	filetag->artist = track->artist;
-    if ((tag_id == S_ALL) || (tag_id == S_TITLE))
+    if ((tag_id == T_ALL) || (tag_id == T_TITLE))
 	filetag->title = track->title;
-    if ((tag_id == S_ALL) || (tag_id == S_GENRE))
+    if ((tag_id == T_ALL) || (tag_id == T_GENRE))
 	filetag->genre = track->genre;
-    if ((tag_id == S_ALL) || (tag_id == S_COMPOSER))
+    if ((tag_id == T_ALL) || (tag_id == T_COMPOSER))
 	filetag->composer = track->composer;
-    if ((tag_id == S_ALL) || (tag_id == S_COMMENT))
+    if ((tag_id == T_ALL) || (tag_id == T_COMMENT))
 	filetag->comment = track->comment;
-    if ((tag_id == S_ALL) || (tag_id == S_TRACK_NR))
+    if ((tag_id == T_ALL) || (tag_id == T_TRACK_NR))
     {
 	snprintf(trackstring, 20, "%d", track->track_nr);
 	filetag->trackstring = trackstring;

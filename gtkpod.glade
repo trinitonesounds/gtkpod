@@ -1848,7 +1848,7 @@
 			      <child>
 				<widget class="GtkCheckButton" id="cfg_update_charset">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used to update the track information. If you have chosen a wrong charset when first importing a track and want to correct it using the &quot;Update Track&quot; function, you must check this option. Note: the charset info is stored in the extended information file (see 'Sync' below) and tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used.</property>
+				  <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used to update the track information. If you have chosen a wrong charset when first importing a track and want to correct it using the 'Update Track' function, you must check this option. Note: the charset info is stored in the extended information file (see 'Writing of iTunesDB' below) and tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used then.</property>
 				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">Use selected charset also when updating
  or syncing tracks</property>
@@ -1949,7 +1949,7 @@
 			      <child>
 				<widget class="GtkCheckButton" id="cfg_update_existing">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">If the filename (full path) of an existing track matches that of a track to be added, this option allows you to update the information of the existing track rather than adding the track again. Please note that this option is different from the option above: duplicates are completely identical, having the same filename still allows for different ID3 tags. On export the updated track is copied to the iPod overwriting the old version.</property>
+				  <property name="tooltip" translatable="yes">If the filename (full path) of an existing track matches that of a track to be added, this option allows you to update the information of the existing track rather than adding the track again. Please note that this option is different from the option 'Don't allow file duplication' above: duplicates are completely identical, while having the same filename still allows for different ID3 tags. On export the updated track is copied to the iPod overwriting the old version.</property>
 				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">When adding dirs/files, update information of
  existing tracks with identical filenames</property>
@@ -2516,7 +2516,7 @@
 			      <child>
 				<widget class="GtkCheckButton" id="cfg_special_export_charset">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used to update the track information. If you set this option you can use the charset selector above to specify a charset instead. Note: the charset info is stored in the extended information file (see 'Sync' above). Tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used.</property>
+				  <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used for the filename. If you set this option you can set a different charset with the charset selector above ('Adding/Updating/Syncing'). Note: the charset info is stored in the extended information file (see 'Writing of the iTunesDB' above). Tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used.</property>
 				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">Use selected charset (see above: 'Adding/Updating/
  Syncing') also for this filename.</property>
@@ -3822,7 +3822,7 @@
 				  <child>
 				    <widget class="GtkCheckButton" id="cfg_write_charset">
 				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used to write the tags. If you have chosen a wrong charset when first importing a track, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see above) and tracks imported before V0.51 will have no charset stored -- the charset specified in the Input section will be used at first.</property>
+				      <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used to write the tags. If you have chosen a wrong charset when first importing a track, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see 'Writing of the iTunesDB' on the 'Input/Output' page) and tracks imported before V0.51 will have no charset stored -- the charset specified on the 'Input/Output' page will be used.</property>
 				      <property name="can_focus">True</property>
 				      <property name="label" translatable="yes">Use selected charset (on the 'Import' page)
  when writing tags</property>
@@ -3965,7 +3965,7 @@
 				  <child>
 				    <widget class="GtkSpinButton" id="cfg_misc_track_nr">
 				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">Number of tracks in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'. 0 means no limit</property>
+				      <property name="tooltip" translatable="yes">Number of tracks in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'. Choose '0' for 'no limit'.</property>
 				      <property name="can_focus">True</property>
 				      <property name="climb_rate">1</property>
 				      <property name="digits">0</property>

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:12:23 jcs>
+/* Time-stamp: <2003-10-04 00:04:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -133,28 +133,28 @@ typedef enum  {
    to this enum list. Therefore, if you change the order, you must
    also adjust the order of the sm_col_strings[] array. */
 typedef enum  {
-  SM_COLUMN_TITLE = 0,
-  SM_COLUMN_ARTIST,
-  SM_COLUMN_ALBUM,
-  SM_COLUMN_GENRE,
-  SM_COLUMN_COMPOSER,
-  SM_COLUMN_TRACK_NR,
-  SM_COLUMN_IPOD_ID,
-  SM_COLUMN_PC_PATH,
-  SM_COLUMN_TRANSFERRED,
-  SM_COLUMN_SIZE,
-  SM_COLUMN_TRACKLEN,
-  SM_COLUMN_BITRATE,
-  SM_COLUMN_PLAYCOUNT,
-  SM_COLUMN_RATING,
-  SM_COLUMN_TIME_PLAYED,
-  SM_COLUMN_TIME_MODIFIED,
-  SM_COLUMN_VOLUME,
-  SM_NUM_COLUMNS
-} SM_item;
+  TM_COLUMN_TITLE = 0,
+  TM_COLUMN_ARTIST,
+  TM_COLUMN_ALBUM,
+  TM_COLUMN_GENRE,
+  TM_COLUMN_COMPOSER,
+  TM_COLUMN_TRACK_NR,
+  TM_COLUMN_IPOD_ID,
+  TM_COLUMN_PC_PATH,
+  TM_COLUMN_TRANSFERRED,
+  TM_COLUMN_SIZE,
+  TM_COLUMN_TRACKLEN,
+  TM_COLUMN_BITRATE,
+  TM_COLUMN_PLAYCOUNT,
+  TM_COLUMN_RATING,
+  TM_COLUMN_TIME_PLAYED,
+  TM_COLUMN_TIME_MODIFIED,
+  TM_COLUMN_VOLUME,
+  TM_NUM_COLUMNS
+} TM_item;
 
 /* number of entries with "autoset empty tag to filename " feature */
-#define SM_NUM_TAGS_PREFS (5)
+#define TM_NUM_TAGS_PREFS (5)
 
 extern const gchar *sm_col_strings[];
 
@@ -167,7 +167,7 @@ enum  {
 /* Drag and drop types */
 enum {
     DND_GTKPOD_IDLIST = 1000,
-    DND_GTKPOD_SM_PATHLIST,
+    DND_GTKPOD_TM_PATHLIST,
     DND_GTKPOD_PM_PATHLIST,
     DND_TEXT_PLAIN
 };
@@ -205,7 +205,7 @@ void st_show_visible (void);
 void st_arrange_visible_sort_tabs (void);
 TabEntry *st_get_selected_entry (gint inst);
 
-void cal_open_calendar (gint inst, S_item item);
+void cal_open_calendar (gint inst, T_item item);
 void sp_go (guint32 inst);
 void sp_conditions_changed (guint32 inst);
 
@@ -222,7 +222,7 @@ void on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				GtkTreeIter *i, gpointer data);
 TimeInfo *st_update_date_interval_from_string (guint32 inst,
-					       S_item item,
+					       T_item item,
 					       gboolean force_update);
 void sm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter);
 guint sm_get_nr_of_tracks(void);
@@ -236,7 +236,7 @@ void sm_stop_editing (gboolean cancel);
 void sm_show_preferred_columns(void);
 void sm_store_col_order (void);
 
-void sm_sort (SM_item col, GtkSortType order);
+void sm_sort (TM_item col, GtkSortType order);
 GList* sm_get_selected_trackids(void);
 GList* sm_get_selected_tracks(void);
 GList* sm_get_all_trackids(void);

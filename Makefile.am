@@ -5,7 +5,8 @@ SUBDIRS = src po
 EXTRA_DIST = \
 	autogen.sh \
 	gtkpod.glade \
-	gtkpod.gladep
+	gtkpod.gladep \
+	TODOandBUGS.txt
 
 install-data-local:
 	@$(NORMAL_INSTALL)

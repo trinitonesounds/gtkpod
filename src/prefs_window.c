@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:20:40 jcs>
+/* Time-stamp: <2003-10-04 00:16:15 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -381,7 +381,7 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->mpl_autoselect);
 	}
-	for (i=0; i<SM_NUM_TAGS_PREFS; ++i)
+	for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
 	{
 	    gchar *buf;
 	    buf = g_strdup_printf ("tag_autoset%d", i);
@@ -399,7 +399,7 @@ prefs_window_create(void)
 	    }
 	    g_free (buf);
 	}
-	for (i=0; i<SM_NUM_COLUMNS; ++i)
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{
 	    gchar *buf;
 	    buf = g_strdup_printf ("col_visible%d", i);
@@ -492,10 +492,10 @@ prefs_window_set(void)
 	    prefs_set_st_autoselect (i, tmpcfg->st[i].autoselect);
 	    prefs_set_st_category (i, tmpcfg->st[i].category);
 	}
-	for (i=0; i<SM_NUM_TAGS_PREFS; ++i) {
+	for (i=0; i<TM_NUM_TAGS_PREFS; ++i) {
 	    prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
 	}
-	for (i=0; i<SM_NUM_COLUMNS; ++i)
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{
 	    prefs_set_col_visible (i, tmpcfg->col_visible[i]);
 	}
@@ -814,13 +814,13 @@ void prefs_window_set_mpl_autoselect (gboolean autoselect)
 
 void prefs_window_set_tag_autoset (gint category, gboolean autoset)
 {
-    if (category < SM_NUM_TAGS_PREFS)
+    if (category < TM_NUM_TAGS_PREFS)
 	tmpcfg->tag_autoset[category] = autoset;
 }
 
 void prefs_window_set_col_visible (gint column, gboolean visible)
 {
-    if (column < SM_NUM_COLUMNS)
+    if (column < TM_NUM_COLUMNS)
 	tmpcfg->col_visible[column] = visible;
 }
 
@@ -1049,9 +1049,9 @@ void sort_window_create (void)
 	/* Set Sort-Column-Combo */
 	/* create the list in the order of the columns displayed */
 	sm_store_col_order ();
-	for (i=0; i<SM_NUM_COLUMNS; ++i)
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{   /* first the visible columns */
-	    SM_item col = prefs_get_col_order (i);
+	    TM_item col = prefs_get_col_order (i);
 	    if (col != -1)
 	    {
 		if (prefs_get_col_visible (col))
@@ -1059,9 +1059,9 @@ void sort_window_create (void)
 					     gettext (sm_col_strings[col]));
 	    }
 	}
-	for (i=0; i<SM_NUM_COLUMNS; ++i)
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{   /* first the visible columns */
-	    SM_item col = prefs_get_col_order (i);
+	    TM_item col = prefs_get_col_order (i);
 	    if (col != -1)
 	    {
 		if (!prefs_get_col_visible (col))
@@ -1117,7 +1117,7 @@ void sort_window_show_hide_tooltips (void)
 
 
 /* get the sort_column selected in the combo */
-static SM_item sort_window_get_sort_col (void)
+static TM_item sort_window_get_sort_col (void)
 {
     const gchar *str;
     GtkWidget *w;
@@ -1129,12 +1129,12 @@ static SM_item sort_window_get_sort_col (void)
     if (str)
 	for (i=0; sm_col_strings[i]; ++i)
 	    if (strcmp (gettext (sm_col_strings[i]), str) == 0)  break;
-    if ((i<0) || (i>= SM_NUM_COLUMNS))
+    if ((i<0) || (i>= TM_NUM_COLUMNS))
     {
 	fprintf (stderr, 
 		 "Programming error: cal_get_category () -- item not found.\n");
 	/* set to something reasonable at least */
-	i = SM_COLUMN_TITLE;
+	i = TM_COLUMN_TITLE;
     }
 
     return i;

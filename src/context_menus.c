@@ -41,11 +41,11 @@ static guint entry_inst = -1;
 static GList *selected_tracks = NULL;
 static Playlist *selected_playlist = NULL;
 static TabEntry *selected_entry = NULL; 
-/* types of context menus (PM/ST/SM) */
+/* types of context menus (PM/ST/TM) */
 typedef enum {
     CM_PM = 0,
     CM_ST,
-    CM_SM,
+    CM_TM,
     CM_NUM
 } CM_type;
 
@@ -257,7 +257,7 @@ create_context_menu(CM_type type)
 	   context menu was activated, we should offer the following
 	   options to the track view context menu as well */
 
-	if ((type == CM_ST) || (type == CM_SM))
+	if ((type == CM_ST) || (type == CM_TM))
 	{
 	    hookup_mi (menu[type], _("Create Playlist"), "gtk-justify-left",
 		       G_CALLBACK (create_playlist_from_entries));
@@ -309,7 +309,7 @@ sm_context_menu_init(void)
     selected_tracks = sm_get_selected_tracks();
     if(selected_tracks)
     {
-	create_context_menu (CM_SM);
+	create_context_menu (CM_TM);
     }
 }
 /**

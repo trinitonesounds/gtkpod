@@ -1529,7 +1529,7 @@ create_prefs_window (void)
   cfg_update_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset also when updating\n or syncing tracks"));
   gtk_widget_show (cfg_update_charset);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_charset, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_update_charset, _("Normally the charset specified when first importing the track will be used to update the track information. If you have chosen a wrong charset when first importing a track and want to correct it using the \"Update Track\" function, you must check this option. Note: the charset info is stored in the extended information file (see 'Sync' below) and tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_update_charset, _("Normally the charset specified when first importing the track will be used to update the track information. If you have chosen a wrong charset when first importing a track and want to correct it using the 'Update Track' function, you must check this option. Note: the charset info is stored in the extended information file (see 'Writing of iTunesDB' below) and tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used then."), NULL);
 
   cfg_add_recursively = gtk_check_button_new_with_mnemonic (_("Add directories recursively"));
   gtk_widget_show (cfg_add_recursively);
@@ -1555,7 +1555,7 @@ create_prefs_window (void)
   cfg_update_existing = gtk_check_button_new_with_mnemonic (_("When adding dirs/files, update information of\n existing tracks with identical filenames"));
   gtk_widget_show (cfg_update_existing);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_existing, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_update_existing, _("If the filename (full path) of an existing track matches that of a track to be added, this option allows you to update the information of the existing track rather than adding the track again. Please note that this option is different from the option above: duplicates are completely identical, having the same filename still allows for different ID3 tags. On export the updated track is copied to the iPod overwriting the old version."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_update_existing, _("If the filename (full path) of an existing track matches that of a track to be added, this option allows you to update the information of the existing track rather than adding the track again. Please note that this option is different from the option 'Don't allow file duplication' above: duplicates are completely identical, while having the same filename still allows for different ID3 tags. On export the updated track is copied to the iPod overwriting the old version."), NULL);
 
   table1 = gtk_table_new (2, 1, FALSE);
   gtk_widget_show (table1);
@@ -1714,7 +1714,7 @@ create_prefs_window (void)
   cfg_special_export_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (see above: 'Adding/Updating/\n Syncing') also for this filename."));
   gtk_widget_show (cfg_special_export_charset);
   gtk_box_pack_start (GTK_BOX (vbox50), cfg_special_export_charset, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_special_export_charset, _("Normally the charset specified when first importing the track will be used to update the track information. If you set this option you can use the charset selector above to specify a charset instead. Note: the charset info is stored in the extended information file (see 'Sync' above). Tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_special_export_charset, _("Normally the charset specified when first importing the track will be used for the filename. If you set this option you can set a different charset with the charset selector above ('Adding/Updating/Syncing'). Note: the charset info is stored in the extended information file (see 'Writing of the iTunesDB' above). Tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used."), NULL);
 
   label72 = gtk_label_new (_("Copying from iPod"));
   gtk_widget_show (label72);
@@ -2081,7 +2081,7 @@ create_prefs_window (void)
   gtk_table_attach (GTK_TABLE (table3), cfg_write_charset, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 20, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_write_charset, _("Normally the charset specified when first importing the track will be used to write the tags. If you have chosen a wrong charset when first importing a track, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see above) and tracks imported before V0.51 will have no charset stored -- the charset specified in the Input section will be used at first."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_write_charset, _("Normally the charset specified when first importing the track will be used to write the tags. If you have chosen a wrong charset when first importing a track, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see 'Writing of the iTunesDB' on the 'Input/Output' page) and tracks imported before V0.51 will have no charset stored -- the charset specified on the 'Input/Output' page will be used."), NULL);
 
   cfg_multi_edit = gtk_check_button_new_with_mnemonic (_("Use 'Multi-Edit' for track selections"));
   gtk_widget_show (cfg_multi_edit);
@@ -2123,7 +2123,7 @@ create_prefs_window (void)
   gtk_table_attach (GTK_TABLE (table8), cfg_misc_track_nr, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_misc_track_nr, _("Number of tracks in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'. 0 means no limit"), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_misc_track_nr, _("Number of tracks in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'. Choose '0' for 'no limit'."), NULL);
 
   label68 = gtk_label_new (_(" Number of tracks in generated playlists: "));
   gtk_widget_show (label68);

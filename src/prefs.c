@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:09:15 jcs>
+/* Time-stamp: <2003-10-04 00:15:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -204,23 +204,23 @@ struct cfg *cfg_new(void)
     mycfg->size_dirbr.y = 400;
     mycfg->size_prefs.x = -1;
     mycfg->size_prefs.y = 480;
-    for (i=0; i<SM_NUM_COLUMNS; ++i)
+    for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	mycfg->sm_col_width[i] = 80;
 	mycfg->col_visible[i] = FALSE;
 	mycfg->col_order[i] = i;
     }
-    mycfg->col_visible[SM_COLUMN_ARTIST] = TRUE;
-    mycfg->col_visible[SM_COLUMN_ALBUM] = TRUE;
-    mycfg->col_visible[SM_COLUMN_TITLE] = TRUE;
-    mycfg->col_visible[SM_COLUMN_GENRE] = TRUE;
-    mycfg->col_visible[SM_COLUMN_PLAYCOUNT] = TRUE;
-    mycfg->col_visible[SM_COLUMN_RATING] = TRUE;
-    for (i=0; i<SM_NUM_TAGS_PREFS; ++i)
+    mycfg->col_visible[TM_COLUMN_ARTIST] = TRUE;
+    mycfg->col_visible[TM_COLUMN_ALBUM] = TRUE;
+    mycfg->col_visible[TM_COLUMN_TITLE] = TRUE;
+    mycfg->col_visible[TM_COLUMN_GENRE] = TRUE;
+    mycfg->col_visible[TM_COLUMN_PLAYCOUNT] = TRUE;
+    mycfg->col_visible[TM_COLUMN_RATING] = TRUE;
+    for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
     {
 	mycfg->tag_autoset[i] = FALSE;
     }
-    mycfg->tag_autoset[SM_COLUMN_TITLE] = TRUE;
+    mycfg->tag_autoset[TM_COLUMN_TITLE] = TRUE;
     for (i=0; i<PANED_NUM; ++i)
     {
 	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
@@ -252,7 +252,7 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.st_sort = SORT_NONE;
     mycfg->sortcfg.sm_sort = SORT_NONE;
-    mycfg->sortcfg.sm_sortcol = SM_COLUMN_TITLE;
+    mycfg->sortcfg.sm_sortcol = TM_COLUMN_TITLE;
     mycfg->sortcfg.pm_autostore = FALSE;
     mycfg->sortcfg.sm_autostore = FALSE;
     mycfg->sortcfg.case_sensitive = FALSE;
@@ -373,22 +373,22 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strncasecmp (line, "sp_rating_cond", 14) == 0)
 	  {
 	      gint i = atoi (line+14);
-	      prefs_set_sp_cond (i, S_RATING, atoi (arg));
+	      prefs_set_sp_cond (i, T_RATING, atoi (arg));
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_playcount_cond", 17) == 0)
 	  {
 	      gint i = atoi (line+17);
-	      prefs_set_sp_cond (i, S_PLAYCOUNT, atoi (arg));
+	      prefs_set_sp_cond (i, T_PLAYCOUNT, atoi (arg));
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_played_cond", 14) == 0)
 	  {
 	      gint i = atoi (line+14);
-	      prefs_set_sp_cond (i, S_TIME_PLAYED, atoi (arg));
+	      prefs_set_sp_cond (i, T_TIME_PLAYED, atoi (arg));
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_modified_cond", 16) == 0)
 	  {
 	      gint i = atoi (line+16);
-	      prefs_set_sp_cond (i, S_TIME_MODIFIED, atoi (arg));
+	      prefs_set_sp_cond (i, T_TIME_MODIFIED, atoi (arg));
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_rating_state", 15) == 0)
 	  {
@@ -408,12 +408,12 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strncasecmp (line, "sp_played_state", 15) == 0)
 	  {
 	      gint i = atoi (line+15);
-	      prefs_set_sp_entry (i, S_TIME_PLAYED, arg);
+	      prefs_set_sp_entry (i, T_TIME_PLAYED, arg);
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_modified_state", 17) == 0)
 	  {
 	      gint i = atoi (line+17);
-	      prefs_set_sp_entry (i, S_TIME_MODIFIED, arg);
+	      prefs_set_sp_entry (i, T_TIME_MODIFIED, arg);
 	  }      
 	  else if(g_ascii_strncasecmp (line, "sp_autodisplay", 14) == 0)
 	  {
@@ -824,15 +824,15 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
 	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
 	fprintf(fp, "sp_or%d=%d\n", i, prefs_get_sp_or (i));
-	fprintf(fp, "sp_rating_cond%d=%d\n", i, prefs_get_sp_cond (i, S_RATING));
+	fprintf(fp, "sp_rating_cond%d=%d\n", i, prefs_get_sp_cond (i, T_RATING));
 	fprintf(fp, "sp_rating_state%d=%d\n", i, prefs_get_sp_rating_state(i));
-	fprintf(fp, "sp_playcount_cond%d=%d\n", i, prefs_get_sp_cond (i, S_PLAYCOUNT));
+	fprintf(fp, "sp_playcount_cond%d=%d\n", i, prefs_get_sp_cond (i, T_PLAYCOUNT));
 	fprintf(fp, "sp_playcount_low%d=%d\n", i, prefs_get_sp_playcount_low (i));
 	fprintf(fp, "sp_playcount_high%d=%d\n", i, prefs_get_sp_playcount_high (i));
-	fprintf(fp, "sp_played_cond%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_PLAYED));
-	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, S_TIME_PLAYED));
-	fprintf(fp, "sp_modified_cond%d=%d\n", i, prefs_get_sp_cond (i, S_TIME_MODIFIED));
-	fprintf(fp, "sp_modified_state%d=%s\n", i, prefs_get_sp_entry (i, S_TIME_MODIFIED));
+	fprintf(fp, "sp_played_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_PLAYED));
+	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_PLAYED));
+	fprintf(fp, "sp_modified_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_MODIFIED));
+	fprintf(fp, "sp_modified_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_MODIFIED));
 	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
     }
     fprintf(fp, _("# autoselect master playlist?\n"));
@@ -840,12 +840,12 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# title=0, artist, album, genre, composer\n"));
     fprintf(fp, _("# track_nr=5, ipod_id, pc_path, transferred\n"));
     fprintf(fp, _("# autoset: set empty tag to filename?\n"));
-    for (i=0; i<SM_NUM_COLUMNS; ++i)
+    for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	fprintf(fp, "sm_col_width%d=%d\n", i, prefs_get_sm_col_width (i));
 	fprintf(fp, "col_visible%d=%d\n",  i, prefs_get_col_visible (i));
 	fprintf(fp, "col_order%d=%d\n",  i, prefs_get_col_order (i));
-	if (i < SM_NUM_TAGS_PREFS)
+	if (i < TM_NUM_TAGS_PREFS)
 	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_tag_autoset (i));
     }	
     fprintf(fp, _("# position of sliders (paned): playlists, above tracks,\n# between sort tabs, and in statusbar.\n"));
@@ -1282,20 +1282,20 @@ void prefs_set_mpl_autoselect (gboolean autoselect)
 
 
 /* retrieve the width of the track display columns. "col": one of the
-   SM_COLUMN_... */
+   TM_COLUMN_... */
 gint prefs_get_sm_col_width (gint col)
 {
-    if (col < SM_NUM_COLUMNS && (cfg->sm_col_width[col] > 0))
+    if (col < TM_NUM_COLUMNS && (cfg->sm_col_width[col] > 0))
 	return cfg->sm_col_width[col];
     return 80;  /* default -- col should be smaller than
-		   SM_NUM_COLUMNS) */
+		   TM_NUM_COLUMNS) */
 }
 
 /* set the width of the track display columns. "col": one of the
-   SM_COLUMN_..., "width": current width */
+   TM_COLUMN_..., "width": current width */
 void prefs_set_sm_col_width (gint col, gint width)
 {
-    if (col < SM_NUM_COLUMNS && width > 0)
+    if (col < TM_NUM_COLUMNS && width > 0)
 	cfg->sm_col_width[col] = width;
 }
 
@@ -1429,51 +1429,51 @@ void prefs_get_size_prefs (gint *x, gint *y)
 
 
 /* Should empty tags be set to filename? -- "category": one of the
-   SM_COLUMN_..., "autoset": new value */
+   TM_COLUMN_..., "autoset": new value */
 void prefs_set_tag_autoset (gint category, gboolean autoset)
 {
-    if (category < SM_NUM_TAGS_PREFS)
+    if (category < TM_NUM_TAGS_PREFS)
 	cfg->tag_autoset[category] = autoset;
 }
 
 
 /* Should empty tags be set to filename? -- "category": one of the
-   SM_COLUMN_... */
+   TM_COLUMN_... */
 gboolean prefs_get_tag_autoset (gint category)
 {
-    if (category < SM_NUM_TAGS_PREFS)
+    if (category < TM_NUM_TAGS_PREFS)
 	return cfg->tag_autoset[category];
     return FALSE;
 }
 
 /* Display column sm_item @visible: new value */
-void prefs_set_col_visible (SM_item sm_item, gboolean visible)
+void prefs_set_col_visible (TM_item sm_item, gboolean visible)
 {
-    if (sm_item < SM_NUM_COLUMNS)
+    if (sm_item < TM_NUM_COLUMNS)
 	cfg->col_visible[sm_item] = visible;
 }
 
 
 /* Display column sm_item? */
-gboolean prefs_get_col_visible (SM_item sm_item)
+gboolean prefs_get_col_visible (TM_item sm_item)
 {
-    if (sm_item < SM_NUM_COLUMNS)
+    if (sm_item < TM_NUM_COLUMNS)
 	return cfg->col_visible[sm_item];
     return FALSE;
 }
 
 /* Display which column at nr @pos? */
-void prefs_set_col_order (gint pos, SM_item sm_item)
+void prefs_set_col_order (gint pos, TM_item sm_item)
 {
-    if (pos < SM_NUM_COLUMNS)
+    if (pos < TM_NUM_COLUMNS)
 	cfg->col_order[pos] = sm_item;
 }
 
 
 /* Display column nr @pos? */
-SM_item prefs_get_col_order (gint pos)
+TM_item prefs_get_col_order (gint pos)
 {
-    if (pos < SM_NUM_COLUMNS)
+    if (pos < TM_NUM_COLUMNS)
 	return cfg->col_order[pos];
     return -1;
 }
@@ -1737,14 +1737,14 @@ void prefs_set_sm_sort (gint i)
     cfg->sortcfg.sm_sort = i;
 }
 
-SM_item prefs_get_sm_sortcol (void)
+TM_item prefs_get_sm_sortcol (void)
 {
     return cfg->sortcfg.sm_sortcol;
 }
 
-void prefs_set_sm_sortcol (SM_item i)
+void prefs_set_sm_sortcol (TM_item i)
 {
-    if (i < SM_NUM_COLUMNS)
+    if (i < TM_NUM_COLUMNS)
 	cfg->sortcfg.sm_sortcol = i;
 }
 
@@ -1930,68 +1930,68 @@ gboolean prefs_get_sp_or (guint32 inst)
     return FALSE;
 }
 
-/* Set whether condition @s_item in sort tab @inst is activated or not */
-void prefs_set_sp_cond (guint32 inst, S_item s_item, gboolean state)
+/* Set whether condition @t_item in sort tab @inst is activated or not */
+void prefs_set_sp_cond (guint32 inst, T_item t_item, gboolean state)
 {
     if (inst < SORT_TAB_MAX)
     {
-	switch (s_item)
+	switch (t_item)
 	{
-	case S_RATING:
+	case T_RATING:
 	    cfg->st[inst].sp_rating = state;
 	    break;
-	case S_PLAYCOUNT:
+	case T_PLAYCOUNT:
 	    cfg->st[inst].sp_playcount = state;
 	    break;
-	case S_TIME_PLAYED:
+	case T_TIME_PLAYED:
 	    cfg->st[inst].sp_played = state;
 	    break;
-	case S_TIME_MODIFIED:
+	case T_TIME_MODIFIED:
 	    cfg->st[inst].sp_modified = state;
 	    break;
 	default:
 	    /* programming error */
-	    fprintf (stderr, "prefs_set_sp_cond(): inst=%d, !s_item=%d!\n",
-		     inst, s_item);
+	    fprintf (stderr, "prefs_set_sp_cond(): inst=%d, !t_item=%d!\n",
+		     inst, t_item);
 	    break;
 	}
     }
     else
     {
 	/* programming error */
-	fprintf (stderr, "prefs_set_sp_cond(): !inst=%d! s_item=%d\n",
-		 inst, s_item);
+	fprintf (stderr, "prefs_set_sp_cond(): !inst=%d! t_item=%d\n",
+		 inst, t_item);
     }
 }
 
 
-/* Set whether condition @s_item in sort tab @inst is activated or not */
-gboolean prefs_get_sp_cond (guint32 inst, S_item s_item)
+/* Set whether condition @t_item in sort tab @inst is activated or not */
+gboolean prefs_get_sp_cond (guint32 inst, T_item t_item)
 {
     if (inst < SORT_TAB_MAX)
     {
-	switch (s_item)
+	switch (t_item)
 	{
-	case S_RATING:
+	case T_RATING:
 	    return cfg->st[inst].sp_rating;
-	case S_PLAYCOUNT:
+	case T_PLAYCOUNT:
 	    return cfg->st[inst].sp_playcount;
-	case S_TIME_PLAYED:
+	case T_TIME_PLAYED:
 	    return cfg->st[inst].sp_played;
-	case S_TIME_MODIFIED:
+	case T_TIME_MODIFIED:
 	    return cfg->st[inst].sp_modified;
 	default:
 	    /* programming error */
-	    fprintf (stderr, "prefs_get_sp_cond(): inst=%d !s_item=%d!\n",
-		     inst, s_item);
+	    fprintf (stderr, "prefs_get_sp_cond(): inst=%d !t_item=%d!\n",
+		     inst, t_item);
 	    break;
 	}
     }
     else
     {
 	/* programming error */
-	fprintf (stderr, "prefs_get_sp_cond(): !inst=%d! s_item=%d\n",
-		 inst, s_item);
+	fprintf (stderr, "prefs_get_sp_cond(): !inst=%d! t_item=%d\n",
+		 inst, t_item);
     }
     return FALSE;
 }
@@ -2044,61 +2044,61 @@ guint32 prefs_get_sp_rating_state (guint32 inst)
 }
 
 
-void prefs_set_sp_entry (guint32 inst, S_item s_item, const gchar *str)
+void prefs_set_sp_entry (guint32 inst, T_item t_item, const gchar *str)
 {
-/*    printf("psse: %d, %d, %s\n", inst, s_item, str);*/
+/*    printf("psse: %d, %d, %s\n", inst, t_item, str);*/
     if (inst < SORT_TAB_MAX)
     {
 	gchar *cstr = NULL;
 
 	if (str)  cstr = g_strdup (str);
 
-	switch (s_item)
+	switch (t_item)
 	{
-	case S_TIME_PLAYED:
+	case T_TIME_PLAYED:
 	    g_free (cfg->st[inst].sp_played_state);
 	    cfg->st[inst].sp_played_state = cstr;
 	    break;
-	case S_TIME_MODIFIED:
+	case T_TIME_MODIFIED:
 	    g_free (cfg->st[inst].sp_modified_state);
 	    cfg->st[inst].sp_modified_state = cstr;
 	    break;
 	default:
 	    /* programming error */
 	    g_free (cstr);
-	    fprintf (stderr, "prefs_set_sp_entry(): inst=%d !s_item=%d!\n",
-		     inst, s_item);
+	    fprintf (stderr, "prefs_set_sp_entry(): inst=%d !t_item=%d!\n",
+		     inst, t_item);
 	    break;
 	}
     }
     else
     {
 	/* programming error */
-	fprintf (stderr, "prefs_set_sp_entry(): !inst=%d! s_item=%d\n",
-		 inst, s_item);
+	fprintf (stderr, "prefs_set_sp_entry(): !inst=%d! t_item=%d\n",
+		 inst, t_item);
     }
 }
 
 
 /* Returns the current default or a pointer to "". Guaranteed to never
    return NULL */
-gchar *prefs_get_sp_entry (guint32 inst, S_item s_item)
+gchar *prefs_get_sp_entry (guint32 inst, T_item t_item)
 {
     gchar *result = NULL;
 
     if (inst < SORT_TAB_MAX)
     {
-	switch (s_item)
+	switch (t_item)
 	{
-	case S_TIME_PLAYED:
+	case T_TIME_PLAYED:
 	    result = cfg->st[inst].sp_played_state;
 	    break;
-	case S_TIME_MODIFIED:
+	case T_TIME_MODIFIED:
 	    result = cfg->st[inst].sp_modified_state;
 	    break;
 	default:
 	    /* programming error */
-	    fprintf (stderr, "prefs_get_sp_entry(): !s_item=%d!\n", s_item);
+	    fprintf (stderr, "prefs_get_sp_entry(): !t_item=%d!\n", t_item);
 	    break;
 	}
     }
