@@ -681,6 +681,17 @@ create_prefs_window (void)
   GtkWidget *cfg_mount_point;
   GtkWidget *cfg_md5songs;
   GtkWidget *cfg_writeid3;
+  GtkWidget *frame2;
+  GtkWidget *hbox2;
+  GtkWidget *vbox4;
+  GtkWidget *cfg_song_list_all;
+  GtkWidget *cfg_song_list_artist;
+  GtkWidget *cfg_song_list_album;
+  GtkWidget *vbox5;
+  GtkWidget *cfg_song_list_genre;
+  GtkWidget *cfg_song_list_track;
+  GtkWidget *cfg_song_list_year;
+  GtkWidget *label18;
   GtkWidget *hbuttonbox3;
   GtkWidget *button6;
   GtkWidget *button7;
@@ -719,6 +730,51 @@ create_prefs_window (void)
   gtk_widget_show (cfg_writeid3);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_writeid3, FALSE, FALSE, 0);
 
+  frame2 = gtk_frame_new (NULL);
+  gtk_widget_show (frame2);
+  gtk_box_pack_start (GTK_BOX (vbox3), frame2, TRUE, TRUE, 0);
+
+  hbox2 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox2);
+  gtk_container_add (GTK_CONTAINER (frame2), hbox2);
+
+  vbox4 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox4);
+  gtk_box_pack_start (GTK_BOX (hbox2), vbox4, TRUE, TRUE, 0);
+
+  cfg_song_list_all = gtk_check_button_new_with_mnemonic (_("All Song Attributes"));
+  gtk_widget_show (cfg_song_list_all);
+  gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_all, FALSE, FALSE, 0);
+
+  cfg_song_list_artist = gtk_check_button_new_with_mnemonic (_("Artist"));
+  gtk_widget_show (cfg_song_list_artist);
+  gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_artist, FALSE, FALSE, 0);
+
+  cfg_song_list_album = gtk_check_button_new_with_mnemonic (_("Album"));
+  gtk_widget_show (cfg_song_list_album);
+  gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_album, FALSE, FALSE, 0);
+
+  vbox5 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox5);
+  gtk_box_pack_start (GTK_BOX (hbox2), vbox5, TRUE, TRUE, 0);
+
+  cfg_song_list_genre = gtk_check_button_new_with_mnemonic (_("Genre"));
+  gtk_widget_show (cfg_song_list_genre);
+  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_genre, FALSE, FALSE, 0);
+
+  cfg_song_list_track = gtk_check_button_new_with_mnemonic (_("Track Number"));
+  gtk_widget_show (cfg_song_list_track);
+  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_track, FALSE, FALSE, 0);
+
+  cfg_song_list_year = gtk_check_button_new_with_mnemonic (_("Year"));
+  gtk_widget_show (cfg_song_list_year);
+  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_year, FALSE, FALSE, 0);
+
+  label18 = gtk_label_new (_("Displayed Song Attributes"));
+  gtk_widget_show (label18);
+  gtk_frame_set_label_widget (GTK_FRAME (frame2), label18);
+  gtk_label_set_justify (GTK_LABEL (label18), GTK_JUSTIFY_LEFT);
+
   hbuttonbox3 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox3);
   gtk_box_pack_start (GTK_BOX (vbox3), hbuttonbox3, FALSE, TRUE, 0);
@@ -751,6 +807,24 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_writeid3, "toggled",
                     G_CALLBACK (on_cfg_writeid3_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_song_list_all, "toggled",
+                    G_CALLBACK (on_cfg_song_list_all_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_song_list_artist, "toggled",
+                    G_CALLBACK (on_cfg_song_list_artist_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_song_list_album, "toggled",
+                    G_CALLBACK (on_cfg_song_list_album_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_song_list_genre, "toggled",
+                    G_CALLBACK (on_cfg_song_list_genre_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_song_list_track, "toggled",
+                    G_CALLBACK (on_cfg_song_list_track_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_song_list_year, "toggled",
+                    G_CALLBACK (on_cfg_song_list_year_toggled),
+                    NULL);
   g_signal_connect ((gpointer) button6, "clicked",
                     G_CALLBACK (on_prefs_ok_clicked),
                     NULL);
@@ -767,6 +841,17 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_mount_point, "cfg_mount_point");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5songs, "cfg_md5songs");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_writeid3, "cfg_writeid3");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame2, "frame2");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox2, "hbox2");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox4, "vbox4");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_all, "cfg_song_list_all");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_artist, "cfg_song_list_artist");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_album, "cfg_song_list_album");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox5, "vbox5");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_genre, "cfg_song_list_genre");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_track, "cfg_song_list_track");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_year, "cfg_song_list_year");
+  GLADE_HOOKUP_OBJECT (prefs_window, label18, "label18");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox3, "hbuttonbox3");
   GLADE_HOOKUP_OBJECT (prefs_window, button6, "button6");
   GLADE_HOOKUP_OBJECT (prefs_window, button7, "button7");

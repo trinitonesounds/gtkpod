@@ -373,3 +373,44 @@ on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
     prefs_window_create(); 
 }
 
+void
+on_cfg_song_list_all_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_song_list_all(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
+on_cfg_song_list_artist_toggled        (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_song_list_artist(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
+on_cfg_song_list_album_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_song_list_album(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
+on_cfg_song_list_genre_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_song_list_genre(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
+on_cfg_song_list_track_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_song_list_track(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
+on_cfg_song_list_year_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_song_list_year(gtk_toggle_button_get_active(togglebutton));
+}

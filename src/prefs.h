@@ -32,11 +32,26 @@
 
 #include <gtk/gtk.h>
 
+/* m
+enum {
+    OPT_SHOW_DEFAULT=	0,
+    OPT_SHOW_ARTIST = (1 << 0),
+    OPT_SHOW_ALBUM  = (1 << 1),
+    OPT_SHOW_YEAR   = (1 << 2),
+    OPT_SHOW_TRACK  = (1 << 3),
+    OPT_SHOW_GENRE  = (1 << 4),
+    OPT_SHOW_ALL    = (1 << 5)	
+};
+*/
+
 struct cfg
 {
   gchar    *ipod_mount;   /* mount point of iPod */
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */	
+  struct {
+      gboolean artist, album, year, track, genre;
+  } song_list_show; /* what columns are displayed in the song list */	
   /* last directories used by the fileselections */
   struct {
       gchar *dir_browse, *file_browse;
@@ -53,6 +68,7 @@ enum {
 
 extern struct cfg *cfg;
 
+void prefs_print(void);
 gboolean read_prefs (int argc, char *argv[]);
 void cfg_free(struct cfg *c);
 void write_prefs (void);
@@ -62,5 +78,19 @@ void prefs_set_md5songs_active(gboolean active);
 void prefs_set_writeid3_active(gboolean active);
 void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
 void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
+
+void prefs_set_song_list_show_all(gboolean val);
+void prefs_set_song_list_show_year(gboolean val);
+void prefs_set_song_list_show_track(gboolean val);
+void prefs_set_song_list_show_genre(gboolean val);
+void prefs_set_song_list_show_album(gboolean val);
+void prefs_set_song_list_show_artist(gboolean val);
+
+gboolean prefs_get_song_list_show_all(void);
+gboolean prefs_get_song_list_show_year(void);
+gboolean prefs_get_song_list_show_album(void);
+gboolean prefs_get_song_list_show_track(void);
+gboolean prefs_get_song_list_show_genre(void);
+gboolean prefs_get_song_list_show_artist(void);
 
 #endif __PREFS_H__

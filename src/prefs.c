@@ -27,6 +27,7 @@
 #  include <config.h>
 #endif
 
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -53,7 +54,7 @@ struct cfg*
 cfg_new(void)
 {
     struct cfg *mycfg = NULL;
-    gchar buf[PATH_MAX];
+    gchar buf[PATH_MAX], *str;
 
     mycfg = g_malloc0 (sizeof (struct cfg));
     memset(mycfg, 0, sizeof(struct cfg));
@@ -67,8 +68,15 @@ cfg_new(void)
 	mycfg->last_dir.dir_browse = g_strdup ("~/");
 	mycfg->last_dir.file_browse = g_strdup ("~/");
     }
-    mycfg->ipod_mount = g_strdup ("/mnt/ipod");
-    mycfg->writeid3 = mycfg->md5songs = FALSE;
+    if((str = getenv("IPOD_MOUNTPOINT")))
+    {
+	snprintf(buf, PATH_MAX, "%s", str);
+	mycfg->ipod_mount = g_strdup_printf("%s/", buf);
+    }
+    else
+    {
+	mycfg->ipod_mount = g_strdup ("/mnt");
+    }
     return(mycfg);
 }
 
@@ -132,6 +140,7 @@ void write_prefs (void)
 void discard_prefs ()
 {
     cfg_free(cfg);
+    cfg = NULL;
 }
 
 void cfg_free(struct cfg *c)
@@ -198,4 +207,144 @@ void prefs_set_md5songs_active(gboolean active)
 void prefs_set_writeid3_active(gboolean active)
 {
     cfg->writeid3 = active;
+}
+
+/* song list opts */
+void 
+prefs_set_song_list_show_all(gboolean val)
+{
+
+    if(val)
+    {
+	cfg->song_list_show.artist = TRUE;
+	cfg->song_list_show.album = TRUE;
+	cfg->song_list_show.year= TRUE;
+	cfg->song_list_show.track = TRUE;
+	cfg->song_list_show.genre = TRUE;
+    }
+    else
+    {
+	cfg->song_list_show.artist = FALSE;
+	cfg->song_list_show.album = FALSE;
+	cfg->song_list_show.year= FALSE;
+	cfg->song_list_show.track = FALSE;
+	cfg->song_list_show.genre = FALSE;
+    }
+}
+
+void 
+prefs_set_song_list_show_artist(gboolean val)
+{
+    cfg->song_list_show.artist = val;
+}
+
+void 
+prefs_set_song_list_show_album(gboolean val)
+{
+    cfg->song_list_show.album = val;
+}
+void 
+prefs_set_song_list_show_year(gboolean val)
+{
+    cfg->song_list_show.year = val;
+}
+void 
+prefs_set_song_list_show_track(gboolean val)
+{
+    cfg->song_list_show.track = val;
+}
+void 
+prefs_set_song_list_show_genre(gboolean val)
+{
+    cfg->song_list_show.genre = val;
+}
+gboolean 
+prefs_get_song_list_show_all(void)
+{
+    if((cfg->song_list_show.artist == FALSE) &&
+	(cfg->song_list_show.album == FALSE) &&
+	(cfg->song_list_show.year == FALSE) &&
+	(cfg->song_list_show.track == FALSE) &&
+	(cfg->song_list_show.genre == FALSE))
+	return(TRUE);
+    else
+	return(FALSE);
+}
+gboolean 
+prefs_get_song_list_show_artist(void)
+{
+    return(cfg->song_list_show.artist);
+}
+gboolean 
+prefs_get_song_list_show_album(void)
+{
+    return(cfg->song_list_show.album);
+}
+gboolean 
+prefs_get_song_list_show_year(void)
+{
+    return(cfg->song_list_show.year);
+}
+gboolean 
+prefs_get_song_list_show_track(void)
+{
+    return(cfg->song_list_show.track); 
+}
+gboolean 
+prefs_get_song_list_show_genre(void)
+{
+    return(cfg->song_list_show.genre); 
+}
+void
+prefs_print(void)
+{
+    FILE *fp = stderr;
+    gchar *on = "On";
+    gchar *off = "Off";
+    
+    fprintf(fp, "GtkPod Preferences\n");
+    fprintf(fp, "Mount Point:\t%s\n", cfg->ipod_mount);
+    fprintf(fp, "Interactive ID3:\t");
+    if(cfg->writeid3)
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
+    
+    fprintf(fp, "MD5 Songs:\t");
+    if(cfg->md5songs)
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
+    
+    fprintf(fp, "Song List Options:\n");
+    fprintf(fp, "  Show All Attributes: ");
+    if(prefs_get_song_list_show_all())
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
+    fprintf(fp, "  Show Album: ");
+    if(prefs_get_song_list_show_album())
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
+    fprintf(fp, "  Show Year: ");
+    if(prefs_get_song_list_show_year())
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
+    fprintf(fp, "  Show Track: ");
+    if(prefs_get_song_list_show_track())
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
+    fprintf(fp, "  Show Genre: ");
+    if(prefs_get_song_list_show_genre())
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
+    fprintf(fp, "  Show Artist: ");
+    if(prefs_get_song_list_show_artist())
+	fprintf(fp, "%s\n", on);
+    else
+	fprintf(fp, "%s\n", off);
 }
