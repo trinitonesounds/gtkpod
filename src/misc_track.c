@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-03-23 21:53:48 jcs>
+|  Time-stamp: <2005-04-02 14:31:56 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -581,30 +581,52 @@ void gp_info_nontransferred_tracks (iTunesDB *itdb,
 \*------------------------------------------------------------------*/
 
 /* DND: add a list of iPod IDs to Playlist @pl */
-/* FIXME: not yet implemented */
-void add_idlist_to_playlist (Playlist *pl, gchar *string)
+void add_tracklist_to_playlist (Playlist *pl, gchar *string)
 {
-    g_warning ("DND for idlist not yet supported\n\n");
-    g_return_if_reached ();
-#if 0
-    guint32 id = 0;
+    Track *track = NULL;
+    Playlist *to_mpl;
     gchar *str;
-    iTunesDB *fromitdb, *toitdb;
+    iTunesDB *from_itdb, *to_itdb;
 
     g_return_if_fail (pl);
-    toitdb = pl->itdb;
-    g_return_if_fail (toitdb);
+    to_itdb = pl->itdb;
+    g_return_if_fail (to_itdb);
+    to_mpl = itdb_playlist_mpl (to_itdb);
+    g_return_if_fail (to_mpl);
 
     str = g_strdup (string);
 
-    while(parse_ipod_id_from_string(&str,&id))
+    while(parse_tracks_from_string(&str, &track))
     {
-	Track *tr = itdb
-	add_trackid_to_playlist(pl, id, TRUE);
+	g_return_if_fail (track);
+	from_itdb = track->itdb;
+	g_return_if_fail (from_itdb);
+	if (from_itdb == to_itdb)
+	{   /* DND within the same itdb */
+	    gp_playlist_add_track (pl, track, TRUE);
+	}
+	else
+	{   /* DND between different itdbs -- need to duplicate the
+	       track before inserting */
+	    Track *duptr, *addtr;
+	    /* duplicate track */
+	    duptr = itdb_track_duplicate (track);
+	    /* add to database -- if duplicate detection is on and the
+	       same track already exists in the database, the already
+	       existing track is returned and @duptr is freed */
+	    addtr = gp_track_add (to_itdb, duptr);
+	    gp_playlist_add_track (pl, addtr, TRUE);
+	    if (addtr == duptr)
+	    {   /* check if we need to add to the MPL as well */
+		if (pl->type == ITDB_PL_TYPE_NORM)
+		{
+		    itdb_playlist_add_track (to_mpl, addtr, -1);
+		}
+	    }
+	}
     }
-    data_changed();
+    data_changed (to_itdb);
     g_free (str);
-#endif
 }
 
 /* DND: add a list of files to Playlist @pl.

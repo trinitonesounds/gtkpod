@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 01:40:24 jcs>
+/* Time-stamp: <2005-04-02 12:58:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -76,7 +76,7 @@ float get_ms_since (GTimeVal *old_time, gboolean update);
 gint get_sort_tab_number (gchar *text);
 void open_about_window (void);
 void close_about_window (void);
-gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
+gboolean parse_tracks_from_string(gchar **s, Track **track);
 void cleanup_backup_and_extended_files (void);
 gboolean gtkpod_main_quit(void);
 void gtkpod_main_window_set_active(gboolean active);

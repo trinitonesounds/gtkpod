@@ -48,13 +48,13 @@ static gboolean pm_selection_blocked = FALSE;
 /* Drag and drop definitions */
 static GtkTargetEntry pm_drag_types [] = {
     { DND_GTKPOD_PM_PATHLIST_TYPE, 0, DND_GTKPOD_PM_PATHLIST },
-    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 static GtkTargetEntry pm_drop_types [] = {
     { DND_GTKPOD_PM_PATHLIST_TYPE, 0, DND_GTKPOD_PM_PATHLIST },
-    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -1126,19 +1126,19 @@ gboolean pm_move_pathlist (gchar *data,
 }
 
 /*
- * utility function for appending ipod track ids for playlist
+ * utility function for appending ipod track pointers of a playlist
  */
 void 
-on_pm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-			 GtkTreeIter *i, gpointer data)
+on_pm_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			    GtkTreeIter *i, gpointer data)
 {
     Playlist *pl;
     GList *gl;
-    GString *idlist = (GString *)data;
+    GString *tracklist = (GString *)data;
 
     g_return_if_fail (tm);
     g_return_if_fail (i);
-    g_return_if_fail (data);
+    g_return_if_fail (tracklist);
 
     gtk_tree_model_get (tm, i, PM_COLUMN_PLAYLIST, &pl, -1);
     g_return_if_fail (pl);
@@ -1147,7 +1147,8 @@ on_pm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     for (gl=pl->members; gl; gl=gl->next)
     {
 	Track *tr = gl->data;
-	g_string_append_printf (idlist, "%d\n", tr->id);
+	g_return_if_fail (tr);
+	g_string_append_printf (tracklist, "%p\n", tr);
     }
 }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-27 23:29:47 jcs>
+/* Time-stamp: <2005-04-02 14:25:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -536,6 +536,9 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
 	    Track *track = gl->data;
 	    g_return_val_if_fail (track, NULL);
 	    duptr = itdb_track_duplicate (track);
+	    /* add to database -- if duplicate detection is on and the
+	       same track already exists in the database, the already
+	       existing track is returned and @duptr is freed */
 	    addtr = gp_track_add (itdb, duptr);
 	    g_hash_table_insert (track_hash, track, addtr);
 	    if (addtr == duptr)

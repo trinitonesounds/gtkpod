@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-23 21:48:20 jcs>
+/* Time-stamp: <2005-04-02 13:04:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -45,7 +45,7 @@ guint32 track_get_timestamp (Track *track, T_item t_item);
 void gp_info_nontransferred_tracks (iTunesDB *itdb,
 				    gdouble *size, guint32 *num);
 
-void add_idlist_to_playlist (Playlist *pl, gchar *str);
+void add_tracklist_to_playlist (Playlist *pl, gchar *str);
 void add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 				 gchar *str, gint position,
 				 AddTrackFunc trackaddfunc, gpointer data);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 23:49:50 jcs>
+/* Time-stamp: <2005-04-02 14:45:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -175,9 +175,9 @@ on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
     {
 	switch (info)
 	{
-	case DND_GTKPOD_IDLIST:
+	case DND_GTKPOD_TRACKLIST:
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_pm_dnd_get_id_foreach, reply);
+				    on_pm_dnd_get_track_foreach, reply);
 	    break;
 	case DND_GTKPOD_PM_PATHLIST:
 	    gtk_tree_selection_selected_foreach(ts,
@@ -227,12 +227,12 @@ tracks_moved_or_copied     (GdkDragContext  *context, gchar *tracks)
 	if ((pl->type == ITDB_PL_TYPE_NORM) &&
 	    (context->action == GDK_ACTION_MOVE))
 	{
-	    guint32 id = 0;
+	    Track *track;
 	    gchar *str = g_strdup (tracks);
 
-	    while(parse_ipod_id_from_string(&str,&id))
+	    while(parse_tracks_from_string(&str, &track))
 	    {
-/*FIXME:		remove_trackid_from_playlist (pl, id);*/
+		gp_playlist_remove_track (pl, track);
 	    }
 	    g_free (str);
 
@@ -286,6 +286,8 @@ on_playlist_treeview_drag_data_received
     {
 	gboolean del_src;
 
+	g_return_if_fail (path);
+
 	if (context && (context->suggested_action & GDK_ACTION_MOVE))
 	     del_src = TRUE;
 	else del_src = FALSE;
@@ -300,20 +302,26 @@ on_playlist_treeview_drag_data_received
 	    g_return_if_reached ();
 	}
 	/* get position of current path */
-	position = atoi (gtk_tree_path_to_string (path));
-	/* adjust position */
-	if (pos == GTK_TREE_VIEW_DROP_AFTER)  ++position;
-	/* don't allow drop _before_ MPL */
-	if (position == 0) ++position;
+	if (gtk_tree_path_get_depth (path) == 1)
+	{   /* drop behind MPL */
+	    position = 0;
+	}
+	else
+	{
+	    gint *indices = gtk_tree_path_get_indices (path);
+	    position = indices[1];
+	    /* adjust position */
+	    if (pos == GTK_TREE_VIEW_DROP_AFTER)  ++position;
+	}
 	switch (info)
 	{
-	case DND_GTKPOD_IDLIST:
+	case DND_GTKPOD_TRACKLIST:
 	    if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
 		(pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
 	    { /* drop into existing playlist */
 		if (pl->type == ITDB_PL_TYPE_NORM)
 		{
-		    add_idlist_to_playlist (pl, data->data);
+		    add_tracklist_to_playlist (pl, data->data);
 		    /* this is a hack -- see comment at
 		       tracks_moved_or_copied */
 		    tracks_moved_or_copied (context, data->data);
@@ -330,7 +338,7 @@ on_playlist_treeview_drag_data_received
 		plitem = add_new_pl_user_name (pl->itdb, NULL, position);
 		if (plitem)
 		{
-		    add_idlist_to_playlist (plitem, data->data);
+		    add_tracklist_to_playlist (plitem, data->data);
 		    /* this is a hack -- see comment at
 		       tracks_moved_or_copied */
 		    tracks_moved_or_copied (context, data->data);
@@ -393,9 +401,9 @@ on_track_treeview_drag_data_get        (GtkWidget       *widget,
     {
 	switch (info)
 	{
-	case DND_GTKPOD_IDLIST:
+	case DND_GTKPOD_TRACKLIST:
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_tm_dnd_get_id_foreach, reply);
+				    on_tm_dnd_get_track_foreach, reply);
 	    break;
 	case DND_GTKPOD_TM_PATHLIST:
 	    gtk_tree_selection_selected_foreach(ts,
@@ -630,9 +638,9 @@ on_track_treeview_drag_data_received    (GtkWidget       *widget,
 	case DND_GTKPOD_TM_PATHLIST:
 	    result = tm_move_pathlist (data->data, path, pos);
 	    break;
-	case DND_GTKPOD_IDLIST:
+	case DND_GTKPOD_TRACKLIST:
 	    /* is disabled in tm_drop_types anyhow (display.c) */
-	    printf ("idlist not supported yet\n");
+	    printf ("tracklist not supported yet\n");
 	    break;
 	case DND_TEXT_PLAIN:
 	    result = tm_add_filelist (data->data, path, pos);
@@ -731,11 +739,11 @@ on_st_treeview_drag_data_get           (GtkWidget       *widget,
 
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
     {
-	if(info == DND_GTKPOD_IDLIST)	/* gtkpod/file */
+	if(info == DND_GTKPOD_TRACKLIST)	/* gtkpod/file */
 	{
 	    GString *reply = g_string_sized_new (2000);
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_st_listing_drag_foreach, reply);
+				    on_st_dnd_get_track_foreach, reply);
 	    if(reply->len)
 	    {
 		gtk_selection_data_set(data, data->target, 8, reply->str,

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-23 21:53:50 jcs>
+/* Time-stamp: <2005-03-28 22:43:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -53,7 +53,7 @@ static void sp_store_sp_entries (gint inst);
 
 /* Drag and drop definitions */
 static GtkTargetEntry st_drag_types [] = {
-    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
 /*    { "text/plain", 0, DND_TEXT_PLAIN },*/
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -2667,28 +2667,29 @@ void st_show_hide_tooltips (void)
 
 
 /*
- * utility function for appending ipod track ids for st treeview callback
+ * utility function for appending ipod track for st treeview callback
  */
 void
-on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
-			   GtkTreeIter *i, gpointer data)
+on_st_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			    GtkTreeIter *i, gpointer data)
 {
+    GList *gl;
     TabEntry *entry;
-    GString *idlist = (GString *)data;
+    GString *tracklist = (GString *)data;
 
-    gtk_tree_model_get (tm, i, ST_COLUMN_ENTRY, &entry, -1);
+    g_return_if_fail (tracklist);
+
     /* can call on 0 cause s is consistent across all of the columns */
-    if(entry && idlist)
-    {
-	GList *l;
-	Track *s;
+    gtk_tree_model_get (tm, i, ST_COLUMN_ENTRY, &entry, -1);
+    g_return_if_fail (entry);
 
-	/* add all member-ids of entry to idlist */
-	for (l=entry->members; l; l=l->next)
-	{
-	    s = (Track *)l->data;
-	    g_string_append_printf (idlist, "%d\n", s->id);
-	}
+
+    /* add all member tracks of entry to tracklist */
+    for (gl=entry->members; gl; gl=gl->next)
+    {
+	Track *tr = gl->data;
+	g_return_if_fail (tr);
+	g_string_append_printf (tracklist, "%p\n", tr);
     }
 }
 

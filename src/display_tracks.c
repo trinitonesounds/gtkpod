@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-23 21:53:49 jcs>
+/* Time-stamp: <2005-03-28 22:43:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -60,13 +60,13 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint position);
 /* Drag and drop definitions */
 static GtkTargetEntry tm_drag_types [] = {
     { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
-    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
+    { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 static GtkTargetEntry tm_drop_types [] = {
     { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
-/*    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },*/
+/*    { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },*/
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -1906,15 +1906,18 @@ gboolean tm_add_filelist (gchar *data,
  * utility function for appending ipod track ids for track view (DND)
  */
 void
-on_tm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp,
-			 GtkTreeIter *i, gpointer data)
+on_tm_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			    GtkTreeIter *i, gpointer data)
 {
     Track *tr;
-    GString *filelist = (GString *)data;
+    GString *tracklist = (GString *)data;
+
+    g_return_if_fail (tracklist);
 
     gtk_tree_model_get(tm, i, READOUT_COL, &tr, -1);
     g_return_if_fail (tr);
-    g_string_append_printf (filelist, "%d\n", tr->id);
+
+    g_string_append_printf (tracklist, "%p\n", tr);
 }
 
 

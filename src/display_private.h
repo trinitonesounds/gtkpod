@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 00:07:53 jcs>
+/* Time-stamp: <2005-03-28 22:26:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -92,9 +92,10 @@ void tm_enable_disable_view_sort (gboolean enable);
 
 /* Drag and drop definitions */
 #define TGNR(a) (guint)(sizeof(a)/sizeof(GtkTargetEntry))
-#define DND_GTKPOD_IDLIST_TYPE "application/gtkpod-idlist"
+#define DND_GTKPOD_TRACKLIST_TYPE "application/gtkpod-tracklist"
 #define DND_GTKPOD_TM_PATHLIST_TYPE "application/gtkpod-tm_pathlist"
 #define DND_GTKPOD_PM_PATHLIST_TYPE "application/gtkpod-pm_pathlist"
+
 struct asf_data
 {
     GtkTreeIter *to_iter;

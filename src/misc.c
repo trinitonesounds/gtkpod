@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-03-23 21:53:49 jcs>
+|  Time-stamp: <2005-04-02 13:00:15 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -220,31 +220,37 @@ float get_ms_since (GTimeVal *old_time, gboolean update)
     return result;
 }
 
-/* parse a bunch of ipod ids delimited by \n
+/* parse a bunch of track pointers delimited by \n
  * @s - address of the character string we're parsing (gets updated)
- * @id - pointer the ipod id parsed from the string
+ * @track - pointer the track pointer parsed from the string
  * Returns FALSE when the string is empty, TRUE when the string can still be
  *	parsed
  */
 gboolean
-parse_ipod_id_from_string(gchar **s, guint32 *id)
+parse_tracks_from_string(gchar **s, Track **track)
 {
-    if(s && (*s))
+    g_return_val_if_fail (track, FALSE);
+    *track = NULL;
+    g_return_val_if_fail (s, FALSE);
+
+    if(*s)
     {
 	gchar *str = *s;
 	gchar *strp = strchr (str, '\n');
+	int tokens;
 
 	if (strp == NULL)
 	{
-	    *id = 0;
+	    *track = NULL;
 	    *s = NULL;
 	    return FALSE;
 	}
-	*id = (guint32)atoi(str);
+	tokens = sscanf (str, "%p", track);
 	++strp;
 	if (*strp) *s = strp;
 	else       *s = NULL;
-	return TRUE;
+	if (tokens == 1) 	return TRUE;
+	else                    return FALSE;
     }
     return FALSE;
 }

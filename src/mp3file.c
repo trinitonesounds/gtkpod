@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 02:10:54 jcs>
+/* Time-stamp: <2005-04-02 12:19:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -59,6 +59,9 @@ struct _File_Tag
     gchar *comment;        /* Comment */
     gchar *composer;	   /* Composer */
     guint32 songlen;       /* Length of file in ms */
+    /* CD/disc number handling */
+    gchar *cdnostring;    /* Position of disc in the album */
+    gchar *cdno_total;    /* The number of discs in the album (ex: 1/2) */
 };
 
 /* This code is taken from the mp3info code. Only the code needed for
@@ -1166,6 +1169,20 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 	    tag->trackstring = g_strdup_printf ("%.2d", atoi (string));
 	    g_free(string);
 	}
+	
+	/* CD/disc number tag handling */
+	string = id3_get_string (id3tag, "TPOS");
+	if (string)
+	{
+	    string2 = strchr(string,'/');
+	    if (string2)
+	    {
+		tag->cdno_total = g_strdup_printf ("%.2d", atoi (string2+1));
+		*string2 = '\0';
+	    }
+	    tag->cdnostring = g_strdup_printf ("%.2d", atoi (string));
+	    g_free(string);
+	}
     }
 
     id3_file_close (id3file);
@@ -1250,12 +1267,21 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	id3_set_string (id3tag, ID3_FRAME_GENRE, track->genre, encoding);
 	id3_set_string (id3tag, ID3_FRAME_COMMENT, track->comment, encoding);
 	id3_set_string (id3tag, "TCOM", track->composer, encoding);
+
 	if (track->tracks)
 	    string1 = g_strdup_printf ("%d/%d",
 				       track->track_nr, track->tracks);
 	else
 	    string1 = g_strdup_printf ("%d", track->track_nr);
 	id3_set_string (id3tag, ID3_FRAME_TRACK, string1, encoding);
+	g_free(string1);
+
+	if (track->cds)
+	    string1 = g_strdup_printf ("%d/%d",
+				       track->cd_nr, track->cds);
+	else
+	    string1 = g_strdup_printf ("%d", track->cd_nr);
+	id3_set_string (id3tag, "TPOS", string1, encoding);
 	g_free(string1);
     }
 
@@ -1970,6 +1996,26 @@ Track *mp3_get_file_info (gchar *name)
 	{
 	    track->tracks = atoi(filetag.track_total);
 	    g_free (filetag.track_total);
+	}
+	/* CD/disc number handling */
+	if (filetag.cdnostring == NULL)
+	{
+	    track->cd_nr = 0;
+	}
+	else
+	{
+	    track->cd_nr = atoi(filetag.cdnostring);
+	    g_free (filetag.cdnostring);
+	}
+	
+	if (filetag.cdno_total == NULL)
+	{
+	    track->cds = 0;
+	}
+	else
+	{
+	    track->cds = atoi(filetag.cdno_total);
+	    g_free (filetag.cdno_total);
 	}
     }
 

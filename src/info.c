@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-13 21:47:33 jcs>
+/* Time-stamp: <2005-04-01 23:25:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -587,7 +587,7 @@ get_drive_stats_from_df(const gchar *mp)
 	if (df_str == NULL) df_str = "df -k -P";
 	if (strlen (df_str))
 	{
-	    snprintf(bufc, PATH_MAX, "%s %s", df_str, mp);
+	    snprintf(bufc, PATH_MAX, "%s \"%s\"", df_str, mp);
 	    fp = popen(bufc, "r");
 	    if(fp)
 	    {
@@ -600,13 +600,20 @@ get_drive_stats_from_df(const gchar *mp)
 			gchar buf2[PATH_MAX+3];
 
 			++bufp; /* skip '\n' */
-			while((i < bytes_read) && (j < PATH_MAX))
+			while((bufp - buf + i < bytes_read) &&
+			      (j < PATH_MAX))
 			{
-			    while(!g_ascii_isspace(bufp[i]) && (j<PATH_MAX))
+			    while(!g_ascii_isspace(bufp[i]) &&
+				  (j<PATH_MAX))
+			    {
 				buf2[j++] = bufp[i++];
+			    }
 			    buf2[j++] = ' ';
-			    while(g_ascii_isspace(bufp[i]))
+			    while((bufp - buf + i < bytes_read) &&
+				  g_ascii_isspace(bufp[i]))
+			    {
 				i++;
+			    }
 			}
 			buf2[j] = '\0';
 			result = g_strdup_printf("%s", buf2);
