@@ -501,17 +501,14 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
                                         guint            time,
                                         gpointer         user_data)
 {
-#if 0
     GtkTreeIter i;
     GtkWidget *w = NULL;
     GtkTreePath *tp = NULL;
     GtkTreeModel *tm = NULL;
     GtkTreeViewDropPosition pos = 0;
-#endif
     /* sometimes we get empty dnd data, ignore */
     if(widgets_blocked || (!data) || (data->length < 0)) return;
 
-#if 0  /* resorting of playlists does not work yet */
     /* allow us to drop only onto ourselves =) */
     w = gtk_drag_get_source_widget(drag_context);
     if(w != widget) return;
@@ -546,7 +543,6 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 			guint insert_index = -1;
 			GList *new_list = NULL, *members = NULL, *l = NULL;
 
-			sm_rows_reordered_callback();
 			members = g_list_copy(current_pl->members);
 			/* build a list of songs to append */
 			while(parse_ipod_id_from_string(&str,&id))
@@ -590,7 +586,6 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 	    gtk_tree_path_free(tp);
 	}
     }
-#endif 0
 }
 
 
