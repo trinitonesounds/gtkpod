@@ -130,7 +130,8 @@
 #define MP4V2_HAS_METADATA_BUG TRUE
 
 #include <sys/types.h>
-#include <stdint.h>
+#include <sys/param.h>
+#include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
 #include "mp4.h"
