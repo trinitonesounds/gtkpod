@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-04-10 23:22+0900\n"
-"PO-Revision-Date: 2003-04-10 23:16+0900\n"
+"POT-Creation-Date: 2003-04-12 01:13+0900\n"
+"PO-Revision-Date: 2003-04-12 01:13+0900\n"
 "Last-Translator: Ayako Sano <@>\n"
 "Language-Team: n/a\n"
 "MIME-Version: 1.0\n"
@@ -271,8 +271,9 @@ msgstr "西洋 (ISO-8859-15)"
 msgid "Western (Windows-1252)"
 msgstr "西洋 (Windows-1252)"
 
-#. set up list with charsets
-#: src/charset.c:142 src/charset.c:150 src/charset.c:179
+#. sanity!
+#. check for "System Charset" and return NULL
+#: src/charset.c:142 src/charset.c:152 src/charset.c:202
 msgid "System Charset"
 msgstr "システム文字"
 
@@ -1112,17 +1113,48 @@ msgstr ""
 "gtkpod バージョン %s: Cross-Platform Multi-Lingual Interface to Apple's iPod"
 "(tm)."
 
-#: src/misc.c:287
-msgid "(C) 2002 - 2003"
+#: src/misc.c:286
+#, fuzzy
+msgid ""
+"(C) 2002 - 2003\n"
+"Jorg Schuler (jcsjcs at users.sourceforge.net)\n"
+"Corey Donohoe (atmos at atmos.org)\n"
+"\n"
+"This program is free software; you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place, Suite 330, Boston, MA 02111-1307, USA.\n"
+"\n"
+"The code handling the reading and writing of the iTunesDB was ported from "
+"mktunes.pl of the gnuPod package written by Adrian Ulrich (http://www.gnu."
+"org/software/gnupod/). Adrian Ulrich ported the playlist part.\n"
+"\n"
+"This program borrows code from the following projects:\n"
+"    xmms:    dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
+"    easytag: reading and writing of ID3 tags (http://easytag.sourceforge."
+"net)\n"
+"\n"
+"The GUI was created with the help of glade-2 (http://glade.gnome.org/)."
 msgstr ""
+"このプログラムはフリーソフトです。このプログラムは、フリーソフトウェア財団発行のGNU一般公衆利用許諾契約書(バージョン２かもしくは希望によってはそれ以降のバージョンのどれか)の条件のもとで、再配布や改変できます\n"
+"このプログラムは実用的であることを願って頒布されますが、まったく保障はありません商用やある特定の目的のために保障をするものではありません。詳細はGNU一般公衆利用許諾契約書をご覧ください\n"
+"あなたはこのプログラムと一緒に、GUN一般公衆利用許諾契約書の写しを受取りますもし受取っていなければフリーソフトウェア財団までご連絡ください宛先です→The Free Software Foundation, Inc., 59　Temple Place,Suite 330, Boston, MA 02111-1307 USA"
 
-#: src/misc.c:310
-msgid "German:   Jorg Schuler (jcsjcs at users.sourceforge.net)"
+#: src/misc.c:309
+#, fuzzy
+msgid ""
+"German:   Jorg Schuler (jcsjcs at users.sourceforge.net)\n"
+"Japanese: Ayako Sano"
 msgstr "German：Jorg Schuler (jcsjcs at users.sourceforge.net)"
-
-#: src/misc.c:311
-msgid ");"
-msgstr ""
 
 #: src/misc.c:438
 #, c-format
@@ -1499,41 +1531,17 @@ msgstr "重複検出"
 msgid "Couldn't find pixmap file: %s"
 msgstr "画像ファイル: %sを見つけられません"
 
+#, fuzzy
 #~ msgid ""
-#~ "    (C) 2002 - 2003\n"
-#~ "    Jorg Schuler (jcsjcs at users.sourceforge.net)"
+#~ "(C) 2002 - 2003\n"
+#~ "Jorg Schuler (jcsjcs at users.sourceforge.net)\n"
+#~ "Corey Donohoe (atmos at atmos.org)\n"
 #~ msgstr ""
 #~ "    (C) 2002 - 2003\n"
 #~ "　　Jorg Schuler (jcsjcs at users.sourceforge.net)"
 
 #~ msgid "    Corey Donohoe (atmos at atmos.org)"
 #~ msgstr "　Corey Donohoe　(atmos at atmos.org)"
-
-#~ msgid ""
-#~ "This program is free software; you can redistribute it and/or modify it "
-#~ "under the terms of the GNU General Public License as published by the "
-#~ "Free Software Foundation; either version 2 of the License, or (at your "
-#~ "option) any later version.\n"
-#~ "\n"
-#~ "This program is distributed in the hope that it will be useful, but "
-#~ "WITHOUT ANY WARRANTY; without even the implied warranty of "
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-#~ "Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public License along "
-#~ "with this program; if not, write to the Free Software Foundation, Inc., "
-#~ "59 Temple Place, Suite 330, Boston, MA 02111-1307, USA."
-#~ msgstr ""
-#~ "このプログラムはフリーソフトです。このプログラムは、フリーソフトウェア財団"
-#~ "発行のGNU一般公衆利用許諾契約書(バージョン２かもしくは希望によってはそれ以"
-#~ "降のバージョンのどれか)の条件のもとで、再配布や改変できます\n"
-#~ "このプログラムは実用的であることを願って頒布されますが、まったく保障はあり"
-#~ "ません商用やある特定の目的のために保障をするものではありません。詳細はGNU"
-#~ "一般公衆利用許諾契約書をご覧ください\n"
-#~ "あなたはこのプログラムと一緒に、GUN一般公衆利用許諾契約書の写しを受取りま"
-#~ "すもし受取っていなければフリーソフトウェア財団までご連絡ください宛先です→"
-#~ "The Free Software Foundation, Inc., 59　Temple Place,Suite 330, Boston, "
-#~ "MA 02111-1307 USA"
 
 #~ msgid ""
 #~ "The code handling the reading and writing of the iTunesDB was ported from "
