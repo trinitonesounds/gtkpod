@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-13 00:11:57 jcs>
+/* Time-stamp: <2005-01-20 00:35:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -389,7 +389,8 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 
 
 /* Import an iTunesDB and return an iTunesDB structure.
- * If @old_itdb is set, it will be merged with the newly imported one
+ * If @old_itdb is set, it will be merged into the newly imported
+ * one. @old_itdb will not be changed.
  * @mp: mount point of iPod (if reading an iPod iTunesDB)
  * @itdb_name: name of iTunesDB (if reading a local file browser) */
 /* Return value: a new iTunesDB structure or NULL in case of an error */
@@ -401,7 +402,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *mp, gchar *itdb_name)
     iTunesDB *itdb = NULL;
     GError *error = NULL;
 
-    g_return_val_if_fail (mp && itdb_name, NULL);
+    g_return_val_if_fail (mp || itdb_name, NULL);
     g_return_val_if_fail (!prefs_get_offline() && !mp, NULL);
 
     if (prefs_get_offline() || itdb_name)
@@ -584,36 +585,21 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *mp, gchar *itdb_name)
 void handle_import (iTunesDB *old_itdb, gchar *mp,
 		    gchar *itdb_name, gint pos)
 {
-    guint32 n;
+    iTunesDB *new_itdb;
 
-    n = get_nr_of_tracks (); /* how many tracks are already there? */
+    new_itdb = gp_import_itdb (old_itdb, mp, itdb_name);
 
-    if (!prefs_get_block_display ())  block_widgets ();
-
-    gtkpod_tracks_statusbar_update();
-
-    if (n != get_nr_of_tracks ())
-    { /* Import was successfull, block menu item and button */
-	display_disable_gtkpod_import_buttons();
-	itunesdb_read = TRUE;
+    if (new_itdb)
+    {
+	if (old_itdb)
+	{
+	    pm_replace_itdb (old_itdb, new_itdb);
+	}
+	else
+	{
+	    pm_add_itdb (new_itdb, pos);
+	}
     }
-    /* reset duplicate detection -- this will also detect and correct
-     * all duplicate tracks currently in the database */
-    prefs_set_md5tracks (md5tracks);
-    destroy_extendedinfohash (); /* delete hash information (if present) */
-
-    /* run update of offline playcounts */
-    parse_offline_playcount ();
-
-    /* Update all smart playlists */
-    spl_update_all ();
-
-    /* taking care about 'Check IPOD files'mi */
-    display_set_check_ipod_menu ();
-
-    space_data_update ();          /* update space display */
-
-    if (!prefs_get_block_display ())  release_widgets ();
 }
 
 
@@ -623,26 +609,28 @@ void handle_import (iTunesDB *old_itdb, gchar *mp,
 gchar *get_track_name_on_disk_verified (Track *track)
 {
     gchar *name = NULL;
+    ExtraTrackData *etr;
 
-    if (track)
+    g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
+
+    if (!prefs_get_offline ())
     {
-	if (!prefs_get_offline ())
+	name = get_track_name_on_ipod (track);
+	if (name)
 	{
-	    name = get_track_name_on_ipod (track);
-	    if (name)
+	    if (!g_file_test (name, G_FILE_TEST_EXISTS))
 	    {
-		if (!g_file_test (name, G_FILE_TEST_EXISTS))
-		{
-		    g_free (name);
-		    name = NULL;
-		}
+		g_free (name);
+		name = NULL;
 	    }
 	}
-	if(!name && track->pc_path_locale && (*track->pc_path_locale))
-	{
-	    if (g_file_test (track->pc_path_locale, G_FILE_TEST_EXISTS))
-		name = g_strdup (track->pc_path_locale);
-	}
+    }
+    if(!name && etr->pc_path_locale && (*etr->pc_path_locale))
+    {
+	if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
+	    name = g_strdup (etr->pc_path_locale);
     }
     return name;
 }
@@ -652,27 +640,30 @@ gchar *get_track_name_on_disk_verified (Track *track)
 gchar *get_track_name_from_source (Track *track, FileSource source)
 {
     gchar *result = NULL;
+    ExtraTrackData *etr;
 
-    g_return_val_if_fail (track != NULL, result);
+    g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
 
     switch (source)
     {
     case SOURCE_PREFER_LOCAL:
-	if (track->pc_path_locale && (*track->pc_path_locale))
+	if (etr->pc_path_locale && (*etr->pc_path_locale))
 	{
-	    if (g_file_test (track->pc_path_locale,G_FILE_TEST_EXISTS))
+	    if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
 	    {
-		result = g_strdup (track->pc_path_locale);
+		result = g_strdup (etr->pc_path_locale);
 	    }
 	}
 	if (!result) result = get_track_name_on_ipod (track);
 	break;
     case SOURCE_LOCAL:
-	if (track->pc_path_locale && (*track->pc_path_locale))
+	if (etr->pc_path_locale && (*etr->pc_path_locale))
 	{
-	    if (g_file_test (track->pc_path_locale,G_FILE_TEST_EXISTS))
+	    if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
 	    {
-		result = g_strdup (track->pc_path_locale);
+		result = g_strdup (etr->pc_path_locale);
 	    }
 	}
 	break;
@@ -733,14 +724,18 @@ void unmark_track_for_deletion (Track *track)
 \*------------------------------------------------------------------*/
 
 
-/* Writes extended info (md5 hash, PC-filename...) into file "name".
-   "itunes" is the filename of the corresponding iTunesDB */
-static gboolean write_extended_info (gchar *name, gchar *itunes)
+/* Writes extended info (md5 hash, PC-filename...) of @itdb into file
+ * @name. @itdb->filename will be used to calculate the md5 checksum
+ * of the corresponding iTunesDB */
+static gboolean write_extended_info (iTunesDB *itdb, gchar *name)
 {
   FILE *fp;
-  guint n,i;
-  Track *track;
   gchar *md5;
+  GList *gl;
+
+  g_return_val_if_fail (itdb, FALSE);
+  g_return_val_if_fail (itdb->filename, FALSE);
+  g_return_val_if_fail (name, FALSE);
 
   space_data_update ();
 
@@ -751,7 +746,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 		      name);
       return FALSE;
   }
-  md5 = md5_hash_on_filename (itunes, FALSE);
+  md5 = md5_hash_on_filename (itdb->filename, FALSE);
   if (md5)
   {
       fprintf(fp, "itunesdb_hash=%s\n", md5);
@@ -764,43 +759,46 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
       return FALSE;
   }
   fprintf (fp, "version=%s\n", VERSION);
-  n = get_nr_of_tracks ();
-  for (i=0; i<n; ++i)
+  for (gl=itdb->tracks; gl; gl=gl->next)
   {
-      track = get_track_by_nr (i);
-      fprintf (fp, "id=%d\n", track->ipod_id);
-      if (track->hostname)
-	  fprintf (fp, "hostname=%s\n", track->hostname);
-      if (strlen (track->pc_path_locale) != 0)
-	  fprintf (fp, "filename_locale=%s\n", track->pc_path_locale);
-      if (strlen (track->pc_path_utf8) != 0)
-	  fprintf (fp, "filename_utf8=%s\n", track->pc_path_utf8);
+      Track *track = gl->data;
+      ExtraTrackData *etr;
+      g_return_val_if_fail (track, (fclose (fp), FALSE));
+      etr = track->userdata;
+      g_return_val_if_fail (etr, (fclose (fp), FALSE));
+      fprintf (fp, "id=%d\n", track->id);
+      if (etr->hostname)
+	  fprintf (fp, "hostname=%s\n", etr->hostname);
+      if (strlen (etr->pc_path_locale) != 0)
+	  fprintf (fp, "filename_locale=%s\n", etr->pc_path_locale);
+      if (strlen (etr->pc_path_utf8) != 0)
+	  fprintf (fp, "filename_utf8=%s\n", etr->pc_path_utf8);
       /* this is just for convenience for people looking for a track
 	 on the ipod away from gktpod/itunes etc. */
       if (strlen (track->ipod_path) != 0)
 	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
-      if (track->md5_hash)
-	  fprintf (fp, "md5_hash=%s\n", track->md5_hash);
-      if (track->charset)
-	  fprintf (fp, "charset=%s\n", track->charset);
-      if (!track->transferred && track->oldsize)
-	  fprintf (fp, "oldsize=%d\n", track->oldsize);
-      if (track->peak_signal_set)
+      if (etr->md5_hash)
+	  fprintf (fp, "md5_hash=%s\n", etr->md5_hash);
+      if (etr->charset)
+	  fprintf (fp, "charset=%s\n", etr->charset);
+      if (!track->transferred && etr->oldsize)
+	  fprintf (fp, "oldsize=%d\n", etr->oldsize);
+      if (etr->peak_signal_set)
       {
 	  gchar buf[20];
-	  g_ascii_dtostr (buf, 20, (gdouble)track->peak_signal);
+	  g_ascii_dtostr (buf, 20, (gdouble)etr->peak_signal);
 	  fprintf (fp, "peak_signal=%s\n", buf);
       }
-      if (track->radio_gain_set)
+      if (etr->radio_gain_set)
       {
 	  gchar buf[20];
-	  g_ascii_dtostr (buf, 20, track->radio_gain);
+	  g_ascii_dtostr (buf, 20, etr->radio_gain);
 	  fprintf (fp, "radio_gain=%s\n", buf);
       }
-      if (track->audiophile_gain_set)
+      if (etr->audiophile_gain_set)
       {
 	  gchar buf[20];
-	  g_ascii_dtostr (buf, 20, track->audiophile_gain);
+	  g_ascii_dtostr (buf, 20, etr->audiophile_gain);
 	  fprintf (fp, "audiophile_gain=%s\n", buf);
       }
       fprintf (fp, "transferred=%d\n", track->transferred);
@@ -812,7 +810,9 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
       GList *gl_track;
       for(gl_track = pending_deletion; gl_track; gl_track = gl_track->next)
       {
-	  track = (Track*)gl_track->data;
+	  Track *track = gl_track->data;
+	  g_return_val_if_fail (track, (fclose (fp), FALSE));
+	  
 	  fprintf (fp, "id=000\n");  /* our sign for tracks pending
 					deletion */
 	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
@@ -839,24 +839,29 @@ static gpointer th_remove (gpointer filename)
     g_mutex_unlock (mutex);
     return (gpointer)result;
 }
+
+
+/* FIXME: th_copy returns GError, but is handled as boolean */
 /* Threaded copy of ipod track */
 static gpointer th_copy (gpointer s)
 {
-    gboolean result;
-    Track *track = (Track *)s;
+    Track *track = s;
+    ExtraTrackData *etr;
     gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
+    GError *error = NULL;
+    g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
 
-    result = itunesdb_copy_track_to_ipod (mount,
-					 track,
-					 track->pc_path_locale);
+    itdb_cp_track_to_ipod (mount, track, etr->pc_path_locale, &error);
     g_free (mount);
     /* delete old size */
-    if (track->transferred) track->oldsize = 0;
+    if (track->transferred) etr->oldsize = 0;
     g_mutex_lock (mutex);
     mutex_data = TRUE;   /* signal that thread will end */
     g_cond_signal (cond);
     g_mutex_unlock (mutex);
-    return (gpointer)result;
+    return error;
 }
 #endif
 

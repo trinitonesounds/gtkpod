@@ -60,6 +60,9 @@ static GtkTargetEntry pm_drop_types [] = {
 };
 
 
+GtkTreePath *pm_get_path (Playlist *pl);
+
+
 /* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
 /* ---------------------------------------------------------------- */
@@ -139,7 +142,7 @@ void pm_track_changed (Track *track)
 }
 
 
-/* Append playlist to the playlist model */
+/* Add playlist to the playlist model */
 /* If @position = -1: append to end */
 /* If @position >=0: insert at that position */
 void pm_add_playlist (Playlist *playlist, gint pos)
@@ -157,9 +160,8 @@ void pm_add_playlist (Playlist *playlist, gint pos)
   g_return_if_fail (model);
 
   if (playlist->type == ITDB_PL_TYPE_MPL)
-  {   /* MPLs are always added top-level and at the end */
+  {   /* MPLs are always added top-level */
       mpl = NULL;
-      pos = -1;
   }
   else
   {   /* We need to find the iter with the mpl in it */
@@ -184,14 +186,8 @@ void pm_add_playlist (Playlist *playlist, gint pos)
       }
   }
 
-  if (pos == -1)
-  {
-      gtk_tree_store_append (GTK_TREE_STORE (model), &iter, mpl);
-  }
-  else
-  {
-      gtk_tree_store_insert (GTK_TREE_STORE (model), &iter, mpl, pos);
-  }
+  gtk_tree_store_insert (GTK_TREE_STORE (model), &iter, mpl, pos);
+
   gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
 		      PM_COLUMN_PLAYLIST, playlist,
 		      -1);
@@ -508,6 +504,72 @@ static gint pm_sort_counter (gint inc)
 }
 
 
+/* Add all playlists of @itdb at position @pos */
+void pm_add_itdb (iTunesDB *itdb, gint pos)
+{
+    GList *gl_pl;
+
+    g_return_if_fail (itdb);
+
+    for (gl_pl=itdb->playlists; gl_pl; gl_pl=gl_pl->next)
+    {
+	Playlist *pl = gl_pl->data;
+	g_return_if_fail (pl);
+	if (pl->playlist->type == ITDB_PL_TYPE_MPL)
+	     pm_add_playlist (pl, pos);
+	else pm_add_playlist (pl, -1);
+    }
+}
+
+
+/* Remove all playlists of @old_itdb and replace with @new_itdb */
+void pm_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
+{
+    Playlist *old_pl, *mpl;
+    gchar *old_pl_name = NULL;
+    GtkTreePath *path;
+    gint pos = -1; /* default: add to the end */
+
+    g_return_if_fail (old_itdb);
+    g_return_if_fail (new_itdb);
+
+    /* remember old selection */
+    old_pl = pm_get_selected_playlist ();
+    if (old_pl)
+    {   /* remember name of formerly selected playlist if it's in the
+	   same itdb */
+	ExtraPlaylistData *epl = old_pl->userdata;
+	g_return_if_fail (epl);
+	if (epl->itdb == old_itdb)
+	    old_pl_name = g_strdup (old_pl->name);
+    }
+
+    /* get position of @old_itdb */
+    mpl = itdb_playlist_mpl (old_itdb);
+    g_return_if_fail (mpl);
+    path = pm_get_path (mpl);
+    if (path)
+    {
+	gint *indices = gtk_tree_path_get_indices (path);
+	if (indices)
+	    pos = indices[0];
+	gtk_tree_path_free (path);
+    }
+
+    /* remove @old_itdb (all playlists are removed if the MPL is
+       removed and add @new_itdb at its place */
+    pm_remove_playlist (mpl, FALSE);
+    pm_add_itdb (new_itdb, pos);
+
+    /* reselect old playlist if still available */
+    if (old_pl_name)
+    {
+	Playlist *pl = itdb_playlist_by_name (new_itdb, name);
+	if (pl) pm_select_playlist (pl);
+    }
+}    
+
+
 /* Helper function: add all playlists to playlist model */
 void pm_add_all_playlists (void)
 {
@@ -520,15 +582,53 @@ void pm_add_all_playlists (void)
     {
 	iTunesDB *itdb = gl_itdb->data;
 	g_return_if_fail (itdb);
-	GList *gl_pl;
-	for (gl_pl=itdb->playlists; gl_pl; gl_pl=gl_pl->next)
-	{
-	    Playlist *pl = gl_pl->data;
-	    g_return_if_fail (pl);
-	    pm_add_playlist (pl, -1);
-	}
+	pm_add_itdb (itdb, -1);
     }
 }
+
+
+/* Return path of playlist @pl. After use the return value must be
+ * freed by calling gtk_tree_path_free() */
+GtkTreePath *pm_get_path (Playlist *pl)
+{
+    struct
+    {
+	Playlist *pl;
+	GtkTreePath *path;
+    } userdata;
+    GtkTreeModel *model;
+    struct userdata userdata;
+    static gboolean pm_get_path_fe (GtkTreeModel *model,
+				    GtkTreePath *path,
+				    GtkTreeIter *iter,
+				    gpointer data)
+	{
+	    struct userdata *ud = data;
+	    Playlist *pl;
+
+	    gtk_tree_model_get (model, iter,
+				PM_COLUMN_PLAYLIST, &pl, -1);
+	    if(pl == ud->pl)
+	    {
+		ud->path = gtk_tree_model_get_path (model, iter);
+		return TRUE;
+	    }
+	    return FALSE;
+	}
+    g_return_val_if_fail (playlist_treeview, NULL);
+    g_return_val_if_fail (pl, NULL);
+    model = gtk_tree_view_get_model (playlist_treeview);
+    g_return_val_if_fail (model, NULL);
+
+    userdata.pl = pl;
+    userdata.path = NULL;
+
+    /* find the pl and fill in path */
+    gtk_tree_model_foreach (model, pm_select_playlist_fe, &userdata);
+
+    return userdata.path;
+}
+
 
 
 /* "unsort" the playlist view without causing the sort tabs to be

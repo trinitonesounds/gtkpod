@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 12:23:19 jcs>
+/* Time-stamp: <2005-01-20 00:24:13 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2840,7 +2840,7 @@ void itdb_filename_ipod2fs (gchar *ipod_file)
 
 
 
-/* Copy one track to the iPod. The PC filename is in @track->pc_path
+/* Copy one track to the iPod. The PC filename is @filename
    and is taken literally.
    @path is the mountpoint of the iPod (in local encoding).
 
@@ -2852,7 +2852,7 @@ void itdb_filename_ipod2fs (gchar *ipod_file)
    @track->id: "gtkpod"_id and written to @track->ipod_path. If
    @track->ipod_path is already set, this one will be used instead */
 gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
-				GError **error)
+				gchar *filename, GError **error)
 {
   static gint dir_num = -1;
   gchar *track_db_path, *ipod_fullfile;
@@ -2861,7 +2861,7 @@ gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
 
   g_return_val_if_fail (mp, FALSE);
   g_return_val_if_fail (track, FALSE);
-  g_return_val_if_fail (track->pc_path_locale, FALSE);
+  g_return_val_if_fail (filename, FALSE);
 
   if(track->transferred)  return TRUE; /* nothing to do */ 
 
@@ -2904,7 +2904,7 @@ gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
 
       /* we need the original suffix of pcfile to construct a correct ipod
 	 filename */
-      original_suffix = strrchr (track->pc_path_locale, '.');
+      original_suffix = strrchr (filename, '.');
       /* If there is no ".mp3", ".m4a" etc, set original_suffix to empty
 	 string. Note: the iPod will most certainly ignore this file... */
       if (!original_suffix) original_suffix = "";
@@ -2949,7 +2949,7 @@ gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
   
 /* 	printf ("ff: %s\ndb: %s\n", ipod_fullfile, track_db_path); */
 
-  success = itdb_cp (track->pc_path_locale, ipod_fullfile, error);
+  success = itdb_cp (filename, ipod_fullfile, error);
   if (success)
   {
       track->transferred = TRUE;

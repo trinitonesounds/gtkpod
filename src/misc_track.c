@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-01-12 00:48:07 jcs>
+|  Time-stamp: <2005-01-20 00:33:10 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -353,8 +353,11 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 	for (gl=itdb->tracks; gl; gl=gl->next)
 	{
 	    Track *track = gl->data;
-	    gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
-	    gchar *ipod_path = itdb_filename_on_ipod (mount, track);
+	    gchar *mount;
+	    gchar *ipod_path;
+	    g_return_val_if_fail (track, NULL);
+	    mount = charset_from_utf8 (prefs_get_ipod_mount ());
+	    ipod_path = itdb_filename_on_ipod (mount, track);
 	    g_free (mount);
 	    if (ipod_path)
 	    {
@@ -373,15 +376,20 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 	for (gl=itdb->tracks; gl; gl=gl->next)
 	{
 	    Track *track = gl->data;
-	    if (track->pc_path_locale)
+	    ExtraTrackData *etr;
+	    g_return_val_if_fail (track, NULL);
+	    etr = track->userdata;
+	    g_return_val_if_fail (etr, NULL);
+	    if (etr->pc_path_locale)
 	    {
-		if (strcmp (track->pc_path_locale, filename) == 0)
+		if (strcmp (etr->pc_path_locale, filename) == 0)
 		    return track;
 	    }
 	}
     }
     return NULL;
 }
+
 
 
 /* ------------------------------------------------------------ *\

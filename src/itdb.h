@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-10 22:32:25 jcs>
+/* Time-stamp: <2005-01-20 00:33:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -313,8 +313,8 @@ typedef struct
 {
     GList *tracks;
     GList *playlists;
-    gchar *filename;
-    gchar *mountpoint;
+    gchar *filename;    /* filename of iTunesDB */
+    gchar *mountpoint;  /* mountpoint of iPod (if available) */
     guint32 version;
     guint64 id;
     /* below is for use by application */
@@ -447,12 +447,12 @@ gchar * itdb_resolve_path (const gchar *root,
 			   const gchar * const * components);
 gboolean itdb_rename_files (const gchar *mp, GError **error);
 gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
-				GError **error);
+				gchar *filename, GError **error);
 gboolean itdb_cp (const gchar *from_file, const gchar *to_file,
 		  GError **error);
 void itdb_filename_fs2ipod (gchar *filename);
 void itdb_filename_ipod2fs (gchar *ipod_file);
-gchar *itdb_filename_on_ipod (const gchar *path, Itdb_Track *track);
+gchar *itdb_filename_on_ipod (const gchar *mp, Itdb_Track *track);
 
 /* track functions */
 Itdb_Track *itdb_track_new (void);
@@ -462,7 +462,6 @@ void itdb_track_remove (Itdb_Track *track);
 void itdb_track_unlink (Itdb_Track *track);
 Itdb_Track *itdb_track_duplicate (Itdb_Track *tr);
 Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id);
-Itdb_Track *itdb_track_by_filename (Itdb_iTunesDB *itdb, gchar *filename);
 
 /* playlist functions */
 Itdb_Playlist *itdb_playlist_new (const gchar *title, gboolean spl);
@@ -479,6 +478,7 @@ void itdb_playlist_add_trackid (Itdb_Playlist *pl,
 				guint32 id, gint32 pos);
 Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id);
 Itdb_Playlist *itdb_playlist_by_nr (Itdb_iTunesDB *itdb, guint32 num);
+Itdb_Playlist *itdb_playlist_by_name (Itdb_iTunesDB *itdb, gchar *name);
 Itdb_Playlist *itdb_playlist_mpl (Itdb_iTunesDB *itdb);
 gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *track);
 guint32 itdb_playlist_contain_track_number (Itdb_Track *tr);

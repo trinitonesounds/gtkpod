@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-13 00:06:24 jcs>
+/* Time-stamp: <2005-01-20 00:33:10 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -109,6 +109,7 @@ ExtraTrackData *gp_track_extra_duplicate (ExtraTrackData *etr)
 	memcpy (etr_dup, etr, sizeof (ExtraTrackData));
 	/* copy strings */
 	etr_dup->year_str = g_strdup (etr->year_str);
+	etr_dup->pc_path_locale = g_strdup (etr->pc_path_locale);
 	etr_dup->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
 	etr_dup->hostname = g_strdup (etr->hostname);
 	etr_dup->md5_hash = g_strdup (etr->md5_hash);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 12:24:29 jcs>
+/* Time-stamp: <2005-01-19 23:35:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1234,6 +1234,24 @@ Itdb_Playlist *itdb_playlist_by_nr (Itdb_iTunesDB *itdb, guint32 num)
     Itdb_Playlist *pl = g_list_nth_data (itdb->playlists, num);
     g_return_val_if_fail (pl, NULL);
     return pl;
+}
+
+
+/* Return first playlist with name @name. */
+Itdb_Playlist *itdb_playlist_by_name (Itdb_iTunesDB *itdb, gchar *name)
+{
+    GList *gl;
+    g_return_val_if_fail (itdb, NULL);
+    g_return_val_if_fail (name, NULL);
+
+    for (gl=itdb->playlists; gl; gl=gl->next)
+    {
+	Playlist *pl = gl->data;
+	g_return_val_if_fail (pl, NULL);
+	if (pl->name && (strcmp (pl->name, name) == 0))
+	    return pl;
+    }
+    return NULL;
 }
 
 
