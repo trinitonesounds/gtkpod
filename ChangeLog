@@ -1,7 +1,13 @@
 gtkpod V0.82-CVS
-	BUGFIX: when clicking onto the column header three times and
-	moving sidewards with the mouse at the same time, gtkpod would
-	crash. Fix requires bugfix in the GTK+-library as well.
+	BUGFIX: when clicking onto the column header of the track
+	treeview three times and moving sidewards with the mouse at
+	the same time, gtkpod crashed. Crashing was due to a bad
+	workaround of a bug in the GTK+-library. Removed workaround
+	and instead submitted a patch for GTK+. Until the patch has
+	been accepted, unsorting will not work. The bug report is
+	available at http://bugzilla.gnome.org/show_bug.cgi?id=152414
+	and the patch can also be downloaded at
+	gtkpod.sourceforge.net/gtkliststore_c.diff
 
 	BUGFIX: when writing tags to file the track tag was
 	deleted.
