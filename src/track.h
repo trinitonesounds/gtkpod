@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 13:31:51 jcs>
+/* Time-stamp: <2003-11-25 22:42:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -120,7 +120,7 @@ void remove_all_tracks (void);
 #define it_get_nr_of_tracks get_nr_of_tracks
 guint get_nr_of_tracks (void);
 guint get_nr_of_nontransferred_tracks (void);
-glong get_filesize_of_nontransferred_tracks (void);
+double get_filesize_of_nontransferred_tracks (guint32 *num);
 Track *it_get_track_by_nr (guint32 n);
 Track *get_next_track (gint i);
 Track *get_track_by_nr (guint32 n);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 23:23:05 jcs>
+/* Time-stamp: <2003-11-25 22:54:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,16 +36,17 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <time.h>
+#include "charset.h"
+#include "confirmation.h"
 #include "file.h"
-#include "mp3file.h"
-#include "mp4file.h"
+#include "info.h"
 #include "itunesdb.h"
 #include "md5.h"
 #include "misc.h"
+#include "mp3file.h"
+#include "mp4file.h"
 #include "prefs.h"
 #include "support.h"
-#include "charset.h"
-#include "confirmation.h"
 
 /* only used when reading extended info from file */
 struct track_extended_info
@@ -1887,8 +1888,8 @@ get_preferred_track_name_format (Track *s)
 
 
 /* in Bytes, minus the space taken by tracks that will be overwritten
- * during copying (returns kB) */
-glong get_filesize_of_deleted_tracks(void)
+ * during copying */
+double get_filesize_of_deleted_tracks(void)
 {
     double n = 0;
     Track *track;
@@ -1899,7 +1900,7 @@ glong get_filesize_of_deleted_tracks(void)
 	track = (Track *)gl_track->data;
 	if (track->transferred)   n += track->size;
     }
-    return n/1024;
+    return n;
 }
 
 void mark_track_for_deletion (Track *track)

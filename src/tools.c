@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-05 00:25:11 jcs>
+/* Time-stamp: <2003-11-25 22:31:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,15 +31,16 @@
 #endif
 
 
-#include <sys/types.h>
-#include <unistd.h>
 #include <string.h>
+#include <sys/types.h>
 #include <sys/wait.h>
-#include <stdlib.h>
-#include "normalize.h"
+#include <unistd.h>
+#include "info.h"
 #include "misc.h"
+#include "normalize.h"
 #include "prefs.h"
 #include "support.h"
+#include <stdlib.h>
 
 #ifdef G_THREADS_ENABLED
 static  GMutex *mutex = NULL;

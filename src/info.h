@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 23:26:01 jcs>
+/* Time-stamp: <2003-11-25 22:54:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,10 +36,22 @@
 #include <gtk/gtk.h>
 #include "song.h"
 
+/* info window */
 void info_open_window (void);
 void info_close_window (void);
 void info_update (void);
 void info_update_track_view (void);
+void info_update_track_view_selected (void);
 void info_update_playlist_view (void);
 void info_update_totals_view (void);
+void info_update_totals_view_space (void);
+
+/* statusbar stuff */
+#define STATUSBAR_TIMEOUT 4200
+void gtkpod_statusbar_init(GtkWidget *);
+void gtkpod_statusbar_message(const gchar *message);
+void gtkpod_space_statusbar_init(GtkWidget *w);
+void gtkpod_tracks_statusbar_init(GtkWidget*);
+void gtkpod_tracks_statusbar_update(void);
+
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 23:06:10 jcs>
+/* Time-stamp: <2003-11-25 23:05:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -95,11 +95,12 @@
 #else
 #  include "getopt.h"
 #endif
+#include "display.h"
+#include "info.h"
+#include "md5.h"
+#include "misc.h"
 #include "prefs.h"
 #include "support.h"
-#include "misc.h"
-#include "display.h"
-#include "md5.h"
 
 /* global config struct */
 /* FIXME: make me static */
@@ -1942,7 +1943,6 @@ void
 prefs_set_info_window(gboolean val)
 {
     cfg->info_window = val;
-    display_set_info_window_menu ();
 }
 
 void prefs_set_sp_or (guint32 inst, gboolean state)

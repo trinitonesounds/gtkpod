@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 23:05:54 jcs>
+/* Time-stamp: <2003-11-25 23:05:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -42,7 +42,6 @@
 
 /* used for stopping of display refresh */
 gint stop_add = SORT_TAB_MAX;
-
 
 /* Move the paths listed in @data before or after (according to @pos)
    @path. Used for DND */
@@ -147,6 +146,8 @@ void display_create (GtkWidget *gtkpod)
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
     /* initialize sorting */
     tm_sort (prefs_get_tm_sortcol (), prefs_get_tm_sort ());
+    /* set the menu item for the info window correctly */
+    display_set_info_window_menu ();
     /* check if info window should be opened */
     if (prefs_get_info_window ())  info_open_window ();
 }
@@ -217,8 +218,8 @@ void display_show_hide_toolbar (void)
     }
 }
 
-/* make the toolbar visible or hide it depending on the value set in
-   the prefs */
+/* Adjust the menu item status according on the value set in the
+   prefs. */
 void display_set_info_window_menu (void)
 {
     GtkWidget *mi = lookup_widget (gtkpod_window, "info_window_menu");

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 13:57:10 jcs>
+/* Time-stamp: <2003-11-25 22:20:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1199,11 +1199,19 @@ tm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
     return(FALSE);
 }
 
+/* called when the track selection changes */
+static void
+tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
+{
+    info_update_track_view_selected ();
+}
+
 /* Create tracks treeview */
 void tm_create_treeview (void)
 {
   GtkTreeModel *model = NULL;
   GtkWidget *track_window = lookup_widget (gtkpod_window, "track_window");
+  GtkTreeSelection *select;
   GtkWidget *stv = gtk_tree_view_new ();
 
   /* create tree view */
@@ -1222,8 +1230,12 @@ void tm_create_treeview (void)
       gtk_list_store_new (1, G_TYPE_POINTER));
   gtk_tree_view_set_model (track_treeview, GTK_TREE_MODEL (model));
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (track_treeview), TRUE);
-  gtk_tree_selection_set_mode (gtk_tree_view_get_selection (track_treeview),
+  select = gtk_tree_view_get_selection (track_treeview);
+  gtk_tree_selection_set_mode (select,
 			       GTK_SELECTION_MULTIPLE);
+  g_signal_connect (G_OBJECT (select) , "changed",
+		    G_CALLBACK (tm_selection_changed_event),
+		    NULL);
   tm_add_columns ();
   gtk_drag_source_set (GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK,
 		       tm_drag_types, TGNR (tm_drag_types),

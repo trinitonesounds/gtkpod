@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 00:23:20 jcs>
+/* Time-stamp: <2003-11-25 22:26:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -42,8 +42,6 @@
 #include "confirmation.h"
 #include "time.h"
 
-#define STATUSBAR_TIMEOUT 4200
-
 #define C_FREE(a) {if(a) g_free(a); a=NULL;}
 
 /* compare a and b, return sign (a-b) -- it has to be this way rather
@@ -75,16 +73,10 @@ gboolean gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);
 void gtkpod_main_window_set_active(gboolean active);
 
-void gtkpod_statusbar_init(GtkWidget *);
-void gtkpod_statusbar_message(const gchar *message);
-void gtkpod_space_statusbar_init(GtkWidget *w);
-
 T_item TM_to_T (TM_item sm);
 T_item ST_to_T (ST_CAT_item st);
 gchar *get_track_info (Track *track);
 
-void gtkpod_tracks_statusbar_init(GtkWidget*);
-void gtkpod_tracks_statusbar_update(void);
 void ipod_directories_head (void);
 void delete_playlist_head (void);
 void delete_track_head (void);

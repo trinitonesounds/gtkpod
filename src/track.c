@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 00:59:27 jcs>
+/* Time-stamp: <2003-11-25 22:41:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -220,9 +220,10 @@ guint get_nr_of_nontransferred_tracks (void)
     return n;
 }
 
-/* in kB, minus the space taken by tracks that will be overwritten
- * during copying */
-glong get_filesize_of_nontransferred_tracks(void)
+/* in Bytes, minus the space taken by tracks that will be overwritten
+ * during copying. If != NULL, num will contain the number of
+ * non-transferred tracks */
+double get_filesize_of_nontransferred_tracks(guint32 *num)
 {
     double n = 0;
     Track *track;
@@ -231,9 +232,13 @@ glong get_filesize_of_nontransferred_tracks(void)
     for (gl_track = tracks; gl_track; gl_track=gl_track->next)
     {
 	track = (Track *)gl_track->data;
-	if (!track->transferred)   n += track->size - track->oldsize;
+	if (!track->transferred)
+	{
+	    n += track->size - track->oldsize;
+	    if (num) *num += 1;
+	}
     }
-    return n/1024;
+    return n;
 }
 
 

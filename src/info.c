@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 23:25:12 jcs>
+/* Time-stamp: <2003-11-25 23:05:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -26,8 +26,11 @@
 |  $Id$
 */
 
-/* This file provides functions for the info window */
+/* This file provides functions for the info window as well as for the
+ * statusbar handling */
 
+#include <math.h>
+#include <stdlib.h>
 #include "info.h"
 #include "interface.h"
 #include "misc.h"
@@ -63,9 +66,22 @@ struct info_totals_view {
 };
 
 /* static function declarations */
-static void info_get_track_view_info (struct info_track_view *tv);
+static void info_get_track_view_info_total (struct info_track_view *tv);
+static void info_get_track_view_info_selected (struct info_track_view *tv);
 static void info_get_playlist_view_info (struct info_playlist_view *pv);
 static void info_get_totals_view_info (struct info_totals_view *tv);
+static void info_get_totals_view_info_space (struct info_totals_view *tv);
+
+/* stuff for statusbar */
+static GtkWidget *gtkpod_statusbar = NULL;
+static GtkWidget *gtkpod_tracks_statusbar = NULL;
+static GtkWidget *gtkpod_space_statusbar = NULL;
+static guint statusbar_timeout_id = 0;
+
+static double get_ipod_free_space(void);
+#if 0
+static glong get_ipod_used_space(void);
+#endif
 
 
 static void fill_label_uint (gchar *w_name, guint32 nr)
@@ -107,7 +123,7 @@ static void fill_label_size (gchar *w_name, double size)
 /* open info window */
 void info_open_window (void)
 {
-    if (info_window)  return;  /* already open */
+    if (info_window)  return;            /* already open */
     info_window = create_gtkpod_info ();
     if (info_window)
     {
@@ -116,7 +132,6 @@ void info_open_window (void)
 	gtk_widget_show (info_window);
     }
 }
-
 
 /* close info window */
 void info_close_window (void)
@@ -136,23 +151,38 @@ void info_update (void)
     info_update_totals_view ();
 }
 
-/* update track view section */
-void info_update_track_view (void)
+static void info_update_track_view_total (void)
 {
     struct info_track_view *tv;
 
     if (!info_window) return; /* not open */
     tv = g_malloc0 (sizeof (struct info_track_view));
-    info_get_track_view_info (tv);
+    info_get_track_view_info_total (tv);
     fill_label_uint ("tracks_total", tv->tracks_total);
-    fill_label_uint ("tracks_selected", tv->tracks_selected);
     fill_label_time ("playtime_total", tv->playtime_total);
-    fill_label_time ("playtime_selected", tv->playtime_selected);
     fill_label_size ("filesize_total", tv->filesize_total);
+    g_free (tv);
+}
+
+void info_update_track_view_selected (void)
+{
+    struct info_track_view *tv;
+
+    if (!info_window) return; /* not open */
+    tv = g_malloc0 (sizeof (struct info_track_view));
+    info_get_track_view_info_selected (tv);
+    fill_label_uint ("tracks_selected", tv->tracks_selected);
+    fill_label_time ("playtime_selected", tv->playtime_selected);
     fill_label_size ("filesize_selected", tv->filesize_selected);
     g_free (tv);
 }
 
+/* update track view section */
+void info_update_track_view (void)
+{
+    info_update_track_view_total ();
+    info_update_track_view_selected ();
+}
 
 /* update playlist view section */
 void info_update_playlist_view (void)
@@ -185,6 +215,19 @@ void info_update_totals_view (void)
     g_free (tv);
 }
 
+/* update "free space" section of totals view */
+void info_update_totals_view_space (void)
+{
+    struct info_totals_view *tv;
+
+    if (!info_window) return; /* not open */
+    tv = g_malloc0 (sizeof (struct info_totals_view));
+    info_get_totals_view_info_space (tv);
+    fill_label_uint ("non_transfered_tracks", tv->nt_tracks);
+    fill_label_size ("non_transfered_filesize", tv->nt_filesize);
+    fill_label_size ("free_space", tv->free_space);
+    g_free (tv);
+}
 
 
 /* ------------------------------------------------------------
@@ -214,23 +257,42 @@ static void fill_in_info (GList *tl, guint32 *tracks,
     }
 }
 
-/* fill in track_view_info structure */
-static void info_get_track_view_info (struct info_track_view *tv)
+/* fill in track_view_info structure (total part) */
+static void info_get_track_view_info_total (struct info_track_view *tv)
 {
     GList *displayed;
-    GList *selected;
 
     if (!tv)  return;
     displayed = display_get_selection (prefs_get_sort_tab_num () - 1);
-    selected = display_get_selection (prefs_get_sort_tab_num ());
-
     fill_in_info (displayed, &tv->tracks_total,
 		  &tv->playtime_total, &tv->filesize_total);
+    g_list_free (displayed);
+}
+
+/* fill in track_view_info structure (total part) */
+static void info_get_track_view_info_selected (struct info_track_view *tv)
+{
+    GList *selected;
+
+    if (!tv)  return;
+    selected = display_get_selection (prefs_get_sort_tab_num ());
+
     fill_in_info (selected, &tv->tracks_selected,
 		  &tv->playtime_selected, &tv->filesize_selected);
-    g_list_free (displayed);
     g_list_free (selected);
 }
+
+#if 0
+/* not used */
+/* fill in track_view_info structure */
+static void info_get_track_view_info (struct info_track_view *tv)
+{
+    if (!tv)  return;
+
+    info_get_track_view_info_total (tv);
+    info_get_track_view_info_selected (tv);
+}
+#endif
 
 static void info_get_playlist_view_info (struct info_playlist_view *pv)
 {
@@ -250,4 +312,241 @@ static void info_get_totals_view_info (struct info_totals_view *tv)
     if (!pl)  return;
     tl = pl->members;
     fill_in_info (tl, &tv->tracks, &tv->playtime, &tv->filesize);
+    info_get_totals_view_info_space (tv);
+}
+
+static void info_get_totals_view_info_space (struct info_totals_view *tv)
+{
+    if (!tv)  return;
+    tv->nt_filesize = get_filesize_of_nontransferred_tracks (&tv->nt_tracks);
+    tv->free_space = get_ipod_free_space () +
+	             get_filesize_of_deleted_tracks ();
+}
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                   Functions for Statusbar                        *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+void
+gtkpod_statusbar_init(GtkWidget *sb)
+{
+    gtkpod_statusbar = sb;
+}
+
+static gint
+gtkpod_statusbar_clear(gpointer data)
+{
+    if(gtkpod_statusbar)
+    {
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), 1);
+    }
+    statusbar_timeout_id = 0; /* indicate that timeout handler is
+				 clear (0 cannot be a handler id) */
+    return FALSE;
+}
+
+void
+gtkpod_statusbar_message(const gchar *message)
+{
+    if(gtkpod_statusbar)
+    {
+	gchar buf[PATH_MAX];
+	guint context = 1;
+
+	snprintf(buf, PATH_MAX, "  %s", message);
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
+	if (statusbar_timeout_id != 0) /* remove last timeout, if still present */
+	    gtk_timeout_remove (statusbar_timeout_id);
+	statusbar_timeout_id = gtk_timeout_add(prefs_get_statusbar_timeout (),
+					       (GtkFunction) gtkpod_statusbar_clear,
+					       NULL);
+    }
+}
+
+void
+gtkpod_tracks_statusbar_init(GtkWidget *w)
+{
+    gtkpod_tracks_statusbar = w;
+    gtkpod_tracks_statusbar_update();
+}
+
+void 
+gtkpod_tracks_statusbar_update(void)
+{
+    if(gtkpod_tracks_statusbar)
+    {
+	gchar *buf;
+	
+	buf = g_strdup_printf (_(" P:%d S:%d/%d"),
+			       get_nr_of_playlists () - 1,
+			       tm_get_nr_of_tracks (),
+			       get_nr_of_tracks ());
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1,  buf);
+	g_free (buf);
+    }
+    /* Update info window */
+    info_update ();
+}
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                       free space stuff                           *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+static gchar*
+get_drive_stats_from_df(const gchar *mp)
+{
+    FILE *fp;
+    gchar buf[PATH_MAX];
+    gchar *result = NULL;
+    guint bytes_read = 0;
+
+    snprintf(buf, PATH_MAX, "df -k -P | grep %s", mp);
+    if((fp = popen(buf, "r")))
+    {
+	if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
+	{
+	    if(g_strstr_len(buf, PATH_MAX, mp))
+	    {
+		int i = 0;
+		int j = 0;
+		gchar buf2[PATH_MAX];
+		
+		while(i < bytes_read)
+		{
+		    while(!g_ascii_isspace(buf[i]))
+			buf2[j++] = buf[i++];
+		    buf2[j++] = ' ';
+		    while(g_ascii_isspace(buf[i]))
+			i++;
+		}
+		buf2[j] = '\0';
+		result = g_strdup_printf("%s", buf2);
+	    }
+	}
+	pclose(fp);	
+    }
+    return(result);
+}
+
+/* @size: size in kB (block of 1024 Bytes) */
+gchar*
+get_filesize_as_string(gdouble size)
+{
+    guint i = 0;
+    gchar *result = NULL;
+    gchar *sizes[] = { _("B"), _("kB"), _("MB"), _("GB"), _("TB"), NULL };
+
+    while((fabs(size) > 1000) && (i<4))
+    {
+	size /= 1000;
+	++i;
+    }
+    if (i>0)
+    {
+	if (fabs(size) < 10)
+	    result = g_strdup_printf("%0.2f %s", size, sizes[i]);
+	else if (fabs(size) < 100)
+	    result = g_strdup_printf("%0.1f %s", size, sizes[i]);
+	else
+	    result = g_strdup_printf("%0.0f %s", size, sizes[i]);
+    }
+    else
+    {   /* Bytes do not have decimal places */
+	result = g_strdup_printf ("%0.0f %s", size, sizes[i]);
+    }
+    return result;
+}
+
+#if 0
+static glong
+get_ipod_used_space(void)
+{
+    glong result = 0;
+    gchar *line = NULL;
+    gchar **tokens = NULL;
+    gchar *mp = prefs_get_ipod_mount ();
+    
+    if((line = get_drive_stats_from_df(mp)))
+    {
+	if((tokens = g_strsplit(line, " ", 5)))
+	{
+	    if(tokens[0] && tokens[1] && tokens[2]) 
+		result = atol(tokens[2]);
+	    g_strfreev(tokens);
+	}
+    }
+    g_free(line);
+    g_free (mp);
+    return(result);
+}
+#endif
+
+/* get free space in Bytes */
+static double
+get_ipod_free_space(void)
+{
+    double result = 0;
+    gchar *line = NULL;
+    gchar **tokens = NULL;
+    gchar *mp = prefs_get_ipod_mount ();
+
+    if((line = get_drive_stats_from_df(mp)))
+    {
+	if((tokens = g_strsplit(line, " ", 5)))
+	{
+	    if(tokens[0] && tokens[1] && tokens[2] && tokens[3]) 
+		result = strtod(tokens[3], NULL) * 1024;
+	    g_strfreev(tokens);
+	}
+    }
+    g_free(line);
+    g_free(mp);
+    return(result);
+}
+
+static guint
+gtkpod_space_statusbar_update(void)
+{
+    if(gtkpod_space_statusbar)
+    {
+	gchar *buf = NULL;
+	gchar *str = NULL;
+	double left, pending;
+
+	left = get_ipod_free_space() + get_filesize_of_deleted_tracks ();
+	pending = get_filesize_of_nontransferred_tracks(NULL);
+	if((left-pending) > 0)
+	{
+	    str = get_filesize_as_string(left - pending);
+	    buf = g_strdup_printf (_(" %s Free"), str);
+	}
+	else
+	{
+	    str = get_filesize_as_string(pending - left);
+	    buf = g_strdup_printf (_(" %s Pending"), str);
+	}
+	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_space_statusbar), 1);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_space_statusbar), 1,  buf);
+	g_free (buf);
+	g_free (str);
+    }
+    info_update_totals_view_space ();
+    return(TRUE);
+}
+
+void
+gtkpod_space_statusbar_init(GtkWidget *w)
+{
+    gtkpod_space_statusbar = w;
+
+    gtkpod_space_statusbar_update();
+    gtk_timeout_add(5000, (GtkFunction) gtkpod_space_statusbar_update, NULL);
 }

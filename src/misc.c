@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 23:10:17 jcs>
+/* Time-stamp: <2003-11-25 22:33:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,19 +38,18 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
-#include <math.h>
-#include "song.h"
+#include "charset.h"
+#include "confirmation.h"
+#include "dirbrowser.h"
+#include "display.h"
+#include "file.h"
 #include "interface.h"
+#include "itunesdb.h"
 #include "misc.h"
 #include "prefs.h"
-#include "support.h"
-#include "itunesdb.h"
-#include "display.h"
-#include "confirmation.h"
 #include "prefs_window.h"
-#include "dirbrowser.h"
-#include "file.h"
-#include "charset.h"
+#include "song.h"
+#include "support.h"
 
 
 #define DEBUG_MISC 0
@@ -59,15 +58,6 @@ GtkWidget *gtkpod_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
 static GtkWidget *pl_file_selector = NULL;
-static GtkWidget *gtkpod_statusbar = NULL;
-static GtkWidget *gtkpod_tracks_statusbar = NULL;
-static GtkWidget *gtkpod_space_statusbar = NULL;
-static guint statusbar_timeout_id = 0;
-
-static glong get_ipod_free_space(void);
-#if 0
-static glong get_ipod_used_space(void);
-#endif
 
 /* used for special playlist creation */
 typedef gboolean (*PL_InsertFunc)(Track *track);
@@ -873,80 +863,6 @@ void gtkpod_warning (const gchar *format, ...)
 			 NULL);               /* gpointer user_data2,*/
     g_free (text);
 }
-
-
-
-
-
-/*------------------------------------------------------------------*\
- *                                                                  *
- *                   Functions for Statusbar                        *
- *                                                                  *
-\*------------------------------------------------------------------*/
-
-void
-gtkpod_statusbar_init(GtkWidget *sb)
-{
-    gtkpod_statusbar = sb;
-}
-
-static gint
-gtkpod_statusbar_clear(gpointer data)
-{
-    if(gtkpod_statusbar)
-    {
-	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), 1);
-    }
-    statusbar_timeout_id = 0; /* indicate that timeout handler is
-				 clear (0 cannot be a handler id) */
-    return FALSE;
-}
-
-void
-gtkpod_statusbar_message(const gchar *message)
-{
-    if(gtkpod_statusbar)
-    {
-	gchar buf[PATH_MAX];
-	guint context = 1;
-
-	snprintf(buf, PATH_MAX, "  %s", message);
-	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
-	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
-	if (statusbar_timeout_id != 0) /* remove last timeout, if still present */
-	    gtk_timeout_remove (statusbar_timeout_id);
-	statusbar_timeout_id = gtk_timeout_add(prefs_get_statusbar_timeout (),
-					       (GtkFunction) gtkpod_statusbar_clear,
-					       NULL);
-    }
-}
-
-void
-gtkpod_tracks_statusbar_init(GtkWidget *w)
-{
-    gtkpod_tracks_statusbar = w;
-    gtkpod_tracks_statusbar_update();
-}
-
-void 
-gtkpod_tracks_statusbar_update(void)
-{
-    if(gtkpod_tracks_statusbar)
-    {
-	gchar *buf;
-	
-	buf = g_strdup_printf (_(" P:%d S:%d/%d"),
-			       get_nr_of_playlists () - 1,
-			       tm_get_nr_of_tracks (),
-			       get_nr_of_tracks ());
-	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1);
-	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1,  buf);
-	g_free (buf);
-    }
-    /* Update info window */
-    info_update ();
-}
-
 
 /* translates a TM_COLUMN_... (defined in display.h) into a
  * T_... (defined in track.h). Returns -1 in case a translation is not
@@ -1884,164 +1800,6 @@ void enqueue_tracks (GList *selected_tracks)
     do_command_on_entries (prefs_get_play_enqueue_path (),
 			   _("Enqueue"),
 			   selected_tracks);
-}
-
-
-/*------------------------------------------------------------------*\
- *                                                                  *
- *                       free space stuff                           *
- *                                                                  *
-\*------------------------------------------------------------------*/
-
-
-static gchar*
-get_drive_stats_from_df(const gchar *mp)
-{
-    FILE *fp;
-    gchar buf[PATH_MAX];
-    gchar *result = NULL;
-    guint bytes_read = 0;
-
-    snprintf(buf, PATH_MAX, "df -k -P | grep %s", mp);
-    if((fp = popen(buf, "r")))
-    {
-	if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
-	{
-	    if(g_strstr_len(buf, PATH_MAX, mp))
-	    {
-		int i = 0;
-		int j = 0;
-		gchar buf2[PATH_MAX];
-		
-		while(i < bytes_read)
-		{
-		    while(!g_ascii_isspace(buf[i]))
-			buf2[j++] = buf[i++];
-		    buf2[j++] = ' ';
-		    while(g_ascii_isspace(buf[i]))
-			i++;
-		}
-		buf2[j] = '\0';
-		result = g_strdup_printf("%s", buf2);
-	    }
-	}
-	pclose(fp);	
-    }
-    return(result);
-}
-
-/* @size: size in kB (block of 1024 Bytes) */
-gchar*
-get_filesize_as_string(gdouble size)
-{
-    guint i = 0;
-    gchar *result = NULL;
-    gchar *sizes[] = { _("B"), _("kB"), _("MB"), _("GB"), _("TB"), NULL };
-
-    while((fabs(size) > 1000) && (i<4))
-    {
-	size /= 1000;
-	++i;
-    }
-    if (i>0)
-    {
-	if (fabs(size) < 10)
-	    result = g_strdup_printf("%0.2f %s", size, sizes[i]);
-	else if (fabs(size) < 100)
-	    result = g_strdup_printf("%0.1f %s", size, sizes[i]);
-	else
-	    result = g_strdup_printf("%0.0f %s", size, sizes[i]);
-    }
-    else
-    {   /* Bytes do not have decimal places */
-	result = g_strdup_printf ("%0.0f %s", size, sizes[i]);
-    }
-    return result;
-}
-
-#if 0
-static glong
-get_ipod_used_space(void)
-{
-    glong result = 0;
-    gchar *line = NULL;
-    gchar **tokens = NULL;
-    gchar *mp = prefs_get_ipod_mount ();
-    
-    if((line = get_drive_stats_from_df(mp)))
-    {
-	if((tokens = g_strsplit(line, " ", 5)))
-	{
-	    if(tokens[0] && tokens[1] && tokens[2]) 
-		result = atol(tokens[2]);
-	    g_strfreev(tokens);
-	}
-    }
-    g_free(line);
-    g_free (mp);
-    return(result);
-}
-#endif
-
-/* get free space in kB (block of 1024 Bytes) */
-static glong
-get_ipod_free_space(void)
-{
-    glong result = 0;
-    gchar *line = NULL;
-    gchar **tokens = NULL;
-    gchar *mp = prefs_get_ipod_mount ();
-
-    if((line = get_drive_stats_from_df(mp)))
-    {
-	if((tokens = g_strsplit(line, " ", 5)))
-	{
-	    if(tokens[0] && tokens[1] && tokens[2] && tokens[3]) 
-		result = atol(tokens[3]);
-	    g_strfreev(tokens);
-	}
-    }
-    g_free(line);
-    g_free(mp);
-    return(result);
-}
-
-static guint
-gtkpod_space_statusbar_update(void)
-{
-    if(gtkpod_space_statusbar)
-    {
-	gchar *buf = NULL;
-	gchar *str = NULL;
-	glong left, pending;
-
-	left = get_ipod_free_space() + get_filesize_of_deleted_tracks ();
-	pending = get_filesize_of_nontransferred_tracks();
-	if((left-pending) > 0)
-	{
-	    str = get_filesize_as_string((double)1024.0*(left - pending));
-	    buf = g_strdup_printf (_(" %s Free"), str);
-	}
-	else
-	{
-	    str = get_filesize_as_string((double)1024.0*(pending - left));
-	    buf = g_strdup_printf (_(" %s Pending"), str);
-	}
-	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_space_statusbar), 1);
-	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_space_statusbar), 1,  buf);
-	g_free (buf);
-	g_free (str);
-    }
-    return(TRUE);
-}
-
-void
-gtkpod_space_statusbar_init(GtkWidget *w)
-{
-    gtkpod_space_statusbar = w;
-
-    gtkpod_space_statusbar_update();
-    gtk_timeout_add(5000, (GtkFunction) gtkpod_space_statusbar_update, NULL);
 }
 
 
