@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-17 17:37:14 jcs>
+/* Time-stamp: <2004-01-17 23:50:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -243,7 +243,7 @@ struct cfg *cfg_new(void)
     mycfg->play_enqueue_path = g_strdup ("xmms -e %s");
     mycfg->mp3gain_path = g_strdup ("");
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
-    mycfg->filename_format = g_strdup ("%A/%d/%t - %n.mp3");
+    mycfg->filename_format = g_strdup ("%a/%A/%T - %t.mp3");
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
@@ -741,6 +741,34 @@ read_prefs_defaults(void)
       }
       prefs_set_paned_pos (PANED_STATUS1, -1);
       prefs_set_paned_pos (PANED_STATUS2, -1);
+  }
+  if (cfg->version < 0.72)
+  {
+      /* changed the meaning of the %x in filename_format */
+      gchar *sp = cfg->filename_format;
+      if (sp) while (*sp)
+      {
+	  if (sp[0] == '%')
+	  {
+	      switch (sp[1]) {
+	      case 'A':
+		  sp[1] = 'a';
+		  break;
+	      case 'd':
+		  sp[1] = 'A';
+		  break;
+	      case 'n':
+		  sp[1] = 't';
+		  break;
+	      case 't':
+		  sp[1] = 'T';
+		  break;
+	      default:
+		  break;
+	      }
+	  }
+	  ++sp;
+      }
   }
   /* ... */
   /* set statusbar paned to a decent value if unset */

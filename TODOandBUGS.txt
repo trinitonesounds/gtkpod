@@ -1,90 +1,89 @@
 TODO:
 
+- stable column sorting:
+> BTW, the other thing that bothers me about gtkpod is that column sorting
+> isn't stable.  AFAIK, gtk doesn't have a stable column sorting option. 
+> Do you know of a good way to do this?  Basically I'd like to click
+> "Track number", "Artist", "Album" then get everything sorted by
+> album-artist-track. (request by David Helder)
+
+- Darren Zimerman
+> As for improvements to gtkpod, the only one I can think of off the top 
+> of my head would be to have a list of available playlists in the 
+> right-click menu.  So instead of just "Add selection to new playlist", 
+> there would actually be list of current playlists (perhaps in a sub-menu).
+
+
+- immediate copying of added tracks to the iPod (when reading tracks
+  over a slow network they will still be in the buffer memory and
+  won't have to read over the network twice if they are copied right
+  away) (request by Seth Arnold)
 
 - playlist creation for orphaned tracks (Sam?)
 
 - reconstruction of iPod contents after file system corruption
   (Edward?)
 
-- replacement of libid3 with libid3tag
-    (reading "Country I" with 229 songs without duplicate recognition
-     JCS statistics:
-     libid3: 74/63 sec (with display), 44 sec (without display)).
-     libid3tag: 37 sec (without display)
-
 - album support (normalize all tracks of an album with the same gain)
    for volume normalization
-- Normalize Context Menus
 
 - gtkpod-like browse of file system contents
 
 - upload text notes to iPod
 
-- set Album/Artist etc. from filename (user configurable). Example: 
-       artist/album/01-track1.mp3 ...
-       01_album_artist_track ...
-
-- for genre (etc.) playlists: have confirmation dialogue before
-  removing old playlists (Chris Cutler?)
-
-- currently iTunesDB.ext uses iPodIDs to match data between
-  iTunesDB.ext and iTunesDB. If another program (like ephpod) writes
-  the iTunesDB the iPodIDs change and data cannot be matched any
-  more -> allow to match data using the MD5 checksums to partially
-  recover the extended information
-
 - add more progress dialogues
 
-- play song and enqueue song should update playcount and last played
-  song's field. (Should be done by some plugin that tells gtkpod when
-  a song has been played -- using either filename or md5 checksum).
+- play track and enqueue track should update playcount and last played
+  track's field. (Should be done by some plugin that tells gtkpod when
+  a track has been played -- using either filename or md5 checksum).
 
 - add an option to let the user decide if all the gtkpod's
-  playlist must be update on export.
+  playlist must be updated on export.
 
+- automate "Create iPod's directories"
 
+- on-the-fly resampling to a particular bit rate. I have 32 GB of
+  songs be cause some of them at at 192, but I only need them at 128
+  or so on the Ipod. Mus icmatch does this exact
+  thing. (zumpicon@verizon.net) JCS: this could be done along with an
+  arbitrary "conversion" on export: user provides a command line in
+  the prefs dialogue that is executed instead of the simple copy
+  command.
 
 Please feel free to submit further features.
 
 
 BUGLIST:
 
+- Submitted By: Olivier Magere (omagere)   [ 873014 ]
+
+  I tried to reconcile my Ipod with GtkPod. I wanted to remove
+  everything from the ipod.
+
+  gtkpod issued plenty of warning messages that it couldn't remove
+  files from the device but it still updated the ipod's database.
+
+  So I was in a situation where I had 5Gb of music on the ipod, none
+  of it known to the ipod.
+
+  Updating the db should be tied to successful file operations.
+
+  (JCS: F00/f00 related problem?)
+
+- "iTundesDB.ext could not be found" printed when "iTunesDB" could not
+  be found (confusing).
+
 - don't write iTunesDB if no tracks are imported.
 
-- when updating songs the free space indicator gets smaller and
-  smaller even if no new songs are added
-
 - during a long operation (menues are blocked) the user can still edit
-  the song data. This could potentially crash gtkpod -> need a way to
+  the track data. This could potentially crash gtkpod -> need a way to
   block editing as well without blocking navigating.
 
-- when copying songs to the iPod (export iTunesDB) and the iPod is
+- when copying tracks to the iPod (export iTunesDB) and the iPod is
   overfilled, libgtk sometimes segfaults (TreeModel changed but did
   not notify TreeView?)
 
-- when deleting an entry in the last sort tab (of 2):
+- when deleting an entry in the last sort tab (of 2), does not always crash:
 
-jcs@hatarakibachi:~/source/gtkpod/gtkpod$ 
-(gtkpod:3842): Gdk-CRITICAL **: file gdkwindow-x11.c: line 1132 (gdk_window_hide): assertion `window != NULL' failed
-
-(gtkpod:3842): Gtk-CRITICAL **: file gtkliststore.c: line 566 (gtk_list_store_get_value): assertion `GTK_LIST_STORE (tree_model)->stamp == iter->stamp' failed
-
-(gtkpod:3842): GLib-GObject-WARNING **: gtype.c:2963: type id `0' is invalid
-
-(gtkpod:3842): GLib-GObject-WARNING **: can't peek value table for type `<invalid>' which is not currently referenced
-
-[3]+  Segmentation fault      src/gtkpod
-------------------------
-- when deleting the last entry in the last sort tab (of 2):
-
-(gtkpod:5034): Gtk-CRITICAL **: file gtkliststore.c: line 566 (gtk_list_store_get_value): assertion `GTK_LIST_STORE (tree_model)->stamp == iter->stamp' failed
-
-(gtkpod:5034): GLib-GObject-WARNING **: gtype.c:2963: type id `0' is invalid
-
-(gtkpod:5034): GLib-GObject-WARNING **: can't peek value table for type `<invalid>' which is not currently referenced
-
-[3]   Segmentation fault      src/gtkpod
-
-
-
-Please add bugs as you find them.
+Please add/report bugs as you find them (jcsjcs at users dot
+sourceforge dot net).

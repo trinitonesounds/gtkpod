@@ -71,7 +71,7 @@ track_get_export_filename (Track *track)
 {
     GString *result;
     char *res_utf8, *res_cs = NULL;
-    char dummy[5];
+    char dummy[10];
     char *p, *str, *extension=NULL, *basename = NULL;
     gboolean original=FALSE; /* indicate whether original filename is
 			      * being used */
@@ -108,16 +108,37 @@ track_get_export_filename (Track *track)
 		    original = TRUE;
 		}
 		break;
-	    case 'A':
+	    case 'a':
 		tmp = track_get_item_utf8 (track, T_ARTIST);
 		break;
-	    case 'd':
+	    case 'A':
 		tmp = track_get_item_utf8 (track, T_ALBUM);
 		break;
-	    case 'n':
+	    case 't':
 		tmp = track_get_item_utf8 (track, T_TITLE);
 		break;
-	    case 't':
+	    case 'c':
+		tmp = track_get_item_utf8 (track, T_COMPOSER);
+		break;
+	    case 'g':
+	    case 'G':
+		tmp = track_get_item_utf8 (track, T_GENRE);
+		break;
+	    case 'C':
+		tmp = dummy;
+		if (track->cds == 0)
+		    sprintf (tmp, "%.2d", track->cd_nr);
+		else if (track->cds < 10)
+		    sprintf(tmp, "%.1d", track->cd_nr);
+		else if (track->cds < 100)
+		    sprintf (tmp, "%.2d", track->cd_nr);
+		else if (track->cds < 1000)
+		    sprintf (tmp, "%.3d", track->cd_nr);
+		else {
+		    sprintf (tmp,"%.4d", track->cd_nr);
+		}
+		break;
+	    case 'T':
 		tmp = dummy;
 		if (track->tracks == 0)
 		    sprintf (tmp, "%.2d", track->track_nr);
@@ -130,6 +151,9 @@ track_get_export_filename (Track *track)
 		else {
 		    sprintf (tmp,"%.4d", track->track_nr);
 		}
+		break;
+	    case '%':
+		tmp = "%";
 		break;
 	    default:
 		/* 

@@ -326,10 +326,13 @@ Export of Tracks
 
 Encoding of ID3 tags (charsets)
 -------------------------------
-You can specify the carset to be used for representing ID3 tags in the
-preferences menu. The default is "System Charset", which is the
-charset associated with the locale gtkpod is running under. If you
-tags are stored in a different encoding, you should set it
+If you use correctly written unicode ID3V2 tags you don't have to
+worry about the charset setting.
+
+Otherwise you must specify the carset to be used for representing ID3
+tags in the preferences menu. The default is "System Charset", which
+is the charset associated with the locale gtkpod is running under. If
+your tags are stored in a different encoding, you should set it
 appropriately.
 
 Please note that if necessary you can change the charset each time you
@@ -348,6 +351,43 @@ set when writing or updating/syncing. The default charset is "EUC-JP"
 -- it will be used when the charset cannot be autodetected, as well as
 when writing tags if a specific charset could not be determined
 before.
+
+gtkpod will recognize ID3V2 tags encoded in unicode automatically and
+ignore your charset setting when necessary.
+
+
+Extracting tag information from the filename
+--------------------------------------------
+Tags can also be extracted from the filename if you activate the
+option 'Use this template to parse filename for tag information' and
+supply a template that explains how the filanames are constructed.
+
+For filenames like 
+    music/new/latin1/alan_jackson - drive/01 drive_for_daddy_gene.mp3
+you could use
+    %a - %A/%T %*.mp3
+
+to extract artist, alabum, track number and title.
+
+The following character sequences are supported:
+
+    %t: title
+    %a: artist
+    %A: album
+    %c: composer
+    %t: title
+    %g: genre
+    %T: track number
+    %C: CD number
+    %*: placeholder, ignore data
+    %%: the character '%'
+
+You cannot supply a template like "%a%t.mp3" because gtkpod would not
+know how to separate artist and title. "%a_%t.mp3" would be correct,
+if artist and title are separated by an underscore.
+
+You can also omit the trailing ".mp3" if you want the template to
+apply to all files instead of only to mp3 files.
 
 
 Restoring your iPod after file system error

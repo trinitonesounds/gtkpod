@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-17 17:47:31 jcs>
+/* Time-stamp: <2004-01-18 00:21:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -308,6 +308,8 @@ static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
   *entry_utf16 = g_utf8_to_utf16 (*entry_utf8, -1, NULL, NULL, NULL);
 }
 
+/* parse the filename of @track and extract the tags as specified in
+   prefs_get_parsetags_template() */
 static void parse_filename (Track *track)
 {
     GList *tokens=NULL, *gl;
@@ -317,12 +319,18 @@ static void parse_filename (Track *track)
 
     template = prefs_get_parsetags_template ();
     if (!template) return;
+    /* If the template starts with a '%.' (except for '%%') we add a
+       '/' in front so that the field has a boundary */
     if ((template[0] == '%') && (template[1] != '%'))
 	 tpl = g_strdup_printf ("%c%s", G_DIR_SEPARATOR, template);
     else tpl = g_strdup (template);
 
     fn = g_strdup (track->pc_path_utf8);
 
+    /* We split the template into tokens. Each token starting with a
+       '%' and two chars long specifies a field ('%.'), otherwise it's
+       normal text (used to separate two fields).
+       "/%a - %t.mp3" would become ".mp3"  "%t"  " - "  "%a"  "/" */
     sps = tpl;
     while ((sp = strchr (sps, '%')))
     {
@@ -339,9 +347,13 @@ static void parse_filename (Track *track)
 	if (!sp[1]) break;
 	sps = sp+2;
     }
+    /* add what's left */
     if (sps[0] != 0)
 	tokens = g_list_prepend (tokens, g_strdup (sps));
 
+    /* If the "last" token does not contain a '.' (like in ".mp3"),
+       remove the filename extension ("somefile.mp3" -> "somefile")
+       because no extension was given in the template */
     str = g_list_nth_data (tokens, 0);
     if (str && (strchr (str, '.') == NULL))
     {
@@ -356,22 +368,29 @@ static void parse_filename (Track *track)
     puts (fn);
 #endif
 
+    /* use the tokens to parse the filename */
     gl = tokens;
     while (gl)
     {
 	gchar *token = gl->data;
+	/* remember: all tokens starting with '%' and two chars long
+	   specify a field */
 	if ((token[0] == '%') && (strlen (token) == 2))
 	{   /* handle tag item */
 	    GList *gln = gl->next;
 	    if (gln)
 	    {
+		gboolean parse_error = FALSE;
 		gchar *itm;
 		gchar *next_token = gln->data;
+		/* find next token so we can determine where the
+		   current field ends */
 		gchar *fnp = g_strrstr (fn, next_token);
-		gboolean parse_error = FALSE;
-		
+ 
 		if (!fnp)   break;
+		/* truncate the filename (for the next token) */
 		fnp[0] = 0;
+		/* adjust fnp to point to the start of the field */
 		fnp = fnp + strlen (next_token);
 #ifdef DEBUG
 		printf ("%s: '%s'\n", token, fnp);

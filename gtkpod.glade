@@ -2328,9 +2328,9 @@
 			      <child>
 				<widget class="GtkCheckButton" id="parsetags">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, %*: skip data. Example: %a - %A/%T %t.mp3</property>
+				  <property name="tooltip" translatable="yes">artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, skip data: %*, the character '%': %%. Example: %a - %A/%T %t.mp3</property>
 				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">Use this template to parse filename to fill in tags</property>
+				  <property name="label" translatable="yes">Use this template to parse filename for tag information</property>
 				  <property name="use_underline">True</property>
 				  <property name="relief">GTK_RELIEF_NORMAL</property>
 				  <property name="active">False</property>
@@ -2749,7 +2749,7 @@
 				  <child>
 				    <widget class="GtkEntry" id="cfg_filename_format">
 				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">Determines the filename of tracks you copy from the iPod, e.g '%A/%d/%t - %n' or '%o'. %A: artist; %d: album; %n: title; %t: track nr; %o: original filename (needs extended information file)</property>
+				      <property name="tooltip" translatable="yes">Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t' or '%o'.  Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, original filename (requires extended information file): %o, the character '%': %%.</property>
 				      <property name="can_focus">True</property>
 				      <property name="editable">True</property>
 				      <property name="visibility">True</property>

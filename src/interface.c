@@ -1717,10 +1717,10 @@ create_prefs_window (void)
   gtk_widget_show (readtags);
   gtk_box_pack_start (GTK_BOX (vbox55), readtags, FALSE, FALSE, 0);
 
-  parsetags = gtk_check_button_new_with_mnemonic (_("Use this template to parse filename to fill in tags"));
+  parsetags = gtk_check_button_new_with_mnemonic (_("Use this template to parse filename for tag information"));
   gtk_widget_show (parsetags);
   gtk_box_pack_start (GTK_BOX (vbox55), parsetags, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, parsetags, _("artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, %*: skip data. Example: %a - %A/%T %t.mp3"), NULL);
+  gtk_tooltips_set_tip (tooltips, parsetags, _("artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, skip data: %*, the character '%': %%. Example: %a - %A/%T %t.mp3"), NULL);
 
   table23 = gtk_table_new (2, 1, FALSE);
   gtk_widget_show (table23);
@@ -1842,7 +1842,7 @@ create_prefs_window (void)
   gtk_table_attach (GTK_TABLE (table9), cfg_filename_format, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_filename_format, _("Determines the filename of tracks you copy from the iPod, e.g '%A/%d/%t - %n' or '%o'. %A: artist; %d: album; %n: title; %t: track nr; %o: original filename (needs extended information file)"), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_filename_format, _("Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t' or '%o'.  Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, original filename (requires extended information file): %o, the character '%': %%."), NULL);
   gtk_entry_set_text (GTK_ENTRY (cfg_filename_format), _(" "));
 
   cfg_special_export_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (see above: 'Adding/Updating/\n Syncing') also for this filename."));
