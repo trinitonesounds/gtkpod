@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: gtkpod 0.73-CVS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-02-04 00:10+0900\n"
-"PO-Revision-Date: 2004-01-20 23:28+0100\n"
+"PO-Revision-Date: 2004-02-13 00:13+0100\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -506,11 +506,11 @@ msgstr "Dernière fois modifié"
 #: src/file.c:466
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
-msgstr ""
+msgstr "Paramètre '%s' dans le modèle '%s' inexistant\n"
 
 #: src/file.c:761
 msgid "Nothing to update"
-msgstr "Rien n'à mettre à jour"
+msgstr "Rien à mettre à jour"
 
 #: src/file.c:770
 #, c-format
@@ -817,7 +817,7 @@ msgstr "Fichier d'infos étendues non supprimé: '%s'"
 
 #: src/file.c:2538
 msgid "Syncing contacts and calendar..."
-msgstr ""
+msgstr "Synchronisation des contacts et du calendrier..."
 
 #: src/file.c:2559
 msgid "Backups could not be created!"
@@ -834,12 +834,12 @@ msgstr "Base de l'iPod sauvegardée"
 #: src/file_export.c:131
 #, c-format
 msgid "Output filename template ('%s') does not match the file '%s'\n"
-msgstr ""
+msgstr "Le modèle de fichier ('%s') ne correspond pas au fichier '%s'\n"
 
 #: src/file_export.c:207
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
-msgstr ""
+msgstr "Le paramêtre '%%%c' dans le modèle '%s' n'existe pas"
 
 #: src/file_export.c:250
 #, c-format
@@ -862,9 +862,9 @@ msgid "Unable to open '%s' for reading\n"
 msgstr "Impossible d'ouvrir le fichier '%s'\n"
 
 #: src/file_export.c:410
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write '%s-%s'\n"
-msgstr "Impossible d'écrire le fichier %s-%s\n"
+msgstr "Impossible d'écrire '%s-%s'\n"
 
 #: src/file_export.c:469
 msgid "Select Export Destination Directory"
@@ -1036,13 +1036,15 @@ msgstr "_Créer les répertoires système de l'iPod"
 
 #: src/interface.c:338
 msgid "_Check iPOD Files"
-msgstr ""
+msgstr "_Controler les fichiers de l'iPod"
 
 #: src/interface.c:341
 msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
 "(tracks with no corresponding files on iPOD)"
 msgstr ""
+"Trouver les fichiers orphelins (fichiers sans entrée dans la base iTunesDB) "
+"et les morceaux fictifs (morceaux sans fichiers correspondant sur l'iPod)"
 
 #: src/interface.c:355 src/interface.c:2396
 msgid "_Edit"
@@ -1177,14 +1179,12 @@ msgid "_Newly Added Tracks"
 msgstr "_Nouveaux morceaux ajoutés"
 
 #: src/interface.c:645
-#, fuzzy
 msgid "Synchronize Contacts"
-msgstr "Synchroniser les répertoires"
+msgstr "Synchroniser les contacts"
 
 #: src/interface.c:649
-#, fuzzy
 msgid "Synchronize Calendar"
-msgstr "Synchroniser les répertoires"
+msgstr "Synchroniser le calendrier"
 
 #: src/interface.c:653
 msgid "_Help"
@@ -1459,7 +1459,6 @@ msgid "Use this template to parse filename for tag information"
 msgstr "Utiliser ce masque pour générer les tags à partir du nom de fichier"
 
 #: src/interface.c:1774
-#, fuzzy
 msgid ""
 "artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
 "nr: %C, year: %Y, skip data: %*, the character '%': %%. You can separate "
@@ -1467,8 +1466,9 @@ msgid ""
 "used. Example: '%a - %A/%T %t.mp3;%t.wav'."
 msgstr ""
 "artiste: %a, album: %A, compositeur: %c, titre: %t, genre: %G, numéro de "
-"piste: %T, numéro de CD: %C, ignore: %*, le caractère '%': %%. Exemple: %a - "
-"%A/%T %t.mp3"
+"piste: %T, numéro de CD: %C, ignore: %*, le caractère '%': %%. Vous pouvez "
+"séparer plusieurs masques par un ';'. Le premier masque a concordé sera "
+"utilisé. Exemple: '%a - %A/%T %t.mp3;%t.wav'."
 
 #: src/interface.c:1786
 msgid "Overwrite tags that are already set."
@@ -1521,7 +1521,6 @@ msgid "Filename Format: "
 msgstr "Format du nom des fichiers: "
 
 #: src/interface.c:1896
-#, fuzzy
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
 "mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod "
@@ -1531,9 +1530,11 @@ msgid ""
 "character '%': %%."
 msgstr ""
 "Détermine le nom de fichier des morceaux que vous copiez de l'iPod, par "
-"exemple '%a/%A/%T - %t' or '%o'. %a: artiste; %A: album, %c: compositeur, %"
-"d: album; %g: genre, %t: titre; %T: numéro de piste, %C: numéro de CD, %o: "
-"nom de fichier original (nécessite le fichier d'infos étendues), le "
+"exemple '%a/%A/%T - %t' or '%o'. Vous pouvez séparer les expressions par "
+"des points-virgules -- gtkpod déterminera laquelle utiliser suivant l'"
+"extension du fichier donnée. Artiste: %a, album: %A, compositeur; %c, titre: "
+"%t, genre: %G, numéro de piste: %T, numéro de CD: %C, anné: %Y, le "
+"nom de fichier original (nécessite le fichier d'infos étendues): %o, le "
 "caractère '%': %%."
 
 #: src/interface.c:1897
@@ -1563,8 +1564,8 @@ msgstr ""
 "vous pouvez utiliser un codage différent de ci-dessus. Note: les infos sur "
 "les caractères sont stockées dans un fichier d'informations étendues. Les "
 "morceaux importés avant la version 0.51 de gtkpod n'utilisait pas ce "
-"fichier. Ce sera le jeu de caractère spécifié ici qui sera utilisé en cas de "
-"mise à jour de ces morceaux."
+"fichier. Ce sera le jeu de caractère spécifié ici qui sera utilisé en cas "
+"de mise à jour de ces morceaux."
 
 #: src/interface.c:1904
 msgid "Copying from iPod"
@@ -1736,7 +1737,7 @@ msgid ""
 "of pure ASCII tags. ID3v2.2/4 tags will also be written if they are already "
 "present in the file to write to."
 msgstr ""
-"les tags ID3v2.4 utilisent l'unicode pour stocker les tags de façon à ce que "
+"Les tags ID3v2.4 utilisent l'unicode pour stocker les tags de façon à ce que "
 "vous n'ayez pas à gérer vous même les jeux de caractères. gtkpod utilise "
 "UTF8 afin de ne pas augmenter la taille des tags en ASCII."
 
@@ -1888,7 +1889,7 @@ msgstr "Normalisation du volume"
 
 #: src/interface.c:2510
 msgid "Command to synchronize contacts:"
-msgstr ""
+msgstr "Commande pour synchroniser les contacts:"
 
 #: src/interface.c:2521 src/interface.c:2534
 #, c-format
@@ -1896,18 +1897,20 @@ msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
 msgstr ""
+"Indiquer le chemin exact ainsi que les paramètres de ligne de commande. '%i' "
+"sera remplacé par le point de montage de l'iPod."
 
 #: src/interface.c:2523
 msgid "Command to be called to synchronize calendar:"
-msgstr ""
+msgstr "Commande pour synchroniser le calendrier:"
 
 #: src/interface.c:2536
 msgid "Call automatically when synchronizing iTunesDB"
-msgstr ""
+msgstr "Lancer automatiquement lors de la synchronisation de la base iTunesDB"
 
 #: src/interface.c:2540
 msgid "Contacts / Calendar"
-msgstr ""
+msgstr "Contacts / Calendrier"
 
 #: src/interface.c:3006
 msgid " Logic: "
@@ -2090,7 +2093,6 @@ msgstr ""
 "majuscule). Le tri dépend du jeu de caractères."
 
 #: src/interface.c:4089
-#, fuzzy
 msgid ""
 "Notice: the track order is always stored to the iPod when you use drag and "
 "drop to re-arrange the tracks.\n"
@@ -2099,7 +2101,8 @@ msgid ""
 "above."
 msgstr ""
 "Note: l'ordre des morceaux est toujours enregistré sur l'iPod lors du "
-"glisser/déposer. Afin de trier par ordre alphabétique sur l'iPod, vous devez "
+"glisser/déposer utiliser pour les réarranger.\n"
+"Afin de trier par ordre alphabétique sur l'iPod, vous devez "
 "cliquer sur le menu 'Édition' puis 'Sauver l'ordre de tri des morceaux "
 "affichés' ou l'option 'Sauver automatiquement' ci-dessus."
 
@@ -2152,25 +2155,28 @@ msgid "Total"
 msgstr "Total"
 
 #: src/interface.c:4734
-#, fuzzy
 msgid ""
 "Selected\n"
 "Playlist"
-msgstr "_Liste de lecture sélectionnée"
+msgstr ""
+"Liste de lecture\n"
+"Sélectionnée"
 
 #: src/interface.c:4742
-#, fuzzy
 msgid ""
 "Displayed\n"
 "Tracks"
-msgstr "_Morceaux affichés"
+msgstr ""
+"Morceaux\n"
+"Affichés"
 
 #: src/interface.c:4750
-#, fuzzy
 msgid ""
 "Selected\n"
 "Tracks"
-msgstr "Morceaux sélec_tionnés"
+msgstr ""
+"Morceaux\n"
+"Sélec_tionnés"
 
 #: src/itunesdb.c:400
 msgid "Master-PL"
@@ -2376,11 +2382,12 @@ msgstr "Jens Lautenbach: améliorations esthétiques de l'interface\n"
 
 #: src/misc.c:442
 msgid "Alex Tribble: iPod eject patch\n"
-msgstr ""
+msgstr "Alex Tribble: éjection de l'iPod\n"
 
 #: src/misc.c:444
 msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling\n"
 msgstr ""
+"Yaroslav Halchenko: gestion des fichiers orphelins et morceaux fictifs\n"
 
 #: src/misc.c:447
 msgid "This program borrows code from the following projects:\n"
@@ -2697,41 +2704,40 @@ msgstr "Dernière fois"
 
 #: src/misc.c:2959
 msgid "Removal of dangling tracks with no files on PC was canceled."
-msgstr ""
+msgstr "Suppression des morceaux fictifs sans fichier sur le PC a été annulée."
 
 #: src/misc.c:2961
 msgid "Handling of dangling tracks with files on PC was canceled."
-msgstr ""
+msgstr "Récupération des morceaux fictifs avec le fichier sur le PC a été annulée."
 
 #: src/misc.c:2999
 msgid "Dangling tracks with no files on PC were removed."
-msgstr ""
+msgstr "Les morceaux fictifs sans fichier sur le PC ont été supprimés."
 
 #: src/misc.c:3001
 msgid "Dangling tracks with files on PC were handled."
-msgstr ""
+msgstr "Les morceaux fictifs avec le fichier sur le PC ont été récupérés."
 
 #: src/misc.c:3028
-#, fuzzy
 msgid "Track"
-msgstr "Morceaux"
+msgstr "Morceau"
 
 #: src/misc.c:3066
 msgid "Creating a tree of known files"
-msgstr ""
+msgstr "Création l'arborescence des fichiers reconnus"
 
 #: src/misc.c:3088
 msgid "Checking iPOD files against known files in DB"
-msgstr ""
+msgstr "Controle des fichiers sur l'iPod par rapport a ceux de la base iTunesDB"
 
 #: src/misc.c:3118
 msgid "Orphaned"
-msgstr ""
+msgstr "Orphelin"
 
 #: src/misc.c:3145
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
-msgstr ""
+msgstr "%d orphelins et %d fichiers fictifs. Traitement en cours..."
 
 #: src/misc.c:3172
 #, c-format
@@ -2744,7 +2750,13 @@ msgid_plural ""
 "Press OK to have them transfered from the files on next Sync, CANCEL to "
 "leave them as is."
 msgstr[0] ""
+"Le morceau fictif suivant a son fichier correspondant sur le PC.\n"
+"Choisissez OK pour le transférer à la prochaine synchro, Annuler pour laisser "
+"tel quel."
 msgstr[1] ""
+"Les morceaux fictifs suivant ont leurs fichiers correspondant sur le PC.\n"
+"Choisissez OK pour le transférer à la prochaine synchro, Annuler pour laisser "
+"tel quel."
 
 #: src/misc.c:3177
 #, c-format
@@ -2755,24 +2767,27 @@ msgid_plural ""
 "The following %d dandling tracks do not have files on PC. \n"
 "Press OK to remove them, CANCEL to leave them. as is"
 msgstr[0] ""
+"Le morceau fictif suivant n'a pas de fichier correspondant sur le PC.\n"
+"Choisissez OK pour le supprimer, Annuler pour le laisser tel quel."
 msgstr[1] ""
+"Les morceaux fictifs suivant n'ont pas de fichiers correspondant sur le PC.\n"
+"Choisissez OK pour les supprimer, Annuler pour les laisser tel quel."
 
 #. we want unique window for each
 #. gboolean modal,
 #: src/misc.c:3184
-#, fuzzy
 msgid "Dangling Tracks"
-msgstr "Attention"
+msgstr "Morceaux fictifs"
 
 #: src/misc.c:3205
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
-msgstr ""
+msgstr "Trouvé %d orphelins et %d morceaux fictifs. Fini."
 
 #: src/mp3file.c:406
-#, fuzzy, c-format
+#, c-format
 msgid "Error opening MP3 file '%s'"
-msgstr "Erreur de lecture du fichier \"%s\".\n"
+msgstr "Erreur a l'ouverture du fichier MP3 '%s'"
 
 #: src/mp3file.c:1126
 #, c-format
@@ -2883,6 +2898,8 @@ msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr ""
+"Veuillez renseigner la commande à appeler dans la section 'Outils' dans "
+"la fenêtre de préférence.\n"
 
 #: src/normalize.c:531
 #, c-format
@@ -2892,6 +2909,10 @@ msgid ""
 "Please verify the setting in the 'Tools' section of the preferences dialog.\n"
 "\n"
 msgstr ""
+"Impossible de trouver le fichier '%s'.\n"
+"\n"
+"Veuillez contrôler la section 'Outils' dans les préférences.\n"
+"\n"
 
 #: src/normalize.c:573
 #, c-format
@@ -2899,6 +2920,8 @@ msgid ""
 "'%s' returned the following output:\n"
 "%s\n"
 msgstr ""
+"'%s' a retourné le résultat suivant:\n"
+"%s\n"
 
 #: src/playlist.c:404
 #, c-format
@@ -3061,6 +3084,9 @@ msgid ""
 "please send it to jcsjcs at users.sourceforge.net for inclusion into the "
 "next release."
 msgstr ""
+"Inspirez vous des scripts dans '%s'. Si vous écrivez un nouveau script, "
+"veuillez s'il vous plait l'envoyer à jcsjcs at users.sourceforge.net afin "
+"qu'il soit inclu dans la prochaine version de gtkpod."
 
 #. update for count == 1, 21, 41 ... and for count == n
 #: src/song.c:406
@@ -3103,113 +3129,12 @@ msgid "Couldn't find pixmap file: %s"
 msgstr "Impossible de trouver le fichier pixmap: %s"
 
 #: src/wavfile.c:106
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open '%s' for reading.\n"
-msgstr "Ne peut ouvrir en lecture le fichier \"%s\".\n"
+msgstr "Ne peut ouvrir en lecture le fichier '%s'.\n"
 
 #: src/wavfile.c:179
-#, fuzzy, c-format
+#, c-format
 msgid "%s does not appear to be a supported wav file.\n"
-msgstr "'%s' n'est pas un fichier audio mp4\n"
+msgstr "%s ne semble pas être un format wav supporté.\n"
 
-#~ msgid "Could not find mp3gain executable."
-#~ msgstr "Impossible de trouver le fichier mp3gain."
-
-#~ msgid "[Lost tracks]"
-#~ msgstr "[Morceaux perdus]"
-
-#~ msgid "Selected"
-#~ msgstr "Sélectionné"
-
-#~ msgid "Track View"
-#~ msgstr "Morceaux"
-
-#~ msgid "Current Playlist"
-#~ msgstr "Liste de lecture courante"
-
-#~ msgid "Total file size"
-#~ msgstr "Taille totale"
-
-#~ msgid "Total play time"
-#~ msgstr "Temps total de lecture"
-
-#~ msgid "Total number of tracks"
-#~ msgstr "Nombre total de morceaux"
-
-#~ msgid "Automatically Set Empty ID3-Tags To Filename?"
-#~ msgstr "Mettre automatiquement à vide les tags ID3 du fichier?"
-
-#~ msgid "Update all tags (not only changed ones)"
-#~ msgstr "Mettre à jour tous les tags (même ceux qui n'ont pas été modifiés)"
-
-#~ msgid "Normally only the tag you changed is written to disk."
-#~ msgstr "Normalement, seuls les tags modifiés sont écrits sur le disque"
-
-#~ msgid "Error while updating ID3v1 tag of '%s' (%s)\n"
-#~ msgstr "Impossible de mettre à jour le tag ID3v1 de '%s' (%s)\n"
-
-#~ msgid "Error while removing ID3v1 tag of '%s' (%s)\n"
-#~ msgstr "Impossible de supprimer le tag ID3v1 de '%s' (%s)\n"
-
-#~ msgid "Error while updating ID3v2 tag of '%s' (%s)\n"
-#~ msgstr "Impossible de mettre à jour le tag ID3v2 de '%s' (%s)\n"
-
-#~ msgid "Error while removing ID3v2 tag of '%s' (%s)\n"
-#~ msgstr "Impossible de supprimer le tag ID3v2 de '%s' (%s)\n"
-
-#~ msgid "No error reported"
-#~ msgstr "Aucune erreur reportée"
-
-#~ msgid "No available memory"
-#~ msgstr "Mémoire insuffisante"
-
-#~ msgid "No data to parse"
-#~ msgstr "Aucune donnée à traiter"
-
-#~ msgid "Improperly formatted data"
-#~ msgstr "Mauvais format de donnée"
-
-#~ msgid "No buffer to write to"
-#~ msgstr "Pas de tampon pour écrire"
-
-#~ msgid "Buffer is too small"
-#~ msgstr "Le tampon est trop petit"
-
-#~ msgid "Invalid frame ID"
-#~ msgstr "Mauvais identifiant de cadre"
-
-#~ msgid "Requested field not found"
-#~ msgstr "Le fichier spécifié est introuvable"
-
-#~ msgid "Unknown field type"
-#~ msgstr "Type de champ inconnu"
-
-#~ msgid "Tag is already attached to a file"
-#~ msgstr "Le fichier est déjà taggé"
-
-#~ msgid "Invalid tag version"
-#~ msgstr "Mauvaise version de tag"
-
-#~ msgid "No file to parse"
-#~ msgstr "Pas de fichier à traiter"
-
-#~ msgid "Attempting to write to a read-only file"
-#~ msgstr "Le fichier est en lecture seule"
-
-#~ msgid "Error in compression/uncompression"
-#~ msgstr "Erreur à la compression/décompression"
-
-#~ msgid "Unknown error message!"
-#~ msgstr "Message d'erreur inconnu!"
-
-#~ msgid "  -w:           write changed ID3 tags to file\n"
-#~ msgstr "  -w:           met a jour les fichiers dont les tags ont changes\n"
-
-#~ msgid "  --id3_write:   same as '-w'.\n"
-#~ msgstr "  --id3_write:  identique a '-w'.\n"
-
-#~ msgid "  -c:           check files automagically for duplicates\n"
-#~ msgstr "  -c:           controle automatiquement les doublons\n"
-
-#~ msgid "  --md5:        same as '-c'.\n"
-#~ msgstr "  --md5:        identique a '-c'.\n"
