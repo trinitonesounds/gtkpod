@@ -1173,3 +1173,12 @@ on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
 	gtk_toggle_button_get_active(togglebutton));
 }
 
+
+void
+on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_write_charset(
+	gtk_toggle_button_get_active(togglebutton));
+}
+

@@ -398,3 +398,7 @@ on_space_statusbar_realize             (GtkWidget       *widget,
 void
 on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

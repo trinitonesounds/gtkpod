@@ -316,6 +316,22 @@ static void set_entry_from_filename (Song *song, gint column)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
+/* update the song->charset info with the currently used charset */
+static void update_charset_info (Song *song)
+{
+    if (song)
+    {
+	G_CONST_RETURN gchar *charset = prefs_get_charset ();
+	C_FREE (song->charset);
+	if (!charset || !strlen (charset))
+	{    /* use standard locale charset */
+	    g_get_charset (&charset);
+	}
+	song->charset = g_strdup (charset);
+    }
+}
+
+
 /* Fills the supplied @or_song with data from the file @name. If
  * @or_song is NULL, a new song struct is created The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
@@ -325,7 +341,6 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 {
     Song *song = NULL;
     File_Tag *filetag;
-    G_CONST_RETURN gchar *charset;
     gint len;
 
     if (!name) return NULL;
@@ -430,13 +445,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
     g_free (filetag);
 
     /* set charset used */
-    C_FREE (song->charset);
-    charset = prefs_get_charset ();
-    if (!charset || !strlen (charset))
-    {    /* use standard locale charset */
-	g_get_charset (&charset);
-    }
-    song->charset = g_strdup (charset);
+    update_charset_info (song);
 
     /* Make sure all strings are initialised -- that way we don't 
        have to worry about it when we are handling the strings */
@@ -590,7 +599,7 @@ void display_non_updated (Song *song, gchar *txt)
 		buf,                /* label */
 		str->str,           /* scrolled text */
 		TRUE,               /* gboolean confirm_again, */
-		NULL,               /* ConfHandlerCA confirm_again_handler,*/
+		prefs_set_show_non_updated,/* confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/
 		CONF_NO_BUTTON,     /* don't show "Apply" button */
 		CONF_NO_BUTTON,     /* cancel_handler,*/
@@ -652,7 +661,7 @@ void display_updated (Song *song, gchar *txt)
 		buf,                /* label */
 		str->str,           /* scrolled text */
 		TRUE,               /* gboolean confirm_again, */
-		NULL,               /* ConfHandlerCA confirm_again_handler,*/
+		prefs_set_show_updated,/* confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/
 		CONF_NO_BUTTON,     /* don't show "Apply" button */
 		CONF_NO_BUTTON,     /* cancel_handler,*/
@@ -715,6 +724,10 @@ void update_song_from_file (Song *song)
 	}
 	/* use the charset used when first importing the song */
 	prefs_set_charset (song->charset);
+    }
+    else
+    {   /* we should update the song->charset information */
+	update_charset_info (song);
     }
 
     if (song->pc_path_locale)
@@ -902,7 +915,24 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 {
     File_Tag *filetag;
     gchar *ipod_fullpath, track[20];
+    gchar *prefs_charset = NULL;
     Song *oldsong;
+
+    /* if we are to use the charset used when first importing
+       the song, change the prefs settings temporarily */
+    if (!prefs_get_write_charset () && song->charset)
+    {   /* we should use the initial charset for the update */
+	if (prefs_get_charset ())
+	{   /* remember the charset originally set */
+	    prefs_charset = g_strdup (prefs_get_charset ());
+	}
+	/* use the charset used when first importing the song */
+	prefs_set_charset (song->charset);
+    }
+    else
+    {   /* we should update the song->charset information */
+	update_charset_info (song);
+    }
 
     filetag = g_malloc0 (sizeof (File_Tag));
     if ((tag_id == S_ALL) || (tag_id == S_ALBUM))
@@ -952,7 +982,12 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 	md5_song_exists_insert (song);
     }
     g_free (filetag);
-    return(TRUE);
+
+    if (!prefs_get_update_charset ())
+    {   /* reset charset */
+	prefs_set_charset (prefs_charset);
+    }
+    return TRUE;
 }
 
 

@@ -246,6 +246,12 @@ prefs_window_create(void)
 					 tmpcfg->id3_writeall);
 	    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_write_charset")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->write_charset);
+	    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_delete_playlist")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -416,6 +422,7 @@ prefs_window_set(void)
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	prefs_set_update_charset(tmpcfg->update_charset);
+	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_automount(tmpcfg->automount);
 
 	sm_show_preferred_columns();
@@ -566,6 +573,8 @@ prefs_window_set_id3_write(gboolean val)
     tmpcfg->id3_write = val;
     if((w = lookup_widget(prefs_window, "cfg_id3_writeall")))
 	gtk_widget_set_sensitive (w, val);
+    if((w = lookup_widget(prefs_window, "cfg_write_charset")))
+	gtk_widget_set_sensitive (w, val);
 }
 
 /**
@@ -693,6 +702,11 @@ void prefs_window_set_display_toolbar (gboolean val)
 void prefs_window_set_update_charset (gboolean val)
 {
     tmpcfg->update_charset = val;
+}
+
+void prefs_window_set_write_charset (gboolean val)
+{
+    tmpcfg->write_charset = val;
 }
 
 void prefs_window_set_save_sorted_order (gboolean val)

@@ -1034,7 +1034,7 @@ create_confirm_window (void)
   gtk_box_pack_start (GTK_BOX (vbox6), hbox3, FALSE, FALSE, 2);
   gtk_container_set_border_width (GTK_CONTAINER (hbox3), 2);
 
-  never_again = gtk_check_button_new_with_mnemonic (_("Never ask this Again"));
+  never_again = gtk_check_button_new_with_mnemonic (_("Never show this dialogue again"));
   gtk_widget_show (never_again);
   gtk_box_pack_start (GTK_BOX (hbox3), never_again, FALSE, FALSE, 0);
 
@@ -1128,6 +1128,7 @@ create_new_prefs_window (void)
   GtkWidget *cfg_id3_write;
   GtkWidget *table3;
   GtkWidget *cfg_id3_writeall;
+  GtkWidget *cfg_write_charset;
   GtkWidget *label32;
   GtkWidget *label24;
   GtkWidget *vbox23;
@@ -1281,7 +1282,7 @@ create_new_prefs_window (void)
   cfg_update_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset also when updating song"));
   gtk_widget_show (cfg_update_charset);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_charset, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_update_charset, _("Normally the charset specified when first importing the song will be used to update the song information. If you chose a wrong charset when first importing a song and want to correct it using the \"Update Song\" function, you must check this option. Note: songs imported before V0.51 will have no charset stored and the charset specified above will always be used."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_update_charset, _("Normally the charset specified when first importing the song will be used to update the song information. If you have chosen a wrong charset when first importing a song and want to correct it using the \"Update Song\" function, you must check this option. Note: charset info is stored in the extended information file (see Export) and songs imported before V0.51 will have no charset stored -- the charset specified above will be used at first."), NULL);
 
   cfg_md5songs = gtk_check_button_new_with_mnemonic (_("Don't allow file duplication"));
   gtk_widget_show (cfg_md5songs);
@@ -1389,7 +1390,7 @@ create_new_prefs_window (void)
   gtk_widget_show (vbox21);
   gtk_container_add (GTK_CONTAINER (frame9), vbox21);
 
-  cfg_write_extended = gtk_check_button_new_with_mnemonic (_("Write extended information (PC filenames,\nMD5 hashes). Recommended."));
+  cfg_write_extended = gtk_check_button_new_with_mnemonic (_("Write extended information (PC filenames,\nMD5 hashes, charset). Recommended."));
   gtk_widget_show (cfg_write_extended);
   gtk_box_pack_start (GTK_BOX (vbox21), cfg_write_extended, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_write_extended, _("Highly recommended for faster import when taking advantage of the duplication recognition. Also, having the PC filenames allows writing changed ID3 tags to disk, and even to reconstruct your ipod's contents in case of file system corruption (change the \"transferred=\" entries in your backuped database)."), NULL);
@@ -1416,7 +1417,7 @@ create_new_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox22), cfg_id3_write, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_id3_write, _("The tags are written to the files on your harddrive and on the ipod (if available)."), NULL);
 
-  table3 = gtk_table_new (1, 1, FALSE);
+  table3 = gtk_table_new (2, 1, FALSE);
   gtk_widget_show (table3);
   gtk_box_pack_start (GTK_BOX (vbox22), table3, FALSE, FALSE, 0);
 
@@ -1426,6 +1427,13 @@ create_new_prefs_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 20, 0);
   gtk_tooltips_set_tip (tooltips, cfg_id3_writeall, _("Normally only the tag you changed is written to disk."), NULL);
+
+  cfg_write_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (in the input section)\nwhen writing tags"));
+  gtk_widget_show (cfg_write_charset);
+  gtk_table_attach (GTK_TABLE (table3), cfg_write_charset, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 20, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_write_charset, _("Normally the charset specified when first importing the song will be used to write the tags. If you have chosen a wrong charset when first importing a song, you should select this option along with the correct charset.  Note: uses the extended information file to store the charset information (see above) and songs imported before V0.51 will have no charset stored -- the charset specified in the Input section will be used at first."), NULL);
 
   label32 = gtk_label_new (_("Songs"));
   gtk_widget_show (label32);
@@ -1797,6 +1805,9 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) cfg_id3_writeall, "toggled",
                     G_CALLBACK (on_cfg_id3_writeall_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_write_charset, "toggled",
+                    G_CALLBACK (on_cfg_write_charset_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_display_toolbar, "toggled",
                     G_CALLBACK (on_cfg_display_toolbar_toggled),
                     NULL);
@@ -1899,6 +1910,7 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_id3_write, "cfg_id3_write");
   GLADE_HOOKUP_OBJECT (new_prefs_window, table3, "table3");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_id3_writeall, "cfg_id3_writeall");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_write_charset, "cfg_write_charset");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label32, "label32");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label24, "label24");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox23, "vbox23");

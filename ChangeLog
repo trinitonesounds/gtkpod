@@ -1,10 +1,16 @@
 gtkpod V0.51-CVS
+	NEW FEATURE: gtkpod remembers charset used when initially
+	importing a song and uses this when "updating" the song
+	information from file or writing tags to file (needs extended
+	information enabled).
+
 	NEW FEATURE: display free space on iPod.
 
 	NEW FEATURE: menu item "Arrange Sort Tabs" to make all visible
 	sort tabs the same size
 
-	IMPROVEMENT: new song column types: file size and play time
+	IMPROVEMENT: new song column types: file size, play time,
+	avg. bitrate
 
 	BUGFIX: fixed "dead" context menu "Alphabetize"
 
