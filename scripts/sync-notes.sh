@@ -100,13 +100,23 @@ echo -n "Syncing iPod ... [Notes] "
 rm -f $IPOD_MOUNT/Notes/*
 cd $NOTESPATH
 
-if [ -f * ]; then
-	for FILE in *
-	do
-  		cat "$FILE" | $RECODE > "$IPOD_MOUNT/Notes/$FILE"
-	done
-else
-	echo  
-	echo -n "No files in $NOTESPATH - "
-fi
+I=0
+
+for FILE in *
+do
+		if [ -f "$FILE" ]; then
+			((++I))
+			cat "$FILE" | $RECODE > "$IPOD_MOUNT/Notes/$FILE"
+		fi
+done
+echo  
+case $I in 
+	0) echo "No notes found to copy";;
+	1) echo "1 note copied";;
+	*) echo "$I notes copied";;
+esac
+
+`	
+echo $I files copied
+
 echo "done!"

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-12 00:48:06 jcs>
+/* Time-stamp: <2005-01-13 00:06:25 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -45,8 +45,9 @@ struct itdbs_head
 typedef struct
 {
     struct itdbs_head *itdbs_head; /* pointer to the master itdbs_head */
-    GHashTable *md5hash;           /* md5 hash information       */
-    gboolean data_changed;         /* data changed since import? */
+    GHashTable *md5hash;           /* md5 hash information             */
+    gboolean data_changed;         /* data changed since import?       */
+    gboolean itdb_imported;        /* has in iTunesDB been imported?   */
 } ExtraiTunesDBData;
 
 typedef struct

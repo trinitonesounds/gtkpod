@@ -81,7 +81,8 @@ void sync_tracks (GList *selected_tracks);
 void display_non_updated (Track *track, gchar *txt);
 void display_updated (Track *track, gchar *txt);
 void display_mserv_problems (Track *track, gchar *txt);
-void handle_import (void);
+void handle_import (iTunesDB *old_itdb, gchar *mp,
+		    gchar *itdb_name, gint pos);
 void handle_export (void);
 void data_changed (iTunesDB *itdb);
 gchar *get_track_name_on_disk_verified (Track *track);

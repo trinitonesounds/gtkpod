@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-12 00:48:05 jcs>
+/* Time-stamp: <2005-01-13 00:06:24 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -141,6 +141,7 @@ void gp_itdb_add_extra (iTunesDB *itdb)
 	itdb->userdata_duplicate =
 	    (ItdbUserDataDuplicateFunc)gp_itdb_extra_duplicate;
 	eitdb->data_changed = FALSE;
+	eitdb->itdb_imported = FALSE;
     }
 }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-12 00:50:52 jcs>
+/* Time-stamp: <2005-01-13 00:11:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -201,8 +201,9 @@ static void destroy_extendedinfohash (void)
 
 /* Read extended info from "name" and check if "itunes" is the
    corresponding iTunesDB (using the itunes_hash value in "name").
-   The data is stored in a hash table with the ipod_id as key.
-   This hash table is used by add_track() to fill in missing information */
+   The data is stored in a hash table with the ipod_id as key.  This
+   hash table is used by fill_in_extended_info() (called from
+   gp_import_itdb()) to fill in missing information */
 /* Return TRUE on success, FALSE otherwise */
 static gboolean read_extended_info (gchar *name, gchar *itunes)
 {
@@ -387,18 +388,21 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 }
 
 
-/* Import an iTunesDB and return an iTunesDB structure. It will have
- * been merged with the existing @old_itdb. */
-/* @itdb_name: if non-NULL the iTunesDB.@itdb_name will be read from
-   the configuration directory (~/.gtkpod) and extended informations will
-   be used. */
+/* Import an iTunesDB and return an iTunesDB structure.
+ * If @old_itdb is set, it will be merged with the newly imported one
+ * @mp: mount point of iPod (if reading an iPod iTunesDB)
+ * @itdb_name: name of iTunesDB (if reading a local file browser) */
 /* Return value: a new iTunesDB structure or NULL in case of an error */
-iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *itdb_name)
+iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *mp, gchar *itdb_name)
 {
     gchar *cfgdir;
     GList *gl;
+    ExtraiTunesDBData *eitdb;
     iTunesDB *itdb = NULL;
     GError *error = NULL;
+
+    g_return_val_if_fail (mp && itdb_name, NULL);
+    g_return_val_if_fail (!prefs_get_offline() && !mp, NULL);
 
     if (prefs_get_offline() || itdb_name)
     { /* offline - requires extended info */
@@ -452,9 +456,8 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *itdb_name)
     { /* iPod is connected */
 	const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL};
 	const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
-	gchar *ipod_mount_filename = charset_from_utf8(prefs_get_ipod_mount());
-	gchar *name_ext = resolve_path (ipod_mount_filename, ext_db);
-	gchar *name_db = resolve_path (ipod_mount_filename, db);
+	gchar *name_ext = resolve_path (mp, ext_db);
+	gchar *name_db = resolve_path (mp, db);
 	if (name_db)
 	{
 	    if (prefs_get_write_extended_info ())
@@ -464,7 +467,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *itdb_name)
 		    gtkpod_warning (_("Extended info will not be used.\n"));
 		}
 	    }
-	    itdb = itdb_parse (ipod_mount_filename, &error);
+	    itdb = itdb_parse (mp, &error);
 	    if(itdb && !error)
 	    {
 		gtkpod_statusbar_message (
@@ -488,7 +491,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *itdb_name)
 	else
 	{
 	    gchar *name = g_build_filename (
-		ipod_mount_filename,
+		mp,
 		"iPod_Control","iTunes","iTunesDB",NULL);
 	    gtkpod_warning (_("'%s' does not exist. Import aborted.\n\n"),
 			    name);
@@ -496,31 +499,34 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *itdb_name)
 	}
 	g_free (name_ext);
 	g_free (name_db);
-	g_free (ipod_mount_filename);
     }
 
     /* add Extra*Data */
     gp_itdb_add_extra_full (itdb);
-    /* validate all tracks */
+    /* validate all tracks and fill in extended info */
     for (gl=itdb->tracks; gl; gl=gl->next)
     {
 	Track *track = gl->data;
+	fill_in_extended_info (track);
 	gp_track_validate_entries (track);
     }
+    /* delete hash information (if present) */
+    destroy_extendedinfohash ();
     /* find duplicates */
     gp_itdb_hash_tracks (itdb);
+
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, NULL);
 
     if (old_itdb)
     {
 	/* this table holds pairs of old_itdb-tracks/new_itdb/tracks */
 	ExtraiTunesDBData *old_eitdb = old_itdb->userdata;
-	ExtraiTunesDBData *eitdb = itdb->userdata;
 	GHashTable *track_hash = g_hash_table_new (g_direct_hash,
 						   g_direct_equal);
 	Playlist *mpl = itdb_playlist_mpl (itdb);
 	g_return_val_if_fail (mpl, NULL);
 	g_return_val_if_fail (old_eitdb, NULL);
-	g_return_val_if_fail (eitdb, NULL);
 
 	/* add tracks from @old_itdb to new itdb */
 	for (gl=old_itdb->tracks; gl; gl=gl->next)
@@ -560,110 +566,29 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *itdb_name)
 	/* copy data_changed flag */
 	eitdb->data_changed = old_eitdb->data_changed;
     }
+    /* set mark that this itdb struct contains an imported iTunesDB */
+    eitdb->itdb_imported = TRUE;
+
     return itdb;
 }
 
 
 
 
-/* Handle the function "Import iTunesDB" */
-/* The import button is disabled once you have imported an existing
-   database or exported your new data. Therefore, no specific check
-   has to be performed on whether it's OK to import or not. */
-void handle_import (void)
+/* Handle the function "Import iTunesDB"
+ * If @old_itdb is set, it will be merged with the newly imported one
+ * @mp: mount point of iPod (if reading an iPod iTunesDB)
+ * @itdb_name: name of iTunesDB (if reading a local file browser)
+ * @pos: insert at which position (ignored if @old_itdb is set)
+ */
+void handle_import (iTunesDB *old_itdb, gchar *mp,
+		    gchar *itdb_name, gint pos)
 {
-    gchar *cfgdir;
-    gboolean success, md5tracks;
     guint32 n;
-
-    /* we must switch off duplicate detection during import --
-     * otherwise we mess up the playlists */
-
-    md5tracks = prefs_get_md5tracks ();
-    prefs_set_md5tracks (FALSE);
 
     n = get_nr_of_tracks (); /* how many tracks are already there? */
 
     if (!prefs_get_block_display ())  block_widgets ();
-    if (!prefs_get_offline())
-    { /* iPod is connected */
-	const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL};
-	const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
-	gchar *ipod_mount_filename = charset_from_utf8(prefs_get_ipod_mount());
-	gchar *name_ext = resolve_path(ipod_mount_filename,ext_db);
-	gchar *name_db = resolve_path(ipod_mount_filename,db);
-	if (name_db)
-	{
-	    if (prefs_get_write_extended_info())
-	    {
-		success = read_extended_info (name_ext, name_db);
-		if (!success)
-		{
-		    gtkpod_warning (_("Extended info will not be used.\n"));
-		}
-	    }
-	    display_enable_disable_view_sort (FALSE);
-	    if(itunesdb_parse (ipod_mount_filename))
-		gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
-	    else
-		gtkpod_statusbar_message(_("iPod Database Import Failed"));
-	    display_enable_disable_view_sort (TRUE);
-	}
-	else
-	{
-	    gchar *name = g_build_filename (
-		ipod_mount_filename,
-		"iPod_Control","iTunes","iTunesDB",NULL);
-	    gtkpod_warning (_("'%s' does not exist. Import aborted.\n\n"), name);
-	    g_free (name);
-	}
-	g_free (name_ext);
-	g_free (name_db);
-	g_free(ipod_mount_filename);
-    }
-    else
-    { /* offline - requires extended info */
-	if ((cfgdir = prefs_get_cfgdir ()))
-	{
-	    gchar *name_ext = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
-	    gchar *name_db = g_build_filename (cfgdir, "iTunesDB", NULL);
-	    if (g_file_test (name_db, G_FILE_TEST_EXISTS))
-	    {
-		success = read_extended_info (name_ext, name_db);
-		if (!success)
-		{
-		    gtkpod_warning (_("Extended info will not be used. If you have non-transferred tracks,\nthese will be lost.\n"));
-		}
-		display_enable_disable_view_sort (FALSE);
-		if(itunesdb_parse_file (name_db))
-		{
-		    gtkpod_statusbar_message(
-			_("Offline iPod Database Successfully Imported"));
-		}
-		else
-		{
-		    gtkpod_statusbar_message(
-			_("Offline iPod Database Import Failed"));
-		}
-		display_enable_disable_view_sort (TRUE);
-	    }
-	    else
-	    {
-		gtkpod_warning (_("'%s' does not exist. Import aborted.\n\n"), name_db);
-	    }
-	    g_free (name_ext);
-	    g_free (name_db);
-	    g_free (cfgdir);
-	}
-	else
-	{
-	    gtkpod_warning (_("Import aborted.\n"));
-	}
-    }
-    /* We need to make sure that the tracks that already existed
-       in the DB when we called itunesdb_parse() do not duplicate
-       any existing ID */
-    renumber_ipod_ids ();
 
     gtkpod_tracks_statusbar_update();
 
