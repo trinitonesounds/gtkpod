@@ -337,10 +337,11 @@ gtkpod_statusbar_timeout_cb(gpointer data)
 void
 gtkpod_statusbar_message(const gchar *message)
 {
+    return;
     if(gtkpod_statusbar)
     {
 	gchar buf[PATH_MAX];
-	    
+	     
 	snprintf(buf, PATH_MAX, "  %s", message);
 	gtkpod_warning("%s\n", message);
 #if 0
