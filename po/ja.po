@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-01 23:12+0900\n"
+"POT-Creation-Date: 2004-03-28 23:42+0900\n"
 "PO-Revision-Date: 2003-12-01 23:28+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -16,66 +16,66 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/callbacks.c:234
+#: src/callbacks.c:233
 #, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] "%d曲を移動しました"
 
-#: src/callbacks.c:240
+#: src/callbacks.c:239
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "%d曲をコピーしました"
 
-#: src/callbacks.c:416 src/callbacks.c:460
+#: src/callbacks.c:415 src/callbacks.c:459
 msgid "Preferences not updated"
 msgstr "設定は更新されません"
 
-#: src/callbacks.c:469
+#: src/callbacks.c:468
 msgid "Preferences applied"
 msgstr "設定を適用しました"
 
-#: src/callbacks.c:685 src/callbacks.c:710
+#: src/callbacks.c:684 src/callbacks.c:709
 msgid "Delete selected entry of which sort tab?"
 msgstr "どちらのソートタブの選択されたものを削除しますか？"
 
-#: src/callbacks.c:853
+#: src/callbacks.c:852
 msgid "Update selected entry of which sort tab?"
 msgstr "とちらのソートタブの選択されたものを更新しますか？"
 
-#: src/callbacks.c:879
+#: src/callbacks.c:878
 msgid "Sync dirs of selected entry in which sort tab?"
 msgstr "とちらのソートタブの選択されたディレクトリを更新しますか？"
 
-#: src/callbacks.c:1060 src/callbacks.c:1116 src/callbacks.c:1167
-#: src/callbacks.c:1758
+#: src/callbacks.c:1073 src/callbacks.c:1129 src/callbacks.c:1180
+#: src/callbacks.c:1762
 msgid "No playlist selected"
 msgstr "プレイリストが選択されていません"
 
-#: src/callbacks.c:1074
+#: src/callbacks.c:1087
 msgid "Export selected entry of which sort tab?"
 msgstr "とちらのソートタブの選択されたものをエクスポートしますか？"
 
-#: src/callbacks.c:1080 src/callbacks.c:1133 src/callbacks.c:1184
-#: src/callbacks.c:1780
+#: src/callbacks.c:1093 src/callbacks.c:1146 src/callbacks.c:1197
+#: src/callbacks.c:1784
 #, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "ソートタブ %d 内では何も選択されていません"
 
-#: src/callbacks.c:1103 src/callbacks.c:1155 src/callbacks.c:1206
+#: src/callbacks.c:1116 src/callbacks.c:1168 src/callbacks.c:1219
 msgid "No tracks selected"
 msgstr "曲が選択されていません"
 
-#: src/callbacks.c:1127
+#: src/callbacks.c:1140
 msgid "Play tracks in selected entry of which sort tab?"
 msgstr "とのソートタブの選択された曲を演奏しますか？"
 
-#: src/callbacks.c:1178
+#: src/callbacks.c:1191
 msgid "Enqueue tracks in selected entry of which sort tab?"
 msgstr "どちらのソートタブの選択された曲を演奏キューに加えますか？"
 
-#: src/callbacks.c:1770
+#: src/callbacks.c:1774
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "とちらのソートタブの選択された曲を平均化しますか？"
 
@@ -285,7 +285,14 @@ msgstr "西洋 (Windows-1252)"
 msgid "System Charset"
 msgstr "システム文字"
 
-#: src/confirmation.c:304
+#. we are not the first instance of gtkpod -- the socket is
+#. already being used, so we pass
+#: src/clientserver.c:190
+msgid ""
+"Another instance of gtkpod was detected. Playcount server not started.\n"
+msgstr ""
+
+#: src/confirmation.c:332
 msgid "Confirmation Dialogue"
 msgstr "確認"
 
@@ -293,11 +300,11 @@ msgstr "確認"
 msgid "Edit"
 msgstr "編集"
 
-#: src/context_menus.c:267 src/tools.c:721
+#: src/context_menus.c:267 src/tools.c:598
 msgid "Play Now"
 msgstr "今すぐ演奏"
 
-#: src/context_menus.c:269 src/tools.c:732
+#: src/context_menus.c:269 src/tools.c:609
 msgid "Enqueue"
 msgstr "演奏キューに加える"
 
@@ -358,27 +365,27 @@ msgstr "OK"
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/display_playlists.c:655 src/interface.c:3863
+#: src/display_playlists.c:655 src/interface.c:3799
 msgid "Playlists"
 msgstr "再生リスト"
 
-#: src/display_songs.c:76 src/display_sorttabs.c:2264 src/interface.c:1858
+#: src/display_songs.c:76 src/display_sorttabs.c:2264 src/interface.c:1789
 msgid "Title"
 msgstr "タイトル"
 
-#: src/display_songs.c:77 src/display_sorttabs.c:2252 src/interface.c:1834
+#: src/display_songs.c:77 src/display_sorttabs.c:2252 src/interface.c:1765
 msgid "Artist"
 msgstr "アーティスト"
 
-#: src/display_songs.c:78 src/display_sorttabs.c:2255 src/interface.c:1846
+#: src/display_songs.c:78 src/display_sorttabs.c:2255 src/interface.c:1777
 msgid "Album"
 msgstr "アルバム"
 
-#: src/display_songs.c:79 src/display_sorttabs.c:2258 src/interface.c:1838
+#: src/display_songs.c:79 src/display_sorttabs.c:2258 src/interface.c:1769
 msgid "Genre"
 msgstr "ジャンル"
 
-#: src/display_songs.c:80 src/interface.c:1850
+#: src/display_songs.c:80 src/interface.c:1781
 msgid "Composer"
 msgstr "作曲者"
 
@@ -410,11 +417,11 @@ msgstr "演奏時間"
 msgid "Bitrate"
 msgstr "ビットレート"
 
-#: src/display_songs.c:88 src/interface.c:3131
+#: src/display_songs.c:88 src/interface.c:3067
 msgid "Playcount"
 msgstr "再生回数"
 
-#: src/display_songs.c:89 src/interface.c:3138
+#: src/display_songs.c:89 src/interface.c:3074
 msgid "Rating"
 msgstr "評価"
 
@@ -462,11 +469,11 @@ msgstr "演奏時間"
 msgid "Plycnt"
 msgstr "再生回数"
 
-#: src/display_songs.c:1135 src/interface.c:3144
+#: src/display_songs.c:1135 src/interface.c:3080
 msgid "Played"
 msgstr "演奏時刻"
 
-#: src/display_songs.c:1139 src/interface.c:3150
+#: src/display_songs.c:1139 src/interface.c:3086
 msgid "Modified"
 msgstr "変更時刻"
 
@@ -486,7 +493,7 @@ msgstr "全て"
 msgid "Comp."
 msgstr "作曲者"
 
-#: src/display_sorttabs.c:2270 src/interface.c:2989
+#: src/display_sorttabs.c:2270 src/interface.c:2925
 msgid "Special"
 msgstr "スペシャル"
 
@@ -498,30 +505,30 @@ msgstr "最後に演奏した時刻"
 msgid "Last Modified"
 msgstr "最後に変更した時刻"
 
-#: src/file.c:466
+#: src/file.c:463
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr ""
 
-#: src/file.c:761
+#: src/file.c:775
 msgid "Nothing to update"
 msgstr "更新されるデータはありません"
 
-#: src/file.c:770
+#: src/file.c:784
 #, c-format
 msgid "Updating %s"
 msgstr "%s を更新中"
 
-#: src/file.c:782
+#: src/file.c:796
 msgid "Updated selected tracks with info from file."
 msgstr "選択された曲の情報を、ファイルを元に更新しました。"
 
-#: src/file.c:842
+#: src/file.c:856
 #, c-format
 msgid "Syncing directory '%s'"
 msgstr "ディレクトリ '%s' の同期処理中"
 
-#: src/file.c:874
+#: src/file.c:888
 msgid "Syncing completed. No files deleted."
 msgstr "同期処理が終了しました。削除されたファイルはありません。"
 
@@ -530,34 +537,34 @@ msgstr "同期処理が終了しました。削除されたファイルはありません。"
 #. title
 #. label
 #. scrolled text
-#: src/file.c:951
+#: src/file.c:965
 msgid "Never delete any files when syncing"
 msgstr "同期処理でファイルを削除しない"
 
-#: src/file.c:970
+#: src/file.c:984
 msgid "Syncing completed."
 msgstr "同期処理が終了しました。"
 
-#: src/file.c:982
+#: src/file.c:996
 msgid "Syncing aborted"
 msgstr "同期処理は中断されました。"
 
-#: src/file.c:1020
+#: src/file.c:1034
 msgid "No tracks in selection"
 msgstr "曲が選択されていません"
 
-#: src/file.c:1058
+#: src/file.c:1072
 #, c-format
 msgid "'%s' is not a directory. Ignored.\n"
 msgstr "'%s' はディレクトリではありません。無視します。\n"
 
-#: src/file.c:1061
+#: src/file.c:1075
 #, c-format
 msgid "'%s' does not exist. Ignored.\n"
 msgstr "'%s' は見つかりません。無視します。\n"
 
 #. no directory names available
-#: src/file.c:1069
+#: src/file.c:1083
 msgid ""
 "No directory names were stored. Make sure that you enable 'Write extended "
 "information' in the Export section of the preferences at the time of "
@@ -574,33 +581,22 @@ msgstr ""
 "ディレクトリの同期を今行うためには、設定メニューの「インポート」欄の中にあ"
 "る、「重複の検出」をオンにして、再び同期処理を行ってください。\n"
 
-#: src/file.c:1073
+#: src/file.c:1087
 msgid "No valid directories have been found. Sync aborted.\n"
 msgstr "正しいディレクトリが見付かりません。同期処理を中止します。\n"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1084
+#: src/file.c:1098
 msgid "Synchronize directories"
 msgstr "ディレクトリの同期"
 
 #. title
-#: src/file.c:1085
+#: src/file.c:1099
 msgid "OK to synchronize the following directories?"
 msgstr "以下のディレクトリで同期処理をしてもよろしいですか?"
 
-#. no entry selected
-#: src/file.c:1142 src/misc.c:1536
-msgid "No entry selected."
-msgstr "何も選択されていません。"
-
-#. no playlist selected
-#. no playlist??? Cannot happen, but...
-#: src/file.c:1170 src/misc.c:1215 src/misc.c:1418 src/misc.c:1525
-msgid "No playlist selected."
-msgstr "プレイリストが選択されていません。"
-
-#: src/file.c:1201
+#: src/file.c:1134
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -608,11 +604,11 @@ msgstr[0] "以下の%d曲を更新できませんでした"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1207
+#: src/file.c:1140
 msgid "Failed Track Update"
 msgstr "曲の更新に失敗"
 
-#: src/file.c:1265
+#: src/file.c:1198
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -620,44 +616,114 @@ msgstr[0] "以下の%d曲を更新しました"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1271
+#: src/file.c:1204
 msgid "Successful Track Update"
 msgstr "曲の更新を完了"
 
 #. no path available
-#: src/file.c:1362
+#: src/file.c:1295
 msgid "no filename available"
 msgstr "ファイル名がわかりません"
 
-#: src/file.c:1407
+#: src/file.c:1340
 msgid "file not found"
 msgstr "ファイルが見つかりません"
 
-#: src/file.c:1411
+#: src/file.c:1344
 msgid "format not supported"
 msgstr "対応していない形式です"
 
-#: src/file.c:1473
+#: src/file.c:1408
 #, c-format
 msgid "Processing '%s'..."
 msgstr "'%s' の処理中..."
 
-#: src/file.c:1643 src/file.c:1657
+#: src/file.c:1580 src/file.c:1594
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "次のファイルのタグを変更できません: %s\n"
 
-#: src/file.c:1784
+#: src/file.c:1774
+#, fuzzy, c-format
+msgid "Could not open '%s' for reading and writing.\n"
+msgstr "ファイル \"%s\" を読み込もうとしましたが、開くことができません。\n"
+
+#: src/file.c:1781
+#, c-format
+msgid "Could not obtain lock on '%s'.\n"
+msgstr ""
+
+#. error!
+#: src/file.c:1800 src/file.c:1809 src/file.c:1820 src/file.c:1830
+#, c-format
+msgid "Malformed line in '%s': %s\n"
+msgstr ""
+
+#: src/file.c:1839
+msgid "Couldn't find track for playcount adjustment:\n"
+msgstr ""
+
+#: src/file.c:1867
+msgid ""
+"Some tracks played offline could not be found in the iTunesDB.\n"
+"OK to remove them from the offline playcount file?"
+msgstr ""
+
+#: src/file.c:1876
+#, fuzzy, c-format
+msgid "Error writing to '%s'.\n"
+msgstr "\"%s\"の書き込み中にエラーが発生しました。\n"
+
+#: src/file_export.c:132
+#, c-format
+msgid "Output filename template ('%s') does not match the file '%s'\n"
+msgstr ""
+
+#: src/file_export.c:209
+#, c-format
+msgid "Unknown token '%%%c' in template '%s'"
+msgstr ""
+
+#: src/file_export.c:260
+#, c-format
+msgid "Error creating %s: %s\n"
+msgstr "'%s'の作成に失敗: %s\n"
+
+#: src/file_export.c:378
+#, c-format
+msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
+msgstr "'%s' を '%s' にコピー中にエラー発生: 許可がありません (%s)\n"
+
+#: src/file_export.c:380
+#, c-format
+msgid "Error copying '%s' to '%s' (%s)\n"
+msgstr "'%s' を '%s' にコピー中にエラー発生: (%s)\n"
+
+#: src/file_export.c:388
+#, c-format
+msgid "Unable to open '%s' for reading\n"
+msgstr "'%s' を読み込みのために開くことができません\n"
+
+#: src/file_export.c:438
+#, fuzzy, c-format
+msgid "Failed to write '%s-%s'\n"
+msgstr "次の曲の保存ができません: %s-%s\n"
+
+#: src/file_export.c:497
+msgid "Select Export Destination Directory"
+msgstr "ファイルを保存するディレクトリを選択してください"
+
+#: src/file_itunesdb.c:205
 #, fuzzy
 msgid "Could not open \"iTunesDB.ext\" for reading extended info.\n"
 msgstr "拡張情報を格納したファイル \"%s\" を開けません。\n"
 
-#: src/file.c:1805
+#: src/file_itunesdb.c:226
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "拡張情報ファイルの読み込み中に以下のエラーが発生しました: %s\n"
 
-#: src/file.c:1822
+#: src/file_itunesdb.c:243
 #, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
@@ -666,7 +732,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/file.c:1834
+#: src/file_itunesdb.c:255
 #, c-format
 msgid ""
 "%s:\n"
@@ -675,7 +741,7 @@ msgstr ""
 "%s:\n"
 "\"itunesdb_hash=\" が書かれているべき箇所に違う内容が書かれています: \"%s\"\n"
 
-#: src/file.c:1894
+#: src/file_itunesdb.c:315
 #, c-format
 msgid ""
 "%s:\n"
@@ -684,7 +750,7 @@ msgstr ""
 "%s:\n"
 "書式エラー: %s\n"
 
-#: src/file.c:1930
+#: src/file_itunesdb.c:366
 msgid ""
 "No MD5 checksums on individual tracks are available.\n"
 "\n"
@@ -700,19 +766,19 @@ msgstr ""
 "にしてください。\n"
 "\n"
 
-#: src/file.c:1974
+#: src/file_itunesdb.c:410
 msgid "Extended info will not be used.\n"
 msgstr "拡張情報は使用されません。\n"
 
-#: src/file.c:1978
+#: src/file_itunesdb.c:414
 msgid "iPod Database Successfully Imported"
 msgstr "iPodからデータベースを読み込みました"
 
-#: src/file.c:1980
+#: src/file_itunesdb.c:416
 msgid "iPod Database Import Failed"
 msgstr "iPodからのデータベースの読み込みに失敗しました"
 
-#: src/file.c:1992
+#: src/file_itunesdb.c:428
 msgid ""
 "Extended info will not be used. If you have non-transferred tracks,\n"
 "these will be lost.\n"
@@ -720,39 +786,33 @@ msgstr ""
 "拡張情報は使用されません。iPod本体に転送されていない曲は\n"
 "終了時に失われます。\n"
 
-#: src/file.c:1996
+#: src/file_itunesdb.c:432
 msgid "Offline iPod Database Successfully Imported"
 msgstr "オフラインでiPodデータベースを読み込みました"
 
-#: src/file.c:1999
+#: src/file_itunesdb.c:435
 msgid "Offline iPod Database Import Failed"
 msgstr "オフラインでのiPodデータベースの読み込みに失敗しました"
 
-#: src/file.c:2005
+#: src/file_itunesdb.c:441
 msgid "Import aborted.\n"
 msgstr "読み込みが中断されました\n"
 
-#: src/file.c:2187
+#: src/file_itunesdb.c:556
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "\"%s\" を開けないため、拡張情報を記録できません。\n"
 
-#: src/file.c:2199
+#: src/file_itunesdb.c:568
 msgid "Aborted writing of extended info.\n"
 msgstr "拡張情報の書き込みは中止されました。\n"
 
-#: src/file.c:2346
-msgid ""
-"iPod directory structure must be present before synching to the iPod can be "
-"performed.\n"
-msgstr ""
-
 #. create the dialog window
-#: src/file.c:2353 src/tools.c:285
+#: src/file_itunesdb.c:713 src/tools.c:166
 msgid "Information"
 msgstr "情報"
 
-#: src/file.c:2364
+#: src/file_itunesdb.c:724
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
@@ -760,20 +820,20 @@ msgstr ""
 "ボタンを押すと中断します。\n"
 "ファイルのエクスポートは後で再開する事ができます。"
 
-#: src/file.c:2377
+#: src/file_itunesdb.c:737
 msgid "deleting..."
 msgstr "削除中..."
 
-#: src/file.c:2444
+#: src/file_itunesdb.c:804
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "一部の曲をiPodから削除できませんでした。エクスポートを中断します。"
 
 #. we now have as much space as we're gonna have, copy files to ipod
-#: src/file.c:2450
+#: src/file_itunesdb.c:810
 msgid "preparing to copy..."
 msgstr "コピーの準備中..."
 
-#: src/file.c:2502
+#: src/file_itunesdb.c:862
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
@@ -781,92 +841,54 @@ msgstr[0] "%d曲中 %d曲をコピーしました。"
 
 #. don't bounce up too quickly (>10% change only)
 #. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
-#: src/file.c:2516 src/tools.c:420
+#: src/file_itunesdb.c:876 src/tools.c:299
 #, c-format
 msgid "%d%% (%d:%02d) left"
 msgstr "残り %d%% (%d:%02d)"
 
-#: src/file.c:2526
+#: src/file_itunesdb.c:886
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "一部の曲をiPodに転送できませんでした。エクスポートを中止します!"
 
-#: src/file.c:2548
-#, fuzzy
-msgid "Error writing iTunesDB to iPod.  No iTunes directory!"
-msgstr "iTunesDBをiPodに書き込めません。エクスポートを中止します!"
+#: src/file_itunesdb.c:924
+msgid ""
+"iPod directory structure must be present before synching to the iPod can be "
+"performed.\n"
+msgstr ""
 
 #. write iTunesDB to iPod
-#: src/file.c:2568 src/file.c:2605 src/file.c:2623
+#: src/file_itunesdb.c:943 src/file_itunesdb.c:980 src/file_itunesdb.c:1001
 msgid "Now writing iTunesDB. Please wait..."
 msgstr "iTunesDBの書き込み中。しばらくお待ちください..."
 
-#: src/file.c:2572
+#: src/file_itunesdb.c:947
 msgid "Error writing iTunesDB to iPod. Export aborted!"
 msgstr "iTunesDBをiPodに書き込めません。エクスポートを中止します!"
 
-#: src/file.c:2577
+#: src/file_itunesdb.c:952
 msgid "Extended information not written"
 msgstr "拡張情報の保存に失敗しました"
 
-#: src/file.c:2584
+#: src/file_itunesdb.c:959
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "拡張情報ファイルを削除できません: '%s'"
 
-#: src/file.c:2592
+#: src/file_itunesdb.c:967
 msgid "Syncing contacts and calendar..."
 msgstr ""
 
-#: src/file.c:2613
+#: src/file_itunesdb.c:988
 msgid "Backups could not be created!"
 msgstr "バックアップを作成できません!"
 
-#: src/file.c:2632
+#: src/file_itunesdb.c:1010
 msgid "Export not successful!"
 msgstr "エクスポートに失敗しました!"
 
-#: src/file.c:2643
+#: src/file_itunesdb.c:1021
 msgid "iPod Database Saved"
 msgstr "iPodデータベースを保存しました"
-
-#: src/file_export.c:131
-#, c-format
-msgid "Output filename template ('%s') does not match the file '%s'\n"
-msgstr ""
-
-#: src/file_export.c:207
-#, c-format
-msgid "Unknown token '%%%c' in template '%s'"
-msgstr ""
-
-#: src/file_export.c:250
-#, c-format
-msgid "Error creating %s: %s\n"
-msgstr "'%s'の作成に失敗: %s\n"
-
-#: src/file_export.c:350
-#, c-format
-msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
-msgstr "'%s' を '%s' にコピー中にエラー発生: 許可がありません (%s)\n"
-
-#: src/file_export.c:352
-#, c-format
-msgid "Error copying '%s' to '%s' (%s)\n"
-msgstr "'%s' を '%s' にコピー中にエラー発生: (%s)\n"
-
-#: src/file_export.c:360
-#, c-format
-msgid "Unable to open '%s' for reading\n"
-msgstr "'%s' を読み込みのために開くことができません\n"
-
-#: src/file_export.c:410
-#, fuzzy, c-format
-msgid "Failed to write '%s-%s'\n"
-msgstr "次の曲の保存ができません: %s-%s\n"
-
-#: src/file_export.c:469
-msgid "Select Export Destination Directory"
-msgstr "ファイルを保存するディレクトリを選択してください"
 
 #: src/getopt.c:681
 #, c-format
@@ -966,330 +988,345 @@ msgstr "%s 空き"
 msgid " %s Pending"
 msgstr "%s 不足"
 
-#: src/interface.c:180
+#: src/interface.c:184
 msgid "gtkpod"
 msgstr "gtkpod"
 
-#: src/interface.c:197
+#: src/interface.c:201
 msgid "_File"
 msgstr "ファイル(_F)"
 
-#: src/interface.c:204
+#: src/interface.c:208
 msgid "_Read iTunesDB"
 msgstr "iTunesDBを読み込む(_R)"
 
-#: src/interface.c:212
+#: src/interface.c:216
 msgid "Add _Files"
 msgstr "ファイルを追加する(_F)"
 
-#: src/interface.c:220
+#: src/interface.c:224
 msgid "Add _Directory"
 msgstr "ディレクトリを追加する(_D)"
 
-#: src/interface.c:228
+#: src/interface.c:232
 msgid "Add _Playlist"
 msgstr "プレイリストを追加する(_P)"
 
-#: src/interface.c:236
+#: src/interface.c:240
 msgid "Synchronize _iTunesDB"
 msgstr "iTunesDBを更新する(_i)"
 
-#: src/interface.c:249
+#: src/interface.c:253
 msgid "_Update Tracks from File"
 msgstr "ファイルを元に曲を更新する(_U)"
 
-#: src/interface.c:260 src/interface.c:283 src/interface.c:311
-#: src/interface.c:465 src/interface.c:488 src/interface.c:576
-#: src/interface.c:599 src/interface.c:623
+#: src/interface.c:264 src/interface.c:287 src/interface.c:315
+#: src/interface.c:485 src/interface.c:508 src/interface.c:596
+#: src/interface.c:619 src/interface.c:643
 msgid "Selected _Playlist"
 msgstr "プレイリスト(_P)"
 
-#: src/interface.c:264 src/interface.c:287 src/interface.c:315
-#: src/interface.c:469 src/interface.c:492 src/interface.c:580
-#: src/interface.c:603 src/interface.c:627
+#: src/interface.c:268 src/interface.c:291 src/interface.c:319
+#: src/interface.c:489 src/interface.c:512 src/interface.c:600
+#: src/interface.c:623 src/interface.c:647
 msgid "Selected Tab _Entry"
 msgstr "選択されているソートタブ(_E)"
 
-#: src/interface.c:268 src/interface.c:291 src/interface.c:319
-#: src/interface.c:473 src/interface.c:496 src/interface.c:584
-#: src/interface.c:607 src/interface.c:631
+#: src/interface.c:272 src/interface.c:295 src/interface.c:323
+#: src/interface.c:493 src/interface.c:516 src/interface.c:604
+#: src/interface.c:627 src/interface.c:651
 msgid "Selected _Tracks"
 msgstr "選択されている曲(_S)"
 
-#: src/interface.c:272
+#: src/interface.c:276
 msgid "_Synchronize Directories"
 msgstr "ディレクトリを同期させる(_S)"
 
-#: src/interface.c:300
+#: src/interface.c:304
 msgid "Copy _Tracks from iPod"
 msgstr "iPodから曲をコピーする(_T)"
 
-#: src/interface.c:328
+#: src/interface.c:332
 msgid "_Offline"
 msgstr "オフライン(_O)"
 
-#: src/interface.c:337
+#: src/interface.c:341
 msgid "_Create iPod's Directories"
 msgstr "iPodの初期設定(_C)"
 
-#: src/interface.c:345
+#: src/interface.c:349
 msgid "_Check iPOD Files"
 msgstr ""
 
-#: src/interface.c:348
+#: src/interface.c:352
 msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
 "(tracks with no corresponding files on iPOD)"
 msgstr ""
 
-#: src/interface.c:362 src/interface.c:2402
+#: src/interface.c:366 src/interface.c:2339
 msgid "_Edit"
 msgstr "編集(_E)"
 
-#: src/interface.c:369
+#: src/interface.c:373
 msgid "_Create Playlists"
 msgstr "プレイリスト作成(_C)"
 
-#: src/interface.c:380
+#: src/interface.c:384
 msgid "Empty Playlist"
 msgstr "空リスト"
 
-#: src/interface.c:384
-msgid "Playlist Containing Displayed Tracks"
+#: src/interface.c:388
+#, fuzzy
+msgid "Random Playlist from Displayed Tracks"
 msgstr "表示されている曲からなるリスト"
 
-#: src/interface.c:388
-msgid "Playlist Containing Selected Tracks"
-msgstr "選択されている曲からなるリスト"
-
 #: src/interface.c:392
-msgid "One Playlist for each Artist"
-msgstr "各アーティスト毎のリスト"
+#, fuzzy
+msgid "Containing Displayed Tracks"
+msgstr "表示されている曲からなるリスト"
 
 #: src/interface.c:396
-msgid "One Playlist for each Album"
-msgstr "各アルバム毎のリスト"
+#, fuzzy
+msgid "Containing Selected Tracks"
+msgstr "選択されている曲からなるリスト"
 
 #: src/interface.c:400
-msgid "One Playlist for each Genre"
-msgstr "各ジャンル毎のリスト"
+#, fuzzy
+msgid "One for each Artist"
+msgstr "各アーティスト毎のリスト"
 
 #: src/interface.c:404
-msgid "One Playlist for each Composer"
-msgstr "各作曲者毎のリスト"
+#, fuzzy
+msgid "One for each Album"
+msgstr "各アルバム毎のリスト"
 
 #: src/interface.c:408
-msgid "Most Often Listened Tracks"
-msgstr "再生回数の多い曲"
+#, fuzzy
+msgid "One for each Genre"
+msgstr "各ジャンル毎のリスト"
 
 #: src/interface.c:412
-msgid "All Tracks Never Listened To"
-msgstr "一度も聴いた事がない曲"
+#, fuzzy
+msgid "One for each Composer"
+msgstr "各作曲者毎のリスト"
 
 #: src/interface.c:416
+#, fuzzy
+msgid "One for each Year"
+msgstr "各ジャンル毎のリスト"
+
+#: src/interface.c:420
 msgid "Best Rated Tracks"
 msgstr "評価の高い曲"
 
-#: src/interface.c:420
+#: src/interface.c:424
+#, fuzzy
+msgid "Tracks Most Often Listened To"
+msgstr "再生回数の多い曲"
+
+#: src/interface.c:428
 msgid "Most Recently Played Tracks"
 msgstr "最近再生された曲"
 
-#: src/interface.c:424
-msgid "Played since last time"
+#: src/interface.c:432
+#, fuzzy
+msgid "All Tracks Played Since Last Time"
 msgstr "前回以降再生された曲"
 
-#: src/interface.c:433
+#: src/interface.c:436
+msgid "All Tracks Never Listened To"
+msgstr "一度も聴いた事がない曲"
+
+#: src/interface.c:440
+msgid "All Tracks not Listed in any Playlist"
+msgstr ""
+
+#: src/interface.c:444
+#, fuzzy
+msgid "Randomize Current Playlist"
+msgstr "現在のプレイリスト"
+
+#: src/interface.c:453
 msgid "_Sorting"
 msgstr "並べ換え(_S)"
 
-#: src/interface.c:441
+#: src/interface.c:461
 msgid "_Save Displayed Track Order"
 msgstr "現在の曲順を保存(_S)"
 
-#: src/interface.c:454
+#: src/interface.c:474
 msgid "_Delete But Keep Tracks"
 msgstr "曲は残したまま削除(_D)"
 
-#: src/interface.c:477
+#: src/interface.c:497
 msgid "_Delete Completely From iPod"
 msgstr "iPodから完全に削除(_D)"
 
-#: src/interface.c:505
+#: src/interface.c:525
 msgid "_Edit Preferences"
 msgstr "設定(_E)"
 
-#: src/interface.c:516
+#: src/interface.c:536
 msgid "_View"
 msgstr "表示(_V)"
 
-#: src/interface.c:523
+#: src/interface.c:543
 msgid "_Toolbar"
 msgstr "ツールバー(_T)"
 
-#: src/interface.c:527
+#: src/interface.c:547
 msgid "_Tooltips"
 msgstr "ツールチップ(_T)"
 
-#: src/interface.c:531
+#: src/interface.c:551
 msgid "_Info Window"
 msgstr "情報(_I)"
 
-#: src/interface.c:538
+#: src/interface.c:558
 msgid "_More Sort Tabs"
 msgstr "ソートタブの追加(_M)"
 
-#: src/interface.c:546
+#: src/interface.c:566
 msgid "_Less Sort Tabs"
 msgstr "ソートタブの削除(_L)"
 
-#: src/interface.c:554
+#: src/interface.c:574
 msgid "_Arrange Sort Tabs"
 msgstr "ソートタブを再配置(_A)"
 
-#: src/interface.c:558 src/interface.c:2544
+#: src/interface.c:578 src/interface.c:2476
 msgid "_Tools"
 msgstr "ツール(_T)"
 
-#: src/interface.c:565
+#: src/interface.c:585
 msgid "_Play Now"
 msgstr "今すぐ演奏(_P)"
 
-#: src/interface.c:588
+#: src/interface.c:608
 msgid "_Enqueue"
 msgstr "演奏キューに入れる(_E)"
 
-#: src/interface.c:616
+#: src/interface.c:636
 msgid "_Normalize Volume"
 msgstr "ボリュームの平均化"
 
-#: src/interface.c:635
+#: src/interface.c:655
 msgid "_Displayed Tracks"
 msgstr "表示されている曲(_D)"
 
-#: src/interface.c:639
+#: src/interface.c:659
 msgid "_All Tracks"
 msgstr "全ての曲(_A)"
 
-#: src/interface.c:643
+#: src/interface.c:663
 msgid "_Newly Added Tracks"
 msgstr "新たに追加された曲(_N)"
 
-#: src/interface.c:652
+#: src/interface.c:672
 #, fuzzy
 msgid "Synchronize Contacts"
 msgstr "ディレクトリの同期"
 
-#: src/interface.c:656
+#: src/interface.c:676
 #, fuzzy
 msgid "Synchronize Calendar"
 msgstr "ディレクトリの同期"
 
-#: src/interface.c:660
+#: src/interface.c:680
 msgid "_Help"
 msgstr "ヘルプ(_H)"
 
-#: src/interface.c:667
+#: src/interface.c:687
 msgid "_About"
 msgstr "gtkpodについて(_A)"
 
-#: src/interface.c:684
+#: src/interface.c:704
 msgid "Read"
 msgstr "読み込み"
 
-#: src/interface.c:685
+#: src/interface.c:705
 msgid "Read Existing Database from Disk/iPod"
 msgstr "iPodまたはディスクからデータベースを読み込みます"
 
-#: src/interface.c:694
+#: src/interface.c:714
 msgid "Files"
 msgstr "ファイル"
 
-#: src/interface.c:695
+#: src/interface.c:715
 msgid "Add Files or Directories"
 msgstr "ファイルまたはディレクトリを追加します"
 
-#: src/interface.c:704
+#: src/interface.c:724
 msgid "Dirs"
 msgstr "ディレクトリ"
 
-#: src/interface.c:705
+#: src/interface.c:725
 msgid "Add Directories Recursively"
 msgstr "ディレクトリを再帰的に追加します"
 
-#: src/interface.c:714 src/itunesdb.c:403
+#: src/interface.c:734 src/itunesdb.c:403
 msgid "Playlist"
 msgstr "プレイリスト"
 
-#: src/interface.c:715
+#: src/interface.c:735
 msgid "Add playlist from file"
 msgstr "プレイリストをファイルから読み込んで追加します"
 
-#: src/interface.c:724
+#: src/interface.c:744
 msgid "New PL"
 msgstr "新規プレイリスト"
 
-#: src/interface.c:725
+#: src/interface.c:745
 msgid "Create New Playlist"
 msgstr "新しくプレイリストを作成します"
 
-#: src/interface.c:734
+#: src/interface.c:754
 msgid "Sync"
 msgstr "更新"
 
-#: src/interface.c:735
+#: src/interface.c:755
 msgid "Write Changes to Disk/iPod"
 msgstr "これまでの変更点をiPodまたはディスクに書き込みます"
 
-#: src/interface.c:744
+#: src/interface.c:764
 msgid "Stop"
 msgstr "中止"
 
-#: src/interface.c:745
+#: src/interface.c:765
 msgid "Stop Display Update"
 msgstr "表示の更新を止める"
 
-#: src/interface.c:1180
+#: src/interface.c:1216
 msgid "About gtkpod"
 msgstr "gtkpodについて"
 
-#: src/interface.c:1223
+#: src/interface.c:1259
 msgid "Credits"
 msgstr "権利表示"
 
-#: src/interface.c:1238
+#: src/interface.c:1274
 msgid "Translators"
 msgstr "翻訳担当"
 
-#: src/interface.c:1298
-msgid "window1"
-msgstr ""
-
-#: src/interface.c:1310
-msgid "label21"
-msgstr ""
-
-#: src/interface.c:1341
-msgid "Never show this dialogue again"
-msgstr "この質問を二度と表示しない"
-
-#: src/interface.c:1590
+#: src/interface.c:1521
 msgid "Preferences"
 msgstr "設定"
 
-#: src/interface.c:1635
+#: src/interface.c:1566
 msgid " iPod Mount _Point:"
 msgstr " iPodのマウント場所(_P):"
 
-#: src/interface.c:1644
+#: src/interface.c:1575
 msgid ""
 "Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar."
 msgstr "iPodのファイルシステムをマウントした場所。例えば '/mnt/ipod/' など。"
 
-#: src/interface.c:1646
+#: src/interface.c:1577
 msgid "Handle mounting/unmounting of iPod drive"
 msgstr "iPodのマウント/アンマウントを gtkpod で行う"
 
-#: src/interface.c:1649
+#: src/interface.c:1580
 msgid ""
 "On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount "
 "<ipod mountpoint>' call is carried out. For more complicated arrangements "
@@ -1300,19 +1337,19 @@ msgstr ""
 "~/.gtkpod/gtkpod.in と ~/.gtkpod/gtkpod.out というスクリプトを使用してくださ"
 "い。"
 
-#: src/interface.c:1651
+#: src/interface.c:1582
 msgid "Automatically import iTunesDB on startup"
 msgstr "起動時に自動的に iTunesDB を読み込む"
 
-#: src/interface.c:1655
+#: src/interface.c:1586
 msgid "Import"
 msgstr "インポート"
 
-#: src/interface.c:1675
+#: src/interface.c:1606
 msgid " _Charset (ID3, files): "
 msgstr " 文字コード(_C) (ID3,ファイル): "
 
-#: src/interface.c:1689
+#: src/interface.c:1620
 msgid ""
 "gtkpod expects the ID3 tags and the filenames to be in the encoding "
 "specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' "
@@ -1323,13 +1360,13 @@ msgstr ""
 "この設定を変更すれば、これらの処理に設定が反映されます。「システム文字」を選"
 "択すると、ロケールで指定されたコードが使われます。"
 
-#: src/interface.c:1692
+#: src/interface.c:1623
 msgid ""
 "Use selected charset also when updating\n"
 " or syncing tracks"
 msgstr "指定した文字コードを更新/同期処理の際にも使用する"
 
-#: src/interface.c:1695
+#: src/interface.c:1626
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to update the track information. If you have chosen a wrong charset when "
@@ -1346,32 +1383,32 @@ msgstr ""
 "ジョン0.51以前のgtkpodでインポートされた曲はこの情報が記録さていません。この"
 "場合、ここで指定された文字コードが今後使われるようになります。"
 
-#: src/interface.c:1697
+#: src/interface.c:1628
 msgid "Add directories recursively"
 msgstr "ディレクトリを再帰的に追加する"
 
-#: src/interface.c:1700
+#: src/interface.c:1631
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
 msgstr "この項目を有効にすると、gtkpodはサブディレクトリを再帰的に辿ります。"
 
-#: src/interface.c:1702
+#: src/interface.c:1633
 msgid "Don't allow file duplication"
 msgstr "ファイルの重複を許さない"
 
-#: src/interface.c:1705
+#: src/interface.c:1636
 msgid "Duplicate Recognition is based on a md5 hash over the file."
 msgstr "md5を利用した重複チェックを行うようになります。"
 
-#: src/interface.c:1711
+#: src/interface.c:1642
 msgid "Display info about detected duplicates"
 msgstr "重複を見つけた際に報告する"
 
-#: src/interface.c:1716
+#: src/interface.c:1647
 msgid ""
 "Display the list of duplicates that have been detected after adding files."
 msgstr "ファイルを追加した際に発見した、重複する曲のリストを表示します。"
 
-#: src/interface.c:1722
+#: src/interface.c:1653
 msgid ""
 "When adding dirs/files, update information of\n"
 " existing tracks with identical filenames"
@@ -1379,7 +1416,7 @@ msgstr ""
 "ファイルやディレクトリを追加する際に、同じファイル名を\n"
 "持った曲がすでにあったらそちらを更新する"
 
-#: src/interface.c:1725
+#: src/interface.c:1656
 msgid ""
 "If the filename (full path) of an existing track matches that of a track to "
 "be added, this option allows you to update the information about the "
@@ -1392,62 +1429,62 @@ msgstr ""
 "の情報を更新します。もしファイルに変更がなく、「ファイルの重複を許さない」の"
 "項目を有効にしている場合は、更新はなされません。"
 
-#: src/interface.c:1731
+#: src/interface.c:1662
 msgid "Display info about updated tracks"
 msgstr "更新された曲の情報を表示する"
 
-#: src/interface.c:1736
+#: src/interface.c:1667
 msgid "Display a list of tracks that could actually be updated."
 msgstr "実際に更新された曲のリストを表示します。"
 
-#: src/interface.c:1738
+#: src/interface.c:1669
 msgid "Display info about non-updated tracks"
 msgstr "更新されなかった曲を表示する"
 
-#: src/interface.c:1743
+#: src/interface.c:1674
 msgid "Display a list of tracks that could not be updated."
 msgstr "実際には更新されなかった曲のリストを表示します。"
 
-#: src/interface.c:1749
+#: src/interface.c:1680
 msgid "When syncing directories"
 msgstr "ディレクトリの同期処理時"
 
-#: src/interface.c:1760
+#: src/interface.c:1691
 msgid "Confirm list of directories"
 msgstr "ディレクトリのリストを確認する"
 
-#: src/interface.c:1766
+#: src/interface.c:1697
 msgid "Delete tracks that have been removed"
 msgstr "同期元で削除された曲を消去する"
 
-#: src/interface.c:1771
+#: src/interface.c:1702
 msgid ""
 "If you check this option, tracks that have been removed from the synced "
 "directories will be removed from the iPod as well."
 msgstr ""
 "この項目を有効にすると、同期元で削除された曲を、iPod上からも消去します。"
 
-#: src/interface.c:1773
+#: src/interface.c:1704
 msgid "Confirm before removing tracks"
 msgstr "曲を削除する前に確認する"
 
-#: src/interface.c:1778
+#: src/interface.c:1709
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
 msgstr "「編集/削除の確認」の項目と同じです"
 
-#: src/interface.c:1780
+#: src/interface.c:1711
 msgid "Adding/Updating/Syncing"
 msgstr "追加/更新/同期"
 
-#: src/interface.c:1794
+#: src/interface.c:1725
 msgid "Read tags from file contents (e.g. ID3 tags in MP3 files)"
 msgstr ""
 
-#: src/interface.c:1798
+#: src/interface.c:1729
 msgid "Use this template to parse filename for tag information"
 msgstr ""
 
-#: src/interface.c:1801
+#: src/interface.c:1732
 msgid ""
 "artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
 "nr: %C, year: %Y, skip data: %*, the character '%': %%. You can separate "
@@ -1455,21 +1492,21 @@ msgid ""
 "used. Example: '%a - %A/%T %t.mp3;%t.wav'."
 msgstr ""
 
-#: src/interface.c:1813
+#: src/interface.c:1744
 msgid "Overwrite tags that are already set."
 msgstr ""
 
-#: src/interface.c:1819
+#: src/interface.c:1750
 msgid ""
 "As a last resort set the following tags to the filaneme if they are (still) "
 "empty:"
 msgstr ""
 
-#: src/interface.c:1862
+#: src/interface.c:1793
 msgid "Tag Reading"
 msgstr ""
 
-#: src/interface.c:1876
+#: src/interface.c:1807
 msgid ""
 "Write extended information (PC filenames,\n"
 " MD5 hashes, charset). Recommended."
@@ -1477,7 +1514,7 @@ msgstr ""
 "拡張情報(PC上のファイル名,MD5値,文字コード)を書き込む。\n"
 "推奨される設定です。"
 
-#: src/interface.c:1879
+#: src/interface.c:1810
 msgid ""
 "Highly recommended for faster import when taking advantage of the "
 "duplication recognition. Also, having the PC filenames allows writing "
@@ -1490,19 +1527,19 @@ msgstr ""
 "仮にiPodの中身が壊れたりした場合にも、再構成を容易にします。(データベースの"
 "バックアップファイルの中の \"transferred=\" の項目を変更すればよい)"
 
-#: src/interface.c:1881
+#: src/interface.c:1812
 msgid "Keep a backup of the iTunesDB in ~/.gtkpod/"
 msgstr "iTunesDBのバックアップを、~/.gtkpod/内に作成する"
 
-#: src/interface.c:1885
+#: src/interface.c:1816
 msgid "Sync (Writing of iTunesDB)"
 msgstr "更新 (iTunesDBへの書き込み)"
 
-#: src/interface.c:1905
+#: src/interface.c:1836
 msgid "Filename Format: "
 msgstr "ファイル名の書式: "
 
-#: src/interface.c:1919
+#: src/interface.c:1846
 #, fuzzy
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
@@ -1516,11 +1553,11 @@ msgstr ""
 "'%o' など。%A: アーティスト; %n: タイトル; %t: トラックNo.; %o: 元のファイル"
 "名 (拡張情報ファイルが必要)"
 
-#: src/interface.c:1920
+#: src/interface.c:1847
 msgid " "
 msgstr " "
 
-#: src/interface.c:1922
+#: src/interface.c:1849
 msgid ""
 "Use selected charset (see above: 'Adding/Updating/\n"
 " Syncing') also for this filename."
@@ -1528,7 +1565,7 @@ msgstr ""
 "指定された文字コード(上にある「追加/更新/同期」を参照)\n"
 "をファイル名にも使用する。"
 
-#: src/interface.c:1925
+#: src/interface.c:1852
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -1544,23 +1581,45 @@ msgstr ""
 "の情報が記録されていません。この場合、上で指定された文字コードが今後使われる"
 "ようになります。"
 
-#: src/interface.c:1927
+#: src/interface.c:1854
+msgid "Check for existing files when copying from iPod."
+msgstr ""
+
+#: src/interface.c:1857
+msgid ""
+"When copying from iPod no check is performed on whether the destination file "
+"exists. Enabling this option will make gtkpod check whether the length of "
+"the destination file is the same as the file in the iPod. If so the file is "
+"skipped, allowing a quick sync of the iPod's contents."
+msgstr ""
+
+#: src/interface.c:1859
+msgid "Fix exported filenames/directories."
+msgstr ""
+
+#: src/interface.c:1862
+msgid ""
+"Some filesystems do not support certain characters in file/directory names i."
+"e. \"*:<>?\\|/ , this option will substitute those with underscore '_'."
+msgstr ""
+
+#: src/interface.c:1864
 msgid "Copying from iPod"
 msgstr "iPodからコピー"
 
-#: src/interface.c:1933
+#: src/interface.c:1870
 msgid "_Input/Output"
 msgstr "入出力(_I)"
 
-#: src/interface.c:1988 src/interface.c:2013 src/interface.c:2038
+#: src/interface.c:1925 src/interface.c:1950 src/interface.c:1975
 msgid "Relative volume adjustment between -100 and +100"
 msgstr "音量の補正値(-100から+100まで)"
 
-#: src/interface.c:2064
+#: src/interface.c:2001
 msgid " Format for time display:"
 msgstr "時刻表示の形式"
 
-#: src/interface.c:2073
+#: src/interface.c:2010
 msgid ""
 "For a full description of options please see 'man 3 strftime'. Default is: '%"
 "k:%M %d %b %g'."
@@ -1568,23 +1627,23 @@ msgstr ""
 "時刻表示の詳しい形式については、'man 3 strftime' を参照してください。標準で"
 "は '%k:%M %d %b %g' です。"
 
-#: src/interface.c:2075
+#: src/interface.c:2012
 msgid "Displayed Track Attributes "
 msgstr "表示する曲の項目"
 
-#: src/interface.c:2095
+#: src/interface.c:2032
 msgid " _Number of sort tabs: "
 msgstr "ソートタブの数(_N)"
 
-#: src/interface.c:2107
+#: src/interface.c:2044
 msgid "Sort Tabs"
 msgstr "ソートタブ"
 
-#: src/interface.c:2123
+#: src/interface.c:2060
 msgid "...master playlist"
 msgstr "...マスタープレイリスト"
 
-#: src/interface.c:2126
+#: src/interface.c:2063
 msgid ""
 "If you don't select the master playlist automatically, the initial database "
 "import is much faster because the display dosn't have to be updated."
@@ -1592,51 +1651,51 @@ msgstr ""
 "マスタープレイリストを自動的に選択しないようにすると、起動時にデータベースを"
 "読み込む際には何も表示しなくなるので、スピードが速くなります。"
 
-#: src/interface.c:2128
+#: src/interface.c:2065
 msgid "...entry 'All' in sort tab..."
 msgstr "...以下のソートタブ内の「全て」の項目"
 
-#: src/interface.c:2140
+#: src/interface.c:2077
 msgid "Automatically select..."
 msgstr "自動的に選択..."
 
-#: src/interface.c:2156
+#: src/interface.c:2093
 msgid "Display toolbar..."
 msgstr "ツールバーの表示..."
 
-#: src/interface.c:2164
+#: src/interface.c:2101
 msgid "...both as icons and text"
 msgstr "アイコンとテキスト"
 
-#: src/interface.c:2172
+#: src/interface.c:2109
 msgid "...as text"
 msgstr "テキストのみ"
 
-#: src/interface.c:2180
+#: src/interface.c:2117
 msgid "...as icons"
 msgstr "アイコンのみ"
 
-#: src/interface.c:2188
+#: src/interface.c:2125
 msgid "Toolbar"
 msgstr "ツールバー"
 
-#: src/interface.c:2203
+#: src/interface.c:2140
 msgid "Display tooltips in main window"
 msgstr "ツールチップをメイン画面で表示する"
 
-#: src/interface.c:2207
+#: src/interface.c:2144
 msgid "Display tooltips in prefs window"
 msgstr "ツールチップを設定画面で表示する"
 
-#: src/interface.c:2211
+#: src/interface.c:2148
 msgid "Tooltips"
 msgstr "ツールチップ"
 
-#: src/interface.c:2243 src/interface.c:4093
+#: src/interface.c:2180 src/interface.c:4029
 msgid "Sorting"
 msgstr "並べ換え"
 
-#: src/interface.c:2249
+#: src/interface.c:2186
 msgid ""
 "Block display when changing playlist or tab\n"
 " entry (faster!)"
@@ -1644,7 +1703,7 @@ msgstr ""
 "プレイリストやソートタブを変更した時に途中経過の\n"
 "表示を抑制する(動作が速くなる)"
 
-#: src/interface.c:2252
+#: src/interface.c:2189
 msgid ""
 "The display can be blocked after changing a selection. The display update is "
 "faster, but you have to wait until it's finished."
@@ -1652,26 +1711,26 @@ msgstr ""
 "選択を変更した時に、曲のリストを更新し終わるまで途中経過を表示しません。更新"
 "のスピードは速くなりますが、それが終わるまでは何もする事ができなくなります。"
 
-#: src/interface.c:2254
+#: src/interface.c:2191
 msgid "Misc"
 msgstr "その他"
 
-#: src/interface.c:2260 src/interface.c:3181
+#: src/interface.c:2197 src/interface.c:3117
 msgid "_Display"
 msgstr "表示(_D)"
 
-#: src/interface.c:2288
+#: src/interface.c:2225
 msgid "Write ID3 tags to disk when modified in gtkpod"
 msgstr "gtkpod内で変更があったID3タグをディスクに書き込む"
 
-#: src/interface.c:2291
+#: src/interface.c:2228
 msgid ""
 "The tags are written to the files on your harddrive and on the ipod (if "
 "available)."
 msgstr ""
 "タグは使っているハードディスクと(可能であれば)iPodの両方で修正されます。"
 
-#: src/interface.c:2297
+#: src/interface.c:2234
 msgid ""
 "Use selected charset (on the 'Import' page)\n"
 " when writing tags"
@@ -1679,7 +1738,7 @@ msgstr ""
 "「インポート」のページで指定された文字コードを\n"
 "タグに使用する"
 
-#: src/interface.c:2302
+#: src/interface.c:2239
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to write the tags. If you have chosen a wrong charset when first importing a "
@@ -1697,11 +1756,11 @@ msgstr ""
 "ついては文字コード情報が保存されていません。「入出力」の項目で指定された文字"
 "コードが適用されます。"
 
-#: src/interface.c:2304
+#: src/interface.c:2241
 msgid "Always write ID3v2.4 tags (only applies to MP3)"
 msgstr ""
 
-#: src/interface.c:2309
+#: src/interface.c:2246
 msgid ""
 "This is the way to go, but maybe not all programs support it yet. ID3v2.4 "
 "uses unicode to store the tags, so you won't have to worry about charsets "
@@ -1710,11 +1769,11 @@ msgid ""
 "present in the file to write to."
 msgstr ""
 
-#: src/interface.c:2311
+#: src/interface.c:2248
 msgid "Use 'Multi-Edit' for track selections"
 msgstr "選択された曲を「一斉編集」する"
 
-#: src/interface.c:2314
+#: src/interface.c:2251
 msgid ""
 "If you select several tracks in the track list and edit a tag of the first "
 "track, the tags in the other tracks are updated as well."
@@ -1722,11 +1781,11 @@ msgstr ""
 "曲リストの曲を二つ以上選択して、最初の曲のタグを変更すると他の曲にもその変更"
 "を適用します。"
 
-#: src/interface.c:2320
+#: src/interface.c:2257
 msgid "Use 'Multi-Edit' also for title field"
 msgstr "タイトルの項目も「一斉編集」を可能にする"
 
-#: src/interface.c:2325
+#: src/interface.c:2262
 msgid ""
 "Usually you don't want to set the title of several tracks to the same text. "
 "This option might avoid unwanted results (especially since there is no "
@@ -1736,11 +1795,11 @@ msgstr ""
 "選択すると大抵は望ましくない結果を得る事になります。(特に、今のところ「やり直"
 "し」は効かないので、選択するべきではありません)"
 
-#: src/interface.c:2327
+#: src/interface.c:2264
 msgid "Track Editing"
 msgstr "曲の編集"
 
-#: src/interface.c:2352
+#: src/interface.c:2289
 msgid ""
 "Number of tracks in the generated playlists 'Most Often Listened', 'Best "
 "Rated' and 'Most Recently Played'. Choose '0' for 'no limit'."
@@ -1749,35 +1808,35 @@ msgstr ""
 "た曲」を選択した際にリストに登録する曲の数を指定します。0を指定すると、曲数を"
 "制限しません。"
 
-#: src/interface.c:2354
+#: src/interface.c:2291
 msgid " Number of tracks in generated playlists: "
 msgstr "生成するプレイリストに加える曲数: "
 
-#: src/interface.c:2363
+#: src/interface.c:2300
 msgid "Also include tracks never played in \"Best Rated\" playlist"
 msgstr ""
 "「評価の高い曲」のリストを作る際に、一度も\n"
 "再生された事のない曲も対象とします。"
 
-#: src/interface.c:2367
+#: src/interface.c:2304
 msgid "Auto-Generated Playlists"
 msgstr "プレイリストの自動作成"
 
-#: src/interface.c:2383
+#: src/interface.c:2320
 msgid "Before removing playlists or tracks from a playlist"
 msgstr "プレイリストや、プレイリストから曲を削除する時"
 
-#: src/interface.c:2387
+#: src/interface.c:2324
 msgid "Before removing tracks completely from the iPod"
 msgstr "曲をiPodから完全に削除する時"
 
-#: src/interface.c:2391
+#: src/interface.c:2328
 msgid ""
 "Before removing tracks completely when\n"
 " synchronizing directories"
 msgstr "ディレクトリの同期を行う際に曲を削除する時"
 
-#: src/interface.c:2394
+#: src/interface.c:2331
 msgid ""
 "This option only has a meaning if you activate the 'Delete Tracks that have "
 "been Removed' option in the 'Adding/Updating/Syncing' section in the 'Input/"
@@ -1786,15 +1845,15 @@ msgstr ""
 "このオプションは「入出力」のタブ中の「追加/更新/同期」の中にある「同期元で削"
 "除された曲を消去する」の項目を設定している場合にのみ適用されます。"
 
-#: src/interface.c:2396
+#: src/interface.c:2333
 msgid "Delete Confirmation "
 msgstr "削除の確認"
 
-#: src/interface.c:2430
+#: src/interface.c:2367
 msgid "Command Line for 'Play Now':"
 msgstr "「今すぐ演奏」のためのコマンド:"
 
-#: src/interface.c:2440
+#: src/interface.c:2377
 #, c-format
 msgid ""
 "For example, 'xmms -p %s' will clear xmms' current playlist, add the "
@@ -1803,11 +1862,11 @@ msgstr ""
 "例えば 'xmms -p %s' とすると、xmms のその時のプレイリストをクリアし、選択した"
 "曲をプレイリストの先頭に加えて演奏を始めます。"
 
-#: src/interface.c:2442
+#: src/interface.c:2379
 msgid "Command Line for 'Enqueue':"
 msgstr "「演奏キューに入れる」ためのコマンド:"
 
-#: src/interface.c:2452
+#: src/interface.c:2389
 #, c-format
 msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected tracks to xmms' "
@@ -1816,116 +1875,102 @@ msgstr ""
 "例えば 'xmms -e %s' とすると、選択された曲を xmms のその時のプレイリストの最"
 "後尾に追加します"
 
-#: src/interface.c:2454
+#: src/interface.c:2391
 msgid "Track Playing"
 msgstr "曲の演奏"
 
-#: src/interface.c:2469
+#: src/interface.c:2406
 msgid "Exact path for the 'mp3gain' executable:"
 msgstr "'mp3gain' コマンドの場所:"
 
-#: src/interface.c:2479
+#: src/interface.c:2416
 msgid ""
 "You only need to specify this if your 'mp3gain' executable is not in your "
-"default path. Example: '/usr/local/bimbam/mp3gain'."
+"default path. Example: '/usr/local/foo/mp3gain'. mp3gain will write the "
+"calculated gain value back to the file -- if you don't want this, set this "
+"entry to /bin/true or similar. mp3gain is only called if appropriate tags "
+"are not already set by your encoder. E.g. lame version 0.95 already writes "
+"the gain values into tags. The exact conversion factor between mp3gain's "
+"gain value and iPod's volume tag is not known yet -- your input is "
+"appreciated."
 msgstr ""
-"この欄は、'mp3gain' コマンドが貴方が通常使っているパスに含まれていない時にの"
-"み指定する必要があります。例: '/usr/local/bimbam/mp3gain'"
 
-#: src/interface.c:2481
-msgid "Write information about suggested gain level to file"
-msgstr "ゲインレベルの情報をファイルに書き込む"
-
-#: src/interface.c:2484
-msgid ""
-"mp3gain can add a special tag to the mp3 file. This tag will save much time "
-"when normalizing a second time. As with all write operations there is a "
-"small change that your files get damaged! Note: gtkpod will use the mp3 file "
-"stored on the iPod if that's available (not in offline mode and file "
-"transferred). Otherwise it will use the original file on your harddisk."
-msgstr ""
-"mp3gain は mp3 ファイルに特殊タグを付加することができます。このタグによって二"
-"回目以降の平均化にかかる時間を大幅に節約できます。この書き込み作業のために"
-"ファイルが破損する可能性もあります。注意: gtkpod は、iPod が接続されていれば"
-"iPod に保存されているmp3 ファイルを使用します(オフラインモードでなく、かつ"
-"ファイルが転送済みであれば)。そうでない場合はオリジナルのファイルを用います。"
-
-#: src/interface.c:2486
+#: src/interface.c:2418
 msgid "Volume Normalization"
 msgstr "音量の平均化"
 
-#: src/interface.c:2510
+#: src/interface.c:2442
 msgid "Command to synchronize contacts:"
 msgstr ""
 
-#: src/interface.c:2520 src/interface.c:2532
+#: src/interface.c:2452 src/interface.c:2464
 #, c-format
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
 msgstr ""
 
-#: src/interface.c:2522
+#: src/interface.c:2454
 msgid "Command to be called to synchronize calendar:"
 msgstr ""
 
-#: src/interface.c:2534
+#: src/interface.c:2466
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr ""
 
-#: src/interface.c:2538
+#: src/interface.c:2470
 msgid "Contacts / Calendar"
 msgstr ""
 
-#: src/interface.c:3009
+#: src/interface.c:2945
 msgid " Logic: "
 msgstr "条件: "
 
-#: src/interface.c:3015
+#: src/interface.c:2951
 msgid "Any (OR)"
 msgstr "いずれか(OR)"
 
-#: src/interface.c:3021
+#: src/interface.c:2957
 msgid "All (AND)"
 msgstr "すべて(AND)"
 
-#: src/interface.c:3041
+#: src/interface.c:2977
 msgid "0"
 msgstr ""
 
-#: src/interface.c:3045
+#: src/interface.c:2981
 msgid "1"
 msgstr ""
 
-#: src/interface.c:3049
+#: src/interface.c:2985
 msgid "2"
 msgstr ""
 
-#: src/interface.c:3053
+#: src/interface.c:2989
 msgid "3"
 msgstr ""
 
-#: src/interface.c:3057
+#: src/interface.c:2993
 msgid "4"
 msgstr ""
 
-#: src/interface.c:3061
+#: src/interface.c:2997
 msgid "5"
 msgstr ""
 
-#: src/interface.c:3079
+#: src/interface.c:3015
 msgid "Select '0' for no lower limit."
 msgstr "下限を指定しない場合は '0' を選んでください。"
 
-#: src/interface.c:3081
+#: src/interface.c:3017
 msgid " <= cts <= "
 msgstr " <= 回数 <= "
 
-#: src/interface.c:3091
+#: src/interface.c:3027
 msgid "Select '-1' for no upper limit."
 msgstr "上限を指定しない場合は '-1' を選んでください。"
 
-#: src/interface.c:3102 src/interface.c:3121
+#: src/interface.c:3038 src/interface.c:3057
 msgid ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
 "finished."
@@ -1933,23 +1978,23 @@ msgstr ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' のように設定してください。書き込ん"
 "だら 'enter' キーを押してください。"
 
-#: src/interface.c:3108 src/interface.c:3127 src/interface.c:3293
+#: src/interface.c:3044 src/interface.c:3063 src/interface.c:3229
 msgid "Calendar"
 msgstr "カレンダー"
 
-#: src/interface.c:3136
+#: src/interface.c:3072
 msgid "Specify interval"
 msgstr "範囲を指定してください"
 
-#: src/interface.c:3167
+#: src/interface.c:3103
 msgid "Display tracks that match the criteria entered above."
 msgstr "上で指定された条件に合致する曲を表示します。"
 
-#: src/interface.c:3185
+#: src/interface.c:3121
 msgid "Start display automatically"
 msgstr "自動的に表示を更新する"
 
-#: src/interface.c:3188
+#: src/interface.c:3124
 msgid ""
 "Automatically start displaying tracks that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
@@ -1957,87 +2002,87 @@ msgstr ""
 "各項目が入力されるとすぐに表示を更新します。この項目が選択されていない時に"
 "は、「表示」ボタンを押すと更新されます。"
 
-#: src/interface.c:3321
+#: src/interface.c:3257
 msgid "Sorttab: "
 msgstr "ソートタブ: "
 
-#: src/interface.c:3332
+#: src/interface.c:3268
 msgid "     "
 msgstr ""
 
-#: src/interface.c:3336
+#: src/interface.c:3272
 msgid "Category: "
 msgstr "カテゴリ: "
 
-#: src/interface.c:3356
+#: src/interface.c:3292
 msgid "Please specify a time interval"
 msgstr "期間を指定してください"
 
-#: src/interface.c:3375
+#: src/interface.c:3311
 msgid "Lower Margin"
 msgstr "下限"
 
-#: src/interface.c:3397 src/interface.c:3461
+#: src/interface.c:3333 src/interface.c:3397
 msgid "Time:"
 msgstr "時刻:"
 
-#: src/interface.c:3412 src/interface.c:3476
+#: src/interface.c:3348 src/interface.c:3412
 msgid ":"
 msgstr ""
 
-#: src/interface.c:3427
+#: src/interface.c:3363
 msgid "No lower margin"
 msgstr "下限を指定しない"
 
-#: src/interface.c:3439
+#: src/interface.c:3375
 msgid "Upper margin"
 msgstr "上限"
 
-#: src/interface.c:3491
+#: src/interface.c:3427
 msgid "No upper margin"
 msgstr "上限を指定しない"
 
-#: src/interface.c:3660
+#: src/interface.c:3596
 msgid "Sorting Options"
 msgstr "ソートの設定"
 
-#: src/interface.c:3818
+#: src/interface.c:3754
 msgid "Ascending"
 msgstr "昇順"
 
-#: src/interface.c:3833
+#: src/interface.c:3769
 msgid "Descending"
 msgstr "降順"
 
-#: src/interface.c:3848
+#: src/interface.c:3784
 msgid "None"
 msgstr "無指定"
 
-#: src/interface.c:3878
+#: src/interface.c:3814
 msgid "Sorttabs"
 msgstr "ソートタブ"
 
-#: src/interface.c:3893
+#: src/interface.c:3829
 msgid "Tracks"
 msgstr "曲リスト"
 
-#: src/interface.c:3951
+#: src/interface.c:3887
 msgid "Auto Store"
 msgstr "自動保存"
 
-#: src/interface.c:3972 src/interface.c:3983
+#: src/interface.c:3908 src/interface.c:3919
 msgid "Please refer to the notice below."
 msgstr "下記の注意を参照してください。"
 
-#: src/interface.c:3985
+#: src/interface.c:3921
 msgid "n/a"
 msgstr "不可"
 
-#: src/interface.c:4052
+#: src/interface.c:3988
 msgid "Sort tracks according to: "
 msgstr "曲順を次の順で並べ換え: "
 
-#: src/interface.c:4066
+#: src/interface.c:4002
 msgid ""
 "You can also use the table headers, but this allows you to sort according to "
 "a column that is not displayed."
@@ -2045,11 +2090,11 @@ msgstr ""
 "表のヘッダを操作しても並べ換えはできますが、この機能を使うと、表示されていな"
 "い項目を使って並べ換えることが可能になります。"
 
-#: src/interface.c:4072
+#: src/interface.c:4008
 msgid "Sorting case sensitive"
 msgstr "並べ換えの際に大文字小文字を区別する"
 
-#: src/interface.c:4075
+#: src/interface.c:4011
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
 "sorting will not work well with most charsets."
@@ -2057,7 +2102,7 @@ msgstr ""
 "並べ換えの際に、アルファベットの大文字と小文字を区別します。アルファベット以"
 "外のほとんどの文字には対応していません。"
 
-#: src/interface.c:4085
+#: src/interface.c:4021
 #, fuzzy
 msgid ""
 "Notice: the track order is always stored to the iPod when you use drag and "
@@ -2070,74 +2115,82 @@ msgstr ""
 "並べ換えによる曲順を iPod に保存するには、「編集」メニューの「現在の曲順を保"
 "存」の項目か、上の「自動保存」を有効にしてください。"
 
-#: src/interface.c:4319
+#: src/interface.c:4255
 msgid "gtkpod Info"
 msgstr ""
 
-#: src/interface.c:4448 src/interface.c:4475 src/interface.c:4514
+#: src/interface.c:4384 src/interface.c:4411 src/interface.c:4450
 msgid "      "
 msgstr ""
 
-#: src/interface.c:4619
+#: src/interface.c:4555
 msgid "Number of tracks"
 msgstr "曲数"
 
-#: src/interface.c:4628
+#: src/interface.c:4564
 msgid "Play time"
 msgstr "演奏時間"
 
-#: src/interface.c:4637
+#: src/interface.c:4573
 msgid "File size"
 msgstr "ファイルサイズ"
 
-#: src/interface.c:4646
+#: src/interface.c:4582
 msgid "Number of playlists"
 msgstr "プレイリストの数"
 
-#: src/interface.c:4655
+#: src/interface.c:4591
 msgid "Deleted tracks"
 msgstr "削除された曲"
 
-#: src/interface.c:4664
+#: src/interface.c:4600
 msgid "File size (deleted)"
 msgstr "削除されたファイルサイズ"
 
-#: src/interface.c:4673
+#: src/interface.c:4609
 msgid "Non-transfered tracks"
 msgstr "未転送の曲数"
 
-#: src/interface.c:4682
+#: src/interface.c:4618
 msgid "File size (non-transfered)"
 msgstr "未転送のファイルサイズ"
 
-#: src/interface.c:4691
+#: src/interface.c:4627
 msgid "Free space on iPod"
 msgstr "iPodの残り容量"
 
-#: src/interface.c:4700
+#: src/interface.c:4636
 msgid "Total"
 msgstr "合計"
 
-#: src/interface.c:4709
+#: src/interface.c:4645
 #, fuzzy
 msgid ""
 "Selected\n"
 "Playlist"
 msgstr "プレイリスト(_P)"
 
-#: src/interface.c:4718
+#: src/interface.c:4654
 #, fuzzy
 msgid ""
 "Displayed\n"
 "Tracks"
 msgstr "表示されている曲(_D)"
 
-#: src/interface.c:4727
+#: src/interface.c:4663
 #, fuzzy
 msgid ""
 "Selected\n"
 "Tracks"
 msgstr "選択されている曲(_S)"
+
+#: src/interface.c:4787
+msgid "label21"
+msgstr ""
+
+#: src/interface.c:4818
+msgid "Never show this dialogue again"
+msgstr "この質問を二度と表示しない"
 
 #: src/itunesdb.c:401
 msgid "Master-PL"
@@ -2169,68 +2222,44 @@ msgstr "iTunesDB \"%s\" に書き込もうとしましたが、開くことができません。\n"
 msgid "Error renaming '%s' to '%s' (%s).\n"
 msgstr "'%s'を'%s'に変更することができません。(%s)\n"
 
-#: src/itunesdb.c:1564
+#: src/itunesdb.c:1567
 #, c-format
 msgid "Could not open file \"%s\" for reading.\n"
 msgstr "ファイル \"%s\" を読み込もうとしましたが、開くことができません。\n"
 
-#: src/itunesdb.c:1571
+#: src/itunesdb.c:1574
 #, c-format
 msgid "Could not open file \"%s\" for writing.\n"
 msgstr "ファイル \"%s\" に書き込もうとしましたが、開くことができません。\n"
 
 #. error -- not end of file!
-#: src/itunesdb.c:1584
+#: src/itunesdb.c:1587
 #, c-format
 msgid "Error reading file \"%s\".\n"
 msgstr "\"%s\"の読み込み中にエラーが発生しました。\n"
 
-#: src/itunesdb.c:1596
+#: src/itunesdb.c:1599
 #, c-format
 msgid "Error writing PC file \"%s\".\n"
 msgstr "\"%s\"の書き込み中にエラーが発生しました。\n"
 
-#: src/md5.c:162
+#: src/md5.c:163
 msgid "Hashed file is 0 bytes long\n"
 msgstr "ファイルの大きさが 0 バイトです\n"
 
-#: src/md5.c:204
+#: src/md5.c:210
 #, c-format
 msgid "Could not open '%s' to calculate MD5 checksum.\n"
 msgstr "'%s' を開けないため、MD5 チェックサムが計算できません。\n"
 
-#: src/misc.c:121
-msgid "Successly Added Files"
-msgstr "ファイルの追加に成功しました"
-
-#. file selector already open -- abort
-#. Create the selector
-#: src/misc.c:140
-msgid "Select files or directories to add."
-msgstr "追加するファイルまたはディレクトリを選択してください。"
-
-#. file selector already open -- abort
-#. Create the selector
-#: src/misc.c:212
-msgid "Select Playlists to add."
-msgstr "追加するプレイリストを選択してください。"
-
-#: src/misc.c:375 src/misc.c:377 src/misc.c:2427
-msgid "New Playlist"
-msgstr "新規プレイリスト"
-
-#: src/misc.c:376
-msgid "Please enter a name for the new playlist"
-msgstr "新しいプレイリストの名前を入力してください"
-
-#: src/misc.c:404
+#: src/misc.c:66
 #, c-format
 msgid ""
 "gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod"
 "(tm)."
 msgstr ""
 
-#: src/misc.c:408
+#: src/misc.c:70
 msgid ""
 "(C) 2002 - 2003\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
@@ -2239,7 +2268,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/misc.c:414
+#: src/misc.c:76
 msgid ""
 "This program is free software; you can redistribute it and/or modify it "
 "under the terms of the GNU General Public License as published by the Free "
@@ -2273,187 +2302,238 @@ msgstr ""
 "\n"
 "\n"
 
-#: src/misc.c:422
+#: src/misc.c:84
 msgid ""
 "Patches were supplied by the following people (list may be incomplete -- "
 "please contact me)\n"
 "\n"
 msgstr ""
 
-#: src/misc.c:424
+#: src/misc.c:86
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"
 msgstr ""
 
-#: src/misc.c:426
+#: src/misc.c:88
 msgid "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
 msgstr ""
 
-#: src/misc.c:428
+#: src/misc.c:90
 msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"
 msgstr ""
 
-#: src/misc.c:430
+#: src/misc.c:92
 msgid ""
 "Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
 "newlines at the end\n"
 msgstr ""
 
-#: src/misc.c:432
+#: src/misc.c:94
 msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
 msgstr ""
 
-#: src/misc.c:434
+#: src/misc.c:96
 msgid "Chris Cutler: automatic creation of various playlist types\n"
 msgstr ""
 
-#: src/misc.c:436
+#: src/misc.c:98
 msgid ""
 "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
 "dialogue during sync\n"
 msgstr ""
 
-#: src/misc.c:438
+#: src/misc.c:100
 msgid ""
 "Edward Matteucci: debugging, special playlist creation, most of the volume "
 "normalizing code\n"
 msgstr ""
 
-#: src/misc.c:440
+#: src/misc.c:102
 msgid "Jens Lautenbach: some optical improvements\n"
 msgstr ""
 
-#: src/misc.c:442
+#: src/misc.c:104
 msgid "Alex Tribble: iPod eject patch\n"
 msgstr ""
 
-#: src/misc.c:444
+#: src/misc.c:106
 msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling\n"
 msgstr ""
 
-#: src/misc.c:446
+#: src/misc.c:108
 msgid ""
 "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"
 msgstr ""
 
-#: src/misc.c:449
+#: src/misc.c:111
+msgid ""
+"Ero Carrera: Filename validation and quick sync when copying tracks from the "
+"iPod\n"
+msgstr ""
+
+#: src/misc.c:114
+msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"
+msgstr ""
+
+#: src/misc.c:117
+msgid "Armando Atienza: Support with external playcounts\n"
+msgstr ""
+
+#: src/misc.c:120
 msgid "This program borrows code from the following projects:\n"
 msgstr ""
 
-#: src/misc.c:451
+#: src/misc.c:122
 msgid ""
 "    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
 "(http://www.gnu.org/software/gnupod/)\n"
 msgstr ""
 
-#: src/misc.c:453
+#: src/misc.c:124
 msgid "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
 msgstr ""
 
-#: src/misc.c:455
+#: src/misc.c:126
 msgid ""
 "    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
 msgstr ""
 
-#: src/misc.c:457
+#: src/misc.c:128
 msgid ""
 "    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge."
 "net)\n"
 msgstr ""
 
-#: src/misc.c:460
+#: src/misc.c:131
 msgid ""
 "The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
 msgstr ""
 
-#: src/misc.c:475
+#: src/misc.c:146
 msgid "French:   David Le Brun (david at dyn-ns dot net)\n"
 msgstr ""
 
-#: src/misc.c:477
+#: src/misc.c:148
 msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 msgstr ""
 
-#: src/misc.c:479
+#: src/misc.c:150
 msgid ""
 "Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
 "net)\n"
 msgstr ""
 
-#: src/misc.c:481
+#: src/misc.c:152
 msgid "Japanese: Ayako Sano\n"
 msgstr ""
 
-#: src/misc.c:483
+#: src/misc.c:154
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 msgstr ""
 
-#: src/misc.c:651
-#, c-format
-msgid "drag and drop: ignored '%s'\n"
-msgstr "ドラッグアンドドロップ: '%s'は無視します\n"
-
-#: src/misc.c:682 src/misc.c:686
+#: src/misc.c:251 src/misc.c:255
 #, c-format
 msgid "Could not delete backup file: \"%s\"\n"
 msgstr "バックアップファイルが削除できません: \"%s\"\n"
 
-#: src/misc.c:714
-msgid ""
-"Data has been changed and not been saved.\n"
-"OK to exit gtkpod?"
-msgstr ""
-"変更のあったデータはセーブされていません。\n"
-"本当に終了しますか?"
+#: src/misc.c:383
+#, c-format
+msgid "drag and drop: ignored '%s'\n"
+msgstr "ドラッグアンドドロップ: '%s'は無視します\n"
+
+#. no entry selected
+#: src/misc.c:793 src/misc_confirm.c:330
+msgid "No entry selected."
+msgstr "何も選択されていません。"
+
+#. no playlist selected
+#. no playlist??? Cannot happen, but...
+#. no playlist selected
+#: src/misc.c:821 src/misc_confirm.c:212 src/misc_confirm.c:319
+#: src/misc_confirm.c:444
+msgid "No playlist selected."
+msgstr "プレイリストが選択されていません。"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:834
+#: src/misc_confirm.c:66
 msgid "Warning"
 msgstr "警告"
 
 #. title
-#: src/misc.c:835
+#: src/misc_confirm.c:67
 msgid "The following has occured:"
 msgstr "以下の問題が発生しました:"
 
-#: src/misc.c:1081
+#: src/misc_confirm.c:107
+msgid ""
+"Are you sure you want to delete the following track completely from your "
+"ipod? The number of playlists this track is a member of is indicated in "
+"parentheses."
+msgid_plural ""
+"Are you sure you want to delete the following tracks completely from your "
+"ipod? The number of playlists the tracks are member of is indicated in "
+"parentheses."
+msgstr[0] ""
+"以下の曲をiPodから完全に削除してもよろしいですか?括弧の中の数字は、それぞれの"
+"曲がいくつのプレイリストに登録されているかを示しています。"
+
+#: src/misc_confirm.c:109
+msgid "Delete Track Completely?"
+msgid_plural "Delete Tracks Completey?"
+msgstr[0] "以下の曲を完全に削除しますか?"
+
+#: src/misc_confirm.c:119
 #, c-format
-msgid "Successfully created iPod directories in '%s'."
-msgstr "'%s' にiPodのディレクトリを作成しました。"
+msgid ""
+"Are you sure you want to delete the following track from the playlist \"%s\"?"
+msgid_plural ""
+"Are you sure you want to delete the following tracks from the playlist \"%s"
+"\"?"
+msgstr[0] "以下の曲をプレイリスト \"%s\" から削除してもよろしいですか?"
 
-#: src/misc.c:1083
+#: src/misc_confirm.c:121
+msgid "Delete Track From Playlist?"
+msgid_plural "Delete Tracks From Playlist?"
+msgstr[0] "以下の曲をプレイリストから削除しますか?"
+
+#: src/misc_confirm.c:167
 #, c-format
-msgid "Problem creating iPod directories in '%s'."
-msgstr "'%s' にiPodのディレクトリを作成する際に問題が発生しました。"
+msgid "Deleted one track completely from iPod"
+msgid_plural "Deleted %d tracks completely from iPod"
+msgstr[0] "iPodから1曲完全に削除しました"
 
-#. gint id,
-#. gboolean modal,
-#: src/misc.c:1130
-msgid "Create iPod directories"
-msgstr "iPodの初期設定"
+#: src/misc_confirm.c:173
+#, c-format
+msgid "Deleted track from playlist '%s'"
+msgid_plural "Deleted tracks from playlist '%s'"
+msgstr[0] "プレイリスト '%s' から曲を削除しました"
 
-#. title
-#: src/misc.c:1131
-msgid "OK to create the following directories?"
-msgstr "以下のディレクトリを作成してもいいですか?"
+#. no tracks selected
+#: src/misc_confirm.c:218
+msgid "No tracks selected."
+msgstr "曲が選択されていません。"
 
-#: src/misc.c:1164
+#: src/misc_confirm.c:336
+msgid "Cannot remove entry 'All'"
+msgstr "'全て' の項目を削除することはできません"
+
+#: src/misc_confirm.c:393
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "プレイリスト '%s' を削除"
 
-#: src/misc.c:1184
+#: src/misc_confirm.c:413
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
 msgstr[0] "プレイリスト '%s'（%d 曲入り）を削除しました"
 
 #. master playlist
-#: src/misc.c:1220
+#: src/misc_confirm.c:449
 msgid "Cannot delete master playlist."
 msgstr "マスタープレイリストは削除できません。"
 
-#: src/misc.c:1244
+#: src/misc_confirm.c:473
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
@@ -2469,189 +2549,204 @@ msgstr[0] ""
 "るかを示しています。"
 
 #. remove only playlist, keep tracks
-#: src/misc.c:1265
+#: src/misc_confirm.c:494
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "プレイリスト '%s' を本当に削除してもいいですか?"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:1270
+#: src/misc_confirm.c:499
 msgid "Delete Playlist?"
 msgstr "プレイリストを削除しますか?"
 
-#: src/misc.c:1313
+#: src/misc_confirm.c:551
+#, c-format
+msgid "Successfully created iPod directories in '%s'."
+msgstr "'%s' にiPodのディレクトリを作成しました。"
+
+#: src/misc_confirm.c:553
+#, c-format
+msgid "Problem creating iPod directories in '%s'."
+msgstr "'%s' にiPodのディレクトリを作成する際に問題が発生しました。"
+
+#. gint id,
+#. gboolean modal,
+#: src/misc_confirm.c:600
+msgid "Create iPod directories"
+msgstr "iPodの初期設定"
+
+#. title
+#: src/misc_confirm.c:601
+msgid "OK to create the following directories?"
+msgstr "以下のディレクトリを作成してもいいですか?"
+
+#: src/misc_confirm.c:636
 msgid ""
-"Are you sure you want to delete the following track completely from your "
-"ipod? The number of playlists this track is a member of is indicated in "
-"parentheses."
-msgid_plural ""
-"Are you sure you want to delete the following tracks completely from your "
-"ipod? The number of playlists the tracks are member of is indicated in "
-"parentheses."
-msgstr[0] ""
-"以下の曲をiPodから完全に削除してもよろしいですか?括弧の中の数字は、それぞれの"
-"曲がいくつのプレイリストに登録されているかを示しています。"
+"Data has been changed and not been saved.\n"
+"OK to exit gtkpod?"
+msgstr ""
+"変更のあったデータはセーブされていません。\n"
+"本当に終了しますか?"
 
-#: src/misc.c:1315
-msgid "Delete Track Completely?"
-msgid_plural "Delete Tracks Completey?"
-msgstr[0] "以下の曲を完全に削除しますか?"
-
-#: src/misc.c:1325
-#, c-format
-msgid ""
-"Are you sure you want to delete the following track from the playlist \"%s\"?"
-msgid_plural ""
-"Are you sure you want to delete the following tracks from the playlist \"%s"
-"\"?"
-msgstr[0] "以下の曲をプレイリスト \"%s\" から削除してもよろしいですか?"
-
-#: src/misc.c:1327
-msgid "Delete Track From Playlist?"
-msgid_plural "Delete Tracks From Playlist?"
-msgstr[0] "以下の曲をプレイリストから削除しますか?"
-
-#: src/misc.c:1373
-#, c-format
-msgid "Deleted one track completely from iPod"
-msgid_plural "Deleted %d tracks completely from iPod"
-msgstr[0] "iPodから1曲完全に削除しました"
-
-#: src/misc.c:1379
-#, c-format
-msgid "Deleted track from playlist '%s'"
-msgid_plural "Deleted tracks from playlist '%s'"
-msgstr[0] "プレイリスト '%s' から曲を削除しました"
-
-#. no tracks selected
-#: src/misc.c:1424
-msgid "No tracks selected."
-msgstr "曲が選択されていません。"
-
-#: src/misc.c:1542
-msgid "Cannot remove entry 'All'"
-msgstr "'全て' の項目を削除することはできません"
-
-#: src/misc.c:2172
+#: src/misc_conversion.c:362
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr "指定されたURI '%s' はfileスキームが設定されていない、不完全なURIです"
 
-#: src/misc.c:2182
+#: src/misc_conversion.c:372
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr "ローカルファイルを指すURI '%s' には '#' は含まれてはなりません"
 
-#: src/misc.c:2199
+#: src/misc_conversion.c:389
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr "指定されたURI '%s' は不正です"
 
-#: src/misc.c:2211
+#: src/misc_conversion.c:401
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr "指定されたURI '%s' のホスト名が不正です"
 
-#: src/misc.c:2227
+#: src/misc_conversion.c:417
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "指定されたURI '%s' は不正なエスケープ文字を含んでいます"
 
-#: src/misc.c:2300
+#: src/misc_input.c:77
+msgid "Successly Added Files"
+msgstr "ファイルの追加に成功しました"
+
+#. file selector already open -- abort
+#. Create the selector
+#: src/misc_input.c:96
+msgid "Select files or directories to add."
+msgstr "追加するファイルまたはディレクトリを選択してください。"
+
+#. file selector already open -- abort
+#. Create the selector
+#: src/misc_input.c:168
+msgid "Select Playlists to add."
+msgstr "追加するプレイリストを選択してください。"
+
+#: src/misc_playlist.c:58 src/misc_playlist.c:60 src/misc_playlist.c:356
+#: src/misc_playlist.c:358
+msgid "New Playlist"
+msgstr "新規プレイリスト"
+
+#: src/misc_playlist.c:59 src/misc_playlist.c:357
+msgid "Please enter a name for the new playlist"
+msgstr "新しいプレイリストの名前を入力してください"
+
+#: src/misc_playlist.c:96
 msgid "AR:"
 msgstr ""
 
-#: src/misc.c:2303
+#: src/misc_playlist.c:99
 msgid "AL:"
 msgstr ""
 
-#: src/misc.c:2306
+#: src/misc_playlist.c:102
 msgid "GE:"
 msgstr ""
 
-#: src/misc.c:2309
+#: src/misc_playlist.c:105
 msgid "CO:"
 msgstr ""
 
-#: src/misc.c:2341
+#: src/misc_playlist.c:108
+msgid "YE:"
+msgstr ""
+
+#: src/misc_playlist.c:149
 msgid "Unknown"
 msgstr "不明"
 
-#: src/misc.c:2410
+#: src/misc_playlist.c:226
+#, fuzzy, c-format
+msgid "Random (%d)"
+msgstr "最近聴いた曲 (%d)"
+
+#: src/misc_playlist.c:291
+#, fuzzy
+msgid "Not Listed"
+msgstr "聴いたことがない曲"
+
+#: src/misc_playlist.c:332
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
 msgstr[0] "新しくプレイリスト'%s'(%d曲)を作成しました"
 
 #. n==0
-#: src/misc.c:2416
+#: src/misc_playlist.c:343
 msgid "No tracks available, playlist not created"
 msgstr "曲が見付からないので、プレイリストは作れません"
 
-#: src/misc.c:2552
+#: src/misc_playlist.c:458
 #, c-format
 msgid "Most Listened (%d)"
 msgstr "良く聴く曲 (%d)"
 
 #. no limit
-#: src/misc.c:2590
+#: src/misc_playlist.c:496
 msgid "Never Listened"
 msgstr "聴いたことがない曲"
 
-#: src/misc.c:2627
+#: src/misc_playlist.c:533
 #, c-format
 msgid "Best Rated (%d)"
 msgstr "評価の高い曲 (%d)"
 
-#: src/misc.c:2664
+#: src/misc_playlist.c:570
 #, c-format
 msgid "Recent (%d)"
 msgstr "最近聴いた曲 (%d)"
 
-#: src/misc.c:2702
+#: src/misc_playlist.c:608
 msgid "Last Time"
 msgstr "前回以降"
 
-#: src/misc.c:2826
+#: src/misc_playlist.c:699
 msgid "Removal of dangling tracks with no files on PC was canceled."
 msgstr ""
 
-#: src/misc.c:2828
+#: src/misc_playlist.c:701
 msgid "Handling of dangling tracks with files on PC was canceled."
 msgstr ""
 
-#: src/misc.c:2866
+#: src/misc_playlist.c:739
 msgid "Dangling tracks with no files on PC were removed."
 msgstr ""
 
-#: src/misc.c:2868
+#: src/misc_playlist.c:741
 msgid "Dangling tracks with files on PC were handled."
 msgstr ""
 
-#: src/misc.c:2895
+#: src/misc_playlist.c:768
 #, fuzzy
 msgid "Track"
 msgstr "曲リスト"
 
-#: src/misc.c:2932
+#: src/misc_playlist.c:805
 msgid "Creating a tree of known files"
 msgstr ""
 
-#: src/misc.c:2954
+#: src/misc_playlist.c:827
 msgid "Checking iPOD files against known files in DB"
 msgstr ""
 
-#: src/misc.c:2981
+#: src/misc_playlist.c:854
 msgid "Orphaned"
 msgstr ""
 
-#: src/misc.c:3009
+#: src/misc_playlist.c:882
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
 msgstr ""
 
-#: src/misc.c:3036
+#: src/misc_playlist.c:909
 #, c-format
 msgid ""
 "The following dandling track has a file on PC.\n"
@@ -2664,7 +2759,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/misc.c:3041
+#: src/misc_playlist.c:914
 #, c-format
 msgid ""
 "The following dandling track doesn't have file on PC. \n"
@@ -2677,38 +2772,62 @@ msgstr[1] ""
 
 #. we want unique window for each
 #. gboolean modal,
-#: src/misc.c:3048
+#: src/misc_playlist.c:921
 #, fuzzy
 msgid "Dangling Tracks"
 msgstr "警告"
 
-#: src/misc.c:3068
+#: src/misc_playlist.c:941
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
 msgstr ""
 
-#: src/mp3file.c:392
+#: src/mp3file.c:393
 #, fuzzy, c-format
 msgid "Error opening MP3 file '%s'"
 msgstr "\"%s\"の読み込み中にエラーが発生しました。\n"
 
-#: src/mp3file.c:1112
+#: src/mp3file.c:1113
 #, fuzzy, c-format
 msgid "Error setting ID3 field: %s\n"
 msgstr "'%s'の作成に失敗: %s\n"
 
-#: src/mp3file.c:1137 src/mp3file.c:1230
+#: src/mp3file.c:1138 src/mp3file.c:1231
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
-#: src/mp3file.c:1268
+#: src/mp3file.c:1269
 #, fuzzy, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
+#: src/mp3file.c:1755
+#, c-format
+msgid ""
+"Could not find mp3gain. I tried to use the following executable: '%s'.\n"
+"\n"
+"If the mp3gain executable is not in your path or named differently, you can "
+"set the full path in the 'Tools' section of the preferences dialog.\n"
+"\n"
+"If you do not have mp3gain installed, you can download it from http://www."
+"sourceforge.net/projects/mp3gain."
+msgstr ""
+"mp3gain が見付かりません。実行したのは次のコマンドです: '%s'\n"
+"\n"
+"もし mp3gain の実行ファイルが違うパスにあったり名前が異なる場合は、設定画面の"
+"「ツール」の項で、フルパスを指定してください。\n"
+"\n"
+"もし mp3gain をインストールしていない場合は、http://www.sourceforge.net/"
+"projects/mp3gain よりダウンロードしてください。"
+
+#: src/mp3file.c:1795
+#, c-format
+msgid "Execution of mp3gain ('%s') failed."
+msgstr ""
+
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:1385
+#: src/mp3file.c:1974
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "ファイル \"%s\" は長さが0なので無視します。\n"
@@ -2754,32 +2873,36 @@ msgid "Added %d+ tracks to playlist '%s'"
 msgid_plural "Added %d+ tracks to playlist '%s'"
 msgstr[0] "%d+ 曲をプレイリスト '%s' に追加しました"
 
-#: src/prefs.c:122
+#: src/prefs.c:125
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "gtkpod version %s 使い方:\n"
 
-#: src/prefs.c:123
+#: src/prefs.c:126
 msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help:   このヘルプを表示します\n"
 
-#: src/prefs.c:124
+#: src/prefs.c:127
+msgid "  -p <filename>:increment playcount for file by one\n"
+msgstr ""
+
+#: src/prefs.c:128
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m path:      iPodのマウントポイントを指定します\n"
 
-#: src/prefs.c:125
+#: src/prefs.c:129
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr "  --mountpoint: '-m'と同じ\n"
 
-#: src/prefs.c:126
+#: src/prefs.c:130
 msgid "  -a:           import database automatically after start.\n"
 msgstr "  -a:           起動時にデータベースを自動的に読み込みます\n"
 
-#: src/prefs.c:127
+#: src/prefs.c:131
 msgid "  --auto:       same as '-a'.\n"
 msgstr "  --auto:       '-a'と同じ\n"
 
-#: src/prefs.c:128
+#: src/prefs.c:132
 msgid ""
 "  -o:           use offline mode. No changes are exported to the iPod,\n"
 "                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
@@ -2790,120 +2913,120 @@ msgstr ""
 "                iPodへ書き込むには、「オフライン」を無効にした後、\n"
 "                「更新」を実行してください。\n"
 
-#: src/prefs.c:129
+#: src/prefs.c:133
 msgid "  --offline:    same as '-o'.\n"
 msgstr "  --offline:    '-o'と同じ\n"
 
-#: src/prefs.c:283 src/prefs.c:705
+#: src/prefs.c:293 src/prefs.c:767
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "設定ファイルの以下の行に誤りがあります: %s\n"
 
-#: src/prefs.c:738
+#: src/prefs.c:800
 #, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr "設定ファイル \"%s\" を開けません\n"
 
-#: src/prefs.c:858
+#: src/prefs.c:902
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "不明なオプション: %s\n"
 
-#: src/prefs.c:902
+#: src/prefs.c:946
 #, c-format
 msgid "# delete confirmation\n"
 msgstr ""
 
-#: src/prefs.c:907
+#: src/prefs.c:951
 #, c-format
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
 
-#: src/prefs.c:924
+#: src/prefs.c:968
 #, c-format
 msgid "# autoselect master playlist?\n"
 msgstr ""
 
-#: src/prefs.c:926
+#: src/prefs.c:970
 #, c-format
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr ""
 
-#: src/prefs.c:927
+#: src/prefs.c:971
 #, c-format
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr ""
 
-#: src/prefs.c:928
+#: src/prefs.c:972
 #, c-format
 msgid "# autoset: set empty tag to filename?\n"
 msgstr ""
 
-#: src/prefs.c:941
+#: src/prefs.c:985
 #, c-format
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
 "# between sort tabs, and in statusbar.\n"
 msgstr ""
 
-#: src/prefs.c:978
+#: src/prefs.c:1022
 #, c-format
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser, prefs\n"
 msgstr ""
 
-#: src/prefs.c:1010
+#: src/prefs.c:1058
 msgid "Settings are not saved.\n"
 msgstr "設定は保存されません。\n"
 
-#: src/prefs.c:1023
+#: src/prefs.c:1071
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "ファイル \"%s\" を開けません\n"
 
-#: src/prefs.c:1372
+#: src/prefs.c:1421
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " 設定: カテゴリーの数 (%d<%d?) か、ソートタブの数 (%d<%d?) が多過ぎます。\n"
 
-#: src/prefs.c:1421
+#: src/prefs.c:1470
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "\"mkdir %s\" を実行できませんでした\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1813
+#: src/prefs.c:1862
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1855
+#: src/prefs.c:1904
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort: 不正な型 '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1876
+#: src/prefs.c:1925
 #, c-format
 msgid "prefs_set_st_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_st_sort: 不正な型 '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1897
+#: src/prefs.c:1946
 #, c-format
 msgid "prefs_set_tm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_tm_sort: 不正な型 '%d' は無視されました\n"
 
-#: src/prefs.c:2011 src/prefs.c:2018
+#: src/prefs.c:2060 src/prefs.c:2067
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr "'%s': '%%s' は一つまでしか使えません。\n"
 
-#: src/prefs_window.c:521
+#: src/prefs_window.c:541
 #, c-format
 msgid ""
 "Have a look at the scripts provided in '%s'. If you write a new script, "
@@ -2916,58 +3039,39 @@ msgstr ""
 msgid "Couldn't find pixmap file: %s"
 msgstr "以下の画像ファイルが見つかりません: %s"
 
-#: src/tools.c:166
-#, c-format
-msgid ""
-"Could not find mp3gain. I tried to use the following executable: '%s'.\n"
-"\n"
-"If the mp3gain executable is not in your path or named differently, you can "
-"set the full path in the 'Tools' section of the preferences dialog.\n"
-"\n"
-"If you do not have mp3gain installed, you can download it from http://www."
-"sourceforge.net/projects/mp3gain."
-msgstr ""
-"mp3gain が見付かりません。実行したのは次のコマンドです: '%s'\n"
-"\n"
-"もし mp3gain の実行ファイルが違うパスにあったり名前が異なる場合は、設定画面の"
-"「ツール」の項で、フルパスを指定してください。\n"
-"\n"
-"もし mp3gain をインストールしていない場合は、http://www.sourceforge.net/"
-"projects/mp3gain よりダウンロードしてください。"
-
-#: src/tools.c:297
+#: src/tools.c:178
 msgid "Press button to abort."
 msgstr "ボタンを押すと中止します。"
 
-#: src/tools.c:310
+#: src/tools.c:191
 msgid "Normalizing..."
 msgstr "平均化中..."
 
-#: src/tools.c:361
+#: src/tools.c:240
 msgid "Aborting..."
 msgstr "中止処理中..."
 
-#: src/tools.c:365
+#: src/tools.c:244
 msgid "Will abort after current mp3gain process ends."
 msgstr "現在実行中の mp3gain が終了次第、処理を中止します。"
 
-#: src/tools.c:406
-#, c-format
-msgid "Normalized %d of %d new track."
+#: src/tools.c:285
+#, fuzzy, c-format
+msgid "Normalized %d of %d new tracks."
 msgid_plural "Normalized %d of %d new tracks."
 msgstr[0] "%d曲中 %d曲の音量を平均化しました。"
 
-#: src/tools.c:428
+#: src/tools.c:306
 msgid "Some tracks were not normalized. Normalization aborted!"
 msgstr "一部の曲を平均化できませんでした。平均化を中止します!"
 
-#: src/tools.c:519
+#: src/tools.c:397
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr ""
 
-#: src/tools.c:531
+#: src/tools.c:409
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -2976,37 +3080,37 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/tools.c:573
+#: src/tools.c:450
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
 "%s\n"
 msgstr ""
 
-#: src/tools.c:624
+#: src/tools.c:501
 #, c-format
 msgid "No command set for '%s'"
 msgstr "'%s' のためのコマンドが設定されていません"
 
-#: src/tools.c:645
+#: src/tools.c:522
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
 msgstr "'%s' のためのコマンド '%s' が見付かりません"
 
 #. update for count == 1, 21, 41 ... and for count == n
-#: src/track.c:406
+#: src/track.c:429
 #, c-format
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
 msgstr[0] "%d曲中%d曲のハッシュを生成しました。"
 
-#: src/track.c:470
+#: src/track.c:493
 #, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] "以下の重複した%d曲が削除されました。"
 
-#: src/track.c:477
+#: src/track.c:500
 #, c-format
 msgid ""
 "The following duplicate track has not been added to the master play list."
@@ -3017,9 +3121,14 @@ msgstr[0] "以下の重複した%d曲はマスタープレイリストに追加されませんでした。"
 
 #. gint id,
 #. gboolean modal,
-#: src/track.c:484
+#: src/track.c:507
 msgid "Duplicate detection"
 msgstr "重複の検出"
+
+#: src/track.c:764
+#, c-format
+msgid "Increased playcount for '%s'"
+msgstr ""
 
 #: src/wavfile.c:106
 #, fuzzy, c-format
@@ -3030,6 +3139,35 @@ msgstr "ファイル \"%s\" を読み込もうとしましたが、開くことができません。\n"
 #, fuzzy, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "'%s' は mp4 オーディオファイルとは認識できません。\n"
+
+#, fuzzy
+#~ msgid "Error writing iTunesDB to iPod.  No iTunes directory!"
+#~ msgstr "iTunesDBをiPodに書き込めません。エクスポートを中止します!"
+
+#~ msgid ""
+#~ "You only need to specify this if your 'mp3gain' executable is not in your "
+#~ "default path. Example: '/usr/local/bimbam/mp3gain'."
+#~ msgstr ""
+#~ "この欄は、'mp3gain' コマンドが貴方が通常使っているパスに含まれていない時に"
+#~ "のみ指定する必要があります。例: '/usr/local/bimbam/mp3gain'"
+
+#~ msgid "Write information about suggested gain level to file"
+#~ msgstr "ゲインレベルの情報をファイルに書き込む"
+
+#~ msgid ""
+#~ "mp3gain can add a special tag to the mp3 file. This tag will save much "
+#~ "time when normalizing a second time. As with all write operations there "
+#~ "is a small change that your files get damaged! Note: gtkpod will use the "
+#~ "mp3 file stored on the iPod if that's available (not in offline mode and "
+#~ "file transferred). Otherwise it will use the original file on your "
+#~ "harddisk."
+#~ msgstr ""
+#~ "mp3gain は mp3 ファイルに特殊タグを付加することができます。このタグによっ"
+#~ "て二回目以降の平均化にかかる時間を大幅に節約できます。この書き込み作業のた"
+#~ "めにファイルが破損する可能性もあります。注意: gtkpod は、iPod が接続されて"
+#~ "いればiPod に保存されているmp3 ファイルを使用します(オフラインモードでな"
+#~ "く、かつファイルが転送済みであれば)。そうでない場合はオリジナルのファイル"
+#~ "を用います。"
 
 #~ msgid "Could not find mp3gain executable."
 #~ msgstr "mp3gain コマンドが見付かりません。"
@@ -3042,9 +3180,6 @@ msgstr "'%s' は mp4 オーディオファイルとは認識できません。\n"
 
 #~ msgid "Track View"
 #~ msgstr "曲目欄"
-
-#~ msgid "Current Playlist"
-#~ msgstr "現在のプレイリスト"
 
 #~ msgid "Total file size"
 #~ msgstr "総ファイルサイズ"

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-23 22:48:49 JST jcs>
+/* Time-stamp: <2004-03-28 23:56:57 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -334,39 +334,41 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_time_format (arg);
 	  }
-	  else if(g_ascii_strcasecmp (line, "filename_format") == 0)
-	  {  /* changed to "export_template" in 0.74 */
-	      prefs_set_export_template (arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "export_template") == 0)
-	  {
-	      prefs_set_export_template (arg);
-	      if (cfg->version < 0.72)
+	  else if((g_ascii_strcasecmp (line, "filename_format") == 0) ||
+		  (g_ascii_strcasecmp (line, "export_template") == 0))
+	  {  /* changed to "export_template" in 0.73CVS */
+	      /* this "funky" string was the result of a wrong
+		 autoconvert -- just ignore it */
+	      if (strcmp (arg, "%a - %a/%T - %T.mp3") != 0)
 	      {
-		  /* changed the meaning of the %x in export_template */
-		  gchar *sp = cfg->export_template;
-		  if (sp) while (*sp)
+		  prefs_set_export_template (arg);
+		  if (cfg->version < 0.72)
 		  {
-		      if (sp[0] == '%')
+		      /* changed the meaning of the %x in export_template */
+		      gchar *sp = cfg->export_template;
+		      if (sp) while (*sp)
 		      {
-			  switch (sp[1]) {
-			  case 'A':
-			      sp[1] = 'a';
-			      break;
-			  case 'd':
-			      sp[1] = 'A';
-			      break;
-			  case 'n':
-			      sp[1] = 't';
-			      break;
-			  case 't':
-			      sp[1] = 'T';
-			      break;
-			  default:
-			      break;
+			  if (sp[0] == '%')
+			  {
+			      switch (sp[1]) {
+			      case 'A':
+				  sp[1] = 'a';
+				  break;
+			      case 'd':
+				  sp[1] = 'A';
+				  break;
+			      case 'n':
+				  sp[1] = 't';
+				  break;
+			      case 't':
+				  sp[1] = 'T';
+				  break;
+			      default:
+				  break;
+			      }
 			  }
+			  ++sp;
 		      }
-		      ++sp;
 		  }
 	      }
 	  }

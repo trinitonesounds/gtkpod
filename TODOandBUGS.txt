@@ -1,5 +1,12 @@
 TODO:
 
+- progress bar for copying songs from iPod
+
+- replace "/" in tags to some meaningful separator like ("-") instaead
+  of "?"
+
+- confirmation dialog before writing iTunesDB
+
 Dangling/orphaned tracks
     - Delete dangling tracks right away -- they can cause an error
       message when exporting the iTunesDB. Instead display them in an
