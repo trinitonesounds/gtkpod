@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-09 23:57:32 jcs>
+/* Time-stamp: <2004-11-15 00:24:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1110,30 +1110,21 @@ static void tm_unsort (void)
     if (track_treeview)
     {
 	GtkTreeModel *model= gtk_tree_view_get_model (track_treeview);
-/* 	gint id=-5; */
-/* 	gboolean set; */
-/* 	GtkSortType order=-5; */
-
-/* 	set = gtk_tree_sortable_get_sort_column_id */
-/* 	    (GTK_TREE_SORTABLE (model), &id, &order); */
-/* 	printf ("IN  set: %d, column: %d, order: %d\n", set, id, order); */
 
 	prefs_set_tm_sort (SORT_NONE);
-#if !BROKEN_GTK_TREE_SORT
-	gtk_tree_sortable_set_sort_column_id
-	    (GTK_TREE_SORTABLE (model),
-	     GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
-	     GTK_SORT_ASCENDING);
-#endif
-
-/* 	set = gtk_tree_sortable_get_sort_column_id */
-/* 	    (GTK_TREE_SORTABLE (model), &id, &order); */
-/* 	printf ("OUT set: %d, column: %d, order: %d\n", set, id, order); */
-
-	tm_adopt_order_in_sorttab ();
-/* 	sort_window_update (); */
-
-	tm_sort_counter (-1);
+	if (!BROKEN_GTK_TREE_SORT)
+	{
+	    gtk_tree_sortable_set_sort_column_id
+		(GTK_TREE_SORTABLE (model),
+		 GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
+		 GTK_SORT_ASCENDING);
+	    tm_adopt_order_in_sorttab ();
+	    tm_sort_counter (-1);
+	}
+	else
+	{
+	    gtkpod_warning (_("Cannot unsort track view because of a bug in the GTK lib you are using (%d.%d.%d < 2.5.4). Once you sort the track view, you cannot go back to the unsorted state.\n\n"), gtk_major_version, gtk_minor_version, gtk_micro_version);
+	}
     }
 }
 
@@ -1534,12 +1525,10 @@ void tm_enable_disable_view_sort (gboolean enable)
 		}
 		else
 		{
-#if !BROKEN_GTK_TREE_SORT
 		    gtk_tree_sortable_set_sort_column_id (
 			GTK_TREE_SORTABLE (model),
 			GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
 			prefs_get_tm_sort ());
-#endif
 		}
 	    }
 	}

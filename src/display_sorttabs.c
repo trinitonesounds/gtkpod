@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-09 23:59:10 jcs>
+/* Time-stamp: <2004-11-14 23:52:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1955,12 +1955,10 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 		    }
 		    else
 		    {
-#if !BROKEN_GTK_TREE_SORT
 			gtk_tree_sortable_set_sort_column_id (
 			    GTK_TREE_SORTABLE (st->model),
 			    GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
 			    prefs_get_st_sort ());
-#endif
 		    }
 		}
 	    }
