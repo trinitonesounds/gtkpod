@@ -340,7 +340,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      block_selection (-1);
 	      g_get_current_time (&time);
 	  }
-	  tm_enable_disable_view_sort (FALSE);
+	  st_enable_disable_view_sort (0, FALSE);
 	  for (gl=new_playlist->members; gl; gl=gl->next)
 	  { /* add all tracks to sort tab 0 */
 	      Track *track = gl->data;
@@ -363,7 +363,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	      }
 	  }
-	  tm_enable_disable_view_sort (TRUE);
+	  st_enable_disable_view_sort (0, TRUE);
 	  if (stop_add != -1) st_add_track (NULL, TRUE, TRUE, 0);
 	  if (!prefs_get_block_display ())
 	  {

@@ -7,7 +7,10 @@ gtkpod V0.82-CVS
 	been accepted, unsorting will not work. The bug report is
 	available at http://bugzilla.gnome.org/show_bug.cgi?id=152414
 	and the patch can also be downloaded at
-	gtkpod.sourceforge.net/gtkliststore_c.diff
+	gtkpod.sourceforge.net/gtkliststore_c.diff.
+	"#define BROKEN_GTK_TREE_SORT 0" in misc.h if you have applied
+	the patch or use "#define BROKEN_GTK_TREE_SORT 1" if you are
+	using a broken GTK+-library.
 
 	BUGFIX: When using "block display during updates" the display
 	was still updated during import. Fixed.

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:11:53 jcs>
+/* Time-stamp: <2004-09-20 21:04:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -699,6 +699,6 @@ gboolean selection_callback_timeout (gpointer data)
    This is a good time to stop sorting display. */
 void display_enable_disable_view_sort (gboolean enable)
 {
-    st_enable_disable_view_sort (enable);
-    tm_enable_disable_view_sort (enable);
+    st_enable_disable_view_sort (0, enable);
+/*    tm_enable_disable_view_sort (enable);*/
 }

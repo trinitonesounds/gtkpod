@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 20:26:36 jcs>
+/* Time-stamp: <2004-09-20 21:23:38 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -351,7 +351,7 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 	    block_selection (inst);
 	    g_get_current_time (&time);
 	}
-	tm_enable_disable_view_sort (FALSE);
+	st_enable_disable_view_sort (inst+1, FALSE);
 	for (gl=st->sp_members; gl; gl=gl->next)
 	{ /* add all member tracks to next instance */
 	    Track *track = (Track *)gl->data;
@@ -378,7 +378,7 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	    }
 	}
-	tm_enable_disable_view_sort (TRUE);
+	st_enable_disable_view_sort (inst+1, TRUE);
 	if (stop_add > (gint)inst)
 	    st_add_track (NULL, TRUE, st->final, inst+1);
 	if (!prefs_get_block_display ())
@@ -1426,7 +1426,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 	  g_get_current_time (&time);
       }
       /* add all tracks previously present to sort tab */
-      tm_enable_disable_view_sort (FALSE);
+      st_enable_disable_view_sort (inst, FALSE);
       for (gl=copy; gl; gl=gl->next)
       {
 	  Track *track = gl->data;
@@ -1449,7 +1449,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	  }
       }
-      tm_enable_disable_view_sort (TRUE);
+      st_enable_disable_view_sort (inst, TRUE);
       if (stop_add >= (gint)inst)
       {
 	  gboolean final = TRUE;  /* playlist is always complete */
@@ -1618,7 +1618,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      block_selection (inst);
 	      g_get_current_time (&time);
 	  }
-	  tm_enable_disable_view_sort (FALSE);
+	  st_enable_disable_view_sort (inst+1, FALSE);
 	  for (gl=new_entry->members; gl; gl=gl->next)
 	  { /* add all member tracks to next instance */
 	      Track *track = gl->data;
@@ -1641,7 +1641,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	      }
 	  }
-	  tm_enable_disable_view_sort (TRUE);
+	  st_enable_disable_view_sort (inst+1, TRUE);
 	  if (stop_add > (gint)inst)
 	      st_add_track (NULL, TRUE, st->final, inst+1);
 	  if (!prefs_get_block_display ())
@@ -1888,83 +1888,83 @@ static gint st_nosort_comp (GtkTreeModel *model,
 
 /* Disable sorting of the view during lengthy updates. */
 /* @enable: TRUE: enable, FALSE: disable */
-void st_enable_disable_view_sort (gboolean enable)
+void st_enable_disable_view_sort (gint inst, gboolean enable)
 {
-    static gint disable_count = 0;
+    static gint disable_count[SORT_TAB_MAX];
+
+    if (inst >= prefs_get_sort_tab_num ())
+    {
+	tm_enable_disable_view_sort (enable);
+	return;
+    }
 
     if (enable)
     {
-	disable_count--;
-	if (disable_count < 0)
+	disable_count[inst]--;
+	if (disable_count[inst] < 0)
 	    fprintf (stderr, "Programming error: disable_count < 0\n");
-	if (disable_count == 0)
+	if (disable_count[inst] == 0)
 	{
 	    /* Re-enable sorting */
 	    if ((prefs_get_st_sort () != SORT_NONE) &&
 		prefs_get_disable_sorting ())
 	    {
-		gint inst;
-		for (inst=0; inst < prefs_get_sort_tab_num(); ++inst)
+		SortTab *st = sorttab[inst];
+		if (st && 
+		    (st->current_category != ST_CAT_SPECIAL) &&
+		    st->model)
 		{
-		    SortTab *st = sorttab[inst];
-		    if (st && 
-			(st->current_category != ST_CAT_SPECIAL) &&
-			st->model)
+		    if (BROKEN_GTK_TREE_SORT)
 		    {
-			if (BROKEN_GTK_TREE_SORT)
-			{
-			    gtk_tree_sortable_set_sort_func (
-				GTK_TREE_SORTABLE (st->model),
-				ST_COLUMN_ENTRY,
-				st_data_compare_func, NULL, NULL);
-			}
-			else
-			{
-			    gtk_tree_sortable_set_sort_column_id (
-				GTK_TREE_SORTABLE (st->model),
-				ST_COLUMN_ENTRY,
-				prefs_get_st_sort ());
-			}
+			gtk_tree_sortable_set_sort_func (
+			    GTK_TREE_SORTABLE (st->model),
+			    ST_COLUMN_ENTRY,
+			    st_data_compare_func, NULL, NULL);
+		    }
+		    else
+		    {
+			gtk_tree_sortable_set_sort_column_id (
+			    GTK_TREE_SORTABLE (st->model),
+			    ST_COLUMN_ENTRY,
+			    prefs_get_st_sort ());
 		    }
 		}
 	    }
+	    st_enable_disable_view_sort (inst+1, enable);
 	}
     }
     else
     {
-	if (disable_count == 0)
+	if (disable_count[inst] == 0)
 	{
 	    /* Disable sorting */
 	    if ((prefs_get_st_sort () != SORT_NONE) &&
 		prefs_get_disable_sorting ())
 	    {
-		gint inst;
-		for (inst=0; inst < prefs_get_sort_tab_num(); ++inst)
+		SortTab *st = sorttab[inst];
+		if (st && 
+		    (st->current_category != ST_CAT_SPECIAL) &&
+		    st->model)
 		{
-		    SortTab *st = sorttab[inst];
-		    if (st && 
-			(st->current_category != ST_CAT_SPECIAL) &&
-			st->model)
+		    if (BROKEN_GTK_TREE_SORT)
 		    {
-			if (BROKEN_GTK_TREE_SORT)
-			{
-			    gtk_tree_sortable_set_sort_func (
-				GTK_TREE_SORTABLE (st->model),
-				ST_COLUMN_ENTRY,
-				st_nosort_comp, NULL, NULL);
-			}
-			else
-			{
-			    gtk_tree_sortable_set_sort_column_id (
-				GTK_TREE_SORTABLE (st->model),
-				GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
-				prefs_get_st_sort ());
-			}
+			gtk_tree_sortable_set_sort_func (
+			    GTK_TREE_SORTABLE (st->model),
+			    ST_COLUMN_ENTRY,
+			    st_nosort_comp, NULL, NULL);
+		    }
+		    else
+		    {
+			gtk_tree_sortable_set_sort_column_id (
+			    GTK_TREE_SORTABLE (st->model),
+			    GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
+			    prefs_get_st_sort ());
 		    }
 		}
 	    }
+	    st_enable_disable_view_sort (inst+1, enable);
 	}
-	disable_count++;
+	disable_count[inst]++;
     }
 }
 
