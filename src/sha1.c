@@ -29,7 +29,6 @@
 */
 
 #include <sys/types.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
 #include "md5.h"
@@ -63,18 +62,8 @@ typedef struct _sha1 sha1;
 static u_char *sha1_hash(const u_char * text, u_int32_t len);
 static void process_block_sha1(sha1 * message);
 
-#define FREE_SHA1_DIGEST(d) \
-{ \
-    int i = 0; \
-    for(i = 0; i < 20; i++) \
-	d[i] = 0x01; \
-    d[20] = 0x00; \
-    g_free(d); \
-    d = NULL; \
-}
-
 #if BYTE_ORDER == LITTLE_ENDIAN
-static void little_endian(hblock * stupidblock, int bytes);
+static void little_endian(hblock * stupidblock, int blocks);
 #endif
 
 /**
@@ -121,12 +110,13 @@ do_hash_on_file(FILE * fp)
        bread = fread(file_chunk, sizeof(char), chunk_size, fp);
        if(bread > 0)
        {
-	   digest = (u_char *) g_malloc0(sizeof(u_char) * 41);
+	   if((digest = (u_char *) g_malloc(sizeof(u_char) * 41)) == NULL)
+	       gtkpod_main_quit();	/* errno == ENOMEM */ 
 	   hash = sha1_hash(file_chunk, bread);
 	   for (x = 0; x < 20; x++)
 	       last += snprintf(&digest[last], 4, "%02x", hash[x]);
 	   digest[last] = 0x00;
-	   FREE_SHA1_DIGEST(hash);
+	   g_free(hash);
        }
        else
        { 
@@ -282,7 +272,7 @@ song_removed_from_ipod(Song * s)
 /* sha1_hash - hash value the input data with a given size.
  * @text - the data we're reading to seed sha1
  * @len - the length of the data for our seed
- * Returns a unique 20 char array, you have to free it with FREE_SHA1_DIGEST 
+ * Returns a unique 20 char array.
  */
 static u_char *
 sha1_hash(const u_char * text, u_int32_t len)
@@ -290,11 +280,18 @@ sha1_hash(const u_char * text, u_int32_t len)
    chunk x;
    chunk temp_len = len;
    const u_char *temp_text = text;
-   u_char *digest = (u_char *) g_malloc(sizeof(u_char) * 21);
-   sha1 *message = (sha1 *) g_malloc(sizeof(sha1));
+   u_char *digest;
+   sha1 *message;
 
-   message->blockdata = (block *) g_malloc(sizeof(block));
-   message->H = (hblock *) g_malloc(sizeof(hblock));
+   if((digest = (u_char *) g_malloc0(sizeof(u_char) * 21)) == NULL)
+       gtkpod_main_quit();	/* errno == ENOMEM */
+   if((message = (sha1 *) g_malloc0(sizeof(sha1))) == NULL)
+       gtkpod_main_quit();	/* errno == ENOMEM */
+   if((message->blockdata = (block *) g_malloc0(sizeof(block))) == NULL)
+       gtkpod_main_quit();	/* errno == ENOMEM */
+   if((message->H = (hblock *) g_malloc(sizeof(hblock))) == NULL)
+       gtkpod_main_quit();	/* errno == ENOMEM */
+   
    message->H->chunkblock[0] = 0x67452301;
    message->H->chunkblock[1] = 0xefcdab89;
    message->H->chunkblock[2] = 0x98badcfe;
@@ -305,7 +302,7 @@ sha1_hash(const u_char * text, u_int32_t len)
       for (x = 0; x < 64; x++)
          message->blockdata->charblock[x] = temp_text[x];
 #if BYTE_ORDER == LITTLE_ENDIAN
-      little_endian((hblock *) message->blockdata, 64);
+      little_endian((hblock *) message->blockdata, 16);
 #endif
       process_block_sha1(message);
       temp_len -= 64;
@@ -317,7 +314,7 @@ sha1_hash(const u_char * text, u_int32_t len)
    for (x = temp_len + 1; x < 64; x++)
       message->blockdata->charblock[x] = 0x00;
 #if BYTE_ORDER == LITTLE_ENDIAN
-   little_endian((hblock *) message->blockdata, 64);
+   little_endian((hblock *) message->blockdata, 16);
 #endif
    if (temp_len > 54)
    {
@@ -328,7 +325,7 @@ sha1_hash(const u_char * text, u_int32_t len)
    message->blockdata->chunkblock[15] = len * 8;
    process_block_sha1(message);
 #if BYTE_ORDER == LITTLE_ENDIAN
-   little_endian(message->H, 20);
+   little_endian(message->H, 5);
 #endif
    for (x = 0; x < 20; x++)
       digest[x] = message->H->charblock[x];
@@ -399,17 +396,10 @@ process_block_sha1(sha1 * message)
 static void
 little_endian(hblock * stupidblock, int blocks)
 {
-   int x = 0;
-   u_char temp;
-
-   for (x = 0; x < blocks; x += 4)
+   int x;
+   for (x = 0; x < blocks; x++)
    {
-      temp = stupidblock->charblock[x];
-      stupidblock->charblock[x] = stupidblock->charblock[x + 3];
-      stupidblock->charblock[x + 3] = temp;
-      temp = stupidblock->charblock[x + 1];
-      stupidblock->charblock[x + 1] = stupidblock->charblock[x + 2];
-      stupidblock->charblock[x + 2] = temp;
+  	stupidblock->chunkblock[x] = (stupidblock->charblock[x * 4] << 24 | stupidblock->charblock[x * 4 + 1] << 16 | stupidblock->charblock[x * 4 +2] << 8 | stupidblock->charblock[x * 4 + 3]); 
    }
 }
 #endif
