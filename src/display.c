@@ -2193,6 +2193,7 @@ void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter)
 			SM_COLUMN_TRANSFERRED, song,
 			SM_COLUMN_SIZE, song,
 			SM_COLUMN_SONGLEN, song,
+			SM_COLUMN_BITRATE, song,
 			-1);
 }
 
@@ -2474,6 +2475,12 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
   case SM_COLUMN_SONGLEN:
       snprintf (text, 20, "%d:%02d", song->songlen/60000,
                                      (song->songlen/1000)%60);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "xalign", 1.0, NULL);
+      break;
+  case SM_COLUMN_BITRATE:
+      snprintf (text, 20, "%dk", song->bitrate/1000);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "xalign", 1.0, NULL);
@@ -2996,6 +3003,8 @@ gint sm_data_compare_func (GtkTreeModel *model,
       return song1->size - song2->size;
   case SM_COLUMN_SONGLEN:
       return song1->songlen - song2->songlen;
+  case SM_COLUMN_BITRATE:
+      return song1->bitrate - song2->bitrate;
   default:
       gtkpod_warning("No sort for column %d\n", column);
       break;
@@ -3065,6 +3074,9 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
 {
   GtkTreeViewColumn *col = NULL;
   GtkCellRenderer *renderer;
+/*  static GtkTooltips *tooltips = NULL;*/
+
+/*  if (!tooltips)  tooltips = gtk_tooltips_new ();*/
 
   switch (sm_item)
   {
@@ -3102,6 +3114,12 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
       break;
   case SM_COLUMN_SONGLEN:
       col = sm_add_text_column (SM_COLUMN_SONGLEN, _("Time"), NULL, FALSE, pos);
+      break;
+  case SM_COLUMN_BITRATE:
+      col = sm_add_text_column (SM_COLUMN_BITRATE, _("Bitrate"), NULL, FALSE, pos);
+/*      gtk_tooltips_set_tip (tooltips, GTK_WIDGET (col),
+			    _("Average Bitrate"),
+			    NULL);*/
       break;
     case SM_NUM_COLUMNS:
       break;

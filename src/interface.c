@@ -1168,6 +1168,7 @@ create_new_prefs_window (void)
   GtkWidget *col_visible0;
   GtkWidget *col_visible5;
   GtkWidget *col_visible8;
+  GtkWidget *col_visible11;
   GtkWidget *label37;
   GtkWidget *frame15;
   GtkWidget *vbox30;
@@ -1604,6 +1605,10 @@ create_new_prefs_window (void)
   gtk_widget_show (col_visible8);
   gtk_box_pack_start (GTK_BOX (vbox29), col_visible8, FALSE, FALSE, 0);
 
+  col_visible11 = gtk_check_button_new_with_mnemonic (_("Bitrate"));
+  gtk_widget_show (col_visible11);
+  gtk_box_pack_start (GTK_BOX (vbox29), col_visible11, FALSE, FALSE, 0);
+
   label37 = gtk_label_new (_("Displayed Song Attributes "));
   gtk_widget_show (label37);
   gtk_frame_set_label_widget (GTK_FRAME (frame14), label37);
@@ -1924,6 +1929,7 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible0, "col_visible0");
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible5, "col_visible5");
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible8, "col_visible8");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible11, "col_visible11");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label37, "label37");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame15, "frame15");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox30, "vbox30");
