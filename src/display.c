@@ -51,6 +51,7 @@ static void sm_song_changed (Song *song);
 static void sm_remove_song (Song *song);
 static void sm_remove_all_song (void);
 static void sm_add_song_to_song_model (Song *song);
+static void st_song_changed (Song *song, gboolean removed, guint32 inst);
 static void st_add_song (Song *song, gboolean final, guint32 inst);
 static void st_remove_song (Song *song, guint32 inst);
 static void st_init (gint32 new_category, guint32 inst);
@@ -59,9 +60,12 @@ static void st_init (gint32 new_category, guint32 inst);
 /* Section for playlist display                                     */
 /* ---------------------------------------------------------------- */
 
-/* FIXME */
+
+/* remove a song from a current playlist (model) */
 void pm_remove_song (Playlist *playlist, Song *song)
 {
+  /* notify sort tab if currently selected playlist is affected */
+  if (playlist == current_playlist) st_remove_song (song, 0);
 }
 
 
@@ -69,13 +73,13 @@ void pm_remove_song (Playlist *playlist, Song *song)
 void pm_add_song (Playlist *playlist, Song *song)
 {
   if (playlist == current_playlist) 
-    st_add_song (song, TRUE, 0);
+    st_add_song (song, TRUE, 0); /* Add to first sort tab */
 }
 
 
 
 /* Used by model_playlist_name_changed() to find the playlist that
-   changed name. If found, emit a "row changed" signal */
+   changed name. If found, emit a "row changed" signal to display the change */
 static gboolean sr_model_playlist_name_changed (GtkTreeModel *model,
 					GtkTreePath *path,
 					GtkTreeIter *iter,
@@ -102,10 +106,23 @@ void pm_name_changed (Playlist *playlist)
 }
 
 
-/* FIXME: At the moment we just call sm_song_changed to update the obvious */
+/* If a song got changed (i.e. it's ID3 entries have changed), we check
+   if it's in the currently displayed playlist, and if yes, we notify the
+   first sort tab of a change */
 void pm_song_changed (Song *song)
 {
-  sm_song_changed (song);
+  gint i,n;
+
+  /* Check if song is member of current playlist */
+  n = get_nr_of_songs_in_playlist (current_playlist);
+  for (i=0; i<n; ++i)
+    {
+      if (song == get_song_in_playlist_by_nr (current_playlist, i))
+	{  /* It's a member! Let's notify the first sort tab */
+	  st_song_changed (song, FALSE, 0);
+	  break;
+	}
+    }
 }
 
 
@@ -184,7 +201,7 @@ static void pm_selection_changed (GtkTreeSelection *selection,
   current_playlist = new_playlist;
   n = get_nr_of_songs_in_playlist (new_playlist);
   for (i=0; i<n; ++i)
-    { /* add all songs to search tab 0 */
+    { /* add all songs to sort tab 0 */
       song = get_song_in_playlist_by_nr (new_playlist, i);
       st_add_song (song, FALSE, 0);
     }
@@ -199,9 +216,27 @@ gint pm_data_compare_func (GtkTreeModel *model,
 {
   Playlist *playlist1;
   Playlist *playlist2;
+  GtkTreeViewColumn *column;
+  GtkSortType sort;
+  gint corr;
 
-  gtk_tree_model_get (model, a, 0, &playlist1, -1);
-  gtk_tree_model_get (model, b, 0, &playlist2, -1);
+  gtk_tree_model_get (model, a, PM_COLUMN_PLAYLIST, &playlist1, -1);
+  gtk_tree_model_get (model, b, PM_COLUMN_PLAYLIST, &playlist2, -1);
+  column = (GtkTreeViewColumn *)user_data;
+  /* we make sure that the master playlist always stays on top */
+  /* This is a hack... for some reason GTK2 doesn't set the sort order
+     until after the sort has been done... */
+  if (!gtk_tree_view_column_get_sort_indicator (column))
+    corr = -1;
+  else
+    {
+      sort = gtk_tree_view_column_get_sort_order (column);
+      if (sort == GTK_SORT_ASCENDING)  corr = 1;
+      else corr = -1;
+    }
+  if (playlist1->type == PL_TYPE_MPL) return 1*corr;
+  if (playlist2->type == PL_TYPE_MPL) return -1*corr;
+  /* otherwise just compare the entries */
   return g_utf8_collate (g_utf8_casefold (playlist1->name, -1), 
 			     g_utf8_casefold (playlist2->name, -1));
 }
@@ -219,17 +254,17 @@ pm_cell_edited (GtkCellRendererText *renderer,
   GtkTreePath *path;
   GtkTreeIter iter;
   Playlist *playlist;
-  gint *column;
+  gint column;
 
   model = (GtkTreeModel *)data;
   path = gtk_tree_path_new_from_string (path_string);
-  column = g_object_get_data (G_OBJECT (renderer), "column");
+  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, column, &playlist, -1);
 
   /*printf("pm_cell_edited: column: %d  song:%lx\n", column, song);*/
 
-  switch ((gint) column)
+  switch (column)
     {
     case PM_COLUMN_PLAYLIST:
       g_free (playlist->name);
@@ -258,7 +293,7 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   gint column;
 
   column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
-  gtk_tree_model_get (model, iter, 0, &playlist, -1);
+  gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
 
   switch (column)
     {  /* We only have one column, so this code is overkill... */
@@ -287,6 +322,10 @@ static void pm_add_columns ()
   gtk_tree_view_column_set_cell_data_func (column, renderer, pm_cell_data_func, NULL, NULL);
   gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
   gtk_tree_view_column_set_resizable (column, TRUE);
+  gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
+  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
+				   PM_COLUMN_PLAYLIST,
+				   pm_data_compare_func, column, NULL);
   gtk_tree_view_append_column (playlist_treeview, column);
 }
 
@@ -300,9 +339,6 @@ static void create_playlist_listview (GtkWidget *gtkpod)
   /* create model */
   model =   GTK_TREE_MODEL (gtk_list_store_new (PM_NUM_COLUMNS,
 						G_TYPE_POINTER));
-  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
-				   PM_COLUMN_PLAYLIST,
-				   pm_data_compare_func, NULL, NULL);
   /* set tree view */
   playlist_treeview = GTK_TREE_VIEW (lookup_widget (gtkpod, "playlist_treeview"));
   gtk_tree_view_set_model (playlist_treeview, GTK_TREE_MODEL (model));
@@ -323,7 +359,7 @@ static void create_playlist_listview (GtkWidget *gtkpod)
 
 
 /* Get the instance of the sort tab that corresponds to
-   "notebook". Returns -1 if search tab could not be found
+   "notebook". Returns -1 if sort tab could not be found
    and prints error message */
 static gint st_get_instance (GtkNotebook *notebook)
 {
@@ -413,9 +449,48 @@ static void st_remove_all_entries (guint32 inst)
 }
 
 
+/* Get the correct name for the entry according to currently
+   selected category (page). Do _not_ g_free() the return value! */
+static gchar *st_get_entryname (Song *song, guint32 inst)
+{
+  switch (sorttab[inst]->current_category)
+    {
+    case ST_CAT_ARTIST:
+      return song->artist;
+    case ST_CAT_ALBUM:
+      return song->album;
+    case ST_CAT_GENRE:
+      return song->genre;
+    }
+  g_warning ("Programming error: st_get_entryname: undefined category\n");
+  return NULL;
+}
+
+
+/* Returns the entry "song" is stored in or NULL. The master entry
+   "All" is skipped */
+static TabEntry *st_get_entry_by_song (Song *song, guint32 inst)
+{
+  GList *entries;
+  TabEntry *entry;
+  guint i;
+
+  /*  printf("%d: looking for song: %x\n", inst, song);*/
+  if (song == NULL) return NULL;
+  entries = sorttab[inst]->entries;
+  i=1; /* skip master entry, which is supposed to be at first position */
+  while ((entry = (TabEntry *)g_list_nth_data (entries, i)) != NULL)
+    {
+      if (g_list_find (entry->members, song) != NULL)   break; /* found! */
+      ++i;
+    }
+  return entry;
+}
+
+
 /* Find TabEntry with name "name". Return NULL if no entry was found.
    Skips the master entry! */
-static TabEntry *st_get_entry (gchar *name, guint32 inst)
+static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
 {
   GList *entries;
   TabEntry *entry;
@@ -436,10 +511,119 @@ static TabEntry *st_get_entry (gchar *name, guint32 inst)
 }
 
 
-/* Add song to search tab. If the song matches the currently
-   selected search criteria, it will be passed on to the next
-   search tab. The last search tab will pass the song on to the
-   song model (currently two search tabs). */
+/* removes a song from the entry it is currently in to the one it
+   should be in according (if a Tag had been changed).
+   Returns TRUE, if song has been moved, FALSE otherwise */
+static gboolean st_recategorize_song (Song *song, guint32 inst)
+{
+  TabEntry *oldentry, *newentry;
+  SortTab *st = sorttab[inst];
+  gchar *entryname;
+
+  oldentry = st_get_entry_by_song (song, inst);
+/* should not happen: song is not in sort tab */
+  if (oldentry == NULL) return FALSE;
+  entryname = st_get_entryname (song, inst);
+  newentry = st_get_entry_by_name (entryname, inst);
+  if (newentry == NULL)
+    { /* not found, create new one */
+      newentry = g_malloc0 (sizeof (TabEntry));
+      newentry->name = g_strdup (entryname);
+      newentry->master = FALSE;
+      st_add_entry (newentry, inst);
+    }
+  if (newentry != oldentry)
+    { /* song category changed */
+      /* add song to entry members list */
+      newentry->members = g_list_append (newentry->members, song); 
+      /* remove song from old entry members list */
+      oldentry->members = g_list_remove (oldentry->members, song);
+      return TRUE;
+    }
+  return FALSE;
+}
+
+
+/* Some tags of a song currently stored in a sort tab have been changed.
+   - if not "removed"
+     - if the song is in the entry currently selected:
+       - remove entry and put into correct category
+       - if current entry != "All":
+         - if sort category changed:
+           - notify next sort tab ("removed")
+	 - if sort category did not change:
+	   - notify next sort tab ("not removed")
+       - if current entry == "All":
+         - notify next sort tab ("not removed")
+     - if the song is not in the entry currently selected (I don't know
+       how that could happen, though):
+       - if sort category changed: remove entry and put into correct category
+       - if this "correct" category is selected, call st_add_song for next
+         instance.
+   - if "removed"
+     - remove the song from the sort tab
+     - if song was in the entry currently selected, notify next instance
+       ("removed")
+  "removed": song has been removed from sort tab. This is different from
+  st_remove_song, because we will not notify the song model: it might confuse
+  the user if the song, whose tabs he/she just edited, disappeared from the
+  display */
+static void st_song_changed (Song *song, gboolean removed, guint32 inst)
+{
+  SortTab *st;
+  TabEntry *master, *entry;
+
+  if (inst == SORT_TAB_NUM)   return;  /* we don't notify the song model */
+  st = sorttab[inst];
+  master = g_list_nth_data (st->entries, 0);
+  if (master == NULL) return; /* should not happen */
+  /* if song is not in tab, don't proceed (should not happen) */
+  if (g_list_find (master->members, song) == NULL) return;
+  if (removed)
+    {
+      /* remove "song" from master entry "All" */
+      master->members = g_list_remove (master->members, song);
+      /* find entry which other entry contains the song... */
+      entry = st_get_entry_by_song (song, inst);
+      /* ...and remove it */
+      if (entry) entry->members = g_list_remove (entry->members, song);
+      if ((st->current_entry == entry) || (st->current_entry == master))
+	st_song_changed (song, TRUE, inst+1);
+    }
+  else
+    {
+      if (g_list_find (st->current_entry->members, song) != NULL)
+	{ /* "song" is in currently selected entry */
+	  if (!st->current_entry->master)
+	    { /* it's not the master list */
+	      if (st_recategorize_song (song, inst))
+		st_song_changed (song, TRUE, inst+1);
+	      else st_song_changed (song, FALSE, inst+1);
+	    }
+	  else
+	    { /* master entry ("All") is currently selected */
+	      st_recategorize_song (song, inst);
+	      st_song_changed (song, FALSE, inst+1);
+	    }
+	}
+      else
+	{ /* "song" is not in an entry currently selected */
+	  if (st_recategorize_song (song, inst))
+	    { /* song was moved to a different entry */
+	      if (st_get_entry_by_song (song, inst) == st->current_entry)
+		{ /* this entry is selected! */
+		  st_add_song (song, TRUE, inst+1);
+		}
+	    }
+	}
+    }
+}
+
+
+/* Add song to sort tab. If the song matches the currently
+   selected sort criteria, it will be passed on to the next
+   sort tab. The last sort tab will pass the song on to the
+   song model (currently two sort tabs). */
 static void st_add_song (Song *song, gboolean final, guint32 inst)
 {
   TabEntry *entry, *iter_entry;
@@ -448,7 +632,6 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
   GtkTreeSelection *selection;
   GtkTreeIter iter;
 
-  /* currently we don't support search criteria */
   if (inst == SORT_TAB_NUM)
     {  /* just add to song model */
       if (song != NULL)    sm_add_song_to_song_model (song);
@@ -463,22 +646,8 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	  g_return_if_fail (entry != NULL);
 	  entry->members = g_list_append (entry->members, song);
 	  /* Check whether entry of same name already exists */
-	  switch (st->current_category)
-	    {
-	    case ST_CAT_ARTIST:
-	      entryname = song->artist;
-	      break;
-	    case ST_CAT_ALBUM:
-	      entryname = song->album;
-	      break;
-	    case ST_CAT_GENRE:
-	      entryname = song->genre;
-	      break;
-	    default: /* programming error! */
-	      g_warning ("Programming error: st_add_song: name == NULL\n");
-	      entryname = NULL;
-	    }
-	  entry = st_get_entry (entryname, inst);
+	  entryname = st_get_entryname (song, inst);
+	  entry = st_get_entry_by_name (entryname, inst);
 	  if (entry == NULL)
 	    { /* not found, create new one */
 	      entry = g_malloc0 (sizeof (TabEntry));
@@ -503,7 +672,7 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	     select either the previously selected entry or "All" */
 	  if (final)
 	    { /* should always be final! */
-	      entry = st_get_entry (st->lastselection[st->current_category],
+	      entry = st_get_entry_by_name (st->lastselection[st->current_category],
 				    inst);
 	      if (entry == NULL)
 		{ /* Entry was not previously selected -> set to "All" */
@@ -538,20 +707,32 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 }
 
 
-/* Remove song from search tab. If the song matches the currently
-   selected search criteria, it will be passed on to the next
-   search tab (i.e. removed). The last search tab will remove the
-   song from the song model (currently two search tabs). */
+/* Remove song from sort tab. If the song matches the currently
+   selected sort criteria, it will be passed on to the next
+   sort tab (i.e. removed). The last sort tab will remove the
+   song from the song model (currently two sort tabs). */
 static void st_remove_song (Song *song, guint32 inst)
 {
-  /* currently we don't support search criteria */
+  TabEntry *master, *entry;
+  SortTab *st;
+
   if (inst == SORT_TAB_NUM)
     {
       sm_remove_song (song);
     }
   else
     {
-      st_remove_song (song, inst+1);
+      st = sorttab[inst];
+      master = g_list_nth_data (st->entries, 0);
+      if (master == NULL) return; /* should not happen! */
+      /* remove "song" from master entry "All" */
+      master->members = g_list_remove (master->members, song);
+      /* find entry which other entry contains the song... */
+      entry = st_get_entry_by_song (song, inst);
+      /* ...and remove it */
+      if (entry) entry->members = g_list_remove (entry->members, song);
+      if ((st->current_entry == entry) || (st->current_entry == master))
+	st_remove_song (song, inst+1);
     }
 }
 
@@ -674,7 +855,6 @@ static void st_selection_changed (GtkTreeSelection *selection,
 
 /* Called when editable cell is being edited. Stores new data to
    the entry list and changes all members. */
-/* FIXME: members' data not updated yet */
 static void
 st_cell_edited (GtkCellRendererText *renderer,
 		const gchar         *path_string,
@@ -685,20 +865,20 @@ st_cell_edited (GtkCellRendererText *renderer,
   GtkTreePath *path;
   GtkTreeIter iter;
   TabEntry *entry;
-  gint *column;
+  gint column;
   gint i, n, inst;
   Song *song;
 
   inst = (guint32)data;
   model = sorttab[inst]->model;
   path = gtk_tree_path_new_from_string (path_string);
-  column = g_object_get_data (G_OBJECT (renderer), "column");
+  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, column, &entry, -1);
 
   /*printf("Inst %d: st_cell_edited: column: %d  :%lx\n", inst, column, entry);*/
 
-  switch ((gint) column)
+  switch (column)
     {
     case ST_COLUMN_ENTRY:
       /* We only do something, if the name actually got changed */
@@ -762,7 +942,7 @@ static void st_cell_data_func (GtkTreeViewColumn *tree_column,
   gboolean editable;
 
   column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
-  gtk_tree_model_get (model, iter, 0, &entry, -1);
+  gtk_tree_model_get (model, iter, ST_COLUMN_ENTRY, &entry, -1);
 
   switch (column)
     {  /* We only have one column, so this code is overkill... */
@@ -783,13 +963,26 @@ gint st_data_compare_func (GtkTreeModel *model,
 {
   TabEntry *entry1;
   TabEntry *entry2;
-  gint result;
+  GtkSortType sort;
+  GtkTreeViewColumn *column;
+  gint result, corr;
 
-  gtk_tree_model_get (model, a, 0, &entry1, -1);
-  gtk_tree_model_get (model, b, 0, &entry2, -1);
+  gtk_tree_model_get (model, a, ST_COLUMN_ENTRY, &entry1, -1);
+  gtk_tree_model_get (model, b, ST_COLUMN_ENTRY, &entry2, -1);
+  column = (GtkTreeViewColumn *)user_data;
   /* We make sure that the "all" entry always stay on top */
-  if (entry1->master) return 1;
-  if (entry2->master) return -1;
+  /* This is a hack... for some reason GTK2 doesn't set the sort order
+     until after the sort has been done... */
+  if (!gtk_tree_view_column_get_sort_indicator (column))
+    corr = -1;
+  else
+    {
+      sort = gtk_tree_view_column_get_sort_order (column);
+      if (sort == GTK_SORT_ASCENDING)  corr = 1;
+      else corr = -1;
+    }
+  if (entry1->master) return 1*corr;
+  if (entry2->master) return -1*corr;
   /* Otherwise return the comparison */
   return g_utf8_collate (g_utf8_casefold (entry1->name, -1), 
 			 g_utf8_casefold (entry2->name, -1));
@@ -810,9 +1003,6 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
 
   /* create model */
   liststore = gtk_list_store_new (ST_NUM_COLUMNS, G_TYPE_POINTER);
-  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (liststore),
-				   ST_COLUMN_ENTRY,
-				   st_data_compare_func, NULL, NULL);
   model = GTK_TREE_MODEL (liststore);
   sorttab[inst]->model = model;
   /* set tree view */
@@ -840,6 +1030,10 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
       gtk_tree_view_column_set_cell_data_func (column, renderer, st_cell_data_func, NULL, NULL);
       gtk_tree_view_column_set_sort_column_id (column, ST_COLUMN_ENTRY);
       gtk_tree_view_column_set_resizable (column, TRUE);
+      gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
+      gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (liststore),
+				       ST_COLUMN_ENTRY,
+				       st_data_compare_func, column, NULL);
       gtk_tree_view_append_column (treeview, column);
       gtk_tree_view_set_headers_visible (treeview, FALSE);
     }
@@ -995,18 +1189,18 @@ sm_cell_edited (GtkCellRendererText *renderer,
   GtkTreePath *path;
   GtkTreeIter iter;
   Song *song;
-  gint *column;
+  gint column;
   gboolean changed = FALSE; /* really changed anything? */
 
   model = (GtkTreeModel *)data;
   path = gtk_tree_path_new_from_string (path_string);
-  column = g_object_get_data (G_OBJECT (renderer), "column");
+  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, column, &song, -1);
 
   /*printf("sm_cell_edited: column: %d  song:%lx\n", column, song);*/
 
-  switch ((gint) column)
+  switch (column)
     {
     case SM_COLUMN_ALBUM:
       if (g_utf8_collate (song->album, new_text) != 0)
@@ -1049,6 +1243,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
 	}
       break;
     }
+  if (changed) pm_song_changed (song); /* notify playlist model... */
   /* If anything changed and prefs say to write changes to file, do so */
   if (changed && cfg->writeid3) write_tags_to_file (song);
   gtk_tree_path_free (path);
@@ -1071,7 +1266,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
   gchar text[11];
 
   column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
-  gtk_tree_model_get (model, iter, 0, &song, -1);
+  gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &song, -1);
 
   switch (column)
     {
@@ -1125,8 +1320,8 @@ gint sm_data_compare_func (GtkTreeModel *model,
   gint column;
   GtkSortType order;
 
-  gtk_tree_model_get (model, a, 0, &song1, -1);
-  gtk_tree_model_get (model, b, 0, &song2, -1);
+  gtk_tree_model_get (model, a, SM_COLUMN_ALBUM, &song1, -1);
+  gtk_tree_model_get (model, b, SM_COLUMN_ALBUM, &song2, -1);
   if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order) == FALSE) return 0;
   switch (column)

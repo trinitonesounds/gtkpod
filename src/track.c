@@ -43,6 +43,8 @@ static guint32 free_ipod_id (guint32 id);
    the playlist code */
 void add_song (Song *song)
 {
+  gint sz = sizeof (gunichar2);
+
   /* Make sure all strings are initialised -- that way we don't 
      have to worry about it when we are handling the strings */
   if (song->album == NULL)           song->album = g_strdup ("");
@@ -52,17 +54,17 @@ void add_song (Song *song)
   if (song->comment == NULL)         song->comment = g_strdup ("");
   if (song->composer == NULL)        song->composer = g_strdup ("");
   if (song->fdesc == NULL)           song->fdesc = g_strdup ("");
-  if (song->album_utf16 == NULL)     song->album_utf16 = g_malloc0 (2);
-  if (song->artist_utf16 == NULL)    song->artist_utf16 = g_malloc0 (2);
-  if (song->title_utf16 == NULL)     song->title_utf16 = g_malloc0 (2);
-  if (song->genre_utf16 == NULL)     song->genre_utf16 = g_malloc0 (2);
-  if (song->comment_utf16 == NULL)   song->comment_utf16 = g_malloc0 (2);
-  if (song->composer_utf16 == NULL)  song->composer_utf16 = g_malloc0 (2);
-  if (song->fdesc_utf16 == NULL)     song->fdesc_utf16 = g_malloc0 (2);
+  if (song->album_utf16 == NULL)     song->album_utf16 = g_malloc0 (sz);
+  if (song->artist_utf16 == NULL)    song->artist_utf16 = g_malloc0 (sz);
+  if (song->title_utf16 == NULL)     song->title_utf16 = g_malloc0 (sz);
+  if (song->genre_utf16 == NULL)     song->genre_utf16 = g_malloc0 (sz);
+  if (song->comment_utf16 == NULL)   song->comment_utf16 = g_malloc0 (sz);
+  if (song->composer_utf16 == NULL)  song->composer_utf16 = g_malloc0 (sz);
+  if (song->fdesc_utf16 == NULL)     song->fdesc_utf16 = g_malloc0 (sz);
   if (song->pc_path_utf8 == NULL)    song->pc_path_utf8 = g_strdup ("");
   if (song->pc_path_locale == NULL)  song->pc_path_locale = g_strdup ("");
   if (song->ipod_path == NULL)       song->ipod_path = g_strdup ("");
-  if (song->ipod_path_utf16 == NULL) song->ipod_path_utf16 = g_malloc0 (2);
+  if (song->ipod_path_utf16 == NULL) song->ipod_path_utf16 = g_malloc0 (sz);
 
   free_ipod_id (song->ipod_id);  /* keep track of highest ID used */
   songs = g_list_append (songs, song);
@@ -400,6 +402,7 @@ gboolean write_tags_to_file (Song *song)
 	g_free (ipod_file);
 	g_free (ipod_fullpath);
       }
+    g_free (filetag);
 }    
 
 
