@@ -12,6 +12,7 @@ gtkpod_SOURCES = \
 	confirmation.c confirmation.h \
 	dirbrowser.c dirbrowser.h \
 	display.c display.h \
+        file.c file.h \
 	file_export.c file_export.h \
 	id3_tag.c id3_tag.h genres.h \
 	interface.c interface.h \

@@ -40,16 +40,16 @@
 GList *playlists;
 
 /* Creates a new playlist */
-void add_new_playlist (void)
+Playlist *add_new_playlist (gchar *plname)
 {
   Playlist *plitem;
 
   plitem = g_malloc0 (sizeof (Playlist));
   plitem->type = PL_TYPE_NORM;
-  plitem->name = g_strdup ("New Playlist");
-  plitem->name_utf16 = g_utf8_to_utf16 (plitem->name, -1, NULL, NULL, NULL);
-  add_playlist (plitem);
+  plitem->name = g_strdup (plname);
+  plitem->name_utf16 = g_utf8_to_utf16 (plname, -1, NULL, NULL, NULL);
   data_changed (); /* indicate that data has changed in memory */
+  return add_playlist (plitem);
 }
 
 

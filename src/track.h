@@ -88,7 +88,7 @@ enum {
 
 void free_song(Song *song);
 gboolean it_add_song (Song *song);
-gboolean add_song (Song *song);
+Song *add_song (Song *song);
 void remove_song (Song *song);
 void remove_all_songs (void);
 #define it_get_nr_of_songs get_nr_of_songs
@@ -96,9 +96,6 @@ guint get_nr_of_songs (void);
 Song *it_get_song_by_nr (guint32 n);
 Song *get_song_by_nr (guint32 n);
 Song *get_song_by_id (guint32 id);
-gboolean add_song_by_filename (gchar *name);
-gboolean add_directory_recursively (gchar *name);
-gboolean write_tags_to_file(Song *s, gint tag_id);
 void handle_import (void);
 void handle_export (void);
 gboolean files_are_saved (void);

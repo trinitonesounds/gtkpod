@@ -40,6 +40,8 @@
 #include "playlist.h"
 #include "interface.h"
 #include "misc.h"
+#include "file.h"
+
 
 /* pointer to the treeview for the song display */
 static GtkTreeView *song_treeview = NULL;

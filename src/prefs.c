@@ -54,8 +54,6 @@ enum {
   GP_OFFLINE
 };
 
-#define ISSPACE(a) (((a)==9) || ((a)==' '))    /* TAB, SPACE */
-
 static void usage (FILE *file)
 {
   fprintf(file, _("gtkpod version %s usage:\n"), VERSION);
@@ -163,13 +161,13 @@ read_prefs_from_file_desc(FILE *fp)
 	    }
 	  /* skip whitespace */
 	  bufp = buf;
-	  while (ISSPACE(*bufp)) ++bufp;
+	  while (g_ascii_isspace(*bufp)) ++bufp;
 	  line = g_strndup (buf, arg-bufp);
 	  ++arg;
 	  len = strlen (arg); /* remove newline */
 	  if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
 	  /* skip whitespace */
-	  while (ISSPACE(*arg)) ++arg;
+	  while (g_ascii_isspace(*arg)) ++arg;
 	  if(g_ascii_strcasecmp (line, "mountpoint") == 0)
 	  {
 	      gchar mount_point[PATH_MAX];

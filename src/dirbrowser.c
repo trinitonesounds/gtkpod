@@ -34,6 +34,7 @@
 #include "prefs.h"
 #include "song.h"
 #include "charset.h"
+#include "file.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -161,7 +162,7 @@ static void add_dir_selected (gchar *dir)
 {
     if (dir)
     {
-	add_directory_recursively (dir);
+	add_directory_recursively (dir, NULL);
 	prefs_set_last_dir_browse(dir);
 	gtkpod_songs_statusbar_update();
     }

@@ -281,3 +281,11 @@ on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
 void
 on_stop_button_clicked                 (GtkButton       *button,
                                         gpointer         user_data);
+
+void
+on_add_PL_button_clicked               (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_add_playlist1_activate              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

@@ -39,9 +39,13 @@
    programm is responsible to keep a representation of the data.
 
    For each song itunesdb_parse() will pass a filled out Song structure
-   to "it_add_song()", which has to be provided. The minimal Song
-   structure looks like this (feel free to have it_add_song() do with it
-   as it pleases -- and yes, you are responsible to free the memory):
+   to "it_add_song()", which has to be provided. The return value is
+   TRUE on success and FALSE on error. At the time being, the return
+   value is ignored, however.
+
+   The minimal Song structure looks like this (feel free to have
+   it_add_song() do with it as it pleases -- and yes, you are
+   responsible to free the memory):
 
    typedef struct
    {

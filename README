@@ -289,22 +289,3 @@ Known bugs
 - Display of large number of songs is awfully slow (mainly because of
   the use of the standard GTK2 tree views) -> deactivate "Automatically
   select "All" in first sort tab"
-
-- When you change notebook page in one of the sort tabs the "All"
-  entry always gets selected, no matter what was selected before, and no
-  matter if you checked the autoselect option or not -> This seems to
-  be bug or feature in gtk-2.2 -- the same code works perfect with
-  gtk-2.0. If you know how to solve this issue, let me know.
-
-- You get "Gtk-CRITICAL **: file gtkdnd.c:..." messages when I change
-  the playlist -> This only happens when you don't select "Block
-  display when changing playlist or tab entry". It's a flaw in the
-  GtkTreeView dnd code: the GtkTreeView registers you press a
-  button. The button release event gets lost, however, because the
-  TreeView gets deactivated to keep you from selecting another
-  playlist while the display is still being built up. Therefore, when
-  you move your mouse after the refresh, the dnd code thinks you're
-  dragging. If you have any idea how to tackle this problem, please
-  let me know. BTW: a similar thing happens when you select another
-  entry in the sort tab.
-

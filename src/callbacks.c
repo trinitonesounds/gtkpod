@@ -81,7 +81,7 @@ void
 on_new_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  add_new_playlist ();
+  add_new_playlist (_("New Playlist"));
 }
 
 void
@@ -147,7 +147,7 @@ void
 on_new_playlist_button                 (GtkButton       *button,
                                         gpointer         user_data)
 {
-  add_new_playlist ();
+  add_new_playlist (_("New Playlist"));
 }
 
 void
@@ -368,7 +368,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 		delete_playlist_head ();
 		break;
 	    case GDK_n:
-		add_new_playlist ();
+		add_new_playlist (_("New Playlist"));
 		break;
 	    default:
 		break;
@@ -804,3 +804,18 @@ on_playlist_treeview_button_release_event
     return FALSE;
 }
 #endif
+
+void
+on_add_PL_button_clicked               (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    create_add_playlists_fileselector ();
+}
+
+
+void
+on_add_playlist1_activate              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    create_add_playlists_fileselector ();
+}

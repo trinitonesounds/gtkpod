@@ -30,6 +30,7 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -43,10 +44,12 @@
 #include "confirmation.h"
 #include "prefs_window.h"
 #include "dirbrowser.h"
+#include "file.h"
 
 GtkWidget *gtkpod_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
+static GtkWidget *pl_file_selector = NULL;
 static GtkWidget *gtkpod_statusbar = NULL;
 static GtkWidget *gtkpod_songs_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
@@ -65,6 +68,8 @@ static void block_file_selector (void)
 {
     if (file_selector)
 	gtk_widget_set_sensitive (file_selector, FALSE);
+    if (pl_file_selector)
+	gtk_widget_set_sensitive (pl_file_selector, FALSE);
 }
 
 /* turn the file selector sensitive (if it's open) */
@@ -72,7 +77,15 @@ static void release_file_selector (void)
 {
     if (file_selector)
 	gtk_widget_set_sensitive (file_selector, TRUE);
+    if (pl_file_selector)
+	gtk_widget_set_sensitive (pl_file_selector, TRUE);
 }
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Add Files File Selector                              *
+ *                                                                  *
+\*------------------------------------------------------------------*/
 
 static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 {
@@ -83,8 +96,8 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
   for (i=0; names[i] != NULL; ++i)
     {
-      add_song_by_filename (names[i]);
-      if(!i)
+      add_song_by_filename (names[i], NULL);
+      if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
     }
   remove_duplicate (NULL, NULL); /* display message about duplicate
@@ -138,6 +151,78 @@ void create_add_files_fileselector (void)
 
     /* Display that dialog */
     gtk_widget_show (file_selector);
+}
+
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Add Playlists File Selector                          *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+static void add_playlists_ok_button (GtkWidget *button, GtkFileSelection *selector)
+{
+  gchar **names;
+  gint i;
+
+  block_widgets ();
+  names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
+  for (i=0; names[i] != NULL; ++i)
+    {
+      add_playlist_by_filename (names[i]);
+      if(i == 0)
+	  prefs_set_last_dir_browse(names[i]);
+    }
+  gtkpod_songs_statusbar_update();
+  release_widgets ();
+  g_strfreev (names);
+}
+
+/* called when the file selector is closed */
+static void add_playlists_close (GtkWidget *w1, GtkWidget *w2)
+{
+    if (pl_file_selector)    gtk_widget_destroy(pl_file_selector),
+    gtkpod_songs_statusbar_update();
+    pl_file_selector = NULL;
+}
+
+
+void create_add_playlists_fileselector (void)
+{
+    if (pl_file_selector) return; /* file selector already open -- abort */
+    /* Create the selector */
+    pl_file_selector = gtk_file_selection_new (_("Select Playlists to add."));
+    gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (pl_file_selector),
+					    TRUE);
+    gtk_file_selection_set_filename(GTK_FILE_SELECTION (pl_file_selector),
+				    cfg->last_dir.browse);
+
+    g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->ok_button),
+		      "clicked",
+		      G_CALLBACK (add_playlists_ok_button),
+		      pl_file_selector);
+
+    /* Ensure that pl_file_selector is set to NULL when window is deleted */
+    g_signal_connect_swapped (GTK_OBJECT (pl_file_selector),
+			      "delete_event",
+			      G_CALLBACK (add_playlists_close), 
+			      (gpointer) pl_file_selector); 
+
+    /* Ensure that the dialog box is deleted when the user clicks a button. */
+    g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->ok_button),
+			      "clicked",
+			      G_CALLBACK (add_playlists_close), 
+			      (gpointer) pl_file_selector); 
+
+    g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->cancel_button),
+			      "clicked",
+			      G_CALLBACK (add_playlists_close),
+			      (gpointer) pl_file_selector); 
+
+    /* Display that dialog */
+    gtk_widget_show (pl_file_selector);
 }
 
 
@@ -975,4 +1060,3 @@ void delete_entry_head (gint inst)
     g_free (label);
     g_string_free (str, TRUE);
 }
-
