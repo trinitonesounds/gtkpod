@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 22:20:40 jcs>
+/* Time-stamp: <2005-01-04 00:02:13 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -111,5 +111,8 @@ iTunesDB *gp_itdb_new (void);
 Playlist *gp_playlist_new (const gchar *title, gboolean spl);
 Track *gp_track_new (void);
 void init_data (GtkWidget *window);
+gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num);
+void gp_duplicate_remove (Track *oldtrack, Track *track);
+Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename);
 
 #endif

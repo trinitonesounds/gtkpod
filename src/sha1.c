@@ -42,6 +42,7 @@
 #include "file.h"
 #include "prefs.h"
 #include "misc.h"
+#include "display_itdb.h"
 #include "support.h"
 
 
@@ -88,13 +89,6 @@ static void little_endian(hblock * stupidblock, int blocks);
 #define PATH_MAX_MD5 4096
 
 /**
- * filehash
- * a string hash of the files on the ipod already, or are already registered
- * to be copied on next export
- * */
-static GHashTable *filehash = NULL;
-
-/**
  * get_filesize_for_file_descriptor - get the filesize on disk for the given
  * file descriptor
  * @fp - the filepointer we want the filesize for
@@ -139,8 +133,7 @@ md5_hash_on_file(FILE * fp)
 	   gchar file_chunk[chunk_size + sizeof(int)];
 
 	   /* allocate the digest we're returning */
-	   if((result = (gchar*)g_malloc0(sizeof(gchar) * 41)) == NULL)
-	       gtkpod_main_quit();	/* errno == ENOMEM */
+	   result = g_malloc0(sizeof(gchar) * 41);
 
 	   /* put filesize in the first 32 bits */
 	   memcpy(file_chunk, &fsize, sizeof(int));
@@ -224,16 +217,17 @@ gchar *md5_hash_on_filename (gchar *name, gboolean silent)
 
 
 /**
- * Free up the dynamically allocated memory in this table
+ * Free up the dynamically allocated memory in @itdb's hash table
  */
-void
-md5_unique_file_free(void)
+void md5_free (ExtraiTunesDBData *itdb)
 {
-   if (filehash)
-   {
-      g_hash_table_destroy(filehash);
-      filehash = NULL;
-   }
+    g_return_if_fail (eitdb);
+
+    if (eitdb->md5hash)
+    {
+	g_hash_table_destroy (eitdb->md5hash);
+	eitdb->md5hash = NULL;
+    }
 }
 
 /**
@@ -242,36 +236,43 @@ md5_unique_file_free(void)
  * is inserted into the hash.
  * Returns a pointer to the duplicate track.
  */
-Track *
-md5_track_exists_insert(Track * s)
+Track *md5_track_exists_insert (iTunesDB *itdb, Track * s)
 {
-   gchar *val = NULL;
-   Track *track = NULL;
+    ExtraiTunesDBData *eitdb;
+    gchar *val = NULL;
+    Track *track = NULL;
 
-   if (prefs_get_md5tracks ())
-   {
-       if (filehash == NULL)
-       {
-	   filehash = g_hash_table_new_full(g_str_hash, g_str_equal,
-					    g_free, NULL);
-       }
-       val = md5_hash_track(s);
-       if (val != NULL)
-       {
-	   if ((track = g_hash_table_lookup(filehash, val)))
-	   {
-	       g_free(val);
-	   }
-	   else                   /* if it doesn't exist we register it in the
-				     hash */
-	   {
-	       C_FREE (s->md5_hash);
-	       s->md5_hash = g_strdup(val);
-	       g_hash_table_insert(filehash, val, s);
-	   }
-       }
-   }
-   return track;
+    g_return_val_if_fail (itdb, NULL);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, NULL);
+
+    if (prefs_get_md5tracks ())
+    {
+	if (eitdb->md5hash == NULL)
+	{
+	    eitdb->md5hash = g_hash_table_new_full(g_str_hash,
+						   g_str_equal,
+						   g_free, NULL);
+	}
+	val = md5_hash_track (s);
+	if (val != NULL)
+	{
+	    track = g_hash_table_lookup (eitdb->md5hash, val);
+	    if (track)
+	    {
+		g_free(val);
+	    }
+	    else
+	    {   /* if it doesn't exist we register it in the hash */
+		g_free (s->md5_hash);
+		s->md5_hash = g_strdup (val);
+		/* val is used in the next line -- we don't have to
+		 * g_free() it */
+		g_hash_table_insert (eitdb->md5hash, val, s);
+	    }
+	}
+    }
+    return track;
 }
 
 /**
@@ -279,21 +280,25 @@ md5_track_exists_insert(Track * s)
  * @s - the Track we want to know about.
  * Returns a pointer to the duplicate track.
  */
-Track *
-md5_track_exists(Track * s)
+Track *md5_track_exists (iTunesDB *itdb, Track *s)
 {
-   Track *track = NULL;
+    ExtraiTunesDBData *eitdb;
+    Track *track = NULL;
 
-   if (prefs_get_md5tracks() && filehash)
-   {
-       gchar *val = md5_hash_track(s);
-       if (val != NULL)
-       {
-	   track = g_hash_table_lookup(filehash, val);
-	   g_free (val);
-       }
-   }
-   return track;
+    g_return_val_if_fail (itdb, NULL);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, NULL);
+
+    if (prefs_get_md5tracks() && eitdb->md5hash)
+    {
+	gchar *val = md5_hash_track (s);
+	if (val)
+	{
+	    track = g_hash_table_lookup (eitdb->md5hash, val);
+	    g_free (val);
+	}
+    }
+    return track;
 }
 
 /**
@@ -302,19 +307,26 @@ md5_track_exists(Track * s)
  * Returns a pointer to the duplicate track using md5 for
  * identification. If md5 checksums are off, NULL is returned.
  */
-Track *md5_file_exists (gchar *file, gboolean silent)
+Track *md5_file_exists (iTunesDB *itdb, gchar *file, gboolean silent)
 {
+    ExtraiTunesDBData *eitdb;
     Track *track = NULL;
-    if (prefs_get_md5tracks() && filehash && file)
+
+    g_return_if_fail (file);
+    g_return_val_if_fail (itdb, NULL);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, NULL);
+
+    if (prefs_get_md5tracks() && eitdb->md5hash)
     {
 	gchar *val = md5_hash_on_filename (file, silent);
 	if (val)
 	{
-	   track = g_hash_table_lookup(filehash, val);
-	   g_free (val);
-       }
-   }
-   return track;
+	    track = g_hash_table_lookup (eitdb->md5hash, val);
+	    g_free (val);
+	}
+    }
+    return track;
 }
 
 
@@ -324,12 +336,19 @@ Track *md5_file_exists (gchar *file, gboolean silent)
  * Returns a pointer to the duplicate track using md5 for
  * identification. If md5 checksums are off, NULL is returned.
  */
-Track *md5_md5_exists (gchar *md5)
+Track *md5_md5_exists (iTunesDB *itdb, gchar *md5)
 {
+    ExtraiTunesDBData *eitdb;
     Track *track = NULL;
-    if (prefs_get_md5tracks() && filehash && md5)
+
+    g_return_val_if_fail (md5, NULL);
+    g_return_val_if_fail (itdb, NULL);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, NULL);
+
+    if (prefs_get_md5tracks() && eitdb->md5hash)
     {
-	track = g_hash_table_lookup(filehash, md5);
+	track = g_hash_table_lookup (eitdb->md5hash, md5);
     }
     return track;
 }
@@ -338,20 +357,28 @@ Track *md5_md5_exists (gchar *md5)
  * Free the specified track from the ipod's unique file hash
  * @s - The Track that's being freed from the ipod
  */
-void
-md5_track_removed(Track * s)
+void md5_track_remove (Track *s)
 {
-    gchar *val = NULL;
-    Track *track = NULL;
+    ExtraiTunesDBData *eitdb;
 
-    if ((prefs_get_md5tracks ()) && (filehash) && (s) && (val = md5_hash_track(s)))
+    g_return_if_fail (s);
+    g_return_if_fail (s->itdb);
+    eitdb = s->itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    if (prefs_get_md5tracks() && eitdb->md5hash)
     {
-	if ((track = g_hash_table_lookup(filehash, val)))
+	gchar *val = md5_hash_track (s);
+	if (val)
 	{
-	    if (track == s) /* only remove if it's the same track */
-		g_hash_table_remove(filehash, val);
+	    Track *track = g_hash_table_lookup (eitdb->md5hash, val);
+	    if (track)
+	    {
+		if (track == s) /* only remove if it's the same track */
+		    g_hash_table_remove (eitdb->md5hash, val);
+	    }
+	    g_free(val);
 	}
-	g_free(val);
     }
 }
 

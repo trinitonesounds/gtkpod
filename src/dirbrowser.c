@@ -31,23 +31,21 @@
 #  include <config.h>
 #endif
 
-#include "misc.h"
-#include "support.h"
-#include "prefs.h"
-#include "itdb.h"
-#include "charset.h"
-#include "file.h"
-
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include <dirent.h>
-#include <unistd.h>
-
-#include <string.h>
-
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include "charset.h"
+#include "file.h"
+#include "info.h"
+#include "itdb.h"
+#include "prefs.h"
+#include "support.h"
+
 
 /* XPM */
 static char *folder[] =
@@ -178,7 +176,7 @@ static void add_dir_selected (gchar *dir)
 	/* display log of updated tracks */
 	display_updated (NULL, NULL);
 	/* display log of detected duplicates */
-	remove_duplicate (NULL, NULL);
+	gp_duplicate_remove (NULL, NULL);
     }
 }
 

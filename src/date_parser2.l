@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-|  Time-stamp: <2005-01-03 22:44:36 jcs>
+|  Time-stamp: <2005-01-03 23:11:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -226,9 +226,9 @@ void dp2_parse (TimeInfo *ti)
     {   /* no error occured -> set the information accordingly */
 	ti->valid = TRUE;
 	if (dp_int_type & INT_NO_LOWER) ti->lower = 0;
-	else   	ti->lower = itunesdb_time_host_to_mac (lower_stamp);
+	else   	ti->lower = itdb_time_host_to_mac (lower_stamp);
 	if (dp_int_type & INT_NO_UPPER) ti->upper = -1; /* -1 = 2^32-1 */
-	else    ti->upper = itunesdb_time_host_to_mac (upper_stamp);
+	else    ti->upper = itdb_time_host_to_mac (upper_stamp);
     }
 #if DP_DEBUG
     printf ("valid: %d, int_type: %d, lower: %u, upper: %u\n",

@@ -4,7 +4,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.55)
 
 AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(gtkpod, 0.87)
+AM_INIT_AUTOMAKE(gtkpod, 0.88.CVS)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 AC_CANONICAL_HOST
@@ -36,7 +36,7 @@ AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 
 dnl used in itunesdb.c to figure out whether we run gtkpod
-AC_DEFINE_UNQUOTED([IS_GTKPOD], 1, [Define this to indicate we are compiling gtkpod])
+AC_DEFINE_UNQUOTED([ITDB_USE_ABBREV], 1, [Define this to have itdb provide abbreviations to its types])
 
 dnl we need 'flex'
 AM_PROG_LEX

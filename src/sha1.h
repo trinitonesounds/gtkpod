@@ -1,5 +1,6 @@
 /*
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
+|                2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
 |  URL: http://gtkpod.sourceforge.net/
@@ -16,7 +17,8 @@
 | 
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
-|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+|  USA
 | 
 |  iTunes and iPod are trademarks of Apple
 | 
@@ -27,15 +29,15 @@
 #ifndef _GTKPOD_MD5_H_
 #define _GTKPOD_MD5_H_
 
-#include "itdb.h"
+#include "display_itdb.h"
 
 gchar *md5_hash_on_filename (gchar *name, gboolean silent);
 /* Any calls to the following functions immediately return if md5sums
  * is not on */
-Track *md5_file_exists (gchar *file, gboolean silent);
-Track *md5_md5_exists (gchar *md5);
-Track *md5_track_exists(Track *s);
-Track *md5_track_exists_insert(Track *s);
-void md5_track_removed(Track *s);
-void md5_unique_file_free(void);
+Track *md5_file_exists (iTunesDB *itdb, gchar *file, gboolean silent);
+Track *md5_md5_exists (iTunesDB *itdb, gchar *md5);
+Track *md5_track_exists (iTunesDB *itdb, Track *s);
+Track *md5_track_exists_insert (iTunesDB *itdb, Track *s);
+void md5_track_remove (Track *s);
+void md5_free (ExtraiTunesDBData *eitdb);
 #endif

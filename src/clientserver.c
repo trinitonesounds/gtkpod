@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-09 23:32:11 jcs>
+/* Time-stamp: <2005-01-03 23:09:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -190,7 +190,7 @@ void received_message (gpointer data, gint source, GdkInputCondition condition)
 		if (strncmp (buf, SOCKET_PLYC, strlen (SOCKET_PLYC)) == 0)
 		{
 		    gchar *file = buf + strlen (SOCKET_PLYC);
-		    if (track_increase_playcount (NULL, file, 1) == FALSE)
+		    if (gp_increase_playcount (NULL, file, 1) == FALSE)
 		    {   /* didn't find the track --> write to
 			   offline_playcount */
 			register_playcount (file);
