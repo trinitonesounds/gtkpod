@@ -2065,6 +2065,7 @@ static void sm_remove_all_songs (void)
       if (column >= 0)
       {
 	  sm_store_col_order ();
+	  display_update_default_sizes ();
 	  sm_create_listview ();
       }
   }
@@ -2793,7 +2794,7 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
   }
   if (col && (pos != -1))
       gtk_tree_view_column_set_visible (col,
-					prefs_get_col_visible (pos));
+					prefs_get_col_visible (sm_item));
   return col;
 }
 
@@ -2996,7 +2997,7 @@ sm_show_preferred_columns(void)
     for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
     {
 	tvc = gtk_tree_view_get_column (song_treeview, i);
-	visible = prefs_get_col_visible (i);
+	visible = prefs_get_col_visible (prefs_get_col_order (i));
 	gtk_tree_view_column_set_visible (tvc, visible);
     }
     if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_NONE)))
