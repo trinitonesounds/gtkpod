@@ -33,5 +33,6 @@
 gboolean song_exists_on_ipod(Song *s);
 void unique_file_repository_init(GList *songlist);
 void unique_file_repository_free(void);
+void song_removed_from_ipod(Song *s);
 
 #endif

@@ -171,3 +171,21 @@ song_exists_on_ipod(Song *s)
     }
     return(result);
 }
+
+/**
+ * Free the specified song from the ipod's unique file hash
+ * @s - The Song that's being freed from the ipod
+ */
+void
+song_removed_from_ipod(Song *s)
+{
+    gchar *val = NULL;
+
+    if((cfg->md5songs) && (filehash) && (val = hash_song(s)))
+    {
+	if(g_hash_table_lookup(filehash, val))
+	{
+	    g_hash_table_remove(filehash, val);
+	}
+    }
+}
