@@ -1293,6 +1293,14 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
  * Apart from that, some information has been derived from phwip's LameTag
  * (http://www.silisoftware.com/applets/?scriptname=LameTag)
  *
+ * 
+ * Code to read the ReplayGain Values stored in an Ape tag.
+ *
+ * Info on Lyrics3 V2.00 can be found at:
+ * http://www.id3.org/lyrics3200.html
+ * On the actual Ape Tag V2.0:
+ * http://www.personal.uni-jena.de/~pfk/mpp/sv8/apetag.html
+ *
  * Copyright (C) 2004 Jens Taprogge <jens.taprogge at post.rwth-aachen.de>
  *
  * Provided under GPL according to Jens Taprogge. (JCS -- 12 March 2004)
@@ -1306,6 +1314,7 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
 #define SIDEINFO_MPEG2_MULTI	17
 #define ID3V1_SIZE		0x80
 #define APE_FOOTER_SIZE 	0x20
+#define LYRICS_FOOTER_SIZE 	0x0f
 
 
 static gint lame_vcmp(gchar a[5], gchar b[5]) {
@@ -1558,8 +1567,9 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 {
 	/* The Ape Tag is located a t the end of the file. Or at least that
 	 * seems where it can most likely be found. Either it is at the very end
-	 * or before a trailing ID3v1 Tag. Those are the two locations we check
-	 * for now. If you find files that have the Tags located in different
+	 * or before a trailing ID3v1 Tag. Sometimes a Lyrics3 Tag is placed
+	 * between the ID3v1 and the Ape Tag.
+	 * If you find files that have the Tags located in different
 	 * positions please let me know. */
 
 	FILE *file = NULL;
@@ -1585,6 +1595,26 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 			fread(&buf, 1, 3, file) != 3)
 		goto rg_fail;
 	if (!strncmp(buf, "TAG", 3)) offset -= ID3V1_SIZE;
+
+	/* check for Lyrics3 Tag */
+	if (fseek(file, -9 + offset, SEEK_END) ||
+			fread(&buf, 1, 9, file) != 9)
+		goto rg_fail;
+	if (!strncmp(buf, "LYRICS200", 9)) {
+		if (fseek(file, -LYRICS_FOOTER_SIZE + offset, SEEK_END) ||
+				fread(&buf, 1, 9, file) != 9)
+			goto rg_fail;
+		data_length = buf[0] - '0';
+		for (i = 1; i < 6; i++) {
+			data_length *= 10;
+			data_length += buf[i] - '0';
+		}
+		if (fseek(file, -LYRICS_FOOTER_SIZE - data_length + offset, SEEK_END) ||
+				fread(&buf, 1, 11, file) != 11)
+			goto rg_fail;
+		if (!strncmp(buf, "LYRICSBEGIN", 11)) 
+			offset -= LYRICS_FOOTER_SIZE + data_length;
+	}
 
 	/* check for APE Tag */
 	if (fseek(file, -APE_FOOTER_SIZE + offset, SEEK_END) ||
