@@ -1192,14 +1192,17 @@ create_prefs_window (void)
   GtkWidget *frame2;
   GtkWidget *hbox2;
   GtkWidget *vbox4;
-  GtkWidget *cfg_song_list_artist;
-  GtkWidget *cfg_song_list_genre;
+  GtkWidget *col_visible1;
+  GtkWidget *col_visible3;
+  GtkWidget *col_visible6;
   GtkWidget *vbox5;
-  GtkWidget *cfg_song_list_album;
-  GtkWidget *cfg_song_list_composer;
+  GtkWidget *col_visible2;
+  GtkWidget *col_visible4;
+  GtkWidget *col_visible7;
   GtkWidget *vbox12;
-  GtkWidget *cfg_song_list_title;
-  GtkWidget *cfg_song_list_track;
+  GtkWidget *col_visible0;
+  GtkWidget *col_visible5;
+  GtkWidget *col_visible8;
   GtkWidget *label18;
   GtkWidget *hbuttonbox3;
   GtkWidget *button6;
@@ -1401,37 +1404,49 @@ create_prefs_window (void)
   gtk_widget_show (vbox4);
   gtk_box_pack_start (GTK_BOX (hbox2), vbox4, TRUE, TRUE, 0);
 
-  cfg_song_list_artist = gtk_check_button_new_with_mnemonic (_("Artist"));
-  gtk_widget_show (cfg_song_list_artist);
-  gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_artist, FALSE, FALSE, 0);
+  col_visible1 = gtk_check_button_new_with_mnemonic (_("Artist"));
+  gtk_widget_show (col_visible1);
+  gtk_box_pack_start (GTK_BOX (vbox4), col_visible1, FALSE, FALSE, 0);
 
-  cfg_song_list_genre = gtk_check_button_new_with_mnemonic (_("Genre"));
-  gtk_widget_show (cfg_song_list_genre);
-  gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_genre, FALSE, FALSE, 0);
+  col_visible3 = gtk_check_button_new_with_mnemonic (_("Genre"));
+  gtk_widget_show (col_visible3);
+  gtk_box_pack_start (GTK_BOX (vbox4), col_visible3, FALSE, FALSE, 0);
+
+  col_visible6 = gtk_check_button_new_with_mnemonic (_("iPod ID"));
+  gtk_widget_show (col_visible6);
+  gtk_box_pack_start (GTK_BOX (vbox4), col_visible6, FALSE, FALSE, 0);
 
   vbox5 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox5);
   gtk_box_pack_start (GTK_BOX (hbox2), vbox5, TRUE, TRUE, 0);
 
-  cfg_song_list_album = gtk_check_button_new_with_mnemonic (_("Album"));
-  gtk_widget_show (cfg_song_list_album);
-  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_album, FALSE, FALSE, 0);
+  col_visible2 = gtk_check_button_new_with_mnemonic (_("Album"));
+  gtk_widget_show (col_visible2);
+  gtk_box_pack_start (GTK_BOX (vbox5), col_visible2, FALSE, FALSE, 0);
 
-  cfg_song_list_composer = gtk_check_button_new_with_mnemonic (_("Composer"));
-  gtk_widget_show (cfg_song_list_composer);
-  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_composer, FALSE, FALSE, 0);
+  col_visible4 = gtk_check_button_new_with_mnemonic (_("Composer"));
+  gtk_widget_show (col_visible4);
+  gtk_box_pack_start (GTK_BOX (vbox5), col_visible4, FALSE, FALSE, 0);
+
+  col_visible7 = gtk_check_button_new_with_mnemonic (_("PC File"));
+  gtk_widget_show (col_visible7);
+  gtk_box_pack_start (GTK_BOX (vbox5), col_visible7, FALSE, FALSE, 0);
 
   vbox12 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox12);
   gtk_box_pack_start (GTK_BOX (hbox2), vbox12, TRUE, TRUE, 0);
 
-  cfg_song_list_title = gtk_check_button_new_with_mnemonic (_("Title"));
-  gtk_widget_show (cfg_song_list_title);
-  gtk_box_pack_start (GTK_BOX (vbox12), cfg_song_list_title, FALSE, FALSE, 0);
+  col_visible0 = gtk_check_button_new_with_mnemonic (_("Title"));
+  gtk_widget_show (col_visible0);
+  gtk_box_pack_start (GTK_BOX (vbox12), col_visible0, FALSE, FALSE, 0);
 
-  cfg_song_list_track = gtk_check_button_new_with_mnemonic (_("Track Number (#)"));
-  gtk_widget_show (cfg_song_list_track);
-  gtk_box_pack_start (GTK_BOX (vbox12), cfg_song_list_track, FALSE, FALSE, 0);
+  col_visible5 = gtk_check_button_new_with_mnemonic (_("Track Number (#)"));
+  gtk_widget_show (col_visible5);
+  gtk_box_pack_start (GTK_BOX (vbox12), col_visible5, FALSE, FALSE, 0);
+
+  col_visible8 = gtk_check_button_new_with_mnemonic (_("Transferred"));
+  gtk_widget_show (col_visible8);
+  gtk_box_pack_start (GTK_BOX (vbox12), col_visible8, FALSE, FALSE, 0);
 
   label18 = gtk_label_new (_("Displayed Song Attributes "));
   gtk_widget_show (label18);
@@ -1503,24 +1518,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_delete_track_from_ipod, "toggled",
                     G_CALLBACK (on_cfg_delete_track_from_ipod_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_song_list_artist, "toggled",
-                    G_CALLBACK (on_cfg_song_list_artist_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) cfg_song_list_genre, "toggled",
-                    G_CALLBACK (on_cfg_song_list_genre_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) cfg_song_list_album, "toggled",
-                    G_CALLBACK (on_cfg_song_list_album_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) cfg_song_list_composer, "toggled",
-                    G_CALLBACK (on_cfg_song_list_composer_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) cfg_song_list_title, "toggled",
-                    G_CALLBACK (on_cfg_song_list_title_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) cfg_song_list_track, "toggled",
-                    G_CALLBACK (on_cfg_song_list_track_toggled),
-                    NULL);
   g_signal_connect ((gpointer) button6, "clicked",
                     G_CALLBACK (on_prefs_ok_clicked),
                     NULL);
@@ -1573,14 +1570,17 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, frame2, "frame2");
   GLADE_HOOKUP_OBJECT (prefs_window, hbox2, "hbox2");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox4, "vbox4");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_artist, "cfg_song_list_artist");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_genre, "cfg_song_list_genre");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible1, "col_visible1");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible3, "col_visible3");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible6, "col_visible6");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox5, "vbox5");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_album, "cfg_song_list_album");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_composer, "cfg_song_list_composer");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible2, "col_visible2");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible4, "col_visible4");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible7, "col_visible7");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox12, "vbox12");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_title, "cfg_song_list_title");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_track, "cfg_song_list_track");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible0, "col_visible0");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible5, "col_visible5");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible8, "col_visible8");
   GLADE_HOOKUP_OBJECT (prefs_window, label18, "label18");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox3, "hbuttonbox3");
   GLADE_HOOKUP_OBJECT (prefs_window, button6, "button6");

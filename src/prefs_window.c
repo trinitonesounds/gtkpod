@@ -35,9 +35,9 @@
 static GtkWidget *prefs_window = NULL;
 static struct cfg *tmpcfg = NULL;
 
-static void prefs_window_song_list_init(void);
-static void prefs_window_set_tag_autoset (gint category, gboolean autoset);
 static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
+static void prefs_window_set_tag_autoset (gint category, gboolean autoset);
+static void prefs_window_set_col_visible (gint column, gboolean visible);
 
 static void on_cfg_st_autoselect_toggled (GtkToggleButton *togglebutton,
 					  gpointer         user_data)
@@ -51,6 +51,15 @@ static void on_cfg_tag_autoset_toggled (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     prefs_window_set_tag_autoset (
+	(guint32)user_data,
+	gtk_toggle_button_get_active(togglebutton));
+}
+
+
+static void on_cfg_col_visible_toggled (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    prefs_window_set_col_visible (
 	(guint32)user_data,
 	gtk_toggle_button_get_active(togglebutton));
 }
@@ -189,6 +198,24 @@ prefs_window_create(void)
 	    }
 	    g_free (buf);
 	}
+	for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+	{
+	    gchar *buf;
+	    buf = g_strdup_printf ("col_visible%d", i);
+	    if((w = lookup_widget(prefs_window,  buf)))
+	    {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					     tmpcfg->col_visible[i]);
+		/* glade makes a "GTK_OBJECT (i)" which segfaults
+		   because "i" is not a GTK object. So we have to set up
+		   the signal handlers ourselves */
+		g_signal_connect ((gpointer)w,
+				  "toggled",
+				  G_CALLBACK (on_cfg_col_visible_toggled),
+				  (gpointer)i);
+	    }
+	    g_free (buf);
+	}
 	
 	if((w = lookup_widget(prefs_window, "cfg_keep_backups")))
 	{
@@ -200,7 +227,6 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->write_extended_info);
 	}
-	prefs_window_song_list_init();
 	gtk_widget_show(prefs_window);
     }
 }
@@ -240,13 +266,11 @@ prefs_window_save(void)
     for (i=0; i<SM_NUM_TAGS_PREFS; ++i) {
 	prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
     }
+    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    {
+	prefs_set_col_visible (i, tmpcfg->col_visible[i]);
+    }
     prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
-    prefs_set_song_list_show_artist(tmpcfg->song_list_show.artist);
-    prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
-    prefs_set_song_list_show_title(tmpcfg->song_list_show.title);
-    prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
-    prefs_set_song_list_show_composer(tmpcfg->song_list_show.composer);
-    prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_playlist_deletion(tmpcfg->deletion.song);
     prefs_set_song_ipod_file_deletion(tmpcfg->deletion.ipod_file);
     prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
@@ -320,56 +344,6 @@ prefs_window_set_mount_point(const gchar *mp)
     tmpcfg->ipod_mount = g_strdup(mp);
 }
 
-/**
- */
-static void
-prefs_window_song_list_init(void)
-{
-    gchar *extras[] = {
-	"cfg_song_list_artist",
-	"cfg_song_list_album",
-	"cfg_song_list_title",
-	"cfg_song_list_genre",
-	"cfg_song_list_composer",
-	"cfg_song_list_track"
-    };
-    guint i = 0, extra_size = 6;
-    GtkWidget *w = NULL;
-    gboolean button_active = FALSE;
-
-    for(i = 0; i < extra_size; i++)
-    {
-	if((w = lookup_widget(prefs_window, extras[i])))
-	{
-	    switch(i)
-	    {
-	    case 0:
-		button_active = tmpcfg->song_list_show.artist;
-		break; 
-	    case 1:
-		button_active = tmpcfg->song_list_show.album;
-		break;
-	    case 2:
-		button_active = tmpcfg->song_list_show.title;
-		break;
-	    case 3:
-		button_active = tmpcfg->song_list_show.genre;
-		break;
-	    case 4:
-		button_active = tmpcfg->song_list_show.composer;
-		break;
-	    case 5:
-		button_active = tmpcfg->song_list_show.track;
-		break;
-	    default:
-		break;
-	    }
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 button_active);
-	}
-    }
-}
-
 void prefs_window_set_keep_backups(gboolean active)
 {
   tmpcfg->keep_backups = active;
@@ -377,37 +351,6 @@ void prefs_window_set_keep_backups(gboolean active)
 void prefs_window_set_write_extended_info(gboolean active)
 {
   tmpcfg->write_extended_info = active;
-}
-
-void 
-prefs_window_set_song_list_artist(gboolean val)
-{
-    tmpcfg->song_list_show.artist = val;
-}
-void 
-prefs_window_set_song_list_album(gboolean val)
-{
-    tmpcfg->song_list_show.album = val;
-}
-void 
-prefs_window_set_song_list_title(gboolean val) 
-{
-    tmpcfg->song_list_show.title = val;
-}
-void 
-prefs_window_set_song_list_genre(gboolean val)
-{
-    tmpcfg->song_list_show.genre = val;
-}
-void 
-prefs_window_set_song_list_composer(gboolean val) 
-{
-    tmpcfg->song_list_show.composer = val;
-}
-void 
-prefs_window_set_song_list_track(gboolean val) 
-{
-    tmpcfg->song_list_show.track = val;
 }
 
 void 
@@ -457,6 +400,12 @@ void prefs_window_set_tag_autoset (gint category, gboolean autoset)
 {
     if (category < SM_NUM_TAGS_PREFS)
 	tmpcfg->tag_autoset[category] = autoset;
+}
+
+void prefs_window_set_col_visible (gint column, gboolean visible)
+{
+    if (column < SM_NUM_COLUMNS_PREFS)
+	tmpcfg->col_visible[column] = visible;
 }
 
 void prefs_window_set_id3_writeall (gboolean val)

@@ -57,19 +57,17 @@ struct cfg
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
   gboolean write_extended_info; /* write additional file with PC filenames etc? */
   struct {
-      gboolean artist, album, title, genre, composer, track;
-  } song_list_show;       /* what columns are displayed in the song list */
-  struct {
       gchar *browse, *export;
   } last_dir;	          /* last directories used by the fileselections */
   struct {
       gboolean song, playlist, ipod_file;
   } deletion;
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
-  struct win_size size_conf_sw; /* last size of gtkpod main window */
-  struct win_size size_conf;    /* last size of gtkpod main window */
+  struct win_size size_conf_sw; /* last size of conf window (scrolled) */
+  struct win_size size_conf;    /* last size of conf window */
   struct win_size size_dirbr;   /* last size of dirbrowser window */
   gint sm_col_width[SM_NUM_COLUMNS_PREFS]; /* width colums in song model */
+  gboolean col_visible[SM_NUM_COLUMNS_PREFS]; /* displayed song model colums */
   gboolean tag_autoset[SM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements
 				 * */
@@ -96,12 +94,6 @@ void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
 void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_playlist_deletion(gboolean val);
-void prefs_set_song_list_show_artist(gboolean val);
-void prefs_set_song_list_show_album(gboolean val);
-void prefs_set_song_list_show_title(gboolean val);
-void prefs_set_song_list_show_genre(gboolean val);
-void prefs_set_song_list_show_composer(gboolean val);
-void prefs_set_song_list_show_track(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
 void prefs_set_md5songs(gboolean active);
@@ -119,6 +111,7 @@ void prefs_set_size_conf (gint x, gint y);
 void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_sm_col_width (gint col, gint width);
 void prefs_set_tag_autoset (gint category, gboolean autoset);
+void prefs_set_col_visible (gint column, gboolean visible);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
 
@@ -130,12 +123,6 @@ gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
 gboolean prefs_get_playlist_deletion(void);
-gboolean prefs_get_song_list_show_album(void);
-gboolean prefs_get_song_list_show_artist(void);
-gboolean prefs_get_song_list_show_title(void);
-gboolean prefs_get_song_list_show_genre(void);
-gboolean prefs_get_song_list_show_composer(void);
-gboolean prefs_get_song_list_show_track(void);
 gboolean prefs_get_song_playlist_deletion(void);
 gboolean prefs_get_song_ipod_file_deletion(void);
 gboolean prefs_get_id3_write(void);
@@ -148,6 +135,7 @@ void prefs_get_size_conf (gint *x, gint *y);
 void prefs_get_size_dirbr (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
+gboolean prefs_get_col_visible (gint column);
 gboolean prefs_get_md5songs(void);
 gboolean prefs_get_update_existing(void);
 gboolean prefs_get_block_display(void);

@@ -2304,7 +2304,7 @@ entry (faster!)</property>
 		      <property name="spacing">0</property>
 
 		      <child>
-			<widget class="GtkCheckButton" id="cfg_song_list_artist">
+			<widget class="GtkCheckButton" id="col_visible1">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Artist</property>
@@ -2313,7 +2313,6 @@ entry (faster!)</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_song_list_artist_toggled" last_modification_time="Sat, 01 Mar 2003 15:29:09 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -2323,7 +2322,7 @@ entry (faster!)</property>
 		      </child>
 
 		      <child>
-			<widget class="GtkCheckButton" id="cfg_song_list_genre">
+			<widget class="GtkCheckButton" id="col_visible3">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Genre</property>
@@ -2332,7 +2331,24 @@ entry (faster!)</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_song_list_genre_toggled" last_modification_time="Sun, 22 Dec 2002 20:30:08 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkCheckButton" id="col_visible6">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">iPod ID</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -2355,7 +2371,7 @@ entry (faster!)</property>
 		      <property name="spacing">0</property>
 
 		      <child>
-			<widget class="GtkCheckButton" id="cfg_song_list_album">
+			<widget class="GtkCheckButton" id="col_visible2">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Album</property>
@@ -2364,7 +2380,6 @@ entry (faster!)</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_song_list_album_toggled" last_modification_time="Sat, 01 Mar 2003 15:29:52 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -2374,7 +2389,7 @@ entry (faster!)</property>
 		      </child>
 
 		      <child>
-			<widget class="GtkCheckButton" id="cfg_song_list_composer">
+			<widget class="GtkCheckButton" id="col_visible4">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Composer</property>
@@ -2383,7 +2398,24 @@ entry (faster!)</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_song_list_composer_toggled" last_modification_time="Sat, 01 Mar 2003 15:29:42 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkCheckButton" id="col_visible7">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">PC File</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -2406,7 +2438,7 @@ entry (faster!)</property>
 		      <property name="spacing">0</property>
 
 		      <child>
-			<widget class="GtkCheckButton" id="cfg_song_list_title">
+			<widget class="GtkCheckButton" id="col_visible0">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Title</property>
@@ -2415,7 +2447,6 @@ entry (faster!)</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_song_list_title_toggled" last_modification_time="Sat, 01 Mar 2003 15:29:34 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>
@@ -2425,7 +2456,7 @@ entry (faster!)</property>
 		      </child>
 
 		      <child>
-			<widget class="GtkCheckButton" id="cfg_song_list_track">
+			<widget class="GtkCheckButton" id="col_visible5">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Track Number (#)</property>
@@ -2434,7 +2465,24 @@ entry (faster!)</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_song_list_track_toggled" last_modification_time="Sun, 22 Dec 2002 20:30:24 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkCheckButton" id="col_visible8">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Transferred</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>

@@ -53,7 +53,6 @@
    re-calculated to match the time interval specified above */
 #define REFRESH_INIT_COUNT 5
 
-
 /* Categories in each sort tab (page numbers) */
 enum {
   ST_CAT_ARTIST = 0,
@@ -90,7 +89,8 @@ enum  {
 };
 
 /* Column numbers in song model */
-/* Note: the toggle buttons for tag_autoset in the prefs_window are
+/* Note: the toggle buttons for tag_autoset and display_col
+ * in the prefs_window are
  * named after the numbers (Title: tag_autoset0, Artist: tag_autoset1
  * etc.) Therefore, if you change the order of the first
  * SM_NUM_TAGS_PREFS entries, you should also adjust the names in
@@ -109,9 +109,10 @@ enum  {
   SM_NUM_COLUMNS
 };
 
-#define SM_NUM_COLUMNS_PREFS (6) /* number of colums for prefs size storage */
-#define SM_NUM_TAGS_PREFS (5)    /* number of entries with "autoset
-				  * empty tag to filename " feature */
+/* number of colums for prefs size storage */
+#define SM_NUM_COLUMNS_PREFS (SM_NUM_COLUMNS-1)
+/* number of entries with "autoset empty tag to filename " feature */
+#define SM_NUM_TAGS_PREFS (5)
 
 /* "Column numbers" in playlist model */
 enum  {

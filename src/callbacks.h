@@ -113,34 +113,6 @@ void
 on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
-void
-on_cfg_song_list_artist_toggled        (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_cfg_song_list_album_toggled         (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_cfg_song_list_title_toggled         (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_cfg_song_list_genre_toggled         (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_cfg_song_list_composer_toggled         (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_cfg_song_list_track_toggled         (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_cfg_song_list_year_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
 gboolean
 on_playlist_treeview_key_release_event (GtkWidget       *widget,
                                         GdkEventKey     *event,
@@ -314,4 +286,3 @@ on_selected_songs1_activate            (GtkMenuItem     *menuitem,
 void
 on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
-

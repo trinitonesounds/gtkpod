@@ -41,12 +41,6 @@ void prefs_window_set_mount_point(const gchar *mp);
 
 void prefs_window_set_keep_backups(gboolean active);
 void prefs_window_set_write_extended_info(gboolean active);
-void prefs_window_set_song_list_artist(gboolean val);
-void prefs_window_set_song_list_album(gboolean val);
-void prefs_window_set_song_list_title(gboolean val);
-void prefs_window_set_song_list_genre(gboolean val);
-void prefs_window_set_song_list_composer(gboolean val);
-void prefs_window_set_song_list_track(gboolean val);
 void prefs_window_set_delete_playlist(gboolean val);
 void prefs_window_set_delete_song_ipod(gboolean val);
 void prefs_window_set_delete_song_playlist(gboolean val);

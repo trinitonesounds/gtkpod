@@ -536,9 +536,11 @@ gint SM_to_S (gint sm)
     case SM_COLUMN_GENRE:       return S_GENRE;
     case SM_COLUMN_COMPOSER:    return S_COMPOSER;
     case SM_COLUMN_TRACK_NR:    return S_TRACK_NR;
+#if DISPLAY_EXTRA_COLUMNS
     case SM_COLUMN_IPOD_ID:     return S_IPOD_ID;
     case SM_COLUMN_PC_PATH:     return S_PC_PATH;
     case SM_COLUMN_TRANSFERRED: return S_TRANSFERRED;
+#endif
     case SM_COLUMN_NONE:        return S_NONE;
     }
     return -1;
