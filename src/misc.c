@@ -273,6 +273,27 @@ gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
 }
 
 
+
+/* Calculate the time in ms passed since @old_time. @old_time is
+   updated with the current time if @update is TRUE*/
+float get_ms_since (GTimeVal *old_time, gboolean update)
+{
+    GTimeVal new_time;
+    float result;
+
+    g_get_current_time (&new_time);
+    result = (new_time.tv_sec - old_time->tv_sec) * 1000 +
+	(float)(new_time.tv_usec - old_time->tv_usec) / 1000;
+    if (update)
+    {
+	old_time->tv_sec = new_time.tv_sec;
+	old_time->tv_usec = new_time.tv_usec;
+    }
+    return result;
+}
+
+
+
 void open_about_window ()
 {
   GtkLabel *about_label;

@@ -36,6 +36,7 @@
 #include "playlist.h"
 
 #define STATUSBAR_TIMEOUT 4200
+
 /* we receive UTF8 strings which should be translated to the locale
  * before printing */
 /* FIXME: write a popup for gtkpod_warning which holds all the
@@ -51,6 +52,7 @@ extern gboolean widgets_blocked;
 void create_add_files_fileselector (void);
 void create_add_playlists_fileselector (void);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
+float get_ms_since (GTimeVal *old_time, gboolean update);
 void open_about_window (void);
 void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);

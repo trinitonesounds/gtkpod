@@ -265,25 +265,42 @@ reset_playlists_to_new_list(GList *new_l)
 void it_add_songid_to_playlist (Playlist *plitem, guint32 id)
 {
     static Playlist *last_pl = NULL;
-    static gint count = 0;
+    static GTimeVal *time;
+    static float max_count = REFRESH_INIT_COUNT;
+    static gint count = REFRESH_INIT_COUNT - 1;
+    static gint count_s = 0;
+    float ms;
     gchar *buf;
+
+    if (!time) time = g_malloc (sizeof (GTimeVal));
 
     if (plitem != last_pl)
     {
-	count = 0;
+	max_count = REFRESH_INIT_COUNT;
+	count = REFRESH_INIT_COUNT - 1;
+	count_s = 0; /* nr of songs in current playlist */
+	g_get_current_time (time);
 	last_pl = plitem;
     }
     add_songid_to_playlist (plitem, id);
-    ++count;
-    if ((count % 20) == 1)
-    { /* updating the statusbar for every single song added takes a
-	 tremendous amount of time! */
-	buf = g_strdup_printf (_("Added %d+ songs to playlist '%s'"),
-			       count, plitem->name);
+    --count;
+    ++count_s;
+    if ((count < 0) && widgets_blocked)
+    {
+	buf = g_strdup_printf (ngettext ("Added %d+ song to playlist '%s'",
+					 "Added %d+ songs to playlists '%s'",
+					 count_s), count_s, plitem->name);
 	gtkpod_statusbar_message(buf);
 	g_free (buf);
+	while (gtk_events_pending ())  gtk_main_iteration ();
+	ms = get_ms_since (time, TRUE);
+	/* average the new and the old max_count */
+	max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
+	count = max_count - 1;
+#if DEBUG_TIMING
+	printf("it_a_s ms: %f mc: %f\n", ms, max_count);
+#endif
     }
-    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 }
 
 Song *it_get_song_in_playlist_by_nr (Playlist *plitem, guint32 n)

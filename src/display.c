@@ -299,41 +299,76 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   Song *song;
   guint32 n,i;
 
+#if DEBUG_TIMING
+  GTimeVal time;
+  g_get_current_time (&time);
+  printf ("pm_selection_changed_cb enter: %ld.%06ld sec\n",
+	  time.tv_sec % 3600, time.tv_usec);
+#endif DEBUG_TIMING
+
   if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
   {  /* no selection -> reset sort tabs */
       st_init (-1, 0);
       current_playlist = NULL;
-      return;
   }
-  gtk_tree_model_get (model, &iter, 
-		      PM_COLUMN_PLAYLIST, &new_playlist,
-		      -1);
-  /* remove all entries from sort tab 0 */
-  /* printf ("removing entries: %x\n", current_playlist);*/
-  st_init (-1, 0);
+  else
+  {   /* handle new selection */
+      gtk_tree_model_get (model, &iter, 
+			  PM_COLUMN_PLAYLIST, &new_playlist,
+			  -1);
+      /* remove all entries from sort tab 0 */
+      /* printf ("removing entries: %x\n", current_playlist);*/
+      st_init (-1, 0);
 
-  current_playlist = new_playlist;
-  n = get_nr_of_songs_in_playlist (new_playlist);
-  if (n > 0)
-  {   
-      if (!prefs_get_block_display ())  block_selection (-1);
-      for (i=0; i<n; ++i)
-      { /* add all songs to sort tab 0 */
-	  if (stop_add == -1)  break;
-	  song = get_song_in_playlist_by_nr (new_playlist, i);
-	  st_add_song (song, FALSE, 0);
-	  while (((i%10) == 0) &&
-		 !prefs_get_block_display() && gtk_events_pending ())
-	      gtk_main_iteration ();
-      }
-      if (stop_add != -1) st_add_song (NULL, TRUE, 0);
-      if (!prefs_get_block_display ())
+      current_playlist = new_playlist;
+      n = get_nr_of_songs_in_playlist (new_playlist);
+      if (n > 0)
       {
-	  while (gtk_events_pending ())	      gtk_main_iteration ();
-	  release_selection (-1);
+	  GTimeVal time;
+	  float max_count = REFRESH_INIT_COUNT;
+	  gint count = max_count - 1;
+	  float ms;
+	  if (!prefs_get_block_display ())
+	  {
+	      block_selection (-1);
+	      g_get_current_time (&time);
+	  }
+	  for (i=0; i<n; ++i)
+	  { /* add all songs to sort tab 0 */
+	      if (stop_add == -1)  break;
+	      song = get_song_in_playlist_by_nr (new_playlist, i);
+	      st_add_song (song, FALSE, 0);
+	      --count;
+	      if ((count < 0) && !prefs_get_block_display ())
+	      {
+		  gtkpod_songs_statusbar_update();
+		  while (gtk_events_pending ())       gtk_main_iteration ();
+		  ms = get_ms_since (&time, TRUE);
+		  /* first time takes significantly longer, so we adjust
+		     the max_count */
+		  if (max_count == REFRESH_INIT_COUNT) max_count *= 2.5;
+		  /* average the new and the old max_count */
+		  max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
+		  count = max_count - 1;
+#if DEBUG_TIMING
+		  printf("pm_s_c ms: %f mc: %f\n", ms, max_count);
+#endif
+	      }
+	  }
+	  if (stop_add != -1) st_add_song (NULL, TRUE, 0);
+	  if (!prefs_get_block_display ())
+	  {
+	      while (gtk_events_pending ())	      gtk_main_iteration ();
+	      release_selection (-1);
+	  }
       }
+      gtkpod_songs_statusbar_update();
   }
-  gtkpod_songs_statusbar_update();
+#if DEBUG_TIMING
+  g_get_current_time (&time);
+  printf ("pm_selection_changed_cb exit:  %ld.%06ld sec\n",
+	  time.tv_sec % 3600, time.tv_usec);
+#endif DEBUG_TIMING
 }
 
 /* Callback function called when the selection
@@ -631,6 +666,14 @@ static void st_add_entry (TabEntry *entry, guint32 inst)
     gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 			ST_COLUMN_ENTRY, entry, -1);
     st->entries = g_list_append (st->entries, entry);
+    if (!entry->master)
+    {
+	if (!st->entry_hash)
+	{
+	    st->entry_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	}
+	g_hash_table_insert (st->entry_hash, entry->name, entry);
+    }
 }
 
 /* Used by st_remove_entry_from_model() to remove entry from model by calling
@@ -654,18 +697,27 @@ static gboolean st_delete_entry_from_model (GtkTreeModel *model,
 /* Remove entry from the display model and the sorttab */
 static void st_remove_entry_from_model (TabEntry *entry, guint32 inst)
 {
-  GtkTreeModel *model = sorttab[inst]->model;
-  if (model && entry)
+    SortTab *st = sorttab[inst];
+    GtkTreeModel *model = st->model;
+    if (model && entry)
     {
-      if (entry == sorttab[inst]->current_entry)
+	if (entry == st->current_entry)
 	{
-	  sorttab[inst]->current_entry = NULL;
+	    st->current_entry = NULL;
 	}
-      gtk_tree_model_foreach (model, st_delete_entry_from_model, entry);
-      sorttab[inst]->entries = g_list_remove (sorttab[inst]->entries, entry);
-      g_list_free (entry->members);
-      C_FREE (entry->name);
-      g_free (entry);
+	gtk_tree_model_foreach (model, st_delete_entry_from_model, entry);
+	st->entries = g_list_remove (st->entries, entry);
+	g_list_free (entry->members);
+	/* remove entry from hash */
+	if (st->entry_hash)
+	{
+	    TabEntry *hashed_entry = 
+		(TabEntry *)g_hash_table_lookup (st->entry_hash, entry->name);
+	    if (hashed_entry == entry)
+		g_hash_table_remove (st->entry_hash, entry->name);
+	}
+	C_FREE (entry->name);
+	g_free (entry);
     }
 }
 
@@ -682,6 +734,9 @@ static void st_remove_all_entries_from_model (guint32 inst)
 	  entry = (TabEntry *)g_list_nth_data (st->entries, 0);
 	  st_remove_entry_from_model (entry, inst);
       }
+      if (st->entry_hash)  g_hash_table_destroy (st->entry_hash);
+      st->entry_hash = NULL;
+      
   }
 }
 
@@ -746,6 +801,7 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
 		next = NULL;
 	}
     }
+    /* remove entry from display model */
     st_remove_entry_from_model (entry, inst);
     /* if we have a next entry, select it. */
     if (next)
@@ -803,12 +859,11 @@ static TabEntry *st_get_entry_by_song (Song *song, guint32 inst)
    it skips the master entry. */
 static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
 {
-  GList *entries;
-  TabEntry *entry;
-  guint i;
+  TabEntry *entry = NULL;
+  SortTab *st = sorttab[inst];
+  GList *entries = st->entries;
 
   if (name == NULL) return NULL;
-  entries = sorttab[inst]->entries;
   /* check if we need to return the master entry */
   if ((strlen (name) == 1) && (*name == -1))
   {
@@ -816,12 +871,17 @@ static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
   }
   else
   {
+#if 0
+      guint i;
       i=1; /* skip master entry, which is supposed to be at first position */
       while ((entry = (TabEntry *)g_list_nth_data (entries, i)) != NULL)
       {
 	  if (g_utf8_collate (entry->name, name) == 0)   break; /* found! */
 	  ++i;
       }
+#endif
+      if (st->entry_hash)
+	  entry = g_hash_table_lookup (st->entry_hash, name);
   }
   return entry;
 }
@@ -1182,6 +1242,13 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   gint i,n;
   Song *song;
 
+#if DEBUG_TIMING
+  GTimeVal time;
+  g_get_current_time (&time);
+  printf ("st_page_selected_cb enter: %ld.%06ld sec\n",
+	  time.tv_sec % 3600, time.tv_usec);
+#endif DEBUG_TIMING
+
   inst = st_get_instance_from_notebook (notebook);
   if (inst == -1) return; /* invalid notebook */
   if (stop_add < (gint)inst)  return;
@@ -1201,17 +1268,38 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   n = g_list_length (copy);
   if (n > 0)
   {
+      GTimeVal time;
+      float max_count = REFRESH_INIT_COUNT;
+      gint count = max_count - 1;
+      float ms;
       /* block playlist view and all sort tab notebooks <= inst */
-      if (!prefs_get_block_display ())  block_selection (inst-1);
+      if (!prefs_get_block_display ())
+      {
+	  block_selection (inst);
+	  g_get_current_time (&time);
+      }
       /* add all songs previously present to sort tab */
       for (i=0; i<n; ++i)
       {
 	  if (stop_add < (gint)inst)  break;
 	  song = (Song *)g_list_nth_data (copy, i);
 	  st_add_song (song, FALSE, inst);
-	  while (((i%10) == 0) &&
-		 !prefs_get_block_display() && gtk_events_pending ())
-	      gtk_main_iteration ();
+	  --count;
+	  if ((count < 0) && !prefs_get_block_display ())
+	  {
+	      gtkpod_songs_statusbar_update();
+	      while (gtk_events_pending ())       gtk_main_iteration ();
+	      ms = get_ms_since (&time, TRUE);
+	      /* first time takes significantly longer, so we adjust
+		 the max_count */
+	      if (max_count == REFRESH_INIT_COUNT) max_count *= 2.5;
+	      /* average the new and the old max_count */
+	      max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
+	      count = max_count - 1;
+#if DEBUG_TIMING
+	      printf("st_p_s ms: %f mc: %f\n", ms, max_count);
+#endif
+	  }
       }
       if (n && (stop_add >= (gint)inst)) st_add_song (NULL, TRUE, inst);
       if (!prefs_get_block_display ())
@@ -1220,6 +1308,11 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 	  release_selection (inst-1);
       }
   }
+#if DEBUG_TIMING
+  g_get_current_time (&time);
+  printf ("st_page_selected_cb exit:  %ld.%06ld sec\n",
+	  time.tv_sec % 3600, time.tv_usec);
+#endif DEBUG_TIMING
 }
 
 
@@ -1272,6 +1365,13 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   SortTab *st;
   guint32 n,i;
 
+#if DEBUG_TIMING
+  GTimeVal time;
+  g_get_current_time (&time);
+  printf ("st_selection_changed_cb enter: %ld.%06ld sec\n",
+	  time.tv_sec % 3600, time.tv_usec);
+#endif DEBUG_TIMING
+
   /* printf("%d: entered\n", inst);*/
   st = sorttab[inst];
   if (st == NULL) return;
@@ -1287,40 +1387,68 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  C_FREE (st->lastselection[st->current_category]);
 	  st_init (-1, inst+1);
       }
-      return; 
   }
-  gtk_tree_model_get (model, &iter, 
-		      ST_COLUMN_ENTRY, &new_entry,
-		      -1);
-  /* printf("selected instance %d, entry %x (was: %x)\n", inst,
-   * new_entry, st->current_entry);*/
-  if (new_entry == st->current_entry) return; /* important: otherwise
-						 st_add_song will not
-						 work correctly */
-  /* initialize next instance */
-  st_init (-1, inst+1);
-  st->current_entry = new_entry;
-  n = g_list_length (new_entry->members); /* number of members */
-  if (n > 0)
-  {
-      if (!prefs_get_block_display ())  block_selection (inst);
-      for (i=0; i<n; ++i)
-      { /* add all member songs to next instance */
-	  if (stop_add <= (gint)inst) break;
-	  song = (Song *)g_list_nth_data (new_entry->members, i);
-	  st_add_song (song, FALSE, inst+1);
-	  while (((i%10) == 0) &&
-		 !prefs_get_block_display() && gtk_events_pending ())
-	      gtk_main_iteration ();
-      }
-      if (stop_add > (gint)inst)  st_add_song (NULL, TRUE, inst+1);
-      if (!prefs_get_block_display ())
+  else
+  {   /* handle new selection */
+      gtk_tree_model_get (model, &iter, 
+			  ST_COLUMN_ENTRY, &new_entry,
+			  -1);
+      /* printf("selected instance %d, entry %x (was: %x)\n", inst,
+       * new_entry, st->current_entry);*/
+      if (new_entry == st->current_entry) return; /* important: otherwise
+						     st_add_song will not
+						     work correctly */
+      /* initialize next instance */
+      st_init (-1, inst+1);
+      st->current_entry = new_entry;
+      n = g_list_length (new_entry->members); /* number of members */
+      if (n > 0)
       {
-	  while (gtk_events_pending ())	  gtk_main_iteration ();
-	  release_selection (inst);
+	  GTimeVal time;
+	  float max_count = REFRESH_INIT_COUNT;
+	  gint count = max_count - 1;
+	  float ms;
+	  if (!prefs_get_block_display ())
+	  {
+	      block_selection (inst);
+	      g_get_current_time (&time);
+	  }
+	  for (i=0; i<n; ++i)
+	  { /* add all member songs to next instance */
+	      if (stop_add <= (gint)inst) break;
+	      song = (Song *)g_list_nth_data (new_entry->members, i);
+	      st_add_song (song, FALSE, inst+1);
+	      --count;
+	      if ((count < 0) && !prefs_get_block_display ())
+	      {
+		  gtkpod_songs_statusbar_update();
+		  while (gtk_events_pending ())       gtk_main_iteration ();
+		  ms = get_ms_since (&time, TRUE);
+		  /* first time takes significantly longer, so we adjust
+		     the max_count */
+		  if (max_count == REFRESH_INIT_COUNT) max_count *= 2.5;
+		  /* average the new and the old max_count */
+		  max_count *= (1 + 2 * REFRESH_MS / ms) / 3;
+		  count = max_count - 1;
+#if DEBUG_TIMING
+		  printf("st_s_c ms: %f mc: %f\n", ms, max_count);
+#endif
+	      }
+	  }
+	  if (stop_add > (gint)inst)  st_add_song (NULL, TRUE, inst+1);
+	  if (!prefs_get_block_display ())
+	  {
+	      while (gtk_events_pending ())	  gtk_main_iteration ();
+	      release_selection (inst);
+	  }
       }
+      gtkpod_songs_statusbar_update();
   }
-  gtkpod_songs_statusbar_update();
+#if DEBUG_TIMING
+  g_get_current_time (&time);
+  printf ("st_selection_changed_cb exit:  %ld.%06ld sec\n",
+	  time.tv_sec % 3600, time.tv_usec);
+#endif DEBUG_TIMING
 }
 
 
@@ -1353,9 +1481,11 @@ st_cell_edited (GtkCellRendererText *renderer,
   gint i, n, inst;
   Song *song;
   GList *members;
+  SortTab *st;
 
   inst = (guint32)data;
-  model = sorttab[inst]->model;
+  st = sorttab[inst];
+  model = st->model;
   path = gtk_tree_path_new_from_string (path_string);
   column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get_iter (model, &iter, path);
@@ -1368,9 +1498,19 @@ st_cell_edited (GtkCellRendererText *renderer,
     case ST_COLUMN_ENTRY:
       /* We only do something, if the name actually got changed */
       if (g_utf8_collate (entry->name, new_text) != 0)
-	{
+      {
+	  /* remove old hash entry if available */
+	  TabEntry *hash_entry =
+	      g_hash_table_lookup (st->entry_hash, entry->name);
+	  if (hash_entry == entry)
+	      g_hash_table_remove (st->entry_hash, entry->name);
+	  /* replace entry name */
 	  g_free (entry->name);
 	  entry->name = g_strdup (new_text);
+	  /* re-insert into hash table if the same name doesn't
+	     already exist */
+	  if (g_hash_table_lookup (st->entry_hash, entry->name) == NULL)
+	      g_hash_table_insert (st->entry_hash, entry->name, entry);
 	  /* Now we look up all the songs and change the ID3 Tag as well */
 	  /* We make a copy of the current members list, as it may change
              during the process */

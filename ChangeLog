@@ -1,3 +1,13 @@
+gtkpod V0.43-CVS 
+	IMPROVEMENT: speed-up of display refreshs.
+	- Import of iTunesDB with full non-blocked display: 4x as fast (51''
+	against 3'35'' on my 2459 songs)
+	- Refresh of first sort tab, non-blocked: 20x as fast (0.65''
+	against 13'' on my 2459 songs)
+	- Refresh of first sort tab, blocked: 60x as fast (0.13''
+	against 7.8'' on my 2459 songs)
+	- Refresh of song list, non-blocked: 2x as fast (9'' against 18''
+	on my 2459 songs)
 gtkpod V0.43-1 28-Feb-2003
 	BUGFIX: After DND operation songs were displayed twice in the
 	master playlist (this was just a display artifact).

@@ -44,6 +44,16 @@
  * last value when starting gtkpod again */
 #define PANED_NUM 3
 
+
+/* print some timing info for tuning purposes */
+#define DEBUG_TIMING 0
+/* time between display refreshs in ms */
+#define REFRESH_MS 200
+/* initial count number between display refreshs -- will be
+   re-calculated to match the time indicated above */
+#define REFRESH_INIT_COUNT 5
+
+
 /* Categories in each sort tab (page numbers) */
 enum {
   ST_CAT_ARTIST = 0,
@@ -69,6 +79,7 @@ typedef struct {
   GList *entries;                    /* list with entries */
   TabEntry *current_entry;           /* pointer to currently selected entry */
   gchar *lastselection[ST_CAT_NUM];  /* name of entry last selected */
+  GHashTable *entry_hash;            /* table for quick find of tab entries */
 } SortTab;
 
 /* "Column numbers" in sort tab model */
