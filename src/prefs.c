@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-12 23:15:06 jcs>
+/* Time-stamp: <2003-09-21 15:01:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -200,6 +200,8 @@ struct cfg *cfg_new(void)
     mycfg->size_conf.y = -1;
     mycfg->size_dirbr.x = 300;
     mycfg->size_dirbr.y = 400;
+    mycfg->size_prefs.x = -1;
+    mycfg->size_prefs.y = 480;
     for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
     {
 	mycfg->sm_col_width[i] = 80;
@@ -580,6 +582,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_size_dirbr (-2, atoi (arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "size_prefs.x") == 0)
+	  {
+	      prefs_set_size_prefs (atoi (arg), -2);
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_prefs.y") == 0)
+	  {
+	      prefs_set_size_prefs (-2, atoi (arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "automount") == 0)
 	  {
 	      prefs_set_automount (atoi (arg));
@@ -839,7 +849,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
     fprintf(fp, "save_sorted_order=%d\n",prefs_get_save_sorted_order());
-    fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser\n"));
+    fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser, prefs\n"));
     fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
     fprintf (fp, "size_gtkpod.y=%d\n", cfg->size_gtkpod.y);
     fprintf (fp, "size_cal.x=%d\n", cfg->size_cal.x);
@@ -850,6 +860,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_conf.y=%d\n", cfg->size_conf.y);
     fprintf (fp, "size_dirbr.x=%d\n", cfg->size_dirbr.x);
     fprintf (fp, "size_dirbr.y=%d\n", cfg->size_dirbr.y);
+    fprintf (fp, "size_prefs.x=%d\n", cfg->size_prefs.x);
+    fprintf (fp, "size_prefs.y=%d\n", cfg->size_prefs.y);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
     fprintf (fp, "special_export_charset=%d\n", cfg->special_export_charset);
@@ -1301,6 +1313,14 @@ void prefs_set_size_dirbr (gint x, gint y)
     if (y != -2) cfg->size_dirbr.y = y;
 }
 
+/* Sets the default size for the prefs window. -2 means:
+ * don't change the current size */
+void prefs_set_size_prefs (gint x, gint y)
+{
+    if (x != -2) cfg->size_prefs.x = x;
+    if (y != -2) cfg->size_prefs.y = y;
+}
+
 /* Writes the current default size for the gtkpod window in "x" and
    "y" */
 void prefs_get_size_gtkpod (gint *x, gint *y)
@@ -1340,6 +1360,15 @@ void prefs_get_size_dirbr (gint *x, gint *y)
 {
     *x = cfg->size_dirbr.x;
     *y = cfg->size_dirbr.y;
+}
+
+
+/* Writes the current default size for the prefs window in
+   "x" and "y" */
+void prefs_get_size_prefs (gint *x, gint *y)
+{
+    *x = cfg->size_prefs.x;
+    *y = cfg->size_prefs.y;
 }
 
 

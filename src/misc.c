@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-19 23:39:59 jcs>
+/* Time-stamp: <2003-09-21 15:42:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -590,6 +590,8 @@ gtkpod_main_quit(void)
 {
     GtkWidget *dialog;
     gint result = GTK_RESPONSE_YES;
+
+    
 
     if (!files_are_saved ())
     {

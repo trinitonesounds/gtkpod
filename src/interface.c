@@ -1293,6 +1293,8 @@ create_prefs_window (void)
   GtkWidget *prefs_window;
   GtkWidget *vbox13;
   GtkWidget *notebook;
+  GtkWidget *scrolledwindow5;
+  GtkWidget *viewport2;
   GtkWidget *vbox14;
   GtkWidget *frame6;
   GtkWidget *vbox15;
@@ -1346,6 +1348,8 @@ create_prefs_window (void)
   GtkWidget *cfg_special_export_charset;
   GtkWidget *label72;
   GtkWidget *label23;
+  GtkWidget *scrolledwindow6;
+  GtkWidget *viewport3;
   GtkWidget *vbox23;
   GtkWidget *frame14;
   GtkWidget *vbox36;
@@ -1408,6 +1412,8 @@ create_prefs_window (void)
   GtkWidget *cfg_block_display;
   GtkWidget *label38;
   GtkWidget *label25;
+  GtkWidget *scrolledwindow7;
+  GtkWidget *viewport4;
   GtkWidget *vbox32;
   GtkWidget *frame10;
   GtkWidget *vbox22;
@@ -1447,6 +1453,8 @@ create_prefs_window (void)
   GtkWidget *cfg_save_sorted_order;
   GtkWidget *label42;
   GtkWidget *label;
+  GtkWidget *scrolledwindow8;
+  GtkWidget *viewport5;
   GtkWidget *vbox20;
   GtkWidget *frame18;
   GtkWidget *vbox34;
@@ -1480,9 +1488,18 @@ create_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox13), notebook, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (notebook), 2);
 
+  scrolledwindow5 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow5);
+  gtk_container_add (GTK_CONTAINER (notebook), scrolledwindow5);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow5), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  viewport2 = gtk_viewport_new (NULL, NULL);
+  gtk_widget_show (viewport2);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow5), viewport2);
+
   vbox14 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox14);
-  gtk_container_add (GTK_CONTAINER (notebook), vbox14);
+  gtk_container_add (GTK_CONTAINER (viewport2), vbox14);
   gtk_container_set_border_width (GTK_CONTAINER (vbox14), 5);
 
   frame6 = gtk_frame_new (NULL);
@@ -1750,9 +1767,18 @@ create_prefs_window (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 0), label23);
   gtk_label_set_justify (GTK_LABEL (label23), GTK_JUSTIFY_LEFT);
 
+  scrolledwindow6 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow6);
+  gtk_container_add (GTK_CONTAINER (notebook), scrolledwindow6);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow6), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  viewport3 = gtk_viewport_new (NULL, NULL);
+  gtk_widget_show (viewport3);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow6), viewport3);
+
   vbox23 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox23);
-  gtk_container_add (GTK_CONTAINER (notebook), vbox23);
+  gtk_container_add (GTK_CONTAINER (viewport3), vbox23);
   gtk_container_set_border_width (GTK_CONTAINER (vbox23), 5);
 
   frame14 = gtk_frame_new (NULL);
@@ -2035,9 +2061,18 @@ create_prefs_window (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 1), label25);
   gtk_label_set_justify (GTK_LABEL (label25), GTK_JUSTIFY_LEFT);
 
+  scrolledwindow7 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow7);
+  gtk_container_add (GTK_CONTAINER (notebook), scrolledwindow7);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow7), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  viewport4 = gtk_viewport_new (NULL, NULL);
+  gtk_widget_show (viewport4);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow7), viewport4);
+
   vbox32 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox32);
-  gtk_container_add (GTK_CONTAINER (notebook), vbox32);
+  gtk_container_add (GTK_CONTAINER (viewport4), vbox32);
   gtk_container_set_border_width (GTK_CONTAINER (vbox32), 5);
 
   frame10 = gtk_frame_new (NULL);
@@ -2231,9 +2266,18 @@ create_prefs_window (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label);
   gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
 
+  scrolledwindow8 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow8);
+  gtk_container_add (GTK_CONTAINER (notebook), scrolledwindow8);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow8), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  viewport5 = gtk_viewport_new (NULL, NULL);
+  gtk_widget_show (viewport5);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow8), viewport5);
+
   vbox20 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox20);
-  gtk_container_add (GTK_CONTAINER (notebook), vbox20);
+  gtk_container_add (GTK_CONTAINER (viewport5), vbox20);
   gtk_container_set_border_width (GTK_CONTAINER (vbox20), 5);
 
   frame18 = gtk_frame_new (NULL);
@@ -2475,6 +2519,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT_NO_REF (prefs_window, prefs_window, "prefs_window");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox13, "vbox13");
   GLADE_HOOKUP_OBJECT (prefs_window, notebook, "notebook");
+  GLADE_HOOKUP_OBJECT (prefs_window, scrolledwindow5, "scrolledwindow5");
+  GLADE_HOOKUP_OBJECT (prefs_window, viewport2, "viewport2");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox14, "vbox14");
   GLADE_HOOKUP_OBJECT (prefs_window, frame6, "frame6");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox15, "vbox15");
@@ -2528,6 +2574,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_special_export_charset, "cfg_special_export_charset");
   GLADE_HOOKUP_OBJECT (prefs_window, label72, "label72");
   GLADE_HOOKUP_OBJECT (prefs_window, label23, "label23");
+  GLADE_HOOKUP_OBJECT (prefs_window, scrolledwindow6, "scrolledwindow6");
+  GLADE_HOOKUP_OBJECT (prefs_window, viewport3, "viewport3");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox23, "vbox23");
   GLADE_HOOKUP_OBJECT (prefs_window, frame14, "frame14");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox36, "vbox36");
@@ -2588,6 +2636,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_block_display, "cfg_block_display");
   GLADE_HOOKUP_OBJECT (prefs_window, label38, "label38");
   GLADE_HOOKUP_OBJECT (prefs_window, label25, "label25");
+  GLADE_HOOKUP_OBJECT (prefs_window, scrolledwindow7, "scrolledwindow7");
+  GLADE_HOOKUP_OBJECT (prefs_window, viewport4, "viewport4");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox32, "vbox32");
   GLADE_HOOKUP_OBJECT (prefs_window, frame10, "frame10");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox22, "vbox22");
@@ -2626,6 +2676,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_save_sorted_order, "cfg_save_sorted_order");
   GLADE_HOOKUP_OBJECT (prefs_window, label42, "label42");
   GLADE_HOOKUP_OBJECT (prefs_window, label, "label");
+  GLADE_HOOKUP_OBJECT (prefs_window, scrolledwindow8, "scrolledwindow8");
+  GLADE_HOOKUP_OBJECT (prefs_window, viewport5, "viewport5");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox20, "vbox20");
   GLADE_HOOKUP_OBJECT (prefs_window, frame18, "frame18");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox34, "vbox34");

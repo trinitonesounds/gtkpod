@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-24 14:48:08 jcs>
+/* Time-stamp: <2003-09-21 18:03:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -105,6 +105,7 @@ gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	{
 	    link = g_list_first (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
+
 	    if (tvt == SONG_TREEVIEW)
 		sm_list_store_move_before (GTK_LIST_STORE (model),
 					   from_iter, &to_iter);

@@ -1,13 +1,5 @@
 TODO:
 
-Normalize: Menus: Normalize->Selected Playlist
-                           ->Selected Tab Entry
-                           ->Selected Songs
-                  Normalize Context Menu
-
-- don't write iTunesDB if no tracks are imported.
-
-- update message of "add directory"
 
 - playlist creation for orphaned tracks (Sam?)
 
@@ -20,10 +12,18 @@ Normalize: Menus: Normalize->Selected Playlist
      libid3tag: 74/63 sec (with display), 44 sec (without display)).
 
 - volume normalization support (Edward)
+   Menus: Normalize->Selected Playlist
+                   ->Selected Tab Entry
+                   ->Selected Songs
+   Normalize Context Menu
 
 - gtkpod-like browse of file system contents
 
 - upload text notes to iPod
+
+- set Album/Artist etc. from filename (user configurable). Example: 
+       artist/album/01-track1.mp3 ...
+       01_album_artist_track ...
 
 - for genre (etc.) playlists: have confirmation dialogue before
   removing old playlists (Chris Cutler?)
@@ -71,6 +71,8 @@ Please feel free to submit further features.
 
 
 BUGLIST:
+
+- don't write iTunesDB if no tracks are imported.
 
 - move song before the first position in song view (DND) and it will
   appear at the end instead.

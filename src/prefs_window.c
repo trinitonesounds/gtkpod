@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-07 20:25:39 jcs>
+/* Time-stamp: <2003-09-21 15:10:03 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -110,6 +110,7 @@ void
 prefs_window_create(void)
 {
     gint i;
+    gint defx, defy;
 
     if(!prefs_window)
     {
@@ -126,6 +127,8 @@ prefs_window_create(void)
 	    return;
 	}
 	prefs_window = create_prefs_window();
+	prefs_get_size_prefs (&defx, &defy);
+	gtk_window_set_default_size (GTK_WINDOW (prefs_window), defx, defy);
 	if((w = lookup_widget(prefs_window, "cfg_mount_point")))
 	{
 	    if (tmpcfg->ipod_mount)
@@ -551,6 +554,8 @@ prefs_window_set(void)
 void
 prefs_window_cancel(void)
 {
+    gint defx, defy;
+
     cfg_free (tmpcfg);
     /* exchange tmpcfg for origcfg */
     tmpcfg = origcfg;
@@ -563,6 +568,10 @@ prefs_window_cancel(void)
     cfg_free (tmpcfg);
     tmpcfg = NULL;
 
+    /* save current window size */
+    gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
+    prefs_set_size_prefs (defx, defy);
+
     /* close the window */
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
@@ -573,6 +582,7 @@ prefs_window_cancel(void)
    save the notebook page */
 void prefs_window_delete(void)
 {
+    gint defx, defy;
     GtkWidget *nb;
 
     /* delete cfg structs */
@@ -585,6 +595,11 @@ void prefs_window_delete(void)
     nb = lookup_widget (prefs_window, "notebook");
     prefs_set_last_prefs_page (gtk_notebook_get_current_page (
 				   GTK_NOTEBOOK (nb)));
+
+    /* save current window size */
+    gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
+    prefs_set_size_prefs (defx, defy);
+
     /* close the window */
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
@@ -596,6 +611,7 @@ void prefs_window_delete(void)
 void
 prefs_window_ok (void)
 {
+    gint defx, defy;
     GtkWidget *nb;
 
     /* save current settings */
@@ -611,6 +627,11 @@ prefs_window_ok (void)
     nb = lookup_widget (prefs_window, "notebook");
     prefs_set_last_prefs_page (gtk_notebook_get_current_page (
 				   GTK_NOTEBOOK (nb)));
+
+    /* save current window size */
+    gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
+    prefs_set_size_prefs (defx, defy);
+
     /* close the window */
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
@@ -622,7 +643,9 @@ prefs_window_ok (void)
 void
 prefs_window_apply (void)
 {
-    GtkWidget *w;
+    gint defx, defy;
+    GtkWidget *nb, *w;
+
     /* save current settings */
     prefs_window_set ();
     /* reset the validated path entries */
@@ -641,6 +664,15 @@ prefs_window_apply (void)
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_time_format ());
 	/* tmpcfg gets set by the "changed" callback */
     }
+
+    /* save current notebook page */
+    nb = lookup_widget (prefs_window, "notebook");
+    prefs_set_last_prefs_page (gtk_notebook_get_current_page (
+				   GTK_NOTEBOOK (nb)));
+
+    /* save current window size */
+    gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
+    prefs_set_size_prefs (defx, defy);
 }
 
 

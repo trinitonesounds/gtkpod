@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-19 23:18:41 jcs>
+/* Time-stamp: <2003-09-21 15:43:13 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -569,9 +569,6 @@ void update_songids (GList *selected_songids)
 	gtkpod_statusbar_message (buf);
 	g_free (buf);
 	update_song_from_file (song);
-	/* FIXME: how can we find (easily) out whether the data has
-	 * actually changed */
-	data_changed ();
     }
     release_widgets ();
     /* display log of non-updated songs */
@@ -1129,16 +1126,19 @@ void update_song_from_file (Song *song)
     gchar *prefs_charset = NULL;
     gchar *songpath = NULL;
     gint32 oldsize = 0;
-    gchar *charset;
+    gboolean charset_set;
 
     if (!song) return;
 
-    /* store size of song on iPod */
+    /* remember size of song on iPod */
     if (song->transferred) oldsize = song->size;
     else                   oldsize = 0;
 
-    charset = song->charset;
-    if (!prefs_get_update_charset () && charset)
+    /* remember if charset was set */
+    if (song->charset)  charset_set = TRUE;
+    else                charset_set = FALSE;
+
+    if (!prefs_get_update_charset () && charset_set)
     {   /* we should use the initial charset for the update */
 	if (prefs_get_charset ())
 	{   /* remember the charset originally set */
@@ -1183,9 +1183,16 @@ void update_song_from_file (Song *song)
 	if (oldhash && song->md5_hash)
 	{   /* do we really have to copy the song again? */
 	    if (strcmp (oldhash, song->md5_hash) != 0)
+	    {
 		song->transferred = FALSE;
+		data_changed ();
+	    }
 	}
-	else song->transferred = FALSE; /* no hash available -- copy! */
+	else
+	{   /* no hash available -- copy! */
+	    song->transferred = FALSE;
+	    data_changed ();
+	}
 	/* set old size if song has to be transferred (for free space
 	 * calculation) */
 	if (!song->transferred) song->oldsize = oldsize;
@@ -1207,7 +1214,7 @@ void update_song_from_file (Song *song)
 	}
     }
 
-    if (!prefs_get_update_charset () && charset)
+    if (!prefs_get_update_charset () && charset_set)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }
@@ -1240,6 +1247,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 			    10 songs */
   Song *song;
   gchar str[PATH_MAX];
+  gchar *basename;
   gint len;
 
   if (name == NULL) return TRUE;
@@ -1259,6 +1267,18 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 	  return add_playlist_by_filename (name, plitem, addsongfunc, data);
       }
   }
+
+  /* print a message about which file is being processed */
+  basename = g_path_get_basename (name);
+  if (basename)
+  {
+      gchar *bn_utf8 = charset_to_utf8 (basename);
+      snprintf (str, PATH_MAX, _("Processing '%s'..."), bn_utf8);
+      gtkpod_statusbar_message (str);
+      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+      g_free (bn_utf8);
+  }
+  C_FREE (basename);
 
   song = get_song_info_from_file (name, NULL);
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-19 23:35:10 jcs>
+/* Time-stamp: <2003-09-21 18:29:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1140,9 +1140,12 @@ void sm_update_default_sizes (void)
 /* Section for drag and drop                                        */
 /* ---------------------------------------------------------------- */
 
-#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))
+/*#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))*/
 /* gtk_list_store_move_*() was introduced in 2.2, so we have to
  * emulate for 2.0 <= V < 2.2 (we require at least 2.0 anyway) */
+/* !!! gtk_list_store_move() at least in 2.2.1 seems to be buggy: if
+   moving before the first entry, the moved entry ends up
+   last. Therefore I emulate the functions for all gtk versions */
 static void sm_list_store_move (GtkListStore *store,
 				 GtkTreeIter  *iter,
 				 GtkTreeIter  *position,
@@ -1180,8 +1183,9 @@ void  sm_list_store_move_after (GtkListStore *store,
 {
     sm_list_store_move (store, iter, position, FALSE);
 }
-#else
-/* starting V2.2 convenient gtk functions exist */
+/* #else*/
+#if 0
+/* starting V2.2 convenient gtk functions exist (see comment above) */
 void  sm_list_store_move_before (GtkListStore *store,
 					 GtkTreeIter  *iter,
 					 GtkTreeIter  *position)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-07 20:26:52 jcs>
+/* Time-stamp: <2003-09-21 15:01:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -81,6 +81,7 @@ struct cfg
   struct win_size size_conf_sw; /* last size of conf window (scrolled) */
   struct win_size size_conf;    /* last size of conf window */
   struct win_size size_dirbr;   /* last size of dirbrowser window */
+  struct win_size size_prefs;   /* last size of prefs window */
   gint sm_col_width[SM_NUM_COLUMNS_PREFS]; /* width colums in song model */
   gboolean col_visible[SM_NUM_COLUMNS_PREFS]; /* displayed song model colums */
   SM_item col_order[SM_NUM_COLUMNS_PREFS]; /* order of columns */
@@ -155,6 +156,7 @@ void prefs_set_size_cal (gint x, gint y);
 void prefs_set_size_conf_sw (gint x, gint y);
 void prefs_set_size_conf (gint x, gint y);
 void prefs_set_size_dirbr (gint x, gint y);
+void prefs_set_size_prefs (gint x, gint y);
 void prefs_set_sm_col_width (gint col, gint width);
 void prefs_set_tag_autoset (gint category, gboolean autoset);
 void prefs_set_col_visible (gint pos, gboolean visible);
@@ -183,6 +185,7 @@ void prefs_get_size_cal (gint *x, gint *y);
 void prefs_get_size_conf_sw (gint *x, gint *y);
 void prefs_get_size_conf (gint *x, gint *y);
 void prefs_get_size_dirbr (gint *x, gint *y);
+void prefs_get_size_prefs (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
 gboolean prefs_get_col_visible (gint pos);
