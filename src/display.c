@@ -431,7 +431,7 @@ static void create_playlist_listview (GtkWidget *gtkpod)
   g_signal_connect (G_OBJECT (selection), "changed",
 		    G_CALLBACK (pm_selection_changed), NULL);
   pm_add_columns ();
-  pm_dnd_advertise(GTK_TREE_VIEW(lookup_widget(gtkpod, "playlist_treeview")));
+  pm_dnd_advertise(playlist_treeview);
 }
 
 
@@ -1659,7 +1659,7 @@ static void create_song_listview (GtkWidget *gtkpod)
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (song_treeview),
 			       GTK_SELECTION_MULTIPLE);
   add_song_columns ();
-  st_dnd_advertise(GTK_TREE_VIEW(lookup_widget(gtkpod, "song_treeview")));
+  st_dnd_advertise(song_treeview);
 }
 
 

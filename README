@@ -5,7 +5,6 @@ Inc., registered in the U.S. and other countries.
 Short instructions:
 -------------------
 
-
 Connecting iPod to a Linux box:
 -------------------------------
 
@@ -105,29 +104,147 @@ cp /mnt/ipod/iPod_Control/iTunes/iTunesDB /mnt/ipod/iPod_Control/iTunes/iTunesDB
 5) Use "Export" to write the added files to the iPod and create a new
     iTunesDB.
 
-6) Quit the program. BTW: all other menu items do have no meaning
-    (yet).
+6) Quit the program.
 
 and continue with step 8-11 above.
 
 
 
-Comments:
+Features
+--------
+
+Songs
+-----
+
+- You can add individual songs or entire directories recursively using
+  "Add Files". A file selection dialogue will appear
+- You can add directories recursively using "Add Dirs". A directory
+  selection dialogue will appear
+- You can delete songs by marking them and pressing the "Ctrl-d" . If
+  you delete songs from the master playlist (the topmost playlist,
+  called "gtkpod" by default). At the moment, deleting with the menu
+  item is not supported.
+- You can rename ID3 tags by editing the tag fields
+- Cou can specify which tags to display in the preferences window
+- Cou can specify (in the prefs window) if the ID3 tags of the
+  corresponding mp3 file should also be updated
+
+
+Sort Tabs
 ---------
-ID3 tags are assumed to be stored in the charset corresponding to the
-current locale setting (this will be made configurable in a later
-version). To add files with tags in a different encoding, you need to
 
-- export the iTunesDB
-- quit the program
-- set the locale accordingly
-- restart the program
-- import the iTunesDB
-- add the files with different encoding
-...
+- The two notebooks above the song display are called "Sort Tabs"
+- They allow you to filter which songs to display
+- If you edit an entry in the sort tab, the corresponding entry in all
+  associated songs will be updated as well. When writing the tags to
+  disk as well, updating of a large number of songs may take a while
 
-The iTunesDB itself is using UTF16, so once entered correctly, they
-will still be correct after import under a different locale.
+
+Playlists
+---------
+
+- You can create playlists with "New Playlist" or pressing "Ctrl-d" in
+  the playlist listview
+- You can add songs to playlists by marking the songs you want to add,
+  and then dragging them onto the playlist
+- You can rename playlists
+
+
+Duplicate Detection
+-------------------
+
+You can instruct gtkpod (in the prefs window) to use
+file-size-dependent MD5 checksums to prevent the same file from
+being entered twice.
+
+For the duplicate detection a list of MD5 checksums is kept in
+memory. It is updated each time you add files or directories. It is
+also updated each time you import your existing iTunes
+database.
+
+If a duplicate is detected, gtkpod will print out the the filenames
+of the duplicate files. If the filename of the already existing file
+is not available (it is not stored in the iTunes database, see
+"Extended Information File" below), other available information of
+the song is printed.
+
+
+Extended Information File
+-------------------------
+
+Some (I believe) essential information is not stored in Apple's iTunes
+database. You can therefore instruct gtkpod to write an additional
+file (iTunesDB.ext) with extended information. For each song it stores
+
+  - MD5 hash
+  - filename in the locale's encoding
+  - filename in UTF8 encoding
+  - hostname where the file was added (not used for anything yet)
+
+Since the extended information file is only valid with the
+corresponding standard iTunes database, a checksum of the iTunes
+database is also stored in the extended information file.
+
+Using an extended information file will considerably speed up the
+import of an existing iTunes database when using duplicate detection,
+since the MD5 checksums do not have to be re-calculated.
+
+Using an extended information file will also allow modification of ID3
+tags in the song files after the initial import, because the full
+filenames are still available.
+
+The extended information file is also used for the "Offline Mode"
+described below.
+
+
+Offline Mode
+------------
+
+It is possible to modify your iTunesDB "offline", i.e. without your
+iPod connected to your computer. You can then synchronize the contents
+of your iPod at any later time.
+
+To to this, you must have a backup of your iTunes database and the
+extended information file in the ~/.gtkpod/ directory (choose the
+backup option in the prefs menu for automatic backups).
+
+Before importing your iTunes database, you must select the "Offline"
+option in the "Files" menu. (The import and export of your iTunes
+database will then be done from or to ~/.gtkpod/.) Then import your
+iTunes database.
+
+You can modify (add songs, add playlists, modify playlists, delete
+playlists, delete songs) as usual. When you export your iTunesDB, it
+will be written to ~/.gtkpod/ along with an extended information file
+(even if you have not chosen that option in the prefs menu), tagging
+the songs not yet transferred.
+
+Next time around you can import the database as described above,
+switch off the offline mode, and export the iTunes database to your
+iPod. The contents of your iPod hard drive are then brought up to
+date.
+
+
+Export of Songs
+---------------
+
+- mark the songs you want to export and select "Export Files to Disk"
+  from the menu
+- the corresponding song files are written to "gtkpod_export/" in the
+  current directory
+
+
+Encoding of ID3 tags (charsets)
+-------------------------------
+You can specify the carset to be used for representing ID3 tags in the
+preferences menu. The default is "System Charset", which is the
+charset associated with the locale gtkpod is running under. If you
+tags are stored in a different encoding, you should set it
+appropriately.
+
+Please note that if necessary you can change the charset each time you
+add files or directories: the iTunesDB itself is using UTF16, so once
+tags are imported correctly, changing the charset has no influence.
 
 
 
@@ -147,15 +264,35 @@ About filenames (excerpt from the GTK2 release notes):
   Best integration of GTK+-2.0 with the environment is achieved by 
   using a UTF-8 locale.
 
+------ end of excerpt
 
-About setting the locale
-------------------------
+It is my feeling that many people use filenames encoded in the
+encoding of the locale. The "Add directories" dialogue already takes
+care of this and assumes the filenames to be in the same encoding as
+you have specified for the ID3 tags (see above). You can therefore
+forget about the excerpt above.
 
-Due to a caching problem with glib2's g_get_charset() function,
-changing the locale after g_get_charset() has already been called,
-will not affect the glib's conversion routines (they will use the
-cached charset instead).
+However, the "Add Files" dialogue (at the moment) uses the standard
+GTK+-2.0 file selection dialogue. Therefore I have no access on the
+conversion functions used, and a warning is printed when filenames are
+encountered that are encoded in a an encoding other than the once of
+the current locale. ID3 tags are still read currectly (according to
+the charset set in the preference dialogue).
 
-As a consequence, changing the locale in the prefs window after a file
-selection or directory selection dialog has been opened, has no
-effect. This problem has been resolved with version 2.1.5 of glib2.
+
+
+Known bugs
+----------
+
+- Menu: Many items don't work yet.
+- Delete dialogue: when deleting large numbers of songs from a
+  playlist, the OK/Cancel buttons are out of the screen and cannot be
+  reached. List of songs should be displayed in a scrollable window.
+- Offline mode: files marked for deletion are not removed from iPod
+  (will be fixed before release)
+- Display of large number of songs is awfully slow (mainly because of
+  the use of the standard GTK2 tree views)
+- "Export songs to disk" is not configurable: it always writes to
+  "gtkpod_export" in the current directory.
+- No safety dialogue when quitting gtkpod without exporting the
+  database

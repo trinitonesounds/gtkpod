@@ -400,7 +400,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 		confirmation_window_create(CONFIRMATION_WINDOW_PLAYLIST);
 		break;
 	    case GDK_n:
-		fprintf(stderr, "new playlist request\n");
+		add_new_playlist ();
 		break;
 	    default:
 		break;
