@@ -268,7 +268,7 @@ msgstr "Europe occidentale (ISO-8859-1)"
 
 #: src/charset.c:93
 msgid "Western (ISO-8859-15)"
-msgstr "EUrope occidentale (ISO-8859-15)"
+msgstr "Europe occidentale (ISO-8859-15)"
 
 #: src/charset.c:94
 msgid "Western (Windows-1252)"
@@ -435,7 +435,7 @@ msgstr "Comp."
 
 #: src/display_sorttabs.c:2142 src/interface.c:2348
 msgid "Special"
-msgstr "Special"
+msgstr "Spécial"
 
 #: src/display_sorttabs.c:2403
 #, fuzzy
@@ -464,7 +464,7 @@ msgstr "%s mis à jour"
 
 #: src/file.c:558
 msgid "Updated selected songs with info from file."
-msgstr "_Mettre à jour les morceaux à partir des fichiers"
+msgstr "Mettre à jour les morceaux à partir des fichiers"
 
 #: src/file.c:618
 #, c-format
@@ -535,12 +535,12 @@ msgstr "Synchroniser les répertoires"
 #. title
 #: src/file.c:859
 msgid "OK to synchronize the following directories?"
-msgstr "Créer les répertoires suivants ?"
+msgstr "Prêt à synchroniser les répertoires suivants ?"
 
 #. no entry selected
 #: src/file.c:916 src/misc.c:1365
 msgid "No entry selected."
-msgstr "Aucune sélection."
+msgstr "Aucun élément sélectionné."
 
 #. no playlist selected
 #: src/file.c:944 src/misc.c:1102 src/misc.c:1254 src/misc.c:1354
@@ -860,7 +860,7 @@ msgstr "Le fichier spécifié est introuvable"
 
 #: src/id3_tag.c:872
 msgid "Unknown field type"
-msgstr "Type de champs inconnu"
+msgstr "Type de champ inconnu"
 
 #: src/id3_tag.c:874
 msgid "Tag is already attached to a file"
@@ -959,7 +959,7 @@ msgstr "_Nouvelle liste de lecture"
 
 #: src/interface.c:341
 msgid "_Alphabetize"
-msgstr "Tri en ordre _alphabétique"
+msgstr "Trier par ordre _alphabétique"
 
 #: src/interface.c:352 src/interface.c:371
 msgid "_Playlists"
@@ -967,11 +967,11 @@ msgstr "_Listes de lecture"
 
 #: src/interface.c:356 src/interface.c:375
 msgid "_Sort Tab"
-msgstr "_Onglet de tri"
+msgstr "_Zone de tri"
 
 #: src/interface.c:360
 msgid "Alphabeti_ze"
-msgstr "Tri en ordre _inverse alphabétique"
+msgstr "Trier par ordre _inverse alphabétique"
 
 #: src/interface.c:379
 msgid "_Reset Sorting"
@@ -1346,7 +1346,7 @@ msgstr "_Nombre de zones de tri"
 
 #: src/interface.c:1681
 msgid "Sort Tabs"
-msgstr "Onglet de tri"
+msgstr "Zones de tri"
 
 #: src/interface.c:1695
 msgid "...master playlist"
@@ -1606,17 +1606,16 @@ msgid "_Misc"
 msgstr "_Divers"
 
 #: src/interface.c:2362
-#, fuzzy
 msgid " Logic: "
 msgstr " Opération logique: "
 
 #: src/interface.c:2367
 msgid "Any (OR)"
-msgstr "Ou"
+msgstr "Ou (OR)"
 
 #: src/interface.c:2373
 msgid "All (AND)"
-msgstr "Et"
+msgstr "Et (AND)"
 
 #: src/interface.c:2393
 msgid "0"
@@ -1687,47 +1686,45 @@ msgstr ""
 "En désactivant cette option, vous devrez appuyer sur 'Afficher'."
 
 #: src/interface.c:2668
-#, fuzzy
 msgid "Sorttab: "
-msgstr "Onglet de tri"
+msgstr "Zone de tri:"
 
 #: src/interface.c:2678
 msgid "     "
-msgstr ""
+msgstr "     "
 
 #: src/interface.c:2683
 msgid "Category: "
-msgstr ""
+msgstr "Catégorie: "
 
 #: src/interface.c:2702
 #, fuzzy
 msgid "Please specify a time interval"
-msgstr "Spécifier un intervalle"
+msgstr "Spécifiez un intervalle de temps"
 
 #: src/interface.c:2722
 msgid "Lower Margin"
-msgstr ""
+msgstr "Borne inférieure"
 
 #: src/interface.c:2745 src/interface.c:2811
-#, fuzzy
 msgid "Time:"
 msgstr "Durée"
 
 #: src/interface.c:2760 src/interface.c:2826
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: src/interface.c:2776
 msgid "No lower margin"
-msgstr ""
+msgstr "Pas de borne inférieure"
 
 #: src/interface.c:2788
 msgid "Upper margin"
-msgstr ""
+msgstr "Borne supérieure"
 
 #: src/interface.c:2842
 msgid "No upper margin"
-msgstr ""
+msgstr "Pas de borne supérieure"
 
 #: src/itunesdb.c:420
 msgid "Master-PL"
