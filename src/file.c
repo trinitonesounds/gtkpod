@@ -2152,6 +2152,14 @@ void mark_track_for_deletion (Track *track)
     pending_deletion = g_list_append(pending_deletion, track);
 }
 
+/* It might be necessary to unmark for deletion like in case of dangling tracks
+   with no real files on ipod */
+void unmark_track_for_deletion (Track *track)
+{
+    if (track != NULL)
+        pending_deletion = g_list_remove(pending_deletion, track);
+}
+
 
 /*------------------------------------------------------------------*\
  *                                                                  *
