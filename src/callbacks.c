@@ -291,7 +291,7 @@ on_playlist_treeview_drag_data_received
 	    {
 		Playlist *pl = NULL;
 		gtk_tree_model_get(tm, &i, 0, &pl, -1);
-		if(pl)
+		if((pl) && (!pl->type))
 		{
 		    gchar *str = g_strdup(data->data);
 		    guint32 id = 0;
