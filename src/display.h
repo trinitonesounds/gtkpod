@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-28 22:40:55 jcs>
+/* Time-stamp: <2005-04-04 21:49:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -233,18 +233,6 @@ void cal_open_calendar (gint inst, T_item item);
 void sp_go (guint32 inst);
 void sp_conditions_changed (guint32 inst);
 
-void on_tm_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data);
-void on_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-			     GtkTreeIter *i, gpointer data);
-void on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-				GtkTreeIter *i, gpointer data);
-void on_pm_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data);
-void on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-				GtkTreeIter *i, gpointer data);
-void on_st_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data);
 TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 					       T_item item,
 					       gboolean force_update);

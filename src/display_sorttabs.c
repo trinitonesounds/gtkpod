@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-28 22:43:04 jcs>
+/* Time-stamp: <2005-04-04 22:21:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -29,6 +29,8 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
+
+#include <gdk/gdkkeysyms.h>
 
 #include "display_private.h"
 #include "info.h"
@@ -65,11 +67,113 @@ typedef enum {
 } IntervalState;
 
 
+
+
 /* ---------------------------------------------------------------- */
 /*                                                                  */
-/* Section for sort tab display (special sort tab)                  */
+/* Section for filter tab display (callback)                        */
 /*                                                                  */
 /* ---------------------------------------------------------------- */
+
+/*
+ * utility function for appending ipod track for st treeview callback
+ */
+static void
+on_st_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			    GtkTreeIter *i, gpointer data)
+{
+    GList *gl;
+    TabEntry *entry;
+    GString *tracklist = (GString *)data;
+
+    g_return_if_fail (tracklist);
+
+    /* can call on 0 cause s is consistent across all of the columns */
+    gtk_tree_model_get (tm, i, ST_COLUMN_ENTRY, &entry, -1);
+    g_return_if_fail (entry);
+
+
+    /* add all member tracks of entry to tracklist */
+    for (gl=entry->members; gl; gl=gl->next)
+    {
+	Track *tr = gl->data;
+	g_return_if_fail (tr);
+	g_string_append_printf (tracklist, "%p\n", tr);
+    }
+}
+
+static void
+on_st_treeview_drag_data_get           (GtkWidget       *widget,
+					GdkDragContext  *context,
+					GtkSelectionData *data,
+					guint            info,
+					guint            time,
+					gpointer         user_data)
+{
+    GtkTreeSelection *ts = NULL;
+
+    if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
+    {
+	if(info == DND_GTKPOD_TRACKLIST)	/* gtkpod/file */
+	{
+	    GString *reply = g_string_sized_new (2000);
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_st_dnd_get_track_foreach, reply);
+	    if(reply->len)
+	    {
+		gtk_selection_data_set(data, data->target, 8, reply->str,
+				       reply->len);
+	    }
+	    g_string_free (reply, TRUE);
+	}
+	else if(info == DND_TEXT_PLAIN)
+	{
+	    /* FIXME: not implemented yet -- must also change
+	     * st_drag_types in display.c */
+	    g_warning ("Programming error: on_st_treeview_drag_data_get: received file of type 'text/plain'\n");
+	}
+    }
+
+}
+
+/* delete selected entry in sort tab */
+static gboolean
+on_st_treeview_key_release_event       (GtkWidget       *widget,
+					GdkEventKey     *event,
+					gpointer         user_data)
+{
+    guint mods;
+    mods = event->state;
+
+    if(!widgets_blocked && (mods & GDK_CONTROL_MASK))
+    {
+	switch(event->keyval)
+	{
+	    case GDK_d:
+		delete_entry_head (st_get_instance_from_treeview (
+				       GTK_TREE_VIEW (widget)), FALSE);
+		break;
+	    case GDK_u:
+		gp_do_selected_entry (update_tracks,
+				   st_get_instance_from_treeview (
+				       GTK_TREE_VIEW (widget)));
+		break;
+	    default:
+		break;
+	}
+
+    }
+  return FALSE;
+}
+
+
+
+/* ---------------------------------------------------------------- */
+/*                                                                  */
+/* Section for filter tab display (special sort tab)                */
+/*                                                                  */
+/* ---------------------------------------------------------------- */
+
 
 /* Remove all members of special sort tab (ST_CAT_SPECIAL) in instance
  * @inst */
@@ -2666,32 +2770,7 @@ void st_show_hide_tooltips (void)
 }
 
 
-/*
- * utility function for appending ipod track for st treeview callback
- */
-void
-on_st_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
-			    GtkTreeIter *i, gpointer data)
-{
-    GList *gl;
-    TabEntry *entry;
-    GString *tracklist = (GString *)data;
 
-    g_return_if_fail (tracklist);
-
-    /* can call on 0 cause s is consistent across all of the columns */
-    gtk_tree_model_get (tm, i, ST_COLUMN_ENTRY, &entry, -1);
-    g_return_if_fail (entry);
-
-
-    /* add all member tracks of entry to tracklist */
-    for (gl=entry->members; gl; gl=gl->next)
-    {
-	Track *tr = gl->data;
-	g_return_if_fail (tr);
-	g_string_append_printf (tracklist, "%p\n", tr);
-    }
-}
 
 
 

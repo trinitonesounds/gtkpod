@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-04 11:51:47 jcs>
+/* Time-stamp: <2005-04-04 22:20:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -91,33 +91,6 @@ on_sorttab_switch_page                 (GtkNotebook     *notebook,
 					guint            page_num,
 					gpointer         user_data);
 
-void
-on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
-					GdkDragContext  *drag_context,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data);
-
-void
-on_playlist_treeview_drag_data_received
-					(GtkWidget       *widget,
-					GdkDragContext  *drag_context,
-					gint             x,
-					gint             y,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data);
-
-void
-on_track_treeview_drag_data_get         (GtkWidget       *widget,
-					GdkDragContext  *drag_context,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data);
-
 gboolean
 on_prefs_window_delete_event           (GtkWidget       *widget,
 					GdkEvent        *event,
@@ -152,16 +125,6 @@ void
 on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 
-gboolean
-on_playlist_treeview_key_release_event (GtkWidget       *widget,
-					GdkEventKey     *event,
-					gpointer         user_data);
-
-gboolean
-on_track_treeview_key_release_event     (GtkWidget       *widget,
-					GdkEventKey     *event,
-					gpointer         user_data);
-
 void
 on_cfg_delete_track_from_playlist_toggled
 					(GtkToggleButton *togglebutton,
@@ -192,15 +155,6 @@ on_import_button_clicked               (GtkButton       *button,
 					gpointer         user_data);
 
 void
-on_track_treeview_drag_data_received    (GtkWidget       *widget,
-					GdkDragContext  *drag_context,
-					gint             x,
-					gint             y,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data);
-void
 on_charset_combo_entry_changed         (GtkEditable     *editable,
 					gpointer         user_data);
 
@@ -230,19 +184,6 @@ on_delete_full_tab_entry_activate           (GtkMenuItem     *menuitem,
 
 void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_st_treeview_drag_data_get           (GtkWidget       *widget,
-					GdkDragContext  *drag_context,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data);
-
-gboolean
-on_st_treeview_key_release_event       (GtkWidget       *widget,
-					GdkEventKey     *event,
 					gpointer         user_data);
 
 void

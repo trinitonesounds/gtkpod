@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-04-02 14:31:56 jcs>
+|  Time-stamp: <2005-04-03 00:38:35 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -603,7 +603,11 @@ void add_tracklist_to_playlist (Playlist *pl, gchar *string)
 	g_return_if_fail (from_itdb);
 	if (from_itdb == to_itdb)
 	{   /* DND within the same itdb */
-	    gp_playlist_add_track (pl, track, TRUE);
+	    if (pl->type == ITDB_PL_TYPE_NORM)
+	    {   /* not necessary to add to MPL as track has to be
+		 * present already */
+		gp_playlist_add_track (pl, track, TRUE);
+	    }
 	}
 	else
 	{   /* DND between different itdbs -- need to duplicate the

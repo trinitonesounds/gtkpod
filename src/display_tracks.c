@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-28 22:43:25 jcs>
+/* Time-stamp: <2005-04-04 22:22:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "support.h"
 #include "prefs.h"
@@ -144,9 +145,177 @@ const gchar *tm_col_tooltips[] = {
 
 
 /* ---------------------------------------------------------------- */
-/* Section for track display                                         */
+/* Section for track display                                        */
+/* DND                                                              */
 /* ---------------------------------------------------------------- */
 
+/*
+ * utility function for appending ipod track ids for track view (DND)
+ */
+static void
+on_tm_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			    GtkTreeIter *i, gpointer data)
+{
+    Track *tr;
+    GString *tracklist = (GString *)data;
+
+    g_return_if_fail (tracklist);
+
+    gtk_tree_model_get(tm, i, READOUT_COL, &tr, -1);
+    g_return_if_fail (tr);
+
+    g_string_append_printf (tracklist, "%p\n", tr);
+}
+
+
+/*
+ * utility function for appending path for track view (DND)
+ */
+static void
+on_tm_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			   GtkTreeIter *iter, gpointer data)
+{
+    GString *filelist = (GString *)data;
+    gchar *ps = gtk_tree_path_to_string (tp);
+    g_string_append_printf (filelist, "%s\n", ps);
+    g_free (ps);
+}
+
+/*
+ * utility function for appending file for track view (DND)
+ */
+static void
+on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			   GtkTreeIter *iter, gpointer data)
+{
+    Track *track;
+    GString *filelist = (GString *)data;
+    gchar *name;
+
+    gtk_tree_model_get(tm, iter, READOUT_COL, &track, -1);
+    name = get_track_name_on_disk_verified (track);
+    if (name)
+    {
+	g_string_append_printf (filelist, "file:%s\n", name);
+	g_free (name);
+    }
+}
+
+static void
+on_track_treeview_drag_data_get        (GtkWidget       *widget,
+					GdkDragContext  *context,
+					GtkSelectionData *data,
+					guint            info,
+					guint            time,
+					gpointer         user_data)
+{
+    GtkTreeSelection *ts = NULL;
+    GString *reply = g_string_sized_new (2000);
+
+/*     printf("tm drag get info: %d\n", info); */
+    if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
+    {
+	switch (info)
+	{
+	case DND_GTKPOD_TRACKLIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_tm_dnd_get_track_foreach, reply);
+	    break;
+	case DND_GTKPOD_TM_PATHLIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_tm_dnd_get_path_foreach, reply);
+	    break;
+	case DND_TEXT_PLAIN:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_tm_dnd_get_file_foreach, reply);
+	    break;
+	}
+    }
+    gtk_selection_data_set(data, data->target, 8, reply->str, reply->len);
+    g_string_free (reply, TRUE);
+}
+
+static void
+on_track_treeview_drag_data_received    (GtkWidget       *widget,
+					GdkDragContext  *context,
+					gint             x,
+					gint             y,
+					GtkSelectionData *data,
+					guint            info,
+					guint            time,
+					gpointer         user_data)
+{
+    GtkTreePath *path = NULL;
+    GtkTreeModel *model = NULL;
+    GtkTreeViewDropPosition pos = 0;
+    gboolean result = FALSE;
+
+    /* printf ("sm drop received info: %d\n", info); */
+
+    /* sometimes we get empty dnd data, ignore */
+    if(widgets_blocked || (!context) ||
+       (!data) || (data->length < 0)) return;
+    /* yet another check, i think it's an 8 bit per byte check */
+    if(data->format != 8) return;
+
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
+					 x, y, &path, &pos))
+    {
+	switch (info)
+	{
+	case DND_GTKPOD_TM_PATHLIST:
+	    result = tm_move_pathlist (data->data, path, pos);
+	    break;
+	case DND_GTKPOD_TRACKLIST:
+	    /* is disabled in tm_drop_types anyhow (display.c) */
+	    printf ("tracklist not supported yet\n");
+	    break;
+	case DND_TEXT_PLAIN:
+	    result = tm_add_filelist (data->data, path, pos);
+	    break;
+	default:
+	    gtkpod_warning (_("This DND type (%d) is not (yet) supported. If you feel implementing this would be useful, please contact the author.\n\n"), info);
+	    break;
+	}
+	gtk_tree_path_free(path);
+    }
+}
+
+/* ---------------------------------------------------------------- */
+/* Section for track display                                        */
+/* other callbacks                                                  */
+/* ---------------------------------------------------------------- */
+
+static gboolean
+on_track_treeview_key_release_event     (GtkWidget       *widget,
+					GdkEventKey     *event,
+					gpointer         user_data)
+{
+    guint mods;
+    mods = event->state;
+
+    if(!widgets_blocked && (mods & GDK_CONTROL_MASK))
+    {
+	switch(event->keyval)
+	{
+	    case GDK_d:
+		delete_track_head (FALSE);
+		break;
+	    case GDK_u:
+		gp_do_selected_tracks (update_tracks);
+		break;
+	    default:
+		break;
+	}
+    }
+    return FALSE;
+}
+
+
+/* ---------------------------------------------------------------- */
+/* Section for track display                                        */
+/* ---------------------------------------------------------------- */
 
 /* Append track to the track model (or write into @into_iter if != 0) */
 void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter)
@@ -1901,55 +2070,3 @@ gboolean tm_add_filelist (gchar *data,
     return TRUE;
 }
 
-
-/*
- * utility function for appending ipod track ids for track view (DND)
- */
-void
-on_tm_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
-			    GtkTreeIter *i, gpointer data)
-{
-    Track *tr;
-    GString *tracklist = (GString *)data;
-
-    g_return_if_fail (tracklist);
-
-    gtk_tree_model_get(tm, i, READOUT_COL, &tr, -1);
-    g_return_if_fail (tr);
-
-    g_string_append_printf (tracklist, "%p\n", tr);
-}
-
-
-/*
- * utility function for appending path for track view or playlist view (DND)
- */
-void
-on_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp,
-			GtkTreeIter *iter, gpointer data)
-{
-    GString *filelist = (GString *)data;
-    gchar *ps = gtk_tree_path_to_string (tp);
-    g_string_append_printf (filelist, "%s\n", ps);
-    g_free (ps);
-}
-
-/*
- * utility function for appending file for track view (DND)
- */
-void
-on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
-			   GtkTreeIter *iter, gpointer data)
-{
-    Track *track;
-    GString *filelist = (GString *)data;
-    gchar *name;
-
-    gtk_tree_model_get(tm, iter, READOUT_COL, &track, -1);
-    name = get_track_name_on_disk_verified (track);
-    if (name)
-    {
-	g_string_append_printf (filelist, "file:%s\n", name);
-	g_free (name);
-    }
-}
