@@ -1,6 +1,7 @@
 TODO:
 
 - Year column
+- Disk column
 
 - stable column sorting:
 > BTW, the other thing that bothers me about gtkpod is that column sorting

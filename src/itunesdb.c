@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-06 00:28:25 jcs>
+/* Time-stamp: <2003-11-08 13:10:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -65,11 +65,11 @@
      gunichar2 *genre_utf16;    /+ genre (utf16)         +/
      gunichar2 *comment_utf16;  /+ comment (utf16)       +/
      gunichar2 *composer_utf16; /+ Composer (utf16)      +/
-     gunichar2 *fdesc_utf16;    /+ ? (utf16)             +/
+     gunichar2 *fdesc_utf16;    /+ Filetype descr (utf16)+/
      gunichar2 *ipod_path_utf16;/+ name of file on iPod: uses ":" instead of "/" +/
-     guint32 ipod_id;           /+ unique ID of track     +/
+     guint32 ipod_id;           /+ unique ID of track    +/
      gint32  size;              /+ size of file in bytes +/
-     gint32  tracklen;           /+ Length of track in ms  +/
+     gint32  tracklen;          /+ Length of track in ms +/
      gint32  cd_nr;             /+ CD number             +/
      gint32  cds;               /+ number of CDs         +/
      gint32  track_nr;          /+ track number          +/
@@ -79,8 +79,8 @@
      guint32 time_played;       /+ time of last play  (Mac type)         +/
      guint32 time_modified;     /+ time of last modification  (Mac type) +/
      guint32 rating;            /+ star rating (stars * 20)              +/
-     guint32 playcount;         /+ number of times track was played       +/
-     guint32 recent_playcount;  /+ times track was played since last sync +/
+     guint32 playcount;         /+ number of times track was played      +/
+     guint32 recent_playcount;  /+ times track was played since last sync+/
      gboolean transferred;      /+ has file been transferred to iPod?    +/
    } Track;
 
@@ -161,6 +161,10 @@
    Jorg Schuler, 19.12.2002 */
 
 
+/* call itunesdb_parse () to read the iTunesDB  */
+/* call itunesdb_write () to write the iTunesDB */
+
+
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -189,12 +193,10 @@
 
 #define ITUNESDB_DEBUG 0
 #define ITUNESDB_MHIT_DEBUG 0
-/* call itunesdb_parse () to read the iTunesDB  */
-/* call itunesdb_write () to write the iTunesDB */
 
 /* list with the contents of the Play Count file for use when
  * importing the iTunesDB */
-GList *playcounts = NULL;
+static GList *playcounts = NULL;
 
 /* structure to hold the contents of one entry of the Play Count file */
 struct playcount {

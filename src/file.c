@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 01:34:36 jcs>
+/* Time-stamp: <2003-11-08 12:51:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1104,7 +1104,7 @@ void update_track_from_file (Track *track)
 
     /* remember size of track on iPod */
     if (track->transferred) oldsize = track->size;
-    else                   oldsize = 0;
+    else                    oldsize = 0;
 
     /* remember if charset was set */
     if (track->charset)  charset_set = TRUE;

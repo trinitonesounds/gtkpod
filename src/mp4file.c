@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 01:43:34 jcs>
+/* Time-stamp: <2003-11-08 15:30:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -76,6 +76,7 @@
    You need to add your handler to get_track_info_from_file() in
    file.c
 
+
    You also have to write a function to write TAGs back to the
    file. That function should be named 
 
@@ -84,8 +85,10 @@
    and return TRUE on success or FALSE on error. In that case it
    should log an error message using gtkpod_warning().
 
-   @tag_id determines which TAGs of @track out of the list above is to
-   be updated. If @tag_id==T_ALL, upudate all (supported) TAGs.
+   @tag_id determines which TAGs of @track out of the list above are
+   to be updated. If @tag_id==T_ALL, upudate all (supported) TAGs.
+
+   You need to add your handler to file_write_info() in file.c
 
    ------------------------------------------------------------ */
 
@@ -97,15 +100,16 @@
 /* Copyright note: code for file_get_mp4_info() is based on
  * mp4info.cpp of the mpeg4ip project */
 
+/* define metadata bug is present (see note at file_write_mp4_info()) */
+#define MP4V2_HAS_METADATA_BUG TRUE
 
 #include "mp4.h"
 
 Track *file_get_mp4_info (gchar *mp4FileName)
 {
-    MP4FileHandle mp4File;
     Track *track = NULL;
+    MP4FileHandle mp4File = MP4Read(mp4FileName, 0);
 
-    mp4File = MP4Read(mp4FileName, 0);
     if (mp4File != MP4_INVALID_FILE_HANDLE)
     {
 	MP4TrackId trackId;
@@ -194,7 +198,7 @@ Track *file_get_mp4_info (gchar *mp4FileName)
     {
 	gchar *filename = charset_to_utf8 (mp4FileName);
 	gtkpod_warning (
-	    _("Could not open '%s' for reading, or '%s' is not an mp4 file.\n"),
+	    _("Could not open '%s' for reading, or file is not an mp4 file.\n"),
 	    filename);
 	g_free (filename);
     }
@@ -203,10 +207,193 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 }
 
 
-gboolean file_write_mp4_info (gchar *filename, Track *track, T_item tag_id)
+gboolean file_write_mp4_info (gchar *mp4FileName, Track *track, T_item tag_id)
 {
-    gtkpod_warning (_("m4a/m4p metadata writing not yet supported.\n"));
-    return FALSE;
+    gboolean result = TRUE;
+    MP4FileHandle mp4File = MP4Modify(mp4FileName, 0, FALSE);
+
+    if (mp4File != MP4_INVALID_FILE_HANDLE)
+    {
+	MP4TrackId trackId;
+	const char *trackType;
+
+	trackId = MP4FindTrackId(mp4File, 0, NULL, 0);
+	trackType = MP4GetTrackType(mp4File, trackId);
+	if (trackType && (strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0))
+	{
+	    gchar *value;
+
+#if MP4V2_HAS_METADATA_BUG
+	    /* It could have been so easy. But: due to a bug in mp4v2
+	     * you have to delete all meta data before modifying
+	     * it. Therefore we have to read it first to avoid data
+	     * loss. (Bug present in mpeg4ip-1.0RC1.) */
+	    gchar *m_name = NULL, *m_artist = NULL;
+	    gchar *m_writer = NULL, *m_comment = NULL;
+	    gchar *m_tool = NULL, *m_year = NULL;
+	    gchar *m_album = NULL, *m_genre = NULL;
+	    u_int16_t m_track, m_tracks, m_disk, m_disks, m_tempo;
+	    u_int8_t *m_covert = NULL, m_cpl;
+	    u_int32_t m_size;
+	    gboolean has_track = MP4GetMetadataTrack (mp4File,
+						      &m_track, &m_tracks);
+	    gboolean has_disk = MP4GetMetadataDisk (mp4File,
+						    &m_disk, &m_disks);
+	    gboolean has_tempo = MP4GetMetadataTempo (mp4File,
+						      &m_tempo);
+	    gboolean has_compilation = MP4GetMetadataCompilation (mp4File,
+								  &m_cpl);
+	    MP4GetMetadataName (mp4File, &m_name);
+	    MP4GetMetadataArtist (mp4File, &m_artist);
+	    MP4GetMetadataWriter (mp4File, &m_writer);
+	    MP4GetMetadataComment (mp4File, &m_comment);
+	    MP4GetMetadataTool (mp4File, &m_tool);
+	    MP4GetMetadataYear (mp4File, &m_year);
+	    MP4GetMetadataAlbum (mp4File, &m_album);
+	    MP4GetMetadataGenre (mp4File, &m_genre);
+	    MP4GetMetadataCoverArt (mp4File, &m_covert, &m_size);
+	    MP4MetadataDelete (mp4File);
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_TITLE))
+	    {
+		value = charset_from_utf8 (track->title);
+		MP4SetMetadataName (mp4File, value);
+		g_free (value);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (m_name) MP4SetMetadataName (mp4File, m_name);
+	    }
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_ARTIST))
+	    {
+		value = charset_from_utf8 (track->artist);
+		MP4SetMetadataArtist (mp4File, value);
+		g_free (value);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (m_artist) MP4SetMetadataArtist (mp4File, m_artist);
+	    }
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_COMPOSER))
+	    {
+		value = charset_from_utf8 (track->composer);
+		MP4SetMetadataWriter (mp4File, value);
+		g_free (value);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (m_writer) MP4SetMetadataWriter (mp4File, m_writer);
+	    }
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_COMMENT))
+	    {
+		value = charset_from_utf8 (track->comment);
+		MP4SetMetadataComment (mp4File, value);
+		g_free (value);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (m_comment) MP4SetMetadataComment (mp4File, m_comment);
+	    }
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_YEAR))
+	    {
+		value = g_strdup_printf ("%d", track->year);
+		MP4SetMetadataYear (mp4File, value);
+		g_free (value);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (m_year) MP4SetMetadataYear (mp4File, m_year);
+	    }
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_ALBUM))
+	    {
+		value = charset_from_utf8 (track->album);
+		MP4SetMetadataAlbum (mp4File, value);
+		g_free (value);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (m_album) MP4SetMetadataAlbum (mp4File, m_album);
+	    }
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_TRACK_NR))
+	    {
+		MP4SetMetadataTrack (mp4File, track->track_nr, track->tracks);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (has_track) MP4SetMetadataTrack (mp4File, m_track, m_tracks);
+	    }
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_CD_NR))
+	    {
+		MP4SetMetadataDisk (mp4File, track->cd_nr, track->cds);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (has_disk) MP4SetMetadataDisk (mp4File, m_disk, m_disks);
+	    }
+#endif
+	    if ((tag_id == T_ALL) || (tag_id == T_GENRE))
+	    {
+		value = charset_from_utf8 (track->genre);
+		MP4SetMetadataGenre (mp4File, value);
+		g_free (value);
+	    }
+#if MP4V2_HAS_METADATA_BUG
+	    else
+	    {
+		if (m_genre) MP4SetMetadataGenre (mp4File, m_genre);
+	    }
+
+	    if (has_tempo) MP4SetMetadataTempo (mp4File, m_tempo);
+	    if (has_compilation) MP4SetMetadataCompilation (mp4File, m_cpl);
+	    if (m_tool)     MP4SetMetadataTool (mp4File, m_tool);
+	    if (m_covert)   MP4SetMetadataCoverArt (mp4File, m_covert, m_size);
+	    g_free (m_name);
+	    g_free (m_artist);
+	    g_free (m_writer);
+	    g_free (m_comment);
+	    g_free (m_tool);
+	    g_free (m_year);
+	    g_free (m_album);
+	    g_free (m_genre);
+	    g_free (m_covert);
+#endif
+	}
+	else
+	{
+	    gchar *filename = charset_to_utf8 (mp4FileName);
+	    gtkpod_warning (_("'%s' does not appear to be a mp4 audio file.\n"),
+			    filename);
+	    g_free (filename);
+	    result = FALSE;
+	}
+	MP4Close (mp4File);
+    }
+    else
+    {
+	gchar *filename = charset_to_utf8 (mp4FileName);
+	gtkpod_warning (
+	    _("Could not open '%s' for writing, or file is not an mp4 file.\n"),
+	    filename);
+	g_free (filename);
+	result = FALSE;
+    }
+
+    return result;
 }
 
 #else
@@ -219,7 +406,7 @@ Track *file_get_mp4_info (gchar *name)
 
 gboolean file_write_mp4_info (gchar *filename, Track *track, T_item tag_id)
 {
-    gtkpod_warning (_("m4a/m4p metadata writing not yet supported.\n"));
+    gtkpod_warning (_("m4a/m4p metadata writing not supported without the mp4v2 library.\n"));
     return FALSE;
 }
 #endif

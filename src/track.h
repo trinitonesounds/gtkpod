@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-07 23:25:44 jcs>
+/* Time-stamp: <2003-11-08 14:23:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -83,7 +83,7 @@ typedef struct
 
 /* A means to address the fields by uniform IDs. May be extended as
  * needed. You should extend "track_get_item_pointer()" defined in
- * track.c as well. */
+ * track.c as well for string fields. */
 typedef enum {
     T_ALL = 0,      /* all fields */
     T_ALBUM,
@@ -106,6 +106,8 @@ typedef enum {
     T_TIME_PLAYED,
     T_TIME_MODIFIED,
     T_VOLUME,
+    T_YEAR,
+    T_CD_NR,
 } T_item;
 
 void free_track(Track *track);

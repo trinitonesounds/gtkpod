@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 01:25:54 jcs>
+/* Time-stamp: <2003-11-08 01:59:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,11 +34,11 @@
  * mpg123 code used in xmms-1.2.7 (Input/mpg123). Only the code needed
  * for the playlength calculation has been extracted */
 
-/* The code in the third section of this file is original gtkpod
- * code. */ 
-
-/* The code in the forth section of this file is taken from
+/* The code in the third section of this file is taken from
  * easytag. */
+
+/* The code in the last section of this file is original gtkpod
+ * code. */ 
 
 /****************
  * Declarations *
@@ -954,125 +954,6 @@ guint get_track_time (gchar *path)
     return result;
 }
 
-
-
-
-/* ----------------------------------------------------------------------
-
-              From here starts original gtkpod code
-
----------------------------------------------------------------------- */
-
-gboolean Id3tag_Read_File_Tag  (gchar *filename, File_Tag *FileTag);
-
-/* Return a Track structure with all information read from the mp3
-   file filled in */
-Track *file_get_mp3_info (gchar *name)
-{
-    Track *track = NULL;
-    File_Tag filetag;
-
-    if (Id3tag_Read_File_Tag (name, &filetag) == TRUE)
-    {
-	struct stat si;
-
-	track = g_malloc0 (sizeof (Track));
-
-	/* Set modification date to modification date of file */
-	if (stat (name, &si) == 0)
-	    track->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
-
-	track->fdesc = g_strdup ("MPEG audio file");
-
-	if (filetag.album)
-	{
-	    track->album = filetag.album;
-	}
-
-	if (filetag.artist)
-	{
-	    track->artist = filetag.artist;
-	}
-
-	if (filetag.title)
-	{
-	    track->title = filetag.title;
-	}
-
-	if (filetag.genre)
-	{
-	    track->genre = filetag.genre;
-	}
-
-	if (filetag.composer)
-	{
-	    track->composer = filetag.composer;
-	}
-
-	if (filetag.comment)
-	{
-	    track->comment = filetag.comment;
-	}
-	if (filetag.year == NULL)
-	{
-	    track->year = 0;
-	}
-	else
-	{
-	    track->year = atoi(filetag.year);
-	    g_free (filetag.year);
-	}
-
-	if (filetag.trackstring == NULL)
-	{
-	    track->track_nr = 0;
-	}
-	else
-	{
-	    track->track_nr = atoi(filetag.trackstring);
-	    g_free (filetag.trackstring);
-	}
-
-	if (filetag.track_total == NULL)
-	{
-	    track->tracks = 0;
-	}
-	else
-	{
-	    track->tracks = atoi(filetag.track_total);
-	    g_free (filetag.track_total);
-	}
-    }
-
-    if (track)
-    {
-	/* Get additional info (play time and bitrate */
-	mp3info *mp3info = mp3file_get_info (name);
-	if (mp3info)
-	{
-	    track->tracklen = mp3info->milliseconds;
-	    track->bitrate = (gint)(mp3info->vbr_average);
-	    g_free (mp3info);
-	}
-	/* Fall back to xmms code if tracklen is 0 */
-	if (track->tracklen == 0)
-	{
-	    track->tracklen = get_track_time (name);
-	    if (track->tracklen)
-		track->bitrate = (float)track->size*8/track->tracklen;
-	}
-
-	if (track->tracklen == 0)
-	{
-	    /* Tracks with zero play length are ignored by iPod... */
-	    gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
-			    name);
-	    free_track (track);
-	    track = NULL;
-	}
-    }
-    return track;
-}
 
 
 
@@ -2103,4 +1984,120 @@ ID3_C_EXPORT size_t ID3Field_GetASCII_1(const ID3Field *field, char *buffer, siz
 	     /* Not tested (< 3.x.x) */
          return ID3Field_GetASCII(field,buffer,maxChars,itemNum+1);
 #    endif
+}
+
+
+/* ----------------------------------------------------------------------
+
+              From here starts original gtkpod code
+
+---------------------------------------------------------------------- */
+
+/* Return a Track structure with all information read from the mp3
+   file filled in */
+Track *file_get_mp3_info (gchar *name)
+{
+    Track *track = NULL;
+    File_Tag filetag;
+
+    if (Id3tag_Read_File_Tag (name, &filetag) == TRUE)
+    {
+	struct stat si;
+
+	track = g_malloc0 (sizeof (Track));
+
+	/* Set modification date to modification date of file */
+	if (stat (name, &si) == 0)
+	    track->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
+
+	track->fdesc = g_strdup ("MPEG audio file");
+
+	if (filetag.album)
+	{
+	    track->album = filetag.album;
+	}
+
+	if (filetag.artist)
+	{
+	    track->artist = filetag.artist;
+	}
+
+	if (filetag.title)
+	{
+	    track->title = filetag.title;
+	}
+
+	if (filetag.genre)
+	{
+	    track->genre = filetag.genre;
+	}
+
+	if (filetag.composer)
+	{
+	    track->composer = filetag.composer;
+	}
+
+	if (filetag.comment)
+	{
+	    track->comment = filetag.comment;
+	}
+	if (filetag.year == NULL)
+	{
+	    track->year = 0;
+	}
+	else
+	{
+	    track->year = atoi(filetag.year);
+	    g_free (filetag.year);
+	}
+
+	if (filetag.trackstring == NULL)
+	{
+	    track->track_nr = 0;
+	}
+	else
+	{
+	    track->track_nr = atoi(filetag.trackstring);
+	    g_free (filetag.trackstring);
+	}
+
+	if (filetag.track_total == NULL)
+	{
+	    track->tracks = 0;
+	}
+	else
+	{
+	    track->tracks = atoi(filetag.track_total);
+	    g_free (filetag.track_total);
+	}
+    }
+
+    if (track)
+    {
+	/* Get additional info (play time and bitrate */
+	mp3info *mp3info = mp3file_get_info (name);
+	if (mp3info)
+	{
+	    track->tracklen = mp3info->milliseconds;
+	    track->bitrate = (gint)(mp3info->vbr_average);
+	    g_free (mp3info);
+	}
+	/* Fall back to xmms code if tracklen is 0 */
+	if (track->tracklen == 0)
+	{
+	    track->tracklen = get_track_time (name);
+	    if (track->tracklen)
+		track->bitrate = (float)track->size*8/track->tracklen;
+	}
+
+	if (track->tracklen == 0)
+	{
+	    /* Tracks with zero play length are ignored by iPod... */
+	    gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
+			    name);
+	    free_track (track);
+	    track = NULL;
+	}
+    }
+    return track;
 }
