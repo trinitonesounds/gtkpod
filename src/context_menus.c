@@ -204,6 +204,7 @@ GtkWidget *hookup_mi (GtkWidget *m, gchar *str, gchar *stock, GCallback func)
     }
     gtk_widget_show(mi);
     gtk_widget_set_sensitive(mi, TRUE);
+    gtk_widget_add_events(mi, GDK_BUTTON_RELEASE_MASK);
     if (func)
 	g_signal_connect(G_OBJECT(mi), "activate", func, NULL);
     gtk_container_add (GTK_CONTAINER (m), mi);
@@ -235,6 +236,13 @@ create_context_menu(CM_type type)
 	/* FIXME: once we can find out in which song column the
 	   context menu was activated, we should offer the following
 	   options to the song view context menu as well */
+	/* 
+	 * FIXME: the only one of these options I'm for having in the SM
+	 * column is reset to our internal representation order(Not on a
+	 * per column basis but for the whole sm view), Alphabatize
+	 * forward/backward can be done with the column label buttons.
+	 */
+
 	if (type != CM_SM)
 	{
 	    GtkWidget *mi;
@@ -251,8 +259,12 @@ create_context_menu(CM_type type)
 		       G_CALLBACK (reset_alphabetize));
 	}
     }
+    /* 
+     * button should be button 0 as per the docs because we're calling
+     * from a button release event
+     */
     gtk_menu_popup(GTK_MENU(menu[type]), NULL, NULL,
-	    NULL, NULL, 3, gtk_get_current_event_time()); 
+	    NULL, NULL, 0, gtk_get_current_event_time()); 
 }
 
 /**
