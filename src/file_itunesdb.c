@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-04 23:49:05 jcs>
+/* Time-stamp: <2004-11-02 21:53:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -668,6 +668,10 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 	  fprintf (fp, "filename_locale=%s\n", track->pc_path_locale);
       if (strlen (track->pc_path_utf8) != 0)
 	  fprintf (fp, "filename_utf8=%s\n", track->pc_path_utf8);
+      /* this is just for convenience for people looking for a track
+	 on the ipod away from gktpod/itunes etc. */
+      if (strlen (track->ipod_path) != 0)
+	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
       if (track->md5_hash)
 	  fprintf (fp, "md5_hash=%s\n", track->md5_hash);
       if (track->charset)

@@ -92,6 +92,10 @@ gtkpod V0.82-CVS
 	If no replay gain tag is set, use the "Normalize" as usual to
 	have mp3gain write a replay gain tag.
 
+	IMPROVEMENT: The extended information database now also
+	contains the iPod filename. This allows to find a certain
+	track even on systems not running gtkpod/gnupod/iTunes etc.
+
 gtkpod V0.80-2
 	BUGFIX: gtkpod would crash right after startup if the info
 	window was open when stopping gtkpod the previous time.

@@ -70,6 +70,25 @@ David Dan
 > genres that are identified in the preferences.
 
 
+kulenfuster@...
+> Not sure from the documentation but it looks like there's no way to
+> sync tunes in the iPod into the desktop database.
+> 
+> For instance situation:
+> 
+> Bob has two desktop machines - one at work, one at home.  He has
+> tunes on both machines, ripped from his CD collection.  The tunes at
+> home are upbeat, the tunes at work are chilled.  He keeps these two
+> CD collections separate so that he can play them on regular CD
+> players in each location.  He loads his new iPod with the tunes on
+> his home computer and then take it to work and loads further tunes
+> from the work machine.  When he gets home he is able to update his
+> home tune database with the tunes from work to give him a backup in
+> a single place in case his iPod fails.  I know there are workarounds
+> but it'd be great if this was something you could do automatically
+> with gtkpod.  If it is already, please let me know (and Woo Ha!).
+
+
 
 - stable column sorting:
 > BTW, the other thing that bothers me about gtkpod is that column sorting
@@ -112,13 +131,10 @@ David Dan
   thing. (zumpicon@verizon.net) JCS: this could be done along with an
   arbitrary "conversion" on export: user provides a command line in
   the prefs dialogue that is executed instead of the simple copy
-  command.
+  command (should also support faac).
 
 
 -- Larry Marso
-> It would be very helpful to know the gtkpodXXXX.mp3 file name of a
-> particular song on the Ipod.
->
 > (ii) In addition to auto-generating a "top 25 rated songs" playlist,
 > could gtkpod create one playlist for each rating level?  This would
 > permit selectively erasing songs by the worst rating level, and
