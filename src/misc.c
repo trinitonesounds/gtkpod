@@ -165,8 +165,9 @@ void open_about_window ()
   label_text = g_strdup_printf (_("gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod(tm)."), VERSION);
   gtk_label_set_text (about_label, label_text);
   g_free (label_text);
-  buffer_text = g_strdup_printf ("%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s",
+  buffer_text = g_strdup_printf ("%s\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s",
 				 _("(C) 2002 Jörg Schuler (jcsjcs at sourceforge.net)"),
+				 _("\t\tCorey Donohoe(atmos at atmos.org)"),
 				 _("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."),
 				 _("The code handling the reading and writing of the iTunesDB was ported from mktunes.pl of the gnuPod package written by Adrian Ulrich (http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipode). Adrian Ulrich ported the playlist part."),
 				 _("This program borrows code from the following projects:"),
