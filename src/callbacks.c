@@ -45,6 +45,7 @@
 #include "md5.h"
 #include "file_export.h"
 #include "charset.h"
+#include "threads.h"
 
 void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
@@ -66,7 +67,10 @@ void
 on_export_itunes1_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    gtkpod_thread_pool_exec(THREAD_WRITE_ITUNES);
+    /*
   handle_export ();
+    */
 }
 
 
@@ -112,7 +116,10 @@ void
 on_export_itunes1_button               (GtkButton       *button,
                                         gpointer         user_data)
 {
+    gtkpod_thread_pool_exec(THREAD_WRITE_ITUNES);
+    /*
   handle_export ();
+    */
 }
 
 gboolean
@@ -483,7 +490,10 @@ void
 on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    gtkpod_thread_pool_exec(THREAD_READ_ITUNES);
+    /*
   handle_import ();
+     */
 }
 
 
@@ -491,7 +501,10 @@ void
 on_import_button_clicked               (GtkButton       *button,
                                         gpointer         user_data)
 {
+    gtkpod_thread_pool_exec(THREAD_READ_ITUNES);
+    /*
   handle_import ();
+    */
 }
 
 

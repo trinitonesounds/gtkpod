@@ -52,7 +52,7 @@ gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
 void cleanup_backup_and_extended_files (void);
 void gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);
-void register_gtkpod_main_window(GtkWidget *win);
+void gtkpod_main_window_set_active(gboolean active);
 
 void gtkpod_statusbar_init(GtkWidget *);
 void gtkpod_statusbar_message(const gchar *message);
@@ -62,4 +62,5 @@ void gtkpod_songs_statusbar_update(void);
 void ipod_directories_head (void);
 void delete_playlist_head (void);
 void delete_song_head (void);
+
 #endif __MISC_H__

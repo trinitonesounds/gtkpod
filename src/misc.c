@@ -40,12 +40,14 @@
 #include "itunesdb.h"
 #include "display.h"
 #include "confirmation.h"
+#include "threads.h"
 
 GtkWidget *gtkpod_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
 static GtkWidget *gtkpod_statusbar = NULL;
 static GtkWidget *gtkpod_songs_statusbar = NULL;
+static gboolean gtkpod_statusbar_timeout_cb(gpointer data);
 
 static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 {
@@ -274,6 +276,7 @@ gtkpod_main_quit(void)
   cleanup_listviews ();
   write_prefs (); /* FIXME: how can we avoid saving options set by
 		   * command line? */
+  gtkpod_thread_pool_free();
   gtk_main_quit ();
 }
 
@@ -320,6 +323,17 @@ gtkpod_statusbar_clear(gpointer data)
     return(result);
     
 }
+
+static gboolean 
+gtkpod_statusbar_timeout_cb(gpointer data)
+{
+    if(GTK_WIDGET_SENSITIVE(gtkpod_window))
+    {
+	gtkpod_statusbar_message((gchar*)data);
+	return(FALSE);
+    }
+    return(TRUE);
+}
 void
 gtkpod_statusbar_message(const gchar *message)
 {
@@ -328,11 +342,18 @@ gtkpod_statusbar_message(const gchar *message)
 	gchar buf[PATH_MAX];
 	guint context = 1;
 	
-	snprintf(buf, PATH_MAX, "  %s", message);
-	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
-	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
-	gtk_timeout_add(STATUSBAR_TIMEOUT, (GtkFunction) gtkpod_statusbar_clear,
-		NULL);
+	if(GTK_WIDGET_SENSITIVE(gtkpod_window))
+	{
+	    snprintf(buf, PATH_MAX, "  %s", message);
+	    gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
+	    gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
+	    gtk_timeout_add(STATUSBAR_TIMEOUT, (GtkFunction)
+			    gtkpod_statusbar_clear, NULL);
+	}
+	else
+	{
+	    g_timeout_add(500, gtkpod_statusbar_timeout_cb, (gpointer)message);
+	}
     }
 }
 
@@ -642,4 +663,13 @@ void delete_song_head (void)
 
     g_free (label);
     g_string_free (str, TRUE);
+}
+
+void
+gtkpod_main_window_set_active(gboolean active)
+{
+    if(gtkpod_window)
+    {
+	gtk_widget_set_sensitive(gtkpod_window, active);
+    }
 }

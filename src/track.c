@@ -1017,7 +1017,9 @@ void handle_export (void)
   if (success)   
   {
       files_saved = TRUE;
+      /*
       gtkpod_statusbar_message(_("iPod Database Saved"));
+      */
   }
 
   C_FREE (cfgdir);
