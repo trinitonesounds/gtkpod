@@ -1,7 +1,10 @@
+gtkpod (0.40-0) unstable; urgency=low
+    * more convenient (remembers sizes of windows and colums etc...)
+    * fixed many bugs
+ -- Jorg Schuler <jcsjcs at users.sourceforge.net>  Sun, 26 Jan 2003 21:27:00 +0900
+
 gtkpod (0.14-0) unstable; urgency=low
     * lots of new features !
     * remove files from ipod
     * playlist drag and drop support
-
- -- Corey Donohoe <cdonohoe@memphis.edu>  Sat, 11 Jan 2003 20:55:53 +0200
-
+ -- Corey Donohoe <cdonohoe@memphis.edu>  Sat, 11 Jan 2003 20:55:53 -0600

@@ -340,13 +340,13 @@ gtkpod_statusbar_message(const gchar *message)
     if(gtkpod_statusbar)
     {
 	gchar buf[PATH_MAX];
-	guint context = 1;
 	    
 	snprintf(buf, PATH_MAX, "  %s", message);
 	gtkpod_warning("%s\n", message);
 #if 0
 	if(GTK_WIDGET_SENSITIVE(gtkpod_window))
 	{
+	    guint context = 1;
 	    gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
 	    gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
 	    gtk_timeout_add(STATUSBAR_TIMEOUT, (GtkFunction)

@@ -116,31 +116,30 @@ static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
    should be user configurable. */
 static void set_entry_from_filename (Song *song, gint column)
 {
-  gchar *str;
+    gchar *str;
 
-  if (prefs_get_tag_autoset (column) &&
-      song->pc_path_utf8 &&
-      strlen (song->pc_path_utf8))
+    if (prefs_get_tag_autoset (column) &&
+	song->pc_path_utf8 && strlen (song->pc_path_utf8))
     {
-      switch (column)
+	switch (column)
 	{
 	case SM_COLUMN_TITLE:
-	  str = g_path_get_basename (song->pc_path_utf8);
-	  set_entry (&song->title, &song->title_utf16, str);
-	  break;
+	    str = g_path_get_basename (song->pc_path_utf8);
+	    set_entry (&song->title, &song->title_utf16, str);
+	    break;
 	case SM_COLUMN_ALBUM:
-	  str = g_path_get_basename (song->pc_path_utf8);
-	  set_entry (&song->album, &song->album_utf16, str);
-	  break;
+	    str = g_path_get_basename (song->pc_path_utf8);
+	    set_entry (&song->album, &song->album_utf16, str);
+	    break;
 	case SM_COLUMN_ARTIST:
-	  str = g_path_get_basename (song->pc_path_utf8);
-	  set_entry (&song->artist, &song->artist_utf16, str);
-	  break;
+	    str = g_path_get_basename (song->pc_path_utf8);
+	    set_entry (&song->artist, &song->artist_utf16, str);
+	    break;
 	case SM_COLUMN_GENRE:
-	  str = g_path_get_basename (song->pc_path_utf8);
-	  set_entry (&song->genre, &song->genre_utf16, str);
-	  break;
-	}	  
+	    str = g_path_get_basename (song->pc_path_utf8);
+	    set_entry (&song->genre, &song->genre_utf16, str);
+	    break;
+	}
     }
 }
 
@@ -308,23 +307,17 @@ gboolean add_song_by_filename (gchar *name)
 	  song->album = filetag->album;
 	  song->album_utf16 = g_utf8_to_utf16 (song->album, -1, NULL, NULL, NULL);
 	}
+      else set_entry_from_filename (song, SM_COLUMN_ALBUM);
       if (filetag->artist)
 	{
 	  song->artist = filetag->artist;
 	  song->artist_utf16 = g_utf8_to_utf16 (song->artist, -1, NULL, NULL, NULL);
 	}
+      else set_entry_from_filename (song, SM_COLUMN_ARTIST);
       if (filetag->title)
 	{
-	    if(strlen(filetag->title) > 0)
-	    {
-		song->title = filetag->title;
-		song->title_utf16 = g_utf8_to_utf16 (song->title, -1, NULL,
-			NULL, NULL); 
-	    }
-	    else
-	    {
-		set_entry_from_filename(song, SM_COLUMN_TITLE);
-	    }
+	  song->title = filetag->title;
+	  song->title_utf16 = g_utf8_to_utf16 (song->title, -1, NULL, NULL, NULL);
 	}
       else set_entry_from_filename (song, SM_COLUMN_TITLE);
       if (filetag->genre)
@@ -332,6 +325,7 @@ gboolean add_song_by_filename (gchar *name)
 	  song->genre = filetag->genre;
 	  song->genre_utf16 = g_utf8_to_utf16 (song->genre, -1, NULL, NULL, NULL);
 	}
+      else set_entry_from_filename (song, SM_COLUMN_GENRE);
       if (filetag->comment)
 	{
 	  song->comment = filetag->comment;
@@ -731,7 +725,6 @@ void handle_import (void)
 	    else
 		gtkpod_statusbar_message(
 			_("Extended iPod Database Import Failed"));
-
 	    g_free (name2);
 	    g_free (cfgdir);
 	}
@@ -761,9 +754,6 @@ void handle_import (void)
     /*
     gtkpod_songs_statusbar_update();
     */
-    /* setup our md5 hashness for unique files */
-    /* if(cfg->md5songs)    done with add_song ();
-       unique_file_repository_init(get_song_list()); */
 }
 
 
@@ -771,7 +761,7 @@ gboolean write_tags_to_file (Song *song)
 {
     File_Tag *filetag;
     gint i, len;
-    gchar *ipod_file, *ipod_fullpath;
+    gchar *ipod_file, *ipod_fullpath, track[20];
 
     filetag = g_malloc0 (sizeof (File_Tag));
     filetag->album = song->album;
@@ -779,7 +769,8 @@ gboolean write_tags_to_file (Song *song)
     filetag->title = song->title;
     filetag->genre = song->genre;
     filetag->comment = song->comment;
-    filetag->track = g_strdup_printf("%d", song->track_nr);
+    snprintf(track, 20, "%d", song->track_nr);
+    filetag->track = track;
     if (song->pc_path_locale && strlen (song->pc_path_locale) > 0)
       {
 	if (Id3tag_Write_File_Tag (song->pc_path_locale, filetag) == FALSE)
@@ -1026,6 +1017,8 @@ void handle_export (void)
   if (success)   
   {
       files_saved = TRUE;
+      /* block menu item and button */
+      disable_gtkpod_import_buttons();
       /*
       gtkpod_statusbar_message(_("iPod Database Saved"));
       */

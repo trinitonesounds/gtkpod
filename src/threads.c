@@ -57,6 +57,8 @@ enum {
 static GThreadPool *thread_pool = NULL;
 G_LOCK_DEFINE_STATIC(thread_lock);
 static guint thread_status = 0;
+static GError *g_err = NULL;
+
 
 static gboolean gtkpod_thread_pool_timeout_cb(gpointer data);
 static void gtkpod_thread_exec(gpointer data, gpointer user_data);
@@ -101,8 +103,6 @@ gtkpod_thread_pool_free(void)
 void
 gtkpod_thread_pool_exec(guint e)
 {
-    GError *g_err = NULL;
-
 #if THREAD_DEBUG
     fprintf(stderr, "gtkpod_thread_pool_exec(%d)\n", e);
 #endif
@@ -111,8 +111,8 @@ gtkpod_thread_pool_exec(guint e)
     if(!thread_pool) return;
     
     g_timeout_add(INTERVAL_TIMEOUT, gtkpod_thread_pool_timeout_cb,
-		    GUINT_TO_POINTER(e));
-    g_thread_pool_push(thread_pool, GUINT_TO_POINTER(e), &g_err);
+      (gpointer)e);
+    g_thread_pool_push(thread_pool, (gpointer)e, &g_err);
 }
 
 /** 
@@ -124,9 +124,8 @@ gtkpod_thread_pool_exec(guint e)
 static gboolean
 gtkpod_thread_pool_timeout_cb(gpointer data)
 {
-    guint type = (guint)data;
-    
 #if THREAD_DEBUG
+    guint type = (guint)data;
     fprintf(stderr, "thread status %d\ntype %d\n", thread_status, type);
 #endif
     g_thread_pool_stop_unused_threads();
