@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-04 13:49:18 jcs>
+/* Time-stamp: <2004-12-16 22:40:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1294,7 +1294,13 @@ void tm_sort (TM_item col, GtkSortType order)
 	    GtkSortType order;
 	    if (gtk_tree_sortable_get_sort_column_id
 		(GTK_TREE_SORTABLE (model), &column, &order))
-		tm_unsort ();
+	    {
+		/* column == -2 actually is not defined, but it means
+		   that the model is unsorted. The sortable interface
+		   is badly implemented in gtk 2.4 */
+		if (column != -2)
+		    tm_unsort ();
+	    }
 	}
     }
 }

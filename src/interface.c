@@ -1544,6 +1544,7 @@ create_prefs_window (void)
   GtkWidget *label93;
   GtkWidget *cfg_tmp_disable_sort;
   GtkWidget *cfg_block_display;
+  GtkWidget *cfg_startup_messages;
   GtkWidget *label38;
   GtkWidget *label25;
   GtkWidget *scrolledwindow7;
@@ -2339,6 +2340,11 @@ create_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox30), cfg_block_display, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_block_display, _("The display can be blocked after changing a selection. The display update is faster, but you have to wait until it's finished. When using this option, sorting is also temporarily disabled (see option above)."), NULL);
 
+  cfg_startup_messages = gtk_check_button_new_with_mnemonic (_("Display messages and warnings at startup"));
+  gtk_widget_show (cfg_startup_messages);
+  gtk_box_pack_start (GTK_BOX (vbox30), cfg_startup_messages, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_startup_messages, _("This option will be re-activated when you upgrade gtkpod."), NULL);
+
   label38 = gtk_label_new (_("Misc"));
   gtk_widget_show (label38);
   gtk_frame_set_label_widget (GTK_FRAME (frame15), label38);
@@ -2791,6 +2797,9 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_block_display, "toggled",
                     G_CALLBACK (on_cfg_block_display_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_startup_messages, "toggled",
+                    G_CALLBACK (on_cfg_startup_messages),
+                    NULL);
   g_signal_connect ((gpointer) cfg_id3_write, "toggled",
                     G_CALLBACK (on_cfg_id3_write_toggled),
                     NULL);
@@ -2985,6 +2994,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label93, "label93");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_tmp_disable_sort, "cfg_tmp_disable_sort");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_block_display, "cfg_block_display");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_startup_messages, "cfg_startup_messages");
   GLADE_HOOKUP_OBJECT (prefs_window, label38, "label38");
   GLADE_HOOKUP_OBJECT (prefs_window, label25, "label25");
   GLADE_HOOKUP_OBJECT (prefs_window, scrolledwindow7, "scrolledwindow7");

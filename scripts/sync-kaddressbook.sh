@@ -1,5 +1,5 @@
 #!/bin/sh
-# (c) 2004 Markus Gaugusch <markus@gaugusch.at>
+# (c) 2004 Markus Gaugusch <markus at gaugusch dot at>
 # Script for syncing kaddressbook data with iPod
 
 # Usage:

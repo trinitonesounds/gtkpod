@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-07 00:18:44 jcs>
+/* Time-stamp: <2004-12-15 22:51:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -437,10 +437,10 @@ gchar *charset_to_charset (const gchar *from_charset,
 			     &bytes_read,  /* *bytes_read       */
 			     NULL,         /* *bytes_written    */
 			     NULL);        /* GError **error    */
-	    if (bytes_read > br0)  br0 = bytes_read; /* max. nr. of
-							converted Bytes */
-	    if (br == bytes_read)  ++bytes_read; /* don't do an
-						    infinite loop */
+	    /* max. nr. of converted Bytes */
+	    if (bytes_read > br0)  br0 = bytes_read;
+	    /* don't do an infinite loop */
+	    if (br == bytes_read)  bytes_read = br + 1;
 	}
 	if (ret == NULL)
 	{ /* still no valid string */

@@ -1,6 +1,8 @@
 TODO:
 
-- "..." for mserv
+- more features for mserv
+
+- icons should be themable
 
 - get_track_name_on_ipod (track): does not consider file sensitivity
   problem.

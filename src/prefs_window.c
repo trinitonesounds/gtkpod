@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-04 11:57:06 jcs>
+/* Time-stamp: <2004-12-16 22:08:27 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -675,6 +675,11 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->tmp_disable_sort);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_startup_messages")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->startup_messages);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_mserv_use")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -784,6 +789,7 @@ prefs_window_set(void)
 	prefs_set_automount(tmpcfg->automount);
 	prefs_set_concal_autosync(tmpcfg->concal_autosync);
 	prefs_set_tmp_disable_sort(tmpcfg->tmp_disable_sort);
+	prefs_set_startup_messages(tmpcfg->startup_messages);
 	prefs_set_mserv_use(tmpcfg->mserv_use);
 	prefs_set_mserv_report_probs(tmpcfg->mserv_report_probs);
 	prefs_set_mserv_username(tmpcfg->mserv_username);
@@ -1230,6 +1236,12 @@ void
 prefs_window_set_tmp_disable_sort(gboolean val)
 {
     tmpcfg->tmp_disable_sort = val;
+}
+
+void
+prefs_window_set_startup_messages(gboolean val)
+{
+    tmpcfg->startup_messages = val;
 }
 
 void

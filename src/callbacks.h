@@ -750,3 +750,7 @@ on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
 void
 on_smart_playlist_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_cfg_startup_messages                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

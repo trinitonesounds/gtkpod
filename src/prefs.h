@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-04 11:51:46 jcs>
+/* Time-stamp: <2004-12-16 22:08:29 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -67,6 +67,7 @@ struct cfg
   gboolean update_existing; /* when adding track, update existing track */
   gboolean block_display;   /* block display during change of selection? */
   gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
+  gboolean startup_messages;/* show startup messages/warnings? */
   gboolean autoimport;	    /* whether or not to automatically import files */
   struct
   {
@@ -325,6 +326,8 @@ void prefs_set_concal_autosync(gboolean val);
 gboolean prefs_get_concal_autosync(void);
 void prefs_set_tmp_disable_sort(gboolean val);
 gboolean prefs_get_tmp_disable_sort(void);
+void prefs_set_startup_messages(gboolean val);
+gboolean prefs_get_startup_messages(void);
 gboolean prefs_get_mserv_use(void);
 void prefs_set_mserv_use(gboolean val);
 gboolean prefs_get_mserv_report_probs(void);

@@ -4371,7 +4371,24 @@ or tab entry (faster!)</property>
 			      </child>
 
 			      <child>
-				<placeholder/>
+				<widget class="GtkCheckButton" id="cfg_startup_messages">
+				  <property name="visible">True</property>
+				  <property name="tooltip" translatable="yes">This option will be re-activated when you upgrade gtkpod.</property>
+				  <property name="can_focus">True</property>
+				  <property name="label" translatable="yes">Display messages and warnings at startup</property>
+				  <property name="use_underline">True</property>
+				  <property name="relief">GTK_RELIEF_NORMAL</property>
+				  <property name="focus_on_click">True</property>
+				  <property name="active">False</property>
+				  <property name="inconsistent">False</property>
+				  <property name="draw_indicator">True</property>
+				  <signal name="toggled" handler="on_cfg_startup_messages" last_modification_time="Thu, 16 Dec 2004 12:49:12 GMT"/>
+				</widget>
+				<packing>
+				  <property name="padding">0</property>
+				  <property name="expand">False</property>
+				  <property name="fill">False</property>
+				</packing>
 			      </child>
 			    </widget>
 			  </child>

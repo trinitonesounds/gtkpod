@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-04 11:51:46 jcs>
+/* Time-stamp: <2004-12-16 22:27:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -270,6 +270,7 @@ struct cfg *cfg_new(void)
     mycfg->unused_gboolean3 = FALSE;
     mycfg->concal_autosync = FALSE;
     mycfg->tmp_disable_sort = TRUE;
+    mycfg->startup_messages = TRUE;
     mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
@@ -822,6 +823,12 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_tmp_disable_sort ((gboolean)atoi(arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "startup_messages") == 0)
+	  {
+	      /* only set if no upgrade/downgrade was performed */
+	      if (cfg->version == g_ascii_strtod (VERSION, NULL))
+		  prefs_set_startup_messages ((gboolean)atoi(arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
 	      prefs_set_int_value (EXPORT_FILES_SPECIAL_CHARSET,
@@ -1124,6 +1131,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
     prefs_write_hash_values (fp);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
+    fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
     fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);
     fprintf (fp, "mserv_report_probs=%d\n", cfg->mserv_report_probs);
     fprintf(fp, "mserv_username=%s\n", cfg->mserv_username);
@@ -2467,6 +2475,16 @@ gboolean prefs_get_tmp_disable_sort(void)
 void prefs_set_tmp_disable_sort(gboolean val)
 {
     cfg->tmp_disable_sort = val;
+}
+
+gboolean prefs_get_startup_messages(void)
+{
+    return(cfg->startup_messages);
+}
+
+void prefs_set_startup_messages(gboolean val)
+{
+    cfg->startup_messages = val;
 }
 
 /* sorting gets disabled temporarily if either of the options

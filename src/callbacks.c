@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-06 23:37:36 jcs>
+/* Time-stamp: <2004-12-16 22:08:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2000,10 +2000,17 @@ on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
 }
 
 void
+on_cfg_startup_messages                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_startup_messages (
+	gtk_toggle_button_get_active(togglebutton));
+}
+
+void
 on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
 
 }
-
 
