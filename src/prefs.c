@@ -115,7 +115,8 @@ read_prefs_from_file_desc(FILE *fp)
     if(fp)
     {
 	gchar *tags[] = {
-	    "mp=", "id3=", "md5=", "album=", "track=", "genre=", "artist=" 
+	    "mp=", "id3=", "md5=", "album=", "track=", "genre=", "artist=",
+	    "delete_file=", "delete_playlist=", "delete_ipod="
 	};
 	gchar *line = NULL;
 	length = fread(buf, 1, PATH_MAX, fp);
@@ -153,6 +154,18 @@ read_prefs_from_file_desc(FILE *fp)
 		else if((g_strstr_len(line, strlen(tags[6]), tags[6])))
 		{
 		    prefs_set_song_list_show_artist((gboolean)atoi(&line[7]));
+		}
+		else if((g_strstr_len(line, strlen(tags[7]), tags[7])))
+		{
+		    prefs_set_song_playlist_deletion((gboolean)atoi(&line[12]));
+		}
+		else if((g_strstr_len(line, strlen(tags[8]), tags[8])))
+		{
+		    prefs_set_playlist_deletion((gboolean)atoi(&line[16]));
+		}
+		else if((g_strstr_len(line, strlen(tags[9]), tags[9])))
+		{
+		    prefs_set_song_ipod_file_deletion((gboolean)atoi(&line[12]));
 		}
 		g_free(line);
 	    }
@@ -247,6 +260,9 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "track=%d\n",prefs_get_song_list_show_track());
     fprintf(fp, "genre=%d\n",prefs_get_song_list_show_genre());
     fprintf(fp, "artist=%d\n",prefs_get_song_list_show_artist());
+    fprintf(fp, "delete_file=%d\n",prefs_get_song_playlist_deletion());
+    fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
+    fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
 }
 
 void 
@@ -473,4 +489,40 @@ prefs_print(void)
 	fprintf(fp, "%s\n", on);
     else
 	fprintf(fp, "%s\n", off);
+}
+
+void 
+prefs_set_playlist_deletion(gboolean val)
+{
+    cfg->deletion.playlist = val;
+}
+
+gboolean 
+prefs_get_playlist_deletion(void)
+{
+    return(cfg->deletion.playlist);
+}
+
+void 
+prefs_set_song_playlist_deletion(gboolean val)
+{
+    cfg->deletion.song = val;
+}
+
+gboolean 
+prefs_get_song_playlist_deletion(void)
+{
+    return(cfg->deletion.song);
+}
+
+void 
+prefs_set_song_ipod_file_deletion(gboolean val)
+{
+    cfg->deletion.ipod_file = val;
+}
+
+gboolean 
+prefs_get_song_ipod_file_deletion(void)
+{
+    return(cfg->deletion.ipod_file);
 }

@@ -56,6 +56,9 @@ struct cfg
   struct {
       gchar *dir_browse, *file_browse;
   } last_dir;	
+  struct {
+      gboolean song, playlist, ipod_file;
+  } deletion;
 };
 
 /* enum for reading of options */
@@ -79,16 +82,22 @@ void prefs_set_writeid3_active(gboolean active);
 void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
 void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
 
+void prefs_set_playlist_deletion(gboolean val);
 void prefs_set_song_list_show_all(gboolean val);
 void prefs_set_song_list_show_track(gboolean val);
 void prefs_set_song_list_show_genre(gboolean val);
 void prefs_set_song_list_show_album(gboolean val);
 void prefs_set_song_list_show_artist(gboolean val);
+void prefs_set_song_playlist_deletion(gboolean val);
+void prefs_set_song_ipod_file_deletion(gboolean val);
 
+gboolean prefs_get_playlist_deletion(void);
 gboolean prefs_get_song_list_show_all(void);
 gboolean prefs_get_song_list_show_album(void);
 gboolean prefs_get_song_list_show_track(void);
 gboolean prefs_get_song_list_show_genre(void);
 gboolean prefs_get_song_list_show_artist(void);
+gboolean prefs_get_song_playlist_deletion(void);
+gboolean prefs_get_song_ipod_file_deletion(void);
 
 #endif __PREFS_H__

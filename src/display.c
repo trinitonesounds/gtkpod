@@ -1695,3 +1695,38 @@ sm_show_preferred_columns(void)
 	    gtk_tree_view_column_set_visible(tvc, FALSE);
     }
 }
+
+Playlist*
+get_currently_selected_playlist(void)
+{
+    return(current_playlist);
+}
+
+void
+on_selected_songs_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
+				 GtkTreeIter *i, gpointer data)
+{
+    Song *s = NULL;
+    GList *l = *((GList**)data);
+    gtk_tree_model_get(tm, i, 0, &s, -1); 
+    /* can call on 0 cause s is consistent across all of the columns */
+    if(s)
+    {
+	l = g_list_append(l, s);
+	*((GList**)data) = l;
+    }
+}
+
+GList *
+get_currently_selected_songs(void)
+{
+    GList *result = NULL;
+    GtkTreeSelection *ts = NULL;
+
+    if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(song_treeview))))
+    {
+	gtk_tree_selection_selected_foreach(ts,on_selected_songs_list_foreach,
+					    &result);
+    }
+    return(result);
+}

@@ -160,3 +160,30 @@ on_cfg_song_list_track_toggled         (GtkToggleButton *togglebutton,
 void
 on_cfg_song_list_year_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+gboolean
+on_playlist_treeview_key_release_event (GtkWidget       *widget,
+                                        GdkEventKey     *event,
+                                        gpointer         user_data);
+
+gboolean
+on_song_treeview_key_release_event     (GtkWidget       *widget,
+                                        GdkEventKey     *event,
+                                        gpointer         user_data);
+
+void
+on_prefs_request_toggled               (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_delete_ok_clicked                   (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_delete_cancel_clicked               (GtkButton       *button,
+                                        gpointer         user_data);
+
+gboolean
+on_delete_confirmation_delete_event    (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data);

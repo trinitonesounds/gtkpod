@@ -27,6 +27,7 @@
 #  include <config.h>
 #endif
 
+#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
 #include "callbacks.h"
@@ -42,6 +43,7 @@
 #include "display.h"
 #include "prefs_window.h"
 #include "md5.h"
+#include "delete_window.h"
 
 void
 on_import_itunes1_activate             (GtkMenuItem     *menuitem,
@@ -412,3 +414,90 @@ on_cfg_song_list_track_toggled         (GtkToggleButton *togglebutton,
 {
     prefs_window_set_song_list_track(gtk_toggle_button_get_active(togglebutton));
 }
+
+gboolean
+on_playlist_treeview_key_release_event (GtkWidget       *widget,
+                                        GdkEventKey     *event,
+                                        gpointer         user_data)
+{
+    guint mods;
+
+    mods = event->state;
+
+    if(mods & GDK_CONTROL_MASK)
+    {
+	switch(event->keyval)
+	{
+	    case GDK_d:
+		confirmation_window_create(CONFIRMATION_WINDOW_PLAYLIST);
+		break;
+	    case GDK_n:
+		fprintf(stderr, "new playlist request\n");
+		break;
+	    default:
+		break;
+	}
+
+    }
+  return FALSE;
+}
+
+
+gboolean
+on_song_treeview_key_release_event     (GtkWidget       *widget,
+                                        GdkEventKey     *event,
+                                        gpointer         user_data)
+{
+    guint mods;
+    mods = event->state;
+
+    if(mods & GDK_CONTROL_MASK)
+    {
+	switch(event->keyval)
+	{
+	    case GDK_d:
+		confirmation_window_create(CONFIRMATION_WINDOW_SONG);
+		break;
+	    default:
+		break;
+	}
+
+    }
+  return FALSE;
+}
+
+
+void
+on_prefs_request_toggled               (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    confirmation_window_prefs_toggled(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_delete_ok_clicked                   (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    confirmation_window_ok_clicked();
+}
+
+
+void
+on_delete_cancel_clicked               (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    confirmation_window_cancel_clicked();
+
+}
+
+
+gboolean
+on_delete_confirmation_delete_event    (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data)
+{
+    confirmation_window_cancel_clicked();
+    return FALSE;
+}
+

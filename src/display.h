@@ -109,4 +109,7 @@ void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 void sm_show_preferred_columns(void);
 void cleanup_listviews(GtkWidget *w);
 
+Playlist* get_currently_selected_playlist(void);
+GList* get_currently_selected_songs(void);
+
 #endif __TREE_H__
