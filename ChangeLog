@@ -23,6 +23,9 @@ gtkpod V0.73-CVS
 
 	BUGFIX: Fixed compile error when compiling with gcc 2.95
 
+	BUGFIX: Tags of tracks on the iPod were never changed (thanks
+	to Andrew Huntwork)
+
 gtkpod V0.72
         NEW FEATURE: tags can now be set from the filename using a
 	template like "%a - %A/%T %t.mp3".
