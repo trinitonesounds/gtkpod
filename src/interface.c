@@ -2095,7 +2095,7 @@ create_prefs_window (void)
   gtk_table_attach (GTK_TABLE (table8), cfg_misc_song_nr, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_misc_song_nr, _("Number of songs in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'. 0 means no song's nr limit"), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_misc_song_nr, _("Number of songs in the generated playlists 'Most Often Listened', 'Best Rated' and 'Most Recently Played'. 0 means no limit"), NULL);
 
   label68 = gtk_label_new (_(" Number of tracks in generated playlists: "));
   gtk_widget_show (label68);
