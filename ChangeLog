@@ -1,6 +1,15 @@
 gtkpod V0.86.CVS
 	Support for iTunes' "checked" field.
 
+	When sorting ignore 'the' and similar at the beginning of the
+	title (thanks to Chris Micacchi)
+
+	Use statvfs() instead of a call to the external command "df"
+	to determine the free space on the iPod (thanks to Steve Jay)
+
+	The fields "time_modified/played/created" can now be edited
+	from within the track view.
+
 gtkpod V0.85.0
 	BUGFIX: when clicking onto the column header of the track
 	treeview three times and moving sidewards with the mouse at

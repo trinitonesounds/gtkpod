@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 23:16:26 JST jcs>
+/* Time-stamp: <2004-12-06 23:32:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -243,16 +243,20 @@ gchar *concat_dir_if_relative (G_CONST_RETURN gchar *base_dir,
 \*------------------------------------------------------------------*/
 
 
-/* Retrieves a string from the user using a dialog.
+/* Retrieves a string (and option) from the user using a dialog.
    @title: title of the dialogue (may be NULL)
    @message: text (question) to be displayed (may be NULL)
    @dflt: default string to be returned (may be NULL)
+   @opt_msg: message for the option checkbox (or NULL)
+   @opt_state: original state of the checkbox. Will be updated
    return value: the string entered by the user or NULL if the dialog
    was cancelled. */
-gchar *get_user_string (gchar *title, gchar *message, gchar *dflt)
+gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
+			gchar *opt_msg, gboolean *opt_state)
 {
 
-    GtkWidget *dialog, *image, *label=NULL, *entry, *hbox;
+    GtkWidget *dialog, *image, *label=NULL;
+    GtkWidget *entry, *checkb=NULL, *hbox;
     gint response;
     gchar *result = NULL;
 
@@ -295,11 +299,22 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt)
        response set above */
     gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
 
+    /* create option checkbox */
+    if (opt_msg && opt_state)
+    {
+	checkb = gtk_check_button_new_with_mnemonic (opt_msg);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkb),
+				      *opt_state);
+    }
+
     /* add to vbox */
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-			hbox, FALSE, FALSE, 0);
+			hbox, FALSE, FALSE, 2);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-			entry, FALSE, FALSE, 0);
+			entry, FALSE, FALSE, 2);
+    if (checkb)
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+			    checkb, FALSE, FALSE, 2);
 
     /* Start the dialogue */
     gtk_widget_show_all (dialog);
@@ -308,7 +323,14 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt)
     if (response == GTK_RESPONSE_OK)
     {
 	result = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+	/* get state of checkbox */
+	if (checkb)
+	{
+	    *opt_state = gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (checkb));
+	}
     }
+
     gtk_widget_destroy (dialog);
     return result;
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-14 19:19:15 jcs>
+/* Time-stamp: <2004-12-06 00:38:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -413,6 +413,55 @@ gboolean ipod_connected (void)
 }
 
 
+
+/* we'll use statvfs to determine free space on the iPod where
+   available, df otherwise */
+#ifdef HAVE_statvfs
+#include <sys/types.h>
+#include <sys/statvfs.h>
+/* update space_ipod_free and space_ipod_used */
+static void th_space_update (void)
+{
+    gchar *mp=NULL;
+    struct statvfs stat;
+    int	status;
+
+    /* don't read info when in offline mode */
+    if (!prefs_get_offline ())
+    {
+	g_mutex_lock (space_mutex);
+	mp = g_strdup (space_mp);
+	g_mutex_unlock (space_mutex);
+    }
+
+    g_mutex_lock (space_mutex);
+    if (mp)
+    {
+	status = statvfs (mp, &stat);
+	if (status != 0) {
+	    /* XXX: why would this fail - what to do here??? */
+	    goto done;
+	}
+	space_ipod_free = (gdouble)stat.f_bavail * stat.f_frsize;
+	space_ipod_used = ((gdouble)stat.f_blocks * stat.f_frsize) -
+	    space_ipod_free;
+	space_uptodate = TRUE;
+	
+    } else { /* mp == NULL */
+ 
+	/* this is set even if offline mode */
+	space_ipod_free = 0;
+	space_ipod_used = 0;
+	space_uptodate = FALSE;  /* this way we will detect when the
+				    iPod is connected */
+    }
+
+done:  
+    g_mutex_unlock (space_mutex);
+    g_free (mp);
+}
+
+#else
 static gchar*
 get_drive_stats_from_df(const gchar *mp)
 {
@@ -510,6 +559,7 @@ static void th_space_update (void)
     g_free (mp);
     g_strfreev(tokens);
 }
+#endif
 
 
 /* keep space_ipod_free/used updated in regular intervals */
@@ -554,9 +604,9 @@ get_filesize_as_string(gdouble size)
     gchar *result = NULL;
     gchar *sizes[] = { _("B"), _("kB"), _("MB"), _("GB"), _("TB"), NULL };
 
-    while((fabs(size) > 1000) && (i<4))
+    while((fabs(size) > 1024) && (i<4))
     {
-	size /= 1000;
+	size /= 1024;
 	++i;
     }
     if (i>0)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-15 23:14:35 jcs>
+/* Time-stamp: <2004-12-06 23:42:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -64,8 +64,10 @@ enum { RESPONSE_APPLY = 5 };
 /* indicates whether widgets are currently blocked */
 extern gboolean widgets_blocked;
 
-gchar *get_user_string (gchar *title, gchar *message, gchar *dflt);
-Playlist *add_new_playlist_user_name (gchar *dflt, gint position);
+gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
+			gchar *opt_msg, gboolean *opt_state);
+Playlist *add_new_pl_user_name (gchar *dflt, gint position);
+void add_new_pl_or_spl_user_name (gchar *dflt, gint position);
 void create_add_files_fileselector (void);
 void create_add_playlists_fileselector (void);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
@@ -110,14 +112,20 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2);
 
 void gtkpod_warning (const gchar *format, ...);
 
-gchar *time_time_to_string (time_t time);
+gchar *time_time_to_string (time_t t);
+gchar *time_fromtime_to_string (time_t t);
+gchar *time_totime_to_string (time_t t);
+time_t time_string_to_time (const gchar *str);
+time_t time_string_to_fromtime (const gchar *str);
+time_t time_string_to_totime (const gchar *str);
 time_t time_get_time (Track *track, TM_item tm_item);
 gchar *time_field_to_string (Track *track, TM_item tm_item);
-void time_set_time (Track *track, time_t time, TM_item tm_item);
+void time_set_time (Track *track, time_t t, TM_item tm_item);
 
 gchar *get_filesize_as_string (double size);
 
 gint compare_string (gchar *str1, gchar *str2);
+gint compare_string_fuzzy (gchar *str1, gchar *str2);
 gint compare_string_case_insensitive (gchar *str1, gchar *str2);
 
 gchar *filename_from_uri (const char *uri,
@@ -184,4 +192,7 @@ gboolean option_get_toggle_button (GtkWidget *win,
 gchar *get_string_from_template (Track *track,
 				 const gchar *full_template,
 				 gboolean is_filename);
+
+GList *glist_duplicate (GList *list);
+
 #endif

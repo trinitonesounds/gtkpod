@@ -41,8 +41,9 @@
 
 
 void create_mpl (void);
+Playlist *add_playlist (Playlist *plitem, gint position);
 Playlist *add_new_playlist (gchar *plname, gint position, gboolean spl);
-void free_playlist(Playlist *playlist);
+void pl_free(Playlist *playlist);
 Playlist *it_add_playlist (Playlist *plitem);
 void randomize_playlist (Playlist *pl);
 void it_add_trackid_to_playlist (Playlist *plitem, guint32 id);
@@ -63,6 +64,18 @@ guint32 get_nr_of_playlists (void);
 Playlist *get_playlist_by_nr (guint32 n);
 guint get_playlist_by_name(gchar *pl_name, guint startfrom);
 Playlist* get_newplaylist_by_name (gchar *pl_name, gboolean spl);
+Playlist *get_playlist_by_id (guint64 id);
+
+Playlist *pl_new (gchar *plname, gboolean spl);
+Playlist *pl_duplicate (Playlist *pl);
+void pl_copy_spl_rules (Playlist *dest, Playlist *src);
+
+void splr_remove (Playlist *pl, SPLRule *splr);
+SPLRule *splr_new (void);
+void splr_add (Playlist *pl, SPLRule *splr, gint pos);
+SPLRule *splr_add_new (Playlist *pl, gint pos);
+void spl_populate (Playlist *spl, GList *tracks);
+
 
 guint32 get_nr_of_tracks_in_playlist (Playlist *plitem);
 Track *get_track_in_playlist_by_nr (Playlist *plitem, guint32 n);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-15 22:56:18 jcs>
+/* Time-stamp: <2004-12-04 11:51:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -267,7 +267,6 @@ struct cfg *cfg_new(void)
 	    break;
 	}
     }
-    mycfg->time_format = g_strdup ("%k:%M %d %b %g");
     mycfg->unused_gboolean3 = FALSE;
     mycfg->concal_autosync = FALSE;
     mycfg->tmp_disable_sort = TRUE;
@@ -387,7 +386,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "time_format") == 0)
 	  {
-	      prefs_set_time_format (arg);
+	      /* removed in 0.87 */
 	  }
 	  else if((g_ascii_strcasecmp (line, "filename_format") == 0) ||
 		  (g_ascii_strcasecmp (line, "export_template") == 0))
@@ -1018,7 +1017,6 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf (fp, "path%d=%s\n", i, cfg->path[i]);
 	g_free (buf);
     }
-    fprintf(fp, "time_format=%s\n", cfg->time_format);
     if (cfg->charset)
     {
 	fprintf(fp, "charset=%s\n", cfg->charset);
@@ -1182,7 +1180,6 @@ void cfg_free(struct cfg *c)
       g_free (c->last_dir.browse);
       for (i=0; i<PATH_NUM; ++i)
 	  g_free (c->path[i]);
-      g_free (c->time_format);
       g_free (c->mserv_username);
       g_free (c);
     }
@@ -1394,7 +1391,6 @@ struct cfg *clone_prefs(void)
 	result->last_dir.browse = g_strdup(cfg->last_dir.browse);
 	for (i=0; i<PATH_NUM; ++i)
 	    result->path[i] = g_strdup (cfg->path[i]);
-	result->time_format = g_strdup(cfg->time_format);
 	result->parsetags_template = g_strdup(cfg->parsetags_template);
 	result->mserv_username = g_strdup(cfg->mserv_username);
     }
@@ -2168,20 +2164,6 @@ const gchar *prefs_get_path (PathType i)
     return cfg->path[i];
 }
 
-void prefs_set_time_format (const gchar *format)
-{
-    if (format)
-    {
-	g_free (cfg->time_format);
-	cfg->time_format = g_strdup (format);
-    }
-}
-
-const gchar *prefs_get_time_format (void)
-{
-    return cfg->time_format;
-}
-
 gboolean 
 prefs_get_automount (void)
 {
@@ -2582,6 +2564,19 @@ void prefs_set_int_value (const gchar *key, gint value)
 }
 
 
+/* Set a integer setting (e.g. @key="file_type") to @value */
+void prefs_set_int64_value (const gchar *key, gint64 value)
+{
+    gchar *str;
+
+    if (!key)  return;
+
+    str = g_strdup_printf ("%lld", value);
+    prefs_set_string_value (key, str);
+    g_free (str);
+}
+
+
 /* Retrieve a string setting. @value will be filled with a copy of the
  * value. */
 /* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
@@ -2610,6 +2605,26 @@ gboolean prefs_get_int_value (const gchar *key, gint *value)
 	if (str)
 	{
 	    *value = atoi (str);
+	    return TRUE;
+	}
+    }
+    return FALSE;
+}
+
+
+/* Retrieve an 64 bit integer setting. @value will be filled with the
+ * stored integer value. */
+/* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
+ * @value is set to 0 */
+gboolean prefs_get_int64_value (const gchar *key, gint64 *value)
+{
+    *value = 0;
+    if (prefs_hash && key)
+    {
+	gchar *str = g_hash_table_lookup (prefs_hash, key);
+	if (str)
+	{
+	    *value = atoll (str);
 	    return TRUE;
 	}
     }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-02 13:25:43 jcs>
+/* Time-stamp: <2004-12-04 13:49:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,6 +30,9 @@
 #  include <config.h>
 #endif
 
+#define __USE_XOPEN     /* needed for strptime() with glibc2 */
+#define _XOPEN_SOURCE   /* needed for strptime() with glibc2 */
+
 #include <gtk/gtk.h>
 #include <math.h>
 #include <string.h>
@@ -39,6 +42,7 @@
 #include "misc.h"
 #include "prefs.h"
 #include "support.h"
+#include <time.h>
 
 
 #define DEBUG_MISC 0
@@ -56,6 +60,8 @@ T_item TM_to_T (TM_item sm)
     case TM_COLUMN_ALBUM:         return T_ALBUM;
     case TM_COLUMN_GENRE:         return T_GENRE;
     case TM_COLUMN_COMPOSER:      return T_COMPOSER;
+    case TM_COLUMN_FDESC:         return T_FDESC;
+    case TM_COLUMN_GROUPING:      return T_GROUPING;
     case TM_COLUMN_TRACK_NR:      return T_TRACK_NR;
     case TM_COLUMN_CD_NR:         return T_CD_NR;
     case TM_COLUMN_IPOD_ID:       return T_IPOD_ID;
@@ -107,23 +113,109 @@ T_item ST_to_T (ST_CAT_item st)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* converts the time stamp @time to a string (max. length:
- * PATH_MAX). You must g_free the return value */
-gchar *time_time_to_string (time_t time)
-{
-    const gchar *format = prefs_get_time_format ();
 
-    if (time && format)
+#define DATE_FORMAT_LONG "%x %X"
+#define DATE_FORMAT_SHORT "%x"
+
+
+static gchar *time_to_string_format (time_t t, const gchar *format)
+{
+    gchar buf[PATH_MAX+1];
+    struct tm tm;
+
+    g_return_val_if_fail (format, NULL);
+
+    if (t)
     {
-	gchar buf[PATH_MAX+1];
-	struct tm *tm = localtime (&time);
-	size_t size = strftime (buf, PATH_MAX, format, tm);
+	localtime_r (&t, &tm);
+	size_t size = strftime (buf, PATH_MAX, format, &tm);
 	buf[size] = 0;
 	return g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
     }
     return g_strdup ("--");
 }
 
+
+
+/* converts the time stamp @t to a string (max. length:
+ * PATH_MAX). You must g_free the return value */
+gchar *time_time_to_string (time_t t)
+{
+    return time_to_string_format (t, DATE_FORMAT_LONG);
+}
+
+
+/* converts the time stamp @t to a string (max. length PATH_MAX)
+   assuming that no time should be shown if the time is 0:00:00 */
+gchar *time_fromtime_to_string (time_t t)
+{
+    struct tm tm;
+    
+    localtime_r (&t, &tm);
+    if ((tm.tm_sec == 0) && (tm.tm_min == 0) && (tm.tm_hour == 0))
+	 return time_to_string_format (t, DATE_FORMAT_SHORT);
+    else return time_to_string_format (t, DATE_FORMAT_LONG);
+}
+
+
+/* converts the time stamp @t to a string (max. length PATH_MAX)
+   assuming that no time should be shown if the time is 23:59:59 */
+gchar *time_totime_to_string (time_t t)
+{
+    struct tm tm;
+    
+    localtime_r (&t, &tm);
+    if ((tm.tm_sec == 59) && (tm.tm_min == 59) && (tm.tm_hour == 23))
+	 return time_to_string_format (t, DATE_FORMAT_SHORT);
+    else return time_to_string_format (t, DATE_FORMAT_LONG);
+}
+
+
+/* convert the string @str to a time stamp */
+time_t time_string_to_time (const gchar *str)
+{
+    return time_string_to_fromtime (str);
+}
+
+
+/* convert the string @str to a time stamp, assuming 0:00:00 if no
+ * time is given */
+time_t time_string_to_fromtime (const gchar *str)
+{
+    time_t t;
+    struct tm tm;
+
+    g_return_val_if_fail (str, -1);
+
+    t = time (NULL);
+    localtime_r (&t, &tm);
+    tm.tm_sec = 0;
+    tm.tm_min = 0;
+    tm.tm_hour = 0;
+    strptime (str, DATE_FORMAT_LONG, &tm);
+    t = mktime (&tm);
+    return t;
+}
+
+
+/* convert the string @str to a time stamp, assuming 23:59:59 if only
+ * date is specified */
+time_t time_string_to_totime (const gchar *str)
+{
+    time_t t;
+    struct tm tm;
+
+    g_return_val_if_fail (str, -1);
+
+    t = time (NULL);
+    localtime_r (&t, &tm);
+    tm.tm_sec = 59;
+    tm.tm_min = 59;
+    tm.tm_hour = 23;
+    strptime (str, DATE_FORMAT_LONG, &tm);
+    t = mktime (&tm);
+    return t;
+}
 
 
 /* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */

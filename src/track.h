@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-21 23:40:18 jcs>
+/* Time-stamp: <2004-12-04 13:54:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -43,7 +43,8 @@ typedef struct
   gchar   *genre;            /* genre (utf8)           */
   gchar   *comment;          /* comment (utf8)         */
   gchar   *composer;         /* Composer (utf8)        */
-  gchar   *fdesc;            /* ? (utf8)               */
+  gchar   *fdesc;            /* eg. "MP3-File"...(utf8)*/
+  gchar   *grouping;         /* ? (utf8)               */
   gchar   *ipod_path;        /* name of file on iPod: uses ":" instead of "/"*/
   gunichar2 *album_utf16;    /* album (utf16)          */
   gunichar2 *artist_utf16;   /* artist (utf16)         */
@@ -51,7 +52,8 @@ typedef struct
   gunichar2 *genre_utf16;    /* genre (utf16)          */
   gunichar2 *comment_utf16;  /* comment (utf16)        */
   gunichar2 *composer_utf16; /* Composer (utf16)       */
-  gunichar2 *fdesc_utf16;    /* ? (utf16)              */
+  gunichar2 *fdesc_utf16;    /* eg. "MP3-File"...(utf8)*/
+  gunichar2 *grouping_utf16; /* ? (utf16)              */
   gunichar2 *ipod_path_utf16;/* name of file on iPod: uses ":" instead of "/"*/
   gchar   *pc_path_utf8;     /* PC filename in utf8 encoding   */
   gchar   *pc_path_locale;   /* PC filename in locale encoding */
@@ -93,7 +95,7 @@ typedef struct
   guint32 unk128, unk132, unk136, unk140, unk144, unk148, unk152;
   guint8  app_rating;        /* star rating set by appl. (not iPod) */
   guint16 type;
-  guint8  compilation;
+  guint8  compilation;   /* FIXME: not displayed */
   guint32 starttime;
   guint32 stoptime;
   guint8  checked;
@@ -136,6 +138,7 @@ typedef enum {
     T_SOUNDCHECK,
     T_YEAR,
     T_CD_NR,
+    T_GROUPING,
 } T_item;
 
 void free_track(Track *track);

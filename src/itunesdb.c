@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-27 16:11:48 jcs>
+/* Time-stamp: <2004-12-04 13:53:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -237,6 +237,7 @@ enum MHOD_ID {
   MHOD_ID_FDESC = 6,
   MHOD_ID_COMMENT = 8,
   MHOD_ID_COMPOSER = 12,
+  MHOD_ID_GROUPING = 13,
   MHOD_ID_SPLPREF = 50,  /* settings for smart playlist */
   MHOD_ID_SPLRULES = 51, /* rules for smart playlist     */
   MHOD_ID_MHYP = 52,     /* unknown                     */
@@ -279,6 +280,18 @@ static gint seek_get_n_bytes (FILE *file, gchar *data, glong seek, gint n)
 }
 
 
+/* Get the 1-byte-number stored at position "seek" in "file"
+   (or -1 when an error occured) */
+static guint32 get1int(FILE *file, glong seek)
+{
+  guchar data;
+  guint32 n;
+
+  if (seek_get_n_bytes (file, &data, seek, 1) != 1) return -1;
+  n = data;
+  return n;
+}
+
 /* Get the 4-byte-number stored at position "seek" in "file"
    in little endian encoding (or -1 when an error occured) */
 static guint32 get4lint(FILE *file, glong seek)
@@ -305,6 +318,19 @@ static guint32 get4bint(FILE *file, glong seek)
 }
 
 /* Get the 8-byte-number stored at position "seek" in "file"
+   in little endian encoding (or -1 when an error occured) */
+static guint64 get8lint(FILE *file, glong seek)
+{
+    guint64 n;
+
+    if (seek_get_n_bytes (file, (gchar *)&n, seek, 8) != 8) return -1;
+#   if (G_BYTE_ORDER == G_BIG_ENDIAN)
+    n = GUINT64_SWAP_LE_BE (n);
+#   endif
+    return n;
+}
+
+/* Get the 8-byte-number stored at position "seek" in "file"
    in big endian encoding (or -1 when an error occured) */
 static guint64 get8bint(FILE *file, glong seek)
 {
@@ -317,17 +343,6 @@ static guint64 get8bint(FILE *file, glong seek)
     return n;
 }
 
-/* Get the 1-byte-number stored at position "seek" in "file"
-   (or -1 when an error occured) */
-static guint32 get1int(FILE *file, glong seek)
-{
-  guchar data;
-  guint32 n;
-
-  if (seek_get_n_bytes (file, &data, seek, 1) != 1) return -1;
-  n = data;
-  return n;
-}
 
 
 
@@ -400,7 +415,8 @@ static gboolean spl_action_known (SPLAction action)
     return result;
 }
 
-enum SPLFieldType itunesdb_spl_get_field_type (const SPLField field)
+/* return the logic type (string, int, date...) of the action field */
+SPLFieldType itunesdb_spl_get_field_type (const SPLField field)
 {
     switch(field)
     {
@@ -412,7 +428,7 @@ enum SPLFieldType itunesdb_spl_get_field_type (const SPLField field)
     case SPLFIELD_COMMENT:
     case SPLFIELD_COMPOSER:
     case SPLFIELD_GROUPING:
-	return(splft_String);
+	return(splft_string);
     case SPLFIELD_BITRATE:
     case SPLFIELD_SAMPLE_RATE:
     case SPLFIELD_YEAR:
@@ -424,18 +440,160 @@ enum SPLFieldType itunesdb_spl_get_field_type (const SPLField field)
     case SPLFIELD_RATING:
     case SPLFIELD_TIME: /* time is the length of the track in
 			   milliseconds */
-	return(splft_Int);
+	return(splft_int);
     case SPLFIELD_COMPILATION:
-	return(splft_Boolean);
+	return(splft_boolean);
     case SPLFIELD_DATE_MODIFIED:
     case SPLFIELD_DATE_ADDED:
     case SPLFIELD_LAST_PLAYED:
-	return(splft_Date);
+	return(splft_date);
     case SPLFIELD_PLAYLIST:
-	return(splft_Playlist);
+	return(splft_playlist);
     }
-    return(splft_Unknown);
+    return(splft_unknown);
 }
+
+
+/* return the type (range, date, string...) of the action field */
+SPLActionType itunesdb_spl_get_action_type (const SPLField field,
+					    const SPLAction action)
+{
+    SPLFieldType fieldType = itunesdb_spl_get_field_type (field);
+    switch(fieldType)
+    {
+    case splft_string:
+	switch (action)
+	{
+	case SPLACTION_IS_STRING:
+	case SPLACTION_IS_NOT:
+	case SPLACTION_CONTAINS:
+	case SPLACTION_DOES_NOT_CONTAIN:
+	case SPLACTION_STARTS_WITH:
+	case SPLACTION_DOES_NOT_START_WITH:
+	case SPLACTION_ENDS_WITH:
+	case SPLACTION_DOES_NOT_END_WITH:
+	    return splat_string;
+	case SPLACTION_IS_NOT_IN_THE_RANGE:
+	case SPLACTION_IS_INT:
+	case SPLACTION_IS_NOT_INT:
+	case SPLACTION_IS_GREATER_THAN:
+	case SPLACTION_IS_NOT_GREATER_THAN:
+	case SPLACTION_IS_LESS_THAN:
+	case SPLACTION_IS_NOT_LESS_THAN:
+	case SPLACTION_IS_IN_THE_RANGE:
+	case SPLACTION_IS_IN_THE_LAST:
+	case SPLACTION_IS_NOT_IN_THE_LAST:
+	    return splat_invalid;
+	default:
+	    /* Unknown action type */
+	    itunesdb_warning ("Unknown action type %d\n\n", action);
+	    return splat_unknown;
+	}
+	break;
+
+    case splft_int:
+	switch (action)
+	{
+	case SPLACTION_IS_INT:
+	case SPLACTION_IS_NOT_INT:
+	case SPLACTION_IS_GREATER_THAN:
+	case SPLACTION_IS_NOT_GREATER_THAN:
+	case SPLACTION_IS_LESS_THAN:
+	case SPLACTION_IS_NOT_LESS_THAN:
+	    return splat_int;
+	case SPLACTION_IS_NOT_IN_THE_RANGE:
+	case SPLACTION_IS_IN_THE_RANGE:
+	    return splat_range_int;
+	case SPLACTION_IS_STRING:
+	case SPLACTION_CONTAINS:
+	case SPLACTION_STARTS_WITH:
+	case SPLACTION_DOES_NOT_START_WITH:
+	case SPLACTION_ENDS_WITH:
+	case SPLACTION_DOES_NOT_END_WITH:
+	case SPLACTION_IS_IN_THE_LAST:
+	case SPLACTION_IS_NOT_IN_THE_LAST:
+	case SPLACTION_IS_NOT:
+	case SPLACTION_DOES_NOT_CONTAIN:
+	    return splat_invalid;
+	default:
+	    /* Unknown action type */
+	    itunesdb_warning ("Unknown action type %d\n\n", action);
+	    return splat_unknown;
+	}
+	break;
+
+    case splft_boolean:
+	return splat_none;
+
+    case splft_date:
+	switch (action)
+	{
+	case SPLACTION_IS_INT:
+	case SPLACTION_IS_NOT_INT:
+	case SPLACTION_IS_GREATER_THAN:
+	case SPLACTION_IS_NOT_GREATER_THAN:
+	case SPLACTION_IS_LESS_THAN:
+	case SPLACTION_IS_NOT_LESS_THAN:
+	    return splat_date;
+	case SPLACTION_IS_IN_THE_LAST:
+	case SPLACTION_IS_NOT_IN_THE_LAST:
+	    return splat_inthelast;
+	case SPLACTION_IS_IN_THE_RANGE:
+	case SPLACTION_IS_NOT_IN_THE_RANGE:
+	    return splat_range_date;
+	case SPLACTION_IS_STRING:
+	case SPLACTION_CONTAINS:
+	case SPLACTION_STARTS_WITH:
+	case SPLACTION_DOES_NOT_START_WITH:
+	case SPLACTION_ENDS_WITH:
+	case SPLACTION_DOES_NOT_END_WITH:
+	case SPLACTION_IS_NOT:
+	case SPLACTION_DOES_NOT_CONTAIN:
+	    return splat_invalid;
+	default:
+	    /* Unknown action type */
+	    itunesdb_warning ("Unknown action type %d\n\n", action);
+	    return splat_unknown;
+	}
+	break;
+
+    case splft_playlist:
+	switch (action)
+	{
+	case SPLACTION_IS_INT:
+	case SPLACTION_IS_NOT_INT:
+	    return splat_playlist;
+	case SPLACTION_IS_GREATER_THAN:
+	case SPLACTION_IS_NOT_GREATER_THAN:
+	case SPLACTION_IS_LESS_THAN:
+	case SPLACTION_IS_NOT_LESS_THAN:
+	case SPLACTION_IS_IN_THE_LAST:
+	case SPLACTION_IS_NOT_IN_THE_LAST:
+	case SPLACTION_IS_IN_THE_RANGE:
+	case SPLACTION_IS_NOT_IN_THE_RANGE:
+	case SPLACTION_IS_STRING:
+	case SPLACTION_CONTAINS:
+	case SPLACTION_STARTS_WITH:
+	case SPLACTION_DOES_NOT_START_WITH:
+	case SPLACTION_ENDS_WITH:
+	case SPLACTION_DOES_NOT_END_WITH:
+	case SPLACTION_IS_NOT:
+	case SPLACTION_DOES_NOT_CONTAIN:
+	    return splat_invalid;
+	default:
+	    /* Unknown action type */
+	    itunesdb_warning ("Unknown action type %d\n\n", action);
+	    return splat_unknown;
+	}
+
+    case splft_unknown:
+	    /* Unknown action type */
+	    itunesdb_warning ("Unknown action type %d\n\n", action);
+	    return splat_unknown;
+    }
+    return splat_unknown;
+}
+
 
 
 /* Returns the type of the mhod and the length *ml. *ml is set to -1
@@ -514,6 +672,7 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
   case MHOD_ID_FDESC:
   case MHOD_ID_COMMENT:
   case MHOD_ID_COMPOSER:
+  case MHOD_ID_GROUPING:
       xl = get4lint (file, seek+4);   /* entry length   */
       entry_utf16 = g_malloc (xl+2);
       if (seek_get_n_bytes (file, (gchar *)entry_utf16, seek+16, xl) != xl) {
@@ -570,7 +729,7 @@ static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 	      if (spl_action_known (splr->action))
 	      {
 		  gint ft = itunesdb_spl_get_field_type (splr->field);
-		  if (ft == splft_String)
+		  if (ft == splft_string)
 		  {
 		      splr->string_utf16 = g_malloc0 (length+2);
 		      if (seek_get_n_bytes (file, (gchar *)splr->string_utf16, seek+4, length) != length) 
@@ -653,6 +812,7 @@ static gunichar2 *get_mhod_string (FILE *file, glong seek, gint32 *ml, gint32 *m
     case MHOD_ID_FDESC:
     case MHOD_ID_COMMENT:
     case MHOD_ID_COMPOSER:
+    case MHOD_ID_GROUPING:
 	result = get_mhod (file, seek, ml, mty);
 	break;
     case MHOD_ID_SPLPREF:
@@ -673,7 +833,6 @@ static glong get_pl(FILE *file, glong seek)
   gint32 zip;
   Playlist *plitem = NULL;
   guint32 ref;
-
   gchar data[4];
 
 
@@ -683,14 +842,15 @@ static glong get_pl(FILE *file, glong seek)
 
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
   if (cmp_n_bytes (data, "mhyp", 4) == FALSE)      return -1; /* not pl */
-  tracknum = get4lint (file, seek+16); /* number of tracks in playlist */
-  nextseek = seek + get4lint (file, seek+8); /* possible begin of next PL */
   zip = get4lint (file, seek+4); /* length of header */
   if (zip == 0) return -1;      /* error! */
+  nextseek = seek + get4lint (file, seek+8); /* possible begin of next PL */
+  tracknum = get4lint (file, seek+16); /* number of tracks in playlist */
   plitem = g_malloc0 (sizeof (Playlist));
   /* Some Playlists have added 256 to their type -- I don't know what
      it's for, so we just ignore it for now -> & 0xff */
   plitem->type = get4lint (file, seek+20) & 0xff;
+  plitem->id = get8lint (file, seek+28);
   do
   {
       gunichar2 *plname_utf16_maybe;
@@ -703,7 +863,7 @@ static glong get_pl(FILE *file, glong seek)
       if (zip != -1) switch ((enum MHOD_ID)type)
       {
       case MHOD_ID_PLAYLIST:
-	  /* here we could do something about the playlist sttings */
+	  /* here we could do something about the playlist settings */
 	  break;
       case MHOD_ID_TITLE:
 	  plname_utf16_maybe = get_mhod (file, seek, &zip, &type);
@@ -742,6 +902,7 @@ static glong get_pl(FILE *file, glong seek)
       case MHOD_ID_FDESC:
       case MHOD_ID_COMMENT:
       case MHOD_ID_COMPOSER:
+      case MHOD_ID_GROUPING:
 	  /* these are not expected here */
 	  break;
       case MHOD_ID_MHYP:
@@ -985,6 +1146,12 @@ gchar *time_time_to_string (time_t time);
 	   track->composer = entry_utf8;
 #endif
 	   track->composer_utf16 = entry_utf16;
+	   break;
+	 case MHOD_ID_GROUPING:
+#ifdef ITUNESDB_PROVIDE_UTF8
+	   track->grouping = entry_utf8;
+#endif
+	   track->grouping_utf16 = entry_utf16;
 	   break;
 	 default: /* unknown entry -- discard */
 #ifdef ITUNESDB_PROVIDE_UTF8
@@ -1435,6 +1602,17 @@ static gboolean put4lint_seek (FILE *file, guint32 n, glong seek)
 }
 
 
+/* Write 8-byte integer "n" to "file" in big little order.
+   Returns TRUE on success, FALSE otherwise */
+static gboolean put8lint (FILE *file, guint64 n)
+{
+#   if (G_BYTE_ORDER == G_BIG_ENDIAN)
+    n = GUINT64_SWAP_LE_BE (n);
+#   endif
+    return put_data (file, (gchar *)&n, 8);
+}
+
+
 /* Write 4-byte integer "n" to "file" in big endian order.
    Returns TRUE on success, FALSE otherwise */
 static gboolean put4bint (FILE *file, guint32 n)
@@ -1622,6 +1800,7 @@ static void mk_mhod (FILE *file, enum MHOD_ID type, void *data)
   case MHOD_ID_FDESC:
   case MHOD_ID_COMMENT:
   case MHOD_ID_COMPOSER:
+  case MHOD_ID_GROUPING:
       if (data)
       {
 	  /* length of string in words  */
@@ -1667,7 +1846,7 @@ static void mk_mhod (FILE *file, enum MHOD_ID type, void *data)
 	  put_n0 (file, 2);           /* unknown                */
 	  /* end of header, start of data */
 	  put1int (file, splp->liveupdate);
-	  put1int (file, splp->checkrules);
+	  put1int (file, splp->checkrules? 1:0);
 	  put1int (file, splp->checklimits);
 	  put1int (file, splp->limittype);
 	  put1int (file, splp->limitsort & 0xff);
@@ -1714,7 +1893,7 @@ static void mk_mhod (FILE *file, enum MHOD_ID type, void *data)
 	      put4bint (file, splr->field);
 	      put4bint (file, splr->action);
 	      put_n0 (file, 11);          /* unknown              */
-	      if (ft == splft_String)
+	      if (ft == splft_string)
 	      {   /* write string-type rule */
 		  gint len = utf16_strlen (splr->string_utf16);
 		  put4bint (file, 2*len); /* length of string     */
@@ -1891,6 +2070,11 @@ write_mhsd_one(FILE *file)
 	    mk_mhod (file, MHOD_ID_COMPOSER, track->composer_utf16);
 	    ++mhod_num;
 	}
+	if (utf16_strlen (track->grouping_utf16) != 0)
+	{
+	    mk_mhod (file, MHOD_ID_GROUPING, track->grouping_utf16);
+	    ++mhod_num;
+	}
         /* Fill in the missing items of the mhit header */
 	fix_mhit (file, mhit_seek, ftell (file), mhod_num);
     }
@@ -1913,14 +2097,13 @@ write_playlist(FILE *file, Playlist *pl)
     put4lint (file, 108);          /* length		        */
     put4lint (file, -1);           /* size -> later             */
     if (pl->is_spl)
-	put4lint (file, 4);        /* ?                         */
+	put4lint (file, 4);        /* nr of mhods               */
     else
-	put4lint (file, 2);        /* ?                         */
+	put4lint (file, 2);        /* nr of mhods               */
     put4lint (file, track_num);    /* number of tracks in plist */
     put4lint (file, pl->type);     /* 1 = main, 0 = visible     */
     put4lint (file, 0);            /* ?                         */
-    put4lint (file, 0);            /* ?                         */
-    put4lint (file, 0);            /* ?                         */
+    put8lint (file, pl->id);       /* 64 bit ID                 */
     put_n0 (file, 18);             /* ?                         */
     mk_mhod (file, MHOD_ID_TITLE, pl->name_utf16);
     mk_long_mhod_id_playlist (file);
@@ -2340,7 +2523,7 @@ gboolean itunesdb_cp (const gchar *from_file, const gchar *to_file)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-guint32 itunesdb_time_get_mac_time (void)
+guint64 itunesdb_time_get_mac_time (void)
 {
     GTimeVal time;
 
@@ -2353,9 +2536,9 @@ guint32 itunesdb_time_get_mac_time (void)
  * this function if necessary to port to host systems with different
  * start of Epoch */
 /* A "0" time will not be converted */
-time_t itunesdb_time_mac_to_host (guint32 mactime)
+time_t itunesdb_time_mac_to_host (guint64 mactime)
 {
-    if (mactime != 0)  return ((time_t)mactime) - 2082844800;
+    if (mactime != 0)  return (time_t)(mactime - 2082844800);
     else               return (time_t)mactime;
 }
 
@@ -2363,7 +2546,7 @@ time_t itunesdb_time_mac_to_host (guint32 mactime)
 /* convert host system timestamp to Macintosh time stamp -- modify
  * this function if necessary to port to host systems with different
  * start of Epoch */
-guint32 itunesdb_time_host_to_mac (time_t time)
+guint64 itunesdb_time_host_to_mac (time_t time)
 {
-    return (guint32)(time + 2082844800);
+    return (guint64)(((gint64)time) + 2082844800);
 }

@@ -11,7 +11,7 @@ dont know which version are you using but I´m compiling against
 mpeg4ip-1.1.
 
 
-----------
+----------------------------------------------------------------------
 Files copied to gtkpod but they don't appear in the database (0.80,
 Tony Williams)
 
@@ -29,7 +29,7 @@ set to 'auto' and it was mounting as msdos instead of vfat.  I
 specified vfat in fstab and voila!  I'm a happy happy man.
 
 
-----------
+----------------------------------------------------------------------
 Filenames on the iPod appear in DOS 8.3 format and syncing to the iPod
 is not working as expected.
 
@@ -39,7 +39,7 @@ You need to specify "vfat" as file system type. How to do that depends
 on which way you use to mount the iPod -- see the README file for more
 details.
 
-----------
+----------------------------------------------------------------------
 The following error message is displayed when accessing the device
 (Markus Gaugusch):
 
@@ -51,4 +51,15 @@ Solution:
 It is possible that hotplug and the "sg" support are not working well
 together. Try disabling "sg" support in the kernel configuration or
 unload the "sg" module if you are using modules.
+
+----------------------------------------------------------------------
+Get a bunch of "Buffer I/O error on device sd?" when connecting the
+iPod (Jonas Bergler)
+
+Solution (by "jeffmock"):
+
+Disable CONFIG_EFI_PARTITION in your kernel configuration, recompile.
+
+Details can be found at 
+http://www.linuxquestions.org/questions/showthread.php?postid=1197015#post1197015
 

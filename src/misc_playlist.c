@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-21 20:52:25 jcs>
+/* Time-stamp: <2004-12-06 22:41:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -53,19 +53,49 @@
  * provided.
  * Return value: the new playlist or NULL if the dialog was
  * cancelled. */
-Playlist *add_new_playlist_user_name (gchar *dflt, gint position)
+Playlist *add_new_pl_user_name (gchar *dflt, gint position)
 {
     Playlist *result = NULL;
     gchar *name = get_user_string (
 	_("New Playlist"),
 	_("Please enter a name for the new playlist"),
-	dflt? dflt:_("New Playlist"));
+	dflt? dflt:_("New Playlist"),
+	NULL, NULL);
     if (name)
     {
 	result = add_new_playlist (name, position, FALSE);
 	gtkpod_tracks_statusbar_update ();
     }
     return result;
+}
+
+
+/* Add a new playlist or smart playlist at position @position. The
+ * name for the new playlist is queried from the user. A default
+ * (@dflt) name can be provided.
+ * Return value: none. In the case of smart playlists, the playlist
+ * will not be created immediately. */
+void add_new_pl_or_spl_user_name (gchar *dflt, gint position)
+{
+    gboolean is_spl = FALSE;
+    gchar *name = get_user_string (
+	_("New Playlist"),
+	_("Please enter a name for the new playlist"),
+	dflt? dflt:_("New Playlist"),
+	_("Smart Playlist"), &is_spl);
+
+    if (name)
+    {
+	if (!is_spl)
+	{   /* add standard playlist */
+	    add_new_playlist (name, position, FALSE);
+	    gtkpod_tracks_statusbar_update ();
+	}
+	else
+	{   /* add smart playlist */
+	    spl_edit_new (name, position);
+	}
+    }
 }
 
 
@@ -374,7 +404,8 @@ Playlist *generate_new_playlist (GList *tracks)
     gchar *name = get_user_string (
 	_("New Playlist"),
 	_("Please enter a name for the new playlist"),
-	_("New Playlist"));
+	_("New Playlist"),
+	NULL, NULL);
     if (name)
 	return generate_playlist_with_name (tracks, name, FALSE);
     return NULL;

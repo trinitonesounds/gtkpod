@@ -1833,6 +1833,10 @@ gint st_data_compare_func (GtkTreeModel *model,
   TabEntry *entry2;
   GtkSortType order;
   gint corr, colid;
+  gint inst;
+  SortTab *st;
+
+  inst = (guint32)user_data;
 
   gtk_tree_model_get (model, a, ST_COLUMN_ENTRY, &entry1, -1);
   gtk_tree_model_get (model, b, ST_COLUMN_ENTRY, &entry2, -1);
@@ -1847,7 +1851,13 @@ gint st_data_compare_func (GtkTreeModel *model,
   if (entry2->master) return (corr);
 
   /* compare the two entries */
-  return compare_string (entry2->name, entry1->name);
+  st = sorttab[inst];
+  switch ( st->current_category ) {
+    case ST_CAT_ARTIST:
+	return compare_string_fuzzy (entry2->name, entry1->name);
+    default:
+	return compare_string (entry2->name, entry1->name);
+  }
 }
 
 /* Stop editing. If @cancel is TRUE, the edited value will be
@@ -1919,7 +1929,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 			gtk_tree_sortable_set_sort_func (
 			    GTK_TREE_SORTABLE (st->model),
 			    ST_COLUMN_ENTRY,
-			    st_data_compare_func, NULL, NULL);
+			    st_data_compare_func, (gpointer)inst, NULL);
 		    }
 		    else
 		    {
@@ -2189,7 +2199,7 @@ static void st_create_listview (gint inst)
 	  gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
 	  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (liststore),
 					   ST_COLUMN_ENTRY,
-					   st_data_compare_func, NULL, NULL);
+					   st_data_compare_func, (gpointer)inst, NULL);
 	  gtk_tree_view_append_column (treeview, column);
 	  gtk_tree_view_set_headers_visible (treeview, FALSE);
 	  gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,

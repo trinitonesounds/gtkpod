@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-11-04 21:47:44 jcs>
+|  Time-stamp: <2004-12-07 00:12:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -119,10 +119,13 @@ D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"),
 		       _("\
 Jim Hall: Decent INSTALL file\n"),
 		       _("\
-Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/contacts to the iPod\n"),  /* Jürgen! */
-		       "\n",
+Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/contacts to the iPod\n"),    /* J"urgen! */
 		       _("\
 Flavio Stanchina: bugfixes\n"),
+		       _("\
+Chris Micacchi: when sorting ignore 'the' and similar at the beginning of the title\n"),
+		       _("\
+Steve Jay: use statvfs() instead of df (better portability, faster)\n"),
 		       "\n",
 		       _("\
 Icons of buttons were made by Nicolas Chariot.\n\
@@ -132,6 +135,8 @@ Icons of buttons were made by Nicolas Chariot.\n\
 This program borrows code from the following projects:\n"),
 		       _("\
     gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB (http://www.gnu.org/software/gnupod/)\n"),
+		       _("\
+    iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some code for smart playlists is based on his C++-classes.\n"),
 		       _("\
     mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"),
 		       _("\
@@ -265,6 +270,23 @@ void cleanup_backup_and_extended_files (void)
 }
 
 
+/* used by glist_duplicate */
+static void gl_dup_fe (gpointer data, GList **dup)
+{
+    *dup = g_list_append (*dup, data);
+}
+
+
+/* Duplicate a GList */
+GList *glist_duplicate (GList *list)
+{
+    GList *dup = NULL;
+    g_list_foreach (list, (GFunc)gl_dup_fe, &dup);
+    return dup;
+}
+
+
+
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -341,7 +363,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 		{   /* directory */
 		    if (!pl)
 		    {  /* no playlist yet -- create new one */
-			pl = add_new_playlist_user_name (NULL, pl_pos);
+			pl = add_new_pl_user_name (NULL, pl_pos);
 			if (!pl)  break; /* while (*filesp) */
 		    }
 		    add_directory_by_name (decoded_file, pl,
@@ -359,8 +381,8 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 			{   /* mp3 file */
 			    if (!pl)
 			    {  /* no playlist yet -- create new one */
-				pl = add_new_playlist_user_name (NULL,
-								 pl_pos);
+				pl = add_new_pl_user_name (NULL,
+							   pl_pos);
 				if (!pl)  break; /* while (*filesp) */
 			    }
 			    add_track_by_filename (decoded_file, pl,
@@ -682,6 +704,87 @@ gint compare_string (gchar *str1, gchar *str2)
 	return compare_string_case_insensitive (str1, str2);
 }
 
+#define NUM_ARTICLES 	7
+static char* articles[NUM_ARTICLES] = {
+	"the ",
+	"a ",
+	"le ", 
+	"la ", 
+	"les ", 
+	"lo ", 
+	"los ", 
+};
+
+/* compare @str1 and @str2 case-sensitively or case-insensitively
+ * depending on prefs settings, and ignoring certain initial articles 
+ * ("the", "le"/"la", etc) */
+gint compare_string_fuzzy (gchar *str1, gchar *str2)
+{
+    static gint   articleKeysGenerated = FALSE;
+    static gint   articleLengths[NUM_ARTICLES];
+    static gchar *articleKeys[NUM_ARTICLES];
+    gchar *tempStr;
+    gint   result;
+    gint   i;
+    
+    gchar *cleanStr1 = g_utf8_casefold (str1, -1);
+    gchar *cleanStr2 = g_utf8_casefold (str2, -1);
+
+    gchar *pstr1 = str1;
+    gchar *pstr2 = str2;
+    gchar *pcleanStr1 = cleanStr1;
+    gchar *pcleanStr2 = cleanStr2;
+    
+    /* If the article collations keys have not been generated, 
+     * do that first
+     */
+    if ( ! articleKeysGenerated ) {
+	for ( i = 0; i < NUM_ARTICLES; i += 1 ) {
+	    tempStr = g_utf8_casefold( articles[i], -1 );
+	    articleLengths[i] = g_utf8_strlen( tempStr, -1 );
+	    articleKeys[i] = g_utf8_collate_key( tempStr, -1 );
+	    g_free( tempStr );
+	}
+	articleKeysGenerated = TRUE;
+    } 
+    
+    /* Check the beginnings of both strings for any of the 
+     * articles we should ignore
+     */
+    for ( i = 0; i < NUM_ARTICLES; i += 1 ) {
+    	tempStr = g_utf8_collate_key( cleanStr1, articleLengths[i] );
+	if ( strcmp( tempStr, articleKeys[i] ) == 0 ) {
+	    /* Found article, bump pointers ahead appropriate distance
+	     */
+	    pstr1 += articleLengths[i];
+	    pcleanStr1 = g_utf8_offset_to_pointer( cleanStr1, articleLengths[i] );
+	    g_free( tempStr );
+	    break;
+	}
+	g_free( tempStr );
+    }
+    for ( i = 0; i < NUM_ARTICLES; i += 1 ) {
+    	tempStr = g_utf8_collate_key( cleanStr2, articleLengths[i] );
+	if ( strcmp( tempStr, articleKeys[i] ) == 0 ) {
+	    /* Found article, bump pointers ahead apropriate distance
+	     */
+	    pstr2 += articleLengths[i];
+	    pcleanStr2 = g_utf8_offset_to_pointer( cleanStr2, articleLengths[i] );
+	    g_free( tempStr );
+	    break;
+	}
+	g_free( tempStr );
+    }
+
+    if (prefs_get_case_sensitive ())
+	result = strcmp(pstr1, pstr2);
+    else
+    	result = g_utf8_collate(pcleanStr1, pcleanStr2);
+
+    g_free (cleanStr1);
+    g_free (cleanStr2);
+    return result;
+}
 
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings */
@@ -1323,3 +1426,5 @@ gchar *get_string_from_template (Track *track,
 
     return res_utf8;
 }
+
+

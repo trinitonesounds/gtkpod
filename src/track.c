@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-02 00:54:02 jcs>
+/* Time-stamp: <2004-12-04 15:33:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -253,7 +253,7 @@ Track *get_track_by_nr (guint32 n)
   return g_list_nth_data (tracks, n);
 }
 
-/* Gets the next track (i=1) or the first track (i=0)
+/* Gets the next track (i!=0) or the first track (i=0)
    This function is optimized for speed, caching a pointer to the last
    link returned.
    Make sure that the list of tracks does not get changed during
@@ -634,6 +634,9 @@ gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item)
     case T_FDESC:
 	result = &track->fdesc;
 	break;
+    case T_GROUPING:
+	result = &track->grouping;
+	break;
     case T_IPOD_PATH:
 	result = &track->ipod_path;
 	break;
@@ -685,6 +688,9 @@ gunichar2 **track_get_item_pointer_utf16 (Track *track, T_item t_item)
 	break;
     case T_FDESC:
 	result = &track->fdesc_utf16;
+	break;
+    case T_GROUPING:
+	result = &track->grouping_utf16;
 	break;
     case T_IPOD_PATH:
 	result = &track->ipod_path_utf16;

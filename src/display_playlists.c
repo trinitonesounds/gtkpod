@@ -266,35 +266,67 @@ void pm_remove_all_playlists (gboolean clear_sort)
 }
 
 
-/* Used by pm_select_playlist() to select the specified playlist by
-   calling gtk_tree_model_foreach () */ 
-static gboolean pm_select_playlist_fe (GtkTreeModel *model,
-				       GtkTreePath *path,
-				       GtkTreeIter *iter,
-				       gpointer data)
-{
-    Playlist *playlist;
-
-    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
-    if(playlist == data)
-    {
-	GtkTreeSelection *ts = gtk_tree_view_get_selection (playlist_treeview);
-	gtk_tree_selection_select_iter (ts, iter);
-	return TRUE;
-    }
-    return FALSE;
-}
-
 /* Select specified playlist */
 void pm_select_playlist (Playlist *playlist)
 {
-  GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
+    static gboolean pm_select_playlist_fe (GtkTreeModel *model,
+					   GtkTreePath *path,
+					   GtkTreeIter *iter,
+					   gpointer data)
+	{
+	    Playlist *playlist;
 
-  if (model != NULL)
-  {
-      /* find the pl and select it */
-      gtk_tree_model_foreach (model, pm_select_playlist_fe, playlist);
-  }
+	    gtk_tree_model_get (model, iter,
+				PM_COLUMN_PLAYLIST, &playlist, -1);
+	    if(playlist == data)
+	    {
+		GtkTreeSelection *ts = gtk_tree_view_get_selection (
+		    playlist_treeview);
+		gtk_tree_selection_select_iter (ts, iter);
+		return TRUE;
+	    }
+	    return FALSE;
+	}
+    GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
+
+    if (model != NULL)
+    {
+	/* find the pl and select it */
+	gtk_tree_model_foreach (model, pm_select_playlist_fe,
+				playlist);
+    }
+}
+
+
+/* Unselect specified playlist */
+void pm_unselect_playlist (Playlist *playlist)
+{
+    static gboolean pm_unselect_playlist_fe (GtkTreeModel *model,
+					     GtkTreePath *path,
+					     GtkTreeIter *iter,
+					     gpointer data)
+	{
+	    Playlist *playlist;
+
+	    gtk_tree_model_get (model, iter,
+				PM_COLUMN_PLAYLIST, &playlist, -1);
+	    if(playlist == data)
+	    {
+		GtkTreeSelection *ts = gtk_tree_view_get_selection (
+		    playlist_treeview);
+		gtk_tree_selection_unselect_iter (ts, iter);
+		return TRUE;
+	    }
+	    return FALSE;
+	}
+    GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
+
+    if (model != NULL)
+    {
+	/* find the pl and select it */
+	gtk_tree_model_foreach (model, pm_unselect_playlist_fe,
+				playlist);
+    }
 }
 
 
@@ -663,7 +695,7 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 	if (playlist->is_spl)
 	{
 	    g_object_set (G_OBJECT (renderer),
-			  "stock-id", "gtk-execute", NULL);
+			  "stock-id", "gtk-properties", NULL);
 	}
 	else if (playlist->type != PL_TYPE_MPL)
 	{

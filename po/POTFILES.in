@@ -12,6 +12,7 @@ src/display.c
 src/display_playlists.c
 src/display_songs.c
 src/display_sorttabs.c
+src/display_spl.c
 src/file.c
 src/file_export.c
 src/file_itunesdb.c

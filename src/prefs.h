@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-04 23:45:04 jcs>
+/* Time-stamp: <2004-12-04 11:51:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -143,7 +143,6 @@ struct cfg
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
   gchar *path[PATH_NUM];    /* path for 'Play Now...' (see PathType) */
-  gchar *time_format;           /* time format for strftime() */
   gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
@@ -290,8 +289,6 @@ gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
 void prefs_set_path (PathType type, const gchar *path);
 const gchar *prefs_get_path (PathType type);
-void prefs_set_time_format (const gchar *format);
-const gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
 void prefs_set_sp_or (guint32 inst, gboolean state);
@@ -339,7 +336,9 @@ gboolean prefs_get_disable_sorting(void);
 
 void prefs_set_string_value (const gchar *key, const gchar *value);
 void prefs_set_int_value (const gchar *key, gint value);
+void prefs_set_int64_value (const gchar *key, gint64 value);
 gboolean prefs_get_string_value (const gchar *key, gchar **value);
 gboolean prefs_get_int_value (const gchar *key, gint *value);
+gboolean prefs_get_int64_value (const gchar *key, gint64 *value);
 
 #endif

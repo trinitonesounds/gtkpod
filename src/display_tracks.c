@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-27 17:02:31 jcs>
+/* Time-stamp: <2004-12-04 13:49:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -103,6 +103,8 @@ const gchar *tm_col_strings[] = {
     N_("Soundcheck"),
     N_("Samplerate"),
     N_("BPM"),
+    N_("Kind"),
+    N_("Grouping"),          /* 25 */
     NULL };
 /* Tooltips for prefs window */
 const gchar *tm_col_tooltips[] = {
@@ -357,6 +359,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
   gboolean multi_edit;
   gint sel_rows_num;
   GList *row_list, *row_node, *first;
+  time_t t;
 
 
   column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
@@ -397,6 +400,8 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_ARTIST:
      case TM_COLUMN_GENRE:
      case TM_COLUMN_COMPOSER:
+     case TM_COLUMN_FDESC:
+     case TM_COLUMN_GROUPING:
         itemp_utf8 = track_get_item_pointer_utf8 (track, TM_to_T (column));
         itemp_utf16 = track_get_item_pointer_utf16 (track, TM_to_T (column));
         if (g_utf8_collate (*itemp_utf8, new_text) != 0)
@@ -477,7 +482,13 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_TIME_CREATED:
      case TM_COLUMN_TIME_PLAYED:
      case TM_COLUMN_TIME_MODIFIED:
-        break;
+	 t = time_string_to_time (new_text);
+	 if ((t != -1) && (t != time_get_time (track, column)))
+	 {
+	     time_set_time (track, t, column);
+	     changed = TRUE;
+	 }
+	 break;
      case TM_COLUMN_VOLUME:
         nr = atoi (new_text);
         if (nr != track->volume)
@@ -579,6 +590,8 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
+  case TM_COLUMN_FDESC:
+  case TM_COLUMN_GROUPING:
       item_utf8 = track_get_item_utf8 (track, TM_to_T (column));
       g_object_set (G_OBJECT (renderer),
 		    "text", item_utf8,
@@ -681,8 +694,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       buf = time_field_to_string (track, column);
       g_object_set (G_OBJECT (renderer),
 		    "text", buf,
-/* don't know how to make it editable yet */
-/* 		    "editable", TRUE, */
+ 		    "editable", TRUE,
 		    "xalign", 0.0, NULL);
       C_FREE (buf);
       break;
@@ -1085,11 +1097,15 @@ static gint tm_data_compare (Track *track1, Track *track2,
   switch (tm_item)
   {
   case TM_COLUMN_TITLE:
-  case TM_COLUMN_ARTIST:
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
+  case TM_COLUMN_FDESC:
+  case TM_COLUMN_GROUPING:
       return compare_string (track_get_item_utf8 (track2, TM_to_T (tm_item)),
+			     track_get_item_utf8 (track1, TM_to_T (tm_item)));
+  case TM_COLUMN_ARTIST:
+      return compare_string_fuzzy (track_get_item_utf8 (track2, TM_to_T (tm_item)),
 			     track_get_item_utf8 (track1, TM_to_T (tm_item)));
   case TM_COLUMN_TRACK_NR:
       cmp = track2->tracks - track1->tracks;
@@ -1349,6 +1365,8 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
+  case TM_COLUMN_FDESC:
+  case TM_COLUMN_GROUPING:
   case TM_COLUMN_RATING:
   case TM_COLUMN_BITRATE:
   case TM_COLUMN_SAMPLERATE:
@@ -1385,15 +1403,12 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       break;
   case TM_COLUMN_TIME_PLAYED:
       text = _("Played");
-      editable = FALSE;
       break;
   case TM_COLUMN_TIME_MODIFIED:
       text = _("Modified");
-      editable = FALSE;
       break;
   case TM_COLUMN_TIME_CREATED:
       text = _("Created");
-      editable = FALSE;
       break;
   case TM_COLUMN_YEAR:
       text = _("Year");

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-22 15:24:16 jcs>
+/* Time-stamp: <2004-12-07 00:12:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -55,7 +55,11 @@ enum { /* types for playlist->type */
 
 /* Most of the knowledge about smart playlists has been provided by
    Samuel "Otto" Wood (sam dot wood at gmail dot com) who let me dig
-   in his impressive c++ class*/
+   in his impressive C++ class. Contact him for a complete
+   copy. Further, all enums and #defines below, SPLRule, SPLRules, and
+   SPLPref may also be used under a FreeBSD license. */
+
+#define SPL_STRING_MAXLEN 255
 
 /* Definitions for smart playlists */
 enum { /* types for match_operator */
@@ -103,7 +107,7 @@ enum {
 };
 
 /* Smartlist Actions - Used in the rules.
-Note by Otto:
+Note by Otto (Samuel Wood):
  really this is a bitmapped field...
  high byte
  bit 0 = "string" values if set, "int" values if not set
@@ -151,6 +155,31 @@ typedef enum {
     SPLACTION_DOES_NOT_END_WITH = 0x03000008,
 } SPLAction;
 
+typedef enum
+{
+    splft_string = 1,
+    splft_int,
+    splft_boolean,
+    splft_date,
+    splft_playlist,
+    splft_unknown
+} SPLFieldType;
+
+typedef enum
+{
+    splat_string = 1,
+    splat_int,
+    splat_date,
+    splat_range_int,
+    splat_range_date,
+    splat_inthelast,
+    splat_playlist,
+    splat_none,
+    splat_invalid,
+    splat_unknown
+} SPLActionType;
+
+
 /* These are to pass to AddRule() when you need a unit for the two "in
    the last" action types Or, in theory, you can use any time
    range... iTunes might not like it, but the iPod shouldn't care. */
@@ -160,31 +189,6 @@ enum {
     SPLACTION_LAST_MONTHS_VALUE = 2628000,/* nr of secs in 30.4167
 					     days ~= 1 month */
 } ;
-
-enum SPLFieldType
-{
-    splft_String,
-    splft_Int,
-    splft_Boolean,
-    splft_Date,
-    splft_Playlist,
-    splft_Unknown
-};
-
-enum SPLActionType
-{
-    splat_String,
-    splat_Int,
-    splat_Boolean,
-    splat_Date,
-    splat_Range,
-    splat_InTheLast,
-    splat_Playlist,
-    splat_None,
-    splat_Invalid,
-    splat_Unknown
-};
-
 
 #if 0
 // Hey, why limit ourselves to what iTunes can do? If the iPod can deal with it, excellent!
@@ -245,7 +249,7 @@ typedef enum {
 				     data after * "to"... */
 } SPLField;
 
-#define SPLDATE_IDENTIFIER 0x2dae2dae2dae2dae
+#define SPLDATE_IDENTIFIER (G_GINT64_CONSTANT (0x2dae2dae2dae2daeU))
 
 /* Maximum string length that iTunes writes to the database */
 #define SPL_MAXSTRINGLENGTH 255
@@ -315,6 +319,7 @@ typedef struct
     gint  num;            /* number of tracks in playlist  */
     GList *members;       /* tracks in playlist (Track *)  */
     gboolean is_spl;      /* smart playlist?               */
+    guint64 id;           /* playlist ID                   */
     SPLPref splpref;      /* smart playlist prefs          */
     SPLRules splrules;    /* rules for smart playlists     */
     glong size;           /* not used by itunesdb.c        */
@@ -329,14 +334,16 @@ void itunesdb_rename_files (const gchar *dirname);
 gboolean itunesdb_copy_track_to_ipod (const gchar *path, Track *track,
 				      const gchar *pcfile);
 /* smart playlist functions */
-enum SPLFieldType itunesdb_spl_get_field_type (const SPLField field);
+SPLFieldType itunesdb_spl_get_field_type (const SPLField field);
+SPLActionType itunesdb_spl_get_action_type (const SPLField field,
+					    const SPLAction action);
 
 gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *s);
 gboolean itunesdb_cp (const gchar *from_file, const gchar *to_file);
-guint32 itunesdb_time_get_mac_time (void);
+guint64 itunesdb_time_get_mac_time (void);
 void itunesdb_convert_filename_fs2ipod (gchar *ipod_file);
 void itunesdb_convert_filename_ipod2fs (gchar *ipod_file);
 Track *itunesdb_new_track (void);
-time_t itunesdb_time_mac_to_host (guint32 mactime);
-guint32 itunesdb_time_host_to_mac (time_t time);
+time_t itunesdb_time_mac_to_host (guint64 mactime);
+guint64 itunesdb_time_host_to_mac (time_t time);
 #endif

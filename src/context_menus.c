@@ -28,14 +28,14 @@
 #  include <config.h>
 #endif
 
-#include "support.h"
-#include "prefs.h"
 #include "display.h"
-#include "track.h"
-#include "playlist.h"
-#include "misc.h"
 #include "file.h"
+#include "misc.h"
+#include "playlist.h"
+#include "prefs.h"
+#include "support.h"
 #include "tools.h"
+#include "track.h"
 
 static guint entry_inst = -1;
 static GList *selected_tracks = NULL;
@@ -186,6 +186,20 @@ delete_entries_full(GtkMenuItem *mi, gpointer data)
 	delete_track_head (TRUE);
 }
 
+
+/* Edit selected smart playlist */
+static void edit_spl (GtkMenuItem *mi, gpointer data)
+{
+    Playlist *pl = NULL;
+
+    if (selected_tracks)   pl = pm_get_selected_playlist ();
+    if (selected_entry)    pl = pm_get_selected_playlist ();
+    if (selected_playlist) pl = selected_playlist;
+
+    spl_edit (pl);
+}
+
+
 static void
 create_playlist_from_entries (GtkMenuItem *mi, gpointer data)
 {
@@ -264,12 +278,29 @@ GtkWidget *hookup_mi (GtkWidget *m, gchar *str, gchar *stock, GCallback func)
 }
 
 
+/* Add separator to Menu @m and return pointer to separator widget */
+GtkWidget *add_separator (GtkWidget *m)
+{
+    GtkWidget *sep = NULL;
+    if (m)
+    {
+	sep = gtk_separator_menu_item_new ();
+	gtk_widget_show(sep);
+	gtk_widget_set_sensitive(sep, TRUE);
+	gtk_container_add (GTK_CONTAINER (m), sep);
+    }
+    return sep;
+}
+
+
 void
 create_context_menu(CM_type type)
 {
     static GtkWidget *menu[CM_NUM];
     static GtkWidget *mi_d[CM_NUM];   /* delete but keep track menu */
     static GtkWidget *mi_df[CM_NUM];  /* delete with tracks menu */
+    static GtkWidget *mi_sep[CM_NUM]; /* separator */
+    static GtkWidget *mi_spl[CM_NUM]; /* edit smart playlist */
     Playlist *pl;
 
     if(!menu[type])
@@ -317,21 +348,29 @@ create_context_menu(CM_type type)
 	{
 	    hookup_mi (menu[type], _("Create new Playlist"), "gtk-justify-left",
 		       G_CALLBACK (create_playlist_from_entries));
+	    mi_sep[type] = add_separator (menu[type]);
 	    mi_d[type] = hookup_mi (menu[type], _("Delete From Playlist"),
 				    "gtk-delete",
 				    G_CALLBACK (delete_entries));
 	    mi_df[type] = hookup_mi (menu[type], _("Delete From iPod"),
 				     "gtk-delete",
 				     G_CALLBACK (delete_entries_full));
+	    mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
+				      "gtk-properties",
+				      G_CALLBACK (edit_spl));
 	}
 	if (type == CM_PM)
 	{
+	    mi_sep[type] = add_separator (menu[type]);
 	    mi_d[type] = hookup_mi (menu[type], _("Delete But Keep Tracks"),
 				    "gtk-delete",
 				    G_CALLBACK (delete_entries));
 	    mi_df[type] = hookup_mi (menu[type], _("Delete Including Tracks"),
 				     "gtk-delete",
 				     G_CALLBACK (delete_entries_full));
+	    mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
+				      "gtk-properties",
+				      G_CALLBACK (edit_spl));
 	}
     }
     /* Make sure, only available delete options are displayed */
@@ -341,28 +380,51 @@ create_context_menu(CM_type type)
 	switch (type)
 	{
 	case CM_PM:
-	    if (pl->type == PL_TYPE_NORM)
+	    if (pl->is_spl)
 	    {
-		gtk_widget_set_sensitive (mi_d[type], TRUE);
-		gtk_widget_set_sensitive (mi_df[type], TRUE);
+		gtk_widget_show (mi_sep[type]);
+		gtk_widget_show (mi_d[type]);
+		gtk_widget_hide (mi_df[type]);
+		gtk_widget_show (mi_spl[type]);
 	    }
 	    else
 	    {
-		gtk_widget_set_sensitive (mi_d[type], FALSE);
-		gtk_widget_set_sensitive (mi_df[type], FALSE);
+		gtk_widget_hide (mi_spl[type]);
+		if (pl->type == PL_TYPE_NORM)
+		{
+		    gtk_widget_show (mi_sep[type]);
+		    gtk_widget_show (mi_d[type]);
+		    gtk_widget_show (mi_df[type]);
+		}
+		else
+		{
+		    gtk_widget_hide (mi_sep[type]);
+		    gtk_widget_hide (mi_d[type]);
+		    gtk_widget_hide (mi_df[type]);
+		}
 	    }
 	    break;
 	case CM_ST:
 	case CM_TM:
-	    if (pl->type == PL_TYPE_NORM)
+	    if (pl->is_spl)
 	    {
-		gtk_widget_set_sensitive (mi_d[type], TRUE);
-		gtk_widget_set_sensitive (mi_df[type], TRUE);
+		gtk_widget_hide (mi_d[type]);
+		gtk_widget_hide (mi_df[type]);
+		gtk_widget_show (mi_spl[type]);
 	    }
 	    else
 	    {
-		gtk_widget_set_sensitive (mi_d[type], FALSE);
-		gtk_widget_set_sensitive (mi_df[type], TRUE);
+		gtk_widget_hide (mi_spl[type]);
+		if (pl->type == PL_TYPE_NORM)
+		{
+		    gtk_widget_show (mi_d[type]);
+		    gtk_widget_show (mi_df[type]);
+		}
+		else
+		{
+		    gtk_widget_hide (mi_d[type]);
+		    gtk_widget_show (mi_df[type]);
+		}
 	    }
 	    break;
 	case CM_NUM:  /* to avoid compiler warning */

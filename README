@@ -550,12 +550,12 @@ IPOD_MOUNTPOINT: Defines the mountpoint of the iPod. This overwrites
 the value stored in the prefs, but is overwritten by the command line
 argument "-m" or "--mountpoint".
 
-GTKPOD_DF_COMMAND: Defines the "df" command to be used for probing the
-free space on the iPod including command line arguments. Default is
-"df -k -P". On some systems it may be necessary to remove the "-P"
-option. The mount point is added to this command line
-automatically. You can switch off calls to df by setting this
-environment variable to an empty string.
+GTKPOD_DF_COMMAND: Only used on systems without statvfs(). Defines the
+"df" command to be used for probing the free space on the iPod
+including command line arguments. Default is "df -k -P". On some
+systems it may be necessary to remove the "-P" option. The mount point
+is added to this command line automatically. You can switch off calls
+to df by setting this environment variable to an empty string.
 
 
 

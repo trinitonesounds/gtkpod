@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-05 23:11:40 jcs>
+/* Time-stamp: <2004-12-06 23:37:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -144,7 +144,7 @@ void
 on_new_playlist_button                 (GtkButton       *button,
 					gpointer         user_data)
 {
-  add_new_playlist_user_name (NULL, -1);
+  add_new_pl_or_spl_user_name (NULL, -1);
 }
 
 void
@@ -318,7 +318,7 @@ on_playlist_treeview_drag_data_received
 		else
 		{ /* drop between playlists */
 		    Playlist *plitem;
-		    plitem = add_new_playlist_user_name (NULL, position);
+		    plitem = add_new_pl_user_name (NULL, position);
 		    if (plitem)
 		    {
 			add_idlist_to_playlist (plitem, data->data);
@@ -493,7 +493,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 		do_selected_playlist (update_trackids);
 		break;
 	    case GDK_n:
-		add_new_playlist_user_name (NULL, -1);
+		add_new_pl_or_spl_user_name (NULL, -1);
 		break;
 	    default:
 		break;
@@ -1320,16 +1320,6 @@ on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
 
 
 void
-on_cfg_time_format_changed             (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_time_format (buf);
-    g_free (buf);
-}
-
-
-void
 on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1498,7 +1488,14 @@ void
 on_new_playlist1_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-  add_new_playlist_user_name (NULL, -1);
+  add_new_pl_or_spl_user_name (NULL, -1);
+}
+
+void
+on_smart_playlist_activate             (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    spl_edit_new (NULL, -1);
 }
 
 void
@@ -2001,3 +1998,12 @@ on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
     prefs_window_set_tmp_disable_sort (
 	gtk_toggle_button_get_active(togglebutton));
 }
+
+void
+on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+
+}
+
+

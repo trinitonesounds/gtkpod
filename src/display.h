@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-05 23:13:34 jcs>
+/* Time-stamp: <2004-12-06 22:36:45 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -163,6 +163,8 @@ typedef enum  {
   TM_COLUMN_SOUNDCHECK,
   TM_COLUMN_SAMPLERATE,
   TM_COLUMN_BPM,
+  TM_COLUMN_FDESC,
+  TM_COLUMN_GROUPING,         /* 25 */
   TM_NUM_COLUMNS
 } TM_item;
 
@@ -205,6 +207,7 @@ Playlist* pm_get_selected_playlist(void);
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);
 void pm_select_playlist (Playlist *playlist);
+void pm_unselect_playlist (Playlist *playlist);
 void pm_remove_track (Playlist *playlist, Track *track);
 void pm_add_track (Playlist *playlist, Track *track, gboolean display);
 void pm_name_changed (Playlist *playlist);
@@ -268,4 +271,7 @@ void display_show_hide_tooltips (void);
 void display_set_info_window_menu (void);
 void display_set_check_ipod_menu (void);
 void display_stop_update (gint inst);
+
+void spl_edit (Playlist *spl);
+void spl_edit_new (gchar *name, gint32 pos);
 #endif 

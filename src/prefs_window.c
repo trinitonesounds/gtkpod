@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-15 22:23:12 jcs>
+/* Time-stamp: <2004-12-04 11:57:06 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -349,17 +349,6 @@ prefs_window_create(void)
 		  the text we might get a callback destroying the old
 		  value... */
 		gchar *buf = g_strdup (tmpcfg->ipod_mount);
-		gtk_entry_set_text(GTK_ENTRY(w), buf);
-		g_free (buf);
-	    }
-	}
-	if((w = lookup_widget(prefs_window, "time_format_entry")))
-	{
-	    if (tmpcfg->time_format)
-	    {  /* we should copy the new path first because by setting
-		  the text we might get a callback destroying the old
-		  value... */
-		gchar *buf = g_strdup (tmpcfg->time_format);
 		gtk_entry_set_text(GTK_ENTRY(w), buf);
 		g_free (buf);
 	    }
@@ -745,7 +734,6 @@ prefs_window_set(void)
 	{
 	    prefs_set_path (i, tmpcfg->path[i]);
 	}
-	prefs_set_time_format(tmpcfg->time_format);
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_autoimport(tmpcfg->autoimport);
 	for (i=0; i<SORT_TAB_MAX; ++i) {
@@ -938,12 +926,6 @@ prefs_window_apply (void)
 	}
     }
 
-    if((w = lookup_widget(prefs_window, "time_format_entry")))
-    {
-	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_time_format ());
-	/* tmpcfg gets set by the "changed" callback */
-    }
-
     if((w = lookup_widget(prefs_window, "mserv_username_entry")))
     {
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mserv_username ());
@@ -1028,13 +1010,6 @@ static void prefs_window_set_path (PathType i, const gchar *path)
     g_return_if_fail (i>=0 && i<PATH_NUM);
     g_free (tmpcfg->path[i]);
     tmpcfg->path[i] = g_strdup (path);
-}
-
-void prefs_window_set_time_format(const gchar *format)
-{
-    if (!format) return;
-    g_free (tmpcfg->time_format);
-    tmpcfg->time_format = g_strdup (format);
 }
 
 void prefs_window_set_write_extended_info(gboolean active)
