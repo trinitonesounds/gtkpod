@@ -785,7 +785,7 @@ msgstr[1] "%d sur %d des nouveaux morceaux copiés."
 #: src/file.c:2220 src/normalize.c:414
 #, c-format
 msgid "%d%% (%d:%02d) left"
-msgstr "%d%% (%d:%02d) gauche"
+msgstr "%d%% (%d:%02d)"
 
 #: src/file.c:2230
 msgid "Some tracks were not written to iPod. Export aborted!"
