@@ -32,6 +32,12 @@
 #include "charset.h"
 #include "support.h"
 
+typedef struct {
+	gchar *descr;
+	gchar *name;
+} CharsetInfo;
+
+
 const CharsetInfo charset_info[] = { 
     {N_("Arabic (IBM-864)"),                  "IBM864"        },
     {N_("Arabic (ISO-8859-6)"),               "ISO-8859-6"    },
@@ -59,6 +65,7 @@ const CharsetInfo charset_info[] = {
     {N_("Greek (Windows-1253)"),              "windows-1253"  },
     {N_("Hebrew (IBM-862)"),                  "IBM862"        },
     {N_("Hebrew (Windows-1255)"),             "windows-1255"  },
+    {N_("Japanese (automatic detection)"),    GTKPOD_JAPAN_AUTOMATIC},
     {N_("Japanese (EUC-JP)"),                 "EUC-JP"        },
     {N_("Japanese (ISO-2022-JP)"),            "ISO-2022-JP"   },
     {N_("Japanese (Shift_JIS)"),              "Shift_JIS"     },
@@ -245,6 +252,54 @@ gchar *charset_to_description (gchar *charset)
 }
 
 
+/* code for automatic detection of Japanese char-subset donated by
+   Hiroshi Kawashima */
+gchar *charset_check_k_code (guchar *p)
+{
+    while (p && *p && (*p != '\n'))
+    {
+	if ((p[0] == 0x1b) &&
+	    p[1] && (p[1] == 0x24) &&
+	    p[2] && (p[2] == 0x42))	    return ("ISO-2022-JP");
+	if ((p[0] == 0x1b) &&
+	    p[1] && (p[1] == 0x24) &&
+	    p[2] && (p[2] == 0x40))	    return ("ISO-2022-JP");
+	if (((p[0] >= 0x81) && (p[0] <= 0x9f)) ||
+	    (p[0] >= 0xe0)) 	            return ("Shift_JIS");
+	if ((p[0] >= 0xa1) && (p[0] <= 0xfe) && p[1] &&
+	    (((p[1] >= 0x21) && (p[1] <= 0x7e)) ||
+	     ((p[1] >= 0xa1) && (p[1] <= 0xfe))))
+	                                    return ("EUC-JP");
+	++p;
+    }
+    return (NULL);
+}
+
+/* same as check_k_code, but defaults to "EUC-JP" if no match is found */
+gchar *charset_check_k_code_with_default (guchar *p)
+{
+    gchar *result=NULL;
+
+    if (p)       result = charset_check_k_code (p);
+    if (!result) result = "EUC-JP";
+    return result;
+}
+
+
+/* return the charset actually used for the "auto detection"
+ * feature. So far only Japanese Autodetecion is implemented */
+gchar *charset_check_auto (gchar *str)
+{
+    G_CONST_RETURN gchar *charset;
+
+    if (str == NULL) return NULL; /* sanity */
+    charset = prefs_get_charset ();
+    if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
+	return (charset_check_k_code (str));
+    return NULL;
+}
+
+
 /* Convert "str" (in the charset specified in cfg->charset) to
  * utf8. If cfg->charset is NULL, "str" is assumed to be in the
  * current locale charset */
@@ -288,6 +343,17 @@ gchar *charset_to_charset (gchar *from_charset, gchar *to_charset, gchar *str)
     gsize bytes_read;
 
     if (!str) return NULL;
+
+    /* Handle automatic selection of Japanese charset */
+    if (from_charset && (strcmp (from_charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
+	from_charset = charset_check_k_code_with_default (str);
+    /* Automatic selection of Japanese charset when encoding to
+       Japanese is a bit of a problem... we simply fall back on EUC-JP
+       (defined in check_k_code_with_default ) if this situation
+       occurs. */
+    if (to_charset && (strcmp (to_charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
+	to_charset = charset_check_k_code_with_default (NULL);
+
     len = strlen (str);
     /* do the conversion! */
     ret = g_convert (str,                  /* string to convert */

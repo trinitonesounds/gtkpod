@@ -160,6 +160,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /* Strip_String(string1);*/
                         FileTag->title = g_strdup(string1);
                         g_free(string1);
+			if (!FileTag->auto_charset)
+			    FileTag->auto_charset = 
+				charset_check_auto (string);
                     }else
                     {
 		        /* Strip_String(string);*/
@@ -186,6 +189,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /* Strip_String(string1);*/
                         FileTag->artist = g_strdup(string1);
                         g_free(string1);
+			if (!FileTag->auto_charset)
+			    FileTag->auto_charset = 
+				charset_check_auto (string);
                     }else
                     {
 		        /* Strip_String(string); */
@@ -212,6 +218,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /* Strip_String(string1);*/
                         FileTag->album = g_strdup(string1);
                         g_free(string1);
+			if (!FileTag->auto_charset)
+			    FileTag->auto_charset = 
+				charset_check_auto (string);
                     }else
                     {
 		        /* Strip_String(string); */
@@ -419,6 +428,9 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                         /*Strip_String(string1);*/
                         FileTag->comment = g_strdup(string1);
                         g_free(string1);
+			if (!FileTag->auto_charset)
+			    FileTag->auto_charset = 
+				charset_check_auto (string);
                     }else
                     {
 		        /*Strip_String(string);*/

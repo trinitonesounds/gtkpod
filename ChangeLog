@@ -1,3 +1,7 @@
+gtkpod V0.52-CVS
+	IMPROVEMENT: added auto-dection of Japanese encoding (thanks
+	to Hiroshi Kawashima).
+
 gtkpod V0.51
 	NEW FEATURE: Synchronize directories (removed songs can be deleted
 	automatically).

@@ -67,6 +67,7 @@ typedef struct
   gboolean transferred;      /* has file been transferred to iPod? */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)         */
   gchar   *charset;          /* charset used for ID3 tags */
+  gchar   *auto_charset;     /* charset detected by auto-detection code */
 } Song;
 
 /* A means to address the fields by uniform IDs. May be extended as

@@ -35,7 +35,6 @@
 #include "support.h"
 #include "md5.h"
 #include "confirmation.h"
-#include "charset.h"
 #include "file.h"
 
 /* List with all the songs */

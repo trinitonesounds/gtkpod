@@ -340,6 +340,12 @@ static void update_charset_info (Song *song)
 	{    /* use standard locale charset */
 	    g_get_charset (&charset);
 	}
+	/* test for Japanese auto detection */
+	if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
+	{
+	    if (song->auto_charset)  charset = song->auto_charset;
+	}
+	song->auto_charset = NULL;
 	song->charset = g_strdup (charset);
     }
 }
@@ -451,6 +457,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    g_free (filetag->track_total);
 	}
 	song->size = filetag->size;
+	song->auto_charset = filetag->auto_charset;
     }
     g_free (filetag);
 

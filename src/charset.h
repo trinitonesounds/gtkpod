@@ -33,12 +33,12 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-typedef struct {
-	gchar *descr;
-	gchar *name;
-} CharsetInfo;
+#define GTKPOD_JAPAN_AUTOMATIC "gtkpod-japan-automatic"
 
 void charset_init_combo (GtkCombo *combo);
+gchar *charset_check_auto (gchar *string);
+gchar *charset_check_k_code (guchar *p);
+gchar *charset_check_k_code_with_default (guchar *p);
 gchar *charset_from_description (gchar *descr);
 gchar *charset_to_description (gchar *charset);
 gchar *charset_to_utf8 (gchar *str);

@@ -56,6 +56,8 @@ struct _File_Tag
     guint32 size;          /* Size of file in bytes */
     guint32 songlen;       /* Length of file in ms */
     GList *other;          /* List of unsupported fields (used for ogg only) */
+    gchar *auto_charset;   /* in case of auto-detection: which charset
+			      was used? */
 };
 
 
