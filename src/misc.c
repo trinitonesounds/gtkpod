@@ -50,6 +50,7 @@
 #include "file.h"
 #include "interface.h"
 #include "itunesdb.h"
+#include "md5.h"
 #include "misc.h"
 #include "playlist.h"
 #include "prefs.h"
@@ -2906,6 +2907,10 @@ guint ntokens(gchar** tokens)
     return n;
 }
 
+
+void process_gtk_events_blocked()
+{    while (widgets_blocked && gtk_events_pending ()) gtk_main_iteration ();  }
+
 /* checks iTunesDB for presence of dangling links and checks IPODs Music directory
  * on subject of orphaned files */
 void check_db (void)
@@ -2926,14 +2931,21 @@ void check_db (void)
     gpointer foundtrack ;
 
     gint  h = 0
+        , i
         , norphaned = 0;
 
     gchar ** tokens;
+    static GString *str_danggood = NULL
+        , *str_dangbad = NULL;
+
 
     gchar * IPOD_MUSICFILES_DIR;
     IPOD_MUSICFILES_DIR=g_strdup_printf("%s%c%s%cMusic%c",
                                         prefs_get_ipod_mount(), G_DIR_SEPARATOR,
                                         IPOD_CONTROL_DIR, G_DIR_SEPARATOR,G_DIR_SEPARATOR);
+
+    prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
+    block_widgets();
 
     gtkpod_statusbar_message(_("Creating a tree of known files"));
     gtkpod_tracks_statusbar_update();
@@ -2944,19 +2956,22 @@ void check_db (void)
     while((track=get_next_track(h)))
     {
         h=1;
+        if (!track->transferred) continue; /* we don't want to report not transfered files
+                                            * as dandgling */
         tokens = g_strsplit(track->ipod_path,":",4);
 /* 	fprintf(stdout,"File %s\n", track->ipod_path); */
         fflush(stdout);
         if (ntokens(tokens)>=4)
             pathtrack=g_strdup (tokens[3]);
         else
-            fprintf(stderr, "Report the bug please: shouldn't be 0 at %s:%d",__FILE__,__LINE__);
+            fprintf(stderr, "Report the bug please: shouldn't be 0 at %s:%d\n",__FILE__,__LINE__);
         g_tree_insert (files_known, pathtrack, track);
         g_strfreev(tokens);
     }
 
     gtkpod_statusbar_message(_("Checking iPOD files against known files in DB"));
     gtkpod_tracks_statusbar_update();
+    process_gtk_events_blocked();
 
     for(h=0;h<IPOD_MUSIC_DIRS;h++)
     {
@@ -3007,15 +3022,18 @@ void check_db (void)
         g_free(dir_des);
         g_free(ipod_dir);
         g_free(ipod_fulldir);
+        process_gtk_events_blocked();
     }
 
-    buf=g_strdup_printf(_("Found %d orphaned and %d dangling files"),
+    buf=g_strdup_printf(_("Found %d orphaned and %d dangling files. Processing..."),
                         norphaned, g_tree_nnodes(files_known));
+
     gtkpod_statusbar_message(buf);
     gtkpod_tracks_statusbar_update();
 
     g_free(buf);
 
+    /* Now lets deal with dangling tracks */
     if (g_tree_nnodes(files_known) > 0)
     {
 	gchar *str = g_strdup_printf ("[%s]", _("Dangling"));
@@ -3026,9 +3044,53 @@ void check_db (void)
     /* Traverse the tree - leftovers are dangling */
     g_tree_foreach(files_known, remove_dangling, pl_dangling);
 
-    if (pl_dangling || pl_orphaned)
-        data_changed();
+    str_danggood = g_string_sized_new(2000);
+    g_string_printf(str_danggood,
+                    _("Dangling tracks with files on PC (to be copied):\n"));
+
+    str_dangbad  = g_string_sized_new(2000);
+    g_string_printf(str_dangbad,
+                    _("Dangling tracks with NO files on PC (to be removed):\n"));
+
+
+    /* Now lets analyze sort dangling links to ones which have files
+       on physical disk and the ones which don't */
+    for(i = 0; i < get_nr_of_tracks_in_playlist (pl_dangling) ; i++)
+    {
+        Track *track = get_track_in_playlist_by_nr (pl_dangling, i);
+        gchar *filehash = NULL;
+        if (track->pc_path_locale && *track->pc_path_locale &&   /* file is specified */
+            g_file_test (track->pc_path_locale, G_FILE_TEST_EXISTS) && /* file exists */
+            track->md5_hash &&                           /* md5 defined for the track */
+            (!strcmp ((filehash=md5_hash_on_file_name (track->pc_path_locale)),
+                      track->md5_hash)))   /* and md5 of the file is the same as in the
+                                            * track info */
+        { /* Original file is present on PC and has the same md5*/
+            track->transferred=FALSE; /* yes - we need to transfer it */
+            update_track_from_file(track); /* please update information for the sake of it */
+            g_string_append_printf
+                (str_danggood,"%s %s-%s(%d)\n%s\n",_("Track"),
+                 track->artist, track->title, track->ipod_id, track->pc_path_locale);
+            data_changed();
+        }
+        else
+        { /* Doesn't exist */
+            g_string_append_printf
+                (str_dangbad,"%s %s-%s(%d)\n%s\n",_("Track"),
+                 track->artist, track->title, track->ipod_id, track->pc_path_locale);
+
+            remove_track_from_playlist(NULL, track); /* remove track from everywhere */
+            remove_track(track); /* seems to be fine fnct for this case */
+            data_changed();
+        }
+
+        if (filehash) g_free(filehash); /* 'if' probably is not necc. due to g_... but */
+    }
+
+    if (pl_dangling || pl_orphaned) data_changed();
 
     g_free(IPOD_MUSICFILES_DIR);
     g_tree_destroy(files_known);
+    prefs_set_statusbar_timeout (0);
+    release_widgets();
 }

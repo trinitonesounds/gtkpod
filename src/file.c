@@ -1511,7 +1511,7 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
           if (strstr (name, prefs_get_ipod_mount ()) == name)
           {   /* Yes */
               track->transferred = TRUE;
-              track->ipod_path = g_strdup_printf ("%c%s", 
+              track->ipod_path = g_strdup_printf ("%c%s",
 						  G_DIR_SEPARATOR,
 						  strstr(track->pc_path_utf8,
 							 "iPod_Control"));

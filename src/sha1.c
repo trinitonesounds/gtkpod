@@ -6,25 +6,25 @@
 |  <http://www.itl.nist.gov/fipspubs/fip180-1.htm>
 |
 |  Part of the gtkpod project.
-| 
+|
 |  URL: http://gtkpod.sourceforge.net/
-| 
+|
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
 |  (at your option) any later version.
-| 
+|
 |  This program is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
 |  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 |  GNU General Public License for more details.
-| 
+|
 |  You should have received a copy of the GNU General Public License
 |  along with this program; if not, write to the Free Software
 |  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-| 
+|
 |  iTunes and iPod are trademarks of Apple
-| 
+|
 |  This product is not supported/written/published by Apple!
 |
 |  $Id$
@@ -76,7 +76,7 @@ static void little_endian(hblock * stupidblock, int blocks);
  * Create and manage a string hash for files on disk
  */
 
-/** 
+/**
  * NR_PATH_MAX_BLOCKS
  * A seed of sorts for SHA1, if collisions occur increasing this value
  * should give more unique data to SHA1 as more of the file is read
@@ -85,7 +85,7 @@ static void little_endian(hblock * stupidblock, int blocks);
 #define NR_PATH_MAX_BLOCKS 4
 #define PATH_MAX_MD5 4096
 
-/** 
+/**
  * filehash
  * a string hash of the files on the ipod already, or are already registered
  * to be copied on next export
@@ -95,7 +95,7 @@ static GHashTable *filehash = NULL;
 /**
  * get_filesize_for_file_descriptor - get the filesize on disk for the given
  * file descriptor
- * @fp - the filepointer we want the filesize for 
+ * @fp - the filepointer we want the filesize for
  * Returns - the filesize in bytes
  */
 static int
@@ -125,7 +125,7 @@ md5_hash_on_file(FILE * fp)
    {
        int fsize = 0;
        int chunk_size = PATH_MAX_MD5 * NR_PATH_MAX_BLOCKS;
-       
+
        fsize = get_filesize_for_file_descriptor(fp);
        if(fsize < chunk_size)
 	   chunk_size = fsize;
@@ -135,18 +135,18 @@ md5_hash_on_file(FILE * fp)
 	   guint8 *hash = NULL;
 	   int bread = 0, x = 0, last = 0;
 	   gchar file_chunk[chunk_size + sizeof(int)];
-	  
+
 	   /* allocate the digest we're returning */
 	   if((result = (gchar*)g_malloc0(sizeof(gchar) * 41)) == NULL)
-	       gtkpod_main_quit();	/* errno == ENOMEM */ 
-	   
+	       gtkpod_main_quit();	/* errno == ENOMEM */
+
 	   /* put filesize in the first 32 bits */
-	   memcpy(file_chunk, &fsize, sizeof(int));	
-	   
+	   memcpy(file_chunk, &fsize, sizeof(int));
+
 	   /* read chunk_size from fp */
-	   bread = fread(&file_chunk[sizeof(int)], sizeof(gchar), 
+	   bread = fread(&file_chunk[sizeof(int)], sizeof(gchar),
 			    chunk_size, fp);
-	    
+
 	   /* create hash from our data */
 	   hash = sha1_hash(file_chunk, (bread + sizeof(int)));
 
@@ -158,7 +158,7 @@ md5_hash_on_file(FILE * fp)
 	   g_free(hash);
        }
        else
-       { 
+       {
 	  gtkpod_warning(_("Hashed file is 0 bytes long\n"));
        }
    }
@@ -231,7 +231,7 @@ md5_unique_file_free(void)
  * Check to see if a track has already been added to the ipod
  * @s - the Track we want to know about. If the track does not exist, it
  * is inserted into the hash.
- * Returns a pointer to the duplicate track. 
+ * Returns a pointer to the duplicate track.
  */
 Track *
 md5_track_exists_insert(Track * s)
@@ -268,7 +268,7 @@ md5_track_exists_insert(Track * s)
 /**
  * Check to see if a track has already been added to the ipod
  * @s - the Track we want to know about.
- * Returns a pointer to the duplicate track. 
+ * Returns a pointer to the duplicate track.
  */
 Track *
 md5_track_exists(Track * s)
@@ -330,7 +330,7 @@ sha1_hash(const guint8 * text, guint32 len)
        gtkpod_main_quit();	/* errno == ENOMEM */
    if((message->H = (hblock *) g_malloc(sizeof(hblock))) == NULL)
        gtkpod_main_quit();	/* errno == ENOMEM */
-   
+
    message->H->chunkblock[0] = 0x67452301;
    message->H->chunkblock[1] = 0xefcdab89;
    message->H->chunkblock[2] = 0x98badcfe;
@@ -375,8 +375,8 @@ sha1_hash(const guint8 * text, guint32 len)
    return (digest);
 }
 
-/* 
- * process_block_sha1 - process one 512-bit block of data 
+/*
+ * process_block_sha1 - process one 512-bit block of data
  * @message - the sha1 struct we're doing working on
  */
 static void
@@ -427,9 +427,9 @@ process_block_sha1(sha1 * message)
 }
 
 #if BYTE_ORDER == LITTLE_ENDIAN
-/* 
+/*
  * little_endian - swap the significants bits to cater to bigendian
- * @stupidblock - the block of data we're swapping 
+ * @stupidblock - the block of data we're swapping
  * @blocks - the number of blocks we're swapping
  */
 static void
@@ -438,7 +438,7 @@ little_endian(hblock * stupidblock, int blocks)
    int x;
    for (x = 0; x < blocks; x++)
    {
-  	stupidblock->chunkblock[x] = (stupidblock->charblock[x * 4] << 24 | stupidblock->charblock[x * 4 + 1] << 16 | stupidblock->charblock[x * 4 +2] << 8 | stupidblock->charblock[x * 4 + 3]); 
+  	stupidblock->chunkblock[x] = (stupidblock->charblock[x * 4] << 24 | stupidblock->charblock[x * 4 + 1] << 16 | stupidblock->charblock[x * 4 +2] << 8 | stupidblock->charblock[x * 4 + 3]);
    }
 }
 #endif
