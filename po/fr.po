@@ -288,7 +288,7 @@ msgstr "Europe occidentale (Windows-1252)"
 #. check for "System Charset" and return NULL
 #: src/charset.c:160 src/charset.c:170 src/charset.c:222
 msgid "System Charset"
-msgstr "Codage"
+msgstr "Jeu de caractères du système"
 
 #: src/confirmation.c:304
 msgid "Confirmation Dialogue"
@@ -308,7 +308,7 @@ msgstr "Mettre dans la file d'attente"
 
 #: src/context_menus.c:271
 msgid "Copy from iPod"
-msgstr "Copier les morceaux de l'iPod"
+msgstr "Copier vers votre disque dur"
 
 #: src/context_menus.c:273
 msgid "Update"
@@ -978,7 +978,7 @@ msgstr "_Fichier"
 
 #: src/interface.c:197
 msgid "_Read iTunesDB"
-msgstr "_Importer de l'iPod"
+msgstr "_Lire les infos de la base iTunesDB"
 
 #: src/interface.c:205
 msgid "Add _Files"
@@ -1024,7 +1024,7 @@ msgstr "_Synchroniser les répertoires"
 
 #: src/interface.c:293
 msgid "Copy _Tracks from iPod"
-msgstr "Copier les morceaux de l'iPod"
+msgstr "Copier les _morceaux vers votre disque dur"
 
 #: src/interface.c:321
 msgid "_Offline"
@@ -1036,7 +1036,7 @@ msgstr "_Créer les répertoires système de l'iPod"
 
 #: src/interface.c:338
 msgid "_Check iPOD Files"
-msgstr "_Controler les fichiers de l'iPod"
+msgstr "_Contrôler les fichiers de l'iPod"
 
 #: src/interface.c:341
 msgid ""
@@ -1308,7 +1308,7 @@ msgstr "Importer les données de l'iPod au démarrage de gtkpod"
 
 #: src/interface.c:1624
 msgid "Import"
-msgstr "Importer"
+msgstr "Import"
 
 #: src/interface.c:1645
 msgid " _Charset (ID3, files): "
@@ -1322,14 +1322,15 @@ msgid ""
 msgstr ""
 "gtkpod utilisera le jeu de caractères spécifié ici pour les tags ID3 et les "
 "fichiers. Vous pouvez le modifier entre chaque opération d'ajout.'Jeu de "
-"caractères du système' est l'encodage de votre système."
+"caractères du système' est le jeu de caractère défini par les locales de "
+"votre système."
 
 #: src/interface.c:1663
 msgid ""
 "Use selected charset also when updating\n"
 " or syncing tracks"
 msgstr ""
-"Le jeu de caractères sélectionné sera utilisé pour la mise à jour ou la "
+"Le jeu de caractères sélectionné sera utilisé pour la mise à jour ou la \n"
 "synchronisation des morceaux"
 
 #: src/interface.c:1666
@@ -1348,8 +1349,8 @@ msgstr ""
 "modifier lors de la mise à jour de ce morceau. Note: les infos sur les "
 "caractères sont stockées dans un fichier d'informations étendues et les "
 "morceaux importés.avant la version 0.51 de gtkpod n'utilisait pas ce "
-"fichier. Ce sera le codage spécifié ici qui sera utilisé en cas de mise à "
-"jour de ces morceaux."
+"fichier. Ce sera le jeu de caractères spécifié ici qui sera utilisé en cas "
+"de mise à jour de ces morceaux."
 
 #: src/interface.c:1668
 msgid "Add directories recursively"
@@ -1434,7 +1435,7 @@ msgid ""
 "If you check this option, tracks that have been removed from the synced "
 "directories will be removed from the iPod as well."
 msgstr ""
-"En cochant cette option, les morceaux qui ont été enlevés des répertoires  "
+"En cochant cette option, les morceaux qui ont été enlevés des répertoires "
 "synchronisés seront supprimés de l'iPod aussi."
 
 #: src/interface.c:1745
@@ -1480,7 +1481,7 @@ msgid ""
 "empty:"
 msgstr ""
 "Mettre un tag par défaut au cas où les tags restent vides après "
-"l'extraction  à partir du nom de fichier:"
+"l'extraction à partir du nom de fichier:"
 
 #: src/interface.c:1836
 msgid "Tag Reading"
@@ -1514,7 +1515,7 @@ msgstr "Faire une copie de sauvegarde de la base iTunesDB dans ~/.gtkpod/"
 
 #: src/interface.c:1860
 msgid "Sync (Writing of iTunesDB)"
-msgstr "Synchroniser (écriture de iTunesDB)"
+msgstr "Synchronisation (Écriture de iTunesDB)"
 
 #: src/interface.c:1881
 msgid "Filename Format: "
@@ -1523,7 +1524,7 @@ msgstr "Format du nom des fichiers: "
 #: src/interface.c:1896
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
-"mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod "
+"mp3' or '%o'. You can separate several patterns by semicolons -- gtkpod "
 "will determine which one to use by the filename extension given. Artist: %a, "
 "album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, "
 "year: %Y, original filename (requires extended information file): %o, the "
@@ -1546,9 +1547,8 @@ msgid ""
 "Use selected charset (see above: 'Adding/Updating/\n"
 " Syncing') also for this filename."
 msgstr ""
-"Utilise le jeu de caractère sélectionné (voir ci-dessus: 'Ajout/Mise à jour/"
-"Synchronisation')\n"
-" pour les noms de fichier."
+"Utilise le jeu de caractère sélectionné pour les noms de fichiers\n"
+"(voir la section ci-dessus: 'Ajout/Mise à jour/Synchronisation')"
 
 #: src/interface.c:1902
 msgid ""
@@ -1561,15 +1561,15 @@ msgid ""
 msgstr ""
 "Par défaut, le jeu de caractères spécifié lors du premier import d'un "
 "morceau sera celui utilisé pour la mise à jour. Si vous cochez cette option, "
-"vous pouvez utiliser un codage différent de ci-dessus. Note: les infos sur "
-"les caractères sont stockées dans un fichier d'informations étendues. Les "
-"morceaux importés avant la version 0.51 de gtkpod n'utilisait pas ce "
-"fichier. Ce sera le jeu de caractère spécifié ici qui sera utilisé en cas "
-"de mise à jour de ces morceaux."
+"vous pouvez utiliser un jeu de caractère différent de ci-dessus. Note: les "
+"infos sur les caractères sont stockées dans un fichier d'informations "
+"étendues. Les morceaux importés avant la version 0.51 de gtkpod n'utilisait "
+"pas ce fichier. Ce sera le jeu de caractère spécifié ici qui sera utilisé en "
+"cas de mise à jour de ces morceaux."
 
 #: src/interface.c:1904
 msgid "Copying from iPod"
-msgstr "Copier les morceaux de l'iPod"
+msgstr "Copie des morceaux de l'iPod"
 
 #: src/interface.c:1911
 msgid "_Input/Output"
@@ -1593,7 +1593,7 @@ msgstr ""
 
 #: src/interface.c:2055
 msgid "Displayed Track Attributes "
-msgstr "Afficher les propriétés des morceaux"
+msgstr "Attributs des morceaux affichés"
 
 #: src/interface.c:2076
 msgid " _Number of sort tabs: "
@@ -1710,7 +1710,7 @@ msgstr ""
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to write the tags. If you have chosen a wrong charset when first importing a "
-"track, you should select this option along with the correct charset.  Note: "
+"track, you should select this option along with the correct charset. Note: "
 "uses the extended information file to store the charset information (see "
 "'Writing of the iTunesDB' on the 'Input/Output' page) and tracks imported "
 "before V0.51 will have no charset stored -- the charset specified on the "
@@ -1768,7 +1768,7 @@ msgstr ""
 
 #: src/interface.c:2317
 msgid "Track Editing"
-msgstr "Édition du morceau"
+msgstr "Édition de morceau"
 
 #: src/interface.c:2343
 msgid ""
@@ -1785,9 +1785,8 @@ msgstr " Nombre de morceaux dans les listes de lecture générées: "
 #: src/interface.c:2355
 msgid "Also include tracks never played in \"Best Rated\" playlist"
 msgstr ""
-"Inclure aussi les morceaux jamais joués dans la liste de lecture des "
-"morceaux \n"
-"les mieux notés"
+"Inclure aussi les morceaux qui n'ont jamais été joués dans la liste de \n"
+"lecture des morceaux les mieux notés"
 
 #: src/interface.c:2359
 msgid "Auto-Generated Playlists"
@@ -1862,9 +1861,9 @@ msgid ""
 "You only need to specify this if your 'mp3gain' executable is not in your "
 "default path. Example: '/usr/local/bimbam/mp3gain'."
 msgstr ""
-"Vous devez spécifier le chemin de l'éxécutable si il ne se trouve pas défini "
-"dans vos chemins par défaut (variable d'environnement $PATH). Exemple:/usr/"
-"local/whatever/mp3gain"
+"Vous devez spécifier le chemin de l'éxécutable si il n'est pas défini "
+"dans les chemins par défaut (variable d'environnement $PATH). "
+"Exemple:/usr/whatever/mp3gain"
 
 #: src/interface.c:2480
 msgid "Write information about suggested gain level to file"
@@ -1889,7 +1888,7 @@ msgstr "Normalisation du volume"
 
 #: src/interface.c:2510
 msgid "Command to synchronize contacts:"
-msgstr "Commande pour synchroniser les contacts:"
+msgstr "Ligne de commande pour synchroniser les contacts:"
 
 #: src/interface.c:2521 src/interface.c:2534
 #, c-format
@@ -1902,11 +1901,11 @@ msgstr ""
 
 #: src/interface.c:2523
 msgid "Command to be called to synchronize calendar:"
-msgstr "Commande pour synchroniser le calendrier:"
+msgstr "Ligne de commande pour synchroniser le calendrier:"
 
 #: src/interface.c:2536
 msgid "Call automatically when synchronizing iTunesDB"
-msgstr "Lancer automatiquement lors de la synchronisation de la base iTunesDB"
+msgstr "Éxécuter en même temps que la synchronisation de la base iTunesDB"
 
 #: src/interface.c:2540
 msgid "Contacts / Calendar"
@@ -2332,12 +2331,13 @@ msgstr ""
 #: src/misc.c:424
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"
 msgstr ""
-"Ramesh Dharan: Édition multiple (édition de tags de plusieurs fichiers en "
-"même temps\n"
+"Ramesh Dharan: 'Édition multiple' (édition de tags de plusieurs fichiers en "
+"même temps)\n"
 
 #: src/misc.c:426
 msgid "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
-msgstr "Hiroshi Kawashima: Détection automatique du jeu de car. japonais\n"
+msgstr "Hiroshi Kawashima: détection automatique du type de jeu de caractères "
+"japonais\n"
 
 #: src/misc.c:428
 msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"
@@ -2349,12 +2349,13 @@ msgid ""
 "Walter Bell: correct handling of DND URIs with escaped characters and/or cr/"
 "newlines at the end\n"
 msgstr ""
-"Walter Bell: correction de la gestion des URIs avec des caractères "
+"Walter Bell: correction de la manipulation des URIs avec des caractères "
 "d'échappement\n"
 
 #: src/misc.c:432
 msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
-msgstr "Sam Clegg: définition des noms de fichier à l'export de morceaux\n"
+msgstr "Sam Clegg: définition par un masque des noms de fichier à l'export "
+"de morceaux\n"
 
 #: src/misc.c:434
 msgid "Chris Cutler: automatic creation of various playlist types\n"
@@ -2704,19 +2705,23 @@ msgstr "Dernière fois"
 
 #: src/misc.c:2959
 msgid "Removal of dangling tracks with no files on PC was canceled."
-msgstr "Suppression des morceaux fictifs sans fichier sur le PC a été annulée."
+msgstr "La suppression des morceaux fictifs sans fichier correspondant sur "
+"le PC a été annulée."
 
 #: src/misc.c:2961
 msgid "Handling of dangling tracks with files on PC was canceled."
-msgstr "Récupération des morceaux fictifs avec le fichier sur le PC a été annulée."
+msgstr "La récupération des morceaux fictifs à partir des fichiers du PC "
+"a été annulée."
 
 #: src/misc.c:2999
 msgid "Dangling tracks with no files on PC were removed."
-msgstr "Les morceaux fictifs sans fichier sur le PC ont été supprimés."
+msgstr "Les morceaux fictifs sans fichier correspondant sur le PC ont été "
+"supprimés."
 
 #: src/misc.c:3001
 msgid "Dangling tracks with files on PC were handled."
-msgstr "Les morceaux fictifs avec le fichier sur le PC ont été récupérés."
+msgstr "Les morceaux fictifs avec leur fichier correspondant sur le PC ont "
+"été récupérés."
 
 #: src/misc.c:3028
 msgid "Track"
@@ -2728,7 +2733,7 @@ msgstr "Création l'arborescence des fichiers reconnus"
 
 #: src/misc.c:3088
 msgid "Checking iPOD files against known files in DB"
-msgstr "Controle des fichiers sur l'iPod par rapport a ceux de la base iTunesDB"
+msgstr "Contrôle des fichiers sur l'iPod par rapport a ceux de la base iTunesDB"
 
 #: src/misc.c:3118
 msgid "Orphaned"
@@ -2737,7 +2742,7 @@ msgstr "Orphelin"
 #: src/misc.c:3145
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
-msgstr "%d orphelins et %d fichiers fictifs. Traitement en cours..."
+msgstr "%d orphelins et %d morceaux fictifs. Traitement en cours..."
 
 #: src/misc.c:3172
 #, c-format
@@ -2898,8 +2903,8 @@ msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr ""
-"Veuillez renseigner la commande à appeler dans la section 'Outils' dans "
-"la fenêtre de préférence.\n"
+"Veuillez renseigner la commande à appeler dans la section 'Outils' de "
+"la fenêtre de préférences.\n"
 
 #: src/normalize.c:531
 #, c-format
@@ -3084,9 +3089,10 @@ msgid ""
 "please send it to jcsjcs at users.sourceforge.net for inclusion into the "
 "next release."
 msgstr ""
-"Inspirez vous des scripts dans '%s'. Si vous écrivez un nouveau script, "
-"veuillez s'il vous plait l'envoyer à jcsjcs at users.sourceforge.net afin "
-"qu'il soit inclu dans la prochaine version de gtkpod."
+"Des scripts d'exemple sont présents dans le répertoire '%s'."
+"Si vous écrivez un nouveau script, veuillez s'il vous plait l'envoyer "
+"à jcsjcs at users.sourceforge.net afin qu'il soit ajouté dans les prochaines "
+"versions de gtkpod."
 
 #. update for count == 1, 21, 41 ... and for count == n
 #: src/song.c:406
