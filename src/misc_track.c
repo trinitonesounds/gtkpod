@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-04-03 00:38:35 jcs>
+|  Time-stamp: <2005-04-05 21:03:17 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -170,7 +170,7 @@ void gp_md5_free_hash (void)
  * (it is assumed that a rating of "0" means that no rating has been
  * set).
  *
- * The "created" timestamp is set to the older entry (unless that one
+ * The "added" timestamp is set to the older entry (unless that one
  * is 0).
  *
  * The "modified" and "last played" timestamps are set to the more
@@ -280,8 +280,8 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 				      track->time_modified);
        /* Set 'played' timestamp */
        oldtrack->time_played =  MAX (oldtrack->time_played, track->time_played);
-       /* Set 'created' timestamp */
-       oldtrack->time_created =  MIN (oldtrack->time_created, track->time_created);
+       /* Set 'added' timestamp */
+       oldtrack->time_added =  MIN (oldtrack->time_added, track->time_added);
 
        /* Update filename if new track has filename set (should be
 	* always!?) */
@@ -521,8 +521,8 @@ guint32 *track_get_timestamp_ptr (Track *track, T_item t_item)
 	return &track->time_played;
     case T_TIME_MODIFIED:
 	return &track->time_modified;
-    case T_TIME_CREATED:
-	return &track->time_created;
+    case T_TIME_ADDED:
+	return &track->time_added;
     default:
 	g_return_val_if_reached (0);
     }

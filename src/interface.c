@@ -3162,10 +3162,10 @@ create_special_sorttab (void)
   GtkWidget *sp_played_button;
   GtkWidget *sp_modified_button;
   GtkWidget *hbox57;
-  GtkWidget *sp_created_entry;
+  GtkWidget *sp_added_entry;
   GtkWidget *label159;
-  GtkWidget *sp_created_cal_button;
-  GtkWidget *sp_created_button;
+  GtkWidget *sp_added_cal_button;
+  GtkWidget *sp_added_button;
   GtkWidget *hseparator2;
   GtkWidget *hbox21;
   GtkWidget *sp_go;
@@ -3352,22 +3352,22 @@ create_special_sorttab (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 
-  sp_created_entry = gtk_entry_new ();
-  gtk_widget_show (sp_created_entry);
-  gtk_box_pack_start (GTK_BOX (hbox57), sp_created_entry, TRUE, TRUE, 0);
-  gtk_tooltips_set_tip (tooltips, sp_created_entry, _("'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when finished."), NULL);
+  sp_added_entry = gtk_entry_new ();
+  gtk_widget_show (sp_added_entry);
+  gtk_box_pack_start (GTK_BOX (hbox57), sp_added_entry, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, sp_added_entry, _("'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when finished."), NULL);
 
   label159 = gtk_label_new ("");
   gtk_widget_show (label159);
   gtk_box_pack_start (GTK_BOX (hbox57), label159, FALSE, FALSE, 0);
 
-  sp_created_cal_button = gtk_button_new_with_mnemonic (_("Calendar"));
-  gtk_widget_show (sp_created_cal_button);
-  gtk_box_pack_start (GTK_BOX (hbox57), sp_created_cal_button, FALSE, FALSE, 0);
+  sp_added_cal_button = gtk_button_new_with_mnemonic (_("Calendar"));
+  gtk_widget_show (sp_added_cal_button);
+  gtk_box_pack_start (GTK_BOX (hbox57), sp_added_cal_button, FALSE, FALSE, 0);
 
-  sp_created_button = gtk_check_button_new_with_mnemonic (_("Created"));
-  gtk_widget_show (sp_created_button);
-  gtk_table_attach (GTK_TABLE (table6), sp_created_button, 0, 1, 4, 5,
+  sp_added_button = gtk_check_button_new_with_mnemonic (_("Added"));
+  gtk_widget_show (sp_added_button);
+  gtk_table_attach (GTK_TABLE (table6), sp_added_button, 0, 1, 4, 5,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
@@ -3440,10 +3440,10 @@ create_special_sorttab (void)
   GLADE_HOOKUP_OBJECT (special_sorttab, sp_played_button, "sp_played_button");
   GLADE_HOOKUP_OBJECT (special_sorttab, sp_modified_button, "sp_modified_button");
   GLADE_HOOKUP_OBJECT (special_sorttab, hbox57, "hbox57");
-  GLADE_HOOKUP_OBJECT (special_sorttab, sp_created_entry, "sp_created_entry");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_added_entry, "sp_added_entry");
   GLADE_HOOKUP_OBJECT (special_sorttab, label159, "label159");
-  GLADE_HOOKUP_OBJECT (special_sorttab, sp_created_cal_button, "sp_created_cal_button");
-  GLADE_HOOKUP_OBJECT (special_sorttab, sp_created_button, "sp_created_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_added_cal_button, "sp_added_cal_button");
+  GLADE_HOOKUP_OBJECT (special_sorttab, sp_added_button, "sp_added_button");
   GLADE_HOOKUP_OBJECT (special_sorttab, hseparator2, "hseparator2");
   GLADE_HOOKUP_OBJECT (special_sorttab, hbox21, "hbox21");
   GLADE_HOOKUP_OBJECT (special_sorttab, sp_go, "sp_go");

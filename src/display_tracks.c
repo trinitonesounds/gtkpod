@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-04 22:22:11 jcs>
+/* Time-stamp: <2005-04-05 21:00:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -100,7 +100,7 @@ const gchar *tm_col_strings[] = {
     N_("Volume"),
     N_("Year"),
     N_("CD Nr"),
-    N_("Time created"),
+    N_("Time added"),
     N_("iPod File"),         /* 20 */
     N_("Soundcheck"),
     N_("Samplerate"),
@@ -131,7 +131,7 @@ const gchar *tm_col_tooltips[] = {
     N_("Manual volume adjust"),
     NULL,
     N_("CD Nr. and total number of CDS in set"),
-    N_("Time track has been created (timestamp of file)"),
+    N_("Time track has been added"),
     N_("Name of file on the iPod"),                    /* 20 */
     N_("Volume adjust in dB (replay gain) -- "
        "you need to activate 'soundcheck' on the iPod"),
@@ -654,7 +654,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
            changed = TRUE;
         }
         break;
-     case TM_COLUMN_TIME_CREATED:
+     case TM_COLUMN_TIME_ADDED:
      case TM_COLUMN_TIME_PLAYED:
      case TM_COLUMN_TIME_MODIFIED:
 	 t = time_string_to_time (new_text);
@@ -874,7 +874,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
-  case TM_COLUMN_TIME_CREATED:
+  case TM_COLUMN_TIME_ADDED:
       buf = time_field_to_string (track, column);
       g_object_set (G_OBJECT (renderer),
 		    "text", buf,
@@ -1345,7 +1345,7 @@ static gint tm_data_compare (Track *track1, Track *track2,
       return track1->playcount - track2->playcount;
   case  TM_COLUMN_RATING:
       return track1->rating - track2->rating;
-  case TM_COLUMN_TIME_CREATED:
+  case TM_COLUMN_TIME_ADDED:
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
       return COMP (time_get_time (track1, tm_item),
@@ -1624,8 +1624,8 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_TIME_MODIFIED:
       text = _("Modified");
       break;
-  case TM_COLUMN_TIME_CREATED:
-      text = _("Created");
+  case TM_COLUMN_TIME_ADDED:
+      text = _("Added");
       break;
   case TM_COLUMN_YEAR:
       text = _("Year");

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-17 22:27:38 jcs>
+/* Time-stamp: <2005-04-05 20:54:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1244,7 +1244,7 @@ static glong get_mhit (FImport *fimp, glong seek)
   CHECK_ERROR (fimp, -1);
   track->compilation = (temp & 0x00ff0000) >> 16;
   track->type = temp & 0x0000ffff;
-  track->time_created = get32lint(cts, seek+32);  /* creation time    */
+  track->time_added = get32lint(cts, seek+32);    /* time added       */
   CHECK_ERROR (fimp, -1);
   track->size = get32lint(cts, seek+36);          /* file size        */
   CHECK_ERROR (fimp, -1);
@@ -2115,7 +2115,7 @@ static void mk_mhit (WContents *cts, Itdb_Track *track)
 	     (track->compilation << 16) |
 	     (track->type & 0x0000ffff));/* rating, compil., type */
 
-  put32lint (cts, track->time_created); /* timestamp             */
+  put32lint (cts, track->time_added); /* timestamp             */
   put32lint (cts, track->size);    /* filesize                  */
   put32lint (cts, track->tracklen); /* length of track in ms     */
   put32lint (cts, track->track_nr);/* track number               */

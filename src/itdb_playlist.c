@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-13 21:45:44 jcs>
+/* Time-stamp: <2005-04-05 20:54:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -352,7 +352,7 @@ gboolean itdb_splr_eval (Itdb_iTunesDB *itdb, SPLRule *splr, Itdb_Track *track)
 	datecomp = track->time_modified;
 	break;
     case SPLFIELD_DATE_ADDED:
-	datecomp = track->time_created;
+	datecomp = track->time_added;
 	break;
     case SPLFIELD_LAST_PLAYED:
 	datecomp = track->time_played;
@@ -512,19 +512,19 @@ static gint compGenre (Itdb_Track *a, Itdb_Track *b)
 }
 static gint compMostRecentlyAdded (Itdb_Track *a, Itdb_Track *b)
 {
-    return b->time_created - a->time_created;
+    return b->time_added - a->time_added;
 }
 static gint compLeastRecentlyAdded (Itdb_Track *a, Itdb_Track *b)
 {
-    return a->time_created - b->time_created;
+    return a->time_added - b->time_added;
 }
 static gint compMostOftenPlayed (Itdb_Track *a, Itdb_Track *b)
 {
-    return b->time_created - a->time_created;
+    return b->time_added - a->time_added;
 }
 static gint compLeastOftenPlayed (Itdb_Track *a, Itdb_Track *b)
 {
-    return a->time_created - b->time_created;
+    return a->time_added - b->time_added;
 }
 static gint compMostRecentlyPlayed (Itdb_Track *a, Itdb_Track *b)
 {

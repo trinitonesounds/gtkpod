@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-05 17:26:12 jcs>
+/* Time-stamp: <2005-04-05 21:12:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -75,7 +75,7 @@ T_item TM_to_T (TM_item sm)
     case TM_COLUMN_BPM:           return T_BPM;
     case TM_COLUMN_PLAYCOUNT:     return T_PLAYCOUNT;
     case TM_COLUMN_RATING:        return T_RATING;
-    case TM_COLUMN_TIME_CREATED:  return T_TIME_CREATED;
+    case TM_COLUMN_TIME_ADDED:    return T_TIME_ADDED;
     case TM_COLUMN_TIME_PLAYED:   return T_TIME_PLAYED;
     case TM_COLUMN_TIME_MODIFIED: return T_TIME_MODIFIED;
     case TM_COLUMN_VOLUME:        return T_VOLUME;
@@ -242,8 +242,8 @@ time_t time_get_time (Track *track, TM_item tm_item)
 
     if (track) switch (tm_item)
     {
-    case TM_COLUMN_TIME_CREATED:
-	mactime = track->time_created;
+    case TM_COLUMN_TIME_ADDED:
+	mactime = track->time_added;
 	break;
     case TM_COLUMN_TIME_PLAYED:
 	mactime = track->time_played;
@@ -273,8 +273,8 @@ void time_set_time (Track *track, time_t time, TM_item tm_item)
 
     if (track) switch (tm_item)
     {
-    case TM_COLUMN_TIME_CREATED:
-	track->time_created = mactime;
+    case TM_COLUMN_TIME_ADDED:
+	track->time_added = mactime;
 	break;
     case TM_COLUMN_TIME_PLAYED:
 	track->time_played = mactime;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-09 00:33:17 jcs>
+/* Time-stamp: <2005-04-05 20:54:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -375,7 +375,7 @@ typedef struct
   gint32  year;              /* year                   */
   gint32  volume;            /* volume adjustment              */
   guint32 soundcheck;        /* volume adjustment "soundcheck" */
-  guint32 time_created;      /* time when added (Mac type)          */
+  guint32 time_added;        /* time when added (Mac type)          */
   guint32 time_played;       /* time of last play (Mac type)        */
   guint32 time_modified;     /* time of last modification (Mac type)*/
   guint32 bookmark_time;     /* bookmark set for (AudioBook) in ms  */

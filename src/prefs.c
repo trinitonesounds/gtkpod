@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-13 21:29:02 jcs>
+/* Time-stamp: <2005-04-05 20:54:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -184,8 +184,8 @@ struct cfg *cfg_new(void)
 	mycfg->st[i].sp_played_state = g_strdup (">4w");
 	mycfg->st[i].sp_modified = FALSE;
 	mycfg->st[i].sp_modified_state = g_strdup ("<1d");
-	mycfg->st[i].sp_created = FALSE;
-	mycfg->st[i].sp_created_state = g_strdup ("<1d");
+	mycfg->st[i].sp_added = FALSE;
+	mycfg->st[i].sp_added_state = g_strdup ("<1d");
 	mycfg->st[i].sp_autodisplay = FALSE;
     }
     mycfg->mpl_autoselect = TRUE;
@@ -523,10 +523,11 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+off);
 	      prefs_set_sp_cond (i, T_TIME_MODIFIED, atoi (arg));
 	  }
-	  else if(arg_comp (line, "sp_created_cond", &off) == 0)
+	  else if((arg_comp (line, "sp_created_cond", &off) == 0) ||
+		  arg_comp (line, "sp_added_cond", &off) == 0)
 	  {
 	      gint i = atoi (line+off);
-	      prefs_set_sp_cond (i, T_TIME_CREATED, atoi (arg));
+	      prefs_set_sp_cond (i, T_TIME_ADDED, atoi (arg));
 	  }
 	  else if(arg_comp (line, "sp_rating_state", &off) == 0)
 	  {
@@ -553,10 +554,11 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+off);
 	      prefs_set_sp_entry (i, T_TIME_MODIFIED, arg);
 	  }
-	  else if(arg_comp (line, "sp_created_state", &off) == 0)
+	  else if((arg_comp (line, "sp_created_state", &off) == 0) ||
+		  (arg_comp (line, "sp_added_state", &off) == 0))
 	  {
 	      gint i = atoi (line+off);
-	      prefs_set_sp_entry (i, T_TIME_CREATED, arg);
+	      prefs_set_sp_entry (i, T_TIME_ADDED, arg);
 	  }
 	  else if(arg_comp (line, "sp_autodisplay", &off) == 0)
 	  {
@@ -1067,8 +1069,8 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_PLAYED));
 	fprintf(fp, "sp_modified_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_MODIFIED));
 	fprintf(fp, "sp_modified_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_MODIFIED));
-	fprintf(fp, "sp_created_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_CREATED));
-	fprintf(fp, "sp_created_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_CREATED));
+	fprintf(fp, "sp_added_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_ADDED));
+	fprintf(fp, "sp_added_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_ADDED));
 	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
     }
     fprintf(fp, _("# autoselect master playlist?\n"));
@@ -2250,8 +2252,8 @@ void prefs_set_sp_cond (guint32 inst, T_item t_item, gboolean state)
 	case T_TIME_MODIFIED:
 	    cfg->st[inst].sp_modified = state;
 	    break;
-	case T_TIME_CREATED:
-	    cfg->st[inst].sp_created = state;
+	case T_TIME_ADDED:
+	    cfg->st[inst].sp_added = state;
 	    break;
 	default:
 	    /* programming error */
@@ -2284,8 +2286,8 @@ gboolean prefs_get_sp_cond (guint32 inst, T_item t_item)
 	    return cfg->st[inst].sp_played;
 	case T_TIME_MODIFIED:
 	    return cfg->st[inst].sp_modified;
-	case T_TIME_CREATED:
-	    return cfg->st[inst].sp_created;
+	case T_TIME_ADDED:
+	    return cfg->st[inst].sp_added;
 	default:
 	    /* programming error */
 	    fprintf (stderr, "prefs_get_sp_cond(): inst=%d !t_item=%d!\n",
@@ -2369,9 +2371,9 @@ void prefs_set_sp_entry (guint32 inst, T_item t_item, const gchar *str)
 	    g_free (cfg->st[inst].sp_modified_state);
 	    cfg->st[inst].sp_modified_state = cstr;
 	    break;
-	case T_TIME_CREATED:
-	    g_free (cfg->st[inst].sp_created_state);
-	    cfg->st[inst].sp_created_state = cstr;
+	case T_TIME_ADDED:
+	    g_free (cfg->st[inst].sp_added_state);
+	    cfg->st[inst].sp_added_state = cstr;
 	    break;
 	default:
 	    /* programming error */
@@ -2406,8 +2408,8 @@ gchar *prefs_get_sp_entry (guint32 inst, T_item t_item)
 	case T_TIME_MODIFIED:
 	    result = cfg->st[inst].sp_modified_state;
 	    break;
-	case T_TIME_CREATED:
-	    result = cfg->st[inst].sp_created_state;
+	case T_TIME_ADDED:
+	    result = cfg->st[inst].sp_added_state;
 	    break;
 	default:
 	    /* programming error */

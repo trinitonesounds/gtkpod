@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-27 23:12:49 jcs>
+/* Time-stamp: <2005-04-05 20:54:57 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -98,7 +98,7 @@ typedef enum {
     T_BPM,
     T_PLAYCOUNT,
     T_RATING,
-    T_TIME_CREATED,
+    T_TIME_ADDED,
     T_TIME_PLAYED,
     T_TIME_MODIFIED,
     T_VOLUME,

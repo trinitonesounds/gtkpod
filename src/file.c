@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 03:07:36 jcs>
+/* Time-stamp: <2005-04-05 21:00:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -677,7 +677,7 @@ Track *copy_new_info (Track *from, Track *to)
     eto->peak_signal_set = efrom->peak_signal_set;
     eto->radio_gain_set = efrom->radio_gain_set;
     eto->audiophile_gain_set = efrom->audiophile_gain_set;
-    to->time_created = from->time_created;
+    to->time_added = from->time_added;
     to->time_modified = from->time_modified;
     to->year = from->year;
     g_free (eto->year_str);
@@ -825,7 +825,6 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     if (nti)
     {
 	ExtraTrackData *enti=nti->userdata;
-	struct stat si;
 	FILE *file;
 
 	g_return_val_if_fail (enti, NULL);
@@ -865,9 +864,8 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	/* exception: md5_hash, charset and hostname: these may be NULL. */
 	/* Set modification date to *now* */
 	nti->time_modified = itdb_time_get_mac_time ();
-	/* Set creation date to modification date of file */
-	if (stat (name, &si) == 0)
-	    nti->time_created = itdb_time_host_to_mac (si.st_mtime);
+	/* Set added date to *now* */
+	nti->time_added = nti->time_modified;
 
 	gp_track_validate_entries (nti);
 

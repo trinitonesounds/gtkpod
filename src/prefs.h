@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-29 18:13:36 jcs>
+/* Time-stamp: <2005-04-05 20:58:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -85,8 +85,8 @@ struct cfg
     gchar *sp_played_state;  /* current "played" string */
     gboolean sp_modified;    /* consider last modified? */
     gchar *sp_modified_state;/* current "modified" string */
-    gboolean sp_created;     /* consider created? */
-    gchar *sp_created_state; /* current "created" string */
+    gboolean sp_added;       /* consider added? */
+    gchar *sp_added_state;   /* current "added" string */
     gboolean sp_autodisplay; /* display automatically? */
   } st[SORT_TAB_MAX];
   struct sortcfg

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-04 22:21:42 jcs>
+/* Time-stamp: <2005-04-05 21:03:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -195,7 +195,7 @@ static void sp_remove_all_members (guint32 inst)
 }
 
 
-/* Return a pointer to ti_created, ti_modified or ti_played. Returns
+/* Return a pointer to ti_added, ti_modified or ti_played. Returns
    NULL if either inst or item are out of range */
 static TimeInfo *sp_get_timeinfo_ptr (guint32 inst, T_item item)
 {
@@ -208,8 +208,8 @@ static TimeInfo *sp_get_timeinfo_ptr (guint32 inst, T_item item)
 	SortTab *st = sorttab[inst];
 	switch (item)
 	{
-	case T_TIME_CREATED:
-	    return &st->ti_created;
+	case T_TIME_ADDED:
+	    return &st->ti_added;
 	case T_TIME_PLAYED:
 	    return &st->ti_played;
 	case T_TIME_MODIFIED:
@@ -289,8 +289,8 @@ static IntervalState sp_check_time (guint32 inst, T_item item, Track *track)
 	case T_TIME_MODIFIED:
 	    gtkpod_statusbar_message (_("'Modified' condition ignored because of error."));
 	    break;
-	case T_TIME_CREATED:
-	    gtkpod_statusbar_message (_("'Created' condition ignored because of error."));
+	case T_TIME_ADDED:
+	    gtkpod_statusbar_message (_("'Added' condition ignored because of error."));
 	    break;
 	default:
 	    break;
@@ -360,10 +360,10 @@ static gboolean sp_check_track (Track *track, guint32 inst)
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
     }
-    /* time created */
-    if (prefs_get_sp_cond (inst, T_TIME_CREATED))
+    /* time added */
+    if (prefs_get_sp_cond (inst, T_TIME_ADDED))
     {
-	IntervalState result = sp_check_time (inst, T_TIME_CREATED, track);
+	IntervalState result = sp_check_time (inst, T_TIME_ADDED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
 	if ((!sp_or) && (result == IS_OUTSIDE))  return FALSE;
 	if (result != IS_ERROR)                  checked = TRUE;
@@ -518,8 +518,8 @@ static void sp_store_sp_entries (gint inst)
 			gtk_entry_get_text (GTK_ENTRY(st->ti_played.entry)));
     prefs_set_sp_entry (inst, T_TIME_MODIFIED,
 			gtk_entry_get_text (GTK_ENTRY(st->ti_modified.entry)));
-    prefs_set_sp_entry (inst, T_TIME_CREATED,
-			gtk_entry_get_text (GTK_ENTRY(st->ti_created.entry)));
+    prefs_set_sp_entry (inst, T_TIME_ADDED,
+			gtk_entry_get_text (GTK_ENTRY(st->ti_added.entry)));
 }
 
 /* display the members satisfying the conditions specified in the
@@ -2449,26 +2449,26 @@ static void st_create_special (gint inst, GtkWidget *window)
 			G_CALLBACK (on_sp_cal_button_clicked),
 			(gpointer)((T_TIME_MODIFIED<<SP_SHIFT) + inst));
 
-      /* CREATED */
-      w = lookup_widget (special, "sp_created_button");
-      st->ti_created.active = w;
+      /* ADDED */
+      w = lookup_widget (special, "sp_added_button");
+      st->ti_added.active = w;
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((T_TIME_CREATED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_ADDED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, T_TIME_CREATED));
-      w = lookup_widget (special, "sp_created_entry");
-      st->ti_created.entry = w;
+				   prefs_get_sp_cond (inst, T_TIME_ADDED));
+      w = lookup_widget (special, "sp_added_entry");
+      st->ti_added.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
-			  prefs_get_sp_entry (inst, T_TIME_CREATED));
+			  prefs_get_sp_entry (inst, T_TIME_ADDED));
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
-			(gpointer)((T_TIME_CREATED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_ADDED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)lookup_widget (special,
-						 "sp_created_cal_button"),
+						 "sp_added_cal_button"),
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
-			(gpointer)((T_TIME_CREATED<<SP_SHIFT) + inst));
+			(gpointer)((T_TIME_ADDED<<SP_SHIFT) + inst));
 
 
       g_signal_connect ((gpointer)lookup_widget (special, "sp_go"),
@@ -2785,14 +2785,14 @@ void st_show_hide_tooltips (void)
 const gchar *cat_strings[] = {
     N_("Last Played"),
     N_("Last Modified"),
-    N_("Created"),
+    N_("Added"),
     NULL };
 
 /* enum to access cat_strings */
 enum {
     CAT_STRING_PLAYED = 0,
     CAT_STRING_MODIFIED = 1,
-    CAT_STRING_CREATED = 2 };
+    CAT_STRING_ADDED = 2 };
 
 /* typedef to specify lower or upper margin */
 typedef enum {
@@ -2973,8 +2973,8 @@ static T_item cal_get_category (GtkWidget *cal)
     case CAT_STRING_MODIFIED:
 	item = T_TIME_MODIFIED;
 	break;
-    case CAT_STRING_CREATED:
-	item = T_TIME_CREATED;
+    case CAT_STRING_ADDED:
+	item = T_TIME_ADDED;
 	break;
     default:
 	fprintf (stderr, "Programming error: cal_get_category () -- item not found.\n");
@@ -3015,7 +3015,7 @@ static void cal_apply_data (GtkWidget *cal)
     /* Get selected instance */
     inst = gtk_spin_button_get_value_as_int (
 	GTK_SPIN_BUTTON (lookup_widget (cal, "sorttab_num_spin"))) - 1;
-    /* Get selected category (played, modified or created) */
+    /* Get selected category (played, modified or added) */
     item = cal_get_category (cal);
     /* Get pointer to corresponding TimeInfo struct */
     ti = sp_get_timeinfo_ptr (inst, item);
@@ -3138,7 +3138,7 @@ static void cal_ok (GtkButton *button, gpointer user_data)
 }
 
 /* Open a calendar window. Preset the values for instance @inst,
-   category @item (time played, time modified or time created) */
+   category @item (time played, time modified or time added) */
 void cal_open_calendar (gint inst, T_item item)
 {
     SortTab *st;
@@ -3185,8 +3185,8 @@ void cal_open_calendar (gint inst, T_item item)
     case T_TIME_MODIFIED:
 	str = gettext (cat_strings[CAT_STRING_MODIFIED]);
 	break;
-    case T_TIME_CREATED:
-	str = gettext (cat_strings[CAT_STRING_CREATED]);
+    case T_TIME_ADDED:
+	str = gettext (cat_strings[CAT_STRING_ADDED]);
 	break;
     default:
 	fprintf (stderr, "Programming error: cal_open_calendar() -- item not found\n");
