@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 15:03:02 jcs>
+/* Time-stamp: <2003-11-03 21:38:21 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,6 +39,7 @@
 #include "file.h"
 #include "id3_tag.h"
 #include "mp3file.h"
+#include "mp4file.h"
 #include "itunesdb.h"
 #include "md5.h"
 #include "misc.h"
@@ -293,10 +294,9 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *      Helper function for add_track_by_filename ()                 *
+ *      Fill in track struct with data from file                     *
  *                                                                  *
 \*------------------------------------------------------------------*/
-
 
 /* Used by set_entry_from_filename() */
 static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
@@ -344,14 +344,18 @@ static void set_entry_from_filename (Track *track, gint column)
 }
 
 
-/*------------------------------------------------------------------*\
- *                                                                  *
- *      Fill in track struct with data from file                     *
- *                                                                  *
-\*------------------------------------------------------------------*/
+static void set_unset_entries_from_filename (Track *track)
+{
+    if (!track->album)    set_entry_from_filename (track, TM_COLUMN_ALBUM);
+    if (!track->artist)   set_entry_from_filename (track, TM_COLUMN_ARTIST);
+    if (!track->title)    set_entry_from_filename (track, TM_COLUMN_TITLE);
+    if (!track->genre)    set_entry_from_filename (track, TM_COLUMN_GENRE);
+    if (!track->composer) set_entry_from_filename (track, TM_COLUMN_COMPOSER);
+}
+
 
 /* update the track->charset info with the currently used charset */
-static void update_charset_info (Track *track)
+void update_charset_info (Track *track)
 {
     if (track)
     {
@@ -378,16 +382,75 @@ static void update_charset_info (Track *track)
 }
 
 
+/* Copy "new" info read from file to an old Track structure. If @to is
+   NULL, nothing will be done.
+   Return value: a pointer to the track the data was copied to. */
+Track *copy_new_info (Track *from, Track *to)
+{
+    if (!from || !to) return NULL;
+
+    C_FREE (to->album);
+    C_FREE (to->artist);
+    C_FREE (to->title);
+    C_FREE (to->genre);
+    C_FREE (to->comment);
+    C_FREE (to->composer);
+    C_FREE (to->fdesc);
+    C_FREE (to->album_utf16);
+    C_FREE (to->artist_utf16);
+    C_FREE (to->title_utf16);
+    C_FREE (to->genre_utf16);
+    C_FREE (to->comment_utf16);
+    C_FREE (to->composer_utf16);
+    C_FREE (to->fdesc_utf16);
+    C_FREE (to->pc_path_utf8);
+    C_FREE (to->pc_path_locale);
+    C_FREE (to->ipod_path);
+    C_FREE (to->ipod_path_utf16);
+    C_FREE (to->charset);
+    C_FREE (to->auto_charset);
+    /* copy strings */
+    to->album = g_strdup (from->album);
+    to->album_utf16 = utf16_strdup (from->album_utf16);
+    to->artist = g_strdup (from->artist);
+    to->artist_utf16 = utf16_strdup (from->artist_utf16);
+    to->title = g_strdup (from->title);
+    to->title_utf16 = utf16_strdup (from->title_utf16);
+    to->genre = g_strdup (from->genre);
+    to->genre_utf16 = utf16_strdup (from->genre_utf16);
+    to->comment = g_strdup (from->comment);
+    to->comment_utf16 = utf16_strdup (from->comment_utf16);
+    to->composer = g_strdup (from->composer);
+    to->composer_utf16 = utf16_strdup (from->composer_utf16);
+    to->fdesc = g_strdup (from->fdesc);
+    to->fdesc_utf16 = utf16_strdup (from->fdesc_utf16);
+    to->ipod_path = g_strdup (from->ipod_path);
+    to->ipod_path_utf16 = utf16_strdup (from->ipod_path_utf16);
+    to->album = g_strdup (from->album);
+    to->album_utf16 = utf16_strdup (from->album_utf16);
+    to->charset = g_strdup (from->charset);
+    to->auto_charset = g_strdup (from->auto_charset);
+    to->size = from->size;
+    to->tracklen = from->tracklen;
+    to->cd_nr = from->cd_nr;
+    to->cds = from->cds;
+    to->track_nr = from->track_nr;
+    to->tracks = from->tracks;
+    to->year = from->year;
+    to->bitrate = from->bitrate;
+
+    return to;
+}
+
 /* Fills the supplied @or_track with data from the file @name. If
  * @or_track is NULL, a new track struct is created The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists */ 
 /* turns NULL on error, a pointer to the Track otherwise */
-Track *get_track_info_from_file (gchar *name, Track *or_track)
+Track *get_track_info_from_file (gchar *name, Track *orig_track)
 {
     Track *track = NULL;
-    File_Tag filetag;
-    mp3info *mp3info;
+    Track *nti = NULL;
     gint len;
 
     if (!name) return NULL;
@@ -395,156 +458,43 @@ Track *get_track_info_from_file (gchar *name, Track *or_track)
     if (g_file_test (name, G_FILE_TEST_IS_DIR)) return NULL;
     if (!g_file_test (name, G_FILE_TEST_EXISTS)) return NULL;
 
-    /* check if filename ends on ".mp3" */
+    /* check for filetype */
     len = strlen (name);
     if (len < 4) return NULL;
-    if (strcasecmp (&name[len-4], ".mp3") != 0) return NULL;
 
-    if (Id3tag_Read_File_Tag (name, &filetag) == TRUE)
+    if (strcasecmp (&name[len-4], ".mp3") == 0)
+	nti = file_get_mp3_info (name);
+    if (strcasecmp (&name[len-4], ".m4p") == 0)
+	nti = file_get_mp4_info (name);
+    if (strcasecmp (&name[len-4], ".m4a") == 0)
+	nti = file_get_mp4_info (name);
+
+    if (nti)
     {
-	struct stat si;
-
-	if (or_track)    track = or_track;
-	else            track = g_malloc0 (sizeof (Track));
-
-	C_FREE (track->pc_path_utf8);
-	C_FREE (track->pc_path_locale);
-	track->pc_path_utf8 = charset_to_utf8 (name);
-	track->pc_path_locale = g_strdup (name);
-
-	/* Set modification date to modification date of file */
-	if (stat (name, &si) == 0)
-	    track->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
-
-	C_FREE (track->fdesc);
-	C_FREE (track->fdesc_utf16);
-	track->fdesc = g_strdup ("MPEG audio file");
-	track->fdesc_utf16 = g_utf8_to_utf16 (track->fdesc, -1, NULL, NULL, NULL);
-	C_FREE (track->album);
-	C_FREE (track->album_utf16);
-	if (filetag.album)
-	{
-	    track->album = filetag.album;
-	    track->album_utf16 = g_utf8_to_utf16 (track->album, -1, NULL, NULL, NULL);
-	}
-	else set_entry_from_filename (track, TM_COLUMN_ALBUM);
-
-	C_FREE (track->artist);
-	C_FREE (track->artist_utf16);
-	if (filetag.artist)
-	{
-	    track->artist = filetag.artist;
-	    track->artist_utf16 = g_utf8_to_utf16 (track->artist, -1, NULL, NULL, NULL);
-	}
-	else set_entry_from_filename (track, TM_COLUMN_ARTIST);
-
-	C_FREE (track->title);
-	C_FREE (track->title_utf16);
-	if (filetag.title)
-	{
-	    track->title = filetag.title;
-	    track->title_utf16 = g_utf8_to_utf16 (track->title, -1, NULL, NULL, NULL);
-	}
-	else set_entry_from_filename (track, TM_COLUMN_TITLE);
-
-	C_FREE (track->genre);
-	C_FREE (track->genre_utf16);
-	if (filetag.genre)
-	{
-	    track->genre = filetag.genre;
-	    track->genre_utf16 = g_utf8_to_utf16 (track->genre, -1, NULL, NULL, NULL);
-	}
-	else set_entry_from_filename (track, TM_COLUMN_GENRE);
-
-	C_FREE (track->composer);
-	C_FREE (track->composer_utf16);
-	if (filetag.composer)
-	{
-	    track->composer = filetag.composer;
-	    track->composer_utf16 = g_utf8_to_utf16 (track->composer, -1, NULL, NULL, NULL);
-	}
-	else set_entry_from_filename (track, TM_COLUMN_COMPOSER);
-
-	C_FREE (track->comment);
-	C_FREE (track->comment_utf16);
-	if (filetag.comment)
-	{
-	    track->comment = filetag.comment;
-	    track->comment_utf16 = g_utf8_to_utf16 (track->comment, -1, NULL, NULL, NULL);
-	}
-	if (filetag.year == NULL)
-	{
-	    track->year = 0;
-	}
-	else
-	{
-	    track->year = atoi(filetag.year);
-	    g_free (filetag.year);
-	}
-
-	if (filetag.trackstring == NULL)
-	{
-	    track->track_nr = 0;
-	}
-	else
-	{
-	    track->track_nr = atoi(filetag.trackstring);
-	    g_free (filetag.trackstring);
-	}
-
-	if (filetag.track_total == NULL)
-	{
-	    track->tracks = 0;
-	}
-	else
-	{
-	    track->tracks = atoi(filetag.track_total);
-	    g_free (filetag.track_total);
-	}
-	track->size = filetag.size;
-	track->auto_charset = filetag.auto_charset;
-    }
-
-    if (track)
-    {
-	/* Get additional info (play time and bitrate */
-	mp3info = mp3file_get_info (name);
-	if (mp3info)
-	{
-	    track->tracklen = mp3info->milliseconds;
-	    track->bitrate = (gint)(mp3info->vbr_average);
-	    g_free (mp3info);
-	}
-	/* Fall back to xmms code if tracklen is 0 */
-	if (track->tracklen == 0)
-	{
-	    track->tracklen = get_track_time (name);
-	    if (track->tracklen)
-		track->bitrate = (float)track->size*8/track->tracklen;
-	}
-
-	/* set charset used */
-	update_charset_info (track);
-
-	/* Make sure all strings are initialised -- that way we don't 
+	/* Set unset strings (album...) from filename */
+	set_unset_entries_from_filename (nti);
+	/* Make sure all strings are initialized -- that way we don't 
 	   have to worry about it when we are handling the strings */
 	/* exception: md5_hash, charset and hostname: these may be NULL. */
-	validate_entries (track);
+	validate_entries (nti);
 
-	if (track->tracklen == 0)
-	{
-	    /* Tracks with zero play length are ignored by iPod... */
-	    gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
-			    name);
-	    if (!or_track)
-	    {  /* don't delete the track that was passed to us */
-		g_free (track);
-	    }
-	    track = NULL;
-	    while (widgets_blocked && gtk_events_pending ())
-		gtk_main_iteration ();
+	if (orig_track)
+	{ /* we need to copy all information over to the original
+	   * track */
+	    track = copy_new_info (nti, orig_track);
+	    free_track (nti);
+	    nti = NULL;
+	}
+	else
+	{ /* just use nti */
+	    track = nti;
+	    nti = NULL;
 	}
     }
+
+    while (widgets_blocked && gtk_events_pending ())
+	gtk_main_iteration ();
+
     return track;
 }
 

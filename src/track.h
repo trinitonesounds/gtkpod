@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:20:51 jcs>
+/* Time-stamp: <2003-11-03 19:42:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -59,7 +59,7 @@ typedef struct
   guint32 ipod_id;           /* unique ID of track     */
   gint32  size;              /* size of file in bytes */
   gint32  oldsize;           /* used when updating tracks: size on iPod */
-  gint32  tracklen;           /* Length of track in ms  */
+  gint32  tracklen;          /* Length of track in ms  */
   gint32  cd_nr;             /* CD number             */
   gint32  cds;               /* number of CDs         */
   gint32  track_nr;          /* track number          */

@@ -46,6 +46,12 @@ dnl (providing getopt_long*) will be included into the binary.
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)]) 
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
 
+dnl Check for libmp4v2
+dnl -- there must be a better way to read out the result of the first
+dnl -- check than running it again with "libmp4v2=..."
+AC_CHECK_LIB(mp4v2, MP4FileInfo,,,-lstdc++)
+AC_CHECK_LIB(mp4v2, MP4FileInfo,libmp4v2=1,libmp4v2=0,-lstdc++)
+
 dnl Id3lib librairies
 dnl Check which libs are required by id3lib
 AC_SEARCH_LIBS(ID3Tag_Link,"id3" "id3 -lstdc++" "id3 -lz" "id3 -lz -lstdc++",,AC_MSG_ERROR(id3lib not found))
@@ -98,7 +104,13 @@ Configuration for $PACKAGE $VERSION :
  GTK+ version .........: `pkg-config gtk+-2.0 --modversion`
  GThread version ......: `pkg-config gthread-2.0 --modversion`
  Id3lib version .......: $ID3LIB_MAJOR.$ID3LIB_MINOR.$ID3LIB_PATCH
- NLS/gettext ..........: $USE_NLS
+ NLS/gettext ..........: $USE_NLS"
+if test "$libmp4v2" = "1"; then
+  echo " mp4v2 ................: yes"
+else
+  echo " mp4v2 ................: no -- limited aac functionality"
+fi
+echo "\
  Install path .........: $prefix
 
  Now type 'make' to build $PACKAGE $VERSION,

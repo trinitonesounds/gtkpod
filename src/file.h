@@ -67,6 +67,6 @@ void mark_track_for_deletion (Track *track);
 void fill_in_extended_info (Track *track);
 glong get_filesize_of_deleted_tracks(void);
 Track *get_track_info_from_file (gchar *name, Track *or_track);
-
+void update_charset_info (Track *track);
 
 #endif

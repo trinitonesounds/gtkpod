@@ -42,58 +42,7 @@
 #ifndef MP3FILEH_INCLUDED
 #define MP3FILEH_INCLUDED 1
 
-#include <gtk/gtk.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include "song.h"
 
-/* MIN_CONSEC_GOOD_FRAMES defines how many consecutive valid MP3 frames
-   we need to see before we decide we are looking at a real MP3 file */
-#define MIN_CONSEC_GOOD_FRAMES 4
-#define FRAME_HEADER_SIZE 4
-#define MIN_FRAME_SIZE 21
-
-enum VBR_REPORT { VBR_VARIABLE, VBR_AVERAGE, VBR_MEDIAN };
-
-typedef struct {
-    gulong sync;
-    guint  version;
-    guint  layer;
-    guint  crc;
-    guint  bitrate;
-    guint  freq;
-    guint  padding;
-    guint  extension;
-    guint  mode;
-    guint  mode_extension;
-    guint  copyright;
-    guint  original;
-    guint  emphasis;
-} mp3header;
-
-typedef struct {
-    gchar *filename;
-    FILE *file;
-    off_t datasize;
-    gint header_isvalid;
-    mp3header header;
-    gint id3_isvalid;
-    gint vbr;
-    float vbr_average;
-    gint milliseconds;
-    gint frames;
-    gint badframes;
-} mp3info;
-
-/* These are for mp3info code */
-gint mp3file_header_layer(mp3header *h);
-gint mp3file_header_bitrate(mp3header *h);
-gchar *mp3file_header_emphasis(mp3header *h);
-gchar *mp3file_header_mode(mp3header *h);
-int mp3file_header_frequency(mp3header *h);
-mp3info *mp3file_get_info (gchar *name);
-
-/* This is for xmms code */
-guint get_track_time(gchar *path);
+Track *file_get_mp3_info (gchar *name);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-26 00:49:03 jcs>
+/* Time-stamp: <2003-11-03 21:30:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2710,6 +2710,39 @@ void since_last_pl(void)
 {
     update_ranked_playlist (_("Last Time"), 0,
 			    since_last_IF, since_last_CF);
+}
+
+
+/* ------------------------------------------------------------
+------------------------------------------------------------------
+--------                                                 ---------
+--------                 UTF16 section                   ---------
+--------                                                 ---------
+------------------------------------------------------------------
+   ------------------------------------------------------------ */
+ 
+/* Get length of utf16 string in number of characters (words) */
+guint32 utf16_strlen (gunichar2 *utf16)
+{
+  guint32 i=0;
+  if (utf16)
+      while (utf16[i] != 0) ++i;
+  return i;
+}
+
+/* duplicate a utf16 string */
+gunichar2 *utf16_strdup (gunichar2 *utf16)
+{
+    guint32 len;
+    gunichar2 *new = NULL;
+
+    if (utf16)
+    {
+	len = utf16_strlen (utf16);
+	new = g_malloc (sizeof (gunichar2) * (len+1));
+	if (new) memcpy (new, utf16, sizeof (gunichar2) * (len+1));
+    }
+    return new;
 }
 
 

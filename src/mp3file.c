@@ -39,15 +39,84 @@
 
 */
 
-
 /* The code in the second section of this file is taken from the
  * mpg123 code used in xmms-1.2.7 (Input/mpg123). Only the code needed
  * for the playlength calculation has been extracted */
 
+/* The code in the third section of this file is original gtkpod
+ * code. */ 
 
-#include "mp3file.h"
+
 #include <string.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include "mp3file.h"
+#include "id3_tag.h"
+#include "charset.h"
+#include "itunesdb.h"
+#include "file.h"
+#include "misc.h"
+#include "support.h"
 
+/* MIN_CONSEC_GOOD_FRAMES defines how many consecutive valid MP3 frames
+   we need to see before we decide we are looking at a real MP3 file */
+#define MIN_CONSEC_GOOD_FRAMES 4
+#define FRAME_HEADER_SIZE 4
+#define MIN_FRAME_SIZE 21
+
+enum VBR_REPORT { VBR_VARIABLE, VBR_AVERAGE, VBR_MEDIAN };
+
+typedef struct {
+    gulong sync;
+    guint  version;
+    guint  layer;
+    guint  crc;
+    guint  bitrate;
+    guint  freq;
+    guint  padding;
+    guint  extension;
+    guint  mode;
+    guint  mode_extension;
+    guint  copyright;
+    guint  original;
+    guint  emphasis;
+} mp3header;
+
+typedef struct {
+    gchar *filename;
+    FILE *file;
+    off_t datasize;
+    gint header_isvalid;
+    mp3header header;
+    gint id3_isvalid;
+    gint vbr;
+    float vbr_average;
+    gint milliseconds;
+    gint frames;
+    gint badframes;
+} mp3info;
+
+/* These are for mp3info code */
+gint mp3file_header_layer(mp3header *h);
+gint mp3file_header_bitrate(mp3header *h);
+gchar *mp3file_header_emphasis(mp3header *h);
+gchar *mp3file_header_mode(mp3header *h);
+int mp3file_header_frequency(mp3header *h);
+mp3info *mp3file_get_info (gchar *name);
+
+/* This is for xmms code */
+guint get_track_time(gchar *path);
+
+
+
+/* ------------------------------------------------------------
+
+   start of first section
+
+   ------------------------------------------------------------ */
 gint get_header(FILE *file,mp3header *header);
 gint frame_length(mp3header *header);
 gint sameConstant(mp3header *h1, mp3header *h2);
@@ -832,3 +901,137 @@ guint get_track_time (gchar *path)
     }
     return result;
 }
+
+
+
+
+/* ----------------------------------------------------------------------
+
+              From here starts original gtkpod code
+
+---------------------------------------------------------------------- */
+
+
+/* Return a Track structure with all information read from the mp3
+   file filled in */
+Track *file_get_mp3_info (gchar *name)
+{
+    Track *track = NULL;
+    File_Tag filetag;
+
+    if (Id3tag_Read_File_Tag (name, &filetag) == TRUE)
+    {
+	struct stat si;
+
+	track = g_malloc0 (sizeof (Track));
+
+	track->pc_path_utf8 = charset_to_utf8 (name);
+	track->pc_path_locale = g_strdup (name);
+
+	/* Set modification date to modification date of file */
+	if (stat (name, &si) == 0)
+	    track->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
+
+	track->fdesc = g_strdup ("MPEG audio file");
+	track->fdesc_utf16 = g_utf8_to_utf16 (track->fdesc, -1, NULL, NULL, NULL);
+	if (filetag.album)
+	{
+	    track->album = filetag.album;
+	    track->album_utf16 = g_utf8_to_utf16 (track->album, -1, NULL, NULL, NULL);
+	}
+
+	if (filetag.artist)
+	{
+	    track->artist = filetag.artist;
+	    track->artist_utf16 = g_utf8_to_utf16 (track->artist, -1, NULL, NULL, NULL);
+	}
+
+	if (filetag.title)
+	{
+	    track->title = filetag.title;
+	    track->title_utf16 = g_utf8_to_utf16 (track->title, -1, NULL, NULL, NULL);
+	}
+
+	if (filetag.genre)
+	{
+	    track->genre = filetag.genre;
+	    track->genre_utf16 = g_utf8_to_utf16 (track->genre, -1, NULL, NULL, NULL);
+	}
+
+	if (filetag.composer)
+	{
+	    track->composer = filetag.composer;
+	    track->composer_utf16 = g_utf8_to_utf16 (track->composer, -1, NULL, NULL, NULL);
+	}
+
+	if (filetag.comment)
+	{
+	    track->comment = filetag.comment;
+	    track->comment_utf16 = g_utf8_to_utf16 (track->comment, -1, NULL, NULL, NULL);
+	}
+	if (filetag.year == NULL)
+	{
+	    track->year = 0;
+	}
+	else
+	{
+	    track->year = atoi(filetag.year);
+	    g_free (filetag.year);
+	}
+
+	if (filetag.trackstring == NULL)
+	{
+	    track->track_nr = 0;
+	}
+	else
+	{
+	    track->track_nr = atoi(filetag.trackstring);
+	    g_free (filetag.trackstring);
+	}
+
+	if (filetag.track_total == NULL)
+	{
+	    track->tracks = 0;
+	}
+	else
+	{
+	    track->tracks = atoi(filetag.track_total);
+	    g_free (filetag.track_total);
+	}
+	track->size = filetag.size;
+	track->auto_charset = filetag.auto_charset;
+    }
+
+    if (track)
+    {
+	/* Get additional info (play time and bitrate */
+	mp3info *mp3info = mp3file_get_info (name);
+	if (mp3info)
+	{
+	    track->tracklen = mp3info->milliseconds;
+	    track->bitrate = (gint)(mp3info->vbr_average);
+	    g_free (mp3info);
+	}
+	/* Fall back to xmms code if tracklen is 0 */
+	if (track->tracklen == 0)
+	{
+	    track->tracklen = get_track_time (name);
+	    if (track->tracklen)
+		track->bitrate = (float)track->size*8/track->tracklen;
+	}
+
+	/* set charset used */
+	update_charset_info (track);
+
+	if (track->tracklen == 0)
+	{
+	    /* Tracks with zero play length are ignored by iPod... */
+	    gtkpod_warning (_("File \"%s\" has zero play length. Ignoring.\n"),
+			    name);
+	    free_track (track);
+	    track = NULL;
+	}
+    }
+    return track;
+}
+

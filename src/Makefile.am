@@ -29,6 +29,7 @@ gtkpod_SOURCES = \
 	md5.c md5.h \
 	misc.c misc.h \
 	mp3file.c mp3file.h \
+	mp4file.c mp4file.h \
 	normalize.c normalize.h \
 	playlist.c playlist.h \
 	prefs.c prefs.h \

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:17:10 jcs>
+/* Time-stamp: <2003-11-03 19:42:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -51,27 +51,29 @@ void
 free_track(Track *track)
 {
   if (track)
-    { /* C_FREE defined in misc.h */
-      C_FREE (track->album);
-      C_FREE (track->artist);
-      C_FREE (track->title);
-      C_FREE (track->genre);
-      C_FREE (track->comment);
-      C_FREE (track->composer);
-      C_FREE (track->fdesc);
-      C_FREE (track->album_utf16);
-      C_FREE (track->artist_utf16);
-      C_FREE (track->title_utf16);
-      C_FREE (track->genre_utf16);
-      C_FREE (track->comment_utf16);
-      C_FREE (track->composer_utf16);
-      C_FREE (track->fdesc_utf16);
-      C_FREE (track->pc_path_utf8);
-      C_FREE (track->pc_path_locale);
-      C_FREE (track->ipod_path);
-      C_FREE (track->ipod_path_utf16);
-      C_FREE (track->md5_hash);
-      C_FREE (track->hostname);
+    {
+      g_free (track->album);
+      g_free (track->artist);
+      g_free (track->title);
+      g_free (track->genre);
+      g_free (track->comment);
+      g_free (track->composer);
+      g_free (track->fdesc);
+      g_free (track->album_utf16);
+      g_free (track->artist_utf16);
+      g_free (track->title_utf16);
+      g_free (track->genre_utf16);
+      g_free (track->comment_utf16);
+      g_free (track->composer_utf16);
+      g_free (track->fdesc_utf16);
+      g_free (track->pc_path_utf8);
+      g_free (track->pc_path_locale);
+      g_free (track->ipod_path);
+      g_free (track->ipod_path_utf16);
+      g_free (track->md5_hash);
+      g_free (track->hostname);
+      g_free (track->charset);
+      g_free (track->auto_charset);
       g_free (track);
     }
 }
