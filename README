@@ -454,100 +454,100 @@ than the once of the current locale. ID3 tags are still read currectly
 
 *--------------------------------------------------*
 |                                                  |
-|  Connecting iPod to a Linux box using IEEE 1394  |
-|  (kernel 2.4.20)                                 |
-|  (connecting to 2.4.21 seems to work slightly    |
-|   differently -- see below )                     |
+|  Connecting iPod to a Linux box	           |
+|  (kernel 2.6.6)                                  |
+|  (should also work with earlier 2.6 kernels)     |
 |                                                  |
 *--------------------------------------------------*
 
-1) You need a Windows iPod. See e.g.
+This describes how to set up the iPod together with the automounter in
+kernel V2.6.6 (some minor changes in the kernel configuration may be
+necessary for older V2.6 versions).
 
-http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipode
+1) It appears to be possible to use HFS-formatted (Apple)
+   iPods. However, this short guide assumes you have a Windows
+   (VFAT) iPod. For conversion from HFS to VFAT please see 
 
-for information about how to convert your mac iPod to a windows iPod.
+   http://www.blinkenlights.ch/gnupod/gnupod.html#SEC6
 
-Alternatively, I have received a report that Alan Cox's patches
-(2.4.21-rc8-ac1, but 2.4.21-ac1 should work as well) include hfsplus
-support. That should allow you to use hfs formatted iPods. But beware:
-hfsplus support is still beta.
+2) I'm using the following kernel configuration options (I'm only
+   using FireWire -- so the USB options are just educated
+   guesses. Please let me know if it works).
 
-2) Get kernel source and configure
-Needed configuration:
+   I'm not using modules, because what's compiled in can't fail
+   loading.
 
-    * Code maturity level options - y
-    * SCSI support - y
-    * SCSI disk support - m
-    * IEEE1394 (FireWire)/IEEE 1394 (FireWire) support (Experimental) - y
-    * OHCI-1394 support - y
-    * SBP-2 support - m
+    * General Setup  -> Support for hot-pluggable devices - y
+    * Device Drivers -> SCSI device support - y
+    *                -> SCSI device support -> SCSI disk support - y
+    *                -> SCSI device support -> SCSI generic support - y
+For FireWire:
+    *                -> IEEE1394 (FireWire) support - y
+    *                -> IEEE1394 (FireWire) support -> OHCI-1394 support - y
+    *                -> IEEE1394 (FireWire) support -> SBP-2 support - y
+For USB:
+    *                -> USB support -> Support for Host-side USB - y
+    *                                       -> EHCI HCD support - y
+    *                                       -> OHCI HCD support - y
+    *                                       -> UHCI HCD support - y
+    *                                       -> USB Mass Storage support - y
+For USB and FireWire:
+    * File Systems   -> DOS/FAT/NT Filesystems - y
+    *                -> DOS/FAT/NT Filesystems -> VFAT fs support - y
+    *                -> Kernel automounter version 4 support - y
+(Try to chose the HFS filesystem in "File System -> Miscelleneous
+filesystems" for HFS support -- let me know how it works).
 
-3) Create /mnt/ipod:
+3) You need to install the following external packages:
 
-   mkdir /mnt/ipod
+   hotplug and udev (http://linux-hotplug.sourceforge.net/)
+   autofs (ftp.kernel.org:/pub/linux/daemons/autofs)
 
-4) Add a line to /etc/fstab. You should edit uid to match your user
-   id. Also, /dev/sda2 may not be appropriate, if you have other scsi
-   devices.
+   Most likely packages are available for your distribution.
 
-/dev/sda2	/mnt/ipod	vfat rw,user,noauto,noatime 0 0
+4) Write rules for udev (/etc/udev/udev.rules, add at the beginning)
+   to recognize your iPod automatically (mind the spaces within
+   "iPod..."):
 
-NOTE: Some users have had problems with newer versions of mount(newer than
-mount-2.11h) The following fstab entry might work better for you.
+BUS="scsi", SYSFS{model}="iPod            ", KERNEL="sd?2", NAME="%k", SYMLINK="ipod"
 
-/dev/sda2	/mnt/ipod	vfat rw,user,noauto,noatime,shortname=winnt 0 0
+   This will map /dev/sd?2 to /dev/ipod everytime you plug in your
+   iPod. That's even works if you own more than one USB/Firewire
+   device that shows up as a harddisk, independent of the order in
+   which you connect the devices.
 
-NOTE: You can add ",umask=0" to the options to make the iPod
-readable/writable for all users.
+   (You need to replace "sd?2" with "sd?1" for HFS formatted iPods.)
 
-5) Connect your iPod to your computer and wait until you see something
-   like the following on your system log (you can use the 'dmesg'
-   command to check).
+   For more information on how to write udev rules please refer to
+   http://www.gamingclones.com/Howtos/udevrules.html. That document
+   gives an easy-to-understand introduction
 
-Nov 28 21:58:06 hatarakibachi kernel: ieee1394: Node 00:1023 changed to 01:1023
-Nov 28 21:58:09 hatarakibachi kernel: ieee1394: Node 01:1023 changed to 00:1023
-Nov 28 21:58:12 hatarakibachi kernel: ieee1394: NodeMgr: hotplug policy returned -2
-Nov 28 21:58:12 hatarakibachi kernel: ieee1394: Device added: Node[00:1023]  GUID[000a2700020680b5]  [Apple Computer, Inc.]
-Nov 28 21:58:12 hatarakibachi kernel: ieee1394: Node 00:1023 changed to 01:1023
+5) Set up autofs to automatically mount the iPod when you access it
+   and unmount it after 2 seconds of inactivity. In /etc/auto.master
+   add:
 
-6) Load the sbp2 module (most likely as root):
+/var/autofs/removable   /etc/auto.removable     --timeout=2,sync,nodev,nosuid,gid=autofs,umask=007
 
-   modprobe sbp2
+   Adjust the gid,umask (and uid) values to whatever you need -- in this
+   example all users in the group "autofs" have read/write access, and
+   I have added all users that may access the iPod to the autofs group.
 
-   You should see something like the following on your system log:
+   In /etc/auto.removable add
 
-Nov 28 21:58:38 hatarakibachi kernel: ieee1394: sbp2: Logged into SBP-2 device
-Nov 28 21:58:38 hatarakibachi kernel: scsi0 : IEEE-1394 SBP-2 protocol driver (host: ohci1394)
-Nov 28 21:58:38 hatarakibachi kernel: $Rev$ James Goodwin <jamesg@filanet.com>
-Nov 28 21:58:38 hatarakibachi kernel: SBP-2 module load options:
-Nov 28 21:58:38 hatarakibachi kernel: - Max speed supported: S400
-Nov 28 21:58:38 hatarakibachi kernel: - Max sectors per I/O supported: 255
-Nov 28 21:58:38 hatarakibachi kernel: - Max outstanding commands supported: 8
-Nov 28 21:58:38 hatarakibachi kernel: - Max outstanding commands per lun supported: 1
-Nov 28 21:58:38 hatarakibachi kernel: - Serialized I/O (debug): no
-Nov 28 21:58:38 hatarakibachi kernel: - Exclusive login: yes
-Nov 28 21:58:38 hatarakibachi kernel:   Vendor: Apple     Model: iPod              Rev: 1.21
-Nov 28 21:58:38 hatarakibachi kernel:   Type:   Direct-Access                      ANSI SCSI revision: 02
-Nov 28 21:58:38 hatarakibachi kernel: Attached scsi removable disk sda at scsi0, channel 0, id 0, lun 0
-Nov 28 21:58:38 hatarakibachi kernel: SCSI device sda: 39062520 512-byte hdwr sectors (20000 MB)
-Nov 28 21:58:38 hatarakibachi kernel: sda: test WP failed, assume Write Enabled
-Nov 28 21:58:39 hatarakibachi kernel:  sda: sda1 sda2
+ipod            -fstype=vfat            :/dev/ipod
 
-7) Mount the iPod hard drive
+   (Obviously you need to change the filesystem type when you use a
+   HFS formatted iPod.)
 
-   mount /mnt/ipod
+   Then simply add a link from /mnt/ipod:
 
-8) do whatever you need to do (e.g. start gtkpod, see below)
+   ln -s /var/autofs/removable/ipod /mnt/ipod
 
-9) Unmount the iPod:
 
-    umount /mnt/ipod
+Now your system is configured to mount the iPod every time you access
+/mnt/ipod and to unmount it again after two seconds of inactivity. You
+won't have to worry about doing mounting/unmouting yourself any more.
 
-10) Unload the module sbp2 (as most likely as root):
-
-    rmmod sbp2
-
-11) Disconnect the iPod from your computer.
 
 
 *--------------------------------------------------*
@@ -555,12 +555,13 @@ Nov 28 21:58:39 hatarakibachi kernel:  sda: sda1 sda2
 |  Connecting iPod to a Linux box (IEEE 1394)      |
 |  (kernel 2.4.21)                                 |
 |  (may also work with 2.4.20, but I didn't try)   |
+|  (instructions for 2.4.20 can be found below)    |
 |                                                  |
 *--------------------------------------------------*
 
 1) You need a Windows iPod. See e.g.
 
-http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipode
+http://www.blinkenlights.ch/gnupod/gnupod.html#SEC6
 
 for information about how to convert your mac iPod to a windows iPod.
 
@@ -658,6 +659,104 @@ Jun 15 17:13:58 hatarakibachi kernel: scsi singledevice 0 0 1 0
     disconnect" message -- as long as you wait for the 'unmount' to
     command to finish properly, everything should be fine).
 
+
+
+*--------------------------------------------------*
+|                                                  |
+|  Connecting iPod to a Linux box using IEEE 1394  |
+|  (kernel 2.4.20)                                 |
+|  (connecting to 2.4.21 seems to work slightly    |
+|   differently -- see above)                      |
+|                                                  |
+*--------------------------------------------------*
+
+1) You need a Windows iPod. See e.g.
+
+http://www.blinkenlights.ch/gnupod/gnupod.html#SEC6
+
+for information about how to convert your mac iPod to a windows iPod.
+
+Alternatively, I have received a report that Alan Cox's patches
+(2.4.21-rc8-ac1, but 2.4.21-ac1 should work as well) include hfsplus
+support. That should allow you to use hfs formatted iPods. But beware:
+hfsplus support is still beta.
+
+2) Get kernel source and configure
+Needed configuration:
+
+    * Code maturity level options - y
+    * SCSI support - y
+    * SCSI disk support - m
+    * IEEE1394 (FireWire)/IEEE 1394 (FireWire) support (Experimental) - y
+    * OHCI-1394 support - y
+    * SBP-2 support - m
+
+3) Create /mnt/ipod:
+
+   mkdir /mnt/ipod
+
+4) Add a line to /etc/fstab. You should edit uid to match your user
+   id. Also, /dev/sda2 may not be appropriate, if you have other scsi
+   devices.
+
+/dev/sda2	/mnt/ipod	vfat rw,user,noauto,noatime 0 0
+
+NOTE: Some users have had problems with newer versions of mount(newer than
+mount-2.11h) The following fstab entry might work better for you.
+
+/dev/sda2	/mnt/ipod	vfat rw,user,noauto,noatime,shortname=winnt 0 0
+
+NOTE: You can add ",umask=0" to the options to make the iPod
+readable/writable for all users.
+
+5) Connect your iPod to your computer and wait until you see something
+   like the following on your system log (you can use the 'dmesg'
+   command to check).
+
+Nov 28 21:58:06 hatarakibachi kernel: ieee1394: Node 00:1023 changed to 01:1023
+Nov 28 21:58:09 hatarakibachi kernel: ieee1394: Node 01:1023 changed to 00:1023
+Nov 28 21:58:12 hatarakibachi kernel: ieee1394: NodeMgr: hotplug policy returned -2
+Nov 28 21:58:12 hatarakibachi kernel: ieee1394: Device added: Node[00:1023]  GUID[000a2700020680b5]  [Apple Computer, Inc.]
+Nov 28 21:58:12 hatarakibachi kernel: ieee1394: Node 00:1023 changed to 01:1023
+
+6) Load the sbp2 module (most likely as root):
+
+   modprobe sbp2
+
+   You should see something like the following on your system log:
+
+Nov 28 21:58:38 hatarakibachi kernel: ieee1394: sbp2: Logged into SBP-2 device
+Nov 28 21:58:38 hatarakibachi kernel: scsi0 : IEEE-1394 SBP-2 protocol driver (host: ohci1394)
+Nov 28 21:58:38 hatarakibachi kernel: $Rev$ James Goodwin <jamesg@filanet.com>
+Nov 28 21:58:38 hatarakibachi kernel: SBP-2 module load options:
+Nov 28 21:58:38 hatarakibachi kernel: - Max speed supported: S400
+Nov 28 21:58:38 hatarakibachi kernel: - Max sectors per I/O supported: 255
+Nov 28 21:58:38 hatarakibachi kernel: - Max outstanding commands supported: 8
+Nov 28 21:58:38 hatarakibachi kernel: - Max outstanding commands per lun supported: 1
+Nov 28 21:58:38 hatarakibachi kernel: - Serialized I/O (debug): no
+Nov 28 21:58:38 hatarakibachi kernel: - Exclusive login: yes
+Nov 28 21:58:38 hatarakibachi kernel:   Vendor: Apple     Model: iPod              Rev: 1.21
+Nov 28 21:58:38 hatarakibachi kernel:   Type:   Direct-Access                      ANSI SCSI revision: 02
+Nov 28 21:58:38 hatarakibachi kernel: Attached scsi removable disk sda at scsi0, channel 0, id 0, lun 0
+Nov 28 21:58:38 hatarakibachi kernel: SCSI device sda: 39062520 512-byte hdwr sectors (20000 MB)
+Nov 28 21:58:38 hatarakibachi kernel: sda: test WP failed, assume Write Enabled
+Nov 28 21:58:39 hatarakibachi kernel:  sda: sda1 sda2
+
+7) Mount the iPod hard drive
+
+   mount /mnt/ipod
+
+8) do whatever you need to do (e.g. start gtkpod, see below)
+
+9) Unmount the iPod:
+
+    umount /mnt/ipod
+
+10) Unload the module sbp2 (as most likely as root):
+
+    rmmod sbp2
+
+11) Disconnect the iPod from your computer.
 
 
 *--------------------------------------------------*

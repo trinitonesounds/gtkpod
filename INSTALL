@@ -1,22 +1,83 @@
-Try the following to compile and install (the 'make install' may
-require root privileges):
-
-	./configure
-	make
-	make install
-
-You can test gtkpod without installing it -- only the translation
-catalogues will not be available:
-
-	src/gtkpod
+How to compile/install gtkpod:
 
 
-Most important requirements (version number in brackets show the
-version I used):
+1. First, make sure you have compiled and installed the dependencies.
+   Most Linux distros will include them, except maybe for libid3tag
+   (http://sourceforge.net/project/showfiles.php?group_id=12349) and
+   libmp4v2 (http://mpeg4ip.sourceforge.net/).
+
+   Please do not confuse the libid3 library with the libid3tag
+   library -- they are not related. libid3tag is part of the MAD
+   project (http://sourceforge.net/projects/mad/).
+
+   The libmp4v2 package is ONLY NEEDED if you need AAC support.  You
+   don't need libmp4v2 if you don't use AAC files.
+
+   libid3tag was successfully compiled and installed with
+
+   ./configure ; make ; make install
+
+   libmp4v2 was successfully compiled and install with
+
+   ./bootstrap --disable-server ; make ; make install
+
+   If you install packages from your linux distribution, keep in mind
+   that you will need to install the "-dev" packages as well to be
+   able to compile.
+
+2. Run the gtkpod 'configure' script to set up the compile
+
+   ./configure
+
+   The standard options to 'configure' apply.  For a list of options:
+
+   ./configure --help
+
+3. Compile the gtkpod software:
+
+   make
+
+4. Install the gtkpod software (may require root privileges):
+
+   make install
+
+
+   Note: You can test gtkpod without installing it. Some features
+   (translation catalogues, icons, scripts) may not be available,
+   however:
+
+   src/gtkpod
+
+
+
+** Note that you do not need to accept the default (usually
+   /usr/local) install path when you compile and install the software.
+   You may choose to install the software in a different location.
+   For example, with libid3tag and libmp4v2 in a non-standard
+   location, outside the $PATH and the usual build environment, you
+   need to configure the build of gtkpod appropriately.  You need to
+   set a CFLAGS variable during the 'configure' that sets the -I and
+   -L flags correctly.
+
+   As a practical example, let's say the libmp4v2 software was
+   installed in $HOME/Applications/mpeg4ip and the libid3tag software
+   was installed in $HOME/Applications/libid3tag, and you want to
+   install gtkpod into $HOME/Applications/gtkpod.  Do this instead:
+
+    CFLAGS="-I$HOME/Applications/mpeg4ip/include -L$HOME/Applications/mpeg4ip/lib -I$HOME/Applications/libid3tag/include -L$HOME/Applications/libid3tag/lib" ./configure --prefix=$HOME/Applications/gtkpod ; make ; make install 
+
+
+
+
+
+
+Version of libraries used by jcsjcs at users dot sourceforge dot net
+to compile gtkpod-0.73CVS:
 
 	libgtk2 (2.2.4)
 	libglib2 (2.2.3)
 	libid3tag (0.15.0b)
 	libmp4v2 (1.0RC1, needed only for aac files)
-	C compiler (gcc 3.3.2)
-	libstdc++5 (3.3.2)
+	C compiler (gcc 3.3.3)
+	libstdc++5 (3.3.3)
+	gettext (0.14.1-2)  for internationalization

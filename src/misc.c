@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-05-16 15:39:13 JST jcs>
+/* Time-stamp: <2004-05-20 23:27:13 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -119,6 +119,8 @@ Armando Atienza: Support with external playcounts\n"),
 		       "\n\n",
 		       _("\
 D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"),
+		       _("\
+Jim Hall: Decent INSTALL file\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n"),
