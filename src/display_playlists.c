@@ -663,7 +663,12 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 	if (playlist->is_spl)
 	{
 	    g_object_set (G_OBJECT (renderer),
-			  "stock-id", "gtk-convert", NULL);
+			  "stock-id", "gtk-execute", NULL);
+	}
+	else if (playlist->type != PL_TYPE_MPL)
+	{
+	    g_object_set (G_OBJECT (renderer),
+			  "stock-id", "gtk-justify-left", NULL);
 	}
 	else
 	{
@@ -702,14 +707,14 @@ static void pm_add_columns ()
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (pm_cell_edited), model);
   g_object_set_data (G_OBJECT (renderer), "column", (gint *)PM_COLUMN_PLAYLIST);
-  gtk_tree_view_column_pack_start (column, renderer, FALSE);
+  gtk_tree_view_column_pack_end (column, renderer, FALSE);
   gtk_tree_view_column_set_cell_data_func (column, renderer, pm_cell_data_func, NULL, NULL);
 
 
   /* cell for graphic indicator */
   renderer = gtk_cell_renderer_pixbuf_new ();
   g_object_set_data (G_OBJECT (renderer), "column", (gint *)PM_COLUMN_PLAYLIST);
-  gtk_tree_view_column_pack_end (column, renderer, FALSE); 
+  gtk_tree_view_column_pack_start (column, renderer, FALSE); 
   gtk_tree_view_column_set_cell_data_func (column, renderer, pm_cell_data_func_pix, NULL, NULL);
 }
 

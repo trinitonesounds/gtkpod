@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-15 22:32:43 jcs>
+/* Time-stamp: <2004-11-27 17:02:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -342,9 +342,9 @@ static const gchar *display_get_disk_string (Track *track)
 }
 
 
-/* Called when editable cell is being edited. Stores new data to
-   the track list. Eventually the ID3 tags in the corresponding
-   files should be changed as well, if activated in the pref settings */
+/* Called when editable cell is being edited. Stores new data to the
+   track list. ID3 tags in the corresponding files are updated as
+   well, if activated in the pref settings */
 static void
 tm_cell_edited (GtkCellRendererText *renderer,
 		const gchar         *path_string,
@@ -706,6 +706,111 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   default:
       g_warning ("Programming error: unknown column in tm_cell_data_func: %d\n", column);
+      break;
+  }
+}
+
+
+
+/* Called when a toggle cell is being changed. Stores new data to the
+   track list. */
+static void
+tm_cell_toggled (GtkCellRendererToggle *renderer,
+		 gchar *arg1,
+		 gpointer user_data)
+{
+  GtkTreeModel *model;
+  GtkTreeSelection *selection;
+  TM_item column;
+  gboolean multi_edit;
+  gint sel_rows_num;
+  GList *row_list, *row_node, *first;
+
+
+  column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
+  multi_edit = prefs_get_multi_edit ();
+  selection = gtk_tree_view_get_selection(track_treeview);
+  row_list = gtk_tree_selection_get_selected_rows(selection, &model);
+
+/*  printf("tm_cell_toggled: column: %d, arg1: %p\n", column, arg1); */
+
+  sel_rows_num = g_list_length (row_list);
+
+  /* block widgets and update display if multi-edit is active */
+  if (multi_edit && (sel_rows_num > 1)) block_widgets ();
+
+  first = g_list_first (row_list);
+
+  for (row_node = first;
+       row_node && (multi_edit || (row_node == first));
+       row_node = g_list_next(row_node))
+  {
+     Track *track;
+     gboolean changed;
+     GtkTreeIter iter;
+
+     gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) row_node->data);
+     gtk_tree_model_get(model, &iter, READOUT_COL, &track, -1);
+     changed = FALSE;
+
+     switch(column)
+     {
+     case TM_COLUMN_TITLE:
+	 if (track->checked == 1)
+	     track->checked = 0;
+	 else
+	     track->checked = 1;
+         changed = TRUE;
+        break;
+     default:
+        g_warning ("Programming error: tm_cell_toggled: unknown track cell (%d) edited\n", column);
+        break;
+     }
+/*      printf ("  changed: %d\n", changed); */
+     if (changed)
+     {
+        track->time_modified = itunesdb_time_get_mac_time ();
+/*        pm_track_changed (track);  notify playlist model... -- not
+ *        necessary here because only the track model is affected */
+        data_changed ();        /* indicate that data has changed */
+     }
+     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+  }
+
+  if (multi_edit && (sel_rows_num > 1)) release_widgets ();
+
+  g_list_foreach(row_list, (GFunc) gtk_tree_path_free, NULL);
+  g_list_free(row_list);
+}
+
+
+
+/* The track data is stored in a separate list (static GList *tracks)
+   and only pointers to the corresponding Track structure are placed
+   into the model.
+   This function reads the data for the given cell from the list and
+   passes it to the renderer. */
+static void tm_cell_data_func_toggle (GtkTreeViewColumn *tree_column,
+				      GtkCellRenderer   *renderer,
+				      GtkTreeModel      *model,
+				      GtkTreeIter       *iter,
+				      gpointer           data)
+{
+  Track *track;
+  TM_item column;
+
+  column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
+  gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
+
+  switch (column)
+  {
+  case TM_COLUMN_TITLE:
+      g_object_set (G_OBJECT (renderer),
+		    "active", !track->checked,
+		    "activatable", TRUE, NULL);
+      break;
+  default:
+      g_warning ("Programming error: unknown column in tm_cell_data_func_toggle: %d\n", column);
       break;
   }
 }
@@ -1198,7 +1303,9 @@ static GtkTreeViewColumn *tm_add_text_column (TM_item col_id,
     }
     g_object_set_data (G_OBJECT (renderer), "editable", (gint *)editable);
     g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
-    column = gtk_tree_view_column_new_with_attributes (name, renderer, NULL);
+    column = gtk_tree_view_column_new ();
+    gtk_tree_view_column_set_title (column, name);
+    gtk_tree_view_column_pack_end (column, renderer, FALSE);
     gtk_tree_view_column_set_cell_data_func (column, renderer,
 					     tm_cell_data_func, NULL, NULL);
     gtk_tree_view_column_set_sort_column_id (column, col_id);
@@ -1223,6 +1330,7 @@ static GtkTreeViewColumn *tm_add_text_column (TM_item col_id,
 /* Adds the columns to our track_treeview */
 static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 {
+  GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
   GtkTreeViewColumn *col = NULL;
   gchar *text = NULL;
   gboolean editable = TRUE;          /* default */
@@ -1300,9 +1408,21 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       break;
   }
   col = tm_add_text_column (tm_item, text, renderer, editable, pos);
+  if (col && (tm_item == TM_COLUMN_TITLE))
+  {
+      renderer = gtk_cell_renderer_toggle_new ();
+      g_object_set_data (G_OBJECT (renderer), "column",
+			 (gint *)tm_item);
+      g_signal_connect (G_OBJECT (renderer), "toggled",
+			G_CALLBACK (tm_cell_toggled), model);
+      gtk_tree_view_column_pack_start (col, renderer, FALSE);
+      gtk_tree_view_column_set_cell_data_func (col, renderer, tm_cell_data_func_toggle, NULL, NULL);
+  }	  
   if (col && (pos != -1))
+  {
       gtk_tree_view_column_set_visible (col,
 					prefs_get_col_visible (tm_item));
+  }
   if (tt && tm_col_tooltips[tm_item])
       gtk_tooltips_set_tip (tt, col->button, 
 			    gettext (tm_col_tooltips[tm_item]),

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-22 17:46:39 jcs>
+/* Time-stamp: <2004-11-27 16:11:48 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1610,12 +1610,9 @@ static void fix_mhit (FILE *file, glong mhit_seek, glong cur, gint mhod_num)
            track ID for MHOD_ID_PLAYLIST
            SPLPref for MHOD_ID_SPLPREF
 	   SPLRules for MHOD_ID_SPLRULES */
-static void mk_mhod (FILE *file, guint32 type, void *data)
+static void mk_mhod (FILE *file, enum MHOD_ID type, void *data)
 {
-  guint32 len;
-  gunichar2 *string;
-
-  switch ((enum MHOD_ID)type)
+  switch (type)
   {
   case MHOD_ID_TITLE:
   case MHOD_ID_PATH:
@@ -1625,25 +1622,28 @@ static void mk_mhod (FILE *file, guint32 type, void *data)
   case MHOD_ID_FDESC:
   case MHOD_ID_COMMENT:
   case MHOD_ID_COMPOSER:
-      string = data;
-      len = utf16_strlen (string);/* length of string in words  */
-      put_data (file, "mhod", 4); /* header                     */
-      put4lint (file, 24);        /* size of header             */
-      put4lint (file, 2*len+40);  /* size of header + body      */
-      put4lint (file, type);      /* type of the entry          */
-      put_n0 (file, 2);           /* dummy space                */
-      /* end of header, start of data */
-      put4lint (file, 1);         /* always 1 for these MHOD_IDs*/
-      put4lint (file, 2*len);     /* size of string             */
-      put_n0 (file, 2);           /* unknown                    */
-      /* FIXME: this assumes "string" is writable.
-	 However, this might not be the case,
-	 e.g. ipod_name might be in read-only mem. */
-      if (len != 0)
+      if (data)
       {
-	  string = fixup_little_utf16(string);
-	  put_data (file, (gchar *)string, 2*len); /* the string */
-	  string = fixup_little_utf16(string);
+	  /* length of string in words  */
+	  guint32 len = utf16_strlen ((gunichar2 *)data);
+	  put_data (file, "mhod", 4); /* header                     */
+	  put4lint (file, 24);        /* size of header             */
+	  put4lint (file, 2*len+40);  /* size of header + body      */
+	  put4lint (file, type);      /* type of the entry          */
+	  put_n0 (file, 2);           /* dummy space                */
+	  /* end of header, start of data */
+	  put4lint (file, 1);         /* always 1 for these MHOD_IDs*/
+	  put4lint (file, 2*len);     /* size of string             */
+	  put_n0 (file, 2);           /* unknown                    */
+	  if (len != 0)
+	  {
+	      /* FIXME: this assumes "string" is writable.
+		 However, this might not be the case,
+		 e.g. ipod_name might be in read-only mem. */
+	      fixup_little_utf16(data);
+	      put_data (file, data, 2*len); /* the string */
+	      fixup_little_utf16(data);
+	  }
       }
       break;
   case MHOD_ID_PLAYLIST:
@@ -1823,8 +1823,8 @@ static void mk_mhip (FILE *file, guint32 id)
   put4lint (file, 0);
   put4lint (file, id);  /* track id in playlist */
   put4lint (file, id);  /* ditto.. don't know the difference, but this
-                               seems to work. Maybe a special ID used for
-			       playlists? */
+			   seems to work. Maybe a special ID used for
+			   playlists? */
   put_n0 (file, 12);
 }
 
