@@ -122,7 +122,10 @@ do_hash_on_file(FILE * fp)
        int chunk_size = PATH_MAX * NR_PATH_MAX_BLOCKS;
        
        fsize = get_filesize_for_file_descriptor(fp);
-       if((fsize > 0) && (fsize > chunk_size))
+       if(fsize < chunk_size)
+	   chunk_size = fsize;
+
+       if(fsize > 0)
        {
 	   u_char *hash = NULL;
 	   int bread = 0, x = 0, last = 0;
@@ -148,11 +151,6 @@ do_hash_on_file(FILE * fp)
 
 	   /* free the hash value sha1_hash gave us */
 	   g_free(hash);
-       }
-       else if(fsize < chunk_size)
-       {
-	  gtkpod_warning(_("Hashed Filesize is less than filesize used to "
-		      "uniquely identify files\n"));
        }
        else
        { 
