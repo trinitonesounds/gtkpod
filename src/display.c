@@ -418,6 +418,40 @@ static void pm_selection_changed (GtkTreeSelection *selection,
 }
 
 
+/**
+ * Reorder playlists to match order of playlists displayed.
+ * data_changed() is called when necessary.
+ */
+void
+pm_rows_reordered (void)
+{
+    GtkTreeModel *tm = NULL;
+
+    if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(playlist_treeview))))
+    {
+	GtkTreeIter i;
+	gboolean valid = FALSE;
+	gint pos = 0;
+
+	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
+	while(valid)
+	{
+	    Playlist *pl;
+
+	    gtk_tree_model_get(tm, &i, 0, &pl, -1); 
+	    if (get_playlist_by_nr (pos) != pl)
+	    {
+		/* move the playlist to indicated position */
+		move_playlist (pl, pos);
+		data_changed ();
+	    }
+	    valid = gtk_tree_model_iter_next(tm, &i);
+	    ++pos;
+	}
+    }
+}
+
+
 /* Function used to compare two cells during sorting (playlist view) */
 gint pm_data_compare_func (GtkTreeModel *model,
 			GtkTreeIter *a,
@@ -2483,37 +2517,63 @@ sm_rows_reordered (void)
 }
 
 
-/**
- * Reorder playlists to match order of playlists displayed.
- * data_changed() is called when necessary.
- */
-void
-pm_rows_reordered (void)
+static void
+on_selected_songids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
+				 GtkTreeIter *i, gpointer data)
 {
-    GtkTreeModel *tm = NULL;
-
-    if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(playlist_treeview))))
+    Song *s = NULL;
+    GList *l = *((GList**)data);
+    gtk_tree_model_get(tm, i, 0, &s, -1);
+    /* can call on 0 cause s is consistent across all of the columns */
+    if(s)
     {
-	GtkTreeIter i;
-	gboolean valid = FALSE;
-	gint pos = 0;
-
-	valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
-	while(valid)
-	{
-	    Playlist *pl;
-
-	    gtk_tree_model_get(tm, &i, 0, &pl, -1); 
-	    if (get_playlist_by_nr (pos) != pl)
-	    {
-		/* move the playlist to indicated position */
-		move_playlist (pl, pos);
-		data_changed ();
-	    }
-	    valid = gtk_tree_model_iter_next(tm, &i);
-	    ++pos;
-	}
+	l = g_list_append(l, (gpointer)s->ipod_id);
+	*((GList**)data) = l;
     }
+}
+
+GList *
+sm_get_selected_songids(void)
+{
+    GList *result = NULL;
+    GtkTreeSelection *ts = NULL;
+
+    if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(song_treeview))))
+    {
+	gtk_tree_selection_selected_foreach(ts,on_selected_songids_list_foreach,
+					    &result);
+    }
+    return(result);
+}
+
+
+static void
+on_selected_songs_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
+				 GtkTreeIter *i, gpointer data)
+{
+    Song *s = NULL;
+    GList *l = *((GList**)data);
+    gtk_tree_model_get(tm, i, 0, &s, -1);
+    /* can call on 0 cause s is consistent across all of the columns */
+    if(s)
+    {
+	l = g_list_append(l, s);
+	*((GList**)data) = l;
+    }
+}
+
+GList *
+sm_get_selected_songs(void)
+{
+    GList *result = NULL;
+    GtkTreeSelection *ts = NULL;
+
+    if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(song_treeview))))
+    {
+	gtk_tree_selection_selected_foreach(ts,on_selected_songs_list_foreach,
+					    &result);
+    }
+    return(result);
 }
 
 
@@ -3245,66 +3305,6 @@ pm_get_selected_playlist(void)
 {
     return(current_playlist);
 }
-
-static void
-on_selected_songids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data)
-{
-    Song *s = NULL;
-    GList *l = *((GList**)data);
-    gtk_tree_model_get(tm, i, 0, &s, -1);
-    /* can call on 0 cause s is consistent across all of the columns */
-    if(s)
-    {
-	l = g_list_append(l, (gpointer)s->ipod_id);
-	*((GList**)data) = l;
-    }
-}
-
-GList *
-get_currently_selected_songids(void)
-{
-    GList *result = NULL;
-    GtkTreeSelection *ts = NULL;
-
-    if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(song_treeview))))
-    {
-	gtk_tree_selection_selected_foreach(ts,on_selected_songids_list_foreach,
-					    &result);
-    }
-    return(result);
-}
-
-
-static void
-on_selected_songs_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp, 
-				 GtkTreeIter *i, gpointer data)
-{
-    Song *s = NULL;
-    GList *l = *((GList**)data);
-    gtk_tree_model_get(tm, i, 0, &s, -1);
-    /* can call on 0 cause s is consistent across all of the columns */
-    if(s)
-    {
-	l = g_list_append(l, s);
-	*((GList**)data) = l;
-    }
-}
-
-GList *
-sm_get_selected_songs(void)
-{
-    GList *result = NULL;
-    GtkTreeSelection *ts = NULL;
-
-    if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(song_treeview))))
-    {
-	gtk_tree_selection_selected_foreach(ts,on_selected_songs_list_foreach,
-					    &result);
-    }
-    return(result);
-}
-
 
 /* make the toolbar visible or hide it depending on the value set in
    the prefs */

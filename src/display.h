@@ -180,7 +180,7 @@ gboolean sm_add_filelist (gchar *data, GtkTreePath *path,
 void sm_show_preferred_columns(void);
 
 Playlist* pm_get_selected_playlist(void);
-GList* get_currently_selected_songids(void);
+GList* sm_get_selected_songids(void);
 GList* sm_get_selected_songs(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);

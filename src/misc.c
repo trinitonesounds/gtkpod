@@ -1402,3 +1402,163 @@ void call_script (gchar *script)
     C_FREE (file);
     C_FREE (cfgdir);
 }
+
+
+
+/***************************************************************************
+ * play / enqueue / general "do command on selected songs" stuff
+ *
+ **************************************************************************/
+
+/**
+ * which - run the shell command which, useful for querying default values
+ * for executable, 
+ * @name - the executable we're trying to find the path for
+ * Returns the path to the executable, NULL on not found
+ */
+static gchar* 
+which(const gchar *exe)
+{
+    FILE *fp = NULL;
+    gchar *result = NULL; 
+    gchar buf[PATH_MAX];
+    gchar *which_exec = NULL;
+   
+    memset(&buf[0], 0, PATH_MAX);
+    which_exec = g_strdup_printf("which %s", exe);
+    if((fp = popen(which_exec, "r")))
+    {
+	int read_bytes = 0;
+	if((read_bytes = fread(buf, sizeof(gchar), PATH_MAX, fp)) > 0)
+	    result = g_strndup(buf, read_bytes-1);
+	pclose(fp);
+    }
+    C_FREE(which_exec);
+    return(result);
+}
+
+/*
+ * do_command_on_entries - execute @play on songs in @selected_songs
+ * @play: the command to execute (e.g. "xmms -e %s")
+ * @what: e.g. "Enqueue" or "Play Now" (used for error messages)
+ * @selected songs: list of songs to to be placed in the command line
+ * at the position of "%s"
+ *
+ */
+void 
+do_command_on_entries (gchar *command, gchar *what, GList *selected_songs)
+{
+    GList *l;
+    gchar *str, *commandc, *next;
+    gboolean percs = FALSE; /* did "%s" already appear? */
+    GPtrArray *args;
+
+    if ((!command) || (strlen (command) == 0))
+    {
+	gchar *buf = g_strdup_printf (_("No command set for '%s'"), what);
+	gtkpod_statusbar_message (buf);
+	C_FREE (buf);
+	return;
+    }
+
+    /* find the command itself -- separated by ' ' */
+    next = strchr (command, ' ');
+    if (!next)
+    {
+	str = g_strdup (command);
+    }
+    else
+    {
+        str = g_strndup (command, next-command);
+    }
+    while (g_ascii_isspace (*command))  ++command;
+    /* get the full path */
+    commandc = which (str);
+    if (!commandc)
+    {
+	gchar *buf = g_strdup_printf (_("Could not find command '%s' specified for '%s'"),
+				      str, what);
+	gtkpod_statusbar_message (buf);
+	C_FREE (buf);
+	C_FREE (str);
+	return;
+    }
+    C_FREE (str);
+
+    /* Create the command line */
+    args = g_ptr_array_sized_new (g_list_length (selected_songs) + 10);
+    /* first the full path */
+    g_ptr_array_add (args, commandc);
+    do
+    {
+	gchar *next;
+	gboolean end;
+
+	next = strchr (command, ' ');
+	if (next == NULL) next = command + strlen (command);
+
+	if (next == command)  end = TRUE;
+	else                  end = FALSE;
+
+	if (!end && (strncmp (command, "%s", 2) != 0))
+	{   /* current token is not "%s" */
+	    gchar *buf;
+	    buf = g_strndup (command, next-command);
+	    g_ptr_array_add (args, buf);
+	}
+	else if (!percs)
+	{
+	    for(l = selected_songs; l; l = l->next)
+	    {
+		if((str = get_song_name_on_disk_verified((Song*)l->data)))
+		    g_ptr_array_add (args, str);
+	    }
+	    percs = TRUE; /* encountered a '%s' */
+	}
+	command = next;
+	/* skip whitespace */
+	while (g_ascii_isspace (*command))  ++command;
+    } while (*command);
+    /* need NULL pointer */
+    g_ptr_array_add (args, NULL);
+
+    switch(fork())
+    {
+    case 0: /* we are the child */
+    {
+	gchar **argv = (gchar **)args->pdata;
+	execv(argv[0], &argv[1]);
+	g_ptr_array_free (args, TRUE);
+	exit(0);
+	break;
+    }
+    case -1: /* we are the parent, fork() failed  */
+	g_ptr_array_free (args, TRUE);
+	break;
+    default: /* we are the parent, everything's fine */
+	break;
+    }
+}
+
+
+/*
+ * play_entries_now - play the entries currently selected in xmms
+ * @selected_songs: list of songs to be played
+ */
+void play_songs (GList *selected_songs)
+{
+    do_command_on_entries (prefs_get_play_now_path (),
+			   _("Play Now"),
+			   selected_songs);
+}
+
+/*
+ * play_entries_now - play the entries currently selected in xmms
+ * @selected_songs: list of songs to be played
+ */
+void enqueue_songs (GList *selected_songs)
+{
+    do_command_on_entries (prefs_get_play_enqueue_path (),
+			   _("Enqueue"),
+			   selected_songs);
+}

@@ -591,7 +591,7 @@ on_charset_combo_entry_changed          (GtkEditable     *editable,
 }
 
 void
-on_delete_song_menu                    (GtkMenuItem     *menuitem,
+on_delete_songs_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     delete_song_head ();
@@ -599,12 +599,21 @@ on_delete_song_menu                    (GtkMenuItem     *menuitem,
 
 
 void
-on_delete_playlist_menu                (GtkMenuItem     *menuitem,
+on_delete_playlist_activate                (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     delete_playlist_head ();
 }
 
+void
+on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Delete selected entry of which sort tab?"));
+
+    if (inst != -1)   delete_entry_head (inst);
+}
 
 void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
@@ -748,15 +757,15 @@ on_add_playlist1_activate              (GtkMenuItem     *menuitem,
 }
 
 void
-on_update_songs_in_selected_playlist1_activate (GtkMenuItem     *menuitem,
-						gpointer         user_data)
+on_update_playlist_activate (GtkMenuItem     *menuitem,
+			     gpointer         user_data)
 {
     update_selected_playlist ();
 }
 
 void
-on_update_selected_songs1_activate            (GtkMenuItem     *menuitem,
-					       gpointer         user_data)
+on_update_songs_activate            (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
 {
     update_selected_songs ();
 }
@@ -949,17 +958,6 @@ on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
 
 
 void
-on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    gint inst = get_sort_tab_number (
-	_("Delete selected entry of which sort tab?"));
-
-    if (inst != -1)   delete_entry_head (inst);
-}
-
-
-void
 on_reset_sorting_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -995,8 +993,8 @@ on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
 
 
 void
-on_export_selected_playlist1_activate  (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
+on_export_playlist_activate  (GtkMenuItem     *menuitem,
+			      gpointer         user_data)
 {
     GList *songs;
     Playlist *pl = pm_get_selected_playlist ();
@@ -1012,8 +1010,8 @@ on_export_selected_playlist1_activate  (GtkMenuItem     *menuitem,
 
 
 void
-on_export_selected_tab_entry1_activate (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
+on_export_tab_entry_activate (GtkMenuItem     *menuitem,
+			      gpointer         user_data)
 {
     TabEntry *entry;
     gint inst;
@@ -1037,13 +1035,115 @@ on_export_selected_tab_entry1_activate (GtkMenuItem     *menuitem,
 
 
 void
-on_export_selected_songs2_activate     (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
+on_export_songs_activate     (GtkMenuItem     *menuitem,
+			      gpointer         user_data)
 {
     GList *songs = sm_get_selected_songs ();
 
     if (songs)
-	file_export_init(songs);
+	file_export_init(songs);  /* will free the songs list */
+    else
+	gtkpod_statusbar_message (_("No songs selected"));
+}
+
+
+void
+on_play_playlist_activate              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+    if (pl)
+	play_songs (pl->members);
+    else
+	gtkpod_statusbar_message (_("No playlist selected"));
+}
+
+
+void
+on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Play songs in selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    play_songs (entry->members);
+}
+
+
+void
+on_play_songs_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    GList *songs = sm_get_selected_songs ();
+    if (songs)
+    {
+	play_songs (songs);
+	g_list_free (songs);
+	songs = NULL;
+    }
+    else
+	gtkpod_statusbar_message (_("No songs selected"));
+}
+
+
+void
+on_enqueue_playlist_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+    if (pl)
+	enqueue_songs (pl->members);
+    else
+	gtkpod_statusbar_message (_("No playlist selected"));
+}
+
+
+void
+on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Enqueue songs in selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    enqueue_songs (entry->members);
+}
+
+
+void
+on_enqueue_songs_activate              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    GList *songs = sm_get_selected_songs ();
+    if (songs)
+    {
+	enqueue_songs (songs);
+	g_list_free (songs);
+	songs = NULL;
+    }
     else
 	gtkpod_statusbar_message (_("No songs selected"));
 }

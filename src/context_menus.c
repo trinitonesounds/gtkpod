@@ -26,57 +26,26 @@
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <limits.h>
-
 #include "support.h"
 #include "prefs.h"
 #include "display.h"
 #include "song.h"
 #include "playlist.h"
-#include "interface.h"
-#include "callbacks.h"
 #include "misc.h"
-#include "file.h"
 #include "file_export.h"
-#include <sys/types.h>
-#include <unistd.h>
 
 static guint entry_inst = -1;
-static GtkWidget *menu = NULL;
 static GList *selected_songs = NULL;
 static Playlist *selected_playlist = NULL;
 static TabEntry *selected_entry = NULL; 
+/* types of context menus (PM/ST/SM) */
+typedef enum {
+    CM_PM = 0,
+    CM_ST,
+    CM_SM,
+    CM_NUM
+} CM_type;
 
-/**
- * which - run the shell command which, useful for querying default values
- * for executable, 
- * @name - the executable we're trying to find the path for
- * Returns the path to the executable, NULL on not found
- */
-static gchar* 
-which(const gchar *exe)
-{
-    FILE *fp = NULL;
-    gchar *result = NULL; 
-    gchar buf[PATH_MAX];
-    gchar *which_exec = NULL;
-   
-    memset(&buf[0], 0, PATH_MAX);
-    which_exec = g_strdup_printf("which %s", exe);
-    if((fp = popen(which_exec, "r")))
-    {
-	int read_bytes = 0;
-	if((read_bytes = fread(buf, sizeof(gchar), PATH_MAX, fp)) > 0)
-	    result = g_strndup(buf, read_bytes-1);
-	pclose(fp);
-    }
-    C_FREE(which_exec);
-    return(result);
-}
 
 /**
  * export_entries - export the currently selected files to disk
@@ -96,113 +65,14 @@ export_entries(GtkWidget *w, gpointer data)
  * @data - Ignored, should be NULL
  * FIXME: How this should work needs to be decided
  */
+#if 0
 static void 
 edit_entries(GtkButton *b, gpointer data)
 {
 
     fprintf(stderr, "edit entries Selected\n");
 }
-
-/*
- * play_entries - play the entries currently selected in xmms
- * @play: the command to execute (e.g. "xmms -e %s")
- * @what: e.g. "Enqueue" or "Play Now" (used for error messages)
- */
-static void 
-do_command_on_entries (gchar *command, gchar *what)
-{
-    GList *l;
-    gchar *str, *commandc, *next;
-    gboolean percs = FALSE; /* did "%s" already appear? */
-    GPtrArray *args;
-
-    if ((!command) || (strlen (command) == 0))
-    {
-	gchar *buf = g_strdup_printf (_("No command set for '%s'"), what);
-	gtkpod_statusbar_message (buf);
-	C_FREE (buf);
-	return;
-    }
-
-    /* find the command itself -- separated by ' ' */
-    next = strchr (command, ' ');
-    if (!next)
-    {
-	str = g_strdup (command);
-    }
-    else
-    {
-        str = g_strndup (command, next-command);
-    }
-    while (g_ascii_isspace (*command))  ++command;
-    /* get the full path */
-    commandc = which (str);
-    if (!commandc)
-    {
-	gchar *buf = g_strdup_printf (_("Could not find '%s' set for '%s'"),
-				      str, what);
-	gtkpod_statusbar_message (buf);
-	C_FREE (buf);
-	C_FREE (str);
-	return;
-    }
-    C_FREE (str);
-
-    /* Create the command line */
-    args = g_ptr_array_sized_new (g_list_length (selected_songs) + 10);
-    /* first the full path */
-    g_ptr_array_add (args, commandc);
-    do
-    {
-	gchar *next;
-	gboolean end;
-
-	next = strchr (command, ' ');
-	if (next == NULL) next = command + strlen (command);
-
-	if (next == command)  end = TRUE;
-	else                  end = FALSE;
-
-	if (!end && (strncmp (command, "%s", 2) != 0))
-	{   /* current token is not "%s" */
-	    gchar *buf;
-	    buf = g_strndup (command, next-command);
-	    g_ptr_array_add (args, buf);
-	}
-	else if (!percs)
-	{
-	    for(l = selected_songs; l; l = l->next)
-	    {
-		if((str = get_song_name_on_disk_verified((Song*)l->data)))
-		    g_ptr_array_add (args, str);
-	    }
-	    percs = TRUE; /* encountered a '%s' */
-	}
-	command = next;
-	/* skip whitespace */
-	while (g_ascii_isspace (*command))  ++command;
-    } while (*command);
-    /* need NULL pointer */
-    g_ptr_array_add (args, NULL);
-
-    switch(fork())
-    {
-    case 0: /* we are the child */
-    {
-	gchar **argv = (gchar **)args->pdata;
-	execv(argv[0], &argv[1]);
-	g_ptr_array_free (args, TRUE);
-	exit(0);
-	break;
-    }
-    case -1: /* we are the parent, fork() failed  */
-	g_ptr_array_free (args, TRUE);
-	break;
-    default: /* we are the parent, everything's fine */
-	break;
-    }
-}
-
+#endif
 
 /*
  * play_entries_now - play the entries currently selected in xmms
@@ -212,7 +82,7 @@ do_command_on_entries (gchar *command, gchar *what)
 static void 
 play_entries_now (GtkMenuItem *mi, gpointer data)
 {
-    do_command_on_entries (prefs_get_play_now_path (), _("Play Now"));
+    play_songs (selected_songs);
 }
 
 /*
@@ -223,7 +93,7 @@ play_entries_now (GtkMenuItem *mi, gpointer data)
 static void 
 play_entries_enqueue (GtkMenuItem *mi, gpointer data)
 {
-    do_command_on_entries (prefs_get_play_enqueue_path (), _("Enqueue"));
+    enqueue_songs (selected_songs);
 }
 
 
@@ -264,36 +134,71 @@ delete_entries(GtkMenuItem *mi, gpointer data)
 /* Attach a menu item to your context menu */
 /* @m - the GtkMenu we're attaching to
  * @str - a gchar* with the menu label
- * @func - the callback for when the item is selected
+ * @stock - name of the stock icon (or NULL if none is to be used)
+ * @func - the callback for when the item is selected (or NULL)
  * @mi - the GtkWidget we're gonna hook into the menu
  */
-GtkWidget *hookup_mi (GtkWidget *m, gchar *str, GCallback func)
+GtkWidget *hookup_mi (GtkWidget *m, gchar *str, gchar *stock, GCallback func)
 {
-    GtkWidget *mi = gtk_menu_item_new_with_label(str);
+    GtkWidget *mi;
+
+    if (stock)
+    {
+	GtkWidget *image;
+	mi = gtk_image_menu_item_new_with_mnemonic (str);
+	image = gtk_image_new_from_stock (stock, GTK_ICON_SIZE_MENU);
+	gtk_widget_show (image);
+	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mi), image);
+    }
+    else
+    {
+	mi = gtk_menu_item_new_with_label(str);
+    }
     gtk_widget_show(mi);
     gtk_widget_set_sensitive(mi, TRUE);
-    g_signal_connect(G_OBJECT(mi), "activate", func, NULL);
+    if (func)
+	g_signal_connect(G_OBJECT(mi), "activate", func, NULL);
     gtk_menu_append(m, mi);
     return mi;
 }
 
 
 void
-create_sm_menu(void)
+create_context_menu(CM_type type)
 {
-    if(!menu)
+    static GtkWidget *menu[CM_NUM];
+
+    if(!menu[type])
     {
-	menu =  gtk_menu_new();
+	menu[type] =  gtk_menu_new();
 #if 0
-	hookup_mi (menu, _("Edit"), G_CALLBACK (edit_entries));
+	hookup_mi (menu[type], _("Edit"), NULL, G_CALLBACK (edit_entries));
 #endif
-	hookup_mi (menu, _("Play Now"), G_CALLBACK (play_entries_now));
-	hookup_mi (menu, _("Enqueue"), G_CALLBACK (play_entries_enqueue));
-	hookup_mi (menu, _("Export"), G_CALLBACK (export_entries));
-	hookup_mi (menu, _("Update"), G_CALLBACK (update_entries));
-	hookup_mi (menu, _("Delete"), G_CALLBACK (delete_entries));
+	hookup_mi (menu[type], _("Play Now"), "gtk-cdrom",
+		   G_CALLBACK (play_entries_now));
+	hookup_mi (menu[type], _("Enqueue"), "gtk-cdrom",
+		   G_CALLBACK (play_entries_enqueue));
+	hookup_mi (menu[type], _("Export"), "gtk-floppy",
+		   G_CALLBACK (export_entries));
+	hookup_mi (menu[type], _("Update"), "gtk-refresh",
+		   G_CALLBACK (update_entries));
+	hookup_mi (menu[type], _("Delete"), "gtk-delete",
+		   G_CALLBACK (delete_entries));
+	if (type != CM_SM)
+	{
+	    GtkWidget *mi;
+	    GtkWidget *sub = gtk_menu_new ();
+	    gtk_widget_show (sub);
+	    mi = hookup_mi (menu[type], _("Alphabetize"), NULL, NULL);
+	    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
+	    hookup_mi (sub, _("Ascending"), "gtk-sort-ascending",
+		       G_CALLBACK (NULL));
+	    hookup_mi (sub, _("Descending"), "gtk-sort-descending",
+		       G_CALLBACK (NULL));
+	    hookup_mi (sub, _("Reset"), "gtk-undo", G_CALLBACK (NULL));
+	}
     }
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL,
+    gtk_menu_popup(GTK_MENU(menu[type]), NULL, NULL,
 	    NULL, NULL, 3, gtk_get_current_event_time()); 
 }
 
@@ -310,7 +215,7 @@ sm_context_menu_init(void)
     selected_songs = sm_get_selected_songs();
     if(selected_songs)
     {
-	create_sm_menu();
+	create_context_menu (CM_SM);
     }
 }
 /**
@@ -327,7 +232,7 @@ pm_context_menu_init(void)
     if(selected_playlist)
     {
 	selected_songs = g_list_copy (selected_playlist->members);
-	create_sm_menu();
+	create_context_menu (CM_PM);
     }
 }
 /**
@@ -345,6 +250,6 @@ st_context_menu_init(gint inst)
     {
 	entry_inst = inst;
 	selected_songs = g_list_copy (selected_entry->members);
-	create_sm_menu();
+	create_context_menu (CM_ST);
     }
 }

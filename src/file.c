@@ -449,6 +449,8 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 \*------------------------------------------------------------------*/
 
 
+/* reads info from file and updates the ID3 tags of
+   @selected_songids. */
 void update_selected_songids (GList *selected_songids)
 {
     GList *gl_id;
@@ -473,11 +475,10 @@ void update_selected_songids (GList *selected_songids)
 	data_changed ();
     }
     release_widgets ();
-    g_list_free (selected_songids);
     /* display log of non-updated songs */
     display_non_updated (NULL, NULL);
-    /* clear log of updated songs */
-    display_updated ((void *)-1, NULL);
+    /* display log of updated songs */
+    display_updated (NULL, NULL);
     /* display log of detected duplicates */
     remove_duplicate (NULL, NULL);
     gtkpod_statusbar_message(_("Updated selected songs with info from file."));
@@ -490,8 +491,9 @@ void update_selected_songs (void)
 
     /* I'm using ids instead of "Song *" -pointer because it would be
      * possible that a song gets removed during the process */
-    selected_songids = get_currently_selected_songids();
+    selected_songids = sm_get_selected_songids();
     update_selected_songids (selected_songids);
+    g_list_free (selected_songids);
 }
 
 
@@ -517,6 +519,7 @@ void update_selected_entry (gint inst)
 					      (gpointer)song->ipod_id);
     }
     update_selected_songids (selected_songids);
+    g_list_free (selected_songids);
 }
 
 
@@ -540,6 +543,7 @@ void update_selected_playlist (void)
 					      (gpointer)song->ipod_id);
     }
     update_selected_songids (selected_songids);
+    g_list_free (selected_songids);
 }
 
 
@@ -672,8 +676,8 @@ void display_updated (Song *song, gchar *txt)
    exists.
    Returns TRUE if the data could be updated, FALSE otherwise. A list
    of non-updated songs can be displayed by calling
-   display_non_updated (NULL). This list can be deleted by
-   calling display_non_updated ((void *)-1);
+   display_non_updated (NULL, NULL). This list can be deleted by
+   calling display_non_updated ((void *)-1, NULL);
    It is also possible that duplicates get detected in the process --
    a list of those can be displayed by calling "remove_duplicate
    (NULL, NULL)", that list can be deleted by calling

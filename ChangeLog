@@ -1,14 +1,20 @@
-gtkpod V0.43-CVS
-	IMPROVEMENT: option to mount the ipod on startup and unmount it on
-	exit.
+gtkpod V0.50
 
-	IMPROVEMENT: mount/unmount ipod directory on startup/exit, and/or
+	NEW FEATURE: context sensitive popup menues (right mouse button
+	click in playlist view, sort tabs or song view.
+
+	NEW FEATURE: play song with xmms (two user definable commands).
+
+	NEW FEATURE: option to mount the iPod directory on startup and
+	unmount it on exit.
+
+	NEW FEATURE: mount/unmount ipod directory on startup/exit, and/or
 	execute ~/.gtkpod/gtkpod.in,out (or /etc/gtkpod/gtkpod.in,out if
 	the former doesn't exist) on startup/exit. First gtkpod.in is
 	executed, then the ipod is mounted (if this option is
 	activated). On exit, it's the other way round.
 
-	IMPROVEMENT: read global prefs /etc/gtkpod/prefs if
+	NEW FEATURE: read global prefs /etc/gtkpod/prefs if
 	~/.gtkpod/prefs does not exist. Useful, e.g. to set a machine-wide
 	default mountpoint for the ipod.
 
@@ -21,10 +27,10 @@ gtkpod V0.43-CVS
 	Songs" or "Add Directory" and no playlist is selected, a new
 	playlist will be selected for each playlist file.
 
-	IMPROVEMENT: user settable: save song order after sort action
+	NEW FEATURE: user settable: save song order after sort action
 	automatically?
 
-	IMPROVEMENT: columns in song view can be dragged into any
+	NEW FEATURE: columns in song view can be dragged into any
 	order. Order will be saved.
 	
         Change of copyright: itunesdb.c and itunesdb.h are now under the
@@ -32,9 +38,9 @@ gtkpod V0.43-CVS
 	code in other programs.
 
 	BUGFIX: when writing tags to file, all tags were updated even if
-	you selected only to upgrade changed tags in the the preferences.
+	you selected only to update changed tags in the the preferences.
 
-	IMPROVEMENT: drag and drop files/directories/playlists from
+	NEW FEATURE: drag and drop files/directories/playlists from
 	konqueror or nautilus directly into the song view. The songs will
 	be inserted at the specified position. You must already have some
 	songs displayed or a drop is not possible. In that case you should
@@ -42,7 +48,7 @@ gtkpod V0.43-CVS
 	the exact position of the files in the playlist (will be added at
 	the end).
 
-	IMPROVEMENT: drag and drop files/directories/playlists from
+	NEW FEATURE: drag and drop files/directories/playlists from
 	konqueror or nautilus directly into the playlist view. If you drop
 	between playlists a (number of) new playlist(s) will be created
 	for the drop. If you drop onto a playlist, the songs will be added

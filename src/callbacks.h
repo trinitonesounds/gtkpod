@@ -187,11 +187,11 @@ on_charset_combo_entry_changed         (GtkEditable     *editable,
                                         gpointer         user_data);
 
 void
-on_delete_song_menu                    (GtkMenuItem     *menuitem,
+on_delete_songs_activate                    (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_delete_playlist_menu                (GtkMenuItem     *menuitem,
+on_delete_playlist_activate                (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -244,13 +244,12 @@ on_add_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_update_songs_in_selected_playlist1_activate
-                                        (GtkMenuItem     *menuitem,
+on_update_playlist_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_update_selected_songs1_activate            (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
+on_update_songs_activate            (GtkMenuItem     *menuitem,
+				     gpointer         user_data);
 
 void
 on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
@@ -353,13 +352,37 @@ on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_export_selected_playlist1_activate  (GtkMenuItem     *menuitem,
+on_export_playlist_activate  (GtkMenuItem     *menuitem,
+			      gpointer         user_data);
+
+void
+on_export_tab_entry_activate (GtkMenuItem     *menuitem,
+			      gpointer         user_data);
+
+void
+on_export_songs_activate     (GtkMenuItem     *menuitem,
+			      gpointer         user_data);
+
+void
+on_play_playlist_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_export_selected_tab_entry1_activate (GtkMenuItem     *menuitem,
+on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_export_selected_songs2_activate     (GtkMenuItem     *menuitem,
+on_play_songs_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_enqueue_playlist_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_enqueue_songs_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);

@@ -89,4 +89,8 @@ void mount_ipod(void);
 void unmount_ipod(void);
 void call_script (gchar *script);
 
+void do_command_on_entries (gchar *command, gchar *what, GList *selected_songs);
+void play_songs (GList *selected_songs);
+void enqueue_songs (GList *selected_songs);
+
 #endif __MISC_H__

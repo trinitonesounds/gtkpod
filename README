@@ -2,11 +2,38 @@ iPod, iTunes, Mac, Macintosh, iBook are trademarks of Apple Computer,
 Inc., registered in the U.S. and other countries.
 
 
-Short instructions:
--------------------
+*----------------------------------*
+|                                  |
+|            Contents              |
+|                                  |
+*----------------------------------*
 
-Connecting iPod to a Linux box:
--------------------------------
+
+  - Connecting iPod to a Linux box:
+  - Using gtkpod
+  - Features
+     - Songs
+     - Sort Tabs
+     - Playlists
+     - Drag and Drop
+     - Duplicate Detection
+     - Preferences File
+     - Startup and Shutdown scripts
+     - Extended Information File
+     - Refresh (Update) Song Info From File
+     - Offline Mode
+     - Export of Songs
+     - Encoding of ID3 tags (charsets)
+     - About filenames
+  - Sick of loading the sbp2 modules by hand? (an example of how to
+    use startup/shutdown scripts)
+  - Known bugs
+
+*----------------------------------*
+|                                  |
+|  Connecting iPod to a Linux box  |
+|                                  |
+*----------------------------------*
 
 1) You need a Windows iPod. See e.g.
 
@@ -85,8 +112,13 @@ Nov 28 21:58:39 hatarakibachi kernel:  sda: sda1 sda2
 
 
 
-Using gtkpod
-------------
+
+*----------------------------------*
+|                                  |
+|          Using gtkpod            |
+|                                  |
+*----------------------------------*
+
 
 Make sure you have followed steps 1-7 above. Then:
 
@@ -110,8 +142,12 @@ and continue with step 8-11 above.
 
 
 
-Features
---------
+
+*----------------------------------*
+|                                  |
+|            Features              |
+|                                  |
+*----------------------------------*
 
 Songs
 -----
@@ -159,6 +195,62 @@ Playlists
 - You can rename playlists.
 - You can delete playlists by selecting the desired playlist and pressing
   "Ctrl-D", or by selecting "Delete Playlist" from the Edit menu.
+
+
+Drag and Drop
+-------------
+
+Drag and Drop can be used in several ways:
+
+- Drag songs from the song view _onto_ an existing playlist: the songs
+  will be added to that playlist.
+- Drag songs from the song view _between_ two existing playlists or
+  behind the last playlist: a new playlist will be created and the
+  songs will be added to that playlist.
+- Drag an entry of a sort tab _onto_ an existing playlist: all songs
+  matching the entry will be added to that playlist.
+- Drag an entry of a sort tab _between_ two existing playlists or
+  behind the last playlist: a new playlist will be created and all
+  songs matching the entry will be added to that playlist.
+- Drag songs, directories, or playlist files _onto_ an existing
+  playlist: all songs as well as the contents of playlist files will
+  be added to that playlist.
+- Drag songs or directories _between_ two existing playlists or behind
+  the last playlist: a new playlist will be created and all songs will
+  be added to that playlist.
+- Drag playlist files _between_ two existing playlists or behind the
+  last playlist: for each playlist file a new playlist named after the
+  file will be created and the corresponding songs will be added to
+  that playlist.
+- Drag songs, directories, or playlist files into the song view (note:
+  something must be displayed in the songview before you can drop into
+  it -- drop onto the correpsonding playlist otherwise.): the songs
+  will be inserted into the corresponding playlist at the position you
+  dropped them.
+
+
+Preferences File
+----------------
+
+On startup gtkpod will read the preferences from ~/.gtkpod/prefs (or
+/etc/gtkpod/prefs if the former doesn't exist).
+
+
+Startup and Shutdown Scripts
+----------------------------
+
+After reading the preferences file gtkpod will try to execute
+~/.gtkpod/gtkpod.in (or /etc/gtkpod/gtkpod.in if the former doesn't
+exist) during startup. This is done before attempting to mount the
+iPod directory (optional) or read the iTunesDB (optional)).
+
+When leaving the program gtkpod will try to execute
+~/.gtkpod/gtkpod.out (or /etc/gtkpod/gtkpod.out if the former doesn't
+exist). This is done after attempting to unmount the iPod directory
+(optional).
+
+Please see the section "Sick of loading the sbp2 modules by hand?" for
+an example of how to use this functionality.
 
 
 Duplicate Detection
@@ -209,8 +301,8 @@ The extended information file is also used for the "Offline Mode"
 described below.
 
 
-Refresh Song Info From File
----------------------------
+Refresh (Update) Song Info From File
+------------------------------------
 
 If you have changed the ID3 tags of your original file, you can update
 the ID3 tags stored in gtkpod without removing and re-adding the
@@ -306,12 +398,122 @@ than the once of the current locale. ID3 tags are still read currectly
 
 
 
-Known bugs
-----------
+*----------------------------------*
+|                                  |
+|     Sick of loading the sbp2     |
+|         modules by hand?         |
+|                                  |
+|         Corey Donohoe            |
+|     <atmos at atmos dot org>     |
+|         March 22nd 2003          |
+|                                  |
+*----------------------------------*
+
+Sick of loading the sbp2 modules by hand every time you want to use your
+ipod?  Are you sick of mounting it too?  Using sudo gtkpod can make manually
+interacting with the ipod filesystem a thing of the past.  Note that you
+should have your ipod working with gtkpod before attempting this automated
+method, see the README that came with gtkpod in order to get things up and
+running.
+
+Here's a brief example of how I'm using gtkpod now in 8 easy steps.
+
+/**********/
+ * Step 1 *
+/**********/
+Using sudo allow users to load/remove the sbp2 module
+Example /etc/sudoers
+------------------------------- Begin Here ---------------------------------
+
+# Cmnd alias specification
+Cmnd_Alias IPOD=/sbin/modprobe sbp2 sbp2_force_inquiry_hack=1, /sbin/rmmod sbp2
+# User privilege specification
+atmos   ALL=(ALL) ALL
+atmos   ALL= NOPASSWD : IPOD
+
+------------------------------- End Here -----------------------------------
+I use the force inquiry hack cause I have an older iPod, if you normally can
+get by with /sbin/modprobe sbp2 then ignore the inquiry hack stuff.  Note
+that explicitly specifying with module to probe/remove keeps the user from
+being able to add/remove arbitrary modules.  This allows us to keep gtkpod
+as a user process, and execute commands the user wouldn't usually have
+enough rights to.
+
+/**********/
+ * Step 2 *
+/**********/
+Add a line similar to the below to your /etc/fstab, this will enable users
+to mount the ipod with read/write capabilities.  Example line assumes your
+ipod mount point is /mnt/ipod and your ipod is detected as /dev/sda
+
+------------------------------- Begin Here ---------------------------------
+/dev/sda2       /mnt/ipod       vfat    rw,user,noauto          0       0
+------------------------------- End Here -----------------------------------
+
+
+/**********/
+ * Step 3 *
+/**********/
+Then setup your /etc/gtkpod/gtkpod.in file to load the module when gtkpod is
+exited
+Example /etc/gtkpod/gtkpod.in
+------------------------------- Begin Here ---------------------------------
+
+sudo /sbin/modprobe sbp2 sbp2_force_inquiry_hack=1
+
+------------------------------- End Here -----------------------------------
+
+/**********/
+ * Step 4 *
+/**********/
+
+Then setup your /etc/gtkpod/gtkpod.out file to unload the module when gtkpod
+is exited
+Example /etc/gtkpod/gtkpod.out
+------------------------------- Begin Here ---------------------------------
+
+sudo /sbin/rmmod sbp2 
+
+------------------------------- End Here -----------------------------------
+
+/**********/
+ * Step 5 *
+/**********/
+Then enable ipod automounting in the gtkpod prefs(in the misc tab).
+
+/**********/
+ * Step 6 *
+/**********/
+You're now ready to use gtkpod in a much nicer fashion.  Start by
+plugging in your ipod.  You should get a check mark with "OK to disconnect"
+displayed on your ipod.
+
+/**********/
+ * Step 7 *
+/**********/
+Start gtkpod, your ipod should be accessible(i.e. autoimport should work)
+A "Do Not Disconnect" message is displayed on your ipod while gtkpod is
+running.
+
+/**********/
+ * Step 8 *
+/**********/
+After you exit gtkpod, the "OK to disconnect" message should be displayed
+again.  It's ok to unplug your ipod now.  
+
+Good Luck. 
+
+
+
+*----------------------------------*
+|                                  |
+|           Known bugs             |
+|                                  |
+*----------------------------------*
+
 
 - Display of large number of songs is awfully slow (mainly because of
   the use of the standard GTK2 tree views) -> deactivate "Automatically
   select "All" in first sort tab" and/or deactivate "Automatically
   select master playlist". You could also "block the display" to speed
   up the display update.
-
