@@ -1101,6 +1101,70 @@ pm_set_selected_playlist (Playlist *pl)
 /* Section for drag and drop                                        */
 /* ---------------------------------------------------------------- */
 
+/*#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))*/
+/* gtk_list_store_move_*() was introduced in 2.2, so we have to
+ * emulate for 2.0 <= V < 2.2 (we require at least 2.0 anyway) */
+/* !!! gtk_list_store_move() at least in 2.2.1 seems to be buggy: if
+   moving before the first entry, the moved entry ends up
+   last. Therefore I emulate the functions for all gtk versions */
+static void pm_list_store_move (GtkListStore *store,
+				 GtkTreeIter  *iter,
+				 GtkTreeIter  *position,
+				 gboolean     before)
+{
+    GtkTreeIter new_iter;
+    Playlist *playlist = NULL;
+    GtkTreeModel *model;
+
+    /* insert new row before or after @position */
+    if (before)  gtk_list_store_insert_before (store, &new_iter, position);
+    else         gtk_list_store_insert_after (store, &new_iter, position);
+
+    model = gtk_tree_view_get_model (playlist_treeview);
+
+    /* get the content (track) of the row to move */
+    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
+    /* remove the old row */
+    gtk_tree_store_remove (GTK_TREE_STORE (model), iter);
+
+    /* set the content of the new row */
+    gtk_tree_store_set (GTK_TREE_STORE (model), &new_iter,
+			PM_COLUMN_PLAYLIST, playlist,
+			-1);
+}
+
+void  pm_list_store_move_before (GtkListStore *store,
+					 GtkTreeIter  *iter,
+					 GtkTreeIter  *position)
+{
+    pm_list_store_move (store, iter, position, TRUE);
+}
+
+void  pm_list_store_move_after (GtkListStore *store,
+					GtkTreeIter  *iter,
+					GtkTreeIter  *position)
+{
+    pm_list_store_move (store, iter, position, FALSE);
+}
+/* #else*/
+#if 0
+/* starting V2.2 convenient gtk functions exist (but see comment above) */
+void  pm_list_store_move_before (GtkListStore *store,
+					 GtkTreeIter  *iter,
+					 GtkTreeIter  *position)
+{
+    gtk_list_store_move_before (store, iter, position);
+}
+
+void  pm_list_store_move_after (GtkListStore *store,
+					GtkTreeIter  *iter,
+					GtkTreeIter  *position)
+{
+    gtk_list_store_move_after (store, iter, position);
+}
+#endif
+
+
 /* move pathlist for track treeview */
 gboolean pm_move_pathlist (gchar *data,
 			   GtkTreePath *path,

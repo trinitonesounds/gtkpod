@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 03:21:15 jcs>
+/* Time-stamp: <2005-02-12 23:49:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -232,7 +232,7 @@ tracks_moved_or_copied     (GdkDragContext  *context, gchar *tracks)
 
 	    while(parse_ipod_id_from_string(&str,&id))
 	    {
-		remove_trackid_from_playlist (pl, id);
+/*FIXME:		remove_trackid_from_playlist (pl, id);*/
 	    }
 	    g_free (str);
 
@@ -294,6 +294,11 @@ on_playlist_treeview_drag_data_received
 	{
 	    gtk_tree_model_get(model, &i, 0, &pl, -1);
 	}
+	if (!pl)
+	{
+	    gtk_drag_finish (context, FALSE, FALSE, time);
+	    g_return_if_reached ();
+	}
 	/* get position of current path */
 	position = atoi (gtk_tree_path_to_string (path));
 	/* adjust position */
@@ -303,61 +308,55 @@ on_playlist_treeview_drag_data_received
 	switch (info)
 	{
 	case DND_GTKPOD_IDLIST:
-	    if(pl)
-	    {
-		if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
-		    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
-		{ /* drop into existing playlist */
-		    if (pl->type == ITDB_PL_TYPE_NORM)
-		    {
-			add_idlist_to_playlist (pl, data->data);
-			/* this is a hack -- see comment at
-			   tracks_moved_or_copied */
-			tracks_moved_or_copied (context, data->data);
-			gtk_drag_finish (context, TRUE, del_src, time);
-		    }
-		    else
-		    {
-			gtk_drag_finish (context, FALSE, FALSE, time);
-		    }
-		}
-		else
-		{ /* drop between playlists */
-		    Playlist *plitem;
-		    plitem = add_new_pl_user_name (NULL, position);
-		    if (plitem)
-		    {
-			add_idlist_to_playlist (plitem, data->data);
-			/* this is a hack -- see comment at
-			   tracks_moved_or_copied */
-			tracks_moved_or_copied (context, data->data);
-			gtk_drag_finish (context, TRUE, del_src, time);
-		    }
-		    else
-		    {
-			gtk_drag_finish (context, FALSE, FALSE, time);
-		    }
-		}
-	    }
-	    else gtk_drag_finish (context, FALSE, FALSE, time);
-	    break;
-	case DND_TEXT_PLAIN:
-	    if(pl)
-	    {
-		if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
-		    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
-		{ /* drop into existing playlist */
-		    add_text_plain_to_playlist (pl, data->data, 0, NULL, NULL);
-		    gtk_drag_finish (context, TRUE, FALSE, time);
-		}
-		else
-		{ /* drop between playlists */
-		    add_text_plain_to_playlist (NULL, data->data, position,
-						NULL, NULL);
+	    if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
+		(pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
+	    { /* drop into existing playlist */
+		if (pl->type == ITDB_PL_TYPE_NORM)
+		{
+		    add_idlist_to_playlist (pl, data->data);
+		    /* this is a hack -- see comment at
+		       tracks_moved_or_copied */
+		    tracks_moved_or_copied (context, data->data);
 		    gtk_drag_finish (context, TRUE, del_src, time);
 		}
+		else
+		{
+		    gtk_drag_finish (context, FALSE, FALSE, time);
+		}
 	    }
-	    else gtk_drag_finish (context, FALSE, FALSE, time);
+	    else
+	    { /* drop between playlists */
+		Playlist *plitem;
+		plitem = add_new_pl_user_name (pl->itdb, NULL, position);
+		if (plitem)
+		{
+		    add_idlist_to_playlist (plitem, data->data);
+		    /* this is a hack -- see comment at
+		       tracks_moved_or_copied */
+		    tracks_moved_or_copied (context, data->data);
+		    gtk_drag_finish (context, TRUE, del_src, time);
+		}
+		else
+		{
+		    gtk_drag_finish (context, FALSE, FALSE, time);
+		}
+	    }
+	    break;
+	case DND_TEXT_PLAIN:
+	    if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
+		(pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
+	    { /* drop into existing playlist */
+		add_text_plain_to_playlist (pl->itdb, pl, data->data,
+					    0, NULL, NULL);
+		gtk_drag_finish (context, TRUE, FALSE, time);
+	    }
+	    else
+	    { /* drop between playlists */
+		add_text_plain_to_playlist (pl->itdb, NULL,
+					    data->data, position,
+					    NULL, NULL);
+		gtk_drag_finish (context, TRUE, del_src, time);
+	    }
 	    break;
 	case DND_GTKPOD_PM_PATHLIST:
 	    /* dont allow moves before MPL */
