@@ -37,7 +37,7 @@ static GHashTable *id_hash = NULL;
 
 typedef struct {
     GtkWidget *window;
-    gboolean  *scrolled;
+    gboolean  scrolled;
     ConfHandlerNA never_again_handler;
     ConfHandler ok_handler;
     ConfHandler cancel_handler;
@@ -185,20 +185,25 @@ gboolean gtkpod_confirmation (gint id,
 
     /* Set text */
     w = lookup_widget (window, "text");
-    if (w && text)
+    if (text)
     {
-	tv = gtk_text_buffer_new(NULL);
-	gtk_text_buffer_set_text(tv, text, strlen(text));
-	gtk_text_view_set_buffer(GTK_TEXT_VIEW(w), tv);
-	gtk_text_view_set_editable(GTK_TEXT_VIEW(w), FALSE);
-	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(w), FALSE);
+	if (w)
+	{
+	    tv = gtk_text_buffer_new(NULL);
+	    gtk_text_buffer_set_text(tv, text, strlen(text));
+	    gtk_text_view_set_buffer(GTK_TEXT_VIEW(w), tv);
+	    gtk_text_view_set_editable(GTK_TEXT_VIEW(w), FALSE);
+	    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(w), FALSE);
+	}
+	cd->scrolled = TRUE;
 	prefs_get_size_conf_sw (&defx, &defy);
     }
     else
     { /* no text -> hide widget */
 	if ((w = lookup_widget (window, "scroller")))
 	    gtk_widget_hide (w);
-	prefs_get_size_conf_sw (&defx, &defy);
+	cd->scrolled = FALSE;
+	prefs_get_size_conf (&defx, &defy);
     }
     gtk_window_set_default_size (GTK_WINDOW (window), defx, defy);
 
