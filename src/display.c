@@ -546,6 +546,14 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
     case PM_COLUMN_PLAYLIST: 
 	g_object_set (G_OBJECT (renderer), "text", playlist->name, 
 		      "editable", TRUE, NULL);
+	if (playlist->type == PL_TYPE_MPL)
+	{ /* mark MPL in red */
+	    g_object_set (G_OBJECT (renderer), "foreground", "red", NULL);
+	}
+	else
+	{
+	    g_object_set (G_OBJECT (renderer), "foreground", NULL, NULL);
+	}
 	break;
     }
 }

@@ -273,6 +273,8 @@ create_context_menu(CM_type type)
 void
 sm_context_menu_init(void)
 {
+    if (widgets_blocked) return;
+
     selected_entry = NULL; 
     selected_playlist = NULL;
     entry_inst = -1;
@@ -289,6 +291,8 @@ sm_context_menu_init(void)
 void
 pm_context_menu_init(void)
 {
+    if (widgets_blocked) return;
+
     if (selected_songs)  g_list_free (selected_songs);
     selected_songs = NULL;
     selected_entry = NULL;
@@ -307,6 +311,8 @@ pm_context_menu_init(void)
 void
 st_context_menu_init(gint inst)
 {
+    if (widgets_blocked) return;
+
     if (selected_songs)  g_list_free (selected_songs);
     selected_songs = NULL;
     selected_playlist = NULL;

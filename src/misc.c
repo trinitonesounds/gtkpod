@@ -47,6 +47,9 @@
 #include "dirbrowser.h"
 #include "file.h"
 
+
+#define DEBUG_MISC 0
+
 GtkWidget *gtkpod_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
@@ -1530,6 +1533,10 @@ do_command_on_entries (gchar *command, gchar *what, GList *selected_songs)
     case 0: /* we are the child */
     {
 	gchar **argv = (gchar **)args->pdata;
+#if DEBUG_MISC
+	gchar **bufp = argv;
+	while (*bufp)	{ puts (*bufp); ++bufp;	}
+#endif
 	execv(argv[0], &argv[1]);
 	g_ptr_array_free (args, TRUE);
 	exit(0);
