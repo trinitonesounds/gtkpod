@@ -1,4 +1,8 @@
-gtkpod V0.52-CVS
+gtkpod V0.53-CVS
+	BUGFIX: drag and drop URIs with cr/nl at the end are handled
+	correctly (thanks to Walter Bell).
+
+gtkpod V0.52
 	NEW FEATURE: Supports Playcounts, Ratings, Time Last Played /
 	Time Last Modified. The playcounts and ratings are read from the
 	'Play Count' file produced by iPod's firmware versions V1.3
@@ -43,6 +47,8 @@ gtkpod V0.52-CVS
 	get_ipod_used_space(), get_ipod_free_space(),
 	charset_to_description(), add_playlist_by_filename(),
 	sm_cell_edited().
+
+	NEW: Italian translation catalogue (almost complete)
 
 gtkpod V0.51
 	NEW FEATURE: Synchronize directories (removed songs can be deleted

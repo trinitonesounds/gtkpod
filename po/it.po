@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtkpod 0.52-cvs\n"
+"Project-Id-Version: gtkpod 0.52\n"
 "POT-Creation-Date: 2003-06-29 15:38+0900\n"
-"PO-Revision-Date: 2003-07-04 21:05+0900\n"
+"PO-Revision-Date: 2003-07-13 01:30+0900\n"
 "Last-Translator: Edward Matteucci <edward.matteucci@libero.it>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -32,23 +32,25 @@ msgstr "Preferenze applicate"
 
 #: src/callbacks.c:616
 msgid "Delete selected entry of which sort tab?"
-msgstr "Cancella"
+msgstr "Cancellare le voci selezionate di quale blocco di ordinamento?"
 
 #: src/callbacks.c:764
 msgid "Update selected entry of which sort tab?"
-msgstr ""
+msgstr "Aggiornare la voce selezionata di quale blocco di ordinamento?"
 
 #: src/callbacks.c:790
 msgid "Sync dirs of selected entry in which sort tab?"
 msgstr ""
+"Sincronizza le directory delle voci selezionate in quale blocco di "
+"ordinamento?"
 
 #: src/callbacks.c:948
 msgid "Sort which sort tab in ascending order?"
-msgstr ""
+msgstr "Quale blocco di ordinamento ordinare in ordine ascendente?"
 
 #: src/callbacks.c:967
 msgid "Sort which sort tab in descending order?"
-msgstr ""
+msgstr "Quale blocco di ordinamento ordinare in ordine discendente?"
 
 #: src/callbacks.c:1017 src/callbacks.c:1073 src/callbacks.c:1124
 msgid "No playlist selected"
@@ -56,12 +58,12 @@ msgstr "Nessuna playlist selezionata"
 
 #: src/callbacks.c:1031
 msgid "Export selected entry of which sort tab?"
-msgstr ""
+msgstr "Esportare la voce selezionata di quale blocco di ordinamento?"
 
 #: src/callbacks.c:1037 src/callbacks.c:1090 src/callbacks.c:1141
 #, c-format
 msgid "No entry selected in Sort Tab %d"
-msgstr ""
+msgstr "Nessuna voce selezionata nel blocco di ordinamento %d"
 
 #: src/callbacks.c:1060 src/callbacks.c:1112 src/callbacks.c:1163
 msgid "No songs selected"
@@ -70,10 +72,13 @@ msgstr "Nessuna canzone selezionata"
 #: src/callbacks.c:1084
 msgid "Play songs in selected entry of which sort tab?"
 msgstr ""
+"Riproduci le canzoni nella voce selezionata di quale blocco di ordinamento?"
 
 #: src/callbacks.c:1135
 msgid "Enqueue songs in selected entry of which sort tab?"
 msgstr ""
+"Metti in coda le canzoni nella voce selezionata di quale blocco di "
+"ordinamento?"
 
 #: src/charset.c:45
 msgid "Arabic (IBM-864)"
@@ -439,12 +444,10 @@ msgid "Special"
 msgstr "Speciale"
 
 #: src/display_sorttabs.c:2423
-#, fuzzy
 msgid "Last Played"
 msgstr "Suonato"
 
 #: src/display_sorttabs.c:2424
-#, fuzzy
 msgid "Last Modified"
 msgstr "Modificato"
 
@@ -606,7 +609,7 @@ msgid "Error while reading extended info: %s\n"
 msgstr "Errore nella lettura delle informazioni estese: %s\n"
 
 #: src/file.c:1538
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "iTunesDB (%s)\n"
 "does not match checksum in extended information file (%s)\n"
@@ -845,7 +848,7 @@ msgstr "Memoria non disponibile"
 
 #: src/id3_tag.c:860
 msgid "No data to parse"
-msgstr ""
+msgstr "Nessun dato da analizzare"
 
 #: src/id3_tag.c:862
 msgid "Improperly formatted data"
@@ -881,7 +884,7 @@ msgstr "Versione non valida del tag"
 
 #: src/id3_tag.c:878
 msgid "No file to parse"
-msgstr ""
+msgstr "Nessun file da analizzare"
 
 #: src/id3_tag.c:880
 msgid "Attempting to write to a read-only file"
@@ -976,7 +979,7 @@ msgstr "_Playlist"
 
 #: src/interface.c:356 src/interface.c:375
 msgid "_Sort Tab"
-msgstr ""
+msgstr "_Blocco di ordinamento"
 
 #: src/interface.c:360
 msgid "Alphabeti_ze"
@@ -1012,15 +1015,15 @@ msgstr ""
 
 #: src/interface.c:454
 msgid "_More Sort Tabs"
-msgstr ""
+msgstr "_Più blocchi di ordinamento"
 
 #: src/interface.c:462
 msgid "_Less Sort Tabs"
-msgstr ""
+msgstr "_Meno blocchi di ordinamento"
 
 #: src/interface.c:470
 msgid "_Arrange Sort Tabs"
-msgstr ""
+msgstr "_Sistema i blocchi di ordinamento"
 
 #: src/interface.c:474
 msgid "_Tools"
@@ -1358,11 +1361,11 @@ msgstr "Attributi delle canzoni mostrati "
 
 #: src/interface.c:1670
 msgid " _Number of sort tabs: "
-msgstr ""
+msgstr "_Numero dei blocchi di ordinamento"
 
 #: src/interface.c:1681
 msgid "Sort Tabs"
-msgstr ""
+msgstr "Blocchi di ordinamento"
 
 #: src/interface.c:1695
 msgid "...master playlist"
@@ -1379,7 +1382,7 @@ msgstr ""
 
 #: src/interface.c:1700
 msgid "...entry 'All' in sort tab..."
-msgstr ""
+msgstr "...voce 'Tutti' nel blocco di ordinamento..."
 
 #: src/interface.c:1711
 msgid "Automatically select..."
@@ -1434,6 +1437,8 @@ msgid ""
 "Block display when changing playlist or tab\n"
 " entry (faster!)"
 msgstr ""
+"Blocca l'interfaccia mentre cambi playlist o blocco\n"
+" di voci (più veloce!)"
 
 #: src/interface.c:1800
 msgid ""
@@ -1619,7 +1624,6 @@ msgid "_Misc"
 msgstr "_Misc"
 
 #: src/interface.c:2362
-#, fuzzy
 msgid " Logic: "
 msgstr "Operatori logici:"
 
@@ -1692,7 +1696,6 @@ msgid "Start display automatically"
 msgstr "Comincia "
 
 #: src/interface.c:2542
-#, fuzzy
 msgid ""
 "Automatically start displaying songs that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
@@ -1703,7 +1706,7 @@ msgstr ""
 
 #: src/interface.c:2668
 msgid "Sorttab: "
-msgstr ""
+msgstr "Blocco di ordinamento: "
 
 #: src/interface.c:2678
 msgid "     "
@@ -1714,7 +1717,6 @@ msgid "Category: "
 msgstr "Categoria: "
 
 #: src/interface.c:2702
-#, fuzzy
 msgid "Please specify a time interval"
 msgstr "Specifica l'intervallo"
 
@@ -1723,7 +1725,6 @@ msgid "Lower Margin"
 msgstr "Margine inferiore"
 
 #: src/interface.c:2745 src/interface.c:2811
-#, fuzzy
 msgid "Time:"
 msgstr "Durata"
 
@@ -1938,7 +1939,7 @@ msgstr "Francese:   David Le Brun (david at dyn-ns dot net)\n"
 #: src/misc.c:503
 #, c-format
 msgid "drag and drop: ignored '%s'"
-msgstr ""
+msgstr "drag and drop: ignorato '%s'"
 
 #: src/misc.c:534 src/misc.c:538
 #, c-format
@@ -1950,7 +1951,7 @@ msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"
 msgstr ""
-"Ci sono dei dati cambiati e non salvati.\n"
+"Ci sono dei dati modificati e non salvati.\n"
 "Uscire comunque da gtkpod?"
 
 #. gint id,
@@ -2236,6 +2237,8 @@ msgstr "# conferma la cancellazione\n"
 #: src/prefs.c:752
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
+"#blocco di ordinamento: seleziona 'Tutti', ultima pagina selezionata "
+"(=category)\n"
 
 #: src/prefs.c:769
 msgid "# autoselect master playlist?\n"
@@ -2279,6 +2282,8 @@ msgstr "Impossibile aprire \"%s\" per la scrittura\n"
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
+" Preferenze: Categoria num (%d<%d?) o blocco di ordinamento num (%d<%d?) "
+"fuori limite.\n"
 
 #: src/prefs.c:1214
 #, c-format
@@ -2301,8 +2306,8 @@ msgstr "'%s': =E8 permesso solo un '%%s'.\n"
 #, c-format
 msgid "Hashed %d of %d song."
 msgid_plural "Hashed %d of %d songs."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Calcolato l'hash di %d di %d canzone."
+msgstr[1] "Calcolato l'hash di %d di %d canzoni."
 
 #: src/song.c:443
 #, c-format

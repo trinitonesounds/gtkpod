@@ -1,17 +1,5 @@
 iPod, iTunes, Mac, Macintosh, iBook are trademarks of Apple Computer,
 Inc., registered in the U.S. and other countries.
-*********************************************************************
-
-Call for help (May 16 2003):
-
-The next release should support playcounts and ratings, but I still
-need to figure out some minor things.
-
-Could someone with access to a Macintosh please contact me
-(jcsjcs@users.sourceforge.net)? All I need are a couple of iTunesDB
-written by iTunes.
-
-**********************************************************************
 
 *----------------------------------*
 |                                  |
@@ -702,3 +690,9 @@ Good Luck.
   select "All" in first sort tab" and/or deactivate "Automatically
   select master playlist". You could also "block the display" to speed
   up the display update.
+
+- When changing selections in the sort tabs while importing the
+  iTunesDB, sometimes the interface freezes. I tried to track this
+  problem down but only found out that gtk+ does not return control
+  back to gtkpod. Selecting the "All" sort tabs seems to unfreeze the
+  interace again.

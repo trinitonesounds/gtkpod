@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-24 23:48:41 jcs>
+/* Time-stamp: <2003-07-13 01:25:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -843,7 +843,7 @@ void sync_songids (GList *selected_songids)
 	if (dirnum == 0) gtkpod_warning (_("\
 No directory names were stored. Make sure that you enable 'Write extended information' in the Export section of the preferences at the time of importing files.\n\
 \n\
-To synchronize directories now, activate the 'duplicate detection' in the Import section and add the directories you want to sync again.\n"));
+To synchronize directories now, activate the duplicate detection ('Don't allow file duplication') in the Import section and add the directories you want to sync again.\n"));
 	else	         gtkpod_warning (_("\
 No valid directories have been found. Sync aborted.\n"));
     }

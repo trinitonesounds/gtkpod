@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-29 13:40:25 jcs>
+/* Time-stamp: <2003-07-13 01:42:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -313,7 +313,7 @@ Patches were supplied by the following people (list may be incomplete -- please 
 Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n\
 Hiroshi Kawashima: Japanese charset autodetecion feature\n\
 Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n\
-Walter Bell: correct handling of DND URIs with escaped characters\n\
+Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newlines at the end\n\
 \n\
 \n"),
 		       _("\
@@ -440,14 +440,20 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 
             file = *filesp;
             /* file is in uri form (the ones we're looking for are
-               file:///), file can include the \n, which isn't a valid
-               character of the filename and will cause the uri decode
-               / file test to fail, so we'll cut it off if its there.
-            */
+               file:///), file can include the \n or \r\n, which isn't
+               a valid character of the filename and will cause the
+               uri decode / file test to fail, so we'll cut it off if
+               its there. */
             file_len = strlen (file);
-            if (file_len && (strcmp(&file[file_len-1],"\n") == 0))
+            if (file_len && (file[file_len-1] == '\n'))
             {
-                file[file_len-1] = (gchar)NULL;
+                file[file_len-1] = 0;
+		--file_len;
+            }
+            if (file_len && (file[file_len-1] == '\r'))
+            {
+                file[file_len-1] = 0;
+		--file_len;
             }
 
             decoded_file = filename_from_uri (file, NULL, NULL);
@@ -500,7 +506,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 	    if (!added)
 	    {
 		if (strlen (*filesp) != 0)
-		    gtkpod_warning (_("drag and drop: ignored '%s'"), *filesp);
+		    gtkpod_warning (_("drag and drop: ignored '%s'\n"), *filesp);
 	    }
 	    ++filesp;
 	}
