@@ -238,7 +238,7 @@ prefs_window_create(void)
 		GtkWidget *as;
 		gint padding;
 
-		buf = g_strdup_printf (_("%d"), i+1);
+		buf = g_strdup_printf ("%d", i+1);
 		as = gtk_check_button_new_with_mnemonic (buf);
 		gtk_widget_show (as);
 		if (i==0) padding = 0;

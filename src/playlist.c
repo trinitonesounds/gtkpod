@@ -297,8 +297,8 @@ void it_add_songid_to_playlist (Playlist *plitem, guint32 id)
     ++count_s;
     if ((count < 0) && widgets_blocked)
     {
-	buf = g_strdup_printf (ngettext ("Added %d+ song to playlist '%s'",
-					 "Added %d+ songs to playlists '%s'",
+	buf = g_strdup_printf (ngettext ("Added %d+ songs to playlist '%s'",
+					 "Added %d+ songs to playlist '%s'",
 					 count_s), count_s, plitem->name);
 	gtkpod_statusbar_message(buf);
 	g_free (buf);

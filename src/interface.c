@@ -1058,7 +1058,7 @@ create_new_prefs_window (void)
   gtk_widget_show (hbox8);
   gtk_box_pack_start (GTK_BOX (vbox15), hbox8, TRUE, TRUE, 0);
 
-  label27 = gtk_label_new (_("iPod Mount Point:"));
+  label27 = gtk_label_new (_(" iPod Mount Point:"));
   gtk_widget_show (label27);
   gtk_box_pack_start (GTK_BOX (hbox8), label27, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label27), GTK_JUSTIFY_LEFT);
@@ -1089,7 +1089,7 @@ create_new_prefs_window (void)
   gtk_widget_show (hbox9);
   gtk_box_pack_start (GTK_BOX (vbox16), hbox9, TRUE, TRUE, 0);
 
-  label29 = gtk_label_new (_("Charset (ID3, files): "));
+  label29 = gtk_label_new (_(" Charset (ID3, files): "));
   gtk_widget_show (label29);
   gtk_box_pack_start (GTK_BOX (hbox9), label29, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label29), GTK_JUSTIFY_LEFT);
@@ -1135,14 +1135,14 @@ create_new_prefs_window (void)
   gtk_table_attach (GTK_TABLE (table1), cfg_show_updated, 0, 1, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 20, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_show_updated, _("Display the songs that have been updated after updating songs."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_show_updated, _("Display a list of songs that could actually be updated."), NULL);
 
   cfg_show_non_updated = gtk_check_button_new_with_mnemonic (_("Display info about non-updated songs"));
   gtk_widget_show (cfg_show_non_updated);
   gtk_table_attach (GTK_TABLE (table1), cfg_show_non_updated, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 20, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_show_non_updated, _("Display the songs that could not be updated after updating songs."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_show_non_updated, _("Display a list of songs that could not be updated."), NULL);
 
   label28 = gtk_label_new (_("Adding Songs"));
   gtk_widget_show (label28);
@@ -1275,7 +1275,7 @@ create_new_prefs_window (void)
   gtk_widget_show (hbox11);
   gtk_box_pack_start (GTK_BOX (vbox25), hbox11, TRUE, TRUE, 0);
 
-  label35 = gtk_label_new (_("Number of sort tabs: "));
+  label35 = gtk_label_new (_(" Number of sort tabs: "));
   gtk_widget_show (label35);
   gtk_box_pack_start (GTK_BOX (hbox11), label35, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label35), GTK_JUSTIFY_LEFT);
@@ -1302,7 +1302,7 @@ create_new_prefs_window (void)
   gtk_widget_show (vbox31);
   gtk_container_add (GTK_CONTAINER (frame16), vbox31);
 
-  cfg_display_toolbar = gtk_check_button_new_with_mnemonic (_("Display toolbar"));
+  cfg_display_toolbar = gtk_check_button_new_with_mnemonic (_("Display toolbar..."));
   gtk_widget_show (cfg_display_toolbar);
   gtk_box_pack_start (GTK_BOX (vbox31), cfg_display_toolbar, FALSE, FALSE, 0);
 
@@ -1310,7 +1310,7 @@ create_new_prefs_window (void)
   gtk_widget_show (table4);
   gtk_box_pack_start (GTK_BOX (vbox31), table4, FALSE, FALSE, 0);
 
-  cfg_toolbar_style_both = gtk_radio_button_new_with_mnemonic (NULL, _("Display both"));
+  cfg_toolbar_style_both = gtk_radio_button_new_with_mnemonic (NULL, _("...both as icons and text"));
   gtk_widget_show (cfg_toolbar_style_both);
   gtk_table_attach (GTK_TABLE (table4), cfg_toolbar_style_both, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
@@ -1318,7 +1318,7 @@ create_new_prefs_window (void)
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (cfg_toolbar_style_both), cfg_toolbar_style_both_group);
   cfg_toolbar_style_both_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (cfg_toolbar_style_both));
 
-  cfg_toolbar_style_text = gtk_radio_button_new_with_mnemonic (NULL, _("Display text"));
+  cfg_toolbar_style_text = gtk_radio_button_new_with_mnemonic (NULL, _("...as text"));
   gtk_widget_show (cfg_toolbar_style_text);
   gtk_table_attach (GTK_TABLE (table4), cfg_toolbar_style_text, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
@@ -1326,7 +1326,7 @@ create_new_prefs_window (void)
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (cfg_toolbar_style_text), cfg_toolbar_style_both_group);
   cfg_toolbar_style_both_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (cfg_toolbar_style_text));
 
-  cfg_toolbar_style_icons = gtk_radio_button_new_with_mnemonic (NULL, _("Display icons"));
+  cfg_toolbar_style_icons = gtk_radio_button_new_with_mnemonic (NULL, _("...as icons"));
   gtk_widget_show (cfg_toolbar_style_icons);
   gtk_table_attach (GTK_TABLE (table4), cfg_toolbar_style_icons, 0, 1, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
@@ -1465,7 +1465,7 @@ create_new_prefs_window (void)
   cfg_save_sorted_order = gtk_check_button_new_with_mnemonic (_("Automatically save song order after sorting."));
   gtk_widget_show (cfg_save_sorted_order);
   gtk_box_pack_start (GTK_BOX (vbox30), cfg_save_sorted_order, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_save_sorted_order, _("Alternatively you can use the menu item 'Save Song Order' to save the sort order."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_save_sorted_order, _("Alternatively you can use the menu item 'Save Displayed Song Order' to save the sort order."), NULL);
 
   cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\nentry (faster!)"));
   gtk_widget_show (cfg_block_display);
@@ -1487,7 +1487,7 @@ create_new_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox13), hbuttonbox5, FALSE, TRUE, 0);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox5), GTK_BUTTONBOX_SPREAD);
 
-  prefs_apply = gtk_button_new_with_mnemonic (_("_Apply"));
+  prefs_apply = gtk_button_new_from_stock ("gtk-apply");
   gtk_widget_show (prefs_apply);
   gtk_container_add (GTK_CONTAINER (hbuttonbox5), prefs_apply);
   GTK_WIDGET_SET_FLAGS (prefs_apply, GTK_CAN_DEFAULT);

@@ -1271,7 +1271,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="label27">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">iPod Mount Point:</property>
+			      <property name="label" translatable="yes"> iPod Mount Point:</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1394,7 +1394,7 @@
 			  <child>
 			    <widget class="GtkLabel" id="label29">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">Charset (ID3, files): </property>
+			      <property name="label" translatable="yes"> Charset (ID3, files): </property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1551,7 +1551,7 @@ existing songs with identical filenames</property>
 			  <child>
 			    <widget class="GtkCheckButton" id="cfg_show_updated">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Display the songs that have been updated after updating songs.</property>
+			      <property name="tooltip" translatable="yes">Display a list of songs that could actually be updated.</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Display info about updated songs</property>
 			      <property name="use_underline">True</property>
@@ -1575,7 +1575,7 @@ existing songs with identical filenames</property>
 			  <child>
 			    <widget class="GtkCheckButton" id="cfg_show_non_updated">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Display the songs that could not be updated after updating songs.</property>
+			      <property name="tooltip" translatable="yes">Display a list of songs that could not be updated.</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Display info about non-updated songs</property>
 			      <property name="use_underline">True</property>
@@ -2103,7 +2103,7 @@ MD5 hashes). Recommended.</property>
 			  <child>
 			    <widget class="GtkLabel" id="label35">
 			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">Number of sort tabs: </property>
+			      <property name="label" translatable="yes"> Number of sort tabs: </property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2215,7 +2215,7 @@ MD5 hashes). Recommended.</property>
 			<widget class="GtkCheckButton" id="cfg_display_toolbar">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">Display toolbar</property>
+			  <property name="label" translatable="yes">Display toolbar...</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
 			  <property name="active">False</property>
@@ -2243,7 +2243,7 @@ MD5 hashes). Recommended.</property>
 			    <widget class="GtkRadioButton" id="cfg_toolbar_style_both">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Display both</property>
+			      <property name="label" translatable="yes">...both as icons and text</property>
 			      <property name="use_underline">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="active">False</property>
@@ -2266,7 +2266,7 @@ MD5 hashes). Recommended.</property>
 			    <widget class="GtkRadioButton" id="cfg_toolbar_style_text">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Display text</property>
+			      <property name="label" translatable="yes">...as text</property>
 			      <property name="use_underline">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="active">False</property>
@@ -2290,7 +2290,7 @@ MD5 hashes). Recommended.</property>
 			    <widget class="GtkRadioButton" id="cfg_toolbar_style_icons">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Display icons</property>
+			      <property name="label" translatable="yes">...as icons</property>
 			      <property name="use_underline">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="active">False</property>
@@ -2820,7 +2820,7 @@ MD5 hashes). Recommended.</property>
 		      <child>
 			<widget class="GtkCheckButton" id="cfg_save_sorted_order">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Alternatively you can use the menu item 'Save Song Order' to save the sort order.</property>
+			  <property name="tooltip" translatable="yes">Alternatively you can use the menu item 'Save Displayed Song Order' to save the sort order.</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Automatically save song order after sorting.</property>
 			  <property name="use_underline">True</property>
@@ -2941,8 +2941,8 @@ entry (faster!)</property>
 	      <property name="visible">True</property>
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>
-	      <property name="label" translatable="yes">_Apply</property>
-	      <property name="use_underline">True</property>
+	      <property name="label">gtk-apply</property>
+	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <signal name="clicked" handler="on_prefs_apply_clicked" last_modification_time="Thu, 13 Mar 2003 13:45:42 GMT"/>
 	    </widget>

@@ -509,7 +509,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
     fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
-    fprintf(fp, _("# sort tab 0/1: select 'All', selected page (category)\n"));
+    fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
 	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
@@ -528,7 +528,7 @@ write_prefs_to_file_desc(FILE *fp)
 	if (i < SM_NUM_TAGS_PREFS)
 	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_tag_autoset (i));
     }	
-    fprintf(fp, _("# position of sliders (paned): playlists, between sort tabs, above songs\n"));
+    fprintf(fp, _("# position of sliders (paned): playlists, above songs, between sort tabs\n"));
     for (i=0; i<PANED_NUM; ++i)
     {
 	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
