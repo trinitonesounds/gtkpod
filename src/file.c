@@ -54,6 +54,8 @@ struct song_extended_info
     gchar *hostname;
     gchar *ipod_path;
     gint32 oldsize;
+    guint32 playcount;
+    guint32 rating;
     gboolean transferred;
 };
 /* List with songs pending deletion */
@@ -1430,6 +1432,11 @@ void fill_in_extended_info (Song *song)
 	  if (sei->hostname && !song->hostname)
 	      song->hostname = g_strdup (sei->hostname);
 	  song->oldsize = sei->oldsize;
+	  song->playcount += sei->playcount;
+	  /* FIXME: This means that the rating can never be reset to 0
+	   * by the iPod */
+	  if (song->rating == 0)
+	      song->rating = sei->rating;
 	  song->transferred = sei->transferred;
 	  g_hash_table_remove (extendedinfohash, &ipod_id);
 	}
@@ -1584,6 +1591,10 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->charset = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "oldsize") == 0)
 		sei->oldsize = atoi (arg);
+	    else if (g_ascii_strcasecmp (line, "playcount") == 0)
+		sei->playcount = atoi (arg);
+	    else if (g_ascii_strcasecmp (line, "rating") == 0)
+		sei->rating = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
 		sei->transferred = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
@@ -1874,6 +1885,8 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 	fprintf (fp, "charset=%s\n", song->charset);
       if (!song->transferred && song->oldsize)
 	  fprintf (fp, "oldsize=%d\n", song->oldsize);
+      fprintf (fp, "playcount=%d\n", song->playcount);
+      fprintf (fp, "rating=%d\n", song->rating);
       fprintf (fp, "transferred=%d\n", song->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
     }

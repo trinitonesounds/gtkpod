@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-13 20:00:06 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -1299,10 +1300,13 @@ gboolean itunesdb_write_to_file (gchar *filename)
       gchar *dirname = g_path_get_dirname (filename);
       gchar *plcname_o = itunesdb_concat_dir (dirname, "Play Counts");
       gchar *plcname_n = itunesdb_concat_dir (dirname, "Play Counts.bak");
-      if (rename (plcname_o, plcname_n) == -1)
-      {   /* an error occured */
-	  itunesdb_warning (_("Error renaming '%s' to '%s' (%s).\n"),
-			    plcname_o, plcname_n, g_strerror (errno));
+      if (g_file_test (plcname_o, G_FILE_TEST_EXISTS))
+      {
+	  if (rename (plcname_o, plcname_n) == -1)
+	  {   /* an error occured */
+	      itunesdb_warning (_("Error renaming '%s' to '%s' (%s).\n"),
+				plcname_o, plcname_n, g_strerror (errno));
+	  }
       }
       g_free (dirname);
       g_free (plcname_o);

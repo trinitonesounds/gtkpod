@@ -296,10 +296,6 @@ on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_sort_tab_num_combo_entry_changed    (GtkEditable     *editable,
-                                        gpointer         user_data);
-
-void
 on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
@@ -473,4 +469,8 @@ on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
 
 void
 on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
                                         gpointer         user_data);

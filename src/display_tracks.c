@@ -238,92 +238,108 @@ sm_cell_edited (GtkCellRendererText *renderer,
 		gpointer             data)
 {
   GtkTreeModel *model;
-  GtkTreePath *path;
-  GtkTreeIter iter;
-  Song *song;
-  SM_item column;
-  gboolean changed = FALSE; /* really changed anything? */
+  GtkTreeSelection *selection; 
+  GtkTreeIter iter; 
+  Song *song; 
+  SM_item column; 
+  gboolean changed;        
+  gboolean edit_first_only;  
+
   guint32 nr;
-  gchar **itemp_utf8 = NULL;
-  gunichar2 **itemp_utf16 = NULL;
+  gchar **itemp_utf8; 
+  gunichar2 **itemp_utf16; 
 
-  model = (GtkTreeModel *)data;
-  path = gtk_tree_path_new_from_string (path_string);
-  column = (SM_item)g_object_get_data (G_OBJECT (renderer), "column");
-  gtk_tree_model_get_iter (model, &iter, path);
-  gtk_tree_model_get (model, &iter, column, &song, -1);
+  GList *row_list; 
+  GList *row_node; 
 
+
+  column = (SM_item) g_object_get_data(G_OBJECT(renderer), "column");
+  edit_first_only = (column == SM_COLUMN_TITLE); 
+  selection = gtk_tree_view_get_selection(song_treeview); 
+  row_list = gtk_tree_selection_get_selected_rows(selection, &model); 
+  
   /*printf("sm_cell_edited: column: %d  song:%lx\n", column, song);*/
 
-  switch (column)
+  for (row_node = g_list_first(row_list); 
+       row_node != NULL && !(edit_first_only && row_node != g_list_first(row_list)); 
+       row_node = g_list_next(row_node))
   {
-  case SM_COLUMN_ALBUM:
-  case SM_COLUMN_ARTIST:
-  case SM_COLUMN_TITLE:
-  case SM_COLUMN_GENRE:
-  case SM_COLUMN_COMPOSER:
-      itemp_utf8 = song_get_item_pointer_utf8 (song, SM_to_S (column));
-      itemp_utf16 = song_get_item_pointer_utf16 (song, SM_to_S (column));
-      if (g_utf8_collate (*itemp_utf8, new_text) != 0)
-      {
-	  g_free (*itemp_utf8);
-	  g_free (*itemp_utf16);
-	  *itemp_utf8 = g_strdup (new_text);
-	  *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
-	  changed = TRUE;
-      }
-      break;
-  case SM_COLUMN_TRACK_NR:
-      nr = atoi (new_text);
-      if ((nr >= 0) && (nr != song->track_nr))
-      {
-	  song->track_nr = nr;
-	  changed = TRUE;
-      }
-      break;
-  case SM_COLUMN_PLAYCOUNT:
-      nr = atoi (new_text);
-      if ((nr >= 0) && (nr != song->playcount))
-      {
-	  song->playcount = nr;
-	  changed = TRUE;
-      }
-      break;
-  case SM_COLUMN_RATING:
-      nr = atoi (new_text);
-      if ((nr >= 0) && (nr <= 5) && (nr != song->rating))
-      {
-	  song->rating = nr*RATING_STEP;
-	  changed = TRUE;
-      }
-      break;
-  case SM_COLUMN_TIME_CREATED:
-  case SM_COLUMN_TIME_PLAYED:
-  case SM_COLUMN_TIME_MODIFIED:
-      break;
-  default:
-      g_warning ("Programming error: sm_cell_edited: unknown song cell (%d) edited\n", column);
-      break;
+     gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) row_node->data); 
+     gtk_tree_model_get(model, &iter, column, &song, -1); 
+     changed = FALSE; 
+
+     switch(column) 
+     {
+     case SM_COLUMN_TITLE:
+     case SM_COLUMN_ALBUM:
+     case SM_COLUMN_ARTIST:
+     case SM_COLUMN_GENRE:
+     case SM_COLUMN_COMPOSER:
+        itemp_utf8 = song_get_item_pointer_utf8 (song, SM_to_S (column));
+        itemp_utf16 = song_get_item_pointer_utf16 (song, SM_to_S (column));
+        if (g_utf8_collate (*itemp_utf8, new_text) != 0)
+        {
+           g_free (*itemp_utf8);
+           g_free (*itemp_utf16);
+           *itemp_utf8 = g_strdup (new_text);
+           *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
+           changed = TRUE; 
+        }
+        break;
+     case SM_COLUMN_TRACK_NR:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != song->track_nr))
+        {
+           song->track_nr = nr;
+           changed = TRUE; 
+        }
+        break;
+     case SM_COLUMN_PLAYCOUNT:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != song->playcount))
+        {
+           song->playcount = nr;
+           changed = TRUE; 
+        }
+        break;
+     case SM_COLUMN_RATING:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr <= 5) && (nr != song->rating))
+        {
+           song->rating = nr*RATING_STEP;
+           changed = TRUE;
+        }
+        break;
+     case SM_COLUMN_TIME_CREATED:
+     case SM_COLUMN_TIME_PLAYED:
+     case SM_COLUMN_TIME_MODIFIED:
+        break;
+     default:
+        g_warning ("Programming error: sm_cell_edited: unknown song cell (%d) edited\n", column);
+        break;
+     }
+     if (changed)
+     {
+        song->time_modified = time_get_mac_time ();
+        pm_song_changed (song); /* notify playlist model... */
+        data_changed ();        /* indicate that data has changed */
+
+        if (prefs_get_id3_write()) 
+        { 
+           S_item tag_id;
+           /* should we update all ID3 tags or just the one
+              changed? */
+           if (prefs_get_id3_writeall ()) tag_id = S_ALL;
+           else                           tag_id = SM_to_S (column);
+           write_tags_to_file (song, tag_id);
+           /* display possible duplicates that have been removed */
+           remove_duplicate (NULL, NULL);
+        }
+     }
   }
-  if (changed)
-  {
-      song->time_modified = time_get_mac_time ();
-      pm_song_changed (song); /* notify playlist model... */
-      data_changed ();        /* indicate that data has changed */
-  }
-  /* If anything changed and prefs say to write changes to file, do so */
-  if (changed && prefs_get_id3_write ())
-  {
-      S_item tag_id;
-      /* should we update all ID3 tags or just the one
-	 changed? */
-      if (prefs_get_id3_writeall ()) tag_id = S_ALL;
-      else		             tag_id = SM_to_S (column);
-      write_tags_to_file (song, tag_id);
-      /* display possible duplicates that have been removed */
-      remove_duplicate (NULL, NULL);
-  }
-  gtk_tree_path_free (path);
+
+  g_list_foreach(row_list, (GFunc) gtk_tree_path_free, NULL); 
+  g_list_free(row_list); 
 }
 
 

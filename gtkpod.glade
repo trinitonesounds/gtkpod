@@ -2708,7 +2708,7 @@
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
 			      <property name="ypad">0</property>
-			      <property name="mnemonic_widget">sort_tab_num_combo_entry</property>
+			      <property name="mnemonic_widget">cfg_sort_tab_num_sb</property>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -2718,35 +2718,17 @@
 			  </child>
 
 			  <child>
-			    <widget class="GtkCombo" id="sort_tab_num_combo">
+			    <widget class="GtkSpinButton" id="cfg_sort_tab_num_sb">
 			      <property name="visible">True</property>
-			      <property name="value_in_list">False</property>
-			      <property name="allow_empty">True</property>
-			      <property name="case_sensitive">False</property>
-			      <property name="enable_arrow_keys">True</property>
-			      <property name="enable_arrows_always">False</property>
-
-			      <child internal-child="entry">
-				<widget class="GtkEntry" id="sort_tab_num_combo_entry">
-				  <property name="visible">True</property>
-				  <property name="can_focus">True</property>
-				  <property name="editable">False</property>
-				  <property name="visibility">True</property>
-				  <property name="max_length">0</property>
-				  <property name="text" translatable="yes"></property>
-				  <property name="has_frame">True</property>
-				  <property name="invisible_char" translatable="yes">*</property>
-				  <property name="activates_default">False</property>
-				  <signal name="changed" handler="on_sort_tab_num_combo_entry_changed" last_modification_time="Tue, 11 Mar 2003 14:31:11 GMT"/>
-				</widget>
-			      </child>
-
-			      <child internal-child="list">
-				<widget class="GtkList" id="sort_tab_num_combo_list">
-				  <property name="visible">True</property>
-				  <property name="selection_mode">GTK_SELECTION_BROWSE</property>
-				</widget>
-			      </child>
+			      <property name="can_focus">True</property>
+			      <property name="climb_rate">1</property>
+			      <property name="digits">0</property>
+			      <property name="numeric">True</property>
+			      <property name="update_policy">GTK_UPDATE_ALWAYS</property>
+			      <property name="snap_to_ticks">False</property>
+			      <property name="wrap">False</property>
+			      <property name="adjustment">0 0 100 1 10 10</property>
+			      <signal name="value_changed" handler="on_cfg_sort_tab_num_sb_value_changed" last_modification_time="Fri, 13 Jun 2003 11:59:32 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>

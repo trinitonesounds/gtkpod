@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-12 23:57:38 jcs>
+/* Time-stamp: <2003-06-13 21:02:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -867,19 +867,6 @@ on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
 
 
 void
-on_sort_tab_num_combo_entry_changed    (GtkEditable     *editable,
-                                        gpointer         user_data)
-{
-    gchar *buf;
-    gint num;
-
-    buf = gtk_editable_get_chars (editable, 0, -1);
-    num = atoi (buf);
-    prefs_window_set_sort_tab_num (num);
-    C_FREE (buf);
-}
-
-void
 on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1359,4 +1346,11 @@ on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
 				 gtk_spin_button_get_value (spinbutton));
     if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
 	sp_conditions_changed (inst);
+}
+
+void
+on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_sort_tab_num (gtk_spin_button_get_value (spinbutton));
 }

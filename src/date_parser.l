@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-| Time-stamp: <2003-06-12 22:14:08 jcs>
+| Time-stamp: <2003-06-13 00:47:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -445,7 +445,7 @@ gboolean dp_parse (gchar *dp_str, time_t *result,
     /* round relative time up or down, if necessary */
     round_reltime ();
     /* set the result */
-    *result = tstamp;
+    if (result)  *result = tstamp;
     /* return the (inverted) error variable */
     return !dp_error;
 }

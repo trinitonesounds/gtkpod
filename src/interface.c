@@ -1209,8 +1209,8 @@ create_prefs_window (void)
   GtkWidget *vbox25;
   GtkWidget *hbox11;
   GtkWidget *label35;
-  GtkWidget *sort_tab_num_combo;
-  GtkWidget *sort_tab_num_combo_entry;
+  GtkObject *cfg_sort_tab_num_sb_adj;
+  GtkWidget *cfg_sort_tab_num_sb;
   GtkWidget *label34;
   GtkWidget *frame14;
   GtkWidget *vbox36;
@@ -1631,15 +1631,11 @@ create_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (hbox11), label35, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label35), GTK_JUSTIFY_LEFT);
 
-  sort_tab_num_combo = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (sort_tab_num_combo)->popwin),
-                     "GladeParentKey", sort_tab_num_combo);
-  gtk_widget_show (sort_tab_num_combo);
-  gtk_box_pack_start (GTK_BOX (hbox11), sort_tab_num_combo, TRUE, TRUE, 0);
-
-  sort_tab_num_combo_entry = GTK_COMBO (sort_tab_num_combo)->entry;
-  gtk_widget_show (sort_tab_num_combo_entry);
-  gtk_editable_set_editable (GTK_EDITABLE (sort_tab_num_combo_entry), FALSE);
+  cfg_sort_tab_num_sb_adj = gtk_adjustment_new (0, 0, 100, 1, 10, 10);
+  cfg_sort_tab_num_sb = gtk_spin_button_new (GTK_ADJUSTMENT (cfg_sort_tab_num_sb_adj), 1, 0);
+  gtk_widget_show (cfg_sort_tab_num_sb);
+  gtk_box_pack_start (GTK_BOX (hbox11), cfg_sort_tab_num_sb, TRUE, TRUE, 0);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (cfg_sort_tab_num_sb), TRUE);
 
   label34 = gtk_label_new (_("Sort Tabs"));
   gtk_widget_show (label34);
@@ -2012,8 +2008,8 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_toolbar_style_icons, "toggled",
                     G_CALLBACK (on_cfg_toolbar_style_icons_toggled),
                     NULL);
-  g_signal_connect ((gpointer) sort_tab_num_combo_entry, "changed",
-                    G_CALLBACK (on_sort_tab_num_combo_entry_changed),
+  g_signal_connect ((gpointer) cfg_sort_tab_num_sb, "value_changed",
+                    G_CALLBACK (on_cfg_sort_tab_num_sb_value_changed),
                     NULL);
   g_signal_connect ((gpointer) time_format_entry, "changed",
                     G_CALLBACK (on_cfg_time_format_changed),
@@ -2063,7 +2059,7 @@ create_prefs_window (void)
 
   gtk_label_set_mnemonic_widget (GTK_LABEL (label27), cfg_mount_point);
   gtk_label_set_mnemonic_widget (GTK_LABEL (label29), charset_combo_entry);
-  gtk_label_set_mnemonic_widget (GTK_LABEL (label35), sort_tab_num_combo_entry);
+  gtk_label_set_mnemonic_widget (GTK_LABEL (label35), cfg_sort_tab_num_sb);
   gtk_label_set_mnemonic_widget (GTK_LABEL (label47), cfg_mount_point);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
@@ -2138,8 +2134,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, vbox25, "vbox25");
   GLADE_HOOKUP_OBJECT (prefs_window, hbox11, "hbox11");
   GLADE_HOOKUP_OBJECT (prefs_window, label35, "label35");
-  GLADE_HOOKUP_OBJECT (prefs_window, sort_tab_num_combo, "sort_tab_num_combo");
-  GLADE_HOOKUP_OBJECT (prefs_window, sort_tab_num_combo_entry, "sort_tab_num_combo_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_sort_tab_num_sb, "cfg_sort_tab_num_sb");
   GLADE_HOOKUP_OBJECT (prefs_window, label34, "label34");
   GLADE_HOOKUP_OBJECT (prefs_window, frame14, "frame14");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox36, "vbox36");

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-06-11 19:56+0900\n"
+"POT-Creation-Date: 2003-06-13 20:16+0900\n"
 "PO-Revision-Date: 2003-04-12 01:13+0900\n"
 "Last-Translator: Ayako Sano <@>\n"
 "Language-Team: n/a\n"
@@ -16,66 +16,66 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. no playlist yet -- create new one
-#: src/callbacks.c:83 src/callbacks.c:149 src/callbacks.c:251
-#: src/callbacks.c:418 src/misc.c:410 src/misc.c:428
+#: src/callbacks.c:84 src/callbacks.c:150 src/callbacks.c:252
+#: src/callbacks.c:419 src/misc.c:410 src/misc.c:428
 msgid "New Playlist"
 msgstr "新規作成"
 
-#: src/callbacks.c:335 src/callbacks.c:379
+#: src/callbacks.c:336 src/callbacks.c:380
 msgid "Preferences not updated"
 msgstr "設定は更新されません。"
 
-#: src/callbacks.c:388
+#: src/callbacks.c:389
 msgid "Preferences applied"
 msgstr "設定を適用"
 
-#: src/callbacks.c:614
+#: src/callbacks.c:615
 msgid "Delete selected entry of which sort tab?"
 msgstr "どちらのタブの選択されたエントリーを削除しますか？"
 
-#: src/callbacks.c:762
+#: src/callbacks.c:763
 msgid "Update selected entry of which sort tab?"
 msgstr "とちらのタブの選択されたエントリーを更新しますか？"
 
-#: src/callbacks.c:788
+#: src/callbacks.c:789
 #, fuzzy
 msgid "Sync dirs of selected entry in which sort tab?"
 msgstr "とちらのタブの選択されたエントリーを更新しますか？"
 
-#: src/callbacks.c:959
+#: src/callbacks.c:960
 msgid "Sort which sort tab in ascending order?"
 msgstr "どのタブを昇順に分類しますか？"
 
-#: src/callbacks.c:978
+#: src/callbacks.c:979
 msgid "Sort which sort tab in descending order?"
 msgstr "どのタブを降順に分類しますか？"
 
-#: src/callbacks.c:1029 src/callbacks.c:1083 src/callbacks.c:1134
+#: src/callbacks.c:1030 src/callbacks.c:1084 src/callbacks.c:1135
 #, fuzzy
 msgid "No playlist selected"
 msgstr "再生リストは選択されていません"
 
-#: src/callbacks.c:1045
+#: src/callbacks.c:1046
 #, fuzzy
 msgid "Export selected entry of which sort tab?"
 msgstr "とちらのタブの選択されたエントリーを更新しますか？"
 
-#: src/callbacks.c:1051 src/callbacks.c:1100 src/callbacks.c:1151
+#: src/callbacks.c:1052 src/callbacks.c:1101 src/callbacks.c:1152
 #, fuzzy, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "選択されていません"
 
-#: src/callbacks.c:1071 src/callbacks.c:1122 src/callbacks.c:1173
+#: src/callbacks.c:1072 src/callbacks.c:1123 src/callbacks.c:1174
 #, fuzzy
 msgid "No songs selected"
 msgstr "どの曲も選択されていません"
 
-#: src/callbacks.c:1094
+#: src/callbacks.c:1095
 #, fuzzy
 msgid "Play songs in selected entry of which sort tab?"
 msgstr "とちらのタブの選択されたエントリーを更新しますか？"
 
-#: src/callbacks.c:1145
+#: src/callbacks.c:1146
 #, fuzzy
 msgid "Enqueue songs in selected entry of which sort tab?"
 msgstr "どちらのタブの選択されたエントリーを削除しますか？"
@@ -338,7 +338,7 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: date_parser.l:237
+#: date_parser.l:261
 #, c-format
 msgid "Date format error: unrecognized character: '%s'\n"
 msgstr ""
@@ -359,89 +359,101 @@ msgstr "キャンセル"
 msgid "Playlists"
 msgstr "再生リスト"
 
-#: src/display_songs.c:761 src/display_sorttabs.c:1925 src/interface.c:1483
+#: src/display_songs.c:778 src/display_sorttabs.c:2089 src/interface.c:1483
 #: src/interface.c:1714
 msgid "Title"
 msgstr "タイトル"
 
-#: src/display_songs.c:764 src/display_sorttabs.c:1913 src/interface.c:1459
+#: src/display_songs.c:781 src/display_sorttabs.c:2077 src/interface.c:1459
 #: src/interface.c:1666
 msgid "Artist"
 msgstr "アーティスト"
 
-#: src/display_songs.c:767 src/display_sorttabs.c:1916 src/interface.c:1471
+#: src/display_songs.c:784 src/display_sorttabs.c:2080 src/interface.c:1471
 #: src/interface.c:1690
 msgid "Album"
 msgstr "アルバム"
 
-#: src/display_songs.c:770 src/display_sorttabs.c:1919 src/interface.c:1463
+#: src/display_songs.c:787 src/display_sorttabs.c:2083 src/interface.c:1463
 #: src/interface.c:1734
 msgid "Genre"
 msgstr "ジャンル"
 
-#: src/display_songs.c:773 src/interface.c:1475 src/interface.c:1670
+#: src/display_songs.c:790 src/interface.c:1475 src/interface.c:1670
 msgid "Composer"
 msgstr "作曲家"
 
-#: src/display_songs.c:776
+#: src/display_songs.c:793
 msgid "#"
 msgstr "#"
 
-#: src/display_songs.c:779
+#: src/display_songs.c:796
 msgid "ID"
 msgstr "ID"
 
-#: src/display_songs.c:783 src/interface.c:1738
+#: src/display_songs.c:800 src/interface.c:1738
 msgid "PC File"
 msgstr "PCファイル"
 
-#: src/display_songs.c:787
+#: src/display_songs.c:804
 msgid "Trnsfrd"
 msgstr "転送"
 
-#: src/display_songs.c:792 src/interface.c:1698
+#: src/display_songs.c:809 src/interface.c:1698
 msgid "File Size"
 msgstr ""
 
-#: src/display_songs.c:796
+#: src/display_songs.c:813
 #, fuzzy
 msgid "Time"
 msgstr "タイトル"
 
-#: src/display_songs.c:800 src/interface.c:1742
+#: src/display_songs.c:817 src/interface.c:1742
 msgid "Bitrate"
 msgstr ""
 
-#: src/display_songs.c:804 src/interface.c:1682 src/interface.c:2427
+#: src/display_songs.c:821 src/interface.c:1682 src/interface.c:2427
 msgid "Playcount"
 msgstr ""
 
-#: src/display_songs.c:807 src/interface.c:1706 src/interface.c:2434
+#: src/display_songs.c:824 src/interface.c:1706 src/interface.c:2434
 msgid "Rating"
 msgstr ""
 
-#: src/display_songs.c:810
+#: src/display_songs.c:827 src/interface.c:2452
 #, fuzzy
 msgid "Imported"
 msgstr "インポート"
 
-#: src/display_songs.c:814 src/interface.c:2440
+#: src/display_songs.c:831 src/interface.c:2440
 msgid "Played"
 msgstr ""
 
-#: src/display_songs.c:818 src/interface.c:2446
+#: src/display_songs.c:835 src/interface.c:2446
 msgid "Modified"
 msgstr ""
 
-#: src/display_sorttabs.c:844
+#: src/display_sorttabs.c:168
+msgid "'Played' condition ignored because of error."
+msgstr ""
+
+#: src/display_sorttabs.c:171
+msgid "'Modified' condition ignored because of error."
+msgstr ""
+
+#: src/display_sorttabs.c:174
+msgid "'Imported' condition ignored because of error."
+msgstr ""
+
+#: src/display_sorttabs.c:1014
 msgid "All"
 msgstr "全て"
 
-#: src/display_sorttabs.c:1922
+#: src/display_sorttabs.c:2086
 msgid "Comp."
 msgstr "作曲家"
 
-#: src/display_sorttabs.c:1928 src/interface.c:2271
+#: src/display_sorttabs.c:2092 src/interface.c:2271
 msgid "Special"
 msgstr ""
 
@@ -1044,7 +1056,7 @@ msgstr "ディレクトリー"
 msgid "Add Directories Recursively"
 msgstr "ディレクトリーを追加"
 
-#: src/interface.c:576 src/itunesdb.c:417
+#: src/interface.c:576 src/itunesdb.c:418
 msgid "Playlist"
 msgstr "再生リスト"
 
@@ -1602,69 +1614,67 @@ msgstr ""
 msgid "Specify interval"
 msgstr ""
 
-#: src/interface.c:2452
-msgid "Created"
-msgstr ""
-
 #: src/interface.c:2469
 msgid "Display songs that match the criteria entered above."
 msgstr ""
 
 #: src/interface.c:2488
-msgid "Display automatically"
+msgid "Start display automatically"
 msgstr ""
 
 #: src/interface.c:2491
-msgid "Automatically display songs that match the criteria entered above."
+msgid ""
+"Automatically start displaying songs that match the criteria entered above. "
+"If not selected, you must press 'Display' or change any of the values above."
 msgstr ""
 
-#: src/itunesdb.c:415
+#: src/itunesdb.c:416
 msgid "Master-PL"
 msgstr "マスタープレイリスト"
 
-#: src/itunesdb.c:688
+#: src/itunesdb.c:689
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for reading.\n"
 msgstr "読込み中から、iTunesDB\"%s\" を開けません\n"
 
-#: src/itunesdb.c:694
+#: src/itunesdb.c:695
 #, c-format
 msgid "Error reading \"%s\".\n"
 msgstr "\"%s\"を読込み中にエラーです\n"
 
-#: src/itunesdb.c:700
+#: src/itunesdb.c:701
 #, c-format
 msgid "\"%s\" is not a iTunesDB.\n"
 msgstr "\"%s\"はiTuneDBではありません\n"
 
-#: src/itunesdb.c:1294
+#: src/itunesdb.c:1295
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for writing.\n"
 msgstr "書込みからiTunesDB \"%s\"を開けません\n"
 
 #. an error occured
-#: src/itunesdb.c:1304
+#: src/itunesdb.c:1307
 #, fuzzy, c-format
 msgid "Error renaming '%s' to '%s' (%s).\n"
 msgstr "'%s' (%s) の ID3v2 タグの削除中にエラー\n"
 
-#: src/itunesdb.c:1482
+#: src/itunesdb.c:1486
 #, c-format
 msgid "Could not open file \"%s\" for reading.\n"
 msgstr "読込みからをファイル\"%s\"を開けません\n"
 
-#: src/itunesdb.c:1489
+#: src/itunesdb.c:1493
 #, c-format
 msgid "Could not open file \"%s\" for writing.\n"
 msgstr "書込みからファイル\"%s\" を開けません\n"
 
 #. error -- not end of file!
-#: src/itunesdb.c:1502
+#: src/itunesdb.c:1506
 #, c-format
 msgid "Error reading file \"%s\"."
 msgstr "ファイル\"%s\"読込み中エラーです"
 
-#: src/itunesdb.c:1514
+#: src/itunesdb.c:1518
 #, c-format
 msgid "Error writing PC file \"%s\"."
 msgstr "PCファイル\"%s\"書込み中エラーです"
