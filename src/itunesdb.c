@@ -137,7 +137,9 @@
 
    (pseudo-intelligent path/file concat and file copy)
 
-   Define "itunesdb_warning()" as you need.
+   Define "itunesdb_warning()" as you need (or simply use g_print and
+   change the default g_print handler with g_set_print_handler() as is
+   done in gtkpod).
 
    Jorg Schuler, 19.12.2002 */
 
@@ -157,10 +159,10 @@
 
 #ifdef IS_GTKPOD
 /* we're being linked with gtkpod */
-#include "misc.h"
-#define itunesdb_warning(...) gtkpod_warning(__VA_ARGS__)
+#define itunesdb_warning(...) g_print(__VA_ARGS__)
 #else
-/* The following prints the error messages to the console: */
+/* The following prints the error messages to the console, converting
+ * UTF8 to the current locale on the fly: */
 #define itunesdb_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
 #endif
 

@@ -359,6 +359,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
     if (!name) return NULL;
 
     if (g_file_test (name, G_FILE_TEST_IS_DIR)) return NULL;
+    if (!g_file_test (name, G_FILE_TEST_EXISTS)) return NULL;
 
     /* check if filename ends on ".mp3" */
     len = strlen (name);
@@ -556,10 +557,23 @@ static void sync_dir (gpointer key,
     Playlist *pl = (Playlist *)user_data;
     gchar *buf = NULL;
     gchar *dir_utf8 = NULL;
+    /* old charset */
+    gchar *prefs_charset = NULL;
 
     /* Assertions */
     if (!dir) return;
     if (!g_file_test (dir, G_FILE_TEST_IS_DIR))  return;
+
+    /* change default charset if prefs don't say otherwise */
+    if (!prefs_get_update_charset () && charset)
+    {   /* we should use the initial charset for the update */
+	if (prefs_get_charset ())
+	{   /* remember the charset originally set */
+	    prefs_charset = g_strdup (prefs_get_charset ());
+	}
+	/* use the charset used for the directory */
+	prefs_set_charset (charset);
+    }	
 
     /* report status */
     /* convert dir to UTF8. Use @charset if specified */
@@ -574,6 +588,11 @@ static void sync_dir (gpointer key,
 
     /* sync dir */
     add_directory_by_name (dir, pl, FALSE, sync_addsongfunc, NULL);
+
+    /* reset charset */
+    if (!prefs_get_update_charset () && charset)
+	prefs_set_charset (prefs_charset);
+    g_free (prefs_charset);
 }
 
 
@@ -604,12 +623,13 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     /* currently selected playlist */
     Playlist *playlist = (Playlist *)user_data2;
     /* state of "update existing" */
-    gboolean update = prefs_get_update_existing();
+    gboolean update;
 
     /* assertion */
     if (!hash) return;
 
     /* set "update existing" to TRUE */
+    update = prefs_get_update_existing();
     prefs_set_update_existing (TRUE);
 
     /* sync all dirs stored in the hash */
@@ -1048,6 +1068,7 @@ void update_song_from_file (Song *song)
     gchar *prefs_charset = NULL;
     gchar *songpath = NULL;
     gint32 oldsize = 0;
+    gchar *charset;
 
     if (!song) return;
 
@@ -1055,7 +1076,8 @@ void update_song_from_file (Song *song)
     if (song->transferred) oldsize = song->size;
     else                   oldsize = 0;
 
-    if (!prefs_get_update_charset () && song->charset)
+    charset = song->charset;
+    if (!prefs_get_update_charset () && charset)
     {   /* we should use the initial charset for the update */
 	if (prefs_get_charset ())
 	{   /* remember the charset originally set */
@@ -1124,7 +1146,7 @@ void update_song_from_file (Song *song)
 	}
     }
 
-    if (!prefs_get_update_charset ())
+    if (!prefs_get_update_charset () && charset)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }
@@ -1270,10 +1292,14 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
     gchar *ipod_fullpath, track[20];
     gchar *prefs_charset = NULL;
     Song *oldsong;
+    gchar *charset;
+
+    if (!song) return FALSE;
 
     /* if we are to use the charset used when first importing
        the song, change the prefs settings temporarily */
-    if (!prefs_get_write_charset () && song->charset)
+    charset = song->charset;
+    if (!prefs_get_write_charset () && charset)
     {   /* we should use the initial charset for the update */
 	if (prefs_get_charset ())
 	{   /* remember the charset originally set */
@@ -1336,7 +1362,7 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
     }
     g_free (filetag);
 
-    if (!prefs_get_update_charset ())
+    if (!prefs_get_update_charset () && charset)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }

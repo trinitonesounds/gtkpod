@@ -3235,6 +3235,8 @@ void display_create (GtkWidget *gtkpod)
     if (stop_button) gtk_widget_hide (stop_button);
     /* Hide/Show the toolbar */
     display_show_hide_toolbar ();
+    /* change standard g_print () handler */
+    g_set_print_handler ((GPrintFunc)gtkpod_warning);
 }
 
 /* redisplay the entire display (playlists, sort tabs, song view) and
