@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-03 13:36:55 jcs>
+/* Time-stamp: <2003-08-22 21:25:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -405,8 +405,8 @@ void hash_songs(void)
  *
  * The md5 hash is not modified.  
  *
- * The playcount is modified to show the cumulative playcount for that
- * song.
+ * The playcount/recent_playcount are modified to show the cumulative
+ * playcounts for that song.
  *
  * The star rating is set to the average of both star ratings if both
  * ratings are not 0, or the higher rating if one of the ratings is 0
@@ -494,6 +494,7 @@ void remove_duplicate (Song *oldsong, Song *song)
        g_free (buf2);
        /* Set playcount */
        oldsong->playcount += song->playcount;
+       oldsong->recent_playcount += song->recent_playcount;
        /* Set rating */
        if (oldsong->rating && song->rating)
 	   oldsong->rating =

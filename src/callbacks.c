@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-11 21:31:50 jcs>
+/* Time-stamp: <2003-08-22 22:09:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1483,6 +1483,13 @@ on_most_recent_played_songs_activate   (GtkMenuItem     *menuitem,
     last_listened_pl();
 }
 
+void
+on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    since_last_pl();
+}
+
 
 void
 on_rebuild_ipod_db1_activate           (GtkMenuItem     *menuitem,
@@ -1506,4 +1513,5 @@ on_cfg_not_played_song_toggled         (GtkToggleButton *togglebutton,
     prefs_window_set_not_played_song (
 	gtk_toggle_button_get_active (togglebutton));
 }
+
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-29 12:11:56 jcs>
+/* Time-stamp: <2003-08-22 21:35:06 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -258,7 +258,7 @@ prefs_window_create(void)
 	if((w = lookup_widget(prefs_window, "cfg_misc_song_nr")))
 	{
 	    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
-				       0, 100);
+				       0, 0xffffffff);
 	    gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
 				       prefs_get_misc_song_nr ());
 	    prefs_window_set_misc_song_nr (tmpcfg->misc_song_nr);

@@ -249,7 +249,7 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (play_entries_now));
 	hookup_mi (menu[type], _("Enqueue"), "gtk-cdrom",
 		   G_CALLBACK (play_entries_enqueue));
-	hookup_mi (menu[type], _("Export"), "gtk-floppy",
+	hookup_mi (menu[type], _("Copy from iPod"), "gtk-floppy",
 		   G_CALLBACK (export_entries));
 	hookup_mi (menu[type], _("Update"), "gtk-refresh",
 		   G_CALLBACK (update_entries));

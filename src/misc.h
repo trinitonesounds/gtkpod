@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-11 21:31:49 jcs>
+/* Time-stamp: <2003-08-23 00:32:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -43,6 +43,9 @@
 #define STATUSBAR_TIMEOUT 4200
 
 #define C_FREE(a) {if(a) g_free(a); a=NULL;}
+
+/* I'm sure there was a C-function or macro for this... */
+#define SIGN(a) (a<0 ? -1:a>0 ? +1:0)
 
 /* pointer to main window */
 extern GtkWidget *gtkpod_window;
@@ -122,10 +125,10 @@ void generate_selected_playlist (void);
 void generate_new_playlist (GList *songs);
 void generate_new_playlist_with_name (GList *songs, gchar *pl_name);
 void generate_playlist (GList *songs, gchar *pl_name);
-void add_ranked_playlist(gchar *pl_name,guint songs_nr, GCompareFunc comparefunc,gboolean played_only);
 void generate_new_playlist (GList *songs);
 void most_listened_pl (void);
 void last_listened_pl(void);
 void most_rated_pl(void);
+void since_last_pl(void);
 void rebuild_iTunesDB(void);
 #endif

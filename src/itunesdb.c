@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-09 23:44:49 jcs>
+/* Time-stamp: <2003-08-22 21:25:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -78,6 +78,7 @@
      guint32 time_modified;     /+ time of last modification  (Mac type) +/
      guint32 rating;            /+ star rating (stars * 20)              +/
      guint32 playcount;         /+ number of times song was played       +/
+     guint32 recent_playcount;  /+ times song was played since last sync +/
      gboolean transferred;      /+ has file been transferred to iPod?    +/
    } Song;
 
@@ -589,6 +590,7 @@ gchar *time_time_to_string (time_t time);
       if (playcount->rating)  song->rating = playcount->rating;
       if (playcount->time_played) song->time_played = playcount->time_played;
       song->playcount += playcount->playcount;
+      song->recent_playcount = playcount->playcount;
       g_free (playcount);
   }
   it_add_song (song);
@@ -1537,7 +1539,7 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
 	{
 	  if (feof (file_in) == 0)
 	    { /* error -- not end of file! */
-	      itunesdb_warning (_("Error reading file \"%s\"."), from_file);
+	      itunesdb_warning (_("Error reading file \"%s\".\n"), from_file);
 	      success = FALSE;
 	    }
 	}
@@ -1549,7 +1551,7 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
 #endif
 	  if (bwrite != bread)
 	    {
-	      itunesdb_warning (_("Error writing PC file \"%s\"."),to_file);
+	      itunesdb_warning (_("Error writing PC file \"%s\".\n"),to_file);
 	      success = FALSE;
 	    }
 	} 

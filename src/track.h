@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-09 23:46:55 jcs>
+/* Time-stamp: <2003-08-22 21:25:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -69,6 +69,7 @@ typedef struct
   guint32 time_modified;     /* time of last modification  (Mac type)   */
   guint32 rating;            /* star rating (stars * RATING_STEP (20))  */
   guint32 playcount;         /* number of times song was played         */
+  guint32 recent_playcount;  /* times song was played since last sync   */
   gchar   *hostname;         /* name of host this file has been imported on */
   gboolean transferred;      /* has file been transferred to iPod?      */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)              */

@@ -1,18 +1,20 @@
 TODO:
 
+- customized export filenames (missing option in prefs, take care of
+  charset issues)
+
 - playlist creation for orphaned tracks (Sam?)
 
 - reconstruction of iPod contents after file system corruption
   (Edward?)
 
 - replacement of libid3 with libid3tag
+    (reading "Country I" with 229 songs without duplicate recognition
+     libid3tag: 74/63 sec (with display), 44 sec (without display)).
 
-- volume normalization support
+- volume normalization support (Edward)
 
 - gtkpod-like browse of file system contents
-
-- miscellaneous special playlists (most recently listend, most
-  listened, highest rank...) -> Edward
 
 - upload text notes to iPod
 
@@ -36,17 +38,27 @@ TODO:
 
 Please feel free to submit further features.
 
+
 BUGLIST:
 
 - when updating songs the free space indicator gets smaller and
-  smaller even no new songs are added
+  smaller even if no new songs are added
 
 - when updating songs (add a large directory with sub dirs
   recursively) at end a requester pops up saying that it updated far
   more songs than are actually in the directories
 
+  -> that's because the dir contained playlist files. The tracks on
+     the playlist files got added/updated several times.
+
 - during a long operation (menues are blocked) the user can still edit
   the song data. This could potentially crash gtkpod -> need a way to
   block editing as well without blocking navigating.
+
+- when copying songs to the iPod (export iTunesDB) and the iPod is
+  overfilled, libgtk sometimes segfaults (TreeModel changed but did
+  not notify TreeView?)
+
+- fix memory holes during use of time_field_to_string() and co.
 
 Please add bugs as you find them.
