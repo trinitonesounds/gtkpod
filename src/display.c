@@ -415,6 +415,34 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
     }
 }
 
+/**
+ * pm_song_column_button_clicked
+ * @tvc - the tree view colum that was clicked
+ * @data - ignored user data
+ * When the sort button is clicked we want to update our internal playlist
+ * representation to what's displayed on screen.
+ */
+static void
+pm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
+{
+    GtkTreeIter i;
+    GList *new_list = NULL;
+    gboolean valid = FALSE;
+    GtkTreeModel *tm = NULL;
+    Playlist *new_pl = NULL;
+			    
+    if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(playlist_treeview))))
+    {
+	valid =gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
+	while(valid)
+	{
+	    gtk_tree_model_get(tm, &i, 0, &new_pl, -1); 
+	    new_list = g_list_append(new_list, new_pl);
+	    valid = gtk_tree_model_iter_next(tm, &i);
+	} 
+	reset_playlists_to_new_list(new_list);
+    }
+}
 
 /* Adds the columns to our playlist_treeview */
 static void pm_add_columns ()
@@ -437,6 +465,10 @@ static void pm_add_columns ()
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
 				   PM_COLUMN_PLAYLIST,
 				   pm_data_compare_func, column, NULL);
+  gtk_tree_view_column_set_clickable(column, TRUE);
+  g_signal_connect (G_OBJECT (column), "clicked",
+		    G_CALLBACK (pm_song_column_button_clicked),
+				(gpointer)SM_COLUMN_TITLE);
   gtk_tree_view_append_column (playlist_treeview, column);
 }
 

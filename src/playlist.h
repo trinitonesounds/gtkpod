@@ -65,4 +65,6 @@ guint32 get_nr_of_playlists (void);
 Playlist *get_playlist_by_nr (guint32 n);
 guint32 get_nr_of_songs_in_playlist (Playlist *plitem);
 Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n);
+void reset_playlists_to_new_list(GList *new_l);
+
 #endif __PLAYLIST_H__

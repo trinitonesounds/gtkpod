@@ -318,7 +318,8 @@ void confirmation_window_ok_clicked(void)
 		if(selected_playlist->type != PL_TYPE_MPL)
 		{
 		    remove_playlist(selected_playlist);
-		    snprintf(buf, PATH_MAX, "%s", (_("Deleted Playlist %s")));
+		    snprintf(buf, PATH_MAX, "%s %s", (_("Deleted Playlist")),
+			    selected_playlist->name);
 		}
 		break;
 	    case CONFIRMATION_WINDOW_SONG_FROM_IPOD:

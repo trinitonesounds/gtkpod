@@ -38,7 +38,6 @@
 
 GList *playlists;
 
-
 /* Creates a new playlist */
 void add_new_playlist (void)
 {
@@ -234,3 +233,15 @@ void remove_all_playlists (void)
       free_playlist (playlist);
     }
 }
+
+/**
+ *
+ * @new_l - the new list we want our internal represenation to be set to
+ */
+void 
+reset_playlists_to_new_list(GList *new_l)
+{
+    if(playlists) g_list_free(playlists);
+    playlists = new_l;
+}
+
