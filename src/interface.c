@@ -1945,7 +1945,7 @@ create_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox34), play_now_path_entry, FALSE, FALSE, 2);
   gtk_tooltips_set_tip (tooltips, play_now_path_entry, _("For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing."), NULL);
 
-  label45 = gtk_label_new (_("Command Line for 'Enqueue'"));
+  label45 = gtk_label_new (_("Command Line for 'Enqueue':"));
   gtk_widget_show (label45);
   gtk_box_pack_start (GTK_BOX (vbox34), label45, FALSE, FALSE, 4);
   gtk_label_set_justify (GTK_LABEL (label45), GTK_JUSTIFY_LEFT);

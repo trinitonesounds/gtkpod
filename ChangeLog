@@ -2,7 +2,8 @@ gtkpod V0.53-CVS
 	IMPROVEMENT: handle adding of playlist files containing relative
 	files with relative paths.
 
-	BUGFIX: fixed memory holes in sync_songids(), sync_dir_ok().
+	BUGFIX: fixed memory holes in sync_songids(), sync_dir_ok(),
+	add_playlist_by_filename().
 
 	BUGFIX: drag and drop URIs with cr/nl at the end are handled
 	correctly (thanks to Walter Bell).
@@ -33,7 +34,7 @@ gtkpod V0.52
 	DND URI. (Thanks to Walter Bell).
 
 	BUGFIX: using 'file_export' from the context menu could crash
-	context menu
+	gtkpod
 
 	BUGFIX: file_export didn't remember directory last used.
 
@@ -149,9 +150,11 @@ gtkpod V0.50
 	against 7.8'' on my 2459 songs)
 	- Refresh of song list, non-blocked: 2x as fast (9'' against 18''
 	on my 2459 songs)
+
 gtkpod V0.43-1 28-Feb-2003
 	BUGFIX: After DND operation songs were displayed twice in the
 	master playlist (this was just a display artifact).
+
 gtkpod V0.43 27-Feb-2003
         Preventive BUGFIX: in the code to import the iTunesDB all absolute
 	references to positions in the iTunesDB were removed. Instead

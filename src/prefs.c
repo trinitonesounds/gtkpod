@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-25 00:44:26 jcs>
+/* Time-stamp: <2003-07-13 20:52:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -113,20 +113,24 @@ enum {
   GP_OFFLINE
 };
 
+
+/* need to convert to locale charset before printing to console */
+#define usage_fpf(file, ...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (file, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
+
 static void usage (FILE *file)
 {
-  fprintf(file, _("gtkpod version %s usage:\n"), VERSION);
-  fprintf(file, _("  -h, --help:   display this message\n"));
-  fprintf(file, _("  -m path:      define the mountpoint of your iPod\n"));
-  fprintf(file, _("  --mountpoint: same as \"-m\".\n"));
-  fprintf(file, _("  -w:           write changed ID3 tags to file\n"));
-  fprintf(file, _("  --id3_write:   same as \"-w\".\n"));
-  fprintf(file, _("  -c:           check files automagically for duplicates\n"));
-  fprintf(file, _("  --md5:        same as \"-c\".\n"));
-  fprintf(file, _("  -a:           import database automatically after start.\n"));
-  fprintf(file, _("  --auto:       same as \"-a\".\n"));
-  fprintf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n                used with \"Offline\" deactivated.\n"));
-  fprintf(file, _("  --offline:    same as \"-o\".\n"));
+  usage_fpf(file, _("gtkpod version %s usage:\n"), VERSION);
+  usage_fpf(file, _("  -h, --help:   display this message\n"));
+  usage_fpf(file, _("  -m path:      define the mountpoint of your iPod\n"));
+  usage_fpf(file, _("  --mountpoint: same as \"-m\".\n"));
+  usage_fpf(file, _("  -w:           write changed ID3 tags to file\n"));
+  usage_fpf(file, _("  --id3_write:   same as \"-w\".\n"));
+  usage_fpf(file, _("  -c:           check files automagically for duplicates\n"));
+  usage_fpf(file, _("  --md5:        same as \"-c\".\n"));
+  usage_fpf(file, _("  -a:           import database automatically after start.\n"));
+  usage_fpf(file, _("  --auto:       same as \"-a\".\n"));
+  usage_fpf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n                used with \"Offline\" deactivated.\n"));
+  usage_fpf(file, _("  --offline:    same as \"-o\".\n"));
 }
 
 struct cfg *cfg_new(void)
@@ -703,7 +707,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 	cfg->offline = TRUE;
 	break;
       default:
-	fprintf(stderr, _("Unknown option: %s\n"), argv[optind]);
+	usage_fpf(stderr, _("Unknown option: %s\n"), argv[optind]);
 	usage(stderr);
 	exit(1);
       }
