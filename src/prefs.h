@@ -76,6 +76,7 @@ struct cfg
   gboolean show_duplicates;     /* show duplicate notification ?*/
   gboolean show_updated;        /* show update notification ?*/
   gboolean show_non_updated;    /* show update notification ?*/
+  gboolean show_sync_dirs;      /* show dirs to be synced ?*/
   gboolean save_sorted_order;   /* save order after sort automatically? */
   gboolean display_toolbar;     /* should toolbar be displayed */
   gboolean update_charset;      /* Update charset when updating song? */
@@ -166,6 +167,8 @@ gboolean prefs_get_show_updated (void);
 void prefs_set_show_updated (gboolean val);
 gboolean prefs_get_show_non_updated (void);
 void prefs_set_show_non_updated (gboolean val);
+gboolean prefs_get_show_sync_dirs (void);
+void prefs_set_show_sync_dirs (gboolean val);
 gboolean prefs_get_display_toolbar (void);
 void prefs_set_display_toolbar (gboolean val);
 gboolean prefs_get_update_charset (void);

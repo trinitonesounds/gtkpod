@@ -63,4 +63,5 @@ gchar* get_song_name_on_ipod(Song *s);
 gchar* get_preferred_song_name_format(Song *s);
 void mark_song_for_deletion (Song *song);
 void fill_in_extended_info (Song *song);
+glong get_filesize_of_deleted_songs(void);
 #endif __FILE_H__

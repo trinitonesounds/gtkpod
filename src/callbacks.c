@@ -846,6 +846,16 @@ on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
 
 
 void
+on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
+				      gpointer         user_data)
+{
+    prefs_window_set_show_sync_dirs(
+	gtk_toggle_button_get_active(togglebutton));
+
+}
+
+
+void
 on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
@@ -1205,4 +1215,3 @@ on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
     prefs_window_set_add_recursively(
 	gtk_toggle_button_get_active(togglebutton));
 }
-

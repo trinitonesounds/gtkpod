@@ -53,6 +53,7 @@ struct song_extended_info
     gchar *charset;
     gchar *hostname;
     gchar *ipod_path;
+    gint32 oldsize;
     gboolean transferred;
 };
 /* List with songs pending deletion */
@@ -529,17 +530,117 @@ void update_songids (GList *selected_songids)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
+/* Callback for adding songs (makes sure song isn't added to playlist
+ * again if it already exists */
+static void sync_addsongfunc (Playlist *plitem, Song *song, gpointer data)
+{
+    if (!song) return;
+    if (!plitem) plitem = get_playlist_by_nr (0); /* NULL/0: MPL */
+
+    /* only add if @song isn't already a member of the current
+       playlist */
+    if (!g_list_find (plitem->members, song))
+	add_song_to_playlist (plitem, song, TRUE);
+}
+
+
 /* Synchronize the directory @key (gchar *dir). Called by
- * sync_songids(). */
+ * sync_songids().
+ * @user_data: selected playlist */
 static void sync_dir (gpointer key,
 		      gpointer value,
 		      gpointer user_data)
 {
     gchar *dir = (gchar *)key;
+    gchar *charset = (gchar *)value;
+    Playlist *pl = (Playlist *)user_data;
+    gchar *buf = NULL;
+    gchar *dir_utf8 = NULL;
 
     /* Assertions */
     if (!dir) return;
     if (!g_file_test (dir, G_FILE_TEST_IS_DIR))  return;
+
+    /* report status */
+    /* convert dir to UTF8. Use @charset if specified */
+    if (charset)
+	dir_utf8 = charset_to_charset (charset, "UTF8", dir);
+    else
+	dir_utf8 = charset_to_utf8 (dir);
+    buf = g_strdup_printf (_("Syncing directory '%s'"), dir_utf8);
+    gtkpod_statusbar_message (buf);
+    g_free (buf);
+    g_free (dir_utf8);
+
+    /* sync dir */
+    add_directory_by_name (dir, pl, FALSE, sync_addsongfunc, NULL);
+}
+
+
+static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
+{
+    GHashTable *hash = (GHashTable *)user_data1;
+    /* currently selected playlist */
+    Playlist *playlist = (Playlist *)user_data2;
+    /* state of "update existing" */
+    gboolean update = prefs_get_update_existing();
+
+    /* assertion */
+    if (!hash) return;
+
+    /* set "update existing" to TRUE */
+    prefs_set_update_existing (TRUE);
+
+    /* sync all dirs stored in the hash */
+    g_hash_table_foreach (hash, sync_dir, playlist);
+
+    /* reset "update existing" */
+    prefs_set_update_existing (update);
+
+    /* destroy the hash table (and free the memory taken by the
+       dirnames */
+    g_hash_table_destroy (hash);
+
+    /* display log of non-updated songs */
+    display_non_updated (NULL, NULL);
+    /* display log updated songs */
+    display_updated (NULL, NULL);
+    /* display log of detected duplicates */
+    remove_duplicate (NULL, NULL);
+
+    gtkpod_statusbar_message (_("Syncing completed"));
+}
+
+
+/* sync dirs cancelled */
+static void sync_dir_cancel (gpointer user_data1, gpointer user_data2)
+{
+    if (user_data1)  g_hash_table_destroy ((GHashTable *)user_data1);
+    gtkpod_statusbar_message (_("Syncing aborted"));
+}
+
+
+/* Append @key (gchar *dir) to GString *user_data. Called by
+ * sync_songids(). Charset to use is @value. If @value is not set, use
+ * the charset specified in the preferences */
+static void sync_add_dir_to_string  (gpointer key,
+				     gpointer value,
+				     gpointer user_data)
+{
+    gchar *dir = (gchar *)key;
+    gchar *charset = (gchar *)value;
+    GString *str = (GString *)user_data;
+    gchar *buf;
+
+    if (!dir || !str) return;
+
+    /* convert to UTF8. Use @charset if specified */
+    if (charset)
+	buf = charset_to_charset (charset, "UTF8", dir);
+    else
+	buf = charset_to_utf8 (dir);
+    g_string_append_printf (str, "%s\n", buf);
+    g_free (buf);
 }
 
 
@@ -549,8 +650,18 @@ void sync_songids (GList *selected_songids)
 {
     GHashTable *hash;
     GList *gl_id;
+    guint32 dirnum = 0;
 
-    hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+    if (g_list_length (selected_songids) == 0)
+    {
+	gtkpod_statusbar_message (_("No songs in selection"));
+	return;
+    }
+
+    /* Create a hash to keep the directory names ("key", and "value"
+       to be freed with g_free). key is dirname, value is charset used
+       */
+    hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 
     /* Get the dirs of all songs selected and enter them into the hash
        table if the dir exists. Using a hash table automatically
@@ -559,25 +670,68 @@ void sync_songids (GList *selected_songids)
     {
 	guint32 id = (guint32)gl_id->data;
 	Song *song = get_song_by_id (id);
-	if (song && song->pc_path_locale)
+	if (song && song->pc_path_locale && *song->pc_path_locale)
 	{
 	    gchar *dirname = g_path_get_dirname (song->pc_path_locale);
+
+	    ++dirnum;
 	    if (g_file_test (dirname, G_FILE_TEST_IS_DIR))
-		g_hash_table_insert (hash, dirname, NULL);
+	    {
+		if (song->charset && *song->charset)
+		{   /* charset set -- just insert the entry */
+		    gchar *charset = g_strdup (song->charset);
+		    g_hash_table_insert (hash, dirname, charset);
+		}
+		else
+		{   /* no charset -- make sure we don't replace a dir
+		     * entry that had the charset set */
+		    if (!g_hash_table_lookup (hash, dirname))
+			g_hash_table_insert (hash, dirname, NULL);
+		}
+	    }
 	    else
 	    {
 		if (g_file_test (dirname, G_FILE_TEST_EXISTS))
-		    gtkpod_warning ("'%s' is not a directory. Ignored.\n", dirname);
+		    gtkpod_warning (_("'%s' is not a directory. Ignored.\n"),
+				    dirname);
 		else
-		    gtkpod_warning ("'%s' does not exist. Ignored.\n", dirname);
+		    gtkpod_warning (_("'%s' does not exist. Ignored.\n"),
+				    dirname);
 	    }
 	}
     }
-    /* sync all dirs stored in the hash */
-    g_hash_table_foreach (hash, sync_dir, NULL);
-    /* destroy the hash table (and free the memory taken by the
-       dirnames */
-    g_hash_table_destroy (hash);
+    if (g_hash_table_size (hash) == 0)
+    {   /* no directory names available */
+	if (dirnum == 0) gtkpod_warning (_("\
+No directory names were stored. Make sure that you enable 'Write extended information' in the Export section of the preferences at the time of importing files.\n\
+\n\
+To synchronize directories now, activate the 'duplicate detection' in the Import section and add the directories you want to sync again.\n"));
+	else	         gtkpod_warning (_("\
+No valid directories have been found. Sync aborted.\n"));
+    }
+    else
+    {
+	GString *str = g_string_sized_new (2000);
+	/* build a string with all directories in the hash */
+	g_hash_table_foreach (hash, sync_add_dir_to_string, str);
+	if (!gtkpod_confirmation (
+		-1,                     /* gint id, */
+		FALSE,                  /* gboolean modal, */
+		_("Synchronize directories"), /* title */
+		_("OK to synchronize the following directories?"),
+		str->str,               /* text */
+		prefs_get_show_sync_dirs(),/* gboolean confirm_again, */
+		prefs_set_show_sync_dirs,/* confirm_again_handler*/
+		sync_dir_ok,            /* ConfHandler ok_handler,*/
+		CONF_NO_BUTTON,         /* don't show "Apply" */
+		sync_dir_cancel,        /* cancel_handler,*/
+		hash,                   /* gpointer user_data1,*/
+		pm_get_selected_playlist())) /* gpointer user_data2,*/
+	{ /* creation failed */
+	    g_hash_table_destroy (hash);
+	}
+	g_string_free (str, TRUE);
+    }
 }
 
 
@@ -789,10 +943,11 @@ void display_updated (Song *song, gchar *txt)
 /* Update information of @song from data in original file. This
    requires that the original filename is available, and that the file
    exists.
-   Returns TRUE if the data could be updated, FALSE otherwise. A list
-   of non-updated songs can be displayed by calling
+
+   A list of non-updated songs can be displayed by calling
    display_non_updated (NULL, NULL). This list can be deleted by
    calling display_non_updated ((void *)-1, NULL);
+
    It is also possible that duplicates get detected in the process --
    a list of those can be displayed by calling "remove_duplicate
    (NULL, NULL)", that list can be deleted by calling
@@ -802,8 +957,13 @@ void update_song_from_file (Song *song)
     Song *oldsong;
     gchar *prefs_charset = NULL;
     gchar *songpath = NULL;
+    gint32 oldsize = 0;
 
     if (!song) return;
+
+    /* store size of song on iPod */
+    if (song->transferred) oldsize = song->size;
+    else                   oldsize = 0;
 
     if (!prefs_get_update_charset () && song->charset)
     {   /* we should use the initial charset for the update */
@@ -834,21 +994,32 @@ void update_song_from_file (Song *song)
     { /* update successfull */
 	/* remove song from md5 hash and reinsert it
 	   (hash value may have changed!) */
+	gchar *oldhash = song->md5_hash;
 	md5_song_removed (song);
-	C_FREE (song->md5_hash);  /* need to remove the old value manually! */
+	song->md5_hash = NULL;  /* need to remove the old value manually! */
 	oldsong = md5_song_exists_insert (song);
-	if (oldsong) { /* song exists, remove and register the new version */
+	if (oldsong) { /* song exists, remove old song
+			  and register the new version */
 	    md5_song_removed (oldsong);
 	    remove_duplicate (song, oldsong);
 	    md5_song_exists_insert (song);
 	}
-	/* song should be copied to iPod on next export */
+	/* song may have to be copied to iPod on next export */
 	/* since it will copied under the same name as before, we
 	   don't have to manually remove it */
-	song->transferred = FALSE;
+	if (oldhash && song->md5_hash)
+	{   /* do we really have to copy the song again? */
+	    if (strcmp (oldhash, song->md5_hash) != 0)
+		song->transferred = FALSE;
+	}
+	else song->transferred = FALSE; /* no hash available -- copy! */
+	/* set old size if song has to be transferred (for free space
+	 * calculation) */
+	if (!song->transferred) song->oldsize = oldsize;
 	/* notify display model */
 	pm_song_changed (song);
 	display_updated (song, NULL);
+        C_FREE (oldhash);
     }
     else
     { /* update not successful -- log this song for later display */
@@ -883,8 +1054,8 @@ void update_song_from_file (Song *song)
    @name is in the current locale
    @plitem: if != NULL, add song to plitem as well (unless it's the MPL)
    descend: TRUE:  add directories recursively
-            FALSE: add contents of directories but don't descend into
-                   subdirectories without */
+            FALSE: add contents of directories passed but don't descend
+                   into its subdirectories */
 /* Not nice: currently only accepts files ending on .mp3 */
 /* @addsongfunc: if != NULL this will be called instead of
    "add_song_to_playlist () -- used for dropping songs at a specific
@@ -1112,6 +1283,7 @@ void fill_in_extended_info (Song *song)
 	      song->charset = g_strdup (sei->charset);
 	  if (sei->hostname && !song->hostname)
 	      song->hostname = g_strdup (sei->hostname);
+	  song->oldsize = sei->oldsize;
 	  song->transferred = sei->transferred;
 	  g_hash_table_remove (extendedinfohash, &ipod_id);
 	}
@@ -1264,6 +1436,8 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->md5_hash = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "charset") == 0)
 		sei->charset = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "oldsize") == 0)
+		sei->oldsize = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
 		sei->transferred = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
@@ -1466,15 +1640,38 @@ get_preferred_song_name_format(Song *s)
 
 /*------------------------------------------------------------------*\
  *                                                                  *
- *      Handle Export of iTunesDB                                   *
+ *      Functions concerning deletion of songs                      *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
+
+/* in Bytes, minus the space taken by songs that will be overwritten
+ * during copying */
+glong get_filesize_of_deleted_songs(void)
+{
+    glong n = 0;
+    Song *song;
+    GList *gl_song;
+
+    for (gl_song = pending_deletion; gl_song; gl_song=gl_song->next)
+    {
+	song = (Song *)gl_song->data;
+	if (song->transferred)   n += song->size;
+    }
+    return n;
+}
 
 void mark_song_for_deletion (Song *song)
 {
     pending_deletion = g_list_append(pending_deletion, song);
 }
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *      Handle Export of iTunesDB                                   *
+ *                                                                  *
+\*------------------------------------------------------------------*/
 
 
 /* Writes extended info (md5 hash, PC-filename...) into file "name".
@@ -1529,6 +1726,8 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 	fprintf (fp, "md5_hash=%s\n", song->md5_hash);
       if (song->charset)
 	fprintf (fp, "charset=%s\n", song->charset);
+      if (!song->transferred && song->oldsize)
+	  fprintf (fp, "oldsize=%d\n", song->oldsize);
       fprintf (fp, "transferred=%d\n", song->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
     }
@@ -1566,13 +1765,16 @@ static gpointer th_remove (gpointer filename)
     return (gpointer)result;
 }
 /* Threaded copy of ipod song */
-static gpointer th_copy (gpointer song)
+static gpointer th_copy (gpointer s)
 {
     gboolean result;
+    Song *song = (Song *)s;
 
     result = itunesdb_copy_song_to_ipod (cfg->ipod_mount,
-					 (Song *)song,
-					 ((Song *)song)->pc_path_locale);
+					 song,
+					 song->pc_path_locale);
+    /* delete old size */
+    if (song->transferred) song->oldsize = 0;
     g_mutex_lock (mutex);
     mutex_data = TRUE;   /* signal that thread will end */
     g_cond_signal (cond);
@@ -1708,10 +1910,15 @@ gboolean flush_songs (void)
 		  g_warning ("Thread creation failed, falling back to default.\n");
 		  result &= itunesdb_copy_song_to_ipod (cfg->ipod_mount,
 							song, song->pc_path_locale);
+		  /* delete old size */
+		  if (song->transferred) song->oldsize = 0;
 	      }
 #else
 	      result &= itunesdb_copy_song_to_ipod (cfg->ipod_mount,
 						    song, song->pc_path_locale);
+	      /* delete old size */
+	      if (song->transferred) song->oldsize = 0;
+
 #endif G_THREADS_ENABLED
 	      ++count;
 	      if (count == 1)  /* we need longer timeout */

@@ -55,6 +55,7 @@ typedef struct
   gchar   *pc_path_locale;   /* PC filename in locale encoding */
   guint32 ipod_id;           /* unique ID of song     */
   gint32  size;              /* size of file in bytes */
+  gint32  oldsize;           /* used when updating songs: size on iPod */
   gint32  songlen;           /* Length of song in ms  */
   gint32  cd_nr;             /* CD number             */
   gint32  cds;               /* number of CDs         */
@@ -99,7 +100,7 @@ void remove_all_songs (void);
 #define it_get_nr_of_songs get_nr_of_songs
 guint get_nr_of_songs (void);
 guint get_nr_of_nontransferred_songs (void);
-guint get_filesize_of_nontransferred_songs (void);
+glong get_filesize_of_nontransferred_songs (void);
 Song *it_get_song_by_nr (guint32 n);
 Song *get_song_by_nr (guint32 n);
 Song *get_song_by_id (guint32 id);

@@ -95,7 +95,7 @@ Song *add_song (Song *song)
   {
     /* Make sure all strings are initialised -- that way we don't 
      have to worry about it when we are handling the strings */
-    /* exception: md5_hash and hostname: these may be NULL. */
+    /* exception: md5_hash, hostname, charset: these may be NULL. */
     validate_entries (song);
     if(!song->ipod_id) 
 	song->ipod_id = free_ipod_id (0);  /* keep track of highest ID used */
@@ -202,20 +202,23 @@ guint get_nr_of_nontransferred_songs (void)
     return n;
 }
 
-guint get_filesize_of_nontransferred_songs(void)
+/* in Bytes, minus the space taken by songs that will be overwritten
+ * during copying */
+glong get_filesize_of_nontransferred_songs(void)
 {
-    guint n = 0;
+    glong n = 0;
     Song *song;
     GList *gl_song;
 
     for (gl_song = songs; gl_song; gl_song=gl_song->next)
     {
 	song = (Song *)gl_song->data;
-	if (!song->transferred)   n += (song->size/1024);
+	if (!song->transferred)   n += song->size - song->oldsize;
     }
     return n;
-
 }
+
+
 /* Returns the n_th song */
 Song *get_song_by_nr (guint32 n)
 {

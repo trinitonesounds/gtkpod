@@ -197,6 +197,11 @@ prefs_window_create(void)
 					 tmpcfg->show_non_updated);
 	    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_show_sync_dirs")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->show_sync_dirs);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_display_toolbar")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -423,6 +428,7 @@ prefs_window_set(void)
 	prefs_set_show_duplicates(tmpcfg->show_duplicates);
 	prefs_set_show_updated(tmpcfg->show_updated);
 	prefs_set_show_non_updated(tmpcfg->show_non_updated);
+	prefs_set_show_sync_dirs(tmpcfg->show_sync_dirs);
 	prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
@@ -690,6 +696,11 @@ void prefs_window_set_show_updated (gboolean val)
 void prefs_window_set_show_non_updated (gboolean val)
 {
     tmpcfg->show_non_updated = val;
+}
+
+void prefs_window_set_show_sync_dirs (gboolean val)
+{
+    tmpcfg->show_sync_dirs = val;
 }
 
 void prefs_window_set_display_toolbar (gboolean val)

@@ -113,6 +113,23 @@ update_entries(GtkMenuItem *mi, gpointer data)
 	do_selected_songs (update_songids);
 }
 
+/*
+ * sync_dirs_ entries - sync the directories of the entries
+ *                      selected
+ * @mi - the menu item selected
+ * @data - Ignored, should be NULL
+ */
+static void 
+sync_dirs_entries(GtkMenuItem *mi, gpointer data)
+{
+    if (selected_playlist)
+	do_selected_playlist (sync_songids);
+    else if(selected_entry)
+	do_selected_entry (sync_songids, entry_inst);
+    else if(selected_songs)
+	do_selected_songs (sync_songids);
+}
+
 /**
  * delete_entries - delete the currently selected entry, be it a playlist,
  * items in a sort tab, or songs
@@ -231,6 +248,8 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (export_entries));
 	hookup_mi (menu[type], _("Update"), "gtk-refresh",
 		   G_CALLBACK (update_entries));
+	hookup_mi (menu[type], _("Sync Dirs"), "gtk-refresh",
+		   G_CALLBACK (sync_dirs_entries));
 	hookup_mi (menu[type], _("Delete"), "gtk-delete",
 		   G_CALLBACK (delete_entries));
 	/* FIXME: once we can find out in which song column the
@@ -243,7 +262,7 @@ create_context_menu(CM_type type)
 	 * forward/backward can be done with the column label buttons.
 	 */
 
-	if (type != CM_SM)
+	if (type == CM_ST)
 	{
 	    GtkWidget *mi;
 	    GtkWidget *sub;

@@ -21,6 +21,7 @@ Inc., registered in the U.S. and other countries.
      - Startup and Shutdown scripts
      - Extended Information File
      - Refresh (Update) Song Info From File
+     - Synchronize Directories
      - Offline Mode
      - Export of Songs
      - Encoding of ID3 tags (charsets)
@@ -145,7 +146,8 @@ cp /mnt/ipod/iPod_Control/iTunes/iTunesDB /mnt/ipod/iPod_Control/iTunes/iTunesDB
 
 and continue with step 8-11 above.
 
-
+You may also want to have a look at "Sick of loading the sbp2 modules
+by hand?" further down.
 
 
 *----------------------------------*
@@ -318,6 +320,29 @@ File" (see above) is needed.
 
 You can also select entries in the sort tab or entire playlists for
 refresh. 
+
+
+Synchronize Directories
+-----------------------
+
+If you have added files to directories or changed files in directories
+you have previously added songs from, you can use the "Synchronize
+Dirs" utility to update your iTunesDB.
+
+"Synchronize Dirs" will use the selected songs to make a list of
+directories to update, so you should activate the "Write Extended
+Information" option in the export section of the preferences
+dialogue.
+
+It will then add all non-existing songs in those directories and
+update (see "Refresh") all existing songs. The songs are also added to
+the currently selected playlist, if they aren't already a member.
+
+Songs that have been removed from the directory will not be removed
+from the iTunesDB.
+
+For best results you should also activate duplicate detection. This
+avoids unnecessary copying of unchanged songs.
 
 
 Offline Mode

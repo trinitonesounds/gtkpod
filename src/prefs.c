@@ -193,6 +193,7 @@ struct cfg *cfg_new(void)
     mycfg->show_duplicates = TRUE;
     mycfg->show_updated = TRUE;
     mycfg->show_non_updated = TRUE;
+    mycfg->show_sync_dirs = TRUE;
     mycfg->display_toolbar = TRUE;
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
@@ -370,6 +371,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "show_non_updated") == 0)
 	  {
 	      prefs_set_show_non_updated((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "show_sync_dirs") == 0)
+	  {
+	      prefs_set_show_sync_dirs((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "display_toolbar") == 0)
 	  {
@@ -619,6 +624,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "show_duplicates=%d\n",prefs_get_show_duplicates());
     fprintf(fp, "show_updated=%d\n",prefs_get_show_updated());
     fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
+    fprintf(fp, "show_sync_dirs=%d\n",prefs_get_show_sync_dirs());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
@@ -1204,6 +1210,16 @@ gboolean prefs_get_show_non_updated (void)
 void prefs_set_show_non_updated (gboolean val)
 {
     cfg->show_non_updated = val;
+}
+
+gboolean prefs_get_show_sync_dirs (void)
+{
+    return cfg->show_sync_dirs;
+}
+
+void prefs_set_show_sync_dirs (gboolean val)
+{
+    cfg->show_sync_dirs = val;
 }
 
 gboolean prefs_get_display_toolbar (void)

@@ -35,6 +35,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <math.h>
 #include "song.h"
 #include "interface.h"
 #include "misc.h"
@@ -59,9 +60,9 @@ static GtkWidget *gtkpod_songs_statusbar = NULL;
 static GtkWidget *gtkpod_space_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
 
-static guint32 get_ipod_free_space(void);
+static glong get_ipod_free_space(void);
 #if 0
-static guint32 get_ipod_used_space(void);
+static glong get_ipod_used_space(void);
 #endif
 /* --------------------------------------------------------------*/
 /* are widgets blocked at the moment? */
@@ -1652,7 +1653,7 @@ get_drive_stats_from_df(const gchar *mp)
     gchar *result = NULL;
     guint bytes_read = 0;
 
-    snprintf(buf, PATH_MAX, "df -k | grep %s", mp);
+    snprintf(buf, PATH_MAX, "df -B1 | grep %s", mp);
     if((fp = popen(buf, "r")))
     {
 	if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
@@ -1681,32 +1682,31 @@ get_drive_stats_from_df(const gchar *mp)
 }
 
 static gchar* 
-get_filesize_in_bytes(int size)
+get_filesize_in_bytes(glong size)
 {
-    guint i = 1;
-    float newsize = 0.0;
+    guint i = 0;
     gchar *result = NULL;
-    glong tmpsize = (glong)size;
-    gchar *sizes[] = { _("Bytes"), _("KB"), _("MB"), _("GB"), NULL };
+    double newsize = size;
+    gchar *sizes[] = { _("Bytes"), _("kB"), _("MB"), _("GB"), _("TB"), NULL };
 
-    while((tmpsize) > (float)1024.0 )
+    while((fabs(newsize) > 1000) && (i<4))
     {
-	int c;
-
-	c = tmpsize % 1024;
-	tmpsize /= (float)1024.0;
-	newsize = (newsize * 0.1) + ((float) c / (float)1024.0);
-	i++;
+	newsize /= 1000;
+	++i;
     }
-    newsize += (float)tmpsize;
-    result = g_strdup_printf("%0.2f %s", (float)newsize, sizes[i]);
+    if (fabs(newsize) < 10)
+	result = g_strdup_printf("%0.2f %s", newsize, sizes[i]);
+    else if (fabs(newsize) < 100)
+	result = g_strdup_printf("%0.1f %s", newsize, sizes[i]);
+    else
+	result = g_strdup_printf("%0.0f %s", newsize, sizes[i]);
     return(result);
 }
 #if 0
-static guint32
+static glong
 get_ipod_used_space(void)
 {
-    guint32 result = 0;
+    glong result = 0;
     gchar *line = NULL;
     gchar **tokens = NULL;
     
@@ -1715,7 +1715,7 @@ get_ipod_used_space(void)
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
 	    if(tokens[2]) 
-		result = atoi(tokens[2]);
+		result = atol(tokens[2]);
 	    g_strfreev(tokens);
 	}
     }
@@ -1723,10 +1723,10 @@ get_ipod_used_space(void)
     return(result);
 }
 #endif
-static guint32
+static glong
 get_ipod_free_space(void)
 {
-    guint32 result = 0;
+    glong result = 0;
     gchar *line = NULL;
     gchar **tokens = NULL;
     if((line = get_drive_stats_from_df(prefs_get_ipod_mount())))
@@ -1734,7 +1734,7 @@ get_ipod_free_space(void)
 	if((tokens = g_strsplit(line, " ", 5)))
 	{
 	    if(tokens[3]) 
-		result = atoi(tokens[3]);
+		result = atol(tokens[3]);
 	    g_strfreev(tokens);
 	}
     }
@@ -1749,18 +1749,18 @@ gtkpod_space_statusbar_update(void)
     {
 	gchar *buf;
 	gchar *str = NULL;
-	guint32 left, pending;
+	glong left, pending;
 
-	left = get_ipod_free_space();
+	left = get_ipod_free_space() + get_filesize_of_deleted_songs ();
 	pending = get_filesize_of_nontransferred_songs();
-	if(left > 0)
+	if((left-pending) > 0)
 	{
 	    str = get_filesize_in_bytes(left - pending);
 	    buf = g_strdup_printf (_(" %s Free"), str);
 	}
 	else
 	{
-	    str = get_filesize_in_bytes(pending);
+	    str = get_filesize_in_bytes(pending - left);
 	    buf = g_strdup_printf (_(" %s Pending"), str);
 	}
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_space_statusbar), 1);

@@ -54,6 +54,7 @@ void prefs_window_set_mpl_autoselect (gboolean autoselect);
 void prefs_window_set_show_duplicates (gboolean val);
 void prefs_window_set_show_updated (gboolean val);
 void prefs_window_set_show_non_updated (gboolean val);
+void prefs_window_set_show_sync_dirs (gboolean val);
 void prefs_window_set_display_toolbar (gboolean val);
 void prefs_window_set_update_charset (gboolean val);
 void prefs_window_set_write_charset (gboolean val);

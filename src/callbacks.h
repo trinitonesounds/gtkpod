@@ -288,6 +288,10 @@ on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
+on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
+				      gpointer         user_data);
+
+void
 on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
