@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:21:22 JST jcs>
+/* Time-stamp: <2004-06-13 22:27:20 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -49,10 +49,15 @@ void info_update_totals_view_space (void);
 
 /* statusbar stuff */
 #define STATUSBAR_TIMEOUT 4200
-void gtkpod_statusbar_init(GtkWidget *);
+void gtkpod_statusbar_init(void);
 void gtkpod_statusbar_message(const gchar *message);
-void gtkpod_space_statusbar_init(GtkWidget *w);
-void gtkpod_tracks_statusbar_init(GtkWidget*);
+void gtkpod_space_statusbar_init(void);
+void gtkpod_tracks_statusbar_init(void);
 void gtkpod_tracks_statusbar_update(void);
 
+/* space stuff */
+#define SPACE_TIMEOUT 4000
+void space_set_ipod_mount (const gchar *mp);
+void space_data_update (void);
+gboolean ipod_connected (void);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-05-16 14:11:51 JST jcs>
+/* Time-stamp: <2004-06-13 22:27:19 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,6 +31,8 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include "info.h"
 #include "interface.h"
 #include "misc.h"
@@ -47,15 +49,23 @@ static GtkWidget *gtkpod_tracks_statusbar = NULL;
 static GtkWidget *gtkpod_space_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
 
-static double get_ipod_free_space(void);
-#if 0
-static glong get_ipod_used_space(void);
-#endif
+/* lock for size related variables (used by child and parent) */
+static GMutex *space_mutex = NULL;
+static GThread *space_thread = NULL;
+static gboolean space_uptodate = FALSE;
+static gchar *space_mp = NULL;
+static gdouble space_ipod_free = 0;
+static gdouble space_ipod_used = 0;
 
+
+static gdouble get_ipod_free_space(void);
+#if 0
+static gdouble get_ipod_used_space(void);
+#endif
 
 /* fill in tracks, playtime and filesize from track list @tl */
 static void fill_in_info (GList *tl, guint32 *tracks,
-			  guint32 *playtime, double *filesize)
+			  guint32 *playtime, gdouble *filesize)
 {
     GList *gl;
 
@@ -99,7 +109,7 @@ static void fill_label_time (gchar *w_name, guint32 secs)
     }
 }
 
-static void fill_label_size (gchar *w_name, double size)
+static void fill_label_size (gchar *w_name, gdouble size)
 {    
     GtkWidget *w = lookup_widget (info_window, w_name);
     if (w)
@@ -109,6 +119,16 @@ static void fill_label_size (gchar *w_name, double size)
 	g_free (str);
     }
 }
+
+static void fill_label_string (gchar *w_name, const char *str)
+{    
+    GtkWidget *w = lookup_widget (info_window, w_name);
+    if (w)
+    {
+	gtk_label_set_text (GTK_LABEL (w), str);
+    }
+}
+
 
 /* open info window */
 void info_open_window (void)
@@ -166,7 +186,7 @@ void info_update (void)
 static void info_update_track_view_total (void)
 {
     guint32 tracks, playtime; /* playtime in secs */
-    double  filesize;         /* in bytes */
+    gdouble  filesize;        /* in bytes */
     GList *displayed;
 
     if (!info_window) return; /* not open */
@@ -180,7 +200,7 @@ static void info_update_track_view_total (void)
 void info_update_track_view_selected (void)
 {
     guint32 tracks, playtime; /* playtime in secs */
-    double  filesize;         /* in bytes */
+    gdouble  filesize;        /* in bytes */
     GList *selected;
 
     if (!info_window) return; /* not open */
@@ -204,7 +224,7 @@ void info_update_track_view (void)
 void info_update_playlist_view (void)
 {
     guint32 tracks, playtime; /* playtime in secs */
-    double  filesize;         /* in bytes */
+    gdouble  filesize;        /* in bytes */
     GList   *tl;
 
     if (!info_window) return; /* not open */
@@ -220,7 +240,7 @@ void info_update_playlist_view (void)
 void info_update_totals_view (void)
 {
     guint32 tracks=0, playtime=0; /* playtime in secs */
-    double  filesize=0;           /* in bytes */
+    gdouble  filesize=0;          /* in bytes */
     Playlist *pl;
 
     if (!info_window) return; /* not open */
@@ -236,7 +256,7 @@ void info_update_totals_view (void)
 /* update "free space" section of totals view */
 void info_update_totals_view_space (void)
 {
-    double nt_filesize, del_filesize;
+    gdouble nt_filesize, del_filesize;
     guint32 nt_tracks, del_tracks;
 
 
@@ -249,16 +269,20 @@ void info_update_totals_view_space (void)
     fill_label_size ("deleted_filesize", del_filesize);
     if (!prefs_get_offline ())
     {
-	double free_space = get_ipod_free_space() + del_filesize - nt_filesize;
-	fill_label_size ("free_space", free_space);
+	if (ipod_connected ())
+	{
+	    gdouble free_space = get_ipod_free_space()
+		+ del_filesize - nt_filesize;
+	    fill_label_size ("free_space", free_space);
+	}
+	else
+	{
+	    fill_label_string ("free_space", _("n/c"));
+	}
     }
     else
     {
-	GtkWidget *w = lookup_widget (info_window, "free_space");
-	if (w)
-	{
-	    gtk_label_set_text (GTK_LABEL (w), _("offline"));
-	}
+	fill_label_string ("free_space", _("offline"));
     }
 }
 
@@ -270,9 +294,9 @@ void info_update_totals_view_space (void)
 \*------------------------------------------------------------------*/
 
 void
-gtkpod_statusbar_init(GtkWidget *sb)
+gtkpod_statusbar_init(void)
 {
-    gtkpod_statusbar = sb;
+    gtkpod_statusbar = lookup_widget (gtkpod_window, "gtkpod_status");
 }
 
 static gint
@@ -307,9 +331,10 @@ gtkpod_statusbar_message(const gchar *message)
 }
 
 void
-gtkpod_tracks_statusbar_init(GtkWidget *w)
+gtkpod_tracks_statusbar_init()
 {
-    gtkpod_tracks_statusbar = w;
+    gtkpod_tracks_statusbar =
+	lookup_widget (gtkpod_window, "tracks_statusbar");
     gtkpod_tracks_statusbar_update();
 }
 
@@ -339,41 +364,154 @@ gtkpod_tracks_statusbar_update(void)
 \*------------------------------------------------------------------*/
 
 
+void space_set_ipod_mount (const gchar *mp)
+{
+    if (space_mutex)  g_mutex_lock (space_mutex);
+    g_free (space_mp);
+    space_mp = g_strdup (mp);
+    if (space_mutex)   g_mutex_unlock (space_mutex);
+}
+
+
+/* iPod space has to be reread */
+void space_data_update (void)
+{
+    space_uptodate = FALSE;
+}
+
+
+/* Is the iPod connected? If space_ipod_used and space_ipod_free are
+   both zero, we assume the iPod is not connected */
+gboolean ipod_connected (void)
+{
+    gboolean result;
+    g_mutex_lock (space_mutex);
+    if ((space_ipod_used == 0) && (space_ipod_free == 0)) result = FALSE;
+    else                                                  result = TRUE;
+    g_mutex_unlock (space_mutex);
+    return result;
+}
+
+
 static gchar*
 get_drive_stats_from_df(const gchar *mp)
 {
     FILE *fp;
-    gchar buf[PATH_MAX];
+    gchar buf[PATH_MAX+1];
+    gchar bufc[PATH_MAX+1];
+    gchar *bufp;
     gchar *result = NULL;
     guint bytes_read = 0;
 
-    snprintf(buf, PATH_MAX, "df -k -P | grep %s", mp);
-    if((fp = popen(buf, "r")))
+#if 0
+    GTimeVal gtv1, gtv2;
+    long micros;
+    g_get_current_time (&gtv1);
+#endif
+
+    if (g_file_test (mp, G_FILE_TEST_EXISTS))
     {
-	if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
+	snprintf(bufc, PATH_MAX, "df -k -P %s", mp);
+	if((fp = popen(bufc, "r")))
 	{
-	    if(g_strstr_len(buf, PATH_MAX, mp))
+	    if((bytes_read = fread(buf, 1, PATH_MAX, fp)) > 0)
 	    {
-		int i = 0;
-		int j = 0;
-		gchar buf2[PATH_MAX+3];
-		
-		while((i < bytes_read) && (j < PATH_MAX))
+		if((bufp = strchr (buf, '\n')))
 		{
-		    while(!g_ascii_isspace(buf[i]) && (j<PATH_MAX))
-			buf2[j++] = buf[i++];
-		    buf2[j++] = ' ';
-		    while(g_ascii_isspace(buf[i]))
-			i++;
+		    int i = 0;
+		    int j = 0;
+		    gchar buf2[PATH_MAX+3];
+		    
+		    ++bufp; /* skip '\n' */
+		    while((i < bytes_read) && (j < PATH_MAX))
+		    {
+			while(!g_ascii_isspace(bufp[i]) && (j<PATH_MAX))
+			    buf2[j++] = bufp[i++];
+			buf2[j++] = ' ';
+			while(g_ascii_isspace(bufp[i]))
+			    i++;
+		    }
+		    buf2[j] = '\0';
+		    result = g_strdup_printf("%s", buf2);
 		}
-		buf2[j] = '\0';
-		result = g_strdup_printf("%s", buf2);
 	    }
+	    pclose(fp);	
 	}
-	pclose(fp);	
     }
+#if 0
+    g_get_current_time (&gtv2);
+    micros = (gtv2.tv_sec-gtv1.tv_sec)*10000000 + (gtv2.tv_usec-gtv1.tv_usec);
+    printf ("df: %ld usec\n", micros);
+#endif
     return(result);
 }
+
+
+/* update space_ipod_free and space_ipod_used */
+static void th_space_update (void)
+{
+    gchar *mp, *line;
+    gchar **tokens = NULL;
+
+    g_mutex_lock (space_mutex);
+    mp = g_strdup (space_mp);
+    g_mutex_unlock (space_mutex);
+
+    line = get_drive_stats_from_df(mp);
+
+    g_mutex_lock (space_mutex);
+
+    if (line) tokens = g_strsplit(line, " ", 5);
+    if (tokens && tokens[0] && tokens[1] && tokens[2] && tokens[3])
+    {
+	space_ipod_free = g_strtod (tokens[3], NULL);
+	space_ipod_used = g_strtod (tokens[2], NULL);
+	space_uptodate = TRUE;
+    }
+    else
+    {
+	space_ipod_free = 0;
+	space_ipod_used = 0;
+	space_uptodate = FALSE;  /* this way we will detect when the
+				    iPod is connected */
+    }
+    g_mutex_unlock (space_mutex);
+    g_free (mp);
+    g_strfreev(tokens);
+}
+
+
+/* keep space_ipod_free/used updated in regular intervals */
+static gpointer th_space_thread (gpointer gp)
+{
+    for (;;)
+    {
+	usleep (SPACE_TIMEOUT*1000);
+	if (!space_uptodate)   th_space_update ();
+    }
+}
+
+
+static gdouble get_ipod_free_space(void)
+{
+    gdouble result;
+    g_mutex_lock (space_mutex);
+    result = space_ipod_free;
+    g_mutex_unlock (space_mutex);
+    return result;
+}
+
+#if 0
+static gdouble get_ipod_used_space(void)
+{
+    gdouble result;
+    g_mutex_lock (space_mutex);
+    result = space_ipod_used;
+    g_mutex_unlock (space_mutex);
+    return result;
+}
+#endif
+
 
 /* @size: size in kB (block of 1024 Bytes) */
 gchar*
@@ -404,49 +542,6 @@ get_filesize_as_string(gdouble size)
     return result;
 }
 
-#if 0
-static glong
-get_ipod_used_space(void)
-{
-    glong result = 0;
-    gchar **tokens = NULL;
-    gchar *line = get_drive_stats_from_df(prefs_get_ipod_mount ());
-    
-    if(line)
-    {
-	if((tokens = g_strsplit(line, " ", 5)))
-	{
-	    if(tokens[0] && tokens[1] && tokens[2]) 
-		result = atol(tokens[2]);
-	    g_strfreev(tokens);
-	}
-    }
-    g_free(line);
-    return(result);
-}
-#endif
-
-/* get free space in Bytes */
-static double
-get_ipod_free_space(void)
-{
-    double result = 0;
-    gchar **tokens = NULL;
-    gchar *line = get_drive_stats_from_df(prefs_get_ipod_mount ());
-
-    if(line)
-    {
-	if((tokens = g_strsplit(line, " ", 5)))
-	{
-	    if(tokens[0] && tokens[1] && tokens[2] && tokens[3]) 
-		result = strtod(tokens[3], NULL) * 1024;
-	    g_strfreev(tokens);
-	}
-    }
-    g_free(line);
-    return(result);
-}
-
 static guint
 gtkpod_space_statusbar_update(void)
 {
@@ -454,19 +549,35 @@ gtkpod_space_statusbar_update(void)
     {
 	gchar *buf = NULL;
 	gchar *str = NULL;
-	double left, pending;
 
-	left = get_ipod_free_space() + get_filesize_of_deleted_tracks (NULL);
-	pending = get_filesize_of_nontransferred_tracks(NULL);
-	if((left-pending) > 0)
+	if (!prefs_get_offline ())
 	{
-	    str = get_filesize_as_string(left - pending);
-	    buf = g_strdup_printf (_(" %s Free"), str);
+	    if (ipod_connected ())
+	    {
+		gdouble left, pending;
+
+		left = get_ipod_free_space() + 
+		    get_filesize_of_deleted_tracks (NULL);
+		pending = get_filesize_of_nontransferred_tracks(NULL);
+		if((left-pending) > 0)
+		{
+		    str = get_filesize_as_string(left - pending);
+		    buf = g_strdup_printf (_(" %s Free"), str);
+		}
+		else
+		{
+		    str = get_filesize_as_string(pending - left);
+		    buf = g_strdup_printf (_(" %s Pending"), str);
+		}
+	    }
+	    else
+	    {
+		buf = g_strdup (_(" disconnected"));
+	    }
 	}
 	else
 	{
-	    str = get_filesize_as_string(pending - left);
-	    buf = g_strdup_printf (_(" %s Pending"), str);
+	    buf = g_strdup (_("offline"));
 	}
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_space_statusbar), 1);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_space_statusbar), 1,  buf);
@@ -478,10 +589,17 @@ gtkpod_space_statusbar_update(void)
 }
 
 void
-gtkpod_space_statusbar_init(GtkWidget *w)
+gtkpod_space_statusbar_init(void)
 {
-    gtkpod_space_statusbar = w;
+    gtkpod_space_statusbar = lookup_widget (gtkpod_window, "space_statusbar");
 
+    if (!space_mutex)
+    {
+	space_mutex = g_mutex_new ();
+	space_mp = g_strdup (prefs_get_ipod_mount ());
+	th_space_update ();  /* make sure we have current data */
+	space_thread = g_thread_create (th_space_thread, NULL, FALSE, NULL);
+    }
     gtkpod_space_statusbar_update();
-    gtk_timeout_add(5000, (GtkFunction) gtkpod_space_statusbar_update, NULL);
+    gtk_timeout_add(1000, (GtkFunction) gtkpod_space_statusbar_update, NULL);
 }

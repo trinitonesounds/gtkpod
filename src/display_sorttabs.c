@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-12 17:27:28 jcs>
+/* Time-stamp: <2004-06-13 22:34:26 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -308,6 +308,8 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
     printf ("sp_go_cb enter: %ld.%06ld sec\n",
 	    time.tv_sec % 3600, time.tv_usec);
 #endif
+
+    space_data_update ();
 
     /* Sanity */
     if (st == NULL) return;
@@ -1644,6 +1646,7 @@ static void st_selection_changed (GtkTreeSelection *selection,
 #if DEBUG_CB_INIT
     printf("st_s_c enter (inst: %d)\n", (gint)user_data);
 #endif
+    space_data_update ();
     add_selection_callback ((gint)user_data, st_selection_changed_cb,
 			    (gpointer)selection, user_data);
 #if DEBUG_CB_INIT

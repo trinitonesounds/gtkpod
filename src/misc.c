@@ -1,4 +1,5 @@
-/* Time-stamp: <2004-05-20 23:27:13 JST jcs>
+/* -*- coding: utf-8; -*-
+|  Time-stamp: <2004-06-11 20:44:44 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -69,7 +70,7 @@ void open_about_window ()
   {
       gchar *text[] = {_("\
 (C) 2002 - 2003\n\
-Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n\
+Jörg Schuler (jcsjcs at users dot sourceforge dot net)\n\
 Corey Donohoe (atmos at atmos dot org)\n\
 \n\
 \n"),
@@ -149,7 +150,7 @@ The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"),
      gchar  *text[] = { _("\
 French:   David Le Brun (david at dyn-ns dot net)\n"),
 				     _("\
-German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"),
+German:   Jörg Schuler (jcsjcs at users dot sourceforge dot net)\n"),
 				     _("\
 Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot net)\n"),
 				     _("\

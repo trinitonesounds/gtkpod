@@ -387,6 +387,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 static void pm_selection_changed (GtkTreeSelection *selection,
 				  gpointer user_data)
 {
+    space_data_update ();
     if (!pm_selection_blocked)
 	add_selection_callback (-1, pm_selection_changed_cb,
 				(gpointer)selection, user_data);

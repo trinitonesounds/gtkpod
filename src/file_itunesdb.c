@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-04-11 00:13:11 JST jcs>
+/* Time-stamp: <2004-06-13 22:34:27 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -384,7 +384,6 @@ void handle_import (void)
     gboolean success, md5tracks;
     guint32 n;
 
-
     /* we must switch off duplicate detection during import --
      * otherwise we mess up the playlists */
 
@@ -467,6 +466,8 @@ void handle_import (void)
 
     release_widgets ();
     display_set_check_ipod_menu ();/* taking care about 'Check IPOD files'mi */
+
+    space_data_update ();          /* update space display */
 }
 
 
@@ -552,6 +553,8 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
   guint n,i;
   Track *track;
   gchar *md5;
+
+  space_data_update ();
 
   fp = fopen (name, "w");
   if (!fp)
@@ -1086,4 +1089,5 @@ gboolean files_are_saved (void)
 void data_changed (void)
 {
   files_saved = FALSE;
+  space_data_update ();
 }  

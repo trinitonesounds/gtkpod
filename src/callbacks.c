@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-05-16 14:01:21 JST jcs>
+/* Time-stamp: <2004-06-13 22:34:27 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -153,7 +153,8 @@ on_sorttab_switch_page                 (GtkNotebook     *notebook,
 					guint            page_num,
 					gpointer         user_data)
 {
-  st_page_selected (notebook, page_num);
+    space_data_update ();
+    st_page_selected (notebook, page_num);
 }
 
 
@@ -720,20 +721,6 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 {
     ipod_directories_head ();
 }
-void
-on_gtkpod_status_realize               (GtkWidget       *widget,
-					gpointer         user_data)
-{
-    gtkpod_statusbar_init(widget);
-}
-
-
-void
-on_tracks_statusbar_realize             (GtkWidget       *widget,
-					gpointer         user_data)
-{
-    gtkpod_tracks_statusbar_init(widget);
-}
 
 void
 on_st_treeview_drag_data_get           (GtkWidget       *widget,
@@ -1225,14 +1212,6 @@ on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     st_arrange_visible_sort_tabs ();
-}
-
-
-void
-on_space_statusbar_realize             (GtkWidget       *widget,
-					gpointer         user_data)
-{
-    gtkpod_space_statusbar_init(widget);
 }
 
 

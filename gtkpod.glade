@@ -1269,7 +1269,6 @@
 	      <property name="height_request">20</property>
 	      <property name="visible">True</property>
 	      <property name="has_resize_grip">False</property>
-	      <signal name="realize" handler="on_gtkpod_status_realize" last_modification_time="Sun, 19 Jan 2003 19:38:08 GMT"/>
 	    </widget>
 	    <packing>
 	      <property name="shrink">False</property>
@@ -1281,7 +1280,7 @@
 	    <widget class="GtkHPaned" id="paned3">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
-	      <property name="position">0</property>
+	      <property name="position">130</property>
 
 	      <child>
 		<widget class="GtkStatusbar" id="space_statusbar">
@@ -1290,7 +1289,6 @@
 		  <property name="height_request">20</property>
 		  <property name="visible">True</property>
 		  <property name="has_resize_grip">False</property>
-		  <signal name="realize" handler="on_space_statusbar_realize" last_modification_time="Fri, 28 Mar 2003 01:16:42 GMT"/>
 		</widget>
 		<packing>
 		  <property name="shrink">True</property>
@@ -1305,7 +1303,6 @@
 		  <property name="height_request">20</property>
 		  <property name="visible">True</property>
 		  <property name="has_resize_grip">True</property>
-		  <signal name="realize" handler="on_tracks_statusbar_realize" last_modification_time="Mon, 20 Jan 2003 03:18:33 GMT"/>
 		</widget>
 		<packing>
 		  <property name="shrink">True</property>

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-29 00:14:31 JST jcs>
+/* Time-stamp: <2004-06-13 21:21:32 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1180,6 +1180,8 @@ void prefs_set_ipod_mount(const gchar *mp)
     if (strncmp ("~/", mp, 2) == 0)
       cfg->ipod_mount = g_build_filename (g_get_home_dir (), mp+2, NULL);
     else cfg->ipod_mount = g_strdup(mp);
+    /* need to notify the info thread of new mount point */
+    space_set_ipod_mount (cfg->ipod_mount);
 }
 
 

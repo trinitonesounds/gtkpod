@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-05-16 13:42:51 JST jcs>
+/* Time-stamp: <2004-06-13 21:58:57 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -237,14 +237,6 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 
 void
-on_gtkpod_status_realize               (GtkWidget       *widget,
-					gpointer         user_data);
-
-void
-on_tracks_statusbar_realize             (GtkWidget       *widget,
-					gpointer         user_data);
-
-void
 on_st_treeview_drag_data_get           (GtkWidget       *widget,
 					GdkDragContext  *drag_context,
 					GtkSelectionData *data,
@@ -419,10 +411,6 @@ on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
 
 void
 on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_space_statusbar_realize             (GtkWidget       *widget,
 					gpointer         user_data);
 
 void
@@ -763,3 +751,4 @@ on_random_playlist_activate            (GtkMenuItem     *menuitem,
 void
 on_randomize_current_playlist_activate (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+

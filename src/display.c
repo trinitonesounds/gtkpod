@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 21:05:54 JST jcs>
+/* Time-stamp: <2004-06-13 21:57:59 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -154,6 +154,10 @@ void display_create (GtkWidget *gtkpod)
     display_set_info_window_menu ();
     /* activate/deactive the menu item 'check iPod' */
     display_set_check_ipod_menu ();
+    /* activate status bars */
+    gtkpod_statusbar_init ();
+    gtkpod_tracks_statusbar_init ();
+    gtkpod_space_statusbar_init ();
     /* check if info window should be opened */
     if (prefs_get_info_window ())  info_open_window ();
 

@@ -801,7 +801,7 @@ create_gtkpod (void)
   paned3 = gtk_hpaned_new ();
   gtk_widget_show (paned3);
   gtk_paned_pack2 (GTK_PANED (paned2), paned3, TRUE, TRUE);
-  gtk_paned_set_position (GTK_PANED (paned3), 0);
+  gtk_paned_set_position (GTK_PANED (paned3), 130);
 
   space_statusbar = gtk_statusbar_new ();
   gtk_widget_show (space_statusbar);
@@ -1031,15 +1031,6 @@ create_gtkpod (void)
                     NULL);
   g_signal_connect ((gpointer) stop_button, "clicked",
                     G_CALLBACK (on_stop_button_clicked),
-                    NULL);
-  g_signal_connect ((gpointer) gtkpod_status, "realize",
-                    G_CALLBACK (on_gtkpod_status_realize),
-                    NULL);
-  g_signal_connect ((gpointer) space_statusbar, "realize",
-                    G_CALLBACK (on_space_statusbar_realize),
-                    NULL);
-  g_signal_connect ((gpointer) tracks_statusbar, "realize",
-                    G_CALLBACK (on_tracks_statusbar_realize),
                     NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
