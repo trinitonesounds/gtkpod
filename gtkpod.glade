@@ -1453,7 +1453,7 @@
 		  <property name="can_focus">True</property>
 		  <property name="editable">True</property>
 		  <property name="justification">GTK_JUSTIFY_LEFT</property>
-		  <property name="wrap_mode">GTK_WRAP_NONE</property>
+		  <property name="wrap_mode">GTK_WRAP_WORD</property>
 		  <property name="cursor_visible">True</property>
 		  <property name="pixels_above_lines">0</property>
 		  <property name="pixels_below_lines">0</property>
@@ -4078,95 +4078,11 @@
 			      <property name="spacing">0</property>
 
 			      <child>
-				<placeholder/>
-			      </child>
-
-			      <child>
-				<widget class="GtkTable" id="table10">
-				  <property name="visible">True</property>
-				  <property name="n_rows">1</property>
-				  <property name="n_columns">2</property>
-				  <property name="homogeneous">False</property>
-				  <property name="row_spacing">0</property>
-				  <property name="column_spacing">0</property>
-
-				  <child>
-				    <widget class="GtkLabel" id="label71">
-				      <property name="visible">True</property>
-				      <property name="label" translatable="yes">Normalization's level: </property>
-				      <property name="use_underline">False</property>
-				      <property name="use_markup">False</property>
-				      <property name="justify">GTK_JUSTIFY_LEFT</property>
-				      <property name="wrap">False</property>
-				      <property name="selectable">False</property>
-				      <property name="xalign">0</property>
-				      <property name="yalign">0.5</property>
-				      <property name="xpad">0</property>
-				      <property name="ypad">0</property>
-				    </widget>
-				    <packing>
-				      <property name="left_attach">0</property>
-				      <property name="right_attach">1</property>
-				      <property name="top_attach">0</property>
-				      <property name="bottom_attach">1</property>
-				      <property name="x_options">fill</property>
-				      <property name="y_options"></property>
-				    </packing>
-				  </child>
-
-				  <child>
-				    <widget class="GtkCombo" id="combo1">
-				      <property name="visible">True</property>
-				      <property name="value_in_list">False</property>
-				      <property name="allow_empty">True</property>
-				      <property name="case_sensitive">False</property>
-				      <property name="enable_arrow_keys">True</property>
-				      <property name="enable_arrows_always">False</property>
-
-				      <child internal-child="entry">
-					<widget class="GtkEntry" id="cfg_normalization_level">
-					  <property name="visible">True</property>
-					  <property name="can_focus">True</property>
-					  <property name="editable">True</property>
-					  <property name="visibility">True</property>
-					  <property name="max_length">0</property>
-					  <property name="text" translatable="yes"></property>
-					  <property name="has_frame">True</property>
-					  <property name="invisible_char" translatable="yes">*</property>
-					  <property name="activates_default">False</property>
-					  <signal name="changed" handler="on_cfg_normalization_level_changed" last_modification_time="Tue, 02 Sep 2003 15:52:44 GMT"/>
-					</widget>
-				      </child>
-
-				      <child internal-child="list">
-					<widget class="GtkList" id="combo-list1">
-					  <property name="visible">True</property>
-					  <property name="selection_mode">GTK_SELECTION_BROWSE</property>
-					</widget>
-				      </child>
-				    </widget>
-				    <packing>
-				      <property name="left_attach">1</property>
-				      <property name="right_attach">2</property>
-				      <property name="top_attach">0</property>
-				      <property name="bottom_attach">1</property>
-				      <property name="y_options"></property>
-				    </packing>
-				  </child>
-				</widget>
-				<packing>
-				  <property name="padding">0</property>
-				  <property name="expand">False</property>
-				  <property name="fill">True</property>
-				</packing>
-			      </child>
-
-			      <child>
 				<widget class="GtkCheckButton" id="cfg_write_gaintag">
 				  <property name="visible">True</property>
-				  <property name="tooltip" translatable="yes">mp3gain can append a special tag to the mp3 file. This tag will save much time while normalizing all the iPod. BEWARE: this could be dangerous for your mp3 file!!</property>
+				  <property name="tooltip" translatable="yes">mp3gain can add a special tag to the mp3 file. This tag will save much time when normalizing a second time. As with all write operations there is a small change that your files get damaged! Note: gtkpod will use the mp3 file stored on the iPod if that's available (not in offline mode and file transferred). Otherwise it will use the original file on your harddisk.</property>
 				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">Write mp3gain's tag</property>
+				  <property name="label" translatable="yes">Write information about suggested gain level to file</property>
 				  <property name="use_underline">True</property>
 				  <property name="relief">GTK_RELIEF_NORMAL</property>
 				  <property name="active">False</property>
@@ -4179,6 +4095,14 @@
 				  <property name="expand">False</property>
 				  <property name="fill">False</property>
 				</packing>
+			      </child>
+
+			      <child>
+				<placeholder/>
+			      </child>
+
+			      <child>
+				<placeholder/>
 			      </child>
 			    </widget>
 			  </child>

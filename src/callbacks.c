@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 00:08:26 jcs>
+/* Time-stamp: <2003-09-28 23:10:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1643,7 +1643,7 @@ on_normalize_selected_playlist_activate
 {
     Playlist *pl = pm_get_selected_playlist ();
     if (pl)
-	normalize_songs_list (pl->members);
+	nm_songs_list (pl->members);
     else
 	gtkpod_statusbar_message (_("No playlist selected"));
 }
@@ -1661,7 +1661,11 @@ on_normalize_selected_tab_entry_activate
     if (inst == -1) return;
 
     entry = st_get_selected_entry (inst);
-    if (!entry)
+    if (entry)
+    {
+	nm_songs_list (entry->members);
+    }
+    else
     {
 	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
 				     inst+1);
@@ -1669,7 +1673,6 @@ on_normalize_selected_tab_entry_activate
 	g_free (str);
 	return;
     }
-    normalize_songs_list (entry->members);
 }
 
 
@@ -1678,7 +1681,7 @@ on_normalize_selected_tracks_activate   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
    GList *songs = sm_get_selected_songs ();
-   normalize_songs_list (songs);
+   nm_songs_list (songs);
    g_list_free (songs);
 }
 
@@ -1688,7 +1691,7 @@ on_normalize_displayed_tracks_activate  (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     GList *songs = sm_get_all_songs ();
-    normalize_songs_list (songs);
+    nm_songs_list (songs);
     g_list_free (songs);
 }
 
@@ -1698,7 +1701,7 @@ on_normalize_all_tracks                (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     Playlist *plitem = get_playlist_by_nr (0);
-    normalize_songs_list (plitem->members);
+    nm_songs_list (plitem->members);
 }
 
 
@@ -1706,5 +1709,5 @@ void
 on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    normalize_new_songs ();
+    nm_new_songs ();
 }

@@ -11,11 +11,9 @@ TODO:
      JCS statistics:
      libid3tag: 74/63 sec (with display), 44 sec (without display)).
 
-- volume normalization support (Edward)
-   Menus: Normalize->Selected Playlist
-                   ->Selected Tab Entry
-                   ->Selected Songs
-   Normalize Context Menu
+- album support (normalize all tracks of an album with the same gain)
+   for volume normalization
+- Normalize Context Menus
 
 - gtkpod-like browse of file system contents
 

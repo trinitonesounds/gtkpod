@@ -21,6 +21,7 @@ Inc., registered in the U.S. and other countries.
      - Extended Information File
      - Refresh (Update) Song Info From File
      - Synchronize Directories
+     - Volume Normalization
      - Offline Mode
      - Export of Songs
      - Encoding of ID3 tags (charsets)
@@ -452,6 +453,12 @@ from the iTunesDB.
 
 For best results you should also activate duplicate detection. This
 avoids unnecessary copying of unchanged songs.
+
+Volume Normalization
+--------------------
+
+FIXME
+
 
 
 Offline Mode

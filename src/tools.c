@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 16:59:32 jcs>
+/* Time-stamp: <2003-09-28 23:40:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -47,6 +47,21 @@ static GCond  *cond = NULL;
 static gboolean mutex_data = FALSE;
 #endif
 
+
+/* I'm not sure how exactly to calculate between iPod's volume tag and
+ * mp3gain's gain. The following worked fine with 2 (two) songs...
+ * Change here if you know better. */
+gint nm_gain_to_volume (gint gain)
+{
+    return 10*gain;
+}
+
+gint nm_volume_to_gain (gint volume)
+{
+    return volume/10;
+}
+
+
 /* parse the mp3gain stdout to search the mp3gain output:
  * 
  * mp3gain stdout for a single file is something like this:
@@ -57,7 +72,7 @@ static gboolean mutex_data = FALSE;
  * we want to extract only the right file's MP3GAIN
  *
  * BEWARE: mp3gain doesn't separate stdout/stderror */
-gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *songsfile)
+static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *songsfile)
 {
    gint found=FALSE;
    gint gain=SONGGAINERROR;
@@ -93,104 +108,123 @@ gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *songsfile)
 
 /* this function return the @song gain in dB */
 /* mp3gain version 1.4.2 */
-gint normalize_get_gain(Song *song)
+gint nm_get_gain(Song *song)
 {
    /*pipe's definition*/
     enum {
 	READ = 0,
 	WRITE = 1
     };
-   #define BUFLEN 200 /*FIXME this should be a [safe/runtime detected] value*/
-   gint k,n;  /*for's counter*/
-   gint len = 0;
-   gint gain = SONGGAINERROR;
-   gint fdpipe[2];  /*a pipe*/
-   gchar *filename=NULL; /*song's filename*/
-   gchar gain_char[BUFLEN+1];
-   gchar *mp3gain_path=NULL;
-   gchar *mp3gain=NULL;
-   pid_t pid,tpid;
+    enum {
+	BUFLEN = 1000,
+    };
+    gint k,n;  /*for's counter*/
+    gint len = 0;
+    gint gain = SONGGAINERROR;
+    gint fdpipe[2];  /*a pipe*/
+    gchar *filename=NULL; /*song's filename*/
+    gchar *mp3gain_path;
+    gchar *mp3gain_exec;
+    gchar *mp3gain_set;
+    gchar *buf;
+    GString* gain_output;
+    pid_t pid,tpid;
 
-   k=0;
-   n=0;
+    k=0;
+    n=0;
 
-   memset(gain_char,0,BUFLEN);
+    /* see if full path to mp3gain was set using the MP3GAIN
+       environment variable */
+    mp3gain_set = getenv ("MP3GAIN");
+    /* use default if not */
+    if (!mp3gain_set) mp3gain_set = "mp3gain";
+    /* find full path */
+    mp3gain_path = which (mp3gain_set);
+    /* show error message if mp3gain cannot be found */
+    if (!mp3gain_path)
+    {
+	gtkpod_warning ("Could not find mp3gain. I tried to use the following executable: '%s'.\n\nIf the mp3gain executable is not in your path or named differently, you can set the environment variable 'MP3GAIN' to the full path to be used.\n\nIf you do not have mp3gain installed, you can download it from http://www.sourceforge.net/projects/mp3gain.", mp3gain_set);
+	return gain;
+    }
 
-   mp3gain = g_strdup ("mp3gain");
-   mp3gain_path = which (mp3gain);
-   if (!mp3gain_path)
-   {
-       gtkpod_warning (_("Could not find mp3gain executable."));
-       return SONGGAINERROR;
-   }
+    mp3gain_exec = g_path_get_basename (mp3gain_path);
 
-   filename=get_track_name_on_disk_verified (song);
+    buf = g_malloc (BUFLEN);
+    gain_output = g_string_sized_new (BUFLEN);
+
+    if (!mp3gain_path)
+    {
+	gtkpod_warning (_("Could not find mp3gain executable."));
+	return SONGGAINERROR;
+    }
+
+    filename=get_track_name_on_disk_verified (song);
    
-   /*FIXME: libglib2.0 documention says this is not safe*/
-   /*what if mp3gain changes attribute or is deleted before the execution?*/
-   //if(g_file_test(mp3gain_path,G_FILE_TEST_IS_EXECUTABLE))
-   if(g_file_test(mp3gain_path,G_FILE_TEST_IS_EXECUTABLE))
-   {
-      /*create the pipe*/
-      pipe(fdpipe);
-      /*than fork*/
-      pid=fork();
-   
-      /*and cast mp3gain*/
-      switch (pid)
-      {
-         case -1: /* parent and error, now what?*/
-	    break;
-         case 0: /*child*/
-            close(1); /*close stdout*/
-            dup2(fdpipe[WRITE],fileno(stdout));
-            close(fdpipe[READ]);
-            close(fdpipe[WRITE]);
-            if(prefs_get_write_gaintag())
-            {
-               execl(mp3gain_path,mp3gain,"-o",filename,NULL); /*this write on mp3file!!*/
-            }
-            else
-            {
-               execl(mp3gain_path, mp3gain, "-s", "s", "-o", filename, NULL);
-            }
-            break; 
-         default: /*parent*/
-            close(fdpipe[WRITE]);
-            tpid = waitpid (pid, NULL, 0); /*wait mp3gain termination FIXME: it freeze gtkpod*/
-            len=read(fdpipe[READ],gain_char,BUFLEN);
-            close(fdpipe[READ]);
-            /*now gain_char contain the mp3gain stdout*/
-            gain = parse_mp3gain_stdout(gain_char,filename);
-            break;
-          }/*end switch*/
-   } /*end if*/
+    /*create the pipe*/
+    pipe(fdpipe);
+    /*than fork*/
+    pid=fork();
+	
+    /*and cast mp3gain*/
+    switch (pid)
+    {
+    case -1: /* parent and error, now what?*/
+	break;
+    case 0: /*child*/
+	close(1); /*close stdout*/
+	dup2(fdpipe[WRITE],fileno(stdout));
+	close(fdpipe[READ]);
+	close(fdpipe[WRITE]);
+	if(prefs_get_write_gaintag())
+	{
+	    /* this call may add a tag to the mp3file!! */
+	    execl(mp3gain_path, mp3gain_exec, "-o", filename, NULL);
+	}
+	else
+	{
+	    execl(mp3gain_path, mp3gain_exec, "-s", "s", "-o", filename, NULL);
+	}
+	break; 
+    default: /*parent*/
+	close(fdpipe[WRITE]);
+	tpid = waitpid (pid, NULL, 0); /*wait mp3gain termination */
+	do
+	{
+	    len = read (fdpipe[READ], buf, BUFLEN);
+	    if (len > 0) g_string_append_len (gain_output, buf, len);
+	} while (len > 0);
+	close(fdpipe[READ]);
+	/* now output->str contains the mp3gain stdout */
+	gain = parse_mp3gain_stdout(gain_output->str, filename);
+	break;
+    }/*end switch*/
+    
+    /*free everything left*/
+    g_free (filename);
+    g_free (mp3gain_path);
+    g_free (mp3gain_exec);
+    g_free (buf);
+    g_string_free (gain_output, TRUE);
 
-   /*free everything left*/
-   g_free(filename);
-   g_free(mp3gain_path);
-   g_free(mp3gain);
-
-   /*and happily return the right value*/
-   return gain;
-   
+    /*and happily return the right value*/
+    return gain;
 }
 
 #ifdef G_THREADS_ENABLED
 /* Threaded getSongGain*/
-static gpointer th_normalize_get_gain (gpointer song)
+static gpointer th_nm_get_gain (gpointer song)
 {
-   gint volume=normalize_get_gain((Song *)song);
+   gint gain=nm_get_gain((Song *)song);
    g_mutex_lock (mutex);
    mutex_data = TRUE; /* signal that thread will end */
    g_cond_signal (cond);
    g_mutex_unlock (mutex);
-   return (gpointer)volume;
+   return (gpointer)gain;
 }
 #endif 
 
 /* normalize the newly inserted songs (i.e. non-transferred songs) */
-void normalize_new_songs (void)
+void nm_new_songs (void)
 {
     GList *songs=NULL;
     gint i=0;
@@ -204,7 +238,7 @@ void normalize_new_songs (void)
 	    songs = g_list_append(songs, song);
 	}
     }
-    normalize_songs_list(songs);
+    nm_songs_list(songs);
     g_list_free (songs);
 }
 
@@ -213,7 +247,7 @@ static void normalization_abort(gboolean *abort)
    *abort=TRUE;
 }
 
-void normalize_songs_list(GList *list)
+void nm_songs_list(GList *list)
 {
   gint count, n, nrs;
   gchar *buf;
@@ -296,7 +330,7 @@ void normalize_songs_list(GList *list)
      {
 #ifdef G_THREADS_ENABLED
         mutex_data = FALSE;
-	thread = g_thread_create (th_normalize_get_gain, song, TRUE, NULL);
+	thread = g_thread_create (th_nm_get_gain, song, TRUE, NULL);
 	if (thread)
 	{
            gboolean first_abort = TRUE;
@@ -329,22 +363,22 @@ void normalize_songs_list(GList *list)
         else
         {
            g_warning ("Thread creation failed, falling back to default.\n");
-           new_gain=normalize_get_gain(song);
+           new_gain=nm_get_gain(song);
         }
 #else
-        new_gain=normalize_get_gain(song);
+        new_gain=nm_get_gain(song);
 #endif 
 
 /*normalization part*/
-        if(new_gain==SONGGAINERROR)
+        if(new_gain == SONGGAINERROR)
         {
            abort=TRUE;
         }
         else
         {
-           if(new_gain!=song->volume)
+           if(nm_gain_to_volume (new_gain) != song->volume)
            {
-              song->volume=new_gain;
+              song->volume = nm_gain_to_volume (new_gain);
 	      pm_song_changed (song);
 	      data_changed ();
            }

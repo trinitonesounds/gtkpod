@@ -35,6 +35,7 @@
 #include "playlist.h"
 #include "misc.h"
 #include "file_export.h"
+#include "normalize.h"
 
 static guint entry_inst = -1;
 static GList *selected_songs = NULL;
@@ -182,6 +183,18 @@ alphabetize(GtkMenuItem *mi, gpointer data)
     }
 }
 
+
+static void normalize_entries (GtkMenuItem *mi, gpointer data)
+{
+    if (selected_playlist)
+	nm_songs_list (selected_playlist->members);
+    else if(selected_entry)
+	nm_songs_list (selected_entry->members);
+    else if(selected_songs)
+	nm_songs_list (selected_songs);
+}
+
+
 /* Attach a menu item to your context menu */
 /* @m - the GtkMenu we're attaching to
  * @str - a gchar* with the menu label
@@ -236,6 +249,8 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (update_entries));
 	hookup_mi (menu[type], _("Sync Dirs"), "gtk-refresh",
 		   G_CALLBACK (sync_dirs_entries));
+	hookup_mi (menu[type], _("Normalize"), NULL,
+		   G_CALLBACK (normalize_entries));
 	hookup_mi (menu[type], _("Delete"), "gtk-delete",
 		   G_CALLBACK (delete_entries));
 	/* FIXME: once we can find out in which song column the

@@ -1,4 +1,7 @@
 gtkpod V0.53-CVS
+	NEW FEATURE: normalize song volume (using mp3gain). Uses iPod's
+	volume adjust feature rather than modifying the mp3 file.
+
 	NEW FEATURE: define format of filename when copying tracks from
 	iPod (mainly thanks to Sam Clegg).
 

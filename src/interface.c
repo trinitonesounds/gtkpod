@@ -1196,6 +1196,7 @@ create_confirm_window (void)
   text = gtk_text_view_new ();
   gtk_widget_show (text);
   gtk_container_add (GTK_CONTAINER (scroller), text);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
 
   option_hbox = gtk_hbox_new (TRUE, 0);
   gtk_widget_show (option_hbox);
@@ -1400,10 +1401,6 @@ create_prefs_window (void)
   GtkWidget *label67;
   GtkWidget *frame22;
   GtkWidget *vbox49;
-  GtkWidget *table10;
-  GtkWidget *label71;
-  GtkWidget *combo1;
-  GtkWidget *cfg_normalization_level;
   GtkWidget *cfg_write_gaintag;
   GtkWidget *label69;
   GtkWidget *frame11;
@@ -2154,33 +2151,10 @@ create_prefs_window (void)
   gtk_container_add (GTK_CONTAINER (frame22), vbox49);
   gtk_container_set_border_width (GTK_CONTAINER (vbox49), 5);
 
-  table10 = gtk_table_new (1, 2, FALSE);
-  gtk_widget_show (table10);
-  gtk_box_pack_start (GTK_BOX (vbox49), table10, FALSE, TRUE, 0);
-
-  label71 = gtk_label_new (_("Normalization's level: "));
-  gtk_widget_show (label71);
-  gtk_table_attach (GTK_TABLE (table10), label71, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (label71), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label71), 0, 0.5);
-
-  combo1 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo1)->popwin),
-                     "GladeParentKey", combo1);
-  gtk_widget_show (combo1);
-  gtk_table_attach (GTK_TABLE (table10), combo1, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  cfg_normalization_level = GTK_COMBO (combo1)->entry;
-  gtk_widget_show (cfg_normalization_level);
-
-  cfg_write_gaintag = gtk_check_button_new_with_mnemonic (_("Write mp3gain's tag"));
+  cfg_write_gaintag = gtk_check_button_new_with_mnemonic (_("Write information about suggested gain level to file"));
   gtk_widget_show (cfg_write_gaintag);
   gtk_box_pack_start (GTK_BOX (vbox49), cfg_write_gaintag, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_write_gaintag, _("mp3gain can append a special tag to the mp3 file. This tag will save much time while normalizing all the iPod. BEWARE: this could be dangerous for your mp3 file!!"), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_write_gaintag, _("mp3gain can add a special tag to the mp3 file. This tag will save much time when normalizing a second time. As with all write operations there is a small change that your files get damaged! Note: gtkpod will use the mp3 file stored on the iPod if that's available (not in offline mode and file transferred). Otherwise it will use the original file on your harddisk."), NULL);
 
   label69 = gtk_label_new (_("Normalization"));
   gtk_widget_show (label69);
@@ -2428,9 +2402,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_not_played_track, "toggled",
                     G_CALLBACK (on_cfg_not_played_track_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_normalization_level, "changed",
-                    G_CALLBACK (on_cfg_normalization_level_changed),
-                    NULL);
   g_signal_connect ((gpointer) cfg_write_gaintag, "toggled",
                     G_CALLBACK (on_cfg_write_gaintag_toggled),
                     NULL);
@@ -2617,10 +2588,6 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label67, "label67");
   GLADE_HOOKUP_OBJECT (prefs_window, frame22, "frame22");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox49, "vbox49");
-  GLADE_HOOKUP_OBJECT (prefs_window, table10, "table10");
-  GLADE_HOOKUP_OBJECT (prefs_window, label71, "label71");
-  GLADE_HOOKUP_OBJECT (prefs_window, combo1, "combo1");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_normalization_level, "cfg_normalization_level");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_gaintag, "cfg_write_gaintag");
   GLADE_HOOKUP_OBJECT (prefs_window, label69, "label69");
   GLADE_HOOKUP_OBJECT (prefs_window, frame11, "frame11");

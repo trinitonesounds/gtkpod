@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-27 01:10:18 jcs>
+/* Time-stamp: <2003-09-28 17:46:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,7 +38,9 @@
 
 #define SONGGAINERROR -200
 
-void normalize_new_songs (void);
-void normalize_songs_list (GList *list);
-gint normalize_get_gain (Song *song);
+void nm_new_songs (void);
+void nm_songs_list (GList *list);
+gint nm_get_gain (Song *song);
+gint nm_gain_to_volumne (gint gain);
+gint nm_volumne_to_gain (gint volume);
 #endif
