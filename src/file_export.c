@@ -262,7 +262,11 @@ track_get_export_filename (Track *track)
 	    if (tmp)
 	    {
 		gchar *tmpcp = g_strdup (tmp);
+		/* remove potentially illegal/harmful characters */
 		fix_path (tmpcp);
+		/* strip spaces to avoid problems with vfat */
+		g_strstrip (tmpcp);
+		/* append to current string */
 		result = g_string_append (result, tmpcp);
 		tmp = NULL;
 		g_free (tmpcp);
@@ -274,8 +278,27 @@ track_get_export_filename (Track *track)
     }
     /* get the utf8 version of the filename */
     res_utf8 = g_string_free (result, FALSE);
-    /* strip spaces at beginning and end to avoid problems with vfat */
-    res_utf8 = g_strstrip (res_utf8);
+    if (res_utf8)
+    {  /* always TRUE! -- but needed to define ext and extst here (gcc2.95) */
+    /* remove white space before the filename extension (last '.') */
+	gchar *ext = strrchr (res_utf8, '.');
+	gchar *extst = NULL;
+	if (ext)
+	{
+	    extst = g_strdup (ext);
+	    *ext = '\0';
+	}
+	g_strstrip (res_utf8);
+	if (extst)
+	{
+	    /* The following strcat() is safe because g_strstrip()
+	       does not increase the original string size. Therefore
+	       the result of the strcat() call will not be longer than
+	       the original string. */
+	    strcat (res_utf8, extst);
+	    g_free (extst);
+	}
+    }
     /* convert it to the charset */
     if (prefs_get_special_export_charset ())
     {   /* use the specified charset */

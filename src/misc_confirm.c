@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 00:47:21 JST jcs>
+/* Time-stamp: <2004-06-28 22:17:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -178,6 +178,7 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
 	remove_trackid_from_playlist (pl, (guint32)l->data);
 
     gtkpod_statusbar_message (buf);
+    gtkpod_tracks_statusbar_update ();
     g_list_free (selected_trackids);
     g_free (buf);
     /* mark data as changed */
