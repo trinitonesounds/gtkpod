@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-07 20:52:58 jcs>
+/* Time-stamp: <2003-09-11 23:39:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -328,7 +328,8 @@ Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newl
 Sam Clegg: user defined filenames when exporting tracks from the iPod\n\
 Chris Cutler: automatic creation of various playlist types\n\
 Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress dialogue during sync\n\
-Edward Matteucci: debugging, special playlist creation\n"),
+Edward Matteucci: debugging, special playlist creation\n\
+Jens Lautenbach: some optical improvements\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n\

@@ -1112,6 +1112,7 @@ create_gtkpod_about_window (void)
   notebook1 = gtk_notebook_new ();
   gtk_widget_show (notebook1);
   gtk_box_pack_start (GTK_BOX (vbox2), notebook1, TRUE, TRUE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (notebook1), 2);
 
   scrolledwindow2 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow2);
@@ -1148,6 +1149,7 @@ create_gtkpod_about_window (void)
   hbuttonbox2 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox2);
   gtk_box_pack_start (GTK_BOX (vbox2), hbuttonbox2, FALSE, FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox2), 5);
 
   about_close = gtk_button_new_from_stock ("gtk-close");
   gtk_widget_show (about_close);
@@ -1233,7 +1235,7 @@ create_confirm_window (void)
 
   option_vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (option_vbox);
-  gtk_box_pack_start (GTK_BOX (option_hbox), option_vbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (option_hbox), option_vbox, FALSE, TRUE, 0);
 
   never_again = gtk_check_button_new_with_mnemonic (_("Never show this dialogue again"));
   gtk_widget_show (never_again);
@@ -1242,20 +1244,20 @@ create_confirm_window (void)
   hbuttonbox4 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox4);
   gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox4, FALSE, FALSE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox4), 2);
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox4), 6);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox4), GTK_BUTTONBOX_SPREAD);
 
-  ok = gtk_button_new_with_mnemonic (_("Ok"));
+  ok = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (ok);
   gtk_container_add (GTK_CONTAINER (hbuttonbox4), ok);
   GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
 
-  apply = gtk_button_new_with_mnemonic (_("Apply"));
+  apply = gtk_button_new_from_stock ("gtk-apply");
   gtk_widget_show (apply);
   gtk_container_add (GTK_CONTAINER (hbuttonbox4), apply);
   GTK_WIDGET_SET_FLAGS (apply, GTK_CAN_DEFAULT);
 
-  cancel = gtk_button_new_with_mnemonic (_("Cancel"));
+  cancel = gtk_button_new_from_stock ("gtk-cancel");
   gtk_widget_show (cancel);
   gtk_container_add (GTK_CONTAINER (hbuttonbox4), cancel);
   GTK_WIDGET_SET_FLAGS (cancel, GTK_CAN_DEFAULT);
@@ -1445,11 +1447,11 @@ create_prefs_window (void)
   GtkWidget *play_now_path_entry;
   GtkWidget *label45;
   GtkWidget *play_enqueue_path_entry;
-  GtkWidget *frame20;
-  GtkWidget *vbox39;
-  GtkWidget *cfg_automount_ipod;
-  GtkWidget *label56;
   GtkWidget *label43;
+  GtkWidget *frame24;
+  GtkWidget *vbox51;
+  GtkWidget *cfg_automount_ipod;
+  GtkWidget *label73;
   GtkWidget *label24;
   GtkWidget *hbuttonbox5;
   GtkWidget *prefs_apply;
@@ -1469,10 +1471,12 @@ create_prefs_window (void)
   notebook = gtk_notebook_new ();
   gtk_widget_show (notebook);
   gtk_box_pack_start (GTK_BOX (vbox13), notebook, TRUE, TRUE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (notebook), 2);
 
   vbox14 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox14);
   gtk_container_add (GTK_CONTAINER (notebook), vbox14);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox14), 5);
 
   frame6 = gtk_frame_new (NULL);
   gtk_widget_show (frame6);
@@ -1482,6 +1486,7 @@ create_prefs_window (void)
   vbox15 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox15);
   gtk_container_add (GTK_CONTAINER (frame6), vbox15);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox15), 5);
 
   hbox8 = gtk_hbox_new (FALSE, 4);
   gtk_widget_show (hbox8);
@@ -1516,6 +1521,7 @@ create_prefs_window (void)
   vbox16 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox16);
   gtk_container_add (GTK_CONTAINER (frame7), vbox16);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox16), 5);
 
   hbox9 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox9);
@@ -1629,6 +1635,7 @@ create_prefs_window (void)
   hbox10 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox10);
   gtk_container_add (GTK_CONTAINER (frame8), hbox10);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox10), 5);
 
   vbox17 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox17);
@@ -1675,6 +1682,7 @@ create_prefs_window (void)
   vbox21 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox21);
   gtk_container_add (GTK_CONTAINER (frame9), vbox21);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox21), 5);
 
   cfg_write_extended = gtk_check_button_new_with_mnemonic (_("Write extended information (PC filenames,\n MD5 hashes, charset). Recommended."));
   gtk_widget_show (cfg_write_extended);
@@ -1692,12 +1700,13 @@ create_prefs_window (void)
 
   frame23 = gtk_frame_new (NULL);
   gtk_widget_show (frame23);
-  gtk_box_pack_start (GTK_BOX (vbox14), frame23, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox14), frame23, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame23), GTK_SHADOW_ETCHED_OUT);
 
   vbox50 = gtk_vbox_new (TRUE, 0);
   gtk_widget_show (vbox50);
   gtk_container_add (GTK_CONTAINER (frame23), vbox50);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox50), 5);
 
   table9 = gtk_table_new (1, 2, FALSE);
   gtk_widget_show (table9);
@@ -1737,15 +1746,17 @@ create_prefs_window (void)
   vbox23 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox23);
   gtk_container_add (GTK_CONTAINER (notebook), vbox23);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox23), 5);
 
   frame14 = gtk_frame_new (NULL);
   gtk_widget_show (frame14);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame14, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame14, FALSE, TRUE, 0);
   gtk_frame_set_shadow_type (GTK_FRAME (frame14), GTK_SHADOW_ETCHED_OUT);
 
   vbox36 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox36);
   gtk_container_add (GTK_CONTAINER (frame14), vbox36);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox36), 5);
 
   hbox12 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox12);
@@ -1865,6 +1876,7 @@ create_prefs_window (void)
   vbox25 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox25);
   gtk_container_add (GTK_CONTAINER (frame12), vbox25);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox25), 5);
 
   hbox11 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox11);
@@ -1878,7 +1890,7 @@ create_prefs_window (void)
   cfg_sort_tab_num_sb_adj = gtk_adjustment_new (0, 0, 100, 1, 10, 10);
   cfg_sort_tab_num_sb = gtk_spin_button_new (GTK_ADJUSTMENT (cfg_sort_tab_num_sb_adj), 1, 0);
   gtk_widget_show (cfg_sort_tab_num_sb);
-  gtk_box_pack_start (GTK_BOX (hbox11), cfg_sort_tab_num_sb, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox11), cfg_sort_tab_num_sb, FALSE, TRUE, 0);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (cfg_sort_tab_num_sb), TRUE);
 
   label34 = gtk_label_new (_("Sort Tabs"));
@@ -1894,6 +1906,7 @@ create_prefs_window (void)
   autoselect_vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (autoselect_vbox);
   gtk_container_add (GTK_CONTAINER (frame13), autoselect_vbox);
+  gtk_container_set_border_width (GTK_CONTAINER (autoselect_vbox), 5);
 
   cfg_mpl_autoselect = gtk_check_button_new_with_mnemonic (_("...master playlist"));
   gtk_widget_show (cfg_mpl_autoselect);
@@ -1924,6 +1937,7 @@ create_prefs_window (void)
   vbox31 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox31);
   gtk_container_add (GTK_CONTAINER (frame16), vbox31);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox31), 5);
 
   cfg_display_toolbar = gtk_check_button_new_with_mnemonic (_("Display toolbar..."));
   gtk_widget_show (cfg_display_toolbar);
@@ -1964,11 +1978,12 @@ create_prefs_window (void)
 
   frame19 = gtk_frame_new (NULL);
   gtk_widget_show (frame19);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame19, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame19, FALSE, TRUE, 0);
 
   vbox38 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox38);
   gtk_container_add (GTK_CONTAINER (frame19), vbox38);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox38), 5);
 
   cfg_display_tooltips_main = gtk_check_button_new_with_mnemonic (_("Display tooltips in main window"));
   gtk_widget_show (cfg_display_tooltips_main);
@@ -1991,6 +2006,7 @@ create_prefs_window (void)
   vbox30 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox30);
   gtk_container_add (GTK_CONTAINER (frame15), vbox30);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox30), 5);
 
   cfg_case_sensitive = gtk_check_button_new_with_mnemonic (_("Sorting case sensitive"));
   gtk_widget_show (cfg_case_sensitive);
@@ -2015,6 +2031,7 @@ create_prefs_window (void)
   vbox32 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox32);
   gtk_container_add (GTK_CONTAINER (notebook), vbox32);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox32), 5);
 
   frame10 = gtk_frame_new (NULL);
   gtk_widget_show (frame10);
@@ -2024,6 +2041,7 @@ create_prefs_window (void)
   vbox22 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox22);
   gtk_container_add (GTK_CONTAINER (frame10), vbox22);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox22), 5);
 
   cfg_id3_write = gtk_check_button_new_with_mnemonic (_("Write ID3 tags to disk when modified in gtkpod"));
   gtk_widget_show (cfg_id3_write);
@@ -2076,6 +2094,7 @@ create_prefs_window (void)
   vbox48 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox48);
   gtk_container_add (GTK_CONTAINER (frame21), vbox48);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox48), 5);
 
   table8 = gtk_table_new (1, 2, FALSE);
   gtk_widget_show (table8);
@@ -2113,6 +2132,7 @@ create_prefs_window (void)
   vbox49 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox49);
   gtk_container_add (GTK_CONTAINER (frame22), vbox49);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox49), 5);
 
   table10 = gtk_table_new (1, 2, FALSE);
   gtk_widget_show (table10);
@@ -2155,6 +2175,7 @@ create_prefs_window (void)
   vbox24 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox24);
   gtk_container_add (GTK_CONTAINER (frame11), vbox24);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox24), 5);
 
   cfg_delete_playlist = gtk_check_button_new_with_mnemonic (_("Before removing playlists"));
   gtk_widget_show (cfg_delete_playlist);
@@ -2186,6 +2207,7 @@ create_prefs_window (void)
   vbox33 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox33);
   gtk_container_add (GTK_CONTAINER (frame17), vbox33);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox33), 5);
 
   cfg_save_sorted_order = gtk_check_button_new_with_mnemonic (_("Automatically save song order after sorting."));
   gtk_widget_show (cfg_save_sorted_order);
@@ -2205,6 +2227,7 @@ create_prefs_window (void)
   vbox20 = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (vbox20);
   gtk_container_add (GTK_CONTAINER (notebook), vbox20);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox20), 5);
 
   frame18 = gtk_frame_new (NULL);
   gtk_widget_show (frame18);
@@ -2214,6 +2237,7 @@ create_prefs_window (void)
   vbox34 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox34);
   gtk_container_add (GTK_CONTAINER (frame18), vbox34);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox34), 5);
 
   label44 = gtk_label_new (_("Command Line for 'Play Now':"));
   gtk_widget_show (label44);
@@ -2237,28 +2261,29 @@ create_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox34), play_enqueue_path_entry, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, play_enqueue_path_entry, _("For example, 'xmms -e %s' will append (enqueue) the selected songs to xmms' current playlist."), NULL);
 
-  frame20 = gtk_frame_new (NULL);
-  gtk_widget_show (frame20);
-  gtk_box_pack_start (GTK_BOX (vbox34), frame20, FALSE, TRUE, 0);
-
-  vbox39 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox39);
-  gtk_container_add (GTK_CONTAINER (frame20), vbox39);
-
-  cfg_automount_ipod = gtk_check_button_new_with_mnemonic (_("Handle mounting/unmounting of iPod drive"));
-  gtk_widget_show (cfg_automount_ipod);
-  gtk_box_pack_start (GTK_BOX (vbox39), cfg_automount_ipod, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_automount_ipod, _("On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount <ipod mountpoint>' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."), NULL);
-
-  label56 = gtk_label_new (_("Misc"));
-  gtk_widget_show (label56);
-  gtk_frame_set_label_widget (GTK_FRAME (frame20), label56);
-  gtk_label_set_justify (GTK_LABEL (label56), GTK_JUSTIFY_LEFT);
-
   label43 = gtk_label_new (_("Song Playing"));
   gtk_widget_show (label43);
   gtk_frame_set_label_widget (GTK_FRAME (frame18), label43);
   gtk_label_set_justify (GTK_LABEL (label43), GTK_JUSTIFY_LEFT);
+
+  frame24 = gtk_frame_new (NULL);
+  gtk_widget_show (frame24);
+  gtk_box_pack_start (GTK_BOX (vbox20), frame24, FALSE, TRUE, 0);
+
+  vbox51 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox51);
+  gtk_container_add (GTK_CONTAINER (frame24), vbox51);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox51), 5);
+
+  cfg_automount_ipod = gtk_check_button_new_with_mnemonic (_("Handle mounting/unmounting of iPod drive"));
+  gtk_widget_show (cfg_automount_ipod);
+  gtk_box_pack_start (GTK_BOX (vbox51), cfg_automount_ipod, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_automount_ipod, _("On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount <ipod mountpoint>' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."), NULL);
+
+  label73 = gtk_label_new (_("Misc"));
+  gtk_widget_show (label73);
+  gtk_frame_set_label_widget (GTK_FRAME (frame24), label73);
+  gtk_label_set_justify (GTK_LABEL (label73), GTK_JUSTIFY_LEFT);
 
   label24 = gtk_label_new_with_mnemonic (_("_Misc"));
   gtk_widget_show (label24);
@@ -2268,6 +2293,7 @@ create_prefs_window (void)
   hbuttonbox5 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox5);
   gtk_box_pack_start (GTK_BOX (vbox13), hbuttonbox5, FALSE, TRUE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox5), 5);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox5), GTK_BUTTONBOX_SPREAD);
 
   prefs_apply = gtk_button_new_from_stock ("gtk-apply");
@@ -2600,11 +2626,11 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, play_now_path_entry, "play_now_path_entry");
   GLADE_HOOKUP_OBJECT (prefs_window, label45, "label45");
   GLADE_HOOKUP_OBJECT (prefs_window, play_enqueue_path_entry, "play_enqueue_path_entry");
-  GLADE_HOOKUP_OBJECT (prefs_window, frame20, "frame20");
-  GLADE_HOOKUP_OBJECT (prefs_window, vbox39, "vbox39");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
-  GLADE_HOOKUP_OBJECT (prefs_window, label56, "label56");
   GLADE_HOOKUP_OBJECT (prefs_window, label43, "label43");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame24, "frame24");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox51, "vbox51");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
+  GLADE_HOOKUP_OBJECT (prefs_window, label73, "label73");
   GLADE_HOOKUP_OBJECT (prefs_window, label24, "label24");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox5, "hbuttonbox5");
   GLADE_HOOKUP_OBJECT (prefs_window, prefs_apply, "prefs_apply");
