@@ -50,6 +50,7 @@ struct song_extended_info
     gchar *pc_path_locale;
     gchar *pc_path_utf8;
     gchar *md5_hash;
+    gchar *charset;
     gchar *hostname;
     gchar *ipod_path;
     gboolean transferred;
@@ -324,6 +325,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 {
     Song *song = NULL;
     File_Tag *filetag;
+    G_CONST_RETURN gchar *charset;
     gint len;
 
     if (!name) return NULL;
@@ -340,8 +342,12 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
     {
 	if (or_song)    song = or_song;
 	else            song = g_malloc0 (sizeof (Song));
-	if (!song->pc_path_utf8) song->pc_path_utf8 = charset_to_utf8 (name);
-	if (!song->pc_path_locale)    song->pc_path_locale = g_strdup (name);
+
+	C_FREE (song->pc_path_utf8);
+	C_FREE (song->pc_path_locale);
+	song->pc_path_utf8 = charset_to_utf8 (name);
+	song->pc_path_locale = g_strdup (name);
+
 	C_FREE (song->album);
 	C_FREE (song->album_utf16);
 	if (filetag->album)
@@ -350,6 +356,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    song->album_utf16 = g_utf8_to_utf16 (song->album, -1, NULL, NULL, NULL);
 	}
 	else set_entry_from_filename (song, SM_COLUMN_ALBUM);
+
 	C_FREE (song->artist);
 	C_FREE (song->artist_utf16);
 	if (filetag->artist)
@@ -358,6 +365,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    song->artist_utf16 = g_utf8_to_utf16 (song->artist, -1, NULL, NULL, NULL);
 	}
 	else set_entry_from_filename (song, SM_COLUMN_ARTIST);
+
 	C_FREE (song->title);
 	C_FREE (song->title_utf16);
 	if (filetag->title)
@@ -366,6 +374,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    song->title_utf16 = g_utf8_to_utf16 (song->title, -1, NULL, NULL, NULL);
 	}
 	else set_entry_from_filename (song, SM_COLUMN_TITLE);
+
 	C_FREE (song->genre);
 	C_FREE (song->genre_utf16);
 	if (filetag->genre)
@@ -374,6 +383,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    song->genre_utf16 = g_utf8_to_utf16 (song->genre, -1, NULL, NULL, NULL);
 	}
 	else set_entry_from_filename (song, SM_COLUMN_GENRE);
+
 	C_FREE (song->comment);
 	C_FREE (song->comment_utf16);
 	if (filetag->comment)
@@ -390,6 +400,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    song->year = atoi(filetag->year);
 	    g_free (filetag->year);
 	}
+
 	if (filetag->track == NULL)
 	{
 	    song->track_nr = 0;
@@ -399,6 +410,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    song->track_nr = atoi(filetag->track);
 	    g_free (filetag->track);
 	}
+
 	if (filetag->track_total == NULL)
 	{
 	    song->tracks = 0;
@@ -408,6 +420,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    song->tracks = atoi(filetag->track_total);
 	    g_free (filetag->track_total);
 	}
+
 	if (filetag->songlen)   song->songlen = filetag->songlen;
 	song->size = filetag->size;
 	song->songlen = get_song_time (name);
@@ -416,10 +429,20 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
     }
     g_free (filetag);
 
+    /* set charset used */
+    C_FREE (song->charset);
+    charset = prefs_get_charset ();
+    if (!charset || !strlen (charset))
+    {    /* use standard locale charset */
+	g_get_charset (&charset);
+    }
+    song->charset = g_strdup (charset);
+
     /* Make sure all strings are initialised -- that way we don't 
        have to worry about it when we are handling the strings */
-    /* exception: md5_hash and hostname: these may be NULL. */
+    /* exception: md5_hash, charset and hostname: these may be NULL. */
     validate_entries (song);
+
     if (song && (song->songlen == 0))
     {
 	/* Songs with zero play length are ignored by iPod... */
@@ -679,14 +702,33 @@ void display_updated (Song *song, gchar *txt)
 void update_song_from_file (Song *song)
 {
     Song *oldsong;
+    gchar *prefs_charset = NULL;
+    gchar *songpath = NULL;
 
     if (!song) return;
+
+    if (!prefs_get_update_charset () && song->charset)
+    {   /* we should use the initial charset for the update */
+	if (prefs_get_charset ())
+	{   /* remember the charset originally set */
+	    prefs_charset = g_strdup (prefs_get_charset ());
+	}
+	/* use the charset used when first importing the song */
+	prefs_set_charset (song->charset);
+    }
+
+    if (song->pc_path_locale)
+    {   /* need to copy because we cannot pass song->pc_path_locale to
+	get_song_info_from_file () since song->pc_path gets g_freed
+	there */
+	songpath = g_strdup (song->pc_path_locale);
+    }
 
     if (!(song->pc_path_locale && *song->pc_path_locale))
     { /* no path available */
 	display_non_updated (song, _("no filename available"));
     }
-    else if (get_song_info_from_file (song->pc_path_locale, song))
+    else if (get_song_info_from_file (songpath, song))
     { /* update successfull */
 	/* remove song from md5 hash and reinsert it
 	   (hash value may have changed!) */
@@ -708,7 +750,7 @@ void update_song_from_file (Song *song)
     }
     else
     { /* update not successful -- log this song for later display */
-	if (g_file_test (song->pc_path_locale,
+	if (g_file_test (songpath,
 			 G_FILE_TEST_IS_REGULAR) == FALSE)
 	{
 	    display_non_updated (song, _("file not found"));
@@ -718,6 +760,13 @@ void update_song_from_file (Song *song)
 	    display_non_updated (song, _("format not supported"));
 	}
     }
+
+    if (!prefs_get_update_charset ())
+    {   /* reset charset */
+	prefs_set_charset (prefs_charset);
+    }
+    C_FREE (songpath);
+
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 }
 
@@ -932,6 +981,8 @@ void fill_in_extended_info (Song *song)
 	      song->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
 	  if (sei->md5_hash && !song->md5_hash)
 	      song->md5_hash = g_strdup (sei->md5_hash);
+	  if (sei->charset && !song->charset)
+	      song->charset = g_strdup (sei->charset);
 	  if (sei->hostname && !song->hostname)
 	      song->hostname = g_strdup (sei->hostname);
 	  song->transferred = sei->transferred;
@@ -951,6 +1002,7 @@ static void hash_delete (gpointer data)
 	C_FREE (sei->pc_path_locale);
 	C_FREE (sei->pc_path_utf8);
 	C_FREE (sei->md5_hash);
+	C_FREE (sei->charset);
 	C_FREE (sei->hostname);
 	C_FREE (sei->ipod_path);
 	g_free (sei);
@@ -1083,6 +1135,8 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->pc_path_utf8 = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "md5_hash") == 0)
 		sei->md5_hash = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "charset") == 0)
+		sei->charset = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "transferred") == 0)
 		sei->transferred = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
@@ -1346,6 +1400,8 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 	fprintf (fp, "filename_utf8=%s\n", song->pc_path_utf8);
       if (song->md5_hash)
 	fprintf (fp, "md5_hash=%s\n", song->md5_hash);
+      if (song->charset)
+	fprintf (fp, "charset=%s\n", song->charset);
       fprintf (fp, "transferred=%d\n", song->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
     }

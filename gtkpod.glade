@@ -1644,6 +1644,26 @@
 		      </child>
 
 		      <child>
+			<widget class="GtkCheckButton" id="cfg_update_charset">
+			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">Normally the charset specified when first importing the song will be used to update the song information. If you chose a wrong charset when first importing a song and want to correct it using the &quot;Update Song&quot; function, you must check this option. Note: songs imported before V0.51 will have no charset stored and the charset specified above will always be used.</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Use selected charset also when updating song</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="on_cfg_update_charset_toggled" last_modification_time="Fri, 04 Apr 2003 14:52:13 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
 			<widget class="GtkCheckButton" id="cfg_md5songs">
 			  <property name="visible">True</property>
 			  <property name="tooltip" translatable="yes">Duplicate Recognition is based on a md5 hash over the file.</property>
@@ -1791,17 +1811,13 @@ existing songs with identical filenames</property>
 		      <child>
 			<placeholder/>
 		      </child>
-
-		      <child>
-			<placeholder/>
-		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
 		    <widget class="GtkLabel" id="label28">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Adding Songs</property>
+		      <property name="label" translatable="yes">Adding/Updating Songs</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>

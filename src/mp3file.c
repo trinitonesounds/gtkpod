@@ -519,8 +519,13 @@ static guint get_song_time_file(FILE * file)
 
 guint get_song_time (gchar *path)
 {
-    FILE *file = fopen (path, "r");
-    guint result = get_song_time_file (file);
-    fclose (file);
+    guint result;
+
+    if (path)
+    {
+	FILE *file = fopen (path, "r");
+	result = get_song_time_file (file);
+	if (file) fclose (file);
+    }
     return result;
 }

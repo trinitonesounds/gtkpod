@@ -55,7 +55,8 @@ struct cfg
   gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
-  gboolean write_extended_info; /* write additional file with PC filenames etc? */
+  gboolean write_extended_info; /* write additional file with PC
+				   filenames etc? */
   struct {
       gchar *browse, *export;
   } last_dir;	          /* last directories used by the fileselections */
@@ -77,6 +78,7 @@ struct cfg
   gboolean show_non_updated;    /* show update notification ?*/
   gboolean save_sorted_order;   /* save order after sort automatically? */
   gboolean display_toolbar;     /* should toolbar be displayed */
+  gboolean update_charset;      /* Update charset when updating song? */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
@@ -164,6 +166,8 @@ gboolean prefs_get_show_non_updated (void);
 void prefs_set_show_non_updated (gboolean val);
 gboolean prefs_get_display_toolbar (void);
 void prefs_set_display_toolbar (gboolean val);
+gboolean prefs_get_update_charset (void);
+void prefs_set_update_charset (gboolean val);
 gboolean prefs_get_save_sorted_order (void);
 void prefs_set_save_sorted_order (gboolean val);
 gint prefs_get_sort_tab_num (void);

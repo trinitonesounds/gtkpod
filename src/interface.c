@@ -1096,6 +1096,7 @@ create_new_prefs_window (void)
   GtkWidget *label29;
   GtkWidget *charset_combo;
   GtkWidget *charset_combo_entry;
+  GtkWidget *cfg_update_charset;
   GtkWidget *cfg_md5songs;
   GtkWidget *table2;
   GtkWidget *cfg_show_duplicates;
@@ -1277,6 +1278,11 @@ create_new_prefs_window (void)
   gtk_tooltips_set_tip (tooltips, charset_combo_entry, _("gtkpod expects the ID3 tags and the filenames to be in the encoding specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' operation. 'System Charset' is the charset used by your current locale."), NULL);
   gtk_editable_set_editable (GTK_EDITABLE (charset_combo_entry), FALSE);
 
+  cfg_update_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset also when updating song"));
+  gtk_widget_show (cfg_update_charset);
+  gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_charset, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_update_charset, _("Normally the charset specified when first importing the song will be used to update the song information. If you chose a wrong charset when first importing a song and want to correct it using the \"Update Song\" function, you must check this option. Note: songs imported before V0.51 will have no charset stored and the charset specified above will always be used."), NULL);
+
   cfg_md5songs = gtk_check_button_new_with_mnemonic (_("Don't allow file duplication"));
   gtk_widget_show (cfg_md5songs);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_md5songs, FALSE, FALSE, 0);
@@ -1316,7 +1322,7 @@ create_new_prefs_window (void)
                     (GtkAttachOptions) (0), 20, 0);
   gtk_tooltips_set_tip (tooltips, cfg_show_non_updated, _("Display a list of songs that could not be updated."), NULL);
 
-  label28 = gtk_label_new (_("Adding Songs"));
+  label28 = gtk_label_new (_("Adding/Updating Songs"));
   gtk_widget_show (label28);
   gtk_frame_set_label_widget (GTK_FRAME (frame7), label28);
   gtk_label_set_justify (GTK_LABEL (label28), GTK_JUSTIFY_LEFT);
@@ -1761,6 +1767,9 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) charset_combo_entry, "changed",
                     G_CALLBACK (on_charset_combo_entry_changed),
                     NULL);
+  g_signal_connect ((gpointer) cfg_update_charset, "toggled",
+                    G_CALLBACK (on_cfg_update_charset_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_md5songs, "toggled",
                     G_CALLBACK (on_cfg_md5songs_toggled),
                     NULL);
@@ -1858,6 +1867,7 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, label29, "label29");
   GLADE_HOOKUP_OBJECT (new_prefs_window, charset_combo, "charset_combo");
   GLADE_HOOKUP_OBJECT (new_prefs_window, charset_combo_entry, "charset_combo_entry");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_update_charset, "cfg_update_charset");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_md5songs, "cfg_md5songs");
   GLADE_HOOKUP_OBJECT (new_prefs_window, table2, "table2");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_show_duplicates, "cfg_show_duplicates");

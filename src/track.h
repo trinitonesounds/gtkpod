@@ -65,6 +65,7 @@ typedef struct
   gchar   *hostname;         /* name of host this file has been imported from */
   gboolean transferred;      /* has file been transferred to iPod? */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)         */
+  gchar   *charset;          /* charset used for ID3 tags */
 } Song;
 
 /* A means to address the fields by uniform IDs. May be extended as
@@ -85,7 +86,8 @@ typedef enum {
     S_TRACK_NR,
     S_TRANSFERRED,
     S_SIZE,
-    S_SONGLEN
+    S_SONGLEN,
+    S_BITRATE
 } S_item;
 
 void free_song(Song *song);

@@ -29,6 +29,8 @@
  *
  * - add the desired option to the prefs window using glade-2
  *
+ * - modify the cfg structure in prefs.h accordingly
+ *
  * - set the default value of new_option in cfg_new() in prefs.c
  *
  * - add function prefs_get_new_option() and
@@ -192,6 +194,7 @@ struct cfg *cfg_new(void)
     mycfg->show_updated = TRUE;
     mycfg->show_non_updated = TRUE;
     mycfg->display_toolbar = TRUE;
+    mycfg->update_charset = FALSE;
     mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->save_sorted_order = FALSE;
     mycfg->sort_tab_num = 2;
@@ -369,6 +372,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "display_toolbar") == 0)
 	  {
 	      prefs_set_display_toolbar((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "update_charset") == 0)
+	  {
+	      prefs_set_update_charset((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
@@ -603,6 +610,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "show_updated=%d\n",prefs_get_show_updated());
     fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
+    fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "save_sorted_order=%d\n",prefs_get_save_sorted_order());
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser\n"));
     fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
@@ -852,11 +860,7 @@ void prefs_set_charset (gchar *charset)
 
 void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
 {
-    if (cfgd->charset)
-    {
-	g_free (cfgd->charset);
-	cfgd->charset = NULL;
-    }
+    C_FREE (cfgd->charset);
     if (charset && strlen (charset))  cfgd->charset = g_strdup (charset);
 }
 
@@ -1199,6 +1203,16 @@ void prefs_set_display_toolbar (gboolean val)
 {
     cfg->display_toolbar = val;
     display_show_hide_toolbar ();
+}
+
+gboolean prefs_get_update_charset (void)
+{
+    return cfg->update_charset;
+}
+
+void prefs_set_update_charset (gboolean val)
+{
+    cfg->update_charset = val;
 }
 
 gboolean prefs_get_save_sorted_order (void)

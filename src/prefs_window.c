@@ -201,7 +201,6 @@ prefs_window_create(void)
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->display_toolbar);
-	    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_toolbar_style_icons")))
 	{
@@ -220,6 +219,11 @@ prefs_window_create(void)
 	    if (tmpcfg->toolbar_style == GTK_TOOLBAR_BOTH)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 	    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_update_charset")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->update_charset);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_save_sorted_order")))
 	{
@@ -411,6 +415,7 @@ prefs_window_set(void)
 	prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
+	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_automount(tmpcfg->automount);
 
 	sm_show_preferred_columns();
@@ -683,6 +688,11 @@ void prefs_window_set_display_toolbar (gboolean val)
     gtk_widget_set_sensitive (w1, val);
     gtk_widget_set_sensitive (w2, val);
     gtk_widget_set_sensitive (w3, val);
+}
+
+void prefs_window_set_update_charset (gboolean val)
+{
+    tmpcfg->update_charset = val;
 }
 
 void prefs_window_set_save_sorted_order (gboolean val)

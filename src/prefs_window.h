@@ -55,6 +55,7 @@ void prefs_window_set_show_duplicates (gboolean val);
 void prefs_window_set_show_updated (gboolean val);
 void prefs_window_set_show_non_updated (gboolean val);
 void prefs_window_set_display_toolbar (gboolean val);
+void prefs_window_set_update_charset (gboolean val);
 void prefs_window_set_toolbar_style (GtkToolbarStyle val);
 void prefs_window_set_save_sorted_order (gboolean val);
 void prefs_window_set_sort_tab_num (gint num);

@@ -394,3 +394,7 @@ on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
 void
 on_space_statusbar_realize             (GtkWidget       *widget,
                                         gpointer         user_data);
+
+void
+on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

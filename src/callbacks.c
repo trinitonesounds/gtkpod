@@ -1164,3 +1164,12 @@ on_space_statusbar_realize             (GtkWidget       *widget,
     gtkpod_space_statusbar_init(widget);
 }
 
+
+void
+on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_update_charset(
+	gtk_toggle_button_get_active(togglebutton));
+}
+
