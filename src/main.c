@@ -72,7 +72,8 @@ main (int argc, char *argv[])
   md5_unique_file_init (NULL); /* init for duplicate detection */
   gtkpod_thread_pool_init();
   if(prefs_get_auto_import())
-    gtkpod_thread_pool_exec(THREAD_READ_ITUNES);
+/*    gtkpod_thread_pool_exec(THREAD_READ_ITUNES);*/
+      handle_import();
   display_set_default_sizes ();
   gtk_widget_show (gtkpod_window);
   gtk_main ();
