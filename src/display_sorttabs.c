@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 01:17:08 jcs>
+/* Time-stamp: <2003-11-15 12:37:12 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1696,11 +1696,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 		 atoi(new_text) */
 	      g_free (entry->name);
 	      entry->name = g_strdup_printf ("%d", atoi (new_text));
-	      if (strcmp (entry->name, new_text) != 0)
-	      {
-		  g_object_set (G_OBJECT (renderer), "text", entry->name,
-				NULL);
-	      }
+	      g_object_set (G_OBJECT (renderer), "text", entry->name, NULL);
 	  }
 	  else
 	  {

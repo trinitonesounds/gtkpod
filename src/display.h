@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 00:32:42 jcs>
+/* Time-stamp: <2003-11-15 13:31:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -152,6 +152,7 @@ typedef enum  {
   TM_COLUMN_TIME_MODIFIED,    /* 15 */
   TM_COLUMN_VOLUME,
   TM_COLUMN_YEAR,
+  TM_COLUMN_CD_NR,
   TM_NUM_COLUMNS
 } TM_item;
 

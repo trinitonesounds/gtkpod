@@ -17,8 +17,21 @@ gtkpod V0.61-CVS
 	 default, only new tracks are read, allowing quick synchronization
 	 of entire directories.
 
+	IMPROVEMENT: In the past, using programs other than gtkpod to
+	transfer files voided the extended information file. gtkpod will
+	not try to use the MD5 checksums stored in the extended
+	information file to match up the data when this occurs.
+
 	IMPROVEMENT: Year is now supported as track view column and as
 	sort tab type.
+
+	IMPROVEMENT: The tags for track number and total number of tracks
+	is displayed as nn/nn in the track view, and can also be entered
+	as such.
+
+	IMPROVEMENT: The tags for CD number and total number of CDs can
+	now be displayed (analoguous to track number and total number of
+	tracks above)
 
 	IMPROVEMENT: When creating a new playlist a dialog is popped up
 	asking for a name.

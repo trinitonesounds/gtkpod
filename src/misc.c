@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 00:32:42 jcs>
+/* Time-stamp: <2003-11-15 13:31:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -958,6 +958,7 @@ T_item TM_to_T (TM_item sm)
     case TM_COLUMN_GENRE:         return T_GENRE;
     case TM_COLUMN_COMPOSER:      return T_COMPOSER;
     case TM_COLUMN_TRACK_NR:      return T_TRACK_NR;
+    case TM_COLUMN_CD_NR:         return T_CD_NR;
     case TM_COLUMN_IPOD_ID:       return T_IPOD_ID;
     case TM_COLUMN_PC_PATH:       return T_PC_PATH;
     case TM_COLUMN_TRANSFERRED:   return T_TRANSFERRED;

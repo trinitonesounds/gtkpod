@@ -31,8 +31,8 @@
 #include <glib.h>
 
 
-gchar *md5_hash_on_file(FILE *fp);
-/* Any calls to thes following functions immediately return if md5sums
+gchar *md5_hash_on_file_name (gchar *name);
+/* Any calls to the following functions immediately return if md5sums
  * is not on */
 Track *md5_track_exists(Track *s);
 Track *md5_track_exists_insert(Track *s);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-13 21:44:48 jcs>
+/* Time-stamp: <2003-11-15 23:23:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -79,6 +79,7 @@ static gboolean mutex_data = FALSE;
 /* Used to keep the "extended information" until the iTunesDB is 
    loaded */
 static GHashTable *extendedinfohash = NULL;
+static GHashTable *extendedinfohash_md5 = NULL;
 static float extendedinfoversion = 0.0;
 
 
@@ -421,8 +422,10 @@ Track *copy_new_info (Track *from, Track *to)
     to->cds = from->cds;
     to->track_nr = from->track_nr;
     to->tracks = from->tracks;
-    to->year = from->year;
     to->bitrate = from->bitrate;
+    to->year = from->year;
+    g_free (to->year_str);
+    to->year_str = g_strdup_printf ("%d", to->year);
 
     return to;
 }
@@ -1442,35 +1445,50 @@ gboolean write_tags_to_file (Track *track, T_item tag_id)
 /* fills in extended info if available (called from add_track()) */
 void fill_in_extended_info (Track *track)
 {
-  gint ipod_id;
-  struct track_extended_info *sei;
+  gint ipod_id=0;
+  struct track_extended_info *sei=NULL;
 
   if (extendedinfohash && track->ipod_id)
-    {
+  {
       ipod_id = track->ipod_id;
       sei = g_hash_table_lookup (extendedinfohash, &ipod_id);
-      if (sei) /* found info for this id! */
-	{
-	  if (sei->pc_path_locale && !track->pc_path_locale)
-	      track->pc_path_locale = g_strdup (sei->pc_path_locale);
-	  if (sei->pc_path_utf8 && !track->pc_path_utf8)
-	      track->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
-	  if (sei->md5_hash && !track->md5_hash)
-	      track->md5_hash = g_strdup (sei->md5_hash);
-	  if (sei->charset && !track->charset)
-	      track->charset = g_strdup (sei->charset);
-	  if (sei->hostname && !track->hostname)
-	      track->hostname = g_strdup (sei->hostname);
-	  track->oldsize = sei->oldsize;
-	  track->playcount += sei->playcount;
-	  /* FIXME: This means that the rating can never be reset to 0
-	   * by the iPod */
-	  if (track->rating == 0)
-	      track->rating = sei->rating;
-	  track->transferred = sei->transferred;
+  }
+  if (extendedinfohash_md5)
+  {
+      if (!track->md5_hash)
+      {
+	  gchar *filename = get_track_name_on_ipod (track);
+	  track->md5_hash = md5_hash_on_file_name (filename);
+	  g_free (filename);
+      }
+      if (track->md5_hash)
+      {
+	  sei = g_hash_table_lookup (extendedinfohash_md5, track->md5_hash);
+      }
+  }
+  if (sei) /* found info for this id! */
+  {
+      if (sei->pc_path_locale && !track->pc_path_locale)
+	  track->pc_path_locale = g_strdup (sei->pc_path_locale);
+      if (sei->pc_path_utf8 && !track->pc_path_utf8)
+	  track->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
+      if (sei->md5_hash && !track->md5_hash)
+	  track->md5_hash = g_strdup (sei->md5_hash);
+      if (sei->charset && !track->charset)
+	  track->charset = g_strdup (sei->charset);
+      if (sei->hostname && !track->hostname)
+	  track->hostname = g_strdup (sei->hostname);
+      track->oldsize = sei->oldsize;
+      track->playcount += sei->playcount;
+      /* FIXME: This means that the rating can never be reset to 0
+       * by the iPod */
+      if (track->rating == 0)
+	  track->rating = sei->rating;
+      track->transferred = sei->transferred;
+      /* don't remove the md5-hash -- there may be duplicates... */
+      if (extendedinfohash)
 	  g_hash_table_remove (extendedinfohash, &ipod_id);
-	}
-    }
+  }
 }
 
 
@@ -1495,7 +1513,10 @@ static void destroy_extendedinfohash (void)
 {
     if (extendedinfohash)
 	g_hash_table_destroy (extendedinfohash);
+    if (extendedinfohash_md5)
+	g_hash_table_destroy (extendedinfohash_md5);
     extendedinfohash = NULL;
+    extendedinfohash_md5 = NULL;
     extendedinfoversion = 0.0;
 }
 
@@ -1508,21 +1529,13 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 {
     gchar *md5, buf[PATH_MAX], *arg, *line, *bufp;
     gboolean success = TRUE;
-    gboolean expect_hash;
+    gboolean expect_hash, hash_matched=FALSE;
     gint len;
     struct track_extended_info *sei = NULL;
-    FILE *fp, *fpit;
+    FILE *fp;
 
 
-    fpit = fopen (itunes, "r");
-    if (!fpit)
-    {
-	gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
-			itunes);
-	return FALSE;
-    }
-    md5 = md5_hash_on_file (fpit);
-    fclose (fpit);
+    md5 = md5_hash_on_file_name (itunes);
     if (!md5)
     {
 	g_warning ("Programming error: Could not create hash value from itunesdb\n");
@@ -1537,10 +1550,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	return FALSE;
     }
     /* Create hash table */
-    if (extendedinfohash) destroy_extendedinfohash ();
-    extendedinfohash = g_hash_table_new_full (g_int_hash, g_int_equal,
-					      NULL, hash_delete);
-    extendedinfoversion = 0.0;
+    destroy_extendedinfohash ();
     expect_hash = TRUE; /* next we expect the hash value (checksum) */
     while (success && fgets (buf, PATH_MAX, fp))
     {
@@ -1565,11 +1575,16 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    {
 		if (strcmp (arg, md5) != 0)
 		{
-		    gtkpod_warning (_("iTunesDB (%s)\ndoes not match checksum in extended information file (%s)\n"), itunes, name);
-		    success = FALSE;
-		    break;
+		    hash_matched = FALSE;
+		    gtkpod_warning (_("iTunesDB '%s' does not match checksum in extended information file '%s'\ngtkpod will try to match the information using MD5 checksums. If successful, this may take a while.\n\n"), itunes, name);
+/*		    success = FALSE;
+		    break;*/
 		}
-		else expect_hash = FALSE;
+		else
+		{
+		    hash_matched = TRUE;
+		}
+		expect_hash = FALSE;
 	    }
 	    else
 	    {
@@ -1585,8 +1600,30 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		{
 		    if (sei->ipod_id != 0)
 		    { /* normal extended information */
-			g_hash_table_insert (extendedinfohash,
-					     &sei->ipod_id, sei);
+			if (hash_matched)
+			{
+			    if (!extendedinfohash)
+			    {
+				extendedinfohash = g_hash_table_new_full (
+				    g_int_hash,g_int_equal, NULL,hash_delete);
+			    }
+			    g_hash_table_insert (extendedinfohash,
+						 &sei->ipod_id, sei);
+			}
+			else if (sei->md5_hash)
+			{
+			    if (!extendedinfohash_md5)
+			    {
+				extendedinfohash_md5 = g_hash_table_new_full (
+				    g_str_hash,g_str_equal, NULL,hash_delete);
+			    }
+			    g_hash_table_insert (extendedinfohash_md5,
+						 sei->md5_hash, sei);
+			}
+			else
+			{
+			    hash_delete ((gpointer)sei);
+			}
 		    }
 		    else
 		    { /* this is a deleted track that hasn't yet been
@@ -1645,6 +1682,11 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     }
     g_free (md5);
     fclose (fp);
+    if (success && !hash_matched && !extendedinfohash_md5)
+    {
+	gtkpod_warning (_("No MD5 checksums on individual tracks are available.\n\nTo avoid this situation in the future either switch on duplicate detection (will provide MD5 checksums) or avoid using the iPod with programs other than gtkpod.\n\n"), itunes, name);
+	success = FALSE;
+    }
     if (!success) destroy_extendedinfohash ();
     return success;
 }
@@ -1667,7 +1709,7 @@ void handle_import (void)
     md5tracks = prefs_get_md5tracks ();
     prefs_set_md5tracks (FALSE);
 
-    n = get_nr_of_tracks (); /* how many tracks are alread there? */
+    n = get_nr_of_tracks (); /* how many tracks are already there? */
 
     block_widgets ();
     if (!cfg->offline)
@@ -1719,8 +1761,6 @@ void handle_import (void)
 	    release_widgets ();
 	}
     }
-    destroy_extendedinfohash (); /* delete hash information (if set up) */
-
     /* We need to make sure that the tracks that already existed
        in the DB when we called itunesdb_parse() do not duplicate
        any existing ID */
@@ -1734,6 +1774,7 @@ void handle_import (void)
     /* reset duplicate detection -- this will also detect and correct
      * all duplicate tracks currently in the database */
     prefs_set_md5tracks (md5tracks);
+    destroy_extendedinfohash (); /* delete hash information (if set up) */
     release_widgets ();
 }
 
@@ -1878,7 +1919,7 @@ void mark_track_for_deletion (Track *track)
    "itunes" is the filename of the corresponding iTunesDB */
 static gboolean write_extended_info (gchar *name, gchar *itunes)
 {
-  FILE *fp, *fpit;
+  FILE *fp;
   guint n,i;
   Track *track;
   gchar *md5;
@@ -1890,16 +1931,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 		      name);
       return FALSE;
   }
-  fpit = fopen (itunes, "r");
-  if (!fpit)
-  {
-      gtkpod_warning (_("Could not open \"%s\" for writing extended info.\n"),
-		      itunes);
-      fclose (fp);
-      return FALSE;
-  }
-  md5 = md5_hash_on_file (fpit);
-  fclose (fpit);
+  md5 = md5_hash_on_file_name (itunes);
   if (md5)
   {
       fprintf(fp, "itunesdb_hash=%s\n", md5);
@@ -1907,7 +1939,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
   }
   else
   {
-      g_warning ("Programming error: Could not create hash value from itunesdb\n");
+      gtkpod_warning (_("Aborted writing of extended info.\n"));
       fclose (fp);
       return FALSE;
   }

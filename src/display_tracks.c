@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 00:59:26 jcs>
+/* Time-stamp: <2003-11-15 13:57:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -51,6 +51,8 @@
 static GtkTreeView *track_treeview = NULL;
 /* array with pointers to the columns used in the track display */
 static GtkTreeViewColumn *tm_columns[TM_NUM_COLUMNS];
+/* column in which track pointer is stored */
+static const gint READOUT_COL = 0;
 
 static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint position);
 
@@ -89,6 +91,7 @@ const gchar *tm_col_strings[] = {
     N_("Time modified"),
     N_("Volume"),
     N_("Year"),
+    N_("CD Nr"),
     NULL };
 
 
@@ -112,24 +115,7 @@ void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter)
 	gtk_list_store_append (GTK_LIST_STORE (model), &iter);
 
     gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-			TM_COLUMN_TITLE, track,
-			TM_COLUMN_ARTIST, track,
-			TM_COLUMN_ALBUM, track,
-			TM_COLUMN_GENRE, track,
-			TM_COLUMN_COMPOSER, track,
-			TM_COLUMN_TRACK_NR, track,
-			TM_COLUMN_IPOD_ID, track,
-			TM_COLUMN_PC_PATH, track,
-			TM_COLUMN_TRANSFERRED, track,
-			TM_COLUMN_SIZE, track,
-			TM_COLUMN_TRACKLEN, track,
-			TM_COLUMN_BITRATE, track,
-			TM_COLUMN_PLAYCOUNT, track,
-			TM_COLUMN_RATING, track,
-			TM_COLUMN_TIME_PLAYED, track,
-			TM_COLUMN_TIME_MODIFIED, track,
-			TM_COLUMN_VOLUME, track,
-			-1);
+			READOUT_COL, track, -1);
 }
 
 
@@ -144,7 +130,7 @@ static gboolean tm_delete_track (GtkTreeModel *model,
 {
   Track *track;
 
-  gtk_tree_model_get (model, iter, TM_COLUMN_ALBUM, &track, -1);
+  gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
   if(track == (Track *)data)
   {
       GtkTreeSelection *selection = gtk_tree_view_get_selection
@@ -236,7 +222,7 @@ static gboolean tm_model_track_changed (GtkTreeModel *model,
 {
   Track *track;
 
-  gtk_tree_model_get (model, iter, TM_COLUMN_ALBUM, &track, -1);
+  gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
   if(track == (Track *)data) {
     gtk_tree_model_row_changed (model, path, iter);
     return TRUE;
@@ -290,6 +276,45 @@ GList *gtk_tree_selection_get_selected_rows (GtkTreeSelection *selection,
 } 
 #endif
 
+
+/* Returns a string to be displayed in track_nr/tracks column */
+/* You must not free or modify the returned string */
+static const gchar *display_get_track_string (Track *track)
+{
+    static gchar str[20];
+
+    /* Erase string */
+    str[0] = 0;
+    if (track)
+    {
+	if (track->tracks == 0)
+	    snprintf (str, 20, "%d", track->track_nr);
+	else
+	    snprintf (str, 20, "%d/%d", track->track_nr, track->tracks);
+    }
+    return str;
+}
+
+
+/* Returns a string to be displayed in disk_nr/disks column */
+/* You must not free or modify the returned string */
+static const gchar *display_get_disk_string (Track *track)
+{
+    static gchar str[20];
+
+    /* Erase string */
+    str[0] = 0;
+    if (track)
+    {
+	if (track->cds == 0)
+	    snprintf (str, 20, "%d", track->cd_nr);
+	else
+	    snprintf (str, 20, "%d/%d", track->cd_nr, track->cds);
+    }
+    return str;
+}
+
+
 /* Called when editable cell is being edited. Stores new data to
    the track list. Eventually the ID3 tags in the corresponding
    files should be changed as well, if activated in the pref settings */
@@ -301,17 +326,9 @@ tm_cell_edited (GtkCellRendererText *renderer,
 {
   GtkTreeModel *model;
   GtkTreeSelection *selection; 
-  GtkTreeIter iter; 
-  Track *track; 
   TM_item column; 
-  gboolean changed;        
   gboolean multi_edit;
-
-  gint32 nr;
-  gchar **itemp_utf8; 
-  gunichar2 **itemp_utf16; 
   gint sel_rows_num;
-
   GList *row_list, *row_node, *first; 
 
 
@@ -322,7 +339,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
   selection = gtk_tree_view_get_selection(track_treeview); 
   row_list = gtk_tree_selection_get_selected_rows(selection, &model); 
   
-/*   printf("tm_cell_edited: column: %d  track:%p\n", column, track); */
+/*   printf("tm_cell_edited: column: %d\n", column); */
 
   sel_rows_num = g_list_length (row_list);
 
@@ -335,8 +352,15 @@ tm_cell_edited (GtkCellRendererText *renderer,
        row_node && (multi_edit || (row_node == first)); 
        row_node = g_list_next(row_node))
   {
+     Track *track; 
+     gboolean changed;        
+     GtkTreeIter iter; 
+     gint32 nr;
+     gchar **itemp_utf8, *str; 
+     gunichar2 **itemp_utf16; 
+
      gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) row_node->data); 
-     gtk_tree_model_get(model, &iter, column, &track, -1); 
+     gtk_tree_model_get(model, &iter, READOUT_COL, &track, -1); 
      changed = FALSE; 
 
      switch(column) 
@@ -364,6 +388,38 @@ tm_cell_edited (GtkCellRendererText *renderer,
            track->track_nr = nr;
            changed = TRUE; 
         }
+	str = strrchr (new_text, '/');
+	if (str)
+	{
+	    nr = atoi (str+1);
+	    if ((nr >= 0) && (nr != track->tracks))
+	    {
+		track->tracks = nr;
+		changed = TRUE; 
+	    }
+	}
+	g_object_set (G_OBJECT (renderer),
+		      "text", display_get_track_string (track), NULL);
+        break;
+     case TM_COLUMN_CD_NR:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->cd_nr))
+        {
+           track->cd_nr = nr;
+           changed = TRUE; 
+        }
+	str = strrchr (new_text, '/');
+	if (str)
+	{
+	    nr = atoi (str+1);
+	    if ((nr >= 0) && (nr != track->cds))
+	    {
+		track->cds = nr;
+		changed = TRUE; 
+	    }
+	}
+	g_object_set (G_OBJECT (renderer),
+		      "text", display_get_disk_string (track), NULL);
         break;
      case TM_COLUMN_YEAR:
         nr = atoi (new_text);
@@ -453,7 +509,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   gchar *item_utf8 = NULL;
 
   column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
-  gtk_tree_model_get (model, iter, TM_COLUMN_ALBUM, &track, -1);
+  gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
 
   switch (column)
   {
@@ -468,21 +524,16 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "editable", TRUE, NULL);
       break;
   case TM_COLUMN_TRACK_NR:
-      if (track->track_nr >= 0)
-      {
-	  snprintf (text, 20, "%d", track->track_nr);
-	  g_object_set (G_OBJECT (renderer),
-			"text", text,
-			"editable", TRUE,
-			"xalign", 1.0, NULL);
-      } 
-      else
-      {
-	  g_object_set (G_OBJECT (renderer),
-			"text", "0",
-			"editable", TRUE,
-			"xalign", 1.0, NULL);
-      }
+      g_object_set (G_OBJECT (renderer),
+		    "text", display_get_track_string (track),
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
+      break;
+  case TM_COLUMN_CD_NR:
+      g_object_set (G_OBJECT (renderer),
+		    "text", display_get_disk_string (track),
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_IPOD_ID:
       if (track->ipod_id != -1)
@@ -629,7 +680,7 @@ tm_rows_reordered (void)
 		Track *new_track;
 		gint old_position;
 
-		gtk_tree_model_get(tm, &i, 0, &new_track, -1); 
+		gtk_tree_model_get(tm, &i, READOUT_COL, &new_track, -1); 
 		new_list = g_list_append(new_list, new_track);
 		/* what position was this track in before? */
 		old_position = g_list_index (current_pl->members, new_track);
@@ -697,8 +748,7 @@ on_trackids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
 {
     Track *s = NULL;
     GList *l = *((GList**)data);
-    gtk_tree_model_get(tm, i, 0, &s, -1);
-    /* can call on 0 cause s is consistent across all of the columns */
+    gtk_tree_model_get(tm, i, READOUT_COL, &s, -1);
     if(s)
     {
 	l = g_list_append(l, (gpointer)s->ipod_id);
@@ -752,8 +802,7 @@ on_tracks_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
 {
     Track *s = NULL;
     GList *l = *((GList**)data);
-    gtk_tree_model_get(tm, i, 0, &s, -1);
-    /* can call on 0 cause s is consistent across all of the columns */
+    gtk_tree_model_get(tm, i, READOUT_COL, &s, -1);
     if(s)
     {
 	l = g_list_append(l, s);
@@ -840,9 +889,10 @@ gint tm_data_compare_func (GtkTreeModel *model,
   gint column;
   TM_item tm_item;
   GtkSortType order;
+  gint cmp;
 
-  gtk_tree_model_get (model, a, TM_COLUMN_ALBUM, &track1, -1);
-  gtk_tree_model_get (model, b, TM_COLUMN_ALBUM, &track2, -1);
+  gtk_tree_model_get (model, a, READOUT_COL, &track1, -1);
+  gtk_tree_model_get (model, b, READOUT_COL, &track2, -1);
   if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order) == FALSE) return 0;
   tm_item = (TM_item) column;
@@ -857,7 +907,13 @@ gint tm_data_compare_func (GtkTreeModel *model,
       return compare_string (track_get_item_utf8 (track1, TM_to_T (tm_item)),
 			     track_get_item_utf8 (track2, TM_to_T (tm_item)));
   case TM_COLUMN_TRACK_NR:
-      return track1->track_nr - track2->track_nr;
+      cmp = track1->tracks - track2->tracks;
+      if (cmp == 0) cmp = track1->track_nr - track2->track_nr;
+      return cmp;
+  case TM_COLUMN_CD_NR:
+      cmp = track1->cds - track2->cds;
+      if (cmp == 0) cmp = track1->cd_nr - track2->cd_nr;
+      return cmp;
   case TM_COLUMN_IPOD_ID:
       return track1->ipod_id - track2->ipod_id;
   case TM_COLUMN_PC_PATH:
@@ -1045,6 +1101,9 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_TRACK_NR:
       text = _("#");
       break;
+  case TM_COLUMN_CD_NR:
+      text = _("CD");
+      break;
   case TM_COLUMN_IPOD_ID:
       text = _("ID");
       editable = FALSE;
@@ -1157,18 +1216,10 @@ void tm_create_treeview (void)
   track_treeview = GTK_TREE_VIEW (stv);
   gtk_widget_show (stv);
   gtk_container_add (GTK_CONTAINER (track_window), stv);
-  /* create model */
+  /* create model (we only need one column for the model -- only a
+   * pointer to the track has to be stored) */
   model = GTK_TREE_MODEL (
-      gtk_list_store_new (TM_NUM_COLUMNS, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER, G_TYPE_POINTER,
-			  G_TYPE_POINTER));
+      gtk_list_store_new (1, G_TYPE_POINTER));
   gtk_tree_view_set_model (track_treeview, GTK_TREE_MODEL (model));
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (track_treeview), TRUE);
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (track_treeview),
@@ -1267,7 +1318,7 @@ static void tm_list_store_move (GtkListStore *store,
     model = gtk_tree_view_get_model (track_treeview);
 
     /* get the content (track) of the row to move */
-    gtk_tree_model_get (model, iter, TM_COLUMN_ALBUM, &track, -1);
+    gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
     /* remove the old row */
     gtk_list_store_remove (GTK_LIST_STORE (model), iter);
 
@@ -1424,9 +1475,7 @@ on_tm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     Track *s;
     GString *filelist = (GString *)data;
 
-    gtk_tree_model_get(tm, i, TM_COLUMN_TITLE, &s, -1); 
-    /* can call on TM_COLUMN_TITLE cause s is consistent across all of
-       the columns */
+    gtk_tree_model_get(tm, i, READOUT_COL, &s, -1); 
     if(s)
     {
 	g_string_append_printf (filelist, "%d\n", s->ipod_id);
@@ -1458,9 +1507,7 @@ on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     GString *filelist = (GString *)data;
     gchar *name;
 
-    gtk_tree_model_get(tm, iter, TM_COLUMN_TITLE, &s, -1); 
-    /* can call on TM_COLUMN_TITLE cause s is consistent across all of
-     * the columns */
+    gtk_tree_model_get(tm, iter, READOUT_COL, &s, -1); 
     name = get_track_name_on_disk_verified (s);
     if (name)
     {

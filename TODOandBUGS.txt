@@ -1,7 +1,5 @@
 TODO:
 
-- Disk column
-
 - stable column sorting:
 > BTW, the other thing that bothers me about gtkpod is that column sorting
 > isn't stable.  AFAIK, gtk doesn't have a stable column sorting option. 
@@ -9,7 +7,7 @@ TODO:
 > "Track number", "Artist", "Album" then get everything sorted by
 > album-artist-track. (request by David Helder)
 
-- when creating new playlist: ask for name
+- display total time of displayed songs (info window?)
 
 - immediate copying of added tracks to the iPod (when reading tracks
   over a slow network they will still be in the buffer memory and

@@ -116,7 +116,7 @@ get_filesize_for_file_descriptor(FILE *fp)
  * string of hex output @fp - an open file descriptor to read from
  * Returns - A Hash String - you handle memory returned
  */
-gchar *
+static gchar *
 md5_hash_on_file(FILE * fp)
 {
    gchar *result = NULL;
@@ -173,7 +173,6 @@ md5_hash_on_file(FILE * fp)
 static gchar *
 md5_hash_track(Track * s)
 {
-   FILE *fp;
    gchar *result = NULL;
    gchar *filename = NULL;
 
@@ -185,20 +184,35 @@ md5_hash_track(Track * s)
       }
       else if ((filename = get_track_name_on_disk(s)) != NULL)
       {
-         if ((fp = fopen(filename, "r")))
-         {
-            result = md5_hash_on_file(fp);
-            fclose(fp);
-         }
-         else
-         {
-            gtkpod_warning(_("Unable to open file \"%s\"\n"), filename);
-         }
+	 result = md5_hash_on_file_name (filename);
          g_free(filename);
       }
    }
    return (result);
 }
+
+
+gchar *md5_hash_on_file_name (gchar *name)
+{
+    gchar *result = NULL;
+
+    if (name)
+    {
+	FILE *fpit = fopen (name, "r");
+	if (!fpit)
+	{
+	    gtkpod_warning (_("Could not open '%s' to calculate MD5 checksum.\n"),
+			    name);
+	}
+	else
+	{
+	    result = md5_hash_on_file (fpit);
+	    fclose (fpit);
+	}
+    }
+    return result;
+}
+
 
 /**
  * Free up the dynamically allocated memory in this table
