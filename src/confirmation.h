@@ -51,7 +51,8 @@ gboolean gtkpod_confirmation (gint id,
 
 /* predefined IDs for use with gtkpod_confirmation() */
 enum {
-    CONF_ID_IPOD_DIR = 0
+    CONF_ID_IPOD_DIR = 0,
+    CONF_ID_GTKPOD_WARNING
 } CONF_ID;
 
 /* pass this as handler if you don't want the corresponding button to

@@ -53,8 +53,6 @@ enum {
 
 #define ITUNESDB_COPYBLK 65536      /* blocksize for cp () */
 
-#define itunesdb_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
-
 gboolean itunesdb_parse (gchar *path);
 gboolean itunesdb_parse_file (gchar *filename);
 gboolean itunesdb_write (gchar *path);

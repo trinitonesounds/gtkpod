@@ -29,6 +29,9 @@
 |  This product is not supported/written/published by Apple!
 */
 
+
+
+
 /* Some notes on how to use the functions in this file:
 
 
@@ -134,6 +137,8 @@
 
    (pseudo-intelligent path/file concat and file copy)
 
+   Define "itunesdb_warning()" as you need.
+
    Jorg Schuler, 19.12.2002 */
 
 
@@ -149,6 +154,17 @@
 #include <string.h>
 
 #include "itunesdb.h"
+
+#ifdef IS_GTKPOD
+/* we're being linked with gtkpod */
+#include "misc.h"
+#define itunesdb_warning(...) gtkpod_warning(__VA_ARGS__)
+#else
+/* The following prints the error messages to the console: */
+#define itunesdb_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
+#endif
+
+
 
 /* We instruct itunesdb_parse to provide utf8 versions of the strings */
 #define ITUNESDB_PROVIDE_UTF8

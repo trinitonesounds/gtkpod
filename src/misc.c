@@ -615,6 +615,49 @@ gint get_sort_tab_number (gchar *text)
 }
 
 
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                       gtkpod_warning                             *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+/* gtkpod_warning(): will pop up a window and display text as a
+ * warning. If a warning window is already open, the text will be
+ * added to the existing window. */
+/* parameters: same as printf */
+void gtkpod_warning (const gchar *format, ...)
+{
+    va_list arg;
+    gchar *text;
+
+    va_start (arg, format);
+    text = g_strdup_vprintf (format, arg);
+    va_end (arg);
+    
+    gtkpod_confirmation (CONF_ID_GTKPOD_WARNING,    /* gint id, */
+			 FALSE,                     /* gboolean modal, */
+			 _("Warning"),              /* title */
+			 _("The following has occured:"),
+			 text,                /* text to be displayed */
+			 TRUE,                /* gboolean confirm_again, */
+			 NULL, /* ConfHandlerCA confirm_again_handler, */
+			 NULL, /* ConfHandler ok_handler,*/
+			 CONF_NO_BUTTON,      /* don't show "Apply" */
+			 CONF_NO_BUTTON,      /* cancel_handler,*/
+			 NULL,                /* gpointer user_data1,*/
+			 NULL);               /* gpointer user_data2,*/
+    g_free (text);
+}
+
+
+
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                   Functions for Statusbar                        *
+ *                                                                  *
+\*------------------------------------------------------------------*/
 
 void
 gtkpod_statusbar_init(GtkWidget *sb)
@@ -1278,6 +1321,7 @@ void delete_entry_head (gint inst)
     g_free (label);
     g_string_free (str, TRUE);
 }
+
 /***************************************************************************
  * Mount Calls
  *
@@ -1313,6 +1357,7 @@ mount_ipod(void)
 	g_free(str);
     }
 }
+
 /**
  * mount_ipod - attempt to mount the ipod to prefs_get_ipod_mount()
  */
@@ -1572,6 +1617,14 @@ void enqueue_songs (GList *selected_songs)
 			   _("Enqueue"),
 			   selected_songs);
 }
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                       free space stuff                           *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
 
 static gchar*
 get_drive_stats_from_df(const gchar *mp)

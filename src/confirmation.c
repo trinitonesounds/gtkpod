@@ -128,7 +128,9 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
 
    @id:    an ID: only one window with a given positive id can be
            open. Use negative ID if you don't care how many windows
-	   are open at the same time (e.g. because they are modal)
+	   are open at the same time (e.g. because they are modal).
+	   With positive IDs @text is added to an already open window
+           with the same ID.
    @modal: should the window be modal (i.e. block the program)?
    @title: title of the window
    @label: the text on the top of the window
@@ -147,7 +149,7 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
 
    return value:
    FALSE: no window was opened because another window with the same ID
-          is already open
+          is already open. Text was appended.
    TRUE:  either a window was opened, or ok_handler() was called
           directly. */
 gboolean gtkpod_confirmation (gint id,
@@ -163,7 +165,6 @@ gboolean gtkpod_confirmation (gint id,
 			      gpointer user_data1,
 			      gpointer user_data2)
 {
-    GtkTextBuffer *tv = NULL;
     GtkWidget *window, *w;
     ConfData *cd;
     gint defx, defy;
@@ -177,7 +178,31 @@ gboolean gtkpod_confirmation (gint id,
     if (id >= 0)
     {
 	if ((cd = g_hash_table_lookup (id_hash, &id)))
-	{ /* window with same ID already open -- return */
+	{ /* window with same ID already open -- add @text and return
+	   * */
+	    if (text &&
+		cd->window && ((w = lookup_widget (cd->window, "text"))))
+	    {
+		GtkTextIter ti;
+		GtkTextBuffer *tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW(w));
+		if (!tb) 
+		{   /* text buffer doesn't exist yet */
+		    GtkWidget *w1;
+		    tb = gtk_text_buffer_new(NULL);
+		    gtk_text_view_set_buffer(GTK_TEXT_VIEW(w), tb);
+		    gtk_text_view_set_editable(GTK_TEXT_VIEW(w), FALSE);
+		    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(w), FALSE);
+		    if ((w1 = lookup_widget (cd->window, "scroller")))
+			gtk_widget_show (w1);
+		    cd->scrolled = TRUE;
+		}
+		/* append new text to the end */
+		gtk_text_buffer_get_end_iter (tb, &ti);
+		gtk_text_buffer_insert (tb, &ti, text, -1);
+		/* scroll window such that new text is visible */
+		gtk_text_view_scroll_mark_onscreen (GTK_TEXT_VIEW (w), 
+                                    gtk_text_buffer_get_insert (tb));
+	    }
 	    return FALSE;
 	}
     }
@@ -234,9 +259,9 @@ gboolean gtkpod_confirmation (gint id,
     {
 	if (w)
 	{
-	    tv = gtk_text_buffer_new(NULL);
-	    gtk_text_buffer_set_text(tv, text, strlen(text));
-	    gtk_text_view_set_buffer(GTK_TEXT_VIEW(w), tv);
+	    GtkTextBuffer *tb = gtk_text_buffer_new(NULL);
+	    gtk_text_buffer_set_text(tb, text, strlen(text));
+	    gtk_text_view_set_buffer(GTK_TEXT_VIEW(w), tb);
 	    gtk_text_view_set_editable(GTK_TEXT_VIEW(w), FALSE);
 	    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(w), FALSE);
 	}

@@ -324,7 +324,6 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 {
     Song *song = NULL;
     File_Tag *filetag;
-    mp3metadata_t *mp3meta;
     gint len;
 
     if (!name) return NULL;
@@ -411,12 +410,6 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	}
 	if (filetag->songlen)   song->songlen = filetag->songlen;
 	song->size = filetag->size;
-/* 	mp3meta = get_mp3metadata_from_file (name, song->size); */
-/* 	if (mp3meta) */
-/* 	{ */
-/* 	    song->bitrate = mp3meta->Bitrate; */
-/* 	    g_free (mp3meta); */
-/* 	} */
 	song->songlen = get_song_time (name);
 	song->bitrate = ((gint)
 			 ((double)song->size*8/song->songlen+0.5)) * 1000;

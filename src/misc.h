@@ -39,12 +39,7 @@
 
 #define STATUSBAR_TIMEOUT 4200
 
-/* we receive UTF8 strings which should be translated to the locale
- * before printing */
-/* FIXME: write a popup for gtkpod_warning which holds all the
- * warnings in a list */
-#define gtkpod_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
-#define C_FREE(a) if(a) g_free(a); a=NULL
+#define C_FREE(a) {if(a) g_free(a); a=NULL;}
 
 /* pointer to main window */
 extern GtkWidget *gtkpod_window;
@@ -69,6 +64,7 @@ void gtkpod_main_window_set_active(gboolean active);
 
 void gtkpod_statusbar_init(GtkWidget *);
 void gtkpod_statusbar_message(const gchar *message);
+void gtkpod_space_statusbar_init(GtkWidget *w);
 
 S_item SM_to_S (SM_item sm);
 S_item ST_to_S (ST_CAT_item st);
@@ -93,5 +89,5 @@ void do_command_on_entries (gchar *command, gchar *what, GList *selected_songs);
 void play_songs (GList *selected_songs);
 void enqueue_songs (GList *selected_songs);
 
-void gtkpod_space_statusbar_init(GtkWidget *w);
+void gtkpod_warning (const gchar *format, ...);
 #endif __MISC_H__

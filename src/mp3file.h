@@ -19,21 +19,8 @@ Boston, MA 02111-1307, USA.
 #ifndef MP3FILEH_INCLUDED
 #define MP3FILEH_INCLUDED 1
 
-typedef struct 
-{
-  short Layer;
-  int Bitrate;
-  int SampleFrequency;
-  int PlayLength;
-  int Mode;
-  int FileSize;
-  int Frames;             // number of frames in mp3
-  int VbrScale;           // vbr scale. if not found, then this is -1
-  short Version;          // Mpeg Version
-  short VariableBitrate;  // true, if bitrate is variable
-} mp3metadata_t;
+#include <gtk/gtk.h>
 
-mp3metadata_t *get_mp3metadata_from_file(gchar *path, guint32 filesize);
 guint get_song_time(gchar *path);
 
 #endif
