@@ -1839,22 +1839,23 @@ guint32 time_get_mac_time (void)
 /* convert Macintosh timestamp to host system time stamp -- modify
  * this function if necessary to port to host systems with different
  * start of Epoch */
-/* A "null" time will not be converted */
+/* A "null" or "-1" time will not be converted */
 time_t time_mac_to_host (guint32 mactime)
 {
-    if (mactime != 0)  return (time_t)(mactime - 2082844800);
-    else               return 0;
+    if ((mactime != 0) && ((gint32)mactime != -1))
+	return ((time_t)mactime) - 2082844800;
+    else               return (gint32)mactime;
 }
 
 
 /* convert host system timestamp to Macintosh time stamp -- modify
  * this function if necessary to port to host systems with different
  * start of Epoch */
-/* A "null" time will not be converted */
+/* A "null" or "-1" time will not be converted */
 guint32 time_host_to_mac (time_t time)
 {
-    if (time != 0)    return (guint32)(time + 2082844800);
-    else              return 0;
+    if ((time != 0) && (time != -1)) return (guint32)(time + 2082844800);
+    else                             return time;
 }
 
 

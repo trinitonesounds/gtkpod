@@ -84,10 +84,11 @@ typedef struct {
 
 /* struct for time info (created, played, modified) */
 typedef struct {
-    gchar *interval;  /* copy of string specified in the sort tab */
+    gchar *int_str;   /* copy of string specified in the sort tab */
+    gboolean valid;   /* is current string valid? */
     GtkWidget *entry; /* pointer to GtkEntry in sort tab */
     guint32 *low;     /* MAC timestamp for lower limit */
-    guint32 *high;    /* MAC timestamp for upper limit ("-1": no limit)*/
+    guint32 *high;    /* MAC timestamp for upper limit ("-1": no limit) */
 } TimeInfo;
 
 /* struct with data corresponding to each sort tab */

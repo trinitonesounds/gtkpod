@@ -1301,7 +1301,6 @@ on_sp_entry_activate             (GtkEditable     *editable,
     prefs_set_sp_entry (inst, item, buf);
 /*     dp_parse (buf, TRUE); */
     dp2_parse (buf);
-    dp_parse (buf);
     sp_go (inst);
 }
 

@@ -24,8 +24,20 @@
 */
 
 %{
+/* Set to "1" if debugging output is desired */
+#define DP_DEBUG 1
 #include <stdlib.h>
 #include "date_parser.h"
+#include "misc.h"
+#include "support.h"
+/* Will be set to TRUE if error occured */
+    static gboolean dp_error;
+/* Will be set to TRUE if construct (< date, = date...) was not
+   recognized */
+    static gboolean dp_construct_error;
+/* Variable to hold lower and upper limit */
+    static time_t lower_stamp, upper_stamp;
+/* Pointer to input string to be parsed */
     static gchar *dp_strp = NULL;
 /* We don't read from a stream but from a string buffer. This macro
    will copy a maximum of @max_size chars from dp_strp to @buf,
@@ -41,6 +53,8 @@
         result = i; \
       } \
     }
+    static void dp_ll (gchar *str);
+    static void dp_LL (gchar *str);
 %}
 
 /* stop parsing after end of string is reached */
@@ -61,39 +75,128 @@
 %option outfile="lex.yy.c"
 
 DATECHARS [^<>=]+
+
+
 %%
 
-"<"{DATECHARS} {
+^"<"{DATECHARS}$ {
+    gchar *strp;
+#if DP_DEBUG
     printf ("<: '%s'\n", yytext);
+#endif
+    lower_stamp = 0;
+    strp = strchr (yytext, '<');
+    if (strp)  upper_stamp = dp_parse (strp+1, FALSE);
+    else       dp_error = TRUE;
 }
 
-">"{DATECHARS} {
+^">"{DATECHARS}$ {
+    gchar *strp;
+#if DP_DEBUG
     printf (">: '%s'\n", yytext);
+#endif
+    lower_stamp = -1;
+    upper_stamp = -1;
+    strp = strchr (yytext, '>');
+    if (strp) lower_stamp = dp_parse (strp+1, TRUE);
+    else      dp_error = TRUE;
 }
 
-"="{DATECHARS} {
+^"="{DATECHARS}$ {
+    gchar *strp;
+#if DP_DEBUG
     printf ("=: '%s'\n", yytext);
+#endif
+    strp = strchr (yytext, '=');
+    if (strp)
+    {
+	lower_stamp = dp_parse (strp+1, TRUE);
+	upper_stamp = dp_parse (strp+1, FALSE);
+    }
+    else      dp_error = TRUE;
+    
 }
 
-{DATECHARS}"<"[ \t]*"d"[ \t]*"<"{DATECHARS} |
-{DATECHARS}"<"[ \t]*"<"{DATECHARS} {
-    printf ("<<: '%s'\n", yytext);
+^{DATECHARS}"<"[ \t]*"d"[ \t]*"<"{DATECHARS}$ {
+    dp_ll (yytext);
 }
 
-{DATECHARS}">"[ \t]*"d"[ \t]*">"{DATECHARS} |
-{DATECHARS}">"[ \t]*">"{DATECHARS} {
-    printf (">>: '%s'\n", yytext);
+^{DATECHARS}"<"[ \t]*"<"{DATECHARS}$ {
+    dp_ll (yytext);
 }
 
-[ \t]*      /* ignore */
+^{DATECHARS}">"[ \t]*"d"[ \t]*">"{DATECHARS}$ {
+    dp_LL (yytext);
+}
 
-.           printf( "Unrecognized character: '%s'\n", yytext );
+^{DATECHARS}">"[ \t]*">"{DATECHARS}$ {
+    dp_LL (yytext);
+}
+
+[\n]        /* ignore */
+
+.           {
+    dp_error = TRUE;
+    dp_construct_error = TRUE;
+}
 
 %%
+
+
+/* pattern " < < " */
+static void dp_ll (gchar *str)
+{
+    gchar *strp;
+#if DP_DEBUG
+    printf ("<<: '%s'\n", yytext);
+#endif
+    strp = strchr (str, '<');
+    if (strp)
+    {
+	*strp = 0;
+	lower_stamp = dp_parse (str, TRUE);
+	strp = strchr (strp+1, '<');
+	if (strp)  upper_stamp = dp_parse (strp+1, FALSE);
+	else       dp_error = TRUE;
+    }
+    else  dp_error = TRUE;
+}
+
+
+/* pattern " > > " */
+static void dp_LL (gchar *str)
+{
+    gchar *strp;
+#if DP_DEBUG
+    printf (">>: '%s'\n", yytext);
+#endif
+    strp = strchr (str, '>');
+    if (strp)
+    {
+	*strp = 0;
+	upper_stamp = dp_parse (str, FALSE);
+	strp = strchr (strp+1, '>');
+	if (strp)  lower_stamp = dp_parse (strp+1, TRUE);
+	else       dp_error = TRUE;
+    }
+    else  dp_error = TRUE;
+}
+
+
 
 void dp2_parse (gchar *dp_str)
 {
-    dp_strp = dp_str;
-    /* set timestamp to current time */
+    /* for the 'end of line ("$") rule to work, we need a "\n" at the
+       end of the string... */
+    gchar *str = g_strdup_printf ("%s\n", dp_str);
+    /* set string to parse */
+    dp_strp = str;
+    /* no error occured (yet) */
+    dp_error = FALSE;
+    dp_construct_error = FALSE;
     yylex ();
+    if (dp_construct_error)
+	gtkpod_warning ("Date parser: did not recognize construct:\n   '%s'\n",
+			dp_str);
+    g_free (str);
 }

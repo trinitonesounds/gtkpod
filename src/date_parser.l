@@ -28,8 +28,12 @@
  * below. */
 
 %{
+/* Set to "1" if debugging output is desired */
+#define DP_DEBUG 1
 #include <stdlib.h>
 #include "date_parser.h"
+#include "misc.h"
+#include "support.h"
     static gchar *dp_strp = NULL;
     static time_t tstamp;
     static gboolean parsed_time;
@@ -85,7 +89,6 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
 {TIMESHORT}	{
     gchar *ptr1 = yytext;
     struct tm *lt = localtime (&tstamp);
-    printf ("Time with minutes: '%s'\n", yytext);
     lt->tm_hour = strtol (ptr1, &ptr1, 10);
     ++ptr1;
     lt->tm_min = strtol (ptr1, &ptr1, 10);
@@ -93,13 +96,15 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     else          lt->tm_sec = 59;
     tstamp = mktime (lt);
     parsed_time = TRUE;
+#if DP_DEBUG
+    printf ("Time with minutes: '%s'\n", yytext);
     printf ("tstamp: %d: %s", (int)tstamp, asctime (lt));
+#endif
 }
 	
 {TIMEFULL}	{
     gchar *ptr1 = yytext;
     struct tm *lt = localtime (&tstamp);
-    printf ("Time with seconds: '%s'\n", yytext);
     lt->tm_hour = strtol (ptr1, &ptr1, 10);
     ++ptr1;
     lt->tm_min = strtol (ptr1, &ptr1, 10);
@@ -107,13 +112,15 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     lt->tm_sec = strtol (ptr1, &ptr1, 10);
     tstamp = mktime (lt);
     parsed_time = TRUE;
+#if DP_DEBUG
+    printf ("Time with seconds: '%s'\n", yytext);
     printf ("tstamp: %d: %s", (int)tstamp, asctime (lt));
+#endif
 }
 
 {DATESHORT}	{
     gchar *ptr1 = yytext;
     struct tm *lt = localtime (&tstamp);
-    printf ("Date without year: '%s'\n", yytext);
     if (!parsed_time)
     {
 	if (lower)
@@ -133,13 +140,15 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     ++ptr1;
     lt->tm_mon = strtol (ptr1, &ptr1, 10) - 1;
     tstamp = mktime (lt);
+#if DP_DEBUG
+    printf ("Date without year: '%s'\n", yytext);
     printf ("tstamp: %d: %s", (int)tstamp, asctime (lt));
+#endif
 }
 
 {DATEFULL}	{
     gchar *ptr1 = yytext;
     struct tm *lt = localtime (&tstamp);
-    printf ("Date with year: '%s'\n", yytext);
     if (!parsed_time)
     {
 	if (lower)
@@ -167,13 +176,15 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     /* tm_year is years since 1900 */
     lt->tm_year -= 1900;
     tstamp = mktime (lt);
+#if DP_DEBUG
+    printf ("Date with year: '%s'\n", yytext);
     printf ("tstamp: %d: %s", (int)tstamp, asctime (lt));
+#endif
 }
 
 {RELTIME_S}     { /* [+-]{TIMESHORT} */
     gchar *ptr1 = yytext;
     gint32 hours, mins, sign;
-    printf ("[+-]{TIMESHORT} '%s'\n", yytext);
     if (*ptr1 == '+')  sign = 1;
     else               sign = -1;
     ++ptr1;
@@ -181,13 +192,15 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     ++ptr1;
     mins = strtol (ptr1, &ptr1, 10);
     tstamp += sign * (hours*3600 + mins*60);
+#if DP_DEBUG
+    printf ("[+-]{TIMESHORT} '%s'\n", yytext);
     printf ("tstamp: %d: %s", (int)tstamp, ctime (&tstamp));
+#endif
 }
 
 {RELTIME_F}     { /* [+-]{TIMEFULL} */
     gchar *ptr1 = yytext;
     gint32 hours, mins, secs, sign;
-    printf ("[+-]{TIMEFULL} '%s'\n", yytext);
     if (*ptr1 == '+')  sign = 1;
     else               sign = -1;
     ++ptr1;
@@ -197,24 +210,31 @@ SRELTIME  [+-]{RELTIME}            /* e.g. -3M5d              */
     ++ptr1;
     secs = strtol (ptr1, &ptr1, 10);
     tstamp += sign * (hours*3600 + mins*60 + secs);
+#if DP_DEBUG
+    printf ("[+-]{TIMEFULL} '%s'\n", yytext);
     printf ("tstamp: %d: %s", (int)tstamp, ctime (&tstamp));
+#endif
 }
 
 {RELTIME}	{ /* ({NUM}[smhdwMy])+ */
+#if DP_DEBUG
     printf ("RELTIME: '%s'\n", yytext);
+#endif
     /* call reltime with negative sign */
     dp_reltime (yytext, -1);
 }
 
 {SRELTIME}	{ /* [+-]{RELTIME} */
+#if DP_DEBUG
     printf ("SRELTIME: '%s'\n", yytext);
+#endif
     if (*yytext == '+')  dp_reltime (yytext+1, +1);
     else                 dp_reltime (yytext+1, -1);
 }
 
 [ \t]*      /* ignore */
 
-.           printf( "Unrecognized character: '%s'\n", yytext );
+.           gtkpod_warning (_("Date format error: unrecognized character: '%s'\n"), yytext );
 
 %%
 
@@ -255,7 +275,9 @@ static void dp_reltime (gchar *str, gint32 sign)
 	++ptr1;
     }
     tstamp += sign*secs;
+#if DP_DEBUG
     printf ("secs: %d, tstamp: %d: %s", (int)secs, (int)tstamp, ctime (&tstamp));
+#endif
 }
 
 /* dp_parse() will take one date specification (like 9/6/03, or -5d,
