@@ -7,6 +7,13 @@ TODO:
 > "Track number", "Artist", "Album" then get everything sorted by
 > album-artist-track. (request by David Helder)
 
+- Darren Zimerman
+> As for improvements to gtkpod, the only one I can think of off the top 
+> of my head would be to have a list of available playlists in the 
+> right-click menu.  So instead of just "Add selection to new playlist", 
+> there would actually be list of current playlists (perhaps in a sub-menu).
+
+
 - immediate copying of added tracks to the iPod (when reading tracks
   over a slow network they will still be in the buffer memory and
   won't have to read over the network twice if they are copied right
@@ -44,11 +51,36 @@ TODO:
 
 - automate "Create iPod's directories"
 
+- on-the-fly resampling to a particular bit rate. I have 32 GB of
+  songs be cause some of them at at 192, but I only need them at 128
+  or so on the Ipod. Mus icmatch does this exact
+  thing. (zumpicon@verizon.net) JCS: this could be done along with an
+  arbitrary "conversion" on export: user provides a command line in
+  the prefs dialogue that is executed instead of the simple copy
+  command.
 
 Please feel free to submit further features.
 
 
 BUGLIST:
+
+- Submitted By: Olivier Magere (omagere)   [ 873014 ]
+
+  I tried to reconcile my Ipod with GtkPod. I wanted to remove
+  everything from the ipod.
+
+  gtkpod issued plenty of warning messages that it couldn't remove
+  files from the device but it still updated the ipod's database.
+
+  So I was in a situation where I had 5Gb of music on the ipod, none
+  of it known to the ipod.
+
+  Updating the db should be tied to successful file operations.
+
+  (JCS: F00/f00 related problem?)
+
+- "iTundesDB.ext could not be found" printed when "iTunesDB" could not
+  be found (confusing).
 
 - don't write iTunesDB if no tracks are imported.
 
