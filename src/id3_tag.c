@@ -291,6 +291,34 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
             }
         }
 
+        /************
+         * Composer *
+         ************/
+        if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMPOSER)) )
+        {
+            if ( (id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)) )
+            {
+                if ( (num_chars=ID3Field_GetASCII_1(id3_field,string,ID3V2_MAX_STRING_LEN,field_num)) > 0
+                     && string != NULL )
+                {
+                    if (USE_CHARACTER_SET_TRANSLATION)
+                    {
+                        string1 = convert_from_file_to_user(string);
+                        /* Strip_String(string1);*/
+                        FileTag->composer = g_strdup(string1);
+                        g_free(string1);
+			if (!FileTag->auto_charset)
+			    FileTag->auto_charset = 
+				charset_check_auto (string);
+                    }else
+                    {
+		        /* Strip_String(string); */
+                        FileTag->composer = g_strdup(string);
+                    }
+                }
+            }
+        }
+
 
         /*************************
          * Track and Total Track *
@@ -399,6 +427,19 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
                             FileTag->genre = g_strdup(Id3tag_Genre_To_String(atoi(string+1)));
                         }
 
+                    }else if ( strspn(string, "0123456789") == strlen(string) )
+		    {
+                        /* Convert a genre written as '3' into 'Dance' */
+                        if (USE_CHARACTER_SET_TRANSLATION)
+                        {
+                            string1 = convert_from_file_to_user(Id3tag_Genre_To_String(atoi(string)));
+                            FileTag->genre = g_strdup(string1);
+                            g_free(string1);
+                        }else
+                        {
+                            FileTag->genre = g_strdup(Id3tag_Genre_To_String(atoi(string)));
+                        }
+
                     }else
                     {
 
@@ -489,6 +530,7 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
     gboolean has_track   = 1;
     gboolean has_genre   = 1;
     gboolean has_comment = 1;
+    gboolean has_composer = 1;
 
 
     /* Test to know if we can write into the file */
@@ -606,6 +648,38 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
 		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_ALBUM)) )
 		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
 		has_album = 0;
+	    }
+	}
+
+        /************
+         * Composer *
+         ************/
+        if (FileTag->composer)
+	{
+	    if (g_utf8_strlen(FileTag->composer, -1)>0 )
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMPOSER)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		id3_frame = ID3Frame_NewID(ID3FID_COMPOSER);
+		ID3Tag_AttachFrame(id3_tag,id3_frame);
+		
+		if ((id3_field = ID3Frame_GetField(id3_frame,ID3FN_TEXT)))
+		{
+		    if (USE_CHARACTER_SET_TRANSLATION)
+		    {
+			string = convert_from_user_to_file(FileTag->composer);
+			ID3Field_SetASCII(id3_field,string);
+			g_free(string);
+		    }else
+		    {
+			ID3Field_SetASCII(id3_field,FileTag->composer);
+		    }
+		}
+	    } else
+	    {
+		if ( (id3_frame = ID3Tag_FindFrameWithID(id3_tag,ID3FID_COMPOSER)) )
+		    ID3Tag_RemoveFrame(id3_tag,id3_frame);
+		has_composer = 0;
 	    }
 	}
 
@@ -743,7 +817,7 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
          * is set to 1, we strip the ID3v1.x and ID3v2 tags. Else let see... :)
          */
         if ( STRIP_TAG_WHEN_EMPTY_FIELDS && !has_title && !has_artist && !has_album
-             && !has_year && !has_track && !has_genre && !has_comment )/*&& !has_song_len ) */
+             && !has_year && !has_track && !has_genre && !has_comment && !has_composer)/*&& !has_song_len ) */
         {
             error_strip_id3v1 = ID3Tag_Strip(id3_tag,ID3TT_ID3V1);
             error_strip_id3v2 = ID3Tag_Strip(id3_tag,ID3TT_ID3V2);

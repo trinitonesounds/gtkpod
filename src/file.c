@@ -446,6 +446,15 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	}
 	else set_entry_from_filename (song, SM_COLUMN_GENRE);
 
+	C_FREE (song->composer);
+	C_FREE (song->composer_utf16);
+	if (filetag.composer)
+	{
+	    song->composer = filetag.composer;
+	    song->composer_utf16 = g_utf8_to_utf16 (song->composer, -1, NULL, NULL, NULL);
+	}
+	else set_entry_from_filename (song, SM_COLUMN_COMPOSER);
+
 	C_FREE (song->comment);
 	C_FREE (song->comment_utf16);
 	if (filetag.comment)
@@ -1372,6 +1381,8 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 	filetag->title = song->title;
     if ((tag_id == S_ALL) || (tag_id == S_GENRE))
 	filetag->genre = song->genre;
+    if ((tag_id == S_ALL) || (tag_id == S_COMPOSER))
+	filetag->composer = song->composer;
     if ((tag_id == S_ALL) || (tag_id == S_COMMENT))
 	filetag->comment = song->comment;
     if ((tag_id == S_ALL) || (tag_id == S_TRACK_NR))

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-24 21:44:54 jcs>
+/* Time-stamp: <2003-08-28 23:54:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -773,11 +773,12 @@ void sm_stop_editing (gboolean cancel)
     if (col)
     {
 	/* Before removing the widget we set multi_edit to FALSE. That
-	   way at most one entry will be changed */
+	   way at most one entry will be changed (this also doesn't
+	   seem to work the way intended) */
 	gboolean me = prefs_get_multi_edit ();
+	prefs_set_multi_edit (FALSE);
 	if (!cancel && col->editable_widget)  
 	    gtk_cell_editable_editing_done (col->editable_widget);
-	prefs_set_multi_edit (FALSE);
 	if (col->editable_widget)
 	    gtk_cell_editable_remove_widget (col->editable_widget);
 	prefs_set_multi_edit (me);

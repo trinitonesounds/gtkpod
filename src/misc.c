@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-24 01:03:40 jcs>
+/* Time-stamp: <2003-08-28 23:21:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -326,7 +326,9 @@ Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n\
 Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newlines at the end\n"),
 		       _("\
 Sam Clegg: user defined filenames when exporting tracks from the iPod\n\
-Chris Cutler: automatic creation of various playlist types\n"),
+Chris Cutler: automatic creation of various playlist types\n\
+Graeme Wilford: reading and writing of the 'Composer' ID3 tags\n\
+Edward Matteucci: debugging, special playlist creation\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n\
@@ -2680,8 +2682,8 @@ static gint since_last_CF (gconstpointer aa, gconstpointer bb)
 /* Insert function: determines whether a song is entered into the playlist */
 static gboolean since_last_IF (Song *song)
 {
-    if (song)   return (song->recent_playcount != 0);
-    return      FALSE;
+    if (song && (song->recent_playcount != 0))  return TRUE;
+    else                                        return FALSE;
 }
 
 void since_last_pl(void)

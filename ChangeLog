@@ -20,6 +20,10 @@ gtkpod V0.53-CVS
 	amount of stack memory (roughly 66000 Bytes) which crashed some
 	systems.
 
+	BUGFIX: reading and writing of the Composer ID3 tags implemented
+	(so far the fields could only be set from inside gtkpod -- thanks
+	to Graeme Wilford)
+
 	BUGFIX: fixed memory holes in sync_songids(), sync_dir_ok(),
 	add_playlist_by_filename().
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-24 22:03:43 jcs>
+/* Time-stamp: <2003-08-28 23:47:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -187,6 +187,7 @@ void pm_add_song (Playlist *playlist, Song *song, gboolean display);
 void pm_name_changed (Playlist *playlist);
 void pm_song_changed (Song *song);
 void pm_sort (GtkSortType order);
+void pm_stop_editing (gboolean cancel);
 gboolean pm_move_pathlist (gchar *data, GtkTreePath *path,
 			   GtkTreeViewDropPosition pos);
 

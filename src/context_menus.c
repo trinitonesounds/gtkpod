@@ -305,7 +305,7 @@ sm_context_menu_init(void)
 {
     if (widgets_blocked) return;
 
-/*    sm_stop_editing (TRUE);*/
+    sm_stop_editing (TRUE);
 
     selected_entry = NULL; 
     selected_playlist = NULL;
@@ -324,6 +324,8 @@ void
 pm_context_menu_init(void)
 {
     if (widgets_blocked) return;
+
+    pm_stop_editing (TRUE);
 
     if (selected_songs)  g_list_free (selected_songs);
     selected_songs = NULL;
@@ -345,7 +347,7 @@ st_context_menu_init(gint inst)
 {
     if (widgets_blocked) return;
 
-/*    st_stop_editing (inst, TRUE);*/
+    st_stop_editing (inst, TRUE);
 
     if (selected_songs)  g_list_free (selected_songs);
     selected_songs = NULL;

@@ -53,6 +53,7 @@ struct _File_Tag
     gchar *track_total;    /* The number of tracks for the album (ex: 12/20) */
     gchar *genre;          /* Genre of song */
     gchar *comment;        /* Comment */
+    gchar *composer;	   /* Composer */
     guint32 size;          /* Size of file in bytes */
     guint32 songlen;       /* Length of file in ms */
     GList *other;          /* List of unsupported fields (used for ogg only) */

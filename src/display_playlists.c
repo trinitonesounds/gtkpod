@@ -384,6 +384,26 @@ static void pm_selection_changed (GtkTreeSelection *selection,
 }
 
 
+/* Stop editing. If @cancel is TRUE, the edited value will be
+   discarded (I have the feeling that the "discarding" part does not
+   work quite the way intended). */
+void pm_stop_editing (gboolean cancel)
+{
+    if (playlist_treeview)
+    {
+	GtkTreeViewColumn *col;
+	gtk_tree_view_get_cursor (playlist_treeview, NULL, &col);
+	if (col)
+	{
+	    if (!cancel && col->editable_widget)  
+		gtk_cell_editable_editing_done (col->editable_widget);
+	    if (col->editable_widget)
+		gtk_cell_editable_remove_widget (col->editable_widget);
+	}
+    }
+}
+
+
 /**
  * Reorder playlists to match order of playlists displayed.
  * data_changed() is called when necessary.
