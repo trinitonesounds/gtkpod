@@ -1,0 +1,7 @@
+gtkpod (0.14-0) unstable; urgency=low
+    * lots of new features !
+    * remove files from ipod
+    * playlist drag and drop support
+
+ -- Corey Donohoe <cdonohoe@memphis.edu>  Sat, 11 Jan 2003 20:55:53 +0200
+

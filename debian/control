@@ -1,0 +1,11 @@
+Source: gtkpod
+Section: misc
+Priority: optional
+Maintainer: Corey Donohoe<cdonohoe@memphis.edu>
+Build-Depends: debhelper(>> 3.0.0), libglib2.0-dev, libgtk2.0-dev, libid3-dev
+Standards-Version: 3.5.2
+
+Package: gtkpod
+Architecture: any
+Depends: ${shlibs:Depends} 
+Description: A Gtk2 Based application to manage an iPod
