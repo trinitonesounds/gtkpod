@@ -130,8 +130,9 @@ static GtkWidget *xmms_create_dir_browser(gchar * title, gchar * current_path, G
 
 struct dirnode
 {
-	unsigned int scanned : 1;
-	char *path;
+    unsigned int scanned : 1;
+    char *path;
+    char *dir;
 };
 
 
@@ -152,7 +153,7 @@ void create_dir_browser (void)
     browser = xmms_create_dir_browser (
 	_("Select directory to add recursively"),
 	cfg->last_dir.browse,
-	GTK_SELECTION_SINGLE,
+	GTK_SELECTION_MULTIPLE,
 	add_dir_selected);
     gtk_widget_show (browser);
 }
@@ -203,6 +204,7 @@ static void destroy_cb(gpointer data)
 	struct dirnode *node = data;
 
 	g_free(node->path);
+	g_free(node->dir);
 	g_free(node);
 }
 
@@ -224,6 +226,7 @@ static void add_dir(GtkCTree *tree, GtkCTreeNode *pnode, char* parent, char *dir
 		GtkCTreeNode *node;
 		struct dirnode *dirnode = g_malloc0(sizeof (struct dirnode));
 		dirnode->path = g_strconcat(path, "/", NULL);
+		dirnode->dir = g_strdup (dir);
  		has_subdir = check_for_subdir(dirnode->path);
 		dir_utf8 = charset_to_utf8 (dir);
 		node = gtk_ctree_insert_node(tree, pnode, NULL, &dir_utf8,
@@ -426,12 +429,10 @@ static GtkWidget *xmms_create_dir_browser(char *title, char *current_path, GtkSe
 			for (node = GTK_CTREE_ROW(node)->children; node != NULL;
 			     node = GTK_CTREE_ROW(node)->sibling)
 			{
-				char *tmp;
-				if (gtk_ctree_node_get_pixtext(ctree, node, 0,
-							       &tmp, NULL,
-							       NULL, NULL))
-					if (!strcmp(dir[i], tmp))
-						break;
+				struct dirnode *dn;
+				dn = gtk_ctree_node_get_row_data(GTK_CTREE(tree), node);
+					if (!strcmp(dir[i], dn->dir))
+					    break;
 			}
 			if (!node)
 				break;

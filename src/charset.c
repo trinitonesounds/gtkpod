@@ -130,16 +130,20 @@ const CharsetInfo charset_info[] = {
    there */
 void charset_init_combo (GtkCombo *combo)
 {
-    G_CONST_RETURN gchar *current_charset;
+    gchar *current_charset;
+    gchar *description;
     const CharsetInfo *ci;
-   
     static GList *charsets = NULL; /* list with choices -- takes a while to
 				     * initialize, so we only do it once */
     
     current_charset = prefs_get_charset ();
     if ((current_charset == NULL) || (strlen (current_charset) == 0))
     {
-	current_charset = _("System Charset");
+	description = g_strdup (_("System Charset"));
+    }
+    else
+    {
+	description = charset_to_description (current_charset);
     }
     if (charsets == NULL)
     { /* set up list with charsets */
@@ -157,7 +161,8 @@ void charset_init_combo (GtkCombo *combo)
     /* set pull down items */
     gtk_combo_set_popdown_strings (GTK_COMBO (combo), charsets); 
     /* set standard entry */
-    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), current_charset);
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), description);
+    g_free (description);
 }
 
 
@@ -189,26 +194,45 @@ gchar *charset_from_description (gchar *descr)
 }
 
 
+/* Returns the description belonging to the charset "charset"
+ * Returns the description (if found) or just a copy of "charset"
+ * You must g_free the charset received */
+gchar *charset_to_description (gchar *charset)
+{
+    const CharsetInfo *ci;
+
+    if (!charset) return NULL; /* sanity! */
+    /* check if charset matches one of the charsets in
+     * charset_info[], and if so, return the description */
+    ci = charset_info;
+    while (ci->descr != NULL)
+    {
+	if (g_utf8_collate (charset, ci->name) == 0)
+	{
+	    return g_strdup (ci->descr);
+	}
+	++ci;
+    }
+    /* OK, it was not in the charset_info[] list. Therefore it must be
+     * from the "iconv -l" list. We just return a copy of it */
+    return g_strdup (charset);
+}
+
+
 /* Convert "str" (in the charset specified in cfg->charset) to
  * utf8. If cfg->charset is NULL, "str" is assumed to be in the
  * current locale charset */
 gchar *charset_to_utf8 (gchar *str)
 {
-    gchar *ret;
+    G_CONST_RETURN gchar *charset;
 
-    /* use standard locale charset */
-    if (!cfg->charset || !strlen (cfg->charset))
-	return g_locale_to_utf8(str, -1, NULL, NULL, NULL);
-    /* OK, we have to use iconv */
-    ret = g_convert (str,                  /* string to convert */
-		     strlen (str),         /* length of string  */
-		     "UTF-8",              /* to_codeset        */
-		     prefs_get_charset (), /* from_codeset      */
-		     NULL,                 /* *bytes_read       */
-		     NULL,                 /* *bytes_written    */
-		     NULL);                /* GError **error    */
-    if (ret == NULL)  ret = g_strdup (_("Invalid Input String"));
-    return ret;
+    if (str == NULL) return NULL;  /* sanity */
+    charset = prefs_get_charset ();
+    if (!charset || !strlen (charset))
+    {    /* use standard locale charset */
+	g_get_charset (&charset);
+    }
+    return charset_to_charset ((gchar *)charset, "UTF-8", str);
 }
 
 
@@ -217,19 +241,81 @@ gchar *charset_to_utf8 (gchar *str)
  * current locale charset */
 gchar *charset_from_utf8 (gchar *str)
 {
-    gchar *ret;
+    G_CONST_RETURN gchar *charset;
 
-    /* use standard locale charset */
-    if (!cfg->charset || !strlen (cfg->charset))
-	return g_locale_from_utf8(str, -1, NULL, NULL, NULL);
-    /* OK, we have to use iconv */
+    if (str == NULL) return NULL;  /* sanity */
+    charset = prefs_get_charset ();
+    if (!charset || !strlen (charset))
+    {    /* use standard locale charset */
+	g_get_charset (&charset);
+    }
+    return charset_to_charset ("UTF-8", (gchar *)charset, str);
+}
+
+
+/* Convert "str" from "from_charset" to "to_charset", trying to skip
+   illegal character as best as possible */
+gchar *charset_to_charset (gchar *from_charset, gchar *to_charset, gchar *str)
+{
+    gchar *ret;
+    gssize len;
+    gsize bytes_read;
+
+    if (!str) return NULL;
+    len = strlen (str);
+    /* do the conversion! */
     ret = g_convert (str,                  /* string to convert */
-		    strlen (str),         /* length of string  */
-		    prefs_get_charset (), /* to_codeset        */
-		    "UTF-8",              /* from_codeset      */
-		    NULL,                 /* *bytes_read       */
-		    NULL,                 /* *bytes_written    */
-		    NULL);                /* GError **error    */
-    if (ret == NULL)  ret = g_strdup (_("Invalid Input String"));
+		     len,                  /* length of string  */
+		     to_charset,           /* to_codeset        */
+		     from_charset,         /* from_codeset      */
+		     &bytes_read,          /* *bytes_read       */
+		     NULL,                 /* *bytes_written    */
+		     NULL);                /* GError **error    */
+    if (ret == NULL)
+    { /* We probably had illegal characters. We try to convert as much
+       * as possible. "bytes_read" tells how many chars were converted
+       * successfully, and we try to fill up with spaces 0x20, which
+       * will work for most charsets (except those using 16 Bit or 32
+       * Bit representation (0x2020 or 0x20202020 != 0x0020 or
+       * 0x00000020) */
+	gchar *strc = g_strdup (str);
+	gsize br0 = bytes_read;
+	gsize br;
+	while (!ret && (bytes_read < len))
+	{
+	    strc[bytes_read] = 0x20;
+	    br = bytes_read;
+	    ret = g_convert (strc,         /* string to convert */
+			     len,          /* length of string  */
+			     to_charset,   /* to_codeset        */
+			     from_charset, /* from_codeset      */
+			     &bytes_read,  /* *bytes_read       */
+			     NULL,         /* *bytes_written    */
+			     NULL);        /* GError **error    */
+	    if (bytes_read > br0)  br0 = bytes_read; /* max. nr. of
+							converted Bytes */
+	    if (br == bytes_read)  ++bytes_read; /* don't do an
+						    infinite loop */
+	}
+	if (ret == NULL)
+	{ /* still no valid string */
+	    if (br0 != 0)
+	    { /* ok, at least something we can use! */
+		ret = g_convert (strc,         /* string to convert */
+				 br0,          /* length of string  */
+				 to_charset,   /* to_codeset        */
+				 from_charset, /* from_codeset      */
+				 &bytes_read,  /* *bytes_read       */
+				 NULL,         /* *bytes_written    */
+				 NULL);        /* GError **error    */
+	    }
+	    if (ret == NULL)
+	    { /* Well... what do you think we should return? */
+		/* ret = g_strdup (_("gtkpod: Invalid Conversion")); */
+		ret = g_strdup ("");
+	    }
+	}
+	g_free (strc);
+    }
     return ret;
 }
