@@ -1,0 +1,44 @@
+Structure of play count files
+"iPod_Control/iTunes/Play Counts"
+
+Offset     Meaning
+0x00-03    "mhdp": header identifier
+0x04-07    0x60: length of header
+0x08-0b    0x10 or 0x0c: size of one entry in bytes
+	   (one entry is one song, 0x10 is for 2.0 firmware, 0x0c is
+	   for 1.3 firmware)
+0x0c-0f    number of entries (songs on iPod)
+0x10-5f    unknown, usually 0x00
+
+Structure of each entry
+
+Entries start at 0x60 (or whatever is written in offxet 0x04 above)
+and are of length 0x10 (2.0 firmware) or 0x0c (1.3 firmware)
+
+Offset     Meaning
+0x00-0x03  number of times song has been played
+0x04-0x07  mac-timestamp (number of seconds since GMT 0:00 1-Jan-1904)
+           subtract 2,082,844,800 seconds to obtain Unix timestamp
+	   (number of seconds since GMT 0:00 1-Jan-1970)
+0x08-0x0b  0x00 ???
+0x0c-0x0f  star rating * 0x14 (only available with 2.0 firmware)
+----------------------------------------------------------------------
+
+
+Structure of On-The-Go-Playlist files
+"iPod_Control/iTunes/OTGPlaylistInfo_1"
+
+Offset     Meaning
+0x00	   "mhpo": header identifier
+0x04	   0x14: size of header (including "mhpo")
+0x08	   0x04: unknown (size of each entry?)
+0x0c	   number of entries
+0x10	   unknown: possibly a UNIX!? datestamp
+
+Structure of each entry
+
+Entries start at 0x14 (or whatever is written in offset 0x04 above)
+and are of length 0x04 (or whatever is written in offset 0x08 above).
+
+0x00       ID of track added to OTG-Playlist
+----------------------------------------------------------------------
