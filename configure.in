@@ -37,10 +37,6 @@ dnl Add the languages which your application supports here.
 ALL_LINGUAS=""
 AM_GLIB_GNU_GETTEXT
 
-dnl check BIG/LITTLE endian
-dnl WORDS_BIGENDIAN is defined if we have to deal with BIGENDIAN
-AC_C_BIGENDIAN (,,)
-
 dnl Id3lib librairies
 dnl Check which libs are required by id3lib
 AC_SEARCH_LIBS(ID3Tag_Link,"id3" "id3 -lstdc++" "id3 -lz" "id3 -lz -lstdc++",,AC_MSG_ERROR(id3lib not found))

@@ -207,7 +207,7 @@ static gint32 get4int(FILE *file, glong seek)
 
 /* Fix UTF16 String for BIGENDIAN machines (like PPC) */
 static gunichar2 *fixup_utf16(gunichar2 *utf16_string) {
-#ifdef WORDS_BIGENDIAN
+#if (G_BYTE_ORDER == G_BIG_ENDIAN)
 gint32 i;
  for(i=0; i<utf16_strlen(utf16_string); i++)
  {
@@ -215,7 +215,7 @@ gint32 i;
 	                ((utf16_string[i]>>8) & 0xff);
  
  }
-#endif WORDS_BIGENDIAN
+#endif
 return utf16_string;
 }
 

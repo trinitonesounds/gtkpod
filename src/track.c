@@ -46,8 +46,11 @@ GList *songs = NULL;
 static GList *pending_deletion = NULL;
 /* Flag to indicate if it's safe to quit (i.e. all songs exported or
    at least a offline database written). It's state is changed in
-   handle_export() and add_song_by_filename(). It's state can be
-   accessed by the public function file_are_saved(). */
+   handle_export() and add_song_by_filename(), as well as the
+   xy_cell_edited() functions in display.c.
+   It's state can be accessed by the public function
+   file_are_saved(). It can be set to FALSE by calling
+   data_changed() */
 static gboolean files_saved = TRUE;
 
 static guint32 free_ipod_id (guint32 id);
