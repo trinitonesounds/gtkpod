@@ -66,7 +66,7 @@ typedef struct
   guint32 time_create;       /* time of creation (Mac type)             */
   guint32 time_played;       /* time of last play  (Mac type)           */
   guint32 time_modified;     /* time of last modification  (Mac type)   */
-  guint32 rating;            /* star rating (stars * 20)                */
+  guint32 rating;            /* star rating (stars * RATING_STEP (20))  */
   guint32 playcount;         /* number of times song was played         */
   gchar   *hostname;         /* name of host this file has been imported on */
   gboolean transferred;      /* has file been transferred to iPod?      */
@@ -74,6 +74,9 @@ typedef struct
   gchar   *charset;          /* charset used for ID3 tags               */
   gchar   *auto_charset;     /* charset detected by auto-detection code */
 } Song;
+
+/* one star is how much (song->rating) */
+#define RATING_STEP 20
 
 /* A means to address the fields by uniform IDs. May be extended as
  * needed. You should extend "song_get_item_pointer()" defined in

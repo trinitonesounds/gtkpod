@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "prefs.h"
 #include "song.h"
 #include "misc.h"
@@ -389,10 +390,29 @@ void hash_songs(void)
 
 
 /* This function removes a duplicate song "song" from memory while
- * preserving the playlists. The md5 hash is not modified.  You should
- * call "remove_duplicate (NULL, NULL)" to pop up the info dialogue
- * with the list of duplicate songs afterwards. Call with "NULL, (void
- * *)-1" to just clean up without dialoge. If "song" does not exist in
+ * preserving the playlists.
+ *
+ * The md5 hash is not modified.  
+ *
+ * The playcount is modified to show the cumulative playcount for that
+ * song.
+ *
+ * The star rating is set to the average of both star ratings if both
+ * ratings are not 0, or the higher rating if one of the ratings is 0
+ * (it is assumed that a rating of "0" means that no rating has been
+ * set).
+ *
+ * The "created" timestamp is set to the older entry (unless that one
+ * is 0).
+ *
+ * The "modified" and "last played" timestamps are set to the more
+ * recent entry.
+ *
+ * You should call "remove_duplicate (NULL, NULL)" to pop up the info
+ * dialogue with the list of duplicate songs afterwards. Call with
+ * "NULL, (void *)-1" to just clean up without dialoge.
+ *
+ * If "song" does not exist in
  * the master play list, only a message is logged (to be displayed
  * later when called with "NULL, NULL" */
 void remove_duplicate (Song *oldsong, Song *song)
@@ -461,6 +481,28 @@ void remove_duplicate (Song *oldsong, Song *song)
 			       buf, buf2);
        g_free (buf);
        g_free (buf2);
+       /* Set playcount */
+       oldsong->playcount += song->playcount;
+       /* Set rating */
+       if (oldsong->rating && song->rating)
+	   oldsong->rating =
+	       floor((double)(oldsong->rating + song->rating + RATING_STEP) /
+		     (2 * RATING_STEP)) * RATING_STEP;
+       else
+	   oldsong->rating = MAX (oldsong->rating, song->rating);
+       /* Set 'created' timestamp */
+       if (oldsong->time_create && song->time_create)
+	   oldsong->time_create = MIN (oldsong->time_create,
+				       song->time_create);
+       else 
+	   oldsong->time_create = MAX (oldsong->time_create,
+				       song->time_create);
+       /* Set 'modified' timestamp */
+       oldsong->time_modified =  MAX (oldsong->time_modified,
+				      song->time_modified);
+       /* Set 'played' timestamp */
+       oldsong->time_played =  MAX (oldsong->time_played, song->time_played);
+
        if (song_is_in_playlist (NULL, song))
        { /* song is already added to memory -> replace with "oldsong" */
 	   /* check for "song" in all playlists (except for MPL) */

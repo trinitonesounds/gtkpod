@@ -88,7 +88,7 @@ static gboolean sp_check_song (Song *song, guint32 inst)
     {
 	/* checked = TRUE: at least one condition was checked */
 	checked = TRUE;
-	cond = prefs_get_sp_rating_n (inst, song->rating/20);
+	cond = prefs_get_sp_rating_n (inst, song->rating/RATING_STEP);
 	/* If one of the two combinations occur, we can take a
 	   shortcut and stop checking the other conditions */
 	if (sp_or && cond)       return TRUE;
@@ -248,6 +248,12 @@ void sp_go (guint32 inst)
 
     /* check if members are already displayed */
     if (st->is_go || prefs_get_sp_autodisplay (inst))  return;
+
+    /* Make sure the information typed into the entries is actually
+     * being used (maybe the user 'forgot' to press enter */
+    gtk_signal_emit_by_name (GTK_OBJECT (st->ti_created.entry), "activate");
+    gtk_signal_emit_by_name (GTK_OBJECT (st->ti_modified.entry), "activate");
+    gtk_signal_emit_by_name (GTK_OBJECT (st->ti_played.entry), "activate");
 
     /* Instead of handling the selection directly, we add a
        "callback". Currently running display updates will be stopped
@@ -1718,6 +1724,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       GtkWidget *special = create_special ();
       GtkWidget *viewport = lookup_widget (special, "special_viewport");
       GtkWidget *w;
+      SortTab   *st = sorttab[inst];
       gint i;
 
       /* according to GTK FAQ: move a widget to a new parent */
@@ -1791,7 +1798,11 @@ static void st_create_special (gint inst, GtkWidget *window)
 			(gpointer)((S_TIME_PLAYED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_cond (inst, S_TIME_PLAYED));
-      g_signal_connect ((gpointer)lookup_widget (special, "sp_played_entry"),
+      w = lookup_widget (special, "sp_played_entry");
+      st->ti_played.entry = w;
+      gtk_entry_set_text (GTK_ENTRY (w),
+			  prefs_get_sp_entry (inst, S_TIME_PLAYED));
+      g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
 			(gpointer)((S_TIME_PLAYED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)lookup_widget (special,
@@ -1809,7 +1820,11 @@ static void st_create_special (gint inst, GtkWidget *window)
 			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_cond (inst, S_TIME_MODIFIED));
-      g_signal_connect ((gpointer)lookup_widget (special, "sp_modified_entry"),
+      w = lookup_widget (special, "sp_modified_entry");
+      st->ti_modified.entry = w;
+      gtk_entry_set_text (GTK_ENTRY (w),
+			  prefs_get_sp_entry (inst, S_TIME_MODIFIED));
+      g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
 			(gpointer)((S_TIME_MODIFIED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)lookup_widget (special,
@@ -1827,7 +1842,11 @@ static void st_create_special (gint inst, GtkWidget *window)
 			(gpointer)((S_TIME_CREATE<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_cond (inst, S_TIME_CREATE));
-      g_signal_connect ((gpointer)lookup_widget (special, "sp_created_entry"),
+      w = lookup_widget (special, "sp_created_entry");
+      st->ti_created.entry = w;
+      gtk_entry_set_text (GTK_ENTRY (w),
+			  prefs_get_sp_entry (inst, S_TIME_CREATE));
+      g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
 			(gpointer)((S_TIME_CREATE<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)lookup_widget (special,

@@ -1745,6 +1745,7 @@ guint32 prefs_get_sp_rating_state (guint32 inst)
 
 void prefs_set_sp_entry (guint32 inst, S_item s_item, gchar *str)
 {
+/*    printf("psse: %d, %d, %s\n", inst, s_item, str);*/
     if (inst < SORT_TAB_MAX)
     {
 	gchar *cstr = NULL;
@@ -1782,27 +1783,38 @@ void prefs_set_sp_entry (guint32 inst, S_item s_item, gchar *str)
 }
 
 
+/* Returns the current default or a pointer to "". Guaranteed to never
+   return NULL */
 gchar *prefs_get_sp_entry (guint32 inst, S_item s_item)
 {
+    gchar *result = NULL;
+
     if (inst < SORT_TAB_MAX)
     {
 	switch (s_item)
 	{
 	case S_TIME_PLAYED:
-	    return cfg->st[inst].sp_played_state;
+	    result = cfg->st[inst].sp_played_state;
+	    break;
 	case S_TIME_MODIFIED:
-	    return cfg->st[inst].sp_modified_state;
+	    result = cfg->st[inst].sp_modified_state;
+	    break;
 	case S_TIME_CREATE:
-	    return cfg->st[inst].sp_create_state;
+	    result = cfg->st[inst].sp_create_state;
+	    break;
 	default:
 	    /* programming error */
 	    fprintf (stderr, "prefs_get_sp_entry(): !s_item=%d!\n", s_item);
 	    break;
 	}
     }
-    /* programming error */
-    fprintf (stderr, "prefs_get_sp_entry(): !inst=%d!\n", inst);
-    return NULL;
+    else
+    {
+	/* programming error */
+	fprintf (stderr, "prefs_get_sp_entry(): !inst=%d!\n", inst);
+    }
+    if (result == NULL)    result = "";
+    return result;
 }
 
 

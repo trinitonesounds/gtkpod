@@ -293,7 +293,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
       nr = atoi (new_text);
       if ((nr >= 0) && (nr <= 5) && (nr != song->rating))
       {
-	  song->rating = nr*20;
+	  song->rating = nr*RATING_STEP;
 	  changed = TRUE;
       }
       break;
@@ -424,7 +424,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   case SM_COLUMN_RATING:
-      snprintf (text, 20, "%d", song->rating/20);
+      snprintf (text, 20, "%d", song->rating/RATING_STEP);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,

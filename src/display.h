@@ -82,6 +82,14 @@ typedef struct {
   GList *members;  /* GList with member songs (pointer to "Song") */
 } TabEntry;
 
+/* struct for time info (created, played, modified) */
+typedef struct {
+    gchar *interval;  /* copy of string specified in the sort tab */
+    GtkWidget *entry; /* pointer to GtkEntry in sort tab */
+    guint32 *low;     /* MAC timestamp for lower limit */
+    guint32 *high;    /* MAC timestamp for upper limit ("-1": no limit)*/
+} TimeInfo;
+
 /* struct with data corresponding to each sort tab */
 typedef struct {
   guint current_category;            /* current page (category) selected) */
@@ -97,8 +105,12 @@ typedef struct {
   GHashTable *entry_hash;            /* table for quick find of tab entries */
   gboolean unselected;               /* unselected item since last st_init? */
   /* The following are used for "special" categories (ST_CAT_SPECIAL) */
-  GList *members;                    /* list of members */
-  gboolean is_go;                    /* pass new members on (display) automatically */
+  GList *members;                    /* list of members (songs) */
+  gboolean is_go;                    /* pass new members on (i.e. display)
+				      * automatically */
+  TimeInfo ti_created,               /* Sort information for creation, */
+      ti_modified,                   /* modification and played time */
+      ti_played;                    
 } SortTab;
 
 /* "Column numbers" in sort tab model */
