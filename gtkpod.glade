@@ -1118,7 +1118,7 @@
 	      <property name="tooltip" translatable="yes">Read Existing Database from Disk/iPod</property>
 	      <property name="label" translatable="yes">Read</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_id">gtk-goto-top</property>
+	      <property name="icon">gtkpod-read.png</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
 	      <property name="is_important">False</property>
@@ -1136,7 +1136,7 @@
 	      <property name="tooltip" translatable="yes">Add Files or Directories</property>
 	      <property name="label" translatable="yes">Files</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_id">gtk-add</property>
+	      <property name="icon">gtkpod-add-files.png</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
 	      <property name="is_important">False</property>
@@ -1154,7 +1154,7 @@
 	      <property name="tooltip" translatable="yes">Add Directories Recursively</property>
 	      <property name="label" translatable="yes">Dirs</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_id">gtk-add</property>
+	      <property name="icon">gtkpod-add-dirs.png</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
 	      <property name="is_important">False</property>
@@ -1172,7 +1172,7 @@
 	      <property name="tooltip" translatable="yes">Add playlist from file</property>
 	      <property name="label" translatable="yes">Playlist</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_id">gtk-add</property>
+	      <property name="icon">gtkpod-add-playlists.png</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
 	      <property name="is_important">False</property>
@@ -1190,7 +1190,7 @@
 	      <property name="tooltip" translatable="yes">Create New Playlist</property>
 	      <property name="label" translatable="yes">New PL</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_id">gtk-justify-left</property>
+	      <property name="icon">gtkpod-new-playlist.png</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
 	      <property name="is_important">False</property>
@@ -1208,7 +1208,7 @@
 	      <property name="tooltip" translatable="yes">Write Changes to Disk/iPod</property>
 	      <property name="label" translatable="yes">Sync</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_id">gtk-goto-bottom</property>
+	      <property name="icon">gtkpod-sync.png</property>
 	      <property name="visible_horizontal">True</property>
 	      <property name="visible_vertical">True</property>
 	      <property name="is_important">False</property>
