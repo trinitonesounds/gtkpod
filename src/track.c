@@ -699,7 +699,7 @@ void handle_import (void)
 
   if (itunes_import_ok () == FALSE)
     { /* Import was successfull, block menu item and button */
-      ;
+      disable_gtkpod_import_buttons();
     }
   /* We need to make sure that the songs that already existed
      in the DB when we called itunesdb_parse() do not duplicate

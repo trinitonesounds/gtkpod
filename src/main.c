@@ -71,6 +71,7 @@ main (int argc, char *argv[])
   create_listviews (gtkpod);
   create_mpl ();     /* needs at least the master playlist */
   unique_file_repository_init (NULL); /* init for duplicate detection */
+  register_gtkpod_main_window(gtkpod);
   if(prefs_get_auto_import())
     handle_import();
   gtk_widget_show (gtkpod);

@@ -37,6 +37,7 @@
 #include "itunesdb.h"
 #include "display.h"
 
+static GtkWidget *main_window = NULL;
 static GtkWidget *about_window = NULL;
 
 
@@ -219,4 +220,34 @@ gtkpod_main_quit(void)
   cleanup_listviews ();
   write_prefs ();
   gtk_main_quit ();
+}
+
+/**
+ * disable_import_buttons
+ * Upon successfull itunes db importing we want to disable the import
+ * buttons.  This retrieves the import buttons from the main gtkpod widget
+ * and disables them from taking input.
+ */
+void
+disable_gtkpod_import_buttons(void)
+{
+    GtkWidget *w = NULL;
+    
+    if(main_window)
+    {
+	if((w = lookup_widget(main_window, "import_button")))
+	{
+	    gtk_widget_set_sensitive(w, FALSE);
+	}
+	if((w = lookup_widget(main_window, "import_itunes_mi")))
+	{
+	    gtk_widget_set_sensitive(w, FALSE);
+	}
+    }
+}
+
+void
+register_gtkpod_main_window(GtkWidget *win)
+{
+    main_window = win;
 }

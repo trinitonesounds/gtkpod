@@ -47,14 +47,6 @@
 #include "file_export.h"
 
 void
-on_import_itunes1_activate             (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-  handle_import ();
-}
-
-
-void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -137,14 +129,6 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
   open_about_window (); /* in misc.c */
-}
-
-
-void
-on_import_itunes1_button               (GtkButton       *button,
-                                        gpointer         user_data)
-{
-  handle_import ();
 }
 
 
@@ -570,3 +554,19 @@ on_offline1_activate                   (GtkMenuItem     *menuitem,
   prefs_set_offline (
      gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
 }
+
+void
+on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+  handle_import ();
+}
+
+
+void
+on_import_button_clicked               (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  handle_import ();
+}
+

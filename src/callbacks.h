@@ -7,10 +7,6 @@ on_gtkpod_delete_event                 (GtkWidget       *widget,
                                         gpointer         user_data);
 
 void
-on_import_itunes1_activate             (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
@@ -48,10 +44,6 @@ on_delete1_activate                    (GtkMenuItem     *menuitem,
 
 void
 on_about1_activate                     (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_import_itunes1_button               (GtkButton       *button,
                                         gpointer         user_data);
 
 void
@@ -219,4 +211,12 @@ on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
 
 void
 on_offline1_activate                   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_import_button_clicked               (GtkButton       *button,
                                         gpointer         user_data);

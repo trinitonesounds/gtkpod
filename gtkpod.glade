@@ -35,11 +35,11 @@
 		<widget class="GtkMenu" id="menuitem10_menu">
 
 		  <child>
-		    <widget class="GtkMenuItem" id="import_itunes1">
+		    <widget class="GtkMenuItem" id="import_itunes_mi">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Import iTunes</property>
 		      <property name="use_underline">True</property>
-		      <signal name="activate" handler="on_import_itunes1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
+		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 		    </widget>
 		  </child>
 
@@ -263,12 +263,12 @@
 	  <property name="tooltips">True</property>
 
 	  <child>
-	    <widget class="button" id="button1">
+	    <widget class="button" id="import_button">
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">Import</property>
 	      <property name="use_underline">True</property>
 	      <property name="stock_pixmap">gtk-goto-top</property>
-	      <signal name="clicked" handler="on_import_itunes1_button" last_modification_time="Sat, 23 Nov 2002 03:49:52 GMT"/>
+	      <signal name="clicked" handler="on_import_button_clicked" last_modification_time="Tue, 07 Jan 2003 20:32:12 GMT"/>
 	    </widget>
 	  </child>
 

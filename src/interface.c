@@ -34,7 +34,7 @@ create_gtkpod (void)
   GtkWidget *menubar1;
   GtkWidget *menuitem10;
   GtkWidget *menuitem10_menu;
-  GtkWidget *import_itunes1;
+  GtkWidget *import_itunes_mi;
   GtkWidget *add_files1;
   GtkWidget *add_directory1;
   GtkWidget *export_itunes1;
@@ -61,7 +61,7 @@ create_gtkpod (void)
   GtkWidget *about1;
   GtkWidget *toolbar2;
   GtkWidget *tmp_toolbar_icon;
-  GtkWidget *button1;
+  GtkWidget *import_button;
   GtkWidget *button2;
   GtkWidget *button3;
   GtkWidget *button4;
@@ -123,9 +123,9 @@ create_gtkpod (void)
   menuitem10_menu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem10), menuitem10_menu);
 
-  import_itunes1 = gtk_menu_item_new_with_mnemonic (_("_Import iTunes"));
-  gtk_widget_show (import_itunes1);
-  gtk_container_add (GTK_CONTAINER (menuitem10_menu), import_itunes1);
+  import_itunes_mi = gtk_menu_item_new_with_mnemonic (_("_Import iTunes"));
+  gtk_widget_show (import_itunes_mi);
+  gtk_container_add (GTK_CONTAINER (menuitem10_menu), import_itunes_mi);
 
   add_files1 = gtk_menu_item_new_with_mnemonic (_("Add _Files"));
   gtk_widget_show (add_files1);
@@ -234,14 +234,14 @@ create_gtkpod (void)
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_BOTH);
 
   tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-goto-top", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar2)));
-  button1 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2),
+  import_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2),
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Import"),
                                 NULL, NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (toolbar2)->children)->data))->label), TRUE);
-  gtk_widget_show (button1);
+  gtk_widget_show (import_button);
 
   tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-add", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar2)));
   button2 = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2),
@@ -447,8 +447,8 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) gtkpod, "delete_event",
                     G_CALLBACK (on_gtkpod_delete_event),
                     NULL);
-  g_signal_connect ((gpointer) import_itunes1, "activate",
-                    G_CALLBACK (on_import_itunes1_activate),
+  g_signal_connect ((gpointer) import_itunes_mi, "activate",
+                    G_CALLBACK (on_import_itunes_mi_activate),
                     NULL);
   g_signal_connect ((gpointer) add_files1, "activate",
                     G_CALLBACK (on_add_files1_activate),
@@ -489,8 +489,8 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about1_activate),
                     NULL);
-  g_signal_connect ((gpointer) button1, "clicked",
-                    G_CALLBACK (on_import_itunes1_button),
+  g_signal_connect ((gpointer) import_button, "clicked",
+                    G_CALLBACK (on_import_button_clicked),
                     NULL);
   g_signal_connect ((gpointer) button2, "clicked",
                     G_CALLBACK (on_add_files1_button),
@@ -529,7 +529,7 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, menubar1, "menubar1");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem10, "menuitem10");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem10_menu, "menuitem10_menu");
-  GLADE_HOOKUP_OBJECT (gtkpod, import_itunes1, "import_itunes1");
+  GLADE_HOOKUP_OBJECT (gtkpod, import_itunes_mi, "import_itunes_mi");
   GLADE_HOOKUP_OBJECT (gtkpod, add_files1, "add_files1");
   GLADE_HOOKUP_OBJECT (gtkpod, add_directory1, "add_directory1");
   GLADE_HOOKUP_OBJECT (gtkpod, export_itunes1, "export_itunes1");
@@ -555,7 +555,7 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13_menu, "menuitem13_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, about1, "about1");
   GLADE_HOOKUP_OBJECT (gtkpod, toolbar2, "toolbar2");
-  GLADE_HOOKUP_OBJECT (gtkpod, button1, "button1");
+  GLADE_HOOKUP_OBJECT (gtkpod, import_button, "import_button");
   GLADE_HOOKUP_OBJECT (gtkpod, button2, "button2");
   GLADE_HOOKUP_OBJECT (gtkpod, button3, "button3");
   GLADE_HOOKUP_OBJECT (gtkpod, button4, "button4");

@@ -44,5 +44,6 @@ void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
 void cleanup_backup_and_extended_files (void);
 void gtkpod_main_quit(void);
-
+void disable_gtkpod_import_buttons(void);
+void register_gtkpod_main_window(GtkWidget *win);
 #endif __UTILS_H__

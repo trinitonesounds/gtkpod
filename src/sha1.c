@@ -107,24 +107,31 @@ do_hash_on_file(FILE * fp)
 {
    int x = 0;
    int last = 0;
-   glong bread = 0;
+   int bread = 0;
    u_char *hash = NULL;
    int blocks = NR_PATH_MAX_BLOCKS;
-   char file_chunk[PATH_MAX * blocks];
+   int chunk_size = PATH_MAX * blocks;
+   char file_chunk[chunk_size];
 
    /* 40 chars for hash */
    u_char *digest = NULL;
 
    if (fp)
    {
-      digest = (u_char *) g_malloc0(sizeof(u_char) * 41);
-      bread = fread(file_chunk, 1, PATH_MAX * blocks, fp);
-      hash = sha1_hash(file_chunk, bread);
-      for (x = 0; x < 20; x++)
-         last += snprintf(&digest[last], 4, "%02x", hash[x]);
-      digest[last] = 0x00;
-      FREE_SHA1_DIGEST(hash);
-
+       bread = fread(file_chunk, sizeof(char), chunk_size, fp);
+       if(bread > 0)
+       {
+	   digest = (u_char *) g_malloc0(sizeof(u_char) * 41);
+	   hash = sha1_hash(file_chunk, bread);
+	   for (x = 0; x < 20; x++)
+	       last += snprintf(&digest[last], 4, "%02x", hash[x]);
+	   digest[last] = 0x00;
+	   FREE_SHA1_DIGEST(hash);
+       }
+       else
+       { 
+	  gtkpod_warning(_("Hashed Filesize read 0 bytes\n"));
+       }
    }
    return (digest);
 }
@@ -174,7 +181,7 @@ unique_file_repository_init(GList * songlist)
    Song *s = NULL;
    GList *l = NULL;
    gchar *val = NULL;
-
+    
    if (cfg->md5songs)
    {
       if (filehash)
@@ -184,13 +191,13 @@ unique_file_repository_init(GList * songlist)
       /* populate the hash table */
       for (l = songlist; l; l = l->next)
       {
-         s = (Song *) l->data;
-         if ((val = hash_song(s)) != NULL)
-         {
-            if (s->md5_hash == NULL)
-               s->md5_hash = g_strdup(val);
-            g_hash_table_insert(filehash, val, s);
-         }
+	  s = (Song *) l->data;
+	  if((val = song_exists_on_ipod(s)))
+	      g_free(val);	
+	  /* 
+	   * TODO could eventually be used to detect duplicates if the user
+	   * doesn't always enable them.  identify and fix.
+	   */
       }
    }
 }
