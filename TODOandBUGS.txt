@@ -51,8 +51,9 @@ TODO:
   a track has been played -- using either filename or md5 checksum).
 
 - add an option to let the user decide if all the gtkpod's
-  playlist must be update on export.
+  playlist must be updated on export.
 
+- automate "Create iPod's directories"
 
 
 Please feel free to submit further features.
@@ -73,7 +74,7 @@ BUGLIST:
   overfilled, libgtk sometimes segfaults (TreeModel changed but did
   not notify TreeView?)
 
-- when deleting an entry in the last sort tab (of 2):
+- when deleting an entry in the last sort tab (of 2), does not always crash:
 
 jcs@hatarakibachi:~/source/gtkpod/gtkpod$ 
 (gtkpod:3842): Gdk-CRITICAL **: file gdkwindow-x11.c: line 1132 (gdk_window_hide): assertion `window != NULL' failed
@@ -86,7 +87,8 @@ jcs@hatarakibachi:~/source/gtkpod/gtkpod$
 
 [3]+  Segmentation fault      src/gtkpod
 ------------------------
-- when deleting the last entry in the last sort tab (of 2):
+- when deleting the last entry in the last sort tab (of 2), does not
+always crash:
 
 (gtkpod:5034): Gtk-CRITICAL **: file gtkliststore.c: line 566 (gtk_list_store_get_value): assertion `GTK_LIST_STORE (tree_model)->stamp == iter->stamp' failed
 
