@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-29 23:33:09 jcs>
+/* Time-stamp: <2003-09-02 00:22:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,6 +33,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <time.h>
 #include "file.h"
 #include "id3_tag.h"
 #include "mp3file.h"
@@ -2002,28 +2003,60 @@ gboolean flush_songs (void)
   gint rmres;
   gboolean result = TRUE;
   static gboolean abort;
-  GtkWidget *dialog;
+  GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
+  time_t diff, start, mins, secs;
+  char *progtext = NULL;
 
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
-  GTimeVal time;
+  GTimeVal gtime;
   if (!mutex) mutex = g_mutex_new ();
   if (!cond) cond = g_cond_new ();
 #endif
 
   abort = FALSE;
-  /* Set up dialogue to abort */
-  dialog = gtk_message_dialog_new (
-      GTK_WINDOW (gtkpod_window),
-      GTK_DIALOG_DESTROY_WITH_PARENT,
-      GTK_MESSAGE_INFO,
-      GTK_BUTTONS_CANCEL,
+
+  /* create the dialog window */
+  dialog = gtk_dialog_new_with_buttons (_("Information"),
+                                         GTK_WINDOW (gtkpod_window),
+                                         GTK_DIALOG_DESTROY_WITH_PARENT,
+                                         GTK_STOCK_CANCEL,
+                                         GTK_RESPONSE_NONE,
+                                         NULL);
+
+  /* emulate gtk_message_dialog_new */
+  image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO,
+				    GTK_ICON_SIZE_DIALOG);
+  label = gtk_label_new (
       _("Press button to abort.\nExport can be continued at a later time."));
+
+  gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  gtk_label_set_selectable (GTK_LABEL (label), TRUE);
+
+  /* hbox to put the image+label in */
+  hbox = gtk_hbox_new (FALSE, 6);
+  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+  /* Create the progress bar */
+  progress_bar = gtk_progress_bar_new ();
+  progtext = g_strdup (_("deleting..."));
+  gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
+  g_free (progtext);
+
   /* Indicate that user wants to abort */
   g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
 			    G_CALLBACK (flush_songs_abort),
 			    &abort);
-  gtk_widget_show (dialog);
+
+  /* Add the image/label + progress bar to dialog */
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+                      hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+                      progress_bar, FALSE, FALSE, 0);
+  gtk_widget_show_all (dialog);
+
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 
   /* lets clean up those pending deletions */
@@ -2045,9 +2078,9 @@ gboolean flush_songs (void)
 		      while (widgets_blocked && gtk_events_pending ())
 			  gtk_main_iteration ();
 		      /* wait a maximum of 10 ms */
-		      g_get_current_time (&time);
-		      g_time_val_add (&time, 20000);
-		      g_cond_timed_wait (cond, mutex, &time);
+		      g_get_current_time (&gtime);
+		      g_time_val_add (&gtime, 20000);
+		      g_cond_timed_wait (cond, mutex, &gtime);
 		  } while(!mutex_data);
 		  g_mutex_unlock (mutex);
 		  rmres = (gint)g_thread_join (thread);
@@ -2085,6 +2118,7 @@ gboolean flush_songs (void)
       if (n != 0)  disable_gtkpod_import_buttons();
       count = 0; /* songs transferred */
       nrs = 0;
+      start = time(NULL);
       while (!abort &&  (song = get_song_by_nr (nrs))) {
 	  ++nrs;
 	  if (!song->transferred)
@@ -2100,9 +2134,9 @@ gboolean flush_songs (void)
 		      while (widgets_blocked && gtk_events_pending ())
 			  gtk_main_iteration ();
 		      /* wait a maximum of 10 ms */
-		      g_get_current_time (&time);
-		      g_time_val_add (&time, 20000);
-		      g_cond_timed_wait (cond, mutex, &time);
+		      g_get_current_time (&gtime);
+		      g_time_val_add (&gtime, 20000);
+		      g_cond_timed_wait (cond, mutex, &gtime);
 		  } while(!mutex_data);
 		  g_mutex_unlock (mutex);
 		  result &= (gboolean)g_thread_join (thread);
@@ -2131,6 +2165,20 @@ gboolean flush_songs (void)
 				     count, n);
 	      gtkpod_statusbar_message(buf);
 	      g_free (buf);
+
+              gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
+					    (gdouble) count/n);
+
+	      diff = time(NULL) - start;
+	      mins = ((diff*n/count)-diff)/60;
+	      secs = ((((diff*n/count)-diff) & 60) / 5) * 5;
+	      /* don't bounce up too quickly (>10% change only) */
+/*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
+	      progtext = g_strdup_printf (_("%d%% (%d:%02d) left"),
+					  count*100/n, (int)mins, (int)secs);
+              gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
+					progtext);
+	      g_free (progtext);
 	  }
 	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
       } /* while (gl_song) */

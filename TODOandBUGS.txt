@@ -1,5 +1,9 @@
 TODO:
 
+- don't write iTunesDB if no tracks are imported.
+
+- update message of "add directory"
+
 - customized export filenames (missing option in prefs, take care of
   charset issues)
 
