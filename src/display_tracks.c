@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 01:07:27 jcs>
+/* Time-stamp: <2004-07-20 00:13:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -100,8 +100,41 @@ const gchar *tm_col_strings[] = {
     N_("CD Nr"),
     N_("Time created"),
     N_("iPod File"),         /* 20 */
+    N_("Soundcheck"),
+    N_("Samplerate"),
+    N_("BPM"),
     NULL };
-
+/* Tooltips for prefs window */
+const gchar *tm_col_tooltips[] = {
+    NULL,                                              /*  0 */
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    N_("Track Nr. and total number of tracks on CD"),  /*  5 */
+    NULL,
+    N_("Name of file on PC, if available"),
+    N_("Whether the file has already been "
+       "transferred to the iPod or not"),
+    NULL,
+    NULL,                                              /* 10 */
+    NULL,
+    N_("Number of times the track has been played"),
+    N_("Star rating from 0 to 5"),
+    N_("Time track has last been played"),
+    N_("Time track has last been modified"),      /* 15 */
+    N_("Manual volume adjust"),
+    NULL,
+    N_("CD Nr. and total number of CDS in set"),
+    N_("Time track has been created (timestamp of file)"),
+    N_("Name of file on the iPod"),                    /* 20 */
+    N_("Volume adjust -- you need to activate "
+       "'soundcheck' on the iPod"),
+    NULL,
+    N_("Supposedly something that tells the iPod to "
+       "increase or decrease the playback speed"),
+    NULL,
+    NULL };                  /* 25 */
 
 
 /* ---------------------------------------------------------------- */
@@ -461,9 +494,41 @@ tm_cell_edited (GtkCellRendererText *renderer,
         break;
      case TM_COLUMN_VOLUME:
         nr = atoi (new_text);
-        if ((nr <= 100) && (nr >= -100) && (nr != track->volume))
+        if (nr != track->volume)
         {
 	    track->volume = nr;
+	    changed = TRUE;
+        }
+        break;
+     case TM_COLUMN_SOUNDCHECK:
+        nr = atoi (new_text);
+        if (nr != track->soundcheck)
+        {
+	    track->soundcheck = nr;
+	    changed = TRUE;
+        }
+        break;
+     case TM_COLUMN_BITRATE:
+        nr = atoi (new_text);
+        if (nr != track->bitrate)
+        {
+	    track->bitrate = nr;
+	    changed = TRUE;
+        }
+        break;
+     case TM_COLUMN_SAMPLERATE:
+        nr = atoi (new_text);
+        if (nr != track->samplerate)
+        {
+	    track->samplerate = nr;
+	    changed = TRUE;
+        }
+        break;
+     case TM_COLUMN_BPM:
+        nr = atoi (new_text);
+        if (nr != track->BPM)
+        {
+	    track->BPM = nr;
 	    changed = TRUE;
         }
         break;
@@ -585,6 +650,21 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       snprintf (text, 20, "%dk", track->bitrate);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
+      break;
+  case TM_COLUMN_SAMPLERATE:
+      snprintf (text, 20, "%d", track->samplerate);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
+      break;
+  case TM_COLUMN_BPM:
+      snprintf (text, 20, "%d", track->BPM);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", TRUE,
 		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_PLAYCOUNT:
@@ -621,6 +701,13 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   case TM_COLUMN_VOLUME:
       snprintf (text, 20, "%d", track->volume);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
+      break;
+  case TM_COLUMN_SOUNDCHECK:
+      snprintf (text, 20, "%d", track->soundcheck);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
@@ -943,6 +1030,10 @@ gint tm_data_compare_func (GtkTreeModel *model,
       return track1->tracklen - track2->tracklen;
   case TM_COLUMN_BITRATE:
       return track1->bitrate - track2->bitrate;
+  case TM_COLUMN_SAMPLERATE:
+      return track1->samplerate - track2->samplerate;
+  case TM_COLUMN_BPM:
+      return track1->BPM - track2->BPM;
   case TM_COLUMN_PLAYCOUNT:
       return track1->playcount - track2->playcount;
   case  TM_COLUMN_RATING:
@@ -954,6 +1045,8 @@ gint tm_data_compare_func (GtkTreeModel *model,
 		   time_get_time (track2, tm_item));
   case  TM_COLUMN_VOLUME:
       return track1->volume - track2->volume;
+  case  TM_COLUMN_SOUNDCHECK:
+      return track1->soundcheck - track2->soundcheck;
   case TM_COLUMN_YEAR:
       return track1->year - track2->year;
   default:
@@ -1101,6 +1194,8 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   gchar *text = NULL;
   gboolean editable = TRUE;          /* default */
   GtkCellRenderer *renderer = NULL;  /* default */
+  GtkTooltips *tt = GTK_TOOLTIPS (lookup_widget (gtkpod_window,
+						 "tooltips"));
 
   if ((tm_item) < 0 || (tm_item >= TM_NUM_COLUMNS))  return NULL;
 
@@ -1113,8 +1208,10 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
-  case TM_COLUMN_VOLUME:
   case TM_COLUMN_RATING:
+  case TM_COLUMN_BITRATE:
+  case TM_COLUMN_SAMPLERATE:
+  case TM_COLUMN_BPM:
       break;
   case TM_COLUMN_TRACK_NR:
       text = _("#");
@@ -1142,9 +1239,6 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       text = _("Time");
       editable = FALSE;
       break;
-  case TM_COLUMN_BITRATE:
-      editable = FALSE;
-      break;
   case TM_COLUMN_PLAYCOUNT:
       text = _("Plycnt");
       break;
@@ -1163,6 +1257,12 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_YEAR:
       text = _("Year");
       break;
+  case TM_COLUMN_VOLUME:
+      text = _("Vol.");
+      break;
+  case TM_COLUMN_SOUNDCHECK:
+      text = _("Sndchk.");
+      break;
   case TM_NUM_COLUMNS:
       break;
   }
@@ -1170,6 +1270,9 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   if (col && (pos != -1))
       gtk_tree_view_column_set_visible (col,
 					prefs_get_col_visible (tm_item));
+  gtk_tooltips_set_tip (tt, col->button, 
+			gettext (tm_col_tooltips[tm_item]),
+			NULL);
   return col;
 }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 23:24:16 jcs>
+/* Time-stamp: <2004-07-19 22:27:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,7 +31,9 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <math.h>
 #include <string.h>
+
 #include "charset.h"
 #include "itunesdb.h"
 #include "misc.h"
@@ -63,12 +65,15 @@ T_item TM_to_T (TM_item sm)
     case TM_COLUMN_SIZE:          return T_SIZE;
     case TM_COLUMN_TRACKLEN:      return T_TRACKLEN;
     case TM_COLUMN_BITRATE:       return T_BITRATE;
+    case TM_COLUMN_SAMPLERATE:    return T_SAMPLERATE;
+    case TM_COLUMN_BPM:           return T_BPM;
     case TM_COLUMN_PLAYCOUNT:     return T_PLAYCOUNT;
     case TM_COLUMN_RATING:        return T_RATING;
     case TM_COLUMN_TIME_CREATED:  return T_TIME_CREATED;
     case TM_COLUMN_TIME_PLAYED:   return T_TIME_PLAYED;
     case TM_COLUMN_TIME_MODIFIED: return T_TIME_MODIFIED;
     case TM_COLUMN_VOLUME:        return T_VOLUME;
+    case TM_COLUMN_SOUNDCHECK:    return T_SOUNDCHECK;
     case TM_COLUMN_YEAR:          return T_YEAR;
     case TM_NUM_COLUMNS:          return -1;
     }
@@ -473,3 +478,20 @@ filename_from_uri (const char *uri,
 
 
 
+gint32 replaygain_to_soundcheck(gint replaygain)
+{
+    double tv;
+    gint32 soundcheck = 0;
+
+/*    tv = ((double) replaygain) / (5.0 * log10(2.0));*/
+    /* according to Samuel Wood -- thanks! */
+    /* exp10() is a gnu extension, therefore I substituted exp10(x)
+       with exp(x*log(10)) */
+    tv = 1000 * exp (-(double)replaygain * log(10) * 0.1);
+
+    soundcheck =  floor(tv + 0.5);
+		
+/* 		printf("radio_gain: %i\n", track->radio_gain); */
+/* 		printf("soundcheck: %i\n", track->soundcheck); */
+    return soundcheck;
+}

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 18:52:01 jcs>
+/* Time-stamp: <2004-07-19 22:27:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,7 +36,6 @@
 #include <unistd.h>
 #include <errno.h>
 #include "info.h"
-#include "math.h"
 #include "misc.h"
 #include "mp3file.h"
 #include "tools.h"
@@ -68,48 +67,29 @@ static GCond  *cond = NULL;
 static gboolean mutex_data = FALSE;
 #endif
 
-static gint32 replaygain_to_volume(gint replaygain)
-{
-    double tv;
-    gint32 volume = 0;
-
-    tv = ((double) replaygain) / (5.0 * log10(2.0));
-    volume =  floor(tv + 0.5);
-		
-    if (volume < -500) {
-	volume = -500;
-    } else {
-	if (volume > 500) volume = 500;
-    }
-/* 		printf("radio_gain: %i\n", track->radio_gain); */
-/* 		printf("volume: %i\n", track->volume); */
-    return volume;
-}
-
-
 /* will get the volume either from mp3gain or from LAME's ReplayGain */
-static gint32 nm_get_volume (Track *track)
+static gint32 nm_get_soundcheck (Track *track)
 {
-    gint32 vol = TRACKVOLERROR;
+    gint32 sc = TRACKVOLERROR;
     if (track)
     {
 
 	if (!track->radio_gain_set)
 	    get_gain (track);
 	if (track->radio_gain_set) 
-	    vol = replaygain_to_volume (track->radio_gain);
+	    sc = replaygain_to_soundcheck (track->radio_gain);
     }
 
-    return vol;
+    return sc;
 }
 
 
 
 #ifdef G_THREADS_ENABLED
 /* Threaded getTrackGain*/
-static gpointer th_nm_get_volume (gpointer track)
+static gpointer th_nm_get_soundcheck (gpointer track)
 {
-   gint32 gain=nm_get_volume ((Track *)track);
+   gint32 gain=nm_get_soundcheck ((Track *)track);
    g_mutex_lock (mutex);
    mutex_data = TRUE; /* signal that thread will end */
    g_cond_signal (cond);
@@ -147,7 +127,7 @@ void nm_tracks_list(GList *list)
   gint count, n, nrs;
   gchar *buf;
   Track  *track;
-  gint32 new_volume = 0;
+  gint32 new_soundcheck = 0;
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
   time_t diff, start, mins, secs;
@@ -223,7 +203,7 @@ void nm_tracks_list(GList *list)
      track=list->data;
 #ifdef G_THREADS_ENABLED
 	mutex_data = FALSE;
-	thread = g_thread_create (th_nm_get_volume, track, TRUE, NULL);
+	thread = g_thread_create (th_nm_get_soundcheck, track, TRUE, NULL);
 	if (thread)
 	{
 	   gboolean first_abort = TRUE;
@@ -250,28 +230,28 @@ void nm_tracks_list(GList *list)
 	      g_cond_timed_wait (cond, mutex, &gtime);
 	   }
 	   while(!mutex_data);
-	   new_volume = (gint)g_thread_join (thread);
+	   new_soundcheck = (gint)g_thread_join (thread);
 	   g_mutex_unlock (mutex);
 	}
 	else
 	{
 	   g_warning ("Thread creation failed, falling back to default.\n");
-	   new_volume = nm_get_volume (track);
+	   new_soundcheck = nm_get_soundcheck (track);
 	}
 #else
-	new_volume = nm_get_volume (track);
+	new_soundcheck = nm_get_soundcheck (track);
 #endif
 
 /*normalization part*/
-	if(new_volume == TRACKVOLERROR)
+	if(new_soundcheck == TRACKVOLERROR)
 	{
 	   abort=TRUE;
 	}
 	else
 	{
-	    if(new_volume != track->volume)
+	    if(new_soundcheck != track->soundcheck)
 	    {
-		track->volume = new_volume;
+		track->soundcheck = new_soundcheck;
 		pm_track_changed (track);
 		data_changed ();
 	    }

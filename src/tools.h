@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 13:06:21 JST jcs>
+/* Time-stamp: <2004-07-19 22:25:45 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,13 +36,10 @@
 #include <gtk/gtk.h>
 #include "track.h"
 
-#define TRACKVOLERROR -20000
+#define TRACKVOLERROR G_MININT32
 
 void nm_new_tracks (void);
 void nm_tracks_list (GList *list);
-gint nm_get_gain (Track *track);
-gint nm_gain_to_volumne (gint gain);
-gint nm_volumne_to_gain (gint volume);
 
 gboolean tools_sync_contacts (void);
 gboolean tools_sync_calendar (void);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 22:33:56 jcs>
+/* Time-stamp: <2004-07-19 13:50:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -76,6 +76,8 @@
      gint32  tracks;            /+ number of tracks      +/
      gint32  year;              /+ year                  +/
      gint32  bitrate;           /+ bitrate               +/
+     gint32  volume;            /+ volume adjustment     +/
+     gint32  soundcheck;        /+ volume adjustment "soundcheck"   +/
      guint32 time_created;      /+ time when added (Mac type)       +/
      guint32 time_played;       /+ time of last play (Mac type)     +/
      guint32 time_modified;     /+ time of last modific. (Mac type) +/
@@ -149,6 +151,10 @@
    is provided to help you do that, however.
 
    The following functions most likely will also come in handy:
+
+   Track *itunesdb_new_track (void);
+   Use itunesdb_new_track() to get an "initialized" track structure
+   (the "unknowns" are initialized with reasonable values).
 
    gboolean itunesdb_cp (gchar *from_file, gchar *to_file);
    guint32 itunesdb_time_get_mac_time (void);

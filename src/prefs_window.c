@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-27 23:24:15 jcs>
+/* Time-stamp: <2004-07-19 21:10:18 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -301,6 +301,7 @@ prefs_window_create(void)
     if(!prefs_window)
     {
 	GtkWidget *w = NULL;
+	GtkTooltips *tt = NULL;
 
 	if(!tmpcfg && !origcfg)
 	{
@@ -606,10 +607,11 @@ prefs_window_create(void)
 	    }
 	    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
 	}
+	/* get tooltips */
+	tt = GTK_TOOLTIPS (lookup_widget (prefs_window, "tooltips"));
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{
-	    gchar *buf;
-	    buf = g_strdup_printf ("col_visible%d", i);
+	    gchar *buf = g_strdup_printf ("col_visible%d", i);
 	    if((w = lookup_widget(prefs_window,  buf)))
 	    {
 		/* set label */
@@ -617,9 +619,16 @@ prefs_window_create(void)
 				      gettext (tm_col_strings[i]));
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					     tmpcfg->col_visible[i]);
+		/* set tooltip if available */
+		if (tt && tm_col_tooltips[i])
+		{
+		    gtk_tooltips_set_tip (tt, w, 
+					  gettext (tm_col_tooltips[i]),
+					  NULL);
+		}
 		/* glade makes a "GTK_OBJECT (i)" which segfaults
-		   because "i" is not a GTK object. So we have to set up
-		   the signal handlers ourselves */
+		   because "i" is not a GTK object. So we have to set
+		   up the signal handlers ourselves */
 		g_signal_connect ((gpointer)w,
 				  "toggled",
 				  G_CALLBACK (on_cfg_col_visible_toggled),

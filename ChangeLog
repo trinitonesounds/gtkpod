@@ -5,16 +5,23 @@ gtkpod V0.81-CVS
 	BUGFIX: fixed case-sensitivity issue while handling orphaned
 	tracks.
 
-	IMPROVEMENT: Added "Created timestamp" support to special
-	sorttab, track display and iTunesDB. (Before only "modified"
-	and "played" were supported.)
+	IMPROVEMENT: Added "Time Created" support to special sorttab,
+	track display and iTunesDB. (Before only "modified" and
+	"played" were supported.)
 
 	IMPROVEMENT: All information stored in the iTunesDB about
 	tracks is read and written, even if the information itself is
 	not used by gtkpod itself.
 
 	IMPROVEMENT: Added new track information fields: iPod_Path,
-	creation time
+	creation time, soundcheck, samplerate, "BPM"
+
+	IMPROVEMENT: Volume normalizing: when importing mp3 the replay
+	gain is read and the soundcheck field set accordingly. Use
+	the "soundcheck" feature of the iPod to have the volume
+	normalized during playback.
+	If no replay gain tag is set, use the "Normalize" as usual to
+	have mp3gain write a replay gain tag.
 
 gtkpod V0.80-2
 	BUGFIX: gtkpod would crash right after startup if the info

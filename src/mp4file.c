@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 22:48:15 jcs>
+/* Time-stamp: <2004-07-19 22:07:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -65,6 +65,15 @@
    gint32  tracklen;          /+ Length of track in ms +/
    gint32  bitrate;           /+ bitrate in kbps       +/
    guint16 samplerate;        /+ e.g.: CD is 44100     +/
+   guint32 peak_signal;	      /+ LAME Peak Signal * 0x800000         +/
+   gint32  radio_gain;	      /+ RadioGain in dB*10
+				(as defined by www.replaygain.org)   +/
+   gint32  audiophile_gain;   /+ AudiophileGain in dB*10 
+				(as defined by www.replaygain.org)   +/
+   gboolean peak_signal_set;  /+ has the peak signal been set?       +/
+   gboolean radio_gain_set;   /+ has the radio gain been set?        +/
+   gboolean audiophile_gain_set;/+ has the audiophile gain been set? +/
+
 
    If prefs_get_tag_readtags() returns FALSE you only should fill in
    tracklen, bitrate and fdesc
@@ -95,6 +104,17 @@
    to be updated. If @tag_id==T_ALL, upudate all (supported) TAGs.
 
    You need to add your handler to file_write_info() in file.c
+
+
+   Finally, you may want to provide a function that can
+   read/calculate the replay gain
+
+   gboolean xxx_get_gain (gchar *filename, Track *track)
+
+   and return TRUE when the replay gain could be determined (as an
+   example see mp3_get_gain() in mp3file.c.
+
+   You need to add your handler to get_gain() in file.c.
 
    ------------------------------------------------------------ */
 

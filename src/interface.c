@@ -1365,28 +1365,31 @@ create_prefs_window (void)
   GtkWidget *vbox27;
   GtkWidget *col_visible1;
   GtkWidget *col_visible4;
-  GtkWidget *col_visible8;
-  GtkWidget *col_visible16;
+  GtkWidget *col_visible9;
   GtkWidget *col_visible19;
   GtkWidget *col_visible12;
+  GtkWidget *col_visible11;
   GtkWidget *vbox28;
   GtkWidget *col_visible2;
-  GtkWidget *col_visible6;
-  GtkWidget *col_visible9;
   GtkWidget *col_visible17;
+  GtkWidget *col_visible10;
   GtkWidget *col_visible15;
   GtkWidget *col_visible13;
+  GtkWidget *col_visible22;
   GtkWidget *vbox29;
   GtkWidget *col_visible0;
-  GtkWidget *col_visible7;
-  GtkWidget *col_visible10;
   GtkWidget *col_visible18;
+  GtkWidget *col_visible16;
   GtkWidget *col_visible14;
+  GtkWidget *col_visible7;
+  GtkWidget *col_visible6;
   GtkWidget *vbox35;
   GtkWidget *col_visible3;
-  GtkWidget *col_visible20;
-  GtkWidget *col_visible11;
   GtkWidget *col_visible5;
+  GtkWidget *col_visible21;
+  GtkWidget *col_visible8;
+  GtkWidget *col_visible20;
+  GtkWidget *col_visible23;
   GtkWidget *hbox13;
   GtkWidget *label47;
   GtkWidget *time_format_entry;
@@ -1889,22 +1892,22 @@ create_prefs_window (void)
   gtk_widget_show (col_visible4);
   gtk_box_pack_start (GTK_BOX (vbox27), col_visible4, FALSE, FALSE, 0);
 
-  col_visible8 = gtk_check_button_new_with_mnemonic ("");
-  gtk_widget_show (col_visible8);
-  gtk_box_pack_start (GTK_BOX (vbox27), col_visible8, FALSE, FALSE, 0);
-
-  col_visible16 = gtk_check_button_new_with_mnemonic ("");
-  gtk_widget_show (col_visible16);
-  gtk_box_pack_start (GTK_BOX (vbox27), col_visible16, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, col_visible16, _("Relative volume adjustment between -100 and +100"), NULL);
+  col_visible9 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible9);
+  gtk_box_pack_start (GTK_BOX (vbox27), col_visible9, FALSE, FALSE, 0);
 
   col_visible19 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible19);
   gtk_box_pack_start (GTK_BOX (vbox27), col_visible19, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, col_visible19, _("Relative volume adjustment between -100 and +100"), NULL);
 
   col_visible12 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible12);
   gtk_box_pack_start (GTK_BOX (vbox27), col_visible12, FALSE, FALSE, 0);
+
+  col_visible11 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible11);
+  gtk_box_pack_start (GTK_BOX (vbox27), col_visible11, FALSE, FALSE, 0);
 
   vbox28 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox28);
@@ -1914,17 +1917,13 @@ create_prefs_window (void)
   gtk_widget_show (col_visible2);
   gtk_box_pack_start (GTK_BOX (vbox28), col_visible2, FALSE, FALSE, 0);
 
-  col_visible6 = gtk_check_button_new_with_mnemonic ("");
-  gtk_widget_show (col_visible6);
-  gtk_box_pack_start (GTK_BOX (vbox28), col_visible6, FALSE, FALSE, 0);
-
-  col_visible9 = gtk_check_button_new_with_mnemonic ("");
-  gtk_widget_show (col_visible9);
-  gtk_box_pack_start (GTK_BOX (vbox28), col_visible9, FALSE, FALSE, 0);
-
   col_visible17 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible17);
   gtk_box_pack_start (GTK_BOX (vbox28), col_visible17, FALSE, FALSE, 0);
+
+  col_visible10 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible10);
+  gtk_box_pack_start (GTK_BOX (vbox28), col_visible10, FALSE, FALSE, 0);
 
   col_visible15 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible15);
@@ -1934,6 +1933,10 @@ create_prefs_window (void)
   gtk_widget_show (col_visible13);
   gtk_box_pack_start (GTK_BOX (vbox28), col_visible13, FALSE, FALSE, 0);
 
+  col_visible22 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible22);
+  gtk_box_pack_start (GTK_BOX (vbox28), col_visible22, FALSE, FALSE, 0);
+
   vbox29 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox29);
   gtk_box_pack_start (GTK_BOX (hbox12), vbox29, TRUE, TRUE, 0);
@@ -1942,21 +1945,25 @@ create_prefs_window (void)
   gtk_widget_show (col_visible0);
   gtk_box_pack_start (GTK_BOX (vbox29), col_visible0, FALSE, FALSE, 0);
 
-  col_visible7 = gtk_check_button_new_with_mnemonic ("");
-  gtk_widget_show (col_visible7);
-  gtk_box_pack_start (GTK_BOX (vbox29), col_visible7, FALSE, FALSE, 0);
-
-  col_visible10 = gtk_check_button_new_with_mnemonic ("");
-  gtk_widget_show (col_visible10);
-  gtk_box_pack_start (GTK_BOX (vbox29), col_visible10, FALSE, FALSE, 0);
-
   col_visible18 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible18);
   gtk_box_pack_start (GTK_BOX (vbox29), col_visible18, FALSE, FALSE, 0);
 
+  col_visible16 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible16);
+  gtk_box_pack_start (GTK_BOX (vbox29), col_visible16, FALSE, FALSE, 0);
+
   col_visible14 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible14);
   gtk_box_pack_start (GTK_BOX (vbox29), col_visible14, FALSE, FALSE, 0);
+
+  col_visible7 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible7);
+  gtk_box_pack_start (GTK_BOX (vbox29), col_visible7, FALSE, FALSE, 0);
+
+  col_visible6 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible6);
+  gtk_box_pack_start (GTK_BOX (vbox29), col_visible6, FALSE, FALSE, 0);
 
   vbox35 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox35);
@@ -1966,17 +1973,25 @@ create_prefs_window (void)
   gtk_widget_show (col_visible3);
   gtk_box_pack_start (GTK_BOX (vbox35), col_visible3, FALSE, FALSE, 0);
 
+  col_visible5 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible5);
+  gtk_box_pack_start (GTK_BOX (vbox35), col_visible5, FALSE, FALSE, 0);
+
+  col_visible21 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible21);
+  gtk_box_pack_start (GTK_BOX (vbox35), col_visible21, FALSE, FALSE, 0);
+
+  col_visible8 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible8);
+  gtk_box_pack_start (GTK_BOX (vbox35), col_visible8, FALSE, FALSE, 0);
+
   col_visible20 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible20);
   gtk_box_pack_start (GTK_BOX (vbox35), col_visible20, FALSE, FALSE, 0);
 
-  col_visible11 = gtk_check_button_new_with_mnemonic ("");
-  gtk_widget_show (col_visible11);
-  gtk_box_pack_start (GTK_BOX (vbox35), col_visible11, FALSE, FALSE, 0);
-
-  col_visible5 = gtk_check_button_new_with_mnemonic ("");
-  gtk_widget_show (col_visible5);
-  gtk_box_pack_start (GTK_BOX (vbox35), col_visible5, FALSE, FALSE, 0);
+  col_visible23 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible23);
+  gtk_box_pack_start (GTK_BOX (vbox35), col_visible23, FALSE, FALSE, 0);
 
   hbox13 = gtk_hbox_new (FALSE, 4);
   gtk_widget_show (hbox13);
@@ -2754,28 +2769,31 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, vbox27, "vbox27");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible1, "col_visible1");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible4, "col_visible4");
-  GLADE_HOOKUP_OBJECT (prefs_window, col_visible8, "col_visible8");
-  GLADE_HOOKUP_OBJECT (prefs_window, col_visible16, "col_visible16");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible9, "col_visible9");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible19, "col_visible19");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible12, "col_visible12");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible11, "col_visible11");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox28, "vbox28");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible2, "col_visible2");
-  GLADE_HOOKUP_OBJECT (prefs_window, col_visible6, "col_visible6");
-  GLADE_HOOKUP_OBJECT (prefs_window, col_visible9, "col_visible9");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible17, "col_visible17");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible10, "col_visible10");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible15, "col_visible15");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible13, "col_visible13");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible22, "col_visible22");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox29, "vbox29");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible0, "col_visible0");
-  GLADE_HOOKUP_OBJECT (prefs_window, col_visible7, "col_visible7");
-  GLADE_HOOKUP_OBJECT (prefs_window, col_visible10, "col_visible10");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible18, "col_visible18");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible16, "col_visible16");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible14, "col_visible14");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible7, "col_visible7");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible6, "col_visible6");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox35, "vbox35");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible3, "col_visible3");
-  GLADE_HOOKUP_OBJECT (prefs_window, col_visible20, "col_visible20");
-  GLADE_HOOKUP_OBJECT (prefs_window, col_visible11, "col_visible11");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible5, "col_visible5");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible21, "col_visible21");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible8, "col_visible8");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible20, "col_visible20");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible23, "col_visible23");
   GLADE_HOOKUP_OBJECT (prefs_window, hbox13, "hbox13");
   GLADE_HOOKUP_OBJECT (prefs_window, label47, "label47");
   GLADE_HOOKUP_OBJECT (prefs_window, time_format_entry, "time_format_entry");

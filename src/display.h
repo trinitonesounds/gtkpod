@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 00:27:48 jcs>
+/* Time-stamp: <2004-07-19 21:10:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -160,6 +160,9 @@ typedef enum  {
   TM_COLUMN_CD_NR,
   TM_COLUMN_TIME_CREATED,
   TM_COLUMN_IPOD_PATH,        /* 20 */
+  TM_COLUMN_SOUNDCHECK,
+  TM_COLUMN_SAMPLERATE,
+  TM_COLUMN_BPM,
   TM_NUM_COLUMNS
 } TM_item;
 
@@ -167,6 +170,7 @@ typedef enum  {
 #define TM_NUM_TAGS_PREFS (5)
 
 extern const gchar *tm_col_strings[];
+extern const gchar *tm_col_tooltips[];
 
 /* "Column numbers" in playlist model */
 enum  {

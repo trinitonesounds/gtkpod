@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 23:34:47 jcs>
+/* Time-stamp: <2004-07-19 22:25:48 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -650,14 +650,17 @@ Track *copy_new_info (Track *from, Track *to)
     to->track_nr = from->track_nr;
     to->tracks = from->tracks;
     to->bitrate = from->bitrate;
-    to->year = from->year;
-    to->volume = from->volume;
+    to->samplerate = from->samplerate;
+    to->soundcheck = from->soundcheck;
     to->peak_signal = from->peak_signal;
     to->radio_gain = from->radio_gain;
     to->audiophile_gain = from->audiophile_gain;
     to->peak_signal_set = from->peak_signal_set;
     to->radio_gain_set = from->radio_gain_set;
     to->audiophile_gain_set = from->audiophile_gain_set;
+    to->time_created = from->time_created;
+    to->time_modified = from->time_modified;
+    to->year = from->year;
     g_free (to->year_str);
     to->year_str = g_strdup_printf ("%d", to->year);
 
@@ -734,6 +737,9 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    if (nti->tracklen)
 		nti->bitrate = nti->size * 8 / nti->tracklen;
 	}
+	if (nti->radio_gain_set) 
+	    nti->soundcheck = 
+		replaygain_to_soundcheck (nti->radio_gain);
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);
 	/* Make sure all strings are initialized -- that way we don't
@@ -741,6 +747,12 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	   strings. Also, validate_entries() will fill in the utf16
 	   strings if that hasn't already been done. */
 	/* exception: md5_hash, charset and hostname: these may be NULL. */
+	/* Set modification date to *now* */
+	nti->time_modified = itunesdb_time_get_mac_time ();
+	/* Set creation date to modification date of file */
+	if (stat (name, &si) == 0)
+	    nti->time_created = itunesdb_time_host_to_mac (si.st_mtime);
+
 	validate_entries (nti);
 
 	if (orig_track)
@@ -755,11 +767,6 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    track = nti;
 	    nti = NULL;
 	}
-	/* Set modification date to *now* */
-	track->time_modified = itunesdb_time_get_mac_time ();
-	/* Set creation date to modification date of file */
-	if (stat (name, &si) == 0)
-	    track->time_created = itunesdb_time_host_to_mac (si.st_mtime);
     }
 
     while (widgets_blocked && gtk_events_pending ())

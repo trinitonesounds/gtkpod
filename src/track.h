@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 22:33:57 jcs>
+/* Time-stamp: <2004-07-19 22:19:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -68,11 +68,12 @@ typedef struct
   guint16 samplerate;        /* samplerate (CD: 44100) */
   gint32  year;              /* year                   */
   gchar   *year_str;         /* year as string -- always identical to year */
-  gint32  volume;            /* volume adjustment */
+  gint32  volume;            /* volume adjustment              */
   gint32  soundcheck;        /* volume adjustment "soundcheck" */
-  guint32 peak_signal;	     /* LAME Peak Signal * 0x800000 */
-  gint    radio_gain;	     /* RadioGain in dB*10 (as defined by www.replaygain.org) */
-  gint    audiophile_gain;   /* AudiophileGain in dB*10 
+  guint32 peak_signal;	     /* LAME Peak Signal * 0x800000    */
+  gint32  radio_gain;	     /* RadioGain in dB*10
+				(as defined by www.replaygain.org) */
+  gint32  audiophile_gain;   /* AudiophileGain in dB*10 
 				(as defined by www.replaygain.org)  */
   gboolean peak_signal_set;  /* has the peak signal been set?       */
   gboolean radio_gain_set;   /* has the radio gain been set?        */
@@ -81,25 +82,26 @@ typedef struct
   guint32 time_played;       /* time of last play (Mac type)        */
   guint32 time_modified;     /* time of last modification (Mac type)*/
   guint32 rating;            /* star rating (stars * RATING_STEP (20))     */
-  guint32 app_rating;        /* star rating set by appl. (not iPod) */
-  guint32 playcount;         /* number of times track was played           */
+  guint32 playcount;         /* number of times track was played    */
   guint32 recent_playcount;  /* times track was played since last sync     */
   gchar   *hostname;         /* name of host this file has been imported on*/
-  gboolean transferred;      /* has file been transferred to iPod?         */
-  gchar   *md5_hash;         /* md5 hash of file (or NULL)                 */
-  gchar   *charset;          /* charset used for ID3 tags
-   */
+  gboolean transferred;      /* has file been transferred to iPod?  */
+  gchar   *md5_hash;         /* md5 hash of file (or NULL)          */
+  gchar   *charset;          /* charset used for ID3 tags           */
+  gint32 BPM;                /* supposed to vary the playback speed */
 /* present in the mhit but not used by gtkpod yet */
-  guint16 type;
-  guint16 compilation;
   guint32 unk020, unk024, unk084, unk100, unk108, unk112, unk116, unk124;
   guint32 unk128, unk132, unk136, unk140, unk144, unk148, unk152;
+  guint32 app_rating;        /* star rating set by appl. (not iPod) */
+  guint16 type;
+  guint16 compilation;
   guint32 starttime;
   guint32 stoptime;
   guint32 checked;
-    guint32 BPM;
-
 } Track;
+/* !Don't forget to add fields read from the file to copy_new_info() in
+ * file.c! */
+
 
 /* one star is how much (track->rating) */
 #define RATING_STEP 20
@@ -124,12 +126,15 @@ typedef enum {
     T_SIZE,
     T_TRACKLEN,
     T_BITRATE,
+    T_SAMPLERATE,
+    T_BPM,
     T_PLAYCOUNT,
     T_RATING,
     T_TIME_CREATED,
     T_TIME_PLAYED,
     T_TIME_MODIFIED,
     T_VOLUME,
+    T_SOUNDCHECK,
     T_YEAR,
     T_CD_NR,
 } T_item;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 23:25:59 jcs>
+/* Time-stamp: <2004-07-19 21:56:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1809,8 +1809,8 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
  * @path: localtion of the file
  * @track: structure holding track information
  *
- * The function always rereads the gains. Even if they have been previuosly
- * known.
+ * The function always rereads the gains. Even if they have been
+ * previuosly known.
  *
  * Returns TRUE if at least the radio_gain could be read.
  */
