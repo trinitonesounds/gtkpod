@@ -217,12 +217,13 @@ static gboolean sp_check_song (Song *song, guint32 inst)
     /* PLAYCOUNT */
     if (prefs_get_sp_cond (inst, S_PLAYCOUNT))
     {
+	guint32 high = 0, low = 0;
 	checked = TRUE;
-	guint32 low = prefs_get_sp_playcount_low (inst);
+	low = prefs_get_sp_playcount_low (inst);
 	/* "-1" will translate into about 4 billion because I use
 	   guint32 instead of gint32. Since 4 billion means "no upper
 	   limit" the logic works fine */
-	guint32 high = prefs_get_sp_playcount_high (inst);
+	high = prefs_get_sp_playcount_high (inst);
 	if ((low <= song->playcount) && (song->playcount <= high))
 	    cond = TRUE;
 	else
