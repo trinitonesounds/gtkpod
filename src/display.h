@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 21:42:10 jcs>
+/* Time-stamp: <2003-09-23 01:32:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -231,6 +231,8 @@ void sm_stop_editing (gboolean cancel);
 void sm_show_preferred_columns(void);
 void sm_store_col_order (void);
 
+void sm_sort (SM_item col, GtkSortType order);
+void sm_sortit (void);
 GList* sm_get_selected_songids(void);
 GList* sm_get_selected_songs(void);
 GList* sm_get_all_songids(void);

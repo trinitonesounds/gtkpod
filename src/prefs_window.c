@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 23:00:32 jcs>
+/* Time-stamp: <2003-09-23 01:37:56 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -1054,26 +1054,41 @@ void sort_window_set (void)
 {
     if (tmpsortcfg && origsortcfg)
     {
+	struct sortcfg *tsc = clone_sortprefs ();
 	prefs_set_pm_sort (tmpsortcfg->pm_sort);
 	prefs_set_pm_autostore (tmpsortcfg->pm_autostore);
 	prefs_set_st_sort (tmpsortcfg->st_sort);
+	prefs_set_sm_sort (tmpsortcfg->sm_sort);
 	prefs_set_sm_autostore (tmpsortcfg->sm_autostore);
 	/* if sort type has changed, initialize display */
-	if (origsortcfg->pm_sort != tmpsortcfg->pm_sort)
-	    display_reset (-1);
-	if (origsortcfg->st_sort != tmpsortcfg->st_sort)
+	if (tsc->pm_sort != tmpsortcfg->pm_sort)
+	{
+	    if (tmpsortcfg->pm_sort == SORT_NONE)
+		  display_reset (-1);
+	    else  pm_sort (tmpsortcfg->pm_sort);
+	}
+	if (tsc->st_sort != tmpsortcfg->st_sort)
 	{
 	    gint i;
 	    for (i=0; i<prefs_get_sort_tab_num (); ++i)
-		display_reset (i);
+	    {
+		if (tmpsortcfg->st_sort == SORT_NONE)
+		      display_reset (i);
+		else  st_sort (i, tmpsortcfg->st_sort);
+	    }
 	}
-	if (origsortcfg->sm_sort != tmpsortcfg->sm_sort)
-	    display_reset (SORT_TAB_MAX);
+	if (tsc->sm_sort != tmpsortcfg->sm_sort)
+	{
+	    if (tmpsortcfg->sm_sort == SORT_NONE)
+		  display_reset (SORT_TAB_MAX);
+	    else  sm_sortit ();
+	}
 	/* if auto sort was changed to TRUE, store order */
-	if (!origsortcfg->pm_autostore && tmpsortcfg->pm_autostore)
+	if (!tsc->pm_autostore && tmpsortcfg->pm_autostore)
 	    pm_rows_reordered ();
-	if (!origsortcfg->sm_autostore && tmpsortcfg->sm_autostore)
+	if (!tsc->sm_autostore && tmpsortcfg->sm_autostore)
 	    sm_rows_reordered ();
+	sortcfg_free (tsc);
     }
 }
 

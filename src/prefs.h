@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 22:26:50 jcs>
+/* Time-stamp: <2003-09-22 23:29:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -71,6 +71,7 @@ struct cfg
     gint pm_sort;         /* sort type for playlists */
     gint st_sort;         /* sort type for sort tabs */
     gint sm_sort;         /* sort type for tracks    */
+    SM_item sm_sortcol;   /* sort column for tracks  */
     gboolean pm_autostore;/* save sort order automatically? */
     gboolean sm_autostore;/* save sort order automatically? */
   } sortcfg;
@@ -160,7 +161,7 @@ void prefs_set_offline(gboolean active);
 void prefs_set_pm_sort (gint type);
 void prefs_set_sm_sort (gint type);
 void prefs_set_st_sort (gint type);
-void prefs_set_st_sortcol (SM_item col);
+void prefs_set_sm_sortcol (SM_item col);
 void prefs_set_sm_autostore (gboolean active);
 void prefs_set_pm_autostore (gboolean active);
 void prefs_set_keep_backups(gboolean active);

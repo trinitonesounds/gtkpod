@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 22:07:22 jcs>
+/* Time-stamp: <2003-09-22 23:27:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -251,6 +251,7 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.st_sort = SORT_NONE;
     mycfg->sortcfg.sm_sort = SORT_NONE;
+    mycfg->sortcfg.sm_sortcol = SM_COLUMN_TITLE;
     mycfg->sortcfg.pm_autostore = FALSE;
     mycfg->sortcfg.sm_autostore = FALSE;
     return(mycfg);
@@ -474,9 +475,13 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_st_sort(atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "sm_sort") == 0)
+	  else if(g_ascii_strcasecmp (line, "sm_sort_") == 0)
 	  {
 	      prefs_set_sm_sort(atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "sm_sortcol") == 0)
+	  {
+	      prefs_set_sm_sortcol(atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "last_prefs_page") == 0)
 	  {
@@ -864,7 +869,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "sm_autostore=%d\n",prefs_get_sm_autostore());
     fprintf(fp, "pm_sort=%d\n",prefs_get_pm_sort());
     fprintf(fp, "st_sort=%d\n",prefs_get_st_sort());
-    fprintf(fp, "sm_sort=%d\n",prefs_get_sm_sort());
+    fprintf(fp, "sm_sort_=%d\n",prefs_get_sm_sort());
+    fprintf(fp, "sm_sortcol=%d\n",prefs_get_sm_sortcol());
     fprintf(fp, "display_tooltips_main=%d\n",
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
@@ -1724,6 +1730,17 @@ void prefs_set_sm_sort (gint i)
     }
 
     cfg->sortcfg.sm_sort = i;
+}
+
+SM_item prefs_get_sm_sortcol (void)
+{
+    return cfg->sortcfg.sm_sortcol;
+}
+
+void prefs_set_sm_sortcol (SM_item i)
+{
+    if (i < SM_NUM_COLUMNS)
+	cfg->sortcfg.sm_sortcol = i;
 }
 
 void prefs_set_display_tooltips_main (gboolean state)

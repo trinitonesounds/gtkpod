@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 18:03:58 jcs>
+/* Time-stamp: <2003-09-23 01:32:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -142,6 +142,8 @@ void display_create (GtkWidget *gtkpod)
     display_show_hide_tooltips ();
     /* change standard g_print () handler */
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
+    /* initialize sorting */
+    sm_sortit ();
 }
 
 /* redisplay the entire display (playlists, sort tabs, song view) and

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-22 21:37:43 jcs>
+/* Time-stamp: <2003-09-23 01:38:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -165,6 +165,8 @@ void sm_remove_all_songs (gboolean clear_sort)
 	  sm_store_col_order ();
 	  display_update_default_sizes ();
 	  sm_create_treeview ();
+	  /* re-initialize sorting, if necessary */
+	  sm_sortit ();
       }
   }
 }
@@ -858,7 +860,28 @@ gint default_comp  (GtkTreeModel *model,
 static void
 sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 {
+    prefs_set_sm_sort (gtk_tree_view_column_get_sort_order (tvc));
+    prefs_set_sm_sortcol (gtk_tree_view_column_get_sort_column_id (tvc));
     if(prefs_get_sm_autostore ())  sm_rows_reordered ();
+}
+
+
+void sm_sort (SM_item col, GtkSortType order)
+{
+    GtkTreeModel *model;
+
+    if (!song_treeview)  return;
+    model = gtk_tree_view_get_model (song_treeview);
+    if (!model)          return;
+    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
+					  col, order);
+}
+
+
+void sm_sortit (void)
+{
+    if (prefs_get_sm_sort () != SORT_NONE)
+	sm_sort (prefs_get_sm_sortcol (), prefs_get_sm_sort ());
 }
 
 

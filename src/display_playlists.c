@@ -550,6 +550,7 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
 static void
 pm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 {
+    prefs_set_pm_sort (gtk_tree_view_column_get_sort_order (tvc));
     if (prefs_get_pm_autostore ())  pm_rows_reordered ();
 }
 
