@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 00:48:52 JST jcs>
+/* Time-stamp: <2004-03-31 23:20:37 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1654,7 +1654,9 @@ gchar *get_track_name_on_ipod (Track *s)
 
     if(s &&  !prefs_get_offline ())
     {
-	result = itunesdb_get_track_name_on_ipod (prefs_get_ipod_mount (), s);
+	gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
+	result = itunesdb_get_track_name_on_ipod (mount, s);
+	g_free (mount);
     }
     return(result);
 }

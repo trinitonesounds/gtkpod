@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-29 23:44:40 JST jcs>
+/* Time-stamp: <2004-03-31 23:21:42 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,14 +33,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "prefs.h"
-#include "track.h"
-#include "misc.h"
-#include "support.h"
-#include "md5.h"
+#include "charset.h"
 #include "confirmation.h"
 #include "file.h"
 #include "itunesdb.h"
+#include "md5.h"
+#include "misc.h"
+#include "prefs.h"
+#include "support.h"
+#include "track.h"
 
 /* List with all the tracks */
 GList *tracks = NULL;
@@ -302,8 +303,9 @@ Track *get_track_by_filename (gchar *filename)
       for (l=tracks; l; l=l->next)
       {
 	  Track *track = (Track *)l->data;
-	  gchar *ipod_path = itunesdb_get_track_name_on_ipod (
-	      prefs_get_ipod_mount (), track);
+	  gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
+	  gchar *ipod_path = itunesdb_get_track_name_on_ipod (mount, track);
+	  g_free (mount);
 	  if (ipod_path)
 	  {
 	      if (strcmp (ipod_path, filename) == 0)

@@ -650,7 +650,11 @@ Jun 15 17:13:58 hatarakibachi kernel: scsi singledevice 0 0 1 0
 
     umount /mnt/ipod
 
-10) Disconnect the iPod from your computer (ignore the "Do not
+10) Unload the module sbp2 (as most likely as root):
+
+    rmmod sbp2
+
+11) Disconnect the iPod from your computer (ignore the "Do not
     disconnect" message -- as long as you wait for the 'unmount' to
     command to finish properly, everything should be fine).
 

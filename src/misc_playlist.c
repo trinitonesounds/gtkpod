@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-29 23:44:41 JST jcs>
+/* Time-stamp: <2004-03-31 23:21:43 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,6 +31,7 @@
 #endif
 
 #include <string.h>
+#include "charset.h"
 #include "md5.h"
 #include "misc.h"
 #include "prefs.h"
@@ -794,10 +795,12 @@ void check_db (void)
 	, ndangling = 0;
 
     gchar ** tokens;
-
+    gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
     gchar *ipod_path_as_filename = 
-      g_filename_from_utf8(prefs_get_ipod_mount(),-1,NULL,NULL,NULL);
+      g_filename_from_utf8(mount,-1,NULL,NULL,NULL);
     const gchar * music[] = {"iPod_Control","Music",NULL,NULL,};
+
+    g_free (mount);
 
     prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
     block_widgets();

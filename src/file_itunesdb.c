@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 00:37:00 JST jcs>
+/* Time-stamp: <2004-03-31 23:20:36 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -78,6 +78,9 @@ static GList *pending_deletion = NULL;
    file_are_saved(). It can be set to FALSE by calling
    data_changed() */
 static gboolean files_saved = TRUE;
+/* Flag to indicated that an iTunesDB has been read */
+static gboolean itunesdb_read = FALSE;
+
 #ifdef G_THREADS_ENABLED
 /* Thread specific */
 static  GMutex *mutex = NULL;
@@ -393,15 +396,13 @@ void handle_import (void)
     block_widgets ();
     if (!prefs_get_offline())
     { /* iPod is connected */
+	gchar *ipod_mount_filename = charset_from_utf8(prefs_get_ipod_mount());
 	if (prefs_get_write_extended_info())
 	{
-                         const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL},
-                           *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
-                         gchar *ipod_mount_filename = g_filename_from_utf8
-                             (prefs_get_ipod_mount(),-1,NULL,NULL,NULL);
+	    const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL};
+	    const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
 	    name1 = resolve_path(ipod_mount_filename,ext_db);
 	    name2 = resolve_path(ipod_mount_filename,db);
-                        g_free(ipod_mount_filename);
 	    success = read_extended_info (name1, name2);
 	    g_free (name1);
 	    g_free (name2);
@@ -410,10 +411,11 @@ void handle_import (void)
 		gtkpod_warning (_("Extended info will not be used.\n"));
 	    }
 	}
-	if(itunesdb_parse (prefs_get_ipod_mount ()))
+	if(itunesdb_parse (ipod_mount_filename))
 	    gtkpod_statusbar_message(_("iPod Database Successfully Imported"));
 	else
 	    gtkpod_statusbar_message(_("iPod Database Import Failed"));
+	g_free(ipod_mount_filename);
     }
     else
     { /* offline - requires extended info */
@@ -453,6 +455,7 @@ void handle_import (void)
     if (n != get_nr_of_tracks ())
     { /* Import was successfull, block menu item and button */
 	display_disable_gtkpod_import_buttons();
+	itunesdb_read = TRUE;
     }
     /* reset duplicate detection -- this will also detect and correct
      * all duplicate tracks currently in the database */
@@ -634,10 +637,12 @@ static gpointer th_copy (gpointer s)
 {
     gboolean result;
     Track *track = (Track *)s;
+    gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
 
-    result = itunesdb_copy_track_to_ipod (prefs_get_ipod_mount (),
+    result = itunesdb_copy_track_to_ipod (mount,
 					 track,
 					 track->pc_path_locale);
+    g_free (mount);
     /* delete old size */
     if (track->transferred) track->oldsize = 0;
     g_mutex_lock (mutex);
@@ -660,7 +665,7 @@ static void flush_tracks_abort (gboolean *abort)
 static gboolean ipod_dirs_present (void)
 {
     gchar *ipod_path_as_filename = 
-      g_filename_from_utf8(prefs_get_ipod_mount (),-1,NULL,NULL,NULL);
+      charset_from_utf8(prefs_get_ipod_mount ());
     const gchar *music[] = {"iPod_Control","Music",NULL},
       *itunes[] = {"iPod_Control","iTunes",NULL};
     gchar *file;
@@ -840,19 +845,21 @@ static gboolean flush_tracks (void)
 		  result &= (gboolean)g_thread_join (thread);
 	      }
 	      else {
+		  gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
 		  g_warning ("Thread creation failed, falling back to default.\n");
 		  result &= itunesdb_copy_track_to_ipod (
-		      prefs_get_ipod_mount (),
-		      track, track->pc_path_locale);
+		      mount, track, track->pc_path_locale);
 		  /* delete old size */
 		  if (track->transferred) track->oldsize = 0;
+		  g_free (mount);
 	      }
 #else
-	      result &= itunesdb_copy_track_to_ipod (cfg->ipod_mount,
-						    track, track->pc_path_locale);
+	      gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
+	      result &= itunesdb_copy_track_to_ipod (mount, track,
+						     track->pc_path_locale);
 	      /* delete old size */
 	      if (track->transferred) track->oldsize = 0;
-
+	      g_free (mount);
 #endif
 	      ++count;
 	      if (count == 1)  /* we need longer timeout */
@@ -898,12 +905,6 @@ void handle_export (void)
   gchar *cft=NULL, *cfe=NULL, *cfgdir;
   gboolean success = TRUE;
   gchar *buf;
-  
-
-  block_widgets (); /* block user input */
-  /* read offline playcounts -- in case we added some tracks we can
-     now handle */
-  parse_offline_playcount ();
 
   cfgdir = prefs_get_cfgdir ();
   if (cfgdir)
@@ -911,6 +912,52 @@ void handle_export (void)
       cft = g_build_filename (cfgdir, "iTunesDB", NULL);
       cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
   }
+
+  if (!itunesdb_read)
+  {   /* No iTunesDB was read but user wants to export current
+         data. If an iTunesDB is present on the iPod or in cfgdir,
+	 this is most likely an error. We should tell the user */
+      gboolean danger = FALSE;
+      /* First check if we can find an existing iTunesDB. If yes, set
+	 'danger' to TRUE */
+      if (prefs_get_offline ())
+      {
+	  if (g_file_test (cft, G_FILE_TEST_EXISTS))  danger = TRUE;
+      }
+      else
+      {  /* online */
+	  gchar *ipod_path_as_filename = 
+	      charset_from_utf8 (prefs_get_ipod_mount());
+	  const gchar *itunes_components[] = {"iPod_Control", "iTunes", NULL};
+	  gchar *itunes_filename = resolve_path(ipod_path_as_filename,
+						itunes_components);
+	  if (g_file_test (itunes_filename, G_FILE_TEST_EXISTS)) danger = TRUE;
+	  g_free (ipod_path_as_filename);
+	  g_free (itunes_filename);
+      }
+      if (danger)
+      {
+	GtkWidget *dialog = gtk_message_dialog_new (
+	    GTK_WINDOW (gtkpod_window),
+	    GTK_DIALOG_DESTROY_WITH_PARENT,
+	    GTK_MESSAGE_WARNING,
+	    GTK_BUTTONS_OK_CANCEL,
+	    _("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before exporting again.\n"));
+	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+	if (result == GTK_RESPONSE_CANCEL)
+	{
+	    g_free (cft);
+	    g_free (cfe);
+	    return;
+	}
+      }
+  }
+
+  block_widgets (); /* block user input */
+  /* read offline playcounts -- in case we added some tracks we can
+     now handle */
+  parse_offline_playcount ();
 
   if(!prefs_get_offline ())
   {
@@ -929,13 +976,12 @@ void handle_export (void)
       {
 	  gchar *ipt = NULL, *ipe = NULL;
 	  gchar *ipod_path_as_filename = 
-	      g_filename_from_utf8(prefs_get_ipod_mount(),-1,NULL,NULL,NULL);
+	      charset_from_utf8 (prefs_get_ipod_mount());
 	  const gchar *itunes_components[] = {"iPod_Control", "iTunes", NULL};
 	  gchar *itunes_filename = resolve_path(ipod_path_as_filename,
 						itunes_components);
 	  ipt = g_build_filename (itunes_filename, "iTunesDB", NULL);
 	  ipe = g_build_filename (itunes_filename, "iTunesDB.ext", NULL);
-	  C_FREE(ipod_path_as_filename);
 
 	  /* write tracks to iPod */
 	  if ((success=flush_tracks()))
@@ -943,7 +989,7 @@ void handle_export (void)
 	      gtkpod_statusbar_message (_("Now writing iTunesDB. Please wait..."));
 	      while (widgets_blocked && gtk_events_pending ())
 		  gtk_main_iteration ();
-	      if (!(success=itunesdb_write (prefs_get_ipod_mount ())))
+	      if (!(success=itunesdb_write (ipod_path_as_filename)))
 		  gtkpod_statusbar_message (_("Error writing iTunesDB to iPod. Export aborted!"));
 	      /* else: write extended info (PC filenames, md5 hash) to iPod */
 	      else if (prefs_get_write_extended_info ())
@@ -971,6 +1017,7 @@ void handle_export (void)
 		  if (str && *str)    tools_sync_calendar ();
 	      }
 	  }
+	  C_FREE(ipod_path_as_filename);
 	  /* if everything was successful, copy files to ~/.gtkpod */
 	  if (success && prefs_get_keep_backups ())
 	  {
@@ -1040,4 +1087,3 @@ void data_changed (void)
 {
   files_saved = FALSE;
 }  
-

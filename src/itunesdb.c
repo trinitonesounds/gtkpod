@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-22 22:42:29 JST jcs>
+/* Time-stamp: <2004-03-31 23:21:45 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -710,17 +710,15 @@ static void init_playcounts (const gchar *filename)
    in track.c.
    Returns TRUE on success, FALSE on error.
    "path" should point to the mount point of the iPod,
-   e.e. "/mnt/ipod" */
+   e.g. "/mnt/ipod" and be in local encoding */
 /* Support for playlists should be added later */
 gboolean itunesdb_parse (const gchar *path)
 {
-  gchar *filename,*path_as_filename;
+  gchar *filename;
   const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
   gboolean result;
 
-  path_as_filename = g_filename_from_utf8(path,-1,NULL,NULL,NULL);
-  filename = resolve_path(path_as_filename,db);
-  g_free(path_as_filename);
+  filename = resolve_path(path, db);
   result = itunesdb_parse_file (filename);
   g_free (filename);
   return result;
@@ -1325,16 +1323,14 @@ write_it (FILE *file)
    the export was successful.
    Returns TRUE on success, FALSE on error.
    "path" should point to the mount point of the
-   iPod, e.e. "/mnt/ipod" */
+   iPod, e.g. "/mnt/ipod" and be in local encoding */
 gboolean itunesdb_write (const gchar *path)
 {
-    gchar *filename,*path_as_filename,*itunes_filename;
+    gchar *filename, *itunes_filename;
     const gchar *itunes[] = {"iPod_Control","iTunes",NULL};
     gboolean result = FALSE;
 
-    path_as_filename = g_filename_from_utf8(path,-1,NULL,NULL,NULL);
-    itunes_filename = resolve_path(path_as_filename,itunes);
-    g_free(path_as_filename);
+    itunes_filename = resolve_path(path, itunes);
     
     if(!itunes_filename)
       return FALSE;
@@ -1406,7 +1402,8 @@ void itunesdb_convert_filename_ipod2fs (gchar *ipod_file)
 
 /* Copy one track to the ipod. The PC-Filename is
    "pcfile" and is taken literally.
-   "path" is assumed to be the mountpoint of the iPod.
+   "path" is assumed to be the mountpoint of the iPod (in local
+   encoding).
    For storage, the directories "f00 ... f19" will be
    cycled through. The filename is constructed from
    "track->ipod_id": "gtkpod_id" and written to
@@ -1418,7 +1415,7 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
   static gint dir_num = -1;
   gchar *track_db_path = NULL, *ipod_fullfile = NULL;
   gchar *dest_components[] = {"","iPod_Control","Music",NULL,NULL,NULL},
-    *ipod_path_as_filename,*parent_dir_filename;
+    *parent_dir_filename;
   gchar *original_suffix;
   gchar dir_num_str[5];
   gboolean success;
@@ -1443,11 +1440,9 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
   g_snprintf(dir_num_str,5,"F%02d",dir_num);
   dest_components[3] = dir_num_str;
   
-  ipod_path_as_filename = g_filename_from_utf8(path,-1,NULL,NULL,NULL);
-  parent_dir_filename = resolve_path(ipod_path_as_filename,(const gchar **)dest_components);
+  parent_dir_filename = resolve_path(path,(const gchar **)dest_components);
   if(parent_dir_filename == NULL) {
           /* Can't find the parent of the filenames we're going to generate to copy into */
-          g_free(ipod_path_as_filename);
           return FALSE;
   }
 
@@ -1464,7 +1459,7 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
   { /* we need to loop until we find an unused filename */
       dest_components[4] = 
         g_strdup_printf("gtkpod%05d%s",track->ipod_id + oops,original_suffix);
-      ipod_fullfile = resolve_path(ipod_path_as_filename,
+      ipod_fullfile = resolve_path(path,
                                    (const gchar * const *)dest_components);
       if(ipod_fullfile)
       {
@@ -1501,7 +1496,6 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
       track->ipod_path_utf16 = g_utf8_to_utf16 (track_db_path, -1, NULL, NULL, NULL);
   }
   
-  g_free(ipod_path_as_filename);
   g_free(parent_dir_filename);
   g_free (track_db_path);
   g_free (ipod_fullfile);
@@ -1511,7 +1505,7 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
 
 /* Return the full iPod filename as stored in @track. Return value
    must be g_free()d after use.
-   @path: mount point of the iPod file system
+   @path: mount point of the iPod file system (in local encoding)
    @track: track
    Return value: full filename to @track on the iPod or NULL if no
    filename is set in @track. NOTE: the file does not necessarily

@@ -5,8 +5,6 @@ TODO:
 
 - progress bar for copying songs from iPod
 
-- confirmation dialog before writing iTunesDB
-
 Dangling/orphaned tracks
     - Delete dangling tracks right away -- they can cause an error
       message when exporting the iTunesDB. Instead display them in an
@@ -41,11 +39,6 @@ Dangling/orphaned tracks
   won't have to read over the network twice if they are copied right
   away) (request by Seth Arnold)
 
-- playlist creation for orphaned tracks (Sam?)
-
-- reconstruction of iPod contents after file system corruption
-  (Edward?)
-
 - album support (normalize all tracks of an album with the same gain)
    for volume normalization
 
@@ -53,7 +46,7 @@ Dangling/orphaned tracks
 
 - upload text notes to iPod
 
-- add more progress dialogues
+- add more progress dialogues (in general!)
 
 - play track and enqueue track should update playcount and last played
   track's field. (Should be done by some plugin that tells gtkpod when
@@ -65,8 +58,6 @@ Dangling/orphaned tracks
 
 - add an option to let the user decide if all the gtkpod's
   playlist must be updated on export.
-
-- automate "Create iPod's directories"
 
 - on-the-fly resampling to a particular bit rate. I have 32 GB of
   songs be cause some of them at at 192, but I only need them at 128
