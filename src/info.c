@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 23:01:58 jcs>
+/* Time-stamp: <2003-11-24 23:25:12 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -214,6 +214,7 @@ static void fill_in_info (GList *tl, guint32 *tracks,
     }
 }
 
+/* fill in track_view_info structure */
 static void info_get_track_view_info (struct info_track_view *tv)
 {
     GList *displayed;
