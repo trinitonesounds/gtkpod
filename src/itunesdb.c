@@ -408,7 +408,7 @@ static glong get_nod_a(FILE *file, glong seek)
   song->bitrate = get4int(file, seek+56);     /* bitrate          */
   song->transferred = TRUE;                   /* song is on iPod! */
 
-  seek += 156;                 /* 1st mhod starts here! */
+  seek += get4int (file, seek+4);             /* 1st mhod starts here! */
   while(zip != -1)
     {
      seek += zip;
@@ -504,49 +504,120 @@ gboolean itunesdb_parse_file (gchar *filename)
   FILE *itunes = NULL;
   gboolean result = FALSE;
   gchar data[8];
-  glong seek;
+  glong seek=0, pl_mhsd=0;
+  guint32 zip, nr_songs=0, nr_playlists=0;
+  gboolean swapped_mhsd = FALSE;
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, it_get_nr_of_songs ());
 #endif
 
   itunes = fopen (filename, "r");
-  do { /* dummy loop for easier error handling */
-    if (itunes == NULL)
+  do
+  { /* dummy loop for easier error handling */
+      if (itunes == NULL)
       {
-	gtkpod_warning (_("Could not open iTunesDB \"%s\" for reading.\n"),
-			filename);
-	break;
+	  gtkpod_warning (_("Could not open iTunesDB \"%s\" for reading.\n"),
+			  filename);
+	  break;
       }
-    if (seek_get_n_bytes (itunes, data, 0, 8) != 8)
+      if (seek_get_n_bytes (itunes, data, seek, 8) != 8)
       {
-	gtkpod_warning (_("Error reading \"%s\".\n"), filename);
-	break;
+	  gtkpod_warning (_("Error reading \"%s\".\n"), filename);
+	  break;
       }
-    /* for(i=0; i<8; ++i)  printf("%02x ", data[i]); printf("\n");*/
-    if (cmp_n_bytes (data, ipodmagic, 8) == FALSE) 
+      /* for(i=0; i<8; ++i)  printf("%02x ", data[i]); printf("\n");*/
+      if (cmp_n_bytes (data, ipodmagic, 8) == FALSE) 
       {  
-	gtkpod_warning (_("\"%s\" is not a iTunesDB.\n"), filename);
-	break;
+	  gtkpod_warning (_("\"%s\" is not a iTunesDB.\n"), filename);
+	  break;
       }
-    seek = 292; /* the magic number!! (the HARDCODED start of the first mhit) */
-    /* get every file entry */
-    while(seek != -1) {
-      /* get_nod_a returns where it's guessing the next MHIT,
-	 if it fails, it returns '-1' */
-      seek = get_nod_a(itunes, seek);
-    }
+      do
+      {
+	  if (seek_get_n_bytes (itunes, data, seek, 8) != 8)  break;
+	  if (cmp_n_bytes (data, "mhsd", 4) == TRUE)
+	  { /* mhsd header -> determine start of playlists */
+	      if (get4int (itunes, seek + 12) == 1)
+	      { /* OK, songlist, save start of playlists */
+		  if (!swapped_mhsd)
+		      pl_mhsd = seek + get4int (itunes, seek+8);
+	      }
+	      else if (get4int (itunes, seek + 12) == 2)
+	      { /* bad: these are playlists... switch */
+		  if (swapped_mhsd)
+		  { /* already switched once -> forget it */
+		      break;
+		  }
+		  else
+		  {
+		      pl_mhsd = seek;
+		      seek += get4int (itunes, seek+8);
+		      swapped_mhsd = TRUE;
+		  }
+	      }
+	      else
+	      { /* neither playlist nor song MHSD --> skip it */
+		  seek += get4int (itunes, seek+8);
+	      }
+	  }
+	  if (cmp_n_bytes (data, "mhlt", 4) == TRUE)
+	  { /* mhlt header -> number of songs */
+	      nr_songs = get4int (itunes, seek+8);
+	  }
+	  if (cmp_n_bytes (data, "mhit", 4) == TRUE)
+	  { /* mhit header -> start of songs*/
+	      result = TRUE;
+	      break;
+	  }
+	  zip = get4int (itunes, seek+4);
+	  if (zip == 0)  break;
+	  seek += zip;
+      } while (result == FALSE);
+      if (result == FALSE)  break; /* some error occured */
+      result = FALSE;
+      /* now we should be at the first MHIT */
+
+      /* get every file entry */
+      while(seek != -1) {
+	  /* get_nod_a returns where it's guessing the next MHIT,
+	     if it fails, it returns '-1' */
+	  seek = get_nod_a(itunes, seek);
+      }
     
-    /* Parse Playlists */
-    /* FIXME: maybe better to skip the headers until we find "mhyp" */
-    seek = get4int(itunes, 112) + 292; /* start position of playlists */
+      /* next: playlists */
+      seek = pl_mhsd;
+      do
+      {
+	  if (seek_get_n_bytes (itunes, data, seek, 8) != 8)  break;
+	  if (cmp_n_bytes (data, "mhsd", 4) == TRUE)
+	  { /* mhsd header */
+	      if (get4int (itunes, seek + 12) != 2)
+	      {  /* this is not a playlist MHSD -> skip it */
+		  seek += get4int (itunes, seek+8);
+	      }
+	  }
+	  if (cmp_n_bytes (data, "mhlp", 4) == TRUE)
+	  { /* mhlp header -> number of playlists */
+	      nr_playlists = get4int (itunes, seek+8);
+	  }
+	  if (cmp_n_bytes (data, "mhyp", 4) == TRUE)
+	  { /* mhyp header -> start of playlists */
+	      result = TRUE;
+	      break;
+	  }
+	  zip = get4int (itunes, seek+4);
+	  if (zip == 0)  break;
+	  seek += zip;
+      } while (result == FALSE);
+      if (result == FALSE)  break; /* some error occured */
+      result = FALSE;
 
 #if ITUNESDB_DEBUG
     fprintf(stderr, "iTunesDB part2 starts at: %x\n", (int)seek);
 #endif
     
     while(seek != -1) {
-     seek = get_pl(itunes, seek);
+	seek = get_pl(itunes, seek);
     }
     
     result = TRUE;

@@ -83,15 +83,24 @@ static void pm_dnd_advertise(GtkTreeView *v);
 void pm_remove_song (Playlist *playlist, Song *song)
 {
   /* notify sort tab if currently selected playlist is affected */
-  if (playlist == current_playlist) st_remove_song (song, 0);
+  if (current_playlist && 
+      ((playlist == current_playlist) ||
+       (current_playlist->type == PL_TYPE_MPL)))
+  {
+      st_remove_song (song, 0);
+  }
 }
 
 
 /* Add song to the display if it's in the currently displayed playlist */
 void pm_add_song (Playlist *playlist, Song *song)
 {
-  if (playlist == current_playlist) 
-    st_add_song (song, TRUE, 0); /* Add to first sort tab */
+  if (current_playlist && 
+      ((playlist == current_playlist) ||
+       (current_playlist->type == PL_TYPE_MPL)))
+  {
+      st_add_song (song, TRUE, 0); /* Add to first sort tab */
+  }
 }
 
 /* advertise dnd for the playlist model GtkTreeView
@@ -1004,21 +1013,31 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	  {
 	      st_add_song (song, final, inst+1);
 	  }
-	  /* select current entry if it corresponds to the last
-	     selection, or last_entry if that's the master entry */
+	  /* check if we should select some entry */
 	  if (!st->current_entry)
-	  {	      
-	      TabEntry *last_entry = st_get_entry_by_name (
-		  st->lastselection[st->current_category], inst);
-	      if (entry == last_entry)
+	  {
+	      if (st->lastselection[st->current_category] == NULL)
 	      {
-		  select_entry = entry;
-		  st_add_song (song, final, inst+1);
+		  /* no last selection -- check if we should select "All" */
+		  if (prefs_get_st_autoselect (inst))
+		  {
+		      select_entry =
+			  (TabEntry *)g_list_nth_data (st->entries, 0);
+		      st_add_song (song, final, inst+1);
+		  }
 	      }
-	      else if (last_entry && last_entry->master)
+	      else
 	      {
-		  select_entry = last_entry;
-		  st_add_song (song, final, inst+1);
+		  /* select current entry if it corresponds to the last
+		     selection, or last_entry if that's the master entry */
+		  TabEntry *last_entry = st_get_entry_by_name (
+		      st->lastselection[st->current_category], inst);
+		  if (last_entry &&
+		      ((entry == last_entry) || last_entry->master))
+		  {
+		      select_entry = last_entry;
+		      st_add_song (song, final, inst+1);
+		  }
 	      }
 	  }
       }
@@ -1107,8 +1126,7 @@ static void st_remove_song (Song *song, guint32 inst)
 /* Init a sort tab: all current entries are removed. The next sort tab
    is initialized as well (st_init (-1, inst+1)).  Set new_category to
    -1 if the current category is to be left unchanged */
-/* if reinit == TRUE, it will also remember, if "All" was
-   selected. Normally it does not specifically remember and will
+/* Normally we do not specifically remember the "All" entry and will
    select "All" in accordance to the prefs settings. */
 static void st_init (gint32 new_category, guint32 inst)
 {
@@ -1118,6 +1136,7 @@ static void st_init (gint32 new_category, guint32 inst)
   if (inst == SORT_TAB_NUM)
     {
       sm_remove_all_songs ();
+      gtkpod_songs_statusbar_update ();
     }
   else
     {
@@ -1126,18 +1145,22 @@ static void st_init (gint32 new_category, guint32 inst)
       cat = st->current_category;
       if (st->current_entry != NULL)
       {
-	  C_FREE (st->lastselection[cat]);
 	  if (!st->current_entry->master)
 	  {
+	      C_FREE (st->lastselection[cat]);
 	      st->lastselection[cat] = g_strdup (st->current_entry->name);
 	  }
+/* don't remember entry 'All' */
+#if 0
 	  else
 	  {
 	      gchar buf[] = {-1, 0}; /* this is how I mark the "All"
 				      * entry as string: should be
 				      * illegal UTF8 */
-	      st->lastselection[cat] = g_strdup (buf);
+	      C_FREE (st->lastselection[cat]);
+	      st->lastselection[cat] = g_strdup (buf);*/
 	  }
+#endif
 	  st->current_entry = NULL;
       }
       if (new_category != -1)
@@ -1163,7 +1186,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 
   inst = st_get_instance_from_notebook (notebook);
   if (inst == -1) return; /* invalid notebook */
-  if (stop_add <= (gint)inst)  return;
+  if (stop_add < (gint)inst)  return;
   st = sorttab[inst];
   /* re-initialize current instance */
   st_init (page, inst);
@@ -1181,22 +1204,22 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   if (n > 0)
   {
       /* block playlist view and all sort tab notebooks <= inst */
-      if (!prefs_get_block_display ())  block_selection (inst);
+      if (!prefs_get_block_display ())  block_selection (inst-1);
       /* add all songs previously present to sort tab */
       for (i=0; i<n; ++i)
       {
-	  if (stop_add <= (gint)inst)  break;
+	  if (stop_add < (gint)inst)  break;
 	  song = (Song *)g_list_nth_data (copy, i);
 	  st_add_song (song, FALSE, inst);
 	  while (((i%10) == 0) &&
 		 !prefs_get_block_display() && gtk_events_pending ())
 	      gtk_main_iteration ();
       }
-      if (n && (stop_add > (gint)inst)) st_add_song (NULL, TRUE, inst);
+      if (n && (stop_add >= (gint)inst)) st_add_song (NULL, TRUE, inst);
       if (!prefs_get_block_display ())
       {
 	  while (gtk_events_pending ())      gtk_main_iteration ();
-	  release_selection (inst);
+	  release_selection (inst-1);
       }
   }
 }

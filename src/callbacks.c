@@ -230,7 +230,7 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
                                         gpointer         user_data)
 {
     GtkTreeSelection *ts = NULL;
-    
+
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
     {
 	if(info == 1000)	/* gtkpod/file */
