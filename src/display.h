@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 21:10:19 jcs>
+/* Time-stamp: <2004-09-15 23:57:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -220,6 +220,7 @@ void st_remove_entry (TabEntry *entry, guint32 inst);
 gint st_get_instance_from_treeview (GtkTreeView *tv);
 void st_show_visible (void);
 void st_arrange_visible_sort_tabs (void);
+void st_adopt_order_in_playlist (void);
 TabEntry *st_get_selected_entry (gint inst);
 
 void cal_open_calendar (gint inst, T_item item);
@@ -252,6 +253,7 @@ gboolean tm_add_filelist (gchar *data, GtkTreePath *path,
 void tm_stop_editing (gboolean cancel);
 void tm_show_preferred_columns(void);
 void tm_store_col_order (void);
+void tm_adopt_order_in_sorttab (void);
 
 void tm_sort (TM_item col, GtkSortType order);
 GList* tm_get_selected_trackids(void);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-21 18:54:03 jcs>
+/* Time-stamp: <2004-09-15 23:57:23 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -99,4 +99,5 @@ void sort_window_set_pm_sort (gint val);
 void sort_window_set_st_sort (gint val);
 void sort_window_set_tm_sort (gint val);
 void sort_window_set_case_sensitive (gboolean val);
+void sort_window_update (void);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 21:10:40 jcs>
+/* Time-stamp: <2004-09-16 00:28:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -237,10 +237,27 @@ Playlist *generate_random_playlist (void)
 }
 
 
-Playlist *randomize_current_playlist (void)
+void randomize_current_playlist (void)
 {
-    fprintf (stderr, "Not implemented yet.\n");
-    return NULL;
+    Playlist *pl= pm_get_selected_playlist ();
+
+    if (!pl)
+    {
+	gtkpod_statusbar_message (_("No playlist selected"));
+	return;
+    }
+
+    if (prefs_get_tm_autostore ())
+    {
+	prefs_set_tm_autostore (FALSE);
+	gtkpod_warning (_("Auto Store of track view disabled.\n\n"));
+/* 	sort_window_update (); */
+    }
+
+    randomize_playlist (pl);
+
+    st_adopt_order_in_playlist ();
+    tm_adopt_order_in_sorttab ();
 }
 
 

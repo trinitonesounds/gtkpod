@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-12 17:18:05 jcs>
+/* Time-stamp: <2004-09-16 00:18:01 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -1235,9 +1235,8 @@ void sort_window_create (void)
 {
     if (!sort_window)
     {
-	GtkWidget *w;
-	gchar *str;
 	GList *collist = NULL;
+	GtkWidget *w;
 	gint i;
 
 	if(!tmpsortcfg && !origsortcfg)
@@ -1252,7 +1251,50 @@ void sort_window_create (void)
 	}
 	sort_window = create_sort_window ();
 
-	w = NULL;
+	/* Set Sort-Column-Combo */
+	/* create the list in the order of the columns displayed */
+	tm_store_col_order ();
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
+	{   /* first the visible columns */
+	    TM_item col = prefs_get_col_order (i);
+	    if (col != -1)
+	    {
+		if (prefs_get_col_visible (col))
+		    collist = g_list_append (collist,
+					     gettext (tm_col_strings[col]));
+	    }
+	}
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
+	{   /* first the visible columns */
+	    TM_item col = prefs_get_col_order (i);
+	    if (col != -1)
+	    {
+		if (!prefs_get_col_visible (col))
+		    collist = g_list_append (collist,
+					     gettext (tm_col_strings[col]));
+	    }
+	}
+	w = lookup_widget (sort_window, "sort_combo");
+	gtk_combo_set_popdown_strings (GTK_COMBO (w), collist);
+	g_list_free (collist);
+	collist = NULL;
+
+	sort_window_update ();
+
+	sort_window_show_hide_tooltips ();
+	gtk_widget_show (sort_window);
+    }
+}
+
+
+
+/* Update sort_window's settings */
+void sort_window_update (void)
+{
+    if (sort_window && tmpsortcfg)
+    {
+	gchar *str;
+	GtkWidget *w = NULL;
 	switch (tmpsortcfg->pm_sort)
 	{
 	case SORT_ASCENDING:
@@ -1303,42 +1345,12 @@ void sort_window_create (void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpsortcfg->case_sensitive);
 	}
-	/* Set Sort-Column-Combo */
-	/* create the list in the order of the columns displayed */
-	tm_store_col_order ();
-	for (i=0; i<TM_NUM_COLUMNS; ++i)
-	{   /* first the visible columns */
-	    TM_item col = prefs_get_col_order (i);
-	    if (col != -1)
-	    {
-		if (prefs_get_col_visible (col))
-		    collist = g_list_append (collist,
-					     gettext (tm_col_strings[col]));
-	    }
-	}
-	for (i=0; i<TM_NUM_COLUMNS; ++i)
-	{   /* first the visible columns */
-	    TM_item col = prefs_get_col_order (i);
-	    if (col != -1)
-	    {
-		if (!prefs_get_col_visible (col))
-		    collist = g_list_append (collist,
-					     gettext (tm_col_strings[col]));
-	    }
-	}
-	w = lookup_widget (sort_window, "sort_combo");
-	gtk_combo_set_popdown_strings (GTK_COMBO (w), collist);
-	g_list_free (collist);
-	collist = NULL;
-	/* set standard entry */
+	/* set standard entry in combo */
 	str = gettext (tm_col_strings[prefs_get_tm_sortcol ()]);
+	w = lookup_widget (sort_window, "sort_combo");
 	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
-
-	sort_window_show_hide_tooltips ();
-	gtk_widget_show (sort_window);
     }
 }
-
 
 
 /* turn the sort window insensitive (if it's open) */

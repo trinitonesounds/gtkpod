@@ -379,6 +379,27 @@ guint remove_playlist_by_name(gchar *pl_name){
 }
 
 
+/* Randomize the order of the members of the playlist @pl */
+void randomize_playlist (Playlist *pl)
+{
+    gint nr = g_list_length (pl->members);
+
+    if (!pl) return;
+
+    while (nr > 1)
+    {
+	/* get random element among the first nr members */
+	gint rand = g_random_int_range (0, nr);
+	GList *gl = g_list_nth (pl->members, rand);
+	/* remove it and add it at the end */
+	pl->members = g_list_remove_link (pl->members, gl);
+	pl->members = g_list_concat (pl->members, gl);
+	--nr;
+    }
+}
+
+
+
 /* ------------------------------------------------------------------- */
 /* functions used by itunesdb (so we can refresh the display during
  * import */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-12 14:24:37 jcs>
+/* Time-stamp: <2004-09-16 00:28:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1083,11 +1083,30 @@ static gint tm_sort_counter (gint inc)
 }
 
 
+/* Redisplays the tracks in the track view according to the order
+ * stored in the sort tab view. This only works if the track view is
+ * not sorted --> skip if sorted */
+
+void tm_adopt_order_in_sorttab (void)
+{
+    if (prefs_get_tm_sort () == SORT_NONE)
+    {
+	GList *gl, *tracks = NULL;
+
+	/* retrieve the currently displayed tracks (non ordered) from
+	   the last sort tab or from the selected playlist if no sort
+	   tabs are being used */
+	tm_remove_all_tracks ();
+	tracks = display_get_selected_members (prefs_get_sort_tab_num()-1);
+	for (gl=tracks; gl; gl=gl->next)
+	    tm_add_track_to_track_model ((Track *)gl->data, NULL);
+    }
+}
+
+
 /* redisplay the contents of the track view in it's unsorted order */
 static void tm_unsort (void)
 {
-    GList *gl, *tracks = NULL;
-
     if (track_treeview)
     {
 	GtkTreeModel *model= gtk_tree_view_get_model (track_treeview);
@@ -1099,6 +1118,8 @@ static void tm_unsort (void)
 /* 	    (GTK_TREE_SORTABLE (model), &id, &order); */
 /* 	printf ("IN  set: %d, column: %d, order: %d\n", set, id, order); */
 
+	prefs_set_tm_sort (SORT_NONE);
+
 	gtk_tree_sortable_set_sort_column_id
 	    (GTK_TREE_SORTABLE (model),
 	     GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
@@ -1108,14 +1129,8 @@ static void tm_unsort (void)
 /* 	    (GTK_TREE_SORTABLE (model), &id, &order); */
 /* 	printf ("OUT set: %d, column: %d, order: %d\n", set, id, order); */
 
-	/* retrieve the currently displayed tracks (non ordered) from
-	   the last sort tab or from the selected playlist if no sort
-	   tabs are being used */
-
-	tm_remove_all_tracks ();
-	tracks = display_get_selected_members (prefs_get_sort_tab_num() - 1);
-	for (gl=tracks; gl; gl=gl->next)
-	    tm_add_track_to_track_model ((Track *)gl->data, NULL);
+	tm_adopt_order_in_sorttab ();
+/* 	sort_window_update (); */
 
 	tm_sort_counter (-1);
     }
@@ -1138,7 +1153,6 @@ tm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 
     if (tm_sort_counter (1) >= 3)
     { /* after clicking three times, reset sort order! */
-	prefs_set_tm_sort (SORT_NONE);
 	tm_unsort ();  /* also resets sort counter */
     }
     else
@@ -1147,6 +1161,7 @@ tm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
     }
     prefs_set_tm_sortcol (newcol);
     if(prefs_get_tm_autostore ())  tm_rows_reordered ();
+/*     sort_window_update (); */
 }
 
 

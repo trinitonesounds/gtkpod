@@ -55,6 +55,7 @@ void free_playlist(Playlist *playlist);
 void create_playlist (Playlist *plitem);
 Playlist *it_add_playlist (Playlist *plitem);
 Playlist *add_playlist (Playlist *plitem, gint position);
+void randomize_playlist (Playlist *pl);
 void it_add_trackid_to_playlist (Playlist *plitem, guint32 id);
 void add_trackid_to_playlist (Playlist *plitem, guint32 id, gboolean display);
 void add_track_to_playlist (Playlist *plitem, Track *track, gboolean display);

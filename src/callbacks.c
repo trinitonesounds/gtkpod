@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-21 20:03:33 jcs>
+/* Time-stamp: <2004-09-15 22:32:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -361,7 +361,7 @@ on_playlist_treeview_drag_data_received
 	    gtk_drag_finish (context, TRUE, FALSE, time);
 	    break;
 	default:
-	    puts ("not yet implemented");
+	    gtkpod_warning (_("This DND type (%d) is not (yet) supported. If you feel implementing this would be useful, please contact the author.\n\n"), info);
 	    gtk_drag_finish (context, FALSE, FALSE, time);
 	    break;
 	}
@@ -632,7 +632,7 @@ on_track_treeview_drag_data_received    (GtkWidget       *widget,
 	    result = tm_add_filelist (data->data, path, pos);
 	    break;
 	default:
-	    g_warning ("Programming error: on track_treeview_drag_data_received: unknown drop: not supported: %d\n", info);
+	    gtkpod_warning (_("This DND type (%d) is not (yet) supported. If you feel implementing this would be useful, please contact the author.\n\n"), info);
 	    break;
 	}
 	gtk_tree_path_free(path);

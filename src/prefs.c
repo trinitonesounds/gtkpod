@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-21 19:16:48 jcs>
+/* Time-stamp: <2004-09-15 23:57:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1930,13 +1930,12 @@ void prefs_set_st_sort (gint i)
     case SORT_ASCENDING:
     case SORT_DESCENDING:
     case SORT_NONE:
+	cfg->sortcfg.st_sort = i;
 	break;
     default:  /* illegal -- ignore */
-	gtkpod_warning (_("prefs_set_st_sort: illegal type '%d' ignored\n"), i);
-	return;
+	gtkpod_warning ("Programming error: prefs_set_st_sort: illegal type '%d' ignored\n", i);
+	break;
     }
-
-    cfg->sortcfg.st_sort = i;
 }
 
 gint prefs_get_tm_sort (void)
@@ -1951,13 +1950,13 @@ void prefs_set_tm_sort (gint i)
     case SORT_ASCENDING:
     case SORT_DESCENDING:
     case SORT_NONE:
+	cfg->sortcfg.tm_sort = i;
 	break;
     default:  /* illegal -- ignore */
-	gtkpod_warning (_("prefs_set_tm_sort: illegal type '%d' ignored\n"), i);
-	return;
+	gtkpod_warning ("Programming error: prefs_set_tm_sort: illegal type '%d' ignored\n", i);
+	break;
     }
 
-    cfg->sortcfg.tm_sort = i;
 }
 
 TM_item prefs_get_tm_sortcol (void)

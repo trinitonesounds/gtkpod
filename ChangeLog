@@ -30,6 +30,9 @@ gtkpod V0.82-CVS
 	BUGFIX: when copying track to the iPod, the free space
 	indication became bigger and bigger during the process.
 
+	NEW FEATURE: added "randomize current playlist" (only the menu
+	entry without actual code was present so far).
+
 	NEW FEATURE: support for On-The-Go Playlists. They will show
 	up as "OTG Playlist 1" etc.
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-12 00:57:02 jcs>
+/* Time-stamp: <2004-09-15 23:57:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -69,7 +69,6 @@ void st_redisplay (guint32 inst);
 void st_cleanup (void);
 void st_set_default_sizes (void);
 void st_update_default_sizes (void);
-void st_adopt_order_in_playlist (void);
 void tm_update_default_sizes (void);
 void st_show_hide_tooltips (void);
 GList *st_get_selected_members (guint32 inst);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-12 00:57:41 jcs>
+/* Time-stamp: <2004-09-15 23:57:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1049,8 +1049,10 @@ void st_track_changed (Track *track, gboolean removed, guint32 inst)
  * order in the track view.
  *
  * Right now I simply delete all members of all tab entries, then add
- * the tracks again without having them added to the track view. For my
- * 2459 tracks that takes approx. 1.3 seconds (850 MHz AMD Duron) */
+ * the tracks again without having them added to the track view. This
+ * is very fast because neither the sort tab display nor the track
+ * view display is affected in any way. For my 2459 tracks that takes
+ * approx. 1.3 seconds (850 MHz AMD Duron) */
 void st_adopt_order_in_playlist (void)
 {
     gint inst;
