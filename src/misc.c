@@ -1676,14 +1676,20 @@ gtkpod_space_statusbar_update(void)
     {
 	gchar *buf;
 	gchar *str = NULL;
-	guint32 free_space, left, pending;
+	guint32 left, pending;
 
 	left = get_ipod_free_space();
 	pending = get_filesize_of_nontransferred_songs();
-
-	free_space = (left - pending);
-	str = get_filesize_in_bytes(free_space);
-	buf = g_strdup_printf (_(" %s Free"), str);
+	if(left > 0)
+	{
+	    str = get_filesize_in_bytes(left - pending);
+	    buf = g_strdup_printf (_(" %s Free"), str);
+	}
+	else
+	{
+	    str = get_filesize_in_bytes(pending);
+	    buf = g_strdup_printf (_(" %s Pending"), str);
+	}
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_space_statusbar), 1);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_space_statusbar), 1,  buf);
 	g_free (buf);
