@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.73-CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-27 23:26+0900\n"
+"POT-Creation-Date: 2004-07-04 17:24+0900\n"
 "PO-Revision-Date: 2004-02-13 00:13+0100\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
@@ -699,46 +699,46 @@ msgstr "Le modèle de fichier ('%s') ne correspond pas au fichier '%s'\n"
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "Le paramêtre '%%%c' dans le modèle '%s' n'existe pas"
 
-#: src/file_export.c:307
+#: src/file_export.c:330
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "Erreur à la création de \"%s\" (%s)\n"
 
-#: src/file_export.c:427
+#: src/file_export.c:450
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
 msgstr "Impossible de copier '%s' vers '%s': Autorisation refusée (%s)\n"
 
-#: src/file_export.c:429
+#: src/file_export.c:452
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "Impossible de copier '%s' vers '%s' (erreur: %s)\n"
 
-#: src/file_export.c:437
+#: src/file_export.c:460
 #, c-format
 msgid "Unable to open '%s' for reading\n"
 msgstr "Impossible d'ouvrir le fichier '%s'\n"
 
 #. create the dialog window
-#: src/file_export.c:542 src/file_itunesdb.c:721 src/tools.c:166
+#: src/file_export.c:565 src/file_itunesdb.c:721 src/tools.c:166
 msgid "Information"
 msgstr "Information"
 
-#: src/file_export.c:553 src/tools.c:178
+#: src/file_export.c:576 src/tools.c:178
 msgid "Press button to abort."
 msgstr "Appuyer sur le bouton pour interrompre"
 
-#: src/file_export.c:566
+#: src/file_export.c:589
 #, fuzzy
 msgid "copying..."
 msgstr "Annulation..."
 
-#: src/file_export.c:617
+#: src/file_export.c:640
 #, c-format
 msgid "Failed to write '%s-%s'\n"
 msgstr "Impossible d'écrire '%s-%s'\n"
 
-#: src/file_export.c:625
+#: src/file_export.c:648
 #, fuzzy, c-format
 msgid "Copied %d of %d track."
 msgid_plural "Copied %d of %d tracks."
@@ -747,17 +747,17 @@ msgstr[1] "%d sur %d des nouveaux morceaux copiés."
 
 #. don't bounce up too quickly (>10% change only)
 #. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
-#: src/file_export.c:640
+#: src/file_export.c:663
 #, fuzzy, c-format
 msgid "%.0f%% (%d:%02d) left"
 msgstr "%d%% (%d:%02d)"
 
-#: src/file_export.c:649
+#: src/file_export.c:672
 #, fuzzy
 msgid "Some tracks were not copied."
 msgstr "Aucun morceau sélectionné."
 
-#: src/file_export.c:704
+#: src/file_export.c:727
 msgid "Select Export Destination Directory"
 msgstr "Sélectionner le répertoire de destination d'export"
 
@@ -2587,15 +2587,15 @@ msgid "drag and drop: ignored '%s'\n"
 msgstr "Glisser/déposer: ignoré '%s'\n"
 
 #. no entry selected
-#: src/misc.c:796 src/misc_confirm.c:295
+#: src/misc.c:796 src/misc_confirm.c:296
 msgid "No entry selected."
 msgstr "Aucun élément sélectionné."
 
 #. no playlist selected
 #. no playlist??? Cannot happen, but...
 #. no playlist selected
-#: src/misc.c:824 src/misc_confirm.c:212 src/misc_confirm.c:284
-#: src/misc_confirm.c:412
+#: src/misc.c:824 src/misc_confirm.c:213 src/misc_confirm.c:285
+#: src/misc_confirm.c:413
 msgid "No playlist selected."
 msgstr "Pas de liste de lecture sélectionnée"
 
@@ -2665,20 +2665,20 @@ msgstr[0] "Morceau supprimé de la liste de lecture '%s'"
 msgstr[1] "Morceaux supprimés de la liste de lecture '%s'"
 
 #. no tracks selected
-#: src/misc_confirm.c:218
+#: src/misc_confirm.c:219
 msgid "No tracks selected."
 msgstr "Aucun morceau sélectionné."
 
-#: src/misc_confirm.c:301
+#: src/misc_confirm.c:302
 msgid "Cannot remove entry 'All'"
 msgstr "Ne peut enlever l'entrée 'Tous'"
 
-#: src/misc_confirm.c:367
+#: src/misc_confirm.c:368
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "Liste de lecture effacée '%s'"
 
-#: src/misc_confirm.c:387
+#: src/misc_confirm.c:388
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
@@ -2686,11 +2686,11 @@ msgstr[0] "Liste de lecture '%s' supprimée avec %d morceau."
 msgstr[1] "Liste de lecture '%s' supprimée avec %d morceaux."
 
 #. master playlist
-#: src/misc_confirm.c:417
+#: src/misc_confirm.c:418
 msgid "Cannot delete master playlist."
 msgstr "Impossible de supprimer la liste de lecture principale"
 
-#: src/misc_confirm.c:441
+#: src/misc_confirm.c:442
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
@@ -2710,39 +2710,39 @@ msgstr[1] ""
 "indiqué entre parenthèses."
 
 #. remove only playlist, keep tracks
-#: src/misc_confirm.c:462
+#: src/misc_confirm.c:463
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "Êtes-vous sûr de vouloir supprimer la liste de lecture '%s' ?"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc_confirm.c:467
+#: src/misc_confirm.c:468
 msgid "Delete Playlist?"
 msgstr "Supprimer la liste de lecture ?"
 
-#: src/misc_confirm.c:528
+#: src/misc_confirm.c:529
 #, c-format
 msgid "Successfully created iPod directories in '%s'."
 msgstr "Création réussie des répertoires de l'iPod dans '%s'."
 
-#: src/misc_confirm.c:530
+#: src/misc_confirm.c:531
 #, c-format
 msgid "Problem creating iPod directories in '%s'."
 msgstr "Problème a la création des répertoires de l'iPod dans '%s'."
 
 #. gint id,
 #. gboolean modal,
-#: src/misc_confirm.c:569
+#: src/misc_confirm.c:570
 msgid "Create iPod directories"
 msgstr "Créer les répertoires de l'iPod"
 
 #. title
-#: src/misc_confirm.c:570
+#: src/misc_confirm.c:571
 msgid "OK to create the following directories?"
 msgstr "Créer les répertoires suivants ?"
 
-#: src/misc_confirm.c:612
+#: src/misc_confirm.c:613
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"

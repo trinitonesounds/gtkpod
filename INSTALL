@@ -50,6 +50,7 @@ How to compile/install gtkpod:
 
 
 
+----------------------------------------------------------------------
 ** Note that you do not need to accept the default (usually
    /usr/local) install path when you compile and install the software.
    You may choose to install the software in a different location.
@@ -68,16 +69,14 @@ How to compile/install gtkpod:
 
 
 
-
-
-
+----------------------------------------------------------------------
 Version of libraries used by jcsjcs at users dot sourceforge dot net
-to compile gtkpod-0.73CVS:
+to compile gtkpod-0.80:
 
-	libgtk2 (2.2.4)
-	libglib2 (2.2.3)
-	libid3tag (0.15.0b)
+	libgtk2 (2.4.3 -- at least 2.0.0)
+	libglib2 (2.4.2 -- at least 2.0.0)
+	libid3tag (0.15.0b -- 0.14 will not work)
 	libmp4v2 (1.0RC1, needed only for aac files)
-	C compiler (gcc 3.3.3)
-	libstdc++5 (3.3.3)
-	gettext (0.14.1-2)  for internationalization
+	C compiler (gcc 3.3.4)
+	libstdc++5 (3.3.4)
+	gettext (0.14.1)  for internationalization

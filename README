@@ -1,6 +1,13 @@
 iPod, iTunes, Mac, Macintosh, iBook are trademarks of Apple Computer,
 Inc., registered in the U.S. and other countries.
 
+
+
+Donations are welcome: please go to
+https://sourceforge.net/project/project_donations.php?group_id=67873
+for details.
+
+
 *----------------------------------*
 |                                  |
 |            Contents              |
@@ -27,6 +34,7 @@ Inc., registered in the U.S. and other countries.
      - Extracting tag information from the filename
      - About filenames
      - Restoring your iPod after file system error
+  - Icons for window managers
   - Connecting iPod to a Linux box:
   - Sick of loading the sbp2 modules by hand? (an example of how to
     use startup/shutdown scripts)
@@ -450,6 +458,24 @@ no access on the conversion functions used, and a warning is printed
 when filenames are encountered that are encoded in a an encoding other
 than the once of the current locale. ID3 tags are still read currectly
 (according to the charset set in the preference dialogue).
+
+
+*--------------------------------------------------*
+|                                                  |
+|  Icons for window managers		           |
+|                                                  |
+*--------------------------------------------------*
+
+Should you require an icon for your window manager you can use those
+provided in $(datadir)/pixmaps (usually
+/usr/local/share/gtkpod/pixmaps or
+/usr/share/gtkpod/pixmaps).
+
+Currently the following files are available:
+
+  gtkpod-icon-48.png
+  gtkpod-icon-48x48.png
+  gtkpod-icon-64x64.png
 
 
 *--------------------------------------------------*
