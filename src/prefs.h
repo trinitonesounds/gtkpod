@@ -45,6 +45,11 @@ enum {
 };
 */
 
+struct win_size {
+    gint x;
+    gint y;
+};
+
 struct cfg
 {
   gchar    *ipod_mount;   /* mount point of iPod */
@@ -61,13 +66,16 @@ struct cfg
   gboolean write_extended_info; /* write additional file with PC filenames etc? */
   struct {
       gboolean artist, album, track, genre;
-  } song_list_show; /* what columns are displayed in the song list */	
+  } song_list_show;       /* what columns are displayed in the song list */
   struct {
       gchar *browse, *export;
-  } last_dir;	  /* last directories used by the fileselections */
+  } last_dir;	          /* last directories used by the fileselections */
   struct {
       gboolean song, playlist, ipod_file;
   } deletion;
+  struct win_size size_gtkpod;  /* last size of gtkpod main window */
+  struct win_size size_conf_sw; /* last size of gtkpod main window */
+  struct win_size size_conf;    /* last size of gtkpod main window */
 };
 
 /* enum for reading of options */
@@ -111,6 +119,9 @@ void prefs_set_last_dir_browse(gchar * dir);
 void prefs_set_last_dir_export(gchar * dir);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
+void prefs_set_size_gtkpod (gint x, gint y);
+void prefs_set_size_conf_sw (gint x, gint y);
+void prefs_set_size_conf (gint x, gint y);
 
 gboolean prefs_get_offline(void);
 gboolean prefs_get_keep_backups(void);
@@ -128,5 +139,8 @@ gboolean prefs_get_song_playlist_deletion(void);
 gboolean prefs_get_song_ipod_file_deletion(void);
 gchar *prefs_get_ipod_mount (void);
 gchar * prefs_get_charset (void);
+void prefs_get_size_gtkpod (gint *x, gint *y);
+void prefs_get_size_conf_sw (gint *x, gint *y);
+void prefs_get_size_conf (gint *x, gint *y);
 
 #endif __PREFS_H__

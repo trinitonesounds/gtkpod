@@ -8,3 +8,4 @@ GtkWidget* create_prefs_window (void);
 GtkWidget* create_delete_confirmation (void);
 GtkWidget* create_delete_confirmation_pl (void);
 GtkWidget* create_create_confirmation (void);
+GtkWidget* create_confirm_window (void);

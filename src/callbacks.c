@@ -667,7 +667,7 @@ void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    confirmation_window_create(CONFIRMATION_WINDOW_CREATE_IPOD_DIRS);
+    ipod_directories_head ();
 }
 
 

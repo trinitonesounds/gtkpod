@@ -39,8 +39,9 @@
 #include "support.h"
 #include "itunesdb.h"
 #include "display.h"
+#include "confirmation.h"
 
-static GtkWidget *main_window = NULL;
+GtkWidget *gtkpod_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
 static GtkWidget *gtkpod_statusbar = NULL;
@@ -287,60 +288,17 @@ disable_gtkpod_import_buttons(void)
 {
     GtkWidget *w = NULL;
     
-    if(main_window)
+    if(gtkpod_window)
     {
-	if((w = lookup_widget(main_window, "import_button")))
+	if((w = lookup_widget(gtkpod_window, "import_button")))
 	{
 	    gtk_widget_set_sensitive(w, FALSE);
 	}
-	if((w = lookup_widget(main_window, "import_itunes_mi")))
+	if((w = lookup_widget(gtkpod_window, "import_itunes_mi")))
 	{
 	    gtk_widget_set_sensitive(w, FALSE);
 	}
     }
-}
-
-void
-register_gtkpod_main_window(GtkWidget *win)
-{
-    main_window = win;
-}
-
-gboolean
-create_ipod_directories(const gchar *ipod_dir)
-{
-    int i = 0;
-    gboolean result = TRUE;
-    gchar buf[PATH_MAX];
-    gchar *mp;
-
-    mp = g_strdup (ipod_dir);
-    if (mp)
-    {
-	if (strlen (mp) > 0)
-	{ /* make sure the mount point does not end in "/" */
-	    if (mp[strlen (mp) - 1] == '/')
-		mp[strlen (mp) - 1] = 0;
-	}
-    }
-    else
-    {
-	mp = g_strdup (".");
-    }
-    snprintf(buf, PATH_MAX, "%s/iPod_Control", mp);
-    if((mkdir(buf, 0755) != 0)) result = FALSE;
-    snprintf(buf, PATH_MAX, "%s/iPod_Control/Music", mp);
-    if((mkdir(buf, 0755) != 0)) result = FALSE;
-    snprintf(buf, PATH_MAX, "%s/iPod_Control/iTunes", mp);
-    if((mkdir(buf, 0755) != 0)) result = FALSE;
-    
-    for(i = 0; i < 20; i++)
-    {
-	snprintf(buf, PATH_MAX, "%s/iPod_Control/Music/F%02d", mp, i);
-	if((mkdir(buf, 0755) != 0)) result = FALSE;
-    }
-    g_free (mp);
-    return(result);
 }
 
 void
@@ -402,3 +360,103 @@ gtkpod_songs_statusbar_update(void)
     }
 
 }
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Create iPod directory hierarchy                      *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+/* ok handler for ipod directory creation */
+/* @user_data1 is the mount point of the iPod */
+static void ipod_directories_ok (gpointer user_data1, gpointer user_data2)
+{
+    gchar *mp = user_data1;
+    gboolean success = TRUE;
+    gchar pbuf[PATH_MAX+1];
+    gchar *buf;
+    gint i;
+
+    if (mp)
+    {
+	snprintf(pbuf, PATH_MAX, "%s/Calendars", mp);
+	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
+	snprintf(pbuf, PATH_MAX, "%s/Contacts", mp);
+	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
+	snprintf(pbuf, PATH_MAX, "%s/iPod_Control", mp);
+	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
+	snprintf(pbuf, PATH_MAX, "%s/iPod_Control/Music", mp);
+	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
+	snprintf(pbuf, PATH_MAX, "%s/iPod_Control/iTunes", mp);
+	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
+	for(i = 0; i < 20; i++)
+	{
+	    snprintf(pbuf, PATH_MAX, "%s/iPod_Control/Music/F%02d", mp, i);
+	    if((mkdir(pbuf, 0755) != 0)) success = FALSE;
+	}
+
+	if (success)
+	    buf = g_strdup_printf (_("Successfully created iPod directories in '%s'."), mp);
+	else
+	    buf = g_strdup_printf (_("Problem creating iPod directories in '%s'."), mp);
+	gtkpod_statusbar_message(buf);
+	g_free (buf);
+	g_free (mp);
+    }
+}
+
+
+/* cancel handler for ipod directory creation */
+static void ipod_directories_cancel (gpointer user_data1, gpointer user_data2)
+{
+    C_FREE (user_data1);
+}
+
+
+/* Pop up the confirmation window for creation of ipod directory
+   hierarchy */
+void ipod_directories_head (void)
+{
+    gchar *mp;
+    GString *str;
+
+    mp = prefs_get_ipod_mount ();
+    if (mp)
+    {
+	if (strlen (mp) > 0)
+	{ /* make sure the mount point does not end in "/" */
+	    if (mp[strlen (mp) - 1] == '/')
+		mp[strlen (mp) - 1] = 0;
+	}
+    }
+    else
+    {
+	mp = g_strdup (".");
+    }
+    str = g_string_sized_new (2000);
+    g_string_append_printf (str, "%s/Calendars\n", mp);
+    g_string_append_printf (str, "%s/Contacts\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control/Music\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control/iTunes\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control/Music/F00\n...\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control/Music/F19\n", mp);
+
+    if (!gtkpod_confirmation (CONF_ID_IPOD_DIR,    /* gint id, */
+			 FALSE,               /* gboolean modal, */
+			 _("Create iPod directories"), /* title */
+			 _("OK to create the following directories?"),
+			 str->str,
+			 FALSE,               /* gboolean never_again, */
+			 NULL, /* ConfHandlerNA never_again_handler, */
+			 ipod_directories_ok, /* ConfHandler ok_handler,*/
+			 ipod_directories_cancel, /* cancel_handler,*/
+			 mp,                  /* gpointer user_data1,*/
+			 NULL))              /* gpointer user_data2,*/
+    { /* creation failed */
+	g_free (mp);
+    }
+    g_string_free (str, TRUE);
+}
+

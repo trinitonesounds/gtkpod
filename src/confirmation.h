@@ -36,4 +36,21 @@
 typedef void (*ConfHandler)(gpointer user_data1, gpointer user_data2);
 typedef void (*ConfHandlerNA)(gboolean state);
 
+gboolean gtkpod_confirmation (gint id,
+			      gboolean modal,
+			      gchar *title,
+			      gchar *label,
+			      gchar *text,
+			      gboolean never_again,
+			      ConfHandlerNA never_again_handler,
+			      ConfHandler ok_handler,
+			      ConfHandler cancel_handler,
+			      gpointer user_data1,
+			      gpointer user_data2);
+
+/* predefined IDs for use with gtkpod_confirmation() */
+enum {
+    CONF_ID_IPOD_DIR = 0
+} CONF_ID;
+
 #endif __CONFIRMATION_H__

@@ -97,6 +97,12 @@ struct cfg *cfg_new(void)
     mycfg->offline = FALSE;
     mycfg->keep_backups = TRUE;
     mycfg->write_extended_info = TRUE;
+    mycfg->size_gtkpod.x = 600;
+    mycfg->size_gtkpod.y = 500;
+    mycfg->size_conf_sw.x = 300;
+    mycfg->size_conf_sw.y = 300;
+    mycfg->size_conf.x = 300;
+    mycfg->size_conf.y = -1;
     return(mycfg);
 }
 
@@ -209,6 +215,30 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_last_dir_export(strdup(arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "size_gtkpod.x") == 0)
+	  {
+	      prefs_set_size_gtkpod (atoi (arg), -2);
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_gtkpod.y") == 0)
+	  {
+	      prefs_set_size_gtkpod (-2, atoi (arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_conf_sw.x") == 0)
+	  {
+	      prefs_set_size_conf_sw (atoi (arg), -2);
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_conf_sw.y") == 0)
+	  {
+	      prefs_set_size_conf_sw (-2, atoi (arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_conf.x") == 0)
+	  {
+	      prefs_set_size_conf (atoi (arg), -2);
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_conf.y") == 0)
+	  {
+	      prefs_set_size_conf (-2, atoi (arg));
+	  }
 	  else
 	  {
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
@@ -313,6 +343,7 @@ static void
 write_prefs_to_file_desc(FILE *fp)
 {
     gint i;
+    gint x,y;
 
     if(!fp)
 	fp = stderr;
@@ -344,6 +375,18 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
     fprintf(fp, "dir_browse=%s\n",cfg->last_dir.browse);
     fprintf(fp, "dir_export=%s\n",cfg->last_dir.export);
+    if (gtkpod_window)
+    {
+	gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
+	prefs_set_size_gtkpod (x, y);
+    }
+    fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
+    fprintf (fp, "size_gtkpod.y=%d\n", cfg->size_gtkpod.y);
+    fprintf (fp, "size_conf_sw.x=%d\n", cfg->size_conf_sw.x);
+    fprintf (fp, "size_conf_sw.y=%d\n", cfg->size_conf_sw.y);
+    fprintf (fp, "size_conf.x=%d\n", cfg->size_conf.x);
+    fprintf (fp, "size_conf.y=%d\n", cfg->size_conf.y);
+    
 }
 
 void 
@@ -752,4 +795,52 @@ gchar *prefs_get_ipod_mount (void)
 {
     if (cfg->ipod_mount)  return g_strdup (cfg->ipod_mount);
     else                  return NULL;
+}
+
+/* Sets the default size for the gtkpod window. -2 means: don't change
+ * the current size */
+void prefs_set_size_gtkpod (gint x, gint y)
+{
+    if (x != -2) cfg->size_gtkpod.x = x;
+    if (y != -2) cfg->size_gtkpod.y = y;
+}
+
+/* Sets the default size for the scrolled conf window. -2 means: don't
+ * change the current size */
+void prefs_set_size_conf_sw (gint x, gint y)
+{
+    if (x != -2) cfg->size_conf_sw.x = x;
+    if (y != -2) cfg->size_conf_sw.y = y;
+}
+
+/* Sets the default size for the non-scrolled conf window. -2 means:
+ * don't change the current size */
+void prefs_set_size_conf (gint x, gint y)
+{
+    if (x != -2) cfg->size_conf.x = x;
+    if (y != -2) cfg->size_conf.y = y;
+}
+
+/* Writes the current default size for the gtkpod window in "x" and
+   "y" */
+void prefs_get_size_gtkpod (gint *x, gint *y)
+{
+    *x = cfg->size_gtkpod.x;
+    *y = cfg->size_gtkpod.y;
+}
+
+/* Writes the current default size for the scrolled conf window in "x"
+   and "y" */
+void prefs_get_size_conf_sw (gint *x, gint *y)
+{
+    *x = cfg->size_conf_sw.x;
+    *y = cfg->size_conf_sw.y;
+}
+
+/* Writes the current default size for the non-scrolled conf window in
+   "x" and "y" */
+void prefs_get_size_conf (gint *x, gint *y)
+{
+    *x = cfg->size_conf.x;
+    *y = cfg->size_conf.y;
 }

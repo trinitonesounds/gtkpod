@@ -41,6 +41,9 @@
 #define gtkpod_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
 #define C_FREE(a) if(a) g_free(a); a=NULL
 
+
+extern GtkWidget *gtkpod_window;
+
 void create_add_files_fileselector (void);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
 void open_about_window (void);
@@ -50,12 +53,11 @@ void cleanup_backup_and_extended_files (void);
 void gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);
 void register_gtkpod_main_window(GtkWidget *win);
-gboolean create_ipod_directories(const gchar *ipod_dir);
 
 void gtkpod_statusbar_init(GtkWidget *);
 void gtkpod_statusbar_message(const gchar *message);
 
 void gtkpod_songs_statusbar_init(GtkWidget*);
 void gtkpod_songs_statusbar_update(void);
-
+void ipod_directories_head (void);
 #endif __MISC_H__

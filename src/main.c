@@ -47,7 +47,7 @@
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *gtkpod;
+    gint defx, defy;
 
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -65,15 +65,16 @@ main (int argc, char *argv[])
    * the project. Delete any components that you don't want shown initially.
    */
   srand(time(NULL));
-  gtkpod = create_gtkpod ();
-  if (!read_prefs (gtkpod, argc, argv)) return 0;
-  create_listviews (gtkpod);
+  gtkpod_window = create_gtkpod ();
+  if (!read_prefs (gtkpod_window, argc, argv)) return 0;
+  create_listviews (gtkpod_window);
   create_mpl ();     /* needs at least the master playlist */
   md5_unique_file_init (NULL); /* init for duplicate detection */
-  register_gtkpod_main_window(gtkpod);
   if(prefs_get_auto_import())
     handle_import();
-  gtk_widget_show (gtkpod);
+  prefs_get_size_gtkpod (&defx, &defy);
+  gtk_window_set_default_size (GTK_WINDOW (gtkpod_window), defx, defy);
+  gtk_widget_show (gtkpod_window);
   gtk_main ();
   return 0;
 }

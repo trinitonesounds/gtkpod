@@ -29,12 +29,15 @@
 
 #include "support.h"
 #include "confirmation.h"
+#include "prefs.h"
+#include "interface.h"
 
 
 static GHashTable *id_hash = NULL;
 
 typedef struct {
     GtkWidget *window;
+    gboolean  *scrolled;
     ConfHandlerNA never_again_handler;
     ConfHandler ok_handler;
     ConfHandler cancel_handler;
@@ -42,40 +45,48 @@ typedef struct {
     gpointer user_data2;
 } ConfData;
 
-/* dummy functions until interface is set up */
-GtkWidget *create_conf_window (void){return NULL;}
-GtkWidget *create_scrolled_conf_window (void){return NULL;}
 
-
-void on_ok_clicked (GtkWidget *w, gpointer id)
+static void on_ok_clicked (GtkWidget *w, gpointer id)
 {
     ConfData *cd;
+    gint defx, defy;
 
     cd = g_hash_table_lookup (id_hash, &id);
     if (cd)
     {
-	gtk_widget_destroy (cd->window);
 	if (cd->ok_handler)
 	    cd->ok_handler (cd->user_data1, cd->user_data2);
+	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
+	if (cd->scrolled)
+	    prefs_set_size_conf_sw (defx, defy);
+	else
+	    prefs_set_size_conf (defx, defy);
+	gtk_widget_destroy (cd->window);
 	g_hash_table_remove (id_hash, &id);
     }
 }
 
-void on_cancel_clicked (GtkWidget *w, gpointer id)
+static void on_cancel_clicked (GtkWidget *w, gpointer id)
 {
     ConfData *cd;
+    gint defx, defy;
 
     cd = g_hash_table_lookup (id_hash, &id);
     if (cd)
     {
-	gtk_widget_destroy (cd->window);
 	if (cd->cancel_handler)
 	    cd->cancel_handler (cd->user_data1, cd->user_data2);
+	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
+	if (cd->scrolled)
+	    prefs_set_size_conf_sw (defx, defy);
+	else
+	    prefs_set_size_conf (defx, defy);
+	gtk_widget_destroy (cd->window);
 	g_hash_table_remove (id_hash, &id);
     }
 }
 
-void on_never_again_toggled (GtkToggleButton *t, gpointer id)
+static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
 {
     ConfData *cd;
 
@@ -95,6 +106,7 @@ void on_never_again_toggled (GtkToggleButton *t, gpointer id)
    directly.
 
    @id:    an ID: only one window with a given id can be open
+   @modal: should the window be modal (i.e. block the program)?
    @title: title of the window
    @label: the text on the top of the window
    @text:  the text displayed in a scrolled window
@@ -112,6 +124,7 @@ void on_never_again_toggled (GtkToggleButton *t, gpointer id)
    TRUE:  either a window was opened, or ok_handler() was called
           directly. */
 gboolean gtkpod_confirmation (gint id,
+			      gboolean modal,
 			      gchar *title,
 			      gchar *label,
 			      gchar *text,
@@ -125,6 +138,7 @@ gboolean gtkpod_confirmation (gint id,
     GtkTextBuffer *tv = NULL;
     GtkWidget *window, *w;
     ConfData *cd;
+    gint defx, defy;
     gint *idp;
 
     if (id_hash == NULL)
@@ -144,16 +158,9 @@ gboolean gtkpod_confirmation (gint id,
 	return TRUE;
     }
 
-    /* choose which window type to use:
-       - we offer window with scrolled text and without scrolled text
-         (the sizes are different)
-       - we offer window with the "never_again" question and without
-         (hide the button if never_again_handler is NULL */
-    if (text)
-	window = create_scrolled_conf_window ();
-    else
-	window = create_conf_window ();
+    window = create_confirm_window ();
 
+    gtk_window_set_modal (GTK_WINDOW (window), modal);
     /* insert ID into hash table */
     idp = g_malloc (sizeof (gint));
     *idp = id;
@@ -177,14 +184,23 @@ gboolean gtkpod_confirmation (gint id,
 	gtk_label_set_text(GTK_LABEL(w), label);
 
     /* Set text */
-    if (text && (w = lookup_widget (window, "text")))
+    w = lookup_widget (window, "text");
+    if (w && text)
     {
 	tv = gtk_text_buffer_new(NULL);
 	gtk_text_buffer_set_text(tv, text, strlen(text));
 	gtk_text_view_set_buffer(GTK_TEXT_VIEW(w), tv);
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(w), FALSE);
 	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(w), FALSE);
+	prefs_get_size_conf_sw (&defx, &defy);
     }
+    else
+    { /* no text -> hide widget */
+	if ((w = lookup_widget (window, "scroller")))
+	    gtk_widget_hide (w);
+	prefs_get_size_conf_sw (&defx, &defy);
+    }
+    gtk_window_set_default_size (GTK_WINDOW (window), defx, defy);
 
     /* Set "Never Again" checkbox */
     w = lookup_widget(window, "never_again");
@@ -208,6 +224,12 @@ gboolean gtkpod_confirmation (gint id,
 	g_signal_connect ((gpointer)w, "clicked",
 			  G_CALLBACK (on_ok_clicked),
 			  (gpointer)id);
+    }
+
+    /* Hide "Apply" button (possible later extension) */
+    if ((w = lookup_widget (window, "apply")))
+    {
+	gtk_widget_hide (w);
     }
 
     /* Connect Cancel handler */

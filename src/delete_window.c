@@ -205,44 +205,6 @@ create_playlist_deletion_interface(const gchar *pl_name)
     if(buf) g_free(buf);
 }
 
-static void create_ipod_dir_interface()
-{
-    GtkWidget *w = NULL;
-    gchar *mp;
-    GString *str;
-
-    confirmation_window = create_create_confirmation();
-    mp = prefs_get_ipod_mount ();
-    if (mp)
-    {
-	if (strlen (mp) > 0)
-	{ /* make sure the mount point does not end in "/" */
-	    if (mp[strlen (mp) - 1] == '/')
-		mp[strlen (mp) - 1] = 0;
-	}
-    }
-    else
-    {
-	mp = g_strdup (".");
-    }
-    str = g_string_sized_new (2000);
-    g_string_append_printf (str, "%s/iPod_Control\n", mp);
-    g_string_append_printf (str, "%s/iPod_Control/Music\n", mp);
-    g_string_append_printf (str, "%s/iPod_Control/iTunes\n", mp);
-    g_string_append_printf (str, "%s/iPod_Control/Music/F00\n...\n", mp);
-    g_string_append_printf (str, "%s/iPod_Control/Music/F19\n", mp);
-    g_free (mp);
-    mp = NULL;
-    if((w = lookup_widget(confirmation_window, "msg_label")))
-	set_message_label_to_string(w, str->str);
-    g_string_free (str, TRUE);
-    if((w = lookup_widget(confirmation_window, "msg_label_title")))
-	gtk_label_set_text(GTK_LABEL(w),
-			   _("OK to create the following directories?"));
-    gtk_window_set_title(GTK_WINDOW(confirmation_window),
-			 _("Create iPod directories"));
-    gtk_widget_show(confirmation_window);
-}
 
 
 /**
@@ -329,9 +291,6 @@ confirmation_window_create(int window_type)
 		    }
 		}
 		break;
-	    case CONFIRMATION_WINDOW_CREATE_IPOD_DIRS:
-		create_ipod_dir_interface();
-		break;
 	    default:
 		fprintf(stderr, "Programming error: Unknown confirmation Ok clicked\n");
 		break;
@@ -350,8 +309,7 @@ void confirmation_window_ok_clicked(void)
     GList *l = NULL;
 
 	    
-    if((selected_playlist) || 
-	    (confirmation_type == CONFIRMATION_WINDOW_CREATE_IPOD_DIRS))
+    if(selected_playlist)
     {
 	gchar buf[PATH_MAX];
 	guint songs_length = 0;
@@ -395,17 +353,6 @@ void confirmation_window_ok_clicked(void)
 		    s = (Song *) l->data;
 		    remove_song_from_playlist(selected_playlist, s);
 		}
-		break;
-	    case CONFIRMATION_WINDOW_CREATE_IPOD_DIRS:
-		if(create_ipod_directories(cfg->ipod_mount))
-		    snprintf(buf, PATH_MAX, "%s %s", 
-			    _("Successfully Created iPod Directories in"), 
-			    cfg->ipod_mount);
-		else
-		    snprintf(buf, PATH_MAX, "%s %s", 
-			    _("Problem Creating iPod Directories in"), 
-			    cfg->ipod_mount);
-		gtkpod_statusbar_message(buf);
 		break;
 	    default:
 		fprintf(stderr, "Programming error: Unknown confirmation Ok clicked\n");
