@@ -489,7 +489,7 @@ void update_selected_entry (gint inst)
     TabEntry *entry;
     GList *gl;
 
-    if ((inst < 0) && (inst > SORT_TAB_NUM))   return;
+    if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
 
     entry = st_get_selected_entry (inst);
     if (entry == NULL)
@@ -759,7 +759,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       {
 	  update_song_from_file (oldsong);
 	  if (plitem && (plitem->type != PL_TYPE_MPL))
-	      add_song_to_playlist (plitem, oldsong);
+	      add_song_to_playlist (plitem, oldsong, TRUE);
 	  free_song (song);
 	  song = NULL;
       }
@@ -780,10 +780,10 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
       if(added_song)                   /* add song to memory */
       {
 	  /* add song to master playlist (if it hasn't been done before) */
-	  if (added_song == song) add_song_to_playlist (NULL, added_song);
+	  if (added_song == song) add_song_to_playlist (NULL, added_song, TRUE);
 	  /* add song to specified playlist, but not to MPL */
 	  if (plitem && (plitem->type != PL_TYPE_MPL))
-	      add_song_to_playlist (plitem, added_song);
+	      add_song_to_playlist (plitem, added_song, TRUE);
 	  /* indicate that non-transferred files exist */
 	  data_changed ();
 	  ++count;
@@ -808,7 +808,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
 /* Write changed tags to file.
    "tag_id": specify which tags should be changed (one of
    S_... defined in song.h) */
-gboolean write_tags_to_file (Song *song, gint tag_id)
+gboolean write_tags_to_file (Song *song, S_item tag_id)
 {
     File_Tag *filetag;
     gint i, len;
@@ -816,17 +816,17 @@ gboolean write_tags_to_file (Song *song, gint tag_id)
     Song *oldsong;
 
     filetag = g_malloc0 (sizeof (File_Tag));
-    if ((tag_id == S_ALL) || (tag_id = S_ALBUM))
+    if ((tag_id == S_ALL) || (tag_id == S_ALBUM))
 	filetag->album = song->album;
-    if ((tag_id == S_ALL) || (tag_id = S_ARTIST))
+    if ((tag_id == S_ALL) || (tag_id == S_ARTIST))
 	filetag->artist = song->artist;
-    if ((tag_id == S_ALL) || (tag_id = S_TITLE))
+    if ((tag_id == S_ALL) || (tag_id == S_TITLE))
 	filetag->title = song->title;
-    if ((tag_id == S_ALL) || (tag_id = S_GENRE))
+    if ((tag_id == S_ALL) || (tag_id == S_GENRE))
 	filetag->genre = song->genre;
-    if ((tag_id == S_ALL) || (tag_id = S_COMMENT))
+    if ((tag_id == S_ALL) || (tag_id == S_COMMENT))
 	filetag->comment = song->comment;
-    if ((tag_id == S_ALL) || (tag_id = S_TRACK_NR))
+    if ((tag_id == S_ALL) || (tag_id == S_TRACK_NR))
     {
 	snprintf(track, 20, "%d", song->track_nr);
 	filetag->track = track;
@@ -1331,9 +1331,9 @@ static gpointer th_copy (gpointer song)
 {
     gboolean result;
 
-    result = copy_song_to_ipod (cfg->ipod_mount,
-				(Song *)song,
-				((Song *)song)->pc_path_locale);
+    result = itunesdb_copy_song_to_ipod (cfg->ipod_mount,
+					 (Song *)song,
+					 ((Song *)song)->pc_path_locale);
     g_mutex_lock (mutex);
     mutex_data = TRUE;   /* signal that thread will end */
     g_cond_signal (cond);
@@ -1467,10 +1467,12 @@ gboolean flush_songs (void)
 	      }
 	      else {
 		  printf ("Thread creation failed, falling back to default.\n");
-		  result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
+		  result &= itunesdb_copy_song_to_ipod (cfg->ipod_mount,
+							song, song->pc_path_locale);
 	      }
 #else
-	      result &= copy_song_to_ipod (cfg->ipod_mount, song, song->pc_path_locale);
+	      result &= itunesdb_copy_song_to_ipod (cfg->ipod_mount,
+						    song, song->pc_path_locale);
 #endif G_THREADS_ENABLED
 	      ++count;
 	      if (count == 1)  /* we need longer timeout */
@@ -1542,9 +1544,9 @@ void handle_export (void)
       {
 	  if (cfgdir)
 	  {
-	      success = cp (ipt, cft);
+	      success = itunesdb_cp (ipt, cft);
 	      if (success && prefs_get_write_extended_info())
-		  success = cp (ipe, cfe);
+		  success = itunesdb_cp (ipe, cfe);
 	  }
 	  if ((cfgdir == NULL) || (!success))
 	      gtkpod_statusbar_message (_("Backups could not be created!"));

@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include "song.h"
 #include "playlist.h"
+#include "display.h"
 
 #define STATUSBAR_TIMEOUT 4200
 
@@ -66,8 +67,8 @@ void gtkpod_main_window_set_active(gboolean active);
 void gtkpod_statusbar_init(GtkWidget *);
 void gtkpod_statusbar_message(const gchar *message);
 
-gint SM_to_S (gint sm);
-gint ST_to_S (gint st);
+S_item SM_to_S (SM_item sm);
+S_item ST_to_S (ST_CAT_item st);
 gchar *get_song_info (Song *song);
 
 void gtkpod_songs_statusbar_init(GtkWidget*);

@@ -105,20 +105,24 @@ Playlist *add_playlist (Playlist *plitem, gint position)
 
 /* This function appends the song with id "id" to the 
    playlist "plitem". It then lets the display model know.
-   If "plitem" == NULL, add to master playlist */
-void add_songid_to_playlist (Playlist *plitem, guint32 id)
+   If "plitem" == NULL, add to master playlist
+   @display: if TRUE, song is eventually added to song model
+   (i.e. displayed). Otherwise it's only added to the sort tabs */
+void add_songid_to_playlist (Playlist *plitem, guint32 id, gboolean display)
 {
   Song *song;
 
   song = get_song_by_id (id);
   /* printf ("id: %4d song: %x\n", id, song); */
-  add_song_to_playlist (plitem, song);
+  add_song_to_playlist (plitem, song, display);
 }
 
 /* This function appends the song "song" to the 
    playlist "plitem". It then lets the display model know.
-   If "plitem" == NULL, add to master playlist */
-void add_song_to_playlist (Playlist *plitem, Song *song)
+   If "plitem" == NULL, add to master playlist
+   @display: if TRUE, song is eventually added to song model
+   (i.e. displayed). Otherwise it's only added to the sort tabs */
+void add_song_to_playlist (Playlist *plitem, Song *song, gboolean display)
 {
   if (song == NULL) return;
   if (plitem == NULL)  plitem = get_playlist_by_nr (0);
@@ -127,7 +131,7 @@ void add_song_to_playlist (Playlist *plitem, Song *song)
   /* it's more convenient to store the pointer to the song than
      the ID, because id=song->ipod_id -- it takes more computing
      power to do it the other way round */
-  pm_add_song (plitem, song);
+  pm_add_song (plitem, song, display);
 }
 
 /* This function removes the song with id "id" from the 
@@ -285,7 +289,7 @@ void it_add_songid_to_playlist (Playlist *plitem, guint32 id)
 	g_get_current_time (time);
 	last_pl = plitem;
     }
-    add_songid_to_playlist (plitem, id);
+    add_songid_to_playlist (plitem, id, TRUE);
     --count;
     ++count_s;
     if ((count < 0) && widgets_blocked)

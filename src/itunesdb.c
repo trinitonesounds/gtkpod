@@ -10,19 +10,19 @@
 |
 |  gnupod-tools: http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipod
 | 
-|  This program is free software; you can redistribute it and/or modify
-|  it under the terms of the GNU General Public License as published by
-|  the Free Software Foundation; either version 2 of the License, or
-|  (at your option) any later version.
-| 
-|  This program is distributed in the hope that it will be useful,
+|  The code contained in this file is free software; you can redistribute
+|  it and/or modify it under the terms of the GNU Lesser General Public
+|  License as published by the Free Software Foundation; either version
+|  2.1 of the License, or (at your option) any later version.
+|  
+|  This file is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
-|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-|  GNU General Public License for more details.
-| 
-|  You should have received a copy of the GNU General Public License
-|  along with this program; if not, write to the Free Software
-|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+|  Lesser General Public License for more details.
+|  
+|  You should have received a copy of the GNU Lesser General Public
+|  License along with this code; if not, write to the Free Software
+|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 | 
 |  iTunes and iPod are trademarks of Apple
 | 
@@ -122,9 +122,17 @@
    Please note that non-transferred songs are not automatically
    transferred to the iPod. A function
 
-   gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
+   gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 
    is provided to help you do that, however.
+
+   The following two function most likely will also come in handy:
+
+   gchar *itunesdb_concat_dir (G_CONST_RETURN gchar *dir,
+                               G_CONST_RETURN gchar *file);
+   gboolean itunesdb_cp (gchar *from_file, gchar *to_file);
+
+   (pseudo-intelligent path/file concat and file copy)
 
    Jorg Schuler, 19.12.2002 */
 
@@ -139,7 +147,6 @@
 #include <support.h>
 #include <stdlib.h>
 
-#include "misc.h"
 #include "itunesdb.h"
 
 /* We instruct itunesdb_parse to provide utf8 versions of the strings */
@@ -153,10 +160,46 @@
 gchar ipodmagic[] = {'m', 'h', 'b', 'd', 0x68, 0x00, 0x00, 0x00};
 static guint32 utf16_strlen(gunichar2 *utf16_string);
 
-/* concat_dir (): concats "dir" and "file" into full filename, taking
+/* Concats "dir" and "file" into full filename, taking
    into account that "dir" may or may not end with "/".
-   You must free the return string after use. Defined in misc.c */
-
+   You must free the return string after use
+   This code tries to take into account some stupid constellations
+   when either "dir" or "file" is not set, or file starts with a "/"
+   (ignore) etc.  */
+gchar *itunesdb_concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
+{
+    if (file && (*file == '/'))
+    { 
+	if (dir && (strlen (dir) > 0))
+	{
+	    return itunesdb_concat_dir (dir, file+1);
+	}
+    }
+    if (dir && (strlen (dir) > 0))
+    {	    
+	if(dir[strlen(dir)-1] == '/')
+	{ /* "dir" ends with "/" */
+	    if (file)
+		return g_strdup_printf ("%s%s", dir, file);
+	    else
+		return g_strdup (dir);
+	}
+	else
+	{ /* "dir" does not end with "/" */
+	    if (file)
+		return g_strdup_printf ("%s/%s", dir, file);
+	    else
+		return g_strdup_printf ("%s/", dir);
+	}
+    }
+    else
+    { /* dir == NULL or 0-byte long */
+	if (file)
+	    return g_strdup (file);
+	else
+	    return g_strdup (""); /* how stupid can the caller be... */
+    }
+}
 
 
 /* Compare the two data. TRUE if identical */
@@ -492,7 +535,7 @@ gboolean itunesdb_parse (gchar *path)
   gchar *filename = NULL;
   gboolean result;
 
-  filename = concat_dir (path, "iPod_Control/iTunes/iTunesDB");
+  filename = itunesdb_concat_dir (path, "iPod_Control/iTunes/iTunesDB");
   result = itunesdb_parse_file (filename);
   if (filename)  g_free (filename);
   return result;
@@ -517,19 +560,19 @@ gboolean itunesdb_parse_file (gchar *filename)
   { /* dummy loop for easier error handling */
       if (itunes == NULL)
       {
-	  gtkpod_warning (_("Could not open iTunesDB \"%s\" for reading.\n"),
+	  itunesdb_warning (_("Could not open iTunesDB \"%s\" for reading.\n"),
 			  filename);
 	  break;
       }
       if (seek_get_n_bytes (itunes, data, seek, 8) != 8)
       {
-	  gtkpod_warning (_("Error reading \"%s\".\n"), filename);
+	  itunesdb_warning (_("Error reading \"%s\".\n"), filename);
 	  break;
       }
       /* for(i=0; i<8; ++i)  printf("%02x ", data[i]); printf("\n");*/
       if (cmp_n_bytes (data, ipodmagic, 8) == FALSE) 
       {  
-	  gtkpod_warning (_("\"%s\" is not a iTunesDB.\n"), filename);
+	  itunesdb_warning (_("\"%s\" is not a iTunesDB.\n"), filename);
 	  break;
       }
       do
@@ -1086,7 +1129,7 @@ gboolean itunesdb_write (gchar *path)
     gchar *filename = NULL;
     gboolean result = FALSE;
 
-    filename = concat_dir (path, "iPod_Control/iTunes/iTunesDB");
+    filename = itunesdb_concat_dir (path, "iPod_Control/iTunes/iTunesDB");
     result = itunesdb_write_to_file (filename);
     if (filename != NULL) g_free (filename);
     return result;
@@ -1110,14 +1153,12 @@ gboolean itunesdb_write_to_file (gchar *filename)
     }
   else
     {
-      gtkpod_warning (_("Could not open iTunesDB \"%s\" for writing.\n"),
+      itunesdb_warning (_("Could not open iTunesDB \"%s\" for writing.\n"),
 		      filename);
     }
   return result;
 }
 
-/* Does this really belong here? -- Maybe, because it
-   requires knowledge of the iPod's filestructure */
 /* Copy one song to the ipod. The PC-Filename is
    "pcfile" and is taken literally.
    "path" is assumed to be the mountpoint of the iPod.
@@ -1125,7 +1166,7 @@ gboolean itunesdb_write_to_file (gchar *filename)
    cycled through. The filename is constructed from
    "song->ipod_id": "gtkpod_id" and written to
    "song->ipod_path_utf8" and "song->ipod_path_utf16" */
-gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
+gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 {
   static gint dir_num = -1;
   gchar *ipod_file = NULL, *ipod_fullfile = NULL;
@@ -1149,8 +1190,8 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
       len = strlen (ipod_file);
       for (i=0; i<len; ++i)     /* replace ':' by '/' */
 	  if (ipod_file[i] == ':')  ipod_file[i] = '/';
-      if (*ipod_file == '/') ipod_fullfile = concat_dir (path, ipod_file+1);
-      else                   ipod_fullfile = concat_dir (path, ipod_file);
+      if (*ipod_file == '/') ipod_fullfile = itunesdb_concat_dir (path, ipod_file+1);
+      else                   ipod_fullfile = itunesdb_concat_dir (path, ipod_file);
   }
   else do
   { /* we need to loop until we find a unused filename */
@@ -1161,7 +1202,7 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 	 also supports other formats. */
       ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d.mp3",
 				   dir_num, song->ipod_id + oops);
-      ipod_fullfile = concat_dir (path, ipod_file+1);
+      ipod_fullfile = itunesdb_concat_dir (path, ipod_file+1);
       if (oops == 0)   oops += 90000;
       else             ++oops;
   } while (g_file_test (ipod_fullfile, G_FILE_TEST_EXISTS));
@@ -1170,7 +1211,7 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
   fprintf(stderr, "ipod_fullfile: %s\n", ipod_fullfile);
 #endif
 
-  success = cp (pcfile, ipod_fullfile);
+  success = itunesdb_cp (pcfile, ipod_fullfile);
   if (success)
   { /* need to store ipod_filename */
       gint i, len;
@@ -1196,7 +1237,7 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 
 /* Copy file "from_file" to "to_file".
    Returns TRUE on success, FALSE otherwise */
-gboolean cp (gchar *from_file, gchar *to_file)
+gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
 {
   gchar data[ITUNESDB_COPYBLK];
   glong bread, bwrite;
@@ -1208,14 +1249,14 @@ gboolean cp (gchar *from_file, gchar *to_file)
     file_in = fopen (from_file, "r");
     if (file_in == NULL)
       {
-	gtkpod_warning (_("Could not open file \"%s\" for reading.\n"), from_file);
+	itunesdb_warning (_("Could not open file \"%s\" for reading.\n"), from_file);
 	success = FALSE;
 	break;
       }
     file_out = fopen (to_file, "w");
     if (file_out == NULL)
       {
-	gtkpod_warning (_("Could not open file \"%s\" for writing.\n"), to_file);
+	itunesdb_warning (_("Could not open file \"%s\" for writing.\n"), to_file);
 	success = FALSE;
 	break;
       }
@@ -1225,7 +1266,7 @@ gboolean cp (gchar *from_file, gchar *to_file)
 	{
 	  if (feof (file_in) == 0)
 	    { /* error -- not end of file! */
-	      gtkpod_warning (_("Error reading file \"%s\"."), from_file);
+	      itunesdb_warning (_("Error reading file \"%s\"."), from_file);
 	      success = FALSE;
 	    }
 	}
@@ -1234,7 +1275,7 @@ gboolean cp (gchar *from_file, gchar *to_file)
 	  bwrite = fwrite (data, 1, bread, file_out);
 	  if (bwrite != bread)
 	    {
-	      gtkpod_warning (_("Error writing PC file \"%s\"."),to_file);
+	      itunesdb_warning (_("Error writing PC file \"%s\"."),to_file);
 	      success = FALSE;
 	    }
 	} 

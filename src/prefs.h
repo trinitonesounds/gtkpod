@@ -51,7 +51,7 @@ struct cfg
   struct {
     gboolean autoselect;  /* automatically select "All" in sort tab? */
     guint    category;    /* which category was selected last? */
-  } st[SORT_TAB_NUM];
+  } st[SORT_TAB_MAX];
   gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
@@ -74,6 +74,7 @@ struct cfg
   gboolean show_duplicates;     /* show duplicate notification ?*/
   gboolean show_updated;        /* show update notification ?*/
   gboolean show_non_updated;    /* show update notification ?*/
+  gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
 };
 
@@ -150,5 +151,7 @@ gboolean prefs_get_show_updated (void);
 void prefs_set_show_updated (gboolean val);
 gboolean prefs_get_show_non_updated (void);
 void prefs_set_show_non_updated (gboolean val);
+gint prefs_get_sort_tab_num (void);
+void prefs_set_sort_tab_num (gint i);
 
 #endif __PREFS_H__

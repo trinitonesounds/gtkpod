@@ -104,7 +104,7 @@ struct cfg *cfg_new(void)
     mycfg->update_existing = FALSE;
     mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
-    for (i=0; i<SORT_TAB_NUM; ++i)
+    for (i=0; i<SORT_TAB_MAX; ++i)
     {
 	mycfg->st[i].autoselect = TRUE;
 	mycfg->st[i].category = (i<ST_CAT_NUM ? i:0);
@@ -144,6 +144,7 @@ struct cfg *cfg_new(void)
     mycfg->show_duplicates = TRUE;
     mycfg->show_updated = TRUE;
     mycfg->show_non_updated = TRUE;
+    mycfg->sort_tab_num = SORT_TAB_MAX;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     return(mycfg);
 }
@@ -260,6 +261,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
 	      prefs_set_offline((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "sort_tab_num") == 0)
+	  {
+	      prefs_set_sort_tab_num(atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "backups") == 0)
 	  {
@@ -439,7 +444,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
     fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
     fprintf(fp, _("# sort tab 0/1: select 'All', selected page (category)\n"));
-    for (i=0; i<SORT_TAB_NUM; ++i)
+    for (i=0; i<SORT_TAB_MAX; ++i)
     {
 	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
 	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
@@ -460,7 +465,8 @@ write_prefs_to_file_desc(FILE *fp)
     for (i=0; i<PANED_NUM; ++i)
     {
 	fprintf(fp, "paned_pos%d=%d\n", i, prefs_get_paned_pos (i));
-    }	
+    }
+    fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
@@ -760,7 +766,7 @@ void prefs_set_auto_import(gboolean val)
 /* "inst": the instance of the sort tab */
 gboolean prefs_get_st_autoselect (guint32 inst)
 {
-    if (inst < SORT_TAB_NUM)
+    if (inst < SORT_TAB_MAX)
     {
 	return cfg->st[inst].autoselect;
     }
@@ -774,7 +780,7 @@ gboolean prefs_get_st_autoselect (guint32 inst)
  * selected automatically? */
 void prefs_set_st_autoselect (guint32 inst, gboolean autoselect)
 {
-    if (inst < SORT_TAB_NUM)
+    if (inst < SORT_TAB_MAX)
     {
 	cfg->st[inst].autoselect = autoselect;
     }
@@ -783,7 +789,7 @@ void prefs_set_st_autoselect (guint32 inst, gboolean autoselect)
 /* "inst": the instance of the sort tab */
 guint prefs_get_st_category (guint32 inst)
 {
-    if (inst < SORT_TAB_NUM)
+    if (inst < SORT_TAB_MAX)
     {
 	return cfg->st[inst].category;
     }
@@ -797,7 +803,7 @@ guint prefs_get_st_category (guint32 inst)
    ST_CAT_... */
 void prefs_set_st_category (guint32 inst, guint category)
 {
-    if ((inst < SORT_TAB_NUM) && (category < ST_CAT_NUM))
+    if ((inst < SORT_TAB_MAX) && (category < ST_CAT_NUM))
     {
 	cfg->st[inst].category = category;
     }
@@ -1028,5 +1034,16 @@ gboolean prefs_get_show_non_updated (void)
 void prefs_set_show_non_updated (gboolean val)
 {
     cfg->show_non_updated = val;
+}
+
+gint prefs_get_sort_tab_num (void)
+{
+    return cfg->sort_tab_num;
+}
+
+void prefs_set_sort_tab_num (gint i)
+{
+    if ((i>=0) && (i<=SORT_TAB_MAX))
+	cfg->sort_tab_num = i;
 }
 

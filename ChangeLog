@@ -1,4 +1,11 @@
 gtkpod V0.43-CVS 
+        Change of copyright: itunesdb.c and itunesdb.h are now under the
+	GNU Lesser General Public License to make it easier to use the
+	code in other programs.
+
+	BUGFIX: when writing tags to file, all tags were updated even if
+	you selected only to upgrade changed tags in the the preferences.
+
 	IMPROVEMENT: drag and drop files/directories/playlists from
 	konqueror or nautilus directly into the playlist view. If you drop
 	between playlists a (number of) new playlist(s) will be created

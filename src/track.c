@@ -439,7 +439,7 @@ void remove_duplicate (Song *oldsong, Song *song)
 	       if (remove_song_from_playlist (pl, song))
 	       {
 		   if (!song_is_in_playlist (pl, oldsong))
-		       add_song_to_playlist (pl, oldsong);
+		       add_song_to_playlist (pl, oldsong, TRUE);
 	       }
 	   }
 	   /* remove song from MPL, i.e. from the ipod */
@@ -461,6 +461,106 @@ void clear_md5_hash_from_songs (void)
 	C_FREE (((Song *)l->data)->md5_hash);
     }
 }
+
+
+/* return the address of the UTF8 field @s_item. @s_item is one of
+ * (the applicable) S_* defined in song.h */
+gchar **song_get_item_pointer_utf8 (Song *song, S_item s_item)
+{
+    gchar **result = NULL;
+
+    if (song) switch (s_item)
+    {
+    case S_ALBUM:
+	result = &song->album;
+	break;
+    case S_ARTIST:
+	result = &song->artist;
+	break;
+    case S_TITLE:
+	result = &song->title;
+	break;
+    case S_GENRE:
+	result = &song->genre;
+	break;
+    case S_COMMENT:
+	result = &song->comment;
+	break;
+    case S_COMPOSER:
+	result = &song->composer;
+	break;
+    case S_FDESC:
+	result = &song->fdesc;
+	break;
+    case S_IPOD_PATH:
+	result = &song->ipod_path;
+	break;
+    default:
+	result = NULL;
+    }
+    return result;
+}
+
+/* return the UTF8 item @s_item. @s_item is one of
+(the * applicable) S_* defined in song.h */
+gchar *song_get_item_utf8 (Song *song, S_item s_item)
+{
+    gchar **address = song_get_item_pointer_utf8 (song, s_item);
+
+    if (address) return *address;
+    else         return NULL;
+}
+
+
+/* return the address of the UTF16 field @s_item. @s_item is one of
+(the * applicable) S_* defined in song.h */
+gunichar2 **song_get_item_pointer_utf16 (Song *song, S_item s_item)
+{
+    gunichar2 **result = NULL;
+
+    if (song) switch (s_item)
+    {
+    case S_ALBUM:
+	result = &song->album_utf16;
+	break;
+    case S_ARTIST:
+	result = &song->artist_utf16;
+	break;
+    case S_TITLE:
+	result = &song->title_utf16;
+	break;
+    case S_GENRE:
+	result = &song->genre_utf16;
+	break;
+    case S_COMMENT:
+	result = &song->comment_utf16;
+	break;
+    case S_COMPOSER:
+	result = &song->composer_utf16;
+	break;
+    case S_FDESC:
+	result = &song->fdesc_utf16;
+	break;
+    case S_IPOD_PATH:
+	result = &song->ipod_path_utf16;
+	break;
+    default:
+	result = NULL;
+    }
+    return result;
+}
+
+/* return the UTF16 item @s_item. @s_item is one of
+(the * applicable) S_* defined in song.h */
+gunichar2 *song_get_item_utf16 (Song *song, S_item s_item)
+{
+    gunichar2 **address = song_get_item_pointer_utf16 (song, s_item);
+
+    if (address) return *address;
+    else         return NULL;
+}
+
+
 
 /* ------------------------------------------------------------------- */
 /* functions used by itunesdb (so we can refresh the display during

@@ -37,7 +37,7 @@
 /* Number of search tabs to be supported.
    Note: the number of search tabs displayed on the screen
    is not changed automatically! */
-#define SORT_TAB_NUM 2
+#define SORT_TAB_MAX 2
 
 /* Number of GtkPaned elements in the main window. The positions of
  * these elements will be stored in the prefs file and be set to the
@@ -54,14 +54,14 @@
 #define REFRESH_INIT_COUNT 5
 
 /* Categories in each sort tab (page numbers) */
-enum {
+typedef enum {
   ST_CAT_ARTIST = 0,
   ST_CAT_ALBUM,
   ST_CAT_GENRE,
   ST_CAT_COMPOSER,
   ST_CAT_TITLE,
   ST_CAT_NUM
-};
+} ST_CAT_item;
 
 /* struct for each entry in sort tab */
 typedef struct {
@@ -80,13 +80,15 @@ typedef struct {
   TabEntry *current_entry;           /* pointer to currently selected entry */
   gchar *lastselection[ST_CAT_NUM];  /* name of entry last selected */
   GHashTable *entry_hash;            /* table for quick find of tab entries */
+  gboolean unselected;               /* unselected item since last st_init? */
+  gboolean final;                    /* have all songs been added? */
 } SortTab;
 
 /* "Column numbers" in sort tab model */
-enum  {
+typedef enum  {
   ST_COLUMN_ENTRY = 0,
   ST_NUM_COLUMNS
-};
+} ST_item;
 
 /* Column numbers in song model */
 /* Note: the toggle buttons for tag_autoset and display_col
@@ -95,7 +97,7 @@ enum  {
  * etc.) Therefore, if you change the order of the first
  * SM_NUM_TAGS_PREFS entries, you should also adjust the names in
  * gtkpod.glade and rebuild the interface */
-enum  {
+typedef enum  {
   SM_COLUMN_TITLE = 0,
   SM_COLUMN_ARTIST,
   SM_COLUMN_ALBUM,
@@ -107,7 +109,7 @@ enum  {
   SM_COLUMN_TRANSFERRED,
   SM_COLUMN_NONE,
   SM_NUM_COLUMNS
-};
+} SM_item;
 
 /* number of colums for prefs size storage */
 #define SM_NUM_COLUMNS_PREFS (SM_NUM_COLUMNS-1)
@@ -133,7 +135,7 @@ void cleanup_display (void);
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);
 void pm_remove_song (Playlist *playlist, Song *song);
-void pm_add_song (Playlist *playlist, Song *song);
+void pm_add_song (Playlist *playlist, Song *song, gboolean display);
 void pm_name_changed (Playlist *playlist);
 void pm_song_changed (Song *song);
 void pm_select_playlist_reinit(Playlist *playlist);

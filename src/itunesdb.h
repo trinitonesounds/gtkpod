@@ -10,31 +10,31 @@
 |
 |  gnupod-tools: http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipod
 | 
-|  This program is free software; you can redistribute it and/or modify
-|  it under the terms of the GNU General Public License as published by
-|  the Free Software Foundation; either version 2 of the License, or
-|  (at your option) any later version.
-| 
-|  This program is distributed in the hope that it will be useful,
+|  The code contained in this file is free software; you can redistribute
+|  it and/or modify it under the terms of the GNU Lesser General Public
+|  License as published by the Free Software Foundation; either version
+|  2.1 of the License, or (at your option) any later version.
+|  
+|  This file is distributed in the hope that it will be useful,
 |  but WITHOUT ANY WARRANTY; without even the implied warranty of
-|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-|  GNU General Public License for more details.
-| 
-|  You should have received a copy of the GNU General Public License
-|  along with this program; if not, write to the Free Software
-|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+|  Lesser General Public License for more details.
+|  
+|  You should have received a copy of the GNU Lesser General Public
+|  License along with this code; if not, write to the Free Software
+|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 | 
 |  iTunes and iPod are trademarks of Apple
 | 
 |  This product is not supported/written/published by Apple!
 */
 
+#ifndef __ITUNESDB_H__
+#define __ITUNESDB_H__
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
-
-#ifndef __ITUNESDB_H__
-#define __ITUNESDB_H__
 
 #include "song.h"
 #include "playlist.h"
@@ -53,10 +53,13 @@ enum {
 
 #define ITUNESDB_COPYBLK 65536      /* blocksize for cp () */
 
+#define itunesdb_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
+
 gboolean itunesdb_parse (gchar *path);
 gboolean itunesdb_parse_file (gchar *filename);
 gboolean itunesdb_write (gchar *path);
 gboolean itunesdb_write_to_file (gchar *filename);
-gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile);
-gboolean cp (gchar *from_file, gchar *to_file);
+gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile);
+gchar *itunesdb_concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
+gboolean itunesdb_cp (gchar *from_file, gchar *to_file);
 #endif __ITUNESDB_H__

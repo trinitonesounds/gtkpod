@@ -50,7 +50,7 @@ static GtkTreeView *playlist_treeview = NULL;
 /* array with pointers to the columns used in the song display */
 static GtkTreeViewColumn *sm_columns[SM_NUM_COLUMNS];
 /* array with pointers to the sorttabs */
-static SortTab *sorttab[SORT_TAB_NUM];
+static SortTab *sorttab[SORT_TAB_MAX];
 /* pointer to the currently selected playlist */
 static Playlist *current_playlist = NULL;
 
@@ -60,7 +60,7 @@ static void block_selection (gint inst);
 static void release_selection (gint inst);
 static void add_selection_callback (gint inst, br_callback brc, gpointer user_data1, gpointer user_data2);
 static gboolean selection_callback_timeout (gpointer data);
-static gint stop_add = SORT_TAB_NUM;
+static gint stop_add = SORT_TAB_MAX;
 
 /* used for display organization */
 static void sm_song_changed (Song *song);
@@ -68,7 +68,7 @@ static void sm_remove_song (Song *song);
 static void sm_remove_all_songs (void);
 static void sm_add_song_to_song_model (Song *song);
 static void st_song_changed (Song *song, gboolean removed, guint32 inst);
-static void st_add_song (Song *song, gboolean final, guint32 inst);
+static void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst);
 static void st_remove_song (Song *song, guint32 inst);
 static void st_init (gint32 new_category, guint32 inst);
 
@@ -113,12 +113,13 @@ void pm_remove_song (Playlist *playlist, Song *song)
 }
 
 
-/* Add song to the display if it's in the currently displayed playlist */
-void pm_add_song (Playlist *playlist, Song *song)
+/* Add song to the display if it's in the currently displayed playlist.
+ * @display: TRUE: add to song model (i.e. display it) */
+void pm_add_song (Playlist *playlist, Song *song, gboolean display)
 {
     if (playlist == current_playlist)
     {
-	st_add_song (song, TRUE, 0); /* Add to first sort tab */
+	st_add_song (song, TRUE, display, 0); /* Add to first sort tab */
     }
 }
 
@@ -313,7 +314,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  { /* add all songs to sort tab 0 */
 	      if (stop_add == -1)  break;
 	      song = get_song_in_playlist_by_nr (new_playlist, i);
-	      st_add_song (song, FALSE, 0);
+	      st_add_song (song, FALSE, TRUE, 0);
 	      --count;
 	      if ((count < 0) && !prefs_get_block_display ())
 	      {
@@ -331,7 +332,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	      }
 	  }
-	  if (stop_add != -1) st_add_song (NULL, TRUE, 0);
+	  if (stop_add != -1) st_add_song (NULL, TRUE, TRUE, 0);
 	  if (!prefs_get_block_display ())
 	  {
 	      while (gtk_events_pending ())	      gtk_main_iteration ();
@@ -601,7 +602,7 @@ static gint st_get_instance_from_notebook (GtkNotebook *notebook)
 {
     gint i;
 
-    for(i=0; i<SORT_TAB_NUM; ++i)
+    for(i=0; i<prefs_get_sort_tab_num (); ++i)
     {
 	if (sorttab[i] && (sorttab[i]->notebook == notebook)) return i;
     }
@@ -618,7 +619,7 @@ gint st_get_instance_from_treeview (GtkTreeView *tv)
 {
     gint i,cat;
 
-    for(i=0; i<SORT_TAB_NUM; ++i)
+    for(i=0; i<prefs_get_sort_tab_num (); ++i)
     {
 	for(cat=0; cat<ST_CAT_NUM; ++cat)
 	{
@@ -632,7 +633,7 @@ gint st_get_instance_from_treeview (GtkTreeView *tv)
 /* returns the selected entry (used by delete_entry_head() */
 TabEntry *st_get_selected_entry (gint inst)
 {
-    if ((inst >= 0) && (inst < SORT_TAB_NUM) && sorttab[inst])
+    if ((inst >= 0) && (inst < prefs_get_sort_tab_num ()) && sorttab[inst])
 	return sorttab[inst]->current_entry;
     return NULL;
 }
@@ -804,21 +805,9 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
    selected category (page). Do _not_ g_free() the return value! */
 static gchar *st_get_entryname (Song *song, guint32 inst)
 {
-  switch (sorttab[inst]->current_category)
-    {
-    case ST_CAT_ARTIST:
-      return song->artist;
-    case ST_CAT_ALBUM:
-      return song->album;
-    case ST_CAT_GENRE:
-      return song->genre;
-    case ST_CAT_COMPOSER:
-      return song->composer;
-    case ST_CAT_TITLE:
-      return song->title;
-    }
-  g_warning ("Programming error: st_get_entryname: undefined category\n");
-  return NULL;
+    S_item s_item = ST_to_S (sorttab[inst]->current_category);
+
+    return song_get_item_utf8 (song, s_item);
 }
 
 
@@ -942,7 +931,7 @@ static void st_song_changed (Song *song, gboolean removed, guint32 inst)
   SortTab *st;
   TabEntry *master, *entry;
 
-  if (inst == SORT_TAB_NUM)
+  if (inst == prefs_get_sort_tab_num ())
     {
       sm_song_changed (song);
       return;
@@ -986,7 +975,7 @@ static void st_song_changed (Song *song, gboolean removed, guint32 inst)
 	    { /* song was moved to a different entry */
 	      if (st_get_entry_by_song (song, inst) == st->current_entry)
 		{ /* this entry is selected! */
-		  st_add_song (song, TRUE, inst+1);
+		  st_add_song (song, TRUE, TRUE, inst+1);
 		}
 	    }
 	}
@@ -1000,38 +989,42 @@ static void st_song_changed (Song *song, gboolean removed, guint32 inst)
    song model (currently two sort tabs).
    When the first song is added, the "All" entry is created.
    If prefs_get_st_autoselect(inst) is true, the "All" entry is
-   automatically selected, if there was no former selection */
-static void st_add_song (Song *song, gboolean final, guint32 inst)
+   automatically selected, if there was no former selection
+   @display: TRUE: add to song model (i.e. display it) */
+static void st_add_song (Song *song, gboolean final, gboolean display, guint32 inst)
 {
   static gint count = 0;
-  TabEntry *entry, *iter_entry;
+  TabEntry *entry, *master_entry, *iter_entry;
   SortTab *st;
   gchar *entryname;
   GtkTreeSelection *selection;
   GtkTreeIter iter;
   TabEntry *select_entry = NULL;
+  gboolean first = FALSE;
 
-  if (inst == SORT_TAB_NUM)
+  if (inst == prefs_get_sort_tab_num ())
   {  /* just add to song model */
-      if (song != NULL)    sm_add_song_to_song_model (song);
+      if ((song != NULL) && display)    sm_add_song_to_song_model (song);
       if (final || (++count % 20 == 0))
 	  gtkpod_songs_statusbar_update();
   }
   else
   {
       st = sorttab[inst];
+      st->final = final;
       if (song != NULL)
       {
 	  /* add song to "All" (master) entry */
-	  entry = g_list_nth_data (st->entries, 0);
-	  if (entry == NULL)
+	  master_entry = g_list_nth_data (st->entries, 0);
+	  if (master_entry == NULL)
 	  { /* doesn't exist yet -- let's create it */
-	      entry = g_malloc0 (sizeof (TabEntry));
-	      entry->name = g_strdup (_("All"));
-	      entry->master = TRUE;
-	      st_add_entry (entry, inst);
+	      master_entry = g_malloc0 (sizeof (TabEntry));
+	      master_entry->name = g_strdup (_("All"));
+	      master_entry->master = TRUE;
+	      st_add_entry (master_entry, inst);
+	      first = TRUE; /* this is the first song */
 	  }
-	  entry->members = g_list_append (entry->members, song);
+	  master_entry->members = g_list_append (master_entry->members, song);
 	  /* Check whether entry of same name already exists */
 	  entryname = st_get_entryname (song, inst);
 	  entry = st_get_entry_by_name (entryname, inst);
@@ -1048,7 +1041,7 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	  if (st->current_entry &&
 	      ((st->current_entry->master) || (entry == st->current_entry)))
 	  {
-	      st_add_song (song, final, inst+1);
+	      st_add_song (song, final, display, inst+1);
 	  }
 	  /* check if we should select some entry */
 	  if (!st->current_entry)
@@ -1056,11 +1049,10 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 	      if (st->lastselection[st->current_category] == NULL)
 	      {
 		  /* no last selection -- check if we should select "All" */
-		  if (prefs_get_st_autoselect (inst))
+		  /* only select "All" when currently adding the first song */
+		  if (first && prefs_get_st_autoselect (inst))
 		  {
-		      select_entry =
-			  (TabEntry *)g_list_nth_data (st->entries, 0);
-		      st_add_song (song, final, inst+1);
+		      select_entry = master_entry;
 		  }
 	      }
 	      else
@@ -1073,33 +1065,22 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 		      ((entry == last_entry) || last_entry->master))
 		  {
 		      select_entry = last_entry;
-		      st_add_song (song, final, inst+1);
 		  }
 	      }
 	  }
       }
       /* select "All" if it's the last song added, no entry currently
-      selected (including "select_entry", which is to be selected" and
-      prefs_get_st_autoselect() allows us to select "All" */
+	 selected (including "select_entry", which is to be selected" and
+	 prefs_get_st_autoselect() allows us to select "All" */
       if (final && !st->current_entry && !select_entry &&
-	  prefs_get_st_autoselect (inst))
+	  !st->unselected && prefs_get_st_autoselect (inst))
       { /* auto-select entry "All" */
 	  select_entry = g_list_nth_data (st->entries, 0);
-	  /* add all songs to next sort tab */
-	  if (select_entry)
-	  {
-	      GList *gl_song;
-	      for (gl_song = select_entry->members; gl_song; gl_song=gl_song->next)
-	      {
-		  st_add_song ((Song *)gl_song->data, final, inst+1);
-	      }
-	  }
       }
 
       if (select_entry)
       {  /* select current select_entry */
 	  /* printf("%d: selecting: %x: %s\n", inst, select_entry, select_entry->name);*/
-	  st->current_entry = select_entry;
 	  if (!gtk_tree_model_get_iter_first (st->model, &iter))
 	  {
 	      g_warning ("Programming error: st_add_song: iter invalid\n");
@@ -1114,7 +1095,7 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
 		  selection = gtk_tree_view_get_selection
 		      (st->treeview[st->current_category]);
 		  /* We may need to unselect the previous selection */
-		  gtk_tree_selection_unselect_all (selection);
+		  /* gtk_tree_selection_unselect_all (selection); */
 		  gtk_tree_selection_select_iter (selection, &iter);
 		  break;
 	      }
@@ -1122,7 +1103,7 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
       }
       else if (!song && final)
       {
-	  st_add_song (NULL, final, inst+1);
+	  st_add_song (NULL, final, display, inst+1);
       }
   }
 }
@@ -1140,7 +1121,7 @@ static void st_remove_song (Song *song, guint32 inst)
   TabEntry *master, *entry;
   SortTab *st;
 
-  if (inst == SORT_TAB_NUM)
+  if (inst == prefs_get_sort_tab_num ())
     {
       sm_remove_song (song);
     }
@@ -1170,7 +1151,7 @@ static void st_init (gint32 new_category, guint32 inst)
   SortTab *st;
   gint cat;
 
-  if (inst == SORT_TAB_NUM)
+  if (inst == prefs_get_sort_tab_num ())
     {
       sm_remove_all_songs ();
       gtkpod_songs_statusbar_update ();
@@ -1179,6 +1160,8 @@ static void st_init (gint32 new_category, guint32 inst)
     {
       st = sorttab[inst];
       if (st == NULL) return; /* could happen during initialisation */
+      st->unselected = FALSE; /* nothing was unselected so far */
+      st->final = TRUE;       /* all songs are added */
       cat = st->current_category;
       if (st->current_entry != NULL)
       {
@@ -1262,7 +1245,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
       {
 	  if (stop_add < (gint)inst)  break;
 	  song = (Song *)g_list_nth_data (copy, i);
-	  st_add_song (song, FALSE, inst);
+	  st_add_song (song, FALSE, TRUE, inst);
 	  --count;
 	  if ((count < 0) && !prefs_get_block_display ())
 	  {
@@ -1280,7 +1263,14 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	  }
       }
-      if (n && (stop_add >= (gint)inst)) st_add_song (NULL, TRUE, inst);
+      if (n && (stop_add >= (gint)inst))
+      {
+	  gboolean final = TRUE;  /* playlist is always complete */
+	  /* if playlist is not source, get final flag from
+	   * corresponding sorttab */
+	  if ((inst > 0) && (sorttab[inst-1])) final = sorttab[inst-1]->final;
+	  st_add_song (NULL, final, TRUE, inst);
+      }
       if (!prefs_get_block_display ())
       {
 	  while (gtk_events_pending ())      gtk_main_iteration ();
@@ -1316,7 +1306,7 @@ void st_page_selected (GtkNotebook *notebook, guint page)
 /* Redisplay the sort tab "inst". Called from the menu item "Re-Init" */
 void st_redisplay (guint32 inst)
 {
-    if (!(inst < SORT_TAB_NUM)) return; /* error! */
+    if (!(inst < prefs_get_sort_tab_num ())) return; /* error! */
     if (sorttab[inst])
 	st_page_selected (sorttab[inst]->notebook,
 			  sorttab[inst]->current_category);
@@ -1325,7 +1315,7 @@ void st_redisplay (guint32 inst)
 /* Start sorting */
 void st_sort (guint32 inst, GtkSortType order)
 {
-    if (!(inst < SORT_TAB_NUM)) return; /* error! */
+    if (!(inst < prefs_get_sort_tab_num ())) return; /* error! */
     if (sorttab[inst])
 	gtk_tree_sortable_set_sort_column_id (
 	    GTK_TREE_SORTABLE (sorttab[inst]->model),
@@ -1364,6 +1354,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       {
 	  st->current_entry = NULL;
 	  C_FREE (st->lastselection[st->current_category]);
+	  st->unselected = TRUE;
 	  st_init (-1, inst+1);
       }
   }
@@ -1374,9 +1365,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 			  -1);
       /* printf("selected instance %d, entry %x (was: %x)\n", inst,
        * new_entry, st->current_entry);*/
-      if (new_entry == st->current_entry) return; /* important: otherwise
-						     st_add_song will not
-						     work correctly */
+
       /* initialize next instance */
       st_init (-1, inst+1);
       st->current_entry = new_entry;
@@ -1396,7 +1385,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  { /* add all member songs to next instance */
 	      if (stop_add <= (gint)inst) break;
 	      song = (Song *)g_list_nth_data (new_entry->members, i);
-	      st_add_song (song, FALSE, inst+1);
+	      st_add_song (song, FALSE, TRUE, inst+1);
 	      --count;
 	      if ((count < 0) && !prefs_get_block_display ())
 	      {
@@ -1414,7 +1403,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 #endif
 	      }
 	  }
-	  if (stop_add > (gint)inst)  st_add_song (NULL, TRUE, inst+1);
+	  if (stop_add > (gint)inst)  st_add_song (NULL, TRUE, st->final, inst+1);
 	  if (!prefs_get_block_display ())
 	  {
 	      while (gtk_events_pending ())	  gtk_main_iteration ();
@@ -1439,6 +1428,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 static void st_selection_changed (GtkTreeSelection *selection,
 				  gpointer user_data)
 {
+/*     printf("st_s_c\n"); */
     add_selection_callback ((gint)user_data, st_selection_changed_cb,
 			    (gpointer)selection, user_data);
 }
@@ -1456,9 +1446,8 @@ st_cell_edited (GtkCellRendererText *renderer,
   GtkTreePath *path;
   GtkTreeIter iter;
   TabEntry *entry;
-  gint column;
+  ST_item column;
   gint i, n, inst;
-  Song *song;
   GList *members;
   SortTab *st;
 
@@ -1466,7 +1455,7 @@ st_cell_edited (GtkCellRendererText *renderer,
   st = sorttab[inst];
   model = st->model;
   path = gtk_tree_path_new_from_string (path_string);
-  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
+  column = (ST_item)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, column, &entry, -1);
 
@@ -1497,53 +1486,29 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  n = g_list_length (members);
 	  /* block user input if we write tags (might take a while) */
 	  if (prefs_get_id3_write ())   block_widgets ();
-	  for (i=0; i<n; ++i) {
-	    song = (Song *)g_list_nth_data (members, i);
-	    /*printf("%d/%d: %x\n", i+1, n, song);*/
-	    switch (sorttab[inst]->current_category)
+	  for (i=0; i<n; ++i)
+	  {
+	      Song *song = (Song *)g_list_nth_data (members, i);
+	      S_item s_item = ST_to_S (sorttab[inst]->current_category);
+	      gchar **itemp_utf8 = song_get_item_pointer_utf8 (song, s_item);
+	      gunichar2 **itemp_utf16 = song_get_item_pointer_utf16(song, s_item);
+	      g_free (*itemp_utf8);
+	      g_free (*itemp_utf16);
+	      *itemp_utf8 = g_strdup (new_text);
+	      *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
+	      pm_song_changed (song);
+	      /* If prefs say to write changes to file, do so */
+	      if (prefs_get_id3_write ())
 	      {
-	      case ST_CAT_ARTIST:
-		g_free (song->artist);
-		g_free (song->artist_utf16);
-		song->artist = g_strdup (new_text);
-		song->artist_utf16 = g_utf8_to_utf16 (new_text, -1,
-						      NULL, NULL, NULL);
-		break;
-	      case ST_CAT_ALBUM:
-		g_free (song->album);
-		g_free (song->album_utf16);
-		song->album = g_strdup (new_text);
-		song->album_utf16 = g_utf8_to_utf16 (new_text, -1,
-						      NULL, NULL, NULL);
-		break;
-	      case ST_CAT_GENRE:
-		g_free (song->genre);
-		g_free (song->genre_utf16);
-		song->genre = g_strdup (new_text);
-		song->genre_utf16 = g_utf8_to_utf16 (new_text, -1,
-						      NULL, NULL, NULL);
-		break;
-	      case ST_CAT_TITLE:
-		g_free (song->title);
-		g_free (song->title_utf16);
-		song->title = g_strdup (new_text);
-		song->title_utf16 = g_utf8_to_utf16 (new_text, -1,
-						      NULL, NULL, NULL);
-		break;
+		  S_item tag_id;
+		  /* should we update all ID3 tags or just the one
+		     changed? */
+		  if (prefs_get_id3_writeall ()) tag_id = S_ALL;
+		  else		               tag_id = ST_to_S (column);
+		  write_tags_to_file (song, tag_id);
+		  while (widgets_blocked && gtk_events_pending ())
+		      gtk_main_iteration ();
 	      }
-	    pm_song_changed (song);
-	    /* If prefs say to write changes to file, do so */
-	    if (prefs_get_id3_write ())
-	    {
-		gint tag_id;
-		/* should we update all ID3 tags or just the one
-		   changed? */
-		if (prefs_get_id3_writeall ()) tag_id = S_ALL;
-		else		               tag_id = ST_to_S (column);
-		write_tags_to_file (song, tag_id);
-		while (widgets_blocked && gtk_events_pending ())
-		    gtk_main_iteration ();
-	    }
 	  }
 	  g_list_free (members);
 	  /* allow user input again */
@@ -1553,6 +1518,8 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  data_changed (); /* indicate that data has changed */
 	}
       break;
+    default:
+	break;
     }
   gtk_tree_path_free (path);
 }
@@ -1685,7 +1652,7 @@ static void st_create_tabs (GtkWidget *gtkpod)
 
   /* we count downward here because the smaller sort tabs might try to
      initialize the higher one's -> create the higher ones first */
-  for (inst=SORT_TAB_NUM-1; inst>=0; --inst)
+  for (inst=SORT_TAB_MAX-1; inst>=0; --inst)
     {
       sorttab[inst] = g_malloc0 (sizeof (SortTab));
       name = g_strdup_printf ("sorttab%d", inst);
@@ -1702,7 +1669,7 @@ static void st_create_tabs (GtkWidget *gtkpod)
 static void cleanup_sort_tabs (void)
 {
   gint i,j;
-  for (i=0; i<SORT_TAB_NUM; ++i)
+  for (i=0; i<SORT_TAB_MAX; ++i)
     {
       if (sorttab[i] != NULL)
 	{
@@ -1834,71 +1801,39 @@ sm_cell_edited (GtkCellRendererText *renderer,
   GtkTreePath *path;
   GtkTreeIter iter;
   Song *song;
-  gint column;
+  SM_item column;
   gboolean changed = FALSE; /* really changed anything? */
   gchar *track_text = NULL;
+  gchar **itemp_utf8 = NULL;
+  gunichar2 **itemp_utf16 = NULL;
 
   model = (GtkTreeModel *)data;
   path = gtk_tree_path_new_from_string (path_string);
-  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
+  column = (SM_item)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get_iter (model, &iter, path);
   gtk_tree_model_get (model, &iter, column, &song, -1);
 
   /*printf("sm_cell_edited: column: %d  song:%lx\n", column, song);*/
 
   switch (column)
-    {
-    case SM_COLUMN_ALBUM:
-      if (g_utf8_collate (song->album, new_text) != 0)
-	{
-	  g_free (song->album);
-	  g_free (song->album_utf16);
-	  song->album = g_strdup (new_text);
-	  song->album_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
+  {
+  case SM_COLUMN_ALBUM:
+  case SM_COLUMN_ARTIST:
+  case SM_COLUMN_TITLE:
+  case SM_COLUMN_GENRE:
+  case SM_COLUMN_COMPOSER:
+      itemp_utf8 = song_get_item_pointer_utf8 (song, SM_to_S (column));
+      itemp_utf16 = song_get_item_pointer_utf16 (song, SM_to_S (column));
+      if (g_utf8_collate (*itemp_utf8, new_text) != 0)
+      {
+	  g_free (*itemp_utf8);
+	  g_free (*itemp_utf16);
+	  *itemp_utf8 = g_strdup (new_text);
+	  *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
 	  changed = TRUE;
-	}
+      }
       break;
-    case SM_COLUMN_ARTIST:
-      if (g_utf8_collate (song->artist, new_text) != 0)
-	{
-	  g_free (song->artist);
-	  g_free (song->artist_utf16);
-	  song->artist = g_strdup (new_text);
-	  song->artist_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
-	  changed = TRUE;
-	}
-      break;
-    case SM_COLUMN_TITLE:
-      if (g_utf8_collate (song->title, new_text) != 0)
-	{
-	  g_free (song->title);
-	  g_free (song->title_utf16);
-	  song->title = g_strdup (new_text);
-	  song->title_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
-	  changed = TRUE;
-	}
-      break;
-    case SM_COLUMN_GENRE:
-      if (g_utf8_collate (song->genre, new_text) != 0)
-	{
-	  g_free (song->genre);
-	  g_free (song->genre_utf16);
-	  song->genre = g_strdup (new_text);
-	  song->genre_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
-	  changed = TRUE;
-	}
-      break;
-    case SM_COLUMN_COMPOSER:
-      if (g_utf8_collate (song->composer, new_text) != 0)
-	{
-	  g_free (song->composer);
-	  g_free (song->composer_utf16);
-	  song->composer = g_strdup (new_text);
-	  song->composer_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
-	  changed = TRUE;
-	}
-      break;
-    case SM_COLUMN_TRACK_NR:
+  case SM_COLUMN_TRACK_NR:
       track_text = g_strdup_printf("%d", song->track_nr);
       if (g_utf8_collate(track_text, new_text) != 0)
       {
@@ -1906,19 +1841,19 @@ sm_cell_edited (GtkCellRendererText *renderer,
 	  changed = TRUE;
       }
       break;
-    default:
+  default:
       fprintf(stderr, "Unknown song cell edited with value %d\n", column);
       break;
-    }
+  }
   if (changed)
-    {
+  {
       pm_song_changed (song); /* notify playlist model... */
       data_changed ();        /* indicate that data has changed */
-    }
+  }
   /* If anything changed and prefs say to write changes to file, do so */
   if (changed && prefs_get_id3_write ())
   {
-      gint tag_id;
+      S_item tag_id;
       /* should we update all ID3 tags or just the one
 	 changed? */
       if (prefs_get_id3_writeall ()) tag_id = S_ALL;
@@ -1943,69 +1878,59 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 			       gpointer           data)
 {
   Song *song;
-  gint column;
+  SM_item column;
   gchar text[11];
+  gchar *item_utf8 = NULL;
 
-  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
+  column = (SM_item)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &song, -1);
 
   switch (column)
-    {
-    case SM_COLUMN_TITLE: 
-      g_object_set (G_OBJECT (renderer), "text", song->title, 
+  {
+  case SM_COLUMN_TITLE:
+  case SM_COLUMN_ARTIST:
+  case SM_COLUMN_ALBUM:
+  case SM_COLUMN_GENRE:
+  case SM_COLUMN_COMPOSER:
+      item_utf8 = song_get_item_utf8 (song, SM_to_S (column));
+      g_object_set (G_OBJECT (renderer), "text", item_utf8, 
 		    "editable", TRUE, NULL);
       break;
-    case SM_COLUMN_ARTIST: 
-      g_object_set (G_OBJECT (renderer), "text", song->artist, 
-		    "editable", TRUE, NULL);
-      break;
-    case SM_COLUMN_ALBUM: 
-      g_object_set (G_OBJECT (renderer), "text", song->album, 
-		    "editable", TRUE, NULL);
-      break;
-    case SM_COLUMN_GENRE: 
-      g_object_set (G_OBJECT (renderer), "text", song->genre, 
-		    "editable", TRUE, NULL);
-      break;
-    case SM_COLUMN_COMPOSER: 
-      g_object_set (G_OBJECT (renderer), "text", song->composer, 
-		    "editable", TRUE, NULL);
-      break;
-    case SM_COLUMN_TRACK_NR:
+  case SM_COLUMN_TRACK_NR:
       if (song->track_nr >= 0)
-	{
+      {
 	  snprintf (text, 10, "%d", song->track_nr);
 	  g_object_set (G_OBJECT (renderer), "text", text, "editable", TRUE,
 			NULL);
-	} 
+      } 
       else
-	{
+      {
 	  g_object_set (G_OBJECT (renderer), "text", "0", NULL);
-	}
+      }
       break;
-    case SM_COLUMN_IPOD_ID:
+  case SM_COLUMN_IPOD_ID:
       if (song->ipod_id != -1)
-	{
+      {
 	  snprintf (text, 10, "%d", song->ipod_id);
 	  g_object_set (G_OBJECT (renderer), "text", text, NULL);
-	} 
+      } 
       else
-	{
+      {
 	  g_object_set (G_OBJECT (renderer), "text", "--", NULL);
-	}
+      }
       break;
-    case SM_COLUMN_PC_PATH:
+  case SM_COLUMN_PC_PATH:
       g_object_set (G_OBJECT (renderer), "text", song->pc_path_utf8, NULL);
       break;
-    case SM_COLUMN_TRANSFERRED:
+  case SM_COLUMN_TRANSFERRED:
       g_object_set (G_OBJECT (renderer), "active", song->transferred, NULL);
       break;
-    case SM_COLUMN_NONE:
+  case SM_COLUMN_NONE:
       break;
-    default:
+  default:
       gtkpod_warning("Unknown column in sm_cell_data_func: %d\n", column);
       break;
-    }
+  }
 }
 
 /**
@@ -2077,49 +2002,46 @@ gint sm_data_compare_func (GtkTreeModel *model,
   Song *song1;
   Song *song2;
   gint column;
+  SM_item sm_item;
   GtkSortType order;
+  gchar *item1_utf8, *item2_utf8;
 
   gtk_tree_model_get (model, a, SM_COLUMN_ALBUM, &song1, -1);
   gtk_tree_model_get (model, b, SM_COLUMN_ALBUM, &song2, -1);
   if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order) == FALSE) return 0;
-  switch (column)
-    {
-	case SM_COLUMN_TITLE:
-	    return g_utf8_collate (g_utf8_casefold (song1->title, -1),
-		    g_utf8_casefold (song2->title, -1));
-	case SM_COLUMN_ARTIST:
-	    return g_utf8_collate (g_utf8_casefold (song1->artist, -1),
-		    g_utf8_casefold (song2->artist, -1));
-	case SM_COLUMN_ALBUM:
-	    return g_utf8_collate (g_utf8_casefold (song1->album, -1),
-		    g_utf8_casefold (song2->album, -1));
-	case SM_COLUMN_GENRE:
-	    return g_utf8_collate (g_utf8_casefold (song1->genre, -1),
-		    g_utf8_casefold (song2->genre, -1));
-	case SM_COLUMN_COMPOSER:
-	    return g_utf8_collate (g_utf8_casefold (song1->composer, -1),
-		    g_utf8_casefold (song2->composer, -1));
-	case SM_COLUMN_TRACK_NR:
-	    return song1->track_nr - song2->track_nr;
-	case SM_COLUMN_IPOD_ID:
-	    return song1->ipod_id - song2->ipod_id;
-	case SM_COLUMN_PC_PATH:
-	    return g_utf8_collate (song1->pc_path_utf8, song2->pc_path_utf8);
-	case SM_COLUMN_TRANSFERRED:
-	    if(song1->transferred == song2->transferred) return 0;
-	    if(song1->transferred == TRUE) return 1;
-	    else return -1;
-	    break;
-	case SM_COLUMN_NONE: 
-	    if (current_playlist)
-		return((g_list_index(current_playlist->members, song1)) -
-		       (g_list_index(current_playlist->members, song2)));
-	    break;
-	default:
-	    gtkpod_warning("No sort for column %d\n", column);
-	    break;
-    }
+  sm_item = (SM_item) column;
+  switch (sm_item)
+  {
+  case SM_COLUMN_TITLE:
+  case SM_COLUMN_ARTIST:
+  case SM_COLUMN_ALBUM:
+  case SM_COLUMN_GENRE:
+  case SM_COLUMN_COMPOSER:
+      item1_utf8 = song_get_item_utf8 (song1, SM_to_S (sm_item));
+      item2_utf8 = song_get_item_utf8 (song2, SM_to_S (sm_item));
+      return g_utf8_collate (g_utf8_casefold (item1_utf8, -1),
+			     g_utf8_casefold (item2_utf8, -1));
+  case SM_COLUMN_TRACK_NR:
+      return song1->track_nr - song2->track_nr;
+  case SM_COLUMN_IPOD_ID:
+      return song1->ipod_id - song2->ipod_id;
+  case SM_COLUMN_PC_PATH:
+      return g_utf8_collate (song1->pc_path_utf8, song2->pc_path_utf8);
+  case SM_COLUMN_TRANSFERRED:
+      if(song1->transferred == song2->transferred) return 0;
+      if(song1->transferred == TRUE) return 1;
+      else return -1;
+      break;
+  case SM_COLUMN_NONE: 
+      if (current_playlist)
+	  return((g_list_index(current_playlist->members, song1)) -
+		 (g_list_index(current_playlist->members, song2)));
+      break;
+  default:
+      gtkpod_warning("No sort for column %d\n", column);
+      break;
+  }
   return 0;
 }
 
@@ -2523,11 +2445,11 @@ static void block_release_selection (gint inst, gint action,
 				     gpointer user_data1,
 				     gpointer user_data2)
 {
-    static gint count_st[SORT_TAB_NUM];
+    static gint count_st[SORT_TAB_MAX];
     static gint count_pl = 0;
     static GtkWidget *stop_button = NULL;
     /* instance that has a pending callback */
-    static gint level = SORT_TAB_NUM; /* no level -> no registered callback */
+    static gint level = SORT_TAB_MAX; /* no level -> no registered callback */
     static br_callback r_brc;
     static gpointer r_user_data1;
     static gpointer r_user_data2;
@@ -2551,32 +2473,32 @@ static void block_release_selection (gint inst, gint action,
 	    if (stop_button) gtk_widget_show (stop_button);
 	}
 	++count_pl;
-	for (i=0; (i<=inst) && (i<SORT_TAB_NUM); ++i)
+	for (i=0; (i<=inst) && (i<SORT_TAB_MAX); ++i)
 	{
 	    ++count_st[i];
 	}
 	break;
     case BR_RELEASE:
-	for (i=0; (i<=inst) && (i<SORT_TAB_NUM); ++i)
+	for (i=0; (i<=inst) && (i<SORT_TAB_MAX); ++i)
 	{
 	    --count_st[i];
 	    if ((count_st[i] == 0) && (stop_add == i))
-		stop_add = SORT_TAB_NUM;
+		stop_add = SORT_TAB_MAX;
 	}
 	--count_pl;
 	if (count_pl == 0)
 	{
 	    if (stop_button) gtk_widget_hide (stop_button);
-	    stop_add = SORT_TAB_NUM;
+	    stop_add = SORT_TAB_MAX;
 	    release_widgets ();
 	}
 	/* check if we have to call a callback */
-	if (level < SORT_TAB_NUM)
+	if (level < SORT_TAB_MAX)
 	{
 	    if (((level == -1) && (count_pl == 0)) ||
 		((level >= 0) && (count_st[level] == 0)))
 	    {
-		level = SORT_TAB_NUM;
+		level = SORT_TAB_MAX;
 		r_brc (r_user_data1, r_user_data2);
 	    }
 	}
@@ -2628,18 +2550,18 @@ static void block_release_selection (gint inst, gint action,
 	    gtk_timeout_remove (timeout_id);
 	    timeout_id = 0;
 	}
-	if (level == SORT_TAB_NUM) break;  /* hmm... what happened to
+	if (level == SORT_TAB_MAX) break;  /* hmm... what happened to
 					      our callback? */
 	if (((level == -1) && (count_pl == 0)) ||
 	    ((level >= 0) && (count_st[level] == 0)))
 	{ /* Let's call the callback function */
-		level = SORT_TAB_NUM;
+		level = SORT_TAB_MAX;
 		r_brc (r_user_data1, r_user_data2);
 	}
 	else
 	{ /* This is strange and should not happen -- let's forget
 	   * about the callback */
-	    level = SORT_TAB_NUM;
+	    level = SORT_TAB_MAX;
 	}
 	break;
     default:

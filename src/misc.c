@@ -239,40 +239,8 @@ void create_add_playlists_fileselector (void)
    (ignore) etc.  */
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
 {
-    if (file && (*file == '/'))
-    { 
-	if (dir && (strlen (dir) > 0))
-	{
-	    return concat_dir (dir, file+1);
-	}
-    }
-    if (dir && (strlen (dir) > 0))
-    {	    
-	if(dir[strlen(dir)-1] == '/')
-	{ /* "dir" ends with "/" */
-	    if (file)
-		return g_strdup_printf ("%s%s", dir, file);
-	    else
-		return g_strdup (dir);
-	}
-	else
-	{ /* "dir" does not end with "/" */
-	    if (file)
-		return g_strdup_printf ("%s/%s", dir, file);
-	    else
-		return g_strdup_printf ("%s/", dir);
-	}
-    }
-    else
-    { /* dir == NULL or 0-byte long */
-	if (file)
-	    return g_strdup (file);
-	else
-	    return g_strdup (""); /* how stupid can the caller be... */
-    }
+    return itunesdb_concat_dir (dir, file);
 }
-
-
 
 /* Calculate the time in ms passed since @old_time. @old_time is
    updated with the current time if @update is TRUE*/
@@ -376,7 +344,7 @@ void add_idlist_to_playlist (Playlist *pl, gchar *str)
     if (!pl) return;
     while(parse_ipod_id_from_string(&str,&id))
     {
-	add_songid_to_playlist(pl, id);
+	add_songid_to_playlist(pl, id, TRUE);
     }
     data_changed();
 }
@@ -622,7 +590,7 @@ gtkpod_songs_statusbar_update(void)
 /* translates a SM_COLUMN_... (defined in display.h) into a
  * S_... (defined in song.h). Returns -1 in case a translation is not
  * possible */
-gint SM_to_S (gint sm)
+S_item SM_to_S (SM_item sm)
 {
     switch (sm)
     {
@@ -632,12 +600,11 @@ gint SM_to_S (gint sm)
     case SM_COLUMN_GENRE:       return S_GENRE;
     case SM_COLUMN_COMPOSER:    return S_COMPOSER;
     case SM_COLUMN_TRACK_NR:    return S_TRACK_NR;
-#if DISPLAY_EXTRA_COLUMNS
     case SM_COLUMN_IPOD_ID:     return S_IPOD_ID;
     case SM_COLUMN_PC_PATH:     return S_PC_PATH;
     case SM_COLUMN_TRANSFERRED: return S_TRANSFERRED;
-#endif
     case SM_COLUMN_NONE:        return S_NONE;
+    case SM_NUM_COLUMNS:        return -1;
     }
     return -1;
 }
@@ -646,7 +613,7 @@ gint SM_to_S (gint sm)
 /* translates a ST_CAT_... (defined in display.h) into a
  * S_... (defined in song.h). Returns -1 in case a translation is not
  * possible */
-gint ST_to_S (gint st)
+S_item ST_to_S (ST_CAT_item st)
 {
     switch (st)
     {
@@ -655,6 +622,7 @@ gint ST_to_S (gint st)
     case ST_CAT_GENRE:       return S_GENRE;
     case ST_CAT_COMPOSER:    return S_COMPOSER;
     case ST_CAT_TITLE:       return S_TITLE;
+    case ST_CAT_NUM:         return -1;
     }
     return -1;
 }
@@ -1165,7 +1133,7 @@ void delete_entry_head (gint inst)
     ConfHandlerCA confirm_again_handler;
     TabEntry *entry;
 
-    if ((inst < 0) && (inst > SORT_TAB_NUM))   return;
+    if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
     pl = get_currently_selected_playlist();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */

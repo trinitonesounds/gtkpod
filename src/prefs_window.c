@@ -157,7 +157,7 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->autoimport);
 	}
-	for (i=0; i<SORT_TAB_NUM; ++i)
+	for (i=0; i<SORT_TAB_MAX; ++i)
 	{
 	    gchar *buf;
 	    buf = g_strdup_printf ("cfg_st_autoselect%d", i);
@@ -259,7 +259,7 @@ prefs_window_save(void)
     prefs_set_mount_point(tmpcfg->ipod_mount);
     prefs_set_charset(tmpcfg->charset);
     prefs_set_auto_import(tmpcfg->autoimport);
-    for (i=0; i<SORT_TAB_NUM; ++i) {
+    for (i=0; i<SORT_TAB_MAX; ++i) {
 	prefs_set_st_autoselect (i, tmpcfg->st[i].autoselect);
 	prefs_set_st_category (i, tmpcfg->st[i].category);
     }
@@ -284,6 +284,10 @@ prefs_window_save(void)
     prefs_set_md5songs(tmpcfg->md5songs);
     prefs_set_update_existing(tmpcfg->update_existing);
     prefs_set_block_display(tmpcfg->block_display);
+    prefs_set_sort_tab_num(tmpcfg->sort_tab_num);
+    prefs_set_show_duplicates(tmpcfg->show_duplicates);
+    prefs_set_show_updated(tmpcfg->show_updated);
+    prefs_set_show_non_updated(tmpcfg->show_non_updated);
 
     cfg_free(tmpcfg);
     tmpcfg =NULL;
@@ -384,7 +388,7 @@ void prefs_window_set_charset (gchar *charset)
 
 void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
 {
-    if (inst < SORT_TAB_NUM)
+    if (inst < SORT_TAB_MAX)
     {
 	tmpcfg->st[inst].autoselect = autoselect;
     }
