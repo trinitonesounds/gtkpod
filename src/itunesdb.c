@@ -213,11 +213,13 @@ static gint32 get4int(FILE *file, glong seek)
 static gunichar2 *fixup_utf16(gunichar2 *utf16_string) {
 #if (G_BYTE_ORDER == G_BIG_ENDIAN)
 gint32 i;
- for(i=0; i<utf16_strlen(utf16_string); i++)
+ if (utf16_string)
  {
-    utf16_string[i] = ((utf16_string[i]<<8) & 0xff00) | 
-	                ((utf16_string[i]>>8) & 0xff);
- 
+     for(i=0; i<utf16_strlen(utf16_string); i++)
+     {
+	 utf16_string[i] = ((utf16_string[i]<<8) & 0xff00) | 
+	     ((utf16_string[i]>>8) & 0xff);
+     }
  }
 #endif
 return utf16_string;
@@ -230,7 +232,7 @@ return utf16_string;
 static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 {
   gchar data[4];
-  gunichar2 *entry_utf16;
+  gunichar2 *entry_utf16 = NULL;
   gint32 xl;
 
 #if ITUNESDB_DEBUG
@@ -255,14 +257,23 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
   fprintf(stderr, "ml: %x mty: %x, xl: %x\n", *ml, *mty, xl);
 #endif
 
-  entry_utf16 = g_malloc (xl+2);
-  if (seek_get_n_bytes (file, (gchar *)entry_utf16, seek+40, xl) != xl) {
-    g_free (entry_utf16);
-    *ml = -1;
-    return NULL;
+  switch (*mty)
+  {
+  case MHOD_ID_PLAYLIST: /* do something with the "weird mhod" */
+      break;
+  default:
+      entry_utf16 = g_malloc (xl+2);
+      if (seek_get_n_bytes (file, (gchar *)entry_utf16, seek+40, xl) != xl) {
+	  g_free (entry_utf16);
+	  entry_utf16 = NULL;
+	  *ml = -1;
+      }
+      else
+      {
+	  entry_utf16[xl/2] = 0; /* add trailing 0 */
+      }
+      break;
   }
-  entry_utf16[xl/2] = 0; /* add trailing 0 */
-
   return fixup_utf16(entry_utf16);
 }
 
@@ -271,7 +282,7 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 /* get a PL, return pos where next PL should be, name and content */
 static glong get_pl(FILE *file, glong seek) 
 {
-  gunichar2 *plname_utf16;
+  gunichar2 *plname_utf16 = NULL, *plname_utf16_maybe;
 #ifdef ITUNESDB_PROVIDE_UTF8
   gchar *plname_utf8;
 #endif ITUNESDB_PROVIDE_UTF8
@@ -293,28 +304,40 @@ static glong get_pl(FILE *file, glong seek)
   pltype = get4int (file, seek+20);  /* Type of playlist (1= MPL) */
   songnum = get4int (file, seek+16); /* number of songs in playlist */
   nextseek = seek + get4int (file, seek+8); /* possible begin of next PL */
-  seek += (680+76); /* skip uninteresting header info */
-  if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
-  plname_utf16 = get_mhod(file, seek, &zip, &type); /* PL name */
-  if (zip == -1)
-    {   /* we did not read a valid mhod header -> name is invalid */
-        /* we simply make up our own name */
-      if (pltype == 1)
-	plname_utf16 = g_utf8_to_utf16 (_("Master-PL"),
-					-1, NULL, NULL, NULL);
-      else plname_utf16 = g_utf8_to_utf16 (_("Playlist"),
-					    -1, NULL, NULL, NULL);
-#ifdef ITUNESDB_PROVIDE_UTF8
-      plname_utf8 = g_utf16_to_utf8 (plname_utf16, -1, NULL, NULL, NULL);
-#endif ITUNESDB_PROVIDE_UTF8
-    }
-  else
-    {
-#ifdef ITUNESDB_PROVIDE_UTF8
-      plname_utf8 = g_utf16_to_utf8(plname_utf16, -1, NULL, NULL, NULL);
-#endif ITUNESDB_PROVIDE_UTF8
+  zip = get4int (file, seek+4); /* length of header */
+  if (zip == 0) return -1;      /* error! */
+  do
+  {
       seek += zip;
-    }
+      if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
+      plname_utf16_maybe = get_mhod(file, seek, &zip, &type); /* PL name */
+      if (zip != -1) switch (type)
+      {
+      case MHOD_ID_PLAYLIST:
+	  break; /* here we could do something about the "weird mhod" */
+      case MHOD_ID_TITLE:
+	  if (plname_utf16_maybe)
+	  {
+	      /* sometimes there seem to be two mhod TITLE headers */
+	      if (plname_utf16) g_free (plname_utf16);
+	      plname_utf16 = plname_utf16_maybe;
+	  }
+	  break;
+      }
+  } while (zip != -1); /* read all MHODs */
+  if (!plname_utf16)
+  {   /* we did not read a valid mhod TITLE header -> */
+      /* we simply make up our own name */
+	if (pltype == 1)
+	    plname_utf16 = g_utf8_to_utf16 (_("Master-PL"),
+					    -1, NULL, NULL, NULL);
+	else plname_utf16 = g_utf8_to_utf16 (_("Playlist"),
+					     -1, NULL, NULL, NULL);
+  }
+#ifdef ITUNESDB_PROVIDE_UTF8
+  plname_utf8 = g_utf16_to_utf8 (plname_utf16, -1, NULL, NULL, NULL);
+#endif ITUNESDB_PROVIDE_UTF8
+
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "pln: %s(%d Tracks) \n", plname_utf8, (int)songnum);
@@ -330,6 +353,10 @@ static glong get_pl(FILE *file, glong seek)
 
   /* create new playlist */
   plitem = it_add_playlist(plitem);
+
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "added pl: %s", plname_utf8);
+#endif
 
   n = 0;  /* number of songs read */
   while (n < songnum)
@@ -809,10 +836,10 @@ static void mk_mhyp (FILE *file, gunichar2 *listname,
 		     guint32 type, guint32 song_num)
 {
   put_data_cur (file, "mhyp", 4);      /* header                   */
-  put_4int_cur (file, 108);            /* type			   */
+  put_4int_cur (file, 108);            /* length		   */
   put_4int_cur (file, -1);             /* size -> later            */
   put_4int_cur (file, 2);              /* ?                        */
-  put_4int_cur (file, song_num);       /* number of songs in plist -> later */
+  put_4int_cur (file, song_num);       /* number of songs in plist */
   put_4int_cur (file, type);           /* 1 = main, 0 = visible    */
   put_4int_cur (file, 0);              /* ?                        */
   put_4int_cur (file, 0);              /* ?                        */

@@ -1,5 +1,8 @@
 gtkpod V0.42+ 21-Feb-2003 - 
-        New Feature: update song information from file when adding songs
+        BUGFIX: some "third party" iTunesDB could not be read (hang after
+	reading the songs and before adding the playlists).
+        
+	New Feature: update song information from file when adding songs
 	with identical filename (option)
 	
         New Feature: update song information from file of selected songs
