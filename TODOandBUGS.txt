@@ -1,13 +1,5 @@
 TODO:
 
-- Export mu3 playlists (http://hanna.pyxidis.org/tech/m3u.html) 
-
-  > Since there is only one field for 'name', and most people like >
-  > something a little more well built, perhaps there could be a pref
-  > setting for the format of the name. Also, unlike the example, I
-  > imagine a fully-qualified location would be the best idea. Thank,
-  (Robert Paskowitz)
-
 - Ignore common words when sorting
 
   > I'm somewhat frustrated with the inconsistency between GTKPod and
@@ -106,7 +98,7 @@ BUGLIST:
 
 - during a long operation (menues are blocked) the user can still edit
   the track data. This could potentially crash gtkpod -> need a way to
-  block editing as well without blocking navigating.
+  block editing as well without blocking navigation.
 
 - when copying tracks to the iPod (export iTunesDB) and the iPod is
   overfilled, libgtk sometimes segfaults (TreeModel changed but did

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 01:37:46 jcs>
+/* Time-stamp: <2004-08-21 21:08:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -346,10 +346,6 @@ on_cfg_toolbar_style_icons_toggled     (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
-on_cfg_export_check_existing_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
 on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
@@ -534,15 +530,7 @@ on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 
 void
-on_cfg_export_template_changed            (GtkEditable     *editable,
-					gpointer         user_data);
-
-void
 on_cfg_normalization_level_changed     (GtkEditable     *editable,
-					gpointer         user_data);
-
-void
-on_cfg_special_export_charset_toggled  (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
@@ -706,14 +694,6 @@ on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
 void
 on_all_tracks_not_listed_in_any_playlist1_activate
                                         (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_cfg_export_check_existing_toggled   (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_cfg_fix_path                       (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void

@@ -29,6 +29,8 @@ gtkpod V0.82-CVS
 	the local machine is now possible (actually it was already
 	possible in V0.80, but now the README explains how to do it).
 
+	NEW FEATURE: Swedish translation provided by Stefan Asserhäll.
+
 	IMPROVEMENT: Speeded up writing of iTunesDB. For me it is now
 	between 1 and 15 seconds instead of between 20 and 40 seconds
 	before (for security I'm using the iPod as a non-buffered

@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-08-21 20:15:55 jcs>
+|  Time-stamp: <2004-08-22 18:32:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -159,6 +159,8 @@ Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot net)\n"
 Japanese: Ayako Sano\n"),
 				     _("\
 Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"),
+				     _("\
+Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"),
 				     NULL };
       gchar **strp = text;
       textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));

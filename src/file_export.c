@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-21 20:21:54 jcs>
+/* Time-stamp: <2004-08-22 13:45:06 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -52,6 +52,26 @@ struct fcd
     GtkWidget *win; /* glade widget to lookup widgets by name */
     gpointer user_data; 
 };
+
+
+
+/*------------------------------------------------------------------
+
+  Code to export tracks
+
+  ------------------------------------------------------------------*/
+
+/* Strings for prefs settings */
+/* use original charset or specified one? */
+const gchar *EXPORT_FILES_SPECIAL_CHARSET="export_files_special_charset";
+/* whether we check for existing files on export or not */
+const gchar *EXPORT_FILES_CHECK_EXISTING="export_files_check_existing";
+const gchar *EXPORT_FILES_PATH="export_files_path";
+const gchar *EXPORT_FILES_TPL="export_files_template";
+/* Default prefs settings */
+const gchar *EXPORT_FILES_TPL_DFLT="%o;%a - %t.mp3;%t.wav";
+
+
 
 
 /**
@@ -217,17 +237,6 @@ static void write_tracks_abort (gboolean *abort)
 }
 
 
-/* Strings for prefs settings */
-/* use original charset or specified one? */
-const gchar *EXPORT_FILES_SPECIAL_CHARSET="export_files_special_charset";
-/* whether we check for existing files on export or not */
-const gchar *EXPORT_FILES_CHECK_EXISTING="export_files_check_existing";
-const gchar *EXPORT_FILES_PATH="export_files_path";
-const gchar *EXPORT_FILES_TPL="export_files_template";
-/* Default prefs settings */
-const gchar *EXPORT_FILES_TPL_DFLT="%o;%a - %t.mp3;%t.wav";
-
-
 
 /**
  * get_preferred_filename - useful for generating the preferred
@@ -314,6 +323,10 @@ static gpointer th_write_track (gpointer s)
 #endif
 
 
+/******************************************************************
+   export_files_write - copy the specified tracks to the selected
+   directory.
+ ******************************************************************/
 static void export_files_write (struct fcd *fcd)
 {
     GList *l = NULL;
@@ -462,20 +475,6 @@ static void export_files_write (struct fcd *fcd)
 	    gtkpod_statusbar_message (_("Some tracks were not copied."));
     }
 }
-/*     gboolean special_charset, check_existing; */
-/*     gchar *template, *dirname; */
-
-/*     g_return_if_fail (fcd && fcd->fc); */
-
-/*     num = g_list_length (fcd->tracks); */
-
-/*     prefs_get_int_value (EXPORT_FILES_SPECIAL_CHARSET, &special_charset); */
-/*     prefs_get_int_value (EXPORT_FILES_CHECK_EXISTING, &check_existing); */
-/*     prefs_get_string_value (EXPORT_PLAYLIST_FILE_TPL, &template); */
-/*     if (!template) */
-/* 	template = g_strdup (EXPORT_PLAYLIST_FILE_TPL_DFLT); */
-/*     dirname = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(fcd->fc)); */
-
 
 /******************************************************************
    export_files_cleanup - free memory taken up by the fcd structure.

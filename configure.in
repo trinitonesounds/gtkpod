@@ -48,7 +48,7 @@ AC_PATH_PROG(UMOUNT, umount)
 AC_SUBST(UMOUNT)
 
 dnl Add the languages which your application supports here.
-ALL_LINGUAS="de fr it ja"
+ALL_LINGUAS="de fr it ja sv"
 AM_GLIB_GNU_GETTEXT
 
 dnl Check if we have to supply getopt_long
