@@ -494,6 +494,8 @@ gtkpod_main_quit(void)
 	display_cleanup ();
 	write_prefs (); /* FIXME: how can we avoid saving options set by
 			 * command line? */
+			/* Tag them as dirty?  seems nasty */
+	unmount_ipod();
 	gtk_main_quit ();
 	return FALSE;
     }
@@ -1266,4 +1268,54 @@ void delete_entry_head (gint inst)
 
     g_free (label);
     g_string_free (str, TRUE);
+}
+/***************************************************************************
+ * Mount Calls
+ *
+ **************************************************************************/
+void
+mount_ipod(void)
+{
+    if(prefs_get_automount())
+    {
+	gchar *str = NULL;
+	if((str = prefs_get_ipod_mount()))
+	{
+	    switch(fork())
+	    {
+		case 0:
+		    execl("/bin/mount", "mount", str, NULL);
+		    exit(0);
+		    break;
+		default:
+		    break;
+	
+	    }
+	    sleep(1);
+	    g_free(str);
+	}
+    }
+}
+void
+unmount_ipod(void)
+{
+    if(prefs_get_automount())
+    {
+	gchar *str = NULL;
+	if((str = prefs_get_ipod_mount()))
+	{
+	    switch(fork())
+	    {
+		case 0:
+		    execl("/bin/umount", "umount", str, NULL);
+		    exit(0);
+		    break;
+		default:
+		    break;
+	
+	    }
+	    sleep(1);
+	    g_free(str);
+	}
+    }
 }

@@ -993,3 +993,11 @@ on_play_enqueue_path_entry_changed     (GtkEditable     *editable,
     g_free (buf);
 }
 
+
+void
+on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_automount(gtk_toggle_button_get_active(togglebutton));
+}
+

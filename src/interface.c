@@ -1033,6 +1033,7 @@ create_new_prefs_window (void)
   GtkWidget *frame17;
   GtkWidget *vbox33;
   GtkWidget *cfg_save_sorted_order;
+  GtkWidget *cfg_automount_ipod;
   GtkWidget *label42;
   GtkWidget *label41;
   GtkWidget *hbuttonbox5;
@@ -1542,6 +1543,10 @@ create_new_prefs_window (void)
   gtk_box_pack_start (GTK_BOX (vbox33), cfg_save_sorted_order, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_save_sorted_order, _("Alternatively you can use the menu item 'Save Displayed Song Order' to save the sort order."), NULL);
 
+  cfg_automount_ipod = gtk_check_button_new_with_mnemonic (_("Handle mounting/unmounting of iPod drive"));
+  gtk_widget_show (cfg_automount_ipod);
+  gtk_box_pack_start (GTK_BOX (vbox33), cfg_automount_ipod, FALSE, FALSE, 0);
+
   label42 = gtk_label_new (_("Misc"));
   gtk_widget_show (label42);
   gtk_frame_set_label_widget (GTK_FRAME (frame17), label42);
@@ -1649,6 +1654,9 @@ create_new_prefs_window (void)
                     NULL);
   g_signal_connect ((gpointer) cfg_save_sorted_order, "toggled",
                     G_CALLBACK (on_cfg_save_sorted_order_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_automount_ipod, "toggled",
+                    G_CALLBACK (on_cfg_automount_ipod_toggled),
                     NULL);
   g_signal_connect ((gpointer) prefs_apply, "clicked",
                     G_CALLBACK (on_prefs_apply_clicked),
@@ -1770,6 +1778,7 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame17, "frame17");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox33, "vbox33");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_save_sorted_order, "cfg_save_sorted_order");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_automount_ipod, "cfg_automount_ipod");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label42, "label42");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label41, "label41");
   GLADE_HOOKUP_OBJECT (new_prefs_window, hbuttonbox5, "hbuttonbox5");

@@ -344,6 +344,11 @@ prefs_window_create(void)
 	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
 					   prefs_get_last_prefs_page ());
 	}
+	if ((w = lookup_widget (prefs_window, "cfg_automount_ipod")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    prefs_get_automount());
+	}
 
 	set_sort_tab_num_combo ();
 	/* make the right number of autoselect checkboxes
@@ -406,6 +411,7 @@ prefs_window_set(void)
 	prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
+	prefs_set_automount(tmpcfg->automount);
 
 	sm_show_preferred_columns();
     }
@@ -699,4 +705,9 @@ void prefs_window_set_sort_tab_num (gint num)
 void prefs_window_set_toolbar_style (GtkToolbarStyle style)
 {
     tmpcfg->toolbar_style = style;
+}
+
+void prefs_window_set_automount(gboolean val)
+{
+    tmpcfg->automount = val;
 }

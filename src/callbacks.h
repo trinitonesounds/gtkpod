@@ -351,3 +351,7 @@ on_play_now_path_entry_changed         (GtkEditable     *editable,
 void
 on_play_enqueue_path_entry_changed     (GtkEditable     *editable,
                                         gpointer         user_data);
+
+void
+on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

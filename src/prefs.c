@@ -153,6 +153,7 @@ struct cfg *cfg_new(void)
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
     mycfg->play_now_path = g_strdup ("xmms -p %s");
     mycfg->play_enqueue_path = g_strdup ("xmms xmms -e %s");
+    mycfg->automount = FALSE;
     return(mycfg);
 }
 
@@ -359,6 +360,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_size_dirbr (-2, atoi (arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "automount") == 0)
+	  {
+	      prefs_set_automount (atoi (arg));
+	  }
 	  else
 	  {
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
@@ -539,6 +544,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_conf.y=%d\n", cfg->size_conf.y);
     fprintf (fp, "size_dirbr.x=%d\n", cfg->size_dirbr.x);
     fprintf (fp, "size_dirbr.y=%d\n", cfg->size_dirbr.y);
+    fprintf (fp, "automount=%d\n", cfg->automount);
 }
 
 void 
@@ -1259,4 +1265,15 @@ void prefs_set_play_enqueue_path (const gchar *path)
 gchar *prefs_get_play_enqueue_path (void)
 {
     return cfg->play_enqueue_path;
+}
+
+gboolean 
+prefs_get_automount(void)
+{
+    return(cfg->automount);
+}
+void
+prefs_set_automount(gboolean val)
+{
+    cfg->automount = val;
 }

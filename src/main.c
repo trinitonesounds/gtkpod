@@ -72,6 +72,8 @@ main (int argc, char *argv[])
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
   display_create (gtkpod_window);
   create_mpl ();     /* needs at least the master playlist */
+  if(prefs_get_automount())
+      mount_ipod();
   if(prefs_get_auto_import())
       handle_import();
   gtk_widget_show (gtkpod_window);

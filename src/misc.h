@@ -84,4 +84,8 @@ void delete_entry_head (gint inst);
 void block_widgets (void);
 void release_widgets (void);
 void update_blocked_widget (GtkWidget *w, gboolean sens);
+
+void mount_ipod(void);
+void unmount_ipod(void);
+
 #endif __MISC_H__

@@ -3080,7 +3080,22 @@ entry (faster!)</property>
 		      </child>
 
 		      <child>
-			<placeholder/>
+			<widget class="GtkCheckButton" id="cfg_automount_ipod">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Handle mounting/unmounting of iPod drive</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="on_cfg_automount_ipod_toggled" last_modification_time="Tue, 18 Mar 2003 05:27:40 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
 		      </child>
 
 		      <child>

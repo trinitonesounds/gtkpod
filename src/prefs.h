@@ -83,6 +83,7 @@ struct cfg
   gint last_prefs_page;         /* last page selected in prefs window */
   gchar *play_now_path;         /* path for 'Play Now' */
   gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
+  gboolean automount;		/* whether we should mount/unmount the ipod */
 };
 
 /* FIXME: make the global struct obsolete! */
@@ -126,6 +127,7 @@ void prefs_set_col_visible (gint pos, gboolean visible);
 void prefs_set_col_order (gint pos, SM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
+void prefs_set_automount(gboolean val);
 
 gboolean prefs_get_offline(void);
 gboolean prefs_get_keep_backups(void);
@@ -175,5 +177,6 @@ void prefs_set_play_now_path (const gchar *path);
 gchar *prefs_get_play_now_path (void);
 void prefs_set_play_enqueue_path (const gchar *path);
 gchar *prefs_get_play_enqueue_path (void);
+gboolean prefs_get_automount(void);
 
 #endif __PREFS_H__
