@@ -306,32 +306,40 @@ register_gtkpod_main_window(GtkWidget *win)
     main_window = win;
 }
 
-#define GTKPOD_MKDIR(buf, result) { \
-    if((mkdir(buf, 0755) != 0)) \
-    { \
-	result = FALSE; \
-    } \
-}
-
 gboolean
 create_ipod_directories(const gchar *ipod_dir)
 {
     int i = 0;
     gboolean result = TRUE;
     gchar buf[PATH_MAX];
-    
-    snprintf(buf, PATH_MAX, "%s/iPod_Control", ipod_dir);
-    GTKPOD_MKDIR(buf, result);
-    snprintf(buf, PATH_MAX, "%s/iPod_Control/Music", ipod_dir);
-    GTKPOD_MKDIR(buf, result);
-    snprintf(buf, PATH_MAX, "%s/iPod_Control/iTunes", ipod_dir);
-    GTKPOD_MKDIR(buf, result);
+    gchar *mp;
+
+    mp = g_strdup (ipod_dir);
+    if (mp)
+    {
+	if (strlen (mp) > 0)
+	{ /* make sure the mount point does not end in "/" */
+	    if (mp[strlen (mp) - 1] == '/')
+		mp[strlen (mp) - 1] = 0;
+	}
+    }
+    else
+    {
+	mp = g_strdup (".");
+    }
+    snprintf(buf, PATH_MAX, "%s/iPod_Control", mp);
+    if((mkdir(buf, 0755) != 0)) result = FALSE;
+    snprintf(buf, PATH_MAX, "%s/iPod_Control/Music", mp);
+    if((mkdir(buf, 0755) != 0)) result = FALSE;
+    snprintf(buf, PATH_MAX, "%s/iPod_Control/iTunes", mp);
+    if((mkdir(buf, 0755) != 0)) result = FALSE;
     
     for(i = 0; i < 20; i++)
     {
-	snprintf(buf, PATH_MAX, "%s/iPod_Control/Music/F%02d", ipod_dir, i);
-	GTKPOD_MKDIR(buf, result);
+	snprintf(buf, PATH_MAX, "%s/iPod_Control/Music/F%02d", mp, i);
+	if((mkdir(buf, 0755) != 0)) result = FALSE;
     }
+    g_free (mp);
     return(result);
 }
 

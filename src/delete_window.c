@@ -210,7 +210,6 @@ static void create_ipod_dir_interface()
     GtkWidget *w = NULL;
     gchar *mp;
     GString *str;
-    gint i;
 
     confirmation_window = create_create_confirmation();
     mp = prefs_get_ipod_mount ();
@@ -224,16 +223,16 @@ static void create_ipod_dir_interface()
     }
     else
     {
-	mp = g_strdup ("");
+	mp = g_strdup (".");
     }
     str = g_string_sized_new (2000);
     g_string_append_printf (str, "%s/iPod_Control\n", mp);
     g_string_append_printf (str, "%s/iPod_Control/Music\n", mp);
     g_string_append_printf (str, "%s/iPod_Control/iTunes\n", mp);
-    for(i = 0; i < 20; i++)
-    {
-	g_string_append_printf (str, "%s/iPod_Control/Music/F%02d\n", mp, i);
-    }
+    g_string_append_printf (str, "%s/iPod_Control/Music/F00\n...\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control/Music/F19\n", mp);
+    g_free (mp);
+    mp = NULL;
     if((w = lookup_widget(confirmation_window, "msg_label")))
 	set_message_label_to_string(w, str->str);
     g_string_free (str, TRUE);
