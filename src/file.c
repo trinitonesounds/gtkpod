@@ -380,7 +380,7 @@ static void update_charset_info (Song *song)
 Song *get_song_info_from_file (gchar *name, Song *or_song)
 {
     Song *song = NULL;
-    File_Tag filetag;
+    Id3tag filetag;
     mp3info *mp3info;
     gint len;
 
@@ -394,7 +394,7 @@ Song *get_song_info_from_file (gchar *name, Song *or_song)
     if (len < 4) return NULL;
     if (strcasecmp (&name[len-4], ".mp3") != 0) return NULL;
 
-    if (Id3tag_Read_File_Tag (name, &filetag) == TRUE)
+    if (id3_tag_read (name, &filetag) == TRUE)
     {
 	struct stat si;
 
@@ -1371,7 +1371,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
    S_... defined in song.h) */
 gboolean write_tags_to_file (Song *song, S_item tag_id)
 {
-    File_Tag *filetag;
+    Id3tag *filetag;
     gchar *ipod_fullpath, track[20];
     gchar *prefs_charset = NULL;
     Song *oldsong;
@@ -1396,7 +1396,7 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 	update_charset_info (song);
     }
 
-    filetag = g_malloc0 (sizeof (File_Tag));
+    filetag = g_malloc0 (sizeof (Id3tag));
     if ((tag_id == S_ALL) || (tag_id == S_ALBUM))
 	filetag->album = song->album;
     if ((tag_id == S_ALL) || (tag_id == S_ARTIST))
@@ -1416,7 +1416,7 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
     }
     if (song->pc_path_locale && (strlen (song->pc_path_locale) > 0))
       {
-	if (Id3tag_Write_File_Tag (song->pc_path_locale, filetag) == FALSE)
+	if (id3_tag_write (song->pc_path_locale, filetag) == FALSE)
 	  {
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    song->pc_path_locale);
@@ -1429,7 +1429,7 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
       {
 	/* need to get ipod filename */
 	ipod_fullpath = get_track_name_on_ipod (song);
-	if (Id3tag_Write_File_Tag (ipod_fullpath, filetag) == FALSE)
+	if (id3_tag_write (ipod_fullpath, filetag) == FALSE)
 	  {
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    ipod_fullpath);

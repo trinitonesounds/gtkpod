@@ -39,9 +39,8 @@
 
 static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 {
-    gchar* rtn;
-    const id3_ucs4_t *string;
     id3_utf8_t *utf8;
+    const id3_ucs4_t *string;
     struct id3_frame *frame;
     union id3_field *field;
 
@@ -64,11 +63,9 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 
     if (frame_name == ID3_FRAME_GENRE) 
        string = id3_genre_name (string);
-    printf("%s\n", string);
+
     utf8 = id3_ucs4_utf8duplicate (string);
-    rtn = charset_from_utf8 (utf8);
-    g_free (utf8);
-    return rtn;
+    return (gchar*) utf8;
 }
  
 static void id3_set_string (struct id3_tag *tag, const char *frame_name, const char *data)
@@ -77,7 +74,6 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
     struct id3_frame *frame;
     union id3_field *field;
     id3_ucs4_t *ucs4;
-    id3_utf8_t *utf8;
 
     if (data == NULL) 
 	return;
@@ -89,6 +85,7 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
      */
     if (strlen(data) == 0)
     {
+	printf("removing ID3 frame: %s\n", frame_name);
         while ((frame = id3_tag_findframe (tag, frame_name, 0)))
  	    id3_tag_detachframe (tag, frame);
 	return;
@@ -112,8 +109,8 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
 	field->type = ID3_FIELD_TYPE_STRINGLIST;
     }
 
-    utf8 = charset_to_utf8 (data);
-    ucs4 = id3_utf8_ucs4duplicate (utf8);
+    ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
+    printf ("%s\n", ucs4);
 
     if (frame_name == ID3_FRAME_GENRE)
     {
@@ -123,7 +120,7 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
 	tmp = g_strdup_printf("%d", index);
 	ucs4 = id3_latin1_ucs4duplicate (tmp);
     }
-    g_free (utf8);
+    g_free (ucs4);
 
     if (frame_name == ID3_FRAME_COMMENT)
         res = id3_field_setfullstring (field, ucs4);
@@ -135,21 +132,22 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
 }
 
 /***
- * Reads id3v1.x / id3v2 tag and load data into the File_Tag structure.
- * If a tag entry exists (ex: title), we allocate memory, else value stays to NULL
+ * Reads id3v1.x / id3v2 tag and load data into the Id3tag structure.
+ * If a tag entry exists (ex: title), we allocate memory, else value 
+ * stays to NULL
  * @returns: TRUE on success, else FALSE.
  */
-gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
+gboolean id3_tag_read (gchar *filename, Id3tag *tag)
 {
     struct id3_file *id3file;
-    struct id3_tag *tag;
+    struct id3_tag *id3tag;
     gchar* string;
     gchar* string2;
 
-    if (!filename || !FileTag)
+    if (!filename || !tag)
         return FALSE;
 
-    memset (FileTag, 0, sizeof (File_Tag));
+    memset (tag, 0, sizeof (Id3tag));
 
     if (!(id3file = id3_file_open (filename, ID3_FILE_MODE_READONLY)))
     {
@@ -160,33 +158,33 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
         return FALSE;
     }
 
-    if ((tag = id3_file_tag(id3file)))
+    if ((id3tag = id3_file_tag(id3file)))
     {
-        FileTag->title = id3_get_string (tag, ID3_FRAME_TITLE);
-        FileTag->artist = id3_get_string (tag, ID3_FRAME_ARTIST);
-        FileTag->album = id3_get_string (tag, ID3_FRAME_ALBUM);
-        FileTag->year = id3_get_string (tag, ID3_FRAME_YEAR);
-        FileTag->composer = id3_get_string (tag, "TCOM");
-        FileTag->comment = id3_get_string (tag, ID3_FRAME_COMMENT);
-	FileTag->genre = id3_get_string (tag, ID3_FRAME_GENRE);
+        tag->title = id3_get_string (id3tag, ID3_FRAME_TITLE);
+        tag->artist = id3_get_string (id3tag, ID3_FRAME_ARTIST);
+        tag->album = id3_get_string (id3tag, ID3_FRAME_ALBUM);
+        tag->year = id3_get_string (id3tag, ID3_FRAME_YEAR);
+        tag->composer = id3_get_string (id3tag, "TCOM");
+        tag->comment = id3_get_string (id3tag, ID3_FRAME_COMMENT);
+	tag->genre = id3_get_string (id3tag, ID3_FRAME_GENRE);
 
-	string = id3_get_string (tag, "TLEN");
+	string = id3_get_string (id3tag, "TLEN");
 	if (string) 
 	{
-            FileTag->songlen = (guint32) strtoul (string, 0, 10);
+            tag->songlen = (guint32) strtoul (string, 0, 10);
 	    g_free (string);
 	}
 
-	string = id3_get_string (tag, ID3_FRAME_TRACK);
+	string = id3_get_string (id3tag, ID3_FRAME_TRACK);
 	if (string)
 	{
 	    string2 = strchr(string,'/');
 	    if (string2)
 	    {
-	        FileTag->track_total = g_strdup_printf ("%.2d", atoi (string2+1));
+	        tag->track_total = g_strdup_printf ("%.2d", atoi (string2+1));
 	        *string2 = '\0';
 	    }
-	    FileTag->track = g_strdup_printf ("%.2d", atoi (string));
+	    tag->track = g_strdup_printf ("%.2d", atoi (string));
             g_free(string);
 	}
     }
@@ -195,13 +193,13 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
     return TRUE;
 }
 
-
-/*
- * Write the ID3 tags to the file. Returns TRUE on success, else 0.
+/**
+ * Write the ID3 tags to the file.
+ * @reutrns: TRUE on success, else FALSE.
  */
-gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
+gboolean id3_tag_write (gchar *filename, Id3tag *tag)
 {
-    struct id3_tag* tag;
+    struct id3_tag* id3tag;
     struct id3_file* id3file;
     gint error = 0;
 
@@ -215,23 +213,23 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
         return FALSE;
     }
 
-    if ((tag = id3_file_tag(id3file)))
+    if ((id3tag = id3_file_tag(id3file)))
     {
-	id3_set_string (tag, ID3_FRAME_TITLE, FileTag->title);
-	id3_set_string (tag, ID3_FRAME_ARTIST, FileTag->artist);
-	id3_set_string (tag, ID3_FRAME_ALBUM, FileTag->album);
-	id3_set_string (tag, ID3_FRAME_GENRE, FileTag->genre);
-	id3_set_string (tag, ID3_FRAME_COMMENT, FileTag->comment);
-	id3_set_string (tag, "TCOM", FileTag->composer);
+	id3_set_string (id3tag, ID3_FRAME_TITLE, tag->title);
+	id3_set_string (id3tag, ID3_FRAME_ARTIST, tag->artist);
+	id3_set_string (id3tag, ID3_FRAME_ALBUM, tag->album);
+	id3_set_string (id3tag, ID3_FRAME_GENRE, tag->genre);
+	id3_set_string (id3tag, ID3_FRAME_COMMENT, tag->comment);
+	id3_set_string (id3tag, "TCOM", tag->composer);
 
-        if ( FileTag->track_total && strlen(FileTag->track_total)>0 )
+        if (tag->track_total && strlen (tag->track_total) > 0)
 	{
-	    char* string = g_strconcat(FileTag->track,"/",FileTag->track_total,NULL);
-    	    id3_set_string (tag, ID3_FRAME_TRACK, string);
+	    char* string = g_strconcat (tag->track,"/",tag->track_total,NULL);
+    	    id3_set_string (id3tag, ID3_FRAME_TRACK, string);
 	    g_free(string);
 	}
 	else
-	    id3_set_string (tag, ID3_FRAME_TRACK, FileTag->track);
+	    id3_set_string (id3tag, ID3_FRAME_TRACK, tag->track);
     }
 
     if (id3_file_update(id3file) != 0)
@@ -247,36 +245,4 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
 
     if (error) return FALSE;
     else       return TRUE;
-}
-
-
-
-/*
- * Return the sub version of the ID3v2 tag, for example id3v2.2, id3v2.3
- */
-gint Id3tag_Get_Id3v2_Version (gchar *filename)
-{
-#if 0
-    FILE *file;
-	guchar tmp[4];
-
-    if ( filename!=NULL && (file=fopen(filename,"r"))!=NULL )
-    {
-        fseek(file,0,SEEK_SET);
-        if (fread(tmp,1,4, file) != 4)
-            return -1;
-
-        if (tmp[0] == 'I' && tmp[1] == 'D' && tmp[2] == '3' && tmp[3] < 0xFF)
-        {
-            fclose(file);
-            return (gint)tmp[3];
-        }else
-        {
-            return -1;
-        }
-    }else
-#endif
-    {
-        return -1;
-    }
 }

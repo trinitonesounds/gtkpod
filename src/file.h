@@ -66,5 +66,7 @@ gchar* get_preferred_track_name_format(Song *s);
 void mark_song_for_deletion (Song *song);
 void fill_in_extended_info (Song *song);
 glong get_filesize_of_deleted_songs(void);
+Song *get_song_info_from_file (gchar *name, Song *or_song);
+
 
 #endif
