@@ -412,7 +412,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 		delete_playlist_head ();
 		break;
 	    case GDK_u:
-		update_selected_playlist ();
+		do_selected_playlist (update_songids);
 		break;
 	    case GDK_n:
 		add_new_playlist (_("New Playlist"), -1);
@@ -442,7 +442,7 @@ on_song_treeview_key_release_event     (GtkWidget       *widget,
 		delete_song_head ();
 		break;
 	    case GDK_u:
-		update_selected_songs ();
+		do_selected_songs (update_songids);
 		break;
 	    default:
 		break;
@@ -697,8 +697,9 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 				       GTK_TREE_VIEW (widget)));
 		break;
 	    case GDK_u:
-		update_selected_entry (st_get_instance_from_treeview (
-					   GTK_TREE_VIEW (widget)));
+		do_selected_entry (update_songids,
+				   st_get_instance_from_treeview (
+				       GTK_TREE_VIEW (widget)));
 		break;
 	    default:
 		break;
@@ -749,14 +750,51 @@ void
 on_update_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
-    update_selected_playlist ();
+    do_selected_playlist (update_songids);
+}
+
+/* update songs in tab entry */
+void
+on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Update selected entry of which sort tab?"));
+
+    if (inst != -1) do_selected_entry (update_songids, inst);
 }
 
 void
 on_update_songs_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
-    update_selected_songs ();
+    do_selected_songs (update_songids);
+}
+
+
+void
+on_sync_playlist_activate (GtkMenuItem     *menuitem,
+			     gpointer         user_data)
+{
+    do_selected_playlist (sync_songids);
+}
+
+/* sync songs in tab entry */
+void
+on_sync_tab_entry_activate        (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Sync dirs of selected entry in which sort tab?"));
+
+    if (inst != -1) do_selected_entry (sync_songids, inst);
+}
+
+void
+on_sync_songs_activate            (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
+{
+    do_selected_songs (sync_songids);
 }
 
 
@@ -931,18 +969,6 @@ on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
 
     if (inst != -1) st_sort (inst, GTK_SORT_DESCENDING);
 
-}
-
-
-/* update songs in tab entry */
-void
-on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
-				     gpointer         user_data)
-{
-    gint inst = get_sort_tab_number (
-	_("Update selected entry of which sort tab?"));
-
-    if (inst != -1) update_selected_entry (inst);
 }
 
 
@@ -1168,6 +1194,15 @@ on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     prefs_window_set_write_charset(
+	gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_add_recursively(
 	gtk_toggle_button_get_active(togglebutton));
 }
 

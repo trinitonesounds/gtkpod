@@ -106,11 +106,11 @@ static void
 update_entries(GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	update_selected_playlist();
+	do_selected_playlist (update_songids);
     else if(selected_entry)
-	update_selected_entry(entry_inst);
+	do_selected_entry (update_songids, entry_inst);
     else if(selected_songs)
-	update_selected_songs();
+	do_selected_songs (update_songids);
 }
 
 /**

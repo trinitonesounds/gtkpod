@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.14\n"
 "POT-Creation-Date: 2003-04-12 01:13+0900\n"
-"PO-Revision-Date: 2003-03-23 23:28+0900\n"
+"PO-Revision-Date: 2003-04-12 23:03+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -629,7 +629,7 @@ msgstr "Verzeichnisse"
 
 #: src/interface.c:532
 msgid "Add Directories Recursively"
-msgstr "_Verzeichnisse rekursiv hinzufügen"
+msgstr "Verzeichnisse rekursiv hinzufügen"
 
 #: src/interface.c:541 src/itunesdb.c:394
 msgid "Playlist"
@@ -645,7 +645,7 @@ msgstr "Neue PL"
 
 #: src/interface.c:552
 msgid "Create New Playlist"
-msgstr "_Neue Playliste erstellen"
+msgstr "Neue Playliste erstellen"
 
 #: src/interface.c:561 src/interface.c:1443
 msgid "Export"

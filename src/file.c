@@ -108,7 +108,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 
     if (!plfile)  return TRUE;
 
-    if (g_file_test (plfile, G_FILE_TEST_IS_REGULAR) == FALSE)
+    if (g_file_test (plfile, G_FILE_TEST_IS_DIR))
     {
 	/* FIXME: Status */
 	return FALSE;  /* definitely not! */
@@ -166,14 +166,18 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	    /* assume comments start with ';' or '#' */
 	    if ((*bufp == ';') || (*bufp == '#')) break;
 	    /* assume the rest of the line is a filename */
-	    if (add_song_by_filename (bufp, plitem, addsongfunc, data))
+	    if (add_song_by_filename (bufp, plitem,
+				      prefs_get_add_recursively (),
+				      addsongfunc, data))
 		++songs;
 	    break;
 	case PLT_M3U:
 	    /* comments start with '#' */
 	    if (*bufp == '#') break;
 	    /* assume the rest of the line is a filename */
-	    if (add_song_by_filename (bufp, plitem, addsongfunc, data))
+	    if (add_song_by_filename (bufp, plitem,
+				      prefs_get_add_recursively (),
+				      addsongfunc, data))
 		++songs;
 	    break;
 	case PLT_PLS:
@@ -189,7 +193,9 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	    { /* looks like a file entry */
 		bufp = strchr (bufp, '=');
 		if (bufp) ++bufp;
-		if (add_song_by_filename (bufp, plitem, addsongfunc, data))
+		if (add_song_by_filename (bufp, plitem,
+					  prefs_get_add_recursively (),
+					  addsongfunc, data))
 		    ++songs;
 	    }
 	    break;
@@ -215,35 +221,37 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 /* Add all files in directory and subdirectories.
    If @name is a regular file, just add that.
    If @name == NULL, just return
-   If @plitem != NULL, add songs also to Playlist @plitem */
+   If @plitem != NULL, add songs also to Playlist @plitem
+   @descend: TRUE: add recursively
+             FALSE: don't enter subdirectories */
 /* Not nice: the return value has not much meaning. TRUE: all files
  * were added successfully. FALSE: some files could not be
    added (e.g: duplicates)  */
 /* @addsongfunc: if != NULL this will be called instead of
    "add_song_to_playlist () -- used for dropping songs at a specific
    position in the song view */
-gboolean add_directory_recursively (gchar *name, Playlist *plitem,
-				    AddSongFunc addsongfunc, gpointer data)
+gboolean add_directory_by_name (gchar *name, Playlist *plitem,
+				gboolean descend,
+				AddSongFunc addsongfunc, gpointer data)
 {
-  GDir *dir;
-  G_CONST_RETURN gchar *next;
-  gchar *nextfull;
   gboolean result = TRUE;
 
   if (name == NULL) return TRUE;
-  if (g_file_test (name, G_FILE_TEST_IS_REGULAR))
-      return (add_song_by_filename (name, plitem, addsongfunc, data));
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
+      GDir *dir = g_dir_open (name, 0, NULL);
       block_widgets ();
-      dir = g_dir_open (name, 0, NULL);
       if (dir != NULL) {
+	  G_CONST_RETURN gchar *next;
 	  do {
 	      next = g_dir_read_name (dir);
 	      if (next != NULL)
 	      {
-		  nextfull = concat_dir (name, next);
-		  result &= add_directory_recursively (nextfull, plitem,
+		  gchar *nextfull = concat_dir (name, next);
+		  if (descend ||
+		      !g_file_test (nextfull, G_FILE_TEST_IS_DIR))
+		      result &= add_directory_by_name (nextfull, plitem,
+						       descend,
 						       addsongfunc, data);
 		  g_free (nextfull);
 	      }
@@ -251,6 +259,10 @@ gboolean add_directory_recursively (gchar *name, Playlist *plitem,
 	  g_dir_close (dir);
       }
       release_widgets ();
+  }
+  else
+  {
+      result = add_song_by_filename (name, plitem, descend, addsongfunc, data);
   }
   return result;
 }
@@ -345,7 +357,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 
     if (!name) return NULL;
 
-    if (g_file_test (name, G_FILE_TEST_IS_REGULAR) == FALSE) return NULL;
+    if (g_file_test (name, G_FILE_TEST_IS_DIR)) return NULL;
 
     /* check if filename ends on ".mp3" */
     len = strlen (name);
@@ -477,7 +489,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 
 /* reads info from file and updates the ID3 tags of
    @selected_songids. */
-void update_selected_songids (GList *selected_songids)
+void update_songids (GList *selected_songids)
 {
     GList *gl_id;
 
@@ -511,23 +523,96 @@ void update_selected_songids (GList *selected_songids)
 }
 
 
-void update_selected_songs (void)
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *      Sync Song Dirs                                              *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+/* Synchronize the directory @key (gchar *dir). Called by
+ * sync_songids(). */
+static void sync_dir (gpointer key,
+		      gpointer value,
+		      gpointer user_data)
+{
+    gchar *dir = (gchar *)key;
+
+    /* Assertions */
+    if (!dir) return;
+    if (!g_file_test (dir, G_FILE_TEST_IS_DIR))  return;
+}
+
+
+/* Sync all directories referred to by the pc_path_locale entries in
+   the selected songs */
+void sync_songids (GList *selected_songids)
+{
+    GHashTable *hash;
+    GList *gl_id;
+
+    hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+
+    /* Get the dirs of all songs selected and enter them into the hash
+       table if the dir exists. Using a hash table automatically
+       removes duplicates */
+    for (gl_id = selected_songids; gl_id; gl_id = gl_id->next)
+    {
+	guint32 id = (guint32)gl_id->data;
+	Song *song = get_song_by_id (id);
+	if (song && song->pc_path_locale)
+	{
+	    gchar *dirname = g_path_get_dirname (song->pc_path_locale);
+	    if (g_file_test (dirname, G_FILE_TEST_IS_DIR))
+		g_hash_table_insert (hash, dirname, NULL);
+	    else
+	    {
+		if (g_file_test (dirname, G_FILE_TEST_EXISTS))
+		    gtkpod_warning ("'%s' is not a directory. Ignored.\n", dirname);
+		else
+		    gtkpod_warning ("'%s' does not exist. Ignored.\n", dirname);
+	    }
+	}
+    }
+    /* sync all dirs stored in the hash */
+    g_hash_table_foreach (hash, sync_dir, NULL);
+    /* destroy the hash table (and free the memory taken by the
+       dirnames */
+    g_hash_table_destroy (hash);
+}
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *  Generic functions to "do" things on selected playlist / entry   *
+ *  / songs                                                         *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+/* Make a list of all selected songs and call @do_func with that list
+   as argument */
+void do_selected_songs (void (*do_func)(GList *songids))
 {
     GList *selected_songids = NULL;
+
+    if (!do_func) return;
 
     /* I'm using ids instead of "Song *" -pointer because it would be
      * possible that a song gets removed during the process */
     selected_songids = sm_get_selected_songids();
-    update_selected_songids (selected_songids);
+    do_func (selected_songids);
     g_list_free (selected_songids);
 }
 
 
-void update_selected_entry (gint inst)
+/* Make a list of all songs in the currently selected entry of sort
+   tab @inst and call @do_func with that list as argument */
+void do_selected_entry (void (*do_func)(GList *songids), gint inst)
 {
     GList *selected_songids = NULL;
     TabEntry *entry;
     GList *gl;
+
+    if (!do_func) return;
 
     if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
 
@@ -544,16 +629,20 @@ void update_selected_entry (gint inst)
 	    selected_songids = g_list_append (selected_songids,
 					      (gpointer)song->ipod_id);
     }
-    update_selected_songids (selected_songids);
+    do_func (selected_songids);
     g_list_free (selected_songids);
 }
 
 
-void update_selected_playlist (void)
+/* Make a list of the songs in the current playlist and call @do_func
+   with that list as argument */
+void do_selected_playlist (void (*do_func)(GList *songids))
 {
     GList *selected_songids = NULL;
     Playlist *pl;
     GList *gl;
+
+    if (!do_func) return;
 
     pl = pm_get_selected_playlist();
     if (!pl)
@@ -568,7 +657,7 @@ void update_selected_playlist (void)
 	    selected_songids = g_list_append (selected_songids,
 					      (gpointer)song->ipod_id);
     }
-    update_selected_songids (selected_songids);
+    do_func (selected_songids);
     g_list_free (selected_songids);
 }
 
@@ -764,7 +853,7 @@ void update_song_from_file (Song *song)
     else
     { /* update not successful -- log this song for later display */
 	if (g_file_test (songpath,
-			 G_FILE_TEST_IS_REGULAR) == FALSE)
+			 G_FILE_TEST_EXISTS) == FALSE)
 	{
 	    display_non_updated (song, _("file not found"));
 	}
@@ -792,12 +881,15 @@ void update_song_from_file (Song *song)
 
 /* Append file @name to the list of songs.
    @name is in the current locale
-   If @plitem != NULL, add song to plitem as well (unless it's the MPL) */
+   @plitem: if != NULL, add song to plitem as well (unless it's the MPL)
+   descend: TRUE:  add directories recursively
+            FALSE: add contents of directories but don't descend into
+                   subdirectories without */
 /* Not nice: currently only accepts files ending on .mp3 */
 /* @addsongfunc: if != NULL this will be called instead of
    "add_song_to_playlist () -- used for dropping songs at a specific
    position in the song view */
-gboolean add_song_by_filename (gchar *name, Playlist *plitem,
+gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 			       AddSongFunc addsongfunc, gpointer data)
 {
   static gint count = 0; /* do a gtkpod_songs_statusbar_update() every
@@ -810,7 +902,7 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem,
 
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
-      return add_directory_recursively (name, NULL, addsongfunc, data);
+      return add_directory_by_name (name, NULL, descend, addsongfunc, data);
   }
 
   /* check if file is a playlist */
@@ -1283,7 +1375,7 @@ gchar *get_song_name_on_disk_verified (Song *song)
 	name = get_song_name_on_ipod (song);
 	if (name)
 	{
-	    if (!g_file_test (name, G_FILE_TEST_IS_REGULAR))
+	    if (!g_file_test (name, G_FILE_TEST_EXISTS))
 	    {
 		g_free (name);
 		name = NULL;
@@ -1291,7 +1383,7 @@ gchar *get_song_name_on_disk_verified (Song *song)
 	}
 	if(!name && song->pc_path_locale && (*song->pc_path_locale))
 	{
-	    if (g_file_test (song->pc_path_locale, G_FILE_TEST_IS_REGULAR))
+	    if (g_file_test (song->pc_path_locale, G_FILE_TEST_EXISTS))
 		name = g_strdup (song->pc_path_locale);
 	} 
     }

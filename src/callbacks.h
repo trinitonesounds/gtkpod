@@ -248,7 +248,23 @@ on_update_playlist_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
+on_update_tab_entry_activate                  (GtkMenuItem     *menuitem,
+					       gpointer         user_data);
+
+void
 on_update_songs_activate            (GtkMenuItem     *menuitem,
+				     gpointer         user_data);
+
+void
+on_sync_playlist_activate            (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_sync_tab_entry_activate                  (GtkMenuItem     *menuitem,
+					       gpointer         user_data);
+
+void
+on_sync_songs_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data);
 
 void
@@ -328,10 +344,6 @@ on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_update_tab_entry_activate                  (GtkMenuItem     *menuitem,
-					       gpointer         user_data);
-
-void
 on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
@@ -401,4 +413,8 @@ on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
 
 void
 on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);

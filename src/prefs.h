@@ -79,7 +79,8 @@ struct cfg
   gboolean save_sorted_order;   /* save order after sort automatically? */
   gboolean display_toolbar;     /* should toolbar be displayed */
   gboolean update_charset;      /* Update charset when updating song? */
-  gboolean write_charset;       /* Update charset when writing song? */
+  gboolean write_charset;       /* Add directories recursively? */
+  gboolean add_recursively;       /* Update charset when writing song? */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
@@ -171,6 +172,8 @@ gboolean prefs_get_update_charset (void);
 void prefs_set_update_charset (gboolean val);
 gboolean prefs_get_write_charset (void);
 void prefs_set_write_charset (gboolean val);
+gboolean prefs_get_add_recursively (void);
+void prefs_set_add_recursively (gboolean val);
 gboolean prefs_get_save_sorted_order (void);
 void prefs_set_save_sorted_order (gboolean val);
 gint prefs_get_sort_tab_num (void);

@@ -26,6 +26,7 @@
 #  include <config.h>
 #endif
 
+#include "misc.h"
 #include "file_export.h"
 #include "prefs.h"
 #include "file.h"

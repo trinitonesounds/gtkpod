@@ -37,17 +37,20 @@
 
 typedef void (*AddSongFunc)(Playlist *plitem, Song *song, gpointer data);
 
-gboolean add_song_by_filename (gchar *name, Playlist *plitem,
+gboolean add_song_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 			       AddSongFunc addsongfunc, gpointer data);
-gboolean add_directory_recursively (gchar *name, Playlist *plitem,
-				    AddSongFunc addsongfunc, gpointer data);
+gboolean add_directory_by_name (gchar *name, Playlist *plitem, 
+				gboolean descend,
+				AddSongFunc addsongfunc, gpointer data);
 gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 				   AddSongFunc addsongfunc, gpointer data);
 gboolean write_tags_to_file(Song *s, S_item tag_id);
 void update_song_from_file (Song *song);
-void update_selected_songs (void);
-void update_selected_entry (gint inst);
-void update_selected_playlist (void);
+void do_selected_songs (void (*do_func)(GList *songids));
+void do_selected_entry (void (*do_func)(GList *songids), gint inst);
+void do_selected_playlist (void (*do_func)(GList *songids));
+void update_songids (GList *selected_songids);
+void sync_songids (GList *selected_songids);
 void display_non_updated (Song *song, gchar *txt);
 void display_updated (Song *song, gchar *txt);
 void handle_import (void);

@@ -60,7 +60,9 @@ static GtkWidget *gtkpod_space_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
 
 static guint32 get_ipod_free_space(void);
+#if 0
 static guint32 get_ipod_used_space(void);
+#endif
 /* --------------------------------------------------------------*/
 /* are widgets blocked at the moment? */
 gboolean widgets_blocked = FALSE;
@@ -105,7 +107,9 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   plitem = pm_get_selected_playlist ();
   for (i=0; names[i] != NULL; ++i)
   {
-      add_song_by_filename (names[i], plitem, NULL, NULL);
+      add_song_by_filename (names[i], plitem,
+			    prefs_get_add_recursively (),
+			    NULL, NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
   }
@@ -403,7 +407,9 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 		    {  /* no playlist yet -- create new one */
 			pl = add_new_playlist (_("New Playlist"), pl_pos);
 		    }
-		    add_directory_recursively (file, pl, songaddfunc, data);
+		    add_directory_by_name (file, pl,
+					   prefs_get_add_recursively (),
+					   songaddfunc, data);
 		    added = TRUE;
 		}
 		if (g_file_test (file, G_FILE_TEST_IS_REGULAR))
@@ -419,7 +425,9 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 				pl = add_new_playlist (
 				    _("New Playlist"), pl_pos);
 			    }
-			    add_song_by_filename (file, pl, songaddfunc, data);
+			    add_song_by_filename (file, pl,
+						  prefs_get_add_recursively (),
+						  songaddfunc, data);
 			    added = TRUE;
 			}
 			else if ((strcasecmp (&file[len-4], ".plu") == 0) ||
@@ -1694,6 +1702,7 @@ get_filesize_in_bytes(int size)
     result = g_strdup_printf("%0.2f %s", (float)newsize, sizes[i]);
     return(result);
 }
+#if 0
 static guint32
 get_ipod_used_space(void)
 {
@@ -1713,6 +1722,7 @@ get_ipod_used_space(void)
     g_free(line);
     return(result);
 }
+#endif
 static guint32
 get_ipod_free_space(void)
 {
