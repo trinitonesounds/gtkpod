@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 22:13:21 jcs>
+/* Time-stamp: <2004-09-12 14:24:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -196,32 +196,18 @@ void tm_remove_track (Track *track)
 
 
 /* Remove all tracks from the display model */
-/* ATTENTION: the treeview and model might be changed by calling this
-   function */
-void tm_remove_all_tracks (gboolean clear_sort)
+void tm_remove_all_tracks ()
 {
   GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
   GtkTreeIter iter;
-  gint column;
-  GtkSortType order;
 
   while (gtk_tree_model_get_iter_first (model, &iter))
   {
       gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
   }
-  if(clear_sort && (prefs_get_tm_sort () == SORT_NONE) &&
-     gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
-					   &column, &order))
-  { /* recreate track treeview to unset sorted column */
-      if (column >= 0)
-      {
-	  tm_store_col_order ();
-	  display_update_default_sizes ();
-	  tm_create_treeview ();
-      }
-  }
+  tm_store_col_order ();
+  tm_update_default_sizes ();
 }
-
 
 /* find out at which position column @tm_item is displayed */
 /* static gint tm_get_col_position (TM_item tm_item) */
@@ -1084,24 +1070,55 @@ gint tm_data_compare_func (GtkTreeModel *model,
 static gint tm_sort_counter (gint inc)
 {
     static gint cnt = 0;
-    if (inc <0) cnt = 0;
-    else        cnt += inc;
+
+    if (inc <0)
+    {
+	cnt = 0;
+    }
+    else
+    {
+	cnt += inc;
+    }   
     return cnt;
 }
+
 
 /* redisplay the contents of the track view in it's unsorted order */
 static void tm_unsort (void)
 {
     GList *gl, *tracks = NULL;
 
-    /* retrieve the currently displayed tracks (non ordered) from the
-       last sort tab or from the selected playlist if no sort tabs are
-       being used */
-    tracks = display_get_selected_members (prefs_get_sort_tab_num() - 1);
-    tm_remove_all_tracks (TRUE);
-    for (gl=tracks; gl; gl=gl->next)
-	tm_add_track_to_track_model ((Track *)gl->data, NULL);
-    tm_sort_counter (-1);
+    if (track_treeview)
+    {
+	GtkTreeModel *model= gtk_tree_view_get_model (track_treeview);
+/* 	gint id=-5; */
+/* 	gboolean set; */
+/* 	GtkSortType order=-5; */
+
+/* 	set = gtk_tree_sortable_get_sort_column_id */
+/* 	    (GTK_TREE_SORTABLE (model), &id, &order); */
+/* 	printf ("IN  set: %d, column: %d, order: %d\n", set, id, order); */
+
+	gtk_tree_sortable_set_sort_column_id
+	    (GTK_TREE_SORTABLE (model),
+	     GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
+	     0);
+
+/* 	set = gtk_tree_sortable_get_sort_column_id */
+/* 	    (GTK_TREE_SORTABLE (model), &id, &order); */
+/* 	printf ("OUT set: %d, column: %d, order: %d\n", set, id, order); */
+
+	/* retrieve the currently displayed tracks (non ordered) from
+	   the last sort tab or from the selected playlist if no sort
+	   tabs are being used */
+
+	tm_remove_all_tracks ();
+	tracks = display_get_selected_members (prefs_get_sort_tab_num() - 1);
+	for (gl=tracks; gl; gl=gl->next)
+	    tm_add_track_to_track_model ((Track *)gl->data, NULL);
+
+	tm_sort_counter (-1);
+    }
 }
 
 
@@ -1179,7 +1196,7 @@ static GtkTreeViewColumn *tm_add_text_column (TM_item col_id,
 					     tm_cell_data_func, NULL, NULL);
     gtk_tree_view_column_set_sort_column_id (column, col_id);
     gtk_tree_view_column_set_resizable (column, TRUE);
-    gtk_tree_view_column_set_clickable(column, TRUE);
+/*     gtk_tree_view_column_set_clickable(column, TRUE); */
     gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_view_column_set_fixed_width (column,
 					  prefs_get_tm_col_width (col_id));

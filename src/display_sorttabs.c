@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 17:12:36 jcs>
+/* Time-stamp: <2004-09-12 00:57:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1316,7 +1316,7 @@ void st_init (ST_CAT_item new_category, guint32 inst)
 {
   if (inst == prefs_get_sort_tab_num ())
   {
-      tm_remove_all_tracks (TRUE);
+      tm_remove_all_tracks ();
       gtkpod_tracks_statusbar_update ();
       return;
   }

@@ -1,4 +1,8 @@
 gtkpod V0.82-CVS
+	BUGFIX: when clicking onto the column header three times and
+	moving sidewards with the mouse at the same time, gtkpod would
+	crash. Fix requires bugfix in the GTK+-library as well.
+
 	BUGFIX: when writing tags to file the track tag was
 	deleted.
 
