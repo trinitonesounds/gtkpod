@@ -15,13 +15,14 @@ src/file.c
 src/file_export.c
 src/getopt1.c
 src/getopt.c
-src/id3_tag.c
 src/interface.c
 src/itunesdb.c
 src/main.c
 src/md5.c
 src/misc.c
 src/mp3file.c
+src/mp4file.c
+src/normalize.c
 src/playlist.c
 src/prefs.c
 src/prefs_window.c
