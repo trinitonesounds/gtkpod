@@ -296,6 +296,7 @@ msgstr "Jeu de caractères du système"
 msgid ""
 "Another instance of gtkpod was detected. Playcount server not started.\n"
 msgstr ""
+"Une autre instance de gtkpod tourne déjà. Serveur de compteur non démarré.\n"
 
 #: src/confirmation.c:332
 msgid "Confirmation Dialogue"
@@ -652,35 +653,37 @@ msgid "Couldn't change tags of file: %s\n"
 msgstr "Ne peut changer les tags du fichier: %s\n"
 
 #: src/file.c:1774
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open '%s' for reading and writing.\n"
-msgstr "Ne peut ouvrir en lecture le fichier '%s'.\n"
+msgstr "Ne peut ouvrir en lecture/écriture le fichier '%s'.\n"
 
 #: src/file.c:1781
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
-msgstr ""
+msgstr "Impossible de verrouiller '%s'\n"
 
 #. error!
 #: src/file.c:1800 src/file.c:1809 src/file.c:1820 src/file.c:1830
 #, c-format
 msgid "Malformed line in '%s': %s\n"
-msgstr ""
+msgstr "Ligne incomplète dans '%s': %s\n"
 
 #: src/file.c:1839
 msgid "Couldn't find track for playcount adjustment:\n"
-msgstr ""
+msgstr "Impossible de trouver le morceau pour ajuster le compteur de lecture:\n"
 
 #: src/file.c:1867
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB.\n"
 "OK to remove them from the offline playcount file?"
 msgstr ""
+"Certains morceaux joués hors-ligne ne peuvent être trouvés dans iTunesDB.\n"
+"OK pour les supprimer du fichier de compteur de lecture hors-ligne ?"
 
 #: src/file.c:1876
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing to '%s'.\n"
-msgstr "Erreur d'écriture du fichier \"%s\".\n"
+msgstr "Erreur d'écriture du fichier '%s'.\n"
 
 #: src/file_export.c:132
 #, c-format
@@ -1095,51 +1098,42 @@ msgid "Empty Playlist"
 msgstr "Vide"
 
 #: src/interface.c:388
-#, fuzzy
 msgid "Random Playlist from Displayed Tracks"
-msgstr "Contenant les morceaux affichés"
+msgstr "Contenant les morceaux affichés aléatoirement"
 
 #: src/interface.c:392
-#, fuzzy
 msgid "Containing Displayed Tracks"
 msgstr "Contenant les morceaux affichés"
 
 #: src/interface.c:396
-#, fuzzy
 msgid "Containing Selected Tracks"
 msgstr "Contenant les morceaux sélectionnés"
 
 #: src/interface.c:400
-#, fuzzy
 msgid "One for each Artist"
 msgstr "Par artiste"
 
 #: src/interface.c:404
-#, fuzzy
 msgid "One for each Album"
 msgstr "Par album"
 
 #: src/interface.c:408
-#, fuzzy
 msgid "One for each Genre"
 msgstr "Par genre"
 
 #: src/interface.c:412
-#, fuzzy
 msgid "One for each Composer"
 msgstr "Par compositeur"
 
 #: src/interface.c:416
-#, fuzzy
 msgid "One for each Year"
-msgstr "Par genre"
+msgstr "Par année"
 
 #: src/interface.c:420
 msgid "Best Rated Tracks"
 msgstr "Contenant les morceaux les mieux notés"
 
 #: src/interface.c:424
-#, fuzzy
 msgid "Tracks Most Often Listened To"
 msgstr "Contenant les morceaux les plus écoutés"
 
@@ -1148,22 +1142,20 @@ msgid "Most Recently Played Tracks"
 msgstr "Contenant les morceaux dernièrement joués"
 
 #: src/interface.c:432
-#, fuzzy
 msgid "All Tracks Played Since Last Time"
 msgstr "Contenant les morceaux joués depuis la dernière fois"
 
 #: src/interface.c:436
 msgid "All Tracks Never Listened To"
-msgstr "Contenant les morceaux jamais écoutés"
+msgstr "Contenant les morceaux qui n'ont jamais été écoutés"
 
 #: src/interface.c:440
 msgid "All Tracks not Listed in any Playlist"
-msgstr ""
+msgstr "Contenant tous les morceaux qui n'appartiennent à aucune liste"
 
 #: src/interface.c:444
-#, fuzzy
 msgid "Randomize Current Playlist"
-msgstr "Créer une liste de lecture"
+msgstr "Mélanger l'ordre de la liste de lecture actuelle"
 
 #: src/interface.c:453
 msgid "_Sorting"
@@ -1620,7 +1612,7 @@ msgstr ""
 
 #: src/interface.c:1854
 msgid "Check for existing files when copying from iPod."
-msgstr ""
+msgstr "Contrôler l'existence des fichiers lors de la copie à partir de l'ipod."
 
 #: src/interface.c:1857
 msgid ""
@@ -1629,16 +1621,24 @@ msgid ""
 "the destination file is the same as the file in the iPod. If so the file is "
 "skipped, allowing a quick sync of the iPod's contents."
 msgstr ""
+"Lors de la copie de morceaux à partir de l'iPod, aucun contrôle n'est fait "
+"pour déterminer si le fichier existe déjà. En activant cette option, gtkpod "
+"vérifiera que la taille du fichier de destination est identique à la taille "
+"du fichier sur l'iPod. En ce cas, le fichier n'est pas recopié pour accélérer "
+"la synchronisation du contenu de l'iPod."
 
 #: src/interface.c:1859
 msgid "Fix exported filenames/directories."
-msgstr ""
+msgstr "Corriger les noms de fichiers/répertoires exportés."
 
 #: src/interface.c:1862
 msgid ""
 "Some filesystems do not support certain characters in file/directory names i."
 "e. \"*:<>?\\|/ , this option will substitute those with underscore '_'."
 msgstr ""
+"Certains systèmes de fichiers ne gère pas certains caractères dans les noms "
+"fichiers, comme par exemple \"*:<>?\\|/. Cette option permet de remplacer ces "
+"caractères par underscore '_'."
 
 #: src/interface.c:1864
 msgid "Copying from iPod"
@@ -1940,6 +1940,13 @@ msgid ""
 "gain value and iPod's volume tag is not known yet -- your input is "
 "appreciated."
 msgstr ""
+"Vous devez seulement préciser le chemin de mp3gain si l'exécutable mp3gain "
+"n'est pas défini dans vos chemins prédéfinis. Exemple: '"
+"/usr/local/test/mp3gain'. mp3gain écrira le gain évalué dans le fichier -- "
+"si vous ne souhaitez pas ce comportement, mettez /bin/true ou autre. mp3gain "
+"appelé uniquement si le tag approprié n'a pas été rempli par votre encodeur."
+"Ainsi Lame 0.95 utilise déjà ce tag. La conversion exact entre la valeur "
+"définie par mp3gain et celle définie par l'iPod n'est pas encore connue."
 
 #: src/interface.c:2418
 msgid "Volume Normalization"
@@ -2442,21 +2449,21 @@ msgstr ""
 "Andrew Huntwork: gestion de la casse des noms de fichier et correctifs\n"
 
 #: src/misc.c:111
-#, fuzzy
 msgid ""
 "Ero Carrera: Filename validation and quick sync when copying tracks from the "
 "iPod\n"
 msgstr ""
-"Sam Clegg: définition par un masque des noms de fichier à l'export de "
-"morceaux\n"
+"Ero Carrera: Validation du nom de fichier et synchro rapide lors de la copie "
+"de l'iPod\n"
 
 #: src/misc.c:114
 msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"
-msgstr ""
+msgstr "Jens Taprogge: Support du tag 'replay gain' de LAME pour normaliser le "
+"volume\n"
 
 #: src/misc.c:117
 msgid "Armando Atienza: Support with external playcounts\n"
-msgstr ""
+msgstr "Armando Atienza: Suppport pour les compteurs de lecture externes\n"
 
 #: src/misc.c:120
 msgid "This program borrows code from the following projects:\n"
@@ -2760,21 +2767,19 @@ msgid "CO:"
 msgstr "CO:"
 
 #: src/misc_playlist.c:108
-#, fuzzy
 msgid "YE:"
-msgstr "GE:"
+msgstr "AN:"
 
 #: src/misc_playlist.c:149
 msgid "Unknown"
 msgstr "Inconnu"
 
 #: src/misc_playlist.c:226
-#, fuzzy, c-format
+#, c-format
 msgid "Random (%d)"
-msgstr "Récents (%d)"
+msgstr "Aléatoirement (%d)"
 
 #: src/misc_playlist.c:291
-#, fuzzy
 msgid "Not Listed"
 msgstr "Jamais écoutés"
 
@@ -2948,7 +2953,7 @@ msgstr ""
 #: src/mp3file.c:1795
 #, c-format
 msgid "Execution of mp3gain ('%s') failed."
-msgstr ""
+msgstr "Échec de l'éxécution de mp3gain ('%s')."
 
 #. Tracks with zero play length are ignored by iPod...
 #: src/mp3file.c:1974
@@ -3009,7 +3014,7 @@ msgstr "  -h, --help:   affiche ce message\n"
 
 #: src/prefs.c:127
 msgid "  -p <filename>:increment playcount for file by one\n"
-msgstr ""
+msgstr "  -p <fichier>: incremente le compteur de lecture du fichier\n"
 
 #: src/prefs.c:128
 msgid "  -m path:      define the mountpoint of your iPod\n"
@@ -3191,11 +3196,11 @@ msgid "Will abort after current mp3gain process ends."
 msgstr "S'interrompra après la fin du traitement courant de mp3gain."
 
 #: src/tools.c:285
-#, fuzzy, c-format
+#, c-format
 msgid "Normalized %d of %d new tracks."
 msgid_plural "Normalized %d of %d new tracks."
-msgstr[0] "%d sur %d du nouveau morceau normalisé."
-msgstr[1] "%d sur %d des nouveaux morceaux normalisés."
+msgstr[0] "%d nouveau morceau normalisé sur %d."
+msgstr[1] "%d nouveaux morceaux normalisés sur %d."
 
 #: src/tools.c:306
 msgid "Some tracks were not normalized. Normalization aborted!"
@@ -3279,7 +3284,7 @@ msgstr "Détection de doublon"
 #: src/track.c:764
 #, c-format
 msgid "Increased playcount for '%s'"
-msgstr ""
+msgstr "Compteur de lecture incrémenté pour '%s'"
 
 #: src/wavfile.c:106
 #, c-format
