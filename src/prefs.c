@@ -402,8 +402,14 @@ void prefs_set_last_dir_browse(gchar *file)
 {
     if (file)
     {
-	if(cfg->last_dir.browse) g_free(cfg->last_dir.browse);
-	cfg->last_dir.browse = get_dirname_of_filename(file);
+	gchar *tmp = NULL;
+	if(cfg->last_dir.browse) 
+	    g_free(cfg->last_dir.browse);
+	if((tmp = get_dirname_of_filename(file)))
+	{
+	    cfg->last_dir.browse = g_strdup_printf("%s/", tmp);
+	    g_free(tmp);
+	}
     }
 }
 

@@ -1610,6 +1610,7 @@ MD5 hashes to disk)</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
+  <property name="default_width">300</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <signal name="delete_event" handler="on_delete_confirmation_delete_event" last_modification_time="Mon, 23 Dec 2002 12:52:05 GMT"/>
@@ -1621,9 +1622,9 @@ MD5 hashes to disk)</property>
       <property name="spacing">0</property>
 
       <child>
-	<widget class="GtkLabel" id="msg_label">
+	<widget class="GtkLabel" id="msg_label_title">
 	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">Are You Sure</property>
+	  <property name="label" translatable="yes">label21</property>
 	  <property name="use_underline">False</property>
 	  <property name="use_markup">False</property>
 	  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -1636,7 +1637,41 @@ MD5 hashes to disk)</property>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>
-	  <property name="expand">True</property>
+	  <property name="expand">False</property>
+	  <property name="fill">False</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkScrolledWindow" id="msg_label_scroller">
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+	  <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+	  <property name="shadow_type">GTK_SHADOW_IN</property>
+	  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
+
+	  <child>
+	    <widget class="GtkTextView" id="msg_label">
+	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="editable">True</property>
+	      <property name="justification">GTK_JUSTIFY_LEFT</property>
+	      <property name="wrap_mode">GTK_WRAP_NONE</property>
+	      <property name="cursor_visible">True</property>
+	      <property name="pixels_above_lines">0</property>
+	      <property name="pixels_below_lines">0</property>
+	      <property name="pixels_inside_wrap">0</property>
+	      <property name="left_margin">0</property>
+	      <property name="right_margin">0</property>
+	      <property name="indent">0</property>
+	      <property name="text" translatable="yes"></property>
+	    </widget>
+	  </child>
+	</widget>
+	<packing>
+	  <property name="padding">0</property>
+	  <property name="expand">False</property>
 	  <property name="fill">True</property>
 	</packing>
       </child>
@@ -1668,7 +1703,7 @@ MD5 hashes to disk)</property>
 	  </child>
 	</widget>
 	<packing>
-	  <property name="padding">0</property>
+	  <property name="padding">2</property>
 	  <property name="expand">False</property>
 	  <property name="fill">True</property>
 	</packing>
@@ -1706,8 +1741,8 @@ MD5 hashes to disk)</property>
 	  </child>
 	</widget>
 	<packing>
-	  <property name="padding">2</property>
-	  <property name="expand">False</property>
+	  <property name="padding">0</property>
+	  <property name="expand">True</property>
 	  <property name="fill">True</property>
 	</packing>
       </child>

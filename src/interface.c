@@ -997,6 +997,8 @@ create_delete_confirmation (void)
 {
   GtkWidget *delete_confirmation;
   GtkWidget *vbox6;
+  GtkWidget *msg_label_title;
+  GtkWidget *msg_label_scroller;
   GtkWidget *msg_label;
   GtkWidget *hbox3;
   GtkWidget *prefs_request;
@@ -1007,19 +1009,30 @@ create_delete_confirmation (void)
   delete_confirmation = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_container_set_border_width (GTK_CONTAINER (delete_confirmation), 6);
   gtk_window_set_title (GTK_WINDOW (delete_confirmation), _("window1"));
+  gtk_window_set_default_size (GTK_WINDOW (delete_confirmation), 300, -1);
 
   vbox6 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox6);
   gtk_container_add (GTK_CONTAINER (delete_confirmation), vbox6);
 
-  msg_label = gtk_label_new (_("Are You Sure"));
+  msg_label_title = gtk_label_new (_("label21"));
+  gtk_widget_show (msg_label_title);
+  gtk_box_pack_start (GTK_BOX (vbox6), msg_label_title, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (msg_label_title), GTK_JUSTIFY_LEFT);
+
+  msg_label_scroller = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (msg_label_scroller);
+  gtk_box_pack_start (GTK_BOX (vbox6), msg_label_scroller, FALSE, TRUE, 0);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (msg_label_scroller), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (msg_label_scroller), GTK_SHADOW_IN);
+
+  msg_label = gtk_text_view_new ();
   gtk_widget_show (msg_label);
-  gtk_box_pack_start (GTK_BOX (vbox6), msg_label, TRUE, TRUE, 0);
-  gtk_label_set_justify (GTK_LABEL (msg_label), GTK_JUSTIFY_LEFT);
+  gtk_container_add (GTK_CONTAINER (msg_label_scroller), msg_label);
 
   hbox3 = gtk_hbox_new (TRUE, 0);
   gtk_widget_show (hbox3);
-  gtk_box_pack_start (GTK_BOX (vbox6), hbox3, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox6), hbox3, FALSE, TRUE, 2);
   gtk_container_set_border_width (GTK_CONTAINER (hbox3), 2);
 
   prefs_request = gtk_check_button_new_with_mnemonic (_("Never ask this Again"));
@@ -1028,7 +1041,7 @@ create_delete_confirmation (void)
 
   hbuttonbox4 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox4);
-  gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox4, FALSE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox4, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox4), 2);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox4), GTK_BUTTONBOX_SPREAD);
 
@@ -1058,6 +1071,8 @@ create_delete_confirmation (void)
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (delete_confirmation, delete_confirmation, "delete_confirmation");
   GLADE_HOOKUP_OBJECT (delete_confirmation, vbox6, "vbox6");
+  GLADE_HOOKUP_OBJECT (delete_confirmation, msg_label_title, "msg_label_title");
+  GLADE_HOOKUP_OBJECT (delete_confirmation, msg_label_scroller, "msg_label_scroller");
   GLADE_HOOKUP_OBJECT (delete_confirmation, msg_label, "msg_label");
   GLADE_HOOKUP_OBJECT (delete_confirmation, hbox3, "hbox3");
   GLADE_HOOKUP_OBJECT (delete_confirmation, prefs_request, "prefs_request");

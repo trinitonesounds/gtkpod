@@ -35,7 +35,7 @@
  * FIXME: Internationalize?
  */
 static gchar *messages[] = {
-    "Are you sure you want to delete "
+    "Are you sure you want to delete the following"
 };
 
 /**
@@ -105,12 +105,12 @@ get_current_selected_song_name(void)
 	s = (Song*)l->data;
 	if(result)
 	{
-	    snprintf(buf, PATH_MAX, "%s%s-%s\n", result, s->artist, s->title);
+	    snprintf(buf, PATH_MAX, "%s\n%s-%s", result, s->artist, s->title);
 	    g_free(result);
 	}
 	else
 	{
-	    snprintf(buf, PATH_MAX, "\n%s-%s\n", s->artist, s->title);
+	    snprintf(buf, PATH_MAX, "%s-%s", s->artist, s->title);
 	}
 	result = g_strdup(buf);
     }
@@ -136,7 +136,21 @@ confirmation_window_cleanup(void)
     g_list_free(l);
     selected_songs = NULL;
     selected_playlist = NULL;
+}
 
+/**
+ *
+ */
+static void
+set_message_label_to_string(GtkWidget *w, gchar *str)
+{
+    GtkTextBuffer *tv = NULL;
+
+    tv = gtk_text_buffer_new(NULL);
+    gtk_text_buffer_set_text(tv, str, strlen(str));
+    gtk_text_view_set_buffer(GTK_TEXT_VIEW(w), tv);
+    gtk_text_view_set_editable(GTK_TEXT_VIEW(w), FALSE);
+    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(w), FALSE);
 }
 
 /**
@@ -151,10 +165,13 @@ create_ipod_song_deletion_interface(void)
     gchar *song_name = NULL;
 
     song_name = get_current_selected_song_name();
-    snprintf(buf, PATH_MAX, "%s%scompletely from your ipod?", messages[0],
-		song_name);
-    if((w = lookup_widget(confirmation_window, "msg_label")))
+    snprintf(buf, PATH_MAX, "%s songs completely from your ipod?",
+	    messages[0]);
+    
+    if((w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
+    if((w = lookup_widget(confirmation_window, "msg_label")))
+	set_message_label_to_string(w, song_name);
     gtk_widget_show(confirmation_window);
     gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[1]);
     if(song_name) g_free(song_name);
@@ -176,10 +193,12 @@ create_playlist_song_deletion_interface(const gchar *pl_name)
     gchar *song_name = NULL;
 
     song_name = get_current_selected_song_name();
-    snprintf(buf, PATH_MAX, "%s %sfrom the playlist\n%s?  ", messages[0],
-	    song_name, pl_name);
-    if((w = lookup_widget(confirmation_window, "msg_label")))
+    snprintf(buf, PATH_MAX, "%s songs from the playlist %s?  ", messages[0],
+	    pl_name);
+    if((w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
+    if((w = lookup_widget(confirmation_window, "msg_label")))
+	set_message_label_to_string(w, song_name);
     gtk_widget_show(confirmation_window);
     gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[2]);
     
@@ -193,9 +212,11 @@ create_playlist_deletion_interface(const gchar *pl_name)
     GtkWidget *w = NULL;
     gchar buf[PATH_MAX];
 
-    snprintf(buf, PATH_MAX, "%s the playlist\n%s?", messages[0], pl_name);
-    if((w = lookup_widget(confirmation_window, "msg_label")))
+    snprintf(buf, PATH_MAX, "%s the playlist %s?", messages[0], pl_name);
+    if((w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
+    if((w = lookup_widget(confirmation_window, "msg_label_scroller")))
+	gtk_widget_hide(w);
     gtk_widget_show(confirmation_window);
     gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[0]);
     gtk_widget_show(confirmation_window);
