@@ -137,6 +137,17 @@ prefs_window_create(void)
 		g_free (buf);
 	    }
 	}
+	if((w = lookup_widget(prefs_window, "cfg_filename_format")))
+	{
+	    if (tmpcfg->filename_format)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->filename_format);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
 	if((w = lookup_widget(prefs_window, "play_now_path_entry")))
 	{
 	    if (tmpcfg->play_now_path)
@@ -437,6 +448,11 @@ prefs_window_create(void)
 				       prefs_get_sort_tab_num ());
 	    prefs_window_set_sort_tab_num (tmpcfg->sort_tab_num);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_write_gaintag")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->write_gaintag);
+        }
 	prefs_window_show_hide_tooltips ();
 	gtk_widget_show(prefs_window);
     }
@@ -512,6 +528,8 @@ prefs_window_set(void)
 	prefs_set_add_recursively(tmpcfg->add_recursively);
 	prefs_set_case_sensitive(tmpcfg->case_sensitive);
 	prefs_set_automount(tmpcfg->automount);
+	prefs_set_filename_format(tmpcfg->filename_format);
+	prefs_set_write_gaintag(tmpcfg->write_gaintag);
 
 	sm_show_preferred_columns();
     }
@@ -897,4 +915,17 @@ void prefs_window_set_toolbar_style (GtkToolbarStyle style)
 void prefs_window_set_automount(gboolean val)
 {
     tmpcfg->automount = val;
+}
+
+void
+prefs_window_set_filename_format(const gchar *val)
+{
+    g_free (tmpcfg->filename_format);
+    tmpcfg->filename_format = g_strdup(val);
+}
+
+void
+prefs_window_set_write_gaintag(gboolean val)
+{
+    tmpcfg->write_gaintag = val;
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-07-13 20:52:32 jcs>
+/* Time-stamp: <2003-09-06 21:32:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -298,6 +298,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_time_format (arg);
 	  }
+	  else if(g_ascii_strcasecmp (line, "filename_format") == 0)
+	  {
+	      prefs_set_filename_format (arg);
+	  }
 	  else if(g_ascii_strcasecmp (line, "charset") == 0)
 	  {
 		if(strlen (arg))      prefs_set_charset(arg);
@@ -580,6 +584,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_automount (atoi (arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
+	  {
+	      prefs_set_write_gaintag ((gboolean)atoi(arg));
+	  }                                                                
 	  else
 	  {
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
@@ -747,6 +755,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "play_now_path=%s\n", cfg->play_now_path);
     fprintf(fp, "play_enqueue_path=%s\n", cfg->play_enqueue_path);
     fprintf(fp, "time_format=%s\n", cfg->time_format);
+    fprintf(fp, "filename_format=%s\n", cfg->filename_format);
     if (cfg->charset)
     {
 	fprintf(fp, "charset=%s\n", cfg->charset);
@@ -838,6 +847,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_dirbr.x=%d\n", cfg->size_dirbr.x);
     fprintf (fp, "size_dirbr.y=%d\n", cfg->size_dirbr.y);
     fprintf (fp, "automount=%d\n", cfg->automount);
+    fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
 }
 
 void 
@@ -890,6 +900,7 @@ void cfg_free(struct cfg *c)
       C_FREE (c->play_now_path);
       C_FREE (c->play_enqueue_path);
       C_FREE (c->time_format);
+      C_FREE (c->filename_format);
       C_FREE (c);
     }
 }
@@ -1119,6 +1130,8 @@ struct cfg *clone_prefs(void)
 	    result->play_enqueue_path = g_strdup(cfg->play_enqueue_path);
 	if(cfg->time_format)
 	    result->time_format = g_strdup(cfg->time_format);
+	if (cfg->filename_format)
+	    result->filename_format = g_strdup(cfg->filename_format);
     }
     return(result);
 }
@@ -1990,4 +2003,13 @@ void prefs_set_filename_format(char* val)
 {
     g_free(cfg->filename_format);
     cfg->filename_format = g_strdup(val);
+}
+gboolean prefs_get_write_gaintag(void)
+{
+    return(cfg->write_gaintag);
+}
+
+void prefs_set_write_gaintag(gboolean val)
+{
+    cfg->write_gaintag = val;
 }

@@ -105,7 +105,14 @@ gint get_song_gain(Song *song)
             dup2(fdpipe[WRITE],fileno(stdout));
             close(fdpipe[READ]);
             close(fdpipe[WRITE]);
-            execl(mp3gain_path,mp3gain,"-s s","-o",filename,NULL); /*FIXME: should be user preferences*/
+            if(prefs_get_write_gaintag())
+            {
+               execl(mp3gain_path,mp3gain,"-o",filename,NULL); /*this write on mp3file!!*/
+            }
+            else
+            {
+               execl(mp3gain_path,mp3gain,"-s s","-o",filename,NULL);
+            }
             break; 
          default: /*parent*/
             close(fdpipe[WRITE]);

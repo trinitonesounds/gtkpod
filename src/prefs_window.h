@@ -75,5 +75,7 @@ void prefs_window_set_toolbar_style (GtkToolbarStyle val);
 void prefs_window_set_save_sorted_order (gboolean val);
 void prefs_window_set_sort_tab_num (gint num);
 void prefs_window_set_automount(gboolean val);
+void prefs_window_set_filename_format(const gchar *mp);
+void prefs_window_set_write_gaintag(gboolean val);
 
 #endif

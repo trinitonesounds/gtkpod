@@ -9,8 +9,7 @@ Normalize: Menus: Normalize->Selected Playlist
 
 - update message of "add directory"
 
-- customized export filenames (missing option in prefs, take care of
-  charset issues)
+- customized export filenames (take care of charset issues)
 
 - playlist creation for orphaned tracks (Sam?)
 

@@ -1534,3 +1534,30 @@ on_normalize_the_newly_inserted_songs1_activate
    normalize_new_songs(TRUE);
 }
 
+
+void
+on_cfg_filename_format_changed            (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    gchar *buf = gtk_editable_get_chars(editable,0, -1);
+    prefs_window_set_filename_format(buf);
+    g_free (buf);
+}
+
+
+void
+on_cfg_normalization_level_changed     (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+
+}
+
+
+void
+on_cfg_write_gaintag_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_write_gaintag (
+	gtk_toggle_button_get_active (togglebutton));
+}
+

@@ -298,6 +298,7 @@ write_song(Song *s)
     {
 	from_file = get_song_name_on_disk(s);
 	g_snprintf(buf, PATH_MAX, "%s/%s", file_export.dest_dir, dest_file); 
+	puts (buf);
 	if (make_dirs(buf)) {
 	    if(copy_file(from_file, buf))
 	        result = TRUE;

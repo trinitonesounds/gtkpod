@@ -588,3 +588,15 @@ void
 on_normalize_the_newly_inserted_songs1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_cfg_filename_format_changed            (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_cfg_normalization_level_changed     (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_cfg_write_gaintag_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

@@ -1329,6 +1329,12 @@ create_prefs_window (void)
   GtkWidget *cfg_write_extended;
   GtkWidget *cfg_keep_backups;
   GtkWidget *label31;
+  GtkWidget *frame23;
+  GtkWidget *vbox50;
+  GtkWidget *table9;
+  GtkWidget *label70;
+  GtkWidget *cfg_filename_format;
+  GtkWidget *label72;
   GtkWidget *label23;
   GtkWidget *vbox23;
   GtkWidget *frame14;
@@ -1411,6 +1417,14 @@ create_prefs_window (void)
   GtkWidget *label68;
   GtkWidget *cfg_not_played_song;
   GtkWidget *label67;
+  GtkWidget *frame22;
+  GtkWidget *vbox49;
+  GtkWidget *table10;
+  GtkWidget *label71;
+  GtkWidget *combo1;
+  GtkWidget *cfg_normalization_level;
+  GtkWidget *cfg_write_gaintag;
+  GtkWidget *label69;
   GtkWidget *frame11;
   GtkWidget *vbox24;
   GtkWidget *cfg_delete_playlist;
@@ -1670,12 +1684,46 @@ create_prefs_window (void)
   gtk_widget_show (cfg_keep_backups);
   gtk_box_pack_start (GTK_BOX (vbox21), cfg_keep_backups, FALSE, FALSE, 0);
 
-  label31 = gtk_label_new (_("Export"));
+  label31 = gtk_label_new (_("Sync (Writing of iTunesDB)"));
   gtk_widget_show (label31);
   gtk_frame_set_label_widget (GTK_FRAME (frame9), label31);
   gtk_label_set_justify (GTK_LABEL (label31), GTK_JUSTIFY_LEFT);
 
-  label23 = gtk_label_new_with_mnemonic (_("_Import/Export"));
+  frame23 = gtk_frame_new (NULL);
+  gtk_widget_show (frame23);
+  gtk_box_pack_start (GTK_BOX (vbox14), frame23, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame23), GTK_SHADOW_ETCHED_OUT);
+
+  vbox50 = gtk_vbox_new (TRUE, 0);
+  gtk_widget_show (vbox50);
+  gtk_container_add (GTK_CONTAINER (frame23), vbox50);
+
+  table9 = gtk_table_new (1, 2, FALSE);
+  gtk_widget_show (table9);
+  gtk_box_pack_start (GTK_BOX (vbox50), table9, FALSE, FALSE, 0);
+
+  label70 = gtk_label_new (_("Filename Format: "));
+  gtk_widget_show (label70);
+  gtk_table_attach (GTK_TABLE (table9), label70, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label70), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label70), 0, 0.5);
+
+  cfg_filename_format = gtk_entry_new ();
+  gtk_widget_show (cfg_filename_format);
+  gtk_table_attach (GTK_TABLE (table9), cfg_filename_format, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_filename_format, _("Determines the filename of tracks you copy from the iPod, e.g '%A/%d/%t - %n.mp3'. %A: artist; %d: album; %n: title; %t: track nr"), NULL);
+  gtk_entry_set_text (GTK_ENTRY (cfg_filename_format), _(" "));
+
+  label72 = gtk_label_new (_("Copying from iPod"));
+  gtk_widget_show (label72);
+  gtk_frame_set_label_widget (GTK_FRAME (frame23), label72);
+  gtk_label_set_justify (GTK_LABEL (label72), GTK_JUSTIFY_LEFT);
+
+  label23 = gtk_label_new_with_mnemonic (_("_Input/Output"));
   gtk_widget_show (label23);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 0), label23);
   gtk_label_set_justify (GTK_LABEL (label23), GTK_JUSTIFY_LEFT);
@@ -2052,6 +2100,47 @@ create_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame21), label67);
   gtk_label_set_justify (GTK_LABEL (label67), GTK_JUSTIFY_LEFT);
 
+  frame22 = gtk_frame_new (NULL);
+  gtk_widget_show (frame22);
+  gtk_box_pack_start (GTK_BOX (vbox32), frame22, FALSE, TRUE, 0);
+
+  vbox49 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox49);
+  gtk_container_add (GTK_CONTAINER (frame22), vbox49);
+
+  table10 = gtk_table_new (1, 2, FALSE);
+  gtk_widget_show (table10);
+  gtk_box_pack_start (GTK_BOX (vbox49), table10, FALSE, TRUE, 0);
+
+  label71 = gtk_label_new (_("Normalization's level: "));
+  gtk_widget_show (label71);
+  gtk_table_attach (GTK_TABLE (table10), label71, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label71), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label71), 0, 0.5);
+
+  combo1 = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (combo1)->popwin),
+                     "GladeParentKey", combo1);
+  gtk_widget_show (combo1);
+  gtk_table_attach (GTK_TABLE (table10), combo1, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  cfg_normalization_level = GTK_COMBO (combo1)->entry;
+  gtk_widget_show (cfg_normalization_level);
+
+  cfg_write_gaintag = gtk_check_button_new_with_mnemonic (_("Write mp3gain's tag"));
+  gtk_widget_show (cfg_write_gaintag);
+  gtk_box_pack_start (GTK_BOX (vbox49), cfg_write_gaintag, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_write_gaintag, _("mp3gain can append a special tag to the mp3 file. This tag will save much time while normalizing all the iPod. BEWARE: this could be dangerous for your mp3 file!!"), NULL);
+
+  label69 = gtk_label_new (_("Normalization"));
+  gtk_widget_show (label69);
+  gtk_frame_set_label_widget (GTK_FRAME (frame22), label69);
+  gtk_label_set_justify (GTK_LABEL (label69), GTK_JUSTIFY_LEFT);
+
   frame11 = gtk_frame_new (NULL);
   gtk_widget_show (frame11);
   gtk_box_pack_start (GTK_BOX (vbox32), frame11, FALSE, TRUE, 0);
@@ -2238,6 +2327,9 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_keep_backups, "toggled",
                     G_CALLBACK (on_cfg_keep_backups_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_filename_format, "changed",
+                    G_CALLBACK (on_cfg_filename_format_changed),
+                    NULL);
   g_signal_connect ((gpointer) time_format_entry, "changed",
                     G_CALLBACK (on_cfg_time_format_changed),
                     NULL);
@@ -2291,6 +2383,12 @@ create_prefs_window (void)
                     NULL);
   g_signal_connect ((gpointer) cfg_not_played_song, "toggled",
                     G_CALLBACK (on_cfg_not_played_song_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_normalization_level, "changed",
+                    G_CALLBACK (on_cfg_normalization_level_changed),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_write_gaintag, "toggled",
+                    G_CALLBACK (on_cfg_write_gaintag_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_delete_playlist, "toggled",
                     G_CALLBACK (on_cfg_delete_playlist_toggled),
@@ -2380,6 +2478,12 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_extended, "cfg_write_extended");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_keep_backups, "cfg_keep_backups");
   GLADE_HOOKUP_OBJECT (prefs_window, label31, "label31");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame23, "frame23");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox50, "vbox50");
+  GLADE_HOOKUP_OBJECT (prefs_window, table9, "table9");
+  GLADE_HOOKUP_OBJECT (prefs_window, label70, "label70");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_filename_format, "cfg_filename_format");
+  GLADE_HOOKUP_OBJECT (prefs_window, label72, "label72");
   GLADE_HOOKUP_OBJECT (prefs_window, label23, "label23");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox23, "vbox23");
   GLADE_HOOKUP_OBJECT (prefs_window, frame14, "frame14");
@@ -2459,6 +2563,14 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label68, "label68");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_not_played_song, "cfg_not_played_song");
   GLADE_HOOKUP_OBJECT (prefs_window, label67, "label67");
+  GLADE_HOOKUP_OBJECT (prefs_window, frame22, "frame22");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox49, "vbox49");
+  GLADE_HOOKUP_OBJECT (prefs_window, table10, "table10");
+  GLADE_HOOKUP_OBJECT (prefs_window, label71, "label71");
+  GLADE_HOOKUP_OBJECT (prefs_window, combo1, "combo1");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_normalization_level, "cfg_normalization_level");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_gaintag, "cfg_write_gaintag");
+  GLADE_HOOKUP_OBJECT (prefs_window, label69, "label69");
   GLADE_HOOKUP_OBJECT (prefs_window, frame11, "frame11");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox24, "vbox24");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_delete_playlist, "cfg_delete_playlist");
