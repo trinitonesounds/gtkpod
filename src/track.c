@@ -491,12 +491,12 @@ void remove_duplicate (Song *oldsong, Song *song)
        else
 	   oldsong->rating = MAX (oldsong->rating, song->rating);
        /* Set 'created' timestamp */
-       if (oldsong->time_create && song->time_create)
-	   oldsong->time_create = MIN (oldsong->time_create,
-				       song->time_create);
+       if (oldsong->time_created && song->time_created)
+	   oldsong->time_created = MIN (oldsong->time_created,
+					song->time_created);
        else 
-	   oldsong->time_create = MAX (oldsong->time_create,
-				       song->time_create);
+	   oldsong->time_created = MAX (oldsong->time_created,
+					song->time_created);
        /* Set 'modified' timestamp */
        oldsong->time_modified =  MAX (oldsong->time_modified,
 				      song->time_modified);
@@ -650,8 +650,8 @@ gboolean it_add_song (Song *song)
 
     /* fix timestamp (up to V0.51 I used a dummy timestamp -- replace
        that with the current time) */
-    if (song && (song->time_create == 0x8c3abf9b))
-	song->time_create = time_get_mac_time ();
+    if (song && (song->time_created == 0x8c3abf9b))
+	song->time_created = time_get_mac_time ();
     if (song && (song->time_modified == 0x8c3abf9b))
 	song->time_modified = 0;
 

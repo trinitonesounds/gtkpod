@@ -11,6 +11,7 @@ gtkpod_SOURCES = \
 	charset.c charset.h \
 	confirmation.c confirmation.h \
 	context_menus.c context_menus.h \
+	date_parser.l date_parser.h \
 	dirbrowser.c dirbrowser.h \
 	display.c display_playlists.c display_sorttabs.c display_songs.c \
 	display.h display_private.h \

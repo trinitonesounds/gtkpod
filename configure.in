@@ -36,6 +36,9 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 dnl used in itunesdb.c to figure out whether we run gtkpod
 AC_DEFINE_UNQUOTED([IS_GTKPOD], 1, [Define this to indicate we are compiling gtkpod])
 
+dnl we need 'flex'
+AM_PROG_LEX
+
 dnl Add the languages which your application supports here.
 ALL_LINGUAS="de fr ja"
 AM_GLIB_GNU_GETTEXT

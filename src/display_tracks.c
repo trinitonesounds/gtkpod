@@ -100,7 +100,7 @@ void sm_add_song_to_song_model (Song *song, GtkTreeIter *into_iter)
 			SM_COLUMN_BITRATE, song,
 			SM_COLUMN_PLAYCOUNT, song,
 			SM_COLUMN_RATING, song,
-			SM_COLUMN_TIME_CREATE, song,
+			SM_COLUMN_TIME_CREATED, song,
 			SM_COLUMN_TIME_PLAYED, song,
 			SM_COLUMN_TIME_MODIFIED, song,
 			-1);
@@ -297,7 +297,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
 	  changed = TRUE;
       }
       break;
-  case SM_COLUMN_TIME_CREATE:
+  case SM_COLUMN_TIME_CREATED:
   case SM_COLUMN_TIME_PLAYED:
   case SM_COLUMN_TIME_MODIFIED:
       break;
@@ -430,7 +430,7 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "editable", TRUE,
 		    "xalign", 1.0, NULL);
       break;
-  case SM_COLUMN_TIME_CREATE:
+  case SM_COLUMN_TIME_CREATED:
   case SM_COLUMN_TIME_PLAYED:
   case SM_COLUMN_TIME_MODIFIED:
       buf = time_field_to_string (song, column);
@@ -677,7 +677,7 @@ gint sm_data_compare_func (GtkTreeModel *model,
       return song1->playcount - song2->playcount;
   case  SM_COLUMN_RATING:
       return song1->rating - song2->rating;
-  case SM_COLUMN_TIME_CREATE:
+  case SM_COLUMN_TIME_CREATED:
   case SM_COLUMN_TIME_PLAYED:
   case SM_COLUMN_TIME_MODIFIED:
       return time_get_time (song1, sm_item) - time_get_time (song2, sm_item);
@@ -806,7 +806,7 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
   case SM_COLUMN_RATING:
       text = _("Rating");
       break;
-  case SM_COLUMN_TIME_CREATE:
+  case SM_COLUMN_TIME_CREATED:
       text = _("Imported");
       editable = FALSE;
       break;

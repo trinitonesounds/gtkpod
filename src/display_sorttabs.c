@@ -237,6 +237,7 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 void sp_go (guint32 inst)
 {
     SortTab *st;
+    gchar *buf;
 
     /* Sanity */
     if (inst >= prefs_get_sort_tab_num ())  return;
@@ -251,9 +252,12 @@ void sp_go (guint32 inst)
 
     /* Make sure the information typed into the entries is actually
      * being used (maybe the user 'forgot' to press enter */
-    gtk_signal_emit_by_name (GTK_OBJECT (st->ti_created.entry), "activate");
-    gtk_signal_emit_by_name (GTK_OBJECT (st->ti_modified.entry), "activate");
-    gtk_signal_emit_by_name (GTK_OBJECT (st->ti_played.entry), "activate");
+    buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_created.entry), 0, -1);
+    prefs_set_sp_entry (inst, S_TIME_CREATED, buf);
+    buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_modified.entry), 0, -1);
+    prefs_set_sp_entry (inst, S_TIME_MODIFIED, buf);
+    buf = gtk_editable_get_chars(GTK_EDITABLE (st->ti_played.entry), 0, -1);
+    prefs_set_sp_entry (inst, S_TIME_PLAYED, buf);
 
     /* Instead of handling the selection directly, we add a
        "callback". Currently running display updates will be stopped
@@ -1839,21 +1843,21 @@ static void st_create_special (gint inst, GtkWidget *window)
       gtk_widget_set_sensitive (w, FALSE);
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((S_TIME_CREATE<<SP_SHIFT) + inst));
+			(gpointer)((S_TIME_CREATED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, S_TIME_CREATE));
+				   prefs_get_sp_cond (inst, S_TIME_CREATED));
       w = lookup_widget (special, "sp_created_entry");
       st->ti_created.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
-			  prefs_get_sp_entry (inst, S_TIME_CREATE));
+			  prefs_get_sp_entry (inst, S_TIME_CREATED));
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
-			(gpointer)((S_TIME_CREATE<<SP_SHIFT) + inst));
+			(gpointer)((S_TIME_CREATED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)lookup_widget (special,
 						 "sp_created_cal_button"),
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
-			(gpointer)((S_TIME_CREATE<<SP_SHIFT) + inst));
+			(gpointer)((S_TIME_CREATED<<SP_SHIFT) + inst));
 
 
       g_signal_connect ((gpointer)lookup_widget (special, "sp_go"),

@@ -73,7 +73,7 @@
      gint32  tracks;            /+ number of tracks      +/
      gint32  year;              /+ year                  +/
      gint32  bitrate;           /+ bitrate               +/
-     guint32 time_create;       /+ time of creation (Mac type)           +/
+     guint32 time_created;      /+ time of creation (Mac type)           +/
      guint32 time_played;       /+ time of last play  (Mac type)         +/
      guint32 time_modified;     /+ time of last modification  (Mac type) +/
      guint32 rating;            /+ star rating (stars * 20)              +/
@@ -490,7 +490,7 @@ static glong get_nod_a(FILE *file, glong seek)
   song->tracks = get4int(file, seek+48);      /* nr of tracks     */
   song->year = get4int(file, seek+52);        /* year             */
   song->bitrate = get4int(file, seek+56);     /* bitrate          */
-  song->time_create = get4int(file, seek+32); /* creation time    */
+  song->time_created = get4int(file, seek+32);/* creation time    */
   song->time_played = get4int(file, seek+84); /* last time played */
   song->time_modified = get4int(file, seek+100);/* modification time */
   song->transferred = TRUE;                   /* song is on iPod!    */
@@ -952,7 +952,7 @@ static void mk_mhit (FILE *file, Song *song)
   put_4int_cur (file, 1);
   put_4int_cur (file, 0);
   put_4int_cur (file, 256);           /* type                       */
-  put_4int_cur (file, song->time_create); /* timestamp              */
+  put_4int_cur (file, song->time_created); /* timestamp              */
   put_4int_cur (file, song->size);    /* filesize                   */
   put_4int_cur (file, song->songlen); /* length of song in ms       */
   put_4int_cur (file, song->track_nr);/* track number               */

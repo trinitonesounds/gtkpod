@@ -384,7 +384,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	song->pc_path_utf8 = charset_to_utf8 (name);
 	song->pc_path_locale = g_strdup (name);
 
-	if (song->time_create == 0) song->time_create = time_get_mac_time ();
+	if (song->time_created == 0) song->time_created = time_get_mac_time ();
 	else                        song->time_modified = time_get_mac_time ();
 
 	C_FREE (song->fdesc);

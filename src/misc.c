@@ -762,7 +762,7 @@ S_item SM_to_S (SM_item sm)
     case SM_COLUMN_BITRATE:       return S_BITRATE;
     case SM_COLUMN_PLAYCOUNT:     return S_PLAYCOUNT;
     case SM_COLUMN_RATING:        return S_RATING;
-    case SM_COLUMN_TIME_CREATE:   return S_TIME_CREATE;
+    case SM_COLUMN_TIME_CREATED:  return S_TIME_CREATED;
     case SM_COLUMN_TIME_PLAYED:   return S_TIME_PLAYED;
     case SM_COLUMN_TIME_MODIFIED: return S_TIME_MODIFIED;
     case SM_NUM_COLUMNS:          return -1;
@@ -1884,8 +1884,8 @@ time_t time_get_time (Song *song, SM_item sm_item)
 
     if (song) switch (sm_item)
     {
-    case SM_COLUMN_TIME_CREATE:
-	mactime = song->time_create;
+    case SM_COLUMN_TIME_CREATED:
+	mactime = song->time_created;
 	break;
     case SM_COLUMN_TIME_PLAYED:
 	mactime = song->time_played;
@@ -1915,8 +1915,8 @@ void time_set_time (Song *song, time_t time, SM_item sm_item)
 
     if (song) switch (sm_item)
     {
-    case SM_COLUMN_TIME_CREATE:
-	song->time_create = mactime;
+    case SM_COLUMN_TIME_CREATED:
+	song->time_created = mactime;
 	break;
     case SM_COLUMN_TIME_PLAYED:
 	song->time_played = mactime;
