@@ -29,6 +29,8 @@
 */
 
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <limits.h>
 #include "md5.h"
@@ -86,44 +88,78 @@ static void little_endian(hblock * stupidblock, int blocks);
 static GHashTable *filehash = NULL;
 
 /**
+ * get_filesize_for_file_descriptor - get the filesize on disk for the given
+ * file descriptor
+ * @fp - the filepointer we want the filesize for 
+ * Returns - the filesize in bytes
+ */
+static int
+get_filesize_for_file_descriptor(FILE *fp)
+{
+    int result = 0;
+    struct stat stat_info;
+    int file_no = fileno(fp);
+
+    if((fstat(file_no, &stat_info) == 0))	/* returns 0 on success */
+	result = (int)stat_info.st_size;
+    return(result);
+}
+
+/**
  * do_hash_on_file - read PATH_MAX * NR_PATH_MAX_BLOCKS bytes from the file
- * and ask sha1 for a hash of it, convert this has to a string of hex output
+ * and ask sha1 for a hash of it, convert this hash to a string of hex output
  * @fp - an open file descriptor to read from
- * Returns - A Hash String
+ * Returns - A Hash String - you handle memory returned
  */
 gchar *
 do_hash_on_file(FILE * fp)
 {
-   int x = 0;
-   int last = 0;
-   int bread = 0;
-   u_char *hash = NULL;
-   int blocks = NR_PATH_MAX_BLOCKS;
-   int chunk_size = PATH_MAX * blocks;
-   char file_chunk[chunk_size];
-
-   /* 40 chars for hash */
-   u_char *digest = NULL;
+   gchar *result = NULL;
 
    if (fp)
    {
-       bread = fread(file_chunk, sizeof(char), chunk_size, fp);
-       if(bread > 0)
+       int fsize = 0;
+       int chunk_size = PATH_MAX * NR_PATH_MAX_BLOCKS;
+       
+       fsize = get_filesize_for_file_descriptor(fp);
+       if((fsize > 0) && (fsize > chunk_size))
        {
-	   if((digest = (u_char *) g_malloc(sizeof(u_char) * 41)) == NULL)
+	   u_char *hash = NULL;
+	   int bread = 0, x = 0, last = 0;
+	   char file_chunk[chunk_size + sizeof(int)];
+	  
+	   /* allocate the digest we're returning */
+	   if((result = (gchar*)g_malloc0(sizeof(gchar) * 41)) == NULL)
 	       gtkpod_main_quit();	/* errno == ENOMEM */ 
-	   hash = sha1_hash(file_chunk, bread);
+	   
+	   /* put filesize in the first 32 bits */
+	   memcpy(file_chunk, &fsize, sizeof(int));	
+	   
+	   /* read chunk_size from fp */
+	   bread = fread(&file_chunk[sizeof(int)], sizeof(char), 
+			    chunk_size, fp);
+	    
+	   /* create hash from our data */
+	   hash = sha1_hash(file_chunk, (bread + sizeof(int)));
+
+	   /* put it in a format we like */
 	   for (x = 0; x < 20; x++)
-	       last += snprintf(&digest[last], 4, "%02x", hash[x]);
-	   digest[last] = 0x00;
+	       last += snprintf(&result[last], 4, "%02x", hash[x]);
+
+	   /* free the hash value sha1_hash gave us */
 	   g_free(hash);
+       }
+       else if(fsize < chunk_size)
+       {
+	  gtkpod_warning(_("Hashed Filesize is less than filesize used to "
+		      "uniquely identify files\n"));
        }
        else
        { 
-	  gtkpod_warning(_("Hashed Filesize read 0 bytes\n"));
+	  gtkpod_warning(_("Hashed File is 0 bytes\n"));
        }
    }
-   return (digest);
+   return (result);
 }
 
 /**
