@@ -2,6 +2,8 @@
 |
 |  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
 |  compile "standalone" with the gtkpod project. 2003/05/11
+|
+|  $Id$
 */
 
 /* This code is taken from the mp3info code. Only the code needed for

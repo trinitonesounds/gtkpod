@@ -5,6 +5,8 @@
 |  Changed by Jorg Schuler to also determine size of file and
 |  length of song in ms. 2002/11/28.
 |  Modified character conversion handling. Jan 2003
+|
+|  $Id$
 */
 
 

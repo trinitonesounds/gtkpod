@@ -21,6 +21,8 @@
 |  iTunes and iPod are trademarks of Apple
 | 
 |  This product is not supported/written/published by Apple!
+|
+|  $Id$
 */
 #ifndef _GTKPOD_MD5_H_
 #define _GTKPOD_MD5_H_

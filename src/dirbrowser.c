@@ -3,6 +3,8 @@
 |  "standalone" with the gtkpod project 2002/11/24
 |  (http://gtkpod.sourceforge.net)
 |  Modified for UTF8 string handling under GKT2 (Jan 2003).
+|
+|  $Id$
 */
 
 /*  XMMS - Cross-platform multimedia player
