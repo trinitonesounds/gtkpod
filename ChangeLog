@@ -46,6 +46,8 @@ gtkpod V0.73-CVS
 	newly created playlist), a new playlist was created but the tracks
 	not added.
 
+	BUGFIX: Fixed hangup when syncing dirs
+
 	BUGFIX: Fixed compile error when compiling without mp4 support
 
 	BUGFIX: Fixed compile error when compiling with gcc 2.95

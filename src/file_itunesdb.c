@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 23:20:36 JST jcs>
+/* Time-stamp: <2004-04-09 23:03:09 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -385,7 +385,7 @@ void handle_import (void)
     guint32 n;
 
 
-    /* we should switch off duplicate detection during import --
+    /* we must switch off duplicate detection during import --
      * otherwise we mess up the playlists */
 
     md5tracks = prefs_get_md5tracks ();

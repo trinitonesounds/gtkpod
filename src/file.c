@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 23:20:37 JST jcs>
+/* Time-stamp: <2004-04-09 22:47:28 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1063,19 +1063,29 @@ void sync_trackids (GList *selected_trackids)
 		{   /* no charset -- make sure we don't replace a dir
 		     * entry that had the charset set */
 		    if (!g_hash_table_lookup (hash, dirname))
+		    {
 			g_hash_table_insert (hash, dirname, NULL);
+		    }
+		    else
+		    {
+			g_free (dirname);
+		    }
 		}
 	    }
 	    else
 	    {
 		if (g_file_test (dirname, G_FILE_TEST_EXISTS))
+		{
 		    gtkpod_warning (_("'%s' is not a directory. Ignored.\n"),
 				    dirname);
+		}
 		else
+		{
 		    gtkpod_warning (_("'%s' does not exist. Ignored.\n"),
 				    dirname);
+		}
+		g_free (dirname);
 	    }
-	    g_free (dirname);
 	}
     }
     if (g_hash_table_size (hash) == 0)
@@ -1677,7 +1687,10 @@ gchar *get_track_name_on_ipod (Track *s)
    /* We start by assuming that the ipod mount point exists.  Then, for each
     * component c of track->ipod_path, we try to find an entry d in good_path that
     * is case-insensitively equal to c.  If we find d, we append d to good_path and make
-    * the result the new good_path.  Otherwise, we quit and return NULL. */
+    * the result the new good_path.  Otherwise, we quit and return
+   NULL.
+   @root: in local encoding, @components: in utf8
+ */
 gchar * resolve_path(const gchar *root,const gchar * const * components) {
   gchar *good_path = g_strdup(root);
   guint32 i;
@@ -1687,7 +1700,7 @@ gchar * resolve_path(const gchar *root,const gchar * const * components) {
     gchar *component_as_filename;
     gchar *test_path;
     gchar *component_stdcase;
-    const gchar *dir_file;
+    const gchar *dir_file=NULL;
 
     /* skip empty components */
     if (strlen (components[i]) == 0) continue;
@@ -1705,24 +1718,27 @@ gchar * resolve_path(const gchar *root,const gchar * const * components) {
     component_stdcase = g_utf8_casefold(components[i],-1);
     /* Case insensitively compare the current component with each entry
      * in the current directory. */
-    for(cur_dir = g_dir_open(good_path,0,NULL) ; 
-      (dir_file = g_dir_read_name(cur_dir)) ; ) {
-      gchar *file_utf8 = g_filename_to_utf8(dir_file,-1,NULL,NULL,NULL);
-      gchar *file_stdcase = g_utf8_casefold(file_utf8,-1);
-      gboolean found = !g_utf8_collate(file_stdcase,component_stdcase);
-      gchar *new_good_path;
-      g_free(file_stdcase);
-      if(!found) {
-         /* This is not the matching entry */
-        g_free(file_utf8);
-        continue;
-      }
+
+    cur_dir = g_dir_open(good_path,0,NULL);
+    if (cur_dir) while ((dir_file = g_dir_read_name(cur_dir)))
+    {
+	gchar *file_utf8 = g_filename_to_utf8(dir_file,-1,NULL,NULL,NULL);
+	gchar *file_stdcase = g_utf8_casefold(file_utf8,-1);
+	gboolean found = !g_utf8_collate(file_stdcase,component_stdcase);
+	gchar *new_good_path;
+	g_free(file_stdcase);
+	if(!found)
+	{
+	    /* This is not the matching entry */
+	    g_free(file_utf8);
+	    continue;
+	}
       
-      new_good_path = dir_file ? g_build_filename(good_path,dir_file,NULL) : NULL;
-      g_free(good_path);
-      good_path= new_good_path;
-      /* This is the matching entry, so we can stop searching */
-      break;
+	new_good_path = dir_file ? g_build_filename(good_path,dir_file,NULL) : NULL;
+	g_free(good_path);
+	good_path= new_good_path;
+	/* This is the matching entry, so we can stop searching */
+	break;
     }
     
     if(!dir_file) {
@@ -1730,9 +1746,9 @@ gchar * resolve_path(const gchar *root,const gchar * const * components) {
       g_free(good_path);
       good_path = NULL;
     }
-    
+
     g_free(component_stdcase);
-    g_dir_close(cur_dir);
+    if (cur_dir) g_dir_close(cur_dir);
     if(!good_path || !g_file_test(good_path,G_FILE_TEST_EXISTS))
       break; /* We couldn't fix this component, so don't try later ones */
   }
