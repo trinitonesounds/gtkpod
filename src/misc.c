@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-02 22:55:43 jcs>
+/* Time-stamp: <2003-09-07 20:52:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1690,7 +1690,7 @@ do_command_on_entries (gchar *command, gchar *what, GList *selected_songs)
 	{
 	    for(l = selected_songs; l; l = l->next)
 	    {
-		if((str = get_song_name_on_disk_verified((Song*)l->data)))
+		if((str = get_track_name_on_disk_verified((Song*)l->data)))
 		    g_ptr_array_add (args, str);
 	    }
 	    percs = TRUE; /* encountered a '%s' */

@@ -26,10 +26,11 @@
 #  include <config.h>
 #endif
 
-#include "misc.h"
 #include "file_export.h"
+#include "misc.h"
 #include "prefs.h"
 #include "file.h"
+#include "charset.h"
 #include "support.h"
 #include <limits.h>
 #include <stdio.h>
@@ -56,37 +57,6 @@ static struct {
     GtkWidget *fs;
 } file_export;
 
-/** chop_filename - Remove non-unix friendly characters from the fielname
- * @filename - the filename we're going to mangle
- * Returns - An allocated string with the new filename, you must free it
- */
-static gchar*
-chop_filename(const gchar *filename)
-{
-    int i = 0;
-    gchar buf[PATH_MAX];
-    gchar *result = NULL;
-    
-    if(filename)
-    {
-	/*
-	 * [FIXME] There are all kinds of special chars we might
-	 * want to remove.  Prehaps simple replace all chars that
-	 * aren't isalnum()?
-	 */
-	snprintf(buf, PATH_MAX, "%s", filename);
-	for(i = 0; i < PATH_MAX && buf[i] != '\0'; i++)
-	{
-	    if(buf[i] == ' ')
-		buf[i] = '_';
-	    else if(buf[i] == '/')
-		buf[i] = '_';
-	}
-	result = g_strdup(buf);
-    }
-    return(result);
-}
-
 
 /**
  * get_preferred_filename - useful for generating the preferred
@@ -99,58 +69,102 @@ static gchar *
 song_get_export_filename (Song *song)
 {
     GString *result;
-    char *p = prefs_get_filename_format ();
+    char *res_utf8, *res_cs = NULL;
     char dummy[5];
+    char *p, *str, *extension=NULL, *basename = NULL;
+    gboolean original=FALSE; /* indicate whether original filename is
+			      * being used */
 
     if (!song) return NULL; 
     result = g_string_new ("");
 
-    while (*p != '\0') {
-	    if (*p == '%') {
-		    char* tmp = NULL;
-		    p++;
-		    switch (*p) {
-			    case 'A':
-				    tmp = song_get_item_utf8 (song, S_ARTIST);
-				    break;
-			    case 'd':
-				    tmp = song_get_item_utf8 (song, S_ALBUM);
-				    break;
-			    case 'n':
-				    tmp = song_get_item_utf8 (song, S_TITLE);
-				    break;
-			    case 't':
-				    tmp = dummy;
-				    if (song->tracks == 0)
-					    sprintf (tmp, "%.2d", song->track_nr);
-				    else if (song->tracks < 10)
-					    sprintf(tmp, "%.1d", song->track_nr);
-				    else if (song->tracks < 100)
-					    sprintf (tmp, "%.2d", song->track_nr);
-				    else if (song->tracks < 1000)
-					    sprintf (tmp, "%.3d", song->track_nr);
-				    else {
-					    g_print ("wow, more that 1000 tracks!");
-					    sprintf (tmp,"%.4d", song->track_nr);
-				    }
-				    break;
-			    default:
-				    /* 
-				     * [FIXME] add more cases here and an error message for 
-				     * the default case
-				     */
-				    break;
-		    }
-		    if (tmp) {
-			    result = g_string_append (result, tmp);
-			    tmp = NULL;
-		    }
-	    }
-	    else 
-		    result = g_string_append_c (result, *p);
-	    p++;
+    p = prefs_get_filename_format ();
+
+    /* try to get an extension */
+    str = get_track_name_on_disk (song);
+    if (str)
+    {
+	gchar *s = strrchr (str, '.');
+	if (s)     extension = g_strdup (s);
+	C_FREE (str);
     }
-    return g_string_free (result,FALSE);
+    /* well... we need some default */
+    /* if (!extension)   extension = g_strdup (".mp3");*/
+
+    /* try to get the original filename */
+    if (song->pc_path_utf8)
+	basename = g_path_get_basename (song->pc_path_utf8);
+
+    while (*p != '\0') {
+	if (*p == '%') {
+	    char* tmp = NULL;
+	    p++;
+	    switch (*p) {
+	    case 'o':
+		if (basename)
+		{
+		    tmp = basename;
+		    original = TRUE;
+		}
+		break;
+	    case 'A':
+		tmp = song_get_item_utf8 (song, S_ARTIST);
+		break;
+	    case 'd':
+		tmp = song_get_item_utf8 (song, S_ALBUM);
+		break;
+	    case 'n':
+		tmp = song_get_item_utf8 (song, S_TITLE);
+		break;
+	    case 't':
+		tmp = dummy;
+		if (song->tracks == 0)
+		    sprintf (tmp, "%.2d", song->track_nr);
+		else if (song->tracks < 10)
+		    sprintf(tmp, "%.1d", song->track_nr);
+		else if (song->tracks < 100)
+		    sprintf (tmp, "%.2d", song->track_nr);
+		else if (song->tracks < 1000)
+		    sprintf (tmp, "%.3d", song->track_nr);
+		else {
+		    g_print ("wow, more that 1000 tracks!");
+		    sprintf (tmp,"%.4d", song->track_nr);
+		}
+		break;
+	    default:
+		/* 
+		 * [FIXME] add more cases here and an error message for 
+		 * the default case
+		 */
+		break;
+	    }
+	    if (tmp) {
+		result = g_string_append (result, tmp);
+		tmp = NULL;
+	    }
+	}
+	else 
+	    result = g_string_append_c (result, *p);
+	p++;
+    }
+    C_FREE (basename);
+    /* add the extension */
+    if (!original && extension)
+	result = g_string_append (result, extension);
+    C_FREE (extension);
+    /* get the utf8 version of the filename */
+    res_utf8 = g_string_free (result,FALSE);
+    /* convert it to the charset */
+    if (prefs_get_special_export_charset ())
+    {   /* use the specified charset */
+	res_cs = charset_from_utf8 (res_utf8);
+    }
+    else
+    {   /* use the charset stored in song->charset */
+	res_cs = charset_song_charset_from_utf8 (song, res_utf8);
+    }
+    C_FREE (res_utf8);
+    return res_cs;
 }
 
 /**
@@ -296,9 +310,8 @@ write_song(Song *s)
     
     if((dest_file = song_get_export_filename(s)))
     {
-	from_file = get_song_name_on_disk(s);
+	from_file = get_track_name_on_disk(s);
 	g_snprintf(buf, PATH_MAX, "%s/%s", file_export.dest_dir, dest_file); 
-	puts (buf);
 	if (make_dirs(buf)) {
 	    if(copy_file(from_file, buf))
 	        result = TRUE;

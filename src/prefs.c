@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-06 21:32:27 jcs>
+/* Time-stamp: <2003-09-07 20:25:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -588,6 +588,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_write_gaintag ((gboolean)atoi(arg));
 	  }                                                                
+	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
+	  {
+	      prefs_set_special_export_charset ((gboolean)atoi(arg));
+	  }                                                                
 	  else
 	  {
 	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
@@ -848,6 +852,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_dirbr.y=%d\n", cfg->size_dirbr.y);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
+    fprintf (fp, "special_export_charset=%d\n", cfg->special_export_charset);
 }
 
 void 
@@ -2004,6 +2009,7 @@ void prefs_set_filename_format(char* val)
     g_free(cfg->filename_format);
     cfg->filename_format = g_strdup(val);
 }
+
 gboolean prefs_get_write_gaintag(void)
 {
     return(cfg->write_gaintag);
@@ -2012,4 +2018,14 @@ gboolean prefs_get_write_gaintag(void)
 void prefs_set_write_gaintag(gboolean val)
 {
     cfg->write_gaintag = val;
+}
+
+gboolean prefs_get_special_export_charset(void)
+{
+    return(cfg->special_export_charset);
+}
+
+void prefs_set_special_export_charset(gboolean val)
+{
+    cfg->special_export_charset = val;
 }

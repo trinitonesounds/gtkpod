@@ -1872,7 +1872,7 @@
 		      <child>
 			<widget class="GtkCheckButton" id="cfg_update_charset">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Normally the charset specified when first importing the song will be used to update the song information. If you have chosen a wrong charset when first importing a song and want to correct it using the &quot;Update Song&quot; function, you must check this option. Note: charset info is stored in the extended information file (see Export) and songs imported before V0.51 will have no charset stored -- the charset specified above will be used at first.</property>
+			  <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used to update the track information. If you have chosen a wrong charset when first importing a track and want to correct it using the &quot;Update Song&quot; function, you must check this option. Note: the charset info is stored in the extended information file (see 'Sync' below) and tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used.</property>
 			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">Use selected charset also when updating
  or syncing tracks</property>
@@ -2507,7 +2507,7 @@
 			  <child>
 			    <widget class="GtkEntry" id="cfg_filename_format">
 			      <property name="visible">True</property>
-			      <property name="tooltip" translatable="yes">Determines the filename of tracks you copy from the iPod, e.g '%A/%d/%t - %n.mp3'. %A: artist; %d: album; %n: title; %t: track nr</property>
+			      <property name="tooltip" translatable="yes">Determines the filename of tracks you copy from the iPod, e.g '%A/%d/%t - %n' or '%o'. %A: artist; %d: album; %n: title; %t: track nr; %o: original filename (needs extended information file)</property>
 			      <property name="can_focus">True</property>
 			      <property name="editable">True</property>
 			      <property name="visibility">True</property>
@@ -2535,7 +2535,24 @@
 		      </child>
 
 		      <child>
-			<placeholder/>
+			<widget class="GtkCheckButton" id="cfg_special_export_charset">
+			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">Normally the charset specified when first importing the track will be used to update the track information. If you set this option you can use the charset selector above to specify a charset instead. Note: the charset info is stored in the extended information file (see 'Sync' above). Tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used.</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Use selected charset (see above: 'Adding/Updating/
+ Syncing') also for this filename.</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="on_cfg_special_export_charset_toggled" last_modification_time="Sun, 07 Sep 2003 11:19:29 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
 		      </child>
 
 		      <child>

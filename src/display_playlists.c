@@ -847,7 +847,7 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	for (l=pl->members; l; l=l->next)
 	{
 	    s = (Song *)l->data;
-	    name = get_song_name_on_disk_verified (s);
+	    name = get_track_name_on_disk_verified (s);
 	    if (name)
 	    {
 		g_string_append_printf (filelist, "file:%s\n", name);

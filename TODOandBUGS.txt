@@ -9,8 +9,6 @@ Normalize: Menus: Normalize->Selected Playlist
 
 - update message of "add directory"
 
-- customized export filenames (take care of charset issues)
-
 - playlist creation for orphaned tracks (Sam?)
 
 - reconstruction of iPod contents after file system corruption
@@ -18,6 +16,7 @@ Normalize: Menus: Normalize->Selected Playlist
 
 - replacement of libid3 with libid3tag
     (reading "Country I" with 229 songs without duplicate recognition
+     JCS statistics:
      libid3tag: 74/63 sec (with display), 44 sec (without display)).
 
 - volume normalization support (Edward)

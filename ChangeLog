@@ -1,4 +1,7 @@
 gtkpod V0.53-CVS
+        NEW FEATURE: define format of filename when copying tracks from
+	iPod (mainly thanks to Sam Clegg).
+
 	NEW FEATURE: adjust volume of each track individually by using
 	iPod's per-track volume adjust feature (implemted through a new
 	column in the song view).

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-23 00:46:05 jcs>
+/* Time-stamp: <2003-09-07 20:52:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1383,7 +1383,7 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
     }
 
   /* If song->ipod_path exists, we use that one instead. */
-  ipod_fullfile = itunesdb_get_song_name_on_ipod (path, song);
+  ipod_fullfile = itunesdb_get_track_name_on_ipod (path, song);
   if (!ipod_fullfile) do
   { /* we need to loop until we find a unused filename */
       if (ipod_file)     g_free(ipod_file);
@@ -1395,7 +1395,7 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 				   dir_num, song->ipod_id + oops);
       ipod_fullfile = g_build_filename (path, ipod_file+1, NULL);
       /* There is a case-sensitivity problem on some systems (see note
-       * at itunesdb_get_song_name_on_ipod (). The following code
+       * at itunesdb_get_track_name_on_ipod (). The following code
        tries to work around it */
       if (!g_file_test (ipod_fullfile, G_FILE_TEST_EXISTS))
       { /* does not exist -- let's try to create it */
@@ -1460,7 +1460,7 @@ gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
    exist. NOTE: this code works around a problem on some systems (see
    below) and might return a filename with different case than the
    original filename. Don't copy it back to @s */
-gchar *itunesdb_get_song_name_on_ipod (gchar *path, Song *s)
+gchar *itunesdb_get_track_name_on_ipod (gchar *path, Song *s)
 {
     gchar *result = NULL;
 

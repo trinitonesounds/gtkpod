@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-02 23:32:28 jcs>
+/* Time-stamp: <2003-09-07 20:52:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -80,7 +80,7 @@ gint get_song_gain(Song *song)
    mp3gain = g_strdup ("mp3gain");
 
    /*start sed s/:/\//*/
-   filename=get_song_name_on_disk_verified (song);
+   filename=get_track_name_on_disk_verified (song);
    for(i=0; filename && (i<strlen(filename)); i++){
       if (filename[i] == ':')  filename[i] = '/';
    }

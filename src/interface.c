@@ -1334,6 +1334,7 @@ create_prefs_window (void)
   GtkWidget *table9;
   GtkWidget *label70;
   GtkWidget *cfg_filename_format;
+  GtkWidget *cfg_special_export_charset;
   GtkWidget *label72;
   GtkWidget *label23;
   GtkWidget *vbox23;
@@ -1539,7 +1540,7 @@ create_prefs_window (void)
   cfg_update_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset also when updating\n or syncing tracks"));
   gtk_widget_show (cfg_update_charset);
   gtk_box_pack_start (GTK_BOX (vbox16), cfg_update_charset, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_update_charset, _("Normally the charset specified when first importing the song will be used to update the song information. If you have chosen a wrong charset when first importing a song and want to correct it using the \"Update Song\" function, you must check this option. Note: charset info is stored in the extended information file (see Export) and songs imported before V0.51 will have no charset stored -- the charset specified above will be used at first."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_update_charset, _("Normally the charset specified when first importing the track will be used to update the track information. If you have chosen a wrong charset when first importing a track and want to correct it using the \"Update Song\" function, you must check this option. Note: the charset info is stored in the extended information file (see 'Sync' below) and tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used."), NULL);
 
   cfg_add_recursively = gtk_check_button_new_with_mnemonic (_("Add directories recursively"));
   gtk_widget_show (cfg_add_recursively);
@@ -1715,8 +1716,13 @@ create_prefs_window (void)
   gtk_table_attach (GTK_TABLE (table9), cfg_filename_format, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_filename_format, _("Determines the filename of tracks you copy from the iPod, e.g '%A/%d/%t - %n.mp3'. %A: artist; %d: album; %n: title; %t: track nr"), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_filename_format, _("Determines the filename of tracks you copy from the iPod, e.g '%A/%d/%t - %n' or '%o'. %A: artist; %d: album; %n: title; %t: track nr; %o: original filename (needs extended information file)"), NULL);
   gtk_entry_set_text (GTK_ENTRY (cfg_filename_format), _(" "));
+
+  cfg_special_export_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (see above: 'Adding/Updating/\n Syncing') also for this filename."));
+  gtk_widget_show (cfg_special_export_charset);
+  gtk_box_pack_start (GTK_BOX (vbox50), cfg_special_export_charset, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_special_export_charset, _("Normally the charset specified when first importing the track will be used to update the track information. If you set this option you can use the charset selector above to specify a charset instead. Note: the charset info is stored in the extended information file (see 'Sync' above). Tracks imported before V0.51 will have no charset stored. Instead the charset specified above will be used."), NULL);
 
   label72 = gtk_label_new (_("Copying from iPod"));
   gtk_widget_show (label72);
@@ -2330,6 +2336,9 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_filename_format, "changed",
                     G_CALLBACK (on_cfg_filename_format_changed),
                     NULL);
+  g_signal_connect ((gpointer) cfg_special_export_charset, "toggled",
+                    G_CALLBACK (on_cfg_special_export_charset_toggled),
+                    NULL);
   g_signal_connect ((gpointer) time_format_entry, "changed",
                     G_CALLBACK (on_cfg_time_format_changed),
                     NULL);
@@ -2483,6 +2492,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, table9, "table9");
   GLADE_HOOKUP_OBJECT (prefs_window, label70, "label70");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_filename_format, "cfg_filename_format");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_special_export_charset, "cfg_special_export_charset");
   GLADE_HOOKUP_OBJECT (prefs_window, label72, "label72");
   GLADE_HOOKUP_OBJECT (prefs_window, label23, "label23");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox23, "vbox23");

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-25 00:43:24 jcs>
+/* Time-stamp: <2003-09-07 20:26:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -111,7 +111,8 @@ struct cfg
   gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
-  gboolean not_played_song;     /* not played song in Highest rated playlist? */
+  gboolean not_played_song;     /* not played song in Highest rated playlist?*/
+  gboolean special_export_charset; /* use original charset or specified one? */
   gint misc_song_nr;            /* song's nr in the Highest rated, most played and most recently played pl*/ 
   gboolean write_gaintag;       /* should we append the mp3gain's tag to the mp3files?*/
   float version;                /* version of gtkpod writing the cfg file */
@@ -251,13 +252,14 @@ void prefs_set_multi_edit (gboolean state);
 gboolean prefs_get_multi_edit (void);
 void prefs_set_misc_song_nr (gint state);
 gint prefs_get_misc_song_nr (void);
+void prefs_set_not_played_song (gboolean state);
 gboolean prefs_get_not_played_song (void);
-void prefs_set_not_played_song (gboolean);
 void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
 void prefs_set_filename_format (char* state);
 char* prefs_get_filename_format (void);
 void prefs_set_write_gaintag(gboolean val);
 gboolean prefs_get_write_gaintag(void);
-
+void prefs_set_special_export_charset(gboolean val);
+gboolean prefs_get_special_export_charset(void);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-03 15:51:49 jcs>
+/* Time-stamp: <2003-09-07 20:20:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -599,4 +599,8 @@ on_cfg_normalization_level_changed     (GtkEditable     *editable,
 
 void
 on_cfg_write_gaintag_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_special_export_charset_toggled  (GtkToggleButton *togglebutton,
                                         gpointer         user_data);

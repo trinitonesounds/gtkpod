@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-28 23:54:06 jcs>
+/* Time-stamp: <2003-09-07 20:53:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1352,7 +1352,7 @@ on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     gtk_tree_model_get(tm, iter, SM_COLUMN_TITLE, &s, -1); 
     /* can call on SM_COLUMN_TITLE cause s is consistent across all of
      * the columns */
-    name = get_song_name_on_disk_verified (s);
+    name = get_track_name_on_disk_verified (s);
     if (name)
     {
 	g_string_append_printf (filelist, "file:%s\n", name);

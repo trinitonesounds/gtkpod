@@ -181,7 +181,7 @@ md5_hash_song(Song * s)
       {
          result = g_strdup(s->md5_hash);
       }
-      else if ((filename = get_song_name_on_disk(s)) != NULL)
+      else if ((filename = get_track_name_on_disk(s)) != NULL)
       {
          if ((fp = fopen(filename, "r")))
          {

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-22 21:35:06 jcs>
+/* Time-stamp: <2003-09-07 20:25:39 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -453,6 +453,11 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->write_gaintag);
         }
+	if((w = lookup_widget(prefs_window, "cfg_special_export_charset")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->special_export_charset);
+        }
 	prefs_window_show_hide_tooltips ();
 	gtk_widget_show(prefs_window);
     }
@@ -530,6 +535,7 @@ prefs_window_set(void)
 	prefs_set_automount(tmpcfg->automount);
 	prefs_set_filename_format(tmpcfg->filename_format);
 	prefs_set_write_gaintag(tmpcfg->write_gaintag);
+	prefs_set_special_export_charset(tmpcfg->special_export_charset);
 
 	sm_show_preferred_columns();
     }
@@ -928,4 +934,10 @@ void
 prefs_window_set_write_gaintag(gboolean val)
 {
     tmpcfg->write_gaintag = val;
+}
+
+void
+prefs_window_set_special_export_charset(gboolean val)
+{
+    tmpcfg->special_export_charset = val;
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-15 23:45:19 jcs>
+/* Time-stamp: <2003-09-07 20:25:40 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -31,28 +31,27 @@
 void block_prefs_window (void);
 void release_prefs_window (void);
 void prefs_window_show_hide_tooltips (void);
-void prefs_window_ok(void);
-void prefs_window_apply(void);
-void prefs_window_cancel(void);
-void prefs_window_create(void);
-void prefs_window_delete(void);
-void prefs_window_set_md5songs(gboolean val);
-void prefs_window_set_update_existing(gboolean val);
-void prefs_window_set_block_display(gboolean val);
-void prefs_window_set_id3_write(gboolean val);
-void prefs_window_set_id3_writeall(gboolean val);
-void prefs_window_set_mount_point(const gchar *mp);
-void prefs_window_set_play_now_path(const gchar *path);
-void prefs_window_set_play_enqueue_path(const gchar *path);
-void prefs_window_set_time_format(const gchar *format);
-
-void prefs_window_set_keep_backups(gboolean active);
-void prefs_window_set_write_extended_info(gboolean active);
-void prefs_window_set_delete_playlist(gboolean val);
-void prefs_window_set_delete_song_ipod(gboolean val);
-void prefs_window_set_delete_song_playlist(gboolean val);
-void prefs_window_set_sync_remove_confirm(gboolean val);
-void prefs_window_set_auto_import(gboolean val);
+void prefs_window_ok (void);
+void prefs_window_apply (void);
+void prefs_window_cancel (void);
+void prefs_window_create (void);
+void prefs_window_delete (void);
+void prefs_window_set_md5songs (gboolean val);
+void prefs_window_set_update_existing (gboolean val);
+void prefs_window_set_block_display (gboolean val);
+void prefs_window_set_id3_write (gboolean val);
+void prefs_window_set_id3_writeall (gboolean val);
+void prefs_window_set_mount_point (const gchar *mp);
+void prefs_window_set_play_now_path (const gchar *path);
+void prefs_window_set_play_enqueue_path (const gchar *path);
+void prefs_window_set_time_format (const gchar *format);
+void prefs_window_set_keep_backups (gboolean active);
+void prefs_window_set_write_extended_info (gboolean active);
+void prefs_window_set_delete_playlist (gboolean val);
+void prefs_window_set_delete_song_ipod (gboolean val);
+void prefs_window_set_delete_song_playlist (gboolean val);
+void prefs_window_set_sync_remove_confirm (gboolean val);
+void prefs_window_set_auto_import (gboolean val);
 void prefs_window_set_charset (gchar *charset);
 void prefs_window_set_mpl_autoselect (gboolean autoselect);
 void prefs_window_set_show_duplicates (gboolean val);
@@ -74,8 +73,8 @@ void prefs_window_set_case_sensitive (gboolean val);
 void prefs_window_set_toolbar_style (GtkToolbarStyle val);
 void prefs_window_set_save_sorted_order (gboolean val);
 void prefs_window_set_sort_tab_num (gint num);
-void prefs_window_set_automount(gboolean val);
-void prefs_window_set_filename_format(const gchar *mp);
-void prefs_window_set_write_gaintag(gboolean val);
-
+void prefs_window_set_automount (gboolean val);
+void prefs_window_set_filename_format (const gchar *mp);
+void prefs_window_set_write_gaintag (gboolean val);
+void prefs_window_set_special_export_charset (gboolean val);
 #endif

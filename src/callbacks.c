@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-02 22:51:25 jcs>
+/* Time-stamp: <2003-09-07 20:20:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1559,5 +1559,13 @@ on_cfg_write_gaintag_toggled           (GtkToggleButton *togglebutton,
 {
     prefs_window_set_write_gaintag (
 	gtk_toggle_button_get_active (togglebutton));
+}
+
+
+void
+on_cfg_special_export_charset_toggled  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+
 }
 

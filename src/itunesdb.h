@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 22:53:02 jcs>
+/* Time-stamp: <2003-09-07 20:52:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -59,7 +59,7 @@ gboolean itunesdb_parse_file (gchar *filename);
 gboolean itunesdb_write (gchar *path);
 gboolean itunesdb_write_to_file (gchar *filename);
 gboolean itunesdb_copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile);
-gchar *itunesdb_get_song_name_on_ipod (gchar *path, Song *s);
+gchar *itunesdb_get_track_name_on_ipod (gchar *path, Song *s);
 gboolean itunesdb_cp (gchar *from_file, gchar *to_file);
 guint32 itunesdb_time_get_mac_time (void);
 time_t itunesdb_time_mac_to_host (guint32 mactime);

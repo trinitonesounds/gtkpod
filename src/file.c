@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-02 23:32:29 jcs>
+/* Time-stamp: <2003-09-07 21:20:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1406,7 +1406,7 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
 	(g_utf8_strlen (song->ipod_path, -1) > 0))
       {
 	/* need to get ipod filename */
-	ipod_fullpath = get_song_name_on_ipod (song);
+	ipod_fullpath = get_track_name_on_ipod (song);
 	if (Id3tag_Write_File_Tag (ipod_fullpath, filetag) == FALSE)
 	  {
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
@@ -1739,15 +1739,15 @@ void handle_import (void)
 }
 
 
-/* Like get_song_name_on_disk(), but verifies the song actually exists
+/* Like get_track_name_on_disk(), but verifies the song actually exists
    Must g_free return value after use */
-gchar *get_song_name_on_disk_verified (Song *song)
+gchar *get_track_name_on_disk_verified (Song *song)
 {
     gchar *name = NULL;
 
     if (song)
     {
-	name = get_song_name_on_ipod (song);
+	name = get_track_name_on_ipod (song);
 	if (name)
 	{
 	    if (!g_file_test (name, G_FILE_TEST_EXISTS))
@@ -1766,20 +1766,20 @@ gchar *get_song_name_on_disk_verified (Song *song)
 }
 
 /**
- * get_song_name_on_disk
+ * get_track_name_on_disk
  * Function to retrieve the filename on disk for the specified Song.  It
  * returns the valid filename whether the file has been copied to the ipod,
  * or has yet to be copied.  So it's useful for file operations on a song.
  * @s - The Song data structure we want the on disk file for
  * Returns - the filename for this Song. Must be g_free'd.
  */
-gchar* get_song_name_on_disk(Song *s)
+gchar* get_track_name_on_disk(Song *s)
 {
     gchar *result = NULL;
 
     if(s)
     {
-	result = get_song_name_on_ipod (s);
+	result = get_track_name_on_ipod (s);
 	if(!result &&
 	   (s->pc_path_locale) && (strlen(s->pc_path_locale) > 0))
 	{
@@ -1797,14 +1797,14 @@ gchar* get_song_name_on_disk(Song *s)
    exist. NOTE: the in itunesdb.c code works around a problem on some
    systems (see below) and might return a filename with different case
    than the original filename. Don't copy it back to @s */
-gchar *get_song_name_on_ipod (Song *s)
+gchar *get_track_name_on_ipod (Song *s)
 {
     gchar *result = NULL;
 
     if(s &&  !prefs_get_offline ())
     {
 	gchar *path = prefs_get_ipod_mount ();
-	result = itunesdb_get_song_name_on_ipod (path, s);
+	result = itunesdb_get_track_name_on_ipod (path, s);
 	C_FREE (path);
     }
     return(result);
@@ -1813,7 +1813,7 @@ gchar *get_song_name_on_ipod (Song *s)
 
 
 /**
- * get_preferred_song_name_format - useful for generating the preferred
+ * get_preferred_track_name_format - useful for generating the preferred
  * output filename for any track.  
  * FIXME Eventually this should check your prefs for the displayed
  * attributes in the song model and generate track names based on that
@@ -1821,7 +1821,7 @@ gchar *get_song_name_on_ipod (Song *s)
  * Returns - The preferred filename, you must free it yourself.
  */
 gchar *
-get_preferred_song_name_format (Song *s)
+get_preferred_track_name_format (Song *s)
 {
     gchar *result = NULL;
     if (s)
@@ -2063,7 +2063,7 @@ gboolean flush_songs (void)
   while (!abort && pending_deletion)
   {
       song = (Song*)pending_deletion->data;
-      if((filename = get_song_name_on_ipod(song)))
+      if((filename = get_track_name_on_ipod(song)))
       {
 	  if(g_strstr_len(filename, strlen(cfg->ipod_mount), cfg->ipod_mount))
 	  {
@@ -2112,6 +2112,11 @@ gboolean flush_songs (void)
   else
   {
       /* we now have as much space as we're gonna have, copy files to ipod */
+
+      progtext = g_strdup (_("preparing to copy..."));
+      gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
+      g_free (progtext);
+      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 
       /* count number of songs to be transferred */
       n = get_nr_of_nontransferred_songs ();
