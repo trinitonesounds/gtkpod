@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-20 00:13:17 jcs>
+/* Time-stamp: <2004-07-20 00:39:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1270,9 +1270,10 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   if (col && (pos != -1))
       gtk_tree_view_column_set_visible (col,
 					prefs_get_col_visible (tm_item));
-  gtk_tooltips_set_tip (tt, col->button, 
-			gettext (tm_col_tooltips[tm_item]),
-			NULL);
+  if (tt && tm_col_tooltips[tm_item])
+      gtk_tooltips_set_tip (tt, col->button, 
+			    gettext (tm_col_tooltips[tm_item]),
+			    NULL);
   return col;
 }
 

@@ -5,6 +5,11 @@ gtkpod V0.81-CVS
 	BUGFIX: fixed case-sensitivity issue while handling orphaned
 	tracks.
 
+	BUGFIX: fixed bug that caused gtkpod to hang when activating
+	duplicate detection without having the list of duplicates
+	displayed (must have been around ever since duplicate
+	detection was introduced...)
+
 	IMPROVEMENT: Added "Time Created" support to special sorttab,
 	track display and iTunesDB. (Before only "modified" and
 	"played" were supported.)

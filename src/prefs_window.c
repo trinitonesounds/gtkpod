@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 21:10:18 jcs>
+/* Time-stamp: <2004-07-20 01:01:29 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -753,6 +753,10 @@ prefs_window_set(void)
 	prefs_set_sync_remove_confirm(tmpcfg->deletion.syncing);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
 	prefs_set_keep_backups(tmpcfg->keep_backups);
+	prefs_set_show_duplicates(tmpcfg->show_duplicates);
+	prefs_set_show_updated(tmpcfg->show_updated);
+	prefs_set_show_non_updated(tmpcfg->show_non_updated);
+	prefs_set_show_sync_dirs(tmpcfg->show_sync_dirs);
 	/* we delete all stored md5 checksums if the md5 checksumming got
 	   disabled */
 	if (prefs_get_md5tracks() && !tmpcfg->md5tracks)
@@ -762,10 +766,6 @@ prefs_window_set(void)
 	prefs_set_update_existing(tmpcfg->update_existing);
 	prefs_set_block_display(tmpcfg->block_display);
 	prefs_set_sort_tab_num(tmpcfg->sort_tab_num, TRUE);
-	prefs_set_show_duplicates(tmpcfg->show_duplicates);
-	prefs_set_show_updated(tmpcfg->show_updated);
-	prefs_set_show_non_updated(tmpcfg->show_non_updated);
-	prefs_set_show_sync_dirs(tmpcfg->show_sync_dirs);
 	prefs_set_sync_remove(tmpcfg->sync_remove);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);

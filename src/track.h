@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 22:19:17 jcs>
+/* Time-stamp: <2004-07-20 00:46:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -88,16 +88,16 @@ typedef struct
   gboolean transferred;      /* has file been transferred to iPod?  */
   gchar   *md5_hash;         /* md5 hash of file (or NULL)          */
   gchar   *charset;          /* charset used for ID3 tags           */
-  gint32 BPM;                /* supposed to vary the playback speed */
+  gint16 BPM;                /* supposed to vary the playback speed */
 /* present in the mhit but not used by gtkpod yet */
   guint32 unk020, unk024, unk084, unk100, unk108, unk112, unk116, unk124;
   guint32 unk128, unk132, unk136, unk140, unk144, unk148, unk152;
-  guint32 app_rating;        /* star rating set by appl. (not iPod) */
+  guint8  app_rating;        /* star rating set by appl. (not iPod) */
   guint16 type;
-  guint16 compilation;
+  guint8  compilation;
   guint32 starttime;
   guint32 stoptime;
-  guint32 checked;
+  guint8  checked;
 } Track;
 /* !Don't forget to add fields read from the file to copy_new_info() in
  * file.c! */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 00:11:11 jcs>
+/* Time-stamp: <2004-07-20 01:07:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -415,6 +415,7 @@ void hash_tracks(void)
    {
        oldtrack = md5_track_exists_insert(track);
        ++count;
+/*        printf("%d:%d:%p:%p\n", count, track_nr, track, oldtrack); */
        if (((count % 20) == 1) || (count == ns))
        { /* update for count == 1, 21, 41 ... and for count == n */
 	   buf = g_strdup_printf (ngettext ("Hashed %d of %d track.",
@@ -519,21 +520,25 @@ void remove_duplicate (Track *oldtrack, Track *track)
        deltrack_nr = 0;
        gtkpod_tracks_statusbar_update();
    }
-   if (prefs_get_show_duplicates() && oldtrack && track)
+   if (oldtrack && track)
    {
-       /* add info about it to str */
-       buf = get_track_info (track);
-       buf2 = get_track_info (oldtrack);
-       if (!str)
+       if (prefs_get_show_duplicates ())
        {
-	   deltrack_nr = 0;
-	   str = g_string_sized_new (2000); /* used to keep record of
-					     * duplicate tracks */
+	   /* add info about it to str */
+	   buf = get_track_info (track);
+	   buf2 = get_track_info (oldtrack);
+	   if (!str)
+	   {
+	       deltrack_nr = 0;
+	       str = g_string_sized_new (2000); /* used to keep record
+						 * of duplicate
+						 * tracks */
+	   }
+	   g_string_append_printf (str, "'%s': identical to '%s'\n",
+				   buf, buf2);
+	   g_free (buf);
+	   g_free (buf2);
        }
-       g_string_append_printf (str, "'%s': identical to '%s'\n",
-			       buf, buf2);
-       g_free (buf);
-       g_free (buf2);
        /* Set playcount */
        oldtrack->playcount += track->playcount;
        oldtrack->recent_playcount += track->recent_playcount;
@@ -582,6 +587,7 @@ void remove_duplicate (Track *oldtrack, Track *track)
 	   removed = TRUE;
        }
        ++deltrack_nr; /* count duplicate tracks */
+       data_changed ();
    }
 }
 
