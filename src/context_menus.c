@@ -145,9 +145,32 @@ delete_entries(GtkMenuItem *mi, gpointer data)
     if (selected_playlist)
 	delete_playlist_head();
     else if(selected_entry)
-	delete_entry_head(entry_inst);
+	delete_entry_head(entry_inst, NULL);
     else if(selected_tracks)
-	delete_track_head();
+	delete_track_head(NULL);
+}
+
+/**
+ * delete_entries_full - delete the currently selected entry, be it a playlist,
+ * items in a sort tab, or tracks. All member tracks are removed from
+ * the iPod completely.
+ * @mi - the menu item selected
+ * @data - ignored, should be NULL
+ */
+static void 
+delete_entries_full(GtkMenuItem *mi, gpointer data)
+{
+    if (selected_playlist)
+    {
+	delete_track_head (get_playlist_by_nr (0));
+	remove_playlist (selected_playlist);
+    }
+    else if (selected_entry)
+    {
+	delete_entry_head (entry_inst, get_playlist_by_nr (0));
+    }
+    else if (selected_tracks)
+	delete_track_head (get_playlist_by_nr (0));
 }
 
 static void
@@ -232,6 +255,9 @@ void
 create_context_menu(CM_type type)
 {
     static GtkWidget *menu[CM_NUM];
+    static GtkWidget *mi_d[CM_NUM];   /* delete but keep track menu */
+    static GtkWidget *mi_df[CM_NUM];  /* delete with tracks menu */
+    Playlist *pl;
 
     if(!menu[type])
     {
@@ -251,17 +277,6 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (sync_dirs_entries));
 	hookup_mi (menu[type], _("Normalize"), NULL,
 		   G_CALLBACK (normalize_entries));
-	hookup_mi (menu[type], _("Delete"), "gtk-delete",
-		   G_CALLBACK (delete_entries));
-	/* FIXME: once we can find out in which track column the
-	   context menu was activated, we should offer the following
-	   options to the track view context menu as well */
-
-	if ((type == CM_ST) || (type == CM_TM))
-	{
-	    hookup_mi (menu[type], _("Create Playlist"), "gtk-justify-left",
-		       G_CALLBACK (create_playlist_from_entries));
-	}
 
 	if (type == CM_ST)
 	{
@@ -282,6 +297,61 @@ create_context_menu(CM_type type)
 	    hookup_mi (sub, _("Reset"), "gtk-undo",
 	               G_CALLBACK (reset_alphabetize));
 */
+	}
+	if ((type == CM_ST) || (type == CM_TM))
+	{
+	    hookup_mi (menu[type], _("Create Playlist"), "gtk-justify-left",
+		       G_CALLBACK (create_playlist_from_entries));
+	    mi_d[type] = hookup_mi (menu[type], _("Delete From Playlist"),
+				    "gtk-delete",
+				    G_CALLBACK (delete_entries));
+	    mi_df[type] = hookup_mi (menu[type], _("Delete From iPod"),
+				     "gtk-delete",
+				     G_CALLBACK (delete_entries_full));
+	}
+	if (type == CM_PM)
+	{
+	    mi_d[type] = hookup_mi (menu[type], _("Delete But Keep Tracks"),
+				    "gtk-delete",
+				    G_CALLBACK (delete_entries));
+	    mi_df[type] = hookup_mi (menu[type], _("Delete Including Tracks"),
+				     "gtk-delete",
+				     G_CALLBACK (delete_entries_full));
+	}
+    }
+    /* Make sure, only available delete options are displayed */
+    pl = pm_get_selected_playlist();
+    if (pl)
+    {
+	switch (type)
+	{
+	case CM_PM:
+	    if (pl->type == PL_TYPE_NORM)
+	    {
+		gtk_widget_set_sensitive (mi_d[type], TRUE);
+		gtk_widget_set_sensitive (mi_df[type], TRUE);
+	    }
+	    else
+	    {
+		gtk_widget_set_sensitive (mi_d[type], FALSE);
+		gtk_widget_set_sensitive (mi_df[type], FALSE);
+	    }
+	    break;
+	case CM_ST:
+	case CM_TM:
+	    if (pl->type == PL_TYPE_NORM)
+	    {
+		gtk_widget_set_sensitive (mi_d[type], TRUE);
+		gtk_widget_set_sensitive (mi_df[type], TRUE);
+	    }
+	    else
+	    {
+		gtk_widget_set_sensitive (mi_d[type], FALSE);
+		gtk_widget_set_sensitive (mi_df[type], TRUE);
+	    }
+	    break;
+	case CM_NUM:  /* to avoid compiler warning */
+	    break;
 	}
     }
     /* 

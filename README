@@ -757,6 +757,10 @@ Good Luck.
   up the display update. Further, decreasing the window size
   considerably speeds up the display.
 
+  I also want to point out that updating the info window takes up a
+  considerable amount of time. Update may become more intelligent in
+  the future -- until then close the info window for more speed.
+
 - When changing selections in the sort tabs while importing the
   iTunesDB, sometimes the interface freezes. I tried to track this
   problem down but only found out that gtk+ does not return control

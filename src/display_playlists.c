@@ -302,7 +302,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   GtkTreeSelection *selection = (GtkTreeSelection *)user_data1;
   GtkTreeModel *model;
   GtkTreeIter  iter;
-  Playlist *new_playlist;
+  Playlist *new_playlist = NULL;
 
 #if DEBUG_TIMING
   GTimeVal time;
@@ -375,6 +375,8 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
   printf ("pm_selection_changed_cb exit:  %ld.%06ld sec\n",
 	  time.tv_sec % 3600, time.tv_usec);
 #endif 
+  /* make only suitable delete menu items available */
+  display_adjust_delete_menus ();
 }
 
 /* Callback function called when the selection

@@ -6,6 +6,13 @@ gtkpod V0.61-CVS
 	Unfortunately .m4p files are not played by the iPod. .m4a files
 	work fine.
 
+	NEW FEATURE: info window showing total file size, play
+	time etc. can be opened.
+
+	IMPROVEMENT: Upon popular request, the menus now provide
+	different entries for "Delete from iPod" and "Delete from
+	Playlist".
+
 	IMPROVEMENT: When adding existing tracks:
 	 Until now the default action when adding tracks that already
 	 exist (identical full filename) was to add it again (they were

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 23:05:59 jcs>
+/* Time-stamp: <2003-11-26 23:23:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -57,6 +57,7 @@ struct info_playlist_view {
 
 /* structure to transfer info about the "totals" section */
 struct info_totals_view {
+    guint32 playlists;
     guint32 tracks;
     guint32 playtime;    /* in seconds */
     double  filesize;    /* in bytes   */
@@ -130,6 +131,8 @@ void info_open_window (void)
 	prefs_set_info_window (TRUE); /* notify prefs */
 	info_update ();
 	gtk_widget_show (info_window);
+	/* set the menu item for the info window correctly */
+	display_set_info_window_menu ();
     }
 }
 
@@ -140,6 +143,8 @@ void info_close_window (void)
     gtk_widget_destroy (info_window);
     info_window = NULL;
     prefs_set_info_window (FALSE); /* notify prefs */
+    /* set the menu item for the info window correctly */
+    display_set_info_window_menu ();
 }
 
 /* update all sections of info window */
@@ -198,6 +203,26 @@ void info_update_playlist_view (void)
     g_free (pv);
 }
 
+
+static void info_fill_in_totals_view_space (struct info_totals_view *tv)
+{
+    if (!info_window || !tv) return;
+    fill_label_uint ("non_transfered_tracks", tv->nt_tracks);
+    fill_label_size ("non_transfered_filesize", tv->nt_filesize);
+    if (!prefs_get_offline ())
+    {
+	fill_label_size ("free_space", tv->free_space);
+    }
+    else
+    {
+	GtkWidget *w = lookup_widget (info_window, "free_space");
+	if (w)
+	{
+	    gtk_label_set_text (GTK_LABEL (w), _("offline"));
+	}
+    }
+}
+
 /* update "totals" view section */
 void info_update_totals_view (void)
 {
@@ -206,12 +231,11 @@ void info_update_totals_view (void)
     if (!info_window) return; /* not open */
     tv = g_malloc0 (sizeof (struct info_totals_view));
     info_get_totals_view_info (tv);
+    fill_label_uint ("total_playlists", tv->playlists);
     fill_label_uint ("total_tracks", tv->tracks);
     fill_label_time ("total_playtime", tv->playtime);
     fill_label_size ("total_filesize", tv->filesize);
-    fill_label_uint ("non_transfered_tracks", tv->nt_tracks);
-    fill_label_size ("non_transfered_filesize", tv->nt_filesize);
-    fill_label_size ("free_space", tv->free_space);
+    info_fill_in_totals_view_space (tv);
     g_free (tv);
 }
 
@@ -223,10 +247,7 @@ void info_update_totals_view_space (void)
     if (!info_window) return; /* not open */
     tv = g_malloc0 (sizeof (struct info_totals_view));
     info_get_totals_view_info_space (tv);
-    fill_label_uint ("non_transfered_tracks", tv->nt_tracks);
-    fill_label_size ("non_transfered_filesize", tv->nt_filesize);
-    fill_label_size ("free_space", tv->free_space);
-    g_free (tv);
+    info_fill_in_totals_view_space (tv);
 }
 
 
@@ -312,6 +333,7 @@ static void info_get_totals_view_info (struct info_totals_view *tv)
     if (!pl)  return;
     tl = pl->members;
     fill_in_info (tl, &tv->tracks, &tv->playtime, &tv->filesize);
+    tv->playlists = get_nr_of_playlists () - 1;
     info_get_totals_view_info_space (tv);
 }
 

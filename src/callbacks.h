@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 18:59:06 jcs>
+/* Time-stamp: <2003-11-26 23:35:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -221,6 +221,22 @@ on_delete_playlist_activate                (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
+on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_delete_full_tracks_activate                    (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_delete_full_playlist_activate                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_delete_full_tab_entry_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
@@ -347,10 +363,6 @@ on_cfg_toolbar_style_text_toggled      (GtkToggleButton *togglebutton,
 
 void
 on_cfg_toolbar_style_icons_toggled     (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void

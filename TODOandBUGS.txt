@@ -61,6 +61,9 @@ Please feel free to submit further features.
 
 BUGLIST:
 
+- Confirmation does not work with "Remove Playlist including
+  tracks"
+
 - don't write iTunesDB if no tracks are imported.
 
 - when updating tracks the free space indicator gets smaller and

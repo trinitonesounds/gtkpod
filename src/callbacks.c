@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 23:06:55 jcs>
+/* Time-stamp: <2003-11-27 00:01:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -520,7 +520,7 @@ on_track_treeview_key_release_event     (GtkWidget       *widget,
 	switch(event->keyval)
 	{
 	    case GDK_d:
-		delete_track_head ();
+		delete_track_head (NULL);
 		break;
 	    case GDK_u:
 		do_selected_tracks (update_trackids);
@@ -677,7 +677,7 @@ void
 on_delete_tracks_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    delete_track_head ();
+    delete_track_head (NULL);
 }
 
 
@@ -695,7 +695,36 @@ on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Delete selected entry of which sort tab?"));
 
-    if (inst != -1)   delete_entry_head (inst);
+    if (inst != -1)   delete_entry_head (inst, NULL);
+}
+
+void
+on_delete_full_tracks_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+     delete_track_head (get_playlist_by_nr (0));
+}
+
+
+void
+on_delete_full_playlist_activate                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    delete_track_head (get_playlist_by_nr (0));
+    remove_playlist (pm_get_selected_playlist ());
+}
+
+void
+on_delete_full_tab_entry_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Delete selected entry of which sort tab?"));
+
+    if (inst != -1)
+    {
+	delete_entry_head (inst, get_playlist_by_nr (0));
+    }
 }
 
 void
@@ -776,7 +805,7 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 	{
 	    case GDK_d:
 		delete_entry_head (st_get_instance_from_treeview (
-				       GTK_TREE_VIEW (widget)));
+				       GTK_TREE_VIEW (widget)), NULL);
 		break;
 	    case GDK_u:
 		do_selected_entry (update_trackids,

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 22:54:14 jcs>
+/* Time-stamp: <2003-11-26 22:49:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1770,7 +1770,7 @@ void handle_import (void)
     gtkpod_tracks_statusbar_update();
     if (n != get_nr_of_tracks ())
     { /* Import was successfull, block menu item and button */
-	disable_gtkpod_import_buttons();
+	display_disable_gtkpod_import_buttons();
     }
     /* reset duplicate detection -- this will also detect and correct
      * all duplicate tracks currently in the database */
@@ -2152,7 +2152,7 @@ gboolean flush_tracks (void)
 
       /* count number of tracks to be transferred */
       n = get_nr_of_nontransferred_tracks ();
-      if (n != 0)  disable_gtkpod_import_buttons();
+      if (n != 0)  display_disable_gtkpod_import_buttons();
       count = 0; /* tracks transferred */
       nrs = 0;
       start = time(NULL);
@@ -2307,7 +2307,7 @@ void handle_export (void)
   {
       files_saved = TRUE;
       /* block menu item and button */
-      disable_gtkpod_import_buttons();
+      display_disable_gtkpod_import_buttons();
       gtkpod_statusbar_message(_("iPod Database Saved"));
   }
 

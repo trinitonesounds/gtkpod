@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 22:26:52 jcs>
+/* Time-stamp: <2003-11-26 23:07:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -70,7 +70,6 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position,
 				 AddTrackFunc trackaddfunc, gpointer data);
 void cleanup_backup_and_extended_files (void);
 gboolean gtkpod_main_quit(void);
-void disable_gtkpod_import_buttons(void);
 void gtkpod_main_window_set_active(gboolean active);
 
 T_item TM_to_T (TM_item sm);
@@ -79,8 +78,8 @@ gchar *get_track_info (Track *track);
 
 void ipod_directories_head (void);
 void delete_playlist_head (void);
-void delete_track_head (void);
-void delete_entry_head (gint inst);
+void delete_track_head (Playlist *pl);
+void delete_entry_head (gint inst, Playlist *pl);
 
 void delete_populate_settings (Playlist *pl, GList *selected_trackids,
 			       gchar **label, gchar **title,

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 23:05:50 jcs>
+/* Time-stamp: <2003-11-26 23:58:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -146,6 +146,8 @@ void display_create (GtkWidget *gtkpod)
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
     /* initialize sorting */
     tm_sort (prefs_get_tm_sortcol (), prefs_get_tm_sort ());
+    /* activate the delete menus correctly */
+    display_adjust_delete_menus ();
     /* set the menu item for the info window correctly */
     display_set_info_window_menu ();
     /* check if info window should be opened */
@@ -196,6 +198,78 @@ void display_reset (gint inst)
 void display_cleanup (void)
 {
     st_cleanup ();
+}
+
+
+/**
+ * disable_import_buttons
+ * Upon successfull itunes db importing we want to disable the import
+ * buttons.  This retrieves the import buttons from the main gtkpod widget
+ * and disables them from taking input.
+ */
+void
+display_disable_gtkpod_import_buttons(void)
+{
+    GtkWidget *w = NULL;
+    
+    if(gtkpod_window)
+    {
+	if((w = lookup_widget(gtkpod_window, "import_button")))
+	{
+	    gtk_widget_set_sensitive(w, FALSE);
+	    /* in case this widget has been blocked, we need to tell
+	       update the desired state upon release */
+	    update_blocked_widget (w, FALSE);
+	}
+	if((w = lookup_widget(gtkpod_window, "import_itunes_mi")))
+	{
+	    gtk_widget_set_sensitive(w, FALSE);
+	    /* in case this widget has been blocked, we need to tell
+	       update the desired state upon release */
+	    update_blocked_widget (w, FALSE);
+	}
+    }
+}
+
+
+/* make sure only suitable delete menu items are available */
+void display_adjust_delete_menus (void)
+{
+    GtkWidget *d  = lookup_widget (gtkpod_window, "delete_menu");
+    GtkWidget *dp = lookup_widget (gtkpod_window, "delete_playlist_menu");
+    GtkWidget *df  = lookup_widget (gtkpod_window, "delete_full_menu");
+    GtkWidget *dfp = lookup_widget (gtkpod_window, "delete_full_playlist_menu");
+#if 0
+/* not used */
+    GtkWidget *de = lookup_widget (gtkpod_window, "delete_tab_entry_menu");
+    GtkWidget *dt = lookup_widget (gtkpod_window, "delete_tracks_menu");
+    GtkWidget *dfe = lookup_widget (gtkpod_window,
+				    "delete_full_tab_entry_menu");
+    GtkWidget *dft = lookup_widget (gtkpod_window, "delete_full_tracks_menu");
+#endif
+
+    Playlist *pl = pm_get_selected_playlist ();
+    if (pl == NULL)
+    {
+	gtk_widget_set_sensitive (d, FALSE);
+	gtk_widget_set_sensitive (df, FALSE);
+    }
+    else
+    {
+	switch (pl->type)
+	{
+	case PL_TYPE_NORM:
+	    gtk_widget_set_sensitive (d, TRUE);
+	    gtk_widget_set_sensitive (df, TRUE);
+	    gtk_widget_set_sensitive (dp, TRUE);
+	    gtk_widget_set_sensitive (dfp, TRUE);
+	    break;
+	case PL_TYPE_MPL:
+	    gtk_widget_set_sensitive (d, FALSE);
+	    gtk_widget_set_sensitive (df, TRUE);
+	    gtk_widget_set_sensitive (dfp, FALSE);
+	}
+    }
 }
 
 /* make the toolbar visible or hide it depending on the value set in

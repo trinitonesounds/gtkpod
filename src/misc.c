@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 22:33:34 jcs>
+/* Time-stamp: <2003-11-26 23:19:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -370,11 +370,16 @@ gchar *get_user_string (gchar *title, gchar *message, gchar *dflt)
  * cancelled. */
 Playlist *add_new_playlist_user_name (gchar *dflt, gint position)
 {
+    Playlist *result = NULL;
     gchar *name = get_user_string (
 	_("New Playlist"),
 	_("Please enter a name for the new playlist"),
 	dflt? dflt:_("New Playlist"));
-    if (name) return add_new_playlist (name, position);
+    if (name)
+    {
+	result = add_new_playlist (name, position);
+	gtkpod_tracks_statusbar_update ();
+    }
     return NULL;
 }
 
@@ -723,37 +728,6 @@ gtkpod_main_quit(void)
     }
     return TRUE;
 }
-
-/**
- * disable_import_buttons
- * Upon successfull itunes db importing we want to disable the import
- * buttons.  This retrieves the import buttons from the main gtkpod widget
- * and disables them from taking input.
- */
-void
-disable_gtkpod_import_buttons(void)
-{
-    GtkWidget *w = NULL;
-    
-    if(gtkpod_window)
-    {
-	if((w = lookup_widget(gtkpod_window, "import_button")))
-	{
-	    gtk_widget_set_sensitive(w, FALSE);
-	    /* in case this widget has been blocked, we need to tell
-	       update the desired state upon release */
-	    update_blocked_widget (w, FALSE);
-	}
-	if((w = lookup_widget(gtkpod_window, "import_itunes_mi")))
-	{
-	    gtk_widget_set_sensitive(w, FALSE);
-	    /* in case this widget has been blocked, we need to tell
-	       update the desired state upon release */
-	    update_blocked_widget (w, FALSE);
-	}
-    }
-}
-
 
 /* Let the user select a sort tab number */
 /* @text: text to be displayed */
@@ -1184,6 +1158,8 @@ static void delete_playlist_ok (gpointer user_data1, gpointer user_data2)
     remove_playlist (selected_playlist);
     gtkpod_statusbar_message (buf);
     g_free (buf);
+    /* mark data as changed */
+    data_changed ();
 }
 
 void delete_playlist_head (void)
@@ -1325,6 +1301,8 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
     gtkpod_statusbar_message (buf);
     g_list_free (selected_trackids);
     g_free (buf);
+    /* mark data as changed */
+    data_changed ();
 }
 
 /* cancel handler for delete track */
@@ -1336,16 +1314,17 @@ static void delete_track_cancel (gpointer user_data1, gpointer user_data2)
     g_list_free (selected_trackids);
 }
 
-void delete_track_head (void)
+
+/* call with @pl = NULL for currently selected playlist */
+void delete_track_head (Playlist *pl)
 {
     GList *selected_trackids;
-    Playlist *pl;
     GString *str;
     gchar *label, *title;
     gboolean confirm_again;
     ConfHandlerOpt confirm_again_handler;
 
-    pl = pm_get_selected_playlist();
+    if (pl == NULL)  pl = pm_get_selected_playlist();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
 	gtkpod_statusbar_message (_("No playlist selected."));
@@ -1372,11 +1351,11 @@ void delete_track_head (void)
 	 NULL, 0, NULL,        /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
 	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
-	 delete_track_ok,       /* ConfHandler ok_handler,*/
+	 delete_track_ok,      /* ConfHandler ok_handler,*/
 	 CONF_NO_BUTTON,       /* don't show "Apply" button */
-	 delete_track_cancel,   /* cancel_handler,*/
+	 delete_track_cancel,  /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
-	 selected_trackids);    /* gpointer user_data2,*/
+	 selected_trackids);   /* gpointer user_data2,*/
 
     g_free (label);
     g_string_free (str, TRUE);
@@ -1420,6 +1399,8 @@ static void delete_entry_ok (gpointer user_data1, gpointer user_data2)
     delete_track_ok (pl, selected_trackids);
     /* Delete the entry */
     st_remove_entry (entry, inst);
+    /* mark data as changed */
+    data_changed ();
 }
 
 
@@ -1433,10 +1414,10 @@ static void delete_entry_cancel (gpointer user_data1, gpointer user_data2)
 }
 
 
-void delete_entry_head (gint inst)
+/* if @pl == NULL, the currently selected playlist will be selected */
+void delete_entry_head (gint inst, Playlist *pl)
 {
     GList *selected_trackids=NULL;
-    Playlist *pl;
     GString *str;
     gchar *label, *title;
     gboolean confirm_again;
@@ -1445,7 +1426,7 @@ void delete_entry_head (gint inst)
     GList *gl;
 
     if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
-    pl = pm_get_selected_playlist();
+    if (pl == NULL)    pl = pm_get_selected_playlist();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
 	gtkpod_statusbar_message (_("No playlist selected."));
