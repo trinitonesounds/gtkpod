@@ -1,5 +1,10 @@
 TODO:
 
+Normalize: Menus: Normalize->Selected Playlist
+                           ->Selected Tab Entry
+                           ->Selected Songs
+                  Normalize Context Menu
+
 - don't write iTunesDB if no tracks are imported.
 
 - update message of "add directory"

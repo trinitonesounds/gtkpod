@@ -42,7 +42,7 @@
 		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1667">
+			<widget class="GtkImage" id="image1787">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-top</property>
 			  <property name="icon_size">1</property>
@@ -63,7 +63,7 @@
 		      <signal name="activate" handler="on_add_files1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1668">
+			<widget class="GtkImage" id="image1788">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -84,7 +84,7 @@
 		      <signal name="activate" handler="on_add_directory1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1669">
+			<widget class="GtkImage" id="image1789">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -105,7 +105,7 @@
 		      <signal name="activate" handler="on_add_playlist1_activate" last_modification_time="Fri, 21 Feb 2003 14:49:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1670">
+			<widget class="GtkImage" id="image1790">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -126,7 +126,7 @@
 		      <signal name="activate" handler="on_export_itunes1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1671">
+			<widget class="GtkImage" id="image1791">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-bottom</property>
 			  <property name="icon_size">1</property>
@@ -152,7 +152,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1672">
+			<widget class="GtkImage" id="image1792">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -204,7 +204,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1673">
+			<widget class="GtkImage" id="image1793">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -262,7 +262,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1674">
+			<widget class="GtkImage" id="image1794">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -337,7 +337,7 @@
 		      <signal name="activate" handler="on_ipod_directories_menu" last_modification_time="Sat, 18 Jan 2003 02:10:39 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1675">
+			<widget class="GtkImage" id="image1795">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-execute</property>
 			  <property name="icon_size">1</property>
@@ -385,7 +385,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1676">
+			<widget class="GtkImage" id="image1796">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-copy</property>
 			  <property name="icon_size">1</property>
@@ -509,13 +509,45 @@
 		  </child>
 
 		  <child>
+		    <widget class="GtkMenuItem" id="normalize_songs1">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">_Normalize songs</property>
+		      <property name="use_underline">True</property>
+
+		      <child>
+			<widget class="GtkMenu" id="normalize_songs1_menu">
+
+			  <child>
+			    <widget class="GtkMenuItem" id="normalize_all_the_ipod's_songs1">
+			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Normalize all the songs in the iPod</property>
+			      <property name="label" translatable="yes">Normalize all the iPod's Songs</property>
+			      <property name="use_underline">True</property>
+			      <signal name="activate" handler="on_normalize_all_the_ipod's_songs1_activate" last_modification_time="Mon, 01 Sep 2003 20:29:49 GMT"/>
+			    </widget>
+			  </child>
+
+			  <child>
+			    <widget class="GtkMenuItem" id="normalize_the_newly_inserted_songs1">
+			      <property name="visible">True</property>
+			      <property name="label" translatable="yes">Normalize the newly inserted songs</property>
+			      <property name="use_underline">True</property>
+			      <signal name="activate" handler="on_normalize_the_newly_inserted_songs1_activate" last_modification_time="Mon, 01 Sep 2003 20:30:32 GMT"/>
+			    </widget>
+			  </child>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
 		    <widget class="GtkImageMenuItem" id="alphabetize0_menu">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Alphabetize</property>
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1677">
+			<widget class="GtkImage" id="image1797">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-sort-ascending</property>
 			  <property name="icon_size">1</property>
@@ -558,7 +590,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1678">
+			<widget class="GtkImage" id="image1798">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-sort-descending</property>
 			  <property name="icon_size">1</property>
@@ -602,7 +634,7 @@
 		      <signal name="activate" handler="on_reset_sorting_activate" last_modification_time="Sat, 15 Mar 2003 08:14:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1679">
+			<widget class="GtkImage" id="image1799">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-undo</property>
 			  <property name="icon_size">1</property>
@@ -623,7 +655,7 @@
 		      <signal name="activate" handler="on_save_song_order1_activate" last_modification_time="Sat, 08 Mar 2003 13:45:01 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1680">
+			<widget class="GtkImage" id="image1800">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-justify-fill</property>
 			  <property name="icon_size">1</property>
@@ -649,7 +681,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1681">
+			<widget class="GtkImage" id="image1801">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -709,7 +741,7 @@
 		      <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1682">
+			<widget class="GtkImage" id="image1802">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -763,7 +795,7 @@
 		      <signal name="activate" handler="on_more_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1683">
+			<widget class="GtkImage" id="image1803">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -784,7 +816,7 @@
 		      <signal name="activate" handler="on_less_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1684">
+			<widget class="GtkImage" id="image1804">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-remove</property>
 			  <property name="icon_size">1</property>
@@ -826,7 +858,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1685">
+			<widget class="GtkImage" id="image1805">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -878,7 +910,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1686">
+			<widget class="GtkImage" id="image1806">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -944,7 +976,7 @@
 		      <signal name="activate" handler="on_about1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image1687">
+			<widget class="GtkImage" id="image1807">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-info</property>
 			  <property name="icon_size">1</property>

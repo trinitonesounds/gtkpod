@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-30 02:09:19 jcs>
+/* Time-stamp: <2003-09-02 22:55:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -131,4 +131,5 @@ void last_listened_pl(void);
 void most_rated_pl(void);
 void since_last_pl(void);
 void rebuild_iTunesDB(void);
+gchar *which(const gchar *exe);
 #endif

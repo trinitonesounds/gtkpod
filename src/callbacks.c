@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-24 14:48:08 jcs>
+/* Time-stamp: <2003-09-02 22:51:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -46,6 +46,7 @@
 #include "file_export.h"
 #include "charset.h"
 #include "playlist.h"
+#include "normalize.h"
 
 void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
@@ -1514,4 +1515,22 @@ on_cfg_not_played_song_toggled         (GtkToggleButton *togglebutton,
 	gtk_toggle_button_get_active (togglebutton));
 }
 
+
+
+void
+on_normalize_all_the_ipod_s_songs1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+   normalize_iPod_songs();
+}
+
+
+void
+on_normalize_the_newly_inserted_songs1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+   normalize_new_songs(TRUE);
+}
 

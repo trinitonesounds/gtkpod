@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-02 00:30:45 jcs>
+/* Time-stamp: <2003-09-02 22:55:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1596,7 +1596,7 @@ void call_script (gchar *script)
  * @name - the executable we're trying to find the path for
  * Returns the path to the executable, NULL on not found
  */
-static gchar* 
+gchar* 
 which(const gchar *exe)
 {
     FILE *fp = NULL;
@@ -2674,3 +2674,4 @@ void since_last_pl(void)
     update_ranked_playlist (_("Last Time"), 0,
 			    since_last_IF, since_last_CF);
 }
+

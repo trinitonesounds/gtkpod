@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-02 00:22:04 jcs>
+/* Time-stamp: <2003-09-02 23:32:29 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2077,7 +2077,7 @@ gboolean flush_songs (void)
 		  {
 		      while (widgets_blocked && gtk_events_pending ())
 			  gtk_main_iteration ();
-		      /* wait a maximum of 10 ms */
+		      /* wait a maximum of 20 ms */
 		      g_get_current_time (&gtime);
 		      g_time_val_add (&gtime, 20000);
 		      g_cond_timed_wait (cond, mutex, &gtime);

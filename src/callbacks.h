@@ -578,3 +578,13 @@ on_cfg_not_played_song_toggled         (GtkToggleButton *togglebutton,
 void
 on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_normalize_all_the_ipod_s_songs1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_normalize_the_newly_inserted_songs1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
