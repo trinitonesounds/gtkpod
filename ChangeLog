@@ -1,4 +1,4 @@
-gtkpod V0.86.CVS
+gtkpod V0.87
         BUGFIX: drag and drop was only implemented for mp3 files, not
         for m4a, m4p, m4b, and wav files (thanks to Chris Micacchi for
         pointing it out and supplying a first fix).
@@ -16,18 +16,16 @@ gtkpod V0.86.CVS
 	IMPROVEMENT: The fields "time_modified/played/created" can now
 	be edited from within the track view.
 
+	NEW FEATURES: Added scripts sync_evolution, sync_evocalendar and
+	sync_notes to synchronise Contacts, Calendar and Tasks from
+	Evolution and to synchronise Notes with anything in the folder
+	~/ipod_notes.
+
+	IMPROVEMENT: Creation of playlists for each rating
+	(Unrated, and Rated 1..5).
+
 	UPDATE: Swedish translation catalog
 
-	Added scripts sync_evolution, sync_evocalendar and sync_notes
-	to synchronise Contacts, Calendar and Tasks from Evolution
-	and to synchronise Notes with anything in the folder ~/ipod_notes.
-	Added field for notes sync path in Preferences. Added Sync Notes
-	and Sync All to the Tools menu.
-
-	Added option to create a playlist for each rating (Unrated,
-	and Rated 1..5).
-
-	
 gtkpod V0.85.0
 	BUGFIX: when clicking onto the column header of the track
 	treeview three times and moving sidewards with the mouse at

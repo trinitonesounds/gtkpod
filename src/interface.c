@@ -2563,7 +2563,7 @@ create_prefs_window (void)
   play_now_path_entry = gtk_entry_new ();
   gtk_widget_show (play_now_path_entry);
   gtk_box_pack_start (GTK_BOX (hbox52), play_now_path_entry, TRUE, TRUE, 0);
-  gtk_tooltips_set_tip (tooltips, play_now_path_entry, _("For example, 'xmms -p %s' will clear xmms' current playlist, add the selected tracks and start playing."), NULL);
+  gtk_tooltips_set_tip (tooltips, play_now_path_entry, _("For example, 'xmms %s' will clear xmms' current playlist, add the selected tracks and start playing."), NULL);
 
   play_now_path_button = gtk_button_new_with_mnemonic (_("..."));
   gtk_widget_show (play_now_path_button);

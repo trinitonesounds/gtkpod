@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-07 10:39:35 jcs>
+/* Time-stamp: <2005-01-02 15:19:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -257,7 +257,8 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		if (strcmp (arg, md5) != 0)
 		{
 		    hash_matched = FALSE;
-		    gtkpod_warning (_("iTunesDB '%s' does not match checksum in extended information file '%s'\ngtkpod will try to match the information using MD5 checksums. If successful, this may take a while.\n\n"), itunes, name);
+		    gtkpod_warning (_("iTunesDB '%s' does not match checksum in extended information file '%s'\ngtkpod will try to match the information using MD5 checksums. This may take a long time.\n\n"), itunes, name);
+		    while (gtk_events_pending ())  gtk_main_iteration ();
 /*		    success = FALSE;
 		    break;*/
 		}

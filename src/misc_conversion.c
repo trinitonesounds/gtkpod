@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-30 13:01:07 jcs>
+/* Time-stamp: <2004-12-30 14:39:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -113,6 +113,21 @@ T_item ST_to_T (ST_CAT_item st)
  *                       Timestamp stuff                            *
  *                                                                  *
 \*------------------------------------------------------------------*/
+
+
+	/* NOTE:
+	 *
+	 * The iPod (firmware 1.3, 2.0, ...?) doesn't seem to use the
+	 * timezone information correctly -- no matter what you set
+	 * iPod's timezone to, it will always record as if it were set
+	 * to UTC -- we need to subtract the difference between
+	 * current timezone and UTC to get a correct
+	 * display. 'timezone' (initialized above) contains the
+	 * difference in seconds.
+	 */
+/*	if (playcount->time_played)
+	playcount->time_played += timezone;*/
+/* FIXME: THIS IS NOT IMPLEMENTED CORRECTLY */
 
 
 #define DATE_FORMAT_LONG "%x %X"

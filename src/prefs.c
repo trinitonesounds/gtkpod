@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-16 22:27:04 jcs>
+/* Time-stamp: <2005-01-02 18:27:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -253,7 +253,7 @@ struct cfg *cfg_new(void)
 	switch ((PathType)i)
 	{
 	case PATH_PLAY_NOW:
-	    mycfg->path[i] = g_strdup ("xmms -p %s"); break;
+	    mycfg->path[i] = g_strdup ("xmms %s"); break;
 	case PATH_PLAY_ENQUEUE:
 	    mycfg->path[i] = g_strdup ("xmms -e %s"); break;
 	case PATH_MP3GAIN:
@@ -364,19 +364,30 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_ipod_mount (arg);
 	  }
-	  else if(arg_comp (line, "toolpath", &off) == 0)
+	  else if((arg_comp (line, "toolpath", &off) == 0) ||
+		  (arg_comp (line, "path", &off) == 0))
 	  {
 	      gint i = atoi (line+off);
 	      prefs_set_path (i, arg);
-	  }
-	  else if(arg_comp (line, "path", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_path (i, arg);
+	      if ((i == PATH_PLAY_NOW) && (cfg->version < 0.87))
+	      {  /* default changed from "xmms -p %s" to "xmms %s" which
+		    avoids xmms from hanging -- thanks to Chris	Vine */
+		  if (strcmp (arg, "xmms -p %s") == 0)
+		  {
+		      prefs_set_path (i, "xmms %s");
+		  }
+	      }
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
 	  {
-	      prefs_set_path (PATH_PLAY_NOW, arg);
+	      if (strcmp (arg, "xmms -p %s") == 0)
+	      {
+		  prefs_set_path (PATH_PLAY_NOW, "xmms %s");
+	      }
+	      else
+	      {
+		  prefs_set_path (PATH_PLAY_NOW, arg);
+	      }
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_enqueue_path") == 0)
 	  {

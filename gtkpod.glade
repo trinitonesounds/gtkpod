@@ -5040,7 +5040,7 @@ or tab entry (faster!)</property>
 				  <child>
 				    <widget class="GtkEntry" id="play_now_path_entry">
 				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">For example, 'xmms -p %s' will clear xmms' current playlist, add the selected tracks and start playing.</property>
+				      <property name="tooltip" translatable="yes">For example, 'xmms %s' will clear xmms' current playlist, add the selected tracks and start playing.</property>
 				      <property name="can_focus">True</property>
 				      <property name="editable">True</property>
 				      <property name="visibility">True</property>

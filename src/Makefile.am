@@ -8,11 +8,21 @@ INCLUDES = @PACKAGE_CFLAGS@ \
 	   -DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	   -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
 
-bin_PROGRAMS = gtkpod
+bin_PROGRAMS = gtkpod # itdb
 
 ## I'm using %option outfile="lex.yy.c" in the parser files,
 ## so this should be portable
 LEX_OUTPUT_ROOT = lex.yy
+
+#itdb_SOURCES = \
+#	itdb_main.c \
+#	itdb.h \
+#	itdb_itunesdb.c \
+#	itdb_playlist.c \
+#	itdb_private.h \
+#	itdb_track.c
+
+#itdb_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
 gtkpod_SOURCES = \
 	charset.c charset.h \

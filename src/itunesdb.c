@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-14 00:52:27 jcs>
+/* Time-stamp: <2005-01-01 14:53:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1428,7 +1428,6 @@ static void read_OTG_playlists (const gchar *dirname)
    Returns TRUE on success, FALSE on error.
    "path" should point to the mount point of the iPod,
    e.g. "/mnt/ipod" and be in local encoding */
-/* Support for playlists should be added later */
 gboolean itunesdb_parse (const gchar *path)
 {
   gchar *filename;
@@ -1560,6 +1559,7 @@ gboolean itunesdb_parse_file (const gchar *filename)
 	      if (get32lint (itunes, seek + 12) != 2)
 	      {  /* this is not a playlist MHSD -> skip it */
 		  seek += get32lint (itunes, seek+8);
+		  continue;
 	      }
 	  }
 	  if (cmp_n_bytes (data, "mhlp", 4) == TRUE)

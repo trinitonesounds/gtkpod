@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-04 15:33:28 jcs>
+/* Time-stamp: <2005-01-01 15:38:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -61,6 +61,7 @@ free_track(Track *track)
       g_free (track->comment);
       g_free (track->composer);
       g_free (track->fdesc);
+      g_free (track->grouping);
       g_free (track->album_utf16);
       g_free (track->artist_utf16);
       g_free (track->title_utf16);
@@ -68,6 +69,7 @@ free_track(Track *track)
       g_free (track->comment_utf16);
       g_free (track->composer_utf16);
       g_free (track->fdesc_utf16);
+      g_free (track->grouping_utf16);
       g_free (track->pc_path_utf8);
       g_free (track->pc_path_locale);
       g_free (track->ipod_path);
