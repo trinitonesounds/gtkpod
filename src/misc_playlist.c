@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 23:17:49 JST jcs>
+/* Time-stamp: <2004-03-29 23:44:41 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -926,7 +926,7 @@ void check_db (void)
 		 TRUE,          /* gboolean confirm_again, */
 		 NULL,          /* ConfHandlerOpt confirm_again_handler,*/
 		 check_db_danglingok, /* ConfHandler ok_handler,*/
-		 CONF_NO_BUTTON, /* don't show "Apply" button */
+		 NULL,          /* don't show "Apply" button */
 		 check_db_danglingcancel, /* cancel_handler,*/
 		 l_dangling[i], /* gpointer user_data1,*/
 		 k);            /* gpointer user_data2,*/

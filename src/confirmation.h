@@ -73,8 +73,6 @@ enum {
     CONF_ID_DANGLING1
 } CONF_ID;
 
-/* pass this as handler if you don't want the corresponding button to
-   be drawn */
-#define CONF_NO_BUTTON ((ConfHandler)-1)
+void CONF_NULL_HANDLER (gpointer d1, gpointer d2);
 
 #endif

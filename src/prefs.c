@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-28 23:56:57 JST jcs>
+/* Time-stamp: <2004-03-29 00:14:31 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -416,11 +416,8 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_sync_remove_confirm((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "auto_import") == 0)
-	  {
-	      prefs_set_autoimport((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "autoimport") == 0)
+	  else if((g_ascii_strcasecmp (line, "auto_import") == 0) ||
+		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
 	  }

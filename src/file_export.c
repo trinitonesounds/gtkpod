@@ -522,12 +522,14 @@ file_export_init(GList *tracks)
  */
 static gchar check_char(gchar c)
 {
-        gint i;
-        gchar invalid[]={'"', '*', ':', '<', '>', '?', '\\', '|', '/'};
-        for(i=0; i<9; i++)
-                if(c==invalid[i])
-                        return '_';
-        return c;
+    gint i;
+    static const gchar 
+	invalid[]={'"', '*', ':', '<', '>', '?', '\\', '|', '/', 0};
+    static const gchar
+	replace[]={'_', '_', '-', '_', '_', '_', '-',  '-', '-', 0};
+    for(i=0; invalid[i]!=0; i++)
+	if(c==invalid[i])  return replace[i];
+    return c;
 }
 
 /**

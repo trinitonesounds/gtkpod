@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:26:08 JST jcs>
+/* Time-stamp: <2004-03-29 22:43:34 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,9 +33,6 @@
 /* The code in the second section of this file is taken from the
  * mpg123 code used in xmms-1.2.7 (Input/mpg123). Only the code needed
  * for the playlength calculation has been extracted. */
-
-/* The code in the third section of this file is taken from
- * easytag. */
 
 /* The code in the last section of this file is original gtkpod
  * code. */

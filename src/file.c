@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-25 22:36:32 JST jcs>
+/* Time-stamp: <2004-03-29 23:44:41 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -969,7 +969,7 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		 prefs_get_sync_remove_confirm(), /* gboolean confirm_again, */
 		 prefs_set_sync_remove_confirm,   /* confirm_again_handler,*/
 		 sync_remove_ok,       /* ConfHandler ok_handler,*/
-		 CONF_NO_BUTTON,       /* don't show "Apply" button */
+		 NULL,                 /* don't show "Apply" button */
 		 sync_remove_cancel,   /* cancel_handler,*/
 		 NULL,                 /* gpointer user_data1,*/
 		 id_list);             /* gpointer user_data2,*/
@@ -1103,7 +1103,7 @@ No valid directories have been found. Sync aborted.\n"));
 		prefs_get_show_sync_dirs(),/* gboolean confirm_again, */
 		prefs_set_show_sync_dirs,/* confirm_again_handler*/
 		sync_dir_ok,            /* ConfHandler ok_handler,*/
-		CONF_NO_BUTTON,         /* don't show "Apply" */
+		NULL,                   /* don't show "Apply" */
 		sync_dir_cancel,        /* cancel_handler,*/
 		hash,                   /* gpointer user_data1,*/
 		pm_get_selected_playlist())) /* gpointer user_data2,*/
@@ -1144,9 +1144,9 @@ void display_non_updated (Track *track, gchar *txt)
 		NULL, 0, NULL,          /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
 		prefs_set_show_non_updated,/* confirm_again_handler,*/
-		NULL,               /* ConfHandler ok_handler,*/
-		CONF_NO_BUTTON,     /* don't show "Apply" button */
-		CONF_NO_BUTTON,     /* cancel_handler,*/
+		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
+		NULL,               /* don't show "Apply" button */
+		NULL,               /* cancel_handler,*/
 		NULL,               /* gpointer user_data1,*/
 		NULL);              /* gpointer user_data2,*/
 	   g_free (buf);
@@ -1208,9 +1208,9 @@ void display_updated (Track *track, gchar *txt)
 		NULL, 0, NULL,          /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
 		prefs_set_show_updated,/* confirm_again_handler,*/
-		NULL,               /* ConfHandler ok_handler,*/
-		CONF_NO_BUTTON,     /* don't show "Apply" button */
-		CONF_NO_BUTTON,     /* cancel_handler,*/
+		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
+		NULL,               /* don't show "Apply" button */
+		NULL,               /* cancel_handler,*/
 		NULL,               /* gpointer user_data1,*/
 		NULL);              /* gpointer user_data2,*/
 	   g_free (buf);

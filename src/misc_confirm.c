@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-25 22:27:16 JST jcs>
+/* Time-stamp: <2004-03-29 23:44:41 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -70,9 +70,9 @@ void gtkpod_warning (const gchar *format, ...)
 			 NULL, 0, NULL,       /* option 2 */
 			 TRUE,                /* gboolean confirm_again, */
 			 NULL, /* ConfHandlerOpt confirm_again_handler, */
-			 NULL, /* ConfHandler ok_handler,*/
-			 CONF_NO_BUTTON,      /* don't show "Apply" */
-			 CONF_NO_BUTTON,      /* cancel_handler,*/
+			 CONF_NULL_HANDLER,   /* ConfHandler ok_handler,*/
+			 NULL,                /* don't show "Apply" */
+			 NULL,                /* cancel_handler,*/
 			 NULL,                /* gpointer user_data1,*/
 			 NULL);               /* gpointer user_data2,*/
     g_free (text);
@@ -234,7 +234,7 @@ void delete_track_head (gboolean full_delete)
 	 confirm_again,        /* gboolean confirm_again, */
 	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
 	 delete_track_ok,      /* ConfHandler ok_handler,*/
-	 CONF_NO_BUTTON,       /* don't show "Apply" button */
+	 NULL,                 /* don't show "Apply" button */
 	 delete_track_cancel,  /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
 	 selected_trackids);   /* gpointer user_data2,*/
@@ -365,7 +365,7 @@ void delete_entry_head (gint inst, gboolean delete_full)
 	 confirm_again,        /* gboolean confirm_again, */
 	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
 	 delete_entry_ok,      /* ConfHandler ok_handler,*/
-	 CONF_NO_BUTTON,       /* don't show "Apply" button */
+	 NULL,                 /* don't show "Apply" button */
 	 delete_entry_cancel,  /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
 	 selected_trackids);   /* gpointer user_data2,*/
@@ -482,7 +482,7 @@ void delete_playlist_head (gboolean delete_full)
 	     confirm_again,          /* gboolean confirm_again, */
 	     confirm_again_handler,  /* ConfHandlerOpt confirm_again_handler,*/
 	     delete_playlist_full_ok,/* ConfHandler ok_handler,*/
-	     CONF_NO_BUTTON,         /* don't show "Apply" button */
+	     NULL,                   /* don't show "Apply" button */
 	     delete_playlist_cancel, /* cancel_handler,*/
 	     pl,                     /* gpointer user_data1,*/
 	     selected_trackids);     /* gpointer user_data2,*/
@@ -504,8 +504,8 @@ void delete_playlist_head (gboolean delete_full)
 	     prefs_get_track_playlist_deletion (),/* confirm_again, */
 	     prefs_set_track_playlist_deletion, /* confirm_again_handler,*/
 	     delete_playlist_ok, /* ConfHandler ok_handler,*/
-	     CONF_NO_BUTTON,     /* don't show "Apply" button */
-	     NULL,               /* cancel_handler,*/
+	     NULL,               /* don't show "Apply" button */
+	     CONF_NULL_HANDLER,  /* cancel_handler,*/
 	     pl,                 /* gpointer user_data1,*/
 	     NULL);              /* gpointer user_data2,*/
 	g_free (buf);
@@ -605,7 +605,7 @@ void ipod_directories_head (gboolean modal)
 			 TRUE,               /* gboolean confirm_again, */
 			 NULL, /* ConfHandlerOpt confirm_again_handler, */
 			 ipod_directories_ok, /* ConfHandler ok_handler,*/
-			 CONF_NO_BUTTON,      /* don't show "Apply" */
+			 NULL,                /* don't show "Apply" */
 			 ipod_directories_cancel, /* cancel_handler,*/
 			 mp,                  /* gpointer user_data1,*/
 			 NULL))               /* gpointer user_data2,*/

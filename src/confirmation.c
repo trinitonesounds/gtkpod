@@ -115,6 +115,13 @@ static void on_cancel_clicked (GtkWidget *w, gpointer id)
 }
 
 
+/* Handler to be used when the button should be displayed, but no
+   action is required */
+void CONF_NULL_HANDLER (gpointer d1, gpointer d2)
+{
+}
+
+
 static void on_response (GtkWidget *w, gint response, gpointer id)
 {
     ConfData *cd;
@@ -187,6 +194,7 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
     }
 }
 
+
 /* gtkpod_confirmation(): open a confirmation window with the
    information given. If "OK" is clicked, ok_handler() is called,
    otherwise cancel_handler() is called, each with the parameters
@@ -219,8 +227,11 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
    @user_data1:     first argument to be passed to the ConfHandler
    @user_data1:     second argument to be passed to the ConfHandler
 
-   Pass "CONF_NO_BUTTON" as "handler" if you want the corresponding
-   button to be hidden.
+   Pass NULL as "handler" if you want the corresponding button to be
+   hidden.
+
+   Pass CONF_NULL_HANDLER if you want the corresponding button to be
+   shown, but don't want to specify a handler.
 
    return value:
    FALSE: no window was opened because another window with the same ID
@@ -300,7 +311,7 @@ gboolean gtkpod_confirmation (gint id,
     if (!confirm_again)
     { /* This question was supposed to be asked "never again" ("don't
 	 confirm again" -- so we just call the ok_handler */
-	if (ok_handler != CONF_NO_BUTTON)
+	if (ok_handler)
 	    ok_handler (user_data1, user_data2);
 	return TRUE;
     }
@@ -315,12 +326,9 @@ gboolean gtkpod_confirmation (gint id,
     cd->option1_handler = option1_handler;
     cd->option2_handler = option2_handler;
     cd->confirm_again_handler = confirm_again_handler;
-    if (ok_handler == CONF_NO_BUTTON)     cd->ok_handler = NULL;
-    else                                  cd->ok_handler = ok_handler;
-    if (apply_handler == CONF_NO_BUTTON)  cd->apply_handler = NULL;
-    else                                  cd->apply_handler = apply_handler;
-    if (cancel_handler == CONF_NO_BUTTON) cd->cancel_handler = NULL;
-    else                                  cd->cancel_handler = cancel_handler;
+    cd->ok_handler = ok_handler;
+    cd->apply_handler = apply_handler;
+    cd->cancel_handler = cancel_handler;
     cd->user_data1 = user_data1;
     cd->user_data2 = user_data2;
     g_hash_table_insert (id_hash, idp, cd);
@@ -430,22 +438,19 @@ gboolean gtkpod_confirmation (gint id,
     /* Hide OK button */
     if ((w = lookup_widget (window, "ok")))
     {
-	if (ok_handler == CONF_NO_BUTTON)
-	    gtk_widget_hide (w);
+	if (!ok_handler)      gtk_widget_hide (w);
     }
 
     /* Hide Apply button */
     if ((w = lookup_widget (window, "apply")))
     {
-	if (apply_handler == CONF_NO_BUTTON)
-	    gtk_widget_hide (w);
+	if (!apply_handler)   gtk_widget_hide (w);
     }
 
     /* Hide Cancel button */
     if ((w = lookup_widget (window, "cancel")))
     {
-	if (cancel_handler == CONF_NO_BUTTON)
-	    gtk_widget_hide (w);
+	if (!cancel_handler)  gtk_widget_hide (w);
     }
 
     /* Connect Close window */

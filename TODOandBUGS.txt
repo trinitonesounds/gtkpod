@@ -1,9 +1,9 @@
 TODO:
 
-- progress bar for copying songs from iPod
+- fix memory leak in check_db (when confirmation window could not be
+  opened)
 
-- replace "/" in tags to some meaningful separator like ("-") instaead
-  of "?"
+- progress bar for copying songs from iPod
 
 - confirmation dialog before writing iTunesDB
 
