@@ -78,7 +78,7 @@ static void little_endian(hblock * stupidblock, int blocks);
  * should give more unique data to SHA1 as more of the file is read
  * This value is multiplied by PATH_MAX to determine how many bytes are read
  */
-#define NR_PATH_MAX_BLOCKS 8
+#define NR_PATH_MAX_BLOCKS 4
 
 /** 
  * filehash

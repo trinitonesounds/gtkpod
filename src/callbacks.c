@@ -656,3 +656,59 @@ on_delete_playlist_menu                (GtkMenuItem     *menuitem,
     confirmation_window_create(CONFIRMATION_WINDOW_PLAYLIST);
 }
 
+
+void
+on_ipod_directories_menu               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+
+}
+
+
+void
+on_alphabetize0_up_menu                   (GtkMenuItem     *menuitem,
+					   gpointer         user_data)
+{
+    st_sort (0, GTK_SORT_ASCENDING);
+}
+
+
+void
+on_alphabetize0_down_menu                   (GtkMenuItem     *menuitem,
+					     gpointer         user_data)
+{
+    st_sort (0, GTK_SORT_DESCENDING);
+}
+
+
+void
+on_re_init0_menu                       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    st_redisplay (0);
+}
+
+
+void
+on_alphabetize1_up_menu                   (GtkMenuItem     *menuitem,
+					   gpointer         user_data)
+{
+    st_sort (1, GTK_SORT_ASCENDING);
+}
+
+
+void
+on_alphabetize1_down_menu                   (GtkMenuItem     *menuitem,
+					     gpointer         user_data)
+{
+    st_sort (1, GTK_SORT_DESCENDING);
+}
+
+
+void
+on_re_init1_menu                       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    st_redisplay (1);
+}
+

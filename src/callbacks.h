@@ -241,3 +241,31 @@ on_delete_song_menu                    (GtkMenuItem     *menuitem,
 void
 on_delete_playlist_menu                (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_ipod_directories_menu               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_re_init0_menu                       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_re_init1_menu                       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alphabetize0_up_menu                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alphabetize0_down_menu              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alphabetize1_up_menu                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_alphabetize1_down_menu              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

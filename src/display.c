@@ -596,8 +596,8 @@ static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
 }
 
 
-/* removes a song from the entry it is currently in to the one it
-   should be in according (if a Tag had been changed).
+/* moves a song from the entry it is currently in to the one it
+   should be in according to its tags (if a Tag had been changed).
    Returns TRUE, if song has been moved, FALSE otherwise */
 static gboolean st_recategorize_song (Song *song, guint32 inst)
 {
@@ -876,8 +876,6 @@ static void st_init (gint32 new_category, guint32 inst)
 }
 
 
-
-
 /* Called when page in sort tab is selected */
 void st_page_selected (GtkNotebook *notebook, guint page)
 {
@@ -910,6 +908,25 @@ void st_page_selected (GtkNotebook *notebook, guint page)
   g_list_free (copy);
 }
 
+
+/* Redisplay the sort tab "inst". Called from the menu item "Re-Init" */
+void st_redisplay (guint32 inst)
+{
+    if (!(inst < SORT_TAB_NUM)) return; /* error! */
+    if (sorttab[inst])
+	st_page_selected (sorttab[inst]->notebook,
+			  sorttab[inst]->current_category);
+}
+
+/* Start sorting */
+void st_sort (guint32 inst, GtkSortType order)
+{
+    if (!(inst < SORT_TAB_NUM)) return; /* error! */
+    if (sorttab[inst])
+	gtk_tree_sortable_set_sort_column_id (
+	    GTK_TREE_SORTABLE (sorttab[inst]->model),
+	    ST_COLUMN_ENTRY, order);
+}
 
 /* Callback function called when the selection
    of the sort tab view has changed */

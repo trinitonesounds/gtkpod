@@ -31,11 +31,6 @@
 #include "song.h"
 #include <stdio.h>
 
-static gchar *titles[] = {
-    N_("Delete Playlist?"),
-    N_("Delete Song Completely?"),
-    N_("Delete Song From Playlist?"),
-};
 
 /**
  * confirmation_type - the type of the current delete window in context
@@ -160,7 +155,7 @@ create_ipod_song_deletion_interface(void)
 	gtk_label_set_text(GTK_LABEL(w), buf);
     if(song_name && (w = lookup_widget(confirmation_window, "msg_label")))
 	set_message_label_to_string(w, song_name);
-    gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[1]);
+    gtk_window_set_title(GTK_WINDOW(confirmation_window), _("Delete Song Completely?"));
     gtk_widget_show(confirmation_window);
     if(song_name) g_free(song_name);
 }
@@ -185,7 +180,7 @@ create_playlist_song_deletion_interface(const gchar *pl_name)
 	gtk_label_set_text(GTK_LABEL(w), buf);
     if(song_name && (w = lookup_widget(confirmation_window, "msg_label")))
 	set_message_label_to_string(w, song_name);
-    gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[2]);
+    gtk_window_set_title(GTK_WINDOW(confirmation_window), _("Delete Song From Playlist?"));
     gtk_widget_show(confirmation_window);
     if(song_name) g_free(song_name);
     if(buf) g_free(buf);
@@ -200,7 +195,7 @@ create_playlist_deletion_interface(const gchar *pl_name)
     buf = g_strdup_printf(_("Are you sure you want to delete the playlist \"%s\"?"), pl_name);
     if(buf && (w = lookup_widget(confirmation_window, "msg_label_title")))
 	gtk_label_set_text(GTK_LABEL(w), buf);
-    gtk_window_set_title(GTK_WINDOW(confirmation_window), titles[0]);
+    gtk_window_set_title(GTK_WINDOW(confirmation_window), _("Delete Playlist?"));
     gtk_widget_show(confirmation_window);
     if(buf) g_free(buf);
 }

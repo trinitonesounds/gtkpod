@@ -103,6 +103,8 @@ void pm_name_changed (Playlist *playlist);
 void pm_song_changed (Song *song);
 
 void st_page_selected (GtkNotebook *notebook, guint page);
+void st_redisplay (guint32 inst);
+void st_sort (guint32 inst, GtkSortType order);
 void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				 GtkTreeIter *i, gpointer data);
 
