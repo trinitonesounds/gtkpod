@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 14:23:28 jcs>
+/* Time-stamp: <2003-11-15 01:08:29 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -64,18 +64,19 @@ typedef struct
   gint32  cds;               /* number of CDs         */
   gint32  track_nr;          /* track number          */
   gint32  tracks;            /* number of tracks      */
-  gint32  year;              /* year                  */
   gint32  bitrate;           /* bitrate               */
-  gint32  volume;            /* volume adjustment between -100 and +100 */
-  guint32 time_played;       /* time of last play  (Mac type)           */
-  guint32 time_modified;     /* time of last modification  (Mac type)   */
-  guint32 rating;            /* star rating (stars * RATING_STEP (20))  */
-  guint32 playcount;         /* number of times track was played        */
-  guint32 recent_playcount;  /* times track was played since last sync  */
-  gchar   *hostname;         /* name of host this file has been imported on */
-  gboolean transferred;      /* has file been transferred to iPod?      */
-  gchar   *md5_hash;         /* md5 hash of file (or NULL)              */
-  gchar   *charset;          /* charset used for ID3 tags               */
+  gint32  year;              /* year                  */
+  gchar   *year_str;         /* year as string -- always identical to year */
+  gint32  volume;            /* volume adjustment between -100 and +100    */
+  guint32 time_played;       /* time of last play  (Mac type)              */
+  guint32 time_modified;     /* time of last modification  (Mac type)      */
+  guint32 rating;            /* star rating (stars * RATING_STEP (20))     */
+  guint32 playcount;         /* number of times track was played           */
+  guint32 recent_playcount;  /* times track was played since last sync     */
+  gchar   *hostname;         /* name of host this file has been imported on*/
+  gboolean transferred;      /* has file been transferred to iPod?         */
+  gchar   *md5_hash;         /* md5 hash of file (or NULL)                 */
+  gchar   *charset;          /* charset used for ID3 tags                  */
 } Track;
 
 /* one star is how much (track->rating) */

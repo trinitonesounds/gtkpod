@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 18:59:07 jcs>
+/* Time-stamp: <2003-11-15 00:59:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -88,6 +88,7 @@ const gchar *tm_col_strings[] = {
     N_("Time played"),
     N_("Time modified"),
     N_("Volume"),
+    N_("Year"),
     NULL };
 
 
@@ -364,6 +365,16 @@ tm_cell_edited (GtkCellRendererText *renderer,
            changed = TRUE; 
         }
         break;
+     case TM_COLUMN_YEAR:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->year))
+        {
+	   g_free (track->year_str);
+	   track->year_str = g_strdup_printf ("%d", nr);
+           track->year = nr;
+           changed = TRUE; 
+        }
+        break;
      case TM_COLUMN_PLAYCOUNT:
         nr = atoi (new_text);
         if ((nr >= 0) && (nr != track->playcount))
@@ -515,6 +526,13 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   case TM_COLUMN_PLAYCOUNT:
       snprintf (text, 20, "%d", track->playcount);
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", TRUE,
+		    "xalign", 1.0, NULL);
+      break;
+  case TM_COLUMN_YEAR:
+      snprintf (text, 20, "%d", track->year);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
@@ -899,21 +917,11 @@ static gint tm_sort_counter (gint inc)
 static void tm_unsort (void)
 {
     GList *gl, *tracks = NULL;
-    gint st_num = prefs_get_sort_tab_num ();
 
     /* retrieve the currently displayed tracks (non ordered) from the
        last sort tab or from the selected playlist if no sort tabs are
        being used */
-    if (st_num == 0)
-    {
-	Playlist *pl = pm_get_selected_playlist ();
-	if (pl)  tracks = pl->members;
-    }
-    else
-    {
-	TabEntry *te = st_get_selected_entry (st_num - 1);
-	if (te)  tracks = te->members;
-    }
+    tracks = display_get_selected_members (prefs_get_sort_tab_num() - 1);
     tm_remove_all_tracks (TRUE);
     for (gl=tracks; gl; gl=gl->next)
 	tm_add_track_to_track_model ((Track *)gl->data, NULL);
@@ -1069,6 +1077,9 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_TIME_MODIFIED:
       text = _("Modified");
       editable = FALSE;
+      break;
+  case TM_COLUMN_YEAR:
+      text = _("Year");
       break;
   case TM_NUM_COLUMNS:
       break;

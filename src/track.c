@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-13 21:44:47 jcs>
+/* Time-stamp: <2003-11-15 00:59:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -73,6 +73,7 @@ free_track(Track *track)
       g_free (track->md5_hash);
       g_free (track->hostname);
       g_free (track->charset);
+      g_free (track->year_str);
       g_free (track);
     }
 }
@@ -150,6 +151,9 @@ void validate_entries (Track *track)
 	track->fdesc_utf16 = g_utf8_to_utf16 (track->fdesc, -1, NULL, NULL, NULL);
     if (track->ipod_path_utf16 == NULL)
 	track->ipod_path_utf16 = g_utf8_to_utf16 (track->ipod_path, -1, NULL, NULL, NULL);
+    /* Make sure year_str is identical to year */
+    g_free (track->year_str);
+    track->year_str = g_strdup_printf ("%d", track->year);
 }
 
 /**
@@ -598,6 +602,9 @@ gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item)
 	break;
     case T_IPOD_PATH:
 	result = &track->ipod_path;
+	break;
+    case T_YEAR:
+	result = &track->year_str;
 	break;
     default:
 	result = NULL;

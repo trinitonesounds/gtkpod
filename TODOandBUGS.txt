@@ -1,6 +1,5 @@
 TODO:
 
-- Year column
 - Disk column
 
 - stable column sorting:
@@ -98,14 +97,6 @@ jcs@hatarakibachi:~/source/gtkpod/gtkpod$
 (gtkpod:5034): GLib-GObject-WARNING **: can't peek value table for type `<invalid>' which is not currently referenced
 
 [3]   Segmentation fault      src/gtkpod
-
-
-- If the last sort tab displays the "special" sort tab. On
-  gtkpod-startup:
-
-(gtkpod:3703): Gtk-CRITICAL **: file gtktreeview.c: line 8239 (gtk_tree_view_get_selection): assertion `GTK_IS_TREE_VIEW (tree_view)' failed
-
-(gtkpod:3703): Gtk-CRITICAL **: file gtktreeselection.c: line 361 (gtk_tree_selection_get_selected): assertion `GTK_IS_TREE_SELECTION (selection)' failed
 
 
 

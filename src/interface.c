@@ -1336,6 +1336,7 @@ create_prefs_window (void)
   GtkWidget *col_visible5;
   GtkWidget *col_visible9;
   GtkWidget *col_visible15;
+  GtkWidget *col_visible17;
   GtkWidget *vbox29;
   GtkWidget *col_visible0;
   GtkWidget *col_visible6;
@@ -1807,6 +1808,11 @@ create_prefs_window (void)
   col_visible15 = gtk_check_button_new_with_mnemonic ("");
   gtk_widget_show (col_visible15);
   gtk_box_pack_start (GTK_BOX (vbox28), col_visible15, FALSE, FALSE, 0);
+
+  col_visible17 = gtk_check_button_new_with_mnemonic ("");
+  gtk_widget_show (col_visible17);
+  gtk_box_pack_start (GTK_BOX (vbox28), col_visible17, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, col_visible17, _("Relative volume adjustment between -100 and +100"), NULL);
 
   vbox29 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox29);
@@ -2526,6 +2532,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible5, "col_visible5");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible9, "col_visible9");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible15, "col_visible15");
+  GLADE_HOOKUP_OBJECT (prefs_window, col_visible17, "col_visible17");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox29, "vbox29");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible0, "col_visible0");
   GLADE_HOOKUP_OBJECT (prefs_window, col_visible6, "col_visible6");

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 00:51:40 jcs>
+/* Time-stamp: <2003-11-14 23:30:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -146,7 +146,7 @@ void
 on_new_playlist_button                 (GtkButton       *button,
                                         gpointer         user_data)
 {
-  add_new_playlist (_("New Playlist"), -1);
+  add_new_playlist_user_name (NULL, -1);
 }
 
 void
@@ -318,13 +318,20 @@ on_playlist_treeview_drag_data_received
 		}
 		else
 		{ /* drop between playlists */
-		    Playlist *plitem = NULL;
-		    plitem = add_new_playlist (_("New Playlist"), position);
-		    add_idlist_to_playlist (plitem, data->data);
-		    /* this is a hack -- see comment at
-		       tracks_moved_or_copied */
-		    tracks_moved_or_copied (context, data->data);
-		    gtk_drag_finish (context, TRUE, del_src, time);
+		    Playlist *plitem;
+		    plitem = add_new_playlist_user_name (NULL, position);
+		    if (plitem)
+		    {
+			add_idlist_to_playlist (plitem, data->data);
+			/* this is a hack -- see comment at
+			   tracks_moved_or_copied */
+			tracks_moved_or_copied (context, data->data);
+			gtk_drag_finish (context, TRUE, del_src, time);
+		    }
+		    else
+		    {
+			gtk_drag_finish (context, FALSE, FALSE, time);
+		    }
 		}
 	    }
 	    else gtk_drag_finish (context, FALSE, FALSE, time);
@@ -490,7 +497,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 		do_selected_playlist (update_trackids);
 		break;
 	    case GDK_n:
-		add_new_playlist (_("New Playlist"), -1);
+		add_new_playlist_user_name (NULL, -1);
 		break;
 	    default:
 		break;
@@ -1420,7 +1427,7 @@ void
 on_new_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  add_new_playlist (_("New Playlist"), -1);
+  add_new_playlist (NULL, -1);
 }
 
 void

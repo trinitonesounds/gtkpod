@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 15:02:11 jcs>
+/* Time-stamp: <2003-11-15 00:32:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -44,12 +44,13 @@ typedef enum {
   ST_CAT_GENRE,
   ST_CAT_COMPOSER,
   ST_CAT_TITLE,
+  ST_CAT_YEAR,
   ST_CAT_SPECIAL,
   ST_CAT_NUM
 } ST_CAT_item;
 
 /* Number of search tabs to be supported. */
-#define SORT_TAB_MAX ST_CAT_NUM
+#define SORT_TAB_MAX (ST_CAT_NUM-1)
 
 /* Number of GtkPaned elements in the main window. The positions of
  * these elements will be stored in the prefs file and be set to the
@@ -127,8 +128,8 @@ typedef enum  {
  * in the prefs_window are
  * named after the numbers (Title: tag_autoset0, Artist: tag_autoset1
  * etc.). Since the labels to the buttons are set in prefs_window.c
- * when creating the window, you only need to make sure the displayed
- * order is what you want */
+ * when creating the window, you only need to name the buttons in the
+ * intended order using glade-2. There is no need to label them. */
 /* Note: the tm_col_strings[] in display_tracks.c are ordered according
    to this enum list. Therefore, if you change the order, you must
    also adjust the order of the tm_col_strings[] array. */
@@ -138,18 +139,19 @@ typedef enum  {
   TM_COLUMN_ALBUM,
   TM_COLUMN_GENRE,
   TM_COLUMN_COMPOSER,
-  TM_COLUMN_TRACK_NR,
+  TM_COLUMN_TRACK_NR,         /*  5 */
   TM_COLUMN_IPOD_ID,
   TM_COLUMN_PC_PATH,
   TM_COLUMN_TRANSFERRED,
   TM_COLUMN_SIZE,
-  TM_COLUMN_TRACKLEN,
+  TM_COLUMN_TRACKLEN,         /* 10 */
   TM_COLUMN_BITRATE,
   TM_COLUMN_PLAYCOUNT,
   TM_COLUMN_RATING,
   TM_COLUMN_TIME_PLAYED,
-  TM_COLUMN_TIME_MODIFIED,
+  TM_COLUMN_TIME_MODIFIED,    /* 15 */
   TM_COLUMN_VOLUME,
+  TM_COLUMN_YEAR,
   TM_NUM_COLUMNS
 } TM_item;
 
@@ -182,6 +184,7 @@ void display_cleanup (void);
 void display_show_hide_toolbar (void);
 void display_reset (gint inst);
 GList *display_get_selection (guint32 inst);
+GList *display_get_selected_members (gint inst);
 
 Playlist* pm_get_selected_playlist(void);
 void pm_remove_playlist (Playlist *playlist, gboolean select);

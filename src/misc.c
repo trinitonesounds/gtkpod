@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-12 23:52:23 jcs>
+/* Time-stamp: <2003-11-15 00:32:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -289,6 +289,111 @@ float get_ms_since (GTimeVal *old_time, gboolean update)
 }
 
 
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Ask for User Input String                            *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
+/* Retrieves a string from the user using a dialog.
+   @title: title of the dialogue (may be NULL)
+   @message: text (question) to be displayed (may be NULL)
+   @dflt: default string to be returned (may be NULL)
+   return value: the string entered by the user or NULL if the dialog
+   was cancelled. */
+gchar *get_user_string (gchar *title, gchar *message, gchar *dflt)
+{
+
+    GtkWidget *dialog, *image, *label=NULL, *entry, *hbox;
+    gint response;
+    gchar *result = NULL;
+
+    /* create the dialog window */
+    dialog = gtk_dialog_new_with_buttons (
+	title,
+	GTK_WINDOW (gtkpod_window),
+	GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+	GTK_STOCK_OK, GTK_RESPONSE_OK,
+	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	NULL);
+    gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+
+    /* emulate gtk_message_dialog_new */
+    image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_QUESTION,
+				    GTK_ICON_SIZE_DIALOG);
+    gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
+
+    if (message)
+    {
+	label = gtk_label_new (message);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
+    }
+    /* hbox to put the image+label in */
+    hbox = gtk_hbox_new (FALSE, 6);
+    gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+    if (label) gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+    /* Create entry */
+    entry = gtk_entry_new ();
+    if (dflt)
+    {
+	gtk_entry_set_text (GTK_ENTRY (entry), dflt);
+	gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+    }
+    /* Pressing enter should activate the default response (default
+       response set above */
+    gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+
+    /* add to vbox */
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+			hbox, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+			entry, FALSE, FALSE, 0);
+
+    /* Start the dialogue */
+    gtk_widget_show_all (dialog);
+    response = gtk_dialog_run (GTK_DIALOG (dialog));
+
+    if (response == GTK_RESPONSE_OK)
+    {
+	result = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+    }
+    gtk_widget_destroy (dialog);
+    return result;
+}
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             Add new playlist asking user for name                *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+/* Add a new playlist at position @position. The name for the new
+ * playlist is queried from the user. A default (@dflt) name can be
+ * provided.
+ * Return value: the new playlist or NULL if the dialog was
+ * cancelled. */
+Playlist *add_new_playlist_user_name (gchar *dflt, gint position)
+{
+    gchar *name = get_user_string (
+	_("New Playlist"),
+	_("Please enter a name for the new playlist"),
+	dflt? dflt:_("New Playlist"));
+    if (name) return add_new_playlist (name, position);
+    return NULL;
+}
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *             About Window                                         *
+ *                                                                  *
+\*------------------------------------------------------------------*/
 
 void open_about_window ()
 {
@@ -498,7 +603,8 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 		{   /* directory */
 		    if (!pl)
 		    {  /* no playlist yet -- create new one */
-			pl = add_new_playlist (_("New Playlist"), pl_pos);
+			pl = add_new_playlist_user_name (NULL, pl_pos);
+			if (!pl)  break; /* while (*filesp) */
 		    }
 		    add_directory_by_name (decoded_file, pl,
 					   prefs_get_add_recursively (),
@@ -515,9 +621,9 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 			{   /* mp3 file */
 			    if (!pl)
 			    {  /* no playlist yet -- create new one */
-				pl = add_new_playlist (
-                                                       _("New Playlist"),
-                                                       pl_pos);
+				pl = add_new_playlist_user_name (NULL,
+								 pl_pos);
+				if (!pl)  break; /* while (*filesp) */
 			    }
 			    add_track_by_filename (decoded_file, pl,
 						  prefs_get_add_recursively (),
@@ -863,6 +969,7 @@ T_item TM_to_T (TM_item sm)
     case TM_COLUMN_TIME_PLAYED:   return T_TIME_PLAYED;
     case TM_COLUMN_TIME_MODIFIED: return T_TIME_MODIFIED;
     case TM_COLUMN_VOLUME:        return T_VOLUME;
+    case TM_COLUMN_YEAR:          return T_YEAR;
     case TM_NUM_COLUMNS:          return -1;
     }
     return -1;
@@ -881,6 +988,7 @@ T_item ST_to_T (ST_CAT_item st)
     case ST_CAT_GENRE:       return T_GENRE;
     case ST_CAT_COMPOSER:    return T_COMPOSER;
     case ST_CAT_TITLE:       return T_TITLE;
+    case ST_CAT_YEAR:        return T_YEAR;
     case ST_CAT_SPECIAL:
     case ST_CAT_NUM:         return -1;
     }
@@ -2957,7 +3065,7 @@ void recover_db(void)
          {
             if(!lost_pl_exist) /*create a lost files' pl*/
             {
-               lost_pl=add_new_playlist(g_strdup(_("Lost tracks")),-1);
+               lost_pl=add_new_playlist(g_strdup(_("[Lost tracks]")),-1);
                lost_pl_exist=TRUE;
             }
             /*add an iTunesDB entry to the iTunesDB and to the lost_pl*/

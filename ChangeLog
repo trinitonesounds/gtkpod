@@ -17,7 +17,16 @@ gtkpod V0.61-CVS
 	 default, only new tracks are read, allowing quick synchronization
 	 of entire directories.
 
+	IMPROVEMENT: Year is now supported as track view column and as
+	sort tab type.
+
+	IMPROVEMENT: When creating a new playlist a dialog is popped up
+	asking for a name.
+
 	BUGFIX: Drag and Drop of files with spaces did not work.
+
+	BUGFIX: "Unsort" (clicking sort column three times) of track
+	view failed if last sort tab was a "special" sort tab.
 
 gtkpod V0.60
 	NEW FEATURE: normalize song volume (using mp3gain). Uses iPod's

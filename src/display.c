@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 18:15:19 jcs>
+/* Time-stamp: <2003-11-14 23:54:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -313,6 +313,26 @@ GList *display_get_selection (guint32 inst)
     return NULL;
 }
 
+
+/* Get the members that are passed on to the next instance.
+   @inst: -1: playlist view
+          0...prefs_get_sort_tab_num()-1: sort tabs
+          >= prefs_get_sort_tab_num(): return NULL
+   You must not g_list_free the list or otherwise modify it */
+GList *display_get_selected_members (gint inst)
+{
+    GList *tracks=NULL;
+    if (inst == -1)
+    {
+	Playlist *pl = pm_get_selected_playlist ();
+	if (pl)  tracks = pl->members;
+    }
+    else
+    {
+	tracks = st_get_selected_members (inst);
+    }
+    return tracks;
+}
 
 
 /* ------------------------------------------------------------

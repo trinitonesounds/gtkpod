@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-08 00:51:14 jcs>
+/* Time-stamp: <2003-11-14 23:28:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -55,6 +55,8 @@ extern GtkWidget *gtkpod_window;
 /* indicates whether widgets are currently blocked */
 extern gboolean widgets_blocked;
 
+gchar *get_user_string (gchar *title, gchar *message, gchar *dflt);
+Playlist *add_new_playlist_user_name (gchar *dflt, gint position);
 void create_add_files_fileselector (void);
 void create_add_playlists_fileselector (void);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);

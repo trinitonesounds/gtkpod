@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 15:48:34 jcs>
+/* Time-stamp: <2003-11-15 01:17:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -40,6 +40,7 @@
 #include "date_parser.h"
 #include "itunesdb.h"
 #include <string.h>
+#include <stdlib.h>
 
 /* array with pointers to the sort tabs */
 static SortTab *sorttab[SORT_TAB_MAX];
@@ -1010,6 +1011,7 @@ void st_track_changed (Track *track, gboolean removed, guint32 inst)
       case ST_CAT_GENRE:
       case ST_CAT_COMPOSER:
       case ST_CAT_TITLE:
+      case ST_CAT_YEAR:
 	  st_track_changed_normal (track, removed, inst);
 	  break;
       case ST_CAT_SPECIAL:
@@ -1218,6 +1220,7 @@ void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)
       case ST_CAT_GENRE:
       case ST_CAT_COMPOSER:
       case ST_CAT_TITLE:
+      case ST_CAT_YEAR:
 	  st_add_track_normal (track, final, display, inst);
 	  break;
       case ST_CAT_SPECIAL:
@@ -1270,6 +1273,7 @@ void st_remove_track (Track *track, guint32 inst)
 	case ST_CAT_GENRE:
 	case ST_CAT_COMPOSER:
 	case ST_CAT_TITLE:
+	case ST_CAT_YEAR:
 	    st_remove_track_normal (track, inst);
 	    break;
 	case ST_CAT_SPECIAL:
@@ -1334,6 +1338,7 @@ void st_init (ST_CAT_item new_category, guint32 inst)
       case ST_CAT_GENRE:
       case ST_CAT_COMPOSER:
       case ST_CAT_TITLE:
+      case ST_CAT_YEAR:
 	  st_remove_all_entries_from_model (inst);
 	  break;
       case ST_CAT_SPECIAL:
@@ -1361,7 +1366,6 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   gboolean is_go;
   GList *copy = NULL;
   SortTab *st;
-  Playlist *current_playlist = pm_get_selected_playlist ();
 
 #if DEBUG_TIMING
   GTimeVal time;
@@ -1384,14 +1388,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
   /* write back old is_go state if page hasn't changed (redisplay) */
   if (page == oldpage)  st->is_go = is_go;
   /* Get list of tracks to re-insert */
-  if (inst == 0)
-  {
-      if (current_playlist)  copy = current_playlist->members;
-  }
-  else
-  {
-      copy = st_get_selected_members (inst-1);
-  }
+  copy = display_get_selected_members (inst-1);
   if (copy)
   {
       GTimeVal time;
@@ -1498,6 +1495,7 @@ static void st_sort_inst (guint32 inst, GtkSortType order)
 	    case ST_CAT_GENRE:
 	    case ST_CAT_COMPOSER:
 	    case ST_CAT_TITLE:
+	    case ST_CAT_YEAR:
 		if (order != SORT_NONE)
 		    gtk_tree_sortable_set_sort_column_id (
 			GTK_TREE_SORTABLE (st->model),
@@ -1693,8 +1691,23 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  if (hash_entry == entry)
 	      g_hash_table_remove (st->entry_hash, entry->name);
 	  /* replace entry name */
-	  g_free (entry->name);
-	  entry->name = g_strdup (new_text);
+	  if (sorttab[inst]->current_category == ST_CAT_YEAR)
+	  {   /* make sure the entry->name is identical to
+		 atoi(new_text) */
+	      g_free (entry->name);
+	      entry->name = g_strdup_printf ("%d", atoi (new_text));
+	      if (strcmp (entry->name, new_text) != 0)
+	      {
+		  g_object_set (G_OBJECT (renderer), "text", entry->name,
+				NULL);
+	      }
+	  }
+	  else
+	  {
+	      g_free (entry->name);
+	      entry->name = g_strdup (new_text);
+	  }
+	  
 	  /* re-insert into hash table if the same name doesn't
 	     already exist */
 	  if (g_hash_table_lookup (st->entry_hash, entry->name) == NULL)
@@ -1710,12 +1723,23 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  {
 	      Track *track = (Track *)g_list_nth_data (members, i);
 	      T_item t_item = ST_to_T (sorttab[inst]->current_category);
-	      gchar **itemp_utf8 = track_get_item_pointer_utf8 (track, t_item);
-	      gunichar2 **itemp_utf16 = track_get_item_pointer_utf16(track, t_item);
-	      g_free (*itemp_utf8);
-	      g_free (*itemp_utf16);
-	      *itemp_utf8 = g_strdup (new_text);
-	      *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
+	      if (t_item == T_YEAR)
+	      {
+		  gint nr = atoi (new_text);
+		  if (nr < 0)  nr = 0;
+		  track->year = nr;
+		  g_free (track->year_str);
+		  track->year_str = g_strdup_printf ("%d", nr);
+	      }
+	      else
+	      {
+		  gchar **itemp_utf8 = track_get_item_pointer_utf8 (track, t_item);
+		  gunichar2 **itemp_utf16 = track_get_item_pointer_utf16(track, t_item);
+		  g_free (*itemp_utf8);
+		  g_free (*itemp_utf16);
+		  *itemp_utf8 = g_strdup (new_text);
+		  *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
+	      }
 	      track->time_modified = itunesdb_time_get_mac_time ();
 	      pm_track_changed (track);
 	      /* If prefs say to write changes to file, do so */
@@ -2243,6 +2267,9 @@ static void st_create_page (gint inst, ST_CAT_item st_cat)
   case ST_CAT_TITLE:
       st0_label0 = gtk_label_new (_("Title"));
       break;
+  case ST_CAT_YEAR:
+      st0_label0 = gtk_label_new (_("Year"));
+      break;
   case ST_CAT_SPECIAL:
       st0_label0 = gtk_label_new (_("Special"));
       break;
@@ -2284,6 +2311,7 @@ static void st_create_pages (gint inst)
   st_create_page (inst, ST_CAT_GENRE);
   st_create_page (inst, ST_CAT_COMPOSER);
   st_create_page (inst, ST_CAT_TITLE);
+  st_create_page (inst, ST_CAT_YEAR);
   st_create_page (inst, ST_CAT_SPECIAL);
   st_create_listview (inst);
 }
