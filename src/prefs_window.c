@@ -87,6 +87,16 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->autoimport);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_keep_backups")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->keep_backups);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_write_extended")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->write_extended_info);
+	}
 	prefs_window_song_list_init();
 	gtk_widget_show(prefs_window);
     }
@@ -125,7 +135,9 @@ prefs_window_save(void)
     prefs_set_song_playlist_deletion(tmpcfg->deletion.song);
     prefs_set_song_ipod_file_deletion(tmpcfg->deletion.ipod_file);
     prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
-    
+    prefs_set_write_extended_info(tmpcfg->write_extended_info);
+    prefs_set_keep_backups(tmpcfg->keep_backups);
+
     cfg_free(tmpcfg);
     tmpcfg =NULL;
     if(prefs_window)
@@ -240,6 +252,14 @@ void prefs_window_set_song_list_all(gboolean val)
     }
 }
 
+void prefs_window_set_keep_backups(gboolean active)
+{
+  tmpcfg->keep_backups = active;
+}
+void prefs_window_set_write_extended_info(gboolean active)
+{
+  tmpcfg->write_extended_info = active;
+}
 void 
 prefs_window_set_song_list_album(gboolean val)
 {

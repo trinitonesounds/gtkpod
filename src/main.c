@@ -65,9 +65,9 @@ main (int argc, char *argv[])
    * (except popup menus), just so that you see something after building
    * the project. Delete any components that you don't want shown initially.
    */
-  if (!read_prefs (argc, argv)) return 0;
   srand(time(NULL));
   gtkpod = create_gtkpod ();
+  if (!read_prefs (gtkpod, argc, argv)) return 0;
   create_listviews (gtkpod);
   create_mpl ();     /* needs at least the master playlist */
   unique_file_repository_init (NULL); /* init for duplicate detection */

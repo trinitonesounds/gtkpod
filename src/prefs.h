@@ -50,7 +50,9 @@ struct cfg
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */	
   gboolean autoimport;	  /* whether or not to automatically import files */
-
+  gboolean offline;       /* are we working offline, i.e. without iPod? */
+  gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
+  gboolean write_extended_info; /* write additional file with PC filenames etc? */
   struct {
       gboolean artist, album, track, genre;
   } song_list_show; /* what columns are displayed in the song list */	
@@ -68,7 +70,8 @@ enum {
   GP_HELP,
   GP_MOUNT,
   GP_WRITEID3,
-  GP_MD5SONGS
+  GP_MD5SONGS,
+  GP_OFFLINE
 };
 
 extern struct cfg *cfg;
@@ -79,13 +82,16 @@ void write_prefs (void);
 void discard_prefs (void);
 struct cfg* clone_prefs(void);
 void prefs_set_mount_point(const gchar *mp);
-gboolean read_prefs (int argc, char *argv[]);
+gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[]);
 void prefs_set_md5songs_active(gboolean active);
 void prefs_set_writeid3_active(gboolean active);
 void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
 void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
 void prefs_set_last_dir_file_export_for_filename(gchar * dir);
 
+void prefs_set_offline(gboolean active);
+void prefs_set_keep_backups(gboolean active);
+void prefs_set_write_extended_info(gboolean active);
 void prefs_set_auto_import(gboolean val);
 void prefs_set_playlist_deletion(gboolean val);
 void prefs_set_song_list_show_all(gboolean val);
@@ -96,6 +102,9 @@ void prefs_set_song_list_show_artist(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
 
+gboolean prefs_get_offline(void);
+gboolean prefs_get_keep_backups(void);
+gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_auto_import(void);
 gboolean prefs_get_playlist_deletion(void);
 gboolean prefs_get_song_list_show_all(void);

@@ -39,11 +39,13 @@ create_gtkpod (void)
   GtkWidget *add_directory1;
   GtkWidget *export_itunes1;
   GtkWidget *separatormenuitem1;
+  GtkWidget *offline_menu;
+  GtkWidget *trennlinie1;
   GtkWidget *quit1;
   GtkWidget *menuitem11;
   GtkWidget *menuitem11_menu;
   GtkWidget *new_playlist1;
-  GtkWidget *image7;
+  GtkWidget *image10;
   GtkWidget *separator1;
   GtkWidget *cut1;
   GtkWidget *copy1;
@@ -51,7 +53,7 @@ create_gtkpod (void)
   GtkWidget *delete1;
   GtkWidget *separator2;
   GtkWidget *edit_preferences1;
-  GtkWidget *image8;
+  GtkWidget *image11;
   GtkWidget *export_files_to_disk;
   GtkWidget *menuitem12;
   GtkWidget *menuitem13;
@@ -142,6 +144,15 @@ create_gtkpod (void)
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), separatormenuitem1);
   gtk_widget_set_sensitive (separatormenuitem1, FALSE);
 
+  offline_menu = gtk_check_menu_item_new_with_mnemonic (_("Offline"));
+  gtk_widget_show (offline_menu);
+  gtk_container_add (GTK_CONTAINER (menuitem10_menu), offline_menu);
+
+  trennlinie1 = gtk_menu_item_new ();
+  gtk_widget_show (trennlinie1);
+  gtk_container_add (GTK_CONTAINER (menuitem10_menu), trennlinie1);
+  gtk_widget_set_sensitive (trennlinie1, FALSE);
+
   quit1 = gtk_image_menu_item_new_from_stock ("gtk-quit", accel_group);
   gtk_widget_show (quit1);
   gtk_container_add (GTK_CONTAINER (menuitem10_menu), quit1);
@@ -157,9 +168,9 @@ create_gtkpod (void)
   gtk_widget_show (new_playlist1);
   gtk_container_add (GTK_CONTAINER (menuitem11_menu), new_playlist1);
 
-  image7 = gtk_image_new_from_stock ("gtk-justify-left", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image7);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_playlist1), image7);
+  image10 = gtk_image_new_from_stock ("gtk-justify-left", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image10);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_playlist1), image10);
 
   separator1 = gtk_menu_item_new ();
   gtk_widget_show (separator1);
@@ -194,9 +205,9 @@ create_gtkpod (void)
                               GDK_p, GDK_CONTROL_MASK,
                               GTK_ACCEL_VISIBLE);
 
-  image8 = gtk_image_new_from_stock ("gtk-preferences", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image8);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (edit_preferences1), image8);
+  image11 = gtk_image_new_from_stock ("gtk-preferences", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image11);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (edit_preferences1), image11);
 
   export_files_to_disk = gtk_menu_item_new_with_mnemonic (_("Export Files to Disk"));
   gtk_widget_show (export_files_to_disk);
@@ -448,6 +459,9 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) export_itunes1, "activate",
                     G_CALLBACK (on_export_itunes1_activate),
                     NULL);
+  g_signal_connect ((gpointer) offline_menu, "activate",
+                    G_CALLBACK (on_offline1_activate),
+                    NULL);
   g_signal_connect ((gpointer) quit1, "activate",
                     G_CALLBACK (on_quit1_activate),
                     NULL);
@@ -520,11 +534,13 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, add_directory1, "add_directory1");
   GLADE_HOOKUP_OBJECT (gtkpod, export_itunes1, "export_itunes1");
   GLADE_HOOKUP_OBJECT (gtkpod, separatormenuitem1, "separatormenuitem1");
+  GLADE_HOOKUP_OBJECT (gtkpod, offline_menu, "offline_menu");
+  GLADE_HOOKUP_OBJECT (gtkpod, trennlinie1, "trennlinie1");
   GLADE_HOOKUP_OBJECT (gtkpod, quit1, "quit1");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem11, "menuitem11");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem11_menu, "menuitem11_menu");
   GLADE_HOOKUP_OBJECT (gtkpod, new_playlist1, "new_playlist1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image7, "image7");
+  GLADE_HOOKUP_OBJECT (gtkpod, image10, "image10");
   GLADE_HOOKUP_OBJECT (gtkpod, separator1, "separator1");
   GLADE_HOOKUP_OBJECT (gtkpod, cut1, "cut1");
   GLADE_HOOKUP_OBJECT (gtkpod, copy1, "copy1");
@@ -532,7 +548,7 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, delete1, "delete1");
   GLADE_HOOKUP_OBJECT (gtkpod, separator2, "separator2");
   GLADE_HOOKUP_OBJECT (gtkpod, edit_preferences1, "edit_preferences1");
-  GLADE_HOOKUP_OBJECT (gtkpod, image8, "image8");
+  GLADE_HOOKUP_OBJECT (gtkpod, image11, "image11");
   GLADE_HOOKUP_OBJECT (gtkpod, export_files_to_disk, "export_files_to_disk");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem12, "menuitem12");
   GLADE_HOOKUP_OBJECT (gtkpod, menuitem13, "menuitem13");
@@ -701,6 +717,8 @@ create_prefs_window (void)
   GtkWidget *cfg_autoimport;
   GtkWidget *cfg_md5songs;
   GtkWidget *cfg_writeid3;
+  GtkWidget *cfg_keep_backups;
+  GtkWidget *cfg_write_extended;
   GtkWidget *frame2;
   GtkWidget *hbox2;
   GtkWidget *vbox4;
@@ -758,6 +776,14 @@ create_prefs_window (void)
   cfg_writeid3 = gtk_check_button_new_with_mnemonic (_("Change the ID3 Tags when modified in Gtkpod\n(on disk and on the ipod)"));
   gtk_widget_show (cfg_writeid3);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_writeid3, FALSE, FALSE, 0);
+
+  cfg_keep_backups = gtk_check_button_new_with_mnemonic (_("Keep a backup of the iTunesDB in ~/.gtkpod/"));
+  gtk_widget_show (cfg_keep_backups);
+  gtk_box_pack_start (GTK_BOX (vbox3), cfg_keep_backups, FALSE, FALSE, 0);
+
+  cfg_write_extended = gtk_check_button_new_with_mnemonic (_("Write extended information (PC filenames,\nMD5 hashes to disk)"));
+  gtk_widget_show (cfg_write_extended);
+  gtk_box_pack_start (GTK_BOX (vbox3), cfg_write_extended, FALSE, FALSE, 0);
 
   frame2 = gtk_frame_new (NULL);
   gtk_widget_show (frame2);
@@ -860,6 +886,12 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_writeid3, "toggled",
                     G_CALLBACK (on_cfg_writeid3_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_keep_backups, "toggled",
+                    G_CALLBACK (on_cfg_keep_backups_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_write_extended, "toggled",
+                    G_CALLBACK (on_cfg_write_extended_info_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_song_list_all, "toggled",
                     G_CALLBACK (on_cfg_song_list_all_toggled),
                     NULL);
@@ -901,6 +933,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_autoimport, "cfg_autoimport");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5songs, "cfg_md5songs");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_writeid3, "cfg_writeid3");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_keep_backups, "cfg_keep_backups");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_extended, "cfg_write_extended");
   GLADE_HOOKUP_OBJECT (prefs_window, frame2, "frame2");
   GLADE_HOOKUP_OBJECT (prefs_window, hbox2, "hbox2");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox4, "vbox4");

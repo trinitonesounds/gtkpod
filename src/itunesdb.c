@@ -34,7 +34,7 @@
 
    *** Reading the iTunesDB ***
 
-   gboolean itunesdb_parse (gchar *path); /* path to mountpoint /
+   gboolean itunesdb_parse (gchar *path); /+ path to mountpoint /+
    will read an iTunesDB and pass the data over to your program. Your
    programm is responsible to keep a representation of the data.
 
@@ -45,24 +45,24 @@
 
    typedef struct
    {
-     gunichar2 *album_utf16;    /* album (utf16)         /
-     gunichar2 *artist_utf16;   /* artist (utf16)        /
-     gunichar2 *title_utf16;    /* title (utf16)         /
-     gunichar2 *genre_utf16;    /* genre (utf16)         /
-     gunichar2 *comment_utf16;  /* comment (utf16)       /
-     gunichar2 *composer_utf16; /* Composer (utf16)      /
-     gunichar2 *fdesc_utf16;    /* ? (utf16)             /
-     gunichar2 *ipod_path_utf16;/* name of file on iPod: uses ":" instead of "/" /
-     guint32 ipod_id;           /* unique ID of song     /
-     gint32  size;              /* size of file in bytes /
-     gint32  songlen;           /* Length of song in ms  /
-     gint32  cd_nr;             /* CD number             /
-     gint32  cds;               /* number of CDs         /
-     gint32  track_nr;          /* track number          /
-     gint32  tracks;            /* number of tracks      /
-     gint32  year;              /* year                  /
-     gint32  bitrate;           /* bitrate               /
-     gboolean transferred;      /* has file been transferred to iPod? /
+     gunichar2 *album_utf16;    /+ album (utf16)         /+
+     gunichar2 *artist_utf16;   /+ artist (utf16)        /+
+     gunichar2 *title_utf16;    /+ title (utf16)         /+
+     gunichar2 *genre_utf16;    /+ genre (utf16)         /+
+     gunichar2 *comment_utf16;  /+ comment (utf16)       /+
+     gunichar2 *composer_utf16; /+ Composer (utf16)      /+
+     gunichar2 *fdesc_utf16;    /+ ? (utf16)             /+
+     gunichar2 *ipod_path_utf16;/+ name of file on iPod: uses ":" instead of "/" /+
+     guint32 ipod_id;           /+ unique ID of song     /+
+     gint32  size;              /+ size of file in bytes /+
+     gint32  songlen;           /+ Length of song in ms  /+
+     gint32  cd_nr;             /+ CD number             /+
+     gint32  cds;               /+ number of CDs         /+
+     gint32  track_nr;          /+ track number          /+
+     gint32  tracks;            /+ number of tracks      /+
+     gint32  year;              /+ year                  /+
+     gint32  bitrate;           /+ bitrate               /+
+     gboolean transferred;      /+ has file been transferred to iPod? /+
    } Song;
 
    "transferred" will be set to TRUE because all songs read from a
@@ -79,7 +79,7 @@
    typedef struct
    {
      gunichar2 *name_utf16;
-     guint32 type;         /* 1: master play list (PL_TYPE_MPL) /
+     guint32 type;         /+ 1: master play list (PL_TYPE_MPL) /+
    } Playlist;
 
    Again, by #defining ITUNESDB_PROVIDE_UTF8, a member "gchar *name"
@@ -99,7 +99,7 @@
 
    *** Writing the iTunesDB ***
 
-   gboolean itunesdb_write (gchar *path), /* path to mountpoint /
+   gboolean itunesdb_write (gchar *path), /+ path to mountpoint /+
    will write an updated version of the iTunesDB.
 
    It uses the following functions to retrieve the data necessary data
@@ -974,29 +974,37 @@ write_it (FILE *file)
    iPod, e.e. "/mnt/ipod" */
 gboolean itunesdb_write (gchar *path)
 {
-    FILE *file = NULL;
     gchar *filename = NULL;
     gboolean result = FALSE;
 
     filename = concat_dir (path, "iPod_Control/iTunes/iTunesDB");
-
-#if ITUNESDB_DEBUG
-    fprintf(stderr, "Writing to %s\n", filename);
-#endif
-
-    if((file = fopen (filename, "w+")))
-    {
-	write_it (file);
-	fclose(file);
-	result = TRUE;
-    }
-    else
-    {
-	gtkpod_warning (_("Could not open iTunesDB \"%s\" for writing.\n"),
-		filename);
-    }
+    result = itunesdb_write_to_file (filename);
     if (filename != NULL) g_free (filename);
     return result;
+}
+
+/* Same as itnuesdb_write (), but you specify the filename directly */
+gboolean itunesdb_write_to_file (gchar *filename)
+{
+  FILE *file = NULL;
+  gboolean result = FALSE;
+
+#if ITUNESDB_DEBUG
+  fprintf(stderr, "Writing to %s\n", filename);
+#endif
+
+  if((file = fopen (filename, "w+")))
+    {
+      write_it (file);
+      fclose(file);
+      result = TRUE;
+    }
+  else
+    {
+      gtkpod_warning (_("Could not open iTunesDB \"%s\" for writing.\n"),
+		      filename);
+    }
+  return result;
 }
 
 /* Does this really belong here? -- Maybe, because it

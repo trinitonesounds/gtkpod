@@ -35,6 +35,8 @@ void prefs_window_set_writeid3_active(gboolean val);
 void prefs_window_set_mount_point(const gchar *mp);
 
 void prefs_window_set_song_list_all(gboolean val);
+void prefs_window_set_keep_backups(gboolean active);
+void prefs_window_set_write_extended_info(gboolean active);
 void prefs_window_set_song_list_album(gboolean val);
 void prefs_window_set_song_list_track(gboolean val);
 void prefs_window_set_song_list_genre(gboolean val);

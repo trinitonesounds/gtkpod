@@ -50,10 +50,11 @@ enum {
   MHOD_ID_PLAYLIST = 100
 };
 
-#define ITUNESDB_COPYBLK 65536      /* blocksize for copy_song_to_ipod () */
+#define ITUNESDB_COPYBLK 65536      /* blocksize for cp () */
 
-gboolean itunesdb_parse (gchar *file);
-gboolean itunesdb_write (gchar *file);
+gboolean itunesdb_parse (gchar *path);
+gboolean itunesdb_write (gchar *path);
+gboolean itunesdb_write_to_file (gchar *filename);
 gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile);
 gboolean cp (gchar *from_file, gchar *to_file);
 #endif __ITUNESDB_H__

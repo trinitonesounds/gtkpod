@@ -208,3 +208,15 @@ on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
 void
 on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_cfg_keep_backups_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_offline1_activate                   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

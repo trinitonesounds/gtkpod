@@ -115,9 +115,22 @@ gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file)
 /* used to handle export of database */
 void handle_export ()
 {
-  if (flush_songs () == FALSE) return; /* some error occured
-					  while writing files to iPod */
-  itunesdb_write (cfg->ipod_mount);    /* write iTunesDB to iPod */
+  if(!cfg->offline)
+    {
+      /* write songs to iPod */
+      if (flush_songs () == FALSE) return;
+      /* write iTunesDB to iPod */
+      if (itunesdb_write (cfg->ipod_mount) == FALSE) return;
+      /* write extended info (PC filenames, md5 hash) to iPod */
+      if (cfg->write_extended_info)
+	;
+	/*if (write_extended_info () == FALSE) return;*/
+      /* copy files to ~/.gtkpod */
+      if (cfg->keep_backups)
+	{
+	  /* FIXME: copy files (too late for today) */
+	}
+    }
 }
 
 

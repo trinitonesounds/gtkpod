@@ -36,6 +36,7 @@
 #include <sys/types.h>
 #include "prefs.h"
 #include "support.h"
+#include "misc.h"
 
 struct cfg *cfg = NULL;
 
@@ -49,7 +50,11 @@ static void usage (FILE *file)
   fprintf(file, _("  -w:           write changed ID3 tags to file\n"));
   fprintf(file, _("  --writeid3:   same as \"-w\".\n"));
   fprintf(file, _("  -c:           check files automagically for duplicates\n"));
-  fprintf(file, _("  --md5:   same as \"-c\".\n"));
+  fprintf(file, _("  --md5:        same as \"-c\".\n"));
+  fprintf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n"));
+  fprintf(file, _("                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n"));
+  fprintf(file, _("                used with \"Offline\" deactivated.\n"));
+  fprintf(file, _("  --offline:    same as \"-o\".\n"));
 }
 
 struct cfg*
@@ -84,6 +89,9 @@ cfg_new(void)
     mycfg->deletion.song = TRUE;
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
+    mycfg->offline = FALSE;
+    mycfg->keep_backups = TRUE;
+    mycfg->write_extended_info = TRUE;
     return(mycfg);
 }
 
@@ -111,89 +119,112 @@ prefs_readline(char *buf, int maxlen, int *last)
     }
     return(result);
 }
+
 static void
 read_prefs_from_file_desc(FILE *fp)
 {
     gchar buf[PATH_MAX];
-    int length = 0, i = 0;
+    gchar *line, *arg, *bufp;
 
     if(fp)
     {
-	gchar *tags[] = {
-	    "mp=", "id3=", "md5=", "album=", "track=", "genre=", "artist=",
-	    "delete_file=", "delete_playlist=", "delete_ipod=", "auto_import="
-	};
-	gchar *line = NULL;
-	length = fread(buf, 1, PATH_MAX, fp);
-	
-	for(i = 0; i < length; i++)
+      while (fgets (buf, PATH_MAX, fp))
 	{
-	    if((line = prefs_readline(&buf[i], length - i, &i)))
+	  /* allow comments */
+	  if ((buf[0] == ';') || (buf[0] == '#')) continue;
+	  arg = strchr (buf, '=');
+	  if (!arg || (arg == buf))
 	    {
-		if((g_strstr_len(line, strlen(tags[0]), tags[0])))
-		{
-		    gchar mount_point[PATH_MAX];
-		    snprintf(mount_point, PATH_MAX, "%s", &line[3]);
-		    prefs_set_mount_point(mount_point);
-		}
-		else if((g_strstr_len(line, strlen(tags[1]), tags[1])))
-		{
-		    prefs_set_writeid3_active((gboolean)atoi(&line[4]));
-		}
-		else if((g_strstr_len(line, strlen(tags[2]), tags[2])))
-		{
-		    prefs_set_md5songs_active((gboolean)atoi(&line[4]));
-		}
-		else if((g_strstr_len(line, strlen(tags[3]), tags[3])))
-		{
-		    prefs_set_song_list_show_album((gboolean)atoi(&line[6]));
-		}
-		else if((g_strstr_len(line, strlen(tags[4]), tags[4])))
-		{
-		    prefs_set_song_list_show_track((gboolean)atoi(&line[6]));
-		}
-		else if((g_strstr_len(line, strlen(tags[5]), tags[5])))
-		{
-		    prefs_set_song_list_show_genre((gboolean)atoi(&line[6]));
-		}
-		else if((g_strstr_len(line, strlen(tags[6]), tags[6])))
-		{
-		    prefs_set_song_list_show_artist((gboolean)atoi(&line[7]));
-		}
-		else if((g_strstr_len(line, strlen(tags[7]), tags[7])))
-		{
-		    prefs_set_song_playlist_deletion((gboolean)atoi(&line[12]));
-		}
-		else if((g_strstr_len(line, strlen(tags[8]), tags[8])))
-		{
-		    prefs_set_playlist_deletion((gboolean)atoi(&line[16]));
-		}
-		else if((g_strstr_len(line, strlen(tags[9]), tags[9])))
-		{
-		    prefs_set_song_ipod_file_deletion((gboolean)atoi(&line[12]));
-		}
-		else if((g_strstr_len(line, strlen(tags[10]), tags[10])))
-		{
-		    prefs_set_auto_import((gboolean)atoi(&line[12]));
-		}
-		g_free(line);
+	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
+	      continue;
 	    }
+	  /* skip whitespace (isblank() is a GNU extension... */
+	  bufp = buf;
+	  while ((*bufp == ' ') || (*bufp == 0x09)) ++bufp;
+	  line = g_strndup (buf, arg-bufp);
+	  ++arg;
+	  if(g_ascii_strcasecmp (line, "mp") == 0)
+	    {
+	      gchar mount_point[PATH_MAX];
+	      snprintf(mount_point, PATH_MAX, "%s", arg);
+	      prefs_set_mount_point(mount_point);
+	    }
+	  else if(g_ascii_strcasecmp (line, "id3") == 0)
+	    {
+	      prefs_set_writeid3_active((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "md5") == 0)
+	    {
+	      prefs_set_md5songs_active((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "album") == 0)
+	    {
+	      prefs_set_song_list_show_album((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "track") == 0)
+	    {
+	      prefs_set_song_list_show_track((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "genre") == 0)
+	    {
+	      prefs_set_song_list_show_genre((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "artist") == 0)
+	    {
+	      prefs_set_song_list_show_artist((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "delete_file") == 0)
+	    {
+	      prefs_set_song_playlist_deletion((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "delete_playlist") == 0)
+	    {
+	      prefs_set_playlist_deletion((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "delete_ipod") == 0)
+	    {
+	      prefs_set_song_ipod_file_deletion((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "auto_import") == 0)
+	    {
+	      prefs_set_auto_import((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "offline") == 0)
+	    {
+	      prefs_set_offline((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "backups") == 0)
+	    {
+	      prefs_set_keep_backups((gboolean)atoi(arg));
+	    }
+	  else if(g_ascii_strcasecmp (line, "extended_info") == 0)
+	    {
+	      prefs_set_write_extended_info((gboolean)atoi(arg));
+	    }
+	  else
+	    {
+	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
+	    }	      
+	  g_free(line);
 	}
     }
 }
 
+
 void
 read_prefs_defaults(void)
 {
-    gchar cfgdir[PATH_MAX], filename[PATH_MAX], *str = NULL;
+    gchar *cfgdir = NULL;
+    gchar filename[PATH_MAX+1], *str = NULL;
     FILE *fp = NULL;
 
     if((str = getenv("HOME")))
     {
-	snprintf(cfgdir, PATH_MAX, "%s/.gtkpod", str);
+        cfgdir = concat_dir (str, ".gtkpod");
 	if(g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
 	{
 	    snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
+	    filename[PATH_MAX] = 0;
 	    if((fp = fopen(filename, "r")))
 	    {
 		read_prefs_from_file_desc(fp);
@@ -204,12 +235,14 @@ read_prefs_defaults(void)
 		fprintf(stderr, "Unable to open %s for reading\n", filename);
 	    }
 	}
+	if (cfgdir) g_free (cfgdir);
     }
 }
 
 /* Read Preferences and initialise the cfg-struct */
-gboolean read_prefs (int argc, char *argv[])
+gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 {
+  GtkCheckMenuItem *menu;
   int opt;
   int option_index;
   struct option const options[] =
@@ -221,7 +254,9 @@ gboolean read_prefs (int argc, char *argv[])
       { "w",           no_argument,	NULL, GP_WRITEID3 },
       { "writeid3",    no_argument,	NULL, GP_WRITEID3 },
       { "c",           no_argument,	NULL, GP_MD5SONGS },
-      { "md5",		no_argument,	NULL, GP_MD5SONGS },
+      { "md5",	       no_argument,	NULL, GP_MD5SONGS },
+      { "o",           no_argument,	NULL, GP_OFFLINE },
+      { "offline",     no_argument,	NULL, GP_OFFLINE },
       { 0, 0, 0, 0 }
     };
   
@@ -247,12 +282,17 @@ gboolean read_prefs (int argc, char *argv[])
       case GP_MD5SONGS:
 	cfg->md5songs = TRUE;
 	break;
+      case GP_OFFLINE:
+	cfg->offline = TRUE;
+	break;
       default:
 	fprintf(stderr, _("Unknown option: %s\n"), argv[optind]);
 	usage(stderr);
 	exit(1);
       }
   }
+  menu = GTK_CHECK_MENU_ITEM (lookup_widget (gtkpod, "offline_menu"));
+  gtk_check_menu_item_set_active (menu, prefs_get_offline ());
   return TRUE;
 }
 
@@ -273,17 +313,21 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
     fprintf(fp, "auto_import=%d\n",prefs_get_auto_import());
+    fprintf(fp, "offline=%d\n",prefs_get_offline());
+    fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
+    fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
 }
 
 void 
 write_prefs (void)
 {
-    gchar cfgdir[PATH_MAX], filename[PATH_MAX], *str = NULL;
+    gchar *cfgdir = NULL;
+    gchar filename[PATH_MAX+1], *str = NULL;
     FILE *fp = NULL;
 
     if((str = getenv("HOME")))
     {
-	snprintf(cfgdir, PATH_MAX, "%s/.gtkpod/", str);
+        cfgdir = concat_dir (str, ".gtkpod");
 	if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
 	{
 	    if(!mkdir(cfgdir, 0755))
@@ -292,16 +336,21 @@ write_prefs (void)
 			cfgdir);
 	    }
 	}
-	snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
-	if((fp = fopen(filename, "w")))
-	{
-	    write_prefs_to_file_desc(fp);
-	    fclose(fp);
-	}
 	else
 	{
+	  snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
+	  filename[PATH_MAX] = 0;
+	  if((fp = fopen(filename, "w")))
+	  {
+	    write_prefs_to_file_desc(fp);
+	    fclose(fp);
+	  }
+	  else
+	  {
 	    fprintf(stderr, "Unable to open %s for writing\n", filename);
+	  }
 	}
+	if (cfgdir) g_free (cfgdir);
     }
 }
 
@@ -351,6 +400,18 @@ get_dirname_of_filename(gchar *file)
    return (result);
 }
 
+void prefs_set_offline(gboolean active)
+{
+  cfg->offline = active;
+}
+void prefs_set_keep_backups(gboolean active)
+{
+  cfg->keep_backups = active;
+}
+void prefs_set_write_extended_info(gboolean active)
+{
+  cfg->write_extended_info = active;
+}
 void prefs_set_last_dir_file_browse_for_filename(gchar *file)
 {
     if(cfg->last_dir.file_browse) g_free(cfg->last_dir.file_browse);
@@ -426,6 +487,18 @@ void
 prefs_set_song_list_show_genre(gboolean val)
 {
     cfg->song_list_show.genre = val;
+}
+gboolean prefs_get_offline(void)
+{
+  return cfg->offline;
+}
+gboolean prefs_get_keep_backups(void)
+{
+  return cfg->keep_backups;
+}
+gboolean prefs_get_write_extended_info(void)
+{
+  return cfg->write_extended_info;
 }
 gboolean 
 prefs_get_song_list_show_all(void)
@@ -562,6 +635,9 @@ clone_prefs(void)
 	result->writeid3 = cfg->writeid3;
 	result->autoimport = cfg->autoimport;
 	result->ipod_mount = g_strdup(cfg->ipod_mount);
+	result->offline = cfg->offline;
+	result->keep_backups = cfg->keep_backups;
+	result->write_extended_info = cfg->write_extended_info;
 	    
 	result->song_list_show.artist = prefs_get_song_list_show_artist();
 	result->song_list_show.album = prefs_get_song_list_show_album();

@@ -544,3 +544,29 @@ on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
 	    gtk_toggle_button_get_active(togglebutton));
 }
 
+
+void
+on_cfg_keep_backups_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_keep_backups(
+	    gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_write_extended_info(
+	    gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_offline1_activate                   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+  prefs_set_offline (
+     gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
+}
