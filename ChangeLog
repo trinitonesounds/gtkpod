@@ -13,7 +13,7 @@ gtkpod V0.51
 	sort tabs the same size
 
         IMPROVEMENT: gtkpod should now compile "out of the box" under
-	FreeBSD and NetBSD (some adaptions were necessary before).
+	FreeBSD and NetBSD (some adaptations were necessary before).
 
         IMPROVEMENT: added all supported charsets provided by "iconv
 	-l" to the list of charsets to choose from. Code assumes that
