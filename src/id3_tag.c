@@ -36,13 +36,8 @@
 
 #include "id3_tag.h"
 #include "genres.h"
-/*#include "easytag.h"
-#include "browser.h"
-#include "setting.h"
-#include "misc.h"
-#include "et_core.h"
+
 #include "charset.h"
-#include "i18n.h"*/
 #include "support.h"
 
 
@@ -51,7 +46,8 @@
  ****************/
 #define ID3V2_MAX_STRING_LEN 4096
 #define CONVERT_OLD_ID3V2_TAG_VERSION FALSE
-#define USE_CHARACTER_SET_TRANSLATION TRUE /* (but not yet supported: JCS) */
+ /* USE_CHARACTER_SET_TRANSLATION impemented by charset_from/to_utf8 () */
+#define USE_CHARACTER_SET_TRANSLATION TRUE
 #define NUMBER_TRACK_FORMATED FALSE
 #define STRIP_TAG_WHEN_EMPTY_FIELDS TRUE
 #define WRITE_ID3V1_TAG TRUE
@@ -70,16 +66,14 @@ ID3_C_EXPORT size_t ID3Field_GetASCII_1 (const ID3Field *field, char *buffer, si
  *************/
 
 
-/* USE_CHARACTER_SET_TRANSLATION is not supported yet (JCS) */
 static gchar *convert_from_file_to_user(gchar *s)
 {
-  return g_locale_to_utf8(s, -1, NULL, NULL, NULL);
+    return charset_to_utf8 (s);
 }
 
-/* USE_CHARACTER_SET_TRANSLATION is not supported yet (JCS) */
 static gchar *convert_from_user_to_file(gchar *s)
 {
-  return g_locale_from_utf8(s, -1, NULL, NULL, NULL);
+    return charset_from_utf8 (s);
 }
 
 /*

@@ -231,5 +231,5 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
                                         guint            time,
                                         gpointer         user_data);
 void
-on_locale_combo_entry_changed          (GtkEditable     *editable,
+on_charset_combo_entry_changed         (GtkEditable     *editable,
                                         gpointer         user_data);

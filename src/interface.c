@@ -719,8 +719,8 @@ create_prefs_window (void)
   GtkWidget *cfg_mount_point;
   GtkWidget *hbox4;
   GtkWidget *label20;
-  GtkWidget *locale_combo;
-  GtkWidget *locale_combo_entry;
+  GtkWidget *charset_combo;
+  GtkWidget *charset_combo_entry;
   GtkWidget *cfg_autoimport;
   GtkWidget *cfg_md5songs;
   GtkWidget *cfg_writeid3;
@@ -776,20 +776,20 @@ create_prefs_window (void)
   gtk_widget_show (hbox4);
   gtk_box_pack_start (GTK_BOX (vbox3), hbox4, TRUE, TRUE, 0);
 
-  label20 = gtk_label_new (_("Locale for file operations:"));
+  label20 = gtk_label_new (_("Charset (ID3, files):"));
   gtk_widget_show (label20);
   gtk_box_pack_start (GTK_BOX (hbox4), label20, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (label20), GTK_JUSTIFY_LEFT);
 
-  locale_combo = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (locale_combo)->popwin),
-                     "GladeParentKey", locale_combo);
-  gtk_widget_show (locale_combo);
-  gtk_box_pack_start (GTK_BOX (hbox4), locale_combo, TRUE, TRUE, 0);
+  charset_combo = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (charset_combo)->popwin),
+                     "GladeParentKey", charset_combo);
+  gtk_widget_show (charset_combo);
+  gtk_box_pack_start (GTK_BOX (hbox4), charset_combo, TRUE, TRUE, 0);
 
-  locale_combo_entry = GTK_COMBO (locale_combo)->entry;
-  gtk_widget_show (locale_combo_entry);
-  gtk_editable_set_editable (GTK_EDITABLE (locale_combo_entry), FALSE);
+  charset_combo_entry = GTK_COMBO (charset_combo)->entry;
+  gtk_widget_show (charset_combo_entry);
+  gtk_editable_set_editable (GTK_EDITABLE (charset_combo_entry), FALSE);
 
   cfg_autoimport = gtk_check_button_new_with_mnemonic (_("Automatically Import ItunesDB on startup"));
   gtk_widget_show (cfg_autoimport);
@@ -903,8 +903,8 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_mount_point, "changed",
                     G_CALLBACK (on_cfg_mount_point_changed),
                     NULL);
-  g_signal_connect ((gpointer) locale_combo_entry, "changed",
-                    G_CALLBACK (on_locale_combo_entry_changed),
+  g_signal_connect ((gpointer) charset_combo_entry, "changed",
+                    G_CALLBACK (on_charset_combo_entry_changed),
                     NULL);
   g_signal_connect ((gpointer) cfg_autoimport, "toggled",
                     G_CALLBACK (on_cfg_autoimport_toggled),
@@ -961,8 +961,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_mount_point, "cfg_mount_point");
   GLADE_HOOKUP_OBJECT (prefs_window, hbox4, "hbox4");
   GLADE_HOOKUP_OBJECT (prefs_window, label20, "label20");
-  GLADE_HOOKUP_OBJECT (prefs_window, locale_combo, "locale_combo");
-  GLADE_HOOKUP_OBJECT (prefs_window, locale_combo_entry, "locale_combo_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, charset_combo, "charset_combo");
+  GLADE_HOOKUP_OBJECT (prefs_window, charset_combo_entry, "charset_combo_entry");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_autoimport, "cfg_autoimport");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5songs, "cfg_md5songs");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_writeid3, "cfg_writeid3");

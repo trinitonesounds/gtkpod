@@ -29,7 +29,7 @@
 #include "song.h"
 #include "interface.h"
 #include "support.h"
-#include "misc.h"
+#include "charset.h"
 
 static GtkWidget *prefs_window = NULL;
 static struct cfg *tmpcfg = NULL;
@@ -61,9 +61,9 @@ prefs_window_create(void)
 	{
 	    gtk_entry_set_text(GTK_ENTRY(w), g_strdup(tmpcfg->ipod_mount));
 	}
-	if((w = lookup_widget(prefs_window, "locale_combo")))
+	if((w = lookup_widget(prefs_window, "charset_combo")))
 	{
-	    locale_init_combo (GTK_COMBO (w));
+	    charset_init_combo (GTK_COMBO (w));
 	}
 	if((w = lookup_widget(prefs_window, "cfg_md5songs")))
 	{
@@ -133,7 +133,7 @@ prefs_window_save(void)
     prefs_set_md5songs_active(tmpcfg->md5songs);
     prefs_set_writeid3_active(tmpcfg->writeid3);
     prefs_set_mount_point(tmpcfg->ipod_mount);
-    prefs_set_lc_ctype(tmpcfg->lc_ctype);
+    prefs_set_charset(tmpcfg->charset);
     prefs_set_auto_import(tmpcfg->autoimport);
     prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
@@ -312,7 +312,7 @@ prefs_window_set_auto_import(gboolean val)
     tmpcfg->autoimport = val;
 }
 
-void prefs_window_set_lc_ctype (gchar *lc_ctype)
+void prefs_window_set_charset (gchar *charset)
 {
-    prefs_cfg_set_lc_ctype (tmpcfg, lc_ctype);
+    prefs_cfg_set_charset (tmpcfg, charset);
 }

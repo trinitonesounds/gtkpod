@@ -87,7 +87,7 @@ cfg_new(void)
     {
 	mycfg->ipod_mount = g_strdup ("/mnt");
     }
-    mycfg->lc_ctype = NULL;
+    mycfg->charset = NULL;
     mycfg->deletion.song = TRUE;
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
@@ -132,9 +132,9 @@ read_prefs_from_file_desc(FILE *fp)
 	      snprintf(mount_point, PATH_MAX, "%s", arg);
 	      prefs_set_mount_point(mount_point);
 	    }
-	  else if(g_ascii_strcasecmp (line, "lc_ctype") == 0)
+	  else if(g_ascii_strcasecmp (line, "charset") == 0)
 	    {
-		if(strlen (arg))      prefs_set_lc_ctype(arg);
+		if(strlen (arg))      prefs_set_charset(arg);
 	    }
 	  else if(g_ascii_strcasecmp (line, "id3") == 0)
 	    {
@@ -299,22 +299,15 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 static void
 write_prefs_to_file_desc(FILE *fp)
 {
-    gchar *lcd;
-
     if(!fp)
 	fp = stderr;
     
     fprintf(fp, "mp=%s\n", cfg->ipod_mount);
-    /* only write the locale if it's 1) set 2) non-zero length 3) not
-     * identical to the system locale */
-    lcd = setlocale (LC_CTYPE, NULL); /* get current system locale */
-    if (cfg->lc_ctype &&
-	strlen (cfg->lc_ctype) &&
-	(!lcd || strcmp (cfg->lc_ctype, lcd) != 0))
+    if (cfg->charset)
     {
-	fprintf(fp, "lc_ctype=%s\n", cfg->lc_ctype);
+	fprintf(fp, "charset=%s\n", cfg->charset);
     } else {
-	fprintf(fp, "lc_ctype=\n");
+	fprintf(fp, "charset=\n");
     }
     fprintf(fp, "id3=%d\n",cfg->writeid3);
     fprintf(fp, "md5=%d\n",cfg->md5songs);
@@ -377,7 +370,7 @@ void cfg_free(struct cfg *c)
     if(c)
     { /* C_FREE defined in misc.h */
       C_FREE (c->ipod_mount);
-      C_FREE (c->lc_ctype);
+      C_FREE (c->charset);
       C_FREE (c->last_dir.browse);
       C_FREE (c->last_dir.export);
       C_FREE (c);
@@ -619,30 +612,26 @@ prefs_get_song_ipod_file_deletion(void)
     return(cfg->deletion.ipod_file);
 }
 
-void prefs_set_lc_ctype (gchar *lc_ctype)
+void prefs_set_charset (gchar *charset)
 {
-    prefs_cfg_set_lc_ctype (cfg, lc_ctype);
+    prefs_cfg_set_charset (cfg, charset);
 }
 
 
-void prefs_cfg_set_lc_ctype (struct cfg *cfgd, gchar *lc_ctype)
+void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
 {
-    if (cfgd->lc_ctype)
-    { /* don't change anything, if there's nothing to change */
-	if (lc_ctype && strcmp (cfgd->lc_ctype, lc_ctype) == 0) return;
-	g_free (cfgd->lc_ctype);
-	cfgd->lc_ctype = NULL;
-    } /* set the new string, if it's non-NULL and a supported locale */
-    if (lc_ctype && locale_check_string (lc_ctype))
-	cfgd->lc_ctype = g_strdup (lc_ctype);
+    if (cfgd->charset)
+    {
+	g_free (cfgd->charset);
+	cfgd->charset = NULL;
+    }
+    if (charset && strlen (charset))  cfgd->charset = g_strdup (charset);
 }
 
 
-
-
-gchar * prefs_get_lc_ctype (void)
+gchar * prefs_get_charset (void)
 {
-    return cfg->lc_ctype;
+    return cfg->charset;
 }
 
 struct cfg*
@@ -657,7 +646,7 @@ clone_prefs(void)
 	result->writeid3 = cfg->writeid3;
 	result->autoimport = cfg->autoimport;
 	result->ipod_mount = g_strdup(cfg->ipod_mount);
-	result->lc_ctype = g_strdup(cfg->lc_ctype);
+	result->charset = g_strdup(cfg->charset);
 	result->offline = cfg->offline;
 	result->keep_backups = cfg->keep_backups;
 	result->write_extended_info = cfg->write_extended_info;

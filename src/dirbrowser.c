@@ -31,7 +31,7 @@
 #include "support.h"
 #include "prefs.h"
 #include "song.h"
-#include "misc.h"
+#include "charset.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -149,8 +149,6 @@ static void add_dir_selected (gchar *dir)
 void create_dir_browser (void)
 {
     if(browser)  return;
-    locale_set (prefs_get_lc_ctype ()); /* Set locale for file operations */
-/*    printf("Current Locale: %s\n", setlocale (LC_CTYPE, NULL));*/
     browser = xmms_create_dir_browser (
 	_("Select directory to add recursively"),
 	cfg->last_dir.browse,
@@ -164,8 +162,6 @@ static void add_dir_close (GtkWidget *w1, GtkWidget *w2)
 {
     if (browser)   gtk_widget_destroy(browser),
     browser = NULL;
-    locale_reset (); /* reset locale to what it was before the file
-		      * operations started */
 }
 
 
@@ -229,7 +225,7 @@ static void add_dir(GtkCTree *tree, GtkCTreeNode *pnode, char* parent, char *dir
 		struct dirnode *dirnode = g_malloc0(sizeof (struct dirnode));
 		dirnode->path = g_strconcat(path, "/", NULL);
  		has_subdir = check_for_subdir(dirnode->path);
-		dir_utf8 = g_locale_to_utf8 (dir, -1, NULL, NULL, NULL);
+		dir_utf8 = charset_to_utf8 (dir);
 		node = gtk_ctree_insert_node(tree, pnode, NULL, &dir_utf8,
 					     NODE_SPACING, folder_pixmap,
 					     folder_mask, ofolder_pixmap,

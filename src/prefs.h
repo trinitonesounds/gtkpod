@@ -47,7 +47,7 @@ enum {
 struct cfg
 {
   gchar    *ipod_mount;   /* mount point of iPod */
-  gchar    *lc_ctype;      /* LC_CTYPE to use with file operations */
+  gchar    *charset;      /* CHARSET to use with file operations */
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */	
   gboolean autoimport;	  /* whether or not to automatically import files */
@@ -103,8 +103,8 @@ void prefs_set_md5songs_active(gboolean active);
 void prefs_set_writeid3_active(gboolean active);
 void prefs_set_last_dir_browse(gchar * dir);
 void prefs_set_last_dir_export(gchar * dir);
-void prefs_set_lc_ctype (gchar *lc_ctype);
-void prefs_cfg_set_lc_ctype (struct cfg *cfg, gchar *lc_ctype);
+void prefs_set_charset (gchar *charset);
+void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 
 gboolean prefs_get_offline(void);
 gboolean prefs_get_keep_backups(void);
@@ -118,6 +118,6 @@ gboolean prefs_get_song_list_show_genre(void);
 gboolean prefs_get_song_list_show_artist(void);
 gboolean prefs_get_song_playlist_deletion(void);
 gboolean prefs_get_song_ipod_file_deletion(void);
-gchar * prefs_get_lc_ctype (void);
+gchar * prefs_get_charset (void);
 
 #endif __PREFS_H__

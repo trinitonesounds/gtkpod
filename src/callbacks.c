@@ -45,6 +45,7 @@
 #include "md5.h"
 #include "delete_window.h"
 #include "file_export.h"
+#include "charset.h"
 
 void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
@@ -623,13 +624,14 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 
 
 void
-on_locale_combo_entry_changed          (GtkEditable     *editable,
+on_charset_combo_entry_changed          (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-    gchar *txt;
+    gchar *descr, *charset;
 
-    txt = gtk_editable_get_chars (editable, 0, -1);
-    prefs_window_set_lc_ctype (txt);
-    g_free (txt);
+    descr = gtk_editable_get_chars (editable, 0, -1);
+    charset = charset_from_description (descr);
+    prefs_window_set_charset (charset);
+    C_FREE (descr);
+    C_FREE (charset);
 }
-

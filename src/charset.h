@@ -23,8 +23,8 @@
 |  This product is not supported/written/published by Apple!
 */
 
-#ifndef __MISC_H__
-#define __MISC_H__
+#ifndef __CHARSET_H__
+#define __CHARSET_H__
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -33,20 +33,13 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-/* we receive UTF8 strings which should be translated to the locale
- * before printing */
-/* FIXME: write a popup for gtkpod_warning which holds all the
- * warnings in a list */
-#define gtkpod_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
-#define C_FREE(a) if(a) g_free(a); a=NULL
+typedef struct {
+	gchar *descr;
+	gchar *name;
+} CharsetInfo;
 
-void create_add_files_fileselector (void);
-gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
-void open_about_window (void);
-void close_about_window (void);
-gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
-void cleanup_backup_and_extended_files (void);
-void gtkpod_main_quit(void);
-void disable_gtkpod_import_buttons(void);
-void register_gtkpod_main_window(GtkWidget *win);
-#endif __MISC_H__
+void charset_init_combo (GtkCombo *combo);
+gchar *charset_from_description (gchar *descr);
+gchar *charset_to_utf8 (gchar *str);
+gchar *charset_from_utf8 (gchar *str);
+#endif __CHARSET_H__

@@ -40,7 +40,6 @@
 static GtkWidget *main_window = NULL;
 static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
-static gchar *lc_ctype_def = NULL;
   
 
 static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
@@ -63,8 +62,6 @@ static void add_files_close (GtkWidget *w1, GtkWidget *w2)
 {
     if (file_selector)    gtk_widget_destroy(file_selector),
     file_selector = NULL;
-    locale_reset (); /* reset locale to what it was before the file
-		      * operations started */
 }
 
 
@@ -72,7 +69,6 @@ void create_add_files_fileselector (void)
 {
     if (file_selector) return; /* file selector already open -- abort */
     /* Create the selector */
-    locale_set (prefs_get_lc_ctype ()); /* Set locale for file operations */
     file_selector = gtk_file_selection_new (_("Select files or directories to add."));
     gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (file_selector),
 					    TRUE);
@@ -262,120 +258,4 @@ void
 register_gtkpod_main_window(GtkWidget *win)
 {
     main_window = win;
-}
-
-
-
-
-/* Sets up the locales to choose from in the "combo". It presets the
-   locale stored in cfg->locale (or "System locale" if none is set
-   there */
-void locale_init_combo (GtkCombo *combo)
-{
-    gchar *current_lc_ctype;
-    
-    static GList *lc_ctypes = NULL; /* list with choices -- takes a while to
-				     * initialize, so we only do it once */
-    
-    current_lc_ctype = prefs_get_lc_ctype ();
-    if ((current_lc_ctype == NULL) || (strlen (current_lc_ctype) == 0))
-    {
-	current_lc_ctype = _("System Locale");
-    }
-    if (lc_ctypes == NULL)
-    { /* set up list with locales */
-	lc_ctypes = g_list_append (lc_ctypes, _("System Locale"));
-	/* later I want to get a list of available locales
-	   automatically -- that's what's going to take time to read */
-	lc_ctypes = g_list_append (lc_ctypes, "de_DE");
-	lc_ctypes = g_list_append (lc_ctypes, "ja_JP");
-	lc_ctypes = g_list_append (lc_ctypes, "en_US");
-	lc_ctypes = g_list_append (lc_ctypes, "de_JP");
-    }
-    /* set pull down items */
-    gtk_combo_set_popdown_strings (GTK_COMBO (combo), lc_ctypes); 
-    /* set standard entry */
-    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), current_lc_ctype);
-}
-
-
-/* checks if the current locale is "valid" */
-gboolean locale_check_string(gchar *lc_ctype)
-{
-    gchar *lcd = NULL;
-    gboolean result = TRUE;
-
-    if (!lc_ctype || !strlen (lc_ctype)) return FALSE;
-    /* don't store the standard "System Locale" */
-    if (g_utf8_collate (g_utf8_casefold (lc_ctype, -1), 
-			g_utf8_casefold (_("System Locale"), -1)) != 0)
-    {
-	/* get the current setting */
-	lcd = setlocale (LC_CTYPE, NULL);
-	if (lcd) lcd = g_strdup (lcd);  /* must copy -- will be
-					 * overwritten by subsequent
-					 * setlocale() calls) */
-	/* check if it's a legal locale */
-	if (setlocale (LC_CTYPE, lc_ctype) == NULL)
-	{
-	    gtkpod_warning (_("Locale not supported: %s\n"), lc_ctype);
-	    result = FALSE;
-	}
-	/* reset the locale */
-	if (lcd)
-	{
-	    setlocale (LC_CTYPE, lcd);
-	}
-	else
-	{
-	    setlocale (LC_CTYPE, "");
-	}
-    }
-    else
-    { /* we never set "System Locale" -- instead a NULL pointer should
-         be stored. So we simply claim it's an invalid string, but do
-         not print an error message */ 
-	result = FALSE;
-    }
-    C_FREE (lcd);
-    return result;
-}
-
-
-/* temporarily sets LC_CTYPE to "lc_ctype" */
-void locale_set (gchar *lc_ctype)
-{
-  const char *charset;
-    /* if we have no default value set, retrieve the current setting */
-    if ((lc_ctype == NULL) || (strlen (lc_ctype) == 0))  return;
-    if (lc_ctype_def == NULL)
-    {
-	lc_ctype_def = setlocale (LC_CTYPE, NULL);
-        /* must copy -- will be overwritten by subsequent setlocale()
-	 * calls) */
-	if (lc_ctype_def)  lc_ctype_def = g_strdup (lc_ctype_def);
-    }
-    if (setlocale (LC_CTYPE, lc_ctype) == NULL)
-    {
-	gtkpod_warning (_("Locale not supported: %s\n"), lc_ctype);
-	locale_reset ();
-    }
-
-    g_get_charset (&charset);
-/*    printf("Current charset:%s\n", charset);*/
-}
-
-
-/* resets LC_CTYPE to it's original value */
-void locale_reset (void)
-{
-    if (lc_ctype_def)
-    {
-	setlocale (LC_CTYPE, lc_ctype_def);
-	C_FREE (lc_ctype_def);
-    }
-    else
-    {	
-	setlocale (LC_CTYPE, "");
-    }
 }
