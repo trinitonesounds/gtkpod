@@ -47,6 +47,12 @@ GList *playlists;
 Playlist *add_new_playlist (gchar *plname, gint position)
 {
   Playlist *plitem;
+  
+  if(!plname) {
+    g_assert_not_reached();
+    return NULL;
+  }
+  
 
   plitem = g_malloc0 (sizeof (Playlist));
   plitem->type = PL_TYPE_NORM;

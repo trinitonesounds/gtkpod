@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-24 16:04:45 JST jcs>
+/* Time-stamp: <2004-02-26 23:22:21 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1464,7 +1464,8 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
   { /* we need to loop until we find an unused filename */
       dest_components[3] = 
         g_strdup_printf("gtkpod%05d%s",track->ipod_id + oops,original_suffix);
-      ipod_fullfile = resolve_path(ipod_path_as_filename,dest_components);
+      ipod_fullfile = resolve_path(ipod_path_as_filename,
+                                   (const gchar * const *)dest_components);
       if(ipod_fullfile) {
               g_free(ipod_fullfile);
               ipod_fullfile = NULL;

@@ -1445,7 +1445,7 @@ void
 on_new_playlist1_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-  add_new_playlist (NULL, -1);
+  add_new_playlist_user_name (NULL, -1);
 }
 
 void

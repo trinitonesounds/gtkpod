@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-07 01:35:34 JST jcs>
+/* Time-stamp: <2004-02-26 23:12:36 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -443,6 +443,8 @@ Jens Lautenbach: some optical improvements\n"),
 Alex Tribble: iPod eject patch\n"),
 		       _("\
 Yaroslav Halchenko: Orphaned and dangling tracks handling\n"),
+		       _("\
+Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n"),

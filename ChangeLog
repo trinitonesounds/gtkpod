@@ -18,9 +18,15 @@ gtkpod V0.73-CVS
 	IMPROVEMENT: included 	Andrew Huntwork's patch to fix issues
 	concerning case-sensitivity of filenames under some conditions.
 
-	IMPROVEMENT: send 'eject' to the iPod after unmounting. This only
-	works if the user has write access to the device file
-	(e.g. /dev/sda2)
+	IMPROVEMENT: when importing the iTunesDB automatically on
+	startup, no window was opened until the import was
+	finished. Thanks to Andrew Huntwork the window now opens
+	before the import starts and progress can be followed in the
+	usual manner.
+
+	IMPROVEMENT: send 'eject' to the iPod after unmounting. This
+	only works under LINUX and if the user has write access to the
+	device file (e.g. /dev/sda2)
 
 	BUGFIX: Fixed compile error when compiling without mp4 support
 

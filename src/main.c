@@ -73,9 +73,9 @@ main (int argc, char *argv[])
 
   /* stuff to be done before starting gtkpod */
   call_script ("gtkpod.in");
+  gtk_widget_show (gtkpod_window);
   if(prefs_get_automount())      mount_ipod();
   if(prefs_get_auto_import())    handle_import();
-  gtk_widget_show (gtkpod_window);
   gtk_main ();
   /* all the cleanup is already done in gtkpod_main_quit() in misc.c */
   return 0;
