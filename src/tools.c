@@ -32,8 +32,10 @@
 
 
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
 #include "info.h"
@@ -102,6 +104,7 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
     int ret = 2;
     int status;
     int errsv;
+    int fdnull;
 
     k=0;
     n=0;
@@ -134,11 +137,15 @@ static gboolean nm_mp3gain_calc_gain (Track *track)
     case -1: /* parent and error, now what?*/
 	break;
     case 0: /*child*/
+	/* redirect output to /dev/null */
+	if ((fdnull = open("/dev/null", O_WRONLY | O_NDELAY)) != -1) {
+		dup2(fdnull, fileno(stdout));
+	}
+	
 	/* this call may add a tag to the mp3file!! */
         execl(mp3gain_path, mp3gain_exec, 
 			"-q", /* quiet */
 			"-k", /* set ReplayGain so that clipping is prevented */
-			"-o", /* database friendly output */
 			filename, NULL);
 	errsv = errno;
         fprintf(stderr, "execl() failed: %s\n", strerror(errsv));
