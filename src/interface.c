@@ -1201,6 +1201,7 @@ create_gtkpod_about_window (void)
   about_label = gtk_label_new ("");
   gtk_widget_show (about_label);
   gtk_box_pack_start (GTK_BOX (about_top_box), about_label, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (about_label), GTK_JUSTIFY_CENTER);
   gtk_label_set_line_wrap (GTK_LABEL (about_label), TRUE);
 
   notebook1 = gtk_notebook_new ();
@@ -1222,7 +1223,6 @@ create_gtkpod_about_window (void)
   label3 = gtk_label_new (_("Credits"));
   gtk_widget_show (label3);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 0), label3);
-  gtk_label_set_justify (GTK_LABEL (label3), GTK_JUSTIFY_LEFT);
 
   scrolledwindow3 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow3);
@@ -1238,7 +1238,6 @@ create_gtkpod_about_window (void)
   label4 = gtk_label_new (_("Translators"));
   gtk_widget_show (label4);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 1), label4);
-  gtk_label_set_justify (GTK_LABEL (label4), GTK_JUSTIFY_LEFT);
 
   hbuttonbox2 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox2);
@@ -1312,7 +1311,6 @@ create_confirm_window (void)
   gtk_widget_show (label);
   gtk_box_pack_start (GTK_BOX (vbox6), label, FALSE, TRUE, 6);
   GTK_WIDGET_SET_FLAGS (label, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   gtk_label_set_selectable (GTK_LABEL (label), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0);
@@ -1638,7 +1636,6 @@ create_prefs_window (void)
   gtk_widget_show (label27);
   gtk_box_pack_start (GTK_BOX (hbox8), label27, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label27, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label27), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label27), TRUE);
 
   cfg_mount_point = gtk_entry_new ();
@@ -1659,7 +1656,6 @@ create_prefs_window (void)
   gtk_widget_show (label26);
   gtk_frame_set_label_widget (GTK_FRAME (frame6), label26);
   GTK_WIDGET_SET_FLAGS (label26, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label26), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label26), TRUE);
 
   frame7 = gtk_frame_new (NULL);
@@ -1680,7 +1676,6 @@ create_prefs_window (void)
   gtk_widget_show (label29);
   gtk_box_pack_start (GTK_BOX (hbox9), label29, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label29, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label29), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label29), TRUE);
 
   charset_combo = gtk_combo_new ();
@@ -1755,7 +1750,6 @@ create_prefs_window (void)
   gtk_widget_show (label46);
   gtk_box_pack_start (GTK_BOX (vbox16), label46, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label46, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label46), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label46), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label46), 0, 0.5);
 
@@ -1787,7 +1781,6 @@ create_prefs_window (void)
   gtk_widget_show (label28);
   gtk_frame_set_label_widget (GTK_FRAME (frame7), label28);
   GTK_WIDGET_SET_FLAGS (label28, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label28), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label28), TRUE);
 
   frame30 = gtk_frame_new (NULL);
@@ -1826,7 +1819,6 @@ create_prefs_window (void)
   label152 = gtk_label_new (_("As a last resort set the following tags to the filaneme if they are (still) empty:"));
   gtk_widget_show (label152);
   gtk_box_pack_start (GTK_BOX (vbox55), label152, FALSE, FALSE, 4);
-  gtk_label_set_justify (GTK_LABEL (label152), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label152), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label152), 0, 0.5);
 
@@ -1870,7 +1862,6 @@ create_prefs_window (void)
   label151 = gtk_label_new (_("Tag Reading"));
   gtk_widget_show (label151);
   gtk_frame_set_label_widget (GTK_FRAME (frame30), label151);
-  gtk_label_set_justify (GTK_LABEL (label151), GTK_JUSTIFY_LEFT);
 
   frame9 = gtk_frame_new (NULL);
   gtk_widget_show (frame9);
@@ -1895,7 +1886,6 @@ create_prefs_window (void)
   gtk_widget_show (label31);
   gtk_frame_set_label_widget (GTK_FRAME (frame9), label31);
   GTK_WIDGET_SET_FLAGS (label31, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label31), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label31), TRUE);
 
   frame23 = gtk_frame_new (NULL);
@@ -1918,7 +1908,6 @@ create_prefs_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label70, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label70), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label70), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label70), 0, 0.5);
 
@@ -1939,13 +1928,11 @@ create_prefs_window (void)
   gtk_widget_show (label72);
   gtk_frame_set_label_widget (GTK_FRAME (frame23), label72);
   GTK_WIDGET_SET_FLAGS (label72, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label72), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label72), TRUE);
 
   label23 = gtk_label_new_with_mnemonic (_("_Input/Output"));
   gtk_widget_show (label23);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 0), label23);
-  gtk_label_set_justify (GTK_LABEL (label23), GTK_JUSTIFY_LEFT);
 
   scrolledwindow6 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow6);
@@ -2078,7 +2065,6 @@ create_prefs_window (void)
   gtk_widget_show (label47);
   gtk_box_pack_start (GTK_BOX (hbox13), label47, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label47, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label47), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label47), TRUE);
 
   time_format_entry = gtk_entry_new ();
@@ -2090,7 +2076,6 @@ create_prefs_window (void)
   gtk_widget_show (label37);
   gtk_frame_set_label_widget (GTK_FRAME (frame14), label37);
   GTK_WIDGET_SET_FLAGS (label37, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label37), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label37), TRUE);
 
   frame12 = gtk_frame_new (NULL);
@@ -2111,7 +2096,6 @@ create_prefs_window (void)
   gtk_widget_show (label35);
   gtk_box_pack_start (GTK_BOX (hbox11), label35, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label35, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label35), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label35), TRUE);
 
   cfg_sort_tab_num_sb_adj = gtk_adjustment_new (0, 0, 100, 1, 10, 10);
@@ -2124,7 +2108,6 @@ create_prefs_window (void)
   gtk_widget_show (label34);
   gtk_frame_set_label_widget (GTK_FRAME (frame12), label34);
   GTK_WIDGET_SET_FLAGS (label34, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label34), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label34), TRUE);
 
   frame13 = gtk_frame_new (NULL);
@@ -2146,7 +2129,6 @@ create_prefs_window (void)
   gtk_widget_show (label40);
   gtk_box_pack_start (GTK_BOX (autoselect_vbox), label40, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label40, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label40), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label40), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label40), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label40), 20, 0);
@@ -2159,7 +2141,6 @@ create_prefs_window (void)
   gtk_widget_show (label36);
   gtk_frame_set_label_widget (GTK_FRAME (frame13), label36);
   GTK_WIDGET_SET_FLAGS (label36, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label36), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label36), TRUE);
 
   frame16 = gtk_frame_new (NULL);
@@ -2208,7 +2189,6 @@ create_prefs_window (void)
   gtk_widget_show (label39);
   gtk_frame_set_label_widget (GTK_FRAME (frame16), label39);
   GTK_WIDGET_SET_FLAGS (label39, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label39), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label39), TRUE);
 
   frame19 = gtk_frame_new (NULL);
@@ -2232,7 +2212,6 @@ create_prefs_window (void)
   gtk_widget_show (label55);
   gtk_frame_set_label_widget (GTK_FRAME (frame19), label55);
   GTK_WIDGET_SET_FLAGS (label55, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label55), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label55), TRUE);
 
   frame15 = gtk_frame_new (NULL);
@@ -2265,7 +2244,6 @@ create_prefs_window (void)
   gtk_widget_show (label93);
   gtk_box_pack_start (GTK_BOX (hbox38), label93, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label93, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label93), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label93), TRUE);
 
   cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\n entry (faster!)"));
@@ -2277,13 +2255,11 @@ create_prefs_window (void)
   gtk_widget_show (label38);
   gtk_frame_set_label_widget (GTK_FRAME (frame15), label38);
   GTK_WIDGET_SET_FLAGS (label38, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label38), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label38), TRUE);
 
   label25 = gtk_label_new_with_mnemonic (_("_Display"));
   gtk_widget_show (label25);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 1), label25);
-  gtk_label_set_justify (GTK_LABEL (label25), GTK_JUSTIFY_LEFT);
 
   scrolledwindow7 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow7);
@@ -2352,7 +2328,6 @@ create_prefs_window (void)
   gtk_widget_show (label32);
   gtk_frame_set_label_widget (GTK_FRAME (frame10), label32);
   GTK_WIDGET_SET_FLAGS (label32, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label32), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label32), TRUE);
 
   frame21 = gtk_frame_new (NULL);
@@ -2382,7 +2357,6 @@ create_prefs_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label68, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label68), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label68), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label68), 0, 0.5);
 
@@ -2394,7 +2368,6 @@ create_prefs_window (void)
   gtk_widget_show (label67);
   gtk_frame_set_label_widget (GTK_FRAME (frame21), label67);
   GTK_WIDGET_SET_FLAGS (label67, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label67), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label67), TRUE);
 
   frame11 = gtk_frame_new (NULL);
@@ -2424,13 +2397,11 @@ create_prefs_window (void)
   gtk_widget_show (label33);
   gtk_frame_set_label_widget (GTK_FRAME (frame11), label33);
   GTK_WIDGET_SET_FLAGS (label33, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label33), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label33), TRUE);
 
   label = gtk_label_new_with_mnemonic (_("_Edit"));
   gtk_widget_show (label);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label);
-  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
 
   scrolledwindow8 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow8);
@@ -2460,7 +2431,6 @@ create_prefs_window (void)
   gtk_widget_show (label44);
   gtk_box_pack_start (GTK_BOX (vbox34), label44, FALSE, FALSE, 2);
   GTK_WIDGET_SET_FLAGS (label44, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label44), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label44), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label44), 0.01, 0.5);
 
@@ -2473,7 +2443,6 @@ create_prefs_window (void)
   gtk_widget_show (label45);
   gtk_box_pack_start (GTK_BOX (vbox34), label45, FALSE, FALSE, 4);
   GTK_WIDGET_SET_FLAGS (label45, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label45), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label45), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label45), 0.01, 0.5);
 
@@ -2486,7 +2455,6 @@ create_prefs_window (void)
   gtk_widget_show (label43);
   gtk_frame_set_label_widget (GTK_FRAME (frame18), label43);
   GTK_WIDGET_SET_FLAGS (label43, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label43), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label43), TRUE);
 
   frame22 = gtk_frame_new (NULL);
@@ -2502,7 +2470,6 @@ create_prefs_window (void)
   gtk_widget_show (label148);
   gtk_box_pack_start (GTK_BOX (vbox49), label148, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label148, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label148), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label148), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label148), 0.01, 0.5);
 
@@ -2520,7 +2487,6 @@ create_prefs_window (void)
   gtk_widget_show (label69);
   gtk_frame_set_label_widget (GTK_FRAME (frame22), label69);
   GTK_WIDGET_SET_FLAGS (label69, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label69), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label69), TRUE);
 
   frame31 = gtk_frame_new (NULL);
@@ -2545,7 +2511,6 @@ create_prefs_window (void)
   gtk_widget_show (label156);
   gtk_box_pack_start (GTK_BOX (vbox59), label156, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label156, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label156), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label156), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label156), 0.01, 0.5);
 
@@ -2558,7 +2523,6 @@ create_prefs_window (void)
   gtk_widget_show (label158);
   gtk_box_pack_start (GTK_BOX (vbox59), label158, FALSE, FALSE, 2);
   GTK_WIDGET_SET_FLAGS (label158, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label158), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label158), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label158), 0.01, 0.5);
 
@@ -2575,13 +2539,11 @@ create_prefs_window (void)
   gtk_widget_show (label157);
   gtk_frame_set_label_widget (GTK_FRAME (frame31), label157);
   GTK_WIDGET_SET_FLAGS (label157, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label157), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label157), TRUE);
 
   label24 = gtk_label_new_with_mnemonic (_("_Tools"));
   gtk_widget_show (label24);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 3), label24);
-  gtk_label_set_justify (GTK_LABEL (label24), GTK_JUSTIFY_LEFT);
 
   hbuttonbox5 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox5);
@@ -3048,7 +3010,6 @@ create_special_sorttab (void)
   gtk_widget_show (label52);
   gtk_box_pack_start (GTK_BOX (hbox20), label52, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label52, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label52), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label52), TRUE);
 
   sp_or_button = gtk_radio_button_new_with_mnemonic (NULL, _("Any (OR)"));
@@ -3121,7 +3082,6 @@ create_special_sorttab (void)
   gtk_widget_show (label54);
   gtk_box_pack_start (GTK_BOX (hbox23), label54, FALSE, FALSE, 0);
   GTK_WIDGET_SET_FLAGS (label54, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label54), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label54), TRUE);
 
   sp_playcount_high_adj = gtk_adjustment_new (1, -1, 2.14748e+09, 1, 10, 10);
@@ -3144,7 +3104,6 @@ create_special_sorttab (void)
   label49 = gtk_label_new ("");
   gtk_widget_show (label49);
   gtk_box_pack_start (GTK_BOX (hbox17), label49, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label49), GTK_JUSTIFY_LEFT);
 
   sp_played_cal_button = gtk_button_new_with_mnemonic (_("Calendar"));
   gtk_widget_show (sp_played_cal_button);
@@ -3164,7 +3123,6 @@ create_special_sorttab (void)
   label50 = gtk_label_new ("");
   gtk_widget_show (label50);
   gtk_box_pack_start (GTK_BOX (hbox18), label50, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label50), GTK_JUSTIFY_LEFT);
 
   sp_modified_cal_button = gtk_button_new_with_mnemonic (_("Calendar"));
   gtk_widget_show (sp_modified_cal_button);
@@ -3223,7 +3181,6 @@ create_special_sorttab (void)
   label53 = gtk_label_new_with_mnemonic (_("_Display"));
   gtk_widget_show (label53);
   gtk_box_pack_start (GTK_BOX (hbox22), label53, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label53), GTK_JUSTIFY_LEFT);
 
   sp_go_always = gtk_check_button_new_with_mnemonic (_("Start display automatically"));
   gtk_widget_show (sp_go_always);
@@ -3365,7 +3322,6 @@ create_calendar_window (void)
   gtk_widget_show (label64);
   gtk_box_pack_start (GTK_BOX (hbox29), label64, FALSE, FALSE, 3);
   GTK_WIDGET_SET_FLAGS (label64, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label64), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label64), TRUE);
 
   sorttab_num_spin_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
@@ -3376,13 +3332,11 @@ create_calendar_window (void)
   label65 = gtk_label_new (_("     "));
   gtk_widget_show (label65);
   gtk_box_pack_start (GTK_BOX (hbox29), label65, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label65), GTK_JUSTIFY_LEFT);
 
   label66 = gtk_label_new (_("Category: "));
   gtk_widget_show (label66);
   gtk_box_pack_start (GTK_BOX (hbox29), label66, FALSE, FALSE, 3);
   GTK_WIDGET_SET_FLAGS (label66, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label66), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label66), TRUE);
 
   cat_combo = gtk_combo_new ();
@@ -3403,7 +3357,6 @@ create_calendar_window (void)
   gtk_widget_show (label63);
   gtk_box_pack_start (GTK_BOX (vbox43), label63, FALSE, FALSE, 3);
   GTK_WIDGET_SET_FLAGS (label63, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label63), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label63), TRUE);
   gtk_label_set_selectable (GTK_LABEL (label63), TRUE);
 
@@ -3423,7 +3376,6 @@ create_calendar_window (void)
   gtk_widget_show (label57);
   gtk_box_pack_start (GTK_BOX (vbox44), label57, FALSE, FALSE, 2);
   GTK_WIDGET_SET_FLAGS (label57, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label57), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label57), TRUE);
 
   lower_cal_box = gtk_vbox_new (FALSE, 0);
@@ -3460,7 +3412,6 @@ create_calendar_window (void)
   label59 = gtk_label_new (_(":"));
   gtk_widget_show (label59);
   gtk_box_pack_start (GTK_BOX (lower_time_box), label59, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label59), GTK_JUSTIFY_LEFT);
 
   lower_minutes_adj = gtk_adjustment_new (3, 0, 59, 1, 5, 2);
   lower_minutes = gtk_spin_button_new (GTK_ADJUSTMENT (lower_minutes_adj), 1, 0);
@@ -3489,7 +3440,6 @@ create_calendar_window (void)
   gtk_widget_show (label58);
   gtk_box_pack_start (GTK_BOX (vbox47), label58, FALSE, FALSE, 2);
   GTK_WIDGET_SET_FLAGS (label58, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label58), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label58), TRUE);
 
   upper_cal_box = gtk_vbox_new (FALSE, 0);
@@ -3526,7 +3476,6 @@ create_calendar_window (void)
   label62 = gtk_label_new (_(":"));
   gtk_widget_show (label62);
   gtk_box_pack_start (GTK_BOX (upper_time_box), label62, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label62), GTK_JUSTIFY_LEFT);
 
   upper_minutes_adj = gtk_adjustment_new (3, 0, 59, 1, 5, 2);
   upper_minutes = gtk_spin_button_new (GTK_ADJUSTMENT (upper_minutes_adj), 1, 0);
@@ -3872,7 +3821,6 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label82, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label82), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label82), TRUE);
 
   table13 = gtk_table_new (1, 1, FALSE);
@@ -3888,7 +3836,6 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label85, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label85), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label85), TRUE);
 
   table14 = gtk_table_new (1, 1, FALSE);
@@ -3904,7 +3851,6 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label86, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label86), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label86), TRUE);
 
   table15 = gtk_table_new (1, 1, FALSE);
@@ -3920,7 +3866,6 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label87, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label87), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label87), TRUE);
 
   table16 = gtk_table_new (1, 1, FALSE);
@@ -3936,7 +3881,6 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label88, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label88), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label88), TRUE);
 
   table17 = gtk_table_new (1, 1, FALSE);
@@ -3952,7 +3896,6 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label89, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label89), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label89), TRUE);
 
   label91 = gtk_label_new ("");
@@ -3960,7 +3903,6 @@ create_sort_window (void)
   gtk_table_attach (GTK_TABLE (table11), label91, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (label91), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label91), 0, 0.5);
 
   hseparator9 = gtk_hseparator_new ();
@@ -4012,7 +3954,6 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label95, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label95), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label95), TRUE);
 
   hbox40 = gtk_hbox_new (TRUE, 0);
@@ -4047,6 +3988,7 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (label96, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label96), GTK_JUSTIFY_CENTER);
   gtk_label_set_selectable (GTK_LABEL (label96), TRUE);
 
   hbox43 = gtk_hbox_new (TRUE, 0);
@@ -4111,7 +4053,6 @@ create_sort_window (void)
   gtk_widget_show (label97);
   gtk_box_pack_start (GTK_BOX (hbox46), label97, FALSE, FALSE, 4);
   GTK_WIDGET_SET_FLAGS (label97, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label97), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label97), TRUE);
 
   sort_combo = gtk_combo_new ();
@@ -4145,7 +4086,6 @@ create_sort_window (void)
   gtk_widget_show (label94);
   gtk_box_pack_start (GTK_BOX (hbox39), label94, FALSE, FALSE, 4);
   GTK_WIDGET_SET_FLAGS (label94, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label94), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label94), TRUE);
   gtk_label_set_selectable (GTK_LABEL (label94), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label94), 0.04, 0.5);
@@ -4154,7 +4094,6 @@ create_sort_window (void)
   gtk_widget_show (label92);
   gtk_frame_set_label_widget (GTK_FRAME (frame26), label92);
   GTK_WIDGET_SET_FLAGS (label92, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label92), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label92), TRUE);
 
   hbuttonbox8 = gtk_hbutton_box_new ();
@@ -4425,7 +4364,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (free_space, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (free_space), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (free_space), TRUE);
   gtk_misc_set_alignment (GTK_MISC (free_space), 1, 0.5);
 
@@ -4435,7 +4373,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (non_transfered_filesize, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (non_transfered_filesize), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (non_transfered_filesize), TRUE);
   gtk_misc_set_alignment (GTK_MISC (non_transfered_filesize), 1, 0.5);
 
@@ -4451,7 +4388,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (non_transfered_tracks, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (non_transfered_tracks), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (non_transfered_tracks), TRUE);
   gtk_misc_set_alignment (GTK_MISC (non_transfered_tracks), 1, 0.5);
 
@@ -4485,7 +4421,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (deleted_filesize, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (deleted_filesize), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (deleted_filesize), TRUE);
   gtk_misc_set_alignment (GTK_MISC (deleted_filesize), 1, 0.5);
 
@@ -4495,7 +4430,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (deleted_tracks, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (deleted_tracks), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (deleted_tracks), TRUE);
   gtk_misc_set_alignment (GTK_MISC (deleted_tracks), 1, 0.5);
 
@@ -4517,7 +4451,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (total_tracks, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (total_tracks), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (total_tracks), TRUE);
   gtk_misc_set_alignment (GTK_MISC (total_tracks), 1, 0.5);
 
@@ -4527,7 +4460,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (total_playtime, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (total_playtime), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (total_playtime), TRUE);
   gtk_misc_set_alignment (GTK_MISC (total_playtime), 1, 0.5);
 
@@ -4537,7 +4469,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (total_filesize, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (total_filesize), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (total_filesize), TRUE);
   gtk_misc_set_alignment (GTK_MISC (total_filesize), 1, 0.5);
 
@@ -4547,7 +4478,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (total_playlists, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (total_playlists), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (total_playlists), TRUE);
   gtk_misc_set_alignment (GTK_MISC (total_playlists), 1, 0.5);
 
@@ -4587,7 +4517,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (playlist_tracks, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (playlist_tracks), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (playlist_tracks), TRUE);
   gtk_misc_set_alignment (GTK_MISC (playlist_tracks), 1, 0.5);
 
@@ -4597,7 +4526,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (playlist_playtime, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (playlist_playtime), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (playlist_playtime), TRUE);
   gtk_misc_set_alignment (GTK_MISC (playlist_playtime), 1, 0.5);
 
@@ -4607,7 +4535,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (playlist_filesize, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (playlist_filesize), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (playlist_filesize), TRUE);
   gtk_misc_set_alignment (GTK_MISC (playlist_filesize), 1, 0.5);
 
@@ -4623,7 +4550,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (tracks_total, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (tracks_total), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (tracks_total), TRUE);
   gtk_misc_set_alignment (GTK_MISC (tracks_total), 1, 0.5);
 
@@ -4633,7 +4559,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (playtime_total, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (playtime_total), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (playtime_total), TRUE);
   gtk_misc_set_alignment (GTK_MISC (playtime_total), 1, 0.5);
 
@@ -4643,7 +4568,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (filesize_total, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (filesize_total), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (filesize_total), TRUE);
   gtk_misc_set_alignment (GTK_MISC (filesize_total), 1, 0.5);
 
@@ -4659,7 +4583,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (tracks_selected, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (tracks_selected), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (tracks_selected), TRUE);
   gtk_misc_set_alignment (GTK_MISC (tracks_selected), 1, 0.5);
 
@@ -4669,7 +4592,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (playtime_selected, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (playtime_selected), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (playtime_selected), TRUE);
   gtk_misc_set_alignment (GTK_MISC (playtime_selected), 1, 0.5);
 
@@ -4679,7 +4601,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   GTK_WIDGET_SET_FLAGS (filesize_selected, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (filesize_selected), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (filesize_selected), TRUE);
   gtk_misc_set_alignment (GTK_MISC (filesize_selected), 1, 0.5);
 
@@ -4701,7 +4622,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 0);
   GTK_WIDGET_SET_FLAGS (label137, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label137), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label137), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label137), 0, 0.5);
 
@@ -4711,7 +4631,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 1);
   GTK_WIDGET_SET_FLAGS (label139, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label139), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label139), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label139), 0, 0.5);
 
@@ -4721,7 +4640,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 0);
   GTK_WIDGET_SET_FLAGS (label141, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label141), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label141), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label141), 0, 0.5);
 
@@ -4731,7 +4649,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 0);
   GTK_WIDGET_SET_FLAGS (label147, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label147), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label147), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label147), 0, 0.5);
 
@@ -4741,7 +4658,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 0);
   GTK_WIDGET_SET_FLAGS (label149, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label149), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label149), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label149), 0, 0.5);
 
@@ -4751,7 +4667,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 0);
   GTK_WIDGET_SET_FLAGS (label150, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label150), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label150), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label150), 0, 0.5);
 
@@ -4761,7 +4676,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 0);
   GTK_WIDGET_SET_FLAGS (label143, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label143), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label143), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label143), 0, 0.5);
 
@@ -4771,7 +4685,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 0);
   GTK_WIDGET_SET_FLAGS (label145, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label145), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label145), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label145), 0, 0.5);
 
@@ -4781,7 +4694,6 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 0);
   GTK_WIDGET_SET_FLAGS (label146, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label146), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (label146), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label146), 0, 0.5);
 
@@ -4791,6 +4703,7 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 1);
   GTK_WIDGET_SET_FLAGS (label99, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label99), GTK_JUSTIFY_CENTER);
   gtk_label_set_selectable (GTK_LABEL (label99), TRUE);
 
   label153 = gtk_label_new (_("Selected\nPlaylist"));
@@ -4799,6 +4712,7 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 1);
   GTK_WIDGET_SET_FLAGS (label153, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label153), GTK_JUSTIFY_CENTER);
   gtk_label_set_selectable (GTK_LABEL (label153), TRUE);
 
   label154 = gtk_label_new (_("Displayed\nTracks"));
@@ -4807,6 +4721,7 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 1);
   GTK_WIDGET_SET_FLAGS (label154, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label154), GTK_JUSTIFY_CENTER);
   gtk_label_set_selectable (GTK_LABEL (label154), TRUE);
 
   label155 = gtk_label_new (_("Selected\nTracks"));
@@ -4815,6 +4730,7 @@ create_gtkpod_info (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 1, 1);
   GTK_WIDGET_SET_FLAGS (label155, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label155), GTK_JUSTIFY_CENTER);
   gtk_label_set_selectable (GTK_LABEL (label155), TRUE);
 
   vbox58 = gtk_vbox_new (FALSE, 0);
