@@ -344,6 +344,10 @@ Drag and Drop can be used in several ways:
   it -- drop onto the correpsonding playlist otherwise.): the tracks
   will be inserted into the corresponding playlist at the position you
   dropped them.
+- If holding the shift key when dropping tracks or a sort tab entry
+  onto an existing or new playlist, the tracks will be moved instead
+  of copied. Please keep in mind that tracks cannot be moved from or
+  to the master playlist.
 
 
 Preferences File
