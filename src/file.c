@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-03 23:15:17 JST jcs>
+/* Time-stamp: <2004-03-04 23:33:12 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2683,11 +2683,16 @@ gchar * resolve_path(const gchar *root,const gchar * const * components) {
     
   for(i = 0 ; components[i] ; i++) {
     GDir *cur_dir;
-    gchar *component_as_filename = 
-      g_filename_from_utf8(components[i],-1,NULL,NULL,NULL);
-    gchar *test_path = g_build_filename(good_path,component_as_filename,NULL);
+    gchar *component_as_filename;
+    gchar *test_path;
     gchar *component_stdcase;
     const gchar *dir_file;
+
+    /* skip empty components */
+    if (strlen (components[i]) == 0) continue;
+    component_as_filename = 
+      g_filename_from_utf8(components[i],-1,NULL,NULL,NULL);
+    test_path = g_build_filename(good_path,component_as_filename,NULL);
     g_free(component_as_filename);
     if(g_file_test(test_path,G_FILE_TEST_EXISTS)) {
       /* This component does not require fixup */

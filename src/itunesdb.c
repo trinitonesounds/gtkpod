@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-26 23:22:21 JST jcs>
+/* Time-stamp: <2004-03-04 23:48:07 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1417,7 +1417,7 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
 {
   static gint dir_num = -1;
   gchar *track_db_path = NULL, *ipod_fullfile = NULL;
-  gchar *dest_components[] = {"iPod_Control","Music",NULL,NULL,NULL},
+  gchar *dest_components[] = {"","iPod_Control","Music",NULL,NULL,NULL},
     *ipod_path_as_filename,*parent_dir_filename;
   gchar *original_suffix;
   gchar dir_num_str[5];
@@ -1441,7 +1441,7 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
   else dir_num = (dir_num + 1) % 20;
   
   g_snprintf(dir_num_str,5,"F%02d",dir_num);
-  dest_components[2] = dir_num_str;
+  dest_components[3] = dir_num_str;
   
   ipod_path_as_filename = g_filename_from_utf8(path,-1,NULL,NULL,NULL);
   parent_dir_filename = resolve_path(ipod_path_as_filename,(const gchar **)dest_components);
@@ -1462,21 +1462,23 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
 
   for (ipod_fullfile = itunesdb_get_track_name_on_ipod (path, track) ; !ipod_fullfile ; oops++)
   { /* we need to loop until we find an unused filename */
-      dest_components[3] = 
+      dest_components[4] = 
         g_strdup_printf("gtkpod%05d%s",track->ipod_id + oops,original_suffix);
       ipod_fullfile = resolve_path(ipod_path_as_filename,
                                    (const gchar * const *)dest_components);
-      if(ipod_fullfile) {
+      if(ipod_fullfile)
+      {
               g_free(ipod_fullfile);
               ipod_fullfile = NULL;
-      } else {
-        gchar *leaf_filename = 
-          g_filename_from_utf8(dest_components[3],-1,NULL,NULL,NULL);
-        ipod_fullfile = g_build_filename(parent_dir_filename,leaf_filename,NULL);
-        track_db_path = g_strjoinv(":",dest_components);
-        g_free(leaf_filename);
       }
-      g_free(dest_components[3]);
+      else
+      {
+        ipod_fullfile = g_build_filename(parent_dir_filename,
+					 dest_components[4], NULL);
+        track_db_path = g_strjoinv(":", dest_components);
+/* 	printf ("ff: %s\ndb: %s\n", ipod_fullfile, track_db_path); */
+      }
+      g_free(dest_components[4]);
   }
   
   if(!track_db_path)
