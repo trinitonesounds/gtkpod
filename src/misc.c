@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 15:33:39 JST jcs>
+/* Time-stamp: <2004-03-14 23:25:30 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -380,7 +380,7 @@ Playlist *add_new_playlist_user_name (gchar *dflt, gint position)
 	result = add_new_playlist (name, position);
 	gtkpod_tracks_statusbar_update ();
     }
-    return NULL;
+    return result;
 }
 
 

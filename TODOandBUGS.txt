@@ -74,9 +74,6 @@ Please feel free to submit further features.
 
 BUGLIST:
 
-- Dragging tracks into a new playlist (i.e. in between two playlists)
-  leaves the newly created playlist empty.
-
 - Submitted By: Olivier Magere (omagere)   [ 873014 ]
 
   I tried to reconcile my Ipod with GtkPod. I wanted to remove
@@ -105,7 +102,8 @@ BUGLIST:
   overfilled, libgtk sometimes segfaults (TreeModel changed but did
   not notify TreeView?)
 
-- when deleting an entry in the last sort tab (of 2), does not always crash:
+- when deleting an entry in the last sort tab (of 2) sometimes gtkpod
+  crashes
 
 Please add/report bugs as you find them (jcsjcs at users dot
 sourceforge dot net).
