@@ -7642,6 +7642,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">gtkpod-icon-48.png</property>
+  <signal name="delete_event" handler="on_gtkpod_info_delete_event" last_modification_time="Sun, 16 May 2004 04:40:47 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox56">

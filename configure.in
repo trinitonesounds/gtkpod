@@ -56,8 +56,9 @@ AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)])
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
 
 dnl Check for libid3tag
-AC_CHECK_LIB([id3tag], [id3_tag_new], ,
-             AC_MSG_ERROR([*** id3tag lib not found]))
+AC_SEARCH_LIBS(id3_tag_new,
+	["id3tag" "id3tag -lz"],,
+	AC_MSG_ERROR([*** id3tag lib not found]))
 
 dnl Check for libmp4v2 (and mp4.h)
 AC_SEARCH_LIBS(MP4FileInfo,

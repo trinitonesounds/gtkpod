@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.73-CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-28 23:42+0900\n"
+"POT-Creation-Date: 2004-05-16 15:43+0900\n"
 "PO-Revision-Date: 2004-02-13 00:13+0100\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
@@ -298,7 +298,7 @@ msgid ""
 msgstr ""
 "Une autre instance de gtkpod tourne déjà. Serveur de compteur non démarré.\n"
 
-#: src/confirmation.c:332
+#: src/confirmation.c:357
 msgid "Confirmation Dialogue"
 msgstr "Message de confirmation"
 
@@ -511,30 +511,30 @@ msgstr "Dernière fois joué"
 msgid "Last Modified"
 msgstr "Dernière fois modifié"
 
-#: src/file.c:463
+#: src/file.c:465
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "Paramètre '%s' dans le modèle '%s' inexistant\n"
 
-#: src/file.c:775
+#: src/file.c:778
 msgid "Nothing to update"
 msgstr "Rien à mettre à jour"
 
-#: src/file.c:784
+#: src/file.c:787
 #, c-format
 msgid "Updating %s"
 msgstr "%s en cours de mise à jour"
 
-#: src/file.c:796
+#: src/file.c:799
 msgid "Updated selected tracks with info from file."
 msgstr "Les morceaux sélectionnés ont été mis à jour à partir des fichiers."
 
-#: src/file.c:856
+#: src/file.c:859
 #, c-format
 msgid "Syncing directory '%s'"
 msgstr "Synchronisation du répertoires '%s'"
 
-#: src/file.c:888
+#: src/file.c:891
 msgid "Syncing completed. No files deleted."
 msgstr "Synchronisation terminée. Aucun fichier effacé."
 
@@ -543,34 +543,34 @@ msgstr "Synchronisation terminée. Aucun fichier effacé."
 #. title
 #. label
 #. scrolled text
-#: src/file.c:965
+#: src/file.c:968
 msgid "Never delete any files when syncing"
 msgstr "Ne jamais effacer les fichiers lors des synchronisations"
 
-#: src/file.c:984
+#: src/file.c:987
 msgid "Syncing completed."
 msgstr "Synchronisation terminée."
 
-#: src/file.c:996
+#: src/file.c:999
 msgid "Syncing aborted"
 msgstr "Synchronisation annulée"
 
-#: src/file.c:1034
+#: src/file.c:1037
 msgid "No tracks in selection"
 msgstr "Aucun morceau sélectionné"
 
-#: src/file.c:1072
+#: src/file.c:1082
 #, c-format
 msgid "'%s' is not a directory. Ignored.\n"
 msgstr "'%s' n'est pas un répertoire. Ignoré.\n"
 
-#: src/file.c:1075
+#: src/file.c:1087
 #, c-format
 msgid "'%s' does not exist. Ignored.\n"
 msgstr "'%s' n'existe pas. Ignoré.\n"
 
 #. no directory names available
-#: src/file.c:1083
+#: src/file.c:1096
 msgid ""
 "No directory names were stored. Make sure that you enable 'Write extended "
 "information' in the Export section of the preferences at the time of "
@@ -588,22 +588,22 @@ msgstr ""
 "doublons' dans l'onglet Import des préférences et ajoutez les répertoires "
 "que vous souhaitez synchroniser de nouveau.\n"
 
-#: src/file.c:1087
+#: src/file.c:1100
 msgid "No valid directories have been found. Sync aborted.\n"
 msgstr "Aucun répertoire valide n'a été trouvé. Synchro annulée.\n"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1098
+#: src/file.c:1111
 msgid "Synchronize directories"
 msgstr "Synchroniser les répertoires"
 
 #. title
-#: src/file.c:1099
+#: src/file.c:1112
 msgid "OK to synchronize the following directories?"
 msgstr "Prêt à synchroniser les répertoires suivants ?"
 
-#: src/file.c:1134
+#: src/file.c:1148
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -612,11 +612,11 @@ msgstr[1] "Les %d morceaux suivants ne peuvent pas être mis à jour."
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1140
+#: src/file.c:1154
 msgid "Failed Track Update"
 msgstr "Échec de la mise à jour du morceau"
 
-#: src/file.c:1198
+#: src/file.c:1212
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -625,116 +625,153 @@ msgstr[1] "Les %d morceaux suivants ont été mis à jour"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1204
+#: src/file.c:1218
 msgid "Successful Track Update"
 msgstr "Morceau mis à jour"
 
 #. no path available
-#: src/file.c:1295
+#: src/file.c:1309
 msgid "no filename available"
 msgstr "pas de nom de fichier disponible"
 
-#: src/file.c:1340
+#: src/file.c:1354
 msgid "file not found"
 msgstr "fichier introuvable"
 
-#: src/file.c:1344
+#: src/file.c:1358
 msgid "format not supported"
 msgstr "format non supporté"
 
-#: src/file.c:1408
+#: src/file.c:1423
 #, c-format
 msgid "Processing '%s'..."
 msgstr "Traitement de '%s'..."
 
-#: src/file.c:1580 src/file.c:1594
+#: src/file.c:1596 src/file.c:1610
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "Ne peut changer les tags du fichier: %s\n"
 
-#: src/file.c:1774
+#: src/file.c:1796
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "Ne peut ouvrir en lecture/écriture le fichier '%s'.\n"
 
-#: src/file.c:1781
+#: src/file.c:1803
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "Impossible de verrouiller '%s'\n"
 
 #. error!
-#: src/file.c:1800 src/file.c:1809 src/file.c:1820 src/file.c:1830
+#: src/file.c:1820 src/file.c:1829 src/file.c:1840 src/file.c:1850
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "Ligne incomplète dans '%s': %s\n"
 
-#: src/file.c:1839
-msgid "Couldn't find track for playcount adjustment:\n"
-msgstr "Impossible de trouver le morceau pour ajuster le compteur de lecture:\n"
+#. gint id,
+#. gboolean modal,
+#: src/file.c:1879
+msgid "Remove offline playcounts?"
+msgstr ""
 
-#: src/file.c:1867
+#. title
+#: src/file.c:1880
+#, fuzzy
 msgid ""
-"Some tracks played offline could not be found in the iTunesDB.\n"
-"OK to remove them from the offline playcount file?"
+"Some tracks played offline could not be found in the iTunesDB. OK to remove "
+"them from the offline playcount file?"
 msgstr ""
 "Certains morceaux joués hors-ligne ne peuvent être trouvés dans iTunesDB.\n"
 "OK pour les supprimer du fichier de compteur de lecture hors-ligne ?"
 
-#: src/file.c:1876
+#: src/file.c:1897
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "Erreur d'écriture du fichier '%s'.\n"
 
-#: src/file_export.c:132
+#: src/file_export.c:182
 #, c-format
 msgid "Output filename template ('%s') does not match the file '%s'\n"
 msgstr "Le modèle de fichier ('%s') ne correspond pas au fichier '%s'\n"
 
-#: src/file_export.c:209
+#: src/file_export.c:259
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "Le paramêtre '%%%c' dans le modèle '%s' n'existe pas"
 
-#: src/file_export.c:260
+#: src/file_export.c:310
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "Erreur à la création de \"%s\" (%s)\n"
 
-#: src/file_export.c:378
+#: src/file_export.c:430
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
 msgstr "Impossible de copier '%s' vers '%s': Autorisation refusée (%s)\n"
 
-#: src/file_export.c:380
+#: src/file_export.c:432
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "Impossible de copier '%s' vers '%s' (erreur: %s)\n"
 
-#: src/file_export.c:388
+#: src/file_export.c:440
 #, c-format
 msgid "Unable to open '%s' for reading\n"
 msgstr "Impossible d'ouvrir le fichier '%s'\n"
 
-#: src/file_export.c:438
+#. create the dialog window
+#: src/file_export.c:545 src/file_itunesdb.c:718 src/tools.c:166
+msgid "Information"
+msgstr "Information"
+
+#: src/file_export.c:556 src/tools.c:178
+msgid "Press button to abort."
+msgstr "Appuyer sur le bouton pour interrompre"
+
+#: src/file_export.c:569
+#, fuzzy
+msgid "copying..."
+msgstr "Annulation..."
+
+#: src/file_export.c:620
 #, c-format
 msgid "Failed to write '%s-%s'\n"
 msgstr "Impossible d'écrire '%s-%s'\n"
 
-#: src/file_export.c:497
+#: src/file_export.c:628
+#, fuzzy, c-format
+msgid "Copied %d of %d track."
+msgid_plural "Copied %d of %d tracks."
+msgstr[0] "%d sur %d du nouveau morceau copié."
+msgstr[1] "%d sur %d des nouveaux morceaux copiés."
+
+#. don't bounce up too quickly (>10% change only)
+#. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
+#: src/file_export.c:643
+#, fuzzy, c-format
+msgid "%.0f%% (%d:%02d) left"
+msgstr "%d%% (%d:%02d)"
+
+#: src/file_export.c:652
+#, fuzzy
+msgid "Some tracks were not copied."
+msgstr "Aucun morceau sélectionné."
+
+#: src/file_export.c:707
 msgid "Select Export Destination Directory"
 msgstr "Sélectionner le répertoire de destination d'export"
 
-#: src/file_itunesdb.c:205
+#: src/file_itunesdb.c:208
 msgid "Could not open \"iTunesDB.ext\" for reading extended info.\n"
 msgstr ""
 "Ne peut ouvrir le fichier \"iTunesDB.ext\" pour lire les infos étendues.\n"
 
-#: src/file_itunesdb.c:226
+#: src/file_itunesdb.c:229
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "Erreur lors de la lecture des infos étendues: %s\n"
 
-#: src/file_itunesdb.c:243
+#: src/file_itunesdb.c:246
 #, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
@@ -748,7 +785,7 @@ msgstr ""
 "contrôle MD5. En cas de succès, cela peut prendre du temps.\n"
 "\n"
 
-#: src/file_itunesdb.c:255
+#: src/file_itunesdb.c:258
 #, c-format
 msgid ""
 "%s:\n"
@@ -757,7 +794,7 @@ msgstr ""
 "%s:\n"
 "\"itunesdb_hash=\" attendue mais reçue:\"%s\"\n"
 
-#: src/file_itunesdb.c:315
+#: src/file_itunesdb.c:318
 #, c-format
 msgid ""
 "%s:\n"
@@ -766,7 +803,7 @@ msgstr ""
 "%s:\n"
 "Erreur de format: %s\n"
 
-#: src/file_itunesdb.c:366
+#: src/file_itunesdb.c:369
 msgid ""
 "No MD5 checksums on individual tracks are available.\n"
 "\n"
@@ -782,19 +819,19 @@ msgstr ""
 "iPod avec d'autres programmes que gtkpod.\n"
 "\n"
 
-#: src/file_itunesdb.c:410
+#: src/file_itunesdb.c:411
 msgid "Extended info will not be used.\n"
 msgstr "Les infos étendues ne seront pas utilisées.\n"
 
-#: src/file_itunesdb.c:414
+#: src/file_itunesdb.c:415
 msgid "iPod Database Successfully Imported"
 msgstr "La base de l'iPod a été importée avec succès"
 
-#: src/file_itunesdb.c:416
+#: src/file_itunesdb.c:417
 msgid "iPod Database Import Failed"
 msgstr "Échec de l'import de la base de l'iPod"
 
-#: src/file_itunesdb.c:428
+#: src/file_itunesdb.c:430
 msgid ""
 "Extended info will not be used. If you have non-transferred tracks,\n"
 "these will be lost.\n"
@@ -802,33 +839,28 @@ msgstr ""
 "Les infos étendues ne seront pas utilisées. Si vous avez des morceaux non,\n"
 "transférés, elles seront perdues.\n"
 
-#: src/file_itunesdb.c:432
+#: src/file_itunesdb.c:434
 msgid "Offline iPod Database Successfully Imported"
 msgstr "La base de l'iPod (mode déconnecté) a été importée avec succès"
 
-#: src/file_itunesdb.c:435
+#: src/file_itunesdb.c:437
 msgid "Offline iPod Database Import Failed"
 msgstr "Échec de l'import de la base de l'iPod (mode déconnecté)"
 
-#: src/file_itunesdb.c:441
+#: src/file_itunesdb.c:443
 msgid "Import aborted.\n"
 msgstr "Import interrompu.\n"
 
-#: src/file_itunesdb.c:556
+#: src/file_itunesdb.c:559
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "Ne peut ouvrir en écriture le fichier d'infos étendues \"%s\".\n"
 
-#: src/file_itunesdb.c:568
+#: src/file_itunesdb.c:571
 msgid "Aborted writing of extended info.\n"
 msgstr "Écriture des infos étendues interrompue.\n"
 
-#. create the dialog window
-#: src/file_itunesdb.c:713 src/tools.c:166
-msgid "Information"
-msgstr "Information"
-
-#: src/file_itunesdb.c:724
+#: src/file_itunesdb.c:729
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
@@ -836,20 +868,20 @@ msgstr ""
 "Appuyer sur le bouton pour Interrompre.\n"
 "L'export peut être repris plus tard."
 
-#: src/file_itunesdb.c:737
+#: src/file_itunesdb.c:742
 msgid "deleting..."
 msgstr "suppression..."
 
-#: src/file_itunesdb.c:804
+#: src/file_itunesdb.c:809
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "Des morceaux ne peuvent pas être supprimés de l'iPod. Export annulé!"
 
 #. we now have as much space as we're gonna have, copy files to ipod
-#: src/file_itunesdb.c:810
+#: src/file_itunesdb.c:815
 msgid "preparing to copy..."
 msgstr "préparation de la copie..."
 
-#: src/file_itunesdb.c:862
+#: src/file_itunesdb.c:869
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
@@ -858,16 +890,25 @@ msgstr[1] "%d sur %d des nouveaux morceaux copiés."
 
 #. don't bounce up too quickly (>10% change only)
 #. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
-#: src/file_itunesdb.c:876 src/tools.c:299
+#: src/file_itunesdb.c:883 src/tools.c:299
 #, c-format
 msgid "%d%% (%d:%02d) left"
 msgstr "%d%% (%d:%02d)"
 
-#: src/file_itunesdb.c:886
+#: src/file_itunesdb.c:893
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Des morceaux n'ont pas été copiés sur l'iPod. Export annulé!"
 
-#: src/file_itunesdb.c:924
+#: src/file_itunesdb.c:945
+msgid ""
+"You did not import the existing iTunesDB. This is most likely incorrect and "
+"will result in the loss of the existing database.\n"
+"\n"
+"Press 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you "
+"cancel, you can import the existing database before exporting again.\n"
+msgstr ""
+
+#: src/file_itunesdb.c:971
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -876,36 +917,36 @@ msgstr ""
 "synchroniser l'ipod.\n"
 
 #. write iTunesDB to iPod
-#: src/file_itunesdb.c:943 src/file_itunesdb.c:980 src/file_itunesdb.c:1001
+#: src/file_itunesdb.c:989 src/file_itunesdb.c:1027 src/file_itunesdb.c:1048
 msgid "Now writing iTunesDB. Please wait..."
 msgstr "Écriture de la base iTunesDB. Veuillez patienter..."
 
-#: src/file_itunesdb.c:947
+#: src/file_itunesdb.c:993
 msgid "Error writing iTunesDB to iPod. Export aborted!"
 msgstr "Erreur lors de l'écriture de iTunesDB sur l'iPod. Export annulé!"
 
-#: src/file_itunesdb.c:952
+#: src/file_itunesdb.c:998
 msgid "Extended information not written"
 msgstr "Infos étendues non écrites"
 
-#: src/file_itunesdb.c:959
+#: src/file_itunesdb.c:1005
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Fichier d'infos étendues non supprimé: '%s'"
 
-#: src/file_itunesdb.c:967
+#: src/file_itunesdb.c:1013
 msgid "Syncing contacts and calendar..."
 msgstr "Synchronisation des contacts et du calendrier..."
 
-#: src/file_itunesdb.c:988
+#: src/file_itunesdb.c:1035
 msgid "Backups could not be created!"
 msgstr "Les sauvegardes ne peuvent pas être créées!"
 
-#: src/file_itunesdb.c:1010
+#: src/file_itunesdb.c:1057
 msgid "Export not successful!"
 msgstr "Échec de l'export"
 
-#: src/file_itunesdb.c:1021
+#: src/file_itunesdb.c:1068
 msgid "iPod Database Saved"
 msgstr "Base de l'iPod sauvegardée"
 
@@ -968,41 +1009,41 @@ msgstr "%s: option `-W %s' est ambigue\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: option `-W %s' n'autorise pas d'argument\n"
 
-#: src/info.c:257
+#: src/info.c:260
 msgid "offline"
 msgstr "déconnecté"
 
-#: src/info.c:320
+#: src/info.c:323
 #, c-format
 msgid " P:%d S:%d/%d"
 msgstr "L:%d M:%d/%d"
 
-#: src/info.c:381
+#: src/info.c:384
 msgid "B"
 msgstr "o"
 
-#: src/info.c:381
+#: src/info.c:384
 msgid "kB"
 msgstr "ko"
 
-#: src/info.c:381
+#: src/info.c:384
 msgid "MB"
 msgstr "Mo"
 
-#: src/info.c:381
+#: src/info.c:384
 msgid "GB"
 msgstr "Go"
 
-#: src/info.c:381
+#: src/info.c:384
 msgid "TB"
 msgstr "To"
 
-#: src/info.c:461
+#: src/info.c:464
 #, c-format
 msgid " %s Free"
 msgstr " %s de libre"
 
-#: src/info.c:466
+#: src/info.c:469
 #, c-format
 msgid " %s Pending"
 msgstr " %s en cours"
@@ -1612,7 +1653,8 @@ msgstr ""
 
 #: src/interface.c:1854
 msgid "Check for existing files when copying from iPod."
-msgstr "Contrôler l'existence des fichiers lors de la copie à partir de l'ipod."
+msgstr ""
+"Contrôler l'existence des fichiers lors de la copie à partir de l'ipod."
 
 #: src/interface.c:1857
 msgid ""
@@ -1624,8 +1666,8 @@ msgstr ""
 "Lors de la copie de morceaux à partir de l'iPod, aucun contrôle n'est fait "
 "pour déterminer si le fichier existe déjà. En activant cette option, gtkpod "
 "vérifiera que la taille du fichier de destination est identique à la taille "
-"du fichier sur l'iPod. En ce cas, le fichier n'est pas recopié pour accélérer "
-"la synchronisation du contenu de l'iPod."
+"du fichier sur l'iPod. En ce cas, le fichier n'est pas recopié pour "
+"accélérer la synchronisation du contenu de l'iPod."
 
 #: src/interface.c:1859
 msgid "Fix exported filenames/directories."
@@ -1637,8 +1679,8 @@ msgid ""
 "e. \"*:<>?\\|/ , this option will substitute those with underscore '_'."
 msgstr ""
 "Certains systèmes de fichiers ne gère pas certains caractères dans les noms "
-"fichiers, comme par exemple \"*:<>?\\|/. Cette option permet de remplacer ces "
-"caractères par underscore '_'."
+"fichiers, comme par exemple \"*:<>?\\|/. Cette option permet de remplacer "
+"ces caractères par underscore '_'."
 
 #: src/interface.c:1864
 msgid "Copying from iPod"
@@ -1941,12 +1983,12 @@ msgid ""
 "appreciated."
 msgstr ""
 "Vous devez seulement préciser le chemin de mp3gain si l'exécutable mp3gain "
-"n'est pas défini dans vos chemins prédéfinis. Exemple: '"
-"/usr/local/test/mp3gain'. mp3gain écrira le gain évalué dans le fichier -- "
-"si vous ne souhaitez pas ce comportement, mettez /bin/true ou autre. mp3gain "
-"appelé uniquement si le tag approprié n'a pas été rempli par votre encodeur."
-"Ainsi Lame 0.95 utilise déjà ce tag. La conversion exact entre la valeur "
-"définie par mp3gain et celle définie par l'iPod n'est pas encore connue."
+"n'est pas défini dans vos chemins prédéfinis. Exemple: '/usr/local/test/"
+"mp3gain'. mp3gain écrira le gain évalué dans le fichier -- si vous ne "
+"souhaitez pas ce comportement, mettez /bin/true ou autre. mp3gain appelé "
+"uniquement si le tag approprié n'a pas été rempli par votre encodeur.Ainsi "
+"Lame 0.95 utilise déjà ce tag. La conversion exact entre la valeur définie "
+"par mp3gain et celle définie par l'iPod n'est pas encore connue."
 
 #: src/interface.c:2418
 msgid "Volume Normalization"
@@ -2243,11 +2285,11 @@ msgstr ""
 "Morceaux\n"
 "Sélec_tionnés"
 
-#: src/interface.c:4787
+#: src/interface.c:4790
 msgid "label21"
 msgstr "label21"
 
-#: src/interface.c:4818
+#: src/interface.c:4821
 msgid "Never show this dialogue again"
 msgstr "Ne plus afficher ce message"
 
@@ -2255,49 +2297,49 @@ msgstr "Ne plus afficher ce message"
 msgid "Master-PL"
 msgstr "Liste principale"
 
-#: src/itunesdb.c:750
+#: src/itunesdb.c:748
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for reading.\n"
 msgstr "Ne peut ouvrir en lecture le fichier iTunesDB \"%s\".\n"
 
-#: src/itunesdb.c:756
+#: src/itunesdb.c:754
 #, c-format
 msgid "Error reading \"%s\".\n"
 msgstr "Erreur de lecture du fichier \"%s\".\n"
 
-#: src/itunesdb.c:762
+#: src/itunesdb.c:760
 #, c-format
 msgid "\"%s\" is not a iTunesDB.\n"
 msgstr "\"%s\" n'est pas une base iTunesDB.\n"
 
-#: src/itunesdb.c:1367
+#: src/itunesdb.c:1363
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for writing.\n"
 msgstr "Ne peut ouvrir en écriture la base iTunesDB \"%s\".\n"
 
 #. an error occured
-#: src/itunesdb.c:1380
+#: src/itunesdb.c:1376
 #, c-format
 msgid "Error renaming '%s' to '%s' (%s).\n"
 msgstr "Impossible de copier '%s' vers '%s' (%s)\n"
 
-#: src/itunesdb.c:1567
+#: src/itunesdb.c:1561
 #, c-format
 msgid "Could not open file \"%s\" for reading.\n"
 msgstr "Ne peut ouvrir en lecture le fichier \"%s\".\n"
 
-#: src/itunesdb.c:1574
+#: src/itunesdb.c:1568
 #, c-format
 msgid "Could not open file \"%s\" for writing.\n"
 msgstr "Ne peut ouvrir en écriture le fichier \"%s\".\n"
 
 #. error -- not end of file!
-#: src/itunesdb.c:1587
+#: src/itunesdb.c:1581
 #, c-format
 msgid "Error reading file \"%s\".\n"
 msgstr "Erreur de lecture du fichier \"%s\".\n"
 
-#: src/itunesdb.c:1599
+#: src/itunesdb.c:1593
 #, c-format
 msgid "Error writing PC file \"%s\".\n"
 msgstr "Erreur d'écriture du fichier \"%s\".\n"
@@ -2458,7 +2500,8 @@ msgstr ""
 
 #: src/misc.c:114
 msgid "Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"
-msgstr "Jens Taprogge: Support du tag 'replay gain' de LAME pour normaliser le "
+msgstr ""
+"Jens Taprogge: Support du tag 'replay gain' de LAME pour normaliser le "
 "volume\n"
 
 #: src/misc.c:117
@@ -2466,10 +2509,14 @@ msgid "Armando Atienza: Support with external playcounts\n"
 msgstr "Armando Atienza: Suppport pour les compteurs de lecture externes\n"
 
 #: src/misc.c:120
+msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"
+msgstr ""
+
+#: src/misc.c:123
 msgid "This program borrows code from the following projects:\n"
 msgstr "Ce programme emprunte du code des projets suivants:\n"
 
-#: src/misc.c:122
+#: src/misc.c:125
 msgid ""
 "    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
 "(http://www.gnu.org/software/gnupod/)\n"
@@ -2477,40 +2524,32 @@ msgstr ""
 "    gnupod: (mktunes.pl porté en C) pour la lecture et écriture de iTunesDB "
 "(http://www.gnu.org/software/gnupod/)\n"
 
-#: src/misc.c:124
+#: src/misc.c:127
 msgid "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
 msgstr ""
 "    mp3info: détection de la durée du mp3 (http://ibiblio.org/mp3info/)\n"
 
-#: src/misc.c:126
+#: src/misc.c:129
 msgid ""
 "    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
 msgstr "    xmms: explorateur, détection de la durée (http://www.xmms.org)\n"
 
-#: src/misc.c:128
-msgid ""
-"    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge."
-"net)\n"
-msgstr ""
-"    easytag: lecture et écriture des tags ID3 (http://easytag.sourceforge."
-"net)\n"
-
-#: src/misc.c:131
+#: src/misc.c:132
 msgid ""
 "The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
 msgstr ""
 "L'interface utilisateur a été créée avec l'aide de glade-2 (http://glade."
 "gnome.org).\n"
 
-#: src/misc.c:146
+#: src/misc.c:147
 msgid "French:   David Le Brun (david at dyn-ns dot net)\n"
 msgstr "Français: David Le Brun (david at dyn-ns dot net)\n"
 
-#: src/misc.c:148
+#: src/misc.c:149
 msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 msgstr "Allemand: Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 
-#: src/misc.c:150
+#: src/misc.c:151
 msgid ""
 "Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
 "net)\n"
@@ -2518,34 +2557,34 @@ msgstr ""
 "Italien: Edward Matteucci (edward_matteucc at users dot sourceforge dot "
 "net)\n"
 
-#: src/misc.c:152
+#: src/misc.c:153
 msgid "Japanese: Ayako Sano\n"
 msgstr "Japonais: Ayako Sano\n"
 
-#: src/misc.c:154
+#: src/misc.c:155
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 msgstr "Japonais: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 
-#: src/misc.c:251 src/misc.c:255
+#: src/misc.c:252 src/misc.c:256
 #, c-format
 msgid "Could not delete backup file: \"%s\"\n"
 msgstr "Ne peut effacer le fichier de sauvegarde: \"%s\"\n"
 
-#: src/misc.c:383
+#: src/misc.c:384
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "Glisser/déposer: ignoré '%s'\n"
 
 #. no entry selected
-#: src/misc.c:793 src/misc_confirm.c:330
+#: src/misc.c:794 src/misc_confirm.c:295
 msgid "No entry selected."
 msgstr "Aucun élément sélectionné."
 
 #. no playlist selected
 #. no playlist??? Cannot happen, but...
 #. no playlist selected
-#: src/misc.c:821 src/misc_confirm.c:212 src/misc_confirm.c:319
-#: src/misc_confirm.c:444
+#: src/misc.c:822 src/misc_confirm.c:212 src/misc_confirm.c:284
+#: src/misc_confirm.c:412
 msgid "No playlist selected."
 msgstr "Pas de liste de lecture sélectionnée"
 
@@ -2619,16 +2658,16 @@ msgstr[1] "Morceaux supprimés de la liste de lecture '%s'"
 msgid "No tracks selected."
 msgstr "Aucun morceau sélectionné."
 
-#: src/misc_confirm.c:336
+#: src/misc_confirm.c:301
 msgid "Cannot remove entry 'All'"
 msgstr "Ne peut enlever l'entrée 'Tous'"
 
-#: src/misc_confirm.c:393
+#: src/misc_confirm.c:367
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "Liste de lecture effacée '%s'"
 
-#: src/misc_confirm.c:413
+#: src/misc_confirm.c:387
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
@@ -2636,11 +2675,11 @@ msgstr[0] "Liste de lecture '%s' supprimée avec %d morceau."
 msgstr[1] "Liste de lecture '%s' supprimée avec %d morceaux."
 
 #. master playlist
-#: src/misc_confirm.c:449
+#: src/misc_confirm.c:417
 msgid "Cannot delete master playlist."
 msgstr "Impossible de supprimer la liste de lecture principale"
 
-#: src/misc_confirm.c:473
+#: src/misc_confirm.c:441
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
@@ -2660,39 +2699,39 @@ msgstr[1] ""
 "indiqué entre parenthèses."
 
 #. remove only playlist, keep tracks
-#: src/misc_confirm.c:494
+#: src/misc_confirm.c:462
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "Êtes-vous sûr de vouloir supprimer la liste de lecture '%s' ?"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc_confirm.c:499
+#: src/misc_confirm.c:467
 msgid "Delete Playlist?"
 msgstr "Supprimer la liste de lecture ?"
 
-#: src/misc_confirm.c:551
+#: src/misc_confirm.c:528
 #, c-format
 msgid "Successfully created iPod directories in '%s'."
 msgstr "Création réussie des répertoires de l'iPod dans '%s'."
 
-#: src/misc_confirm.c:553
+#: src/misc_confirm.c:530
 #, c-format
 msgid "Problem creating iPod directories in '%s'."
 msgstr "Problème a la création des répertoires de l'iPod dans '%s'."
 
 #. gint id,
 #. gboolean modal,
-#: src/misc_confirm.c:600
+#: src/misc_confirm.c:569
 msgid "Create iPod directories"
 msgstr "Créer les répertoires de l'iPod"
 
 #. title
-#: src/misc_confirm.c:601
+#: src/misc_confirm.c:570
 msgid "OK to create the following directories?"
 msgstr "Créer les répertoires suivants ?"
 
-#: src/misc_confirm.c:636
+#: src/misc_confirm.c:612
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"
@@ -2741,49 +2780,49 @@ msgstr "Sélectionner les fichiers ou répertoires à ajouter."
 msgid "Select Playlists to add."
 msgstr "Sélectionner les listes de lecture à ajouter."
 
-#: src/misc_playlist.c:58 src/misc_playlist.c:60 src/misc_playlist.c:356
-#: src/misc_playlist.c:358
+#: src/misc_playlist.c:59 src/misc_playlist.c:61 src/misc_playlist.c:357
+#: src/misc_playlist.c:359
 msgid "New Playlist"
 msgstr "Nouvelle liste de lecture"
 
-#: src/misc_playlist.c:59 src/misc_playlist.c:357
+#: src/misc_playlist.c:60 src/misc_playlist.c:358
 msgid "Please enter a name for the new playlist"
 msgstr "Entrer le nom de la nouvelle liste de lecture"
 
-#: src/misc_playlist.c:96
+#: src/misc_playlist.c:97
 msgid "AR:"
 msgstr "AR:"
 
-#: src/misc_playlist.c:99
+#: src/misc_playlist.c:100
 msgid "AL:"
 msgstr "AL:"
 
-#: src/misc_playlist.c:102
+#: src/misc_playlist.c:103
 msgid "GE:"
 msgstr "GE:"
 
-#: src/misc_playlist.c:105
+#: src/misc_playlist.c:106
 msgid "CO:"
 msgstr "CO:"
 
-#: src/misc_playlist.c:108
+#: src/misc_playlist.c:109
 msgid "YE:"
 msgstr "AN:"
 
-#: src/misc_playlist.c:149
+#: src/misc_playlist.c:150
 msgid "Unknown"
 msgstr "Inconnu"
 
-#: src/misc_playlist.c:226
+#: src/misc_playlist.c:227
 #, c-format
 msgid "Random (%d)"
 msgstr "Aléatoirement (%d)"
 
-#: src/misc_playlist.c:291
+#: src/misc_playlist.c:292
 msgid "Not Listed"
 msgstr "Jamais écoutés"
 
-#: src/misc_playlist.c:332
+#: src/misc_playlist.c:333
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
@@ -2791,80 +2830,80 @@ msgstr[0] "Liste de lecture '%s' créée avec %d morceau."
 msgstr[1] "Liste de lecture '%s' créée avec %d morceaux."
 
 #. n==0
-#: src/misc_playlist.c:343
+#: src/misc_playlist.c:344
 msgid "No tracks available, playlist not created"
 msgstr "Aucun morceau disponible, liste de lecture non créée"
 
-#: src/misc_playlist.c:458
+#: src/misc_playlist.c:459
 #, c-format
 msgid "Most Listened (%d)"
 msgstr "Les plus écoutés (%d)"
 
 #. no limit
-#: src/misc_playlist.c:496
+#: src/misc_playlist.c:497
 msgid "Never Listened"
 msgstr "Jamais écoutés"
 
-#: src/misc_playlist.c:533
+#: src/misc_playlist.c:534
 #, c-format
 msgid "Best Rated (%d)"
 msgstr "Mieux notés (%d)"
 
-#: src/misc_playlist.c:570
+#: src/misc_playlist.c:571
 #, c-format
 msgid "Recent (%d)"
 msgstr "Récents (%d)"
 
-#: src/misc_playlist.c:608
+#: src/misc_playlist.c:609
 msgid "Last Time"
 msgstr "Dernière fois"
 
-#: src/misc_playlist.c:699
+#: src/misc_playlist.c:700
 msgid "Removal of dangling tracks with no files on PC was canceled."
 msgstr ""
 "La suppression des morceaux fictifs sans fichier correspondant sur le PC a "
 "été annulée."
 
-#: src/misc_playlist.c:701
+#: src/misc_playlist.c:702
 msgid "Handling of dangling tracks with files on PC was canceled."
 msgstr ""
 "La récupération des morceaux fictifs à partir des fichiers du PC a été "
 "annulée."
 
-#: src/misc_playlist.c:739
+#: src/misc_playlist.c:740
 msgid "Dangling tracks with no files on PC were removed."
 msgstr ""
 "Les morceaux fictifs sans fichier correspondant sur le PC ont été supprimés."
 
-#: src/misc_playlist.c:741
+#: src/misc_playlist.c:742
 msgid "Dangling tracks with files on PC were handled."
 msgstr ""
 "Les morceaux fictifs avec leur fichier correspondant sur le PC ont été "
 "récupérés."
 
-#: src/misc_playlist.c:768
+#: src/misc_playlist.c:769
 msgid "Track"
 msgstr "Morceau"
 
-#: src/misc_playlist.c:805
+#: src/misc_playlist.c:809
 msgid "Creating a tree of known files"
 msgstr "Création l'arborescence des fichiers reconnus"
 
-#: src/misc_playlist.c:827
+#: src/misc_playlist.c:836
 msgid "Checking iPOD files against known files in DB"
 msgstr ""
 "Contrôle des fichiers sur l'iPod par rapport a ceux de la base iTunesDB"
 
-#: src/misc_playlist.c:854
+#: src/misc_playlist.c:870
 msgid "Orphaned"
 msgstr "Orphelin"
 
-#: src/misc_playlist.c:882
+#: src/misc_playlist.c:898
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
 msgstr "%d orphelins et %d morceaux fictifs. Traitement en cours..."
 
-#: src/misc_playlist.c:909
+#: src/misc_playlist.c:924
 #, c-format
 msgid ""
 "The following dandling track has a file on PC.\n"
@@ -2883,7 +2922,7 @@ msgstr[1] ""
 "Choisissez OK pour le transférer à la prochaine synchro, Annuler pour "
 "laisser tel quel."
 
-#: src/misc_playlist.c:914
+#: src/misc_playlist.c:929
 #, c-format
 msgid ""
 "The following dandling track doesn't have file on PC. \n"
@@ -2900,36 +2939,36 @@ msgstr[1] ""
 
 #. we want unique window for each
 #. gboolean modal,
-#: src/misc_playlist.c:921
+#: src/misc_playlist.c:936
 msgid "Dangling Tracks"
 msgstr "Morceaux fictifs"
 
-#: src/misc_playlist.c:941
+#: src/misc_playlist.c:961
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
 msgstr "Trouvé %d orphelins et %d morceaux fictifs. Fini."
 
-#: src/mp3file.c:393
+#: src/mp3file.c:390
 #, c-format
 msgid "Error opening MP3 file '%s'"
 msgstr "Erreur a l'ouverture du fichier MP3 '%s'"
 
-#: src/mp3file.c:1113
+#: src/mp3file.c:1110
 #, c-format
 msgid "Error setting ID3 field: %s\n"
 msgstr "Erreur en remplissant le champ ID3: %s\n"
 
-#: src/mp3file.c:1138 src/mp3file.c:1231
+#: src/mp3file.c:1135 src/mp3file.c:1228
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "Erreur à l'ouverture du fichier: '%s' (%s).\n"
 
-#: src/mp3file.c:1269
+#: src/mp3file.c:1266
 #, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "ERREUR pour écrire le tag dans le fichier: '%s' (%s).\n"
 
-#: src/mp3file.c:1755
+#: src/mp3file.c:1752
 #, c-format
 msgid ""
 "Could not find mp3gain. I tried to use the following executable: '%s'.\n"
@@ -2950,47 +2989,47 @@ msgstr ""
 "officiel http://mp3gain.sourceforge.net ou dans les paquetages de votre "
 "système."
 
-#: src/mp3file.c:1795
+#: src/mp3file.c:1792
 #, c-format
 msgid "Execution of mp3gain ('%s') failed."
 msgstr "Échec de l'éxécution de mp3gain ('%s')."
 
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:1974
+#: src/mp3file.c:1971
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "Fichier \"%s\" à une durée de zéro. Ignoré.\n"
 
-#: src/mp4file.c:203 src/mp4file.c:322
+#: src/mp4file.c:205 src/mp4file.c:324
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio file.\n"
 msgstr "'%s' n'est pas un fichier audio mp4\n"
 
-#: src/mp4file.c:213
+#: src/mp4file.c:215
 #, c-format
 msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
 msgstr "Ne peut pas lire le fichier '%s' ou n'est pas un fichier mp4.\n"
 
-#: src/mp4file.c:333
+#: src/mp4file.c:335
 #, c-format
 msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
 msgstr "Ne peut écrire le fichier '%s' ou n'est pas un fichier mp4.\n"
 
-#: src/mp4file.c:346
-#, c-format
+#: src/mp4file.c:348
+#, fuzzy, c-format
 msgid ""
-"Import of '%s' failed: m4a/m4p not supported without the mp4v2 library. You "
-"must compile the gtkpod source together with the mp4v2 library.\n"
+"Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
+"You must compile the gtkpod source together with the mp4v2 library.\n"
 msgstr ""
 "Import de '%s' annulé: pas de support des formats m4a/m4p\n"
 "Vous devez compiler gtkpod avec la bibliothèque mp4v2.\n"
 
-#: src/mp4file.c:352
-#, c-format
+#: src/mp4file.c:354
+#, fuzzy, c-format
 msgid ""
-"m4a/m4p metadata update for '%s' failed: m4a/m4p not supported without the "
-"mp4v2 library. You must compile the gtkpod source together with the mp4v2 "
-"library.\n"
+"m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
+"without the mp4v2 library. You must compile the gtkpod source together with "
+"the mp4v2 library.\n"
 msgstr ""
 "Mise à jour des données m4a/m4p annulée (\"%s\"): pas de support des formats "
 "m4a/m4p\n"
@@ -3048,52 +3087,52 @@ msgstr ""
 msgid "  --offline:    same as '-o'.\n"
 msgstr "  --offline:    identique a '-o'.\n"
 
-#: src/prefs.c:293 src/prefs.c:767
+#: src/prefs.c:293 src/prefs.c:766
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "Erreur lors de la lecture des options: %s\n"
 
-#: src/prefs.c:800
+#: src/prefs.c:799
 #, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr "Impossible d'ouvrir en lecture le fichier des options '%s'\n"
 
-#: src/prefs.c:902
+#: src/prefs.c:901
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "Option inconnue: %s\n"
 
-#: src/prefs.c:946
+#: src/prefs.c:945
 #, c-format
 msgid "# delete confirmation\n"
 msgstr "# confirmation de suppression\n"
 
-#: src/prefs.c:951
+#: src/prefs.c:950
 #, c-format
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr "# zones: choix 'All', dernière page sélectionnée (=categorie)\n"
 
-#: src/prefs.c:968
+#: src/prefs.c:967
 #, c-format
 msgid "# autoselect master playlist?\n"
 msgstr "# sélection automatique de liste de lecture principale?\n"
 
-#: src/prefs.c:970
+#: src/prefs.c:969
 #, c-format
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr "# titre=0, artiste, album, genre, compositeur\n"
 
-#: src/prefs.c:971
+#: src/prefs.c:970
 #, c-format
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr "# no_piste=5, ipod_id, pc_path, transféré\n"
 
-#: src/prefs.c:972
+#: src/prefs.c:971
 #, c-format
 msgid "# autoset: set empty tag to filename?\n"
 msgstr "# Définition automatique: mettre à vide les tags dans le fichier?\n"
 
-#: src/prefs.c:985
+#: src/prefs.c:984
 #, c-format
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
@@ -3103,7 +3142,7 @@ msgstr ""
 "morceaux,\n"
 "# entre les zones et dans la barre de statut.\n"
 
-#: src/prefs.c:1022
+#: src/prefs.c:1021
 #, c-format
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
@@ -3112,52 +3151,52 @@ msgstr ""
 "# tailles de fenêtre: fenêtre principale, confirmation avec défilement,\n"
 "#                     confirmation sans défilement, explorateur de fichiers\n"
 
-#: src/prefs.c:1058
+#: src/prefs.c:1057
 msgid "Settings are not saved.\n"
 msgstr "Réglages non sauvés.\n"
 
-#: src/prefs.c:1071
+#: src/prefs.c:1070
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "Impossible d'ouvrir en écriture \"%s\"\n"
 
-#: src/prefs.c:1421
+#: src/prefs.c:1420
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " Préférences: N° de catégorie (%d<%d?) ou n° de zone (%d<%d?) inexistant.\n"
 
-#: src/prefs.c:1470
+#: src/prefs.c:1469
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "Impossible de lancer 'mkdir %s'\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1862
+#: src/prefs.c:1861
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: style '%d' non reconnu\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1904
+#: src/prefs.c:1903
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort: style '%d' non reconnu\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1925
+#: src/prefs.c:1924
 #, c-format
 msgid "prefs_set_st_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_st_sort: style '%d' non reconnu\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1946
+#: src/prefs.c:1945
 #, c-format
 msgid "prefs_set_tm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_tm_sort: style '%d' non reconnu\n"
 
-#: src/prefs.c:2060 src/prefs.c:2067
+#: src/prefs.c:2059 src/prefs.c:2066
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr "'%s': seulement une '%%s' autorisée.\n"
@@ -3178,10 +3217,6 @@ msgstr ""
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Impossible de trouver le fichier pixmap: %s"
-
-#: src/tools.c:178
-msgid "Press button to abort."
-msgstr "Appuyer sur le bouton pour interrompre"
 
 #: src/tools.c:191
 msgid "Normalizing..."
@@ -3247,7 +3282,7 @@ msgid "Could not find command '%s' specified for '%s'"
 msgstr "Impossible d'éxécuter la commande '%s' spécifiée pour '%s'"
 
 #. update for count == 1, 21, 41 ... and for count == n
-#: src/track.c:429
+#: src/track.c:420
 #, c-format
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
@@ -3255,14 +3290,14 @@ msgstr[0] "%d morceau traité sur %d."
 msgstr[1] "%d morceaux traités sur %d."
 
 # y, c-format
-#: src/track.c:493
+#: src/track.c:484
 #, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] "Le morceau suivant est en double et a été supprimé."
 msgstr[1] "Les %d morceaux suivants sont en double et ont été supprimés."
 
-#: src/track.c:500
+#: src/track.c:491
 #, c-format
 msgid ""
 "The following duplicate track has not been added to the master play list."
@@ -3277,11 +3312,11 @@ msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
-#: src/track.c:507
+#: src/track.c:498
 msgid "Duplicate detection"
 msgstr "Détection de doublon"
 
-#: src/track.c:764
+#: src/track.c:755
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "Compteur de lecture incrémenté pour '%s'"
@@ -3295,6 +3330,17 @@ msgstr "Ne peut ouvrir en lecture le fichier '%s'.\n"
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s ne semble pas être un format wav supporté.\n"
+
+#~ msgid "Couldn't find track for playcount adjustment:\n"
+#~ msgstr ""
+#~ "Impossible de trouver le morceau pour ajuster le compteur de lecture:\n"
+
+#~ msgid ""
+#~ "    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge."
+#~ "net)\n"
+#~ msgstr ""
+#~ "    easytag: lecture et écriture des tags ID3 (http://easytag.sourceforge."
+#~ "net)\n"
 
 #~ msgid "Error writing iTunesDB to iPod.  No iTunes directory!"
 #~ msgstr ""

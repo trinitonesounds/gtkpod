@@ -99,7 +99,7 @@
 
 
 #ifdef HAVE_LIBMP4V2
-/* Use mp4v2 from the mpeg4ip project to handle mp4 (m4a, m4p) files
+/* Use mp4v2 from the mpeg4ip project to handle mp4 (m4a, m4p, m4b) files
    (http://mpeg4ip.sourceforge.net/) */
 /* Copyright note: code for mp4_get_file_info() is based on
  * mp4info.cpp of the mpeg4ip project */
@@ -147,6 +147,8 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		    track->fdesc = g_strdup ("AAC audio file");
 		if (strcmp (value, ".m4p") == 0)
 		    track->fdesc = g_strdup ("Protected AAC audio file");
+		if (strcmp (value, ".m4b") == 0)
+		    track->fdesc = g_strdup ("AAC audio book file");
 	    }
 	    if (prefs_get_readtags ())
 	    {
@@ -343,13 +345,13 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 /* We don't support mp4 without the mp4v2 library */
 Track *mp4_get_file_info (gchar *name)
 {
-    gtkpod_warning (_("Import of '%s' failed: m4a/m4p not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), name);
+    gtkpod_warning (_("Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), name);
     return NULL;
 }
 
 gboolean mp4_write_file_info (gchar *filename, Track *track)
 {
-    gtkpod_warning (_("m4a/m4p metadata update for '%s' failed: m4a/m4p not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), filename);
+    gtkpod_warning (_("m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), filename);
     return FALSE;
 }
 #endif

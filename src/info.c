@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:19:19 JST jcs>
+/* Time-stamp: <2004-05-16 14:11:51 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -131,10 +131,13 @@ void info_open_window (void)
 /* close info window */
 void info_close_window (void)
 {
+    GtkWidget *win;
+
     if (!info_window) return; /* not open */
     info_update_default_sizes ();
-    gtk_widget_destroy (info_window);
+    win = info_window;
     info_window = NULL;
+    gtk_widget_destroy (win);
     prefs_set_info_window (FALSE); /* notify prefs */
     /* set the menu item for the info window correctly */
     display_set_info_window_menu ();
@@ -353,11 +356,11 @@ get_drive_stats_from_df(const gchar *mp)
 	    {
 		int i = 0;
 		int j = 0;
-		gchar buf2[PATH_MAX];
+		gchar buf2[PATH_MAX+3];
 		
-		while(i < bytes_read)
+		while((i < bytes_read) && (j < PATH_MAX))
 		{
-		    while(!g_ascii_isspace(buf[i]))
+		    while(!g_ascii_isspace(buf[i]) && (j<PATH_MAX))
 			buf2[j++] = buf[i++];
 		    buf2[j++] = ' ';
 		    while(g_ascii_isspace(buf[i]))

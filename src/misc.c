@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 23:10:04 JST jcs>
+/* Time-stamp: <2004-05-16 15:39:13 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -118,6 +118,9 @@ Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"),
 Armando Atienza: Support with external playcounts\n"),
 		       "\n\n",
 		       _("\
+D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"),
+		       "\n\n",
+		       _("\
 This program borrows code from the following projects:\n"),
 		       _("\
     gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB (http://www.gnu.org/software/gnupod/)\n"),
@@ -125,8 +128,6 @@ This program borrows code from the following projects:\n"),
     mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"),
 		       _("\
     xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"),
-		       _("\
-    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge.net)\n"),
 		       "\n",
 		       _("\
 The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"),

@@ -73,6 +73,7 @@ gint determine_file_type(gchar *path)
 	    if (g_strcasecmp (suf, ".mp3") == 0) type = FILE_TYPE_MP3;
 	    else if (g_strcasecmp (suf, ".m4a") == 0) type = FILE_TYPE_M4A;
 	    else if (g_strcasecmp (suf, ".m4p") == 0) type = FILE_TYPE_M4P;
+	    else if (g_strcasecmp (suf, ".m4b") == 0) type = FILE_TYPE_M4B;
 	    else if (g_strcasecmp (suf, ".wav") == 0) type = FILE_TYPE_WAV;
 	    else if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
 	    else if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
@@ -134,6 +135,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
  	    case FILE_TYPE_MP3:
 	    case FILE_TYPE_M4A:
 	    case FILE_TYPE_M4P:
+	    case FILE_TYPE_M4B:
 	    case FILE_TYPE_WAV:
 	        /* FIXME: Status */
 		g_free(plname);
@@ -688,6 +690,7 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    break;
 	case FILE_TYPE_M4A:
 	case FILE_TYPE_M4P:
+	case FILE_TYPE_M4B:
 	    nti = mp4_get_file_info (name);
 	    break;
 	case FILE_TYPE_WAV:
@@ -1406,6 +1409,7 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 	  case FILE_TYPE_MP3:
 	  case FILE_TYPE_M4A:
 	  case FILE_TYPE_M4P:
+	  case FILE_TYPE_M4B:
 	  case FILE_TYPE_UNKNOWN:
 	  case FILE_TYPE_ERROR:
 		  break;
@@ -1541,6 +1545,7 @@ static gboolean file_write_info (gchar *name, Track *track)
 		return mp3_write_file_info (name, track);
 	    case FILE_TYPE_M4A:
 	    case FILE_TYPE_M4P:
+	    case FILE_TYPE_M4B:
 		return mp4_write_file_info (name, track);
 	    case FILE_TYPE_WAV:
 		return wav_write_file_info (name, track);
@@ -1921,6 +1926,7 @@ gboolean get_gain (Track *track)
 	result = mp3_get_gain (path, track);
     case FILE_TYPE_M4A: /* FIXME */
     case FILE_TYPE_M4P: /* FIXME */
+    case FILE_TYPE_M4B: /* FIXME */
     case FILE_TYPE_WAV: /* FIXME */
     case FILE_TYPE_M3U: 
     case FILE_TYPE_PLS: 

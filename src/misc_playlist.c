@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-04-01 23:47:46 JST jcs>
+/* Time-stamp: <2004-05-16 14:52:35 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -236,7 +236,7 @@ Playlist *generate_random_playlist (void)
 }
 
 
-Playlist *randomize_current_playlist (void) 
+Playlist *randomize_current_playlist (void)
 {
     fprintf (stderr, "Not implemented yet.\n");
     return NULL;
@@ -709,8 +709,8 @@ check_db_danglingcancel  (gpointer user_data1, gpointer user_data2)
 static void
 check_db_danglingok (gpointer user_data1, gpointer user_data2)
 {
-    GList *tlist = ((GList *)user_data1)
-	, *l_dangling = tlist;
+    GList *tlist = ((GList *)user_data1);
+    GList *l_dangling = tlist;
     gint *i=((gint*)user_data2);
     /* traverse the list and append to the str */
     for (tlist = g_list_first(tlist);
@@ -775,11 +775,12 @@ void check_db (void)
     Track *track = NULL;
     GDir  *dir_des = NULL;
 
-    gchar *pathtrack=NULL
-	, *ipod_filename = NULL
-	, *ipod_dir = NULL
-	, *ipod_fulldir = NULL
-	, *buf = NULL;
+    gchar *pathtrack=NULL;
+    gchar *ipod_filename = NULL;
+    gchar *ipod_dir = NULL;
+    gchar *ipod_fulldir = NULL;
+    gchar *buf = NULL;
+#   define localdebug  0      /* may be later becomes more general verbose param */
 
     Playlist* pl_orphaned = NULL;
     GList * l_dangling[2] = {NULL, NULL}; /* 2 kinds of dangling tracks: with approp
@@ -796,8 +797,8 @@ void check_db (void)
 
     gchar ** tokens;
     gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
-    gchar *ipod_path_as_filename = 
-      g_filename_from_utf8(mount,-1,NULL,NULL,NULL);
+    gchar *ipod_path_as_filename =
+        g_filename_from_utf8(mount,-1,NULL,NULL,NULL);
     const gchar * music[] = {"iPod_Control","Music",NULL,NULL,};
 
     g_free (mount);
@@ -813,16 +814,21 @@ void check_db (void)
 				   treeKeyDestroy, treeValueDestroy);
     while((track=get_next_track(h)))
     {
+        gint ntok=0;
 	h=1;
 	if (!track->transferred) continue; /* we don't want to report not transfered files
 					    * as dandgling */
-	tokens = g_strsplit(track->ipod_path,":",3);
-/*	fprintf(stdout,"File %s\n", track->ipod_path); */
-	fflush(stdout);
-	if (ntokens(tokens)>=3)
-	    pathtrack=g_strdup (tokens[2]);
+	tokens = g_strsplit(track->ipod_path,":",(track->ipod_path[0]==':'?4:3));
+        ntok=ntokens(tokens);
+	if (ntok>=3)
+	    pathtrack=g_strdup (tokens[ntok-1]);
 	else
 	    fprintf(stderr, "Report the bug please: shouldn't be 0 at %s:%d\n",__FILE__,__LINE__);
+        if (localdebug)
+            fprintf(stdout,"File %s\n", pathtrack);
+
+	fflush(stdout);
+
 	g_tree_insert (files_known, pathtrack, track);
 	g_strfreev(tokens);
     }
@@ -843,10 +849,17 @@ void check_db (void)
 		/* we have a file in the directory*/
 	    {
 		pathtrack=g_strdup_printf("%s%c%s", ipod_dir, ':', ipod_filename);
+
+                if (localdebug) {
+                    fprintf(stdout,"Considering %s ", pathtrack);
+                    fflush(stdout);
+                }
+
 		if ( g_tree_lookup_extended (files_known, pathtrack,
 					     &foundtrack, &foundtrack) )
 		{ /* file is not orphaned */
 		    g_tree_remove(files_known, pathtrack); /* we don't need this any more */
+                    if (localdebug) fprintf(stdout," good ");
 		}
 		else
 		{  /* Now deal with orphaned... */
@@ -861,23 +874,23 @@ void check_db (void)
 
 		    norphaned++;
 
-
 		    fn_orphaned = g_strdup_printf("%s%ciPod_Control%cMusic%cF%02d%c%s",
 		      prefs_get_ipod_mount(), G_DIR_SEPARATOR, G_DIR_SEPARATOR,
                                               G_DIR_SEPARATOR,h, G_DIR_SEPARATOR,ipod_filename);
-
+                    if (localdebug) fprintf(stdout,"to orphaned ");
 		    add_track_by_filename( fn_orphaned, pl_orphaned,
 					   FALSE, NULL, NULL);
 		}
+                if (localdebug) fprintf(stdout," done\n");
+
 		g_free(ipod_filename);
 		g_free(pathtrack);
 	    }
-                        g_dir_close(dir_des);
+            g_dir_close(dir_des);
 	}
-                   music[3] = NULL;
-                   g_free(ipod_dir);
-	g_free(dir_des);
-	g_free(ipod_fulldir);
+        music[3] = NULL;
+        g_free(ipod_dir);
+ 	g_free(ipod_fulldir);
 	process_gtk_events_blocked();
     }
 
@@ -892,7 +905,6 @@ void check_db (void)
     g_free(buf);
 
     /* Now lets deal with dangling tracks */
-
     /* Traverse the tree - leftovers are dangling - put them in two lists */
     g_tree_foreach(files_known, remove_dangling, l_dangling);
 
@@ -936,6 +948,7 @@ void check_db (void)
 		== GTK_RESPONSE_REJECT)
 	    {   /* free memory */
 		g_list_free(l_dangling[i]);
+		g_free(k);
 	    }
 	    g_free (buf);
 	    g_string_free (str_dangs, TRUE);

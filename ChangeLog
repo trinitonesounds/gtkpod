@@ -1,6 +1,11 @@
 gtkpod V0.73-CVS
 	NEW FEATURE: Added support for WAV audio files
 
+	NEW FEATURE: Added support for bookmarkable AAC files (.m4b
+	files). Thanks to D.L. Sharp. More information is available at
+	http://www.ipodlounge.com/articles_more.php?id=3233_0_8_0_C
+	http://docs.info.apple.com/article.html?artnum=61695
+
 	NEW FEATURE: Added support for syncing contacts and calendar from
 	existing applications to the iPod (on iTunesDB export and/or via
 	the Tools-menu). The sync is done by calling external scripts.

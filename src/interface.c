@@ -4689,6 +4689,9 @@ create_gtkpod_info (void)
   gtk_container_add (GTK_CONTAINER (hbuttonbox9), info_close);
   GTK_WIDGET_SET_FLAGS (info_close, GTK_CAN_DEFAULT);
 
+  g_signal_connect ((gpointer) gtkpod_info, "delete_event",
+                    G_CALLBACK (on_gtkpod_info_delete_event),
+                    NULL);
   g_signal_connect ((gpointer) info_close, "clicked",
                     G_CALLBACK (on_info_close_clicked),
                     NULL);

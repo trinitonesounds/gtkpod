@@ -1,6 +1,5 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
-
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
@@ -60,9 +59,15 @@ fi
 (grep "^AM_GLIB_GNU_GETTEXT" $srcdir/configure.in >/dev/null) && {
   (grep "sed.*POTFILES" $srcdir/configure.in) > /dev/null || \
   (glib-gettextize --version) < /dev/null > /dev/null 2>&1 || {
-    echo
-    echo "**Error**: You must have \`glib' installed."
-    echo "You can get it from: ftp://ftp.gtk.org/pub/gtk"
+    if [ -f /etc/debian_version ]
+    then	
+   	echo "**Error**: Please apt-get install libglib2.0-dev"
+    else	
+    	echo
+    	echo "**Error**: You must have \`glib' installed."
+    	echo "You can get it from: ftp://ftp.gtk.org/pub/gtk."
+	echo "When using packages, make sure you also install the -dev package."
+    fi
     DIE=1
   }
 }

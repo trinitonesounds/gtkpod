@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 00:36:58 JST jcs>
+/* Time-stamp: <2004-05-16 14:01:21 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1843,7 +1843,7 @@ on_gtkpod_info_delete_event            (GtkWidget       *widget,
 					gpointer         user_data)
 {
     info_close_window ();
-    return FALSE;
+    return TRUE; /* don't close again -- info_close_window() already does it */
 }
 
 
@@ -1983,4 +1983,3 @@ on_randomize_current_playlist_activate (GtkMenuItem     *menuitem,
 {
     randomize_current_playlist();
 }
-
