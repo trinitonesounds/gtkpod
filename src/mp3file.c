@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-25 13:30:39 jcs>
+/* Time-stamp: <2004-08-14 00:15:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1248,11 +1248,11 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	id3_set_string (id3tag, ID3_FRAME_GENRE, track->genre, encoding);
 	id3_set_string (id3tag, ID3_FRAME_COMMENT, track->comment, encoding);
 	id3_set_string (id3tag, "TCOM", track->composer, encoding);
-	if (track->cds)
+	if (track->tracks)
 	    string1 = g_strdup_printf ("%d/%d",
-				       track->cd_nr, track->cds);
+				       track->track_nr, track->tracks);
 	else
-	    string1 = g_strdup_printf ("%d", track->cd_nr);
+	    string1 = g_strdup_printf ("%d", track->track_nr);
 	id3_set_string (id3tag, ID3_FRAME_TRACK, string1, encoding);
 	g_free(string1);
     }

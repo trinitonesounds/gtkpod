@@ -481,7 +481,7 @@ When gtkpod is started, it will also read this file and incorporate
 the information into the iTunesDB that can be written back to the
 iPod.
 
-There has been several requests to also register playcounts when
+There have been several requests to also register playcounts when
 playing a track on the local machine. This is possible by calling
 gtkpod as "gtkpod -p <filename>".
 

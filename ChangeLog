@@ -1,4 +1,7 @@
 gtkpod V0.82-CVS
+	BUGFIX: when writing tags to file the track tag was
+	deleted.
+
 	BUGFIX: handling of orphaned tracks that had been added to the
 	ipod again are now handled correctly.
 

@@ -1,6 +1,21 @@
 TODO:
 
-Dangling/orphaned tracks
+- Export mu3 playlists (http://hanna.pyxidis.org/tech/m3u.html) 
+
+  > Since there is only one field for 'name', and most people like >
+  > something a little more well built, perhaps there could be a pref
+  > setting for the format of the name. Also, unlike the example, I
+  > imagine a fully-qualified location would be the best idea. Thank,
+  (Robert Paskowitz)
+
+- Ignore common words when sorting
+
+  > I'm somewhat frustrated with the inconsistency between GTKPod and
+  > the iPod itself, however. items in the iPod are sorted with "the"
+  > as if it weren't there...
+  (Alex Perez)
+
+- Dangling/orphaned tracks
     - Delete dangling tracks right away -- they can cause an error
       message when exporting the iTunesDB. Instead display them in an
       info window.
@@ -87,6 +102,14 @@ Please feel free to submit further features.
 
 
 BUGLIST:
+
+- Adam Pavlakovic (4th generation): 
+
+> > Hey, I am using korganizer and the script included in gtkpod to
+> > sync it, the only problem is that the ipod doesn't see it and even
+> > though the file is in the Calendars folder in the ipod, it won't
+> > be recognized and none of my dates will show up. Any help?
+
 
 - "iTundesDB.ext could not be found" printed when "iTunesDB" could not
   be found (confusing).
