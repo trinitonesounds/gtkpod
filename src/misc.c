@@ -534,6 +534,7 @@ gint SM_to_S (gint sm)
     case SM_COLUMN_ARTIST:      return S_ARTIST;
     case SM_COLUMN_ALBUM:       return S_ALBUM;
     case SM_COLUMN_GENRE:       return S_GENRE;
+    case SM_COLUMN_COMPOSER:    return S_COMPOSER;
     case SM_COLUMN_TRACK_NR:    return S_TRACK_NR;
     case SM_COLUMN_IPOD_ID:     return S_IPOD_ID;
     case SM_COLUMN_PC_PATH:     return S_PC_PATH;
@@ -551,10 +552,11 @@ gint ST_to_S (gint st)
 {
     switch (st)
     {
-    case ST_CAT_TITLE:       return S_TITLE;
     case ST_CAT_ARTIST:      return S_ARTIST;
     case ST_CAT_ALBUM:       return S_ALBUM;
     case ST_CAT_GENRE:       return S_GENRE;
+    case ST_CAT_COMPOSER:    return S_COMPOSER;
+    case ST_CAT_TITLE:       return S_TITLE;
     }
     return -1;
 }

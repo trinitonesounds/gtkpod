@@ -123,6 +123,12 @@ struct cfg *cfg_new(void)
     mycfg->size_conf.y = -1;
     mycfg->size_dirbr.x = 300;
     mycfg->size_dirbr.y = 400;
+    mycfg->song_list_show.artist = TRUE;
+    mycfg->song_list_show.album = TRUE;
+    mycfg->song_list_show.title = TRUE;
+    mycfg->song_list_show.genre = TRUE;
+    mycfg->song_list_show.composer = FALSE;
+    mycfg->song_list_show.track = FALSE;
     for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
     {
 	mycfg->sm_col_width[i] = 80;
@@ -199,21 +205,29 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_block_display((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "album") == 0)
+	  else if(g_ascii_strcasecmp (line, "show_album") == 0)
 	  {
 	      prefs_set_song_list_show_album((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "track") == 0)
+	  else if(g_ascii_strcasecmp (line, "show_artist") == 0)
 	  {
-	      prefs_set_song_list_show_track((gboolean)atoi(arg));
+	      prefs_set_song_list_show_artist((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "genre") == 0)
+	  else if(g_ascii_strcasecmp (line, "show_title") == 0)
+	  {
+	      prefs_set_song_list_show_title((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "show_genre") == 0)
 	  {
 	      prefs_set_song_list_show_genre((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "artist") == 0)
+	  else if(g_ascii_strcasecmp (line, "show_composer") == 0)
 	  {
-	      prefs_set_song_list_show_artist((gboolean)atoi(arg));
+	      prefs_set_song_list_show_composer((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "show_track") == 0)
+	  {
+	      prefs_set_song_list_show_track((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "delete_file") == 0)
 	  {
@@ -436,10 +450,12 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "md5=%d\n",prefs_get_md5songs ());
     fprintf(fp, "update_existing=%d\n",prefs_get_update_existing ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
-    fprintf(fp, "album=%d\n",prefs_get_song_list_show_album());
-    fprintf(fp, "track=%d\n",prefs_get_song_list_show_track());
-    fprintf(fp, "genre=%d\n",prefs_get_song_list_show_genre());
-    fprintf(fp, "artist=%d\n",prefs_get_song_list_show_artist());
+    fprintf(fp, "show_album=%d\n",prefs_get_song_list_show_album());
+    fprintf(fp, "show_artist=%d\n",prefs_get_song_list_show_artist());
+    fprintf(fp, "show_title=%d\n",prefs_get_song_list_show_title());
+    fprintf(fp, "show_genre=%d\n",prefs_get_song_list_show_genre());
+    fprintf(fp, "show_composer=%d\n",prefs_get_song_list_show_composer());
+    fprintf(fp, "show_track=%d\n",prefs_get_song_list_show_track());
     fprintf(fp, "delete_file=%d\n",prefs_get_song_playlist_deletion());
     fprintf(fp, "delete_playlist=%d\n",prefs_get_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_song_ipod_file_deletion());
@@ -658,28 +674,6 @@ gboolean prefs_get_id3_writeall(void)
     return cfg->id3_writeall;
 }
 
-
-
-/* song list opts */
-void prefs_set_song_list_show_all(gboolean val)
-{
-
-    if(val)
-    {
-	cfg->song_list_show.artist = TRUE;
-	cfg->song_list_show.album = TRUE;
-	cfg->song_list_show.track = TRUE;
-	cfg->song_list_show.genre = TRUE;
-    }
-    else
-    {
-	cfg->song_list_show.artist = FALSE;
-	cfg->song_list_show.album = FALSE;
-	cfg->song_list_show.track = FALSE;
-	cfg->song_list_show.genre = FALSE;
-    }
-}
-
 void prefs_set_song_list_show_artist(gboolean val)
 {
     cfg->song_list_show.artist = val;
@@ -690,14 +684,24 @@ void prefs_set_song_list_show_album(gboolean val)
     cfg->song_list_show.album = val;
 }
 
-void prefs_set_song_list_show_track(gboolean val)
+void prefs_set_song_list_show_title(gboolean val)
 {
-    cfg->song_list_show.track = val;
+    cfg->song_list_show.title = val;
 }
 
 void prefs_set_song_list_show_genre(gboolean val)
 {
     cfg->song_list_show.genre = val;
+}
+
+void prefs_set_song_list_show_composer(gboolean val)
+{
+    cfg->song_list_show.composer = val;
+}
+
+void prefs_set_song_list_show_track(gboolean val)
+{
+    cfg->song_list_show.track = val;
 }
 
 gboolean prefs_get_offline(void)
@@ -715,17 +719,6 @@ gboolean prefs_get_write_extended_info(void)
   return cfg->write_extended_info;
 }
 
-gboolean prefs_get_song_list_show_all(void)
-{
-    if((cfg->song_list_show.artist == FALSE) &&
-	(cfg->song_list_show.album == FALSE) &&
-	(cfg->song_list_show.track == FALSE) &&
-	(cfg->song_list_show.genre == FALSE))
-	return(TRUE);
-    else
-	return(FALSE);
-}
-
 gboolean prefs_get_song_list_show_artist(void)
 {
     return(cfg->song_list_show.artist);
@@ -736,14 +729,24 @@ gboolean prefs_get_song_list_show_album(void)
     return(cfg->song_list_show.album);
 }
 
-gboolean prefs_get_song_list_show_track(void)
+gboolean prefs_get_song_list_show_title(void)
 {
-    return(cfg->song_list_show.track); 
+    return(cfg->song_list_show.title); 
 }
 
 gboolean prefs_get_song_list_show_genre(void)
 {
     return(cfg->song_list_show.genre); 
+}
+
+gboolean prefs_get_song_list_show_composer(void)
+{
+    return(cfg->song_list_show.composer); 
+}
+
+gboolean prefs_get_song_list_show_track(void)
+{
+    return(cfg->song_list_show.track); 
 }
 
 void prefs_set_playlist_deletion(gboolean val)

@@ -826,6 +826,8 @@ static gchar *st_get_entryname (Song *song, guint32 inst)
       return song->album;
     case ST_CAT_GENRE:
       return song->genre;
+    case ST_CAT_COMPOSER:
+      return song->composer;
     case ST_CAT_TITLE:
       return song->title;
     }
@@ -1275,7 +1277,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
       /* block playlist view and all sort tab notebooks <= inst */
       if (!prefs_get_block_display ())
       {
-	  block_selection (inst);
+	  block_selection (inst-1);
 	  g_get_current_time (&time);
       }
       /* add all songs previously present to sort tab */
@@ -1372,7 +1374,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  time.tv_sec % 3600, time.tv_usec);
 #endif DEBUG_TIMING
 
-  /* printf("%d: entered\n", inst);*/
+/*  printf("st_s_c_cb %d: entered\n", inst);*/
   st = sorttab[inst];
   if (st == NULL) return;
   if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
@@ -1754,6 +1756,7 @@ static void sm_add_song_to_song_model (Song *song)
 		      SM_COLUMN_ARTIST, song,
 		      SM_COLUMN_ALBUM, song,
 		      SM_COLUMN_GENRE, song,
+		      SM_COLUMN_COMPOSER, song,
 		      SM_COLUMN_TRACK_NR, song,
 		      SM_COLUMN_IPOD_ID, song,
 		      SM_COLUMN_PC_PATH, song,
@@ -1905,6 +1908,16 @@ sm_cell_edited (GtkCellRendererText *renderer,
 	  changed = TRUE;
 	}
       break;
+    case SM_COLUMN_COMPOSER:
+      if (g_utf8_collate (song->composer, new_text) != 0)
+	{
+	  g_free (song->composer);
+	  g_free (song->composer_utf16);
+	  song->composer = g_strdup (new_text);
+	  song->composer_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
+	  changed = TRUE;
+	}
+      break;
     case SM_COLUMN_TRACK_NR:
       track_text = g_strdup_printf("%d", song->track_nr);
       if (g_utf8_collate(track_text, new_text) != 0)
@@ -1972,6 +1985,10 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
     case SM_COLUMN_GENRE: 
       g_object_set (G_OBJECT (renderer), "text", song->genre, 
+		    "editable", TRUE, NULL);
+      break;
+    case SM_COLUMN_COMPOSER: 
+      g_object_set (G_OBJECT (renderer), "text", song->composer, 
 		    "editable", TRUE, NULL);
       break;
     case SM_COLUMN_TRACK_NR:
@@ -2100,6 +2117,9 @@ gint sm_data_compare_func (GtkTreeModel *model,
 	case SM_COLUMN_GENRE:
 	    return g_utf8_collate (g_utf8_casefold (song1->genre, -1),
 		    g_utf8_casefold (song2->genre, -1));
+	case SM_COLUMN_COMPOSER:
+	    return g_utf8_collate (g_utf8_casefold (song1->composer, -1),
+		    g_utf8_casefold (song2->composer, -1));
 	case SM_COLUMN_TRACK_NR:
 	    return song1->track_nr - song2->track_nr;
 	case SM_COLUMN_IPOD_ID:
@@ -2137,6 +2157,7 @@ sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 	    case SM_COLUMN_ARTIST:
 	    case SM_COLUMN_ALBUM:
 	    case SM_COLUMN_GENRE:
+	    case SM_COLUMN_COMPOSER:
 	    case SM_COLUMN_TRACK_NR:
 		sm_rows_reordered_callback();
 		break;
@@ -2241,13 +2262,35 @@ static void add_song_columns ()
 				(gpointer)col_id);
   gtk_tree_view_append_column (song_treeview, column);
   
+  /* composer column */
+  col_id = SM_COLUMN_COMPOSER;
+  renderer = gtk_cell_renderer_text_new ();
+  g_signal_connect (G_OBJECT (renderer), "edited",
+		    G_CALLBACK (sm_cell_edited), model);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
+  column = gtk_tree_view_column_new_with_attributes (_("Composer"), renderer, NULL);
+  gtk_tree_view_column_set_cell_data_func (column, renderer,
+					    sm_cell_data_func, NULL, NULL);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
+  gtk_tree_view_column_set_resizable (column, TRUE);
+  gtk_tree_view_column_set_clickable(column, TRUE);
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+  sm_columns[col_id] = column;
+  gtk_tree_view_column_set_fixed_width (column,
+					prefs_get_sm_col_width (col_id));
+  g_signal_connect (G_OBJECT (column), "clicked",
+		    G_CALLBACK (sm_song_column_button_clicked),
+				(gpointer)col_id);
+  gtk_tree_view_append_column (song_treeview, column);
+  
   /* track column */
   col_id = SM_COLUMN_TRACK_NR;
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (sm_cell_edited), model);
   g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
-  column = gtk_tree_view_column_new_with_attributes (_("Track Number"),
+  /* "#" stands for "Track Number" */
+  column = gtk_tree_view_column_new_with_attributes (_("#"),
 							renderer, NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
@@ -2340,7 +2383,7 @@ static GtkTreeModel *create_song_model (void)
   model = gtk_list_store_new (SM_NUM_COLUMNS, G_TYPE_POINTER, G_TYPE_POINTER,
 			      G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_POINTER,
 			      G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_POINTER,
-			      G_TYPE_POINTER);
+			      G_TYPE_POINTER, G_TYPE_POINTER);
 
   /* define sort functions for all of our lists */
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
@@ -2351,6 +2394,8 @@ static GtkTreeModel *create_song_model (void)
 	  SM_COLUMN_ALBUM, sm_data_compare_func, NULL, NULL);
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
 	  SM_COLUMN_GENRE, sm_data_compare_func, NULL, NULL);
+  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
+	  SM_COLUMN_COMPOSER, sm_data_compare_func, NULL, NULL);
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
 	  SM_COLUMN_TRACK_NR, sm_data_compare_func, NULL, NULL);
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
@@ -2455,53 +2500,42 @@ void
 sm_show_preferred_columns(void)
 {
     GtkTreeViewColumn *tvc = NULL;
+    gboolean visible;
 	
-    if(prefs_get_song_list_show_all())
-    {
-	if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_ALBUM)))
-	    gtk_tree_view_column_set_visible(tvc, TRUE);
-	if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TRACK_NR)))
-	    gtk_tree_view_column_set_visible(tvc, TRUE);
-	if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_GENRE)))
-	    gtk_tree_view_column_set_visible(tvc, TRUE);
-	if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_ARTIST)))
-	    gtk_tree_view_column_set_visible(tvc, TRUE);
-    }
-    else
-    {
-	tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_ALBUM);
-	if(prefs_get_song_list_show_album())
-	    gtk_tree_view_column_set_visible(tvc, TRUE);
-	else
-	    gtk_tree_view_column_set_visible(tvc, FALSE);
+    tvc = gtk_tree_view_get_column (song_treeview, SM_COLUMN_ALBUM);
+    visible = prefs_get_song_list_show_album ();
+    gtk_tree_view_column_set_visible (tvc, visible);
 	
-	tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TRACK_NR);
-	if(prefs_get_song_list_show_track())
-	    gtk_tree_view_column_set_visible(tvc, TRUE);
-	else
-	    gtk_tree_view_column_set_visible(tvc, FALSE);
-	
-	tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_GENRE);
-	if(prefs_get_song_list_show_genre())
-	    gtk_tree_view_column_set_visible(tvc, TRUE);
-	else
-	    gtk_tree_view_column_set_visible(tvc, FALSE);
-	
-	tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_ARTIST);
-	if(prefs_get_song_list_show_artist())
-	    gtk_tree_view_column_set_visible(tvc, TRUE);
-	else
-	    gtk_tree_view_column_set_visible(tvc, FALSE);
-    }
+    tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_ARTIST);
+    visible = prefs_get_song_list_show_artist ();
+    gtk_tree_view_column_set_visible (tvc, visible);
+
+    tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TITLE);
+    visible = prefs_get_song_list_show_title ();
+    gtk_tree_view_column_set_visible (tvc, visible);
+
+    tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_GENRE);
+    visible = prefs_get_song_list_show_genre ();
+    gtk_tree_view_column_set_visible (tvc, visible);
+
+    tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_COMPOSER);
+    visible = prefs_get_song_list_show_composer ();
+    gtk_tree_view_column_set_visible (tvc, visible);
+
+    tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TRACK_NR);
+    visible = prefs_get_song_list_show_track ();
+    gtk_tree_view_column_set_visible (tvc, visible);
+
 #if TRUE
+    visible = FALSE;
     if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_PC_PATH)))
-	gtk_tree_view_column_set_visible(tvc, FALSE);
+	gtk_tree_view_column_set_visible(tvc, visible);
     if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_IPOD_ID)))
-	gtk_tree_view_column_set_visible(tvc, FALSE);
+	gtk_tree_view_column_set_visible(tvc, visible);
     if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_TRANSFERRED)))
-	gtk_tree_view_column_set_visible(tvc, FALSE);
+	gtk_tree_view_column_set_visible(tvc, visible);
     if((tvc = gtk_tree_view_get_column(song_treeview, SM_COLUMN_NONE)))
-	gtk_tree_view_column_set_visible(tvc, FALSE);
+	gtk_tree_view_column_set_visible(tvc, visible);
 #endif
 }
 

@@ -50,7 +50,7 @@
 /* time between display refreshs in ms */
 #define REFRESH_MS 200
 /* initial count number between display refreshs -- will be
-   re-calculated to match the time indicated above */
+   re-calculated to match the time interval specified above */
 #define REFRESH_INIT_COUNT 5
 
 
@@ -59,6 +59,7 @@ enum {
   ST_CAT_ARTIST = 0,
   ST_CAT_ALBUM,
   ST_CAT_GENRE,
+  ST_CAT_COMPOSER,
   ST_CAT_TITLE,
   ST_CAT_NUM
 };
@@ -99,6 +100,7 @@ enum  {
   SM_COLUMN_ARTIST,
   SM_COLUMN_ALBUM,
   SM_COLUMN_GENRE,
+  SM_COLUMN_COMPOSER,
   SM_COLUMN_TRACK_NR,
   SM_COLUMN_IPOD_ID,
   SM_COLUMN_PC_PATH,
@@ -107,9 +109,9 @@ enum  {
   SM_NUM_COLUMNS
 };
 
-#define SM_NUM_COLUMNS_PREFS (5) /* number of colums for prefs size storage */
-#define SM_NUM_TAGS_PREFS (4)    /* number of entries with "tag
-				  * autoset" feature */
+#define SM_NUM_COLUMNS_PREFS (6) /* number of colums for prefs size storage */
+#define SM_NUM_TAGS_PREFS (5)    /* number of entries with "autoset
+				  * empty tag to filename " feature */
 
 /* "Column numbers" in playlist model */
 enum  {

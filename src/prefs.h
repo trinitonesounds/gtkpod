@@ -33,18 +33,6 @@
 #include <gtk/gtk.h>
 #include "display.h"
 
-/* m
-enum {
-    OPT_SHOW_DEFAULT=	0,
-    OPT_SHOW_ARTIST = (1 << 0),
-    OPT_SHOW_ALBUM  = (1 << 1),
-    OPT_SHOW_YEAR   = (1 << 2),
-    OPT_SHOW_TRACK  = (1 << 3),
-    OPT_SHOW_GENRE  = (1 << 4),
-    OPT_SHOW_ALL    = (1 << 5)	
-};
-*/
-
 struct win_size {
     gint x;
     gint y;
@@ -69,7 +57,7 @@ struct cfg
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
   gboolean write_extended_info; /* write additional file with PC filenames etc? */
   struct {
-      gboolean artist, album, track, genre;
+      gboolean artist, album, title, genre, composer, track;
   } song_list_show;       /* what columns are displayed in the song list */
   struct {
       gchar *browse, *export;
@@ -108,11 +96,12 @@ void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
 void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_playlist_deletion(gboolean val);
-void prefs_set_song_list_show_all(gboolean val);
-void prefs_set_song_list_show_track(gboolean val);
-void prefs_set_song_list_show_genre(gboolean val);
-void prefs_set_song_list_show_album(gboolean val);
 void prefs_set_song_list_show_artist(gboolean val);
+void prefs_set_song_list_show_album(gboolean val);
+void prefs_set_song_list_show_title(gboolean val);
+void prefs_set_song_list_show_genre(gboolean val);
+void prefs_set_song_list_show_composer(gboolean val);
+void prefs_set_song_list_show_track(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
 void prefs_set_md5songs(gboolean active);
@@ -141,11 +130,12 @@ gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
 gboolean prefs_get_playlist_deletion(void);
-gboolean prefs_get_song_list_show_all(void);
 gboolean prefs_get_song_list_show_album(void);
-gboolean prefs_get_song_list_show_track(void);
-gboolean prefs_get_song_list_show_genre(void);
 gboolean prefs_get_song_list_show_artist(void);
+gboolean prefs_get_song_list_show_title(void);
+gboolean prefs_get_song_list_show_genre(void);
+gboolean prefs_get_song_list_show_composer(void);
+gboolean prefs_get_song_list_show_track(void);
 gboolean prefs_get_song_playlist_deletion(void);
 gboolean prefs_get_song_ipod_file_deletion(void);
 gboolean prefs_get_id3_write(void);

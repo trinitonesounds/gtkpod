@@ -288,6 +288,10 @@ static void set_entry_from_filename (Song *song, gint column)
 	    str = g_path_get_basename (song->pc_path_utf8);
 	    set_entry (&song->genre, &song->genre_utf16, str);
 	    break;
+	case SM_COLUMN_COMPOSER:
+	    str = g_path_get_basename (song->pc_path_utf8);
+	    set_entry (&song->composer, &song->composer_utf16, str);
+	    break;
 	}
     }
 }

@@ -129,6 +129,9 @@ create_gtkpod (void)
   GtkWidget *scrolledwindow16;
   GtkWidget *st0_cat3_treeview;
   GtkWidget *label14;
+  GtkWidget *scrolledwindow18;
+  GtkWidget *st0_cat4_treeview;
+  GtkWidget *label23;
   GtkWidget *sorttab1;
   GtkWidget *scrolledwindow15;
   GtkWidget *st1_cat0_treeview;
@@ -142,6 +145,9 @@ create_gtkpod (void)
   GtkWidget *scrolledwindow17;
   GtkWidget *st1_cat3_treeview;
   GtkWidget *label15;
+  GtkWidget *scrolledwindow19;
+  GtkWidget *st1_cat4_treeview;
+  GtkWidget *label24;
   GtkWidget *scrolledwindow11;
   GtkWidget *song_treeview;
   GtkWidget *hbox5;
@@ -544,6 +550,7 @@ create_gtkpod (void)
   sorttab0 = gtk_notebook_new ();
   gtk_widget_show (sorttab0);
   gtk_paned_pack1 (GTK_PANED (paned1), sorttab0, TRUE, TRUE);
+  gtk_notebook_set_scrollable (GTK_NOTEBOOK (sorttab0), TRUE);
 
   scrolledwindow9 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow9);
@@ -596,14 +603,28 @@ create_gtkpod (void)
   gtk_widget_show (st0_cat3_treeview);
   gtk_container_add (GTK_CONTAINER (scrolledwindow16), st0_cat3_treeview);
 
-  label14 = gtk_label_new (_("Title"));
+  label14 = gtk_label_new (_("Comp."));
   gtk_widget_show (label14);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab0), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab0), 3), label14);
   gtk_label_set_justify (GTK_LABEL (label14), GTK_JUSTIFY_LEFT);
 
+  scrolledwindow18 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow18);
+  gtk_container_add (GTK_CONTAINER (sorttab0), scrolledwindow18);
+
+  st0_cat4_treeview = gtk_tree_view_new ();
+  gtk_widget_show (st0_cat4_treeview);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow18), st0_cat4_treeview);
+
+  label23 = gtk_label_new (_("Title"));
+  gtk_widget_show (label23);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab0), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab0), 4), label23);
+  gtk_label_set_justify (GTK_LABEL (label23), GTK_JUSTIFY_LEFT);
+
   sorttab1 = gtk_notebook_new ();
   gtk_widget_show (sorttab1);
   gtk_paned_pack2 (GTK_PANED (paned1), sorttab1, TRUE, TRUE);
+  gtk_notebook_set_scrollable (GTK_NOTEBOOK (sorttab1), TRUE);
 
   scrolledwindow15 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow15);
@@ -656,10 +677,23 @@ create_gtkpod (void)
   gtk_widget_show (st1_cat3_treeview);
   gtk_container_add (GTK_CONTAINER (scrolledwindow17), st1_cat3_treeview);
 
-  label15 = gtk_label_new (_("Title"));
+  label15 = gtk_label_new (_("Comp."));
   gtk_widget_show (label15);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab1), 3), label15);
   gtk_label_set_justify (GTK_LABEL (label15), GTK_JUSTIFY_LEFT);
+
+  scrolledwindow19 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindow19);
+  gtk_container_add (GTK_CONTAINER (sorttab1), scrolledwindow19);
+
+  st1_cat4_treeview = gtk_tree_view_new ();
+  gtk_widget_show (st1_cat4_treeview);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow19), st1_cat4_treeview);
+
+  label24 = gtk_label_new (_("Title"));
+  gtk_widget_show (label24);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (sorttab1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (sorttab1), 4), label24);
+  gtk_label_set_justify (GTK_LABEL (label24), GTK_JUSTIFY_LEFT);
 
   scrolledwindow11 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow11);
@@ -821,6 +855,12 @@ create_gtkpod (void)
   g_signal_connect_after ((gpointer) st0_cat3_treeview, "key_release_event",
                           G_CALLBACK (on_st_treeview_key_release_event),
                           NULL);
+  g_signal_connect ((gpointer) st0_cat4_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
+  g_signal_connect_after ((gpointer) st0_cat4_treeview, "key_release_event",
+                          G_CALLBACK (on_st_treeview_key_release_event),
+                          NULL);
   g_signal_connect ((gpointer) sorttab1, "switch_page",
                     G_CALLBACK (on_sorttab_switch_page),
                     NULL);
@@ -846,6 +886,12 @@ create_gtkpod (void)
                     G_CALLBACK (on_st_treeview_drag_data_get),
                     NULL);
   g_signal_connect_after ((gpointer) st1_cat3_treeview, "key_release_event",
+                          G_CALLBACK (on_st_treeview_key_release_event),
+                          NULL);
+  g_signal_connect ((gpointer) st1_cat4_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
+  g_signal_connect_after ((gpointer) st1_cat4_treeview, "key_release_event",
                           G_CALLBACK (on_st_treeview_key_release_event),
                           NULL);
   g_signal_connect ((gpointer) song_treeview, "drag_data_get",
@@ -964,6 +1010,9 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow16, "scrolledwindow16");
   GLADE_HOOKUP_OBJECT (gtkpod, st0_cat3_treeview, "st0_cat3_treeview");
   GLADE_HOOKUP_OBJECT (gtkpod, label14, "label14");
+  GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow18, "scrolledwindow18");
+  GLADE_HOOKUP_OBJECT (gtkpod, st0_cat4_treeview, "st0_cat4_treeview");
+  GLADE_HOOKUP_OBJECT (gtkpod, label23, "label23");
   GLADE_HOOKUP_OBJECT (gtkpod, sorttab1, "sorttab1");
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow15, "scrolledwindow15");
   GLADE_HOOKUP_OBJECT (gtkpod, st1_cat0_treeview, "st1_cat0_treeview");
@@ -977,6 +1026,9 @@ create_gtkpod (void)
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow17, "scrolledwindow17");
   GLADE_HOOKUP_OBJECT (gtkpod, st1_cat3_treeview, "st1_cat3_treeview");
   GLADE_HOOKUP_OBJECT (gtkpod, label15, "label15");
+  GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow19, "scrolledwindow19");
+  GLADE_HOOKUP_OBJECT (gtkpod, st1_cat4_treeview, "st1_cat4_treeview");
+  GLADE_HOOKUP_OBJECT (gtkpod, label24, "label24");
   GLADE_HOOKUP_OBJECT (gtkpod, scrolledwindow11, "scrolledwindow11");
   GLADE_HOOKUP_OBJECT (gtkpod, song_treeview, "song_treeview");
   GLADE_HOOKUP_OBJECT (gtkpod, hbox5, "hbox5");
@@ -1121,6 +1173,8 @@ create_prefs_window (void)
   GtkWidget *tag_autoset3;
   GtkWidget *vbox10;
   GtkWidget *tag_autoset2;
+  GtkWidget *tag_autoset4;
+  GtkWidget *vbox11;
   GtkWidget *tag_autoset0;
   GtkWidget *label22;
   GtkWidget *frame4;
@@ -1138,11 +1192,13 @@ create_prefs_window (void)
   GtkWidget *frame2;
   GtkWidget *hbox2;
   GtkWidget *vbox4;
-  GtkWidget *cfg_song_list_all;
   GtkWidget *cfg_song_list_artist;
-  GtkWidget *cfg_song_list_album;
-  GtkWidget *vbox5;
   GtkWidget *cfg_song_list_genre;
+  GtkWidget *vbox5;
+  GtkWidget *cfg_song_list_album;
+  GtkWidget *cfg_song_list_composer;
+  GtkWidget *vbox12;
+  GtkWidget *cfg_song_list_title;
   GtkWidget *cfg_song_list_track;
   GtkWidget *label18;
   GtkWidget *hbuttonbox3;
@@ -1265,9 +1321,17 @@ create_prefs_window (void)
   gtk_widget_show (tag_autoset2);
   gtk_box_pack_start (GTK_BOX (vbox10), tag_autoset2, FALSE, FALSE, 0);
 
+  tag_autoset4 = gtk_check_button_new_with_mnemonic (_("Composer"));
+  gtk_widget_show (tag_autoset4);
+  gtk_box_pack_start (GTK_BOX (vbox10), tag_autoset4, FALSE, FALSE, 0);
+
+  vbox11 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox11);
+  gtk_box_pack_start (GTK_BOX (hbox6), vbox11, TRUE, TRUE, 0);
+
   tag_autoset0 = gtk_check_button_new_with_mnemonic (_("Title"));
   gtk_widget_show (tag_autoset0);
-  gtk_box_pack_start (GTK_BOX (vbox10), tag_autoset0, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox11), tag_autoset0, FALSE, FALSE, 0);
 
   label22 = gtk_label_new (_("Automatically Set Empty ID3-Tags To Filename?"));
   gtk_widget_show (label22);
@@ -1337,29 +1401,37 @@ create_prefs_window (void)
   gtk_widget_show (vbox4);
   gtk_box_pack_start (GTK_BOX (hbox2), vbox4, TRUE, TRUE, 0);
 
-  cfg_song_list_all = gtk_check_button_new_with_mnemonic (_("All Song Attributes"));
-  gtk_widget_show (cfg_song_list_all);
-  gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_all, FALSE, FALSE, 0);
-
   cfg_song_list_artist = gtk_check_button_new_with_mnemonic (_("Artist"));
   gtk_widget_show (cfg_song_list_artist);
   gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_artist, FALSE, FALSE, 0);
 
-  cfg_song_list_album = gtk_check_button_new_with_mnemonic (_("Album"));
-  gtk_widget_show (cfg_song_list_album);
-  gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_album, FALSE, FALSE, 0);
+  cfg_song_list_genre = gtk_check_button_new_with_mnemonic (_("Genre"));
+  gtk_widget_show (cfg_song_list_genre);
+  gtk_box_pack_start (GTK_BOX (vbox4), cfg_song_list_genre, FALSE, FALSE, 0);
 
   vbox5 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox5);
   gtk_box_pack_start (GTK_BOX (hbox2), vbox5, TRUE, TRUE, 0);
 
-  cfg_song_list_genre = gtk_check_button_new_with_mnemonic (_("Genre"));
-  gtk_widget_show (cfg_song_list_genre);
-  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_genre, FALSE, FALSE, 0);
+  cfg_song_list_album = gtk_check_button_new_with_mnemonic (_("Album"));
+  gtk_widget_show (cfg_song_list_album);
+  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_album, FALSE, FALSE, 0);
 
-  cfg_song_list_track = gtk_check_button_new_with_mnemonic (_("Track Number"));
+  cfg_song_list_composer = gtk_check_button_new_with_mnemonic (_("Composer"));
+  gtk_widget_show (cfg_song_list_composer);
+  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_composer, FALSE, FALSE, 0);
+
+  vbox12 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox12);
+  gtk_box_pack_start (GTK_BOX (hbox2), vbox12, TRUE, TRUE, 0);
+
+  cfg_song_list_title = gtk_check_button_new_with_mnemonic (_("Title"));
+  gtk_widget_show (cfg_song_list_title);
+  gtk_box_pack_start (GTK_BOX (vbox12), cfg_song_list_title, FALSE, FALSE, 0);
+
+  cfg_song_list_track = gtk_check_button_new_with_mnemonic (_("Track Number (#)"));
   gtk_widget_show (cfg_song_list_track);
-  gtk_box_pack_start (GTK_BOX (vbox5), cfg_song_list_track, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox12), cfg_song_list_track, FALSE, FALSE, 0);
 
   label18 = gtk_label_new (_("Displayed Song Attributes "));
   gtk_widget_show (label18);
@@ -1431,17 +1503,20 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_delete_track_from_ipod, "toggled",
                     G_CALLBACK (on_cfg_delete_track_from_ipod_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_song_list_all, "toggled",
-                    G_CALLBACK (on_cfg_song_list_all_toggled),
-                    NULL);
   g_signal_connect ((gpointer) cfg_song_list_artist, "toggled",
                     G_CALLBACK (on_cfg_song_list_artist_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_song_list_genre, "toggled",
+                    G_CALLBACK (on_cfg_song_list_genre_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_song_list_album, "toggled",
                     G_CALLBACK (on_cfg_song_list_album_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_song_list_genre, "toggled",
-                    G_CALLBACK (on_cfg_song_list_genre_toggled),
+  g_signal_connect ((gpointer) cfg_song_list_composer, "toggled",
+                    G_CALLBACK (on_cfg_song_list_composer_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_song_list_title, "toggled",
+                    G_CALLBACK (on_cfg_song_list_title_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_song_list_track, "toggled",
                     G_CALLBACK (on_cfg_song_list_track_toggled),
@@ -1479,6 +1554,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset3, "tag_autoset3");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox10, "vbox10");
   GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset2, "tag_autoset2");
+  GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset4, "tag_autoset4");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox11, "vbox11");
   GLADE_HOOKUP_OBJECT (prefs_window, tag_autoset0, "tag_autoset0");
   GLADE_HOOKUP_OBJECT (prefs_window, label22, "label22");
   GLADE_HOOKUP_OBJECT (prefs_window, frame4, "frame4");
@@ -1496,11 +1573,13 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, frame2, "frame2");
   GLADE_HOOKUP_OBJECT (prefs_window, hbox2, "hbox2");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox4, "vbox4");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_all, "cfg_song_list_all");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_artist, "cfg_song_list_artist");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_album, "cfg_song_list_album");
-  GLADE_HOOKUP_OBJECT (prefs_window, vbox5, "vbox5");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_genre, "cfg_song_list_genre");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox5, "vbox5");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_album, "cfg_song_list_album");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_composer, "cfg_song_list_composer");
+  GLADE_HOOKUP_OBJECT (prefs_window, vbox12, "vbox12");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_title, "cfg_song_list_title");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_song_list_track, "cfg_song_list_track");
   GLADE_HOOKUP_OBJECT (prefs_window, label18, "label18");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox3, "hbuttonbox3");

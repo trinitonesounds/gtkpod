@@ -241,10 +241,12 @@ prefs_window_save(void)
 	prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
     }
     prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
-    prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
-    prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
-    prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
     prefs_set_song_list_show_artist(tmpcfg->song_list_show.artist);
+    prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
+    prefs_set_song_list_show_title(tmpcfg->song_list_show.title);
+    prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
+    prefs_set_song_list_show_composer(tmpcfg->song_list_show.composer);
+    prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_playlist_deletion(tmpcfg->deletion.song);
     prefs_set_song_ipod_file_deletion(tmpcfg->deletion.ipod_file);
     prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
@@ -261,6 +263,9 @@ prefs_window_save(void)
 
     cfg_free(tmpcfg);
     tmpcfg =NULL;
+
+    sm_show_preferred_columns();
+
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
@@ -320,71 +325,47 @@ prefs_window_set_mount_point(const gchar *mp)
 static void
 prefs_window_song_list_init(void)
 {
-    if(prefs_get_song_list_show_all())
-    {
-	prefs_window_set_song_list_all(TRUE);
-    }
-    else
-    {
-	prefs_window_set_song_list_all(FALSE);
-    }
-}
-
-void prefs_window_set_song_list_all(gboolean val)
-{
     gchar *extras[] = {
 	"cfg_song_list_artist",
 	"cfg_song_list_album",
+	"cfg_song_list_title",
 	"cfg_song_list_genre",
+	"cfg_song_list_composer",
 	"cfg_song_list_track"
     };
-    guint i = 0, extra_size = 4;
+    guint i = 0, extra_size = 6;
     GtkWidget *w = NULL;
-    
-    if(val)
-    {
-	if((w = lookup_widget(prefs_window, "cfg_song_list_all")))
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-	
-	for(i = 0; i < extra_size; i++)
-	{
-	    w = lookup_widget(prefs_window, extras[i]);
-	    gtk_widget_set_sensitive(w, FALSE);
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), FALSE);
-	}
-    }
-    else
-    {
-	gboolean button_active = FALSE;
+    gboolean button_active = FALSE;
 
-	if((w = lookup_widget(prefs_window, "cfg_song_list_all")))
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), FALSE);
-	
-	for(i = 0; i < extra_size; i++)
+    for(i = 0; i < extra_size; i++)
+    {
+	if((w = lookup_widget(prefs_window, extras[i])))
 	{
-	    if((w = lookup_widget(prefs_window, extras[i])))
+	    switch(i)
 	    {
-		gtk_widget_set_sensitive(w, TRUE);
-		switch(i)
-		{
-		    case 0:
-			button_active = tmpcfg->song_list_show.artist;
-			break; 
-		    case 1:
-			button_active = tmpcfg->song_list_show.album;
-			break;
-		    case 2:
-			button_active = tmpcfg->song_list_show.genre;
-			break;
-		    case 3:
-			button_active = tmpcfg->song_list_show.track;
-			break;
-		    default:
-			break;
-		}
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-			button_active);
+	    case 0:
+		button_active = tmpcfg->song_list_show.artist;
+		break; 
+	    case 1:
+		button_active = tmpcfg->song_list_show.album;
+		break;
+	    case 2:
+		button_active = tmpcfg->song_list_show.title;
+		break;
+	    case 3:
+		button_active = tmpcfg->song_list_show.genre;
+		break;
+	    case 4:
+		button_active = tmpcfg->song_list_show.composer;
+		break;
+	    case 5:
+		button_active = tmpcfg->song_list_show.track;
+		break;
+	    default:
+		break;
 	    }
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 button_active);
 	}
     }
 }
@@ -397,15 +378,21 @@ void prefs_window_set_write_extended_info(gboolean active)
 {
   tmpcfg->write_extended_info = active;
 }
+
+void 
+prefs_window_set_song_list_artist(gboolean val)
+{
+    tmpcfg->song_list_show.artist = val;
+}
 void 
 prefs_window_set_song_list_album(gboolean val)
 {
     tmpcfg->song_list_show.album = val;
 }
 void 
-prefs_window_set_song_list_track(gboolean val) 
+prefs_window_set_song_list_title(gboolean val) 
 {
-    tmpcfg->song_list_show.track = val;
+    tmpcfg->song_list_show.title = val;
 }
 void 
 prefs_window_set_song_list_genre(gboolean val)
@@ -413,9 +400,14 @@ prefs_window_set_song_list_genre(gboolean val)
     tmpcfg->song_list_show.genre = val;
 }
 void 
-prefs_window_set_song_list_artist(gboolean val)
+prefs_window_set_song_list_composer(gboolean val) 
 {
-    tmpcfg->song_list_show.artist = val;
+    tmpcfg->song_list_show.composer = val;
+}
+void 
+prefs_window_set_song_list_track(gboolean val) 
+{
+    tmpcfg->song_list_show.track = val;
 }
 
 void 

@@ -293,8 +293,7 @@ on_prefs_ok_clicked                    (GtkButton       *button,
                                         gpointer         user_data)
 {
     prefs_window_save();
-    write_prefs();
-    sm_show_preferred_columns();
+/*    write_prefs();*/
 }
 
 
@@ -315,13 +314,6 @@ on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
 }
 
 void
-on_cfg_song_list_all_toggled           (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_song_list_all(gtk_toggle_button_get_active(togglebutton));
-}
-
-void
 on_cfg_song_list_artist_toggled        (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
@@ -336,10 +328,24 @@ on_cfg_song_list_album_toggled         (GtkToggleButton *togglebutton,
 }
 
 void
+on_cfg_song_list_title_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_song_list_title(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
 on_cfg_song_list_genre_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     prefs_window_set_song_list_genre(gtk_toggle_button_get_active(togglebutton));
+}
+
+void
+on_cfg_song_list_composer_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_song_list_composer(gtk_toggle_button_get_active(togglebutton));
 }
 
 void
@@ -867,4 +873,3 @@ on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
     prefs_window_set_update_existing(
 	gtk_toggle_button_get_active(togglebutton));
 }
-
