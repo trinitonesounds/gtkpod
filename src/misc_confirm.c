@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 23:25:32 jcs>
+/* Time-stamp: <2005-01-08 01:51:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -147,7 +147,7 @@ void delete_populate_settings (Playlist *pl, GList *selected_trackids,
 void delete_track_ok (gpointer user_data1, gpointer user_data2)
 {
     Playlist *pl = user_data1;
-    GList *selected_trackids = user_data2;
+    GList *selected_tracks = user_data2;
     gint n;
     gchar *buf;
     GList *l;
@@ -175,7 +175,7 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
     }
 
     for (l = selected_trackids; l; l = l->next)
-	remove_trackid_from_playlist (pl, (guint32)l->data);
+	remove_track_from_playlist (pl, l->data);
 
     gtkpod_statusbar_message (buf);
     gtkpod_tracks_statusbar_update ();
@@ -189,9 +189,9 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
 /* @user_data1 the selected playlist, @user_data2 are the selected tracks */
 static void delete_track_cancel (gpointer user_data1, gpointer user_data2)
 {
-    GList *selected_trackids = user_data2;
+    GList *selected_tracks = user_data2;
 
-    g_list_free (selected_trackids);
+    g_list_free (selected_tracks);
 }
 
 
@@ -200,7 +200,7 @@ static void delete_track_cancel (gpointer user_data1, gpointer user_data2)
 void delete_track_head (gboolean full_delete)
 {
     Playlist *pl;
-    GList *selected_trackids;
+    GList *selected_tracks;
     GString *str;
     gchar *label, *title;
     gboolean confirm_again;
@@ -213,13 +213,13 @@ void delete_track_head (gboolean full_delete)
 	gtkpod_statusbar_message (_("No playlist selected."));
 	return;
     }
-    selected_trackids = tm_get_selected_trackids();
-    if (selected_trackids == NULL)
+    selected_tracks = tm_get_selected_tracks();
+    if (selected_tracks == NULL)
     {  /* no tracks selected */
 	gtkpod_statusbar_message (_("No tracks selected."));
 	return;
     }
-    delete_populate_settings (pl, selected_trackids,
+    delete_populate_settings (pl, selected_tracks,
 			      &label, &title,
 			      &confirm_again, &confirm_again_handler,
 			      &str);
@@ -238,7 +238,7 @@ void delete_track_head (gboolean full_delete)
 	 NULL,                 /* don't show "Apply" button */
 	 delete_track_cancel,  /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
-	 selected_trackids);   /* gpointer user_data2,*/
+	 selected_tracks);     /* gpointer user_data2,*/
 
     g_free (label);
     g_string_free (str, TRUE);
@@ -268,7 +268,7 @@ gtkpod_main_window_set_active(gboolean active)
 void delete_entry_head (gint inst, gboolean delete_full)
 {
     Playlist *pl;
-    GList *selected_trackids=NULL;
+    GList *selected_tracks=NULL;
     GString *str;
     gchar *label, *title;
     gboolean confirm_again;
@@ -304,9 +304,8 @@ void delete_entry_head (gint inst, gboolean delete_full)
     }
     for (gl=entry->members; gl; gl=gl->next)
     {
-	Track *s=(Track *)gl->data;
-	selected_trackids = g_list_append (selected_trackids,
-					  (gpointer)s->ipod_id);
+	Track *trac = gl->data;
+	selected_tracks = g_list_append (selected_tracks, track);
     }
 
     delete_populate_settings (pl, selected_trackids,
@@ -334,7 +333,7 @@ void delete_entry_head (gint inst, gboolean delete_full)
     {
     case GTK_RESPONSE_OK:
 	/* Delete the tracks */
-	delete_track_ok (pl, selected_trackids);
+	delete_track_ok (pl, selected_tracks);
 	/* Delete the entry */
 	st_remove_entry (entry, inst);
 	/* mark data as changed */

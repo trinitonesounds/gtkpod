@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-01-05 23:59:15 jcs>
+|  Time-stamp: <2005-01-08 01:51:59 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -330,6 +330,135 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 }
 
 
+/* ------------------------------------------------------------ *\
+|                                                                |
+|         functions to retrieve information from tracks          |
+|                                                                |
+\* ------------------------------------------------------------ */
+
+/* return the address of the UTF8 field @t_item. @t_item is one of
+ * (the applicable) T_* defined in track.h */
+gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item)
+{
+    gchar **result = NULL;
+
+    g_return_val_if_fail (track, NULL);
+
+    switch (t_item)
+    {
+    case T_ALBUM:
+	result = &track->album;
+	break;
+    case T_ARTIST:
+	result = &track->artist;
+	break;
+    case T_TITLE:
+	result = &track->title;
+	break;
+    case T_GENRE:
+	result = &track->genre;
+	break;
+    case T_COMMENT:
+	result = &track->comment;
+	break;
+    case T_COMPOSER:
+	result = &track->composer;
+	break;
+    case T_FDESC:
+	result = &track->fdesc;
+	break;
+    case T_GROUPING:
+	result = &track->grouping;
+	break;
+    case T_IPOD_PATH:
+	result = &track->ipod_path;
+	break;
+    case T_YEAR:
+	result = &track->year_str;
+	break;
+    default:
+	g_return_val_if_reached (NULL);
+    }
+    return result;
+}
+
+/* return the UTF8 item @t_item. @t_item is one of
+   (the applicable) T_* defined in track.h */
+gchar *track_get_item_utf8 (Track *track, T_item t_item)
+{
+    gchar **ptr;
+
+    g_return_val_if_fail (track, NULL);
+
+    ptr = track_get_item_pointer_utf8 (track, t_item);
+
+    if (ptr)     return *ptr;
+    else         return NULL;
+}
+
+
+/* return a pointer to the specified timestamp. @t_item is one of (the
+   applicable) T_* defined in track.h.  If the parameters are illegal,
+   "0" is returned. */
+guint32 *track_get_timestamp_ptr (Track *track, T_item t_item)
+{
+    g_return_val_if_fail (track, NULL);
+
+    switch (t_item)
+    {
+    case T_TIME_PLAYED:
+	return &track->time_played;
+    case T_TIME_MODIFIED:
+	return &track->time_modified;
+    case T_TIME_CREATED:
+	return &track->time_created;
+    default:
+	g_return_val_if_reached (0);
+    }
+}
+
+
+/* return the specified timestamp. @t_item is one of
+   (the * applicable) T_* defined in track.h. If the parameters are
+   illegal, "0" is returned. */
+guint32 track_get_timestamp (Track *track, T_item t_item)
+{
+    g_return_val_if_fail (track, 0);
+
+    guint32 *ptr = track_get_timestamp_ptr (track, t_item);
+    if (ptr)  return *ptr;
+    else      return 0;
+}
+
+
+/* Make sure all strings are initialised -- that way we don't
+   have to worry about it when we are handling the strings.
+/* exception: md5_hash, hostname and charset: these may be NULL. */
+void track_validate_entries (Track *track)
+{
+    ExtraTrackData *etr;
+
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    if (!track->album)           track->album = g_strdup ("");
+    if (!track->artist)          track->artist = g_strdup ("");
+    if (!track->title)           track->title = g_strdup ("");
+    if (!track->genre)           track->genre = g_strdup ("");
+    if (!track->comment)         track->comment = g_strdup ("");
+    if (!track->composer)        track->composer = g_strdup ("");
+    if (!track->fdesc)           track->fdesc = g_strdup ("");
+    if (!track->grouping)        track->grouping = g_strdup ("");
+    if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
+    if (!track->pc_path_locale)  track->pc_path_locale = g_strdup ("");
+    if (!track->ipod_path)       track->ipod_path = g_strdup ("");
+    /* Make sure year_str is identical to year */
+    g_free (etr->year_str);
+    etr->year_str = g_strdup_printf ("%d", track->year);
+}
+
+
 /*------------------------------------------------------------------*\
  *                                                                  *
  *             DND to playlists                                     *
@@ -477,31 +606,31 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 
 /* Make a list of all selected tracks and call @do_func with that list
    as argument */
-void do_selected_tracks (void (*do_func)(GList *trackids))
+void gp_do_selected_tracks (void (*do_func)(GList *tracks))
 {
-    GList *selected_trackids = NULL;
+    GList *selected_tracks = NULL;
 
-    if (!do_func) return;
+    g_return_if_fail (do_func);
 
     /* I'm using ids instead of "Track *" -pointer because it would be
      * possible that a track gets removed during the process */
-    selected_trackids = tm_get_selected_trackids();
-    do_func (selected_trackids);
-    g_list_free (selected_trackids);
+    selected_tracks = tm_get_selected_tracks ();
+    do_func (selected_tracks);
+    g_list_free (selected_tracks);
 }
 
 
 /* Make a list of all tracks in the currently selected entry of sort
    tab @inst and call @do_func with that list as argument */
-void do_selected_entry (void (*do_func)(GList *trackids), gint inst)
+void gp_do_selected_entry (void (*do_func)(GList *tracks), gint inst)
 {
-    GList *selected_trackids = NULL;
+    GList *selected_tracks = NULL;
     TabEntry *entry;
     GList *gl;
 
-    if (!do_func) return;
+    g_return_if_fail (do_func);
 
-    if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
+    g_return_if_fail ((inst >= 0) && (inst <= prefs_get_sort_tab_num));
 
     entry = st_get_selected_entry (inst);
     if (entry == NULL)
@@ -511,25 +640,24 @@ void do_selected_entry (void (*do_func)(GList *trackids), gint inst)
     }
     for (gl=entry->members; gl; gl=gl->next)
     { /* make a list with all trackids in this entry */
-	Track *track = (Track *)gl->data;
-	if (track)
-	    selected_trackids = g_list_append (selected_trackids,
-					      (gpointer)track->ipod_id);
+	Track *track = gl->data;
+	g_return_if_fail (track);
+	selected_trackids = g_list_append (selected_tracks, track);
     }
-    do_func (selected_trackids);
-    g_list_free (selected_trackids);
+    do_func (selected_tracks);
+    g_list_free (selected_tracks);
 }
 
 
 /* Make a list of the tracks in the current playlist and call @do_func
    with that list as argument */
-void do_selected_playlist (void (*do_func)(GList *trackids))
+void gp_do_selected_playlist (void (*do_func)(GList *tracks))
 {
-    GList *selected_trackids = NULL;
+    GList *selected_tracks = NULL;
     Playlist *pl;
     GList *gl;
 
-    if (!do_func) return;
+    g_return_if_fail (do_func);
 
     pl = pm_get_selected_playlist();
     if (!pl)
@@ -539,13 +667,12 @@ void do_selected_playlist (void (*do_func)(GList *trackids))
     }
     for (gl=pl->members; gl; gl=gl->next)
     { /* make a list with all trackids in this entry */
-	Track *track = (Track *)gl->data;
-	if (track)
-	    selected_trackids = g_list_append (selected_trackids,
-					      (gpointer)track->ipod_id);
+	Track *track = gl->data;
+	g_return_if_fail (track);
+	selected_tracks = g_list_append (selected_tracks, track);
     }
-    do_func (selected_trackids);
-    g_list_free (selected_trackids);
+    do_func (selected_tracks);
+    g_list_free (selected_tracks);
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-21 20:52:26 jcs>
+/* Time-stamp: <2005-01-08 02:06:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -42,10 +42,12 @@
 #include "charset.h"
 #include "clientserver.h"
 #include "confirmation.h"
+#include "info.h"
 #include "file.h"
-#include "itunesdb.h"
+#include "itdb.h"
 #include "md5.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "mp3file.h"
 #include "mp4file.h"
 #include "prefs.h"
@@ -104,8 +106,9 @@ gint determine_file_type(gchar *path)
 /* @addtrackfunc: if != NULL this will be called instead of
    "add_track_to_playlist () -- used for dropping tracks at a specific
    position in the track view */
-gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
-				   AddTrackFunc addtrackfunc, gpointer data)
+gboolean
+add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
+			  AddTrackFunc addtrackfunc, gpointer data)
 {
     gchar *bufp, *plfile_utf8;
     gchar *dirname = NULL, *plname = NULL;
@@ -115,11 +118,13 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
     FILE *fp;
     gboolean error;
 
-    if (!plfile)  return TRUE;
+    g_return_val_if_fail (plfile, FALSE);
+    g_return_val_if_fail (itdb, FALSE);
 
     if (g_file_test (plfile, G_FILE_TEST_IS_DIR))
     {
-	/* FIXME: Status */
+	gtkpod_warning (_("'%s' is a directory, not a playlist file.\n\n"),
+			plfile);
 	return FALSE;  /* definitely not! */
     }
 
@@ -133,37 +138,37 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
     {
 	*bufp = 0;          /* truncate playlist name */
 	type = determine_file_type(plfile);
-	switch (type) {
-	    case FILE_TYPE_ERROR:
- 	    case FILE_TYPE_MP3:
-	    case FILE_TYPE_M4A:
-	    case FILE_TYPE_M4P:
-	    case FILE_TYPE_M4B:
-	    case FILE_TYPE_WAV:
-	        /* FIXME: Status */
-		g_free(plname);
-		return FALSE;
-
-	    case FILE_TYPE_M3U:
-	    case FILE_TYPE_PLS:
-		break;
-	    
-	    case FILE_TYPE_UNKNOWN:
-		/* assume MISC (M3U like) style */
-		type = -2;
-		break;
+	switch (type)
+	{
+	case FILE_TYPE_ERROR:
+	case FILE_TYPE_MP3:
+	case FILE_TYPE_M4A:
+	case FILE_TYPE_M4P:
+	case FILE_TYPE_M4B:
+	case FILE_TYPE_WAV:
+	    gtkpod_warning (_("'%s' is a not a known playlist file.\n\n"),
+			      plfile);
+	    g_free(plname);
+	    return FALSE;
+	case FILE_TYPE_M3U:
+	case FILE_TYPE_PLS:
+	    break;
+	case FILE_TYPE_UNKNOWN:
+	    /* assume MISC (M3U like) style */
+	    type = FILE_TYPE_MISC;
+	    break;
 	}
     }
 
     /* attempt to open playlist file */
     if (!(fp = fopen (plfile, "r")))
     {
-	/* FIXME: Status */
+	gtkpod_warning (_("Cannot open '%s' for reading.\n\n"));
 	g_free (plname);
 	return FALSE;  /* definitely not! */
     }
     /* create playlist (if none is specified) */
-    if (!plitem)  plitem = add_new_playlist (plname, -1, FALSE);
+    if (!plitem)  plitem = gp_playlist_add_new (itdb, plname, FALSE, -1);
     C_FREE (plname);
 
     /* need dirname if playlist file contains relative paths */
@@ -183,7 +188,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	if((len>0) && (bufp[len-1] == 0x0a))  bufp[len-1] = 0;
 	switch (type)
 	{
-	case -2:
+	case FILE_TYPE_MISC:
 	    /* skip whitespace */
 	    while (isspace (*bufp)) ++bufp;
 	    /* assume comments start with ';' or '#' */
@@ -238,7 +243,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 
     /* I don't think it's too interesting to pop up the list of
        duplicates -- but we should reset the list. */
-    remove_duplicate (NULL, (void *)-1);
+    gp_duplicate_remove (NULL, (void *)-1);
     return !error;
 }
 
@@ -306,16 +311,6 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
  *      Fill in track struct with data from file                     *
  *                                                                  *
 \*------------------------------------------------------------------*/
-
-/* Used by set_entry_from_filename() and parse_filename() */
-static void set_entry (gchar **entry_utf8, gunichar2 **entry_utf16, gchar *str)
-{
-  C_FREE (*entry_utf8);
-  C_FREE (*entry_utf16);
-  *entry_utf8 = str;
-  *entry_utf16 = g_utf8_to_utf16 (*entry_utf8, -1, NULL, NULL, NULL);
-}
-
 
 /* parse the file with name @filename (UTF8) and fill extract the tags
  * to @trackas specified in @template. @track can be NULL if you just
@@ -421,29 +416,43 @@ static gboolean parse_filename_with_template (Track *track,
 		case 'a': /* artist */
 		    if (track &&
 			(!track->artist || prefs_get_parsetags_overwrite ()))
-			set_entry (&track->artist, &track->artist_utf16, itm);
+		    {
+			g_free (track->artist);
+			track->artist = itm;
+		    }
 		    break;
 		case 'A': /* album */
 		    if (track &&
 			(!track->album || prefs_get_parsetags_overwrite ()))
-			set_entry (&track->album, &track->album_utf16, itm);
+		    {
+			g_free (track->album);
+			track->album = itm;
+		    }
 		    break;
 		case 'c': /* composer */
 		    if (track &&
 			(!track->composer || prefs_get_parsetags_overwrite ()))
-			set_entry (&track->composer, &track->composer_utf16,
-				   itm);
+		    {
+			g_free (track->composer);
+			track->composer = itm;
+		    }
 		    break;
 		case 't': /* title */
 		    if (track &&
 			(!track->title || prefs_get_parsetags_overwrite ()))
-			set_entry (&track->title, &track->title_utf16, itm);
+		    {
+			g_free (track->title);
+			track->title = itm;
+		    }
 		    break;
 		case 'g': /* genre */
 		case 'G': /* genre */
 		    if (track &&
 			(!track->genre || prefs_get_parsetags_overwrite ()))
-			set_entry (&track->genre, &track->genre_utf16, itm);
+		    {
+			g_free (track->genre);
+			track->genre = itm;
+		    }
 		    break;
 		case 'T': /* track */
 		    if (track &&
@@ -512,8 +521,13 @@ static gboolean parse_filename_with_template (Track *track,
    with the "," character. */
 static void parse_filename (Track *track)
 {
+    ExtraTrackData *etr;
     const gchar *template;
     gchar **templates, **tplp;
+
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
 
     template = prefs_get_parsetags_template ();
     if (!template) return;
@@ -521,11 +535,11 @@ static void parse_filename (Track *track)
     tplp = templates;
     while (*tplp)
     {
-	if (parse_filename_with_template (NULL, track->pc_path_utf8, *tplp))
+	if (parse_filename_with_template (NULL, etr->pc_path_utf8, *tplp))
 	    break;
 	++tplp;
     }
-    if (*tplp)  parse_filename_with_template (track, track->pc_path_utf8, *tplp);
+    if (*tplp)  parse_filename_with_template (track, etr->pc_path_utf8, *tplp);
     g_strfreev (templates);
 }
 
@@ -534,32 +548,36 @@ static void parse_filename (Track *track)
    should be user configurable. */
 static void set_entry_from_filename (Track *track, gint column)
 {
-    gchar *str;
+    ExtraTrackData *etr;
+
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
 
     if (prefs_get_autosettags (column) &&
-	track->pc_path_utf8 && strlen (track->pc_path_utf8))
+	etr->pc_path_utf8 && strlen (etr->pc_path_utf8))
     {
 	switch (column)
 	{
 	case TM_COLUMN_TITLE:
-	    str = g_path_get_basename (track->pc_path_utf8);
-	    set_entry (&track->title, &track->title_utf16, str);
+	    g_free (track->title);
+	    track->title = g_path_get_basename (etr->pc_path_utf8);
 	    break;
 	case TM_COLUMN_ALBUM:
-	    str = g_path_get_basename (track->pc_path_utf8);
-	    set_entry (&track->album, &track->album_utf16, str);
+	    g_free (track->album);
+	    track->album = g_path_get_basename (etr->pc_path_utf8);
 	    break;
 	case TM_COLUMN_ARTIST:
-	    str = g_path_get_basename (track->pc_path_utf8);
-	    set_entry (&track->artist, &track->artist_utf16, str);
+	    g_free (track->artist);
+	    track->artist = g_path_get_basename (etr->pc_path_utf8);
 	    break;
 	case TM_COLUMN_GENRE:
-	    str = g_path_get_basename (track->pc_path_utf8);
-	    set_entry (&track->genre, &track->genre_utf16, str);
+	    g_free (track->genre);
+	    track->genre = g_path_get_basename (etr->pc_path_utf8);
 	    break;
 	case TM_COLUMN_COMPOSER:
-	    str = g_path_get_basename (track->pc_path_utf8);
-	    set_entry (&track->composer, &track->composer_utf16, str);
+	    g_free (track->composer);
+	    track->composer = g_path_get_basename (etr->pc_path_utf8);
 	    break;
 	}
     }
@@ -588,29 +606,38 @@ static void set_unset_entries_from_filename (Track *track)
 /* update the track->charset info with the currently used charset */
 void update_charset_info (Track *track)
 {
-    if (track)
+    const gchar *charset = prefs_get_charset ();
+    ExtraTrackData *etr;
+
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    C_FREE (etr->charset);
+    if (!charset || !strlen (charset))
+    {    /* use standard locale charset */
+	g_get_charset (&charset);
+    }
+    /* only set charset if it's not GTKPOD_JAPAN_AUTOMATIC */
+    if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) != 0))
     {
-	const gchar *charset = prefs_get_charset ();
-	C_FREE (track->charset);
-	if (!charset || !strlen (charset))
-	{    /* use standard locale charset */
-	    g_get_charset (&charset);
-	}
-	/* only set charset if it's not GTKPOD_JAPAN_AUTOMATIC */
-	if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) != 0))
-	{
-	    track->charset = g_strdup (charset);
-	}
+	etr->charset = g_strdup (charset);
     }
 }
 
 
-/* Copy "new" info read from file to an old Track structure. If @to is
-   NULL, nothing will be done.
+/* Copy "new" info read from file to an old Track structure.
    Return value: a pointer to the track the data was copied to. */
 Track *copy_new_info (Track *from, Track *to)
 {
-    if (!from || !to) return NULL;
+    ExtraTrackData *efrom, *eto;
+
+    g_return_val_if_fail (from, NULL);
+    g_return_val_if_fail (to, NULL);
+    efrom = from->userdata;
+    eto = to->userdata;
+    g_return_val_if_fail (efrom, NULL);
+    g_return_val_if_fail (eto, NULL);
 
     C_FREE (to->album);
     C_FREE (to->artist);
@@ -619,34 +646,20 @@ Track *copy_new_info (Track *from, Track *to)
     C_FREE (to->comment);
     C_FREE (to->composer);
     C_FREE (to->fdesc);
-    C_FREE (to->album_utf16);
-    C_FREE (to->artist_utf16);
-    C_FREE (to->title_utf16);
-    C_FREE (to->genre_utf16);
-    C_FREE (to->comment_utf16);
-    C_FREE (to->composer_utf16);
-    C_FREE (to->fdesc_utf16);
-    C_FREE (to->pc_path_utf8);
+    C_FREE (eto->pc_path_utf8);
     C_FREE (to->pc_path_locale);
-    C_FREE (to->charset);
+    C_FREE (eto->charset);
     /* copy strings */
     to->album = g_strdup (from->album);
-    to->album_utf16 = utf16_strdup (from->album_utf16);
     to->artist = g_strdup (from->artist);
-    to->artist_utf16 = utf16_strdup (from->artist_utf16);
     to->title = g_strdup (from->title);
-    to->title_utf16 = utf16_strdup (from->title_utf16);
     to->genre = g_strdup (from->genre);
-    to->genre_utf16 = utf16_strdup (from->genre_utf16);
     to->comment = g_strdup (from->comment);
-    to->comment_utf16 = utf16_strdup (from->comment_utf16);
     to->composer = g_strdup (from->composer);
-    to->composer_utf16 = utf16_strdup (from->composer_utf16);
     to->fdesc = g_strdup (from->fdesc);
-    to->fdesc_utf16 = utf16_strdup (from->fdesc_utf16);
-    to->pc_path_utf8 = g_strdup (from->pc_path_utf8);
+    eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
     to->pc_path_locale = g_strdup (from->pc_path_locale);
-    to->charset = g_strdup (from->charset);
+    eto->charset = g_strdup (efrom->charset);
     to->size = from->size;
     to->tracklen = from->tracklen;
     to->cd_nr = from->cd_nr;
@@ -656,17 +669,17 @@ Track *copy_new_info (Track *from, Track *to)
     to->bitrate = from->bitrate;
     to->samplerate = from->samplerate;
     to->soundcheck = from->soundcheck;
-    to->peak_signal = from->peak_signal;
-    to->radio_gain = from->radio_gain;
-    to->audiophile_gain = from->audiophile_gain;
-    to->peak_signal_set = from->peak_signal_set;
-    to->radio_gain_set = from->radio_gain_set;
-    to->audiophile_gain_set = from->audiophile_gain_set;
+    eto->peak_signal = efrom->peak_signal;
+    eto->radio_gain = efrom->radio_gain;
+    eto->audiophile_gain = efrom->audiophile_gain;
+    eto->peak_signal_set = efrom->peak_signal_set;
+    eto->radio_gain_set = efrom->radio_gain_set;
+    eto->audiophile_gain_set = efrom->audiophile_gain_set;
     to->time_created = from->time_created;
     to->time_modified = from->time_modified;
     to->year = from->year;
-    g_free (to->year_str);
-    to->year_str = g_strdup_printf ("%d", to->year);
+    g_free (eto->year_str);
+    eto->year_str = g_strdup_printf ("%d", to->year);
 
     return to;
 }
@@ -765,10 +778,10 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 
 
 /* Fills the supplied @orig_track with data from the file @name. If
- * @or_track is NULL, a new track struct is created The entries
+ * @or_track is NULL, a new track struct is created. The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists */
-/* turns NULL on error, a pointer to the Track otherwise */
+/* Returns NULL on error, a pointer to the Track otherwise */
 Track *get_track_info_from_file (gchar *name, Track *orig_track)
 {
     Track *track = NULL;
@@ -809,17 +822,21 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 
     if (nti)
     {
+	ExtraTrackData *enti=nti->userdata;
 	struct stat si;
 	FILE *file;
-	if (nti->charset == NULL)
+
+	g_return_val_if_fail (enti, NULL);
+
+	if (enti->charset == NULL)
 	{   /* Fill in currently used charset. Try if auto_charset is
 	     * set first. If not, use the currently set charset. */
-	    nti->charset = charset_get_auto ();
-	    if (nti->charset == NULL)
+	    enti->charset = charset_get_auto ();
+	    if (enti->charset == NULL)
 		update_charset_info (nti);
 	}
 	/* set path file information */
-	nti->pc_path_utf8 = charset_to_utf8 (name);
+	enti->pc_path_utf8 = charset_to_utf8 (name);
 	nti->pc_path_locale = g_strdup (name);
 	/* set length of file */
 	file = fopen (name, "r");
@@ -834,9 +851,9 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    if (nti->tracklen)
 		nti->bitrate = nti->size * 8 / nti->tracklen;
 	}
-	if (nti->radio_gain_set) 
+	if (enti->radio_gain_set) 
 	    nti->soundcheck = 
-		replaygain_to_soundcheck (nti->radio_gain);
+		replaygain_to_soundcheck (enti->radio_gain);
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);
 	/* Make sure all strings are initialized -- that way we don't
@@ -845,18 +862,18 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	   strings if that hasn't already been done. */
 	/* exception: md5_hash, charset and hostname: these may be NULL. */
 	/* Set modification date to *now* */
-	nti->time_modified = itunesdb_time_get_mac_time ();
+	nti->time_modified = itdb_time_get_mac_time ();
 	/* Set creation date to modification date of file */
 	if (stat (name, &si) == 0)
-	    nti->time_created = itunesdb_time_host_to_mac (si.st_mtime);
+	    nti->time_created = itdb_time_host_to_mac (si.st_mtime);
 
-	validate_entries (nti);
+	track_validate_entries (nti);
 
 	if (orig_track)
 	{ /* we need to copy all information over to the original
 	   * track */
 	    track = copy_new_info (nti, orig_track);
-	    free_track (nti);
+	    itdb_track_free (nti);
 	    nti = NULL;
 	}
 	else
@@ -883,26 +900,26 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 
 
 /* reads info from file and updates the ID3 tags of
-   @selected_trackids. */
-void update_trackids (GList *selected_trackids)
+   @selected_tracks. */
+void update_tracks (GList *selected_tracks)
 {
-    GList *gl_id;
+    GList *gl;
 
-    if (g_list_length (selected_trackids) == 0)
+    if (selected_tracks == NULL)
     {
 	gtkpod_statusbar_message(_("Nothing to update"));
 	return;
     }
 
     block_widgets ();
-    for (gl_id = selected_trackids; gl_id; gl_id = gl_id->next)
+    for (gl=selected_tracks; gl; gl=gl->next)
     {
-	guint32 id = (guint32)gl_id->data;
-	Track *track = get_track_by_id (id);
+	Track *track = gl->data;
+	g_return_if_fail (track);
 	gchar *buf = g_strdup_printf (_("Updating %s"), get_track_info (track));
 	gtkpod_statusbar_message (buf);
 	g_free (buf);
-	update_track_from_file (track);
+	update_track_from_file (track->itdb, track);
     }
     release_widgets ();
     /* display log of non-updated tracks */
@@ -912,7 +929,7 @@ void update_trackids (GList *selected_trackids)
     /* display log of problems with mserv data */
     display_mserv_problems (NULL, NULL);
     /* display log of detected duplicates */
-    remove_duplicate (NULL, NULL);
+    gp_duplicate_remove (NULL, NULL);
     gtkpod_statusbar_message(_("Updated selected tracks with info from file."));
 }
 
@@ -925,22 +942,21 @@ void update_trackids (GList *selected_trackids)
 
 
 /* reads info from file and updates the ID3 tags of
-   @selected_trackids. */
-void mserv_from_file_trackids (GList *selected_trackids)
+   @selected_tracks. */
+void mserv_from_file_tracks (GList *selected_tracks)
 {
-    GList *gl_id;
+    GList *gl;
 
-    if (g_list_length (selected_trackids) == 0)
+    if (selected_tracks == NULL)
     {
 	gtkpod_statusbar_message(_("Nothing to update"));
 	return;
     }
 
     block_widgets ();
-    for (gl_id = selected_trackids; gl_id; gl_id = gl_id->next)
+    for (gl = selected_tracks; gl; gl=gl->next)
     {
-	guint32 id = (guint32)gl_id->data;
-	Track *track = get_track_by_id (id);
+	Track *track = gl->data;
 	gchar *buf = g_strdup_printf (_("Retrieving mserv data %s"), get_track_info (track));
 	gtkpod_statusbar_message (buf);
 	g_free (buf);
@@ -966,18 +982,22 @@ void mserv_from_file_trackids (GList *selected_trackids)
  * again if it already exists */
 static void sync_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 {
-    if (!track) return;
-    if (!plitem) plitem = get_playlist_by_nr (0); /* NULL/0: MPL */
+    iTunesDB *itdb;
+
+    g_return_if_fail (plitem);
+    g_return_if_fail (track);
+    itdb = plitem->itdb;
+    g_return_if_fail (itdb);
 
     /* only add if @track isn't already a member of the current
        playlist */
-    if (!g_list_find (plitem->members, track))
-	add_track_to_playlist (plitem, track, TRUE);
+    if (!itdb_playlist_contains_track (plitem, track))
+	gp_playlist_add_track (plitem, track, TRUE);
 }
 
 
 /* Synchronize the directory @key (gchar *dir). Called by
- * sync_trackids().
+ * sync_tracks().
  * @user_data: selected playlist */
 static void sync_dir (gpointer key,
 		      gpointer value,
@@ -1028,7 +1048,7 @@ static void sync_dir (gpointer key,
 
 
 /* ok handler for sync_remove */
-/* @user_data1 is NULL, @user_data2 are the selected trackids */
+/* @user_data1 is NULL, @user_data2 are the selected tracks */
 static void sync_remove_ok (gpointer user_data1, gpointer user_data2)
 {
     if (prefs_get_sync_remove ())
@@ -1037,12 +1057,12 @@ static void sync_remove_ok (gpointer user_data1, gpointer user_data2)
 
 
 /* cancel handler for sync_remove */
-/* @user_data1 is NULL, @user_data2 are the selected trackids */
+/* @user_data1 is NULL, @user_data2 are the selected tracks */
 static void sync_remove_cancel (gpointer user_data1, gpointer user_data2)
 {
-    GList *id_list = user_data2;
+    GList *track_list = user_data2;
 
-    g_list_free (id_list);
+    g_list_free (track_list);
 
     gtkpod_statusbar_message (_("Syncing completed. No files deleted."));
 }
@@ -1055,9 +1075,12 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     Playlist *playlist = (Playlist *)user_data2;
     /* state of "update existing" */
     gboolean update;
+    iTunesDB *itdb;
 
-    /* assertion */
-    if (!hash) return;
+    g_return_if_fail (hash);
+    g_return_if_fail (playlist);
+    itdb = playlist->itdb;
+    g_return_if_fail (itdb);
 
     /* set "update existing" to TRUE */
     update = prefs_get_update_existing();
@@ -1074,45 +1097,49 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     /* display log updated tracks */
     display_updated (NULL, NULL);
     /* display log of detected duplicates */
-    remove_duplicate (NULL, NULL);
+    gp_duplicate_remove (NULL, NULL);
 
     if (prefs_get_sync_remove ())
     {   /* remove tracks that are no longer present in the dirs */
-	GList *id_list = NULL;
-	GString *str;
-	gchar *label, *title;
-	Track *s;
-	GList *l;
+	GList *track_list = NULL;
+	GList *gl;
 
 	/* add all tracks that are no longer present in the dirs */
-	for (s=get_next_track (0); s; s=get_next_track (1))
+	for (gl=itdb->tracks; gl; gl=gl->next)
 	{
-	    if (s->pc_path_locale && *s->pc_path_locale)
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+	    if (tr->pc_path_locale && *tr->pc_path_locale)
 	    {
-		gchar *dirname = g_path_get_dirname (s->pc_path_locale);
+		gchar *dirname = g_path_get_dirname (tr->pc_path_locale);
 		if (g_hash_table_lookup (hash, dirname) &&
-		    !g_file_test (s->pc_path_locale, G_FILE_TEST_EXISTS))
+		    !g_file_test (tr->pc_path_locale, G_FILE_TEST_EXISTS))
 		{
-		    id_list = g_list_append (id_list, (gpointer)s->ipod_id);
+		    track_list = g_list_append (track_list, tr);
 		}
 		g_free (dirname);
 	    }
 	}
-	if (g_list_length (id_list) > 0)
+	if (track_list != NULL)
 	{
+	    gchar *label, *title;
+	    GString *str;
 	    /* populate "title" and "label" */
-	    delete_populate_settings (NULL, id_list,
+	    delete_populate_settings (NULL, track_list,
 				      &label, &title,
 				      NULL, NULL, NULL);
 	    /* create a list of tracks */
 	    str = g_string_sized_new (2000);
-	    for(l = id_list; l; l=l->next)
+	    for(gl=track_list; gl; gl=gl->next)
 	    {
-		s = get_track_by_id ((guint32)l->data);
-		if (s)
-		    g_string_append_printf (str, "%s (%s-%s)\n",
-					    s->pc_path_utf8,
-					    s->artist, s->title);
+		ExtraTrackData *etr;
+		Track *tr = gl->data;
+		g_return_if_fail (tr);
+		etr = tr->userdata;
+		g_return_if_fail (etr);
+		g_string_append_printf (str, "%s (%s-%s)\n",
+					etr->pc_path_utf8,
+					tr->artist, tr->title);
 	    }
 	    /* open window */
 	    gtkpod_confirmation
@@ -1131,12 +1158,12 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		 NULL,                 /* don't show "Apply" button */
 		 sync_remove_cancel,   /* cancel_handler,*/
 		 NULL,                 /* gpointer user_data1,*/
-		 id_list);             /* gpointer user_data2,*/
+		 track_list);          /* gpointer user_data2,*/
 
 	    g_free (label);
 	    g_string_free (str, TRUE);
 	}
-	else sync_remove_cancel (hash, id_list);
+	else sync_remove_cancel (hash, track_list);
     }
     else
     {
@@ -1157,7 +1184,7 @@ static void sync_dir_cancel (gpointer user_data1, gpointer user_data2)
 
 
 /* Append @key (gchar *dir) to GString *user_data. Called by
- * sync_trackids(). Charset to use is @value. If @value is not set, use
+ * sync_tracks(). Charset to use is @value. If @value is not set, use
  * the charset specified in the preferences */
 static void sync_add_dir_to_string  (gpointer key,
 				     gpointer value,
@@ -1182,13 +1209,13 @@ static void sync_add_dir_to_string  (gpointer key,
 
 /* Sync all directories referred to by the pc_path_locale entries in
    the selected tracks */
-void sync_trackids (GList *selected_trackids)
+void sync_tracks (GList *selected_tracks)
 {
     GHashTable *hash;
-    GList *gl_id;
+    GList *gl;
     guint32 dirnum = 0;
 
-    if (g_list_length (selected_trackids) == 0)
+    if (selected_tracks == NULL)
     {
 	gtkpod_statusbar_message (_("No tracks in selection"));
 	return;
@@ -1202,10 +1229,14 @@ void sync_trackids (GList *selected_trackids)
     /* Get the dirs of all tracks selected and enter them into the hash
        table if the dir exists. Using a hash table automatically
        removes duplicates */
-    for (gl_id = selected_trackids; gl_id; gl_id = gl_id->next)
+    for (gl = selected_tracks; gl; gl=gl->next)
     {
-	guint32 id = (guint32)gl_id->data;
-	Track *track = get_track_by_id (id);
+	ExtraTrackData *etr;
+	Track *track = gl->data;
+	g_return_if_fail (track);
+	etr = track->userdata;
+	g_return_if_fail (etr);
+
 	if (track && track->pc_path_locale && *track->pc_path_locale)
 	{
 	    gchar *dirname = g_path_get_dirname (track->pc_path_locale);
@@ -1213,9 +1244,9 @@ void sync_trackids (GList *selected_trackids)
 	    ++dirnum;
 	    if (g_file_test (dirname, G_FILE_TEST_IS_DIR))
 	    {
-		if (track->charset && *track->charset)
+		if (etr->charset && *etr->charset)
 		{   /* charset set -- just insert the entry */
-		    gchar *charset = g_strdup (track->charset);
+		    gchar *charset = g_strdup (etr->charset);
 		    g_hash_table_insert (hash, dirname, charset);
 		}
 		else
@@ -1490,23 +1521,27 @@ void display_mserv_problems (Track *track, gchar *txt)
    a list of those can be displayed by calling "remove_duplicate
    (NULL, NULL)", that list can be deleted by calling
    "remove_duplicate (NULL, (void *)-1)"*/
-void update_track_from_file (Track *track)
+void update_track_from_file (iTunesDB *itdb, Track *track)
 {
+    ExtraTrackData *etr;
     Track *oldtrack;
     gchar *prefs_charset = NULL;
     gchar *trackpath = NULL;
     gint32 oldsize = 0;
     gboolean charset_set;
 
-    if (!track) return;
+    g_return_if_fail (itdb);
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
 
     /* remember size of track on iPod */
     if (track->transferred) oldsize = track->size;
     else                    oldsize = 0;
 
     /* remember if charset was set */
-    if (track->charset)  charset_set = TRUE;
-    else                 charset_set = FALSE;
+    if (etr->charset)  charset_set = TRUE;
+    else               charset_set = FALSE;
 
     if (!prefs_get_update_charset () && charset_set)
     {   /* we should use the initial charset for the update */
@@ -1515,7 +1550,7 @@ void update_track_from_file (Track *track)
 	    prefs_charset = g_strdup (prefs_get_charset ());
 	}
 	/* use the charset used when first importing the track */
-	prefs_set_charset (track->charset);
+	prefs_set_charset (etr->charset);
     }
 
     if (track->pc_path_locale)
@@ -1533,35 +1568,36 @@ void update_track_from_file (Track *track)
     { /* update successfull */
 	/* remove track from md5 hash and reinsert it
 	   (hash value may have changed!) */
-	gchar *oldhash = track->md5_hash;
-	md5_track_removed (track);
-	track->md5_hash = NULL;  /* need to remove the old value manually! */
-	oldtrack = md5_track_exists_insert (track);
+	gchar *oldhash = etr->md5_hash;
+	md5_track_remove (track);
+	/* need to remove the old value manually! */
+	etr->md5_hash = NULL;
+	oldtrack = md5_track_exists_insert (itdb, track);
 	if (oldtrack) { /* track exists, remove old track
 			  and register the new version */
-	    md5_track_removed (oldtrack);
-	    remove_duplicate (track, oldtrack);
-	    md5_track_exists_insert (track);
+	    md5_track_remove (oldtrack);
+	    gp_duplicate_remove (track, oldtrack);
+	    md5_track_exists_insert (itdb, track);
 	}
 	/* track may have to be copied to iPod on next export */
 	/* since it will copied under the same name as before, we
 	   don't have to manually remove it */
-	if (oldhash && track->md5_hash)
+	if (oldhash && etr->md5_hash)
 	{   /* do we really have to copy the track again? */
-	    if (strcmp (oldhash, track->md5_hash) != 0)
+	    if (strcmp (oldhash, etr->md5_hash) != 0)
 	    {
 		track->transferred = FALSE;
-		data_changed ();
+		data_changed (itdb);
 	    }
 	}
 	else
 	{   /* no hash available -- copy! */
 	    track->transferred = FALSE;
-	    data_changed ();
+	    data_changed (itdb);
 	}
 	/* set old size if track has to be transferred (for free space
 	 * calculation) */
-	if (!track->transferred) track->oldsize = oldsize;
+	if (!track->transferred) etr->oldsize = oldsize;
 	/* notify display model */
 	pm_track_changed (track);
 	display_updated (track, NULL);

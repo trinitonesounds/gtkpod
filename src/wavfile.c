@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 22:53:51 jcs>
+/* Time-stamp: <2005-01-08 01:15:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -159,7 +159,7 @@ Track *wav_get_file_info (gchar *filename)
 	fseek(wav_file->file, len, SEEK_CUR);
     }
 
-    track = itunesdb_new_track ();
+    track = gp_track_new ();
 
     track->bitrate = wav_file->samples_per_sec * wav_file->channels * wav_file->bits_per_sample;
     track->samplerate = wav_file->samples_per_sec;

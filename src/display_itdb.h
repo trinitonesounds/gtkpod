@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 00:07:54 jcs>
+/* Time-stamp: <2005-01-08 00:31:41 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -124,6 +124,8 @@ Track *gp_track_new (void);
 
 Playlist *gp_playlist_new (const gchar *title, gboolean spl);
 void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos);
+Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
+			       gboolean spl, gint32 pos);
 void gp_playlist_remove_track (Playlist *plitem, Track *track);
 void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display);
 

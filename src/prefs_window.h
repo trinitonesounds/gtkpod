@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-16 22:08:27 jcs>
+/* Time-stamp: <2005-01-07 21:25:27 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -31,7 +31,6 @@
 #include <gtk/gtk.h>
 #include "prefs.h"
 
-extern const gchar *path_button_names[];
 extern const gchar *path_entry_names[];
 
 void prefs_window_update_default_sizes (void);

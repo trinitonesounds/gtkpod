@@ -38,17 +38,19 @@
 
 
 /* values below -1 are private to individual functions */
-enum {
-	FILE_TYPE_ERROR = -1,
-	FILE_TYPE_UNKNOWN = 0,
-	FILE_TYPE_MP3,
-	FILE_TYPE_M4A,
-	FILE_TYPE_M4P,
-	FILE_TYPE_M4B,
-	FILE_TYPE_WAV,
-	FILE_TYPE_M3U,
-	FILE_TYPE_PLS
-};
+typedef enum
+{
+    FILE_TYPE_MISC = -2,
+    FILE_TYPE_ERROR = -1,
+    FILE_TYPE_UNKNOWN = 0,
+    FILE_TYPE_MP3,
+    FILE_TYPE_M4A,
+    FILE_TYPE_M4P,
+    FILE_TYPE_M4B,
+    FILE_TYPE_WAV,
+    FILE_TYPE_M3U,
+    FILE_TYPE_PLS
+} FileType;
 
 typedef enum
 {
@@ -66,13 +68,15 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 gboolean add_directory_by_name (gchar *name, Playlist *plitem,
 				gboolean descend,
 				AddTrackFunc addtrackfunc, gpointer data);
-gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
-				   AddTrackFunc addtrackfunc, gpointer data);
+gboolean add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
+				   Playlist *plitem,
+				   AddTrackFunc addtrackfunc,
+				   gpointer data);
 gboolean write_tags_to_file(Track *s);
-void update_track_from_file (Track *track);
-void update_trackids (GList *selected_trackids);
-void mserv_from_file_trackids (GList *selected_trackids);
-void sync_trackids (GList *selected_trackids);
+void update_track_from_file (iTunesDB *itdb, Track *track);
+void update_tracks (GList *selected_tracks);
+void mserv_from_file_tracks (GList *selected_tracks);
+void sync_tracks (GList *selected_tracks);
 void display_non_updated (Track *track, gchar *txt);
 void display_updated (Track *track, gchar *txt);
 void display_mserv_problems (Track *track, gchar *txt);

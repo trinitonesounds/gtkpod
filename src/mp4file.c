@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 22:07:02 jcs>
+/* Time-stamp: <2005-01-08 01:15:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -135,6 +135,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mp4.h"
+/* need to include config.h again because mp4.h seems to #undef
+   PACKAGE */
+#include <config.h>
 
 Track *mp4_get_file_info (gchar *mp4FileName)
 {
@@ -160,7 +163,7 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 	    guint32 avgBitRate = MP4GetTrackBitRate(mp4File, trackId);
 	    guint32 samplerate = MP4GetTrackTimeScale(mp4File, trackId);
 
-	    track = itunesdb_new_track ();
+	    track = gp_track_new ();
 
 	    track->tracklen = msDuration;
 	    track->bitrate = avgBitRate/1000;

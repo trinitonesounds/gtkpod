@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:26:07 JST jcs>
+/* Time-stamp: <2005-01-07 23:51:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -29,7 +29,7 @@
 #ifndef MP4FILEH_INCLUDED
 #define MP4FILEH_INCLUDED 1
 
-#include "track.h"
+#include "itdb.h"
 
 gboolean mp4_write_file_info (gchar *filename, Track *track);
 Track *mp4_get_file_info (gchar *name);

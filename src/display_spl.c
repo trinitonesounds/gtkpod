@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-14 00:43:55 jcs>
+/* Time-stamp: <2005-01-08 00:44:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,7 +35,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "itunesdb.h"
+#include "itdb.h"
 #include "misc.h"
 #include "display.h"
 #include "prefs.h"
@@ -509,7 +509,7 @@ static void splr_entry_changed (GtkEditable *editable,
     case spl_ET_FROMVALUE_DATE:
 	t = time_string_to_fromtime (str);
 	if (t != -1)
-	    splr->fromvalue = itunesdb_time_host_to_mac (t);
+	    splr->fromvalue = itdb_time_host_to_mac (t);
 	break;
     case spl_ET_FROMDATE:
 	splr->fromdate = atol (str);
@@ -520,7 +520,7 @@ static void splr_entry_changed (GtkEditable *editable,
     case spl_ET_TOVALUE_DATE:
 	t = time_string_to_totime (str);
 	if (t != -1)
-	    splr->tovalue = itunesdb_time_host_to_mac (t);
+	    splr->tovalue = itdb_time_host_to_mac (t);
 	break;
     case spl_ET_TODATE:
 	splr->todate = atol (str);
@@ -531,9 +531,6 @@ static void splr_entry_changed (GtkEditable *editable,
     case spl_ET_STRING:
 	g_free (splr->string);
 	splr->string = g_strdup (str);
-	g_free (splr->string_utf16);
-	splr->string_utf16 = g_utf8_to_utf16 (str, -1,
-					      NULL, NULL, NULL);
 	break;
     default:
 	/* must not happen */
@@ -602,7 +599,7 @@ static void spl_button_minus_clicked (GtkButton *button,
     row = g_list_index (spl->splrules.rules, splr);
     g_return_if_fail (row != -1);
 
-    splr_remove (spl, splr);
+    itdb_splr_remove (spl, splr);
     spl_update_rules_from_row (spl_window, row);
 }
 
@@ -625,7 +622,7 @@ static void spl_button_plus_clicked (GtkButton *button,
     row = g_list_index (spl->splrules.rules, splr);
     g_return_if_fail (row != -1);
 
-    splr_add_new (spl, row+1);
+    itdb_splr_add_new (spl, row+1);
     spl_update_rules_from_row (spl_window, row+1);
 }
 
@@ -636,11 +633,18 @@ static void spl_cancel (GtkButton *button, GtkWidget *spl_window)
 					   "spl_work");
     Playlist *spl_orig = g_object_get_data (G_OBJECT (spl_window),
 					    "spl_orig");
-    pl_free (spl_dup);
+    iTunesDB *itdb = g_object_get_data (G_OBJECT (spl_window),
+					"spl_itdb");
+
+    g_return_if_fail (spl_dup != NULL);
+    g_return_if_fail (spl_orig != NULL);
+    g_return_if_fail (itdb != NULL);
+
+    itdb_playlist_free (spl_dup);
     /* does playlist already exist in display? */
-    if (!playlist_exists (spl_orig))
+    if (!itdb_playlist_exists (itdb, spl_orig))
     {   /* Delete */
-	pl_free (spl_orig);
+	itdb_playlist_free (spl_orig);
     }
     gtk_widget_destroy (spl_window);
 
@@ -661,7 +665,7 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
     GtkWidget *w;
     Playlist *spl_dup;
     Playlist *spl_orig;
-    Playlist *mpl;
+    iTunesDB *itdb;
     gint32 pos;
 
     g_return_if_fail (spl_window != NULL);
@@ -669,25 +673,22 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
     spl_dup = g_object_get_data (G_OBJECT (spl_window), "spl_work");
     spl_orig = g_object_get_data (G_OBJECT (spl_window), "spl_orig");
     pos =  (gint32)g_object_get_data (G_OBJECT (spl_window), "spl_pos");
+    itdb = g_object_get_data (G_OBJECT (spl_window), "spl_itdb");
 
     g_return_if_fail (spl_dup != NULL);
     g_return_if_fail (spl_orig != NULL);
+    g_return_if_fail (itdb != NULL);
 
     /* Read out new playlist name */
     if ((w = lookup_widget (spl_window, "spl_name_entry")))
     {
 	g_free (spl_orig->name);
 	spl_orig->name = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
-	g_free (spl_orig->name_utf16);
-	spl_orig->name_utf16 = g_utf8_to_utf16 (spl_dup->name, -1,
-						NULL, NULL, NULL);
     }
 
-    pl_copy_spl_rules (spl_orig, spl_dup);
+    itdb_spl_copy_rules (spl_orig, spl_dup);
 
-    mpl = get_playlist_by_nr (0);  /* contains all tracks */
-
-    spl_update (spl_orig, mpl->members);
+    itdb_spl_update (itdb, spl_orig);
 
     if (pm_get_selected_playlist () == spl_orig)
     {   /* redisplay */
@@ -695,13 +696,13 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
 	pm_select_playlist (spl_orig);
     }
 
-    /* does playlist already exist in display? */
-    if (!playlist_exists (spl_orig))
+    /* does playlist already exist in itdb? */
+    if (!itdb_playlist_exists (itdb, spl_orig))
     {   /* Insert at specified position */
-	add_playlist (spl_orig, pos);
+	gp_playlist_add (itdb, spl_orig, pos);
     }
 
-    pl_free (spl_dup);
+    itdb_playlist_free (spl_dup);
     gtk_widget_destroy (spl_window);
 
     release_widgets ();
@@ -791,7 +792,7 @@ void set_timestring (gchar *str, guint64 value, enum entrytype et)
 
     g_return_if_fail (str != NULL);
 
-    t = itunesdb_time_mac_to_host (value);
+    t = itdb_time_mac_to_host (value);
     if (et == spl_ET_FROMVALUE_DATE)
     {
 	resstr = time_fromtime_to_string (t);
@@ -917,9 +918,11 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
     GtkWidget *hbox = NULL;
     SPLActionType at;
     GtkWidget *entry, *label, *combobox;
-    gint index, i, n;
+    gint index;
     GArray *pl_ids = NULL;
     Playlist *spl_orig;
+    iTunesDB *itdb;
+    GList *gl;
 
 
     g_return_val_if_fail (spl_window, NULL);
@@ -928,7 +931,10 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
     spl_orig =  g_object_get_data (G_OBJECT (spl_window), "spl_orig");
     g_return_val_if_fail (spl_orig, NULL);
 
-    at = itb_splr_get_action_type (splr);
+    itdb =  g_object_get_data (G_OBJECT (spl_window), "spl_itdb");
+    g_return_val_if_fail (itdb, NULL);
+
+    at = itdb_splr_get_action_type (splr);
     g_return_val_if_fail (at != splat_unknown, NULL);
     g_return_val_if_fail (at != splat_invalid, NULL);
 
@@ -1010,17 +1016,20 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	combobox = gtk_combo_box_new_text ();
 	gtk_widget_show (combobox);
 	gtk_box_pack_start (GTK_BOX (hbox), combobox, TRUE, TRUE, 0);
-	n = get_nr_of_playlists ();
-	pl_ids = g_array_sized_new (TRUE, TRUE, sizeof (guint64), n);
-	for (i=1; i<n; ++i)
+	pl_ids = g_array_sized_new (TRUE, TRUE, sizeof (guint64), 
+				    itdb_playlists_number (itdb));
+	gl=itdb->playlists;
+	while (gl && gl->next)
 	{
-	    Playlist *pl = get_playlist_by_nr (i);
+	    Playlist *pl = gl->next->data;
+	    g_return_val_if_fail (pl, NULL);
 	    if (pl != spl_orig)
 	    {
 		gtk_combo_box_append_text (GTK_COMBO_BOX (combobox),
 					   pl->name);
 		g_array_append_val (pl_ids, pl->id);
 	    }
+	    gl = gl->next;
 	}
 	g_object_set_data (G_OBJECT (combobox), "spl_rule", splr);
 	g_object_set_data_full (G_OBJECT (combobox), "spl_pl_ids",
@@ -1092,7 +1101,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 
     /* Combobox for action */
     /* ------------------- */
-    ft = itb_splr_get_field_type (splr);
+    ft = itdb_splr_get_field_type (splr);
     g_return_if_fail (ft != splft_unknown);
     snprintf (name, WNLEN, "spl_actioncombo%d", row);
     combobox = g_object_get_data (G_OBJECT (table), name);
@@ -1152,7 +1161,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 
     /* input fields (range, string, date...) */
     /* ------------------------------------- */
-    at = itb_splr_get_action_type (splr);
+    at = itdb_splr_get_action_type (splr);
     g_return_if_fail (at != splat_unknown);
     g_return_if_fail (at != splat_invalid);
     snprintf (name, WNLEN, "spl_actionhbox%d", row);
@@ -1281,24 +1290,26 @@ static void spl_update_rules_from_row (GtkWidget *spl_window, gint row)
 
 /* Edit a smart playlist. If it is a new smartlist, it will be
  * inserted at position @pos when 'OK' is pressed. */
-void spl_edit_all (Playlist *spl, gint32 pos)
+void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 {
     GtkWidget *spl_window, *w;
     Playlist *spl_dup;
 
     g_return_if_fail (spl != NULL);
     g_return_if_fail (spl->is_spl);
+    g_return_if_fail (itdb != NULL);
 
     spl_window = create_spl_window ();
-    g_assert (spl_window != NULL);
+    g_return_if_fail (spl_window != NULL);
 
     /* Duplicate playlist to work on */
-    spl_dup = pl_duplicate (spl);
+    spl_dup = itdb_playlist_duplicate (spl);
 
     /* Store pointers to original playlist and duplicate */
     g_object_set_data (G_OBJECT (spl_window), "spl_orig", spl);
     g_object_set_data (G_OBJECT (spl_window), "spl_work", spl_dup);
     g_object_set_data (G_OBJECT (spl_window), "spl_pos", (gpointer)pos);
+    g_object_set_data (G_OBJECT (spl_window), "spl_itdb", itdb);
     /* Set checkboxes and connect signal handlers */
     if ((w = lookup_widget (spl_window, "spl_name_entry")))
     {
@@ -1378,15 +1389,17 @@ void spl_edit_all (Playlist *spl, gint32 pos)
 /* Edit an existing smart playlist */
 void spl_edit (Playlist *spl)
 {
-    spl_edit_all (spl, -1);
+    g_return_if_fail (spl);
+    g_return_if_fail (spl->itdb);
+    spl_edit_all (spl->itdb, spl, -1);
 }
 
 
 /* Edit a non-existing smartlist. If successful, it will be entered at
    position @pos. Default name is @name */
-void spl_edit_new (gchar *name, gint32 pos)
+void spl_edit_new (iTunesDB *itdb, gchar *name, gint32 pos)
 {
-    Playlist *spl = pl_new (name? name:_("New Playlist"), TRUE);
+    Playlist *spl = gp_playlist_new (name? name:_("New Playlist"), TRUE);
 
-    spl_edit_all (spl, pos);
+    spl_edit_all (itdb, spl, pos);
 }

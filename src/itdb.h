@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 00:59:13 jcs>
+/* Time-stamp: <2005-01-07 23:47:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -464,6 +464,7 @@ void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos);
 void itdb_playlist_move (Itdb_Playlist *pl, guint32 pos);
 void itdb_playlist_remove (Itdb_Playlist *pl);
 void itdb_playlist_unlink (Itdb_Playlist *pl);
+gboolean itdb_playlist_exists (Itdb_iTunesDB *itdb, Itdb_Playlist *pl);
 Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl);
 void itdb_playlist_add_track (Itdb_Playlist *pl,
 			      Itdb_Track *track, gint32 pos);
@@ -485,7 +486,7 @@ void itdb_splr_remove (Itdb_Playlist *pl, SPLRule *splr);
 SPLRule *itdb_splr_new (void);
 void itdb_splr_add (Itdb_Playlist *pl, SPLRule *splr, gint pos);
 SPLRule *itdb_splr_add_new (Itdb_Playlist *pl, gint pos);
-void itunesdb_spl_copy_rules (Itdb_Playlist *dest, Itdb_Playlist *src);
+void itdb_spl_copy_rules (Itdb_Playlist *dest, Itdb_Playlist *src);
 gboolean itdb_splr_eval (Itdb_iTunesDB *itdb, SPLRule *splr, Itdb_Track *track);
 void itdb_spl_update (Itdb_iTunesDB *itdb, Itdb_Playlist *spl);
 void itdb_spl_update_all (Itdb_iTunesDB *itdb);

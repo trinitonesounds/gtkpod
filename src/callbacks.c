@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 22:56:24 jcs>
+/* Time-stamp: <2005-01-08 01:51:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -201,17 +201,17 @@ on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
    'gtk_drop_finish()'. Therefore this function is called directly by
    on_playlist_treeview_drag_data_received() */
 static void
-tracks_moved_or_copied     (GdkDragContext  *context, gchar *trackids)
+tracks_moved_or_copied     (GdkDragContext  *context, gchar *tracks)
 {
 /*      printf ("ttracks_moved_or_copied ts/dc/action: %p/%d\n", context, context?context->action:0);  */
-    if(trackids && context)
+    if(tracks && context)
     {
 	gint n=0;
 	gchar *buf = NULL;
-	gchar *ptr = trackids;
+	gchar *ptr = tracks;
 	Playlist *pl = pm_get_selected_playlist ();
 
-	/* count the number of ids */
+	/* count the number of tracks */
 	while ((ptr=strchr (ptr, '\n')))
 	{
 	    ++n;
@@ -222,7 +222,7 @@ tracks_moved_or_copied     (GdkDragContext  *context, gchar *trackids)
 	    (context->action == GDK_ACTION_MOVE))
 	{
 	    guint32 id = 0;
-	    gchar *str = g_strdup (trackids);
+	    gchar *str = g_strdup (tracks);
 
 	    while(parse_ipod_id_from_string(&str,&id))
 	    {
@@ -490,7 +490,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 	switch(event->keyval)
 	{
 	    case GDK_u:
-		do_selected_playlist (update_trackids);
+		do_selected_playlist (update_tracks);
 		break;
 	    case GDK_n:
 		add_new_pl_or_spl_user_name (NULL, -1);
@@ -520,7 +520,7 @@ on_track_treeview_key_release_event     (GtkWidget       *widget,
 		delete_track_head (FALSE);
 		break;
 	    case GDK_u:
-		do_selected_tracks (update_trackids);
+		do_selected_tracks (update_tracks);
 		break;
 	    default:
 		break;
@@ -765,7 +765,7 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 				       GTK_TREE_VIEW (widget)), FALSE);
 		break;
 	    case GDK_u:
-		do_selected_entry (update_trackids,
+		do_selected_entry (update_tracks,
 				   st_get_instance_from_treeview (
 				       GTK_TREE_VIEW (widget)));
 		break;
@@ -818,7 +818,7 @@ void
 on_update_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
-    do_selected_playlist (update_trackids);
+    do_selected_playlist (update_tracks);
 }
 
 /* update tracks in tab entry */
@@ -829,14 +829,14 @@ on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Update selected entry of which sort tab?"));
 
-    if (inst != -1) do_selected_entry (update_trackids, inst);
+    if (inst != -1) do_selected_entry (update_tracks, inst);
 }
 
 void
 on_update_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
-    do_selected_tracks (update_trackids);
+    do_selected_tracks (update_tracks);
 }
 
 
@@ -845,7 +845,7 @@ on_mserv_from_file_playlist_menu_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    do_selected_playlist (mserv_from_file_trackids);
+    do_selected_playlist (mserv_from_file_tracks);
 }
 
 
@@ -856,7 +856,7 @@ on_mserv_from_file_entry_menu_activate (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Update selected entry of which sort tab?"));
 
-    if (inst != -1) do_selected_entry (mserv_from_file_trackids, inst);
+    if (inst != -1) do_selected_entry (mserv_from_file_tracks, inst);
 }
 
 
@@ -865,7 +865,7 @@ on_mserv_from_file_tracks_menu_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    do_selected_tracks (mserv_from_file_trackids);
+    do_selected_tracks (mserv_from_file_tracks);
 }
 
 
@@ -902,7 +902,7 @@ void
 on_sync_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
-    do_selected_playlist (sync_trackids);
+    do_selected_playlist (sync_tracks);
 }
 
 /* sync tracks in tab entry */
@@ -913,14 +913,14 @@ on_sync_tab_entry_activate        (GtkMenuItem     *menuitem,
     gint inst = get_sort_tab_number (
 	_("Sync dirs of selected entry in which sort tab?"));
 
-    if (inst != -1) do_selected_entry (sync_trackids, inst);
+    if (inst != -1) do_selected_entry (sync_tracks, inst);
 }
 
 void
 on_sync_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
-    do_selected_tracks (sync_trackids);
+    do_selected_tracks (sync_tracks);
 }
 
 

@@ -2529,7 +2529,7 @@
 			      <child>
 				<widget class="GtkLabel" id="label152">
 				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">As a last resort set the following tags to the filaneme if they are (still) empty:</property>
+				  <property name="label" translatable="yes">As a last resort set the following tags to the filename if they are (still) empty:</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>

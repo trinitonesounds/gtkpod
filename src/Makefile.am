@@ -25,10 +25,6 @@ itdb_SOURCES = \
 itdb_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
 gtkpod_SOURCES = \
-    display_itdb.c display_itdb.h \
-    display.c display_playlists.c display_sorttabs.c \
-    display_songs.c display_spl.c \
-    display.h display_private.h \
     file.c file.h \
     file_export.c file_itunesdb.c \
     info.c info.h \
@@ -52,6 +48,10 @@ gtkpod_SOURCES = \
     context_menus.c context_menus.h \
     date_parser.l date_parser2.l date_parser.h \
     dirbrowser.c dirbrowser.h \
+    display_itdb.c display_itdb.h \
+    display.c display_playlists.c display_sorttabs.c \
+    display_songs.c display_spl.c \
+    display.h display_private.h \
     callbacks.c callbacks.h
 
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@

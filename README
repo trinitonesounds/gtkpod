@@ -626,6 +626,11 @@ For USB and FireWire:
 (Try to chose the HFS filesystem in "File System -> Miscelleneous
 filesystems" for HFS support -- let me know how it works).
 
+At least for the new 4Gs and iPod minis you should _disable_
+(CONFIG_EFI_PARTITION, see Troubleshooting for more information):
+    * File Systems -> Partition Types -> Advanced Partition Selection
+		   -> EFI GUID Partition support
+
 3) You need to install the following external packages:
 
    hotplug and udev (http://linux-hotplug.sourceforge.net/)
@@ -709,6 +714,11 @@ Needed configuration:
     * SBP-2 support - m (important to use module -- if someone finds
       out how to use hotplug with sbp2 compiled in, let me know)
       (With 2.6.1 compiling sbp2 in seems to work fine.)
+At least for the new 4Gs and iPod minis you should _disable_
+(CONFIG_EFI_PARTITION, see Troubleshooting for more information):
+    * File Systems -> Partition Types -> Advanced Partition Selection
+		   -> EFI GUID Partition support
+
 
 3) Create /mnt/ipod:
 
@@ -821,6 +831,10 @@ Needed configuration:
     * IEEE1394 (FireWire)/IEEE 1394 (FireWire) support (Experimental) - y
     * OHCI-1394 support - y
     * SBP-2 support - m
+At least for the new 4Gs and iPod minis you should _disable_
+(CONFIG_EFI_PARTITION, see Troubleshooting for more information):
+    * File Systems -> Partition Types -> Advanced Partition Selection
+		   -> EFI GUID Partition support
 
 3) Create /mnt/ipod:
 
@@ -917,6 +931,9 @@ The trick to it is that you have to
 
 - You can then mount /dev/sda2 to /mnt/ipod as normal."
 
+On the other hand: with my 4G iPod under 2.6.9 and 2.6.10 I never had
+any problem whatsoever getting the iPod to work. With IEEE it was
+awful (would work some times, would not some other time).
 
 
 *----------------------------------*

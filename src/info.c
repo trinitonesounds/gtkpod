@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-06 00:38:19 jcs>
+/* Time-stamp: <2005-01-08 02:09:21 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <gtk/gtk.h>
 #include "info.h"
 #include "interface.h"
 #include "misc.h"

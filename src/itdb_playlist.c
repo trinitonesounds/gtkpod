@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 00:59:12 jcs>
+/* Time-stamp: <2005-01-08 00:42:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -936,31 +936,29 @@ SPLRule *splr_duplicate (SPLRule *splr)
 /* Duplicate an existing playlist */
 Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl)
 {
-    Itdb_Playlist *pl_dup = NULL;
+    Itdb_Playlist *pl_dup;
+    GList *gl;
 
-    if (pl)
+    g_return_val_if_fail (pl);
+
+    pl_dup = g_new0 (Itdb_Playlist, 1);
+    memcpy (pl_dup, pl, sizeof (Itdb_Playlist));
+    /* clear list heads */
+    pl_dup->members = NULL;
+    pl_dup->splrules.rules = NULL;
+
+    /* Now copy strings */
+    pl_dup->name = g_strdup (pl->name);
+
+    /* Copy members */
+    pl_dup->members = glist_duplicate (pl->members);
+
+    /* Copy rules */
+    for (gl=pl->splrules.rules; gl; gl=gl->next)
     {
-	GList *gl;
-	pl_dup = g_new0 (Itdb_Playlist, 1);
-	memcpy (pl_dup, pl, sizeof (Itdb_Playlist));
-	/* clear list heads */
-	pl_dup->members = NULL;
-	pl_dup->splrules.rules = NULL;
-
-	/* Now copy strings */
-	pl_dup->name = g_strdup (pl->name);
-
-	/* Copy members */
-	pl_dup->members = glist_duplicate (pl->members);
-
-	/* Copy rules */
-	for (gl=pl->splrules.rules; gl; gl=gl->next)
-	{
-	    SPLRule *splr_dup = splr_duplicate (gl->data);
-	    pl_dup->splrules.rules = g_list_append (
-		pl_dup->splrules.rules, splr_dup);
-		
-	}
+	SPLRule *splr_dup = splr_duplicate (gl->data);
+	pl_dup->splrules.rules = g_list_append (
+	    pl_dup->splrules.rules, splr_dup);
     }
     return pl_dup;
 }
@@ -1095,6 +1093,17 @@ void itdb_playlist_unlink (Itdb_Playlist *pl)
     g_return_if_fail (itdb);
 
     itdb->playlists = g_list_remove (itdb->playlists, pl);
+}
+
+
+/* Return TRUE if the playlist @pl exists, FALSE otherwise */
+gboolean itdb_playlist_exists (Itdb_iTunesDB *itdb, Itdb_Playlist *pl)
+{
+    g_return_val_if_fail (itdb, FALSE);
+    g_return_val_if_fail (pl, FALSE);
+
+    if (g_list_find (itdb->playlists, pl))  return TRUE;
+    else                                    return FALSE;
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-30 13:32:09 jcs>
+/* Time-stamp: <2005-01-07 23:50:29 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,13 +39,14 @@
 #include "support.h"
 #include "prefs.h"
 #include "display_private.h"
-#include "track.h"
-#include "playlist.h"
+#include "display_itdb.h"
+#include "itdb.h"
+#include "info.h"
 #include "callbacks.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "file.h"
 #include "context_menus.h"
-#include "itunesdb.h"
 
 /* pointer to the treeview for the track display */
 static GtkTreeView *track_treeview = NULL;
@@ -386,14 +387,19 @@ tm_cell_edited (GtkCellRendererText *renderer,
        row_node = g_list_next(row_node))
   {
      Track *track;
+     ExtraTrackData *etr;
      gboolean changed;
      GtkTreeIter iter;
      gint32 nr;
      gchar **itemp_utf8, *str;
-     gunichar2 **itemp_utf16;
 
      gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) row_node->data);
      gtk_tree_model_get(model, &iter, READOUT_COL, &track, -1);
+     g_return_if_fail (track);
+     etr = track->userdata;
+     g_return_if_fail (etr);
+
+
      changed = FALSE;
 
      switch(column)
@@ -406,13 +412,10 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_FDESC:
      case TM_COLUMN_GROUPING:
         itemp_utf8 = track_get_item_pointer_utf8 (track, TM_to_T (column));
-        itemp_utf16 = track_get_item_pointer_utf16 (track, TM_to_T (column));
         if (g_utf8_collate (*itemp_utf8, new_text) != 0)
         {
            g_free (*itemp_utf8);
-           g_free (*itemp_utf16);
            *itemp_utf8 = g_strdup (new_text);
-           *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
            changed = TRUE;
         }
         break;
@@ -460,8 +463,8 @@ tm_cell_edited (GtkCellRendererText *renderer,
         nr = atoi (new_text);
         if ((nr >= 0) && (nr != track->year))
         {
-	   g_free (track->year_str);
-	   track->year_str = g_strdup_printf ("%d", nr);
+	   g_free (etr->year_str);
+	   etr->year_str = g_strdup_printf ("%d", nr);
            track->year = nr;
            changed = TRUE;
         }
@@ -540,9 +543,9 @@ tm_cell_edited (GtkCellRendererText *renderer,
 /*      printf ("  changed: %d\n", changed); */
      if (changed)
      {
-        track->time_modified = itunesdb_time_get_mac_time ();
-        pm_track_changed (track); /* notify playlist model... */
-        data_changed ();        /* indicate that data has changed */
+        track->time_modified = itdb_time_get_mac_time ();
+        pm_track_changed (track);    /* notify playlist model... */
+        data_changed (track->itdb); /* indicate that data has changed */
 
         if (prefs_get_id3_write())
         {
@@ -553,7 +556,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
 	     else                           tag_id = TM_to_T (column);*/
            write_tags_to_file (track);
            /* display possible duplicates that have been removed */
-           remove_duplicate (NULL, NULL);
+           gp_duplicate_remove (NULL, NULL);
         }
      }
      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
@@ -578,6 +581,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 			       gpointer           data)
 {
   Track *track;
+  ExtraTrackData *etr;
   TM_item column;
   gchar text[21];
   gchar *buf = NULL;
@@ -585,6 +589,9 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 
   column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
   gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
+  g_return_if_fail (track);
+  etr = track->userdata;
+  g_return_if_fail (etr);
 
   switch (column)
   {
@@ -613,9 +620,9 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_IPOD_ID:
-      if (track->ipod_id != -1)
+      if (track->id != -1)
       {
-	  snprintf (text, 20, "%d", track->ipod_id);
+	  snprintf (text, 20, "%d", track->id);
 	  g_object_set (G_OBJECT (renderer),
 			"text", text,
 			"xalign", 1.0, NULL);
@@ -628,7 +635,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       }
       break;
   case TM_COLUMN_PC_PATH:
-      g_object_set (G_OBJECT (renderer), "text", track->pc_path_utf8, NULL);
+      g_object_set (G_OBJECT (renderer), "text", etr->pc_path_utf8, NULL);
       break;
   case TM_COLUMN_IPOD_PATH:
       g_object_set (G_OBJECT (renderer), "text", track->ipod_path, NULL);
@@ -799,10 +806,10 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
 /*      printf ("  changed: %d\n", changed); */
      if (changed)
      {
-        track->time_modified = itunesdb_time_get_mac_time ();
+        track->time_modified = itdb_time_get_mac_time ();
 /*        pm_track_changed (track);  notify playlist model... -- not
  *        necessary here because only the track model is affected */
-        data_changed ();        /* indicate that data has changed */
+        data_changed (track->itdb);  /* indicate that data has changed */
      }
      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
@@ -886,101 +893,106 @@ static gint comp_int (gconstpointer a, gconstpointer b)
 void
 tm_rows_reordered (void)
 {
-    Playlist *current_pl = pm_get_selected_playlist();
-    gboolean changed = FALSE;
+    Playlist *current_pl;
+
+    g_return_if_fail (track_treeview);
+    current_pl = pm_get_selected_playlist ();
 
     if(current_pl)
     {
 	GtkTreeModel *tm = NULL;
+	GtkTreeIter i;
+	GList *new_list = NULL, *old_pos_l = NULL;
+	gboolean valid = FALSE;
+	GList *nlp, *olp;
+	gboolean changed = FALSE;
+	iTunesDB *itdb = NULL;
 
-	if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(track_treeview))))
+	tm = gtk_tree_view_get_model (track_treeview);
+	g_return_if_fail (tm);
+
+	valid = gtk_tree_model_get_iter_first (tm,&i);
+	while (valid)
 	{
-	    GtkTreeIter i;
-	    GList *new_list = NULL, *old_pos_l = NULL;
-	    gboolean valid = FALSE;
-	    GList *nlp, *olp;
+	    Track *new_track;
+	    gint old_position;
 
-	    valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i);
-	    while(valid)
-	    {
-		Track *new_track;
-		gint old_position;
+	    gtk_tree_model_get (tm, &i, READOUT_COL, &new_track, -1);
+	    g_return_if_fail (new_track);
 
-		gtk_tree_model_get(tm, &i, READOUT_COL, &new_track, -1);
-		new_list = g_list_append(new_list, new_track);
-		/* what position was this track in before? */
-		old_position = g_list_index (current_pl->members, new_track);
-		/* check if we already used this position before (can
-		   happen if track has been added to playlist more than
-		   once */
-		while ((old_position != -1) &&
-		       g_list_find (old_pos_l, (gpointer)old_position))
-		{  /* find next occurence */
-		    GList *link;
-		    gint next;
-		    link = g_list_nth (current_pl->members, old_position + 1);
-		    next = g_list_index (link, new_track);
-		    if (next == -1)   old_position = -1;
-		    else              old_position += (1+next);
-		}
-		/* we make a sorted list of the old positions */
-		old_pos_l = g_list_insert_sorted (old_pos_l,
-						  (gpointer)old_position,
-						  comp_int);
-		valid = gtk_tree_model_iter_next(tm, &i);
+	    if (!itdb) itdb = new_track->itdb;
+	    new_list = g_list_append (new_list, new_track);
+	    /* what position was this track in before? */
+	    old_position = g_list_index (current_pl->members, new_track);
+	    /* check if we already used this position before (can
+	       happen if track has been added to playlist more than
+	       once */
+	    while ((old_position != -1) &&
+		   g_list_find (old_pos_l, (gpointer)old_position))
+	    {  /* find next occurence */
+		GList *link;
+		gint next;
+		link = g_list_nth (current_pl->members, old_position + 1);
+		next = g_list_index (link, new_track);
+		if (next == -1)   old_position = -1;
+		else              old_position += (1+next);
 	    }
-	    nlp = new_list;
-	    olp = old_pos_l;
-	    while (nlp && olp)
-	    {
-		GList *old_link;
-		gint position = (gint)olp->data;
-
-		/* if position == -1 one of the tracks in the track view
-		   could not be found in the selected playlist -> stop! */
-		if (position == -1)
-		{
-		    g_warning ("Programming error: tm_rows_reordered_callback: track in track view was not in selected playlist\n");
-		    break;
-		}
-		old_link = g_list_nth (current_pl->members, position);
-		/* replace old track with new track */
-		if (old_link->data != nlp->data)
-		{
-		    old_link->data = nlp->data;
-		    changed = TRUE;
-		}
-		/* next */
-		nlp = nlp->next;
-		olp = olp->next;
-	    }
-	    g_list_free (new_list);
-	    g_list_free (old_pos_l);
+	    /* we make a sorted list of the old positions */
+	    old_pos_l = g_list_insert_sorted (old_pos_l,
+					      (gpointer)old_position,
+					      comp_int);
+	    valid = gtk_tree_model_iter_next (tm, &i);
 	}
-    }
-    /* if we changed data, mark data as changed and adopt order in
-       sort tabs */
-    if (changed)
-    {
-	data_changed ();
-	st_adopt_order_in_playlist ();
+	nlp = new_list;
+	olp = old_pos_l;
+	while (nlp && olp)
+	{
+	    GList *old_link;
+	    gint position = (gint)olp->data;
+
+	    /* if position == -1 one of the tracks in the track view
+	       could not be found in the selected playlist -> stop! */
+	    if (position == -1)
+	    {
+		g_warning ("Programming error: tm_rows_reordered_callback: track in track view was not in selected playlist\n");
+		g_return_if_reached ();
+	    }
+	    old_link = g_list_nth (current_pl->members, position);
+	    /* replace old track with new track */
+	    if (old_link->data != nlp->data)
+	    {
+		old_link->data = nlp->data;
+		changed = TRUE;
+	    }
+	    /* next */
+	    nlp = nlp->next;
+	    olp = olp->next;
+	}
+	g_list_free (new_list);
+	g_list_free (old_pos_l);
+	/* if we changed data, mark data as changed and adopt order in
+	   sort tabs */
+	if (changed)
+	{
+	    data_changed (itdb);
+	    st_adopt_order_in_playlist ();
+	}
     }
 }
 
 
 static void
 on_trackids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
-			  GtkTreeIter *i, gpointer data)
+			   GtkTreeIter *i, gpointer data)
 {
-    Track *s = NULL;
+    Track *tr = NULL;
     GList *l = *((GList**)data);
-    gtk_tree_model_get(tm, i, READOUT_COL, &s, -1);
-    if(s)
-    {
-	l = g_list_append(l, (gpointer)s->ipod_id);
-	*((GList**)data) = l;
-    }
+    gtk_tree_model_get(tm, i, READOUT_COL, &tr, -1);
+    g_return_if_fail (tr);
+    l = g_list_append(l, (gpointer)tr->id);
+    *((GList**)data) = l;
 }
+
 
 /* return a list containing the track IDs of all tracks currently being
    selected */
@@ -992,18 +1004,10 @@ tm_get_selected_trackids(void)
 
     if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(track_treeview))))
     {
-	gtk_tree_selection_selected_foreach(ts,on_trackids_list_foreach,
+	gtk_tree_selection_selected_foreach(ts, on_trackids_list_foreach,
 					    &result);
     }
     return(result);
-}
-
-static gboolean
-on_all_trackids_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
-			     GtkTreeIter *i, gpointer data)
-{
-    on_trackids_list_foreach (tm, tp, i, data);
-    return FALSE;
 }
 
 /* return a list containing the track IDs of all tracks currently being
@@ -1011,6 +1015,13 @@ on_all_trackids_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
 GList *
 tm_get_all_trackids(void)
 {
+    static gboolean
+	on_all_trackids_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
+				      GtkTreeIter *i, gpointer data)
+	{
+	    on_trackids_list_foreach (tm, tp, i, data);
+	    return FALSE;
+	}
     GList *result = NULL;
     GtkTreeModel *model;
 
@@ -1024,17 +1035,16 @@ tm_get_all_trackids(void)
 
 static void
 on_tracks_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
-			GtkTreeIter *i, gpointer data)
+			 GtkTreeIter *i, gpointer data)
 {
-    Track *s = NULL;
+    Track *tr = NULL;
     GList *l = *((GList**)data);
-    gtk_tree_model_get(tm, i, READOUT_COL, &s, -1);
-    if(s)
-    {
-	l = g_list_append(l, s);
-	*((GList**)data) = l;
-    }
+    gtk_tree_model_get(tm, i, READOUT_COL, &tr, -1);
+    g_return_if_fail (tr);
+    l = g_list_append(l, tr);
+    *((GList**)data) = l;
 }
+
 
 /* return a list containing pointers to all tracks currently being
    selected */
@@ -1046,7 +1056,7 @@ tm_get_selected_tracks(void)
 
     if((ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(track_treeview))))
     {
-	gtk_tree_selection_selected_foreach(ts,on_tracks_list_foreach,
+	gtk_tree_selection_selected_foreach(ts, on_tracks_list_foreach,
 					    &result);
     }
     return(result);
@@ -1111,6 +1121,7 @@ static gint tm_data_compare (Track *track1, Track *track2,
 			     TM_item tm_item)
 {
   gint cmp;
+  ExtraTrackData *etr1, *etr2;
 
   switch (tm_item)
   {
@@ -1134,9 +1145,13 @@ static gint tm_data_compare (Track *track1, Track *track2,
       if (cmp == 0) cmp = track1->cd_nr - track2->cd_nr;
       return cmp;
   case TM_COLUMN_IPOD_ID:
-      return track1->ipod_id - track2->ipod_id;
+      return track1->id - track2->id;
   case TM_COLUMN_PC_PATH:
-      return g_utf8_collate (track1->pc_path_utf8, track2->pc_path_utf8);
+      g_return_val_if_fail (track1 && track2, 0);
+      etr1 = track1->userdata;
+      etr2 = track2->userdata;
+      g_return_val_if_fail (etr1 && etr2, 0);
+      return g_utf8_collate (etr1->pc_path_utf8, etr2->pc_path_utf8);
   case TM_COLUMN_IPOD_PATH:
       return g_utf8_collate (track1->ipod_path, track2->ipod_path);
   case TM_COLUMN_TRANSFERRED:
@@ -1799,7 +1814,7 @@ void tm_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 /*    printf("plitem: %p\n", plitem);
       if (plitem) printf("plitem->type: %d\n", plitem->type);*/
     /* add to playlist but not to the display */
-    add_track_to_playlist (plitem, track, FALSE);
+    gp_playlist_add_track (plitem, track, FALSE);
 
     /* create new iter in track view */
     switch (asf->pos)
@@ -1892,14 +1907,12 @@ void
 on_tm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 			 GtkTreeIter *i, gpointer data)
 {
-    Track *s;
+    Track *tr;
     GString *filelist = (GString *)data;
 
-    gtk_tree_model_get(tm, i, READOUT_COL, &s, -1);
-    if(s)
-    {
-	g_string_append_printf (filelist, "%d\n", s->ipod_id);
-    }
+    gtk_tree_model_get(tm, i, READOUT_COL, &tr, -1);
+    g_return_if_fail (tr);
+    g_string_append_printf (filelist, "%d\n", tr->id);
 }
 
 

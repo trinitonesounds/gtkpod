@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 22:21:03 jcs>
+/* Time-stamp: <2005-01-07 23:47:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -273,5 +273,5 @@ void display_set_check_ipod_menu (void);
 void display_stop_update (gint inst);
 
 void spl_edit (Playlist *spl);
-void spl_edit_new (gchar *name, gint32 pos);
+void spl_edit_new (iTunesDB *itdb, gchar *name, gint32 pos);
 #endif 

@@ -53,13 +53,39 @@ together. Try disabling "sg" support in the kernel configuration or
 unload the "sg" module if you are using modules.
 
 ----------------------------------------------------------------------
-Get a bunch of "Buffer I/O error on device sd?" when connecting the
-iPod (Jonas Bergler)
+When connecting an iPod via USB to a 2.6 kernel machine the iPod will
+be recognized but not work correctly. In /var/log/messages you'll see
+the a bunch of "Buffer I/O error on device sd?" when connecting the
+iPod (Jonas Bergler, Kevin Venkiteswaran)
 
 Solution (by "jeffmock"):
 
-Disable CONFIG_EFI_PARTITION in your kernel configuration, recompile.
+Disable CONFIG_EFI_PARTITION (File Systems -> Partition Types ->
+Advanced Partition Selection -> EFI GUID Partition support) in your
+kernel configuration, recompile.
 
 Details can be found at 
 http://www.linuxquestions.org/questions/showthread.php?postid=1197015#post1197015
+
+Excerpt:
+
+"This problem could potentially happen with both 2.4 and 2.6 kernels.
+
+A longer story follows and perhaps someone can come up with a more
+sensible solution for the long run.
+
+The iPod looks like a removable disk drive to the host computer. When it
+is attached to the computer, the mini iPod reports a capacity of 7999488
+512-byte sectors (or about 4GB). This turns out to be wrong for whatever
+reason. The mini iPod only really has 7999376 sectors and it exaggerates
+by 112 sectors. The other quality of the iPod is that if the computer
+attempts to read a sector greater than the actual capacity but less than
+the reported capacity, the iPod will dutifully report an I/O error, but
+it won't respond to any future requests until you unplug/plug the iPod."
+
+I followed the kernel recompile instructions for distro, disabled only
+the CONFIG_EFI_PARTITION option, and things ran perfectly for me
+afterwards. As indicated above, hopefully a better long-term solution
+will emerge soon."
+
 

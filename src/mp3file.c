@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-20 01:38:07 jcs>
+/* Time-stamp: <2005-01-08 01:15:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1884,7 +1884,7 @@ Track *mp3_get_file_info (gchar *name)
     File_Tag filetag;
     mp3info *mp3info;
 
-    track = itunesdb_new_track ();
+    track = gp_track_new ();
     if (prefs_get_readtags() && (id3_tag_read (name, &filetag) == TRUE))
     {
 	track->fdesc = g_strdup ("MPEG audio file");

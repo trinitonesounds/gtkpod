@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-06 00:03:26 jcs>
+/* Time-stamp: <2005-01-08 01:51:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,13 +35,18 @@
 
 void gp_duplicate_remove (Track *oldtrack, Track *track);
 Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename);
+gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item);
+gchar *track_get_item_utf8 (Track *track, T_item t_item);
+guint32 *track_get_timestamp_ptr (Track *track, T_item t_item);
+guint32 track_get_timestamp (Track *track, T_item t_item);
+void track_validate_entries (Track *track);
 
 void add_idlist_to_playlist (Playlist *pl, gchar *str);
 void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position,
 				 AddTrackFunc trackaddfunc, gpointer data);
-void do_selected_tracks (void (*do_func)(GList *trackids));
-void do_selected_entry (void (*do_func)(GList *trackids), gint inst);
-void do_selected_playlist (void (*do_func)(GList *trackids));
+void gp_do_selected_tracks (void (*do_func)(GList *tracks));
+void gp_do_selected_entry (void (*do_func)(GList *tracks), gint inst);
+void gp_do_selected_playlist (void (*do_func)(GList *tracks));
 
 
 #endif

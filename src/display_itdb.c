@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 00:07:54 jcs>
+/* Time-stamp: <2005-01-08 00:31:42 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -128,6 +128,24 @@ void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos)
     itdb_playlist_add (itdb, pl, pos);
     pm_add_playlist (pl, pos);
 }
+
+/* create new playlist with title @name and add to @itdb and to
+ * display at position @pos */
+Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
+			       gboolean spl, gint32 pos)
+{
+    Playlist *pl;
+
+    g_return_val_if_fail (itdb, NULL);
+    g_return_val_if_fail (name, NULL);
+
+    pl = gp_playlist_new (name, spl);
+    itdb_playlist_add (itdb, pl, pos);
+    pm_add_playlist (pl, pos);
+    return pl;
+}
+
+
 
 /* This function removes the track "track" from the
    playlist "plitem". It then lets the display model know.

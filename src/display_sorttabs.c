@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-18 13:12:56 jcs>
+/* Time-stamp: <2005-01-07 23:14:12 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,14 +31,16 @@
 #endif
 
 #include "display_private.h"
+#include "info.h"
 #include "prefs.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "support.h"
 #include "context_menus.h"
 #include "interface.h"
 #include "callbacks.h"
 #include "date_parser.h"
-#include "itunesdb.h"
+#include "itdb.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -1713,6 +1715,7 @@ st_cell_edited (GtkCellRendererText *renderer,
       /* We only do something, if the name actually got changed */
       if (g_utf8_collate (entry->name, new_text) != 0)
       {
+	  iTunesDB *itdb = NULL;
 	  /* remove old hash entry if available */
 	  TabEntry *hash_entry =
 	      g_hash_table_lookup (st->entry_hash, entry->name);
@@ -1745,26 +1748,30 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  if (prefs_get_id3_write ())   block_widgets ();
 	  for (i=0; i<n; ++i)
 	  {
+	      ExtraTrackData *etr;
 	      Track *track = (Track *)g_list_nth_data (members, i);
+	      g_return_if_fail (track);
+	      etr = track->userdata;
+	      g_return_if_fail (etr);
+	      g_return_if_fail (track->itdb);
+	      if (!itdb) itdb = track->itdb;
 	      T_item t_item = ST_to_T (sorttab[inst]->current_category);
 	      if (t_item == T_YEAR)
 	      {
 		  gint nr = atoi (new_text);
 		  if (nr < 0)  nr = 0;
 		  track->year = nr;
-		  g_free (track->year_str);
-		  track->year_str = g_strdup_printf ("%d", nr);
+		  g_free (etr->year_str);
+		  etr->year_str = g_strdup_printf ("%d", nr);
 	      }
 	      else
 	      {
 		  gchar **itemp_utf8 = track_get_item_pointer_utf8 (track, t_item);
-		  gunichar2 **itemp_utf16 = track_get_item_pointer_utf16(track, t_item);
+		  g_return_if_fail (itemp_utf8);
 		  g_free (*itemp_utf8);
-		  g_free (*itemp_utf16);
 		  *itemp_utf8 = g_strdup (new_text);
-		  *itemp_utf16 = g_utf8_to_utf16 (new_text, -1, NULL, NULL, NULL);
 	      }
-	      track->time_modified = itunesdb_time_get_mac_time ();
+	      track->time_modified = itdb_time_get_mac_time ();
 	      pm_track_changed (track);
 	      /* If prefs say to write changes to file, do so */
 	      if (prefs_get_id3_write ())
@@ -1783,9 +1790,10 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  /* allow user input again */
 	  if (prefs_get_id3_write ())   release_widgets ();
 	  /* display possible duplicates that have been removed */
-	  remove_duplicate (NULL, NULL);
-	  data_changed (); /* indicate that data has changed */
-	}
+	  gp_duplicate_remove (NULL, NULL);
+	  /* indicate that data has changed */
+	  if (itdb) data_changed (itdb);
+      }
       break;
     default:
 	break;
@@ -2679,7 +2687,7 @@ on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	for (l=entry->members; l; l=l->next)
 	{
 	    s = (Track *)l->data;
-	    g_string_append_printf (idlist, "%d\n", s->ipod_id);
+	    g_string_append_printf (idlist, "%d\n", s->id);
 	}
     }
 }
@@ -2729,7 +2737,7 @@ static void cal_set_time_widgets (GtkCalendar *cal,
      * -> set calendar to current time */
     if ((mactime != 0) && (mactime != -1))
     {
-	tt = itunesdb_time_mac_to_host (mactime);
+	tt = itdb_time_mac_to_host (mactime);
 	if (no_margin)  gtk_toggle_button_set_active (no_margin, FALSE);
     }
     else if (no_margin) gtk_toggle_button_set_active (no_margin, TRUE);
