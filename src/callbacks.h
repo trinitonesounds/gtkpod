@@ -269,3 +269,11 @@ on_delete_st0_activate                 (GtkMenuItem     *menuitem,
 void
 on_delete_st1_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

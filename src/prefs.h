@@ -57,11 +57,13 @@ struct cfg
   gboolean id3_write;     /* should changes to ID3 tags be written to file */
   gboolean id3_writeall;  /* should all ID3 tags be updated */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */
+  gboolean block_display; /* block display during change of selection? */
   gboolean autoimport;	  /* whether or not to automatically import files */
   struct {
     gboolean autoselect;  /* automatically select "All" in sort tab? */
     guint    category;    /* which category was selected last? */
   } st[SORT_TAB_NUM];
+  gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
   gboolean write_extended_info; /* write additional file with PC filenames etc? */
@@ -102,6 +104,7 @@ void prefs_set_keep_backups(gboolean active);
 void prefs_set_write_extended_info(gboolean active);
 void prefs_set_auto_import(gboolean val);
 void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
+void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_playlist_deletion(gboolean val);
 void prefs_set_song_list_show_all(gboolean val);
@@ -112,6 +115,7 @@ void prefs_set_song_list_show_artist(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
 void prefs_set_md5songs(gboolean active);
+void prefs_set_block_display(gboolean active);
 void prefs_set_id3_write(gboolean active);
 void prefs_set_id3_writeall(gboolean active);
 void prefs_set_last_dir_browse(gchar * dir);
@@ -132,6 +136,7 @@ gboolean prefs_get_keep_backups(void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_auto_import(void);
 gboolean prefs_get_st_autoselect (guint32 inst);
+gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
 gboolean prefs_get_playlist_deletion(void);
 gboolean prefs_get_song_list_show_all(void);
@@ -152,6 +157,7 @@ void prefs_get_size_dirbr (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
 gboolean prefs_get_md5songs(void);
+gboolean prefs_get_block_display(void);
 gint prefs_get_paned_pos (gint i);
 guint32 prefs_get_statusbar_timeout (void);
 

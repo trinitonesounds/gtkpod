@@ -32,7 +32,8 @@ void release_prefs_window (void);
 void prefs_window_save(void);
 void prefs_window_create(void);
 void prefs_window_cancel(void);
-void prefs_window_set_md5songs_active(gboolean val);
+void prefs_window_set_md5songs(gboolean val);
+void prefs_window_set_block_display(gboolean val);
 void prefs_window_set_id3_write(gboolean val);
 void prefs_window_set_id3_writeall(gboolean val);
 void prefs_window_set_mount_point(const gchar *mp);
@@ -49,4 +50,5 @@ void prefs_window_set_song_list_artist(gboolean val);
 void prefs_window_set_delete_song_playlist(gboolean val);
 void prefs_window_set_auto_import(gboolean val);
 void prefs_window_set_charset (gchar *charset);
+void prefs_window_set_mpl_autoselect (gboolean autoselect);
 #endif

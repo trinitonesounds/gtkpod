@@ -102,12 +102,15 @@ struct cfg *cfg_new(void)
     mycfg->deletion.song = TRUE;
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
+    mycfg->md5songs = FALSE;
+    mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_NUM; ++i)
     {
 	mycfg->st[i].autoselect = TRUE;
 	mycfg->st[i].category = (i<ST_CAT_NUM ? i:0);
     }
+    mycfg->mpl_autoselect = TRUE;
     mycfg->offline = FALSE;
     mycfg->keep_backups = TRUE;
     mycfg->write_extended_info = TRUE;
@@ -191,6 +194,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_md5songs((gboolean)atoi(arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
+	  {
+	      prefs_set_block_display((gboolean)atoi(arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "album") == 0)
 	  {
 	      prefs_set_song_list_show_album((gboolean)atoi(arg));
@@ -233,6 +240,10 @@ read_prefs_from_file_desc(FILE *fp)
 	      gint i = atoi (line+11);
 	      prefs_set_st_category (i, atoi (arg));
 	  }      
+	  else if(g_ascii_strcasecmp (line, "mpl_autoselect") == 0)
+	  {
+	      prefs_set_mpl_autoselect((gboolean)atoi(arg));
+	  }
 	  else if(g_ascii_strncasecmp (line, "sm_col_width", 12) == 0)
 	  {
 	      gint i = atoi (line+12);
@@ -422,6 +433,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "id3=%d\n", prefs_get_id3_write ());
     fprintf(fp, "id3_all=%d\n", prefs_get_id3_writeall ());
     fprintf(fp, "md5=%d\n",cfg->md5songs);
+    fprintf(fp, "block_display=%d\n",cfg->block_display);
     fprintf(fp, "album=%d\n",prefs_get_song_list_show_album());
     fprintf(fp, "track=%d\n",prefs_get_song_list_show_track());
     fprintf(fp, "genre=%d\n",prefs_get_song_list_show_genre());
@@ -435,6 +447,7 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
 	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
     }
+    fprintf(fp, "mpl_autoselect=%d\n", prefs_get_mpl_autoselect ());
     for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
     {
 	fprintf(fp, "sm_col_width%d=%d\n", i, prefs_get_sm_col_width (i));
@@ -583,6 +596,18 @@ void prefs_set_md5songs(gboolean active)
 gboolean prefs_get_md5songs(void)
 {
     return cfg->md5songs;
+}
+
+/* Should the display be blocked (be insenstive) while it is updated
+   after a selection (playlist, tab entry) change? */
+void prefs_set_block_display(gboolean active)
+{
+    cfg->block_display = active;
+}
+
+gboolean prefs_get_block_display(void)
+{
+    return cfg->block_display;
 }
 
 void prefs_set_id3_write(gboolean active)
@@ -881,6 +906,18 @@ void prefs_set_st_category (guint32 inst, guint category)
 	gtkpod_warning ("Category nr (%d) or sorttab nr (%d) out of range.\n", category, inst);
     }
 }
+
+gboolean prefs_get_mpl_autoselect (void)
+{
+    return cfg->mpl_autoselect;
+}
+
+/* Should the MPL be selected automatically? */
+void prefs_set_mpl_autoselect (gboolean autoselect)
+{
+    cfg->mpl_autoselect = autoselect;
+}
+
 
 /* retrieve the width of the song display columns. "col": one of the
    SM_COLUMN_... */

@@ -509,7 +509,7 @@ void destroy_blocked_widget_list (void)
 
 /* called by block_widgets() and release_widgets() */
 /* "block": TRUE = block, FALSE = release */
-static void do_block_widgets (gboolean block)
+static void block_release_widgets (gboolean block)
 {
     static gint count = 0; /* how many times are the widgets blocked? */
     GList *l;
@@ -558,14 +558,14 @@ static void do_block_widgets (gboolean block)
 /* Block widgets (turn insensitive) listed in "blocked_widgets" */
 void block_widgets (void)
 {
-    do_block_widgets (TRUE);
+    block_release_widgets (TRUE);
 }
 
 /* Release widgets (i.e. return them to their state before
    "block_widgets() was called */
 void release_widgets (void)
 {
-    do_block_widgets (FALSE);
+    block_release_widgets (FALSE);
 }
 
 

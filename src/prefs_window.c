@@ -107,6 +107,11 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->md5songs);
 	}
+	if((w = lookup_widget(prefs_window, "cfg_block_display")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->block_display);
+	}
 	if((w = lookup_widget(prefs_window, "cfg_id3_write")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -155,6 +160,11 @@ prefs_window_create(void)
 				  (gpointer)i);
 	    }
 	    g_free (buf);
+	}
+	if((w = lookup_widget(prefs_window, "cfg_mpl_autoselect")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					    tmpcfg->mpl_autoselect);
 	}
 	for (i=0; i<SM_NUM_TAGS_PREFS; ++i)
 	{
@@ -225,6 +235,7 @@ prefs_window_save(void)
     for (i=0; i<SM_NUM_TAGS_PREFS; ++i) {
 	prefs_set_tag_autoset (i, tmpcfg->tag_autoset[i]);
     }
+    prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
     prefs_set_song_list_show_track(tmpcfg->song_list_show.track);
     prefs_set_song_list_show_genre(tmpcfg->song_list_show.genre);
     prefs_set_song_list_show_album(tmpcfg->song_list_show.album);
@@ -240,6 +251,7 @@ prefs_window_save(void)
 	clear_md5_hash_from_songs ();
     /* this call well automatically destroy/setup the md5 hash table */
     prefs_set_md5songs(tmpcfg->md5songs);
+    prefs_set_block_display(tmpcfg->block_display);
 
     cfg_free(tmpcfg);
     tmpcfg =NULL;
@@ -249,14 +261,20 @@ prefs_window_save(void)
 }
 
 /**
- * prefs_window_set_md5songs_active
+ * prefs_window_set_md5songs
  * @val - truth value of whether or not we should use the md5 hash to
  * prevent file duplication. changes temp variable 
  */
 void
-prefs_window_set_md5songs_active(gboolean val)
+prefs_window_set_md5songs(gboolean val)
 {
     tmpcfg->md5songs = val;
+}
+
+void
+prefs_window_set_block_display(gboolean val)
+{
+    tmpcfg->block_display = val;
 }
 
 /**
@@ -423,6 +441,12 @@ void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
     {
 	tmpcfg->st[inst].autoselect = autoselect;
     }
+}
+
+/* Should the MPL be selected automatically? */
+void prefs_window_set_mpl_autoselect (gboolean autoselect)
+{
+    tmpcfg->mpl_autoselect = autoselect;
 }
 
 void prefs_window_set_tag_autoset (gint category, gboolean autoset)

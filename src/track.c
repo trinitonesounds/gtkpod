@@ -510,7 +510,7 @@ gboolean flush_songs (void)
   GList *gl_song;
   gchar *filename = NULL;
   gboolean result = TRUE;
-  gboolean abort = FALSE;
+  static gboolean abort;
   GtkWidget *dialog;
 
 #ifdef G_THREADS_ENABLED
@@ -520,6 +520,7 @@ gboolean flush_songs (void)
   if (!cond) cond = g_cond_new ();
 #endif
 
+  abort = FALSE;
   /* Set up dialogue to abort */
   dialog = gtk_message_dialog_new (
       GTK_WINDOW (gtkpod_window),

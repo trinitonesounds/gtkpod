@@ -3,14 +3,13 @@ gtkpod V0.41+ 01-Feb-2003 to 04-Feb-2003
 	time. gtkpod will (hopefully) correctly remember which songs have
 	already been copied/deleted from your iPod.
 	
-	Improvement: removal and copy of songs is done in a separate
-	thread, so the display doesn't freeze on long file system
+	Improvement: removal and copy of songs during export is done in a
+	separate thread, so the display doesn't freeze on long file system
 	operations
 
         Bugfix: Kentaro Fukuchi pointed out that MusicMatch (at least the
 	Japanese version) uses song IDs starting with 2 (and not with
-	53). Fixed. If some other program start with 1 (reasonable),
-	please let me know.
+	53). gtkpod then dropped some of your songs -- fixed.
         
 	Improvement: Delete works on entries in sort tabs now (ctrl-d and
 	new menu item)
@@ -18,7 +17,8 @@ gtkpod V0.41+ 01-Feb-2003 to 04-Feb-2003
 	Improvement?: don't close dirbrowser window until after the songs
 	have been read.
 
-	Improvement: do expose events when writing tags
+	Improvement: display is updated while writing tags to disk "in the
+	background"
 
 	Bugfix: sometimes deleted songs were not removed from the
 	display. Changing tags then could crash program

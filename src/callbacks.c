@@ -42,7 +42,6 @@
 #include "playlist.h"
 #include "display.h"
 #include "prefs_window.h"
-#include "md5.h"
 #include "file_export.h"
 #include "charset.h"
 
@@ -178,6 +177,7 @@ on_playlist_treeview_drag_data_received
     GtkTreeModel *tm = NULL;
     GtkTreeViewDropPosition pos = 0;
 
+    puts("here!");
     /* sometimes we get empty dnd data, ignore */
     if(widgets_blocked || (!data) || (data->length < 0)) return;
     /* don't allow us to drag onto ourselves =) */
@@ -279,7 +279,7 @@ void
 on_cfg_md5songs_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    prefs_window_set_md5songs_active(gtk_toggle_button_get_active(togglebutton));
+    prefs_window_set_md5songs(gtk_toggle_button_get_active(togglebutton));
 }
 
 
@@ -536,7 +536,6 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 		    Song *new_song = NULL;
 		    Playlist *current_pl = NULL;
 		    gchar *str = data->data;
-		   
 		    if((current_pl = get_currently_selected_playlist()) &&
 			    (current_pl->type != PL_TYPE_MPL))
 		    {
@@ -771,3 +770,17 @@ on_delete_st1_activate                 (GtkMenuItem     *menuitem,
     delete_entry_head (1);
 }
 
+void
+on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_mpl_autoselect(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_block_display(gtk_toggle_button_get_active(togglebutton));
+}

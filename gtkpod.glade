@@ -1099,7 +1099,6 @@
 		    <widget class="GtkTreeView" id="song_treeview">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
-		      <property name="events">GDK_KEY_RELEASE_MASK</property>
 		      <property name="headers_visible">True</property>
 		      <property name="rules_hint">False</property>
 		      <property name="reorderable">False</property>
@@ -1649,6 +1648,26 @@ MD5 hashes)</property>
 	  </child>
 
 	  <child>
+	    <widget class="GtkCheckButton" id="cfg_block_display">
+	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="label" translatable="yes">Block display when changing playlist or
+tab entry (faster!)</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="active">False</property>
+	      <property name="inconsistent">False</property>
+	      <property name="draw_indicator">True</property>
+	      <signal name="toggled" handler="on_cfg_block_display_toggled" last_modification_time="Sun, 09 Feb 2003 11:14:32 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
 	    <widget class="GtkFrame" id="frame5">
 	      <property name="visible">True</property>
 	      <property name="label_xalign">0</property>
@@ -1799,6 +1818,25 @@ MD5 hashes)</property>
 		  <property name="visible">True</property>
 		  <property name="homogeneous">False</property>
 		  <property name="spacing">0</property>
+
+		  <child>
+		    <widget class="GtkCheckButton" id="cfg_mpl_autoselect">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">...master playlist</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		      <signal name="toggled" handler="on_cfg_mpl_autoselect_toggled" last_modification_time="Sun, 09 Feb 2003 07:01:19 GMT"/>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
 
 		  <child>
 		    <widget class="GtkCheckButton" id="cfg_st_autoselect0">

@@ -589,7 +589,6 @@ create_gtkpod (void)
   song_treeview = gtk_tree_view_new ();
   gtk_widget_show (song_treeview);
   gtk_container_add (GTK_CONTAINER (scrolledwindow11), song_treeview);
-  gtk_widget_set_events (song_treeview, GDK_KEY_RELEASE_MASK);
 
   hbox5 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox5);
@@ -998,6 +997,7 @@ create_prefs_window (void)
   GtkWidget *cfg_id3_writeall;
   GtkWidget *cfg_keep_backups;
   GtkWidget *cfg_write_extended;
+  GtkWidget *cfg_block_display;
   GtkWidget *frame5;
   GtkWidget *hbox6;
   GtkWidget *vbox9;
@@ -1009,6 +1009,7 @@ create_prefs_window (void)
   GtkWidget *label22;
   GtkWidget *frame4;
   GtkWidget *vbox8;
+  GtkWidget *cfg_mpl_autoselect;
   GtkWidget *cfg_st_autoselect0;
   GtkWidget *cfg_st_autoselect1;
   GtkWidget *label21;
@@ -1101,6 +1102,10 @@ create_prefs_window (void)
   gtk_widget_show (cfg_write_extended);
   gtk_box_pack_start (GTK_BOX (vbox3), cfg_write_extended, FALSE, FALSE, 0);
 
+  cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or\ntab entry (faster!)"));
+  gtk_widget_show (cfg_block_display);
+  gtk_box_pack_start (GTK_BOX (vbox3), cfg_block_display, FALSE, FALSE, 0);
+
   frame5 = gtk_frame_new (NULL);
   gtk_widget_show (frame5);
   gtk_box_pack_start (GTK_BOX (vbox3), frame5, TRUE, TRUE, 0);
@@ -1145,6 +1150,10 @@ create_prefs_window (void)
   vbox8 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox8);
   gtk_container_add (GTK_CONTAINER (frame4), vbox8);
+
+  cfg_mpl_autoselect = gtk_check_button_new_with_mnemonic (_("...master playlist"));
+  gtk_widget_show (cfg_mpl_autoselect);
+  gtk_box_pack_start (GTK_BOX (vbox8), cfg_mpl_autoselect, FALSE, FALSE, 0);
 
   cfg_st_autoselect0 = gtk_check_button_new_with_mnemonic (_("...entry \"All\" in first sort tab"));
   gtk_widget_show (cfg_st_autoselect0);
@@ -1272,6 +1281,12 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_write_extended, "toggled",
                     G_CALLBACK (on_cfg_write_extended_info_toggled),
                     NULL);
+  g_signal_connect ((gpointer) cfg_block_display, "toggled",
+                    G_CALLBACK (on_cfg_block_display_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_mpl_autoselect, "toggled",
+                    G_CALLBACK (on_cfg_mpl_autoselect_toggled),
+                    NULL);
   g_signal_connect ((gpointer) cfg_delete_playlist, "toggled",
                     G_CALLBACK (on_cfg_delete_playlist_toggled),
                     NULL);
@@ -1320,6 +1335,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_id3_writeall, "cfg_id3_writeall");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_keep_backups, "cfg_keep_backups");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_extended, "cfg_write_extended");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_block_display, "cfg_block_display");
   GLADE_HOOKUP_OBJECT (prefs_window, frame5, "frame5");
   GLADE_HOOKUP_OBJECT (prefs_window, hbox6, "hbox6");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox9, "vbox9");
@@ -1331,6 +1347,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label22, "label22");
   GLADE_HOOKUP_OBJECT (prefs_window, frame4, "frame4");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox8, "vbox8");
+  GLADE_HOOKUP_OBJECT (prefs_window, cfg_mpl_autoselect, "cfg_mpl_autoselect");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_st_autoselect0, "cfg_st_autoselect0");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_st_autoselect1, "cfg_st_autoselect1");
   GLADE_HOOKUP_OBJECT (prefs_window, label21, "label21");

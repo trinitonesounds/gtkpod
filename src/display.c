@@ -52,6 +52,12 @@ static SortTab *sorttab[SORT_TAB_NUM];
 /* pointer to the currently selected playlist */
 static Playlist *current_playlist = NULL;
 
+/* used for stopping of display refresh */
+static void block_selection (gint inst);
+static void release_selection (gint inst);
+static gboolean stop_add = FALSE;
+
+
 static void sm_song_changed (Song *song);
 static void sm_remove_song (Song *song);
 static void sm_remove_all_songs (void);
@@ -59,7 +65,7 @@ static void sm_add_song_to_song_model (Song *song);
 static void st_song_changed (Song *song, gboolean removed, guint32 inst);
 static void st_add_song (Song *song, gboolean final, guint32 inst);
 static void st_remove_song (Song *song, guint32 inst);
-static void st_init (gint32 new_category, gboolean reinit, guint32 inst);
+static void st_init (gint32 new_category, guint32 inst);
 
 static void pm_dnd_advertise(GtkTreeView *v);
 
@@ -93,24 +99,8 @@ pm_dnd_advertise(GtkTreeView *v)
 	{ "text/plain", 0, 1001 }
     };
     guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
-    
-    if(!v) return;
-    gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
-					    GDK_ACTION_COPY);
-}
 
-static void
-sm_dnd_advertise(GtkTreeView *v)
-{
-    GtkTargetEntry target[] = {
-	{ "gtkpod/file", 0, 1000 },
-	{ "text/plain", 0, 1001 }
-    };
-    guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
-    
     if(!v) return;
-    gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
-					    target_size, GDK_ACTION_COPY);
     gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
 					    GDK_ACTION_COPY);
 }
@@ -122,10 +112,26 @@ static void st_dnd_advertise (GtkTreeView *v)
 	{ "text/plain", 0, 1001 }
     };
     guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
-    
+
     if(!v) return;
     gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
 					    target_size, GDK_ACTION_COPY);
+}
+
+static void
+sm_dnd_advertise(GtkTreeView *v)
+{
+    GtkTargetEntry target[] = {
+	{ "gtkpod/file", 0, 1000 },
+	{ "text/plain", 0, 1001 }
+    };
+    guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
+
+    if(!v) return;
+    gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
+					    target_size, GDK_ACTION_COPY);
+    gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
+					    GDK_ACTION_COPY);
 }
 
 
@@ -191,13 +197,17 @@ void pm_add_playlist (Playlist *playlist)
   gtk_list_store_append (GTK_LIST_STORE (model), &iter);
   gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 		      PM_COLUMN_PLAYLIST, playlist, -1);
-  /* If it's the first playlist, we select the item, causing a
-     callback which will initialize the select1 treeview and so on... */
+  /* If it's the first playlist (no playlist selected AND playlist ist
+     the MPL, we select it, unless prefs_get_mpl_autoselect() says
+     otherwise */
   if (current_playlist == NULL)
-    {
-      selection = gtk_tree_view_get_selection (playlist_treeview);
-      gtk_tree_selection_select_iter (selection, &iter);
-    }
+  {
+      if ((playlist->type == PL_TYPE_MPL) && prefs_get_mpl_autoselect())
+      {
+	  selection = gtk_tree_view_get_selection (playlist_treeview);
+	  gtk_tree_selection_select_iter (selection, &iter);
+      }
+  }
 }
 
 /* Used by pm_remove_playlist() to remove playlist from model by calling
@@ -275,28 +285,37 @@ static void pm_selection_changed (GtkTreeSelection *selection,
   GtkTreeIter  iter;
   Playlist *new_playlist;
   Song *song;
-  gboolean reinit = FALSE;
   guint32 n,i;
 
   if (gtk_tree_selection_get_selected (selection, &model, &iter) == FALSE)
-    return; /* no selection -- strange! */
+  {  /* no selection -> reset sort tabs */
+      st_init (-1, 0);
+      current_playlist = NULL;
+      return;
+  }
   gtk_tree_model_get (model, &iter, 
 		      PM_COLUMN_PLAYLIST, &new_playlist,
 		      -1);
-  /* no change in selection -- strange! */
-  if (new_playlist == current_playlist)   reinit = TRUE;
   /* remove all entries from sort tab 0 */
   /* printf ("removing entries: %x\n", current_playlist);*/
-  st_init (-1, reinit, 0);
+  st_init (-1, 0);
 
   current_playlist = new_playlist;
   n = get_nr_of_songs_in_playlist (new_playlist);
-  for (i=0; i<n; ++i)
-    { /* add all songs to sort tab 0 */
-      song = get_song_in_playlist_by_nr (new_playlist, i);
-      st_add_song (song, FALSE, 0);
-    }
-  if (n != 0) st_add_song (NULL, TRUE, 0);
+  if (n > 0)
+  {   
+      if (!prefs_get_block_display ())  block_selection (-1);
+      for (i=0; i<n; ++i)
+      { /* add all songs to sort tab 0 */
+	  if (stop_add)  break;
+	  song = get_song_in_playlist_by_nr (new_playlist, i);
+	  st_add_song (song, FALSE, 0);
+	  while (!prefs_get_block_display() && gtk_events_pending ())
+	      gtk_main_iteration ();
+      }
+      if (stop_add) st_add_song (NULL, TRUE, 0);
+      if (!prefs_get_block_display ())  release_selection (-1);
+  }
   gtkpod_songs_statusbar_update();
 }
 
@@ -926,6 +945,8 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
   if (inst == SORT_TAB_NUM)
   {  /* just add to song model */
       if (song != NULL)    sm_add_song_to_song_model (song);
+      if (final || (++count % 20 == 0))
+	  gtkpod_songs_statusbar_update();
   }
   else
   {
@@ -1024,11 +1045,7 @@ static void st_add_song (Song *song, gboolean final, guint32 inst)
       {
 	  st_add_song (NULL, final, inst+1);
       }
-
-      if (final || (++count % 20 == 0))
-	  gtkpod_songs_statusbar_update();
   }
-  while (widgets_blocked && gtk_events_pending ())   gtk_main_iteration ();
 }
 
 
@@ -1069,12 +1086,8 @@ static void st_remove_song (Song *song, guint32 inst)
    -1 if the current category is to be left unchanged */
 /* if reinit == TRUE, it will also remember, if "All" was
    selected. Normally it does not specifically remember and will
-   select "All" in accordance to the prefs settings. However, if
-   reinit == TRUE "All" will be selected automatically if it was
-   selected */
-/* Trashed "reinit" -- if you selected "All", it will be selected
-   again automatically */
-static void st_init (gint32 new_category, gboolean reinit, guint32 inst)
+   select "All" in accordance to the prefs settings. */
+static void st_init (gint32 new_category, guint32 inst)
 {
   SortTab *st;
   gint cat;
@@ -1110,7 +1123,7 @@ static void st_init (gint32 new_category, gboolean reinit, guint32 inst)
 	  prefs_set_st_category (inst, new_category);
 	}
       st_remove_all_entries_from_model (inst);
-      st_init (-1, reinit, inst+1);
+      st_init (-1, inst+1);
     }
 }
 
@@ -1120,37 +1133,43 @@ void st_page_selected (GtkNotebook *notebook, guint page)
 {
   guint32 inst;
   GList *copy = NULL;
-  TabEntry *master;
   SortTab *st;
   gint i,n;
   Song *song;
 
+  if (stop_add)  return;
   inst = st_get_instance_from_notebook (notebook);
   if (inst == -1) return; /* invalid notebook */
   st = sorttab[inst];
-  master = g_list_nth_data (st->entries, 0);
-  /* Copy members before they get deleted by st_init */
-  if (master != NULL)
-    {
-      copy = g_list_copy (master->members);
-    }
   /* re-initialize current instance */
-  st_init (page, FALSE, inst);
-  /* We may need to unselect the previous selection */
-  /* selection = gtk_tree_view_get_selection
-      (st->treeview[page]);
-      gtk_tree_selection_unselect_all (selection); */
-  /* add all songs previously present to sort tab */
-  /* printf("starting to add songs\n"); */
+  st_init (page, inst);
+  /* Get list of songs to re-insert */
+  if (inst == 0)
+  {
+      if (current_playlist)  copy = current_playlist->members;
+  }
+  else
+  {
+      if (sorttab[inst-1] && sorttab[inst-1]->current_entry)
+	  copy = sorttab[inst-1]->current_entry->members;
+  }
   n = g_list_length (copy);
-  for (i=0; i<n; ++i)
-    {
-      song = (Song *)g_list_nth_data (copy, i);
-      st_add_song (song, FALSE, inst);
-    }
-  if (n != 0) st_add_song (NULL, TRUE, inst);
-  g_list_free (copy);
-  /* printf("finished adding songs\n");*/
+  if (n > 0)
+  {
+      /* block playlist view and all sort tab notebooks <= inst */
+      if (!prefs_get_block_display ())  block_selection (inst);
+      /* add all songs previously present to sort tab */
+      for (i=0; i<n; ++i)
+      {
+	  if (stop_add)  break;
+	  song = (Song *)g_list_nth_data (copy, i);
+	  st_add_song (song, FALSE, inst);
+	  while (!prefs_get_block_display() && gtk_events_pending ())
+	      gtk_main_iteration ();
+      }
+      if (n && !stop_add) st_add_song (NULL, TRUE, inst);
+      if (!prefs_get_block_display ())  release_selection (inst);
+  }
 }
 
 
@@ -1202,7 +1221,7 @@ static void st_selection_changed (GtkTreeSelection *selection,
       {
 	  st->current_entry = NULL;
 	  C_FREE (st->lastselection[st->current_category]);
-	  st_init (-1, FALSE, inst+1);
+	  st_init (-1, inst+1);
       }
       return; 
   }
@@ -1214,15 +1233,23 @@ static void st_selection_changed (GtkTreeSelection *selection,
   if (new_entry == st->current_entry) return; /* important: otherwise
 						 st_add_song will not work correctly */
   /* initialize next instance */
-  st_init (-1, FALSE, inst+1);
+  st_init (-1, inst+1);
   st->current_entry = new_entry;
   n = g_list_length (new_entry->members); /* number of members */
-  for (i=0; i<n; ++i)
-    { /* add all member songs to next instance */
-      song = (Song *)g_list_nth_data (new_entry->members, i);
-      st_add_song (song, FALSE, inst+1);
-    }
-  if (n != 0)  st_add_song (NULL, TRUE, inst+1);
+  if (n > 0)
+  {
+      if (!prefs_get_block_display ())  block_selection (inst);
+      for (i=0; i<n; ++i)
+      { /* add all member songs to next instance */
+	  if (stop_add) break;
+	  song = (Song *)g_list_nth_data (new_entry->members, i);
+	  st_add_song (song, FALSE, inst+1);
+	  while (!prefs_get_block_display() && gtk_events_pending ())
+	      gtk_main_iteration ();
+      }
+      if (!stop_add)  st_add_song (NULL, TRUE, inst+1);
+      if (!prefs_get_block_display ())  release_selection (inst);
+  }
   gtkpod_songs_statusbar_update();
 }
 
@@ -1861,8 +1888,9 @@ gint sm_data_compare_func (GtkTreeModel *model,
 	    else return -1;
 	    break;
 	case SM_COLUMN_NONE: 
-	    return((g_list_index(current_playlist->members, song1)) -
-		    (g_list_index(current_playlist->members, song2)));
+	    if (current_playlist)
+		return((g_list_index(current_playlist->members, song1)) -
+		       (g_list_index(current_playlist->members, song2)));
 	    break;
 	default:
 	    gtkpod_warning("No sort for column %d\n", column);
@@ -2369,3 +2397,125 @@ void display_update_default_sizes (void)
 }
 
 
+/* ------------------------------------------------------------
+
+           Functions for stopping display update 
+
+   ------------------------------------------------------------ */
+struct timeout_data {
+    GtkWidget *dialog;
+    guint     id;
+};
+
+/* timeout function called after one second to display the abort
+ * message */
+static gboolean add_songs_dialog (gpointer data)
+{
+    struct timeout_data *timeout = (struct timeout_data *)data;
+    gtk_widget_show (timeout->dialog);
+    timeout->id = 0;
+    return FALSE;
+}
+
+
+/* This function is called when the user presses the abort button
+ * during a display refresh */
+static void add_songs_abort (gboolean *abort)
+{
+    *abort = TRUE;
+}
+
+
+/* called by block_selection() and release_selection */
+static void block_release_selection (gint inst, gboolean block)
+{
+    static gboolean first_time = TRUE;
+    static struct timeout_data timeout;
+    static gint count_st[SORT_TAB_NUM];
+    static gint count_pl = 0;
+    gint i;
+
+    if (first_time)
+    { /* just to be sure -- should be zero.... */
+	for (i=0; i<SORT_TAB_NUM; ++i)  count_st[i] = 0;
+	first_time = FALSE;
+	timeout.dialog = NULL;
+	timeout.id = 0;
+	stop_add = FALSE;
+    }
+
+    if(block)
+    {
+	if (count_pl == 0)
+	{
+	    block_widgets ();
+	    gtk_widget_set_sensitive (GTK_WIDGET (playlist_treeview), FALSE);
+	}
+	++count_pl;
+	for (i=0; (i<=inst) && (i<SORT_TAB_NUM); ++i)
+	{
+	    if (count_st[i] == 0)
+		gtk_widget_set_sensitive (GTK_WIDGET (sorttab[i]->notebook),
+					  FALSE);
+	    ++count_st[i];
+	}
+	/* Set up dialogue to abort */
+	if (!timeout.dialog)
+	{
+	    timeout.dialog = gtk_message_dialog_new (
+		GTK_WINDOW (gtkpod_window),
+		GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_INFO,
+		GTK_BUTTONS_CANCEL,
+		_("Click to abort display update.\n\nNot all songs will be displayed, but none are lost."));
+	    /* Indicate that user wants to abort */
+	    g_signal_connect_swapped (GTK_OBJECT (timeout.dialog), "response",
+				      G_CALLBACK (add_songs_abort),
+				      &stop_add);
+	    timeout.id = gtk_timeout_add (1800, add_songs_dialog, &timeout);
+	}
+    }
+    else
+    { /* release selection */
+	for (i=0; (i<=inst) && (i<SORT_TAB_NUM); ++i)
+	{
+	    --count_st[i];
+	    if (count_st[i] == 0)
+		gtk_widget_set_sensitive (GTK_WIDGET (sorttab[i]->notebook),
+					  TRUE);
+	}
+	--count_pl;
+	if (count_pl == 0)
+	{
+	    gtk_widget_set_sensitive (GTK_WIDGET (playlist_treeview), TRUE);
+	    if (timeout.id)
+	    { /* remove timeout function if still present */
+		gtk_timeout_remove (timeout.id);
+		timeout.id = 0;
+	    }
+	    if (timeout.dialog)
+	    { /* destroy dialog */
+		gtk_widget_destroy (timeout.dialog);
+		timeout.dialog = NULL;
+	    }
+	    stop_add = FALSE;
+	    release_widgets ();
+	}
+    }
+}
+
+/* Will block the possibility to select another playlist / sort tab
+   page / tab entry. Will also block the widgets and set up a timeout
+   dialogue popping up after 1.8 seconds offering to stop the update
+   process. "inst" is the sort tab instance up to which the selections
+   should be blocked. "-1" corresponds to the playlist view */
+static void block_selection (gint inst)
+{
+    block_release_selection (inst, TRUE);
+}
+
+/* Makes selection possible again */
+static void release_selection (gint inst)
+{
+    block_release_selection (inst, FALSE);
+}
