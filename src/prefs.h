@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 00:08:14 jcs>
+/* Time-stamp: <2003-10-02 23:35:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -113,8 +113,8 @@ struct cfg
   gboolean display_tooltips_main; /* should tooltips be displayed (main) */
   gboolean display_tooltips_prefs;/* should toolbar be displayed (prefs) */
   gboolean update_charset;      /* Update charset when updating song? */
-  gboolean write_charset;       /* Add directories recursively? */
-  gboolean add_recursively;     /* Update charset when writing song? */
+  gboolean write_charset;       /* Use selected charset when writing song? */
+  gboolean add_recursively;     /* Add directories recursively? */
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */

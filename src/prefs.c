@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-28 00:08:14 jcs>
+/* Time-stamp: <2003-10-02 23:32:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1157,13 +1157,16 @@ void prefs_set_charset (gchar *charset)
 void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
 {
     C_FREE (cfgd->charset);
-    if (charset && strlen (charset))  cfgd->charset = g_strdup (charset);
+    if (charset && strlen (charset))
+	cfgd->charset = g_strdup (charset);
+    printf ("set_charset: '%s'\n", charset);	
 }
 
 
 gchar *prefs_get_charset (void)
 {
     return cfg->charset;
+    printf ("get_charset: '%s'\n", cfg->charset);
 }
 
 struct cfg *clone_prefs(void)

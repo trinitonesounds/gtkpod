@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-27 01:41:50 jcs>
+/* Time-stamp: <2003-10-02 23:56:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -361,13 +361,19 @@ static void update_charset_info (Song *song)
 	{    /* use standard locale charset */
 	    g_get_charset (&charset);
 	}
-	/* test for Japanese auto detection */
+	/* Test for Japanese auto detection. "Japanese Autodetection"
+	   is not a valid charset. Here try to replace it with the
+	   encoding detected when reading the song */
 	if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
 	{
-	    if (song->auto_charset)  charset = song->auto_charset;
+	    if (song->auto_charset)  song->charset = song->auto_charset;
+	    song->auto_charset = NULL;
 	}
-	song->auto_charset = NULL;
-	song->charset = g_strdup (charset);
+	else
+	{
+	    song->charset = g_strdup (charset);
+	    song->auto_charset = NULL;
+	}
     }
 }
 
@@ -1375,14 +1381,15 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
     gchar *ipod_fullpath, track[20];
     gchar *prefs_charset = NULL;
     Song *oldsong;
-    gchar *charset;
+    gboolean song_charset_set;
 
     if (!song) return FALSE;
 
     /* if we are to use the charset used when first importing
        the song, change the prefs settings temporarily */
-    charset = song->charset;
-    if (!prefs_get_write_charset () && charset)
+    if (song->charset)  song_charset_set = TRUE;
+    else                song_charset_set = FALSE;
+    if (!prefs_get_write_charset () && song_charset_set)
     {   /* we should use the initial charset for the update */
 	if (prefs_get_charset ())
 	{   /* remember the charset originally set */
@@ -1447,10 +1454,11 @@ gboolean write_tags_to_file (Song *song, S_item tag_id)
     }
     g_free (filetag);
 
-    if (!prefs_get_update_charset () && charset)
+    if (!prefs_get_write_charset () && song_charset_set)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }
+    g_free (prefs_charset);
     return TRUE;
 }
 
