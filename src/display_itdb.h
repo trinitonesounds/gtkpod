@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 13:46:41 jcs>
+/* Time-stamp: <2005-01-12 00:48:06 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -58,18 +58,19 @@ typedef struct
 {
   gint32  oldsize;        /* used when updating tracks: size on iPod */
   gchar   *year_str;      /* year as string -- always identical to year */
-  guint32 peak_signal;	  /* LAME Peak Signal * 0x800000    */
+  guint32 peak_signal;	  /* LAME Peak Signal * 0x800000            */
   gdouble radio_gain;	  /* RadioGain in dB
-			     (as defined by www.replaygain.org) */
+			     (as defined by www.replaygain.org)     */
   gdouble audiophile_gain;/* AudiophileGain in dB 
-			     (as defined by www.replaygain.org)  */
-  gboolean peak_signal_set;    /* has the peak signal been set?       */
-  gboolean radio_gain_set;     /* has the radio gain been set?        */
+			     (as defined by www.replaygain.org)     */
+  gboolean peak_signal_set;    /* has the peak signal been set?     */
+  gboolean radio_gain_set;     /* has the radio gain been set?      */
   gboolean audiophile_gain_set;/* has the audiophile gain been set? */
-  gchar   *pc_path_utf8;  /* PC filename in utf8 encoding   */
+  gchar   *pc_path_locale;/* path on PC (local encoding)            */
+  gchar   *pc_path_utf8;  /* PC filename in utf8 encoding           */
   gchar   *hostname;      /* name of host this file has been imported on*/
-  gchar   *md5_hash;      /* md5 hash of file (or NULL)          */
-  gchar   *charset;       /* charset used for ID3 tags           */
+  gchar   *md5_hash;      /* md5 hash of file (or NULL)             */
+  gchar   *charset;       /* charset used for ID3 tags              */
 } ExtraTrackData;
 
 /* A means to address the fields by uniform IDs. May be extended as
@@ -119,9 +120,13 @@ void init_data (GtkWidget *window);
 
 iTunesDB *gp_itdb_new (void);
 void gp_itdb_add (iTunesDB *itdb);
+void gp_itdb_add_extra (iTunesDB *itdb);
+void gp_itdb_add_extra_full (iTunesDB *itdb);
 
 Track *gp_track_new (void);
 Track *gp_track_add (iTunesDB *itdb, Track *track);
+void gp_track_add_extra (Track *track);
+void gp_track_validate_entries (Track *track);
 
 Playlist *gp_playlist_new (const gchar *title, gboolean spl);
 void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos);
@@ -129,6 +134,8 @@ Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
 			       gboolean spl, gint32 pos);
 void gp_playlist_remove_track (Playlist *plitem, Track *track);
 void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display);
+
+void gp_playlist_add_extra (Playlist *pl);
 
 gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num);
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 12:24:51 jcs>
+/* Time-stamp: <2005-01-10 22:32:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -361,8 +361,6 @@ typedef struct
   gchar   *composer;         /* Composer (utf8)        */
   gchar   *fdesc;            /* eg. "MP3-File"...(utf8)*/
   gchar   *grouping;         /* ? (utf8)               */
-  gchar   *pc_path_locale;   /* path on PC (local encoding).
-				Attention: not stored in iTunesDB!    */
   gchar   *ipod_path;        /* name of file on iPod: uses ":"
 				instead of "/"                        */
   guint32 id;                /* unique ID of track     */

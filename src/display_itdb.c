@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 13:37:54 jcs>
+/* Time-stamp: <2005-01-12 00:48:05 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -117,17 +117,60 @@ ExtraTrackData *gp_track_extra_duplicate (ExtraTrackData *etr)
     return etr_dup;
 }
 
+
+/* Create a new itdb struct including ExtraiTunesDBData */
 iTunesDB *gp_itdb_new (void)
 {
     iTunesDB *itdb = itdb_new ();
-    ExtraiTunesDBData *eitdb = g_new0 (ExtraiTunesDBData, 1);
-    itdb->userdata = eitdb;
-    itdb->userdata_destroy =
-	(ItdbUserDataDestroyFunc)gp_itdb_extra_destroy;
-    itdb->userdata_duplicate =
-	(ItdbUserDataDuplicateFunc)gp_itdb_extra_duplicate;
-    eitdb->data_changed = FALSE;
+    gp_itdb_add_extra (itdb);
     return itdb;
+}
+
+
+    /* Add and initialize ExtraiTunesDBData if missing */
+void gp_itdb_add_extra (iTunesDB *itdb)
+{
+    g_return_if_fail (itdb);
+
+    if (!itdb->userdata)
+    {
+	ExtraiTunesDBData *eitdb = g_new0 (ExtraiTunesDBData, 1);
+	itdb->userdata = eitdb;
+	itdb->userdata_destroy =
+	    (ItdbUserDataDestroyFunc)gp_itdb_extra_destroy;
+	itdb->userdata_duplicate =
+	    (ItdbUserDataDuplicateFunc)gp_itdb_extra_duplicate;
+	eitdb->data_changed = FALSE;
+    }
+}
+
+
+/* Validate a complete @itdb (including tracks and playlists),
+ * i.e. add the Extra*Data and validate the track entries */
+void gp_itdb_add_extra_full (iTunesDB *itdb)
+{
+    GList *gl;
+
+    g_return_if_fail (itdb);
+
+    /* Add and initialize ExtraiTunesDBData if missing */
+    gp_itdb_add_extra (itdb);
+
+    /* validate tracks */
+    for (gl=itdb->tracks; gl; gl=gl->next)
+    {
+	Track *track = gl->data;
+	g_return_if_fail (track);
+	gp_track_add_extra (track);
+    }
+
+    /* validate playlists */
+    for (gl=itdb->playlists; gl; gl=gl->next)
+    {
+	Playlist *pl = gl->data;
+	g_return_if_fail (pl);
+	gp_playlist_add_extra (pl);
+    }
 }
 
 Playlist *gp_playlist_new (const gchar *title, gboolean spl)
@@ -141,16 +184,46 @@ Playlist *gp_playlist_new (const gchar *title, gboolean spl)
     return pl;
 }
 
+/* Add and initialize the ExtraPlaylistData if missing */
+void gp_playlist_add_extra (Playlist *pl)
+{
+    g_return_if_fail (pl);
+
+    if (!pl->userdata)
+    {
+	ExtraPlaylistData *epl = g_new0 (ExtraPlaylistData, 1);
+	pl->userdata = epl;
+	pl->userdata_destroy =
+	    (ItdbUserDataDestroyFunc)gp_playlist_extra_destroy;
+	pl->userdata_duplicate =
+	    (ItdbUserDataDuplicateFunc)gp_playlist_extra_duplicate;
+    }
+}
+
 Track *gp_track_new (void)
 {
     Track *track = itdb_track_new ();
-    track->userdata = g_new0 (ExtraTrackData, 1);
-    track->userdata_destroy =
-	(ItdbUserDataDestroyFunc)gp_track_extra_destroy;
-    track->userdata_duplicate =
-	(ItdbUserDataDuplicateFunc)gp_track_extra_duplicate;
+    /* Add ExtraTrackData */
+    gp_track_add_extra (track);
     return track;
 }
+
+/* Add and initialize the ExtraTrackData if missing */
+void gp_track_add_extra (Track *track)
+{
+    g_return_if_fail (track);
+
+    if (!track->userdata);
+    {
+	ExtraTrackDAta *etr = g_new0 (ExtraTrackData, 1);
+	track->userdata = etr;
+	track->userdata_destroy =
+	    (ItdbUserDataDestroyFunc)gp_track_extra_destroy;
+	track->userdata_duplicate =
+	    (ItdbUserDataDuplicateFunc)gp_track_extra_duplicate;
+    }
+}
+
 
 /* Append track to the track list of @itdb */
 /* Note: the track will also have to be added to the playlists */
@@ -172,7 +245,7 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
 	/* Make sure all strings are initialised -- that way we don't
 	   have to worry about it when we are handling the strings */
 	/* exception: md5_hash, hostname, charset: these may be NULL. */
-	track_validate_entries (track);
+	gp_track_validate_entries (track);
 	itdb_track_add (itdb, track);
 	result = track;
     }
@@ -272,6 +345,42 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
     pl->members = g_list_append (pl->members, track);
     if (display)  pm_add_track (pl, track, TRUE);
 }
+
+
+/* Make sure all strings are initialised -- that way we don't
+   have to worry about it when we are handling the strings.
+/* exception: md5_hash, hostname and charset: these may be NULL. */
+void gp_track_validate_entries (Track *track)
+{
+    ExtraTrackData *etr;
+
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    if (!track->album)           track->album = g_strdup ("");
+    if (!track->artist)          track->artist = g_strdup ("");
+    if (!track->title)           track->title = g_strdup ("");
+    if (!track->genre)           track->genre = g_strdup ("");
+    if (!track->comment)         track->comment = g_strdup ("");
+    if (!track->composer)        track->composer = g_strdup ("");
+    if (!track->fdesc)           track->fdesc = g_strdup ("");
+    if (!track->grouping)        track->grouping = g_strdup ("");
+    if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
+    if (!track->pc_path_locale)  track->pc_path_locale = g_strdup ("");
+    if (!track->ipod_path)       track->ipod_path = g_strdup ("");
+    /* Make sure year_str is identical to year */
+    g_free (etr->year_str);
+    etr->year_str = g_strdup_printf ("%d", track->year);
+}
+
+
+/* Make sure all structs (iTunesDB, Playlist, Track) have the
+ * Extra*Data set */
+
+void gp_validate_itdb (iTunesDB *itdb)
+
+
 
 
 void init_data (GtkWidget *window)

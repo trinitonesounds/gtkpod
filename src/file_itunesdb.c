@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 13:50:36 jcs>
+/* Time-stamp: <2005-01-12 00:50:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,8 +36,10 @@
 #include "display.h"
 #include "file.h"
 #include "itdb.h"
+#include "info.h"
 #include "md5.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "prefs.h"
 #include "support.h"
 #include "tools.h"
@@ -92,48 +94,54 @@ static GHashTable *extendedinfohash_md5 = NULL;
 static float extendedinfoversion = 0.0;
 
 
-/* fills in extended info if available (called from add_track()) */
+/* fills in extended info if available */
 void fill_in_extended_info (Track *track)
 {
   gint ipod_id=0;
+  ExtraTrackData *etr;
   struct track_extended_info *sei=NULL;
 
-  if (extendedinfohash && track->ipod_id)
+  g_return_if_fail (track);
+  etr = track->userdata;
+  g_return_if_fail (etr);
+
+  if (extendedinfohash && track->id)
   {
-      ipod_id = track->ipod_id;
+      /* copy id to gint value -- needed for the hash table functions */
+      ipod_id = track->id;
       sei = g_hash_table_lookup (extendedinfohash, &ipod_id);
   }
-  if (extendedinfohash_md5)
+  if (!sei && extendedinfohash_md5)
   {
-      if (!track->md5_hash)
+      if (!etr->md5_hash)
       {
 	  gchar *filename = get_track_name_on_ipod (track);
-	  track->md5_hash = md5_hash_on_filename (filename, FALSE);
+	  etr->md5_hash = md5_hash_on_filename (filename, FALSE);
 	  g_free (filename);
       }
-      if (track->md5_hash)
+      if (etr->md5_hash)
       {
-	  sei = g_hash_table_lookup (extendedinfohash_md5, track->md5_hash);
+	  sei = g_hash_table_lookup (extendedinfohash_md5, etr->md5_hash);
       }
   }
   if (sei) /* found info for this id! */
   {
-      if (sei->pc_path_locale && !track->pc_path_locale)
-	  track->pc_path_locale = g_strdup (sei->pc_path_locale);
-      if (sei->pc_path_utf8 && !track->pc_path_utf8)
-	  track->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
-      if (sei->md5_hash && !track->md5_hash)
-	  track->md5_hash = g_strdup (sei->md5_hash);
-      if (sei->charset && !track->charset)
-	  track->charset = g_strdup (sei->charset);
-      if (sei->hostname && !track->hostname)
-	  track->hostname = g_strdup (sei->hostname);
-      track->oldsize = sei->oldsize;
+      if (sei->pc_path_locale && !etr->pc_path_locale)
+	  etr->pc_path_locale = g_strdup (sei->pc_path_locale);
+      if (sei->pc_path_utf8 && !etr->pc_path_utf8)
+	  etr->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
+      if (sei->md5_hash && !etr->md5_hash)
+	  etr->md5_hash = g_strdup (sei->md5_hash);
+      if (sei->charset && !etr->charset)
+	  etr->charset = g_strdup (sei->charset);
+      if (sei->hostname && !etr->hostname)
+	  etr->hostname = g_strdup (sei->hostname);
+      etr->oldsize = sei->oldsize;
       track->playcount += sei->playcount;
       if (sei->peak_signal_set)
       {
-	  track->peak_signal_set = sei->peak_signal_set;
-	  track->peak_signal = sei->peak_signal;
+	  etr->peak_signal_set = sei->peak_signal_set;
+	  etr->peak_signal = sei->peak_signal;
       }
       if (extendedinfoversion > 0.81)
       {
@@ -142,13 +150,13 @@ void fill_in_extended_info (Track *track)
 	     up for a while) */
 	  if (sei->radio_gain_set)
 	  {
-	      track->radio_gain_set = sei->radio_gain_set;
-	      track->radio_gain = sei->radio_gain;
+	      etr->radio_gain_set = sei->radio_gain_set;
+	      etr->radio_gain = sei->radio_gain;
 	  }
 	  if (sei->audiophile_gain_set)
 	  {
-	      track->audiophile_gain_set = sei->audiophile_gain_set;
-	      track->audiophile_gain = sei->audiophile_gain;
+	      etr->audiophile_gain_set = sei->audiophile_gain_set;
+	      etr->audiophile_gain = sei->audiophile_gain;
 	  }
       }
       /* FIXME: This means that the rating can never be reset to 0
@@ -300,7 +308,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		    else
 		    { /* this is a deleted track that hasn't yet been
 		         removed from the iPod's hard drive */
-			Track *track = itunesdb_new_track ();
+			Track *track = gp_track_new ();
 			track->ipod_path = g_strdup (sei->ipod_path);
 			pending_deletion = g_list_append (pending_deletion,
 							  track);
@@ -377,6 +385,185 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     if (!success) destroy_extendedinfohash ();
     return success;
 }
+
+
+/* Import an iTunesDB and return an iTunesDB structure. It will have
+ * been merged with the existing @old_itdb. */
+/* @itdb_name: if non-NULL the iTunesDB.@itdb_name will be read from
+   the configuration directory (~/.gtkpod) and extended informations will
+   be used. */
+/* Return value: a new iTunesDB structure or NULL in case of an error */
+iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *itdb_name)
+{
+    gchar *cfgdir;
+    GList *gl;
+    iTunesDB *itdb = NULL;
+    GError *error = NULL;
+
+    if (prefs_get_offline() || itdb_name)
+    { /* offline - requires extended info */
+	if ((cfgdir = prefs_get_cfgdir ()))
+	{
+	    gchar *name_ext = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
+	    gchar *name_db = g_build_filename (cfgdir, "iTunesDB", NULL);
+	    if (g_file_test (name_db, G_FILE_TEST_EXISTS))
+	    {
+		if (!read_extended_info (name_ext, name_db))
+		{
+		    gtkpod_warning (_("Extended info will not be used. If you have non-transferred tracks,\nthese will be lost.\n"));
+		}
+		itdb = itdb_parse_file (name_db, &error);
+		if(itdb && !error)
+		{
+		    gtkpod_statusbar_message(
+			_("Offline iPod Database Successfully Imported"));
+		}
+		else
+		{
+		    if (error)
+		    {
+			gtkpod_warning (
+			    _("Offline iPod database import failed: '%s'\n\n"),
+			error->message);
+		    }
+		    else
+		    {
+			gtkpod_warning (
+			    _("Offline iPod database import failed: \n\n"));
+		    }
+		}
+	    }
+	    else
+	    {
+		gtkpod_warning (
+		    _("'%s' does not exist. Import aborted.\n\n"),
+		    name_db);
+	    }
+	    g_free (name_ext);
+	    g_free (name_db);
+	    g_free (cfgdir);
+	}
+	else
+	{
+	    gtkpod_warning (_("Import aborted.\n"));
+	}
+    }
+    else
+    { /* iPod is connected */
+	const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL};
+	const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
+	gchar *ipod_mount_filename = charset_from_utf8(prefs_get_ipod_mount());
+	gchar *name_ext = resolve_path (ipod_mount_filename, ext_db);
+	gchar *name_db = resolve_path (ipod_mount_filename, db);
+	if (name_db)
+	{
+	    if (prefs_get_write_extended_info ())
+	    {
+		if (!read_extended_info (name_ext, name_db))
+		{
+		    gtkpod_warning (_("Extended info will not be used.\n"));
+		}
+	    }
+	    itdb = itdb_parse (ipod_mount_filename, &error);
+	    if(itdb && !error)
+	    {
+		gtkpod_statusbar_message (
+		    _("iPod Database Successfully Imported"));
+	    }
+	    else
+	    {
+		if (error)
+		{
+		    gtkpod_warning (
+			_("iPod Database Import Failed: '%s'\n\n"),
+			error->message);
+		}
+		else
+		{
+		    gtkpod_warning (
+			_("iPod Database Import Failed.\n\n"));
+		}
+	    }
+	}
+	else
+	{
+	    gchar *name = g_build_filename (
+		ipod_mount_filename,
+		"iPod_Control","iTunes","iTunesDB",NULL);
+	    gtkpod_warning (_("'%s' does not exist. Import aborted.\n\n"),
+			    name);
+	    g_free (name);
+	}
+	g_free (name_ext);
+	g_free (name_db);
+	g_free (ipod_mount_filename);
+    }
+
+    /* add Extra*Data */
+    gp_itdb_add_extra_full (itdb);
+    /* validate all tracks */
+    for (gl=itdb->tracks; gl; gl=gl->next)
+    {
+	Track *track = gl->data;
+	gp_track_validate_entries (track);
+    }
+    /* find duplicates */
+    gp_itdb_hash_tracks (itdb);
+
+    if (old_itdb)
+    {
+	/* this table holds pairs of old_itdb-tracks/new_itdb/tracks */
+	ExtraiTunesDBData *old_eitdb = old_itdb->userdata;
+	ExtraiTunesDBData *eitdb = itdb->userdata;
+	GHashTable *track_hash = g_hash_table_new (g_direct_hash,
+						   g_direct_equal);
+	Playlist *mpl = itdb_playlist_mpl (itdb);
+	g_return_val_if_fail (mpl, NULL);
+	g_return_val_if_fail (old_eitdb, NULL);
+	g_return_val_if_fail (eitdb, NULL);
+
+	/* add tracks from @old_itdb to new itdb */
+	for (gl=old_itdb->tracks; gl; gl=gl->next)
+	{
+	    Track *duptr, *addtr;
+	    Track *track = gl->data;
+	    g_return_val_if_fail (track, NULL);
+	    duptr = itdb_track_duplicate (track);
+	    addtr = gp_track_add (itdb, duptr);
+	    g_hash_table_insert (track_hash, track, addtr);
+	    if (addtr == duptr)
+	    {   /* Add to MPL */
+		itdb_playlist_add_track (mpl, addtr, -1);
+	    }
+	}
+	/* add playlists */
+	gl = old_itdb->playlists;
+	while (gl && gl->next)
+	{
+	    GList *glm;
+	    Playlist *duppl;
+	    Playlist *pl = gl->next->data; /* skip MPL */
+	    g_return_val_if_fail (pl, NULL);
+	    duppl = itdb_playlist_duplicate (pl);
+	    /* switch members */
+	    for (glm=duppl->members; glm; glm=glm->next);
+	    {
+		Track *newtr = g_hash_table_lookup (track_hash,
+						    glm->data);
+		g_return_val_if_fail (newtr, NULL);
+		glm->data = newtr;
+	    }
+	    itdb_playlist_add (itdb, duppl, -1);
+	    gl = gl->next;
+	}
+	g_hash_table_destroy (track_hash);
+	/* copy data_changed flag */
+	eitdb->data_changed = old_eitdb->data_changed;
+    }
+    return itdb;
+}
+
+
 
 
 /* Handle the function "Import iTunesDB" */

@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-01-08 01:51:59 jcs>
+|  Time-stamp: <2005-01-12 00:48:07 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -276,6 +276,60 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
    }
 }
 
+/**
+ * Register all tracks in the md5 hash and remove duplicates (while
+ * preserving playlists).
+ * Call  remove_duplicate (NULL, NULL); to show an info dialogue
+ */
+void gp_itdb_hash (iTunesDB *itdb)
+{
+   gint ns, count, track_nr;
+   gchar *buf;
+   Track *track, *oldtrack;
+
+   g_return_if_fail (itdb);
+
+   if (!prefs_get_md5tracks ()) return;
+
+   ns = itdb_tracks_number (itdb);
+   if (ns == 0)                 return;
+
+   block_widgets (); /* block widgets -- this might take a while,
+			so we'll do refreshs */
+   md5_free (itdb);  /* release md5 hash */
+   count = 0;
+   track_nr = 0;
+   /* populate the hash table */
+   while ((track = g_list_nth_data (itdb->tracks, track_nr)))
+   {
+       oldtrack = md5_track_exists_insert (track);
+       ++count;
+/*        printf("%d:%d:%p:%p\n", count, track_nr, track, oldtrack); */
+       if (!prefs_get_block_display() &&
+	   (((count % 20) == 1) || (count == ns)))
+       { /* update for count == 1, 21, 41 ... and for count == n */
+	   buf = g_strdup_printf (ngettext ("Hashed %d of %d track.",
+					    "Hashed %d of %d tracks.", ns),
+				  count, ns);
+	   gtkpod_statusbar_message(buf);
+	   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+	   g_free (buf);
+       }
+       if (oldtrack)
+       {
+	   remove_duplicate (oldtrack, track);
+       }
+       else
+       { /* if we removed a track (above), we don't need to increment
+	    the track_nr here */
+	   ++track_nr;
+       }
+   }
+   release_widgets (); /* release widgets again */
+}
+
+
+
 
 /* ------------------------------------------------------------ *\
 |                                                                |
@@ -431,32 +485,6 @@ guint32 track_get_timestamp (Track *track, T_item t_item)
 }
 
 
-/* Make sure all strings are initialised -- that way we don't
-   have to worry about it when we are handling the strings.
-/* exception: md5_hash, hostname and charset: these may be NULL. */
-void track_validate_entries (Track *track)
-{
-    ExtraTrackData *etr;
-
-    g_return_if_fail (track);
-    etr = track->userdata;
-    g_return_if_fail (etr);
-
-    if (!track->album)           track->album = g_strdup ("");
-    if (!track->artist)          track->artist = g_strdup ("");
-    if (!track->title)           track->title = g_strdup ("");
-    if (!track->genre)           track->genre = g_strdup ("");
-    if (!track->comment)         track->comment = g_strdup ("");
-    if (!track->composer)        track->composer = g_strdup ("");
-    if (!track->fdesc)           track->fdesc = g_strdup ("");
-    if (!track->grouping)        track->grouping = g_strdup ("");
-    if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
-    if (!track->pc_path_locale)  track->pc_path_locale = g_strdup ("");
-    if (!track->ipod_path)       track->ipod_path = g_strdup ("");
-    /* Make sure year_str is identical to year */
-    g_free (etr->year_str);
-    etr->year_str = g_strdup_printf ("%d", track->year);
-}
 
 
 /*------------------------------------------------------------------*\

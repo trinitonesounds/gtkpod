@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 12:24:43 jcs>
+/* Time-stamp: <2005-01-12 00:48:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -100,7 +100,7 @@ void itdb_track_unlink (Itdb_Track *track)
     itdb->tracks = g_list_remove (itdb->tracks, track);
 }
 
-/* Duplicate an existing playlist */
+/* Duplicate an existing track */
 Itdb_Track *itdb_track_duplicate (Itdb_Track *tr)
 {
     Itdb_Track *tr_dup;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 13:46:40 jcs>
+/* Time-stamp: <2005-01-12 00:48:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -869,7 +869,7 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	if (stat (name, &si) == 0)
 	    nti->time_created = itdb_time_host_to_mac (si.st_mtime);
 
-	track_validate_entries (nti);
+	gp_track_validate_entries (nti);
 
 	if (orig_track)
 	{ /* we need to copy all information over to the original

@@ -1,5 +1,7 @@
 TODO:
 
+- give out warning if umount did not succeed.
+
 - more features for mserv
 
 - icons should be themable

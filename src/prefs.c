@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-02 18:27:53 jcs>
+/* Time-stamp: <2005-01-12 00:48:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1274,7 +1274,7 @@ void prefs_set_ipod_mount(const gchar *mp)
 
 /* If the status of md5 hash flag changes, free or re-init the md5
    hash table */
-void prefs_set_md5tracks(gboolean active)
+void prefs_set_md5tracks (gboolean active)
 {
     if (cfg->md5tracks && !active)
     { /* md5 checksums have been turned off */
@@ -1285,7 +1285,9 @@ void prefs_set_md5tracks(gboolean active)
     { /* md5 checksums have been turned on */
 	cfg->md5tracks = active; /* must be set before calling
 				   hash_tracks() */
-	hash_tracks ();
+	gp_itdb_hash_tracks ();
+	/* display duplicates */
+	remove_duplicate (NULL, NULL);
     }
 }
 
