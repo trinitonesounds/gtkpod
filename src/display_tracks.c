@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-03 15:28:18 jcs>
+/* Time-stamp: <2003-08-07 23:13:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -913,7 +913,7 @@ static GtkTreeViewColumn *sm_add_column (SM_item sm_item, gint pos)
       editable = FALSE;
       break;
   case SM_COLUMN_PLAYCOUNT:
-      text = _("Playcount");
+      text = _("Plycnt");
       break;
   case SM_COLUMN_RATING:
       text = _("Rating");

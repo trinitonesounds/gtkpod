@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-03 15:48:04 jcs>
+/* Time-stamp: <2003-08-08 23:37:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -227,7 +227,7 @@ void create_add_playlists_fileselector (void)
     /* Ensure that pl_file_selector is set to NULL when window is deleted */
     g_signal_connect_swapped (GTK_OBJECT (pl_file_selector),
 			      "delete_event",
-			      G_CALLBACK (add_playlists_close), 
+			      G_CALLBACK (add_playlists_close),
 			      (gpointer) pl_file_selector); 
 
     /* Ensure that the dialog box is deleted when the user clicks a button. */
@@ -422,7 +422,7 @@ parse_ipod_id_from_string(gchar **s, guint32 *id)
 void add_idlist_to_playlist (Playlist *pl, gchar *str)
 {
     guint32 id = 0;
-	    
+
     if (!pl) return;
     while(parse_ipod_id_from_string(&str,&id))
     {
@@ -503,7 +503,7 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 			    if (!pl)
 			    {  /* no playlist yet -- create new one */
 				pl = add_new_playlist (
-                                                       _("New Playlist"), 
+                                                       _("New Playlist"),
                                                        pl_pos);
 			    }
 			    add_song_by_filename (decoded_file, pl,
@@ -788,7 +788,7 @@ gtkpod_statusbar_message(const gchar *message)
     {
 	gchar buf[PATH_MAX];
 	guint context = 1;
-	     
+
 	snprintf(buf, PATH_MAX, "  %s", message);
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
@@ -800,7 +800,7 @@ gtkpod_statusbar_message(const gchar *message)
     }
 }
 
-void 
+void
 gtkpod_songs_statusbar_init(GtkWidget *w)
 {
     gtkpod_songs_statusbar = w;
@@ -1595,7 +1595,7 @@ void call_script (gchar *script)
 
 /**
  * which - run the shell command which, useful for querying default values
- * for executable, 
+ * for executable,
  * @name - the executable we're trying to find the path for
  * Returns the path to the executable, NULL on not found
  */
@@ -1603,10 +1603,10 @@ static gchar*
 which(const gchar *exe)
 {
     FILE *fp = NULL;
-    gchar *result = NULL; 
+    gchar *result = NULL;
     gchar buf[PATH_MAX];
     gchar *which_exec = NULL;
-   
+
     memset(&buf[0], 0, PATH_MAX);
     which_exec = g_strdup_printf("which %s", exe);
     if((fp = popen(which_exec, "r")))
@@ -1795,7 +1795,7 @@ get_drive_stats_from_df(const gchar *mp)
 }
 
 /* @size: size in kB (block of 1024 Bytes) */
-static gchar* 
+static gchar*
 get_filesize_in_bytes(glong size)
 {
     guint i = 0;
@@ -2015,7 +2015,7 @@ static gboolean
 has_case_prefix (const gchar *haystack, const gchar *needle)
 {
   const gchar *h, *n;
-  
+
   /* Eat one character at a time. */
   h = haystack;
   n = needle;
@@ -2037,13 +2037,13 @@ unescape_character (const char *scanner)
   int second_digit;
 
   first_digit = g_ascii_xdigit_value (scanner[0]);
-  if (first_digit < 0) 
+  if (first_digit < 0)
     return -1;
   
   second_digit = g_ascii_xdigit_value (scanner[1]);
   if (second_digit < 0) 
     return -1;
-  
+
   return (first_digit << 4) | second_digit;
 }
 
@@ -2064,7 +2064,7 @@ g_unescape_uri_string (const char *escaped,
     len = strlen (escaped);
 
   result = g_malloc (len + 1);
-  
+
   out = result;
   for (in = escaped, in_end = escaped + len; in < in_end; in++)
     {
@@ -2198,7 +2198,7 @@ filename_from_uri (const char *uri,
     }
   
   path_part = uri + strlen ("file:");
-  
+
   if (strchr (path_part, '#') != NULL)
     {
       g_set_error (error, G_CONVERT_ERROR, G_CONVERT_ERROR_BAD_URI,
@@ -2348,7 +2348,7 @@ void generate_category_playlists (S_item cat)
     {
         Playlist *pl = get_playlist_by_nr (i);
 
-        if(pl->name && (strncmp (pl->name, str, strlen (str)) == 0) && 
+        if(pl->name && (strncmp (pl->name, str, strlen (str)) == 0) &&
 	   (pl->name[strlen(pl->name)-1] == ']'))
 	{
             remove_playlist(pl);
@@ -2360,7 +2360,7 @@ void generate_category_playlists (S_item cat)
     C_FREE (str);
 
     master_pl = get_playlist_by_nr (0);
-    
+
     for(i = 0; i < get_nr_of_songs_in_playlist (master_pl) ; i++)
     {
         Song *song = g_list_nth_data (master_pl->members, i);
@@ -2423,9 +2423,9 @@ void generate_displayed_playlist (void)
 	return;
     }
 
-    generate_playlist (songs);
+    generate_new_playlist (songs);
     g_list_free (songs);
-}    
+}
 
 
 /* Generate a new playlist containing all the songs currently
@@ -2440,20 +2440,20 @@ void generate_selected_playlist (void)
 	return;
     }
 
-    generate_playlist (songs);
+    generate_new_playlist (songs);
     g_list_free (songs);
-}    
+}
 
 
-/* Generate a playlist consisting of the songs in @songs. */
-void generate_playlist (GList *songs)
-{
+/* Generate a playlist consisting of the songs in @songs
+ * with @name name*/
+void generate_new_playlist_with_name (GList *songs,gchar *pl_name){
     GList *l;
     Playlist *pl;
     gint n = g_list_length (songs);
     gchar *str;
 
-    pl = add_new_playlist (_("New Playlist"), -1);
+    pl = add_new_playlist (pl_name, -1);
     for (l=songs; l; l=l->next)
     {
 	Song *song = (Song *)l->data;
@@ -2465,4 +2465,66 @@ void generate_playlist (GList *songs)
     gtkpod_statusbar_message (str);
     gtkpod_songs_statusbar_update();
     g_free (str);
+}
+
+/* Generate a playlist named "New Playlist" consisting of the songs in @songs. */
+void generate_new_playlist (GList *songs)
+{
+    generate_new_playlist_with_name (songs,_("New Playlist"));
+}
+
+/* generate a new playlist named @pl_name, containing @songs_nr songs and
+ * using @comparefunction to set an order.
+ * songs_nr can be any number in the 1-[guint limit] range. 0 is reserved for no limit*/
+void add_ranked_playlist(gchar *pl_name,guint songs_nr, GCompareFunc comparefunc){
+   GList *songs=NULL;
+   guint f=0;
+   guint i=0;
+   Song *song;
+
+   while((song=get_next_song(i))){
+       i=1;
+       if(song!=NULL){
+           if((song->playcount)){ /*add in order (first element-> most listened)*/
+              songs=g_list_insert_sorted(songs,song,comparefunc);
+              f++;
+              if(songs_nr&&f>songs_nr){ /*cut the tail*/
+                 songs=g_list_remove(songs,g_list_nth_data(songs,songs_nr));
+              }
+           }
+       }
+   }
+
+   if(f){
+       generate_new_playlist_with_name (songs,pl_name);
+   }
+   g_list_free(songs);
+}
+
+/*CF->Confront Function*/
+gint Most_Listened_CF (gconstpointer aa, gconstpointer bb)
+{
+    gint result=0;
+    const Song *a = aa;
+    const Song *b = bb;
+
+    if (a && b)
+    {
+	result = b->playcount - a->playcount;
+	if (result == 0) result = b->rating - a->rating;
+	if (result == 0) result = b->time_played - a->time_played;
+    }
+    return result;
+}
+
+/* Generate a new playlist containing the most listened (playcount
+ * reverse order) songs. to enter this playlist a song must have >0
+ * in the playcount field. */
+void most_listened_pl(void)
+{
+    gchar *str = g_strdup_printf (_("Most listened (%d)"), 25);
+    gchar *str2 = g_strdup_printf ("[%s]", str);
+    add_ranked_playlist(str2, 25, Most_Listened_CF);
+    g_free (str);
+    g_free (str2);
 }

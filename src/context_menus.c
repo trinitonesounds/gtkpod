@@ -150,7 +150,7 @@ delete_entries(GtkMenuItem *mi, gpointer data)
 static void
 create_playlist_from_entries (GtkMenuItem *mi, gpointer data)
 {
-    generate_playlist (selected_songs);
+    generate_new_playlist (selected_songs);
 }
 
 /**

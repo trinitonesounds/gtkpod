@@ -1450,3 +1450,11 @@ on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
     generate_category_playlists (S_COMPOSER);
 }
 
+
+void
+on_add_most_played_songs__pl1_activate (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    most_listened_pl();
+}
+
