@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 14:39:47 jcs>
+/* Time-stamp: <2003-09-25 22:47:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -64,7 +64,7 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 
     if (frame_name == ID3_FRAME_GENRE) 
        string = id3_genre_name (string);
-
+    printf("%s\n", string);
     utf8 = id3_ucs4_utf8duplicate (string);
     rtn = charset_from_utf8 (utf8);
     g_free (utf8);

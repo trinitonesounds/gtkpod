@@ -77,6 +77,20 @@ main (int argc, char *argv[])
   if(prefs_get_automount())      mount_ipod();
   if(prefs_get_auto_import())    handle_import();
   gtk_widget_show (gtkpod_window);
+  gtkpod_confirmation (CONF_ID_GTKPOD_WARNING,    /* gint id, */
+		       FALSE,                     /* gboolean modal, */
+		       _("Warning"),              /* title */
+		       "Due to transition to libmad, charset support for reading/writing ID3 tags is temporarily broken in this CVS release (only US-ASCII will work). Please use the official release (0.52) or a CVS release before 9/25 if you need charset support.",
+		       NULL,                /* text to be displayed */
+		       NULL, 0, NULL,       /* option 1 */
+		       NULL, 0, NULL,       /* option 2 */
+		       TRUE,                /* gboolean confirm_again, */
+		       NULL, /* ConfHandlerOpt confirm_again_handler, */
+		       NULL, /* ConfHandler ok_handler,*/
+		       CONF_NO_BUTTON,      /* don't show "Apply" */
+		       CONF_NO_BUTTON,      /* cancel_handler,*/
+		       NULL,                /* gpointer user_data1,*/
+		       NULL);               /* gpointer user_data2,*/
   gtk_main ();
   /* all the cleanup is already done in gtkpod_main_quit() in misc.c */
   return 0;
