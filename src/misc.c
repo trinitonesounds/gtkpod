@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-28 23:21:00 jcs>
+/* Time-stamp: <2003-08-30 02:09:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2390,23 +2390,13 @@ void generate_category_playlists (S_item cat)
     gtkpod_songs_statusbar_update();
 }
 
-
 /* Generate a new playlist containing all the songs currently
    displayed */
 Playlist *generate_displayed_playlist (void)
 {
     GList *songs = sm_get_all_songs ();
-    Playlist *result = NULL;
-
-    if (songs)
-    {
-	result = generate_new_playlist (songs);
-	g_list_free (songs);
-    }
-    else
-    {   /* no songs displayed */
-	gtkpod_statusbar_message (_("No tracks displayed."));
-    }
+    Playlist *result = generate_new_playlist (songs);
+    g_list_free (songs);
     return result;
 }
 
@@ -2416,38 +2406,35 @@ Playlist *generate_displayed_playlist (void)
 Playlist *generate_selected_playlist (void)
 {
     GList *songs = sm_get_selected_songs ();
-    Playlist *result = NULL;
-
-    if (songs)
-    {
-	result = generate_new_playlist (songs);
-	g_list_free (songs);
-    }
-    else
-    {   /* no songs displayed */
-	gtkpod_statusbar_message (_("No tracks selected."));
-    }
+    Playlist *result = generate_new_playlist (songs);
+    g_list_free (songs);
     return result;
 }
 
-
 /* Generate a playlist consisting of the songs in @songs
- * with @name name*/
-Playlist *generate_new_playlist_with_name (GList *songs,gchar *pl_name){
+ * with @name name */
+Playlist *generate_playlist_with_name (GList *songs,gchar *pl_name){
     GList *l;
-    Playlist *pl;
+    Playlist *pl=NULL;
     gint n = g_list_length (songs);
     gchar *str;
 
-    pl = add_new_playlist (pl_name, -1);
-    for (l=songs; l; l=l->next)
+    if(n>0)
     {
-	Song *song = (Song *)l->data;
-	add_song_to_playlist (pl, song, TRUE);
-    }
-    str = g_strdup_printf (ngettext ("Created playlist '%s' with %d track.",
+        pl = add_new_playlist (pl_name, -1);
+        for (l=songs; l; l=l->next)
+        {
+            Song *song = (Song *)l->data;
+            add_song_to_playlist (pl, song, TRUE);
+        }
+        str = g_strdup_printf (ngettext ("Created playlist '%s' with %d track.",
 				     "Created playlist '%s' with %d tracks.",
 				     n), pl_name, n);
+    }
+    else
+    { /* n==0 */
+        str = g_strdup_printf (_("No tracks available, playlist not created"));
+    }
     gtkpod_statusbar_message (str);
     gtkpod_songs_statusbar_update();
     g_free (str);
@@ -2457,9 +2444,8 @@ Playlist *generate_new_playlist_with_name (GList *songs,gchar *pl_name){
 /* Generate a playlist named "New Playlist" consisting of the songs in @songs. */
 Playlist *generate_new_playlist (GList *songs)
 {
-    return generate_new_playlist_with_name (songs,_("New Playlist"));
+    return generate_playlist_with_name (songs, _("New Playlist"));
 }
-
 
 /* Generate a new playlist named @pl_name, containing @songs_nr songs.
  *
@@ -2497,6 +2483,7 @@ static Playlist *add_ranked_playlist(gchar *pl_name, gint songs_nr,
     }
 
     if (f != 0)
+    /* else generate_playlist_with_name prints something*/
     {
 #if 0
 	GList *sl;
@@ -2506,11 +2493,7 @@ static Playlist *add_ranked_playlist(gchar *pl_name, gint songs_nr,
 	    printf ("%ud\n", s->time_played);
 	}
 #endif
-	result = generate_new_playlist_with_name (songs, pl_name);
-    }
-    else
-    {
-	gtkpod_statusbar_message (_("Playlist with 0 tracks not created."));
+	result = generate_playlist_with_name (songs, pl_name);
     }
     g_list_free (songs);
     return result;
