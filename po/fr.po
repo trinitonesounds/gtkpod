@@ -656,9 +656,8 @@ msgid "Couldn't change tags of file: %s\n"
 msgstr "Ne peut changer les tags du fichier: %s\n"
 
 #: src/file.c:1784
-#, fuzzy
 msgid "Could not open \"iTunesDB.ext\" for reading extended info.\n"
-msgstr "Ne peut ouvrir le fichier \"%s\" pour lire les infos étendues.\n"
+msgstr "Ne peut ouvrir le fichier \"iTunesDB.ext\" pour lire les infos étendues.\n"
 
 #: src/file.c:1805
 #, c-format
@@ -759,6 +758,8 @@ msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
 msgstr ""
+"Les répertoires systèmes de l'iPod doivent exister avant de pouvoir "
+"synchroniser l'ipod.\n"
 
 #. create the dialog window
 #: src/file.c:2353 src/tools.c:285
@@ -805,9 +806,8 @@ msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Des morceaux n'ont pas été copiés sur l'iPod. Export annulé!"
 
 #: src/file.c:2548
-#, fuzzy
 msgid "Error writing iTunesDB to iPod.  No iTunes directory!"
-msgstr "Erreur lors de l'écriture de iTunesDB sur l'iPod. Export annulé!"
+msgstr "Erreur lors de l'écriture de iTunesDB sur l'iPod. Pas de répertoire iTunes!"
 
 #. write iTunesDB to iPod
 #: src/file.c:2568 src/file.c:2605 src/file.c:2623
@@ -1534,7 +1534,6 @@ msgid "Filename Format: "
 msgstr "Format du nom des fichiers: "
 
 #: src/interface.c:1919
-#, fuzzy
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
 "mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod "
@@ -1720,7 +1719,6 @@ msgstr ""
 "l'écriture des tags"
 
 #: src/interface.c:2302
-#, fuzzy
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to write the tags. If you have chosen a wrong charset when first importing a "
@@ -2410,6 +2408,7 @@ msgstr ""
 msgid ""
 "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"
 msgstr ""
+"Andrew Huntwork: gestion de la casse des noms de fichier et correctifs\n"
 
 #: src/misc.c:449
 msgid "This program borrows code from the following projects:\n"
