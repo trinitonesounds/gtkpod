@@ -1890,7 +1890,7 @@ create_prefs_window (void)
   cfg_sync_remove_confirm2 = gtk_check_button_new_with_mnemonic (_("Before removing tracks completely when\n synchronizing directories"));
   gtk_widget_show (cfg_sync_remove_confirm2);
   gtk_box_pack_start (GTK_BOX (vbox24), cfg_sync_remove_confirm2, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_sync_remove_confirm2, _("This option only has only meaning if you activate the 'Delete Tracks that have been Removed' option in the 'Import/Syncing Dirs' section."), NULL);
+  gtk_tooltips_set_tip (tooltips, cfg_sync_remove_confirm2, _("This option only has a meaning if you activate the 'Delete Tracks that have been Removed' option in the 'Import/Syncing Dirs' section."), NULL);
 
   label33 = gtk_label_new (_("Delete Confirmation "));
   gtk_widget_show (label33);
@@ -2539,7 +2539,7 @@ create_special_sorttab (void)
   sp_go_always = gtk_check_button_new_with_mnemonic (_("Start display automatically"));
   gtk_widget_show (sp_go_always);
   gtk_box_pack_start (GTK_BOX (hbox21), sp_go_always, FALSE, FALSE, 2);
-  gtk_tooltips_set_tip (tooltips, sp_go_always, _("Automatically start displaying songs that match the criteria entered above. If not selected, you must press 'Display' or change any of the values above."), NULL);
+  gtk_tooltips_set_tip (tooltips, sp_go_always, _("Automatically start displaying songs that match the criteria entered above. If not selected, you must press 'Display' to start displaying."), NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (special_sorttab, special_sorttab, "special_sorttab");

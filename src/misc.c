@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 21:18:03 jcs>
+/* Time-stamp: <2003-06-21 13:05:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -280,8 +280,10 @@ float get_ms_since (GTimeVal *old_time, gboolean update)
 void open_about_window ()
 {
   GtkLabel *about_label;
-  gchar *credits_text, *translators_text, *label_text;
+  gchar *label_text;
   GtkTextView *textview;
+  GtkTextIter ti;
+  GtkTextBuffer *tb;
 
   if (about_window != NULL) return;
   about_window = create_gtkpod_about_window ();
@@ -289,36 +291,67 @@ void open_about_window ()
   label_text = g_strdup_printf (_("gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod(tm)."), VERSION);
   gtk_label_set_text (about_label, label_text);
   g_free (label_text);
-  credits_text =  _("\
+  {
+      gchar *text[] = {_("\
 (C) 2002 - 2003\n\
-Jorg Schuler (jcsjcs at users.sourceforge.net)\n\
-Corey Donohoe (atmos at atmos.org)\n\
+Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n\
+Corey Donohoe (atmos at atmos dot org)\n\
 \n\
+\n"),
+		       _("\
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n\
 \n\
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\
 \n\
 You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n\
 \n\
-The code handling the reading and writing of the iTunesDB was ported from mktunes.pl of the gnuPod package written by Adrian Ulrich (http://www.gnu.org/software/gnupod/). Adrian Ulrich ported the playlist part.\n\
+\n"),
+		       _("\
+Patches were supplied by the following people (list may be incomplete -- please contact me)\n\
 \n\
+Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n\
+Hiroshi Kawashima: Japanese charset autodetecion feature\n\
+Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n\
+\n\
+\n"),
+		       _("\
 This program borrows code from the following projects:\n\
-    mp3info: mp3 playlength detection (http://ibiblio.org/mp3info/)\n\
-    xmms:    dirbrowser, mp3 playlength detection (http://www.xmms.org)\n\
-    easytag: reading and writing of ID3 tags (http://easytag.sourceforge.net)\n\
+    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB (http://www.gnu.org/software/gnupod/)\n\
+    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n\
+    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n\
+    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge.net)\n\
 \n\
-The GUI was created with the help of glade-2 (http://glade.gnome.org/).");
+The GUI was created with the help of glade-2 (http://glade.gnome.org/)."),
+		       NULL };
+      gchar **strp = text;
+      textview = GTK_TEXT_VIEW (lookup_widget (about_window, "credits_textview"));
+      tb = gtk_text_view_get_buffer (textview);
+      while (*strp)
+      {
+	  gtk_text_buffer_get_end_iter (tb, &ti);
+	  gtk_text_buffer_insert (tb, &ti, *strp, -1);
+	  ++strp;
+      }
+  }
 
-  textview = GTK_TEXT_VIEW (lookup_widget (about_window, "credits_textview"));
-  gtk_text_buffer_set_text (gtk_text_view_get_buffer (textview),
-			    credits_text, -1);
-
-  translators_text = _("\
-German:   Jorg Schuler (jcsjcs at users.sourceforge.net)\n\
-Japanese: Ayako Sano");
-  textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));
-  gtk_text_buffer_set_text (gtk_text_view_get_buffer (textview),
-			    translators_text, -1);
+ {
+     gchar  *text[] = { _("\
+German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"),
+				     _("\
+Japanese: Ayako Sano\n"),
+				     _("\
+French:   David Le Brun (david at dyn-ns dot net)\n"),
+				     NULL };
+      gchar **strp = text;
+      textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));
+      tb = gtk_text_view_get_buffer (textview);
+      while (*strp)
+      {
+	  gtk_text_buffer_get_end_iter (tb, &ti);
+	  gtk_text_buffer_insert (tb, &ti, *strp, -1);
+	  ++strp;
+      }
+  }
 
   gtk_widget_show (about_window);
 }
