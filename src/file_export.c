@@ -98,14 +98,16 @@ static gchar *
 song_get_export_filename (Song *song)
 {
     GString *result;
-    if (!song) return NULL; 
     char *p = prefs_get_filename_format ();
-    result = g_string_new ("");
     char dummy[5];
+
+    if (!song) return NULL; 
+    result = g_string_new ("");
+
     while (*p != '\0') {
 	    if (*p == '%') {
-		    p++;
 		    char* tmp = NULL;
+		    p++;
 		    switch (*p) {
 			    case 'A':
 				    tmp = song_get_item_utf8 (song, S_ARTIST);
