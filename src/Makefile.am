@@ -16,6 +16,7 @@ LEX_OUTPUT_ROOT = lex.yy
 
 gtkpod_SOURCES = \
 	charset.c charset.h \
+	clientserver.c clientserver.h \
 	confirmation.c confirmation.h \
 	context_menus.c context_menus.h \
 	date_parser.l date_parser2.l date_parser.h \

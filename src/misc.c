@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 23:25:30 JST jcs>
+/* Time-stamp: <2004-03-21 23:40:19 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,6 +37,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "charset.h"
+#include "clientserver.h"
 #include "confirmation.h"
 #include "dirbrowser.h"
 #include "display.h"
@@ -724,6 +725,8 @@ gtkpod_main_quit(void)
 
     if (result == GTK_RESPONSE_YES)
     {
+	server_shutdown (); /* stop accepting requests for playcount updates */
+
 	remove_all_playlists ();  /* first remove playlists, then
 				   * tracks! (otherwise non-existing
 				   *tracks may be accessed) */
@@ -2874,9 +2877,9 @@ gboolean remove_dangling (gpointer key, gpointer value, gpointer pl_dangling)
 	(track->pc_path_locale && *track->pc_path_locale &&   /* file is specified */
 	 g_file_test (track->pc_path_locale, G_FILE_TEST_EXISTS) && /* file exists */
 	 track->md5_hash &&                           /* md5 defined for the track */
-	 (!strcmp ((filehash=md5_hash_on_file_name (track->pc_path_locale)),
-		   track->md5_hash)));   /* and md5 of the file is the same as in the
-					  * track info */
+	 (!strcmp ((filehash=md5_hash_on_filename (
+			track->pc_path_locale, FALSE)), track->md5_hash)));
+    /* and md5 of the file is the same as in the track info */
     /* 1 - Original file is present on PC and has the same md5*/
     /* 0 - Doesn't exist */
     l_dangling[lind]=g_list_append(l_dangling[lind], track);

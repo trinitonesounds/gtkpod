@@ -37,14 +37,14 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "clientserver.h"
+#include "display.h"
+#include "file.h"
 #include "interface.h"
 #include "misc.h"
-#include "support.h"
-
 #include "playlist.h"
-#include "file.h"
-#include "display.h"
 #include "prefs.h"
+#include "support.h"
 
 int
 main (int argc, char *argv[])
@@ -56,7 +56,11 @@ main (int argc, char *argv[])
 #endif
 
 #ifdef G_THREADS_ENABLED
+  /* this must be called before gtk_init () */
   g_thread_init (NULL);
+  /* FIXME: this call causes gtkpod to freeze as soon as tracks should be
+     displayed */
+/*   gdk_threads_init (); */
 #endif
 
   gtk_init (&argc, &argv);
@@ -66,17 +70,25 @@ main (int argc, char *argv[])
   srand(time(NULL));
 
   gtkpod_window = create_gtkpod ();
-
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
+
   display_create (gtkpod_window);
   create_mpl ();     /* needs at least the master playlist */
 
   /* stuff to be done before starting gtkpod */
   call_script ("gtkpod.in");
+
   gtk_widget_show (gtkpod_window);
+
   if(prefs_get_automount())      mount_ipod();
   if(prefs_get_auto_import())    handle_import();
+
+  server_setup ();   /* start server to accept playcount updates */
+
+/*   gdk_threads_enter (); */
   gtk_main ();
+/*   gdk_threads_leave (); */
+
   /* all the cleanup is already done in gtkpod_main_quit() in misc.c */
   return 0;
 }

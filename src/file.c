@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 15:30:13 JST jcs>
+/* Time-stamp: <2004-03-21 23:40:19 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1492,7 +1492,7 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
   C_FREE (basename);
 
   /* Check if there exists already a track with the same filename */
-  oldtrack = get_track_by_filename (name);
+  oldtrack = get_track_by_local_filename (name);
   /* If a track already exists in the database, either update it or
      just add it to the current playlist (if it doesn't already exist) */
   if (oldtrack)
@@ -1715,7 +1715,7 @@ void fill_in_extended_info (Track *track)
       if (!track->md5_hash)
       {
 	  gchar *filename = get_track_name_on_ipod (track);
-	  track->md5_hash = md5_hash_on_file_name (filename);
+	  track->md5_hash = md5_hash_on_filename (filename, FALSE);
 	  g_free (filename);
       }
       if (track->md5_hash)
@@ -1814,7 +1814,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 			name);
 	return FALSE;
     }
-    md5 = md5_hash_on_file_name (itunes);
+    md5 = md5_hash_on_filename (itunes, FALSE);
     if (!md5)
     {
 	g_warning ("Programming error: Could not create hash value from itunesdb\n");
@@ -2232,7 +2232,7 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 		      name);
       return FALSE;
   }
-  md5 = md5_hash_on_file_name (itunes);
+  md5 = md5_hash_on_filename (itunes, FALSE);
   if (md5)
   {
       fprintf(fp, "itunesdb_hash=%s\n", md5);

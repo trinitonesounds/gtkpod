@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 12:51:21 JST jcs>
+/* Time-stamp: <2004-03-21 21:43:51 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -95,6 +95,8 @@
 #else
 #  include "getopt.h"
 #endif
+
+#include "clientserver.h"
 #include "display.h"
 #include "info.h"
 #include "md5.h"
@@ -108,6 +110,7 @@ static struct cfg *cfg = NULL;
 /* enum for reading of options */
 enum {
   GP_HELP,
+  GP_PLAYCOUNT,
   GP_MOUNT,
   GP_AUTO,
   GP_OFFLINE
@@ -121,6 +124,7 @@ static void usage (FILE *file)
 {
   usage_fpf(file, _("gtkpod version %s usage:\n"), VERSION);
   usage_fpf(file, _("  -h, --help:   display this message\n"));
+  usage_fpf(file, _("  -p <filename>:increment playcount for file by one\n"));
   usage_fpf(file, _("  -m path:      define the mountpoint of your iPod\n"));
   usage_fpf(file, _("  --mountpoint: same as '-m'.\n"));
   usage_fpf(file, _("  -a:           import database automatically after start.\n"));
@@ -839,15 +843,18 @@ read_prefs_defaults(void)
 }
 
 /* Read Preferences and initialise the cfg-struct */
+/* Return value: FALSE if "-p" argument was given -> stop program */
 gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 {
   GtkCheckMenuItem *menu;
   int opt;
   int option_index;
+  gboolean result = TRUE;
   struct option const options[] =
     {
       { "h",           no_argument,	NULL, GP_HELP },
       { "help",        no_argument,	NULL, GP_HELP },
+      { "p",           required_argument,       NULL, GP_PLAYCOUNT },
       { "m",           required_argument,	NULL, GP_MOUNT },
       { "mountpoint",  required_argument,	NULL, GP_MOUNT },
       { "offline",     no_argument,	NULL, GP_OFFLINE },
@@ -868,6 +875,10 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 	usage(stdout);
 	exit(0);
 	break;
+      case GP_PLAYCOUNT:
+	  client_playcount (optarg);
+	  result = FALSE;
+	  break;
       case GP_MOUNT:
 	g_free (cfg->ipod_mount);
 	cfg->ipod_mount = g_strdup (optarg);
@@ -886,7 +897,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
   }
   menu = GTK_CHECK_MENU_ITEM (lookup_widget (gtkpod, "offline_menu"));
   gtk_check_menu_item_set_active (menu, prefs_get_offline ());
-  return TRUE;
+  return result;
 }
 
 static void

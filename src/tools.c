@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 15:30:00 JST jcs>
+/* Time-stamp: <2004-03-21 15:05:15 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -253,10 +253,13 @@ static gint32 nm_get_volume (Track *track)
 {
     if (track)
     {
+	gchar *path;
+
 	if (track->radio_gain_set) 
 		return replaygain_to_volume (track->radio_gain);
 	
-	gchar *path = get_track_name_on_disk_verified (track);
+	path = get_track_name_on_disk_verified (track);
+
 	mp3_get_track_lame_replaygain (path, track);
 	if (track->radio_gain_set) 
 		return replaygain_to_volume (track->radio_gain);

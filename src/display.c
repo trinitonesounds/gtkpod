@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-01-26 23:01:57 jcs>
+/* Time-stamp: <2004-03-21 20:39:54 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -154,6 +154,7 @@ void display_create (GtkWidget *gtkpod)
     display_set_check_ipod_menu ();
     /* check if info window should be opened */
     if (prefs_get_info_window ())  info_open_window ();
+
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and

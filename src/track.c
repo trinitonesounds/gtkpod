@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-03 23:25:58 JST jcs>
+/* Time-stamp: <2004-03-21 23:34:25 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -290,7 +290,7 @@ Track *get_track_by_id (guint32 id)
 
 /* Returns the track with the local filename @name or NULL, if none can
  * be found. */
-Track *get_track_by_filename (gchar *name)
+Track *get_track_by_local_filename (gchar *name)
 {
   GList *l;
 

@@ -184,7 +184,7 @@ md5_hash_track(Track * s)
       }
       else if ((filename = get_track_name_on_disk(s)) != NULL)
       {
-	 result = md5_hash_on_file_name (filename);
+	 result = md5_hash_on_filename (filename, FALSE);
          g_free(filename);
       }
    }
@@ -192,7 +192,8 @@ md5_hash_track(Track * s)
 }
 
 
-gchar *md5_hash_on_file_name (gchar *name)
+/* @silent: don't print any warning */
+gchar *md5_hash_on_filename (gchar *name, gboolean silent)
 {
     gchar *result = NULL;
 
@@ -201,8 +202,12 @@ gchar *md5_hash_on_file_name (gchar *name)
 	FILE *fpit = fopen (name, "r");
 	if (!fpit)
 	{
-	    gtkpod_warning (_("Could not open '%s' to calculate MD5 checksum.\n"),
-			    name);
+	    if (!silent)
+	    {
+		gtkpod_warning (
+		    _("Could not open '%s' to calculate MD5 checksum.\n"),
+		    name);
+	    }
 	}
 	else
 	{
@@ -286,6 +291,28 @@ md5_track_exists(Track * s)
    }
    return track;
 }
+
+/**
+ * Check to see if a track has already been added to the ipod
+ * @file - the Track we want to know about.
+ * Returns a pointer to the duplicate track using md5 for
+ * identification. If md5 checksums are off, NULL is returned.
+ */
+Track *md5_file_exists (gchar *file)
+{
+    Track *track = NULL;
+    if (prefs_get_md5tracks() && filehash && file)
+    {
+	gchar *val = md5_hash_on_filename (file, FALSE);
+	if (val)
+	{
+	   track = g_hash_table_lookup(filehash, val);
+	   g_free (val);
+       }
+   }
+   return track;
+}
+
 
 /**
  * Free the specified track from the ipod's unique file hash
