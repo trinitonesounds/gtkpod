@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # (c) 2004 Markus Gaugusch <markus@gaugusch.at>
 # Script for syncing kaddressbook data with iPod
 
