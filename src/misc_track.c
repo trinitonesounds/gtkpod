@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-02-05 15:54:41 jcs>
+|  Time-stamp: <2005-02-09 00:14:34 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -634,7 +634,7 @@ void add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 		{   /* directory */
 		    if (!pl)
 		    {  /* no playlist yet -- create new one */
-			pl = add_new_pl_user_name (NULL, pl_pos);
+			pl = add_new_pl_user_name (itdb, NULL, pl_pos);
 			if (!pl)  break; /* while (*filesp) */
 		    }
 		    add_directory_by_name (itdb, decoded_file, pl,
@@ -654,7 +654,7 @@ void add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 		    case FILE_TYPE_WAV:
 			if (!pl)
 			{  /* no playlist yet -- create new one */
-			    pl = add_new_pl_user_name (NULL,
+			    pl = add_new_pl_user_name (itdb, NULL,
 						       pl_pos);
 			    if (!pl)  break; /* while (*filesp) */
 			}

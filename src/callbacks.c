@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 01:51:58 jcs>
+/* Time-stamp: <2005-02-09 00:21:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -144,7 +144,7 @@ void
 on_new_playlist_button                 (GtkButton       *button,
 					gpointer         user_data)
 {
-  add_new_pl_or_spl_user_name (NULL, -1);
+  add_new_pl_or_spl_user_name (gp_get_active_itdb (), NULL, -1);
 }
 
 void
@@ -493,7 +493,8 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 		do_selected_playlist (update_tracks);
 		break;
 	    case GDK_n:
-		add_new_pl_or_spl_user_name (NULL, -1);
+		add_new_pl_or_spl_user_name (gp_get_active_itdb(),
+					     NULL, -1);
 		break;
 	    default:
 		break;
@@ -1488,7 +1489,7 @@ void
 on_new_playlist1_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-  add_new_pl_or_spl_user_name (NULL, -1);
+  add_new_pl_or_spl_user_name (gp_get_active_itdb(), NULL, -1);
 }
 
 void
@@ -1516,28 +1517,36 @@ void
 on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    generate_category_playlists (T_ARTIST);
+    generate_category_playlists (gp_get_active_itdb(), T_ARTIST);
 }
 
 void
 on_pl_for_each_album_activate         (GtkMenuItem     *menuitem,
 				       gpointer         user_data)
 {
-    generate_category_playlists (T_ALBUM);
+    generate_category_playlists (gp_get_active_itdb(), T_ALBUM);
 }
 
 void
 on_pl_for_each_genre_activate         (GtkMenuItem     *menuitem,
 				       gpointer         user_data)
 {
-    generate_category_playlists (T_GENRE);
+    generate_category_playlists (gp_get_active_itdb(), T_GENRE);
 }
 
 void
 on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
 					  gpointer         user_data)
 {
-    generate_category_playlists (T_COMPOSER);
+    generate_category_playlists (gp_get_active_itdb(), T_COMPOSER);
+}
+
+
+void
+on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    generate_category_playlists (gp_get_active_itdb(), T_YEAR);
 }
 
 
@@ -1974,14 +1983,6 @@ on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
     prefs_window_set_concal_autosync
 	(gtk_toggle_button_get_active(togglebutton));
 }
-
-void
-on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    generate_category_playlists (T_YEAR);
-}
-
 
 void
 on_all_tracks_not_listed_in_any_playlist1_activate

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-05 16:16:00 jcs>
+/* Time-stamp: <2005-02-09 00:22:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -65,8 +65,8 @@ extern gboolean widgets_blocked;
 
 gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
 			gchar *opt_msg, gboolean *opt_state);
-Playlist *add_new_pl_user_name (gchar *dflt, gint position);
-void add_new_pl_or_spl_user_name (gchar *dflt, gint position);
+Playlist *add_new_pl_user_name (iTunesDB *itdb, gchar *dflt, gint32 pos);
+void add_new_pl_or_spl_user_name (iTunesDB *itdb, gchar *dflt, gint32 pos);
 void create_add_files_fileselector (void);
 void create_add_playlists_fileselector (void);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
@@ -129,7 +129,7 @@ gchar *filename_from_uri (const char *uri,
 			  char      **hostname,
 			  GError    **error);
 
-void generate_category_playlists (T_item cat);
+void generate_category_playlists (iTunesDB *itdb, T_item cat);
 Playlist *generate_displayed_playlist (void);
 Playlist *generate_selected_playlist (void);
 void randomize_current_playlist (void);

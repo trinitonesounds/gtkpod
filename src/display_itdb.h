@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-05 16:44:32 jcs>
+/* Time-stamp: <2005-02-08 23:59:09 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -140,5 +140,5 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display);
 void gp_playlist_add_extra (Playlist *pl);
 
 gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num);
-
+iTunesDB *gp_get_active_itdb (void);
 #endif

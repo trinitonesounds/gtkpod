@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-05 16:52:49 jcs>
+/* Time-stamp: <2005-02-09 00:29:27 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -350,7 +350,6 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
 
 /* This function appends the track "track" to the
    playlist @pl. It then lets the display model know.
-   If @pl == NULL, add to master playlist
    @display: if TRUE, track is added the display.  Otherwise it's only
    added to memory */
 void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
@@ -358,11 +357,9 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
     iTunesDB *itdb;
 
     g_return_if_fail (track);
+    g_return_if_fail (pl);
     itdb = pl->itdb;
     g_return_if_fail (itdb);
-
-    if (pl == NULL)  pl = itdb_playlist_mpl (itdb);
-    g_return_if_fail (pl);
 
     pl->members = g_list_append (pl->members, track);
     if (display)  pm_add_track (pl, track, TRUE);
@@ -469,3 +466,28 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 }
 
 
+/* determine "active" itdb -- it's either the itdb of the playlist
+ * currently selected, or the first itdb if none is selected */
+
+iTunesDB *gp_get_active_itdb (void)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+    struct itdbs_head *itdbs_head;
+
+    /* If playlist is selected, use the itdb of the playlist as the
+       active itdb */
+    if (pl)
+    {
+	g_return_val_if_fail (pl->itdb, NULL);
+	return pl->itdb;
+    }
+
+    /* Otherwise choose the first itdb */
+    g_return_if_fail (gtkpod_window);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_if_fail (itdbs_head);
+    g_return_val_if_fail (itdbs_head->itdbs, NULL);
+    g_return_val_if_fail (itdbs_head->itdbs->data, NULL);
+    return itdbs_head->itdbs->data;
+}

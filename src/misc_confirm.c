@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-05 16:53:39 jcs>
+/* Time-stamp: <2005-02-08 23:52:21 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -631,10 +631,13 @@ gtkpod_main_quit(void)
     {
 	server_shutdown (); /* stop accepting requests for playcount updates */
 
+/* FIXME: release memory in a clean way */
+#if 0
 	remove_all_playlists ();  /* first remove playlists, then
 				   * tracks! (otherwise non-existing
 				   *tracks may be accessed) */
 	remove_all_tracks ();
+#endif
 	display_cleanup ();
 	write_prefs (); /* FIXME: how can we avoid saving options set by
 			 * command line? */

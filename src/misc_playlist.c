@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-22 13:19:16 jcs>
+/* Time-stamp: <2005-02-09 00:33:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -32,9 +32,11 @@
 
 #include <string.h>
 #include "charset.h"
-#include "itunesdb.h"
+#include "itdb.h"
+#include "info.h"
 #include "md5.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "prefs.h"
 #include "support.h"
 
@@ -53,17 +55,22 @@
  * provided.
  * Return value: the new playlist or NULL if the dialog was
  * cancelled. */
-Playlist *add_new_pl_user_name (gchar *dflt, gint position)
+Playlist *add_new_pl_user_name (iTunesDB *itdb,
+				gchar *dflt, gint32 position)
 {
     Playlist *result = NULL;
-    gchar *name = get_user_string (
+    gchar *name;
+
+    g_return_val_if_fail (itdb, NULL);
+
+    name = get_user_string (
 	_("New Playlist"),
 	_("Please enter a name for the new playlist"),
 	dflt? dflt:_("New Playlist"),
 	NULL, NULL);
     if (name)
     {
-	result = add_new_playlist (name, position, FALSE);
+	result = gp_playlist_add_new (itdb, name, FALSE, position);
 	gtkpod_tracks_statusbar_update ();
     }
     return result;
@@ -75,10 +82,15 @@ Playlist *add_new_pl_user_name (gchar *dflt, gint position)
  * (@dflt) name can be provided.
  * Return value: none. In the case of smart playlists, the playlist
  * will not be created immediately. */
-void add_new_pl_or_spl_user_name (gchar *dflt, gint position)
+void add_new_pl_or_spl_user_name (iTunesDB *itdb,
+				  gchar *dflt, gint32 position)
 {
     gboolean is_spl = FALSE;
-    gchar *name = get_user_string (
+    gchar *name;
+
+    g_return_if_fail (itdb);
+
+    name = get_user_string (
 	_("New Playlist"),
 	_("Please enter a name for the new playlist"),
 	dflt? dflt:_("New Playlist"),
@@ -88,12 +100,12 @@ void add_new_pl_or_spl_user_name (gchar *dflt, gint position)
     {
 	if (!is_spl)
 	{   /* add standard playlist */
-	    add_new_playlist (name, position, FALSE);
+	    gp_playlist_add_new (itdb, name, FALSE, position);
 	    gtkpod_tracks_statusbar_update ();
 	}
 	else
 	{   /* add smart playlist */
-	    spl_edit_new (name, position);
+	    spl_edit_new (itdb, name, position);
 	}
     }
 }
@@ -110,15 +122,13 @@ typedef gboolean (*PL_InsertFunc)(Track *track, gpointer userdata);
 
 /* generate_category_playlists: Create a playlist for each category
    @cat (T_ARTIST, T_ALBUM, T_GENRE, T_COMPOSER) */
-void generate_category_playlists (T_item cat)
+void generate_category_playlists (iTunesDB *itdb, T_item cat)
 {
     Playlist *master_pl;
-    gint i;
     gchar *qualifier;
+    GList *gl;
 
-    /* sanity */
-    if ((cat != T_ARTIST) && (cat != T_ALBUM) &&
-	(cat != T_GENRE) && (cat != T_COMPOSER)) return;
+    g_return_if_fail (itdb);
 
     /* Initialize the "qualifier". It is used to indicate the category of
        automatically generated playlists */
@@ -140,37 +150,24 @@ void generate_category_playlists (T_item cat)
 	qualifier = _("YE:");
 	break;
     default:
-	qualifier = NULL;
+	g_return_if_reached ();
 	break;
     }
-
-    /* sanity */
-    if (qualifier == NULL) return;
 
     /* FIXME: delete all playlists named '[<qualifier> .*]' and
      * remember which playlist was selected if it gets deleted */
 
-    master_pl = get_playlist_by_nr (0);
+    master_pl = itdb_playlist_mpl (itdb);
+    g_return_if_fail (master_pl);
 
-    for(i = 0; i < get_nr_of_tracks_in_playlist (master_pl) ; i++)
+    for (gl=master_pl->members; gl; gl=gl->next)
     {
-	Track *track = g_list_nth_data (master_pl->members, i);
+	Track *track = gl->data;
 	Playlist *cat_pl = NULL;
-	gint j;
 	gchar *category = NULL;
-	gchar *track_cat = NULL;
-	int playlists_len = get_nr_of_playlists();
-	gchar yearbuf[12];
+	gchar *track_cat;
 
-	if (cat == T_YEAR)
-	{
-	    snprintf (yearbuf, 11, "%d", track->year);
-	    track_cat = yearbuf;
-	}
-	else
-	{
-	    track_cat = track_get_item_utf8 (track, cat);
-	}
+	track_cat = track_get_item_utf8 (track, cat);
 
 	if (track_cat)
 	{
@@ -187,24 +184,15 @@ void generate_category_playlists (T_item cat)
 	    }
 
 	    /* look for category playlist */
-	    for(j = 1; j < playlists_len; j++)
-	    {
-		Playlist *pl = get_playlist_by_nr (j);
-
-		if(g_ascii_strcasecmp(pl->name, category) == 0)
-		{
-		    cat_pl = pl;
-		    break;
-		}
-	    }
+	    cat_pl = itdb_playlist_by_name (itdb, category);
 	    /* or, create category playlist */
 	    if(!cat_pl)
 	    {
-		cat_pl = add_new_playlist(category, -1, FALSE);
+		cat_pl = gp_playlist_add_new (itdb, category,
+					      FALSE, -1);
 	    }
-
-	    add_track_to_playlist(cat_pl, track, TRUE);
-	    C_FREE (category);
+	    gp_playlist_add_track (cat_pl, track, TRUE);
+	    g_free (category);
 	}
     }
     gtkpod_tracks_statusbar_update();
@@ -284,7 +272,7 @@ void randomize_current_playlist (void)
 /* 	sort_window_update (); */
     }
 
-    randomize_playlist (pl);
+    itdb_playlist_randomize (pl);
 
     st_adopt_order_in_playlist ();
     tm_adopt_order_in_sorttab ();

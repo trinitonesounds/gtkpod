@@ -91,6 +91,26 @@ kulenfuster@...
 > with gtkpod.  If it is already, please let me know (and Woo Ha!).
 
 
+I have the 20G model and I have more "f" directories
+than gtkpod recognises. So gtkpod only fills up through f19, when
+really I have through f29. Everything works fine on the iPod, it's
+just that gtkpod refuses to put music into any of the other
+directories.
+
+
+gtkpod-bugs:
+When my iPod and iTunes DB are in harmony with my
+local directory structure, all is fine when I sync
+directories that have missing (deleted) filed - these are
+correctly removed from the DB and the iPod.
+
+However if the directory is missing (deleted/moved/
+renamed as is quite common when I am organising my
+music) then the sync complains that the directory is
+missing and won't remove the files from the iTunes DB
+and the iPod.
+
+
 
 - stable column sorting:
 > BTW, the other thing that bothers me about gtkpod is that column sorting
@@ -230,6 +250,11 @@ BUGLIST:
   CG : Works with 4th generation and evolution export - need a copy of
   the original ics file and the version on the ipod
 
+> Ich habe inzwischen den Verdacht, daß gar nicht die ID3v2.3-Tags (am
+> Anfang der Datei), sondern die ID3v1.1-Tags (am Ende der Datei)
+> eingelesen werden. Das könnte die Beschränkung der Tracknummer auf 127
+> erklären. Deshalb habe ich jeweils den Anfang und das Ende der Dateien
+
 - special sorttab does not do date sorting correctly.
 
 - during a long operation (menues are blocked) the user can still edit
@@ -246,6 +271,21 @@ BUGLIST:
 
 > '** (gtkpod:3839): WARNING **: Programming error: Could not create hash
 > value from itunesdb' -> not an error -- reading of file failed!
+
+------------
+> Steps to replicate:
+> 
+> mount /mnt/ipod
+> start gtkpod
+> - hit button Read on toolbar
+> - select track/song/file by left clicking on it
+> - Select Edit --> Delete completely from iPod
+> - hit button Sync on toolbar
+> quit gtkpod
+> umount /mnt/ipod
+> 
+> songs remains on ipod nonetheless!
+(Per Homer)
 
 
 ----------
@@ -269,6 +309,16 @@ tamagucci at fastwebnet.it, gerald.miller at morris.com
 > 
 > Thanks for writing this software, 
 > and thanks for letting it be free, =) 
+
+stefano.brozzi
+> > 1. on creating a smart playlist with a rule on title name,
+> >   only exact case matching is considered
+> > 
+> > 2. adding options during creation of a smart playlist thru the button +
+> >   there is no autoresize of the modal window to keep " Ok " and " cancel "
+> >   buttons inside of the windows.
+
+
 
 Please add/report bugs as you find them (jcsjcs at users dot
 sourceforge dot net).

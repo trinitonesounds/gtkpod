@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-22 13:19:17 jcs>
+/* Time-stamp: <2005-02-09 00:33:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -485,6 +485,7 @@ gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *track);
 guint32 itdb_playlist_contain_track_number (Itdb_Track *tr);
 void itdb_playlist_remove_track (Itdb_Playlist *pl, Itdb_Track *track);
 guint32 itdb_playlist_tracks_number (Itdb_Playlist *pl);
+void itdb_playlist_randomize (Itdb_Playlist *pl);
 
 /* smart playlist functions */
 SPLFieldType itdb_splr_get_field_type (const SPLRule *splr);

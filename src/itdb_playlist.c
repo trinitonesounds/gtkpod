@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-19 23:35:19 jcs>
+/* Time-stamp: <2005-02-09 00:33:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -573,6 +573,14 @@ static GList *glist_duplicate (GList *list)
     GList *dup = NULL;
     g_list_foreach (list, (GFunc)gl_dup_fe, &dup);
     return dup;
+}
+
+/* Randomizes a playlist */
+void itdb_playlist_randomize (Itdb_Playlist *pl)
+{
+    g_return_if_fail (pl);
+
+    pl->members = randomize_glist (pl->members);
 }
 
 

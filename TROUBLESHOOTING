@@ -1,14 +1,25 @@
 Troubleshooting-FAQ:
 
 
-mpeg4ip-1.1 "PACKAGE undefined" (0.82-CVS, Juan J. Sierralta P.)
+mpeg4ip-1.1 "PACKAGE undefined"
 
-Yesterday I got the CVS of gtkpod and tried to compile with MP4v2
-which fails since <mp4.h> undefine PACKAGE so GCC complains about
-PACKAGE undefined at calls to gtkpod_warning in mp4file.c.  I just
-added the #define after the #include <mp4.h> and it worked just fine,
-dont know which version are you using but I´m compiling against
-mpeg4ip-1.1.
+
+Solution:
+
+Add
+
+#include <config.h>
+
+after
+
+#include <mp4.h>
+
+in
+
+mp4file.c
+
+This is a workaround to a problem in the mp4.h header files. It's
+included in V0.87 and above.
 
 
 ----------------------------------------------------------------------
