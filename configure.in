@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT(configure.in)
-AM_INIT_AUTOMAKE(gtkpod, 0.70)
+AM_INIT_AUTOMAKE(gtkpod, 0.71-CVS)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 AC_CANONICAL_HOST
@@ -42,12 +42,11 @@ dnl (providing getopt_long*) will be included into the binary.
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)]) 
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
 
-dnl Check for libmp4v2
-AC_SEARCH_LIBS(MP4FileInfo, "mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++",[have_mp4v2="yes -- will build with aac support",AC_DEFINE_UNQUOTED(HAVE_MP4V2, 1, ["Define to 1 if you have the mp4v2 library"])],have_mp4v2="***no -- will build without aac support")
-
-dnl Id3lib librairies
 dnl Check which libs are required by id3lib
-AC_SEARCH_LIBS(ID3Tag_Link,"id3" "id3 -lstdc++" "id3 -lz" "id3 -lz -lstdc++",,AC_MSG_ERROR(id3lib not found))
+AC_SEARCH_LIBS(ID3Tag_Link, ["id3" "id3 -lstdc++" "id3 -lz" "id3 -lz -lstdc++"],,AC_MSG_ERROR(id3lib not found))
+
+dnl Check for libmp4v2
+AC_SEARCH_LIBS(MP4FileInfo, ["mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++"],[have_mp4v2="yes -- will build with aac support",AC_DEFINE_UNQUOTED(HAVE_LIBMP4V2, 1, ["Define to 1 if you have the mp4v2 library"])],have_mp4v2="***no -- will build without aac support")
 
 dnl expected version for cross compiling
 ID3LIB_MAJOR=3
