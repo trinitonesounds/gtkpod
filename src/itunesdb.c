@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-20 18:12:09 jcs>
+/* Time-stamp: <2004-11-22 01:50:21 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -209,9 +209,6 @@
 #define itunesdb_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
 #endif
 
-/* We instruct itunesdb_parse to provide utf8 versions of the strings */
-#define ITUNESDB_PROVIDE_UTF8
-
 #define ITUNESDB_DEBUG 0
 #define ITUNESDB_MHIT_DEBUG 0
 
@@ -242,6 +239,9 @@ enum {
   MHOD_ID_FDESC = 6,
   MHOD_ID_COMMENT = 8,
   MHOD_ID_COMPOSER = 12,
+  MHOD_ID_SPLPREF = 50,  /* settings for smart playlist */
+  MHOD_ID_SPLRULES = 51, /* rules for smart playlist     */
+  MHOD_ID_MHYP = 52,     /* unknown                     */
   MHOD_ID_PLAYLIST = 100
 };
 
@@ -282,8 +282,8 @@ static gint seek_get_n_bytes (FILE *file, gchar *data, glong seek, gint n)
 
 
 /* Get the 4-byte-number stored at position "seek" in "file"
-   (or -1 when an error occured) */
-static guint32 get4int(FILE *file, glong seek)
+   in little endian encoding (or -1 when an error occured) */
+static guint32 get4lint(FILE *file, glong seek)
 {
   guchar data[4];
   guint32 n;
@@ -296,6 +296,51 @@ static guint32 get4int(FILE *file, glong seek)
   return n;
 }
 
+/* Get the 4-byte-number stored at position "seek" in "file"
+   in big endian encoding (or -1 when an error occured) */
+static guint32 get4bint(FILE *file, glong seek)
+{
+  guchar data[4];
+  guint32 n;
+
+  if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
+  n =  ((guint32)data[0]) << 24;
+  n += ((guint32)data[1]) << 16;
+  n += ((guint32)data[2]) << 8;
+  n += ((guint32)data[3]);
+  return n;
+}
+
+/* Get the 8-byte-number stored at position "seek" in "file"
+   in big endian encoding (or -1 when an error occured) */
+static guint64 get8bint(FILE *file, glong seek)
+{
+  guchar data[8];
+  guint64 n;
+
+  if (seek_get_n_bytes (file, data, seek, 8) != 8) return -1;
+  n =  ((guint64)data[0]) << 56;
+  n += ((guint64)data[1]) << 48;
+  n += ((guint64)data[2]) << 40;
+  n += ((guint64)data[3]) << 32;
+  n += ((guint64)data[4]) << 24;
+  n += ((guint64)data[5]) << 16;
+  n += ((guint64)data[6]) << 8;
+  n += ((guint64)data[7]);
+  return n;
+}
+
+/* Get the 1-byte-number stored at position "seek" in "file"
+   (or -1 when an error occured) */
+static guint32 get1int(FILE *file, glong seek)
+{
+  guchar data;
+  guint32 n;
+
+  if (seek_get_n_bytes (file, &data, seek, 1) != 1) return -1;
+  n = data;
+  return n;
+}
 
 
 
@@ -315,15 +360,133 @@ gint32 i;
 return utf16_string;
 }
 
+/* Fix UTF16 String (for smart playlists it has to be reversed for
+ * little endian machines) */
+static gunichar2 *fixup_rev_utf16(gunichar2 *utf16_string) {
+#if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
+gint32 i;
+ if (utf16_string)
+ {
+     for(i=0; i<utf16_strlen(utf16_string); i++)
+     {
+	 utf16_string[i] = ((utf16_string[i]<<8) & 0xff00) |
+	     ((utf16_string[i]>>8) & 0xff);
+     }
+ }
+#endif
+return utf16_string;
+}
 
-/* return the length of the header *ml, the genre number *mty,
-   and a string with the entry (in UTF16?). After use you must
-   free the string with g_free (). Returns NULL in case of error. */
-static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
+
+/* return TRUE if the smart playlist action @action is
+   known. Otherwise a warning is displayed and FALSE is returned. */
+static gboolean spl_action_known (SPLAction action)
+{
+    gboolean result = FALSE;
+
+    switch (action)
+    {
+    case SPLACTION_IS_INT:
+    case SPLACTION_IS_GREATER_THAN:
+    case SPLACTION_IS_NOT_GREATER_THAN:
+    case SPLACTION_IS_LESS_THAN:
+    case SPLACTION_IS_NOT_LESS_THAN:
+    case SPLACTION_IS_IN_THE_RANGE:
+    case SPLACTION_IS_NOT_IN_THE_RANGE:
+    case SPLACTION_IS_IN_THE_LAST:
+    case SPLACTION_IS_STRING:
+    case SPLACTION_CONTAINS:
+    case SPLACTION_STARTS_WITH:
+    case SPLACTION_DOES_NOT_START_WITH:
+    case SPLACTION_ENDS_WITH:
+    case SPLACTION_DOES_NOT_END_WITH:
+    case SPLACTION_IS_NOT_INT:
+    case SPLACTION_IS_NOT_IN_THE_LAST:
+    case SPLACTION_IS_NOT:
+    case SPLACTION_DOES_NOT_CONTAIN:
+	result = TRUE;
+    }
+    if (result == FALSE)
+    {	/* New action! */
+	itunesdb_warning (_("Unknown action (%d) in smart playlist will be ignored.\n"), action);
+    }
+    return result;
+}
+
+enum SPLFieldType spl_get_field_type (const SPLField field)
+{
+    switch(field)
+    {
+    case SPLFIELD_SONG_NAME:
+    case SPLFIELD_ALBUM:
+    case SPLFIELD_ARTIST:
+    case SPLFIELD_GENRE:
+    case SPLFIELD_KIND:
+    case SPLFIELD_COMMENT:
+    case SPLFIELD_COMPOSER:
+    case SPLFIELD_GROUPING:
+	return(splft_String);
+    case SPLFIELD_BITRATE:
+    case SPLFIELD_SAMPLE_RATE:
+    case SPLFIELD_YEAR:
+    case SPLFIELD_TRACKNUMBER:
+    case SPLFIELD_SIZE:
+    case SPLFIELD_PLAYCOUNT:
+    case SPLFIELD_DISC_NUMBER:
+    case SPLFIELD_BPM:
+    case SPLFIELD_RATING:
+    case SPLFIELD_TIME: /* time is the length of the track in
+			   milliseconds */
+	return(splft_Int);
+    case SPLFIELD_COMPILATION:
+	return(splft_Boolean);
+    case SPLFIELD_DATE_MODIFIED:
+    case SPLFIELD_DATE_ADDED:
+    case SPLFIELD_LAST_PLAYED:
+	return(splft_Date);
+    case SPLFIELD_PLAYLIST:
+	return(splft_Playlist);
+    }
+    return(splft_Unknown);
+}
+
+
+/* Returns the type of the mhod and the length *ml. *ml is set to -1
+ * on error (e.g. because there's no mhod at @seek */
+static gint32 get_mhod_type (FILE *file, glong seek, gint32 *ml)
+{
+    gchar data[4];
+    gint32 type = -1;
+
+#if ITUNESDB_DEBUG
+    fprintf(stderr, "get_mhod_type seek: %x\n", (int)seek);
+#endif
+
+    *ml = -1;
+
+    if ((seek_get_n_bytes (file, data, seek, 4) == 4) &&
+	(cmp_n_bytes (data, "mhod", 4) == TRUE))
+    {
+	*ml = get4lint (file, seek+8);    /* total length   */
+	type = get4lint (file, seek+12);  /* mhod_id number */
+    }
+    return type;
+}
+
+
+/* Returns a pointer to the data contained in the mhod at position
+   @seek. This can be a simple string or something more complicated as
+   in the case for SPLPREF or SPLRULES. *ml is set to the total length
+   of the mhod (-1 in case of an error), *mty is set to the type of
+   the mhod */
+static void *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 {
   gchar data[4];
   gunichar2 *entry_utf16 = NULL;
+  SPLPref *splp = NULL;
+  void *result = NULL;
   gint32 xl;
+  gint32 header_length;
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "get_mhod seek: %x\n", (int)seek);
@@ -339,9 +502,11 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
       *ml = -1;
       return NULL;
     }
-  *ml = get4int (file, seek+8);       /* length         */
-  *mty = get4int (file, seek+12);     /* mhod_id number */
-  xl = get4int (file, seek+28);       /* entry length   */
+  header_length = get4lint (file, seek+4); /* header length  */
+  *ml = get4lint (file, seek+8);           /* total length   */
+  *mty = get4lint (file, seek+12);         /* mhod_id number */
+
+  seek += header_length;
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "ml: %x mty: %x, xl: %x\n", *ml, *mty, xl);
@@ -349,11 +514,21 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 
   switch (*mty)
   {
-  case MHOD_ID_PLAYLIST: /* do something with the "weird mhod" */
+  case MHOD_ID_PLAYLIST:
+  case MHOD_ID_MHYP:
+      /* these do not have a simple text string setting */
       break;
-  default:
+  case MHOD_ID_TITLE:
+  case MHOD_ID_PATH:
+  case MHOD_ID_ALBUM:
+  case MHOD_ID_ARTIST:
+  case MHOD_ID_GENRE:
+  case MHOD_ID_FDESC:
+  case MHOD_ID_COMMENT:
+  case MHOD_ID_COMPOSER:
+      xl = get4lint (file, seek+4);   /* entry length   */
       entry_utf16 = g_malloc (xl+2);
-      if (seek_get_n_bytes (file, (gchar *)entry_utf16, seek+40, xl) != xl) {
+      if (seek_get_n_bytes (file, (gchar *)entry_utf16, seek+16, xl) != xl) {
 	  g_free (entry_utf16);
 	  entry_utf16 = NULL;
 	  *ml = -1;
@@ -362,24 +537,140 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
       {
 	  entry_utf16[xl/2] = 0; /* add trailing 0 */
       }
+      fixup_utf16 (entry_utf16);
+      result = entry_utf16;
+      break;
+  case MHOD_ID_SPLPREF:  /* Settings for smart playlist */
+      splp = g_malloc0 (sizeof (SPLPref));
+      splp->liveupdate = get1int (file, seek);
+      splp->checkrules = get1int (file, seek+1);
+      splp->checklimits = get1int (file, seek+2);
+      splp->limittype = get1int (file, seek+3);
+      splp->limitsort = get1int (file, seek+4);
+      splp->limitvalue = get4lint (file, seek+8);
+      splp->matchcheckedonly = get1int (file, seek+12);
+      splp->limitsort_opposite = get1int (file, seek+13);
+      /* if the opposite flag is on, set limitsort's high bit -- see
+	 note in itunesdb.h for more info */
+      if (splp->limitsort_opposite)
+	  splp->limitsort |= 0x80000000;
+      result = splp;
+      break;
+  case MHOD_ID_SPLRULES:  /* Rules for smart playlist */
+      if ((seek_get_n_bytes (file, data, seek, 4) == 4) &&
+	  (cmp_n_bytes (data, "SLst", 4) == TRUE))
+      {
+	  /* !!! for some reason the SLst part is the only part of the
+	     iTunesDB with big-endian encoding, including UTF16
+	     strings */
+	  gint i;
+	  guint32 numrules;
+	  SPLRules *splrs = g_malloc0 (sizeof (SPLRules));
+	  splrs->unk004 = get4bint (file, seek+4);
+	  numrules = get4bint (file, seek+8);
+	  splrs->match_operator = get4bint (file, seek+12);
+	  seek += 136;  /* I can't find this value stored in the
+			   iTunesDB :-( */
+	  for (i=0; i<numrules; ++i)
+	  {
+	      SPLRule *splr = g_malloc0 (sizeof (SPLRule));
+	      guint32 length;
+	      splr->field = get4bint (file, seek);
+	      splr->action = get4bint (file, seek+4);
+	      length = get4bint (file, seek+52);
+	      seek += 56;
+	      if (spl_action_known (splr->action))
+	      {
+		  gint ft = spl_get_field_type (splr->field);
+		  if (ft == splft_String)
+		  {
+		      splr->string = g_malloc0 (length+2);
+		      if (seek_get_n_bytes (file, (gchar *)splr->string, seek, length) != length) 
+		      {
+			  g_free (splr->string);
+			  g_free (splr);
+			  splr = NULL;
+			  *ml = -1;
+			  break;  /* exits the "for (i...)" loop */
+		      }
+		      fixup_rev_utf16 (splr->string);
+		  }
+		  else
+		  {
+		      if (length != 0x44)
+		      {
+			  itunesdb_warning (_("Length of smart playlist rule field (%d) not as expected. Trying to continue anyhow.\n"), length);
+		      }
+		      splr->fromvalue = get8bint (file, seek);
+		      splr->fromdate = get8bint (file, seek+8);
+		      splr->fromunits = get8bint (file, seek+16);
+		      splr->tovalue = get8bint (file, seek+24);
+		      splr->todate = get8bint (file, seek+32);
+		      splr->tounits = get8bint (file, seek+40);
+		      /* SPLFIELD_PLAYLIST seem to use these unknowns*/
+		      splr->unk048 = get4bint (file, seek+48);
+		      splr->unk052 = get4bint (file, seek+52);
+		      splr->unk056 = get4bint (file, seek+56);
+		      splr->unk060 = get4bint (file, seek+60);
+		      splr->unk064 = get4bint (file, seek+64);
+		  }  
+		  seek += length;
+	      }
+	      else
+	      {
+		  g_free (splr);
+		  splr = NULL;
+	      }
+	      if (splr)
+	      {
+		  splrs->rules = g_list_append (splrs->rules, splr);
+	      } 
+	  }
+      }
+      else
+      {
+	  *ml = -1;
+      }
+      break;
+  default:
+      itunesdb_warning (_("Encountered unknown MHOD type (%d) while parsing the iTunesDB. Ignoring.\n\n"), *mty);
       break;
   }
-  return fixup_utf16(entry_utf16);
+  return result;
 }
 
+/* Returns the value of a string type mhod. return the length of the
+   mhod *ml, the mhod type *mty, and a string with the entry (in
+   UTF16). After use you must free the string with g_free(). Returns
+   NULL if no string is avaible. *ml is set to -1 in case of error. */
+static gunichar2 *get_mhod_string (FILE *file, glong seek, gint32 *ml, gint32 *mty)
+{
+    gunichar2 *result = NULL;
 
+    *mty = get_mhod_type (file, seek, ml);
+
+    if (*ml != -1) switch (*mty)
+    {
+    case MHOD_ID_TITLE:
+    case MHOD_ID_PATH:
+    case MHOD_ID_ALBUM:
+    case MHOD_ID_ARTIST:
+    case MHOD_ID_GENRE:
+    case MHOD_ID_FDESC:
+    case MHOD_ID_COMMENT:
+    case MHOD_ID_COMPOSER:
+	result = get_mhod (file, seek, ml, mty);
+    }
+    return result;
+}
 
 /* get a PL, return pos where next PL should be, name and content */
 static glong get_pl(FILE *file, glong seek)
 {
-  gunichar2 *plname_utf16 = NULL, *plname_utf16_maybe;
-#ifdef ITUNESDB_PROVIDE_UTF8
-  gchar *plname_utf8;
-#endif
-  guint32 type, pltype, tracknum, n;
+  guint32 type, tracknum, n;
   guint32 nextseek;
   gint32 zip;
-  Playlist *plitem;
+  Playlist *plitem = NULL;
   guint32 ref;
 
   gchar data[4];
@@ -391,43 +682,73 @@ static glong get_pl(FILE *file, glong seek)
 
   if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
   if (cmp_n_bytes (data, "mhyp", 4) == FALSE)      return -1; /* not pl */
+  tracknum = get4lint (file, seek+16); /* number of tracks in playlist */
+  nextseek = seek + get4lint (file, seek+8); /* possible begin of next PL */
+  zip = get4lint (file, seek+4); /* length of header */
+  if (zip == 0) return -1;      /* error! */
+  plitem = g_malloc0 (sizeof (Playlist));
   /* Some Playlists have added 256 to their type -- I don't know what
      it's for, so we just ignore it for now -> & 0xff */
-  pltype = get4int (file, seek+20) & 0xff;  /* Type of playlist (1= MPL) */
-  tracknum = get4int (file, seek+16); /* number of tracks in playlist */
-  nextseek = seek + get4int (file, seek+8); /* possible begin of next PL */
-  zip = get4int (file, seek+4); /* length of header */
-  if (zip == 0) return -1;      /* error! */
+  plitem->type = get4lint (file, seek+20) & 0xff;
   do
   {
+      gunichar2 *plname_utf16_maybe;
+      SPLPref *splpref = NULL;
+      SPLRules *splrules = NULL;
+
       seek += zip;
       if (seek_get_n_bytes (file, data, seek, 4) != 4) return -1;
-      plname_utf16_maybe = get_mhod(file, seek, &zip, &type); /* PL name */
+      type = get_mhod_type (file, seek, &zip);
       if (zip != -1) switch (type)
       {
       case MHOD_ID_PLAYLIST:
-	  break; /* here we could do something about the "weird mhod" */
+	  /* here we could do something about the playlist sttings */
+	  break;
       case MHOD_ID_TITLE:
+	  plname_utf16_maybe = get_mhod (file, seek, &zip, &type);
 	  if (plname_utf16_maybe)
 	  {
 	      /* sometimes there seem to be two mhod TITLE headers */
-	      if (plname_utf16) g_free (plname_utf16);
-	      plname_utf16 = plname_utf16_maybe;
+	      g_free (plitem->name_utf16);
+	      plitem->name_utf16  = plname_utf16_maybe;
+
+	  }
+	  break;
+      case MHOD_ID_SPLPREF:
+	  splpref = get_mhod (file, seek, &zip, &type);
+	  if (splpref)
+	  {
+	      plitem->is_spl = TRUE;
+	      memcpy (&plitem->splpref, splpref, sizeof (SPLPref));
+	      g_free (splpref);
+	      splpref = NULL;
+	  }
+	  break;
+      case MHOD_ID_SPLRULES:
+	  splrules = get_mhod (file, seek, &zip, &type);
+	  if (splrules)
+	  {
+	      plitem->is_spl = TRUE;
+	      memcpy (&plitem->splrules, splrules, sizeof (SPLRules));
+	      g_free (splrules);
+	      splrules = NULL;
 	  }
 	  break;
       }
   } while (zip != -1); /* read all MHODs */
-  if (!plname_utf16)
+
+  if (!plitem->name_utf16)
   {   /* we did not read a valid mhod TITLE header -> */
       /* we simply make up our own name */
-	if (pltype == PL_TYPE_MPL)
-	    plname_utf16 = g_utf8_to_utf16 (_("Master-PL"),
-					    -1, NULL, NULL, NULL);
-	else plname_utf16 = g_utf8_to_utf16 (_("Playlist"),
-					     -1, NULL, NULL, NULL);
+	if (plitem->type == PL_TYPE_MPL)
+	    plitem->name_utf16 = g_utf8_to_utf16 (_("Master-PL"), -1,
+						  NULL, NULL, NULL);
+	else plitem->name_utf16 = g_utf8_to_utf16 (_("Playlist"), -1,
+						   NULL, NULL, NULL);
   }
 #ifdef ITUNESDB_PROVIDE_UTF8
-  plname_utf8 = g_utf16_to_utf8 (plname_utf16, -1, NULL, NULL, NULL);
+  plitem->name = g_utf16_to_utf8 (plitem->name_utf16, -1,
+				  NULL, NULL, NULL);
 #endif
 
 
@@ -435,22 +756,14 @@ static glong get_pl(FILE *file, glong seek)
   fprintf(stderr, "pln: %s(%d Tracks) \n", plname_utf8, (int)tracknum);
 #endif
 
-  plitem = g_malloc0 (sizeof (Playlist));
-
-#ifdef ITUNESDB_PROVIDE_UTF8
-  plitem->name = plname_utf8;
-#endif
-  plitem->name_utf16 = plname_utf16;
-  plitem->type = pltype;
-
-  /* create new playlist */
+  /* add new playlist */
   plitem = it_add_playlist(plitem);
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "added pl: %s", plname_utf8);
+  fprintf(stderr, "added pl: %s", plitem->plname);
 #endif
 
-  if ((pltype == PL_TYPE_MPL) &&
+  if ((plitem->type == PL_TYPE_MPL) &&
       (tracknum > 0) &&
       (mpl_ids == NULL))
   {   /* we need space to store the mpl IDs locally */
@@ -466,12 +779,12 @@ static glong get_pl(FILE *file, glong seek)
       if (cmp_n_bytes (data, "mhyp", 4) == TRUE) return -1; /* Wrong!!! */
       if (cmp_n_bytes (data, "mhip", 4) == TRUE)
 	{
-	  ref = get4int(file, seek+24);
+	  ref = get4lint(file, seek+24);
 	  it_add_trackid_to_playlist(plitem, ref);
-	  if (pltype == PL_TYPE_MPL) mpl_ids[n] = ref;
+	  if (plitem->type == PL_TYPE_MPL) mpl_ids[n] = ref;
 	  ++n;
 	}
-      seek += get4int (file, seek+8);
+      seek += get4lint (file, seek+8);
     }
   return nextseek;
 }
@@ -499,58 +812,58 @@ static glong get_mhit(FILE *file, glong seek)
 
   track = itunesdb_new_track ();
 
-  track->ipod_id = get4int(file, seek+16);       /* iPod ID          */
-  track->unk020 = get4int (file, seek+20);
-  track->unk024 = get4int (file, seek+24);
-  track->rating = get4int (file, seek+28)>>24;   /* rating          */
-  temp = get4int (file, seek+32);
+  track->ipod_id = get4lint(file, seek+16);       /* iPod ID          */
+  track->unk020 = get4lint (file, seek+20);
+  track->unk024 = get4lint (file, seek+24);
+  track->rating = get4lint (file, seek+28)>>24;   /* rating          */
+  temp = get4lint (file, seek+32);
   track->compilation = (temp & 0x00ff0000) >> 16;
   track->type = temp & 0x0000ffff;
-  track->time_created = get4int(file, seek+32);  /* creation time    */
-  track->size = get4int(file, seek+36);          /* file size        */
-  track->tracklen = get4int(file, seek+40);      /* time             */
-  track->track_nr = get4int(file, seek+44);      /* track number     */
-  track->tracks = get4int(file, seek+48);        /* nr of tracks     */
-  track->year = get4int(file, seek+52);          /* year             */
-  track->bitrate = get4int(file, seek+56);       /* bitrate          */
-  track->samplerate = get4int(file,seek+60)>>16; /* sample rate      */
-  track->volume = get4int(file, seek+64);        /* volume adjust    */
-  track->starttime = get4int (file, seek+68);
-  track->stoptime = get4int (file, seek+72);
-  track->soundcheck = get4int (file, seek+76);   /* soundcheck       */
-  track->playcount = get4int (file, seek+80);    /* playcount        */
-  track->unk084 = get4int (file, seek+84);
-  track->time_played = get4int(file, seek+88);   /* last time played */
-  track->cd_nr = get4int(file, seek+92);         /* CD nr            */
-  track->cds = get4int(file, seek+96);           /* CD nr of..       */
-  track->unk100 = get4int (file, seek+100);
-  track->time_modified = get4int(file, seek+104);/* last mod. time   */
-  track->unk108 = get4int (file, seek+108);
-  track->unk112 = get4int (file, seek+112);
-  track->unk116 = get4int (file, seek+116);
-  temp = get4int (file, seek+120);
+  track->time_created = get4lint(file, seek+32);  /* creation time    */
+  track->size = get4lint(file, seek+36);          /* file size        */
+  track->tracklen = get4lint(file, seek+40);      /* time             */
+  track->track_nr = get4lint(file, seek+44);      /* track number     */
+  track->tracks = get4lint(file, seek+48);        /* nr of tracks     */
+  track->year = get4lint(file, seek+52);          /* year             */
+  track->bitrate = get4lint(file, seek+56);       /* bitrate          */
+  track->samplerate = get4lint(file,seek+60)>>16; /* sample rate      */
+  track->volume = get4lint(file, seek+64);        /* volume adjust    */
+  track->starttime = get4lint (file, seek+68);
+  track->stoptime = get4lint (file, seek+72);
+  track->soundcheck = get4lint (file, seek+76);   /* soundcheck       */
+  track->playcount = get4lint (file, seek+80);    /* playcount        */
+  track->unk084 = get4lint (file, seek+84);
+  track->time_played = get4lint(file, seek+88);   /* last time played */
+  track->cd_nr = get4lint(file, seek+92);         /* CD nr            */
+  track->cds = get4lint(file, seek+96);           /* CD nr of..       */
+  track->unk100 = get4lint (file, seek+100);
+  track->time_modified = get4lint(file, seek+104);/* last mod. time   */
+  track->unk108 = get4lint (file, seek+108);
+  track->unk112 = get4lint (file, seek+112);
+  track->unk116 = get4lint (file, seek+116);
+  temp = get4lint (file, seek+120);
   track->BPM = temp >> 16;
   track->app_rating = (temp & 0xff00)>> 8;/* The rating set by * the
 					     application, as opposed to
 					     the rating set on the iPod
 					     itself */
   track->checked = temp & 0xff;           /* Checked/Unchecked: 0/1 */
-  track->unk124 = get4int (file, seek+124);
-  track->unk128 = get4int (file, seek+128);
-  track->unk132 = get4int (file, seek+132);
-  track->unk136 = get4int (file, seek+136);
-  track->unk140 = get4int (file, seek+140);
-  track->unk144 = get4int (file, seek+144);
-  track->unk148 = get4int (file, seek+148);
-  track->unk152 = get4int (file, seek+152);
+  track->unk124 = get4lint (file, seek+124);
+  track->unk128 = get4lint (file, seek+128);
+  track->unk132 = get4lint (file, seek+132);
+  track->unk136 = get4lint (file, seek+136);
+  track->unk140 = get4lint (file, seek+140);
+  track->unk144 = get4lint (file, seek+144);
+  track->unk148 = get4lint (file, seek+148);
+  track->unk152 = get4lint (file, seek+152);
 
   track->transferred = TRUE;                   /* track is on iPod! */
 
 #if ITUNESDB_MHIT_DEBUG
 time_t time_mac_to_host (guint32 mactime);
 gchar *time_time_to_string (time_t time);
-#define printf_mhit(sk, str)  printf ("%3d: %d (%s)\n", sk, get4int (file, seek+sk), str);
-#define printf_mhit_time(sk, str) { gchar *buf = time_time_to_string (itunesdb_time_mac_to_host (get4int (file, seek+sk))); printf ("%3d: %s (%s)\n", sk, buf, str); g_free (buf); }
+#define printf_mhit(sk, str)  printf ("%3d: %d (%s)\n", sk, get4lint (file, seek+sk), str);
+#define printf_mhit_time(sk, str) { gchar *buf = time_time_to_string (itunesdb_time_mac_to_host (get4lint (file, seek+sk))); printf ("%3d: %s (%s)\n", sk, buf, str); g_free (buf); }
   {
       printf ("\nmhit: seek=%lu\n", seek);
       printf_mhit (  4, "header size");
@@ -559,8 +872,8 @@ gchar *time_time_to_string (time_t time);
       printf_mhit ( 16, "iPod ID");
       printf_mhit ( 20, "?");
       printf_mhit ( 24, "?");
-      printf (" 28: %u (type)\n", get4int (file, seek+28) & 0xffffff);
-      printf (" 28: %u (rating)\n", get4int (file, seek+28) >> 24);
+      printf (" 28: %u (type)\n", get4lint (file, seek+28) & 0xffffff);
+      printf (" 28: %u (rating)\n", get4lint (file, seek+28) >> 24);
       printf_mhit ( 32, "timestamp file");
       printf_mhit_time ( 32, "timestamp file");
       printf_mhit ( 36, "size");
@@ -570,8 +883,8 @@ gchar *time_time_to_string (time_t time);
       printf_mhit ( 52, "year");
       printf_mhit ( 56, "bitrate");
       printf_mhit ( 60, "sample rate");
-      printf (" 60: %u (sample rate LSB)\n", get4int (file, seek+60) & 0xffff);
-      printf (" 60: %u (sample rate HSB)\n", (get4int (file, seek+60) >> 16));
+      printf (" 60: %u (sample rate LSB)\n", get4lint (file, seek+60) & 0xffff);
+      printf (" 60: %u (sample rate HSB)\n", (get4lint (file, seek+60) >> 16));
       printf_mhit ( 64, "?");
       printf_mhit ( 68, "?");
       printf_mhit ( 72, "?");
@@ -602,11 +915,11 @@ gchar *time_time_to_string (time_t time);
 #undef printf_mhit
 #endif
 
-  seek += get4int (file, seek+4);             /* 1st mhod starts here! */
+  seek += get4lint (file, seek+4);             /* 1st mhod starts here! */
   while(zip != -1)
     {
      seek += zip;
-     entry_utf16 = get_mhod (file, seek, &zip, &type);
+     entry_utf16 = get_mhod_string (file, seek, &zip, &type);
      if (entry_utf16 != NULL) {
 #ifdef ITUNESDB_PROVIDE_UTF8
        entry_utf8 = g_utf16_to_utf8 (entry_utf16, -1, NULL, NULL, NULL);
@@ -726,16 +1039,16 @@ static void init_playcounts (const gchar *dirname)
       localtime (&tt);  /* set the ext. variable 'timezone' (see below) */
       if (seek_get_n_bytes (plycts, data, 0, 4) != 4)  break;
       if (cmp_n_bytes (data, "mhdp", 4) == FALSE)      break;
-      header_length = get4int (plycts, 4);
+      header_length = get4lint (plycts, 4);
       /* all the headers I know are 0x60 long -- if this one is longer
 	 we can simply ignore the additional information */
       if (header_length < 0x60)                        break;
-      entry_length = get4int (plycts, 8);
+      entry_length = get4lint (plycts, 8);
       /* all the entries I know are 0x0c (firmware 1.3) or 0x10
        * (firmware 2.0) in length */
       if (entry_length < 0x0c)                         break;
       /* number of entries */
-      entry_num = get4int (plycts, 12);
+      entry_num = get4lint (plycts, 12);
       for (i=0; i<entry_num; ++i)
       {
 	  struct playcount *playcount = g_malloc0 (sizeof (struct playcount));
@@ -745,8 +1058,8 @@ static void init_playcounts (const gchar *dirname)
 	  /* check if entry exists by reading its last four bytes */
 	  if (seek_get_n_bytes (plycts, data,
 				seek+entry_length-4, 4) != 4) break;
-	  playcount->playcount = get4int (plycts, seek);
-	  playcount->time_played = get4int (plycts, seek+4);
+	  playcount->playcount = get4lint (plycts, seek);
+	  playcount->time_played = get4lint (plycts, seek+4);
           /* NOTE:
 	   *
 	   * The iPod (firmware 1.3) doesn't seem to use the timezone
@@ -761,7 +1074,7 @@ static void init_playcounts (const gchar *dirname)
 
 	  /* rating only exists if the entry length is at least 0x10 */
 	  if (entry_length >= 0x10)
-	      playcount->rating = get4int (plycts, seek+12);
+	      playcount->rating = get4lint (plycts, seek+12);
 	  else
 	      playcount->rating = NO_PLAYCOUNT;
       }
@@ -795,15 +1108,15 @@ static gboolean process_OTG_file (const gchar *filename,
 
 	if (seek_get_n_bytes (otgf, data, 0, 4) != 4)  goto end;
 	if (cmp_n_bytes (data, "mhpo", 4) == FALSE)    goto end;
-	header_length = get4int (otgf, 4);
+	header_length = get4lint (otgf, 4);
 	/* all the headers I know are 0x14 long -- if this one is
 	 longer we can simply ignore the additional information */
 	if (header_length < 0x14)                      goto end;
-	entry_length = get4int (otgf, 8);
+	entry_length = get4lint (otgf, 8);
 	/* all the entries I know are 0x04 long */
 	if (entry_length < 0x04)                       goto end;
 	/* number of entries */
-	entry_num = get4int (otgf, 12);
+	entry_num = get4lint (otgf, 12);
 	if (entry_num > 0)
 	{
 	    /* Create new playlist */
@@ -819,7 +1132,7 @@ static gboolean process_OTG_file (const gchar *filename,
 	    /* Add items */
 	    for (i=0; i<entry_num; ++i)
 	    {
-		guint32 num = get4int (otgf,
+		guint32 num = get4lint (otgf,
 				      header_length + entry_length *i);
 		if ((num < mpl_length) && mpl_ids)
 		{
@@ -921,7 +1234,7 @@ gboolean itunesdb_parse_file (const gchar *filename)
 	  itunesdb_warning (_("\"%s\" is not a iTunesDB.\n"), filename);
 	  break;
       }
-      seek = get4int (itunes, 4);
+      seek = get4lint (itunes, 4);
       /* all the headers I know are 0x68 long -- if this one is longer
 	 we can simply ignore the additional information */
       /* we don't need any information of the mhbd header... */
@@ -935,12 +1248,12 @@ gboolean itunesdb_parse_file (const gchar *filename)
 	  if (seek_get_n_bytes (itunes, data, seek, 8) != 8)  break;
 	  if (cmp_n_bytes (data, "mhsd", 4) == TRUE)
 	  { /* mhsd header -> determine start of playlists */
-	      if (get4int (itunes, seek + 12) == 1)
+	      if (get4lint (itunes, seek + 12) == 1)
 	      { /* OK, tracklist, save start of playlists */
 		  if (!swapped_mhsd)
-		      pl_mhsd = seek + get4int (itunes, seek+8);
+		      pl_mhsd = seek + get4lint (itunes, seek+8);
 	      }
-	      else if (get4int (itunes, seek + 12) == 2)
+	      else if (get4lint (itunes, seek + 12) == 2)
 	      { /* bad: these are playlists... switch */
 		  if (swapped_mhsd)
 		  { /* already switched once -> forget it */
@@ -949,18 +1262,18 @@ gboolean itunesdb_parse_file (const gchar *filename)
 		  else
 		  {
 		      pl_mhsd = seek;
-		      seek += get4int (itunes, seek+8);
+		      seek += get4lint (itunes, seek+8);
 		      swapped_mhsd = TRUE;
 		  }
 	      }
 	      else
 	      { /* neither playlist nor track MHSD --> skip it */
-		  seek += get4int (itunes, seek+8);
+		  seek += get4lint (itunes, seek+8);
 	      }
 	  }
 	  if (cmp_n_bytes (data, "mhlt", 4) == TRUE)
 	  { /* mhlt header -> number of tracks */
-	      nr_tracks = get4int (itunes, seek+8);
+	      nr_tracks = get4lint (itunes, seek+8);
 	      if (nr_tracks == 0)
 	      {   /* no tracks -- skip directly to next mhsd */
 		  result = TRUE;
@@ -972,7 +1285,7 @@ gboolean itunesdb_parse_file (const gchar *filename)
 	      result = TRUE;
 	      break;
 	  }
-	  zip = get4int (itunes, seek+4);
+	  zip = get4lint (itunes, seek+4);
 	  if (zip == 0)  break;
 	  seek += zip;
       } while (result == FALSE);
@@ -997,21 +1310,21 @@ gboolean itunesdb_parse_file (const gchar *filename)
 	  if (seek_get_n_bytes (itunes, data, seek, 8) != 8)  break;
 	  if (cmp_n_bytes (data, "mhsd", 4) == TRUE)
 	  { /* mhsd header */
-	      if (get4int (itunes, seek + 12) != 2)
+	      if (get4lint (itunes, seek + 12) != 2)
 	      {  /* this is not a playlist MHSD -> skip it */
-		  seek += get4int (itunes, seek+8);
+		  seek += get4lint (itunes, seek+8);
 	      }
 	  }
 	  if (cmp_n_bytes (data, "mhlp", 4) == TRUE)
 	  { /* mhlp header -> number of playlists */
-	      nr_playlists = get4int (itunes, seek+8);
+	      nr_playlists = get4lint (itunes, seek+8);
 	  }
 	  if (cmp_n_bytes (data, "mhyp", 4) == TRUE)
 	  { /* mhyp header -> start of playlists */
 	      result = TRUE;
 	      break;
 	  }
-	  zip = get4int (itunes, seek+4);
+	  zip = get4lint (itunes, seek+4);
 	  if (zip == 0)  break;
 	  seek += zip;
       } while (result == FALSE);

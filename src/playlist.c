@@ -40,43 +40,7 @@
 #include "file.h"
 #include "support.h"
 
-
 GList *playlists;
-
-/* Creates a new playlist */
-Playlist *add_new_playlist (gchar *plname, gint position)
-{
-  Playlist *plitem;
-  
-  if(!plname) {
-    g_assert_not_reached();
-    return NULL;
-  }
-  
-
-  plitem = g_malloc0 (sizeof (Playlist));
-  plitem->type = PL_TYPE_NORM;
-  plitem->name = g_strdup (plname);
-  plitem->size = 0.0;
-  plitem->name_utf16 = g_utf8_to_utf16 (plname, -1, NULL, NULL, NULL);
-  data_changed (); /* indicate that data has changed in memory */
-  return add_playlist (plitem, position);
-}
-
-
-/* initializes the playlists by creating the master playlist */
-void create_mpl (void)
-{
-  Playlist *plitem;
-
-  if (playlists != NULL) return;  /* already entries! */
-  plitem = g_malloc0 (sizeof (Playlist));
-  plitem->type = PL_TYPE_MPL;  /* MPL! */
-  plitem->name = g_strdup ("gtkpod");
-  plitem->size = 0.0;
-  plitem->name_utf16 = g_utf8_to_utf16 (plitem->name, -1, NULL, NULL, NULL);
-  add_playlist (plitem, -1);
-}
 
 /* This function stores the new "plitem" in the global list
    and adds it to the display model.
@@ -88,7 +52,7 @@ void create_mpl (void)
    has to be used for consequent calls of add_track(id)_to_playlist()
    */
 /* @position: if != -1, playlist will be inserted at that position */
-Playlist *add_playlist (Playlist *plitem, gint position)
+static Playlist *add_playlist (Playlist *plitem, gint position)
 {
     Playlist *mpl;
 
@@ -113,6 +77,62 @@ Playlist *add_playlist (Playlist *plitem, gint position)
     pm_add_playlist (plitem, position);
     return plitem;
 }
+
+/* Creates a new playlist (spl = TRUE: smart playlist) */
+Playlist *add_new_playlist (gchar *plname, gint position, gboolean spl)
+{
+  Playlist *plitem;
+  
+  if(!plname) {
+    g_assert_not_reached();
+    return NULL;
+  }
+
+  plitem = g_malloc0 (sizeof (Playlist));
+  plitem->type = PL_TYPE_NORM;
+  plitem->name = g_strdup (plname);
+  plitem->size = 0.0;
+  plitem->name_utf16 = g_utf8_to_utf16 (plname, -1, NULL, NULL, NULL);
+  plitem->is_spl = spl;
+  if (spl)
+  {   /* set preferred values */
+      gint value;
+      if (prefs_get_int_value ("spl_liveupdate", &value))
+	  plitem->splpref.liveupdate = value;
+      if (prefs_get_int_value ("spl_checkrules", &value))
+	  plitem->splpref.checkrules = value;
+      if (prefs_get_int_value ("spl_checklimits", &value))
+	  plitem->splpref.checklimits = value;
+      if (prefs_get_int_value ("spl_limittype", &value))
+	  plitem->splpref.limittype = value;
+      if (prefs_get_int_value ("spl_limitsort", &value))
+	  plitem->splpref.limitsort = value;
+      if (prefs_get_int_value ("spl_limitvalue", &value))
+	  plitem->splpref.limitvalue = value;
+      if (prefs_get_int_value ("spl_matchcheckedonly", &value))
+	  plitem->splpref.matchcheckedonly = value;
+      if (prefs_get_int_value ("spl_limitsort_opposite", &value))
+	  plitem->splpref.limitsort_opposite = value;
+  }
+  data_changed (); /* indicate that data has changed in memory */
+  return add_playlist (plitem, position);
+}
+
+
+/* initializes the playlists by creating the master playlist */
+void create_mpl (void)
+{
+  Playlist *plitem;
+
+  if (playlists != NULL) return;  /* already entries! */
+  plitem = g_malloc0 (sizeof (Playlist));
+  plitem->type = PL_TYPE_MPL;  /* MPL! */
+  plitem->name = g_strdup ("gtkpod");
+  plitem->size = 0.0;
+  plitem->name_utf16 = g_utf8_to_utf16 (plitem->name, -1, NULL, NULL, NULL);
+  add_playlist (plitem, -1);
+}
+
 
 /* This function appends the track with id "id" to the
    playlist "plitem". It then lets the display model know.
@@ -340,13 +360,13 @@ guint get_playlist_by_name(gchar *pl_name, guint startfrom)
  * and added to the tail of playlists, otherwise pointer to an existing
  * playlist will be returned
  */
-Playlist* get_newplaylist_by_name (gchar *pl_name)
+Playlist* get_newplaylist_by_name (gchar *pl_name, gboolean spl)
 {
     Playlist *res = NULL;
     guint plnum = get_playlist_by_name(pl_name, (guint) 0);
 
     if (!plnum)
-        res = add_new_playlist(pl_name,-1);
+        res = add_new_playlist(pl_name,-1, spl);
     else
         res = get_playlist_by_nr(plnum);
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-12 02:09:06 jcs>
+/* Time-stamp: <2004-11-21 23:40:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,7 +33,6 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
-
 #include <glib.h>
 
 typedef struct

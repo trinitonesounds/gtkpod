@@ -625,7 +625,7 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   gint column;
 
   column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
-  gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
+  gtk_tree_model_get (model, iter, column, &playlist, -1);
 
   switch (column)
     {  /* We only have one column, so this code is overkill... */
@@ -643,6 +643,38 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
     }
 }
 
+
+/* set graphic indicator for smart playlists */
+static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
+				   GtkCellRenderer   *renderer,
+				   GtkTreeModel      *model,
+				   GtkTreeIter       *iter,
+				   gpointer           data)
+{
+  Playlist *playlist;
+  gint column;
+
+  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
+  gtk_tree_model_get (model, iter, column, &playlist, -1);
+
+  switch (column)
+    {  /* We only have one column, so this code is overkill... */
+    case PM_COLUMN_PLAYLIST: 
+	if (playlist->is_spl)
+	{
+	    g_object_set (G_OBJECT (renderer),
+			  "stock-id", "gtk-convert", NULL);
+	}
+	else
+	{
+	    g_object_set (G_OBJECT (renderer),
+			  "stock-id", NULL, NULL);
+	}
+	break;
+    }
+}
+
+
 /* Adds the columns to our playlist_treeview */
 static void pm_add_columns ()
 {
@@ -650,14 +682,9 @@ static void pm_add_columns ()
   GtkCellRenderer *renderer;
   GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
 
-
   /* playlist column */
-  renderer = gtk_cell_renderer_text_new ();
-  g_signal_connect (G_OBJECT (renderer), "edited",
-		    G_CALLBACK (pm_cell_edited), model);
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)PM_COLUMN_PLAYLIST);
-  column = gtk_tree_view_column_new_with_attributes (_("Playlists"), renderer, NULL);
-  gtk_tree_view_column_set_cell_data_func (column, renderer, pm_cell_data_func, NULL, NULL);
+  column = gtk_tree_view_column_new ();
+  gtk_tree_view_column_set_title (column, _("Playlists"));
   gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
@@ -669,6 +696,21 @@ static void pm_add_columns ()
 		    G_CALLBACK (pm_track_column_button_clicked),
 				(gpointer)PM_COLUMN_PLAYLIST);
   gtk_tree_view_append_column (playlist_treeview, column);
+
+  /* cell for playlist name */
+  renderer = gtk_cell_renderer_text_new ();
+  g_signal_connect (G_OBJECT (renderer), "edited",
+		    G_CALLBACK (pm_cell_edited), model);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)PM_COLUMN_PLAYLIST);
+  gtk_tree_view_column_pack_start (column, renderer, FALSE);
+  gtk_tree_view_column_set_cell_data_func (column, renderer, pm_cell_data_func, NULL, NULL);
+
+
+  /* cell for graphic indicator */
+  renderer = gtk_cell_renderer_pixbuf_new ();
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)PM_COLUMN_PLAYLIST);
+  gtk_tree_view_column_pack_end (column, renderer, FALSE); 
+  gtk_tree_view_column_set_cell_data_func (column, renderer, pm_cell_data_func_pix, NULL, NULL);
 }
 
 

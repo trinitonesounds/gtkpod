@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-06 00:14:16 jcs>
+/* Time-stamp: <2004-11-21 20:52:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -163,7 +163,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 	return FALSE;  /* definitely not! */
     }
     /* create playlist (if none is specified) */
-    if (!plitem)  plitem = add_new_playlist (plname, -1);
+    if (!plitem)  plitem = add_new_playlist (plname, -1, FALSE);
     C_FREE (plname);
 
     /* need dirname if playlist file contains relative paths */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 23:11:41 jcs>
+/* Time-stamp: <2004-11-21 20:52:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -62,7 +62,7 @@ Playlist *add_new_playlist_user_name (gchar *dflt, gint position)
 	dflt? dflt:_("New Playlist"));
     if (name)
     {
-	result = add_new_playlist (name, position);
+	result = add_new_playlist (name, position, FALSE);
 	gtkpod_tracks_statusbar_update ();
     }
     return result;
@@ -170,7 +170,7 @@ void generate_category_playlists (T_item cat)
 	    /* or, create category playlist */
 	    if(!cat_pl)
 	    {
-		cat_pl = add_new_playlist(category, -1);
+		cat_pl = add_new_playlist(category, -1, FALSE);
 	    }
 
 	    add_track_to_playlist(cat_pl, track, TRUE);
@@ -341,7 +341,7 @@ Playlist *generate_playlist_with_name (GList *tracks, gchar *pl_name,
 	    if (sel_pl && !playlist_exists (sel_pl))   select = TRUE;
 	}
 
-	new_pl = add_new_playlist (pl_name, -1);
+	new_pl = add_new_playlist (pl_name, -1, FALSE);
 	for (l=tracks; l; l=l->next)
 	{
 	    Track *track = (Track *)l->data;
@@ -917,7 +917,7 @@ void check_db (void)
 		    if (!pl_orphaned)
 		    {
 			gchar *str = g_strdup_printf ("[%s]", _("Orphaned"));
-			pl_orphaned = get_newplaylist_by_name(str);
+			pl_orphaned = get_newplaylist_by_name(str, FALSE);
 			g_free (str);
 		    }
 

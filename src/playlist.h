@@ -36,25 +36,14 @@
 #endif
 
 #include <gtk/gtk.h>
-#include "itunesdb.h"     /* required for PL_TYPE enum def */
+#include "itunesdb.h"
 #include "track.h"
 
-typedef struct
-{
-    gchar *name;          /* name of playlist in UTF8 */
-    gunichar2 *name_utf16;/* name of playlist in UTF16 */
-    guint32 type;         /* 1: master play list (PL_TYPE_MPL) */
-    gint  num;            /* number of tracks in playlist */
-    GList *members;       /* tracks in playlist (Track *) */
-    glong size;
-} Playlist;
 
 void create_mpl (void);
-Playlist *add_new_playlist (gchar *plname, gint position);
+Playlist *add_new_playlist (gchar *plname, gint position, gboolean spl);
 void free_playlist(Playlist *playlist);
-void create_playlist (Playlist *plitem);
 Playlist *it_add_playlist (Playlist *plitem);
-Playlist *add_playlist (Playlist *plitem, gint position);
 void randomize_playlist (Playlist *pl);
 void it_add_trackid_to_playlist (Playlist *plitem, guint32 id);
 void add_trackid_to_playlist (Playlist *plitem, guint32 id, gboolean display);
@@ -73,7 +62,7 @@ guint32 get_nr_of_playlists (void);
 #define it_get_playlist_by_nr get_playlist_by_nr
 Playlist *get_playlist_by_nr (guint32 n);
 guint get_playlist_by_name(gchar *pl_name, guint startfrom);
-Playlist* get_newplaylist_by_name (gchar *pl_name);
+Playlist* get_newplaylist_by_name (gchar *pl_name, gboolean spl);
 
 #define it_get_nr_of_tracks_in_playlist get_nr_of_tracks_in_playlist
 guint32 get_nr_of_tracks_in_playlist (Playlist *plitem);
