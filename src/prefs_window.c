@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-21 18:54:03 jcs>
+/* Time-stamp: <2004-09-12 17:18:05 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -672,7 +672,7 @@ prefs_window_create(void)
 /* 	} */
 	if((w = lookup_widget(prefs_window, "concal_label")))
 	{
-	    gchar *str = g_strdup_printf (_("Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release."), PKGDATADIR G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
+	    gchar *str = g_strdup_printf (_("Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release."), PACKAGE_DATA_DIR G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
 	    gtk_label_set_text (GTK_LABEL (w), str);
 	    g_free (str);
 	}
