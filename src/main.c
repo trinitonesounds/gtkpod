@@ -33,18 +33,17 @@
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include "clientserver.h"
-#include "display.h"
-#include "file.h"
-#include "interface.h"
-#include "misc.h"
-#include "playlist.h"
-#include "prefs.h"
 #include "support.h"
+#include "interface.h"
+#include "display.h"
+#include "clientserver.h"
+#include "prefs.h"
+#include "misc.h"
+#include "file.h"
+
 
 int
 main (int argc, char *argv[])
@@ -84,7 +83,7 @@ main (int argc, char *argv[])
   gtk_widget_show (gtkpod_window);
 
   if(prefs_get_automount())      mount_ipod();
-  if(prefs_get_autoimport())     handle_import();
+  if(prefs_get_autoimport())     handle_import_merge_first_ipod ();
 
   server_setup ();   /* start server to accept playcount updates */
 

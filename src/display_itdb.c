@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-20 00:33:10 jcs>
+/* Time-stamp: <2005-01-22 13:09:24 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -259,7 +259,7 @@ void gp_itdb_add (iTunesDB *itdb)
 {
     ExtraiTunesDBData *eitdb;
 
-    g_assert (itdbs_head);
+    g_return_if_fail (itdbs_head);
     g_return_if_fail (itdb);
     eitdb = itdb->userdata;
     g_assert (eitdb);

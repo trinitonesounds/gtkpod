@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-01-20 00:33:10 jcs>
+|  Time-stamp: <2005-01-22 13:42:44 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -491,6 +491,36 @@ guint32 track_get_timestamp (Track *track, T_item t_item)
     if (ptr)  return *ptr;
     else      return 0;
 }
+
+
+/* Fills @size with the size and @num with the number of
+   non-transferred tracks. The size is in Bytes, minus the space taken
+   by tracks that will be overwritten. */
+/* @size and @num may be NULL */
+void gp_info_nontransferred_tracks (iTunesDB *itdb,
+				    gdouble *size, guint32 *num)
+{
+    GList *gl;
+
+    if (size) *size = 0;
+    if (num)  *num = 0;
+    g_return_if_fail (itdb);
+
+    for (gl = itdb->tracks; gl; gl=gl->next)
+    {
+	Track tr = gl->data;
+	ExtraTrackData *etr;
+	g_return_if_fail (tr);
+	etr = tr->userdata;
+	g_return_if_fail (etr);
+	if (!tr->transferred)
+	{
+	    if (size)  *size += tr->size - et->oldsize;
+	    if (num)   *num += 1;
+	}
+    }
+}
+
 
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-21 20:50:55 jcs>
+/* Time-stamp: <2005-01-22 13:19:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -440,7 +440,7 @@ Itdb_iTunesDB *itdb_new (void);
 void itdb_free (Itdb_iTunesDB *itdb);
 iTunesDB *itdb_duplicate (Itdb_iTunesDB *itdb);
 guint32 itdb_tracks_number (Itdb_iTunesDB *itdb);
-guint32 itdb_tracks_number_nontransfered (Itdb_iTunesDB *itdb);
+guint32 itdb_tracks_number_nontransferred (Itdb_iTunesDB *itdb);
 guint32 itdb_playlists_number (Itdb_iTunesDB *itdb);
 
 /* general file functions */

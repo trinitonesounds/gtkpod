@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-21 23:04:32 jcs>
+/* Time-stamp: <2005-01-22 14:01:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -573,7 +573,12 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, gchar *mp, gchar *itdb_name)
     return itdb;
 }
 
-
+/* Convenience function: 
+   Merges the first GP_ITDB_TYPE_IPOD itdb with the new one. */
+MUST FIXME:
+void handle_import_merge_first_ipod (void)
+{
+}
 
 
 /* Handle the function "Import iTunesDB"
@@ -683,24 +688,28 @@ gchar *get_track_name_from_source (Track *track, FileSource source)
 \*------------------------------------------------------------------*/
 
 
-/* in Bytes, minus the space taken by tracks that will be overwritten
- * during copying */
-/* @num will be filled with the number of tracks if != NULL */
-double get_filesize_of_deleted_tracks (guint32 *num)
+/* Fills @size with the size in bytes taken on the iPod and @num with
+   the number of total deleted tracks.  @size and @num may be NULL */
+/* FIXME: @itdb is not used yet */
+void gp_info_deleted_tracks (iTunesDB *itdb,
+			     gdouble *size, guint32 *num)
 {
-    double size = 0;
-    guint32 n = 0;
-    Track *track;
-    GList *gl_track;
+    GList *gl;
 
-    for (gl_track = pending_deletion; gl_track; gl_track=gl_track->next)
+    if (size) *size = 0;
+    if (num)  *num = 0;
+    g_return_if_fail (itdb);
+
+    for (gl=pending_deletion; gl; gl=gl->next)
     {
-	track = (Track *)gl_track->data;
-	if (track->transferred)   size += track->size;
-	++n;
+	Track tr = gl->data;
+	g_return_if_fail (tr);
+	if (tr->transferred)
+	{
+	    if (size)  *size += tr->size - et->oldsize;
+	}
+	if (num)   *num += 1;
     }
-    if (num)  *num = n;
-    return size;
 }
 
 void mark_track_for_deletion (Track *track)
@@ -931,7 +940,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
   g_return_val_if_fail (itdb, FALSE);
 
 
-  n = itdb_tracks_number_nontransfered (itdb);
+  n = itdb_tracks_number_nontransferred (itdb);
 
   if (n==0 && !pending_deletion) return TRUE;
 

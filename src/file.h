@@ -81,6 +81,8 @@ void sync_tracks (GList *selected_tracks);
 void display_non_updated (Track *track, gchar *txt);
 void display_updated (Track *track, gchar *txt);
 void display_mserv_problems (Track *track, gchar *txt);
+void handle_import_main (void);
+void handle_import_merge_first_ipod (void);
 void handle_import (iTunesDB *old_itdb, gchar *mp,
 		    gchar *itdb_name, gint pos);
 void handle_export (void);
@@ -92,7 +94,8 @@ gchar *get_track_name_from_source (Track *track, FileSource source);
 gchar* get_preferred_track_name_format(Track *s);
 void mark_track_for_deletion (Track *track);
 void unmark_track_for_deletion (Track *track);
-double get_filesize_of_deleted_tracks (guint32 *num);
+void gp_info_deleted_tracks (iTunesDB *itdb,
+			     gdouble *size, guint32 *num);
 Track *get_track_info_from_file (gchar *name, Track *or_track);
 void update_charset_info (Track *track);
 gchar *resolve_path(const gchar *,const gchar * const *);

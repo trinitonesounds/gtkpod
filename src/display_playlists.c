@@ -575,6 +575,8 @@ void pm_add_all_playlists (void)
 {
     GList *gl_itdb;    
     struct itdbs_head *itdbs_head;
+
+    g_return_if_fail (gtkpod_window);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
 				    "itdbs_head");
     g_return_if_fail (itdbs_head);

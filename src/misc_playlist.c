@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-06 22:41:57 jcs>
+/* Time-stamp: <2005-01-22 13:19:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -933,7 +933,7 @@ void check_db (void)
     {
         gint ntok=0;
 	h=1;
-        /* we don't want to report non-transfered files as dandgling */
+        /* we don't want to report non-transferred files as dandgling */
 	if (!track->transferred) continue; 
 	tokens = g_strsplit(track->ipod_path,":",(track->ipod_path[0]==':'?4:3));
         ntok=ntokens(tokens);

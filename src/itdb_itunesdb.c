@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-21 22:49:53 jcs>
+/* Time-stamp: <2005-01-22 13:52:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -685,7 +685,7 @@ guint32 itdb_tracks_number (Itdb_iTunesDB *itdb)
 }
 
 
-guint32 itdb_tracks_number_nontransfered (Itdb_iTunesDB *itdb)
+guint32 itdb_tracks_number_nontransferred (Itdb_iTunesDB *itdb)
 {
     guint n = 0;
     GList *gl;
@@ -693,7 +693,7 @@ guint32 itdb_tracks_number_nontransfered (Itdb_iTunesDB *itdb)
 
 
 
-    for (gl = tracks; gl; gl=gl->next)
+    for (gl=itdb->tracks; gl; gl=gl->next)
     {
 	Itdb_Track *track = gl->data;
 	if (!track->transferred)   ++n;

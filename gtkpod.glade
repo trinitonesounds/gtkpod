@@ -8550,48 +8550,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
       <property name="spacing">0</property>
 
       <child>
-	<widget class="GtkHBox" id="hbox67">
-	  <property name="visible">True</property>
-	  <property name="homogeneous">False</property>
-	  <property name="spacing">0</property>
-
-	  <child>
-	    <widget class="GtkLabel" id="label176">
-	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">Database: </property>
-	      <property name="use_underline">False</property>
-	      <property name="use_markup">False</property>
-	      <property name="justify">GTK_JUSTIFY_LEFT</property>
-	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
-	      <property name="xalign">0.5</property>
-	      <property name="yalign">0.5</property>
-	      <property name="xpad">0</property>
-	      <property name="ypad">0</property>
-	    </widget>
-	    <packing>
-	      <property name="padding">6</property>
-	      <property name="expand">False</property>
-	      <property name="fill">False</property>
-	    </packing>
-	  </child>
-
-	  <child>
-	    <widget class="GtkComboBox" id="itdb_combobox">
-	      <property name="visible">True</property>
-	    </widget>
-	    <packing>
-	      <property name="padding">0</property>
-	      <property name="expand">False</property>
-	      <property name="fill">True</property>
-	    </packing>
-	  </child>
-	</widget>
-	<packing>
-	  <property name="padding">5</property>
-	  <property name="expand">False</property>
-	  <property name="fill">True</property>
-	</packing>
+	<placeholder/>
       </child>
 
       <child>
@@ -8626,7 +8585,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  <property name="border_width">4</property>
 			  <property name="visible">True</property>
 			  <property name="n_rows">21</property>
-			  <property name="n_columns">11</property>
+			  <property name="n_columns">13</property>
 			  <property name="homogeneous">False</property>
 			  <property name="row_spacing">0</property>
 			  <property name="column_spacing">1</property>
@@ -8670,7 +8629,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="non_transfered_filesize">
+			    <widget class="GtkLabel" id="non_transferred_filesize">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -8708,7 +8667,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="non_transfered_tracks">
+			    <widget class="GtkLabel" id="non_transferred_tracks">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -8866,7 +8825,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="total_tracks">
+			    <widget class="GtkLabel" id="total_tracks_ipod">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">      </property>
@@ -8891,7 +8850,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="total_playtime">
+			    <widget class="GtkLabel" id="total_playtime_ipod">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -8916,7 +8875,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="total_filesize">
+			    <widget class="GtkLabel" id="total_filesize_ipod">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -8941,7 +8900,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="total_playlists">
+			    <widget class="GtkLabel" id="total_playlists_ipod">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">      </property>
@@ -8966,72 +8925,6 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkHSeparator" id="hseparator45">
-			      <property name="visible">True</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">11</property>
-			      <property name="top_attach">0</property>
-			      <property name="bottom_attach">1</property>
-			      <property name="x_options">fill</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkHSeparator" id="hseparator35">
-			      <property name="visible">True</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">11</property>
-			      <property name="top_attach">2</property>
-			      <property name="bottom_attach">3</property>
-			      <property name="x_options">fill</property>
-			      <property name="y_options"></property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkHSeparator" id="hseparator32">
-			      <property name="visible">True</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">11</property>
-			      <property name="top_attach">4</property>
-			      <property name="bottom_attach">5</property>
-			      <property name="x_options">fill</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkHSeparator" id="hseparator33">
-			      <property name="visible">True</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">11</property>
-			      <property name="top_attach">6</property>
-			      <property name="bottom_attach">7</property>
-			      <property name="x_options">fill</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkHSeparator" id="hseparator34">
-			      <property name="visible">True</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">11</property>
-			      <property name="top_attach">8</property>
-			      <property name="bottom_attach">9</property>
-			      <property name="x_options">fill</property>
-			    </packing>
-			  </child>
-
-			  <child>
 			    <widget class="GtkLabel" id="playlist_tracks">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
@@ -9047,8 +8940,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">5</property>
-			      <property name="right_attach">6</property>
+			      <property name="left_attach">7</property>
+			      <property name="right_attach">8</property>
 			      <property name="top_attach">3</property>
 			      <property name="bottom_attach">4</property>
 			      <property name="x_options">fill</property>
@@ -9072,8 +8965,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">5</property>
-			      <property name="right_attach">6</property>
+			      <property name="left_attach">7</property>
+			      <property name="right_attach">8</property>
 			      <property name="top_attach">5</property>
 			      <property name="bottom_attach">6</property>
 			      <property name="x_options">fill</property>
@@ -9097,8 +8990,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">5</property>
-			      <property name="right_attach">6</property>
+			      <property name="left_attach">7</property>
+			      <property name="right_attach">8</property>
 			      <property name="top_attach">7</property>
 			      <property name="bottom_attach">8</property>
 			      <property name="x_options">fill</property>
@@ -9107,21 +9000,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkVSeparator" id="vseparator20">
-			      <property name="visible">True</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">6</property>
-			      <property name="right_attach">7</property>
-			      <property name="top_attach">1</property>
-			      <property name="bottom_attach">8</property>
-			      <property name="x_options">fill</property>
-			      <property name="y_options">fill</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkLabel" id="tracks_total">
+			    <widget class="GtkLabel" id="tracks_displayed">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -9136,8 +9015,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">7</property>
-			      <property name="right_attach">8</property>
+			      <property name="left_attach">9</property>
+			      <property name="right_attach">10</property>
 			      <property name="top_attach">3</property>
 			      <property name="bottom_attach">4</property>
 			      <property name="x_options">fill</property>
@@ -9146,7 +9025,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="playtime_total">
+			    <widget class="GtkLabel" id="playtime_displayed">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -9161,8 +9040,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">7</property>
-			      <property name="right_attach">8</property>
+			      <property name="left_attach">9</property>
+			      <property name="right_attach">10</property>
 			      <property name="top_attach">5</property>
 			      <property name="bottom_attach">6</property>
 			      <property name="x_options">fill</property>
@@ -9171,7 +9050,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			  </child>
 
 			  <child>
-			    <widget class="GtkLabel" id="filesize_total">
+			    <widget class="GtkLabel" id="filesize_displayed">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -9186,8 +9065,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">7</property>
-			      <property name="right_attach">8</property>
+			      <property name="left_attach">9</property>
+			      <property name="right_attach">10</property>
 			      <property name="top_attach">7</property>
 			      <property name="bottom_attach">8</property>
 			      <property name="x_options">fill</property>
@@ -9225,8 +9104,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">9</property>
-			      <property name="right_attach">10</property>
+			      <property name="left_attach">11</property>
+			      <property name="right_attach">12</property>
 			      <property name="top_attach">3</property>
 			      <property name="bottom_attach">4</property>
 			      <property name="x_options">fill</property>
@@ -9250,8 +9129,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">9</property>
-			      <property name="right_attach">10</property>
+			      <property name="left_attach">11</property>
+			      <property name="right_attach">12</property>
 			      <property name="top_attach">5</property>
 			      <property name="bottom_attach">6</property>
 			      <property name="x_options">fill</property>
@@ -9275,8 +9154,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">9</property>
-			      <property name="right_attach">10</property>
+			      <property name="left_attach">11</property>
+			      <property name="right_attach">12</property>
 			      <property name="top_attach">7</property>
 			      <property name="bottom_attach">8</property>
 			      <property name="x_options">fill</property>
@@ -9295,19 +9174,6 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			      <property name="bottom_attach">8</property>
 			      <property name="x_options">fill</property>
 			      <property name="y_options">fill</property>
-			    </packing>
-			  </child>
-
-			  <child>
-			    <widget class="GtkHSeparator" id="hseparator36">
-			      <property name="visible">True</property>
-			    </widget>
-			    <packing>
-			      <property name="left_attach">0</property>
-			      <property name="right_attach">5</property>
-			      <property name="top_attach">10</property>
-			      <property name="bottom_attach">11</property>
-			      <property name="x_options">fill</property>
 			    </packing>
 			  </child>
 
@@ -9472,7 +9338,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			    <widget class="GtkLabel" id="label143">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Non-transfered tracks</property>
+			      <property name="label" translatable="yes">Non-transferred tracks</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -9498,7 +9364,7 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			    <widget class="GtkLabel" id="label145">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">File size (non-transfered)</property>
+			      <property name="label" translatable="yes">File size (non-transferred)</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -9550,7 +9416,8 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 			    <widget class="GtkLabel" id="label99">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Total</property>
+			      <property name="label" translatable="yes">Total
+(iPod)</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_CENTER</property>
@@ -9590,8 +9457,8 @@ Playlist</property>
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">5</property>
-			      <property name="right_attach">6</property>
+			      <property name="left_attach">7</property>
+			      <property name="right_attach">8</property>
 			      <property name="top_attach">1</property>
 			      <property name="bottom_attach">2</property>
 			      <property name="x_padding">1</property>
@@ -9618,8 +9485,8 @@ Tracks</property>
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">7</property>
-			      <property name="right_attach">8</property>
+			      <property name="left_attach">9</property>
+			      <property name="right_attach">10</property>
 			      <property name="top_attach">1</property>
 			      <property name="bottom_attach">2</property>
 			      <property name="x_padding">1</property>
@@ -9646,12 +9513,113 @@ Tracks</property>
 			      <property name="ypad">0</property>
 			    </widget>
 			    <packing>
-			      <property name="left_attach">9</property>
-			      <property name="right_attach">10</property>
+			      <property name="left_attach">11</property>
+			      <property name="right_attach">12</property>
 			      <property name="top_attach">1</property>
 			      <property name="bottom_attach">2</property>
 			      <property name="x_padding">1</property>
 			      <property name="y_padding">1</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="label176">
+			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">Total
+(local)</property>
+			      <property name="use_underline">False</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_CENTER</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">True</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">5</property>
+			      <property name="right_attach">6</property>
+			      <property name="top_attach">1</property>
+			      <property name="bottom_attach">2</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="total_tracks_local">
+			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">      </property>
+			      <property name="use_underline">False</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">True</property>
+			      <property name="xalign">1</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">5</property>
+			      <property name="right_attach">6</property>
+			      <property name="top_attach">3</property>
+			      <property name="bottom_attach">4</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="total_playtime_local">
+			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes"></property>
+			      <property name="use_underline">False</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">True</property>
+			      <property name="xalign">1</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">5</property>
+			      <property name="right_attach">6</property>
+			      <property name="top_attach">5</property>
+			      <property name="bottom_attach">6</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="total_filesize_local">
+			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes"></property>
+			      <property name="use_underline">False</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">True</property>
+			      <property name="xalign">1</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">5</property>
+			      <property name="right_attach">6</property>
+			      <property name="top_attach">7</property>
+			      <property name="bottom_attach">8</property>
 			      <property name="x_options">fill</property>
 			      <property name="y_options"></property>
 			    </packing>
@@ -9708,8 +9676,140 @@ Tracks</property>
 			    <packing>
 			      <property name="left_attach">5</property>
 			      <property name="right_attach">11</property>
-			      <property name="top_attach">9</property>
+			      <property name="top_attach">11</property>
 			      <property name="bottom_attach">21</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options">fill</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="total_playlists_local">
+			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">      </property>
+			      <property name="use_underline">False</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">True</property>
+			      <property name="xalign">1</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">5</property>
+			      <property name="right_attach">6</property>
+			      <property name="top_attach">9</property>
+			      <property name="bottom_attach">10</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkHSeparator" id="hseparator45">
+			      <property name="visible">True</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">13</property>
+			      <property name="top_attach">0</property>
+			      <property name="bottom_attach">1</property>
+			      <property name="x_options">fill</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkHSeparator" id="hseparator35">
+			      <property name="visible">True</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">13</property>
+			      <property name="top_attach">2</property>
+			      <property name="bottom_attach">3</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options"></property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkHSeparator" id="hseparator32">
+			      <property name="visible">True</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">13</property>
+			      <property name="top_attach">4</property>
+			      <property name="bottom_attach">5</property>
+			      <property name="x_options">fill</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkHSeparator" id="hseparator33">
+			      <property name="visible">True</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">13</property>
+			      <property name="top_attach">6</property>
+			      <property name="bottom_attach">7</property>
+			      <property name="x_options">fill</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkHSeparator" id="hseparator34">
+			      <property name="visible">True</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">13</property>
+			      <property name="top_attach">8</property>
+			      <property name="bottom_attach">9</property>
+			      <property name="x_options">fill</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkVSeparator" id="vseparator20">
+			      <property name="visible">True</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">6</property>
+			      <property name="right_attach">7</property>
+			      <property name="top_attach">1</property>
+			      <property name="bottom_attach">10</property>
+			      <property name="x_options">fill</property>
+			      <property name="y_options">fill</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkHSeparator" id="hseparator36">
+			      <property name="visible">True</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">0</property>
+			      <property name="right_attach">7</property>
+			      <property name="top_attach">10</property>
+			      <property name="bottom_attach">11</property>
+			      <property name="x_options">fill</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkVSeparator" id="vseparator23">
+			      <property name="visible">True</property>
+			    </widget>
+			    <packing>
+			      <property name="left_attach">12</property>
+			      <property name="right_attach">13</property>
+			      <property name="top_attach">1</property>
+			      <property name="bottom_attach">9</property>
 			      <property name="x_options">fill</property>
 			      <property name="y_options">fill</property>
 			    </packing>

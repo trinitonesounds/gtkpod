@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-21 23:05:10 jcs>
+/* Time-stamp: <2005-01-22 13:51:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -70,7 +70,9 @@ static void fill_in_info (GList *tl, guint32 *tracks,
 {
     GList *gl;
 
-    if (!tracks || !playtime || !filesize) return; /* sanity */
+    g_return_if_fail (tracks);
+    g_return_if_fail (playtime);
+    g_return_if_fail (filesize);
 
     *tracks = 0;
     *playtime = 0;
@@ -87,7 +89,11 @@ static void fill_in_info (GList *tl, guint32 *tracks,
 
 static void fill_label_uint (gchar *w_name, guint32 nr)
 {    
-    GtkWidget *w = lookup_widget (info_window, w_name);
+    GtkWidget *w;
+
+    g_return_if_fail (info_window);
+    g_return_if_fail (w_name);
+    w = lookup_widget (info_window, w_name);
     if (w)
     {
 	gchar *str = g_strdup_printf ("%u", nr);
@@ -98,7 +104,11 @@ static void fill_label_uint (gchar *w_name, guint32 nr)
 
 static void fill_label_time (gchar *w_name, guint32 secs)
 {    
-    GtkWidget *w = lookup_widget (info_window, w_name);
+    GtkWidget *w;
+
+    g_return_if_fail (info_window);
+    g_return_if_fail (w_name);
+    w = lookup_widget (info_window, w_name);
     if (w)
     {
 	gchar *str = g_strdup_printf ("%u:%02u:%02u",
@@ -112,7 +122,11 @@ static void fill_label_time (gchar *w_name, guint32 secs)
 
 static void fill_label_size (gchar *w_name, gdouble size)
 {    
-    GtkWidget *w = lookup_widget (info_window, w_name);
+    GtkWidget *w;
+
+    g_return_if_fail (info_window);
+    g_return_if_fail (w_name);
+    w = lookup_widget (info_window, w_name);
     if (w)
     {
 	gchar *str = get_filesize_as_string (size);
@@ -123,12 +137,17 @@ static void fill_label_size (gchar *w_name, gdouble size)
 
 static void fill_label_string (gchar *w_name, const char *str)
 {    
-    GtkWidget *w = lookup_widget (info_window, w_name);
+    GtkWidget *w;
+
+    g_return_if_fail (info_window);
+    g_return_if_fail (w_name);
+    w = lookup_widget (info_window, w_name);
     if (w)
     {
 	gtk_label_set_text (GTK_LABEL (w), str);
     }
 }
+
 
 
 /* open info window */
@@ -184,18 +203,18 @@ void info_update (void)
     info_update_totals_view ();
 }
 
-static void info_update_track_view_total (void)
+static void info_update_track_view_displayed (void)
 {
     guint32 tracks, playtime; /* playtime in secs */
     gdouble  filesize;        /* in bytes */
     GList *displayed;
 
-    if (!info_window) return; /* not open */
+    g_return_if_fail (info_window);
     displayed = display_get_selected_members (prefs_get_sort_tab_num()-1);
     fill_in_info (displayed, &tracks, &playtime, &filesize);
-    fill_label_uint ("tracks_total", tracks);
-    fill_label_time ("playtime_total", playtime);
-    fill_label_size ("filesize_total", filesize);
+    fill_label_uint ("tracks_displayed", tracks);
+    fill_label_time ("playtime_displayed", playtime);
+    fill_label_size ("filesize_displayed", filesize);
 }
 
 void info_update_track_view_selected (void)
@@ -217,7 +236,7 @@ void info_update_track_view_selected (void)
 void info_update_track_view (void)
 {
     if (!info_window) return; /* not open */
-    info_update_track_view_total ();
+    info_update_track_view_displayed ();
     info_update_track_view_selected ();
 }
 
@@ -237,20 +256,84 @@ void info_update_playlist_view (void)
 }
 
 
+/* Get the local itdb */
+static iTunesDB *get_itdb_local (void)
+{
+    struct itdbs_head *itdbs_head;
+    GList *gl;
+
+    g_return_val_if_fail (gtkpod_window, NULL);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_val_if_fail (itdbs_head, NULL);
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_val_if_fail (itdb, NULL);
+	if (itdb->usertype == GP_ITDB_TYPE_LOCAL)
+	    return itdb;
+    }
+    return NULL;
+}
+
+
+/* Get the iPod itdb */
+/* FIXME: This function must be expanded if support for several iPods
+   is implemented */
+static iTunesDB *get_itdb_ipod (void)
+{
+    struct itdbs_head *itdbs_head;
+    GList *gl;
+
+    g_return_val_if_fail (gtkpod_window, NULL);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_val_if_fail (itdbs_head, NULL);
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_val_if_fail (itdb, NULL);
+	if (itdb->usertype == GP_ITDB_TYPE_IPOD)
+	    return itdb;
+    }
+    return NULL;
+}
+
+
 /* update "totals" view section */
 void info_update_totals_view (void)
 {
     guint32 tracks=0, playtime=0; /* playtime in secs */
     gdouble  filesize=0;          /* in bytes */
     Playlist *pl;
+    iTunesDB *itdb;
 
     if (!info_window) return; /* not open */
-    pl = get_playlist_by_nr (0);
-    if (pl)  fill_in_info (pl->members, &tracks, &playtime, &filesize);
-    fill_label_uint ("total_playlists", get_nr_of_playlists ()-1);
-    fill_label_uint ("total_tracks", tracks);
-    fill_label_time ("total_playtime", playtime);
-    fill_label_size ("total_filesize", filesize);
+    
+    itdb = get_itdb_ipod ();
+    if (itdb)
+    {
+	pl = itdb_playlist_mpl (itdb);
+	g_return_if_fail (pl);
+	fill_in_info (pl->members, &tracks, &playtime, &filesize);
+	fill_label_uint ("total_playlists_ipod",
+			 itdb_playlists_number (itdb)-1);
+	fill_label_uint ("total_tracks_ipod", tracks);
+	fill_label_time ("total_playtime_ipod", playtime);
+	fill_label_size ("total_filesize_ipod", filesize);
+    }
+    itdb = get_itdb_local ();
+    if (itdb)
+    {
+	pl = itdb_playlist_mpl (itdb);
+	g_return_if_fail (pl);
+	fill_in_info (pl->members, &tracks, &playtime, &filesize);
+	fill_label_uint ("total_playlistslocal",
+			 itdb_playlists_number (itdb)-1);
+	fill_label_uint ("total_trackslocal", tracks);
+	fill_label_time ("total_playtimelocal", playtime);
+	fill_label_size ("total_filesizelocal", filesize);
+    }
     info_update_totals_view_space ();
 }
 
@@ -259,31 +342,35 @@ void info_update_totals_view_space (void)
 {
     gdouble nt_filesize, del_filesize;
     guint32 nt_tracks, del_tracks;
-
+    iTunesDB *itdb;
 
     if (!info_window) return;
-    nt_filesize = get_filesize_of_nontransferred_tracks (&nt_tracks);
-    fill_label_uint ("non_transfered_tracks", nt_tracks);
-    fill_label_size ("non_transfered_filesize", nt_filesize);
-    del_filesize = get_filesize_of_deleted_tracks (&del_tracks);
-    fill_label_uint ("deleted_tracks", del_tracks);
-    fill_label_size ("deleted_filesize", del_filesize);
-    if (!prefs_get_offline ())
+    itdb = get_itdb_ipod ();
+    if (itdb)
     {
-	if (ipod_connected ())
+	gp_info_nontransferred_tracks (itdb, &nt_filesize, &nt_tracks);
+	fill_label_uint ("non_transferred_tracks", nt_tracks);
+	fill_label_size ("non_transferred_filesize", nt_filesize);
+	gp_info_deleted_tracks (itdb, &del_filesize, &del_tracks);
+	fill_label_uint ("deleted_tracks", del_tracks);
+	fill_label_size ("deleted_filesize", del_filesize);
+	if (!prefs_get_offline ())
 	{
-	    gdouble free_space = get_ipod_free_space()
-		+ del_filesize - nt_filesize;
-	    fill_label_size ("free_space", free_space);
+	    if (ipod_connected ())
+	    {
+		gdouble free_space = get_ipod_free_space()
+		    + del_filesize - nt_filesize;
+		fill_label_size ("free_space", free_space);
+	    }
+	    else
+	    {
+		fill_label_string ("free_space", _("n/c"));
+	    }
 	}
 	else
 	{
-	    fill_label_string ("free_space", _("n/c"));
+	    fill_label_string ("free_space", _("offline"));
 	}
-    }
-    else
-    {
-	fill_label_string ("free_space", _("offline"));
     }
 }
 
@@ -353,11 +440,24 @@ gtkpod_tracks_statusbar_update(void)
     if(gtkpod_tracks_statusbar)
     {
 	gchar *buf;
+	iTunesDB *itdb;
+	Playlist *pl;
+	pl = pm_get_selected_playlist ();
+	/* select of which iTunesDB data should be displayed */
+	if (pl)
+	{
+	    itdb = pl->itdb;
+	}
+	else
+	{
+	    itdb = get_itdb_ipod ();
+	}
+	g_return_if_fail (itdb);
 	
 	buf = g_strdup_printf (_(" P:%d S:%d/%d"),
-			       get_nr_of_playlists () - 1,
+			       itdb_playlists_number (itdb) - 1,
 			       tm_get_nr_of_tracks (),
-			       get_nr_of_tracks ());
+			       itdb_tracks_number (itdb));
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1,  buf);
 	g_free (buf);
@@ -638,11 +738,13 @@ gtkpod_space_statusbar_update(void)
 	{
 	    if (ipod_connected ())
 	    {
-		gdouble left, pending;
+		gdouble left, pending, deleted;
+		iTunesDB *itdb = get_itdb_ipod ();
+		g_return_val_if_fail (itdb, TRUE);
 
-		left = get_ipod_free_space() + 
-		    get_filesize_of_deleted_tracks (NULL);
-		pending = get_filesize_of_nontransferred_tracks(NULL);
+		gp_info_deleted_tracks (itdb, &deleted, NULL);
+		gp_info_nontransferred_tracks (itdb, &pending, NULL);
+		left = get_ipod_free_space() + deleted;
 		if((left-pending) > 0)
 		{
 		    str = get_filesize_as_string(left - pending);
