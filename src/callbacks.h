@@ -343,3 +343,11 @@ on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
 void
 on_reset_sorting_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_play_now_entry_changed              (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_play_entry_changed                  (GtkEditable     *editable,
+                                        gpointer         user_data);

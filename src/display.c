@@ -2634,11 +2634,15 @@ static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
     /* Convert the list of paths into a list of iters */
     while (*pathp)
     {
-	from_iter = g_malloc (sizeof (GtkTreeIter));
-	if ((strlen (*pathp) > 0) &&
-	    gtk_tree_model_get_iter_from_string (model, from_iter, *pathp))
+	/* check that we won't move the master playlist (path = "0") */
+	if (!( (treeview == playlist_treeview) && (atoi (*pathp) == 0) ))
 	{
-	    iterlist = g_list_append (iterlist, from_iter);
+	    from_iter = g_malloc (sizeof (GtkTreeIter));
+	    if ((strlen (*pathp) > 0) &&
+		gtk_tree_model_get_iter_from_string (model, from_iter, *pathp))
+	    {
+		iterlist = g_list_append (iterlist, from_iter);
+	    }
 	}
 	++pathp;
     }
@@ -2659,7 +2663,7 @@ static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	    if (treeview == playlist_treeview)
 		pm_list_store_move_after (GTK_LIST_STORE (model),
 					  from_iter, &to_iter);
-	    iterlist = g_list_remove_link (iterlist, link);
+	    iterlist = g_list_delete_link (iterlist, link);
 	    g_free (from_iter);
 	}
 	break;
@@ -2674,7 +2678,7 @@ static gboolean pmsm_move_pathlist (GtkTreeView *treeview,
 	    if (treeview == playlist_treeview)
 		pm_list_store_move_before (GTK_LIST_STORE (model),
 					   from_iter, &to_iter);
-	    iterlist = g_list_remove_link (iterlist, link);
+	    iterlist = g_list_delete_link (iterlist, link);
 	    g_free (from_iter);
 	}
 	break;

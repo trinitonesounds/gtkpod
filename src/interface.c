@@ -974,13 +974,6 @@ create_new_prefs_window (void)
   GtkWidget *label32;
   GtkWidget *label24;
   GtkWidget *vbox23;
-  GtkWidget *frame12;
-  GtkWidget *vbox25;
-  GtkWidget *hbox11;
-  GtkWidget *label35;
-  GtkWidget *sort_tab_num_combo;
-  GtkWidget *sort_tab_num_combo_entry;
-  GtkWidget *label34;
   GtkWidget *frame16;
   GtkWidget *vbox31;
   GtkWidget *cfg_display_toolbar;
@@ -990,6 +983,19 @@ create_new_prefs_window (void)
   GtkWidget *cfg_toolbar_style_text;
   GtkWidget *cfg_toolbar_style_icons;
   GtkWidget *label39;
+  GtkWidget *frame12;
+  GtkWidget *vbox25;
+  GtkWidget *hbox11;
+  GtkWidget *label35;
+  GtkWidget *sort_tab_num_combo;
+  GtkWidget *sort_tab_num_combo_entry;
+  GtkWidget *label34;
+  GtkWidget *frame13;
+  GtkWidget *autoselect_vbox;
+  GtkWidget *cfg_mpl_autoselect;
+  GtkWidget *label40;
+  GtkWidget *autoselect_hbox;
+  GtkWidget *label36;
   GtkWidget *frame14;
   GtkWidget *hbox12;
   GtkWidget *vbox27;
@@ -1005,24 +1011,30 @@ create_new_prefs_window (void)
   GtkWidget *col_visible5;
   GtkWidget *col_visible8;
   GtkWidget *label37;
-  GtkWidget *frame13;
-  GtkWidget *autoselect_vbox;
-  GtkWidget *cfg_mpl_autoselect;
-  GtkWidget *label40;
-  GtkWidget *autoselect_hbox;
-  GtkWidget *label36;
+  GtkWidget *frame15;
+  GtkWidget *vbox30;
+  GtkWidget *cfg_block_display;
+  GtkWidget *label38;
+  GtkWidget *label25;
+  GtkWidget *vbox32;
+  GtkWidget *frame18;
+  GtkWidget *vbox34;
+  GtkWidget *label44;
+  GtkWidget *play_now_entry;
+  GtkWidget *label45;
+  GtkWidget *play_entry;
+  GtkWidget *label43;
   GtkWidget *frame11;
   GtkWidget *vbox24;
   GtkWidget *cfg_delete_playlist;
   GtkWidget *cfg_delete_track_from_playlist;
   GtkWidget *cfg_delete_track_from_ipod;
   GtkWidget *label33;
-  GtkWidget *frame15;
-  GtkWidget *vbox30;
+  GtkWidget *frame17;
+  GtkWidget *vbox33;
   GtkWidget *cfg_save_sorted_order;
-  GtkWidget *cfg_block_display;
-  GtkWidget *label38;
-  GtkWidget *label25;
+  GtkWidget *label42;
+  GtkWidget *label41;
   GtkWidget *hbuttonbox5;
   GtkWidget *prefs_apply;
   GtkWidget *prefs_cancel;
@@ -1056,7 +1068,7 @@ create_new_prefs_window (void)
 
   hbox8 = gtk_hbox_new (FALSE, 4);
   gtk_widget_show (hbox8);
-  gtk_box_pack_start (GTK_BOX (vbox15), hbox8, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox15), hbox8, FALSE, FALSE, 0);
 
   label27 = gtk_label_new (_(" iPod Mount Point:"));
   gtk_widget_show (label27);
@@ -1087,7 +1099,7 @@ create_new_prefs_window (void)
 
   hbox9 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox9);
-  gtk_box_pack_start (GTK_BOX (vbox16), hbox9, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox16), hbox9, FALSE, FALSE, 0);
 
   label29 = gtk_label_new (_(" Charset (ID3, files): "));
   gtk_widget_show (label29);
@@ -1263,37 +1275,6 @@ create_new_prefs_window (void)
   gtk_widget_show (vbox23);
   gtk_container_add (GTK_CONTAINER (notebook), vbox23);
 
-  frame12 = gtk_frame_new (NULL);
-  gtk_widget_show (frame12);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame12, TRUE, TRUE, 0);
-
-  vbox25 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox25);
-  gtk_container_add (GTK_CONTAINER (frame12), vbox25);
-
-  hbox11 = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox11);
-  gtk_box_pack_start (GTK_BOX (vbox25), hbox11, TRUE, TRUE, 0);
-
-  label35 = gtk_label_new (_(" Number of sort tabs: "));
-  gtk_widget_show (label35);
-  gtk_box_pack_start (GTK_BOX (hbox11), label35, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label35), GTK_JUSTIFY_LEFT);
-
-  sort_tab_num_combo = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (sort_tab_num_combo)->popwin),
-                     "GladeParentKey", sort_tab_num_combo);
-  gtk_widget_show (sort_tab_num_combo);
-  gtk_box_pack_start (GTK_BOX (hbox11), sort_tab_num_combo, TRUE, TRUE, 0);
-
-  sort_tab_num_combo_entry = GTK_COMBO (sort_tab_num_combo)->entry;
-  gtk_widget_show (sort_tab_num_combo_entry);
-
-  label34 = gtk_label_new (_("Sort Tabs"));
-  gtk_widget_show (label34);
-  gtk_frame_set_label_widget (GTK_FRAME (frame12), label34);
-  gtk_label_set_justify (GTK_LABEL (label34), GTK_JUSTIFY_LEFT);
-
   frame16 = gtk_frame_new (NULL);
   gtk_widget_show (frame16);
   gtk_box_pack_start (GTK_BOX (vbox23), frame16, TRUE, TRUE, 0);
@@ -1338,6 +1319,66 @@ create_new_prefs_window (void)
   gtk_widget_show (label39);
   gtk_frame_set_label_widget (GTK_FRAME (frame16), label39);
   gtk_label_set_justify (GTK_LABEL (label39), GTK_JUSTIFY_LEFT);
+
+  frame12 = gtk_frame_new (NULL);
+  gtk_widget_show (frame12);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame12, TRUE, TRUE, 0);
+
+  vbox25 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox25);
+  gtk_container_add (GTK_CONTAINER (frame12), vbox25);
+
+  hbox11 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox11);
+  gtk_box_pack_start (GTK_BOX (vbox25), hbox11, FALSE, FALSE, 0);
+
+  label35 = gtk_label_new (_(" Number of sort tabs: "));
+  gtk_widget_show (label35);
+  gtk_box_pack_start (GTK_BOX (hbox11), label35, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label35), GTK_JUSTIFY_LEFT);
+
+  sort_tab_num_combo = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (sort_tab_num_combo)->popwin),
+                     "GladeParentKey", sort_tab_num_combo);
+  gtk_widget_show (sort_tab_num_combo);
+  gtk_box_pack_start (GTK_BOX (hbox11), sort_tab_num_combo, TRUE, TRUE, 0);
+
+  sort_tab_num_combo_entry = GTK_COMBO (sort_tab_num_combo)->entry;
+  gtk_widget_show (sort_tab_num_combo_entry);
+
+  label34 = gtk_label_new (_("Sort Tabs"));
+  gtk_widget_show (label34);
+  gtk_frame_set_label_widget (GTK_FRAME (frame12), label34);
+  gtk_label_set_justify (GTK_LABEL (label34), GTK_JUSTIFY_LEFT);
+
+  frame13 = gtk_frame_new (NULL);
+  gtk_widget_show (frame13);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame13, FALSE, TRUE, 0);
+
+  autoselect_vbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (autoselect_vbox);
+  gtk_container_add (GTK_CONTAINER (frame13), autoselect_vbox);
+
+  cfg_mpl_autoselect = gtk_check_button_new_with_mnemonic (_("...master playlist"));
+  gtk_widget_show (cfg_mpl_autoselect);
+  gtk_box_pack_start (GTK_BOX (autoselect_vbox), cfg_mpl_autoselect, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_mpl_autoselect, _("If you don't select the master playlist automatically, the initial database import is much faster because the display dosn't have to be updated."), NULL);
+
+  label40 = gtk_label_new (_("...entry 'All' in sort tab..."));
+  gtk_widget_show (label40);
+  gtk_box_pack_start (GTK_BOX (autoselect_vbox), label40, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label40), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label40), 0, 0.5);
+  gtk_misc_set_padding (GTK_MISC (label40), 20, 0);
+
+  autoselect_hbox = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (autoselect_hbox);
+  gtk_box_pack_start (GTK_BOX (autoselect_vbox), autoselect_hbox, TRUE, TRUE, 0);
+
+  label36 = gtk_label_new (_("Automatically select..."));
+  gtk_widget_show (label36);
+  gtk_frame_set_label_widget (GTK_FRAME (frame13), label36);
+  gtk_label_set_justify (GTK_LABEL (label36), GTK_JUSTIFY_LEFT);
 
   frame14 = gtk_frame_new (NULL);
   gtk_widget_show (frame14);
@@ -1400,38 +1441,71 @@ create_new_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame14), label37);
   gtk_label_set_justify (GTK_LABEL (label37), GTK_JUSTIFY_LEFT);
 
-  frame13 = gtk_frame_new (NULL);
-  gtk_widget_show (frame13);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame13, FALSE, TRUE, 0);
+  frame15 = gtk_frame_new (NULL);
+  gtk_widget_show (frame15);
+  gtk_box_pack_start (GTK_BOX (vbox23), frame15, TRUE, TRUE, 0);
 
-  autoselect_vbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (autoselect_vbox);
-  gtk_container_add (GTK_CONTAINER (frame13), autoselect_vbox);
+  vbox30 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox30);
+  gtk_container_add (GTK_CONTAINER (frame15), vbox30);
 
-  cfg_mpl_autoselect = gtk_check_button_new_with_mnemonic (_("...master playlist"));
-  gtk_widget_show (cfg_mpl_autoselect);
-  gtk_box_pack_start (GTK_BOX (autoselect_vbox), cfg_mpl_autoselect, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_mpl_autoselect, _("If you don't select the master playlist automatically, the initial database import is much faster because the display dosn't have to be updated."), NULL);
+  cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\nentry (faster!)"));
+  gtk_widget_show (cfg_block_display);
+  gtk_box_pack_start (GTK_BOX (vbox30), cfg_block_display, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_block_display, _("The display can be blocked after changing a selection. The display update is faster, but you have to wait until it's finished."), NULL);
 
-  label40 = gtk_label_new (_("...entry 'All' in sort tab..."));
-  gtk_widget_show (label40);
-  gtk_box_pack_start (GTK_BOX (autoselect_vbox), label40, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label40), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label40), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (label40), 20, 0);
+  label38 = gtk_label_new (_("Misc"));
+  gtk_widget_show (label38);
+  gtk_frame_set_label_widget (GTK_FRAME (frame15), label38);
+  gtk_label_set_justify (GTK_LABEL (label38), GTK_JUSTIFY_LEFT);
 
-  autoselect_hbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (autoselect_hbox);
-  gtk_box_pack_start (GTK_BOX (autoselect_vbox), autoselect_hbox, TRUE, TRUE, 0);
+  label25 = gtk_label_new (_("Display"));
+  gtk_widget_show (label25);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label25);
+  gtk_label_set_justify (GTK_LABEL (label25), GTK_JUSTIFY_LEFT);
 
-  label36 = gtk_label_new (_("Automatically select..."));
-  gtk_widget_show (label36);
-  gtk_frame_set_label_widget (GTK_FRAME (frame13), label36);
-  gtk_label_set_justify (GTK_LABEL (label36), GTK_JUSTIFY_LEFT);
+  vbox32 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox32);
+  gtk_container_add (GTK_CONTAINER (notebook), vbox32);
+
+  frame18 = gtk_frame_new (NULL);
+  gtk_widget_show (frame18);
+  gtk_box_pack_start (GTK_BOX (vbox32), frame18, TRUE, TRUE, 0);
+
+  vbox34 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox34);
+  gtk_container_add (GTK_CONTAINER (frame18), vbox34);
+
+  label44 = gtk_label_new (_("Command Line for 'Play Now':"));
+  gtk_widget_show (label44);
+  gtk_box_pack_start (GTK_BOX (vbox34), label44, FALSE, FALSE, 2);
+  gtk_label_set_justify (GTK_LABEL (label44), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label44), 0.01, 0.5);
+
+  play_now_entry = gtk_entry_new ();
+  gtk_widget_show (play_now_entry);
+  gtk_box_pack_start (GTK_BOX (vbox34), play_now_entry, FALSE, FALSE, 2);
+  gtk_tooltips_set_tip (tooltips, play_now_entry, _("For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing."), NULL);
+
+  label45 = gtk_label_new (_("Command Line for 'Play'"));
+  gtk_widget_show (label45);
+  gtk_box_pack_start (GTK_BOX (vbox34), label45, FALSE, FALSE, 4);
+  gtk_label_set_justify (GTK_LABEL (label45), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label45), 0.01, 0.5);
+
+  play_entry = gtk_entry_new ();
+  gtk_widget_show (play_entry);
+  gtk_box_pack_start (GTK_BOX (vbox34), play_entry, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, play_entry, _("For example, 'xmms -e %s' will append the selected songs to xmms' current playlist."), NULL);
+
+  label43 = gtk_label_new (_("Song Playing"));
+  gtk_widget_show (label43);
+  gtk_frame_set_label_widget (GTK_FRAME (frame18), label43);
+  gtk_label_set_justify (GTK_LABEL (label43), GTK_JUSTIFY_LEFT);
 
   frame11 = gtk_frame_new (NULL);
   gtk_widget_show (frame11);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame11, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox32), frame11, TRUE, TRUE, 0);
 
   vbox24 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox24);
@@ -1454,33 +1528,28 @@ create_new_prefs_window (void)
   gtk_frame_set_label_widget (GTK_FRAME (frame11), label33);
   gtk_label_set_justify (GTK_LABEL (label33), GTK_JUSTIFY_LEFT);
 
-  frame15 = gtk_frame_new (NULL);
-  gtk_widget_show (frame15);
-  gtk_box_pack_start (GTK_BOX (vbox23), frame15, TRUE, TRUE, 0);
+  frame17 = gtk_frame_new (NULL);
+  gtk_widget_show (frame17);
+  gtk_box_pack_start (GTK_BOX (vbox32), frame17, TRUE, TRUE, 0);
 
-  vbox30 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox30);
-  gtk_container_add (GTK_CONTAINER (frame15), vbox30);
+  vbox33 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox33);
+  gtk_container_add (GTK_CONTAINER (frame17), vbox33);
 
   cfg_save_sorted_order = gtk_check_button_new_with_mnemonic (_("Automatically save song order after sorting."));
   gtk_widget_show (cfg_save_sorted_order);
-  gtk_box_pack_start (GTK_BOX (vbox30), cfg_save_sorted_order, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox33), cfg_save_sorted_order, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_save_sorted_order, _("Alternatively you can use the menu item 'Save Displayed Song Order' to save the sort order."), NULL);
 
-  cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\nentry (faster!)"));
-  gtk_widget_show (cfg_block_display);
-  gtk_box_pack_start (GTK_BOX (vbox30), cfg_block_display, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_block_display, _("The display can be blocked after changing a selection. The display update is faster, but you have to wait until it's finished."), NULL);
+  label42 = gtk_label_new (_("Misc"));
+  gtk_widget_show (label42);
+  gtk_frame_set_label_widget (GTK_FRAME (frame17), label42);
+  gtk_label_set_justify (GTK_LABEL (label42), GTK_JUSTIFY_LEFT);
 
-  label38 = gtk_label_new (_("Misc"));
-  gtk_widget_show (label38);
-  gtk_frame_set_label_widget (GTK_FRAME (frame15), label38);
-  gtk_label_set_justify (GTK_LABEL (label38), GTK_JUSTIFY_LEFT);
-
-  label25 = gtk_label_new (_("Display"));
-  gtk_widget_show (label25);
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label25);
-  gtk_label_set_justify (GTK_LABEL (label25), GTK_JUSTIFY_LEFT);
+  label41 = gtk_label_new (_("Misc"));
+  gtk_widget_show (label41);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 3), label41);
+  gtk_label_set_justify (GTK_LABEL (label41), GTK_JUSTIFY_LEFT);
 
   hbuttonbox5 = gtk_hbutton_box_new ();
   gtk_widget_show (hbuttonbox5);
@@ -1541,9 +1610,6 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) cfg_id3_writeall, "toggled",
                     G_CALLBACK (on_cfg_id3_writeall_toggled),
                     NULL);
-  g_signal_connect ((gpointer) sort_tab_num_combo_entry, "changed",
-                    G_CALLBACK (on_sort_tab_num_combo_entry_changed),
-                    NULL);
   g_signal_connect ((gpointer) cfg_display_toolbar, "toggled",
                     G_CALLBACK (on_cfg_display_toolbar_toggled),
                     NULL);
@@ -1556,8 +1622,20 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) cfg_toolbar_style_icons, "toggled",
                     G_CALLBACK (on_cfg_toolbar_style_icons_toggled),
                     NULL);
+  g_signal_connect ((gpointer) sort_tab_num_combo_entry, "changed",
+                    G_CALLBACK (on_sort_tab_num_combo_entry_changed),
+                    NULL);
   g_signal_connect ((gpointer) cfg_mpl_autoselect, "toggled",
                     G_CALLBACK (on_cfg_mpl_autoselect_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) cfg_block_display, "toggled",
+                    G_CALLBACK (on_cfg_block_display_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) play_now_entry, "changed",
+                    G_CALLBACK (on_play_now_entry_changed),
+                    NULL);
+  g_signal_connect ((gpointer) play_entry, "changed",
+                    G_CALLBACK (on_play_entry_changed),
                     NULL);
   g_signal_connect ((gpointer) cfg_delete_playlist, "toggled",
                     G_CALLBACK (on_cfg_delete_playlist_toggled),
@@ -1570,9 +1648,6 @@ create_new_prefs_window (void)
                     NULL);
   g_signal_connect ((gpointer) cfg_save_sorted_order, "toggled",
                     G_CALLBACK (on_cfg_save_sorted_order_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) cfg_block_display, "toggled",
-                    G_CALLBACK (on_cfg_block_display_toggled),
                     NULL);
   g_signal_connect ((gpointer) prefs_apply, "clicked",
                     G_CALLBACK (on_prefs_apply_clicked),
@@ -1636,13 +1711,6 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, label32, "label32");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label24, "label24");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox23, "vbox23");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame12, "frame12");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox25, "vbox25");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox11, "hbox11");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label35, "label35");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo, "sort_tab_num_combo");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo_entry, "sort_tab_num_combo_entry");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label34, "label34");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame16, "frame16");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox31, "vbox31");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_display_toolbar, "cfg_display_toolbar");
@@ -1651,6 +1719,19 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_toolbar_style_text, "cfg_toolbar_style_text");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_toolbar_style_icons, "cfg_toolbar_style_icons");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label39, "label39");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, frame12, "frame12");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox25, "vbox25");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, hbox11, "hbox11");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label35, "label35");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo, "sort_tab_num_combo");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, sort_tab_num_combo_entry, "sort_tab_num_combo_entry");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label34, "label34");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, frame13, "frame13");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_vbox, "autoselect_vbox");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_mpl_autoselect, "cfg_mpl_autoselect");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label40, "label40");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_hbox, "autoselect_hbox");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label36, "label36");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame14, "frame14");
   GLADE_HOOKUP_OBJECT (new_prefs_window, hbox12, "hbox12");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox27, "vbox27");
@@ -1666,24 +1747,30 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible5, "col_visible5");
   GLADE_HOOKUP_OBJECT (new_prefs_window, col_visible8, "col_visible8");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label37, "label37");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame13, "frame13");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_vbox, "autoselect_vbox");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_mpl_autoselect, "cfg_mpl_autoselect");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label40, "label40");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, autoselect_hbox, "autoselect_hbox");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label36, "label36");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, frame15, "frame15");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox30, "vbox30");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_block_display, "cfg_block_display");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label38, "label38");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label25, "label25");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox32, "vbox32");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, frame18, "frame18");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox34, "vbox34");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label44, "label44");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, play_now_entry, "play_now_entry");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label45, "label45");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, play_entry, "play_entry");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label43, "label43");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame11, "frame11");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox24, "vbox24");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_playlist, "cfg_delete_playlist");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_track_from_playlist, "cfg_delete_track_from_playlist");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_delete_track_from_ipod, "cfg_delete_track_from_ipod");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label33, "label33");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, frame15, "frame15");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox30, "vbox30");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, frame17, "frame17");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, vbox33, "vbox33");
   GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_save_sorted_order, "cfg_save_sorted_order");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, cfg_block_display, "cfg_block_display");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label38, "label38");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, label25, "label25");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label42, "label42");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, label41, "label41");
   GLADE_HOOKUP_OBJECT (new_prefs_window, hbuttonbox5, "hbuttonbox5");
   GLADE_HOOKUP_OBJECT (new_prefs_window, prefs_apply, "prefs_apply");
   GLADE_HOOKUP_OBJECT (new_prefs_window, prefs_cancel, "prefs_cancel");

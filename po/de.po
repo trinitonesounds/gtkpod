@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.14\n"
-"POT-Creation-Date: 2003-03-15 23:16+0900\n"
+"POT-Creation-Date: 2003-03-16 16:07+0900\n"
 "PO-Revision-Date: 2003-03-15 23:17+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
@@ -270,17 +270,17 @@ msgstr "Playlisten"
 msgid "All"
 msgstr "Alle"
 
-#: src/display.c:1938 src/display.c:2867 src/interface.c:1164
+#: src/display.c:1938 src/display.c:2917 src/interface.c:1164
 #: src/interface.c:1354
 msgid "Artist"
 msgstr "Künstler"
 
-#: src/display.c:1941 src/display.c:2870 src/interface.c:1176
+#: src/display.c:1941 src/display.c:2920 src/interface.c:1176
 #: src/interface.c:1188 src/interface.c:1370
 msgid "Album"
 msgstr "Album"
 
-#: src/display.c:1944 src/display.c:2873 src/interface.c:1168
+#: src/display.c:1944 src/display.c:2923 src/interface.c:1168
 #: src/interface.c:1358
 msgid "Genre"
 msgstr "Genre"
@@ -289,27 +289,27 @@ msgstr "Genre"
 msgid "Comp."
 msgstr "Komp."
 
-#: src/display.c:1950 src/display.c:2864 src/interface.c:1386
+#: src/display.c:1950 src/display.c:2914 src/interface.c:1386
 msgid "Title"
 msgstr "Titel"
 
-#: src/display.c:2876 src/interface.c:1180 src/interface.c:1374
+#: src/display.c:2926 src/interface.c:1180 src/interface.c:1374
 msgid "Composer"
 msgstr "Komponist"
 
-#: src/display.c:2879
+#: src/display.c:2929
 msgid "#"
 msgstr "#"
 
-#: src/display.c:2882
+#: src/display.c:2932
 msgid "ID"
 msgstr "ID"
 
-#: src/display.c:2885 src/interface.c:1378
+#: src/display.c:2935 src/interface.c:1378
 msgid "PC File"
 msgstr "PC Datei"
 
-#: src/display.c:2889
+#: src/display.c:2939
 msgid "Trnsfrd"
 msgstr "Übertragen"
 

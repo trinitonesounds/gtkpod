@@ -36,6 +36,9 @@ static GtkWidget *prefs_window = NULL;
 static struct cfg *tmpcfg = NULL;
 static struct cfg *origcfg = NULL;
 
+/* keeps the check buttons for "Select Entry 'All' in Sorttab %d" */
+static GtkWidget *autoselect_widget[SORT_TAB_MAX];
+
 static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
 static void prefs_window_set_tag_autoset (gint category, gboolean autoset);
 static void prefs_window_set_col_visible (gint column, gboolean visible);
@@ -240,6 +243,7 @@ prefs_window_create(void)
 
 		buf = g_strdup_printf ("%d", i+1);
 		as = gtk_check_button_new_with_mnemonic (buf);
+		autoselect_widget[i] = as;
 		gtk_widget_show (as);
 		if (i==0) padding = 0;
 		else      padding = 5;
@@ -313,6 +317,9 @@ prefs_window_create(void)
 	}
 
 	set_sort_tab_num_combo ();
+	/* make the right number of autoselect checkboxes
+	   sensitive/insensitive */
+	prefs_window_set_sort_tab_num (tmpcfg->sort_tab_num);
 
 	gtk_widget_show(prefs_window);
     }
@@ -622,7 +629,14 @@ void prefs_window_set_save_sorted_order (gboolean val)
 
 void prefs_window_set_sort_tab_num (gint num)
 {
+    gint i;
+
     tmpcfg->sort_tab_num = num;
+    for (i=0; i<SORT_TAB_MAX; ++i)
+    {   /* make all checkboxes with i<num sensitive, the others
+	   insensitive */
+	gtk_widget_set_sensitive (autoselect_widget[i], i<num);
+    }
 }
 
 void prefs_window_set_toolbar_style (GtkToolbarStyle style)

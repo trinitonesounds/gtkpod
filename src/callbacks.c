@@ -971,3 +971,19 @@ on_reset_sorting_activate              (GtkMenuItem     *menuitem,
 {
     display_reset ();
 }
+
+void
+on_play_now_entry_changed              (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+
+}
+
+
+void
+on_play_entry_changed                  (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+
+}
+
