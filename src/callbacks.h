@@ -107,3 +107,32 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
                                         guint            info,
                                         guint            time,
                                         gpointer         user_data);
+
+gboolean
+on_prefs_window_delete_event           (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data);
+
+void
+on_cfg_mount_point_changed             (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_cfg_md5songs_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_cfg_writeid3_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_prefs_ok_clicked                    (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_prefs_cancel_clicked                (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

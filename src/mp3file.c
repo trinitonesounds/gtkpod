@@ -77,10 +77,12 @@ static int bitrate3_25[16] = {		/* bitraten sind ausprobiert */
 	0,8000,16000,24000,32000,0,0,0,0,0,0,0,0,0,0
 };
 
+/* unused ??
 static char *ModeNameA[4] = {  "Stereo",  "Joint-Stereo",  "Dual-Channel",  "Single-Channel" };
 static char *ModeNameShortA[4] = {  "S",  "JS",  "DC",  "SC" };
 static char *LayerNameA[5] = { "-",  "I",  "II",  "III",  "-"};
 static char *VersionNameA[5] = { "-",  "1",  "2",  "-",  "2.5"};
+*/
 
 /* VBR definitions */
 #define FRAMES_FLAG     0x0001
@@ -291,7 +293,6 @@ guint32 length_from_file(gchar *path, guint32 filesize)
   size_t size = 0;
   size_t length = 0;
   FILE *InFile;
-  gchar *dummy;
   unsigned char buf[10];
   gint i;
   mp3metadata_t mp3meta;

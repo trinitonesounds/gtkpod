@@ -35,9 +35,12 @@
 struct cfg
 {
   gchar    *ipod_mount;   /* mount point of iPod */
-  gchar    *last_dir;     /* last directory selected */
   gboolean writeid3;      /* should changes to ID3 tags be written to file */
   gboolean md5songs;	  /* don't allow song duplication on your ipod */	
+  /* last directories used by the fileselections */
+  struct {
+      gchar *dir_browse, *file_browse;
+  } last_dir;	
 };
 
 /* enum for reading of options */
@@ -51,7 +54,13 @@ enum {
 extern struct cfg *cfg;
 
 gboolean read_prefs (int argc, char *argv[]);
+void cfg_free(struct cfg *c);
 void write_prefs (void);
 void discard_prefs (void);
+void prefs_set_mount_point(const gchar *mp);
+void prefs_set_md5songs_active(gboolean active);
+void prefs_set_writeid3_active(gboolean active);
+void prefs_set_last_dir_dir_browse_for_filename(gchar * dir);
+void prefs_set_last_dir_file_browse_for_filename(gchar * dir);
 
 #endif __PREFS_H__

@@ -35,10 +35,13 @@
 
 #define gtkpod_warning(...) fprintf (stderr, __VA_ARGS__)
 
+void handle_import();
+void handle_export();
 void add_dir_selected (gchar *dir);
 void create_add_files_fileselector (gchar *startdir);
 gchar *concat_dir (G_CONST_RETURN gchar *dir, G_CONST_RETURN gchar *file);
 void open_about_window (void);
 void close_about_window (void);
+gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
 
 #endif __UTILS_H__

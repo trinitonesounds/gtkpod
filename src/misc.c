@@ -28,11 +28,13 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <stdlib.h>
+#include "song.h"
 #include "interface.h"
 #include "misc.h"
 #include "prefs.h"
 #include "support.h"
-
+#include "itunesdb.h"
 
 
 static GtkWidget *about_window = NULL;
@@ -42,9 +44,8 @@ static GtkWidget *about_window = NULL;
 void add_dir_selected (gchar *dir)
 {
   add_directory_recursively (dir);
-  cfg->last_dir = dir;
+  prefs_set_last_dir_dir_browse_for_filename(dir);
 }
-
 
 static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
 {
@@ -55,6 +56,8 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   for (i=0; names[i] != NULL; ++i)
     {
       add_song_by_filename (names[i]);
+      if(!i)
+	  prefs_set_last_dir_file_browse_for_filename(names[i]);
     }
   g_strfreev (names);
 }
@@ -150,4 +153,40 @@ void close_about_window (void)
   g_return_if_fail (about_window != NULL);
   gtk_widget_destroy (about_window);
   about_window = NULL;
+}
+
+/* parse a bunch of ipod ids delimited by \n
+ * @s - address of the character string we're parsing
+ * @id - pointer the ipod id parsed from the string
+ * returns FALSE when the string is empty, TRUE when the string can still be
+ * 	parsed
+ */
+gboolean
+parse_ipod_id_from_string(gchar **s, guint32 *id)
+{
+    if((s) && (*s))
+    {
+	int i = 0;
+	gchar buf[4096];
+	gchar *new = NULL;
+	gchar *str = *s;
+	guint max = strlen(str);
+
+	for(i = 0; i < max; i++)
+	{
+	    if(str[i] == '\n')
+	    {
+		snprintf(buf, 4096, "%s", str);
+		buf[i] = '\0';
+		*id = (guint32)atoi(buf);
+		if((i+1) < max)
+		    new = g_strdup(&str[i+1]);
+		break;
+	    }
+	}
+	g_free(str);
+	*s = new;
+	return(TRUE);
+    }
+    return(FALSE);
 }

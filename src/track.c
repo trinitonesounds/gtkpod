@@ -27,12 +27,16 @@
 #  include <config.h>
 #endif
 
+#include <stdlib.h>
 #include "prefs.h"
 #include "song.h"
 #include "misc.h"
 #include "id3_tag.h"
 #include "mp3file.h"
 #include "support.h"
+#include "md5.h"
+#include "itunesdb.h"
+#include "display.h"
 
 GList *songs = NULL;
 
@@ -124,7 +128,6 @@ gboolean add_song_by_filename (gchar *name)
 {
   Song *song;
   File_Tag *filetag;
-  gchar *mp3;
   gint len;
 
   if (name == NULL) return TRUE;
@@ -423,6 +426,7 @@ gboolean write_tags_to_file (Song *song)
 	g_free (ipod_fullpath);
       }
     g_free (filetag);
+    return(TRUE);
 }    
 
 

@@ -40,6 +40,7 @@
 #include "display.h"
 #include "song.h"
 #include "playlist.h"
+#include "interface.h"
 
 static GtkTreeView *song_treeview = NULL;
 static GtkTreeView *playlist_treeview = NULL;
@@ -400,7 +401,7 @@ static gint st_get_instance (GtkNotebook *notebook)
       if (sorttab[i]->notebook == notebook) return i;
       ++i;
     }
-  g_warning (_("Programming error (st_get_instance): notebook %x could not be found.\n"), notebook);
+  g_warning (_("Programming error (st_get_instance): notebook could not be found.\n"));
   return -1;
 }
 
@@ -550,7 +551,7 @@ static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
 static gboolean st_recategorize_song (Song *song, guint32 inst)
 {
   TabEntry *oldentry, *newentry;
-  SortTab *st = sorttab[inst];
+  /* SortTab *st = sorttab[inst]; */
   gchar *entryname;
 
   oldentry = st_get_entry_by_song (song, inst);
@@ -1019,7 +1020,7 @@ gint st_data_compare_func (GtkTreeModel *model,
   TabEntry *entry2;
   GtkSortType sort;
   GtkTreeViewColumn *column;
-  gint result, corr;
+  gint corr;
 
   gtk_tree_model_get (model, a, ST_COLUMN_ENTRY, &entry1, -1);
   gtk_tree_model_get (model, b, ST_COLUMN_ENTRY, &entry2, -1);

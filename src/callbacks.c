@@ -40,6 +40,7 @@
 #include "song.h"
 #include "playlist.h"
 #include "display.h"
+#include "prefs_window.h"
 
 void
 on_import_itunes1_activate             (GtkMenuItem     *menuitem,
@@ -53,7 +54,7 @@ void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  create_add_files_fileselector (cfg->last_dir);
+  create_add_files_fileselector (cfg->last_dir.file_browse);
 }
 
 
@@ -64,7 +65,7 @@ on_add_directory1_activate             (GtkMenuItem     *menuitem,
   GtkWidget *browser;
 
   browser = xmms_create_dir_browser (_("Select directory to add recursively"),
-				     cfg->last_dir,
+				     cfg->last_dir.file_browse,
 				     GTK_SELECTION_SINGLE,
 				     add_dir_selected);
   gtk_widget_show (browser);
@@ -148,7 +149,7 @@ void
 on_add_files1_button                   (GtkButton       *button,
                                         gpointer         user_data)
 {
-  create_add_files_fileselector (cfg->last_dir);
+  create_add_files_fileselector (cfg->last_dir.file_browse);
 }
 
 
@@ -159,7 +160,7 @@ on_add_directory1_button               (GtkButton       *button,
   GtkWidget *browser;
 
   browser = xmms_create_dir_browser (_("Select directory to add recursively"),
-				     cfg->last_dir,
+				     cfg->last_dir.dir_browse,
 				     GTK_SELECTION_SINGLE,
 				     add_dir_selected);
   gtk_widget_show (browser);
@@ -215,41 +216,6 @@ on_sorttab_switch_page                 (GtkNotebook     *notebook,
   st_page_selected (notebook, page_num);
 }
 
-/* parse a bunch of ipod ids delimited by \n
- * @s - address of the character string we're parsing
- * @id - pointer the ipod id parsed from the string
- * returns FALSE when the string is empty, TRUE when the string can still be
- * 	parsed
- */
-static gboolean
-parse_ipod_id_from_string(gchar **s, guint32 *id)
-{
-    if((s) && (*s))
-    {
-	int i = 0;
-	gchar buf[4096];
-	gchar *new = NULL;
-	gchar *str = *s;
-	guint max = strlen(str);
-
-	for(i = 0; i < max; i++)
-	{
-	    if(str[i] == '\n')
-	    {
-		snprintf(buf, 4096, "%s", str);
-		buf[i] = '\0';
-		*id = (guint32)atoi(buf);
-		if((i+1) < max)
-		    new = g_strdup(&str[i+1]);
-		break;
-	    }
-	}
-	g_free(str);
-	*s = new;
-	return(TRUE);
-    }
-    return(FALSE);
-}
 
 void
 on_playlist_treeview_drag_data_received
@@ -347,5 +313,63 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
 	    fprintf(stderr, "Unknown info %d\n", info);
 	}
     }
+}
+
+
+gboolean
+on_prefs_window_delete_event           (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data)
+{
+  prefs_window_cancel ();
+  return FALSE;
+}
+
+
+void
+on_cfg_mount_point_changed             (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+    prefs_window_set_mount_point(gtk_editable_get_chars(editable,0, -1));
+}
+
+
+void
+on_cfg_md5songs_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_md5songs_active(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_cfg_writeid3_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_writeid3_active(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_prefs_ok_clicked                    (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    prefs_window_save();
+}
+
+
+void
+on_prefs_cancel_clicked                (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    prefs_window_cancel();
+}
+
+
+void
+on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    prefs_window_create(); 
 }
 

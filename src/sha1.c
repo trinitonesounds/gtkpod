@@ -131,7 +131,7 @@ unique_file_repository_init(GList *songlist)
 	for(l = songlist; l; l = l->next)
 	{
 	    s = (Song*)l->data;
-	    if(val = hash_song(s))
+	    if((val = hash_song(s)))
 		g_hash_table_insert(filehash, val, s);
 	}
     }

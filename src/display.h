@@ -105,4 +105,6 @@ void st_page_selected (GtkNotebook *notebook, guint page);
 void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				 GtkTreeIter *i, gpointer data);
 
+void cleanup_listviews(GtkWidget *w);
+
 #endif __TREE_H__

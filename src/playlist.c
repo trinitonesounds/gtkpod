@@ -115,7 +115,7 @@ void add_song_to_playlist (Playlist *plitem, Song *song)
 {
   if (plitem == NULL)  plitem = get_playlist_by_nr (0);
   plitem->members = g_list_append (plitem->members, song);
-  /*  ++plitem->num;  /* increase song counter */
+  /*  ++plitem->num;  */ /* increase song counter */
   /* it's more convenient to store the pointer to the song than
      the ID, because id=song->ipod_id -- it takes more computing
      power to do it the other way round */
@@ -148,7 +148,7 @@ void remove_song_from_playlist (Playlist *plitem, Song *song)
           /* This is checked to make it easier for the display model
 	     and so we know whether we have to decrease plitem->num */
   plitem->members = g_list_remove (plitem->members, song);
-  /*  --plitem->num;  /* decrease song counter */
+  /*  --plitem->num;  */ /* decrease song counter */
   pm_remove_song (plitem, song);
   if (plitem->type == PL_TYPE_MPL)
     { /* if it's the MPL, we remove the song permanently */

@@ -490,7 +490,7 @@ gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag)
     {
         ID3Frame *id3_frame;
         ID3Field *id3_field;
-        gchar *string, *string1;
+        gchar *string;
 
         ID3Tag_Link(id3_tag,filename);
 

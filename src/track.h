@@ -75,6 +75,7 @@ Song *get_song_by_id (guint32 id);
 gboolean flush_songs (void);
 gboolean add_song_by_filename (gchar *name);
 gboolean add_directory_recursively (gchar *name);
+gboolean write_tags_to_file(Song *s);
 void handle_import_itunes (void);
 gchar* get_song_name_on_disk(Song *s);
 #endif __SONG_H__

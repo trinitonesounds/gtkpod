@@ -27,6 +27,7 @@
 #  include <config.h>
 #endif
 
+#include <string.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <getopt.h>
@@ -48,13 +49,32 @@ static void usage (FILE *file)
   fprintf(file, _("  --md5:   same as \"-c\".\n"));
 }
 
+struct cfg*
+cfg_new(void)
+{
+    struct cfg *mycfg = NULL;
+    gchar buf[PATH_MAX];
+
+    mycfg = g_malloc0 (sizeof (struct cfg));
+    memset(mycfg, 0, sizeof(struct cfg));
+    if(getcwd(buf, PATH_MAX))
+    {
+	mycfg->last_dir.dir_browse = g_strdup (buf);
+	mycfg->last_dir.file_browse = g_strdup (buf);
+    }
+    else
+    {
+	mycfg->last_dir.dir_browse = g_strdup ("~/");
+	mycfg->last_dir.file_browse = g_strdup ("~/");
+    }
+    mycfg->ipod_mount = g_strdup ("/mnt/ipod");
+    mycfg->writeid3 = mycfg->md5songs = FALSE;
+    return(mycfg);
+}
 
 /* Read Preferences and initialise the cfg-struct */
 gboolean read_prefs (int argc, char *argv[])
 {
-  gint j;
-  gint32 val;
-  gchar *string;
   int opt;
   int option_index;
   struct option const options[] =
@@ -71,10 +91,8 @@ gboolean read_prefs (int argc, char *argv[])
     };
   
   if (cfg != NULL) discard_prefs ();
-  cfg = g_malloc0 (sizeof (struct cfg));
-  cfg->ipod_mount = g_strdup ("/mnt/ipod");
-  cfg->last_dir = g_strdup ("~/");
-  cfg->writeid3 = cfg->md5songs = FALSE;
+  
+  cfg = cfg_new();
 
   while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
     switch(opt) 
@@ -113,11 +131,71 @@ void write_prefs (void)
 /* Free all memory including the cfg-struct itself. */
 void discard_prefs ()
 {
-  if (cfg != NULL)
+    cfg_free(cfg);
+}
+
+void cfg_free(struct cfg *c)
+{
+    if(c)
     {
-      g_free (cfg->ipod_mount);
-      g_free (cfg->last_dir);
-      g_free (cfg);
-      cfg = NULL;
+      g_free (c->ipod_mount);
+      g_free (c->last_dir.dir_browse);
+      g_free (c->last_dir.file_browse);
+      g_free (c);
     }
+}
+
+static gchar *
+get_dirname_of_filename(gchar *file)
+{
+   char *tok = NULL, *buf = NULL, filename[PATH_MAX];
+   gchar *result, dump[PATH_MAX];
+
+   snprintf(filename, PATH_MAX, "%s", file);
+   buf = (gchar *) malloc((sizeof(gchar) * PATH_MAX) + 1);
+
+   memset(buf, 0, sizeof(buf));
+   memset(dump, 0, PATH_MAX);
+
+   if ((tok = strtok(filename, "/")))
+   {
+      do
+      {
+         buf = strncat(buf, dump, PATH_MAX);
+         snprintf(dump, PATH_MAX, "/%s", tok);
+      }
+      while ((tok = strtok(NULL, "/")));
+   }
+   result = g_strdup_printf("%s/",buf);
+   g_free(buf);
+   return (result);
+}
+
+void prefs_set_last_dir_file_browse_for_filename(gchar *file)
+{
+    if(cfg->last_dir.file_browse) g_free(cfg->last_dir.file_browse);
+    cfg->last_dir.file_browse = get_dirname_of_filename(file);
+}
+
+void prefs_set_last_dir_dir_browse_for_filename(gchar *file)
+{
+    if(cfg->last_dir.dir_browse) g_free(cfg->last_dir.dir_browse);
+    cfg->last_dir.dir_browse = get_dirname_of_filename(file);
+}
+
+
+void prefs_set_mount_point(const gchar *mp)
+{
+    if(cfg->ipod_mount) g_free(cfg->ipod_mount);
+    cfg->ipod_mount = g_strdup(mp);
+}
+
+void prefs_set_md5songs_active(gboolean active)
+{
+    cfg->md5songs = active;
+}
+
+void prefs_set_writeid3_active(gboolean active)
+{
+    cfg->writeid3 = active;
 }

@@ -4,3 +4,4 @@
 
 GtkWidget* create_gtkpod (void);
 GtkWidget* create_gtkpod_about_window (void);
+GtkWidget* create_prefs_window (void);

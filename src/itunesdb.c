@@ -261,7 +261,7 @@ static gunichar2 *get_mhod (FILE *file, glong seek, gint32 *ml, gint32 *mty)
 /* get a PL, return pos where next PL should be, name and content */
 static glong get_pl(FILE *file, glong seek) 
 {
-  gunichar2 *foo, *plname_utf16;
+  gunichar2 *plname_utf16;
 #ifdef ITUNESDB_PROVIDE_UTF8
   gchar *plname_utf8;
 #endif ITUNESDB_PROVIDE_UTF8
@@ -887,7 +887,6 @@ static void
 write_playlist(FILE *file, Playlist *pl)
 {
     Song *s;
-    GList *l;
     guint32 i, n;
     glong mhyp_seek;
     gunichar2 empty = 0;
@@ -958,7 +957,7 @@ gboolean itunesdb_write (gchar *path)
 
     filename = concat_dir (path, "iPod_Control/iTunes/iTunesDB");
 
-    if(file = fopen (filename, "w+"))
+    if((file = fopen (filename, "w+")))
     {
 	write_it (file);
 	fclose(file);
@@ -1026,7 +1025,7 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 	{
 	  if (feof (file_in) == 0)
 	    { /* error -- not end of file! */
-	      gtkpod_warning (_("Error reading PC file \"%s\"."));
+	      gtkpod_warning (_("Error reading PC file \"%s\"."),pcfile);
 	      success = FALSE;
 	    }
 	}
@@ -1035,7 +1034,7 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 	  bwrite = fwrite (data, 1, bread, file_out);
 	  if (bwrite != bread)
 	    {
-	      gtkpod_warning (_("Error writing PC file \"%s\"."));
+	      gtkpod_warning (_("Error writing PC file \"%s\"."),ipod_file);
 	      success = FALSE;
 	    }
 	} 
