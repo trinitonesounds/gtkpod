@@ -724,12 +724,24 @@ gboolean add_song_by_filename (gchar *name, Playlist *plitem)
 			    10 songs */
   Song *song, *added_song;
   gchar str[PATH_MAX];
+  gint len;
 
   if (name == NULL) return TRUE;
 
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
       return add_directory_recursively (name, NULL);
+  }
+
+  /* check if file is a playlist */
+  len = strlen (name);
+  if (len >= 4)
+  {
+      if ((strcmp (&name[len-4], ".pls") == 0) ||
+	  (strcmp (&name[len-4], ".m3u") == 0))
+      {
+	  return add_playlist_by_filename (name);
+      }
   }
 
   song = get_song_info_from_file (name, NULL);

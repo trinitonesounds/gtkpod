@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-02-26 00:36+0900\n"
+"POT-Creation-Date: 2003-02-27 22:20+0900\n"
 "PO-Revision-Date: 2003-02-02 22:59+0900\n"
 "Last-Translator: Ayako Sano <@>\n"
 "Language-Team: n/a\n"
@@ -245,51 +245,51 @@ msgstr "ＯＫ"
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/display.c:370
+#: src/display.c:379
 msgid "Nothing is selected currently in Playlist Tree\n"
 msgstr "現在の再生リストツリー中では選択されません\n"
 
-#: src/display.c:524
+#: src/display.c:533
 msgid "Playlists"
 msgstr "再生リスト"
 
-#: src/display.c:984
+#: src/display.c:993
 msgid "All"
 msgstr "全て"
 
-#: src/display.c:2003 src/interface.c:599 src/interface.c:659
+#: src/display.c:2026 src/interface.c:599 src/interface.c:659
 #: src/interface.c:1268
 msgid "Title"
 msgstr "タイトル"
 
-#: src/display.c:2025 src/interface.c:557 src/interface.c:617
+#: src/display.c:2048 src/interface.c:557 src/interface.c:617
 #: src/interface.c:1252 src/interface.c:1344
 msgid "Artist"
 msgstr "アーティスト"
 
-#: src/display.c:2047 src/interface.c:571 src/interface.c:631
+#: src/display.c:2070 src/interface.c:571 src/interface.c:631
 #: src/interface.c:1264 src/interface.c:1348
 msgid "Album"
 msgstr "アルバム"
 
-#: src/display.c:2068 src/interface.c:585 src/interface.c:645
+#: src/display.c:2091 src/interface.c:585 src/interface.c:645
 #: src/interface.c:1256 src/interface.c:1356
 msgid "Genre"
 msgstr "ジャンル"
 
-#: src/display.c:2089 src/interface.c:1360
+#: src/display.c:2112 src/interface.c:1360
 msgid "Track Number"
 msgstr "トラック"
 
-#: src/display.c:2108
+#: src/display.c:2131
 msgid "iPod ID"
 msgstr "iPod ID"
 
-#: src/display.c:2126
+#: src/display.c:2149
 msgid "PC File"
 msgstr "PCファイル"
 
-#: src/display.c:2142
+#: src/display.c:2165
 msgid "Trnsfrd"
 msgstr "転送"
 
@@ -750,43 +750,43 @@ msgstr "適用"
 msgid "Master-PL"
 msgstr "マスターPL"
 
-#: src/itunesdb.c:517
+#: src/itunesdb.c:520
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for reading.\n"
 msgstr "読込み中から、iTunesDB\"%s\" を開けません\n"
 
-#: src/itunesdb.c:523
+#: src/itunesdb.c:526
 #, c-format
 msgid "Error reading \"%s\".\n"
 msgstr "\"%s\"を読込み中にエラーです\n"
 
-#: src/itunesdb.c:529
+#: src/itunesdb.c:532
 #, c-format
 msgid "\"%s\" is not a iTunesDB.\n"
 msgstr "\"%s\"はiTuneDBではありません\n"
 
-#: src/itunesdb.c:1042
+#: src/itunesdb.c:1113
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for writing.\n"
 msgstr "書込みからiTunesDB \"%s\"を開けません\n"
 
-#: src/itunesdb.c:1140
+#: src/itunesdb.c:1211
 #, c-format
 msgid "Could not open file \"%s\" for reading.\n"
 msgstr "読込みからをファイル\"%s\"を開けません\n"
 
-#: src/itunesdb.c:1147
+#: src/itunesdb.c:1218
 #, c-format
 msgid "Could not open file \"%s\" for writing.\n"
 msgstr "書込みからファイル\"%s\" を開けません\n"
 
 #. error -- not end of file!
-#: src/itunesdb.c:1157
+#: src/itunesdb.c:1228
 #, c-format
 msgid "Error reading file \"%s\"."
 msgstr "ファイル\"%s\"読込み中エラーです"
 
-#: src/itunesdb.c:1166
+#: src/itunesdb.c:1237
 #, c-format
 msgid "Error writing PC file \"%s\"."
 msgstr "PCファイル\"%s\"書込み中エラーです"

@@ -1,3 +1,25 @@
+gtkpod (0.43-0) unstable; urgency=low
+    * Preventive BUGFIX: in the code to import the iTunesDB all absolute
+      references to positions in the iTunesDB were removed. Instead
+      itunesdb.c now uses the header information to find the headers it
+      needs. This should make it more reliable to read third party
+      iTunesDB. This was also part of the problem with the ephpod import
+      problem below (the other half of the problem was ephpod's not
+      really conformant way of writing the database).
+    * BUGFIX: some iTunesDBs produced by ephpod could not be read (hang
+      after reading the songs and before adding the playlists).
+    * New Feature: update song information from file when adding songs
+      with identical filename (option)
+    * New Feature: update song information from file of selected songs
+      (ctrl-u and menu item)
+    * BUGFIX: copy_song_to_ipod() there was a <5% chance that songs were
+      overwritten by new songs during the copy process, if you deleted
+      songs before adding new songs.
+    * BUGFIX: Deleting songs from the iPod only worked if you exported
+      the iTunesDB twice.
+    * New Feature: Add Playlists (m3u and pls)
+ -- Jorg Schuler <jcsjcs at users.sourceforge.net>  Thu, 27 Feb 2003 23:00:00 +0900
+
 gtkpod (0.42-0) unstable; urgency=low
     * Bugfix: on first start gtkpod complained it could not create
       ~/.gtkpod even though it could... (and vice versa).

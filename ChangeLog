@@ -1,4 +1,4 @@
-gtkpod V0.42+ 21-Feb-2003 - 
+gtkpod V0.43 27-Feb-2003
         Preventive BUGFIX: in the code to import the iTunesDB all absolute
 	references to positions in the iTunesDB were removed. Instead
 	itunesdb.c now uses the header information to find the headers it

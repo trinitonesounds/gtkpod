@@ -116,15 +116,22 @@ Features
 Songs
 -----
 
-- You can add individual songs or entire directories recursively using
-  "Add Files". A file selection dialogue will appear
+- You can add individual songs, entire directories recursively, or
+  existing playlists using "Add Files". A file selection dialogue will
+  appear.
 - You can add directories recursively using "Add Dirs". A directory
-  selection dialogue will appear
+  selection dialogue will appear.
+- You can add existing playlists using "Add Playlists"
 - You can delete songs by marking them and pressing the "Ctrl-d" . If
   you delete songs from the master playlist (the topmost playlist,
   called "gtkpod" by default).  You can also delete songs by selecting them,
-  and clicking "Delete Song" in the <FOO> menu.
-- You can rename ID3 tags by editing the tag fields
+  and using "Delete Song" in the Edit menu.
+- You can update ID3 tags of selected songs in gtkpod from the mp3
+  file by pressing "Ctrl-u" or choose "Update song info from file" in
+  the Edit menu.
+- You can rename ID3 tags by editing the fields in gtkpod. You can
+  change an entire group of ID3 tags by editing an entry in the sort
+  tab.
 - Cou can specify which tags to display in the preferences window
 - Cou can specify (in the prefs window) if the ID3 tags of the
   corresponding mp3 file should also be updated
@@ -144,12 +151,14 @@ Playlists
 ---------
 
 - You can create playlists with "New Playlist" or pressing "Ctrl-n" in
-  the playlist listview
+  the playlist listview.
+- You can also create playlists by adding an existing playlist file
+  with "Add file" or "Add playlist".
 - You can add songs to playlists by marking the songs you want to add,
-  and then dragging them onto the playlist
-- You can rename playlists
+  and then dragging them onto the playlist.
+- You can rename playlists.
 - You can delete playlists by selecting the desired playlist and pressing
-  "Ctrl-D", or by selecting "Delete Playlist" from the <FOO> menu
+  "Ctrl-D", or by selecting "Delete Playlist" from the Edit menu.
 
 
 Duplicate Detection
@@ -198,6 +207,20 @@ filenames are still available.
 
 The extended information file is also used for the "Offline Mode"
 described below.
+
+
+Refresh Song Info From File
+---------------------------
+
+If you have changed the ID3 tags of your original file, you can update
+the ID3 tags stored in gtkpod without removing and re-adding the
+song. Simply select the song to be updated and press "Ctrl-u" or
+choose "Update Song Info From File" from the Edit menu. Since gtkpod
+needs to know the filename of the song, the "Extended Information
+File" (see above) is needed.
+
+You can also select entries in the sort tab or entire playlists for
+refresh. 
 
 
 Offline Mode
@@ -274,12 +297,12 @@ care of this and assumes the filenames to be in the same encoding as
 you have specified for the ID3 tags (see above). You can therefore
 forget about the excerpt above.
 
-However, the "Add Files" dialogue (at the moment) uses the standard
-GTK+-2.0 file selection dialogue. Therefore I have no access on the
-conversion functions used, and a warning is printed when filenames are
-encountered that are encoded in a an encoding other than the once of
-the current locale. ID3 tags are still read currectly (according to
-the charset set in the preference dialogue).
+However, the "Add Files" and "Add Playlists" dialogue (at the moment)
+uses the standard GTK+-2.0 file selection dialogue. Therefore I have
+no access on the conversion functions used, and a warning is printed
+when filenames are encountered that are encoded in a an encoding other
+than the once of the current locale. ID3 tags are still read currectly
+(according to the charset set in the preference dialogue).
 
 
 
@@ -288,4 +311,7 @@ Known bugs
 
 - Display of large number of songs is awfully slow (mainly because of
   the use of the standard GTK2 tree views) -> deactivate "Automatically
-  select "All" in first sort tab"
+  select "All" in first sort tab" and/or deactivate "Automatically
+  select master playlist". You could also "block the display" to speed
+  up the display update.
+
