@@ -37,7 +37,6 @@ build-stamp: configure-stamp
 
 	# Add here commands to compile the package.
 	$(MAKE)
-	#/usr/bin/docbook-to-man debian/gtkpbbuttons.sgml > gtkpbbuttons.1
 
 	touch build-stamp
 
@@ -61,7 +60,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	# Add here commands to install the package into debian/gtkpbbuttons.
+	# Add here commands to install the package into debian/gtkpod.
 	$(MAKE) install prefix=$(CURDIR)/debian/gtkpod/usr
 
 
