@@ -149,7 +149,7 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 		break;
 	    
 	    case FILE_TYPE_UNKNOWN:
-		/* assume M3U style */
+		/* assume MISC (M3U like) style */
 		type = -2;
 		break;
 	}

@@ -79,7 +79,7 @@ static gint32 nm_get_soundcheck (Track *track)
 	if (track->radio_gain_set) 
 	    sc = replaygain_to_soundcheck (track->radio_gain);
     }
-
+    
     return sc;
 }
 

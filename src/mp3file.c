@@ -1492,18 +1492,27 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	if (strncmp(buf, "LAME", 4))
 		goto rg_fail;
 	
-	/* Check LAME Version (Dont know when fixed-point PeakSingleAmplitude
-	 * was introduced exactly. 3.94b will be used for now.) 
-	 * FIXME: Skip really old versions altogether. */
+	/* Check LAME Version */
 	if (fread(version, 1, 5, file) != 5)
 		goto rg_fail;
 	
+	/* Skip really old versions altogether. I am not sure when radio_gain
+	 * information was introduced. 3.89 does not seem to supprt it though.
+	 * */
+	if (lame_vcmp(version, "3.90") < 0) {
+/*		fprintf(stderr, "Old lame version (%c%c%c%c%c). Not used.\n",
+				version[0], version[1], version[2], version[3], version[4]); */
+		goto rg_fail;
+	}
+		
 	if (fseek(file, 0x2, SEEK_CUR) || (fread(buf, 1, 4, file) != 4))
 		goto rg_fail;
 
 	/* get the peak signal. */
 	ps = parse_lame_uint32(buf);
 	
+	/* Don't know when fixed-point PeakSingleAmplitude
+	 * was introduced exactly. 3.94b will be used for now.) */
 	if ((lame_vcmp(version, "3.94b") >= 0)) {
 		if ((!track->peak_signal_set) && ps) {
 			track->peak_signal = ps;
