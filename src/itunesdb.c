@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:20:41 jcs>
+/* Time-stamp: <2003-11-05 00:37:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1367,6 +1367,7 @@ gboolean itunesdb_copy_track_to_ipod (gchar *path, Track *track, gchar *pcfile)
 {
   static gint dir_num = -1;
   gchar *ipod_file = NULL, *ipod_fullfile = NULL;
+  gchar *original_suffix;
   gboolean success;
   gint32 oops = 0;
   gint pathlen = 0;
@@ -1384,17 +1385,24 @@ gboolean itunesdb_copy_track_to_ipod (gchar *path, Track *track, gchar *pcfile)
       return FALSE;
     }
 
+  /* we may need the original suffix of pcfile to construct a correct
+     ipod filename */
+  original_suffix = strrchr (pcfile, '.');
+  /* If there is no ".mp3", ".m4a" etc, set original_suffix to empty
+     string. Note: the iPod will most certainly ignore this file... */
+  if (!original_suffix) original_suffix = "";
+
   /* If track->ipod_path exists, we use that one instead. */
   ipod_fullfile = itunesdb_get_track_name_on_ipod (path, track);
   if (!ipod_fullfile) do
-  { /* we need to loop until we find a unused filename */
+  { /* we need to loop until we find an unused filename */
       if (ipod_file)     g_free(ipod_file);
       if (ipod_fullfile) g_free(ipod_fullfile);
       /* The iPod seems to need the .mp3 ending to play the track.
 	 Of course the following line should be changed once gtkpod
 	 also supports other formats. */
-      ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d.mp3",
-				   dir_num, track->ipod_id + oops);
+      ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d%s",
+				   dir_num, track->ipod_id + oops, original_suffix);
       ipod_fullfile = g_build_filename (path, ipod_file+1, NULL);
       /* There is a case-sensitivity problem on some systems (see note
        * at itunesdb_get_track_name_on_ipod (). The following code

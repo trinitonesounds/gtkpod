@@ -1,3 +1,9 @@
+gtkpod V0.61-CVS
+	NEW FEATURE: import of AAC files (.m4a and maybe .m4p) supported,
+	provided the mp4v2 library from the mpeg4ip project
+	(mpeg4ip.sourceforge.net) is available during the compilation of
+	gtkpod. Changing of TAGs is not yet implemented.
+
 gtkpod V0.60
 	NEW FEATURE: normalize song volume (using mp3gain). Uses iPod's
 	volume adjust feature rather than modifying the mp3 file.

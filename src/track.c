@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-03 19:42:24 jcs>
+/* Time-stamp: <2003-11-05 00:42:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -115,12 +115,12 @@ Track *add_track (Track *track)
 
 
 /* Make sure all strings are initialised -- that way we don't 
-   have to worry about it when we are handling the strings */
+   have to worry about it when we are handling the strings.
+   If a corresponding utf16 string is not set, it will be created from
+   the utf8 string */
 /* exception: md5_hash and hostname: these may be NULL. */
 void validate_entries (Track *track)
 {
-    gint sz = sizeof (gunichar2);
-
     if (!track) return;
 
     if (track->album == NULL)           track->album = g_strdup ("");
@@ -130,17 +130,25 @@ void validate_entries (Track *track)
     if (track->comment == NULL)         track->comment = g_strdup ("");
     if (track->composer == NULL)        track->composer = g_strdup ("");
     if (track->fdesc == NULL)           track->fdesc = g_strdup ("");
-    if (track->album_utf16 == NULL)     track->album_utf16 = g_malloc0 (sz);
-    if (track->artist_utf16 == NULL)    track->artist_utf16 = g_malloc0 (sz);
-    if (track->title_utf16 == NULL)     track->title_utf16 = g_malloc0 (sz);
-    if (track->genre_utf16 == NULL)     track->genre_utf16 = g_malloc0 (sz);
-    if (track->comment_utf16 == NULL)   track->comment_utf16 = g_malloc0 (sz);
-    if (track->composer_utf16 == NULL)  track->composer_utf16 = g_malloc0 (sz);
-    if (track->fdesc_utf16 == NULL)     track->fdesc_utf16 = g_malloc0 (sz);
     if (track->pc_path_utf8 == NULL)    track->pc_path_utf8 = g_strdup ("");
     if (track->pc_path_locale == NULL)  track->pc_path_locale = g_strdup ("");
     if (track->ipod_path == NULL)       track->ipod_path = g_strdup ("");
-    if (track->ipod_path_utf16 == NULL) track->ipod_path_utf16 = g_malloc0 (sz);
+    if (track->album_utf16 == NULL)     
+	track->album_utf16 = g_utf8_to_utf16 (track->album, -1, NULL, NULL, NULL);
+    if (track->artist_utf16 == NULL)
+	track->artist_utf16 = g_utf8_to_utf16 (track->artist, -1, NULL, NULL, NULL);
+    if (track->title_utf16 == NULL)
+	track->title_utf16 = g_utf8_to_utf16 (track->title, -1, NULL, NULL, NULL);
+    if (track->genre_utf16 == NULL)
+	track->genre_utf16 = g_utf8_to_utf16 (track->genre, -1, NULL, NULL, NULL);
+    if (track->comment_utf16 == NULL)
+	track->comment_utf16 = g_utf8_to_utf16 (track->comment, -1, NULL, NULL, NULL);
+    if (track->composer_utf16 == NULL)
+	track->composer_utf16 = g_utf8_to_utf16 (track->composer, -1, NULL, NULL, NULL);
+    if (track->fdesc_utf16 == NULL)
+	track->fdesc_utf16 = g_utf8_to_utf16 (track->fdesc, -1, NULL, NULL, NULL);
+    if (track->ipod_path_utf16 == NULL)
+	track->ipod_path_utf16 = g_utf8_to_utf16 (track->ipod_path, -1, NULL, NULL, NULL);
 }
 
 /**

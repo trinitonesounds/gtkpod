@@ -925,49 +925,40 @@ Track *file_get_mp3_info (gchar *name)
 
 	track = g_malloc0 (sizeof (Track));
 
-	track->pc_path_utf8 = charset_to_utf8 (name);
-	track->pc_path_locale = g_strdup (name);
-
 	/* Set modification date to modification date of file */
 	if (stat (name, &si) == 0)
 	    track->time_modified = itunesdb_time_host_to_mac (si.st_mtime);
 
 	track->fdesc = g_strdup ("MPEG audio file");
-	track->fdesc_utf16 = g_utf8_to_utf16 (track->fdesc, -1, NULL, NULL, NULL);
+
 	if (filetag.album)
 	{
 	    track->album = filetag.album;
-	    track->album_utf16 = g_utf8_to_utf16 (track->album, -1, NULL, NULL, NULL);
 	}
 
 	if (filetag.artist)
 	{
 	    track->artist = filetag.artist;
-	    track->artist_utf16 = g_utf8_to_utf16 (track->artist, -1, NULL, NULL, NULL);
 	}
 
 	if (filetag.title)
 	{
 	    track->title = filetag.title;
-	    track->title_utf16 = g_utf8_to_utf16 (track->title, -1, NULL, NULL, NULL);
 	}
 
 	if (filetag.genre)
 	{
 	    track->genre = filetag.genre;
-	    track->genre_utf16 = g_utf8_to_utf16 (track->genre, -1, NULL, NULL, NULL);
 	}
 
 	if (filetag.composer)
 	{
 	    track->composer = filetag.composer;
-	    track->composer_utf16 = g_utf8_to_utf16 (track->composer, -1, NULL, NULL, NULL);
 	}
 
 	if (filetag.comment)
 	{
 	    track->comment = filetag.comment;
-	    track->comment_utf16 = g_utf8_to_utf16 (track->comment, -1, NULL, NULL, NULL);
 	}
 	if (filetag.year == NULL)
 	{
@@ -998,7 +989,6 @@ Track *file_get_mp3_info (gchar *name)
 	    track->tracks = atoi(filetag.track_total);
 	    g_free (filetag.track_total);
 	}
-	track->size = filetag.size;
 	track->auto_charset = filetag.auto_charset;
     }
 

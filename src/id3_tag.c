@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-10 22:04:36 jcs>
+/* Time-stamp: <2003-11-05 00:59:08 jcs>
 |
 |  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
 |  compile "standalone" with the gtkpod project. 2002/11/24
@@ -99,7 +99,6 @@ static void Strip_String (gchar *string)
  */
 gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
 {
-    FILE   *file;
     ID3Tag *id3_tag = NULL;    /* Tag defined by the id3lib */
     gchar  *string, *string1, *string2;
 
@@ -108,19 +107,6 @@ gboolean Id3tag_Read_File_Tag (gchar *filename, File_Tag *FileTag)
         return FALSE;
 
     memset (FileTag, 0, sizeof (File_Tag));
-
-    if ( (file=fopen(filename,"r"))==NULL )
-    {
-	gchar *fbuf = charset_to_utf8 (filename);
-        g_print(_("ERROR while opening file: '%s' (%s).\n"),
-		fbuf, g_strerror(errno));
-	g_free (fbuf);
-        return FALSE;
-    }
-    fseek (file, 0, SEEK_END);
-    FileTag->size = ftell (file); /* get the filesize in bytes */
-    fclose(file); /* We close it cause id3lib opens/closes file itself */
-
 
     /* Get data from tag */
     if ( (id3_tag = ID3Tag_New()) )

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-03 21:38:21 jcs>
+/* Time-stamp: <2003-11-05 00:58:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -471,10 +471,24 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 
     if (nti)
     {
+	FILE *file;
+	/* set path file information */
+	nti->pc_path_utf8 = charset_to_utf8 (name);
+	nti->pc_path_locale = g_strdup (name);
+	/* set length of file */
+	file = fopen (name, "r");
+	if (file)
+	{
+	    fseek (file, 0, SEEK_END);
+	    nti->size = ftell (file); /* get the filesize in bytes */
+	    fclose(file);
+	}
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);
 	/* Make sure all strings are initialized -- that way we don't 
-	   have to worry about it when we are handling the strings */
+	   have to worry about it when we are handling the
+	   strings. Also, validate_entries() will fill in the utf16
+	   strings if that hasn't already been done. */
 	/* exception: md5_hash, charset and hostname: these may be NULL. */
 	validate_entries (nti);
 

@@ -43,7 +43,6 @@
 typedef struct _File_Tag File_Tag;
 struct _File_Tag
 {
-    gulong key;            /* Incremented value */
     gboolean saved;        /* Set to TRUE if this tag had been saved */
     gchar *title;          /* Title of track */
     gchar *artist;         /* Artist name */
@@ -54,7 +53,6 @@ struct _File_Tag
     gchar *genre;          /* Genre of song */
     gchar *comment;        /* Comment */
     gchar *composer;	   /* Composer */
-    guint32 size;          /* Size of file in bytes */
     guint32 songlen;       /* Length of file in ms */
     GList *other;          /* List of unsupported fields (used for ogg only) */
     gchar *auto_charset;   /* in case of auto-detection: which charset
