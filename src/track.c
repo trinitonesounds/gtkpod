@@ -408,6 +408,8 @@ void remove_duplicate (Song *oldsong, Song *song)
 		_("Duplicate detection"),/* title */
 		buf,                     /* label */
 		str->str,                /* scrolled text */
+		NULL, FALSE, NULL,  /* option 1 */
+		NULL, FALSE, NULL,  /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
 		NULL,               /* ConfHandlerCA confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/

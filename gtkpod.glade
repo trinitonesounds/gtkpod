@@ -1379,8 +1379,28 @@
       </child>
 
       <child>
-	<widget class="GtkHBox" id="hbox3">
-	  <property name="border_width">2</property>
+	<widget class="GtkVBox" id="option_vbox">
+	  <property name="visible">True</property>
+	  <property name="homogeneous">False</property>
+	  <property name="spacing">0</property>
+
+	  <child>
+	    <placeholder/>
+	  </child>
+
+	  <child>
+	    <placeholder/>
+	  </child>
+	</widget>
+	<packing>
+	  <property name="padding">2</property>
+	  <property name="expand">False</property>
+	  <property name="fill">False</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkHBox" id="hbox14">
 	  <property name="visible">True</property>
 	  <property name="homogeneous">True</property>
 	  <property name="spacing">0</property>
@@ -1404,7 +1424,7 @@
 	  </child>
 	</widget>
 	<packing>
-	  <property name="padding">2</property>
+	  <property name="padding">0</property>
 	  <property name="expand">False</property>
 	  <property name="fill">False</property>
 	</packing>

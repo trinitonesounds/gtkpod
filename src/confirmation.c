@@ -38,7 +38,9 @@ static GHashTable *id_hash = NULL;
 typedef struct {
     GtkWidget *window;
     gboolean  scrolled;
-    ConfHandlerCA confirm_again_handler;
+    ConfHandlerOpt option1_handler;
+    ConfHandlerOpt option2_handler;
+    ConfHandlerOpt confirm_again_handler;
     ConfHandler ok_handler;
     ConfHandler apply_handler;
     ConfHandler cancel_handler;
@@ -119,6 +121,30 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
     }
 }
 
+static void on_option1_toggled (GtkToggleButton *t, gpointer id)
+{
+    ConfData *cd;
+
+    cd = g_hash_table_lookup (id_hash, &id);
+    if (cd)
+    {
+	if (cd->option1_handler)
+	    cd->option1_handler (gtk_toggle_button_get_active(t));
+    }
+}
+
+static void on_option2_toggled (GtkToggleButton *t, gpointer id)
+{
+    ConfData *cd;
+
+    cd = g_hash_table_lookup (id_hash, &id);
+    if (cd)
+    {
+	if (cd->option2_handler)
+	    cd->option2_handler (gtk_toggle_button_get_active(t));
+    }
+}
+
 /* gtkpod_confirmation(): open a confirmation window with the
    information given. If "OK" is clicked, ok_handler() is called,
    otherwise cancel_handler() is called, each with the parameters
@@ -135,6 +161,10 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
    @title: title of the window
    @label: the text on the top of the window
    @text:  the text displayed in a scrolled window
+   @option_text: text for the option checkbox (or NULL)
+   @option_state: initial state of the option
+   @option_handler: callback for the option (is called with the
+           current state of the toggle box)
    @confirm_again:    state of the "confirm again" flag
    @confirm_again_handler: callback for the checkbox (is called with the
                     inverted current state of the toggle box)
@@ -157,8 +187,14 @@ gboolean gtkpod_confirmation (gint id,
 			      gchar *title,
 			      gchar *label,
 			      gchar *text,
+			      gchar *option1_text,
+			      gboolean option1_state,
+			      ConfHandlerOpt option1_handler,
+			      gchar *option2_text,
+			      gboolean option2_state,
+			      ConfHandlerOpt option2_handler,
 			      gboolean confirm_again,
-			      ConfHandlerCA confirm_again_handler,
+			      ConfHandlerOpt confirm_again_handler,
 			      ConfHandler ok_handler,
 			      ConfHandler apply_handler,
 			      ConfHandler cancel_handler,
@@ -232,6 +268,8 @@ gboolean gtkpod_confirmation (gint id,
     *idp = id;
     cd = g_malloc (sizeof (ConfData));
     cd->window = window;
+    cd->option1_handler = option1_handler;
+    cd->option2_handler = option2_handler;
     cd->confirm_again_handler = confirm_again_handler;
     if (ok_handler == CONF_NO_BUTTON)     cd->ok_handler = NULL;
     else                                  cd->ok_handler = ok_handler;
@@ -276,6 +314,38 @@ gboolean gtkpod_confirmation (gint id,
 	prefs_get_size_conf (&defx, &defy);
     }
     gtk_window_set_default_size (GTK_WINDOW (window), defx, defy);
+
+    /* Set "Option 1" checkbox */
+    w = lookup_widget (window, "option_vbox");
+    if (w && option1_handler && option1_text)
+    {
+	GtkWidget *option1_button =
+	    gtk_check_button_new_with_mnemonic (option1_text);
+	gtk_widget_show (option1_button);
+	gtk_box_pack_start (GTK_BOX (w), option1_button, FALSE, FALSE, 2);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(option1_button),
+				     option1_state);
+	g_signal_connect ((gpointer)option1_button,
+			  "toggled",
+			  G_CALLBACK (on_option1_toggled),
+			  (gpointer)id);
+    }
+
+    /* Set "Option 2" checkbox */
+    w = lookup_widget (window, "option_vbox");
+    if (w && option2_handler && option2_text)
+    {
+	GtkWidget *option2_button =
+	    gtk_check_button_new_with_mnemonic (option2_text);
+	gtk_widget_show (option2_button);
+	gtk_box_pack_start (GTK_BOX (w), option2_button, FALSE, FALSE, 2);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(option2_button),
+				     option2_state);
+	g_signal_connect ((gpointer)option2_button,
+			  "toggled",
+			  G_CALLBACK (on_option2_toggled),
+			  (gpointer)id);
+    }
 
     /* Set "Never Again" checkbox */
     w = lookup_widget(window, "never_again");

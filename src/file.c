@@ -720,6 +720,8 @@ No valid directories have been found. Sync aborted.\n"));
 		_("Synchronize directories"), /* title */
 		_("OK to synchronize the following directories?"),
 		str->str,               /* text */
+		NULL, FALSE, NULL,      /* option 1 */
+		NULL, FALSE, NULL,      /* option 2 */
 		prefs_get_show_sync_dirs(),/* gboolean confirm_again, */
 		prefs_set_show_sync_dirs,/* confirm_again_handler*/
 		sync_dir_ok,            /* ConfHandler ok_handler,*/
@@ -841,6 +843,8 @@ void display_non_updated (Song *song, gchar *txt)
 		_("Failed Song Update"),   /* title */
 		buf,                /* label */
 		str->str,           /* scrolled text */
+		NULL, FALSE, NULL,      /* option 1 */
+		NULL, FALSE, NULL,      /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
 		prefs_set_show_non_updated,/* confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/
@@ -903,6 +907,8 @@ void display_updated (Song *song, gchar *txt)
 		_("Successful Song Update"),   /* title */
 		buf,                /* label */
 		str->str,           /* scrolled text */
+		NULL, FALSE, NULL,      /* option 1 */
+		NULL, FALSE, NULL,      /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
 		prefs_set_show_updated,/* confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/

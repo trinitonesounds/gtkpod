@@ -657,8 +657,10 @@ void gtkpod_warning (const gchar *format, ...)
 			 _("Warning"),              /* title */
 			 _("The following has occured:"),
 			 text,                /* text to be displayed */
+			 NULL, FALSE, NULL,   /* option 1 */
+			 NULL, FALSE, NULL,   /* option 2 */
 			 TRUE,                /* gboolean confirm_again, */
-			 NULL, /* ConfHandlerCA confirm_again_handler, */
+			 NULL, /* ConfHandlerOpt confirm_again_handler, */
 			 NULL, /* ConfHandler ok_handler,*/
 			 CONF_NO_BUTTON,      /* don't show "Apply" */
 			 CONF_NO_BUTTON,      /* cancel_handler,*/
@@ -1011,9 +1013,11 @@ void ipod_directories_head (void)
 			 FALSE,               /* gboolean modal, */
 			 _("Create iPod directories"), /* title */
 			 _("OK to create the following directories?"),
-			 str->str,
+		         str->str,
+			 NULL, FALSE, NULL,  /* option 1 */
+			 NULL, FALSE, NULL,  /* option 2 */
 			 TRUE,               /* gboolean confirm_again, */
-			 NULL, /* ConfHandlerCA confirm_again_handler, */
+			 NULL, /* ConfHandlerOpt confirm_again_handler, */
 			 ipod_directories_ok, /* ConfHandler ok_handler,*/
 			 CONF_NO_BUTTON,      /* don't show "Apply" */
 			 ipod_directories_cancel, /* cancel_handler,*/
@@ -1072,8 +1076,10 @@ void delete_playlist_head (void)
 	 _("Delete Playlist?"), /* title */
 	 buf,                   /* label */
 	 NULL,                  /* scrolled text */
+	 NULL, FALSE, NULL,     /* option 1 */
+	 NULL, FALSE, NULL,     /* option 2 */
 	 prefs_get_playlist_deletion (),   /* gboolean confirm_again, */
-	 prefs_set_playlist_deletion, /* ConfHandlerCA confirm_again_handler,*/
+	 prefs_set_playlist_deletion, /* ConfHandlerOpt confirm_again_handler,*/
 	 delete_playlist_ok, /* ConfHandler ok_handler,*/
 	 CONF_NO_BUTTON,     /* don't show "Apply" button */
 	 NULL,               /* cancel_handler,*/
@@ -1097,7 +1103,7 @@ void delete_playlist_head (void)
 void delete_populate_settings (Playlist *pl, GList *selected_songs,
 			       gchar **label, gchar **title,
 			       gboolean *confirm_again,
-			       ConfHandlerCA *confirm_again_handler,
+			       ConfHandlerOpt *confirm_again_handler,
 			       GString **str)
 {
     Song *s;
@@ -1188,7 +1194,7 @@ void delete_song_head (void)
     GString *str;
     gchar *label, *title;
     gboolean confirm_again;
-    ConfHandlerCA confirm_again_handler;
+    ConfHandlerOpt confirm_again_handler;
 
     pl = pm_get_selected_playlist();
     if (pl == NULL)
@@ -1213,8 +1219,10 @@ void delete_song_head (void)
 	 title,                /* title */
 	 label,                /* label */
 	 str->str,             /* scrolled text */
+	 NULL, FALSE, NULL,    /* option 1 */
+	 NULL, FALSE, NULL,    /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
-	 confirm_again_handler,/* ConfHandlerCA confirm_again_handler,*/
+	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
 	 delete_song_ok,       /* ConfHandler ok_handler,*/
 	 CONF_NO_BUTTON,       /* don't show "Apply" button */
 	 delete_song_cancel,   /* cancel_handler,*/
@@ -1283,7 +1291,7 @@ void delete_entry_head (gint inst)
     GString *str;
     gchar *label, *title;
     gboolean confirm_again;
-    ConfHandlerCA confirm_again_handler;
+    ConfHandlerOpt confirm_again_handler;
     TabEntry *entry;
 
     if ((inst < 0) || (inst > prefs_get_sort_tab_num ()))   return;
@@ -1329,8 +1337,10 @@ void delete_entry_head (gint inst)
 	 title,                /* title */
 	 label,                /* label */
 	 str->str,             /* scrolled text */
+	 NULL, FALSE, NULL,    /* option 1 */
+	 NULL, FALSE, NULL,    /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
-	 confirm_again_handler,/* ConfHandlerCA confirm_again_handler,*/
+	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
 	 delete_entry_ok,      /* ConfHandler ok_handler,*/
 	 CONF_NO_BUTTON,       /* don't show "Apply" button */
 	 delete_entry_cancel,  /* cancel_handler,*/
