@@ -88,6 +88,11 @@
 #include "display.h"
 #include "md5.h"
 
+/* For OS with non-GNU getopt library */
+#ifndef getopt_long_only
+#define getopt_long_only getopt_long
+#endif
+
 /* global config struct */
 /* FIXME: make me static */
 struct cfg *cfg = NULL;

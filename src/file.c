@@ -354,6 +354,7 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 {
     Song *song = NULL;
     File_Tag *filetag;
+    mp3info *mp3info;
     gint len;
 
     if (!name) return NULL;
@@ -449,14 +450,25 @@ static Song *get_song_info_from_file (gchar *name, Song *or_song)
 	    song->tracks = atoi(filetag->track_total);
 	    g_free (filetag->track_total);
 	}
-
-	if (filetag->songlen)   song->songlen = filetag->songlen;
 	song->size = filetag->size;
-	song->songlen = get_song_time (name);
-	song->bitrate = ((gint)
-			 ((double)song->size*8/song->songlen+0.5)) * 1000;
     }
     g_free (filetag);
+
+    /* Get additional info (play time and bitrate */
+    mp3info = mp3file_get_info (name);
+    if (mp3info)
+    {
+	song->songlen = mp3info->milliseconds;
+	song->bitrate = (gint)(mp3info->vbr_average * 1000);
+	g_free (mp3info);
+    }
+    /* Fall back to xmms code if songlen is 0 */
+    if (song->songlen == 0)
+    {
+	song->songlen = get_song_time (name);
+	if (song->songlen)
+	    song->bitrate = (float)song->size*8000/song->songlen;
+    }
 
     /* set charset used */
     update_charset_info (song);

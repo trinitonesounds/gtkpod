@@ -302,6 +302,7 @@ You should have received a copy of the GNU General Public License along with thi
 The code handling the reading and writing of the iTunesDB was ported from mktunes.pl of the gnuPod package written by Adrian Ulrich (http://www.gnu.org/software/gnupod/). Adrian Ulrich ported the playlist part.\n\
 \n\
 This program borrows code from the following projects:\n\
+    mp3info: mp3 playlength detection\n\
     xmms:    dirbrowser, mp3 playlength detection (http://www.xmms.org)\n\
     easytag: reading and writing of ID3 tags (http://easytag.sourceforge.net)\n\
 \n\
