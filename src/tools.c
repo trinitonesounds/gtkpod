@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-04 23:56:41 jcs>
+/* Time-stamp: <2004-11-04 21:47:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -412,7 +412,7 @@ static gboolean tools_sync_script (SyncType type)
 
     tools_sync_replace_percent_i (argv);
 
-    script_path = which (argv[0]);
+    script_path = g_find_program_in_path (argv[0]);
     if (!script_path)
     {
 	gtkpod_warning (_("Could not find the command '%s'.\n\nPlease verify the setting in the 'Tools' section of the preferences dialog.\n\n"), argv[0]);
@@ -525,7 +525,7 @@ do_command_on_entries (const gchar *command, const gchar *what,
     }
     while (g_ascii_isspace (*command))  ++command;
     /* get the full path */
-    commandc = which (str);
+    commandc = g_find_program_in_path (str);
     if (!commandc)
     {
 	gchar *buf = g_strdup_printf (_("Could not find command '%s' specified for '%s'"),

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 00:14:12 JST jcs>
+/* Time-stamp: <2004-11-04 22:52:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,6 +30,7 @@
 #define CLIENTSERVERH_INCLUDED 1
 
 #include <glib.h>
+#include "config.h"
 
 extern const gchar *SOCKET_TEST;
 extern const gchar *SOCKET_PLYC;
@@ -37,4 +38,9 @@ extern const gchar *SOCKET_PLYC;
 void server_setup (void);
 void server_shutdown (void);
 gboolean client_playcount (gchar *file);
+#ifndef HAVE_FLOCK
+/* emulate flock on systems that do not have it */
+int flock(int fd, int operation);
+#endif
+
 #endif

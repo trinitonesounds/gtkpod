@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-15 21:33:11 jcs>
+/* Time-stamp: <2004-11-04 22:52:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -26,6 +26,7 @@
 |  $Id$
 */
 
+#include "config.h"
 #include "clientserver.h"
 #include "md5.h"
 #include "misc.h"
@@ -52,6 +53,27 @@ static guint inp_handler;
 
 const gchar *SOCKET_TEST="TEST:";
 const gchar *SOCKET_PLYC="PLYC:";
+
+
+#ifndef HAVE_FLOCK
+/* emulate flock on systems that do not have it */
+int flock(int fd, int operation)
+{
+    struct flock      f;
+    memset(&f, 0, sizeof (f));
+
+    switch (operation)
+    {
+      LOCK_EX:
+	f.l_type = F_WRLCK;
+	return fcntl(fileno (file), F_SETLKW, &f);
+    default:
+	g_warning ("*** flock operation '%d' not implemented.\n");
+	return -1;
+    }
+}
+#endif
+
 
 /* set the path to the socket name */
 static void set_path (struct sockaddr_un *saddr)

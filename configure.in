@@ -57,6 +57,10 @@ dnl (providing getopt_long*) will be included into the binary.
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)]) 
 AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
 
+dnl Check if flock() is available (seems to be missing on some
+dnl solaris versions)
+AC_CHECK_FUNCS(flock)
+
 dnl Check for libid3tag
 AC_CHECK_LIB([id3tag], [id3_frame_field], ,
              AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))

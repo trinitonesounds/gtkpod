@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-04 23:49:01 jcs>
+/* Time-stamp: <2004-11-04 21:47:45 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1742,7 +1742,7 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
     /* use default if not */
     if (!mp3gain_set || !(*mp3gain_set)) mp3gain_set = "mp3gain";
     /* find full path */
-    mp3gain_path = which (mp3gain_set);
+    mp3gain_path = g_find_program_in_path (mp3gain_set);
     /* show error message if mp3gain cannot be found */
     if (!mp3gain_path)
     {

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-05 23:01:24 jcs>
+/* Time-stamp: <2004-11-04 21:47:45 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -249,7 +249,7 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 	buf = g_strdup (path);
 
     /* get full path */
-    fbuf = which (buf);
+    fbuf = g_find_program_in_path (buf);
     if (!fbuf) fbuf = g_strdup (buf);
 
     if (fbuf)

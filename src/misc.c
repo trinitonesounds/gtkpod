@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-10-02 01:05:27 jcs>
+|  Time-stamp: <2004-11-04 21:47:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -670,35 +670,6 @@ void call_script (gchar *script)
     C_FREE (cfgdir);
 }
 
-
-
-/**
- * which - run the shell command which, useful for querying default values
- * for executable,
- * @name - the executable we're trying to find the path for
- * Returns the path to the executable, NULL on not found.
- * Return value must be g_free'd when no longer used.
- */
-gchar*
-which(const gchar *exe)
-{
-    FILE *fp = NULL;
-    gchar *result = NULL;
-    gchar buf[PATH_MAX];
-    gchar *which_exec = NULL;
-
-    memset(&buf[0], 0, PATH_MAX);
-    which_exec = g_strdup_printf("which %s", exe);
-    if((fp = popen(which_exec, "r")))
-    {
-	int read_bytes = 0;
-	if((read_bytes = fread(buf, sizeof(gchar), PATH_MAX, fp)) > 0)
-	    result = g_strndup(buf, read_bytes-1);
-	pclose(fp);
-    }
-    C_FREE(which_exec);
-    return(result);
-}
 
 
 /* compare @str1 and @str2 case-sensitively or case-insensitively

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 16:43:13 jcs>
+/* Time-stamp: <2004-11-04 21:47:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -140,7 +140,6 @@ guint32 utf16_strlen (gunichar2 *utf16);
 gunichar2 *utf16_strdup (gunichar2 *utf16);
 
 void check_db (void);
-gchar *which(const gchar *exe);
 
 void do_selected_tracks (void (*do_func)(GList *trackids));
 void do_selected_entry (void (*do_func)(GList *trackids), gint inst);
