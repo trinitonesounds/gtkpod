@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2003-11-30 00:58+0900\n"
+"POT-Creation-Date: 2003-11-30 10:47+0900\n"
 "PO-Revision-Date: 2003-11-29 12:25+0100\n"
 "Last-Translator: \n"
 "Language-Team:  <it@li.org>\n"
