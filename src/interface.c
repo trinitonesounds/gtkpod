@@ -1873,7 +1873,7 @@ create_prefs_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 20, 0);
 
-  label152 = gtk_label_new (_("As a last resort set the following tags to the filaneme if they are (still) empty:"));
+  label152 = gtk_label_new (_("As a last resort set the following tags to the filename if they are (still) empty:"));
   gtk_widget_show (label152);
   gtk_box_pack_start (GTK_BOX (vbox55), label152, FALSE, FALSE, 4);
   gtk_label_set_line_wrap (GTK_LABEL (label152), TRUE);
@@ -4480,6 +4480,9 @@ create_gtkpod_info (void)
   GtkWidget *gtkpod_info;
   GdkPixbuf *gtkpod_info_icon_pixbuf;
   GtkWidget *vbox56;
+  GtkWidget *hbox67;
+  GtkWidget *label176;
+  GtkWidget *itdb_combobox;
   GtkWidget *scrolledwindow10;
   GtkWidget *viewport7;
   GtkWidget *vbox57;
@@ -4550,6 +4553,18 @@ create_gtkpod_info (void)
   vbox56 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox56);
   gtk_container_add (GTK_CONTAINER (gtkpod_info), vbox56);
+
+  hbox67 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox67);
+  gtk_box_pack_start (GTK_BOX (vbox56), hbox67, FALSE, TRUE, 5);
+
+  label176 = gtk_label_new (_("Database: "));
+  gtk_widget_show (label176);
+  gtk_box_pack_start (GTK_BOX (hbox67), label176, FALSE, FALSE, 6);
+
+  itdb_combobox = gtk_combo_box_new_text ();
+  gtk_widget_show (itdb_combobox);
+  gtk_box_pack_start (GTK_BOX (hbox67), itdb_combobox, FALSE, TRUE, 0);
 
   scrolledwindow10 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow10);
@@ -4986,6 +5001,9 @@ create_gtkpod_info (void)
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (gtkpod_info, gtkpod_info, "gtkpod_info");
   GLADE_HOOKUP_OBJECT (gtkpod_info, vbox56, "vbox56");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, hbox67, "hbox67");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, label176, "label176");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, itdb_combobox, "itdb_combobox");
   GLADE_HOOKUP_OBJECT (gtkpod_info, scrolledwindow10, "scrolledwindow10");
   GLADE_HOOKUP_OBJECT (gtkpod_info, viewport7, "viewport7");
   GLADE_HOOKUP_OBJECT (gtkpod_info, vbox57, "vbox57");

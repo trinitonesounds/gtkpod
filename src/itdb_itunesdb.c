@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-20 00:24:13 jcs>
+/* Time-stamp: <2005-01-21 22:49:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -685,6 +685,24 @@ guint32 itdb_tracks_number (Itdb_iTunesDB *itdb)
 }
 
 
+guint32 itdb_tracks_number_nontransfered (Itdb_iTunesDB *itdb)
+{
+    guint n = 0;
+    GList *gl;
+    g_return_val_if_fail (itdb, 0);
+
+
+
+    for (gl = tracks; gl; gl=gl->next)
+    {
+	Itdb_Track *track = gl->data;
+	if (!track->transferred)   ++n;
+    }
+    return n;
+}
+
+
+
 /* Creates a new Itdb_iTunesDB with the unknowns filled in to reasonable
    values */
 Itdb_iTunesDB *itdb_new (void)
@@ -762,7 +780,7 @@ static void *get_mhod (FContents *cts, gulong mhod_seek,
 	  g_set_error (&cts->error,
 		       ITDB_FILE_ERROR,
 		       ITDB_FILE_ERROR_CORRUPT,
-		       _("Itdb_iTunesDB corrupt: no MHOD at offset %ld in file '%s'."),
+		       _("iTunesDB corrupt: no MHOD at offset %ld in file '%s'."),
 		       mhod_seek, cts->filename);
       }
       return NULL;
@@ -835,7 +853,7 @@ static void *get_mhod (FContents *cts, gulong mhod_seek,
       if (cmp_n_bytes_seek (cts, "SLst", seek, 4))
       {
 	  /* !!! for some reason the SLst part is the only part of the
-	     Itdb_iTunesDB with big-endian encoding, including UTF16
+	     iTunesDB with big-endian encoding, including UTF16
 	     strings */
 	  gint i;
 	  guint32 numrules;
@@ -847,7 +865,7 @@ static void *get_mhod (FContents *cts, gulong mhod_seek,
 	  splrs->match_operator = get32bint (cts, seek+12);
 	  if (cts->error) return NULL;
 	  seek += 136;  /* I can't find this value stored in the
-			   Itdb_iTunesDB :-( */
+			   iTunesDB :-( */
 	  for (i=0; i<numrules; ++i)
 	  {
 	      guint32 length;
@@ -931,7 +949,7 @@ static void *get_mhod (FContents *cts, gulong mhod_seek,
       }
       break;
   default:
-      g_warning (_("Encountered unknown MHOD type (%d) while parsing the Itdb_iTunesDB. Ignoring.\n\n"), *mty);
+      g_warning (_("Encountered unknown MHOD type (%d) while parsing the iTunesDB. Ignoring.\n\n"), *mty);
       break;
   }
   *ml = len;
@@ -1012,7 +1030,7 @@ static glong get_pl (FImport *fimp, glong seek)
       g_set_error (&fimp->error,
 		   ITDB_FILE_ERROR,
 		   ITDB_FILE_ERROR_CORRUPT,
-		   _("Itdb_iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."),
+		   _("iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."),
 		   seek, cts->filename);
       return -1;
   }
@@ -1023,7 +1041,7 @@ static glong get_pl (FImport *fimp, glong seek)
   tracknum = get32lint (cts, seek+16); /* number of tracks in playlist */
   CHECK_ERROR (fimp, -1);
   plitem = itdb_playlist_new (NULL, FALSE);
-  /* Some Itdb_Playlists have added 256 to their type -- I don't know what
+  /* Some Playlists have added 256 to their type -- I don't know what
      it's for, so we just ignore it for now -> & 0xff */
   plitem->type = get32lint (cts, seek+20) & 0xff;
   CHECK_ERROR (fimp, -1);
@@ -1108,7 +1126,7 @@ static glong get_pl (FImport *fimp, glong seek)
       if (plitem->type == ITDB_PL_TYPE_MPL)
 	  plitem->name = _("Master-PL");
       else
-	  plitem->name = _("Itdb_Playlist");
+	  plitem->name = _("Playlist");
   }
 
 #if ITUNESDB_DEBUG
@@ -1130,7 +1148,7 @@ static glong get_pl (FImport *fimp, glong seek)
 	  g_set_error (&fimp->error,
 		       ITDB_FILE_ERROR,
 		       ITDB_FILE_ERROR_CORRUPT,
-		       _("Itdb_iTunesDB corrupt: found mhyp at %ld in file '%s'."),
+		       _("iTunesDB corrupt: found mhyp at %ld in file '%s'."),
 		       seek, cts->filename);
 	  return -1;
       }
@@ -1431,7 +1449,7 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
 
     g_assert (fimp && cts);
 
-    if (!plname) plname = _("OTG Itdb_Playlist");
+    if (!plname) plname = _("OTG Playlist");
 
     if (!cmp_n_bytes_seek (cts, "mhpo", 0, 4))
     {
@@ -1497,13 +1515,13 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
 }
 
 
-/* Add the On-The-Go Itdb_Playlist(s) to the database */
+/* Add the On-The-Go Playlist(s) to the database */
 /* The OTG-Files are located in the directory given by
    fimp->itdb->itdb_filename.
    On error FALSE is returned and fimp->error is set accordingly. */
 static gboolean read_OTG_playlists (FImport *fimp)
 {
-    gchar *db[] = {"OTGItdb_PlaylistInfo", NULL};
+    gchar *db[] = {"OTG_PlaylistInfo", NULL};
     gchar *dirname, *otgname;
 
     g_assert (fimp);
@@ -1515,14 +1533,14 @@ static gboolean read_OTG_playlists (FImport *fimp)
     otgname = itdb_resolve_path (dirname, (const gchar **)db);
 
 
-    /* only parse if "OTGItdb_PlaylistInfo" exists */
+    /* only parse if "OTG_PlaylistInfo" exists */
     if (otgname)
     {
 	gchar *filename;
 	gint i=1;
 	do
 	{
-	    db[0] = g_strdup_printf ("OTGItdb_PlaylistInfo_%d", i);
+	    db[0] = g_strdup_printf ("OTG_PlaylistInfo_%d", i);
 	    filename = itdb_resolve_path (dirname, (const gchar **)db);
 	    g_free (db[0]);
 	    if (filename)
@@ -1530,7 +1548,7 @@ static gboolean read_OTG_playlists (FImport *fimp)
 		FContents *cts = fcontents_read (filename, &fimp->error);
 		if (cts)
 		{
-		    gchar *plname = g_strdup_printf (_("OTG Itdb_Playlist %d"), i);
+		    gchar *plname = g_strdup_printf (_("OTG Playlist %d"), i);
 		    process_OTG_file (fimp, cts, plname);
 		    g_free (plname);
 		    fcontents_free (cts);
@@ -1573,7 +1591,7 @@ static gboolean parse_fimp (FImport *fimp)
 	    g_set_error (&fimp->error,
 			 ITDB_FILE_ERROR,
 			 ITDB_FILE_ERROR_CORRUPT,
-			 _("Not a Itdb_iTunesDB: '%s' (missing mhdb header)."),
+			 _("Not a iTunesDB: '%s' (missing mhdb header)."),
 			 cts->filename);
 	}
 	return FALSE;
@@ -1589,7 +1607,7 @@ static gboolean parse_fimp (FImport *fimp)
 	g_set_error (&fimp->error,
 		     ITDB_FILE_ERROR,
 		     ITDB_FILE_ERROR_CORRUPT,
-		     _("Itdb_iTunesDB ('%s'): header length of mhsd hunk smaller than expected (%ld<32). Aborting."),
+		     _("iTunesDB ('%s'): header length of mhsd hunk smaller than expected (%ld<32). Aborting."),
 		     cts->filename, seek);
 	return FALSE;
     }
@@ -1621,7 +1639,7 @@ static gboolean parse_fimp (FImport *fimp)
 		    g_set_error (&fimp->error,
 				 ITDB_FILE_ERROR,
 				 ITDB_FILE_ERROR_CORRUPT,
-				 _("Itdb_iTunesDB '%s' corrupt: already found two playlist mhsds -- giving up."),
+				 _("iTunesDB '%s' corrupt: already found two playlist mhsds -- giving up."),
 				 cts->filename);
 		    return FALSE;
 		}
@@ -1667,7 +1685,7 @@ static gboolean parse_fimp (FImport *fimp)
 	    g_set_error (&fimp->error,
 			 ITDB_FILE_ERROR,
 			 ITDB_FILE_ERROR_CORRUPT,
-			 _("Itdb_iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."),
+			 _("iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."),
 			 seek, cts->filename);
 	    return FALSE;
 	}
@@ -1682,7 +1700,7 @@ static gboolean parse_fimp (FImport *fimp)
 	if (fimp->error)  return FALSE;
 	if (seek == -1)
 	{   /* this should not be -- issue warning */
-	    g_warning (_("Itdb_iTunesDB possibly corrupt: number of tracks (mhit hunks) inconsistent. Trying to continue.\n"));
+	    g_warning (_("iTunesDB possibly corrupt: number of tracks (mhit hunks) inconsistent. Trying to continue.\n"));
 	    break;
 	}
     }
@@ -1691,7 +1709,7 @@ static gboolean parse_fimp (FImport *fimp)
     seek = pl_mhsd;
     for (;;)
     {   /* this is all a bit of magic to make sure we can handle
-	   slightly "off-standard" Itdb_iTunesDBs as well. Normally we
+	   slightly "off-standard" iTunesDBs as well. Normally we
 	   would expect hunks in the following order: <mhsd type 2>,
 	   <mhlp> containing the number of playlists, <mhyp>: first
 	   playlist header. Here we just scan everything until we find
@@ -1702,7 +1720,7 @@ static gboolean parse_fimp (FImport *fimp)
 	    g_set_error (&fimp->error,
 			 ITDB_FILE_ERROR,
 			 ITDB_FILE_ERROR_CORRUPT,
-			 _("Itdb_iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."),
+			 _("iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."),
 			 seek, cts->filename);
 	    return FALSE;
 	}
@@ -1752,7 +1770,7 @@ static gboolean parse_fimp (FImport *fimp)
     }
 
 #if ITUNESDB_DEBUG
-    fprintf(stderr, "Itdb_iTunesDB part2 starts at: %x\n", (int)seek);
+    fprintf(stderr, "iTunesDB part2 starts at: %x\n", (int)seek);
 #endif
 
     for (i=0; i<nr_playlists; ++i)
@@ -1761,7 +1779,7 @@ static gboolean parse_fimp (FImport *fimp)
 	if (fimp->error) return FALSE;
 	if (seek == -1)
 	{   /* this should not be -- issue warning */
-	    g_warning (_("Itdb_iTunesDB possibly corrupt: number of playlists (mhyp hunks) inconsistent. Trying to continue.\n"));
+	    g_warning (_("iTunesDB possibly corrupt: number of playlists (mhyp hunks) inconsistent. Trying to continue.\n"));
 	    break;
 	}
     }
@@ -1779,7 +1797,7 @@ Itdb_iTunesDB *itdb_parse (const gchar *mp, GError **error)
 {
     gchar *filename;
     Itdb_iTunesDB *itdb = NULL;
-    const gchar *db[] = {"iPod_Control","iTunes","Itdb_iTunesDB",NULL};
+    const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
 
     filename = itdb_resolve_path (mp, db);
     if (filename)
@@ -1847,9 +1865,9 @@ Itdb_iTunesDB *itdb_parse_file (const gchar *filename, GError **error)
 }
 
 
-/* up to here we had the functions for reading the Itdb_iTunesDB               */
+/* up to here we had the functions for reading the iTunesDB               */
 /* ---------------------------------------------------------------------- */
-/* from here on we have the functions for writing the Itdb_iTunesDB            */
+/* from here on we have the functions for writing the iTunesDB            */
 
 /* Name of the device in utf16 */
 gunichar2 ipod_name[] = { 'g', 't', 'k', 'p', 'o', 'd', 0 };
@@ -2237,7 +2255,7 @@ static void mk_mhod (WContents *cts, enum MHOD_ID type, void *data)
 	  put32lint (cts, type);     /* type of the entry        */
 	  put32_n0 (cts, 2);           /* unknown                  */
 	  /* end of header, start of data */
-	  /* For some reason this is the only part of the Itdb_iTunesDB
+	  /* For some reason this is the only part of the iTunesDB
 	     that uses big endian */
 	  put_data (cts, "SLst", 4);      /* header               */
 	  put32bint (cts, splrs->unk004); /* unknown              */
@@ -2486,7 +2504,7 @@ static gboolean write_playlist(FExport *fexp, Itdb_Playlist *pl)
     mhyp_seek = cts->pos;
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "Itdb_Playlist: %s (%d tracks)\n", pl->name, track_num);
+  fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, track_num);
 #endif
 
     put_data (cts, "mhyp", 4);    /* header                    */
@@ -2647,7 +2665,7 @@ static void wcontents_free (WContents *cts)
 }
 
 
-/* Do the actual writing to the Itdb_iTunesDB */
+/* Do the actual writing to the iTunesDB */
 gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 			  GError **error)
 {
@@ -2685,15 +2703,20 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
     }
     wcontents_free (cts);
     g_free (fexp);
+    if (result == TRUE)
+    {
+	g_free (itdb->filename);
+	itdb->filename = g_strdup (filename);
+    }
     return result;
 }
 
-/* Write out an Itdb_iTunesDB.
+/* Write out an iTunesDB.
 
    An existing "Play Counts" file is renamed to "Play Counts.bak" if
    the export was successful.
 
-   An existing "OTGItdb_PlaylistInfo" file is removed if the export was
+   An existing "OTG_PlaylistInfo" file is removed if the export was
    successful.
 
    Returns TRUE on success, FALSE on error, in which case @error is
@@ -2724,7 +2747,7 @@ gboolean itdb_write (Itdb_iTunesDB *itdb, const gchar *mp, GError **error)
 	return FALSE;
     }
 
-    itunes_filename = g_build_filename (itunes_path, "Itdb_iTunesDB", NULL);
+    itunes_filename = g_build_filename (itunes_path, "iTunesDB", NULL);
 
     result = itdb_write_file (itdb, itunes_filename, error);
 
@@ -2739,7 +2762,7 @@ gboolean itdb_write (Itdb_iTunesDB *itdb, const gchar *mp, GError **error)
 
 
 /* (Renames/removes some files on the iPod (Playcounts, OTG
-   semaphore). May have to be called if you write the Itdb_iTunesDB not
+   semaphore). May have to be called if you write the iTunesDB not
    directly to the iPod but to some other location and then manually
    copy the file from there to the iPod. */
 /* Returns FALSE on error and sets @error accordingly */
@@ -2747,7 +2770,7 @@ gboolean itdb_rename_files (const gchar *mp, GError **error)
 {
     const gchar *db_itd[] =  {"iPod_Control", "iTunes", NULL};
     const gchar *db_plc_o[] = {"Play Counts", NULL};
-    const gchar *db_otg[] = {"OTGItdb_PlaylistInfo", NULL};
+    const gchar *db_otg[] = {"OTG_PlaylistInfo", NULL};
     gchar *itunesdir;
     gchar *plcname_o;
     gchar *plcname_n;
@@ -2788,7 +2811,7 @@ gboolean itdb_rename_files (const gchar *mp, GError **error)
 	}
     }
 
-    /* remove "OTGItdb_PlaylistInfo" (the iPod will remove the remaining
+    /* remove "OTG_PlaylistInfo" (the iPod will remove the remaining
      * files */
     if (otgname)
     {

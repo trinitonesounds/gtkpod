@@ -134,6 +134,15 @@ kulenfuster@...
   arbitrary "conversion" on export: user provides a command line in
   the prefs dialogue that is executed instead of the simple copy
   command (should also support faac).
+> I think this could be implemented like this: (Juho Routakorpi)
+> 1. User adds a track (or a directory containing a track) in format X
+> 2. gtkpod notices this and adds this to conversion queue, starts conversion 
+> immediatelly in the background
+> 3. If all format X files aren't converted when user commits sync, then format
+> X songs are put to end of transfer queue
+> 4. Temporary files are deleted on exit (if user has chose so)
+
+
 
 
 -- Larry Marso
@@ -165,6 +174,25 @@ kulenfuster@...
 > checkbox.  Alternatively, I can select a single album, or even a 
 > single song.
 
+> I have a question: (Will Richey)
+>  - Could Offline mode be modified such that it handles the unmounting /
+>    remounting of the iPod?  I'd like to be able to leave gtkpod running,
+>    detach the iPod and see the changes, then reattach and reconnect.
+This would also include that gtkpod.in and gtkpod.out are called only
+if not in offline mode. When switching from offline to online, mount
+and gtkpod.in should be called. When switching from online to offline
+gtkpod.out should be called. Further, the README file should be edited
+to reflect the change.
+
+(Michael)
+> Second issue - when I delete a playlist and add a playlist with many of  
+> the same identical songs, it looks like gtkpod does in fact delete the   
+> files from the iPod and recopy them to the iPod.
+Yes -- once they are removed, they are removed.
+> 
+> It would be nice if it did not do that.
+Could be done by checking against the "pending_deletion" list by md5 hash
+before adding a new track.
 
 
 
@@ -246,3 +274,123 @@ Please add/report bugs as you find them (jcsjcs at users dot
 sourceforge dot net).
 
 
+-----------------------------------------
+Equalizer: (Julien Oster)
+As you certainly have noticed, the internal iPod equalizer is causing 
+ugly clipping (and thus horrible bass distortion) when using bass 
+booster settings with a lot of MP3s. Googling around quickly revealed a 
+forum posts (http://www5.head-fi.org/forums/showthread.php?t=84088) 
+which suggests using mp3gain to lower the level of MP3s. That way, 
+clipping no longer occurs. The forum thread also reports that doing so 
+unfortunately also lowers the volume the MP3 is played, but that isn't 
+necessarily the case.
+
+I just spent some hours doing a lot of tests on MP3s with mp3gain and 
+gtkpod and I finally came to a solution to avoid every clipping problems 
+AND keeping the original volume in every case.
+
+Before you say "but gtkpod already has support for mp3gain!", please 
+read on. The mp3gain feature as it is implemented in gtkpod right now 
+does not solve any equalizer bass distortion problems, it just 
+normalizes the volume of all tracks. However, what I am suggesting here 
+actually doesn't change the volume of the tracks at all, it just removes 
+possible clipping and thus possible bass distortion.
+
+While experimenting, dealing with all those different volumes, gains, 
+soundcheck values, mp3gain settings and whatever else got me quite 
+confused. I don't want you to get a headache, it's already enough that I 
+got one ;-) So I'll show you step by step what you have to do to remove 
+clipping from an MP3.
+
+First of all, we need an MP3 to test the whole thing. Just choose an MP3 
+which shows horrible and clearly hearable clipping distortion when using 
+the "Bass Booster" equalizer setting on your iPod.
+
+Let's assume that you have that track available as /tmp/foo.mp3 on your 
+workstation. Uploading it without any change to your iPod and listening 
+to it may be fine when the equalizer is disabled, but when choosing 
+"Bass Booster" or another bass intensive setting, the levels of some of 
+the lower frequencies are boosted beyond a limit so that that ugly 
+distortion occurs. Not good.
+
+We can easily solve this issue by using mp3gain on the track, giving the 
+following output:
+
+/tmp% mp3gain -r -o /tmp/foo.mp3
+File    MP3 gain        dB gain Max Amplitude   Max global_gain Min
+foo.mp3 -7      -10.690000      39675.560208    190     126
+
+Note that the "-r" switch has to be there! Otherwise it doesn't work. 
+I'm not entirely sure, but it looks like without the -r switch, only the 
+volume information in the ID3 tag is changed while with -r, the relative 
+volume of every single frame is changed (fortunately, also without 
+reducing quality). To avoid clipping you have to volume the frames down.
+
+As you know, the "-o" switch is just for a nicer output and doesn't 
+affect how the file is handled.
+
+Now, after doing this, you can already upload the file to your iPod 
+using gtkpod. Looking at the soundcheck value after importing it shows 
+that it isn't 0 anymore but something slightly off, like 0,3 or 0,75, 
+however it's always close to 0.
+
+Playing it reveals no clipping at all! You can try out every equalizer 
+setting you want, mp3gain lowered the volume of the individual frames 
+enough to not get any frequency boosted beyond any limit by the equalizer.
+
+Happy now? No, there's still a problem: the distortion is gone, but the 
+volume is way too low now. Of course, you can just increase the volume 
+on your iPod, but sometimes even the highest volume actually seems a bit 
+low (even on uncapped iPods). However, even that problem can be solved.
+
+Let's look at the mp3gain output again:
+
+File    MP3 gain        dB gain Max Amplitude   Max global_gain Min
+foo.mp3 -7      -10.690000      39675.560208    190     126
+
+So, it tells us the volume of every frame has been decreased by 10.69dB. 
+If you would use mp3gain without the -r switch, -10.69 would be exactly 
+the same value that would have got written in the "soundcheck" field.
+
+But since we want to *increase* the playing volume to get the track back 
+to its original volume, we do the opposite: we write "10.69dB" in the 
+soundcheck field. Not as a negative value, but as a positive value!
+
+Doing so, enabling "Sound Check" on the iPod and listening to the track 
+again shows that the track volume is obviously back to original. But 
+checking with the equalizer also proves... still no clipping!
+
+Yay! So we have got rid of the clipping while still keeping the original 
+volume and we're completely happy now.
+
+Now, what do you think about implementing this functionality in gtkpod, 
+similar to the already existing normalize functionality? That would 
+really be great.
+
+Of course, there's still one possible drawback, which depends on what 
+you would like to have: using that method, nothing is actually 
+normalized. The volume of the tracks is the same as before. But if my 
+aching head isn't mistaken, skipping the "set the soundcheck field to 
+the opposite value of the applied gain"-step will also result in 
+normalization (also I still think the volume may be too low then, but I 
+also think you could fix this by setting the Soundcheck field to a fixed 
+value for all tracks).
+-------------------------
+
+
+
+
+
+Doc sites:
+
+http://www.kgarner.com/blog/archives/2005/01/11/fc3-hal-ipod/
+http://mpeters.us/linux/linux_pod.php
+http://users.ameritech.net/djfake/linux3.htm
+
+Karlan Mitchell:
+The program searches for an ipod, and mounts it
+Check out a little C program I created to make iPod use with linux 
+easier, A GUI would be great, but I don't do that.  The tool can be 
+found at http://karlan.us.to/devel/ipod
+If you would like to merge the code, please feel free to, I'd do it if 
+you'd accept a patch.

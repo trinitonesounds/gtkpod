@@ -25,7 +25,6 @@ itdb_SOURCES = \
 itdb_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
 gtkpod_SOURCES = \
-    file_itunesdb.c \
     info.c info.h \
     interface.c interface.h \
     itdb_itunesdb.c itdb_playlist.c  itdb_track.c itdb_private.h itdb.h \
@@ -52,6 +51,7 @@ gtkpod_SOURCES = \
     display_songs.c display_spl.c \
     display.h display_private.h \
     file.c file.h file_export.c \
+    file_itunesdb.c \
     callbacks.c callbacks.h
 
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@

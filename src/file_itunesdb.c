@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-20 00:35:23 jcs>
+/* Time-stamp: <2005-01-21 23:04:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -725,27 +725,31 @@ void unmark_track_for_deletion (Track *track)
 
 
 /* Writes extended info (md5 hash, PC-filename...) of @itdb into file
- * @name. @itdb->filename will be used to calculate the md5 checksum
- * of the corresponding iTunesDB */
-static gboolean write_extended_info (iTunesDB *itdb, gchar *name)
+ * @itdb->filename+".ext". @itdb->filename will also be used to
+ * calculate the md5 checksum of the corresponding iTunesDB */
+static gboolean write_extended_info (iTunesDB *itdb)
 {
   FILE *fp;
   gchar *md5;
   GList *gl;
+  gchar *name;
 
   g_return_val_if_fail (itdb, FALSE);
   g_return_val_if_fail (itdb->filename, FALSE);
-  g_return_val_if_fail (name, FALSE);
 
   space_data_update ();
 
+  name = g_strdup_printf ("%s.ext", itdb->filename);
   fp = fopen (name, "w");
   if (!fp)
   {
       gtkpod_warning (_("Could not open \"%s\" for writing extended info.\n"),
 		      name);
+      g_free (name);
       return FALSE;
   }
+  g_free (name);
+  name = NULL;
   md5 = md5_hash_on_filename (itdb->filename, FALSE);
   if (md5)
   {
@@ -828,6 +832,7 @@ static gboolean write_extended_info (iTunesDB *itdb, gchar *name)
 
 #ifdef G_THREADS_ENABLED
 /* Threaded remove file */
+/* returns: int result (of remove()) */
 static gpointer th_remove (gpointer filename)
 {
     int result;
@@ -839,10 +844,11 @@ static gpointer th_remove (gpointer filename)
     g_mutex_unlock (mutex);
     return (gpointer)result;
 }
+#endif
 
 
-/* FIXME: th_copy returns GError, but is handled as boolean */
 /* Threaded copy of ipod track */
+/* Returns: GError *error */
 static gpointer th_copy (gpointer s)
 {
     Track *track = s;
@@ -857,13 +863,14 @@ static gpointer th_copy (gpointer s)
     g_free (mount);
     /* delete old size */
     if (track->transferred) etr->oldsize = 0;
+#ifdef G_THREADS_ENABLED
     g_mutex_lock (mutex);
     mutex_data = TRUE;   /* signal that thread will end */
     g_cond_signal (cond);
     g_mutex_unlock (mutex);
+#endif
     return error;
 }
-#endif
 
 /* This function is called when the user presses the abort button
  * during flush_tracks() */
@@ -900,10 +907,11 @@ static gboolean ipod_dirs_present (void)
 
 
 /* Flushes all non-transferred tracks to the iPod filesystem
-   Returns TRUE on success, FALSE if some error occured */
-static gboolean flush_tracks (void)
+   Returns TRUE on success, FALSE if some error occured or not all
+   tracks were written. */
+static gboolean flush_tracks (iTunesDB *itdb)
 {
-  gint count, n, nrs;
+  gint count, n;
   gchar *buf;
   Track  *track;
   gchar *filename = NULL;
@@ -913,7 +921,6 @@ static gboolean flush_tracks (void)
   GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
   time_t diff, start, fullsecs, hrs, mins, secs;
   gchar *progtext = NULL;
-
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
   GTimeVal gtime;
@@ -921,7 +928,10 @@ static gboolean flush_tracks (void)
   if (!cond) cond = g_cond_new ();
 #endif
 
-  n = get_nr_of_nontransferred_tracks ();
+  g_return_val_if_fail (itdb, FALSE);
+
+
+  n = itdb_tracks_number_nontransfered (itdb);
 
   if (n==0 && !pending_deletion) return TRUE;
 
@@ -973,6 +983,7 @@ static gboolean flush_tracks (void)
   while (!abort && pending_deletion)
   {
       track = (Track*)pending_deletion->data;
+      g_return_val_if_fail (track, FALSE);
       if((filename = get_track_name_on_ipod(track)))
       {
 	  const gchar *mp = prefs_get_ipod_mount ();
@@ -1011,7 +1022,7 @@ static gboolean flush_tracks (void)
 	  }
 	  g_free(filename);
       }
-      free_track(track);
+      itdb_track_free (track);
       pending_deletion = g_list_delete_link (pending_deletion, pending_deletion);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
@@ -1022,7 +1033,9 @@ static gboolean flush_tracks (void)
   }
   else
   {
-      /* we now have as much space as we're gonna have, copy files to ipod */
+      /* we now have as much space as we're gonna have, copy files to
+       * ipod */
+      GList *gl;
 
       progtext = g_strdup (_("preparing to copy..."));
       gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
@@ -1032,12 +1045,16 @@ static gboolean flush_tracks (void)
       /* count number of tracks to be transferred */
       if (n != 0)  display_disable_gtkpod_import_buttons();
       count = 0; /* tracks transferred */
-      nrs = 0;
-      start = time(NULL);
-      while (!abort &&  (track = get_track_by_nr (nrs))) {
-	  ++nrs;
-	  if (!track->transferred)
+      start = time (NULL);
+      for (gl=itdb->tracks; gl && !abort; gl=gl->next);
+      {
+	  track = gl->data;
+	  g_return_val_if_fail (track, FALSE); /* this will hang the
+						  application :-( */
+	  if (!track->transferred)             /* but this would crash
+						  it otherwise... */
 	  {
+	      GError *error = NULL;
 #ifdef G_THREADS_ENABLED
 	      mutex_data = FALSE;
 	      thread = g_thread_create (th_copy, track, TRUE, NULL);
@@ -1054,26 +1071,25 @@ static gboolean flush_tracks (void)
 		      g_cond_timed_wait (cond, mutex, &gtime);
 		  } while(!mutex_data);
 		  g_mutex_unlock (mutex);
-		  result &= (gboolean)g_thread_join (thread);
+		  error = g_thread_join (thread);
 	      }
 	      else {
-		  gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
 		  g_warning ("Thread creation failed, falling back to default.\n");
-		  result &= itunesdb_copy_track_to_ipod (
-		      mount, track, track->pc_path_locale);
-		  /* delete old size */
-		  if (track->transferred) track->oldsize = 0;
-		  g_free (mount);
+		  error = th_copy (track);
 	      }
 #else
-	      gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
-	      result &= itunesdb_copy_track_to_ipod (mount, track,
-						     track->pc_path_locale);
-	      /* delete old size */
-	      if (track->transferred) track->oldsize = 0;
-	      g_free (mount);
+	      error = th_copy (track);
 #endif
-	      data_changed (); /* otherwise new free space status from
+	      if (error)
+	      {   /* an error occured */
+		  result = FALSE;
+		  if (error->message)
+		      gtkpod_warning ("%s\n\n", error->message);
+		  else
+		      g_warning ("error->message == NULL!\n");
+		  g_error_free (error);
+	      }
+	      data_changed (itdb); /* otherwise new free space status from
 	      iPod is never read and free space keeps increasing while
 	      we copy more and more files to the iPod */
 	      ++count;
@@ -1105,7 +1121,7 @@ static gboolean flush_tracks (void)
 	      g_free (progtext);
 	  }
 	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-      } /* while (gl_track) */
+      } /* for (;;) */
       if (abort)      result = FALSE;   /* negative result if user aborted */
       if (result == FALSE)
 	  gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
@@ -1117,43 +1133,52 @@ static gboolean flush_tracks (void)
 }
 
 
-/* used to handle export of database */
-void handle_export (void)
+gboolean gp_write_itdb (iTunesDB *itdb)
 {
-  gchar *cft=NULL, *cfe=NULL, *cfgdir;
+  gchar *cfgdir;
   gboolean success = TRUE;
-  gchar *buf;
+  ExtraiTunesDBData *eitdb;
+  gchar *mp;
+
+  g_return_val_if_fail (itdb, FALSE);
+  eitdb = itdb->userdata;
+  g_return_val_if_fail (eitdb, FALSE);
 
   cfgdir = prefs_get_cfgdir ();
-  if (cfgdir)
-  {
-      cft = g_build_filename (cfgdir, "iTunesDB", NULL);
-      cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
-  }
+  g_return_val_if_fail (cfgdir, FALSE);
 
-  if (!file_itunesdb_read())
+  mp =  charset_from_utf8 (prefs_get_ipod_mount());
+
+  if (!eitdb->itdb_imported)
   {   /* No iTunesDB was read but user wants to export current
          data. If an iTunesDB is present on the iPod or in cfgdir,
 	 this is most likely an error. We should tell the user */
-      gboolean danger = FALSE;
-      /* First check if we can find an existing iTunesDB. If yes, set
-	 'danger' to TRUE */
-      if (prefs_get_offline ())
+      gchar *tunes = NULL;
+      /* First check if we can find an existing iTunesDB. */
+      switch (itdb->usertype)
       {
-	  if (g_file_test (cft, G_FILE_TEST_EXISTS))  danger = TRUE;
+      case GP_ITDB_TYPE_LOCAL:
+	  tunes = g_build_filename (cfgdir, "iTunesDB", NULL);
+	  break;
+      case GP_ITDB_TYPE_IPOD:
+	  if (prefs_get_offline ())
+	  {
+	      tunes = g_build_filename (cfgdir, "iTunesDB", NULL);
+	  }
+	  else
+	  {
+	      const gchar *itunes_components[] = {"iPod_Control",
+						  "iTunes",
+						  "iTunesDB", NULL};
+	      tunes = resolve_path (mp, itunes_components);
+	  }
+	  break;
+      default:
+	  g_free (cfgdir);
+	  g_free (mp);
+	  g_return_val_if_reached (FALSE);
       }
-      else
-      {  /* online */
-	  gchar *ipod_path_as_filename = 
-	      charset_from_utf8 (prefs_get_ipod_mount());
-	  const gchar *itunes_components[] = {"iPod_Control", "iTunes", NULL};
-	  gchar *itunes_filename = resolve_path(ipod_path_as_filename,
-						itunes_components);
-	  if (g_file_test (itunes_filename, G_FILE_TEST_EXISTS)) danger = TRUE;
-	  g_free (ipod_path_as_filename);
-	  g_free (itunes_filename);
-      }
-      if (danger)
+      if (g_file_test (tunes, G_FILE_TEST_EXISTS))
       {
 	GtkWidget *dialog = gtk_message_dialog_new (
 	    GTK_WINDOW (gtkpod_window),
@@ -1165,17 +1190,14 @@ void handle_export (void)
 	gtk_widget_destroy (dialog);
 	if (result == GTK_RESPONSE_CANCEL)
 	{
-	    g_free (cft);
-	    g_free (cfe);
-	    return;
+	    g_free (cfgdir);
+	    g_free (mp);
+	    return FALSE;
 	}
       }
   }
 
   block_widgets (); /* block user input */
-  /* read offline playcounts -- in case we added some tracks we can
-     now handle */
-  parse_offline_playcount ();
 
   if(!prefs_get_offline ())
   {
@@ -1193,93 +1215,188 @@ void handle_export (void)
       if (success)
       {
 	  /* write tracks to iPod */
-	  success = flush_tracks ();
+	  success = flush_tracks (itdb);
       }
   }
 
-  if (success && cfgdir)
-  {
+  if (success)
       gtkpod_statusbar_message (_("Now writing iTunesDB. Please wait..."));
-      while (widgets_blocked && gtk_events_pending ())
-	  gtk_main_iteration ();
-      success = itunesdb_write_to_file (cft);
+  while (widgets_blocked && gtk_events_pending ())
+      gtk_main_iteration ();
+
+  if (success && !prefs_get_offline () &&
+      (itdb->usertype == GP_ITDB_TYPE_IPOD))
+  {   /* write to the iPod */
+      GError *error = NULL;
+      if (!itdb_write (itdb, mp, &error))
+      {   /* an error occured */
+	  success = FALSE;
+	  if (error && error->message)
+	      gtkpod_warning ("%s\n\n", error->message);
+	  else
+	      g_warning ("error->message == NULL!\n");
+	  g_error_free (error);
+	  error = NULL;
+      }
       if (success)
-	  success = write_extended_info (cfe, cft);
+      {
+	  if (prefs_get_write_extended_info ())
+	  {   /* write extended information */
+	      success = write_extended_info (itdb);
+	  }
+	  else
+	  {   /* delete extended information if present */
+	      gchar *ext = g_strdup_printf ("%s.ext", itdb->filename);
+	      if (g_file_test (ext, G_FILE_TEST_EXISTS))
+	      {
+		  if (remove (ext) != 0)
+		  {
+		      gchar *buf = g_strdup_printf (_("Extended information file not deleted: '%s\'"), ext);
+		      gtkpod_statusbar_message (buf);
+		      g_free (buf);
+		  }
+	      }
+	  }
+      }
+      if (success && cfgdir)
+      {   /* copy to cfgdir */
+	  gchar *base, *from, *to1, *to2;
+	  GError *error = NULL;
+	  base = g_path_get_basename (itdb->filename);
+	  to1 = g_build_filename (cfgdir, base, NULL);
+	  if (!itdb_cp (itdb->filename, to1, &error))
+	  {
+	      success = FALSE;
+	      if (error && error->message)
+		  gtkpod_warning ("%s\n\n", error->message);
+	      else
+		  g_warning ("error->message == NULL!\n");
+	      g_error_free (error);
+	      error = NULL;
+	  }
+	  if (prefs_get_write_extended_info ())
+	  {
+	      from = g_strdup_printf ("%s.ext", itdb->filename);
+	      to2 = g_strdup_printf ("%s.ext", to1);
+	      if (!itdb_cp (from, to2, &error))
+	      {
+		  success = FALSE;
+		  if (error && error->message)
+		      gtkpod_warning ("%s\n\n", error->message);
+		  else
+		      g_warning ("error->message == NULL!\n");
+		  g_error_free (error);
+	      }
+	      g_free (from);
+	      g_free (to2);
+	  }
+	  g_free (base);
+	  g_free (to1);
+      }
   }
 
-  /* now copy to iPod */
-  if(success && !prefs_get_offline ())
-  {
-      gchar *ipt = NULL, *ipe = NULL;
-      gchar *ipod_path_as_filename = 
-	  charset_from_utf8 (prefs_get_ipod_mount());
-      const gchar *itunes_components[] = {"iPod_Control", "iTunes", NULL};
-      gchar *itunes_filename = resolve_path(ipod_path_as_filename,
-					    itunes_components);
-      ipt = g_build_filename (itunes_filename, "iTunesDB", NULL);
-      ipe = g_build_filename (itunes_filename, "iTunesDB.ext", NULL);
+  if (success && prefs_get_offline () &&
+      (itdb->usertype == GP_ITDB_TYPE_IPOD))
+  {   /* write to cfgdir */
+      gchar *name = g_build_filename (cfgdir, "iTunesDB", NULL);
+      GError *error = NULL;
+      if (!itdb_write_file (itdb, name, &error))
+      {   /* an error occured */
+	  success = FALSE;
+	  if (error && error->message)
+	      gtkpod_warning ("%s\n\n", error->message);
+	  else
+	      g_warning ("error->message == NULL!\n");
+	  g_error_free (error);
+	  error = NULL;
+      }
+      if (success && prefs_get_write_extended_info ())
+      {   /* write extended information */
+	  success = write_extended_info (itdb);
+      }
+  }
 
-      /* copy iTunesDB to iPod */
-      while (widgets_blocked && gtk_events_pending ())
-	  gtk_main_iteration ();
-      success = itunesdb_cp (cft, ipt);
-      if (!success)
-      {
-	  gtkpod_statusbar_message (_("Error writing iTunesDB to iPod. Export aborted!"));
+
+  if (success && prefs_get_offline () &&
+      (itdb->usertype == GP_ITDB_TYPE_LOCAL))
+  {   /* write to cfgdir */
+      gchar *name = g_build_filename (cfgdir, "localDB", NULL);
+      GError *error = NULL;
+      if (!itdb_write_file (itdb, name, &error))
+      {   /* an error occured */
+	  success = FALSE;
+	  if (error && error->message)
+	      gtkpod_warning ("%s\n\n", error->message);
+	  else
+	      g_warning ("error->message == NULL!\n");
+	  g_error_free (error);
+	  error = NULL;
       }
-      /* else: copy extended info (PC filenames, md5 hash) to iPod */
-      else if (prefs_get_write_extended_info ())
-      {
-	  success = itunesdb_cp (cfe, ipe);
-	  if(!success)
-	  {
-	      gtkpod_statusbar_message (_("Extended information not written"));
-	  }
-      }
-      /* else: delete extended information file, if it exists */
-      else if (g_file_test (ipe, G_FILE_TEST_EXISTS))
-      {
-	  if (remove (ipe) != 0)
-	  {
-	      buf = g_strdup_printf (_("Extended information file not deleted: '%s\'"), ipe);
-	      gtkpod_statusbar_message (buf);
-	      g_free (buf);
-	  }
-      }
-      if (prefs_get_concal_autosync ())
-      {
-	  const gchar *str;
-	  gtkpod_statusbar_message (_("Syncing contacts, calendar and notes..."));
-	  str = prefs_get_path (PATH_SYNC_CONTACTS);
-	  if (str && *str)    tools_sync_contacts ();
-	  str = prefs_get_path (PATH_SYNC_CALENDAR);
-	  if (str && *str)    tools_sync_calendar ();
-	  str = prefs_get_path (PATH_SYNC_NOTES);
-	  if (str && *str)    tools_sync_notes ();
-      }
-      g_free (ipt);
-      g_free (ipe);
-      /* move old playcount file etc out of the way */
       if (success)
-	  itunesdb_rename_files (ipod_path_as_filename);
-      g_free (ipod_path_as_filename);
+      {   /* write extended information */
+	  success = write_extended_info (itdb);
+      }
   }
 
   /* indicate that files and/or database is saved */
   if (success)
   {
-      files_saved = TRUE;
+      eitdb->data_changed = FALSE;
       /* block menu item and button */
       display_disable_gtkpod_import_buttons();
       gtkpod_statusbar_message(_("iPod Database Saved"));
   }
 
   g_free (cfgdir);
-  g_free (cft);
-  g_free (cfe);
+  g_free (mp);
 
   release_widgets (); /* Allow input again */
+
+  return success;
 }
+
+
+
+/* used to handle export of database */
+void handle_export (void)
+{
+    GList *gl;
+    gboolean success = TRUE;
+    struct itdbs_head *itdbs_head;
+
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    g_return_if_fail (itdbs_head);
+
+    block_widgets (); /* block user input */
+
+    /* read offline playcounts -- in case we added some tracks we can
+       now handle */
+    parse_offline_playcount ();
+
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_if_fail (itdb);
+	success &= gp_write_itdb (itdb);
+    }
+
+    if (prefs_get_concal_autosync ())
+    {
+	const gchar *str;
+	gtkpod_statusbar_message (_("Syncing contacts, calendar and notes..."));
+	str = prefs_get_path (PATH_SYNC_CONTACTS);
+	if (str && *str)    tools_sync_contacts ();
+	str = prefs_get_path (PATH_SYNC_CALENDAR);
+	if (str && *str)    tools_sync_calendar ();
+	str = prefs_get_path (PATH_SYNC_NOTES);
+	if (str && *str)    tools_sync_notes ();
+    }
+
+    release_widgets ();
+}
+
+
 
 
 /* indicate that data was changed and update the free space indicator */

@@ -6,6 +6,7 @@ EXTRA_DIST = \
 	autogen.sh \
 	gtkpod.glade \
 	gtkpod.gladep \
+	TROUBLESHOOTING \
 	TODOandBUGS.txt
 
 install-data-local:
