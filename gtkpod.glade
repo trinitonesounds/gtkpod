@@ -2285,7 +2285,7 @@ MD5 hashes). Recommended.</property>
 				<widget class="GtkEntry" id="sort_tab_num_combo_entry">
 				  <property name="visible">True</property>
 				  <property name="can_focus">True</property>
-				  <property name="editable">True</property>
+				  <property name="editable">False</property>
 				  <property name="visibility">True</property>
 				  <property name="max_length">0</property>
 				  <property name="text" translatable="yes"></property>
@@ -2854,7 +2854,7 @@ entry (faster!)</property>
 		      </child>
 
 		      <child>
-			<widget class="GtkEntry" id="play_now_entry">
+			<widget class="GtkEntry" id="play_now_path_entry">
 			  <property name="visible">True</property>
 			  <property name="tooltip" translatable="yes">For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing.</property>
 			  <property name="can_focus">True</property>
@@ -2865,7 +2865,7 @@ entry (faster!)</property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
 			  <property name="activates_default">False</property>
-			  <signal name="changed" handler="on_play_now_entry_changed" last_modification_time="Sun, 16 Mar 2003 10:08:37 GMT"/>
+			  <signal name="changed" handler="on_play_now_path_entry_changed" last_modification_time="Sun, 16 Mar 2003 13:57:45 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">2</property>
@@ -2877,7 +2877,7 @@ entry (faster!)</property>
 		      <child>
 			<widget class="GtkLabel" id="label45">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Command Line for 'Play'</property>
+			  <property name="label" translatable="yes">Command Line for 'Enqueue'</property>
 			  <property name="use_underline">False</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2896,9 +2896,9 @@ entry (faster!)</property>
 		      </child>
 
 		      <child>
-			<widget class="GtkEntry" id="play_entry">
+			<widget class="GtkEntry" id="play_enqueue_path_entry">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">For example, 'xmms -e %s' will append the selected songs to xmms' current playlist.</property>
+			  <property name="tooltip" translatable="yes">For example, 'xmms xmms -e %s' will append the selected songs to xmms' current playlist.</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>
 			  <property name="visibility">True</property>
@@ -2907,7 +2907,7 @@ entry (faster!)</property>
 			  <property name="has_frame">True</property>
 			  <property name="invisible_char" translatable="yes">*</property>
 			  <property name="activates_default">False</property>
-			  <signal name="changed" handler="on_play_entry_changed" last_modification_time="Sun, 16 Mar 2003 10:08:45 GMT"/>
+			  <signal name="changed" handler="on_play_enqueue_path_entry_changed" last_modification_time="Sun, 16 Mar 2003 13:57:55 GMT"/>
 			</widget>
 			<packing>
 			  <property name="padding">0</property>

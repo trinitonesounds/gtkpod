@@ -1194,7 +1194,8 @@ void handle_import (void)
 }
 
 
-/* Like get_song_name_on_disk(), but verifies the song actually exists */
+/* Like get_song_name_on_disk(), but verifies the song actually exists
+   Must g_free return value after use */
 gchar *get_song_name_on_disk_verified (Song *song)
 {
     gchar *name = NULL;

@@ -45,6 +45,33 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+/**
+ * which - run the shell command which, useful for querying default values
+ * for executable, 
+ * @name - the executable we're trying to find the path for
+ * Returns the path to the executable, NULL on not found
+ */
+static gchar* 
+which(const gchar *exe)
+{
+    FILE *fp = NULL;
+    gchar *result = NULL; 
+    gchar buf[PATH_MAX];
+    gchar *which_exec = NULL;
+   
+    memset(&buf[0], 0, PATH_MAX);
+    which_exec = g_strdup_printf("which %s", exe);
+    if((fp = popen(which_exec, "r")))
+    {
+	int read_bytes = 0;
+	if((read_bytes = fread(buf, sizeof(gchar), PATH_MAX, fp)) > 0)
+	    result = g_strndup(buf, read_bytes-1);
+	pclose(fp);
+    }
+    C_FREE(which_exec);
+    return(result);
+}
+
 /* Macro to attach menu items to your context menu */
 /* @_m - the GtkMenu we're attaching to
  * @_mi - a GtkWidget we're gonna hook into the menu
@@ -93,41 +120,131 @@ edit_entries(GtkButton *b, gpointer data)
 
 /*
  * play_entries - play the entries currently selected in xmms
+ * @play: the command to execute (e.g. "xmms -e %s")
+ * @what: e.g. "Enqueue" or "Play Now" (used for error messages)
+ */
+static void 
+do_command_on_entries (gchar *command, gchar *what)
+{
+    GList *l;
+    gchar *str, *commandc, *next;
+    gboolean percs = FALSE; /* did "%s" already appear? */
+    GPtrArray *args;
+
+    if(selected_playlist) selected_songs = selected_playlist->members;
+
+    if ((!command) || (strlen (command) == 0))
+    {
+	gchar *buf = g_strdup_printf (_("No command set for '%s'"), what);
+	gtkpod_statusbar_message (buf);
+	C_FREE (buf);
+	return;
+    }
+
+    /* find the command itself -- separated by ' ' */
+    next = strchr (command, ' ');
+    if (!next)
+    {
+	str = g_strdup (command);
+	command = "";  /* what is left over from the command */
+    }
+    else
+    {
+        str = g_strndup (command, next-command);
+	command = next; /* what is left over from the command */
+    }
+    while (g_ascii_isspace (*command))  ++command;
+    /* get the full path */
+    commandc = which (str);
+    if (!commandc)
+    {
+	gchar *buf = g_strdup_printf (_("Could not find '%s' set for '%s'"),
+				      str, what);
+	gtkpod_statusbar_message (buf);
+	C_FREE (buf);
+	C_FREE (str);
+	return;
+    }
+    C_FREE (str);
+
+    /* Create the command line */
+    args = g_ptr_array_sized_new (g_list_length (selected_songs) + 10);
+    /* first the full path */
+    g_ptr_array_add (args, commandc);
+    do
+    {
+	gchar *next;
+	gboolean end;
+
+	next = strchr (command, ' ');
+	if (next == NULL) next = command + strlen (command);
+
+	if (next == command)  end = TRUE;
+	else                  end = FALSE;
+
+	if (!end && (strncmp (command, "%s", 2) != 0))
+	{   /* current token is not "%s" */
+	    gchar *buf;
+	    buf = g_strndup (command, next-command);
+	    g_ptr_array_add (args, buf);
+	}
+	else if (!percs)
+	{
+	    for(l = selected_songs; l; l = l->next)
+	    {
+		if((str = get_song_name_on_disk_verified((Song*)l->data)))
+		    g_ptr_array_add (args, str);
+	    }
+	    percs = TRUE; /* encountered a '%s' */
+	}
+	command = next;
+	/* skip whitespace */
+	while (g_ascii_isspace (*command))  ++command;
+    } while (*command);
+    /* need NULL pointer */
+    g_ptr_array_add (args, NULL);
+
+    switch(fork())
+    {
+    case 0: /* we are the child */
+    {
+	gchar **argv = (gchar **)args->pdata;
+	execv(argv[0], &argv[1]);
+	g_ptr_array_free (args, TRUE);
+	exit(0);
+	break;
+    }
+    case -1: /* we are the parent, fork() failed  */
+	g_ptr_array_free (args, TRUE);
+	break;
+    default: /* we are the parent, everything's fine */
+	break;
+    }
+}
+
+
+/*
+ * play_entries_now - play the entries currently selected in xmms
  * @mi - the menu item selected
  * @data - Ignored, should be NULL
  */
 static void 
-play_entries(GtkMenuItem *mi, gpointer data)
+play_entries_now (GtkMenuItem *mi, gpointer data)
 {
-    GList *l;
-    gchar *str, *xmms;
-    
-    if(selected_playlist) selected_songs = selected_playlist->members;
-    switch(fork())
-    {
-	case 0:
-	    xmms = prefs_get_xmms_path();
-	    for(l = selected_songs; l; l = l->next)
-	    {
-		if((str = get_song_name_on_disk_verified((Song*)l->data)))
-		{
-		    switch(fork())
-		    {
-			case 0:
-			    execl(xmms, "xmms", "-e", str, NULL);
-			    exit(0);
-			    break;
-			default:
-			    break;
-		    }
-		}
-	    }
-	    exit(0);
-	    break;
-	default:
-	    break;
-    }
+    do_command_on_entries (prefs_get_play_now_path (), _("Play Now"));
 }
+
+/*
+ * play_entries_now - play the entries currently selected in xmms
+ * @mi - the menu item selected
+ * @data - Ignored, should be NULL
+ */
+static void 
+play_entries_enqueue (GtkMenuItem *mi, gpointer data)
+{
+    do_command_on_entries (prefs_get_play_enqueue_path (), _("Enqueue"));
+}
+
 
 /*
  * update_entries - update the entries currently selected
@@ -172,7 +289,8 @@ create_sm_menu(void)
 #if 0
 	HOOKUP(menu, w, _("Edit"), edit_entries);
 #endif
-	HOOKUP(menu, w, _("Play"), play_entries);
+	HOOKUP(menu, w, _("Play Now"), play_entries_now);
+	HOOKUP(menu, w, _("Enqueue"), play_entries_enqueue);
 	HOOKUP(menu, w, _("Export"), export_entries);
 	HOOKUP(menu, w, _("Update"), update_entries);
 	HOOKUP(menu, w, _("Delete"), delete_entries);

@@ -345,9 +345,9 @@ on_reset_sorting_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_play_now_entry_changed              (GtkEditable     *editable,
+on_play_now_path_entry_changed         (GtkEditable     *editable,
                                         gpointer         user_data);
 
 void
-on_play_entry_changed                  (GtkEditable     *editable,
+on_play_enqueue_path_entry_changed     (GtkEditable     *editable,
                                         gpointer         user_data);

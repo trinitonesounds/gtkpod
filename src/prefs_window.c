@@ -134,7 +134,36 @@ prefs_window_create(void)
 	prefs_window = create_new_prefs_window();
 	if((w = lookup_widget(prefs_window, "cfg_mount_point")))
 	{
-	    gtk_entry_set_text(GTK_ENTRY(w), g_strdup(tmpcfg->ipod_mount));
+	    if (tmpcfg->ipod_mount)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->ipod_mount);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
+	if((w = lookup_widget(prefs_window, "play_now_path_entry")))
+	{
+	    if (tmpcfg->play_now_path)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->play_now_path);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
+	}
+	if((w = lookup_widget(prefs_window, "play_enqueue_path_entry")))
+	{
+	    if (tmpcfg->play_enqueue_path)
+	    {  /* we should copy the new path first because by setting
+		  the text we might get a callback destroying the old
+		  value... */
+		gchar *buf = g_strdup (tmpcfg->play_enqueue_path);
+		gtk_entry_set_text(GTK_ENTRY(w), buf);
+		g_free (buf);
+	    }
 	}
 	if((w = lookup_widget(prefs_window, "charset_combo")))
 	{
@@ -341,6 +370,8 @@ prefs_window_set(void)
 	prefs_set_id3_write(tmpcfg->id3_write);
 	prefs_set_id3_writeall(tmpcfg->id3_writeall);
 	prefs_set_mount_point(tmpcfg->ipod_mount);
+	prefs_set_play_now_path(tmpcfg->play_now_path);
+	prefs_set_play_enqueue_path(tmpcfg->play_enqueue_path);
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_auto_import(tmpcfg->autoimport);
 	for (i=0; i<SORT_TAB_MAX; ++i) {
@@ -461,8 +492,20 @@ prefs_window_ok (void)
 void
 prefs_window_apply (void)
 {
+    GtkWidget *w;
     /* save current settings */
     prefs_window_set ();
+    /* reset the validated path entries */
+    if((w = lookup_widget(prefs_window, "play_now_path_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_play_now_path ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
+    if((w = lookup_widget(prefs_window, "play_enqueue_path_entry")))
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_play_enqueue_path ());
+	/* tmpcfg gets set by the "changed" callback */
+    }
 }
 
 
@@ -523,6 +566,20 @@ prefs_window_set_mount_point(const gchar *mp)
 {
     if(tmpcfg->ipod_mount) g_free(tmpcfg->ipod_mount);
     tmpcfg->ipod_mount = g_strdup(mp);
+}
+
+void prefs_window_set_play_now_path(const gchar *path)
+{
+    if (!path) return;
+    if (tmpcfg->play_now_path) g_free (tmpcfg->play_now_path);
+    tmpcfg->play_now_path = g_strdup (path);
+}
+
+void prefs_window_set_play_enqueue_path(const gchar *path)
+{
+    if (!path) return;
+    if (tmpcfg->play_enqueue_path) g_free (tmpcfg->play_enqueue_path);
+    tmpcfg->play_enqueue_path = g_strdup (path);
 }
 
 void prefs_window_set_keep_backups(gboolean active)

@@ -341,7 +341,9 @@ void
 on_cfg_mount_point_changed             (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-    prefs_window_set_mount_point(gtk_editable_get_chars(editable,0, -1));
+    gchar *buf = gtk_editable_get_chars(editable,0, -1);
+    prefs_window_set_mount_point(buf);
+    g_free (buf);
 }
 
 
@@ -973,17 +975,21 @@ on_reset_sorting_activate              (GtkMenuItem     *menuitem,
 }
 
 void
-on_play_now_entry_changed              (GtkEditable     *editable,
+on_play_now_path_entry_changed         (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-
+    gchar *buf = gtk_editable_get_chars(editable,0, -1);
+    prefs_window_set_play_now_path (buf);
+    g_free (buf);
 }
 
 
 void
-on_play_entry_changed                  (GtkEditable     *editable,
+on_play_enqueue_path_entry_changed     (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-
+    gchar *buf = gtk_editable_get_chars(editable,0, -1);
+    prefs_window_set_play_enqueue_path (buf);
+    g_free (buf);
 }
 

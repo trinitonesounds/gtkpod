@@ -1020,9 +1020,9 @@ create_new_prefs_window (void)
   GtkWidget *frame18;
   GtkWidget *vbox34;
   GtkWidget *label44;
-  GtkWidget *play_now_entry;
+  GtkWidget *play_now_path_entry;
   GtkWidget *label45;
-  GtkWidget *play_entry;
+  GtkWidget *play_enqueue_path_entry;
   GtkWidget *label43;
   GtkWidget *frame11;
   GtkWidget *vbox24;
@@ -1345,6 +1345,7 @@ create_new_prefs_window (void)
 
   sort_tab_num_combo_entry = GTK_COMBO (sort_tab_num_combo)->entry;
   gtk_widget_show (sort_tab_num_combo_entry);
+  gtk_editable_set_editable (GTK_EDITABLE (sort_tab_num_combo_entry), FALSE);
 
   label34 = gtk_label_new (_("Sort Tabs"));
   gtk_widget_show (label34);
@@ -1482,21 +1483,21 @@ create_new_prefs_window (void)
   gtk_label_set_justify (GTK_LABEL (label44), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label44), 0.01, 0.5);
 
-  play_now_entry = gtk_entry_new ();
-  gtk_widget_show (play_now_entry);
-  gtk_box_pack_start (GTK_BOX (vbox34), play_now_entry, FALSE, FALSE, 2);
-  gtk_tooltips_set_tip (tooltips, play_now_entry, _("For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing."), NULL);
+  play_now_path_entry = gtk_entry_new ();
+  gtk_widget_show (play_now_path_entry);
+  gtk_box_pack_start (GTK_BOX (vbox34), play_now_path_entry, FALSE, FALSE, 2);
+  gtk_tooltips_set_tip (tooltips, play_now_path_entry, _("For example, 'xmms -p %s' will clear xmms' current playlist, add the selected songs and start playing."), NULL);
 
-  label45 = gtk_label_new (_("Command Line for 'Play'"));
+  label45 = gtk_label_new (_("Command Line for 'Enqueue'"));
   gtk_widget_show (label45);
   gtk_box_pack_start (GTK_BOX (vbox34), label45, FALSE, FALSE, 4);
   gtk_label_set_justify (GTK_LABEL (label45), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label45), 0.01, 0.5);
 
-  play_entry = gtk_entry_new ();
-  gtk_widget_show (play_entry);
-  gtk_box_pack_start (GTK_BOX (vbox34), play_entry, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, play_entry, _("For example, 'xmms -e %s' will append the selected songs to xmms' current playlist."), NULL);
+  play_enqueue_path_entry = gtk_entry_new ();
+  gtk_widget_show (play_enqueue_path_entry);
+  gtk_box_pack_start (GTK_BOX (vbox34), play_enqueue_path_entry, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, play_enqueue_path_entry, _("For example, 'xmms xmms -e %s' will append the selected songs to xmms' current playlist."), NULL);
 
   label43 = gtk_label_new (_("Song Playing"));
   gtk_widget_show (label43);
@@ -1631,11 +1632,11 @@ create_new_prefs_window (void)
   g_signal_connect ((gpointer) cfg_block_display, "toggled",
                     G_CALLBACK (on_cfg_block_display_toggled),
                     NULL);
-  g_signal_connect ((gpointer) play_now_entry, "changed",
-                    G_CALLBACK (on_play_now_entry_changed),
+  g_signal_connect ((gpointer) play_now_path_entry, "changed",
+                    G_CALLBACK (on_play_now_path_entry_changed),
                     NULL);
-  g_signal_connect ((gpointer) play_entry, "changed",
-                    G_CALLBACK (on_play_entry_changed),
+  g_signal_connect ((gpointer) play_enqueue_path_entry, "changed",
+                    G_CALLBACK (on_play_enqueue_path_entry_changed),
                     NULL);
   g_signal_connect ((gpointer) cfg_delete_playlist, "toggled",
                     G_CALLBACK (on_cfg_delete_playlist_toggled),
@@ -1756,9 +1757,9 @@ create_new_prefs_window (void)
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame18, "frame18");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox34, "vbox34");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label44, "label44");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, play_now_entry, "play_now_entry");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, play_now_path_entry, "play_now_path_entry");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label45, "label45");
-  GLADE_HOOKUP_OBJECT (new_prefs_window, play_entry, "play_entry");
+  GLADE_HOOKUP_OBJECT (new_prefs_window, play_enqueue_path_entry, "play_enqueue_path_entry");
   GLADE_HOOKUP_OBJECT (new_prefs_window, label43, "label43");
   GLADE_HOOKUP_OBJECT (new_prefs_window, frame11, "frame11");
   GLADE_HOOKUP_OBJECT (new_prefs_window, vbox24, "vbox24");

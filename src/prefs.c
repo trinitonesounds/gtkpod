@@ -54,32 +54,6 @@ enum {
   GP_OFFLINE
 };
 
-/**
- * which - run the shell command which, useful for querying default values
- * for executable, 
- * @name - the executable we're trying to find the path for
- * Returns the path to the executable, NULL on not found
- */
-static gchar* 
-which(const gchar *exe)
-{
-    FILE *fp = NULL;
-    gchar *result = NULL; 
-    gchar buf[PATH_MAX];
-    gchar *which_exec = NULL;
-   
-    memset(&buf[0], 0, PATH_MAX);
-    which_exec = g_strdup_printf("which %s", exe);
-    if((fp = popen(which_exec, "r")))
-    {
-	int read_bytes = 0;
-	if((read_bytes = fread(buf, sizeof(gchar), PATH_MAX, fp)) > 0)
-	    result = g_strndup(buf, read_bytes-1);
-	pclose(fp);
-    }
-    C_FREE(which_exec);
-    return(result);
-}
 static void usage (FILE *file)
 {
   fprintf(file, _("gtkpod version %s usage:\n"), VERSION);
@@ -177,7 +151,8 @@ struct cfg *cfg_new(void)
     mycfg->sort_tab_num = 2;
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
-    mycfg->xmms_path = which("xmms");
+    mycfg->play_now_path = g_strdup ("xmms -p %s");
+    mycfg->play_enqueue_path = g_strdup ("xmms xmms -e %s");
     return(mycfg);
 }
 
@@ -211,9 +186,15 @@ read_prefs_from_file_desc(FILE *fp)
 	  while (g_ascii_isspace(*arg)) ++arg;
 	  if(g_ascii_strcasecmp (line, "mountpoint") == 0)
 	  {
-	      gchar mount_point[PATH_MAX];
-	      snprintf(mount_point, PATH_MAX, "%s", arg);
-	      prefs_set_mount_point(mount_point);
+	      prefs_set_mount_point (arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
+	  {
+	      prefs_set_play_now_path (arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "play_enqueue_path") == 0)
+	  {
+	      prefs_set_play_enqueue_path (arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "charset") == 0)
 	  {
@@ -493,6 +474,8 @@ write_prefs_to_file_desc(FILE *fp)
     sm_store_col_order ();
 
     fprintf(fp, "mountpoint=%s\n", cfg->ipod_mount);
+    fprintf(fp, "play_now_path=%s\n", cfg->play_now_path);
+    fprintf(fp, "play_enqueue_path=%s\n", cfg->play_enqueue_path);
     if (cfg->charset)
     {
 	fprintf(fp, "charset=%s\n", cfg->charset);
@@ -605,6 +588,8 @@ void cfg_free(struct cfg *c)
       C_FREE (c->charset);
       C_FREE (c->last_dir.browse);
       C_FREE (c->last_dir.export);
+      C_FREE (c->play_now_path);
+      C_FREE (c->play_enqueue_path);
       C_FREE (c);
     }
 }
@@ -823,6 +808,10 @@ struct cfg *clone_prefs(void)
 	    result->last_dir.browse = g_strdup(cfg->last_dir.browse);
 	if(cfg->last_dir.export)
 	    result->last_dir.export = g_strdup(cfg->last_dir.export);
+	if(cfg->play_now_path)
+	    result->play_now_path = g_strdup(cfg->play_now_path);
+	if(cfg->play_enqueue_path)
+	    result->play_enqueue_path = g_strdup(cfg->play_enqueue_path);
     }
     return(result);
 }
@@ -1198,15 +1187,76 @@ void prefs_set_last_prefs_page (gint i)
     cfg->last_prefs_page = i;
 }
 
-void prefs_set_xmms_path(const gchar *xmms)
+/* validate the the play_path @path and return a valid copy that has
+ * to be freed with g_free when it's not needed any more. */
+/* Rules: - only one '%'
+          - must be '%s'
+          - removes all invalid '%' */
+gchar *prefs_validate_play_path (const gchar *path)
 {
-    if (g_file_test (xmms, G_FILE_TEST_IS_REGULAR) == TRUE)
+    const gchar *pp;
+    gchar *npp, *npath=NULL;
+    gint num;
+
+    if ((!path) || (strlen (path) == 0)) return NULL;
+
+    npath = g_malloc0 (strlen (path)+1); /* new path can only be shorter
+					    than old path */
+    pp = path;
+    npp = npath;
+    num = 0; /* number of '%' */
+    while (*pp)
     {
-	C_FREE(cfg->xmms_path);
-	cfg->xmms_path = g_strdup(xmms);
+	if (*pp == '%')
+	{
+	    if (num != 0)
+	    {
+		gtkpod_warning (_("'%s': only one '%%s' allowed.\n"), path);
+		++pp; /* skip '%.' */
+	    }
+	    else
+	    {
+		if (*(pp+1) != 's')
+		{
+		    gtkpod_warning (_("'%s': only one '%%s' allowed.\n"), path);
+		    ++pp; /* skip '%s' */
+		}
+		else
+		{   /* copy '%s' */
+		    *npp++ = *pp++;
+		    *npp++ = *pp;
+		}
+	    }
+	    ++num;
+	}
+	else
+	{
+	    *npp++ = *pp;
+	}
+	if (*pp) ++pp; /* increment if we are not at the end */
     }
+    return npath;
 }
-gchar * prefs_get_xmms_path(void)
+
+
+void prefs_set_play_now_path (const gchar *path)
 {
-    return(cfg->xmms_path);
+    C_FREE (cfg->play_now_path);
+    cfg->play_now_path = prefs_validate_play_path (path);
+}
+
+gchar *prefs_get_play_now_path (void)
+{
+    return cfg->play_now_path;
+}
+
+void prefs_set_play_enqueue_path (const gchar *path)
+{
+    C_FREE (cfg->play_enqueue_path);
+    cfg->play_enqueue_path = prefs_validate_play_path (path);
+}
+
+gchar *prefs_get_play_enqueue_path (void)
+{
+    return cfg->play_enqueue_path;
 }

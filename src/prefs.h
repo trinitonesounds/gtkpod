@@ -81,7 +81,8 @@ struct cfg
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
-  gchar *xmms_path;
+  gchar *play_now_path;         /* path for 'Play Now' */
+  gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
 };
 
 /* FIXME: make the global struct obsolete! */
@@ -139,7 +140,6 @@ gboolean prefs_get_song_ipod_file_deletion(void);
 gboolean prefs_get_id3_write(void);
 gboolean prefs_get_id3_writeall(void);
 gchar *prefs_get_ipod_mount (void);
-gchar *prefs_get_xmms_path(void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);
 void prefs_get_size_conf_sw (gint *x, gint *y);
@@ -170,5 +170,10 @@ GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
 gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
-void prefs_set_xmms_path(const gchar *xmms);
+gchar *prefs_validate_play_path (const gchar *path);
+void prefs_set_play_now_path (const gchar *path);
+gchar *prefs_get_play_now_path (void);
+void prefs_set_play_enqueue_path (const gchar *path);
+gchar *prefs_get_play_enqueue_path (void);
+
 #endif __PREFS_H__
