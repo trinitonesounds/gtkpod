@@ -1329,26 +1329,53 @@ static gint lame_vcmp(gchar a[5], gchar b[5]) {
 }
 
 
-static gboolean check_originator(char buf[]) {
-	char oc = (buf[0] & 0x1c) >> 2;
-	return ((oc > 0) && (oc <= 3)) ? TRUE : FALSE;
-}
+static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
+	char oc, nc;
+	gint gain;
 
+	/* check originator */
+	oc = (buf[0] & 0x1c) >> 2;
+	if ((oc <= 0) || (oc > 3)) return;
 
-static gboolean check_invalid(char buf[]) {
+	/* check name code */
+	nc = buf[0] & 0xe0;
+	if (!((nc == 0x20) || (nc == 0x40))) return;
+	
+	gain = ((buf[0] & 0x1) << 8) + buf[1];
+	
 	/* This would be a value of -0.
 	 * That value however is illegal by current standards and reserved for
 	 * future use. */
+	if ((!gain) && (buf[0] & 0x02)) return;
 	
-	return (((buf[0] && 0x02) == 0x02) && 
-			((buf[1] & 0xff) == 0x0)) ?
-		TRUE : FALSE;
+	if (buf[0] & 2) gain = -gain;
+	
+	gain += gain_adjust;
+
+	switch (nc) {
+		case 0x20:
+			track->radio_gain = gain;
+			track->radio_gain_set = TRUE;
+			printf("radio_gain (lame): %i\n", track->radio_gain);
+			break;
+		case 0x40:
+			track->audiophile_gain = gain;
+			track->audiophile_gain_set = TRUE;
+			printf("audiophile_gain (lame): %i\n", 
+					track->audiophile_gain);
+			break;
+	}
 }
 
 
 static inline guint32 parse_ape_uint32(char *buf) {
 	return (buf[0] & 0xff) | (buf[1] & 0xff) << 8 
 		| (buf[2] & 0xff) << 16 | (buf[3] & 0xff) << 24;
+}
+
+static inline guint32 parse_lame_uint32(char *buf) {
+	return (buf[0] & 0xff) << 24 | (buf[1] & 0xff) << 16 
+		| (buf[2] & 0xff) << 8 | (buf[3] & 0xff);
 }
 
 /* 
@@ -1402,10 +1429,10 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	if (!strncmp(id3head.id, "ID3", 3)) {
 		int realsize = 0;
 		
-		realsize = (id3head.size[0] & 0x7f) << 21;
-		realsize += (id3head.size[1] & 0x7f) << 14;
-		realsize += (id3head.size[2] & 0x7f) << 7;
-		realsize += id3head.size[3] & 0x7f;
+		realsize = (id3head.size[0] & 0x7f) << 21 
+			| (id3head.size[1] & 0x7f) << 14 
+			| (id3head.size[2] & 0x7f) << 7 
+			| (id3head.size[3] & 0x7f);
 
 		if (id3head.flags & TAG_FOOTER) {
 			/* footer is copy of header */
@@ -1466,17 +1493,21 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 		goto rg_fail;
 
 	/* get the peak signal. FIXME: check if it is set at all */
-	ps = (buf[0] & 0xff) << 24 | (buf[1] & 0xff) << 16 
-		| (buf[2] & 0xff) << 8 | (buf[3] & 0xff);
+	ps = parse_lame_uint32(buf);
 	
 	if ((lame_vcmp(version, "3.94b") >= 0)) {
-		track->peak_signal = ps;
+		if (ps) {
+			track->peak_signal = ps;
+			track->peak_signal_set = TRUE;
+			printf("peak_signal (lame): %f\n", (double)
+					track->peak_signal / 0x800000);
+		}
 	} else {
 		float f = *((float *) (void *) (&ps)) * 0x800000;
 		track->peak_signal = (guint32) f;
+		printf("peak_signal (lame floating point): %f\n", 
+				(double) track->peak_signal / 0x800000);
 	}
-	track->peak_signal_set = TRUE;
-/* 	printf("peak_signal: %f\n", track->peak_signal); */
 
 	/*
 	 * Versions prior to 3.95.1 used a reference volume of 83dB.
@@ -1491,36 +1522,14 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	if (fread(&buf[0], 1, 2, file) != 2)
 		goto rg_fail;
 
-	/* check if radio_gain (Name Code) is set and if originator is valid */
-	if (((buf[0] & 0xe0) == 0x20) && check_originator(buf) 
-			&& (!check_invalid(buf))) {
-		track->radio_gain = ((buf[0] & 0x1) << 8) + buf[1];
-		
-		if (buf[0] & 2) track->radio_gain = -track->radio_gain;
-		
-		track->radio_gain += gain_adjust;
-		track->radio_gain_set = TRUE;
+	/* radio gain */
+	read_lame_replaygain(buf, track, gain_adjust);
 
-/*		if (prefs_get_mp3_volume_from_radio_gain ()) 
-		        track->volume = mp3_get_volume_from_radio_gain
-				(track->radio_gain);
-*/	}
-	
 	if (fread(&buf[0], 1, 2, file) != 2)
 		goto rg_fail;
 
-	/* check if audiophile_gain (Name Code) is set and if originator is
-	 * valid */
-	if (((buf[0] & 0xe0) == 0x40) && check_originator(buf)
-			&& (!check_invalid(buf))) {
-		track->audiophile_gain = ((buf[0] & 0x1) << 8) + buf[1];
-		
-		if (buf[0] & 2) track->radio_gain = -track->radio_gain;
-		
-		track->audiophile_gain += gain_adjust;
-		track->audiophile_gain_set = TRUE;
-		/* printf("audiophile_gain: %i\n", track->audiophile_gain);*/
-	}
+	/* audiophile gain */
+	read_lame_replaygain(buf, track, gain_adjust);
 
 	fclose(file);
 	return TRUE;
@@ -1633,6 +1642,7 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 				d *= 10;
 				track->radio_gain = (guint32) floor(d + 0.5);
 				track->radio_gain_set = TRUE;
+				printf("radio_gain (ape): %i\n", track->radio_gain);
 			}
 			
 			continue;
@@ -1647,6 +1657,7 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 				d *= 0x800000;
 				track->peak_signal = (guint32) floor(d + 0.5);
 				track->peak_signal_set = TRUE;
+				printf("peak_signal (ape): %f\n", (double) track->peak_signal / 0x800000);
 			}
 
 			continue;
@@ -1750,7 +1761,11 @@ Track *file_get_mp3_info (gchar *name)
     }
 
     mp3_get_track_lame_replaygain(name, track);
+    track->peak_signal_set = FALSE;
+    track->radio_gain_set = FALSE;
+    track->audiophile_gain_set = FALSE;
     mp3_get_track_ape_replaygain(name, track);
+    printf("\n");
 
     /* Get additional info (play time and bitrate */
     mp3info = mp3file_get_info (name);
