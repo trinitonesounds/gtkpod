@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 21:56:58 jcs>
+/* Time-stamp: <2004-07-22 00:32:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1358,13 +1358,13 @@ static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
 	switch (nc) {
 		case 0x20:
 			if (track->radio_gain_set) return;
-			track->radio_gain = gain;
+			track->radio_gain = (gdouble)gain / 10;
 			track->radio_gain_set = TRUE;
 /*			printf("radio_gain (lame): %i\n", track->radio_gain); */
 			break;
 		case 0x40:
 			if (track->audiophile_gain_set) return;
-			track->audiophile_gain = gain;
+			track->audiophile_gain = (gdouble)gain / 10;
 			track->audiophile_gain_set = TRUE;
 /*			printf("audiophile_gain (lame): %i\n", 
 					track->audiophile_gain);*/
@@ -1416,8 +1416,8 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	int sideinfo;
 	guint32 ps;
 
-	track->radio_gain = 0xffff;
-	track->audiophile_gain = 0xffff;
+	track->radio_gain = 0;
+	track->audiophile_gain = 0;
 	track->peak_signal = 0;
 	track->radio_gain_set = FALSE;
 	track->audiophile_gain_set = FALSE;
@@ -1661,29 +1661,29 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 		
 		if (entry_length + 1 > sizeof(buf))
 			continue;
-		
-		if (!track->radio_gain_set && !strncasecmp(&dbuf[pos],
-					"REPLAYGAIN_TRACK_GAIN", pos2 - pos)) {
+/* 		printf ("%s:%d:%d\n",&dbuf[pos], pos2, pos); */
+		if (!track->radio_gain_set && !strcasecmp(&dbuf[pos],
+					"REPLAYGAIN_TRACK_GAIN")) {
 			memcpy(buf, &dbuf[pos2], entry_length);
 			buf[entry_length] = '\0';
 			
-			d = strtod(buf, &ep);
+			d = g_ascii_strtod(buf, &ep);
+/* 			printf("%f\n", d); */
 			if ((ep == buf + entry_length - 3) 
 					&& (!strncasecmp(ep, " dB", 3))) {
-				d *= 10;
-				track->radio_gain = (guint32) floor(d + 0.5);
+			    track->radio_gain = d;
 				track->radio_gain_set = TRUE;
 /*				printf("radio_gain (ape): %i\n", track->radio_gain);*/
 			}
 			
 			continue;
 		}
-		if (!track->peak_signal_set && !strncasecmp(&dbuf[pos],
-					"REPLAYGAIN_TRACK_PEAK", pos2 - pos)) {
+		if (!track->peak_signal_set && !strcasecmp(&dbuf[pos],
+					"REPLAYGAIN_TRACK_PEAK")) {
 			memcpy(buf, &dbuf[pos2], entry_length);
 			buf[entry_length] = '\0';
 			
-			d = strtod(buf, &ep);
+			d = g_ascii_strtod(buf, &ep);
 			if (ep == buf + entry_length) {
 				d *= 0x800000;
 				track->peak_signal = (guint32) floor(d + 0.5);
@@ -1823,7 +1823,6 @@ gboolean mp3_get_gain (gchar *path, Track *track)
 
 	mp3_get_track_lame_replaygain(path, track);
 	if (track->radio_gain_set && track->peak_signal_set) return TRUE;
-	
 	mp3_get_track_ape_replaygain(path, track);
 	if (track->radio_gain_set) return TRUE;
 	    

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-19 22:27:20 jcs>
+/* Time-stamp: <2004-07-22 00:32:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -478,9 +478,9 @@ filename_from_uri (const char *uri,
 
 
 
-gint32 replaygain_to_soundcheck(gint replaygain)
+gint32 replaygain_to_soundcheck(gdouble replaygain)
 {
-    double tv;
+    gdouble tv;
     gint32 soundcheck = 0;
 
 /*    tv = ((double) replaygain) / (5.0 * log10(2.0));*/

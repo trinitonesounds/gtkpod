@@ -10,6 +10,10 @@ gtkpod V0.81-CVS
 	displayed (must have been around ever since duplicate
 	detection was introduced...)
 
+	BUGFIX: gain tags written by mp3gain were never read
+	correctly. Normalization using mp3gain was therefore
+	impossible. Didn't anyone ever use that feature?!
+
 	IMPROVEMENT: Added "Time Created" support to special sorttab,
 	track display and iTunesDB. (Before only "modified" and
 	"played" were supported.)

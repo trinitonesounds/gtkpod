@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-18 20:55:58 jcs>
+/* Time-stamp: <2004-07-22 00:24:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -596,9 +596,9 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
       if (track->peak_signal_set)
 	  fprintf (fp, "peak_signal=%u\n", track->peak_signal);
       if (track->radio_gain_set)
-	  fprintf (fp, "radio_gain=%d\n", track->radio_gain);
+	  fprintf (fp, "radio_gain=%f.2\n", track->radio_gain);
       if (track->audiophile_gain_set)
-	  fprintf (fp, "audiophile_gain=%d\n", track->audiophile_gain);
+	  fprintf (fp, "audiophile_gain=%f.2\n", track->audiophile_gain);
       fprintf (fp, "transferred=%d\n", track->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }

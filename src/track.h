@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-07-20 00:46:19 jcs>
+/* Time-stamp: <2004-07-22 00:21:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -71,9 +71,9 @@ typedef struct
   gint32  volume;            /* volume adjustment              */
   gint32  soundcheck;        /* volume adjustment "soundcheck" */
   guint32 peak_signal;	     /* LAME Peak Signal * 0x800000    */
-  gint32  radio_gain;	     /* RadioGain in dB*10
+  gdouble radio_gain;	     /* RadioGain in dB
 				(as defined by www.replaygain.org) */
-  gint32  audiophile_gain;   /* AudiophileGain in dB*10 
+  gdouble audiophile_gain;   /* AudiophileGain in dB 
 				(as defined by www.replaygain.org)  */
   gboolean peak_signal_set;  /* has the peak signal been set?       */
   gboolean radio_gain_set;   /* has the radio gain been set?        */
