@@ -1,8 +1,5 @@
 gtkpod V0.51-CVS
-	*************************************************************
-	CAUTION: CURRENT CVS VERSION IS BROKEN -- USE gtkpod V0.50
-	INSTEAD.
-	*************************************************************
+	NEW FEATURE: display free space on iPod.
 
 	NEW FEATURE: menu item "Arrange Sort Tabs" to make all visible
 	sort tabs the same size

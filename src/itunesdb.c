@@ -1275,7 +1275,7 @@ gchar *itunesdb_get_song_name_on_ipod (gchar *path, Song *s)
 {
     gchar *result = NULL;
 
-    if(s)
+    if(s && s->ipod_path && *s->ipod_path)
     {
 	guint i = 0, size = 0;
 	gchar *buf = g_strdup (s->ipod_path);
