@@ -2765,8 +2765,8 @@ gunichar2 *utf16_strdup (gunichar2 *utf16)
 /* compare @str1 and @str2 case-sensitively only */
 gint str_cmp (gconstpointer str1, gconstpointer str2, gpointer data)
 {
-/*	return compare_string_case_insensitive((gchar *)str1, (gchar *)str2); */
-	return strcmp((gchar *)str1, (gchar *)str2);
+	return compare_string_case_insensitive((gchar *)str1, (gchar *)str2);
+	/*return strcmp((gchar *)str1, (gchar *)str2);*/
 }
 
 static void treeKeyDestroy(gpointer key) { g_free(key); }
@@ -2920,10 +2920,9 @@ void check_db (void)
 
     gchar ** tokens;
 
-    gchar * IPOD_MUSICFILES_DIR;
-    IPOD_MUSICFILES_DIR=g_strdup_printf("%s%c%s%cMusic%c",
-					prefs_get_ipod_mount(), G_DIR_SEPARATOR,
-					IPOD_CONTROL_DIR, G_DIR_SEPARATOR,G_DIR_SEPARATOR);
+    gchar *ipod_path_as_filename = 
+      g_filename_from_utf8(prefs_get_ipod_mount(),-1,NULL,NULL,NULL);
+    const gchar * music[] = {"iPod_Control","Music",NULL,NULL,};
 
     prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
     block_widgets();
@@ -2939,11 +2938,11 @@ void check_db (void)
 	h=1;
 	if (!track->transferred) continue; /* we don't want to report not transfered files
 					    * as dandgling */
-	tokens = g_strsplit(track->ipod_path,":",4);
+	tokens = g_strsplit(track->ipod_path,":",3);
 /*	fprintf(stdout,"File %s\n", track->ipod_path); */
 	fflush(stdout);
-	if (ntokens(tokens)>=4)
-	    pathtrack=g_strdup (tokens[3]);
+	if (ntokens(tokens)>=3)
+	    pathtrack=g_strdup (tokens[2]);
 	else
 	    fprintf(stderr, "Report the bug please: shouldn't be 0 at %s:%d\n",__FILE__,__LINE__);
 	g_tree_insert (files_known, pathtrack, track);
@@ -2958,13 +2957,10 @@ void check_db (void)
     {
 	/* directory name */
 	ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
-	ipod_fulldir=g_strdup_printf("%s%s",IPOD_MUSICFILES_DIR,ipod_dir); /* full path */
+                    music[2] = ipod_dir;
+	ipod_fulldir=resolve_path(ipod_path_as_filename,music); /* full path */
 
-	dir_des=g_dir_open(ipod_fulldir,0,NULL);
-
-	/* this shouldn't happend, but you never know */
-	if (dir_des!=NULL)
-	{
+	if(ipod_fulldir && (dir_des=g_dir_open(ipod_fulldir,0,NULL))) {
 	    while ((ipod_filename=g_strdup(g_dir_read_name(dir_des))))
 		/* we have a file in the directory*/
 	    {
@@ -2988,10 +2984,9 @@ void check_db (void)
 		    norphaned++;
 
 
-		    fn_orphaned = g_strdup_printf("%s%s%c%s",
-						  IPOD_MUSICFILES_DIR,
-						  ipod_dir, G_DIR_SEPARATOR,
-						  ipod_filename);
+		    fn_orphaned = g_strdup_printf("%s%ciPod_Control%cMusic%cF%02d%c%s",
+		      prefs_get_ipod_mount(), G_DIR_SEPARATOR, G_DIR_SEPARATOR,
+                                              G_DIR_SEPARATOR,h, G_DIR_SEPARATOR,ipod_filename);
 
 		    add_track_by_filename( fn_orphaned, pl_orphaned,
 					   FALSE, NULL, NULL);
@@ -2999,9 +2994,11 @@ void check_db (void)
 		g_free(ipod_filename);
 		g_free(pathtrack);
 	    }
+                        g_dir_close(dir_des);
 	}
+                   music[3] = NULL;
+                   g_free(ipod_dir);
 	g_free(dir_des);
-	g_free(ipod_dir);
 	g_free(ipod_fulldir);
 	process_gtk_events_blocked();
     }
@@ -3064,8 +3061,7 @@ void check_db (void)
     }
 
     if (pl_orphaned) data_changed();
-
-    g_free(IPOD_MUSICFILES_DIR);
+    g_free(ipod_path_as_filename);
     g_tree_destroy(files_known);
     buf=g_strdup_printf(_("Found %d orphaned and %d dangling files. Done."),
 			norphaned, ndangling);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-03 22:16:47 JST jcs>
+/* Time-stamp: <2004-02-24 16:04:45 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -180,6 +180,7 @@
 #include <time.h>
 #include "itunesdb.h"
 #include "support.h"
+#include "file.h"
 
 #ifdef IS_GTKPOD
 /* we're being linked with gtkpod */
@@ -713,10 +714,13 @@ static void init_playcounts (const gchar *filename)
 /* Support for playlists should be added later */
 gboolean itunesdb_parse (const gchar *path)
 {
-  gchar *filename = NULL;
+  gchar *filename,*path_as_filename;
+  const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
   gboolean result;
 
-  filename = g_build_filename (path, "iPod_Control/iTunes/iTunesDB", NULL);
+  path_as_filename = g_filename_from_utf8(path,-1,NULL,NULL,NULL);
+  filename = resolve_path(path_as_filename,db);
+  g_free(path_as_filename);
   result = itunesdb_parse_file (filename);
   g_free (filename);
   return result;
@@ -1324,10 +1328,19 @@ write_it (FILE *file)
    iPod, e.e. "/mnt/ipod" */
 gboolean itunesdb_write (const gchar *path)
 {
-    gchar *filename = NULL;
+    gchar *filename,*path_as_filename,*itunes_filename;
+    const gchar *itunes[] = {"iPod_Control","iTunes",NULL};
     gboolean result = FALSE;
 
-    filename = g_build_filename (path, "iPod_Control/iTunes/iTunesDB", NULL);
+    path_as_filename = g_filename_from_utf8(path,-1,NULL,NULL,NULL);
+    itunes_filename = resolve_path(path_as_filename,itunes);
+    g_free(path_as_filename);
+    
+    if(!itunes_filename)
+      return FALSE;
+    
+    filename = g_build_filename (itunes_filename, "iTunesDB", NULL);
+    g_free(itunes_filename);
     result = itunesdb_write_to_file (filename);
     g_free (filename);
     return result;
@@ -1353,6 +1366,7 @@ gboolean itunesdb_write_to_file (const gchar *filename)
     {
       itunesdb_warning (_("Could not open iTunesDB \"%s\" for writing.\n"),
 		      filename);
+      result = FALSE;
     }
   if (result == TRUE)
   {   /* rename "Play Counts" to "Play Counts.bak" */
@@ -1402,24 +1416,40 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
 				      const gchar *pcfile)
 {
   static gint dir_num = -1;
-  gchar *ipod_file = NULL, *ipod_fullfile = NULL;
+  gchar *track_db_path = NULL, *ipod_fullfile = NULL;
+  gchar *dest_components[] = {"iPod_Control","Music",NULL,NULL,NULL},
+    *ipod_path_as_filename,*parent_dir_filename;
   gchar *original_suffix;
+  gchar dir_num_str[5];
   gboolean success;
   gint32 oops = 0;
   gint pathlen = 0;
 
-  if (path) pathlen = strlen (path); /* length of path in bytes */
-
 #if ITUNESDB_DEBUG
   fprintf(stderr, "Entered itunesdb_copy_track_to_ipod: '%s', %p, '%s'\n", path, track, pcfile);
 #endif
-  if (dir_num == -1) dir_num = (gint) (19.0*rand()/(RAND_MAX));
-  if(track->transferred == TRUE) return TRUE; /* nothing to do */
   if (track == NULL)
     {
       g_warning ("Programming error: copy_track_to_ipod () called NULL-track\n");
       return FALSE;
     }
+  if(track->transferred == TRUE) return TRUE; /* nothing to do */ 
+
+  if (path) pathlen = strlen (path); /* length of path in bytes */
+  
+  if (dir_num == -1) dir_num = g_random_int_range (0, 20);
+  else dir_num = (dir_num + 1) % 20;
+  
+  g_snprintf(dir_num_str,5,"F%02d",dir_num);
+  dest_components[2] = dir_num_str;
+  
+  ipod_path_as_filename = g_filename_from_utf8(path,-1,NULL,NULL,NULL);
+  parent_dir_filename = resolve_path(ipod_path_as_filename,(const gchar **)dest_components);
+  if(parent_dir_filename == NULL) {
+          /* Can't find the parent of the filenames we're going to generate to copy into */
+          g_free(ipod_path_as_filename);
+          return FALSE;
+  }
 
   /* we may need the original suffix of pcfile to construct a correct
      ipod filename */
@@ -1429,43 +1459,28 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
   if (!original_suffix) original_suffix = "";
 
   /* If track->ipod_path exists, we use that one instead. */
-  ipod_fullfile = itunesdb_get_track_name_on_ipod (path, track);
-  if (!ipod_fullfile) do
+
+  for (ipod_fullfile = itunesdb_get_track_name_on_ipod (path, track) ; !ipod_fullfile ; oops++)
   { /* we need to loop until we find an unused filename */
-      if (ipod_file)     g_free(ipod_file);
-      if (ipod_fullfile) g_free(ipod_fullfile);
-      /* The iPod seems to need the .mp3 ending to play the track.
-	 Of course the following line should be changed once gtkpod
-	 also supports other formats. */
-      ipod_file = g_strdup_printf ("/iPod_Control/Music/F%02d/gtkpod%05d%s",
-				   dir_num, track->ipod_id + oops, original_suffix);
-      ipod_fullfile = g_build_filename (path, ipod_file+1, NULL);
-      /* There is a case-sensitivity problem on some systems (see note
-       * at itunesdb_get_track_name_on_ipod (). The following code
-       tries to work around it */
-      if (!g_file_test (ipod_fullfile, G_FILE_TEST_EXISTS))
-      { /* does not exist -- let's try to create it */
-	  FILE *file = fopen (ipod_fullfile, "w+");
-	  if (file)
-	  { /* OK -- everything's fine -- let's clean up */
-	      fclose (file);
-	      remove (ipod_fullfile);
-	  }
-	  else
-	  { /* let's try to change the ".../Music/F..." to
-	     * ".../Music/f..." and try again */
-	      gchar *bufp = strstr (ipod_fullfile+pathlen,
-				    "/Music/F");
-	      if (bufp)	  bufp[7] = 'f';
-	      /* we don't have to check if it works because if it
-		 doesn't most likely @path is wrong in the first
-		 place, or the iPod isn't mounted etc. We'll catch
-		 that curing copy anyhow. */
-	  }
+      dest_components[3] = 
+        g_strdup_printf("gtkpod%05d%s",track->ipod_id + oops,original_suffix);
+      ipod_fullfile = resolve_path(ipod_path_as_filename,dest_components);
+      if(ipod_fullfile) {
+              g_free(ipod_fullfile);
+              ipod_fullfile = NULL;
+      } else {
+        gchar *leaf_filename = 
+          g_filename_from_utf8(dest_components[3],-1,NULL,NULL,NULL);
+        ipod_fullfile = g_build_filename(parent_dir_filename,leaf_filename,NULL);
+        track_db_path = g_strjoinv(":",dest_components);
+        g_free(leaf_filename);
       }
-      if (oops == 0)   oops += 90000;
-      else             ++oops;
-  } while (g_file_test (ipod_fullfile, G_FILE_TEST_EXISTS));
+      g_free(dest_components[3]);
+  }
+  
+  if(!track_db_path)
+    track_db_path = g_strdup(track->ipod_path);
+  
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "ipod_fullfile: '%s'\n", ipod_fullfile);
@@ -1475,22 +1490,18 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
   if (success)
   {
       track->transferred = TRUE;
-      ++dir_num;
-      if (dir_num == 20) dir_num = 0;
-      if (ipod_file)
-      { /* need to store ipod_filename */
-          itunesdb_convert_filename_fs2ipod(ipod_file);
 #ifdef ITUNESDB_PROVIDE_UTF8
-	  if (track->ipod_path) g_free (track->ipod_path);
-	  track->ipod_path = g_strdup (ipod_file);
+      if (track->ipod_path) g_free (track->ipod_path);
+      track->ipod_path = g_strdup (track_db_path);
 #endif
-	  if (track->ipod_path_utf16) g_free (track->ipod_path_utf16);
-	  track->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
-						   -1, NULL, NULL, NULL);
-      }
+      if (track->ipod_path_utf16) g_free (track->ipod_path_utf16);
+      track->ipod_path_utf16 = g_utf8_to_utf16 (track_db_path, -1, NULL, NULL, NULL);
   }
-  if (ipod_file )    g_free (ipod_file);
-  if (ipod_fullfile) g_free (ipod_fullfile);
+  
+  g_free(ipod_path_as_filename);
+  g_free(parent_dir_filename);
+  g_free (track_db_path);
+  g_free (ipod_fullfile);
   return success;
 }
 
@@ -1505,42 +1516,29 @@ gboolean itunesdb_copy_track_to_ipod (const gchar *path,
    original filename. Don't copy it back to @track */
 gchar *itunesdb_get_track_name_on_ipod (const gchar *path, Track *track)
 {
-    gchar *result = NULL;
+  gchar *result,*buf,*good_path,**components,*resolved;
 
-    if(track && track->ipod_path && *track->ipod_path)
-    {
-	gchar *buf = g_strdup (track->ipod_path);
-	itunesdb_convert_filename_ipod2fs (buf);
-	result = g_build_filename (path, buf, NULL);
-	/* There seems to be a problem with some distributions
-	   (kernel versions or whatever -- even identical version
-	   numbers don't don't show identical behaviour...): even
-	   though vfat is supposed to be case insensitive, a
-	   difference is made between upper and lower case under
-	   some special circumstances. As in
-	   "/iPod_Control/Music/F00" and "/iPod_Control/Music/f00
-	   "... If the former filename does not exist, we try to
-	   access the latter. If that exists we return it,
-	   otherwise we return the first version. */
-	if (!g_file_test (result, G_FILE_TEST_EXISTS))
-	{
-	    gchar *bufp = strstr (buf, "/Music/F");
-	    if (bufp)
-	    {
-		gchar *result2;
-		bufp[7] = 'f'; /* change the 'F' to 'f' */
-		result2 = g_build_filename (path, buf, NULL);
-		if (g_file_test (result2, G_FILE_TEST_EXISTS))
-		{
-		    g_free (result);
-		    result = result2;
-		}
-		else g_free (result2);
-	    }
-	}
-	g_free (buf);
-    }
+  if(!track || !track->ipod_path || !*track->ipod_path)
+    return NULL;
+        
+  buf = g_strdup (track->ipod_path);
+  itunesdb_convert_filename_ipod2fs (buf);
+  result = g_build_filename (path, buf, NULL);
+  g_free(buf);
+  if (g_file_test (result, G_FILE_TEST_EXISTS))
     return result;
+    
+  g_free(result);
+  
+  good_path = g_filename_from_utf8(path,-1,NULL,NULL,NULL);
+  components = g_strsplit(track->ipod_path,":",10);
+  
+  resolved = resolve_path(good_path,(const gchar **)components);
+  
+  g_free(good_path);
+  g_strfreev(components);
+  
+  return resolved;
 }
 
 

@@ -1652,7 +1652,7 @@ gboolean write_tags_to_file (Track *track)
 	/* need to get ipod filename */
 	ipod_fullpath = get_track_name_on_ipod (track);
 	if (file_write_info (
-		track->pc_path_locale, track) == FALSE)
+		ipod_fullpath, track) == FALSE)
 	{
 	    gtkpod_warning (_("Couldn't change tags of file: %s\n"),
 			    ipod_fullpath);
@@ -1781,7 +1781,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     fp = fopen (name, "r");
     if (!fp)
     {
-	gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
+	gtkpod_warning (_("Could not open \"iTunesDB.ext\" for reading extended info.\n"),
 			name);
 	return FALSE;
     }
@@ -1959,10 +1959,13 @@ void handle_import (void)
     { /* iPod is connected */
 	if (prefs_get_write_extended_info())
 	{
-	    name1 = g_build_filename (prefs_get_ipod_mount (),
-				"iPod_Control/iTunes/iTunesDB.ext", NULL);
-	    name2 = g_build_filename (prefs_get_ipod_mount (),
-				"iPod_Control/iTunes/iTunesDB", NULL);
+                         const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL},
+                           *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
+                         gchar *ipod_mount_filename = g_filename_from_utf8
+                             (prefs_get_ipod_mount(),-1,NULL,NULL,NULL);
+	    name1 = resolve_path(ipod_mount_filename,ext_db);
+	    name2 = resolve_path(ipod_mount_filename,db);
+                        g_free(ipod_mount_filename);
 	    success = read_extended_info (name1, name2);
 	    g_free (name1);
 	    g_free (name2);
@@ -2281,16 +2284,24 @@ static void flush_tracks_abort (gboolean *abort)
 /* check if iPod directory stucture is present */
 static gboolean ipod_dirs_present (void)
 {
-    const gchar *mp = prefs_get_ipod_mount ();
+    gchar *ipod_path_as_filename = 
+      g_filename_from_utf8(prefs_get_ipod_mount (),-1,NULL,NULL,NULL);
+    const gchar *music[] = {"iPod_Control","Music",NULL},
+      *itunes[] = {"iPod_Control","iTunes",NULL};
     gchar *file;
     gboolean result = TRUE;
 
-    file = g_build_filename (mp, "iPod_Control/Music", NULL);
-    if (!g_file_test (file, G_FILE_TEST_IS_DIR))  result = FALSE;
-    g_free (file);
-    file = g_build_filename (mp, "iPod_Control/iTunes", NULL);
-    if (!g_file_test (file, G_FILE_TEST_IS_DIR))  result = FALSE;
-    g_free (file);
+    file = resolve_path(ipod_path_as_filename,music);
+    if(!file || !g_file_test(file,G_FILE_TEST_IS_DIR))
+      result = FALSE;
+    g_free(file);
+    
+    file = resolve_path(ipod_path_as_filename,itunes);
+    if(!file || !g_file_test(file,G_FILE_TEST_IS_DIR))
+      result = FALSE;
+    g_free(file);
+    
+    g_free(ipod_path_as_filename);
 
     return result;
 }
@@ -2524,16 +2535,25 @@ static gboolean flush_tracks (void)
 /* used to handle export of database */
 void handle_export (void)
 {
-  gchar *ipt, *ipe, *cft=NULL, *cfe=NULL, *cfgdir;
+  gchar *ipt, *ipe, *cft=NULL, *cfe=NULL, *cfgdir, *itunes_filename,
+    *ipod_path_as_filename = 
+      g_filename_from_utf8(prefs_get_ipod_mount(),-1,NULL,NULL,NULL);
+  const gchar *itunes_components[] = {"iPod_Control","iTunes",NULL};
   gboolean success = TRUE;
   gchar *buf;
+  
+  itunes_filename = resolve_path(ipod_path_as_filename,itunes_components);
+  if(!itunes_filename) {
+    g_free(ipod_path_as_filename);
+    gtkpod_statusbar_message(_("Error writing iTunesDB to iPod.  No iTunes directory!"));
+    return;
+  }
 
   block_widgets (); /* block user input */
   cfgdir = prefs_get_cfgdir ();
-  ipt = g_build_filename (prefs_get_ipod_mount (),
-			  "iPod_Control/iTunes/iTunesDB", NULL);
-  ipe = g_build_filename (prefs_get_ipod_mount (),
-			  "iPod_Control/iTunes/iTunesDB.ext", NULL);
+  ipt = g_build_filename(itunes_filename,"iTunesDB",NULL);
+  ipe = g_build_filename(itunes_filename,"iTunesDB.ext",NULL);
+  g_free(ipod_path_as_filename);
   if (cfgdir)
   {
       cft = g_build_filename (cfgdir, "iTunesDB", NULL);
@@ -2643,4 +2663,80 @@ gboolean files_are_saved (void)
 void data_changed (void)
 {
   files_saved = FALSE;
+}  
+
+/* There seems to be a problem with some distributions
+      (kernel versions or whatever -- even identical version
+      numbers don't don't show identical behaviour...): even
+      though vfat is supposed to be case insensitive, a
+     difference is made between upper and lower case under
+     some special circumstances. As in
+     "/iPod_Control/Music/F00" and "/iPod_Control/Music/f00
+     "... If the former filename does not exist, we try to find an existing
+     case insensitive match for each component of the filename. 
+     If we can find such a match, we return it.  Otherwise, we return NULL.*/
+     
+   /* We start by assuming that the ipod mount point exists.  Then, for each
+    * component c of track->ipod_path, we try to find an entry d in good_path that
+    * is case-insensitively equal to c.  If we find d, we append d to good_path and make
+    * the result the new good_path.  Otherwise, we quit and return NULL. */
+gchar * resolve_path(const gchar *root,const gchar * const * components) {
+  gchar *good_path = g_strdup(root);
+  guint32 i;
+    
+  for(i = 0 ; components[i] ; i++) {
+    GDir *cur_dir;
+    gchar *component_as_filename = 
+      g_filename_from_utf8(components[i],-1,NULL,NULL,NULL);
+    gchar *test_path = g_build_filename(good_path,component_as_filename,NULL);
+    gchar *component_stdcase;
+    const gchar *dir_file;
+    g_free(component_as_filename);
+    if(g_file_test(test_path,G_FILE_TEST_EXISTS)) {
+      /* This component does not require fixup */
+      g_free(good_path);
+      good_path = test_path;
+      continue;
+    }
+    g_free(test_path);
+    component_stdcase = g_utf8_casefold(components[i],-1);
+    /* Case insensitively compare the current component with each entry
+     * in the current directory. */
+    for(cur_dir = g_dir_open(good_path,0,NULL) ; 
+      (dir_file = g_dir_read_name(cur_dir)) ; ) {
+      gchar *file_utf8 = g_filename_to_utf8(dir_file,-1,NULL,NULL,NULL);
+      gchar *file_stdcase = g_utf8_casefold(file_utf8,-1);
+      gboolean found = !g_utf8_collate(file_stdcase,component_stdcase);
+      gchar *new_good_path;
+      g_free(file_stdcase);
+      if(!found) {
+         /* This is not the matching entry */
+        g_free(file_utf8);
+        continue;
+      }
+      
+      new_good_path = dir_file ? g_build_filename(good_path,dir_file,NULL) : NULL;
+      g_free(good_path);
+      good_path= new_good_path;
+      /* This is the matching entry, so we can stop searching */
+      break;
+    }
+    
+    if(!dir_file) {
+      /* We never found a matching entry */
+      g_free(good_path);
+      good_path = NULL;
+    }
+    
+    g_free(component_stdcase);
+    g_dir_close(cur_dir);
+    if(!good_path || !g_file_test(good_path,G_FILE_TEST_EXISTS))
+      break; /* We couldn't fix this component, so don't try later ones */
+  }
+    
+  if(good_path && g_file_test(good_path,G_FILE_TEST_EXISTS))
+    return good_path;
+          
+  return NULL;
 }
+

@@ -15,6 +15,9 @@ gtkpod V0.73-CVS
 
 	IMPROVEMENT: streamlined layout of info window
 
+	IMPROVEMENT: included 	Andrew Huntwork's patch to fix issues
+	concerning case-sensitivity of filenames under some conditions.
+
 	IMPROVEMENT: send 'eject' to the iPod after unmounting. This only
 	works if the user has write access to the device file
 	(e.g. /dev/sda2)

@@ -50,7 +50,11 @@ Dangling/orphaned tracks
 
 - play track and enqueue track should update playcount and last played
   track's field. (Should be done by some plugin that tells gtkpod when
-  a track has been played -- using either filename or md5 checksum).
+  a track has been played -- using either filename or md5
+  checksum. Stefan Jol: "Perhaps the coverviewer plugin is a good
+  basis.  It's a plugin that searches the internet for a picture of
+  the cover with the song title and artist info. It's written in
+  python.").
 
 - add an option to let the user decide if all the gtkpod's
   playlist must be updated on export.
