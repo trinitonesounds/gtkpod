@@ -1,4 +1,4 @@
-gtkpod V0.83.CVS
+gtkpod V0.85.0
 	BUGFIX: when clicking onto the column header of the track
 	treeview three times and moving sidewards with the mouse at
 	the same time, gtkpod crashed. Crashing was due to a bad
