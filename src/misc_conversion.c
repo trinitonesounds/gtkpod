@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:12:27 JST jcs>
+/* Time-stamp: <2004-03-24 23:13:50 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,25 +31,11 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <unistd.h>
 #include "charset.h"
-#include "clientserver.h"
-#include "confirmation.h"
-#include "dirbrowser.h"
-#include "display.h"
-#include "file.h"
-#include "interface.h"
 #include "itunesdb.h"
-#include "md5.h"
 #include "misc.h"
-#include "playlist.h"
 #include "prefs.h"
-#include "prefs_window.h"
-#include "track.h"
 #include "support.h"
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:12:28 JST jcs>
+/* Time-stamp: <2004-03-24 23:10:04 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,20 +36,9 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "charset.h"
-#include "clientserver.h"
-#include "confirmation.h"
-#include "dirbrowser.h"
-#include "display.h"
-#include "file.h"
 #include "interface.h"
-#include "itunesdb.h"
-#include "md5.h"
 #include "misc.h"
-#include "playlist.h"
 #include "prefs.h"
-#include "prefs_window.h"
-#include "track.h"
 #include "support.h"
 
 

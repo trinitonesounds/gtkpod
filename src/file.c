@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:29:06 JST jcs>
+/* Time-stamp: <2004-03-24 23:20:23 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,18 +31,15 @@
 #endif
 
 #include <ctype.h>
-#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/file.h>
-#include <time.h>
 #include <unistd.h>
 
 #include "charset.h"
 #include "clientserver.h"
 #include "confirmation.h"
 #include "file.h"
-#include "info.h"
 #include "itunesdb.h"
 #include "md5.h"
 #include "misc.h"
@@ -50,7 +47,6 @@
 #include "mp4file.h"
 #include "prefs.h"
 #include "support.h"
-#include "tools.h"
 #include "wavfile.h"
 
 /* Determine the type of a file. 
