@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-06 22:33:24 jcs>
+/* Time-stamp: <2004-11-09 23:57:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1119,12 +1119,12 @@ static void tm_unsort (void)
 /* 	printf ("IN  set: %d, column: %d, order: %d\n", set, id, order); */
 
 	prefs_set_tm_sort (SORT_NONE);
-
+#if !BROKEN_GTK_TREE_SORT
 	gtk_tree_sortable_set_sort_column_id
 	    (GTK_TREE_SORTABLE (model),
 	     GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
 	     GTK_SORT_ASCENDING);
-
+#endif
 
 /* 	set = gtk_tree_sortable_get_sort_column_id */
 /* 	    (GTK_TREE_SORTABLE (model), &id, &order); */
@@ -1534,10 +1534,12 @@ void tm_enable_disable_view_sort (gboolean enable)
 		}
 		else
 		{
+#if !BROKEN_GTK_TREE_SORT
 		    gtk_tree_sortable_set_sort_column_id (
 			GTK_TREE_SORTABLE (model),
 			GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
 			prefs_get_tm_sort ());
+#endif
 		}
 	    }
 	}
