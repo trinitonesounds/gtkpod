@@ -65,7 +65,7 @@ gchar* get_track_name_on_ipod(Track *s);
 gchar* get_preferred_track_name_format(Track *s);
 void mark_track_for_deletion (Track *track);
 void fill_in_extended_info (Track *track);
-double get_filesize_of_deleted_tracks(void);
+double get_filesize_of_deleted_tracks (guint32 *num);
 Track *get_track_info_from_file (gchar *name, Track *or_track);
 void update_charset_info (Track *track);
 

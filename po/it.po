@@ -1,3 +1,5 @@
+# translation of it.po to 
+# translation of it.po to
 # Italian language translation for gtkpod.
 # Copyright (C) 2003 Edward Matteucci
 # This file is distributed under the same license as the gtkpod package.
@@ -6,30 +8,32 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtkpod 0.52\n"
-"POT-Creation-Date: 2003-11-29 13:00+0900\n"
-"PO-Revision-Date: 2003-11-29 11:35+0900\n"
-"Last-Translator: Edward Matteucci <edward_matteucc@users.sourceforge.net>\n"
-"Language-Team: none\n"
+"Project-Id-Version: it\n"
+"POT-Creation-Date: 2003-11-30 00:58+0900\n"
+"PO-Revision-Date: 2003-11-29 12:25+0100\n"
+"Last-Translator: \n"
+"Language-Team:  <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: KBabel 1.0.2\n"
 
 # c-format
 #: src/callbacks.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] "Spostata una traccia"
-msgstr[1] "Spostata una traccia"
+msgstr[1] "Spostate %d tracce"
 
 #: src/callbacks.c:240
-#, fuzzy, c-format
+#, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "Copiata una traccia"
-msgstr[1] "Copiata una traccia"
+msgstr[1] "Copiate %d tracce"
 
 #: src/callbacks.c:416 src/callbacks.c:460
 msgid "Preferences not updated"
@@ -335,24 +339,20 @@ msgid "Create Playlist"
 msgstr "Crea nuova Playlist"
 
 #: src/context_menus.c:304
-#, fuzzy
 msgid "Delete From Playlist"
-msgstr "Cancella la traccia dalla playlist?"
+msgstr "Cancella dalla Playlist"
 
 #: src/context_menus.c:307
-#, fuzzy
 msgid "Delete From iPod"
-msgstr "Conferma la cancellazione"
+msgstr "Cancella dall'iPod"
 
 #: src/context_menus.c:313
-#, fuzzy
 msgid "Delete But Keep Tracks"
-msgstr "_Tracce Selezionate"
+msgstr "Cancella ma preserva le tracce"
 
 #: src/context_menus.c:316
-#, fuzzy
 msgid "Delete Including Tracks"
-msgstr "_Tracce Selezionate"
+msgstr "Cancella le tracce incluse"
 
 #: date_parser.l:270
 #, c-format
@@ -613,7 +613,7 @@ msgstr "Nessuna playlist selezionata."
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
 msgstr[0] "La traccia seguente non può essere aggiornata"
-msgstr[1] "Le tracce seguenti non possono essere aggiornate"
+msgstr[1] "Le %d tracce seguenti non possono essere aggiornate"
 
 #. gint id,
 #. gboolean modal,
@@ -626,7 +626,7 @@ msgstr "Aggiornamento delle tracce fallito"
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
 msgstr[0] "La traccia seguente è stata aggiornata"
-msgstr[1] "Le tracce seguenti sono state aggiornate"
+msgstr[1] "Le %d tracce seguenti sono state aggiornate"
 
 #. gint id,
 #. gboolean modal,
@@ -641,11 +641,11 @@ msgstr "nessun nome di file disponibile"
 
 #: src/file.c:1181
 msgid "file not found"
-msgstr "File non trovato"
+msgstr "file non trovato"
 
 #: src/file.c:1185
 msgid "format not supported"
-msgstr "Formato non supportato"
+msgstr "formato non supportato"
 
 #: src/file.c:1247
 #, c-format
@@ -657,7 +657,7 @@ msgstr "Elaborazione di '%s' in corso..."
 msgid "Couldn't change tags of file: %s\n"
 msgstr "Impossibile cambiare il tag del file: %s\n"
 
-#: src/file.c:1548
+#: src/file.c:1542
 #, c-format
 msgid "Could not open \"%s\" for reading extended info.\n"
 msgstr "Impossibile aprire \"%s\" per leggere le informazioni estese.\n"
@@ -747,23 +747,23 @@ msgstr "Fallita l'importazione del Database offline"
 msgid "Import aborted.\n"
 msgstr "Importazione abortita.\n"
 
-#: src/file.c:1929
+#: src/file.c:1933
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr ""
 "Impossibile aprire \"%s\" per la scrittura delle informazioni estese.\n"
 
-#: src/file.c:1941
+#: src/file.c:1945
 msgid "Aborted writing of extended info.\n"
 msgstr ""
 "Impossibile aprire \"%s\" per la scrittura delle informazioni estese.\n"
 
 #. create the dialog window
-#: src/file.c:2050 src/normalize.c:279
+#: src/file.c:2057 src/normalize.c:279
 msgid "Information"
 msgstr "Informazioni"
 
-#: src/file.c:2061
+#: src/file.c:2068
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
@@ -771,21 +771,21 @@ msgstr ""
 "Premi il bottone per abortire.\n"
 "l'esportazione può essere ultimata in un secondo momento."
 
-#: src/file.c:2074
+#: src/file.c:2081
 msgid "deleting..."
 msgstr "cancellazione in corso..."
 
-#: src/file.c:2141
+#: src/file.c:2148
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr ""
 "Alcune tracce non possono essere cancellate dall'iPod. Esportazione abortita!"
 
 #. we now have as much space as we're gonna have, copy files to ipod
-#: src/file.c:2147
+#: src/file.c:2154
 msgid "preparing to copy..."
 msgstr "copia in preparazione..."
 
-#: src/file.c:2200
+#: src/file.c:2206
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
@@ -794,37 +794,42 @@ msgstr[1] "Copiato %d di %d di nuove tracce"
 
 #. don't bounce up too quickly (>10% change only)
 #. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
-#: src/file.c:2214 src/normalize.c:414
+#: src/file.c:2220 src/normalize.c:414
 #, c-format
 msgid "%d%% (%d:%02d) left"
-msgstr "%d%% (%d:%02d) XXXXX"
+msgstr "%d%% (%d:%02d) rimasti"
 
-#: src/file.c:2224
+#: src/file.c:2230
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Alcune tracce non sono state scritte sull'iPod. Esportazione abortita"
 
-#: src/file.c:2258
+#. write iTunesDB to iPod
+#: src/file.c:2263 src/file.c:2291 src/file.c:2309
+msgid "Now writing iTunesDB. Please wait..."
+msgstr "Scrittura del iTunesDB in corso. Attendere prego..."
+
+#: src/file.c:2267
 msgid "Error writing iTunesDB to iPod. Export aborted!"
 msgstr "Errore nella scrittura del iTunesDB sull'iPod. Esportazione abortito!"
 
-#: src/file.c:2263
+#: src/file.c:2272
 msgid "Extended information not written"
 msgstr "Le informazioni estese non sono state scritte"
 
-#: src/file.c:2270
+#: src/file.c:2279
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Il file delle informazioni estese non è stato cancellato: '%s'"
 
-#: src/file.c:2286
+#: src/file.c:2299
 msgid "Backups could not be created!"
 msgstr "Impossibile creare un backup!"
 
-#: src/file.c:2302
+#: src/file.c:2318
 msgid "Export not successful!"
 msgstr "Esportazione conclusa senza successo!"
 
-#: src/file.c:2313
+#: src/file.c:2329
 msgid "iPod Database Saved"
 msgstr "Database iPod salvato"
 
@@ -916,43 +921,41 @@ msgstr "%s: l'opzione `-W %s' è ambigua\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: l'opzione `-W %s' non ammette argomenti\n"
 
-#: src/info.c:221
-#, fuzzy
+#: src/info.c:244
 msgid "offline"
-msgstr "_Offline"
+msgstr "offline"
 
-#: src/info.c:406
+#: src/info.c:307
 #, c-format
 msgid " P:%d S:%d/%d"
 msgstr " P:%d S:%d/%d"
 
-#: src/info.c:467
-#, fuzzy
+#: src/info.c:368
 msgid "B"
-msgstr "TB"
+msgstr "B"
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "kB"
 msgstr "kB"
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "MB"
 msgstr "MB"
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "GB"
 msgstr "GB"
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "TB"
 msgstr "TB"
 
-#: src/info.c:547
+#: src/info.c:448
 #, c-format
 msgid " %s Free"
 msgstr "%s Liberi"
 
-#: src/info.c:552
+#: src/info.c:453
 #, c-format
 msgid " %s Pending"
 msgstr " %s Pendenti"
@@ -1088,14 +1091,12 @@ msgid "_Save Displayed Track Order"
 msgstr "_Salva l'ordine delle tracce"
 
 #: src/interface.c:432
-#, fuzzy
 msgid "_Delete But Keep Tracks"
-msgstr "_Tracce Selezionate"
+msgstr "_Cancella ma preserva le tracce"
 
 #: src/interface.c:455
-#, fuzzy
 msgid "_Delete Completely From iPod"
-msgstr "Cancella completamente una traccia dall'iPod"
+msgstr "_Cancella completamente dall'iPod"
 
 #: src/interface.c:483
 msgid "_Edit Preferences"
@@ -1115,7 +1116,7 @@ msgstr "_Suggerimenti"
 
 #: src/interface.c:509
 msgid "_Info Window"
-msgstr ""
+msgstr "_Finestra di informazioni"
 
 #: src/interface.c:513
 msgid "_More Sort Tabs"
@@ -1717,14 +1718,12 @@ msgid "Auto-Generated Playlists"
 msgstr "Playlist Auto-Generata"
 
 #: src/interface.c:2272
-#, fuzzy
 msgid "Before removing playlists or tracks from a playlist"
-msgstr "Prima di rimuovere completamente le tracce dalla playlist"
+msgstr "Prima di rimuovere le playlist o le tracce dalla playlist"
 
 #: src/interface.c:2276
-#, fuzzy
 msgid "Before removing tracks completely from the iPod"
-msgstr "Prima di rimuovere le tracce completamente dall'iPod"
+msgstr "Prima di rimuovere completamente le tracce dall'iPod"
 
 #: src/interface.c:2280
 msgid ""
@@ -1779,15 +1778,16 @@ msgid "Track Playing"
 msgstr "Traccia in riproduzione"
 
 #: src/interface.c:2363
-#, fuzzy
 msgid "Exact path for the 'mp3gain' executable:"
-msgstr "Impossibile trovare l'eseguibile mp3gain."
+msgstr "Path esatta per l'eseguibile 'mp3gain'"
 
 #: src/interface.c:2374
 msgid ""
 "You only need to specify this if your 'mp3gain' executable is not in your "
 "default path. Example: '/usr/local/bimbam/mp3gain'."
 msgstr ""
+"Bisogna impostare questo solo se l'eseguibile 'mp3gain' non è nella tua path "
+"di default. Ad esempio: '/usr/local/bimbam/mp3gain'."
 
 #: src/interface.c:2376
 msgid "Write information about suggested gain level to file"
@@ -1809,9 +1809,8 @@ msgstr ""
 "trasferito), altrimenti userà il file originale sul hard disk."
 
 #: src/interface.c:2381
-#, fuzzy
 msgid "Volume Normalization"
-msgstr "Normalizzazione"
+msgstr "Normalizzazione del volume"
 
 #: src/interface.c:2808
 msgid " Logic: "
@@ -2006,76 +2005,79 @@ msgstr ""
 "selezionare 'Salva l'ordine delle tracce' dal menù 'Modifica' o selezionare "
 "'Auto Store' sopra."
 
-#: src/interface.c:4142
-#, fuzzy
+#: src/interface.c:4148
 msgid "gtkpod Info"
-msgstr "gtkpod"
+msgstr "informazioni su gtkpod"
 
-#: src/interface.c:4217 src/interface.c:4685
-#, fuzzy
+#: src/interface.c:4223 src/interface.c:4743
 msgid "Total"
-msgstr "Titolo"
+msgstr "Totale"
 
-#: src/interface.c:4227
-#, fuzzy
+#: src/interface.c:4233
 msgid "Selected"
-msgstr "Cancella"
+msgstr "Selezionato"
 
-#: src/interface.c:4237 src/interface.c:4398
-#, fuzzy
+#: src/interface.c:4243 src/interface.c:4404
 msgid "Number of tracks"
-msgstr "_Numero dei blocchi di ordinamento"
+msgstr "Numero di tracce"
 
-#: src/interface.c:4247 src/interface.c:4418
+#: src/interface.c:4253 src/interface.c:4424
 msgid "Play time"
 msgstr "Durata"
 
-#: src/interface.c:4257 src/interface.c:4438
+#: src/interface.c:4263 src/interface.c:4444
 msgid "File size"
 msgstr "Dimensione"
 
-#: src/interface.c:4335
-#, fuzzy
+#: src/interface.c:4341
 msgid "Track View"
-msgstr "Tracce"
+msgstr "Vista della traccia"
 
-#: src/interface.c:4408 src/interface.c:4631 src/interface.c:4675
+#: src/interface.c:4414 src/interface.c:4553 src/interface.c:4573
 msgid "      "
 msgstr "      "
 
-#: src/interface.c:4458
-#, fuzzy
+#: src/interface.c:4464
 msgid "Current Playlist"
-msgstr "Crea nuova Playlist"
+msgstr "Playlist corrente"
 
-#: src/interface.c:4521
-msgid "Free space on iPod"
-msgstr ""
-
-#: src/interface.c:4531
-msgid "File size (non-transfered)"
-msgstr ""
-
-#: src/interface.c:4541
-msgid "Non-transfered tracks"
-msgstr ""
-
-#: src/interface.c:4551
+#: src/interface.c:4503
 msgid "Total file size"
-msgstr ""
+msgstr "Dimensione dei file totale"
 
-#: src/interface.c:4561
+#: src/interface.c:4513
 msgid "Total play time"
-msgstr ""
+msgstr "Durata di riproduzione totale"
 
-#: src/interface.c:4571
+#: src/interface.c:4523
 msgid "Total number of tracks"
-msgstr ""
+msgstr "Numero totale delle tracce"
 
-#: src/interface.c:4665
-#, fuzzy
+#: src/interface.c:4563
 msgid "Number of playlists"
-msgstr "...playlist principale"
+msgstr "Numero delle playlist"
+
+#: src/interface.c:4589
+msgid "Free space on iPod"
+msgstr "Spazio libero sull'iPod"
+
+#: src/interface.c:4609
+msgid "File size (non-transfered)"
+msgstr "Dimensione dei file (non trasferiti)"
+
+#: src/interface.c:4635
+msgid "Non-transfered tracks"
+msgstr "Tracce non trasferite"
+
+#: src/interface.c:4679
+#, fuzzy
+msgid "Deleted tracks"
+msgstr "_Tracce Selezionate"
+
+#: src/interface.c:4689
+#, fuzzy
+msgid "File size (deleted)"
+msgstr "Dimensione dei file (non trasferiti)"
 
 #: src/itunesdb.c:384
 msgid "Master-PL"
@@ -2401,10 +2403,10 @@ msgid "Deleted playlist '%s'"
 msgstr "Playlist cancellata '%s'"
 
 #: src/misc.c:1177
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
-msgstr[0] "Creata la playlist '%s' con %d traccia."
+msgstr[0] "Cancellata la playlist '%s' con la %d traccia appartenente."
 msgstr[1] "Creata la playlist '%s' con %d tracce."
 
 #. master playlist
@@ -2413,7 +2415,7 @@ msgid "Cannot delete master playlist."
 msgstr "Impossibile cancellare la playlist principale"
 
 #: src/misc.c:1237
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
 "completely from your ipod? The number of playlists this track is a member of "
@@ -2423,8 +2425,9 @@ msgid_plural ""
 "completely from your ipod? The number of playlists the tracks are member of "
 "is indicated in parentheses."
 msgstr[0] ""
-"Sei sicuro di voler eliminare completamente la seguente traccia\n"
-"dal tuo ipod?"
+"Sei sicuro di voler eliminare completamente la playlist '%s' e la traccia "
+"seguentedal tuo iPod? Il numero di playlist di cui fa parte questa traccia "
+"sono indicate tra parentesi."
 msgstr[1] ""
 "Sei sicuro di voler eliminare completamente le seguenti tracce\n"
 "dal tuo ipod?"
@@ -2442,7 +2445,6 @@ msgid "Delete Playlist?"
 msgstr "Cancella la playlist?"
 
 #: src/misc.c:1306
-#, fuzzy
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "ipod? The number of playlists this track is a member of is indicated in "
@@ -2453,7 +2455,8 @@ msgid_plural ""
 "parentheses."
 msgstr[0] ""
 "Sei sicuro di voler eliminare completamente la seguente traccia\n"
-"dal tuo ipod?"
+"dal tuo ipod? Il numero di playlist di cui questa traccia fa parte è "
+"indicato tra parentesi."
 msgstr[1] ""
 "Sei sicuro di voler eliminare completamente le seguenti tracce\n"
 "dal tuo ipod?"
@@ -2465,7 +2468,7 @@ msgstr[0] "Cancella completamente la traccia?"
 msgstr[1] "Cancella completamente le tracce?"
 
 #: src/misc.c:1318
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Are you sure you want to delete the following track from the playlist \"%s\"?"
 msgid_plural ""
@@ -2739,6 +2742,14 @@ msgid ""
 "If you do not have mp3gain installed, you can download it from http://www."
 "sourceforge.net/projects/mp3gain."
 msgstr ""
+"Impossibile trovare mp3gain. È stato provato il seguente esegubile: '%s'.\n"
+"\n"
+"Se l'esegubile mp3gain non è nella path oppure ha un nome differente, si può "
+"indicare la path completa nella sezione 'Strumenti' della finestra di "
+"impostazioni.\n"
+"\n"
+"Se non hai mp3gain installato, puoi scaricarlo da http://www.sourceforge.net/"
+"projects/mp3gain."
 
 #: src/normalize.c:165
 msgid "Could not find mp3gain executable."
@@ -2898,7 +2909,7 @@ msgstr "Impostazioni non salvate.\n"
 msgid "Unable to open '%s' for writing\n"
 msgstr "Impossibile aprire '%s' per la scrittura\n"
 
-#: src/prefs.c:1285
+#: src/prefs.c:1286
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
@@ -2906,58 +2917,56 @@ msgstr ""
 " Preferenze: Categoria num (%d<%d?) o blocco di ordinamento num (%d<%d?) "
 "fuori limite.\n"
 
-#: src/prefs.c:1334
+#: src/prefs.c:1335
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "Impossibile eseguire 'mkdir %s'\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1665
+#: src/prefs.c:1666
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: stile non legale '%d' ignorato\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1707
+#: src/prefs.c:1708
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort: tipo non legale '%d' ignorato\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1728
+#: src/prefs.c:1729
 #, c-format
 msgid "prefs_set_st_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_st_sort: tipo non legale '%d' ignorato\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1749
+#: src/prefs.c:1750
 #, c-format
 msgid "prefs_set_tm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_tm_sort: tipo non legale '%d' ignorato\n"
 
-#: src/prefs.c:1863 src/prefs.c:1870
+#: src/prefs.c:1864 src/prefs.c:1871
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr "'%s': è permesso solo un '%%s'.\n"
 
 #. update for count == 1, 21, 41 ... and for count == n
-#: src/song.c:403
+#: src/song.c:406
 #, c-format
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
 msgstr[0] "Calcolato l'hash di %d di %d traccia."
 msgstr[1] "Calcolato l'hash di %d di %d tracce."
 
-#: src/song.c:465
+#: src/song.c:468
 #, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] "La seguente traccia duplicata è stata rimossa."
-msgstr[1] ""
-"Le seguenti %d tracce duplicate sono state rimosse.La seguente traccia "
-"duplicata non è stata aggiunta alla playlist principale"
+msgstr[1] "Le seguenti %d tracce duplicate sono state rimosse."
 
-#: src/song.c:472
+#: src/song.c:475
 #, c-format
 msgid ""
 "The following duplicate track has not been added to the master play list."
@@ -2967,12 +2976,12 @@ msgid_plural ""
 msgstr[0] ""
 "La seguente traccia duplicata non è stata aggiunta alla playlist principale"
 msgstr[1] ""
-"Le seguenti traccie duplicate non sono state aggiunte alla playlist "
+"Le seguenti %d tracce duplicate non sono state aggiunte alla playlist "
 "principale"
 
 #. gint id,
 #. gboolean modal,
-#: src/song.c:479
+#: src/song.c:482
 msgid "Duplicate detection"
 msgstr "Rilevazione dei duplicati"
 
@@ -2980,6 +2989,3 @@ msgstr "Rilevazione dei duplicati"
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Impossibile trovare il file pixmap: %s"
-
-#~ msgid "_Misc"
-#~ msgstr "_Misc"

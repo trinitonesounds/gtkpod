@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-29 11:58:11 jcs>
+/* Time-stamp: <2003-11-30 01:06:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -41,38 +41,6 @@
 /* pointer to info window */
 static GtkWidget *info_window = NULL;
 
-/* structure to transfer info about track view */
-struct info_track_view {
-    guint32 tracks_total, tracks_selected;
-    guint32 playtime_total, playtime_selected;  /* in seconds */
-    double  filesize_total, filesize_selected;  /* in bytes   */
-};
-
-/* structure to transfer info about track view */
-struct info_playlist_view {
-    guint32 tracks;
-    guint32 playtime; /* in seconds */
-    double  filesize; /* in bytes   */
-};
-
-/* structure to transfer info about the "totals" section */
-struct info_totals_view {
-    guint32 playlists;
-    guint32 tracks;
-    guint32 playtime;    /* in seconds */
-    double  filesize;    /* in bytes   */
-    guint32 nt_tracks;
-    double  nt_filesize; /* in bytes   */
-    double  free_space;  /* in bytes   */
-};
-
-/* static function declarations */
-static void info_get_track_view_info_total (struct info_track_view *tv);
-static void info_get_track_view_info_selected (struct info_track_view *tv);
-static void info_get_playlist_view_info (struct info_playlist_view *pv);
-static void info_get_totals_view_info (struct info_totals_view *tv);
-static void info_get_totals_view_info_space (struct info_totals_view *tv);
-
 /* stuff for statusbar */
 static GtkWidget *gtkpod_statusbar = NULL;
 static GtkWidget *gtkpod_tracks_statusbar = NULL;
@@ -84,6 +52,27 @@ static double get_ipod_free_space(void);
 static glong get_ipod_used_space(void);
 #endif
 
+
+/* fill in tracks, playtime and filesize from track list @tl */
+static void fill_in_info (GList *tl, guint32 *tracks,
+			  guint32 *playtime, double *filesize)
+{
+    GList *gl;
+
+    if (!tracks || !playtime || !filesize) return; /* sanity */
+
+    *tracks = 0;
+    *playtime = 0;
+    *filesize = 0;
+
+    for (gl=tl; gl; gl=gl->next)
+    {
+	Track *s = gl->data;
+	*tracks += 1;
+	*playtime += s->tracklen/1000;
+	*filesize += s->size;
+    }
+}
 
 static void fill_label_uint (gchar *w_name, guint32 nr)
 {    
@@ -158,33 +147,38 @@ void info_update (void)
 
 static void info_update_track_view_total (void)
 {
-    struct info_track_view *tv;
+    guint32 tracks, playtime; /* playtime in secs */
+    double  filesize;         /* in bytes */
+    GList *displayed;
 
     if (!info_window) return; /* not open */
-    tv = g_malloc0 (sizeof (struct info_track_view));
-    info_get_track_view_info_total (tv);
-    fill_label_uint ("tracks_total", tv->tracks_total);
-    fill_label_time ("playtime_total", tv->playtime_total);
-    fill_label_size ("filesize_total", tv->filesize_total);
-    g_free (tv);
+    displayed = display_get_selection (prefs_get_sort_tab_num()-1);
+    fill_in_info (displayed, &tracks, &playtime, &filesize);
+    g_list_free (displayed);
+    fill_label_uint ("tracks_total", tracks);
+    fill_label_time ("playtime_total", playtime);
+    fill_label_size ("filesize_total", filesize);
 }
 
 void info_update_track_view_selected (void)
 {
-    struct info_track_view *tv;
+    guint32 tracks, playtime; /* playtime in secs */
+    double  filesize;         /* in bytes */
+    GList *selected;
 
     if (!info_window) return; /* not open */
-    tv = g_malloc0 (sizeof (struct info_track_view));
-    info_get_track_view_info_selected (tv);
-    fill_label_uint ("tracks_selected", tv->tracks_selected);
-    fill_label_time ("playtime_selected", tv->playtime_selected);
-    fill_label_size ("filesize_selected", tv->filesize_selected);
-    g_free (tv);
+    selected = display_get_selection (prefs_get_sort_tab_num ());
+    fill_in_info (selected, &tracks, &playtime, &filesize);
+    g_list_free (selected);
+    fill_label_uint ("tracks_selected", tracks);
+    fill_label_time ("playtime_selected", playtime);
+    fill_label_size ("filesize_selected", filesize);
 }
 
 /* update track view section */
 void info_update_track_view (void)
 {
+    if (!info_window) return; /* not open */
     info_update_track_view_total ();
     info_update_track_view_selected ();
 }
@@ -192,26 +186,55 @@ void info_update_track_view (void)
 /* update playlist view section */
 void info_update_playlist_view (void)
 {
-    struct info_playlist_view *pv;
+    guint32 tracks, playtime; /* playtime in secs */
+    double  filesize;         /* in bytes */
+    GList   *tl;
 
     if (!info_window) return; /* not open */
-    pv = g_malloc0 (sizeof (struct info_playlist_view));
-    info_get_playlist_view_info (pv);
-    fill_label_uint ("playlist_tracks", pv->tracks);
-    fill_label_time ("playlist_playtime", pv->playtime);
-    fill_label_size ("playlist_filesize", pv->filesize);
-    g_free (pv);
+    tl = display_get_selection (-1);
+    fill_in_info (tl, &tracks, &playtime, &filesize);
+    g_list_free (tl);
+    fill_label_uint ("playlist_tracks", tracks);
+    fill_label_time ("playlist_playtime", playtime);
+    fill_label_size ("playlist_filesize", filesize);
 }
 
 
-static void info_fill_in_totals_view_space (struct info_totals_view *tv)
+/* update "totals" view section */
+void info_update_totals_view (void)
 {
-    if (!info_window || !tv) return;
-    fill_label_uint ("non_transfered_tracks", tv->nt_tracks);
-    fill_label_size ("non_transfered_filesize", tv->nt_filesize);
+    guint32 tracks=0, playtime=0; /* playtime in secs */
+    double  filesize=0;           /* in bytes */
+    Playlist *pl;
+
+    if (!info_window) return; /* not open */
+    pl = get_playlist_by_nr (0);
+    if (pl)  fill_in_info (pl->members, &tracks, &playtime, &filesize);
+    fill_label_uint ("total_playlists", get_nr_of_playlists ()-1);
+    fill_label_uint ("total_tracks", tracks);
+    fill_label_time ("total_playtime", playtime);
+    fill_label_size ("total_filesize", filesize);
+    info_update_totals_view_space ();
+}
+
+/* update "free space" section of totals view */
+void info_update_totals_view_space (void)
+{
+    double nt_filesize, del_filesize;
+    guint32 nt_tracks, del_tracks;
+
+
+    if (!info_window) return;
+    nt_filesize = get_filesize_of_nontransferred_tracks (&nt_tracks);
+    fill_label_uint ("non_transfered_tracks", nt_tracks);
+    fill_label_size ("non_transfered_filesize", nt_filesize);
+    del_filesize = get_filesize_of_deleted_tracks (&del_tracks);
+    fill_label_uint ("deleted_tracks", del_tracks);
+    fill_label_size ("deleted_filesize", del_filesize);
     if (!prefs_get_offline ())
     {
-	fill_label_size ("free_space", tv->free_space);
+	double free_space = get_ipod_free_space() + del_filesize - nt_filesize;
+	fill_label_size ("free_space", free_space);
     }
     else
     {
@@ -221,128 +244,6 @@ static void info_fill_in_totals_view_space (struct info_totals_view *tv)
 	    gtk_label_set_text (GTK_LABEL (w), _("offline"));
 	}
     }
-}
-
-/* update "totals" view section */
-void info_update_totals_view (void)
-{
-    struct info_totals_view *tv;
-
-    if (!info_window) return; /* not open */
-    tv = g_malloc0 (sizeof (struct info_totals_view));
-    info_get_totals_view_info (tv);
-    fill_label_uint ("total_playlists", tv->playlists);
-    fill_label_uint ("total_tracks", tv->tracks);
-    fill_label_time ("total_playtime", tv->playtime);
-    fill_label_size ("total_filesize", tv->filesize);
-    info_fill_in_totals_view_space (tv);
-    g_free (tv);
-}
-
-/* update "free space" section of totals view */
-void info_update_totals_view_space (void)
-{
-    struct info_totals_view *tv;
-
-    if (!info_window) return; /* not open */
-    tv = g_malloc0 (sizeof (struct info_totals_view));
-    info_get_totals_view_info_space (tv);
-    info_fill_in_totals_view_space (tv);
-}
-
-
-/* ------------------------------------------------------------
-
-           Functions for retrieving statistics 
-
-   ------------------------------------------------------------ */
-
-/* fill in tracks, playtime and filesize from track list @tl */
-static void fill_in_info (GList *tl, guint32 *tracks,
-			  guint32 *playtime, double *filesize)
-{
-    GList *gl;
-
-    if (!tracks || !playtime || !filesize) return; /* sanity */
-
-    *tracks = 0;
-    *playtime = 0;
-    *filesize = 0;
-
-    for (gl=tl; gl; gl=gl->next)
-    {
-	Track *s = gl->data;
-	*tracks += 1;
-	*playtime += s->tracklen/1000;
-	*filesize += s->size;
-    }
-}
-
-/* fill in track_view_info structure (total part) */
-static void info_get_track_view_info_total (struct info_track_view *tv)
-{
-    GList *displayed;
-
-    if (!tv)  return;
-    displayed = display_get_selection (prefs_get_sort_tab_num () - 1);
-    fill_in_info (displayed, &tv->tracks_total,
-		  &tv->playtime_total, &tv->filesize_total);
-    g_list_free (displayed);
-}
-
-/* fill in track_view_info structure (total part) */
-static void info_get_track_view_info_selected (struct info_track_view *tv)
-{
-    GList *selected;
-
-    if (!tv)  return;
-    selected = display_get_selection (prefs_get_sort_tab_num ());
-
-    fill_in_info (selected, &tv->tracks_selected,
-		  &tv->playtime_selected, &tv->filesize_selected);
-    g_list_free (selected);
-}
-
-#if 0
-/* not used */
-/* fill in track_view_info structure */
-static void info_get_track_view_info (struct info_track_view *tv)
-{
-    if (!tv)  return;
-
-    info_get_track_view_info_total (tv);
-    info_get_track_view_info_selected (tv);
-}
-#endif
-
-static void info_get_playlist_view_info (struct info_playlist_view *pv)
-{
-    GList *tl;
-    if (!pv)  return;
-    tl = display_get_selection (-1);
-    fill_in_info (tl, &pv->tracks, &pv->playtime, &pv->filesize);
-    g_list_free (tl);
-}
-
-static void info_get_totals_view_info (struct info_totals_view *tv)
-{
-    GList *tl;
-    Playlist *pl;
-    if (!tv)  return;
-    pl = get_playlist_by_nr (0);
-    if (!pl)  return;
-    tl = pl->members;
-    fill_in_info (tl, &tv->tracks, &tv->playtime, &tv->filesize);
-    tv->playlists = get_nr_of_playlists () - 1;
-    info_get_totals_view_info_space (tv);
-}
-
-static void info_get_totals_view_info_space (struct info_totals_view *tv)
-{
-    if (!tv)  return;
-    tv->nt_filesize = get_filesize_of_nontransferred_tracks (&tv->nt_tracks);
-    tv->free_space = get_ipod_free_space () +
-	             get_filesize_of_deleted_tracks ();
 }
 
 
@@ -539,7 +440,7 @@ gtkpod_space_statusbar_update(void)
 	gchar *str = NULL;
 	double left, pending;
 
-	left = get_ipod_free_space() + get_filesize_of_deleted_tracks ();
+	left = get_ipod_free_space() + get_filesize_of_deleted_tracks (NULL);
 	pending = get_filesize_of_nontransferred_tracks(NULL);
 	if((left-pending) > 0)
 	{

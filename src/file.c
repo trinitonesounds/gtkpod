@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-29 13:41:12 jcs>
+/* Time-stamp: <2003-11-30 00:47:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1536,18 +1536,18 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     FILE *fp;
 
 
-    md5 = md5_hash_on_file_name (itunes);
-    if (!md5)
-    {
-	g_warning ("Programming error: Could not create hash value from itunesdb\n");
-	return FALSE;
-    }
     fp = fopen (name, "r");
     if (!fp)
     {
 	gtkpod_warning (_("Could not open \"%s\" for reading extended info.\n"),
 			name);
-	g_free (md5);
+	return FALSE;
+    }
+    md5 = md5_hash_on_file_name (itunes);
+    if (!md5)
+    {
+	g_warning ("Programming error: Could not create hash value from itunesdb\n");
+	fclose (fp);
 	return FALSE;
     }
     /* Create hash table */
@@ -1887,18 +1887,22 @@ get_preferred_track_name_format (Track *s)
 
 /* in Bytes, minus the space taken by tracks that will be overwritten
  * during copying */
-double get_filesize_of_deleted_tracks(void)
+/* num will be filled with the number of tracks if != NULL */
+double get_filesize_of_deleted_tracks (guint32 *num)
 {
-    double n = 0;
+    double size = 0;
+    guint32 n = 0;
     Track *track;
     GList *gl_track;
 
     for (gl_track = pending_deletion; gl_track; gl_track=gl_track->next)
     {
 	track = (Track *)gl_track->data;
-	if (track->transferred)   n += track->size;
+	if (track->transferred)   size += track->size;
+	++n;
     }
-    return n;
+    if (num)  *num = n;
+    return size;
 }
 
 void mark_track_for_deletion (Track *track)

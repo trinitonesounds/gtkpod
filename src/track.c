@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 22:41:02 jcs>
+/* Time-stamp: <2003-11-30 00:43:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -225,20 +225,23 @@ guint get_nr_of_nontransferred_tracks (void)
  * non-transferred tracks */
 double get_filesize_of_nontransferred_tracks(guint32 *num)
 {
-    double n = 0;
+    double size = 0;
+    guint32 n = 0;
     Track *track;
     GList *gl_track;
+
 
     for (gl_track = tracks; gl_track; gl_track=gl_track->next)
     {
 	track = (Track *)gl_track->data;
 	if (!track->transferred)
 	{
-	    n += track->size - track->oldsize;
-	    if (num) *num += 1;
+	    size += track->size - track->oldsize;
+	    ++n;
 	}
     }
-    return n;
+    if (num) *num = n;
+    return size;
 }
 
 

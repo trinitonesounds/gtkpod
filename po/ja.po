@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-11-29 13:00+0900\n"
+"POT-Creation-Date: 2003-11-30 00:58+0900\n"
 "PO-Revision-Date: 2003-11-29 12:18+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -654,7 +654,7 @@ msgstr ""
 msgid "Couldn't change tags of file: %s\n"
 msgstr "次のファイルのタグを変更できません: %s\n"
 
-#: src/file.c:1548
+#: src/file.c:1542
 #, c-format
 msgid "Could not open \"%s\" for reading extended info.\n"
 msgstr "拡張情報を格納したファイル \"%s\" を開けません。\n"
@@ -734,22 +734,22 @@ msgstr "オフラインでのiPodデータベースの読み込みに失敗しました"
 msgid "Import aborted.\n"
 msgstr "読み込みが中断されました\n"
 
-#: src/file.c:1929
+#: src/file.c:1933
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "拡張情報を \"%s\" に書き込めません。\n"
 
-#: src/file.c:1941
+#: src/file.c:1945
 #, fuzzy
 msgid "Aborted writing of extended info.\n"
 msgstr "拡張情報を \"%s\" に書き込めません。\n"
 
 #. create the dialog window
-#: src/file.c:2050 src/normalize.c:279
+#: src/file.c:2057 src/normalize.c:279
 msgid "Information"
 msgstr "情報"
 
-#: src/file.c:2061
+#: src/file.c:2068
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
@@ -757,21 +757,21 @@ msgstr ""
 "ボタンを押すと中断します。\n"
 "ファイルのエクスポートは後で再開する事ができます。"
 
-#: src/file.c:2074
+#: src/file.c:2081
 msgid "deleting..."
 msgstr "削除中..."
 
-#: src/file.c:2141
+#: src/file.c:2148
 #, fuzzy
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "一部の曲をiPodから削除できませんでした。エクスポートを中断します。"
 
 #. we now have as much space as we're gonna have, copy files to ipod
-#: src/file.c:2147
+#: src/file.c:2154
 msgid "preparing to copy..."
 msgstr "コピーの準備中..."
 
-#: src/file.c:2200
+#: src/file.c:2206
 #, fuzzy, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
@@ -779,38 +779,43 @@ msgstr[0] "%d曲中 %d曲をコピーしました。"
 
 #. don't bounce up too quickly (>10% change only)
 #. left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;
-#: src/file.c:2214 src/normalize.c:414
+#: src/file.c:2220 src/normalize.c:414
 #, c-format
 msgid "%d%% (%d:%02d) left"
 msgstr "残り %d%% (%d:%02d)"
 
-#: src/file.c:2224
+#: src/file.c:2230
 #, fuzzy
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "一部の曲をiPodに転送できませんでした。エクスポートを中止します!"
 
-#: src/file.c:2258
+#. write iTunesDB to iPod
+#: src/file.c:2263 src/file.c:2291 src/file.c:2309
+msgid "Now writing iTunesDB. Please wait..."
+msgstr ""
+
+#: src/file.c:2267
 msgid "Error writing iTunesDB to iPod. Export aborted!"
 msgstr "iTunesDBをiPodに書き込めません。エクスポートを中止します!"
 
-#: src/file.c:2263
+#: src/file.c:2272
 msgid "Extended information not written"
 msgstr "拡張情報の保存に失敗しました"
 
-#: src/file.c:2270
+#: src/file.c:2279
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "拡張情報ファイルを削除できません: '%s'"
 
-#: src/file.c:2286
+#: src/file.c:2299
 msgid "Backups could not be created!"
 msgstr "バックアップを作成できません!"
 
-#: src/file.c:2302
+#: src/file.c:2318
 msgid "Export not successful!"
 msgstr "エクスポートに失敗しました!"
 
-#: src/file.c:2313
+#: src/file.c:2329
 msgid "iPod Database Saved"
 msgstr "iPodデータベースを保存しました"
 
@@ -902,42 +907,42 @@ msgstr "%s: 指定されたオプション `-W %s' では記述が曖昧です\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: 指定されたオプション `-W %s' は引数を取りません\n"
 
-#: src/info.c:221
+#: src/info.c:244
 #, fuzzy
 msgid "offline"
 msgstr "オフライン(_O)"
 
-#: src/info.c:406
+#: src/info.c:307
 #, c-format
 msgid " P:%d S:%d/%d"
 msgstr ""
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "B"
 msgstr ""
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "kB"
 msgstr ""
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "MB"
 msgstr ""
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "GB"
 msgstr ""
 
-#: src/info.c:467
+#: src/info.c:368
 msgid "TB"
 msgstr ""
 
-#: src/info.c:547
+#: src/info.c:448
 #, c-format
 msgid " %s Free"
 msgstr "%s 空き"
 
-#: src/info.c:552
+#: src/info.c:453
 #, c-format
 msgid " %s Pending"
 msgstr "%s 不足"
@@ -1989,79 +1994,89 @@ msgid ""
 "Store' above."
 msgstr ""
 
-#: src/interface.c:4142
+#: src/interface.c:4148
 #, fuzzy
 msgid "gtkpod Info"
 msgstr "gtkpod"
 
-#: src/interface.c:4217 src/interface.c:4685
+#: src/interface.c:4223 src/interface.c:4743
 #, fuzzy
 msgid "Total"
 msgstr "タイトル"
 
-#: src/interface.c:4227
+#: src/interface.c:4233
 #, fuzzy
 msgid "Selected"
 msgstr "削除"
 
-#: src/interface.c:4237 src/interface.c:4398
+#: src/interface.c:4243 src/interface.c:4404
 #, fuzzy
 msgid "Number of tracks"
 msgstr "ソートタブの数(_N)"
 
-#: src/interface.c:4247 src/interface.c:4418
+#: src/interface.c:4253 src/interface.c:4424
 #, fuzzy
 msgid "Play time"
 msgstr "演奏時間"
 
-#: src/interface.c:4257 src/interface.c:4438
+#: src/interface.c:4263 src/interface.c:4444
 #, fuzzy
 msgid "File size"
 msgstr "ファイルサイズ"
 
-#: src/interface.c:4335
+#: src/interface.c:4341
 #, fuzzy
 msgid "Track View"
 msgstr "曲の編集"
 
-#: src/interface.c:4408 src/interface.c:4631 src/interface.c:4675
+#: src/interface.c:4414 src/interface.c:4553 src/interface.c:4573
 msgid "      "
 msgstr ""
 
-#: src/interface.c:4458
+#: src/interface.c:4464
 #, fuzzy
 msgid "Current Playlist"
 msgstr "プレイリストを作成"
 
-#: src/interface.c:4521
+#: src/interface.c:4503
+msgid "Total file size"
+msgstr ""
+
+#: src/interface.c:4513
+msgid "Total play time"
+msgstr ""
+
+#: src/interface.c:4523
+msgid "Total number of tracks"
+msgstr ""
+
+#: src/interface.c:4563
+#, fuzzy
+msgid "Number of playlists"
+msgstr "ソートタブの数(_N)"
+
+#: src/interface.c:4589
 msgid "Free space on iPod"
 msgstr ""
 
-#: src/interface.c:4531
+#: src/interface.c:4609
 msgid "File size (non-transfered)"
 msgstr ""
 
-#: src/interface.c:4541
+#: src/interface.c:4635
 #, fuzzy
 msgid "Non-transfered tracks"
 msgstr "新しく追加された曲の音量を平均化する"
 
-#: src/interface.c:4551
-msgid "Total file size"
-msgstr ""
-
-#: src/interface.c:4561
-msgid "Total play time"
-msgstr ""
-
-#: src/interface.c:4571
-msgid "Total number of tracks"
-msgstr ""
-
-#: src/interface.c:4665
+#: src/interface.c:4679
 #, fuzzy
-msgid "Number of playlists"
-msgstr "ソートタブの数(_N)"
+msgid "Deleted tracks"
+msgstr "曲(_S)"
+
+#: src/interface.c:4689
+#, fuzzy
+msgid "File size (deleted)"
+msgstr "ファイルサイズ"
 
 #: src/itunesdb.c:384
 msgid "Master-PL"
@@ -2827,61 +2842,61 @@ msgstr "設定は保存されません。\n"
 msgid "Unable to open '%s' for writing\n"
 msgstr "ファイル \"%s\" を開けません\n"
 
-#: src/prefs.c:1285
+#: src/prefs.c:1286
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " 設定: カテゴリーの数 (%d<%d?) か、ソートタブの数 (%d<%d?) が多過ぎます。\n"
 
-#: src/prefs.c:1334
+#: src/prefs.c:1335
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "\"mkdir %s\" を実行できませんでした\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1665
+#: src/prefs.c:1666
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1707
+#: src/prefs.c:1708
 #, fuzzy, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1728
+#: src/prefs.c:1729
 #, fuzzy, c-format
 msgid "prefs_set_st_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1749
+#: src/prefs.c:1750
 #, fuzzy, c-format
 msgid "prefs_set_tm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
-#: src/prefs.c:1863 src/prefs.c:1870
+#: src/prefs.c:1864 src/prefs.c:1871
 #, c-format
 msgid "'%s': only one '%%s' allowed.\n"
 msgstr "'%s': '%%s' は一つまでしか使えません。\n"
 
 #. update for count == 1, 21, 41 ... and for count == n
-#: src/song.c:403
+#: src/song.c:406
 #, fuzzy, c-format
 msgid "Hashed %d of %d track."
 msgid_plural "Hashed %d of %d tracks."
 msgstr[0] "%d曲中%d曲のハッシュを生成しました。"
 
-#: src/song.c:465
+#: src/song.c:468
 #, fuzzy, c-format
 msgid "The following duplicate track has been removed."
 msgid_plural "The following %d duplicate tracks have been removed."
 msgstr[0] "以下の重複した%d曲が削除されました。"
 
-#: src/song.c:472
+#: src/song.c:475
 #, fuzzy, c-format
 msgid ""
 "The following duplicate track has not been added to the master play list."
@@ -2892,7 +2907,7 @@ msgstr[0] "以下の重複した%d曲はマスタープレイリストに追加されませんでした。"
 
 #. gint id,
 #. gboolean modal,
-#: src/song.c:479
+#: src/song.c:482
 msgid "Duplicate detection"
 msgstr "重複の検出"
 

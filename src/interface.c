@@ -4109,31 +4109,37 @@ create_gtkpod_info (void)
   GtkWidget *frame29;
   GtkWidget *hbox49;
   GtkWidget *table22;
-  GtkWidget *hseparator32;
   GtkWidget *hseparator33;
   GtkWidget *hseparator34;
   GtkWidget *hseparator35;
-  GtkWidget *hseparator36;
-  GtkWidget *hseparator37;
-  GtkWidget *hseparator38;
-  GtkWidget *label146;
-  GtkWidget *label145;
-  GtkWidget *label143;
   GtkWidget *label141;
   GtkWidget *label139;
   GtkWidget *label137;
-  GtkWidget *free_space;
-  GtkWidget *non_transfered_filesize;
-  GtkWidget *non_transfered_tracks;
   GtkWidget *total_filesize;
   GtkWidget *total_playtime;
   GtkWidget *total_tracks;
+  GtkWidget *label147;
+  GtkWidget *total_playlists;
+  GtkWidget *hseparator39;
+  GtkWidget *label146;
+  GtkWidget *free_space;
+  GtkWidget *label145;
+  GtkWidget *non_transfered_filesize;
+  GtkWidget *hseparator37;
+  GtkWidget *label143;
+  GtkWidget *non_transfered_tracks;
   GtkWidget *vseparator17;
   GtkWidget *vseparator18;
   GtkWidget *vseparator19;
-  GtkWidget *hseparator39;
-  GtkWidget *label147;
-  GtkWidget *total_playlists;
+  GtkWidget *hseparator42;
+  GtkWidget *label149;
+  GtkWidget *label150;
+  GtkWidget *deleted_filesize;
+  GtkWidget *deleted_tracks;
+  GtkWidget *hseparator32;
+  GtkWidget *hseparator36;
+  GtkWidget *hseparator41;
+  GtkWidget *hseparator38;
   GtkWidget *label134;
   GtkWidget *hbuttonbox9;
   GtkWidget *info_close;
@@ -4470,17 +4476,11 @@ create_gtkpod_info (void)
   gtk_widget_show (hbox49);
   gtk_container_add (GTK_CONTAINER (frame29), hbox49);
 
-  table22 = gtk_table_new (15, 5, FALSE);
+  table22 = gtk_table_new (19, 5, FALSE);
   gtk_widget_show (table22);
   gtk_box_pack_start (GTK_BOX (hbox49), table22, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (table22), 4);
   gtk_table_set_col_spacings (GTK_TABLE (table22), 1);
-
-  hseparator32 = gtk_hseparator_new ();
-  gtk_widget_show (hseparator32);
-  gtk_table_attach (GTK_TABLE (table22), hseparator32, 0, 5, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 
   hseparator33 = gtk_hseparator_new ();
   gtk_widget_show (hseparator33);
@@ -4499,54 +4499,6 @@ create_gtkpod_info (void)
   gtk_table_attach (GTK_TABLE (table22), hseparator35, 0, 5, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-
-  hseparator36 = gtk_hseparator_new ();
-  gtk_widget_show (hseparator36);
-  gtk_table_attach (GTK_TABLE (table22), hseparator36, 0, 5, 8, 9,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-
-  hseparator37 = gtk_hseparator_new ();
-  gtk_widget_show (hseparator37);
-  gtk_table_attach (GTK_TABLE (table22), hseparator37, 0, 5, 10, 11,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-
-  hseparator38 = gtk_hseparator_new ();
-  gtk_widget_show (hseparator38);
-  gtk_table_attach (GTK_TABLE (table22), hseparator38, 0, 5, 12, 13,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-
-  label146 = gtk_label_new (_("Free space on iPod"));
-  gtk_widget_show (label146);
-  gtk_table_attach (GTK_TABLE (table22), label146, 1, 2, 13, 14,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  GTK_WIDGET_SET_FLAGS (label146, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label146), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (label146), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label146), 0, 0.5);
-
-  label145 = gtk_label_new (_("File size (non-transfered)"));
-  gtk_widget_show (label145);
-  gtk_table_attach (GTK_TABLE (table22), label145, 1, 2, 11, 12,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  GTK_WIDGET_SET_FLAGS (label145, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label145), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (label145), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label145), 0, 0.5);
-
-  label143 = gtk_label_new (_("Non-transfered tracks"));
-  gtk_widget_show (label143);
-  gtk_table_attach (GTK_TABLE (table22), label143, 1, 2, 9, 10,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  GTK_WIDGET_SET_FLAGS (label143, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (label143), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (label143), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label143), 0, 0.5);
 
   label141 = gtk_label_new (_("Total file size"));
   gtk_widget_show (label141);
@@ -4578,36 +4530,6 @@ create_gtkpod_info (void)
   gtk_label_set_selectable (GTK_LABEL (label137), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label137), 0, 0.5);
 
-  free_space = gtk_label_new ("");
-  gtk_widget_show (free_space);
-  gtk_table_attach (GTK_TABLE (table22), free_space, 3, 4, 13, 14,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  GTK_WIDGET_SET_FLAGS (free_space, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (free_space), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (free_space), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (free_space), 1, 0.5);
-
-  non_transfered_filesize = gtk_label_new ("");
-  gtk_widget_show (non_transfered_filesize);
-  gtk_table_attach (GTK_TABLE (table22), non_transfered_filesize, 3, 4, 11, 12,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  GTK_WIDGET_SET_FLAGS (non_transfered_filesize, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (non_transfered_filesize), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (non_transfered_filesize), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (non_transfered_filesize), 1, 0.5);
-
-  non_transfered_tracks = gtk_label_new ("");
-  gtk_widget_show (non_transfered_tracks);
-  gtk_table_attach (GTK_TABLE (table22), non_transfered_tracks, 3, 4, 9, 10,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  GTK_WIDGET_SET_FLAGS (non_transfered_tracks, GTK_CAN_FOCUS);
-  gtk_label_set_justify (GTK_LABEL (non_transfered_tracks), GTK_JUSTIFY_LEFT);
-  gtk_label_set_selectable (GTK_LABEL (non_transfered_tracks), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (non_transfered_tracks), 1, 0.5);
-
   total_filesize = gtk_label_new ("");
   gtk_widget_show (total_filesize);
   gtk_table_attach (GTK_TABLE (table22), total_filesize, 3, 4, 7, 8,
@@ -4638,30 +4560,6 @@ create_gtkpod_info (void)
   gtk_label_set_selectable (GTK_LABEL (total_tracks), TRUE);
   gtk_misc_set_alignment (GTK_MISC (total_tracks), 1, 0.5);
 
-  vseparator17 = gtk_vseparator_new ();
-  gtk_widget_show (vseparator17);
-  gtk_table_attach (GTK_TABLE (table22), vseparator17, 0, 1, 1, 14,
-                    (GtkAttachOptions) (0),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
-
-  vseparator18 = gtk_vseparator_new ();
-  gtk_widget_show (vseparator18);
-  gtk_table_attach (GTK_TABLE (table22), vseparator18, 2, 3, 1, 14,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
-
-  vseparator19 = gtk_vseparator_new ();
-  gtk_widget_show (vseparator19);
-  gtk_table_attach (GTK_TABLE (table22), vseparator19, 4, 5, 1, 14,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
-
-  hseparator39 = gtk_hseparator_new ();
-  gtk_widget_show (hseparator39);
-  gtk_table_attach (GTK_TABLE (table22), hseparator39, 0, 5, 14, 15,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-
   label147 = gtk_label_new (_("Number of playlists"));
   gtk_widget_show (label147);
   gtk_table_attach (GTK_TABLE (table22), label147, 1, 2, 1, 2,
@@ -4681,6 +4579,166 @@ create_gtkpod_info (void)
   gtk_label_set_justify (GTK_LABEL (total_playlists), GTK_JUSTIFY_LEFT);
   gtk_label_set_selectable (GTK_LABEL (total_playlists), TRUE);
   gtk_misc_set_alignment (GTK_MISC (total_playlists), 1, 0.5);
+
+  hseparator39 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator39);
+  gtk_table_attach (GTK_TABLE (table22), hseparator39, 0, 5, 18, 19,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  label146 = gtk_label_new (_("Free space on iPod"));
+  gtk_widget_show (label146);
+  gtk_table_attach (GTK_TABLE (table22), label146, 1, 2, 17, 18,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (label146, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label146), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label146), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label146), 0, 0.5);
+
+  free_space = gtk_label_new ("");
+  gtk_widget_show (free_space);
+  gtk_table_attach (GTK_TABLE (table22), free_space, 3, 4, 17, 18,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (free_space, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (free_space), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (free_space), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (free_space), 1, 0.5);
+
+  label145 = gtk_label_new (_("File size (non-transfered)"));
+  gtk_widget_show (label145);
+  gtk_table_attach (GTK_TABLE (table22), label145, 1, 2, 15, 16,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (label145, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label145), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label145), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label145), 0, 0.5);
+
+  non_transfered_filesize = gtk_label_new ("");
+  gtk_widget_show (non_transfered_filesize);
+  gtk_table_attach (GTK_TABLE (table22), non_transfered_filesize, 3, 4, 15, 16,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (non_transfered_filesize, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (non_transfered_filesize), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (non_transfered_filesize), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (non_transfered_filesize), 1, 0.5);
+
+  hseparator37 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator37);
+  gtk_table_attach (GTK_TABLE (table22), hseparator37, 0, 5, 14, 15,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  label143 = gtk_label_new (_("Non-transfered tracks"));
+  gtk_widget_show (label143);
+  gtk_table_attach (GTK_TABLE (table22), label143, 1, 2, 13, 14,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (label143, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label143), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label143), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label143), 0, 0.5);
+
+  non_transfered_tracks = gtk_label_new ("");
+  gtk_widget_show (non_transfered_tracks);
+  gtk_table_attach (GTK_TABLE (table22), non_transfered_tracks, 3, 4, 13, 14,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (non_transfered_tracks, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (non_transfered_tracks), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (non_transfered_tracks), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (non_transfered_tracks), 1, 0.5);
+
+  vseparator17 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator17);
+  gtk_table_attach (GTK_TABLE (table22), vseparator17, 0, 1, 1, 18,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  vseparator18 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator18);
+  gtk_table_attach (GTK_TABLE (table22), vseparator18, 2, 3, 1, 18,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  vseparator19 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator19);
+  gtk_table_attach (GTK_TABLE (table22), vseparator19, 4, 5, 1, 18,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  hseparator42 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator42);
+  gtk_table_attach (GTK_TABLE (table22), hseparator42, 1, 4, 10, 11,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  label149 = gtk_label_new (_("Deleted tracks"));
+  gtk_widget_show (label149);
+  gtk_table_attach (GTK_TABLE (table22), label149, 1, 2, 9, 10,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (label149, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label149), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label149), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label149), 0, 0.5);
+
+  label150 = gtk_label_new (_("File size (deleted)"));
+  gtk_widget_show (label150);
+  gtk_table_attach (GTK_TABLE (table22), label150, 1, 2, 11, 12,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (label150, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (label150), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (label150), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label150), 0, 0.5);
+
+  deleted_filesize = gtk_label_new ("");
+  gtk_widget_show (deleted_filesize);
+  gtk_table_attach (GTK_TABLE (table22), deleted_filesize, 3, 4, 11, 12,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (deleted_filesize, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (deleted_filesize), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (deleted_filesize), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (deleted_filesize), 1, 0.5);
+
+  deleted_tracks = gtk_label_new ("");
+  gtk_widget_show (deleted_tracks);
+  gtk_table_attach (GTK_TABLE (table22), deleted_tracks, 3, 4, 9, 10,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  GTK_WIDGET_SET_FLAGS (deleted_tracks, GTK_CAN_FOCUS);
+  gtk_label_set_justify (GTK_LABEL (deleted_tracks), GTK_JUSTIFY_LEFT);
+  gtk_label_set_selectable (GTK_LABEL (deleted_tracks), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (deleted_tracks), 1, 0.5);
+
+  hseparator32 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator32);
+  gtk_table_attach (GTK_TABLE (table22), hseparator32, 0, 5, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  hseparator36 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator36);
+  gtk_table_attach (GTK_TABLE (table22), hseparator36, 0, 5, 8, 9,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  hseparator41 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator41);
+  gtk_table_attach (GTK_TABLE (table22), hseparator41, 1, 4, 12, 13,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  hseparator38 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator38);
+  gtk_table_attach (GTK_TABLE (table22), hseparator38, 0, 5, 16, 17,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 
   label134 = gtk_label_new (_("Total"));
   gtk_widget_show (label134);
@@ -4754,31 +4812,37 @@ create_gtkpod_info (void)
   GLADE_HOOKUP_OBJECT (gtkpod_info, frame29, "frame29");
   GLADE_HOOKUP_OBJECT (gtkpod_info, hbox49, "hbox49");
   GLADE_HOOKUP_OBJECT (gtkpod_info, table22, "table22");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator32, "hseparator32");
   GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator33, "hseparator33");
   GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator34, "hseparator34");
   GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator35, "hseparator35");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator36, "hseparator36");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator37, "hseparator37");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator38, "hseparator38");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, label146, "label146");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, label145, "label145");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, label143, "label143");
   GLADE_HOOKUP_OBJECT (gtkpod_info, label141, "label141");
   GLADE_HOOKUP_OBJECT (gtkpod_info, label139, "label139");
   GLADE_HOOKUP_OBJECT (gtkpod_info, label137, "label137");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, free_space, "free_space");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, non_transfered_filesize, "non_transfered_filesize");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, non_transfered_tracks, "non_transfered_tracks");
   GLADE_HOOKUP_OBJECT (gtkpod_info, total_filesize, "total_filesize");
   GLADE_HOOKUP_OBJECT (gtkpod_info, total_playtime, "total_playtime");
   GLADE_HOOKUP_OBJECT (gtkpod_info, total_tracks, "total_tracks");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, label147, "label147");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, total_playlists, "total_playlists");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator39, "hseparator39");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, label146, "label146");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, free_space, "free_space");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, label145, "label145");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, non_transfered_filesize, "non_transfered_filesize");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator37, "hseparator37");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, label143, "label143");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, non_transfered_tracks, "non_transfered_tracks");
   GLADE_HOOKUP_OBJECT (gtkpod_info, vseparator17, "vseparator17");
   GLADE_HOOKUP_OBJECT (gtkpod_info, vseparator18, "vseparator18");
   GLADE_HOOKUP_OBJECT (gtkpod_info, vseparator19, "vseparator19");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator39, "hseparator39");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, label147, "label147");
-  GLADE_HOOKUP_OBJECT (gtkpod_info, total_playlists, "total_playlists");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator42, "hseparator42");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, label149, "label149");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, label150, "label150");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, deleted_filesize, "deleted_filesize");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, deleted_tracks, "deleted_tracks");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator32, "hseparator32");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator36, "hseparator36");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator41, "hseparator41");
+  GLADE_HOOKUP_OBJECT (gtkpod_info, hseparator38, "hseparator38");
   GLADE_HOOKUP_OBJECT (gtkpod_info, label134, "label134");
   GLADE_HOOKUP_OBJECT (gtkpod_info, hbuttonbox9, "hbuttonbox9");
   GLADE_HOOKUP_OBJECT (gtkpod_info, info_close, "info_close");
