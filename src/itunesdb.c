@@ -41,6 +41,10 @@
    will read an iTunesDB and pass the data over to your program. Your
    programm is responsible to keep a representation of the data.
 
+   The information given in the "Play Counts" file is also read if
+   availablew and the playcounts, star rating and the time last played
+   is updated.
+
    For each song itunesdb_parse() will pass a filled out Song structure
    to "it_add_song()", which has to be provided. The return value is
    TRUE on success and FALSE on error. At the time being, the return
@@ -72,6 +76,8 @@
      guint32 time_create;       /+ time of creation (Mac type)           +/
      guint32 time_played;       /+ time of last play  (Mac type)         +/
      guint32 time_modified;     /+ time of last modification  (Mac type) +/
+     guint32 rating;            /+ star rating (stars * 20)              +/
+     guint32 playcount;         /+ number of times song was played       +/
      gboolean transferred;      /+ has file been transferred to iPod?    +/
    } Song;
 
@@ -164,12 +170,10 @@
 /* we're being linked with gtkpod */
 #define itunesdb_warning(...) g_print(__VA_ARGS__)
 #else
-/* The following prints the error messages to the console, converting
+/* The following prints the error messages to the shell, converting
  * UTF8 to the current locale on the fly: */
 #define itunesdb_warning(...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (stderr, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
 #endif
-
-
 
 /* We instruct itunesdb_parse to provide utf8 versions of the strings */
 #define ITUNESDB_PROVIDE_UTF8
@@ -178,8 +182,19 @@
 /* call itunesdb_parse () to read the iTunesDB  */
 /* call itunesdb_write () to write the iTunesDB */
 
-/* Header definitions for parsing the iTunesDB */
-gchar ipodmagic[] = {'m', 'h', 'b', 'd', 0x68, 0x00, 0x00, 0x00};
+/* list with the contents of the Play Count file for use when
+ * importing the iTunesDB */
+GList *playcounts = NULL;
+
+/* structure to hold the contents of one entry of the Play Count file */
+struct playcount {
+    guint32 playcount;
+    guint32 time_played;
+    guint32 rating;
+};
+
+static struct playcount *get_next_playcount (void);
+
 static guint32 utf16_strlen(gunichar2 *utf16_string);
 
 /* Concats "dir" and "file" into full filename, taking
@@ -452,6 +467,7 @@ static glong get_nod_a(FILE *file, glong seek)
   gunichar2 *entry_utf16;
   gint type;
   gint zip = 0;
+  struct playcount *playcount;
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "get_nod_a seek: %x\n", (int)seek);
@@ -541,16 +557,95 @@ static glong get_nod_a(FILE *file, glong seek)
 	 }
      }
     }
+  playcount = get_next_playcount ();
+  if (playcount)
+  {
+      if (playcount->rating)  song->rating = playcount->rating;
+      if (playcount->time_played) song->time_played = playcount->time_played;
+      song->playcount += playcount->playcount;
+      g_free (playcount);
+  }
   it_add_song (song);
   return seek;   /* no more black magic */
 }
 
 
-/* Parse the iTunesDB and store the songs 
-   using it_addsong () defined in song.c. 
+/* get next playcount, that is the first entry of GList
+ * playcounts. This entry is removed from the list. You must free the
+ * return value after use */
+static struct playcount *get_next_playcount (void)
+{
+    struct playcount *playcount = g_list_nth_data (playcounts, 0);
+
+    if (playcount)  playcounts = g_list_remove (playcounts, playcount);
+    return playcount;
+}
+
+/* delete all entries of GList *playcounts */
+static void reset_playcounts (void)
+{
+    struct playcount *playcount;
+    while ((playcount=get_next_playcount())) g_free (playcount);
+}
+
+/* Read the Play Count file (formed by adding "Play Counts" to the
+ * directory contained in @filename) and set up the GList *playcounts
+ * */
+static void init_playcounts (gchar *filename)
+{
+  gchar *dirname = g_path_get_dirname (filename);
+  gchar *plcname = itunesdb_concat_dir (dirname, "Play Counts");
+  FILE *plycts = fopen (plcname, "r");
+  gboolean error = TRUE;
+
+  reset_playcounts ();
+
+  if (plycts) do
+  {
+      gchar data[4];
+      guint32 header_length, entry_length, entry_num, i=0;
+
+      if (seek_get_n_bytes (plycts, data, 0, 4) != 4)  break;
+      if (cmp_n_bytes (data, "mhdp", 4) == FALSE)      break;
+      header_length = get4int (plycts, 4);
+      /* all the headers I know are 0x60 long -- if this one is longer
+	 we can simply ignore the additional information */
+      if (header_length < 0x60)                        break;
+      entry_length = get4int (plycts, 8);
+      /* all the entries I know are 0x0c (firmware 1.3) or 0x10
+       * (firmware 2.0) in length */
+      if (entry_length < 0x0c)                         break;
+      /* number of entries */
+      entry_num = get4int (plycts, 12);
+      for (i=0; i<entry_num; ++i)
+      {
+	  struct playcount *playcount = g_malloc0 (sizeof (struct playcount));
+	  glong seek = header_length + i*entry_length;
+
+	  playcounts = g_list_append (playcounts, playcount);
+	  /* check if entry exists by reading its last four bytes */
+	  if (seek_get_n_bytes (plycts, data,
+				seek+entry_length-4, 4) != 4) break;
+	  playcount->playcount = get4int (plycts, seek);
+	  playcount->time_played = get4int (plycts, seek+4);
+	  /* rating only exists if the entry length is at least 0x10 */
+	  if (entry_length >= 0x10)
+	      playcount->rating = get4int (plycts, seek+12);
+      }
+      if (i == entry_num)  error = FALSE;
+  } while (FALSE);
+  if (plycts)  fclose (plycts);
+  if (error)   reset_playcounts ();
+  g_free (dirname);
+  g_free (plcname);
+}
+
+
+/* Parse the iTunesDB and store the songs using it_addsong () defined
+   in song.c.
    Returns TRUE on success, FALSE on error.
-   "path" should point to the mount point of the
-   iPod, e.e. "/mnt/ipod" */
+   "path" should point to the mount point of the iPod,
+   e.e. "/mnt/ipod" */
 /* Support for playlists should be added later */
 gboolean itunesdb_parse (gchar *path)
 {
@@ -577,6 +672,8 @@ gboolean itunesdb_parse_file (gchar *filename)
   fprintf(stderr, "Parsing %s\nenter: %4d\n", filename, it_get_nr_of_songs ());
 #endif
 
+  if (!filename) return FALSE;
+
   itunes = fopen (filename, "r");
   do
   { /* dummy loop for easier error handling */
@@ -586,17 +683,26 @@ gboolean itunesdb_parse_file (gchar *filename)
 			  filename);
 	  break;
       }
-      if (seek_get_n_bytes (itunes, data, seek, 8) != 8)
+      if (seek_get_n_bytes (itunes, data, seek, 4) != 4)
       {
 	  itunesdb_warning (_("Error reading \"%s\".\n"), filename);
 	  break;
       }
       /* for(i=0; i<8; ++i)  printf("%02x ", data[i]); printf("\n");*/
-      if (cmp_n_bytes (data, ipodmagic, 8) == FALSE) 
+      if (cmp_n_bytes (data, "mhbd", 4) == FALSE) 
       {  
 	  itunesdb_warning (_("\"%s\" is not a iTunesDB.\n"), filename);
 	  break;
       }
+      seek = get4int (itunes, 4);
+      /* all the headers I know are 0x68 long -- if this one is longer
+	 we can simply ignore the additional information */
+      /* we don't need any information of the mhbd header... */
+      /*      if (seek < 0x68)
+      {
+	  itunesdb_warning (_("\"%s\" is not a iTunesDB.\n"), filename);
+	  break;
+	  }*/
       do
       {
 	  if (seek_get_n_bytes (itunes, data, seek, 8) != 8)  break;
@@ -646,6 +752,9 @@ gboolean itunesdb_parse_file (gchar *filename)
       if (result == FALSE)  break; /* some error occured */
       result = FALSE;
       /* now we should be at the first MHIT */
+
+      /* Read Play Count file if available */
+      init_playcounts (filename);
 
       /* get every file entry */
       if (nr_songs)  while(seek != -1) {
