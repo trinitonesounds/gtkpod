@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-14 00:33:56 jcs>
+/* Time-stamp: <2003-06-17 23:41:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1887,7 +1887,8 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
       if (!song->transferred && song->oldsize)
 	  fprintf (fp, "oldsize=%d\n", song->oldsize);
       fprintf (fp, "playcount=%d\n", song->playcount);
-      fprintf (fp, "rating=%d\n", song->rating);
+/* rating is now written in iTunesDB */
+/*      fprintf (fp, "rating=%d\n", song->rating);*/
       fprintf (fp, "transferred=%d\n", song->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
     }

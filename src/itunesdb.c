@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-13 20:00:06 jcs>
+/* Time-stamp: <2003-06-18 00:08:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -483,18 +483,19 @@ static glong get_nod_a(FILE *file, glong seek)
   song = g_malloc0 (sizeof (Song));
 
   song->ipod_id = get4int(file, seek+16);     /* iPod ID          */
+  song->rating = get4int(file, seek+28) >> 24;/* rating           */
+  song->time_created = get4int(file, seek+32);/* creation time    */
   song->size = get4int(file, seek+36);        /* file size        */
   song->songlen = get4int(file, seek+40);     /* time             */
-  song->cd_nr = get4int(file, seek+92);       /* CD nr            */
-  song->cds = get4int(file, seek+96);         /* CD nr of..       */
   song->track_nr = get4int(file, seek+44);    /* track number     */
   song->tracks = get4int(file, seek+48);      /* nr of tracks     */
   song->year = get4int(file, seek+52);        /* year             */
   song->bitrate = get4int(file, seek+56);     /* bitrate          */
-  song->time_created = get4int(file, seek+32);/* creation time    */
   song->time_played = get4int(file, seek+84); /* last time played */
-  song->time_modified = get4int(file, seek+100);/* modification time */
-  song->transferred = TRUE;                   /* song is on iPod!    */
+  song->cd_nr = get4int(file, seek+92);       /* CD nr            */
+  song->cds = get4int(file, seek+96);         /* CD nr of..       */
+  song->time_modified = get4int(file, seek+104);/* modification time */
+  song->transferred = TRUE;                   /* song is on iPod! */
 
   seek += get4int (file, seek+4);             /* 1st mhod starts here! */
   while(zip != -1)
@@ -952,8 +953,8 @@ static void mk_mhit (FILE *file, Song *song)
   put_4int_cur (file, song->ipod_id); /* song index number          */
   put_4int_cur (file, 1);
   put_4int_cur (file, 0);
-  put_4int_cur (file, 256);           /* type                       */
-  put_4int_cur (file, song->time_created); /* timestamp              */
+  put_4int_cur (file, 257 | song->rating<<24);  /* type, rating     */
+  put_4int_cur (file, song->time_created); /* timestamp             */
   put_4int_cur (file, song->size);    /* filesize                   */
   put_4int_cur (file, song->songlen); /* length of song in ms       */
   put_4int_cur (file, song->track_nr);/* track number               */

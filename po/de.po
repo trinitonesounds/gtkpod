@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.14\n"
-"POT-Creation-Date: 2003-06-16 19:42+0900\n"
+"POT-Creation-Date: 2003-06-18 00:15+0900\n"
 "PO-Revision-Date: 2003-04-19 16:16+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
@@ -355,78 +355,78 @@ msgstr "Abbrechen"
 msgid "Playlists"
 msgstr "Playlisten"
 
-#: src/display_songs.c:779 src/display_sorttabs.c:2156 src/interface.c:1503
+#: src/display_songs.c:810 src/display_sorttabs.c:2156 src/interface.c:1503
 #: src/interface.c:1705
 msgid "Title"
 msgstr "Titel"
 
-#: src/display_songs.c:782 src/display_sorttabs.c:2144 src/interface.c:1479
+#: src/display_songs.c:813 src/display_sorttabs.c:2144 src/interface.c:1479
 #: src/interface.c:1657
 msgid "Artist"
 msgstr "Künstler"
 
-#: src/display_songs.c:785 src/display_sorttabs.c:2147 src/interface.c:1491
+#: src/display_songs.c:816 src/display_sorttabs.c:2147 src/interface.c:1491
 #: src/interface.c:1681
 msgid "Album"
 msgstr "Album"
 
-#: src/display_songs.c:788 src/display_sorttabs.c:2150 src/interface.c:1483
+#: src/display_songs.c:819 src/display_sorttabs.c:2150 src/interface.c:1483
 #: src/interface.c:1725
 msgid "Genre"
 msgstr "Genre"
 
-#: src/display_songs.c:791 src/interface.c:1495 src/interface.c:1661
+#: src/display_songs.c:822 src/interface.c:1495 src/interface.c:1661
 msgid "Composer"
 msgstr "Komponist"
 
-#: src/display_songs.c:794
+#: src/display_songs.c:825
 msgid "#"
 msgstr "#"
 
-#: src/display_songs.c:797
+#: src/display_songs.c:828
 msgid "ID"
 msgstr "ID"
 
-#: src/display_songs.c:801 src/interface.c:1729
+#: src/display_songs.c:832 src/interface.c:1729
 msgid "PC File"
 msgstr "PC Datei"
 
-#: src/display_songs.c:805
+#: src/display_songs.c:836
 msgid "Trnsfrd"
 msgstr "Übertragen"
 
-#: src/display_songs.c:810 src/interface.c:1689
+#: src/display_songs.c:841 src/interface.c:1689
 msgid "File Size"
 msgstr "Dateigröße"
 
-#: src/display_songs.c:814
+#: src/display_songs.c:845
 msgid "Time"
 msgstr "Zeit"
 
-#: src/display_songs.c:818 src/interface.c:1733
+#: src/display_songs.c:849 src/interface.c:1733
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: src/display_songs.c:822 src/interface.c:1673 src/interface.c:2515
+#: src/display_songs.c:853 src/interface.c:1673 src/interface.c:2515
 msgid "Playcount"
 msgstr ""
 
-#: src/display_songs.c:825 src/interface.c:1697 src/interface.c:2522
+#: src/display_songs.c:856 src/interface.c:1697 src/interface.c:2522
 #, fuzzy
 msgid "Rating"
 msgstr "Warnung"
 
-#: src/display_songs.c:828 src/interface.c:2540
+#: src/display_songs.c:859 src/interface.c:2540
 #, fuzzy
 msgid "Imported"
 msgstr "Importieren"
 
-#: src/display_songs.c:832 src/interface.c:2528
+#: src/display_songs.c:863 src/interface.c:2528
 #, fuzzy
 msgid "Played"
 msgstr "Spielzeit"
 
-#: src/display_songs.c:836 src/interface.c:2534
+#: src/display_songs.c:867 src/interface.c:2534
 msgid "Modified"
 msgstr ""
 
@@ -669,49 +669,49 @@ msgstr ""
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "Datei '%s' konnte nicht zum Schreiben geöffnet werden.\n"
 
-#: src/file.c:1980
+#: src/file.c:1981
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
 msgstr ""
 
-#: src/file.c:2036
+#: src/file.c:2037
 msgid "Some songs could not be deleted from the iPod. Export aborted!"
 msgstr ""
 
-#: src/file.c:2088
+#: src/file.c:2089
 #, fuzzy, c-format
 msgid "Copied %d of %d new song."
 msgid_plural "Copied %d of %d new songs."
 msgstr[0] "%d von insgesamt %d Stück indiziert."
 msgstr[1] "%d von insgesamt %d Stücken indiziert."
 
-#: src/file.c:2098
+#: src/file.c:2099
 msgid "Some songs were not written to iPod. Export aborted!"
 msgstr ""
 
-#: src/file.c:2130
+#: src/file.c:2131
 msgid "Error writing iTunesDB to iPod. Export aborted!"
 msgstr ""
 
-#: src/file.c:2135
+#: src/file.c:2136
 msgid "Extended information not written"
 msgstr ""
 
-#: src/file.c:2142
+#: src/file.c:2143
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr ""
 
-#: src/file.c:2158
+#: src/file.c:2159
 msgid "Backups could not be created!"
 msgstr ""
 
-#: src/file.c:2174
+#: src/file.c:2175
 msgid "Export not successful!"
 msgstr ""
 
-#: src/file.c:2185
+#: src/file.c:2186
 msgid "iPod Database Saved"
 msgstr ""
 
@@ -1714,49 +1714,49 @@ msgstr ""
 msgid "Master-PL"
 msgstr "Haupt-PL"
 
-#: src/itunesdb.c:689
+#: src/itunesdb.c:690
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for reading.\n"
 msgstr "iTunesDB '%s' konnte nicht zum Lesen geöffnet werden.\n"
 
-#: src/itunesdb.c:695
+#: src/itunesdb.c:696
 #, c-format
 msgid "Error reading \"%s\".\n"
 msgstr "Fehler beim Lesen von '%s'.\n"
 
-#: src/itunesdb.c:701
+#: src/itunesdb.c:702
 #, c-format
 msgid "\"%s\" is not a iTunesDB.\n"
 msgstr "'%s' ist keine iTunesDB.\n"
 
-#: src/itunesdb.c:1295
+#: src/itunesdb.c:1296
 #, c-format
 msgid "Could not open iTunesDB \"%s\" for writing.\n"
 msgstr "iTunesDB '%s' konnte nicht zum Schreiben geöffnet werden.\n"
 
 #. an error occured
-#: src/itunesdb.c:1307
+#: src/itunesdb.c:1308
 #, fuzzy, c-format
 msgid "Error renaming '%s' to '%s' (%s).\n"
 msgstr "Fehler beim Kopieren von '%s' nach '%s' (errno: %d)\n"
 
-#: src/itunesdb.c:1486
+#: src/itunesdb.c:1487
 #, c-format
 msgid "Could not open file \"%s\" for reading.\n"
 msgstr "Datei '%s' konnte nicht zum Lesen geöffnet werden.\n"
 
-#: src/itunesdb.c:1493
+#: src/itunesdb.c:1494
 #, c-format
 msgid "Could not open file \"%s\" for writing.\n"
 msgstr "Datei '%s' konnte nicht zum Schreiben geöffnet werden.\n"
 
 #. error -- not end of file!
-#: src/itunesdb.c:1506
+#: src/itunesdb.c:1507
 #, c-format
 msgid "Error reading file \"%s\"."
 msgstr "Fehler beim Lesen der Datei '%s'."
 
-#: src/itunesdb.c:1518
+#: src/itunesdb.c:1519
 #, c-format
 msgid "Error writing PC file \"%s\"."
 msgstr "Fehler beim Schreiben der Datei '%s'."
