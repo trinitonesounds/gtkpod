@@ -524,12 +524,13 @@ iPod, there is a way to restore the contents semi-automatically if you
 have been using the "backup to ~/.gtkpod" and "write extended
 information file" (iTunesDB.ext) options:
 
-1) Replace all the "transferred=1" to "transferred=0" in
-~/.gtkpod/iTunesDB.ext.
+1) Make gtkpod think it still needs to copy the songs 
+  
+$ perl -p -i -e 's/transferred=1/transferred=0/g' ~/.gtkpod/iTunesDB.ext
 
 2) Import the iTunesDB in "Offline" mode
 
-3) Switch Offline off again
+3) Switch to "Online" mode
 
 4) Export iTunesDB
 
