@@ -64,6 +64,8 @@ chop_filename(const gchar *filename)
 	{
 	    if(buf[i] == ' ')
 		buf[i] = '_';
+	    else if(buf[i] == '/')
+		buf[i] = '_';
 	}
 	result = g_strdup(buf);
     }
