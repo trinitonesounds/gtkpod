@@ -1673,7 +1673,7 @@ msgid ""
 "The display can be blocked after changing a selection. The display update is "
 "faster, but you have to wait until it's finished."
 msgstr ""
-"L'application peut se trouver gelée lors d'un changement de sélection. En "
+"L'application peut se trouver figée lors d'un changement de sélection. En "
 "cochant cette option, l'affichage est plus rapide, mais vous devez attendre "
 "la fin de l'opération."
 
