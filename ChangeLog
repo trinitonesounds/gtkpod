@@ -20,6 +20,9 @@ gtkpod V0.53-CVS
 	amount of stack memory (roughly 66000 Bytes) which crashed some
 	systems.
 
+	BUGFIX: md5 hash for duplicate detection will examine the same
+	number of bytes on all systems now (before it used 4xPATH_MAX).
+
 	BUGFIX: reading and writing of the Composer ID3 tags implemented
 	(so far the fields could only be set from inside gtkpod -- thanks
 	to Graeme Wilford)

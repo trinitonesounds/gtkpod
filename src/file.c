@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-17 00:13:10 jcs>
+/* Time-stamp: <2003-08-29 23:33:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -76,6 +76,7 @@ static gboolean mutex_data = FALSE;
 /* Used to keep the "extended information" until the iTunesDB is 
    loaded */
 static GHashTable *extendedinfohash = NULL;
+static float extendedinfoversion = 0.0;
 
 
 /*------------------------------------------------------------------*\
@@ -1495,6 +1496,7 @@ static void destroy_extendedinfohash (void)
     if (extendedinfohash)
 	g_hash_table_destroy (extendedinfohash);
     extendedinfohash = NULL;
+    extendedinfoversion = 0.0;
 }
 
 /* Read extended info from "name" and check if "itunes" is the
@@ -1538,6 +1540,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
     if (extendedinfohash) destroy_extendedinfohash ();
     extendedinfohash = g_hash_table_new_full (g_int_hash, g_int_equal,
 					      NULL, hash_delete);
+    extendedinfoversion = 0.0;
     expect_hash = TRUE; /* next we expect the hash value (checksum) */
     while (success && fgets (buf, PATH_MAX, fp))
     {
@@ -1602,6 +1605,10 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		    sei->ipod_id = atoi (arg);
 		}
 	    }
+	    else if (g_ascii_strcasecmp (line, "version") == 0)
+	    { /* found version */
+		extendedinfoversion = g_ascii_strtod (arg, NULL);
+	    }
 	    else if (sei == NULL)
 	    {
 		gtkpod_warning (_("%s:\nFormat error: %s\n"), name, buf);
@@ -1615,7 +1622,14 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    else if (g_ascii_strcasecmp (line, "filename_utf8") == 0)
 		sei->pc_path_utf8 = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "md5_hash") == 0)
-		sei->md5_hash = g_strdup (arg);
+	    {   /* only accept hash value if version is >= 0.53 or
+		   PATH_MAX is 4096 -- in 0.53 I changed the MD5 hash
+		   routine to using blocks of 4096 Bytes in
+		   length. Before it was PATH_MAX, which might be
+		   different on different architectures. */
+		if ((extendedinfoversion >= 0.53) || (PATH_MAX == 4096))
+		    sei->md5_hash = g_strdup (arg);
+	    }
 	    else if (g_ascii_strcasecmp (line, "charset") == 0)
 		sei->charset = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "oldsize") == 0)
@@ -1871,55 +1885,53 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 
   fp = fopen (name, "w");
   if (!fp)
-    {
+  {
       gtkpod_warning (_("Could not open \"%s\" for writing extended info.\n"),
 		      name);
       return FALSE;
-    }
+  }
   fpit = fopen (itunes, "r");
   if (!fpit)
-    {
+  {
       gtkpod_warning (_("Could not open \"%s\" for writing extended info.\n"),
 		      itunes);
       fclose (fp);
       return FALSE;
-    }
+  }
   md5 = md5_hash_on_file (fpit);
   fclose (fpit);
   if (md5)
-    {
+  {
       fprintf(fp, "itunesdb_hash=%s\n", md5);
       g_free (md5);
-    }
+  }
   else
-    {
+  {
       g_warning ("Programming error: Could not create hash value from itunesdb\n");
       fclose (fp);
       return FALSE;
-    }
+  }
+  fprintf (fp, "version=%s\n", VERSION);
   n = get_nr_of_songs ();
   for (i=0; i<n; ++i)
-    {
+  {
       song = get_song_by_nr (i);
       fprintf (fp, "id=%d\n", song->ipod_id);
       if (song->hostname)
-	fprintf (fp, "hostname=%s\n", song->hostname);
+	  fprintf (fp, "hostname=%s\n", song->hostname);
       if (strlen (song->pc_path_locale) != 0)
-	fprintf (fp, "filename_locale=%s\n", song->pc_path_locale);
+	  fprintf (fp, "filename_locale=%s\n", song->pc_path_locale);
       if (strlen (song->pc_path_utf8) != 0)
-	fprintf (fp, "filename_utf8=%s\n", song->pc_path_utf8);
+	  fprintf (fp, "filename_utf8=%s\n", song->pc_path_utf8);
       if (song->md5_hash)
-	fprintf (fp, "md5_hash=%s\n", song->md5_hash);
+	  fprintf (fp, "md5_hash=%s\n", song->md5_hash);
       if (song->charset)
-	fprintf (fp, "charset=%s\n", song->charset);
+	  fprintf (fp, "charset=%s\n", song->charset);
       if (!song->transferred && song->oldsize)
 	  fprintf (fp, "oldsize=%d\n", song->oldsize);
-/* rating and playcount are now written to iTunesDB */
-/*       fprintf (fp, "playcount=%d\n", song->playcount); */
-/*      fprintf (fp, "rating=%d\n", song->rating);*/
       fprintf (fp, "transferred=%d\n", song->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-    }
+  }
   if (prefs_get_offline())
   { /* we are offline and also need to export the list of songs that
        are to be deleted */

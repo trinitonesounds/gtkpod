@@ -65,6 +65,9 @@ Please feel free to submit further features.
 
 BUGLIST:
 
+- move song before the first position in song view (DND) and it will
+  appear at the end instead.
+
 - when updating songs the free space indicator gets smaller and
   smaller even if no new songs are added
 

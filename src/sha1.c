@@ -78,9 +78,10 @@ static void little_endian(hblock * stupidblock, int blocks);
  * NR_PATH_MAX_BLOCKS
  * A seed of sorts for SHA1, if collisions occur increasing this value
  * should give more unique data to SHA1 as more of the file is read
- * This value is multiplied by PATH_MAX to determine how many bytes are read
+ * This value is multiplied by PATH_MAX_MD5 to determine how many bytes are read
  */
 #define NR_PATH_MAX_BLOCKS 4
+#define PATH_MAX_MD5 4096
 
 /** 
  * filehash
@@ -108,9 +109,9 @@ get_filesize_for_file_descriptor(FILE *fp)
 }
 
 /**
- * md5_hash_on_file - read PATH_MAX * NR_PATH_MAX_BLOCKS bytes from the file
- * and ask sha1 for a hash of it, convert this hash to a string of hex output
- * @fp - an open file descriptor to read from
+ * md5_hash_on_file - read PATH_MAX_MD5 * NR_PATH_MAX_BLOCKS bytes
+ * from the file and ask sha1 for a hash of it, convert this hash to a
+ * string of hex output @fp - an open file descriptor to read from
  * Returns - A Hash String - you handle memory returned
  */
 gchar *
@@ -121,7 +122,7 @@ md5_hash_on_file(FILE * fp)
    if (fp)
    {
        int fsize = 0;
-       int chunk_size = PATH_MAX * NR_PATH_MAX_BLOCKS;
+       int chunk_size = PATH_MAX_MD5 * NR_PATH_MAX_BLOCKS;
        
        fsize = get_filesize_for_file_descriptor(fp);
        if(fsize < chunk_size)
