@@ -545,7 +545,7 @@ static void delete_song_ok (gpointer user_data1, gpointer user_data2)
     if (!selected_songs)
 	return;
 
-    n = g_list_length (selected_songs);
+    n = g_list_length (selected_songs); /* nr of songs to be deleted */
     if (pl->type == PL_TYPE_MPL)
     {
 	buf = g_strdup_printf (ngettext (_("Deleted one song completely from iPod"), _("Deleted %d songs completely from iPod"), n), n);

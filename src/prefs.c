@@ -37,6 +37,7 @@
 #include "prefs.h"
 #include "support.h"
 #include "misc.h"
+#include "display.h"
 
 struct cfg *cfg = NULL;
 
@@ -103,6 +104,10 @@ struct cfg *cfg_new(void)
     mycfg->size_conf_sw.y = 300;
     mycfg->size_conf.x = 300;
     mycfg->size_conf.y = -1;
+    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    {
+	mycfg->sm_col_width[i] = 80;
+    }
     return(mycfg);
 }
 
@@ -194,6 +199,11 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint i = atoi (line+11);
 	      prefs_set_st_category (i, atoi (arg));
+	  }      
+	  else if(g_ascii_strncasecmp (line, "sm_col_width", 12) == 0)
+	  {
+	      gint i = atoi (line+12);
+	      prefs_set_sm_col_width (i, atoi (arg));
 	  }      
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
@@ -369,6 +379,11 @@ write_prefs_to_file_desc(FILE *fp)
     {
 	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
 	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
+    }
+    sm_update_prefs_sm_col_width (); /* update cfg */
+    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    {
+	fprintf(fp, "sm_col_width%d=%d\n", i, prefs_get_sm_col_width (i));
     }	
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "backups=%d\n",prefs_get_keep_backups());
@@ -767,6 +782,21 @@ void prefs_set_st_category (guint32 inst, guint category)
 	gtkpod_warning ("Category nr (%d) or sorttab nr (%d) out of range.\n", category, inst);
     }
 }
+
+gint prefs_get_sm_col_width (gint col)
+{
+    if (col < SM_NUM_COLUMNS_PREFS)
+	return cfg->sm_col_width[col];
+    return 80;  /* default -- col should be smaller than
+		   SM_NUM_COLUMNS_PREFS) */
+}
+
+void prefs_set_sm_col_width (gint col, gint width)
+{
+    if (col < SM_NUM_COLUMNS_PREFS)
+	cfg->sm_col_width[col] = width;
+}
+
 
 /* Returns "$HOME/.gtkpod" or NULL if dir does not exist and cannot be
    created. You must g_free the string after use */

@@ -86,6 +86,8 @@ enum  {
   SM_NUM_COLUMNS
 };
 
+#define  SM_NUM_COLUMNS_PREFS (5) /* number of colums for prefs size storage */
+
 /* "Column numbers" in playlist model */
 enum  {
   PM_COLUMN_PLAYLIST = 0,
@@ -95,6 +97,7 @@ enum  {
 
 void create_listviews (GtkWidget *gtkpod);
 void destroy_listview (void);
+void cleanup_listviews(void);
 
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist);
@@ -113,7 +116,7 @@ void on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 guint sm_get_nr_of_songs(void);
 void sm_rows_reordered_callback(void);
 void sm_show_preferred_columns(void);
-void cleanup_listviews(void);
+void sm_update_prefs_sm_col_width (void);
 
 Playlist* get_currently_selected_playlist(void);
 GList* get_currently_selected_songs(void);

@@ -43,6 +43,8 @@
 
 static GtkTreeView *song_treeview = NULL;
 static GtkTreeView *playlist_treeview = NULL;
+       /* pointer to the columns used in the song display */
+static GtkTreeViewColumn *sm_columns[SM_NUM_COLUMNS_PREFS];
 
 static SortTab *sorttab[SORT_TAB_NUM];
 
@@ -1675,145 +1677,228 @@ sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
     }
 }
 
+/* Update width of the song columns in the prefs structure */
+void sm_update_prefs_sm_col_width (void)
+{
+    gint i;
+    GtkTreeViewColumn *col;
+
+    for (i=0; i<SM_NUM_COLUMNS_PREFS; ++i)
+    {
+	col = sm_columns [i];
+	if (col)
+	{
+	    prefs_set_sm_col_width (i,
+				    gtk_tree_view_column_get_width (col));
+	}
+    }
+}
+
+
 /* Adds the columns to our song_treeview */
 static void add_song_columns ()
 {
+  gint col_id;
   GtkTreeViewColumn *column;
   GtkCellRenderer *renderer;
   GtkTreeModel *model = gtk_tree_view_get_model (song_treeview);
   
   /* title column */
+  col_id = SM_COLUMN_TITLE;
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (sm_cell_edited), model);
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)SM_COLUMN_TITLE);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
   column = gtk_tree_view_column_new_with_attributes (_("Title"), renderer,
 							NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_TITLE);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
-				(gpointer)SM_COLUMN_TITLE);
+				(gpointer)col_id);
   gtk_tree_view_append_column (song_treeview, column);
 
   /* artist column */
+  col_id = SM_COLUMN_ARTIST;
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (sm_cell_edited), model);
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)SM_COLUMN_ARTIST);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
   column = gtk_tree_view_column_new_with_attributes (_("Artist"), renderer,
 						    NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_ARTIST);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
-				(gpointer)SM_COLUMN_ARTIST);
+				(gpointer)col_id);
   gtk_tree_view_append_column (song_treeview, column);
   
   /* album column */
+  col_id = SM_COLUMN_ALBUM;
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (sm_cell_edited), model);
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)SM_COLUMN_ALBUM);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
   column = gtk_tree_view_column_new_with_attributes (_("Album"), renderer, NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_ALBUM);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
-				(gpointer)SM_COLUMN_ALBUM);
+				(gpointer)col_id);
   gtk_tree_view_append_column (song_treeview, column);
 
   /* genre column */
+  col_id = SM_COLUMN_GENRE;
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (sm_cell_edited), model);
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)SM_COLUMN_GENRE);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
   column = gtk_tree_view_column_new_with_attributes (_("Genre"), renderer, NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_GENRE);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
-				(gpointer)SM_COLUMN_GENRE);
+				(gpointer)col_id);
   gtk_tree_view_append_column (song_treeview, column);
   
   /* track column */
+  col_id = SM_COLUMN_TRACK;
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (sm_cell_edited), model);
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)SM_COLUMN_TRACK);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
   column = gtk_tree_view_column_new_with_attributes (_("Track Number"),
 							renderer, NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_TRACK);
-  gtk_tree_view_column_set_resizable (column, FALSE);
-  gtk_tree_view_column_set_max_width (column, 20); 
-  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
+  gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_clickable(column, TRUE);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (sm_song_column_button_clicked),
-				(gpointer)SM_COLUMN_TRACK);
+				(gpointer)col_id);
   gtk_tree_view_append_column (song_treeview, column);
   
   /* ipod_id column */
+  col_id = SM_COLUMN_IPOD_ID;
   renderer = gtk_cell_renderer_text_new ();
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)SM_COLUMN_IPOD_ID);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
   column = gtk_tree_view_column_new_with_attributes (_("iPod ID"), renderer,
 						    NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_IPOD_ID);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
-  gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+  gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   gtk_tree_view_append_column (song_treeview, column);
 
   /* pc_path column */
+  col_id = SM_COLUMN_PC_PATH;
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (sm_cell_edited), model);
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)SM_COLUMN_PC_PATH);
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
   column = gtk_tree_view_column_new_with_attributes (_("PC File"), renderer,
 						    NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_PC_PATH);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
-  gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   gtk_tree_view_append_column (song_treeview, column);
   
   /* transferred column */
+  col_id = SM_COLUMN_TRANSFERRED;
   renderer = gtk_cell_renderer_toggle_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
-	      (gint*)SM_COLUMN_TRANSFERRED);
+	      (gint*)col_id);
   column = gtk_tree_view_column_new_with_attributes (_("Trnsfrd"), renderer,
 						    NULL);
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					    sm_cell_data_func, NULL, NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_TRANSFERRED);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
   gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   gtk_tree_view_append_column (song_treeview, column);
   
   /* Gtkpod playlist sorting */
+  col_id = SM_COLUMN_NONE;
   renderer = gtk_cell_renderer_toggle_new ();
   g_object_set_data (G_OBJECT (renderer), "column", 
-	      (gint*)SM_COLUMN_NONE);
+	      (gint*)col_id);
   column = gtk_tree_view_column_new_with_attributes ("gtkpod", renderer,
 						    NULL);
-  gtk_tree_view_column_set_sort_column_id (column, SM_COLUMN_NONE);
+  gtk_tree_view_column_set_sort_column_id (column, col_id);
   gtk_tree_view_column_set_resizable (column, TRUE);
+  if (col_id < SM_NUM_COLUMNS_PREFS)
+  {
+      sm_columns[col_id] = column;
+      gtk_tree_view_column_set_fixed_width (column,
+					    prefs_get_sm_col_width (col_id));
+  }
   gtk_tree_view_append_column (song_treeview, column);
 
   sm_show_preferred_columns();
