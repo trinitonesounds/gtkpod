@@ -318,7 +318,6 @@ create_ipod_directories(const gchar *ipod_dir)
     for(i = 0; i < 20; i++)
     {
 	snprintf(buf, PATH_MAX, "%s/iPod_Control/Music/F%02d", ipod_dir, i);
-	fprintf(stderr, "Making %s\n", buf);
 	GTKPOD_MKDIR(buf);
     }
     return(TRUE);
