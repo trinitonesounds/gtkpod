@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-24 22:57:12 jcs>
+/* Time-stamp: <2003-11-24 23:26:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -32,7 +32,7 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
-
+ 
 #include <gtk/gtk.h>
 #include "song.h"
 
