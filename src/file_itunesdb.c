@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-02 14:25:11 jcs>
+/* Time-stamp: <2005-04-06 23:40:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -502,6 +502,8 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
 	g_free (name_db);
     }
 
+    if (!itdb) return NULL;
+
     /* add Extra*Data */
     gp_itdb_add_extra_full (itdb);
     /* validate all tracks and fill in extended info */
@@ -964,7 +966,6 @@ static gboolean flush_tracks (iTunesDB *itdb)
 
   g_return_val_if_fail (itdb, FALSE);
 
-
   n = itdb_tracks_number_nontransferred (itdb);
 
   if (n==0 && !pending_deletion) return TRUE;
@@ -1080,7 +1081,8 @@ static gboolean flush_tracks (iTunesDB *itdb)
       if (n != 0)  display_disable_gtkpod_import_buttons();
       count = 0; /* tracks transferred */
       start = time (NULL);
-      for (gl=itdb->tracks; gl && !abort; gl=gl->next);
+n = itdb_tracks_number_nontransferred (itdb);
+      for (gl=itdb->tracks; gl && !abort; gl=gl->next)
       {
 	  track = gl->data;
 	  g_return_val_if_fail (track, FALSE); /* this will hang the
@@ -1192,7 +1194,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
       switch (itdb->usertype)
       {
       case GP_ITDB_TYPE_LOCAL:
-	  tunes = g_build_filename (cfgdir, "iTunesDB", NULL);
+	  tunes = g_build_filename (cfgdir, "localDB", NULL);
 	  break;
       case GP_ITDB_TYPE_IPOD:
 	  if (prefs_get_offline ())
@@ -1351,8 +1353,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   }
 
 
-  if (success && prefs_get_offline () &&
-      (itdb->usertype == GP_ITDB_TYPE_LOCAL))
+  if (success && (itdb->usertype == GP_ITDB_TYPE_LOCAL))
   {   /* write to cfgdir */
       gchar *name = g_build_filename (cfgdir, "localDB", NULL);
       GError *error = NULL;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 20:54:58 jcs>
+/* Time-stamp: <2005-04-06 23:49:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -692,11 +692,10 @@ guint32 itdb_tracks_number_nontransferred (Itdb_iTunesDB *itdb)
     GList *gl;
     g_return_val_if_fail (itdb, 0);
 
-
-
     for (gl=itdb->tracks; gl; gl=gl->next)
     {
 	Itdb_Track *track = gl->data;
+	g_return_val_if_fail (track, 0);
 	if (!track->transferred)   ++n;
     }
     return n;
@@ -2673,12 +2672,21 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 {
     FExport *fexp;
     gulong mhbd_seek = 0;
+    GList *gl;
+    guint32 id = 52;
     WContents *cts;
     gboolean result = TRUE;;
 
     g_return_val_if_fail (itdb, FALSE);
     g_return_val_if_fail (filename, FALSE);
 
+    /* assign unique IDs */
+    for (gl=itdb->tracks; gl; gl=gl->next)
+    {
+	Track *track = gl->data;
+	g_return_val_if_fail (track, FALSE);
+	track->id = id++;
+    }
 
     fexp = g_new0 (FExport, 1);
     fexp->itdb = itdb;
@@ -2714,6 +2722,8 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 }
 
 /* Write out an iTunesDB.
+
+   First reassigns unique IDs to all tracks.
 
    An existing "Play Counts" file is renamed to "Play Counts.bak" if
    the export was successful.
@@ -3080,8 +3090,8 @@ gboolean itdb_cp (const gchar *from_file, const gchar *to_file,
 			     g_file_error_from_errno (errno),
 			     _("Error while reading from '%s' (%s)."),
 			     from_file, g_strerror (errno));
+		goto err_out;
 	    }
-	    goto err_out;
 	}
 	else
 	{
@@ -3096,8 +3106,8 @@ gboolean itdb_cp (const gchar *from_file, const gchar *to_file,
 			     g_file_error_from_errno (errno),
 			     _("Error while writing to '%s' (%s)."),
 			     to_file, g_strerror (errno));
+		goto err_out;
 	    }
-	    goto err_out;
 	}
     } while (bread != 0);
 

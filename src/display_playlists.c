@@ -68,30 +68,91 @@ static GtkTargetEntry pm_drop_types [] = {
 GtkTreePath *pm_get_path (Playlist *pl);
 
 
-static void
-on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
-					GdkDragContext  *context,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data);
-
-static void
-on_playlist_treeview_drag_data_received
-					(GtkWidget       *widget,
-					GdkDragContext  *drag_context,
-					gint             x,
-					gint             y,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data);
-
 
 /* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
 /* drag and drop                                                    */
 /* ---------------------------------------------------------------- */
+
+
+static void pm_drag_begin (GtkWidget *widget,
+			   GdkDragContext *drag_context,
+			   gpointer user_data)
+{
+    puts ("drag_begin");
+}
+
+
+static void pm_drag_data_delete (GtkWidget *widget,
+			   GdkDragContext *drag_context,
+			   gpointer user_data)
+{
+    puts ("drag_data_delete");
+}
+
+static gboolean pm_drag_drop (GtkWidget *widget,
+			      GdkDragContext *drag_context,
+			      gint x,
+			      gint y,
+			      guint time,
+			      gpointer user_data)
+{
+    GdkAtom target;
+
+    puts ("drag_data_drop");
+
+    target = gtk_drag_dest_find_target (widget, drag_context, NULL);
+
+    if (target != GDK_NONE)
+    {
+	gtk_drag_get_data (widget, drag_context, target, time);
+	return TRUE;
+    }
+    return FALSE;
+}
+
+static void pm_drag_end (GtkWidget *widget,
+			 GdkDragContext *drag_context,
+			 gpointer user_data)
+{
+    puts ("drag_end");
+}
+
+static void pm_drag_leave (GtkWidget *widget,
+			   GdkDragContext *drag_context,
+			   guint time,
+			   gpointer user_data)
+{
+    puts ("drag_leave");
+}
+
+static gboolean pm_drag_motion (GtkWidget *widget,
+				GdkDragContext *drag_context,
+				gint x,
+				gint y,
+				guint time,
+				gpointer user_data)
+{
+    GtkTreePath *path;
+    GtkTreeViewDropPosition pos;
+    gboolean result;
+
+    g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
+
+    result = gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
+						x, y,
+						&path,
+						&pos);
+
+    printf ("drag_motion: %d %d %d\n", x, y, pos);
+
+    gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path, pos);
+
+    return result;
+}
+
+
+
 
 /*#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))*/
 /* gtk_list_store_move_*() was introduced in 2.2, so we have to
@@ -300,15 +361,17 @@ tracks_moved_or_copied     (GdkDragContext  *context, gchar *tracks)
 
 
 static void
-on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
-					GdkDragContext  *context,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data)
+pm_drag_data_get (GtkWidget       *widget,
+		  GdkDragContext  *context,
+		  GtkSelectionData *data,
+		  guint            info,
+		  guint            time,
+		  gpointer         user_data)
 {
     GtkTreeSelection *ts = NULL;
     GString *reply = g_string_sized_new (2000);
+
+    puts ("data_get");
 
     /* printf("sm drag get info: %d\n", info);*/
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
@@ -333,16 +396,14 @@ on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
     g_string_free (reply, TRUE);
 }
 
-void
-on_playlist_treeview_drag_data_received
-					(GtkWidget       *widget,
-					GdkDragContext  *context,
-					gint             x,
-					gint             y,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data)
+static void pm_drag_data_received (GtkWidget       *widget,
+				   GdkDragContext  *context,
+				   gint             x,
+				   gint             y,
+				   GtkSelectionData *data,
+				   guint            info,
+				   guint            time,
+				   gpointer         user_data)
 {
     GtkTreeIter i;
     GtkTreePath *path = NULL;
@@ -351,6 +412,7 @@ on_playlist_treeview_drag_data_received
     gint position = -1;
     Playlist *pl = NULL;
 
+    puts ("drag_data_received");
 
 /*     printf ("treeview received drag data/length/format: %p/%d/%d\n", data, data?data->length:0, data?data->format:0); */
 /*     printf ("treeview received drag context/actions/suggested action: %p/%d/%d\n", context, context?context->actions:0, context?context->suggested_action:0); */
@@ -1425,22 +1487,54 @@ void pm_create_treeview (void)
 
   gtk_drag_source_set (GTK_WIDGET (playlist_treeview), GDK_BUTTON1_MASK,
 		       pm_drag_types, TGNR (pm_drag_types), GDK_ACTION_COPY);
-  gtk_tree_view_enable_model_drag_dest (playlist_treeview,
-					pm_drop_types, TGNR (pm_drop_types),
-					GDK_ACTION_COPY);
+  gtk_drag_dest_set (GTK_WIDGET (playlist_treeview),
+		     GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT,
+		     pm_drop_types, TGNR (pm_drop_types),
+		     GDK_ACTION_COPY);
+
+
+/*   gtk_tree_view_enable_model_drag_dest (playlist_treeview, */
+/* 					pm_drop_types, TGNR (pm_drop_types), */
+/* 					GDK_ACTION_COPY); */
   /* need the gtk_drag_dest_set() with no actions ("0") so that the
      data_received callback gets the correct info value. This is most
      likely a bug... */
-  gtk_drag_dest_set_target_list (GTK_WIDGET (playlist_treeview),
-				 gtk_target_list_new (pm_drop_types,
-						      TGNR (pm_drop_types)));
+/*   gtk_drag_dest_set_target_list (GTK_WIDGET (playlist_treeview), */
+/* 				 gtk_target_list_new (pm_drop_types, */
+/* 						      TGNR (pm_drop_types))); */
 
-  g_signal_connect ((gpointer) playlist_treeview, "drag_data_get",
-		    G_CALLBACK (on_playlist_treeview_drag_data_get),
+  g_signal_connect ((gpointer) playlist_treeview, "drag-begin",
+		    G_CALLBACK (pm_drag_begin),
 		    NULL);
-  g_signal_connect ((gpointer) playlist_treeview, "drag_data_received",
-		    G_CALLBACK (on_playlist_treeview_drag_data_received),
+
+  g_signal_connect ((gpointer) playlist_treeview, "drag-data-delete",
+		    G_CALLBACK (pm_drag_data_delete),
 		    NULL);
+
+  g_signal_connect ((gpointer) playlist_treeview, "drag-data-get",
+		    G_CALLBACK (pm_drag_data_get),
+		    NULL);
+
+  g_signal_connect ((gpointer) playlist_treeview, "drag-data-received",
+		    G_CALLBACK (pm_drag_data_received),
+		    NULL);
+
+  g_signal_connect ((gpointer) playlist_treeview, "drag-drop",
+		    G_CALLBACK (pm_drag_drop),
+		    NULL);
+
+  g_signal_connect ((gpointer) playlist_treeview, "drag-end",
+		    G_CALLBACK (pm_drag_end),
+		    NULL);
+
+  g_signal_connect ((gpointer) playlist_treeview, "drag-leave",
+		    G_CALLBACK (pm_drag_leave),
+		    NULL);
+
+  g_signal_connect ((gpointer) playlist_treeview, "drag-motion",
+		    G_CALLBACK (pm_drag_motion),
+		    NULL);
+
   g_signal_connect_after ((gpointer) playlist_treeview, "key_release_event",
 			  G_CALLBACK (on_playlist_treeview_key_release_event),
 			  NULL);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 20:54:56 jcs>
+/* Time-stamp: <2005-04-05 22:12:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2615,7 +2615,7 @@ void prefs_set_int64_value (const gchar *key, gint64 value)
 
     if (!key)  return;
 
-    str = g_strdup_printf ("%lld", value);
+    str = g_strdup_printf ("%llu", value);
     prefs_set_string_value (key, str);
     g_free (str);
 }
@@ -2668,7 +2668,7 @@ gboolean prefs_get_int64_value (const gchar *key, gint64 *value)
 	gchar *str = g_hash_table_lookup (prefs_hash, key);
 	if (str)
 	{
-	    *value = atoll (str);
+	    *value = (gint64)g_ascii_strtoull (str, NULL, 10);
 	    return TRUE;
 	}
     }
