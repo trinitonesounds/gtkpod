@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 23:40:19 JST jcs>
+/* Time-stamp: <2004-03-22 00:14:57 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -452,6 +452,9 @@ Ero Carrera: Filename validation and quick sync when copying tracks from the iPo
 		       "\n\n",
 		       _("\
 Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"),
+		       "\n\n",
+		       _("\
+Armando Atienza: Support with external playcounts\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n"),
