@@ -3,6 +3,11 @@
 |  compile "standalone" with the gtkpod project. 2002/11/24.
 |  Changed by Jorg Schuler to also determine size of file and
 |  length of song in ms. 2002/11/28.
+|
+|  Converted to use libid3tag from the mad project 
+|  Sam Clegg - 2003/09/15
+|
+|  $Id$
 */
 
 /* id3tag.h - 2001/02/16 */
@@ -24,24 +29,12 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
-
-#ifndef __ID3TAG_H__
-#define __ID3TAG_H__
-
+#ifndef __ID3_TAG_H__
+#define __ID3_TAG_H__
 
 #include <glib.h>
 
-
-/****************
- * Declarations *
- ****************/
-
-/*
- * Description of each item of the TagList list
- */
-typedef struct _File_Tag File_Tag;
-struct _File_Tag
+typedef struct 
 {
     gulong key;            /* Incremented value */
     gboolean saved;        /* Set to TRUE if this tag had been saved */
@@ -59,14 +52,9 @@ struct _File_Tag
     GList *other;          /* List of unsupported fields (used for ogg only) */
     gchar *auto_charset;   /* in case of auto-detection: which charset
 			      was used? */
-};
+} File_Tag;
 
-
-/**************
- * Prototypes *
- **************/
 gboolean Id3tag_Read_File_Tag  (gchar *filename, File_Tag *FileTag);
 gboolean Id3tag_Write_File_Tag (gchar *filename, File_Tag *FileTag);
-#define ID3V2_MAX_STRING_LEN 4096
 
 #endif /* __ID3TAG_H__ */
