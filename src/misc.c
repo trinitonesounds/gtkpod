@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-21 13:05:36 jcs>
+/* Time-stamp: <2003-06-25 22:24:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -48,6 +48,7 @@
 #include "prefs_window.h"
 #include "dirbrowser.h"
 #include "file.h"
+#include "charset.h"
 
 
 #define DEBUG_MISC 0
@@ -312,6 +313,7 @@ Patches were supplied by the following people (list may be incomplete -- please 
 Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n\
 Hiroshi Kawashima: Japanese charset autodetecion feature\n\
 Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n\
+Walter Bell: correct handling of DND URIs with escaped characters\n\
 \n\
 \n"),
 		       _("\
@@ -416,7 +418,6 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
 				 AddSongFunc songaddfunc, gpointer data)
 {
     gchar **files = NULL, **filesp = NULL;
-    gchar *file = NULL;
     Playlist *pl_playlist = pl; /* playlist for playlist file */
 
     if (!str)  return;
@@ -424,57 +425,77 @@ void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint pl_pos,
     /*   printf("pl: %x, pl_pos: %d\n%s\n", pl, pl_pos, str);*/
 
     block_widgets ();
+
     files = g_strsplit (str, "\n", -1);
     if (files)
     {
-	filesp = files;
+        filesp = files;
 	while (*filesp)
 	{
-	    gboolean added;
+	    gboolean added = FALSE;
+            gint file_len = -1;
 
-	    added = FALSE;
-	    file = *filesp;
-	    if (strncmp (file, "file:", 5) == 0)
-	    {
-		file += 5;
-		if (g_file_test (file, G_FILE_TEST_IS_DIR))
+            gchar *file = NULL;
+            gchar *decoded_file = NULL;
+
+            file = *filesp;
+            /* file is in uri form (the ones we're looking for are
+               file:///), file can include the \n, which isn't a valid
+               character of the filename and will cause the uri decode
+               / file test to fail, so we'll cut it off if its there.
+            */
+            file_len = strlen (file);
+            if (file_len && (strcmp(&file[file_len-1],"\n") == 0))
+            {
+                file[file_len-1] = (gchar)NULL;
+            }
+
+            decoded_file = filename_from_uri (file, NULL, NULL);
+            if (decoded_file != NULL)
+            {
+		if (g_file_test (decoded_file, G_FILE_TEST_IS_DIR))
 		{   /* directory */
 		    if (!pl)
 		    {  /* no playlist yet -- create new one */
 			pl = add_new_playlist (_("New Playlist"), pl_pos);
 		    }
-		    add_directory_by_name (file, pl,
+		    add_directory_by_name (decoded_file, pl,
 					   prefs_get_add_recursively (),
 					   songaddfunc, data);
 		    added = TRUE;
 		}
 		if (g_file_test (file, G_FILE_TEST_IS_REGULAR))
 		{   /* regular file */
-		    gint len = strlen (file);
-
-		    if (len >= 4)
+		    gint decoded_len = strlen (decoded_file);
+		    if (decoded_len >= 4)
 		    {
-			if (strcasecmp (&file[len-4], ".mp3") == 0)
+			if (strcasecmp (&decoded_file[decoded_len-4],
+                                        ".mp3") == 0)
 			{   /* mp3 file */
 			    if (!pl)
 			    {  /* no playlist yet -- create new one */
 				pl = add_new_playlist (
-				    _("New Playlist"), pl_pos);
+                                                       _("New Playlist"), 
+                                                       pl_pos);
 			    }
-			    add_song_by_filename (file, pl,
+			    add_song_by_filename (decoded_file, pl,
 						  prefs_get_add_recursively (),
 						  songaddfunc, data);
 			    added = TRUE;
 			}
-			else if ((strcasecmp (&file[len-4], ".plu") == 0) ||
-				 (strcasecmp (&file[len-4], ".m3u") == 0))
+			else if ((strcasecmp (&decoded_file[decoded_len-4],
+                                              ".plu") == 0) ||
+				 (strcasecmp (&decoded_file[decoded_len-4],
+                                              ".m3u") == 0))
 			{
-			    add_playlist_by_filename (file, pl_playlist,
+			    add_playlist_by_filename (decoded_file,
+                                                      pl_playlist,
 						      songaddfunc, data);
 			    added = TRUE;
 			}
 		    }
-		}
+                }
+                g_free (decoded_file);
 	    }
 	    if (!added)
 	    {
@@ -1949,4 +1970,300 @@ gint compare_string_case_insensitive (gchar *str1, gchar *str2)
     g_free (string1);
     g_free (string2);
     return result;
+}
+
+
+/* -------------------------------------------------------------------
+ * The following is taken straight out of glib2.0.6 (gconvert.c):
+ * g_filename_from_uri uses g_filename_from_utf8() to convert from
+ * utf8. However, the user might have selected a different charset
+ * inside gtkpod -- we must use gtkpod's charset_from_utf8()
+ * instead. That's the only line changed...
+ * -------------------------------------------------------------------*/
+
+/* Test of haystack has the needle prefix, comparing case
+ * insensitive. haystack may be UTF-8, but needle must
+ * contain only ascii. */
+static gboolean
+has_case_prefix (const gchar *haystack, const gchar *needle)
+{
+  const gchar *h, *n;
+  
+  /* Eat one character at a time. */
+  h = haystack;
+  n = needle;
+
+  while (*n && *h &&
+	 g_ascii_tolower (*n) == g_ascii_tolower (*h))
+    {
+      n++;
+      h++;
+    }
+  
+  return *n == '\0';
+}
+
+static int
+unescape_character (const char *scanner)
+{
+  int first_digit;
+  int second_digit;
+
+  first_digit = g_ascii_xdigit_value (scanner[0]);
+  if (first_digit < 0) 
+    return -1;
+  
+  second_digit = g_ascii_xdigit_value (scanner[1]);
+  if (second_digit < 0) 
+    return -1;
+  
+  return (first_digit << 4) | second_digit;
+}
+
+static gchar *
+g_unescape_uri_string (const char *escaped,
+		       int         len,
+		       const char *illegal_escaped_characters,
+		       gboolean    ascii_must_not_be_escaped)
+{
+  const gchar *in, *in_end;
+  gchar *out, *result;
+  int c;
+  
+  if (escaped == NULL)
+    return NULL;
+
+  if (len < 0)
+    len = strlen (escaped);
+
+  result = g_malloc (len + 1);
+  
+  out = result;
+  for (in = escaped, in_end = escaped + len; in < in_end; in++)
+    {
+      c = *in;
+
+      if (c == '%')
+	{
+	  /* catch partial escape sequences past the end of the substring */
+	  if (in + 3 > in_end)
+	    break;
+
+	  c = unescape_character (in + 1);
+
+	  /* catch bad escape sequences and NUL characters */
+	  if (c <= 0)
+	    break;
+
+	  /* catch escaped ASCII */
+	  if (ascii_must_not_be_escaped && c <= 0x7F)
+	    break;
+
+	  /* catch other illegal escaped characters */
+	  if (strchr (illegal_escaped_characters, c) != NULL)
+	    break;
+
+	  in += 2;
+	}
+
+      *out++ = c;
+    }
+  
+  g_assert (out - result <= len);
+  *out = '\0';
+
+  if (in != in_end || !g_utf8_validate (result, -1, NULL))
+    {
+      g_free (result);
+      return NULL;
+    }
+
+  return result;
+}
+
+static gboolean
+is_escalphanum (gunichar c)
+{
+  return c > 0x7F || g_ascii_isalnum (c);
+}
+
+static gboolean
+is_escalpha (gunichar c)
+{
+  return c > 0x7F || g_ascii_isalpha (c);
+}
+
+/* allows an empty string */
+static gboolean
+hostname_validate (const char *hostname)
+{
+  const char *p;
+  gunichar c, first_char, last_char;
+
+  p = hostname;
+  if (*p == '\0')
+    return TRUE;
+  do
+    {
+      /* read in a label */
+      c = g_utf8_get_char (p);
+      p = g_utf8_next_char (p);
+      if (!is_escalphanum (c))
+	return FALSE;
+      first_char = c;
+      do
+	{
+	  last_char = c;
+	  c = g_utf8_get_char (p);
+	  p = g_utf8_next_char (p);
+	}
+      while (is_escalphanum (c) || c == '-');
+      if (last_char == '-')
+	return FALSE;
+      
+      /* if that was the last label, check that it was a toplabel */
+      if (c == '\0' || (c == '.' && *p == '\0'))
+	return is_escalpha (first_char);
+    }
+  while (c == '.');
+  return FALSE;
+}
+
+/**
+ * g_filename_from_uri:
+ * @uri: a uri describing a filename (escaped, encoded in UTF-8).
+ * @hostname: Location to store hostname for the URI, or %NULL.
+ *            If there is no hostname in the URI, %NULL will be
+ *            stored in this location.
+ * @error: location to store the error occuring, or %NULL to ignore
+ *         errors. Any of the errors in #GConvertError may occur.
+ * 
+ * Converts an escaped UTF-8 encoded URI to a local filename in the
+ * encoding used for filenames. 
+ * 
+ * Return value: a newly-allocated string holding the resulting
+ *               filename, or %NULL on an error.
+ **/
+gchar *
+filename_from_uri (const char *uri,
+		   char      **hostname,
+		   GError    **error)
+{
+  const char *path_part;
+  const char *host_part;
+  char *unescaped_hostname;
+  char *result;
+  char *filename;
+  int offs;
+#ifdef G_OS_WIN32
+  char *p, *slash;
+#endif
+
+  if (hostname)
+    *hostname = NULL;
+
+  if (!has_case_prefix (uri, "file:/"))
+    {
+      g_set_error (error, G_CONVERT_ERROR, G_CONVERT_ERROR_BAD_URI,
+		   _("The URI '%s' is not an absolute URI using the file scheme"),
+		   uri);
+      return NULL;
+    }
+  
+  path_part = uri + strlen ("file:");
+  
+  if (strchr (path_part, '#') != NULL)
+    {
+      g_set_error (error, G_CONVERT_ERROR, G_CONVERT_ERROR_BAD_URI,
+		   _("The local file URI '%s' may not include a '#'"),
+		   uri);
+      return NULL;
+    }
+	
+  if (has_case_prefix (path_part, "///")) 
+    path_part += 2;
+  else if (has_case_prefix (path_part, "//"))
+    {
+      path_part += 2;
+      host_part = path_part;
+
+      path_part = strchr (path_part, '/');
+
+      if (path_part == NULL)
+	{
+	  g_set_error (error, G_CONVERT_ERROR, G_CONVERT_ERROR_BAD_URI,
+		       _("The URI '%s' is invalid"),
+		       uri);
+	  return NULL;
+	}
+
+      unescaped_hostname = g_unescape_uri_string (host_part, path_part - host_part, "", TRUE);
+
+      if (unescaped_hostname == NULL ||
+	  !hostname_validate (unescaped_hostname))
+	{
+	  g_free (unescaped_hostname);
+	  g_set_error (error, G_CONVERT_ERROR, G_CONVERT_ERROR_BAD_URI,
+		       _("The hostname of the URI '%s' is invalid"),
+		       uri);
+	  return NULL;
+	}
+      
+      if (hostname)
+	*hostname = unescaped_hostname;
+      else
+	g_free (unescaped_hostname);
+    }
+
+  filename = g_unescape_uri_string (path_part, -1, "/", FALSE);
+
+  if (filename == NULL)
+    {
+      g_set_error (error, G_CONVERT_ERROR, G_CONVERT_ERROR_BAD_URI,
+		   _("The URI '%s' contains invalidly escaped characters"),
+		   uri);
+      return NULL;
+    }
+
+  offs = 0;
+#ifdef G_OS_WIN32
+  /* Drop localhost */
+  if (hostname && *hostname != NULL &&
+      g_ascii_strcasecmp (*hostname, "localhost") == 0)
+    {
+      g_free (*hostname);
+      *hostname = NULL;
+    }
+
+  /* Turn slashes into backslashes, because that's the canonical spelling */
+  p = filename;
+  while ((slash = strchr (p, '/')) != NULL)
+    {
+      *slash = '\\';
+      p = slash + 1;
+    }
+
+  /* Windows URIs with a drive letter can be like "file://host/c:/foo"
+   * or "file://host/c|/foo" (some Netscape versions). In those cases, start
+   * the filename from the drive letter.
+   */
+  if (g_ascii_isalpha (filename[1]))
+    {
+      if (filename[2] == ':')
+	offs = 1;
+      else if (filename[2] == '|')
+	{
+	  filename[2] = ':';
+	  offs = 1;
+	}
+    }
+#endif
+
+  /* This is where we differ from glib2.0.6: we use
+     gtkpod's charset_from_utf8() instead of glib's
+     g_filename_from_utf8() */
+  result = charset_from_utf8 (filename + offs);
+  g_free (filename);
+  
+  return result;
 }

@@ -16,6 +16,10 @@ gtkpod V0.52-CVS
 	utf8 sort should work fine, case-sensitive may not work entirely
 	as expected with some charsets.
 
+	BUGFIX: drag-and-drop: gtkpod should now correctly handle files
+	with "special" characters (like spaces...) that are escaped in the
+	DND URI. (Thanks to Walter Bell).
+
 	BUGFIX: using 'file_export' from the context menu could crash
 	context menu
 

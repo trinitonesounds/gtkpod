@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-19 21:07:33 jcs>
+/* Time-stamp: <2003-06-25 22:06:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -109,5 +109,9 @@ void time_set_time (Song *song, time_t time, SM_item sm_item);
 
 gint compare_string (gchar *str1, gchar *str2);
 gint compare_string_case_insensitive (gchar *str1, gchar *str2);
+
+gchar *filename_from_uri (const char *uri,
+			  char      **hostname,
+			  GError    **error);
 
 #endif 
