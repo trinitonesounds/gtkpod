@@ -95,7 +95,7 @@ static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
 static float extendedinfoversion = 0.0;
 
-/* values bwlow -1 are private to individual functions */
+/* values below -1 are private to individual functions */
 enum {
 	FILE_TYPE_ERROR = -1,
 	FILE_TYPE_UNKNOWN = 0,
@@ -104,12 +104,12 @@ enum {
 	FILE_TYPE_WAV,
 	FILE_TYPE_M3U,
 	FILE_TYPE_PLS
-} file_type;
+};
 
 
 /* Determine the type of a file. 
  *
- * Currently this is done by checking the end of the filename. An improved
+ * Currently this is done by checking the suffix of the filename. An improved
  * version should probably only fall back to that method if everything else
  * fails.
  * -jlt
@@ -123,16 +123,16 @@ static int determine_file_type(gchar *path)
 	if (!path) return FILE_TYPE_ERROR;
 	
     	path_utf8 = charset_to_utf8 (path);
-        suf = path_utf8 + strlen(path_utf8) - 4;
-	if (suf < path_utf8) return FILE_TYPE_UNKNOWN;
-	
-	/* since we are checking only for equality strcasecmp should be
-	 * sufficient */
-	if (g_strcasecmp (suf, ".mp3") == 0) type = FILE_TYPE_MP3;
-	if (g_strcasecmp (suf, ".mp4") == 0) type = FILE_TYPE_MP4;
-	if (g_strcasecmp (suf, ".wav") == 0) type = FILE_TYPE_WAV;
-	if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
-	if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
+	suf = path_utf8 + strlen(path_utf8) - 4;
+	if (suf >= path_utf8) {
+		/* since we are exclusively checkinng for equality strcasecmp
+		 * should be sufficient */
+		if (g_strcasecmp (suf, ".mp3") == 0) type = FILE_TYPE_MP3;
+		if (g_strcasecmp (suf, ".mp4") == 0) type = FILE_TYPE_MP4;
+		if (g_strcasecmp (suf, ".wav") == 0) type = FILE_TYPE_WAV;
+		if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
+		if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
+	}
 
 	g_free(path_utf8);
 	return type;
