@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-28 23:47:02 jcs>
+/* Time-stamp: <2003-09-22 21:42:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -125,7 +125,7 @@ typedef enum  {
  * in the prefs_window are
  * named after the numbers (Title: tag_autoset0, Artist: tag_autoset1
  * etc.) Therefore, if you change the order of the first
- * SM_NUM_TAGS_PREFS entries, you should also adjust the names in
+ * SM_NUM_TAGS_PREFS entries, you must also adjust the names in
  * gtkpod.glade and rebuild the interface */
 typedef enum  {
   SM_COLUMN_TITLE = 0,

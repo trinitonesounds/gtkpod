@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 15:01:55 jcs>
+/* Time-stamp: <2003-09-22 22:07:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -236,7 +236,6 @@ struct cfg *cfg_new(void)
     mycfg->write_charset = FALSE;
     mycfg->add_recursively = TRUE;
     mycfg->case_sensitive = FALSE;
-    mycfg->save_sorted_order = FALSE;
     mycfg->sort_tab_num = 2;
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
@@ -249,6 +248,11 @@ struct cfg *cfg_new(void)
     mycfg->multi_edit_title = TRUE;
     mycfg->not_played_song = TRUE;
     mycfg->misc_song_nr = 25;
+    mycfg->sortcfg.pm_sort = SORT_NONE;
+    mycfg->sortcfg.st_sort = SORT_NONE;
+    mycfg->sortcfg.sm_sort = SORT_NONE;
+    mycfg->sortcfg.pm_autostore = FALSE;
+    mycfg->sortcfg.sm_autostore = FALSE;
     return(mycfg);
 }
 
@@ -454,6 +458,26 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_toolbar_style(atoi(arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
+	  {
+	      prefs_set_pm_autostore((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "sm_autostore") == 0)
+	  {
+	      prefs_set_sm_autostore((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "pm_sort") == 0)
+	  {
+	      prefs_set_pm_sort(atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "st_sort") == 0)
+	  {
+	      prefs_set_st_sort(atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "sm_sort") == 0)
+	  {
+	      prefs_set_sm_sort(atoi(arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "last_prefs_page") == 0)
 	  {
 	      prefs_set_last_prefs_page(atoi(arg));
@@ -540,7 +564,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
-	      prefs_set_save_sorted_order((gboolean)atoi(arg));
+	      /* ignore option -- has been deleted with 0.53 */
 	  }
 	  else if(g_ascii_strcasecmp (line, "size_gtkpod.x") == 0)
 	  {
@@ -836,6 +860,11 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "sync_remove=%d\n",prefs_get_sync_remove());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
+    fprintf(fp, "pm_autostore=%d\n",prefs_get_pm_autostore());
+    fprintf(fp, "sm_autostore=%d\n",prefs_get_sm_autostore());
+    fprintf(fp, "pm_sort=%d\n",prefs_get_pm_sort());
+    fprintf(fp, "st_sort=%d\n",prefs_get_st_sort());
+    fprintf(fp, "sm_sort=%d\n",prefs_get_sm_sort());
     fprintf(fp, "display_tooltips_main=%d\n",
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
@@ -848,7 +877,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
-    fprintf(fp, "save_sorted_order=%d\n",prefs_get_save_sorted_order());
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser, prefs\n"));
     fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
     fprintf (fp, "size_gtkpod.y=%d\n", cfg->size_gtkpod.y);
@@ -921,6 +949,12 @@ void cfg_free(struct cfg *c)
       C_FREE (c);
     }
 }
+
+void sortcfg_free(struct sortcfg *c)
+{
+    g_free (c);
+}
+
 
 static gchar *
 get_dirname_of_filename(const gchar *file)
@@ -1149,6 +1183,17 @@ struct cfg *clone_prefs(void)
 	    result->time_format = g_strdup(cfg->time_format);
 	if (cfg->filename_format)
 	    result->filename_format = g_strdup(cfg->filename_format);
+    }
+    return(result);
+}
+
+struct sortcfg *clone_sortprefs(void)
+{
+    struct sortcfg *result = NULL;
+
+    if(cfg)
+    {
+	result = g_memdup (&cfg->sortcfg, sizeof (struct sortcfg));
     }
     return(result);
 }
@@ -1556,16 +1601,6 @@ void prefs_set_case_sensitive (gboolean val)
     cfg->case_sensitive = val;
 }
 
-gboolean prefs_get_save_sorted_order (void)
-{
-    return cfg->save_sorted_order;
-}
-
-void prefs_set_save_sorted_order (gboolean val)
-{
-    cfg->save_sorted_order = val;
-}
-
 gint prefs_get_sort_tab_num (void)
 {
     return cfg->sort_tab_num;
@@ -1606,6 +1641,89 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
 
     cfg->toolbar_style = i;
     display_show_hide_toolbar ();
+}
+
+gboolean prefs_get_pm_autostore (void)
+{
+    return cfg->sortcfg.pm_autostore;
+}
+
+void prefs_set_pm_autostore (gboolean val)
+{
+    cfg->sortcfg.pm_autostore = val;
+}
+
+gboolean prefs_get_sm_autostore (void)
+{
+    return cfg->sortcfg.sm_autostore;
+}
+
+void prefs_set_sm_autostore (gboolean val)
+{
+    cfg->sortcfg.sm_autostore = val;
+}
+
+gint prefs_get_pm_sort (void)
+{
+    return cfg->sortcfg.pm_sort;
+}
+
+void prefs_set_pm_sort (gint i)
+{
+    switch (i)
+    {
+    case SORT_ASCENDING:
+    case SORT_DESCENDING:
+    case SORT_NONE:
+	break;
+    default:  /* illegal -- ignore */
+	gtkpod_warning (_("prefs_set_pm_sort: illegal type '%d' ignored\n"), i);
+	return;
+    }
+
+    cfg->sortcfg.pm_sort = i;
+}
+
+gint prefs_get_st_sort (void)
+{
+    return cfg->sortcfg.st_sort;
+}
+
+void prefs_set_st_sort (gint i)
+{
+    switch (i)
+    {
+    case SORT_ASCENDING:
+    case SORT_DESCENDING:
+    case SORT_NONE:
+	break;
+    default:  /* illegal -- ignore */
+	gtkpod_warning (_("prefs_set_st_sort: illegal type '%d' ignored\n"), i);
+	return;
+    }
+
+    cfg->sortcfg.st_sort = i;
+}
+
+gint prefs_get_sm_sort (void)
+{
+    return cfg->sortcfg.sm_sort;
+}
+
+void prefs_set_sm_sort (gint i)
+{
+    switch (i)
+    {
+    case SORT_ASCENDING:
+    case SORT_DESCENDING:
+    case SORT_NONE:
+	break;
+    default:  /* illegal -- ignore */
+	gtkpod_warning (_("prefs_set_sm_sort: illegal type '%d' ignored\n"), i);
+	return;
+    }
+
+    cfg->sortcfg.sm_sort = i;
 }
 
 void prefs_set_display_tooltips_main (gboolean state)

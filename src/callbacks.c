@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 23:53:07 jcs>
+/* Time-stamp: <2003-09-22 22:59:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -853,16 +853,6 @@ on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
 
 
 void
-on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_save_sorted_order(
-	gtk_toggle_button_get_active(togglebutton));
-
-}
-
-
-void
 on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -925,52 +915,6 @@ on_cfg_toolbar_style_icons_toggled      (GtkToggleButton *togglebutton,
     {
 	prefs_window_set_toolbar_style (GTK_TOOLBAR_ICONS);
     }
-}
-
-void
-on_alpha_playlists0_activate           (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    pm_sort (GTK_SORT_ASCENDING);
-}
-
-
-void
-on_alpha_sort_tab0_activate            (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    gint inst = get_sort_tab_number (
-	_("Sort which sort tab in ascending order?"));
-
-    if (inst != -1) st_sort (inst, GTK_SORT_ASCENDING);
-}
-
-
-void
-on_alpha_playlist1_activate            (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    pm_sort (GTK_SORT_DESCENDING);
-}
-
-
-void
-on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    gint inst = get_sort_tab_number (
-	_("Sort which sort tab in descending order?"));
-
-    if (inst != -1) st_sort (inst, GTK_SORT_DESCENDING);
-
-}
-
-
-void
-on_reset_sorting_activate              (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    display_reset (-2);
 }
 
 void
@@ -1565,7 +1509,136 @@ void
 on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-/*    prefs_window_set_case_sensitive(
-      gtk_toggle_button_get_active(togglebutton));*/
+    prefs_window_set_case_sensitive(
+	gtk_toggle_button_get_active(togglebutton));
+}
 
+void
+on_sorting_clicked                     (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    sort_window_create ();
+}
+
+
+void
+on_sorting_activate                    (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    sort_window_create ();
+}
+
+
+void
+on_sm_none_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_sm_sort (SORT_NONE);
+    else
+	sort_window_set_sm_sort (SORT_RESET);
+}
+
+
+void
+on_st_ascend_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_st_sort (SORT_ASCENDING);
+}
+
+
+void
+on_st_descend_toggled                  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_st_sort (SORT_DESCENDING);
+}
+
+
+void
+on_st_none_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_st_sort (SORT_NONE);
+}
+
+
+void
+on_pm_ascend_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_pm_sort (SORT_ASCENDING);
+}
+
+
+void
+on_pm_descend_toggled                  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_pm_sort (SORT_DESCENDING);
+}
+
+
+void
+on_pm_none_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_pm_sort (SORT_NONE);
+}
+
+
+void
+on_pm_autostore_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    sort_window_set_pm_autostore (gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_sm_autostore_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    sort_window_set_sm_autostore (gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_sort_apply_clicked                  (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    sort_window_apply ();
+}
+
+
+void
+on_sort_cancel_clicked                 (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    sort_window_cancel ();
+}
+
+
+void
+on_sort_ok_clicked                     (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    sort_window_ok ();
+}
+
+
+gboolean
+on_sort_window_delete_event            (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data)
+{
+    sort_window_delete ();
+    return FALSE;
 }

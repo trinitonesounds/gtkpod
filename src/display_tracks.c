@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 20:07:26 jcs>
+/* Time-stamp: <2003-09-22 21:37:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -858,7 +858,7 @@ gint default_comp  (GtkTreeModel *model,
 static void
 sm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 {
-    if(prefs_get_save_sorted_order ())  sm_rows_reordered ();
+    if(prefs_get_sm_autostore ())  sm_rows_reordered ();
 }
 
 

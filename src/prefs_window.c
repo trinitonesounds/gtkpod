@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 15:10:03 jcs>
+/* Time-stamp: <2003-09-22 23:00:32 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -34,8 +34,11 @@
 #include "charset.h"
 
 static GtkWidget *prefs_window = NULL;
+static GtkWidget *sort_window = NULL;
 static struct cfg *tmpcfg = NULL;
 static struct cfg *origcfg = NULL;
+static struct sortcfg *tmpsortcfg = NULL;
+static struct sortcfg *origsortcfg = NULL;
 
 /* keeps the check buttons for "Select Entry 'All' in Sorttab %d" */
 static GtkWidget *autoselect_widget[SORT_TAB_MAX];
@@ -123,7 +126,7 @@ prefs_window_create(void)
 	}
 	else
 	{
-	    g_warning ("Programming error: tmpcfg is not NULL wtf !!\n");
+	    g_warning ("Programming error: tmpcfg is not NULL!!\n");
 	    return;
 	}
 	prefs_window = create_prefs_window();
@@ -287,11 +290,6 @@ prefs_window_create(void)
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->update_charset);
-	}
-	if((w = lookup_widget(prefs_window, "cfg_save_sorted_order")))
-	{
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpcfg->save_sorted_order);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_block_display")))
 	{
@@ -475,10 +473,9 @@ prefs_window_create(void)
 static void 
 prefs_window_set(void)
 {
-    gint i;
-
     if (tmpcfg)
     {
+	gint i;
 	/* Need this in case user reordered column order (we don't
 	 * catch the reorder signal) */
 	sm_store_col_order ();
@@ -522,7 +519,6 @@ prefs_window_set(void)
 	prefs_set_show_non_updated(tmpcfg->show_non_updated);
 	prefs_set_show_sync_dirs(tmpcfg->show_sync_dirs);
 	prefs_set_sync_remove(tmpcfg->sync_remove);
-	prefs_set_save_sorted_order(tmpcfg->save_sorted_order);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
@@ -928,11 +924,6 @@ void prefs_window_set_case_sensitive (gboolean val)
     tmpcfg->case_sensitive = val;
 }
 
-void prefs_window_set_save_sorted_order (gboolean val)
-{
-    tmpcfg->save_sorted_order = val;
-}
-
 void prefs_window_set_sort_tab_num (gint num)
 {
     gint i;
@@ -972,4 +963,219 @@ void
 prefs_window_set_special_export_charset(gboolean val)
 {
     tmpcfg->special_export_charset = val;
+}
+
+
+
+
+/* ------------------------------------------------------------ *\
+ *                                                              *
+ * Sort-Prefs Window                                            *
+ *                                                              *
+\* ------------------------------------------------------------ */
+
+/**
+ * sort_window_create
+ * Create, Initialize, and Show the sorting preferences window
+ * allocate a static sort struct for temporary variables
+ */
+void sort_window_create (void)
+{
+    if (!sort_window)
+    {
+	GtkWidget *w;
+
+	if(!tmpsortcfg && !origsortcfg)
+	{
+	    tmpsortcfg = clone_sortprefs();
+	    origsortcfg = clone_sortprefs();
+	}
+	else
+	{
+	    g_warning ("Programming error: tmpsortcfg is not NULL!!\n");
+	    return;
+	}
+	sort_window = create_sort_window ();
+
+	w = NULL;
+	switch (tmpsortcfg->pm_sort)
+	{
+	case SORT_ASCENDING:
+	    w = lookup_widget (sort_window, "pm_ascend");
+	    break;
+	case SORT_DESCENDING:
+	    w = lookup_widget (sort_window, "pm_descend");
+	    break;
+	case SORT_NONE:
+	    w = lookup_widget (sort_window, "pm_none");
+	    break;
+	}
+	if (w)
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+
+	w = NULL;
+	switch (tmpsortcfg->st_sort)
+	{
+	case SORT_ASCENDING:
+	    w = lookup_widget (sort_window, "st_ascend");
+	    break;
+	case SORT_DESCENDING:
+	    w = lookup_widget (sort_window, "st_descend");
+	    break;
+	case SORT_NONE:
+	    w = lookup_widget (sort_window, "st_none");
+	    break;
+	}
+	if (w)
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+
+	w = lookup_widget (sort_window, "sm_none");
+	if (w)
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 (tmpsortcfg->sm_sort == SORT_NONE));
+
+	w = lookup_widget (sort_window, "pm_autostore");
+	if (w)
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpsortcfg->pm_autostore);
+
+	w = lookup_widget (sort_window, "sm_autostore");
+	if (w)
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpsortcfg->sm_autostore);
+
+	gtk_widget_show (sort_window);
+    }
+}
+
+
+/* copy newly set values from tmpsortcfg to the original cfg struct */
+void sort_window_set (void)
+{
+    if (tmpsortcfg && origsortcfg)
+    {
+	prefs_set_pm_sort (tmpsortcfg->pm_sort);
+	prefs_set_pm_autostore (tmpsortcfg->pm_autostore);
+	prefs_set_st_sort (tmpsortcfg->st_sort);
+	prefs_set_sm_autostore (tmpsortcfg->sm_autostore);
+	/* if sort type has changed, initialize display */
+	if (origsortcfg->pm_sort != tmpsortcfg->pm_sort)
+	    display_reset (-1);
+	if (origsortcfg->st_sort != tmpsortcfg->st_sort)
+	{
+	    gint i;
+	    for (i=0; i<prefs_get_sort_tab_num (); ++i)
+		display_reset (i);
+	}
+	if (origsortcfg->sm_sort != tmpsortcfg->sm_sort)
+	    display_reset (SORT_TAB_MAX);
+	/* if auto sort was changed to TRUE, store order */
+	if (!origsortcfg->pm_autostore && tmpsortcfg->pm_autostore)
+	    pm_rows_reordered ();
+	if (!origsortcfg->sm_autostore && tmpsortcfg->sm_autostore)
+	    sm_rows_reordered ();
+    }
+}
+
+
+/**
+ * sort_window_cancel
+ * UI has requested sort prefs changes be ignored -- write back the
+ * original values
+ * Frees the tmpsortcfg and origsortcfg variable
+ */
+void sort_window_cancel(void)
+{
+    struct sortcfg *tt;
+
+    /* exchange tmpsortcfg with origsortcfg */
+    tt = tmpsortcfg;
+    tmpsortcfg = origsortcfg;
+    origsortcfg = tt;
+    tt = NULL;
+
+    /* "save" (i.e. reset) original configs */
+    sort_window_set ();
+
+    /* delete cfg struct */
+    sortcfg_free (tmpsortcfg);
+    sortcfg_free (origsortcfg);
+    tmpsortcfg = NULL;
+
+    /* close the window */
+    if(sort_window)
+	gtk_widget_destroy(sort_window);
+    sort_window = NULL;
+}
+
+/* when window is deleted, we keep the currently applied prefs */
+void sort_window_delete(void)
+{
+    /* delete sortcfg structs */
+    sortcfg_free (tmpsortcfg);
+    tmpsortcfg = NULL;
+    sortcfg_free (origsortcfg);
+    origsortcfg = NULL;
+
+    /* close the window */
+    if(sort_window)
+	gtk_widget_destroy(sort_window);
+    sort_window = NULL;
+}
+
+/* apply the current settings and close the window */
+/* Frees the tmpsortcfg and origsortcfg variable */
+void sort_window_ok (void)
+{
+    /* save current settings */
+    sort_window_set ();
+
+    /* delete sortcfg structs */
+    sortcfg_free (tmpsortcfg);
+    tmpsortcfg = NULL;
+    sortcfg_free (origsortcfg);
+    origsortcfg = NULL;
+
+    /* close the window */
+    if(sort_window)
+	gtk_widget_destroy(sort_window);
+    sort_window = NULL;
+}
+
+
+/* apply the current settings, don't close the window */
+void sort_window_apply (void)
+{
+    /* save current settings */
+    sort_window_set ();
+}
+
+
+
+void sort_window_set_pm_autostore (gboolean val)
+{
+    tmpsortcfg->pm_autostore = val;
+}
+
+void sort_window_set_sm_autostore (gboolean val)
+{
+    tmpsortcfg->sm_autostore = val;
+}
+
+void sort_window_set_pm_sort (gint val)
+{
+    tmpsortcfg->pm_sort = val;
+}
+
+void sort_window_set_st_sort (gint val)
+{
+    tmpsortcfg->st_sort = val;
+}
+
+void sort_window_set_sm_sort (gint val)
+{
+    if (val != SORT_RESET)
+	tmpsortcfg->sm_sort = val;
+    else
+	tmpsortcfg->sm_sort = origsortcfg->sm_sort;
 }

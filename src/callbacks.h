@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 23:53:06 jcs>
+/* Time-stamp: <2003-09-22 17:05:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -316,10 +316,6 @@ on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
 				      gpointer         user_data);
 
 void
-on_cfg_save_sorted_order_toggled       (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
 on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
@@ -352,27 +348,7 @@ on_cfg_toolbar_style_icons_toggled     (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_alpha_playlists0_activate           (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_alpha_sort_tab0_activate            (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_alpha_playlist1_activate            (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_alpha_sort_tab1_activate            (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
 on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_reset_sorting_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -603,4 +579,65 @@ on_cfg_special_export_charset_toggled  (GtkToggleButton *togglebutton,
 
 void
 on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_sorting_clicked                     (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_sorting_activate                    (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_sm_none_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_st_ascend_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_st_descend_toggled                  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_st_none_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_pm_none_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_pm_descend_toggled                  (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_pm_ascend_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_pm_autostore_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_sort_apply_clicked                  (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_sort_cancel_clicked                 (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_sort_ok_clicked                     (GtkButton       *button,
+                                        gpointer         user_data);
+
+gboolean
+on_sort_window_delete_event            (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data);
+
+void
+on_sm_autostore_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);

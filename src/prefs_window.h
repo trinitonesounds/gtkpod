@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-07 20:25:40 jcs>
+/* Time-stamp: <2003-09-22 22:40:41 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -71,10 +71,21 @@ void prefs_window_set_write_charset (gboolean val);
 void prefs_window_set_add_recursively (gboolean val);
 void prefs_window_set_case_sensitive (gboolean val);
 void prefs_window_set_toolbar_style (GtkToolbarStyle val);
-void prefs_window_set_save_sorted_order (gboolean val);
 void prefs_window_set_sort_tab_num (gint num);
 void prefs_window_set_automount (gboolean val);
 void prefs_window_set_filename_format (const gchar *mp);
 void prefs_window_set_write_gaintag (gboolean val);
 void prefs_window_set_special_export_charset (gboolean val);
+
+void sort_window_create (void);
+void sort_window_ok (void);
+void sort_window_apply (void);
+void sort_window_cancel (void);
+void sort_window_create (void);
+void sort_window_delete (void);
+void sort_window_set_pm_autostore (gboolean val);
+void sort_window_set_sm_autostore (gboolean val);
+void sort_window_set_pm_sort (gint val);
+void sort_window_set_st_sort (gint val);
+void sort_window_set_sm_sort (gint val);
 #endif

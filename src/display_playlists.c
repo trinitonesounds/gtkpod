@@ -550,8 +550,7 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
 static void
 pm_song_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 {
-    if(prefs_get_save_sorted_order ())  pm_rows_reordered ();
-
+    if (prefs_get_pm_autostore ())  pm_rows_reordered ();
 }
 
 /* Adds the columns to our playlist_treeview */

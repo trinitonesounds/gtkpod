@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 15:01:55 jcs>
+/* Time-stamp: <2003-09-22 22:26:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -49,7 +49,8 @@ struct cfg
   gboolean update_existing;/* when adding song, update existing song */
   gboolean block_display; /* block display during change of selection? */
   gboolean autoimport;	  /* whether or not to automatically import files */
-  struct {
+  struct
+  {
     gboolean autoselect;  /* automatically select "All" in sort tab? */
     guint    category;    /* which category was selected last? */
     /* the following fields are for the "special" tab */
@@ -64,16 +65,26 @@ struct cfg
     gboolean sp_modified;     /* consider last modified? */
     gchar *sp_modified_state; /* current "modified" string */
     gboolean sp_autodisplay;  /* display automatically? */ 
-} st[SORT_TAB_MAX];
+  } st[SORT_TAB_MAX];
+  struct sortcfg
+  {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
+    gint pm_sort;         /* sort type for playlists */
+    gint st_sort;         /* sort type for sort tabs */
+    gint sm_sort;         /* sort type for tracks    */
+    gboolean pm_autostore;/* save sort order automatically? */
+    gboolean sm_autostore;/* save sort order automatically? */
+  } sortcfg;
   gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
   gboolean write_extended_info; /* write additional file with PC
 				   filenames etc? */
-  struct {
+  struct
+  {
       gchar *browse, *export;
   } last_dir;	          /* last directories used by the fileselections */
-  struct {
+  struct
+  {
       gboolean song, playlist, ipod_file, syncing;
   } deletion;
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
@@ -93,7 +104,6 @@ struct cfg
   gboolean show_non_updated;    /* show update notification ?*/
   gboolean show_sync_dirs;      /* show dirs to be synced ? */
   gboolean sync_remove;         /* delete tracks removed from synced dirs? */
-  gboolean save_sorted_order;   /* save order after sort automatically? */
   gboolean display_toolbar;     /* should toolbar be displayed */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
   gboolean display_tooltips_main; /* should tooltips be displayed (main) */
@@ -119,19 +129,40 @@ struct cfg
   float version;                /* version of gtkpod writing the cfg file */
 };
 
+
+/* types for sortcfg.xx_sort */
+enum
+{
+    SORT_ASCENDING = GTK_SORT_ASCENDING,
+    SORT_DESCENDING = GTK_SORT_DESCENDING,
+    SORT_NONE = 10*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
+    SORT_RESET = 20*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
+};
+/* SORT_RESET: only used for sort_window_set_sm_sort() */
+
+
+
 /* FIXME: make the global struct obsolete! */
 extern struct cfg *cfg;
 
 gchar *prefs_get_cfgdir (void);
 void prefs_print(void);
 void cfg_free(struct cfg *c);
+void sortcfg_free(struct sortcfg *c);
 void write_prefs (void);
 void discard_prefs (void);
 struct cfg* clone_prefs(void);
+struct sortcfg* clone_sortprefs(void);
 void prefs_set_mount_point(const gchar *mp);
 gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[]);
 
 void prefs_set_offline(gboolean active);
+void prefs_set_pm_sort (gint type);
+void prefs_set_sm_sort (gint type);
+void prefs_set_st_sort (gint type);
+void prefs_set_st_sortcol (SM_item col);
+void prefs_set_sm_autostore (gboolean active);
+void prefs_set_pm_autostore (gboolean active);
 void prefs_set_keep_backups(gboolean active);
 void prefs_set_write_extended_info(gboolean active);
 void prefs_set_auto_import(gboolean val);
@@ -166,6 +197,12 @@ void prefs_set_statusbar_timeout (guint32 val);
 void prefs_set_automount(gboolean val);
 
 gboolean prefs_get_offline(void);
+gint prefs_get_pm_sort (void);
+gint prefs_get_st_sort (void);
+gint prefs_get_sm_sort (void);
+SM_item prefs_get_sm_sortcol (void);
+gboolean prefs_get_sm_autostore (void);
+gboolean prefs_get_pm_autostore (void);
 gboolean prefs_get_keep_backups(void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_auto_import(void);
@@ -215,8 +252,6 @@ gboolean prefs_get_add_recursively (void);
 void prefs_set_add_recursively (gboolean val);
 gboolean prefs_get_case_sensitive (void);
 void prefs_set_case_sensitive (gboolean val);
-gboolean prefs_get_save_sorted_order (void);
-void prefs_set_save_sorted_order (gboolean val);
 gint prefs_get_sort_tab_num (void);
 void prefs_set_sort_tab_num (gint i, gboolean update_display);
 GtkToolbarStyle prefs_get_toolbar_style (void);
