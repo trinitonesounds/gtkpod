@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:19:21 JST jcs>
+/* Time-stamp: <2004-03-14 13:33:46 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1517,12 +1517,12 @@ void
 on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 			   GtkTreeIter *iter, gpointer data)
 {
-    Track *s;
+    Track *track;
     GString *filelist = (GString *)data;
     gchar *name;
 
-    gtk_tree_model_get(tm, iter, READOUT_COL, &s, -1);
-    name = get_track_name_on_disk_verified (s);
+    gtk_tree_model_get(tm, iter, READOUT_COL, &track, -1);
+    name = get_track_name_on_disk_verified (track);
     if (name)
     {
 	g_string_append_printf (filelist, "file:%s\n", name);

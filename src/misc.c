@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-12 23:42:37 JST jcs>
+/* Time-stamp: <2004-03-14 15:33:39 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -448,6 +448,9 @@ Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"),
 		       "\n\n",
 		       _("\
 Ero Carrera: Filename validation and quick sync when copying tracks from the iPod\n"),
+		       "\n\n",
+		       _("\
+Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"),
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n"),

@@ -7,6 +7,11 @@ gtkpod V0.73-CVS
 	Only one script is included so far: kaddressbook_ipod. Please
 	submit more for inclusion into the next release.
 
+	NEW FEATURE: added support for LAME's replay gain to normalize the
+	volume track (thanks to Jens Taprogge). Unfortunately the
+	conversion factor between LAME's replay gain and the iPod's volume
+	tag are not well known yet -- your input is appreciated!
+
 	IMPROVEMENT: added new auto-playlists: "One playlist for each
 	year" and "Playlist with all songs not listed in any playlist".
 

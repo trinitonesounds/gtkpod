@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-06 21:44:40 JST jcs>
+/* Time-stamp: <2004-03-14 13:38:15 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,4 +33,6 @@
 
 gboolean file_write_mp3_info (gchar *filename, Track *track);
 Track *file_get_mp3_info (gchar *name);
+gint32 mp3_get_volume_from_radio_gain (gint radio_gain);
+gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track);
 #endif

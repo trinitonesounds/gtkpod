@@ -759,3 +759,11 @@ on_cfg_export_check_existing_toggled   (GtkToggleButton *togglebutton,
 void
 on_cfg_fix_path                       (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_mp3_volume_from_radio_gain          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_mp3gain_use_replaygain              (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

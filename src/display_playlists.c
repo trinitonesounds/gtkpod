@@ -912,14 +912,14 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     gtk_tree_model_get(tm, iter, PM_COLUMN_PLAYLIST, &pl, -1); 
     if (pl && filelist)
     {
-	Track *s;
+	Track *track;
 	gchar *name;
 	GList *l;
 
 	for (l=pl->members; l; l=l->next)
 	{
-	    s = (Track *)l->data;
-	    name = get_track_name_on_disk_verified (s);
+	    track = (Track *)l->data;
+	    name = get_track_name_on_disk_verified (track);
 	    if (name)
 	    {
 		g_string_append_printf (filelist, "file:%s\n", name);

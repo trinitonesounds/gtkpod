@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:19:16 JST jcs>
+/* Time-stamp: <2004-03-14 12:51:24 JST jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -526,6 +526,16 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->concal_autosync);
 	}
+	if((w = lookup_widget(prefs_window, "mp3_volume_from_radio_gain")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->mp3_volume_from_radio_gain);
+	}
+	if((w = lookup_widget(prefs_window, "mp3gain_use_radio_gain")))
+	{
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+					 tmpcfg->mp3gain_use_radio_gain);
+	}
 	if((w = lookup_widget(prefs_window, "concal_label")))
 	{
 	    gchar *str = g_strdup_printf (_("Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release."), PKGDATADIR G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
@@ -620,6 +630,8 @@ prefs_window_set(void)
 	prefs_set_export_template(tmpcfg->export_template);
 	prefs_set_write_gaintag(tmpcfg->write_gaintag);
 	prefs_set_concal_autosync(tmpcfg->concal_autosync);
+	prefs_set_mp3_volume_from_radio_gain(tmpcfg->mp3_volume_from_radio_gain);
+	prefs_set_mp3gain_use_radio_gain(tmpcfg->mp3gain_use_radio_gain);
 	prefs_set_special_export_charset(tmpcfg->special_export_charset);
 
 	tm_show_preferred_columns();
@@ -1124,6 +1136,18 @@ void
 prefs_window_set_concal_autosync(gboolean val)
 {
     tmpcfg->concal_autosync = val;
+}
+
+void
+prefs_window_set_mp3_volume_from_radio_gain(gboolean val)
+{
+    tmpcfg->mp3_volume_from_radio_gain = val;
+}
+
+void
+prefs_window_set_mp3gain_use_radio_gain(gboolean val)
+{
+    tmpcfg->mp3gain_use_radio_gain = val;
 }
 
 void

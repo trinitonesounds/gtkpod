@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-12 23:34:00 JST jcs>
+/* Time-stamp: <2004-03-14 12:51:21 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -248,6 +248,8 @@ struct cfg *cfg_new(void)
     mycfg->export_template = g_strdup ("%o;%a - %t.mp3;%t.wav");
     mycfg->write_gaintag = FALSE;
     mycfg->concal_autosync = FALSE;
+    mycfg->mp3_volume_from_radio_gain = FALSE;
+    mycfg->mp3gain_use_radio_gain = FALSE;
     mycfg->fix_path = TRUE;
     mycfg->export_check_existing = FALSE;
     mycfg->automount = FALSE;
@@ -333,6 +335,34 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "export_template") == 0)
 	  {
 	      prefs_set_export_template (arg);
+	      if (cfg->version < 0.72)
+	      {
+		  /* changed the meaning of the %x in export_template */
+		  gchar *sp = cfg->export_template;
+		  if (sp) while (*sp)
+		  {
+		      if (sp[0] == '%')
+		      {
+			  switch (sp[1]) {
+			  case 'A':
+			      sp[1] = 'a';
+			      break;
+			  case 'd':
+			      sp[1] = 'A';
+			      break;
+			  case 'n':
+			      sp[1] = 't';
+			      break;
+			  case 't':
+			      sp[1] = 'T';
+			      break;
+			  default:
+			      break;
+			  }
+		      }
+		      ++sp;
+		  }
+	      }
 	  }
 	  else if(g_ascii_strcasecmp (line, "charset") == 0)
 	  {
@@ -706,6 +736,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_concal_autosync ((gboolean)atoi(arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "mp3_volume_from_radio_gain") == 0)
+	  {
+	      prefs_set_mp3_volume_from_radio_gain ((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "mp3gain_use_radio_gain") == 0)
+	  {
+	      prefs_set_mp3gain_use_radio_gain ((gboolean)atoi(arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
 	      prefs_set_special_export_charset ((gboolean)atoi(arg));
@@ -758,10 +796,14 @@ read_prefs_defaults(void)
 	  {
 	      read_prefs_from_file_desc(fp);
 	      fclose(fp);
+	      have_prefs = TRUE; /* read prefs */
 	  }
       }
   }
   C_FREE (cfgdir);
+  /* set version of the prefs file to "current" if none was read */
+  if (!have_prefs)   cfg->version = g_ascii_strtod (VERSION, NULL);
+
   /* handle version changes in prefs */
   if (cfg->version == 0.0)
   {
@@ -776,35 +818,7 @@ read_prefs_defaults(void)
       prefs_set_paned_pos (PANED_STATUS1, -1);
       prefs_set_paned_pos (PANED_STATUS2, -1);
   }
-  if (cfg->version < 0.72)
-  {
-      /* changed the meaning of the %x in export_template */
-      gchar *sp = cfg->export_template;
-      if (sp) while (*sp)
-      {
-	  if (sp[0] == '%')
-	  {
-	      switch (sp[1]) {
-	      case 'A':
-		  sp[1] = 'a';
-		  break;
-	      case 'd':
-		  sp[1] = 'A';
-		  break;
-	      case 'n':
-		  sp[1] = 't';
-		  break;
-	      case 't':
-		  sp[1] = 'T';
-		  break;
-	      default:
-		  break;
-	      }
-	  }
-	  ++sp;
-      }
-  }
-  /* ... */
+
   /* set statusbar paned to a decent value if unset */
   if (prefs_get_paned_pos (PANED_STATUS1) == -1)
   {
@@ -1006,6 +1020,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
     fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
+    fprintf (fp, "mp3_volume_from_radio_gain=%d\n", cfg->mp3_volume_from_radio_gain);
+    fprintf (fp, "mp3gain_use_radio_gain=%d\n", cfg->mp3gain_use_radio_gain);
     fprintf (fp, "special_export_charset=%d\n", cfg->special_export_charset);
 }
 
@@ -2462,6 +2478,26 @@ gboolean prefs_get_concal_autosync(void)
 void prefs_set_concal_autosync(gboolean val)
 {
     cfg->concal_autosync = val;
+}
+
+gboolean prefs_get_mp3_volume_from_radio_gain(void)
+{
+    return(cfg->mp3_volume_from_radio_gain);
+}
+
+void prefs_set_mp3_volume_from_radio_gain(gboolean val)
+{
+    cfg->mp3_volume_from_radio_gain = val;
+}
+
+gboolean prefs_get_mp3gain_use_radio_gain(void)
+{
+    return(cfg->mp3gain_use_radio_gain);
+}
+
+void prefs_set_mp3gain_use_radio_gain(gboolean val)
+{
+    cfg->mp3gain_use_radio_gain = val;
 }
 
 gboolean prefs_get_special_export_charset(void)

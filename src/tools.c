@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:30:36 JST jcs>
+/* Time-stamp: <2004-03-14 15:30:00 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,6 +37,7 @@
 #include <unistd.h>
 #include "info.h"
 #include "misc.h"
+#include "mp3file.h"
 #include "tools.h"
 #include "prefs.h"
 #include "support.h"
@@ -69,7 +70,7 @@ static gboolean mutex_data = FALSE;
 /* I'm not sure how exactly to calculate between iPod's volume tag and
  * mp3gain's gain. The following worked fine with 2 (two) tracks...
  * Change here if you know better. */
-static gint nm_gain_to_volume (gint gain)
+static gint32 nm_gain_to_volume (gint gain)
 {
     gint vol;
 
@@ -85,7 +86,7 @@ static gint nm_gain_to_volume (gint gain)
 #if 0
 /* if you change nm_gain_to_volume() also change this, even though it's
    not used at the moment */
-static gint nm_volume_to_gain (gint volume)
+static gint nm_volume_to_gain (gint32 volume)
 {
     return volume/10;
 }
@@ -104,7 +105,7 @@ static gint nm_volume_to_gain (gint volume)
 static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
 {
    gint found=FALSE;
-   gint gain=TRACKGAINERROR;
+   gint gain=TRACKVOLERROR;
    /*they are just pointers, don't need to be freed*/
    gchar *filename=NULL;
    gchar *num=NULL;
@@ -135,13 +136,14 @@ static gint parse_mp3gain_stdout(gchar *mp3gain_stdout, gchar *tracksfile)
    return gain;
 }
 
-/* this function return the @track gain in dB */
+
+/* this function returns the @track volume */
 /* mp3gain version 1.4.2 */
-gint nm_get_gain(Track *track)
+gint nm_mp3gain_get_gain (Track *track)
 {
     gint k,n;  /*for's counter*/
     gint len = 0;
-    gint gain = TRACKGAINERROR;
+    gint gain = TRACKVOLERROR;
     gint fdpipe[2];  /*a pipe*/
     gchar *filename=NULL; /*track's filename*/
     gchar *mp3gain_path;
@@ -164,7 +166,7 @@ gint nm_get_gain(Track *track)
     if (!mp3gain_path)
     {
 	gtkpod_warning (_("Could not find mp3gain. I tried to use the following executable: '%s'.\n\nIf the mp3gain executable is not in your path or named differently, you can set the full path in the 'Tools' section of the preferences dialog.\n\nIf you do not have mp3gain installed, you can download it from http://www.sourceforge.net/projects/mp3gain."), mp3gain_set);
-	return TRACKGAINERROR;
+	return TRACKVOLERROR;
     }
 
     mp3gain_exec = g_path_get_basename (mp3gain_path);
@@ -224,11 +226,47 @@ gint nm_get_gain(Track *track)
     return gain;
 }
 
+
+/* will get the volume either from mp3gain or from LAME's ReplayGain */
+static gint32 nm_get_volume (Track *track)
+{
+    gint32 volume = TRACKVOLERROR;
+
+    if (track)
+    {
+	if (prefs_get_mp3gain_use_radio_gain ())
+	{   /* use LAME's radio gain instead of mp3gain */
+	    if (!track->radio_gain_set)
+	    {
+		gchar *path = get_track_name_on_disk_verified (track);
+		mp3_get_track_lame_replaygain (path, track);
+		g_free (path);
+	    }
+	    if (track->radio_gain_set)
+	    {
+		volume = mp3_get_volume_from_radio_gain (track->radio_gain);
+	    }
+	}
+	if (!prefs_get_mp3gain_use_radio_gain () || !track->radio_gain_set)
+	{
+	    gint gain = nm_mp3gain_get_gain (track);
+	    if (gain != TRACKVOLERROR)
+	    {
+		volume = nm_gain_to_volume (gain);
+	    }
+	}
+    }
+/*    printf ("%d\n", volume);*/
+    return volume;
+}
+
+
+
 #ifdef G_THREADS_ENABLED
 /* Threaded getTrackGain*/
-static gpointer th_nm_get_gain (gpointer track)
+static gpointer th_nm_get_volume (gpointer track)
 {
-   gint gain=nm_get_gain((Track *)track);
+   gint32 gain=nm_get_volume ((Track *)track);
    g_mutex_lock (mutex);
    mutex_data = TRUE; /* signal that thread will end */
    g_cond_signal (cond);
@@ -266,7 +304,7 @@ void nm_tracks_list(GList *list)
   gint count, n, nrs;
   gchar *buf;
   Track  *track;
-  gint new_gain=0;
+  gint32 new_volume = 0;
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
   time_t diff, start, mins, secs;
@@ -344,7 +382,7 @@ void nm_tracks_list(GList *list)
      {
 #ifdef G_THREADS_ENABLED
 	mutex_data = FALSE;
-	thread = g_thread_create (th_nm_get_gain, track, TRUE, NULL);
+	thread = g_thread_create (th_nm_get_volume, track, TRUE, NULL);
 	if (thread)
 	{
 	   gboolean first_abort = TRUE;
@@ -371,31 +409,31 @@ void nm_tracks_list(GList *list)
 	      g_cond_timed_wait (cond, mutex, &gtime);
 	   }
 	   while(!mutex_data);
-	   new_gain = (gint)g_thread_join (thread);
+	   new_volume = (gint)g_thread_join (thread);
 	   g_mutex_unlock (mutex);
 	}
 	else
 	{
 	   g_warning ("Thread creation failed, falling back to default.\n");
-	   new_gain=nm_get_gain(track);
+	   new_volume = nm_get_volume (track);
 	}
 #else
-	new_gain=nm_get_gain(track);
+	new_volume = nm_get_volume (track);
 #endif
 
 /*normalization part*/
-	if(new_gain == TRACKGAINERROR)
+	if(new_volume == TRACKVOLERROR)
 	{
 	   abort=TRUE;
 	}
 	else
 	{
-	   if(nm_gain_to_volume (new_gain) != track->volume)
-	   {
-	      track->volume = nm_gain_to_volume (new_gain);
-	      pm_track_changed (track);
-	      data_changed ();
-	   }
+	    if(new_volume != track->volume)
+	    {
+		track->volume = new_volume;
+		pm_track_changed (track);
+		data_changed ();
+	    }
 	}
 /*end normalization*/
 

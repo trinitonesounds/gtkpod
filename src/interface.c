@@ -1322,6 +1322,7 @@ create_prefs_window (void)
   GtkWidget *cfg_md5tracks;
   GtkWidget *table2;
   GtkWidget *cfg_show_duplicates;
+  GtkWidget *mp3_volume_from_radio_gain;
   GtkWidget *hseparator43;
   GtkWidget *cfg_update_existing;
   GtkWidget *table1;
@@ -1480,6 +1481,7 @@ create_prefs_window (void)
   GtkWidget *label148;
   GtkWidget *mp3gain_path_entry;
   GtkWidget *cfg_write_gaintag;
+  GtkWidget *mp3gain_use_radio_gain;
   GtkWidget *label69;
   GtkWidget *frame31;
   GtkWidget *vbox59;
@@ -1628,6 +1630,11 @@ create_prefs_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 20, 0);
   gtk_tooltips_set_tip (tooltips, cfg_show_duplicates, _("Display the list of duplicates that have been detected after adding files."), NULL);
+
+  mp3_volume_from_radio_gain = gtk_check_button_new_with_mnemonic (_("Use LAME's ReplayGain to set the volume tag\n when reading mp3 files."));
+  gtk_widget_show (mp3_volume_from_radio_gain);
+  gtk_box_pack_start (GTK_BOX (vbox16), mp3_volume_from_radio_gain, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, mp3_volume_from_radio_gain, _("It is possible to use the value of LAME's ReplayGain to normalize the volume (you need to tell LAME to store that information). The exact conversion factor between ReplayGain and iPod's volume tag is not known yet -- your input is appreciated."), NULL);
 
   hseparator43 = gtk_hseparator_new ();
   gtk_widget_show (hseparator43);
@@ -2396,12 +2403,17 @@ create_prefs_window (void)
   mp3gain_path_entry = gtk_entry_new ();
   gtk_widget_show (mp3gain_path_entry);
   gtk_box_pack_start (GTK_BOX (vbox49), mp3gain_path_entry, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, mp3gain_path_entry, _("You only need to specify this if your 'mp3gain' executable is not in your default path. Example: '/usr/local/bimbam/mp3gain'."), NULL);
+  gtk_tooltips_set_tip (tooltips, mp3gain_path_entry, _("You only need to specify this if your 'mp3gain' executable is not in your default path. Example: '/usr/local/bimbam/mp3gain'. The exact conversion factor between mp3gain's gain value and iPod's volume tag is not known yet -- your input is appreciated."), NULL);
 
   cfg_write_gaintag = gtk_check_button_new_with_mnemonic (_("Write information about suggested gain level to file"));
   gtk_widget_show (cfg_write_gaintag);
   gtk_box_pack_start (GTK_BOX (vbox49), cfg_write_gaintag, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, cfg_write_gaintag, _("mp3gain can add a special tag to the mp3 file. This tag will save much time when normalizing a second time. As with all write operations there is a small change that your files get damaged! Note: gtkpod will use the mp3 file stored on the iPod if that's available (not in offline mode and file transferred). Otherwise it will use the original file on your harddisk."), NULL);
+
+  mp3gain_use_radio_gain = gtk_check_button_new_with_mnemonic (_("If available use LAME's ReplayGain tag instead\n of mp3gain."));
+  gtk_widget_show (mp3gain_use_radio_gain);
+  gtk_box_pack_start (GTK_BOX (vbox49), mp3gain_use_radio_gain, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, mp3gain_use_radio_gain, _("It is possible to use the value of LAME's ReplayGain to normalize the volume (you need to tell LAME to store that information). This is potentially faster than using mp3gain. The exact conversion factor between ReplayGain and iPod's volume tag is not known yet -- your input is appreciated."), NULL);
 
   label69 = gtk_label_new (_("Volume Normalization"));
   gtk_widget_show (label69);
@@ -2512,6 +2524,9 @@ create_prefs_window (void)
                     NULL);
   g_signal_connect ((gpointer) cfg_show_duplicates, "toggled",
                     G_CALLBACK (on_cfg_show_duplicates_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) mp3_volume_from_radio_gain, "toggled",
+                    G_CALLBACK (on_mp3_volume_from_radio_gain),
                     NULL);
   g_signal_connect ((gpointer) cfg_update_existing, "toggled",
                     G_CALLBACK (on_cfg_update_existing_toggled),
@@ -2636,6 +2651,9 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_write_gaintag, "toggled",
                     G_CALLBACK (on_cfg_write_gaintag_toggled),
                     NULL);
+  g_signal_connect ((gpointer) mp3gain_use_radio_gain, "toggled",
+                    G_CALLBACK (on_mp3gain_use_replaygain),
+                    NULL);
   g_signal_connect ((gpointer) sync_contacts_path_entry, "changed",
                     G_CALLBACK (on_sync_contacts_path_entry_changed),
                     NULL);
@@ -2686,6 +2704,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_md5tracks, "cfg_md5tracks");
   GLADE_HOOKUP_OBJECT (prefs_window, table2, "table2");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_show_duplicates, "cfg_show_duplicates");
+  GLADE_HOOKUP_OBJECT (prefs_window, mp3_volume_from_radio_gain, "mp3_volume_from_radio_gain");
   GLADE_HOOKUP_OBJECT (prefs_window, hseparator43, "hseparator43");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_update_existing, "cfg_update_existing");
   GLADE_HOOKUP_OBJECT (prefs_window, table1, "table1");
@@ -2841,6 +2860,7 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label148, "label148");
   GLADE_HOOKUP_OBJECT (prefs_window, mp3gain_path_entry, "mp3gain_path_entry");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_write_gaintag, "cfg_write_gaintag");
+  GLADE_HOOKUP_OBJECT (prefs_window, mp3gain_use_radio_gain, "mp3gain_use_radio_gain");
   GLADE_HOOKUP_OBJECT (prefs_window, label69, "label69");
   GLADE_HOOKUP_OBJECT (prefs_window, frame31, "frame31");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox59, "vbox59");

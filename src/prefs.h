@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-01 23:14:10 JST jcs>
+/* Time-stamp: <2004-03-14 12:51:22 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -136,11 +136,14 @@ struct cfg
   gboolean export_check_existing;/* whether we check for existing files on export or not */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
-  gboolean not_played_track;     /* not played track in Highest rated playlist?*/
+  gboolean not_played_track;    /* not played track in Highest rated playlist?*/
   gboolean special_export_charset; /* use original charset or specified one? */
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   gboolean write_gaintag;       /* should we append the mp3gain's tag to the mp3files?*/
   gboolean concal_autosync;     /* sync contacts and calendar on iTunesDB sync? */
+  gboolean mp3_volume_from_radio_gain; /* automatically set the volume tag
+                                       from the information provided by lame?*/
+  gboolean mp3gain_use_radio_gain;/*use lame's information instead of mp3gain?*/
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -333,6 +336,10 @@ void prefs_set_write_gaintag(gboolean val);
 gboolean prefs_get_write_gaintag(void);
 void prefs_set_concal_autosync(gboolean val);
 gboolean prefs_get_concal_autosync(void);
+void prefs_set_mp3_volume_from_radio_gain(gboolean val);
+gboolean prefs_get_mp3_volume_from_radio_gain(void);
+void prefs_set_mp3gain_use_radio_gain(gboolean val);
+gboolean prefs_get_mp3gain_use_radio_gain(void);
 void prefs_set_special_export_charset(gboolean val);
 gboolean prefs_get_special_export_charset(void);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-06 21:44:13 JST jcs>
+/* Time-stamp: <2004-03-14 13:38:14 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -45,6 +45,7 @@
  ****************/
 
 #include <glib.h>
+#include <math.h>
 /*
  * Description of each item of the TagList list
  */
@@ -1278,6 +1279,219 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
 }
 
 
+/*
+ * Code to read the ReplayGain Values stored by LAME in its own tag.
+ *
+ * Most of the relevant information has been extracted from them LAME sources
+ * (http://lame.sourceforge.net/).
+ * The "Mp3 info Tag rev 1 specifications - draft 0"
+ * (http://gabriel.mp3-tech.org/mp3infotag.html) by Gabriel Bouvigne describes
+ * the actual Tag (except for small changes).
+ *
+ * Apart from that, some information has been derived from phwip's LameTag
+ * (http://www.silisoftware.com/applets/?scriptname=LameTag)
+ *
+ * Copyright (C) 2004 Jens Taprogge <jens.taprogge at post.rwth-aachen.de>
+ *
+ * Provided under GPL according to Jens Taprogge. (JCS -- 12 March 2004)
+ */
+
+#define TAG_FOOTER	0x10
+#define LAME_OFFSET	0x74
+
+
+/* Return the track volume. 
+ * FIXME: Conversion seems to be incorrect (according to
+ * subjective impression). */
+gint32 mp3_get_volume_from_radio_gain (gint radio_gain)
+{
+    double tv;
+    gint32 volume = 0;
+
+    tv = (double)radio_gain / (5.0 * log10(2.0));
+    volume =  floor(tv + 0.5);
+		
+    if (volume < -500)
+    {
+	volume = -500;
+    }
+    else
+    {
+	if (volume > 500) volume = 500;
+    }
+/* 		printf("radio_gain: %i\n", track->radio_gain); */
+/* 		printf("volume: %i\n", track->volume); */
+    return volume;
+}
+
+
+static gint lame_vcmp(gchar a[5], gchar b[5]) {
+	int r;
+
+	r = strncmp(a, b, 4);
+	if (r) return r;
+	
+	/* check for alpha or beta versions */
+	if (a[4] == ' ') return 1;
+	if (b[4] == ' ') return -1;
+	return strncmp(&a[4], &b[4], 1);
+}
+
+gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
+{
+	struct {
+		/* All members are defined in terms of chars so padding does not
+		 * occur. Is there a cleaner way to keep the compiler from
+		 * padding? */
+		
+		char     id[3];
+		char     version[2];
+		char     flags;
+		char     size[4];
+	} id3head;
+
+	FILE *file = NULL;
+	char buf[4], version[5];
+
+	int gain_adjust = 0;
+	int sideinfo;
+	guint32 ps;
+
+	track->radio_gain = 0xffff;
+	track->audiophile_gain = 0xffff;
+	track->peak_signal = 0;
+	track->radio_gain_set = FALSE;
+	track->audiophile_gain_set = FALSE;
+	track->peak_signal_set = FALSE;
+	
+	if (!path)
+		goto rg_fail;
+	
+	file = fopen (path, "r");
+	
+	/* Skip ID3 header if appropriate */
+	if (fread(&id3head, 1, sizeof(id3head), file) != 
+			sizeof(id3head))
+		goto rg_fail;
+	
+	if (!strncmp(id3head.id, "ID3", 3)) {
+		int realsize = 0;
+		
+		realsize = (id3head.size[0] & 0x7f) << 21;
+		realsize += (id3head.size[1] & 0x7f) << 14;
+		realsize += (id3head.size[2] & 0x7f) << 7;
+		realsize += id3head.size[3] & 0x7f;
+
+		if (id3head.flags & TAG_FOOTER) {
+			/* footer is copy of header */
+			realsize += sizeof(id3head);
+		}
+
+		if (fseek(file, realsize-1, SEEK_CUR) ||
+				(!fread(&buf[0], 1, 1, file)))
+			goto rg_fail;
+	} else {
+		/* no ID3 Tag - go back */
+		fseek(file, -sizeof(id3head), SEEK_CUR);
+	}
+
+	/* Search Xing header. The location is dependant on the MPEG Layer and
+	 * whether the stream is mono or not. */
+	if (fread(buf, 1, 4, file) != 4) goto rg_fail;
+	
+	/* should start with 0xff */
+	if (buf[0] != '\xff') goto rg_fail;
+	
+	/* determine the length of the sideinfo */
+	if (buf[1] & 0x08) {
+		/* MPEG 1 */
+		/* check for mono */
+		sideinfo = ((buf[3] & 0xc0) == 0xc0) ? 17 : 32;
+	} else {
+		/* MPEG 2 */
+		/* check for mono */
+		sideinfo = ((buf[3] & 0xc0) == 0xc0) ? 9 : 17;
+	}
+	
+	if (fseek(file, sideinfo, SEEK_CUR) ||
+			(fread(&buf[0], 1, 4, file) != 4))
+		goto rg_fail;
+	if (!(!strncmp(buf, "Xing", 4) || !strncmp(buf, "Info", 4)))
+		goto rg_fail;
+
+	/* Check for LAME Tag */
+	if (fseek(file, LAME_OFFSET, SEEK_CUR) ||
+				(fread(&buf[0], 1, 4, file) != 4))
+		goto rg_fail;
+	if (strncmp(buf, "LAME", 4))
+		goto rg_fail;
+	
+	/* Check LAME Version (Dont know when fixed-point PeakSingleAmplitude
+	 * was introduced exactly. 3.94b will be used for now.) */
+	if (fread(version, 1, 5, file) != 5)
+		goto rg_fail;
+	
+	if (fseek(file, 0x2, SEEK_CUR) || (fread(buf, 1, 4, file) != 4))
+		goto rg_fail;
+
+	ps = ((buf[0] & 0xff) << 24) | ((buf[1] & 0xff)<< 16) | 
+	    ((buf[2] & 0xff) << 8) | (buf[3] & 0xff);
+	
+	if ((lame_vcmp(version, "3.94b") > 0)) {
+		track->peak_signal = ps;
+	} else {
+		float f = *((float *) (void *) (&ps)) * 0x800000;
+		track->peak_signal = (guint32) f;
+	}
+	track->peak_signal_set = TRUE;
+/* 	printf("peak_signal: %f\n", track->peak_signal); */
+
+	/*
+	 * Versions prior to 3.95.1 used a reference volume of 83dB.
+	 * (As compared to the currently used 89dB.)
+	 * FIXME: How to check the version correclty?
+	 */
+	if ((lame_vcmp(version, "3.95 ") < 0)) {
+		gain_adjust = 60;
+		/* fprintf(stderr, "Old lame version. Gain adjusted.\n");*/
+	}
+
+	if (fread(&buf[0], 1, 2, file) != 2)
+		goto rg_fail;
+
+	/* check if radio_gain is set */
+	if (buf[0] & 0xfc) {
+		track->radio_gain = ((buf[0] & 0x1) << 8) + buf[1];
+		if (buf[0] & 2) track->radio_gain = -track->radio_gain;
+		track->radio_gain += gain_adjust;
+		track->radio_gain_set = TRUE;
+
+		if (prefs_get_mp3_volume_from_radio_gain ())
+		    track->volume = mp3_get_volume_from_radio_gain (track->radio_gain);
+	}
+	
+	if (fread(&buf[0], 1, 2, file) != 2)
+		goto rg_fail;
+
+	/* check if audiophile_gain is set */
+	if (buf[0] & 0xfc) {
+		track->audiophile_gain = ((buf[0] & 0x1) << 8) + buf[1];
+		if (buf[0] & 2) track->audiophile_gain =
+			-track->audiophile_gain;
+		track->audiophile_gain += gain_adjust;
+		track->audiophile_gain_set = TRUE;
+		/* printf("audiophile_gain: %i\n", track->audiophile_gain);*/
+	}
+
+	fclose(file);
+	return TRUE;
+
+rg_fail:
+	if (file)
+		fclose(file);
+	return FALSE;
+}
+
 /* ----------------------------------------------------------------------
 
 	      From here starts original gtkpod code
@@ -1362,6 +1576,8 @@ Track *file_get_mp3_info (gchar *name)
 	    g_free (filetag.track_total);
 	}
     }
+
+    mp3_get_track_lame_replaygain(name, track);
 
     /* Get additional info (play time and bitrate */
     mp3info = mp3file_get_info (name);

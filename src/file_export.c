@@ -514,7 +514,8 @@ file_export_init(GList *tracks)
 
 /*
 |  Copyright (C) 2004 Ero Carrera <ero at dkbza.org>
-|  (Confirmed that code is placed under GPL. JCS. 12 March 2004)
+|
+|  Placed under GPL in agreement with Ero Carrera. (JCS -- 12 March 2004)
 */
 
 /**

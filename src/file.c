@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-04 23:33:12 JST jcs>
+/* Time-stamp: <2004-03-14 15:30:13 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -51,6 +51,7 @@
 #include "wavfile.h"
 
 /* only used when reading extended info from file */
+/* see definition of Track in track.h for explanations */
 struct track_extended_info
 {
     guint ipod_id;
@@ -63,6 +64,12 @@ struct track_extended_info
     gint32 oldsize;
     guint32 playcount;
     guint32 rating;
+    guint32 peak_signal;
+    gint    radio_gain;
+    gint    audiophile_gain;
+    gboolean peak_signal_set;
+    gboolean radio_gain_set;
+    gboolean audiophile_gain_set;
     gboolean transferred;
 };
 /* List with tracks pending deletion */
@@ -649,6 +656,13 @@ Track *copy_new_info (Track *from, Track *to)
     to->tracks = from->tracks;
     to->bitrate = from->bitrate;
     to->year = from->year;
+    to->volume = from->volume;
+    to->peak_signal = from->peak_signal;
+    to->radio_gain = from->radio_gain;
+    to->audiophile_gain = from->audiophile_gain;
+    to->peak_signal_set = from->peak_signal_set;
+    to->radio_gain_set = from->radio_gain_set;
+    to->audiophile_gain_set = from->audiophile_gain_set;
     g_free (to->year_str);
     to->year_str = g_strdup_printf ("%d", to->year);
 
@@ -1723,6 +1737,21 @@ void fill_in_extended_info (Track *track)
 	  track->hostname = g_strdup (sei->hostname);
       track->oldsize = sei->oldsize;
       track->playcount += sei->playcount;
+      if (sei->peak_signal_set)
+      {
+	  track->peak_signal_set = sei->peak_signal_set;
+	  track->peak_signal = sei->peak_signal;
+      }
+      if (sei->radio_gain_set)
+      {
+	  track->radio_gain_set = sei->radio_gain_set;
+	  track->radio_gain = sei->radio_gain;
+      }
+      if (sei->audiophile_gain_set)
+      {
+	  track->audiophile_gain_set = sei->audiophile_gain_set;
+	  track->audiophile_gain = sei->audiophile_gain;
+      }
       /* FIXME: This means that the rating can never be reset to 0
        * by the iPod */
       if (track->rating == 0)
@@ -1922,6 +1951,21 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->transferred = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
 		sei->ipod_path = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "peak_signal") == 0)
+	    {
+		sei->peak_signal_set = TRUE;
+		sei->peak_signal = g_ascii_strtod (arg, NULL);
+	    }
+	    else if (g_ascii_strcasecmp (line, "radio_gain") == 0)
+	    {
+		sei->radio_gain_set = TRUE;
+		sei->radio_gain = atoi (arg);
+	    }
+	    else if (g_ascii_strcasecmp (line, "audiophile_gain") == 0)
+	    {
+		sei->audiophile_gain_set = TRUE;
+		sei->audiophile_gain = atoi (arg);
+	    }
     }
     g_free (md5);
     fclose (fp);
@@ -2218,6 +2262,12 @@ static gboolean write_extended_info (gchar *name, gchar *itunes)
 	  fprintf (fp, "charset=%s\n", track->charset);
       if (!track->transferred && track->oldsize)
 	  fprintf (fp, "oldsize=%d\n", track->oldsize);
+      if (track->peak_signal_set)
+	  fprintf (fp, "peak_signal=%u\n", track->peak_signal);
+      if (track->radio_gain_set)
+	  fprintf (fp, "radio_gain=%d\n", track->radio_gain);
+      if (track->audiophile_gain_set)
+	  fprintf (fp, "audiophile_gain=%d\n", track->audiophile_gain);
       fprintf (fp, "transferred=%d\n", track->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }

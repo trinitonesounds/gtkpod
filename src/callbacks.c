@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-12 00:10:53 JST jcs>
+/* Time-stamp: <2004-03-14 12:52:43 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1975,5 +1975,23 @@ on_all_tracks_not_listed_in_any_playlist1_activate
                                         gpointer         user_data)
 {
     generate_not_listed_playlist ();
+}
+
+
+void
+on_mp3_volume_from_radio_gain          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_mp3_volume_from_radio_gain
+	(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_mp3gain_use_replaygain              (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    prefs_window_set_mp3gain_use_radio_gain
+	(gtk_toggle_button_get_active(togglebutton));
 }
 

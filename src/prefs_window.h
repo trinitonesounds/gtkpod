@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-01 23:14:10 JST jcs>
+/* Time-stamp: <2004-03-14 12:51:23 JST jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -86,6 +86,8 @@ void prefs_window_set_automount (gboolean val);
 void prefs_window_set_export_template (const gchar *mp);
 void prefs_window_set_write_gaintag (gboolean val);
 void prefs_window_set_concal_autosync (gboolean val);
+void prefs_window_set_mp3_volume_from_radio_gain (gboolean val);
+void prefs_window_set_mp3gain_use_radio_gain (gboolean val);
 void prefs_window_set_special_export_charset (gboolean val);
 
 void sort_window_create (void);
