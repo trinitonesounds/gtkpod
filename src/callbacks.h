@@ -522,3 +522,7 @@ on_cfg_multi_edit_toggled              (GtkToggleButton *togglebutton,
 void
 on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_generate_genre_playlists_activate   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

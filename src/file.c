@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-07-13 15:58:50 jcs>
+/* Time-stamp: <2003-08-02 23:09:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1821,10 +1821,10 @@ get_preferred_song_name_format (Song *s)
 
 
 /* in Bytes, minus the space taken by songs that will be overwritten
- * during copying */
+ * during copying (returns kB) */
 glong get_filesize_of_deleted_songs(void)
 {
-    glong n = 0;
+    double n = 0;
     Song *song;
     GList *gl_song;
 
@@ -1833,7 +1833,7 @@ glong get_filesize_of_deleted_songs(void)
 	song = (Song *)gl_song->data;
 	if (song->transferred)   n += song->size;
     }
-    return n;
+    return n/1024;
 }
 
 void mark_song_for_deletion (Song *song)

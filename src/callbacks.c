@@ -45,6 +45,7 @@
 #include "prefs_window.h"
 #include "file_export.h"
 #include "charset.h"
+#include "playlist.h"
 
 void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
@@ -1404,5 +1405,13 @@ on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
 {
     prefs_window_set_multi_edit_title (
 	gtk_toggle_button_get_active (togglebutton));
+}
+
+
+void
+on_generate_genre_playlists_activate   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    generate_genre_playlists();    
 }
 

@@ -46,7 +46,6 @@
 /****************
  * Declarations *
  ****************/
-#define ID3V2_MAX_STRING_LEN 4096
 #define CONVERT_OLD_ID3V2_TAG_VERSION FALSE
  /* USE_CHARACTER_SET_TRANSLATION impemented by charset_from/to_utf8 () */
 #define USE_CHARACTER_SET_TRANSLATION TRUE

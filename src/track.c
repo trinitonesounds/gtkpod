@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-25 00:31:15 jcs>
+/* Time-stamp: <2003-08-02 23:10:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -203,11 +203,11 @@ guint get_nr_of_nontransferred_songs (void)
     return n;
 }
 
-/* in Bytes, minus the space taken by songs that will be overwritten
+/* in kB, minus the space taken by songs that will be overwritten
  * during copying */
 glong get_filesize_of_nontransferred_songs(void)
 {
-    glong n = 0;
+    double n = 0;
     Song *song;
     GList *gl_song;
 
@@ -216,7 +216,7 @@ glong get_filesize_of_nontransferred_songs(void)
 	song = (Song *)gl_song->data;
 	if (!song->transferred)   n += song->size - song->oldsize;
     }
-    return n;
+    return n/1024;
 }
 
 

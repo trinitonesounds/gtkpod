@@ -4,21 +4,14 @@ AC_INIT(configure.in)
 AM_INIT_AUTOMAKE(gtkpod, 0.53-CVS)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
+AC_CANONICAL_HOST
 
 AC_ISC_POSIX
 AC_PROG_CC
 AM_PROG_CC_STDC
-AC_HEADER_STDC
 
-dnl Use -Wall if we have gcc
-changequote(,) dnl
-if test "x$GCC" = "xyes"; then
-    case " $CFLAGS " in
-    *[\ \ ]-Wall[\ \	]*) ;;
-    *) CFLAGS="-Wall $CFLAGS" ;;
-    esac
-fi
-changequote([,]) dnl
+# default set of CFLAGS (override this with ./configure CFLAGS=foo)
+CFLAGS=${CFLAGS:=-O2 -g -Wall}
 
 AC_ARG_ENABLE(shared_id3,
 	[  --disable-shared-id3    use static id3lib],
@@ -31,7 +24,7 @@ AC_SUBST(PACKAGE_LIBS)
 
 GETTEXT_PACKAGE=gtkpod
 AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE",["Gettext package name"])
 
 dnl used in itunesdb.c to figure out whether we run gtkpod
 AC_DEFINE_UNQUOTED([IS_GTKPOD], 1, [Define this to indicate we are compiling gtkpod])
@@ -46,8 +39,8 @@ AM_GLIB_GNU_GETTEXT
 dnl Check if we have to supply getopt_long
 dnl If getopt_long_only is not available, getopt.c and getopt1.c
 dnl (providing getopt_long*) will be included into the binary.
-AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ([getopt])]) 
-AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ([getopt1])]) 
+AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt)]) 
+AC_CHECK_FUNCS(getopt_long_only, , [AC_LIBOBJ(getopt1)]) 
 
 dnl Id3lib librairies
 dnl Check which libs are required by id3lib
@@ -79,9 +72,9 @@ main ()
     exit(0);
 }
 ], . conftest.id3; echo "${ID3LIB_MAJOR}.${ID3LIB_MINOR}.${ID3LIB_PATCH}", AC_MSG_WARN(could not determine id3lib version),[echo $ac_n "cross compiling; assuming ${ID3LIB_MAJOR}.${ID3LIB_MINOR}.${ID3LIB_PATCH} $ac_c"])
-AC_DEFINE_UNQUOTED(ID3LIB_MAJOR, $ID3LIB_MAJOR)
-AC_DEFINE_UNQUOTED(ID3LIB_MINOR, $ID3LIB_MINOR)
-AC_DEFINE_UNQUOTED(ID3LIB_PATCH, $ID3LIB_PATCH)
+AC_DEFINE_UNQUOTED(ID3LIB_MAJOR, $ID3LIB_MAJOR,["ID3LIB Major Version Number"])
+AC_DEFINE_UNQUOTED(ID3LIB_MINOR, $ID3LIB_MINOR,["ID3LIB Minor Version Number"])
+AC_DEFINE_UNQUOTED(ID3LIB_PATCH, $ID3LIB_PATCH,["ID3LIB Patch Version Number"])
 
 AC_OUTPUT([
 Makefile
@@ -101,7 +94,6 @@ Configuration for $PACKAGE $VERSION :
  GTK+ version .........: `pkg-config gtk+-2.0 --modversion`
  GThread version ......: `pkg-config gthread-2.0 --modversion`
  Id3lib version .......: $ID3LIB_MAJOR.$ID3LIB_MINOR.$ID3LIB_PATCH
- LIBOBJ: ..............: $LIBOBJ
  NLS/gettext ..........: $USE_NLS
  Install path .........: $prefix
 

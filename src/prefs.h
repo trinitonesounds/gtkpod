@@ -107,6 +107,7 @@ struct cfg
   gchar *play_now_path;         /* path for 'Play Now' */
   gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
   gchar *time_format;           /* time format for strftime() */
+  gchar *filename_format;       /* filename for files exported from ipod */
   gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
@@ -247,4 +248,6 @@ void prefs_set_multi_edit (gboolean state);
 gboolean prefs_get_multi_edit (void);
 void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
+void prefs_set_filename_format (char* state);
+char* prefs_get_filename_format (void);
 #endif

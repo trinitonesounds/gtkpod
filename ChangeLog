@@ -1,6 +1,10 @@
 gtkpod V0.53-CVS
-	IMPROVEMENT: handle adding of playlist files containing relative
+	IMPROVEMENT: handle adding of playlist files containing
 	files with relative paths.
+
+	IMPROVEMENT: the function copying songs to the iPod used a "large"
+	amount of stack memory (roughly 66000 Bytes) which crashed some
+	systems.
 
 	BUGFIX: fixed memory holes in sync_songids(), sync_dir_ok(),
 	add_playlist_by_filename().

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-07-13 15:56:06 jcs>
+/* Time-stamp: <2003-08-02 23:41:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -329,9 +329,11 @@ Patches were supplied by the following people (list may be incomplete -- please 
 Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n\
 Hiroshi Kawashima: Japanese charset autodetecion feature\n\
 Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n\
-Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newlines at the end\n\
-\n\
-\n"),
+Walter Bell: correct handling of DND URIs with escaped characters and/or cr/newlines at the end\n"),
+		       _("\
+Sam Clegg: user defined filenames when exporting tracks from the iPod\n\
+Chris Cutler: automatic creation of various playlist types\n"),
+		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n\
     gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB (http://www.gnu.org/software/gnupod/)\n\
@@ -354,11 +356,15 @@ The GUI was created with the help of glade-2 (http://glade.gnome.org/)."),
 
  {
      gchar  *text[] = { _("\
+French:   David Le Brun (david at dyn-ns dot net)\n"),
+				     _("\
 German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"),
+				     _("\
+Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot net)\n"),
 				     _("\
 Japanese: Ayako Sano\n"),
 				     _("\
-French:   David Le Brun (david at dyn-ns dot net)\n"),
+Japanese: Kentaro Fukuchi (fukuchi at is dot titech dot ac dot jp)\n"),
 				     NULL };
       gchar **strp = text;
       textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));

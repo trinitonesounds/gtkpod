@@ -1,9 +1,10 @@
 ## Process this file with automake to produce Makefile.in
 
+AM_CFLAGS = @PACKAGE_CFLAGS@
+
 INCLUDES = \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
-	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
-	@PACKAGE_CFLAGS@
+	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" 
 
 bin_PROGRAMS = gtkpod
 

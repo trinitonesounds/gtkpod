@@ -241,6 +241,7 @@ struct cfg *cfg_new(void)
     mycfg->play_now_path = g_strdup ("xmms -p %s");
     mycfg->play_enqueue_path = g_strdup ("xmms -e %s");
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
+    mycfg->filename_format = g_strdup ("%A/%d/%t - %n.mp3");
     mycfg->automount = FALSE;
     mycfg->multi_edit = FALSE;
     mycfg->multi_edit_title = TRUE;
@@ -1946,4 +1947,15 @@ void prefs_set_sp_playcount_high (guint32 inst, gint32 limit)
 	cfg->st[inst].sp_playcount_high = limit;
     else
 	fprintf (stderr, "prefs_set_sp_playcount_high(): !inst=%d!\n", inst);
+}
+
+char* prefs_get_filename_format(void)
+{
+    return(cfg->filename_format);
+}
+
+void prefs_set_filename_format(char* val)
+{
+    g_free(cfg->filename_format);
+    cfg->filename_format = g_strdup(val);
 }

@@ -68,6 +68,11 @@ chop_filename(const gchar *filename)
     
     if(filename)
     {
+	/*
+	 * [FIXME] There are all kinds of special chars we might
+	 * want to remove.  Prehaps simple replace all chars that
+	 * aren't isalnum()?
+	 */
 	snprintf(buf, PATH_MAX, "%s", filename);
 	for(i = 0; i < PATH_MAX && buf[i] != '\0'; i++)
 	{
@@ -79,6 +84,93 @@ chop_filename(const gchar *filename)
 	result = g_strdup(buf);
     }
     return(result);
+}
+
+
+/**
+ * get_preferred_filename - useful for generating the preferred
+ * @param Song the song
+ * @return the file filename (including directories) for this Song
+ * based on the users preferences.  The returned char* must be freed
+ * by the caller.
+ */
+static gchar *
+song_get_export_filename (Song *song)
+{
+    GString *result;
+    if (!song) return NULL; 
+    char *p = prefs_get_filename_format ();
+    result = g_string_new ("");
+    char dummy[5];
+    while (*p != '\0') {
+	    if (*p == '%') {
+		    p++;
+		    char* tmp = NULL;
+		    switch (*p) {
+			    case 'A':
+				    tmp = song_get_item_utf8 (song, S_ARTIST);
+				    break;
+			    case 'd':
+				    tmp = song_get_item_utf8 (song, S_ALBUM);
+				    break;
+			    case 'n':
+				    tmp = song_get_item_utf8 (song, S_TITLE);
+				    break;
+			    case 't':
+				    tmp = dummy;
+				    if (song->tracks == 0)
+					    g_sprintf (tmp, "%.2d", song->track_nr);
+				    else if (song->tracks < 10)
+					    g_sprintf("%.1d", song->track_nr);
+				    else if (song->tracks < 100)
+					    g_sprintf (tmp, "%.2d", song->track_nr);
+				    else if (song->tracks < 1000)
+					    g_sprintf (tmp, "%.3d", song->track_nr);
+				    else {
+					    g_print ("wow, more that 1000 tracks!");
+					    g_sprintf (tmp,"%.4d", song->track_nr);
+				    }
+				    break;
+			    default:
+				    /* 
+				     * [FIXME] add more cases here and an error message for 
+				     * the default case
+				     */
+				    break;
+		    }
+		    if (tmp) {
+			    result = g_string_append (result, tmp);
+			    tmp = NULL;
+		    }
+	    }
+	    else 
+		    result = g_string_append_c (result, *p);
+	    p++;
+    }
+    return g_string_free (result,FALSE);
+}
+
+/**
+ * Recursively make directories in the given filename.
+ * @return FALSE is this is not possible.
+ */
+gboolean
+make_dirs(char* filename)
+{
+	char* p = filename;
+	if (*p == G_DIR_SEPARATOR) p++;
+	while ((p = index(p, G_DIR_SEPARATOR)) != NULL) {
+		*p = '\0';
+		if (!g_file_test(filename, G_FILE_TEST_EXISTS)) {
+			if (mkdir(filename, 0755) == -1) {
+				gtkpod_warning (_("Error creating %s: %s\n"), filename, g_strerror(errno));
+				return FALSE;
+			}
+		}
+		*p = G_DIR_SEPARATOR;
+		p++;
+	}
+	return TRUE;
 }
 
 /**
@@ -102,7 +194,7 @@ file_export_cleanup(void)
  * Returns TRUE on write success, FALSE on write failure
  */
 static gboolean
-copy_file_from_fd_to_fd(FILE *from, FILE *to)
+copy_file_fd(FILE *from, FILE *to)
 {
     gboolean result = FALSE;
     gchar data[READ_WRITE_BLOCKSIZE];
@@ -147,14 +239,14 @@ copy_file_from_fd_to_fd(FILE *from, FILE *to)
 }
 
 /**
- * copy_file_from_file_to_dest - copy the filename on disk named file, to
+ * copy_file - copy the filename on disk named file, to
  * the destination file dest.  Both names are FULL pathnames to the file
  * @file - the filename to copy 
  * @dest - the filename we copy to
  * Returns TRUE on successful copying
  */
 static gboolean 
-copy_file_from_file_to_dest(gchar *file, gchar *dest)
+copy_file(gchar *file, gchar *dest)
 {
     gboolean result = FALSE;
     FILE *from = NULL, *to = NULL;
@@ -163,7 +255,7 @@ copy_file_from_file_to_dest(gchar *file, gchar *dest)
     {
 	if((to = fopen(dest, "w")))
 	{
-	    result = copy_file_from_fd_to_fd(from, to);
+	    result = copy_file_fd(from, to);
 	    fclose(to);
 	}
 	else
@@ -194,20 +286,19 @@ copy_file_from_file_to_dest(gchar *file, gchar *dest)
 static gboolean
 write_song(Song *s)
 {
-    gchar *tmp = NULL;
-    gchar buf[PATH_MAX];
-    gchar *dest_file = NULL;
     gchar *from_file = NULL;
+    gchar *dest_file = NULL;
+    gchar buf[PATH_MAX];
     gboolean result = FALSE;
     
-    if((tmp = get_preferred_song_name_format(s)))
+    if((dest_file = song_get_export_filename(s)))
     {
-	dest_file = chop_filename(tmp);
-	g_free(tmp);
 	from_file = get_song_name_on_disk(s);
-	snprintf(buf, PATH_MAX, "%s/%s", file_export.dest_dir, dest_file); 
-	if(copy_file_from_file_to_dest(from_file, buf))
-	    result = TRUE;
+	g_snprintf(buf, PATH_MAX, "%s/%s", file_export.dest_dir, dest_file); 
+	if (make_dirs(buf)) {
+	    if(copy_file(from_file, buf))
+	        result = TRUE;
+	}
 	g_free(from_file);
 	g_free(dest_file);
     }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-06-22 01:07:46 jcs>
+/* Time-stamp: <2003-08-02 16:33:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1545,7 +1545,7 @@ gchar *itunesdb_get_song_name_on_ipod (gchar *path, Song *s)
    Returns TRUE on success, FALSE otherwise */
 gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
 {
-  gchar data[ITUNESDB_COPYBLK];
+  gchar *data=g_malloc (ITUNESDB_COPYBLK);
   glong bread, bwrite;
   gboolean success = TRUE;
   FILE *file_in = NULL;
@@ -1609,6 +1609,7 @@ gboolean itunesdb_cp (gchar *from_file, gchar *to_file)
 	remove (to_file);
       }
     }
+  g_free (data);
   return success;
 }
 
