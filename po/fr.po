@@ -452,7 +452,6 @@ msgid "Updating %s"
 msgstr "%s mis à jour"
 
 #: src/file.c:558
-#, fuzzy
 msgid "Updated selected songs with info from file."
 msgstr "_Mettre à jour les morceaux à partir des fichiers"
 
@@ -524,7 +523,6 @@ msgstr "Synchroniser les répertoires"
 
 #. title
 #: src/file.c:859
-#, fuzzy
 msgid "OK to synchronize the following directories?"
 msgstr "Créer les répertoires suivants ?"
 
@@ -539,7 +537,6 @@ msgid "No playlist selected."
 msgstr "Pas de liste de lecture sélectionnée"
 
 #: src/file.c:975
-#, fuzzy, c-format
 msgid "The following song could not be updated"
 msgid_plural "The following %d songs could not be updated"
 msgstr[0] "Le morceau suivant ne peut pas être mis à jour."
@@ -552,7 +549,6 @@ msgid "Failed Song Update"
 msgstr "Echec de la mise à jour du morceau"
 
 #: src/file.c:1039
-#, fuzzy, c-format
 msgid "The following song has been updated"
 msgid_plural "The following %d songs have been updated"
 msgstr[0] "Le morceau suivant a été mis à jour"
@@ -578,9 +574,8 @@ msgid "format not supported"
 msgstr "format non supporté"
 
 #: src/file.c:1370 src/file.c:1383
-#, fuzzy, c-format
 msgid "Couldn't change tags of file: %s\n"
-msgstr "Impossible de trouver le fichier pixmap: %s"
+msgstr "Impossible de trouver le fichier pixmap: %s\n"
 
 #: src/file.c:1491 src/file.c:1505
 #, c-format
@@ -989,7 +984,6 @@ msgid "_Toolbar"
 msgstr "_Barre d'outils"
 
 #: src/interface.c:450
-#, fuzzy
 msgid "_Tooltips"
 msgstr "_Infobulles"
 
@@ -1703,7 +1697,6 @@ msgstr "Ne peut ouvrir en écriture le fichier iTunesDB \"%s\".\n"
 
 #. an error occured
 #: src/itunesdb.c:1383
-#, fuzzy, c-format
 msgid "Error renaming '%s' to '%s' (%s).\n"
 msgstr "Impossible de copier '%s' vers '%s' (%s)\n"
 
@@ -1763,7 +1756,6 @@ msgstr ""
 "d'Apple."
 
 #: src/misc.c:295
-#, fuzzy
 msgid ""
 "(C) 2002 - 2003\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
@@ -1831,7 +1823,6 @@ msgstr ""
 "\n"
 
 #: src/misc.c:317
-#, fuzzy
 msgid ""
 "This program borrows code from the following projects:\n"
 "    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
@@ -1941,7 +1932,6 @@ msgid "Delete Playlist?"
 msgstr "Supprimer la liste de lecture ?"
 
 #: src/misc.c:1159
-#, fuzzy
 msgid ""
 "Are you sure you want to delete the following song\n"
 "completely from your ipod?"
@@ -1960,7 +1950,6 @@ msgid "Delete Songs Completey?"
 msgstr "Supprimer complètement les morceaux ?"
 
 #: src/misc.c:1170
-#, fuzzy, c-format
 msgid ""
 "Are you sure you want to delete the following song\n"
 "from the playlist \"%s\"?"
@@ -2049,7 +2038,6 @@ msgid " %s Pending"
 msgstr " %s en attente"
 
 #: src/playlist.c:306
-#, fuzzy, c-format
 msgid "Added %d+ songs to playlist '%s'"
 msgid_plural "Added %d+ songs to playlist '%s'"
 msgstr[0] "%d morceau ajouté à la liste de lecture '%s'"
