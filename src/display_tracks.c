@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-25 22:20:50 jcs>
+/* Time-stamp: <2003-12-07 23:51:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -938,6 +938,8 @@ gint tm_data_compare_func (GtkTreeModel *model,
 		   time_get_time (track2, tm_item));
   case  TM_COLUMN_VOLUME:
       return track1->volume - track2->volume;
+  case TM_COLUMN_YEAR:
+      return track1->year - track2->year;
   default:
       g_warning ("Programming error: tm_data_compare_func: no sort method for column %d\n", column);
       break;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 13:14:26 jcs>
+/* Time-stamp: <2003-12-07 15:07:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -102,7 +102,7 @@
 #include "prefs.h"
 #include "support.h"
 
-/* global config struct */
+/* config struct */
 static struct cfg *cfg = NULL;
 
 /* enum for reading of options */
