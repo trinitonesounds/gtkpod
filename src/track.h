@@ -65,7 +65,7 @@ typedef struct
   gboolean transferred;      /* has file been transferred to iPod? */
 } Song;
 
-void add_song (Song *song);
+gboolean add_song (Song *song);
 void remove_song (Song *song);
 void remove_all_songs (void);
 GList *get_song_list (void);
@@ -76,4 +76,5 @@ gboolean flush_songs (void);
 gboolean add_song_by_filename (gchar *name);
 gboolean add_directory_recursively (gchar *name);
 void handle_import_itunes (void);
+gchar* get_song_name_on_disk(Song *s);
 #endif __SONG_H__

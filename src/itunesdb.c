@@ -92,7 +92,7 @@
    with the above mentioned pointer to the playlist and the songid to
    be added.
 
-   void add_song (Song *song);
+   gboolean add_song (Song *song);
    Playlist *add_playlist (Playlist *plitem);
    void add_songid_to_playlist (Playlist *plitem, guint32 id);
 
@@ -303,7 +303,9 @@ static glong get_pl(FILE *file, glong seek)
       seek += zip;
     }
 
+#if 0
   printf("pln: %s(%d Tracks) \n", plname_utf8, (int)songnum);
+#endif
   plitem = g_malloc0 (sizeof (Playlist));
 #ifdef ITUNESDB_PROVIDE_UTF8
   plitem->name = plname_utf8;
@@ -886,13 +888,13 @@ write_playlist(FILE *file, Playlist *pl)
 {
     Song *s;
     GList *l;
+    guint32 i, n;
     glong mhyp_seek;
     gunichar2 empty = 0;
-    guint32 i, n;
-
+    
     mhyp_seek = ftell(file);
     n = get_nr_of_songs_in_playlist (pl);
-#if 1
+#if 0
   fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, n);
 #endif    
     mk_mhyp(file, pl->name_utf16, pl->type, n);  
@@ -918,7 +920,7 @@ write_mhsd_two(FILE *file)
     mk_mhsd (file, 2);         /* write header: type 2: playlists  */
     mhlp_seek = ftell (file);
     playlists = get_nr_of_playlists();
-    mk_mhlp (file, playlists + 1);
+    mk_mhlp (file, playlists);
     for(i = 0; i < playlists; i++)
     { 
 	write_playlist(file, get_playlist_by_nr(i));

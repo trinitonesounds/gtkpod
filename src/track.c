@@ -41,33 +41,45 @@ static guint32 free_ipod_id (guint32 id);
 /* Append song to the list */
 /* Note: adding to the display model is the responsibility of
    the playlist code */
-void add_song (Song *song)
+gboolean add_song (Song *song)
 {
   gint sz = sizeof (gunichar2);
-
-  /* Make sure all strings are initialised -- that way we don't 
+  gboolean result = FALSE;
+    
+  if(song_exists_on_ipod(song))
+  {
+    fprintf(stderr, "song already exists on ipod !!!\n");
+    remove_song(song);
+  }
+  else
+  {
+    /* Make sure all strings are initialised -- that way we don't 
      have to worry about it when we are handling the strings */
-  if (song->album == NULL)           song->album = g_strdup ("");
-  if (song->artist == NULL)          song->artist = g_strdup ("");
-  if (song->title == NULL)           song->title = g_strdup ("");
-  if (song->genre == NULL)           song->genre = g_strdup ("");
-  if (song->comment == NULL)         song->comment = g_strdup ("");
-  if (song->composer == NULL)        song->composer = g_strdup ("");
-  if (song->fdesc == NULL)           song->fdesc = g_strdup ("");
-  if (song->album_utf16 == NULL)     song->album_utf16 = g_malloc0 (sz);
-  if (song->artist_utf16 == NULL)    song->artist_utf16 = g_malloc0 (sz);
-  if (song->title_utf16 == NULL)     song->title_utf16 = g_malloc0 (sz);
-  if (song->genre_utf16 == NULL)     song->genre_utf16 = g_malloc0 (sz);
-  if (song->comment_utf16 == NULL)   song->comment_utf16 = g_malloc0 (sz);
-  if (song->composer_utf16 == NULL)  song->composer_utf16 = g_malloc0 (sz);
-  if (song->fdesc_utf16 == NULL)     song->fdesc_utf16 = g_malloc0 (sz);
-  if (song->pc_path_utf8 == NULL)    song->pc_path_utf8 = g_strdup ("");
-  if (song->pc_path_locale == NULL)  song->pc_path_locale = g_strdup ("");
-  if (song->ipod_path == NULL)       song->ipod_path = g_strdup ("");
-  if (song->ipod_path_utf16 == NULL) song->ipod_path_utf16 = g_malloc0 (sz);
-
-  free_ipod_id (song->ipod_id);  /* keep track of highest ID used */
-  songs = g_list_append (songs, song);
+    if (song->album == NULL)           song->album = g_strdup ("");
+    if (song->artist == NULL)          song->artist = g_strdup ("");
+    if (song->title == NULL)           song->title = g_strdup ("");
+    if (song->genre == NULL)           song->genre = g_strdup ("");
+    if (song->comment == NULL)         song->comment = g_strdup ("");
+    if (song->composer == NULL)        song->composer = g_strdup ("");
+    if (song->fdesc == NULL)           song->fdesc = g_strdup ("");
+    if (song->album_utf16 == NULL)     song->album_utf16 = g_malloc0 (sz);
+    if (song->artist_utf16 == NULL)    song->artist_utf16 = g_malloc0 (sz);
+    if (song->title_utf16 == NULL)     song->title_utf16 = g_malloc0 (sz);
+    if (song->genre_utf16 == NULL)     song->genre_utf16 = g_malloc0 (sz);
+    if (song->comment_utf16 == NULL)   song->comment_utf16 = g_malloc0 (sz);
+    if (song->composer_utf16 == NULL)  song->composer_utf16 = g_malloc0 (sz);
+    if (song->fdesc_utf16 == NULL)     song->fdesc_utf16 = g_malloc0 (sz);
+    if (song->pc_path_utf8 == NULL)    song->pc_path_utf8 = g_strdup ("");
+    if (song->pc_path_locale == NULL)  song->pc_path_locale = g_strdup ("");
+    if (song->ipod_path == NULL)       song->ipod_path = g_strdup ("");
+    if (song->ipod_path_utf16 == NULL) song->ipod_path_utf16 = g_malloc0 (sz);
+    
+    song->ipod_id = free_ipod_id (0);  /* keep track of highest ID used */
+    
+    songs = g_list_append (songs, song);
+    result = TRUE;
+  }
+  return(result);
 }
 
 
@@ -198,10 +210,13 @@ gboolean add_song_by_filename (gchar *name)
          export G_BROKEN_FILENAMES=1 in your shell.  See README for details. */
       song->pc_path_utf8 = g_filename_to_utf8 (name, -1, NULL, NULL, NULL);
       song->pc_path_locale = g_strdup (name);
-      song->ipod_id = free_ipod_id (0);
+      song->ipod_id = 0;
       song->transferred = FALSE;
-      add_song (song);                    /* add song to memory */
-      add_song_to_playlist (NULL, song);  /* add song to master playlist */
+      if(add_song (song))                   /* add song to memory */
+      {
+	  add_song_to_playlist (NULL, song);  
+	  /* add song to master playlist */
+      }
     }
   g_free (filetag);
   return TRUE;
@@ -358,6 +373,10 @@ void handle_import_itunes (void)
 	  /*we need to tell the display that the ID has changed */
 	  pm_song_changed (song);
 	}
+	
+      /* setup our md5 hashness for unique files */
+      if(cfg->md5songs)
+	unique_file_repository_init(get_song_list());
     }
 }
 
@@ -420,3 +439,37 @@ static guint32 free_ipod_id (guint32 id)
   if (id == 0)   ++max_id;
   return max_id;
 }
+
+/**
+ * get_song_name_on_disk
+ * Function to retrieve the filename on disk for the specified Song.  It
+ * returns the valid filename whether the file has been copied to the ipod,
+ * or has yet to be copied.  So it's useful for file operations on a song.
+ * @s - The Song data structure we want the on disk file for
+ * Returns - the filename for this Song
+ */
+gchar* get_song_name_on_disk(Song *s)
+{
+    gchar *result = NULL;
+    if(s)
+    {
+	if((s->ipod_path) && (strlen(s->ipod_path) > 0))
+	{
+	    result = g_strdup_printf("%s%s",cfg->ipod_mount, s->ipod_path);
+	}
+	else if(strlen(s->pc_path_utf8) > 0)
+	{
+	    result = g_strdup_printf("%s",s->pc_path_utf8);
+	} 
+	if(result)
+	{
+	    guint i = 0, size = 0;
+	    size = strlen(result);
+	    for(i = 0; i < size; i++)
+		if(result[i] == ':') result[i] = '/';
+	}
+    }
+    return(result);
+
+}
+

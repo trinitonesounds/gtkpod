@@ -20,7 +20,8 @@ gtkpod_SOURCES = \
 	itunesdb.c itunesdb.h \
 	id3_tag.c id3_tag.h genres.h \
 	mp3file.c mp3file.h \
-	dirbrowser.c dirbrowser.h
+	dirbrowser.c dirbrowser.h \
+	md5.c md5.h
 
 gtkpod_LDADD = @PACKAGE_LIBS@ $(INTLLIBS)
 

@@ -44,6 +44,8 @@ static void usage (FILE *file)
   fprintf(file, _("  --mountpoint: same as \"-m\".\n"));
   fprintf(file, _("  -w:           write changed ID3 tags to file\n"));
   fprintf(file, _("  --writeid3:   same as \"-w\".\n"));
+  fprintf(file, _("  -c:           check files automagically for duplicates\n"));
+  fprintf(file, _("  --md5:   same as \"-c\".\n"));
 }
 
 
@@ -63,6 +65,8 @@ gboolean read_prefs (int argc, char *argv[])
       { "mountpoint",  required_argument,	NULL, GP_MOUNT },
       { "w",           no_argument,	NULL, GP_WRITEID3 },
       { "writeid3",    no_argument,	NULL, GP_WRITEID3 },
+      { "c",           no_argument,	NULL, GP_MD5SONGS },
+      { "md5",		no_argument,	NULL, GP_MD5SONGS },
       { 0, 0, 0, 0 }
     };
   
@@ -70,7 +74,7 @@ gboolean read_prefs (int argc, char *argv[])
   cfg = g_malloc0 (sizeof (struct cfg));
   cfg->ipod_mount = g_strdup ("/mnt/ipod");
   cfg->last_dir = g_strdup ("~/");
-  cfg->writeid3 = FALSE;
+  cfg->writeid3 = cfg->md5songs = FALSE;
 
   while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
     switch(opt) 
@@ -85,6 +89,9 @@ gboolean read_prefs (int argc, char *argv[])
 	break;
       case GP_WRITEID3:
 	cfg->writeid3 = TRUE;
+	break;
+      case GP_MD5SONGS:
+	cfg->md5songs = TRUE;
 	break;
       default:
 	fprintf(stderr, _("Unknown option: %s\n"), argv[optind]);

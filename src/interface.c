@@ -320,6 +320,7 @@ create_gtkpod (void)
   scrolledwindow16 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow16);
   gtk_container_add (GTK_CONTAINER (sorttab0), scrolledwindow16);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow16), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   st0_cat3_treeview = gtk_tree_view_new ();
   gtk_widget_show (st0_cat3_treeview);
@@ -379,6 +380,7 @@ create_gtkpod (void)
   scrolledwindow17 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (scrolledwindow17);
   gtk_container_add (GTK_CONTAINER (sorttab1), scrolledwindow17);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow17), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   st1_cat3_treeview = gtk_tree_view_new ();
   gtk_widget_show (st1_cat3_treeview);
