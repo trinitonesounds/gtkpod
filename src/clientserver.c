@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 23:09:06 jcs>
+/* Time-stamp: <2005-01-06 00:03:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,6 +30,7 @@
 #include "clientserver.h"
 #include "md5.h"
 #include "misc.h"
+#include "display_itdb.h"
 #include "prefs.h"
 #include "support.h"
 

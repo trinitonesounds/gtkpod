@@ -45,7 +45,7 @@
 #include "itdb.h"
 #include "prefs.h"
 #include "support.h"
-
+#include "misc_track.h"
 
 /* XPM */
 static char *folder[] =

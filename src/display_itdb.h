@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 21:59:09 jcs>
+/* Time-stamp: <2005-01-06 00:03:26 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -109,12 +109,18 @@ typedef enum
 } GpItdbType;
 
 
-iTunesDB *gp_itdb_new (void);
-Playlist *gp_playlist_new (const gchar *title, gboolean spl);
-Track *gp_track_new (void);
 void init_data (GtkWidget *window);
+
+iTunesDB *gp_itdb_new (void);
+void gp_itdb_add (iTunesDB *itdb);
+
+Track *gp_track_new (void);
+
+Playlist *gp_playlist_new (const gchar *title, gboolean spl);
+void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos);
+void gp_playlist_remove_track (Playlist *plitem, Track *track);
+void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display);
+
 gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num);
-void gp_duplicate_remove (Track *oldtrack, Track *track);
-Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename);
 
 #endif

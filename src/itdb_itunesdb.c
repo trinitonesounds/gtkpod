@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 23:48:43 jcs>
+/* Time-stamp: <2005-01-06 00:16:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -687,23 +687,6 @@ Itdb_iTunesDB *itdb_new (void)
 	((guint64)g_rand_int (grand));
     return itdb;
 }
-
-/* return the master playlist of @itdb */
-Itdb_Playlist *itdb_mpl (Itdb_iTunesDB *itdb)
-{
-    Itdb_Playlist *pl;
-
-    g_return_val_if_fail (itdb, NULL);
-
-    pl = g_list_nth_data (itdb->playlists, 0);
-    g_return_val_if_fail (pl, NULL);
-
-    /* mpl is guaranteed to be at first position... */
-    g_return_val_if_fail (pl->type != ITDB_PL_TYPE_MPL, NULL);
-
-    return pl;
-}
-
 
 /* Returns the type of the mhod and the length *ml. *ml is set to -1
  * on error (e.g. because there's no mhod at @seek). */

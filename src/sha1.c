@@ -37,6 +37,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <glib.h>
 #include "charset.h"
 #include "md5.h"
 #include "file.h"
@@ -168,20 +169,22 @@ md5_hash_on_file(FILE * fp)
 static gchar *
 md5_hash_track(Track * s)
 {
+   ExtraTrackData *etr;
    gchar *result = NULL;
-   gchar *filename = NULL;
+   gchar *filename;
 
-   if (s != NULL)
+   g_return_val_if_fail (s, NULL);
+   etr = s->userdata;
+   g_return_val_if_fail (etr, NULL);
+
+   if (etr->md5_hash != NULL)
    {
-      if (s->md5_hash != NULL)
-      {
-         result = g_strdup(s->md5_hash);
-      }
-      else if ((filename = get_track_name_on_disk(s)) != NULL)
-      {
-	 result = md5_hash_on_filename (filename, FALSE);
-         g_free(filename);
-      }
+       result = g_strdup(etr->md5_hash);
+   }
+   else if ((filename = get_track_name_on_disk (s)) != NULL)
+   {
+       result = md5_hash_on_filename (filename, FALSE);
+       g_free(filename);
    }
    return (result);
 }
@@ -250,12 +253,17 @@ void md5_free (iTunesDB *itdb)
 Track *md5_track_exists_insert (iTunesDB *itdb, Track * s)
 {
     ExtraiTunesDBData *eitdb;
+    ExtraTrackData *etr;
     gchar *val = NULL;
     Track *track = NULL;
 
     g_return_val_if_fail (itdb, NULL);
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);
+
+    g_return_val_if_fail (s, NULL);
+    etr = s->userdata;
+    g_return_val_if_fail (etr, NULL);
 
     if (prefs_get_md5tracks ())
     {
@@ -275,8 +283,8 @@ Track *md5_track_exists_insert (iTunesDB *itdb, Track * s)
 	    }
 	    else
 	    {   /* if it doesn't exist we register it in the hash */
-		g_free (s->md5_hash);
-		s->md5_hash = g_strdup (val);
+		g_free (etr->md5_hash);
+		etr->md5_hash = g_strdup (val);
 		/* val is used in the next line -- we don't have to
 		 * g_free() it */
 		g_hash_table_insert (eitdb->md5hash, val, s);
@@ -323,7 +331,7 @@ Track *md5_file_exists (iTunesDB *itdb, gchar *file, gboolean silent)
     ExtraiTunesDBData *eitdb;
     Track *track = NULL;
 
-    g_return_if_fail (file);
+    g_return_val_if_fail (file, NULL);
     g_return_val_if_fail (itdb, NULL);
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);

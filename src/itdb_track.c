@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 23:25:31 jcs>
+/* Time-stamp: <2005-01-06 00:23:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -27,6 +27,7 @@
 */
 
 #include "itdb_private.h"
+#include <string.h>
 
 /* Generate a new Itdb_Track structure */
 Itdb_Track *itdb_track_new (void)
@@ -109,6 +110,52 @@ Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id)
     {
 	Itdb_Track *track = gl->data;
 	if (track->id == id)  return track;
+    }
+    return NULL;
+}
+
+/* Returns the track with the filename @name or NULL, if none can be
+ * found. This function also works if @name is on the iPod. */
+/* If @filename == NULL, NULL is returned. */
+Itdb_Track *itdb_track_by_filename (Itdb_iTunesDB *itdb, gchar *filename)
+{
+    g_return_val_if_fail (itdb, NULL);
+
+    if (!filename) return NULL;
+
+    if (itdb->mountpoint && 
+	(strncmp (filename, itdb->mountpoint,
+		  strlen (itdb->mountpoint)) == 0))
+    {   /* handle track on iPod */
+	GList *gl;
+	for (gl=itdb->tracks; gl; gl=gl->next)
+	{
+	    Itdb_Track *track = gl->data;
+	    g_return_val_if_fail (track, NULL);
+	    gchar *ipod_path = itdb_filename_on_ipod (itdb->mountpoint,
+						      track);
+	    if (ipod_path)
+	    {
+		if (strcmp (ipod_path, filename) == 0)
+		{
+		    g_free (ipod_path);
+		    return track;
+		}
+		g_free (ipod_path);
+	    }
+	}
+    }
+    else
+    {   /* handle track on local filesystem */
+	GList *gl;
+	for (gl=itdb->tracks; gl; gl=gl->next)
+	{
+	    Itdb_Track *track = gl->data;
+	    g_return_val_if_fail (track, NULL);
+	    if (track->pc_path_locale)
+		if (strcmp (track->pc_path_locale, filename) == 0)
+		    return track;
+	}
     }
     return NULL;
 }

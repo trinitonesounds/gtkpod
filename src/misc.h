@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 22:23:03 jcs>
+/* Time-stamp: <2005-01-05 23:36:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -77,9 +77,6 @@ gint get_sort_tab_number (gchar *text);
 void open_about_window (void);
 void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
-void add_idlist_to_playlist (Playlist *pl, gchar *str);
-void add_text_plain_to_playlist (Playlist *pl, gchar *str, gint position,
-				 AddTrackFunc trackaddfunc, gpointer data);
 void cleanup_backup_and_extended_files (void);
 gboolean gtkpod_main_quit(void);
 void gtkpod_main_window_set_active(gboolean active);
@@ -151,10 +148,6 @@ guint32 utf16_strlen (gunichar2 *utf16);
 gunichar2 *utf16_strdup (gunichar2 *utf16);
 
 void check_db (void);
-
-void do_selected_tracks (void (*do_func)(GList *trackids));
-void do_selected_entry (void (*do_func)(GList *trackids), gint inst);
-void do_selected_playlist (void (*do_func)(GList *trackids));
 
 guint32 replaygain_to_soundcheck (gdouble gain);
 gdouble soundcheck_to_replaygain (guint32 soundcheck);

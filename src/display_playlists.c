@@ -32,6 +32,7 @@
 #include "display_private.h"
 #include "prefs.h"
 #include "misc.h"
+#include "info.h"
 #include "support.h"
 #include "context_menus.h"
 #include "callbacks.h"
@@ -158,7 +159,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
 	      Playlist *pl;
 	      gtk_tree_model_get (model, &mpl_iter,
 				  PM_COLUMN_PLAYLIST, &pl, -1);
-	      g_return_fail (pl);
+	      g_return_if_fail (pl);
 	      if (pl->itdb == playlist->itdb)
 	      {
 		  mpl = &mpl_iter;
@@ -174,13 +175,13 @@ void pm_add_playlist (Playlist *playlist, gint pos)
 
   if (pos == -1)
   {
-      gtk_tree_store_append (model, &iter, mpl);
+      gtk_tree_store_append (GTK_TREE_STORE (model), &iter, mpl);
   }
   else
   {
-      gtk_tree_store_insert (model, &iter, mpl, pos);
+      gtk_tree_store_insert (GTK_TREE_STORE (model), &iter, mpl, pos);
   }
-  gtk_tree_store_set (model, &iter,
+  gtk_tree_store_set (GTK_TREE_STORE (model), &iter,
 		      PM_COLUMN_PLAYLIST, playlist,
 		      -1);
 

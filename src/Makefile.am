@@ -43,6 +43,7 @@ gtkpod_SOURCES = \
     main.c \
     md5.c md5.h \
     misc.c misc.h \
+    misc_track.c misc_track.h \
     misc_confirm.c misc_conversion.c misc_input.c misc_playlist.c \
     mp3file.c mp3file.h \
     mp4file.c mp4file.h \

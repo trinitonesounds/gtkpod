@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 23:53:07 jcs>
+/* Time-stamp: <2005-01-06 00:16:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -455,7 +455,7 @@ void itdb_track_add (Itdb_iTunesDB *itdb, Itdb_Track *track, gint32 pos);
 void itdb_track_remove (Itdb_Track *track);
 void itdb_track_unlink (Itdb_Track *track);
 Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id);
-Itdb_Playlist *itdb_mpl (Itdb_iTunesDB *itdb);
+Itdb_Track *itdb_track_by_filename (Itdb_iTunesDB *itdb, gchar *filename);
 
 /* playlist functions */
 Itdb_Playlist *itdb_playlist_new (const gchar *title, gboolean spl);
@@ -469,7 +469,9 @@ void itdb_playlist_add_track (Itdb_Playlist *pl,
 void itdb_playlist_add_trackid (Itdb_Playlist *pl,
 				guint32 id, gint32 pos);
 Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id);
+Itdb_Playlist *itdb_playlist_mpl (Itdb_iTunesDB *itdb);
 gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *track);
+guint32 itdb_playlist_contain_track_number (Itdb_Track *tr);
 void itdb_playlist_remove_track (Itdb_Playlist *pl, Itdb_Track *track);
 guint32 itdb_playlist_tracks_number (Itdb_Playlist *pl);
 

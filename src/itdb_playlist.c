@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 23:49:35 jcs>
+/* Time-stamp: <2005-01-06 00:23:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1167,10 +1167,10 @@ void itdb_playlist_remove_track (Itdb_Playlist *pl, Itdb_Track *track)
 {
     g_return_if_fail (track);
 
-    if (pl == NULL)   pl=itdb_mpl (track->itdb);
+    if (pl == NULL)   pl=itdb_playlist_mpl (track->itdb);
 
     if (pl == NULL)
-	pl = itdb_mpl (track->itdb);
+	pl = itdb_playlist_mpl (track->itdb);
 
     g_return_if_fail (pl);
 
@@ -1195,6 +1195,23 @@ Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id)
 }
 
 
+/* return the master playlist of @itdb */
+Itdb_Playlist *itdb_playlist_mpl (Itdb_iTunesDB *itdb)
+{
+    Itdb_Playlist *pl;
+
+    g_return_val_if_fail (itdb, NULL);
+
+    pl = g_list_nth_data (itdb->playlists, 0);
+    g_return_val_if_fail (pl, NULL);
+
+    /* mpl is guaranteed to be at first position... */
+    g_return_val_if_fail (pl->type != ITDB_PL_TYPE_MPL, NULL);
+
+    return pl;
+}
+
+
 /* checks if @track is in playlist @pl. TRUE, if yes, FALSE
    otherwise. If @pl is NULL, the */
 gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *tr)
@@ -1202,13 +1219,38 @@ gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *tr)
     g_return_val_if_fail (tr, FALSE);
 
     if (pl == NULL)
-	pl = itdb_mpl (tr->itdb);
+	pl = itdb_playlist_mpl (tr->itdb);
 
     g_return_val_if_fail (pl, FALSE);
 
     if (g_list_find (pl->members, tr))  return TRUE;
     else                                return FALSE;
 }
+
+
+/* returns in how many playlists (other than the MPL) @track is a
+   member of */
+guint32 itdb_playlist_contain_track_number (Itdb_Track *tr)
+{
+    iTunesDB *itdb;
+    guint32 num = 0;
+    GList *gl;
+
+    g_return_val_if_fail (tr, 0);
+    itdb = tr->itdb;
+    g_return_val_if_fail (itdb, 0);
+
+    /* start with 2nd playlist (skip MPL) */
+    gl = g_list_nth (itdb->playlists, 1);
+    while (gl)
+    {
+	g_return_val_if_fail (gl->data, num);
+	if (itdb_playlist_contains_track (gl->data, tr)) ++num;
+	gl = gl->next;
+    }
+    return num;
+}
+
 
 
 /* return number of tracks in playlist */

@@ -31,6 +31,7 @@
 #include "display.h"
 #include "file.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "prefs.h"
 #include "support.h"
 #include "tools.h"

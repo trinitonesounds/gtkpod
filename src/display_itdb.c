@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 23:59:34 jcs>
+/* Time-stamp: <2005-01-06 00:16:36 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -153,7 +153,7 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
 
     if (plitem->type == ITDB_PL_TYPE_MPL)
     { /* if it's the MPL, we remove the track permanently */
-	GList *gl = g_list_nth_data (track->itdb->playlists, 1);
+	GList *gl = g_list_nth (track->itdb->playlists, 1);
 	while (gl)
 	{  /* first we remove the track from all other playlists (i=1) */
 	    Playlist *pl = gl->data;
@@ -163,6 +163,26 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
 	}
 	itdb_track_remove (track);
     }
+}
+
+/* This function appends the track "track" to the
+   playlist @pl. It then lets the display model know.
+   If @pl == NULL, add to master playlist
+   @display: if TRUE, track is added the display.  Otherwise it's only
+   added to memory */
+void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
+{
+    iTunesDB *itdb;
+
+    g_return_if_fail (track);
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
+
+    if (pl == NULL)  pl = itdb_mpl (itdb);
+    g_return_if_fail (pl);
+
+    pl->members = g_list_append (pl->members, track);
+    if (display)  pm_add_track (pl, track, TRUE);
 }
 
 
@@ -236,298 +256,3 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 }
 
 
-/* ------------------------------------------------------------ *\
-|                                                                |
-|         functions for md5 checksums                            |
-|                                                                |
-\* ------------------------------------------------------------ */
-
-/**
- * Register all tracks in the md5 hash and remove duplicates (while
- * preserving playlists)
- */
-void gp_hash_tracks_itdb (iTunesDB *itdb)
-{
-   gint ns, count;
-   gchar *buf;
-   GList *gl;
-
-   g_return_if_fail (itdb);
-
-   if (!prefs_get_md5tracks ()) return;
-   ns = itdb_tracks_number (itdb);   /* number of tracks */
-   if (ns == 0)                 return;
-
-   block_widgets (); /* block widgets -- this might take a while,
-			so we'll do refreshs */
-   md5_free (itdb);  /* release md5 hash */
-   count = 0;
-   /* populate the hash table */
-   gl=itdb->tracks;
-   while (gl)
-   {
-       Track *track=gl->data;
-       Track *oldtrack = md5_track_exists_insert (itdb, track);
-
-       /* need to get next track now because it might be a duplicate and
-	  thus be removed when we call gp_duplicate_remove() */
-       gl = gl->next;
-
-       if (oldtrack)
-       {
-	   gp_duplicate_remove (oldtrack, track);
-       }
-
-       ++count;
-       if (((count % 20) == 1) || (count == ns))
-       { /* update for count == 1, 21, 41 ... and for count == n */
-	   buf = g_strdup_printf (ngettext ("Hashed %d of %d track.",
-					    "Hashed %d of %d tracks.", ns),
-				  count, ns);
-	   gtkpod_statusbar_message (buf);
-	   while (widgets_blocked && gtk_events_pending ())
-	       gtk_main_iteration ();
-	   g_free (buf);
-       }
-   }
-   gp_duplicate_remove (NULL, NULL); /* show info dialogue */
-   release_widgets (); /* release widgets again */
-}
-
-
-/**
- * Call gp_hash_tracks_itdb() for each itdb.
- *
- */
-void gp_hash_tracks (void)
-{
-    GList *gl;
-
-    g_assert (itdbs_head);
-
-    block_widgets ();
-    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
-    {
-	gp_hash_tracks_itdb (gl->data);
-    }
-    release_widgets ();
-}
-
-
-/* This function removes a duplicate track "track" from memory while
- * preserving the playlists.
- *
- * The md5 hash is not modified.
- *
- * The playcount/recent_playcount are modified to show the cumulative
- * playcounts for that track.
- *
- * The star rating is set to the average of both star ratings if both
- * ratings are not 0, or the higher rating if one of the ratings is 0
- * (it is assumed that a rating of "0" means that no rating has been
- * set).
- *
- * The "created" timestamp is set to the older entry (unless that one
- * is 0).
- *
- * The "modified" and "last played" timestamps are set to the more
- * recent entry.
- *
- * You should call "gp_duplicate_remove (NULL, NULL)" to pop up the info
- * dialogue with the list of duplicate tracks afterwards. Call with
- * "NULL, (void *)-1" to just clean up without dialoge.
- *
- * If "track" does not exist in
- * the master play list, only a message is logged (to be displayed
- * later when called with "NULL, NULL" */
-void gp_duplicate_remove (Track *oldtrack, Track *track)
-{
-   gchar *buf, *buf2;
-   static gint deltrack_nr = 0;
-   static gboolean removed = FALSE;
-   static GString *str = NULL;
-
-/*   printf ("%p, %p, '%s'\n", oldtrack, track, str?str->str:"empty");*/
-
-   if (prefs_get_show_duplicates() && !oldtrack && !track && str)
-   {
-       if (str->len)
-       { /* Some tracks have been deleted. Print a notice */
-	   if (removed)
-	   {
-	       buf = g_strdup_printf (
-		   ngettext ("The following duplicate track has been removed.",
-			     "The following %d duplicate tracks have been removed.",
-			     deltrack_nr), deltrack_nr);
-	   }
-	   else
-	   {
-	       buf = g_strdup_printf (
-		   ngettext ("The following duplicate track has not been added to the master play list.",
-			     "The following %d duplicate tracks have not been added to the master play list.",
-			     deltrack_nr), deltrack_nr);
-	   }
-	   gtkpod_confirmation
-	       (-1,                      /* gint id, */
-		FALSE,                   /* gboolean modal, */
-		_("Duplicate detection"),/* title */
-		buf,                     /* label */
-		str->str,                /* scrolled text */
-		NULL, 0, NULL,      /* option 1 */
-		NULL, 0, NULL,      /* option 2 */
-		TRUE,               /* gboolean confirm_again, */
-		prefs_set_show_duplicates,
-		                    /* ConfHandlerCA confirm_again_handler,*/
-		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
-		NULL,               /* don't show "Apply" button */
-		NULL,               /* don't show "Cancel" button */
-		NULL,               /* gpointer user_data1,*/
-		NULL);              /* gpointer user_data2,*/
-	   g_free (buf);
-       }
-   }
-
-   if (oldtrack == NULL)
-   { /* clean up */
-       if (str)       g_string_free (str, TRUE);
-       str = NULL;
-       removed = FALSE;
-       deltrack_nr = 0;
-       gtkpod_tracks_statusbar_update();
-   }
-
-   if (oldtrack && track)
-   {
-       iTunesDB *itdb = oldtrack->itdb;
-       g_return_if_fail (itdb);
-
-       if (prefs_get_show_duplicates ())
-       {
-	   /* add info about it to str */
-	   buf = get_track_info (track);
-	   buf2 = get_track_info (oldtrack);
-	   if (!str)
-	   {
-	       deltrack_nr = 0;
-	       str = g_string_sized_new (2000); /* used to keep record
-						 * of duplicate
-						 * tracks */
-	   }
-	   g_string_append_printf (str, "'%s': identical to '%s'\n",
-				   buf, buf2);
-	   g_free (buf);
-	   g_free (buf2);
-       }
-       /* Set playcount */
-       oldtrack->playcount += track->playcount;
-       oldtrack->recent_playcount += track->recent_playcount;
-       /* Set rating */
-       if (oldtrack->rating && track->rating)
-	   oldtrack->rating =
-	       floor((double)(oldtrack->rating + track->rating + RATING_STEP) /
-		     (2 * RATING_STEP)) * RATING_STEP;
-       else
-	   oldtrack->rating = MAX (oldtrack->rating, track->rating);
-       /* Set 'modified' timestamp */
-       oldtrack->time_modified =  MAX (oldtrack->time_modified,
-				      track->time_modified);
-       /* Set 'played' timestamp */
-       oldtrack->time_played =  MAX (oldtrack->time_played, track->time_played);
-       /* Set 'created' timestamp */
-       oldtrack->time_created =  MIN (oldtrack->time_created, track->time_created);
-
-       /* Update filename if new track has filename set (should be
-	* always!?) */
-       if (track->pc_path_locale)
-       {
-	   ExtraTrackData *oldetr = oldtrack->userdata;
-	   ExtraTrackData *etr = track->userdata;
-	   g_return_if_fail (oldetr);
-	   g_return_if_fail (etr);
-	   g_free (oldtrack->pc_path_locale);
-	   g_free (oldetr->pc_path_utf8);
-	   oldtrack->pc_path_locale = g_strdup (track->pc_path_locale);
-	   oldetr->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
-       }
-       if (itdb_playlist_contains_track (NULL, track))
-       { /* track is already added to memory -> replace with "oldtrack" */
-	   /* check for "track" in all playlists (except for MPL) */
-	   GList *gl;
-	   gl = g_list_nth_data (itdb->playlists, 1);
-	   while (gl)
-	   {
-	       Playlist *pl = gl->data;
-	       g_return_if_fail (pl);
-	       /* if "track" is in playlist pl, we remove it and add
-		  the "oldtrack" instead (this way round we don't have
-		  to worry about changing md5 hash entries */
-	       if (itdb_playlist_contains_track (pl, track))
-	       {
-		   gp_playlist_remove_track (pl, track);
-	       {
-		   if (!itdb_playlist_contains_track (pl, oldtrack))
-		       gp_playlist_add_track (pl, oldtrack, TRUE);
-	       }
-	       gl = gl->next;
-	   }
-	   /* remove track from MPL, i.e. from the ipod */
-	   gp_playlist_remove_track (NULL, track);
-	   removed = TRUE;
-       }
-       ++deltrack_nr; /* count duplicate tracks */
-       data_changed (itdb);
-   }
-}
-
-
-/* ------------------------------------------------------------ *\
-|                                                                |
-|         functions to locate tracks                             |
-|                                                                |
-\* ------------------------------------------------------------ */
-
-
-/* Returns the track with the filename @name or NULL, if none can be
- * found. This function also works if @name is on the iPod. */
-Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
-{
-    g_return_val_if_fail (itdb, NULL);
-    g_return_val_if_fail (filename, NULL);
-
-    if ((itdb->usertype == GP_ITDB_TYPE_IPOD) &&
-	(strncmp (filename, prefs_get_ipod_mount (),
-		  strlen (prefs_get_ipod_mount ())) == 0))
-    {   /* handle track on iPod */
-	GList *gl;
-	for (gl=itdb->tracks; gl; gl=gl->next)
-	{
-	    Track *track = gl->data;
-	    gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
-	    gchar *ipod_path = itdb_filename_on_ipod (mount, track);
-	    g_free (mount);
-	    if (ipod_path)
-	    {
-		if (strcmp (ipod_path, filename) == 0)
-		{
-		    g_free (ipod_path);
-		    return track;
-		}
-		g_free (ipod_path);
-	    }
-	}
-    }
-    else
-    {   /* handle track on local filesystem */
-	GList *gl;
-	for (gl=itdb->tracks; gl; gl=gl->next)
-	{
-	    Track *track = gl->data;
-	    if (track->pc_path)
-	    {
-		if (strcmp (track->pc_path, filename) == 0)
-		    return track;
-	    }
-	}
-    }
-    return NULL;
-}
