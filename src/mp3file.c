@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 13:38:14 JST jcs>
+/* Time-stamp: <2004-03-24 22:26:08 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1218,7 +1218,7 @@ static enum id3_field_textencoding get_encoding (struct id3_tag *tag)
  * Write the ID3 tags to the file.
  * @returns: TRUE on success, else FALSE.
  */
-gboolean file_write_mp3_info (gchar *filename, Track *track)
+gboolean mp3_write_file_info (gchar *filename, Track *track)
 {
     struct id3_tag* id3tag;
     struct id3_file* id3file;
@@ -1388,6 +1388,7 @@ static inline guint32 parse_lame_uint32(char *buf) {
 	return (buf[0] & 0xff) << 24 | (buf[1] & 0xff) << 16 
 		| (buf[2] & 0xff) << 8 | (buf[3] & 0xff);
 }
+
 
 /* 
  * mp3_get_track_lame_replaygain - read the specified file and scan for LAME Tag
@@ -1713,38 +1714,6 @@ rg_fail:
 }
 
 
-/* 
- * mp3_read_gain_tags - try to read the ReplayGain values from the LAME or Ape
- * Tags. If that does not work run mp3gain.
- *
- * @path: localtion of the file
- * @track: structure holding track information
- *
- * The function always rereads the gains. Even if they have been previuosly
- * known.
- *
- * Returns TRUE if at least the radio_gain could be read.
- */
-
-gboolean mp3_read_gain_tags(gchar *path, Track *track) 
-{
-	track->radio_gain_set = FALSE;
-	track->audiophile_gain_set = FALSE;
-	track->peak_signal_set = FALSE;
-
-	mp3_get_track_lame_replaygain(path, track);
-	if (track->radio_gain_set && track->peak_signal_set) return TRUE;
-	
-	mp3_get_track_ape_replaygain(path, track);
-	if (track->radio_gain_set) return TRUE;
-	    
-/*	if (nm_mp3gain_calc_gain(track))
-	mp3_get_track_ape_replaygain(path, track); */
-	return FALSE;
-}
-
-
-
 /* ----------------------------------------------------------------------
 
 	      mp3gain code
@@ -1759,7 +1728,7 @@ gboolean mp3_read_gain_tags(gchar *path, Track *track)
  * Radio Replay Gain and Peak to an Ape Tag */
 
 /* mp3gain version 1.4.2 */
-gboolean mp3_calc_gain (gchar *path)
+static gboolean mp3_calc_gain (gchar *path, Track *track)
 {
     gint k,n;  /*for's counter*/
     gchar *mp3gain_path;
@@ -1839,6 +1808,63 @@ gboolean mp3_calc_gain (gchar *path)
 
 
 
+/* 
+ * mp3_get_gain - try to read the ReplayGain values from the LAME or Ape
+ * Tags. If that does not work run mp3gain. And try to read again.
+ *
+ * @path: localtion of the file
+ * @track: structure holding track information
+ *
+ * The function always rereads the gains. Even if they have been previuosly
+ * known.
+ *
+ * Returns TRUE if at least the radio_gain could be read.
+ */
+
+gboolean mp3_get_gain (gchar *path, Track *track) 
+{
+	track->radio_gain_set = FALSE;
+	track->audiophile_gain_set = FALSE;
+	track->peak_signal_set = FALSE;
+
+	mp3_get_track_lame_replaygain(path, track);
+	if (track->radio_gain_set && track->peak_signal_set) return TRUE;
+	
+	mp3_get_track_ape_replaygain(path, track);
+	if (track->radio_gain_set) return TRUE;
+	    
+	if (mp3_calc_gain(path, track))
+	    mp3_get_track_ape_replaygain(path, track);
+	if (track->radio_gain_set) return TRUE;
+	return FALSE;
+}
+
+
+
+/* 
+ * mp3_read_gain - as mp3_get_gain() above, but will never run
+ * mp3gain.
+ *
+ * Returns TRUE if at least the radio_gain could be read.
+ */
+
+gboolean mp3_read_gain (gchar *path, Track *track) 
+{
+	track->radio_gain_set = FALSE;
+	track->audiophile_gain_set = FALSE;
+	track->peak_signal_set = FALSE;
+
+	mp3_get_track_lame_replaygain(path, track);
+	if (track->radio_gain_set && track->peak_signal_set) return TRUE;
+	
+	mp3_get_track_ape_replaygain(path, track);
+	if (track->radio_gain_set) return TRUE;
+	    
+	return FALSE;
+}
+
+
+
 /* ----------------------------------------------------------------------
 
 	      From here starts original gtkpod code
@@ -1847,7 +1873,7 @@ gboolean mp3_calc_gain (gchar *path)
 
 /* Return a Track structure with all information read from the mp3
    file filled in */
-Track *file_get_mp3_info (gchar *name)
+Track *mp3_get_file_info (gchar *name)
 {
     Track *track = NULL;
     File_Tag filetag;
@@ -1924,7 +1950,7 @@ Track *file_get_mp3_info (gchar *name)
 	}
     }
 
-    mp3_read_gain_tags(name, track);
+    mp3_read_gain (name, track);
 
     /* Get additional info (play time and bitrate */
     mp3info = mp3file_get_info (name);

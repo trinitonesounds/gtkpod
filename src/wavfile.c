@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-06 21:45:18 JST jcs>
+/* Time-stamp: <2004-03-24 22:26:06 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -90,7 +90,7 @@ static gint read_le_short(FILE * file, gshort *ret)
 
 
 
-Track *file_get_wav_info (gchar *filename)
+Track *wav_get_file_info (gchar *filename)
 {
     Track *track = NULL;
     gchar *fn;
@@ -182,7 +182,7 @@ Track *file_get_wav_info (gchar *filename)
 }
 
 
-gboolean file_write_wav_info (gchar *filename, Track *track)
+gboolean wav_write_file_info (gchar *filename, Track *track)
 {
     /* tags cannot be saved to wav files */
     return TRUE;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 15:05:15 JST jcs>
+/* Time-stamp: <2004-03-24 22:17:27 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -90,24 +90,17 @@ static gint32 replaygain_to_volume(gint replaygain)
 /* will get the volume either from mp3gain or from LAME's ReplayGain */
 static gint32 nm_get_volume (Track *track)
 {
+    gint32 vol = TRACKVOLERROR;
     if (track)
     {
-	gchar *path;
-	path = get_track_name_on_disk_verified (track);
 
-	read_gain_tags (path, track);
-
+	if (!track->radio_gain_set)
+	    get_gain (track);
 	if (track->radio_gain_set) 
-		return replaygain_to_volume (track->radio_gain);
-	    
-	if (calc_gain (path)) {
-	    read_gain_tags (path, track);
-	    if (track->radio_gain_set) 
-		    return replaygain_to_volume (track->radio_gain);
-	}
+	    vol = replaygain_to_volume (track->radio_gain);
     }
 
-    return TRACKVOLERROR;
+    return vol;
 }
 
 

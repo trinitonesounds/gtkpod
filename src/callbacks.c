@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-23 22:50:48 JST jcs>
+/* Time-stamp: <2004-03-24 22:19:11 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -41,7 +41,6 @@
 #include "dirbrowser.h"
 #include "display.h"
 #include "file.h"
-#include "file_export.h"
 #include "info.h"
 #include "misc.h"
 #include "tools.h"

@@ -52,6 +52,8 @@ enum {
 
 typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
 
+void file_export_init(GList *tracks);
+
 gint determine_file_type(gchar *path);
 gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 			       AddTrackFunc addtrackfunc, gpointer data);
@@ -62,9 +64,6 @@ gboolean add_playlist_by_filename (gchar *plfile, Playlist *plitem,
 				   AddTrackFunc addtrackfunc, gpointer data);
 gboolean write_tags_to_file(Track *s);
 void update_track_from_file (Track *track);
-void do_selected_tracks (void (*do_func)(GList *trackids));
-void do_selected_entry (void (*do_func)(GList *trackids), gint inst);
-void do_selected_playlist (void (*do_func)(GList *trackids));
 void update_trackids (GList *selected_trackids);
 void sync_trackids (GList *selected_trackids);
 void display_non_updated (Track *track, gchar *txt);
@@ -86,6 +85,5 @@ void update_charset_info (Track *track);
 gchar *resolve_path(const gchar *,const gchar * const *);
 void parse_offline_playcount (void);
 
-gboolean calc_gain(gchar *path);
-gboolean read_gain_tags(gchar *path, Track *track);
+gboolean get_gain(Track *track);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-01 23:07:02 JST jcs>
+/* Time-stamp: <2004-03-24 22:27:18 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -43,7 +43,7 @@
 
    You need to supply a function
 
-   Track *file_get_xxx_info (gchar *filename)
+   Track *xxx_get_file_info (gchar *filename)
 
    that returns a new Track structure with as many of the following
    fields filled in (in UTF8):
@@ -84,7 +84,7 @@
    You also have to write a function to write TAGs back to the
    file. That function should be named
 
-   gboolean file_write_xxx_info (gchar *filename, Track *track, T_item tag_id)
+   gboolean xxx_write_file_info (gchar *filename, Track *track, T_item tag_id)
 
    and return TRUE on success or FALSE on error. In that case it
    should log an error message using gtkpod_warning().
@@ -101,10 +101,10 @@
 #ifdef HAVE_LIBMP4V2
 /* Use mp4v2 from the mpeg4ip project to handle mp4 (m4a, m4p) files
    (http://mpeg4ip.sourceforge.net/) */
-/* Copyright note: code for file_get_mp4_info() is based on
+/* Copyright note: code for mp4_get_file_info() is based on
  * mp4info.cpp of the mpeg4ip project */
 
-/* define metadata bug is present (see note at file_write_mp4_info()) */
+/* define metadata bug is present (see note at mp4_write_file_info()) */
 #define MP4V2_HAS_METADATA_BUG TRUE
 
 #include <sys/types.h>
@@ -113,7 +113,7 @@
 #include <string.h>
 #include "mp4.h"
 
-Track *file_get_mp4_info (gchar *mp4FileName)
+Track *mp4_get_file_info (gchar *mp4FileName)
 {
     Track *track = NULL;
     MP4FileHandle mp4File = MP4Read(mp4FileName, 0);
@@ -219,7 +219,7 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 }
 
 
-gboolean file_write_mp4_info (gchar *mp4FileName, Track *track)
+gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 {
     gboolean result = TRUE;
     MP4FileHandle mp4File = MP4Modify(mp4FileName, 0, FALSE);
@@ -341,13 +341,13 @@ gboolean file_write_mp4_info (gchar *mp4FileName, Track *track)
 
 #else
 /* We don't support mp4 without the mp4v2 library */
-Track *file_get_mp4_info (gchar *name)
+Track *mp4_get_file_info (gchar *name)
 {
     gtkpod_warning (_("Import of '%s' failed: m4a/m4p not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), name);
     return NULL;
 }
 
-gboolean file_write_mp4_info (gchar *filename, Track *track)
+gboolean mp4_write_file_info (gchar *filename, Track *track)
 {
     gtkpod_warning (_("m4a/m4p metadata update for '%s' failed: m4a/m4p not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), filename);
     return FALSE;

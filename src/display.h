@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-04 21:21:22 JST jcs>
+/* Time-stamp: <2004-03-24 21:05:53 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,6 +37,9 @@
 #include "info.h"
 #include "track.h"
 #include "playlist.h"
+
+/* pointer to main window */
+extern GtkWidget *gtkpod_window;
 
 /* Categories in each sort tab (page numbers) */
 typedef enum {

@@ -2,6 +2,7 @@
 
 src/callbacks.c
 src/charset.c
+src/clientserver.c
 src/confirmation.c
 src/context_menus.c
 src/date_parser.c
@@ -13,6 +14,7 @@ src/display_songs.c
 src/display_sorttabs.c
 src/file.c
 src/file_export.c
+src/file_itunesdb.c
 src/getopt.c
 src/getopt1.c
 src/info.c
@@ -21,6 +23,10 @@ src/itunesdb.c
 src/main.c
 src/md5.c
 src/misc.c
+src/misc_confirm.c
+src/misc_conversion.c
+src/misc_input.c
+src/misc_playlist.c
 src/mp3file.c
 src/mp4file.c
 src/playlist.c

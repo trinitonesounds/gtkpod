@@ -24,13 +24,14 @@ gtkpod_SOURCES = \
 	display.c display_playlists.c display_sorttabs.c display_songs.c \
 	display.h display_private.h \
         file.c file.h \
-	file_export.c file_export.h \
+	file_export.c file_itunesdb.c \
 	info.c info.h \
 	interface.c interface.h \
 	itunesdb.c itunesdb.h \
 	main.c \
 	md5.c md5.h \
 	misc.c misc.h \
+	misc_confirm.c misc_conversion.c misc_input.c misc_playlist.c \
 	mp3file.c mp3file.h \
 	mp4file.c mp4file.h \
 	playlist.c playlist.h \

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-21 20:39:54 JST jcs>
+/* Time-stamp: <2004-03-24 21:05:54 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,6 +39,8 @@
 #include "misc.h"
 #include "support.h"
 
+
+GtkWidget *gtkpod_window = NULL;
 
 /* used for stopping of display refresh */
 gint stop_add = SORT_TAB_MAX;

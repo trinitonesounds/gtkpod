@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-14 13:38:15 JST jcs>
+/* Time-stamp: <2004-03-24 22:26:08 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,9 +31,8 @@
 
 #include "track.h"
 
-gboolean file_write_mp3_info (gchar *filename, Track *track);
-Track *file_get_mp3_info (gchar *name);
-gboolean mp3_read_gain_tags(gchar *path, Track *track);
-gboolean mp3_calc_gain (gchar *path);
+gboolean mp3_write_file_info (gchar *filename, Track *track);
+Track *mp3_get_file_info (gchar *name);
+gboolean mp3_get_gain (gchar *path, Track *track);
 
 #endif

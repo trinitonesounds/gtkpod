@@ -34,7 +34,7 @@
 #include "track.h"
 #include "playlist.h"
 #include "misc.h"
-#include "file_export.h"
+#include "file.h"
 #include "tools.h"
 
 static guint entry_inst = -1;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-23 21:36:20 JST jcs>
+/* Time-stamp: <2004-03-24 22:12:28 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -48,8 +48,6 @@
    than just calculate a-b, because a and b might be unsigned... */
 #define COMP(a,b) (a<b ? -1:a>b ? +1:0)
 
-/* pointer to main window */
-extern GtkWidget *gtkpod_window;
 /* indicates whether widgets are currently blocked */
 extern gboolean widgets_blocked;
 
@@ -133,4 +131,8 @@ gunichar2 *utf16_strdup (gunichar2 *utf16);
 
 void check_db (void);
 gchar *which(const gchar *exe);
+
+void do_selected_tracks (void (*do_func)(GList *trackids));
+void do_selected_entry (void (*do_func)(GList *trackids), gint inst);
+void do_selected_playlist (void (*do_func)(GList *trackids));
 #endif
