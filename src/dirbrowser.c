@@ -1,7 +1,8 @@
 /*
-|  Changed by Jorg Schuler <jcsjcs at sourceforge.net> to compile
-|  "standalone" with the gtkpod project. 2002/11/24
-|  Added functions for "locale" settability and UTF8 support (2003/01/11)
+|  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to compile
+|  "standalone" with the gtkpod project 2002/11/24
+|  (http://gtkpod.sourceforge.net)
+|  Modified for UTF8 string handling under GKT2 (Jan 2003).
 */
 
 /*  XMMS - Cross-platform multimedia player

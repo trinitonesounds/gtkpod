@@ -1,7 +1,7 @@
 /*
-|  Changed by Jorg Schuler <jcsjcs at sourceforge.net> to compile
-|  "standalone" with the gtkpod project, to return time in ms
-|  as integer, and to accept the filesize as integer.. 2002/11/28
+|  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
+|  compile "standalone" with the gtkpod project, to return time in
+|  ms as integer, and to accept the filesize as integer.. 2002/11/28
 */
 
 

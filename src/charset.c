@@ -1,8 +1,8 @@
 /*
-|  Copyright (C) 2002 Jorg Schuler <jcsjcs at sourceforge.net>
+|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
-|  URL: 
+|  URL:  http://gtkpod.sourceforge.net/
 | 
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by

@@ -1,8 +1,9 @@
 /*
-|  Changed by Jorg Schuler <jcsjcs at sourceforge.net> to compile
-|  "standalone" with the gtkpod project. 2002/11/24
+|  Changed by Jorg Schuler <jcsjcs at users.sourceforge.net> to
+|  compile "standalone" with the gtkpod project. 2002/11/24
 |  Changed by Jorg Schuler to also determine size of file and
 |  length of song in ms. 2002/11/28.
+|  Modified character conversion handling. Jan 2003
 */
 
 
