@@ -1,7 +1,20 @@
 # List of source files containing translatable strings.
 
-src/main.c
-src/interface.c
 src/callbacks.c
+src/charset.c
+src/delete_window.c
+src/dirbrowser.c
+src/display.c
+src/file_export.c
+src/id3_tag.c
+src/interface.c
+src/itunesdb.c
+src/main.c
+src/md5.c
+src/misc.c
+src/mp3file.c
+src/playlist.c
+src/prefs.c
+src/prefs_window.c
+src/song.c
 src/support.c
-src/tree.c
