@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-06 21:45:18 JST jcs>
+/* Time-stamp: <2004-03-01 23:07:02 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -107,6 +107,10 @@
 /* define metadata bug is present (see note at file_write_mp4_info()) */
 #define MP4V2_HAS_METADATA_BUG TRUE
 
+#include <sys/types.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 #include "mp4.h"
 
 Track *file_get_mp4_info (gchar *mp4FileName)
@@ -126,9 +130,10 @@ Track *file_get_mp4_info (gchar *mp4FileName)
 	    gchar *value;
 	    guint16 numvalue, numvalue2;
 	    MP4Duration trackDuration = MP4GetTrackDuration(mp4File, trackId);
-	    double msDuration = UINT64_TO_DOUBLE(
-		MP4ConvertFromTrackDuration(mp4File, trackId,
-					    trackDuration, MP4_MSECS_TIME_SCALE));
+	    double msDuration = 
+		(double)MP4ConvertFromTrackDuration(mp4File, trackId,
+						    trackDuration,
+						    MP4_MSECS_TIME_SCALE);
 	    guint32 avgBitRate = MP4GetTrackBitRate(mp4File, trackId);
 
 	    track = g_malloc0 (sizeof (Track));
