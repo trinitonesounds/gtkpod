@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-08 23:52:21 jcs>
+/* Time-stamp: <2005-03-27 19:54:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -160,7 +160,6 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
     g_return_if_fail (pl);
 
     if (!selected_tracks)	return;
-
     n = g_list_length (selected_tracks); /* nr of tracks to be deleted */
     if (pl->type == ITDB_PL_TYPE_MPL)
     {
@@ -308,18 +307,21 @@ void delete_entry_head (gint inst, gboolean delete_full)
 	gtkpod_statusbar_message (_("No entry selected."));
 	return;
     }
+
     if (entry->members == NULL)
     {  /* no tracks in entry -> just remove entry */
 	if (!entry->master)  st_remove_entry (entry, inst);
 	else   gtkpod_statusbar_message (_("Cannot remove entry 'All'"));
 	return;
     }
+
     for (gl=entry->members; gl; gl=gl->next)
     {
 	Track *track = gl->data;
 	g_return_if_fail (track);
 	selected_tracks = g_list_append (selected_tracks, track);
     }
+
 
     delete_populate_settings (itdb, pl, selected_tracks,
 			      &label, &title,

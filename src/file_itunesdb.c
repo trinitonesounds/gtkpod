@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-13 21:50:30 jcs>
+/* Time-stamp: <2005-03-27 23:29:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -616,11 +616,11 @@ void handle_import (iTunesDB *old_itdb, const gchar *mp,
     {
 	if (old_itdb)
 	{
-	    pm_replace_itdb (old_itdb, new_itdb);
+	    gp_replace_itdb (old_itdb, new_itdb);
 	}
 	else
 	{
-	    pm_add_itdb (new_itdb, pos);
+	    gp_itdb_add (new_itdb, pos);
 	}
     }
 }
@@ -1436,13 +1436,11 @@ void handle_export (void)
 void data_changed (iTunesDB *itdb)
 {
     ExtraiTunesDBData *eitdb;
-
     g_return_if_fail (itdb);
     eitdb = itdb->userdata;
     g_return_if_fail (eitdb);
 
     eitdb->data_changed = TRUE;
-
     space_data_update ();
 }
 

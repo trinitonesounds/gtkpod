@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 23:14:12 jcs>
+/* Time-stamp: <2005-03-23 21:53:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -844,7 +844,7 @@ static gchar *st_get_entryname (Track *track, guint32 inst)
 {
     T_item t_item = ST_to_T (sorttab[inst]->current_category);
 
-    return track_get_item_utf8 (track, t_item);
+    return track_get_item (track, t_item);
 }
 
 
@@ -1766,7 +1766,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	      }
 	      else
 	      {
-		  gchar **itemp_utf8 = track_get_item_pointer_utf8 (track, t_item);
+		  gchar **itemp_utf8 = track_get_item_pointer (track, t_item);
 		  g_return_if_fail (itemp_utf8);
 		  g_free (*itemp_utf8);
 		  *itemp_utf8 = g_strdup (new_text);

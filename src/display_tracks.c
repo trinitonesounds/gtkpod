@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-13 21:54:02 jcs>
+/* Time-stamp: <2005-03-23 21:53:49 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -411,7 +411,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_COMPOSER:
      case TM_COLUMN_FDESC:
      case TM_COLUMN_GROUPING:
-        itemp_utf8 = track_get_item_pointer_utf8 (track, TM_to_T (column));
+        itemp_utf8 = track_get_item_pointer (track, TM_to_T (column));
         if (g_utf8_collate (*itemp_utf8, new_text) != 0)
         {
            g_free (*itemp_utf8);
@@ -602,7 +602,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_COMPOSER:
   case TM_COLUMN_FDESC:
   case TM_COLUMN_GROUPING:
-      item_utf8 = track_get_item_utf8 (track, TM_to_T (column));
+      item_utf8 = track_get_item (track, TM_to_T (column));
       g_object_set (G_OBJECT (renderer),
 		    "text", item_utf8,
 		    "editable", TRUE, NULL);
@@ -1131,11 +1131,11 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_COMPOSER:
   case TM_COLUMN_FDESC:
   case TM_COLUMN_GROUPING:
-      return compare_string (track_get_item_utf8 (track1, TM_to_T (tm_item)),
-			     track_get_item_utf8 (track2, TM_to_T (tm_item)));
+      return compare_string (track_get_item (track1, TM_to_T (tm_item)),
+			     track_get_item (track2, TM_to_T (tm_item)));
   case TM_COLUMN_ARTIST:
-      return compare_string_fuzzy (track_get_item_utf8 (track1, TM_to_T (tm_item)),
-			     track_get_item_utf8 (track2, TM_to_T (tm_item)));
+      return compare_string_fuzzy (track_get_item (track1, TM_to_T (tm_item)),
+			     track_get_item (track2, TM_to_T (tm_item)));
   case TM_COLUMN_TRACK_NR:
       cmp = track1->tracks - track2->tracks;
       if (cmp == 0) cmp = track1->track_nr - track2->track_nr;

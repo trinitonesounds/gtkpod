@@ -157,12 +157,14 @@ sync_dirs_entries(GtkMenuItem *mi, gpointer data)
 static void 
 delete_entries(GtkMenuItem *mi, gpointer data)
 {
+    puts("1");
     if (selected_playlist)
 	delete_playlist_head (FALSE);
     else if(selected_entry)
 	delete_entry_head (entry_inst, FALSE);
     else if(selected_tracks)
 	delete_track_head (FALSE);
+    puts("2");
 }
 
 /**

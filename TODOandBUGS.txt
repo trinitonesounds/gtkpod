@@ -98,6 +98,17 @@ just that gtkpod refuses to put music into any of the other
 directories.
 
 
+On Tue, Mar 08, 2005 at 05:37:29PM +0000, Andy wrote:   
+> Can gtkpod do any mangling of the files as it loads them on to an iPod?
+> In particular, I was wondering if there was a way to inject an album
+> cover into a file's id3 as it goes in so my drive files can remain
+> pristine.
+> 
+> That is, let's say I have cover.jpg in each folder, but not in the files
+> themselves.  Could gtkpod be made to pick that up and put it in the id3
+> field for cover (so the iPod Photo can show it).
+
+
 gtkpod-bugs:
 When my iPod and iTunes DB are in harmony with my
 local directory structure, all is fine when I sync
@@ -164,12 +175,6 @@ and the iPod.
 
 
 
-
--- Larry Marso
-> (ii) In addition to auto-generating a "top 25 rated songs" playlist,
-> could gtkpod create one playlist for each rating level?  This would
-> permit selectively erasing songs by the worst rating level, and
-> moving to backups certain other rating levels.
 
 -- John Pedersen
 > I have an Ipod mini, which stores roughly 4GB.  My music collection
@@ -311,12 +316,15 @@ tamagucci at fastwebnet.it, gerald.miller at morris.com
 > and thanks for letting it be free, =) 
 
 stefano.brozzi
-> > 1. on creating a smart playlist with a rule on title name,
-> >   only exact case matching is considered
-> > 
-> > 2. adding options during creation of a smart playlist thru the button +
-> >   there is no autoresize of the modal window to keep " Ok " and " cancel "
-> >   buttons inside of the windows.
+> 1. on creating a smart playlist with a rule on title name,
+>   only exact case matching is considered
+> 
+> 2. adding options during creation of a smart playlist thru the button +
+>   there is no autoresize of the modal window to keep " Ok " and " cancel "
+>   buttons inside of the windows.
+> 3. another problem is that the field "date added" is overwritten by
+> gtkpod.  At this moment I've something like 30gb of mp3 with a "date
+> added" field at the same date and second.
 
 
 

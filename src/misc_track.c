@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-02-12 03:08:44 jcs>
+|  Time-stamp: <2005-03-23 21:53:48 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -446,7 +446,7 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 
 /* return the address of the UTF8 field @t_item. @t_item is one of
  * (the applicable) T_* defined in track.h */
-gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item)
+gchar **track_get_item_pointer (Track *track, T_item t_item)
 {
     gchar **result = NULL;
     ExtraTrackData *etr;
@@ -495,13 +495,13 @@ gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item)
 
 /* return the UTF8 item @t_item. @t_item is one of
    (the applicable) T_* defined in track.h */
-gchar *track_get_item_utf8 (Track *track, T_item t_item)
+gchar *track_get_item (Track *track, T_item t_item)
 {
     gchar **ptr;
 
     g_return_val_if_fail (track, NULL);
 
-    ptr = track_get_item_pointer_utf8 (track, t_item);
+    ptr = track_get_item_pointer (track, t_item);
 
     if (ptr)     return *ptr;
     else         return NULL;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 02:26:24 jcs>
+/* Time-stamp: <2005-03-23 21:48:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,8 +38,8 @@ void gp_md5_hash_tracks_itdb (iTunesDB *itdb);
 void gp_md5_hash_tracks (void);
 void gp_md5_free_hash (void);
 Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename);
-gchar **track_get_item_pointer_utf8 (Track *track, T_item t_item);
-gchar *track_get_item_utf8 (Track *track, T_item t_item);
+gchar **track_get_item_pointer (Track *track, T_item t_item);
+gchar *track_get_item (Track *track, T_item t_item);
 guint32 *track_get_timestamp_ptr (Track *track, T_item t_item);
 guint32 track_get_timestamp (Track *track, T_item t_item);
 void gp_info_nontransferred_tracks (iTunesDB *itdb,

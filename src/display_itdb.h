@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 02:10:54 jcs>
+/* Time-stamp: <2005-03-27 23:12:49 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -120,7 +120,8 @@ typedef enum
 void init_data (GtkWidget *window);
 
 iTunesDB *gp_itdb_new (void);
-void gp_itdb_add (iTunesDB *itdb);
+void gp_itdb_add (iTunesDB *itdb, gint pos);
+void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb);
 void gp_itdb_add_extra (iTunesDB *itdb);
 void gp_itdb_add_extra_full (iTunesDB *itdb);
 

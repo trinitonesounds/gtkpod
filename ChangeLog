@@ -1,9 +1,32 @@
+gtkpod V0.88.2
+	IMPROVEMENT: Added '%p' (current playlist) identifier when
+	exporting tracks.
+
+gtkpod V0.88.1
+	BUGFIX: Should now work with the shuffle -- forgot to change a
+	version number in the iTunesDB file :-(
+
+gtkpod V0.88
+	NEW FEATURE: Support for iPod Shuffle. Thanks to Steve Wahl.
+
+	BUGFIX: In smartlists star rating better supported. One star is
+	"1" and not "20".
+
 gtkpod V0.87
+	NEW FEATURE: Support for smart playlists.
+
+	NEW FEATURE: Added scripts sync_evolution, sync_evocalendar and
+	sync_notes to synchronise Contacts, Calendar and Tasks from
+	Evolution and to synchronise Notes with anything in the folder
+	~/ipod_notes.
+
         BUGFIX: drag and drop was only implemented for mp3 files, not
         for m4a, m4p, m4b, and wav files (thanks to Chris Micacchi for
         pointing it out and supplying a first fix).
 
 	BUGFIX: Category playlists "for each year" did not work.
+
+	BUGFIX: Invalid charset conversion could hang gtkpod.
 
 	IMPROVEMENT: Support for iTunes' "checked", filedescriptor (kind),
 	and grouping fields.
@@ -17,11 +40,6 @@ gtkpod V0.87
 
 	IMPROVEMENT: The fields "time_modified/played/created" can now
 	be edited from within the track view.
-
-	NEW FEATURES: Added scripts sync_evolution, sync_evocalendar and
-	sync_notes to synchronise Contacts, Calendar and Tasks from
-	Evolution and to synchronise Notes with anything in the folder
-	~/ipod_notes.
 
 	IMPROVEMENT: Creation of playlists for each rating
 	(Unrated, and Rated 1..5).

@@ -306,10 +306,10 @@ void pm_remove_all_playlists (gboolean clear_sort)
 /* Select specified playlist */
 void pm_select_playlist (Playlist *playlist)
 {
-    static gboolean pm_select_playlist_fe (GtkTreeModel *model,
-					   GtkTreePath *path,
-					   GtkTreeIter *iter,
-					   gpointer data)
+    gboolean pm_select_playlist_fe (GtkTreeModel *model,
+				    GtkTreePath *path,
+				    GtkTreeIter *iter,
+				    gpointer data)
 	{
 	    Playlist *playlist;
 
@@ -340,10 +340,10 @@ void pm_select_playlist (Playlist *playlist)
 /* Unselect specified playlist */
 void pm_unselect_playlist (Playlist *playlist)
 {
-    static gboolean pm_unselect_playlist_fe (GtkTreeModel *model,
-					     GtkTreePath *path,
-					     GtkTreeIter *iter,
-					     gpointer data)
+    gboolean pm_unselect_playlist_fe (GtkTreeModel *model,
+				      GtkTreePath *path,
+				      GtkTreeIter *iter,
+				      gpointer data)
 	{
 	    Playlist *playlist;
 
@@ -520,54 +520,6 @@ void pm_add_itdb (iTunesDB *itdb, gint pos)
 	else pm_add_playlist (pl, -1);
     }
 }
-
-
-/* Remove all playlists of @old_itdb and replace with @new_itdb */
-void pm_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
-{
-    Playlist *old_pl, *mpl;
-    gchar *old_pl_name = NULL;
-    GtkTreePath *path;
-    gint pos = -1; /* default: add to the end */
-
-    g_return_if_fail (old_itdb);
-    g_return_if_fail (new_itdb);
-
-    /* remember old selection */
-    old_pl = pm_get_selected_playlist ();
-    if (old_pl)
-    {   /* remember name of formerly selected playlist if it's in the
-	   same itdb */
-	ExtraPlaylistData *epl = old_pl->userdata;
-	g_return_if_fail (epl);
-	if (old_pl->itdb == old_itdb)
-	    old_pl_name = g_strdup (old_pl->name);
-    }
-
-    /* get position of @old_itdb */
-    mpl = itdb_playlist_mpl (old_itdb);
-    g_return_if_fail (mpl);
-    path = pm_get_path (mpl);
-    if (path)
-    {
-	gint *indices = gtk_tree_path_get_indices (path);
-	if (indices)
-	    pos = indices[0];
-	gtk_tree_path_free (path);
-    }
-
-    /* remove @old_itdb (all playlists are removed if the MPL is
-       removed and add @new_itdb at its place */
-    pm_remove_playlist (mpl, FALSE);
-    pm_add_itdb (new_itdb, pos);
-
-    /* reselect old playlist if still available */
-    if (old_pl_name)
-    {
-	Playlist *pl = itdb_playlist_by_name (new_itdb, old_pl_name);
-	if (pl) pm_select_playlist (pl);
-    }
-}    
 
 
 /* Helper function: add all playlists to playlist model */

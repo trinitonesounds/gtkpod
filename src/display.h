@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-19 23:35:21 jcs>
+/* Time-stamp: <2005-03-27 23:09:21 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -204,10 +204,10 @@ GList *display_get_selected_members (gint inst);
 void display_enable_disable_view_sort (gboolean enable);
 
 Playlist* pm_get_selected_playlist(void);
+GtkTreePath *pm_get_path (Playlist *pl);
 void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist, gint position);
 void pm_add_itdb (iTunesDB *itdb, gint pos);
-void pm_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb);
 void pm_select_playlist (Playlist *playlist);
 void pm_unselect_playlist (Playlist *playlist);
 void pm_remove_track (Playlist *playlist, Track *track);

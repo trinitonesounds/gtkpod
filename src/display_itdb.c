@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-13 21:58:53 jcs>
+/* Time-stamp: <2005-03-27 23:23:53 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -258,18 +258,85 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
 }
 
 /* add itdb to itdbs */
-void gp_itdb_add (iTunesDB *itdb)
+void gp_itdb_add (iTunesDB *itdb, gint pos)
 {
     ExtraiTunesDBData *eitdb;
 
     g_return_if_fail (itdbs_head);
     g_return_if_fail (itdb);
     eitdb = itdb->userdata;
-    g_assert (eitdb);
+    g_return_if_fail (eitdb);
 
     eitdb->itdbs_head = itdbs_head;
-    itdbs_head->itdbs = g_list_append (itdbs_head->itdbs, itdb);
+    itdbs_head->itdbs = g_list_insert (itdbs_head->itdbs, itdb, pos);
+    pm_add_itdb (itdb, pos);
 }
+
+/* Also replaces @old_itdb in the itdbs GList and take care that the
+ * displayed itdb gets replaced as well */
+void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
+{
+    ExtraiTunesDBData *new_eitdb;
+    Playlist *old_pl, *mpl;
+    GList *old_link;
+    gchar *old_pl_name = NULL;
+    GtkTreePath *path;
+    gint pos = -1; /* default: add to the end */
+
+    g_return_if_fail (old_itdb);
+    g_return_if_fail (new_itdb);
+    g_return_if_fail (itdbs_head);
+
+    new_eitdb = new_itdb->userdata;
+    g_return_if_fail (new_eitdb);
+
+    old_link = g_list_find (itdbs_head->itdbs, old_itdb);
+    g_return_if_fail (old_link);
+
+    /* remember old selection */
+    old_pl = pm_get_selected_playlist ();
+    if (old_pl)
+    {   /* remember name of formerly selected playlist if it's in the
+	   same itdb */
+	if (old_pl->itdb == old_itdb)
+	    old_pl_name = g_strdup (old_pl->name);
+    }
+
+    /* get position of @old_itdb */
+    mpl = itdb_playlist_mpl (old_itdb);
+    g_return_if_fail (mpl);
+    path = pm_get_path (mpl);
+    if (path)
+    {
+	gint *indices = gtk_tree_path_get_indices (path);
+	if (indices)
+	    pos = indices[0];
+	gtk_tree_path_free (path);
+    }
+
+    /* remove @old_itdb (all playlists are removed if the MPL is
+       removed and add @new_itdb at its place */
+    pm_remove_playlist (mpl, FALSE);
+
+    /* replace old_itdb with new_itdb */
+    new_eitdb->itdbs_head = itdbs_head;
+    old_link->data = new_itdb;
+    /* free old_itdb */
+    itdb_free (old_itdb);
+
+    /* display replacement */
+    pm_add_itdb (new_itdb, pos);
+
+    /* reselect old playlist if still available */
+    if (old_pl_name)
+    {
+	Playlist *pl = itdb_playlist_by_name (new_itdb, old_pl_name);
+	if (pl) pm_select_playlist (pl);
+    }
+}    
+
+
+
 
 /* add playlist to itdb and to display */
 void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos)
@@ -391,6 +458,7 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
 	    g_return_if_fail (pl);
 	    pm_remove_track (pl, track);
 	    itdb_playlist_remove_track (pl, track);
+	    gl=gl->next;
 	}
 	md5_track_remove (track);
 	itdb_track_remove (track);
@@ -460,7 +528,7 @@ void init_data (GtkWidget *window)
 
     itdb = gp_itdb_new ();
     itdb->usertype = GP_ITDB_TYPE_IPOD;
-    gp_itdb_add (itdb);
+    gp_itdb_add (itdb, -1);
     pl = gp_playlist_new (_("gtkpod"), FALSE);
     pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
     gp_playlist_add (itdb, pl, -1);
@@ -469,7 +537,7 @@ void init_data (GtkWidget *window)
 
     itdb = gp_itdb_new ();
     itdb->usertype = GP_ITDB_TYPE_LOCAL;
-    gp_itdb_add (itdb);
+    gp_itdb_add (itdb, -1);
     pl = gp_playlist_new (_("Local"), FALSE);
     pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
     gp_playlist_add (itdb, pl, -1);

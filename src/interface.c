@@ -5407,7 +5407,7 @@ create_export_files_options (void)
   export_files_template = gtk_entry_new ();
   gtk_widget_show (export_files_template);
   gtk_box_pack_start (GTK_BOX (hbox51), export_files_template, TRUE, TRUE, 0);
-  gtk_tooltips_set_tip (tooltips, export_files_template, _("Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, the character '%': %%."), NULL);
+  gtk_tooltips_set_tip (tooltips, export_files_template, _("Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t.mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod will determine which one to use by the filename extension given. Artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, original filename (requires extended information file): %o, current playlist: %p, the character '%': %%."), NULL);
   gtk_entry_set_text (GTK_ENTRY (export_files_template), _(" "));
 
   export_files_special_charset = gtk_check_button_new_with_mnemonic (_("Use selected charset (Preferences/'Adding/Updating/ Syncing')\nfor this filename."));

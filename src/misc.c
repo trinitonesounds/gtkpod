@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-02-05 00:55:10 jcs>
+|  Time-stamp: <2005-03-23 21:53:49 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1090,6 +1090,7 @@ gchar *get_string_from_template (Track *track,
 	if (*p == '%') {
 	    const gchar* tmp = NULL;
 	    gchar dummy[100];
+	    Playlist *pl;
 	    p++;
 	    switch (*p) {
 	    case 'o':
@@ -1098,21 +1099,26 @@ gchar *get_string_from_template (Track *track,
 		    tmp = basename;
 		}
 		break;
+	    case 'p':
+		pl = pm_get_selected_playlist ();
+		if (pl)
+		    tmp = pl->name;
+		break;
 	    case 'a':
-		tmp = track_get_item_utf8 (track, T_ARTIST);
+		tmp = track_get_item (track, T_ARTIST);
 		break;
 	    case 'A':
-		tmp = track_get_item_utf8 (track, T_ALBUM);
+		tmp = track_get_item (track, T_ALBUM);
 		break;
 	    case 't':
-		tmp = track_get_item_utf8 (track, T_TITLE);
+		tmp = track_get_item (track, T_TITLE);
 		break;
 	    case 'c':
-		tmp = track_get_item_utf8 (track, T_COMPOSER);
+		tmp = track_get_item (track, T_COMPOSER);
 		break;
 	    case 'g':
 	    case 'G':
-		tmp = track_get_item_utf8 (track, T_GENRE);
+		tmp = track_get_item (track, T_GENRE);
 		break;
 	    case 'C':
 		if (track->cds == 0)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-02 17:53:34 jcs>
+/* Time-stamp: <2005-03-17 22:27:38 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2044,8 +2044,9 @@ static void mk_mhbd (FExport *fexp)
   if (fexp->itdb->version < 0x09) fexp->itdb->version = 0x09;
   put32lint (cts, fexp->itdb->version);
                         /* Version number: 0x01: iTunes 2, 0x02:
-			 * iTunes 3, 0x09 = iTunes 4.2, 0x0a = *
-			 * iTunes 4.5, 0x0b = iTunes 4.7 */
+			 * iTunes 3, 0x09 = iTunes 4.2, 0x0a =
+			 * iTunes 4.5, 0x0b = iTunes 4.7
+			 * 0x0c: required for shuffle */
   put32lint (cts, 2);   /* 2 children (track list and playlist list) */
   put64lint (cts, fexp->itdb->id);
   put32lint (cts, 2);   /* ? */
