@@ -1494,8 +1494,8 @@ create_prefs_window (void)
   GtkWidget *label157;
   GtkWidget *label24;
   GtkWidget *hbuttonbox5;
-  GtkWidget *prefs_apply;
   GtkWidget *prefs_cancel;
+  GtkWidget *prefs_apply;
   GtkWidget *prefs_ok;
   GtkTooltips *tooltips;
 
@@ -2483,15 +2483,15 @@ create_prefs_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox5), 5);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox5), GTK_BUTTONBOX_SPREAD);
 
-  prefs_apply = gtk_button_new_from_stock ("gtk-apply");
-  gtk_widget_show (prefs_apply);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox5), prefs_apply);
-  GTK_WIDGET_SET_FLAGS (prefs_apply, GTK_CAN_DEFAULT);
-
   prefs_cancel = gtk_button_new_from_stock ("gtk-cancel");
   gtk_widget_show (prefs_cancel);
   gtk_container_add (GTK_CONTAINER (hbuttonbox5), prefs_cancel);
   GTK_WIDGET_SET_FLAGS (prefs_cancel, GTK_CAN_DEFAULT);
+
+  prefs_apply = gtk_button_new_from_stock ("gtk-apply");
+  gtk_widget_show (prefs_apply);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox5), prefs_apply);
+  GTK_WIDGET_SET_FLAGS (prefs_apply, GTK_CAN_DEFAULT);
 
   prefs_ok = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (prefs_ok);
@@ -2663,11 +2663,11 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) concal_autosync, "toggled",
                     G_CALLBACK (on_concal_autosync_toggled),
                     NULL);
-  g_signal_connect ((gpointer) prefs_apply, "clicked",
-                    G_CALLBACK (on_prefs_apply_clicked),
-                    NULL);
   g_signal_connect ((gpointer) prefs_cancel, "clicked",
                     G_CALLBACK (on_prefs_cancel_clicked),
+                    NULL);
+  g_signal_connect ((gpointer) prefs_apply, "clicked",
+                    G_CALLBACK (on_prefs_apply_clicked),
                     NULL);
   g_signal_connect ((gpointer) prefs_ok, "clicked",
                     G_CALLBACK (on_prefs_ok_clicked),
@@ -2873,8 +2873,8 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label157, "label157");
   GLADE_HOOKUP_OBJECT (prefs_window, label24, "label24");
   GLADE_HOOKUP_OBJECT (prefs_window, hbuttonbox5, "hbuttonbox5");
-  GLADE_HOOKUP_OBJECT (prefs_window, prefs_apply, "prefs_apply");
   GLADE_HOOKUP_OBJECT (prefs_window, prefs_cancel, "prefs_cancel");
+  GLADE_HOOKUP_OBJECT (prefs_window, prefs_apply, "prefs_apply");
   GLADE_HOOKUP_OBJECT (prefs_window, prefs_ok, "prefs_ok");
   GLADE_HOOKUP_OBJECT_NO_REF (prefs_window, tooltips, "tooltips");
 
@@ -3597,8 +3597,8 @@ create_sort_window (void)
   GtkWidget *label94;
   GtkWidget *label92;
   GtkWidget *hbuttonbox8;
-  GtkWidget *sort_apply;
   GtkWidget *sort_cancel;
+  GtkWidget *sort_apply;
   GtkWidget *sort_ok;
   GtkTooltips *tooltips;
 
@@ -4050,15 +4050,15 @@ create_sort_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox8), 5);
   gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox8), GTK_BUTTONBOX_SPREAD);
 
-  sort_apply = gtk_button_new_from_stock ("gtk-apply");
-  gtk_widget_show (sort_apply);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox8), sort_apply);
-  GTK_WIDGET_SET_FLAGS (sort_apply, GTK_CAN_DEFAULT);
-
   sort_cancel = gtk_button_new_from_stock ("gtk-cancel");
   gtk_widget_show (sort_cancel);
   gtk_container_add (GTK_CONTAINER (hbuttonbox8), sort_cancel);
   GTK_WIDGET_SET_FLAGS (sort_cancel, GTK_CAN_DEFAULT);
+
+  sort_apply = gtk_button_new_from_stock ("gtk-apply");
+  gtk_widget_show (sort_apply);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox8), sort_apply);
+  GTK_WIDGET_SET_FLAGS (sort_apply, GTK_CAN_DEFAULT);
 
   sort_ok = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (sort_ok);
@@ -4104,11 +4104,11 @@ create_sort_window (void)
   g_signal_connect ((gpointer) cfg_case_sensitive, "toggled",
                     G_CALLBACK (on_sort_case_sensitive_toggled),
                     NULL);
-  g_signal_connect ((gpointer) sort_apply, "clicked",
-                    G_CALLBACK (on_sort_apply_clicked),
-                    NULL);
   g_signal_connect ((gpointer) sort_cancel, "clicked",
                     G_CALLBACK (on_sort_cancel_clicked),
+                    NULL);
+  g_signal_connect ((gpointer) sort_apply, "clicked",
+                    G_CALLBACK (on_sort_apply_clicked),
                     NULL);
   g_signal_connect ((gpointer) sort_ok, "clicked",
                     G_CALLBACK (on_sort_ok_clicked),
@@ -4191,8 +4191,8 @@ create_sort_window (void)
   GLADE_HOOKUP_OBJECT (sort_window, label94, "label94");
   GLADE_HOOKUP_OBJECT (sort_window, label92, "label92");
   GLADE_HOOKUP_OBJECT (sort_window, hbuttonbox8, "hbuttonbox8");
-  GLADE_HOOKUP_OBJECT (sort_window, sort_apply, "sort_apply");
   GLADE_HOOKUP_OBJECT (sort_window, sort_cancel, "sort_cancel");
+  GLADE_HOOKUP_OBJECT (sort_window, sort_apply, "sort_apply");
   GLADE_HOOKUP_OBJECT (sort_window, sort_ok, "sort_ok");
   GLADE_HOOKUP_OBJECT_NO_REF (sort_window, tooltips, "tooltips");
 

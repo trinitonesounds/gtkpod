@@ -1287,6 +1287,8 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
  * The "Mp3 info Tag rev 1 specifications - draft 0"
  * (http://gabriel.mp3-tech.org/mp3infotag.html) by Gabriel Bouvigne describes
  * the actual Tag (except for small changes).
+ * Details on the actual ReplayGain fields have been obtained from
+ * http://www.replaygain.org .
  *
  * Apart from that, some information has been derived from phwip's LameTag
  * (http://www.silisoftware.com/applets/?scriptname=LameTag)
@@ -1298,6 +1300,10 @@ gboolean file_write_mp3_info (gchar *filename, Track *track)
 
 #define TAG_FOOTER	0x10
 #define LAME_OFFSET	0x74
+#define SIDEINFO_MPEG1_MONO	17
+#define SIDEINFO_MPEG1_MULTI	32
+#define SIDEINFO_MPEG2_MONO	9
+#define SIDEINFO_MPEG2_MULTI	17
 
 
 /* Return the track volume. 
@@ -1335,6 +1341,21 @@ static gint lame_vcmp(gchar a[5], gchar b[5]) {
 	if (a[4] == ' ') return 1;
 	if (b[4] == ' ') return -1;
 	return strncmp(&a[4], &b[4], 1);
+}
+
+static gboolean check_originator(char buf[]) {
+	char oc = (buf[0] & 0x1c) >> 2;
+	return ((oc > 0) && (oc <= 3)) ? TRUE : FALSE;
+}
+
+static gboolean check_invalid(char buf[]) {
+	/* This would be a value of -0.
+	 * That value however is illegal by current standards and reserved for
+	 * future use. */
+	
+	return (((buf[0] && 0x02) == 0x02) && 
+			((buf[1] & 0xff) == 0x0)) ?
+		TRUE : FALSE;
 }
 
 gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
@@ -1399,24 +1420,25 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	 * whether the stream is mono or not. */
 	if (fread(buf, 1, 4, file) != 4) goto rg_fail;
 	
-	/* should start with 0xff */
-	if (buf[0] != '\xff') goto rg_fail;
+	/* should start with 0xff 0xf? (synch) */
+	if (((buf[0] & 0xff) != 0xff) 
+			|| ((buf[1] & 0xf0) != 0xf0)) goto rg_fail;
 	
 	/* determine the length of the sideinfo */
 	if (buf[1] & 0x08) {
-		/* MPEG 1 */
-		/* check for mono */
-		sideinfo = ((buf[3] & 0xc0) == 0xc0) ? 17 : 32;
+		sideinfo = ((buf[3] & 0xc0) == 0xc0) ? 
+			SIDEINFO_MPEG1_MONO : SIDEINFO_MPEG1_MULTI;
 	} else {
-		/* MPEG 2 */
-		/* check for mono */
-		sideinfo = ((buf[3] & 0xc0) == 0xc0) ? 9 : 17;
+		sideinfo = ((buf[3] & 0xc0) == 0xc0) ? 
+			SIDEINFO_MPEG2_MONO : SIDEINFO_MPEG2_MULTI;
 	}
 	
 	if (fseek(file, sideinfo, SEEK_CUR) ||
 			(fread(&buf[0], 1, 4, file) != 4))
 		goto rg_fail;
-	if (!(!strncmp(buf, "Xing", 4) || !strncmp(buf, "Info", 4)))
+	
+	/* Is this really a Xing or Info Header? */
+	if (strncmp(buf, "Xing", 4) && strncmp(buf, "Info", 4))
 		goto rg_fail;
 
 	/* Check for LAME Tag */
@@ -1453,31 +1475,39 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 	 */
 	if ((lame_vcmp(version, "3.95 ") < 0)) {
 		gain_adjust = 60;
-		/* fprintf(stderr, "Old lame version. Gain adjusted.\n");*/
+/*		fprintf(stderr, "Old lame version (%c%c%c%c%c). Adjusting gain.\n",
+				version[0], version[1], version[2], version[3], version[4]); */
 	}
 
 	if (fread(&buf[0], 1, 2, file) != 2)
 		goto rg_fail;
 
-	/* check if radio_gain is set */
-	if (buf[0] & 0xfc) {
+	/* check if radio_gain (Name Code) is set and if originator is valid */
+	if (((buf[0] & 0xe0) == 0x20) && check_originator(buf) 
+			&& (!check_invalid(buf))) {
 		track->radio_gain = ((buf[0] & 0x1) << 8) + buf[1];
+		
 		if (buf[0] & 2) track->radio_gain = -track->radio_gain;
+		
 		track->radio_gain += gain_adjust;
 		track->radio_gain_set = TRUE;
 
-		if (prefs_get_mp3_volume_from_radio_gain ())
-		    track->volume = mp3_get_volume_from_radio_gain (track->radio_gain);
+		if (prefs_get_mp3_volume_from_radio_gain ()) 
+		        track->volume = mp3_get_volume_from_radio_gain
+				(track->radio_gain);
 	}
 	
 	if (fread(&buf[0], 1, 2, file) != 2)
 		goto rg_fail;
 
-	/* check if audiophile_gain is set */
-	if (buf[0] & 0xfc) {
+	/* check if audiophile_gain (Name Code) is set and if originator is
+	 * valid */
+	if (((buf[0] & 0xe0) == 0x40) && check_originator(buf)
+			&& (!check_invalid(buf))) {
 		track->audiophile_gain = ((buf[0] & 0x1) << 8) + buf[1];
-		if (buf[0] & 2) track->audiophile_gain =
-			-track->audiophile_gain;
+		
+		if (buf[0] & 2) track->radio_gain = -track->radio_gain;
+		
 		track->audiophile_gain += gain_adjust;
 		track->audiophile_gain_set = TRUE;
 		/* printf("audiophile_gain: %i\n", track->audiophile_gain);*/
