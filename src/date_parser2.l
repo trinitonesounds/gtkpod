@@ -1,4 +1,6 @@
-/*
+/* -*- mode: c -*-
+|  Time-stamp: <2003-06-12 00:00:13 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -86,7 +88,7 @@ DATECHARS [^<>=]+
 #endif
     lower_stamp = 0;
     strp = strchr (yytext, '<');
-    if (strp)  upper_stamp = dp_parse (strp+1, FALSE);
+    if (strp)  upper_stamp = dp_parse (strp+1, FALSE, TRUE);
     else       dp_error = TRUE;
 }
 
@@ -98,7 +100,7 @@ DATECHARS [^<>=]+
     lower_stamp = -1;
     upper_stamp = -1;
     strp = strchr (yytext, '>');
-    if (strp) lower_stamp = dp_parse (strp+1, TRUE);
+    if (strp) lower_stamp = dp_parse (strp+1, TRUE, TRUE);
     else      dp_error = TRUE;
 }
 
@@ -110,8 +112,8 @@ DATECHARS [^<>=]+
     strp = strchr (yytext, '=');
     if (strp)
     {
-	lower_stamp = dp_parse (strp+1, TRUE);
-	upper_stamp = dp_parse (strp+1, FALSE);
+	lower_stamp = dp_parse (strp+1, TRUE, FALSE);
+	upper_stamp = dp_parse (strp+1, FALSE, FALSE);
     }
     else      dp_error = TRUE;
     
@@ -154,9 +156,9 @@ static void dp_ll (gchar *str)
     if (strp)
     {
 	*strp = 0;
-	lower_stamp = dp_parse (str, TRUE);
+	lower_stamp = dp_parse (str, TRUE, TRUE);
 	strp = strchr (strp+1, '<');
-	if (strp)  upper_stamp = dp_parse (strp+1, FALSE);
+	if (strp)  upper_stamp = dp_parse (strp+1, FALSE, TRUE);
 	else       dp_error = TRUE;
     }
     else  dp_error = TRUE;
@@ -174,9 +176,9 @@ static void dp_LL (gchar *str)
     if (strp)
     {
 	*strp = 0;
-	upper_stamp = dp_parse (str, FALSE);
+	upper_stamp = dp_parse (str, FALSE, TRUE);
 	strp = strchr (strp+1, '>');
-	if (strp)  lower_stamp = dp_parse (strp+1, TRUE);
+	if (strp)  lower_stamp = dp_parse (strp+1, TRUE, TRUE);
 	else       dp_error = TRUE;
     }
     else  dp_error = TRUE;
@@ -184,19 +186,36 @@ static void dp_LL (gchar *str)
 
 
 
-void dp2_parse (gchar *dp_str)
+void dp2_parse (TimeInfo *ti)
 {
     /* for the 'end of line ("$") rule to work, we need a "\n" at the
        end of the string... */
-    gchar *str = g_strdup_printf ("%s\n", dp_str);
+    gchar *str = g_strdup_printf ("%s\n", ti->int_str);
     /* set string to parse */
     dp_strp = str;
     /* no error occured (yet) */
     dp_error = FALSE;
     dp_construct_error = FALSE;
+    /* parse the string */
     yylex ();
+    /* free memory */
+    g_free (str);
+    str = NULL;
+    /* print error message */
     if (dp_construct_error)
 	gtkpod_warning ("Date parser: did not recognize construct:\n   '%s'\n",
-			dp_str);
-    g_free (str);
+			ti->int_str);
+    if (dp_error)
+    {   /* error occured -> invalidate TimeInfo */
+	ti->valid = FALSE;
+    }
+    else
+    {   /* no error occured -> set the information accordingly */
+	ti->valid = TRUE;
+	ti->low = time_host_to_mac (lower_stamp);
+	ti->high = time_host_to_mac (upper_stamp);
+    }
+#if DP_DEBUG
+    printf ("valid: %d, low: %u, high: %u\n", ti->valid, ti->low, ti->high);
+#endif
 }

@@ -1,4 +1,5 @@
-/*
+/* Time-stamp: <2003-06-11 23:47:49 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -32,7 +33,8 @@
 
 #include <gtk/gtk.h>
 #include <time.h>
+#include <display.h>
 
-time_t dp_parse (gchar *str, gboolean lower_margin);
-void dp2_parse (gchar *str);
+time_t dp_parse (gchar *dp_str, gboolean lower_margin, gboolean strict);
+void dp2_parse (TimeInfo *ti);
 #endif 

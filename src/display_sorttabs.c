@@ -34,6 +34,7 @@
 #include "context_menus.h"
 #include "interface.h"
 #include "callbacks.h"
+#include "date_parser.h"
 #include <string.h>
 
 /* array with pointers to the sort tabs */
@@ -67,6 +68,67 @@ static void sp_remove_all_members (guint32 inst)
     g_list_free (st->members);
     st->members = NULL;
 }
+
+
+/* Return a pointer to ti_created, ti_modified or ti_played. Returns
+   NULL if either inst or item are out of range */
+static TimeInfo *st_get_timeinfo (guint32 inst, S_item item)
+{
+    if (inst >= SORT_TAB_MAX)
+    {
+	fprintf (stderr, "Programming error: st_get_timeinfo: inst out of range: %d\n", inst);
+    }
+    else
+    {
+	SortTab *st = sorttab[inst];
+	switch (item)
+	{
+	case S_TIME_PLAYED:
+	    return &st->ti_played;
+	case S_TIME_MODIFIED:
+	    return &st->ti_modified;
+	case S_TIME_CREATED:
+	    return &st->ti_created;
+	default:
+	    fprintf (stderr, "Programming error: st_get_timeinfo: item invalid: %d\n", item);
+	}
+    }
+    return NULL;
+}
+
+/* Update the date interval from the string provided by
+   prefs_get_sp_entry() */
+/* @inst: instance
+   @item: S_TIME_CREATED, S_TIME_PLAYED, or S_TIME_MODIFIED,
+   @force_update: usually the update is only performed if the string
+   has changed. TRUE will re-evaluate the string (and print an error
+   message again, if necessary */
+void st_update_date_interval_from_string (guint32 inst,
+					  S_item item,
+					  gboolean force_update)
+{
+    gchar *new_string;
+    SortTab *st;
+    TimeInfo *ti;
+
+    if (inst >= prefs_get_sort_tab_num ()) return;
+
+    st = sorttab[inst];
+
+    ti = st_get_timeinfo (inst, item);
+
+    if (ti == NULL) return;
+
+    new_string = prefs_get_sp_entry (inst, item);
+
+    if (force_update || !ti->int_str ||
+	(strcmp (new_string, ti->int_str) != 0))
+    {   /* Re-evaluate the interval */
+	g_free (ti->int_str);
+	ti->int_str = g_strdup (new_string);
+	dp2_parse (ti);
+    }
+}	
 
 
 /* decide whether or not @song satisfies the conditions specified in

@@ -1,4 +1,6 @@
-/*
+/* -*- mode: c -*-
+| Time-stamp: <2003-06-12 00:03:12 jcs>
+|
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 | 
@@ -35,9 +37,28 @@
 #include "misc.h"
 #include "support.h"
     static gchar *dp_strp = NULL;
+    /* time stamp (result!) */
     static time_t tstamp;
+    /* already parsed time? */
     static gboolean parsed_time;
+    /* are we reading a lower bound (TRUE) or upper bound (FALSE) */
     static gboolean lower;
+    /* should relative dates be read strictly (TRUE: no changing of seconds
+     * to 0 or 59 when minutes are set) or not. It's only set to FALSE
+     * for the "=..." format. */
+    static gboolean rel_strict;
+    typedef enum {
+	DP_SEC,
+	DP_MIN,
+	DP_HOUR,
+	DP_DAY,
+	DP_WEEK,
+	DP_MONTH,
+	DP_YEAR,
+	DP_INF
+    } RelTime;
+    /* Which is the lowest relative time specifier already parsed? */
+    RelTime reltime;
     static void dp_reltime (gchar *str, gint32 sign);
 /* We don't read from a stream but from a string buffer. This macro
    will copy a maximum of @max_size chars from dp_strp to @buf,
@@ -252,29 +273,113 @@ static void dp_reltime (gchar *str, gint32 sign)
 	{
 	case 's':
 	    secs += arg;
+	    reltime = DP_SEC;
 	    break;
 	case 'm':
 	    secs += 60*arg;
+	    if (DP_MIN < reltime)   reltime = DP_MIN;
 	    break;
 	case 'h':
 	    secs += 3600*arg;
+	    if (DP_HOUR < reltime)   reltime = DP_HOUR;
 	    break;
 	case 'd':
 	    secs += 24*3600*arg;
+	    if (DP_DAY < reltime)   reltime = DP_DAY;
 	    break;
 	case 'w':
 	    secs += 7*24*3600*arg;
+	    if (DP_WEEK < reltime)   reltime = DP_WEEK;
 	    break;
 	case 'M':
 	    secs += 30*7*24*3600*arg;
+	    if (DP_MONTH < reltime)   reltime = DP_MONTH;
 	    break;
 	case 'y':
 	    secs += 365*7*24*3600*arg;
+	    if (DP_YEAR < reltime)   reltime = DP_YEAR;
 	    break;
 	}
 	++ptr1;
     }
     tstamp += sign*secs;
+    if (!rel_strict && !parsed_time)
+    {   /* Round this datestamp to make a lower/upper margin */
+	struct tm *lt = localtime (&tstamp);
+	switch (reltime)
+	{
+	case DP_INF:
+	    break;
+	case DP_YEAR:
+	    if (lower) lt->tm_mon = 0;
+	    else       lt->tm_mon = 11;
+	case DP_MONTH:
+	    if (lower) lt->tm_mday = 1;
+	    else
+	    {
+		switch (lt->tm_mon)
+		{
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:
+		    lt->tm_mday = 31;
+		    break;
+		case 2:
+		    if ((lt->tm_year % 4) != 0)   lt->tm_mday = 28;
+		    else
+		    {
+			if ((lt->tm_year % 100) != 0) lt->tm_mday = 29;
+			else
+			{   /* centuries are only leap years if they
+			     * are a multiple of 400 */
+			    if (((lt->tm_year+300) % 400) == 0)
+				 lt->tm_mday = 29;
+			    else lt->tm_mday = 28;
+			}
+		    }
+		    break;
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+		    lt->tm_mday = 30;
+		    break;
+		}
+	    }
+	case DP_WEEK:
+	    if (reltime == DP_WEEK)
+	    {   /* only do this if week was set manually */
+		/* tm_wday gives us the number of days since Sunday (0
+		   to 6). Let's declare Monday to be the start of the
+		   week and Sunday the end. */
+		if (lower)
+		{   /* Round down to Monday */
+		    if (lt->tm_wday == 0)  lt->tm_mday -= 6;
+		    else                   lt->tm_mday -= (lt->tm_wday-1);
+		}
+		else
+		{   /* Round up to Sunday */
+		    if (lt->tm_wday != 0)  lt->tm_mday += (7-lt->tm_wday);
+		}
+	    }
+	case DP_DAY:
+	    if (lower) lt->tm_hour = 0;
+	    else       lt->tm_hour = 23;
+	case DP_HOUR:
+	    if (lower) lt->tm_min = 0;
+	    else       lt->tm_min = 59;
+	case DP_MIN:
+	    if (lower) lt->tm_sec = 0;
+	    else       lt->tm_sec = 59;
+	case DP_SEC:
+	    break;
+	}
+	tstamp = mktime (lt);
+    }
 #if DP_DEBUG
     printf ("secs: %d, tstamp: %d: %s", (int)secs, (int)tstamp, ctime (&tstamp));
 #endif
@@ -292,13 +397,15 @@ static void dp_reltime (gchar *str, gint32 sign)
  * 6 2003, 23:59:59"). Similarily, "8:05" would either compute to
  * "8:05:00" or "8:05:59" depending on whether the lower or upper
  * boundary is to be determined. */
-time_t dp_parse (gchar *dp_str, gboolean lower_margin)
+time_t dp_parse (gchar *dp_str, gboolean lower_margin, gboolean strict)
 {
     dp_strp = dp_str;
     /* set timestamp to current time */
     tstamp = time (NULL);
     parsed_time = FALSE;
     lower = lower_margin;
+    rel_strict = strict;
+    reltime = DP_INF;
     yylex ();
     return tstamp;
 }
