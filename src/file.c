@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:12:15 jcs>
+/* Time-stamp: <2003-10-04 15:03:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -924,7 +924,7 @@ void do_selected_tracks (void (*do_func)(GList *trackids))
 
     /* I'm using ids instead of "Track *" -pointer because it would be
      * possible that a track gets removed during the process */
-    selected_trackids = sm_get_selected_trackids();
+    selected_trackids = tm_get_selected_trackids();
     do_func (selected_trackids);
     g_list_free (selected_trackids);
 }

@@ -7,7 +7,7 @@ TODO:
   (Edward?)
 
 - replacement of libid3 with libid3tag
-    (reading "Country I" with 229 songs without duplicate recognition
+    (reading "Country I" with 229 tracks without duplicate recognition
      JCS statistics:
      libid3tag: 74/63 sec (with display), 44 sec (without display)).
 
@@ -34,9 +34,9 @@ TODO:
 
 - add more progress dialogues
 
-- play song and enqueue song should update playcount and last played
-  song's field. (Should be done by some plugin that tells gtkpod when
-  a song has been played -- using either filename or md5 checksum).
+- play track and enqueue track should update playcount and last played
+  track's field. (Should be done by some plugin that tells gtkpod when
+  a track has been played -- using either filename or md5 checksum).
 
 - add an option to let the user decide if all the gtkpod's
   playlist must be update on export.
@@ -50,14 +50,14 @@ BUGLIST:
 
 - don't write iTunesDB if no tracks are imported.
 
-- when updating songs the free space indicator gets smaller and
-  smaller even if no new songs are added
+- when updating tracks the free space indicator gets smaller and
+  smaller even if no new tracks are added
 
 - during a long operation (menues are blocked) the user can still edit
-  the song data. This could potentially crash gtkpod -> need a way to
+  the track data. This could potentially crash gtkpod -> need a way to
   block editing as well without blocking navigating.
 
-- when copying songs to the iPod (export iTunesDB) and the iPod is
+- when copying tracks to the iPod (export iTunesDB) and the iPod is
   overfilled, libgtk sometimes segfaults (TreeModel changed but did
   not notify TreeView?)
 
@@ -86,4 +86,5 @@ jcs@hatarakibachi:~/source/gtkpod/gtkpod$
 
 
 
-Please add bugs as you find them.
+Please add/report bugs as you find them (jcsjcs at users dot
+sourceforge dot net).

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:14:19 jcs>
+/* Time-stamp: <2003-10-04 18:59:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -430,16 +430,18 @@ parse_ipod_id_from_string(gchar **s, guint32 *id)
 
 
 /* DND: add a list of iPod IDs to Playlist @pl */
-void add_idlist_to_playlist (Playlist *pl, gchar *str)
+void add_idlist_to_playlist (Playlist *pl, gchar *string)
 {
     guint32 id = 0;
-
+    gchar *str = g_strdup (string);
+    
     if (!pl) return;
     while(parse_ipod_id_from_string(&str,&id))
     {
 	add_trackid_to_playlist(pl, id, TRUE);
     }
     data_changed();
+    g_free (str);
 }
 
 /* DND: add a list of files to Playlist @pl.  @pl: playlist to add to
@@ -828,7 +830,7 @@ gtkpod_tracks_statusbar_update(void)
 	gchar *buf;
 	
 	buf = g_strdup_printf (_(" P:%d S:%d/%d"), get_nr_of_playlists
-		() - 1, sm_get_nr_of_tracks (), get_nr_of_tracks ());
+		() - 1, tm_get_nr_of_tracks (), get_nr_of_tracks ());
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1,  buf);
 	g_free (buf);
@@ -1321,7 +1323,7 @@ void delete_track_head (void)
 	gtkpod_statusbar_message (_("No playlist selected."));
 	return;
     }
-    selected_trackids = sm_get_selected_trackids();
+    selected_trackids = tm_get_selected_trackids();
     if (selected_trackids == NULL)
     {  /* no tracks selected */
 	gtkpod_statusbar_message (_("No tracks selected."));
@@ -1950,11 +1952,11 @@ gchar *time_time_to_string (time_t time)
 
 
 /* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
-time_t time_get_time (Track *track, TM_item sm_item)
+time_t time_get_time (Track *track, TM_item tm_item)
 {
     guint32 mactime = 0;
 
-    if (track) switch (sm_item)
+    if (track) switch (tm_item)
     {
     case TM_COLUMN_TIME_PLAYED:
 	mactime = track->time_played;
@@ -1971,18 +1973,18 @@ time_t time_get_time (Track *track, TM_item sm_item)
 
 
 /* hopefully obvious */
-gchar *time_field_to_string (Track *track, TM_item sm_item)
+gchar *time_field_to_string (Track *track, TM_item tm_item)
 {
-    return (time_time_to_string (time_get_time (track, sm_item)));
+    return (time_time_to_string (time_get_time (track, tm_item)));
 }
 
 
 /* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
-void time_set_time (Track *track, time_t time, TM_item sm_item)
+void time_set_time (Track *track, time_t time, TM_item tm_item)
 {
     guint32 mactime = itunesdb_time_host_to_mac (time);
 
-    if (track) switch (sm_item)
+    if (track) switch (tm_item)
     {
     case TM_COLUMN_TIME_PLAYED:
 	track->time_played = mactime;
@@ -2419,7 +2421,7 @@ void generate_category_playlists (T_item cat)
    displayed */
 Playlist *generate_displayed_playlist (void)
 {
-    GList *tracks = sm_get_all_tracks ();
+    GList *tracks = tm_get_all_tracks ();
     Playlist *result = generate_new_playlist (tracks);
     g_list_free (tracks);
     return result;
@@ -2430,7 +2432,7 @@ Playlist *generate_displayed_playlist (void)
    selected */
 Playlist *generate_selected_playlist (void)
 {
-    GList *tracks = sm_get_selected_tracks ();
+    GList *tracks = tm_get_selected_tracks ();
     Playlist *result = generate_new_playlist (tracks);
     g_list_free (tracks);
     return result;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:15:47 jcs>
+/* Time-stamp: <2003-10-04 15:12:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -206,7 +206,7 @@ struct cfg *cfg_new(void)
     mycfg->size_prefs.y = 480;
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	mycfg->sm_col_width[i] = 80;
+	mycfg->tm_col_width[i] = 80;
 	mycfg->col_visible[i] = FALSE;
 	mycfg->col_order[i] = i;
     }
@@ -251,10 +251,10 @@ struct cfg *cfg_new(void)
     mycfg->misc_track_nr = 25;
     mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.st_sort = SORT_NONE;
-    mycfg->sortcfg.sm_sort = SORT_NONE;
-    mycfg->sortcfg.sm_sortcol = TM_COLUMN_TITLE;
+    mycfg->sortcfg.tm_sort = SORT_NONE;
+    mycfg->sortcfg.tm_sortcol = TM_COLUMN_TITLE;
     mycfg->sortcfg.pm_autostore = FALSE;
-    mycfg->sortcfg.sm_autostore = FALSE;
+    mycfg->sortcfg.tm_autostore = FALSE;
     mycfg->sortcfg.case_sensitive = FALSE;
     return(mycfg);
 }
@@ -424,10 +424,11 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_mpl_autoselect((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strncasecmp (line, "sm_col_width", 12) == 0)
+	  else if((g_ascii_strncasecmp (line, "tm_col_width", 12) == 0) ||
+		  (g_ascii_strncasecmp (line, "sm_col_width", 12) == 0))
 	  {
 	      gint i = atoi (line+12);
-	      prefs_set_sm_col_width (i, atoi (arg));
+	      prefs_set_tm_col_width (i, atoi (arg));
 	  }      
 	  else if(g_ascii_strncasecmp (line, "tag_autoset", 11) == 0)
 	  {
@@ -465,9 +466,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_pm_autostore((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "sm_autostore") == 0)
+	  else if((g_ascii_strcasecmp (line, "tm_autostore") == 0) ||
+		  (g_ascii_strcasecmp (line, "sm_autostore") == 0))
 	  {
-	      prefs_set_sm_autostore((gboolean)atoi(arg));
+	      prefs_set_tm_autostore((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "pm_sort") == 0)
 	  {
@@ -477,13 +479,15 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_st_sort(atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "sm_sort_") == 0)
+	  else if((g_ascii_strcasecmp (line, "tm_sort_") == 0) ||
+		  (g_ascii_strcasecmp (line, "sm_sort_") == 0))
 	  {
-	      prefs_set_sm_sort(atoi(arg));
+	      prefs_set_tm_sort(atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "sm_sortcol") == 0)
+	  else if((g_ascii_strcasecmp (line, "tm_sortcol") == 0) ||
+		  (g_ascii_strcasecmp (line, "sm_sortcol") == 0))
 	  {
-	      prefs_set_sm_sortcol(atoi(arg));
+	      prefs_set_tm_sortcol(atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "last_prefs_page") == 0)
 	  {
@@ -545,11 +549,13 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_multi_edit_title((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "not_played_track") == 0)
+	  else if((g_ascii_strcasecmp (line, "not_played_track") == 0) ||
+		  (g_ascii_strcasecmp (line, "not_played_song") == 0))
 	  {
 	      prefs_set_not_played_track((gboolean)atoi(arg));
 	  }
-       	  else if(g_ascii_strcasecmp (line, "misc_track_nr") == 0)
+       	  else if((g_ascii_strcasecmp (line, "misc_track_nr") == 0) ||
+		  (g_ascii_strcasecmp (line, "misc_song_nr") == 0))
        	  {
        	      prefs_set_misc_track_nr(atoi(arg));
        	  }
@@ -793,7 +799,7 @@ write_prefs_to_file_desc(FILE *fp)
      * positions */
     display_update_default_sizes ();
     /* update order of track view columns */
-    sm_store_col_order ();
+    tm_store_col_order ();
 
     fprintf(fp, "version=%s\n", VERSION);
     fprintf(fp, "mountpoint=%s\n", cfg->ipod_mount);
@@ -842,7 +848,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# autoset: set empty tag to filename?\n"));
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	fprintf(fp, "sm_col_width%d=%d\n", i, prefs_get_sm_col_width (i));
+	fprintf(fp, "tm_col_width%d=%d\n", i, prefs_get_tm_col_width (i));
 	fprintf(fp, "col_visible%d=%d\n",  i, prefs_get_col_visible (i));
 	fprintf(fp, "col_order%d=%d\n",  i, prefs_get_col_order (i));
 	if (i < TM_NUM_TAGS_PREFS)
@@ -868,11 +874,11 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
     fprintf(fp, "pm_autostore=%d\n",prefs_get_pm_autostore());
-    fprintf(fp, "sm_autostore=%d\n",prefs_get_sm_autostore());
+    fprintf(fp, "tm_autostore=%d\n",prefs_get_tm_autostore());
     fprintf(fp, "pm_sort=%d\n",prefs_get_pm_sort());
     fprintf(fp, "st_sort=%d\n",prefs_get_st_sort());
-    fprintf(fp, "sm_sort_=%d\n",prefs_get_sm_sort());
-    fprintf(fp, "sm_sortcol=%d\n",prefs_get_sm_sortcol());
+    fprintf(fp, "tm_sort_=%d\n",prefs_get_tm_sort());
+    fprintf(fp, "tm_sortcol=%d\n",prefs_get_tm_sortcol());
     fprintf(fp, "display_tooltips_main=%d\n",
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
@@ -1283,20 +1289,20 @@ void prefs_set_mpl_autoselect (gboolean autoselect)
 
 /* retrieve the width of the track display columns. "col": one of the
    TM_COLUMN_... */
-gint prefs_get_sm_col_width (gint col)
+gint prefs_get_tm_col_width (gint col)
 {
-    if (col < TM_NUM_COLUMNS && (cfg->sm_col_width[col] > 0))
-	return cfg->sm_col_width[col];
+    if (col < TM_NUM_COLUMNS && (cfg->tm_col_width[col] > 0))
+	return cfg->tm_col_width[col];
     return 80;  /* default -- col should be smaller than
 		   TM_NUM_COLUMNS) */
 }
 
 /* set the width of the track display columns. "col": one of the
    TM_COLUMN_..., "width": current width */
-void prefs_set_sm_col_width (gint col, gint width)
+void prefs_set_tm_col_width (gint col, gint width)
 {
     if (col < TM_NUM_COLUMNS && width > 0)
-	cfg->sm_col_width[col] = width;
+	cfg->tm_col_width[col] = width;
 }
 
 
@@ -1446,27 +1452,27 @@ gboolean prefs_get_tag_autoset (gint category)
     return FALSE;
 }
 
-/* Display column sm_item @visible: new value */
-void prefs_set_col_visible (TM_item sm_item, gboolean visible)
+/* Display column tm_item @visible: new value */
+void prefs_set_col_visible (TM_item tm_item, gboolean visible)
 {
-    if (sm_item < TM_NUM_COLUMNS)
-	cfg->col_visible[sm_item] = visible;
+    if (tm_item < TM_NUM_COLUMNS)
+	cfg->col_visible[tm_item] = visible;
 }
 
 
-/* Display column sm_item? */
-gboolean prefs_get_col_visible (TM_item sm_item)
+/* Display column tm_item? */
+gboolean prefs_get_col_visible (TM_item tm_item)
 {
-    if (sm_item < TM_NUM_COLUMNS)
-	return cfg->col_visible[sm_item];
+    if (tm_item < TM_NUM_COLUMNS)
+	return cfg->col_visible[tm_item];
     return FALSE;
 }
 
 /* Display which column at nr @pos? */
-void prefs_set_col_order (gint pos, TM_item sm_item)
+void prefs_set_col_order (gint pos, TM_item tm_item)
 {
     if (pos < TM_NUM_COLUMNS)
-	cfg->col_order[pos] = sm_item;
+	cfg->col_order[pos] = tm_item;
 }
 
 
@@ -1664,14 +1670,14 @@ void prefs_set_pm_autostore (gboolean val)
     cfg->sortcfg.pm_autostore = val;
 }
 
-gboolean prefs_get_sm_autostore (void)
+gboolean prefs_get_tm_autostore (void)
 {
-    return cfg->sortcfg.sm_autostore;
+    return cfg->sortcfg.tm_autostore;
 }
 
-void prefs_set_sm_autostore (gboolean val)
+void prefs_set_tm_autostore (gboolean val)
 {
-    cfg->sortcfg.sm_autostore = val;
+    cfg->sortcfg.tm_autostore = val;
 }
 
 gint prefs_get_pm_sort (void)
@@ -1716,12 +1722,12 @@ void prefs_set_st_sort (gint i)
     cfg->sortcfg.st_sort = i;
 }
 
-gint prefs_get_sm_sort (void)
+gint prefs_get_tm_sort (void)
 {
-    return cfg->sortcfg.sm_sort;
+    return cfg->sortcfg.tm_sort;
 }
 
-void prefs_set_sm_sort (gint i)
+void prefs_set_tm_sort (gint i)
 {
     switch (i)
     {
@@ -1730,22 +1736,22 @@ void prefs_set_sm_sort (gint i)
     case SORT_NONE:
 	break;
     default:  /* illegal -- ignore */
-	gtkpod_warning (_("prefs_set_sm_sort: illegal type '%d' ignored\n"), i);
+	gtkpod_warning (_("prefs_set_tm_sort: illegal type '%d' ignored\n"), i);
 	return;
     }
 
-    cfg->sortcfg.sm_sort = i;
+    cfg->sortcfg.tm_sort = i;
 }
 
-TM_item prefs_get_sm_sortcol (void)
+TM_item prefs_get_tm_sortcol (void)
 {
-    return cfg->sortcfg.sm_sortcol;
+    return cfg->sortcfg.tm_sortcol;
 }
 
-void prefs_set_sm_sortcol (TM_item i)
+void prefs_set_tm_sortcol (TM_item i)
 {
     if (i < TM_NUM_COLUMNS)
-	cfg->sortcfg.sm_sortcol = i;
+	cfg->sortcfg.tm_sortcol = i;
 }
 
 void prefs_set_display_tooltips_main (gboolean state)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:09:51 jcs>
+/* Time-stamp: <2003-10-04 15:48:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -998,7 +998,7 @@ void st_track_changed (Track *track, gboolean removed, guint32 inst)
 {
   if (inst == prefs_get_sort_tab_num ())
     {
-      sm_track_changed (track);
+      tm_track_changed (track);
       return;
     }
   else if (inst < prefs_get_sort_tab_num ())
@@ -1205,7 +1205,7 @@ void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)
 
   if (inst == prefs_get_sort_tab_num ())
   {  /* just add to track model */
-      if ((track != NULL) && display)    sm_add_track_to_track_model (track, NULL);
+      if ((track != NULL) && display)    tm_add_track_to_track_model (track, NULL);
       if (final || (++count % 20 == 0))
 	  gtkpod_tracks_statusbar_update();
   }
@@ -1259,7 +1259,7 @@ void st_remove_track (Track *track, guint32 inst)
 {
     if (inst == prefs_get_sort_tab_num ())
     {
-	sm_remove_track (track);
+	tm_remove_track (track);
     }
     else if (inst < prefs_get_sort_tab_num ())
     {
@@ -1292,7 +1292,7 @@ void st_init (ST_CAT_item new_category, guint32 inst)
 {
   if (inst == prefs_get_sort_tab_num ())
   {
-      sm_remove_all_tracks (TRUE);
+      tm_remove_all_tracks (TRUE);
       gtkpod_tracks_statusbar_update ();
       return;
   }
@@ -2050,7 +2050,8 @@ static void st_create_listview (gint inst)
 	  gtk_tree_view_append_column (treeview, column);
 	  gtk_tree_view_set_headers_visible (treeview, FALSE);
 	  gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
-			       st_drag_types, TGNR (st_drag_types), GDK_ACTION_COPY);
+			       st_drag_types, TGNR (st_drag_types),
+			       GDK_ACTION_COPY|GDK_ACTION_MOVE);
 	  g_signal_connect (G_OBJECT (treeview), "button-press-event",
 			    G_CALLBACK (st_button_press_event), GINT_TO_POINTER(inst));
       }

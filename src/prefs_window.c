@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:16:15 jcs>
+/* Time-stamp: <2003-10-04 15:02:12 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -407,7 +407,7 @@ prefs_window_create(void)
 	    {
 		/* set label */
 		gtk_button_set_label (GTK_BUTTON (w),
-				      gettext (sm_col_strings[i]));
+				      gettext (tm_col_strings[i]));
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					     tmpcfg->col_visible[i]);
 		/* glade makes a "GTK_OBJECT (i)" which segfaults
@@ -479,7 +479,7 @@ prefs_window_set(void)
 	gint i;
 	/* Need this in case user reordered column order (we don't
 	 * catch the reorder signal) */
-	sm_store_col_order ();
+	tm_store_col_order ();
 	prefs_set_id3_write(tmpcfg->id3_write);
 	prefs_set_id3_writeall(tmpcfg->id3_writeall);
 	prefs_set_mount_point(tmpcfg->ipod_mount);
@@ -536,7 +536,7 @@ prefs_window_set(void)
 	prefs_set_write_gaintag(tmpcfg->write_gaintag);
 	prefs_set_special_export_charset(tmpcfg->special_export_charset);
 
-	sm_show_preferred_columns();
+	tm_show_preferred_columns();
     }
 }
 
@@ -1027,20 +1027,20 @@ void sort_window_create (void)
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	w = lookup_widget (sort_window, "sm_none");
+	w = lookup_widget (sort_window, "tm_none");
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 (tmpsortcfg->sm_sort == SORT_NONE));
+					 (tmpsortcfg->tm_sort == SORT_NONE));
 
 	w = lookup_widget (sort_window, "pm_autostore");
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpsortcfg->pm_autostore);
 
-	w = lookup_widget (sort_window, "sm_autostore");
+	w = lookup_widget (sort_window, "tm_autostore");
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpsortcfg->sm_autostore);
+					 tmpsortcfg->tm_autostore);
 	if((w = lookup_widget(sort_window, "cfg_case_sensitive")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -1048,7 +1048,7 @@ void sort_window_create (void)
 	}
 	/* Set Sort-Column-Combo */
 	/* create the list in the order of the columns displayed */
-	sm_store_col_order ();
+	tm_store_col_order ();
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{   /* first the visible columns */
 	    TM_item col = prefs_get_col_order (i);
@@ -1056,7 +1056,7 @@ void sort_window_create (void)
 	    {
 		if (prefs_get_col_visible (col))
 		    collist = g_list_append (collist,
-					     gettext (sm_col_strings[col]));
+					     gettext (tm_col_strings[col]));
 	    }
 	}
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
@@ -1066,7 +1066,7 @@ void sort_window_create (void)
 	    {
 		if (!prefs_get_col_visible (col))
 		    collist = g_list_append (collist,
-					     gettext (sm_col_strings[col]));
+					     gettext (tm_col_strings[col]));
 	    }
 	}
 	w = lookup_widget (sort_window, "sort_combo");
@@ -1074,7 +1074,7 @@ void sort_window_create (void)
 	g_list_free (collist);
 	collist = NULL;
 	/* set standard entry */
-	str = gettext (sm_col_strings[prefs_get_sm_sortcol ()]);
+	str = gettext (tm_col_strings[prefs_get_tm_sortcol ()]);
 	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
 
 	sort_window_show_hide_tooltips ();
@@ -1127,8 +1127,8 @@ static TM_item sort_window_get_sort_col (void)
     str = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w)->entry));
     /* Check which string is selected in the combo */
     if (str)
-	for (i=0; sm_col_strings[i]; ++i)
-	    if (strcmp (gettext (sm_col_strings[i]), str) == 0)  break;
+	for (i=0; tm_col_strings[i]; ++i)
+	    if (strcmp (gettext (tm_col_strings[i]), str) == 0)  break;
     if ((i<0) || (i>= TM_NUM_COLUMNS))
     {
 	fprintf (stderr, 
@@ -1150,26 +1150,26 @@ void sort_window_set (void)
 	prefs_set_pm_sort (tmpsortcfg->pm_sort);
 	prefs_set_pm_autostore (tmpsortcfg->pm_autostore);
 	prefs_set_st_sort (tmpsortcfg->st_sort);
-	prefs_set_sm_sort (tmpsortcfg->sm_sort);
-	prefs_set_sm_autostore (tmpsortcfg->sm_autostore);
+	prefs_set_tm_sort (tmpsortcfg->tm_sort);
+	prefs_set_tm_autostore (tmpsortcfg->tm_autostore);
 	prefs_set_case_sensitive(tmpsortcfg->case_sensitive);
-	tmpsortcfg->sm_sortcol = sort_window_get_sort_col ();
-	prefs_set_sm_sortcol (tmpsortcfg->sm_sortcol);
+	tmpsortcfg->tm_sortcol = sort_window_get_sort_col ();
+	prefs_set_tm_sortcol (tmpsortcfg->tm_sortcol);
 	/* if sort type has changed, initialize display */
 	if (tsc->pm_sort != tmpsortcfg->pm_sort)
 	    pm_sort (tmpsortcfg->pm_sort);
 	if (tsc->st_sort != tmpsortcfg->st_sort)
 	    st_sort (tmpsortcfg->st_sort);
-	if ((tsc->sm_sort != tmpsortcfg->sm_sort) ||
-	    (tsc->sm_sortcol != tmpsortcfg->sm_sortcol))
+	if ((tsc->tm_sort != tmpsortcfg->tm_sort) ||
+	    (tsc->tm_sortcol != tmpsortcfg->tm_sortcol))
 	{
-	    sm_sort (prefs_get_sm_sortcol (), tmpsortcfg->sm_sort);
+	    tm_sort (prefs_get_tm_sortcol (), tmpsortcfg->tm_sort);
 	}
 	/* if auto sort was changed to TRUE, store order */
 	if (!tsc->pm_autostore && tmpsortcfg->pm_autostore)
 	    pm_rows_reordered ();
-	if (!tsc->sm_autostore && tmpsortcfg->sm_autostore)
-	    sm_rows_reordered ();
+	if (!tsc->tm_autostore && tmpsortcfg->tm_autostore)
+	    tm_rows_reordered ();
 	sortcfg_free (tsc);
     }
 }
@@ -1253,9 +1253,9 @@ void sort_window_set_pm_autostore (gboolean val)
     tmpsortcfg->pm_autostore = val;
 }
 
-void sort_window_set_sm_autostore (gboolean val)
+void sort_window_set_tm_autostore (gboolean val)
 {
-    tmpsortcfg->sm_autostore = val;
+    tmpsortcfg->tm_autostore = val;
 }
 
 void sort_window_set_pm_sort (gint val)
@@ -1268,9 +1268,9 @@ void sort_window_set_st_sort (gint val)
     tmpsortcfg->st_sort = val;
 }
 
-void sort_window_set_sm_sort (gint val)
+void sort_window_set_tm_sort (gint val)
 {
-    tmpsortcfg->sm_sort = val;
+    tmpsortcfg->tm_sort = val;
 }
 
 void sort_window_set_case_sensitive (gboolean val)

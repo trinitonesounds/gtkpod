@@ -3304,18 +3304,18 @@ create_sort_window (void)
   GtkWidget *hbox42;
   GtkWidget *pm_autostore;
   GtkWidget *hbox41;
-  GtkWidget *sm_autostore;
+  GtkWidget *tm_autostore;
   GtkWidget *label96;
   GtkWidget *hbox43;
-  GtkWidget *sm_ascend;
-  GSList *sm_ascend_group = NULL;
+  GtkWidget *tm_ascend;
+  GSList *tm_ascend_group = NULL;
   GtkWidget *image2013;
   GtkWidget *vseparator7;
   GtkWidget *hbox44;
-  GtkWidget *sm_descend;
+  GtkWidget *tm_descend;
   GtkWidget *image2014;
   GtkWidget *hbox45;
-  GtkWidget *sm_none;
+  GtkWidget *tm_none;
   GtkWidget *image2015;
   GtkWidget *hbox46;
   GtkWidget *label97;
@@ -3644,10 +3644,10 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  sm_autostore = gtk_check_button_new ();
-  gtk_widget_show (sm_autostore);
-  gtk_box_pack_start (GTK_BOX (hbox41), sm_autostore, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, sm_autostore, _("Please refer to the notice below."), NULL);
+  tm_autostore = gtk_check_button_new ();
+  gtk_widget_show (tm_autostore);
+  gtk_box_pack_start (GTK_BOX (hbox41), tm_autostore, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, tm_autostore, _("Please refer to the notice below."), NULL);
 
   label96 = gtk_label_new (_("n/a"));
   gtk_widget_show (label96);
@@ -3661,15 +3661,15 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  sm_ascend = gtk_radio_button_new (NULL);
-  gtk_widget_show (sm_ascend);
-  gtk_box_pack_start (GTK_BOX (hbox43), sm_ascend, FALSE, FALSE, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sm_ascend), sm_ascend_group);
-  sm_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sm_ascend));
+  tm_ascend = gtk_radio_button_new (NULL);
+  gtk_widget_show (tm_ascend);
+  gtk_box_pack_start (GTK_BOX (hbox43), tm_ascend, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (tm_ascend), tm_ascend_group);
+  tm_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (tm_ascend));
 
   image2013 = gtk_image_new_from_stock ("gtk-sort-ascending", GTK_ICON_SIZE_BUTTON);
   gtk_widget_show (image2013);
-  gtk_container_add (GTK_CONTAINER (sm_ascend), image2013);
+  gtk_container_add (GTK_CONTAINER (tm_ascend), image2013);
 
   vseparator7 = gtk_vseparator_new ();
   gtk_widget_show (vseparator7);
@@ -3683,15 +3683,15 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  sm_descend = gtk_radio_button_new (NULL);
-  gtk_widget_show (sm_descend);
-  gtk_box_pack_start (GTK_BOX (hbox44), sm_descend, FALSE, FALSE, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sm_descend), sm_ascend_group);
-  sm_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sm_descend));
+  tm_descend = gtk_radio_button_new (NULL);
+  gtk_widget_show (tm_descend);
+  gtk_box_pack_start (GTK_BOX (hbox44), tm_descend, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (tm_descend), tm_ascend_group);
+  tm_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (tm_descend));
 
   image2014 = gtk_image_new_from_stock ("gtk-sort-descending", GTK_ICON_SIZE_BUTTON);
   gtk_widget_show (image2014);
-  gtk_container_add (GTK_CONTAINER (sm_descend), image2014);
+  gtk_container_add (GTK_CONTAINER (tm_descend), image2014);
 
   hbox45 = gtk_hbox_new (TRUE, 0);
   gtk_widget_show (hbox45);
@@ -3699,15 +3699,15 @@ create_sort_window (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  sm_none = gtk_radio_button_new (NULL);
-  gtk_widget_show (sm_none);
-  gtk_box_pack_start (GTK_BOX (hbox45), sm_none, FALSE, FALSE, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (sm_none), sm_ascend_group);
-  sm_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (sm_none));
+  tm_none = gtk_radio_button_new (NULL);
+  gtk_widget_show (tm_none);
+  gtk_box_pack_start (GTK_BOX (hbox45), tm_none, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (tm_none), tm_ascend_group);
+  tm_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (tm_none));
 
   image2015 = gtk_image_new_from_stock ("gtk-undo", GTK_ICON_SIZE_BUTTON);
   gtk_widget_show (image2015);
-  gtk_container_add (GTK_CONTAINER (sm_none), image2015);
+  gtk_container_add (GTK_CONTAINER (tm_none), image2015);
 
   hbox46 = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox46);
@@ -3802,17 +3802,17 @@ create_sort_window (void)
   g_signal_connect ((gpointer) pm_autostore, "toggled",
                     G_CALLBACK (on_pm_autostore_toggled),
                     NULL);
-  g_signal_connect ((gpointer) sm_autostore, "toggled",
-                    G_CALLBACK (on_sm_autostore_toggled),
+  g_signal_connect ((gpointer) tm_autostore, "toggled",
+                    G_CALLBACK (on_tm_autostore_toggled),
                     NULL);
-  g_signal_connect ((gpointer) sm_ascend, "toggled",
-                    G_CALLBACK (on_sm_ascend_toggled),
+  g_signal_connect ((gpointer) tm_ascend, "toggled",
+                    G_CALLBACK (on_tm_ascend_toggled),
                     NULL);
-  g_signal_connect ((gpointer) sm_descend, "toggled",
-                    G_CALLBACK (on_sm_descend_toggled),
+  g_signal_connect ((gpointer) tm_descend, "toggled",
+                    G_CALLBACK (on_tm_descend_toggled),
                     NULL);
-  g_signal_connect ((gpointer) sm_none, "toggled",
-                    G_CALLBACK (on_sm_none_toggled),
+  g_signal_connect ((gpointer) tm_none, "toggled",
+                    G_CALLBACK (on_tm_none_toggled),
                     NULL);
   g_signal_connect ((gpointer) cfg_case_sensitive, "toggled",
                     G_CALLBACK (on_sort_case_sensitive_toggled),
@@ -3881,17 +3881,17 @@ create_sort_window (void)
   GLADE_HOOKUP_OBJECT (sort_window, hbox42, "hbox42");
   GLADE_HOOKUP_OBJECT (sort_window, pm_autostore, "pm_autostore");
   GLADE_HOOKUP_OBJECT (sort_window, hbox41, "hbox41");
-  GLADE_HOOKUP_OBJECT (sort_window, sm_autostore, "sm_autostore");
+  GLADE_HOOKUP_OBJECT (sort_window, tm_autostore, "tm_autostore");
   GLADE_HOOKUP_OBJECT (sort_window, label96, "label96");
   GLADE_HOOKUP_OBJECT (sort_window, hbox43, "hbox43");
-  GLADE_HOOKUP_OBJECT (sort_window, sm_ascend, "sm_ascend");
+  GLADE_HOOKUP_OBJECT (sort_window, tm_ascend, "tm_ascend");
   GLADE_HOOKUP_OBJECT (sort_window, image2013, "image2013");
   GLADE_HOOKUP_OBJECT (sort_window, vseparator7, "vseparator7");
   GLADE_HOOKUP_OBJECT (sort_window, hbox44, "hbox44");
-  GLADE_HOOKUP_OBJECT (sort_window, sm_descend, "sm_descend");
+  GLADE_HOOKUP_OBJECT (sort_window, tm_descend, "tm_descend");
   GLADE_HOOKUP_OBJECT (sort_window, image2014, "image2014");
   GLADE_HOOKUP_OBJECT (sort_window, hbox45, "hbox45");
-  GLADE_HOOKUP_OBJECT (sort_window, sm_none, "sm_none");
+  GLADE_HOOKUP_OBJECT (sort_window, tm_none, "tm_none");
   GLADE_HOOKUP_OBJECT (sort_window, image2015, "image2015");
   GLADE_HOOKUP_OBJECT (sort_window, hbox46, "hbox46");
   GLADE_HOOKUP_OBJECT (sort_window, label97, "label97");

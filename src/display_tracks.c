@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:12:16 jcs>
+/* Time-stamp: <2003-10-04 18:59:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -50,18 +50,18 @@
 /* pointer to the treeview for the track display */
 static GtkTreeView *track_treeview = NULL;
 /* array with pointers to the columns used in the track display */
-static GtkTreeViewColumn *sm_columns[TM_NUM_COLUMNS];
+static GtkTreeViewColumn *tm_columns[TM_NUM_COLUMNS];
 
-static GtkTreeViewColumn *sm_add_column (TM_item sm_item, gint position);
+static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint position);
 
 /* Drag and drop definitions */
-static GtkTargetEntry sm_drag_types [] = {
+static GtkTargetEntry tm_drag_types [] = {
     { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
     { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
-static GtkTargetEntry sm_drop_types [] = {
+static GtkTargetEntry tm_drop_types [] = {
     { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
 /*    { DND_GTKPOD_IDLIST_TYPE, 0, DND_GTKPOD_IDLIST },*/
     { "text/plain", 0, DND_TEXT_PLAIN },
@@ -70,7 +70,7 @@ static GtkTargetEntry sm_drop_types [] = {
 
 
 /* Strings associated to the column headers */
-const gchar *sm_col_strings[] = {
+const gchar *tm_col_strings[] = {
     N_("Title"),
     N_("Artist"),
     N_("Album"),
@@ -98,7 +98,7 @@ const gchar *sm_col_strings[] = {
 
 
 /* Append track to the track model (or write into @into_iter if != 0) */
-void sm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter)
+void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter)
 {
     GtkTreeIter iter;
     GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
@@ -136,7 +136,7 @@ void sm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter)
 /* Used by remove_track() to remove track from model by calling
    gtk_tree_model_foreach ().
    Entry is deleted if data == track */
-static gboolean sm_delete_track (GtkTreeModel *model,
+static gboolean tm_delete_track (GtkTreeModel *model,
 				GtkTreePath *path,
 				GtkTreeIter *iter,
 				gpointer data)
@@ -159,18 +159,18 @@ static gboolean sm_delete_track (GtkTreeModel *model,
 
 
 /* Remove track from the display model */
-void sm_remove_track (Track *track)
+void tm_remove_track (Track *track)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
   if (model != NULL)
-    gtk_tree_model_foreach (model, sm_delete_track, track);
+    gtk_tree_model_foreach (model, tm_delete_track, track);
 }
 
 
 /* Remove all tracks from the display model */
 /* ATTENTION: the treeview and model might be changed by calling this
    function */
-void sm_remove_all_tracks (gboolean clear_sort)
+void tm_remove_all_tracks (gboolean clear_sort)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
   GtkTreeIter iter;
@@ -181,22 +181,22 @@ void sm_remove_all_tracks (gboolean clear_sort)
   {
       gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
   }
-  if(clear_sort && (prefs_get_sm_sort () == SORT_NONE) &&
+  if(clear_sort && (prefs_get_tm_sort () == SORT_NONE) &&
      gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order))
   { /* recreate track treeview to unset sorted column */
       if (column >= 0)
       {
-	  sm_store_col_order ();
+	  tm_store_col_order ();
 	  display_update_default_sizes ();
-	  sm_create_treeview ();
+	  tm_create_treeview ();
       }
   }
 }
 
 
-/* find out at which position column @sm_item is displayed */
-/* static gint sm_get_col_position (TM_item sm_item) */
+/* find out at which position column @tm_item is displayed */
+/* static gint tm_get_col_position (TM_item tm_item) */
 /* { */
 /*     gint i; */
 /*     GtkTreeViewColumn *col; */
@@ -206,14 +206,14 @@ void sm_remove_all_tracks (gboolean clear_sort)
 /*     for (i=0; i<TM_NUM_COLUMNS_PREFS; ++i) */
 /*     { */
 /* 	col = gtk_tree_view_get_column (track_treeview, i); */
-/* 	if (col->sort_column_id == sm_item) return i; */
+/* 	if (col->sort_column_id == tm_item) return i; */
 /*     } */
 /*     return -1; */
 /* } */
 
 
 /* store the order of the track view columns */
-void sm_store_col_order (void)
+void tm_store_col_order (void)
 {
     gint i;
     GtkTreeViewColumn *col;
@@ -226,9 +226,9 @@ void sm_store_col_order (void)
 }
 
 
-/* Used by sm_track_changed() to find the track that
+/* Used by tm_track_changed() to find the track that
    changed name. If found, emit a "row changed" signal */
-static gboolean sm_model_track_changed (GtkTreeModel *model,
+static gboolean tm_model_track_changed (GtkTreeModel *model,
 				       GtkTreePath *path,
 				       GtkTreeIter *iter,
 				       gpointer data)
@@ -246,13 +246,13 @@ static gboolean sm_model_track_changed (GtkTreeModel *model,
 
 /* One of the tracks has changed (this happens when the
    iTunesDB is read and some IDs are renumbered */
-void sm_track_changed (Track *track)
+void tm_track_changed (Track *track)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
-  /*  printf("sm_track_changed enter\n");*/
+  /*  printf("tm_track_changed enter\n");*/
   if (model != NULL)
-    gtk_tree_model_foreach (model, sm_model_track_changed, track);
-  /*  printf("sm_track_changed exit\n");*/
+    gtk_tree_model_foreach (model, tm_model_track_changed, track);
+  /*  printf("tm_track_changed exit\n");*/
 }
 
 
@@ -293,7 +293,7 @@ GList *gtk_tree_selection_get_selected_rows (GtkTreeSelection *selection,
    the track list. Eventually the ID3 tags in the corresponding
    files should be changed as well, if activated in the pref settings */
 static void
-sm_cell_edited (GtkCellRendererText *renderer,
+tm_cell_edited (GtkCellRendererText *renderer,
 		const gchar         *path_string,
 		const gchar         *new_text,
 		gpointer             data)
@@ -321,7 +321,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
   selection = gtk_tree_view_get_selection(track_treeview); 
   row_list = gtk_tree_selection_get_selected_rows(selection, &model); 
   
-/*   printf("sm_cell_edited: column: %d  track:%p\n", column, track); */
+/*   printf("tm_cell_edited: column: %d  track:%p\n", column, track); */
 
   sel_rows_num = g_list_length (row_list);
 
@@ -392,7 +392,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
         }
         break;
      default:
-        g_warning ("Programming error: sm_cell_edited: unknown track cell (%d) edited\n", column);
+        g_warning ("Programming error: tm_cell_edited: unknown track cell (%d) edited\n", column);
         break;
      }
 /*      printf ("  changed: %d\n", changed); */
@@ -429,7 +429,7 @@ sm_cell_edited (GtkCellRendererText *renderer,
    into the model.
    This function reads the data for the given cell from the list and
    passes it to the renderer. */
-static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
+static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 			       GtkCellRenderer   *renderer,
 			       GtkTreeModel      *model,
 			       GtkTreeIter       *iter,
@@ -545,18 +545,18 @@ static void sm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   default:
-      g_warning ("Programming error: unknown column in sm_cell_data_func: %d\n", column);
+      g_warning ("Programming error: unknown column in tm_cell_data_func: %d\n", column);
       break;
   }
 }
 
 /**
- * sm_get_nr_of_tracks - get the number of tracks displayed
+ * tm_get_nr_of_tracks - get the number of tracks displayed
  * currently in the track model Returns - the number of tracks displayed
  * currently
  */
 guint
-sm_get_nr_of_tracks(void)
+tm_get_nr_of_tracks(void)
 {
     GtkTreeIter i;
     guint result = 0;
@@ -589,7 +589,7 @@ static gint comp_int (gconstpointer a, gconstpointer b)
  * data_changed() is called when necessary.
  */
 void
-sm_rows_reordered (void)
+tm_rows_reordered (void)
 {
     Playlist *current_pl = pm_get_selected_playlist();
     gboolean changed = FALSE;
@@ -645,7 +645,7 @@ sm_rows_reordered (void)
 		   could not be found in the selected playlist -> stop! */
 		if (position == -1)
 		{
-		    g_warning ("Programming error: sm_rows_reordered_callback: track in track view was not in selected playlist\n");
+		    g_warning ("Programming error: tm_rows_reordered_callback: track in track view was not in selected playlist\n");
 		    break;
 		}
 		old_link = g_list_nth (current_pl->members, position);
@@ -691,7 +691,7 @@ on_trackids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
 /* return a list containing the track IDs of all tracks currently being
    selected */
 GList *
-sm_get_selected_trackids(void)
+tm_get_selected_trackids(void)
 {
     GList *result = NULL;
     GtkTreeSelection *ts = NULL;
@@ -715,7 +715,7 @@ on_all_trackids_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
 /* return a list containing the track IDs of all tracks currently being
    displayed */
 GList *
-sm_get_all_trackids(void)
+tm_get_all_trackids(void)
 {
     GList *result = NULL;
     GtkTreeModel *model;
@@ -746,7 +746,7 @@ on_tracks_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
 /* return a list containing pointers to all tracks currently being
    selected */
 GList *
-sm_get_selected_tracks(void)
+tm_get_selected_tracks(void)
 {
     GList *result = NULL;
     GtkTreeSelection *ts = NULL;
@@ -771,7 +771,7 @@ on_all_tracks_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
 /* return a list containing pointers to all tracks currently being
    displayed */
 GList *
-sm_get_all_tracks(void)
+tm_get_all_tracks(void)
 {
     GList *result = NULL;
     GtkTreeModel *model;
@@ -788,7 +788,7 @@ sm_get_all_tracks(void)
 /* Stop editing. If @cancel is TRUE, the edited value will be
    discarded (I have the feeling that the "discarding" part does not
    work quite the way intended). */
-void sm_stop_editing (gboolean cancel)
+void tm_stop_editing (gboolean cancel)
 {
     GtkTreeViewColumn *col;
 
@@ -812,7 +812,7 @@ void sm_stop_editing (gboolean cancel)
 
 
 /* Function used to compare two cells during sorting (track view) */
-gint sm_data_compare_func (GtkTreeModel *model,
+gint tm_data_compare_func (GtkTreeModel *model,
 			GtkTreeIter *b,
 			GtkTreeIter *a,
 			gpointer user_data)
@@ -820,24 +820,24 @@ gint sm_data_compare_func (GtkTreeModel *model,
   Track *track1;
   Track *track2;
   gint column;
-  TM_item sm_item;
+  TM_item tm_item;
   GtkSortType order;
 
   gtk_tree_model_get (model, a, TM_COLUMN_ALBUM, &track1, -1);
   gtk_tree_model_get (model, b, TM_COLUMN_ALBUM, &track2, -1);
   if(gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					   &column, &order) == FALSE) return 0;
-  sm_item = (TM_item) column;
-  /*printf ("sm_comp: %d\n", sm_item);*/
-  switch (sm_item)
+  tm_item = (TM_item) column;
+  /*printf ("tm_comp: %d\n", tm_item);*/
+  switch (tm_item)
   {
   case TM_COLUMN_TITLE:
   case TM_COLUMN_ARTIST:
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
-      return compare_string (track_get_item_utf8 (track1, TM_to_T (sm_item)),
-			     track_get_item_utf8 (track2, TM_to_T (sm_item)));
+      return compare_string (track_get_item_utf8 (track1, TM_to_T (tm_item)),
+			     track_get_item_utf8 (track2, TM_to_T (tm_item)));
   case TM_COLUMN_TRACK_NR:
       return track1->track_nr - track2->track_nr;
   case TM_COLUMN_IPOD_ID:
@@ -860,12 +860,12 @@ gint sm_data_compare_func (GtkTreeModel *model,
       return track1->rating - track2->rating;
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
-      return COMP (time_get_time (track1, sm_item),
-		   time_get_time (track2, sm_item));
+      return COMP (time_get_time (track1, tm_item),
+		   time_get_time (track2, tm_item));
   case  TM_COLUMN_VOLUME:
       return track1->volume - track2->volume;
   default:
-      g_warning ("Programming error: sm_data_compare_func: no sort method for column %d\n", column);
+      g_warning ("Programming error: tm_data_compare_func: no sort method for column %d\n", column);
       break;
   }
   return 0;
@@ -887,7 +887,7 @@ gint default_comp  (GtkTreeModel *model,
    @inc: negative: reset counter to 0
    @inc: positive or zero : add to counter
    return value: new value of the counter */
-static gint sm_sort_counter (gint inc)
+static gint tm_sort_counter (gint inc)
 {
     static gint cnt = 0;
     if (inc <0) cnt = 0;
@@ -896,7 +896,7 @@ static gint sm_sort_counter (gint inc)
 }
 
 /* redisplay the contents of the track view in it's unsorted order */
-static void sm_unsort (void)
+static void tm_unsort (void)
 {
     GList *gl, *tracks = NULL;
     gint st_num = prefs_get_sort_tab_num ();
@@ -914,42 +914,42 @@ static void sm_unsort (void)
 	TabEntry *te = st_get_selected_entry (st_num - 1);
 	if (te)  tracks = te->members;
     }
-    sm_remove_all_tracks (TRUE);
+    tm_remove_all_tracks (TRUE);
     for (gl=tracks; gl; gl=gl->next)
-	sm_add_track_to_track_model ((Track *)gl->data, NULL);
-    sm_sort_counter (-1);
+	tm_add_track_to_track_model ((Track *)gl->data, NULL);
+    tm_sort_counter (-1);
 }
 
 
 /* when clicking the same table header three times, the sorting is
    aborted */
 static void
-sm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
+tm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 {
     static gint lastcol = -1; /* which column was sorted last time? */
     gint newcol = gtk_tree_view_column_get_sort_column_id (tvc);
 
     if (newcol != lastcol)
     {
-	sm_sort_counter (-1);
+	tm_sort_counter (-1);
 	lastcol = newcol;
     }
     
-    if (sm_sort_counter (1) >= 3)
+    if (tm_sort_counter (1) >= 3)
     { /* after clicking three times, reset sort order! */
-	prefs_set_sm_sort (SORT_NONE);
-	sm_unsort ();  /* also resets sort counter */
+	prefs_set_tm_sort (SORT_NONE);
+	tm_unsort ();  /* also resets sort counter */
     }
     else
     {
-	prefs_set_sm_sort (gtk_tree_view_column_get_sort_order (tvc));
+	prefs_set_tm_sort (gtk_tree_view_column_get_sort_order (tvc));
     }
-    prefs_set_sm_sortcol (newcol);
-    if(prefs_get_sm_autostore ())  sm_rows_reordered ();
+    prefs_set_tm_sortcol (newcol);
+    if(prefs_get_tm_autostore ())  tm_rows_reordered ();
 }
 
 
-void sm_sort (TM_item col, GtkSortType order)
+void tm_sort (TM_item col, GtkSortType order)
 {
     if (track_treeview)
     {
@@ -965,15 +965,15 @@ void sm_sort (TM_item col, GtkSortType order)
 	    GtkSortType order;
 	    if (gtk_tree_sortable_get_sort_column_id
 		(GTK_TREE_SORTABLE (model), &column, &order))
-		sm_unsort ();
+		tm_unsort ();
 	}
     }
 }
 
 
 /* Add one column at position @pos. This code is used over and over
-   by sm_add_column() -- therefore I put it into a separate function */
-static GtkTreeViewColumn *sm_add_text_column (TM_item col_id,
+   by tm_add_column() -- therefore I put it into a separate function */
+static GtkTreeViewColumn *tm_add_text_column (TM_item col_id,
 					      gchar *name,
 					      GtkCellRenderer *renderer,
 					      gboolean editable,
@@ -986,45 +986,45 @@ static GtkTreeViewColumn *sm_add_text_column (TM_item col_id,
     if (editable)
     {
 	g_signal_connect (G_OBJECT (renderer), "edited",
-			  G_CALLBACK (sm_cell_edited), model);
+			  G_CALLBACK (tm_cell_edited), model);
     }
     g_object_set_data (G_OBJECT (renderer), "editable", (gint *)editable);
     g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
     column = gtk_tree_view_column_new_with_attributes (name, renderer, NULL);
     gtk_tree_view_column_set_cell_data_func (column, renderer,
-					     sm_cell_data_func, NULL, NULL);
+					     tm_cell_data_func, NULL, NULL);
     gtk_tree_view_column_set_sort_column_id (column, col_id);
     gtk_tree_view_column_set_resizable (column, TRUE);
     gtk_tree_view_column_set_clickable(column, TRUE);
     gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_view_column_set_fixed_width (column,
-					  prefs_get_sm_col_width (col_id));
+					  prefs_get_tm_col_width (col_id));
     g_signal_connect (G_OBJECT (column), "clicked",
-		      G_CALLBACK (sm_track_column_button_clicked),
+		      G_CALLBACK (tm_track_column_button_clicked),
 		      (gpointer)col_id);
     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), col_id,
-				     sm_data_compare_func, NULL, NULL);
+				     tm_data_compare_func, NULL, NULL);
     gtk_tree_view_column_set_reorderable (column, TRUE);
     gtk_tree_view_insert_column (track_treeview, column, pos);
-    sm_columns[col_id] = column;
+    tm_columns[col_id] = column;
     return column;
 }
 
 
 
 /* Adds the columns to our track_treeview */
-static GtkTreeViewColumn *sm_add_column (TM_item sm_item, gint pos)
+static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 {
   GtkTreeViewColumn *col = NULL;
   gchar *text = NULL;
   gboolean editable = TRUE;          /* default */
   GtkCellRenderer *renderer = NULL;  /* default */
 
-  if ((sm_item) < 0 || (sm_item >= TM_NUM_COLUMNS))  return NULL;
+  if ((tm_item) < 0 || (tm_item >= TM_NUM_COLUMNS))  return NULL;
 
-  text = gettext (sm_col_strings[sm_item]);
+  text = gettext (tm_col_strings[tm_item]);
 
-  switch (sm_item)
+  switch (tm_item)
   {
   case TM_COLUMN_TITLE:
   case TM_COLUMN_ARTIST:
@@ -1073,27 +1073,27 @@ static GtkTreeViewColumn *sm_add_column (TM_item sm_item, gint pos)
   case TM_NUM_COLUMNS:
       break;
   }
-  col = sm_add_text_column (sm_item, text, renderer, editable, pos);
+  col = tm_add_text_column (tm_item, text, renderer, editable, pos);
   if (col && (pos != -1))
       gtk_tree_view_column_set_visible (col,
-					prefs_get_col_visible (sm_item));
+					prefs_get_col_visible (tm_item));
   return col;
 }
 
 
 /* Adds the columns to our track_treeview */
-static void sm_add_columns (void)
+static void tm_add_columns (void)
 {
     gint i;
 
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	sm_add_column (prefs_get_col_order (i), -1);
+	tm_add_column (prefs_get_col_order (i), -1);
     }
-    sm_show_preferred_columns();
+    tm_show_preferred_columns();
 }
 
-static void sm_select_current_position (gint x, gint y)
+static void tm_select_current_position (gint x, gint y)
 {
     if (track_treeview)
     {
@@ -1111,15 +1111,15 @@ static void sm_select_current_position (gint x, gint y)
 }
 
 static gboolean
-sm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
+tm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 {
     if(w && e)
     {
 	switch(e->button)
 	{
 	    case 3:
-		sm_select_current_position (e->x, e->y);
-		sm_context_menu_init ();
+		tm_select_current_position (e->x, e->y);
+		tm_context_menu_init ();
 		return TRUE;
 	    default:
 		break;
@@ -1130,7 +1130,7 @@ sm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 }
 
 /* Create tracks treeview */
-void sm_create_treeview (void)
+void tm_create_treeview (void)
 {
   GtkTreeModel *model = NULL;
   GtkWidget *track_window = lookup_widget (gtkpod_window, "track_window");
@@ -1162,38 +1162,37 @@ void sm_create_treeview (void)
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (track_treeview), TRUE);
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (track_treeview),
 			       GTK_SELECTION_MULTIPLE);
-  sm_add_columns ();
+  tm_add_columns ();
   gtk_drag_source_set (GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK,
-		       sm_drag_types, TGNR (sm_drag_types), GDK_ACTION_COPY);
-/*  gtk_tree_view_enable_model_drag_source (track_treeview, GDK_BUTTON1_MASK,
-					  sm_drag_types, TGNR (sm_drag_types),
-					  GDK_ACTION_COPY);*/
-  gtk_tree_view_enable_model_drag_dest(track_treeview, sm_drop_types,
-				       TGNR (sm_drop_types), GDK_ACTION_COPY);
+		       tm_drag_types, TGNR (tm_drag_types),
+		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
+  gtk_tree_view_enable_model_drag_dest(track_treeview, tm_drop_types,
+				       TGNR (tm_drop_types), 
+				       GDK_ACTION_COPY|GDK_ACTION_MOVE);
   /* need the gtk_drag_dest_set() with no actions ("0") so that the
      data_received callback gets the correct info value. This is most
      likely a bug... */
   gtk_drag_dest_set_target_list (GTK_WIDGET (track_treeview),
-				 gtk_target_list_new (sm_drop_types,
-						      TGNR (sm_drop_types)));
+				 gtk_target_list_new (tm_drop_types,
+						      TGNR (tm_drop_types)));
 
   g_signal_connect ((gpointer) stv, "drag_data_get",
 		    G_CALLBACK (on_track_treeview_drag_data_get),
 		    NULL);
-  g_signal_connect_after ((gpointer) stv, "key_release_event",
-			  G_CALLBACK (on_track_treeview_key_release_event),
-			  NULL);
   g_signal_connect ((gpointer) stv, "drag_data_received",
 		    G_CALLBACK (on_track_treeview_drag_data_received),
 		    NULL);
+  g_signal_connect_after ((gpointer) stv, "key_release_event",
+			  G_CALLBACK (on_track_treeview_key_release_event),
+			  NULL);
   g_signal_connect ((gpointer) track_treeview, "button-press-event",
-		    G_CALLBACK (sm_button_press_event),
+		    G_CALLBACK (tm_button_press_event),
 		    NULL);
 }
 
 
 void
-sm_show_preferred_columns(void)
+tm_show_preferred_columns(void)
 {
     GtkTreeViewColumn *tvc = NULL;
     gboolean visible;
@@ -1211,7 +1210,7 @@ sm_show_preferred_columns(void)
 /* update the cfg structure (preferences) with the current sizes /
    positions (called by display_update_default_sizes():
    column widths of track model */
-void sm_update_default_sizes (void)
+void tm_update_default_sizes (void)
 {
     gint i;
     GtkTreeViewColumn *col;
@@ -1219,10 +1218,10 @@ void sm_update_default_sizes (void)
     /* column widths */
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	col = sm_columns [i];
+	col = tm_columns [i];
 	if (col)
 	{
-	    prefs_set_sm_col_width (i,
+	    prefs_set_tm_col_width (i,
 				    gtk_tree_view_column_get_width (col));
 	}
     }
@@ -1241,7 +1240,7 @@ void sm_update_default_sizes (void)
 /* !!! gtk_list_store_move() at least in 2.2.1 seems to be buggy: if
    moving before the first entry, the moved entry ends up
    last. Therefore I emulate the functions for all gtk versions */
-static void sm_list_store_move (GtkListStore *store,
+static void tm_list_store_move (GtkListStore *store,
 				 GtkTreeIter  *iter,
 				 GtkTreeIter  *position,
 				 gboolean     before)
@@ -1262,33 +1261,33 @@ static void sm_list_store_move (GtkListStore *store,
     gtk_list_store_remove (GTK_LIST_STORE (model), iter);
 
     /* set the content of the new row */
-    sm_add_track_to_track_model (track, &new_iter);
+    tm_add_track_to_track_model (track, &new_iter);
 }
 
-void  sm_list_store_move_before (GtkListStore *store,
+void  tm_list_store_move_before (GtkListStore *store,
 					 GtkTreeIter  *iter,
 					 GtkTreeIter  *position)
 {
-    sm_list_store_move (store, iter, position, TRUE);
+    tm_list_store_move (store, iter, position, TRUE);
 }
 
-void  sm_list_store_move_after (GtkListStore *store,
+void  tm_list_store_move_after (GtkListStore *store,
 					GtkTreeIter  *iter,
 					GtkTreeIter  *position)
 {
-    sm_list_store_move (store, iter, position, FALSE);
+    tm_list_store_move (store, iter, position, FALSE);
 }
 /* #else*/
 #if 0
 /* starting V2.2 convenient gtk functions exist (but see comment above) */
-void  sm_list_store_move_before (GtkListStore *store,
+void  tm_list_store_move_before (GtkListStore *store,
 					 GtkTreeIter  *iter,
 					 GtkTreeIter  *position)
 {
     gtk_list_store_move_before (store, iter, position);
 }
 
-void  sm_list_store_move_after (GtkListStore *store,
+void  tm_list_store_move_after (GtkListStore *store,
 					GtkTreeIter  *iter,
 					GtkTreeIter  *position)
 {
@@ -1298,16 +1297,16 @@ void  sm_list_store_move_after (GtkListStore *store,
 
 
 /* move pathlist for track treeview */
-gboolean sm_move_pathlist (gchar *data,
+gboolean tm_move_pathlist (gchar *data,
 			   GtkTreePath *path,
 			   GtkTreeViewDropPosition pos)
 {
-    return pmsm_move_pathlist (track_treeview, data, path, pos, TRACK_TREEVIEW);
+    return pmtm_move_pathlist (track_treeview, data, path, pos, TRACK_TREEVIEW);
 }
 
 
-/* Callback for adding tracks within sm_add_filelist */
-void sm_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
+/* Callback for adding tracks within tm_add_filelist */
+void tm_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 {
     struct asf_data *asf = (struct asf_data *)data;
     GtkTreeModel *model;
@@ -1335,7 +1334,7 @@ void sm_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 	break;	
     }
     /* set the iter */
-    sm_add_track_to_track_model (track, &new_iter);
+    tm_add_track_to_track_model (track, &new_iter);
 }
 
 
@@ -1344,7 +1343,7 @@ void sm_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
    @path: where to drop
    @pos:  before/after...
 */
-gboolean sm_add_filelist (gchar *data,
+gboolean tm_add_filelist (gchar *data,
 			  GtkTreePath *path,
 			  GtkTreeViewDropPosition pos)
 {
@@ -1393,11 +1392,11 @@ gboolean sm_add_filelist (gchar *data,
     asf = g_malloc (sizeof (struct asf_data));
     asf->to_iter = &to_iter;
     asf->pos = pos;
-    /* add the files to playlist -- but have sm_addtrackfunc() called
+    /* add the files to playlist -- but have tm_addtrackfunc() called
        for every added track */
     add_text_plain_to_playlist (current_playlist, use_data, 0,
-				sm_addtrackfunc, asf);
-    sm_rows_reordered ();
+				tm_addtrackfunc, asf);
+    tm_rows_reordered ();
     g_free (asf);
     C_FREE (buf);
     return TRUE;
@@ -1408,7 +1407,7 @@ gboolean sm_add_filelist (gchar *data,
  * utility function for appending ipod track ids for track view (DND)
  */
 void 
-on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+on_tm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 			 GtkTreeIter *i, gpointer data)
 {
     Track *s;
@@ -1441,7 +1440,7 @@ on_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp,
  * utility function for appending file for track view (DND)
  */
 void 
-on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 			   GtkTreeIter *iter, gpointer data)
 {
     Track *s;

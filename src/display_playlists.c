@@ -868,7 +868,7 @@ gboolean pm_move_pathlist (gchar *data,
 			   GtkTreePath *path,
 			   GtkTreeViewDropPosition pos)
 {
-    return pmsm_move_pathlist (playlist_treeview, data, path, pos, PLAYLIST_TREEVIEW);
+    return pmtm_move_pathlist (playlist_treeview, data, path, pos, PLAYLIST_TREEVIEW);
 }
 
 /*

@@ -293,20 +293,20 @@ create_context_menu(CM_type type)
 }
 
 /**
- * sm_context_menu_init - initialize the right click menu for tracks
+ * tm_context_menu_init - initialize the right click menu for tracks
  */
 void
-sm_context_menu_init(void)
+tm_context_menu_init(void)
 {
     if (widgets_blocked) return;
 
-    sm_stop_editing (TRUE);
+    tm_stop_editing (TRUE);
 
     selected_entry = NULL; 
     selected_playlist = NULL;
     entry_inst = -1;
     if (selected_tracks)  g_list_free (selected_tracks);
-    selected_tracks = sm_get_selected_tracks();
+    selected_tracks = tm_get_selected_tracks();
     if(selected_tracks)
     {
 	create_context_menu (CM_TM);

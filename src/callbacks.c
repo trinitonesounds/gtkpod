@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:18:18 jcs>
+/* Time-stamp: <2003-10-04 19:12:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,6 +35,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "callbacks.h"
 #include "support.h"
@@ -160,7 +161,7 @@ on_sorttab_switch_page                 (GtkNotebook     *notebook,
 
 void
 on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
-                                        GdkDragContext  *drag_context,
+                                        GdkDragContext  *context,
                                         GtkSelectionData *data,
                                         guint            info,
                                         guint            time,
@@ -193,10 +194,67 @@ on_playlist_treeview_drag_data_get     (GtkWidget       *widget,
 }
 
 
+/* NOTE: if we do it the "right way" by having this function called as
+   a 'drag_end' callback, we run into the following problem: This is
+   also called with context->action==GDK_ACTION_MOVE if tracks are
+   reordered using drag and drop or when dropping into the master
+   playlist, irrespective of the arguments of
+   'gtk_drop_finish()'. Therefore this function is called directly by
+   on_playlist_treeview_drag_data_received() */
+static void
+tracks_moved_or_copied     (GdkDragContext  *context, gchar *trackids)
+{
+     printf ("ttracks_moved_or_copied ts/dc/action: %p/%d\n", context, context?context->action:0); 
+    if(trackids && context)
+    {
+	gint n=0;
+	gchar *buf = NULL;
+	gchar *ptr = trackids;
+	Playlist *pl = pm_get_selected_playlist ();
+
+	/* count the number of ids */
+	while ((ptr=strchr (ptr, '\n')))
+	{
+	    ++n;
+	    ++ptr;
+	}
+
+	if (pl && (pl->type == PL_TYPE_NORM) &&
+	    (context->action == GDK_ACTION_MOVE))
+	{
+	    guint32 id = 0;
+	    gchar *str = g_strdup (trackids);
+
+	    while(parse_ipod_id_from_string(&str,&id))
+	    {
+		remove_trackid_from_playlist (pl, id);
+	    }
+	    g_free (str);
+
+	    buf = g_strdup_printf (
+		ngettext ("Moved one track",
+			  "Moved %d tracks", n), n);
+	}
+	else if (pl)
+	{
+	    buf = g_strdup_printf (
+		ngettext ("Copied one track",
+			  "Copied %d tracks", n), n);
+	}
+
+	if (buf)
+	{
+	    gtkpod_statusbar_message (buf);
+	    g_free (buf);
+	}
+    }
+}
+
+
 void
 on_playlist_treeview_drag_data_received
                                         (GtkWidget       *widget,
-                                        GdkDragContext  *drag_context,
+                                        GdkDragContext  *context,
                                         gint             x,
                                         gint             y,
                                         GtkSelectionData *data,
@@ -211,13 +269,21 @@ on_playlist_treeview_drag_data_received
     gint position = -1;
     Playlist *pl = NULL;
 
+
+/*     printf ("treeview received drag data/length/format: %p/%d/%d\n", data, data?data->length:0, data?data->format:0); */
+/*     printf ("treeview received drag context/actions/suggested action: %p/%d/%d\n", context, context?context->actions:0, context?context->suggested_action:0); */
     /* sometimes we get empty dnd data, ignore */
-    if((!data) || (data->length < 0)) return;
+    if((!context) || (!data) || (data->length < 0)) return;
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
     if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
 					 x, y, &path, &pos))
     {
+	gboolean del_src;
+
+	if (context && (context->suggested_action & GDK_ACTION_MOVE))
+	     del_src = TRUE;
+	else del_src = FALSE;
 	model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
 	if(gtk_tree_model_get_iter(model, &i, path))
 	{
@@ -240,19 +306,28 @@ on_playlist_treeview_drag_data_received
 		    if (pl->type == PL_TYPE_NORM)
 		    {
 			add_idlist_to_playlist (pl, data->data);
-			gtk_drag_finish (drag_context, TRUE, FALSE, time);
+			/* this is a hack -- see comment at
+			   tracks_moved_or_copied */
+			tracks_moved_or_copied (context, data->data);
+			gtk_drag_finish (context, TRUE, del_src, time);
 		    }
-		    else gtk_drag_finish (drag_context, FALSE, FALSE, time);
+		    else
+		    {
+			gtk_drag_finish (context, FALSE, FALSE, time);
+		    }
 		}
 		else
 		{ /* drop between playlists */
 		    Playlist *plitem = NULL;
 		    plitem = add_new_playlist (_("New Playlist"), position);
 		    add_idlist_to_playlist (plitem, data->data);
-		    gtk_drag_finish (drag_context, TRUE, FALSE, time);
+		    /* this is a hack -- see comment at
+		       tracks_moved_or_copied */
+		    tracks_moved_or_copied (context, data->data);
+		    gtk_drag_finish (context, TRUE, del_src, time);
 		}
 	    }
-	    else gtk_drag_finish (drag_context, FALSE, FALSE, time);
+	    else gtk_drag_finish (context, FALSE, FALSE, time);
 	    break;
 	case DND_TEXT_PLAIN:
 	    if(pl)
@@ -261,38 +336,39 @@ on_playlist_treeview_drag_data_received
 		    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
 		{ /* drop into existing playlist */
 		    add_text_plain_to_playlist (pl, data->data, 0, NULL, NULL);
-		    gtk_drag_finish (drag_context, TRUE, FALSE, time);
+		    gtk_drag_finish (context, TRUE, FALSE, time);
 		}
 		else
 		{ /* drop between playlists */
 		    add_text_plain_to_playlist (NULL, data->data, position,
 						NULL, NULL);
-		    gtk_drag_finish (drag_context, TRUE, FALSE, time);
+		    gtk_drag_finish (context, TRUE, del_src, time);
 		}
 	    }
-	    else gtk_drag_finish (drag_context, FALSE, FALSE, time);
+	    else gtk_drag_finish (context, FALSE, FALSE, time);
 	    break;
 	case DND_GTKPOD_PM_PATHLIST:
 	    /* dont allow moves before MPL */
 	    position = atoi (gtk_tree_path_to_string (path));
 	    if (position == 0)  pos = GTK_TREE_VIEW_DROP_AFTER;
 	    pm_move_pathlist (data->data, path, pos);
-	    gtk_drag_finish (drag_context, TRUE, FALSE, time);
+	    gtk_drag_finish (context, TRUE, FALSE, time);
 	    break;
 	default:
 	    puts ("not yet implemented");
-	    gtk_drag_finish (drag_context, FALSE, FALSE, time);
+	    gtk_drag_finish (context, FALSE, FALSE, time);
 	    break;
 	}
 	gtk_tree_path_free(path);
     }
+    else   gtk_drag_finish (context, FALSE, FALSE, time);
 }
 
 
 
 void
-on_track_treeview_drag_data_get         (GtkWidget       *widget,
-                                        GdkDragContext  *drag_context,
+on_track_treeview_drag_data_get        (GtkWidget       *widget,
+                                        GdkDragContext  *context,
                                         GtkSelectionData *data,
                                         guint            info,
                                         guint            time,
@@ -301,14 +377,14 @@ on_track_treeview_drag_data_get         (GtkWidget       *widget,
     GtkTreeSelection *ts = NULL;
     GString *reply = g_string_sized_new (2000);
 
-    /* printf("sm drag get info: %d\n", info);*/
+/*     printf("tm drag get info: %d\n", info); */
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
     {
 	switch (info)
 	{
 	case DND_GTKPOD_IDLIST:
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_sm_dnd_get_id_foreach, reply);
+				    on_tm_dnd_get_id_foreach, reply);
 	    break;
 	case DND_GTKPOD_TM_PATHLIST:
 	    gtk_tree_selection_selected_foreach(ts,
@@ -316,7 +392,7 @@ on_track_treeview_drag_data_get         (GtkWidget       *widget,
 	    break;
 	case DND_TEXT_PLAIN:
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_sm_dnd_get_file_foreach, reply);
+				    on_tm_dnd_get_file_foreach, reply);
 	    break;
 	}
     }
@@ -532,7 +608,7 @@ on_import_button_clicked               (GtkButton       *button,
 
 void
 on_track_treeview_drag_data_received    (GtkWidget       *widget,
-                                        GdkDragContext  *drag_context,
+                                        GdkDragContext  *context,
                                         gint             x,
                                         gint             y,
                                         GtkSelectionData *data,
@@ -548,7 +624,8 @@ on_track_treeview_drag_data_received    (GtkWidget       *widget,
     /* printf ("sm drop received info: %d\n", info); */
 
     /* sometimes we get empty dnd data, ignore */
-    if(widgets_blocked || (!data) || (data->length < 0)) return;
+    if(widgets_blocked || (!context) ||
+       (!data) || (data->length < 0)) return;
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
 
@@ -559,14 +636,14 @@ on_track_treeview_drag_data_received    (GtkWidget       *widget,
 	switch (info)
 	{
 	case DND_GTKPOD_TM_PATHLIST:
-	    result = sm_move_pathlist (data->data, path, pos);
+	    result = tm_move_pathlist (data->data, path, pos);
 	    break;
 	case DND_GTKPOD_IDLIST:
-	    /* is disabled in sm_drop_types anyhow (display.c) */
+	    /* is disabled in tm_drop_types anyhow (display.c) */
 	    printf ("idlist not supported yet\n");
 	    break;
 	case DND_TEXT_PLAIN:
-	    result = sm_add_filelist (data->data, path, pos);
+	    result = tm_add_filelist (data->data, path, pos);
 	    break;
 	default:
 	    g_warning ("Programming error: on track_treeview_drag_data_received: unknown drop: not supported: %d\n", info);
@@ -646,7 +723,7 @@ on_cfg_id3_writeall_toggled            (GtkToggleButton *togglebutton,
 
 void
 on_st_treeview_drag_data_get           (GtkWidget       *widget,
-                                        GdkDragContext  *drag_context,
+                                        GdkDragContext  *context,
                                         GtkSelectionData *data,
                                         guint            info,
                                         guint            time,
@@ -809,7 +886,7 @@ void
 on_save_track_order1_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    sm_rows_reordered ();
+    tm_rows_reordered ();
     pm_rows_reordered ();
 }
 
@@ -989,7 +1066,7 @@ void
 on_export_tracks_activate     (GtkMenuItem     *menuitem,
 			      gpointer         user_data)
 {
-    GList *tracks = sm_get_selected_tracks ();
+    GList *tracks = tm_get_selected_tracks ();
 
     if (tracks)
     {
@@ -1042,7 +1119,7 @@ void
 on_play_tracks_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    GList *tracks = sm_get_selected_tracks ();
+    GList *tracks = tm_get_selected_tracks ();
     if (tracks)
     {
 	play_tracks (tracks);
@@ -1093,7 +1170,7 @@ void
 on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    GList *tracks = sm_get_selected_tracks ();
+    GList *tracks = tm_get_selected_tracks ();
     if (tracks)
     {
 	enqueue_tracks (tracks);
@@ -1561,36 +1638,36 @@ on_pm_autostore_toggled                (GtkToggleButton *togglebutton,
 
 
 void
-on_sm_ascend_toggled                   (GtkToggleButton *togglebutton,
+on_tm_ascend_toggled                   (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     if (gtk_toggle_button_get_active(togglebutton))
-	sort_window_set_sm_sort (SORT_ASCENDING);
+	sort_window_set_tm_sort (SORT_ASCENDING);
 }
 
 
 void
-on_sm_descend_toggled                  (GtkToggleButton *togglebutton,
+on_tm_descend_toggled                  (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     if (gtk_toggle_button_get_active(togglebutton))
-	sort_window_set_sm_sort (SORT_DESCENDING);
+	sort_window_set_tm_sort (SORT_DESCENDING);
 }
 
 
 void
-on_sm_none_toggled                     (GtkToggleButton *togglebutton,
+on_tm_none_toggled                     (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     if (gtk_toggle_button_get_active(togglebutton))
-	sort_window_set_sm_sort (SORT_NONE);
+	sort_window_set_tm_sort (SORT_NONE);
 }
 
 void
-on_sm_autostore_toggled                (GtkToggleButton *togglebutton,
+on_tm_autostore_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    sort_window_set_sm_autostore (gtk_toggle_button_get_active(togglebutton));
+    sort_window_set_tm_autostore (gtk_toggle_button_get_active(togglebutton));
 }
 
 
@@ -1680,7 +1757,7 @@ void
 on_normalize_selected_tracks_activate   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-   GList *tracks = sm_get_selected_tracks ();
+   GList *tracks = tm_get_selected_tracks ();
    nm_tracks_list (tracks);
    g_list_free (tracks);
 }
@@ -1690,7 +1767,7 @@ void
 on_normalize_displayed_tracks_activate  (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    GList *tracks = sm_get_all_tracks ();
+    GList *tracks = tm_get_all_tracks ();
     nm_tracks_list (tracks);
     g_list_free (tracks);
 }

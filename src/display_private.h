@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:09:51 jcs>
+/* Time-stamp: <2003-10-04 15:04:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -54,10 +54,10 @@ extern gint stop_add;
 void pm_create_treeview (void);
 void pm_set_selected_playlist(Playlist *pl);
 void pm_remove_all_playlists (gboolean clear_sort);
-void sm_create_treeview (void);
-void sm_track_changed (Track *track);
-void sm_remove_track (Track *track);
-void sm_remove_all_tracks (gboolean clear_sort);
+void tm_create_treeview (void);
+void tm_track_changed (Track *track);
+void tm_remove_track (Track *track);
+void tm_remove_all_tracks (gboolean clear_sort);
 void st_remove_all_entries_from_model (guint32 inst);
 void st_track_changed (Track *track, gboolean removed, guint32 inst);
 void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst);
@@ -70,7 +70,7 @@ void st_cleanup (void);
 void st_set_default_sizes (void);
 void st_update_default_sizes (void);
 void st_adopt_order_in_playlist (void);
-void sm_update_default_sizes (void);
+void tm_update_default_sizes (void);
 void st_show_hide_tooltips (void);
 GList *st_get_selected_members (guint32 inst);
 
@@ -78,7 +78,7 @@ GList *st_get_selected_members (guint32 inst);
 /* Drag and drop definitions */
 #define TGNR(a) (guint)(sizeof(a)/sizeof(GtkTargetEntry))
 #define DND_GTKPOD_IDLIST_TYPE "application/gtkpod-idlist"
-#define DND_GTKPOD_TM_PATHLIST_TYPE "application/gtkpod-sm_pathlist"
+#define DND_GTKPOD_TM_PATHLIST_TYPE "application/gtkpod-tm_pathlist"
 #define DND_GTKPOD_PM_PATHLIST_TYPE "application/gtkpod-pm_pathlist"
 struct asf_data
 {
@@ -93,10 +93,10 @@ typedef enum
     SORTTAB_TREEVIEW
 } TreeViewType;
 
-void  sm_list_store_move_before (GtkListStore *store,
+void  tm_list_store_move_before (GtkListStore *store,
 				 GtkTreeIter  *iter,
 				 GtkTreeIter  *position);
-void  sm_list_store_move_after (GtkListStore *store,
+void  tm_list_store_move_after (GtkListStore *store,
 				GtkTreeIter  *iter,
 				GtkTreeIter  *position);
 void  pm_list_store_move_before (GtkListStore *store,
@@ -105,7 +105,7 @@ void  pm_list_store_move_before (GtkListStore *store,
 void  pm_list_store_move_after (GtkListStore *store,
 				GtkTreeIter  *iter,
 				GtkTreeIter  *position);
-gboolean pmsm_move_pathlist (GtkTreeView *treeview,
+gboolean pmtm_move_pathlist (GtkTreeView *treeview,
 			     gchar *data,
 			     GtkTreePath *path,
 			     GtkTreeViewDropPosition pos,

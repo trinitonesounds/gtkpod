@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-03 00:15:06 jcs>
+/* Time-stamp: <2003-10-04 18:15:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -45,7 +45,7 @@ gint stop_add = SORT_TAB_MAX;
 
 /* Move the paths listed in @data before or after (according to @pos)
    @path. Used for DND */
-gboolean pmsm_move_pathlist (GtkTreeView *treeview,
+gboolean pmtm_move_pathlist (GtkTreeView *treeview,
 			     gchar *data,
 			     GtkTreePath *path,
 			     GtkTreeViewDropPosition pos,
@@ -88,38 +88,38 @@ gboolean pmsm_move_pathlist (GtkTreeView *treeview,
     case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
     case GTK_TREE_VIEW_DROP_INTO_OR_AFTER:
     case GTK_TREE_VIEW_DROP_AFTER:
-	while (iterlist)
+	for (link = g_list_last (iterlist); link; link = link->prev)
 	{
-	    link = g_list_last (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
 	    if (tvt == TRACK_TREEVIEW)
-		sm_list_store_move_after (GTK_LIST_STORE (model),
+		tm_list_store_move_after (GTK_LIST_STORE (model),
 					  from_iter, &to_iter);
 	    if (tvt == PLAYLIST_TREEVIEW)
 		pm_list_store_move_after (GTK_LIST_STORE (model),
 					  from_iter, &to_iter);
-	    iterlist = g_list_delete_link (iterlist, link);
-	    g_free (from_iter);
 	}
 	break;
     case GTK_TREE_VIEW_DROP_BEFORE:
-	while (iterlist)
+	for (link = g_list_first (iterlist); link; link = link->next)
 	{
-	    link = g_list_first (iterlist);
 	    from_iter = (GtkTreeIter *)link->data;
 
 	    if (tvt == TRACK_TREEVIEW)
-		sm_list_store_move_before (GTK_LIST_STORE (model),
+		tm_list_store_move_before (GTK_LIST_STORE (model),
 					   from_iter, &to_iter);
 	    if (tvt == PLAYLIST_TREEVIEW)
 		pm_list_store_move_before (GTK_LIST_STORE (model),
 					   from_iter, &to_iter);
-	    iterlist = g_list_delete_link (iterlist, link);
-	    g_free (from_iter);
 	}
 	break;
     }
-    if (tvt == TRACK_TREEVIEW)      sm_rows_reordered ();
+
+    /* free iterlist */
+    for (link = iterlist; link; link = link->next)
+	g_free (link->data);
+    g_list_free (iterlist);
+
+    if (tvt == TRACK_TREEVIEW)     tm_rows_reordered ();
     if (tvt == PLAYLIST_TREEVIEW)  pm_rows_reordered ();
     return TRUE;
 }
@@ -130,7 +130,7 @@ void display_create (GtkWidget *gtkpod)
 {
     GtkWidget *stop_button;
 
-    sm_create_treeview ();
+    tm_create_treeview ();
     st_create_tabs ();
     pm_create_treeview ();
     /* set certain sizes, positions, widths... to default values */
@@ -145,7 +145,7 @@ void display_create (GtkWidget *gtkpod)
     /* change standard g_print () handler */
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
     /* initialize sorting */
-    sm_sort (prefs_get_sm_sortcol (), prefs_get_sm_sort ());
+    tm_sort (prefs_get_tm_sortcol (), prefs_get_tm_sort ());
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and
@@ -276,7 +276,7 @@ void display_update_default_sizes (void)
 	gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
 	prefs_set_size_gtkpod (x, y);
     }
-    sm_update_default_sizes ();
+    tm_update_default_sizes ();
     st_update_default_sizes ();
 }
 
@@ -309,7 +309,7 @@ GList *display_get_selection (guint32 inst)
     if ((inst >= 0) && (inst < prefs_get_sort_tab_num ()))
 	return g_list_copy (st_get_selected_members (inst));
     if (inst >= prefs_get_sort_tab_num ())
-	return sm_get_selected_tracks ();
+	return tm_get_selected_tracks ();
     return NULL;
 }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-27 01:39:01 jcs>
+/* Time-stamp: <2003-10-04 18:59:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -623,18 +623,18 @@ on_sort_window_delete_event            (GtkWidget       *widget,
                                         gpointer         user_data);
 
 void
-on_sm_ascend_toggled                   (GtkToggleButton *togglebutton,
+on_tm_ascend_toggled                   (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_sm_descend_toggled                  (GtkToggleButton *togglebutton,
+on_tm_descend_toggled                  (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_sm_none_toggled                     (GtkToggleButton *togglebutton,
+on_tm_none_toggled                     (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 void
-on_sm_autostore_toggled                (GtkToggleButton *togglebutton,
+on_tm_autostore_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 

@@ -16,6 +16,11 @@ gtkpod V0.53-CVS
 	NEW FEATURE: menu items and context menu items to create new
 	playlist containing displayed songs or selected songs.
 
+	IMPROVEMENT: Try to press the shift key when dropping songs into a
+	playlist to move rather than copy tracks from one playlist to
+	another. Keep in mind that songs cannot be moved from or to the
+	master play list.
+
 	IMPROVEMENT: better alphabetize interface. Alphabetize settings
 	will be remembered, different settings for playlists, sort tabs,
 	and tracks possible. Also, clicking the column header three times

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 00:04:31 jcs>
+/* Time-stamp: <2003-10-04 15:02:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -129,9 +129,9 @@ typedef enum  {
  * etc.). Since the labels to the buttons are set in prefs_window.c
  * when creating the window, you only need to make sure the displayed
  * order is what you want */
-/* Note: the sm_col_strings[] in display_tracks.c are ordered according
+/* Note: the tm_col_strings[] in display_tracks.c are ordered according
    to this enum list. Therefore, if you change the order, you must
-   also adjust the order of the sm_col_strings[] array. */
+   also adjust the order of the tm_col_strings[] array. */
 typedef enum  {
   TM_COLUMN_TITLE = 0,
   TM_COLUMN_ARTIST,
@@ -156,7 +156,7 @@ typedef enum  {
 /* number of entries with "autoset empty tag to filename " feature */
 #define TM_NUM_TAGS_PREFS (5)
 
-extern const gchar *sm_col_strings[];
+extern const gchar *tm_col_strings[];
 
 /* "Column numbers" in playlist model */
 enum  {
@@ -209,11 +209,11 @@ void cal_open_calendar (gint inst, T_item item);
 void sp_go (guint32 inst);
 void sp_conditions_changed (guint32 inst);
 
-void on_sm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+void on_tm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 			      GtkTreeIter *i, gpointer data);
 void on_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 			     GtkTreeIter *i, gpointer data);
-void on_sm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+void on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				GtkTreeIter *i, gpointer data);
 void on_pm_dnd_get_id_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 			      GtkTreeIter *i, gpointer data);
@@ -224,23 +224,23 @@ void on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 TimeInfo *st_update_date_interval_from_string (guint32 inst,
 					       T_item item,
 					       gboolean force_update);
-void sm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter);
-guint sm_get_nr_of_tracks(void);
-void sm_rows_reordered(void);
+void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter);
+guint tm_get_nr_of_tracks(void);
+void tm_rows_reordered(void);
 void pm_rows_reordered(void);
-gboolean sm_move_pathlist (gchar *data, GtkTreePath *path,
+gboolean tm_move_pathlist (gchar *data, GtkTreePath *path,
 			   GtkTreeViewDropPosition pos);
-gboolean sm_add_filelist (gchar *data, GtkTreePath *path,
+gboolean tm_add_filelist (gchar *data, GtkTreePath *path,
 			  GtkTreeViewDropPosition pos);
-void sm_stop_editing (gboolean cancel);
-void sm_show_preferred_columns(void);
-void sm_store_col_order (void);
+void tm_stop_editing (gboolean cancel);
+void tm_show_preferred_columns(void);
+void tm_store_col_order (void);
 
-void sm_sort (TM_item col, GtkSortType order);
-GList* sm_get_selected_trackids(void);
-GList* sm_get_selected_tracks(void);
-GList* sm_get_all_trackids(void);
-GList* sm_get_all_tracks(void);
+void tm_sort (TM_item col, GtkSortType order);
+GList* tm_get_selected_trackids(void);
+GList* tm_get_selected_tracks(void);
+GList* tm_get_all_trackids(void);
+GList* tm_get_all_tracks(void);
 
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
