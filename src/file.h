@@ -63,10 +63,11 @@ typedef enum
 typedef void (*AddTrackFunc)(Playlist *plitem, Track *track, gpointer data);
 
 gint determine_file_type(gchar *path);
-gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
-			       AddTrackFunc addtrackfunc, gpointer data);
-gboolean add_directory_by_name (gchar *name, Playlist *plitem,
-				gboolean descend,
+gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
+				Playlist *plitem, gboolean descend,
+				AddTrackFunc addtrackfunc, gpointer data);
+gboolean add_directory_by_name (iTunesDB *itdb, gchar *name,
+				Playlist *plitem, gboolean descend,
 				AddTrackFunc addtrackfunc, gpointer data);
 gboolean add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 				   Playlist *plitem,

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-22 13:45:06 jcs>
+/* Time-stamp: <2005-01-08 13:47:22 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -35,6 +35,7 @@
 #include "charset.h"
 #include "interface.h"
 #include "support.h"
+#include "info.h"
 #include <limits.h>
 #include <stdio.h>
 #include <errno.h>

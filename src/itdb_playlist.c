@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 00:42:43 jcs>
+/* Time-stamp: <2005-01-08 12:24:29 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -562,16 +562,14 @@ static GList *randomize_glist (GList *list)
     return list;
 }
 
-/* used by glist_duplicate */
-static void gl_dup_fe (gpointer data, GList **dup)
-{
-    *dup = g_list_append (*dup, data);
-}
-
 
 /* Duplicate a GList */
 static GList *glist_duplicate (GList *list)
 {
+    static void gl_dup_fe (gpointer data, GList **dup)
+	{
+	    *dup = g_list_append (*dup, data);
+	}
     GList *dup = NULL;
     g_list_foreach (list, (GFunc)gl_dup_fe, &dup);
     return dup;
@@ -939,13 +937,17 @@ Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl)
     Itdb_Playlist *pl_dup;
     GList *gl;
 
-    g_return_val_if_fail (pl);
+    g_return_val_if_fail (pl, NULL);
+    g_return_val_if_fail (pl->userdata && !pl->userdata_duplicate, NULL);
 
     pl_dup = g_new0 (Itdb_Playlist, 1);
     memcpy (pl_dup, pl, sizeof (Itdb_Playlist));
     /* clear list heads */
     pl_dup->members = NULL;
     pl_dup->splrules.rules = NULL;
+
+    /* clear itdb pointer */
+    pl_dup->itdb = NULL;
 
     /* Now copy strings */
     pl_dup->name = g_strdup (pl->name);
@@ -960,6 +962,11 @@ Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl)
 	pl_dup->splrules.rules = g_list_append (
 	    pl_dup->splrules.rules, splr_dup);
     }
+
+    /* Copy userdata */
+    if (pl->userdata)
+	pl_dup->userdata = pl->userdata_duplicate (pl->userdata);
+
     return pl_dup;
 }
 
@@ -1049,6 +1056,8 @@ void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos)
 {
     g_return_if_fail (itdb);
     g_return_if_fail (pl);
+    g_return_if_fail (pl->userdata && !pl->userdata_duplicate);
+    g_return_if_fail (pl->userdata && !pl->userdata_destroy);
 
     pl->itdb = itdb;
 
@@ -1061,8 +1070,11 @@ void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos)
 /* move playlist @pl to position @pos */
 void itdb_playlist_move (Itdb_Playlist *pl, guint32 pos)
 {
+    Itdb_iTunesDB *itdb;
+
     g_return_if_fail (pl);
-    g_return_if_fail (pl->itdb);
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
 
     itdb->playlists = g_list_remove (itdb->playlists, pl);
     itdb->playlists = g_list_insert (itdb->playlists, pl, pos);

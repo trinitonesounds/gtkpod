@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-06 00:23:52 jcs>
+/* Time-stamp: <2005-01-08 12:24:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -46,6 +46,8 @@ void itdb_track_add (Itdb_iTunesDB *itdb, Itdb_Track *track, gint32 pos)
 {
     g_return_if_fail (itdb);
     g_return_if_fail (track);
+    g_return_if_fail (track->userdata && !track->userdata_duplicate);
+    g_return_if_fail (track->userdata && !track->userdata_destroy);
 
     track->itdb = itdb;
 
@@ -97,6 +99,41 @@ void itdb_track_unlink (Itdb_Track *track)
 
     itdb->tracks = g_list_remove (itdb->tracks, track);
 }
+
+/* Duplicate an existing playlist */
+Itdb_Track *itdb_track_duplicate (Itdb_Track *tr)
+{
+    Itdb_Track *tr_dup;
+
+    g_return_val_if_fail (tr, NULL);
+    g_return_val_if_fail (tr->userdata && !tr->userdata_duplicate, NULL);
+
+    tr_dup = g_new0 (Itdb_Track, 1);
+    memcpy (tr_dup, tr, sizeof (Itdb_Track));
+
+    /* clear itdb pointer */
+    tr_dup->itdb = NULL;
+
+    /* copy strings */
+    tr_dup->album = g_strdup (tr->album);
+    tr_dup->artist = g_strdup (tr->artist);
+    tr_dup->title = g_strdup (tr->title);
+    tr_dup->genre = g_strdup (tr->genre);
+    tr_dup->comment = g_strdup (tr->comment);
+    tr_dup->composer = g_strdup (tr->composer);
+    tr_dup->fdesc = g_strdup (tr->fdesc);
+    tr_dup->grouping = g_strdup (tr->grouping);
+    tr_dup->pc_path_locale = g_strdup (tr->pc_path_locale);
+    tr_dup->ipod_path = g_strdup (tr->ipod_path);
+
+    /* Copy userdata */
+    if (tr->userdata)
+	tr_dup->userdata = tr->userdata_duplicate (tr->userdata);
+
+    return tr_dup;
+}
+
+
 
 /* Returns the track with the ID @id or NULL if the ID cannot be
  * found. */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 00:31:42 jcs>
+/* Time-stamp: <2005-01-08 13:37:54 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -55,12 +55,35 @@ void gp_itdb_extra_destroy (ExtraiTunesDBData *eitdb)
     }
 }
 
+ExtraiTunesDBData *gp_itdb_extra_duplicate (ExtraiTunesDBData *eitdb)
+{
+    ExtraiTunesDBData *eitdb_dup = NULL;
+    if (eitdb)
+    {
+	/* FIXME: not yet implemented */
+	g_return_val_if_reached (NULL);
+    }
+    return eitdb_dup;
+}
+
 void gp_playlist_extra_destroy (ExtraPlaylistData *epl)
 {
     if (epl)
     {
 	g_free (epl);
     }
+}
+
+ExtraPlaylistData *gp_playlist_extra_duplicate (ExtraPlaylistData *epl)
+{
+    ExtraPlaylistData *epl_dup = NULL
+
+    if (epl)
+    {
+	epl_dup = g_new (ExtraPlaylistData, 1);
+	memcpy (epl_dup, epl, sizeof (ExtraPlaylistData));
+    }
+    return epl_dup;
 }
 
 void gp_track_extra_destroy (ExtraTrackData *etrack)
@@ -76,6 +99,24 @@ void gp_track_extra_destroy (ExtraTrackData *etrack)
     }
 }
 
+ExtraTrackData *gp_track_extra_duplicate (ExtraTrackData *etr)
+{
+    ExtraPlaylistData *etr_dup = NULL
+
+    if (etr)
+    {
+	etr_dup = g_new (ExtraTrackData, 1);
+	memcpy (etr_dup, etr, sizeof (ExtraTrackData));
+	/* copy strings */
+	etr_dup->year_str = g_strdup (etr->year_str);
+	etr_dup->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
+	etr_dup->hostname = g_strdup (etr->hostname);
+	etr_dup->md5_hash = g_strdup (etr->md5_hash);
+	etr_dup->charset = g_strdup (etr->charset);
+    }
+    return etr_dup;
+}
+
 iTunesDB *gp_itdb_new (void)
 {
     iTunesDB *itdb = itdb_new ();
@@ -83,6 +124,8 @@ iTunesDB *gp_itdb_new (void)
     itdb->userdata = eitdb;
     itdb->userdata_destroy =
 	(ItdbUserDataDestroyFunc)gp_itdb_extra_destroy;
+    itdb->userdata_duplicate =
+	(ItdbUserDataDuplicateFunc)gp_itdb_extra_duplicate;
     eitdb->data_changed = FALSE;
     return itdb;
 }
@@ -93,6 +136,8 @@ Playlist *gp_playlist_new (const gchar *title, gboolean spl)
     pl->userdata = g_new0 (ExtraPlaylistData, 1);
     pl->userdata_destroy =
 	(ItdbUserDataDestroyFunc)gp_playlist_extra_destroy;
+    pl->userdata_duplicate =
+	(ItdbUserDataDuplicateFunc)gp_playlist_extra_duplicate;
     return pl;
 }
 
@@ -102,7 +147,36 @@ Track *gp_track_new (void)
     track->userdata = g_new0 (ExtraTrackData, 1);
     track->userdata_destroy =
 	(ItdbUserDataDestroyFunc)gp_track_extra_destroy;
+    track->userdata_duplicate =
+	(ItdbUserDataDuplicateFunc)gp_track_extra_duplicate;
     return track;
+}
+
+/* Append track to the track list of @itdb */
+/* Note: the track will also have to be added to the playlists */
+/* Returns: pointer to the added track -- may be different in the case
+   of duplicates. In that case a pointer to the already existing track
+   is returned. */
+Track *gp_track_add (iTunesDB *itdb, Track *track)
+{
+    Track *oldtrack, *result=NULL;
+
+    if((oldtrack = md5_track_exists_insert (itdb, track)))
+    {
+	gp_duplicate_remove (oldtrack, track);
+	itdb_track_free (track);
+	result = oldtrack;
+    }
+    else
+    {
+	/* Make sure all strings are initialised -- that way we don't
+	   have to worry about it when we are handling the strings */
+	/* exception: md5_hash, hostname, charset: these may be NULL. */
+	track_validate_entries (track);
+	itdb_track_add (itdb, track);
+	result = track;
+    }
+    return result;
 }
 
 /* add itdb to itdbs */

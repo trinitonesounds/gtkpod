@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 02:06:28 jcs>
+/* Time-stamp: <2005-01-08 13:46:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -195,7 +195,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
 	    if ((*bufp == ';') || (*bufp == '#')) break;
 	    /* assume the rest of the line is a filename */
 	    filename = concat_dir_if_relative (dirname, bufp);
-	    if (add_track_by_filename (filename, plitem,
+	    if (add_track_by_filename (itdb, filename, plitem,
 				      prefs_get_add_recursively (),
 				      addtrackfunc, data))
 		++tracks;
@@ -205,7 +205,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
 	    if (*bufp == '#') break;
 	    /* assume the rest of the line is a filename */
 	    filename = concat_dir_if_relative (dirname, bufp);
-	    if (add_track_by_filename (filename, plitem,
+	    if (add_track_by_filename (itdb, filename, plitem,
 				      prefs_get_add_recursively (),
 				      addtrackfunc, data))
 		++tracks;
@@ -227,7 +227,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
 		    ++bufp;
 		    filename = concat_dir_if_relative (dirname, bufp);
 		    if (add_track_by_filename
-			(filename, plitem,
+			(itdb, filename, plitem,
 			 prefs_get_add_recursively (),
 			 addtrackfunc, data))
 			++tracks;
@@ -257,7 +257,6 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
 
 /* Add all files in directory and subdirectories.
    If @name is a regular file, just add that.
-   If @name == NULL, just return
    If @plitem != NULL, add tracks also to Playlist @plitem
    @descend: TRUE: add recursively
              FALSE: don't enter subdirectories */
@@ -267,13 +266,15 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
 /* @addtrackfunc: if != NULL this will be called instead of
    "add_track_to_playlist () -- used for dropping tracks at a specific
    position in the track view */
-gboolean add_directory_by_name (gchar *name, Playlist *plitem,
-				gboolean descend,
+gboolean add_directory_by_name (iTunesDB *itdb, gchar *name,
+				Playlist *plitem, gboolean descend,
 				AddTrackFunc addtrackfunc, gpointer data)
 {
   gboolean result = TRUE;
 
-  if (name == NULL) return TRUE;
+  g_return_val_if_fail (itdb, FALSE);
+  g_return_val_if_fail (name, FALSE);
+
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
       GDir *dir = g_dir_open (name, 0, NULL);
@@ -287,9 +288,9 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
 		  gchar *nextfull = g_build_filename (name, next, NULL);
 		  if (descend ||
 		      !g_file_test (nextfull, G_FILE_TEST_IS_DIR))
-		      result &= add_directory_by_name (nextfull, plitem,
-						       descend,
-						       addtrackfunc, data);
+		      result &= add_directory_by_name (
+			  itdb, nextfull, plitem,
+			  descend, addtrackfunc, data);
 		  g_free (nextfull);
 	      }
 	  } while (next != NULL);
@@ -299,7 +300,8 @@ gboolean add_directory_by_name (gchar *name, Playlist *plitem,
   }
   else
   {
-      result = add_track_by_filename (name, plitem, descend, addtrackfunc, data);
+      result = add_track_by_filename (itdb, name, plitem,
+				      descend, addtrackfunc, data);
   }
   return result;
 }
@@ -1006,14 +1008,17 @@ static void sync_dir (gpointer key,
     gchar *dir = (gchar *)key;
     gchar *charset = (gchar *)value;
     Playlist *pl = (Playlist *)user_data;
+    iTunesDB *itdb;
     gchar *buf = NULL;
     gchar *dir_utf8 = NULL;
     /* old charset */
     gchar *prefs_charset = NULL;
 
-    /* Assertions */
-    if (!dir) return;
-    if (!g_file_test (dir, G_FILE_TEST_IS_DIR))  return;
+    g_return_if_fail (dir);
+    if (!g_file_test (dir, G_FILE_TEST_IS_DIR))  g_return_if_reached();
+    g_return_if_fail (pl);
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
 
     /* change default charset if prefs don't say otherwise */
     if (!prefs_get_update_charset () && charset)
@@ -1038,7 +1043,7 @@ static void sync_dir (gpointer key,
     g_free (dir_utf8);
 
     /* sync dir */
-    add_directory_by_name (dir, pl, FALSE, sync_addtrackfunc, NULL);
+    add_directory_by_name (itdb, dir, pl, FALSE, sync_addtrackfunc, NULL);
 
     /* reset charset */
     if (!prefs_get_update_charset () && charset)
@@ -1642,7 +1647,8 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 /* @addtrackfunc: if != NULL this will be called instead of
    "add_track_to_playlist () -- used for dropping tracks at a specific
    position in the track view */
-gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
+gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
+				Playlist *plitem, gboolean descend,
 			       AddTrackFunc addtrackfunc, gpointer data)
 {
   static gint count = 0; /* do a gtkpod_tracks_statusbar_update() every
@@ -1650,19 +1656,25 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
   Track *oldtrack;
   gchar str[PATH_MAX];
   gchar *basename;
+  Playlist *mpl;
 
-  if (name == NULL) return TRUE;
+  g_return_val_if_fail (name, FALSE);
+  g_return_val_if_fail (itdb, FALSE);
+  mpl = itdb_playlist_mpl (itdb);
+  g_return_val_if_fail (mpl, FALSE);
+
+  if (!plitem)  plitem = mpl;
 
   if (g_file_test (name, G_FILE_TEST_IS_DIR))
   {
-      return add_directory_by_name (name, plitem, descend, addtrackfunc, data);
+      return add_directory_by_name (itdb, name, plitem, descend, addtrackfunc, data);
   }
 
   /* check if file is a playlist */
   switch (determine_file_type(name)) {
 	  case FILE_TYPE_M3U:
 	  case FILE_TYPE_PLS:
-		  return add_playlist_by_filename (name, plitem, addtrackfunc, data);
+		  return add_playlist_by_filename (itdb, name, plitem, addtrackfunc, data);
 	  case FILE_TYPE_MP3:
 	  case FILE_TYPE_M4A:
 	  case FILE_TYPE_M4P:
@@ -1685,24 +1697,24 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
   C_FREE (basename);
 
   /* Check if there exists already a track with the same filename */
-  oldtrack = get_track_by_filename (name);
+  oldtrack = itdb_track_by_filename (itdb, name);
   /* If a track already exists in the database, either update it or
      just add it to the current playlist (if it doesn't already exist) */
   if (oldtrack)
   {
       if (prefs_get_update_existing ())
       {   /* update the information */
-	  update_track_from_file (oldtrack);
+	  update_track_from_file (itdb, oldtrack);
       }
       /* add to current playlist if it's not already in there */
-      if (plitem && (plitem->type != PL_TYPE_MPL))
+      if (plitem->type != ITDB_PL_TYPE_MPL)
       {
-	  if (!track_is_in_playlist (plitem, oldtrack))
+	  if (!itdb_playlist_contains_track (plitem, oldtrack))
 	  {
 	      if (addtrackfunc)
 		  addtrackfunc (plitem, oldtrack, data);
 	      else
-		  add_track_to_playlist (plitem, oldtrack, TRUE);
+		  gp_playlist_add_track (plitem, oldtrack, TRUE);
 	  }
       }
   }
@@ -1713,7 +1725,10 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
       if (track)
       {
           Track *added_track = NULL;
-	  track->ipod_id = 0;
+	  ExtraTrackData *etr = track->userdata;
+	  g_return_val_if_fail (etr, FALSE);
+
+	  track->id = 0;
 
 	  /* does 'name' start with ipod_mount? */
           if (strstr (name, prefs_get_ipod_mount ()) == name)
@@ -1721,11 +1736,9 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
               track->transferred = TRUE;
               track->ipod_path = g_strdup_printf ("%c%s",
 						  G_DIR_SEPARATOR,
-						  strstr(track->pc_path_utf8,
+						  strstr(etr->pc_path_utf8,
 							 "iPod_Control"));
-              itunesdb_convert_filename_fs2ipod (track->ipod_path);
-              track->ipod_path_utf16 = g_utf8_to_utf16 (track->ipod_path,
-                                                        -1, NULL, NULL, NULL);
+              itdb_filename_fs2ipod (track->ipod_path);
           }
 	  else
           {   /* No */
@@ -1735,48 +1748,50 @@ gboolean add_track_by_filename (gchar *name, Playlist *plitem, gboolean descend,
 	  if (gethostname (str, PATH_MAX-2) == 0)
 	  {
 	      str[PATH_MAX-1] = 0;
-	      track->hostname = g_strdup (str);
+	      etr->hostname = g_strdup (str);
 	  }
 	  /* add_track may return pointer to a different track if an
 	     identical one (MD5 checksum) was found */
-	  added_track = add_track (track);
-	  if(added_track)                   /* add track to memory */
+	  added_track = gp_track_add (itdb, track);
+	  g_return_val_if_fail (added_track, FALSE);
+
+	  if (addtrackfunc)
 	  {
-	      if (addtrackfunc)
-	      {
-		  if (!plitem || (plitem->type == PL_TYPE_MPL))
-		  {   /* add track to master playlist (if it hasn't been
-		       * done before) */
-		      if (added_track == track)
-			  addtrackfunc (plitem, added_track, data);
-		  }
-		  else
-		  {   /* (plitem != NULL) && (type == NORM) */
-		      /* add track to master playlist (if it hasn't been
-		       * done before) */
-		      if (added_track == track)
-			  add_track_to_playlist (NULL, added_track, TRUE);
-		      /* add track to specified playlist */
+	      if (plitem->type == ITDB_PL_TYPE_MPL)
+	      {   /* add track to master playlist (if it wasn't a
+		     duplicate */
+		  if (added_track == track)
 		      addtrackfunc (plitem, added_track, data);
+	      }
+	      else
+	      {   /* add track to master playlist (if it wasn't a
+		   * duplicate) */
+		  if (added_track == track)
+		  {
+		      gp_playlist_add_track (mpl, added_track, TRUE);
 		  }
+		  /* add track to specified playlist */
+		  addtrackfunc (plitem, added_track, data);
 	      }
-	      else  /* no addtrackfunc */
-	      {
-		  /* add track to master playlist (if it hasn't been done before) */
-		  if (added_track == track) add_track_to_playlist (NULL, added_track,
-								   TRUE);
+	  }
+	  else  /* no addtrackfunc */
+	  {
+		  /* add track to master playlist (if it wasn't a
+		   * duplicate) */
+		  if (added_track == track)
+		      gp_playlist_add_track (mpl, added_track,
+					     TRUE);
 		  /* add track to specified playlist, but not to MPL */
-		  if (plitem && (plitem->type != PL_TYPE_MPL))
-		      add_track_to_playlist (plitem, added_track, TRUE);
-	      }
-	      /* indicate that non-transferred files exist */
-	      data_changed ();
-	      ++count;
-	      if (count >= 10)  /* update every ten tracks added */
-	      {
-		  gtkpod_tracks_statusbar_update();
-		  count = 0;
-	      }
+		  if (plitem->type != ITDB_PL_TYPE_MPL)
+		      gp_playlist_add_track (plitem, added_track, TRUE);
+	  }
+	  /* indicate that non-transferred files exist */
+	  data_changed (itdb);
+	  ++count;
+	  if (count >= 10)  /* update every ten tracks added */
+	  {
+	      gtkpod_tracks_statusbar_update();
+	      count = 0;
 	  }
       }
   }
@@ -1820,17 +1835,23 @@ static gboolean file_write_info (gchar *name, Track *track)
 /* Write tags to file */
 gboolean write_tags_to_file (Track *track)
 {
+    ExtraTrackData *etr;
+    iTunesDB *itdb;
     gchar *ipod_fullpath;
     gchar *prefs_charset = NULL;
     Track *oldtrack;
     gboolean track_charset_set;
 
-    if (!track) return FALSE;
+    g_return_val_if_fail (track, FALSE);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, FALSE);
+    itdb = track->itdb;
+    g_return_val_if_fail (itdb, FALSE);
 
     /* if we are to use the charset used when first importing
        the track, change the prefs settings temporarily */
-    if (track->charset)  track_charset_set = TRUE;
-    else                track_charset_set = FALSE;
+    if (etr->charset)  track_charset_set = TRUE;
+    else               track_charset_set = FALSE;
     if (!prefs_get_write_charset () && track_charset_set)
     {   /* we should use the initial charset for the update */
 	if (prefs_get_charset ())
@@ -1838,7 +1859,7 @@ gboolean write_tags_to_file (Track *track)
 	    prefs_charset = g_strdup (prefs_get_charset ());
 	}
 	/* use the charset used when first importing the track */
-	prefs_set_charset (track->charset);
+	prefs_set_charset (etr->charset);
     }
     else
     {   /* we should update the track->charset information */
@@ -1870,13 +1891,13 @@ gboolean write_tags_to_file (Track *track)
 	g_free (ipod_fullpath);
     }
     /* remove track from md5 hash and reinsert it (hash value has changed!) */
-    md5_track_removed (track);
-    C_FREE (track->md5_hash);  /* need to remove the old value manually! */
-    oldtrack = md5_track_exists_insert (track);
+    md5_track_remove (track);
+    C_FREE (etr->md5_hash);  /* need to remove the old value manually! */
+    oldtrack = md5_track_exists_insert (itdb, track);
     if (oldtrack) { /* track exists, remove and register the new version */
-	md5_track_removed (oldtrack);
-	remove_duplicate (track, oldtrack);
-	md5_track_exists_insert (track);
+	md5_track_remove (oldtrack);
+	gp_duplicate_remove (track, oldtrack);
+	md5_track_exists_insert (itdb, track);
     }
 
     if (!prefs_get_write_charset () && track_charset_set)
@@ -1920,14 +1941,14 @@ gchar* get_track_name_on_disk(Track *s)
    exist. NOTE: the in itunesdb.c code works around a problem on some
    systems (see below) and might return a filename with different case
    than the original filename. Don't copy it back to @s */
-gchar *get_track_name_on_ipod (Track *s)
+gchar *get_track_name_on_ipod (Track *tr)
 {
     gchar *result = NULL;
 
-    if(s &&  !prefs_get_offline ())
+    if(tr &&  !prefs_get_offline ())
     {
 	gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
-	result = itunesdb_get_track_name_on_ipod (mount, s);
+	result = itdb_filename_on_ipod (mount, tr);
 	g_free (mount);
     }
     return(result);
@@ -2111,7 +2132,7 @@ void parse_offline_playcount (void)
 				offlplyc, buf_utf8);
 		goto cont;
 	    }
-	    if (track_increase_playcount (md5, filename, 1) == FALSE)
+	    if (gp_increase_playcount (md5, filename, 1) == FALSE)
 	    {   /* didn't find the track -> store */
 		gchar *filename_utf8 = charset_to_utf8 (filename);
 /* 		if (gstr->len == 0) */

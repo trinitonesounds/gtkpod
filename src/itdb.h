@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 23:47:27 jcs>
+/* Time-stamp: <2005-01-08 12:24:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -307,6 +307,7 @@ typedef struct SPLRules
 
 
 typedef void (* ItdbUserDataDestroyFunc) (gpointer userdata);
+typedef gpointer (* ItdbUserDataDuplicateFunc) (gpointer userdata);
 
 typedef struct
 {
@@ -319,8 +320,10 @@ typedef struct
     /* below is for use by application */
     guint64 usertype;
     gpointer userdata;
-    ItdbUserDataDestroyFunc userdata_destroy; /* function called to free
-						 userdata */
+    /* function called to duplicate userdata */
+    ItdbUserDataDuplicateFunc userdata_duplicate;
+    /* function called to free userdata */
+    ItdbUserDataDestroyFunc userdata_destroy;
 } Itdb_iTunesDB;
 
 
@@ -340,8 +343,10 @@ typedef struct
     /* below is for use by application */
     guint64 usertype;
     gpointer userdata;
-    ItdbUserDataDestroyFunc userdata_destroy; /* function called to free
-						 userdata */
+    /* function called to duplicate userdata */
+    ItdbUserDataDuplicateFunc userdata_duplicate;
+    /* function called to free userdata */
+    ItdbUserDataDestroyFunc userdata_destroy;
 } Itdb_Playlist;
 
 
@@ -394,11 +399,13 @@ typedef struct
   /* below is for use by application */
   guint64 usertype;
   gpointer userdata;
-  ItdbUserDataDestroyFunc userdata_destroy; /* function called to free
-					       userdata */
+  /* function called to duplicate userdata */
+  ItdbUserDataDuplicateFunc userdata_duplicate;
+  /* function called to free userdata */
+  ItdbUserDataDestroyFunc userdata_destroy;
 } Itdb_Track;
-/* !Don't forget to add fields read from the file to copy_new_info() in
- * file.c! */
+/* (gtkpod note: don't forget to add fields read from the file to
+ * copy_new_info() in file.c!) */
 
 /* one star is how much (track->rating) */
 #define RATING_STEP 20
@@ -433,6 +440,7 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 			  GError **error);
 Itdb_iTunesDB *itdb_new (void);
 void itdb_free (Itdb_iTunesDB *itdb);
+iTunesDB *itdb_duplicate (Itdb_iTunesDB *itdb);
 guint32 itdb_tracks_number (Itdb_iTunesDB *itdb);
 guint32 itdb_playlists_number (Itdb_iTunesDB *itdb);
 
@@ -454,6 +462,7 @@ void itdb_track_free (Itdb_Track *track);
 void itdb_track_add (Itdb_iTunesDB *itdb, Itdb_Track *track, gint32 pos);
 void itdb_track_remove (Itdb_Track *track);
 void itdb_track_unlink (Itdb_Track *track);
+Itdb_Track *itdb_track_duplicate (Itdb_Track *tr);
 Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id);
 Itdb_Track *itdb_track_by_filename (Itdb_iTunesDB *itdb, gchar *filename);
 
@@ -464,8 +473,8 @@ void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos);
 void itdb_playlist_move (Itdb_Playlist *pl, guint32 pos);
 void itdb_playlist_remove (Itdb_Playlist *pl);
 void itdb_playlist_unlink (Itdb_Playlist *pl);
-gboolean itdb_playlist_exists (Itdb_iTunesDB *itdb, Itdb_Playlist *pl);
 Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl);
+gboolean itdb_playlist_exists (Itdb_iTunesDB *itdb, Itdb_Playlist *pl);
 void itdb_playlist_add_track (Itdb_Playlist *pl,
 			      Itdb_Track *track, gint32 pos);
 void itdb_playlist_add_trackid (Itdb_Playlist *pl,

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 02:09:21 jcs>
+/* Time-stamp: <2005-01-08 13:50:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,8 +37,8 @@
 #include "info.h"
 #include "interface.h"
 #include "misc.h"
+#include "misc_itdb.h"
 #include "prefs.h"
-#include "track.h"
 #include "support.h"
 
 /* pointer to info window */

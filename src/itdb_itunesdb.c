@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-06 00:16:35 jcs>
+/* Time-stamp: <2005-01-08 12:23:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -655,6 +655,16 @@ void itdb_free (Itdb_iTunesDB *itdb)
 	    (*itdb->userdata_destroy) (itdb->userdata);
 	g_free (itdb);
     }
+}
+
+/* Free the memory taken by @itdb. */
+iTunesDB *itdb_duplicate (Itdb_iTunesDB *itdb)
+{
+    g_return_val_if_fail (itdb, NULL);
+    g_return_val_if_fail (itdb->userdata &&
+			  !itdb->userdata_duplicate, NULL);
+    /* FIXME: not yet implemented */
+    g_return_val_if_reached (NULL);
 }
 
 /* return number of playlists */
