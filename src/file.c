@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-07 02:26:27 JST jcs>
+/* Time-stamp: <2004-02-07 12:41:52 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2325,6 +2325,9 @@ static gboolean flush_tracks (void)
   /* check if iPod directories are present */
   if (!ipod_dirs_present ())
   {   /* no -- create them */
+      /* FIXME: probably it's necessary to implement
+         gtkpod_confirmation() as a dialog which blocks until a button
+	 is pressed (for modal confirmation dialogs at least). */
       ipod_directories_head (TRUE);
       /* if still not present abort */
       if (!ipod_dirs_present ())
