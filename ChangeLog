@@ -28,6 +28,9 @@ gtkpod V0.73-CVS
 	only works under LINUX and if the user has write access to the
 	device file (e.g. /dev/sda2)
 
+	IMPROVEMENT: when writing to the iPod automatically create
+	iPod's directories when they are not present.
+
 	BUGFIX: Fixed compile error when compiling without mp4 support
 
 	BUGFIX: Fixed compile error when compiling with gcc 2.95
@@ -82,7 +85,7 @@ gtkpod V0.70
 
 	IMPROVEMENT: In the past, using programs other than gtkpod to
 	transfer files voided the extended information file. gtkpod will
-	not try to use the MD5 checksums stored in the extended
+	now try to use the MD5 checksums stored in the extended
 	information file to match up the data when this occurs.
 
 	IMPROVEMENT: The 'year' tag is now supported as track view column

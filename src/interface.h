@@ -4,9 +4,9 @@
 
 GtkWidget* create_gtkpod (void);
 GtkWidget* create_gtkpod_about_window (void);
-GtkWidget* create_confirm_window (void);
 GtkWidget* create_prefs_window (void);
 GtkWidget* create_special_sorttab (void);
 GtkWidget* create_calendar_window (void);
 GtkWidget* create_sort_window (void);
 GtkWidget* create_gtkpod_info (void);
+GtkWidget* create_confirm_dialog (void);

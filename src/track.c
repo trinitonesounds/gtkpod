@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-07 02:55:19 JST jcs>
+/* Time-stamp: <2004-03-03 23:25:58 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -487,10 +487,11 @@ void remove_duplicate (Track *oldtrack, Track *track)
 		NULL, 0, NULL,      /* option 1 */
 		NULL, 0, NULL,      /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
-		NULL,               /* ConfHandlerCA confirm_again_handler,*/
+		prefs_set_show_duplicates,
+		                    /* ConfHandlerCA confirm_again_handler,*/
 		NULL,               /* ConfHandler ok_handler,*/
 		CONF_NO_BUTTON,     /* don't show "Apply" button */
-		CONF_NO_BUTTON,     /* cancel_handler,*/
+		CONF_NO_BUTTON,     /* don't show "Cancel" button */
 		NULL,               /* gpointer user_data1,*/
 		NULL);              /* gpointer user_data2,*/
 	   g_free (buf);

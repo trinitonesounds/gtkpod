@@ -114,6 +114,35 @@ static void on_cancel_clicked (GtkWidget *w, gpointer id)
     }
 }
 
+
+static void on_response (GtkWidget *w, gint response, gpointer id)
+{
+    ConfData *cd;
+/*     printf ("r: %d, i: %d\n", response, id); */
+    cd = g_hash_table_lookup (id_hash, &id);
+    if (cd)
+    {
+	switch (response)
+	{
+	case GTK_RESPONSE_OK:
+	    on_ok_clicked (w, id);
+	    break;
+	case GTK_RESPONSE_NONE:
+	case GTK_RESPONSE_CANCEL:
+	    on_cancel_clicked (w, id);
+	    break;
+	case GTK_RESPONSE_APPLY:
+	    on_apply_clicked (w, id);
+	    break;
+	default:
+	    g_warning ("Programming error: resonse '%d' received in on_response()\n", response);
+	    on_cancel_clicked (w, id);
+	    break;
+	}
+    }
+}
+
+
 static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
 {
     ConfData *cd;
@@ -276,9 +305,8 @@ gboolean gtkpod_confirmation (gint id,
 	return TRUE;
     }
 
-    window = create_confirm_window ();
+    window = create_confirm_dialog ();
 
-    gtk_window_set_modal (GTK_WINDOW (window), modal);
     /* insert ID into hash table */
     idp = g_malloc (sizeof (gint));
     *idp = id;
@@ -399,37 +427,25 @@ gboolean gtkpod_confirmation (gint id,
 	gtk_widget_hide (w);
     }
 
-    /* Connect OK handler or hide button */
+    /* Hide OK button */
     if ((w = lookup_widget (window, "ok")))
     {
 	if (ok_handler == CONF_NO_BUTTON)
 	    gtk_widget_hide (w);
-	else
-	    g_signal_connect ((gpointer)w, "clicked",
-			      G_CALLBACK (on_ok_clicked),
-			      (gpointer)id);
     }
 
-    /* Connect "Apply" handler or hide button */
+    /* Hide Apply button */
     if ((w = lookup_widget (window, "apply")))
     {
 	if (apply_handler == CONF_NO_BUTTON)
 	    gtk_widget_hide (w);
-	else
-	    g_signal_connect ((gpointer)w, "clicked",
-			      G_CALLBACK (on_apply_clicked),
-			      (gpointer)id);
     }
 
-    /* Connect Cancel handler or hide button */
+    /* Hide Cancel button */
     if ((w = lookup_widget (window, "cancel")))
     {
 	if (cancel_handler == CONF_NO_BUTTON)
 	    gtk_widget_hide (w);
-	else
-	    g_signal_connect ((gpointer)w, "clicked",
-			      G_CALLBACK (on_cancel_clicked),
-			      (gpointer)id);
     }
 
     /* Connect Close window */
@@ -438,7 +454,21 @@ gboolean gtkpod_confirmation (gint id,
 		      G_CALLBACK (on_cancel_clicked),
 		      (gpointer) id);
 
-    gtk_widget_show (window);
+    if (modal)
+    {
+	/* use gtk_dialog_run() to block the application */
+	gint response = gtk_dialog_run (GTK_DIALOG (window));
+	on_response (window, response, (gpointer) id);
+    }
+    else
+    {
+	/* Make sure we catch the response */
+	g_signal_connect (GTK_OBJECT (window),
+			  "response",
+			  G_CALLBACK (on_response),
+			  (gpointer) id);
+	gtk_widget_show (window);
+    }
 
     return TRUE;
 }

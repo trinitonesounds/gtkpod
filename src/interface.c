@@ -1276,112 +1276,6 @@ create_gtkpod_about_window (void)
 }
 
 GtkWidget*
-create_confirm_window (void)
-{
-  GtkWidget *confirm_window;
-  GdkPixbuf *confirm_window_icon_pixbuf;
-  GtkWidget *vbox6;
-  GtkWidget *label;
-  GtkWidget *vbox7;
-  GtkWidget *scroller;
-  GtkWidget *text;
-  GtkWidget *option_hbox;
-  GtkWidget *option_vbox;
-  GtkWidget *never_again;
-  GtkWidget *hbuttonbox4;
-  GtkWidget *ok;
-  GtkWidget *apply;
-  GtkWidget *cancel;
-
-  confirm_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_container_set_border_width (GTK_CONTAINER (confirm_window), 6);
-  gtk_window_set_title (GTK_WINDOW (confirm_window), _("window1"));
-  confirm_window_icon_pixbuf = create_pixbuf ("gtkpod-icon-48.png");
-  if (confirm_window_icon_pixbuf)
-    {
-      gtk_window_set_icon (GTK_WINDOW (confirm_window), confirm_window_icon_pixbuf);
-      gdk_pixbuf_unref (confirm_window_icon_pixbuf);
-    }
-
-  vbox6 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox6);
-  gtk_container_add (GTK_CONTAINER (confirm_window), vbox6);
-
-  label = gtk_label_new (_("label21"));
-  gtk_widget_show (label);
-  gtk_box_pack_start (GTK_BOX (vbox6), label, FALSE, TRUE, 6);
-  GTK_WIDGET_SET_FLAGS (label, GTK_CAN_FOCUS);
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0);
-
-  vbox7 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox7);
-  gtk_box_pack_start (GTK_BOX (vbox6), vbox7, TRUE, TRUE, 0);
-
-  scroller = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_show (scroller);
-  gtk_box_pack_start (GTK_BOX (vbox7), scroller, TRUE, TRUE, 0);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroller), GTK_SHADOW_IN);
-
-  text = gtk_text_view_new ();
-  gtk_widget_show (text);
-  gtk_container_add (GTK_CONTAINER (scroller), text);
-  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
-
-  option_hbox = gtk_hbox_new (TRUE, 0);
-  gtk_widget_show (option_hbox);
-  gtk_box_pack_start (GTK_BOX (vbox6), option_hbox, FALSE, FALSE, 0);
-
-  option_vbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (option_vbox);
-  gtk_box_pack_start (GTK_BOX (option_hbox), option_vbox, FALSE, TRUE, 0);
-
-  never_again = gtk_check_button_new_with_mnemonic (_("Never show this dialogue again"));
-  gtk_widget_show (never_again);
-  gtk_box_pack_end (GTK_BOX (option_vbox), never_again, FALSE, FALSE, 0);
-
-  hbuttonbox4 = gtk_hbutton_box_new ();
-  gtk_widget_show (hbuttonbox4);
-  gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox4, FALSE, FALSE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox4), 6);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox4), GTK_BUTTONBOX_SPREAD);
-
-  ok = gtk_button_new_from_stock ("gtk-ok");
-  gtk_widget_show (ok);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox4), ok);
-  GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
-
-  apply = gtk_button_new_from_stock ("gtk-apply");
-  gtk_widget_show (apply);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox4), apply);
-  GTK_WIDGET_SET_FLAGS (apply, GTK_CAN_DEFAULT);
-
-  cancel = gtk_button_new_from_stock ("gtk-cancel");
-  gtk_widget_show (cancel);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox4), cancel);
-  GTK_WIDGET_SET_FLAGS (cancel, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (confirm_window, confirm_window, "confirm_window");
-  GLADE_HOOKUP_OBJECT (confirm_window, vbox6, "vbox6");
-  GLADE_HOOKUP_OBJECT (confirm_window, label, "label");
-  GLADE_HOOKUP_OBJECT (confirm_window, vbox7, "vbox7");
-  GLADE_HOOKUP_OBJECT (confirm_window, scroller, "scroller");
-  GLADE_HOOKUP_OBJECT (confirm_window, text, "text");
-  GLADE_HOOKUP_OBJECT (confirm_window, option_hbox, "option_hbox");
-  GLADE_HOOKUP_OBJECT (confirm_window, option_vbox, "option_vbox");
-  GLADE_HOOKUP_OBJECT (confirm_window, never_again, "never_again");
-  GLADE_HOOKUP_OBJECT (confirm_window, hbuttonbox4, "hbuttonbox4");
-  GLADE_HOOKUP_OBJECT (confirm_window, ok, "ok");
-  GLADE_HOOKUP_OBJECT (confirm_window, apply, "apply");
-  GLADE_HOOKUP_OBJECT (confirm_window, cancel, "cancel");
-
-  return confirm_window;
-}
-
-GtkWidget*
 create_prefs_window (void)
 {
   GtkWidget *prefs_window;
@@ -4819,5 +4713,105 @@ create_gtkpod_info (void)
   GLADE_HOOKUP_OBJECT (gtkpod_info, info_close, "info_close");
 
   return gtkpod_info;
+}
+
+GtkWidget*
+create_confirm_dialog (void)
+{
+  GtkWidget *confirm_dialog;
+  GtkWidget *dialog_vbox1;
+  GtkWidget *vbox6;
+  GtkWidget *label;
+  GtkWidget *vbox7;
+  GtkWidget *scroller;
+  GtkWidget *text;
+  GtkWidget *option_hbox;
+  GtkWidget *option_vbox;
+  GtkWidget *never_again;
+  GtkWidget *dialog_action_area1;
+  GtkWidget *cancel;
+  GtkWidget *apply;
+  GtkWidget *ok;
+
+  confirm_dialog = gtk_dialog_new ();
+
+  dialog_vbox1 = GTK_DIALOG (confirm_dialog)->vbox;
+  gtk_widget_show (dialog_vbox1);
+
+  vbox6 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox6);
+  gtk_box_pack_start (GTK_BOX (dialog_vbox1), vbox6, TRUE, TRUE, 0);
+
+  label = gtk_label_new (_("label21"));
+  gtk_widget_show (label);
+  gtk_box_pack_start (GTK_BOX (vbox6), label, FALSE, TRUE, 6);
+  GTK_WIDGET_SET_FLAGS (label, GTK_CAN_FOCUS);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  gtk_label_set_selectable (GTK_LABEL (label), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0);
+
+  vbox7 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox7);
+  gtk_box_pack_start (GTK_BOX (vbox6), vbox7, TRUE, TRUE, 0);
+
+  scroller = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scroller);
+  gtk_box_pack_start (GTK_BOX (vbox7), scroller, TRUE, TRUE, 0);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scroller), GTK_SHADOW_IN);
+
+  text = gtk_text_view_new ();
+  gtk_widget_show (text);
+  gtk_container_add (GTK_CONTAINER (scroller), text);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
+
+  option_hbox = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (option_hbox);
+  gtk_box_pack_start (GTK_BOX (vbox6), option_hbox, FALSE, FALSE, 0);
+
+  option_vbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (option_vbox);
+  gtk_box_pack_start (GTK_BOX (option_hbox), option_vbox, FALSE, TRUE, 0);
+
+  never_again = gtk_check_button_new_with_mnemonic (_("Never show this dialogue again"));
+  gtk_widget_show (never_again);
+  gtk_box_pack_end (GTK_BOX (option_vbox), never_again, FALSE, FALSE, 0);
+
+  dialog_action_area1 = GTK_DIALOG (confirm_dialog)->action_area;
+  gtk_widget_show (dialog_action_area1);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
+
+  cancel = gtk_button_new_from_stock ("gtk-cancel");
+  gtk_widget_show (cancel);
+  gtk_dialog_add_action_widget (GTK_DIALOG (confirm_dialog), cancel, GTK_RESPONSE_CANCEL);
+  GTK_WIDGET_SET_FLAGS (cancel, GTK_CAN_DEFAULT);
+
+  apply = gtk_button_new_from_stock ("gtk-apply");
+  gtk_widget_show (apply);
+  gtk_dialog_add_action_widget (GTK_DIALOG (confirm_dialog), apply, GTK_RESPONSE_APPLY);
+  GTK_WIDGET_SET_FLAGS (apply, GTK_CAN_DEFAULT);
+
+  ok = gtk_button_new_from_stock ("gtk-ok");
+  gtk_widget_show (ok);
+  gtk_dialog_add_action_widget (GTK_DIALOG (confirm_dialog), ok, GTK_RESPONSE_OK);
+  GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (confirm_dialog, confirm_dialog, "confirm_dialog");
+  GLADE_HOOKUP_OBJECT_NO_REF (confirm_dialog, dialog_vbox1, "dialog_vbox1");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, vbox6, "vbox6");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, label, "label");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, vbox7, "vbox7");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, scroller, "scroller");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, text, "text");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, option_hbox, "option_hbox");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, option_vbox, "option_vbox");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, never_again, "never_again");
+  GLADE_HOOKUP_OBJECT_NO_REF (confirm_dialog, dialog_action_area1, "dialog_action_area1");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, cancel, "cancel");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, apply, "apply");
+  GLADE_HOOKUP_OBJECT (confirm_dialog, ok, "ok");
+
+  return confirm_dialog;
 }
 

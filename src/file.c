@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-02-07 12:41:52 JST jcs>
+/* Time-stamp: <2004-03-03 23:15:17 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2333,21 +2333,6 @@ static gboolean flush_tracks (void)
 
   if (n==0 && !pending_deletion) return TRUE;
 
-  /* check if iPod directories are present */
-  if (!ipod_dirs_present ())
-  {   /* no -- create them */
-      /* FIXME: probably it's necessary to implement
-         gtkpod_confirmation() as a dialog which blocks until a button
-	 is pressed (for modal confirmation dialogs at least). */
-      ipod_directories_head (TRUE);
-      /* if still not present abort */
-      if (!ipod_dirs_present ())
-      {
-	  gtkpod_warning (_("iPod directory structure must be present before synching to the iPod can be performed.\n"));
-	  return FALSE;
-      }
-  }
-
   abort = FALSE;
   /* create the dialog window */
   dialog = gtk_dialog_new_with_buttons (_("Information"),
@@ -2535,25 +2520,13 @@ static gboolean flush_tracks (void)
 /* used to handle export of database */
 void handle_export (void)
 {
-  gchar *ipt, *ipe, *cft=NULL, *cfe=NULL, *cfgdir, *itunes_filename,
-    *ipod_path_as_filename = 
-      g_filename_from_utf8(prefs_get_ipod_mount(),-1,NULL,NULL,NULL);
-  const gchar *itunes_components[] = {"iPod_Control","iTunes",NULL};
+  gchar *cft=NULL, *cfe=NULL, *cfgdir;
   gboolean success = TRUE;
   gchar *buf;
   
-  itunes_filename = resolve_path(ipod_path_as_filename,itunes_components);
-  if(!itunes_filename) {
-    g_free(ipod_path_as_filename);
-    gtkpod_statusbar_message(_("Error writing iTunesDB to iPod.  No iTunes directory!"));
-    return;
-  }
 
   block_widgets (); /* block user input */
   cfgdir = prefs_get_cfgdir ();
-  ipt = g_build_filename(itunes_filename,"iTunesDB",NULL);
-  ipe = g_build_filename(itunes_filename,"iTunesDB.ext",NULL);
-  g_free(ipod_path_as_filename);
   if (cfgdir)
   {
       cft = g_build_filename (cfgdir, "iTunesDB", NULL);
@@ -2562,58 +2535,84 @@ void handle_export (void)
 
   if(!prefs_get_offline ())
   {
-      /* write tracks to iPod */
-      if ((success=flush_tracks ()))
-      { /* write iTunesDB to iPod */
-	  gtkpod_statusbar_message (_("Now writing iTunesDB. Please wait..."));
-	  while (widgets_blocked && gtk_events_pending ())
-	      gtk_main_iteration ();
-	  if (!(success=itunesdb_write (prefs_get_ipod_mount ())))
-	      gtkpod_statusbar_message (_("Error writing iTunesDB to iPod. Export aborted!"));
-	  /* else: write extended info (PC filenames, md5 hash) to iPod */
-	  else if (prefs_get_write_extended_info ())
+      /* check if iPod directories are present */
+      if (!ipod_dirs_present ())
+      {   /* no -- create them */
+	  ipod_directories_head (TRUE);
+	  /* if still not present abort */
+	  if (!ipod_dirs_present ())
 	  {
-	      if(!(success = write_extended_info (ipe, ipt)))
-		  gtkpod_statusbar_message (_("Extended information not written"));
+	      gtkpod_warning (_("iPod directory structure must be present before synching to the iPod can be performed.\n"));
+	      success = FALSE;
 	  }
-	  /* else: delete extended information file, if it exists */
-	  else if (g_file_test (ipe, G_FILE_TEST_EXISTS))
-	  {
-	      if (remove (ipe) != 0)
+      }
+      if (success)
+      {
+	  gchar *ipt = NULL, *ipe = NULL;
+	  gchar *ipod_path_as_filename = 
+	      g_filename_from_utf8(prefs_get_ipod_mount(),-1,NULL,NULL,NULL);
+	  const gchar *itunes_components[] = {"iPod_Control", "iTunes", NULL};
+	  gchar *itunes_filename = resolve_path(ipod_path_as_filename,
+						itunes_components);
+	  ipt = g_build_filename (itunes_filename, "iTunesDB", NULL);
+	  ipe = g_build_filename (itunes_filename, "iTunesDB.ext", NULL);
+	  C_FREE(ipod_path_as_filename);
+
+	  /* write tracks to iPod */
+	  if ((success=flush_tracks()))
+	  { /* write iTunesDB to iPod */
+	      gtkpod_statusbar_message (_("Now writing iTunesDB. Please wait..."));
+	      while (widgets_blocked && gtk_events_pending ())
+		  gtk_main_iteration ();
+	      if (!(success=itunesdb_write (prefs_get_ipod_mount ())))
+		  gtkpod_statusbar_message (_("Error writing iTunesDB to iPod. Export aborted!"));
+	      /* else: write extended info (PC filenames, md5 hash) to iPod */
+	      else if (prefs_get_write_extended_info ())
 	      {
-		  buf = g_strdup_printf (_("Extended information file not deleted: '%s\'"), ipe);
-		  gtkpod_statusbar_message (buf);
-		  g_free (buf);
+		  if(!(success = write_extended_info (ipe, ipt)))
+		      gtkpod_statusbar_message (_("Extended information not written"));
+	      }
+	      /* else: delete extended information file, if it exists */
+	      else if (g_file_test (ipe, G_FILE_TEST_EXISTS))
+	      {
+		  if (remove (ipe) != 0)
+		  {
+		      buf = g_strdup_printf (_("Extended information file not deleted: '%s\'"), ipe);
+		      gtkpod_statusbar_message (buf);
+		      g_free (buf);
+		  }
+	      }
+	      if (prefs_get_concal_autosync ())
+	      {
+		  const gchar *str;
+		  gtkpod_statusbar_message (_("Syncing contacts and calendar..."));
+		  str = prefs_get_sync_contacts_path ();
+		  if (str && *str)    tools_sync_contacts ();
+		  str = prefs_get_sync_calendar_path ();
+		  if (str && *str)    tools_sync_calendar ();
 	      }
 	  }
-	  if (prefs_get_concal_autosync ())
+	  /* if everything was successful, copy files to ~/.gtkpod */
+	  if (success && prefs_get_keep_backups ())
 	  {
-	      const gchar *str;
-	      gtkpod_statusbar_message (_("Syncing contacts and calendar..."));
-	      str = prefs_get_sync_contacts_path ();
-	      if (str && *str)    tools_sync_contacts ();
-	      str = prefs_get_sync_calendar_path ();
-	      if (str && *str)    tools_sync_calendar ();
+	      if (cfgdir)
+	      {
+		  gtkpod_statusbar_message (
+		      _("Now writing iTunesDB. Please wait..."));
+		  while (widgets_blocked && gtk_events_pending ())
+		      gtk_main_iteration ();
+		  success = itunesdb_cp (ipt, cft);
+		  if (success && prefs_get_write_extended_info())
+		      success = itunesdb_cp (ipe, cfe);
+	      }
+	      if ((cfgdir == NULL) || (!success))
+		  gtkpod_statusbar_message (_("Backups could not be created!"));
 	  }
+	  if (success && !prefs_get_keep_backups() && cfgdir)
+	      cleanup_backup_and_extended_files ();
+	  g_free (ipt);
+	  g_free (ipe);
       }
-      /* if everything was successful, copy files to ~/.gtkpod */
-      if (success && prefs_get_keep_backups ())
-      {
-	  if (cfgdir)
-	  {
-	      gtkpod_statusbar_message (
-		  _("Now writing iTunesDB. Please wait..."));
-	      while (widgets_blocked && gtk_events_pending ())
-	      gtk_main_iteration ();
-	      success = itunesdb_cp (ipt, cft);
-	      if (success && prefs_get_write_extended_info())
-		  success = itunesdb_cp (ipe, cfe);
-	  }
-	  if ((cfgdir == NULL) || (!success))
-	      gtkpod_statusbar_message (_("Backups could not be created!"));
-      }
-      if (success && !prefs_get_keep_backups() && cfgdir)
-	  cleanup_backup_and_extended_files ();
   }
   else
   {   /* we are offline -> only write database to ~/.gtkpod */
@@ -2646,8 +2645,6 @@ void handle_export (void)
   g_free (cfgdir);
   g_free (cft);
   g_free (cfe);
-  g_free (ipt);
-  g_free (ipe);
 
   release_widgets (); /* Allow input again */
 }
