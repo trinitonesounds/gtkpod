@@ -38,6 +38,7 @@
 #include "support.h"
 #include "misc.h"
 #include "display.h"
+#include "md5.h"
 
 /* global config struct */
 /* FIXME: make me static */
@@ -186,7 +187,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
 	  {
-	      prefs_set_md5songs_active((gboolean)atoi(arg));
+	      prefs_set_md5songs((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "album") == 0)
 	  {
@@ -550,9 +551,27 @@ void prefs_set_mount_point(const gchar *mp)
     else cfg->ipod_mount = g_strdup(mp);
 }
 
-void prefs_set_md5songs_active(gboolean active)
+
+/* If the status of md5 hash flag changes, free or re-init the md5
+   hash table */
+void prefs_set_md5songs(gboolean active)
 {
-    cfg->md5songs = active;
+    if (cfg->md5songs && !active)
+    { /* md5 checksums have been turned off */
+	cfg->md5songs = active;
+	md5_unique_file_free ();
+    }
+    if (!cfg->md5songs && active)
+    { /* md5 checksums have been turned on */
+	cfg->md5songs = active; /* must be set before calling
+				   hash_songs() */
+	hash_songs ();
+    }
+}
+
+gboolean prefs_get_md5songs(void)
+{
+    return cfg->md5songs;
 }
 
 void prefs_set_id3_write(gboolean active)

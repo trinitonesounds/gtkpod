@@ -68,7 +68,6 @@ main (int argc, char *argv[])
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
   create_display (gtkpod_window);
   create_mpl ();     /* needs at least the master playlist */
-  md5_unique_file_init (NULL); /* init for duplicate detection */
   if(prefs_get_auto_import())
       handle_import();
   gtk_widget_show (gtkpod_window);

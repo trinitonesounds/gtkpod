@@ -427,14 +427,6 @@ void remove_all_songs (void)
 }
 
 
-/* Return a pointer to the song list, so other modules can
-   read!-access this information */
-GList *get_song_list (void)
-{
-  return songs;
-}
-
-
 /* Returns the number of songs stored in the list */
 guint get_nr_of_songs (void)
 {
@@ -1104,13 +1096,55 @@ void data_changed (void)
   files_saved = FALSE;
 }
 
+/**
+ * Register all songs in the md5 hash.
+ */
+void hash_songs(void)
+{
+   gint n,count;
+   gchar *buf;
+   Song *s = NULL;
+   GList *l = NULL;
+
+   n = get_nr_of_songs ();
+   if ((n>0) && prefs_get_md5songs ())
+   {
+       block_widgets (); /* block widgets -- this might take a while,
+			    so we'll be refreshs */
+       count = 0;
+       /* populate the hash table */
+       for (l = songs; l; l = l->next)
+       {
+	   s = (Song *) l->data;
+	   md5_song_exists(s);
+	   ++count;
+	   if (((count % 20) == 1) || (count == n))
+	   { /* update for count == 1, 21, 41 ... and for count == n */
+	       buf = g_strdup_printf (ngettext (_("Hashed %d of %d song."),
+						_("Hashed %d of %d songs."), n),
+				      count, n);
+	       gtkpod_statusbar_message(buf);
+	       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+	       g_free (buf);
+	   }
+	   /* 
+	    * TODO: could eventually be used to detect duplicates if the user
+	    * doesn't always enable them.  identify and fix.
+	    */
+       }
+       release_widgets (); /* release widgets again */
+   }
+}
 
 /* ------------------------------------------------------------------- */
 /* functions used by itunesdb (so we can refresh the display during
  * import */
 gboolean it_add_song (Song *song)
 {
+    static gint count = 0;
     gboolean result = add_song (song);
+    ++count;
+    if ((count % 20) == 0)     gtkpod_songs_statusbar_update();
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
     return result;
 }
@@ -1121,3 +1155,5 @@ Song *it_get_song_by_nr (guint32 n)
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
     return song;
 }
+
+

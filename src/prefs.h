@@ -110,7 +110,7 @@ void prefs_set_song_list_show_album(gboolean val);
 void prefs_set_song_list_show_artist(gboolean val);
 void prefs_set_song_playlist_deletion(gboolean val);
 void prefs_set_song_ipod_file_deletion(gboolean val);
-void prefs_set_md5songs_active(gboolean active);
+void prefs_set_md5songs(gboolean active);
 void prefs_set_id3_write(gboolean active);
 void prefs_set_id3_writeall(gboolean active);
 void prefs_set_last_dir_browse(gchar * dir);
@@ -148,6 +148,7 @@ void prefs_get_size_conf_sw (gint *x, gint *y);
 void prefs_get_size_conf (gint *x, gint *y);
 gint prefs_get_sm_col_width (gint col);
 gboolean prefs_get_tag_autoset (gint category);
+gboolean prefs_get_md5songs(void);
 gint prefs_get_paned_pos (gint i);
 guint32 prefs_get_statusbar_timeout (void);
 

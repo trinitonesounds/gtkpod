@@ -292,15 +292,8 @@ void
 on_prefs_ok_clicked                    (GtkButton       *button,
                                         gpointer         user_data)
 {
-    gboolean md5;
-
-    md5 = cfg->md5songs;
     prefs_window_save();
     write_prefs();
-    if(!md5 && cfg->md5songs)
-	md5_unique_file_init(get_song_list());
-    if(md5 && !cfg->md5songs)
-	md5_unique_file_free();
     sm_show_preferred_columns();
 }
 

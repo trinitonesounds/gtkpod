@@ -48,6 +48,7 @@ static GtkWidget *about_window = NULL;
 static GtkWidget *file_selector = NULL;
 static GtkWidget *gtkpod_statusbar = NULL;
 static GtkWidget *gtkpod_songs_statusbar = NULL;
+static guint statusbar_timeout_id = 0;
 
 /* --------------------------------------------------------------*/
 /* list with the widgets that are turned insensitive during import/export...*/
@@ -346,6 +347,8 @@ gtkpod_statusbar_clear(gpointer data)
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), 1);
 	result = 1;
     }
+    statusbar_timeout_id = 0; /* indicate that timeout handler is
+				 clear (0 cannot be a handler id) */
     return(result);
     
 }
@@ -361,8 +364,11 @@ gtkpod_statusbar_message(const gchar *message)
 	snprintf(buf, PATH_MAX, "  %s", message);
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
-	gtk_timeout_add(prefs_get_statusbar_timeout (), (GtkFunction)
-			gtkpod_statusbar_clear, NULL);
+	if (statusbar_timeout_id != 0) /* remove last timeout, if still present */
+	    gtk_timeout_remove (statusbar_timeout_id);
+	statusbar_timeout_id = gtk_timeout_add(prefs_get_statusbar_timeout (),
+					       (GtkFunction) gtkpod_statusbar_clear,
+					       NULL);
     }
 }
 

@@ -929,11 +929,11 @@ static void st_init (gint32 new_category, guint32 inst)
       if (st == NULL) return; /* could happen during initialisation */
       cat = st->current_category;
       /* Copy selected entry name if not master */
-      C_FREE (st->lastselection[cat]);
       if (st->current_entry != NULL)
 	{
 	  if (!st->current_entry->master)
 	    {
+	      C_FREE (st->lastselection[cat]);
 	      st->lastselection[cat] =
 		g_strdup (st->current_entry->name);
 	    }
@@ -1278,8 +1278,7 @@ static void cleanup_sort_tabs (void)
 	  st_remove_all_entries (i);
 	  for (j=0; j<ST_CAT_NUM; ++j)
 	    {
-	      if (sorttab[i]->lastselection[j])
-		g_free (sorttab[i]->lastselection[j]);
+		C_FREE (sorttab[i]->lastselection[j]);
 	    }
 	  g_free (sorttab[i]);
 	  sorttab[i] = NULL;

@@ -246,7 +246,26 @@ reset_playlists_to_new_list(GList *new_l)
  * import */
 void it_add_songid_to_playlist (Playlist *plitem, guint32 id)
 {
+    static Playlist *last_pl = NULL;
+    static gint count = 0;
+    gchar *buf;
+
+    if (plitem != last_pl)
+    {
+	count = 0;
+	last_pl = plitem;
+    }
     add_songid_to_playlist (plitem, id);
+    ++count;
+    if ((count % 20) == 0)
+    { /* updating the statusbar for every single song added takes a
+	 tremendous amount of time! */
+	buf = g_strdup_printf (_("Added %d+ songs to playlist '%s'"),
+			       count, plitem->name);
+	gtkpod_statusbar_message(buf);
+	while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+	g_free (buf);
+    }
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 }
 

@@ -166,7 +166,7 @@ md5_hash_on_file(FILE * fp)
  * Returns - an SHA1 hash in string format, is the hex output from the hash
  */
 static gchar *
-hash_song(Song * s)
+md5_hash_song(Song * s)
 {
    FILE *fp;
    gchar *result = NULL;
@@ -196,49 +196,24 @@ hash_song(Song * s)
 }
 
 /**
- * Initialize the filelist hash table and insert all the Songs passed in
- * @songlist - A GList with data attribute of type Song *
- */
-void
-md5_unique_file_init(GList * songlist)
-{
-   Song *s = NULL;
-   GList *l = NULL;
-   gchar *val = NULL;
-    
-   if (cfg->md5songs)
-   {
-      if (filehash)
-         md5_unique_file_free();
-      filehash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-
-      /* populate the hash table */
-      for (l = songlist; l; l = l->next)
-      {
-	  s = (Song *) l->data;
-	  if((val = md5_song_exists(s)))
-	      g_free(val);	
-	  /* 
-	   * TODO could eventually be used to detect duplicates if the user
-	   * doesn't always enable them.  identify and fix.
-	   */
-      }
-   }
-}
-
-
-/**
  * Free up the dynamically allocated memory in this table
  */
 void
 md5_unique_file_free(void)
 {
-   if ((cfg->md5songs) && (filehash))
+   if ((prefs_get_md5songs ()) && (filehash))
    {
       g_hash_table_destroy(filehash);
       filehash = NULL;
    }
 }
+
+/* used to free the hash value of "Song *s" when we destroy the hashes */
+static void free_song_hash (void *s)
+{
+    C_FREE (((Song *)s)->md5_hash);
+}
+
 
 /**
  * Check to see if a song has already been added to the ipod
@@ -254,33 +229,37 @@ md5_song_exists(Song * s)
    gchar *result = NULL;
    Song *song = NULL;
 
-   if ((cfg->md5songs) && (filehash))
+   if (prefs_get_md5songs ())
    {
-      val = hash_song(s);
-      if (val != NULL)
-      {
-         if ((song = g_hash_table_lookup(filehash, val)))
-         {
-            g_free(val);
-            if (song->pc_path_utf8 && strlen(song->pc_path_utf8))
-               result = song->pc_path_utf8;
-            else if ((song->title && strlen(song->title)))
-               result = song->title;
-            else if ((song->album && strlen(song->album)))
-               result = song->album;
-            else if ((song->artist && strlen(song->artist)))
-               result = song->artist;
-            else
-               result = "";
-         }
-         else                   /* if it doesn't exist we register it in the
-                                   hash */
-         {
-            if (s->md5_hash == NULL)
-               s->md5_hash = g_strdup(val);
-            g_hash_table_insert(filehash, val, s);
-         }
-      }
+       if (filehash == NULL)
+       {
+	   filehash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, free_song_hash);
+       }
+       val = md5_hash_song(s);
+       if (val != NULL)
+       {
+	   if ((song = g_hash_table_lookup(filehash, val)))
+	   {
+	       g_free(val);
+	       if (song->pc_path_utf8 && strlen(song->pc_path_utf8))
+		   result = song->pc_path_utf8;
+	       else if ((song->title && strlen(song->title)))
+		   result = song->title;
+	       else if ((song->album && strlen(song->album)))
+		   result = song->album;
+	       else if ((song->artist && strlen(song->artist)))
+		   result = song->artist;
+	       else
+		   result = "";
+	   }
+	   else                   /* if it doesn't exist we register it in the
+				     hash */
+	   {
+	       if (s->md5_hash == NULL)
+		   s->md5_hash = g_strdup(val);
+	       g_hash_table_insert(filehash, val, s);
+	   }
+       }
    }
    return result;
 }
@@ -294,7 +273,7 @@ md5_song_removed(Song * s)
 {
    gchar *val = NULL;
 
-   if ((cfg->md5songs) && (filehash) && (s) && (val = hash_song(s)))
+   if ((prefs_get_md5songs ()) && (filehash) && (s) && (val = md5_hash_song(s)))
    {
       if (g_hash_table_lookup(filehash, val))
       {

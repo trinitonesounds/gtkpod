@@ -213,7 +213,6 @@ prefs_window_save(void)
 {
     gint i;
 
-    prefs_set_md5songs_active(tmpcfg->md5songs);
     prefs_set_id3_write(tmpcfg->id3_write);
     prefs_set_id3_writeall(tmpcfg->id3_writeall);
     prefs_set_mount_point(tmpcfg->ipod_mount);
@@ -235,6 +234,7 @@ prefs_window_save(void)
     prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
     prefs_set_write_extended_info(tmpcfg->write_extended_info);
     prefs_set_keep_backups(tmpcfg->keep_backups);
+    prefs_set_md5songs(tmpcfg->md5songs);
 
     cfg_free(tmpcfg);
     tmpcfg =NULL;

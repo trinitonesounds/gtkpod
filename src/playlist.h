@@ -38,17 +38,17 @@
 
 typedef struct
 {
-  gchar *name;
-  gunichar2 *name_utf16;
-  guint32 type;         /* 1: master play list (PL_TYPE_MPL) */
-  GList *members;       /* songs in playlist (Song *) */
+    gchar *name;          /* name of playlist in UTF8 */
+    gunichar2 *name_utf16;/* name of playlist in UTF16 */
+    guint32 type;         /* 1: master play list (PL_TYPE_MPL) */
+    GList *members;       /* songs in playlist (Song *) */
 } Playlist;
 
-enum {
-  PL_TYPE_NORM = 0,
-  PL_TYPE_MPL = 1
+enum { /* types for playlist->type */
+    PL_TYPE_NORM = 0,       /* normal playlist, visible in iPod */
+    PL_TYPE_MPL = 1         /* master playlist, contains all songs,
+			       not visible in iPod */
 };
-
 
 void create_mpl (void);
 void add_new_playlist (void);

@@ -91,7 +91,6 @@ gboolean it_add_song (Song *song);
 gboolean add_song (Song *song);
 void remove_song (Song *song);
 void remove_all_songs (void);
-GList *get_song_list (void);
 #define it_get_nr_of_songs get_nr_of_songs
 guint get_nr_of_songs (void);
 Song *it_get_song_by_nr (guint32 n);
@@ -107,4 +106,5 @@ void data_changed (void);
 gchar* get_song_name_on_disk(Song *s);
 gchar* get_preferred_song_name_format(Song *s);
 void remove_song_from_ipod (Song *song);
+void hash_songs(void);
 #endif __SONG_H__
