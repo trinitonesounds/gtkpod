@@ -95,7 +95,7 @@ enum  {
 void create_listviews (GtkWidget *gtkpod);
 void destroy_listview (void);
 
-void pm_remove_playlist (Playlist *playlist);
+void pm_remove_playlist (Playlist *playlist, gboolean select);
 void pm_add_playlist (Playlist *playlist);
 void pm_remove_song (Playlist *playlist, Song *song);
 void pm_add_song (Playlist *playlist, Song *song);

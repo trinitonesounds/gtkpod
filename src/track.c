@@ -278,9 +278,7 @@ gboolean add_song_by_filename (gchar *name)
 }
 
 
-/* Remove song from the list. First it's removed from any display
-   model using remove_song_from_model (), then the entry itself
-   is removed from the GList *songs */
+/* Remove song from the list. */
 void remove_song (Song *song)
 {
   /*  remove_song_from_model (song); Must be done by playlist handling! */

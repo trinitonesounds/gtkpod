@@ -197,9 +197,9 @@ parse_ipod_id_from_string(gchar **s, guint32 *id)
 void
 gtkpod_main_quit(void)
 {
-    remove_all_songs ();
-    remove_all_playlists ();
-    /* cleanup_listviews (); FIXME!!! close window button segfaults if this call is in */
-    write_prefs ();
-    gtk_main_quit ();
+  remove_all_playlists ();
+  remove_all_songs ();
+  cleanup_listviews ();
+  write_prefs ();
+  gtk_main_quit ();
 }

@@ -194,7 +194,7 @@ Song *get_song_in_playlist_by_nr (Playlist *plitem, guint32 n)
    is removed from the GList *playlists */
 void remove_playlist (Playlist *playlist)
 {
-  pm_remove_playlist (playlist);
+  pm_remove_playlist (playlist, FALSE);
   playlists = g_list_remove (playlists, playlist);
   if (playlist->name)            g_free (playlist->name);
   if (playlist->name_utf16)      g_free (playlist->name_utf16);

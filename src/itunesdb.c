@@ -1010,21 +1010,17 @@ gboolean itunesdb_write (gchar *path)
    "song->ipod_path_utf8" and "song->ipod_path_utf16" */
 gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 {
-  gint dir_num = 0;
-  FILE *file_in = NULL;
-  FILE *file_out = NULL;
+  static gint dir_num = -1;
   gchar *ipod_file, *ipod_fullfile;
-  gchar data[ITUNESDB_COPYBLK];
-  glong bread, bwrite;
-  gboolean success = TRUE;
+  gboolean success;
 
+  if (dir_num == -1) dir_num = (gint) (19.0*rand()/(RAND_MAX));
   if(song->transferred == TRUE) return TRUE; /* nothing to do */
   if (song == NULL)
     {
       g_warning ("Programming error: copy_song_to_ipod () called NULL-song\n");
       return FALSE;
     }
-  dir_num = (int) (19.0*rand()/(RAND_MAX));
 
   /* The iPod seems to need the .mp3 ending to play the song.
      Of course the following line should be changed once gtkpod
@@ -1036,50 +1032,7 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
 #endif
 
   ipod_fullfile = concat_dir (path, ipod_file+1);
-  do { /* dummy loop for easier error handling */
-    file_in = fopen (pcfile, "r");
-    if (file_in == NULL)
-      {
-	gtkpod_warning (_("Could not open PC file \"%s\" for reading.\n"), pcfile);
-	success = FALSE;
-	break;
-      }
-    file_out = fopen (ipod_fullfile, "w");
-    if (file_out == NULL)
-      {
-	gtkpod_warning (_("Could not open iPod file \"%s\" for writing.\n"), ipod_fullfile);
-	success = FALSE;
-	break;
-      }
-    do {
-      bread = fread (data, 1, ITUNESDB_COPYBLK, file_in);
-      if (bread == 0)
-	{
-	  if (feof (file_in) == 0)
-	    { /* error -- not end of file! */
-	      gtkpod_warning (_("Error reading PC file \"%s\"."),pcfile);
-	      success = FALSE;
-	    }
-	}
-      else
-	{
-	  bwrite = fwrite (data, 1, bread, file_out);
-	  if (bwrite != bread)
-	    {
-	      gtkpod_warning (_("Error writing PC file \"%s\"."),ipod_file);
-	      success = FALSE;
-	    }
-	} 
-    } while (success && (bread != 0));
-  } while (FALSE);
-  if (file_in)  fclose (file_in);
-  if (file_out)
-    {
-      fclose (file_out);
-      if (!success) { /* error occured -> delete file on iPod */
-	remove (ipod_fullfile);
-      }
-    }
+  success = cp (pcfile, ipod_fullfile);
   if (success)
     { /* need to store ipod_filename */
       gint i, len;
@@ -1092,8 +1045,68 @@ gboolean copy_song_to_ipod (gchar *path, Song *song, gchar *pcfile)
       song->ipod_path_utf16 = g_utf8_to_utf16 (ipod_file,
 					       -1, NULL, NULL, NULL);
       song->transferred = TRUE;
+      ++dir_num;
+      if (dir_num == 20) dir_num = 0;
     }
   g_free (ipod_file);
   g_free (ipod_fullfile);
+  return success;
+}
+
+
+/* Copy file "from_file" to "to_file".
+   Returns TRUE on success, FALSE otherwise */
+gboolean cp (gchar *from_file, gchar *to_file)
+{
+  gchar data[ITUNESDB_COPYBLK];
+  glong bread, bwrite;
+  gboolean success = TRUE;
+  FILE *file_in = NULL;
+  FILE *file_out = NULL;
+
+  do { /* dummy loop for easier error handling */
+    file_in = fopen (from_file, "r");
+    if (file_in == NULL)
+      {
+	gtkpod_warning (_("Could not open file \"%s\" for reading.\n"), from_file);
+	success = FALSE;
+	break;
+      }
+    file_out = fopen (to_file, "w");
+    if (file_out == NULL)
+      {
+	gtkpod_warning (_("Could not open file \"%s\" for writing.\n"), to_file);
+	success = FALSE;
+	break;
+      }
+    do {
+      bread = fread (data, 1, ITUNESDB_COPYBLK, file_in);
+      if (bread == 0)
+	{
+	  if (feof (file_in) == 0)
+	    { /* error -- not end of file! */
+	      gtkpod_warning (_("Error reading file \"%s\"."), from_file);
+	      success = FALSE;
+	    }
+	}
+      else
+	{
+	  bwrite = fwrite (data, 1, bread, file_out);
+	  if (bwrite != bread)
+	    {
+	      gtkpod_warning (_("Error writing PC file \"%s\"."),to_file);
+	      success = FALSE;
+	    }
+	} 
+    } while (success && (bread != 0));
+  } while (FALSE);
+  if (file_in)  fclose (file_in);
+  if (file_out)
+    {
+      fclose (file_out);
+      if (!success) { /* error occured -> delete to_file */
+	remove (to_file);
+      }
+    }
   return success;
 }

@@ -189,45 +189,57 @@ static gboolean pm_delete_playlist (GtkTreeModel *model,
   gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   if(playlist == (Playlist *)data) {
     gtk_list_store_remove (GTK_LIST_STORE (model), iter);
-    /* this is deleting two rows at a time. !!! */
-    /*
-    gtk_tree_model_row_deleted (model, path);
-    */
     return TRUE;
   }
   return FALSE;
 }
 
 
-/* Remove playlist from the display models */
-void pm_remove_playlist (Playlist *playlist)
+/* Remove "playlist" from the display model. 
+   "select": TRUE: a new playlist is selected
+             FALSE: no selection is taking place
+                    (useful when quitting program) */
+void pm_remove_playlist (Playlist *playlist, gboolean select)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (playlist_treeview);
+  gboolean have_iter = FALSE;
+  GtkTreeIter i,in;
+  GtkTreeSelection *ts = NULL;
+
   if (model != NULL)
-  {
-    GtkTreeIter i;
-    GtkTreeSelection *ts = NULL;
-    
-    /* 
-     * get the currently selected playlist from the playlist view  and its
-     * iterator 
-     */
-    ts = gtk_tree_view_get_selection(playlist_treeview);
-    if((gtk_tree_selection_get_selected(ts, NULL, &i)))
     {
-	/* if we can't select the next iterator, grab the first one*/
-	if(!(gtk_tree_model_iter_next(model, &i)))
+      ts = gtk_tree_view_get_selection(playlist_treeview);
+      if (select && (current_playlist == playlist))
 	{
-		gtk_tree_model_get_iter_first(model, &i);
+	  /* We are about to delete the currently selected
+	     playlist. Try to select the next. */
+	  if(gtk_tree_selection_get_selected(ts, NULL, &i))
+	    {
+	      if(gtk_tree_model_iter_next(model, &i))
+		{
+		  have_iter = TRUE;
+		}
+	    }
 	}
-    
-	/* find the pl and delete it */
-	gtk_tree_model_foreach (model, pm_delete_playlist, playlist);
-	
-	/* select our new found iter !!! */
-	gtk_tree_selection_select_iter(ts, &i);
+      /* find the pl and delete it */
+      gtk_tree_model_foreach (model, pm_delete_playlist, playlist);
+      if (select && (current_playlist == playlist) && !have_iter)
+	{
+	  /* We deleted the current playlist which was the last.
+	     Now we try to select the currently last playlist */
+	  if(gtk_tree_model_get_iter_first(model, &in))
+	    {
+	      i = in;
+	      while (gtk_tree_model_iter_next (model, &in))
+		{
+		  i = in;
+		}
+	      have_iter = TRUE;
+	    }
+	}
+      /* select our iter !!! */
+      if (have_iter && select)   gtk_tree_selection_select_iter(ts, &i);
     }
-  }
 }
 
 
@@ -429,6 +441,7 @@ static gint st_get_instance (GtkNotebook *notebook)
   gint i=0;
   while (i<SORT_TAB_NUM)
     {
+      if (sorttab[i] == NULL) return -1; /* gtk_main_quit() selects one of the notebooks, but the memory has already been deleted... */
       if (sorttab[i]->notebook == notebook) return i;
       ++i;
     }
@@ -474,7 +487,6 @@ static gboolean st_delete_entry_from_model (GtkTreeModel *model,
   gtk_tree_model_get (model, iter, ST_COLUMN_ENTRY, &entry, -1);
   if(entry == (TabEntry *)data) {
     gtk_list_store_remove (GTK_LIST_STORE (model), iter);
-    gtk_tree_model_row_deleted (model, path);
     return TRUE;
   }
   return FALSE;
@@ -587,7 +599,7 @@ static gboolean st_recategorize_song (Song *song, guint32 inst)
 
   oldentry = st_get_entry_by_song (song, inst);
   /*  printf("%d: recat_oldentry: %x\n", inst, oldentry);*/
-/* should not happen: song is not in sort tab */
+  /* should not happen: song is not in sort tab */
   if (oldentry == NULL) return FALSE;
   entryname = st_get_entryname (song, inst);
   /*  printf("%d: recat_entryname: %s\n", inst, entryname);*/
@@ -869,6 +881,7 @@ void st_page_selected (GtkNotebook *notebook, guint page)
   Song *song;
 
   inst = st_get_instance (notebook);
+  if (inst == -1) return;
   st = sorttab[inst];
   master = g_list_nth_data (st->entries, 0);
   /* Copy members before they get deleted by st_init */
@@ -1153,6 +1166,7 @@ static void cleanup_sort_tabs (void)
     {
       if (sorttab[i] != NULL)
 	{
+	  st_remove_all_entries (i);
 	  for (j=0; j<ST_CAT_NUM; ++j)
 	    {
 	      if (sorttab[i]->lastselection[j])
@@ -1204,10 +1218,6 @@ static gboolean sm_delete_song (GtkTreeModel *model,
   gtk_tree_model_get (model, iter, SM_COLUMN_ALBUM, &song, -1);
   if(song == (Song *)data) {
     gtk_list_store_remove (GTK_LIST_STORE (model), iter);
-    /* this is deleting two rows !!! */
-    /*
-    gtk_tree_model_row_deleted (model, path);
-    */
     return TRUE;
   }
   return FALSE;
