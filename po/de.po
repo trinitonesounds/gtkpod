@@ -1439,7 +1439,11 @@ msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%A/%d/%t - %"
 "n' or '%o'. %A: artist; %d: album; %n: title; %t: track nr; %o: original "
 "filename (needs extended information file)"
-msgstr "Bestimmt, wie der Dateiname von Stücken gewählt wird, die vom iPod kopiert werden. Bsp.: '%A/%d/%t - %n' oder '%o': %A: Künstler; %d: Album; %n: Titel; %t: Stück-Nr.; %o: ursprünglicher Dateiname (benötigt 'Erweiterte Informationen')"
+msgstr ""
+"Bestimmt, wie der Dateiname von Stücken gewählt wird, die vom iPod kopiert "
+"werden. Bsp.: '%A/%d/%t - %n' oder '%o': %A: Künstler; %d: Album; %n: Titel; "
+"%t: Stück-Nr.; %o: ursprünglicher Dateiname (benötigt 'Erweiterte "
+"Informationen')"
 
 #: src/interface.c:1736
 msgid " "
@@ -2105,7 +2109,10 @@ msgid ""
 "Patches were supplied by the following people (list may be incomplete -- "
 "please contact me)\n"
 "\n"
-msgstr "Patches were supplied by the following people (list may be incomplete -- please contact me)\n\n"
+msgstr ""
+"Patches were supplied by the following people (list may be incomplete -- "
+"please contact me)\n"
+"\n"
 
 #: src/misc.c:322
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several songs in one run)\n"
@@ -2117,7 +2124,9 @@ msgstr "Hiroshi Kawashima: Automatische Erkennung japanischer Zeichensätze\n"
 
 #: src/misc.c:326
 msgid "Adrian Ulrich: porting of playlist code from mktunes.pl to itunesdb.c\n"
-msgstr "Adrian Ulrich: Portierung des Playlisten-Codes von mktunes.pl nach itunesdb.c\n"
+msgstr ""
+"Adrian Ulrich: Portierung des Playlisten-Codes von mktunes.pl nach itunesdb."
+"c\n"
 
 #: src/misc.c:328
 msgid ""
@@ -2127,7 +2136,8 @@ msgstr "Walter Bell: Korrekte Handhabung der kodierten DND URIs\n"
 
 #: src/misc.c:330
 msgid "Sam Clegg: user defined filenames when exporting tracks from the iPod\n"
-msgstr "Sam Clegg: benutzerdefinierte Dateinamen beim Kopieren von Stücken vom iPod\n"
+msgstr ""
+"Sam Clegg: benutzerdefinierte Dateinamen beim Kopieren von Stücken vom iPod\n"
 
 #: src/misc.c:332
 msgid "Chris Cutler: automatic creation of various playlist types\n"
@@ -2137,7 +2147,9 @@ msgstr "Chris Cutler: automatische Erstellung diverser Playlisten\n"
 msgid ""
 "Graeme Wilford: reading and writing of the 'Composer' ID3 tags, progress "
 "dialogue during sync\n"
-msgstr "Graeme Wilford: Lesen und Schreiben der 'Komponisten' ID3-Tags, Fortschrittsbalken während iTunesDB-Abgleich.\n"
+msgstr ""
+"Graeme Wilford: Lesen und Schreiben der 'Komponisten' ID3-Tags, "
+"Fortschrittsbalken während iTunesDB-Abgleich.\n"
 
 #: src/misc.c:336
 msgid "Edward Matteucci: debugging, special playlist creation\n"
@@ -2155,7 +2167,9 @@ msgstr "Dieses Programm verwendet Code der folgenden Projekte:\n"
 msgid ""
 "    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
 "(http://www.gnu.org/software/gnupod/)\n"
-msgstr "    gnutools: (mktunes.pl, nach C portiert) Schreiben und Lesen der iTunesDB (http://www.gnu.org/software/gnupod/)\n"
+msgstr ""
+"    gnutools: (mktunes.pl, nach C portiert) Schreiben und Lesen der iTunesDB "
+"(http://www.gnu.org/software/gnupod/)\n"
 
 #: src/misc.c:345
 msgid "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
@@ -2164,18 +2178,23 @@ msgstr "    mp3info:  MP3-Spielzeit-Ermittlung (http://ibiblio.org/mp3info/)\n"
 #: src/misc.c:347
 msgid ""
 "    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
-msgstr "xmms:     Verzeichnisbaum-Anzeige, MP3-Spielzeit-Ermittlung (http://www.xmms.org)\n"
+msgstr ""
+"xmms:     Verzeichnisbaum-Anzeige, MP3-Spielzeit-Ermittlung (http://www.xmms."
+"org)\n"
 
 #: src/misc.c:349
 msgid ""
 "    easytag:  reading and writing of ID3 tags (http://easytag.sourceforge."
 "net)\n"
-msgstr "easytag:  Lesen und Schreiben der ID3-Tgs (http://easytag.sourceforge.net)\n"
+msgstr ""
+"easytag:  Lesen und Schreiben der ID3-Tgs (http://easytag.sourceforge.net)\n"
 
 #: src/misc.c:352
 msgid ""
 "The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
-msgstr "Die graphische Benutzeroberfläche wurde mit Hilfe von glade-2 (http://glade.gnome.org/) erstellt.\n"
+msgstr ""
+"Die graphische Benutzeroberfläche wurde mit Hilfe von glade-2 (http://glade."
+"gnome.org/) erstellt.\n"
 
 #: src/misc.c:367
 msgid "French:   David Le Brun (david at dyn-ns dot net)\n"
@@ -2199,7 +2218,8 @@ msgstr "Japanisch:   Ayako Sano\n"
 
 #: src/misc.c:375
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
-msgstr "Japanisch:   Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
+msgstr ""
+"Japanisch:   Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 
 #: src/misc.c:540
 #, c-format
@@ -2521,7 +2541,8 @@ msgid ""
 "                used with 'Offline' deactivated.\n"
 msgstr ""
 "  -o:        Offline-Modus benutzen. Änderungen werden nicht auf den iPod\n"
-"             geschrieben, sondern nach '~/.gtkpod/'. Der iPod wird aktualisiert,\n"
+"             geschrieben, sondern nach '~/.gtkpod/'. Der iPod wird "
+"aktualisiert,\n"
 "             wenn nicht im Offline-Modus die iTunesDB abgeglichen wird.\n"
 
 #: src/prefs.c:133
