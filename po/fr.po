@@ -1528,8 +1528,7 @@ msgstr "Avant de supprimer complètement les morceaux de l'iPod"
 msgid ""
 "Before removing tracks completely when\n"
 " synchronizing directories"
-msgstr ""
-"Avant de supprimer complètement les morceaux lors des synchronisations"
+msgstr "Avant de supprimer complètement les morceaux lors des synchronisations"
 
 #: src/interface.c:1893
 msgid ""
@@ -1872,9 +1871,8 @@ msgstr ""
 "\n"
 "Ramesh Dharan: edition multiple (edition de plusieurs tags en un coup)\n"
 "Adrian Ulrich: portage du code de gestion des listes de lecture\n"
-"Walter Bell: correction de la gestion des URIs avec des caractères"
-" d'échappement"
-"\n"
+"Walter Bell: correction de la gestion des URIs avec des caractères "
+"d'échappement\n"
 "\n"
 
 #: src/misc.c:319
