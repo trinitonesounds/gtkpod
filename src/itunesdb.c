@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-11-06 16:16:16 jcs>
+/* Time-stamp: <2004-11-20 18:12:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -220,6 +220,9 @@
 /* list with the contents of the Play Count file for use when
  * importing the iTunesDB */
 static GList *playcounts = NULL;
+/* needed to keep a local copy of the IDs in the master playlist */
+static guint32 *mpl_ids = NULL;
+static guint32 mpl_length = 0;
 
 /* structure to hold the contents of one entry of the Play Count file */
 struct playcount {
@@ -447,6 +450,13 @@ static glong get_pl(FILE *file, glong seek)
   fprintf(stderr, "added pl: %s", plname_utf8);
 #endif
 
+  if ((pltype == PL_TYPE_MPL) &&
+      (tracknum > 0) &&
+      (mpl_ids == NULL))
+  {   /* we need space to store the mpl IDs locally */
+      mpl_ids = g_malloc0 (tracknum * sizeof (*mpl_ids));
+      mpl_length = tracknum;
+  }
   n = 0;  /* number of tracks read */
   while (n < tracknum)
     {
@@ -458,6 +468,7 @@ static glong get_pl(FILE *file, glong seek)
 	{
 	  ref = get4int(file, seek+24);
 	  it_add_trackid_to_playlist(plitem, ref);
+	  if (pltype == PL_TYPE_MPL) mpl_ids[n] = ref;
 	  ++n;
 	}
       seek += get4int (file, seek+8);
@@ -808,9 +819,12 @@ static gboolean process_OTG_file (const gchar *filename,
 	    /* Add items */
 	    for (i=0; i<entry_num; ++i)
 	    {
-		guint32 id = get4int (otgf,
+		guint32 num = get4int (otgf,
 				      header_length + entry_length *i);
-		it_add_trackid_to_playlist (pl, id);
+		if ((num < mpl_length) && mpl_ids)
+		{
+		    it_add_trackid_to_playlist (pl, mpl_ids[num]);
+		}
 	    }
 	}
 	result = TRUE;
@@ -1024,6 +1038,12 @@ gboolean itunesdb_parse_file (const gchar *filename)
 #if ITUNESDB_DEBUG
   fprintf(stderr, "exit:  %4d\n", it_get_nr_of_tracks ());
 #endif
+
+  /* clean up used memory */
+  g_free (mpl_ids);
+  mpl_ids = NULL;
+  mpl_length = 0;
+
   return result;
 }
 
