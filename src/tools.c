@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-24 22:17:27 JST jcs>
+/* Time-stamp: <2004-04-11 00:13:11 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -293,7 +293,7 @@ void nm_tracks_list(GList *list)
 
 	diff = time(NULL) - start;
 	mins = ((diff*n/count)-diff)/60;
-	secs = ((((diff*n/count)-diff) & 60) / 5) * 5;
+	secs = ((((diff*n/count)-diff) % 60) / 5) * 5;
       /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
 	progtext = g_strdup_printf (_("%d%% (%d:%02d) left"),

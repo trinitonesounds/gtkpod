@@ -1,50 +1,53 @@
 gtkpod V0.73-CVS
-	NEW FEATURE: added support for WAV audio files
+	NEW FEATURE: Added support for WAV audio files
 
-	NEW FEATURE: added support for syncing contacts and calendar from
+	NEW FEATURE: Added support for syncing contacts and calendar from
 	existing applications to the iPod (on iTunesDB export and/or via
 	the Tools-menu). The sync is done by calling external scripts.
 	Only one script is included so far: kaddressbook_ipod. Please
 	submit more for inclusion into the next release.
 
-	NEW FEATURE: added support for LAME's replay gain to normalize the
+	NEW FEATURE: Added support for LAME's replay gain to normalize the
 	volume track (thanks to Jens Taprogge). Unfortunately the
 	conversion factor between LAME's replay gain and the iPod's volume
 	tag are not well known yet -- your input is appreciated!
 
-	IMPROVEMENT: added new auto-playlists: "One playlist for each
+	IMPROVEMENT: Added new auto-playlists: "One playlist for each
 	year" and "Playlist with all songs not listed in any playlist".
 
-	IMPROVEMENT: can specify several templates to scan the filename
+	IMPROVEMENT: Can specify several templates to scan the filename
 	for tags using the ';' as a separator
 
-	IMPROVEMENT: can specify several templates for the export
+	IMPROVEMENT: Can specify several templates for the export
 	filename. gtkpod selects according to the extension given.
 
-	IMPROVEMENT: streamlined layout of info window
+	IMPROVEMENT: Streamlined layout of info window
 
-	IMPROVEMENT: included Andrew Huntwork's patch to fix issues
+	IMPROVEMENT: Included Andrew Huntwork's patch to fix issues
 	concerning case-sensitivity of filenames under some conditions.
 
-	IMPROVEMENT: included Ero Carrera's patch to validate the filename
+	IMPROVEMENT: Included Ero Carrera's patch to validate the filename
 	when copying tracks from the iPod and to make a quick sync of the
 	iPod's contents.
 
-	IMPROVEMENT: when importing the iTunesDB automatically on startup,
+	IMPROVEMENT: When importing the iTunesDB automatically on startup,
 	no window was opened until the import was finished. Thanks to
 	Andrew Huntwork the window now opens before the import starts and
 	progress can be followed in the usual manner.
 
-	IMPROVEMENT: send 'eject' to the iPod after unmounting. This only
+	IMPROVEMENT: Send 'eject' to the iPod after unmounting. This only
 	works under LINUX and if the user has write access to the device
 	file (e.g. /dev/sda2)
 
-	IMPROVEMENT: when writing to the iPod automatically create iPod's
+	IMPROVEMENT: When writing to the iPod automatically create iPod's
 	directories when they are not present.
+
+	IMPROVEMENT: Added progress dialog with abort button when copying
+	tracks from the iPod.
 
 	BUGFIX: When dragging tracks between two playlist (i.e. into a
 	newly created playlist), a new playlist was created but the tracks
-	not added.
+	were not added.
 
 	BUGFIX: Fixed hangup when syncing dirs
 
@@ -52,11 +55,14 @@ gtkpod V0.73-CVS
 
 	BUGFIX: Fixed compile error when compiling with gcc 2.95
 
-	BUGFIX: Tags of tracks on the iPod were never changed (thanks to
-	Andrew Huntwork)
+	BUGFIX: Tags of tracks on the iPod were never changed (fixed
+	thanks to Andrew Huntwork)
+
+	BUGFIX: Fixed calculation of remaining seconds in progress
+	dialogs.
 
 	BUGFIX: automatic update of preferences data from older version
-	ran awry when no preference file was present
+	went awry when no preference file was present
 
 gtkpod V0.72
         NEW FEATURE: tags can now be set from the filename using a

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-04-09 23:03:09 JST jcs>
+/* Time-stamp: <2004-04-11 00:13:11 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -700,7 +700,7 @@ static gboolean flush_tracks (void)
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
   time_t diff, start, mins, secs;
-  char *progtext = NULL;
+  gchar *progtext = NULL;
 
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
@@ -877,7 +877,7 @@ static gboolean flush_tracks (void)
 
 	      diff = time(NULL) - start;
 	      mins = ((diff*n/count)-diff+5)/60;
-	      secs = ((((diff*n/count)-diff+5) & 60) / 5) * 5;
+	      secs = ((((diff*n/count)-diff+5) % 60) / 5) * 5;
 	      /* don't bounce up too quickly (>10% change only) */
 /*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
 	      progtext = g_strdup_printf (_("%d%% (%d:%02d) left"),

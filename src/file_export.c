@@ -39,9 +39,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <string.h>
+#include <math.h>
 
 
-gchar *fix_path(const gchar *orig);
 /**
  * READ_WRITE_BLOCKSIZE - how many bytes we read per fread/fwrite call
  */
@@ -58,6 +58,56 @@ static struct {
     gchar *dest_dir;
     GtkWidget *fs;
 } file_export;
+
+#ifdef G_THREADS_ENABLED
+/* Thread specific */
+static  GMutex *mutex = NULL;
+static GCond  *cond = NULL;
+static gboolean mutex_data = FALSE;
+#endif
+
+
+
+/*
+|  Copyright (C) 2004 Ero Carrera <ero at dkbza.org>
+|
+|  Placed under GPL in agreement with Ero Carrera. (JCS -- 12 March 2004)
+*/
+
+/**
+ * Check if supported char and return substitute.
+ */
+static gchar check_char(gchar c)
+{
+    gint i;
+    static const gchar 
+	invalid[]={'"', '*', ':', '<', '>', '?', '\\', '|', '/', 0};
+    static const gchar
+	replace[]={'_', '_', '-', '_', '_', '_', '-',  '-', '-', 0};
+    for(i=0; invalid[i]!=0; i++)
+	if(c==invalid[i])  return replace[i];
+    return c;
+}
+
+/**
+ * Process a path. It will substitute all the invalid characters.
+ */
+gchar *fix_path(const gchar *orig)
+{
+        gint i, l;
+        gchar *new;
+
+        if(orig == NULL)         return NULL;
+        new = g_strdup(orig);
+        for(i=0, l=strlen(orig); i<l; i++)
+	{
+	    new[i]=check_char(new[i]);
+        }
+        return new;
+}
+
+/* End of code originally supplied by Ero Carrera */
+
 
 
 gchar *get_export_filename_template (Track *track)
@@ -249,7 +299,7 @@ track_get_export_filename (Track *track)
  * @return FALSE is this is not possible.
  */
 gboolean
-make_dirs(char* filename)
+mkdirhier(char* filename)
 {
 	char* p = filename;
 	if (*p == G_DIR_SEPARATOR) p++;
@@ -278,6 +328,7 @@ file_export_cleanup(void)
     if(file_export.tracks) g_list_free(file_export.tracks);
     if(file_export.fs) gtk_widget_destroy(file_export.fs);
     memset(&file_export, 0, sizeof(file_export));
+    release_widgets ();
 }
 
 /**
@@ -347,6 +398,7 @@ file_is_ok(gchar *from, gchar *dest)
     return FALSE;
 }
 
+
 /**
  * copy_file - copy the filename on disk named file, to
  * the destination file dest.  Both names are FULL pathnames to the file
@@ -406,7 +458,7 @@ write_track(Track *s)
 	gchar *from_file = get_track_name_on_disk(s);
 	gchar *filename = g_build_filename (file_export.dest_dir,
 					    dest_file, NULL);
-	if (make_dirs(filename)) {
+	if (mkdirhier(filename)) {
 	    if(copy_file(from_file, filename))
 	        result = TRUE;
 	}
@@ -417,6 +469,31 @@ write_track(Track *s)
     return(result);
 }
 
+
+
+#ifdef G_THREADS_ENABLED
+/* Threaded write_track */
+static gpointer th_write_track (gpointer s)
+{
+    gboolean result = write_track ((Track *)s);
+
+    g_mutex_lock (mutex);
+    mutex_data = TRUE;   /* signal that thread will end */
+    g_cond_signal (cond);
+    g_mutex_unlock (mutex);
+
+    return (gpointer)result;
+}
+#endif
+
+/* This function is called when the user presses the abort button
+ * during flush_tracks() */
+static void write_tracks_abort (gboolean *abort)
+{
+    *abort = TRUE;
+}
+
+
 /**
  * file_export_do - if we get the "Ok" from the file selection we wanna
  * write the files out to disk
@@ -424,23 +501,158 @@ write_track(Track *s)
 static void
 file_export_do(void)
 {
-    Track *s = NULL;
     GList *l = NULL;
-    
-    if(file_export.tracks)
+    gint n;
+    static gboolean abort;
+    gdouble total = 0;
+#ifdef G_THREADS_ENABLED
+    GThread *thread = NULL;
+    GTimeVal gtime;
+    if (!mutex) mutex = g_mutex_new ();
+    if (!cond) cond = g_cond_new ();
+#endif
+
+    /* close the file requester */
+    if(file_export.fs)
     {
-	for(l = file_export.tracks; l; l = l->next)
+	gtk_widget_destroy (file_export.fs);
+	file_export.fs = NULL;
+    }
+
+
+    block_widgets ();
+
+    abort = FALSE;
+    n = g_list_length (file_export.tracks);
+    /* calculate total length to be copied */
+    for(l = file_export.tracks; l && !abort; l = l->next)
+    {
+	Track *s = (Track*)l->data;
+	total += s->size;
+    }
+
+    if(n != 0)
+    {
+	/* create the dialog window */
+	GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
+	gchar *progtext = NULL;
+	gint count = 0;     /* number of tracks copied */
+	gdouble copied = 0;  /* number of bytes copied */
+	gdouble fraction;    /* fraction copied (copied/total) */
+	gboolean result = TRUE;
+	time_t diff, start, mins, secs;
+
+	dialog = gtk_dialog_new_with_buttons (_("Information"),
+					      GTK_WINDOW (gtkpod_window),
+					      GTK_DIALOG_DESTROY_WITH_PARENT,
+					      GTK_STOCK_CANCEL,
+					      GTK_RESPONSE_NONE,
+					      NULL);
+
+	/* emulate gtk_message_dialog_new */
+	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO,
+					  GTK_ICON_SIZE_DIALOG);
+	label = gtk_label_new (
+	    _("Press button to abort."));
+
+	gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	gtk_label_set_selectable (GTK_LABEL (label), TRUE);
+
+	/* hbox to put the image+label in */
+	hbox = gtk_hbox_new (FALSE, 6);
+	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+	/* Create the progress bar */
+	progress_bar = gtk_progress_bar_new ();
+	progtext = g_strdup (_("copying..."));
+	gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
+	g_free (progtext);
+
+	/* Indicate that user wants to abort */
+	g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
+				  G_CALLBACK (write_tracks_abort),
+				  &abort);
+
+	/* Add the image/label + progress bar to dialog */
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+			    hbox, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+			    progress_bar, FALSE, FALSE, 0);
+	gtk_widget_show_all (dialog);
+
+	while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+	start = time(NULL);
+	for(l = file_export.tracks; l && !abort; l = l->next)
 	{
-	    s = (Track*)l->data;
-	    if (track_is_valid (s))
+	    Track *s = (Track*)l->data;
+	    gchar *buf;
+
+	    copied += s->size;
+#ifdef G_THREADS_ENABLED
+	    mutex_data = FALSE;
+	    thread = g_thread_create (th_write_track, s, TRUE, NULL);
+	    if (thread)
 	    {
-		if(!write_track(s))
-		    gtkpod_warning (_("Failed to write '%s-%s'\n"), s->artist, s->title);	
-		l->data = NULL;
+		g_mutex_lock (mutex);
+		do
+		{
+		    while (widgets_blocked && gtk_events_pending ())
+			gtk_main_iteration ();
+		    /* wait a maximum of 20 ms */
+		    g_get_current_time (&gtime);
+		    g_time_val_add (&gtime, 20000);
+		    g_cond_timed_wait (cond, mutex, &gtime);
+		} while(!mutex_data);
+		g_mutex_unlock (mutex);
+		result &= (gboolean)g_thread_join (thread);
 	    }
+	    else {
+		g_warning ("Thread creation failed, falling back to default.\n");
+		result &= write_track (s);
+	    }
+#else
+	    result &= write_track (s);
+#endif
+	    if (!result)
+	    {
+		gtkpod_warning (_("Failed to write '%s-%s'\n"), s->artist, s->title);	
+	    }
+
+	    ++count;
+	    if (count == 1)  /* we need longer timeout */
+		prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
+	    if (count == n)  /* we need to reset timeout */
+		prefs_set_statusbar_timeout (0);
+	    buf = g_strdup_printf (ngettext ("Copied %d of %d track.",
+					     "Copied %d of %d tracks.", n),
+				   count, n);
+	    gtkpod_statusbar_message(buf);
+	    g_free (buf);
+
+	    fraction = copied/total;
+
+	    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
+					  fraction);
+	    diff = time(NULL) - start;
+	    mins = ((diff/fraction)-diff+5)/60;
+	    secs = ((((time_t)(diff/fraction)-diff+5) % 60) / 5) * 5;
+	    /* don't bounce up too quickly (>10% change only) */
+/*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
+	    progtext = g_strdup_printf (_("%.0f%% (%d:%02d) left"),
+					100*fraction, (int)mins, (int)secs);
+	    gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
+				      progtext);
+	    g_free (progtext);
+	    while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 	}
+	gtk_widget_destroy (dialog);
+	if (!result || abort)
+	    gtkpod_statusbar_message (_("Some tracks were not copied."));
     }
     file_export_cleanup();
+    release_widgets ();
 }
 
 /**
@@ -491,8 +703,6 @@ file_export_init(GList *tracks)
 
     if(!file_export.fs)
     {
-	/* FIXME: we should besser use an ID list since tracks might be
-	   removed during the procedure of selecting a directory */
 	file_export.tracks = g_list_copy (tracks);
 	w = gtk_file_selection_new(_("Select Export Destination Directory"));
 	gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION(w),
@@ -507,46 +717,8 @@ file_export_init(GList *tracks)
 		G_CALLBACK(export_files_cancel_button_clicked), w);
 	file_export.fs = w;
 	gtk_widget_show(w);
+	block_widgets ();
     }
 }
 
 
-/*
-|  Copyright (C) 2004 Ero Carrera <ero at dkbza.org>
-|
-|  Placed under GPL in agreement with Ero Carrera. (JCS -- 12 March 2004)
-*/
-
-/**
- * Check if supported char and return substitute.
- */
-static gchar check_char(gchar c)
-{
-    gint i;
-    static const gchar 
-	invalid[]={'"', '*', ':', '<', '>', '?', '\\', '|', '/', 0};
-    static const gchar
-	replace[]={'_', '_', '-', '_', '_', '_', '-',  '-', '-', 0};
-    for(i=0; invalid[i]!=0; i++)
-	if(c==invalid[i])  return replace[i];
-    return c;
-}
-
-/**
- * Process a path. It will substitute all the invalid characters.
- */
-gchar *fix_path(const gchar *orig)
-{
-        gint i, l;
-        gchar *new;
-
-        if(orig == NULL)         return NULL;
-        new = g_strdup(orig);
-        for(i=0, l=strlen(orig); i<l; i++)
-	{
-	    new[i]=check_char(new[i]);
-        }
-        return new;
-}
-
-/* End of code originally supplied by Ero Carrera */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-31 23:21:42 JST jcs>
+/* Time-stamp: <2004-04-10 23:46:39 JST jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -328,17 +328,6 @@ Track *get_track_by_filename (gchar *filename)
       }
   }
   return NULL;
-}
-
-
-/* Check if @track is (still) in the track list
- *
- * Return TRUE if present
- */
-gboolean track_is_valid (Track *track)
-{
-    if (g_list_find (tracks, track)) return TRUE;
-    else                           return FALSE;
 }
 
 
