@@ -283,8 +283,8 @@ void open_about_window ()
   label_text = g_strdup_printf (_("gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod(tm)."), VERSION);
   gtk_label_set_text (about_label, label_text);
   g_free (label_text);
-  credits_text =  _("\
-(C) 2002 - 2003
+  credits_text =  
+_("(C) 2002 - 2003
 Jorg Schuler (jcsjcs at users.sourceforge.net)
 Corey Donohoe (atmos at atmos.org)
 
@@ -306,8 +306,8 @@ The GUI was created with the help of glade-2 (http://glade.gnome.org/).");
   gtk_text_buffer_set_text (gtk_text_view_get_buffer (textview),
 			    credits_text, -1);
 
-  translators_text = _("\
-German:   Jorg Schuler (jcsjcs at users.sourceforge.net)
+  translators_text = 
+_("German:   Jorg Schuler (jcsjcs at users.sourceforge.net)
 Japanese: Ayako Sano");
   textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));
   gtk_text_buffer_set_text (gtk_text_view_get_buffer (textview),

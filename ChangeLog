@@ -1,4 +1,9 @@
 gtkpod V0.51-CVS
+        IMPROVEMENT: added all supported charsets provided by "iconv
+	--list" to the list of charsets to choose from. Code assumes that
+	"iconv --list" returns a list with the name of one charset in each
+	line, each valid line being terminated by "//".
+
 	NEW FEATURE: gtkpod remembers charset used when initially
 	importing a song and uses this when "updating" the song
 	information from file or writing tags to file (needs extended

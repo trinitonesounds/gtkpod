@@ -147,6 +147,8 @@ void charset_init_combo (GtkCombo *combo)
     }
     if (charsets == NULL)
     { /* set up list with charsets */
+	FILE *fp;
+
 	charsets = g_list_append (charsets, _("System Charset"));
 	/* now add all the charset descriptions in the list above */
 	ci=charset_info;
@@ -155,8 +157,29 @@ void charset_init_combo (GtkCombo *combo)
 	    charsets = g_list_append (charsets, _(ci->descr));
 	    ++ci;
 	}
-	/* now add all the charsets listed by "iconv -l" */
-	/* FIXME! */
+	/* let's add all available charsets returned by "iconv
+	   --list" */
+	fp = popen ("iconv --list", "r");
+	if (fp)
+	{
+	    gchar buf[PATH_MAX];
+	    /* read one line of output at a time */
+	    while (fgets (buf, PATH_MAX, fp))
+	    {
+		/* only consider lines ending on "//" */
+		gchar *bufp = g_strrstr (buf, "//\n");
+		if (bufp)
+		{  /* add everything before "//" to our charset list */
+		    gchar *bufpp = buf;
+		    *bufp = 0;  /* shorten string */
+		    while ((*bufpp == ' ') || (*bufpp == 0x09))
+			++bufpp; /* skip whitespace */
+		    if (*bufpp)
+			charsets = g_list_append (charsets, g_strdup (bufpp));
+		}
+	    }
+	    pclose (fp);
+	}
     }
     /* set pull down items */
     gtk_combo_set_popdown_strings (GTK_COMBO (combo), charsets); 
@@ -207,7 +230,8 @@ gchar *charset_to_description (gchar *charset)
     ci = charset_info;
     while (ci->descr != NULL)
     {
-	if (g_utf8_collate (charset, ci->name) == 0)
+	if (g_utf8_collate (g_utf8_casefold (charset, -1),
+			    g_utf8_casefold (ci->name, -1)) == 0)
 	{
 	    return g_strdup (_(ci->descr));
 	}
