@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
-"POT-Creation-Date: 2003-02-27 22:20+0900\n"
+"POT-Creation-Date: 2003-02-28 20:55+0900\n"
 "PO-Revision-Date: 2003-02-02 22:59+0900\n"
 "Last-Translator: Ayako Sano <@>\n"
 "Language-Team: n/a\n"
@@ -245,51 +245,51 @@ msgstr "ＯＫ"
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/display.c:379
+#: src/display.c:377
 msgid "Nothing is selected currently in Playlist Tree\n"
 msgstr "現在の再生リストツリー中では選択されません\n"
 
-#: src/display.c:533
+#: src/display.c:531
 msgid "Playlists"
 msgstr "再生リスト"
 
-#: src/display.c:993
+#: src/display.c:991
 msgid "All"
 msgstr "全て"
 
-#: src/display.c:2026 src/interface.c:599 src/interface.c:659
+#: src/display.c:2024 src/interface.c:599 src/interface.c:659
 #: src/interface.c:1268
 msgid "Title"
 msgstr "タイトル"
 
-#: src/display.c:2048 src/interface.c:557 src/interface.c:617
+#: src/display.c:2046 src/interface.c:557 src/interface.c:617
 #: src/interface.c:1252 src/interface.c:1344
 msgid "Artist"
 msgstr "アーティスト"
 
-#: src/display.c:2070 src/interface.c:571 src/interface.c:631
+#: src/display.c:2068 src/interface.c:571 src/interface.c:631
 #: src/interface.c:1264 src/interface.c:1348
 msgid "Album"
 msgstr "アルバム"
 
-#: src/display.c:2091 src/interface.c:585 src/interface.c:645
+#: src/display.c:2089 src/interface.c:585 src/interface.c:645
 #: src/interface.c:1256 src/interface.c:1356
 msgid "Genre"
 msgstr "ジャンル"
 
-#: src/display.c:2112 src/interface.c:1360
+#: src/display.c:2110 src/interface.c:1360
 msgid "Track Number"
 msgstr "トラック"
 
-#: src/display.c:2131
+#: src/display.c:2129
 msgid "iPod ID"
 msgstr "iPod ID"
 
-#: src/display.c:2149
+#: src/display.c:2147
 msgid "PC File"
 msgstr "PCファイル"
 
-#: src/display.c:2165
+#: src/display.c:2163
 msgid "Trnsfrd"
 msgstr "転送"
 

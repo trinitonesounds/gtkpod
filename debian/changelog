@@ -1,3 +1,8 @@
+gtkpod (0.43-1) unstable; urgency=low
+    * BUGFIX: After DND operation songs were displayed twice in the
+      master playlist (this was just a display artifact).
+ -- Jorg Schuler <jcsjcs at users.sourceforge.net>  Thu, 28 Feb 2003 21:00:00 +0900
+
 gtkpod (0.43-0) unstable; urgency=low
     * Preventive BUGFIX: in the code to import the iTunesDB all absolute
       references to positions in the iTunesDB were removed. Instead

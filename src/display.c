@@ -95,12 +95,10 @@ void pm_remove_song (Playlist *playlist, Song *song)
 /* Add song to the display if it's in the currently displayed playlist */
 void pm_add_song (Playlist *playlist, Song *song)
 {
-  if (current_playlist && 
-      ((playlist == current_playlist) ||
-       (current_playlist->type == PL_TYPE_MPL)))
-  {
-      st_add_song (song, TRUE, 0); /* Add to first sort tab */
-  }
+    if (playlist == current_playlist)
+    {
+	st_add_song (song, TRUE, 0); /* Add to first sort tab */
+    }
 }
 
 /* advertise dnd for the playlist model GtkTreeView

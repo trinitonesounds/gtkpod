@@ -1,3 +1,6 @@
+gtkpod V0.43-1 28-Feb-2003
+	BUGFIX: After DND operation songs were displayed twice in the
+	master playlist (this was just a display artifact).
 gtkpod V0.43 27-Feb-2003
         Preventive BUGFIX: in the code to import the iTunesDB all absolute
 	references to positions in the iTunesDB were removed. Instead

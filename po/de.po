@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.14\n"
-"POT-Creation-Date: 2003-02-27 22:20+0900\n"
+"POT-Creation-Date: 2003-02-28 20:55+0900\n"
 "PO-Revision-Date: 2003-02-27 22:45+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
@@ -244,51 +244,51 @@ msgstr "OK"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/display.c:379
+#: src/display.c:377
 msgid "Nothing is selected currently in Playlist Tree\n"
 msgstr "Es ist zur Zeit nichts im Playlist Fenster ausgewählt\n"
 
-#: src/display.c:533
+#: src/display.c:531
 msgid "Playlists"
 msgstr "Playlisten"
 
-#: src/display.c:993
+#: src/display.c:991
 msgid "All"
 msgstr "Alle"
 
-#: src/display.c:2026 src/interface.c:599 src/interface.c:659
+#: src/display.c:2024 src/interface.c:599 src/interface.c:659
 #: src/interface.c:1268
 msgid "Title"
 msgstr "Titel"
 
-#: src/display.c:2048 src/interface.c:557 src/interface.c:617
+#: src/display.c:2046 src/interface.c:557 src/interface.c:617
 #: src/interface.c:1252 src/interface.c:1344
 msgid "Artist"
 msgstr "Künstler"
 
-#: src/display.c:2070 src/interface.c:571 src/interface.c:631
+#: src/display.c:2068 src/interface.c:571 src/interface.c:631
 #: src/interface.c:1264 src/interface.c:1348
 msgid "Album"
 msgstr "Album"
 
-#: src/display.c:2091 src/interface.c:585 src/interface.c:645
+#: src/display.c:2089 src/interface.c:585 src/interface.c:645
 #: src/interface.c:1256 src/interface.c:1356
 msgid "Genre"
 msgstr "Genre"
 
-#: src/display.c:2112 src/interface.c:1360
+#: src/display.c:2110 src/interface.c:1360
 msgid "Track Number"
 msgstr "Stück Nummer"
 
-#: src/display.c:2131
+#: src/display.c:2129
 msgid "iPod ID"
 msgstr "iPod ID"
 
-#: src/display.c:2149
+#: src/display.c:2147
 msgid "PC File"
 msgstr "PC Datei"
 
-#: src/display.c:2165
+#: src/display.c:2163
 msgid "Trnsfrd"
 msgstr "Übertragen"
 
