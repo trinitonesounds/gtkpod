@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-29 12:48:15 jcs>
+/* Time-stamp: <2003-11-30 13:05:17 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -30,6 +30,7 @@
 
 #include <gtk/gtk.h>
 
+void prefs_window_update_default_sizes (void);
 void prefs_window_block (void);
 void prefs_window_release (void);
 void prefs_window_show_hide_tooltips (void);

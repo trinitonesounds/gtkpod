@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 00:37:28 jcs>
+/* Time-stamp: <2003-11-30 13:14:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -203,6 +203,8 @@ struct cfg *cfg_new(void)
     mycfg->size_dirbr.y = 400;
     mycfg->size_prefs.x = -1;
     mycfg->size_prefs.y = 480;
+    mycfg->size_info.x = 300;
+    mycfg->size_info.y = 470;
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	mycfg->tm_col_width[i] = 80;
@@ -632,6 +634,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_size_prefs (-2, atoi (arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "size_info.x") == 0)
+	  {
+	      prefs_set_size_info (atoi (arg), -2);
+	  }
+	  else if(g_ascii_strcasecmp (line, "size_info.y") == 0)
+	  {
+	      prefs_set_size_info (-2, atoi (arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "automount") == 0)
 	  {
 	      prefs_set_automount (atoi (arg));
@@ -913,6 +923,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_dirbr.y=%d\n", cfg->size_dirbr.y);
     fprintf (fp, "size_prefs.x=%d\n", cfg->size_prefs.x);
     fprintf (fp, "size_prefs.y=%d\n", cfg->size_prefs.y);
+    fprintf (fp, "size_info.x=%d\n", cfg->size_info.x);
+    fprintf (fp, "size_info.y=%d\n", cfg->size_info.y);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
@@ -1394,6 +1406,14 @@ void prefs_set_size_prefs (gint x, gint y)
     if (y != -2) cfg->size_prefs.y = y;
 }
 
+/* Sets the default size for the info window. -2 means:
+ * don't change the current size */
+void prefs_set_size_info (gint x, gint y)
+{
+    if (x != -2) cfg->size_info.x = x;
+    if (y != -2) cfg->size_info.y = y;
+}
+
 /* Writes the current default size for the gtkpod window in "x" and
    "y" */
 void prefs_get_size_gtkpod (gint *x, gint *y)
@@ -1436,12 +1456,20 @@ void prefs_get_size_dirbr (gint *x, gint *y)
 }
 
 
-/* Writes the current default size for the prefs window in
+/* Writes the current default size for the info window in
    "x" and "y" */
 void prefs_get_size_prefs (gint *x, gint *y)
 {
     *x = cfg->size_prefs.x;
     *y = cfg->size_prefs.y;
+}
+
+/* Writes the current default size for the info window in
+   "x" and "y" */
+void prefs_get_size_info (gint *x, gint *y)
+{
+    *x = cfg->size_info.x;
+    *y = cfg->size_info.y;
 }
 
 

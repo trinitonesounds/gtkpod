@@ -1,4 +1,4 @@
-gtkpod V0.61-CVS
+gtkpod V0.70
 	NEW FEATURE: import of AAC files (.m4a) supported, provided the
 	mp4v2 library from the mpeg4ip project
 	(mpeg4ip.sourceforge.net) is available during the compilation of

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-26 23:21:42 jcs>
+/* Time-stamp: <2003-11-30 13:05:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -39,6 +39,7 @@
 /* info window */
 void info_open_window (void);
 void info_close_window (void);
+void info_update_default_sizes (void);
 void info_update (void);
 void info_update_track_view (void);
 void info_update_track_view_selected (void);

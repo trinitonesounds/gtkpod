@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 00:47:36 jcs>
+/* Time-stamp: <2003-11-30 10:53:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1887,7 +1887,7 @@ get_preferred_track_name_format (Track *s)
 
 /* in Bytes, minus the space taken by tracks that will be overwritten
  * during copying */
-/* num will be filled with the number of tracks if != NULL */
+/* @num will be filled with the number of tracks if != NULL */
 double get_filesize_of_deleted_tracks (guint32 *num)
 {
     double size = 0;

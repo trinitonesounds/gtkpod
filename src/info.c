@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 01:06:17 jcs>
+/* Time-stamp: <2003-11-30 13:05:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -117,6 +117,9 @@ void info_open_window (void)
     info_window = create_gtkpod_info ();
     if (info_window)
     {
+	gint defx, defy;
+	prefs_get_size_info (&defx, &defy);
+	gtk_window_set_default_size (GTK_WINDOW (info_window), defx, defy);
 	prefs_set_info_window (TRUE); /* notify prefs */
 	info_update ();
 	gtk_widget_show (info_window);
@@ -129,11 +132,23 @@ void info_open_window (void)
 void info_close_window (void)
 {
     if (!info_window) return; /* not open */
+    info_update_default_sizes ();
     gtk_widget_destroy (info_window);
     info_window = NULL;
     prefs_set_info_window (FALSE); /* notify prefs */
     /* set the menu item for the info window correctly */
     display_set_info_window_menu ();
+}
+
+/* save current window size */
+void info_update_default_sizes (void)
+{
+    if (info_window)
+    {
+	gint defx, defy;
+	gtk_window_get_size (GTK_WINDOW (info_window), &defx, &defy);
+	prefs_set_size_info (defx, defy);
+    }
 }
 
 /* update all sections of info window */
@@ -152,9 +167,8 @@ static void info_update_track_view_total (void)
     GList *displayed;
 
     if (!info_window) return; /* not open */
-    displayed = display_get_selection (prefs_get_sort_tab_num()-1);
+    displayed = display_get_selected_members (prefs_get_sort_tab_num()-1);
     fill_in_info (displayed, &tracks, &playtime, &filesize);
-    g_list_free (displayed);
     fill_label_uint ("tracks_total", tracks);
     fill_label_time ("playtime_total", playtime);
     fill_label_size ("filesize_total", filesize);
@@ -191,9 +205,8 @@ void info_update_playlist_view (void)
     GList   *tl;
 
     if (!info_window) return; /* not open */
-    tl = display_get_selection (-1);
+    tl = display_get_selected_members (-1);
     fill_in_info (tl, &tracks, &playtime, &filesize);
-    g_list_free (tl);
     fill_label_uint ("playlist_tracks", tracks);
     fill_label_time ("playlist_playtime", playtime);
     fill_label_size ("playlist_filesize", filesize);

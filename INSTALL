@@ -1,1 +1,22 @@
+Try the following to compile and install (the 'make install' may
+require root privileges):
 
+	./configure
+	make
+	make install
+
+You can test gtkpod without installing it -- only the translation
+catalogues will not be available:
+
+	src/gtkpod
+
+
+Most important requirements (version number in brackets show the
+version I used):
+
+	libgtk2 (2.2.4)
+	libglib2 (2.2.3)
+	libid3 (3.8.3)
+	libmp4v2 (1.0RC1, needed only for aac files)
+	C compiler (gcc 3.3.2 20031005)
+	libstdc++5 (3.3.2)

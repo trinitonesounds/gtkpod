@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-29 13:18:41 jcs>
+/* Time-stamp: <2003-11-30 13:05:16 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -547,6 +547,18 @@ prefs_window_set(void)
 }
 
 
+/* save current window size */
+void prefs_window_update_default_sizes (void)
+{
+    if (prefs_window)
+    {
+	gint defx, defy;
+	gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
+	prefs_set_size_prefs (defx, defy);
+    }
+}
+
+
 /**
  * cancel_gtk_prefs_window
  * UI has requested preference changes be ignored -- write back the
@@ -556,8 +568,6 @@ prefs_window_set(void)
 void
 prefs_window_cancel(void)
 {
-    gint defx, defy;
-
     cfg_free (tmpcfg);
     /* exchange tmpcfg for origcfg */
     tmpcfg = origcfg;
@@ -571,8 +581,7 @@ prefs_window_cancel(void)
     tmpcfg = NULL;
 
     /* save current window size */
-    gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
-    prefs_set_size_prefs (defx, defy);
+    prefs_window_update_default_sizes ();
 
     /* close the window */
     if(prefs_window)

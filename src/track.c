@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-30 00:43:08 jcs>
+/* Time-stamp: <2003-11-30 10:53:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -221,7 +221,7 @@ guint get_nr_of_nontransferred_tracks (void)
 }
 
 /* in Bytes, minus the space taken by tracks that will be overwritten
- * during copying. If != NULL, num will contain the number of
+ * during copying. If != NULL, @num will be filled with the number of
  * non-transferred tracks */
 double get_filesize_of_nontransferred_tracks(guint32 *num)
 {

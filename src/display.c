@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-26 23:58:37 jcs>
+/* Time-stamp: <2003-11-30 13:05:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -372,6 +372,8 @@ void display_update_default_sizes (void)
     }
     tm_update_default_sizes ();
     st_update_default_sizes ();
+    prefs_window_update_default_sizes ();
+    info_update_default_sizes ();
 }
 
 
