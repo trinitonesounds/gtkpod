@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 13:31:51 jcs>
+/* Time-stamp: <2003-11-24 23:04:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,6 +34,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include "info.h"
 #include "song.h"
 #include "playlist.h"
 
@@ -249,5 +250,6 @@ GList* tm_get_all_tracks(void);
 void display_update_default_sizes (void);
 void display_set_default_sizes (void);
 void display_show_hide_tooltips (void);
+void display_set_info_window_menu (void);
 void display_stop_update (gint inst);
 #endif 

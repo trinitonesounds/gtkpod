@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-15 13:31:51 jcs>
+/* Time-stamp: <2003-11-24 23:10:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -935,13 +935,16 @@ gtkpod_tracks_statusbar_update(void)
     {
 	gchar *buf;
 	
-	buf = g_strdup_printf (_(" P:%d S:%d/%d"), get_nr_of_playlists
-		() - 1, tm_get_nr_of_tracks (), get_nr_of_tracks ());
+	buf = g_strdup_printf (_(" P:%d S:%d/%d"),
+			       get_nr_of_playlists () - 1,
+			       tm_get_nr_of_tracks (),
+			       get_nr_of_tracks ());
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1,  buf);
 	g_free (buf);
     }
-
+    /* Update info window */
+    info_update ();
 }
 
 
@@ -1928,27 +1931,34 @@ get_drive_stats_from_df(const gchar *mp)
 }
 
 /* @size: size in kB (block of 1024 Bytes) */
-static gchar*
-get_filesize_in_bytes(glong size)
+gchar*
+get_filesize_as_string(gdouble size)
 {
     guint i = 0;
     gchar *result = NULL;
-    double newsize = (double)size * 1024;
-    gchar *sizes[] = { _("Bytes"), _("kB"), _("MB"), _("GB"), _("TB"), NULL };
+    gchar *sizes[] = { _("B"), _("kB"), _("MB"), _("GB"), _("TB"), NULL };
 
-    while((fabs(newsize) > 1000) && (i<4))
+    while((fabs(size) > 1000) && (i<4))
     {
-	newsize /= 1000;
+	size /= 1000;
 	++i;
     }
-    if (fabs(newsize) < 10)
-	result = g_strdup_printf("%0.2f %s", newsize, sizes[i]);
-    else if (fabs(newsize) < 100)
-	result = g_strdup_printf("%0.1f %s", newsize, sizes[i]);
+    if (i>0)
+    {
+	if (fabs(size) < 10)
+	    result = g_strdup_printf("%0.2f %s", size, sizes[i]);
+	else if (fabs(size) < 100)
+	    result = g_strdup_printf("%0.1f %s", size, sizes[i]);
+	else
+	    result = g_strdup_printf("%0.0f %s", size, sizes[i]);
+    }
     else
-	result = g_strdup_printf("%0.0f %s", newsize, sizes[i]);
-    return(result);
+    {   /* Bytes do not have decimal places */
+	result = g_strdup_printf ("%0.0f %s", size, sizes[i]);
+    }
+    return result;
 }
+
 #if 0
 static glong
 get_ipod_used_space(void)
@@ -2009,12 +2019,12 @@ gtkpod_space_statusbar_update(void)
 	pending = get_filesize_of_nontransferred_tracks();
 	if((left-pending) > 0)
 	{
-	    str = get_filesize_in_bytes(left - pending);
+	    str = get_filesize_as_string((double)1024.0*(left - pending));
 	    buf = g_strdup_printf (_(" %s Free"), str);
 	}
 	else
 	{
-	    str = get_filesize_in_bytes(pending - left);
+	    str = get_filesize_as_string((double)1024.0*(pending - left));
 	    buf = g_strdup_printf (_(" %s Pending"), str);
 	}
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_space_statusbar), 1);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 14:59:26 jcs>
+/* Time-stamp: <2003-11-23 23:52:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -53,8 +53,8 @@ struct cfg
   gboolean autoimport;	  /* whether or not to automatically import files */
   struct
   {
-    gboolean autoselect;  /* automatically select "All" in sort tab? */
-    guint    category;    /* which category was selected last? */
+    gboolean autoselect;      /* automatically select "All" in sort tab? */
+    guint    category;        /* which category was selected last? */
     /* the following fields are for the "special" tab */
     gboolean sp_or;           /* logic operation: OR? (FALSE: AND) */
     gboolean sp_rating;       /* consider rating? */
@@ -78,6 +78,7 @@ struct cfg
     gboolean tm_autostore;    /* save sort order automatically?    */
     gboolean case_sensitive;  /* Should sorting be case-sensitive? */
   } sortcfg;
+  gboolean info_window;   /* is info window open (will then open on restart */
   gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean keep_backups;  /* write backups of iTunesDB etc to ~/.gtkpod? */
@@ -197,6 +198,7 @@ void prefs_set_col_order (gint pos, TM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
 void prefs_set_automount(gboolean val);
+void prefs_set_info_window(gboolean val);
 
 gboolean prefs_get_offline(void);
 gint prefs_get_pm_sort (void);
@@ -267,7 +269,8 @@ void prefs_set_play_enqueue_path (const gchar *path);
 gchar *prefs_get_play_enqueue_path (void);
 void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
-gboolean prefs_get_automount(void);
+gboolean prefs_get_automount (void);
+gboolean prefs_get_info_window (void);
 void prefs_set_sp_or (guint32 inst, gboolean state);
 gboolean prefs_get_sp_or (guint32 inst);
 void prefs_set_sp_cond (guint32 inst, T_item t_item, gboolean state);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-14 23:30:16 jcs>
+/* Time-stamp: <2003-11-24 23:06:55 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,19 +37,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "callbacks.h"
-#include "support.h"
-
-#include "misc.h"
-#include "prefs.h"
-#include "dirbrowser.h"
-#include "file.h"
-#include "display.h"
-#include "prefs_window.h"
-#include "file_export.h"
 #include "charset.h"
-#include "playlist.h"
+#include "dirbrowser.h"
+#include "display.h"
+#include "file.h"
+#include "file_export.h"
+#include "info.h"
+#include "misc.h"
 #include "normalize.h"
+#include "playlist.h"
+#include "prefs.h"
+#include "prefs_window.h"
+#include "support.h"
 
 void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
@@ -1804,3 +1803,30 @@ on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
     nm_new_tracks ();
 }
 
+
+void
+on_info_window1_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)))
+	 info_open_window ();
+    else info_close_window ();
+}
+
+
+gboolean
+on_gtkpod_info_delete_event            (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data)
+{
+    info_close_window ();
+    return FALSE;
+}
+
+
+void
+on_info_close_clicked                  (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    info_close_window ();
+}

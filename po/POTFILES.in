@@ -15,6 +15,7 @@ src/file.c
 src/file_export.c
 src/getopt1.c
 src/getopt.c
+src/info.c
 src/interface.c
 src/itunesdb.c
 src/main.c

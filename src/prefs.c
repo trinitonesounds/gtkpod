@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-10-04 15:12:56 jcs>
+/* Time-stamp: <2003-11-24 23:06:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -245,6 +245,7 @@ struct cfg *cfg_new(void)
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
     mycfg->filename_format = g_strdup ("%A/%d/%t - %n.mp3");
     mycfg->automount = FALSE;
+    mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
     mycfg->multi_edit_title = TRUE;
     mycfg->not_played_track = TRUE;
@@ -631,6 +632,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_automount (atoi (arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "info_window") == 0)
+	  {
+	      prefs_set_info_window (atoi (arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
 	  {
 	      prefs_set_write_gaintag ((gboolean)atoi(arg));
@@ -905,6 +910,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_prefs.x=%d\n", cfg->size_prefs.x);
     fprintf (fp, "size_prefs.y=%d\n", cfg->size_prefs.y);
     fprintf (fp, "automount=%d\n", cfg->automount);
+    fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "write_gaintag=%d\n", cfg->write_gaintag);
     fprintf (fp, "special_export_charset=%d\n", cfg->special_export_charset);
 }
@@ -1915,14 +1921,28 @@ gchar *prefs_get_time_format (void)
 }
 
 gboolean 
-prefs_get_automount(void)
+prefs_get_automount (void)
 {
-    return(cfg->automount);
+    return cfg->automount;
 }
 void
+
 prefs_set_automount(gboolean val)
 {
     cfg->automount = val;
+}
+
+gboolean 
+prefs_get_info_window(void)
+{
+    return cfg->info_window;
+}
+void
+
+prefs_set_info_window(gboolean val)
+{
+    cfg->info_window = val;
+    display_set_info_window_menu ();
 }
 
 void prefs_set_sp_or (guint32 inst, gboolean state)

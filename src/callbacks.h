@@ -668,3 +668,16 @@ void
 on_all_tracks_never_listened_to1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_info_window1_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+gboolean
+on_gtkpod_info_delete_event            (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data);
+
+void
+on_info_close_clicked                  (GtkButton       *button,
+                                        gpointer         user_data);

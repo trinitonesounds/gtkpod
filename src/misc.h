@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-14 23:28:42 jcs>
+/* Time-stamp: <2003-11-24 00:23:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -116,6 +116,8 @@ gchar *time_time_to_string (time_t time);
 time_t time_get_time (Track *track, TM_item tm_item);
 gchar *time_field_to_string (Track *track, TM_item tm_item);
 void time_set_time (Track *track, time_t time, TM_item tm_item);
+
+gchar *get_filesize_as_string (double size);
 
 gint compare_string (gchar *str1, gchar *str2);
 gint compare_string_case_insensitive (gchar *str1, gchar *str2);

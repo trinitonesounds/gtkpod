@@ -22,6 +22,7 @@ gtkpod_SOURCES = \
 	display.h display_private.h \
         file.c file.h \
 	file_export.c file_export.h \
+	info.c info.h \
 	interface.c interface.h \
 	itunesdb.c itunesdb.h \
 	main.c \

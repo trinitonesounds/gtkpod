@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-11-14 23:54:52 jcs>
+/* Time-stamp: <2003-11-24 23:05:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,6 +33,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "display_private.h"
+#include "info.h"
 #include "prefs.h"
 #include "prefs_window.h"
 #include "misc.h"
@@ -125,7 +126,7 @@ gboolean pmtm_move_pathlist (GtkTreeView *treeview,
 }
 
 
-/* Create the different listviews to display the various information */
+/* Create the listviews etc */
 void display_create (GtkWidget *gtkpod)
 {
     GtkWidget *stop_button;
@@ -146,6 +147,8 @@ void display_create (GtkWidget *gtkpod)
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
     /* initialize sorting */
     tm_sort (prefs_get_tm_sortcol (), prefs_get_tm_sort ());
+    /* check if info window should be opened */
+    if (prefs_get_info_window ())  info_open_window ();
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and
@@ -210,6 +213,22 @@ void display_show_hide_toolbar (void)
     else
     {
 	gtk_widget_hide (tb);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), FALSE);
+    }
+}
+
+/* make the toolbar visible or hide it depending on the value set in
+   the prefs */
+void display_set_info_window_menu (void)
+{
+    GtkWidget *mi = lookup_widget (gtkpod_window, "info_window_menu");
+
+    if (prefs_get_info_window ())
+    {
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), TRUE);
+    }
+    else
+    {
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), FALSE);
     }
 }

@@ -42,7 +42,7 @@
 		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2088">
+			<widget class="GtkImage" id="image2180">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-top</property>
 			  <property name="icon_size">1</property>
@@ -63,7 +63,7 @@
 		      <signal name="activate" handler="on_add_files1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2089">
+			<widget class="GtkImage" id="image2181">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -84,7 +84,7 @@
 		      <signal name="activate" handler="on_add_directory1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2090">
+			<widget class="GtkImage" id="image2182">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -105,7 +105,7 @@
 		      <signal name="activate" handler="on_add_playlist1_activate" last_modification_time="Fri, 21 Feb 2003 14:49:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2091">
+			<widget class="GtkImage" id="image2183">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -126,7 +126,7 @@
 		      <signal name="activate" handler="on_export_itunes1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2092">
+			<widget class="GtkImage" id="image2184">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-bottom</property>
 			  <property name="icon_size">1</property>
@@ -152,7 +152,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2093">
+			<widget class="GtkImage" id="image2185">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -204,7 +204,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2094">
+			<widget class="GtkImage" id="image2186">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -262,7 +262,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2095">
+			<widget class="GtkImage" id="image2187">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -337,7 +337,7 @@
 		      <signal name="activate" handler="on_ipod_directories_menu" last_modification_time="Sat, 18 Jan 2003 02:10:39 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2096">
+			<widget class="GtkImage" id="image2188">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-execute</property>
 			  <property name="icon_size">1</property>
@@ -385,7 +385,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2097">
+			<widget class="GtkImage" id="image2189">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-copy</property>
 			  <property name="icon_size">1</property>
@@ -598,7 +598,7 @@
 		      <signal name="activate" handler="on_sorting_activate" last_modification_time="Mon, 22 Sep 2003 08:00:42 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2098">
+			<widget class="GtkImage" id="image2190">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-sort-ascending</property>
 			  <property name="icon_size">1</property>
@@ -619,7 +619,7 @@
 		      <signal name="activate" handler="on_save_track_order1_activate" last_modification_time="Sat, 08 Mar 2003 13:45:01 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2099">
+			<widget class="GtkImage" id="image2191">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-justify-fill</property>
 			  <property name="icon_size">1</property>
@@ -645,7 +645,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2100">
+			<widget class="GtkImage" id="image2192">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -705,7 +705,7 @@
 		      <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2101">
+			<widget class="GtkImage" id="image2193">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -752,6 +752,16 @@
 		  </child>
 
 		  <child>
+		    <widget class="GtkCheckMenuItem" id="info_window_menu">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">_Info Window</property>
+		      <property name="use_underline">True</property>
+		      <property name="active">False</property>
+		      <signal name="activate" handler="on_info_window1_activate" last_modification_time="Sun, 23 Nov 2003 15:25:04 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
 		    <widget class="GtkImageMenuItem" id="more_sort_tabs">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_More Sort Tabs</property>
@@ -759,7 +769,7 @@
 		      <signal name="activate" handler="on_more_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2102">
+			<widget class="GtkImage" id="image2194">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -780,7 +790,7 @@
 		      <signal name="activate" handler="on_less_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2103">
+			<widget class="GtkImage" id="image2195">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-remove</property>
 			  <property name="icon_size">1</property>
@@ -822,7 +832,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2104">
+			<widget class="GtkImage" id="image2196">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -874,7 +884,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2105">
+			<widget class="GtkImage" id="image2197">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -940,7 +950,7 @@
 		      <signal name="activate" handler="on_about1_activate" last_modification_time="Sat, 23 Nov 2002 03:06:04 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image2106">
+			<widget class="GtkImage" id="image2198">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-info</property>
 			  <property name="icon_size">1</property>
@@ -1206,7 +1216,7 @@
   <property name="default_height">450</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
-  <signal name="delete_event" handler="on_about_window_close" object="gtkpod_about_window" last_modification_time="Sat, 30 Nov 2002 16:10:01 GMT"/>
+  <signal name="delete_event" handler="on_about_window_close" last_modification_time="Sat, 30 Nov 2002 16:10:01 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox2">
@@ -1299,12 +1309,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label3">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Credits</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -1351,12 +1362,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label4">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Translators</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -1743,12 +1755,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label26">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Import</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -1789,12 +1802,13 @@
 				  <child>
 				    <widget class="GtkLabel" id="label29">
 				      <property name="visible">True</property>
+				      <property name="can_focus">True</property>
 				      <property name="label" translatable="yes"> _Charset (ID3, files): </property>
 				      <property name="use_underline">True</property>
 				      <property name="use_markup">False</property>
 				      <property name="justify">GTK_JUSTIFY_LEFT</property>
 				      <property name="wrap">False</property>
-				      <property name="selectable">False</property>
+				      <property name="selectable">True</property>
 				      <property name="xalign">0.5</property>
 				      <property name="yalign">0.5</property>
 				      <property name="xpad">0</property>
@@ -2043,12 +2057,13 @@
 			      <child>
 				<widget class="GtkLabel" id="label46">
 				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">When syncing directories</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
-				  <property name="selectable">False</property>
+				  <property name="selectable">True</property>
 				  <property name="xalign">0</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
@@ -2161,12 +2176,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label28">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Adding/Updating/Syncing</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -2336,12 +2352,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label30">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Automatically Set Empty ID3-Tags To Filename?</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -2422,12 +2439,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label31">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Sync (Writing of iTunesDB)</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -2471,12 +2489,13 @@
 				  <child>
 				    <widget class="GtkLabel" id="label70">
 				      <property name="visible">True</property>
+				      <property name="can_focus">True</property>
 				      <property name="label" translatable="yes">Filename Format: </property>
 				      <property name="use_underline">False</property>
 				      <property name="use_markup">False</property>
 				      <property name="justify">GTK_JUSTIFY_LEFT</property>
 				      <property name="wrap">False</property>
-				      <property name="selectable">False</property>
+				      <property name="selectable">True</property>
 				      <property name="xalign">0</property>
 				      <property name="yalign">0.5</property>
 				      <property name="xpad">0</property>
@@ -2552,12 +2571,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label72">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Copying from iPod</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -2588,12 +2608,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label23">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">_Input/Output</property>
 	      <property name="use_underline">True</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -3123,12 +3144,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label37">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Displayed Track Attributes </property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -3169,12 +3191,13 @@
 				  <child>
 				    <widget class="GtkLabel" id="label35">
 				      <property name="visible">True</property>
+				      <property name="can_focus">True</property>
 				      <property name="label" translatable="yes"> _Number of sort tabs: </property>
 				      <property name="use_underline">True</property>
 				      <property name="use_markup">False</property>
 				      <property name="justify">GTK_JUSTIFY_LEFT</property>
 				      <property name="wrap">False</property>
-				      <property name="selectable">False</property>
+				      <property name="selectable">True</property>
 				      <property name="xalign">0.5</property>
 				      <property name="yalign">0.5</property>
 				      <property name="xpad">0</property>
@@ -3225,12 +3248,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label34">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Sort Tabs</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -3285,12 +3309,13 @@
 			      <child>
 				<widget class="GtkLabel" id="label40">
 				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">...entry 'All' in sort tab...</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
-				  <property name="selectable">False</property>
+				  <property name="selectable">True</property>
 				  <property name="xalign">0</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">20</property>
@@ -3341,12 +3366,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label36">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Automatically select...</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -3493,12 +3519,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label39">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Toolbar</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -3577,12 +3604,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label55">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Tooltips</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -3655,12 +3683,13 @@
 					  <child>
 					    <widget class="GtkLabel" id="label93">
 					      <property name="visible">True</property>
+					      <property name="can_focus">True</property>
 					      <property name="label" translatable="yes">Sorting</property>
 					      <property name="use_underline">True</property>
 					      <property name="use_markup">False</property>
 					      <property name="justify">GTK_JUSTIFY_LEFT</property>
 					      <property name="wrap">False</property>
-					      <property name="selectable">False</property>
+					      <property name="selectable">True</property>
 					      <property name="xalign">0.5</property>
 					      <property name="yalign">0.5</property>
 					      <property name="xpad">0</property>
@@ -3718,12 +3747,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label38">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Misc</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -3754,12 +3784,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label25">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">_Display</property>
 	      <property name="use_underline">True</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -3955,12 +3986,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label32">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Track Editing</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -4027,12 +4059,13 @@
 				  <child>
 				    <widget class="GtkLabel" id="label68">
 				      <property name="visible">True</property>
+				      <property name="can_focus">True</property>
 				      <property name="label" translatable="yes"> Number of tracks in generated playlists: </property>
 				      <property name="use_underline">False</property>
 				      <property name="use_markup">False</property>
 				      <property name="justify">GTK_JUSTIFY_LEFT</property>
 				      <property name="wrap">False</property>
-				      <property name="selectable">False</property>
+				      <property name="selectable">True</property>
 				      <property name="xalign">0</property>
 				      <property name="yalign">0.5</property>
 				      <property name="xpad">0</property>
@@ -4079,12 +4112,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label67">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Auto-Generated Playlists</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -4149,12 +4183,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label69">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Normalization</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -4269,12 +4304,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label33">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Delete Confirmation </property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -4313,12 +4349,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">_Edit</property>
 	      <property name="use_underline">True</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -4367,12 +4404,13 @@
 			      <child>
 				<widget class="GtkLabel" id="label44">
 				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">Command Line for 'Play Now':</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
-				  <property name="selectable">False</property>
+				  <property name="selectable">True</property>
 				  <property name="xalign">0.01</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
@@ -4409,12 +4447,13 @@
 			      <child>
 				<widget class="GtkLabel" id="label45">
 				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
 				  <property name="label" translatable="yes">Command Line for 'Enqueue':</property>
 				  <property name="use_underline">False</property>
 				  <property name="use_markup">False</property>
 				  <property name="justify">GTK_JUSTIFY_LEFT</property>
 				  <property name="wrap">False</property>
-				  <property name="selectable">False</property>
+				  <property name="selectable">True</property>
 				  <property name="xalign">0.01</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
@@ -4453,12 +4492,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label43">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Track Playing</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -4515,12 +4555,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label73">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Misc</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -4563,12 +4604,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label24">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">_Misc</property>
 	      <property name="use_underline">True</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -4668,12 +4710,13 @@
 	      <child>
 		<widget class="GtkLabel" id="label52">
 		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
 		  <property name="label" translatable="yes"> Logic: </property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">False</property>
 		  <property name="justify">GTK_JUSTIFY_LEFT</property>
 		  <property name="wrap">False</property>
-		  <property name="selectable">False</property>
+		  <property name="selectable">True</property>
 		  <property name="xalign">0.5</property>
 		  <property name="yalign">0.5</property>
 		  <property name="xpad">0</property>
@@ -4908,12 +4951,13 @@
 		      <child>
 			<widget class="GtkLabel" id="label54">
 			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes"> &lt;= cts &lt;= </property>
 			  <property name="use_underline">False</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>
 			  <property name="wrap">False</property>
-			  <property name="selectable">False</property>
+			  <property name="selectable">True</property>
 			  <property name="xalign">0.5</property>
 			  <property name="yalign">0.5</property>
 			  <property name="xpad">0</property>
@@ -5361,12 +5405,13 @@
 		  <child>
 		    <widget class="GtkLabel" id="label64">
 		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes">Sorttab: </property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
-		      <property name="selectable">False</property>
+		      <property name="selectable">True</property>
 		      <property name="xalign">0.5</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
@@ -5422,12 +5467,13 @@
 		  <child>
 		    <widget class="GtkLabel" id="label66">
 		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes">Category: </property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
-		      <property name="selectable">False</property>
+		      <property name="selectable">True</property>
 		      <property name="xalign">0.5</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
@@ -6391,12 +6437,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label82">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Ascending</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -6434,12 +6481,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label85">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Descending</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -6477,12 +6525,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label86">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">None</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -6520,12 +6569,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label87">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Playlists</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -6564,12 +6614,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label88">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Sorttabs</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -6608,12 +6659,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label89">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Tracks</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -6760,12 +6812,13 @@
 			  <child>
 			    <widget class="GtkLabel" id="label95">
 			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Auto Store</property>
 			      <property name="use_underline">False</property>
 			      <property name="use_markup">False</property>
 			      <property name="justify">GTK_JUSTIFY_LEFT</property>
 			      <property name="wrap">False</property>
-			      <property name="selectable">False</property>
+			      <property name="selectable">True</property>
 			      <property name="xalign">0.5</property>
 			      <property name="yalign">0.5</property>
 			      <property name="xpad">0</property>
@@ -6882,12 +6935,13 @@
 		      <child>
 			<widget class="GtkLabel" id="label96">
 			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
 			  <property name="label" translatable="yes">n/a</property>
 			  <property name="use_underline">False</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_CENTER</property>
 			  <property name="wrap">False</property>
-			  <property name="selectable">False</property>
+			  <property name="selectable">True</property>
 			  <property name="xalign">0.5</property>
 			  <property name="yalign">0.5</property>
 			  <property name="xpad">0</property>
@@ -7076,12 +7130,13 @@
 		  <child>
 		    <widget class="GtkLabel" id="label97">
 		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes">Sort tracks according to: </property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
-		      <property name="selectable">False</property>
+		      <property name="selectable">True</property>
 		      <property name="xalign">0.5</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
@@ -7190,12 +7245,13 @@
 		  <child>
 		    <widget class="GtkLabel" id="label94">
 		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes">Notice: the track order is always stored to the iPod when using drag and drop. In order to store a alphabetized track order to the iPod you must choose the 'Save Displayed Track Order' from the 'Edit' menu or select 'Auto Store' above.</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">False</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">True</property>
-		      <property name="selectable">False</property>
+		      <property name="selectable">True</property>
 		      <property name="xalign">0.04</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
@@ -7220,12 +7276,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label92">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Sorting</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -7304,6 +7361,7 @@
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <signal name="delete_event" handler="on_gtkpod_info_delete_event" last_modification_time="Sun, 23 Nov 2003 15:26:56 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox54">
@@ -7592,7 +7650,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -7617,7 +7675,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -7642,7 +7700,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -7667,7 +7725,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -7692,7 +7750,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -7717,7 +7775,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -7768,12 +7826,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label110">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Track View</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -7944,7 +8003,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -7994,7 +8053,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -8044,7 +8103,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -8071,12 +8130,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label122">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Current Playlist</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -8205,7 +8265,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -8255,7 +8315,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -8305,7 +8365,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -8368,7 +8428,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -8502,7 +8562,7 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkLabel" id="non_transfered_size">
+		    <widget class="GtkLabel" id="non_transfered_filesize">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes"></property>
@@ -8511,7 +8571,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -8536,7 +8596,7 @@
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
 		      <property name="wrap">False</property>
 		      <property name="selectable">True</property>
-		      <property name="xalign">0</property>
+		      <property name="xalign">1</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
 		      <property name="ypad">0</property>
@@ -8563,12 +8623,13 @@
 	  <child>
 	    <widget class="GtkLabel" id="label134">
 	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes">Total</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
 	      <property name="wrap">False</property>
-	      <property name="selectable">False</property>
+	      <property name="selectable">True</property>
 	      <property name="xalign">0.5</property>
 	      <property name="yalign">0.5</property>
 	      <property name="xpad">0</property>
@@ -8594,13 +8655,14 @@
 	  <property name="spacing">0</property>
 
 	  <child>
-	    <widget class="GtkButton" id="button5">
+	    <widget class="GtkButton" id="info_close">
 	      <property name="visible">True</property>
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="label">gtk-close</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <signal name="clicked" handler="on_info_close_clicked" last_modification_time="Sun, 23 Nov 2003 15:28:50 GMT"/>
 	    </widget>
 	  </child>
 	</widget>
