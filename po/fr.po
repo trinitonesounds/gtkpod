@@ -1,13 +1,12 @@
-# French language translation for gtkpod
-# Copyright (C) 2003 David Le Brun
+# French language translation for gtkpod # Copyright (C) 2003 David Le Brun
 # David Le Brun <david@dyn-ns.net>, 2003.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtkpod 0.51\n"
+"Project-Id-Version: gtkpod 0.52\n"
 "POT-Creation-Date: 2003-06-21 13:05+0900\n"
-"PO-Revision-Date: 2003-06-21 13:25+0900\n"
+"PO-Revision-Date: 2003-06-21 15:53+0200\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -23,11 +22,11 @@ msgstr "Nouvelle liste de lecture"
 
 #: src/callbacks.c:337 src/callbacks.c:381
 msgid "Preferences not updated"
-msgstr "Options non mises à jour"
+msgstr "Préférences non mises à jour"
 
 #: src/callbacks.c:390
 msgid "Preferences applied"
-msgstr "Options appliquées"
+msgstr "Préférences mises à jour"
 
 #: src/callbacks.c:616
 msgid "Delete selected entry of which sort tab?"
@@ -39,9 +38,7 @@ msgstr "Mettre à jour l'entrée sélectionnée de quelle zone de tri ?"
 
 #: src/callbacks.c:790
 msgid "Sync dirs of selected entry in which sort tab?"
-msgstr ""
-"Synchroniser les répertoires de la sélection de quelle zone de tri ?"
-"Synchroniser les répertoires de l'entrée sélectionnée de quelle zone de tri ?"
+msgstr "Synchroniser les répertoires de l'entrée sélectionnée de quelle zone de tri ?"
 
 #: src/callbacks.c:948
 msgid "Sort which sort tab in ascending order?"
@@ -74,9 +71,7 @@ msgstr "Jouer les morceaux de l'entrée sélectionnée de quelle zone de tri ?"
 
 #: src/callbacks.c:1134
 msgid "Enqueue songs in selected entry of which sort tab?"
-msgstr ""
-"Mettre dans la file les morceaux de l'entrée sélectionnée de quelle zone de "
-"tri ?"
+msgstr "Ajouter les morceaux de l'entrée sélectionnée de quelle zone de tri ?"
 
 #: src/charset.c:44
 msgid "Arabic (IBM-864)"
@@ -547,8 +542,8 @@ msgstr "Pas de liste de lecture sélectionnée"
 #, fuzzy, c-format
 msgid "The following song could not be updated"
 msgid_plural "The following %d songs could not be updated"
-msgstr[0] "Afficher la liste des morceaux qui ne peuvent pas être mis à jour."
-msgstr[1] ""
+msgstr[0] "Le morceau suivant ne peut pas être mis à jour."
+msgstr[1] "Les morceaux suivants ne peuvent pas être mis à jour."
 
 #. gint id,
 #. gboolean modal,
@@ -560,8 +555,8 @@ msgstr "Echec de la mise à jour du morceau"
 #, fuzzy, c-format
 msgid "The following song has been updated"
 msgid_plural "The following %d songs have been updated"
-msgstr[0] "Le problème suivant est survenu:"
-msgstr[1] ""
+msgstr[0] "Le morceau suivant a été mis à jour"
+msgstr[1] "Les morceaux suivants ont été mis à jour"
 
 #. gint id,
 #. gboolean modal,
@@ -927,7 +922,7 @@ msgstr "_Onglet sélectionné"
 #: src/interface.c:235 src/interface.c:258 src/interface.c:286
 #: src/interface.c:419 src/interface.c:500 src/interface.c:523
 msgid "Selected _Songs"
-msgstr "_Musiques sélectionnées"
+msgstr "_Morceaux sélectionnés"
 
 #: src/interface.c:239
 msgid "Synchronize Directories"
@@ -983,7 +978,7 @@ msgstr "_Supprimer"
 
 #: src/interface.c:428
 msgid "_Edit Preferences"
-msgstr "_Options"
+msgstr "_Préférences"
 
 #: src/interface.c:439
 msgid "_View"
@@ -996,7 +991,7 @@ msgstr "_Barre d'outils"
 #: src/interface.c:450
 #, fuzzy
 msgid "_Tooltips"
-msgstr "_Outils"
+msgstr "_Infobulles"
 
 #: src/interface.c:454
 msgid "_More Sort Tabs"
@@ -1112,7 +1107,7 @@ msgstr "Appliquer"
 
 #: src/interface.c:1304
 msgid "Preferences"
-msgstr "Options"
+msgstr "Préférences"
 
 #: src/interface.c:1331
 msgid " iPod Mount _Point:"
@@ -1121,7 +1116,8 @@ msgstr "Point de montage de l'iPod:"
 #: src/interface.c:1341
 msgid ""
 "Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar."
-msgstr "Point de montage de l'iPod. Habituellement '/mnt/ipod'"
+msgstr ""
+"Point de montage de l'iPod. Habituellement '/mnt/ipod'"
 
 #: src/interface.c:1343
 msgid "Automatically import iTunesDB on startup"
@@ -1172,9 +1168,7 @@ msgstr "Ajouter les répertoires récursivement"
 
 #: src/interface.c:1389
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
-msgstr ""
-"Si vous cochez cette case, gtkpod parcourera les sous-répertoires "
-"récursivement."
+msgstr "Si vous cochez cette case, gtkpod parcourera les sous-répertoires récursivement."
 
 #: src/interface.c:1391
 msgid "Don't allow file duplication"
@@ -1192,8 +1186,7 @@ msgstr "Afficher les infos au sujet des doublons"
 msgid ""
 "Display the list of duplicates that have been detected after adding files."
 msgstr ""
-"Afficher la liste des doublons qui ont été détectés lors de l'ajout de "
-"fichier."
+"Afficher la liste des doublons détectés lors de l'ajout de fichier."
 
 #: src/interface.c:1407
 msgid ""
@@ -1390,15 +1383,15 @@ msgstr "Barre d'outils"
 
 #: src/interface.c:1770
 msgid "Display tooltips in main window"
-msgstr "Afficher les tooltips dans la fenêtre principale"
+msgstr "Afficher les infobulles dans la fenêtre principale"
 
 #: src/interface.c:1774
 msgid "Display tooltips in prefs window"
-msgstr "Afficher les toolstips dans la fenêtre des préférences"
+msgstr "Afficher les infobulles dans la fenêtre des préférences"
 
 #: src/interface.c:1778
 msgid "Tooltips"
-msgstr "Tooltips"
+msgstr "Infobulles"
 
 #: src/interface.c:1792
 msgid "Sorting case sensitive"
@@ -1507,7 +1500,7 @@ msgid ""
 "'undo' yet)."
 msgstr ""
 "Généralement, vous ne devriez pas avoir à utiliser cette option, car elle "
-"peut avoir des effets inattendus."
+"peut avoir des effets inattendus (pas d'annulation possible)."
 
 #: src/interface.c:1864
 msgid "Song Editing"
@@ -1553,7 +1546,7 @@ msgstr "Sauver automatiquement l'ordre de tri des chansons"
 msgid ""
 "Alternatively you can use the menu item 'Save Displayed Song Order' to save "
 "the sort order."
-msgstr "Vous pouvez utiliser le menu 'Sauver l'ordre de tri' "
+msgstr "Vous pouvez aussi utiliser le menu 'Sauver l'ordre de tri' "
 
 #: src/interface.c:1937
 msgid "Command Line for 'Play Now':"
@@ -1802,11 +1795,19 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
-"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.\n"
+"This program is free software; you can redistribute it and/or modify it "
+"under the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version.\n"
 "\n"
-"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
+"This program is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details.\n"
 "\n"
-"You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n"
+"You should have received a copy of the GNU General Public License along with "
+"this program; if not, write to the Free Software Foundation, Inc., 59 Temple "
+"Place, Suite 330, Boston, MA 02111-1307, USA.\n"
 "\n"
 "\n"
 
@@ -1821,6 +1822,13 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"Les patches ont été soumis par les personnes suivantes (liste peut être "
+"incomplète -- contactez-moi)\n"
+"\n"
+"Ramesh Dharan: Edition multiple (edition de plusieurs tags en un coup)\n"
+"Adrian Ulrich: portage du code de gestion des listes de lecture\n"
+"\n"
+"\n"
 
 #: src/misc.c:317
 #, fuzzy
@@ -1837,10 +1845,12 @@ msgid ""
 msgstr ""
 "Cette application empreinte du code des projets suivants :\n"
 "    mp3info: detection de la durée des mp3\n"
-"    xmms:    l'explorateur de fichier, detection de la durée des mp3 (http://www.xmms.org)\n"
+"    xmms:    l'explorateur de fichier, detection de la durée des mp3 "
+"(http://www.xmms.org)\n"
 "    easytag: gestion des tags ID3 (http://easytag.sourceforge.net)\n"
 "\n"
-"L'interface graphique a été crée avec l'application glade-2 (http://glade.gnome.org/)."
+"L'interface graphique a été crée avec l'application glade-2 (http://glade."
+"gnome.org/)."
 
 #: src/misc.c:338
 msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
@@ -1938,8 +1948,8 @@ msgid ""
 msgid_plural ""
 "Are you sure you want to delete the following songs\n"
 "completely from your ipod?"
-msgstr[0] "Etes-vous sûr de vouloir supprimer la liste de lecture '%s' ?"
-msgstr[1] ""
+msgstr[0] "Etes-vous sûr de vouloir supprimer le morceau suivant de votre ipod ?"
+msgstr[1] "Etes-vous sûr de vouloir supprimer les morceaux suivants de votre ipod ?"
 
 #: src/misc.c:1161
 msgid "Delete Song Completely?"
@@ -1957,8 +1967,10 @@ msgid ""
 msgid_plural ""
 "Are you sure you want to delete the following songs\n"
 "from the playlist \"%s\"?"
-msgstr[0] "Etes-vous sûr de vouloir supprimer la liste de lecture '%s' ?"
-msgstr[1] ""
+msgstr[0] "Etes-vous sûr de vouloir supprimer le morceau\n"
+"suivant de la liste de lecture '%s' ?"
+msgstr[1] "Etes-vous sûr de vouloir supprimer les morceaux\n"
+"suivants de la liste de lecture '%s' ?"
 
 #: src/misc.c:1172
 msgid "Delete Song From Playlist?"
@@ -2040,8 +2052,8 @@ msgstr " %s en attente"
 #, fuzzy, c-format
 msgid "Added %d+ songs to playlist '%s'"
 msgid_plural "Added %d+ songs to playlist '%s'"
-msgstr[0] "%d musiques ajoutées à la liste de lecture '%s'"
-msgstr[1] ""
+msgstr[0] "%d morceau ajouté à la liste de lecture '%s'"
+msgstr[1] "%d morceaux ajoutés à la liste de lecture '%s'"
 
 #: src/prefs.c:118
 #, c-format
@@ -2170,7 +2182,7 @@ msgstr "Impossible d'ouvrir en lecture \"%s\"\n"
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
-" Options: N° de catégorie (%d<%d?) ou n° de zone (%d<%d?) inexistant.\n"
+" Préférences: N° de catégorie (%d<%d?) ou n° de zone (%d<%d?) inexistant.\n"
 
 #: src/prefs.c:1203
 #, c-format
@@ -2193,15 +2205,15 @@ msgstr "'%s': seulement une '%%s' autorisée.\n"
 #, c-format
 msgid "Hashed %d of %d song."
 msgid_plural "Hashed %d of %d songs."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d sur %d morceau traité"
+msgstr[1] "%d sur %d morceaux traités"
 
 #: src/song.c:433
 #, c-format
 msgid "The following duplicate song has been removed."
 msgid_plural "The following %d duplicate songs have been removed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Le morceau suivant est en double et a été supprimé."
+msgstr[1] "Les morceaux suivants sont en double et ont été supprimés."
 
 #: src/song.c:440
 #, c-format
@@ -2210,7 +2222,9 @@ msgid ""
 msgid_plural ""
 "The following %d duplicate songs have not been added to the master play list."
 msgstr[0] ""
+"Le morceau (doublon) n'a pas été ajouté à la liste de lecture principale."
 msgstr[1] ""
+"Les morceaux (doublons) n'ont pas été ajoutés à la liste de lecture principale"
 
 #. gint id,
 #. gboolean modal,
