@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-24 22:03:43 jcs>
+/* Time-stamp: <2003-09-21 23:49:56 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2034,6 +2034,7 @@ static void st_create_listview (gint inst)
 			    G_CALLBACK (st_button_press_event), GINT_TO_POINTER(inst));
       }
   }
+//  st_sort (inst, GTK_SORT_ASCENDING);
 }
 
 

@@ -74,18 +74,8 @@ BUGLIST:
 
 - don't write iTunesDB if no tracks are imported.
 
-- move song before the first position in song view (DND) and it will
-  appear at the end instead.
-
 - when updating songs the free space indicator gets smaller and
   smaller even if no new songs are added
-
-- when updating songs (add a large directory with sub dirs
-  recursively) at end a requester pops up saying that it updated far
-  more songs than are actually in the directories
-
-  -> that's because the dir contained playlist files. The tracks on
-     the playlist files got added/updated several times.
 
 - during a long operation (menues are blocked) the user can still edit
   the song data. This could potentially crash gtkpod -> need a way to

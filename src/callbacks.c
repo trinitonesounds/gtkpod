@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-07 20:20:08 jcs>
+/* Time-stamp: <2003-09-21 23:53:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1230,15 +1230,6 @@ on_cfg_time_format_changed             (GtkEditable     *editable,
 
 
 void
-on_cfg_case_sensitive_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_case_sensitive(
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
 on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
@@ -1569,3 +1560,12 @@ on_cfg_special_export_charset_toggled  (GtkToggleButton *togglebutton,
 
 }
 
+
+void
+on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+/*    prefs_window_set_case_sensitive(
+      gtk_toggle_button_get_active(togglebutton));*/
+
+}

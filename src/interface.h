@@ -8,3 +8,4 @@ GtkWidget* create_confirm_window (void);
 GtkWidget* create_prefs_window (void);
 GtkWidget* create_special_sorttab (void);
 GtkWidget* create_calendar_window (void);
+GtkWidget* create_sort_window (void);

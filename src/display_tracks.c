@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 18:29:18 jcs>
+/* Time-stamp: <2003-09-21 20:07:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1185,7 +1185,7 @@ void  sm_list_store_move_after (GtkListStore *store,
 }
 /* #else*/
 #if 0
-/* starting V2.2 convenient gtk functions exist (see comment above) */
+/* starting V2.2 convenient gtk functions exist (but see comment above) */
 void  sm_list_store_move_before (GtkListStore *store,
 					 GtkTreeIter  *iter,
 					 GtkTreeIter  *position)

@@ -1408,7 +1408,11 @@ create_prefs_window (void)
   GtkWidget *label55;
   GtkWidget *frame15;
   GtkWidget *vbox30;
-  GtkWidget *cfg_case_sensitive;
+  GtkWidget *button4;
+  GtkWidget *alignment2;
+  GtkWidget *hbox38;
+  GtkWidget *image1935;
+  GtkWidget *label93;
   GtkWidget *cfg_block_display;
   GtkWidget *label38;
   GtkWidget *label25;
@@ -2041,10 +2045,26 @@ create_prefs_window (void)
   gtk_container_add (GTK_CONTAINER (frame15), vbox30);
   gtk_container_set_border_width (GTK_CONTAINER (vbox30), 5);
 
-  cfg_case_sensitive = gtk_check_button_new_with_mnemonic (_("Sorting case sensitive"));
-  gtk_widget_show (cfg_case_sensitive);
-  gtk_box_pack_start (GTK_BOX (vbox30), cfg_case_sensitive, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, cfg_case_sensitive, _("If checked, sorting will be case sensitive. Please note that case sensitive sorting will not work well with most charsets."), NULL);
+  button4 = gtk_button_new ();
+  gtk_widget_show (button4);
+  gtk_box_pack_start (GTK_BOX (vbox30), button4, FALSE, FALSE, 0);
+
+  alignment2 = gtk_alignment_new (0.5, 0.5, 0, 0);
+  gtk_widget_show (alignment2);
+  gtk_container_add (GTK_CONTAINER (button4), alignment2);
+
+  hbox38 = gtk_hbox_new (FALSE, 2);
+  gtk_widget_show (hbox38);
+  gtk_container_add (GTK_CONTAINER (alignment2), hbox38);
+
+  image1935 = gtk_image_new_from_stock ("gtk-sort-ascending", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1935);
+  gtk_box_pack_start (GTK_BOX (hbox38), image1935, FALSE, FALSE, 0);
+
+  label93 = gtk_label_new_with_mnemonic (_("Sorting"));
+  gtk_widget_show (label93);
+  gtk_box_pack_start (GTK_BOX (hbox38), label93, FALSE, FALSE, 0);
+  gtk_label_set_justify (GTK_LABEL (label93), GTK_JUSTIFY_LEFT);
 
   cfg_block_display = gtk_check_button_new_with_mnemonic (_("Block display when changing playlist or tab\n entry (faster!)"));
   gtk_widget_show (cfg_block_display);
@@ -2443,9 +2463,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_display_tooltips_prefs, "toggled",
                     G_CALLBACK (on_cfg_display_tooltips_prefs_toggled),
                     NULL);
-  g_signal_connect ((gpointer) cfg_case_sensitive, "toggled",
-                    G_CALLBACK (on_cfg_case_sensitive_toggled),
-                    NULL);
   g_signal_connect ((gpointer) cfg_block_display, "toggled",
                     G_CALLBACK (on_cfg_block_display_toggled),
                     NULL);
@@ -2632,7 +2649,11 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, label55, "label55");
   GLADE_HOOKUP_OBJECT (prefs_window, frame15, "frame15");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox30, "vbox30");
-  GLADE_HOOKUP_OBJECT (prefs_window, cfg_case_sensitive, "cfg_case_sensitive");
+  GLADE_HOOKUP_OBJECT (prefs_window, button4, "button4");
+  GLADE_HOOKUP_OBJECT (prefs_window, alignment2, "alignment2");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox38, "hbox38");
+  GLADE_HOOKUP_OBJECT (prefs_window, image1935, "image1935");
+  GLADE_HOOKUP_OBJECT (prefs_window, label93, "label93");
   GLADE_HOOKUP_OBJECT (prefs_window, cfg_block_display, "cfg_block_display");
   GLADE_HOOKUP_OBJECT (prefs_window, label38, "label38");
   GLADE_HOOKUP_OBJECT (prefs_window, label25, "label25");
@@ -3322,5 +3343,472 @@ create_calendar_window (void)
   GLADE_HOOKUP_OBJECT (calendar_window, cal_ok, "cal_ok");
 
   return calendar_window;
+}
+
+GtkWidget*
+create_sort_window (void)
+{
+  GtkWidget *sort_window;
+  GtkWidget *vbox52;
+  GtkWidget *frame26;
+  GtkWidget *vbox53;
+  GtkWidget *hbox30;
+  GtkWidget *table11;
+  GtkWidget *checkbutton1;
+  GtkWidget *image1934;
+  GtkWidget *hbox34;
+  GtkWidget *st_ascend;
+  GSList *st_ascend_group = NULL;
+  GtkWidget *image1931;
+  GtkWidget *hbox35;
+  GtkWidget *st_descend;
+  GtkWidget *image1932;
+  GtkWidget *hbox36;
+  GtkWidget *st_none;
+  GtkWidget *image1933;
+  GtkWidget *hbox33;
+  GtkWidget *pl_none;
+  GSList *pl_none_group = NULL;
+  GtkWidget *image1930;
+  GtkWidget *hbox32;
+  GtkWidget *pl_descend;
+  GtkWidget *image1929;
+  GtkWidget *hbox37;
+  GtkWidget *pl_ascend;
+  GtkWidget *image1928;
+  GtkWidget *hseparator9;
+  GtkWidget *vseparator2;
+  GtkWidget *hseparator10;
+  GtkWidget *vseparator3;
+  GtkWidget *vseparator6;
+  GtkWidget *vseparator7;
+  GtkWidget *vseparator8;
+  GtkWidget *hseparator11;
+  GtkWidget *hseparator12;
+  GtkWidget *hseparator13;
+  GtkWidget *table12;
+  GtkWidget *label82;
+  GtkWidget *table13;
+  GtkWidget *label85;
+  GtkWidget *table14;
+  GtkWidget *label86;
+  GtkWidget *table15;
+  GtkWidget *label87;
+  GtkWidget *table16;
+  GtkWidget *label88;
+  GtkWidget *table17;
+  GtkWidget *label89;
+  GtkWidget *table18;
+  GtkWidget *label90;
+  GtkWidget *label91;
+  GtkWidget *hseparator15;
+  GtkWidget *cfg_case_sensitive;
+  GtkWidget *label92;
+  GtkWidget *hbuttonbox8;
+  GtkWidget *button1;
+  GtkWidget *button2;
+  GtkWidget *button3;
+  GtkTooltips *tooltips;
+
+  tooltips = gtk_tooltips_new ();
+
+  sort_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (sort_window), _("Sorting Options"));
+
+  vbox52 = gtk_vbox_new (FALSE, 4);
+  gtk_widget_show (vbox52);
+  gtk_container_add (GTK_CONTAINER (sort_window), vbox52);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox52), 6);
+
+  frame26 = gtk_frame_new (NULL);
+  gtk_widget_show (frame26);
+  gtk_box_pack_start (GTK_BOX (vbox52), frame26, FALSE, FALSE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame26), GTK_SHADOW_ETCHED_OUT);
+
+  vbox53 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox53);
+  gtk_container_add (GTK_CONTAINER (frame26), vbox53);
+
+  hbox30 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox30);
+  gtk_box_pack_start (GTK_BOX (vbox53), hbox30, FALSE, TRUE, 0);
+
+  table11 = gtk_table_new (9, 9, FALSE);
+  gtk_widget_show (table11);
+  gtk_box_pack_start (GTK_BOX (hbox30), table11, TRUE, FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table11), 4);
+
+  checkbutton1 = gtk_check_button_new ();
+  gtk_widget_show (checkbutton1);
+  gtk_table_attach (GTK_TABLE (table11), checkbutton1, 7, 8, 7, 8,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  image1934 = gtk_image_new_from_stock ("gtk-undo", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1934);
+  gtk_container_add (GTK_CONTAINER (checkbutton1), image1934);
+
+  hbox34 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (hbox34);
+  gtk_table_attach (GTK_TABLE (table11), hbox34, 3, 4, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  st_ascend = gtk_radio_button_new (NULL);
+  gtk_widget_show (st_ascend);
+  gtk_box_pack_start (GTK_BOX (hbox34), st_ascend, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (st_ascend), st_ascend_group);
+  st_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (st_ascend));
+
+  image1931 = gtk_image_new_from_stock ("gtk-sort-ascending", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1931);
+  gtk_container_add (GTK_CONTAINER (st_ascend), image1931);
+
+  hbox35 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (hbox35);
+  gtk_table_attach (GTK_TABLE (table11), hbox35, 5, 6, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  st_descend = gtk_radio_button_new (NULL);
+  gtk_widget_show (st_descend);
+  gtk_box_pack_start (GTK_BOX (hbox35), st_descend, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (st_descend), st_ascend_group);
+  st_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (st_descend));
+
+  image1932 = gtk_image_new_from_stock ("gtk-sort-descending", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1932);
+  gtk_container_add (GTK_CONTAINER (st_descend), image1932);
+
+  hbox36 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (hbox36);
+  gtk_table_attach (GTK_TABLE (table11), hbox36, 7, 8, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  st_none = gtk_radio_button_new (NULL);
+  gtk_widget_show (st_none);
+  gtk_box_pack_start (GTK_BOX (hbox36), st_none, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (st_none), st_ascend_group);
+  st_ascend_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (st_none));
+
+  image1933 = gtk_image_new_from_stock ("gtk-undo", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1933);
+  gtk_container_add (GTK_CONTAINER (st_none), image1933);
+
+  hbox33 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (hbox33);
+  gtk_table_attach (GTK_TABLE (table11), hbox33, 7, 8, 3, 4,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  pl_none = gtk_radio_button_new (NULL);
+  gtk_widget_show (pl_none);
+  gtk_box_pack_start (GTK_BOX (hbox33), pl_none, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (pl_none), pl_none_group);
+  pl_none_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (pl_none));
+
+  image1930 = gtk_image_new_from_stock ("gtk-undo", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1930);
+  gtk_container_add (GTK_CONTAINER (pl_none), image1930);
+
+  hbox32 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (hbox32);
+  gtk_table_attach (GTK_TABLE (table11), hbox32, 5, 6, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  pl_descend = gtk_radio_button_new (NULL);
+  gtk_widget_show (pl_descend);
+  gtk_box_pack_start (GTK_BOX (hbox32), pl_descend, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (pl_descend), pl_none_group);
+  pl_none_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (pl_descend));
+
+  image1929 = gtk_image_new_from_stock ("gtk-sort-descending", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1929);
+  gtk_container_add (GTK_CONTAINER (pl_descend), image1929);
+
+  hbox37 = gtk_hbox_new (TRUE, 0);
+  gtk_widget_show (hbox37);
+  gtk_table_attach (GTK_TABLE (table11), hbox37, 3, 4, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  pl_ascend = gtk_radio_button_new (NULL);
+  gtk_widget_show (pl_ascend);
+  gtk_box_pack_start (GTK_BOX (hbox37), pl_ascend, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (pl_ascend), pl_none_group);
+  pl_none_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (pl_ascend));
+
+  image1928 = gtk_image_new_from_stock ("gtk-sort-ascending", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image1928);
+  gtk_container_add (GTK_CONTAINER (pl_ascend), image1928);
+
+  hseparator9 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator9);
+  gtk_table_attach (GTK_TABLE (table11), hseparator9, 0, 9, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  vseparator2 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator2);
+  gtk_table_attach (GTK_TABLE (table11), vseparator2, 0, 1, 1, 8,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  hseparator10 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator10);
+  gtk_table_attach (GTK_TABLE (table11), hseparator10, 0, 9, 8, 9,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  vseparator3 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator3);
+  gtk_table_attach (GTK_TABLE (table11), vseparator3, 8, 9, 1, 8,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  vseparator6 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator6);
+  gtk_table_attach (GTK_TABLE (table11), vseparator6, 2, 3, 1, 8,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  vseparator7 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator7);
+  gtk_table_attach (GTK_TABLE (table11), vseparator7, 4, 5, 1, 6,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  vseparator8 = gtk_vseparator_new ();
+  gtk_widget_show (vseparator8);
+  gtk_table_attach (GTK_TABLE (table11), vseparator8, 6, 7, 1, 8,
+                    (GtkAttachOptions) (0),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  hseparator11 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator11);
+  gtk_table_attach (GTK_TABLE (table11), hseparator11, 1, 8, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  hseparator12 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator12);
+  gtk_table_attach (GTK_TABLE (table11), hseparator12, 1, 8, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  hseparator13 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator13);
+  gtk_table_attach (GTK_TABLE (table11), hseparator13, 1, 8, 6, 7,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  table12 = gtk_table_new (1, 1, FALSE);
+  gtk_widget_show (table12);
+  gtk_table_attach (GTK_TABLE (table11), table12, 3, 4, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table12), 3);
+
+  label82 = gtk_label_new (_("Ascending"));
+  gtk_widget_show (label82);
+  gtk_table_attach (GTK_TABLE (table12), label82, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label82), GTK_JUSTIFY_LEFT);
+
+  table13 = gtk_table_new (1, 1, FALSE);
+  gtk_widget_show (table13);
+  gtk_table_attach (GTK_TABLE (table11), table13, 5, 6, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table13), 3);
+
+  label85 = gtk_label_new (_("Descending"));
+  gtk_widget_show (label85);
+  gtk_table_attach (GTK_TABLE (table13), label85, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label85), GTK_JUSTIFY_LEFT);
+
+  table14 = gtk_table_new (1, 1, FALSE);
+  gtk_widget_show (table14);
+  gtk_table_attach (GTK_TABLE (table11), table14, 7, 8, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table14), 3);
+
+  label86 = gtk_label_new (_("None"));
+  gtk_widget_show (label86);
+  gtk_table_attach (GTK_TABLE (table14), label86, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label86), GTK_JUSTIFY_LEFT);
+
+  table15 = gtk_table_new (1, 1, FALSE);
+  gtk_widget_show (table15);
+  gtk_table_attach (GTK_TABLE (table11), table15, 1, 2, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table15), 3);
+
+  label87 = gtk_label_new (_("Playlists"));
+  gtk_widget_show (label87);
+  gtk_table_attach (GTK_TABLE (table15), label87, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label87), GTK_JUSTIFY_LEFT);
+
+  table16 = gtk_table_new (1, 1, FALSE);
+  gtk_widget_show (table16);
+  gtk_table_attach (GTK_TABLE (table11), table16, 1, 2, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table16), 3);
+
+  label88 = gtk_label_new (_("Sorttabs"));
+  gtk_widget_show (label88);
+  gtk_table_attach (GTK_TABLE (table16), label88, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label88), GTK_JUSTIFY_LEFT);
+
+  table17 = gtk_table_new (1, 1, FALSE);
+  gtk_widget_show (table17);
+  gtk_table_attach (GTK_TABLE (table11), table17, 1, 2, 7, 8,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table17), 3);
+
+  label89 = gtk_label_new (_("Tracks"));
+  gtk_widget_show (label89);
+  gtk_table_attach (GTK_TABLE (table17), label89, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label89), GTK_JUSTIFY_LEFT);
+
+  table18 = gtk_table_new (1, 1, FALSE);
+  gtk_widget_show (table18);
+  gtk_table_attach (GTK_TABLE (table11), table18, 3, 6, 7, 8,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table18), 3);
+
+  label90 = gtk_label_new (_("Use table headers"));
+  gtk_widget_show (label90);
+  gtk_table_attach (GTK_TABLE (table18), label90, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  label91 = gtk_label_new ("");
+  gtk_widget_show (label91);
+  gtk_table_attach (GTK_TABLE (table11), label91, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label91), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label91), 0, 0.5);
+
+  hseparator15 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator15);
+  gtk_box_pack_start (GTK_BOX (vbox53), hseparator15, FALSE, TRUE, 4);
+
+  cfg_case_sensitive = gtk_check_button_new_with_mnemonic (_("Sorting case sensitive"));
+  gtk_widget_show (cfg_case_sensitive);
+  gtk_box_pack_start (GTK_BOX (vbox53), cfg_case_sensitive, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, cfg_case_sensitive, _("If checked, sorting will be case sensitive. Please note that case sensitive sorting will not work well with most charsets."), NULL);
+
+  label92 = gtk_label_new (_("Sorting"));
+  gtk_widget_show (label92);
+  gtk_frame_set_label_widget (GTK_FRAME (frame26), label92);
+  gtk_label_set_justify (GTK_LABEL (label92), GTK_JUSTIFY_LEFT);
+
+  hbuttonbox8 = gtk_hbutton_box_new ();
+  gtk_widget_show (hbuttonbox8);
+  gtk_box_pack_start (GTK_BOX (vbox52), hbuttonbox8, FALSE, FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttonbox8), 5);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox8), GTK_BUTTONBOX_SPREAD);
+
+  button1 = gtk_button_new_from_stock ("gtk-apply");
+  gtk_widget_show (button1);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox8), button1);
+  GTK_WIDGET_SET_FLAGS (button1, GTK_CAN_DEFAULT);
+
+  button2 = gtk_button_new_from_stock ("gtk-cancel");
+  gtk_widget_show (button2);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox8), button2);
+  GTK_WIDGET_SET_FLAGS (button2, GTK_CAN_DEFAULT);
+
+  button3 = gtk_button_new_from_stock ("gtk-ok");
+  gtk_widget_show (button3);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox8), button3);
+  GTK_WIDGET_SET_FLAGS (button3, GTK_CAN_DEFAULT);
+
+  g_signal_connect ((gpointer) cfg_case_sensitive, "toggled",
+                    G_CALLBACK (on_sort_case_sensitive_toggled),
+                    NULL);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (sort_window, sort_window, "sort_window");
+  GLADE_HOOKUP_OBJECT (sort_window, vbox52, "vbox52");
+  GLADE_HOOKUP_OBJECT (sort_window, frame26, "frame26");
+  GLADE_HOOKUP_OBJECT (sort_window, vbox53, "vbox53");
+  GLADE_HOOKUP_OBJECT (sort_window, hbox30, "hbox30");
+  GLADE_HOOKUP_OBJECT (sort_window, table11, "table11");
+  GLADE_HOOKUP_OBJECT (sort_window, checkbutton1, "checkbutton1");
+  GLADE_HOOKUP_OBJECT (sort_window, image1934, "image1934");
+  GLADE_HOOKUP_OBJECT (sort_window, hbox34, "hbox34");
+  GLADE_HOOKUP_OBJECT (sort_window, st_ascend, "st_ascend");
+  GLADE_HOOKUP_OBJECT (sort_window, image1931, "image1931");
+  GLADE_HOOKUP_OBJECT (sort_window, hbox35, "hbox35");
+  GLADE_HOOKUP_OBJECT (sort_window, st_descend, "st_descend");
+  GLADE_HOOKUP_OBJECT (sort_window, image1932, "image1932");
+  GLADE_HOOKUP_OBJECT (sort_window, hbox36, "hbox36");
+  GLADE_HOOKUP_OBJECT (sort_window, st_none, "st_none");
+  GLADE_HOOKUP_OBJECT (sort_window, image1933, "image1933");
+  GLADE_HOOKUP_OBJECT (sort_window, hbox33, "hbox33");
+  GLADE_HOOKUP_OBJECT (sort_window, pl_none, "pl_none");
+  GLADE_HOOKUP_OBJECT (sort_window, image1930, "image1930");
+  GLADE_HOOKUP_OBJECT (sort_window, hbox32, "hbox32");
+  GLADE_HOOKUP_OBJECT (sort_window, pl_descend, "pl_descend");
+  GLADE_HOOKUP_OBJECT (sort_window, image1929, "image1929");
+  GLADE_HOOKUP_OBJECT (sort_window, hbox37, "hbox37");
+  GLADE_HOOKUP_OBJECT (sort_window, pl_ascend, "pl_ascend");
+  GLADE_HOOKUP_OBJECT (sort_window, image1928, "image1928");
+  GLADE_HOOKUP_OBJECT (sort_window, hseparator9, "hseparator9");
+  GLADE_HOOKUP_OBJECT (sort_window, vseparator2, "vseparator2");
+  GLADE_HOOKUP_OBJECT (sort_window, hseparator10, "hseparator10");
+  GLADE_HOOKUP_OBJECT (sort_window, vseparator3, "vseparator3");
+  GLADE_HOOKUP_OBJECT (sort_window, vseparator6, "vseparator6");
+  GLADE_HOOKUP_OBJECT (sort_window, vseparator7, "vseparator7");
+  GLADE_HOOKUP_OBJECT (sort_window, vseparator8, "vseparator8");
+  GLADE_HOOKUP_OBJECT (sort_window, hseparator11, "hseparator11");
+  GLADE_HOOKUP_OBJECT (sort_window, hseparator12, "hseparator12");
+  GLADE_HOOKUP_OBJECT (sort_window, hseparator13, "hseparator13");
+  GLADE_HOOKUP_OBJECT (sort_window, table12, "table12");
+  GLADE_HOOKUP_OBJECT (sort_window, label82, "label82");
+  GLADE_HOOKUP_OBJECT (sort_window, table13, "table13");
+  GLADE_HOOKUP_OBJECT (sort_window, label85, "label85");
+  GLADE_HOOKUP_OBJECT (sort_window, table14, "table14");
+  GLADE_HOOKUP_OBJECT (sort_window, label86, "label86");
+  GLADE_HOOKUP_OBJECT (sort_window, table15, "table15");
+  GLADE_HOOKUP_OBJECT (sort_window, label87, "label87");
+  GLADE_HOOKUP_OBJECT (sort_window, table16, "table16");
+  GLADE_HOOKUP_OBJECT (sort_window, label88, "label88");
+  GLADE_HOOKUP_OBJECT (sort_window, table17, "table17");
+  GLADE_HOOKUP_OBJECT (sort_window, label89, "label89");
+  GLADE_HOOKUP_OBJECT (sort_window, table18, "table18");
+  GLADE_HOOKUP_OBJECT (sort_window, label90, "label90");
+  GLADE_HOOKUP_OBJECT (sort_window, label91, "label91");
+  GLADE_HOOKUP_OBJECT (sort_window, hseparator15, "hseparator15");
+  GLADE_HOOKUP_OBJECT (sort_window, cfg_case_sensitive, "cfg_case_sensitive");
+  GLADE_HOOKUP_OBJECT (sort_window, label92, "label92");
+  GLADE_HOOKUP_OBJECT (sort_window, hbuttonbox8, "hbuttonbox8");
+  GLADE_HOOKUP_OBJECT (sort_window, button1, "button1");
+  GLADE_HOOKUP_OBJECT (sort_window, button2, "button2");
+  GLADE_HOOKUP_OBJECT (sort_window, button3, "button3");
+  GLADE_HOOKUP_OBJECT_NO_REF (sort_window, tooltips, "tooltips");
+
+  return sort_window;
 }
 
