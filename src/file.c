@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-03 11:55:57 jcs>
+/* Time-stamp: <2004-10-04 23:49:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -692,8 +692,8 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
     if (prefs_get_mserv_use())
     {
 	/* try getting the user's rating from the mserv db */
-	const gchar *music_root = prefs_get_mserv_music_root();
-	const gchar *trackinfo_root = prefs_get_mserv_trackinfo_root();
+	const gchar *music_root = prefs_get_path(PATH_MSERV_MUSIC_ROOT);
+	const gchar *trackinfo_root = prefs_get_path (PATH_MSERV_TRACKINFO_ROOT);
 	/* music_root and trackinfo_root guaranteed to be != NULL */
 	g_return_val_if_fail (music_root && trackinfo_root, FALSE);
 

@@ -2739,12 +2739,6 @@ create_prefs_window (void)
   g_signal_connect ((gpointer) cfg_mserv_use, "toggled",
                     G_CALLBACK (on_mserv_use_toggled),
                     NULL);
-  g_signal_connect ((gpointer) mserv_music_root_entry, "changed",
-                    G_CALLBACK (on_mserv_music_root_changed),
-                    NULL);
-  g_signal_connect ((gpointer) mserv_trackinfo_root_entry, "changed",
-                    G_CALLBACK (on_mserv_trackinfo_root_changed),
-                    NULL);
   g_signal_connect ((gpointer) mserv_username_entry, "changed",
                     G_CALLBACK (on_mserv_username_changed),
                     NULL);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-02 22:32:15 jcs>
+/* Time-stamp: <2004-10-04 23:45:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -46,6 +46,8 @@ typedef enum
     PATH_MP3GAIN,
     PATH_SYNC_CONTACTS,
     PATH_SYNC_CALENDAR,
+    PATH_MSERV_MUSIC_ROOT,
+    PATH_MSERV_TRACKINFO_ROOT,
     PATH_NUM
 } PathType;
 
@@ -140,7 +142,7 @@ struct cfg
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
-  gchar *toolpath[PATH_NUM];    /* path for 'Play Now...' (see PathType) */
+  gchar *path[PATH_NUM];    /* path for 'Play Now...' (see PathType) */
   gchar *time_format;           /* time format for strftime() */
   gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
@@ -150,8 +152,6 @@ struct cfg
   gboolean concal_autosync;     /* sync contacts and calendar on iTunesDB sync? */
   gboolean mserv_use;           /* use mserv data (rating)? */
   gboolean mserv_report_probs;  /* report problems while updating? */
-  gchar *mserv_music_root;      /* where is mserv music located? */
-  gchar *mserv_trackinfo_root;  /* where is mserv data located? */
   gchar *mserv_username;        /* username for mserv? */
   gboolean unused_gboolean3;    /* unused */
   float version;                /* version of gtkpod writing the cfg file */
@@ -288,8 +288,8 @@ GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
 gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
-void prefs_set_toolpath (PathType type, const gchar *path);
-const gchar *prefs_get_toolpath (PathType type);
+void prefs_set_path (PathType type, const gchar *path);
+const gchar *prefs_get_path (PathType type);
 void prefs_set_time_format (const gchar *format);
 const gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);
@@ -332,10 +332,6 @@ gboolean prefs_get_mserv_use(void);
 void prefs_set_mserv_use(gboolean val);
 gboolean prefs_get_mserv_report_probs(void);
 void prefs_set_mserv_report_probs(gboolean val);
-const gchar *prefs_get_mserv_music_root(void);
-void prefs_set_mserv_music_root(const gchar *root);
-const gchar *prefs_get_mserv_trackinfo_root(void);
-void prefs_set_mserv_trackinfo_root(const gchar *root);
 const gchar *prefs_get_mserv_username(void);
 void prefs_set_mserv_username(const gchar *root);
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-10-02 22:51:54 jcs>
+/* Time-stamp: <2004-10-04 23:49:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -253,13 +253,16 @@ struct cfg *cfg_new(void)
 	switch ((PathType)i)
 	{
 	case PATH_PLAY_NOW:
-	    mycfg->toolpath[i] = g_strdup ("xmms -p %s"); break;
+	    mycfg->path[i] = g_strdup ("xmms -p %s"); break;
 	case PATH_PLAY_ENQUEUE:
-	    mycfg->toolpath[i] = g_strdup ("xmms -e %s"); break;
+	    mycfg->path[i] = g_strdup ("xmms -e %s"); break;
 	case PATH_MP3GAIN:
 	case PATH_SYNC_CONTACTS:
 	case PATH_SYNC_CALENDAR:
-	    mycfg->toolpath[i] = g_strdup (""); break;
+	case PATH_MSERV_MUSIC_ROOT:
+	    mycfg->path[i] = g_strdup (""); break;
+	case PATH_MSERV_TRACKINFO_ROOT:
+	    mycfg->path[i] = g_strdup ("/var/lib/mserv/trackinfo/");
 	case PATH_NUM:
 	    break;
 	}
@@ -283,8 +286,6 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.case_sensitive = FALSE;
     mycfg->mserv_use = FALSE;
     mycfg->mserv_report_probs = TRUE;
-    mycfg->mserv_music_root = g_strdup ("");
-    mycfg->mserv_trackinfo_root = g_strdup ("/var/lib/mserv/trackinfo/");
     mycfg->mserv_username = g_strdup ("");
     return(mycfg);
 }
@@ -346,19 +347,24 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(arg_comp (line, "toolpath", &off) == 0)
 	  {
 	      gint i = atoi (line+off);
-	      prefs_set_toolpath (i, arg);
+	      prefs_set_path (i, arg);
+	  }
+	  else if(arg_comp (line, "path", &off) == 0)
+	  {
+	      gint i = atoi (line+off);
+	      prefs_set_path (i, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
 	  {
-	      prefs_set_toolpath (PATH_PLAY_NOW, arg);
+	      prefs_set_path (PATH_PLAY_NOW, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_enqueue_path") == 0)
 	  {
-	      prefs_set_toolpath (PATH_PLAY_ENQUEUE, arg);
+	      prefs_set_path (PATH_PLAY_ENQUEUE, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "mp3gain_path") == 0)
 	  {
-	      prefs_set_toolpath (PATH_MP3GAIN, arg);
+	      prefs_set_path (PATH_MP3GAIN, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "time_format") == 0)
 	  {
@@ -808,14 +814,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_mserv_report_probs ((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "mserv_music_root") == 0)
-	  {
-	      prefs_set_mserv_music_root (arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "mserv_trackinfo_root") == 0)
-	  {
-	      prefs_set_mserv_trackinfo_root (arg);
-	  }
 	  else if(g_ascii_strcasecmp (line, "mserv_username") == 0)
 	  {
 	      prefs_set_mserv_username (arg);
@@ -993,7 +991,7 @@ write_prefs_to_file_desc(FILE *fp)
 	   to read for humans */
 	if (bufp) *bufp = '\0';
 	fprintf (fp, ";%s\n", buf);
-	fprintf (fp, "toolpath%d=%s\n", i, cfg->toolpath[i]);
+	fprintf (fp, "path%d=%s\n", i, cfg->path[i]);
 	g_free (buf);
     }
     fprintf(fp, "time_format=%s\n", cfg->time_format);
@@ -1106,8 +1104,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
     fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);
     fprintf (fp, "mserv_report_probs=%d\n", cfg->mserv_report_probs);
-    fprintf(fp, "mserv_music_root=%s\n", cfg->mserv_music_root);
-    fprintf(fp, "mserv_trackinfo_root=%s\n", cfg->mserv_trackinfo_root);
     fprintf(fp, "mserv_username=%s\n", cfg->mserv_username);
 /*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
 }
@@ -1161,10 +1157,8 @@ void cfg_free(struct cfg *c)
       g_free (c->charset);
       g_free (c->last_dir.browse);
       for (i=0; i<PATH_NUM; ++i)
-	  g_free (c->toolpath[i]);
+	  g_free (c->path[i]);
       g_free (c->time_format);
-      g_free (c->mserv_music_root);
-      g_free (c->mserv_trackinfo_root);
       g_free (c->mserv_username);
       g_free (c);
     }
@@ -1375,11 +1369,9 @@ struct cfg *clone_prefs(void)
 	result->charset = g_strdup(cfg->charset);
 	result->last_dir.browse = g_strdup(cfg->last_dir.browse);
 	for (i=0; i<PATH_NUM; ++i)
-	    result->toolpath[i] = g_strdup (cfg->toolpath[i]);
+	    result->path[i] = g_strdup (cfg->path[i]);
 	result->time_format = g_strdup(cfg->time_format);
 	result->parsetags_template = g_strdup(cfg->parsetags_template);
-	result->mserv_music_root = g_strdup(cfg->mserv_music_root);
-	result->mserv_trackinfo_root = g_strdup(cfg->mserv_trackinfo_root);
 	result->mserv_username = g_strdup(cfg->mserv_username);
     }
     return(result);
@@ -2117,26 +2109,28 @@ gchar *prefs_validate_path (const gchar *path, const gchar *allowed)
 }
 
 
-void prefs_set_toolpath (PathType i, const gchar *path)
+void prefs_set_path (PathType i, const gchar *path)
 {
     switch (i)
     {
     case PATH_PLAY_NOW:
     case PATH_PLAY_ENQUEUE:
-	g_free (cfg->toolpath[i]);
-	cfg->toolpath[i] = prefs_validate_path (path, "s");
+	g_free (cfg->path[i]);
+	cfg->path[i] = prefs_validate_path (path, "s");
 	break;
     case PATH_MP3GAIN:
-	g_free (cfg->toolpath[i]);
+    case PATH_MSERV_MUSIC_ROOT:
+    case PATH_MSERV_TRACKINFO_ROOT:
+	g_free (cfg->path[i]);
 	if (path)
-	    cfg->toolpath[i] = g_strstrip (g_strdup (path));
+	    cfg->path[i] = g_strstrip (g_strdup (path));
 	else
-	    cfg->toolpath[i] = g_strdup ("");
+	    cfg->path[i] = g_strdup ("");
 	break;
     case PATH_SYNC_CONTACTS:
     case PATH_SYNC_CALENDAR:
-	g_free (cfg->toolpath[i]);
-	cfg->toolpath[i] = prefs_validate_path (path, "i");
+	g_free (cfg->path[i]);
+	cfg->path[i] = prefs_validate_path (path, "i");
 	break;
     case PATH_NUM:
 	break;
@@ -2144,10 +2138,10 @@ void prefs_set_toolpath (PathType i, const gchar *path)
 }
 
 
-const gchar *prefs_get_toolpath (PathType i)
+const gchar *prefs_get_path (PathType i)
 {
     g_return_val_if_fail (i>=0 && i<PATH_NUM, "");
-    return cfg->toolpath[i];
+    return cfg->path[i];
 }
 
 void prefs_set_time_format (const gchar *format)
@@ -2496,34 +2490,6 @@ gboolean prefs_get_mserv_report_probs(void)
 void prefs_set_mserv_report_probs(gboolean val)
 {
     cfg->mserv_report_probs = val;
-}
-
-void prefs_set_mserv_music_root (const gchar *str)
-{
-    if (str)
-    {
-	g_free (cfg->mserv_music_root);
-	cfg->mserv_music_root = g_strdup (str);
-    }
-}
-
-const gchar *prefs_get_mserv_music_root (void)
-{
-    return cfg->mserv_music_root;
-}
-
-void prefs_set_mserv_trackinfo_root (const gchar *str)
-{
-    if (str)
-    {
-	g_free (cfg->mserv_trackinfo_root);
-	cfg->mserv_trackinfo_root = g_strdup (str);
-    }
-}
-
-const gchar *prefs_get_mserv_trackinfo_root (void)
-{
-    return cfg->mserv_trackinfo_root;
 }
 
 void prefs_set_mserv_username (const gchar *str)

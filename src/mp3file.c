@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-08-14 00:15:07 jcs>
+/* Time-stamp: <2004-10-04 23:49:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1738,7 +1738,7 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
     n=0;
 
     /* see if full path to mp3gain was set using the prefs dialogue */
-    mp3gain_set = prefs_get_toolpath (PATH_MP3GAIN);
+    mp3gain_set = prefs_get_path (PATH_MP3GAIN);
     /* use default if not */
     if (!mp3gain_set || !(*mp3gain_set)) mp3gain_set = "mp3gain";
     /* find full path */
