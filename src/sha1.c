@@ -42,14 +42,14 @@
 typedef u_int32_t chunk;
 union _block
 {
-   u_char charblock[64];
+   u_int8_t charblock[64];
    chunk chunkblock[16];
 };
 typedef union _block block;
 
 union _hblock
 {
-   u_char charblock[20];
+   u_int8_t charblock[20];
    chunk chunkblock[5];
 };
 typedef union _hblock hblock;
@@ -61,7 +61,7 @@ struct _sha1
 };
 typedef struct _sha1 sha1;
 
-static u_char *sha1_hash(const u_char * text, u_int32_t len);
+static u_int8_t *sha1_hash(const u_int8_t * text, u_int32_t len);
 static void process_block_sha1(sha1 * message);
 
 #if BYTE_ORDER == LITTLE_ENDIAN
@@ -127,9 +127,9 @@ md5_hash_on_file(FILE * fp)
 
        if(fsize > 0)
        {
-	   u_char *hash = NULL;
+	   u_int8_t *hash = NULL;
 	   int bread = 0, x = 0, last = 0;
-	   char file_chunk[chunk_size + sizeof(int)];
+	   gchar file_chunk[chunk_size + sizeof(int)];
 	  
 	   /* allocate the digest we're returning */
 	   if((result = (gchar*)g_malloc0(sizeof(gchar) * 41)) == NULL)
@@ -139,7 +139,7 @@ md5_hash_on_file(FILE * fp)
 	   memcpy(file_chunk, &fsize, sizeof(int));	
 	   
 	   /* read chunk_size from fp */
-	   bread = fread(&file_chunk[sizeof(int)], sizeof(char), 
+	   bread = fread(&file_chunk[sizeof(int)], sizeof(gchar), 
 			    chunk_size, fp);
 	    
 	   /* create hash from our data */
@@ -201,39 +201,30 @@ md5_hash_song(Song * s)
 void
 md5_unique_file_free(void)
 {
-   if ((prefs_get_md5songs ()) && (filehash))
+   if (filehash)
    {
       g_hash_table_destroy(filehash);
       filehash = NULL;
    }
 }
 
-/* used to free the hash value of "Song *s" when we destroy the hashes */
-static void free_song_hash (void *s)
-{
-    C_FREE (((Song *)s)->md5_hash);
-}
-
-
 /**
  * Check to see if a song has already been added to the ipod
  * @s - the Song we want to know about
- * Returns the filename (or other tag) if the song is already 
- * on the ipod, NULL otherwise. Don't free the result. Use it
- * _before_ you free the song "s".
+ * Returns a pointer to the duplicate song.
  */
-gchar *
+Song *
 md5_song_exists(Song * s)
 {
    gchar *val = NULL;
-   gchar *result = NULL;
    Song *song = NULL;
 
    if (prefs_get_md5songs ())
    {
        if (filehash == NULL)
        {
-	   filehash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, free_song_hash);
+	   filehash = g_hash_table_new_full(g_str_hash, g_str_equal,
+					    g_free, NULL);
        }
        val = md5_hash_song(s);
        if (val != NULL)
@@ -241,27 +232,17 @@ md5_song_exists(Song * s)
 	   if ((song = g_hash_table_lookup(filehash, val)))
 	   {
 	       g_free(val);
-	       if (song->pc_path_utf8 && strlen(song->pc_path_utf8))
-		   result = song->pc_path_utf8;
-	       else if ((song->title && strlen(song->title)))
-		   result = song->title;
-	       else if ((song->album && strlen(song->album)))
-		   result = song->album;
-	       else if ((song->artist && strlen(song->artist)))
-		   result = song->artist;
-	       else
-		   result = "";
 	   }
 	   else                   /* if it doesn't exist we register it in the
 				     hash */
 	   {
-	       if (s->md5_hash == NULL)
-		   s->md5_hash = g_strdup(val);
+	       C_FREE (s->md5_hash);
+	       s->md5_hash = g_strdup(val);
 	       g_hash_table_insert(filehash, val, s);
 	   }
        }
    }
-   return result;
+   return song;
 }
 
 /**
@@ -271,16 +252,18 @@ md5_song_exists(Song * s)
 void
 md5_song_removed(Song * s)
 {
-   gchar *val = NULL;
+    gchar *val = NULL;
+    Song *song = NULL;
 
-   if ((prefs_get_md5songs ()) && (filehash) && (s) && (val = md5_hash_song(s)))
-   {
-      if (g_hash_table_lookup(filehash, val))
-      {
-         g_hash_table_remove(filehash, val);
-      }
-      g_free(val);
-   }
+    if ((prefs_get_md5songs ()) && (filehash) && (s) && (val = md5_hash_song(s)))
+    {
+	if ((song = g_hash_table_lookup(filehash, val)))
+	{
+	    if (song == s) /* only remove if it's the same song */
+		g_hash_table_remove(filehash, val);
+	}
+	g_free(val);
+    }
 }
 
 /* sha1_hash - hash value the input data with a given size.
@@ -288,16 +271,16 @@ md5_song_removed(Song * s)
  * @len - the length of the data for our seed
  * Returns a unique 20 char array.
  */
-static u_char *
-sha1_hash(const u_char * text, u_int32_t len)
+static u_int8_t *
+sha1_hash(const u_int8_t * text, u_int32_t len)
 {
    chunk x;
    chunk temp_len = len;
-   const u_char *temp_text = text;
-   u_char *digest;
+   const u_int8_t *temp_text = text;
+   u_int8_t *digest;
    sha1 *message;
 
-   if((digest = (u_char *) g_malloc0(sizeof(u_char) * 21)) == NULL)
+   if((digest = (u_int8_t *) g_malloc0(sizeof(u_int8_t) * 21)) == NULL)
        gtkpod_main_quit();	/* errno == ENOMEM */
    if((message = (sha1 *) g_malloc0(sizeof(sha1))) == NULL)
        gtkpod_main_quit();	/* errno == ENOMEM */

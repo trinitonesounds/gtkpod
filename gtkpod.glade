@@ -655,6 +655,7 @@
 			      <property name="rules_hint">False</property>
 			      <property name="reorderable">False</property>
 			      <property name="enable_search">True</property>
+			      <signal name="drag_data_get" handler="on_st_treeview_drag_data_get" last_modification_time="Sat, 01 Feb 2003 10:47:50 GMT"/>
 			    </widget>
 			  </child>
 			</widget>
@@ -700,6 +701,7 @@
 			      <property name="rules_hint">False</property>
 			      <property name="reorderable">False</property>
 			      <property name="enable_search">True</property>
+			      <signal name="drag_data_get" handler="on_st_treeview_drag_data_get" last_modification_time="Sat, 01 Feb 2003 10:47:50 GMT"/>
 			    </widget>
 			  </child>
 			</widget>
@@ -745,6 +747,7 @@
 			      <property name="rules_hint">False</property>
 			      <property name="reorderable">False</property>
 			      <property name="enable_search">True</property>
+			      <signal name="drag_data_get" handler="on_st_treeview_drag_data_get" last_modification_time="Sat, 01 Feb 2003 10:47:50 GMT"/>
 			    </widget>
 			  </child>
 			</widget>
@@ -790,6 +793,7 @@
 			      <property name="rules_hint">False</property>
 			      <property name="reorderable">False</property>
 			      <property name="enable_search">True</property>
+			      <signal name="drag_data_get" handler="on_st_treeview_drag_data_get" last_modification_time="Sat, 01 Feb 2003 10:47:50 GMT"/>
 			    </widget>
 			  </child>
 			</widget>
@@ -852,6 +856,7 @@
 			      <property name="rules_hint">False</property>
 			      <property name="reorderable">False</property>
 			      <property name="enable_search">True</property>
+			      <signal name="drag_data_get" handler="on_st_treeview_drag_data_get" last_modification_time="Sat, 01 Feb 2003 10:47:50 GMT"/>
 			    </widget>
 			  </child>
 			</widget>
@@ -897,6 +902,7 @@
 			      <property name="rules_hint">False</property>
 			      <property name="reorderable">False</property>
 			      <property name="enable_search">True</property>
+			      <signal name="drag_data_get" handler="on_st_treeview_drag_data_get" last_modification_time="Sat, 01 Feb 2003 10:47:50 GMT"/>
 			    </widget>
 			  </child>
 			</widget>
@@ -942,6 +948,7 @@
 			      <property name="rules_hint">False</property>
 			      <property name="reorderable">False</property>
 			      <property name="enable_search">True</property>
+			      <signal name="drag_data_get" handler="on_st_treeview_drag_data_get" last_modification_time="Sat, 01 Feb 2003 10:47:50 GMT"/>
 			    </widget>
 			  </child>
 			</widget>
@@ -987,6 +994,7 @@
 			      <property name="rules_hint">False</property>
 			      <property name="reorderable">False</property>
 			      <property name="enable_search">True</property>
+			      <signal name="drag_data_get" handler="on_st_treeview_drag_data_get" last_modification_time="Sat, 01 Feb 2003 10:47:50 GMT"/>
 			    </widget>
 			  </child>
 			</widget>

@@ -248,3 +248,11 @@ on_songs_statusbar_realize             (GtkWidget       *widget,
 void
 on_cfg_id3_writeall_toggled            (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_st_treeview_drag_data_get           (GtkWidget       *widget,
+                                        GdkDragContext  *drag_context,
+                                        GtkSelectionData *data,
+                                        guint            info,
+                                        guint            time,
+                                        gpointer         user_data);

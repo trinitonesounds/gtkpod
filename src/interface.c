@@ -670,8 +670,32 @@ create_gtkpod (void)
   g_signal_connect ((gpointer) sorttab0, "switch_page",
                     G_CALLBACK (on_sorttab_switch_page),
                     NULL);
+  g_signal_connect ((gpointer) st0_cat0_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
+  g_signal_connect ((gpointer) st0_cat1_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
+  g_signal_connect ((gpointer) st0_cat2_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
+  g_signal_connect ((gpointer) st0_cat3_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
   g_signal_connect ((gpointer) sorttab1, "switch_page",
                     G_CALLBACK (on_sorttab_switch_page),
+                    NULL);
+  g_signal_connect ((gpointer) st1_cat0_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
+  g_signal_connect ((gpointer) st1_cat1_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
+  g_signal_connect ((gpointer) st1_cat2_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
+                    NULL);
+  g_signal_connect ((gpointer) st1_cat3_treeview, "drag_data_get",
+                    G_CALLBACK (on_st_treeview_drag_data_get),
                     NULL);
   g_signal_connect ((gpointer) song_treeview, "drag_data_get",
                     G_CALLBACK (on_song_treeview_drag_data_get),

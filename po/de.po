@@ -1,13 +1,13 @@
 # German language translation for gtkpod
-# Copyright (C) 2003 Free Software Foundation, Inc.
-# Jörg Schuler <jcsjcs@users.sourceforge.net>, 2003.
+# Copyright (C) 2003 Jörg Schuler
+# Jörg Schuler <jcsjcs at users.sourceforge.net>, 2003.
 #
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.14\n"
-"POT-Creation-Date: 2003-01-29 22:41+0900\n"
-"PO-Revision-Date: 2003-01-26 20:40+0900\n"
+"POT-Creation-Date: 2003-02-01 20:27+0900\n"
+"PO-Revision-Date: 2003-02-01 17:43+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: src/callbacks.c:224
+#: src/callbacks.c:220
 msgid "Badly positioned file drop, items not copied"
 msgstr "Drop schlecht positioniert. Die Stücke wurden nicht übernommen."
 
-#: src/callbacks.c:269 src/callbacks.c:320
+#: src/callbacks.c:265 src/callbacks.c:309
 msgid "Preferences not updated"
 msgstr "Die Einstellungen wurden nicht übernommen"
 
@@ -224,67 +224,67 @@ msgstr "Westlich (Windows-1252)"
 msgid "System Charset"
 msgstr "System-Zeichensatz"
 
-#: src/confirmation.c:194
+#: src/confirmation.c:225
 msgid "Confirmation Dialogue"
 msgstr "Sicherheitsabfrage"
 
-#: src/dirbrowser.c:157
+#: src/dirbrowser.c:178
 msgid "Select directory to add recursively"
 msgstr "Wählen Sie Verzeichnisse zum Hinzufügen"
 
-#: src/dirbrowser.c:399 src/interface.c:1153 src/interface.c:1343
+#: src/dirbrowser.c:424 src/interface.c:1177 src/interface.c:1367
 msgid "Ok"
 msgstr "OK"
 
-#: src/dirbrowser.c:408 src/interface.c:1158 src/interface.c:1353
+#: src/dirbrowser.c:433 src/interface.c:1182 src/interface.c:1377
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/display.c:309
+#: src/display.c:327
 msgid "Nothing is selected currently in Playlist Tree\n"
 msgstr "Es ist zur Zeit nichts im Playlist Fenster ausgewählt\n"
 
-#: src/display.c:463
+#: src/display.c:481
 msgid "Playlists"
 msgstr "Playlisten"
 
-#: src/display.c:793
+#: src/display.c:814
 msgid "All"
 msgstr "Alle"
 
-#: src/display.c:1710 src/interface.c:495 src/interface.c:555
-#: src/interface.c:1052
+#: src/display.c:1735 src/interface.c:495 src/interface.c:555
+#: src/interface.c:1076
 msgid "Title"
 msgstr "Titel"
 
-#: src/display.c:1732 src/interface.c:453 src/interface.c:513
-#: src/interface.c:1036 src/interface.c:1123
+#: src/display.c:1757 src/interface.c:453 src/interface.c:513
+#: src/interface.c:1060 src/interface.c:1147
 msgid "Artist"
 msgstr "Künstler"
 
-#: src/display.c:1754 src/interface.c:467 src/interface.c:527
-#: src/interface.c:1048 src/interface.c:1127
+#: src/display.c:1779 src/interface.c:467 src/interface.c:527
+#: src/interface.c:1072 src/interface.c:1151
 msgid "Album"
 msgstr "Album"
 
-#: src/display.c:1775 src/interface.c:481 src/interface.c:541
-#: src/interface.c:1040 src/interface.c:1135
+#: src/display.c:1800 src/interface.c:481 src/interface.c:541
+#: src/interface.c:1064 src/interface.c:1159
 msgid "Genre"
 msgstr "Genre"
 
-#: src/display.c:1796 src/interface.c:1139
+#: src/display.c:1821 src/interface.c:1163
 msgid "Track Number"
 msgstr "Stück Nummer"
 
-#: src/display.c:1815
+#: src/display.c:1840
 msgid "iPod ID"
 msgstr "iPod ID"
 
-#: src/display.c:1833
+#: src/display.c:1858
 msgid "PC File"
 msgstr "PC Datei"
 
-#: src/display.c:1849
+#: src/display.c:1874
 msgid "Trnsfrd"
 msgstr "Übertragen"
 
@@ -490,41 +490,41 @@ msgstr "Neue PL"
 msgid "Export"
 msgstr "Exportieren"
 
-#: src/interface.c:816 src/interface.c:1299
+#: src/interface.c:840 src/interface.c:1323
 msgid "window1"
 msgstr "Fenster1"
 
-#: src/interface.c:847
+#: src/interface.c:871
 msgid "Credits"
 msgstr "Danksagung"
 
-#: src/interface.c:863
+#: src/interface.c:887
 msgid "Translators"
 msgstr "Übersetzer"
 
-#: src/interface.c:957
+#: src/interface.c:981
 msgid "gtkpod Preferences"
 msgstr "gtkpod Einstellungen"
 
-#: src/interface.c:972
+#: src/interface.c:996
 msgid "iPod Mount Point:"
 msgstr "iPod Mount Point:"
 
-#: src/interface.c:985
+#: src/interface.c:1009
 msgid "Charset (ID3, files):"
 msgstr "Zeichensatz (ID3, Dateinamen):"
 
-#: src/interface.c:1000
+#: src/interface.c:1024
 msgid "Automatically import iTunesDB on startup"
 msgstr "Beim Starten iTunes-Datenbank automatisch importieren?"
 
-#: src/interface.c:1004
+#: src/interface.c:1028
 msgid "Don't allow file duplication (slower import)"
 msgstr ""
 "Mehrfaches Einlesen von Stücken verhindern\n"
 "(langsamerer Import)"
 
-#: src/interface.c:1008
+#: src/interface.c:1032
 msgid ""
 "Change the ID3 tags when modified in gtkpod\n"
 "(on disk and on the ipod)"
@@ -532,15 +532,15 @@ msgstr ""
 "ID3 Tags bei Änderungen in gtkpod auf der\n"
 "Festplatte und auf dem iPod ebenfalls ändern"
 
-#: src/interface.c:1012
+#: src/interface.c:1036
 msgid "Update all tags (not only changed ones)"
-msgstr ""
+msgstr "Alle Tags neu schreiben (nicht nur die gerade geänderten)"
 
-#: src/interface.c:1016
+#: src/interface.c:1040
 msgid "Keep a backup of the iTunesDB in ~/.gtkpod/"
 msgstr "Backup von iTunesDB in ~/.gtkpod/ erzeugen"
 
-#: src/interface.c:1020
+#: src/interface.c:1044
 msgid ""
 "Write extended information (PC filenames,\n"
 "MD5 hashes)"
@@ -548,59 +548,59 @@ msgstr ""
 "Erweiterte Informationen schreiben (PC Dateinamen,\n"
 "MD5-Prüfsummen)"
 
-#: src/interface.c:1056
+#: src/interface.c:1080
 msgid "Automatically Set Empty ID3-Tags To Filename?"
 msgstr "Leere ID3-Tags mit dem Filename initialisieren?"
 
-#: src/interface.c:1069
+#: src/interface.c:1093
 msgid "...entry \"All\" in first sort tab"
 msgstr "Eintrag 'Alle' im ersten Sort Tab"
 
-#: src/interface.c:1073
+#: src/interface.c:1097
 msgid "...entry \"All\" in second sort tab"
 msgstr "Eintrag 'Alle' im zweiten Sort Tab"
 
-#: src/interface.c:1077
+#: src/interface.c:1101
 msgid "Automatically select..."
 msgstr "Wähle automatisch "
 
-#: src/interface.c:1090
+#: src/interface.c:1114
 msgid "Before removing playlists"
 msgstr "Vor dem Entfernen von Playlisten"
 
-#: src/interface.c:1094
+#: src/interface.c:1118
 msgid "Before removing tracks from playlist"
 msgstr "Vor dem Entfernen von Stücken aus einer Playliste"
 
-#: src/interface.c:1098
+#: src/interface.c:1122
 msgid "Before removing tracks completely from iPod"
 msgstr "Vor dem vollständigen Löschen vom iPod"
 
-#: src/interface.c:1102
+#: src/interface.c:1126
 msgid "Delete Confirmation "
 msgstr "Sicherheitsabfrage beim Löschen "
 
-#: src/interface.c:1119
+#: src/interface.c:1143
 msgid "All Song Attributes"
 msgstr "Alle Informationen"
 
-#: src/interface.c:1143
+#: src/interface.c:1167
 msgid "Displayed Song Attributes "
 msgstr "Angezeigte Informationen "
 
-#: src/interface.c:1163
+#: src/interface.c:1187
 msgid "gtkpod Preferences: "
 msgstr "gtkpod Einstellungen: "
 
-#: src/interface.c:1305
+#: src/interface.c:1329
 msgid "label21"
 msgstr "label21"
 
-#: src/interface.c:1333
+#: src/interface.c:1357
 msgid "Never ask this Again"
 msgstr "Diese Frage nie wieder stellen"
 
-#: src/interface.c:1348
+#: src/interface.c:1372
 msgid "Apply"
 msgstr "Anwenden"
 
@@ -662,17 +662,19 @@ msgstr "Das Files, für das eine Prüfsumme berechnet werden soll, ist leer.\n"
 msgid "Unable to open file \"%s\"\n"
 msgstr "Kann '%s' nicht öffnen\n"
 
-#: src/misc.c:64
+#. display message about duplicate
+#. * songs, if duplicates were detected
+#: src/misc.c:94
 msgid "Successly Added Files"
 msgstr "Dateien wurden erfolgreich hinzugefügt"
 
 #. file selector already open -- abort
 #. Create the selector
-#: src/misc.c:82
+#: src/misc.c:113
 msgid "Select files or directories to add."
 msgstr "Wählen Sie hinzuzufügende Dateien oder Verzeichnisse aus."
 
-#: src/misc.c:172
+#: src/misc.c:203
 #, c-format
 msgid ""
 "gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod"
@@ -681,7 +683,7 @@ msgstr ""
 "gtkpod Version %s: Plattformübergreifendes internationalisiertes GUI für "
 "Apples iPod(tm)."
 
-#: src/misc.c:176
+#: src/misc.c:207
 msgid ""
 "    (C) 2002 - 2003\n"
 "    Jorg Schuler (jcsjcs at users.sourceforge.net)"
@@ -689,11 +691,11 @@ msgstr ""
 "    (C) 2002 - 2003\n"
 "    Jörg Schuler (jcsjcs at users.sourceforge.net)"
 
-#: src/misc.c:177
+#: src/misc.c:208
 msgid "    Corey Donohoe (atmos at atmos.org)"
 msgstr "    Corey Donohoe (atmos at atmos.org)"
 
-#: src/misc.c:178
+#: src/misc.c:209
 msgid ""
 "This program is free software; you can redistribute it and/or modify it "
 "under the terms of the GNU General Public License as published by the Free "
@@ -723,7 +725,7 @@ msgstr ""
 "Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software "
 "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA."
 
-#: src/misc.c:179
+#: src/misc.c:210
 msgid ""
 "The code handling the reading and writing of the iTunesDB was ported from "
 "mktunes.pl of the gnuPod package written by Adrian Ulrich (http://www."
@@ -735,11 +737,11 @@ msgstr ""
 "http://www.blinkenlights.ch/cgi-bin/fm.pl?get=ipode). Adrian Ulrich hat den "
 "Playlisten-Teil portiert."
 
-#: src/misc.c:180
+#: src/misc.c:211
 msgid "This program borrows code from the following projects:"
 msgstr "Dieses Programm hat von folgenden Projekten Programmcode ausgeliehen:"
 
-#: src/misc.c:181
+#: src/misc.c:212
 msgid ""
 "  xmms:    dirbrowser\n"
 "  easytag: reading and writing of ID3 tags\n"
@@ -749,95 +751,103 @@ msgstr ""
 "  easytag: Lesen und Schreiben von ID3 Tags\n"
 "  GNOMAD:  Bestimmung der Spielzeit eines Stücks"
 
-#: src/misc.c:182
+#: src/misc.c:213
 msgid "The GUI was created with the help of glade-2."
 msgstr "Das GUI wurde mit der Hilfe von 'glade-2' erstellt."
 
-#: src/misc.c:189
+#: src/misc.c:220
 msgid "German: Jorg Schuler (jcsjcs at users.sourceforge.net)"
 msgstr "Deutsch: Jörg Schuler (jcsjcs at users.sourceforge.net)"
 
-#: src/misc.c:255 src/misc.c:259
+#: src/misc.c:279 src/misc.c:283
 #, c-format
 msgid "Could not delete backup file: \"%s\"\n"
 msgstr "Konnte Sicherheitskopie nicht löschen: '%s'\n"
 
-#: src/misc.c:378
+#: src/misc.c:309
+msgid ""
+"Data has been changed and not been saved.\n"
+"OK to exit gtkpod?"
+msgstr ""
+"Änderungen wurden noch nicht gespeichert.\n"
+"Wollen Sie gtkpod trotzdem verlassen?"
+
+#: src/misc.c:408
 #, c-format
 msgid " P:%d S:%d/%d"
 msgstr " P:%d S:%d/%d"
 
-#: src/misc.c:464
+#: src/misc.c:617
 #, c-format
 msgid "Successfully created iPod directories in '%s'."
 msgstr "Die iPod-Verzeichnisstruktur wurde erfolgreich in '%s' angelegt."
 
-#: src/misc.c:466
+#: src/misc.c:619
 #, c-format
 msgid "Problem creating iPod directories in '%s'."
 msgstr "Es trat ein Problem beim Erzeugen der iPod-Verzeichnisse in '%s' auf."
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:512
+#: src/misc.c:665
 msgid "Create iPod directories"
 msgstr "iPod-Verzeichnisstruktur erstellen"
 
 #. title
-#: src/misc.c:513
+#: src/misc.c:666
 msgid "OK to create the following directories?"
 msgstr "Sollen die folgenden Verzeichnisse erstellt werden?"
 
-#: src/misc.c:542
+#: src/misc.c:696
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "Playliste '%s' gelöscht."
 
 #. no playlist selected
-#: src/misc.c:557 src/misc.c:664
+#: src/misc.c:711 src/misc.c:819
 msgid "No playlist selected."
 msgstr "Keine Playliste ausgewählt."
 
 #. master playlist
-#: src/misc.c:562
+#: src/misc.c:716
 msgid "Cannot delete master playlist."
 msgstr "Die Hauptplayliste kann nicht gelöscht werden."
 
-#: src/misc.c:566
+#: src/misc.c:720
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "Sind Sie sicher, daß Sie die Playliste \"%s\" entfernen wollen?"
 
 #. gint id,
 #. gboolean modal,
-#: src/misc.c:571
+#: src/misc.c:725
 msgid "Delete Playlist?"
 msgstr "Playliste löschen?"
 
-#: src/misc.c:615
+#: src/misc.c:770
 msgid "Deleted one song completely from iPod"
 msgstr "Ein Stück wurde komplett vom iPod entfernt."
 
-#: src/misc.c:615
+#: src/misc.c:770
 #, c-format
 msgid "Deleted %d songs completely from iPod"
 msgstr "%d Stücke wurden komplett vom iPod entfernt."
 
-#: src/misc.c:619
+#: src/misc.c:774
 #, c-format
 msgid "Deleted song from playlist '%s'"
 msgstr "Stück wurde von der Playliste '%s' entfernt."
 
-#: src/misc.c:619
+#: src/misc.c:774
 #, c-format
 msgid "Deleted songs from playlist '%s'"
 msgstr "Die Stücke wurden von der Playliste '%s' entfernt."
 
-#: src/misc.c:658
+#: src/misc.c:813
 msgid "No songs selected."
 msgstr "Keine Stücke ausgewählt."
 
-#: src/misc.c:672
+#: src/misc.c:827
 msgid ""
 "Are you sure you want to delete the following song\n"
 "completely from your ipod?"
@@ -851,15 +861,15 @@ msgstr[1] ""
 "Sind Sie sicher, daß Sie die folgenden Stücke\n"
 "vollständig vom iPod entfernen wollen?"
 
-#: src/misc.c:673
+#: src/misc.c:828
 msgid "Delete Song Completely?"
 msgstr "Vollständig entfernen?"
 
-#: src/misc.c:673
+#: src/misc.c:828
 msgid "Delete Songs Completey?"
 msgstr "Stücke vollständig entfernen?"
 
-#: src/misc.c:679
+#: src/misc.c:834
 #, c-format
 msgid ""
 "Are you sure you want to delete the following song\n"
@@ -874,57 +884,63 @@ msgstr[1] ""
 "Sind Sie sicher, daß Sie die folgenden Stücke\n"
 "von der Playliste \"%s\" entfernen wollen?"
 
-#: src/misc.c:680
+#: src/misc.c:835
 msgid "Delete Song From Playlist?"
 msgstr "Von der Playliste entfernen?"
 
-#: src/misc.c:680
+#: src/misc.c:835
 msgid "Delete Songs From Playlist?"
 msgstr "Stücke von der Playliste entfernen?"
 
-#: src/prefs.c:60
+#. updating the statusbar for every single song added takes a
+#. tremendous amount of time!
+#: src/playlist.c:280
+#, c-format
+msgid "Added %d+ songs to playlist '%s'"
+msgstr "%d+ Stücke wurden zur Playliste '%s' hinzugefügt."
+
+#: src/prefs.c:61
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "Benutzung von gtkpod %s:\n"
 
-#: src/prefs.c:61
+#: src/prefs.c:62
 msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help:   diesen Text anzeigen\n"
 
-#: src/prefs.c:62
+#: src/prefs.c:63
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m <Pfad>:    Mountpoint für iPod angeben\n"
 
-#: src/prefs.c:63
+#: src/prefs.c:64
 msgid "  --mountpoint: same as \"-m\".\n"
 msgstr "  --mountpoint: wie '-m'\n"
 
-#: src/prefs.c:64
+#: src/prefs.c:65
 msgid "  -w:           write changed ID3 tags to file\n"
 msgstr "  -w:           Änderungen von ID3 Tags auch in die Datei übernehmen\n"
 
-#: src/prefs.c:65
-#, fuzzy
-msgid "  --id3_write:   same as \"-w\".\n"
-msgstr "  --writeid3:   wie '-w'\n"
-
 #: src/prefs.c:66
+msgid "  --id3_write:   same as \"-w\".\n"
+msgstr "  --id3_write:   wie '-w'\n"
+
+#: src/prefs.c:67
 msgid "  -c:           check files automagically for duplicates\n"
 msgstr "  -c:           neue Dateien automatisch auf Duplikate untersuchen\n"
 
-#: src/prefs.c:67
+#: src/prefs.c:68
 msgid "  --md5:        same as \"-c\".\n"
 msgstr "  --md5:        wie '-c'\n"
 
-#: src/prefs.c:68
+#: src/prefs.c:69
 msgid "  -a:           import database automatically after start.\n"
 msgstr "  -a:           iTunesDB automatisch importieren\n"
 
-#: src/prefs.c:69
+#: src/prefs.c:70
 msgid "  --auto:       same as \"-a\".\n"
 msgstr "  --auto:       wie '-a'\n"
 
-#: src/prefs.c:70
+#: src/prefs.c:71
 msgid ""
 "  -o:           use offline mode. No changes are exported to the iPod,\n"
 "                but to ~/.gtkpod/ instead. iPod is updated if \"Export\" is\n"
@@ -935,61 +951,63 @@ msgstr ""
 "aktualisiert,\n"
 "             wenn nicht im Offline-Modus exportiert wird.\n"
 
-#: src/prefs.c:71
+#: src/prefs.c:72
 msgid "  --offline:    same as \"-o\".\n"
 msgstr "  --offline:    wie '-o'\n"
 
-#: src/prefs.c:156 src/prefs.c:293
+#: src/prefs.c:158 src/prefs.c:295
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "Fehler beim Lesen der Vor-Einstellungen: %s\n"
 
-#: src/prefs.c:321
+#: src/prefs.c:323
 #, c-format
 msgid "Unable to open config file \"%s\" for reading\n"
 msgstr "Kann Datei '%s' mit den Einstellungen nicht lesen.\n"
 
-#: src/prefs.c:381
+#: src/prefs.c:383
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "Unbekannte Option: %s\n"
 
-#: src/prefs.c:462
+#: src/prefs.c:464
 msgid "Settings are not saved.\n"
 msgstr "Einstellungen nicht gespeichert.\n"
 
-#: src/prefs.c:475
+#: src/prefs.c:477
 #, c-format
 msgid "Unable to open \"%s\" for writing\n"
 msgstr "Kann '%s' nicht zum schreiben öffnen.\n"
 
-#: src/prefs.c:887
+#: src/prefs.c:907
 #, c-format
 msgid "Unable to \"mkdir %s\"\n"
 msgstr "Kann 'mkdir %s' nicht ausführen.\n"
 
-#: src/song.c:180
-#, c-format
-msgid "Song (%s) already exists on iPod! (%s)\n"
-msgstr "Das Stück '%s' existiert bereits auf dem iPod! ('%s')\n"
-
 #. Songs with zero play length are ignored by iPod...
-#: src/song.c:368
+#: src/song.c:374
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "Das Stück '%s' hat null Sekunden Spielzeit und wird ignoriert.\n"
 
-#: src/song.c:560 src/song.c:574
+#: src/song.c:519
+#, c-format
+msgid "Copied %d of %d new song."
+msgid_plural "Copied %d of %d new songs."
+msgstr[0] "%d von insgesamt %d Stück kopiert."
+msgstr[1] "%d von insgesamt %d Stücken kopiert."
+
+#: src/song.c:592 src/song.c:606
 #, c-format
 msgid "Could not open \"%s\" for reading extended info.\n"
 msgstr "Konnte Datei '%s' mit den erweiterten Informationen nicht öffnen.\n"
 
-#: src/song.c:591
+#: src/song.c:623
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "Fehler beim Lesen der erweiterten Informationen: %s\n"
 
-#: src/song.c:607
+#: src/song.c:639
 #, c-format
 msgid ""
 "iTunesDB (%s)\n"
@@ -998,7 +1016,7 @@ msgstr ""
 "Die Prüfsumme der iTunesDB (%s) entspricht nicht der Prüfsumme,\n"
 "die mit den erweiterten Informationen (%s) gespeichert ist.\n"
 
-#: src/song.c:615
+#: src/song.c:647
 #, c-format
 msgid ""
 "%s:\n"
@@ -1007,7 +1025,7 @@ msgstr ""
 "%s:\n"
 "'itunesdb_hash=' wurde erwartet. Stattdessen wurde gefunden: '%s'\n"
 
-#: src/song.c:649
+#: src/song.c:681
 #, c-format
 msgid ""
 "%s:\n"
@@ -1016,23 +1034,23 @@ msgstr ""
 "%s:\n"
 "Formatfehler: %s\n"
 
-#: src/song.c:683
+#: src/song.c:715
 msgid "You cannot import an iTunesDB again!\n"
 msgstr "iTunesDB kann nicht wiederholt importiert werden!\n"
 
-#: src/song.c:702
+#: src/song.c:741
 msgid "Extended info will not be used.\n"
 msgstr "Erweiterte Informationen werden nicht benutzt.\n"
 
-#: src/song.c:706
+#: src/song.c:745
 msgid "iPod Database Successfully Imported"
 msgstr "Die iPod Datenbank wurde erfolgreich eingelesen."
 
-#: src/song.c:708
+#: src/song.c:747
 msgid "iPod Database Import Failed"
 msgstr "Beim Einlesen der iPod Datenbank trat ein Fehler auf."
 
-#: src/song.c:720
+#: src/song.c:759
 msgid ""
 "Extended info will not be used. If you have non-transferred songs,\n"
 "these will be lost.\n"
@@ -1040,63 +1058,94 @@ msgstr ""
 "Erweiterte Informationen werden nicht benutzt. Noch nicht auf den iPod\n"
 "übertragene Stücke gehen verloren.\n"
 
-#: src/song.c:724
-msgid "Extended iPod Database Successfully Imported"
-msgstr "Die erweiterte iPod Datenbank wurde erfolgreich eingelesen."
+#: src/song.c:763
+msgid "Offline iPod Database Successfully Imported"
+msgstr "Die Offline-iPod Datenbank wurde erfolgreich eingelesen."
 
-#: src/song.c:727
-msgid "Extended iPod Database Import Failed"
-msgstr "Es trat ein Fehler beim Einlesen der erweiterten Datenbank auf."
+#: src/song.c:766
+msgid "Offline iPod Database Import Failed"
+msgstr "Beim Einlesen der Offline-iPod Datenbank trat ein Fehler auf."
 
-#: src/song.c:733
+#: src/song.c:772
 msgid "Import aborted.\n"
 msgstr "Importieren abgebrochen.\n"
 
-#: src/song.c:789 src/song.c:808
+#: src/song.c:831 src/song.c:850
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "Tags in der Datei '%s' konnten nicht geändert werden.\n"
 
-#: src/song.c:901 src/song.c:908
+#: src/song.c:952 src/song.c:959
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr ""
 "Datei '%s' konnte nicht zum Schreiben der Informationen geöffnet werden.\n"
 
-#: src/song.c:978
+#: src/song.c:1033
 msgid "Could not write songs to iPod. Export aborted!\n"
 msgstr ""
-"Stücke konnte nicht auf den iPod kopiert werden. Export wurde abgebrochen!\n"
+"Einige Stücke konnte nicht auf den iPod kopiert werden. Export wurde "
+"abgebrochen!\n"
 
-#: src/song.c:981
+#: src/song.c:1036
 msgid "Error writing iTunesDB to iPod. Export aborted!\n"
 msgstr ""
 "Fehler beim Übertragen der iTunesDB auf den iPod. Der Export wurde "
 "abgebrochen!\n"
 
-#: src/song.c:986
+#: src/song.c:1041
 msgid "Extended information not written\n"
 msgstr "Erweiterte Informationen wurden nicht geschrieben.\n"
 
-#: src/song.c:993
+#: src/song.c:1048
 #, c-format
 msgid "Could not delete extended information file: \"%s\"\n"
 msgstr ""
 "Die Datei '%s' mit den erweiterten Informationen konnte nicht gelöscht "
 "werden.\n"
 
-#: src/song.c:1006
+#: src/song.c:1061
 msgid "Backups could not be created!\n"
 msgstr "Die Sicherheitskopien konnten nicht erstellt werden!\n"
 
-#: src/song.c:1022
+#: src/song.c:1077
 msgid "Export not successful!\n"
 msgstr "Das Exportieren war nicht erfolgreich!\n"
+
+#: src/song.c:1088
+msgid "iPod Database Saved"
+msgstr "Die Datenbank wurde erfolgrech geschrieben."
+
+#. update for count == 1, 21, 41 ... and for count == n
+#: src/song.c:1145
+#, c-format
+msgid "Hashed %d of %d song."
+msgid_plural "Hashed %d of %d songs."
+msgstr[0] "%d von insgesamt %d Stück indiziert."
+msgstr[1] "%d von insgesamt %d Stücken indiziert."
+
+#: src/song.c:1188
+#, c-format
+msgid "The following duplicate song has been removed."
+msgid_plural "The following %d duplicate songs have been removed."
+msgstr[0] "Das folgende doppelt eingelesene Stück wurde entfernt."
+msgstr[1] "Die folgenden %d doppelt eingelesenen Stücke wurden entfernt."
+
+#: src/song.c:1195
+#, c-format
+msgid "The following duplicate song has been skipped."
+msgid_plural "The following %d duplicate songs have been skipped."
+msgstr[0] "Das folgende bereits eingelesene Stück wurde nicht hinzugefügt."
+msgstr[1] ""
+"Das folgenden %d bereits eingelesenen Stücke wurde nicht hinzugefügt."
+
+#. gint id,
+#. gboolean modal,
+#: src/song.c:1202
+msgid "Duplicate detection"
+msgstr "Duplikaterkennung"
 
 #: src/support.c:90 src/support.c:114
 #, c-format
 msgid "Couldn't find pixmap file: %s"
 msgstr "Konnte die Pixmap '%s' nicht finden."
-
-#~ msgid "iPod Database Saved"
-#~ msgstr "Die iPod Datenbank wurde gespeichert."

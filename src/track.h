@@ -107,4 +107,6 @@ gchar* get_song_name_on_disk(Song *s);
 gchar* get_preferred_song_name_format(Song *s);
 void remove_song_from_ipod (Song *song);
 void hash_songs(void);
+void remove_duplicate (Song *oldsong, Song *song);
+void clear_md5_hash_from_songs (void);
 #endif __SONG_H__

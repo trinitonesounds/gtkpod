@@ -40,6 +40,7 @@ typedef struct {
     gboolean  scrolled;
     ConfHandlerCA confirm_again_handler;
     ConfHandler ok_handler;
+    ConfHandler apply_handler;
     ConfHandler cancel_handler;
     gpointer user_data1;
     gpointer user_data2;
@@ -56,6 +57,26 @@ static void on_ok_clicked (GtkWidget *w, gpointer id)
     {
 	if (cd->ok_handler)
 	    cd->ok_handler (cd->user_data1, cd->user_data2);
+	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
+	if (cd->scrolled)
+	    prefs_set_size_conf_sw (defx, defy);
+	else
+	    prefs_set_size_conf (defx, defy);
+	gtk_widget_destroy (cd->window);
+	g_hash_table_remove (id_hash, &id);
+    }
+}
+
+static void on_apply_clicked (GtkWidget *w, gpointer id)
+{
+    ConfData *cd;
+    gint defx, defy;
+
+    cd = g_hash_table_lookup (id_hash, &id);
+    if (cd)
+    {
+	if (cd->apply_handler)
+	    cd->apply_handler (cd->user_data1, cd->user_data2);
 	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
 	if (cd->scrolled)
 	    prefs_set_size_conf_sw (defx, defy);
@@ -116,9 +137,13 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
    @confirm_again_handler: callback for the checkbox (is called with the
                     inverted current state of the toggle box)
    @ok_handler:     function to be called when the OK button is pressed
+   @apply_handler:  function to be called when the Apply button is pressed
    @cancel_handler: function to be called when the cancel button is pressed
    @user_data1:     first argument to be passed to the ConfHandler
    @user_data1:     second argument to be passed to the ConfHandler
+
+   Pass "CONF_NO_BUTTON" as "handler" if you want the corresponding
+   button to be hidden.
 
    return value:
    FALSE: no window was opened because another window with the same ID
@@ -133,6 +158,7 @@ gboolean gtkpod_confirmation (gint id,
 			      gboolean confirm_again,
 			      ConfHandlerCA confirm_again_handler,
 			      ConfHandler ok_handler,
+			      ConfHandler apply_handler,
 			      ConfHandler cancel_handler,
 			      gpointer user_data1,
 			      gpointer user_data2)
@@ -168,7 +194,8 @@ gboolean gtkpod_confirmation (gint id,
     if (!confirm_again)
     { /* This question was supposed to be asked "never again" ("don't
 	 confirm again" -- so we just call the ok_handler */
-	ok_handler (user_data1, user_data2);
+	if (ok_handler != CONF_NO_BUTTON)
+	    ok_handler (user_data1, user_data2);
 	return TRUE;
     }
 
@@ -181,8 +208,12 @@ gboolean gtkpod_confirmation (gint id,
     cd = g_malloc (sizeof (ConfData));
     cd->window = window;
     cd->confirm_again_handler = confirm_again_handler;
-    cd->ok_handler = ok_handler;
-    cd->cancel_handler = cancel_handler;
+    if (ok_handler == CONF_NO_BUTTON)     cd->ok_handler = NULL;
+    else                                  cd->ok_handler = ok_handler;
+    if (apply_handler == CONF_NO_BUTTON)  cd->apply_handler = NULL;
+    else                                  cd->apply_handler = apply_handler;
+    if (cancel_handler == CONF_NO_BUTTON) cd->cancel_handler = NULL;
+    else                                  cd->cancel_handler = cancel_handler;
     cd->user_data1 = user_data1;
     cd->user_data2 = user_data2;
     g_hash_table_insert (id_hash, idp, cd);
@@ -237,26 +268,37 @@ gboolean gtkpod_confirmation (gint id,
 	gtk_widget_hide (w);
     }
 
-    /* Connect OK handler */
+    /* Connect OK handler or hide button */
     if ((w = lookup_widget (window, "ok")))
     {
-	g_signal_connect ((gpointer)w, "clicked",
-			  G_CALLBACK (on_ok_clicked),
-			  (gpointer)id);
+	if (ok_handler == CONF_NO_BUTTON)
+	    gtk_widget_hide (w);
+	else
+	    g_signal_connect ((gpointer)w, "clicked",
+			      G_CALLBACK (on_ok_clicked),
+			      (gpointer)id);
     }
 
-    /* Hide "Apply" button (possible later extension) */
+    /* Connect "Apply" handler or hide button */
     if ((w = lookup_widget (window, "apply")))
     {
-	gtk_widget_hide (w);
+	if (apply_handler == CONF_NO_BUTTON)
+	    gtk_widget_hide (w);
+	else
+	    g_signal_connect ((gpointer)w, "clicked",
+			      G_CALLBACK (on_apply_clicked),
+			      (gpointer)id);
     }
 
-    /* Connect Cancel handler */
+    /* Connect Cancel handler or hide button */
     if ((w = lookup_widget (window, "cancel")))
     {
-	g_signal_connect ((gpointer)w, "clicked",
-			  G_CALLBACK (on_cancel_clicked),
-			  (gpointer)id);
+	if (cancel_handler == CONF_NO_BUTTON)
+	    gtk_widget_hide (w);
+	else
+	    g_signal_connect ((gpointer)w, "clicked",
+			      G_CALLBACK (on_cancel_clicked),
+			      (gpointer)id);
     }
 
     /* Connect Close window */

@@ -30,7 +30,7 @@
 
 /* Any calls to these functions immediately return if md5sums is not on */
 
-gchar *md5_song_exists(Song *s);
+Song *md5_song_exists(Song *s);
 void md5_song_removed(Song *s);
 void md5_unique_file_free(void);
 gchar *md5_hash_on_file(FILE *fp);

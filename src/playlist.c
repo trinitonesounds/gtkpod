@@ -116,6 +116,7 @@ void add_songid_to_playlist (Playlist *plitem, guint32 id)
    If "plitem" == NULL, add to master playlist */
 void add_song_to_playlist (Playlist *plitem, Song *song)
 {
+  if (song == NULL) return;
   if (plitem == NULL)  plitem = get_playlist_by_nr (0);
   plitem->members = g_list_append (plitem->members, song);
   /*  ++plitem->num;  */ /* increase song counter */
@@ -129,13 +130,13 @@ void add_song_to_playlist (Playlist *plitem, Song *song)
    playlist "plitem". It then lets the display model know.
    No action is taken if "song" is not in the playlist.
    If "plitem" == NULL, remove from master playlist */
-void remove_songid_from_playlist (Playlist *plitem, guint32 id)
+gboolean remove_songid_from_playlist (Playlist *plitem, guint32 id)
 {
   Song *song;
 
   song = get_song_by_id (id);
   /* printf ("id: %4d song: %x\n", id, song); */
-  remove_song_from_playlist (plitem, song);
+  return remove_song_from_playlist (plitem, song);
 }
 
 /* This function removes the song "song" from the 
@@ -143,12 +144,15 @@ void remove_songid_from_playlist (Playlist *plitem, guint32 id)
    No action is taken if "song" is not in the playlist.
    If "plitem" == NULL, remove from master playlist.
    If the song is removed from the MPL, it's also removed 
-   from memory completely */
-void remove_song_from_playlist (Playlist *plitem, Song *song)
+   from memory completely
+
+   Return value: FALSE, if song was not a member, TRUE otherwise */
+gboolean remove_song_from_playlist (Playlist *plitem, Song *song)
 {
-    if (song == NULL) return;
+    if (song == NULL) return FALSE;
     if (plitem == NULL)  plitem = get_playlist_by_nr (0);
-    if (g_list_find (plitem->members, song) == NULL) return; /* not a member */
+    if (g_list_find (plitem->members, song) == NULL)
+	return FALSE; /* not a member */
     pm_remove_song (plitem, song);
     plitem->members = g_list_remove (plitem->members, song);
     if (plitem->type == PL_TYPE_MPL)
@@ -162,7 +166,20 @@ void remove_song_from_playlist (Playlist *plitem, Song *song)
 	}
 	remove_song_from_ipod (song);	
     }
+    return TRUE; /* song was a member */
 }
+
+/* checks if "song" is in playlist "plitem". TRUE, if yes, FALSE
+   otherwise */
+gboolean song_is_in_playlist (Playlist *plitem, Song *song)
+{
+    if (song == NULL) return FALSE;
+    if (plitem == NULL)  plitem = get_playlist_by_nr (0);
+    if (g_list_find (plitem->members, song) == NULL)
+	return FALSE; /* not a member */
+    return TRUE;
+}
+
 
 /* Returns the number of playlists
    (including the MPL, which is nr. 0) */
@@ -257,13 +274,12 @@ void it_add_songid_to_playlist (Playlist *plitem, guint32 id)
     }
     add_songid_to_playlist (plitem, id);
     ++count;
-    if ((count % 20) == 0)
+    if ((count % 20) == 1)
     { /* updating the statusbar for every single song added takes a
 	 tremendous amount of time! */
 	buf = g_strdup_printf (_("Added %d+ songs to playlist '%s'"),
 			       count, plitem->name);
 	gtkpod_statusbar_message(buf);
-	while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 	g_free (buf);
     }
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();

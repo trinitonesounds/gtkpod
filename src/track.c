@@ -39,6 +39,7 @@
 #include "md5.h"
 #include "itunesdb.h"
 #include "display.h"
+#include "confirmation.h"
 
 /* only used when reading extended info from file */
 struct song_extended_info
@@ -152,7 +153,7 @@ gboolean add_song (Song *song)
   gint sz = sizeof (gunichar2);
   gboolean result = FALSE;
   gint ipod_id;
-  gchar *str;
+  Song *oldsong;
   struct song_extended_info *sei;
 
   /* fill in additional information from the extended info hash */
@@ -175,10 +176,10 @@ gboolean add_song (Song *song)
 	}
     }
 
-  if((str = md5_song_exists (song)))
+  if((oldsong = md5_song_exists (song)))
   {
-    gtkpod_warning (_("Song (%s) already exists on iPod! (%s)\n"), song->pc_path_utf8, str);
-    free_song(song);
+      remove_duplicate (oldsong, song);
+      free_song(song);
   }
   else
   {
@@ -441,22 +442,20 @@ Song *get_song_by_nr (guint32 n)
 }
 
 
-/* This code needs explaining...
-   Function used by get_song_by_id() to compare 
-   song->ipod_id with the id currently searched for */
-static gint get_song_by_id_comp_func (gconstpointer song, gconstpointer id)
-{
-  return (((Song *)song)->ipod_id - *((guint32 *)id));
-}
-
-/* Returns the song with ID "id" */
+/* Returns the song with ID "id". We need to get the last occurence of
+ * "id" in case we're currently importing the iTunesDB. In that case
+ * there might be duplicate ids */
 Song *get_song_by_id (guint32 id)
 {
-  GList *song_l;
+  GList *l;
+  Song *s;
 
-  song_l = g_list_find_custom (songs, &id, get_song_by_id_comp_func);
-  if (song_l == NULL) return NULL;
-  return (Song *)song_l->data;
+  for (l=g_list_last(songs); l; l=l->prev)
+  {
+      s = (Song *)l->data;
+      if (s->ipod_id == id)  return s;
+  }
+  return NULL;
 }
 
 
@@ -517,8 +516,8 @@ gboolean flush_songs (void)
 	    prefs_set_statusbar_timeout (1<<31);
 	if (count == n)  /* we need to reset timeout */
 	    prefs_set_statusbar_timeout (0);
-	buf = g_strdup_printf (ngettext (_("Copied %d of %d new song."),
-					 _("Copied %d of %d new songs."), n),
+	buf = g_strdup_printf (ngettext ("Copied %d of %d new song.",
+					 "Copied %d of %d new songs.", n),
 			       count, n);
 	gtkpod_statusbar_message(buf);
 	g_free (buf);
@@ -707,7 +706,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 void handle_import (void)
 {
     gchar *name1, *name2, *cfgdir;
-    gboolean success;
+    gboolean success, md5songs;
     guint32 n,i;
     Song *song;
 
@@ -717,6 +716,11 @@ void handle_import (void)
 	return;
     }
 
+    /* we should switch off duplicate detection during import --
+     * otherwise we mess up the playlists */
+
+    md5songs = prefs_get_md5songs ();
+    prefs_set_md5songs (FALSE);
 
     n = get_nr_of_songs (); /* how many songs are alread there? */
 
@@ -756,10 +760,10 @@ void handle_import (void)
 	    }
 	    if(itunesdb_parse_file (name2))
 		gtkpod_statusbar_message(
-			_("Extended iPod Database Successfully Imported"));
+			_("Offline iPod Database Successfully Imported"));
 	    else
 		gtkpod_statusbar_message(
-			_("Extended iPod Database Import Failed"));
+			_("Offline iPod Database Import Failed"));
 	    g_free (name2);
 	    g_free (cfgdir);
 	}
@@ -770,13 +774,8 @@ void handle_import (void)
 	    release_widgets ();
 	}
     }
+    destroy_extendedinfohash (); /* delete hash information (if set up) */
 
-    destroy_extendedinfohash (); /* delete hash information (if available) */
-
-    if (n != get_nr_of_songs ())
-    { /* Import was successfull, block menu item and button */
-	disable_gtkpod_import_buttons();
-    }
     /* We need to make sure that the songs that already existed
        in the DB when we called itunesdb_parse() do not duplicate
        any existing ID */
@@ -788,6 +787,13 @@ void handle_import (void)
 	pm_song_changed (song);
     }
     gtkpod_songs_statusbar_update();
+    if (n != get_nr_of_songs ())
+    { /* Import was successfull, block menu item and button */
+	disable_gtkpod_import_buttons();
+    }
+    /* reset duplicate detection -- this will also detect and correct
+     * all duplicate songs currently in the database */
+    prefs_set_md5songs (md5songs);
     release_widgets ();
 }
 
@@ -800,6 +806,7 @@ gboolean write_tags_to_file (Song *song, gint tag_id)
     File_Tag *filetag;
     gint i, len;
     gchar *ipod_file, *ipod_fullpath, track[20];
+    Song *oldsong;
 
     filetag = g_malloc0 (sizeof (File_Tag));
     if ((tag_id == S_ALL) || (tag_id = S_ALBUM))
@@ -846,9 +853,18 @@ gboolean write_tags_to_file (Song *song, gint tag_id)
 	g_free (ipod_file);
 	g_free (ipod_fullpath);
       }
+    /* remove song from md5 hash and reinsert it (hash value has changed!) */
+    md5_song_removed (song);
+    C_FREE (song->md5_hash);  /* need to remove the old value manually! */
+    oldsong = md5_song_exists (song);
+    if (oldsong) { /* song exists, remove and register the new version */
+	md5_song_removed (oldsong);
+	remove_duplicate (song, oldsong);
+	md5_song_exists (song);
+    }
     g_free (filetag);
     return(TRUE);
-}    
+}
 
 
 /*  Call with 0 to get a unused ID. It will be registered.
@@ -1069,9 +1085,7 @@ void handle_export (void)
       files_saved = TRUE;
       /* block menu item and button */
       disable_gtkpod_import_buttons();
-      /*
       gtkpod_statusbar_message(_("iPod Database Saved"));
-      */
   }
 
   C_FREE (cfgdir);
@@ -1096,44 +1110,166 @@ void data_changed (void)
   files_saved = FALSE;
 }
 
+/* ------------------------------------------------------------ *\
+|                                                                |
+|         functions for md5 checksums                            |
+|                                                                |
+\* ------------------------------------------------------------ */
+
 /**
- * Register all songs in the md5 hash.
+ * Register all songs in the md5 hash and remove duplicates (while
+ * preserving playlists)
  */
 void hash_songs(void)
 {
-   gint n,count;
+   gint ns, count, song_nr;
    gchar *buf;
-   Song *s = NULL;
-   GList *l = NULL;
+   Song *song, *oldsong;
 
-   n = get_nr_of_songs ();
-   if ((n>0) && prefs_get_md5songs ())
+   if (!prefs_get_md5songs ()) return;
+   ns = get_nr_of_songs ();
+   if (ns == 0)                 return;
+
+   block_widgets (); /* block widgets -- this might take a while,
+			so we'll do refreshs */
+   md5_unique_file_free (); /* release md5 hash */
+   count = 0;
+   song_nr = 0;
+   /* populate the hash table */
+   while ((song = get_song_by_nr (song_nr)))
    {
-       block_widgets (); /* block widgets -- this might take a while,
-			    so we'll be refreshs */
-       count = 0;
-       /* populate the hash table */
-       for (l = songs; l; l = l->next)
-       {
-	   s = (Song *) l->data;
-	   md5_song_exists(s);
-	   ++count;
-	   if (((count % 20) == 1) || (count == n))
-	   { /* update for count == 1, 21, 41 ... and for count == n */
-	       buf = g_strdup_printf (ngettext (_("Hashed %d of %d song."),
-						_("Hashed %d of %d songs."), n),
-				      count, n);
-	       gtkpod_statusbar_message(buf);
-	       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-	       g_free (buf);
-	   }
-	   /* 
-	    * TODO: could eventually be used to detect duplicates if the user
-	    * doesn't always enable them.  identify and fix.
-	    */
+       oldsong = md5_song_exists(song);
+       ++count;
+       if (((count % 20) == 1) || (count == ns))
+       { /* update for count == 1, 21, 41 ... and for count == n */
+	   buf = g_strdup_printf (ngettext ("Hashed %d of %d song.",
+					    "Hashed %d of %d songs.", ns),
+				  count, ns);
+	   gtkpod_statusbar_message(buf);
+	   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+	   g_free (buf);
        }
-       release_widgets (); /* release widgets again */
+       if (oldsong)
+       {
+	   remove_duplicate (oldsong, song);
+       }
+       else
+       { /* if we removed a song (above), we don't need to increment
+	    the song_nr */
+	   ++song_nr;
+       }
    }
+   remove_duplicate (NULL, NULL); /* show info dialogue */
+   release_widgets (); /* release widgets again */
+}
+
+
+/* This function removes a duplicate song "song" from memory while
+ * preserving the playlists. The md5 hash is not modified.  You should
+ * call "remove_duplicate (NULL, NULL)" to pop up the info dialogue
+ * with the list of duplicate songs afterwards. Call with "NULL, (void
+ * *)-1" to just clean up without dialoge. If "song" does not exist in
+ * the master play list, only a message is logged (to be displayed
+ * later when called with "NULL, NULL" */
+void remove_duplicate (Song *oldsong, Song *song)
+{
+   gchar *buf, *buf2;
+   static gint delsong_nr = 0;
+   static gboolean removed = FALSE;
+   static GString *str = NULL;
+
+   if ((oldsong == NULL) && (song == NULL) && str)
+   {
+       if (str->len)
+       { /* Some songs have been deleted. Print a notice */
+	   if (removed)
+	   {	       
+	       buf = g_strdup_printf (
+		   ngettext ("The following duplicate song has been removed.",
+			     "The following %d duplicate songs have been removed.",
+			     delsong_nr), delsong_nr);
+	   }
+	   else
+	   {
+	       buf = g_strdup_printf (
+		   ngettext ("The following duplicate song has been skipped.",
+			     "The following %d duplicate songs have been skipped.",
+			     delsong_nr), delsong_nr);
+	   }
+	   gtkpod_confirmation
+	       (-1,                      /* gint id, */
+		FALSE,                   /* gboolean modal, */
+		_("Duplicate detection"),/* title */
+		buf,                     /* label */
+		str->str,                /* scrolled text */
+		TRUE,               /* gboolean confirm_again, */
+		NULL,               /* ConfHandlerCA confirm_again_handler,*/
+		NULL,               /* ConfHandler ok_handler,*/
+		CONF_NO_BUTTON,     /* don't show "Apply" button */
+		CONF_NO_BUTTON,     /* cancel_handler,*/
+		NULL,               /* gpointer user_data1,*/
+		NULL);              /* gpointer user_data2,*/
+	   g_free (buf);
+       }
+   }
+   if (oldsong == NULL)
+   { /* clean up */
+       if (str)       g_string_free (str, TRUE);
+       str = NULL;
+       removed = FALSE;
+       delsong_nr = 0;
+       gtkpod_songs_statusbar_update();
+   }
+   if (oldsong && song)
+   {
+       /* add info about it to str */
+       buf = get_song_info (song);
+       buf2 = get_song_info (oldsong);
+       if (!str)
+       {
+	   delsong_nr = 0;
+	   str = g_string_sized_new (2000); /* used to keep record of
+					     * duplicate songs */
+       }
+       g_string_append_printf (str, "'%s': identical to '%s'\n",
+			       buf, buf2);
+       g_free (buf);
+       g_free (buf2);
+       if (song_is_in_playlist (NULL, song))
+       { /* song is already added to memory -> replace with "oldsong" */
+	   /* check for "song" in all playlists (except for MPL) */
+	   gint np = get_nr_of_playlists ();
+	   gint pl_nr;
+	   for (pl_nr=1; pl_nr<np; ++pl_nr)
+	   {
+	       Playlist *pl = get_playlist_by_nr (pl_nr);
+	       /* if "song" is in playlist pl, we remove it and add
+		  the "oldsong" instead (this way round we don't have
+		  to worry about changing md5 hash entries */
+	       if (remove_song_from_playlist (pl, song))
+	       {
+		   if (!song_is_in_playlist (pl, oldsong))
+		       add_song_to_playlist (pl, oldsong);
+	       }
+	   }
+	   /* remove song from MPL, i.e. from the ipod */
+	   remove_song_from_playlist (NULL, song);
+	   removed = TRUE;
+       }
+       ++delsong_nr; /* count duplicate songs */
+   }
+}
+
+
+/* delete all md5 checkums from the songs */
+void clear_md5_hash_from_songs (void)
+{
+    GList *l;
+
+    for (l = songs; l; l = l->next)
+    {
+	C_FREE (((Song *)l->data)->md5_hash);
+    }
 }
 
 /* ------------------------------------------------------------------- */

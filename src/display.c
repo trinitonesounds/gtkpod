@@ -100,7 +100,7 @@ pm_dnd_advertise(GtkTreeView *v)
 }
 
 static void
-st_dnd_advertise(GtkTreeView *v)
+sm_dnd_advertise(GtkTreeView *v)
 {
     GtkTargetEntry target[] = {
 	{ "gtkpod/file", 0, 1000 },
@@ -114,6 +114,20 @@ st_dnd_advertise(GtkTreeView *v)
     gtk_tree_view_enable_model_drag_dest(v, target, target_size, 
 					    GDK_ACTION_COPY);
 }
+
+static void st_dnd_advertise (GtkTreeView *v)
+{
+    GtkTargetEntry target[] = {
+	{ "gtkpod/file", 0, 1000 },
+	{ "text/plain", 0, 1001 }
+    };
+    guint target_size = (guint)(sizeof(target)/sizeof(GtkTargetEntry));
+    
+    if(!v) return;
+    gtk_tree_view_enable_model_drag_source(v, GDK_BUTTON1_MASK, target, 
+					    target_size, GDK_ACTION_COPY);
+}
+
 
 /* Used by model_playlist_name_changed() to find the playlist that
    changed name. If found, emit a "row changed" signal to display the change */
@@ -150,6 +164,7 @@ void pm_song_changed (Song *song)
 {
   gint i,n;
 
+  if (!current_playlist) return;
   /* Check if song is member of current playlist */
   n = get_nr_of_songs_in_playlist (current_playlist);
   for (i=0; i<n; ++i)
@@ -519,7 +534,9 @@ static gint st_get_instance (GtkNotebook *notebook)
       if (sorttab[i] && (sorttab[i]->notebook == notebook)) return i;
       ++i;
     }
-  g_warning ("Programming error (st_get_instance): notebook could not be found.\n");
+/*  g_warning ("Programming error (st_get_instance): notebook could
+  not be found.\n"); function somehow can get called after notebooks got
+  destroyed */
   return -1;
 }
 
@@ -736,7 +753,8 @@ static void st_song_changed (Song *song, gboolean removed, guint32 inst)
     }
   else
     {
-      if (g_list_find (st->current_entry->members, song) != NULL)
+      if (st->current_entry &&
+	  g_list_find (st->current_entry->members, song) != NULL)
 	{ /* "song" is in currently selected entry */
 	  if (!st->current_entry->master)
 	    { /* it's not the master list */
@@ -1124,6 +1142,8 @@ st_cell_edited (GtkCellRendererText *renderer,
 	    }
 	  }
 	  g_list_free (members);
+	  /* display possible duplicates that have been removed */
+	  remove_duplicate (NULL, NULL);
 	  data_changed (); /* indicate that data has changed */
 	}
       break;
@@ -1242,6 +1262,7 @@ static void st_create_listview (GtkWidget *gtkpod, gint inst)
 				       st_data_compare_func, column, NULL);
       gtk_tree_view_append_column (treeview, column);
       gtk_tree_view_set_headers_visible (treeview, FALSE);
+      st_dnd_advertise(treeview);
     }
 }
 
@@ -1482,6 +1503,8 @@ sm_cell_edited (GtkCellRendererText *renderer,
       if (prefs_get_id3_writeall ()) tag_id = S_ALL;
       else		             tag_id = SM_to_S (column);
       write_tags_to_file (song, tag_id);
+      /* display possible duplicates that have been removed */
+      remove_duplicate (NULL, NULL);
   }
   gtk_tree_path_free (path);
 }
@@ -1929,7 +1952,7 @@ static void create_song_listview (GtkWidget *gtkpod)
   gtk_tree_selection_set_mode (gtk_tree_view_get_selection (song_treeview),
 			       GTK_SELECTION_MULTIPLE);
   add_song_columns ();
-  st_dnd_advertise(song_treeview);
+  sm_dnd_advertise(song_treeview);
 }
 
 
@@ -1958,31 +1981,46 @@ void cleanup_display (void)
 }
 
 /*
- * utility function for appending ipod song ids for playlist callback
+ * utility function for appending ipod song ids for song treeview callback
  */
 void 
 on_song_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 				 GtkTreeIter *i, gpointer data)
 {
     Song *s;
-    gchar *new = NULL;
-    gchar *filelist = *((gchar**)data);
-    gtk_tree_model_get(tm, i, 0, &s, -1); 
+    GString *filelist = (GString *)data;
+
+    gtk_tree_model_get(tm, i, SM_COLUMN_TITLE, &s, -1); 
     /* can call on 0 cause s is consistent across all of the columns */
     if(s)
     {
-	gchar buf[PATH_MAX];
-	if(filelist)
+	g_string_append_printf (filelist, "%d\n", s->ipod_id);
+    }
+}
+
+/*
+ * utility function for appending ipod song ids for st treeview callback
+ */
+void 
+on_st_listing_drag_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			   GtkTreeIter *i, gpointer data)
+{
+    TabEntry *entry;
+    GString *idlist = (GString *)data;
+
+    gtk_tree_model_get (tm, i, ST_COLUMN_ENTRY, &entry, -1);
+    /* can call on 0 cause s is consistent across all of the columns */
+    if(entry && idlist)
+    {
+	GList *l;
+	Song *s;
+
+	/* add all member-ids of entry to idlist */
+	for (l=entry->members; l; l=l->next)
 	{
-	    snprintf(buf, PATH_MAX, "%s%d\n", filelist, s->ipod_id);
-	    g_free(filelist);
+	    s = (Song *)l->data;
+	    g_string_append_printf (idlist, "%d\n", s->ipod_id);
 	}
-	else
-	{
-	    snprintf(buf, PATH_MAX, "%d\n", s->ipod_id);
-	}
-	new = g_strdup(buf);
-	*((gchar**)data) = new;
     }
 }
 

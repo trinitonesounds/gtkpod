@@ -44,6 +44,7 @@ gboolean gtkpod_confirmation (gint id,
 			      gboolean never_again,
 			      ConfHandlerCA confirm_again_handler,
 			      ConfHandler ok_handler,
+			      ConfHandler apply_handler,
 			      ConfHandler cancel_handler,
 			      gpointer user_data1,
 			      gpointer user_data2);
@@ -52,5 +53,9 @@ gboolean gtkpod_confirmation (gint id,
 enum {
     CONF_ID_IPOD_DIR = 0
 } CONF_ID;
+
+/* pass this as handler if you don't want the corresponding button to
+   be drawn */
+#define CONF_NO_BUTTON ((ConfHandler)-1)
 
 #endif __CONFIRMATION_H__

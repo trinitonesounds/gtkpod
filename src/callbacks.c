@@ -120,8 +120,11 @@ on_gtkpod_delete_event                 (GtkWidget       *widget,
                                         GdkEvent        *event,
                                         gpointer         user_data)
 {
-  if (!widgets_blocked) gtkpod_main_quit ();
-  return FALSE;
+    if (!widgets_blocked)
+    {
+	return gtkpod_main_quit ();
+    }
+    return TRUE; /* don't quit -- would cause numerous error messages */
 }
 
 gboolean
@@ -176,7 +179,7 @@ on_playlist_treeview_drag_data_received
     GtkTreeViewDropPosition pos = 0;
 
     /* sometimes we get empty dnd data, ignore */
-    if((!data) || (data->length < 0)) return;
+    if(widgets_blocked || (!data) || (data->length < 0)) return;
     /* don't allow us to drag onto ourselves =) */
     w = gtk_drag_get_source_widget(drag_context);
     if(w == widget) return;
@@ -200,7 +203,7 @@ on_playlist_treeview_drag_data_received
 		gtk_tree_model_get(tm, &i, 0, &pl, -1);
 		if((pl) && (pl->type == PL_TYPE_NORM))
 		{
-		    gchar *str = g_strdup(data->data);
+		    gchar *str = data->data;
 		    guint32 id = 0;
 		    while(parse_ipod_id_from_string(&str,&id))
 		    {
@@ -233,17 +236,17 @@ on_song_treeview_drag_data_get         (GtkWidget       *widget,
     
     if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
     {
-	gchar *reply = NULL;
 	if(info == 1000)	/* gtkpod/file */
 	{
+	    GString *reply = g_string_sized_new (2000);
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_song_listing_drag_foreach, &reply);
-	    if(reply)
+				    on_song_listing_drag_foreach, reply);
+	    if(reply->len)
 	    {
-		gtk_selection_data_set(data, data->target, 8, reply,
-					strlen(reply));
-		g_free(reply);
+		gtk_selection_data_set(data, data->target, 8, reply->str,
+				       reply->len);
 	    }
+	    g_string_free (reply, TRUE);
 	}
 	else if(info == 1001)
 	{
@@ -505,7 +508,7 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
     GtkTreeViewDropPosition pos = 0;
 
     /* sometimes we get empty dnd data, ignore */
-    if((!data) || (data->length < 0)) return;
+    if(widgets_blocked || (!data) || (data->length < 0)) return;
     /* allow us to drop only onto ourselves =) */
     w = gtk_drag_get_source_widget(drag_context);
     if(w != widget) return;
@@ -532,7 +535,7 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 		    guint32 id = 0;
 		    Song *new_song = NULL;
 		    Playlist *current_pl = NULL;
-		    gchar *str = g_strdup(data->data);
+		    gchar *str = data->data;
 		   
 		    if((current_pl = get_currently_selected_playlist()) &&
 			    (current_pl->type != PL_TYPE_MPL))
@@ -578,10 +581,6 @@ on_song_treeview_drag_data_received    (GtkWidget       *widget,
 			current_pl->members = members;
 			pm_select_playlist_reinit(current_pl);
 			data_changed();
-		    }
-		    else
-		    {
-			g_free(str);
 		    }
 		}
 	    }
@@ -696,5 +695,38 @@ on_cfg_id3_writeall_toggled            (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     prefs_window_set_id3_writeall(gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_st_treeview_drag_data_get           (GtkWidget       *widget,
+                                        GdkDragContext  *drag_context,
+                                        GtkSelectionData *data,
+                                        guint            info,
+                                        guint            time,
+                                        gpointer         user_data)
+{
+    GtkTreeSelection *ts = NULL;
+    
+    if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
+    {
+	if(info == 1000)	/* gtkpod/file */
+	{
+	    GString *reply = g_string_sized_new (2000);
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_st_listing_drag_foreach, reply);
+	    if(reply->len)
+	    {
+		gtk_selection_data_set(data, data->target, 8, reply->str,
+				       reply->len);
+	    }
+	    g_string_free (reply, TRUE);
+	}
+	else if(info == 1001)
+	{
+	    fprintf(stderr, "received file of type \"text/plain\"\n");
+	}
+    }
+
 }
 

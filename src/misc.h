@@ -32,6 +32,7 @@
 
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include "song.h"
 
 #define STATUSBAR_TIMEOUT 4200
 /* we receive UTF8 strings which should be translated to the locale
@@ -52,7 +53,7 @@ void open_about_window (void);
 void close_about_window (void);
 gboolean parse_ipod_id_from_string(gchar **s, guint32 *id);
 void cleanup_backup_and_extended_files (void);
-void gtkpod_main_quit(void);
+gboolean gtkpod_main_quit(void);
 void disable_gtkpod_import_buttons(void);
 void gtkpod_main_window_set_active(gboolean active);
 
@@ -61,6 +62,7 @@ void gtkpod_statusbar_message(const gchar *message);
 
 gint SM_to_S (gint sm);
 gint ST_to_S (gint st);
+gchar *get_song_info (Song *song);
 
 void gtkpod_songs_statusbar_init(GtkWidget*);
 void gtkpod_songs_statusbar_update(void);

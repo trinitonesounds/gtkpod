@@ -29,6 +29,7 @@
 
 #include <gtk/gtk.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -88,6 +89,8 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
       if(!i)
 	  prefs_set_last_dir_browse(names[i]);
     }
+  remove_duplicate (NULL, NULL); /* display message about duplicate
+				  * songs, if duplicates were detected */
   gtkpod_statusbar_message(_("Successly Added Files"));
   gtkpod_songs_statusbar_update();
   release_widgets ();
@@ -231,7 +234,7 @@ void close_about_window (void)
 }
 
 /* parse a bunch of ipod ids delimited by \n
- * @s - address of the character string we're parsing
+ * @s - address of the character string we're parsing (gets updated)
  * @id - pointer the ipod id parsed from the string
  * Returns FALSE when the string is empty, TRUE when the string can still be
  * 	parsed
@@ -239,31 +242,24 @@ void close_about_window (void)
 gboolean
 parse_ipod_id_from_string(gchar **s, guint32 *id)
 {
-    if((s) && (*s))
+    if(s && (*s))
     {
-	int i = 0;
-	gchar buf[4096];
-	gchar *new = NULL;
 	gchar *str = *s;
-	guint max = strlen(str);
+	gchar *strp = strchr (str, '\n');
 
-	for(i = 0; i < max; i++)
+	if (strp == NULL)
 	{
-	    if(str[i] == '\n')
-	    {
-		snprintf(buf, 4096, "%s", str);
-		buf[i] = '\0';
-		*id = (guint32)atoi(buf);
-		if((i+1) < max)
-		    new = g_strdup(&str[i+1]);
-		break;
-	    }
+	    *id = 0;
+	    *s = NULL;
+	    return FALSE;
 	}
-	g_free(str);
-	*s = new;
-	return(TRUE);
+	*id = (guint32)atoi(str);
+	++strp;
+	if (*strp) *s = strp;
+	else       *s = NULL;
+	return TRUE;
     }
-    return(FALSE);
+    return FALSE;
 }
 
 void cleanup_backup_and_extended_files (void)
@@ -294,17 +290,40 @@ void cleanup_backup_and_extended_files (void)
 
 /**
  * gtkpod_main_quit
+ * 
+ * return value: FALSE if it's OK to quit.
  */
-void
+gboolean
 gtkpod_main_quit(void)
 {
-  remove_all_playlists ();  /* first remove playlists, then songs!
-		    (otherwise non-existing songs may be accessed) */
-  remove_all_songs ();
-  cleanup_display ();
-  write_prefs (); /* FIXME: how can we avoid saving options set by
-		   * command line? */
-  gtk_main_quit ();
+    GtkWidget *dialog;
+    gint result = GTK_RESPONSE_YES;
+
+    if (!files_are_saved ())
+    {
+	dialog = gtk_message_dialog_new (
+	    GTK_WINDOW (gtkpod_window),
+	    GTK_DIALOG_DESTROY_WITH_PARENT,
+	    GTK_MESSAGE_WARNING,
+	    GTK_BUTTONS_YES_NO,
+	    _("Data has been changed and not been saved.\nOK to exit gtkpod?"));
+	result = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+    }
+
+    if (result == GTK_RESPONSE_YES)
+    {
+	remove_all_playlists ();  /* first remove playlists, then
+				   * songs! (otherwise non-existing
+				   *songs may be accessed) */
+	remove_all_songs ();
+	cleanup_display ();
+	write_prefs (); /* FIXME: how can we avoid saving options set by
+			 * command line? */
+	gtk_main_quit ();
+	return FALSE;
+    }
+    return TRUE;
 }
 
 /**
@@ -434,7 +453,21 @@ gint ST_to_S (gint st)
     return -1;
 }
 
-
+/* return some sensible input about the "song". Yo must free the
+ * return string after use. */
+gchar *get_song_info (Song *song)
+{
+    if (!song) return NULL;
+    if (song->pc_path_utf8 && strlen(song->pc_path_utf8))
+	return g_path_get_basename (song->pc_path_utf8);
+    else if ((song->title && strlen(song->title)))
+	return g_strdup (song->title);
+    else if ((song->album && strlen(song->album)))
+	return g_strdup (song->album);
+    else if ((song->artist && strlen(song->artist)))
+	return g_strdup (song->artist);
+    return g_strdup_printf ("iPod ID: %d", song->ipod_id);
+}
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -635,6 +668,7 @@ void ipod_directories_head (void)
 			 TRUE,               /* gboolean confirm_again, */
 			 NULL, /* ConfHandlerCA confirm_again_handler, */
 			 ipod_directories_ok, /* ConfHandler ok_handler,*/
+			 CONF_NO_BUTTON,      /* don't show "Apply" */
 			 ipod_directories_cancel, /* cancel_handler,*/
 			 mp,                  /* gpointer user_data1,*/
 			 NULL))              /* gpointer user_data2,*/
@@ -694,6 +728,7 @@ void delete_playlist_head (void)
 	 prefs_get_playlist_deletion (),   /* gboolean confirm_again, */
 	 prefs_set_playlist_deletion, /* ConfHandlerCA confirm_again_handler,*/
 	 delete_playlist_ok, /* ConfHandler ok_handler,*/
+	 CONF_NO_BUTTON,     /* don't show "Apply" button */
 	 NULL,               /* cancel_handler,*/
 	 pl,                 /* gpointer user_data1,*/
 	 NULL);              /* gpointer user_data2,*/
@@ -820,6 +855,7 @@ void delete_song_head (void)
 	 confirm_again,        /* gboolean confirm_again, */
 	 confirm_again_handler,/* ConfHandlerCA confirm_again_handler,*/
 	 delete_song_ok,       /* ConfHandler ok_handler,*/
+	 CONF_NO_BUTTON,       /* don't show "Apply" button */
 	 delete_song_cancel,   /* cancel_handler,*/
 	 pl,                   /* gpointer user_data1,*/
 	 selected_songs);      /* gpointer user_data2,*/

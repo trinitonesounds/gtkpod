@@ -59,8 +59,9 @@ Playlist *add_playlist (Playlist *plitem);
 void it_add_songid_to_playlist (Playlist *plitem, guint32 id);
 void add_songid_to_playlist (Playlist *plitem, guint32 id);
 void add_song_to_playlist (Playlist *plitem, Song *song);
-void remove_songid_from_playlist (Playlist *plitem, guint32 id);
-void remove_song_from_playlist (Playlist *plitem, Song *song);
+gboolean remove_songid_from_playlist (Playlist *plitem, guint32 id);
+gboolean remove_song_from_playlist (Playlist *plitem, Song *song);
+gboolean song_is_in_playlist (Playlist *plitem, Song *song);
 void remove_playlist (Playlist *playlist);
 void remove_all_playlists (void);
 #define it_get_nr_of_playlists get_nr_of_playlists

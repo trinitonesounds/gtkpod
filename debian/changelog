@@ -1,6 +1,25 @@
+gtkpod (0.41-0) unstable; urgency=low
+    * minor bugfixes (just possible segfaults and such)
+    * window won't freeze during import/export/add operations
+    * better handling of duplicate songs (e.g. duplicate songs are now
+      displayed in a window instead of on the console, if duplicate
+      detection is switched on later, duplicate songs are removed but
+      the playlists are preserved...)
+    * confirmation window when quitting gtkpod without saving data
+    * Drag-and-drop for sort tab entries
+    * Japanese langauge catalogue
+ -- Jorg Schuler <jcsjcs at users.sourceforge.net>  Sun, 01 Feb 2003 18:15:00 +0900
+
 gtkpod (0.40-0) unstable; urgency=low
-    * more convenient (remembers sizes of windows and colums etc...)
-    * fixed many bugs
+    many new features:
+
+    * Playlists (Drag-and-drop support)
+    * Sort Tabs
+    * Duplicate Detection
+    * German language support
+    * Charset for ID3 tags can be set
+    * Offline modification of iPod contents (and later synchronisation)
+    * Preferences
  -- Jorg Schuler <jcsjcs at users.sourceforge.net>  Sun, 26 Jan 2003 21:27:00 +0900
 
 gtkpod (0.14-0) unstable; urgency=low

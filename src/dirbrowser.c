@@ -158,9 +158,17 @@ void release_dirbrowser (void)
 /* Callback after one directory has been added */
 static void add_dir_selected (gchar *dir)
 {
-  add_directory_recursively (dir);
-  prefs_set_last_dir_browse(dir);
-  gtkpod_songs_statusbar_update();
+    if (dir)
+    {
+	add_directory_recursively (dir);
+	prefs_set_last_dir_browse(dir);
+	gtkpod_songs_statusbar_update();
+    }
+    else
+    {
+	remove_duplicate (NULL, NULL); /* display message about duplicate
+					* songs, if duplicates were detected */
+    }
 }
 
 void create_dir_browser (void)
@@ -302,6 +310,8 @@ static void select_row_cb(GtkWidget *widget, int row, int column, GdkEventButton
 		handler = gtk_object_get_user_data(GTK_OBJECT(widget));
 		if (handler)
 			handler(dirnode->path);
+		if (handler) handler(NULL); /* call once with "NULL" to
+					       indicate "end" */
 	}
 }
 
@@ -321,7 +331,7 @@ static void ok_clicked(GtkWidget *widget, GtkWidget *tree)
 	struct dirnode *dirnode;
 	GList *list_node;
 	GtkWidget *window;
-	void (*handler) (char *);
+	void (*handler) (char *) = NULL;
 
 	window = gtk_object_get_user_data(GTK_OBJECT(widget));
 	gtk_widget_hide(window);
@@ -335,6 +345,8 @@ static void ok_clicked(GtkWidget *widget, GtkWidget *tree)
 			handler(dirnode->path);
 		list_node = g_list_next(list_node);
 	}
+	if (handler) handler(NULL); /* call once with "NULL" to
+				       indicate "end" */
 	add_dir_close (widget, tree);
 }
 

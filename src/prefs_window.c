@@ -234,6 +234,11 @@ prefs_window_save(void)
     prefs_set_playlist_deletion(tmpcfg->deletion.playlist);
     prefs_set_write_extended_info(tmpcfg->write_extended_info);
     prefs_set_keep_backups(tmpcfg->keep_backups);
+    /* we delete all stored md5 checksums if the md5 checksumming got
+       disabled */
+    if (prefs_get_md5songs() && !tmpcfg->md5songs)
+	clear_md5_hash_from_songs ();
+    /* this call well automatically destroy/setup the md5 hash table */
     prefs_set_md5songs(tmpcfg->md5songs);
 
     cfg_free(tmpcfg);
