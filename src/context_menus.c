@@ -389,7 +389,7 @@ create_context_menu(CM_type type)
 	    else
 	    {
 		gtk_widget_hide (mi_spl[type]);
-		if (pl->type == PL_TYPE_NORM)
+		if (pl->type == ITDB_PL_TYPE_NORM)
 		{
 		    gtk_widget_show (mi_sep[type]);
 		    gtk_widget_show (mi_d[type]);
@@ -414,7 +414,7 @@ create_context_menu(CM_type type)
 	    else
 	    {
 		gtk_widget_hide (mi_spl[type]);
-		if (pl->type == PL_TYPE_NORM)
+		if (pl->type == ITDB_PL_TYPE_NORM)
 		{
 		    gtk_widget_show (mi_d[type]);
 		    gtk_widget_show (mi_df[type]);

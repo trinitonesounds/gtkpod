@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-09-20 23:24:02 jcs>
+/* Time-stamp: <2005-01-04 22:56:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -267,13 +267,13 @@ void display_adjust_delete_menus (void)
     {
 	switch (pl->type)
 	{
-	case PL_TYPE_NORM:
+	case ITDB_PL_TYPE_NORM:
 	    gtk_widget_set_sensitive (d, TRUE);
 	    gtk_widget_set_sensitive (df, TRUE);
 	    gtk_widget_set_sensitive (dp, TRUE);
 	    gtk_widget_set_sensitive (dfp, TRUE);
 	    break;
-	case PL_TYPE_MPL:
+	case ITDB_PL_TYPE_MPL:
 	    gtk_widget_set_sensitive (d, FALSE);
 	    gtk_widget_set_sensitive (df, TRUE);
 	    gtk_widget_set_sensitive (dfp, FALSE);

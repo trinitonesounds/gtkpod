@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 22:41:30 jcs>
+/* Time-stamp: <2005-01-04 23:53:07 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -46,10 +46,10 @@
 #define ITUNESDB_PROVIDE_UTF8
 
 enum { /* types for playlist->type */
-    PL_TYPE_NORM = 0,       /* normal playlist, visible in iPod */
-    PL_TYPE_MPL = 1         /* master playlist, contains all tracks,
-			       not visible in iPod */
-};
+    ITDB_PL_TYPE_NORM = 0,       /* normal playlist, visible in iPod */
+    ITDB_PL_TYPE_MPL = 1         /* master playlist, contains all tracks,
+				    not visible in iPod */
+} ItdbPlType;
 
 
 
@@ -356,7 +356,7 @@ typedef struct
   gchar   *composer;         /* Composer (utf8)        */
   gchar   *fdesc;            /* eg. "MP3-File"...(utf8)*/
   gchar   *grouping;         /* ? (utf8)               */
-  gchar   *pc_path;          /* path on PC (local encoding).
+  gchar   *pc_path_locale;   /* path on PC (local encoding).
 				Attention: not stored in iTunesDB!    */
   gchar   *ipod_path;        /* name of file on iPod: uses ":"
 				instead of "/"                        */
@@ -433,6 +433,8 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 			  GError **error);
 Itdb_iTunesDB *itdb_new (void);
 void itdb_free (Itdb_iTunesDB *itdb);
+guint32 itdb_tracks_number (Itdb_iTunesDB *itdb);
+guint32 itdb_playlists_number (Itdb_iTunesDB *itdb);
 
 /* general file functions */
 gchar * itdb_resolve_path (const gchar *root,
@@ -453,7 +455,7 @@ void itdb_track_add (Itdb_iTunesDB *itdb, Itdb_Track *track, gint32 pos);
 void itdb_track_remove (Itdb_Track *track);
 void itdb_track_unlink (Itdb_Track *track);
 Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id);
-guint32 itdb_track_number (Itdb_Playlist *pl);
+Itdb_Playlist *itdb_mpl (Itdb_iTunesDB *itdb);
 
 /* playlist functions */
 Itdb_Playlist *itdb_playlist_new (const gchar *title, gboolean spl);
@@ -468,7 +470,8 @@ void itdb_playlist_add_trackid (Itdb_Playlist *pl,
 				guint32 id, gint32 pos);
 Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id);
 gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *track);
-guint32 itdb_playlist_number (Itdb_iTunesDB *itdb);
+void itdb_playlist_remove_track (Itdb_Playlist *pl, Itdb_Track *track);
+guint32 itdb_playlist_tracks_number (Itdb_Playlist *pl);
 
 /* smart playlist functions */
 SPLFieldType itdb_splr_get_field_type (const SPLRule *splr);

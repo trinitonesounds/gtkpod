@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 21:06:58 jcs>
+/* Time-stamp: <2005-01-04 23:48:43 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -657,6 +657,23 @@ void itdb_free (Itdb_iTunesDB *itdb)
     }
 }
 
+/* return number of playlists */
+guint32 itdb_playlists_number (Itdb_iTunesDB *itdb)
+{
+    g_return_val_if_fail (itdb, 0);
+
+    return g_list_length (itdb->playlists);
+}
+
+
+/* return total number of tracks */
+guint32 itdb_tracks_number (Itdb_iTunesDB *itdb)
+{
+    g_return_val_if_fail (itdb, 0);
+
+    return g_list_length (itdb->tracks);
+}
+
 
 /* Creates a new Itdb_iTunesDB with the unknowns filled in to reasonable
    values */
@@ -670,6 +687,23 @@ Itdb_iTunesDB *itdb_new (void)
 	((guint64)g_rand_int (grand));
     return itdb;
 }
+
+/* return the master playlist of @itdb */
+Itdb_Playlist *itdb_mpl (Itdb_iTunesDB *itdb)
+{
+    Itdb_Playlist *pl;
+
+    g_return_val_if_fail (itdb, NULL);
+
+    pl = g_list_nth_data (itdb->playlists, 0);
+    g_return_val_if_fail (pl, NULL);
+
+    /* mpl is guaranteed to be at first position... */
+    g_return_val_if_fail (pl->type != ITDB_PL_TYPE_MPL, NULL);
+
+    return pl;
+}
+
 
 /* Returns the type of the mhod and the length *ml. *ml is set to -1
  * on error (e.g. because there's no mhod at @seek). */
@@ -1078,7 +1112,7 @@ static glong get_pl (FImport *fimp, glong seek)
   else
   {   /* we did not read a valid mhod TITLE header -> */
       /* we simply make up our own name */
-      if (plitem->type == PL_TYPE_MPL)
+      if (plitem->type == ITDB_PL_TYPE_MPL)
 	  plitem->name = _("Master-PL");
       else
 	  plitem->name = _("Itdb_Playlist");
@@ -2834,7 +2868,7 @@ gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
 
   g_return_val_if_fail (mp, FALSE);
   g_return_val_if_fail (track, FALSE);
-  g_return_val_if_fail (track->pc_path, FALSE);
+  g_return_val_if_fail (track->pc_path_locale, FALSE);
 
   if(track->transferred)  return TRUE; /* nothing to do */ 
 
@@ -2877,7 +2911,7 @@ gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
 
       /* we need the original suffix of pcfile to construct a correct ipod
 	 filename */
-      original_suffix = strrchr (track->pc_path, '.');
+      original_suffix = strrchr (track->pc_path_locale, '.');
       /* If there is no ".mp3", ".m4a" etc, set original_suffix to empty
 	 string. Note: the iPod will most certainly ignore this file... */
       if (!original_suffix) original_suffix = "";
@@ -2922,7 +2956,7 @@ gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
   
 /* 	printf ("ff: %s\ndb: %s\n", ipod_fullfile, track_db_path); */
 
-  success = itdb_cp (track->pc_path, ipod_fullfile, error);
+  success = itdb_cp (track->pc_path_locale, ipod_fullfile, error);
   if (success)
   {
       track->transferred = TRUE;

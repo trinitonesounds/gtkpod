@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-12-16 22:08:27 jcs>
+/* Time-stamp: <2005-01-04 22:56:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -218,7 +218,7 @@ tracks_moved_or_copied     (GdkDragContext  *context, gchar *trackids)
 	    ++ptr;
 	}
 
-	if (pl && (pl->type == PL_TYPE_NORM) &&
+	if (pl && (pl->type == ITDB_PL_TYPE_NORM) &&
 	    (context->action == GDK_ACTION_MOVE))
 	{
 	    guint32 id = 0;
@@ -302,7 +302,7 @@ on_playlist_treeview_drag_data_received
 		if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
 		    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
 		{ /* drop into existing playlist */
-		    if (pl->type == PL_TYPE_NORM)
+		    if (pl->type == ITDB_PL_TYPE_NORM)
 		    {
 			add_idlist_to_playlist (pl, data->data);
 			/* this is a hack -- see comment at

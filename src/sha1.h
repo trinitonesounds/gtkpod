@@ -39,5 +39,6 @@ Track *md5_md5_exists (iTunesDB *itdb, gchar *md5);
 Track *md5_track_exists (iTunesDB *itdb, Track *s);
 Track *md5_track_exists_insert (iTunesDB *itdb, Track *s);
 void md5_track_remove (Track *s);
-void md5_free (ExtraiTunesDBData *eitdb);
+void md5_free (iTunesDB *itdb);
+void md5_free_eitdb (ExtraiTunesDBData *eitdb);
 #endif

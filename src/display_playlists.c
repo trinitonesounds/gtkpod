@@ -70,7 +70,7 @@ void pm_remove_track (Playlist *playlist, Track *track)
   /* notify sort tab if currently selected playlist is affected */
   if (current_playlist && 
       ((playlist == current_playlist) ||
-       (current_playlist->type == PL_TYPE_MPL)))
+       (current_playlist->type == ITDB_PL_TYPE_MPL)))
   {
       st_remove_track (track, 0);
   }
@@ -144,7 +144,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
   model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
   g_return_if_fail (model);
 
-  if (playlist->type == PL_TYPE_MPL)
+  if (playlist->type == ITDB_PL_TYPE_MPL)
   {   /* MPLs are always added top-level and at the end */
       mpl = NULL;
       pos = -1;
@@ -196,7 +196,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
       /* If it's the first playlist (no playlist selected AND playlist is
 	 the MPL, we select it, unless prefs_get_mpl_autoselect() says
 	 otherwise */
-      if ((playlist->type == PL_TYPE_MPL) && prefs_get_mpl_autoselect())
+      if ((playlist->type == ITDB_PL_TYPE_MPL) && prefs_get_mpl_autoselect())
       {
 	  selection = gtk_tree_view_get_selection (playlist_treeview);
 	  gtk_tree_selection_select_iter (selection, &iter);
@@ -625,8 +625,8 @@ gint pm_data_compare_func (GtkTreeModel *model,
   /* We make sure that the master playlist always stays on top */
   if (order == GTK_SORT_ASCENDING) corr = +1;
   else                             corr = -1;
-  if (playlist1->type == PL_TYPE_MPL) return (-corr);
-  if (playlist2->type == PL_TYPE_MPL) return (corr);
+  if (playlist1->type == ITDB_PL_TYPE_MPL) return (-corr);
+  if (playlist2->type == ITDB_PL_TYPE_MPL) return (corr);
 
   /* compare the two entries */
   return compare_string (playlist1->name, playlist2->name);
@@ -694,7 +694,7 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   switch (column)
     {  /* We only have one column, so this code is overkill... */
     case PM_COLUMN_PLAYLIST: 
-	if (playlist->type == PL_TYPE_MPL)
+	if (playlist->type == ITDB_PL_TYPE_MPL)
 	{   /* mark MPL */
 	    g_object_set (G_OBJECT (renderer),
 			  "text", playlist->name, 
@@ -736,7 +736,7 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 	    g_object_set (G_OBJECT (renderer),
 			  "stock-id", "gtk-properties", NULL);
 	}
-	else if (playlist->type != PL_TYPE_MPL)
+	else if (playlist->type != ITDB_PL_TYPE_MPL)
 	{
 	    g_object_set (G_OBJECT (renderer),
 			  "stock-id", "gtk-justify-left", NULL);

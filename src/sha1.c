@@ -219,7 +219,7 @@ gchar *md5_hash_on_filename (gchar *name, gboolean silent)
 /**
  * Free up the dynamically allocated memory in @itdb's hash table
  */
-void md5_free (ExtraiTunesDBData *itdb)
+void md5_free_eitdb (ExtraiTunesDBData *eitdb)
 {
     g_return_if_fail (eitdb);
 
@@ -228,6 +228,17 @@ void md5_free (ExtraiTunesDBData *itdb)
 	g_hash_table_destroy (eitdb->md5hash);
 	eitdb->md5hash = NULL;
     }
+}
+
+/**
+ * Free up the dynamically allocated memory in @itdb's hash table
+ */
+void md5_free (iTunesDB *itdb)
+{
+    g_return_if_fail (itdb);
+    g_return_if_fail (itdb->userdata);
+
+    md5_free_eitdb (itdb->userdata);
 }
 
 /**

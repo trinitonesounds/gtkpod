@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-28 22:17:47 jcs>
+/* Time-stamp: <2005-01-04 23:25:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -101,7 +101,7 @@ void delete_populate_settings (Playlist *pl, GList *selected_trackids,
     /* write title and label */
     n = g_list_length (selected_trackids);
     if (!pl) pl = get_playlist_by_nr (0); /* NULL,0: MPL */
-    if(pl->type == PL_TYPE_MPL)
+    if(pl->type == ITDB_PL_TYPE_MPL)
     {
 	if (label)
 	    *label = g_strdup (ngettext ("Are you sure you want to delete the following track completely from your ipod? The number of playlists this track is a member of is indicated in parentheses.", "Are you sure you want to delete the following tracks completely from your ipod? The number of playlists the tracks are member of is indicated in parentheses.", n));
@@ -161,7 +161,7 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
 	return;
 
     n = g_list_length (selected_trackids); /* nr of tracks to be deleted */
-    if (pl->type == PL_TYPE_MPL)
+    if (pl->type == ITDB_PL_TYPE_MPL)
     {
 	buf = g_strdup_printf (
 	    ngettext ("Deleted one track completely from iPod",
@@ -413,7 +413,7 @@ void delete_playlist_head (gboolean delete_full)
 	gtkpod_statusbar_message (_("No playlist selected."));
 	return;
     }
-    if (pl->type == PL_TYPE_MPL)
+    if (pl->type == ITDB_PL_TYPE_MPL)
     { /* master playlist */
 	gtkpod_statusbar_message (_("Cannot delete master playlist."));
 	return;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-02 15:19:15 jcs>
+/* Time-stamp: <2005-01-04 22:08:32 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -78,9 +78,6 @@ static GList *pending_deletion = NULL;
    handle_export().  It's state can be accessed by the public function
    file_are_saved(). It can be set to FALSE by calling
    data_changed() */
-static gboolean files_saved = TRUE;
-/* Flag to indicated that an iTunesDB has been read */
-static gboolean itunesdb_read = FALSE;
 
 #ifdef G_THREADS_ENABLED
 /* Thread specific */
@@ -93,13 +90,6 @@ static gboolean mutex_data = FALSE;
 static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
 static float extendedinfoversion = 0.0;
-
-
-/* Has the iTunesDB already been read? */
-gboolean file_itunesdb_read (void)
-{
-    return itunesdb_read;
-}
 
 
 /* fills in extended info if available (called from add_track()) */
@@ -1175,15 +1165,16 @@ void handle_export (void)
 }
 
 
-/* make state of "files_saved" available to functions */
-gboolean files_are_saved (void)
+/* indicate that data was changed and update the free space indicator */
+void data_changed (iTunesDB *itdb)
 {
-  return files_saved;
-}
+    ExtraiTunesDBData *eitdb;
 
-/* set the state of "files_saved" to FALSE */
-void data_changed (void)
-{
-  files_saved = FALSE;
-  space_data_update ();
-}  
+    g_return_if_fail (itdb);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    eitdb->data_changed = TRUE;
+
+    space_data_update ();
+}

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 22:41:30 jcs>
+/* Time-stamp: <2005-01-04 23:25:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -65,7 +65,7 @@ void itdb_track_free (Itdb_Track *track)
     g_free (track->composer);
     g_free (track->fdesc);
     g_free (track->grouping);
-    g_free (track->pc_path);
+    g_free (track->pc_path_locale);
     g_free (track->ipod_path);
     if (track->userdata && track->userdata_destroy)
 	(*track->userdata_destroy) (track->userdata);
@@ -111,13 +111,4 @@ Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id)
 	if (track->id == id)  return track;
     }
     return NULL;
-}
-
-
-/* return number of tracks in playlist */
-guint32 itdb_track_number (Itdb_Playlist *pl)
-{
-    g_return_val_if_fail (pl, 0);
-
-    return g_list_length (playlist->members);
 }

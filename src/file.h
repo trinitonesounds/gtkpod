@@ -78,8 +78,7 @@ void display_updated (Track *track, gchar *txt);
 void display_mserv_problems (Track *track, gchar *txt);
 void handle_import (void);
 void handle_export (void);
-gboolean files_are_saved (void);
-void data_changed (void);
+void data_changed (iTunesDB *itdb);
 gchar *get_track_name_on_disk_verified (Track *track);
 gchar* get_track_name_on_disk(Track *s);
 gchar* get_track_name_on_ipod(Track *s);
@@ -95,8 +94,6 @@ gchar *resolve_path(const gchar *,const gchar * const *);
 void parse_offline_playcount (void);
 
 gboolean get_gain(Track *track);
-
-gboolean file_itunesdb_read (void);
 
 /* file_export.c */
 void export_files_init(GList *tracks);

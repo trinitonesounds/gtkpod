@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-03 22:40:46 jcs>
+/* Time-stamp: <2005-01-04 23:49:35 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1005,7 +1005,7 @@ Itdb_Playlist *itdb_playlist_new (const gchar *title, gboolean spl)
     GRand *grand = g_rand_new ();
     Itdb_Playlist *pl = g_new0 (Itdb_Playlist, 1);
 
-    pl->type = PL_TYPE_NORM;
+    pl->type = ITDB_PL_TYPE_NORM;
     pl->name = g_strdup (title);
     pl->is_spl = spl;
     pl->id = ((guint64)g_rand_int (grand) << 32) |
@@ -1161,6 +1161,23 @@ gboolean itdb_playlist_add_tracknr (FImport *fimp, Itdb_Playlist *pl,
 }
 
 
+/* Remove track @track from playlist *pl. If @pl == NULL remove from
+ * master playlist. */
+void itdb_playlist_remove_track (Itdb_Playlist *pl, Itdb_Track *track)
+{
+    g_return_if_fail (track);
+
+    if (pl == NULL)   pl=itdb_mpl (track->itdb);
+
+    if (pl == NULL)
+	pl = itdb_mpl (track->itdb);
+
+    g_return_if_fail (pl);
+
+    pl->members = g_list_remove (pl->members, track);
+}
+
+
 /* Returns the playlist with the ID @id or NULL if the ID cannot be
  * found. */
 Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id)
@@ -1178,23 +1195,26 @@ Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id)
 }
 
 
-/* checks if "track" is in playlist "plitem". TRUE, if yes, FALSE
-   otherwise */
-gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *track)
+/* checks if @track is in playlist @pl. TRUE, if yes, FALSE
+   otherwise. If @pl is NULL, the */
+gboolean itdb_playlist_contains_track (Itdb_Playlist *pl, Itdb_Track *tr)
 {
+    g_return_val_if_fail (tr, FALSE);
+
+    if (pl == NULL)
+	pl = itdb_mpl (tr->itdb);
+
     g_return_val_if_fail (pl, FALSE);
 
-    if (track == NULL) return FALSE;
-
-    if (g_list_find (pl->members, track))  return TRUE;
-    else                                   return FALSE;
+    if (g_list_find (pl->members, tr))  return TRUE;
+    else                                return FALSE;
 }
 
 
-/* return number of playlists */
-guint32 itdb_playlist_number (Itdb_iTunesDB *itdb)
+/* return number of tracks in playlist */
+guint32 itdb_playlist_tracks_number (Itdb_Playlist *pl)
 {
-    g_return_val_if_fail (itdb, 0);
+    g_return_val_if_fail (pl, 0);
 
-    return g_list_length (itdb->playlists);
+    return g_list_length (pl->members);
 }

@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-12-11 15:53:39 jcs>
+|  Time-stamp: <2005-01-04 22:18:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -919,15 +919,22 @@ void do_selected_playlist (void (*do_func)(GList *trackids))
  * return string after use. */
 gchar *get_track_info (Track *track)
 {
-    if (!track) return NULL;
-    if (track->pc_path_utf8 && strlen(track->pc_path_utf8))
-	return g_path_get_basename (track->pc_path_utf8);
-    else if ((track->title && strlen(track->title)))
+    ExtraTrackData *etr;
+
+    g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
+
+    if (etr->pc_path_utf8 && strlen(etr->pc_path_utf8))
+	return g_path_get_basename (etr->pc_path_utf8);
+    if ((track->title && strlen(track->title)))
 	return g_strdup (track->title);
-    else if ((track->album && strlen(track->album)))
+    if ((track->album && strlen(track->album)))
 	return g_strdup (track->album);
-    else if ((track->artist && strlen(track->artist)))
+    if ((track->artist && strlen(track->artist)))
 	return g_strdup (track->artist);
+    if ((track->composer && strlen(track->composer)))
+	return g_strdup (track->composer);
     return g_strdup_printf ("iPod ID: %d", track->ipod_id);
 }
 

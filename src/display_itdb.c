@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-04 00:02:11 jcs>
+/* Time-stamp: <2005-01-04 23:59:34 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -30,21 +30,31 @@
 #  include <config.h>
 #endif
 
+#include <math.h>
+
 #include "display_itdb.h"
 #include "display.h"
 #include "md5.h"
 #include "support.h"
+#include "file.h"
+#include "misc.h"
+#include "info.h"
+#include "prefs.h"
 
-/* list with available iTunesDBs. A pointer to this list is stored in
- * gtkpod_window as "itdbs" data (see . */
-static GList *itdbs=NULL;
+
+/* A struct containing a list with available iTunesDBs. A pointer to
+   this struct is stored in gtkpod_window as itdbs_head */
+static struct itdbs_head
+{
+    GList *itdbs;
+} *itdbs_head = NULL;
 
 
 void gp_itdb_extra_destroy (ExtraiTunesDBData *eitdb)
 {
     if (eitdb)
     {
-	md5_free (eitdb);
+	md5_free_eitdb (eitdb);
 	g_free (eitdb);
     }
 }
@@ -73,9 +83,11 @@ void gp_track_extra_destroy (ExtraTrackData *etrack)
 iTunesDB *gp_itdb_new (void)
 {
     iTunesDB *itdb = itdb_new ();
-    itdb->userdata = g_new0 (ExtraiTunesDBData, 1);
+    ExtraiTunesDBData *eitdb = g_new0 (ExtraiTunesDBData, 1);
+    itdb->userdata = eitdb;
     itdb->userdata_destroy =
 	(ItdbUserDataDestroyFunc)gp_itdb_extra_destroy;
+    eitdb->data_changed = FALSE;
     return itdb;
 }
 
@@ -100,9 +112,15 @@ Track *gp_track_new (void)
 /* add itdb to itdbs */
 void gp_itdb_add (iTunesDB *itdb)
 {
-    g_return_if_fail (itdb);
+    ExtraiTunesDBData *eitdb;
 
-    itdbs = g_list_append (itdbs, itdb);
+    g_assert (itdbs_head);
+    g_return_if_fail (itdb);
+    eitdb = itdb->userdata;
+    g_assert (eitdb);
+
+    eitdb->itdbs_head = itdbs_head;
+    itdbs_head->itdbs = g_list_append (itdbs_head->itdbs, itdb);
 }
 
 /* add playlist to itdb and to display */
@@ -115,28 +133,63 @@ void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos)
     pm_add_playlist (pl, pos);
 }
 
+/* This function removes the track "track" from the
+   playlist "plitem". It then lets the display model know.
+   No action is taken if "track" is not in the playlist.
+   If "plitem" == NULL, remove from master playlist.
+   If the track is removed from the MPL, it's also removed
+   from memory completely */
+void gp_playlist_remove_track (Playlist *plitem, Track *track)
+{
+    g_return_if_fail (track);
+    g_return_if_fail (track->itdb);
+
+    if (plitem == NULL)  plitem = itdb_mpl (track->itdb);
+    g_return_if_fail (plitem);
+
+    pm_remove_track (plitem, track);
+
+    itdb_playlist_remove_track (plitem, track);
+
+    if (plitem->type == ITDB_PL_TYPE_MPL)
+    { /* if it's the MPL, we remove the track permanently */
+	GList *gl = g_list_nth_data (track->itdb->playlists, 1);
+	while (gl)
+	{  /* first we remove the track from all other playlists (i=1) */
+	    Playlist *pl = gl->data;
+	    g_return_if_fail (pl);
+	    pm_remove_track (pl, track);
+	    itdb_playlist_remove_track (pl, track);
+	}
+	itdb_track_remove (track);
+    }
+}
+
+
 void init_data (GtkWidget *window)
 {
     iTunesDB *itdb;
     Playlist *pl;
 
     g_assert (window);
-    g_return_if_fail (itdbs == NULL);
+    g_assert (itdbs_head == NULL);
 
-    g_object_set_data (G_OBJECT (window), "itdbs", &itdbs);
+    itdbs_head = g_new0 (struct itdbs_head, 1);
+
+    g_object_set_data (G_OBJECT (window), "itdbs_head", itdbs_head);
 
     itdb = gp_itdb_new ();
     itdb->usertype = GP_ITDB_TYPE_IPOD;
     gp_itdb_add (itdb);
     pl = gp_playlist_new (_("gtkpod"), FALSE);
-    pl->type = PL_TYPE_MPL;  /* MPL! */
+    pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
     gp_playlist_add (itdb, pl, -1);
 
     itdb = gp_itdb_new ();
     itdb->usertype = GP_ITDB_TYPE_LOCAL;
     gp_itdb_add (itdb);
     pl = gp_playlist_new (_("Local"), FALSE);
-    pl->type = PL_TYPE_MPL;  /* MPL! */
+    pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
     gp_playlist_add (itdb, pl, -1);
 }
 
@@ -155,7 +208,9 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
     Track *track = NULL;
     GList *gl;
 
-    for (gl=itdbs; gl; gl=gl->next)
+    g_return_val_if_fail (itdbs_head, FALSE);
+
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
 	iTunesDB *itdb = gl->data;
 	g_return_val_if_fail (itdb, FALSE);
@@ -167,7 +222,7 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 	{
 	    gchar *buf1, *buf;
 	    track->playcount += num;
-	    data_changed ();
+	    data_changed (itdb);
 	    pm_track_changed (track);
 	    buf1 = get_track_info (track);
 	    buf = g_strdup_printf (_("Increased playcount for '%s'"), buf1);
@@ -191,48 +246,71 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
  * Register all tracks in the md5 hash and remove duplicates (while
  * preserving playlists)
  */
-void hash_tracks (void)
+void gp_hash_tracks_itdb (iTunesDB *itdb)
 {
-   gint ns, count, track_nr;
+   gint ns, count;
    gchar *buf;
-   Track *track, *oldtrack;
+   GList *gl;
+
+   g_return_if_fail (itdb);
 
    if (!prefs_get_md5tracks ()) return;
-   ns = get_nr_of_tracks ();
+   ns = itdb_tracks_number (itdb);   /* number of tracks */
    if (ns == 0)                 return;
 
    block_widgets (); /* block widgets -- this might take a while,
 			so we'll do refreshs */
-   md5_unique_file_free (); /* release md5 hash */
+   md5_free (itdb);  /* release md5 hash */
    count = 0;
-   track_nr = 0;
    /* populate the hash table */
-   while ((track = get_track_by_nr (track_nr)))
+   gl=itdb->tracks;
+   while (gl)
    {
-       oldtrack = md5_track_exists_insert(track);
+       Track *track=gl->data;
+       Track *oldtrack = md5_track_exists_insert (itdb, track);
+
+       /* need to get next track now because it might be a duplicate and
+	  thus be removed when we call gp_duplicate_remove() */
+       gl = gl->next;
+
+       if (oldtrack)
+       {
+	   gp_duplicate_remove (oldtrack, track);
+       }
+
        ++count;
-/*        printf("%d:%d:%p:%p\n", count, track_nr, track, oldtrack); */
        if (((count % 20) == 1) || (count == ns))
        { /* update for count == 1, 21, 41 ... and for count == n */
 	   buf = g_strdup_printf (ngettext ("Hashed %d of %d track.",
 					    "Hashed %d of %d tracks.", ns),
 				  count, ns);
-	   gtkpod_statusbar_message(buf);
-	   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+	   gtkpod_statusbar_message (buf);
+	   while (widgets_blocked && gtk_events_pending ())
+	       gtk_main_iteration ();
 	   g_free (buf);
-       }
-       if (oldtrack)
-       {
-	   gp_duplicate_remove (oldtrack, track);
-       }
-       else
-       { /* if we removed a track (above), we don't need to increment
-	    the track_nr here */
-	   ++track_nr;
        }
    }
    gp_duplicate_remove (NULL, NULL); /* show info dialogue */
    release_widgets (); /* release widgets again */
+}
+
+
+/**
+ * Call gp_hash_tracks_itdb() for each itdb.
+ *
+ */
+void gp_hash_tracks (void)
+{
+    GList *gl;
+
+    g_assert (itdbs_head);
+
+    block_widgets ();
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	gp_hash_tracks_itdb (gl->data);
+    }
+    release_widgets ();
 }
 
 
@@ -308,6 +386,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 	   g_free (buf);
        }
    }
+
    if (oldtrack == NULL)
    { /* clean up */
        if (str)       g_string_free (str, TRUE);
@@ -316,8 +395,12 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
        deltrack_nr = 0;
        gtkpod_tracks_statusbar_update();
    }
+
    if (oldtrack && track)
    {
+       iTunesDB *itdb = oldtrack->itdb;
+       g_return_if_fail (itdb);
+
        if (prefs_get_show_duplicates ())
        {
 	   /* add info about it to str */
@@ -357,34 +440,42 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 	* always!?) */
        if (track->pc_path_locale)
        {
+	   ExtraTrackData *oldetr = oldtrack->userdata;
+	   ExtraTrackData *etr = track->userdata;
+	   g_return_if_fail (oldetr);
+	   g_return_if_fail (etr);
 	   g_free (oldtrack->pc_path_locale);
-	   g_free (oldtrack->pc_path_utf8);
-	   oldtrack->pc_path_utf8 = g_strdup (track->pc_path_utf8);
+	   g_free (oldetr->pc_path_utf8);
 	   oldtrack->pc_path_locale = g_strdup (track->pc_path_locale);
+	   oldetr->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
        }
-       if (track_is_in_playlist (NULL, track))
+       if (itdb_playlist_contains_track (NULL, track))
        { /* track is already added to memory -> replace with "oldtrack" */
 	   /* check for "track" in all playlists (except for MPL) */
-	   gint np = get_nr_of_playlists ();
-	   gint pl_nr;
-	   for (pl_nr=1; pl_nr<np; ++pl_nr)
+	   GList *gl;
+	   gl = g_list_nth_data (itdb->playlists, 1);
+	   while (gl)
 	   {
-	       Playlist *pl = get_playlist_by_nr (pl_nr);
+	       Playlist *pl = gl->data;
+	       g_return_if_fail (pl);
 	       /* if "track" is in playlist pl, we remove it and add
 		  the "oldtrack" instead (this way round we don't have
 		  to worry about changing md5 hash entries */
-	       if (remove_track_from_playlist (pl, track))
+	       if (itdb_playlist_contains_track (pl, track))
 	       {
-		   if (!track_is_in_playlist (pl, oldtrack))
-		       add_track_to_playlist (pl, oldtrack, TRUE);
+		   gp_playlist_remove_track (pl, track);
+	       {
+		   if (!itdb_playlist_contains_track (pl, oldtrack))
+		       gp_playlist_add_track (pl, oldtrack, TRUE);
 	       }
+	       gl = gl->next;
 	   }
 	   /* remove track from MPL, i.e. from the ipod */
-	   remove_track_from_playlist (NULL, track);
+	   gp_playlist_remove_track (NULL, track);
 	   removed = TRUE;
        }
        ++deltrack_nr; /* count duplicate tracks */
-       data_changed ();
+       data_changed (itdb);
    }
 }
 
