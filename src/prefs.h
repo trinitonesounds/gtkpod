@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-23 22:48:50 JST jcs>
+/* Time-stamp: <2004-06-27 18:11:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -34,7 +34,18 @@
 #endif
 
 #include <gtk/gtk.h>
+#include "prefs_window.h"
 #include "display.h"
+
+typedef enum
+{
+    PATH_PLAY_NOW = 0,
+    PATH_PLAY_ENQUEUE,
+    PATH_MP3GAIN,
+    PATH_SYNC_CONTACTS,
+    PATH_SYNC_CALENDAR,
+    PATH_NUM
+} PathType;
 
 struct win_size {
     gint x;
@@ -124,11 +135,7 @@ struct cfg
   gint sort_tab_num;            /* number of sort tabs displayed */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
-  gchar *play_now_path;         /* path for 'Play Now' */
-  gchar *play_enqueue_path;     /* path for 'Play', i.e. 'Enqueue' */
-  gchar *mp3gain_path;          /* path for the mp3gain executable */
-  gchar *sync_contacts_path;    /* path for the sync_contacts executable */
-  gchar *sync_calendar_path;    /* path for the sync_calendar executable */
+  gchar *toolpath[PATH_NUM];    /* path for 'Play Now...' (see PathType) */
   gchar *time_format;           /* time format for strftime() */
   gchar *export_template;       /* filename for files exported from ipod */
   gboolean automount;		/* whether we should mount/unmount the ipod */
@@ -154,7 +161,6 @@ enum
     SORT_DESCENDING = GTK_SORT_DESCENDING,
     SORT_NONE = 10*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
 };
-/* SORT_RESET: only used for sort_window_set_tm_sort() */
 
 
 
@@ -168,6 +174,7 @@ struct cfg* clone_prefs(void);
 struct sortcfg* clone_sortprefs(void);
 void prefs_set_ipod_mount(const gchar *mp);
 gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[]);
+gchar *prefs_validate_path (const gchar *path, const gchar *allowed);
 
 void prefs_set_offline(gboolean active);
 void prefs_set_pm_sort (gint type);
@@ -284,17 +291,8 @@ GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
 gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
-gchar *prefs_validate_play_path (const gchar *path);
-void prefs_set_play_now_path (const gchar *path);
-const gchar *prefs_get_play_now_path (void);
-void prefs_set_play_enqueue_path (const gchar *path);
-const gchar *prefs_get_play_enqueue_path (void);
-void prefs_set_mp3gain_path (const gchar *path);
-const gchar *prefs_get_mp3gain_path (void);
-void prefs_set_sync_contacts_path (const gchar *path);
-const gchar *prefs_get_sync_contacts_path (void);
-void prefs_set_sync_calendar_path (const gchar *path);
-const gchar *prefs_get_sync_calendar_path (void);
+void prefs_set_toolpath (PathType type, const gchar *path);
+const gchar *prefs_get_toolpath (PathType type);
 void prefs_set_time_format (const gchar *format);
 gchar *prefs_get_time_format (void);
 gboolean prefs_get_automount (void);

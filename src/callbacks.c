@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-13 22:34:27 JST jcs>
+/* Time-stamp: <2004-06-27 14:37:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -998,36 +998,6 @@ on_cfg_toolbar_style_icons_toggled      (GtkToggleButton *togglebutton,
 }
 
 void
-on_play_now_path_entry_changed         (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_play_now_path (buf);
-    g_free (buf);
-}
-
-
-void
-on_play_enqueue_path_entry_changed     (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_play_enqueue_path (buf);
-    g_free (buf);
-}
-
-
-void
-on_mp3gain_entry_changed               (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_mp3gain_path (buf);
-    g_free (buf);
-}
-
-
-void
 on_cfg_export_check_existing_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
@@ -1885,26 +1855,6 @@ on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 {
     check_db();
 }
-
-void
-on_sync_contacts_path_entry_changed    (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_sync_contacts_path (buf);
-    g_free (buf);
-}
-
-
-void
-on_sync_calendar_entry_changed         (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_sync_calendar_path (buf);
-    g_free (buf);
-}
-
 
 void
 on_sync_calendar_activate              (GtkMenuItem     *menuitem,

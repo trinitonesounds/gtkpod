@@ -1461,22 +1461,32 @@ create_prefs_window (void)
   GtkWidget *frame18;
   GtkWidget *vbox34;
   GtkWidget *label44;
+  GtkWidget *hbox52;
   GtkWidget *play_now_path_entry;
+  GtkWidget *play_now_path_button;
   GtkWidget *label45;
+  GtkWidget *hbox53;
   GtkWidget *play_enqueue_path_entry;
+  GtkWidget *play_enqueue_path_button;
   GtkWidget *label43;
   GtkWidget *frame22;
   GtkWidget *vbox49;
   GtkWidget *label148;
+  GtkWidget *hbox54;
   GtkWidget *mp3gain_path_entry;
+  GtkWidget *mp3gain_path_button;
   GtkWidget *label69;
   GtkWidget *frame31;
   GtkWidget *vbox59;
   GtkWidget *concal_label;
   GtkWidget *label156;
+  GtkWidget *hbox55;
   GtkWidget *sync_contacts_path_entry;
+  GtkWidget *sync_contacts_path_button;
   GtkWidget *label158;
+  GtkWidget *hbox56;
   GtkWidget *sync_calendar_path_entry;
+  GtkWidget *sync_calendar_path_button;
   GtkWidget *concal_autosync;
   GtkWidget *label157;
   GtkWidget *label24;
@@ -2343,10 +2353,18 @@ create_prefs_window (void)
   gtk_label_set_selectable (GTK_LABEL (label44), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label44), 0.01, 0.5);
 
+  hbox52 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox52);
+  gtk_box_pack_start (GTK_BOX (vbox34), hbox52, FALSE, FALSE, 2);
+
   play_now_path_entry = gtk_entry_new ();
   gtk_widget_show (play_now_path_entry);
-  gtk_box_pack_start (GTK_BOX (vbox34), play_now_path_entry, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox52), play_now_path_entry, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, play_now_path_entry, _("For example, 'xmms -p %s' will clear xmms' current playlist, add the selected tracks and start playing."), NULL);
+
+  play_now_path_button = gtk_button_new_with_mnemonic (_("..."));
+  gtk_widget_show (play_now_path_button);
+  gtk_box_pack_start (GTK_BOX (hbox52), play_now_path_button, FALSE, FALSE, 0);
 
   label45 = gtk_label_new (_("Command Line for 'Enqueue':"));
   gtk_widget_show (label45);
@@ -2355,10 +2373,18 @@ create_prefs_window (void)
   gtk_label_set_selectable (GTK_LABEL (label45), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label45), 0.01, 0.5);
 
+  hbox53 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox53);
+  gtk_box_pack_start (GTK_BOX (vbox34), hbox53, FALSE, FALSE, 0);
+
   play_enqueue_path_entry = gtk_entry_new ();
   gtk_widget_show (play_enqueue_path_entry);
-  gtk_box_pack_start (GTK_BOX (vbox34), play_enqueue_path_entry, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox53), play_enqueue_path_entry, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, play_enqueue_path_entry, _("For example, 'xmms -e %s' will append (enqueue) the selected tracks to xmms' current playlist."), NULL);
+
+  play_enqueue_path_button = gtk_button_new_with_mnemonic (_("..."));
+  gtk_widget_show (play_enqueue_path_button);
+  gtk_box_pack_start (GTK_BOX (hbox53), play_enqueue_path_button, FALSE, FALSE, 0);
 
   label43 = gtk_label_new (_("Track Playing"));
   gtk_widget_show (label43);
@@ -2382,10 +2408,18 @@ create_prefs_window (void)
   gtk_label_set_selectable (GTK_LABEL (label148), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label148), 0.01, 0.5);
 
+  hbox54 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox54);
+  gtk_box_pack_start (GTK_BOX (vbox49), hbox54, FALSE, FALSE, 0);
+
   mp3gain_path_entry = gtk_entry_new ();
   gtk_widget_show (mp3gain_path_entry);
-  gtk_box_pack_start (GTK_BOX (vbox49), mp3gain_path_entry, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox54), mp3gain_path_entry, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, mp3gain_path_entry, _("You only need to specify this if your 'mp3gain' executable is not in your default path. Example: '/usr/local/foo/mp3gain'. mp3gain will write the calculated gain value back to the file -- if you don't want this, set this entry to /bin/true or similar. mp3gain is only called if appropriate tags are not already set by your encoder. E.g. lame version 0.95 already writes the gain values into tags. The exact conversion factor between mp3gain's gain value and iPod's volume tag is not known yet -- your input is appreciated."), NULL);
+
+  mp3gain_path_button = gtk_button_new_with_mnemonic (_("..."));
+  gtk_widget_show (mp3gain_path_button);
+  gtk_box_pack_start (GTK_BOX (hbox54), mp3gain_path_button, FALSE, FALSE, 0);
 
   label69 = gtk_label_new (_("Volume Normalization"));
   gtk_widget_show (label69);
@@ -2418,10 +2452,18 @@ create_prefs_window (void)
   gtk_label_set_selectable (GTK_LABEL (label156), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label156), 0.01, 0.5);
 
+  hbox55 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox55);
+  gtk_box_pack_start (GTK_BOX (vbox59), hbox55, FALSE, FALSE, 2);
+
   sync_contacts_path_entry = gtk_entry_new ();
   gtk_widget_show (sync_contacts_path_entry);
-  gtk_box_pack_start (GTK_BOX (vbox59), sync_contacts_path_entry, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox55), sync_contacts_path_entry, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, sync_contacts_path_entry, _("Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod."), NULL);
+
+  sync_contacts_path_button = gtk_button_new_with_mnemonic (_("..."));
+  gtk_widget_show (sync_contacts_path_button);
+  gtk_box_pack_start (GTK_BOX (hbox55), sync_contacts_path_button, FALSE, FALSE, 0);
 
   label158 = gtk_label_new (_("Command to be called to synchronize calendar:"));
   gtk_widget_show (label158);
@@ -2430,10 +2472,18 @@ create_prefs_window (void)
   gtk_label_set_selectable (GTK_LABEL (label158), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label158), 0.01, 0.5);
 
+  hbox56 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox56);
+  gtk_box_pack_start (GTK_BOX (vbox59), hbox56, FALSE, FALSE, 0);
+
   sync_calendar_path_entry = gtk_entry_new ();
   gtk_widget_show (sync_calendar_path_entry);
-  gtk_box_pack_start (GTK_BOX (vbox59), sync_calendar_path_entry, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox56), sync_calendar_path_entry, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, sync_calendar_path_entry, _("Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod."), NULL);
+
+  sync_calendar_path_button = gtk_button_new_with_mnemonic (_("..."));
+  gtk_widget_show (sync_calendar_path_button);
+  gtk_box_pack_start (GTK_BOX (hbox56), sync_calendar_path_button, FALSE, FALSE, 0);
 
   concal_autosync = gtk_check_button_new_with_mnemonic (_("Call automatically when synchronizing iTunesDB"));
   gtk_widget_show (concal_autosync);
@@ -2607,21 +2657,6 @@ create_prefs_window (void)
                     NULL);
   g_signal_connect ((gpointer) cfg_sync_remove_confirm2, "toggled",
                     G_CALLBACK (on_cfg_sync_remove_confirm_toggled),
-                    NULL);
-  g_signal_connect ((gpointer) play_now_path_entry, "changed",
-                    G_CALLBACK (on_play_now_path_entry_changed),
-                    NULL);
-  g_signal_connect ((gpointer) play_enqueue_path_entry, "changed",
-                    G_CALLBACK (on_play_enqueue_path_entry_changed),
-                    NULL);
-  g_signal_connect ((gpointer) mp3gain_path_entry, "changed",
-                    G_CALLBACK (on_mp3gain_entry_changed),
-                    NULL);
-  g_signal_connect ((gpointer) sync_contacts_path_entry, "changed",
-                    G_CALLBACK (on_sync_contacts_path_entry_changed),
-                    NULL);
-  g_signal_connect ((gpointer) sync_calendar_path_entry, "changed",
-                    G_CALLBACK (on_sync_calendar_entry_changed),
                     NULL);
   g_signal_connect ((gpointer) concal_autosync, "toggled",
                     G_CALLBACK (on_concal_autosync_toggled),
@@ -2813,22 +2848,32 @@ create_prefs_window (void)
   GLADE_HOOKUP_OBJECT (prefs_window, frame18, "frame18");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox34, "vbox34");
   GLADE_HOOKUP_OBJECT (prefs_window, label44, "label44");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox52, "hbox52");
   GLADE_HOOKUP_OBJECT (prefs_window, play_now_path_entry, "play_now_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, play_now_path_button, "play_now_path_button");
   GLADE_HOOKUP_OBJECT (prefs_window, label45, "label45");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox53, "hbox53");
   GLADE_HOOKUP_OBJECT (prefs_window, play_enqueue_path_entry, "play_enqueue_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, play_enqueue_path_button, "play_enqueue_path_button");
   GLADE_HOOKUP_OBJECT (prefs_window, label43, "label43");
   GLADE_HOOKUP_OBJECT (prefs_window, frame22, "frame22");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox49, "vbox49");
   GLADE_HOOKUP_OBJECT (prefs_window, label148, "label148");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox54, "hbox54");
   GLADE_HOOKUP_OBJECT (prefs_window, mp3gain_path_entry, "mp3gain_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, mp3gain_path_button, "mp3gain_path_button");
   GLADE_HOOKUP_OBJECT (prefs_window, label69, "label69");
   GLADE_HOOKUP_OBJECT (prefs_window, frame31, "frame31");
   GLADE_HOOKUP_OBJECT (prefs_window, vbox59, "vbox59");
   GLADE_HOOKUP_OBJECT (prefs_window, concal_label, "concal_label");
   GLADE_HOOKUP_OBJECT (prefs_window, label156, "label156");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox55, "hbox55");
   GLADE_HOOKUP_OBJECT (prefs_window, sync_contacts_path_entry, "sync_contacts_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, sync_contacts_path_button, "sync_contacts_path_button");
   GLADE_HOOKUP_OBJECT (prefs_window, label158, "label158");
+  GLADE_HOOKUP_OBJECT (prefs_window, hbox56, "hbox56");
   GLADE_HOOKUP_OBJECT (prefs_window, sync_calendar_path_entry, "sync_calendar_path_entry");
+  GLADE_HOOKUP_OBJECT (prefs_window, sync_calendar_path_button, "sync_calendar_path_button");
   GLADE_HOOKUP_OBJECT (prefs_window, concal_autosync, "concal_autosync");
   GLADE_HOOKUP_OBJECT (prefs_window, label157, "label157");
   GLADE_HOOKUP_OBJECT (prefs_window, label24, "label24");

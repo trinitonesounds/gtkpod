@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-23 22:48:49 JST jcs>
+/* Time-stamp: <2004-06-27 19:11:18 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -28,13 +28,14 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "callbacks.h"
+#include "charset.h"
+#include "interface.h"
+#include "misc.h"
 #include "prefs.h"
 #include "prefs_window.h"
-#include "track.h"
-#include "interface.h"
-#include "callbacks.h"
 #include "support.h"
-#include "charset.h"
+#include "track.h"
 
 static GtkWidget *prefs_window = NULL;
 static GtkWidget *sort_window = NULL;
@@ -49,6 +50,42 @@ static GtkWidget *autoselect_widget[SORT_TAB_MAX];
 static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
 static void prefs_window_set_autosettags (gint category, gboolean autoset);
 static void prefs_window_set_col_visible (gint column, gboolean visible);
+static void prefs_window_set_toolpath (PathType i, const gchar *path);
+
+/* Definition of path button names.
+   E.g. path_button_names[PATH_PLAY_ENQUEUE] is
+   "play_enqueue_path_button" 
+*/
+const gchar *path_button_names[] =
+{
+    "play_now_path_button",
+    "play_enqueue_path_button",
+    "mp3gain_path_button",
+    "sync_contacts_path_button",
+    "sync_calendar_path_button",
+    NULL
+};
+const gchar *path_entry_names[] =
+{
+    "play_now_path_entry",
+    "play_enqueue_path_entry",
+    "mp3gain_path_entry",
+    "sync_contacts_path_entry",
+    "sync_calendar_path_entry",
+    NULL
+};
+static const gchar *path_fileselector_titles[] =
+{
+    N_("Please select command for 'Play Now'"),
+    N_("Please select command for 'Enqueue'"),
+    N_("Please select the mp3gain executable"),
+    N_("Please select command to sync contacts"),
+    N_("Please select command to sync calendar"),
+    NULL
+};
+/* pointers to fileselectors */
+static GtkWidget *path_fileselector[PATH_NUM];
+
 
 static void on_cfg_st_autoselect_toggled (GtkToggleButton *togglebutton,
 					  gpointer         user_data)
@@ -73,6 +110,149 @@ static void on_cfg_col_visible_toggled (GtkToggleButton *togglebutton,
     prefs_window_set_col_visible (
 	(guint32)user_data,
 	gtk_toggle_button_get_active(togglebutton));
+}
+
+
+/* Close all open path fileselectors */
+static void path_close_windows (void)
+{
+    gint i;
+    for (i=0; i<PATH_NUM; ++i)
+    {
+	if (path_fileselector[i])
+	{
+	    gtk_widget_destroy (path_fileselector[i]);
+	    path_fileselector[i] = NULL;
+	}
+    }
+}
+
+
+/* close button on path fileselector window was pressed */
+static gboolean on_path_delete (GtkWidget *w, GdkEvent *e, gpointer user_data)
+{
+    PathType i = (PathType)user_data;
+
+    g_return_val_if_fail (i>=0 && i<PATH_NUM, FALSE);
+
+    path_fileselector[i] = NULL;
+    return FALSE;
+}
+
+
+/* cancel button on path fileselector window was pressed */
+static void on_path_cancel (GtkButton *button, gpointer user_data)
+{
+    PathType i = (PathType)user_data;
+
+    g_return_if_fail (i>=0 && i<PATH_NUM);
+
+    if (path_fileselector[i])
+    {
+	gtk_widget_destroy (path_fileselector[i]);
+	path_fileselector[i] = NULL;
+    }
+}
+
+
+/* ok button on path fileselector window was pressed */
+static void on_path_ok (GtkButton *button, gpointer user_data)
+{
+    PathType i = (PathType)user_data;
+
+    g_return_if_fail (i>=0 && i<PATH_NUM);
+
+    if (path_fileselector[i])
+    {
+	const gchar *npath = gtk_file_selection_get_filename (
+	    GTK_FILE_SELECTION (path_fileselector[i]));
+	const gchar *opath = tmpcfg->toolpath[i];
+	/* find command line arguments */
+	const gchar *opathp = strchr (opath, ' ');
+	gchar *newpath;
+	GtkWidget *w;
+
+	/* attach command line arguments if present */
+	if (opathp)
+	    newpath = g_strdup_printf ("%s%s", npath, opathp);
+	else
+	    newpath = g_strdup (npath);
+
+	if ((w = lookup_widget (prefs_window, path_entry_names[i])))
+	{
+	    gchar *newpath_utf8 = g_filename_to_utf8 (newpath, -1, NULL, NULL, NULL);
+	    gtk_entry_set_text(GTK_ENTRY(w), newpath_utf8);
+	    g_free (newpath_utf8);
+	}
+	g_free (newpath);
+
+	gtk_widget_destroy (path_fileselector[i]);
+	path_fileselector[i] = NULL;
+    }
+}
+
+static void on_path_button_pressed (GtkButton *button, gpointer user_data)
+{
+    PathType i = (PathType)user_data;
+    GtkFileSelection *fs;
+    const gchar *path, *pathp;
+    gchar *buf, *fbuf;
+
+    g_return_if_fail (tmpcfg);
+    g_return_if_fail (i>=0 && i<PATH_NUM);
+
+    if (path_fileselector[i])
+    {  /* fileselector already open --> simply raise to top */
+	gdk_window_raise(path_fileselector[i]->window);
+	return;
+    }
+    path_fileselector[i] = gtk_file_selection_new (_(path_fileselector_titles[i]));
+    fs = GTK_FILE_SELECTION (path_fileselector[i]); /* for convenience */
+    g_signal_connect (fs->ok_button,
+		      "clicked",
+		      G_CALLBACK (on_path_ok),
+		      (gpointer)i);
+    g_signal_connect (fs->cancel_button,
+		      "clicked",
+		      G_CALLBACK (on_path_cancel),
+		      (gpointer)i);
+    g_signal_connect (fs,
+		      "delete_event", /* catches the window close button */
+		      G_CALLBACK (on_path_delete),
+		      (gpointer)i);
+
+    /* set current filename */
+    /* find first whitespace separating path from command line arguments */
+    path = tmpcfg->toolpath[i];
+    pathp = strchr (path, ' ');
+    if (pathp)
+	buf = g_strndup (path, pathp-path);
+    else
+	buf = g_strdup (path);
+
+    /* get full path */
+    fbuf = which (buf);
+
+    if (fbuf)
+    {
+	gchar *fbuf_utf8 = g_filename_from_utf8 (fbuf, -1, NULL, NULL, NULL);
+	gtk_file_selection_set_filename (fs, fbuf_utf8);
+	g_free (fbuf_utf8);
+	g_free (fbuf);
+    }
+    g_free (buf);
+
+    gtk_widget_show (path_fileselector[i]);
+}
+
+
+static void on_path_entry_changed (GtkEditable     *editable,
+				   gpointer         user_data)
+{
+    PathType i = (PathType)user_data;
+    gchar *buf = gtk_editable_get_chars(editable, 0, -1);
+    prefs_window_set_toolpath (i, buf);
+    g_free (buf);
 }
 
 
@@ -153,61 +333,6 @@ prefs_window_create(void)
 		  the text we might get a callback destroying the old
 		  value... */
 		gchar *buf = g_strdup (tmpcfg->export_template);
-		gtk_entry_set_text(GTK_ENTRY(w), buf);
-		g_free (buf);
-	    }
-	}
-	if((w = lookup_widget(prefs_window, "play_now_path_entry")))
-	{
-	    if (tmpcfg->play_now_path)
-	    {  /* we should copy the new path first because by setting
-		  the text we might get a callback destroying the old
-		  value... */
-		gchar *buf = g_strdup (tmpcfg->play_now_path);
-		gtk_entry_set_text(GTK_ENTRY(w), buf);
-		g_free (buf);
-	    }
-	}
-	if((w = lookup_widget(prefs_window, "play_enqueue_path_entry")))
-	{
-	    if (tmpcfg->play_enqueue_path)
-	    {  /* we should copy the new path first because by setting
-		  the text we might get a callback destroying the old
-		  value... */
-		gchar *buf = g_strdup (tmpcfg->play_enqueue_path);
-		gtk_entry_set_text(GTK_ENTRY(w), buf);
-		g_free (buf);
-	    }
-	}
-	if((w = lookup_widget(prefs_window, "mp3gain_path_entry")))
-	{
-	    if (tmpcfg->mp3gain_path)
-	    {  /* we should copy the new path first because by setting
-		  the text we might get a callback destroying the old
-		  value... */
-		gchar *buf = g_strdup (tmpcfg->mp3gain_path);
-		gtk_entry_set_text(GTK_ENTRY(w), buf);
-		g_free (buf);
-	    }
-	}
-	if((w = lookup_widget(prefs_window, "sync_contacts_path_entry")))
-	{
-	    if (tmpcfg->sync_contacts_path)
-	    {  /* we should copy the new path first because by setting
-		  the text we might get a callback destroying the old
-		  value... */
-		gchar *buf = g_strdup (tmpcfg->sync_contacts_path);
-		gtk_entry_set_text(GTK_ENTRY(w), buf);
-		g_free (buf);
-	    }
-	}
-	if((w = lookup_widget(prefs_window, "sync_calendar_path_entry")))
-	{
-	    if (tmpcfg->sync_calendar_path)
-	    {  /* we should copy the new path first because by setting
-		  the text we might get a callback destroying the old
-		  value... */
-		gchar *buf = g_strdup (tmpcfg->sync_calendar_path);
 		gtk_entry_set_text(GTK_ENTRY(w), buf);
 		g_free (buf);
 	    }
@@ -404,6 +529,32 @@ prefs_window_create(void)
 		g_free (buf);
 	    }
 	}
+	/* connect signals for path entrys and selectors */
+	for (i=0; i<PATH_NUM; ++i)
+	{
+	    if ((w = lookup_widget (prefs_window, path_button_names[i])))
+	    {
+		g_signal_connect ((gpointer)w,
+				  "clicked",
+				  G_CALLBACK (on_path_button_pressed),
+				  (gpointer)i);
+	    }
+	    if ((w = lookup_widget (prefs_window, path_entry_names[i])))
+	    {
+		if (tmpcfg->toolpath[i])
+		{  /* we should copy the new path first because by setting
+		      the text we might get a callback destroying the old
+		      value... */
+		    gchar *buf = g_strdup (tmpcfg->toolpath[i]);
+		    gtk_entry_set_text(GTK_ENTRY(w), buf);
+		    g_free (buf);
+		}
+		g_signal_connect ((gpointer)w,
+				  "changed",
+				  G_CALLBACK (on_path_entry_changed),
+				  (gpointer)i);
+	    }
+	}
 	if((w = lookup_widget(prefs_window, "cfg_mpl_autoselect")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -570,11 +721,10 @@ prefs_window_set(void)
 	prefs_set_id3_write(tmpcfg->id3_write);
 	prefs_set_id3_write_id3v24(tmpcfg->id3_write_id3v24);
 	prefs_set_ipod_mount(tmpcfg->ipod_mount);
-	prefs_set_play_now_path(tmpcfg->play_now_path);
-	prefs_set_play_enqueue_path(tmpcfg->play_enqueue_path);
-	prefs_set_mp3gain_path(tmpcfg->mp3gain_path);
-	prefs_set_sync_contacts_path(tmpcfg->sync_contacts_path);
-	prefs_set_sync_calendar_path(tmpcfg->sync_calendar_path);
+	for (i=0; i<PATH_NUM; ++i)
+	{
+	    prefs_set_toolpath (i, tmpcfg->toolpath[i]);
+	}
 	prefs_set_time_format(tmpcfg->time_format);
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_autoimport(tmpcfg->autoimport);
@@ -679,6 +829,9 @@ prefs_window_cancel(void)
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
+
+    /* close path_fileselector windows */
+    path_close_windows ();
 }
 
 /* when window is deleted, we keep the currently applied prefs and
@@ -707,6 +860,9 @@ void prefs_window_delete(void)
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
+
+    /* close path_fileselector windows */
+    path_close_windows ();
 }
 
 /* apply the current settings and close the window */
@@ -739,6 +895,9 @@ prefs_window_ok (void)
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
+
+    /* close path_fileselector windows */
+    path_close_windows ();
 }
 
 
@@ -746,37 +905,22 @@ prefs_window_ok (void)
 void
 prefs_window_apply (void)
 {
-    gint defx, defy;
+    gint defx, defy, i;
     GtkWidget *nb, *w;
 
     /* save current settings */
     prefs_window_set ();
+
     /* reset the validated path entries */
-    if((w = lookup_widget(prefs_window, "play_now_path_entry")))
+    for (i=0; i<PATH_NUM; ++i)
     {
-	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_play_now_path ());
-	/* tmpcfg gets set by the "changed" callback */
+	if((w = lookup_widget(prefs_window, path_entry_names[i])))
+	{
+	    gtk_entry_set_text(GTK_ENTRY(w), tmpcfg->toolpath[i]);
+	    /* tmpcfg gets set by the "changed" callback */
+	}
     }
-    if((w = lookup_widget(prefs_window, "play_enqueue_path_entry")))
-    {
-	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_play_enqueue_path ());
-	/* tmpcfg gets set by the "changed" callback */
-    }
-    if((w = lookup_widget(prefs_window, "mp3gain_path_entry")))
-    {
-	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mp3gain_path ());
-	/* tmpcfg gets set by the "changed" callback */
-    }
-    if((w = lookup_widget(prefs_window, "sync_contacts_path_entry")))
-    {
-	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_sync_contacts_path ());
-	/* tmpcfg gets set by the "changed" callback */
-    }
-    if((w = lookup_widget(prefs_window, "sync_calendar_path_entry")))
-    {
-	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_sync_calendar_path ());
-	/* tmpcfg gets set by the "changed" callback */
-    }
+
     if((w = lookup_widget(prefs_window, "time_format_entry")))
     {
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_time_format ());
@@ -855,39 +999,12 @@ prefs_window_set_mount_point(const gchar *mp)
     tmpcfg->ipod_mount = g_strdup(mp);
 }
 
-void prefs_window_set_play_now_path(const gchar *path)
+static void prefs_window_set_toolpath (PathType i, const gchar *path)
 {
     if (!path) return;
-    g_free (tmpcfg->play_now_path);
-    tmpcfg->play_now_path = g_strdup (path);
-}
-
-void prefs_window_set_play_enqueue_path(const gchar *path)
-{
-    if (!path) return;
-    g_free (tmpcfg->play_enqueue_path);
-    tmpcfg->play_enqueue_path = g_strdup (path);
-}
-
-void prefs_window_set_mp3gain_path(const gchar *path)
-{
-    if (!path) return;
-    g_free (tmpcfg->mp3gain_path);
-    tmpcfg->mp3gain_path = g_strdup (path);
-}
-
-void prefs_window_set_sync_contacts_path(const gchar *path)
-{
-    if (!path) return;
-    g_free (tmpcfg->sync_contacts_path);
-    tmpcfg->sync_contacts_path = g_strdup (path);
-}
-
-void prefs_window_set_sync_calendar_path(const gchar *path)
-{
-    if (!path) return;
-    g_free (tmpcfg->sync_calendar_path);
-    tmpcfg->sync_calendar_path = g_strdup (path);
+    g_return_if_fail (i>=0 && i<PATH_NUM);
+    g_free (tmpcfg->toolpath[i]);
+    tmpcfg->toolpath[i] = g_strdup (path);
 }
 
 void prefs_window_set_time_format(const gchar *format)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-13 22:34:27 JST jcs>
+/* Time-stamp: <2004-06-27 18:14:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1014,9 +1014,9 @@ void handle_export (void)
 	      {
 		  const gchar *str;
 		  gtkpod_statusbar_message (_("Syncing contacts and calendar..."));
-		  str = prefs_get_sync_contacts_path ();
+		  str = prefs_get_toolpath (PATH_SYNC_CONTACTS);
 		  if (str && *str)    tools_sync_contacts ();
-		  str = prefs_get_sync_calendar_path ();
+		  str = prefs_get_toolpath (PATH_SYNC_CALENDAR);
 		  if (str && *str)    tools_sync_calendar ();
 	      }
 	  }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-04-11 00:13:11 JST jcs>
+/* Time-stamp: <2004-06-27 18:52:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -379,10 +379,10 @@ static gboolean tools_sync_script (SyncType type)
     switch (type)
     {
     case SYNC_CONTACTS:
-	script = g_strdup (prefs_get_sync_contacts_path ());
+	script = g_strdup (prefs_get_toolpath (PATH_SYNC_CONTACTS));
 	break;
     case SYNC_CALENDAR:
-	script = g_strdup (prefs_get_sync_calendar_path ());
+	script = g_strdup (prefs_get_toolpath (PATH_SYNC_CALENDAR));
 	break;
     default:
 	fprintf (stderr, "Programming error: tools_sync_script () called with %d\n", type);
@@ -594,7 +594,7 @@ do_command_on_entries (const gchar *command, const gchar *what,
  */
 void tools_play_tracks (GList *selected_tracks)
 {
-    do_command_on_entries (prefs_get_play_now_path (),
+    do_command_on_entries (prefs_get_toolpath (PATH_PLAY_NOW),
 			   _("Play Now"),
 			   selected_tracks);
 }
@@ -605,7 +605,7 @@ void tools_play_tracks (GList *selected_tracks)
  */
 void tools_enqueue_tracks (GList *selected_tracks)
 {
-    do_command_on_entries (prefs_get_play_enqueue_path (),
+    do_command_on_entries (prefs_get_toolpath (PATH_PLAY_ENQUEUE),
 			   _("Enqueue"),
 			   selected_tracks);
 }

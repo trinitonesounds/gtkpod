@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-03-23 22:48:50 JST jcs>
+/* Time-stamp: <2004-06-27 16:56:39 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -29,6 +29,10 @@
 #define _GTKPOD_PREFS_WINDOW_H
 
 #include <gtk/gtk.h>
+#include "prefs.h"
+
+extern const gchar *path_button_names[];
+extern const gchar *path_entry_names[];
 
 void prefs_window_update_default_sizes (void);
 void prefs_window_block (void);
@@ -49,11 +53,6 @@ void prefs_window_set_block_display (gboolean val);
 void prefs_window_set_id3_write (gboolean val);
 void prefs_window_set_id3_write_id3v24 (gboolean val);
 void prefs_window_set_mount_point (const gchar *mp);
-void prefs_window_set_play_now_path (const gchar *path);
-void prefs_window_set_play_enqueue_path (const gchar *path);
-void prefs_window_set_mp3gain_path (const gchar *path);
-void prefs_window_set_sync_contacts_path (const gchar *path);
-void prefs_window_set_sync_calendar_path (const gchar *path);
 void prefs_window_set_time_format (const gchar *format);
 void prefs_window_set_keep_backups (gboolean active);
 void prefs_window_set_write_extended_info (gboolean active);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-13 21:21:32 JST jcs>
+/* Time-stamp: <2004-06-27 18:51:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -245,11 +245,23 @@ struct cfg *cfg_new(void)
     mycfg->sort_tab_num = 2;
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
-    mycfg->play_now_path = g_strdup ("xmms -p %s");
-    mycfg->play_enqueue_path = g_strdup ("xmms -e %s");
-    mycfg->mp3gain_path = g_strdup ("");
-    mycfg->sync_contacts_path = g_strdup ("");
-    mycfg->sync_calendar_path = g_strdup ("");
+    for (i=0; i<PATH_NUM; ++i)
+    {  /* the switch() will cause the compiler to complain if we
+	  forget to initialize one of the paths */
+	switch ((PathType)i)
+	{
+	case PATH_PLAY_NOW:
+	    mycfg->toolpath[i] = g_strdup ("xmms -p %s"); break;
+	case PATH_PLAY_ENQUEUE:
+	    mycfg->toolpath[i] = g_strdup ("xmms -e %s"); break;
+	case PATH_MP3GAIN:
+	case PATH_SYNC_CONTACTS:
+	case PATH_SYNC_CALENDAR:
+	    mycfg->toolpath[i] = g_strdup (""); break;
+	case PATH_NUM:
+	    break;
+	}
+    }
     mycfg->time_format = g_strdup ("%k:%M %d %b %g");
     mycfg->export_template = g_strdup ("%o;%a - %t.mp3;%t.wav");
     mycfg->unused_gboolean3 = FALSE;
@@ -310,25 +322,22 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_ipod_mount (arg);
 	  }
+	  else if(g_ascii_strncasecmp (line, "toolpath", 8) == 0)
+	  {
+	      gint i = atoi (line+8);
+	      prefs_set_toolpath (i, arg);
+	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
 	  {
-	      prefs_set_play_now_path (arg);
+	      prefs_set_toolpath (PATH_PLAY_NOW, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_enqueue_path") == 0)
 	  {
-	      prefs_set_play_enqueue_path (arg);
+	      prefs_set_toolpath (PATH_PLAY_ENQUEUE, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "mp3gain_path") == 0)
 	  {
-	      prefs_set_mp3gain_path (arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "sync_contacts_path") == 0)
-	  {
-	      prefs_set_sync_contacts_path (arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "sync_calendar_path") == 0)
-	  {
-	      prefs_set_sync_calendar_path (arg);
+	      prefs_set_toolpath (PATH_MP3GAIN, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "time_format") == 0)
 	  {
@@ -924,11 +933,17 @@ write_prefs_to_file_desc(FILE *fp)
 
     fprintf(fp, "version=%s\n", VERSION);
     fprintf(fp, "mountpoint=%s\n", cfg->ipod_mount);
-    fprintf(fp, "play_now_path=%s\n", cfg->play_now_path);
-    fprintf(fp, "play_enqueue_path=%s\n", cfg->play_enqueue_path);
-    fprintf(fp, "mp3gain_path=%s\n", cfg->mp3gain_path);
-    fprintf(fp, "sync_contacts_path=%s\n", cfg->sync_contacts_path);
-    fprintf(fp, "sync_calendar_path=%s\n", cfg->sync_calendar_path);
+    for (i=0; i<PATH_NUM; ++i)
+    {
+	gchar *buf = g_strdup (path_entry_names[i]);
+	gchar *bufp = strrchr (buf, '_');
+	/* we cut off the "_entry" of the entry name, making it easier
+	   to read for humans */
+	if (bufp) *bufp = '\0';
+	fprintf (fp, ";%s\n", buf);
+	fprintf (fp, "toolpath%d=%s\n", i, cfg->toolpath[i]);
+	g_free (buf);
+    }
     fprintf(fp, "time_format=%s\n", cfg->time_format);
     fprintf(fp, "export_template=%s\n", cfg->export_template);
     if (cfg->charset)
@@ -1087,15 +1102,14 @@ void cfg_free(struct cfg *c)
 {
     if(c)
     {
+      gint i;
+
       g_free (c->ipod_mount);
       g_free (c->charset);
       g_free (c->last_dir.browse);
       g_free (c->last_dir.export);
-      g_free (c->play_now_path);
-      g_free (c->play_enqueue_path);
-      g_free (c->mp3gain_path);
-      g_free (c->sync_contacts_path);
-      g_free (c->sync_calendar_path);
+      for (i=0; i<PATH_NUM; ++i)
+	  g_free (c->toolpath[i]);
       g_free (c->time_format);
       g_free (c->export_template);
       g_free (c);
@@ -1321,6 +1335,8 @@ struct cfg *clone_prefs(void)
 
     if(cfg)
     {
+	gint i;
+
 	result = g_memdup (cfg, sizeof (struct cfg));
 	if (cfg->ipod_mount)
 	    result->ipod_mount = g_strdup(cfg->ipod_mount);
@@ -1332,16 +1348,8 @@ struct cfg *clone_prefs(void)
 	    result->last_dir.browse = g_strdup(cfg->last_dir.browse);
 	if(cfg->last_dir.export)
 	    result->last_dir.export = g_strdup(cfg->last_dir.export);
-	if(cfg->play_now_path)
-	    result->play_now_path = g_strdup(cfg->play_now_path);
-	if(cfg->play_enqueue_path)
-	    result->play_enqueue_path = g_strdup(cfg->play_enqueue_path);
-	if(cfg->mp3gain_path)
-	    result->mp3gain_path = g_strdup(cfg->mp3gain_path);
-	if(cfg->sync_contacts_path)
-	    result->sync_contacts_path = g_strdup(cfg->sync_contacts_path);
-	if(cfg->sync_calendar_path)
-	    result->sync_calendar_path = g_strdup(cfg->sync_calendar_path);
+	for (i=0; i<PATH_NUM; ++i)
+	    if (cfg->toolpath[i])  result->toolpath[i] = g_strdup (cfg->toolpath[i]);
 	if(cfg->time_format)
 	    result->time_format = g_strdup(cfg->time_format);
 	if (cfg->export_template)
@@ -2036,45 +2044,43 @@ void prefs_set_last_prefs_page (gint i)
 
 /* validate the the play_path @path and return a valid copy that has
  * to be freed with g_free when it's not needed any more. */
-/* Rules: - only one '%'
-	  - must be '%s'
+/* Rules: - must be '%(member of allowed)'
 	  - removes all invalid '%' */
-gchar *prefs_validate_play_path (const gchar *path)
+gchar *prefs_validate_path (const gchar *path, const gchar *allowed)
 {
     const gchar *pp;
     gchar *npp, *npath=NULL;
-    gint num;
 
     if ((!path) || (strlen (path) == 0)) return g_strdup ("");
+    if (!allowed)  allowed = "";
 
     npath = g_malloc0 (strlen (path)+1); /* new path can only be shorter
 					    than old path */
     pp = path;
     npp = npath;
-    num = 0; /* number of '%' */
     while (*pp)
     {
 	if (*pp == '%')
 	{
-	    if (num != 0)
+	    if (*(pp+1) && strchr (allowed, *(pp+1)) == NULL)
 	    {
-		gtkpod_warning (_("'%s': only one '%%s' allowed.\n"), path);
-		++pp; /* skip '%.' */
-	    }
-	    else
-	    {
-		if (*(pp+1) != 's')
+		if (strlen (allowed) == 0)
 		{
-		    gtkpod_warning (_("'%s': only one '%%s' allowed.\n"), path);
-		    ++pp; /* skip '%s' */
+		    gtkpod_warning (_("'%s': no arguments (%%...) allowed.\n"),
+				    path);
 		}
 		else
-		{   /* copy '%s' */
-		    *npp++ = *pp++;
-		    *npp++ = *pp;
+		{
+		    gtkpod_warning (_("'%s': only '%%[%s]' allowed.\n"),
+				    path, allowed);
 		}
+		++pp; /* skip '%...' */
 	    }
-	    ++num;
+	    else
+	    {   /* copy '%s' */
+		*npp++ = *pp++;
+		*npp++ = *pp;
+	    }
 	}
 	else
 	{
@@ -2086,80 +2092,37 @@ gchar *prefs_validate_play_path (const gchar *path)
 }
 
 
-void prefs_set_play_now_path (const gchar *path)
+void prefs_set_toolpath (PathType i, const gchar *path)
 {
-    C_FREE (cfg->play_now_path);
-    cfg->play_now_path = prefs_validate_play_path (path);
-}
-
-const gchar *prefs_get_play_now_path (void)
-{
-    return cfg->play_now_path;
-}
-
-void prefs_set_play_enqueue_path (const gchar *path)
-{
-    C_FREE (cfg->play_enqueue_path);
-    cfg->play_enqueue_path = prefs_validate_play_path (path);
-}
-
-const gchar *prefs_get_play_enqueue_path (void)
-{
-    return cfg->play_enqueue_path;
-}
-
-void prefs_set_mp3gain_path (const gchar *path)
-{
-    C_FREE (cfg->mp3gain_path);
-    if (path)
+    switch (i)
     {
-	cfg->mp3gain_path = g_strstrip (g_strdup (path));
-    }
-    else
-    {
-	cfg->mp3gain_path = g_strdup ("");
+    case PATH_PLAY_NOW:
+    case PATH_PLAY_ENQUEUE:
+	g_free (cfg->toolpath[i]);
+	cfg->toolpath[i] = prefs_validate_path (path, "s");
+	break;
+    case PATH_MP3GAIN:
+	g_free (cfg->toolpath[i]);
+	if (path)
+	    cfg->toolpath[i] = g_strstrip (g_strdup (path));
+	else
+	    cfg->toolpath[i] = g_strdup ("");
+	break;
+    case PATH_SYNC_CONTACTS:
+    case PATH_SYNC_CALENDAR:
+	g_free (cfg->toolpath[i]);
+	cfg->toolpath[i] = prefs_validate_path (path, "i");
+	break;
+    case PATH_NUM:
+	break;
     }
 }
 
-const gchar *prefs_get_mp3gain_path (void)
-{
-    return cfg->mp3gain_path;
-}
 
-void prefs_set_sync_contacts_path (const gchar *path)
+const gchar *prefs_get_toolpath (PathType i)
 {
-    C_FREE (cfg->sync_contacts_path);
-    if (path)
-    {
-	cfg->sync_contacts_path = g_strstrip (g_strdup (path));
-    }
-    else
-    {
-	cfg->sync_contacts_path = g_strdup ("");
-    }
-}
-
-const gchar *prefs_get_sync_contacts_path (void)
-{
-    return cfg->sync_contacts_path;
-}
-
-void prefs_set_sync_calendar_path (const gchar *path)
-{
-    C_FREE (cfg->sync_calendar_path);
-    if (path)
-    {
-	cfg->sync_calendar_path = g_strstrip (g_strdup (path));
-    }
-    else
-    {
-	cfg->sync_calendar_path = g_strdup ("");
-    }
-}
-
-const gchar *prefs_get_sync_calendar_path (void)
-{
-    return cfg->sync_calendar_path;
+    g_return_val_if_fail (i>=0 && i<PATH_NUM, "");
+    return cfg->toolpath[i];
 }
 
 void prefs_set_time_format (const gchar *format)

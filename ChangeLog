@@ -17,6 +17,9 @@ gtkpod V0.73-CVS
 	conversion factor between LAME's replay gain and the iPod's volume
 	tag are not well known yet -- your input is appreciated!
 
+	IMPROVEMENT: Added file selectors for selecting files in the tools
+	section of the preferences dialog.
+
 	IMPROVEMENT: Added new auto-playlists: "One playlist for each
 	year" and "Playlist with all songs not listed in any playlist".
 

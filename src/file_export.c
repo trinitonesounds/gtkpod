@@ -263,8 +263,6 @@ track_get_export_filename (Track *track)
 	    {
 		gchar *tmpcp = g_strdup (tmp);
 		if(prefs_get_fix_path())   fix_path (tmpcp);
-		g_strstrip (tmpcp); /* strip spaces around to
-				       avoid problems with vfat */
 		result = g_string_append (result, tmpcp);
 		tmp = NULL;
 		g_free (tmpcp);
@@ -276,6 +274,8 @@ track_get_export_filename (Track *track)
     }
     /* get the utf8 version of the filename */
     res_utf8 = g_string_free (result, FALSE);
+    /* strip spaces at beginning and end to avoid problems with vfat */
+    res_utf8 = g_strstrip (res_utf8);
     /* convert it to the charset */
     if (prefs_get_special_export_charset ())
     {   /* use the specified charset */

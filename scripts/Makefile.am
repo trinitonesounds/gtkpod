@@ -2,4 +2,8 @@
 
 scriptdir = $(pkgdatadir)/scripts
 
-script_SCRIPTS = kaddressbook_ipod.sh
+script_SCRIPTS = \
+	kaddressbook_ipod.sh \
+	sync-korganizer.sh \
+	sync-kaddressbook.sh
+

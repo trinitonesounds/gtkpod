@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2004-06-11 20:44:44 JST jcs>
+|  Time-stamp: <2004-06-27 23:09:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -70,7 +70,7 @@ void open_about_window ()
   {
       gchar *text[] = {_("\
 (C) 2002 - 2003\n\
-Jörg Schuler (jcsjcs at users dot sourceforge dot net)\n\
+Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n\
 Corey Donohoe (atmos at atmos dot org)\n\
 \n\
 \n"),
@@ -108,20 +108,18 @@ Alex Tribble: iPod eject patch\n"),
 Yaroslav Halchenko: Orphaned and dangling tracks handling\n"),
 		       _("\
 Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"),
-		       "\n\n",
 		       _("\
 Ero Carrera: Filename validation and quick sync when copying tracks from the iPod\n"),
-		       "\n\n",
 		       _("\
 Jens Taprogge: Support for LAME's replay gain tag to normalize volume\n"),
-		       "\n\n",
 		       _("\
 Armando Atienza: Support with external playcounts\n"),
-		       "\n\n",
 		       _("\
 D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"),
 		       _("\
 Jim Hall: Decent INSTALL file\n"),
+		       _("\
+Juergen Helmers, Markus Gaugusch: Conversion scripts to sync calendar/contacts to the iPod\n"),  /* Jürgen! */
 		       "\n\n",
 		       _("\
 This program borrows code from the following projects:\n"),
@@ -150,7 +148,7 @@ The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"),
      gchar  *text[] = { _("\
 French:   David Le Brun (david at dyn-ns dot net)\n"),
 				     _("\
-German:   Jörg Schuler (jcsjcs at users dot sourceforge dot net)\n"),
+German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"),
 				     _("\
 Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot net)\n"),
 				     _("\
@@ -675,7 +673,8 @@ void call_script (gchar *script)
  * which - run the shell command which, useful for querying default values
  * for executable,
  * @name - the executable we're trying to find the path for
- * Returns the path to the executable, NULL on not found
+ * Returns the path to the executable, NULL on not found.
+ * Return value must be g_free'd when no longer used.
  */
 gchar*
 which(const gchar *exe)

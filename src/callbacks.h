@@ -1,4 +1,4 @@
-/* Time-stamp: <2004-06-13 21:58:57 JST jcs>
+/* Time-stamp: <2004-06-27 14:37:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -350,18 +350,6 @@ on_cfg_toolbar_style_icons_toggled     (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
-on_play_now_path_entry_changed         (GtkEditable     *editable,
-					gpointer         user_data);
-
-void
-on_play_enqueue_path_entry_changed     (GtkEditable     *editable,
-					gpointer         user_data);
-
-void
-on_mp3gain_entry_changed               (GtkEditable     *editable,
-					gpointer         user_data);
-
-void
 on_cfg_export_check_existing_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
@@ -705,14 +693,6 @@ on_parsetags_toggled                   (GtkToggleButton *togglebutton,
 
 void
 on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_sync_contacts_path_entry_changed    (GtkEditable     *editable,
-					gpointer         user_data);
-
-void
-on_sync_calendar_entry_changed         (GtkEditable     *editable,
 					gpointer         user_data);
 
 void
