@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-08-22 21:25:19 jcs>
+/* Time-stamp: <2003-09-27 01:41:48 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -364,7 +364,7 @@ void hash_songs(void)
    gchar *buf;
    Song *song, *oldsong;
 
-   if (!prefs_get_md5songs ()) return;
+   if (!prefs_get_md5tracks ()) return;
    ns = get_nr_of_songs ();
    if (ns == 0)                 return;
 

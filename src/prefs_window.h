@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 14:36:02 jcs>
+/* Time-stamp: <2003-09-27 01:39:01 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -38,7 +38,7 @@ void prefs_window_apply (void);
 void prefs_window_cancel (void);
 void prefs_window_create (void);
 void prefs_window_delete (void);
-void prefs_window_set_md5songs (gboolean val);
+void prefs_window_set_md5tracks (gboolean val);
 void prefs_window_set_update_existing (gboolean val);
 void prefs_window_set_block_display (gboolean val);
 void prefs_window_set_id3_write (gboolean val);

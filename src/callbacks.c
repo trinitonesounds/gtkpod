@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 14:40:12 jcs>
+/* Time-stamp: <2003-09-27 01:41:47 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -291,7 +291,7 @@ on_playlist_treeview_drag_data_received
 
 
 void
-on_song_treeview_drag_data_get         (GtkWidget       *widget,
+on_track_treeview_drag_data_get         (GtkWidget       *widget,
                                         GdkDragContext  *drag_context,
                                         GtkSelectionData *data,
                                         guint            info,
@@ -347,10 +347,10 @@ on_cfg_mount_point_changed             (GtkEditable     *editable,
 
 
 void
-on_cfg_md5songs_toggled                (GtkToggleButton *togglebutton,
+on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    prefs_window_set_md5songs(gtk_toggle_button_get_active(togglebutton));
+    prefs_window_set_md5tracks(gtk_toggle_button_get_active(togglebutton));
 }
 
 
@@ -426,7 +426,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 
 
 gboolean
-on_song_treeview_key_release_event     (GtkWidget       *widget,
+on_track_treeview_key_release_event     (GtkWidget       *widget,
                                         GdkEventKey     *event,
                                         gpointer         user_data)
 {
@@ -531,7 +531,7 @@ on_import_button_clicked               (GtkButton       *button,
 
 
 void
-on_song_treeview_drag_data_received    (GtkWidget       *widget,
+on_track_treeview_drag_data_received    (GtkWidget       *widget,
                                         GdkDragContext  *drag_context,
                                         gint             x,
                                         gint             y,
@@ -591,7 +591,7 @@ on_charset_combo_entry_changed          (GtkEditable     *editable,
 }
 
 void
-on_delete_songs_activate               (GtkMenuItem     *menuitem,
+on_delete_tracks_activate               (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     delete_song_head ();
@@ -630,7 +630,7 @@ on_gtkpod_status_realize               (GtkWidget       *widget,
 
 
 void
-on_songs_statusbar_realize             (GtkWidget       *widget,
+on_tracks_statusbar_realize             (GtkWidget       *widget,
                                         gpointer         user_data)
 {
     gtkpod_songs_statusbar_init(widget);
@@ -764,7 +764,7 @@ on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
 }
 
 void
-on_update_songs_activate            (GtkMenuItem     *menuitem,
+on_update_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
     do_selected_songs (update_songids);
@@ -790,7 +790,7 @@ on_sync_tab_entry_activate        (GtkMenuItem     *menuitem,
 }
 
 void
-on_sync_songs_activate            (GtkMenuItem     *menuitem,
+on_sync_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data)
 {
     do_selected_songs (sync_songids);
@@ -806,7 +806,7 @@ on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
 }
 
 void
-on_save_song_order1_activate           (GtkMenuItem     *menuitem,
+on_save_track_order1_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     sm_rows_reordered ();
@@ -986,7 +986,7 @@ on_export_tab_entry_activate (GtkMenuItem     *menuitem,
 
 
 void
-on_export_songs_activate     (GtkMenuItem     *menuitem,
+on_export_tracks_activate     (GtkMenuItem     *menuitem,
 			      gpointer         user_data)
 {
     GList *songs = sm_get_selected_songs ();
@@ -1039,7 +1039,7 @@ on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
 
 
 void
-on_play_songs_activate                 (GtkMenuItem     *menuitem,
+on_play_tracks_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     GList *songs = sm_get_selected_songs ();
@@ -1090,7 +1090,7 @@ on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
 
 
 void
-on_enqueue_songs_activate              (GtkMenuItem     *menuitem,
+on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     GList *songs = sm_get_selected_songs ();
@@ -1347,14 +1347,14 @@ on_new_playlist1_activate              (GtkMenuItem     *menuitem,
 }
 
 void
-on_pl_containing_displayed_songs_activate (GtkMenuItem     *menuitem,
+on_pl_containing_displayed_tracks_activate (GtkMenuItem     *menuitem,
 					    gpointer         user_data)
 {
     generate_displayed_playlist ();
 }
 
 void
-on_pl_containing_selected_songs_activate (GtkMenuItem     *menuitem,
+on_pl_containing_selected_tracks_activate (GtkMenuItem     *menuitem,
 					    gpointer         user_data)
 {
     generate_selected_playlist ();
@@ -1390,7 +1390,7 @@ on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
 
 
 void
-on_add_most_played_songs__pl1_activate (GtkMenuItem     *menuitem,
+on_most_listened_tracks1_activate       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     most_listened_pl();
@@ -1398,15 +1398,7 @@ on_add_most_played_songs__pl1_activate (GtkMenuItem     *menuitem,
 
 
 void
-on_most_listened_songs1_activate       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    most_listened_pl();
-}
-
-
-void
-on_most_rated_songs_playlist_s1_activate
+on_most_rated_tracks_playlist_s1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -1415,7 +1407,7 @@ on_most_rated_songs_playlist_s1_activate
 
 
 void
-on_most_recent_played_songs_activate   (GtkMenuItem     *menuitem,
+on_most_recent_played_tracks_activate   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     last_listened_pl();
@@ -1438,38 +1430,20 @@ on_rebuild_ipod_db1_activate           (GtkMenuItem     *menuitem,
 
 
 void
-on_cfg_misc_song_nr_value_changed      (GtkSpinButton   *spinbutton,
+on_cfg_misc_track_nr_value_changed      (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
     prefs_window_set_misc_song_nr (gtk_spin_button_get_value (spinbutton));
 }
 
 void
-on_cfg_not_played_song_toggled         (GtkToggleButton *togglebutton,
+on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
     prefs_window_set_not_played_song (
 	gtk_toggle_button_get_active (togglebutton));
 }
 
-
-
-void
-on_normalize_all_the_ipod_s_songs1_activate
-                                        (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-   normalize_iPod_songs();
-}
-
-
-void
-on_normalize_the_newly_inserted_songs1_activate
-                                        (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-   normalize_new_songs(TRUE);
-}
 
 
 void
@@ -1660,4 +1634,77 @@ on_sort_window_delete_event            (GtkWidget       *widget,
 {
     sort_window_delete ();
     return FALSE;
+}
+
+void
+on_normalize_selected_playlist_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+    if (pl)
+	normalize_songs_list (pl->members);
+    else
+	gtkpod_statusbar_message (_("No playlist selected"));
+}
+
+
+void
+on_normalize_selected_tab_entry_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Normalize songs in selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    normalize_songs_list (entry->members);
+}
+
+
+void
+on_normalize_selected_tracks_activate   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+   GList *songs = sm_get_selected_songs ();
+   normalize_songs_list (songs);
+   g_list_free (songs);
+}
+
+
+void
+on_normalize_displayed_tracks_activate  (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    GList *songs = sm_get_all_songs ();
+    normalize_songs_list (songs);
+    g_list_free (songs);
+}
+
+
+void
+on_normalize_all_tracks                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    Playlist *plitem = get_playlist_by_nr (0);
+    normalize_songs_list (plitem->members);
+}
+
+
+void
+on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    normalize_new_songs ();
 }

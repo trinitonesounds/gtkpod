@@ -80,7 +80,7 @@ main (int argc, char *argv[])
   gtkpod_confirmation (CONF_ID_GTKPOD_WARNING,    /* gint id, */
 		       FALSE,                     /* gboolean modal, */
 		       _("Warning"),              /* title */
-		       "Due to transition to libmad, charset support for reading/writing ID3 tags is temporarily broken in this CVS release (only US-ASCII will work). Please use the official release (0.52) or a CVS release before 9/25 if you need charset support.",
+		       "Due to transition to libmad, charset support for reading/writing ID3 tags is temporarily broken in this CVS version (only US-ASCII will work). Please use the official release (0.52) or a CVS snapshot before 9/25 if you need charset support.",
 		       NULL,                /* text to be displayed */
 		       NULL, 0, NULL,       /* option 1 */
 		       NULL, 0, NULL,       /* option 2 */

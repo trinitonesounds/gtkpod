@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 14:39:47 jcs>
+/* Time-stamp: <2003-09-26 23:37:04 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2466,6 +2466,33 @@ Playlist *generate_new_playlist (GList *songs)
     return generate_playlist_with_name (songs, _("New Playlist"));
 }
 
+/* look at the add_ranked_playlist help:
+ * BEWARE this function shouldn't be used*/
+static GList *create_ranked_glist(gint songs_nr,PL_InsertFunc insertfunc,
+                                  GCompareFunc comparefunc)
+{
+   GList *songs=NULL;
+   gint f=0;
+   gint i=0;
+   Song *song=NULL;
+  
+   while ((song=get_next_song(i)))
+   {
+      i=1; /* for get_next_song() */
+      if (song && (!insertfunc || insertfunc (song)))
+      {
+         songs = g_list_insert_sorted (songs, song, comparefunc);
+         ++f;
+         if (songs_nr && (f>songs_nr))
+         {   /*cut the tail*/
+            songs = g_list_remove(songs,
+                   g_list_nth_data(songs, songs_nr));
+            --f;
+         }
+      }
+   }
+   return songs;
+}
 /* Generate a new playlist named @pl_name, containing @songs_nr songs.
  *
  * @insertfunc: determines which songs to enter into the new playlist.
@@ -2479,27 +2506,10 @@ static Playlist *add_ranked_playlist(gchar *pl_name, gint songs_nr,
 				     PL_InsertFunc insertfunc,
 				     GCompareFunc comparefunc)
 {
-    GList *songs = NULL;
     Playlist *result = NULL;
-    gint f=0;
-    gint i=0;
-    Song *song;
-
-    while ((song=get_next_song(i)))
-    {
-	i=1; /* for get_next_song() */
-	if (song && (!insertfunc || insertfunc (song)))
-	{
-	    songs = g_list_insert_sorted (songs, song, comparefunc);
-	    ++f;
-	    if (songs_nr && (f>songs_nr))
-	    {   /*cut the tail*/
-		songs = g_list_remove(songs,
-				      g_list_nth_data(songs, songs_nr));
-		--f;
-	    }
-	}
-    }
+    GList *songs = create_ranked_glist(songs_nr,insertfunc,comparefunc);
+    gint f;
+    f=g_list_length(songs);
 
     if (f != 0)
     /* else generate_playlist_with_name prints something*/
@@ -2694,3 +2704,202 @@ void since_last_pl(void)
 			    since_last_IF, since_last_CF);
 }
 
+static gint relative_path_CF (gconstpointer aa, gconstpointer bb)
+{
+   gint result = 0;
+   const Song *a = aa;
+   const Song *b = bb;
+
+   if (a && b)
+   {
+      result=strcmp(b->ipod_path,a->ipod_path);
+   }
+   return result;
+}
+
+/* a function to recover the itunesdb from an 
+ * inconsistent state (if some file get lost or
+ * there are some not more existent files in the
+ * iTunesDB)*/
+void recover_db(void)
+{
+/*BEWARE can broke the iTunesDB if it's run BEFORE uploading the iTunesdb*/
+/*this function can be divided in several section
+ * every section is independent (can be placed in a
+ * separate function). there is only one common value
+ * */
+   /* THE COMMON VALUE*/
+   gboolean changed=FALSE; /*ths iTunesDB has been changed?*/
+   
+/********************************
+ * DELETE DEAD FILES's SECTION
+ ********************************/
+   Song *song=NULL;
+   gchar *pathsong=NULL;
+   GList *ghost_songs=NULL;
+   gint g=0;
+   while((song=get_next_song(g)))
+   {
+      g=1;
+      pathsong=get_track_name_on_ipod(song);
+      if(!g_file_test(pathsong,G_FILE_TEST_IS_REGULAR))
+      {
+         ghost_songs=g_list_append(ghost_songs,song);
+         changed=TRUE;
+      }
+   }
+
+   /*take care of this "ghost" songs*/
+   if(g_list_length(ghost_songs)!=0)
+   {
+      delete_song_ok(NULL,ghost_songs); /*NULL== erase from MPL*/
+   }
+   /*free everything*/
+   g_free(pathsong);
+   free_song(song);
+   song=NULL;
+   g_list_free(ghost_songs);
+   ghost_songs=NULL;
+
+
+}void iani(void){gboolean changed=FALSE;
+   
+/**************************
+ * ORPHANED FILES's SECTION
+ **************************/
+   Song *ipod_song=NULL; /*an existing non lost song*/
+   gchar *ipod_filename=NULL; /*the ipod's song filename 
+      * this file exists but we don't know if it has an iTunesDB entry*/
+   gchar *ipod_validfile=NULL; /*not lost file */
+   
+   Song *lost_song=NULL; /*an existing song that has no entry in the iTunesDB*/
+   gchar *lostfile_fullpath=NULL; /*the lost song's fullpath*/
+   gboolean found;
+   gchar *ipod_dir = NULL;
+   GDir *dir_des;
+
+#if 0 /*read the TODO below*/
+   gboolean ordered_exist=FALSE;
+   GList *ranked_list=NULL;
+   gint mean;
+   gint min,max;
+#endif
+
+   gint h;
+   gboolean lost_pl_exist=FALSE;
+   gchar *mp=g_strdup(prefs_get_ipod_mount());
+   Playlist *lost_pl=NULL; /*a pl containing all the losts songs*/
+
+   for(h=0;h<20;h++)
+   {
+      /*directory name*/
+      ipod_dir=g_strdup_printf("%s/iPod_Control/Music/F%02d",mp, h);
+      dir_des=g_dir_open(ipod_dir,0,NULL);
+      /*this shouldn't happend, but you never know */
+      if(dir_des!=NULL){
+      while((ipod_filename=g_strdup(g_dir_read_name(dir_des))))/*we have a file in the directory*/
+      {
+         lostfile_fullpath=g_strdup_printf("%s/%s",ipod_dir,ipod_filename);
+         /*<TODO>*/
+         /*FIXME:
+          * we can create a path ordered glist 
+          * containing all the songs in the iTunesDB
+          * and search the possibly lost files
+          * in this list using a much less
+          * expensive algoritm
+          *     TODO:
+          *     check the strcmp
+          *     investigate the SEGFAULT
+          */
+#if 0
+         if(!ordered_exist)
+         {
+            ordered_exist=TRUE;
+            ranked_list=create_ranked_glist(0,NULL,relative_path_CF); /*SEGFAULT!!!*/
+         }
+         found=FALSE;
+         
+         min=0;
+         /*if "max=1" while doesn't start but we need lost_song*/
+         lost_song=g_list_nth_data(ranked_list,min);
+         max=g_list_length(ranked_list)-1;
+         while (min<max)
+         {
+            mean = (min+max)/2;
+            lost_song=g_list_nth_data(ranked_list,mean);
+            /*work?*/
+            if (strcmp(lostfile_fullpath,lost_song->ipod_path)>0)
+            {
+               min = mean+1;
+            }
+            else
+            {
+               max = mean;
+            }
+         }
+         if (strcmp(lostfile_fullpath,lost_song->ipod_path)!=0)
+         {
+            free_song(lost_song);
+            lost_song = NULL;
+            found=FALSE;
+         }
+         else
+         {
+            found=TRUE;
+         }
+#else         
+         found=FALSE;
+         ipod_song=get_next_song(0);
+         while(!found&&ipod_song!=NULL)
+         {
+            ipod_validfile=get_track_name_on_ipod(ipod_song);
+            if(strcmp(ipod_validfile,lostfile_fullpath)==0)
+            {
+               found=TRUE;
+            }
+            else
+            {
+               ipod_song=get_next_song(1);
+            }
+         /*</TODO>*/
+         } /*end of while(!found&&song!=NULL)*/
+#endif
+         if(!found)/*it's a lost song, add it in the iTunesDB*/
+         {
+            if(!lost_pl_exist) /*create a lost files' pl*/
+            {
+               lost_pl=add_new_playlist(g_strdup(_("Lost songs")),-1);
+               lost_pl_exist=TRUE;
+            }
+            /*add an iTunesDB entry to the iTunesDB and to the lost_pl*/
+            lost_song=get_song_info_from_file (lostfile_fullpath,lost_song);
+            add_song_to_playlist(NULL,lost_song,TRUE); /*MPL*/
+            add_song_to_playlist(lost_pl,lost_song,TRUE); /*lost_pl*/
+            changed=TRUE;
+         }
+      } /*end of while(filename!=NULL)*/
+      g_dir_close(dir_des);
+      }/*if*/
+   }/*end for*/
+
+   g_free(lostfile_fullpath);
+   g_free(ipod_filename);
+   g_free(ipod_dir);
+   free_song(ipod_song);
+   ipod_song=NULL;
+   free_song(lost_song);
+   lost_song=NULL;
+   free_playlist(lost_pl); /*a pl containing all the losts songs*/
+   g_free(ipod_validfile);
+   g_free(mp);
+   
+   //GDir *dir_des;
+   //Song *ipod_song=NULL; /*an existing non lost song*/
+
+/***************************
+ * NEWS TO THE WORLD SECTION
+ ***************************/
+   if(changed)
+      data_changed();
+
+}

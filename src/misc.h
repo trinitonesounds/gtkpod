@@ -134,5 +134,6 @@ void last_listened_pl(void);
 void most_rated_pl(void);
 void since_last_pl(void);
 void rebuild_iTunesDB(void);
+void recover_db(void);
 gchar *which(const gchar *exe);
 #endif

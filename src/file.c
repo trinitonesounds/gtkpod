@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-21 15:43:13 jcs>
+/* Time-stamp: <2003-09-27 01:41:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -377,7 +377,7 @@ static void update_charset_info (Song *song)
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists */ 
 /* turns NULL on error, a pointer to the Song otherwise */
-static Song *get_song_info_from_file (gchar *name, Song *or_song)
+Song *get_song_info_from_file (gchar *name, Song *or_song)
 {
     Song *song = NULL;
     File_Tag filetag;
@@ -1680,15 +1680,15 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 void handle_import (void)
 {
     gchar *name1, *name2, *cfgdir;
-    gboolean success, md5songs;
+    gboolean success, md5tracks;
     guint32 n;
 
 
     /* we should switch off duplicate detection during import --
      * otherwise we mess up the playlists */
 
-    md5songs = prefs_get_md5songs ();
-    prefs_set_md5songs (FALSE);
+    md5tracks = prefs_get_md5tracks ();
+    prefs_set_md5tracks (FALSE);
 
     n = get_nr_of_songs (); /* how many songs are alread there? */
 
@@ -1756,7 +1756,7 @@ void handle_import (void)
     }
     /* reset duplicate detection -- this will also detect and correct
      * all duplicate songs currently in the database */
-    prefs_set_md5songs (md5songs);
+    prefs_set_md5tracks (md5tracks);
     release_widgets ();
 }
 

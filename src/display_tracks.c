@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 15:37:08 jcs>
+/* Time-stamp: <2003-09-27 01:42:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1133,7 +1133,7 @@ sm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 void sm_create_treeview (void)
 {
   GtkTreeModel *model = NULL;
-  GtkWidget *song_window = lookup_widget (gtkpod_window, "song_window");
+  GtkWidget *track_window = lookup_widget (gtkpod_window, "track_window");
   GtkWidget *stv = gtk_tree_view_new ();
 
   /* create tree view */
@@ -1145,7 +1145,7 @@ void sm_create_treeview (void)
   }
   song_treeview = GTK_TREE_VIEW (stv);
   gtk_widget_show (stv);
-  gtk_container_add (GTK_CONTAINER (song_window), stv);
+  gtk_container_add (GTK_CONTAINER (track_window), stv);
   /* create model */
   model = GTK_TREE_MODEL (
       gtk_list_store_new (SM_NUM_COLUMNS, G_TYPE_POINTER,
@@ -1178,13 +1178,13 @@ void sm_create_treeview (void)
 						      TGNR (sm_drop_types)));
 
   g_signal_connect ((gpointer) stv, "drag_data_get",
-		    G_CALLBACK (on_song_treeview_drag_data_get),
+		    G_CALLBACK (on_track_treeview_drag_data_get),
 		    NULL);
   g_signal_connect_after ((gpointer) stv, "key_release_event",
-			  G_CALLBACK (on_song_treeview_key_release_event),
+			  G_CALLBACK (on_track_treeview_key_release_event),
 			  NULL);
   g_signal_connect ((gpointer) stv, "drag_data_received",
-		    G_CALLBACK (on_song_treeview_drag_data_received),
+		    G_CALLBACK (on_track_treeview_drag_data_received),
 		    NULL);
   g_signal_connect ((gpointer) song_treeview, "button-press-event",
 		    G_CALLBACK (sm_button_press_event),

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-02 22:58:15 jcs>
+/* Time-stamp: <2003-09-27 01:10:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,8 +38,7 @@
 
 #define SONGGAINERROR -200
 
-void normalize_iPod_songs(void);
-void normalize_new_songs(gboolean zero_gain);
-void normalize_songs_list(GList *list);
-gint get_song_gain(Song *song);
+void normalize_new_songs (void);
+void normalize_songs_list (GList *list);
+gint normalize_get_gain (Song *song);
 #endif

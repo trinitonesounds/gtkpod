@@ -225,7 +225,7 @@ md5_song_exists_insert(Song * s)
    gchar *val = NULL;
    Song *song = NULL;
 
-   if (prefs_get_md5songs ())
+   if (prefs_get_md5tracks ())
    {
        if (filehash == NULL)
        {
@@ -261,7 +261,7 @@ md5_song_exists(Song * s)
 {
    Song *song = NULL;
 
-   if (prefs_get_md5songs() && filehash)
+   if (prefs_get_md5tracks() && filehash)
    {
        gchar *val = md5_hash_song(s);
        if (val != NULL)
@@ -283,7 +283,7 @@ md5_song_removed(Song * s)
     gchar *val = NULL;
     Song *song = NULL;
 
-    if ((prefs_get_md5songs ()) && (filehash) && (s) && (val = md5_hash_song(s)))
+    if ((prefs_get_md5tracks ()) && (filehash) && (s) && (val = md5_hash_song(s)))
     {
 	if ((song = g_hash_table_lookup(filehash, val)))
 	{

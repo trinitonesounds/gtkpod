@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 15:49:17 jcs>
+/* Time-stamp: <2003-09-27 01:39:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -110,7 +110,7 @@ enum {
   GP_HELP,
   GP_MOUNT,
   GP_ID3_WRITE,
-  GP_MD5SONGS,
+  GP_MD5TRACKS,
   GP_AUTO,
   GP_OFFLINE
 };
@@ -166,7 +166,7 @@ struct cfg *cfg_new(void)
     mycfg->deletion.playlist = TRUE;
     mycfg->deletion.ipod_file = TRUE;
     mycfg->deletion.syncing = TRUE;
-    mycfg->md5songs = FALSE;
+    mycfg->md5tracks = FALSE;
     mycfg->update_existing = FALSE;
     mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
@@ -325,7 +325,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
 	  {
-	      prefs_set_md5songs((gboolean)atoi(arg));
+	      prefs_set_md5tracks((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "update_existing") == 0)
 	  {
@@ -733,8 +733,8 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       { "mountpoint",  required_argument,	NULL, GP_MOUNT },
       { "w",           no_argument,	NULL, GP_ID3_WRITE },
       { "id3_write",   no_argument,	NULL, GP_ID3_WRITE },
-      { "c",           no_argument,	NULL, GP_MD5SONGS },
-      { "md5",	       no_argument,	NULL, GP_MD5SONGS },
+      { "c",           no_argument,	NULL, GP_MD5TRACKS },
+      { "md5",	       no_argument,	NULL, GP_MD5TRACKS },
       { "o",           no_argument,	NULL, GP_OFFLINE },
       { "offline",     no_argument,	NULL, GP_OFFLINE },
       { "a",           no_argument,	NULL, GP_AUTO },
@@ -761,8 +761,8 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       case GP_ID3_WRITE:
 	cfg->id3_write = TRUE;
 	break;
-      case GP_MD5SONGS:
-	cfg->md5songs = TRUE;
+      case GP_MD5TRACKS:
+	cfg->md5tracks = TRUE;
 	break;
       case GP_AUTO:
 	cfg->autoimport = TRUE;
@@ -809,7 +809,7 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "id3=%d\n", prefs_get_id3_write ());
     fprintf(fp, "id3_all=%d\n", prefs_get_id3_writeall ());
-    fprintf(fp, "md5=%d\n",prefs_get_md5songs ());
+    fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "update_existing=%d\n",prefs_get_update_existing ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, _("# delete confirmation\n"));
@@ -1031,24 +1031,24 @@ void prefs_set_mount_point(const gchar *mp)
 
 /* If the status of md5 hash flag changes, free or re-init the md5
    hash table */
-void prefs_set_md5songs(gboolean active)
+void prefs_set_md5tracks(gboolean active)
 {
-    if (cfg->md5songs && !active)
+    if (cfg->md5tracks && !active)
     { /* md5 checksums have been turned off */
-	cfg->md5songs = active;
+	cfg->md5tracks = active;
 	md5_unique_file_free ();
     }
-    if (!cfg->md5songs && active)
+    if (!cfg->md5tracks && active)
     { /* md5 checksums have been turned on */
-	cfg->md5songs = active; /* must be set before calling
+	cfg->md5tracks = active; /* must be set before calling
 				   hash_songs() */
 	hash_songs ();
     }
 }
 
-gboolean prefs_get_md5songs(void)
+gboolean prefs_get_md5tracks(void)
 {
-    return cfg->md5songs;
+    return cfg->md5tracks;
 }
 
 void prefs_set_update_existing(gboolean active)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 16:03:08 jcs>
+/* Time-stamp: <2003-09-27 01:39:01 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -194,10 +194,10 @@ prefs_window_create(void)
 	{
 	    charset_init_combo (GTK_COMBO (w));
 	}
-	if((w = lookup_widget(prefs_window, "cfg_md5songs")))
+	if((w = lookup_widget(prefs_window, "cfg_md5tracks")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpcfg->md5songs);
+					 tmpcfg->md5tracks);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_update_existing")))
 	{
@@ -208,7 +208,7 @@ prefs_window_create(void)
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_duplicates);
-	    if (!tmpcfg->md5songs) gtk_widget_set_sensitive (w, FALSE);
+	    if (!tmpcfg->md5tracks) gtk_widget_set_sensitive (w, FALSE);
 	}
 	if((w = lookup_widget(prefs_window, "cfg_show_updated")))
 	{
@@ -270,7 +270,7 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->multi_edit);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_not_played_song")))
+	if((w = lookup_widget(prefs_window, "cfg_not_played_track")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->not_played_song);
@@ -508,10 +508,10 @@ prefs_window_set(void)
 	prefs_set_keep_backups(tmpcfg->keep_backups);
 	/* we delete all stored md5 checksums if the md5 checksumming got
 	   disabled */
-	if (prefs_get_md5songs() && !tmpcfg->md5songs)
+	if (prefs_get_md5tracks() && !tmpcfg->md5tracks)
 	    clear_md5_hash_from_songs ();
 	/* this call well automatically destroy/setup the md5 hash table */
-	prefs_set_md5songs(tmpcfg->md5songs);
+	prefs_set_md5tracks(tmpcfg->md5tracks);
 	prefs_set_update_existing(tmpcfg->update_existing);
 	prefs_set_block_display(tmpcfg->block_display);
 	prefs_set_sort_tab_num(tmpcfg->sort_tab_num, TRUE);
@@ -673,16 +673,16 @@ prefs_window_apply (void)
 
 
 /**
- * prefs_window_set_md5songs
+ * prefs_window_set_md5tracks
  * @val - truth value of whether or not we should use the md5 hash to
  * prevent file duplication. changes temp variable 
  */
 void
-prefs_window_set_md5songs(gboolean val)
+prefs_window_set_md5tracks(gboolean val)
 {
     GtkWidget *w;
 
-    tmpcfg->md5songs = val;
+    tmpcfg->md5tracks = val;
     if((w = lookup_widget(prefs_window, "cfg_show_duplicates")))
 	gtk_widget_set_sensitive (w, val);
 }

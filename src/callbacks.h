@@ -1,4 +1,4 @@
-/* Time-stamp: <2003-09-23 12:09:39 jcs>
+/* Time-stamp: <2003-09-27 01:39:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -111,7 +111,7 @@ on_playlist_treeview_drag_data_received
                                         gpointer         user_data);
 
 void
-on_song_treeview_drag_data_get         (GtkWidget       *widget,
+on_track_treeview_drag_data_get         (GtkWidget       *widget,
                                         GdkDragContext  *drag_context,
                                         GtkSelectionData *data,
                                         guint            info,
@@ -128,7 +128,7 @@ on_cfg_mount_point_changed             (GtkEditable     *editable,
                                         gpointer         user_data);
 
 void
-on_cfg_md5songs_toggled                (GtkToggleButton *togglebutton,
+on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
@@ -158,7 +158,7 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
                                         gpointer         user_data);
 
 gboolean
-on_song_treeview_key_release_event     (GtkWidget       *widget,
+on_track_treeview_key_release_event     (GtkWidget       *widget,
                                         GdkEventKey     *event,
                                         gpointer         user_data);
 
@@ -200,7 +200,7 @@ on_import_button_clicked               (GtkButton       *button,
                                         gpointer         user_data);
 
 void
-on_song_treeview_drag_data_received    (GtkWidget       *widget,
+on_track_treeview_drag_data_received    (GtkWidget       *widget,
                                         GdkDragContext  *drag_context,
                                         gint             x,
                                         gint             y,
@@ -213,7 +213,7 @@ on_charset_combo_entry_changed         (GtkEditable     *editable,
                                         gpointer         user_data);
 
 void
-on_delete_songs_activate                    (GtkMenuItem     *menuitem,
+on_delete_tracks_activate                    (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -229,7 +229,7 @@ on_gtkpod_status_realize               (GtkWidget       *widget,
                                         gpointer         user_data);
 
 void
-on_songs_statusbar_realize             (GtkWidget       *widget,
+on_tracks_statusbar_realize             (GtkWidget       *widget,
                                         gpointer         user_data);
 
 void
@@ -278,7 +278,7 @@ on_update_tab_entry_activate                  (GtkMenuItem     *menuitem,
 					       gpointer         user_data);
 
 void
-on_update_songs_activate            (GtkMenuItem     *menuitem,
+on_update_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data);
 
 void
@@ -290,7 +290,7 @@ on_sync_tab_entry_activate                  (GtkMenuItem     *menuitem,
 					       gpointer         user_data);
 
 void
-on_sync_songs_activate            (GtkMenuItem     *menuitem,
+on_sync_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data);
 
 void
@@ -298,7 +298,7 @@ on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_save_song_order1_activate           (GtkMenuItem     *menuitem,
+on_save_track_order1_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -374,7 +374,7 @@ on_export_tab_entry_activate (GtkMenuItem     *menuitem,
 			      gpointer         user_data);
 
 void
-on_export_songs_activate     (GtkMenuItem     *menuitem,
+on_export_tracks_activate     (GtkMenuItem     *menuitem,
 			      gpointer         user_data);
 
 void
@@ -386,7 +386,7 @@ on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_play_songs_activate                 (GtkMenuItem     *menuitem,
+on_play_tracks_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -398,7 +398,7 @@ on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_enqueue_songs_activate              (GtkMenuItem     *menuitem,
+on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -498,10 +498,10 @@ on_new_playlist1_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_pl_containing_displayed_songs_activate (GtkMenuItem     *menuitem,
+on_pl_containing_displayed_tracks_activate (GtkMenuItem     *menuitem,
 					   gpointer         user_data);
 void
-on_pl_containing_selected_songs_activate (GtkMenuItem     *menuitem,
+on_pl_containing_selected_tracks_activate (GtkMenuItem     *menuitem,
 					  gpointer         user_data);
 void
 on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
@@ -521,20 +521,16 @@ on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
 
 
 void
-on_add_most_played_songs__pl1_activate (GtkMenuItem     *menuitem,
+on_most_listened_tracks1_activate       (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_most_listened_songs1_activate       (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_most_rated_songs_playlist_s1_activate
+on_most_rated_tracks_playlist_s1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_most_recent_played_songs_activate   (GtkMenuItem     *menuitem,
+on_most_recent_played_tracks_activate   (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -542,25 +538,15 @@ on_rebuild_ipod_db1_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_cfg_misc_song_nr_value_changed      (GtkSpinButton   *spinbutton,
+on_cfg_misc_track_nr_value_changed      (GtkSpinButton   *spinbutton,
                                         gpointer         user_data);
 
 void
-on_cfg_not_played_song_toggled         (GtkToggleButton *togglebutton,
+on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
 on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_normalize_all_the_ipod_s_songs1_activate
-                                        (GtkMenuItem     *menuitem,
-                                        gpointer         user_data);
-
-void
-on_normalize_the_newly_inserted_songs1_activate
-                                        (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
@@ -651,3 +637,29 @@ void
 on_sm_autostore_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
+
+void
+on_normalize_selected_playlist_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_normalize_selected_tab_entry_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_normalize_selected_tracks_activate   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_normalize_displayed_tracks_activate  (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_normalize_all_tracks                (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
