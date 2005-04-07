@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-06 23:49:57 jcs>
+/* Time-stamp: <2005-04-07 21:31:38 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2616,7 +2616,7 @@ static gboolean wcontents_write (WContents *cts)
     g_assert (cts);
     g_assert (cts->filename);
 
-    fd = open (cts->filename, O_WRONLY|O_CREAT|O_TRUNC);
+    fd = creat (cts->filename, S_IRWXU|S_IRWXG|S_IRWXO);
 
     if (fd == -1)
     {

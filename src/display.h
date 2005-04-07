@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 20:58:38 jcs>
+/* Time-stamp: <2005-04-07 22:28:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -184,7 +184,7 @@ enum  {
 enum {
     DND_GTKPOD_TRACKLIST = 1000,
     DND_GTKPOD_TM_PATHLIST,
-    DND_GTKPOD_PM_PATHLIST,
+    DND_GTKPOD_PLAYLISTLIST,
     DND_TEXT_PLAIN
 };
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-06 23:40:22 jcs>
+/* Time-stamp: <2005-04-07 22:59:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1081,7 +1081,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
       if (n != 0)  display_disable_gtkpod_import_buttons();
       count = 0; /* tracks transferred */
       start = time (NULL);
-n = itdb_tracks_number_nontransferred (itdb);
+
       for (gl=itdb->tracks; gl && !abort; gl=gl->next)
       {
 	  track = gl->data;
@@ -1216,20 +1216,22 @@ gboolean gp_write_itdb (iTunesDB *itdb)
       }
       if (g_file_test (tunes, G_FILE_TEST_EXISTS))
       {
-	GtkWidget *dialog = gtk_message_dialog_new (
-	    GTK_WINDOW (gtkpod_window),
-	    GTK_DIALOG_DESTROY_WITH_PARENT,
-	    GTK_MESSAGE_WARNING,
-	    GTK_BUTTONS_OK_CANCEL,
-	    _("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before calling this function again.\n"));
-	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
-	gtk_widget_destroy (dialog);
-	if (result == GTK_RESPONSE_CANCEL)
-	{
-	    g_free (cfgdir);
-	    g_free (mp);
-	    return FALSE;
-	}
+	  gchar *str = g_strdup_printf (_("You did not import the existing iTunesDB ('%s'). This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before calling this function again.\n"), tunes);
+	  GtkWidget *dialog = gtk_message_dialog_new (
+	      GTK_WINDOW (gtkpod_window),
+	      GTK_DIALOG_DESTROY_WITH_PARENT,
+	      GTK_MESSAGE_WARNING,
+	      GTK_BUTTONS_OK_CANCEL,
+	      str);
+	  gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+	  gtk_widget_destroy (dialog);
+	  g_free (str);
+	  if (result == GTK_RESPONSE_CANCEL)
+	  {
+	      g_free (cfgdir);
+	      g_free (mp);
+	      return FALSE;
+	  }
       }
   }
 

@@ -52,13 +52,13 @@ static gboolean pm_selection_blocked = FALSE;
 
 /* Drag and drop definitions */
 static GtkTargetEntry pm_drag_types [] = {
-    { DND_GTKPOD_PM_PATHLIST_TYPE, 0, DND_GTKPOD_PM_PATHLIST },
+    { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST },
     { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 static GtkTargetEntry pm_drop_types [] = {
-    { DND_GTKPOD_PM_PATHLIST_TYPE, 0, DND_GTKPOD_PM_PATHLIST },
+    { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST },
     { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
@@ -73,6 +73,19 @@ GtkTreePath *pm_get_path (Playlist *pl);
 /* Section for playlist display                                     */
 /* drag and drop                                                    */
 /* ---------------------------------------------------------------- */
+
+
+/* ----------------------------------------------------------------
+ *
+ * For drag and drop within the playlist view the following rules apply:
+ *
+ * 1) Drags between different itdbs: playlists are copied (moved with
+ *    CTRL pressed)
+ *
+ * 2) Drags within the same itdb: playlist is moved (copied with CTRL
+ *    pressed)
+ *
+ * ---------------------------------------------------------------- */
 
 
 static void pm_drag_begin (GtkWidget *widget,
@@ -137,6 +150,8 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     GtkTreeViewDropPosition pos;
     gboolean result;
 
+    printf ("drag_motion: %d %d %d\n", x, y, pos);
+
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
 
     result = gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
@@ -144,87 +159,27 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 						&path,
 						&pos);
 
-    printf ("drag_motion: %d %d %d\n", x, y, pos);
-
     gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path, pos);
+
+    if (result == TRUE)
+    {
+	GdkAtom target;
+	target = gtk_drag_dest_find_target (widget, drag_context, NULL);
+	if (target == GDK_NONE)
+	{
+	    gdk_drag_status (drag_context, 0, time);
+	}
+	else 
+	{
+	    g_object_set_data (G_OBJECT (widget), "drag_data_by_motion", "set");
+	    gtk_drag_get_data (widget, drag_context, target, time);
+	}
+    }
 
     return result;
 }
 
 
-
-
-/*#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))*/
-/* gtk_list_store_move_*() was introduced in 2.2, so we have to
- * emulate for 2.0 <= V < 2.2 (we require at least 2.0 anyway) */
-/* !!! gtk_list_store_move() at least in 2.2.1 seems to be buggy: if
-   moving before the first entry, the moved entry ends up
-   last. Therefore I emulate the functions for all gtk versions */
-static void pm_list_store_move (GtkListStore *store,
-				 GtkTreeIter  *iter,
-				 GtkTreeIter  *position,
-				 gboolean     before)
-{
-    GtkTreeIter new_iter;
-    Playlist *playlist = NULL;
-    GtkTreeModel *model;
-
-    /* insert new row before or after @position */
-    if (before)  gtk_list_store_insert_before (store, &new_iter, position);
-    else         gtk_list_store_insert_after (store, &new_iter, position);
-
-    model = gtk_tree_view_get_model (playlist_treeview);
-
-    /* get the content (track) of the row to move */
-    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
-    /* remove the old row */
-    gtk_tree_store_remove (GTK_TREE_STORE (model), iter);
-
-    /* set the content of the new row */
-    gtk_tree_store_set (GTK_TREE_STORE (model), &new_iter,
-			PM_COLUMN_PLAYLIST, playlist,
-			-1);
-}
-
-void  pm_list_store_move_before (GtkListStore *store,
-					 GtkTreeIter  *iter,
-					 GtkTreeIter  *position)
-{
-    pm_list_store_move (store, iter, position, TRUE);
-}
-
-void  pm_list_store_move_after (GtkListStore *store,
-					GtkTreeIter  *iter,
-					GtkTreeIter  *position)
-{
-    pm_list_store_move (store, iter, position, FALSE);
-}
-/* #else*/
-#if 0
-/* starting V2.2 convenient gtk functions exist (but see comment above) */
-void  pm_list_store_move_before (GtkListStore *store,
-					 GtkTreeIter  *iter,
-					 GtkTreeIter  *position)
-{
-    gtk_list_store_move_before (store, iter, position);
-}
-
-void  pm_list_store_move_after (GtkListStore *store,
-					GtkTreeIter  *iter,
-					GtkTreeIter  *position)
-{
-    gtk_list_store_move_after (store, iter, position);
-}
-#endif
-
-
-/* move pathlist for track treeview */
-gboolean pm_move_pathlist (gchar *data,
-			   GtkTreePath *path,
-			   GtkTreeViewDropPosition pos)
-{
-    return pmtm_move_pathlist (playlist_treeview, data, path, pos, PLAYLIST_TREEVIEW);
-}
 
 /*
  * utility function for appending file for track view (DND)
@@ -258,16 +213,22 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 }
 
 /*
- * utility function for appending path for track view or playlist view (DND)
+ * utility function for appending pointers to a playlist (DND)
  */
 static void
-on_pm_dnd_get_path_foreach(GtkTreeModel *tm, GtkTreePath *tp,
-			   GtkTreeIter *iter, gpointer data)
+on_pm_dnd_get_playlist_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			       GtkTreeIter *iter, gpointer data)
 {
-    GString *filelist = (GString *)data;
-    gchar *ps = gtk_tree_path_to_string (tp);
-    g_string_append_printf (filelist, "%s\n", ps);
-    g_free (ps);
+    Playlist *pl;
+    GString *playlistlist = (GString *)data;
+
+    g_return_if_fail (tm);
+    g_return_if_fail (iter);
+    g_return_if_fail (playlistlist);
+
+    gtk_tree_model_get (tm, iter, PM_COLUMN_PLAYLIST, &pl, -1);
+    g_return_if_fail (pl);
+    g_string_append_printf (playlistlist, "%p\n", pl);
 }
 
 
@@ -298,13 +259,6 @@ on_pm_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     }
 }
 
-/* NOTE: if we do it the "right way" by having this function called as
-   a 'drag_end' callback, we run into the following problem: This is
-   also called with context->action==GDK_ACTION_MOVE if tracks are
-   reordered using drag and drop or when dropping into the master
-   playlist, irrespective of the arguments of
-   'gtk_drop_finish()'. Therefore this function is called directly by
-   on_playlist_treeview_drag_data_received() */
 static void
 tracks_moved_or_copied     (GdkDragContext  *context, gchar *tracks)
 {
@@ -382,9 +336,9 @@ pm_drag_data_get (GtkWidget       *widget,
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_pm_dnd_get_track_foreach, reply);
 	    break;
-	case DND_GTKPOD_PM_PATHLIST:
+	case DND_GTKPOD_PLAYLISTLIST:
 	    gtk_tree_selection_selected_foreach(ts,
-				    on_pm_dnd_get_path_foreach, reply);
+				    on_pm_dnd_get_playlist_foreach, reply);
 	    break;
 	case DND_TEXT_PLAIN:
 	    gtk_tree_selection_selected_foreach(ts,
@@ -412,7 +366,20 @@ static void pm_drag_data_received (GtkWidget       *widget,
     gint position = -1;
     Playlist *pl = NULL;
 
-    puts ("drag_data_received");
+    printf ("drag_data_received: context->suggested_action: %d\n", context? context->suggested_action:-999999);
+
+    g_return_if_fail (context);
+    g_return_if_fail (data);
+    g_return_if_fail (data->length > 0);
+
+    if (g_object_get_data (G_OBJECT (widget), "drag_data_by_motion"))
+    {   /* this callback was caused by pm_drag_motion -- we are
+	 * supposed to gdk_drag_status () */
+	puts ("by motion");
+	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion", NULL);
+	gdk_drag_status (context, GDK_ACTION_COPY, time);
+	return;
+    }
 
 /*     printf ("treeview received drag data/length/format: %p/%d/%d\n", data, data?data->length:0, data?data->format:0); */
 /*     printf ("treeview received drag context/actions/suggested action: %p/%d/%d\n", context, context?context->actions:0, context?context->suggested_action:0); */
@@ -502,8 +469,10 @@ static void pm_drag_data_received (GtkWidget       *widget,
 		gtk_drag_finish (context, TRUE, del_src, time);
 	    }
 	    break;
-	case DND_GTKPOD_PM_PATHLIST:
+	case DND_GTKPOD_PLAYLISTLIST:
 	    /* dont allow moves before MPL */
+	    printf ("not implemented!\n");
+	    break;
 	    position = atoi (gtk_tree_path_to_string (path));
 	    if (position == 0)  pos = GTK_TREE_VIEW_DROP_AFTER;
 	    pm_move_pathlist (data->data, path, pos);
@@ -521,6 +490,79 @@ static void pm_drag_data_received (GtkWidget       *widget,
 
 
 
+
+
+/*#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))*/
+/* gtk_list_store_move_*() was introduced in 2.2, so we have to
+ * emulate for 2.0 <= V < 2.2 (we require at least 2.0 anyway) */
+/* !!! gtk_list_store_move() at least in 2.2.1 seems to be buggy: if
+   moving before the first entry, the moved entry ends up
+   last. Therefore I emulate the functions for all gtk versions */
+static void pm_list_store_move (GtkListStore *store,
+				 GtkTreeIter  *iter,
+				 GtkTreeIter  *position,
+				 gboolean     before)
+{
+    GtkTreeIter new_iter;
+    Playlist *playlist = NULL;
+    GtkTreeModel *model;
+
+    /* insert new row before or after @position */
+    if (before)  gtk_list_store_insert_before (store, &new_iter, position);
+    else         gtk_list_store_insert_after (store, &new_iter, position);
+
+    model = gtk_tree_view_get_model (playlist_treeview);
+
+    /* get the content (track) of the row to move */
+    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
+    /* remove the old row */
+    gtk_tree_store_remove (GTK_TREE_STORE (model), iter);
+
+    /* set the content of the new row */
+    gtk_tree_store_set (GTK_TREE_STORE (model), &new_iter,
+			PM_COLUMN_PLAYLIST, playlist,
+			-1);
+}
+
+void  pm_list_store_move_before (GtkListStore *store,
+					 GtkTreeIter  *iter,
+					 GtkTreeIter  *position)
+{
+    pm_list_store_move (store, iter, position, TRUE);
+}
+
+void  pm_list_store_move_after (GtkListStore *store,
+					GtkTreeIter  *iter,
+					GtkTreeIter  *position)
+{
+    pm_list_store_move (store, iter, position, FALSE);
+}
+/* #else*/
+#if 0
+/* starting V2.2 convenient gtk functions exist (but see comment above) */
+void  pm_list_store_move_before (GtkListStore *store,
+					 GtkTreeIter  *iter,
+					 GtkTreeIter  *position)
+{
+    gtk_list_store_move_before (store, iter, position);
+}
+
+void  pm_list_store_move_after (GtkListStore *store,
+					GtkTreeIter  *iter,
+					GtkTreeIter  *position)
+{
+    gtk_list_store_move_after (store, iter, position);
+}
+#endif
+
+
+/* move pathlist for track treeview */
+gboolean pm_move_pathlist (gchar *data,
+			   GtkTreePath *path,
+			   GtkTreeViewDropPosition pos)
+{
+    return pmtm_move_pathlist (playlist_treeview, data, path, pos, PLAYLIST_TREEVIEW);
+}
 
 /* ---------------------------------------------------------------- */
 /* Section for playlist display                                     */
