@@ -171,7 +171,7 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	}
 	else 
 	{
-	    g_object_set_data (G_OBJECT (widget), "drag_data_by_motion", "set");
+	    g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_path", path);
 	    gtk_drag_get_data (widget, drag_context, target, time);
 	}
     }
@@ -365,49 +365,111 @@ static void pm_drag_data_received (GtkWidget       *widget,
     GtkTreeViewDropPosition pos = 0;
     gint position = -1;
     Playlist *pl = NULL;
+    gboolean path_ok = FALSE;
+    gboolean del_src;
 
-    printf ("drag_data_received: context->suggested_action: %d\n", context? context->suggested_action:-999999);
+printf ("drag_data_received: x y a: %d %d %d\n", x, y, context->suggested_action);
 
+    g_return_if_fail (widget); 
     g_return_if_fail (context);
     g_return_if_fail (data);
     g_return_if_fail (data->length > 0);
+    g_return_if_fail (data->data);
+    g_return_if_fail (data->format == 8);
 
-    if (g_object_get_data (G_OBJECT (widget), "drag_data_by_motion"))
+/* puts(gtk_tree_path_to_string (path)); */
+
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+    g_return_if_fail (model);
+
+    path = g_object_get_data (G_OBJECT (widget), "drag_data_by_motion_path");
+    if (path)
     {   /* this callback was caused by pm_drag_motion -- we are
 	 * supposed to gdk_drag_status () */
-	puts ("by motion");
-	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion", NULL);
+	Track *tr_s = NULL;
+	Playlist *pl_s;
+puts ("by motion");
+        /* unset flag that */ 
+	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_path", NULL);
+	if(gtk_tree_model_get_iter (model, &i, path))
+	{
+	    gtk_tree_model_get (model, &i, 0, &pl, -1);
+	}
+	g_return_if_fail (pl);
+
+	switch (info)
+	{
+	case DND_GTKPOD_TRACKLIST:
+	    /* get first track and check itdb */
+	    sscanf (data->data, "%p", &tr_s);
+	    if (!tr_s)
+	    {
+		gdk_drag_status (context, 0, time);
+		g_return_if_reached ();
+	    }
+	    printf ("s: %p  d: %p\n", tr_s->itdb, pl->itdb);
+	    printf ("suggested action: %d\n", context->suggested_action);
+	    break;
+	case DND_GTKPOD_PLAYLISTLIST:
+	    /* get first playlist and check itdb */
+	    sscanf (data->data, "%p", &pl_s);
+	    if (!pl_s)
+	    {
+		gdk_drag_status (context, 0, time);
+		g_return_if_reached ();
+	    }
+	    printf ("s: %p  d: %p\n", pl_s->itdb, pl->itdb);
+	    if (pl_s->type == ITDB_PL_TYPE_MPL)
+	    {
+		    gdk_drag_status (context, GDK_ACTION_COPY, time);
+		    return;
+	    }
+	    if (pl_s->itdb == pl->itdb)
+	    {
+		if (context->suggested_action == GDK_ACTION_COPY)
+		    gdk_drag_status (context, GDK_ACTION_MOVE, time);
+		else
+		    gdk_drag_status (context, GDK_ACTION_COPY, time);
+	    }
+	    else
+	    {
+		if (context->suggested_action == GDK_ACTION_COPY)
+		    gdk_drag_status (context, GDK_ACTION_COPY, time);
+		else
+		    gdk_drag_status (context, GDK_ACTION_MOVE, time);
+	    }
+	    return;
+	}
 	gdk_drag_status (context, GDK_ACTION_COPY, time);
 	return;
     }
 
 /*     printf ("treeview received drag data/length/format: %p/%d/%d\n", data, data?data->length:0, data?data->format:0); */
 /*     printf ("treeview received drag context/actions/suggested action: %p/%d/%d\n", context, context?context->actions:0, context?context->suggested_action:0); */
-    /* sometimes we get empty dnd data, ignore */
-    if((!context) || (!data) || (data->length < 0)) return;
-    /* yet another check, i think it's an 8 bit per byte check */
-    if(data->format != 8) return;
-    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
-					 x, y, &path, &pos))
+
+    path_ok = gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
+						x, y, &path, &pos);
+    /* this handler doesn't get called unless the position is valid */
+    g_return_if_fail (path_ok);
+    g_return_if_fail (path);
+
+    if(gtk_tree_model_get_iter(model, &i, path))
     {
-	gboolean del_src;
+	gtk_tree_model_get(model, &i, 0, &pl, -1);
+    }
+    g_return_if_fail (pl);
 
-	g_return_if_fail (path);
 
-	if (context && (context->suggested_action & GDK_ACTION_MOVE))
-	     del_src = TRUE;
-	else del_src = FALSE;
-	model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-/* puts(gtk_tree_path_to_string (path)); */
-	if(gtk_tree_model_get_iter(model, &i, path))
-	{
-	    gtk_tree_model_get(model, &i, 0, &pl, -1);
-	}
-	if (!pl)
-	{
-	    gtk_drag_finish (context, FALSE, FALSE, time);
-	    g_return_if_reached ();
-	}
+    if (context && (context->suggested_action & GDK_ACTION_MOVE))
+	del_src = TRUE;
+    else del_src = FALSE;
+
+    if (!pl)
+    {
+	gtk_drag_finish (context, FALSE, FALSE, time);
+	g_return_if_reached ();
+    }
+
 	/* get position of current path */
 	if (gtk_tree_path_get_depth (path) == 1)
 	{
@@ -484,8 +546,6 @@ static void pm_drag_data_received (GtkWidget       *widget,
 	    break;
 	}
 	gtk_tree_path_free(path);
-    }
-    else   gtk_drag_finish (context, FALSE, FALSE, time);
 }
 
 
@@ -1527,12 +1587,14 @@ void pm_create_treeview (void)
 		    G_CALLBACK (pm_selection_changed), NULL);
   pm_add_columns ();
 
-  gtk_drag_source_set (GTK_WIDGET (playlist_treeview), GDK_BUTTON1_MASK,
-		       pm_drag_types, TGNR (pm_drag_types), GDK_ACTION_COPY);
+  gtk_drag_source_set (GTK_WIDGET (playlist_treeview),
+		       GDK_BUTTON1_MASK |GDK_CONTROL_MASK,
+		       pm_drag_types, TGNR (pm_drag_types),
+		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
   gtk_drag_dest_set (GTK_WIDGET (playlist_treeview),
 		     GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT,
 		     pm_drop_types, TGNR (pm_drop_types),
-		     GDK_ACTION_COPY);
+		     GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
 
 /*   gtk_tree_view_enable_model_drag_dest (playlist_treeview, */

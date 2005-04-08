@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-07 21:31:38 jcs>
+/* Time-stamp: <2005-04-08 23:26:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2267,7 +2267,9 @@ static void mk_mhod (WContents *cts, enum MHOD_ID type, void *data)
 	  for (gl=splrs->rules; gl; gl=gl->next)
 	  {
 	      SPLRule *splr = gl->data;
-	      gint ft = itdb_splr_get_field_type (splr);
+	      gint ft;
+	      g_return_if_fail (splr);
+	      ft = itdb_splr_get_field_type (splr);
 /*	      printf ("%p: field: %d ft: %d\n", splr, splr->field, ft);*/
 	      itdb_splr_validate (splr);
 	      put32bint (cts, splr->field);
@@ -2276,7 +2278,7 @@ static void mk_mhod (WContents *cts, enum MHOD_ID type, void *data)
 	      if (ft == splft_string)
 	      {   /* write string-type rule */
 		  gunichar2 *entry_utf16 =
-		      g_utf8_to_utf16 ((gchar *)data, -1,NULL,NULL,NULL);
+		      g_utf8_to_utf16 (splr->string, -1,NULL,NULL,NULL);
 		  gint len = utf16_strlen (entry_utf16);
 		  fixup_big_utf16 (entry_utf16);
 		  put32bint (cts, 2*len); /* length of string     */
