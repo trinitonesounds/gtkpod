@@ -52,6 +52,15 @@ TODO:
 
    HTH.
 
+
+Satadru
+> It would be nice to have the ability to have some sort of shadow aac 
+> directory, that would have converted versions of all the songs in your 
+> library, if the song is a higher bitrate than 128kbps aac, so that you 
+> can get the most music onto your ipod.
+(+ recode to 128 kB when exporting)
+
+
 Torsten Curdt
 > * I love the type-and-filter-right-away search of iTunes!
 > * I miss the easy click-on-burn-audio-cd button

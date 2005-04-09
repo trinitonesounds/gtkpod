@@ -350,6 +350,39 @@ pm_drag_data_get (GtkWidget       *widget,
     g_string_free (reply, TRUE);
 }
 
+
+static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
+				       GdkDragContext *context)
+{
+    GdkDragAction action = 0;
+
+    g_return_val_if_fail (src, 0);
+    g_return_val_if_fail (dest, 0);
+    g_return_val_if_fail (context, 0);
+
+    if (src->type == ITDB_PL_TYPE_MPL)
+	action = GDK_ACTION_COPY;
+    else
+    {
+	if (src->itdb == dest->itdb)
+	{
+	    if (context->suggested_action == GDK_ACTION_COPY)
+		action = GDK_ACTION_MOVE;
+	    else
+		action = GDK_ACTION_COPY;
+	}
+	else
+	{
+	    if (context->suggested_action == GDK_ACTION_COPY)
+		action = GDK_ACTION_COPY;
+	    else
+		action = GDK_ACTION_MOVE;
+	}
+    }
+    return action;
+}
+
+
 static void pm_drag_data_received (GtkWidget       *widget,
 				   GdkDragContext  *context,
 				   gint             x,
@@ -413,31 +446,18 @@ puts ("by motion");
 	case DND_GTKPOD_PLAYLISTLIST:
 	    /* get first playlist and check itdb */
 	    sscanf (data->data, "%p", &pl_s);
+	    printf("suggested action: %d  actions: %d\n",
+		   context->suggested_action, context->actions);
 	    if (!pl_s)
 	    {
 		gdk_drag_status (context, 0, time);
 		g_return_if_reached ();
 	    }
-	    printf ("s: %p  d: %p\n", pl_s->itdb, pl->itdb);
-	    if (pl_s->type == ITDB_PL_TYPE_MPL)
-	    {
-		    gdk_drag_status (context, GDK_ACTION_COPY, time);
-		    return;
-	    }
-	    if (pl_s->itdb == pl->itdb)
-	    {
-		if (context->suggested_action == GDK_ACTION_COPY)
-		    gdk_drag_status (context, GDK_ACTION_MOVE, time);
-		else
-		    gdk_drag_status (context, GDK_ACTION_COPY, time);
-	    }
-	    else
-	    {
-		if (context->suggested_action == GDK_ACTION_COPY)
-		    gdk_drag_status (context, GDK_ACTION_COPY, time);
-		else
-		    gdk_drag_status (context, GDK_ACTION_MOVE, time);
-	    }
+	    gdk_drag_status (context,
+			     pm_pm_get_action (pl_s, pl, context),
+			     time);
+	    printf ("s: %p  d: %p  a:%d\n", pl_s->itdb, pl->itdb,
+		    pm_pm_get_action (pl_s, pl, context));
 	    return;
 	}
 	gdk_drag_status (context, GDK_ACTION_COPY, time);

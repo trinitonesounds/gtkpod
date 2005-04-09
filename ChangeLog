@@ -1,6 +1,18 @@
+gtkpod V0.90
+	Complete rewrite of reading/writing the iTunesDB
+
+	IMPROVEMENT: local database to browse local content
+
+	IMPROVEMENT: support MP3 disc numbers (thanks to Leigh Dyer)
+
 gtkpod V0.88.2
 	IMPROVEMENT: Added '%p' (current playlist) identifier when
 	exporting tracks.
+
+	BUGFIX: DND in playlist view did not work.
+
+	BUGFIX: scripts sync_evolution, sync_evocalendar and sync_notes
+	were not included in standard distribution.
 
 gtkpod V0.88.1
 	BUGFIX: Should now work with the shuffle -- forgot to change a
