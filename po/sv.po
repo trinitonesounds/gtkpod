@@ -1,13 +1,13 @@
 # Translation of gtkpod to Swedish.
 # This file is distributed under the same license as gtkpod.
-# Copyright (C) Stefan Asserhäll <stefan.asserhall@comhem.se>, 2004.
+# Copyright (C) Stefan Asserhäll <stefan.asserhall@comhem.se>, 2004, 2005.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-07 00:20+0900\n"
-"PO-Revision-Date: 2004-12-09 18:40+0100\n"
+"POT-Creation-Date: 2005-04-20 12:22+0900\n"
+"PO-Revision-Date: 2005-04-09 09:28+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -372,30 +372,29 @@ msgid "gtkpod"
 msgstr "gtkpod"
 
 #: src/display_itdb.c:541
-#, fuzzy
 msgid "Local"
-msgstr "_Lokal"
+msgstr "Lokal"
 
 #: src/display_itdb.c:579
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "ökade spelningsantal för '%s'"
 
-#: src/display_playlists.c:344
+#: src/display_playlists.c:298
 #, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] "Flyttade ett spår"
 msgstr[1] "Flyttade %d spår"
 
-#: src/display_playlists.c:350
+#: src/display_playlists.c:304
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "Kopierade ett spår"
 msgstr[1] "Kopierade %d spår"
 
-#: src/display_playlists.c:513 src/display_songs.c:278
+#: src/display_playlists.c:564 src/display_songs.c:278
 #, c-format
 msgid ""
 "This DND type (%d) is not (yet) supported. If you feel implementing this "
@@ -406,7 +405,7 @@ msgstr ""
 "vore användbart att implementera, kontakta gärna upphovsmannen.\n"
 "\n"
 
-#: src/display_playlists.c:1386 src/interface.c:4086
+#: src/display_playlists.c:1508 src/interface.c:4086
 msgid "Playlists"
 msgstr "Spellistor"
 
@@ -496,9 +495,8 @@ msgid "CD Nr"
 msgstr "Cd-nummer"
 
 #: src/display_songs.c:103
-#, fuzzy
 msgid "Time added"
-msgstr "Spelningstid"
+msgstr "Tid tillagd"
 
 #: src/display_songs.c:104
 msgid "iPod File"
@@ -568,9 +566,8 @@ msgid "CD Nr. and total number of CDS in set"
 msgstr "Cd-nummer och totalt antal cd i albumet"
 
 #: src/display_songs.c:134
-#, fuzzy
 msgid "Time track has been added"
-msgstr "Tiden spåret har spelats"
+msgstr "Tidsspår har lagts till"
 
 #: src/display_songs.c:135
 msgid "Name of file on the iPod"
@@ -622,7 +619,6 @@ msgid "Trnsfrd"
 msgstr "Överfört"
 
 #: src/display_songs.c:1607
-#, fuzzy
 msgid "Cmpl"
 msgstr "Komp."
 
@@ -644,7 +640,7 @@ msgstr "Ändrad"
 
 #: src/display_songs.c:1628 src/display_sorttabs.c:2788 src/interface.c:3368
 msgid "Added"
-msgstr ""
+msgstr "Tillagd"
 
 #: src/display_songs.c:1634
 msgid "Vol."
@@ -663,9 +659,8 @@ msgid "'Modified' condition ignored because of error."
 msgstr "Tillståndet 'Ändrad' ignoreras på grund av fel."
 
 #: src/display_sorttabs.c:293
-#, fuzzy
 msgid "'Added' condition ignored because of error."
-msgstr "Tillståndet 'Ändrad' ignoreras på grund av fel."
+msgstr "Tillståndet 'Tillagd' ignoreras på grund av fel."
 
 #: src/display_sorttabs.c:1231
 msgid "All"
@@ -896,25 +891,31 @@ msgid "New Playlist"
 msgstr "Ny spellista"
 
 #: src/file.c:126
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "'%s' is a directory, not a playlist file.\n"
 "\n"
-msgstr "'%s' är inte en katalog. Ignoreras.\n"
+msgstr ""
+"'%s' är en katalog, inte en spellistefil.\n"
+"\n"
 
 #: src/file.c:149
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "'%s' is a not a known playlist file.\n"
 "\n"
-msgstr "'%s' verkar inte vara en mp4-ljudfil.\n"
+msgstr ""
+"'%s' är inte en känd spellistefil.\n"
+"\n"
 
 #: src/file.c:166
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Cannot open '%s' for reading.\n"
 "\n"
-msgstr "Kunde inte öppna '%s' för läsning.\n"
+msgstr ""
+"Kan inte öppna '%s' för läsning.\n"
+"\n"
 
 #: src/file.c:483
 #, c-format
@@ -1242,7 +1243,7 @@ msgid "Error while reading extended info: %s\n"
 msgstr "Fel vid läsning av utökad information: %s\n"
 
 #: src/file_itunesdb.c:259
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
 "gtkpod will try to match the information using MD5 checksums. This may take "
@@ -1252,7 +1253,7 @@ msgstr ""
 "Checksumman för iTunes databas '%s' stämmer inte med den i filen '%s' med "
 "utökad information.\n"
 "Ett försök görs av gtkpod att passa ihop informationen med MD5-checksummor. "
-"Om det går, kan det ta en stund.\n"
+"Det kan ta lång tid.\n"
 "\n"
 
 #: src/file_itunesdb.c:272
@@ -1302,18 +1303,21 @@ msgid "Offline iPod Database Successfully Imported"
 msgstr "Nerkopplad iPod-databas importerad med lyckat resultat"
 
 #: src/file_itunesdb.c:431
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Offline iPod database import failed: '%s'\n"
 "\n"
-msgstr "Import av nerkopplad iPod-databas misslyckades"
+msgstr ""
+"Import av nerkopplad iPod-databas misslyckades: '%s'\n"
+"\n"
 
 #: src/file_itunesdb.c:437
-#, fuzzy
 msgid ""
 "Offline iPod database import failed: \n"
 "\n"
-msgstr "Import av nerkopplad iPod-databas misslyckades"
+msgstr ""
+"Import av nerkopplad iPod-databas misslyckades: \n"
+"\n"
 
 #: src/file_itunesdb.c:444 src/file_itunesdb.c:497
 #, c-format
@@ -1337,18 +1341,21 @@ msgid "iPod Database Successfully Imported"
 msgstr "iPod-databasen importerad med lyckat resultat"
 
 #: src/file_itunesdb.c:482
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "iPod Database Import Failed: '%s'\n"
 "\n"
-msgstr "Import av iPod-databasen misslyckades"
+msgstr ""
+"Import av iPod-databasen misslyckades: '%s'\n"
+"\n"
 
 #: src/file_itunesdb.c:488
-#, fuzzy
 msgid ""
 "iPod Database Import Failed.\n"
 "\n"
-msgstr "Import av iPod-databasen misslyckades"
+msgstr ""
+"Import av iPod-databasen misslyckades.\n"
+"\n"
 
 #: src/file_itunesdb.c:782
 #, c-format
@@ -1390,10 +1397,11 @@ msgstr[1] "Kopierade %d av %d nya spår."
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Vissa spår skrevs inte till iPod. Export avbruten."
 
-#: src/file_itunesdb.c:1224 src/misc_playlist.c:972
+#: src/file_itunesdb.c:1219
+#, fuzzy, c-format
 msgid ""
-"You did not import the existing iTunesDB. This is most likely incorrect and "
-"will result in the loss of the existing database.\n"
+"You did not import the existing iTunesDB ('%s'). This is most likely "
+"incorrect and will result in the loss of the existing database.\n"
 "\n"
 "Press 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you "
 "cancel, you can import the existing database before calling this function "
@@ -1406,7 +1414,7 @@ msgstr ""
 "du avbryter, kan du importera befintlig databas innan du använder den här "
 "funktionen igen.\n"
 
-#: src/file_itunesdb.c:1247
+#: src/file_itunesdb.c:1249
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1414,23 +1422,22 @@ msgstr ""
 "Katalogstrukturen i iPod måste finnas innan synkronisering av iPod kan "
 "utföras.\n"
 
-#: src/file_itunesdb.c:1259
+#: src/file_itunesdb.c:1261
 msgid "Now writing iTunesDB. Please wait..."
 msgstr "Skriver nu iTunes databas. Vänta..."
 
-#: src/file_itunesdb.c:1290
+#: src/file_itunesdb.c:1292
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Filen med utökad information inte borttagen: '%s'"
 
-#: src/file_itunesdb.c:1382
+#: src/file_itunesdb.c:1384
 msgid "iPod Database Saved"
 msgstr "iPod-databas sparad"
 
-#: src/file_itunesdb.c:1424
-#, fuzzy
+#: src/file_itunesdb.c:1426
 msgid "Syncing contacts, calendar and notes..."
-msgstr "Synkronisera kontakter och kalender..."
+msgstr "Synkroniserar kontakter, kalender och anteckningar..."
 
 #: src/getopt.c:681
 #, c-format
@@ -1693,7 +1700,7 @@ msgstr "Alla spår som inte finns i någon spellista"
 
 #: src/interface.c:512
 msgid "Randomize Current Playlist"
-msgstr "Gör aktuell spellista slumpmässig"
+msgstr "Gör nuvarande spellista slumpmässig"
 
 #: src/interface.c:521
 msgid "_Sorting"
@@ -1772,14 +1779,12 @@ msgid "_Newly Added Tracks"
 msgstr "_Nytillagda spår"
 
 #: src/interface.c:746
-#, fuzzy
 msgid "Synchronize All"
-msgstr "Synkronisera kalender"
+msgstr "Synkronisera allt"
 
 #: src/interface.c:749
-#, fuzzy
 msgid "Synchronise Contacts, Calendar and Notes"
-msgstr "Synkronisera kalender"
+msgstr "Synkronisera kontakter, kalender och anteckningar"
 
 #: src/interface.c:751
 msgid "Synchronize Contacts"
@@ -1790,9 +1795,8 @@ msgid "Synchronize Calendar"
 msgstr "Synkronisera kalender"
 
 #: src/interface.c:759
-#, fuzzy
 msgid "Synchronize Notes"
-msgstr "Synkronisera kontakter"
+msgstr "Synkronisera anteckningar"
 
 #: src/interface.c:763
 msgid "_Help"
@@ -2064,7 +2068,6 @@ msgid "Overwrite tags that are already set."
 msgstr "Skriv över taggar som redan är angivna."
 
 #: src/interface.c:1876
-#, fuzzy
 msgid ""
 "As a last resort set the following tags to the filename if they are (still) "
 "empty:"
@@ -2261,11 +2264,11 @@ msgstr ""
 
 #: src/interface.c:2371
 msgid "Display messages and warnings at startup"
-msgstr ""
+msgstr "Visa meddelanden och varningar vid start"
 
 #: src/interface.c:2374
 msgid "This option will be re-activated when you upgrade gtkpod."
-msgstr ""
+msgstr "Det här alternativet aktiveras igen när du uppdaterar gtkpod."
 
 #: src/interface.c:2376
 msgid "Misc"
@@ -2417,13 +2420,13 @@ msgid "Command Line for 'Play Now':"
 msgstr "Kommandorad för 'Spela nu':"
 
 #: src/interface.c:2566
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "For example, 'xmms %s' will clear xmms' current playlist, add the selected "
 "tracks and start playing."
 msgstr ""
 "Till exempel rensas XMM:s nuvarande spellista, de markerade spåren läggs "
-"till och uppspelning startar med 'xmms -p %s'."
+"till och uppspelning startar med 'xmms %s'."
 
 #: src/interface.c:2572
 msgid "Command Line for 'Enqueue':"
@@ -2488,18 +2491,16 @@ msgid "Command to be called to synchronize calendar:"
 msgstr "Kommando att anropa för att synkronisera kalender:"
 
 #: src/interface.c:2691
-#, fuzzy
 msgid "Command to be called to synchronize notes:"
-msgstr "Kommando att anropa för att synkronisera kalender:"
+msgstr "Kommando att anropa för att synkronisera anteckningar:"
 
 #: src/interface.c:2711
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr "Anropa automatiskt vid synkronisering av iTunes databas"
 
 #: src/interface.c:2715
-#, fuzzy
 msgid "Contacts / Calendar / Notes"
-msgstr "Kontakter och kalender"
+msgstr "Kontakter, kalender och anteckningar"
 
 #: src/interface.c:3182
 msgid "special_sorttab -- Don't translate!"
@@ -2733,12 +2734,10 @@ msgid "File size (deleted)"
 msgstr "Filstorlek (borttagna)"
 
 #: src/interface.c:4860
-#, fuzzy
 msgid "Non-transferred tracks"
 msgstr "Spår som inte överförts"
 
 #: src/interface.c:4869
-#, fuzzy
 msgid "File size (non-transferred)"
 msgstr "Filstorlek (inte överförda)"
 
@@ -2751,6 +2750,8 @@ msgid ""
 "Total\n"
 "(iPod)"
 msgstr ""
+"Totalt\n"
+"(iPod)"
 
 #: src/interface.c:4896
 msgid ""
@@ -2781,6 +2782,8 @@ msgid ""
 "Total\n"
 "(local)"
 msgstr ""
+"Totalt\n"
+"(lokalt)"
 
 #: src/interface.c:5141
 msgid "label21"
@@ -2871,7 +2874,6 @@ msgid "Filename Format: "
 msgstr "Filnamnsformat: "
 
 #: src/interface.c:5410
-#, fuzzy
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
 "mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod "
@@ -2884,8 +2886,8 @@ msgstr ""
 "eller '%o'. Du kan skilja flera mönster åt med semikolon. Vilket som används "
 "avgörs av gtkpod genom filnamnsändelsen som anges. Artist: %a, album: %A, "
 "kompositör: %c, titel: %t, genre: %G, spårnummer: %T, cd-nummer: %C, år: %Y, "
-"ursprungligt filnamn (kräver fil med utökad information): %o, tecknet '%': %"
-"%."
+"ursprungligt filnamn (kräver fil med utökad information): %o, nuvarande "
+"spellista: %p, tecknet '%': %%."
 
 #: src/interface.c:5411
 msgid " "
@@ -2971,27 +2973,27 @@ msgstr "_Uppdatering under tiden"
 #: src/itdb_itunesdb.c:314
 #, c-format
 msgid "Illegal seek to offset %ld (length %ld) in file '%s'."
-msgstr ""
+msgstr "Ogiltig sökning till position %ld (längd %ld) i filen '%s'."
 
 #: src/itdb_itunesdb.c:521
 #, c-format
 msgid "Not a Play Counts file: '%s' (missing mhdp header)."
-msgstr ""
+msgstr "Inte en uppspelningsdatafil: '%s' (saknar mhdp-huvud)."
 
 #: src/itdb_itunesdb.c:535
 #, c-format
 msgid "Play Counts file ('%s'): header length smaller than expected (%d<96)."
-msgstr ""
+msgstr "Uppspelningsdatafil ('%s'): Huvudlängd mindre än väntat (%d < 96)"
 
 #: src/itdb_itunesdb.c:548
 #, c-format
 msgid "Play Counts file ('%s'): entry length smaller than expected (%d<12)."
-msgstr ""
+msgstr "Uppspelningsdatafil ('%s'): Postlängd mindre än väntat (%d < 12)"
 
 #: src/itdb_itunesdb.c:783
 #, c-format
 msgid "iTunesDB corrupt: no MHOD at offset %ld in file '%s'."
-msgstr ""
+msgstr "iTunes databas skadad: Ingen MHOD på position %ld i filen '%s'."
 
 #: src/itdb_itunesdb.c:903
 #, c-format
@@ -3003,11 +3005,8 @@ msgstr ""
 "Försöker fortsätta ändå.\n"
 
 #: src/itdb_itunesdb.c:946
-#, fuzzy
 msgid "Did not find SLst hunk as expected. Trying to continue.\n"
-msgstr ""
-"Regelfältets längd (%d) i den smarta spellistan är inte den förväntade. "
-"Försöker fortsätta ändå.\n"
+msgstr "Hittade inte SLst data som förväntat. Försöker fortsätta ändå.\n"
 
 #: src/itdb_itunesdb.c:952
 #, c-format
@@ -3023,6 +3022,7 @@ msgstr ""
 #, c-format
 msgid "iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."
 msgstr ""
+"iTunes databas skadad: Datalängd 0 för data på position %ld i filen '%s'."
 
 #: src/itdb_itunesdb.c:1127
 msgid "Master-PL"
@@ -3031,7 +3031,7 @@ msgstr "Huvudspellista"
 #: src/itdb_itunesdb.c:1151
 #, c-format
 msgid "iTunesDB corrupt: found mhyp at %ld in file '%s'."
-msgstr ""
+msgstr "iTunes databas skadad: Hittade mhyp på position %ld i filen '%s'."
 
 #: src/itdb_itunesdb.c:1452
 msgid "OTG Playlist"
@@ -3040,18 +3040,18 @@ msgstr "OTG-spellista"
 #: src/itdb_itunesdb.c:1466
 #, c-format
 msgid "Not a OTG playlist file: '%s' (missing mhpo header)."
-msgstr ""
+msgstr "Inte en OTG-spellistefil: '%s' (saknar mhpo-huvud)."
 
 #: src/itdb_itunesdb.c:1480
 #, c-format
 msgid "OTG playlist file ('%s'): header length smaller than expected (%d<20)."
-msgstr ""
+msgstr "OTG-spellistefil ('%s'): Huvudlängd mindre än väntat (%d < 20)"
 
 #: src/itdb_itunesdb.c:1492
 #, c-format
 msgid ""
 "OTG playlist file file ('%s'): entry length smaller than expected (%d<4)."
-msgstr ""
+msgstr "OTG-spellistefil ('%s'): Postlängd mindre än väntat (%d < 4)"
 
 #: src/itdb_itunesdb.c:1551
 #, c-format
@@ -3061,7 +3061,7 @@ msgstr "OTG-spellista %d"
 #: src/itdb_itunesdb.c:1594
 #, c-format
 msgid "Not a iTunesDB: '%s' (missing mhdb header)."
-msgstr ""
+msgstr "Inte en iTunes databas: '%s' (saknar mhdb-huvud)."
 
 #: src/itdb_itunesdb.c:1610
 #, c-format
@@ -3069,11 +3069,14 @@ msgid ""
 "iTunesDB ('%s'): header length of mhsd hunk smaller than expected (%ld<32). "
 "Aborting."
 msgstr ""
+"iTunes databas (%s): Huvudlängd för mhsd-data mindre än väntat (%ld < 32). "
+"Avbryter."
 
 #: src/itdb_itunesdb.c:1642
 #, c-format
 msgid "iTunesDB '%s' corrupt: already found two playlist mhsds -- giving up."
 msgstr ""
+"iTunes databas '%s' skadad: Två mhsd för spellistor redan hittade. Ger upp."
 
 #. this should not be -- issue warning
 #: src/itdb_itunesdb.c:1703
@@ -3081,6 +3084,8 @@ msgid ""
 "iTunesDB possibly corrupt: number of tracks (mhit hunks) inconsistent. "
 "Trying to continue.\n"
 msgstr ""
+"iTunes databas möjligen skadad: Antal spår (mhit-data) inte konsekvent. "
+"Försöker fortsätta.\n"
 
 #. this should not be -- issue warning
 #: src/itdb_itunesdb.c:1782
@@ -3088,81 +3093,81 @@ msgid ""
 "iTunesDB possibly corrupt: number of playlists (mhyp hunks) inconsistent. "
 "Trying to continue.\n"
 msgstr ""
+"iTunes databas möjligen skadad: Antal spellistor (mhyp-data) inte "
+"konsekvent. Försöker fortsätta.\n"
 
 #: src/itdb_itunesdb.c:1818
-#, fuzzy, c-format
+#, c-format
 msgid "File not found: '%s'."
-msgstr "filen hittades inte"
+msgstr "Filen hittades inte: '%s'."
 
-#: src/itdb_itunesdb.c:2308
+#: src/itdb_itunesdb.c:2310
 #, c-format
 msgid "Cannot write mhod of type %d\n"
-msgstr ""
+msgstr "Kan inte skriva mhod av typen %d\n"
 
-#: src/itdb_itunesdb.c:2434 src/itdb_itunesdb.c:2547
+#: src/itdb_itunesdb.c:2436 src/itdb_itunesdb.c:2549
 msgid "Database in memory corrupt (track pointer == NULL). Aborting export."
-msgstr ""
+msgstr "Databas i minnet skadad (spårpekare == NULL). Avbryter export."
 
-#: src/itdb_itunesdb.c:2585
+#: src/itdb_itunesdb.c:2587
 msgid "Database in memory corrupt (playlist pointer == NULL). Aborting export."
-msgstr ""
+msgstr "Databas i minnet skadad (spårlistepekare == NULL). Avbryter export."
 
-#: src/itdb_itunesdb.c:2625
+#: src/itdb_itunesdb.c:2627
 #, c-format
 msgid "Opening of '%s' for writing failed."
-msgstr ""
+msgstr "Fel när '%s' skulle öppnas för skriving."
 
-#: src/itdb_itunesdb.c:2636
-#, fuzzy, c-format
+#: src/itdb_itunesdb.c:2638
+#, c-format
 msgid "Writing to '%s' failed."
-msgstr "Fel vid skrivning till '%s'.\n"
+msgstr "Fel vid skrivning till '%s'."
 
-#: src/itdb_itunesdb.c:2647
+#: src/itdb_itunesdb.c:2649
 #, c-format
 msgid "Writing to '%s' failed (%s)."
-msgstr ""
+msgstr "Fel vid skrivning till '%s' (%s)."
 
-#: src/itdb_itunesdb.c:2756 src/itdb_itunesdb.c:2800 src/itdb_itunesdb.c:2934
+#: src/itdb_itunesdb.c:2758 src/itdb_itunesdb.c:2802 src/itdb_itunesdb.c:2936
 #, c-format
 msgid "Path not found: '%s'."
-msgstr ""
+msgstr "Sökväg hittades inte: '%s'."
 
-#: src/itdb_itunesdb.c:2820
-#, fuzzy, c-format
+#: src/itdb_itunesdb.c:2822
+#, c-format
 msgid "Error renaming '%s' to '%s' (%s)."
-msgstr "Fel vid byte av namn på '%s' till '%s' (%s).\n"
+msgstr "Fel vid byte av namn på '%s' till '%s' (%s)."
 
-#: src/itdb_itunesdb.c:2837
-#, fuzzy, c-format
+#: src/itdb_itunesdb.c:2839
+#, c-format
 msgid "Error removing '%s' (%s)."
-msgstr "Fel vid borttagning av '%s'.\n"
+msgstr "Fel vid borttagning av '%s'."
 
-#: src/itdb_itunesdb.c:3063
-#, fuzzy, c-format
+#: src/itdb_itunesdb.c:3065
+#, c-format
 msgid "Error opening '%s' for reading (%s)."
-msgstr "Fel vid byte av namn på '%s' till '%s' (%s).\n"
+msgstr "Fel när '%s' skulle öppnas för läsning (%s)."
 
-#: src/itdb_itunesdb.c:3074
-#, fuzzy, c-format
+#: src/itdb_itunesdb.c:3076
+#, c-format
 msgid "Error opening '%s' for writing (%s)."
-msgstr ""
-"Kunde inte öppna '%s' för skrivning (%s).\n"
-"\n"
+msgstr "Fel när '%s' skulle öppnas för skriving (%s)."
 
-#: src/itdb_itunesdb.c:3091
-#, fuzzy, c-format
+#: src/itdb_itunesdb.c:3093
+#, c-format
 msgid "Error while reading from '%s' (%s)."
-msgstr "Fel vid läsning av inställningar: %s\n"
+msgstr "Fel vid läsning från '%s' (%s)."
 
-#: src/itdb_itunesdb.c:3107
-#, fuzzy, c-format
+#: src/itdb_itunesdb.c:3109
+#, c-format
 msgid "Error while writing to '%s' (%s)."
-msgstr "Fel vid skrivning till '%s'.\n"
+msgstr "Fel vid skrivning till '%s' (%s)."
 
-#: src/itdb_itunesdb.c:3120 src/itdb_itunesdb.c:3130
-#, fuzzy, c-format
+#: src/itdb_itunesdb.c:3122 src/itdb_itunesdb.c:3132
+#, c-format
 msgid "Error when closing '%s' (%s)."
-msgstr "Fel vid byte av namn på '%s' till '%s' (%s).\n"
+msgstr "Fel när '%s' skulle stängas (%s)."
 
 #. New action!
 #: src/itdb_playlist.c:70
@@ -3173,12 +3178,12 @@ msgstr "Okänd åtgärd (%d) i smart spellista kommer att ignoreras.\n"
 #: src/itdb_playlist.c:1169
 #, c-format
 msgid "Itdb_Track ID '%d' not found.\n"
-msgstr ""
+msgstr "ITunes databas spår-id '%d' hittades inte.\n"
 
 #: src/itdb_playlist.c:1193
 #, c-format
 msgid "OTG playlist file '%s': reference to non-existent track (%d)."
-msgstr ""
+msgstr "OTG-spellistefil '%s': Referens till spår som inte finns (%d)."
 
 #: src/md5.c:158
 msgid "Hashed file is 0 bytes long\n"
@@ -3632,27 +3637,27 @@ msgstr ""
 "Data har ändrats och inte sparats.\n"
 "Ok att avsluta gtkpod?"
 
-#: src/misc_conversion.c:484 src/misc_conversion_old.c:483
+#: src/misc_conversion.c:484
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr "Webbadressen '%s' är inte en absolut webbadress med filschema"
 
-#: src/misc_conversion.c:494 src/misc_conversion_old.c:493
+#: src/misc_conversion.c:494
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr "Webbadressen '%s' för lokal fil kan inte innehålla '#'"
 
-#: src/misc_conversion.c:511 src/misc_conversion_old.c:510
+#: src/misc_conversion.c:511
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr "Webbadressen '%s' är ogiltig"
 
-#: src/misc_conversion.c:523 src/misc_conversion_old.c:522
+#: src/misc_conversion.c:523
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr "Värddator för webbadressen '%s' är ogiltig"
 
-#: src/misc_conversion.c:539 src/misc_conversion_old.c:538
+#: src/misc_conversion.c:539
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "Webbadressen '%s' innehåller felaktiga specialtecken"
@@ -3662,19 +3667,19 @@ msgid "Successly Added Files"
 msgstr "Filer tillagda med lyckat resultat"
 
 #: src/misc_input.c:120
-#, fuzzy, c-format
+#, c-format
 msgid "Select files or directories to add to '%s/%s'"
-msgstr "Markera filer och kataloger att lägga till."
+msgstr "Markera filer eller kataloger att lägga till i '%s/%s'"
 
 #: src/misc_input.c:126
-#, fuzzy, c-format
+#, c-format
 msgid "Select files or directories to add to '%s'"
-msgstr "Markera filer och kataloger att lägga till."
+msgstr "Markera filer eller kataloger att lägga till i '%s'"
 
 #: src/misc_input.c:220
-#, fuzzy, c-format
+#, c-format
 msgid "Select Playlist to add to '%s'"
-msgstr "Markera spellistor att lägga till."
+msgstr "Markera spellistor att lägga till i '%s'"
 
 #: src/misc_playlist.c:68 src/misc_playlist.c:95 src/misc_playlist.c:408
 msgid "Please enter a name for the new playlist"
@@ -3748,14 +3753,13 @@ msgid "Best Rated (%d)"
 msgstr "Med bäst betyg (%d)"
 
 #: src/misc_playlist.c:645
-#, fuzzy
 msgid "Unrated tracks"
-msgstr "Borttagna spår"
+msgstr "Spår utan betyg"
 
 #: src/misc_playlist.c:650
-#, fuzzy, c-format
+#, c-format
 msgid "Rated %d"
-msgstr "Med bäst betyg (%d)"
+msgstr "Betyg %d"
 
 #: src/misc_playlist.c:693
 #, c-format
@@ -3785,6 +3789,22 @@ msgstr "Spår med saknade filer som har filer på PC:n har hanterats."
 #: src/misc_playlist.c:927
 msgid "Track"
 msgstr "Spår"
+
+#: src/misc_playlist.c:972
+msgid ""
+"You did not import the existing iTunesDB. This is most likely incorrect and "
+"will result in the loss of the existing database.\n"
+"\n"
+"Press 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you "
+"cancel, you can import the existing database before calling this function "
+"again.\n"
+msgstr ""
+"Du importerade inte befintlig iTunes databas. Det är troligtvis felaktigt "
+"och orsakar förlust av den befintliga databasen.\n"
+"\n"
+"Klicka på 'Ok' om du vill fortsätta ändå eller 'Avbryt' för att avbryta. Om "
+"du avbryter, kan du importera befintlig databas innan du använder den här "
+"funktionen igen.\n"
 
 #: src/misc_playlist.c:988
 msgid "Creating a tree of known files"
@@ -4260,53 +4280,3 @@ msgstr "Kunde inte öppna '%s' för läsning.\n"
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s verkar inte vara en wav-fil som stöds.\n"
-
-#~ msgid "Time created"
-#~ msgstr "Skapad"
-
-#~ msgid "Time track has been created (timestamp of file)"
-#~ msgstr "Tiden då spåret skapades (filens tidstämpel)"
-
-#~ msgid "Created"
-#~ msgstr "Skapad"
-
-#~ msgid "'Created' condition ignored because of error."
-#~ msgstr "Tillståndet 'Skapad' ignoreras på grund av fel."
-
-#~ msgid "Error writing iTunesDB to iPod. Export aborted!"
-#~ msgstr "Fel vid skrivning av iTunes databas till iPod. Export avbruten."
-
-#~ msgid "Extended information not written"
-#~ msgstr "Utökad information skrevs inte"
-
-#~ msgid "Total"
-#~ msgstr "Totalt"
-
-#~ msgid "Could not open iTunesDB \"%s\" for reading.\n"
-#~ msgstr "Kunde inte öppna iTunes databas \"%s\" för läsning.\n"
-
-#~ msgid "Error reading \"%s\".\n"
-#~ msgstr "Fel vid läsning av \"%s\".\n"
-
-#~ msgid "\"%s\" is not a iTunesDB.\n"
-#~ msgstr "\"%s\" är inte en iTunes databas.\n"
-
-#~ msgid "Could not open iTunesDB \"%s\" for writing.\n"
-#~ msgstr "Kunde inte öppna iTunes databas \"%s\" för skrivning.\n"
-
-#~ msgid "Could not open file \"%s\" for reading.\n"
-#~ msgstr "Kunde inte öppna filen \"%s\" för läsning.\n"
-
-#~ msgid "Could not open file \"%s\" for writing.\n"
-#~ msgstr "Kunde inte öppna filen \"%s\" för skrivning.\n"
-
-#~ msgid "Error reading file \"%s\".\n"
-#~ msgstr "Fel vid läsning av filen \"%s\".\n"
-
-#~ msgid "Error writing PC file \"%s\".\n"
-#~ msgstr "Fel vid skrivning av PC-filen \"%s\".\n"
-
-#~ msgid "Added %d+ tracks to playlist '%s'"
-#~ msgid_plural "Added %d+ tracks to playlist '%s'"
-#~ msgstr[0] "Lade till %d spår i spellistan '%s'"
-#~ msgstr[1] "Lade till %d+ spår i spellistan '%s'"

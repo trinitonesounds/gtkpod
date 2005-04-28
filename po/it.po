@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-07 00:20+0900\n"
+"POT-Creation-Date: 2005-04-20 12:22+0900\n"
 "PO-Revision-Date: 2005-01-29 13:26+0100\n"
 "Last-Translator: \n"
 "Language-Team:  <it@li.org>\n"
@@ -391,21 +391,21 @@ msgid "Increased playcount for '%s'"
 msgstr "Aumentati i conta-riproduzione per '%s'"
 
 # c-format
-#: src/display_playlists.c:344
+#: src/display_playlists.c:298
 #, c-format
 msgid "Moved one track"
 msgid_plural "Moved %d tracks"
 msgstr[0] "Spostata una traccia"
 msgstr[1] "Spostate %d tracce"
 
-#: src/display_playlists.c:350
+#: src/display_playlists.c:304
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "Copiata una traccia"
 msgstr[1] "Copiate %d tracce"
 
-#: src/display_playlists.c:513 src/display_songs.c:278
+#: src/display_playlists.c:564 src/display_songs.c:278
 #, c-format
 msgid ""
 "This DND type (%d) is not (yet) supported. If you feel implementing this "
@@ -415,7 +415,7 @@ msgstr ""
 "Questo tipo DND (%d) non è (ancora) supportato. Se pensi che possa essere "
 "utile implementarlo, contatta l'autore.\n"
 
-#: src/display_playlists.c:1386 src/interface.c:4086
+#: src/display_playlists.c:1508 src/interface.c:4086
 msgid "Playlists"
 msgstr "Playlist"
 
@@ -1405,10 +1405,11 @@ msgstr[1] "Copiato %d di %d di nuove tracce"
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Alcune tracce non sono state scritte sull'iPod. Esportazione abortita!"
 
-#: src/file_itunesdb.c:1224 src/misc_playlist.c:972
+#: src/file_itunesdb.c:1219
+#, fuzzy, c-format
 msgid ""
-"You did not import the existing iTunesDB. This is most likely incorrect and "
-"will result in the loss of the existing database.\n"
+"You did not import the existing iTunesDB ('%s'). This is most likely "
+"incorrect and will result in the loss of the existing database.\n"
 "\n"
 "Press 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you "
 "cancel, you can import the existing database before calling this function "
@@ -1421,7 +1422,7 @@ msgstr ""
 "interrompere l'operazione. Se la interrompi, puoi importare il database "
 "esistente prima di richiamare di nuovo questa funzione.\n"
 
-#: src/file_itunesdb.c:1247
+#: src/file_itunesdb.c:1249
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1429,20 +1430,20 @@ msgstr ""
 "La struttura delle directory dell'iPod deve essere presente prima che la "
 "sincronizzazione verso l'iPod possa avere inizio.\n"
 
-#: src/file_itunesdb.c:1259
+#: src/file_itunesdb.c:1261
 msgid "Now writing iTunesDB. Please wait..."
 msgstr "Scrittura del iTunesDB in corso. Attendere prego..."
 
-#: src/file_itunesdb.c:1290
+#: src/file_itunesdb.c:1292
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Il file delle informazioni estese non è stato cancellato: '%s'"
 
-#: src/file_itunesdb.c:1382
+#: src/file_itunesdb.c:1384
 msgid "iPod Database Saved"
 msgstr "Database iPod salvato"
 
-#: src/file_itunesdb.c:1424
+#: src/file_itunesdb.c:1426
 msgid "Syncing contacts, calendar and notes..."
 msgstr "Sincronizzazione di contatti, calendari e note..."
 
@@ -3114,72 +3115,72 @@ msgstr ""
 msgid "File not found: '%s'."
 msgstr "file non trovato"
 
-#: src/itdb_itunesdb.c:2308
+#: src/itdb_itunesdb.c:2310
 #, c-format
 msgid "Cannot write mhod of type %d\n"
 msgstr ""
 
-#: src/itdb_itunesdb.c:2434 src/itdb_itunesdb.c:2547
+#: src/itdb_itunesdb.c:2436 src/itdb_itunesdb.c:2549
 msgid "Database in memory corrupt (track pointer == NULL). Aborting export."
 msgstr ""
 
-#: src/itdb_itunesdb.c:2585
+#: src/itdb_itunesdb.c:2587
 msgid "Database in memory corrupt (playlist pointer == NULL). Aborting export."
 msgstr ""
 
-#: src/itdb_itunesdb.c:2625
+#: src/itdb_itunesdb.c:2627
 #, c-format
 msgid "Opening of '%s' for writing failed."
 msgstr ""
 
-#: src/itdb_itunesdb.c:2636
+#: src/itdb_itunesdb.c:2638
 #, fuzzy, c-format
 msgid "Writing to '%s' failed."
 msgstr "Errore nella scrittura verso '%s'.\n"
 
-#: src/itdb_itunesdb.c:2647
+#: src/itdb_itunesdb.c:2649
 #, c-format
 msgid "Writing to '%s' failed (%s)."
 msgstr ""
 
-#: src/itdb_itunesdb.c:2756 src/itdb_itunesdb.c:2800 src/itdb_itunesdb.c:2934
+#: src/itdb_itunesdb.c:2758 src/itdb_itunesdb.c:2802 src/itdb_itunesdb.c:2936
 #, c-format
 msgid "Path not found: '%s'."
 msgstr ""
 
-#: src/itdb_itunesdb.c:2820
+#: src/itdb_itunesdb.c:2822
 #, fuzzy, c-format
 msgid "Error renaming '%s' to '%s' (%s)."
 msgstr "Errore nella rinominazione da '%s' a '%s' (%s).\n"
 
-#: src/itdb_itunesdb.c:2837
+#: src/itdb_itunesdb.c:2839
 #, fuzzy, c-format
 msgid "Error removing '%s' (%s)."
 msgstr "Errore nella rimozione di '%s'.\n"
 
-#: src/itdb_itunesdb.c:3063
+#: src/itdb_itunesdb.c:3065
 #, fuzzy, c-format
 msgid "Error opening '%s' for reading (%s)."
 msgstr "Errore nella rinominazione da '%s' a '%s' (%s).\n"
 
-#: src/itdb_itunesdb.c:3074
+#: src/itdb_itunesdb.c:3076
 #, fuzzy, c-format
 msgid "Error opening '%s' for writing (%s)."
 msgstr ""
 "Impossibile aprire il file '%s' in scrittura (%s).\n"
 "\n"
 
-#: src/itdb_itunesdb.c:3091
+#: src/itdb_itunesdb.c:3093
 #, fuzzy, c-format
 msgid "Error while reading from '%s' (%s)."
 msgstr "Errore nella lettura delle preferenze: %s\n"
 
-#: src/itdb_itunesdb.c:3107
+#: src/itdb_itunesdb.c:3109
 #, fuzzy, c-format
 msgid "Error while writing to '%s' (%s)."
 msgstr "Errore nella scrittura verso '%s'.\n"
 
-#: src/itdb_itunesdb.c:3120 src/itdb_itunesdb.c:3130
+#: src/itdb_itunesdb.c:3122 src/itdb_itunesdb.c:3132
 #, fuzzy, c-format
 msgid "Error when closing '%s' (%s)."
 msgstr "Errore nella rinominazione da '%s' a '%s' (%s).\n"
@@ -3639,27 +3640,27 @@ msgstr ""
 "Ci sono dei dati modificati e non salvati.\n"
 "Uscire comunque da gtkpod?"
 
-#: src/misc_conversion.c:484 src/misc_conversion_old.c:483
+#: src/misc_conversion.c:484
 #, c-format
 msgid "The URI '%s' is not an absolute URI using the file scheme"
 msgstr "La URI '%s' non è una URI assoluto usando lo schema dei file"
 
-#: src/misc_conversion.c:494 src/misc_conversion_old.c:493
+#: src/misc_conversion.c:494
 #, c-format
 msgid "The local file URI '%s' may not include a '#'"
 msgstr "La URI del file locale '%s' non può includere '#'"
 
-#: src/misc_conversion.c:511 src/misc_conversion_old.c:510
+#: src/misc_conversion.c:511
 #, c-format
 msgid "The URI '%s' is invalid"
 msgstr "La URI '%s' non è valida"
 
-#: src/misc_conversion.c:523 src/misc_conversion_old.c:522
+#: src/misc_conversion.c:523
 #, c-format
 msgid "The hostname of the URI '%s' is invalid"
 msgstr "Il nome dell'host della URI '%s' non è valido"
 
-#: src/misc_conversion.c:539 src/misc_conversion_old.c:538
+#: src/misc_conversion.c:539
 #, c-format
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "La URI '%s' contiene caratteri non validi che sono stati saltati"
@@ -3795,6 +3796,22 @@ msgstr "Le tracce con i file sul PC sono state gestite."
 #: src/misc_playlist.c:927
 msgid "Track"
 msgstr "Traccia"
+
+#: src/misc_playlist.c:972
+msgid ""
+"You did not import the existing iTunesDB. This is most likely incorrect and "
+"will result in the loss of the existing database.\n"
+"\n"
+"Press 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you "
+"cancel, you can import the existing database before calling this function "
+"again.\n"
+msgstr ""
+"Non hai importato l'iTunesDB esistente. Questo è quasi certamente sbagliato "
+"e risulterà in una perdita del database esistente.\n"
+"\n"
+"Premi 'OK' se si vuole procedere comunque o 'Annulla' se si vuole "
+"interrompere l'operazione. Se la interrompi, puoi importare il database "
+"esistente prima di richiamare di nuovo questa funzione.\n"
 
 #: src/misc_playlist.c:988
 msgid "Creating a tree of known files"

@@ -9,8 +9,8 @@
 #
 # with the following defaults: 
 
-IPOD_MOUNT=/mnt/ipod                          # mountpoint of ipod
-NOTESPATH=~/ipod_notes						  # path to folder containing notes
+IPOD_MOUNT=/media/PERLIPOD                          # mountpoint of ipod
+NOTESPATH=~/Desktop/Notizen		  # path to folder containing notes
 ENCODING=ISO-8859-15                          # encoding used by ipod
 
 # Unless called with "-e=none" this script requires "recode" available
@@ -58,7 +58,14 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 #
 # 2004/12/15 (Clinton Gormley <clint at traveljury dot com>):
 # adapted sync-korganiser to synchronise a folder containing notes
-
+#
+# 2005/04/02 (Thomas Perl <thp at perli dot net>):
+# * added features to remove gedit backup files (*~) from source 
+#   folder before syncing, better would be to modify the find 
+#   command to exclude such backup files instead of deleting them
+# * added support for directories inside of notes, syncing only 
+#   directories containing files
+# * added check to see if recode is installed
 
 # overwrite default settings with optional command line arguments
 while getopts i:d:e: option; do
@@ -76,6 +83,11 @@ done
 if [ $ENCODING = "none" ] || [ $ENCODING = "NONE" ]; then
     RECODE="cat"    # no conversion
 else
+    which recode >/dev/null 2>&1
+    if [ "$?" != "0" ]; then
+      echo "recode utility not found. please install 'recode'."
+      exit
+    fi
     RECODE="recode UTF8..$ENCODING"
 fi
 
@@ -97,26 +109,27 @@ fi
 # Seeing all notes should be under 4K, easier to delete and recopy rather than checking all files sizes
 
 echo -n "Syncing iPod ... [Notes] "
-rm -f $IPOD_MOUNT/Notes/*
+rm -rf $IPOD_MOUNT/Notes/*
+rm -f $NOTESPATH/*~
 cd $NOTESPATH
 
 I=0
 
-for FILE in *
-do
-		if [ -f "$FILE" ]; then
-			((++I))
-			cat "$FILE" | $RECODE > "$IPOD_MOUNT/Notes/$FILE"
-		fi
-done
-echo  
-case $I in 
+find -type f |
+(
+  read FILE
+  while [ "$?" == "0" ]; do
+	((++I))
+	mkdir -p "$IPOD_MOUNT/Notes/`dirname "$FILE"`/"
+	cat "$FILE" | $RECODE > "$IPOD_MOUNT/Notes/$FILE"
+	read FILE
+  done
+  echo  
+  case $I in 
 	0) echo "No notes found to copy";;
 	1) echo "1 note copied";;
 	*) echo "$I notes copied";;
-esac
-
-`	
-echo $I files copied
+  esac
+)
 
 echo "done!"

@@ -1,6 +1,9 @@
 gtkpod V0.90
 	Complete rewrite of reading/writing the iTunesDB
 
+	IMPROVEMENT: sync-notes.sh now also works on directories (thanks
+	to Thomas Perl)
+
 	IMPROVEMENT: local database to browse local content
 
 	IMPROVEMENT: support MP3 disc numbers (thanks to Leigh Dyer)

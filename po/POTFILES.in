@@ -30,7 +30,6 @@ src/md5.c
 src/misc.c
 src/misc_confirm.c
 src/misc_conversion.c
-src/misc_conversion_old.c
 src/misc_input.c
 src/misc_playlist.c
 src/misc_track.c

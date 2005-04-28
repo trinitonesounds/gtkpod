@@ -53,6 +53,17 @@ TODO:
    HTH.
 
 
+Anton de Wet
+Feature Suggestion:
+  It would be very useful to be able to set the rating for all the
+  selected tracks. (i.e. change all tracks with rating 0 to rating 1 for
+  eg.) to then set specific tracks (like the Griffin iTrip frequency
+  changing tracks) to 0
+
+  Also usefull would be able to set the "default" rating for all newly
+  added tracks.
+
+
 Satadru
 > It would be nice to have the ability to have some sort of shadow aac 
 > directory, that would have converted versions of all the songs in your 
@@ -228,12 +239,31 @@ Yes -- once they are removed, they are removed.
 Could be done by checking against the "pending_deletion" list by md5 hash
 before adding a new track.
 
+On Sun, Apr 24, 2005 at 11:59:00AM +0100, David Smith wrote:
+> Is there any way to reverse sync with directories on gtkpod, i.e press  
+> sync and it updates my directories FROM my ipod? At the moment all i can
+> do is manually add the files i know I have updated on my iPod to my
+> computer.
+
+Len Trigg:
+> > Another thing that confused me was the "sort tabs". Since they are
+> > used for filtering rather than sorting, they should really be named
+> > "filter tabs" or "filter panes". 
+
+
 
 
 Please feel free to submit further features.
 
 
 BUGLIST:
+
+Hallo,
+ich habe das teil bei mir seit längerem ohne probs laufen, ich habe es einfach unter windows initialisiert, dann hat man nicht die probleme mit hfs und so. Nach der ersteinrichtung kann man es dann ganz normal mounten (mit vfat) und mit gtkpod bespielen. Läuft wunderbar!
+NUR: Aufpassen, wenn man in seiner Musiksammlung m3u liegen hat, wenn die mit übertragen wird, kackt gtkpod ab...
+Grüße,
+Patrick
+
 
 - Alexander C Gross
 > I am a happy user of gtkpod and really like the intuitive editing of

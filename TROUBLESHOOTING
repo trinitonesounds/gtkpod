@@ -99,4 +99,8 @@ the CONFIG_EFI_PARTITION option, and things ran perfectly for me
 afterwards. As indicated above, hopefully a better long-term solution
 will emerge soon."
 
-
+(Jorg Schuler: it seems a patch was introduced in kernel version 2.6.10:
+"<phil@ipom.com> [PATCH] USB Storage: Add unusual_devs entry for iPod
+This patch adds an unusual_devs.h entry for the Apple iPod as it
+reports one too many sectors. The patch was submitted by
+Avi Kivity <avi@argo.co.il> and re-diffed by me.")
