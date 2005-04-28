@@ -12449,7 +12449,7 @@ filename if they are (still) emply:</property>
 				<widget class="GtkButton" id="mserv_music_root_button">
 				  <property name="visible">True</property>
 				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">...</property>
+				  <property name="label" translatable="yes">Browse</property>
 				  <property name="use_underline">True</property>
 				  <property name="relief">GTK_RELIEF_NORMAL</property>
 				  <property name="focus_on_click">True</property>
@@ -12468,7 +12468,7 @@ filename if they are (still) emply:</property>
 				<widget class="GtkButton" id="mserv_trackinfo_root_button">
 				  <property name="visible">True</property>
 				  <property name="can_focus">True</property>
-				  <property name="label" translatable="yes">...</property>
+				  <property name="label" translatable="yes">Browse</property>
 				  <property name="use_underline">True</property>
 				  <property name="relief">GTK_RELIEF_NORMAL</property>
 				  <property name="focus_on_click">True</property>
@@ -13706,6 +13706,7 @@ filename if they are (still) emply:</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_id3_write_toggled" last_modification_time="Thu, 28 Apr 2005 18:07:39 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -13811,6 +13812,7 @@ when writing tags</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_multi_edit_toggled" last_modification_time="Thu, 28 Apr 2005 18:08:31 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -13991,6 +13993,7 @@ when writing tags</property>
 				  <property name="snap_to_ticks">False</property>
 				  <property name="wrap">False</property>
 				  <property name="adjustment">1 0 100 1 10 10</property>
+				  <signal name="value_changed" handler="on_cfg_misc_track_nr_value_changed" last_modification_time="Thu, 28 Apr 2005 18:09:09 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -14017,6 +14020,7 @@ when writing tags</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_not_played_track_toggled" last_modification_time="Thu, 28 Apr 2005 18:08:52 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -14117,6 +14121,7 @@ when writing tags</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_delete_track_from_playlist_toggled" last_modification_time="Thu, 28 Apr 2005 18:09:28 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -14136,6 +14141,7 @@ when writing tags</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_delete_track_from_ipod_toggled" last_modification_time="Thu, 28 Apr 2005 18:09:36 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -14156,6 +14162,7 @@ synchronizing directories</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_sync_remove_confirm_toggled" last_modification_time="Thu, 28 Apr 2005 18:10:20 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -14852,6 +14859,7 @@ synchronizing directories</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_concal_autosync_toggled" last_modification_time="Thu, 28 Apr 2005 18:12:10 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>

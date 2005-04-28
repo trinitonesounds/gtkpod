@@ -1,7 +1,8 @@
 2005-04-28  David Sedeño Fernandez <david@alderia.com>
 
 	* gtkpod.glade: Sync option from Reading to General. Put forbidden
-	buttons in mserv option. Add missing tooltips.
+	buttons in mserv option. Add missing tooltips. Add missing callbacks
+	in Edit and Tools tab.
 	
 2005-04-20  David Sedeño Fernandez <david@alderia.com>
 
