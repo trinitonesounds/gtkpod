@@ -11741,6 +11741,96 @@ existing tracks with identical filenames</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
+
+	      <child>
+		<widget class="GtkVBox" id="vbox104">
+		  <property name="visible">True</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">8</property>
+
+		  <child>
+		    <widget class="GtkLabel" id="label237">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">&lt;b&gt;Sync&lt;/b&gt;</property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">True</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkHBox" id="hbox98">
+		      <property name="visible">True</property>
+		      <property name="homogeneous">False</property>
+		      <property name="spacing">0</property>
+
+		      <child>
+			<widget class="GtkLabel" id="label238">
+			  <property name="visible">True</property>
+			  <property name="label" translatable="yes">    </property>
+			  <property name="use_underline">False</property>
+			  <property name="use_markup">False</property>
+			  <property name="justify">GTK_JUSTIFY_LEFT</property>
+			  <property name="wrap">False</property>
+			  <property name="selectable">False</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkCheckButton" id="cfg_write_extended">
+			  <property name="visible">True</property>
+			  <property name="tooltip" translatable="yes">Highly recommended for faster import when taking advantage of the duplication recognition. Also, having the PC filenames allows writing changed ID3 tags to disk, and even to reconstruct your ipod's contents in case of file system corruption (change the &quot;transferred=&quot; entries in your backuped database).</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Write extended information (PC filenames,
+ MD5 hashes, charset). Recommended.</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="focus_on_click">True</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="on_cfg_write_extended_info_toggled" last_modification_time="Sat, 04 Jan 2003 16:44:20 GMT"/>
+			</widget>
+			<packing>
+			  <property name="padding">0</property>
+			  <property name="expand">False</property>
+			  <property name="fill">False</property>
+			</packing>
+		      </child>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">True</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
 	    </widget>
 	    <packing>
 	      <property name="tab_expand">False</property>
@@ -11856,6 +11946,7 @@ existing tracks with identical filenames</property>
 			  <child>
 			    <widget class="GtkCheckButton" id="parsetags">
 			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD nr: %C, year: %Y, skip data: %*, the character '%': %%. You can separate several templates by a ';'. The first one matching the filename will be used. Example: '%a - %A/%T %t.mp3;%t.wav'.</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Use this template to parse filename for tag information:</property>
 			      <property name="use_underline">True</property>
@@ -12189,6 +12280,7 @@ filename if they are (still) emply:</property>
 			  <child>
 			    <widget class="GtkCheckButton" id="cfg_mserv_use">
 			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Currently only rating is supported.</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Use mserv database to fill additional information</property>
 			      <property name="use_underline">True</property>
@@ -12210,7 +12302,7 @@ filename if they are (still) emply:</property>
 			    <widget class="GtkTable" id="table33">
 			      <property name="visible">True</property>
 			      <property name="n_rows">3</property>
-			      <property name="n_columns">2</property>
+			      <property name="n_columns">3</property>
 			      <property name="homogeneous">False</property>
 			      <property name="row_spacing">8</property>
 			      <property name="column_spacing">8</property>
@@ -12242,6 +12334,7 @@ filename if they are (still) emply:</property>
 			      <child>
 				<widget class="GtkEntry" id="mserv_music_root_entry">
 				  <property name="visible">True</property>
+				  <property name="tooltip" translatable="yes">mserv database lookup will be done for music in this directory.</property>
 				  <property name="can_focus">True</property>
 				  <property name="editable">True</property>
 				  <property name="visibility">True</property>
@@ -12287,6 +12380,7 @@ filename if they are (still) emply:</property>
 			      <child>
 				<widget class="GtkEntry" id="mserv_trackinfo_root_entry">
 				  <property name="visible">True</property>
+				  <property name="tooltip" translatable="yes">Root directory of mserv database (trackinfo root).</property>
 				  <property name="can_focus">True</property>
 				  <property name="editable">True</property>
 				  <property name="visibility">True</property>
@@ -12332,6 +12426,7 @@ filename if they are (still) emply:</property>
 			      <child>
 				<widget class="GtkEntry" id="mserv_username_entry">
 				  <property name="visible">True</property>
+				  <property name="tooltip" translatable="yes">Username to be used for mserv database lookup.</property>
 				  <property name="can_focus">True</property>
 				  <property name="editable">True</property>
 				  <property name="visibility">True</property>
@@ -12349,6 +12444,44 @@ filename if they are (still) emply:</property>
 				  <property name="y_options"></property>
 				</packing>
 			      </child>
+
+			      <child>
+				<widget class="GtkButton" id="mserv_music_root_button">
+				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
+				  <property name="label" translatable="yes">...</property>
+				  <property name="use_underline">True</property>
+				  <property name="relief">GTK_RELIEF_NORMAL</property>
+				  <property name="focus_on_click">True</property>
+				</widget>
+				<packing>
+				  <property name="left_attach">2</property>
+				  <property name="right_attach">3</property>
+				  <property name="top_attach">0</property>
+				  <property name="bottom_attach">1</property>
+				  <property name="x_options">fill</property>
+				  <property name="y_options"></property>
+				</packing>
+			      </child>
+
+			      <child>
+				<widget class="GtkButton" id="mserv_trackinfo_root_button">
+				  <property name="visible">True</property>
+				  <property name="can_focus">True</property>
+				  <property name="label" translatable="yes">...</property>
+				  <property name="use_underline">True</property>
+				  <property name="relief">GTK_RELIEF_NORMAL</property>
+				  <property name="focus_on_click">True</property>
+				</widget>
+				<packing>
+				  <property name="left_attach">2</property>
+				  <property name="right_attach">3</property>
+				  <property name="top_attach">1</property>
+				  <property name="bottom_attach">2</property>
+				  <property name="x_options">fill</property>
+				  <property name="y_options"></property>
+				</packing>
+			      </child>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -12360,6 +12493,7 @@ filename if they are (still) emply:</property>
 			  <child>
 			    <widget class="GtkCheckButton" id="cfg_mserv_report_probs">
 			      <property name="visible">True</property>
+			      <property name="tooltip" translatable="yes">Currently only rating is supported.</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes">Show information about problems when accessing mserv</property>
 			      <property name="use_underline">True</property>
@@ -12394,96 +12528,6 @@ filename if they are (still) emply:</property>
 		<packing>
 		  <property name="padding">0</property>
 		  <property name="expand">False</property>
-		  <property name="fill">True</property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkVBox" id="vbox92">
-		  <property name="visible">True</property>
-		  <property name="homogeneous">False</property>
-		  <property name="spacing">8</property>
-
-		  <child>
-		    <widget class="GtkLabel" id="label225">
-		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">&lt;b&gt;Sync&lt;/b&gt;</property>
-		      <property name="use_underline">False</property>
-		      <property name="use_markup">True</property>
-		      <property name="justify">GTK_JUSTIFY_LEFT</property>
-		      <property name="wrap">False</property>
-		      <property name="selectable">False</property>
-		      <property name="xalign">0</property>
-		      <property name="yalign">0.5</property>
-		      <property name="xpad">0</property>
-		      <property name="ypad">0</property>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">False</property>
-		      <property name="fill">False</property>
-		    </packing>
-		  </child>
-
-		  <child>
-		    <widget class="GtkHBox" id="hbox91">
-		      <property name="visible">True</property>
-		      <property name="homogeneous">False</property>
-		      <property name="spacing">0</property>
-
-		      <child>
-			<widget class="GtkLabel" id="label226">
-			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">    </property>
-			  <property name="use_underline">False</property>
-			  <property name="use_markup">False</property>
-			  <property name="justify">GTK_JUSTIFY_LEFT</property>
-			  <property name="wrap">False</property>
-			  <property name="selectable">False</property>
-			  <property name="xalign">0.5</property>
-			  <property name="yalign">0.5</property>
-			  <property name="xpad">0</property>
-			  <property name="ypad">0</property>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">False</property>
-			  <property name="fill">False</property>
-			</packing>
-		      </child>
-
-		      <child>
-			<widget class="GtkCheckButton" id="checkbutton33">
-			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Highly recommended for faster import when taking advantage of the duplication recognition. Also, having the PC filenames allows writing changed ID3 tags to disk, and even to reconstruct your ipod's contents in case of file system corruption (change the &quot;transferred=&quot; entries in your backuped database).</property>
-			  <property name="can_focus">True</property>
-			  <property name="label" translatable="yes">Write extended information (PC filenames,
- MD5 hashes, charset). Recommended.</property>
-			  <property name="use_underline">True</property>
-			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
-			  <property name="active">False</property>
-			  <property name="inconsistent">False</property>
-			  <property name="draw_indicator">True</property>
-			  <signal name="toggled" handler="on_cfg_write_extended_info_toggled" last_modification_time="Sat, 04 Jan 2003 16:44:20 GMT"/>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">False</property>
-			  <property name="fill">False</property>
-			</packing>
-		      </child>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">False</property>
-		      <property name="fill">True</property>
-		    </packing>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="padding">0</property>
-		  <property name="expand">True</property>
 		  <property name="fill">True</property>
 		</packing>
 	      </child>
