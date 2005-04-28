@@ -1575,7 +1575,7 @@ void pm_create_treeview (void)
   GtkWidget *playlist_window;
   GtkWidget *tree;
 
-  playlist_window = lookup_widget (gtkpod_window, "playlist_window");
+  playlist_window = glade_xml_get_widget (main_window_xml, "playlist_window");
   g_return_if_fail (playlist_window);
 
   /* destroy old treeview */

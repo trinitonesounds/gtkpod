@@ -12,12 +12,16 @@ EXTRA_DIST = \
 install-data-local:
 	@$(NORMAL_INSTALL)
 	if test -d $(srcdir)/pixmaps; then \
-	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps; \
+	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir); \
 	  for pixmap in $(srcdir)/pixmaps/*; do \
 	    if test -f $$pixmap; then \
-	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir)/pixmaps; \
+	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir); \
 	    fi \
 	  done \
+	fi
+
+	if test -f gtkpod.glade; then \
+	  $(INSTALL_DATA) gtkpod.glade $(DESTDIR)$(pkgdatadir); \
 	fi
 
 dist-hook:

@@ -38,7 +38,6 @@ gtkpod_SOURCES = \
     display.h display_private.h \
     file.c file.h file_export.c \
     info.c info.h \
-    interface.c interface.h \
     itdb_itunesdb.c itdb_playlist.c  itdb_track.c itdb_private.h itdb.h \
     main.c \
     md5.c md5.h \
@@ -51,7 +50,6 @@ gtkpod_SOURCES = \
     mp4file.c mp4file.h \
     prefs.c prefs.h \
     prefs_window.c prefs_window.h \
-    support.c support.h \
     wavfile.c wavfile.h \
     callbacks.c callbacks.h
 

@@ -61,10 +61,19 @@ void open_about_window ()
   GtkTextView *textview;
   GtkTextIter ti;
   GtkTextBuffer *tb;
+  gchar *xml_file;
+  GladeXML *about_xml;
 
   if (about_window != NULL) return;
-  about_window = create_gtkpod_about_window ();
-  about_label = GTK_LABEL (lookup_widget (about_window, "about_label"));
+  /* about_window = create_gtkpod_about_window (); */
+
+  xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+  about_xml = glade_xml_new (xml_file, "gtkpod_about_window", NULL);
+  glade_xml_signal_autoconnect (about_xml);
+  about_window = glade_xml_get_widget (about_xml, "gtkpod_about_window");
+  
+  
+  about_label = GTK_LABEL (glade_xml_get_widget (about_xml, "about_label"));
   label_text = g_strdup_printf (_("gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod(tm)."), VERSION);
   gtk_label_set_text (about_label, label_text);
   g_free (label_text);
@@ -147,7 +156,7 @@ This program borrows code from the following projects:\n"),
 The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"),
 		       NULL };
       gchar **strp = text;
-      textview = GTK_TEXT_VIEW (lookup_widget (about_window, "credits_textview"));
+      textview = GTK_TEXT_VIEW (glade_xml_get_widget (about_xml, "credits_textview"));
       tb = gtk_text_view_get_buffer (textview);
       while (*strp)
       {
@@ -172,7 +181,7 @@ Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"),
 Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"),
 				     NULL };
       gchar **strp = text;
-      textview = GTK_TEXT_VIEW (lookup_widget (about_window, "translators_textview"));
+      textview = GTK_TEXT_VIEW (glade_xml_get_widget (about_xml, "translators_textview"));
       tb = gtk_text_view_get_buffer (textview);
       while (*strp)
       {
@@ -718,7 +727,7 @@ gunichar2 *utf16_strdup (gunichar2 *utf16)
    (integer value). If no parameter is set in the prefs, use
    @dflt. The corresponding widget names are stored in an array
    @widgets and are member of @win */
-void option_set_radio_button (GtkWidget *win,
+void option_set_radio_button (GladeXML *win_xml,
 			      const gchar *prefs_string,
 			      const gchar **widgets,
 			      gint dflt)
@@ -726,7 +735,7 @@ void option_set_radio_button (GtkWidget *win,
     gint wnum, num=0;
     GtkWidget *w;
 
-    g_return_if_fail (win && prefs_string && widgets);
+    g_return_if_fail (win_xml && prefs_string && widgets);
 
     /* number of available widgets */
     num=0;
@@ -743,7 +752,7 @@ void option_set_radio_button (GtkWidget *win,
 	prefs_set_int_value (prefs_string, 0);
 	wnum = 0;
     }
-    w = lookup_widget (win, widgets[wnum]);
+    w = glade_xml_get_widget (win_xml, widgets[wnum]);
     if (w)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
 }
@@ -751,17 +760,17 @@ void option_set_radio_button (GtkWidget *win,
 
 /* Retrieve which toggle button was activated and store the state in
  * the prefs */
-gint option_get_radio_button (GtkWidget *win,
+gint option_get_radio_button (GladeXML *win_xml,
 			      const gchar *prefs_string,
 			      const gchar **widgets)
 {
     gint i;
 
-    g_return_val_if_fail (win && prefs_string && widgets, 0);
+    g_return_val_if_fail (win_xml && prefs_string && widgets, 0);
 
     for (i=0; widgets[i]; ++i)
     {
-	GtkWidget *w = lookup_widget (win, widgets[i]);
+	GtkWidget *w = glade_xml_get_widget (win_xml, widgets[i]);
 	if (w)
 	{
 	    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)))
@@ -849,21 +858,21 @@ void option_get_filename (GtkFileChooser *fc,
 
 /* Set the string entry @name to the prefs value stored in @name or
    to @default if @name is not yet defined. */
-void option_set_string (GtkWidget *win,
+void option_set_string (GladeXML *win_xml,
 			const gchar *name,
 			const gchar *dflt)
 {
     gchar *string;
     GtkWidget *entry;
 
-    g_return_if_fail (win && name && dflt);
+    g_return_if_fail (win_xml && name && dflt);
 
     prefs_get_string_value (name, &string);
 
     if (!string)
 	string = g_strdup (dflt);
 
-    entry = lookup_widget (win, name);
+    entry = glade_xml_get_widget (win_xml, name);
 
     if (entry)
 	gtk_entry_set_text(GTK_ENTRY(entry), string);
@@ -875,15 +884,16 @@ void option_set_string (GtkWidget *win,
  * to the prefs (@name) */
 /* If @value is != NULL, a copy of the string is placed into
    @value. It has to be g_free()d after use */
-void option_get_string (GtkWidget *win,
+void option_get_string (GladeXML *win_xml,
 			const gchar *name,
 			gchar **value)
 {
     GtkWidget *entry;
 
-    g_return_if_fail (win && name);
+    g_return_if_fail (win_xml && name);
 
-    entry = lookup_widget (win, name);
+    entry = glade_xml_get_widget (win_xml, name);
+
     if (entry)
     {
 	const gchar *str = gtk_entry_get_text (GTK_ENTRY (entry));
@@ -895,19 +905,19 @@ void option_get_string (GtkWidget *win,
 
 /* Set the state of toggle button @name to the prefs value stored in
    @name or to @default if @name is not yet defined. */
-void option_set_toggle_button (GtkWidget *win,
+void option_set_toggle_button (GladeXML *win_xml,
 			       const gchar *name,
 			       gboolean dflt)
 {
     gboolean active;
     GtkWidget *button;
 
-    g_return_if_fail (win && name);
+    g_return_if_fail (win_xml && name);
 
     if (!prefs_get_int_value (name, &active))
 	active = dflt;
 
-    button = lookup_widget (win, name);
+    button = glade_xml_get_widget (win_xml, name);
 
     if (button)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(button),
@@ -917,15 +927,15 @@ void option_set_toggle_button (GtkWidget *win,
 /* Retrieve the current state of the toggle button @name and write it
  * to the prefs (@name) */
 /* Return value: the current state */
-gboolean option_get_toggle_button (GtkWidget *win,
+gboolean option_get_toggle_button (GladeXML *win_xml,
 				   const gchar *name)
 {
     gboolean active = FALSE;
     GtkWidget *button;
 
-    g_return_val_if_fail (win && name, active);
+    g_return_val_if_fail (win_xml && name, active);
 
-    button = lookup_widget (win, name);
+    button = glade_xml_get_widget (win_xml, name);
 
     if (button)
     {

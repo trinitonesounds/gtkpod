@@ -31,7 +31,7 @@ if test "y$have_pkgconfig" = "y"; then
 fi
 
 dnl check for libs that are managed with pkg-config
-PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.4.0 gthread-2.0 >= 0.14.0 glib-2.0 > 2.0.0],,[AC_MSG_FAILURE([*** $PACKAGE_PKG_ERRORS])])
+PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.4.0 gthread-2.0 >= 0.14.0 glib-2.0 > 2.0.0 libglade-2.0  >=  2.0.0 gmodule-2.0],,[AC_MSG_FAILURE([*** $PACKAGE_PKG_ERRORS])])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 

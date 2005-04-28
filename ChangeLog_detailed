@@ -1,0 +1,126 @@
+2005-04-20  David Sedeño Fernandez <david@alderia.com>
+
+	* gtkpod.glade: Preferences window work to follow more the Gnome HIG.
+
+2005-04-18  David Sedeño Fernandez <david@alderia.com>
+
+	* src/prefs_window.c (prefs_window_show_hide_tooltips): Check if we
+	have the correct data.
+	* NEWS: Copy the ChangeLog file to NEWS file.
+	* ChangeLog: Update.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/prefs_window.c: Get the right tooltips object.
+	* src/display.h: Add GtkTooltipsData to SortData;
+	* src/display_sorttabs.c: Show / Hide tooltips.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/Makefile.am: Remove support.c and support.h 
+	* src/main.c: remove add_pixmap_directory calls.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/confirmation.c: Save the glade xml file in ConfData struct in
+	order to take widgets later with glade_xml_get_widget. 
+	* src/misc.c : Change GtkWidget for GladeXML
+	in order to take the widgets with glade_xml_get_widget in some
+	functions.
+	* src/misc.h: Change GtkWidget for GladeXML in some functions.
+	* src/file_export.c: Call option_set_* and
+	option_get_* , with the xml file instead of the window.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/Makefile.am: Remove interface.* for compilation.
+	* src/display_spl.c: Load spl_window from glade file. Change all
+	lookup_widget calls to glade_xml_get_widget for spl_window.
+	* src/interface.h: Remove create_spl_window.
+	* src/interface.c: Remove create_spl_window.
+	* src/prefs_window.c: Fix a not remove line.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/file_export.c: Load export_files_options and
+	export_playlist_file_options from glade file.
+	* src/interfac.c: Remove create_files_options and
+	create_export_playlist_file_options.
+	* src/interfac.h: Remove create_files_options and
+	create_export_playlist_file_options.
+	
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/confirmation.c: Load confirm_dialog from glade file. Change all
+	lookup_widget calls to glade_xml_get_widget for confirm_dialog.
+	* src/interfac.c: Remove create_confirm_dialog.
+	* src/interfac.h: Remove create_confirm_dialog.
+	
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/info.c: Load info window from glade file. Change all
+	lookup_widget calls to glade_xml_get_widget for info_window.
+	* src/interfac.c: Remove create_info_window.
+	* src/interfac.h: Remove create_info_window.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/prefs_window.c: Load sort_window from glade file. Change
+        all lookup_widget calls to glade_xml_get_widget for sort_window.
+	* src/interfac.c: Remove create_sort_window.
+	* src/interfac.h: Remove create_sort_window.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/display_sorttabs.c: Load calendar_window from glade file. Change
+	all lookup_widget calls to glade_xml_get_widget for cal.
+	* src/interfac.c: Remove create_calendar_window.
+	* src/interfac.h: Remove create_calendar_window.
+	
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/display_sorttabs.c: Load special_sorttab from glade file. Change
+	all lookup_widget calls to glade_xml_get_widget for special. 
+	* src/interfac.c: Remove create_special_sorttab.
+	* src/interfac.h: Remove create_special_sorttab.
+	
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* src/misc.h: include glade.h
+	* src/misc.c: Load about window from glade file.
+	* src/interface.c: Remove create_gtkpod_about_window.
+	* src/interface.h: Remove create_gtkpod_about_window.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* gtkpod.glade: Rename on_most_rated_tracks_playlist's1_activate to
+	on_most_rated_tracks_playlist_s1_activate so libglade can handle it.
+	* src/interface.c: Remove create_prefs_window function.
+	* src/interface.h: Remove create_prefs_window and create_gtkpod.
+	* src/prefs_window.c: prefs_window_xml new var. Load prefs_window from
+	xml. Change all lookup_widget calls to glade_xml_get_widget for
+	prefs_window.
+
+2005-04-09  David Sedeño Fernandez <david@alderia.com>
+
+	* configure.in: Check libglade and gmodule
+	* Makefile.am: Install pixmaps without pixmaps prefix. Install glade
+	file.
+	* src/display.h: Include glade.h. Add main xml variable for glade
+	file.
+	* src/display.c: Change lookup_widget calls to glade_xml_get_widget.
+	* src/display_playlists.c: Change lookup_widget calls to
+	glade_xml_get_widget for main window.
+	* src/display_songs.c: Change lookup_widget calls to
+	glade_xml_get_widget for main window.
+	* src/display_sorttabs.c: Change lookup_widget calls
+	to glade_xml_get_widget for main window.
+	* src/info.c: Change lookup_widget calls to glade_xml_get_widget for
+	main window.
+	* src/interface.c: Delete create_gtkpod.
+	* src/main.c: Load main xml glade file.
+	* src/misc_input.c: Change lookup_widget calls to glade_xml_get_widget
+	for main window.
+	* src/prefs.c:  Change lookup_widget calls to glade_xml_get_widget 
+	for main window.
+

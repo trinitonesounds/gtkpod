@@ -48,6 +48,8 @@
 int
 main (int argc, char *argv[])
 {
+	char *xml_file;
+	
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -64,13 +66,16 @@ main (int argc, char *argv[])
 
   gtk_init (&argc, &argv);
 
-  add_pixmap_directory (PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "pixmaps");
-
-  add_pixmap_directory (PACKAGE_DATA_DIR G_DIR_SEPARATOR_S "pixmaps");
-
   srand(time(NULL));
 
-  gtkpod_window = create_gtkpod ();
+  /* gtkpod_window = create_gtkpod (); */
+  xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+  main_window_xml = glade_xml_new (xml_file, "gtkpod", NULL);
+
+  glade_xml_signal_autoconnect (main_window_xml);
+  
+  gtkpod_window = glade_xml_get_widget (main_window_xml, "gtkpod");
+  
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
 
   display_create (gtkpod_window);

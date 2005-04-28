@@ -496,7 +496,7 @@ static GList *add_blocked_widget (GList *blocked_widgets, gchar *name)
     GtkWidget *w;
     struct blocked_widget *bw;
 
-    if((w = lookup_widget(gtkpod_window,  name)))
+    if((w = glade_xml_get_widget (main_window_xml,  name)))
     {
 	bw = g_malloc0 (sizeof (struct blocked_widget));
 	bw->widget = w;

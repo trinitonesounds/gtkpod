@@ -1006,7 +1006,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 	  exit(1);
       }
   }
-  menu = GTK_CHECK_MENU_ITEM (lookup_widget (gtkpod, "offline_menu"));
+  menu = GTK_CHECK_MENU_ITEM (glade_xml_get_widget (main_window_xml, "offline_menu"));
   gtk_check_menu_item_set_active (menu, prefs_get_offline ());
   return result;
 }

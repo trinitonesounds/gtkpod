@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-27 23:28:06 jcs>
+/* Time-stamp: <2005-04-29 01:15:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -131,14 +131,21 @@ gboolean pmtm_move_pathlist (GtkTreeView *treeview,
 void display_create (GtkWidget *gtkpod)
 {
     GtkWidget *stop_button;
+    gint defx, defy;
+
+    /* x,y-size */
+    prefs_get_size_gtkpod (&defx, &defy);
+    gtk_window_set_default_size (GTK_WINDOW (gtkpod_window), defx, defy);
+/* we need to use the following line if the main window is already
+   displayed */
+/*    gtk_window_resize (GTK_WINDOW (gtkpod_window), defx, defy);*/
 
     tm_create_treeview ();
     st_create_tabs ();
+    st_set_default_sizes ();
     pm_create_treeview ();
-    /* set certain sizes, positions, widths... to default values */
-    display_set_default_sizes ();
     /* Hide the "stop_button" */
-    stop_button = lookup_widget (gtkpod_window, "stop_button");
+    stop_button = glade_xml_get_widget (main_window_xml, "stop_button");
     if (stop_button) gtk_widget_hide (stop_button);
     /* Hide/Show the toolbar */
     display_show_hide_toolbar ();
@@ -219,14 +226,15 @@ display_disable_gtkpod_import_buttons(void)
 
     if(gtkpod_window)
     {
-	if((w = lookup_widget(gtkpod_window, "import_button")))
+	if((w = glade_xml_get_widget (main_window_xml, "import_button")))
 	{
 	    gtk_widget_set_sensitive(w, FALSE);
 	    /* in case this widget has been blocked, we need to tell
 	       update the desired state upon release */
 	    update_blocked_widget (w, FALSE);
 	}
-	if((w = lookup_widget(gtkpod_window, "import_itunes_mi")))
+
+	if((w = glade_xml_get_widget (main_window_xml, "import_itunes_mi")))
 	{
 	    gtk_widget_set_sensitive(w, FALSE);
 	    /* in case this widget has been blocked, we need to tell
@@ -240,17 +248,17 @@ display_disable_gtkpod_import_buttons(void)
 /* make sure only suitable delete menu items are available */
 void display_adjust_delete_menus (void)
 {
-    GtkWidget *d  = lookup_widget (gtkpod_window, "delete_menu");
-    GtkWidget *dp = lookup_widget (gtkpod_window, "delete_playlist_menu");
-    GtkWidget *df  = lookup_widget (gtkpod_window, "delete_full_menu");
-    GtkWidget *dfp = lookup_widget (gtkpod_window, "delete_full_playlist_menu");
+    GtkWidget *d  = glade_xml_get_widget (main_window_xml, "delete_menu");
+    GtkWidget *dp = glade_xml_get_widget (main_window_xml, "delete_playlist_menu");
+    GtkWidget *df  = glade_xml_get_widget (main_window_xml, "delete_full_menu");
+    GtkWidget *dfp = glade_xml_get_widget (main_window_xml, "delete_full_playlist_menu");
 #if 0
 /* not used */
-    GtkWidget *de = lookup_widget (gtkpod_window, "delete_tab_entry_menu");
-    GtkWidget *dt = lookup_widget (gtkpod_window, "delete_tracks_menu");
-    GtkWidget *dfe = lookup_widget (gtkpod_window,
+    GtkWidget *de = glade_xml_get_widget (main_window_xml, "delete_tab_entry_menu");
+    GtkWidget *dt = glade_xml_get_widget (main_window_xml, "delete_tracks_menu");
+    GtkWidget *dfe = glade_xml_get_widget (main_window_xml,
 				    "delete_full_tab_entry_menu");
-    GtkWidget *dft = lookup_widget (gtkpod_window, "delete_full_tracks_menu");
+    GtkWidget *dft = glade_xml_get_widget (main_window_xml, "delete_full_tracks_menu");
 #endif
 
     Playlist *pl = pm_get_selected_playlist ();
@@ -281,8 +289,8 @@ void display_adjust_delete_menus (void)
    the prefs */
 void display_show_hide_toolbar (void)
 {
-    GtkWidget *tb = lookup_widget (gtkpod_window, "toolbar");
-    GtkWidget *mi = lookup_widget (gtkpod_window, "toolbar_menu");
+    GtkWidget *tb = glade_xml_get_widget (main_window_xml, "toolbar");
+    GtkWidget *mi = glade_xml_get_widget (main_window_xml, "toolbar_menu");
 
     if (prefs_get_display_toolbar ())
     {
@@ -301,7 +309,7 @@ void display_show_hide_toolbar (void)
    prefs. */
 void display_set_info_window_menu (void)
 {
-    GtkWidget *mi = lookup_widget (gtkpod_window, "info_window_menu");
+    GtkWidget *mi = glade_xml_get_widget (main_window_xml, "info_window_menu");
 
     if (prefs_get_info_window ())
     {
@@ -320,7 +328,7 @@ void display_set_check_ipod_menu (void)
 {
     GtkWidget *w = NULL;
 
-    if((w = lookup_widget(gtkpod_window, "check_ipod_files_mi")))
+    if((w = glade_xml_get_widget (main_window_xml, "check_ipod_files_mi")))
         gtk_widget_set_sensitive(w, !prefs_get_offline());
     else
         g_warning ("check_ipod_files_mi(): Programming error: widget check_ipod_files_mi must be found\n");
@@ -334,8 +342,8 @@ void display_show_hide_tooltips (void)
     GtkTooltips *tt = NULL; /* = GTK_TOOLTIPS (lookup_widget (gtkpod_window,
       "tooltips")); */
     GtkCheckMenuItem *mi = GTK_CHECK_MENU_ITEM (
-	lookup_widget (gtkpod_window, "tooltips_menu"));
-    GtkToolbar *tb = GTK_TOOLBAR (lookup_widget (gtkpod_window, "toolbar"));
+	glade_xml_get_widget (main_window_xml, "tooltips_menu"));
+    GtkToolbar *tb = GTK_TOOLBAR (glade_xml_get_widget (main_window_xml, "toolbar"));
 
 
     if (prefs_get_display_tooltips_main ())
@@ -356,20 +364,6 @@ void display_show_hide_tooltips (void)
     prefs_window_show_hide_tooltips ();
     /* Show/Hide tooltips of the prefs window */
     sort_window_show_hide_tooltips ();
-}
-
-
-/* set the default sizes for the gtkpod main window according to prefs:
-   x, y, position of the PANED_NUM GtkPaned elements (the widht of the
-   colums is set when setting up the colums in the listview */
-void display_set_default_sizes (void)
-{
-    gint defx, defy;
-
-    /* x,y-size */
-    prefs_get_size_gtkpod (&defx, &defy);
-    gtk_window_set_default_size (GTK_WINDOW (gtkpod_window), defx, defy);
-    st_set_default_sizes ();
 }
 
 
@@ -503,7 +497,7 @@ static void block_release_selection (gint inst, gint action,
     /* lookup stop_button */
     if (stop_button == NULL)
     {
-	stop_button = lookup_widget (gtkpod_window, "stop_button");
+	stop_button = glade_xml_get_widget (main_window_xml, "stop_button");
 	if (stop_button == NULL)
 	    g_warning ("Programming error: stop_button not found\n");
     }

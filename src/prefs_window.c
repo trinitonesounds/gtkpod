@@ -37,6 +37,9 @@
 #include "support.h"
 #include "display_itdb.h"
 
+GladeXML *prefs_window_xml;
+GladeXML *sort_window_xml;
+
 static GtkWidget *prefs_window = NULL;
 static GtkWidget *sort_window = NULL;
 static struct cfg *tmpcfg = NULL;
@@ -173,7 +176,7 @@ static void on_path_ok (PathType i)
 	else
 	    newpath = g_strdup (npath);
 
-	if ((w = lookup_widget (prefs_window, path_entry_names[i])))
+	if ((w = glade_xml_get_widget (prefs_window_xml, path_entry_names[i])))
 	{
 	    gchar *newpath_utf8 = g_filename_to_utf8 (newpath, -1, NULL, NULL, NULL);
 	    gtk_entry_set_text(GTK_ENTRY(w), newpath_utf8);
@@ -304,16 +307,25 @@ void prefs_window_release (void)
  * the prefs (tooltips_prefs) */
 void prefs_window_show_hide_tooltips (void)
 {
+    
     if (prefs_window)
     {
-	GtkTooltips *tt = GTK_TOOLTIPS (lookup_widget (prefs_window,
-						      "tooltips"));
-	if (tt)
-	{
-	    if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
-	    else                                     gtk_tooltips_disable (tt);
+	GtkTooltips *tt;
+	GtkTooltipsData *tooltipsdata;
+		
+	tooltipsdata = gtk_tooltips_data_get (glade_xml_get_widget (prefs_window_xml, "cfg_mount_point"));
+	if (tooltipsdata) {
+		tt = tooltipsdata->tooltips;
+		if (tt)
+		{
+	    	if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
+	    	else                                     gtk_tooltips_disable (tt);
+		}
+    	} else {
+		g_message("tooltipsdata is NULL");
 	}
-    }
+	
+   }
 }
 
 /**
@@ -326,6 +338,7 @@ prefs_window_create(void)
 {
     gint i;
     gint defx, defy;
+    char *xml_file;
 
     if(!prefs_window)
     {
@@ -342,10 +355,16 @@ prefs_window_create(void)
 	    g_warning ("Programming error: tmpcfg is not NULL!!\n");
 	    return;
 	}
-	prefs_window = create_prefs_window();
+
+	xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+	prefs_window_xml = glade_xml_new (xml_file, "prefs_window", NULL);
+	glade_xml_signal_autoconnect (prefs_window_xml);
+
+	prefs_window = glade_xml_get_widget(prefs_window_xml,"prefs_window");
+
 	prefs_get_size_prefs (&defx, &defy);
 	gtk_window_set_default_size (GTK_WINDOW (prefs_window), defx, defy);
-	if((w = lookup_widget(prefs_window, "cfg_mount_point")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_mount_point")))
 	{
 	    if (tmpcfg->ipod_mount)
 	    {  /* we should copy the new path first because by setting
@@ -356,92 +375,93 @@ prefs_window_create(void)
 		g_free (buf);
 	    }
 	}
-	if((w = lookup_widget(prefs_window, "charset_combo")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "charset_combo")))
 	{
 	    charset_init_combo (GTK_COMBO (w));
 	}
-	if((w = lookup_widget(prefs_window, "cfg_md5tracks")))
+
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_md5tracks")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->md5tracks);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_update_existing")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_update_existing")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->update_existing);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_show_duplicates")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_duplicates")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_duplicates);
 	    if (!tmpcfg->md5tracks) gtk_widget_set_sensitive (w, FALSE);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_show_updated")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_updated")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_updated);
 	    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_show_non_updated")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_non_updated")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_non_updated);
 	    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_show_sync_dirs")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_sync_dirs")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->show_sync_dirs);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_sync_remove")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_sync_remove")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->sync_remove);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_display_toolbar")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_display_toolbar")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->display_toolbar);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_toolbar_style_icons")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_icons")))
 	{
 	    if (tmpcfg->toolbar_style == GTK_TOOLBAR_ICONS)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 	    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_toolbar_style_text")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_text")))
 	{
 	    if (tmpcfg->toolbar_style == GTK_TOOLBAR_TEXT)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 	    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_toolbar_style_both")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_both")))
 	{
 	    if (tmpcfg->toolbar_style == GTK_TOOLBAR_BOTH)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 	    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_display_tooltips_main")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_main")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->display_tooltips_main);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_display_tooltips_prefs")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_prefs")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->display_tooltips_prefs);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_multi_edit")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_multi_edit")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->multi_edit);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_not_played_track")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_not_played_track")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->not_played_track);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_misc_track_nr")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_misc_track_nr")))
 	{
 	    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
 				       0, 0xffffffff);
@@ -449,71 +469,71 @@ prefs_window_create(void)
 				       prefs_get_misc_track_nr ());
 	    prefs_window_set_misc_track_nr (tmpcfg->misc_track_nr);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_multi_edit_title")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_multi_edit_title")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->multi_edit_title);
 	    gtk_widget_set_sensitive (w, tmpcfg->multi_edit);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_update_charset")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_update_charset")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->update_charset);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_block_display")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_block_display")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->block_display);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_id3_write")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_id3_write")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->id3_write);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_id3_write_id3v24")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_id3_write_id3v24")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->id3_write_id3v24);
 	    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_write_charset")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_write_charset")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->write_charset);
 	    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_add_recursively")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_add_recursively")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->add_recursively);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_delete_track_from_playlist")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_delete_track_from_playlist")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->deletion.track);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_delete_track_from_ipod")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_delete_track_from_ipod")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->deletion.ipod_file);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_sync_remove_confirm")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->deletion.syncing);
 	    gtk_widget_set_sensitive (w, tmpcfg->sync_remove);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_sync_remove_confirm2")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm2")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->deletion.syncing);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_autoimport")))
+	if((w = glade_xml_get_widget (prefs_window_xml,  "cfg_autoimport")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->autoimport);
 	}
-	if((w = lookup_widget(prefs_window, "autoselect_hbox")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "autoselect_hbox")))
 	{
 	    for (i=0; i<SORT_TAB_MAX; ++i)
 	    {
@@ -540,14 +560,14 @@ prefs_window_create(void)
 	/* connect signals for path entrys and selectors */
 	for (i=0; i<PATH_NUM; ++i)
 	{
-	    if ((w = lookup_widget (prefs_window, path_button_names[i])))
+	    if ((w = glade_xml_get_widget (prefs_window_xml, path_button_names[i])))
 	    {
 		g_signal_connect ((gpointer)w,
 				  "clicked",
 				  G_CALLBACK (on_path_button_pressed),
 				  (gpointer)i);
 	    }
-	    if ((w = lookup_widget (prefs_window, path_entry_names[i])))
+	    if ((w = glade_xml_get_widget (prefs_window_xml, path_entry_names[i])))
 	    {
 		if (tmpcfg->path[i])
 		{  /* we should copy the new path first because by setting
@@ -563,7 +583,7 @@ prefs_window_create(void)
 				  (gpointer)i);
 	    }
 	}
-	if((w = lookup_widget(prefs_window, "cfg_mpl_autoselect")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_mpl_autoselect")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->mpl_autoselect);
@@ -572,7 +592,7 @@ prefs_window_create(void)
 	{
 	    gchar *buf;
 	    buf = g_strdup_printf ("tag_autoset%d", i);
-	    if((w = lookup_widget(prefs_window,  buf)))
+	    if((w = glade_xml_get_widget (prefs_window_xml, buf)))
 	    {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					     tmpcfg->autosettags[i]);
@@ -586,23 +606,23 @@ prefs_window_create(void)
 	    }
 	    g_free (buf);
 	}
-	if((w = lookup_widget(prefs_window, "readtags")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "readtags")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->readtags);
 	}
-	if((w = lookup_widget(prefs_window, "parsetags")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "parsetags")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->parsetags);
 	}
-	if((w = lookup_widget(prefs_window, "parsetags_overwrite")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "parsetags_overwrite")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->parsetags_overwrite);
 	    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
 	}
-	if((w = lookup_widget(prefs_window, "parsetags_template")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "parsetags_template")))
 	{
 	    if (tmpcfg->parsetags_template)
 	    {  /* we should copy the new path first because by setting
@@ -615,11 +635,11 @@ prefs_window_create(void)
 	    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
 	}
 	/* get tooltips */
-	tt = GTK_TOOLTIPS (lookup_widget (prefs_window, "tooltips"));
+	tt = GTK_TOOLTIPS (glade_xml_get_widget (prefs_window_xml, "tooltips"));
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{
 	    gchar *buf = g_strdup_printf ("col_visible%d", i);
-	    if((w = lookup_widget(prefs_window,  buf)))
+	    if((w = glade_xml_get_widget (prefs_window_xml, buf)))
 	    {
 		/* set label */
 		gtk_button_set_label (GTK_BUTTON (w),
@@ -644,23 +664,23 @@ prefs_window_create(void)
 	    g_free (buf);
 	}
 
-	if((w = lookup_widget(prefs_window, "cfg_write_extended")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_write_extended")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    tmpcfg->write_extended_info);
 	}
 
-	if ((w = lookup_widget (prefs_window, "notebook")))
+	if ((w = glade_xml_get_widget (prefs_window_xml, "notebook")))
 	{
 	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
 					   prefs_get_last_prefs_page ());
 	}
-	if ((w = lookup_widget (prefs_window, "cfg_automount_ipod")))
+	if ((w = glade_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					    prefs_get_automount());
 	}
-	if ((w = lookup_widget (prefs_window, "cfg_sort_tab_num_sb")))
+	if ((w = glade_xml_get_widget (prefs_window_xml, "cfg_sort_tab_num_sb")))
 	{
 	    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
 				       0, SORT_TAB_MAX);
@@ -668,32 +688,32 @@ prefs_window_create(void)
 				       prefs_get_sort_tab_num ());
 	    prefs_window_set_sort_tab_num (tmpcfg->sort_tab_num);
 	}
-	if((w = lookup_widget(prefs_window, "concal_autosync")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "concal_autosync")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->concal_autosync);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_tmp_disable_sort")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_tmp_disable_sort")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->tmp_disable_sort);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_startup_messages")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_startup_messages")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->startup_messages);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_mserv_use")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_mserv_use")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->mserv_use);
 	}
-	if((w = lookup_widget(prefs_window, "cfg_mserv_report_probs")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "cfg_mserv_report_probs")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->mserv_report_probs);
 	}
-	if((w = lookup_widget(prefs_window, "mserv_username_entry")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "mserv_username_entry")))
 	{
 	    if (tmpcfg->mserv_username)
 	    {  /* we should copy the new path first because by setting
@@ -709,7 +729,7 @@ prefs_window_create(void)
 /* 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), */
 /* 					 tmpcfg->unused_gboolean3); */
 /* 	} */
-	if((w = lookup_widget(prefs_window, "concal_label")))
+	if((w = glade_xml_get_widget (prefs_window_xml, "concal_label")))
 	{
 	    gchar *str = g_strdup_printf (_("Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release."), PACKAGE_DATA_DIR G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
 	    gtk_label_set_text (GTK_LABEL (w), str);
@@ -858,7 +878,7 @@ void prefs_window_delete(void)
     origcfg = NULL;
 
     /* save current notebook page */
-    nb = lookup_widget (prefs_window, "notebook");
+    nb = glade_xml_get_widget (prefs_window_xml, "notebook");
     prefs_set_last_prefs_page (gtk_notebook_get_current_page (
 				   GTK_NOTEBOOK (nb)));
 
@@ -893,7 +913,7 @@ prefs_window_ok (void)
     origcfg = NULL;
 
     /* save current notebook page */
-    nb = lookup_widget (prefs_window, "notebook");
+    nb = glade_xml_get_widget (prefs_window_xml, "notebook");
     prefs_set_last_prefs_page (gtk_notebook_get_current_page (
 				   GTK_NOTEBOOK (nb)));
 
@@ -924,21 +944,21 @@ prefs_window_apply (void)
     /* reset the validated path entries */
     for (i=0; i<PATH_NUM; ++i)
     {
-	if((w = lookup_widget(prefs_window, path_entry_names[i])))
+	if((w = glade_xml_get_widget (prefs_window_xml, path_entry_names[i])))
 	{
 	    gtk_entry_set_text(GTK_ENTRY(w), tmpcfg->path[i]);
 	    /* tmpcfg gets set by the "changed" callback */
 	}
     }
 
-    if((w = lookup_widget(prefs_window, "mserv_username_entry")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "mserv_username_entry")))
     {
 	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mserv_username ());
 	/* tmpcfg gets set by the "changed" callback */
     }
 
     /* save current notebook page */
-    nb = lookup_widget (prefs_window, "notebook");
+    nb = glade_xml_get_widget (prefs_window_xml, "notebook");
     prefs_set_last_prefs_page (gtk_notebook_get_current_page (
 				   GTK_NOTEBOOK (nb)));
 
@@ -959,7 +979,7 @@ prefs_window_set_md5tracks(gboolean val)
     GtkWidget *w;
 
     tmpcfg->md5tracks = val;
-    if((w = lookup_widget(prefs_window, "cfg_show_duplicates")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_duplicates")))
 	gtk_widget_set_sensitive (w, val);
 }
 
@@ -975,9 +995,9 @@ prefs_window_set_update_existing(gboolean val)
     GtkWidget *w;
 
     tmpcfg->update_existing = val;
-    if((w = lookup_widget(prefs_window, "cfg_show_updated")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_updated")))
 	gtk_widget_set_sensitive (w, val);
-    if((w = lookup_widget(prefs_window, "cfg_show_non_updated")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_non_updated")))
 	gtk_widget_set_sensitive (w, val);
 }
 
@@ -992,9 +1012,9 @@ prefs_window_set_id3_write(gboolean val)
     GtkWidget *w;
 
     tmpcfg->id3_write = val;
-    if((w = lookup_widget(prefs_window, "cfg_id3_write_id3v24")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_id3_write_id3v24")))
 	gtk_widget_set_sensitive (w, val);
-    if((w = lookup_widget(prefs_window, "cfg_write_charset")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_write_charset")))
 	gtk_widget_set_sensitive (w, val);
 }
 
@@ -1083,9 +1103,9 @@ prefs_window_set_parsetags(gboolean val)
     GtkWidget *w;
 
     tmpcfg->parsetags = val;
-    if((w = lookup_widget(prefs_window, "parsetags_overwrite")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "parsetags_overwrite")))
 	gtk_widget_set_sensitive (w, val);
-    if((w = lookup_widget(prefs_window, "parsetags_template")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "parsetags_template")))
 	gtk_widget_set_sensitive (w, val);
 }
 
@@ -1138,15 +1158,15 @@ void prefs_window_set_sync_remove (gboolean val)
     GtkWidget *w;
 
     tmpcfg->sync_remove = val;
-    if((w = lookup_widget(prefs_window, "cfg_sync_remove_confirm")))
+    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm")))
 	gtk_widget_set_sensitive (w, val);
 }
 
 void prefs_window_set_display_toolbar (gboolean val)
 {
-    GtkWidget *w1 = lookup_widget (prefs_window, "cfg_toolbar_style_icons");
-    GtkWidget *w2 = lookup_widget (prefs_window, "cfg_toolbar_style_text");
-    GtkWidget *w3 = lookup_widget (prefs_window, "cfg_toolbar_style_both");
+    GtkWidget *w1 = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_icons");
+    GtkWidget *w2 = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_text");
+    GtkWidget *w3 = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_both");
 
     tmpcfg->display_toolbar = val;
 
@@ -1167,7 +1187,7 @@ void prefs_window_set_display_tooltips_prefs (gboolean val)
 
 void prefs_window_set_multi_edit (gboolean val)
 {
-    GtkWidget *w = lookup_widget (prefs_window, "cfg_multi_edit_title");
+    GtkWidget *w = glade_xml_get_widget  (prefs_window_xml, "cfg_multi_edit_title");
 
     tmpcfg->multi_edit = val;
     gtk_widget_set_sensitive (w, val);
@@ -1282,6 +1302,8 @@ prefs_window_set_unused_gboolean3(gboolean val)
  */
 void sort_window_create (void)
 {
+    gchar *xml_file; 
+   
     if (sort_window)
     {  /* sort options already open --> simply raise to the top */
 	gdk_window_raise(sort_window->window);
@@ -1302,7 +1324,12 @@ void sort_window_create (void)
 	    g_warning ("Programming error: tmpsortcfg is not NULL!!\n");
 	    return;
 	}
-	sort_window = create_sort_window ();
+
+	xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+	sort_window_xml = glade_xml_new (xml_file, "sort_window", NULL);
+	glade_xml_signal_autoconnect (sort_window_xml);
+
+	sort_window = glade_xml_get_widget (sort_window_xml, "sort_window");
 
 	/* Set Sort-Column-Combo */
 	/* create the list in the order of the columns displayed */
@@ -1327,7 +1354,7 @@ void sort_window_create (void)
 					     gettext (tm_col_strings[col]));
 	    }
 	}
-	w = lookup_widget (sort_window, "sort_combo");
+	w = glade_xml_get_widget (sort_window_xml, "sort_combo");
 	gtk_combo_set_popdown_strings (GTK_COMBO (w), collist);
 	g_list_free (collist);
 	collist = NULL;
@@ -1351,13 +1378,13 @@ void sort_window_update (void)
 	switch (tmpsortcfg->pm_sort)
 	{
 	case SORT_ASCENDING:
-	    w = lookup_widget (sort_window, "pm_ascend");
+	    w = glade_xml_get_widget (sort_window_xml, "pm_ascend");
 	    break;
 	case SORT_DESCENDING:
-	    w = lookup_widget (sort_window, "pm_descend");
+	    w = glade_xml_get_widget (sort_window_xml, "pm_descend");
 	    break;
 	case SORT_NONE:
-	    w = lookup_widget (sort_window, "pm_none");
+	    w = glade_xml_get_widget (sort_window_xml, "pm_none");
 	    break;
 	}
 	if (w)
@@ -1367,13 +1394,13 @@ void sort_window_update (void)
 	switch (tmpsortcfg->st_sort)
 	{
 	case SORT_ASCENDING:
-	    w = lookup_widget (sort_window, "st_ascend");
+	    w = glade_xml_get_widget (sort_window_xml, "st_ascend");
 	    break;
 	case SORT_DESCENDING:
-	    w = lookup_widget (sort_window, "st_descend");
+	    w = glade_xml_get_widget (sort_window_xml, "st_descend");
 	    break;
 	case SORT_NONE:
-	    w = lookup_widget (sort_window, "st_none");
+	    w = glade_xml_get_widget (sort_window_xml, "st_none");
 	    break;
 	}
 	if (w)
@@ -1382,36 +1409,36 @@ void sort_window_update (void)
 	switch (tmpsortcfg->tm_sort)
 	{
 	case SORT_ASCENDING:
-	    w = lookup_widget (sort_window, "tm_ascend");
+	    w = glade_xml_get_widget (sort_window_xml, "tm_ascend");
 	    break;
 	case SORT_DESCENDING:
-	    w = lookup_widget (sort_window, "tm_descend");
+	    w = glade_xml_get_widget (sort_window_xml, "tm_descend");
 	    break;
 	case SORT_NONE:
-	    w = lookup_widget (sort_window, "tm_none");
+	    w = glade_xml_get_widget (sort_window_xml, "tm_none");
 	    break;
 	}
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	w = lookup_widget (sort_window, "pm_autostore");
+	w = glade_xml_get_widget (sort_window_xml, "pm_autostore");
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpsortcfg->pm_autostore);
 
-	w = lookup_widget (sort_window, "tm_autostore");
+	w = glade_xml_get_widget (sort_window_xml, "tm_autostore");
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpsortcfg->tm_autostore);
 
-	if((w = lookup_widget(sort_window, "cfg_case_sensitive")))
+	if((w = glade_xml_get_widget (sort_window_xml, "cfg_case_sensitive")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpsortcfg->case_sensitive);
 	}
 	/* set standard entry in combo */
 	str = gettext (tm_col_strings[prefs_get_tm_sortcol ()]);
-	w = lookup_widget (sort_window, "sort_combo");
+	w = glade_xml_get_widget (sort_window_xml, "sort_combo");
 	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
     }
 }
@@ -1438,8 +1465,10 @@ void sort_window_show_hide_tooltips (void)
 {
     if (sort_window)
     {
-	GtkTooltips *tt = GTK_TOOLTIPS (lookup_widget (sort_window,
-						      "tooltips"));
+	GtkTooltips *tt;
+	GtkTooltipsData *tooltips_data;
+	tooltips_data = gtk_tooltips_data_get (glade_xml_get_widget (sort_window_xml, "sort_combo-entry"));
+	tt = tooltips_data->tooltips;
 	if (tt)
 	{
 	    if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
@@ -1456,7 +1485,7 @@ static TM_item sort_window_get_sort_col (void)
     GtkWidget *w;
     gint i = -1;
 
-    w = lookup_widget (sort_window, "sort_combo");
+    w = glade_xml_get_widget (sort_window_xml, "sort_combo");
     str = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w)->entry));
     /* Check which string is selected in the combo */
     if (str)

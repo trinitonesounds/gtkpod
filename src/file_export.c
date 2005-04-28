@@ -51,6 +51,7 @@ struct fcd
     GList *tracks;  /* tracks to be written */
     GtkWidget *fc;  /* file chooser */
     GtkWidget *win; /* glade widget to lookup widgets by name */
+    GladeXML *win_xml; /* Glade xml reference */
     gpointer user_data; 
 };
 
@@ -496,13 +497,13 @@ static void export_files_cleanup (struct fcd *fcd)
  ******************************************************************/
 static void export_files_retrieve_options (struct fcd *fcd)
 {
-    g_return_if_fail (fcd && fcd->win && fcd->fc);
+    g_return_if_fail (fcd && fcd->win_xml && fcd->fc);
 
-    option_get_toggle_button (fcd->win,
+    option_get_toggle_button (fcd->win_xml,
 			      EXPORT_FILES_SPECIAL_CHARSET);
-    option_get_toggle_button (fcd->win,
+    option_get_toggle_button (fcd->win_xml,
 			      EXPORT_FILES_CHECK_EXISTING);
-    option_get_string (fcd->win, EXPORT_FILES_TPL, NULL);
+    option_get_string (fcd->win_xml, EXPORT_FILES_TPL, NULL);
     option_get_filename (GTK_FILE_CHOOSER (fcd->fc),
 			 EXPORT_FILES_PATH, NULL);
 }
@@ -548,8 +549,8 @@ static void export_files_response (GtkDialog *fc,
  ******************************************************************/
 void export_files_init (GList *tracks)
 {
-    GtkWidget *win = create_export_files_options ();
-    GtkWidget *options = lookup_widget (win, "options_frame");
+    GtkWidget *win; 
+    GtkWidget *options;
     struct fcd *fcd = g_malloc0 (sizeof (struct fcd));
     GtkWidget *fc = gtk_file_chooser_dialog_new (
 	_("Select Export Destination Directory"),
@@ -559,10 +560,19 @@ void export_files_init (GList *tracks)
 	GTK_STOCK_APPLY, RESPONSE_APPLY,
 	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
+    gchar *xml_file;
+    GladeXML *export_files_xml;
+
+    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+    export_files_xml = glade_xml_new (xml_file, "export_files_options", NULL);
+    win = glade_xml_get_widget (export_files_xml, "export_files_options");
+
+    options = glade_xml_get_widget (export_files_xml, "options_frame");
 
     /* Information needed to clean up later */
     fcd->tracks = g_list_copy (tracks);
     fcd->win = win;
+    fcd->win_xml = export_files_xml;
     fcd->fc = fc;
 
     /* according to GTK FAQ: move a widget to a new parent */
@@ -578,12 +588,12 @@ void export_files_init (GList *tracks)
     option_set_folder (GTK_FILE_CHOOSER (fc),
 		       EXPORT_FILES_PATH);
     /* set toggle button "charset" */
-    option_set_toggle_button (win, EXPORT_FILES_SPECIAL_CHARSET, FALSE);
+    option_set_toggle_button (export_files_xml, EXPORT_FILES_SPECIAL_CHARSET, FALSE);
     /* set toggle button "check for existing files" */
-    option_set_toggle_button (win, EXPORT_FILES_CHECK_EXISTING, TRUE);
+    option_set_toggle_button (export_files_xml, EXPORT_FILES_CHECK_EXISTING, TRUE);
 
     /* set last template */
-    option_set_string (win, EXPORT_FILES_TPL, EXPORT_FILES_TPL_DFLT);
+    option_set_string (export_files_xml, EXPORT_FILES_TPL, EXPORT_FILES_TPL_DFLT);
 
     /* catch response codes */
     g_signal_connect (fc, "response",
@@ -652,13 +662,13 @@ static void export_playlist_file_retrieve_options (struct fcd *fcd)
 {
     g_return_if_fail (fcd && fcd->win && fcd->fc);
 
-    option_get_radio_button (fcd->win,
+    option_get_radio_button (fcd->win_xml,
 			     EXPORT_PLAYLIST_FILE_TYPE,
 			     ExportPlaylistFileTypeW);
-    option_get_radio_button (fcd->win,
+    option_get_radio_button (fcd->win_xml,
 			     EXPORT_PLAYLIST_FILE_SOURCE,
 			     ExportPlaylistFileSourceW);
-    option_get_string (fcd->win, EXPORT_PLAYLIST_FILE_TPL, NULL);
+    option_get_string (fcd->win_xml, EXPORT_PLAYLIST_FILE_TPL, NULL);
     option_get_folder (GTK_FILE_CHOOSER (fcd->fc),
 		       EXPORT_PLAYLIST_FILE_PATH, NULL);
 }
@@ -819,8 +829,8 @@ static void export_playlist_file_response (GtkDialog *fc,
  ******************************************************************/
 void export_playlist_file_init (GList *tracks)
 {
-    GtkWidget *win = create_export_playlist_file_options ();
-    GtkWidget *options = lookup_widget (win, "options_frame");
+    GtkWidget *win; 
+    GtkWidget *options; 
     struct fcd *fcd = g_malloc0 (sizeof (struct fcd));
     GtkWidget *fc = gtk_file_chooser_dialog_new (
 	_("Create Playlist File"),
@@ -830,6 +840,14 @@ void export_playlist_file_init (GList *tracks)
 	GTK_STOCK_APPLY, RESPONSE_APPLY,
 	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
+    gchar *xml_file;
+    GladeXML *export_playlist_xml;
+    
+    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+    export_playlist_xml = glade_xml_new (xml_file, "export_playlist_file_options", NULL);
+    win = glade_xml_get_widget (export_playlist_xml, "export_playlist_file_options");
+
+    options = glade_xml_get_widget (export_playlist_xml, "options_frame");
 
     /* Information needed to clean up later */
     fcd->tracks = g_list_copy (tracks);
@@ -849,13 +867,13 @@ void export_playlist_file_init (GList *tracks)
     option_set_folder (GTK_FILE_CHOOSER (fc),
 		       EXPORT_PLAYLIST_FILE_PATH);
     /* set last type */
-    option_set_radio_button (win, EXPORT_PLAYLIST_FILE_TYPE,
+    option_set_radio_button (export_playlist_xml, EXPORT_PLAYLIST_FILE_TYPE,
 			     ExportPlaylistFileTypeW, 0);
     /* set last source */
-    option_set_radio_button (win, EXPORT_PLAYLIST_FILE_SOURCE,
+    option_set_radio_button (export_playlist_xml, EXPORT_PLAYLIST_FILE_SOURCE,
 			     ExportPlaylistFileSourceW, 0);
     /* set last template */
-    option_set_string (win, EXPORT_PLAYLIST_FILE_TPL,
+    option_set_string (export_playlist_xml, EXPORT_PLAYLIST_FILE_TPL,
 		       EXPORT_PLAYLIST_FILE_TPL_DFLT);
 
     /* catch response codes */

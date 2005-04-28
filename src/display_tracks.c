@@ -1563,7 +1563,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   gchar *text = NULL;
   gboolean editable = TRUE;          /* default */
   GtkCellRenderer *renderer = NULL;  /* default */
-  GtkTooltips *tt = GTK_TOOLTIPS (lookup_widget (gtkpod_window,
+  GtkTooltips *tt = GTK_TOOLTIPS (glade_xml_get_widget (main_window_xml,
 						 "tooltips"));
 
   if ((tm_item) < 0 || (tm_item >= TM_NUM_COLUMNS))  return NULL;
@@ -1727,7 +1727,7 @@ tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
 void tm_create_treeview (void)
 {
   GtkTreeModel *model = NULL;
-  GtkWidget *track_window = lookup_widget (gtkpod_window, "track_window");
+  GtkWidget *track_window = glade_xml_get_widget (main_window_xml, "track_window");
   GtkTreeSelection *select;
   GtkWidget *stv = gtk_tree_view_new ();
 

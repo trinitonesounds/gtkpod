@@ -34,8 +34,12 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <glade/glade.h>
 #include "itdb.h"
 #include "display_itdb.h"
+
+/* Main XML glade file */
+GladeXML *main_window_xml;
 
 /* pointer to main window */
 extern GtkWidget *gtkpod_window;
@@ -119,6 +123,7 @@ typedef struct {
   TimeInfo ti_modified;              /* TimeInfo "modified" (sp) */
   TimeInfo ti_played;                /* TimeInfo "played" (sp)   */
   GtkTooltips *sp_tooltips;          /* pointer to tooltips in special st */
+  GtkTooltipsData *sp_tooltips_data;          /* pointer to tooltips in special st */
 } SortTab;
 
 /* "Column numbers" in sort tab model */

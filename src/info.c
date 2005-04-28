@@ -44,6 +44,8 @@
 /* pointer to info window */
 static GtkWidget *info_window = NULL;
 
+GladeXML *info_xml; 
+
 /* stuff for statusbar */
 static GtkWidget *gtkpod_statusbar = NULL;
 static GtkWidget *gtkpod_tracks_statusbar = NULL;
@@ -93,7 +95,7 @@ static void fill_label_uint (gchar *w_name, guint32 nr)
 
     g_return_if_fail (info_window);
     g_return_if_fail (w_name);
-    w = lookup_widget (info_window, w_name);
+    w = glade_xml_get_widget (info_xml, w_name);
     if (w)
     {
 	gchar *str = g_strdup_printf ("%u", nr);
@@ -108,7 +110,7 @@ static void fill_label_time (gchar *w_name, guint32 secs)
 
     g_return_if_fail (info_window);
     g_return_if_fail (w_name);
-    w = lookup_widget (info_window, w_name);
+    w = glade_xml_get_widget (info_xml, w_name);
     if (w)
     {
 	gchar *str = g_strdup_printf ("%u:%02u:%02u",
@@ -126,7 +128,7 @@ static void fill_label_size (gchar *w_name, gdouble size)
 
     g_return_if_fail (info_window);
     g_return_if_fail (w_name);
-    w = lookup_widget (info_window, w_name);
+    w = glade_xml_get_widget (info_xml, w_name);
     if (w)
     {
 	gchar *str = get_filesize_as_string (size);
@@ -141,7 +143,7 @@ static void fill_label_string (gchar *w_name, const char *str)
 
     g_return_if_fail (info_window);
     g_return_if_fail (w_name);
-    w = lookup_widget (info_window, w_name);
+    w = glade_xml_get_widget (info_xml, w_name);
     if (w)
     {
 	gtk_label_set_text (GTK_LABEL (w), str);
@@ -153,8 +155,15 @@ static void fill_label_string (gchar *w_name, const char *str)
 /* open info window */
 void info_open_window (void)
 {
+    gchar *xml_file;
+    
+
     if (info_window)  return;            /* already open */
-    info_window = create_gtkpod_info ();
+    
+    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+    info_xml = glade_xml_new (xml_file, "gtkpod_info", NULL);
+    info_window = glade_xml_get_widget (info_xml, "gtkpod_info");
+    
     if (info_window)
     {
 	gint defx, defy;
@@ -178,7 +187,7 @@ void info_close_window (void)
     win = info_window;
     info_window = NULL;
     gtk_widget_destroy (win);
-    prefs_set_info_window (FALSE); /* notify prefs */
+     prefs_set_info_window (FALSE); /* notify prefs */
     /* set the menu item for the info window correctly */
     display_set_info_window_menu ();
 }
@@ -384,7 +393,7 @@ void info_update_totals_view_space (void)
 void
 gtkpod_statusbar_init(void)
 {
-    gtkpod_statusbar = lookup_widget (gtkpod_window, "gtkpod_status");
+    gtkpod_statusbar = glade_xml_get_widget (main_window_xml, "gtkpod_status");
 }
 
 static gint
@@ -430,7 +439,7 @@ void
 gtkpod_tracks_statusbar_init()
 {
     gtkpod_tracks_statusbar =
-	lookup_widget (gtkpod_window, "tracks_statusbar");
+	glade_xml_get_widget (main_window_xml, "tracks_statusbar");
     gtkpod_tracks_statusbar_update();
 }
 
@@ -786,7 +795,7 @@ gtkpod_space_statusbar_update(void)
 void
 gtkpod_space_statusbar_init(void)
 {
-    gtkpod_space_statusbar = lookup_widget (gtkpod_window, "space_statusbar");
+    gtkpod_space_statusbar = glade_xml_get_widget (main_window_xml, "space_statusbar");
 
     if (!space_mutex)
     {

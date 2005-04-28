@@ -1,0 +1,607 @@
+gtkpod V0.90
+	Complete rewrite of reading/writing the iTunesDB
+
+	IMPROVEMENT: local database to browse local content
+
+	IMPROVEMENT: support MP3 disc numbers (thanks to Leigh Dyer)
+
+gtkpod V0.88.2
+	IMPROVEMENT: Added '%p' (current playlist) identifier when
+	exporting tracks.
+
+	BUGFIX: DND in playlist view did not work.
+
+	BUGFIX: scripts sync_evolution, sync_evocalendar and sync_notes
+	were not included in standard distribution.
+
+gtkpod V0.88.1
+	BUGFIX: Should now work with the shuffle -- forgot to change a
+	version number in the iTunesDB file :-(
+
+gtkpod V0.88
+	NEW FEATURE: Support for iPod Shuffle. Thanks to Steve Wahl.
+
+	BUGFIX: In smartlists star rating better supported. One star is
+	"1" and not "20".
+
+gtkpod V0.87
+	NEW FEATURE: Support for smart playlists.
+
+	NEW FEATURE: Added scripts sync_evolution, sync_evocalendar and
+	sync_notes to synchronise Contacts, Calendar and Tasks from
+	Evolution and to synchronise Notes with anything in the folder
+	~/ipod_notes.
+
+        BUGFIX: drag and drop was only implemented for mp3 files, not
+        for m4a, m4p, m4b, and wav files (thanks to Chris Micacchi for
+        pointing it out and supplying a first fix).
+
+	BUGFIX: Category playlists "for each year" did not work.
+
+	BUGFIX: Invalid charset conversion could hang gtkpod.
+
+	IMPROVEMENT: Support for iTunes' "checked", filedescriptor (kind),
+	and grouping fields.
+
+	IMPROVEMENT: When sorting ignore 'the' and similar at the
+	beginning of the title (thanks to Chris Micacchi)
+
+	IMPROVEMENT: Use statvfs() instead of a call to the external
+	command "df" to determine the free space on the iPod (thanks
+	to Steve Jay)
+
+	IMPROVEMENT: The fields "time_modified/played/created" can now
+	be edited from within the track view.
+
+	IMPROVEMENT: Creation of playlists for each rating
+	(Unrated, and Rated 1..5).
+
+	UPDATE: Swedish translation catalog
+
+	UPDATE: Italian translation catalog
+
+gtkpod V0.85.0
+	BUGFIX: when clicking onto the column header of the track
+	treeview three times and moving sidewards with the mouse at
+	the same time, gtkpod crashed. Crashing was due to a bad
+	workaround of a bug in the GTK+-library. Removed workaround
+	and instead submitted a bug report against GTK+. The bug has
+	been fixed in version 2.5.4 of the GTK+ library.
+
+	BUGFIX: When using "block display during updates" the display
+	was still updated during import. Fixed.
+
+	BUGFIX: The menu item "Check iPod's Files" was not reliably
+	activated. It's now always selectable when not in offline
+	mode.
+
+	BUGFIX: when writing tags to file the track tag was
+	deleted.
+
+	BUGFIX: special sorttab: sorting according to "time modified"
+	and "time created" did not work.
+
+	BUGFIX: handling of orphaned tracks that had been added to the
+	ipod again are now handled correctly.
+
+	BUGFIX: fixed case-sensitivity issue while handling orphaned
+	tracks.
+
+	BUGFIX: fixed bug that caused gtkpod to hang when activating
+	duplicate detection without having the list of duplicates
+	displayed (must have been around ever since duplicate
+	detection was introduced...)
+
+	BUGFIX: gain tags written by mp3gain were never read
+	correctly. Normalization using mp3gain was therefore
+	impossible. Didn't anyone ever use that feature?!
+
+	BUGFIX: when copying track to the iPod, the free space
+	indication became bigger and bigger during the process.
+
+	BUGFIX: Ascending and descending were interchanged in the sort
+	window.
+
+	NEW FEATURE: Implemented Michael Rolig's patch/idea to access
+	mserv data for the rating. Still needs testing as I don't use
+	mserv.
+
+	NEW FEATURE: added "randomize current playlist" (only the menu
+	entry without actual code was present so far).
+
+	NEW FEATURE: support for On-The-Go Playlists. They will show
+	up as "OTG Playlist 1" etc.
+
+	NEW FEATURE: export of PLS or M3U file including meta data.
+	
+	NEW FEATURE: registering playcounts when tracks are played on
+	the local machine is now possible (actually it was already
+	possible in V0.80, but now the README explains how to do it).
+
+	NEW FEATURE: Swedish translation provided by Stefan Asserhäll.
+
+	IMPROVEMENT: Speeded up writing of iTunesDB. For me it is now
+	between 1 and 15 seconds instead of between 20 and 40 seconds
+	before (for security I'm using the iPod as a non-buffered
+	device). A back-upped version of the iTunesDB is now always
+	written to ~/.gtkpod.
+
+	IMPROVEMENT: Speeded up display of sorted views. Thanks to
+	Stefan Asserhäll for the idea and valuable input.
+
+	IMPROVEMENT: Moved some options from the preferences dialog to
+	the file chooser dialog where you need them. gtkpod now
+	requires GTK2.4 to compile.
+
+	IMPROVEMENT: Added "Time Created" support to special sorttab,
+	track display and iTunesDB. (Before only "modified" and
+	"played" were supported.)
+
+	IMPROVEMENT: All information stored in the iTunesDB about
+	tracks is read and written, even if the information itself is
+	not used by gtkpod itself.
+
+	IMPROVEMENT: Added new track information fields: iPod_Path,
+	creation time, soundcheck, samplerate, "BPM"
+
+	IMPROVEMENT: Volume normalizing: when importing mp3 the replay
+	gain is read and the soundcheck field set accordingly. Use
+	the "soundcheck" feature of the iPod to have the volume
+	normalized during playback.
+	If no replay gain tag is set, use the "Normalize" as usual to
+	have mp3gain write a replay gain tag.
+
+	IMPROVEMENT: The extended information database now also
+	contains the iPod filename. This allows to find a certain
+	track even on systems not running gtkpod/gnupod/iTunes etc.
+
+	IMPROVEMENT: Some fixes for compilation under solaris. This
+	also led to the introduction of the environment variable
+	"GTKPOD_DF_COMMAND" that can be used to customize the df
+	command called to probe the free space of the iPod.
+
+gtkpod V0.80-2
+	BUGFIX: gtkpod would crash right after startup if the info
+	window was open when stopping gtkpod the previous time.
+
+	BUGFIX: Fixed free space display: the digits were right, the
+	unit was wrong (B instead of kB, kB instead of MB, MB instead
+	of GB...).
+
+	PATCH: gtkpod will compile with GTK V2.0 (V0.80 needed GTK
+	V2.4)
+
+	PATCH: gtkpod should compile under Fedora without patch
+
+	PATCH: reverted to old-style check of id3tag-lib as id3tag.pc
+	is not included with the id3tag distribution by default
+	
+gtkpod V0.80
+	NEW FEATURE: Added support for WAV audio files
+
+	NEW FEATURE: Added support for bookmarkable AAC files (.m4b
+	files). Thanks to D.L. Sharp. More information is available at
+	http://www.ipodlounge.com/articles_more.php?id=3233_0_8_0_C
+	http://docs.info.apple.com/article.html?artnum=61695
+
+	NEW FEATURE: Added support for syncing contacts and calendar from
+	existing applications to the iPod (on iTunesDB export and/or via
+	the Tools-menu). The sync is done by calling external scripts.
+	Only one script is included so far: kaddressbook_ipod. Please
+	submit more for inclusion into the next release.
+
+	NEW FEATURE: Added support for LAME's replay gain to normalize the
+	volume track (thanks to Jens Taprogge). Unfortunately the
+	conversion factor between LAME's replay gain and the iPod's volume
+	tag are not well known yet -- your input is appreciated!
+
+	IMPROVEMENT: Added file selectors for selecting files in the tools
+	section of the preferences dialog.
+
+	IMPROVEMENT: Added new auto-playlists: "One playlist for each
+	year" and "Playlist with all songs not listed in any playlist".
+
+	IMPROVEMENT: Can specify several templates to scan the filename
+	for tags using the ';' as a separator
+
+	IMPROVEMENT: Can specify several templates for the export
+	filename. gtkpod selects according to the extension given.
+
+	IMPROVEMENT: Streamlined layout of info window
+
+	IMPROVEMENT: Included Andrew Huntwork's patch to fix issues
+	concerning case-sensitivity of filenames under some conditions.
+
+	IMPROVEMENT: Included Ero Carrera's patch to validate the filename
+	when copying tracks from the iPod and to make a quick sync of the
+	iPod's contents.
+
+	IMPROVEMENT: When importing the iTunesDB automatically on startup,
+	no window was opened until the import was finished. Thanks to
+	Andrew Huntwork the window now opens before the import starts and
+	progress can be followed in the usual manner.
+
+	IMPROVEMENT: Send 'eject' to the iPod after unmounting. This only
+	works under LINUX and if the user has write access to the device
+	file (e.g. /dev/sda2)
+
+	IMPROVEMENT: When writing to the iPod automatically create iPod's
+	directories when they are not present.
+
+	IMPROVEMENT: Added progress dialog with abort button when copying
+	tracks from the iPod.
+
+	BUGFIX: When dragging tracks between two playlist (i.e. into a
+	newly created playlist), a new playlist was created but the tracks
+	were not added.
+
+	BUGFIX: Fixed hangup when syncing dirs
+
+	BUGFIX: Fixed compile error when compiling without mp4 support
+
+	BUGFIX: Fixed compile error when compiling with gcc 2.95
+
+	BUGFIX: Tags of tracks on the iPod were never changed (fixed
+	thanks to Andrew Huntwork)
+
+	BUGFIX: Fixed calculation of remaining seconds in progress
+	dialogs.
+
+	BUGFIX: automatic update of preferences data from older version
+	went awry when no preference file was present
+
+gtkpod V0.72
+        NEW FEATURE: tags can now be set from the filename using a
+	template like "%a - %A/%T %t.mp3".
+
+	IMPROVEMENT: read and write ID3v2.4 tags. This has been achieved
+	by migrating to the id3tag library. Using ID3v2.4 tags with
+	unicode encoding takes away the need to worry about which encoding
+	is used for the tags. Old "broken"-style locale charset encodings
+	in tags are still supported, of course.
+
+	BUGFIX: configure script was broken -- even though mp4 support was
+	configured in, gtkpod was built without :-(
+
+gtkpod V0.70
+	NEW FEATURE: import of AAC files (.m4a) supported, provided the
+	mp4v2 library from the mpeg4ip project
+	(mpeg4ip.sourceforge.net) is available during the compilation of
+	gtkpod. Writing tags to AAC files is also supported.  .m4p files
+	can also be imported, but they are not played by the iPod. .m4a
+	files work fine.
+
+	NEW FEATURE: info window showing total file size, play time
+	etc. can be opened.
+
+	IMPROVEMENT: Upon popular request, the menus now provide different
+	entries for "Delete from iPod" and "Delete from Playlist".
+
+	IMPROVEMENT: when deleting tracks completely from the iPod, the
+	confirmation dialog also displays the number of playlists the
+	tracks are members of.
+
+	IMPROVEMENT: Quick sync possible using "Add Tracks".  Details:
+
+	  Until now the default action when adding tracks that already
+	  exist (identical full filename) was to add it again (they were
+	  rejected by the duplicate detection, but that took a long time),
+	  or to update the track information (option).
+
+	  Now the default action is to skip existing tracks (identical
+	  filename) or to update the track information (option). Thus, by
+	  default, only new tracks are read, allowing quick
+	  synchronization of entire directories.
+
+	IMPROVEMENT: In the past, using programs other than gtkpod to
+	transfer files voided the extended information file. gtkpod will
+	now try to use the MD5 checksums stored in the extended
+	information file to match up the data when this occurs.
+
+	IMPROVEMENT: The 'year' tag is now supported as track view column
+	and as sort tab type.
+
+	IMPROVEMENT: The tags for track number and total number of tracks
+	are displayed as nn/nn in the track view, and can also be entered
+	as such.
+
+	IMPROVEMENT: The tags for CD number and total number of CDs can
+	now be displayed (analoguous to track number and total number of
+	tracks above)
+
+	IMPROVEMENT: When creating a new playlist a dialog is popped up
+	asking for a name.
+
+	BUGFIX: Drag and Drop of files with spaces did not work.
+
+	BUGFIX: "Unsort" (clicking sort column three times) of track view
+	failed if last sort tab was a "special" sort tab.
+
+	BUGFIX: updated ID3 tag reading code from easytag's new
+	version. Please also note that id3lib V3.7.3 seems to crash gtkpod
+	every once in a while. V3.8.3 appears to be more stable.
+
+gtkpod V0.60
+	NEW FEATURE: normalize song volume (using mp3gain). Uses iPod's
+	volume adjust feature rather than modifying the mp3 file.
+
+	NEW FEATURE: define format of filename when copying tracks from
+	iPod (mainly thanks to Sam Clegg).
+
+	NEW FEATURE: adjust volume of each track individually by using
+	iPod's per-track volume adjust feature (implemted through a new
+	column in the song view).
+
+	NEW FEATURE: automatically create a playlist for each
+	album/artist/genre/composer in your collection (thanks to Chris
+	Cutler), and other automatic playlist generations.
+
+	NEW FEATURE: menu items and context menu items to create new
+	playlist containing displayed songs or selected songs.
+
+	IMPROVEMENT: Try to press the shift key when dropping songs into a
+	playlist to move rather than copy tracks from one playlist to
+	another. Keep in mind that songs cannot be moved from or to the
+	master play list.
+
+	IMPROVEMENT: better alphabetize interface. Alphabetize settings
+	will be remembered, different settings for playlists, sort tabs,
+	and tracks possible. Also, clicking the column header three times
+	will revert the view to its unsorted state.
+
+	IMPROVEMENT: handle adding of playlist files containing files with
+	relative paths.
+
+	IMPROVEMENT: context menus more intuitive, context menus will no
+	longer trigger edit mode (most of the time).
+
+	IMPROVEMENT: the function copying songs to the iPod used a "large"
+	amount of stack memory (roughly 66000 Bytes) which crashed some
+	systems.
+
+	BUGFIX: md5 hash for duplicate detection will examine the same
+	number of bytes on all systems now (before it used 4xPATH_MAX).
+
+	BUGFIX: reading and writing of the Composer ID3 tags implemented
+	(so far the fields could only be set from inside gtkpod -- thanks
+	to Graeme Wilford)
+
+	BUGFIX: fixed memory holes in sync_songids(), sync_dir_ok(),
+	add_playlist_by_filename().
+
+	BUGFIX: drag and drop URIs with cr/nl at the end are handled
+	correctly (thanks to Walter Bell).
+
+gtkpod V0.52
+	NEW FEATURE: Supports Playcounts, Ratings, Time Last Played / Time
+	Last Modified. The playcounts and ratings are read from the 'Play
+	Count' file produced by iPod's firmware versions V1.3
+	(playcounts only) and V2.0 (playcounts and rating).
+
+	NEW FEATURE: If you mark several songs and change a tag in the
+	first one, the corresponding tag in the other songs will be
+	changed as well (must activate in the prefs menu). Patch provided
+	by Ramesh Dharan. Thanks!
+
+	IMPROVEMENT: added auto-dection of Japanese encoding (thanks to
+	Hiroshi Kawashima).
+
+	IMPROVEMENT: option to sort case-sensitively. Case-insensitive
+	utf8 sort should work fine, case-sensitive may not work entirely
+	as expected with some charsets.
+
+	BUGFIX: display free size correctly even if more than 4294967295
+	(or maybe just half that many?) Bytes are free on the iPod.
+
+	BUGFIX: drag-and-drop: gtkpod should now correctly handle files
+	with "special" characters (like spaces...) that are escaped in the
+	DND URI. (Thanks to Walter Bell).
+
+	BUGFIX: using 'file_export' from the context menu could crash
+	gtkpod
+
+	BUGFIX: file_export didn't remember directory last used.
+
+	BUGFIX: can now choose zero sort tabs in the prefs dialogue
+	(instead of the minimum one) -- why didn't anyone tell me?
+
+	BUGFIX: when deleting songs, sometimes adjacent songs got edited
+	(took title or artist... of the deleted song). Hopefully fixed --
+	please report.
+
+	BUGFIX: after reordering columns in the song view, the selection
+	of which columns are to be displayed went haywire -- fixed.
+
+	BUGFIX: fixed memory holes in pm_data_compare_func(),
+	st_data_compare_func(), sm_data_compare_func(),
+	get_ipod_used_space(), get_ipod_free_space(),
+	charset_to_description(), add_playlist_by_filename(),
+	sm_cell_edited().
+
+	NEW: Italian translation catalogue (almost complete)
+
+gtkpod V0.51
+	NEW FEATURE: Synchronize directories (removed songs can be deleted
+	automatically).
+
+	NEW FEATURE: gtkpod remembers charset used when initially
+	importing a song and uses this when "updating" the song
+	information from file or writing tags to file (needs extended
+	information enabled).
+
+	NEW FEATURE: display free space on iPod.
+
+	NEW FEATURE: menu item "Arrange Sort Tabs" to make all visible
+	sort tabs the same size
+
+        IMPROVEMENT: gtkpod should now compile "out of the box" under
+	FreeBSD and NetBSD (some adaptations were necessary before).
+
+        IMPROVEMENT: added all supported charsets provided by "iconv -l"
+	to the list of charsets to choose from. Code assumes that "iconv
+	-l" returns a list with the name of one charset in each line, each
+	valid line being terminated by "//".
+
+	IMPROVEMENT: new song column types: file size, play time,
+	avg. bitrate
+
+	BUGFIX: changed playlength code to that used by mp3info. It's much
+	slower but seems to be more reliable.
+
+	BUGFIX: fixed "dead" context menu "Alphabetize"
+
+gtkpod V0.50
+	NEW FEATURE: context sensitive popup menues (right mouse button
+	click in playlist view, sort tabs or song view.
+
+	NEW FEATURE: play song with xmms (two user definable commands).
+
+	NEW FEATURE: option to mount the iPod directory on startup and
+	unmount it on exit.
+
+	NEW FEATURE: mount/unmount ipod directory on startup/exit, and/or
+	execute ~/.gtkpod/gtkpod.in,out (or /etc/gtkpod/gtkpod.in,out if
+	the former doesn't exist) on startup/exit. First gtkpod.in is
+	executed, then the ipod is mounted (if this option is
+	activated). On exit, it's the other way round.
+
+	NEW FEATURE: read global prefs /etc/gtkpod/prefs if
+	~/.gtkpod/prefs does not exist. Useful, e.g. to set a machine-wide
+	default mountpoint for the ipod.
+
+	IMPROVEMENT: "Add Songs" and "Add Directory" has a new default
+	behaviour. They will now add songs/directories to the currently
+	selected playlist. If no playlist is selected, they add to the
+	master playlist.  "Add Playlist" will still create a new playlist
+	before adding the songs into it. Also, when playlist files are
+	added with "Add Songs" or "Add Directory" and no playlist is
+	selected, a new playlist will be selected for each playlist file.
+
+	NEW FEATURE: user settable: save song order after sort action
+	automatically?
+
+	NEW FEATURE: columns in song view can be dragged into any
+	order. Order will be saved.
+	
+        Change of copyright: itunesdb.c and itunesdb.h are now under the
+	GNU Lesser General Public License to make it easier to use the
+	code in other programs.
+
+	BUGFIX: when writing tags to file, all tags were updated even if
+	you selected only to update changed tags in the the preferences.
+
+	NEW FEATURE: drag and drop files/directories/playlists from
+	konqueror or nautilus directly into the song view. The songs will
+	be inserted at the specified position. You must already have some
+	songs displayed or a drop is not possible. In that case you should
+	drop into the playlist view since obviously you don't care about
+	the exact position of the files in the playlist (will be added at
+	the end).
+
+	NEW FEATURE: drag and drop files/directories/playlists from
+	konqueror or nautilus directly into the playlist view. If you drop
+	between playlists a (number of) new playlist(s) will be created
+	for the drop. If you drop onto a playlist, the songs will be added
+	into that playlist. Alpha-Version!
+
+	IMPROVEMENT: speed-up of display refreshs.  - Import of iTunesDB
+	with full non-blocked display: 4x as fast (51'' against 3'35'' on
+	my 2459 songs) - Refresh of first sort tab, non-blocked: 20x as
+	fast (0.65'' against 13'' on my 2459 songs) - Refresh of first
+	sort tab, blocked: 60x as fast (0.13'' against 7.8'' on my 2459
+	songs) - Refresh of song list, non-blocked: 2x as fast (9''
+	against 18'' on my 2459 songs)
+
+gtkpod V0.43-1 28-Feb-2003
+	BUGFIX: After DND operation songs were displayed twice in the
+	master playlist (this was just a display artifact).
+
+gtkpod V0.43 27-Feb-2003
+        Preventive BUGFIX: in the code to import the iTunesDB all absolute
+	references to positions in the iTunesDB were removed. Instead
+	itunesdb.c now uses the header information to find the headers it
+	needs. This should make it more reliable to read third party
+	iTunesDB. This was also part of the problem with the ephpod import
+	problem below (the other half of the problem was ephpod's not
+	really conformant way of writing the database).
+
+        BUGFIX: some iTunesDBs produced by ephpod could not be read (hang
+	after reading the songs and before adding the playlists).
+        
+	New Feature: update song information from file when adding songs
+	with identical filename (option)
+	
+        New Feature: update song information from file of selected songs
+	(ctrl-u and menu item)
+
+	BUGFIX: copy_song_to_ipod() there was a <5% chance that songs were
+	overwritten by new songs during the copy process, if you deleted
+	songs before adding new songs.
+
+        BUGFIX: Deleting songs from the iPod only worked if you exported
+	the iTunesDB twice.
+	
+	New Feature: Add Playlists (m3u and pls)
+
+gtkpod V0.42 20-Feb-2003
+        Bugfix: on first start gtkpod complained it could not create
+	~/.gtkpod even though it could... (and vice versa).
+
+	Improvement: display update can now be interrupted, selection
+	changed at any time.
+
+	Bugfix: gtkpod now sets bitrate (average bitrate for VBR)
+
+        Improvement: export can be interrupted and be continued at a later
+	time. gtkpod will (hopefully) correctly remember which songs have
+	already been copied/deleted from your iPod.
+	
+	Improvement: removal and copy of songs during export is done in a
+	separate thread, so the display doesn't freeze on long file system
+	operations
+
+        Bugfix: Kentaro Fukuchi pointed out that MusicMatch (at least the
+	Japanese version) uses song IDs starting with 2 (and not with
+	53). gtkpod then dropped some of your songs -- fixed.
+        
+	Improvement: Delete works on entries in sort tabs now (ctrl-d and
+	new menu item)
+	
+	Improvement?: don't close dirbrowser window until after the songs
+	have been read.
+
+	Improvement: display is updated while writing tags to disk "in the
+	background"
+
+	Bugfix: sometimes deleted songs were not removed from the
+	display. Changing tags then could crash the program
+
+	Bugfix: convert filenames ot UTF8 based on the charset chosen in
+	the options window
+
+	Bugfix: don't try to access iPod based files when in offline mode
+
+gtkpod V0.41 01-Feb-2003
+	- minor bugfixes (just possible segfaults and such)
+	- window won't freeze during import/export/add operations
+	- better handling of duplicate songs (e.g. duplicate songs are now
+	  displayed in a window instead of on the console, if duplicate
+	  detection is switched on later, duplicate songs are removed but
+	  the playlists are preserved...)
+	- confirmation window when quitting gtkpod without saving data
+	- Drag-and-drop for sort tab entries
+	- Japanese langauge catalogue
+	
+gtkpod V0.40 26-Jan-2003
+	many new features:
+
+	- Playlists (Drag-and-drop support)
+	- Sort Tabs
+	- Duplicate Detection
+	- German language support
+	- Charset for ID3 tags can be set
+	- Offline modification of iPod contents (and later synchronisation)
+	- Preferences
+	
+gtkpod V0.10
+	basic tool to import/export songs to your iPod.

@@ -58,6 +58,7 @@ typedef struct
     const gchar *str;
 } ComboEntry;
 
+GladeXML *spl_window_xml;
 
 static const ComboEntry splat_inthelast_units_comboentries[] =
 {
@@ -275,7 +276,7 @@ static void spl_all_radio_toggled (GtkToggleButton *togglebutton,
     g_return_if_fail (spl);
     if (gtk_toggle_button_get_active (togglebutton))
     {
-	GtkWidget *frame = lookup_widget (spl_window, "spl_rules_frame");
+	GtkWidget *frame = glade_xml_get_widget (spl_window_xml, "spl_rules_frame");
 	g_return_if_fail (frame);
 	gtk_widget_set_sensitive (frame, TRUE);
 	spl->splpref.checkrules = TRUE;
@@ -293,7 +294,7 @@ static void spl_any_radio_toggled (GtkToggleButton *togglebutton,
     g_return_if_fail (spl);
     if (gtk_toggle_button_get_active (togglebutton))
     {
-	GtkWidget *frame = lookup_widget (spl_window, "spl_rules_frame");
+	GtkWidget *frame = glade_xml_get_widget (spl_window_xml, "spl_rules_frame");
 	g_return_if_fail (frame);
 	gtk_widget_set_sensitive (frame, TRUE);
 	spl->splpref.checkrules = TRUE;
@@ -310,7 +311,7 @@ static void spl_none_radio_toggled (GtkToggleButton *togglebutton,
     g_return_if_fail (spl_window);
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    frame = lookup_widget (spl_window, "spl_rules_frame");
+    frame = glade_xml_get_widget (spl_window_xml, "spl_rules_frame");
     g_return_if_fail (frame);
     if (gtk_toggle_button_get_active (togglebutton))
     {
@@ -677,7 +678,7 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
     iTunesDB *itdb;
     gint32 pos;
 
-    g_return_if_fail (spl_window != NULL);
+    g_return_if_fail (spl_window_xml != NULL);
 
     spl_dup = g_object_get_data (G_OBJECT (spl_window), "spl_work");
     spl_orig = g_object_get_data (G_OBJECT (spl_window), "spl_orig");
@@ -689,7 +690,7 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
     g_return_if_fail (itdb != NULL);
 
     /* Read out new playlist name */
-    if ((w = lookup_widget (spl_window, "spl_name_entry")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_name_entry")))
     {
 	g_free (spl_orig->name);
 	spl_orig->name = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
@@ -728,7 +729,7 @@ static void spl_display_checklimits (GtkWidget *spl_window)
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
 
-    if ((w = lookup_widget (spl_window, "spl_checklimits_button")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_checklimits_button")))
     {
 	gtk_toggle_button_set_active (
 	    GTK_TOGGLE_BUTTON (w), spl->splpref.checklimits);
@@ -737,7 +738,7 @@ static void spl_display_checklimits (GtkWidget *spl_window)
 			  spl_window);
     }
 
-    if ((w = lookup_widget (spl_window, "spl_limitvalue_entry")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_limitvalue_entry")))
     {
 	gchar str[WNLEN];
 	snprintf (str, WNLEN, "%d", spl->splpref.limitvalue);
@@ -748,7 +749,7 @@ static void spl_display_checklimits (GtkWidget *spl_window)
 			  spl_window);
     }
 
-    if ((w = lookup_widget (spl_window, "spl_limittype_combobox")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_limittype_combobox")))
     {
 	spl_set_combobox (GTK_COMBO_BOX (w), 
 			  limittype_comboentries,
@@ -758,12 +759,12 @@ static void spl_display_checklimits (GtkWidget *spl_window)
 	gtk_widget_set_sensitive (w, spl->splpref.checklimits);
     }
 
-    if ((w = lookup_widget (spl_window, "spl_limitsort_label")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_limitsort_label")))
     {
 	gtk_widget_set_sensitive (w, spl->splpref.checklimits);
     }
 
-    if ((w = lookup_widget (spl_window, "spl_limitsort_combobox")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_limitsort_combobox")))
     {
 	spl_set_combobox (GTK_COMBO_BOX (w), 
 			  limitsort_comboentries,
@@ -1087,7 +1088,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    table = GTK_TABLE (lookup_widget (spl_window, "spl_rules_table"));
+    table = GTK_TABLE (glade_xml_get_widget (spl_window_xml, "spl_rules_table"));
     g_return_if_fail (table);
 
     row = g_list_index (spl->splrules.rules, splr);
@@ -1233,7 +1234,7 @@ static void spl_display_rules (GtkWidget *spl_window)
     g_return_if_fail (spl_window);
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    align = lookup_widget (spl_window, "spl_rules_table_align");
+    align = glade_xml_get_widget (spl_window_xml, "spl_rules_table_align");
     g_return_if_fail (align);
     /* Destroy table if it already exists */
     table = g_object_get_data (G_OBJECT (spl_window),
@@ -1281,7 +1282,7 @@ static void spl_update_rules_from_row (GtkWidget *spl_window, gint row)
     g_return_if_fail (spl_window);
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    table = lookup_widget (spl_window, "spl_rules_table");
+    table = glade_xml_get_widget (spl_window_xml, "spl_rules_table");
     g_return_if_fail (table);
 
     numrules = g_list_length (spl->splrules.rules);
@@ -1309,12 +1310,16 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 {
     GtkWidget *spl_window, *w;
     Playlist *spl_dup;
+    gchar *xml_file;
 
     g_return_if_fail (spl != NULL);
     g_return_if_fail (spl->is_spl);
     g_return_if_fail (itdb != NULL);
 
-    spl_window = create_spl_window ();
+    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+    spl_window_xml = glade_xml_new (xml_file, "spl_window", NULL);
+    spl_window = glade_xml_get_widget (spl_window_xml, "spl_window");
+    
     g_return_if_fail (spl_window != NULL);
 
     /* Duplicate playlist to work on */
@@ -1326,13 +1331,13 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     g_object_set_data (G_OBJECT (spl_window), "spl_pos", (gpointer)pos);
     g_object_set_data (G_OBJECT (spl_window), "spl_itdb", itdb);
     /* Set checkboxes and connect signal handlers */
-    if ((w = lookup_widget (spl_window, "spl_name_entry")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_name_entry")))
     {
 	if (spl_dup->name)
 	    gtk_entry_set_text (GTK_ENTRY (w), spl_dup->name);	
     }
 
-    if ((w = lookup_widget (spl_window, "spl_all_radio")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_all_radio")))
     {
 	gtk_toggle_button_set_active (
 	    GTK_TOGGLE_BUTTON (w),
@@ -1341,7 +1346,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 			  G_CALLBACK (spl_all_radio_toggled),
 			  spl_window);
     }
-    if ((w = lookup_widget (spl_window, "spl_any_radio")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_any_radio")))
     {
 	gtk_toggle_button_set_active (
 	    GTK_TOGGLE_BUTTON (w),
@@ -1350,7 +1355,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 			  G_CALLBACK (spl_any_radio_toggled),
 			  spl_window);
     }
-    if ((w = lookup_widget (spl_window, "spl_none_radio")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_none_radio")))
     {
 	gtk_toggle_button_set_active (
 	    GTK_TOGGLE_BUTTON (w), !spl_dup->splpref.checkrules);
@@ -1359,7 +1364,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 			  spl_window);
     }
 
-    if ((w = lookup_widget (spl_window, "spl_matchcheckedonly_button")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_matchcheckedonly_button")))
     {
 	gtk_toggle_button_set_active (
 	    GTK_TOGGLE_BUTTON (w), spl_dup->splpref.matchcheckedonly);
@@ -1368,7 +1373,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 			  spl_window);
     }
 
-    if ((w = lookup_widget (spl_window, "spl_liveupdate_button")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_liveupdate_button")))
     {
 	gtk_toggle_button_set_active (
 	    GTK_TOGGLE_BUTTON (w), spl_dup->splpref.liveupdate);
@@ -1378,12 +1383,12 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     }
 
     /* Signals for Cancel, OK, Delete */
-    if ((w = lookup_widget (spl_window, "spl_cancel_button")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_cancel_button")))
     {
 	g_signal_connect (w, "clicked",
 		      G_CALLBACK (spl_cancel), spl_window);
     }
-    if ((w = lookup_widget (spl_window, "spl_ok_button")))
+    if ((w = glade_xml_get_widget (spl_window_xml, "spl_ok_button")))
     {
 	g_signal_connect (w, "clicked",
 		      G_CALLBACK (spl_ok), spl_window);
