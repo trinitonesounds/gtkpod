@@ -20,7 +20,6 @@ src/file_itunesdb.c
 src/getopt1.c
 src/getopt.c
 src/info.c
-src/interface.c
 src/itdb_itunesdb.c
 src/itdb_main.c
 src/itdb_playlist.c
@@ -40,3 +39,4 @@ src/prefs_window.c
 src/support.c
 src/tools.c
 src/wavfile.c
+gtkpod.glade
