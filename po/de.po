@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-04-29 13:14+0900\n"
-"PO-Revision-Date: 2005-04-07 00:58+0900\n"
+"PO-Revision-Date: 2005-04-29 14:14+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -1415,7 +1415,7 @@ msgstr ""
 "Einige Stücke wurden nicht auf den iPod übertragen. Export abgebrochen!"
 
 #: src/file_itunesdb.c:1218
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
 "incorrect and will result in the loss of the existing database.\n"
@@ -1424,7 +1424,7 @@ msgid ""
 "cancel, you can import the existing database before calling this function "
 "again.\n"
 msgstr ""
-"Sie haben die bereits bestehende iTunesDB nicht eingelesen. Dies ist "
+"Sie haben die bereits bestehende iTunesDB ('%s') nicht eingelesen. Dies ist "
 "wahrscheinlich nicht was Sie beabsichtigen, da auf diese Weise die "
 "existierende Datenbank verloren geht.\n"
 "\n"
@@ -1591,11 +1591,10 @@ msgstr ""
 "der erwarteten Länge ab. Es wird versucht fortzufahren.\n"
 
 #: src/itdb_itunesdb.c:946
-#, fuzzy
 msgid "Did not find SLst hunk as expected. Trying to continue.\n"
 msgstr ""
-"Die Länge einer Regel (%d) einer intelligenten Wiedergabeliste weicht von "
-"der erwarteten Länge ab. Es wird versucht fortzufahren.\n"
+"Es wurde nicht wie erwarted ein 'SLst'-Hunk gefunden. Es wird trotzdem "
+"versucht, weiterzumachen.\n"
 
 #: src/itdb_itunesdb.c:952
 #, c-format
@@ -1692,9 +1691,9 @@ msgstr ""
 "ist nicht konsistent. Versuche fortzufahren.\n"
 
 #: src/itdb_itunesdb.c:1818
-#, fuzzy, c-format
+#, c-format
 msgid "File not found: '%s'."
-msgstr "Datei nicht gefunden"
+msgstr "Datei nicht gefunden: '%s'."
 
 #: src/itdb_itunesdb.c:2310
 #, c-format
@@ -1719,9 +1718,9 @@ msgid "Opening of '%s' for writing failed."
 msgstr "Öffnen der Datei '%s' zum Schreiben ist fehlgeschlagen."
 
 #: src/itdb_itunesdb.c:2638
-#, fuzzy, c-format
+#, c-format
 msgid "Writing to '%s' failed."
-msgstr "Fehler beim Schreiben in die Datei '%s'.\n"
+msgstr "Fehler beim Schreiben in die Datei '%s'."
 
 #: src/itdb_itunesdb.c:2649
 #, c-format
@@ -1734,41 +1733,39 @@ msgid "Path not found: '%s'."
 msgstr "Pfad nicht gefunden: '%s'."
 
 #: src/itdb_itunesdb.c:2822
-#, fuzzy, c-format
+#, c-format
 msgid "Error renaming '%s' to '%s' (%s)."
-msgstr "Fehler beim Umbenennen von '%s' nach '%s' (%s)\n"
+msgstr "Fehler beim Umbenennen von '%s' nach '%s' (%s)."
 
 #: src/itdb_itunesdb.c:2839
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing '%s' (%s)."
-msgstr "Fehler beim Entfernen von '%s'.\n"
+msgstr "Fehler beim Entfernen von '%s' (%s)."
 
 #: src/itdb_itunesdb.c:3065
-#, fuzzy, c-format
+#, c-format
 msgid "Error opening '%s' for reading (%s)."
-msgstr "Fehler beim Umbenennen von '%s' nach '%s' (%s)\n"
+msgstr "Fehler beim Öffnen von '%s' zum Lesen (%s)."
 
 #: src/itdb_itunesdb.c:3076
-#, fuzzy, c-format
+#, c-format
 msgid "Error opening '%s' for writing (%s)."
-msgstr ""
-"Datei '%s' konnte nicht zum Schreiben geöffnet werden. (%s)\n"
-"\n"
+msgstr "Fehler beim Öffnen von '%s' zum Schreiben (%s)."
 
 #: src/itdb_itunesdb.c:3093
-#, fuzzy, c-format
+#, c-format
 msgid "Error while reading from '%s' (%s)."
-msgstr "Fehler beim Lesen der Vor-Einstellungen: %s\n"
+msgstr "Fehler beim Lesen aus '%s' (%s)."
 
 #: src/itdb_itunesdb.c:3109
-#, fuzzy, c-format
+#, c-format
 msgid "Error while writing to '%s' (%s)."
-msgstr "Fehler beim Schreiben in die Datei '%s'.\n"
+msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
 
 #: src/itdb_itunesdb.c:3122 src/itdb_itunesdb.c:3132
-#, fuzzy, c-format
+#, c-format
 msgid "Error when closing '%s' (%s)."
-msgstr "Fehler beim Umbenennen von '%s' nach '%s' (%s)\n"
+msgstr "Fehler beim Schließen der Datei '%s' (%s)."
 
 #. New action!
 #: src/itdb_playlist.c:70
@@ -2287,7 +2284,7 @@ msgid "Select files or directories to add to '%s'"
 msgstr "Wählen Sie die zu '%s' hinzuzufügenden Dateien oder Verzeichnisse aus."
 
 #: src/misc_input.c:219
-#, fuzzy, c-format
+#, c-format
 msgid "Select Playlist to add to '%s'"
 msgstr ""
 "Wählen Sie die Wiedergabeliste aus, die zu '%s' hinzugefügt werden soll."
@@ -3453,7 +3450,6 @@ msgid "Overwrite tags that are already set."
 msgstr "Tags, die bereits gesetzt sind, überschreiben."
 
 #: gtkpod.glade:2544
-#, fuzzy
 msgid ""
 "As a last resort set the following tags to the filename if they are (still) "
 "empty:"
@@ -4139,12 +4135,10 @@ msgid "File size (deleted)"
 msgstr "Dateigröße (gelöscht)"
 
 #: gtkpod.glade:9349
-#, fuzzy
 msgid "Non-transferred tracks"
 msgstr "Nicht übertragene Stücke"
 
 #: gtkpod.glade:9375
-#, fuzzy
 msgid "File size (non-transferred)"
 msgstr "Dateigröße (nicht übertragen)"
 
@@ -4281,7 +4275,6 @@ msgid "Filename Format: "
 msgstr "Format für Dateinamen: "
 
 #: gtkpod.glade:10455
-#, fuzzy
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
 "mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod "
@@ -4295,7 +4288,8 @@ msgstr ""
 "Semikolons getrennt werden -- gtkpod ermittelt die passende Schablone anhand "
 "des Dateinamensuffix. Künstler: %a, Album: %A, Komponist: %c, Titel: %t, "
 "Musikrichtung: %G, Stück-Nr.: %T, CD-Nr.: %C, Jahr: %Y,  ursprünglicher "
-"Dateiname (benötigt 'Erweiterte Informationen'): %o, das Zeichen '%': %%."
+"Dateiname (benötigt 'Erweiterte Informationen'): %o, die aktuelle "
+"Wiedergabelist: %p, das Zeichen '%': %%."
 
 #: gtkpod.glade:10460
 msgid " "
@@ -4382,9 +4376,8 @@ msgid "Live _updating"
 msgstr "_Live-Update"
 
 #: gtkpod.glade:11040
-#, fuzzy
 msgid "<b>Import</b>"
-msgstr "Importieren"
+msgstr "<b>Importieren</b>"
 
 #: gtkpod.glade:11067 gtkpod.glade:11243 gtkpod.glade:11411 gtkpod.glade:11486
 #: gtkpod.glade:11540 gtkpod.glade:11615 gtkpod.glade:11770 gtkpod.glade:11892
@@ -4392,284 +4385,197 @@ msgstr "Importieren"
 #: gtkpod.glade:13353 gtkpod.glade:13502 gtkpod.glade:13663 gtkpod.glade:13716
 #: gtkpod.glade:13822 gtkpod.glade:13923 gtkpod.glade:14078 gtkpod.glade:14252
 #: gtkpod.glade:14471 gtkpod.glade:14608
-#, fuzzy
 msgid "    "
-msgstr "     "
+msgstr "    "
 
 #: gtkpod.glade:11100
-#, fuzzy
 msgid "iPod Mount _Point:"
-msgstr " iPod Mount _Point:"
+msgstr "iPod Mount _Point:"
 
 #: gtkpod.glade:11216
-#, fuzzy
 msgid "<b>Adding/Updating/Syncing</b>"
-msgstr "Hinzufügen/Aktualisieren/Abgleichen"
+msgstr "<b>Hinzufügen/Aktualisieren/Abgleichen</b>"
 
 #: gtkpod.glade:11276
-#, fuzzy
 msgid "_Charset (ID3, files):"
-msgstr " _Zeichensatz (ID3, Dateinamen): "
+msgstr "_Zeichensatz (ID3, Dateinamen):"
 
 #: gtkpod.glade:11345
-#, fuzzy
 msgid ""
 "Use selected charset also when updating \n"
 "or syncing tracks"
 msgstr ""
 "Gewählten Zeichensatz auch verwenden wenn Stücke\n"
-" aktualisiert oder Verzeichnisse abgeglichen\n"
-" werden"
+"aktualisiert oder Verzeichnisse abgeglichen werden"
 
 #: gtkpod.glade:11460
-#, fuzzy
 msgid ""
 "When adding dirs/files, update information of\n"
 "existing tracks with identical filenames"
 msgstr ""
 "Beim Hinzufügen von Stücken bereits eingelesene\n"
-"Stücke mit dem selben Dateinamen aktualisieren."
+"Stücke mit demselben Dateinamen aktualisieren."
 
 #: gtkpod.glade:11643
-#, fuzzy
 msgid "Confirm lists of directories"
 msgstr "Liste der Verzeichnisse bestätigen"
 
 #: gtkpod.glade:11743
 msgid "<b>Sync</b>"
-msgstr ""
+msgstr "<b>Abgleichen</b>"
 
 #: gtkpod.glade:11833
-#, fuzzy
 msgid "General"
-msgstr "Genre"
+msgstr "Allgemein"
 
 #: gtkpod.glade:11865
-#, fuzzy
 msgid "<b>Tag Reading</b>"
-msgstr "Lesen von Tags"
+msgstr "<b>Lesen von Tags</b>"
 
 #: gtkpod.glade:11940
-#, fuzzy
 msgid "Use this template to parse filename for tag information:"
-msgstr "Diese Schablone verwenden, um aus dem Dateinamen die Tags zu erhalten"
+msgstr ""
+"Diese Schablone verwenden, um aus dem Dateinamen die Tags zu bestimmen:"
 
 #: gtkpod.glade:12011
-#, fuzzy
 msgid "Overwrite tags that are already set"
 msgstr "Tags, die bereits gesetzt sind, überschreiben."
 
 #: gtkpod.glade:12043
-#, fuzzy
 msgid ""
 "As a last resort set the following tags to the\n"
 "filename if they are (still) emply:"
 msgstr ""
-"Falls Tags (immer noch) nicht gesetzt sind, die folgenden Tags mit dem "
-"Dateinamen initialisieren:"
+"Falls Tags (immer noch) nicht gesetzt sind, die \n"
+"folgenden Tags mit dem Dateinamen initialisieren:"
 
 #: gtkpod.glade:12218
 msgid "<b>mserv</b>"
-msgstr ""
+msgstr "<b>mserv</b>"
 
 #: gtkpod.glade:12274
-#, fuzzy
 msgid "Use mserv database to fill additional information"
-msgstr "mserv Datenbank verwenden für zusätzliche Informationen"
+msgstr "mserv Datenbank für zusätzliche Informationen verwenden"
 
 #: gtkpod.glade:12302
-#, fuzzy
 msgid "Music Root:"
-msgstr "Stammverzeichnis für Musik: "
+msgstr "Stammverzeichnis für Musik:"
 
 #: gtkpod.glade:12348
-#, fuzzy
 msgid "mserv Root:"
-msgstr "mserv Stammverzeichnis: "
+msgstr "mserv Stammverzeichnis:"
 
 #: gtkpod.glade:12394
-#, fuzzy
 msgid "Username:"
-msgstr "Benutzername: "
+msgstr "Benutzername:"
 
 #: gtkpod.glade:12441 gtkpod.glade:12460 gtkpod.glade:14326 gtkpod.glade:14395
 #: gtkpod.glade:14539 gtkpod.glade:14690 gtkpod.glade:14754 gtkpod.glade:14818
 msgid "Browse"
-msgstr ""
+msgstr "Durchsuchen"
 
 #: gtkpod.glade:12533
-#, fuzzy
 msgid "Reading"
-msgstr "Lesen von Tags"
+msgstr "Einlesen"
 
 #: gtkpod.glade:12565
-#, fuzzy
 msgid "<b>Displayed Track Attributes</b>"
-msgstr "Angezeigte Informationen "
+msgstr "<b>Angezeigte Informationen</b>"
 
 #: gtkpod.glade:13216
-#, fuzzy
 msgid "<b>Sort Tabs</b>"
-msgstr "Sort Tabs"
+msgstr "<b>Filter-Tabs</b>"
 
 #: gtkpod.glade:13264
-#, fuzzy
 msgid "_Number of sort tabs:"
-msgstr " _Anzahl der Sort Tabs: "
+msgstr "_Anzahl der Filter-Tabs:"
 
 #: gtkpod.glade:13326
-#, fuzzy
 msgid "<b>Automatically select...</b>"
-msgstr "Wähle automatisch "
+msgstr "<b>Wähle automatisch...</b>"
 
 #: gtkpod.glade:13475
-#, fuzzy
 msgid "<b>Tooltips</b>"
-msgstr "Tooltips"
+msgstr "<b>Tooltips</b>"
 
 #: gtkpod.glade:13604
-#, fuzzy
 msgid "Display"
-msgstr "_Anzeige"
+msgstr "Anzeige"
 
 #: gtkpod.glade:13636
-#, fuzzy
 msgid "<b>Track Editing</b>"
-msgstr "Bearbeiten von Stücken"
+msgstr "<b>Bearbeiten von Stücken</b>"
 
 #: gtkpod.glade:13744
-#, fuzzy
 msgid ""
 "Use selected charset (on the 'General' page)\n"
 "when writing tags"
 msgstr ""
-"Ausgewählten Zeichensatz (auf der Import-Seite)\n"
-" beim Schreiben von ID3-Tags verwenden"
+"Ausgewählten Zeichensatz (auf der Allgemein-Seite)\n"
+"beim Schreiben von ID3-Tags verwenden"
 
 #: gtkpod.glade:13797
-#, fuzzy
 msgid "Use 'Multi-Edit' for tracks selections"
 msgstr "'Multi-Edit' bei markierten Stücken verwenden"
 
 #: gtkpod.glade:13896
-#, fuzzy
 msgid "<b>Auto-Generated Playlists</b>"
-msgstr "Automatisch generierte Wiedergabelisten"
+msgstr "<b>Automatisch generierte Wiedergabelisten</b>"
 
 #: gtkpod.glade:13956
-#, fuzzy
 msgid "Number of tracks in generated playlists:"
-msgstr " Anzahl der Stücke in generierten Wiedergabelisten: "
+msgstr "Anzahl der Stücke in generierten Wiedergabelisten:"
 
 #: gtkpod.glade:14051
-#, fuzzy
 msgid "<b>Delete Confirmation</b>"
-msgstr "Sicherheitsabfrage beim Löschen "
+msgstr "<b>Sicherheitsabfrage beim Löschen</b>"
 
 #: gtkpod.glade:14126
-#, fuzzy
 msgid "Before removing playlists or tracks from the iPod "
 msgstr ""
-"Vor dem Entfernen von Wiedergabelisten oder Stücken aus einer Wiedergabeliste"
+"Vor dem Entfernen von Wiedergabelisten oder Stücken aus\n"
+"einer Wiedergabeliste"
 
 #: gtkpod.glade:14146
-#, fuzzy
 msgid ""
 "Before removing tracks completely when\n"
 "synchronizing directories"
 msgstr ""
 "Vor dem vollständigen Löschen vom iPod beim\n"
-" Abgleich von Verzeichnissen"
+"Abgleich von Verzeichnissen"
 
 #: gtkpod.glade:14225
 msgid "<b>Play</b>"
-msgstr ""
+msgstr "<b>Wiedergabe</b>"
 
 #: gtkpod.glade:14285
-#, fuzzy
 msgid "Command for 'Play now':"
-msgstr "Kommandozeile für 'Jetzt abspielen'"
+msgstr "Befehl für 'Jetzt abspielen':"
 
 #: gtkpod.glade:14354
-#, fuzzy
 msgid "Command for 'Enqueue':"
-msgstr "Kommandozeile für 'Zum Abspielen Vormerken':"
+msgstr "Befehl für 'Zum Abspielen Vormerken':"
 
 #: gtkpod.glade:14444
-#, fuzzy
 msgid "<b>Volume Normalization</b>"
-msgstr "Lautstärkenormalisierung"
+msgstr "<b>Lautstärkenormalisierung</b>"
 
 #: gtkpod.glade:14498
-#, fuzzy
 msgid "'mp3gain' executable:"
-msgstr "Genauer Pfad des mp3gain-Programms:"
+msgstr "'mp3gain'-Programm:"
 
 #: gtkpod.glade:14581
 msgid "<b>Synchronization</b>"
-msgstr ""
+msgstr "<b>Synchronisierung</b>"
 
 #: gtkpod.glade:14644
 msgid "Contacts sync command:"
-msgstr ""
+msgstr "Befehl zum Abgleich der Kontakte:"
 
 #: gtkpod.glade:14708
 msgid "Calendar sync command:"
-msgstr ""
+msgstr "Befehl zum Abgleich des Kalenders:"
 
 #: gtkpod.glade:14772
 msgid "Notes sync command:"
-msgstr ""
-
-#~ msgid "Time created"
-#~ msgstr "Erstellt"
-
-#~ msgid "Time track has been created (timestamp of file)"
-#~ msgstr "Zeitpunkt, zu dem das Stück erstellt wurde (Timestamp der Datei)"
-
-#~ msgid "Created"
-#~ msgstr "Erstellt"
-
-#~ msgid "'Created' condition ignored because of error."
-#~ msgstr ""
-#~ "Die Bedingung 'Erstellungszeitpunkt' wurde aufgrund eines Fehlers "
-#~ "ignoriert."
-
-#~ msgid "Error writing iTunesDB to iPod. Export aborted!"
-#~ msgstr ""
-#~ "Fehler beim Schreiben der iTunesDB auf dem iPod. Export abgebrochen!"
-
-#~ msgid "Extended information not written"
-#~ msgstr "Erweiterte Informationen wurden nicht geschrieben"
-
-#~ msgid "Total"
-#~ msgstr "Insgesamt"
-
-#~ msgid "Could not open iTunesDB \"%s\" for reading.\n"
-#~ msgstr "iTunesDB '%s' konnte nicht zum Lesen geöffnet werden.\n"
-
-#~ msgid "Error reading \"%s\".\n"
-#~ msgstr "Fehler beim Lesen von '%s'.\n"
-
-#~ msgid "\"%s\" is not a iTunesDB.\n"
-#~ msgstr "'%s' ist keine iTunesDB.\n"
-
-#~ msgid "Could not open iTunesDB \"%s\" for writing.\n"
-#~ msgstr "iTunesDB '%s' konnte nicht zum Schreiben geöffnet werden.\n"
-
-#~ msgid "Could not open file \"%s\" for reading.\n"
-#~ msgstr "Datei '%s' konnte nicht zum Lesen geöffnet werden.\n"
-
-#~ msgid "Could not open file \"%s\" for writing.\n"
-#~ msgstr "Datei '%s' konnte nicht zum Schreiben geöffnet werden.\n"
-
-#~ msgid "Error reading file \"%s\".\n"
-#~ msgstr "Fehler beim Lesen der Datei '%s'.\n"
-
-#~ msgid "Error writing PC file \"%s\".\n"
-#~ msgstr "Fehler beim Schreiben der Datei '%s'.\n"
-
-#~ msgid "Added %d+ tracks to playlist '%s'"
-#~ msgid_plural "Added %d+ tracks to playlist '%s'"
-#~ msgstr[0] "%d+ Stücke wurden zur Wiedergabeliste '%s' hinzugefügt."
-#~ msgstr[1] "%d+ Stücke wurden zur Wiedergabeliste '%s' hinzugefügt."
+msgstr "Befehl zum Abgleich der Notizen:"
