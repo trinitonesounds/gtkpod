@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-04-29 12:15:40 jcs>
+|  Time-stamp: <2005-04-30 01:42:42 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -579,9 +579,93 @@ void gp_info_nontransferred_tracks (iTunesDB *itdb,
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* DND: add a list of iPod IDs to Playlist @pl */
+/* DND: add either a GList of tracks or an ASCII list of tracks to
+ * Playlist @pl */
+static void add_tracks_to_playlist (Playlist *pl,
+				    gchar *string, GList *tracks)
+{
+    void intern_add_track (Playlist *pl, Track *track)
+	{
+	    iTunesDB *from_itdb, *to_itdb;
+	    Playlist *to_mpl;
+	    from_itdb = track->itdb;
+	    g_return_if_fail (from_itdb);
+	    to_itdb = pl->itdb;
+	    to_mpl = itdb_playlist_mpl (to_itdb);
+
+	    if (from_itdb == to_itdb)
+	    {   /* DND within the same itdb */
+		if (pl->type == ITDB_PL_TYPE_NORM)
+		{   /* not necessary to add to MPL as track has to be
+		     * present already */
+		    gp_playlist_add_track (pl, track, TRUE);
+		}
+	    }
+	    else
+	    {   /* DND between different itdbs -- need to duplicate the
+		   track before inserting */
+		Track *duptr, *addtr;
+		/* duplicate track */
+		duptr = itdb_track_duplicate (track);
+		/* add to database -- if duplicate detection is on and the
+		   same track already exists in the database, the already
+		   existing track is returned and @duptr is freed */
+		addtr = gp_track_add (to_itdb, duptr);
+		gp_playlist_add_track (pl, addtr, TRUE);
+		if (addtr == duptr)
+		{   /* check if we need to add to the MPL as well */
+		    if (pl->type == ITDB_PL_TYPE_NORM)
+		    {
+			itdb_playlist_add_track (to_mpl, addtr, -1);
+		    }
+		}
+	    }
+	}
+
+
+    g_return_if_fail (!(string && tracks));
+    g_return_if_fail (pl);
+    g_return_if_fail (pl->itdb);
+    g_return_if_fail (itdb_playlist_mpl (pl->itdb));
+    if (!(string || tracks)) return;
+
+    if (string)
+    {
+	Track *track;
+	gchar *str;
+	while(parse_tracks_from_string(&str, &track))
+	{
+	    g_return_if_fail (track);
+	    intern_add_track (pl, track);
+	}
+    }
+    if (tracks)
+    {
+	GList *gl;
+	for (gl=tracks; gl; gl=gl->next)
+	{
+	    Track *track = gl->data;
+	    g_return_if_fail (track);
+	    intern_add_track (pl, track);
+	}
+    }
+}
+
+
+/* DND: add a glist of tracks to Playlist @pl */
+void add_trackglist_to_playlist (Playlist *pl, GList *tracks)
+{
+	add_tracks_to_playlist (pl, NULL, tracks);
+}
+
+
+/* DND: add a list of tracks to Playlist @pl */
 void add_tracklist_to_playlist (Playlist *pl, gchar *string)
 {
+    add_tracks_to_playlist (pl, string, NULL);
+}
+
+#if 0
     Track *track = NULL;
     Playlist *to_mpl;
     gchar *str;
@@ -631,6 +715,7 @@ void add_tracklist_to_playlist (Playlist *pl, gchar *string)
     data_changed (to_itdb);
     g_free (str);
 }
+#endif
 
 /* DND: add a list of files to Playlist @pl.
 
