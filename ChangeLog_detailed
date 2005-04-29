@@ -1,3 +1,7 @@
+2005-04-29 David Sedeño Fernandez <david@alderia.com>
+
+	* gtkpod.glade: Put scrolled window in General tab.
+
 2005-04-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* gtkpod.glade: Set 'Visible' to 'No' on all top level windows
