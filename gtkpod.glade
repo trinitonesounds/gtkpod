@@ -1537,7 +1537,6 @@
 <widget class="GtkWindow" id="gtkpod_about_window">
   <property name="width_request">350</property>
   <property name="height_request">0</property>
-  <property name="visible">True</property>
   <property name="title" translatable="yes">About gtkpod</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -1768,7 +1767,6 @@
 
 <widget class="GtkWindow" id="prefs_window_old">
   <property name="height_request">480</property>
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Preferences</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -5715,7 +5713,6 @@ or tab entry (faster!)</property>
 </widget>
 
 <widget class="GtkWindow" id="special_sorttab">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">special_sorttab -- Don't translate!</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -6519,7 +6516,6 @@ or tab entry (faster!)</property>
 </widget>
 
 <widget class="GtkWindow" id="calendar_window">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Calendar</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -7216,7 +7212,6 @@ or tab entry (faster!)</property>
 </widget>
 
 <widget class="GtkWindow" id="sort_window">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Sorting Options</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -8542,7 +8537,6 @@ In order to store an alphabetized track order to the iPod you must choose the 'S
 </widget>
 
 <widget class="GtkWindow" id="gtkpod_info">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">gtkpod Info</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -9858,7 +9852,6 @@ Tracks</property>
 </widget>
 
 <widget class="GtkDialog" id="confirm_dialog">
-  <property name="visible">True</property>
   <property name="title" translatable="yes"></property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -10076,7 +10069,6 @@ Tracks</property>
 </widget>
 
 <widget class="GtkWindow" id="export_playlist_file_options">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">window1</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -10403,7 +10395,6 @@ Tracks</property>
 </widget>
 
 <widget class="GtkWindow" id="export_files_options">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">window1</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -10552,7 +10543,6 @@ for this filename.</property>
 </widget>
 
 <widget class="GtkWindow" id="spl_window">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Smart Playlist</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -11001,7 +10991,6 @@ for this filename.</property>
 </widget>
 
 <widget class="GtkWindow" id="prefs_window">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Preferences</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
