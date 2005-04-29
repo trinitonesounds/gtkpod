@@ -10,6 +10,11 @@
 	* src/ removed dependence on support.[ch], interface.[ch] and
 	the files.
 
+	* po/de.po: update
+
+	* src/display_playlist.c, src/misc_track.[ch]: continued work
+          on playlist DND.
+
 2005-04-28  David Sedeño Fernandez <david@alderia.com>
 
 	* gtkpod.glade: Sync option from Reading to General. Put forbidden
