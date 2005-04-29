@@ -3,6 +3,9 @@
 	* gtkpod.glade: Set 'Visible' to 'No' on all top level windows
         to that the resize command still works as it is.
 
+	* src/ removed dependence on support.[ch], interface.[ch] and
+	the files.
+
 2005-04-28  David Sedeño Fernandez <david@alderia.com>
 
 	* gtkpod.glade: Sync option from Reading to General. Put forbidden
