@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-| Time-stamp: <2003-06-15 12:40:59 jcs>
+| Time-stamp: <2005-04-29 12:13:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,7 +33,6 @@
 #include <stdlib.h>
 #include "date_parser.h"
 #include "misc.h"
-#include "support.h"
     static gchar *dp_strp = NULL;
     /* time stamp (result!) */
     static time_t tstamp;

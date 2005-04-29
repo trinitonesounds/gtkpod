@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-04-05 21:03:17 jcs>
+|  Time-stamp: <2005-04-29 12:15:40 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,7 +36,6 @@
 #include "prefs.h"
 #include "misc.h"
 #include "misc_track.h"
-#include "support.h"
 #include "info.h"
 #include "charset.h"
 #include <math.h>

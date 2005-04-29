@@ -44,8 +44,8 @@
 #include "info.h"
 #include "itdb.h"
 #include "prefs.h"
-#include "support.h"
 #include "misc_track.h"
+#include <glib/gi18n-lib.h>
 
 /* XPM */
 static char *folder[] =

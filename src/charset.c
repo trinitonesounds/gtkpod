@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-02 18:38:14 jcs>
+/* Time-stamp: <2005-04-29 12:13:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,7 +35,6 @@
 #include "prefs.h"
 #include "charset.h"
 #include "misc.h"
-#include "support.h"
 
 /* If Japanese auto-conversion is being used, this variable is being
    set with each call of charset_to_utf8(). You can get a copy of its

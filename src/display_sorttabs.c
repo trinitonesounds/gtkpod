@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 01:14:10 jcs>
+/* Time-stamp: <2005-04-29 12:13:16 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,9 +37,7 @@
 #include "prefs.h"
 #include "misc.h"
 #include "misc_track.h"
-#include "support.h"
 #include "context_menus.h"
-#include "interface.h"
 #include "callbacks.h"
 #include "date_parser.h"
 #include "itdb.h"

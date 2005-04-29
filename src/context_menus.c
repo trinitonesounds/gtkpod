@@ -33,7 +33,6 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
-#include "support.h"
 #include "tools.h"
 #include "itdb.h"
 

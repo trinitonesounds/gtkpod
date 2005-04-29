@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-02 12:19:20 jcs>
+/* Time-stamp: <2005-04-29 12:15:38 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -111,7 +111,6 @@ struct _File_Tag
 #include "itdb.h"
 #include "file.h"
 #include "misc.h"
-#include "support.h"
 
 
 /* MIN_CONSEC_GOOD_FRAMES defines how many consecutive valid MP3 frames

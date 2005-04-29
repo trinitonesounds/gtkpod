@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-27 19:54:37 jcs>
+/* Time-stamp: <2005-04-29 12:15:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,7 +37,6 @@
 #include "confirmation.h"
 #include "misc.h"
 #include "prefs.h"
-#include "support.h"
 #include "info.h"
 
 #define DEBUG_MISC 0

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 20:54:57 jcs>
+/* Time-stamp: <2005-04-29 12:15:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -27,7 +27,7 @@
 */
 
 #include "itdb_private.h"
-#include "support.h"
+#include <glib/gi18n-lib.h>
 #include <string.h>
 
 /* spl_action_known(), itb_splr_get_field_type(),

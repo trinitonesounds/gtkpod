@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 02:43:33 jcs>
+/* Time-stamp: <2005-04-29 12:15:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,7 +33,6 @@
 #include "charset.h"
 #include "itdb.h"
 #include "misc.h"
-#include "support.h"
 #include "wavfile.h"
 
 #include <string.h>

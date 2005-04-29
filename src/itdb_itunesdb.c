@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-08 23:26:39 jcs>
+/* Time-stamp: <2005-04-29 12:13:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -120,7 +120,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include "itdb_private.h"
-#include "support.h"
+#include <glib/gi18n-lib.h>
 
 #define ITUNESDB_DEBUG 0
 #define ITUNESDB_MHIT_DEBUG 0

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-07 22:59:25 jcs>
+/* Time-stamp: <2005-04-29 12:15:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -41,7 +41,6 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
-#include "support.h"
 #include "tools.h"
 
 /*------------------------------------------------------------------*\

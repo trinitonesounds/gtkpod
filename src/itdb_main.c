@@ -36,9 +36,9 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <time.h>
+#include <libintl.h>
 
 #include "itdb.h"
-#include "support.h"
 
 int
 main (int argc, char *argv[])

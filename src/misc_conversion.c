@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 21:12:17 jcs>
+/* Time-stamp: <2005-04-29 12:15:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -41,7 +41,6 @@
 #include "itdb.h"
 #include "misc.h"
 #include "prefs.h"
-#include "support.h"
 #include <time.h>
 
 

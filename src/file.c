@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 21:00:27 jcs>
+/* Time-stamp: <2005-04-29 12:13:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -51,7 +51,6 @@
 #include "mp3file.h"
 #include "mp4file.h"
 #include "prefs.h"
-#include "support.h"
 #include "wavfile.h"
 
 /* Determine the type of a file. 

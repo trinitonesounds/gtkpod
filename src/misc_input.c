@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-09 00:03:51 jcs>
+/* Time-stamp: <2005-04-29 12:15:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,7 +38,6 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include "prefs_window.h"
-#include "support.h"
 
 
 #define DEBUG_MISC 0

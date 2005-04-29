@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 02:38:10 jcs>
+/* Time-stamp: <2005-04-29 12:15:37 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -30,11 +30,9 @@
 #include <string.h>
 #include "callbacks.h"
 #include "charset.h"
-#include "interface.h"
 #include "misc.h"
 #include "prefs.h"
 #include "prefs_window.h"
-#include "support.h"
 #include "display_itdb.h"
 
 GladeXML *prefs_window_xml;

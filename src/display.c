@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 01:15:18 jcs>
+/* Time-stamp: <2005-04-29 12:13:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,7 +37,6 @@
 #include "prefs.h"
 #include "prefs_window.h"
 #include "misc.h"
-#include "support.h"
 
 
 GtkWidget *gtkpod_window = NULL;

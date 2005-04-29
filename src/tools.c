@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-12 02:43:17 jcs>
+/* Time-stamp: <2005-04-29 12:05:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -40,7 +40,6 @@
 #include "mp3file.h"
 #include "tools.h"
 #include "prefs.h"
-#include "support.h"
 #include <stdlib.h>
 
 

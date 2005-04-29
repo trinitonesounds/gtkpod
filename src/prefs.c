@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 22:12:40 jcs>
+/* Time-stamp: <2005-04-29 12:15:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -102,7 +102,6 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
-#include "support.h"
 
 /* static function declarations */
 static void prefs_write_hash_values (FILE *fp);

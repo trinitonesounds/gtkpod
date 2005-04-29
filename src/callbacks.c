@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-04 22:21:43 jcs>
+/* Time-stamp: <2005-04-29 12:15:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -47,7 +47,6 @@
 #include "tools.h"
 #include "prefs.h"
 #include "prefs_window.h"
-#include "support.h"
 
 void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,

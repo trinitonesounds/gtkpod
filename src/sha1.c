@@ -44,7 +44,6 @@
 #include "prefs.h"
 #include "misc.h"
 #include "display_itdb.h"
-#include "support.h"
 
 
 typedef guint32 chunk;

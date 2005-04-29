@@ -1,5 +1,5 @@
 /* -*- mode: c -*-
-|  Time-stamp: <2005-01-03 23:11:26 jcs>
+|  Time-stamp: <2005-04-29 12:13:18 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -31,7 +31,6 @@
 #include "date_parser.h"
 #include "misc.h"
 #include "itdb.h"
-#include "support.h"
 /* Will be set to TRUE if error occured */
     static gboolean dp_error;
 /* Will be set to TRUE if construct (< date, = date...) was not

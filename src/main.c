@@ -36,8 +36,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "support.h"
-#include "interface.h"
 #include "display.h"
 #include "clientserver.h"
 #include "prefs.h"

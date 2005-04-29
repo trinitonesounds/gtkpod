@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-08 13:47:22 jcs>
+/* Time-stamp: <2005-04-29 12:13:15 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -33,8 +33,6 @@
 #include "prefs.h"
 #include "file.h"
 #include "charset.h"
-#include "interface.h"
-#include "support.h"
 #include "info.h"
 #include <limits.h>
 #include <stdio.h>

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-02 12:58:28 jcs>
+/* Time-stamp: <2005-04-29 12:11:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -33,6 +33,7 @@
 #  include <config.h>
 #endif
 
+#include <glib/gi18n-lib.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <stdio.h>

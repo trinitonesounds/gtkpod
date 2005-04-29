@@ -38,7 +38,6 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "info.h"
-#include "support.h"
 #include "context_menus.h"
 #include "callbacks.h"
 

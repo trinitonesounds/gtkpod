@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-01 23:25:01 jcs>
+/* Time-stamp: <2005-04-29 12:13:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,11 +35,9 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 #include "info.h"
-#include "interface.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
-#include "support.h"
 
 /* pointer to info window */
 static GtkWidget *info_window = NULL;

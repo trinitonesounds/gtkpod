@@ -30,10 +30,9 @@
 #endif
 
 #include <string.h>
-#include "support.h"
+#include <glib/gi18n-lib.h>
 #include "confirmation.h"
 #include "prefs.h"
-#include "interface.h"
 
 
 static GHashTable *id_hash = NULL;

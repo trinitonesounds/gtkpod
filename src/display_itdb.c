@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-03-27 23:23:53 jcs>
+/* Time-stamp: <2005-04-29 12:13:18 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -36,7 +36,6 @@
 #include "display_itdb.h"
 #include "display.h"
 #include "md5.h"
-#include "support.h"
 #include "file.h"
 #include "misc.h"
 #include "misc_track.h"
