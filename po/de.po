@@ -1,6 +1,6 @@
 # German language translation for gtkpod
-# Copyright (C) 2003 Jörg Schuler
-# Jörg Schuler <jcsjcs at users.sourceforge.net>, 2003.
+# Copyright (C) 2003-2005 Jörg Schuler
+# Jörg Schuler <jcsjcs at users.sourceforge.net>
 #
 #
 msgid ""
