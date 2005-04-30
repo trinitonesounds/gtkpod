@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-07 22:28:19 jcs>
+/* Time-stamp: <2005-04-30 16:02:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -113,12 +113,6 @@ void  tm_list_store_move_before (GtkListStore *store,
 				 GtkTreeIter  *iter,
 				 GtkTreeIter  *position);
 void  tm_list_store_move_after (GtkListStore *store,
-				GtkTreeIter  *iter,
-				GtkTreeIter  *position);
-void  pm_list_store_move_before (GtkListStore *store,
-				 GtkTreeIter  *iter,
-				 GtkTreeIter  *position);
-void  pm_list_store_move_after (GtkListStore *store,
 				GtkTreeIter  *iter,
 				GtkTreeIter  *position);
 gboolean pmtm_move_pathlist (GtkTreeView *treeview,

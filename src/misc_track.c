@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-04-30 01:42:42 jcs>
+|  Time-stamp: <2005-04-30 13:40:53 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -291,7 +291,8 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 	   oldetr->pc_path_locale = g_strdup (etr->pc_path_locale);
 	   oldetr->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
        }
-       if (itdb_playlist_contains_track (NULL, track))
+       if (itdb_playlist_contains_track (itdb_playlist_mpl (itdb),
+					 track))
        { /* track is already added to memory -> replace with "oldtrack" */
 	   /* check for "track" in all playlists (except for MPL) */
 	   GList *gl;

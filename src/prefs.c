@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:37 jcs>
+/* Time-stamp: <2005-04-30 12:52:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1284,7 +1284,11 @@ void prefs_set_md5tracks (gboolean active)
 				    "itdbs_head");
 /*    g_return_if_fail (itdbs_head);*/
     /* gets called before itdbs are set up -> fail silently */
-    if (!itdbs_head) return;
+    if (!itdbs_head)
+    {
+	cfg->md5tracks = active;
+	return;
+    }
 
     if (cfg->md5tracks && !active)
     { /* md5 checksums have been turned off */

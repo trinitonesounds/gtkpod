@@ -1,3 +1,19 @@
+2005-04-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* po/sv.po: update received from Stefan Asserhäll
+
+	* file_itunesdb.c: fixed segfault when importing database
+          twice (still need to fix that database _can_ be imported
+          twice, which shouldn't be)
+
+	* file_itunesdb.c: display track info after import of database
+
+	* misc_track.c: fixed error in gp_duplicate_remove() when
+          @track was not yet added to any itdb.
+
+	* display_playlists.c: DND within playlist view across and
+          within itdbs now functional (it appears).
+
 2005-04-29 David Sedeño Fernandez <david@alderia.com>
 
 	* gtkpod.glade: Put scrolled window in General tab.

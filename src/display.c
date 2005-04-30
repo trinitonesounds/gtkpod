@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:13:17 jcs>
+/* Time-stamp: <2005-04-30 16:03:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -96,8 +96,8 @@ gboolean pmtm_move_pathlist (GtkTreeView *treeview,
 		tm_list_store_move_after (GTK_LIST_STORE (model),
 					  from_iter, &to_iter);
 	    if (tvt == PLAYLIST_TREEVIEW)
-		pm_list_store_move_after (GTK_LIST_STORE (model),
-					  from_iter, &to_iter);
+		gtk_tree_store_move_after (GTK_TREE_STORE (model),
+					   from_iter, &to_iter);
 	}
 	break;
     case GTK_TREE_VIEW_DROP_BEFORE:
@@ -109,8 +109,8 @@ gboolean pmtm_move_pathlist (GtkTreeView *treeview,
 		tm_list_store_move_before (GTK_LIST_STORE (model),
 					   from_iter, &to_iter);
 	    if (tvt == PLAYLIST_TREEVIEW)
-		pm_list_store_move_before (GTK_LIST_STORE (model),
-					   from_iter, &to_iter);
+		gtk_tree_store_move_before (GTK_TREE_STORE (model),
+					    from_iter, &to_iter);
 	}
 	break;
     }

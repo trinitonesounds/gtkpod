@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:41 jcs>
+/* Time-stamp: <2005-04-30 13:46:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -557,10 +557,11 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
 	    g_return_val_if_fail (pl, NULL);
 	    duppl = itdb_playlist_duplicate (pl);
 	    /* switch members */
-	    for (glm=duppl->members; glm; glm=glm->next);
+	    for (glm=duppl->members; glm; glm=glm->next)
 	    {
-		Track *newtr = g_hash_table_lookup (track_hash,
-						    glm->data);
+		Track *newtr;
+		g_return_val_if_fail (glm->data, NULL);
+		newtr = g_hash_table_lookup (track_hash, glm->data);
 		g_return_val_if_fail (newtr, NULL);
 		glm->data = newtr;
 	    }
@@ -627,6 +628,7 @@ void handle_import (iTunesDB *old_itdb, const gchar *mp,
 	    gp_itdb_add (new_itdb, pos);
 	}
     }
+    gtkpod_tracks_statusbar_update ();
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:13:18 jcs>
+/* Time-stamp: <2005-04-30 16:02:15 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -398,6 +398,7 @@ void gp_playlist_remove (Playlist *pl)
 }
 
 
+
 /* FIXME: this is a bit dangerous. . . we delete all
  * playlists with titles @pl_name and return how many
  * pl have been removed.
@@ -541,6 +542,9 @@ void init_data (GtkWidget *window)
     pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
     gp_playlist_add (itdb, pl, -1);
     ((ExtraiTunesDBData *)itdb->userdata)->data_changed = FALSE;
+
+    /* set md5 */
+    prefs_set_md5tracks (prefs_get_md5tracks ());
 }
 
 
