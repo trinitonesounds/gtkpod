@@ -77,9 +77,9 @@ static GtkTargetEntry pm_drop_types [] = {
  * For drag and drop within the playlist view the following rules apply:
  *
  * 1) Drags between different itdbs: playlists are copied (moved with
- *    CTRL pressed)
+ *    SHIFT pressed)
  *
- * 2) Drags within the same itdb: playlist is moved (copied with CTRL
+ * 2) Drags within the same itdb: playlist is moved (copied with SHIFT
  *    pressed)
  *
  * ---------------------------------------------------------------- */
@@ -113,7 +113,7 @@ static void pm_drag_data_delete (GtkWidget *widget,
     g_return_if_fail (widget);
     g_return_if_fail (drag_context);
 
-    printf ("drag_data_delete: %d\n", drag_context->action);
+/*     printf ("drag_data_delete: %d\n", drag_context->action); */
 
     if (drag_context->action == GDK_ACTION_MOVE)
     {
@@ -168,36 +168,56 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 {
     GtkTreePath *path;
     GtkTreeViewDropPosition pos;
-    gboolean result;
+    GdkAtom target;
+    guint info;
 
-    printf ("drag_motion: %d %d %d\n", x, y, pos);
 
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
 
-    result = gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
-						x, y,
-						&path,
-						&pos);
+    /* no drop possible if position is not valid */
+    if (!gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
+					    x, y, &path, &pos))
+	return FALSE;
+
+    printf ("drag_motion: %d %d %d\n", x, y, pos);
 
     gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path, pos);
 
-    if (result == TRUE)
-    {
-	GdkAtom target;
-	target = gtk_drag_dest_find_target (widget, drag_context, NULL);
-	if (target == GDK_NONE)
-	{
-	    gdk_drag_status (drag_context, 0, time);
-	}
-	else 
-	{
-	    g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_path", path);
-	    g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_pos", (gpointer)pos);
-	    gtk_drag_get_data (widget, drag_context, target, time);
-	}
+    target = gtk_drag_dest_find_target (widget, drag_context, NULL);
+
+    /* no drop possible if no valid target can be found */
+    if (target == GDK_NONE)
+	return FALSE;
+
+    /* no drop possible _before_ MPL */
+    if (gtk_tree_path_get_depth (path) == 1)
+    {   /* MPL */
+	if (pos == GTK_TREE_VIEW_DROP_BEFORE)
+	    return FALSE;
     }
 
-    return result;
+    /* get 'info'-id from target-atom */
+    if (!gtk_target_list_find (
+	    gtk_drag_dest_get_target_list (widget), target, &info))
+	return FALSE;
+
+    switch (info)
+    {
+    case DND_GTKPOD_PLAYLISTLIST:
+	/* need to consult drag data to decide */
+	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_path", path);
+	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_pos", (gpointer)pos);
+	gtk_drag_get_data (widget, drag_context, target, time);
+	return TRUE;
+    case DND_GTKPOD_TRACKLIST:
+	/* whatever the source suggests */
+	gdk_drag_status (drag_context, drag_context->suggested_action, time);
+	return TRUE;
+    default:
+	puts ("pm_drag_motion: not yet supported");
+    }
+
+    return FALSE;
 }
 
 
@@ -394,6 +414,12 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
     if (src->type == ITDB_PL_TYPE_MPL)
 	return GDK_ACTION_COPY;
 
+    /* don't allow drop onto itself */
+    if ((src == dest) &&
+	((pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER) ||
+	 (pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE)))
+	return 0;
+
     if (src->itdb == dest->itdb)
     {   /* DND within the same itdb */
         /* don't allow copy/move onto MPL */
@@ -457,7 +483,7 @@ printf ("drag_data_received: x y a: %d %d %d\n", x, y, context->suggested_action
     {   /* this callback was caused by pm_drag_motion -- we are
 	 * supposed to gdk_drag_status () */
 	Track *tr_s = NULL;
-puts ("by motion");
+puts ("...by motion");
         pos = (GtkTreeViewDropPosition)g_object_get_data (G_OBJECT (widget), "drag_data_by_motion_pos");
         /* unset flag that */ 
 	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_path", NULL);
@@ -629,7 +655,8 @@ puts ("by motion");
 		    break;
 		default:
 		    pl_d = pl;
-		    add_trackglist_to_playlist (pl_d, pl_s->members);
+		    if (pl_d != pl_s)
+			add_trackglist_to_playlist (pl_d, pl_s->members);
 		    break;
 		}
 		gtk_drag_finish (context, TRUE, FALSE, time);
@@ -662,7 +689,8 @@ puts ("by motion");
 		    break;
 		default:
 		    pl_d = pl;
-		    add_trackglist_to_playlist (pl_d, pl_s->members);
+		    if (pl_d != pl_s)
+			add_trackglist_to_playlist (pl_d, pl_s->members);
 		    gtk_drag_finish (context, TRUE, TRUE, time);
 		    break;
 		}
