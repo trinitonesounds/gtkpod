@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:13:16 jcs>
+/* Time-stamp: <2005-05-01 15:08:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2348,10 +2348,8 @@ static void st_create_special (gint inst, GtkWidget *window)
       GtkWidget *w;
       SortTab   *st = sorttab[inst];
       gint i;
-      gchar *xml_file;
       GladeXML *special_xml;
 
-      xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
       special_xml = glade_xml_new (xml_file, "special_sorttab", NULL);
       special = glade_xml_get_widget (special_xml, "special_sorttab");
      
@@ -3158,7 +3156,6 @@ void cal_open_calendar (gint inst, T_item item)
     static GList *catlist = NULL;
     gint defx, defy;
     TimeInfo *ti;
-    gchar *xml_file;
 
     /* Sanity */
     if (inst >= SORT_TAB_MAX)  return;
@@ -3168,7 +3165,6 @@ void cal_open_calendar (gint inst, T_item item)
     /* Sanity */
     if (!st) return;
 
-    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
     cal_xml = glade_xml_new (xml_file, "calendar_window", NULL);
 
     glade_xml_signal_autoconnect (cal_xml);

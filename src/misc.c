@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-04-29 12:15:40 jcs>
+|  Time-stamp: <2005-05-01 15:08:28 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -59,13 +59,11 @@ void open_about_window ()
   GtkTextView *textview;
   GtkTextIter ti;
   GtkTextBuffer *tb;
-  gchar *xml_file;
   GladeXML *about_xml;
 
   if (about_window != NULL) return;
   /* about_window = create_gtkpod_about_window (); */
 
-  xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
   about_xml = glade_xml_new (xml_file, "gtkpod_about_window", NULL);
   glade_xml_signal_autoconnect (about_xml);
   about_window = glade_xml_get_widget (about_xml, "gtkpod_about_window");

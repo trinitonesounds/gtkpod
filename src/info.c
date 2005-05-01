@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:13:14 jcs>
+/* Time-stamp: <2005-05-01 15:08:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -153,12 +153,8 @@ static void fill_label_string (gchar *w_name, const char *str)
 /* open info window */
 void info_open_window (void)
 {
-    gchar *xml_file;
-    
-
     if (info_window)  return;            /* already open */
     
-    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
     info_xml = glade_xml_new (xml_file, "gtkpod_info", NULL);
     info_window = glade_xml_get_widget (info_xml, "gtkpod_info");
     

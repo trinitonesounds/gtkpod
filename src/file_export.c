@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:13:15 jcs>
+/* Time-stamp: <2005-05-01 15:08:28 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -558,10 +558,8 @@ void export_files_init (GList *tracks)
 	GTK_STOCK_APPLY, RESPONSE_APPLY,
 	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
-    gchar *xml_file;
     GladeXML *export_files_xml;
 
-    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
     export_files_xml = glade_xml_new (xml_file, "export_files_options", NULL);
     win = glade_xml_get_widget (export_files_xml, "export_files_options");
 
@@ -838,10 +836,8 @@ void export_playlist_file_init (GList *tracks)
 	GTK_STOCK_APPLY, RESPONSE_APPLY,
 	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
-    gchar *xml_file;
     GladeXML *export_playlist_xml;
     
-    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
     export_playlist_xml = glade_xml_new (xml_file, "export_playlist_file_options", NULL);
     win = glade_xml_get_widget (export_playlist_xml, "export_playlist_file_options");
 

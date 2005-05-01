@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-30 22:05:08 jcs>
+/* Time-stamp: <2005-05-01 01:22:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -200,13 +200,77 @@ on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     }
 }
 
-static void
-on_track_treeview_drag_data_get        (GtkWidget       *widget,
-					GdkDragContext  *context,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data)
+static void tm_drag_begin (GtkWidget *widget,
+			   GdkDragContext *drag_context,
+			   gpointer user_data)
+{
+    puts ("tm_drag_begin");
+}
+
+
+/* remove dragged playlist after successful MOVE */
+static void tm_drag_data_delete (GtkWidget *widget,
+			   GdkDragContext *drag_context,
+			   gpointer user_data)
+{
+    puts ("tm_drag_data_delete");
+}
+
+static gboolean tm_drag_drop (GtkWidget *widget,
+			      GdkDragContext *drag_context,
+			      gint x,
+			      gint y,
+			      guint time,
+			      gpointer user_data)
+{
+    GdkAtom target;
+
+    puts ("tm_drag_data_drop");
+
+    target = gtk_drag_dest_find_target (widget, drag_context, NULL);
+
+    if (target != GDK_NONE)
+    {
+	gtk_drag_get_data (widget, drag_context, target, time);
+	return TRUE;
+    }
+    return FALSE;
+}
+
+static void tm_drag_end (GtkWidget *widget,
+			 GdkDragContext *drag_context,
+			 gpointer user_data)
+{
+    puts ("tm_drag_end");
+}
+
+static void tm_drag_leave (GtkWidget *widget,
+			   GdkDragContext *drag_context,
+			   guint time,
+			   gpointer user_data)
+{
+    puts ("tm_drag_leave");
+}
+
+static gboolean tm_drag_motion (GtkWidget *widget,
+				GdkDragContext *drag_context,
+				gint x,
+				gint y,
+				guint time,
+				gpointer user_data)
+{
+    puts ("tm_drag_motion");
+
+    return FALSE;
+}
+
+
+static void tm_drag_data_get (GtkWidget       *widget,
+			      GdkDragContext  *context,
+			      GtkSelectionData *data,
+			      guint            info,
+			      guint            time,
+			      gpointer         user_data)
 {
     GtkTreeSelection *ts = NULL;
     GString *reply = g_string_sized_new (2000);
@@ -234,15 +298,14 @@ on_track_treeview_drag_data_get        (GtkWidget       *widget,
     g_string_free (reply, TRUE);
 }
 
-static void
-on_track_treeview_drag_data_received    (GtkWidget       *widget,
-					GdkDragContext  *context,
-					gint             x,
-					gint             y,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data)
+static void tm_drag_data_received (GtkWidget       *widget,
+				   GdkDragContext  *context,
+				   gint             x,
+				   gint             y,
+				   GtkSelectionData *data,
+				   guint            info,
+				   guint            time,
+				   gpointer         user_data)
 {
     GtkTreePath *path = NULL;
     GtkTreeModel *model = NULL;
@@ -1753,25 +1816,63 @@ void tm_create_treeview (void)
 		    G_CALLBACK (tm_selection_changed_event),
 		    NULL);
   tm_add_columns ();
-  gtk_drag_source_set (GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK,
+
+/*   gtk_drag_source_set (GTK_WIDGET (track_treeview), GDK_BUTTON1_MASK, */
+/* 		       tm_drag_types, TGNR (tm_drag_types), */
+/* 		       GDK_ACTION_COPY|GDK_ACTION_MOVE); */
+/*   gtk_tree_view_enable_model_drag_dest(track_treeview, tm_drop_types, */
+/* 				       TGNR (tm_drop_types), */
+/* 				       GDK_ACTION_COPY|GDK_ACTION_MOVE); */
+/*   /\* need the gtk_drag_dest_set() with no actions ("0") so that the */
+/*      data_received callback gets the correct info value. This is most */
+/*      likely a bug... *\/ */
+/*   gtk_drag_dest_set_target_list (GTK_WIDGET (track_treeview), */
+/* 				 gtk_target_list_new (tm_drop_types, */
+/* 						      TGNR (tm_drop_types))); */
+
+
+  gtk_drag_source_set (GTK_WIDGET (track_treeview),
+		       GDK_BUTTON1_MASK,
 		       tm_drag_types, TGNR (tm_drag_types),
 		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
-  gtk_tree_view_enable_model_drag_dest(track_treeview, tm_drop_types,
-				       TGNR (tm_drop_types),
-				       GDK_ACTION_COPY|GDK_ACTION_MOVE);
-  /* need the gtk_drag_dest_set() with no actions ("0") so that the
-     data_received callback gets the correct info value. This is most
-     likely a bug... */
-  gtk_drag_dest_set_target_list (GTK_WIDGET (track_treeview),
-				 gtk_target_list_new (tm_drop_types,
-						      TGNR (tm_drop_types)));
+  gtk_drag_dest_set (GTK_WIDGET (track_treeview),
+		     GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT,
+		     tm_drop_types, TGNR (tm_drop_types),
+		     GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
-  g_signal_connect ((gpointer) stv, "drag_data_get",
-		    G_CALLBACK (on_track_treeview_drag_data_get),
+
+  g_signal_connect ((gpointer) track_treeview, "drag-begin",
+		    G_CALLBACK (tm_drag_begin),
 		    NULL);
-  g_signal_connect ((gpointer) stv, "drag_data_received",
-		    G_CALLBACK (on_track_treeview_drag_data_received),
+
+  g_signal_connect ((gpointer) track_treeview, "drag-data-delete",
+		    G_CALLBACK (tm_drag_data_delete),
 		    NULL);
+
+  g_signal_connect ((gpointer) track_treeview, "drag-data-get",
+		    G_CALLBACK (tm_drag_data_get),
+		    NULL);
+
+  g_signal_connect ((gpointer) track_treeview, "drag-data-received",
+		    G_CALLBACK (tm_drag_data_received),
+		    NULL);
+
+  g_signal_connect ((gpointer) track_treeview, "drag-drop",
+		    G_CALLBACK (tm_drag_drop),
+		    NULL);
+
+  g_signal_connect ((gpointer) track_treeview, "drag-end",
+		    G_CALLBACK (tm_drag_end),
+		    NULL);
+
+  g_signal_connect ((gpointer) track_treeview, "drag-leave",
+		    G_CALLBACK (tm_drag_leave),
+		    NULL);
+
+  g_signal_connect ((gpointer) track_treeview, "drag-motion",
+		    G_CALLBACK (tm_drag_motion),
+		    NULL);
+
   g_signal_connect_after ((gpointer) stv, "key_release_event",
 			  G_CALLBACK (on_track_treeview_key_release_event),
 			  NULL);

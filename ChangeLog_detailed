@@ -1,3 +1,12 @@
+2005-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* src/*.c: initialize @xml_file to either the local copy or
+	  the installed copy (main.c) and use that for all accesses to
+	  gtkpod.glade
+
+	* Makefile.am: uninstall-hook, rework install-hook and
+          dist-hook, move pixmaps back to pixmaps directory
+
 2005-04-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* po/sv.po: update received from Stefan Asserhäll

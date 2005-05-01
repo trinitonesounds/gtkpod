@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:13:16 jcs>
+/* Time-stamp: <2005-05-01 15:08:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1308,13 +1308,11 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 {
     GtkWidget *spl_window, *w;
     Playlist *spl_dup;
-    gchar *xml_file;
 
     g_return_if_fail (spl != NULL);
     g_return_if_fail (spl->is_spl);
     g_return_if_fail (itdb != NULL);
 
-    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
     spl_window_xml = glade_xml_new (xml_file, "spl_window", NULL);
     spl_window = glade_xml_get_widget (spl_window_xml, "spl_window");
     

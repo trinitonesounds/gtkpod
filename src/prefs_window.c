@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:37 jcs>
+/* Time-stamp: <2005-05-01 15:08:27 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -336,7 +336,6 @@ prefs_window_create(void)
 {
     gint i;
     gint defx, defy;
-    char *xml_file;
 
     if(!prefs_window)
     {
@@ -354,7 +353,6 @@ prefs_window_create(void)
 	    return;
 	}
 
-	xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
 	prefs_window_xml = glade_xml_new (xml_file, "prefs_window", NULL);
 	glade_xml_signal_autoconnect (prefs_window_xml);
 
@@ -1300,8 +1298,6 @@ prefs_window_set_unused_gboolean3(gboolean val)
  */
 void sort_window_create (void)
 {
-    gchar *xml_file; 
-   
     if (sort_window)
     {  /* sort options already open --> simply raise to the top */
 	gdk_window_raise(sort_window->window);
@@ -1323,7 +1319,6 @@ void sort_window_create (void)
 	    return;
 	}
 
-	xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
 	sort_window_xml = glade_xml_new (xml_file, "sort_window", NULL);
 	glade_xml_signal_autoconnect (sort_window_xml);
 

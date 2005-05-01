@@ -43,11 +43,16 @@
 #include "file.h"
 
 
+/* path to gtkpod.glade */
+gchar *xml_file;
+
 int
 main (int argc, char *argv[])
 {
-	char *xml_file;
+    gchar *progname;
 	
+  
+
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -66,8 +71,51 @@ main (int argc, char *argv[])
 
   srand(time(NULL));
 
-  /* gtkpod_window = create_gtkpod (); */
-  xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
+  /* initialize xml_file: if gtkpod is called in the build directory
+     (".../src/gtkpod") use the local gtkpod.glade (the symlink in the
+     pixmaps director), otherwise use
+     "PACKAGE_DATA_DIR/PACKAGE/pixmaps/gtkpod.glade" */
+
+  progname = g_find_program_in_path (argv[0]);
+  if (progname)
+  {
+      if (!g_path_is_absolute (progname))
+      {
+	  gchar *cur_dir = g_get_current_dir ();
+	  gchar *prog_absolute;
+
+	  if (g_str_has_prefix (progname, "." G_DIR_SEPARATOR_S))
+	      prog_absolute = g_build_filename (cur_dir,progname+2,NULL);
+	  else
+	      prog_absolute = g_build_filename (cur_dir,progname,NULL);
+	  g_free (progname);
+	  g_free (cur_dir);
+	  progname = prog_absolute;
+      }
+      #define SEPsrcSEPgtkpod G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod"
+      if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
+      {
+	  gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);
+	  if (suffix)
+	  {
+	      *suffix = 0;
+	      xml_file = g_build_filename (progname, "pixmaps", "gtkpod.glade", NULL);
+	  }
+      }
+      g_free (progname);
+      if (!g_file_test (xml_file, G_FILE_TEST_EXISTS))
+      {
+	  g_free (xml_file);
+	  xml_file = NULL;
+      }
+  }
+  if (!xml_file)
+      xml_file = g_build_filename (PACKAGE_DATA_DIR, PACKAGE, "pixmaps", "gtkpod.glade", NULL);
+  else
+  {
+      printf ("Using local gtkpod.glade file since program was started from source directory:\n%s\n", xml_file);
+  }
+
   main_window_xml = glade_xml_new (xml_file, "gtkpod", NULL);
 
   glade_xml_signal_autoconnect (main_window_xml);

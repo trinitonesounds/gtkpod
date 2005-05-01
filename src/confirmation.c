@@ -30,7 +30,7 @@
 #endif
 
 #include <string.h>
-#include <glib/gi18n-lib.h>
+#include "misc.h"
 #include "confirmation.h"
 #include "prefs.h"
 
@@ -278,7 +278,6 @@ GtkResponseType gtkpod_confirmation (gint id,
     gint defx, defy;
     gint *idp;
     GladeXML *confirm_xml;
-    gchar *xml_file;
 
     if (id_hash == NULL)
     {  /* initialize hash table to store IDs */
@@ -336,7 +335,6 @@ GtkResponseType gtkpod_confirmation (gint id,
     }
 
     /* window = create_confirm_dialog (); */
-    xml_file = g_build_filename (PACKAGE_DATA_DIR, G_DIR_SEPARATOR_S, PACKAGE, "gtkpod.glade", NULL);
     confirm_xml = glade_xml_new (xml_file, "confirm_dialog", NULL);
     window = glade_xml_get_widget (confirm_xml, "confirm_dialog");
 

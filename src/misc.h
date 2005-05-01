@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:11:03 jcs>
+/* Time-stamp: <2005-05-01 13:39:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -64,6 +64,8 @@ enum { RESPONSE_APPLY = 5 };
 
 /* indicates whether widgets are currently blocked */
 extern gboolean widgets_blocked;
+/* full path to 'gtkpod.glade', defined in main.c */
+extern gchar *xml_file;
 
 gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
 			gchar *opt_msg, gboolean *opt_state);

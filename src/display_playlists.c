@@ -1711,7 +1711,7 @@ void pm_create_treeview (void)
   pm_add_columns ();
 
   gtk_drag_source_set (GTK_WIDGET (playlist_treeview),
-		       GDK_BUTTON1_MASK |GDK_CONTROL_MASK,
+		       GDK_BUTTON1_MASK,
 		       pm_drag_types, TGNR (pm_drag_types),
 		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
   gtk_drag_dest_set (GTK_WIDGET (playlist_treeview),

@@ -2,35 +2,45 @@
 
 SUBDIRS = src po scripts
 
+
 EXTRA_DIST = \
 	autogen.sh \
 	gtkpod.glade \
 	gtkpod.gladep \
 	TROUBLESHOOTING \
-	TODOandBUGS.txt
+	TODOandBUGS.txt \
+	pixmaps
 
-install-data-local:
-	@$(NORMAL_INSTALL)
+install-data-hook:
 	if test -d $(srcdir)/pixmaps; then \
-	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir); \
+	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps; \
 	  for pixmap in $(srcdir)/pixmaps/*; do \
 	    if test -f $$pixmap; then \
-	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir); \
+	      if ! test -h $$pixmap; then \
+	        $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir)/pixmaps; \
+	      fi \
 	    fi \
 	  done \
 	fi
+	for gladefile in gtkpod.glade gtkpod.gladep; do \
+	  if test -f $$gladefile; then \
+          $(INSTALL_DATA) $$gladefile $(DESTDIR)$(pkgdatadir); \
+	  ln -s $(DESTDIR)$(pkgdatadir)/$$gladefile $(DESTDIR)$(pkgdatadir)/pixmaps/$$gladefile; \
+	  fi \
+	done
 
-	if test -f gtkpod.glade; then \
-	  $(INSTALL_DATA) gtkpod.glade $(DESTDIR)$(pkgdatadir); \
+uninstall-hook:
+	if test -d $(DESTDIR)$(pkgdatadir)/pixmaps; then \
+	      rm -fr $(DESTDIR)$(pkgdatadir)/pixmaps/ ; \
 	fi
+	for gladefile in gtkpod.glade gtkpod.gladep; do \
+	    rm -f $(DESTDIR)$(pkgdatadir)/$$gladefile; \
+	done
 
 dist-hook:
-	if test -d pixmaps; then \
-	  mkdir $(distdir)/pixmaps; \
-	  for pixmap in pixmaps/*; do \
-	    if test -f $$pixmap; then \
-	      cp -p $$pixmap $(distdir)/pixmaps; \
-	    fi \
-	  done \
-	fi
+	for gladefile in gtkpod.glade gtkpod.gladep; do \
+	    rm -f $(distdir)/pixmaps/$$gladefile; \
+	done
+	rm -rf $(distdir)/pixmaps/CVS
+
 
