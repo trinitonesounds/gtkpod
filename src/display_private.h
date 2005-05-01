@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-30 16:02:14 jcs>
+/* Time-stamp: <2005-05-01 17:30:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -101,24 +101,5 @@ struct asf_data
     GtkTreeIter *to_iter;
     GtkTreeViewDropPosition pos;
 };
-
-typedef enum
-{
-    TRACK_TREEVIEW,
-    PLAYLIST_TREEVIEW,
-    SORTTAB_TREEVIEW
-} TreeViewType;
-
-void  tm_list_store_move_before (GtkListStore *store,
-				 GtkTreeIter  *iter,
-				 GtkTreeIter  *position);
-void  tm_list_store_move_after (GtkListStore *store,
-				GtkTreeIter  *iter,
-				GtkTreeIter  *position);
-gboolean pmtm_move_pathlist (GtkTreeView *treeview,
-			     gchar *data,
-			     GtkTreePath *path,
-			     GtkTreeViewDropPosition pos,
-			     TreeViewType tvt);
 
 #endif /* __DISPLAY_PRIVATE_H__ */

@@ -7,6 +7,11 @@
 	* Makefile.am: uninstall-hook, rework install-hook and
           dist-hook, move pixmaps back to pixmaps directory
 
+	* display_playlist.c, display_songs.c: implemented DND within
+          track view as well as between track and playlist view.
+
+	* parse_tracks_from_string(): fixed segfault
+
 2005-04-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* po/sv.po: update received from Stefan Asserhäll

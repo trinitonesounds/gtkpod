@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-07 22:28:18 jcs>
+/* Time-stamp: <2005-05-01 17:33:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -221,8 +221,6 @@ void pm_name_changed (Playlist *playlist);
 void pm_track_changed (Track *track);
 void pm_sort (GtkSortType order);
 void pm_stop_editing (gboolean cancel);
-gboolean pm_move_pathlist (gchar *data, GtkTreePath *path,
-			   GtkTreeViewDropPosition pos);
 
 void st_stop_editing (gint inst, gboolean cancel);
 void st_page_selected (GtkNotebook *notebook, guint page);
@@ -245,8 +243,6 @@ void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter);
 guint tm_get_nr_of_tracks(void);
 void tm_rows_reordered(void);
 void pm_rows_reordered(void);
-gboolean tm_move_pathlist (gchar *data, GtkTreePath *path,
-			   GtkTreeViewDropPosition pos);
 gboolean tm_add_filelist (gchar *data, GtkTreePath *path,
 			  GtkTreeViewDropPosition pos);
 void tm_stop_editing (gboolean cancel);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 01:22:54 jcs>
+/* Time-stamp: <2005-05-02 02:19:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -145,8 +145,79 @@ const gchar *tm_col_tooltips[] = {
 
 /* ---------------------------------------------------------------- */
 /* Section for track display                                        */
-/* DND                                                              */
+/* DND -- Drag And Drop                                             */
 /* ---------------------------------------------------------------- */
+
+
+/* Move the paths listed in @data before or after (according to @pos)
+   @path. Used for DND */
+static gboolean tm_move_pathlist (gchar *data,
+				  GtkTreePath *path,
+				  GtkTreeViewDropPosition pos)
+{
+    GtkTreeIter to_iter;
+    GtkTreeIter *from_iter;
+    GtkTreeModel *model;
+    GList *iterlist = NULL;
+    GList *link;
+    gchar **paths, **pathp;
+
+    g_return_val_if_fail (data, FALSE);
+    g_return_val_if_fail (*data, FALSE);
+
+    model = gtk_tree_view_get_model (track_treeview);
+    g_return_val_if_fail (model, FALSE);
+
+    g_return_val_if_fail (gtk_tree_model_get_iter (model, &to_iter, path),
+			  FALSE);
+
+    /* split the path list into individual strings */
+    paths = g_strsplit (data, "\n", -1);
+    pathp = paths;
+    /* Convert the list of paths into a list of iters */
+    while (*pathp)
+    {
+	from_iter = g_malloc (sizeof (GtkTreeIter));
+	if ((strlen (*pathp) > 0) &&
+	    gtk_tree_model_get_iter_from_string (model, from_iter, *pathp))
+	{
+	    iterlist = g_list_append (iterlist, from_iter);
+	}
+	++pathp;
+    }
+    g_strfreev (paths);
+    /* Move the iters in iterlist before or after @to_iter */
+    switch (pos)
+    {
+    case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
+    case GTK_TREE_VIEW_DROP_INTO_OR_AFTER:
+    case GTK_TREE_VIEW_DROP_AFTER:
+	for (link = g_list_last (iterlist); link; link = link->prev)
+	{
+	    from_iter = (GtkTreeIter *)link->data;
+	    gtk_list_store_move_after (GTK_LIST_STORE (model),
+				       from_iter, &to_iter);
+	}
+	break;
+    case GTK_TREE_VIEW_DROP_BEFORE:
+	for (link = g_list_first (iterlist); link; link = link->next)
+	{
+	    from_iter = (GtkTreeIter *)link->data;
+	    gtk_list_store_move_before (GTK_LIST_STORE (model),
+					from_iter, &to_iter);
+	}
+	break;
+    }
+
+    /* free iterlist */
+    for (link = iterlist; link; link = link->next)
+	g_free (link->data);
+    g_list_free (iterlist);
+
+    tm_rows_reordered ();
+    return TRUE;
+}
+
 
 /*
  * utility function for appending ipod track ids for track view (DND)
@@ -201,7 +272,7 @@ on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 }
 
 static void tm_drag_begin (GtkWidget *widget,
-			   GdkDragContext *drag_context,
+			   GdkDragContext *dc,
 			   gpointer user_data)
 {
     puts ("tm_drag_begin");
@@ -210,14 +281,68 @@ static void tm_drag_begin (GtkWidget *widget,
 
 /* remove dragged playlist after successful MOVE */
 static void tm_drag_data_delete (GtkWidget *widget,
-			   GdkDragContext *drag_context,
+			   GdkDragContext *dc,
 			   gpointer user_data)
 {
+    GtkTreeSelection *ts;
+    Playlist *pl = pm_get_selected_playlist ();
+    gchar *buf;
+    gint num;
+
     puts ("tm_drag_data_delete");
+
+    g_return_if_fail (widget);
+    ts = gtk_tree_view_get_selection (GTK_TREE_VIEW(widget));
+    g_return_if_fail (ts);
+    /* number of selected tracks */
+    num = gtk_tree_selection_count_selected_rows (ts);
+    if (num == 0) return;
+
+    /* Check if we really have to delete the tracks */
+    if (pl->type == ITDB_PL_TYPE_NORM)
+    {	/* get list of selected tracks */
+	GString *reply = g_string_sized_new (2000);
+	gchar *str;
+	Track *track;
+
+	gtk_tree_selection_selected_foreach(ts,
+					    on_tm_dnd_get_track_foreach,
+					    reply);
+	str = reply->str;
+	while(parse_tracks_from_string(&str, &track))
+	{
+	    gp_playlist_remove_track (pl, track);
+	}
+	g_string_free (reply, TRUE);
+
+	buf = g_strdup_printf (ngettext ("Moved one track",
+					 "Moved %d tracks", num), num);
+    }
+    else
+    {
+	buf = g_strdup_printf (ngettext ("Copied one track",
+					 "Copied %d tracks", num), num);
+    }
+
+    if (buf)
+    {
+	gtkpod_statusbar_message (buf);
+	g_free (buf);
+    }
 }
 
+
+
+static void tm_drag_end (GtkWidget *widget,
+			 GdkDragContext *dc,
+			 gpointer user_data)
+{
+    puts ("tm_drag_end");
+}
+
+
 static gboolean tm_drag_drop (GtkWidget *widget,
-			      GdkDragContext *drag_context,
+			      GdkDragContext *dc,
 			      gint x,
 			      gint y,
 			      guint time,
@@ -227,25 +352,18 @@ static gboolean tm_drag_drop (GtkWidget *widget,
 
     puts ("tm_drag_data_drop");
 
-    target = gtk_drag_dest_find_target (widget, drag_context, NULL);
+    target = gtk_drag_dest_find_target (widget, dc, NULL);
 
     if (target != GDK_NONE)
     {
-	gtk_drag_get_data (widget, drag_context, target, time);
+	gtk_drag_get_data (widget, dc, target, time);
 	return TRUE;
     }
     return FALSE;
 }
 
-static void tm_drag_end (GtkWidget *widget,
-			 GdkDragContext *drag_context,
-			 gpointer user_data)
-{
-    puts ("tm_drag_end");
-}
-
 static void tm_drag_leave (GtkWidget *widget,
-			   GdkDragContext *drag_context,
+			   GdkDragContext *dc,
 			   guint time,
 			   gpointer user_data)
 {
@@ -253,15 +371,46 @@ static void tm_drag_leave (GtkWidget *widget,
 }
 
 static gboolean tm_drag_motion (GtkWidget *widget,
-				GdkDragContext *drag_context,
+				GdkDragContext *dc,
 				gint x,
 				gint y,
 				guint time,
 				gpointer user_data)
 {
-    puts ("tm_drag_motion");
+    GdkAtom target;
+    GtkTreePath *path;
+    GtkTreeViewDropPosition pos;
 
-    return FALSE;
+/*     printf ("drag_motion  suggested: %d actions: %d\n", */
+/* 	    dc->suggested_action, dc->actions); */
+    g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
+
+    /* no drop possible if position is not valid */
+    if (!gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
+					    x, y, &path, &pos))
+	return FALSE;
+
+    gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path, pos);
+
+    target = gtk_drag_dest_find_target (widget, dc, NULL);
+
+    /* no drop possible if no valid target can be found */
+    if (target == GDK_NONE)
+    {
+	gdk_drag_status (dc, 0, time);
+	return FALSE;
+    }
+
+    if (dc->source_window == dc->dest_window)
+    {   /* if drag is within the same window we only allow move */
+	gdk_drag_status (dc, GDK_ACTION_MOVE, time);
+    }
+    else
+    {  /* whatever the source suggests */
+	gdk_drag_status (dc, dc->suggested_action, time);
+    }
+
+    return TRUE;
 }
 
 
@@ -299,7 +448,7 @@ static void tm_drag_data_get (GtkWidget       *widget,
 }
 
 static void tm_drag_data_received (GtkWidget       *widget,
-				   GdkDragContext  *context,
+				   GdkDragContext  *dc,
 				   gint             x,
 				   gint             y,
 				   GtkSelectionData *data,
@@ -315,7 +464,7 @@ static void tm_drag_data_received (GtkWidget       *widget,
     /* printf ("sm drop received info: %d\n", info); */
 
     /* sometimes we get empty dnd data, ignore */
-    if(widgets_blocked || (!context) ||
+    if(widgets_blocked || (!dc) ||
        (!data) || (data->length < 0)) return;
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
@@ -328,16 +477,24 @@ static void tm_drag_data_received (GtkWidget       *widget,
 	{
 	case DND_GTKPOD_TM_PATHLIST:
 	    result = tm_move_pathlist (data->data, path, pos);
+	    dc->action = GDK_ACTION_MOVE;
+	    gtk_drag_finish (dc, TRUE, FALSE, time);
 	    break;
 	case DND_GTKPOD_TRACKLIST:
 	    /* is disabled in tm_drop_types anyhow (display.c) */
 	    printf ("tracklist not supported yet\n");
+	    dc->action = 0;
+	    gtk_drag_finish (dc, FALSE, FALSE, time);
 	    break;
 	case DND_TEXT_PLAIN:
 	    result = tm_add_filelist (data->data, path, pos);
+	    dc->action = dc->suggested_action;
+	    gtk_drag_finish (dc, TRUE, dc->action==GDK_ACTION_MOVE, time);
 	    break;
 	default:
-	    gtkpod_warning (_("This DND type (%d) is not (yet) supported. If you feel implementing this would be useful, please contact the author.\n\n"), info);
+	    dc->action = 0;
+	    gtk_drag_finish (dc, FALSE, FALSE, time);
+	    puts ("tm_drag_data_received(): should not be reached");
 	    break;
 	}
 	gtk_tree_path_free(path);
@@ -1836,7 +1993,8 @@ void tm_create_treeview (void)
 		       tm_drag_types, TGNR (tm_drag_types),
 		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
   gtk_drag_dest_set (GTK_WIDGET (track_treeview),
-		     GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT,
+/* 		     GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT, */
+		     GTK_DEST_DEFAULT_HIGHLIGHT,
 		     tm_drop_types, TGNR (tm_drop_types),
 		     GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
@@ -1993,83 +2151,6 @@ void tm_enable_disable_view_sort (gboolean enable)
     }
 }
 
-
-
-
-/* ---------------------------------------------------------------- */
-/* Section for drag and drop                                        */
-/* ---------------------------------------------------------------- */
-
-/*#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 2))*/
-/* gtk_list_store_move_*() was introduced in 2.2, so we have to
- * emulate for 2.0 <= V < 2.2 (we require at least 2.0 anyway) */
-/* !!! gtk_list_store_move() at least in 2.2.1 seems to be buggy: if
-   moving before the first entry, the moved entry ends up
-   last. Therefore I emulate the functions for all gtk versions */
-static void tm_list_store_move (GtkListStore *store,
-				 GtkTreeIter  *iter,
-				 GtkTreeIter  *position,
-				 gboolean     before)
-{
-    GtkTreeIter new_iter;
-    Track *track = NULL;
-    GtkTreeModel *model;
-
-    /* insert new row before or after @position */
-    if (before)  gtk_list_store_insert_before (store, &new_iter, position);
-    else         gtk_list_store_insert_after (store, &new_iter, position);
-
-    model = gtk_tree_view_get_model (track_treeview);
-
-    /* get the content (track) of the row to move */
-    gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
-    /* remove the old row */
-    gtk_list_store_remove (GTK_LIST_STORE (model), iter);
-
-    /* set the content of the new row */
-    gtk_list_store_set (GTK_LIST_STORE (model), &new_iter,
-			READOUT_COL, track, -1);
-}
-
-void  tm_list_store_move_before (GtkListStore *store,
-					 GtkTreeIter  *iter,
-					 GtkTreeIter  *position)
-{
-    tm_list_store_move (store, iter, position, TRUE);
-}
-
-void  tm_list_store_move_after (GtkListStore *store,
-					GtkTreeIter  *iter,
-					GtkTreeIter  *position)
-{
-    tm_list_store_move (store, iter, position, FALSE);
-}
-/* #else*/
-#if 0
-/* starting V2.2 convenient gtk functions exist (but see comment above) */
-void  tm_list_store_move_before (GtkListStore *store,
-					 GtkTreeIter  *iter,
-					 GtkTreeIter  *position)
-{
-    gtk_list_store_move_before (store, iter, position);
-}
-
-void  tm_list_store_move_after (GtkListStore *store,
-					GtkTreeIter  *iter,
-					GtkTreeIter  *position)
-{
-    gtk_list_store_move_after (store, iter, position);
-}
-#endif
-
-
-/* move pathlist for track treeview */
-gboolean tm_move_pathlist (gchar *data,
-			   GtkTreePath *path,
-			   GtkTreeViewDropPosition pos)
-{
-    return pmtm_move_pathlist (track_treeview, data, path, pos, TRACK_TREEVIEW);
-}
 
 
 /* Callback for adding tracks within tm_add_filelist */

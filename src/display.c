@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-30 16:03:14 jcs>
+/* Time-stamp: <2005-05-01 17:22:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -43,88 +43,6 @@ GtkWidget *gtkpod_window = NULL;
 
 /* used for stopping of display refresh */
 gint stop_add = SORT_TAB_MAX;
-
-/* Move the paths listed in @data before or after (according to @pos)
-   @path. Used for DND */
-gboolean pmtm_move_pathlist (GtkTreeView *treeview,
-			     gchar *data,
-			     GtkTreePath *path,
-			     GtkTreeViewDropPosition pos,
-			     TreeViewType tvt)
-{
-    GtkTreeIter to_iter;
-    GtkTreeIter *from_iter;
-    GtkTreeModel *model;
-    GList *iterlist = NULL;
-    GList *link;
-    gchar **paths, **pathp;
-
-    if (!data)          return FALSE;
-    if (!strlen (data)) return FALSE;
-    model = gtk_tree_view_get_model (treeview);
-    if (!gtk_tree_model_get_iter (model, &to_iter, path))  return FALSE;
-
-    /* split the path list into individual strings */
-    paths = g_strsplit (data, "\n", -1);
-    pathp = paths;
-    /* Convert the list of paths into a list of iters */
-    while (*pathp)
-    {
-	/* check that we won't move the master playlist (path = "0") */
-	if (!( (tvt == PLAYLIST_TREEVIEW) && (atoi (*pathp) == 0) ))
-	{
-	    from_iter = g_malloc (sizeof (GtkTreeIter));
-	    if ((strlen (*pathp) > 0) &&
-		gtk_tree_model_get_iter_from_string (model, from_iter, *pathp))
-	    {
-		iterlist = g_list_append (iterlist, from_iter);
-	    }
-	}
-	++pathp;
-    }
-    g_strfreev (paths);
-    /* Move the iters in iterlist before or after @to_iter */
-    switch (pos)
-    {
-    case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
-    case GTK_TREE_VIEW_DROP_INTO_OR_AFTER:
-    case GTK_TREE_VIEW_DROP_AFTER:
-	for (link = g_list_last (iterlist); link; link = link->prev)
-	{
-	    from_iter = (GtkTreeIter *)link->data;
-	    if (tvt == TRACK_TREEVIEW)
-		tm_list_store_move_after (GTK_LIST_STORE (model),
-					  from_iter, &to_iter);
-	    if (tvt == PLAYLIST_TREEVIEW)
-		gtk_tree_store_move_after (GTK_TREE_STORE (model),
-					   from_iter, &to_iter);
-	}
-	break;
-    case GTK_TREE_VIEW_DROP_BEFORE:
-	for (link = g_list_first (iterlist); link; link = link->next)
-	{
-	    from_iter = (GtkTreeIter *)link->data;
-
-	    if (tvt == TRACK_TREEVIEW)
-		tm_list_store_move_before (GTK_LIST_STORE (model),
-					   from_iter, &to_iter);
-	    if (tvt == PLAYLIST_TREEVIEW)
-		gtk_tree_store_move_before (GTK_TREE_STORE (model),
-					    from_iter, &to_iter);
-	}
-	break;
-    }
-
-    /* free iterlist */
-    for (link = iterlist; link; link = link->next)
-	g_free (link->data);
-    g_list_free (iterlist);
-
-    if (tvt == TRACK_TREEVIEW)     tm_rows_reordered ();
-    if (tvt == PLAYLIST_TREEVIEW)  pm_rows_reordered ();
-    return TRUE;
-}
-
 
 /* Create the listviews etc */
 void display_create (GtkWidget *gtkpod)
