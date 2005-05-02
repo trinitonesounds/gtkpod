@@ -1,5 +1,10 @@
 2005-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	* display_spl.c: fix spl edit window after transition to
+	  libglade.
+
+2005-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	* src/*.c: initialize @xml_file to either the local copy or
 	  the installed copy (main.c) and use that for all accesses to
 	  gtkpod.glade

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 15:08:28 jcs>
+/* Time-stamp: <2005-05-02 10:44:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -248,6 +248,21 @@ static void spl_set_combobox (GtkComboBox *cb,
     if (g_object_get_data (G_OBJECT (cb), "combo_set") == NULL)
     {   /* the combo has not yet been initialized */
 	const ComboEntry *ce = centries;
+	GtkCellRenderer *cell;
+	GtkListStore *store;
+
+	/* since the transition to libglade we have to set the model
+	   ourselves */
+	store = gtk_list_store_new (1, G_TYPE_STRING);
+	gtk_combo_box_set_model (cb, GTK_TREE_MODEL (store));
+	g_object_unref (store);
+
+	cell = gtk_cell_renderer_text_new ();
+	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (cb), cell, TRUE);
+	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (cb), cell,
+					"text", 0,
+					NULL);
+
 	while (ce->str != NULL)
 	{
 	    gtk_combo_box_append_text (cb, _(ce->str));
@@ -1086,7 +1101,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    table = GTK_TABLE (glade_xml_get_widget (spl_window_xml, "spl_rules_table"));
+    table = g_object_get_data (G_OBJECT (spl_window), "spl_rules_table");
     g_return_if_fail (table);
 
     row = g_list_index (spl->splrules.rules, splr);
@@ -1280,7 +1295,7 @@ static void spl_update_rules_from_row (GtkWidget *spl_window, gint row)
     g_return_if_fail (spl_window);
     spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
     g_return_if_fail (spl);
-    table = glade_xml_get_widget (spl_window_xml, "spl_rules_table");
+    table = g_object_get_data (G_OBJECT (spl_window), "spl_rules_table");
     g_return_if_fail (table);
 
     numrules = g_list_length (spl->splrules.rules);
