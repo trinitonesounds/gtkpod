@@ -69,10 +69,10 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 gboolean add_directory_by_name (iTunesDB *itdb, gchar *name,
 				Playlist *plitem, gboolean descend,
 				AddTrackFunc addtrackfunc, gpointer data);
-gboolean add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
-				   Playlist *plitem,
-				   AddTrackFunc addtrackfunc,
-				   gpointer data);
+Playlist *add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
+				    Playlist *plitem, gint plitem_pos,
+				    AddTrackFunc addtrackfunc,
+				    gpointer data);
 gboolean write_tags_to_file(Track *s);
 void update_track_from_file (iTunesDB *itdb, Track *track);
 void update_tracks (GList *selected_tracks);

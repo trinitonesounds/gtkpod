@@ -1,3 +1,8 @@
+2005-05-06 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* src/display* and others: DND between filter tabs, playlist
+	  view, track view, as well as external file browsers.
+
 2005-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* display_spl.c: fix spl edit window after transition to

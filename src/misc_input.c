@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:39 jcs>
+/* Time-stamp: <2005-05-06 03:18:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -181,7 +181,7 @@ static void add_playlists_ok_button (GtkWidget *button, GtkFileSelection *select
   for (i=0; names[i] != NULL; ++i)
     {
       add_playlist_by_filename (pl_active_itdb,names[i],
-				NULL, NULL, NULL);
+				NULL, -1, NULL, NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
     }

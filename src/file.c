@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:13:15 jcs>
+/* Time-stamp: <2005-05-06 03:18:45 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -105,8 +105,11 @@ gint determine_file_type(gchar *path)
 /* @addtrackfunc: if != NULL this will be called instead of
    "add_track_to_playlist () -- used for dropping tracks at a specific
    position in the track view */
-gboolean
-add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
+/* Return value: playlist to which the files were added to or NULL on
+ * error */
+Playlist *
+add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
+			  Playlist *plitem, gint plitem_pos,
 			  AddTrackFunc addtrackfunc, gpointer data)
 {
     gchar *bufp, *plfile_utf8;
@@ -167,8 +170,10 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
 	return FALSE;  /* definitely not! */
     }
     /* create playlist (if none is specified) */
-    if (!plitem)  plitem = gp_playlist_add_new (itdb, plname, FALSE, -1);
+    if (!plitem)  plitem = gp_playlist_add_new (itdb, plname,
+						FALSE, plitem_pos);
     C_FREE (plname);
+    g_return_val_if_fail (plitem, NULL);
 
     /* need dirname if playlist file contains relative paths */
     dirname = g_path_get_dirname (plfile);
@@ -243,7 +248,9 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile, Playlist *plitem,
     /* I don't think it's too interesting to pop up the list of
        duplicates -- but we should reset the list. */
     gp_duplicate_remove (NULL, (void *)-1);
-    return !error;
+
+    if (!error) return plitem;
+    return NULL;
 }
 
 
@@ -1680,7 +1687,10 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
   switch (determine_file_type(name)) {
 	  case FILE_TYPE_M3U:
 	  case FILE_TYPE_PLS:
-		  return add_playlist_by_filename (itdb, name, plitem, addtrackfunc, data);
+	      if (add_playlist_by_filename (itdb, name, plitem, -1,
+					    addtrackfunc, data))
+		  return TRUE;
+	      return FALSE;
 	  case FILE_TYPE_MP3:
 	  case FILE_TYPE_M4A:
 	  case FILE_TYPE_M4P:

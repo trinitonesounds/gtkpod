@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 15:08:28 jcs>
+/* Time-stamp: <2005-05-06 03:18:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -54,7 +54,7 @@ static void sp_store_sp_entries (gint inst);
 /* Drag and drop definitions */
 static GtkTargetEntry st_drag_types [] = {
     { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
-/*    { "text/plain", 0, DND_TEXT_PLAIN },*/
+    { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 
@@ -82,12 +82,11 @@ on_st_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 			    GtkTreeIter *i, gpointer data)
 {
     GList *gl;
-    TabEntry *entry;
+    TabEntry *entry=NULL;
     GString *tracklist = (GString *)data;
 
     g_return_if_fail (tracklist);
 
-    /* can call on 0 cause s is consistent across all of the columns */
     gtk_tree_model_get (tm, i, ST_COLUMN_ENTRY, &entry, -1);
     g_return_if_fail (entry);
 
@@ -101,39 +100,78 @@ on_st_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     }
 }
 
-static void
-on_st_treeview_drag_data_get           (GtkWidget       *widget,
-					GdkDragContext  *context,
-					GtkSelectionData *data,
-					guint            info,
-					guint            time,
-					gpointer         user_data)
-{
-    GtkTreeSelection *ts = NULL;
 
-    if((data) && (ts = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget))))
+/*
+ * utility function for appending filenames for st treeview callback
+ */
+static void
+on_st_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			   GtkTreeIter *iter, gpointer data)
+{
+    GList *gl;
+    TabEntry *entry=NULL;
+    GString *filelist = data;
+
+    g_return_if_fail (tm);
+    g_return_if_fail (iter);
+    g_return_if_fail (data);
+
+    gtk_tree_model_get (tm, iter, ST_COLUMN_ENTRY, &entry, -1);
+    g_return_if_fail (entry);
+
+
+    /* add all member tracks of entry to tracklist */
+    for (gl=entry->members; gl; gl=gl->next)
     {
-	if(info == DND_GTKPOD_TRACKLIST)	/* gtkpod/file */
+	gchar *name;
+	Track *tr = gl->data;
+
+	g_return_if_fail (tr);
+	name = get_track_name_on_disk_verified (tr);
+	if (name)
 	{
-	    GString *reply = g_string_sized_new (2000);
-	    gtk_tree_selection_selected_foreach(ts,
-				    on_st_dnd_get_track_foreach, reply);
-	    if(reply->len)
-	    {
-		gtk_selection_data_set(data, data->target, 8, reply->str,
-				       reply->len);
-	    }
-	    g_string_free (reply, TRUE);
-	}
-	else if(info == DND_TEXT_PLAIN)
-	{
-	    /* FIXME: not implemented yet -- must also change
-	     * st_drag_types in display.c */
-	    g_warning ("Programming error: on_st_treeview_drag_data_get: received file of type 'text/plain'\n");
+	    g_string_append_printf (filelist, "file:%s\n", name);
+	    g_free (name);
 	}
     }
-
 }
+
+
+static void
+st_drag_data_get (GtkWidget       *widget,
+		  GdkDragContext  *context,
+		  GtkSelectionData *data,
+		  guint            info,
+		  guint            time,
+		  gpointer         user_data)
+{
+    GtkTreeSelection *ts = NULL;
+    GString *reply = g_string_sized_new (2000);
+
+    if (!data) return;
+    
+    ts = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+    if (ts)
+    {
+	switch (info)
+	{
+	case DND_GTKPOD_TRACKLIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_st_dnd_get_track_foreach, reply);
+	    break;
+	case DND_TEXT_PLAIN:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_st_dnd_get_file_foreach, reply);
+	    break;
+	default:
+	    g_warning ("Programming error: st_drag_data_get received unknown info type (%d)\n", info);
+	    break;
+	}
+    }
+    gtk_selection_data_set(data, data->target, 8, reply->str, reply->len);
+    g_string_free (reply, TRUE);
+}
+
 
 /* delete selected entry in sort tab */
 static gboolean
@@ -2579,7 +2617,7 @@ static void st_create_page (gint inst, ST_CAT_item st_cat)
       gtk_widget_show (st0_cat0_treeview);
       gtk_container_add (GTK_CONTAINER (st0_window0), st0_cat0_treeview);
       g_signal_connect ((gpointer) st0_cat0_treeview, "drag_data_get",
-			G_CALLBACK (on_st_treeview_drag_data_get),
+			G_CALLBACK (st_drag_data_get),
 			NULL);
       g_signal_connect_after ((gpointer) st0_cat0_treeview, "key_release_event",
 			      G_CALLBACK (on_st_treeview_key_release_event),

@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-05-02 01:38:07 jcs>
+|  Time-stamp: <2005-05-06 03:20:31 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -670,20 +670,28 @@ void add_tracklist_to_playlist (Playlist *pl, gchar *string)
 /* DND: add a list of files to Playlist @pl.
 
    @pl: playlist to add to or NULL. If NULL, a "New Playlist" will be
-   created for adding tracks and when adding a playlist file, a
-   playlist with the name of the playlist file will be added.
+   created and inserted at position @pl_pos for adding tracks and when
+   adding a playlist file, a playlist with the name of the playlist
+   file will be added.
+
+   @pl_pos: position to add playlist file, ignored if @pl!=NULL.
 
    @trackaddfunc: passed on to add_track_by_filename() etc. */
-void add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
-				 gchar *str, gint pl_pos,
-				 AddTrackFunc trackaddfunc, gpointer data)
+
+/* Return value: playlist to where the tracks were added. Note: when
+   adding playlist files, additional playlists may have been created */
+Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
+				      gchar *str, gint pl_pos,
+				      AddTrackFunc trackaddfunc,
+				      gpointer data)
 {
     gchar **files = NULL, **filesp = NULL;
     Playlist *pl_playlist = pl; /* playlist for playlist file */
+    Playlist *pl_playlist_created = NULL;
 
-    g_return_if_fail (itdb);
+    g_return_val_if_fail (itdb, NULL);
 
-    if (!str)  return;
+    if (!str)  return NULL;
 
     /*   printf("pl: %x, pl_pos: %d\n%s\n", pl, pl_pos, str);*/
 
@@ -757,9 +765,9 @@ void add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 			break;
 		    case FILE_TYPE_M3U:
 		    case FILE_TYPE_PLS:
-			add_playlist_by_filename (itdb, decoded_file,
-						  pl_playlist,
-						  trackaddfunc, data);
+			pl_playlist_created = add_playlist_by_filename (
+			    itdb, decoded_file,
+			    pl_playlist, pl_pos, trackaddfunc, data);
 			added = TRUE;
 			break;
 		    case FILE_TYPE_ERROR:
@@ -786,6 +794,10 @@ void add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
     gp_duplicate_remove (NULL, NULL);
 
     release_widgets ();
+
+    if (pl) return pl;
+    if (pl_playlist_created) return pl_playlist_created;
+    return NULL;
 }
 
 

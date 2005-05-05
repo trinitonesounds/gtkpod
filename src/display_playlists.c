@@ -52,7 +52,6 @@ static gboolean pm_selection_blocked = FALSE;
 /* Drag and drop definitions */
 static GtkTargetEntry pm_drag_types [] = {
     { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST },
-    { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -166,13 +165,18 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 				guint time,
 				gpointer user_data)
 {
+    GtkTreeModel *model;
+    GtkTreeIter iter_d;
     GtkTreePath *path;
     GtkTreeViewDropPosition pos;
     GdkAtom target;
     guint info;
+    Playlist *pl_d;
 
-
+    g_return_val_if_fail (widget, FALSE);
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
+
+
 
     /* no drop possible if position is not valid */
     if (!gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
@@ -183,6 +187,16 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	    x, y, pos, dc->suggested_action, dc->actions);
 
     gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path, pos);
+
+    /* Get destination playlist in case it's needed */
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+    g_return_val_if_fail (model, FALSE);
+
+    if(gtk_tree_model_get_iter (model, &iter_d, path))
+    {
+	gtk_tree_model_get (model, &iter_d, 0, &pl_d, -1);
+    }
+    g_return_val_if_fail (pl_d, FALSE);
 
     target = gtk_drag_dest_find_target (widget, dc, NULL);
 
@@ -206,10 +220,10 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     /* get 'info'-id from target-atom */
     if (!gtk_target_list_find (
 	    gtk_drag_dest_get_target_list (widget), target, &info))
-	{
-	    gdk_drag_status (dc, 0, time);
-	    return FALSE;
-	}
+    {
+	gdk_drag_status (dc, 0, time);
+	return FALSE;
+    }
 
     switch (info)
     {
@@ -220,13 +234,27 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	gtk_drag_get_data (widget, dc, target, time);
 	return TRUE;
     case DND_GTKPOD_TRACKLIST:
+	/* do not allow drop into currently selected playlist */
+	if (pl_d == pm_get_selected_playlist ())
+	{
+	    if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
+		(pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
+	    {
+		gdk_drag_status (dc, 0, time);
+		return FALSE;
+	    }
+	}
 	/* need to consult drag data to decide */
 	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_path", path);
 	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_pos", (gpointer)pos);
 	gtk_drag_get_data (widget, dc, target, time);
 	return TRUE;
+    case DND_TEXT_PLAIN:
+	gdk_drag_status (dc, dc->suggested_action, time);
+	return TRUE;
     default:
-	puts ("pm_drag_motion: not yet supported");
+	g_warning ("Programming error: pm_drag_motion received unknown info type (%d)\n", info);
+
     }
 
     return FALSE;
@@ -241,9 +269,9 @@ static void
 on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
 			   GtkTreeIter *iter, gpointer data)
 {
-    Playlist *pl;
+    Playlist *pl=NULL;
     GList *gl;
-    GString *filelist = (GString *)data;
+    GString *filelist = data;
 
     g_return_if_fail (tm);
     g_return_if_fail (iter);
@@ -255,8 +283,11 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 
     for (gl=pl->members; gl; gl=gl->next)
     {
+	gchar *name;
 	Track *track = gl->data;
-	gchar *name = get_track_name_on_disk_verified (track);
+
+	g_return_if_fail (track);
+	name = get_track_name_on_disk_verified (track);
 	if (name)
 	{
 	    g_string_append_printf (filelist, "file:%s\n", name);
@@ -272,7 +303,7 @@ static void
 on_pm_dnd_get_playlist_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 			       GtkTreeIter *iter, gpointer data)
 {
-    Playlist *pl;
+    Playlist *pl=NULL;
     GString *playlistlist = (GString *)data;
 
     g_return_if_fail (tm);
@@ -284,33 +315,6 @@ on_pm_dnd_get_playlist_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     g_string_append_printf (playlistlist, "%p\n", pl);
 }
 
-
-/*
- * utility function for appending ipod track pointers of a playlist
- */
-static void 
-on_pm_dnd_get_track_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
-			    GtkTreeIter *i, gpointer data)
-{
-    Playlist *pl;
-    GList *gl;
-    GString *tracklist = (GString *)data;
-
-    g_return_if_fail (tm);
-    g_return_if_fail (i);
-    g_return_if_fail (tracklist);
-
-    gtk_tree_model_get (tm, i, PM_COLUMN_PLAYLIST, &pl, -1);
-    g_return_if_fail (pl);
-
-    /* add all member-ids of entry to idlist */
-    for (gl=pl->members; gl; gl=gl->next)
-    {
-	Track *tr = gl->data;
-	g_return_if_fail (tr);
-	g_string_append_printf (tracklist, "%p\n", tr);
-    }
-}
 
 
 static void
@@ -324,21 +328,17 @@ pm_drag_data_get (GtkWidget       *widget,
     GtkTreeSelection *ts;
     GString *reply = g_string_sized_new (2000);
 
-    g_return_if_fail (data);
+    if (!data) return;
 
     puts ("data_get");
 
     /* printf("sm drag get info: %d\n", info);*/
 
     ts = gtk_tree_view_get_selection(GTK_TREE_VIEW (widget));
-    if(ts)
+    if (ts)
     {
 	switch (info)
 	{
-	case DND_GTKPOD_TRACKLIST:
-	    gtk_tree_selection_selected_foreach (ts,
-				    on_pm_dnd_get_track_foreach, reply);
-	    break;
 	case DND_GTKPOD_PLAYLISTLIST:
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_pm_dnd_get_playlist_foreach, reply);
@@ -346,6 +346,9 @@ pm_drag_data_get (GtkWidget       *widget,
 	case DND_TEXT_PLAIN:
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_pm_dnd_get_file_foreach, reply);
+	    break;
+	default:
+	    g_warning ("Programming error: pm_drag_data_get received unknown info type (%d)\n", info);
 	    break;
 	}
     }
@@ -384,12 +387,32 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
 	if ((dest->type == ITDB_PL_TYPE_MPL) &&
 	    (pos != GTK_TREE_VIEW_DROP_AFTER))
 	    return 0;
+
 	/* DND within the same itdb -> default is moving, shift means
 	   copying */
 	if (dc->suggested_action == GDK_ACTION_COPY)
-	    return GDK_ACTION_MOVE;
+	{   /* don't allow move if view is sorted */
+	    gint column;
+	    GtkSortType order;
+	    GtkTreeModel *model;
+	    GtkWidget *src_widget = gtk_drag_get_source_widget (dc);
+	    g_return_val_if_fail (src_widget, 0);
+	    model = gtk_tree_view_get_model (GTK_TREE_VIEW(src_widget));
+	    g_return_val_if_fail (model, 0);
+	    if (gtk_tree_sortable_get_sort_column_id (
+		    GTK_TREE_SORTABLE (model), &column, &order))
+	    {
+		return 0;
+	    }
+	    else
+	    {
+		return GDK_ACTION_MOVE;
+	    }
+	}
 	else
+	{
 	    return GDK_ACTION_COPY;
+	}
     }
     else
     {   /* DND between different itdbs -> default is copying, shift
@@ -468,8 +491,8 @@ static void pm_drag_data_received (GtkWidget       *widget,
 {
     GtkTreeIter iter_d, iter_s;
     GtkTreePath *path_d=NULL, *path_s;
-    GtkTreePath *path_m = NULL;
-    GtkTreeModel *model = NULL;
+    GtkTreePath *path_m;
+    GtkTreeModel *model;
     GtkTreeViewDropPosition pos = 0;
     gint position = -1;
     Playlist *pl, *pl_s, *pl_d;
@@ -637,25 +660,29 @@ puts ("...by motion");
 	{ /* drop into existing playlist */
 	    add_text_plain_to_playlist (pl->itdb, pl, data->data,
 					0, NULL, NULL);
+	    dc->action = GDK_ACTION_COPY;
 	    gtk_drag_finish (dc, TRUE, FALSE, time);
 	}
 	else
 	{ /* drop between playlists */
+	    Playlist *plitem;
 	    if (pos == GTK_TREE_VIEW_DROP_AFTER)
-		add_text_plain_to_playlist (pl->itdb, NULL,
-					    data->data, position+1,
-					    NULL, NULL);
+		plitem = add_text_plain_to_playlist (
+		    pl->itdb, NULL, data->data, position+1, NULL, NULL);
 	    else
-		add_text_plain_to_playlist (pl->itdb, NULL,
-					    data->data, position,
-					    NULL, NULL);
+		plitem = add_text_plain_to_playlist (
+		    pl->itdb, NULL, data->data, position, NULL, NULL);
 
-	    dc->action = dc->suggested_action;
-	    if (dc->action & GDK_ACTION_MOVE)
-		del_src = TRUE;
-	    else del_src = FALSE;
-
-	    gtk_drag_finish (dc, TRUE, del_src, time);
+	    if (plitem)
+	    {
+		dc->action = GDK_ACTION_COPY;
+		gtk_drag_finish (dc, TRUE, FALSE, time);
+	    }
+	    else
+	    {
+		dc->action = 0;
+		gtk_drag_finish (dc, FALSE, FALSE, time);
+	    }
 	}
 	break;
     case DND_GTKPOD_PLAYLISTLIST:

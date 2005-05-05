@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-02 02:19:40 jcs>
+/* Time-stamp: <2005-05-06 03:30:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -66,7 +66,6 @@ static GtkTargetEntry tm_drag_types [] = {
 };
 static GtkTargetEntry tm_drop_types [] = {
     { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
-/*    { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },*/
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -382,7 +381,7 @@ static gboolean tm_drag_motion (GtkWidget *widget,
     GtkTreeViewDropPosition pos;
 
 /*     printf ("drag_motion  suggested: %d actions: %d\n", */
-/* 	    dc->suggested_action, dc->actions); */
+/*  	    dc->suggested_action, dc->actions); */
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
 
     /* no drop possible if position is not valid */
@@ -401,9 +400,22 @@ static gboolean tm_drag_motion (GtkWidget *widget,
 	return FALSE;
     }
 
-    if (dc->source_window == dc->dest_window)
-    {   /* if drag is within the same window we only allow move */
-	gdk_drag_status (dc, GDK_ACTION_MOVE, time);
+    if (widget == gtk_drag_get_source_widget (dc))
+    {   /* drag is within the same widget */
+	gint column;
+	GtkSortType order;
+	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+	g_return_val_if_fail (model, FALSE);
+	if(gtk_tree_sortable_get_sort_column_id (
+	       GTK_TREE_SORTABLE (model), &column, &order))
+	{   /* don't allow move because the model is sorted */
+	    gdk_drag_status (dc, 0, time);
+	    return FALSE;
+	}
+	else
+	{   /* only allow moves within the same widget */
+	    gdk_drag_status (dc, GDK_ACTION_MOVE, time);
+	}
     }
     else
     {  /* whatever the source suggests */
@@ -440,6 +452,9 @@ static void tm_drag_data_get (GtkWidget       *widget,
 	case DND_TEXT_PLAIN:
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_tm_dnd_get_file_foreach, reply);
+	    break;
+	default:
+	    g_warning ("Programming error: tm_drag_data_get received unknown info type (%d)\n", info);
 	    break;
 	}
     }
@@ -489,7 +504,10 @@ static void tm_drag_data_received (GtkWidget       *widget,
 	case DND_TEXT_PLAIN:
 	    result = tm_add_filelist (data->data, path, pos);
 	    dc->action = dc->suggested_action;
-	    gtk_drag_finish (dc, TRUE, dc->action==GDK_ACTION_MOVE, time);
+	    if (dc->action == GDK_ACTION_MOVE)
+		gtk_drag_finish (dc, TRUE, TRUE, time);
+	    else
+		gtk_drag_finish (dc, TRUE, FALSE, time);
 	    break;
 	default:
 	    dc->action = 0;
