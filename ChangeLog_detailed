@@ -3,6 +3,12 @@
 	* src/display* and others: DND between filter tabs, playlist
 	  view, track view, as well as external file browsers.
 
+	* display_songs.c, display_playlists.c, display.c,
+          display_sorttabs.c: added text/uri-list as drag and drop
+          type, added autoscroll to playlist- and track view,
+          corrected behaviour during certain drop situations onto the
+          track view.
+
 2005-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* display_spl.c: fix spl edit window after transition to

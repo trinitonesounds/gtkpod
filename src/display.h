@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 17:33:05 jcs>
+/* Time-stamp: <2005-05-06 19:12:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -190,6 +190,7 @@ enum {
     DND_GTKPOD_TRACKLIST = 1000,
     DND_GTKPOD_TM_PATHLIST,
     DND_GTKPOD_PLAYLISTLIST,
+    DND_TEXT_URI_LIST,
     DND_TEXT_PLAIN
 };
 
@@ -207,6 +208,8 @@ void display_reset (gint inst);
 GList *display_get_selection (guint32 inst);
 GList *display_get_selected_members (gint inst);
 void display_enable_disable_view_sort (gboolean enable);
+void display_remove_autoscroll_row_timeout (GtkWidget *widget);
+void display_install_autoscroll_row_timeout (GtkWidget *widget);
 
 Playlist* pm_get_selected_playlist(void);
 GtkTreePath *pm_get_path (Playlist *pl);

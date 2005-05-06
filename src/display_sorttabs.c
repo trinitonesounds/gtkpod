@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 03:18:46 jcs>
+/* Time-stamp: <2005-05-06 19:57:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -54,6 +54,7 @@ static void sp_store_sp_entries (gint inst);
 /* Drag and drop definitions */
 static GtkTargetEntry st_drag_types [] = {
     { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
+    { "text/uri-list", 0, DND_TEXT_URI_LIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -137,6 +138,47 @@ on_st_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 }
 
 
+/*
+ * utility function for appending uris for st treeview callback
+ */
+static void
+on_st_dnd_get_uri_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			  GtkTreeIter *iter, gpointer data)
+{
+    GList *gl;
+    TabEntry *entry=NULL;
+    GString *filelist = data;
+
+    g_return_if_fail (tm);
+    g_return_if_fail (iter);
+    g_return_if_fail (data);
+
+    gtk_tree_model_get (tm, iter, ST_COLUMN_ENTRY, &entry, -1);
+    g_return_if_fail (entry);
+
+
+    /* add all member tracks of entry to tracklist */
+    for (gl=entry->members; gl; gl=gl->next)
+    {
+	gchar *name;
+	Track *tr = gl->data;
+
+	g_return_if_fail (tr);
+	name = get_track_name_on_disk_verified (tr);
+	if (name)
+	{
+	    gchar *uri = g_filename_to_uri (name, NULL, NULL);
+	    if (uri)
+	    {
+		g_string_append_printf (filelist, "file:%s\n", name);
+		g_free (uri);
+	    }
+	    g_free (name);
+	}
+    }
+}
+
+
 static void
 st_drag_data_get (GtkWidget       *widget,
 		  GdkDragContext  *context,
@@ -158,6 +200,10 @@ st_drag_data_get (GtkWidget       *widget,
 	case DND_GTKPOD_TRACKLIST:
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_st_dnd_get_track_foreach, reply);
+	    break;
+	case DND_TEXT_URI_LIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_st_dnd_get_uri_foreach, reply);
 	    break;
 	case DND_TEXT_PLAIN:
 	    gtk_tree_selection_selected_foreach(ts,

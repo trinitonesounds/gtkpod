@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 17:22:39 jcs>
+/* Time-stamp: <2005-05-06 17:51:30 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -606,3 +606,120 @@ void display_enable_disable_view_sort (gboolean enable)
     st_enable_disable_view_sort (0, enable);
 /*    tm_enable_disable_view_sort (enable);*/
 }
+
+
+
+/* ------------------------------------------------------------
+
+           Functions for auto-scroll during drag and drop
+
+   ------------------------------------------------------------ */
+
+
+static void _remove_scroll_row_timeout (GtkWidget *widget)
+{
+    g_return_if_fail (widget);
+
+    g_object_set_data (G_OBJECT (widget),
+		       "scroll_row_timeout", NULL);
+    g_object_set_data (G_OBJECT (widget),
+		       "scroll_row_times", NULL);
+}
+
+void display_remove_autoscroll_row_timeout (GtkWidget *widget)
+{
+    guint timeout;
+
+    g_return_if_fail (widget);
+
+    timeout = (guint)g_object_get_data (G_OBJECT (widget),
+					"scroll_row_timeout");
+
+    if (timeout != 0)
+    {
+	g_source_remove (timeout);
+	_remove_scroll_row_timeout (widget);
+    }
+}
+
+static gint display_autoscroll_row_timeout (gpointer data)
+{
+    GtkTreeView *treeview = data;
+    gint px, py;
+    GdkModifierType mask;
+    GdkRectangle vis_rect;
+    gint times;
+    gboolean resp = TRUE;
+    const gint SCROLL_EDGE_SIZE = 12;
+
+    g_return_val_if_fail (data, FALSE);
+
+    gdk_threads_enter ();
+
+    times = (gint)g_object_get_data (G_OBJECT (data), "scroll_row_times");
+    
+    gdk_window_get_pointer (gtk_tree_view_get_bin_window (treeview),
+			    &px, &py, &mask);
+    gtk_tree_view_get_visible_rect (treeview, &vis_rect);
+/*     printf ("px/py, w/h, mask: %d/%d, %d/%d, %d\n", px, py, */
+/* 	    vis_rect.width, vis_rect.height, mask); */
+    if ((vis_rect.height > 2.2 * SCROLL_EDGE_SIZE) &&
+	((py < SCROLL_EDGE_SIZE) ||
+	 (py > vis_rect.height-SCROLL_EDGE_SIZE)))
+    {
+	GtkTreePath *path = NULL;
+
+	if (py < SCROLL_EDGE_SIZE/3)
+	    ++times;
+	if (py > vis_rect.height-SCROLL_EDGE_SIZE/3)
+	    ++times;
+
+	if (times > 0)
+	{
+	    if (gtk_tree_view_get_path_at_pos (treeview, px, py, 
+					       &path, NULL, NULL, NULL))
+	    {
+		if (py < SCROLL_EDGE_SIZE)
+		    gtk_tree_path_prev (path);
+		if (py > vis_rect.height-SCROLL_EDGE_SIZE)
+		    gtk_tree_path_next (path);
+		gtk_tree_view_scroll_to_cell (treeview, path, NULL,
+					      FALSE, 0, 0);
+	    }
+	    times = 0;
+	}
+	else
+	{
+	    ++times;
+	}
+    }
+    else
+    {
+	times = 0;
+    }
+    g_object_set_data (G_OBJECT (data), "scroll_row_times",
+		       (gpointer)times);
+    if (mask == 0)
+    {
+	_remove_scroll_row_timeout (data);
+	resp = FALSE;
+    }
+    gdk_threads_leave ();
+    return resp;
+}
+
+void display_install_autoscroll_row_timeout (GtkWidget *widget)
+{
+    if (!g_object_get_data (G_OBJECT (widget), "scroll_row_timeout"))
+    {   /* install timeout function for autoscroll */
+	guint timeout = g_timeout_add (75, display_autoscroll_row_timeout,
+				       widget);
+	g_object_set_data (G_OBJECT (widget), "scroll_row_timeout",
+			   (gpointer)timeout);
+    }
+}
+
+
+
+
+

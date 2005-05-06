@@ -52,12 +52,14 @@ static gboolean pm_selection_blocked = FALSE;
 /* Drag and drop definitions */
 static GtkTargetEntry pm_drag_types [] = {
     { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST },
+    { "text/uri-list", 0, DND_TEXT_URI_LIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 static GtkTargetEntry pm_drop_types [] = {
     { DND_GTKPOD_PLAYLISTLIST_TYPE, 0, DND_GTKPOD_PLAYLISTLIST },
     { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
+    { "text/uri-list", 0, DND_TEXT_URI_LIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -133,6 +135,8 @@ static gboolean pm_drag_drop (GtkWidget *widget,
 
     puts ("drag_data_drop");
 
+    display_remove_autoscroll_row_timeout (widget);
+
     target = gtk_drag_dest_find_target (widget, drag_context, NULL);
 
     if (target != GDK_NONE)
@@ -148,6 +152,7 @@ static void pm_drag_end (GtkWidget *widget,
 			 gpointer user_data)
 {
     puts ("drag_end");
+    display_remove_autoscroll_row_timeout (widget);
 }
 
 static void pm_drag_leave (GtkWidget *widget,
@@ -156,6 +161,7 @@ static void pm_drag_leave (GtkWidget *widget,
 			   gpointer user_data)
 {
     puts ("drag_leave");
+    display_remove_autoscroll_row_timeout (widget);
 }
 
 static gboolean pm_drag_motion (GtkWidget *widget,
@@ -176,12 +182,14 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     g_return_val_if_fail (widget, FALSE);
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
 
-
+    display_install_autoscroll_row_timeout (widget);
 
     /* no drop possible if position is not valid */
     if (!gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
 					    x, y, &path, &pos))
 	return FALSE;
+
+    g_return_val_if_fail (path, FALSE);
 
     printf ("pm_drag_motion (x/y/pos/s/a): %d %d %d %d %d\n",
 	    x, y, pos, dc->suggested_action, dc->actions);
@@ -189,7 +197,7 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path, pos);
 
     /* Get destination playlist in case it's needed */
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
     g_return_val_if_fail (model, FALSE);
 
     if(gtk_tree_model_get_iter (model, &iter_d, path))
@@ -204,6 +212,7 @@ static gboolean pm_drag_motion (GtkWidget *widget,
     if (target == GDK_NONE)
     {
 	gdk_drag_status (dc, 0, time);
+	gtk_tree_path_free (path);
 	return FALSE;
     }
 
@@ -213,6 +222,7 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	if (pos == GTK_TREE_VIEW_DROP_BEFORE)
 	{
 	    gdk_drag_status (dc, 0, time);
+	    gtk_tree_path_free (path);
 	    return FALSE;
 	}
     }
@@ -222,6 +232,7 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	    gtk_drag_dest_get_target_list (widget), target, &info))
     {
 	gdk_drag_status (dc, 0, time);
+	gtk_tree_path_free (path);
 	return FALSE;
     }
 
@@ -241,6 +252,7 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 		(pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
 	    {
 		gdk_drag_status (dc, 0, time);
+		gtk_tree_path_free (path);
 		return FALSE;
 	    }
 	}
@@ -250,14 +262,15 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 	gtk_drag_get_data (widget, dc, target, time);
 	return TRUE;
     case DND_TEXT_PLAIN:
+    case DND_TEXT_URI_LIST:
 	gdk_drag_status (dc, dc->suggested_action, time);
+	gtk_tree_path_free (path);
 	return TRUE;
     default:
 	g_warning ("Programming error: pm_drag_motion received unknown info type (%d)\n", info);
-
+	gtk_tree_path_free (path);
+	return FALSE;
     }
-
-    return FALSE;
 }
 
 
@@ -295,6 +308,47 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	}
     }
 }
+
+
+/*
+ * utility function for appending uris for track view (DND)
+ */
+static void 
+on_pm_dnd_get_uri_foreach(GtkTreeModel *tm, GtkTreePath *tp, 
+			  GtkTreeIter *iter, gpointer data)
+{
+    Playlist *pl=NULL;
+    GList *gl;
+    GString *filelist = data;
+
+    g_return_if_fail (tm);
+    g_return_if_fail (iter);
+    g_return_if_fail (data);
+
+    /* get current playlist */
+    gtk_tree_model_get(tm, iter, PM_COLUMN_PLAYLIST, &pl, -1); 
+    g_return_if_fail (pl);
+
+    for (gl=pl->members; gl; gl=gl->next)
+    {
+	gchar *name;
+	Track *track = gl->data;
+
+	g_return_if_fail (track);
+	name = get_track_name_on_disk_verified (track);
+	if (name)
+	{
+	    gchar *uri = g_filename_to_uri (name, NULL, NULL);
+	    if (uri)
+	    {
+		g_string_append_printf (filelist, "file:%s\n", name);
+		g_free (uri);
+	    }
+	    g_free (name);
+	}
+    }
+}
+
 
 /*
  * utility function for appending pointers to a playlist (DND)
@@ -347,6 +401,10 @@ pm_drag_data_get (GtkWidget       *widget,
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_pm_dnd_get_file_foreach, reply);
 	    break;
+	case DND_TEXT_URI_LIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_pm_dnd_get_uri_foreach, reply);
+	    break;
 	default:
 	    g_warning ("Programming error: pm_drag_data_get received unknown info type (%d)\n", info);
 	    break;
@@ -358,13 +416,21 @@ pm_drag_data_get (GtkWidget       *widget,
 
 
 static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
+				       GtkWidget *widget,
 				       GtkTreeViewDropPosition pos,
 				       GdkDragContext *dc)
 {
+    GdkModifierType mask;
+
     g_return_val_if_fail (src, 0);
     g_return_val_if_fail (dest, 0);
+    g_return_val_if_fail (widget, 0);
     g_return_val_if_fail (dc, 0);
 
+    /* get modifier mask */
+    gdk_window_get_pointer (
+	gtk_tree_view_get_bin_window (GTK_TREE_VIEW (widget)),
+	NULL, NULL, &mask);
 
     /* don't allow copy/move before the MPL */
     if ((dest->type == ITDB_PL_TYPE_MPL) &&
@@ -390,7 +456,11 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
 
 	/* DND within the same itdb -> default is moving, shift means
 	   copying */
-	if (dc->suggested_action == GDK_ACTION_COPY)
+	if (mask & GDK_SHIFT_MASK)
+	{
+	    return GDK_ACTION_COPY;
+	}
+	else
 	{   /* don't allow move if view is sorted */
 	    gint column;
 	    GtkSortType order;
@@ -409,18 +479,14 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
 		return GDK_ACTION_MOVE;
 	    }
 	}
-	else
-	{
-	    return GDK_ACTION_COPY;
-	}
     }
     else
     {   /* DND between different itdbs -> default is copying, shift
 	   means moving */
-	if (dc->suggested_action == GDK_ACTION_COPY)
-	    return GDK_ACTION_COPY;
-	else
+	if (mask & GDK_SHIFT_MASK)
 	    return GDK_ACTION_MOVE;
+	else
+	    return GDK_ACTION_COPY;
     }
 }
 
@@ -528,6 +594,8 @@ puts ("...by motion");
 	{
 	    gtk_tree_model_get (model, &iter_d, 0, &pl, -1);
 	}
+	gtk_tree_path_free (path_m);
+
 	g_return_if_fail (pl);
 
 	switch (info)
@@ -556,11 +624,11 @@ puts ("...by motion");
 		g_return_if_reached ();
 	    }
 	    gdk_drag_status (dc,
-			     pm_pm_get_action (pl_s, pl, pos, dc),
+			     pm_pm_get_action (pl_s, pl, widget, pos, dc),
 			     time);
 	    printf ("src: %p  dest: %p  sugg: %d a:%d\n",
 		    pl_s->itdb, pl->itdb, dc->suggested_action,
-		    pm_pm_get_action (pl_s, pl, pos, dc));
+		    pm_pm_get_action (pl_s, pl, widget, pos, dc));
 	    return;
 	}
 	g_return_if_reached ();
@@ -569,6 +637,8 @@ puts ("...by motion");
 
 /*     printf ("treeview received drag data/length/format: %p/%d/%d\n", data, data?data->length:0, data?data->format:0); */
 /*     printf ("treeview received drag context/actions/suggested action: %p/%d/%d\n", context, context?context->actions:0, context?context->suggested_action:0); */
+
+    display_remove_autoscroll_row_timeout (widget);
 
     path_ok = gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW(widget),
 						 x, y, &path_d, &pos);
@@ -587,13 +657,6 @@ puts ("...by motion");
     }
     g_return_if_fail (pl);
 
-
-    if (!pl)
-    {
-	gtk_drag_finish (dc, FALSE, FALSE, time);
-	g_return_if_reached ();
-    }
-
     /* get position of current path */
     if (gtk_tree_path_get_depth (path_d) == 1)
     {   /* MPL */
@@ -607,6 +670,7 @@ puts ("...by motion");
 	position = indices[1] + 1;
     }
     gtk_tree_path_free (path_d);
+    path_d = NULL;
 
  printf("position: %d\n", position);
     switch (info)
@@ -654,6 +718,7 @@ puts ("...by motion");
 	    }
 	}
 	break;
+    case DND_TEXT_URI_LIST:
     case DND_TEXT_PLAIN:
 	if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
 	    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
@@ -693,7 +758,7 @@ puts ("...by motion");
 	    gtk_drag_finish (dc, FALSE, FALSE, time);
 	    g_return_if_reached ();
 	}
-	dc->action = pm_pm_get_action (pl_s, pl, pos, dc);
+	dc->action = pm_pm_get_action (pl_s, pl, widget, pos, dc);
 
 	if (pl->itdb == pl_s->itdb)
 	{   /* handle DND within the same itdb */

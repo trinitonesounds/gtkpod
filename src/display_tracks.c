@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 03:30:02 jcs>
+/* Time-stamp: <2005-05-06 19:31:29 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -61,11 +61,13 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint position);
 static GtkTargetEntry tm_drag_types [] = {
     { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
     { DND_GTKPOD_TRACKLIST_TYPE, 0, DND_GTKPOD_TRACKLIST },
+    { "text/uri-list", 0, DND_TEXT_URI_LIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 static GtkTargetEntry tm_drop_types [] = {
     { DND_GTKPOD_TM_PATHLIST_TYPE, 0, DND_GTKPOD_TM_PATHLIST },
+    { "text/uri-list", 0, DND_TEXT_URI_LIST },
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
@@ -188,7 +190,6 @@ static gboolean tm_move_pathlist (gchar *data,
     /* Move the iters in iterlist before or after @to_iter */
     switch (pos)
     {
-    case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
     case GTK_TREE_VIEW_DROP_INTO_OR_AFTER:
     case GTK_TREE_VIEW_DROP_AFTER:
 	for (link = g_list_last (iterlist); link; link = link->prev)
@@ -198,6 +199,7 @@ static gboolean tm_move_pathlist (gchar *data,
 				       from_iter, &to_iter);
 	}
 	break;
+    case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
     case GTK_TREE_VIEW_DROP_BEFORE:
 	for (link = g_list_first (iterlist); link; link = link->next)
 	{
@@ -270,6 +272,31 @@ on_tm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
     }
 }
 
+/*
+ * utility function for appending file-uri for track view (DND)
+ */
+static void
+on_tm_dnd_get_uri_foreach(GtkTreeModel *tm, GtkTreePath *tp,
+			  GtkTreeIter *iter, gpointer data)
+{
+    Track *track;
+    GString *filelist = (GString *)data;
+    gchar *name;
+
+    gtk_tree_model_get(tm, iter, READOUT_COL, &track, -1);
+    name = get_track_name_on_disk_verified (track);
+    if (name)
+    {
+	gchar *uri = g_filename_to_uri (name, NULL, NULL);
+	if (uri)
+	{
+	    g_string_append_printf (filelist, "%s\n", uri);
+	    g_free (uri);
+	}
+	g_free (name);
+    }
+}
+
 static void tm_drag_begin (GtkWidget *widget,
 			   GdkDragContext *dc,
 			   gpointer user_data)
@@ -337,6 +364,7 @@ static void tm_drag_end (GtkWidget *widget,
 			 gpointer user_data)
 {
     puts ("tm_drag_end");
+    display_remove_autoscroll_row_timeout (widget);
 }
 
 
@@ -350,6 +378,8 @@ static gboolean tm_drag_drop (GtkWidget *widget,
     GdkAtom target;
 
     puts ("tm_drag_data_drop");
+
+    display_remove_autoscroll_row_timeout (widget);
 
     target = gtk_drag_dest_find_target (widget, dc, NULL);
 
@@ -367,7 +397,10 @@ static void tm_drag_leave (GtkWidget *widget,
 			   gpointer user_data)
 {
     puts ("tm_drag_leave");
+    display_remove_autoscroll_row_timeout (widget);
 }
+
+
 
 static gboolean tm_drag_motion (GtkWidget *widget,
 				GdkDragContext *dc,
@@ -376,20 +409,61 @@ static gboolean tm_drag_motion (GtkWidget *widget,
 				guint time,
 				gpointer user_data)
 {
+    GtkTreeView *treeview;
     GdkAtom target;
-    GtkTreePath *path;
+    GtkTreePath *path = NULL;
     GtkTreeViewDropPosition pos;
 
 /*     printf ("drag_motion  suggested: %d actions: %d\n", */
 /*  	    dc->suggested_action, dc->actions); */
+
+/*     printf ("x: %d y: %d\n", x, y); */
+
     g_return_val_if_fail (GTK_IS_TREE_VIEW (widget), FALSE);
 
-    /* no drop possible if position is not valid */
-    if (!gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
-					    x, y, &path, &pos))
-	return FALSE;
+    treeview = GTK_TREE_VIEW (widget);
 
-    gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path, pos);
+    display_install_autoscroll_row_timeout (widget);
+
+    /* optically set destination row if available */
+    if (gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
+					   x, y, &path, &pos))
+    {
+	/* drops are only allowed before and after -- not onto
+	   existing paths */
+	switch (pos)
+	{
+	case GTK_TREE_VIEW_DROP_INTO_OR_AFTER:
+	case GTK_TREE_VIEW_DROP_AFTER:
+	    gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path,
+					     GTK_TREE_VIEW_DROP_AFTER);
+	    break;
+	case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
+	case GTK_TREE_VIEW_DROP_BEFORE:
+	    gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path,
+					     GTK_TREE_VIEW_DROP_BEFORE);
+	    break;
+	}
+
+ 	gtk_tree_path_free (path);
+ 	path = NULL;
+    }
+    else
+    {
+	path = gtk_tree_path_new_first ();
+	gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path,
+					 GTK_TREE_VIEW_DROP_BEFORE);
+	gtk_tree_path_free (path);
+	path = NULL;
+    }
+
+
+
+    if (pm_get_selected_playlist () == NULL)
+    {   /* no drop possible if no playlist is selected */
+	gdk_drag_status (dc, 0, time);
+	return FALSE;
+    }
 
     target = gtk_drag_dest_find_target (widget, dc, NULL);
 
@@ -449,6 +523,10 @@ static void tm_drag_data_get (GtkWidget       *widget,
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_tm_dnd_get_path_foreach, reply);
 	    break;
+	case DND_TEXT_URI_LIST:
+	    gtk_tree_selection_selected_foreach(ts,
+				    on_tm_dnd_get_uri_foreach, reply);
+	    break;
 	case DND_TEXT_PLAIN:
 	    gtk_tree_selection_selected_foreach(ts,
 				    on_tm_dnd_get_file_foreach, reply);
@@ -484,39 +562,89 @@ static void tm_drag_data_received (GtkWidget       *widget,
     /* yet another check, i think it's an 8 bit per byte check */
     if(data->format != 8) return;
 
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
-    if(gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(widget),
-					 x, y, &path, &pos))
+    display_remove_autoscroll_row_timeout (widget);
+
+    model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
+    g_return_if_fail (model);
+    if (!gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (widget),
+					    x, y, &path, &pos))
     {
-	switch (info)
+	gint py;
+	gdk_window_get_pointer (
+	    gtk_tree_view_get_bin_window (GTK_TREE_VIEW (widget)),
+	    NULL, &py, NULL);
+	if (py < 5)
 	{
-	case DND_GTKPOD_TM_PATHLIST:
-	    result = tm_move_pathlist (data->data, path, pos);
-	    dc->action = GDK_ACTION_MOVE;
-	    gtk_drag_finish (dc, TRUE, FALSE, time);
+	    /* initialize with first displayed and drop before */
+	    GtkTreeIter iter;
+	    if (gtk_tree_model_get_iter_first (model, &iter))
+	    {
+		path = gtk_tree_model_get_path (model, &iter);
+		pos = GTK_TREE_VIEW_DROP_BEFORE;
+	    }
+	}
+	else
+	{   /* initialize with last path if available and drop after */
+	    GtkTreeIter iter;
+	    if (gtk_tree_model_get_iter_first (model, &iter))
+	    {
+		GtkTreeIter last_valid_iter;
+		do
+		{
+		    last_valid_iter = iter;
+		} while (gtk_tree_model_iter_next (model, &iter));
+		path = gtk_tree_model_get_path (model, &last_valid_iter);
+		pos = GTK_TREE_VIEW_DROP_AFTER;
+	    }
+	}
+    }
+
+    if (path)
+    {   /* map position onto BEFORE or AFTER */
+	switch (pos)
+	{
+	case GTK_TREE_VIEW_DROP_INTO_OR_AFTER:
+	case GTK_TREE_VIEW_DROP_AFTER:
+	    pos = GTK_TREE_VIEW_DROP_AFTER;
 	    break;
-	case DND_GTKPOD_TRACKLIST:
-	    /* is disabled in tm_drop_types anyhow (display.c) */
-	    printf ("tracklist not supported yet\n");
-	    dc->action = 0;
-	    gtk_drag_finish (dc, FALSE, FALSE, time);
-	    break;
-	case DND_TEXT_PLAIN:
-	    result = tm_add_filelist (data->data, path, pos);
-	    dc->action = dc->suggested_action;
-	    if (dc->action == GDK_ACTION_MOVE)
-		gtk_drag_finish (dc, TRUE, TRUE, time);
-	    else
-		gtk_drag_finish (dc, TRUE, FALSE, time);
-	    break;
-	default:
-	    dc->action = 0;
-	    gtk_drag_finish (dc, FALSE, FALSE, time);
-	    puts ("tm_drag_data_received(): should not be reached");
+	case GTK_TREE_VIEW_DROP_INTO_OR_BEFORE:
+	case GTK_TREE_VIEW_DROP_BEFORE:
+	    pos = GTK_TREE_VIEW_DROP_BEFORE;
 	    break;
 	}
-	gtk_tree_path_free(path);
     }
+
+    switch (info)
+    {
+    case DND_GTKPOD_TM_PATHLIST:
+	g_return_if_fail (path);
+	result = tm_move_pathlist (data->data, path, pos);
+	dc->action = GDK_ACTION_MOVE;
+	gtk_drag_finish (dc, TRUE, FALSE, time);
+	break;
+    case DND_TEXT_PLAIN:
+	result = tm_add_filelist (data->data, path, pos);
+	dc->action = dc->suggested_action;
+	if (dc->action == GDK_ACTION_MOVE)
+	    gtk_drag_finish (dc, TRUE, TRUE, time);
+	else
+	    gtk_drag_finish (dc, TRUE, FALSE, time);
+	break;
+    case DND_TEXT_URI_LIST:
+	result = tm_add_filelist (data->data, path, pos);
+	dc->action = dc->suggested_action;
+	if (dc->action == GDK_ACTION_MOVE)
+	    gtk_drag_finish (dc, TRUE, TRUE, time);
+	else
+	    gtk_drag_finish (dc, TRUE, FALSE, time);
+	break;
+    default:
+	dc->action = 0;
+	gtk_drag_finish (dc, FALSE, FALSE, time);
+	puts ("tm_drag_data_received(): should not be reached");
+	break;
+    }
+    if (path) gtk_tree_path_free(path);
 }
 
 /* ---------------------------------------------------------------- */
@@ -2011,8 +2139,7 @@ void tm_create_treeview (void)
 		       tm_drag_types, TGNR (tm_drag_types),
 		       GDK_ACTION_COPY|GDK_ACTION_MOVE);
   gtk_drag_dest_set (GTK_WIDGET (track_treeview),
-/* 		     GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT, */
-		     GTK_DEST_DEFAULT_HIGHLIGHT,
+		     0,
 		     tm_drop_types, TGNR (tm_drop_types),
 		     GDK_ACTION_COPY|GDK_ACTION_MOVE);
 
@@ -2206,26 +2333,27 @@ void tm_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 
 /* DND: insert a list of files before/after @path
    @data: list of files
-   @path: where to drop
-   @pos:  before/after...
+   @path: where to drop (NULL to drop at the end)
+   @pos:  before/after... (ignored if @path is NULL)
 */
 gboolean tm_add_filelist (gchar *data,
 			  GtkTreePath *path,
 			  GtkTreeViewDropPosition pos)
 {
     GtkTreeModel *model;
-    GtkTreeIter to_iter;
-    struct asf_data *asf;
     gchar *buf = NULL, *use_data;
     gchar **files, **filep;
     Playlist *current_playlist = pm_get_selected_playlist ();
 
-    if (!data)             return FALSE;
-    if (!strlen (data))    return FALSE;
-    if (!current_playlist) return FALSE;
+    g_return_val_if_fail (data, FALSE);
+    g_return_val_if_fail (*data, FALSE);
+    g_return_val_if_fail (current_playlist, FALSE);
 
     model = gtk_tree_view_get_model (track_treeview);
-    if (!gtk_tree_model_get_iter (model, &to_iter, path))  return FALSE;
+    g_return_val_if_fail (model, FALSE);
+    if (path)
+    {
+    }
 
     if (pos != GTK_TREE_VIEW_DROP_BEFORE)
     {   /* need to reverse the list of files -- otherwise wie add them
@@ -2255,16 +2383,25 @@ gboolean tm_add_filelist (gchar *data,
 
 /*     printf("filelist: (%s) -> (%s)\n", data, use_data); */
     /* initialize add-track-struct */
-    asf = g_malloc (sizeof (struct asf_data));
-    asf->to_iter = &to_iter;
-    asf->pos = pos;
-    /* add the files to playlist -- but have tm_addtrackfunc() called
-       for every added track */
-    add_text_plain_to_playlist (current_playlist->itdb,
-				current_playlist, use_data, 0,
-				tm_addtrackfunc, asf);
+    if (path)
+    {   /* add where specified (@path/@pos) */
+	GtkTreeIter to_iter;
+	struct asf_data asf;
+	if (!gtk_tree_model_get_iter (model, &to_iter, path))
+	    g_return_val_if_reached (FALSE);
+	asf.to_iter = &to_iter;
+	asf.pos = pos;
+	add_text_plain_to_playlist (current_playlist->itdb,
+				    current_playlist, use_data, 0,
+				    tm_addtrackfunc, &asf);
+    }
+    else
+    {   /* add to the end */
+	add_text_plain_to_playlist (current_playlist->itdb,
+				    current_playlist, use_data, 0,
+				    NULL, NULL);
+    }
     tm_rows_reordered ();
-    g_free (asf);
     C_FREE (buf);
     return TRUE;
 }
