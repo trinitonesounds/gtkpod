@@ -1,3 +1,8 @@
+2005-05-06 David Sedeño <david@alderia.com>
+
+	* gtkpod.glade: Put Cancel, Apply, Accept buttons in preferences
+	window.
+
 2005-05-06 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/display* and others: DND between filter tabs, playlist
