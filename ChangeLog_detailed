@@ -1,7 +1,7 @@
 2005-05-06 David Sedeño <david@alderia.com>
 
 	* gtkpod.glade: Put Cancel, Apply, Accept buttons in preferences
-	window.
+	window. Added Misc and Toolbar section to Display tab.
 
 2005-05-06 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
