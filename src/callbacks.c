@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-07 20:34:20 jcs>
+/* Time-stamp: <2005-05-08 00:30:00 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -364,7 +364,10 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
     {
 	gtkpod_statusbar_message (_("Currently no iPod database selected"));
     }
-    ipod_directories_head (itdb->mountpoint);
+    else
+    {
+	ipod_directories_head (itdb->mountpoint);
+    }
 }
 
 void

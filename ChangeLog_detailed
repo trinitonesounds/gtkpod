@@ -3,6 +3,9 @@
 	* src/ preliminary import/export support for local database as
           well as for iPod database.
 
+	* file_itunesdb.c, itdb_itunesdb.c: added support for iPod
+          Shuffle. Testing is needes because I don't own a Shuffle.
+
 2005-05-07 David Sedeño <david@alderia.com>
 
 	* gtkpod.glade: Put autoselect_hbox name to an hbox in display tab.

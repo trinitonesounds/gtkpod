@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-07 23:58:53 jcs>
+/* Time-stamp: <2005-05-08 01:59:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1331,6 +1331,19 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 	      g_warning ("error->message == NULL!\n");
 	  g_error_free (error);
 	  error = NULL;
+      }
+      if (success)
+      {   /* write shuffle data */
+	  if (!itdb_shuffle_write (itdb, NULL, &error))
+	  {   /* an error occured */
+	      success = FALSE;
+	      if (error && error->message)
+		  gtkpod_warning ("%s\n\n", error->message);
+	      else
+		  g_warning ("error->message == NULL!\n");
+	      g_error_free (error);
+	      error = NULL;
+	  }
       }
       if (success)
       {

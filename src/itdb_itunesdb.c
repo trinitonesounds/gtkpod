@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-07 20:52:36 jcs>
+/* Time-stamp: <2005-05-08 01:56:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -110,7 +110,6 @@
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
 #include <time.h>
 #include <string.h>
 #include <sys/types.h>
@@ -1946,6 +1945,30 @@ static void put32lint (WContents *cts, guint32 n)
 }
 
 
+/* Append @n times 2-byte-long zeros */
+static void put16_n0 (WContents *cts, gulong n)
+{
+    g_assert (cts);
+
+    if (n>0)
+    {
+	wcontents_maybe_expand (cts, 2*n, cts->pos);
+	memset (&cts->contents[cts->pos], 0, 2*n);
+	cts->pos += 2*n;
+    }
+}
+
+/* Write 3-byte integer @n to @cts in big endian order. */
+static void put24bint (WContents *cts, guint32 n)
+{
+    gchar buf[3] ;
+    buf[0] = (n >> 16) & 0xff ;
+    buf[1] = (n >> 8)  & 0xff ;
+    buf[2] = (n >> 0)  & 0xff ;
+    put_data (cts, buf, 3);
+}
+
+
 /* Write 4-byte integer @n to @cts at position @seek in little
    endian order. */
 static void put32lint_seek (WContents *cts, guint32 n, gulong seek)
@@ -2668,6 +2691,24 @@ static void wcontents_free (WContents *cts)
 }
 
 
+static void reassign_ids (Itdb_iTunesDB *itdb)
+{
+    guint32 id = 52;
+    GList *gl;
+
+    g_return_if_fail (itdb);
+
+    /* assign unique IDs */
+    for (gl=itdb->tracks; gl; gl=gl->next)
+    {
+	Track *track = gl->data;
+	g_return_if_fail (track);
+	track->id = id++;
+    }
+}
+
+
+
 /* Do the actual writing to the iTunesDB */
 /* If @filename==NULL, itdb->filename is tried */
 gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
@@ -2675,8 +2716,6 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 {
     FExport *fexp;
     gulong mhbd_seek = 0;
-    GList *gl;
-    guint32 id = 52;
     WContents *cts;
     gboolean result = TRUE;;
 
@@ -2685,13 +2724,7 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 
     if (!filename) filename = itdb->filename;
 
-    /* assign unique IDs */
-    for (gl=itdb->tracks; gl; gl=gl->next)
-    {
-	Track *track = gl->data;
-	g_return_val_if_fail (track, FALSE);
-	track->id = id++;
-    }
+    reassign_ids (itdb);
 
     fexp = g_new0 (FExport, 1);
     fexp->itdb = itdb;
@@ -2788,6 +2821,304 @@ gboolean itdb_write (Itdb_iTunesDB *itdb, const gchar *mp, GError **error)
 }
 
 
+/* from here on we have the functions for writing the iTunesDB          */
+/* -------------------------------------------------------------------- */
+/* up to here we had the functions for writing the iTunesSD             */
+
+/*
+|  Copyright (C) 2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Part of the gtkpod project.
+|
+|  Based on itunessd.c written by Steve Wahl for gtkpod-0.88:
+|
+|  Copyright 2005 Steve Wahl <steve at pro-ns dot net>
+|
+|  This file contains routines to create the iTunesSD file, as
+|  used by the ipod shuffle.
+|
+|  Like itunesdb.c, it is derived from the perl script "mktunes.pl"
+|  (part of the gnupod-tools collection) written by Adrian
+|  Ulrich <pab at blinkenlights.ch>.
+|
+|  Small(?) portions derived from itunesdb.c, so Jorg Schuler probably
+|  has some copyright ownership in this file as well.
+|
+|  The code contained in this file is free software; you can redistribute
+|  it and/or modify it under the terms of the GNU Lesser General Public
+|  License as published by the Free Software Foundation; either version
+|  2.1 of the License, or (at your option) any later version.
+|
+|  This file is distributed in the hope that it will be useful,
+|  but WITHOUT ANY WARRANTY; without even the implied warranty of
+|  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+|  Lesser General Public License for more details.
+|
+|  You should have received a copy of the GNU Lesser General Public
+|  License along with this code; if not, write to the Free Software
+|  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+|
+|  iTunes and iPod are trademarks of Apple
+|
+|  This product is not supported/written/published by Apple!
+|
+*/
+
+/* notes:
+
+  All software currently seems to write iTunesDB as well as iTunesSD
+  on the iPod shuffle.  I assume that reading from the iTunesSD file
+  is not necessary.  The iTunesStats file is different, but I leave
+  that for another day.
+
+  The iTunesSD file format is as follows (taken from WikiPodLinux, feb
+  '05):
+
+    Offset Field         Bytes   Value
+     (hex)               (dec)
+
+  iTunesSD header (occurs once, at beginning of file):
+
+    00      num_songs     3       number of song entries in the file
+
+    03      unknown       3       always(?) 0x010600
+    06      header size   3       size of the header (0x12, 18 bytes)
+    09      unknown       3       possibly zero padding
+
+  iTunesSD song entry format (occurs once for each song)
+
+   000      size of entry 3       always(?) 0x00022e (558 bytes)
+   003      unk1          3       unknown, always(?) 0x5aa501
+   006      starttime     3       Start Time, in 256 ms increments
+                                  e.g. 60s = 0xea (234 dec)
+   009      unk2          3       unknown (always 0?)
+   00C      unk3          3       unknown, some relationship to starttime
+   00F      stoptime      3       Stop Time, also in 256 ms increments.
+                                  Zero means play to end of file.
+   012      unk4          3       Unknown.
+   015      unk5          3       Unknown, but associated with stoptime?
+   018      volume        3       Volume - ranges from 0x00 (-100%) to 0x64
+                                  (0%) to 0xc8 (100%)
+   01B      file_type     3       0x01 = MP3, 0x02 = AAC, 0x04=WAV
+   01E      unk6          3       unknown (always 0x200?)
+   021      filename      522     filename of the song, padded at the end
+                                  with 0's.  Note: forward slashes are used
+                                  here, not colons like in the iTunesDB --
+                                  for example,
+                                  "/iPod_Control/Music/F00/Song.mp3"
+   22B      shuffleflag   1       If this value is 0x00, the song will be
+                                  skipped while the player is in shuffle
+                                  mode.  Any other value will allow it to be
+                                  played in both normal and shuffle modes.
+                                  iTunes 4.7.1 sets this to 0 for audio books.
+   22C      bookmarkflag  1       If this flag is 0x00, the song will not be
+                                  bookmarkable (i.e. its playback position
+                                  won't be saved when switching to a different
+                                  song). Any other value wil make it
+                                  Bookmarkable.  Unlike hard drive based iPods,
+                                  all songs can be marked as bookmarkable,
+                                  not just .m4b and .aa
+   22D      unknownflag   1       unknown, always? 0x00.
+
+All integers in the iTunesSD file are in BIG endian form...
+
+*/
+
+
+/* Write out an iTunesSD for the Shuffle.
+
+   First reassigns unique IDs to all tracks.
+
+   An existing "Play Counts" file is renamed to "Play Counts.bak" if
+   the export was successful.
+
+   An existing "OTG_PlaylistInfo" file is removed if the export was
+   successful.
+
+   Returns TRUE on success, FALSE on error, in which case @error is
+   set accordingly.
+
+   @mp must point to the mount point of the iPod, e.g. "/mnt/ipod" and
+   be in local encoding. If mp==NULL, itdb->mountpoint is tried. */
+
+
+gboolean itdb_shuffle_write (Itdb_iTunesDB *itdb,
+			     const gchar *mp, GError **error)
+{
+    gchar *itunes_filename, *itunes_path;
+    const gchar *db[] = {"iPod_Control","iTunes",NULL};
+    gboolean result = FALSE;
+
+    g_return_val_if_fail (itdb, FALSE);
+    g_return_val_if_fail (mp || itdb->mountpoint, FALSE);
+
+    if (!mp) mp = itdb->mountpoint;
+
+    itunes_path = itdb_resolve_path (mp, db);
+    
+    if(!itunes_path)
+    {
+	gchar *str = g_build_filename (mp, db[0], db[1], db[2], NULL);
+	g_set_error (error,
+		     ITDB_FILE_ERROR,
+		     ITDB_FILE_ERROR_NOTFOUND,
+		     _("Path not found: '%s'."),
+		     str);
+	g_free (str);
+	return FALSE;
+    }
+
+    itunes_filename = g_build_filename (itunes_path, "iTunesSD", NULL);
+
+    result = itdb_shuffle_write_file (itdb, itunes_filename, error);
+
+    g_free(itunes_filename);
+    g_free(itunes_path);
+
+    if (result == TRUE)
+	result = itdb_rename_files (mp, error);
+
+    if (result == TRUE)
+    {
+	gchar *mnp = g_strdup (mp);
+	g_free (itdb->mountpoint);
+	itdb->mountpoint = mnp;
+    }
+
+    return result;
+}
+
+
+/* Do the actual writing to the iTunesSD */
+/* If @filename cannot be NULL */
+gboolean itdb_shuffle_write_file (Itdb_iTunesDB *itdb,
+				  const gchar *filename, GError **error)
+{
+    FExport *fexp;
+    GList *gl;
+    WContents *cts;
+    gboolean result = TRUE;;
+
+    g_return_val_if_fail (itdb, FALSE);
+    g_return_val_if_fail (filename, FALSE);
+
+    reassign_ids (itdb);
+
+    fexp = g_new0 (FExport, 1);
+    fexp->itdb = itdb;
+    fexp->itunesdb = wcontents_new (filename);
+    cts = fexp->itunesdb;
+
+    put24bint (cts, itdb_tracks_number (itdb));
+    put24bint (cts, 0x010600);
+    put24bint (cts, 0x12);	/* size of header */
+    put24bint (cts, 0x0);	/* padding? */
+    put24bint (cts, 0x0);
+    put24bint (cts, 0x0);
+
+    for (gl=itdb->tracks; gl; gl=gl->next)
+    {
+	gboolean haystack (gchar *fdesc, gchar **desclist)
+	    {
+		gchar **dlp;
+		if (!fdesc || !desclist) return FALSE;
+		for (dlp=desclist; *dlp; ++dlp)
+		{
+		    if (strstr (fdesc, *dlp)) return TRUE;
+		}
+		return FALSE;
+	    }
+	Itdb_Track *tr = gl->data;
+	gchar *path;
+	gunichar2 *path_utf16;
+	guint32 pathlen;
+	gchar *mp3_desc[] = {"MPEG", "MP3", "mpeg", "mp3", NULL};
+	gchar *mp4_desc[] = {"AAC", "MP4", "aac", "mp4", NULL};
+	gchar *wav_desc[] = {"WAV", "wav", NULL};
+
+	g_return_val_if_fail (tr, FALSE);
+
+	put24bint (cts, 0x00022e);
+	put24bint (cts, 0x5aa501);
+	/* starttime is in 256 ms incr. for shuffle */
+	put24bint (cts, tr->starttime / 256);
+	put24bint (cts, 0);
+	put24bint (cts, 0);
+	put24bint (cts, tr->stoptime / 256);
+	put24bint (cts, 0);
+	put24bint (cts, 0);
+	/* track->volume ranges from -255 to +255 */
+	/* we want 0 - 200 */
+	put24bint (cts, ((tr->volume + 255) * 201) / 511);
+
+	/* The next one should be 0x01 for MP3,
+	** 0x02 for AAC, and 0x04 for WAV, but I can't find
+	** a suitable indicator within the track structure? */
+	/* JCS: let's do heuristic on tr->fdesc which would contain
+	   "MPEG audio file", "AAC audio file", "Protected AAC audio
+	   file", "AAC audio book file", "WAV audio file" (or similar
+	   if not written by gtkpod */
+
+	if (haystack (tr->fdesc, mp3_desc))
+	    put24bint (cts, 0x01);
+	else if (haystack (tr->fdesc, mp4_desc))
+	    put24bint (cts, 0x02);
+	else if (haystack (tr->fdesc, wav_desc))
+	    put24bint (cts, 0x04);
+	else
+	    put24bint (cts, 0x01);  /* default to mp3 */
+
+	put24bint (cts, 0x200);
+		
+	/* shuffle uses forward slash separator, not colon */
+	path = g_strdup (tr->ipod_path);
+	itdb_filename_ipod2fs (path);
+	path_utf16 = g_utf8_to_utf16 (path, -1, NULL, NULL, NULL);
+	pathlen = utf16_strlen (path_utf16);
+	if (pathlen > 261) pathlen = 261;
+	fixup_little_utf16 (path_utf16);
+	put_data (cts, (gchar *)path_utf16, 2*pathlen);
+	/* pad to 522 bytes */
+	put16_n0 (cts, 261-pathlen);
+	g_free(path);
+	g_free(path_utf16);
+
+	/* XXX FIXME: should depend on something, not hardcoded */
+	put8int (cts, 0x1); /* song used in shuffle mode */
+	put8int (cts, 0);   /* song will not be bookmarkable */
+	put8int (cts, 0);
+    }
+    if (!fexp->error)
+    {
+	if (!wcontents_write (cts))
+	    g_propagate_error (&fexp->error, cts->error);
+    }
+    if (fexp->error)
+    {
+	g_propagate_error (error, fexp->error);
+	result = FALSE;
+    }
+    wcontents_free (cts);
+    g_free (fexp);
+    return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *                  Other file/filename stuff                       *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+
 /* (Renames/removes some files on the iPod (Playcounts, OTG
    semaphore). May have to be called if you write the iTunesDB not
    directly to the iPod but to some other location and then manually
@@ -2863,13 +3194,6 @@ gboolean itdb_rename_files (const gchar *mp, GError **error)
 
     return result;
 }
-
-/*------------------------------------------------------------------*\
- *                                                                  *
- *                  Other file/filename stuff                       *
- *                                                                  *
-\*------------------------------------------------------------------*/
-
 
 
 /* Convert string from casual PC file name to iPod iTunesDB format
@@ -3156,6 +3480,9 @@ gboolean itdb_cp (const gchar *from_file, const gchar *to_file,
     g_free (data);
     return FALSE;
 }
+
+
+
 
 
 
