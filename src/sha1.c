@@ -414,14 +414,10 @@ sha1_hash(const guint8 * text, guint32 len)
    guint8 *digest;
    sha1 *message;
 
-   if((digest = (guint8 *) g_malloc0(sizeof(guint8) * 21)) == NULL)
-       gtkpod_main_quit();	/* errno == ENOMEM */
-   if((message = (sha1 *) g_malloc0(sizeof(sha1))) == NULL)
-       gtkpod_main_quit();	/* errno == ENOMEM */
-   if((message->blockdata = (block *) g_malloc0(sizeof(block))) == NULL)
-       gtkpod_main_quit();	/* errno == ENOMEM */
-   if((message->H = (hblock *) g_malloc(sizeof(hblock))) == NULL)
-       gtkpod_main_quit();	/* errno == ENOMEM */
+   digest = g_malloc0(sizeof(guint8) * 21);
+   message = g_malloc0(sizeof(sha1));
+   message->blockdata = g_malloc0(sizeof(block));
+   message->H = g_malloc(sizeof(hblock));
 
    message->H->chunkblock[0] = 0x67452301;
    message->H->chunkblock[1] = 0xefcdab89;

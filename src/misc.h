@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 13:39:30 jcs>
+/* Time-stamp: <2005-05-07 20:34:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -89,7 +89,7 @@ T_item TM_to_T (TM_item sm);
 T_item ST_to_T (ST_CAT_item st);
 gchar *get_track_info (Track *track);
 
-void ipod_directories_head (void);
+void ipod_directories_head (const gchar *mountpoint);
 void delete_playlist_head (gboolean delete_full);
 void delete_track_head (gboolean delete_full);
 void delete_entry_head (gint inst, gboolean delete_full);

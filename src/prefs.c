@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-30 12:52:27 jcs>
+/* Time-stamp: <2005-05-07 23:58:41 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -994,7 +994,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 	  prefs_set_ipod_mount (optarg);
 	  break;
       case GP_AUTO:
-	  prefs_set_autoimport (TRUE);
+	  prefs_set_autoimport_commandline (TRUE);
 	  break;
       case GP_OFFLINE:
 	  prefs_set_offline (TRUE);
@@ -1270,6 +1270,8 @@ void prefs_set_ipod_mount(const gchar *mp)
     else cfg->ipod_mount = g_strdup(mp);
     /* need to notify the info thread of new mount point */
     space_set_ipod_mount (cfg->ipod_mount);
+    /* FIXME: change mountpoint of all itdbs of type IPOD */
+    gp_itdb_set_mountpoint (mp);
 }
 
 
@@ -1452,6 +1454,16 @@ gboolean prefs_get_autoimport(void)
 void prefs_set_autoimport(gboolean val)
 {
     cfg->autoimport = val;
+}
+
+gboolean prefs_get_autoimport_commandline(void)
+{
+    return(cfg->autoimport_commandline);
+}
+
+void prefs_set_autoimport_commandline(gboolean val)
+{
+    cfg->autoimport_commandline = val;
 }
 
 /* "inst": the instance of the sort tab */
@@ -2630,6 +2642,8 @@ void prefs_set_int64_value (const gchar *key, gint64 value)
  * @value is set to NULL */
 gboolean prefs_get_string_value (const gchar *key, gchar **value)
 {
+    g_return_val_if_fail (value, FALSE);
+
     *value = NULL;
     if (prefs_hash && key)
     {
@@ -2639,12 +2653,25 @@ gboolean prefs_get_string_value (const gchar *key, gchar **value)
 }
 
 
+/* Same as prefs_get_string_value() but easier to use. The string is
+   simply returned, a returned NULL value means that the @key could
+   not be found. g_free() the result when it's no longer needed */
+gchar *prefs_get_string (const gchar *key)
+{
+    if (prefs_hash && key)
+	return g_strdup (g_hash_table_lookup (prefs_hash, key));
+    return NULL;
+}
+
+
 /* Retrieve an integer setting. @value will be filled with the stored
  * integer value. */
 /* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
  * @value is set to 0 */
 gboolean prefs_get_int_value (const gchar *key, gint *value)
 {
+    g_return_val_if_fail (value, FALSE);
+
     *value = 0;
     if (prefs_hash && key)
     {
@@ -2665,6 +2692,8 @@ gboolean prefs_get_int_value (const gchar *key, gint *value)
  * @value is set to 0 */
 gboolean prefs_get_int64_value (const gchar *key, gint64 *value)
 {
+    g_return_val_if_fail (value, FALSE);
+
     *value = 0;
     if (prefs_hash && key)
     {
@@ -2679,19 +2708,17 @@ gboolean prefs_get_int64_value (const gchar *key, gint64 *value)
 }
 
 
-/* used by prefs_write_hash_value () */
-static void prefs_write_hash_func (gpointer key, gpointer value,
-				   gpointer fp)
-{
-    g_return_if_fail (key && value && fp);
-    fprintf ((FILE *)fp, "%s=%s\n", (gchar *)key, (gchar *)value);
-}
-
-
 /* write the values in the hash table out into the preferences file
    @fp */
 static void prefs_write_hash_values (FILE *fp)
 {
+    void prefs_write_hash_func (gpointer key, gpointer value,
+				gpointer fp)
+	{
+	    g_return_if_fail (key && value && fp);
+	    fprintf ((FILE *)fp, "%s=%s\n", (gchar *)key, (gchar *)value);
+	}
+
     if (prefs_hash)
 	g_hash_table_foreach (prefs_hash, prefs_write_hash_func, fp);
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 19:31:29 jcs>
+/* Time-stamp: <2005-05-06 23:29:23 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -301,7 +301,7 @@ static void tm_drag_begin (GtkWidget *widget,
 			   GdkDragContext *dc,
 			   gpointer user_data)
 {
-    puts ("tm_drag_begin");
+/*     puts ("tm_drag_begin"); */
 }
 
 
@@ -315,7 +315,7 @@ static void tm_drag_data_delete (GtkWidget *widget,
     gchar *buf;
     gint num;
 
-    puts ("tm_drag_data_delete");
+/*     puts ("tm_drag_data_delete"); */
 
     g_return_if_fail (widget);
     ts = gtk_tree_view_get_selection (GTK_TREE_VIEW(widget));
@@ -363,7 +363,7 @@ static void tm_drag_end (GtkWidget *widget,
 			 GdkDragContext *dc,
 			 gpointer user_data)
 {
-    puts ("tm_drag_end");
+/*     puts ("tm_drag_end"); */
     display_remove_autoscroll_row_timeout (widget);
 }
 
@@ -377,7 +377,7 @@ static gboolean tm_drag_drop (GtkWidget *widget,
 {
     GdkAtom target;
 
-    puts ("tm_drag_data_drop");
+/*     puts ("tm_drag_data_drop"); */
 
     display_remove_autoscroll_row_timeout (widget);
 
@@ -396,7 +396,7 @@ static void tm_drag_leave (GtkWidget *widget,
 			   guint time,
 			   gpointer user_data)
 {
-    puts ("tm_drag_leave");
+/*     puts ("tm_drag_leave"); */
     display_remove_autoscroll_row_timeout (widget);
 }
 
@@ -641,7 +641,7 @@ static void tm_drag_data_received (GtkWidget       *widget,
     default:
 	dc->action = 0;
 	gtk_drag_finish (dc, FALSE, FALSE, time);
-	puts ("tm_drag_data_received(): should not be reached");
+/* 	puts ("tm_drag_data_received(): should not be reached"); */
 	break;
     }
     if (path) gtk_tree_path_free(path);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 15:08:27 jcs>
+/* Time-stamp: <2005-05-07 15:14:18 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.

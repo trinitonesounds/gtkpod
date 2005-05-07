@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:36 jcs>
+/* Time-stamp: <2005-05-07 20:34:20 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -276,7 +276,7 @@ void
 on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-  handle_import_merge_first_ipod ();
+  gp_merge_ipod_itdbs ();
 }
 
 
@@ -284,7 +284,7 @@ void
 on_import_button_clicked               (GtkButton       *button,
 					gpointer         user_data)
 {
-  handle_import_merge_first_ipod ();
+  gp_merge_ipod_itdbs ();
 }
 
 
@@ -359,7 +359,12 @@ void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    ipod_directories_head ();
+    iTunesDB *itdb = gp_get_active_itdb ();
+    if (!itdb || !itdb->mountpoint)
+    {
+	gtkpod_statusbar_message (_("Currently no iPod database selected"));
+    }
+    ipod_directories_head (itdb->mountpoint);
 }
 
 void

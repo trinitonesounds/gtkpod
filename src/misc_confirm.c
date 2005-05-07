@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:40 jcs>
+/* Time-stamp: <2005-05-07 20:37:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,6 +38,11 @@
 #include "misc.h"
 #include "prefs.h"
 #include "info.h"
+
+#ifdef HAVE_statvfs
+#include <sys/types.h>
+#include <sys/statvfs.h>
+#endif
 
 #define DEBUG_MISC 0
 
@@ -511,59 +516,135 @@ void delete_playlist_head (gboolean delete_full)
  *             Create iPod directory hierarchy                      *
  *                                                                  *
 \*------------------------------------------------------------------*/
+
+/* deterimine the number of directories that should be created */
+/*
+ * <20 GB: 20
+ * <30 GB: 30
+ * <40 GB: 40
+ * <50 GB: 50
+ * else:   60
+ *
+ */
+static gint ipod_directories_number (gchar *mp)
+{
+    const gint default_nr = 20;
+#ifdef HAVE_statvfs
+    struct statvfs stat;
+    int	status;
+    gdouble size;
+
+    g_return_val_if_fail (mp, default_nr);
+
+    status = statvfs (mp, &stat);
+    if (status != 0)
+    {
+	return default_nr;
+    }
+    /* Get size in GB */
+    size = ((gdouble)stat.f_blocks * stat.f_frsize) / 1024 / 1024 / 1024;
+    if (size < 20) return 20;
+    if (size < 30) return 30;
+    if (size < 40) return 40;
+    if (size < 50) return 50;
+    return 60;
+#else
+    return default_nr;
+#endif
+}
+
+
 /* ok handler for ipod directory creation */
 /* @user_data1 is the mount point of the iPod */
 static void ipod_directories_ok (gchar *mp)
 {
-    gboolean success = TRUE;
-    gchar pbuf[PATH_MAX+1];
-    gchar *buf;
-    gint i;
+    gchar *buf, *errordir=NULL;
+    gchar *pbuf;
+    gint i, dirnum;
 
-    if (mp)
+    g_return_if_fail (mp);
+
+    if (!errordir)
     {
-	snprintf(pbuf, PATH_MAX, "%s/Calendars", mp);
-	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
-	snprintf(pbuf, PATH_MAX, "%s/Contacts", mp);
-	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
-	snprintf(pbuf, PATH_MAX, "%s/iPod_Control", mp);
-	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
-	snprintf(pbuf, PATH_MAX, "%s/iPod_Control/Music", mp);
-	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
-	snprintf(pbuf, PATH_MAX, "%s/iPod_Control/iTunes", mp);
-	if((mkdir(pbuf, 0755) != 0)) success = FALSE;
-	for(i = 0; i < 20; i++)
-	{
-	    snprintf(pbuf, PATH_MAX, "%s/iPod_Control/Music/F%02d", mp, i);
-	    if((mkdir(pbuf, 0755) != 0)) success = FALSE;
-	}
-
-	if (success)
-	    buf = g_strdup_printf (_("Successfully created iPod directories in '%s'."), mp);
+	pbuf = g_build_filename (mp, "Calendars", NULL);
+	if((mkdir(pbuf, 0755) != 0))
+	    errordir = pbuf;
 	else
-	    buf = g_strdup_printf (_("Problem creating iPod directories in '%s'."), mp);
-	gtkpod_statusbar_message(buf);
-	g_free (buf);
+	    g_free (pbuf);
     }
+    if (!errordir)
+    {
+	pbuf = g_build_filename (mp, "Contacts", NULL);
+	if((mkdir(pbuf, 0755) != 0))
+	    errordir = pbuf;
+	else
+	    g_free (pbuf);
+    }
+    if (!errordir)
+    {
+	pbuf = g_build_filename (mp, "iPod_Control", NULL);
+	if((mkdir(pbuf, 0755) != 0))
+	    errordir = pbuf;
+	else
+	    g_free (pbuf);
+    }
+    if (!errordir)
+    {
+	pbuf = g_build_filename (mp, "iPod_Control", "Music", NULL);
+	if((mkdir(pbuf, 0755) != 0))
+	    errordir = pbuf;
+	else
+	    g_free (pbuf);
+    }
+    if (!errordir)
+    {
+	pbuf = g_build_filename (mp, "iPod_Control", "iTunes", NULL);
+	if((mkdir(pbuf, 0755) != 0))
+	    errordir = pbuf;
+	else
+	    g_free (pbuf);
+    }
+    dirnum = ipod_directories_number (mp);
+    for(i = 0; i < dirnum; i++)
+    {
+	if (!errordir)
+	{
+	    gchar *num = g_strdup_printf ("F%02d", i);
+	    pbuf = g_build_filename (mp,
+				     "iPod_Control", "Music", num, NULL);
+	    if((mkdir(pbuf, 0755) != 0))
+		errordir = pbuf;
+	    else
+		g_free (pbuf);
+	    g_free (num);
+	}
+    }
+
+    if (errordir)
+	buf = g_strdup_printf (_("Problem creating iPod directory: '%s'."), errordir);
+    else
+	buf = g_strdup_printf (_("Successfully created iPod directories in '%s'."), mp);
+    gtkpod_statusbar_message(buf);
+    g_free (buf);
+    g_free (errordir);
 }
 
 
 /* Pop up the confirmation window for creation of ipod directory
    hierarchy. */
-void ipod_directories_head (void)
+void ipod_directories_head (const gchar *mountpoint)
 {
     gchar *mp;
     GString *str;
     GtkResponseType response;
 
-    if (prefs_get_ipod_mount ())
-    {
-	mp = g_strdup (prefs_get_ipod_mount ());
-	if (strlen (mp) > 0)
-	{ /* make sure the mount point does not end in "/" */
-	    if (mp[strlen (mp) - 1] == '/')
-		mp[strlen (mp) - 1] = 0;
-	}
+    g_return_if_fail (mountpoint);
+    mp = g_strdup (mountpoint);
+
+    if (strlen (mp) > 0)
+    { /* make sure the mount point does not end in "/" */
+	if (mp[strlen (mp) - 1] == '/')
+	    mp[strlen (mp) - 1] = 0;
     }
     else
     {
@@ -576,7 +657,8 @@ void ipod_directories_head (void)
     g_string_append_printf (str, "%s/iPod_Control/Music\n", mp);
     g_string_append_printf (str, "%s/iPod_Control/iTunes\n", mp);
     g_string_append_printf (str, "%s/iPod_Control/Music/F00\n...\n", mp);
-    g_string_append_printf (str, "%s/iPod_Control/Music/F19\n", mp);
+    g_string_append_printf (str, "%s/iPod_Control/Music/F%d\n",
+			    mp, ipod_directories_number (mp)-1);
 
     response = gtkpod_confirmation (CONF_ID_IPOD_DIR,    /* gint id, */
 			 TRUE,               /* gboolean modal, */
@@ -590,7 +672,7 @@ void ipod_directories_head (void)
 			 CONF_NULL_HANDLER,   /* ConfHandler ok_handler,*/
 			 NULL,                /* don't show "Apply" */
 			 CONF_NULL_HANDLER,   /* cancel_handler,*/
-			 mp,                  /* gpointer user_data1,*/
+			 NULL,                /* gpointer user_data1,*/
 			 NULL);               /* gpointer
 					       * user_data2,*/
     switch (response)
@@ -632,6 +714,8 @@ gtkpod_main_quit(void)
     {
 	server_shutdown (); /* stop accepting requests for playcount updates */
 
+	write_prefs ();
+
 /* FIXME: release memory in a clean way */
 #if 0
 	remove_all_playlists ();  /* first remove playlists, then
@@ -640,9 +724,7 @@ gtkpod_main_quit(void)
 	remove_all_tracks ();
 #endif
 	display_cleanup ();
-	write_prefs (); /* FIXME: how can we avoid saving options set by
-			 * command line? */
-			/* Tag them as dirty?  seems nasty */
+
 	if(prefs_get_automount())
 	{
 	    unmount_ipod ();

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 15:08:28 jcs>
+/* Time-stamp: <2005-05-07 13:38:10 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -296,7 +296,7 @@ static iTunesDB *get_itdb_ipod (void)
     {
 	iTunesDB *itdb = gl->data;
 	g_return_val_if_fail (itdb, NULL);
-	if (itdb->usertype == GP_ITDB_TYPE_IPOD)
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	    return itdb;
     }
     return NULL;

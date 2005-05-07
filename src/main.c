@@ -73,7 +73,7 @@ main (int argc, char *argv[])
 
   /* initialize xml_file: if gtkpod is called in the build directory
      (".../src/gtkpod") use the local gtkpod.glade (the symlink in the
-     pixmaps director), otherwise use
+     pixmaps directory), otherwise use
      "PACKAGE_DATA_DIR/PACKAGE/pixmaps/gtkpod.glade" */
 
   progname = g_find_program_in_path (argv[0]);
@@ -134,7 +134,8 @@ main (int argc, char *argv[])
   gtk_widget_show (gtkpod_window);
 
   if(prefs_get_automount())      mount_ipod();
-  if(prefs_get_autoimport())     handle_import_merge_first_ipod ();
+  if(prefs_get_autoimport() || prefs_get_autoimport_commandline())
+      gp_merge_ipod_itdbs ();
 
   server_setup ();   /* start server to accept playcount updates */
 

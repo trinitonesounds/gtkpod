@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 20:58:37 jcs>
+/* Time-stamp: <2005-05-07 15:08:27 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -70,6 +70,8 @@ struct cfg
   gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
   gboolean startup_messages;/* show startup messages/warnings? */
   gboolean autoimport;	    /* whether or not to automatically import files */
+  gboolean autoimport_commandline;/* whether or not to automatically
+				   * import files as set by commandline */
   struct
   {
     gboolean autoselect;     /* automatically select "All" in sort tab? */
@@ -335,12 +337,15 @@ gboolean prefs_get_mserv_report_probs(void);
 void prefs_set_mserv_report_probs(gboolean val);
 const gchar *prefs_get_mserv_username(void);
 void prefs_set_mserv_username(const gchar *root);
+gboolean prefs_get_autoimport_commandline(void);
+void prefs_set_autoimport_commandline(gboolean val);
 
 gboolean prefs_get_disable_sorting(void);
 
 void prefs_set_string_value (const gchar *key, const gchar *value);
 void prefs_set_int_value (const gchar *key, gint value);
 void prefs_set_int64_value (const gchar *key, gint64 value);
+gchar *prefs_get_string (const gchar *key);
 gboolean prefs_get_string_value (const gchar *key, gchar **value);
 gboolean prefs_get_int_value (const gchar *key, gint *value);
 gboolean prefs_get_int64_value (const gchar *key, gint64 *value);

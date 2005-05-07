@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-05 20:54:57 jcs>
+/* Time-stamp: <2005-05-07 15:14:16 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -46,6 +46,8 @@ typedef struct
 {
     struct itdbs_head *itdbs_head; /* pointer to the master itdbs_head */
     GHashTable *md5hash;           /* md5 hash information             */
+    gchar *offline_filename;       /* filename for offline database
+				      (only for GP_ITDP_TYPE_IPOD)     */
     gboolean data_changed;         /* data changed since import?       */
     gboolean itdb_imported;        /* has in iTunesDB been imported?   */
 } ExtraiTunesDBData;
@@ -112,8 +114,8 @@ typedef enum {
 /* types for iTunesDB */
 typedef enum
 {
-    GP_ITDB_TYPE_IPOD,    /* iPod */
-    GP_ITDB_TYPE_LOCAL,   /* local browsing */
+    GP_ITDB_TYPE_LOCAL = 1<<0,   /* local browsing */
+    GP_ITDB_TYPE_IPOD  = 1<<1,    /* iPod */
 } GpItdbType;
 
 
@@ -147,4 +149,5 @@ void gp_playlist_add_extra (Playlist *pl);
 gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num);
 iTunesDB *gp_get_active_itdb (void);
 iTunesDB *gp_get_ipod_itdb (void);
+void gp_update_itdb_prefs (void);
 #endif

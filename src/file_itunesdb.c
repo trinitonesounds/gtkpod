@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-30 13:46:10 jcs>
+/* Time-stamp: <2005-05-07 23:58:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -390,70 +390,97 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 /* Import an iTunesDB and return an iTunesDB structure.
  * If @old_itdb is set, it will be merged into the newly imported
  * one. @old_itdb will not be changed.
+ * @type: GP_ITDB_TYPE_LOCAL or GP_ITDB_TYPE_IPOD
  * @mp: mount point of iPod (if reading an iPod iTunesDB)
- * @itdb_name: name of iTunesDB (if reading a local file browser) */
+ * @name_off: name of the iTunesDB in offline mode
+ * @name_loc: name of iTunesDB (if reading a local file browser) */
 /* Return value: a new iTunesDB structure or NULL in case of an error */
-iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
-			  const gchar *mp, const gchar *itdb_name)
+iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
+			  const gchar *mp, const gchar *name_off,
+			  const gchar *name_loc)
 {
-    gchar *cfgdir;
+    gchar *cfgdir = prefs_get_cfgdir ();
     GList *gl;
     ExtraiTunesDBData *eitdb;
     iTunesDB *itdb = NULL;
     GError *error = NULL;
 
-    g_return_val_if_fail (mp || itdb || prefs_get_offline(), NULL);
+    g_return_val_if_fail (!(type & GP_ITDB_TYPE_LOCAL) || name_loc, NULL);
+    g_return_val_if_fail (!(type & GP_ITDB_TYPE_IPOD) || 
+			  (mp && name_off), NULL);
+    g_return_val_if_fail (cfgdir, NULL);
 
-    if (prefs_get_offline() || itdb_name)
-    { /* offline - requires extended info */
-	if ((cfgdir = prefs_get_cfgdir ()))
+    if (prefs_get_offline() || (type & GP_ITDB_TYPE_LOCAL))
+    { /* offline or local database - requires extended info */
+	gchar *name_ext;
+	gchar *name_db;
+
+	if (type & GP_ITDB_TYPE_LOCAL)
 	{
-	    gchar *name_ext = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
-	    gchar *name_db = g_build_filename (cfgdir, "iTunesDB", NULL);
-	    if (g_file_test (name_db, G_FILE_TEST_EXISTS))
+	    name_ext = g_strdup_printf ("%s.ext", name_loc);
+	    name_db = g_strdup (name_loc);
+	}
+	else
+	{
+	    name_ext = g_strdup_printf ("%s.ext", name_off);
+	    name_db = g_strdup (name_off);
+	}
+
+	if (g_file_test (name_db, G_FILE_TEST_EXISTS))
+	{
+	    if (prefs_get_write_extended_info ())
 	    {
 		if (!read_extended_info (name_ext, name_db))
 		{
 		    gtkpod_warning (_("Extended info will not be used. If you have non-transferred tracks,\nthese will be lost.\n"));
 		}
-		itdb = itdb_parse_file (name_db, &error);
-		if(itdb && !error)
-		{
+	    }
+	    itdb = itdb_parse_file (name_db, &error);
+	    if (itdb && !error)
+	    {
+		if (type & GP_ITDB_TYPE_IPOD)
 		    gtkpod_statusbar_message(
-			_("Offline iPod Database Successfully Imported"));
-		}
+			_("Offline iPod database successfully imported"));
 		else
-		{
-		    if (error)
-		    {
-			gtkpod_warning (
-			    _("Offline iPod database import failed: '%s'\n\n"),
-			error->message);
-		    }
-		    else
-		    {
-			gtkpod_warning (
-			    _("Offline iPod database import failed: \n\n"));
-		    }
-		}
+		    gtkpod_statusbar_message(
+			_("Local database successfully imported"));
 	    }
 	    else
 	    {
-		gtkpod_warning (
-		    _("'%s' does not exist. Import aborted.\n\n"),
-		    name_db);
+		if (error)
+		{
+		    if (type & GP_ITDB_TYPE_IPOD)
+			gtkpod_warning (
+			    _("Offline iPod database import failed: '%s'\n\n"),
+			    error->message);
+		    else
+			gtkpod_warning (
+			    _("Local database import failed: '%s'\n\n"),
+			    error->message);
+		}
+		else
+		{
+		    if (type & GP_ITDB_TYPE_IPOD)
+			gtkpod_warning (
+			    _("Offline iPod database import failed: \n\n"));
+		    else
+			gtkpod_warning (
+			    _("Local database import failed: \n\n"));
+		}
 	    }
-	    g_free (name_ext);
-	    g_free (name_db);
-	    g_free (cfgdir);
 	}
 	else
 	{
-	    gtkpod_warning (_("Import aborted.\n"));
+	    gtkpod_warning (
+		_("'%s' does not exist. Import aborted.\n\n"),
+		name_db);
 	}
+	g_free (name_ext);
+	g_free (name_db);
+	g_free (cfgdir);
     }
     else
-    { /* iPod is connected */
+    { /* GP_ITDB_TYPE_IPOD _and_ iPod is connected */
 	const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL};
 	const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
 	gchar *name_ext = resolve_path (mp, ext_db);
@@ -520,6 +547,22 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);
 
+    /* fill in additional info */
+    itdb->usertype = type;
+    if (type & GP_ITDB_TYPE_IPOD)
+    {
+	if (prefs_get_offline ())
+	{
+	    itdb->mountpoint = g_strdup (mp);
+	    g_free (itdb->filename);
+	    itdb->filename = NULL;
+	}
+	eitdb->offline_filename = g_strdup (name_off);
+    }	    
+
+    eitdb->data_changed = FALSE;
+    eitdb->itdb_imported = TRUE;
+
     if (old_itdb)
     {
 	/* this table holds pairs of old_itdb-tracks/new_itdb/tracks */
@@ -573,18 +616,15 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb,
 	eitdb->data_changed = old_eitdb->data_changed;
     }
     /* set mark that this itdb struct contains an imported iTunesDB */
-    eitdb->itdb_imported = TRUE;
 
     return itdb;
 }
 
-/* Convenience function: 
-   Merges the first GP_ITDB_TYPE_IPOD itdb with the new one. */
-void handle_import_merge_first_ipod (void)
+/* attempts to import all iPod databases */
+void gp_merge_ipod_itdbs (void)
 {
     struct itdbs_head *itdbs_head;
     GList *gl;
-    iTunesDB *itdb = NULL;
 
     g_return_if_fail (gtkpod_window);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
@@ -593,41 +633,62 @@ void handle_import_merge_first_ipod (void)
 
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
-	itdb = gl->data;
+	iTunesDB *itdb = gl->data;
+	ExtraiTunesDBData *eitdb;
 	g_return_if_fail (itdb);
-	if (itdb->usertype == GP_ITDB_TYPE_IPOD) break;
-	itdb = NULL;
+	eitdb = itdb->userdata;
+	g_return_if_fail (eitdb);
+	if ((itdb->usertype & GP_ITDB_TYPE_IPOD) && !eitdb->itdb_imported)
+	{
+	    gp_merge_itdb (itdb);
+	}
     }
-
-    g_return_if_fail (itdb);
-    handle_import (itdb, prefs_get_ipod_mount(), NULL, 0);
+    display_disable_gtkpod_import_buttons ();
 }
 
 
-/* Handle the function "Import iTunesDB"
- * If @old_itdb is set, it will be merged with the newly imported one
- * @mp: mount point of iPod (if reading an iPod iTunesDB)
- * @itdb_name: name of iTunesDB (if reading a local file browser)
- * @pos: insert at which position (ignored if @old_itdb is set)
+/* 
+ * Merges @old_itdb with a newly imported one, then replaces @old_itdb
+ * in the itdbs-list and the display.
+ *
+ * old_itdb->usertype, ->mountpoint, ->filename,
+ * ->eitdb->offline_filename must be set according to usertype and
+ * will be used to read the new itdb
+ *
  */
-void handle_import (iTunesDB *old_itdb, const gchar *mp,
-		    const gchar *itdb_name, gint pos)
+void gp_merge_itdb (iTunesDB *old_itdb)
 {
+    ExtraiTunesDBData *old_eitdb;
     iTunesDB *new_itdb;
 
-    new_itdb = gp_import_itdb (old_itdb, mp, itdb_name);
+    g_return_if_fail (old_itdb);
+    old_eitdb = old_itdb->userdata;
+    g_return_if_fail (old_eitdb);
+
+    if (old_itdb->usertype & GP_ITDB_TYPE_LOCAL)
+    {
+	g_return_if_fail (old_itdb->filename);
+
+	new_itdb = gp_import_itdb (old_itdb, old_itdb->usertype,
+				   NULL, NULL, old_itdb->filename);
+    }
+    else if (old_itdb->usertype & GP_ITDB_TYPE_IPOD)
+    {
+	g_return_if_fail (old_itdb->mountpoint);
+	g_return_if_fail (old_eitdb->offline_filename);
+
+	new_itdb = gp_import_itdb (old_itdb, old_itdb->usertype,
+				   old_itdb->mountpoint,
+				   old_eitdb->offline_filename,
+				   NULL);
+    }
+    else
+	g_return_if_reached ();
 
     if (new_itdb)
-    {
-	if (old_itdb)
-	{
-	    gp_replace_itdb (old_itdb, new_itdb);
-	}
-	else
-	{
-	    gp_itdb_add (new_itdb, pos);
-	}
-    }
+	gp_replace_itdb (old_itdb, new_itdb);
+
+    gp_update_itdb_prefs ();
     gtkpod_tracks_statusbar_update ();
 }
 
@@ -918,27 +979,25 @@ static void flush_tracks_abort (gboolean *abort)
 
 
 /* check if iPod directory stucture is present */
-static gboolean ipod_dirs_present (void)
+static gboolean ipod_dirs_present (gchar *mountpoint)
 {
-    gchar *ipod_path_as_filename = 
-      charset_from_utf8(prefs_get_ipod_mount ());
     const gchar *music[] = {"iPod_Control","Music",NULL},
       *itunes[] = {"iPod_Control","iTunes",NULL};
     gchar *file;
     gboolean result = TRUE;
 
-    file = resolve_path(ipod_path_as_filename,music);
-    if(!file || !g_file_test(file,G_FILE_TEST_IS_DIR))
-      result = FALSE;
-    g_free(file);
-    
-    file = resolve_path(ipod_path_as_filename,itunes);
-    if(!file || !g_file_test(file,G_FILE_TEST_IS_DIR))
-      result = FALSE;
-    g_free(file);
-    
-    g_free(ipod_path_as_filename);
+    g_return_val_if_fail (mountpoint, FALSE);
 
+    file = resolve_path(mountpoint, music);
+    if(!file || !g_file_test(file,G_FILE_TEST_IS_DIR))
+      result = FALSE;
+    g_free(file);
+    
+    file = resolve_path(mountpoint, itunes);
+    if(!file || !g_file_test(file,G_FILE_TEST_IS_DIR))
+      result = FALSE;
+    g_free(file);
+    
     return result;
 }
 
@@ -1175,7 +1234,6 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   gchar *cfgdir;
   gboolean success = TRUE;
   ExtraiTunesDBData *eitdb;
-  gchar *mp;
 
   g_return_val_if_fail (itdb, FALSE);
   eitdb = itdb->userdata;
@@ -1184,40 +1242,38 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   cfgdir = prefs_get_cfgdir ();
   g_return_val_if_fail (cfgdir, FALSE);
 
-  mp =  charset_from_utf8 (prefs_get_ipod_mount());
-
   if (!eitdb->itdb_imported)
   {   /* No iTunesDB was read but user wants to export current
          data. If an iTunesDB is present on the iPod or in cfgdir,
 	 this is most likely an error. We should tell the user */
       gchar *tunes = NULL;
       /* First check if we can find an existing iTunesDB. */
-      switch (itdb->usertype)
+      if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
       {
-      case GP_ITDB_TYPE_LOCAL:
-	  tunes = g_build_filename (cfgdir, "localDB", NULL);
-	  break;
-      case GP_ITDB_TYPE_IPOD:
+	  tunes = g_strdup (itdb->filename);
+      }
+      else if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+      {
 	  if (prefs_get_offline ())
 	  {
-	      tunes = g_build_filename (cfgdir, "iTunesDB", NULL);
+	      tunes = g_strdup (eitdb->offline_filename);
 	  }
 	  else
 	  {
 	      const gchar *itunes_components[] = {"iPod_Control",
 						  "iTunes",
 						  "iTunesDB", NULL};
-	      tunes = resolve_path (mp, itunes_components);
+	      tunes = resolve_path (itdb->mountpoint, itunes_components);
 	  }
-	  break;
-      default:
+      }
+      else
+      {
 	  g_free (cfgdir);
-	  g_free (mp);
 	  g_return_val_if_reached (FALSE);
       }
       if (g_file_test (tunes, G_FILE_TEST_EXISTS))
       {
-	  gchar *str = g_strdup_printf (_("You did not import the existing iTunesDB ('%s'). This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before calling this function again.\n"), tunes);
+	  gchar *str = g_strdup_printf (_("You did not import the existing iTunesDB ('%s'). This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to skip storing. If you cancel, you can import the existing database before calling this function again.\n"), tunes);
 	  GtkWidget *dialog = gtk_message_dialog_new (
 	      GTK_WINDOW (gtkpod_window),
 	      GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1230,7 +1286,6 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 	  if (result == GTK_RESPONSE_CANCEL)
 	  {
 	      g_free (cfgdir);
-	      g_free (mp);
 	      return FALSE;
 	  }
       }
@@ -1238,14 +1293,14 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 
   block_widgets (); /* block user input */
 
-  if(!prefs_get_offline ())
+  if((itdb->usertype & GP_ITDB_TYPE_IPOD) && !prefs_get_offline ())
   {
       /* check if iPod directories are present */
-      if (!ipod_dirs_present ())
+      if (!ipod_dirs_present (itdb->mountpoint))
       {   /* no -- create them */
-	  ipod_directories_head ();
+	  ipod_directories_head (itdb->mountpoint);
 	  /* if still not present abort */
-	  if (!ipod_dirs_present ())
+	  if (!ipod_dirs_present (itdb->mountpoint))
 	  {
 	      gtkpod_warning (_("iPod directory structure must be present before synching to the iPod can be performed.\n"));
 	      success = FALSE;
@@ -1264,10 +1319,10 @@ gboolean gp_write_itdb (iTunesDB *itdb)
       gtk_main_iteration ();
 
   if (success && !prefs_get_offline () &&
-      (itdb->usertype == GP_ITDB_TYPE_IPOD))
+      (itdb->usertype & GP_ITDB_TYPE_IPOD))
   {   /* write to the iPod */
       GError *error = NULL;
-      if (!itdb_write (itdb, mp, &error))
+      if (!itdb_write (itdb, NULL, &error))
       {   /* an error occured */
 	  success = FALSE;
 	  if (error && error->message)
@@ -1299,11 +1354,8 @@ gboolean gp_write_itdb (iTunesDB *itdb)
       }
       if (success && cfgdir)
       {   /* copy to cfgdir */
-	  gchar *base, *from, *to1, *to2;
 	  GError *error = NULL;
-	  base = g_path_get_basename (itdb->filename);
-	  to1 = g_build_filename (cfgdir, base, NULL);
-	  if (!itdb_cp (itdb->filename, to1, &error))
+	  if (!itdb_cp (itdb->filename, eitdb->offline_filename, &error))
 	  {
 	      success = FALSE;
 	      if (error && error->message)
@@ -1315,9 +1367,10 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 	  }
 	  if (prefs_get_write_extended_info ())
 	  {
+	      gchar *from, *to;
 	      from = g_strdup_printf ("%s.ext", itdb->filename);
-	      to2 = g_strdup_printf ("%s.ext", to1);
-	      if (!itdb_cp (from, to2, &error))
+	      to = g_strdup_printf ("%s.ext", eitdb->offline_filename);
+	      if (!itdb_cp (from, to, &error))
 	      {
 		  success = FALSE;
 		  if (error && error->message)
@@ -1327,19 +1380,16 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 		  g_error_free (error);
 	      }
 	      g_free (from);
-	      g_free (to2);
+	      g_free (to);
 	  }
-	  g_free (base);
-	  g_free (to1);
       }
   }
 
   if (success && prefs_get_offline () &&
-      (itdb->usertype == GP_ITDB_TYPE_IPOD))
+      (itdb->usertype & GP_ITDB_TYPE_IPOD))
   {   /* write to cfgdir */
-      gchar *name = g_build_filename (cfgdir, "iTunesDB", NULL);
       GError *error = NULL;
-      if (!itdb_write_file (itdb, name, &error))
+      if (!itdb_write_file (itdb, eitdb->offline_filename, &error))
       {   /* an error occured */
 	  success = FALSE;
 	  if (error && error->message)
@@ -1356,11 +1406,10 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   }
 
 
-  if (success && (itdb->usertype == GP_ITDB_TYPE_LOCAL))
+  if (success && (itdb->usertype & GP_ITDB_TYPE_LOCAL))
   {   /* write to cfgdir */
-      gchar *name = g_build_filename (cfgdir, "localDB", NULL);
       GError *error = NULL;
-      if (!itdb_write_file (itdb, name, &error))
+      if (!itdb_write_file (itdb, NULL, &error))
       {   /* an error occured */
 	  success = FALSE;
 	  if (error && error->message)
@@ -1386,7 +1435,6 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   }
 
   g_free (cfgdir);
-  g_free (mp);
 
   release_widgets (); /* Allow input again */
 
@@ -1417,8 +1465,12 @@ void handle_export (void)
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
 	iTunesDB *itdb = gl->data;
+	ExtraiTunesDBData *eitdb;
 	g_return_if_fail (itdb);
-	success &= gp_write_itdb (itdb);
+	eitdb = itdb->userdata;
+	g_return_if_fail (eitdb);
+	if (eitdb->data_changed || eitdb->itdb_imported)
+	    success &= gp_write_itdb (itdb);
     }
 
     if (prefs_get_concal_autosync ())
@@ -1471,7 +1523,36 @@ gboolean files_are_saved (void)
 	g_return_val_if_fail (itdb, !changed);
 	eitdb = itdb->userdata;
 	g_return_val_if_fail (eitdb, !changed);
+printf ("itdb: %p, changed: %d, imported: %d\n",
+	itdb, eitdb->data_changed, eitdb->itdb_imported);
 	changed |= eitdb->data_changed;
     }
     return !changed;
+}
+
+
+/* FIXME: transitional function to set the mountpoint of all
+ * GP_ITDB_TYPE_IPOD itdbs. Should be replaced with a new system to
+ * individually define the mountpoints */
+void gp_itdb_set_mountpoint (const gchar *mp)
+{
+    struct itdbs_head *itdbs_head;
+
+    GList *gl;
+
+    g_return_if_fail (gtkpod_window);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+    if (!itdbs_head) return;
+
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_if_fail (itdb);
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    g_free (itdb->mountpoint);
+	    itdb->mountpoint = g_strdup (mp);
+	}
+    }
 }

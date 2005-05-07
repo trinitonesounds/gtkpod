@@ -90,7 +90,7 @@ static void pm_drag_begin (GtkWidget *widget,
 			   GdkDragContext *drag_context,
 			   gpointer user_data)
 {
-    puts ("drag_begin");
+/*     puts ("drag_begin"); */
 }
 
 
@@ -133,7 +133,7 @@ static gboolean pm_drag_drop (GtkWidget *widget,
 {
     GdkAtom target;
 
-    puts ("drag_data_drop");
+/*     puts ("drag_data_drop"); */
 
     display_remove_autoscroll_row_timeout (widget);
 
@@ -151,7 +151,7 @@ static void pm_drag_end (GtkWidget *widget,
 			 GdkDragContext *drag_context,
 			 gpointer user_data)
 {
-    puts ("drag_end");
+/*     puts ("drag_end"); */
     display_remove_autoscroll_row_timeout (widget);
 }
 
@@ -160,7 +160,7 @@ static void pm_drag_leave (GtkWidget *widget,
 			   guint time,
 			   gpointer user_data)
 {
-    puts ("drag_leave");
+/*     puts ("drag_leave"); */
     display_remove_autoscroll_row_timeout (widget);
 }
 
@@ -191,8 +191,8 @@ static gboolean pm_drag_motion (GtkWidget *widget,
 
     g_return_val_if_fail (path, FALSE);
 
-    printf ("pm_drag_motion (x/y/pos/s/a): %d %d %d %d %d\n",
-	    x, y, pos, dc->suggested_action, dc->actions);
+/*     printf ("pm_drag_motion (x/y/pos/s/a): %d %d %d %d %d\n", */
+/* 	    x, y, pos, dc->suggested_action, dc->actions); */
 
     gtk_tree_view_set_drag_dest_row (GTK_TREE_VIEW (widget), path, pos);
 
@@ -384,7 +384,7 @@ pm_drag_data_get (GtkWidget       *widget,
 
     if (!data) return;
 
-    puts ("data_get");
+/*     puts ("data_get"); */
 
     /* printf("sm drag get info: %d\n", info);*/
 
@@ -566,7 +566,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
     gboolean path_ok;
     gboolean del_src;
 
-printf ("drag_data_received: x y a: %d %d %d\n", x, y, dc->suggested_action);
+/* printf ("drag_data_received: x y a: %d %d %d\n", x, y, dc->suggested_action); */
 
     g_return_if_fail (widget); 
     g_return_if_fail (dc);
@@ -585,7 +585,7 @@ printf ("drag_data_received: x y a: %d %d %d\n", x, y, dc->suggested_action);
     if (path_m)
     {   /* this callback was caused by pm_drag_motion -- we are
 	 * supposed to gdk_drag_status () */
-puts ("...by motion");
+/* puts ("...by motion"); */
         pos = (GtkTreeViewDropPosition)g_object_get_data (G_OBJECT (widget), "drag_data_by_motion_pos");
         /* unset flag that */ 
 	g_object_set_data (G_OBJECT (widget), "drag_data_by_motion_path", NULL);
@@ -611,9 +611,9 @@ puts ("...by motion");
 	    gdk_drag_status (dc,
 			     pm_tm_get_action (tr_s, pl, pos, dc),
 			     time);
-	    printf ("src: %p  dest: %p  sugg: %d a:%d\n",
-		    pl_s->itdb, pl->itdb, dc->suggested_action,
-		    pm_tm_get_action (tr_s, pl, pos, dc));
+/* 	    printf ("src: %p  dest: %p  sugg: %d a:%d\n", */
+/* 		    pl_s->itdb, pl->itdb, dc->suggested_action, */
+/* 		    pm_tm_get_action (tr_s, pl, pos, dc)); */
 	    return;
 	case DND_GTKPOD_PLAYLISTLIST:
 	    /* get first playlist and check itdb */
@@ -626,9 +626,9 @@ puts ("...by motion");
 	    gdk_drag_status (dc,
 			     pm_pm_get_action (pl_s, pl, widget, pos, dc),
 			     time);
-	    printf ("src: %p  dest: %p  sugg: %d a:%d\n",
-		    pl_s->itdb, pl->itdb, dc->suggested_action,
-		    pm_pm_get_action (pl_s, pl, widget, pos, dc));
+/* 	    printf ("src: %p  dest: %p  sugg: %d a:%d\n", */
+/* 		    pl_s->itdb, pl->itdb, dc->suggested_action, */
+/* 		    pm_pm_get_action (pl_s, pl, widget, pos, dc)); */
 	    return;
 	}
 	g_return_if_reached ();
@@ -672,7 +672,7 @@ puts ("...by motion");
     gtk_tree_path_free (path_d);
     path_d = NULL;
 
- printf("position: %d\n", position);
+/*  printf("position: %d\n", position); */
     switch (info)
     {
     case DND_GTKPOD_TRACKLIST:

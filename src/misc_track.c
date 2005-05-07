@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-05-06 03:20:31 jcs>
+|  Time-stamp: <2005-05-07 23:39:48 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -391,7 +391,7 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
     g_return_val_if_fail (itdb, NULL);
     g_return_val_if_fail (filename, NULL);
 
-    if ((itdb->usertype == GP_ITDB_TYPE_IPOD) &&
+    if ((itdb->usertype & GP_ITDB_TYPE_IPOD) &&
 	(strncmp (filename, prefs_get_ipod_mount (),
 		  strlen (prefs_get_ipod_mount ())) == 0))
     {   /* handle track on iPod */
@@ -594,7 +594,7 @@ static void add_tracks_to_playlist (Playlist *pl,
 	    to_itdb = pl->itdb;
 	    to_mpl = itdb_playlist_mpl (to_itdb);
 
-	    printf ("add tr %p to pl: %p\n", track, pl);
+/* 	    printf ("add tr %p to pl: %p\n", track, pl); */
 	    if (from_itdb == to_itdb)
 	    {   /* DND within the same itdb */
 		if (pl->type == ITDB_PL_TYPE_NORM)

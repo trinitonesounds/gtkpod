@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 17:51:30 jcs>
+/* Time-stamp: <2005-05-07 23:38:38 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -141,23 +141,22 @@ display_disable_gtkpod_import_buttons(void)
 {
     GtkWidget *w = NULL;
 
-    if(gtkpod_window)
-    {
-	if((w = glade_xml_get_widget (main_window_xml, "import_button")))
-	{
-	    gtk_widget_set_sensitive(w, FALSE);
-	    /* in case this widget has been blocked, we need to tell
-	       update the desired state upon release */
-	    update_blocked_widget (w, FALSE);
-	}
+    g_return_if_fail (gtkpod_window);
 
-	if((w = glade_xml_get_widget (main_window_xml, "import_itunes_mi")))
-	{
-	    gtk_widget_set_sensitive(w, FALSE);
-	    /* in case this widget has been blocked, we need to tell
-	       update the desired state upon release */
-	    update_blocked_widget (w, FALSE);
-	}
+    if((w = glade_xml_get_widget (main_window_xml, "import_button")))
+    {
+	gtk_widget_set_sensitive(w, FALSE);
+	/* in case this widget has been blocked, we need to tell
+	   update the desired state upon release */
+	update_blocked_widget (w, FALSE);
+    }
+
+    if((w = glade_xml_get_widget (main_window_xml, "import_itunes_mi")))
+    {
+	gtk_widget_set_sensitive(w, FALSE);
+	/* in case this widget has been blocked, we need to tell
+	   update the desired state upon release */
+	update_blocked_widget (w, FALSE);
     }
 }
 

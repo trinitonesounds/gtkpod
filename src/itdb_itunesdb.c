@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:13:14 jcs>
+/* Time-stamp: <2005-05-07 20:52:36 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2669,6 +2669,7 @@ static void wcontents_free (WContents *cts)
 
 
 /* Do the actual writing to the iTunesDB */
+/* If @filename==NULL, itdb->filename is tried */
 gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 			  GError **error)
 {
@@ -2680,7 +2681,9 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
     gboolean result = TRUE;;
 
     g_return_val_if_fail (itdb, FALSE);
-    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (filename || itdb->filename, FALSE);
+
+    if (!filename) filename = itdb->filename;
 
     /* assign unique IDs */
     for (gl=itdb->tracks; gl; gl=gl->next)
@@ -2717,8 +2720,9 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
     g_free (fexp);
     if (result == TRUE)
     {
+	gchar *fn = g_strdup (filename);
 	g_free (itdb->filename);
-	itdb->filename = g_strdup (filename);
+	itdb->filename = fn;
     }
     return result;
 }
@@ -2737,7 +2741,7 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
    set accordingly.
 
    @mp must point to the mount point of the iPod, e.g. "/mnt/ipod" and
-   be in local encoding */
+   be in local encoding. If mp==NULL, itdb->mountpoint is tried. */
 gboolean itdb_write (Itdb_iTunesDB *itdb, const gchar *mp, GError **error)
 {
     gchar *itunes_filename, *itunes_path;
@@ -2745,7 +2749,9 @@ gboolean itdb_write (Itdb_iTunesDB *itdb, const gchar *mp, GError **error)
     gboolean result = FALSE;
 
     g_return_val_if_fail (itdb, FALSE);
-    g_return_val_if_fail (mp, FALSE);
+    g_return_val_if_fail (mp || itdb->mountpoint, FALSE);
+
+    if (!mp) mp = itdb->mountpoint;
 
     itunes_path = itdb_resolve_path (mp, db);
     
@@ -2770,6 +2776,13 @@ gboolean itdb_write (Itdb_iTunesDB *itdb, const gchar *mp, GError **error)
 
     if (result == TRUE)
 	result = itdb_rename_files (mp, error);
+
+    if (result == TRUE)
+    {
+	gchar *mnp = g_strdup (mp);
+	g_free (itdb->mountpoint);
+	itdb->mountpoint = mnp;
+    }
 
     return result;
 }

@@ -81,13 +81,15 @@ void sync_tracks (GList *selected_tracks);
 void display_non_updated (Track *track, gchar *txt);
 void display_updated (Track *track, gchar *txt);
 void display_mserv_problems (Track *track, gchar *txt);
-void handle_import_main (void);
-void handle_import_merge_first_ipod (void);
-void handle_import (iTunesDB *old_itdb, const gchar *mp,
-		    const gchar *itdb_name, gint pos);
+iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
+			  const gchar *mp, const gchar *name_off,
+			  const gchar *name_loc);
+void gp_merge_ipod_itdbs (void);
+void gp_merge_itdb (iTunesDB *old_itdb);
 void handle_export (void);
 void data_changed (iTunesDB *itdb);
 gboolean files_are_saved (void);
+void gp_itdb_set_mountpoint (const gchar *mp);
 gchar *get_track_name_on_disk_verified (Track *track);
 gchar* get_track_name_on_disk(Track *s);
 gchar* get_track_name_on_ipod(Track *s);
