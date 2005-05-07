@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:42 jcs>
+/* Time-stamp: <2005-05-08 02:21:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -929,7 +929,6 @@ SPLRule *splr_duplicate (SPLRule *splr)
     if (splr)
     {
 	dup = g_malloc (sizeof (SPLRule));
-	g_assert (dup);
 	memcpy (dup, splr, sizeof (SPLRule));
 
 	/* Now copy the strings */
@@ -1181,8 +1180,8 @@ gboolean itdb_playlist_add_tracknr (FImport *fimp, Itdb_Playlist *pl,
 {
     Itdb_Track *track;
 
-    g_assert (fimp && pl && filename);
-    g_assert (fimp->itdb);
+    g_return_val_if_fail (fimp && pl && filename, FALSE);
+    g_return_val_if_fail (fimp->itdb, FALSE);
 
     track = g_list_nth_data (fimp->itdb->tracks, num);
     if (!track)

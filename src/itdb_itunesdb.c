@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-08 01:56:34 jcs>
+/* Time-stamp: <2005-05-08 02:18:21 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -294,11 +294,11 @@ gchar * itdb_resolve_path (const gchar *root,
 /* Check if the @seek with length @len is legal or out of
  * range. Returns TRUE if legal and FALSE when it is out of range, in
  * which case cts->error is set as well.
- * g_asserts for cts and cts->contents are done as well. */
+ * g_return_if_fails for cts and cts->contents are done as well. */
 static gboolean check_seek (FContents *cts, glong seek, glong len)
 {
-    g_assert (cts);
-    g_assert (cts->contents);
+    g_return_val_if_fail (cts, FALSE);
+    g_return_val_if_fail (cts->contents, FALSE);
 
     if ((seek+len <= cts->length) && (seek >=0))
     {
@@ -306,7 +306,7 @@ static gboolean check_seek (FContents *cts, glong seek, glong len)
     }
     else
     {
-	g_assert (cts->filename);
+	g_return_val_if_fail (cts->filename, FALSE);
 	g_set_error (&cts->error,
 		     ITDB_FILE_ERROR,
 		     ITDB_FILE_ERROR_SEEK,
@@ -371,7 +371,7 @@ static guint32 get32lint (FContents *cts, glong seek)
 
     if (check_seek (cts, seek, 4))
     {
-	g_assert (cts->contents);
+	g_return_val_if_fail (cts->contents, 0);
 	memcpy (&n, &cts->contents[seek], 4);
 #       if (G_BYTE_ORDER == G_BIG_ENDIAN)
 	  n = GUINT32_SWAP_LE_BE (n);
@@ -389,7 +389,7 @@ static guint32 get32bint (FContents *cts, glong seek)
 
     if (check_seek (cts, seek, 4))
     {
-	g_assert (cts->contents);
+	g_return_val_if_fail (cts->contents, 0);
 	memcpy (&n, &cts->contents[seek], 4);
 #       if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
 	  n = GUINT32_SWAP_LE_BE (n);
@@ -406,7 +406,7 @@ static guint64 get64lint (FContents *cts, glong seek)
 
     if (check_seek (cts, seek, 8))
     {
-	g_assert (cts->contents);
+	g_return_val_if_fail (cts->contents, 0);
 	memcpy (&n, &cts->contents[seek], 8);
 #       if (G_BYTE_ORDER == G_BIG_ENDIAN)
 	  n = GUINT64_SWAP_LE_BE (n);
@@ -424,7 +424,7 @@ static guint64 get64bint (FContents *cts, glong seek)
 
     if (check_seek (cts, seek, 8))
     {
-	g_assert (cts->contents);
+	g_return_val_if_fail (cts->contents, 0);
 	memcpy (&n, &cts->contents[seek], 8);
 #       if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
 	  n = GUINT64_SWAP_LE_BE (n);
@@ -477,7 +477,7 @@ static gunichar2 *fixup_big_utf16 (gunichar2 *utf16_string)
  * return value after use */
 static struct playcount *playcount_get_next (FImport *fimp)
 {
-    g_assert (fimp);
+    g_return_val_if_fail (fimp, NULL);
 
     struct playcount *playcount = g_list_nth_data (fimp->playcounts, 0);
 
@@ -491,7 +491,7 @@ static void playcounts_free (FImport *fimp)
 {
     struct playcount *playcount;
 
-    g_assert (fimp);
+    g_return_if_fail (fimp);
 
     while ((playcount=playcount_get_next (fimp))) g_free (playcount);
 }
@@ -502,8 +502,8 @@ static gboolean playcounts_read (FImport *fimp, FContents *cts)
 {
     guint32 header_length, entry_length, entry_num, i=0;
 
-    g_assert (fimp);
-    g_assert (cts);
+    g_return_val_if_fail (fimp, FALSE);
+    g_return_val_if_fail (cts, FALSE);
 
     if (!cmp_n_bytes_seek (cts, "mhdp", 0, 4))
     {
@@ -513,7 +513,7 @@ static gboolean playcounts_read (FImport *fimp, FContents *cts)
 	}
 	else
 	{   /* set error */
-	    g_assert (cts->filename);
+	    g_return_val_if_fail (cts->filename, FALSE);
 	    g_set_error (&fimp->error,
 			 ITDB_FILE_ERROR,
 			 ITDB_FILE_ERROR_CORRUPT,
@@ -600,11 +600,11 @@ static gboolean playcounts_init (FImport *fimp)
   gboolean result=FALSE;
   FContents *cts;
 
-  g_assert (fimp);
-  g_assert (!fimp->error);
-  g_assert (!fimp->playcounts);
-  g_assert (fimp->itdb);
-  g_assert (fimp->itdb->filename);
+  g_return_val_if_fail (fimp, FALSE);
+  g_return_val_if_fail (!fimp->error, FALSE);
+  g_return_val_if_fail (!fimp->playcounts, FALSE);
+  g_return_val_if_fail (fimp->itdb, FALSE);
+  g_return_val_if_fail (fimp->itdb->filename, FALSE);
 
   dirname = g_path_get_dirname (fimp->itdb->filename);
 
@@ -757,15 +757,15 @@ static void *get_mhod (FContents *cts, gulong mhod_seek,
   gint32 header_length;
   gulong seek;
 
-  g_assert (ml);
-  g_assert (mty);
-  g_assert (cts);
+  g_return_val_if_fail (ml, NULL);
+  g_return_val_if_fail (mty, NULL);
+  g_return_val_if_fail (cts, NULL);
 
 #if ITUNESDB_DEBUG
   fprintf(stderr, "get_mhod seek: %d\n", mhod_seek);
 #endif
 
-  g_assert (cts);
+  g_return_val_if_fail (cts, NULL);
 
   *ml = -1;
 
@@ -1012,7 +1012,7 @@ static glong get_pl (FImport *fimp, glong seek)
 #if ITUNESDB_DEBUG
   fprintf(stderr, "mhyp seek: %x\n", (int)seek);
 #endif
-  g_assert (fimp);
+  g_return_val_if_fail (fimp, -1);
 
   cts = fimp->itunesdb;
 
@@ -1214,7 +1214,7 @@ static glong get_mhit (FImport *fimp, glong seek)
   fprintf(stderr, "get_mhit seek: %x\n", (int)seek);
 #endif
 
-  g_assert (fimp);
+  g_return_val_if_fail (fimp, -1);
 
   cts = fimp->itunesdb;
 
@@ -1446,7 +1446,7 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
 {
     guint32 header_length, entry_length, entry_num;
 
-    g_assert (fimp && cts);
+    g_return_val_if_fail (fimp && cts, FALSE);
 
     if (!plname) plname = _("OTG Playlist");
 
@@ -1458,7 +1458,7 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
 	}
 	else
 	{   /* set error */
-	    g_assert (cts->filename);
+	    g_return_val_if_fail (cts->filename, FALSE);
 	    g_set_error (&fimp->error,
 			 ITDB_FILE_ERROR,
 			 ITDB_FILE_ERROR_CORRUPT,
@@ -1523,9 +1523,9 @@ static gboolean read_OTG_playlists (FImport *fimp)
     gchar *db[] = {"OTG_PlaylistInfo", NULL};
     gchar *dirname, *otgname;
 
-    g_assert (fimp);
-    g_assert (fimp->itdb);
-    g_assert (fimp->itdb->filename);
+    g_return_val_if_fail (fimp, FALSE);
+    g_return_val_if_fail (fimp->itdb, FALSE);
+    g_return_val_if_fail (fimp->itdb->filename, FALSE);
 
     dirname = g_path_get_dirname (fimp->itdb->filename);
 
@@ -1572,10 +1572,10 @@ static gboolean parse_fimp (FImport *fimp)
     gboolean swapped_mhsd = FALSE;
     FContents *cts;
 
-    g_assert (fimp);
-    g_assert (fimp->itdb);
-    g_assert (fimp->itunesdb);
-    g_assert (fimp->itunesdb->filename);
+    g_return_val_if_fail (fimp, FALSE);
+    g_return_val_if_fail (fimp->itdb, FALSE);
+    g_return_val_if_fail (fimp->itunesdb, FALSE);
+    g_return_val_if_fail (fimp->itunesdb->filename, FALSE);
 
     cts = fimp->itunesdb;
 
@@ -1877,7 +1877,7 @@ gunichar2 ipod_name[] = { 'g', 't', 'k', 'p', 'o', 'd', 0 };
 static void wcontents_maybe_expand (WContents *cts, gulong len,
 				    gulong seek)
 {
-    g_assert (cts);
+    g_return_if_fail (cts);
 
     while (cts->pos+len > cts->total)
     {
@@ -1892,8 +1892,8 @@ static void wcontents_maybe_expand (WContents *cts, gulong len,
 static void put_data_seek (WContents *cts, gchar *data,
 			   gulong len, gulong seek)
 {
-    g_assert (cts);
-    g_assert (data);
+    g_return_if_fail (cts);
+    g_return_if_fail (data);
 
     if (len != 0)
     {
@@ -1912,7 +1912,7 @@ static void put_data_seek (WContents *cts, gchar *data,
  * successful because glib terminates when out of memory */
 static void put_data (WContents *cts, gchar *data, gulong len)
 {
-    g_assert (cts);
+    g_return_if_fail (cts);
 
     put_data_seek (cts, data, len, cts->pos);
 }
@@ -1948,7 +1948,7 @@ static void put32lint (WContents *cts, guint32 n)
 /* Append @n times 2-byte-long zeros */
 static void put16_n0 (WContents *cts, gulong n)
 {
-    g_assert (cts);
+    g_return_if_fail (cts);
 
     if (n>0)
     {
@@ -2036,7 +2036,7 @@ static void put64bint_seek (WContents *cts, guint64 n, gulong seek)
 /* Append @n times 4-byte-long zeros */
 static void put32_n0 (WContents *cts, gulong n)
 {
-    g_assert (cts);
+    g_return_if_fail (cts);
 
     if (n>0)
     {
@@ -2053,9 +2053,9 @@ static void mk_mhbd (FExport *fexp)
 {
   WContents *cts;
 
-  g_assert (fexp);
-  g_assert (fexp->itdb);
-  g_assert (fexp->itunesdb);
+  g_return_if_fail (fexp);
+  g_return_if_fail (fexp->itdb);
+  g_return_if_fail (fexp->itunesdb);
 
   cts = fexp->itunesdb;
 
@@ -2087,9 +2087,9 @@ static void mk_mhsd (FExport *fexp, guint32 type)
 {
   WContents *cts;
 
-  g_assert (fexp);
-  g_assert (fexp->itdb);
-  g_assert (fexp->itunesdb);
+  g_return_if_fail (fexp);
+  g_return_if_fail (fexp->itdb);
+  g_return_if_fail (fexp->itunesdb);
 
   cts = fexp->itunesdb;
 
@@ -2106,9 +2106,9 @@ static void mk_mhlt (FExport *fexp, guint32 num)
 {
   WContents *cts;
 
-  g_assert (fexp);
-  g_assert (fexp->itdb);
-  g_assert (fexp->itunesdb);
+  g_return_if_fail (fexp);
+  g_return_if_fail (fexp->itdb);
+  g_return_if_fail (fexp->itunesdb);
 
   cts = fexp->itunesdb;
 
@@ -2122,8 +2122,8 @@ static void mk_mhlt (FExport *fexp, guint32 num)
 /* Write out the mhit header. Size will be written later */
 static void mk_mhit (WContents *cts, Itdb_Track *track)
 {
-  g_assert (cts);
-  g_assert (track);
+  g_return_if_fail (cts);
+  g_return_if_fail (track);
 
   put_data (cts, "mhit", 4);
   put32lint (cts, 156);  /* header size */
@@ -2177,7 +2177,7 @@ static void mk_mhit (WContents *cts, Itdb_Track *track)
    total size and number of mhods */
 static void fix_mhit (WContents *cts, gulong mhit_seek, guint32 mhod_num)
 {
-  g_assert (cts);
+  g_return_if_fail (cts);
 
   /* size of whole mhit */
   put32lint_seek (cts, cts->pos-mhit_seek, mhit_seek+8);
@@ -2194,7 +2194,7 @@ static void fix_mhit (WContents *cts, gulong mhit_seek, guint32 mhod_num)
 	   SPLRules for MHOD_ID_SPLRULES */
 static void mk_mhod (WContents *cts, enum MHOD_ID type, void *data)
 {
-  g_assert (cts);
+  g_return_if_fail (cts);
 
   switch (type)
   {
@@ -2341,8 +2341,8 @@ static void mk_mhlp (FExport *fexp)
 {
   WContents *cts;
 
-  g_assert (fexp);
-  g_assert (fexp->itunesdb);
+  g_return_if_fail (fexp);
+  g_return_if_fail (fexp->itunesdb);
 
   cts = fexp->itunesdb;
 
@@ -2366,9 +2366,9 @@ static void mk_long_mhod_id_playlist (FExport *fexp, Itdb_Playlist *pl)
 {
   WContents *cts;
 
-  g_assert (fexp);
-  g_assert (fexp->itunesdb);
-  g_assert (pl);
+  g_return_if_fail (fexp);
+  g_return_if_fail (fexp->itunesdb);
+  g_return_if_fail (pl);
 
   cts = fexp->itunesdb;
 
@@ -2412,8 +2412,8 @@ static void mk_mhip (FExport *fexp, guint32 pos, guint32 id)
 {
   WContents *cts;
 
-  g_assert (fexp);
-  g_assert (fexp->itunesdb);
+  g_return_if_fail (fexp);
+  g_return_if_fail (fexp->itunesdb);
 
   cts = fexp->itunesdb;
 
@@ -2436,9 +2436,9 @@ static gboolean write_mhsd_one(FExport *fexp)
     gulong mhsd_seek;
     WContents *cts;
 
-    g_assert (fexp);
-    g_assert (fexp->itdb);
-    g_assert (fexp->itunesdb);
+    g_return_val_if_fail (fexp, FALSE);
+    g_return_val_if_fail (fexp->itdb, FALSE);
+    g_return_val_if_fail (fexp->itunesdb, FALSE);
 
     cts = fexp->itunesdb;
     
@@ -2521,10 +2521,10 @@ static gboolean write_playlist(FExport *fexp, Itdb_Playlist *pl)
     guint32 i;
     WContents *cts;
 
-    g_assert (fexp);
-    g_assert (fexp->itdb);
-    g_assert (fexp->itunesdb);
-    g_assert (pl);
+    g_return_val_if_fail (fexp, FALSE);
+    g_return_val_if_fail (fexp->itdb, FALSE);
+    g_return_val_if_fail (fexp->itunesdb, FALSE);
+    g_return_val_if_fail (pl, FALSE);
 
     cts = fexp->itunesdb;
     mhyp_seek = cts->pos;
@@ -2590,9 +2590,9 @@ static gboolean write_mhsd_two(FExport *fexp)
     glong mhsd_seek;
     WContents *cts;
 
-    g_assert (fexp);
-    g_assert (fexp->itdb);
-    g_assert (fexp->itunesdb);
+    g_return_val_if_fail (fexp, FALSE);
+    g_return_val_if_fail (fexp->itdb, FALSE);
+    g_return_val_if_fail (fexp->itunesdb, FALSE);
 
     cts = fexp->itunesdb;
     mhsd_seek = cts->pos;      /* get position of mhsd header */
@@ -2623,7 +2623,7 @@ static WContents *wcontents_new (const gchar *filename)
 {
     WContents *cts;
 
-    g_assert (filename);
+    g_return_val_if_fail (filename, NULL);
 
     cts = g_new0 (WContents, 1);
     cts->filename = g_strdup (filename);
@@ -2638,8 +2638,8 @@ static gboolean wcontents_write (WContents *cts)
 {
     int fd;
 
-    g_assert (cts);
-    g_assert (cts->filename);
+    g_return_val_if_fail (cts, FALSE);
+    g_return_val_if_fail (cts->filename, FALSE);
 
     fd = creat (cts->filename, S_IRWXU|S_IRWXG|S_IRWXO);
 

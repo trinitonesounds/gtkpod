@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:39 jcs>
+/* Time-stamp: <2005-05-08 02:21:13 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -384,7 +384,7 @@ g_unescape_uri_string (const char *escaped,
       *out++ = c;
     }
 
-  g_assert (out - result <= len);
+  g_return_val_if_fail (out - result <= len, NULL);
   *out = '\0';
 
   if (in != in_end || !g_utf8_validate (result, -1, NULL))

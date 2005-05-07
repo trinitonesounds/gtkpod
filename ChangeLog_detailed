@@ -6,6 +6,9 @@
 	* file_itunesdb.c, itdb_itunesdb.c: added support for iPod
           Shuffle. Testing is needes because I don't own a Shuffle.
 
+	* replayed all g_assert() with g_return_if_fail() to avoid
+          program termination on error.
+
 2005-05-07 David Sedeño <david@alderia.com>
 
 	* gtkpod.glade: Put autoselect_hbox name to an hbox in display tab.

@@ -989,7 +989,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
   GtkTreeModel *model;
   GtkTreeSelection *selection;
 
-  g_assert (playlist_treeview);
+  g_return_if_fail (playlist_treeview);
   g_return_if_fail (playlist);
 
   model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));

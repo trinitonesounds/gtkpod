@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-08 00:06:29 jcs>
+/* Time-stamp: <2005-05-08 02:21:14 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -528,8 +528,8 @@ void init_data (GtkWidget *window)
     gchar *cfgdir;
     gint type;
 
-    g_assert (window);
-    g_assert (itdbs_head == NULL);
+    g_return_if_fail (window);
+    g_return_if_fail (itdbs_head == NULL);
 
     cfgdir = prefs_get_cfgdir ();
 
