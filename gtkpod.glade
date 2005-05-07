@@ -13427,7 +13427,7 @@ filename if they are (still) emply:</property>
 			      </child>
 
 			      <child>
-				<widget class="GtkVBox" id="vbox127">
+				<widget class="GtkVBox" id="autoselect_vbox">
 				  <property name="visible">True</property>
 				  <property name="homogeneous">False</property>
 				  <property name="spacing">8</property>
@@ -13476,10 +13476,18 @@ filename if they are (still) emply:</property>
 				  </child>
 
 				  <child>
-				    <widget class="GtkHBox" id="hbox122">
+				    <widget class="GtkHBox" id="autoselect_hbox">
 				      <property name="visible">True</property>
 				      <property name="homogeneous">False</property>
 				      <property name="spacing">0</property>
+
+				      <child>
+					<placeholder/>
+				      </child>
+
+				      <child>
+					<placeholder/>
+				      </child>
 
 				      <child>
 					<placeholder/>

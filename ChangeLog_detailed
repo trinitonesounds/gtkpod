@@ -1,3 +1,7 @@
+2005-05-07 David Sedeño <david@alderia.com>
+
+	* gtkpod.glade: Put autoselect_hbox name to an hbox in display tab.
+
 2005-05-06 David Sedeño <david@alderia.com>
 
 	* gtkpod.glade: Put Cancel, Apply, Accept buttons in preferences
