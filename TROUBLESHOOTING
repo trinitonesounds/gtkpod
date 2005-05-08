@@ -23,6 +23,7 @@ Contents:
 
 - SHUFFLE won't play music after reformatting (Mark Davis)
 
+- Calendar entries mixed up
 
 
 ----------------------------------------------------------------------
@@ -143,3 +144,13 @@ The SHUFFLE seems to care about the volume name which has to be
 device file for your SHUFFLE!):
 
 mkdosfs -F32 -n IPOD /dev/sda1
+
+
+----------------------------------------------------------------------
+Calendar entries mixed up
+
+The iPod does not appear to like times specified in UTC (indicated by
+a trailing 'Z'). KOrganizer seems to do this. If you know how to work
+around it let me know.
+
+

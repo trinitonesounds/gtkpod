@@ -9,6 +9,9 @@
 	* itdb_playlist.c: correct comparison for smart-list action
           SPLACTION_IS_IN_THE_RANGE
 
+	* file.c: when adding tracks also copy tracks that are already
+          on the iPod but not in the iPod_Control dir.
+
 2005-05-07 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/ preliminary import/export support for local database as

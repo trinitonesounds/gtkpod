@@ -5,6 +5,10 @@ TODO:
   dirs are used no matter how many are present.
   Creation of directories should be moved to itdb_*
 
+- be able to select multiple genres, albums, etc. at the same
+  time. (should be possible -- difficulty is selecting several
+  playlists)
+
 - give out warning if umount did not succeed.
 
 - more features for mserv

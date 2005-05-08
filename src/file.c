@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 03:18:45 jcs>
+/* Time-stamp: <2005-05-08 15:16:24 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1742,24 +1742,30 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
       {
           Track *added_track = NULL;
 	  ExtraTrackData *etr = track->userdata;
+
 	  g_return_val_if_fail (etr, FALSE);
 
 	  track->id = 0;
+	  track->transferred = FALSE;
 
-	  /* does 'name' start with ipod_mount? */
-          if (strstr (name, prefs_get_ipod_mount ()) == name)
+	  /* is 'name' on the iPod? */
+          if (strstr (name, itdb->mountpoint) == name)
           {   /* Yes */
-              track->transferred = TRUE;
-              track->ipod_path = g_strdup_printf ("%c%s",
-						  G_DIR_SEPARATOR,
-						  strstr(etr->pc_path_utf8,
-							 "iPod_Control"));
-              itdb_filename_fs2ipod (track->ipod_path);
+	      /* is 'name' in the iPod_Control directory? */
+	      gchar *name_i = name + strlen (itdb->mountpoint);
+	      gchar *name_l;
+	      if (*name_i == G_DIR_SEPARATOR) ++name_i;
+	      name_l = g_ascii_strdown (name_i, -1);
+	      if (strstr (name_l, "ipod_control") == name_l)
+	      {   /* Yes */
+		  track->transferred = TRUE;
+		  track->ipod_path = g_strdup_printf (
+		      "%c%s", G_DIR_SEPARATOR, name_i);
+		  itdb_filename_fs2ipod (track->ipod_path);
+	      }
+	      g_free (name_l);
           }
-	  else
-          {   /* No */
-              track->transferred = FALSE;
-          }
+
 
 	  if (gethostname (str, PATH_MAX-2) == 0)
 	  {
