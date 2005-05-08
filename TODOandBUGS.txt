@@ -1,5 +1,10 @@
 TODO:
 
+- itdb/misc_confirm.c: number of F?? directories should be determined
+  before starting copying files to the iPod. At the moment only 20
+  dirs are used no matter how many are present.
+  Creation of directories should be moved to itdb_*
+
 - give out warning if umount did not succeed.
 
 - more features for mserv

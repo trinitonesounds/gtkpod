@@ -1,6 +1,33 @@
 Troubleshooting-FAQ:
 
 
+Contents:
+
+- mpeg4ip-1.1 "PACKAGE undefined"
+
+- Files copied to gtkpod but they don't appear in the database (0.80,
+  Tony Williams)
+
+- Filenames on the iPod appear in DOS 8.3 format and syncing to the iPod
+  is not working as expected.
+
+- The following error message is displayed when accessing the device
+  (Markus Gaugusch):
+     ieee1394: sbp2: aborting sbp2 command
+     Test Unit Ready 00 00 00 00 00
+
+- When connecting an iPod via USB to a 2.6 kernel machine the iPod will
+  be recognized but not work correctly. In /var/log/messages you'll
+  see the a bunch of "Buffer I/O error on device sd?" when connecting
+  the iPod (Jonas Bergler, Kevin Venkiteswaran)
+
+- SHUFFLE won't play music after reformatting (Mark Davis)
+
+
+
+----------------------------------------------------------------------
+
+
 mpeg4ip-1.1 "PACKAGE undefined"
 
 
@@ -104,3 +131,15 @@ will emerge soon."
 This patch adds an unusual_devs.h entry for the Apple iPod as it
 reports one too many sectors. The patch was submitted by
 Avi Kivity <avi@argo.co.il> and re-diffed by me.")
+
+
+----------------------------------------------------------------------
+SHUFFLE won't play music after reformatting
+
+Solution (by Mark Davis):
+
+The SHUFFLE seems to care about the volume name which has to be
+"IPOD". Try to format as (replace /dev/sda1 with the appropriate
+device file for your SHUFFLE!):
+
+mkdosfs -F32 -n IPOD /dev/sda1
