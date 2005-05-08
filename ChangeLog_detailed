@@ -6,6 +6,9 @@
 	* itdb_itunesdb.c: make sure version number written to
           iTunesDB is 0x0c -- otherwise the SHUFFLE is not supported.
 
+	* itdb_playlist.c: correct comparison for smart-list action
+          SPLACTION_IS_IN_THE_RANGE
+
 2005-05-07 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/ preliminary import/export support for local database as

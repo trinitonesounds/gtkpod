@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-08 02:21:14 jcs>
+/* Time-stamp: <2005-05-08 14:03:28 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -410,10 +410,10 @@ gboolean itdb_splr_eval (Itdb_iTunesDB *itdb, SPLRule *splr, Itdb_Track *track)
 	case SPLACTION_IS_LESS_THAN:
 	    return (intcomp < splr->fromvalue);
 	case SPLACTION_IS_IN_THE_RANGE:
-	    return ((intcomp < splr->fromvalue &&
-		     intcomp > splr->tovalue) ||
-		    (intcomp > splr->fromvalue &&
-		     intcomp < splr->tovalue));
+	    return ((intcomp <= splr->fromvalue &&
+		     intcomp >= splr->tovalue) ||
+		    (intcomp >= splr->fromvalue &&
+		     intcomp <= splr->tovalue));
 	case SPLACTION_IS_NOT_IN_THE_RANGE:
 	    return ((intcomp < splr->fromvalue &&
 		     intcomp < splr->tovalue) ||
@@ -456,10 +456,10 @@ gboolean itdb_splr_eval (Itdb_iTunesDB *itdb, SPLRule *splr, Itdb_Track *track)
 	    mactime = itdb_time_host_to_mac (t);
 	    return (datecomp <= mactime);
 	case SPLACTION_IS_IN_THE_RANGE:
-	    return ((datecomp < splr->fromvalue &&
-		     datecomp > splr->tovalue) ||
-		    (datecomp > splr->fromvalue &&
-		     datecomp < splr->tovalue));
+	    return ((datecomp <= splr->fromvalue &&
+		     datecomp >= splr->tovalue) ||
+		    (datecomp >= splr->fromvalue &&
+		     datecomp <= splr->tovalue));
 	case SPLACTION_IS_NOT_IN_THE_RANGE:
 	    return ((datecomp < splr->fromvalue &&
 		     datecomp < splr->tovalue) ||
