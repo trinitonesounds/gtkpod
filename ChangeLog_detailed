@@ -1,3 +1,9 @@
+2005-05-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* tracks deleted from the iPod within gtkpod will now really
+          be deleted during the next Sync (bug introduced through the
+          introduction of itdb)
+
 2005-05-07 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* TROUBLESHOOTING: added note from Mark Davis that the SHUFFLE

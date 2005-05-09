@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-08 02:21:14 jcs>
+/* Time-stamp: <2005-05-09 23:39:04 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -461,8 +461,21 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
 	    gl=gl->next;
 	}
 	md5_track_remove (track);
-	itdb_track_remove (track);
+
+	if ((itdb->usertype & GP_ITDB_TYPE_IPOD) && track->transferred)
+	{
+	    ExtraiTunesDBData *eitdb = itdb->userdata;
+	    g_return_if_fail (eitdb);
+
+	    itdb_track_unlink (track);
+	    mark_track_for_deletion (itdb, track);
+	}
+	else
+	{
+	    itdb_track_remove (track);
+	}
     }
+
     data_changed (itdb);
 }
 

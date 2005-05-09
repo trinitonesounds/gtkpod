@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-07 15:14:16 jcs>
+/* Time-stamp: <2005-05-09 21:26:50 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -46,6 +46,8 @@ typedef struct
 {
     struct itdbs_head *itdbs_head; /* pointer to the master itdbs_head */
     GHashTable *md5hash;           /* md5 hash information             */
+    GList *pending_deletion;       /* tracks marked for removal from
+				      media                            */
     gchar *offline_filename;       /* filename for offline database
 				      (only for GP_ITDP_TYPE_IPOD)     */
     gboolean data_changed;         /* data changed since import?       */

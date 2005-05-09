@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-07 13:38:10 jcs>
+/* Time-stamp: <2005-05-09 23:40:50 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -273,7 +273,7 @@ static iTunesDB *get_itdb_local (void)
     {
 	iTunesDB *itdb = gl->data;
 	g_return_val_if_fail (itdb, NULL);
-	if (itdb->usertype == GP_ITDB_TYPE_LOCAL)
+	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	    return itdb;
     }
     return NULL;
@@ -752,7 +752,8 @@ gtkpod_space_statusbar_update(void)
 	    {
 		gdouble left, pending, deleted;
 		iTunesDB *itdb = get_itdb_ipod ();
-		g_return_val_if_fail (itdb, TRUE);
+		/* we may be called before any itdb is present */
+		if (!itdb) return TRUE;
 
 		gp_info_deleted_tracks (itdb, &deleted, NULL);
 		gp_info_nontransferred_tracks (itdb, &pending, NULL);

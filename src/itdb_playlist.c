@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-08 14:03:28 jcs>
+/* Time-stamp: <2005-05-09 22:01:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1102,6 +1102,7 @@ void itdb_playlist_remove (Itdb_Playlist *pl)
 
 
 /* Remove playlist @pl but do not free memory */
+/* pl->itdb is set to NULL */
 void itdb_playlist_unlink (Itdb_Playlist *pl)
 {
     Itdb_iTunesDB *itdb;
@@ -1111,6 +1112,7 @@ void itdb_playlist_unlink (Itdb_Playlist *pl)
     g_return_if_fail (itdb);
 
     itdb->playlists = g_list_remove (itdb->playlists, pl);
+    pl->itdb = NULL;
 }
 
 
@@ -1204,8 +1206,6 @@ gboolean itdb_playlist_add_tracknr (FImport *fimp, Itdb_Playlist *pl,
 void itdb_playlist_remove_track (Itdb_Playlist *pl, Itdb_Track *track)
 {
     g_return_if_fail (track);
-
-    if (pl == NULL)   pl=itdb_playlist_mpl (track->itdb);
 
     if (pl == NULL)
 	pl = itdb_playlist_mpl (track->itdb);

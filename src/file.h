@@ -95,8 +95,8 @@ gchar* get_track_name_on_disk(Track *s);
 gchar* get_track_name_on_ipod(Track *s);
 gchar *get_track_name_from_source (Track *track, FileSource source);
 gchar* get_preferred_track_name_format(Track *s);
-void mark_track_for_deletion (Track *track);
-void unmark_track_for_deletion (Track *track);
+void mark_track_for_deletion (iTunesDB *itdb, Track *track);
+void unmark_track_for_deletion (iTunesDB *itdb, Track *track);
 void gp_info_deleted_tracks (iTunesDB *itdb,
 			     gdouble *size, guint32 *num);
 Track *get_track_info_from_file (gchar *name, Track *or_track);

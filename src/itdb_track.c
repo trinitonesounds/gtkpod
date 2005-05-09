@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-02-13 21:42:04 jcs>
+/* Time-stamp: <2005-05-09 22:01:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -87,6 +87,7 @@ void itdb_track_remove (Itdb_Track *track)
 }
 
 /* Remove track @track but do not free memory */
+/* track->itdb is set to NULL */
 void itdb_track_unlink (Itdb_Track *track)
 {
     Itdb_iTunesDB *itdb;
@@ -96,6 +97,7 @@ void itdb_track_unlink (Itdb_Track *track)
     g_return_if_fail (itdb);
 
     itdb->tracks = g_list_remove (itdb->tracks, track);
+    track->itdb = NULL;
 }
 
 /* Duplicate an existing track */

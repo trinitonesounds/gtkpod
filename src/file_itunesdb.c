@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-08 01:59:20 jcs>
+/* Time-stamp: <2005-05-09 23:33:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -72,14 +72,6 @@ struct track_extended_info
     gboolean transferred;
 };
 
-/* List with tracks pending deletion */
-static GList *pending_deletion = NULL;
-/* Flag to indicate if it's safe to quit (i.e. all tracks exported or
-   at least a offline database written). It's state is set to TRUE in
-   handle_export().  It's state can be accessed by the public function
-   file_are_saved(). It can be set to FALSE by calling
-   data_changed() */
-
 #ifdef G_THREADS_ENABLED
 /* Thread specific */
 static  GMutex *mutex = NULL;
@@ -90,6 +82,7 @@ static gboolean mutex_data = FALSE;
    loaded */
 static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
+static GList *extendeddeletion = NULL;
 static float extendedinfoversion = 0.0;
 
 
@@ -190,11 +183,21 @@ static void hash_delete (gpointer data)
 static void destroy_extendedinfohash (void)
 {
     if (extendedinfohash)
+    {
 	g_hash_table_destroy (extendedinfohash);
+	extendedinfohash = NULL;
+    }
     if (extendedinfohash_md5)
+    {
 	g_hash_table_destroy (extendedinfohash_md5);
-    extendedinfohash = NULL;
-    extendedinfohash_md5 = NULL;
+	extendedinfohash_md5 = NULL;
+    }
+    if (extendeddeletion)
+    {
+	g_list_foreach (extendeddeletion, (GFunc)itdb_track_free, NULL);
+	g_list_free (extendeddeletion);
+	extendeddeletion = NULL;
+    }
     extendedinfoversion = 0.0;
 }
 
@@ -310,7 +313,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		         removed from the iPod's hard drive */
 			Track *track = gp_track_new ();
 			track->ipod_path = g_strdup (sei->ipod_path);
-			pending_deletion = g_list_append (pending_deletion,
+			extendeddeletion = g_list_append (extendeddeletion,
 							  track);
 			hash_delete ((gpointer)sei); /* free sei */
 		    }
@@ -528,21 +531,10 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	g_free (name_db);
     }
 
-    if (!itdb) return NULL;
-
     /* add Extra*Data */
     gp_itdb_add_extra_full (itdb);
-    /* validate all tracks and fill in extended info */
-    for (gl=itdb->tracks; gl; gl=gl->next)
-    {
-	Track *track = gl->data;
-	fill_in_extended_info (track);
-	gp_track_validate_entries (track);
-    }
-    /* delete hash information (if present) */
-    destroy_extendedinfohash ();
-    /* find duplicates */
-    gp_md5_hash_tracks_itdb (itdb);
+
+    if (!itdb) return NULL;
 
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);
@@ -559,6 +551,29 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	}
 	eitdb->offline_filename = g_strdup (name_off);
     }	    
+
+    /* validate all tracks and fill in extended info */
+    for (gl=itdb->tracks; gl; gl=gl->next)
+    {
+	Track *track = gl->data;
+	g_return_val_if_fail (track, NULL);
+	fill_in_extended_info (track);
+	gp_track_validate_entries (track);
+    }
+    /* take over the pending deletion information */
+    while (extendeddeletion)
+    {
+	Track *track = extendeddeletion->data;
+	g_return_val_if_fail (track, NULL);
+	mark_track_for_deletion (itdb, track);
+	extendeddeletion = g_list_remove (extendeddeletion,
+					  extendeddeletion);
+    }
+
+    /* delete hash information (if present) */
+    destroy_extendedinfohash ();
+    /* find duplicates */
+    gp_md5_hash_tracks_itdb (itdb);
 
     eitdb->data_changed = FALSE;
     eitdb->itdb_imported = TRUE;
@@ -779,13 +794,17 @@ gchar *get_track_name_from_source (Track *track, FileSource source)
 void gp_info_deleted_tracks (iTunesDB *itdb,
 			     gdouble *size, guint32 *num)
 {
+    ExtraiTunesDBData *eitdb;
     GList *gl;
 
     if (size) *size = 0;
     if (num)  *num = 0;
-    g_return_if_fail (itdb);
 
-    for (gl=pending_deletion; gl; gl=gl->next)
+    g_return_if_fail (itdb);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    for (gl=eitdb->pending_deletion; gl; gl=gl->next)
     {
 	ExtraTrackData *etr;
 	Track *tr = gl->data;
@@ -801,17 +820,32 @@ void gp_info_deleted_tracks (iTunesDB *itdb,
     }
 }
 
-void mark_track_for_deletion (Track *track)
+void mark_track_for_deletion (iTunesDB *itdb, Track *track)
 {
-    pending_deletion = g_list_append(pending_deletion, track);
+    ExtraiTunesDBData *eitdb;
+    g_return_if_fail (itdb);
+    g_return_if_fail (track);
+    g_return_if_fail (track->itdb == NULL);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    eitdb->pending_deletion = g_list_append (eitdb->pending_deletion,
+					     track);
 }
 
 /* It might be necessary to unmark for deletion like in case of
    dangling tracks with no real files on ipod */
-void unmark_track_for_deletion (Track *track)
+void unmark_track_for_deletion (iTunesDB *itdb, Track *track)
 {
+    ExtraiTunesDBData *eitdb;
+    g_return_if_fail (itdb);
+    g_return_if_fail (track);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
     if (track != NULL)
-        pending_deletion = g_list_remove(pending_deletion, track);
+        eitdb->pending_deletion = g_list_remove (
+	    eitdb->pending_deletion, track);
 }
 
 
@@ -827,6 +861,7 @@ void unmark_track_for_deletion (Track *track)
  * calculate the md5 checksum of the corresponding iTunesDB */
 static gboolean write_extended_info (iTunesDB *itdb)
 {
+  ExtraiTunesDBData *eitdb;
   FILE *fp;
   gchar *md5;
   GList *gl;
@@ -834,6 +869,8 @@ static gboolean write_extended_info (iTunesDB *itdb)
 
   g_return_val_if_fail (itdb, FALSE);
   g_return_val_if_fail (itdb->filename, FALSE);
+  eitdb = itdb->userdata;
+  g_return_val_if_fail (eitdb, FALSE);
 
   space_data_update ();
 
@@ -909,16 +946,16 @@ static gboolean write_extended_info (iTunesDB *itdb)
   if (prefs_get_offline())
   { /* we are offline and also need to export the list of tracks that
        are to be deleted */
-      GList *gl_track;
-      for(gl_track = pending_deletion; gl_track; gl_track = gl_track->next)
+      for(gl = eitdb->pending_deletion; gl; gl = gl->next)
       {
-	  Track *track = gl_track->data;
+	  Track *track = gl->data;
 	  g_return_val_if_fail (track, (fclose (fp), FALSE));
 	  
 	  fprintf (fp, "id=000\n");  /* our sign for tracks pending
 					deletion */
 	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
-	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+	  while (widgets_blocked && gtk_events_pending ())
+	      gtk_main_iteration ();
       }
   }
   fprintf (fp, "id=xxx\n");
@@ -1017,6 +1054,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
   GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
   time_t diff, start, fullsecs, hrs, mins, secs;
   gchar *progtext = NULL;
+  ExtraiTunesDBData *eitdb;
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
   GTimeVal gtime;
@@ -1025,10 +1063,12 @@ static gboolean flush_tracks (iTunesDB *itdb)
 #endif
 
   g_return_val_if_fail (itdb, FALSE);
+  eitdb = itdb->userdata;
+  g_return_val_if_fail (eitdb, FALSE);
 
   n = itdb_tracks_number_nontransferred (itdb);
 
-  if (n==0 && !pending_deletion) return TRUE;
+  if (n==0 && !eitdb->pending_deletion) return TRUE;
 
   abort = FALSE;
   /* create the dialog window */
@@ -1075,9 +1115,9 @@ static gboolean flush_tracks (iTunesDB *itdb)
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 
   /* lets clean up those pending deletions */
-  while (!abort && pending_deletion)
+  while (!abort && eitdb->pending_deletion)
   {
-      track = (Track*)pending_deletion->data;
+      track = (Track*)eitdb->pending_deletion->data;
       g_return_val_if_fail (track, FALSE);
       if((filename = get_track_name_on_ipod(track)))
       {
@@ -1118,8 +1158,10 @@ static gboolean flush_tracks (iTunesDB *itdb)
 	  g_free(filename);
       }
       itdb_track_free (track);
-      pending_deletion = g_list_delete_link (pending_deletion, pending_deletion);
-      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+      eitdb->pending_deletion = g_list_delete_link (
+	  eitdb->pending_deletion, eitdb->pending_deletion);
+      while (widgets_blocked && gtk_events_pending ())
+	  gtk_main_iteration ();
   }
   if (abort) result = FALSE;
   if (result == FALSE)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:39 jcs>
+/* Time-stamp: <2005-05-09 23:18:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -860,7 +860,7 @@ check_db_danglingok0 (gpointer user_data1, gpointer user_data2)
 	
         /* printf("Removing track %d\n", track->ipod_id); */
 	gp_playlist_remove_track (NULL, track); /* remove track from everywhere */
-	unmark_track_for_deletion (track); /* otherwise it will try to remove non-existing ipod file */
+	unmark_track_for_deletion (itdb, track); /* otherwise it will try to remove non-existing ipod file */
     }
     g_list_free(l_dangling);
     data_changed (itdb);
@@ -1077,7 +1077,7 @@ void check_db (iTunesDB *itdb)
 			    ":iPod_Control:Music:%s:%s",
 			    num_str, ipod_filename);
 			gp_track_validate_entries (track);
-			mark_track_for_deletion (track);
+			mark_track_for_deletion (itdb, track);
 			gtkpod_warning (_(
 			 "The following orphaned file had already "
 			 "been added to the iPod again. It will be "
