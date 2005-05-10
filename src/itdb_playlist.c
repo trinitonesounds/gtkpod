@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-09 22:01:01 jcs>
+/* Time-stamp: <2005-05-10 21:52:48 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -788,16 +788,16 @@ void itdb_spl_update (Itdb_iTunesDB *itdb, Itdb_Playlist *spl)
 }
 
 
-/* used by itdb_spl_udpate_all() */
-void spl_update (Itdb_Playlist *playlist, Itdb_iTunesDB *itdb)
-{
-    itdb_spl_update (itdb, playlist);
-}
-
-
 /* update all smart playlists */
 void itdb_spl_update_all (Itdb_iTunesDB *itdb)
 {
+    void spl_update (Itdb_Playlist *playlist, Itdb_iTunesDB *itdb)
+	{
+	    g_return_if_fail (playlist);
+	    itdb_spl_update (itdb, playlist);
+	}
+
+
     g_return_if_fail (itdb);
 
     g_list_foreach (itdb->playlists, (GFunc)spl_update, itdb);

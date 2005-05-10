@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-01 15:08:28 jcs>
+/* Time-stamp: <2005-05-10 23:02:25 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -48,7 +48,6 @@ struct fcd
 {
     GList *tracks;  /* tracks to be written */
     GtkWidget *fc;  /* file chooser */
-    GtkWidget *win; /* glade widget to lookup widgets by name */
     GladeXML *win_xml; /* Glade xml reference */
     gpointer user_data; 
 };
@@ -340,7 +339,7 @@ static void export_files_write (struct fcd *fcd)
     if (!cond) cond = g_cond_new ();
 #endif
 
-    g_return_if_fail (fcd && fcd->win && fcd->fc);
+    g_return_if_fail (fcd && fcd->fc);
 
     abort = FALSE;
     n = g_list_length (fcd->tracks);
@@ -483,7 +482,6 @@ static void export_files_cleanup (struct fcd *fcd)
 {
     g_return_if_fail (fcd);
     g_list_free (fcd->tracks);
-    if (fcd->win)  gtk_widget_destroy (fcd->win);
     g_free (fcd);
     release_widgets ();
 }
@@ -562,23 +560,22 @@ void export_files_init (GList *tracks)
 
     export_files_xml = glade_xml_new (xml_file, "export_files_options", NULL);
     win = glade_xml_get_widget (export_files_xml, "export_files_options");
-
     options = glade_xml_get_widget (export_files_xml, "options_frame");
 
     /* Information needed to clean up later */
     fcd->tracks = g_list_copy (tracks);
-    fcd->win = win;
     fcd->win_xml = export_files_xml;
     fcd->fc = fc;
 
     /* according to GTK FAQ: move a widget to a new parent */
     gtk_widget_ref (options);
     gtk_container_remove (GTK_CONTAINER (win), options);
-    gtk_widget_unref (options);
-
     /* set extra options */
     gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (fc),
 				       options);
+    gtk_widget_unref (options);
+
+    gtk_widget_destroy (win);
 
     /* set last folder */
     option_set_folder (GTK_FILE_CHOOSER (fc),
@@ -644,7 +641,6 @@ static void export_playlist_file_cleanup (struct fcd *fcd)
 {
     g_return_if_fail (fcd);
     g_list_free (fcd->tracks);
-    if (fcd->win)  gtk_widget_destroy (fcd->win);
     g_free (fcd);
     release_widgets ();
 }
@@ -656,7 +652,7 @@ static void export_playlist_file_cleanup (struct fcd *fcd)
  ******************************************************************/
 static void export_playlist_file_retrieve_options (struct fcd *fcd)
 {
-    g_return_if_fail (fcd && fcd->win && fcd->fc);
+    g_return_if_fail (fcd && fcd->fc);
 
     option_get_radio_button (fcd->win_xml,
 			     EXPORT_PLAYLIST_FILE_TYPE,
@@ -845,17 +841,17 @@ void export_playlist_file_init (GList *tracks)
 
     /* Information needed to clean up later */
     fcd->tracks = g_list_copy (tracks);
-    fcd->win = win;
     fcd->fc = fc;
 
     /* according to GTK FAQ: move a widget to a new parent */
     gtk_widget_ref (options);
     gtk_container_remove (GTK_CONTAINER (win), options);
-    gtk_widget_unref (options);
-
     /* set extra options */
     gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER (fc),
 				       options);
+    gtk_widget_unref (options);
+
+    gtk_widget_destroy (win);
 
     /* set last folder */
     option_set_folder (GTK_FILE_CHOOSER (fc),

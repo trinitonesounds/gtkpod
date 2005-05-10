@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-09 23:33:52 jcs>
+/* Time-stamp: <2005-05-10 21:57:17 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -575,7 +575,9 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     /* find duplicates */
     gp_md5_hash_tracks_itdb (itdb);
 
+    /* mark the data as unchanged */
     eitdb->data_changed = FALSE;
+    /* set mark that this itdb struct contains an imported iTunesDB */
     eitdb->itdb_imported = TRUE;
 
     if (old_itdb)
@@ -630,7 +632,9 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	/* copy data_changed flag */
 	eitdb->data_changed = old_eitdb->data_changed;
     }
-    /* set mark that this itdb struct contains an imported iTunesDB */
+
+    /* update all SPLs */
+    itdb_spl_update_all (itdb);
 
     return itdb;
 }
