@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:37 jcs>
+/* Time-stamp: <2005-05-12 23:23:37 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -171,11 +171,11 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 	    value = strrchr (mp4FileName, '.');
 	    if (value)
 	    {
-		if (strcmp (value, ".m4a") == 0)
+		if (g_strcasecmp (value, ".m4a") == 0)
 		    track->fdesc = g_strdup ("AAC audio file");
-		if (strcmp (value, ".m4p") == 0)
+		if (g_strcasecmp (value, ".m4p") == 0)
 		    track->fdesc = g_strdup ("Protected AAC audio file");
-		if (strcmp (value, ".m4b") == 0)
+		if (g_strcasecmp (value, ".m4b") == 0)
 		    track->fdesc = g_strdup ("AAC audio book file");
 	    }
 	    if (prefs_get_readtags ())

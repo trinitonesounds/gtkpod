@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:15:38 jcs>
+/* Time-stamp: <2005-05-14 01:48:02 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1005,37 +1005,30 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
     return utf8;
 }
 
-static void id3_set_string (struct id3_tag *tag, const char *frame_name, const char *data, enum id3_field_textencoding encoding)
+static void id3_set_string (struct id3_tag *tag,
+			    const char *frame_name,
+			    const char *data,
+			    enum id3_field_textencoding encoding)
 {
     int res;
     struct id3_frame *frame;
     union id3_field *field;
     id3_ucs4_t *ucs4;
 
-    if (data == NULL)
-	return;
-
-/*    printf ("updating id3 (enc: %d): %s: %s\n", encoding, frame_name, data);*/
-
-    /*
-     * An empty string removes the frame altogether.
-     */
-    if (strlen(data) == 0)
+    /* clear the frame, because of bug in libid3tag see
+       http://www.mars.org/mailman/public/mad-dev/2004-October/001113.html
+    */
+    while ((frame = id3_tag_findframe (tag, frame_name, 0)))
     {
-/*	printf("removing ID3 frame: %s\n", frame_name);*/
-	while ((frame = id3_tag_findframe (tag, frame_name, 0)))
-	    id3_tag_detachframe (tag, frame);
-	return;
+	id3_tag_detachframe (tag, frame);
     }
 
-    frame = id3_tag_findframe (tag, frame_name, 0);
-    if (!frame)
-    {
-/*	puts("new frame!");*/
-	frame = id3_frame_new (frame_name);
-	id3_tag_attachframe (tag, frame);
-    }
+    if ((data == NULL) || (strlen(data) == 0))
+	return;
 
+    frame = id3_frame_new (frame_name);
+    id3_tag_attachframe (tag, frame);
+   
     if (frame_name == ID3_FRAME_COMMENT)
     {
 	field = id3_frame_field (frame, 3);
@@ -1050,6 +1043,10 @@ static void id3_set_string (struct id3_tag *tag, const char *frame_name, const c
     /* Use the specified text encoding */
     id3_field_settextencoding(field, encoding);
 
+
+    /* maybe could be optimized see
+       http://www.mars.org/mailman/public/mad-dev/2002-October/000739.html
+    */
     if (frame_name == ID3_FRAME_GENRE)
     {
 	id3_ucs4_t *tmp_ucs4 = id3_utf8_ucs4duplicate ((id3_utf8_t *)data);
@@ -1260,6 +1257,16 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	    (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1))
 	    encoding = ID3_FIELD_TEXTENCODING_UTF_8;
 
+	/* always render id3v1 to prevent dj studio from crashing */
+	id3_tag_options(id3tag, ID3_TAG_OPTION_ID3V1, ~0);
+
+        /* turn off frame compression and crc information to let
+	   itunes read tags see
+	   http://www.mars.org/mailman/public/mad-dev/2002-October/000742.html
+	*/
+	id3_tag_options(id3tag, ID3_TAG_OPTION_COMPRESSION, 0);
+	id3_tag_options(id3tag, ID3_TAG_OPTION_CRC, 0);
+
 	id3_set_string (id3tag, ID3_FRAME_TITLE, track->title, encoding);
 	id3_set_string (id3tag, ID3_FRAME_ARTIST, track->artist, encoding);
 	id3_set_string (id3tag, ID3_FRAME_ALBUM, track->album, encoding);
@@ -1282,7 +1289,7 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	    string1 = g_strdup_printf ("%d", track->cd_nr);
 	id3_set_string (id3tag, "TPOS", string1, encoding);
 	g_free(string1);
-    }
+    } 
 
     if (id3_file_update(id3file) != 0)
     {
