@@ -1,11 +1,22 @@
-2005-05-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
-
-	* mp4file.c: changed case-sensitive compare to
-          case-insensitive compare for filetype extension
+2005-05-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* mp3file.c: applied Christoph Kunz' patch addressing a couple
           of compatibility issues with non-ID3v2.4 compatible software
           (most software out there that's not using the id3tag-lib).
+
+	* gtkpod.glade: added delete event signal handler to
+          prefs_window
+
+	* info.c, prefs_window.c: raise prefs/info window to the top
+          when it is already open
+
+	* info.c: added xml_signal_autoconnect() otherwise close
+          buttons wouldn't work.
+
+2005-05-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* mp4file.c: changed case-sensitive compare to
+          case-insensitive compare for filetype extension
 
 2005-05-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

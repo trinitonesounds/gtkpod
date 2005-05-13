@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-09 23:40:50 jcs>
+/* Time-stamp: <2005-05-14 02:26:13 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -153,9 +153,14 @@ static void fill_label_string (gchar *w_name, const char *str)
 /* open info window */
 void info_open_window (void)
 {
-    if (info_window)  return;            /* already open */
+    if (info_window)
+    {   /* info window already open -- raise to the top */
+	gdk_window_raise (info_window->window);
+	return;
+    }
     
     info_xml = glade_xml_new (xml_file, "gtkpod_info", NULL);
+    glade_xml_signal_autoconnect (info_xml);
     info_window = glade_xml_get_widget (info_xml, "gtkpod_info");
     
     if (info_window)
@@ -177,6 +182,7 @@ void info_close_window (void)
     GtkWidget *win;
 
     if (!info_window) return; /* not open */
+
     info_update_default_sizes ();
     win = info_window;
     info_window = NULL;
