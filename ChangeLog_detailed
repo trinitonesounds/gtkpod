@@ -1,3 +1,12 @@
+2005-05-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* mp4file.c: changed case-sensitive compare to
+          case-insensitive compare for filetype extension
+
+	* mp3file.c: applied Christoph Kunz' patch addressing a couple
+          of compatibility issues with non-ID3v2.4 compatible software
+          (most software out there that's not using the id3tag-lib).
+
 2005-05-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* file_itunesdb.c: Automatic update of smart playlists after
@@ -5,6 +14,8 @@
 
 	* file_export.c: Fixed segfault in 'copy from iPod' and 'crate
           playlist file' (caused by transition to libglade)
+
+	* file_export.c: Print warning when overwriting existing files.
 
 2005-05-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

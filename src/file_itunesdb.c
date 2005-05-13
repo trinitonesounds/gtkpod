@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-10 21:57:17 jcs>
+/* Time-stamp: <2005-05-14 01:48:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1207,7 +1207,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
 		  {
 		      while (widgets_blocked && gtk_events_pending ())
 			  gtk_main_iteration ();
-		      /* wait a maximum of 10 ms */
+		      /* wait a maximum of 20 ms */
 		      g_get_current_time (&gtime);
 		      g_time_val_add (&gtime, 20000);
 		      g_cond_timed_wait (cond, mutex, &gtime);

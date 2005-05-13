@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-05-01 15:08:28 jcs>
+|  Time-stamp: <2005-05-14 01:51:45 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -132,6 +132,9 @@ Flavio Stanchina: bugfixes\n"),
 Chris Micacchi: when sorting ignore 'the' and similar at the beginning of the title\n"),
 		       _("\
 Steve Jay: use statvfs() instead of df (better portability, faster)\n"),
+		       "\n",
+		       _("\
+Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 tags\n"),
 		       "\n",
 		       _("\
 Icons of buttons were made by Nicolas Chariot.\n\

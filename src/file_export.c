@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-10 23:02:25 jcs>
+/* Time-stamp: <2005-05-11 00:02:19 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -196,7 +196,19 @@ copy_file(gchar *file, gchar *dest)
     prefs_get_int_value (EXPORT_FILES_CHECK_EXISTING, &check_existing);
     
     if(check_existing && file_is_ok(file, dest))
+    {
+	gchar *buf = g_strdup_printf (_("Skipping existing file with same length: '%s'\n"), dest);
+	gtkpod_warning (buf);
+	g_free (buf);
     	return TRUE;
+    }
+
+    if (g_file_test (dest, G_FILE_TEST_EXISTS))
+    {
+	gchar *buf = g_strdup_printf (_("Overwriting existing file: '%s'\n"), dest);
+	gtkpod_warning (buf);
+	g_free (buf);
+    }
 	
     if((from = fopen(file, "r")))
     {
