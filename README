@@ -854,6 +854,13 @@ At least for the new 4Gs and iPod minis you should _disable_
 
 /dev/sda2	/mnt/ipod	vfat rw,user,noauto,noatime 0 0
 
+   (For HFS this line should read
+
+/dev/sda  /mnt/ipod  hfsplus  rw,user,noauto,exec  0  0
+
+    please note that it's just '/dev/sda')
+
+
 NOTE: Some users have had problems with newer versions of mount(newer than
 mount-2.11h) The following fstab entry might work better for you.
 
