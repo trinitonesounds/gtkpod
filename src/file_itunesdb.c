@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-14 01:48:03 jcs>
+/* Time-stamp: <2005-05-16 20:58:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -566,8 +566,8 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	Track *track = extendeddeletion->data;
 	g_return_val_if_fail (track, NULL);
 	mark_track_for_deletion (itdb, track);
-	extendeddeletion = g_list_remove (extendeddeletion,
-					  extendeddeletion);
+	extendeddeletion = g_list_delete_link (extendeddeletion,
+					       extendeddeletion);
     }
 
     /* delete hash information (if present) */

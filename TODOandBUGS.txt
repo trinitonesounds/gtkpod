@@ -1,5 +1,10 @@
 TODO:
 
+<eject>
+- program gtkpod is using a deprecated SCSI ioctl, please convert it
+  to SG_IO
+
+
 - itdb/misc_confirm.c: number of F?? directories should be determined
   before starting copying files to the iPod. At the moment only 20
   dirs are used no matter how many are present.

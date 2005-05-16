@@ -1,3 +1,8 @@
+2005-05-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* file_itunesdb.c: fixed infinite loop pointed out by Richard
+          Deken
+
 2005-05-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* mp3file.c: applied Christoph Kunz' patch addressing a couple
