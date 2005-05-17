@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-09 22:01:02 jcs>
+/* Time-stamp: <2005-05-17 23:40:15 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -136,6 +136,13 @@ Itdb_Track *itdb_track_duplicate (Itdb_Track *tr)
 
 /* Returns the track with the ID @id or NULL if the ID cannot be
  * found. */
+/* Looking up tracks by ID is not really a good idea because the IDs
+   are created by itdb just before export. The functions are here
+   because they are needed during import of the iTunesDB which is
+   referencing tracks by IDs */
+/* This function is very slow -- if you need to lookup many IDs use
+   the functions itdb_track_id_tree_create(),
+   itdb_track_id_tree_destroy(), and itdb_track_id_tree_by_id() below. */
 Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id)
 {
     GList *gl;
@@ -150,3 +157,48 @@ Itdb_Track *itdb_track_by_id (Itdb_iTunesDB *itdb, guint32 id)
     return NULL;
 }
 
+static gint track_id_compare (gconstpointer a, gconstpointer b)
+{
+    if (*(guint32*) a == *(guint32*) b)
+	return 0;
+    if (*(guint32*) a > *(guint32*) b)
+	return 1;
+    return -1;
+}
+
+
+/* Creates a balanced-binary tree for quick ID lookup that is used in
+   itdb_track_by_id_tree() function below */
+GTree *itdb_track_id_tree_create (Itdb_iTunesDB *itdb)
+{
+    GTree *idtree;
+    GList *gl;
+
+    g_return_val_if_fail (itdb, NULL);
+
+    idtree = g_tree_new (track_id_compare);
+
+    for (gl=itdb->tracks; gl; gl=gl->next)
+    {
+	Itdb_Track *tr = gl->data;
+	g_return_val_if_fail (tr, NULL);
+	g_tree_insert (idtree, &tr->id, tr);
+    }
+    return idtree;
+}
+
+/* free memory of @idtree */
+void itdb_track_id_tree_destroy (GTree *idtree)
+{
+    g_return_if_fail (idtree);
+
+    g_tree_destroy (idtree);
+}
+
+/* lookup track by @id using @idtree for quicker reference */
+Itdb_Track *itdb_track_id_tree_by_id (GTree *idtree, guint32 id)
+{
+    g_return_val_if_fail (idtree, NULL);
+
+    return (Itdb_Track *)g_tree_lookup (idtree, &id);
+}

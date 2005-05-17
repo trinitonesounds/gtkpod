@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-10 21:52:48 jcs>
+/* Time-stamp: <2005-05-17 23:28:08 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1022,6 +1022,8 @@ Itdb_Playlist *itdb_playlist_new (const gchar *title, gboolean spl)
     pl->is_spl = spl;
     pl->id = ((guint64)g_rand_int (grand) << 32) |
 	((guint64)g_rand_int (grand));
+    /* FIXME: make sure this id is really unique (with 100 playlists the
+     * chance to create a duplicate is 1 in 184,467,440,737,095,516.16) */
     if (spl)
     {
 	pl->splpref.liveupdate = TRUE;
@@ -1142,33 +1144,6 @@ void itdb_playlist_add_track (Itdb_Playlist *pl,
 
     if (pos == -1)  pl->members = g_list_append (pl->members, track);
     else  pl->members = g_list_insert (pl->members, track, pos);
-}
-
-
-
-/* add @track to playlist @pl position @pos (-1 for "append to
- * end") */
-/* a critical message is logged if either @itdb, @pl or @track is
-   NULL. */
-void itdb_playlist_add_trackid (Itdb_Playlist *pl,
-				guint32 id, gint32 pos)
-{
-    Itdb_Track *track;
-
-    g_return_if_fail (pl);
-    g_return_if_fail (pl->itdb);
-
-    track = itdb_track_by_id (pl->itdb, id);
-
-    if (track)
-    {
-	if (pos == -1)  pl->members = g_list_append (pl->members, track);
-	else  pl->members = g_list_insert (pl->members, track, pos);
-    }
-    else
-    {
-	g_warning (_("Itdb_Track ID '%d' not found.\n"), id);
-    }
 }
 
 

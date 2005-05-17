@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-09 23:39:04 jcs>
+/* Time-stamp: <2005-05-17 23:37:48 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -581,7 +581,6 @@ void init_data (GtkWidget *window)
 			g_free (local);
 		    }
 		    g_free (fn);
-
 		    if (g_file_test (filename, G_FILE_TEST_EXISTS))
 			itdb = gp_import_itdb (NULL, type,
 					       NULL, NULL, filename);

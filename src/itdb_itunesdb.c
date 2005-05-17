@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-08 13:29:10 jcs>
+/* Time-stamp: <2005-05-17 23:41:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1013,6 +1013,7 @@ static glong get_pl (FImport *fimp, glong seek)
   fprintf(stderr, "mhyp seek: %x\n", (int)seek);
 #endif
   g_return_val_if_fail (fimp, -1);
+  g_return_val_if_fail (fimp->idtree, -1);
 
   cts = fimp->itunesdb;
 
@@ -1153,6 +1154,7 @@ static glong get_pl (FImport *fimp, glong seek)
       }
       if (cmp_n_bytes_seek (cts, "mhip", seek, 4))
       {
+	  Itdb_Track *tr;
 	  gint32 pos = -1;
 	  guint32 posid;
 	  gint32 mhod_type;
@@ -1185,7 +1187,11 @@ static glong get_pl (FImport *fimp, glong seek)
 		 end of list */
 	      if (pos == i) pos = -1;
 	  }
-	  itdb_playlist_add_trackid (plitem, ref, pos);
+	  tr = itdb_track_id_tree_by_id (fimp->idtree, ref);
+	  if (tr)
+	      itdb_playlist_add_track (plitem, tr, pos);
+	  else
+	      g_warning (_("Itdb_Track ID '%d' not found.\n"), ref);
 	  ++i;
       }
       CHECK_ERROR (fimp, -1);
@@ -1772,9 +1778,11 @@ static gboolean parse_fimp (FImport *fimp)
     fprintf(stderr, "iTunesDB part2 starts at: %x\n", (int)seek);
 #endif
 
+    /* Create track-id tree for quicker track lookup */
+    fimp->idtree = itdb_track_id_tree_create (fimp->itdb);
     for (i=0; i<nr_playlists; ++i)
     {
-	seek = get_pl(fimp, seek);
+	seek = get_pl (fimp, seek);
 	if (fimp->error) return FALSE;
 	if (seek == -1)
 	{   /* this should not be -- issue warning */
@@ -1782,6 +1790,8 @@ static gboolean parse_fimp (FImport *fimp)
 	    break;
 	}
     }
+    itdb_track_id_tree_destroy (fimp->idtree);
+    fimp->idtree = NULL;
 
     return TRUE;
 }
@@ -1832,7 +1842,7 @@ Itdb_iTunesDB *itdb_parse_file (const gchar *filename, GError **error)
     g_return_val_if_fail (filename, NULL);
 
     fimp = g_new0 (FImport, 1);
-    itdb = g_new0 (Itdb_iTunesDB, 1);
+    itdb = itdb_new ();
     itdb->filename = g_strdup (filename);
     fimp->itdb = itdb;
 

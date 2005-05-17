@@ -1,3 +1,8 @@
+2005-05-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* implemented tree-lookup for track IDs to speed up import of
+	  large iTunesDBs along the lines of Richard Deken's patch
+
 2005-05-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* file_itunesdb.c: fixed infinite loop pointed out by Richard
