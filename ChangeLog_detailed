@@ -7,6 +7,8 @@
 
 	* improved error messages when import of files fails
 
+	* added some g_return_if_fail(itdb->mountpoint) statements.
+
 2005-05-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* implemented tree-lookup for track IDs to speed up import of

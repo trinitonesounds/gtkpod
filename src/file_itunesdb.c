@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-16 20:58:14 jcs>
+/* Time-stamp: <2005-05-20 00:34:12 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1309,6 +1309,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 	      const gchar *itunes_components[] = {"iPod_Control",
 						  "iTunes",
 						  "iTunesDB", NULL};
+	      g_return_val_if_fail (itdb->mountpoint, FALSE);
 	      tunes = resolve_path (itdb->mountpoint, itunes_components);
 	  }
       }
@@ -1341,6 +1342,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 
   if((itdb->usertype & GP_ITDB_TYPE_IPOD) && !prefs_get_offline ())
   {
+      g_return_val_if_fail (itdb->mountpoint, FALSE);
       /* check if iPod directories are present */
       if (!ipod_dirs_present (itdb->mountpoint))
       {   /* no -- create them */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-19 23:35:40 jcs>
+/* Time-stamp: <2005-05-20 00:34:25 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1745,8 +1745,8 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 	  /* is 'name' on the iPod? */
 	  if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	  {
-	      if (itdb->mountpoint &&
-		  strstr (name, itdb->mountpoint) == name)
+	      g_return_val_if_fail (itdb->mountpoint, FALSE);
+	      if (strstr (name, itdb->mountpoint) == name)
 	      {   /* Yes */
 		  /* is 'name' in the iPod_Control directory? */
 		  gchar *name_i = name + strlen (itdb->mountpoint);
