@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-14 01:48:02 jcs>
+/* Time-stamp: <2005-05-19 23:25:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -380,24 +380,6 @@ void get_mp3_info(mp3info *mp3)
 }
 
 
-
-/* Returns a filled-in mp3info struct that must be g_free'd after use */
-static mp3info *mp3file_get_info (gchar *filename)
-{
-    mp3info *mp3 = NULL;
-    FILE *fp;
-
-    if ( !( fp=fopen(filename,"r") ) ) {
-	gtkpod_warning (_("Error opening MP3 file '%s'"),filename);
-    } else {
-	mp3 = g_malloc0 (sizeof (mp3info));
-	mp3->filename=filename;
-	mp3->file=fp;
-	get_mp3_info (mp3);
-	fclose (fp);
-    }
-    return mp3;
-}
 
 
 /* ------------------------------------------------------------
@@ -1122,8 +1104,8 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
     gchar* string;
     gchar* string2;
 
-    if (!filename || !tag)
-	return FALSE;
+    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (tag, FALSE);
 
     memset (tag, 0, sizeof (File_Tag));
 
@@ -1435,7 +1417,7 @@ static inline guint32 parse_lame_uint32(char *buf) {
  * TODO: Check CRC.
  */
 
-gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
+gboolean mp3_get_track_lame_replaygain (gchar *path, Track *track)
 {
 	struct {
 		/* All members are defined in terms of chars so padding does not
@@ -1470,7 +1452,10 @@ gboolean mp3_get_track_lame_replaygain(gchar *path, Track *track)
 		goto rg_fail;
 	
 	file = fopen (path, "r");
-	
+
+	if (!file)
+	    goto rg_fail;
+
 	/* Skip ID3 header if appropriate */
 	if (fread(&id3head, 1, sizeof(id3head), file) != 
 			sizeof(id3head))
@@ -1640,6 +1625,9 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 	g_return_val_if_fail (path, FALSE);
 
 	file = fopen (path, "r");
+
+	if (!file)
+	    goto rg_fail;
 
 	/* check for ID3v1 Tag */
 	if (fseek(file, -ID3V1_SIZE, SEEK_END) ||
@@ -1915,10 +1903,10 @@ gboolean mp3_read_gain (gchar *path, Track *track)
     etr->audiophile_gain_set = FALSE;
     etr->peak_signal_set = FALSE;
 
-    mp3_get_track_lame_replaygain(path, track);
+    mp3_get_track_lame_replaygain (path, track);
     if (etr->radio_gain_set && etr->peak_signal_set) return TRUE;
 
-    mp3_get_track_ape_replaygain(path, track);
+    mp3_get_track_ape_replaygain (path, track);
     if (etr->radio_gain_set) return TRUE;
     
     return FALSE;
@@ -1939,6 +1927,29 @@ Track *mp3_get_file_info (gchar *name)
     Track *track = NULL;
     File_Tag filetag;
     mp3info *mp3info;
+    FILE *file;
+
+    g_return_val_if_fail (name, NULL);
+
+    /* Attempt to open the file */
+    file = fopen (name, "r");
+    if (file)
+    {
+	mp3info = g_malloc0 (sizeof (mp3info));
+	mp3info->filename = name;
+	mp3info->file = file;
+	get_mp3_info (mp3info);
+	mp3info->file = NULL;
+	fclose (file);
+    }
+    else
+    {
+	gchar *fbuf = charset_to_utf8 (name);
+    	gtkpod_warning(_("ERROR while opening file: '%s' (%s).\n"),
+		       fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return NULL;
+    }
 
     track = gp_track_new ();
     if (prefs_get_readtags() && (id3_tag_read (name, &filetag) == TRUE))
@@ -2028,7 +2039,6 @@ Track *mp3_get_file_info (gchar *name)
     mp3_read_gain (name, track);
 
     /* Get additional info (play time and bitrate */
-    mp3info = mp3file_get_info (name);
     if (mp3info)
     {
 	track->tracklen = mp3info->milliseconds;

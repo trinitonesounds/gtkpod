@@ -1,3 +1,12 @@
+2005-05-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* fixed segfault when trying to import read-protected MP3 files
+          (thanks to Chris Pitchford for pointing out this bug).
+
+	* fixed segfault when adding tracks to the local database
+
+	* improved error messages when import of files fails
+
 2005-05-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* implemented tree-lookup for track IDs to speed up import of

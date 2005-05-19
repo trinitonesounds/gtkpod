@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 03:18:44 jcs>
+/* Time-stamp: <2005-05-19 23:35:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -59,6 +59,7 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   gchar **names;
   gint i;
   Playlist *plitem;
+  gboolean result = TRUE;
 
   g_return_if_fail (active_itdb);
 
@@ -67,9 +68,9 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   plitem = pm_get_selected_playlist ();
   for (i=0; names[i] != NULL; ++i)
   {
-      add_track_by_filename (active_itdb, names[i], plitem,
-			    prefs_get_add_recursively (),
-			    NULL, NULL);
+      result &= add_track_by_filename (active_itdb, names[i], plitem,
+				       prefs_get_add_recursively (),
+				       NULL, NULL);
       if(i == 0)
 	  prefs_set_last_dir_browse(names[i]);
   }
@@ -79,7 +80,10 @@ static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
   display_updated (NULL, NULL);
   /* display log of detected duplicates */
   gp_duplicate_remove (NULL, NULL);
-  gtkpod_statusbar_message(_("Successly Added Files"));
+  if (result == TRUE)
+      gtkpod_statusbar_message (_("Successly added files"));
+  else
+      gtkpod_statusbar_message (_("Some files were not added successfully"));
   gtkpod_tracks_statusbar_update();
   release_widgets ();
   g_strfreev (names);

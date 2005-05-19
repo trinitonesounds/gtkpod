@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-08 15:16:24 jcs>
+/* Time-stamp: <2005-05-19 23:35:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -831,7 +831,7 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     if (nti)
     {
 	ExtraTrackData *enti=nti->userdata;
-	FILE *file;
+	struct stat filestat;
 
 	g_return_val_if_fail (enti, NULL);
 
@@ -846,13 +846,8 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	enti->pc_path_utf8 = charset_to_utf8 (name);
 	enti->pc_path_locale = g_strdup (name);
 	/* set length of file */
-	file = fopen (name, "r");
-	if (file)
-	{
-	    fseek (file, 0, SEEK_END);
-	    nti->size = ftell (file); /* get the filesize in bytes */
-	    fclose(file);
-	}
+	stat (name, &filestat);
+	nti->size = filestat.st_size; /* get the filesize in bytes */
 	if (nti->bitrate == 0)
 	{  /* estimate bitrate */
 	    if (nti->tracklen)
@@ -1656,7 +1651,6 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
    descend: TRUE:  add directories recursively
             FALSE: add contents of directories passed but don't descend
                    into its subdirectories */
-/* Not nice: currently only accepts files ending on .mp3 */
 /* @addtrackfunc: if != NULL this will be called instead of
    "add_track_to_playlist () -- used for dropping tracks at a specific
    position in the track view */
@@ -1670,6 +1664,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
   gchar str[PATH_MAX];
   gchar *basename;
   Playlist *mpl;
+  gboolean result = TRUE;
 
   g_return_val_if_fail (name, FALSE);
   g_return_val_if_fail (itdb, FALSE);
@@ -1742,30 +1737,32 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
       {
           Track *added_track = NULL;
 	  ExtraTrackData *etr = track->userdata;
-
 	  g_return_val_if_fail (etr, FALSE);
 
 	  track->id = 0;
 	  track->transferred = FALSE;
 
 	  /* is 'name' on the iPod? */
-          if (strstr (name, itdb->mountpoint) == name)
-          {   /* Yes */
-	      /* is 'name' in the iPod_Control directory? */
-	      gchar *name_i = name + strlen (itdb->mountpoint);
-	      gchar *name_l;
-	      if (*name_i == G_DIR_SEPARATOR) ++name_i;
-	      name_l = g_ascii_strdown (name_i, -1);
-	      if (strstr (name_l, "ipod_control") == name_l)
+	  if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	  {
+	      if (itdb->mountpoint &&
+		  strstr (name, itdb->mountpoint) == name)
 	      {   /* Yes */
-		  track->transferred = TRUE;
-		  track->ipod_path = g_strdup_printf (
-		      "%c%s", G_DIR_SEPARATOR, name_i);
-		  itdb_filename_fs2ipod (track->ipod_path);
+		  /* is 'name' in the iPod_Control directory? */
+		  gchar *name_i = name + strlen (itdb->mountpoint);
+		  gchar *name_l;
+		  if (*name_i == G_DIR_SEPARATOR) ++name_i;
+		  name_l = g_ascii_strdown (name_i, -1);
+		  if (strstr (name_l, "ipod_control") == name_l)
+		  {   /* Yes */
+		      track->transferred = TRUE;
+		      track->ipod_path = g_strdup_printf (
+			  "%c%s", G_DIR_SEPARATOR, name_i);
+		      itdb_filename_fs2ipod (track->ipod_path);
+		  }
+		  g_free (name_l);
 	      }
-	      g_free (name_l);
-          }
-
+	  }
 
 	  if (gethostname (str, PATH_MAX-2) == 0)
 	  {
@@ -1816,9 +1813,13 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 	      count = 0;
 	  }
       }
+      else
+      { /* !track */
+	  result = FALSE;
+      }
   }
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-  return TRUE;
+  return result;
 }
 
 
