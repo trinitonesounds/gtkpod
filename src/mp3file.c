@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-19 23:25:22 jcs>
+/* Time-stamp: <2005-05-21 13:43:51 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1926,7 +1926,7 @@ Track *mp3_get_file_info (gchar *name)
 {
     Track *track = NULL;
     File_Tag filetag;
-    mp3info *mp3info;
+    mp3info *mp3i=NULL;
     FILE *file;
 
     g_return_val_if_fail (name, NULL);
@@ -1935,11 +1935,11 @@ Track *mp3_get_file_info (gchar *name)
     file = fopen (name, "r");
     if (file)
     {
-	mp3info = g_malloc0 (sizeof (mp3info));
-	mp3info->filename = name;
-	mp3info->file = file;
-	get_mp3_info (mp3info);
-	mp3info->file = NULL;
+	mp3i = g_malloc0 (sizeof (mp3info));
+	mp3i->filename = name;
+	mp3i->file = file;
+	get_mp3_info (mp3i);
+	mp3i->file = NULL;
 	fclose (file);
     }
     else
@@ -2039,12 +2039,12 @@ Track *mp3_get_file_info (gchar *name)
     mp3_read_gain (name, track);
 
     /* Get additional info (play time and bitrate */
-    if (mp3info)
+    if (mp3i)
     {
-	track->tracklen = mp3info->milliseconds;
-	track->bitrate = (gint)(mp3info->vbr_average);
- 	track->samplerate = mp3file_header_frequency (&mp3info->header);
-	g_free (mp3info);
+	track->tracklen = mp3i->milliseconds;
+	track->bitrate = (gint)(mp3i->vbr_average);
+ 	track->samplerate = mp3file_header_frequency (&mp3i->header);
+	g_free (mp3i);
     }
     /* Fall back to xmms code if tracklen is 0 */
     if (track->tracklen == 0)
@@ -2062,6 +2062,5 @@ Track *mp3_get_file_info (gchar *name)
 	gp_track_free (track);
 	track = NULL;
     }
-
     return track;
 }

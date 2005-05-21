@@ -1,3 +1,14 @@
+2005-05-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* itdb_itunesdb.c: add check for truncated PlayCounts file and
+          skip it (necessary in case the file has been truncated by
+          dosfsck)
+
+	* display_spl.c: fixed double display of combobox entries
+
+	* mp3file.c: hunted down the meanest segfault encountered so
+          far. "mp3info *mp3info;" sizeof (mp3info) is what?
+
 2005-05-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* fixed segfault when trying to import read-protected MP3 files

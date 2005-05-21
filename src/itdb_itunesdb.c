@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-17 23:41:03 jcs>
+/* Time-stamp: <2005-05-21 11:11:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -598,6 +598,7 @@ static gboolean playcounts_init (FImport *fimp)
   const gchar *db[] = {"Play Counts", NULL};
   gchar *plcname, *dirname;
   gboolean result=FALSE;
+  struct stat filestat;
   FContents *cts;
 
   g_return_val_if_fail (fimp, FALSE);
@@ -612,7 +613,13 @@ static gboolean playcounts_init (FImport *fimp)
 
   g_free (dirname);
 
+  /* skip if no playcounts file is present */
   if (!plcname) return TRUE;
+
+  /* skip if playcounts file has zero-length (often happens after
+   * dosfsck) */
+  stat (plcname, &filestat);
+  if (filestat.st_size < 0x60) return TRUE; /* check for header length */
 
   cts = fcontents_read (plcname, &fimp->error);
   if (cts)

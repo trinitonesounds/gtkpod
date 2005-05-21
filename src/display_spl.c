@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-02 10:44:27 jcs>
+/* Time-stamp: <2005-05-21 11:27:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1031,7 +1031,7 @@ GtkWidget *spl_create_hbox (GtkWidget *spl_window, SPLRule *splr)
 	    splr->fromvalue *= ((double)units)/splr->fromunits;
 	}
 	entry = hbox_add_entry (hbox, splr, spl_ET_INTHELAST);
-	combobox = gtk_combo_box_new_text ();
+	combobox = gtk_combo_box_new ();
 	gtk_widget_show (combobox);
 	gtk_box_pack_start (GTK_BOX (hbox), combobox, TRUE, TRUE, 0);
 	g_object_set_data (G_OBJECT (combobox), "spl_rule", splr);
@@ -1114,7 +1114,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
     combobox = g_object_get_data (G_OBJECT (table), name);
     if (!combobox)
     {  /* create combo for field */
-	combobox = gtk_combo_box_new_text ();
+	combobox = gtk_combo_box_new ();
 	gtk_widget_show (combobox);
 	gtk_table_attach (table, combobox, 0,1, row,row+1,
 			  0,0,         /* expand options */
@@ -1172,7 +1172,7 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
     }
     if (!combobox)
     {  /* create combo for action */
-	combobox = gtk_combo_box_new_text ();
+	combobox = gtk_combo_box_new ();
 	gtk_widget_show (combobox);
 	gtk_table_attach (table, combobox, 1,2, row,row+1,
 			  GTK_FILL,0,   /* expand options */
