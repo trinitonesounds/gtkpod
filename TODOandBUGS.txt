@@ -14,14 +14,9 @@ TODO:
   time. (should be possible -- difficulty is selecting several
   playlists)
 
-- give out warning if umount did not succeed.
-
 - more features for mserv
 
 - icons should be themable
-
-- get_track_name_on_ipod (track): does not consider file sensitivity
-  problem.
 
 - Update calendar in special sort tab when changing category.
 
@@ -97,15 +92,6 @@ Torsten Curdt
 >   a control that is easier than entering a number
 > 
 
-David Dan
-> Right now I have a problem with books and other non music mp3s
-> playing while listening to all of my music.  Instead of moving all
-> of my music to a playlist, I thought it would be much better to have
-> a playlist called sometime like Only Music, that is generated
-> automatically when adding mp3s. This playlist would exclude certain
-> genres that are identified in the preferences.
-
-
 kulenfuster@...
 > Not sure from the documentation but it looks like there's no way to
 > sync tunes in the iPod into the desktop database.
@@ -141,19 +127,6 @@ On Tue, Mar 08, 2005 at 05:37:29PM +0000, Andy wrote:
 > That is, let's say I have cover.jpg in each folder, but not in the files
 > themselves.  Could gtkpod be made to pick that up and put it in the id3
 > field for cover (so the iPod Photo can show it).
-
-
-gtkpod-bugs:
-When my iPod and iTunes DB are in harmony with my
-local directory structure, all is fine when I sync
-directories that have missing (deleted) filed - these are
-correctly removed from the DB and the iPod.
-
-However if the directory is missing (deleted/moved/
-renamed as is quite common when I am organising my
-music) then the sync complains that the directory is
-missing and won't remove the files from the iTunes DB
-and the iPod.
 
 
 

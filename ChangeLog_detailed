@@ -1,5 +1,11 @@
 2005-05-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	* display warning if unmounting of the iPod was unsuccessful
+
+	* when syncing dirs remove tracks when dir was removed.
+
+2005-05-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	* itdb_itunesdb.c: add check for truncated PlayCounts file and
           skip it (necessary in case the file has been truncated by
           dosfsck)
@@ -8,6 +14,9 @@
 
 	* mp3file.c: hunted down the meanest segfault encountered so
           far. "mp3info *mp3info;" sizeof (mp3info) is what?
+
+	  Replaced "mp3info" by "MP3Info" and "mp3header" by
+	  "MP3Header" to avoid similar problems in the future.
 
 2005-05-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

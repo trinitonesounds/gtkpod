@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-21 13:43:51 jcs>
+/* Time-stamp: <2005-05-21 13:49:09 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -135,21 +135,21 @@ typedef struct {
     guint  copyright;
     guint  original;
     guint  emphasis;
-} mp3header;
+} MP3Header;
 
 typedef struct {
     gchar *filename;
     FILE *file;
     off_t datasize;
     gint header_isvalid;
-    mp3header header;
+    MP3Header header;
     gint id3_isvalid;
     gint vbr;
     float vbr_average;
     gint milliseconds;
     gint frames;
     gint badframes;
-} mp3info;
+} MP3Info;
 
 /* This is for xmms code */
 static guint get_track_time(gchar *path);
@@ -161,7 +161,7 @@ static guint get_track_time(gchar *path);
    start of first section
 
    ------------------------------------------------------------ */
-void get_mp3_info(mp3info *mp3);
+void get_mp3_info(MP3Info *mp3);
 
 gint frequencies[3][4] = {
    {22050,24000,16000,50000},  /* MPEG 2.0 */
@@ -196,17 +196,17 @@ gchar *emphasis_text[] = {
 };
 
 
-static gint mp3file_header_bitrate(mp3header *h) {
+static gint mp3file_header_bitrate(MP3Header *h) {
     return bitrate[h->version & 1][3-h->layer][h->bitrate];
 }
 
 
-static gint mp3file_header_frequency(mp3header *h) {
+static gint mp3file_header_frequency(MP3Header *h) {
     return frequencies[h->version][h->freq];
 }
 
 
-gint frame_length(mp3header *header) {
+gint frame_length(MP3Header *header) {
 	return header->sync == 0xFFE ?
 		    (frame_size_index[3-header->layer]*((header->version&1)+1)*
 		    mp3file_header_bitrate(header)/(float)mp3file_header_frequency(header))+
@@ -218,7 +218,7 @@ gint frame_length(mp3header *header) {
    positive value = Frame Length of this header
    0 = No, we did not retrieve a valid frame header
 */
-gint get_header(FILE *file,mp3header *header)
+gint get_header(FILE *file,MP3Header *header)
 {
     guchar buffer[FRAME_HEADER_SIZE];
     gint fl;
@@ -253,7 +253,7 @@ gint get_header(FILE *file,mp3header *header)
     return ((fl=frame_length(header)) >= MIN_FRAME_SIZE ? fl : 0);
 }
 
-gint sameConstant(mp3header *h1, mp3header *h2) {
+gint sameConstant(MP3Header *h1, MP3Header *h2) {
     if((*(guint*)h1) == (*(guint*)h2)) return 1;
 
     if((h1->version       == h2->version         ) &&
@@ -269,10 +269,10 @@ gint sameConstant(mp3header *h1, mp3header *h2) {
 }
 
 
-gint get_first_header(mp3info *mp3, long startpos)
+gint get_first_header(MP3Info *mp3, long startpos)
 {
   gint k, l=0,c;
-  mp3header h, h2;
+  MP3Header h, h2;
   long valid_start=0;
 
   fseek(mp3->file,startpos,SEEK_SET);
@@ -290,7 +290,7 @@ gint get_first_header(mp3info *mp3, long startpos)
 	  }
 	  if(k == MIN_CONSEC_GOOD_FRAMES) {
 		fseek(mp3->file,valid_start,SEEK_SET);
-		memcpy(&(mp3->header),&h2,sizeof(mp3header));
+		memcpy(&(mp3->header),&h2,sizeof(MP3Header));
 		mp3->header_isvalid=1;
 		return 1;
 	  }
@@ -307,10 +307,10 @@ gint get_first_header(mp3info *mp3, long startpos)
 /* get_next_header() - read header at current position or look for
    the next valid header if there isn't one at the current position
 */
-gint get_next_header(mp3info *mp3)
+gint get_next_header(MP3Info *mp3)
 {
   gint l=0,c,skip_bytes=0;
-  mp3header h;
+  MP3Header h;
 
    while(1) {
      while((c=fgetc(mp3->file)) != 255 && (ftell(mp3->file) < mp3->datasize)) skip_bytes++;
@@ -331,7 +331,7 @@ gint get_next_header(mp3info *mp3)
 }
 
 
-void get_mp3_info(mp3info *mp3)
+void get_mp3_info(MP3Info *mp3)
 {
   gint frame_type[15]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   float milliseconds=0,total_rate=0;
@@ -339,7 +339,7 @@ void get_mp3_info(mp3info *mp3)
   gint vbr_median=-1;
   guint bitrate;
   gint counter=0;
-  mp3header header;
+  MP3Header header;
   struct stat filestat;
   off_t data_start=0;
 
@@ -354,7 +354,7 @@ void get_mp3_info(mp3info *mp3)
 	      frame_type[15-bitrate]++;
 	  frames++;
       }
-      memcpy(&header,&(mp3->header),sizeof(mp3header));
+      memcpy(&header,&(mp3->header),sizeof(MP3Header));
       for(counter=0;counter<15;counter++) {
 	  if(frame_type[counter]) {
 	      float header_bitrate; /* introduced by JCS to speed up */
@@ -1926,7 +1926,7 @@ Track *mp3_get_file_info (gchar *name)
 {
     Track *track = NULL;
     File_Tag filetag;
-    mp3info *mp3i=NULL;
+    MP3Info *mp3i=NULL;
     FILE *file;
 
     g_return_val_if_fail (name, NULL);
@@ -1935,7 +1935,7 @@ Track *mp3_get_file_info (gchar *name)
     file = fopen (name, "r");
     if (file)
     {
-	mp3i = g_malloc0 (sizeof (mp3info));
+	mp3i = g_malloc0 (sizeof (MP3Info));
 	mp3i->filename = name;
 	mp3i->file = file;
 	get_mp3_info (mp3i);

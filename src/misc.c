@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-05-14 01:51:45 jcs>
+|  Time-stamp: <2005-05-22 15:11:14 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,6 +37,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "charset.h"
 #include "misc.h"
 #include "prefs.h"
 #include "misc_track.h"
@@ -487,7 +488,7 @@ unmount_ipod(void)
 {
     const gchar *str = prefs_get_ipod_mount ();
     gchar *ipod_device = getdevicename (prefs_get_ipod_mount());
-    if(str)
+    if (str)
     {
 	pid_t pid, tpid;
 	int status;
@@ -496,15 +497,38 @@ unmount_ipod(void)
 	switch (pid)
 	{
 	    case 0: /* child */
-		execl(UMOUNT_BIN, "umount", str, NULL);
-		exit(0);
+		execl (UMOUNT_BIN, "umount", str, NULL);
+		exit (1); /* this is only reached in case of an error */
 		break;
 	    case -1: /* parent and error */
 		break;
 	    default: /* parent -- let's wait for the child to terminate */
 		tpid = waitpid (pid, &status, 0);
-		eject_ipod (ipod_device);
-		/* we could evaluate tpid and status now */
+		if (status != 0);
+		{
+		    gchar *buf;
+		    gchar *str_utf8 = charset_to_utf8 (str);
+		    GtkWidget *dialog;
+		    if (ipod_device)
+			buf = g_strdup_printf (
+			    _("Unmounting of '%s' (%s) unsuccessful."),
+			    str_utf8, ipod_device);
+		    else
+			buf = g_strdup_printf (
+			    _("Unmounting of '%s' unsuccessful."),
+			    str_utf8);
+		    g_free (str_utf8);
+		    dialog = gtk_message_dialog_new (
+			GTK_WINDOW (gtkpod_window),
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_MESSAGE_WARNING,
+			GTK_BUTTONS_OK,
+			buf);
+		    gtk_dialog_run (GTK_DIALOG (dialog));
+		    gtk_widget_destroy (dialog);
+		    g_free (buf);
+		}
+		if (ipod_device) eject_ipod (ipod_device);
 		break;
 	}
     }

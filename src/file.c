@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-21 13:44:09 jcs>
+/* Time-stamp: <2005-05-22 16:36:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1057,11 +1057,24 @@ static void sync_dir (gpointer key,
 
 
 /* ok handler for sync_remove */
-/* @user_data1 is NULL, @user_data2 are the selected tracks */
+/* @user_data1 is selected playlist, @user_data2 are the selected
+ * tracks */
 static void sync_remove_ok (gpointer user_data1, gpointer user_data2)
 {
+    Playlist *mpl, *pl = user_data1;
+    iTunesDB *itdb;
+
+    g_return_if_fail (pl);
+    /* get MPL via playlist->itdb */
+    itdb = pl->itdb;
+    g_return_if_fail (itdb);
+    mpl = itdb_playlist_mpl (itdb);
+    g_return_if_fail (mpl);
+
     if (prefs_get_sync_remove ())
-	delete_track_ok (NULL, user_data2);
+	delete_track_ok (mpl, user_data2);
+    else
+	g_list_free ((GList *)user_data2);
 }
 
 
@@ -1077,18 +1090,23 @@ static void sync_remove_cancel (gpointer user_data1, gpointer user_data2)
 }
 
 
+struct SyncData
+{
+    GHashTable *hash_tosync;
+    GHashTable *hash_removed;
+    Playlist *playlist;  /* currently selected playlist */
+};
+
 static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 {
-    GHashTable *hash = (GHashTable *)user_data1;
-    /* currently selected playlist */
-    Playlist *playlist = (Playlist *)user_data2;
+    struct SyncData *sd = user_data1;
     /* state of "update existing" */
     gboolean update;
     iTunesDB *itdb;
 
-    g_return_if_fail (hash);
-    g_return_if_fail (playlist);
-    itdb = playlist->itdb;
+    g_return_if_fail (sd);
+    g_return_if_fail (sd->playlist);
+    itdb = sd->playlist->itdb;
     g_return_if_fail (itdb);
 
     /* set "update existing" to TRUE */
@@ -1096,7 +1114,7 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     prefs_set_update_existing (TRUE);
 
     /* sync all dirs stored in the hash */
-    g_hash_table_foreach (hash, sync_dir, playlist);
+    g_hash_table_foreach (sd->hash_tosync, sync_dir, sd->playlist);
 
     /* reset "update existing" */
     prefs_set_update_existing (update);
@@ -1125,8 +1143,12 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 	    if (etr->pc_path_locale && *etr->pc_path_locale)
 	    {
 		gchar *dirname = g_path_get_dirname (etr->pc_path_locale);
-		if (g_hash_table_lookup (hash, dirname) &&
+		if (g_hash_table_lookup (sd->hash_tosync, dirname) &&
 		    !g_file_test (etr->pc_path_locale,G_FILE_TEST_EXISTS))
+		{
+		    tracklist = g_list_append (tracklist, tr);
+		}
+		else if (g_hash_table_lookup (sd->hash_removed, dirname))
 		{
 		    tracklist = g_list_append (tracklist, tr);
 		}
@@ -1170,53 +1192,37 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		 sync_remove_ok,       /* ConfHandler ok_handler,*/
 		 NULL,                 /* don't show "Apply" button */
 		 sync_remove_cancel,   /* cancel_handler,*/
-		 NULL,                 /* gpointer user_data1,*/
+		 sd->playlist,         /* gpointer user_data1,*/
 		 tracklist);           /* gpointer user_data2,*/
 
 	    g_free (label);
 	    g_string_free (str, TRUE);
 	}
-	else sync_remove_cancel (hash, tracklist);
+	else sync_remove_cancel (NULL, tracklist);
     }
     else
     {
 	gtkpod_statusbar_message (_("Syncing completed."));
     }
-    /* destroy the hash table (and free the memory taken by the
-       dirnames */
-    g_hash_table_destroy (hash);
+    /* destroy the hash tables */
+    g_hash_table_destroy (sd->hash_tosync);
+    g_hash_table_destroy (sd->hash_removed);
+    g_free (sd);
 }
 
 
 /* sync dirs cancelled */
 static void sync_dir_cancel (gpointer user_data1, gpointer user_data2)
 {
-    if (user_data1)  g_hash_table_destroy ((GHashTable *)user_data1);
+    struct SyncData *sd = user_data1;
+
+    if (sd)
+    {
+	g_hash_table_destroy (sd->hash_tosync);
+	g_hash_table_destroy (sd->hash_removed);
+	g_free (sd);
+    }
     gtkpod_statusbar_message (_("Syncing aborted"));
-}
-
-
-/* Append @key (gchar *dir) to GString *user_data. Called by
- * sync_tracks(). Charset to use is @value. If @value is not set, use
- * the charset specified in the preferences */
-static void sync_add_dir_to_string  (gpointer key,
-				     gpointer value,
-				     gpointer user_data)
-{
-    gchar *dir = (gchar *)key;
-    gchar *charset = (gchar *)value;
-    GString *str = (GString *)user_data;
-    gchar *buf;
-
-    if (!dir || !str) return;
-
-    /* convert to UTF8. Use @charset if specified */
-    if (charset)
-	buf = charset_to_charset (charset, "UTF8", dir);
-    else
-	buf = charset_to_utf8 (dir);
-    g_string_append_printf (str, "%s\n", buf);
-    g_free (buf);
 }
 
 
@@ -1224,9 +1230,33 @@ static void sync_add_dir_to_string  (gpointer key,
    the selected tracks */
 void sync_tracks (GList *selected_tracks)
 {
-    GHashTable *hash;
+    GHashTable *hash_tosync;
+    GHashTable *hash_removed;
+    struct SyncData *sd;
     GList *gl;
     guint32 dirnum = 0;
+    /* Append @key (gchar *dir) to GString *user_data. Charset to use is
+     * @value. If @value is not set, use the charset specified in the
+     * preferences */
+    void sync_add_dir_to_string  (gpointer key,
+				  gpointer value,
+				  gpointer user_data)
+	{
+	    gchar *dir = (gchar *)key;
+	    gchar *charset = (gchar *)value;
+	    GString *str = (GString *)user_data;
+	    gchar *buf;
+
+	    if (!dir || !str) return;
+
+	    /* convert to UTF8. Use @charset if specified */
+	    if (charset)
+		buf = charset_to_charset (charset, "UTF8", dir);
+	    else
+		buf = charset_to_utf8 (dir);
+	    g_string_append_printf (str, "%s\n", buf);
+	    g_free (buf);
+	}
 
     if (selected_tracks == NULL)
     {
@@ -1237,7 +1267,8 @@ void sync_tracks (GList *selected_tracks)
     /* Create a hash to keep the directory names ("key", and "value"
        to be freed with g_free). key is dirname, value is charset used
        */
-    hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+    hash_tosync = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+    hash_removed = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 
     /* Get the dirs of all tracks selected and enter them into the hash
        table if the dir exists. Using a hash table automatically
@@ -1260,14 +1291,14 @@ void sync_tracks (GList *selected_tracks)
 		if (etr->charset && *etr->charset)
 		{   /* charset set -- just insert the entry */
 		    gchar *charset = g_strdup (etr->charset);
-		    g_hash_table_insert (hash, dirname, charset);
+		    g_hash_table_insert (hash_tosync, dirname, charset);
 		}
 		else
 		{   /* no charset -- make sure we don't replace a dir
 		     * entry that had the charset set */
-		    if (!g_hash_table_lookup (hash, dirname))
+		    if (!g_hash_table_lookup (hash_tosync, dirname))
 		    {
-			g_hash_table_insert (hash, dirname, NULL);
+			g_hash_table_insert (hash_tosync, dirname, NULL);
 		    }
 		    else
 		    {
@@ -1281,17 +1312,33 @@ void sync_tracks (GList *selected_tracks)
 		{
 		    gtkpod_warning (_("'%s' is not a directory. Ignored.\n"),
 				    dirname);
+		    g_free (dirname);
 		}
 		else
-		{
-		    gtkpod_warning (_("'%s' does not exist. Ignored.\n"),
-				    dirname);
+		{   /* add to directories to be removed */
+		    if (etr->charset && *etr->charset)
+		    {   /* charset set -- just insert the entry */
+			gchar *charset = g_strdup (etr->charset);
+			g_hash_table_insert (hash_removed, dirname, charset);
+		    }
+		    else
+		    {   /* no charset -- make sure we don't replace a
+			 * dir entry that had the charset set */
+			if (!g_hash_table_lookup (hash_removed, dirname))
+			{
+			    g_hash_table_insert (hash_removed, dirname, NULL);
+			}
+			else
+			{
+			    g_free (dirname);
+			}
+		    }
 		}
-		g_free (dirname);
 	    }
 	}
     }
-    if (g_hash_table_size (hash) == 0)
+    if ((g_hash_table_size (hash_tosync) +
+	 g_hash_table_size (hash_removed)) == 0)
     {   /* no directory names available */
 	if (dirnum == 0) gtkpod_warning (_("\
 No directory names were stored. Make sure that you enable 'Write extended information' in the Export section of the preferences at the time of importing files.\n\
@@ -1303,8 +1350,25 @@ No valid directories have been found. Sync aborted.\n"));
     else
     {
 	GString *str = g_string_sized_new (2000);
-	/* build a string with all directories in the hash */
-	g_hash_table_foreach (hash, sync_add_dir_to_string, str);
+	if (g_hash_table_size (hash_removed) != 0)
+	{
+	    g_string_printf (str, 
+			     _("The (former) contents of the following directories will be removed:\n\n"));
+	    g_hash_table_foreach (hash_removed,
+				  sync_add_dir_to_string, str);
+	    g_string_append_printf (str, "\n\n");
+	}
+	if (g_hash_table_size (hash_tosync) != 0)
+	{
+	    g_string_append_printf (str, 
+			     _("The following directories will be synchronized:\n\n"));
+	    g_hash_table_foreach (hash_tosync,
+				  sync_add_dir_to_string, str);
+	}
+	sd = g_malloc (sizeof (struct SyncData));
+	sd->hash_tosync = hash_tosync;
+	sd->hash_removed = hash_removed;
+	sd->playlist = pm_get_selected_playlist ();
 	if (gtkpod_confirmation (
 		-1,                     /* gint id, */
 		FALSE,                  /* gboolean modal, */
@@ -1318,11 +1382,13 @@ No valid directories have been found. Sync aborted.\n"));
 		sync_dir_ok,            /* ConfHandler ok_handler,*/
 		NULL,                   /* don't show "Apply" */
 		sync_dir_cancel,        /* cancel_handler,*/
-		hash,                   /* gpointer user_data1,*/
-		pm_get_selected_playlist()) /* gpointer user_data2,*/
+		sd,                     /* gpointer user_data1,*/
+		NULL)                   /* gpointer user_data2,*/
 	    != GTK_RESPONSE_ACCEPT)
 	{ /* creation failed */
-	    g_hash_table_destroy (hash);
+	    g_hash_table_destroy (sd->hash_tosync);
+	    g_hash_table_destroy (sd->hash_removed);
+	    g_free (sd);
 	}
 	g_string_free (str, TRUE);
     }
