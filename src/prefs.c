@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-07 23:58:41 jcs>
+/* Time-stamp: <2005-05-24 23:39:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -164,6 +164,8 @@ struct cfg *cfg_new(void)
     mycfg->charset = NULL;
     mycfg->deletion.track = TRUE;
     mycfg->deletion.ipod_file = TRUE;
+    mycfg->deletion.local_file = TRUE;
+    mycfg->deletion.database = TRUE;
     mycfg->deletion.syncing = TRUE;
     mycfg->md5tracks = FALSE;
     mycfg->update_existing = FALSE;
@@ -470,13 +472,17 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_track_playlist_deletion((gboolean)atoi(arg));
 	  }
+	  else if(g_ascii_strcasecmp (line, "delete_database") == 0)
+	  {
+	      prefs_set_track_database_deletion((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "delete_local_file") == 0)
+	  {
+	      prefs_set_track_local_file_deletion((gboolean)atoi(arg));
+	  }
 	  else if(g_ascii_strcasecmp (line, "delete_playlist") == 0)
 	  {
 	      /* ignore -- no longer supported as of 0.61-CVS */
-	  }
-	  else if(g_ascii_strcasecmp (line, "delete_ipod") == 0)
-	  {
-	      prefs_set_track_ipod_file_deletion((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "sync_remove_confirm") == 0)
 	  {
@@ -1051,6 +1057,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# delete confirmation\n"));
     fprintf(fp, "delete_file=%d\n",prefs_get_track_playlist_deletion());
     fprintf(fp, "delete_ipod=%d\n",prefs_get_track_ipod_file_deletion());
+    fprintf(fp, "delete_database=%d\n",prefs_get_track_database_deletion());
+    fprintf(fp, "delete_local_file=%d\n",prefs_get_track_local_file_deletion());
     fprintf(fp, "sync_remove_confirm=%d\n",prefs_get_sync_remove_confirm());
     fprintf(fp, "autoimport=%d\n",prefs_get_autoimport());
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
@@ -1383,6 +1391,27 @@ gboolean prefs_get_track_ipod_file_deletion(void)
 {
     return(cfg->deletion.ipod_file);
 }
+
+void prefs_set_track_database_deletion(gboolean val)
+{
+    cfg->deletion.database = val;
+}
+
+gboolean prefs_get_track_database_deletion(void)
+{
+    return (cfg->deletion.database);
+}
+
+void prefs_set_track_local_file_deletion(gboolean val)
+{
+    cfg->deletion.local_file = val;
+}
+
+gboolean prefs_get_track_local_file_deletion(void)
+{
+    return cfg->deletion.local_file;
+}
+
 
 void prefs_set_sync_remove_confirm(gboolean val)
 {

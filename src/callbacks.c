@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-20 00:34:13 jcs>
+/* Time-stamp: <2005-05-24 23:39:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -227,25 +227,6 @@ on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
 }
 
 void
-on_cfg_delete_track_from_playlist_toggled
-					(GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_delete_track_playlist(
-	    gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_delete_track_ipod(
-	    gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
 on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -306,7 +287,8 @@ void
 on_delete_tracks_activate               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    delete_track_head (FALSE);
+    g_print ("not supported yet");
+//    delete_track_head (FALSE);
 }
 
 
@@ -314,24 +296,27 @@ void
 on_delete_playlist_activate                (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    delete_playlist_head (FALSE);
+    g_print ("not supported yet");
+//    delete_playlist_head (FALSE);
 }
 
 void
 on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    gint inst = get_sort_tab_number (
-	_("Delete selected entry of which sort tab?"));
+    g_print ("not supported yet");
+/*     gint inst = get_sort_tab_number ( */
+/* 	_("Delete selected entry of which sort tab?")); */
 
-    if (inst != -1)   delete_entry_head (inst, FALSE);
+/*     if (inst != -1)   delete_entry_head (inst, FALSE); */
 }
 
 void
 on_delete_full_tracks_activate               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-     delete_track_head (TRUE);
+    g_print ("not supported yet");
+//     delete_track_head (TRUE);
 }
 
 
@@ -339,20 +324,22 @@ void
 on_delete_full_playlist_activate                (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    delete_playlist_head (TRUE);
+    g_print ("not supported yet");
+//    delete_playlist_head (TRUE);
 }
 
 void
 on_delete_full_tab_entry_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    gint inst = get_sort_tab_number (
-	_("Delete selected entry of which sort tab?"));
+    g_print ("not supported yet");
+/*     gint inst = get_sort_tab_number ( */
+/* 	_("Delete selected entry of which sort tab?")); */
 
-    if (inst != -1)
-    {
-	delete_entry_head (inst, TRUE);
-    }
+/*     if (inst != -1) */
+/*     { */
+/* 	delete_entry_head (inst, TRUE); */
+/*     } */
 }
 
 void
@@ -899,15 +886,6 @@ on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     prefs_window_set_sync_remove(
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_sync_remove_confirm(
 	gtk_toggle_button_get_active(togglebutton));
 }
 

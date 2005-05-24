@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-17 23:37:48 jcs>
+/* Time-stamp: <2005-05-25 00:13:58 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -429,12 +429,16 @@ guint gp_playlist_remove_by_name (iTunesDB *itdb, gchar *pl_name)
 
 
 /* This function removes the track "track" from the
-   playlist "plitem". It then lets the display model know.
+   playlist "plitem" and also adjusts the display.
    No action is taken if "track" is not in the playlist.
    If "plitem" == NULL, remove from master playlist.
    If the track is removed from the MPL, it's also removed
-   from memory completely */
-void gp_playlist_remove_track (Playlist *plitem, Track *track)
+   from memory completely (i.e. from the tracklist and md5 hash).
+   Depending on @deleteaction, the track is either marked for deletion
+   on the ipod/hard disk or just removed from the database
+ */
+void gp_playlist_remove_track (Playlist *plitem, Track *track,
+			       DeleteAction deleteaction)
 {
     iTunesDB *itdb;
 
@@ -442,16 +446,34 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
     itdb = track->itdb;
     g_return_if_fail (itdb);
 
+    switch (deleteaction)
+    {
+    case DELETE_ACTION_IPOD:
+    case DELETE_ACTION_LOCAL:
+    case DELETE_ACTION_DATABASE:
+	/* remove from MPL in these cases */
+	plitem = NULL;
+	break;
+    case DELETE_ACTION_PLAYLIST:
+	break;
+    }
+
     if (plitem == NULL)  plitem = itdb_playlist_mpl (track->itdb);
+    
     g_return_if_fail (plitem);
 
+    /* remove track from display */
     pm_remove_track (plitem, track);
 
+    /* remove track from playlist */
     itdb_playlist_remove_track (plitem, track);
 
     if (plitem->type == ITDB_PL_TYPE_MPL)
     { /* if it's the MPL, we remove the track permanently */
-	GList *gl = g_list_nth (track->itdb->playlists, 1);
+	GList *gl = g_list_nth (itdb->playlists, 1);
+	ExtraiTunesDBData *eitdb = itdb->userdata;
+	g_return_if_fail (eitdb);
+
 	while (gl)
 	{  /* first we remove the track from all other playlists (i=1) */
 	    Playlist *pl = gl->data;
@@ -462,17 +484,51 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track)
 	}
 	md5_track_remove (track);
 
-	if ((itdb->usertype & GP_ITDB_TYPE_IPOD) && track->transferred)
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
-	    ExtraiTunesDBData *eitdb = itdb->userdata;
-	    g_return_if_fail (eitdb);
-
-	    itdb_track_unlink (track);
-	    mark_track_for_deletion (itdb, track);
+	    switch (deleteaction)
+	    {
+	    case DELETE_ACTION_DATABASE:
+		/* ATTENTION: this might create a dangling file on the
+		   iPod! */
+		itdb_track_remove (track);
+		break;
+	    case DELETE_ACTION_IPOD:
+		if (track->transferred)
+		{
+		    itdb_track_unlink (track);
+		    mark_track_for_deletion (itdb, track);
+		}
+		else
+		{
+		    itdb_track_remove (track);
+		}
+		break;
+	    case DELETE_ACTION_PLAYLIST:
+	    case DELETE_ACTION_LOCAL:
+		break;
+		/* not allowed -- programming error */
+		g_return_if_reached ();
+		break;
+	    }
 	}
-	else
+	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	{
-	    itdb_track_remove (track);
+	    switch (deleteaction)
+	    {
+	    case DELETE_ACTION_LOCAL:
+		itdb_track_unlink (track);
+		mark_track_for_deletion (itdb, track);
+		break;
+	    case DELETE_ACTION_DATABASE:
+		itdb_track_remove (track);
+		break;
+	    case DELETE_ACTION_PLAYLIST:
+	    case DELETE_ACTION_IPOD:
+		/* not allowed -- programming error */
+		g_return_if_reached ();
+		break;
+	    }
 	}
     }
 

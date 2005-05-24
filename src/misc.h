@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-07 20:34:05 jcs>
+/* Time-stamp: <2005-05-23 00:29:48 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -38,6 +38,7 @@
 #include <glade/glade.h>
 #include <stdio.h>
 #include "file.h"
+#include "display_itdb.h"
 #include "itdb.h"
 #include "display.h"
 #include "confirmation.h"
@@ -90,12 +91,11 @@ T_item ST_to_T (ST_CAT_item st);
 gchar *get_track_info (Track *track);
 
 void ipod_directories_head (const gchar *mountpoint);
-void delete_playlist_head (gboolean delete_full);
-void delete_track_head (gboolean delete_full);
-void delete_entry_head (gint inst, gboolean delete_full);
+void delete_playlist_head (DeleteAction deleteaction);
+void delete_track_head (DeleteAction deleteaction);
+void delete_entry_head (gint entry_inst, DeleteAction deleteaction);
 
-void delete_populate_settings (iTunesDB *itdb, Playlist *pl,
-			       GList *selected_trackids,
+void delete_populate_settings (struct DeleteData *dd,
 			       gchar **label, gchar **title,
 			       gboolean *confirm_again,
 			       ConfHandlerOpt *confirm_again_handler,

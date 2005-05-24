@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-09 23:18:01 jcs>
+/* Time-stamp: <2005-05-25 00:13:57 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -839,9 +839,9 @@ check_db_danglingcancel1  (gpointer user_data1, gpointer user_data2)
     gtkpod_statusbar_message (_("Handling of dangling tracks with files on PC was canceled."));
 }
 
-
-/* To be called for ok to remove dangling Tracks with with no files linked.
- * Frees @user_data1 and @user_data2*/
+/* "dangling": tracks that are in database but not on disk */
+/* To be called for ok to remove dangling Tracks with with no files
+ * linked.  Frees @user_data1 and @user_data2*/
 static void
 check_db_danglingok0 (gpointer user_data1, gpointer user_data2)
 {
@@ -859,8 +859,8 @@ check_db_danglingok0 (gpointer user_data1, gpointer user_data2)
 	g_return_if_fail (track);
 	
         /* printf("Removing track %d\n", track->ipod_id); */
-	gp_playlist_remove_track (NULL, track); /* remove track from everywhere */
-	unmark_track_for_deletion (itdb, track); /* otherwise it will try to remove non-existing ipod file */
+	/* remove track from database */
+	gp_playlist_remove_track (NULL, track, DELETE_ACTION_DATABASE);
     }
     g_list_free(l_dangling);
     data_changed (itdb);

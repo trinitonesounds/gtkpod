@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-22 16:36:19 jcs>
+/* Time-stamp: <2005-05-25 00:07:44 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1094,7 +1094,7 @@ struct SyncData
 {
     GHashTable *hash_tosync;
     GHashTable *hash_removed;
-    Playlist *playlist;  /* currently selected playlist */
+    Playlist *pl;  /* currently selected playlist */
 };
 
 static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
@@ -1105,8 +1105,8 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     iTunesDB *itdb;
 
     g_return_if_fail (sd);
-    g_return_if_fail (sd->playlist);
-    itdb = sd->playlist->itdb;
+    g_return_if_fail (sd->pl);
+    itdb = sd->pl->itdb;
     g_return_if_fail (itdb);
 
     /* set "update existing" to TRUE */
@@ -1114,7 +1114,7 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     prefs_set_update_existing (TRUE);
 
     /* sync all dirs stored in the hash */
-    g_hash_table_foreach (sd->hash_tosync, sync_dir, sd->playlist);
+    g_hash_table_foreach (sd->hash_tosync, sync_dir, sd->pl);
 
     /* reset "update existing" */
     prefs_set_update_existing (update);
@@ -1159,10 +1159,25 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 	{
 	    gchar *label, *title;
 	    GString *str;
+	    struct DeleteData dd;
+	    GtkResponseType response;
+
+	    dd.pl = sd->pl;
+	    dd.itdb = itdb;
+	    dd.selected_tracks = tracklist;
+	    dd.deleteaction = -1;
+
+	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+		dd.deleteaction = DELETE_ACTION_DATABASE;
+	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+		dd.deleteaction = DELETE_ACTION_IPOD;
+	    g_return_if_fail (dd.deleteaction != -1);
+
 	    /* populate "title" and "label" */
-	    delete_populate_settings (itdb, NULL, tracklist,
+	    delete_populate_settings (&dd,
 				      &label, &title,
 				      NULL, NULL, NULL);
+
 	    /* create a list of tracks */
 	    str = g_string_sized_new (2000);
 	    for(gl=tracklist; gl; gl=gl->next)
@@ -1177,9 +1192,9 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 					tr->artist, tr->title);
 	    }
 	    /* open window */
-	    gtkpod_confirmation
+	    response = gtkpod_confirmation
 		(-1,                   /* gint id, */
-		 FALSE,                /* gboolean modal, */
+		 TRUE,                /* gboolean modal, */
 		 title,                /* title */
 		 label,                /* label */
 		 str->str,             /* scrolled text */
@@ -1189,11 +1204,21 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		 NULL, 0, NULL,        /* option 2 */
 		 prefs_get_sync_remove_confirm(), /* gboolean confirm_again, */
 		 prefs_set_sync_remove_confirm,   /* confirm_again_handler,*/
-		 sync_remove_ok,       /* ConfHandler ok_handler,*/
+		 CONF_NULL_HANDLER,    /* ConfHandler ok_handler,*/
 		 NULL,                 /* don't show "Apply" button */
-		 sync_remove_cancel,   /* cancel_handler,*/
-		 sd->playlist,         /* gpointer user_data1,*/
-		 tracklist);           /* gpointer user_data2,*/
+		 CONF_NULL_HANDLER,    /* cancel_handler,*/
+		 NULL,                 /* gpointer user_data1,*/
+		 NULL);                /* gpointer user_data2,*/
+
+	    switch (response)
+	    {
+	    case GTK_RESPONSE_OK:
+		sync_remove_ok (sd->pl, tracklist);
+		break;
+	    default:
+		sync_remove_cancel (sd->pl, tracklist);
+		break;
+	    }
 
 	    g_free (label);
 	    g_string_free (str, TRUE);
@@ -1368,7 +1393,7 @@ No valid directories have been found. Sync aborted.\n"));
 	sd = g_malloc (sizeof (struct SyncData));
 	sd->hash_tosync = hash_tosync;
 	sd->hash_removed = hash_removed;
-	sd->playlist = pm_get_selected_playlist ();
+	sd->pl = pm_get_selected_playlist ();
 	if (gtkpod_confirmation (
 		-1,                     /* gint id, */
 		FALSE,                  /* gboolean modal, */

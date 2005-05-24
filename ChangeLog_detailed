@@ -1,3 +1,8 @@
+2005-05-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* finished rewrite of delete code (only context-menu delete
+          supported at the moment). Basically untested :-(
+
 2005-05-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* display warning if unmounting of the iPod was unsuccessful

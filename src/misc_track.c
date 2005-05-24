@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-05-07 23:39:48 jcs>
+|  Time-stamp: <2005-05-25 00:17:19 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -306,14 +306,24 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 		  to worry about changing md5 hash entries */
 	       if (itdb_playlist_contains_track (pl, track))
 	       {
-		   gp_playlist_remove_track (pl, track);
+		   gp_playlist_remove_track (pl, track,
+					     DELETE_ACTION_PLAYLIST);
 		   if (!itdb_playlist_contains_track (pl, oldtrack))
 		       gp_playlist_add_track (pl, oldtrack, TRUE);
 	       }
 	       gl = gl->next;
 	   }
-	   /* remove track from MPL, i.e. from the ipod */
-	   gp_playlist_remove_track (NULL, track);
+	   /* remove track from MPL, i.e. from the ipod (or the local
+	    * database */
+	   if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	   {
+	       gp_playlist_remove_track (NULL, track, DELETE_ACTION_IPOD);
+	   }
+	   if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	   {
+	       gp_playlist_remove_track (NULL, track,
+					 DELETE_ACTION_DATABASE);
+	   }
 	   removed = TRUE;
        }
        ++deltrack_nr; /* count duplicate tracks */

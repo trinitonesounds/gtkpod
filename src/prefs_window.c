@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-14 02:25:30 jcs>
+/* Time-stamp: <2005-05-24 23:39:04 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -518,6 +518,16 @@ prefs_window_create(void)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				     tmpcfg->deletion.ipod_file);
     }
+    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_track_local_file_deletion")))
+    {
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				     tmpcfg->deletion.local_file);
+    }
+    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_track_database_deletion")))
+    {
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				     tmpcfg->deletion.database);
+    }
     if((w = glade_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm")))
     {
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -782,6 +792,8 @@ prefs_window_set(void)
 	prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
 	prefs_set_track_playlist_deletion(tmpcfg->deletion.track);
 	prefs_set_track_ipod_file_deletion(tmpcfg->deletion.ipod_file);
+	prefs_set_track_local_file_deletion(tmpcfg->deletion.local_file);
+	prefs_set_track_database_deletion(tmpcfg->deletion.database);
 	prefs_set_sync_remove_confirm(tmpcfg->deletion.syncing);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
 	prefs_set_show_duplicates(tmpcfg->show_duplicates);
@@ -1043,22 +1055,46 @@ void prefs_window_set_write_extended_info(gboolean active)
 }
 
 void
-prefs_window_set_delete_track_ipod(gboolean val)
+on_cfg_delete_track_from_playlist_toggled (GtkToggleButton *togglebutton,
+					   gpointer         user_data)
 {
-    tmpcfg->deletion.ipod_file = val;
+    tmpcfg->deletion.track = 
+	gtk_toggle_button_get_active(togglebutton);
+}
+
+
+void
+on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    tmpcfg->deletion.ipod_file =
+	gtk_toggle_button_get_active(togglebutton);
 }
 
 void
-prefs_window_set_delete_track_playlist(gboolean val)
+on_cfg_track_local_file_deletion_toggled (GtkToggleButton *togglebutton,
+					  gpointer         user_data)
 {
-    tmpcfg->deletion.track = val;
+    tmpcfg->deletion.local_file =
+	gtk_toggle_button_get_active(togglebutton);
 }
 
 void
-prefs_window_set_sync_remove_confirm(gboolean val)
+on_cfg_track_database_deletion_toggled (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->deletion.syncing = val;
+    tmpcfg->deletion.database =
+	gtk_toggle_button_get_active(togglebutton);
 }
+
+void
+on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    tmpcfg->deletion.syncing = 
+	gtk_toggle_button_get_active(togglebutton);
+}
+
 
 void
 prefs_window_set_autoimport(gboolean val)

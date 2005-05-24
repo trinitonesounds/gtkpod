@@ -14617,7 +14617,7 @@ when writing tags</property>
 			    <widget class="GtkCheckButton" id="cfg_delete_track_from_ipod">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Before removing playlists or tracks from the iPod </property>
+			      <property name="label" translatable="yes">Before removing tracks from the iPod</property>
 			      <property name="use_underline">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="focus_on_click">True</property>
@@ -14625,6 +14625,46 @@ when writing tags</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
 			      <signal name="toggled" handler="on_cfg_delete_track_from_ipod_toggled" last_modification_time="Thu, 28 Apr 2005 18:09:36 GMT"/>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">False</property>
+			      <property name="fill">False</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkCheckButton" id="cfg_track_local_file_deletion">
+			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">Before removing tracks from the harddisk</property>
+			      <property name="use_underline">True</property>
+			      <property name="relief">GTK_RELIEF_NORMAL</property>
+			      <property name="focus_on_click">True</property>
+			      <property name="active">False</property>
+			      <property name="inconsistent">False</property>
+			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_track_local_file_deletion_toggled" last_modification_time="Tue, 24 May 2005 14:27:44 GMT"/>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">False</property>
+			      <property name="fill">False</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkCheckButton" id="cfg_track_database_deletion">
+			      <property name="visible">True</property>
+			      <property name="can_focus">True</property>
+			      <property name="label" translatable="yes">Before removing tracks from the local database</property>
+			      <property name="use_underline">True</property>
+			      <property name="relief">GTK_RELIEF_NORMAL</property>
+			      <property name="focus_on_click">True</property>
+			      <property name="active">False</property>
+			      <property name="inconsistent">False</property>
+			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_cfg_track_database_deletion_toggled" last_modification_time="Tue, 24 May 2005 14:28:06 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>

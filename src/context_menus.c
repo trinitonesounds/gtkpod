@@ -154,38 +154,15 @@ sync_dirs_entries(GtkMenuItem *mi, gpointer data)
  * @data - ignored, should be NULL
  */
 static void 
-delete_entries(GtkMenuItem *mi, gpointer data)
+delete_entries(GtkMenuItem *mi, DeleteAction deleteaction)
 {
     if (selected_playlist)
-	delete_playlist_head (FALSE);
+	delete_playlist_head (deleteaction);
     else if(selected_entry)
-	delete_entry_head (entry_inst, FALSE);
+	delete_entry_head (entry_inst, deleteaction);
     else if(selected_tracks)
-	delete_track_head (FALSE);
+	delete_track_head (deleteaction);
 }
-
-/**
- * delete_entries_full - delete the currently selected entry, be it a playlist,
- * items in a sort tab, or tracks. All member tracks are removed from
- * the iPod completely.
- * @mi - the menu item selected
- * @data - ignored, should be NULL
- */
-static void 
-delete_entries_full(GtkMenuItem *mi, gpointer data)
-{
-    if (selected_playlist)
-    {
-	delete_playlist_head (TRUE);
-    }
-    else if (selected_entry)
-    {
-	delete_entry_head (entry_inst, TRUE);
-    }
-    else if (selected_tracks)
-	delete_track_head (TRUE);
-}
-
 
 /* Edit selected smart playlist */
 static void edit_spl (GtkMenuItem *mi, gpointer data)
@@ -252,7 +229,7 @@ static void normalize_entries (GtkMenuItem *mi, gpointer data)
  * @func - the callback for when the item is selected (or NULL)
  * @mi - the GtkWidget we're gonna hook into the menu
  */
-GtkWidget *hookup_mi (GtkWidget *m, gchar *str, gchar *stock, GCallback func)
+GtkWidget *hookup_mi (GtkWidget *m, gchar *str, gchar *stock, GCallback func, gpointer userdata)
 {
     GtkWidget *mi;
 
@@ -272,7 +249,7 @@ GtkWidget *hookup_mi (GtkWidget *m, gchar *str, gchar *stock, GCallback func)
     gtk_widget_set_sensitive(mi, TRUE);
     gtk_widget_add_events(mi, GDK_BUTTON_RELEASE_MASK);
     if (func)
-	g_signal_connect(G_OBJECT(mi), "activate", func, NULL);
+	g_signal_connect(G_OBJECT(mi), "activate", func, userdata);
     gtk_container_add (GTK_CONTAINER (m), mi);
     return mi;
 }
@@ -297,10 +274,17 @@ void
 create_context_menu(CM_type type)
 {
     static GtkWidget *menu[CM_NUM];
-    static GtkWidget *mi_d[CM_NUM];   /* delete but keep track menu */
-    static GtkWidget *mi_df[CM_NUM];  /* delete with tracks menu */
-    static GtkWidget *mi_sep[CM_NUM]; /* separator */
-    static GtkWidget *mi_spl[CM_NUM]; /* edit smart playlist */
+    static GtkWidget *mi_pl[CM_NUM];   /* DELETE_ACTION_PLAYLIST */
+    static GtkWidget *mi_ipod[CM_NUM]; /* DELETE_ACTION_IPOD     */
+    static GtkWidget *mi_local[CM_NUM];/* DELETE_ACTION_LOCAL    */
+    static GtkWidget *mi_db[CM_NUM];   /* DELETE_ACTION_DATABASE */
+    static GtkWidget *mi_sep[CM_NUM];  /* separator              */
+    static GtkWidget *mi_spl[CM_NUM];  /* edit smart playlist    */
+    static GtkWidget *mi_ipod_all[CM_NUM];/* DELETE_ACTION_IPOD (all
+					   * tracks)      */
+    static GtkWidget *mi_db_all[CM_NUM];  /* DELETE_ACTION_DATABASE
+					   * (all tracks  */
+
     Playlist *pl;
 
     if(!menu[type])
@@ -310,24 +294,30 @@ create_context_menu(CM_type type)
 	hookup_mi (menu[type], _("Edit"), NULL, G_CALLBACK (edit_entries));
 #endif
 	hookup_mi (menu[type], _("Play Now"), "gtk-cdrom",
-		   G_CALLBACK (play_entries_now));
+		   G_CALLBACK (play_entries_now), NULL);
 	hookup_mi (menu[type], _("Enqueue"), "gtk-cdrom",
-		   G_CALLBACK (play_entries_enqueue));
+		   G_CALLBACK (play_entries_enqueue), NULL);
 	hookup_mi (menu[type], _("Copy from iPod"), "gtk-floppy",
-		   G_CALLBACK (export_entries));
+		   G_CALLBACK (export_entries), NULL);
 	hookup_mi (menu[type], _("Create Playlist File"), "gtk-floppy",
-		   G_CALLBACK (create_playlist_file));
+		   G_CALLBACK (create_playlist_file), NULL);
 	hookup_mi (menu[type], _("Update"), "gtk-refresh",
-		   G_CALLBACK (update_entries));
+		   G_CALLBACK (update_entries), NULL);
 	hookup_mi (menu[type], _("Sync Dirs"), "gtk-refresh",
-		   G_CALLBACK (sync_dirs_entries));
+		   G_CALLBACK (sync_dirs_entries), NULL);
 	hookup_mi (menu[type], _("Normalize"), NULL,
-		   G_CALLBACK (normalize_entries));
+		   G_CALLBACK (normalize_entries), NULL);
+	hookup_mi (menu[type], _("Create new Playlist"),
+		   "gtk-justify-left",
+		   G_CALLBACK (create_playlist_from_entries), NULL);
+	mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
+				  "gtk-properties",
+				  G_CALLBACK (edit_spl), NULL);
 
 	if (type == CM_ST)
 	{
 	    hookup_mi (menu[type], _("Alphabetize"), "gtk-sort-ascending",
-		       G_CALLBACK (alphabetize));
+		       G_CALLBACK (alphabetize), NULL);
 /* example for sub menus!
 	    GtkWidget *mi;
 	    GtkWidget *sub;
@@ -337,70 +327,129 @@ create_context_menu(CM_type type)
 	    gtk_widget_show (sub);
 	    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
 	    hookup_mi (sub, _("Ascending"), "gtk-sort-ascending",
-		       G_CALLBACK (alphabetize_ascending));
+		       G_CALLBACK (alphabetize_ascending), NULL);
 	    hookup_mi (sub, _("Descending"), "gtk-sort-descending",
-		       G_CALLBACK (alphabetize_descending));
+		       G_CALLBACK (alphabetize_descending), NULL);
 	    hookup_mi (sub, _("Reset"), "gtk-undo",
-	               G_CALLBACK (reset_alphabetize));
+	               G_CALLBACK (reset_alphabetize), NULL);
 */
 	}
 	if ((type == CM_ST) || (type == CM_TM))
 	{
-	    hookup_mi (menu[type], _("Create new Playlist"), "gtk-justify-left",
-		       G_CALLBACK (create_playlist_from_entries));
 	    mi_sep[type] = add_separator (menu[type]);
-	    mi_d[type] = hookup_mi (menu[type], _("Delete From Playlist"),
-				    "gtk-delete",
-				    G_CALLBACK (delete_entries));
-	    mi_df[type] = hookup_mi (menu[type], _("Delete From iPod"),
+	    mi_ipod[type] = hookup_mi (menu[type],
+				       _("Delete From iPod"),
+				       "gtk-delete",
+				       G_CALLBACK (delete_entries),
+				       (gpointer)DELETE_ACTION_IPOD);
+	    mi_local[type] = hookup_mi (menu[type],
+					_("Delete From Harddisk"),
+					"gtk-delete",
+					G_CALLBACK (delete_entries),
+					(gpointer)DELETE_ACTION_IPOD);
+	    mi_db[type] = hookup_mi (menu[type],
+				     _("Delete From Database"),
 				     "gtk-delete",
-				     G_CALLBACK (delete_entries_full));
-	    mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
-				      "gtk-properties",
-				      G_CALLBACK (edit_spl));
+				     G_CALLBACK (delete_entries),
+				     (gpointer)DELETE_ACTION_DATABASE);
+	    mi_pl[type] = hookup_mi (menu[type],
+				     _("Delete From Playlist"),
+				     "gtk-delete",
+				     G_CALLBACK (delete_entries),
+				     (gpointer)DELETE_ACTION_PLAYLIST);
 	}
 	if (type == CM_PM)
 	{
 	    mi_sep[type] = add_separator (menu[type]);
-	    mi_d[type] = hookup_mi (menu[type], _("Delete But Keep Tracks"),
-				    "gtk-delete",
-				    G_CALLBACK (delete_entries));
-	    mi_df[type] = hookup_mi (menu[type], _("Delete Including Tracks"),
+	    mi_ipod[type] = hookup_mi (menu[type],
+				       _("Delete Including Tracks"),
+				       "gtk-delete",
+				       G_CALLBACK (delete_entries),
+				       (gpointer)DELETE_ACTION_IPOD);
+	    mi_local[type] = hookup_mi (menu[type],
+					_("Delete Including Tracks (Harddisk)"),
+					"gtk-delete",
+					G_CALLBACK (delete_entries),
+					(gpointer)DELETE_ACTION_LOCAL);
+	    mi_db[type] = hookup_mi (menu[type],
+				     _("Delete Including Tracks (Database)"),
 				     "gtk-delete",
-				     G_CALLBACK (delete_entries_full));
-	    mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
-				      "gtk-properties",
-				      G_CALLBACK (edit_spl));
+				     G_CALLBACK (delete_entries),
+				     (gpointer)DELETE_ACTION_DATABASE);
+	    mi_pl[type] = hookup_mi (menu[type],
+				     _("Delete But Keep Tracks"),
+				     "gtk-delete",
+				     G_CALLBACK (delete_entries),
+				     (gpointer)DELETE_ACTION_PLAYLIST);
+	    mi_ipod_all[type] = hookup_mi (menu[type],
+					   _("Remove All Tracks from iPod"),
+					   "gtk-delete",
+					   G_CALLBACK (delete_entries),
+					   (gpointer)DELETE_ACTION_IPOD);
+	    mi_db_all[type] = hookup_mi (menu[type],
+					 _("Remove All Tracks from Database"),
+					 "gtk-delete",
+					 G_CALLBACK (delete_entries),
+					 (gpointer)DELETE_ACTION_DATABASE);
 	}
     }
     /* Make sure, only available delete options are displayed */
     pl = pm_get_selected_playlist();
     if (pl)
     {
+	iTunesDB *itdb = pl->itdb;
+	g_return_if_fail (itdb);
+
 	switch (type)
 	{
 	case CM_PM:
 	    if (pl->is_spl)
 	    {
-		gtk_widget_show (mi_sep[type]);
-		gtk_widget_show (mi_d[type]);
-		gtk_widget_hide (mi_df[type]);
 		gtk_widget_show (mi_spl[type]);
 	    }
 	    else
 	    {
 		gtk_widget_hide (mi_spl[type]);
-		if (pl->type == ITDB_PL_TYPE_NORM)
+	    }
+	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	    {
+		gtk_widget_hide (mi_local [type]);
+		gtk_widget_hide (mi_db [type]);
+		gtk_widget_hide (mi_db_all [type]);
+		if (pl->type == ITDB_PL_TYPE_MPL)
 		{
-		    gtk_widget_show (mi_sep[type]);
-		    gtk_widget_show (mi_d[type]);
-		    gtk_widget_show (mi_df[type]);
+		    gtk_widget_hide (mi_sep [type]);
+		    gtk_widget_hide (mi_ipod [type]);
+		    gtk_widget_hide (mi_pl [type]);
+		    gtk_widget_show (mi_ipod_all [type]);
 		}
 		else
 		{
-		    gtk_widget_hide (mi_sep[type]);
-		    gtk_widget_hide (mi_d[type]);
-		    gtk_widget_hide (mi_df[type]);
+		    gtk_widget_show (mi_sep [type]);
+		    gtk_widget_show (mi_ipod [type]);
+		    gtk_widget_show (mi_pl [type]);
+		    gtk_widget_hide (mi_ipod_all [type]);
+		}
+	    }
+	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	    {
+		gtk_widget_hide (mi_ipod [type]);
+		gtk_widget_hide (mi_ipod_all [type]);
+		if (pl->type == ITDB_PL_TYPE_MPL)
+		{
+		    gtk_widget_hide (mi_sep [type]);
+		    gtk_widget_hide (mi_local [type]);
+		    gtk_widget_hide (mi_db [type]);
+		    gtk_widget_hide (mi_pl [type]);
+		    gtk_widget_show (mi_db_all [type]);
+		}
+		else
+		{
+		    gtk_widget_show (mi_sep [type]);
+		    gtk_widget_show (mi_local [type]);
+		    gtk_widget_show (mi_db [type]);
+		    gtk_widget_show (mi_pl [type]);
+		    gtk_widget_hide (mi_db_all [type]);
 		}
 	    }
 	    break;
@@ -408,22 +457,41 @@ create_context_menu(CM_type type)
 	case CM_TM:
 	    if (pl->is_spl)
 	    {
-		gtk_widget_hide (mi_d[type]);
-		gtk_widget_hide (mi_df[type]);
 		gtk_widget_show (mi_spl[type]);
 	    }
 	    else
 	    {
 		gtk_widget_hide (mi_spl[type]);
-		if (pl->type == ITDB_PL_TYPE_NORM)
+	    }
+	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	    {
+		gtk_widget_hide (mi_local [type]);
+		gtk_widget_hide (mi_db [type]);
+		if (pl->type == ITDB_PL_TYPE_MPL)
 		{
-		    gtk_widget_show (mi_d[type]);
-		    gtk_widget_show (mi_df[type]);
+		    gtk_widget_show (mi_ipod [type]);
+		    gtk_widget_hide (mi_pl [type]);
 		}
 		else
 		{
-		    gtk_widget_hide (mi_d[type]);
-		    gtk_widget_show (mi_df[type]);
+		    gtk_widget_show (mi_ipod [type]);
+		    gtk_widget_show (mi_pl [type]);
+		}
+	    }
+	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	    {
+		gtk_widget_hide (mi_ipod [type]);
+		if (pl->type == ITDB_PL_TYPE_MPL)
+		{
+		    gtk_widget_show (mi_local [type]);
+		    gtk_widget_show (mi_db [type]);
+		    gtk_widget_hide (mi_pl [type]);
+		}
+		else
+		{
+		    gtk_widget_show (mi_local [type]);
+		    gtk_widget_show (mi_db [type]);
+		    gtk_widget_show (mi_pl [type]);
 		}
 	    }
 	    break;

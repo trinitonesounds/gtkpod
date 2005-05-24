@@ -289,7 +289,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 	if ((cd = g_hash_table_lookup (id_hash, &id)))
 	{ /* window with same ID already open -- add @text and return
 	   * */
-	    if (text &&
+	    if (text && *text &&
 		cd->window && ((w = glade_xml_get_widget (cd->window_xml, "text"))))
 	    {
 		GtkTextIter ti;

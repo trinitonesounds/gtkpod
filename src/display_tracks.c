@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 23:29:23 jcs>
+/* Time-stamp: <2005-05-24 23:57:31 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -337,7 +337,7 @@ static void tm_drag_data_delete (GtkWidget *widget,
 	str = reply->str;
 	while(parse_tracks_from_string(&str, &track))
 	{
-	    gp_playlist_remove_track (pl, track);
+	    gp_playlist_remove_track (pl, track, DELETE_ACTION_PLAYLIST);
 	}
 	g_string_free (reply, TRUE);
 
@@ -664,12 +664,9 @@ on_track_treeview_key_release_event     (GtkWidget       *widget,
     {
 	switch(event->keyval)
 	{
-	    case GDK_d:
-		delete_track_head (FALSE);
-		break;
-	    case GDK_u:
-		gp_do_selected_tracks (update_tracks);
-		break;
+/* 	    case GDK_u: */
+/* 		gp_do_selected_tracks (update_tracks); */
+/* 		break; */
 	    default:
 		break;
 	}

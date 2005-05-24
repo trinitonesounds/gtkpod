@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-01-07 21:25:27 jcs>
+/* Time-stamp: <2005-05-24 23:39:04 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -54,9 +54,6 @@ void prefs_window_set_id3_write_id3v24 (gboolean val);
 void prefs_window_set_mount_point (const gchar *mp);
 void prefs_window_set_time_format (const gchar *format);
 void prefs_window_set_write_extended_info (gboolean active);
-void prefs_window_set_delete_track_ipod (gboolean val);
-void prefs_window_set_delete_track_playlist (gboolean val);
-void prefs_window_set_sync_remove_confirm (gboolean val);
 void prefs_window_set_autoimport (gboolean val);
 void prefs_window_set_charset (gchar *charset);
 void prefs_window_set_mpl_autoselect (gboolean autoselect);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 19:57:20 jcs>
+/* Time-stamp: <2005-05-22 22:03:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -232,15 +232,11 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
     {
 	switch(event->keyval)
 	{
-	    case GDK_d:
-		delete_entry_head (st_get_instance_from_treeview (
-				       GTK_TREE_VIEW (widget)), FALSE);
-		break;
-	    case GDK_u:
-		gp_do_selected_entry (update_tracks,
-				   st_get_instance_from_treeview (
-				       GTK_TREE_VIEW (widget)));
-		break;
+/* 	    case GDK_u: */
+/* 		gp_do_selected_entry (update_tracks, */
+/* 				   st_get_instance_from_treeview ( */
+/* 				       GTK_TREE_VIEW (widget))); */
+/* 		break; */
 	    default:
 		break;
 	}

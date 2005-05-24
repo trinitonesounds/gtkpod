@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-07 15:08:27 jcs>
+/* Time-stamp: <2005-05-24 23:39:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -112,7 +112,7 @@ struct cfg
   } last_dir;	          /* last directories used by the fileselections */
   struct
   {
-      gboolean track, ipod_file, syncing;
+      gboolean track, ipod_file, local_file, database, syncing;
   } deletion;
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
   struct win_size size_cal;     /* last size of calendar window */
@@ -194,9 +194,6 @@ void prefs_set_autoimport(gboolean val);
 void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
 void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
-void prefs_set_track_playlist_deletion(gboolean val);
-void prefs_set_track_ipod_file_deletion(gboolean val);
-void prefs_set_sync_remove_confirm(gboolean val);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_update_existing(gboolean active);
 void prefs_set_block_display(gboolean active);
@@ -243,9 +240,6 @@ gboolean prefs_get_autoimport(void);
 gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
-gboolean prefs_get_track_playlist_deletion(void);
-gboolean prefs_get_track_ipod_file_deletion(void);
-gboolean prefs_get_sync_remove_confirm(void);
 gboolean prefs_get_id3_write(void);
 gboolean prefs_get_id3_write_id3v24(void);
 const gchar *prefs_get_ipod_mount (void);
@@ -275,6 +269,18 @@ gboolean prefs_get_show_sync_dirs (void);
 void prefs_set_show_sync_dirs (gboolean val);
 gboolean prefs_get_sync_remove (void);
 void prefs_set_sync_remove (gboolean val);
+
+void prefs_set_sync_remove_confirm(gboolean val);
+gboolean prefs_get_sync_remove_confirm(void);
+void prefs_set_track_playlist_deletion(gboolean val);
+gboolean prefs_get_track_playlist_deletion(void);
+void prefs_set_track_ipod_file_deletion(gboolean val);
+gboolean prefs_get_track_ipod_file_deletion(void);
+void prefs_set_track_database_deletion(gboolean val);
+gboolean prefs_get_track_database_deletion(void);
+void prefs_set_track_local_file_deletion(gboolean val);
+gboolean prefs_get_track_local_file_deletion(void);
+
 gboolean prefs_get_display_toolbar (void);
 void prefs_set_display_toolbar (gboolean val);
 gboolean prefs_get_update_charset (void);

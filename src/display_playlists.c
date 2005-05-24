@@ -880,9 +880,9 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
     {
 	switch(event->keyval)
 	{
-	    case GDK_u:
-		gp_do_selected_playlist (update_tracks);
-		break;
+/* 	    case GDK_u: */
+/* 		gp_do_selected_playlist (update_tracks); */
+/* 		break; */
 	    case GDK_n:
 		add_new_pl_or_spl_user_name (gp_get_active_itdb(),
 					     NULL, -1);

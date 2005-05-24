@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-06 19:12:37 jcs>
+/* Time-stamp: <2005-05-23 00:22:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -172,6 +172,42 @@ typedef enum  {
   TM_COLUMN_COMPILATION,
   TM_NUM_COLUMNS
 } TM_item;
+
+/* A means to address the fields by uniform IDs. May be extended as
+ * needed. You should extend "track_get_item_pointer()" defined in
+ * track.c as well for string fields. */
+typedef enum {
+    T_ALL = 0,      /* all fields */
+    T_ALBUM,
+    T_ARTIST,
+    T_TITLE,
+    T_GENRE,
+    T_COMMENT,
+    T_COMPOSER,
+    T_FDESC,
+    T_PC_PATH,
+    T_IPOD_PATH,
+    T_IPOD_ID,
+    T_TRACK_NR,
+    T_TRANSFERRED,
+    T_SIZE,
+    T_TRACKLEN,
+    T_BITRATE,
+    T_SAMPLERATE,
+    T_BPM,
+    T_PLAYCOUNT,
+    T_RATING,
+    T_TIME_ADDED,
+    T_TIME_PLAYED,
+    T_TIME_MODIFIED,
+    T_VOLUME,
+    T_SOUNDCHECK,
+    T_YEAR,
+    T_CD_NR,
+    T_GROUPING,
+    T_COMPILATION,
+} T_item;
+
 
 /* number of entries with "autoset empty tag to filename " feature */
 #define TM_NUM_TAGS_PREFS (5)

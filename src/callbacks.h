@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-04 22:20:53 jcs>
+/* Time-stamp: <2005-05-24 23:39:05 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -123,15 +123,6 @@ on_prefs_apply_clicked                 (GtkButton       *button,
 
 void
 on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_cfg_delete_track_from_playlist_toggled
-					(GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
@@ -344,10 +335,6 @@ on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
 
 void
 on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void

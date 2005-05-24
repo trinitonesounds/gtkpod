@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-09 21:26:50 jcs>
+/* Time-stamp: <2005-05-25 00:02:55 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -35,7 +35,6 @@
 
 #include <itdb.h>
 #include <gtk/gtk.h>
-
 
 struct itdbs_head
 {
@@ -78,41 +77,6 @@ typedef struct
   gchar   *charset;       /* charset used for ID3 tags              */
 } ExtraTrackData;
 
-/* A means to address the fields by uniform IDs. May be extended as
- * needed. You should extend "track_get_item_pointer()" defined in
- * track.c as well for string fields. */
-typedef enum {
-    T_ALL = 0,      /* all fields */
-    T_ALBUM,
-    T_ARTIST,
-    T_TITLE,
-    T_GENRE,
-    T_COMMENT,
-    T_COMPOSER,
-    T_FDESC,
-    T_PC_PATH,
-    T_IPOD_PATH,
-    T_IPOD_ID,
-    T_TRACK_NR,
-    T_TRANSFERRED,
-    T_SIZE,
-    T_TRACKLEN,
-    T_BITRATE,
-    T_SAMPLERATE,
-    T_BPM,
-    T_PLAYCOUNT,
-    T_RATING,
-    T_TIME_ADDED,
-    T_TIME_PLAYED,
-    T_TIME_MODIFIED,
-    T_VOLUME,
-    T_SOUNDCHECK,
-    T_YEAR,
-    T_CD_NR,
-    T_GROUPING,
-    T_COMPILATION,
-} T_item;
-
 /* types for iTunesDB */
 typedef enum
 {
@@ -120,6 +84,26 @@ typedef enum
     GP_ITDB_TYPE_IPOD  = 1<<1,    /* iPod */
 } GpItdbType;
 
+/* Delete actions */
+typedef enum
+{
+    /* remove from playlist only -- cannot be used on MPL */
+    DELETE_ACTION_PLAYLIST = 0,
+    /* remove from iPod (implicates removing from database) */
+    DELETE_ACTION_IPOD,
+    /* remove from local harddisk (implicates removing from database) */
+    DELETE_ACTION_LOCAL,
+    /* remove from database only */
+    DELETE_ACTION_DATABASE
+} DeleteAction;
+
+struct DeleteData
+{
+    iTunesDB *itdb;
+    Playlist *pl;
+    GList *selected_tracks;
+    DeleteAction deleteaction;
+};
 
 void init_data (GtkWidget *window);
 
@@ -143,7 +127,8 @@ Playlist *gp_playlist_add_new (iTunesDB *itdb, gchar *name,
 			       gboolean spl, gint32 pos);
 Playlist *gp_playlist_by_name_or_add (iTunesDB *itdb, gchar *pl_name,
 				      gboolean spl);
-void gp_playlist_remove_track (Playlist *plitem, Track *track);
+void gp_playlist_remove_track (Playlist *plitem, Track *track,
+			       DeleteAction deleteaction);
 void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display);
 
 void gp_playlist_add_extra (Playlist *pl);
