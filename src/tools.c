@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-04-29 12:05:01 jcs>
+/* Time-stamp: <2005-05-27 00:08:58 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -271,7 +271,7 @@ void nm_tracks_list (GList *list)
      /*normalization part*/
      if(new_soundcheck == TRACKVOLERROR)
      {
-	 gchar *path = get_track_name_on_disk_verified (track);
+	 gchar *path = get_file_name_verified (track);
 	 gchar *buf = g_strdup_printf (
 	     _("'%s-%s' (%s) could not be normalized.\n\n"),
 	     track->artist, track->title, path? path:"");
@@ -586,7 +586,7 @@ do_command_on_entries (const gchar *command, const gchar *what,
 	{
 	    for(l = selected_tracks; l; l = l->next)
 	    {
-		if((str = get_track_name_on_disk_verified((Track*)l->data)))
+		if((str = get_file_name_verified((Track*)l->data)))
 		    g_ptr_array_add (args, str);
 	    }
 	    percs = TRUE; /* encountered a '%s' */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-20 00:34:12 jcs>
+/* Time-stamp: <2005-05-27 00:17:59 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -107,7 +107,7 @@ void fill_in_extended_info (Track *track)
   {
       if (!etr->md5_hash)
       {
-	  gchar *filename = get_track_name_on_ipod (track);
+	  gchar *filename = get_file_name_on_ipod (track);
 	  etr->md5_hash = md5_hash_on_filename (filename, FALSE);
 	  g_free (filename);
       }
@@ -712,89 +712,15 @@ void gp_merge_itdb (iTunesDB *old_itdb)
 }
 
 
-/* Like get_track_name_on_disk(), but verifies the track actually
-   exists.
-   Must g_free return value after use */
-gchar *get_track_name_on_disk_verified (Track *track)
-{
-    gchar *name = NULL;
-    ExtraTrackData *etr;
-
-    g_return_val_if_fail (track, NULL);
-    etr = track->userdata;
-    g_return_val_if_fail (etr, NULL);
-
-    if (!prefs_get_offline ())
-    {
-	name = get_track_name_on_ipod (track);
-	if (name)
-	{
-	    if (!g_file_test (name, G_FILE_TEST_EXISTS))
-	    {
-		g_free (name);
-		name = NULL;
-	    }
-	}
-    }
-    if(!name && etr->pc_path_locale && (*etr->pc_path_locale))
-    {
-	if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
-	    name = g_strdup (etr->pc_path_locale);
-    }
-    return name;
-}
-
-
-/* Get track name from source @source */
-gchar *get_track_name_from_source (Track *track, FileSource source)
-{
-    gchar *result = NULL;
-    ExtraTrackData *etr;
-
-    g_return_val_if_fail (track, NULL);
-    etr = track->userdata;
-    g_return_val_if_fail (etr, NULL);
-
-    switch (source)
-    {
-    case SOURCE_PREFER_LOCAL:
-	if (etr->pc_path_locale && (*etr->pc_path_locale))
-	{
-	    if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
-	    {
-		result = g_strdup (etr->pc_path_locale);
-	    }
-	}
-	if (!result) result = get_track_name_on_ipod (track);
-	break;
-    case SOURCE_LOCAL:
-	if (etr->pc_path_locale && (*etr->pc_path_locale))
-	{
-	    if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
-	    {
-		result = g_strdup (etr->pc_path_locale);
-	    }
-	}
-	break;
-    case SOURCE_IPOD:
-	result = get_track_name_on_ipod (track);
-	break;
-    }
-    return result;
-}
-
-
-
 /*------------------------------------------------------------------*\
  *                                                                  *
  *      Functions concerning deletion of tracks                      *
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-
-/* Fills @size with the size in bytes taken on the iPod and @num with
-   the number of total deleted tracks.  @size and @num may be NULL */
-/* FIXME: @itdb is not used yet */
+/* Fills in @size with the size in bytes taken on the iPod or the
+ * local harddisk with files to be deleted, @num with the number of
+ * tracks to be deleted. */ 
 void gp_info_deleted_tracks (iTunesDB *itdb,
 			     gdouble *size, guint32 *num)
 {
@@ -816,10 +742,20 @@ void gp_info_deleted_tracks (iTunesDB *itdb,
 	etr = tr->userdata;
 	g_return_if_fail (tr);
 
-	if (tr->transferred)
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
-	    if (size)  *size += tr->size - etr->oldsize;
+	    if (tr->transferred)
+	    {   /* I don't understand why "- etr->oldsize" (JCS) --
+		 * supposedly related to update_track_from_file() but
+		 I can't see how. */
+		if (size)  *size += tr->size - etr->oldsize;
+	    }
 	}
+	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	{   /* total size on hard disk */
+	    if (size) *size += tr->size;
+	}
+
 	if (num)   *num += 1;
     }
 }
@@ -1013,7 +949,7 @@ static gpointer th_copy (gpointer s)
 
 /* This function is called when the user presses the abort button
  * during flush_tracks() */
-static void flush_tracks_abort (gboolean *abort)
+static void file_dialog_abort (gboolean *abort)
 {
     *abort = TRUE;
 }
@@ -1043,38 +979,11 @@ static gboolean ipod_dirs_present (gchar *mountpoint)
 }
 
 
-/* Flushes all non-transferred tracks to the iPod filesystem
-   Returns TRUE on success, FALSE if some error occured or not all
-   tracks were written. */
-static gboolean flush_tracks (iTunesDB *itdb)
+
+static GtkWidget *create_file_dialog (GtkWidget **progress_bar)
 {
-  gint count, n;
-  gchar *buf;
-  Track  *track;
-  gchar *filename = NULL;
-  gint rmres;
-  gboolean result = TRUE;
-  static gboolean abort;
-  GtkWidget *dialog, *progress_bar, *label, *image, *hbox;
-  time_t diff, start, fullsecs, hrs, mins, secs;
-  gchar *progtext = NULL;
-  ExtraiTunesDBData *eitdb;
-#ifdef G_THREADS_ENABLED
-  GThread *thread = NULL;
-  GTimeVal gtime;
-  if (!mutex) mutex = g_mutex_new ();
-  if (!cond) cond = g_cond_new ();
-#endif
+  GtkWidget *dialog, *label, *image, *hbox;
 
-  g_return_val_if_fail (itdb, FALSE);
-  eitdb = itdb->userdata;
-  g_return_val_if_fail (eitdb, FALSE);
-
-  n = itdb_tracks_number_nontransferred (itdb);
-
-  if (n==0 && !eitdb->pending_deletion) return TRUE;
-
-  abort = FALSE;
   /* create the dialog window */
   dialog = gtk_dialog_new_with_buttons (_("Information"),
                                          GTK_WINDOW (gtkpod_window),
@@ -1099,35 +1008,82 @@ static gboolean flush_tracks (iTunesDB *itdb)
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
   /* Create the progress bar */
-  progress_bar = gtk_progress_bar_new ();
-  progtext = g_strdup (_("deleting..."));
-  gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
-  g_free (progtext);
+  if (progress_bar)
+      *progress_bar = gtk_progress_bar_new ();
 
   /* Indicate that user wants to abort */
   g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
-			    G_CALLBACK (flush_tracks_abort),
+			    G_CALLBACK (file_dialog_abort),
 			    &abort);
 
   /* Add the image/label + progress bar to dialog */
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
                       hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
-                      progress_bar, FALSE, FALSE, 0);
+  if (progress_bar)
+      gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+			  *progress_bar, FALSE, FALSE, 0);
   gtk_widget_show_all (dialog);
 
+  return dialog;
+}
+
+
+/* Removes all tracks that were marked for deletion from the iPod or
+   the local harddisk (for itdb->usertype == GP_ITDB_TYPE_LOCAL) */
+/* Returns TRUE on success, FALSE if some error occured and not all
+   files were removed */
+static gboolean delete_files (iTunesDB *itdb)
+{
+  GtkWidget *dialog, *progress_bar;
+  gchar *progtext = NULL;
+  gboolean result = TRUE;
+  static gboolean abort;
+  ExtraiTunesDBData *eitdb;
+#ifdef G_THREADS_ENABLED
+  GThread *thread = NULL;
+  GTimeVal gtime;
+  if (!mutex) mutex = g_mutex_new ();
+  if (!cond) cond = g_cond_new ();
+#endif
+
+  g_return_val_if_fail (itdb, FALSE);
+  eitdb = itdb->userdata;
+  g_return_val_if_fail (eitdb, FALSE);
+
+  if (itdb_tracks_number_nontransferred (itdb)==0 &&
+      !eitdb->pending_deletion)
+      return TRUE;
+
+  abort = FALSE;
+
+  dialog = create_file_dialog (&progress_bar);
+  progtext = g_strdup (_("deleting..."));
+  gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+  g_free (progtext);
 
   /* lets clean up those pending deletions */
   while (!abort && eitdb->pending_deletion)
   {
-      track = (Track*)eitdb->pending_deletion->data;
+      gchar *filename = NULL;
+      Track *track = eitdb->pending_deletion->data;
       g_return_val_if_fail (track, FALSE);
-      if((filename = get_track_name_on_ipod(track)))
+
+      if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+      {
+	  filename = get_file_name_on_ipod (track);
+      }
+      if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+      {
+	  filename = get_file_name_on_harddisk (track);
+      }
+
+      if(filename)
       {
 	  const gchar *mp = prefs_get_ipod_mount ();
 	  if(mp && g_strstr_len(filename, strlen(mp), mp))
 	  {
+	      gint rmres;
 #ifdef G_THREADS_ENABLED
 	      mutex_data = FALSE;
 	      thread = g_thread_create (th_remove, filename, TRUE, NULL);
@@ -1167,107 +1123,137 @@ static gboolean flush_tracks (iTunesDB *itdb)
       while (widgets_blocked && gtk_events_pending ())
 	  gtk_main_iteration ();
   }
+  gtk_widget_destroy (dialog);
   if (abort) result = FALSE;
-  if (result == FALSE)
-  {
-      gtkpod_statusbar_message (_("Some tracks could not be deleted from the iPod. Export aborted!"));
-  }
-  else
-  {
-      /* we now have as much space as we're gonna have, copy files to
-       * ipod */
-      GList *gl;
+  return result;
+}
 
-      progtext = g_strdup (_("preparing to copy..."));
-      gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
-      g_free (progtext);
-      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 
-      /* count number of tracks to be transferred */
-      if (n != 0)  display_disable_gtkpod_import_buttons();
-      count = 0; /* tracks transferred */
-      start = time (NULL);
 
-      for (gl=itdb->tracks; gl && !abort; gl=gl->next)
-      {
-	  track = gl->data;
-	  g_return_val_if_fail (track, FALSE); /* this will hang the
-						  application :-( */
-	  if (!track->transferred)             /* but this would crash
-						  it otherwise... */
-	  {
-	      GError *error = NULL;
+
+/* Flushes all non-transferred tracks to the iPod filesystem
+   Returns TRUE on success, FALSE if some error occured or not all
+   tracks were written. */
+static gboolean flush_tracks (iTunesDB *itdb)
+{
+  GList *gl;
+  gint count, n;
+  gchar *buf;
+  Track  *track;
+  gboolean result = TRUE;
+  static gboolean abort;
+  GtkWidget *dialog, *progress_bar;
+  time_t diff, start, fullsecs, hrs, mins, secs;
+  gchar *progtext = NULL;
+  ExtraiTunesDBData *eitdb;
 #ifdef G_THREADS_ENABLED
-	      mutex_data = FALSE;
-	      thread = g_thread_create (th_copy, track, TRUE, NULL);
-	      if (thread)
-	      {
-		  g_mutex_lock (mutex);
-		  do
-		  {
-		      while (widgets_blocked && gtk_events_pending ())
-			  gtk_main_iteration ();
-		      /* wait a maximum of 20 ms */
-		      g_get_current_time (&gtime);
-		      g_time_val_add (&gtime, 20000);
-		      g_cond_timed_wait (cond, mutex, &gtime);
-		  } while(!mutex_data);
-		  g_mutex_unlock (mutex);
-		  error = g_thread_join (thread);
-	      }
-	      else {
-		  g_warning ("Thread creation failed, falling back to default.\n");
-		  error = th_copy (track);
-	      }
-#else
-	      error = th_copy (track);
+  GThread *thread = NULL;
+  GTimeVal gtime;
+  if (!mutex) mutex = g_mutex_new ();
+  if (!cond) cond = g_cond_new ();
 #endif
-	      if (error)
-	      {   /* an error occured */
-		  result = FALSE;
-		  if (error->message)
-		      gtkpod_warning ("%s\n\n", error->message);
-		  else
-		      g_warning ("error->message == NULL!\n");
-		  g_error_free (error);
-	      }
-	      data_changed (itdb); /* otherwise new free space status from
-	      iPod is never read and free space keeps increasing while
-	      we copy more and more files to the iPod */
-	      ++count;
-	      if (count == 1)  /* we need longer timeout */
-		  prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
-	      if (count == n)  /* we need to reset timeout */
-		  prefs_set_statusbar_timeout (0);
-	      buf = g_strdup_printf (ngettext ("Copied %d of %d new track.",
-					       "Copied %d of %d new tracks.", n),
-				     count, n);
-	      gtkpod_statusbar_message(buf);
-	      g_free (buf);
 
-              gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
-					    (gdouble) count/n);
+  g_return_val_if_fail (itdb, FALSE);
+  eitdb = itdb->userdata;
+  g_return_val_if_fail (eitdb, FALSE);
 
-	      diff = time(NULL) - start;
-	      fullsecs = (diff*n/count)-diff+5;
-	      hrs  = fullsecs / 3600;
-	      mins = (fullsecs % 3600) / 60;
-	      secs = ((fullsecs % 60) / 5) * 5;
-	      /* don't bounce up too quickly (>10% change only) */
-/*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
-	      progtext = g_strdup_printf (
-		  _("%d%% (%d:%02d:%02d left)"),
-		  count*100/n, (int)hrs, (int)mins, (int)secs);
-              gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
-					progtext);
-	      g_free (progtext);
+  n = itdb_tracks_number_nontransferred (itdb);
+
+  if (n==0 && !eitdb->pending_deletion) return TRUE;
+
+  abort = FALSE;
+  /* create the dialog window */
+  dialog = create_file_dialog (&progress_bar);
+  progtext = g_strdup (_("preparing to copy..."));
+  gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress_bar), progtext);
+  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+  g_free (progtext);
+
+  /* count number of tracks to be transferred */
+  if (n != 0)  display_disable_gtkpod_import_buttons();
+  count = 0; /* tracks transferred */
+  start = time (NULL);
+
+  for (gl=itdb->tracks; gl && !abort; gl=gl->next)
+  {
+      track = gl->data;
+      g_return_val_if_fail (track, FALSE); /* this will hang the
+					      application :-( */
+      if (!track->transferred)             /* but this would crash
+					      it otherwise... */
+      {
+	  GError *error = NULL;
+#ifdef G_THREADS_ENABLED
+	  mutex_data = FALSE;
+	  thread = g_thread_create (th_copy, track, TRUE, NULL);
+	  if (thread)
+	  {
+	      g_mutex_lock (mutex);
+	      do
+	      {
+		  while (widgets_blocked && gtk_events_pending ())
+		      gtk_main_iteration ();
+		  /* wait a maximum of 20 ms */
+		  g_get_current_time (&gtime);
+		  g_time_val_add (&gtime, 20000);
+		  g_cond_timed_wait (cond, mutex, &gtime);
+	      } while(!mutex_data);
+	      g_mutex_unlock (mutex);
+	      error = g_thread_join (thread);
 	  }
-	  while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-      } /* for (;;) */
-      if (abort)      result = FALSE;   /* negative result if user aborted */
-      if (result == FALSE)
-	  gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
-  }
+	  else {
+	      g_warning ("Thread creation failed, falling back to default.\n");
+	      error = th_copy (track);
+	  }
+#else
+	  error = th_copy (track);
+#endif
+	  if (error)
+	  {   /* an error occured */
+	      result = FALSE;
+	      if (error->message)
+		  gtkpod_warning ("%s\n\n", error->message);
+	      else
+		  g_warning ("error->message == NULL!\n");
+	      g_error_free (error);
+	  }
+	  data_changed (itdb); /* otherwise new free space status from
+				  iPod is never read and free space
+				  keeps increasing while we copy more
+				  and more files to the iPod */
+	  ++count;
+	  if (count == 1)  /* we need longer timeout */
+	      prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
+	  if (count == n)  /* we need to reset timeout */
+	      prefs_set_statusbar_timeout (0);
+	  buf = g_strdup_printf (ngettext ("Copied %d of %d new track.",
+					   "Copied %d of %d new tracks.", n),
+				 count, n);
+	  gtkpod_statusbar_message(buf);
+	  g_free (buf);
+	  
+	  gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
+					(gdouble) count/n);
+	  
+	  diff = time(NULL) - start;
+	  fullsecs = (diff*n/count)-diff+5;
+	  hrs  = fullsecs / 3600;
+	  mins = (fullsecs % 3600) / 60;
+	  secs = ((fullsecs % 60) / 5) * 5;
+	  /* don't bounce up too quickly (>10% change only) */
+/*	      left = ((mins < left) || (100*mins >= 110*left)) ? mins : left;*/
+	  progtext = g_strdup_printf (
+	      _("%d%% (%d:%02d:%02d left)"),
+	      count*100/n, (int)hrs, (int)mins, (int)secs);
+	  gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar),
+				    progtext);
+	  g_free (progtext);
+      }
+      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
+  } /* for (.;.;.) */
+  if (abort)      result = FALSE;   /* negative result if user aborted */
+  if (result == FALSE)
+      gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
   prefs_set_statusbar_timeout (0);
   gtk_widget_destroy (dialog);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
@@ -1355,10 +1341,23 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 	  }
       }
       if (success)
+      {   /* remove deleted files */
+	  success = delete_files (itdb);
+	  if (!success)
+	  {
+	      gtkpod_statusbar_message (_("Some tracks could not be deleted from the iPod. Export aborted!"));
+	  }
+      }
+      if (success)
       {
 	  /* write tracks to iPod */
 	  success = flush_tracks (itdb);
       }
+  }
+
+  if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+  {
+      success = delete_files (itdb);
   }
 
   if (success)

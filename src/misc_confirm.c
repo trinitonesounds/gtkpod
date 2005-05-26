@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-24 23:40:25 jcs>
+/* Time-stamp: <2005-05-27 00:16:53 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -649,7 +649,7 @@ void delete_playlist_head (DeleteAction deleteaction)
     iTunesDB *itdb;
     GtkResponseType response = GTK_RESPONSE_NONE;
     GString *str;
-    gchar *label, *title;
+    gchar *label = NULL, *title;
     gboolean confirm_again;
     ConfHandlerOpt confirm_again_handler;
     guint32 n = 0;

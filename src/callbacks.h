@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-24 23:39:05 jcs>
+/* Time-stamp: <2005-05-27 00:36:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -576,23 +576,7 @@ on_info_close_clicked                  (GtkButton       *button,
 
 
 void
-on_cfg_write_id3v24_toggled            (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_readtags_toggled                    (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_parsetags_template_changed             (GtkEditable     *editable,
-					gpointer         user_data);
-
-void
-on_parsetags_overwrite_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_parsetags_toggled                   (GtkToggleButton *togglebutton,
+on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
@@ -676,7 +660,7 @@ on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
 
 void
-on_mserv_username_changed              (GtkEditable     *editable,
+on_mserv_username_entry_changed              (GtkEditable     *editable,
                                         gpointer         user_data);
 
 void

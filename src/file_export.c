@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-11 00:02:19 jcs>
+/* Time-stamp: <2005-05-27 00:17:40 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -298,7 +298,7 @@ write_track(Track *s)
     
     if((dest_file = track_get_export_filename(s)))
     {
-	gchar *from_file = get_track_name_on_disk(s);
+	gchar *from_file = get_file_name(s);
 	gchar *filename, *dest_dir;
 
 	prefs_get_string_value (EXPORT_FILES_PATH, &dest_dir);
@@ -725,8 +725,8 @@ static void export_playlist_file_write (struct fcd *fcd)
 	    gchar *infotext_utf8 = get_string_from_template (track,
 							     template,
 							     FALSE);
-	    gchar *filename = get_track_name_from_source (track,
-							  source);
+	    gchar *filename = get_file_name_from_source (track,
+							 source);
 	    gchar *infotext;
 
 	    if (infotext_utf8)

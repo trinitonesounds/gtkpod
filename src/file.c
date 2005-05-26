@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-25 00:07:44 jcs>
+/* Time-stamp: <2005-05-27 00:16:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1995,7 +1995,7 @@ gboolean write_tags_to_file (Track *track)
 	(g_utf8_strlen (track->ipod_path, -1) > 0))
     {
 	/* need to get ipod filename */
-	ipod_fullpath = get_track_name_on_ipod (track);
+	ipod_fullpath = get_file_name_on_ipod (track);
 	if (file_write_info (
 		ipod_fullpath, track) == FALSE)
 	{
@@ -2024,14 +2024,14 @@ gboolean write_tags_to_file (Track *track)
 
 
 /**
- * get_track_name_on_disk
+ * get_file_name
  * Function to retrieve the filename on disk for the specified Track.  It
  * returns the valid filename whether the file has been copied to the ipod,
  * or has yet to be copied.  So it's useful for file operations on a track.
  * @s - The Track data structure we want the on disk file for
  * Returns - the filename for this Track. Must be g_free'd.
  */
-gchar* get_track_name_on_disk(Track *tr)
+gchar* get_file_name(Track *tr)
 {
     ExtraTrackData *etr;
     gchar *result = NULL;
@@ -2040,7 +2040,7 @@ gchar* get_track_name_on_disk(Track *tr)
     etr = tr->userdata;
     g_return_val_if_fail (etr, result);
 
-    result = get_track_name_on_ipod (tr);
+    result = get_file_name_on_ipod (tr);
     if(!result &&
        (etr->pc_path_locale) && (strlen(etr->pc_path_locale) > 0))
     {
@@ -2057,7 +2057,7 @@ gchar* get_track_name_on_disk(Track *tr)
    exist. NOTE: the in itunesdb.c code works around a problem on some
    systems (see below) and might return a filename with different case
    than the original filename. Don't copy it back to @s */
-gchar *get_track_name_on_ipod (Track *tr)
+gchar *get_file_name_on_ipod (Track *tr)
 {
     gchar *result = NULL;
 
@@ -2069,6 +2069,100 @@ gchar *get_track_name_on_ipod (Track *tr)
     }
     return(result);
 }
+
+
+/* Return the full path of track @tr on the local harddisk or NULL if
+ * no path was stored. Return value must be g_free'd when it is no
+ * longer needed */
+gchar *get_file_name_on_harddisk (Track *tr)
+{
+    ExtraTrackData *etr;
+    gchar *result = NULL;
+
+    g_return_val_if_fail (tr, NULL);
+    etr = tr->userdata;
+    g_return_val_if_fail (etr, result);
+
+    if ((etr->pc_path_locale) && (strlen(etr->pc_path_locale) > 0))
+    {
+	result = g_strdup (etr->pc_path_locale);
+    }
+    return result;
+}
+
+
+/* Like get_file_name(), but verifies the track actually exists.  Must
+   g_free return value after use */
+gchar *get_file_name_verified (Track *track)
+{
+    gchar *name = NULL;
+    ExtraTrackData *etr;
+
+    g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
+
+    if (!prefs_get_offline ())
+    {
+	name = get_file_name_on_ipod (track);
+	if (name)
+	{
+	    if (!g_file_test (name, G_FILE_TEST_EXISTS))
+	    {
+		g_free (name);
+		name = NULL;
+	    }
+	}
+    }
+    if(!name && etr->pc_path_locale && (*etr->pc_path_locale))
+    {
+	if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
+	    name = g_strdup (etr->pc_path_locale);
+    }
+    return name;
+}
+
+
+/* Get file name from source @source */
+gchar *get_file_name_from_source (Track *track, FileSource source)
+{
+    gchar *result = NULL;
+    ExtraTrackData *etr;
+
+    g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
+
+    switch (source)
+    {
+    case SOURCE_PREFER_LOCAL:
+	if (etr->pc_path_locale && (*etr->pc_path_locale))
+	{
+	    if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
+	    {
+		result = g_strdup (etr->pc_path_locale);
+	    }
+	}
+	if (!result) result = get_file_name_on_ipod (track);
+	break;
+    case SOURCE_LOCAL:
+	if (etr->pc_path_locale && (*etr->pc_path_locale))
+	{
+	    if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
+	    {
+		result = g_strdup (etr->pc_path_locale);
+	    }
+	}
+	break;
+    case SOURCE_IPOD:
+	result = get_file_name_on_ipod (track);
+	break;
+    }
+    return result;
+}
+
+
+
 
 
 
@@ -2314,7 +2408,7 @@ void parse_offline_playcount (void)
 /* Set the gain value in @track. Return value: TRUE, if gain could be set */
 gboolean get_gain (Track *track) 
 {
-    gchar *path = get_track_name_on_disk_verified (track);
+    gchar *path = get_file_name_verified (track);
     gboolean result = FALSE;
 
     switch (determine_file_type (path))

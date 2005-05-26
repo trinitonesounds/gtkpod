@@ -180,7 +180,7 @@ md5_hash_track(Track * s)
    {
        result = g_strdup(etr->md5_hash);
    }
-   else if ((filename = get_track_name_on_disk (s)) != NULL)
+   else if ((filename = get_file_name (s)) != NULL)
    {
        result = md5_hash_on_filename (filename, FALSE);
        g_free(filename);

@@ -11943,6 +11943,7 @@ existing tracks with identical filenames</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_readtags_toggled" last_modification_time="Thu, 26 May 2005 15:28:01 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -11963,6 +11964,7 @@ existing tracks with identical filenames</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_parsetags_toggled" last_modification_time="Thu, 26 May 2005 15:27:49 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -12015,6 +12017,7 @@ existing tracks with identical filenames</property>
 				      <property name="has_frame">True</property>
 				      <property name="invisible_char">*</property>
 				      <property name="activates_default">False</property>
+				      <signal name="changed" handler="on_parsetags_template_changed" last_modification_time="Thu, 26 May 2005 15:28:19 GMT"/>
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
@@ -12034,6 +12037,7 @@ existing tracks with identical filenames</property>
 				      <property name="active">False</property>
 				      <property name="inconsistent">False</property>
 				      <property name="draw_indicator">True</property>
+				      <signal name="toggled" handler="on_parsetags_overwrite_toggled" last_modification_time="Thu, 26 May 2005 15:28:32 GMT"/>
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
@@ -12443,6 +12447,7 @@ filename if they are (still) emply:</property>
 				  <property name="has_frame">True</property>
 				  <property name="invisible_char">*</property>
 				  <property name="activates_default">False</property>
+				  <signal name="changed" handler="on_mserv_username_entry_changed" last_modification_time="Thu, 26 May 2005 15:29:20 GMT"/>
 				</widget>
 				<packing>
 				  <property name="left_attach">1</property>
@@ -14243,6 +14248,7 @@ when writing tags</property>
 				      <property name="active">False</property>
 				      <property name="inconsistent">False</property>
 				      <property name="draw_indicator">True</property>
+				      <signal name="toggled" handler="on_cfg_write_charset_toggled" last_modification_time="Thu, 26 May 2005 15:32:16 GMT"/>
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
@@ -14262,6 +14268,7 @@ when writing tags</property>
 				      <property name="active">False</property>
 				      <property name="inconsistent">False</property>
 				      <property name="draw_indicator">True</property>
+				      <signal name="toggled" handler="on_cfg_id3_write_id3v24_toggled" last_modification_time="Thu, 26 May 2005 15:32:35 GMT"/>
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
@@ -14342,6 +14349,7 @@ when writing tags</property>
 				  <property name="active">False</property>
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
+				  <signal name="toggled" handler="on_cfg_multi_edit_title_toggled" last_modification_time="Thu, 26 May 2005 15:32:53 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>

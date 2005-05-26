@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-24 23:39:04 jcs>
+/* Time-stamp: <2005-05-27 00:24:07 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -1128,14 +1128,18 @@ void prefs_window_set_autosettags (gint category, gboolean autoset)
 }
 
 void
-prefs_window_set_readtags(gboolean val)
+on_readtags_toggled                    (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->readtags = val;
+    tmpcfg->readtags = 
+	gtk_toggle_button_get_active(togglebutton);
 }
 
 void
-prefs_window_set_parsetags(gboolean val)
+on_parsetags_toggled                   (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
+    gboolean val = gtk_toggle_button_get_active(togglebutton);
     GtkWidget *w;
 
     tmpcfg->parsetags = val;
@@ -1146,16 +1150,19 @@ prefs_window_set_parsetags(gboolean val)
 }
 
 void
-prefs_window_set_parsetags_overwrite(gboolean val)
+on_parsetags_overwrite_toggled         (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->parsetags_overwrite = val;
+    tmpcfg->parsetags_overwrite = 
+	gtk_toggle_button_get_active(togglebutton);
 }
 
 void
-prefs_window_set_parsetags_template(const gchar *val)
+on_parsetags_template_changed             (GtkEditable     *editable,
+					gpointer         user_data)
 {
     g_free (tmpcfg->parsetags_template);
-    tmpcfg->parsetags_template = g_strdup(val);
+    tmpcfg->parsetags_template = gtk_editable_get_chars (editable,0, -1);
 }
 
 void prefs_window_set_col_visible (gint column, gboolean visible)

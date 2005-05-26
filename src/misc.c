@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-05-22 15:11:14 jcs>
+|  Time-stamp: <2005-05-27 00:08:59 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1036,7 +1036,7 @@ static gchar *select_template (Track *track, const gchar *p)
     g_return_val_if_fail (track, strdup (""));
     etr = track->userdata;
     g_return_val_if_fail (etr, strdup (""));
-    tname = get_track_name_on_disk (track);
+    tname = get_file_name (track);
     if (!tname) return (NULL);         /* this should not happen... */
     ext = strrchr (tname, '.');        /* pointer to filename extension */
 
@@ -1099,7 +1099,7 @@ gchar *get_string_from_template (Track *track,
 
     if (!template)
     {
-	gchar *fn = get_track_name_on_disk (track);
+	gchar *fn = get_file_name (track);
 	gtkpod_warning (_("Template ('%s') does not match file type '%s'\n"), full_template, fn ? fn:"");
 	g_free (fn);
 	return NULL;

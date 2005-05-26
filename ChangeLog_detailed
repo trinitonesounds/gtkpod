@@ -1,3 +1,16 @@
+2005-05-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* renamed get_track_name* to get_file_name*
+
+	* fixed some issues with track deletion (tracks were never
+          removed from harddisk)
+
+	* moved some more prefs_windows callbacks from callbacks.c to
+          prefs_windows.c (continuous project whenever I feel like it)
+
+	* gtkpod.glade: added a couple of forgotten callbacks to prefs
+          dialog
+
 2005-05-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* finished rewrite of delete code (only context-menu delete

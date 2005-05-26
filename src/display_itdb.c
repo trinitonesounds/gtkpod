@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-25 00:13:58 jcs>
+/* Time-stamp: <2005-05-26 23:29:54 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -455,6 +455,8 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 	plitem = NULL;
 	break;
     case DELETE_ACTION_PLAYLIST:
+	/* cannot remove from MPL */
+	g_return_if_fail (plitem);
 	break;
     }
 

@@ -300,7 +300,7 @@ on_pm_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	Track *track = gl->data;
 
 	g_return_if_fail (track);
-	name = get_track_name_on_disk_verified (track);
+	name = get_file_name_verified (track);
 	if (name)
 	{
 	    g_string_append_printf (filelist, "file:%s\n", name);
@@ -335,7 +335,7 @@ on_pm_dnd_get_uri_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	Track *track = gl->data;
 
 	g_return_if_fail (track);
-	name = get_track_name_on_disk_verified (track);
+	name = get_file_name_verified (track);
 	if (name)
 	{
 	    gchar *uri = g_filename_to_uri (name, NULL, NULL);
