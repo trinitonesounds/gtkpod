@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-24 23:39:05 jcs>
+/* Time-stamp: <2005-05-27 22:28:14 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -42,11 +42,10 @@
  *   prefs_set_new_option() should verify that the value passed is
  *   valid.
  *
- * - add a function prefs_window_set_new_option to
- *   prefs_window.[ch]. This function is called from the callback
- *   functions in callback.c to set the state of the option. The value
- *   is applied to the actual prefs when pressing the "OK" or "Apply"
- *   button in the prefs window.
+ * - add a callback on_new_option_*() to prefs_windows.c to set the
+ *   new value in the temporary prefs struct.
+ *   The value is applied to the actual prefs when pressing the "OK"
+ *   or "Apply" button in the prefs window.
  *
  * - if your option is a pointer to data, make sure the data is copied
  *   in clone_prefs() in prefs.c

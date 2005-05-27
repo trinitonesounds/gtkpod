@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:36:54 jcs>
+/* Time-stamp: <2005-05-27 22:28:13 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -97,18 +97,6 @@ on_prefs_window_delete_event           (GtkWidget       *widget,
 					gpointer         user_data);
 
 void
-on_cfg_mount_point_changed             (GtkEditable     *editable,
-					gpointer         user_data);
-
-void
-on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_id3_write_toggled                (GtkToggleButton *togglebutton,
-					 gpointer         user_data);
-
-void
 on_prefs_ok_clicked                    (GtkButton       *button,
 					gpointer         user_data);
 
@@ -126,14 +114,6 @@ on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 
 void
-on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
 on_offline1_activate                   (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 
@@ -143,10 +123,6 @@ on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
 
 void
 on_import_button_clicked               (GtkButton       *button,
-					gpointer         user_data);
-
-void
-on_charset_combo_entry_changed         (GtkEditable     *editable,
 					gpointer         user_data);
 
 void
@@ -175,14 +151,6 @@ on_delete_full_tab_entry_activate           (GtkMenuItem     *menuitem,
 
 void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
@@ -222,35 +190,11 @@ on_sync_tracks_activate            (GtkMenuItem     *menuitem,
 				     gpointer         user_data);
 
 void
-on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
 on_save_track_order1_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 
 void
-on_cfg_show_duplicates_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_show_updated_toggled            (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
-				      gpointer         user_data);
-
-void
 on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_cfg_display_toolbar_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
@@ -259,26 +203,6 @@ on_more_sort_tabs_activate             (GtkMenuItem     *menuitem,
 
 void
 on_less_sort_tabs_activate             (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_cfg_toolbar_display_text_toggled    (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_toolbar_style_both_toggled      (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_toolbar_style_text_toggled      (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_toolbar_style_icons_toggled     (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
@@ -322,22 +246,6 @@ on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 
 void
-on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
 on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
@@ -374,27 +282,7 @@ on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
 					gpointer         user_data);
 
 void
-on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
-					gpointer         user_data);
-
-void
 on_tooltips_menu_activate              (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_cfg_display_tooltips_main_toggled   (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_multi_edit_toggled              (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
-on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
 					gpointer         user_data);
 
 void
@@ -442,19 +330,7 @@ on_rebuild_ipod_db1_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 
 void
-on_cfg_misc_track_nr_value_changed      (GtkSpinButton   *spinbutton,
-					gpointer         user_data);
-
-void
-on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
 on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
-					gpointer         user_data);
-
-void
-on_cfg_normalization_level_changed     (GtkEditable     *editable,
 					gpointer         user_data);
 
 void
@@ -576,10 +452,6 @@ on_info_close_clicked                  (GtkButton       *button,
 
 
 void
-on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
-					gpointer         user_data);
-
-void
 on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data);
 void
@@ -598,10 +470,6 @@ on_sync_contacts_activate              (GtkMenuItem     *menuitem,
 void
 on_sync_notes_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
-
-void
-on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
-					gpointer         user_data);
 
 void
 on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
@@ -634,10 +502,6 @@ on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
-on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
 on_mserv_from_file_playlist_menu_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
@@ -652,26 +516,9 @@ on_mserv_from_file_tracks_menu_activate
                                         gpointer         user_data);
 
 void
-on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-
-void
-on_mserv_username_entry_changed              (GtkEditable     *editable,
-                                        gpointer         user_data);
-
-void
 on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
 
 void
 on_smart_playlist_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
-
-void
-on_cfg_startup_messages                (GtkToggleButton *togglebutton,
-                                        gpointer         user_data);
-

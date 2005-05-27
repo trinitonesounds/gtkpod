@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:24:07 jcs>
+/* Time-stamp: <2005-05-27 22:28:14 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -43,43 +43,6 @@ void prefs_window_cancel (void);
 void prefs_window_create (void);
 void prefs_window_delete (void);
 
-void prefs_window_set_md5tracks (gboolean val);
-void prefs_window_set_update_existing (gboolean val);
-void prefs_window_set_block_display (gboolean val);
-void prefs_window_set_id3_write (gboolean val);
-void prefs_window_set_id3_write_id3v24 (gboolean val);
-void prefs_window_set_mount_point (const gchar *mp);
-void prefs_window_set_time_format (const gchar *format);
-void prefs_window_set_write_extended_info (gboolean active);
-void prefs_window_set_autoimport (gboolean val);
-void prefs_window_set_charset (gchar *charset);
-void prefs_window_set_mpl_autoselect (gboolean autoselect);
-void prefs_window_set_show_duplicates (gboolean val);
-void prefs_window_set_show_updated (gboolean val);
-void prefs_window_set_show_non_updated (gboolean val);
-void prefs_window_set_show_sync_dirs (gboolean val);
-void prefs_window_set_sync_remove (gboolean val);
-void prefs_window_set_display_toolbar (gboolean val);
-void prefs_window_set_display_tooltips_main (gboolean val);
-void prefs_window_set_display_tooltips_prefs (gboolean val);
-void prefs_window_set_multi_edit (gboolean val);
-void prefs_window_set_multi_edit_title (gboolean val);
-void prefs_window_set_misc_track_nr (gint val);
-void prefs_window_set_not_played_track (gboolean val);
-void prefs_window_set_update_charset (gboolean val);
-void prefs_window_set_write_charset (gboolean val);
-void prefs_window_set_add_recursively (gboolean val);
-void prefs_window_set_toolbar_style (GtkToolbarStyle val);
-void prefs_window_set_sort_tab_num (gint num);
-void prefs_window_set_automount (gboolean val);
-void prefs_window_set_concal_autosync (gboolean val);
-void prefs_window_set_tmp_disable_sort (gboolean val);
-void prefs_window_set_startup_messages (gboolean val);
-void prefs_window_set_mserv_use (gboolean val);
-void prefs_window_set_mserv_report_probs (gboolean val);
-void prefs_window_set_mserv_music_root (const gchar *val);
-void prefs_window_set_mserv_trackinfo_root (const gchar *val);
-void prefs_window_set_mserv_username (const gchar *val);
 void prefs_window_set_unused_gboolean3 (gboolean val);
 
 void sort_window_create (void);

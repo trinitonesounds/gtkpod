@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:36:54 jcs>
+/* Time-stamp: <2005-05-27 22:28:13 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -169,32 +169,6 @@ on_prefs_window_delete_event           (GtkWidget       *widget,
 
 
 void
-on_cfg_mount_point_changed             (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars(editable,0, -1);
-    prefs_window_set_mount_point(buf);
-    g_free (buf);
-}
-
-
-void
-on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_md5tracks(gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_cfg_id3_write_toggled                (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_id3_write(gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
 on_prefs_ok_clicked                    (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -227,24 +201,6 @@ on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
 }
 
 void
-on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_autoimport(
-	    gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_write_extended_info(
-	    gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
 on_offline1_activate                   (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -268,20 +224,6 @@ on_import_button_clicked               (GtkButton       *button,
   gp_merge_ipod_itdbs ();
 }
 
-
-
-void
-on_charset_combo_entry_changed          (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    gchar *descr, *charset;
-
-    descr = gtk_editable_get_chars (editable, 0, -1);
-    charset = charset_from_description (descr);
-    prefs_window_set_charset (charset);
-    g_free (descr);
-    g_free (charset);
-}
 
 void
 on_delete_tracks_activate               (GtkMenuItem     *menuitem,
@@ -358,21 +300,6 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 }
 
 void
-on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_mpl_autoselect(gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_block_display(gtk_toggle_button_get_active(togglebutton));
-}
-
-void
 on_stop_button_clicked                 (GtkButton       *button,
 					gpointer         user_data)
 {
@@ -421,11 +348,11 @@ on_update_tracks_activate            (GtkMenuItem     *menuitem,
 
 
 void
-on_mserv_from_file_playlist_menu_activate
+on_mserv_from_file_tracks_menu_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    gp_do_selected_playlist (mserv_from_file_tracks);
+    gp_do_selected_tracks (mserv_from_file_tracks);
 }
 
 
@@ -437,44 +364,6 @@ on_mserv_from_file_entry_menu_activate (GtkMenuItem     *menuitem,
 	_("Update selected entry of which sort tab?"));
 
     if (inst != -1) gp_do_selected_entry (mserv_from_file_tracks, inst);
-}
-
-
-void
-on_mserv_from_file_tracks_menu_activate
-                                        (GtkMenuItem     *menuitem,
-                                        gpointer         user_data)
-{
-    gp_do_selected_tracks (mserv_from_file_tracks);
-}
-
-
-void
-on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_mserv_use (
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_mserv_report_probs (
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-
-void
-on_mserv_username_entry_changed              (GtkEditable     *editable,
-					      gpointer         user_data)
-{
-    gchar *buf = gtk_editable_get_chars (editable,0, -1);
-    prefs_window_set_mserv_username (buf);
-    g_free (buf);
 }
 
 
@@ -505,14 +394,6 @@ on_sync_tracks_activate            (GtkMenuItem     *menuitem,
 
 
 void
-on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_update_existing(
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-void
 on_save_track_order1_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -522,60 +403,11 @@ on_save_track_order1_activate           (GtkMenuItem     *menuitem,
 
 
 void
-on_cfg_show_duplicates_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_show_duplicates(
-	gtk_toggle_button_get_active(togglebutton));
-
-}
-
-
-void
-on_cfg_show_updated_toggled            (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_show_updated(
-	gtk_toggle_button_get_active(togglebutton));
-
-}
-
-
-void
-on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_show_non_updated(
-	gtk_toggle_button_get_active(togglebutton));
-
-}
-
-
-void
-on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
-				      gpointer         user_data)
-{
-    prefs_window_set_show_sync_dirs(
-	gtk_toggle_button_get_active(togglebutton));
-
-}
-
-
-void
 on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     prefs_set_display_toolbar (
 	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
-}
-
-
-void
-on_cfg_display_toolbar_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_display_toolbar(
-	gtk_toggle_button_get_active(togglebutton));
 }
 
 
@@ -593,46 +425,6 @@ on_less_sort_tabs_activate             (GtkMenuItem     *menuitem,
 {
     prefs_set_sort_tab_num (prefs_get_sort_tab_num()-1, TRUE);
 }
-
-void
-on_cfg_toolbar_style_both_toggled      (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    if (gtk_toggle_button_get_active(togglebutton))
-    {
-	prefs_window_set_toolbar_style (GTK_TOOLBAR_BOTH);
-    }
-}
-
-
-void
-on_cfg_toolbar_style_text_toggled      (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    if (gtk_toggle_button_get_active(togglebutton))
-    {
-	prefs_window_set_toolbar_style (GTK_TOOLBAR_TEXT);
-    }
-}
-
-
-void
-on_cfg_toolbar_style_icons_toggled      (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    if (gtk_toggle_button_get_active(togglebutton))
-    {
-	prefs_window_set_toolbar_style (GTK_TOOLBAR_ICONS);
-    }
-}
-
-void
-on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_automount(gtk_toggle_button_get_active(togglebutton));
-}
-
 
 void
 on_export_playlist_activate  (GtkMenuItem     *menuitem,
@@ -856,41 +648,6 @@ on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
 
 
 void
-on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_update_charset(
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_write_charset(
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_add_recursively(
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-void
-on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_sync_remove(
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
 on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
@@ -1004,54 +761,11 @@ on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
 }
 
 void
-on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
-					gpointer         user_data)
-{
-    prefs_window_set_sort_tab_num (gtk_spin_button_get_value (spinbutton));
-}
-
-void
 on_tooltips_menu_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     prefs_set_display_tooltips_main (
 	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
-}
-
-
-void
-on_cfg_display_tooltips_main_toggled   (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_display_tooltips_main (
-	gtk_toggle_button_get_active (togglebutton));
-}
-
-
-void
-on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_display_tooltips_prefs (
-	gtk_toggle_button_get_active (togglebutton));
-}
-
-
-void
-on_cfg_multi_edit_toggled              (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_multi_edit (
-	gtk_toggle_button_get_active (togglebutton));
-}
-
-
-void
-on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_multi_edit_title (
-	gtk_toggle_button_get_active (togglebutton));
 }
 
 
@@ -1165,39 +879,6 @@ on_rebuild_ipod_db1_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
 /*    rebuild_iTunesDB();*/
-}
-
-
-void
-on_cfg_misc_track_nr_value_changed      (GtkSpinButton   *spinbutton,
-					gpointer         user_data)
-{
-    prefs_window_set_misc_track_nr (gtk_spin_button_get_value (spinbutton));
-}
-
-void
-on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_not_played_track (
-	gtk_toggle_button_get_active (togglebutton));
-}
-
-
-
-void
-on_cfg_normalization_level_changed     (GtkEditable     *editable,
-					gpointer         user_data)
-{
-
-}
-
-
-void
-on_cfg_special_export_charset_toggled  (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-
 }
 
 
@@ -1466,15 +1147,6 @@ on_info_close_clicked                  (GtkButton       *button,
 
 
 void
-on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_id3_write_id3v24
-	(gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
 on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
@@ -1515,14 +1187,6 @@ on_sync_notes_activate                 (GtkMenuItem     *menuitem,
 }
 
 void
-on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    prefs_window_set_concal_autosync
-	(gtk_toggle_button_get_active(togglebutton));
-}
-
-void
 on_all_tracks_not_listed_in_any_playlist1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
@@ -1544,22 +1208,6 @@ on_randomize_current_playlist_activate (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
     randomize_current_playlist();
-}
-
-void
-on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_tmp_disable_sort (
-	gtk_toggle_button_get_active(togglebutton));
-}
-
-void
-on_cfg_startup_messages                (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    prefs_window_set_startup_messages (
-	gtk_toggle_button_get_active(togglebutton));
 }
 
 void

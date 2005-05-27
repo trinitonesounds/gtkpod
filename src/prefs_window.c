@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:24:07 jcs>
+/* Time-stamp: <2005-05-27 22:38:25 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -31,6 +31,7 @@
 #include "callbacks.h"
 #include "charset.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "prefs.h"
 #include "prefs_window.h"
 #include "display_itdb.h"
@@ -52,6 +53,7 @@ static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
 static void prefs_window_set_autosettags (gint category, gboolean autoset);
 static void prefs_window_set_col_visible (gint column, gboolean visible);
 static void prefs_window_set_path (PathType i, const gchar *path);
+static void prefs_window_set_sort_tab_num (gint num);
 
 /* Definition of path button names.
    E.g. path_button_names[PATH_PLAY_ENQUEUE] is
@@ -468,7 +470,7 @@ prefs_window_create(void)
 				   0, 0xffffffff);
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
 				   prefs_get_misc_track_nr ());
-	prefs_window_set_misc_track_nr (tmpcfg->misc_track_nr);
+	tmpcfg->misc_track_nr = tmpcfg->misc_track_nr;
     }
     if((w = glade_xml_get_widget (prefs_window_xml, "cfg_multi_edit_title")))
     {
@@ -980,47 +982,44 @@ prefs_window_apply (void)
 }
 
 
-/**
- * prefs_window_set_md5tracks
- * @val - truth value of whether or not we should use the md5 hash to
- * prevent file duplication. changes temp variable
- */
 void
-prefs_window_set_md5tracks(gboolean val)
+on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    GtkWidget *w;
+    gboolean val = gtk_toggle_button_get_active(togglebutton);
+    GtkWidget *w = glade_xml_get_widget (prefs_window_xml, "cfg_show_duplicates");
 
     tmpcfg->md5tracks = val;
-    if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_duplicates")))
-	gtk_widget_set_sensitive (w, val);
+    if(w)	gtk_widget_set_sensitive (w, val);
 }
 
 void
-prefs_window_set_block_display(gboolean val)
+on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->block_display = val;
+    tmpcfg->block_display = gtk_toggle_button_get_active (togglebutton);
 }
 
 void
-prefs_window_set_update_existing(gboolean val)
+on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
+    gboolean val = gtk_toggle_button_get_active (togglebutton);
     GtkWidget *w;
 
     tmpcfg->update_existing = val;
+
     if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_updated")))
 	gtk_widget_set_sensitive (w, val);
     if((w = glade_xml_get_widget (prefs_window_xml, "cfg_show_non_updated")))
 	gtk_widget_set_sensitive (w, val);
 }
 
-/**
- * prefs_window_set_id3_write
- * @val - truth value of whether or not we should allow id3 tags to be
- * interactively changed, changes temp variable
- */
 void
-prefs_window_set_id3_write(gboolean val)
+on_cfg_id3_write_toggled                (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
+    gboolean val = gtk_toggle_button_get_active (togglebutton);
     GtkWidget *w;
 
     tmpcfg->id3_write = val;
@@ -1029,6 +1028,24 @@ prefs_window_set_id3_write(gboolean val)
     if((w = glade_xml_get_widget (prefs_window_xml, "cfg_write_charset")))
 	gtk_widget_set_sensitive (w, val);
 }
+
+
+void
+on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    tmpcfg->id3_write_id3v24 = gtk_toggle_button_get_active (togglebutton);
+}
+
+
+void
+on_cfg_mount_point_changed             (GtkEditable     *editable,
+					gpointer         user_data)
+{
+    g_free (tmpcfg->ipod_mount);
+    tmpcfg->ipod_mount = gtk_editable_get_chars(editable,0, -1);
+}
+
 
 /**
  * prefs_window_set_mount_point
@@ -1049,9 +1066,12 @@ static void prefs_window_set_path (PathType i, const gchar *path)
     tmpcfg->path[i] = g_strdup (path);
 }
 
-void prefs_window_set_write_extended_info(gboolean active)
+void
+on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-  tmpcfg->write_extended_info = active;
+    tmpcfg->write_extended_info = 
+	gtk_toggle_button_get_active (togglebutton);
 }
 
 void
@@ -1097,14 +1117,24 @@ on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
 
 
 void
-prefs_window_set_autoimport(gboolean val)
+on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->autoimport = val;
+    tmpcfg->autoimport =
+	gtk_toggle_button_get_active(togglebutton);
 }
 
-void prefs_window_set_charset (gchar *charset)
+void
+on_charset_combo_entry_changed          (GtkEditable     *editable,
+					gpointer         user_data)
 {
+    gchar *descr, *charset;
+
+    descr = gtk_editable_get_chars (editable, 0, -1);
+    charset = charset_from_description (descr);
     prefs_cfg_set_charset (tmpcfg, charset);
+    g_free (descr);
+    g_free (charset);
 }
 
 void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
@@ -1115,10 +1145,12 @@ void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
     }
 }
 
-/* Should the MPL be selected automatically? */
-void prefs_window_set_mpl_autoselect (gboolean autoselect)
+void
+on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->mpl_autoselect = autoselect;
+    tmpcfg->mpl_autoselect =
+	gtk_toggle_button_get_active(togglebutton);
 }
 
 void prefs_window_set_autosettags (gint category, gboolean autoset)
@@ -1171,33 +1203,43 @@ void prefs_window_set_col_visible (gint column, gboolean visible)
 	tmpcfg->col_visible[column] = visible;
 }
 
-void prefs_window_set_id3_write_id3v24 (gboolean val)
+void
+on_cfg_show_duplicates_toggled         (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->id3_write_id3v24 = val;
+    tmpcfg->show_duplicates =
+	gtk_toggle_button_get_active (togglebutton);
+
 }
 
-void prefs_window_set_show_duplicates (gboolean val)
+
+void
+on_cfg_show_updated_toggled            (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->show_duplicates = val;
+    tmpcfg->show_updated = gtk_toggle_button_get_active (togglebutton);
 }
 
-void prefs_window_set_show_updated (gboolean val)
+
+void
+on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->show_updated = val;
+    tmpcfg->show_non_updated = gtk_toggle_button_get_active (togglebutton);
 }
 
-void prefs_window_set_show_non_updated (gboolean val)
+void
+on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
+				      gpointer         user_data)
 {
-    tmpcfg->show_non_updated = val;
+    tmpcfg->show_sync_dirs = gtk_toggle_button_get_active (togglebutton);
 }
 
-void prefs_window_set_show_sync_dirs (gboolean val)
+void
+on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->show_sync_dirs = val;
-}
-
-void prefs_window_set_sync_remove (gboolean val)
-{
+    gboolean val = gtk_toggle_button_get_active (togglebutton);
     GtkWidget *w;
 
     tmpcfg->sync_remove = val;
@@ -1205,68 +1247,96 @@ void prefs_window_set_sync_remove (gboolean val)
 	gtk_widget_set_sensitive (w, val);
 }
 
-void prefs_window_set_display_toolbar (gboolean val)
+void
+on_cfg_display_tooltips_main_toggled   (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
+    tmpcfg->display_tooltips_main =
+	gtk_toggle_button_get_active  (togglebutton);
+}
+
+void
+on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    tmpcfg->display_tooltips_prefs =
+	gtk_toggle_button_get_active  (togglebutton);
+}
+
+
+void
+on_cfg_display_toolbar_toggled         (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    gboolean val = gtk_toggle_button_get_active (togglebutton);
     GtkWidget *w1 = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_icons");
     GtkWidget *w2 = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_text");
     GtkWidget *w3 = glade_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_both");
 
     tmpcfg->display_toolbar = val;
 
-    gtk_widget_set_sensitive (w1, val);
-    gtk_widget_set_sensitive (w2, val);
-    gtk_widget_set_sensitive (w3, val);
+    if (w1) gtk_widget_set_sensitive (w1, val);
+    if (w2) gtk_widget_set_sensitive (w2, val);
+    if (w3) gtk_widget_set_sensitive (w3, val);
 }
 
-void prefs_window_set_display_tooltips_main (gboolean val)
+void
+on_cfg_multi_edit_toggled              (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->display_tooltips_main = val;
-}
-
-void prefs_window_set_display_tooltips_prefs (gboolean val)
-{
-    tmpcfg->display_tooltips_prefs = val;
-}
-
-void prefs_window_set_multi_edit (gboolean val)
-{
+    gboolean val = gtk_toggle_button_get_active (togglebutton);
     GtkWidget *w = glade_xml_get_widget  (prefs_window_xml, "cfg_multi_edit_title");
 
     tmpcfg->multi_edit = val;
     gtk_widget_set_sensitive (w, val);
 }
 
-void prefs_window_set_multi_edit_title (gboolean val)
+
+void
+on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->multi_edit_title = val;
+    tmpcfg->multi_edit_title =
+	gtk_toggle_button_get_active  (togglebutton);
 }
 
-void prefs_window_set_update_charset (gboolean val)
+void
+on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->update_charset = val;
+    tmpcfg->update_charset = gtk_toggle_button_get_active (togglebutton);
 }
 
-void prefs_window_set_not_played_track (gboolean val)
+void
+on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->not_played_track = val;
+    tmpcfg->write_charset = gtk_toggle_button_get_active (togglebutton);
 }
 
-void prefs_window_set_misc_track_nr (gint val)
+void
+on_cfg_add_recursively_toggled         (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->misc_track_nr = val;
+    tmpcfg->add_recursively = gtk_toggle_button_get_active (togglebutton);
 }
 
-void prefs_window_set_write_charset (gboolean val)
+void
+on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->write_charset = val;
+    tmpcfg->not_played_track =
+	gtk_toggle_button_get_active  (togglebutton);
 }
 
-void prefs_window_set_add_recursively (gboolean val)
+void
+on_cfg_misc_track_nr_value_changed      (GtkSpinButton   *spinbutton,
+					gpointer         user_data)
 {
-    tmpcfg->add_recursively = val;
+    tmpcfg->misc_track_nr = gtk_spin_button_get_value  (spinbutton);
 }
 
-void prefs_window_set_sort_tab_num (gint num)
+static void prefs_window_set_sort_tab_num (gint num)
 {
     gint i;
 
@@ -1278,51 +1348,112 @@ void prefs_window_set_sort_tab_num (gint num)
     }
 }
 
+void
+on_cfg_sort_tab_num_sb_value_changed   (GtkSpinButton   *spinbutton,
+					gpointer         user_data)
+{
+    prefs_window_set_sort_tab_num (
+	gtk_spin_button_get_value (spinbutton));
+}
+
+void
+on_cfg_toolbar_style_both_toggled      (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active (togglebutton))
+    {
+	tmpcfg->toolbar_style = GTK_TOOLBAR_BOTH;
+    }
+}
+
+
+void
+on_cfg_toolbar_style_text_toggled      (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active (togglebutton))
+    {
+	tmpcfg->toolbar_style = GTK_TOOLBAR_TEXT;
+    }
+}
+
+
+void
+on_cfg_toolbar_style_icons_toggled      (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active (togglebutton))
+    {
+	tmpcfg->toolbar_style = GTK_TOOLBAR_ICONS;
+    }
+}
+
 void prefs_window_set_toolbar_style (GtkToolbarStyle style)
 {
-    tmpcfg->toolbar_style = style;
-}
-
-void prefs_window_set_automount(gboolean val)
-{
-    tmpcfg->automount = val;
 }
 
 void
-prefs_window_set_concal_autosync(gboolean val)
+on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->concal_autosync = val;
+    tmpcfg->automount = gtk_toggle_button_get_active (togglebutton);
 }
 
 void
-prefs_window_set_tmp_disable_sort(gboolean val)
+on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
+					gpointer         user_data)
 {
-    tmpcfg->tmp_disable_sort = val;
+    tmpcfg->concal_autosync = gtk_toggle_button_get_active (togglebutton);
 }
 
 void
-prefs_window_set_startup_messages(gboolean val)
+on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
 {
-    tmpcfg->startup_messages = val;
+    tmpcfg->tmp_disable_sort =
+	gtk_toggle_button_get_active (togglebutton);
+}
+void
+on_cfg_startup_messages                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    tmpcfg->startup_messages =
+	gtk_toggle_button_get_active (togglebutton);
 }
 
 void
-prefs_window_set_mserv_use(gboolean val)
+on_mserv_from_file_playlist_menu_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
 {
-    tmpcfg->mserv_use = val;
+    gp_do_selected_playlist (mserv_from_file_tracks);
+}
+
+
+void
+on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+    tmpcfg->mserv_use = gtk_toggle_button_get_active (togglebutton);
 }
 
 void
-prefs_window_set_mserv_report_probs(gboolean val)
+on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
 {
-    tmpcfg->mserv_report_probs = val;
+    tmpcfg->mserv_report_probs =
+	gtk_toggle_button_get_active (togglebutton);
 }
 
-void prefs_window_set_mserv_username(const gchar *val)
+void
+on_mserv_username_entry_changed              (GtkEditable     *editable,
+					      gpointer         user_data)
 {
+    gchar *val = gtk_editable_get_chars (editable,0, -1);
+
     if (!val) return;
     g_free (tmpcfg->mserv_username);
-    tmpcfg->mserv_username = g_strdup (val);
+    tmpcfg->mserv_username = val;
 }
 
 void
