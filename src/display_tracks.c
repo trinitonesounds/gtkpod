@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:08:59 jcs>
+/* Time-stamp: <2005-05-27 23:54:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -95,12 +95,12 @@ const gchar *tm_col_strings[] = {
     N_("Bitrate"),
     N_("Playcount"),
     N_("Rating"),
-    N_("Time played"),
-    N_("Time modified"),     /* 15 */
+    N_("Date played"),
+    N_("Date modified"),     /* 15 */
     N_("Volume"),
     N_("Year"),
     N_("CD Nr"),
-    N_("Time added"),
+    N_("Date added"),
     N_("iPod File"),         /* 20 */
     N_("Soundcheck"),
     N_("Samplerate"),
@@ -126,12 +126,12 @@ const gchar *tm_col_tooltips[] = {
     NULL,
     N_("Number of times the track has been played"),
     N_("Star rating from 0 to 5"),
-    N_("Time track has last been played"),
-    N_("Time track has last been modified"),      /* 15 */
+    N_("Date and time track has last been played"),
+    N_("Date and time track has last been modified"),      /* 15 */
     N_("Manual volume adjust"),
     NULL,
     N_("CD Nr. and total number of CDS in set"),
-    N_("Time track has been added"),
+    N_("Date and time track has been added"),
     N_("Name of file on the iPod"),                    /* 20 */
     N_("Volume adjust in dB (replay gain) -- "
        "you need to activate 'soundcheck' on the iPod"),
@@ -1113,6 +1113,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 {
   Track *track;
   ExtraTrackData *etr;
+  iTunesDB *itdb;
   TM_item column;
   gchar text[21];
   gchar *buf = NULL;
@@ -1123,6 +1124,8 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   g_return_if_fail (track);
   etr = track->userdata;
   g_return_if_fail (etr);
+  itdb = track->itdb;
+  g_return_if_fail (itdb);
 
   switch (column)
   {
@@ -1151,7 +1154,8 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_IPOD_ID:
-      if (track->id != -1)
+      if ((track->id != -1) &&
+	  itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
 	  snprintf (text, 20, "%d", track->id);
 	  g_object_set (G_OBJECT (renderer),
@@ -1169,7 +1173,16 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       g_object_set (G_OBJECT (renderer), "text", etr->pc_path_utf8, NULL);
       break;
   case TM_COLUMN_IPOD_PATH:
-      g_object_set (G_OBJECT (renderer), "text", track->ipod_path, NULL);
+      if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+      {
+	  g_object_set (G_OBJECT (renderer), "text",
+			track->ipod_path, NULL);
+      }
+      if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+      {
+	  g_object_set (G_OBJECT (renderer), "text",
+			_("Local Database"), NULL);
+      }
       break;
   case TM_COLUMN_TRANSFERRED:
       g_object_set (G_OBJECT (renderer), "active", track->transferred, NULL);
@@ -1925,12 +1938,18 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   gchar *text = NULL;
   gboolean editable = TRUE;          /* default */
   GtkCellRenderer *renderer = NULL;  /* default */
-  GtkTooltips *tt = GTK_TOOLTIPS (glade_xml_get_widget (main_window_xml,
-						 "tooltips"));
+  GtkTooltips *tt;
 
-  if ((tm_item) < 0 || (tm_item >= TM_NUM_COLUMNS))  return NULL;
+  g_return_val_if_fail (gtkpod_window, NULL);
+  tt = g_object_get_data (G_OBJECT (gtkpod_window), "main_tooltips");
+  g_return_val_if_fail (tt, NULL);
+
+  g_return_val_if_fail (tm_item >= 0, NULL);
+  g_return_val_if_fail (tm_item < TM_NUM_COLUMNS, NULL);
 
   text = gettext (tm_col_strings[tm_item]);
+
+  g_return_val_if_fail (text, NULL);
 
   switch (tm_item)
   {
@@ -2022,7 +2041,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       gtk_tree_view_column_set_visible (col,
 					prefs_get_col_visible (tm_item));
   }
-  if (tt && tm_col_tooltips[tm_item])
+  if (tm_col_tooltips[tm_item])
       gtk_tooltips_set_tip (tt, col->button, 
 			    gettext (tm_col_tooltips[tm_item]),
 			    NULL);

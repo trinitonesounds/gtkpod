@@ -124,7 +124,7 @@ main (int argc, char *argv[])
   
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
 
-  display_create (gtkpod_window);
+  display_create ();
 
   init_data (gtkpod_window);   /* setup base data */
 

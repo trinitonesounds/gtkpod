@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 22:38:25 jcs>
+/* Time-stamp: <2005-05-28 00:27:25 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -307,26 +307,19 @@ void prefs_window_release (void)
  * the prefs (tooltips_prefs) */
 void prefs_window_show_hide_tooltips (void)
 {
-    
-    if (prefs_window)
-    {
-	GtkTooltips *tt;
-	GtkTooltipsData *tooltipsdata;
-		
-	tooltipsdata = gtk_tooltips_data_get (glade_xml_get_widget (prefs_window_xml, "cfg_mount_point"));
-	if (tooltipsdata) {
-		tt = tooltipsdata->tooltips;
-		if (tt)
-		{
-	    	if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
-	    	else                                     gtk_tooltips_disable (tt);
-		}
-    	} else {
-		g_message("tooltipsdata is NULL");
-	}
-	
-   }
+    GtkTooltips *tt;
+    GtkTooltipsData *tooltipsdata;
+
+    if (!prefs_window)   return; /* we may get called even when window
+				    is not open */
+    tooltipsdata = gtk_tooltips_data_get (glade_xml_get_widget (prefs_window_xml, "cfg_write_extended"));
+    g_return_if_fail (tooltipsdata);
+    tt = tooltipsdata->tooltips;
+    g_return_if_fail (tt);
+    if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
+    else                                     gtk_tooltips_disable (tt);
 }
+
 
 /**
  * create_gtk_prefs_window
@@ -339,8 +332,8 @@ prefs_window_create(void)
     gint i;
     gint defx, defy;
     GtkWidget *w = NULL;
-    GtkTooltips *tt = NULL;
-
+    GtkTooltips *tt;
+    GtkTooltipsData *tooltipsdata;
 
     if (prefs_window)
     {   /* prefs window already open -- raise to the top */
@@ -363,6 +356,13 @@ prefs_window_create(void)
     glade_xml_signal_autoconnect (prefs_window_xml);
 
     prefs_window = glade_xml_get_widget(prefs_window_xml,"prefs_window");
+
+    g_return_if_fail (prefs_window);
+		
+    tooltipsdata = gtk_tooltips_data_get (glade_xml_get_widget (prefs_window_xml, "cfg_write_extended"));
+    g_return_if_fail (tooltipsdata);
+    tt = tooltipsdata->tooltips;
+    g_return_if_fail (tt);
 
     prefs_get_size_prefs (&defx, &defy);
     gtk_window_set_default_size (GTK_WINDOW (prefs_window), defx, defy);
@@ -647,8 +647,7 @@ prefs_window_create(void)
 	}
 	gtk_widget_set_sensitive (w, tmpcfg->parsetags);
     }
-    /* get tooltips */
-    tt = GTK_TOOLTIPS (glade_xml_get_widget (prefs_window_xml, "tooltips"));
+
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	gchar *buf = g_strdup_printf ("col_visible%d", i);
@@ -660,7 +659,7 @@ prefs_window_create(void)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->col_visible[i]);
 	    /* set tooltip if available */
-	    if (tt && tm_col_tooltips[i])
+	    if (tm_col_tooltips[i])
 	    {
 		gtk_tooltips_set_tip (tt, w, 
 				      gettext (tm_col_tooltips[i]),
@@ -1644,6 +1643,10 @@ void sort_window_show_hide_tooltips (void)
 	{
 	    if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
 	    else                                     gtk_tooltips_disable (tt);
+	}
+	else
+	{
+	    g_warning ("***tt is NULL***");
 	}
     }
 }

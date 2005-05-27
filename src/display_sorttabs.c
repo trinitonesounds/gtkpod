@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:08:58 jcs>
+/* Time-stamp: <2005-05-28 00:28:19 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -2575,11 +2575,10 @@ static void st_create_special (gint inst, GtkWidget *window)
       /* Safe pointer to tooltips */
       st->sp_tooltips_data = gtk_tooltips_data_get(glade_xml_get_widget (special_xml, "sp_modified_entry"));
       /* Show / don't show tooltips */
-      if (st->sp_tooltips_data) {
-      	if (prefs_get_display_tooltips_main ()) 
-	    	gtk_tooltips_enable (st->sp_tooltips_data->tooltips);
-      	else gtk_tooltips_disable (st->sp_tooltips_data->tooltips);
-      } 
+      g_return_if_fail (st->sp_tooltips_data);
+      if (prefs_get_display_tooltips_main ()) 
+	  gtk_tooltips_enable (st->sp_tooltips_data->tooltips);
+      else gtk_tooltips_disable (st->sp_tooltips_data->tooltips);
       /* we don't need this any more */
       gtk_widget_destroy (special);
 }
@@ -2846,16 +2845,18 @@ void st_show_hide_tooltips (void)
 
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	if (sorttab[i])
-	{
-	    GtkTooltips *tt = sorttab[i]->sp_tooltips;
-	    if (tt)
-	    {
-		if (prefs_get_display_tooltips_main ())
-		       gtk_tooltips_enable (tt);
-		else   gtk_tooltips_disable (tt);
-	    }
-	}
+	GtkTooltips *tt;
+	GtkTooltipsData *ttd;
+
+	g_return_if_fail (sorttab[i]);
+	ttd = sorttab[i]->sp_tooltips_data;
+	g_return_if_fail (ttd);
+	tt = ttd->tooltips;
+	g_return_if_fail (tt);
+
+	if (prefs_get_display_tooltips_main ())
+	    gtk_tooltips_enable (tt);
+	else   gtk_tooltips_disable (tt);
     }
 }
 

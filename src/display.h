@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-23 00:22:14 jcs>
+/* Time-stamp: <2005-05-28 00:23:33 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -122,8 +122,7 @@ typedef struct {
   TimeInfo ti_added;                 /* TimeInfo "added" (sp)  */
   TimeInfo ti_modified;              /* TimeInfo "modified" (sp) */
   TimeInfo ti_played;                /* TimeInfo "played" (sp)   */
-  GtkTooltips *sp_tooltips;          /* pointer to tooltips in special st */
-  GtkTooltipsData *sp_tooltips_data;          /* pointer to tooltips in special st */
+  GtkTooltipsData *sp_tooltips_data; /* pointer to tooltips in special st */
 } SortTab;
 
 /* "Column numbers" in sort tab model */
@@ -235,7 +234,7 @@ enum {
 #define SP_SHIFT 9
 #define SP_MASK ((1<<SP_SHIFT)-1)
 
-void display_create (GtkWidget *gtkpod);
+void display_create (void);
 void display_cleanup (void);
 void display_adjust_delete_menus (void);
 void display_disable_gtkpod_import_buttons(void);

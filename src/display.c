@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-21 12:11:40 jcs>
+/* Time-stamp: <2005-05-28 00:18:01 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -45,10 +45,13 @@ GtkWidget *gtkpod_window = NULL;
 gint stop_add = SORT_TAB_MAX;
 
 /* Create the listviews etc */
-void display_create (GtkWidget *gtkpod)
+void display_create (void)
 {
     GtkWidget *stop_button;
     gint defx, defy;
+    GtkTooltips *main_tooltips;
+
+    g_return_if_fail (gtkpod_window);
 
     /* x,y-size */
     prefs_get_size_gtkpod (&defx, &defy);
@@ -56,6 +59,14 @@ void display_create (GtkWidget *gtkpod)
 /* we need to use the following line if the main window is already
    displayed */
 /*    gtk_window_resize (GTK_WINDOW (gtkpod_window), defx, defy);*/
+
+    /* Create tooltips */
+    main_tooltips = gtk_tooltips_new ();
+    g_object_set_data (G_OBJECT (gtkpod_window),
+		       "main_tooltips", main_tooltips);
+    /* indicate that main_tooltips was set up */
+    g_object_set_data (G_OBJECT (gtkpod_window),
+		       "main_tooltips_initialised", "set");
 
     tm_create_treeview ();
     st_create_tabs ();
@@ -254,25 +265,39 @@ void display_set_check_ipod_menu (void)
  * the prefs (tooltips_main) */
 void display_show_hide_tooltips (void)
 {
-    /* so far only tooltips in the toolbar are used... */
-    GtkTooltips *tt = NULL; /* = GTK_TOOLTIPS (lookup_widget (gtkpod_window,
-      "tooltips")); */
-    GtkCheckMenuItem *mi = GTK_CHECK_MENU_ITEM (
+    GtkCheckMenuItem *mi;
+    GtkToolbar *tb;
+    GtkTooltips *mt;
+
+    g_return_if_fail (main_window_xml);
+    g_return_if_fail (gtkpod_window);
+
+    /* ignore calls before window was set up properly (called by
+       prefs) */
+    if (!g_object_get_data (G_OBJECT (gtkpod_window),
+			    "main_tooltips_initialised")) return;
+
+    mi = GTK_CHECK_MENU_ITEM (
 	glade_xml_get_widget (main_window_xml, "tooltips_menu"));
-    GtkToolbar *tb = GTK_TOOLBAR (glade_xml_get_widget (main_window_xml, "toolbar"));
+    tb = GTK_TOOLBAR (glade_xml_get_widget (main_window_xml, "toolbar"));
+    mt = g_object_get_data (G_OBJECT (gtkpod_window), "main_tooltips");
+
+    g_return_if_fail (mi);
+    g_return_if_fail (tb);
+    g_return_if_fail (mt);
 
 
     if (prefs_get_display_tooltips_main ())
     {
-	if (tt)  gtk_tooltips_enable (tt);
-	if (mi)  gtk_check_menu_item_set_active (mi, TRUE);
-	if (tb)  gtk_toolbar_set_tooltips (tb, TRUE);
+	gtk_tooltips_enable (mt);
+	gtk_check_menu_item_set_active (mi, TRUE);
+	gtk_toolbar_set_tooltips (tb, TRUE);
     }
     else
     {
-	if (tt)  gtk_tooltips_disable (tt);
-	if (mi)  gtk_check_menu_item_set_active (mi, FALSE);
-	if (tb)  gtk_toolbar_set_tooltips (tb, FALSE);
+	gtk_tooltips_disable (mt);
+	gtk_check_menu_item_set_active (mi, FALSE);
+	gtk_toolbar_set_tooltips (tb, FALSE);
     }
     /* Show/Hide tooltips of the special sorttabs */
     st_show_hide_tooltips ();

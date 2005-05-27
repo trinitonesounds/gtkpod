@@ -1,7 +1,17 @@
 2005-05-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* moved all prefs_windows callbacks from callbacks.c to
-          prefs_windows.c  -- should be continued with other callbacks.
+          prefs_windows.c  -- should be continued with other
+          callbacks.
+
+	* display_songs.c: ipod_path in track display set to "Local
+          Database" for ITDB_TYPE_LOCAL
+
+	* prefs_windows.c: fixed error concerning show/hide of
+	  tooltips
+
+	* display*.c: hopefully made tooltips working again throughout
+          gtkpod.
 
 2005-05-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
