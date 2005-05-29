@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:17:59 jcs>
+/* Time-stamp: <2005-05-30 00:52:40 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1039,6 +1039,7 @@ static gboolean delete_files (iTunesDB *itdb)
   gboolean result = TRUE;
   static gboolean abort;
   ExtraiTunesDBData *eitdb;
+  const gchar *mp = NULL;
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
   GTimeVal gtime;
@@ -1050,9 +1051,16 @@ static gboolean delete_files (iTunesDB *itdb)
   eitdb = itdb->userdata;
   g_return_val_if_fail (eitdb, FALSE);
 
-  if (itdb_tracks_number_nontransferred (itdb)==0 &&
-      !eitdb->pending_deletion)
+  if (!eitdb->pending_deletion)
+  {
       return TRUE;
+  }
+
+  if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+  {
+      mp = prefs_get_ipod_mount ();
+      g_return_val_if_fail (mp, FALSE);
+  }
 
   abort = FALSE;
 
@@ -1080,41 +1088,37 @@ static gboolean delete_files (iTunesDB *itdb)
 
       if(filename)
       {
-	  const gchar *mp = prefs_get_ipod_mount ();
-	  if(mp && g_strstr_len(filename, strlen(mp), mp))
-	  {
-	      gint rmres;
+	  gint rmres;
 #ifdef G_THREADS_ENABLED
-	      mutex_data = FALSE;
-	      thread = g_thread_create (th_remove, filename, TRUE, NULL);
-	      if (thread)
+	  mutex_data = FALSE;
+	  thread = g_thread_create (th_remove, filename, TRUE, NULL);
+	  if (thread)
+	  {
+	      g_mutex_lock (mutex);
+	      do
 	      {
-		  g_mutex_lock (mutex);
-		  do
-		  {
-		      while (widgets_blocked && gtk_events_pending ())
-			  gtk_main_iteration ();
-		      /* wait a maximum of 20 ms */
-		      g_get_current_time (&gtime);
-		      g_time_val_add (&gtime, 20000);
-		      g_cond_timed_wait (cond, mutex, &gtime);
-		  } while(!mutex_data);
-		  g_mutex_unlock (mutex);
-		  rmres = (gint)g_thread_join (thread);
-		  if (rmres == -1) result = FALSE;
-	      }
-	      else {
-		  g_warning ("Thread creation failed, falling back to default.\n");
-		  remove (filename);
-	      }
-#else
-	      rmres = remove(filename);
+		  while (widgets_blocked && gtk_events_pending ())
+		      gtk_main_iteration ();
+		  /* wait a maximum of 20 ms */
+		  g_get_current_time (&gtime);
+		  g_time_val_add (&gtime, 20000);
+		  g_cond_timed_wait (cond, mutex, &gtime);
+	      } while(!mutex_data);
+	      g_mutex_unlock (mutex);
+	      rmres = (gint)g_thread_join (thread);
 	      if (rmres == -1) result = FALSE;
-/*	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", track->artist,
-						    track->title, track->ipod_id,
-						    filename);*/
-#endif
 	  }
+	  else {
+	      g_warning ("Thread creation failed, falling back to default.\n");
+	      remove (filename);
+	  }
+#else
+	  rmres = remove(filename);
+	  if (rmres == -1) result = FALSE;
+/*	      fprintf(stderr, "Removed %s-%s(%d)\n%s\n", track->artist,
+	      track->title, track->ipod_id,
+	      filename);*/
+#endif
 	  g_free(filename);
       }
       itdb_track_free (track);
@@ -1159,7 +1163,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
 
   n = itdb_tracks_number_nontransferred (itdb);
 
-  if (n==0 && !eitdb->pending_deletion) return TRUE;
+  if (n==0) return TRUE;
 
   abort = FALSE;
   /* create the dialog window */

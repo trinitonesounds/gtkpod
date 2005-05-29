@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-23 00:29:48 jcs>
+/* Time-stamp: <2005-05-30 00:29:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -109,7 +109,7 @@ void mount_ipod(void);
 void unmount_ipod(void);
 void call_script (gchar *script);
 
-void delete_track_ok (gpointer user_data1, gpointer user_data2);
+void delete_track_ok (struct DeleteData *dd);
 
 void gtkpod_warning (const gchar *format, ...);
 

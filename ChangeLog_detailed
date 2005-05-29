@@ -1,4 +1,12 @@
-2005-05-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2005-05-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* itdb_cp_track_to_ipod(): no longer uses ipod-ID to create
+          filename.
+
+	* file.c, misc_confirm.c: fixed several non-reported bugs
+          concerning deletion
+
+2005-05-27 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* moved all prefs_windows callbacks from callbacks.c to
           prefs_windows.c  -- should be continued with other

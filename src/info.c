@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-21 12:16:53 jcs>
+/* Time-stamp: <2005-05-29 23:39:26 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -465,7 +465,7 @@ gtkpod_tracks_statusbar_update(void)
 /*	g_return_if_fail (itdb);*/
 	if (!itdb) return;
 	
-	buf = g_strdup_printf (_(" P:%d S:%d/%d"),
+	buf = g_strdup_printf (_(" P:%d T:%d/%d"),
 			       itdb_playlists_number (itdb) - 1,
 			       tm_get_nr_of_tracks (),
 			       itdb_tracks_number (itdb));

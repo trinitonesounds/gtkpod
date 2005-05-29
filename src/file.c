@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:16:52 jcs>
+/* Time-stamp: <2005-05-30 00:40:06 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1056,35 +1056,15 @@ static void sync_dir (gpointer key,
 }
 
 
-/* ok handler for sync_remove */
-/* @user_data1 is selected playlist, @user_data2 are the selected
- * tracks */
-static void sync_remove_ok (gpointer user_data1, gpointer user_data2)
-{
-    Playlist *mpl, *pl = user_data1;
-    iTunesDB *itdb;
-
-    g_return_if_fail (pl);
-    /* get MPL via playlist->itdb */
-    itdb = pl->itdb;
-    g_return_if_fail (itdb);
-    mpl = itdb_playlist_mpl (itdb);
-    g_return_if_fail (mpl);
-
-    if (prefs_get_sync_remove ())
-	delete_track_ok (mpl, user_data2);
-    else
-	g_list_free ((GList *)user_data2);
-}
-
 
 /* cancel handler for sync_remove */
 /* @user_data1 is NULL, @user_data2 are the selected tracks */
-static void sync_remove_cancel (gpointer user_data1, gpointer user_data2)
+static void sync_remove_cancel (struct DeleteData *dd)
 {
-    GList *track_list = user_data2;
+    g_return_if_fail (dd);
 
-    g_list_free (track_list);
+    g_list_free (dd->selected_tracks);
+    g_free (dd);
 
     gtkpod_statusbar_message (_("Syncing completed. No files deleted."));
 }
@@ -1129,6 +1109,7 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     if (prefs_get_sync_remove ())
     {   /* remove tracks that are no longer present in the dirs */
 	GList *tracklist = NULL;
+	struct DeleteData *dd;
 	GList *gl;
 
 	/* add all tracks that are no longer present in the dirs */
@@ -1155,26 +1136,26 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		g_free (dirname);
 	    }
 	}
-	if (tracklist != NULL)
+
+	dd = g_malloc0 (sizeof (struct DeleteData));
+	dd->pl = sd->pl;
+	dd->itdb = itdb;
+	dd->selected_tracks = tracklist;
+	dd->deleteaction = -1;
+	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	    dd->deleteaction = DELETE_ACTION_DATABASE;
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	    dd->deleteaction = DELETE_ACTION_IPOD;
+	g_return_if_fail (dd->deleteaction != -1);
+
+	if (tracklist)
 	{
 	    gchar *label, *title;
 	    GString *str;
-	    struct DeleteData dd;
 	    GtkResponseType response;
 
-	    dd.pl = sd->pl;
-	    dd.itdb = itdb;
-	    dd.selected_tracks = tracklist;
-	    dd.deleteaction = -1;
-
-	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-		dd.deleteaction = DELETE_ACTION_DATABASE;
-	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-		dd.deleteaction = DELETE_ACTION_IPOD;
-	    g_return_if_fail (dd.deleteaction != -1);
-
 	    /* populate "title" and "label" */
-	    delete_populate_settings (&dd,
+	    delete_populate_settings (dd,
 				      &label, &title,
 				      NULL, NULL, NULL);
 
@@ -1213,17 +1194,17 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 	    switch (response)
 	    {
 	    case GTK_RESPONSE_OK:
-		sync_remove_ok (sd->pl, tracklist);
+		delete_track_ok (dd);
 		break;
 	    default:
-		sync_remove_cancel (sd->pl, tracklist);
+		sync_remove_cancel (dd);
 		break;
 	    }
 
 	    g_free (label);
 	    g_string_free (str, TRUE);
 	}
-	else sync_remove_cancel (NULL, tracklist);
+	else sync_remove_cancel (dd);
     }
     else
     {

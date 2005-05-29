@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:16:53 jcs>
+/* Time-stamp: <2005-05-30 00:29:39 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -123,8 +123,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Are you sure you want to delete the following track completely from your iPod? The number of playlists this track is a member of is indicated in parentheses.",
 			      "Are you sure you want to delete the following tracks completely from your iPod? The number of playlists the tracks are member of is indicated in parentheses.", n));
 	    if (title)
-		*title = ngettext ("Delete Track Completely from iPod?",
-				   "Delete Tracks Completey from iPod?", n);
+		*title = g_strdup (
+		    ngettext ("Delete Track Completely from iPod?",
+			      "Delete Tracks Completey from iPod?", n));
 	    if (confirm_again)
 		*confirm_again = prefs_get_track_ipod_file_deletion ();
 	    if (confirm_again_handler)
@@ -136,8 +137,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Are you sure you want to remove the following track from the playlist \"%s\"?",
 			      "Are you sure you want to remove the following tracks from the playlist \"%s\"?", n), dd->pl->name);
 	    if (title)
-		*title = ngettext ("Remove Track From Playlist?",
-				   "Remove Tracks From Playlist?", n);
+		*title = g_strdup (
+		    ngettext ("Remove Track From Playlist?",
+			      "Remove Tracks From Playlist?", n));
 	    if (confirm_again)
 		*confirm_again = prefs_get_track_playlist_deletion ();
 	    if (confirm_again_handler)
@@ -161,8 +163,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Are you sure you want to delete the following track completely from your harddisk? The number of playlists this track is a member of is indicated in parentheses.",
 			      "Are you sure you want to delete the following tracks completely from your harddisk? The number of playlists the tracks are member of is indicated in parentheses.", n));
 	    if (title)
-		*title = ngettext ("Delete Track from Harddisk?",
-				   "Delete Tracks from Harddisk?", n);
+		*title = g_strdup (
+		    ngettext ("Delete Track from Harddisk?",
+			      "Delete Tracks from Harddisk?", n));
 	    if (confirm_again)
 		*confirm_again = prefs_get_track_local_file_deletion ();
 	    if (confirm_again_handler)
@@ -174,8 +177,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Are you sure you want to remove the following track from the playlist \"%s\"?",
 			      "Are you sure you want to remove the following tracks from the playlist \"%s\"?", n), dd->pl->name);
 	    if (title)
-		*title = ngettext ("Remove Track From Playlist?",
-				   "Remove Tracks From Playlist?", n);
+		*title = g_strdup (
+		    ngettext ("Remove Track From Playlist?",
+			      "Remove Tracks From Playlist?", n));
 	    if (confirm_again)
 		*confirm_again = prefs_get_track_playlist_deletion ();
 	    if (confirm_again_handler)
@@ -187,8 +191,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Are you sure you want to remove the following track completely from your local database? The number of playlists this track is a member of is indicated in parentheses.",
 			      "Are you sure you want to remove the following tracks completely from your local database? The number of playlists the tracks are member of is indicated in parentheses.", n));
 	    if (title)
-		*title = ngettext ("Remove Track from Local Database?",
-				   "Remove Tracks from Local Database?", n);
+		*title = g_strdup (
+		    ngettext ("Remove Track from Local Database?",
+			      "Remove Tracks from Local Database?", n));
 	    if (confirm_again)
 		*confirm_again = prefs_get_track_database_deletion ();
 	    if (confirm_again_handler)
@@ -217,10 +222,8 @@ void delete_populate_settings (struct DeleteData *dd,
 
 /* cancel handler for delete track */
 /* @user_data1 the selected playlist, @user_data2 are the selected tracks */
-static void delete_track_cancel (gpointer user_data1, gpointer user_data2)
+static void delete_track_cancel (struct DeleteData *dd)
 {
-    struct DeleteData *dd = user_data1;
-
     g_return_if_fail (dd);
 
     g_list_free (dd->selected_tracks);
@@ -231,11 +234,8 @@ static void delete_track_cancel (gpointer user_data1, gpointer user_data2)
 
 /* ok handler for delete track */
 /* @user_data1 the selected playlist, @user_data2 are the selected tracks */
-void delete_track_ok (gpointer user_data1, gpointer user_data2)
+void delete_track_ok (struct DeleteData *dd)
 {
-    struct DeleteData *dd = user_data1;
-
-    GList *selected_tracks = user_data2;
     gint n;
     gchar *buf = NULL;
     GList *l;
@@ -245,7 +245,7 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
     g_return_if_fail (dd->itdb);
 
     /* should never happen */
-    if (!dd->selected_tracks)	delete_track_cancel (dd, NULL);
+    if (!dd->selected_tracks)	delete_track_cancel (dd);
 
     /* nr of tracks to be deleted */
     n = g_list_length (dd->selected_tracks);
@@ -302,8 +302,7 @@ void delete_track_ok (gpointer user_data1, gpointer user_data2)
 	    break;
 	}
     }
-
-    for (l = selected_tracks; l; l = l->next)
+    for (l = dd->selected_tracks; l; l = l->next)
     {
 	gp_playlist_remove_track (dd->pl, l->data, dd->deleteaction);
     }
@@ -377,14 +376,15 @@ void delete_track_head (DeleteAction deleteaction)
     {
     case GTK_RESPONSE_OK:
 	/* Delete the tracks */
-	delete_track_ok (dd, NULL);
+	delete_track_ok (dd);
 	break;
     default:
-	delete_track_cancel (dd, NULL);
+	delete_track_cancel (dd);
 	break;
     }
 
     g_free (label);
+    g_free (title);
     g_string_free (str, TRUE);
 }
 
@@ -415,7 +415,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
     Playlist *pl;
     GList *selected_tracks=NULL;
     GString *str;
-    gchar *label, *title;
+    gchar *label = NULL, *title = NULL;
     gboolean confirm_again;
     ConfHandlerOpt confirm_again_handler;
     TabEntry *entry;
@@ -460,6 +460,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
 			      &label, &title,
 			      &confirm_again, &confirm_again_handler,
 			      &str);
+
     /* open window */
     response = gtkpod_confirmation
 	(-1,                   /* gint id, */
@@ -481,16 +482,17 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
     {
     case GTK_RESPONSE_OK:
 	/* Delete the tracks */
-	delete_track_ok (dd, NULL);
+	delete_track_ok (dd);
 	/* Delete the entry */
 	st_remove_entry (entry, inst);
 	break;
     default:
-	delete_track_cancel (dd, NULL);
+	delete_track_cancel (dd);
 	break;
     }
 
     g_free (label);
+    g_free (title);
     g_string_free (str, TRUE);
 }
 
@@ -536,6 +538,7 @@ static void delete_playlist_ok (struct DeleteData *dd)
 	    if (dd->pl->type == ITDB_PL_TYPE_MPL)
 	    {
 		msg = g_strdup_printf (_("Removed all %d tracks from the iPod"), n);
+		display_reset (0);
 	    }
 	    else
 	    {
@@ -605,6 +608,7 @@ static void delete_playlist_ok (struct DeleteData *dd)
 	    if (dd->pl->type == ITDB_PL_TYPE_MPL)
 	    {
 		msg = g_strdup_printf (_("Removed all %d tracks from the database"), n);
+		display_reset (0);
 	    }
 	    else
 	    {
@@ -636,6 +640,8 @@ static void delete_playlist_ok (struct DeleteData *dd)
 	}
     }
     delete_playlist_cleanup (dd);
+
+    gtkpod_tracks_statusbar_update ();
 }
 
 
@@ -649,7 +655,7 @@ void delete_playlist_head (DeleteAction deleteaction)
     iTunesDB *itdb;
     GtkResponseType response = GTK_RESPONSE_NONE;
     GString *str;
-    gchar *label = NULL, *title;
+    gchar *label = NULL, *title = NULL;
     gboolean confirm_again;
     ConfHandlerOpt confirm_again_handler;
     guint32 n = 0;
@@ -695,7 +701,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    }
 	    else
 	    {
-		title = g_strdup_printf(_("Are you sure you want to delete the playlist '%s'?"), pl->name);
+		label = g_strdup_printf(_("Are you sure you want to delete the playlist '%s'?"), pl->name);
 	    }
 	    break;
 	case DELETE_ACTION_LOCAL:
@@ -750,7 +756,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    }
 	    else
 	    {
-		title = g_strdup_printf(_("Are you sure you want to delete the playlist '%s'?"), pl->name);
+		label = g_strdup_printf(_("Are you sure you want to delete the playlist '%s'?"), pl->name);
 	    }
 	    break;
 	case DELETE_ACTION_IPOD:

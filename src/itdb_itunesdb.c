@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-21 11:11:03 jcs>
+/* Time-stamp: <2005-05-30 00:03:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -3242,9 +3242,15 @@ void itdb_filename_ipod2fs (gchar *ipod_file)
    successful transfer @track->transferred is set to TRUE.
 
    For storage, the directories "f00 ... f19" will be
-   cycled through. The filename is constructed from
-   @track->id: "gtkpod"_id and written to @track->ipod_path. If
-   @track->ipod_path is already set, this one will be used instead */
+   cycled through.
+
+   The filename is constructed as "gtkpod"<random number> and copied
+   to @track->ipod_path. If this file already exists, <random number>
+   is adjusted until an unused filename is found.
+
+   If @track->ipod_path is already set, this one will be used
+   instead. If a file with this name already exists, it will be
+   overwritten. */
 gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
 				gchar *filename, GError **error)
 {
@@ -3270,6 +3276,7 @@ gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
       gchar *original_suffix;
       gchar dir_num_str[5];
       gint32 oops = 0;
+      gint32 rand = g_random_int_range (0, 899999); /* 0 to 900000 */
 
       if (dir_num == -1) dir_num = g_random_int_range (0, 20);
       else dir_num = (dir_num + 1) % 20;
@@ -3306,8 +3313,8 @@ gboolean itdb_cp_track_to_ipod (const gchar *mp, Itdb_Track *track,
       do
       {   /* we need to loop until we find an unused filename */
 	  dest_components[3] = 
-	      g_strdup_printf("gtkpod%05d%s",
-			      track->id + oops, original_suffix);
+	      g_strdup_printf("gtkpod%06d%s",
+			      rand + oops, original_suffix);
 	  ipod_fullfile = itdb_resolve_path (
 	      parent_dir_filename,
 	      (const gchar **)&dest_components[3]);

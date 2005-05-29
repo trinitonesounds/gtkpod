@@ -346,7 +346,7 @@ create_context_menu(CM_type type)
 					_("Delete From Harddisk"),
 					"gtk-delete",
 					G_CALLBACK (delete_entries),
-					(gpointer)DELETE_ACTION_IPOD);
+					(gpointer)DELETE_ACTION_LOCAL);
 	    mi_db[type] = hookup_mi (menu[type],
 				     _("Delete From Database"),
 				     "gtk-delete",
