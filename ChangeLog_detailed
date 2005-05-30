@@ -6,6 +6,13 @@
 	* file.c, misc_confirm.c: fixed several non-reported bugs
           concerning deletion
 
+	* display_playlists.c, display_sortabs.c, display_songs.c:
+          added gtkpod_tracks_statusbar_update() to drag_end()
+          callbacks.
+
+	* file_itunesdb.c: fixed segfault when pressing the 'Cancel'
+          button during file transfer to the iPod.
+
 2005-05-27 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* moved all prefs_windows callbacks from callbacks.c to

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 23:54:46 jcs>
+/* Time-stamp: <2005-05-30 23:28:52 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -365,6 +365,7 @@ static void tm_drag_end (GtkWidget *widget,
 {
 /*     puts ("tm_drag_end"); */
     display_remove_autoscroll_row_timeout (widget);
+    gtkpod_tracks_statusbar_update ();
 }
 
 

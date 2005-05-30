@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-30 00:52:40 jcs>
+/* Time-stamp: <2005-05-30 23:58:34 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -949,9 +949,9 @@ static gpointer th_copy (gpointer s)
 
 /* This function is called when the user presses the abort button
  * during flush_tracks() */
-static void file_dialog_abort (gboolean *abort)
+static void file_dialog_abort (gboolean *abort_flag)
 {
-    *abort = TRUE;
+    *abort_flag = TRUE;
 }
 
 
@@ -980,7 +980,8 @@ static gboolean ipod_dirs_present (gchar *mountpoint)
 
 
 
-static GtkWidget *create_file_dialog (GtkWidget **progress_bar)
+static GtkWidget *create_file_dialog (GtkWidget **progress_bar,
+				      gboolean *abort_flag)
 {
   GtkWidget *dialog, *label, *image, *hbox;
 
@@ -1014,7 +1015,7 @@ static GtkWidget *create_file_dialog (GtkWidget **progress_bar)
   /* Indicate that user wants to abort */
   g_signal_connect_swapped (GTK_OBJECT (dialog), "response",
 			    G_CALLBACK (file_dialog_abort),
-			    &abort);
+			    abort_flag);
 
   /* Add the image/label + progress bar to dialog */
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
@@ -1037,7 +1038,7 @@ static gboolean delete_files (iTunesDB *itdb)
   GtkWidget *dialog, *progress_bar;
   gchar *progtext = NULL;
   gboolean result = TRUE;
-  static gboolean abort;
+  static gboolean abort_flag;
   ExtraiTunesDBData *eitdb;
   const gchar *mp = NULL;
 #ifdef G_THREADS_ENABLED
@@ -1062,16 +1063,16 @@ static gboolean delete_files (iTunesDB *itdb)
       g_return_val_if_fail (mp, FALSE);
   }
 
-  abort = FALSE;
+  abort_flag = FALSE;
 
-  dialog = create_file_dialog (&progress_bar);
+  dialog = create_file_dialog (&progress_bar, &abort_flag);
   progtext = g_strdup (_("deleting..."));
   gtk_progress_bar_set_text(GTK_PROGRESS_BAR (progress_bar), progtext);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   g_free (progtext);
 
   /* lets clean up those pending deletions */
-  while (!abort && eitdb->pending_deletion)
+  while (!abort_flag && eitdb->pending_deletion)
   {
       gchar *filename = NULL;
       Track *track = eitdb->pending_deletion->data;
@@ -1128,7 +1129,7 @@ static gboolean delete_files (iTunesDB *itdb)
 	  gtk_main_iteration ();
   }
   gtk_widget_destroy (dialog);
-  if (abort) result = FALSE;
+  if (abort_flag) result = FALSE;
   return result;
 }
 
@@ -1145,7 +1146,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
   gchar *buf;
   Track  *track;
   gboolean result = TRUE;
-  static gboolean abort;
+  static gboolean abort_flag;
   GtkWidget *dialog, *progress_bar;
   time_t diff, start, fullsecs, hrs, mins, secs;
   gchar *progtext = NULL;
@@ -1165,9 +1166,9 @@ static gboolean flush_tracks (iTunesDB *itdb)
 
   if (n==0) return TRUE;
 
-  abort = FALSE;
+  abort_flag = FALSE;
   /* create the dialog window */
-  dialog = create_file_dialog (&progress_bar);
+  dialog = create_file_dialog (&progress_bar, &abort_flag);
   progtext = g_strdup (_("preparing to copy..."));
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (progress_bar), progtext);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
@@ -1178,7 +1179,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
   count = 0; /* tracks transferred */
   start = time (NULL);
 
-  for (gl=itdb->tracks; gl && !abort; gl=gl->next)
+  for (gl=itdb->tracks; gl && !abort_flag; gl=gl->next)
   {
       track = gl->data;
       g_return_val_if_fail (track, FALSE); /* this will hang the
@@ -1255,7 +1256,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
       }
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   } /* for (.;.;.) */
-  if (abort)      result = FALSE;   /* negative result if user aborted */
+  if (abort_flag)      result = FALSE;   /* negative result if user aborted */
   if (result == FALSE)
       gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
   prefs_set_statusbar_timeout (0);

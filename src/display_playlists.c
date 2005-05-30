@@ -153,6 +153,7 @@ static void pm_drag_end (GtkWidget *widget,
 {
 /*     puts ("drag_end"); */
     display_remove_autoscroll_row_timeout (widget);
+    gtkpod_tracks_statusbar_update ();
 }
 
 static void pm_drag_leave (GtkWidget *widget,

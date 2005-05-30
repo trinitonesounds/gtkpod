@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-28 00:28:19 jcs>
+/* Time-stamp: <2005-05-30 23:29:46 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -136,6 +136,16 @@ on_st_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	}
     }
 }
+
+
+static void st_drag_end (GtkWidget *widget,
+			 GdkDragContext *dc,
+			 gpointer user_data)
+{
+/*     puts ("st_drag_end"); */
+    gtkpod_tracks_statusbar_update ();
+}
+
 
 
 /*
@@ -2359,19 +2369,15 @@ st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 /* Create tracks listview */
 static void st_create_listview (gint inst)
 {
-  GtkTreeViewColumn *column;
-  GtkCellRenderer *renderer;
   GtkTreeModel *model;
   GtkListStore *liststore;
-  GtkTreeView *treeview;
-  GtkTreeSelection *selection;
   gint i;
   SortTab *st = sorttab[inst];
 
   /* create model */
   if (st->model)
   {
-      /* FIXME: how do we delete the model? */
+      g_object_unref (G_OBJECT (st->model));
       st->model = NULL;
   }
   liststore = gtk_list_store_new (ST_NUM_COLUMNS, G_TYPE_POINTER);
@@ -2382,18 +2388,23 @@ static void st_create_listview (gint inst)
   {
       if (i != ST_CAT_SPECIAL)
       {
+	  GtkTreeSelection *selection;
+	  GtkTreeView *treeview;
+	  GtkCellRenderer *renderer;
+	  GtkTreeViewColumn *column;
+
 	  treeview = st->treeview[i];
 	  gtk_tree_view_set_model (treeview, model);
-	  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
-	  gtk_tree_selection_set_mode (gtk_tree_view_get_selection (treeview),
-				       GTK_SELECTION_SINGLE);
 	  selection = gtk_tree_view_get_selection (treeview);
+	  gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 	  g_signal_connect (G_OBJECT (selection), "changed",
-			    G_CALLBACK (st_selection_changed), (gpointer)inst);
+			    G_CALLBACK (st_selection_changed),
+			    (gpointer)inst);
 	  /* Add column */
 	  renderer = gtk_cell_renderer_text_new ();
 	  g_signal_connect (G_OBJECT (renderer), "edited",
-			    G_CALLBACK (st_cell_edited), GINT_TO_POINTER(inst));
+			    G_CALLBACK (st_cell_edited),
+			    GINT_TO_POINTER(inst));
 	  g_object_set_data (G_OBJECT (renderer), "column",
 			     (gint *)ST_COLUMN_ENTRY);
 	  column = gtk_tree_view_column_new ();
@@ -2408,12 +2419,6 @@ static void st_create_listview (gint inst)
 					   ST_COLUMN_ENTRY,
 					   st_data_compare_func, (gpointer)inst, NULL);
 	  gtk_tree_view_append_column (treeview, column);
-	  gtk_tree_view_set_headers_visible (treeview, FALSE);
-	  gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
-			       st_drag_types, TGNR (st_drag_types),
-			       GDK_ACTION_COPY|GDK_ACTION_MOVE);
-	  g_signal_connect (G_OBJECT (treeview), "button-press-event",
-			    G_CALLBACK (st_button_press_event), GINT_TO_POINTER(inst));
       }
   }
 }
@@ -2589,7 +2594,6 @@ static void st_create_page (gint inst, ST_CAT_item st_cat)
 {
   GtkWidget *st0_notebook;
   GtkWidget *st0_window0;
-  GtkWidget *st0_cat0_treeview;
   GtkWidget *st0_label0 = NULL;
   SortTab *st = sorttab[inst];
 
@@ -2639,7 +2643,7 @@ static void st_create_page (gint inst, ST_CAT_item st_cat)
       st0_label0 = gtk_label_new (_("Special"));
       break;
   case ST_CAT_NUM: /* should not happen... */
-      st0_label0 = gtk_label_new (("Programming Error"));
+      g_return_if_reached ();
       break;
   }
   gtk_widget_show (st0_label0);
@@ -2653,17 +2657,28 @@ static void st_create_page (gint inst, ST_CAT_item st_cat)
   }
   else
   {
+      GtkWidget *treeview;
       /* create treeview */
-      st0_cat0_treeview = gtk_tree_view_new ();
-      gtk_widget_show (st0_cat0_treeview);
-      gtk_container_add (GTK_CONTAINER (st0_window0), st0_cat0_treeview);
-      g_signal_connect ((gpointer) st0_cat0_treeview, "drag_data_get",
-			G_CALLBACK (st_drag_data_get),
-			NULL);
-      g_signal_connect_after ((gpointer) st0_cat0_treeview, "key_release_event",
+      treeview = gtk_tree_view_new ();
+      st->treeview[st_cat] = GTK_TREE_VIEW (treeview);
+      gtk_widget_show (treeview);
+      gtk_container_add (GTK_CONTAINER (st0_window0), treeview);
+      g_signal_connect_after ((gpointer) treeview, "key_release_event",
 			      G_CALLBACK (on_st_treeview_key_release_event),
 			      NULL);
-      st->treeview[st_cat] = GTK_TREE_VIEW (st0_cat0_treeview);
+      gtk_drag_source_set (GTK_WIDGET (treeview), GDK_BUTTON1_MASK,
+			   st_drag_types, TGNR (st_drag_types),
+			   GDK_ACTION_COPY|GDK_ACTION_MOVE);
+      g_signal_connect (G_OBJECT (treeview), "button-press-event",
+			G_CALLBACK (st_button_press_event), GINT_TO_POINTER(inst));
+      g_signal_connect ((gpointer) treeview, "drag_data_get",
+			G_CALLBACK (st_drag_data_get),
+			NULL);
+      g_signal_connect ((gpointer) treeview, "drag-end",
+			G_CALLBACK (st_drag_end),
+			NULL);
+      gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
+      gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
   }
 }
 
