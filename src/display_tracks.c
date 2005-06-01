@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-30 23:28:52 jcs>
+/* Time-stamp: <2005-06-02 00:19:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1190,7 +1190,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   case TM_COLUMN_COMPILATION:
       g_object_set (G_OBJECT (renderer),
-		    "active", !track->compilation,
+		    "active", track->compilation,
 		    "activatable", TRUE, NULL);
       break;
   case TM_COLUMN_SIZE:
@@ -1338,10 +1338,10 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
 	 else        track->checked = 0;
 	 break;
      case TM_COLUMN_COMPILATION:
-	 if ((active && (track->compilation == 0)) ||
-	     (!active && (track->compilation == 1)))
+	 if ((!active && (track->compilation == 0)) ||
+	     (active && (track->compilation == 1)))
 	     changed = TRUE;
-	 if (active) track->compilation = 1;
+	 if (!active) track->compilation = 1;
 	 else        track->compilation = 0;
         break;
      default:

@@ -1,6 +1,8 @@
 gtkpod V0.90
 	Complete rewrite of reading/writing the iTunesDB
 
+	BUGFIX: display and reading of compilation flag fixed
+
 	IMPROVEMENT: sync-notes.sh now also works on directories (thanks
 	to Thomas Perl)
 
