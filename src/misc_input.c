@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-21 12:27:55 jcs>
+/* Time-stamp: <2005-06-02 23:29:03 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -32,7 +32,7 @@
 
 #include <stdlib.h>
 #include "charset.h"
-#include "dirbrowser.h"
+#include "fileselection.h"
 #include "info.h"
 #include "misc.h"
 #include "misc_track.h"
@@ -41,242 +41,6 @@
 
 
 #define DEBUG_MISC 0
-
-static GtkWidget *file_selector = NULL;
-static iTunesDB *active_itdb = NULL;
-static GtkWidget *pl_file_selector = NULL;
-static iTunesDB *pl_active_itdb = NULL;
-
-
-/*------------------------------------------------------------------*\
- *                                                                  *
- *             Add Files File Selector                              *
- *                                                                  *
-\*------------------------------------------------------------------*/
-
-static void add_files_ok_button (GtkWidget *button, GtkFileSelection *selector)
-{
-  gchar **names;
-  gint i;
-  Playlist *plitem;
-  gboolean result = TRUE;
-
-  g_return_if_fail (active_itdb);
-
-  block_widgets ();
-  names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
-  plitem = pm_get_selected_playlist ();
-  for (i=0; names[i] != NULL; ++i)
-  {
-      result &= add_track_by_filename (active_itdb, names[i], plitem,
-				       prefs_get_add_recursively (),
-				       NULL, NULL);
-      if(i == 0)
-	  prefs_set_last_dir_browse(names[i]);
-  }
-  /* clear log of non-updated tracks */
-  display_non_updated ((void *)-1, NULL);
-  /* display log of updated tracks */
-  display_updated (NULL, NULL);
-  /* display log of detected duplicates */
-  gp_duplicate_remove (NULL, NULL);
-  if (result == TRUE)
-      gtkpod_statusbar_message (_("Successly added files"));
-  else
-      gtkpod_statusbar_message (_("Some files were not added successfully"));
-  gtkpod_tracks_statusbar_update();
-  release_widgets ();
-  g_strfreev (names);
-}
-
-/* called when the file selector is closed */
-static void add_files_close (GtkWidget *w1, GtkWidget *w2)
-{
-    if (file_selector)    gtk_widget_destroy(file_selector),
-    gtkpod_tracks_statusbar_update();
-    file_selector = NULL;
-}
-
-
-void create_add_files_fileselector (void)
-{
-    gchar *buf;
-    Playlist *mpl, *pl;
-
-    if (file_selector)
-    {   /* file selector already open -- raise to the top */
-	gdk_window_raise (file_selector->window);
-	return;
-    }
-    active_itdb = gp_get_active_itdb ();
-    g_return_if_fail (active_itdb);
-
-    /* title for file selector */
-    mpl = itdb_playlist_mpl (active_itdb);
-    g_return_if_fail (mpl);
-    g_return_if_fail (mpl->name);
-    pl = pm_get_selected_playlist ();
-    if (pl)
-    {
-	g_return_if_fail (pl->name);
-	buf = g_strdup_printf (
-	    _("Select files or directories to add to '%s/%s'"),
-	    mpl->name, pl->name);
-    }
-    else
-    {
-	buf = g_strdup_printf (
-	    _("Select files or directories to add to '%s'"),
-	    mpl->name);
-    }
-
-    /* Create the selector */
-    file_selector = gtk_file_selection_new (buf);
-    g_free (buf);
-    gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (file_selector),
-					    TRUE);
-    gtk_file_selection_set_filename(GTK_FILE_SELECTION (file_selector),
-				    prefs_get_last_dir_browse ());
-
-    g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
-		      "clicked",
-		      G_CALLBACK (add_files_ok_button),
-		      file_selector);
-
-    /* Ensure that file_selector is set to NULL when window is deleted */
-    g_signal_connect_swapped (GTK_OBJECT (file_selector),
-			      "delete_event",
-			      G_CALLBACK (add_files_close),
-			      (gpointer) file_selector);
-
-    /* Ensure that the dialog box is deleted when the user clicks a button. */
-    g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
-			      "clicked",
-			      G_CALLBACK (add_files_close),
-			      (gpointer) file_selector);
-
-    g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->cancel_button),
-			      "clicked",
-			      G_CALLBACK (add_files_close),
-			      (gpointer) file_selector);
-
-    /* Display that dialog */
-    gtk_widget_show (file_selector);
-}
-
-
-
-/*------------------------------------------------------------------*\
- *                                                                  *
- *             Add Playlists File Selector                          *
- *                                                                  *
-\*------------------------------------------------------------------*/
-
-
-static void add_playlists_ok_button (GtkWidget *button, GtkFileSelection *selector)
-{
-  gchar **names;
-  gint i;
-
-  g_return_if_fail (pl_active_itdb);
-
-  block_widgets ();
-  names = gtk_file_selection_get_selections (GTK_FILE_SELECTION (selector));
-  for (i=0; names[i] != NULL; ++i)
-    {
-      add_playlist_by_filename (pl_active_itdb,names[i],
-				NULL, -1, NULL, NULL);
-      if(i == 0)
-	  prefs_set_last_dir_browse(names[i]);
-    }
-  gtkpod_tracks_statusbar_update();
-  release_widgets ();
-  g_strfreev (names);
-}
-
-/* called when the file selector is closed */
-static void add_playlists_close (GtkWidget *w1, GtkWidget *w2)
-{
-    if (pl_file_selector)    gtk_widget_destroy(pl_file_selector),
-    gtkpod_tracks_statusbar_update();
-    pl_file_selector = NULL;
-}
-
-
-void create_add_playlists_fileselector (void)
-{
-    Playlist *mpl;
-    gchar *buf;
-
-    if (pl_file_selector)
-    {   /* file selector already open -- raise to the top */
-	gdk_window_raise (pl_file_selector->window);
-	return;
-    }
-    pl_active_itdb = gp_get_active_itdb ();
-    g_return_if_fail (pl_active_itdb);
-
-    /* title for file selector */
-    mpl = itdb_playlist_mpl (pl_active_itdb);
-    g_return_if_fail (mpl);
-    g_return_if_fail (mpl->name);
-    buf = g_strdup_printf (_("Select Playlist to add to '%s'"),
-			   mpl->name);
-    /* Create the selector */
-    pl_file_selector = gtk_file_selection_new (buf);
-    g_free (buf);
-    gtk_file_selection_set_select_multiple (GTK_FILE_SELECTION (pl_file_selector),
-					    TRUE);
-    gtk_file_selection_set_filename(GTK_FILE_SELECTION (pl_file_selector),
-				    prefs_get_last_dir_browse ());
-
-    g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->ok_button),
-		      "clicked",
-		      G_CALLBACK (add_playlists_ok_button),
-		      pl_file_selector);
-
-    /* Ensure that pl_file_selector is set to NULL when window is deleted */
-    g_signal_connect_swapped (GTK_OBJECT (pl_file_selector),
-			      "delete_event",
-			      G_CALLBACK (add_playlists_close),
-			      (gpointer) pl_file_selector);
-
-    /* Ensure that the dialog box is deleted when the user clicks a button. */
-    g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->ok_button),
-			      "clicked",
-			      G_CALLBACK (add_playlists_close),
-			      (gpointer) pl_file_selector);
-
-    g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (pl_file_selector)->cancel_button),
-			      "clicked",
-			      G_CALLBACK (add_playlists_close),
-			      (gpointer) pl_file_selector);
-
-    /* Display that dialog */
-    gtk_widget_show (pl_file_selector);
-}
-
-
-
-/* turn the file selector insensitive (if it's open) */
-static void file_selector_block (void)
-{
-    if (file_selector)
-	gtk_widget_set_sensitive (file_selector, FALSE);
-    if (pl_file_selector)
-	gtk_widget_set_sensitive (pl_file_selector, FALSE);
-}
-
-/* turn the file selector sensitive (if it's open) */
-static void file_selector_release (void)
-{
-    if (file_selector)
-	gtk_widget_set_sensitive (file_selector, TRUE);
-    if (pl_file_selector)
-	gtk_widget_set_sensitive (pl_file_selector, TRUE);
-}
-
-
 
 /* Concats @base_dir and @rel_dir if and only if @rel_dir is not
  * absolute (does not start with '~' or '/'). Otherwise simply return
@@ -551,7 +315,6 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 	    }
 	    sort_window_block ();
 	    prefs_window_block ();
-	    file_selector_block ();
 	    dirbrowser_block ();
 	    widgets_blocked = TRUE;
 	}
@@ -570,7 +333,6 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
 		}
 		sort_window_release ();
 		prefs_window_release ();
-		file_selector_release ();
 		dirbrowser_release ();
 		widgets_blocked = FALSE;
 	    }
@@ -611,4 +373,3 @@ void update_blocked_widget (GtkWidget *w, gboolean sens)
 {
     block_release_widgets (BR_UPDATE, w, sens);
 }
-

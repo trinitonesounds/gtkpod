@@ -1,7 +1,8 @@
 gtkpod V0.90
 	Complete rewrite of reading/writing the iTunesDB
 
-	BUGFIX: display and reading of compilation flag fixed
+	BUGFIX: display and reading of compilation flag fixed (thanks
+	to Julien Oster for the patch)
 
 	IMPROVEMENT: sync-notes.sh now also works on directories (thanks
 	to Thomas Perl)
@@ -9,6 +10,9 @@ gtkpod V0.90
 	IMPROVEMENT: local database to browse local content
 
 	IMPROVEMENT: support MP3 disc numbers (thanks to Leigh Dyer)
+
+	IMPROVEMENT: Use of GTK filechoosers instead of fileselectors
+	(thanks to James Ligget)
 
 gtkpod V0.88.2
 	IMPROVEMENT: Added '%p' (current playlist) identifier when

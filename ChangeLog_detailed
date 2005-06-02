@@ -1,3 +1,10 @@
+2005-06-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* included James Ligget's patch to replace the file selectors
+          with filechooser dialogs
+
+	* moved the code in dirbrowser.c to the new file fileselection.c
+
 2005-06-02 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* Fixed bug for display and reading of compilation flag

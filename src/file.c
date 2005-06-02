@@ -1,6 +1,6 @@
-/* Time-stamp: <2005-05-30 00:40:06 jcs>
+/* Time-stamp: <2005-06-03 00:07:39 jcs>
 |
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://gtkpod.sourceforge.net/

@@ -41,13 +41,13 @@ gtkpod_SOURCES = \
     confirmation.c confirmation.h \
     context_menus.c context_menus.h \
     date_parser.l date_parser2.l date_parser.h \
-    dirbrowser.c dirbrowser.h \
     display.c display_playlists.c display_sorttabs.c \
     display.h display_private.h \
     display_itdb.c display_itdb.h \
     display_songs.c display_spl.c \
     file.c file.h file_export.c \
     file_itunesdb.c \
+    fileselection.h fileselection.c \
     info.c info.h \
     itdb_itunesdb.c itdb_playlist.c  itdb_track.c itdb_private.h itdb.h \
     main.c \

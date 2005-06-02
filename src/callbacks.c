@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 22:28:13 jcs>
+;;/* Time-stamp: <2005-06-02 23:11:42 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -37,10 +37,10 @@
 #include <string.h>
 
 #include "charset.h"
-#include "dirbrowser.h"
 #include "display.h"
 #include "display_itdb.h"
 #include "file.h"
+#include "fileselection.h"
 #include "info.h"
 #include "misc.h"
 #include "misc_track.h"
@@ -52,7 +52,7 @@ void
 on_add_files1_activate                 (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    create_add_files_fileselector ();
+    create_add_files_dialog ();
 }
 
 
@@ -92,7 +92,7 @@ void
 on_add_files1_button                   (GtkButton       *button,
 					gpointer         user_data)
 {
-  create_add_files_fileselector ();
+  create_add_files_dialog ();
 }
 
 
@@ -310,7 +310,7 @@ void
 on_add_PL_button_clicked               (GtkButton       *button,
 					gpointer         user_data)
 {
-    create_add_playlists_fileselector ();
+    create_add_playlists_dialog ();
 }
 
 
@@ -318,7 +318,7 @@ void
 on_add_playlist1_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    create_add_playlists_fileselector ();
+    create_add_playlists_dialog ();
 }
 
 void
@@ -1216,5 +1216,3 @@ on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
 {
     each_rating_pl (gp_get_active_itdb ());
 }
-
-
