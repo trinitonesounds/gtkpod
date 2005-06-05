@@ -1,8 +1,9 @@
-/* Time-stamp: <2005-05-28 00:18:01 jcs>
+/* Time-stamp: <2005-06-05 23:43:59 jcs>
 |
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -37,7 +38,8 @@
 #include "prefs.h"
 #include "prefs_window.h"
 #include "misc.h"
-
+#include "misc_track.h"
+#include "tools.h"
 
 GtkWidget *gtkpod_window = NULL;
 
@@ -633,13 +635,6 @@ void display_enable_disable_view_sort (gboolean enable)
 
 
 
-/* ------------------------------------------------------------
-
-           Functions for auto-scroll during drag and drop
-
-   ------------------------------------------------------------ */
-
-
 static void _remove_scroll_row_timeout (GtkWidget *widget)
 {
     g_return_if_fail (widget);
@@ -745,5 +740,741 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget)
 
 
 
+/* ------------------------------------------------------------
+
+      Callbacks for toolbar buttons and menu.
+
+   ------------------------------------------------------------ */
+
+/* The following functions are called directly without using callbacks
+   in this section: 
+
+   void handle_export (void)
+   void create_add_files_dialog (void)
+   void create_add_playlists_dialog(void)
+   void dirbrowser_create (void)
+   void open_about_window ()
+*/
 
 
+/* callback for "add new playlist" button */
+void
+on_new_playlist_button                 (GtkButton       *button,
+					gpointer         user_data)
+{
+  add_new_pl_or_spl_user_name (gp_get_active_itdb (), NULL, -1);
+}
+
+
+/* callback for "add new playlist" menu */
+void
+on_new_playlist1_activate              (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+  add_new_pl_or_spl_user_name (gp_get_active_itdb(), NULL, -1);
+}
+
+void
+on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    if(!widgets_blocked)  prefs_window_create();
+}
+
+
+void
+on_offline1_activate                   (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+  prefs_set_offline (
+     gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
+  display_set_check_ipod_menu ();
+}
+
+void
+on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+  gp_merge_ipod_itdbs ();
+}
+
+
+void
+on_import_button_clicked               (GtkButton       *button,
+					gpointer         user_data)
+{
+  gp_merge_ipod_itdbs ();
+}
+
+
+void
+on_delete_tracks_activate               (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    g_print ("not supported yet");
+//    delete_track_head (FALSE);
+}
+
+
+void
+on_delete_playlist_activate                (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    g_print ("not supported yet");
+//    delete_playlist_head (FALSE);
+}
+
+void
+on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    g_print ("not supported yet");
+/*     gint inst = get_sort_tab_number ( */
+/* 	_("Delete selected entry of which sort tab?")); */
+
+/*     if (inst != -1)   delete_entry_head (inst, FALSE); */
+}
+
+void
+on_delete_full_tracks_activate               (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    g_print ("not supported yet");
+//     delete_track_head (TRUE);
+}
+
+
+void
+on_delete_full_playlist_activate                (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    g_print ("not supported yet");
+//    delete_playlist_head (TRUE);
+}
+
+void
+on_delete_full_tab_entry_activate           (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    g_print ("not supported yet");
+/*     gint inst = get_sort_tab_number ( */
+/* 	_("Delete selected entry of which sort tab?")); */
+
+/*     if (inst != -1) */
+/*     { */
+/* 	delete_entry_head (inst, TRUE); */
+/*     } */
+}
+
+void
+on_ipod_directories_menu               (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    iTunesDB *itdb = gp_get_active_itdb ();
+    if (!itdb)
+    {
+	gtkpod_statusbar_message (_("Currently no iPod database selected"));
+    }
+    else
+    {
+	ipod_directories_head (itdb->mountpoint);
+    }
+}
+
+void
+on_stop_button_clicked                 (GtkButton       *button,
+					gpointer         user_data)
+{
+    display_stop_update (-1);
+}
+
+void
+on_update_playlist_activate (GtkMenuItem     *menuitem,
+			     gpointer         user_data)
+{
+    gp_do_selected_playlist (update_tracks);
+}
+
+/* update tracks in tab entry */
+void
+on_update_tab_entry_activate        (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Update selected entry of which sort tab?"));
+
+    if (inst != -1) gp_do_selected_entry (update_tracks, inst);
+}
+
+void
+on_update_tracks_activate            (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
+{
+    gp_do_selected_tracks (update_tracks);
+}
+
+
+void
+on_mserv_from_file_tracks_menu_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    gp_do_selected_tracks (mserv_from_file_tracks);
+}
+
+
+void
+on_mserv_from_file_entry_menu_activate (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Update selected entry of which sort tab?"));
+
+    if (inst != -1) gp_do_selected_entry (mserv_from_file_tracks, inst);
+}
+
+
+void
+on_sync_playlist_activate (GtkMenuItem     *menuitem,
+			     gpointer         user_data)
+{
+    gp_do_selected_playlist (sync_tracks);
+}
+
+/* sync tracks in tab entry */
+void
+on_sync_tab_entry_activate        (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Sync dirs of selected entry in which sort tab?"));
+
+    if (inst != -1) gp_do_selected_entry (sync_tracks, inst);
+}
+
+void
+on_sync_tracks_activate            (GtkMenuItem     *menuitem,
+				     gpointer         user_data)
+{
+    gp_do_selected_tracks (sync_tracks);
+}
+
+
+void
+on_save_track_order1_activate           (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    tm_rows_reordered ();
+    pm_rows_reordered ();
+}
+
+
+void
+on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    prefs_set_display_toolbar (
+	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
+}
+
+
+void
+on_more_sort_tabs_activate             (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    prefs_set_sort_tab_num (prefs_get_sort_tab_num()+1, TRUE);
+}
+
+
+void
+on_less_sort_tabs_activate             (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    prefs_set_sort_tab_num (prefs_get_sort_tab_num()-1, TRUE);
+}
+
+void
+on_export_playlist_activate  (GtkMenuItem     *menuitem,
+			      gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+
+    if (!pl)
+    {
+	gtkpod_statusbar_message (_("No playlist selected"));
+	return;
+    }
+    export_files_init (pl->members);
+}
+
+
+void
+on_export_tab_entry_activate (GtkMenuItem     *menuitem,
+			      gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Export selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    export_files_init (entry->members);
+}
+
+
+void
+on_export_tracks_activate     (GtkMenuItem     *menuitem,
+			      gpointer         user_data)
+{
+    GList *tracks = tm_get_selected_tracks ();
+
+    if (tracks)
+    {
+	export_files_init(tracks);
+	g_list_free (tracks);
+    }
+    else
+    {
+	gtkpod_statusbar_message (_("No tracks selected"));
+    }
+}
+
+
+void
+on_playlist_file_playlist_activate     (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+
+    if (!pl)
+    {
+	gtkpod_statusbar_message (_("No playlist selected"));
+	return;
+    }
+    export_playlist_file_init (pl->members);
+}
+
+
+void
+on_playlist_file_tab_entry_activate    (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Create playlist file from selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    export_playlist_file_init (entry->members);
+}
+
+
+void
+on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    GList *tracks = tm_get_selected_tracks ();
+
+    if (tracks)
+    {
+	export_playlist_file_init(tracks);
+	g_list_free (tracks);
+    }
+    else
+    {
+	gtkpod_statusbar_message (_("No tracks selected"));
+    }
+}
+
+void
+on_play_playlist_activate              (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+    if (pl)
+	tools_play_tracks (pl->members);
+    else
+	gtkpod_statusbar_message (_("No playlist selected"));
+}
+
+
+void
+on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Play tracks in selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    tools_play_tracks (entry->members);
+}
+
+
+void
+on_play_tracks_activate                 (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    GList *tracks = tm_get_selected_tracks ();
+    if (tracks)
+    {
+	tools_play_tracks (tracks);
+	g_list_free (tracks);
+	tracks = NULL;
+    }
+    else
+	gtkpod_statusbar_message (_("No tracks selected"));
+}
+
+
+void
+on_enqueue_playlist_activate           (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+    if (pl)
+	tools_enqueue_tracks (pl->members);
+    else
+	gtkpod_statusbar_message (_("No playlist selected"));
+}
+
+
+void
+on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Enqueue tracks in selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    tools_enqueue_tracks (entry->members);
+}
+
+
+void
+on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    GList *tracks = tm_get_selected_tracks ();
+    if (tracks)
+    {
+	tools_enqueue_tracks (tracks);
+	g_list_free (tracks);
+	tracks = NULL;
+    }
+    else
+	gtkpod_statusbar_message (_("No tracks selected"));
+}
+
+
+void
+on_arrange_sort_tabs_activate          (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    st_arrange_visible_sort_tabs ();
+}
+
+void
+on_tooltips_menu_activate              (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    prefs_set_display_tooltips_main (
+	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
+}
+
+void
+on_pl_containing_displayed_tracks_activate (GtkMenuItem     *menuitem,
+					    gpointer         user_data)
+{
+    generate_displayed_playlist ();
+}
+
+void
+on_pl_containing_selected_tracks_activate (GtkMenuItem     *menuitem,
+					    gpointer         user_data)
+{
+    generate_selected_playlist ();
+}
+
+void
+on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    generate_category_playlists (gp_get_active_itdb(), T_ARTIST);
+}
+
+void
+on_pl_for_each_album_activate         (GtkMenuItem     *menuitem,
+				       gpointer         user_data)
+{
+    generate_category_playlists (gp_get_active_itdb(), T_ALBUM);
+}
+
+void
+on_pl_for_each_genre_activate         (GtkMenuItem     *menuitem,
+				       gpointer         user_data)
+{
+    generate_category_playlists (gp_get_active_itdb(), T_GENRE);
+}
+
+void
+on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
+					  gpointer         user_data)
+{
+    generate_category_playlists (gp_get_active_itdb(), T_COMPOSER);
+}
+
+
+void
+on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    generate_category_playlists (gp_get_active_itdb(), T_YEAR);
+}
+
+
+void
+on_most_listened_tracks1_activate       (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    most_listened_pl(gp_get_active_itdb());
+}
+
+
+void
+on_all_tracks_never_listened_to1_activate
+					(GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    never_listened_pl(gp_get_active_itdb());
+}
+
+void
+on_most_rated_tracks_playlist_s1_activate
+					(GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    most_rated_pl(gp_get_active_itdb());
+}
+
+
+void
+on_most_recent_played_tracks_activate   (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    last_listened_pl(gp_get_active_itdb());
+}
+
+void
+on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    since_last_pl(gp_get_active_itdb());
+}
+
+void
+on_sorting_activate                    (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    sort_window_create ();
+}
+
+void
+on_normalize_selected_playlist_activate
+					(GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+    if (pl)
+	nm_tracks_list (pl->members);
+    else
+	gtkpod_statusbar_message (_("No playlist selected"));
+}
+
+
+void
+on_normalize_selected_tab_entry_activate
+					(GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (_("Normalize tracks in selected entry of which sort tab?"));
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (entry)
+    {
+	nm_tracks_list (entry->members);
+    }
+    else
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+}
+
+
+void
+on_normalize_selected_tracks_activate   (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+   GList *tracks = tm_get_selected_tracks ();
+   nm_tracks_list (tracks);
+   g_list_free (tracks);
+}
+
+
+void
+on_normalize_displayed_tracks_activate  (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    GList *tracks = tm_get_all_tracks ();
+    nm_tracks_list (tracks);
+    g_list_free (tracks);
+}
+
+
+void
+on_normalize_all_tracks                (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    iTunesDB *itdb = gp_get_active_itdb ();
+    Playlist *mpl;
+    g_return_if_fail (itdb);
+    mpl = itdb_playlist_mpl (itdb);
+    g_return_if_fail (mpl);
+    nm_tracks_list (mpl->members);
+}
+
+
+void
+on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    nm_new_tracks (gp_get_active_itdb ());
+}
+
+
+void
+on_info_window1_activate               (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    if (gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)))
+	 info_open_window ();
+    else info_close_window ();
+}
+
+void
+on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    check_db (gp_get_ipod_itdb());
+}
+
+
+void
+on_sync_all_activate                   (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+	tools_sync_all ();
+}
+
+
+void
+on_sync_calendar_activate              (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    tools_sync_calendar ();
+}
+
+
+void
+on_sync_contacts_activate              (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    tools_sync_contacts ();
+}
+
+
+void
+on_sync_notes_activate                 (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+	tools_sync_notes ();
+
+}
+
+void
+on_all_tracks_not_listed_in_any_playlist1_activate
+                                        (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    generate_not_listed_playlist (gp_get_active_itdb ());
+}
+
+
+void
+on_random_playlist_activate            (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    generate_random_playlist(gp_get_active_itdb ());
+}
+
+
+void
+on_randomize_current_playlist_activate (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    randomize_current_playlist();
+}
+
+void
+on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    each_rating_pl (gp_get_active_itdb ());
+}

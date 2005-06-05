@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-30 23:58:34 jcs>
+/* Time-stamp: <2005-06-05 22:40:11 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1509,6 +1509,9 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 
 
 /* used to handle export of database */
+/* ATTENTION: directly used as callback in gtkpod.glade -- if you
+   change the arguments of this function make sure you define a
+   separate callback for gtkpod.glade */
 void handle_export (void)
 {
     GList *gl;

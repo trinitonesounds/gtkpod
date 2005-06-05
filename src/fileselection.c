@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-03 00:05:14 jcs>
+/* Time-stamp: <2005-06-05 22:40:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -132,6 +132,9 @@ static void add_files_ok(GtkFileChooser* filechooser)
 /* 
  * Add Files Dialog
  */
+/* ATTENTION: directly used as callback in gtkpod.glade -- if you
+   change the arguments of this function make sure you define a
+   separate callback for gtkpod.glade */
 void create_add_files_dialog (void)
 {
     GtkWidget* fc;  /* The file chooser dialog */
@@ -208,6 +211,9 @@ static void add_playlists_ok(GtkFileChooser* filechooser)
 /*
  * Add Playlist Dialog
  */
+/* ATTENTION: directly used as callback in gtkpod.glade -- if you
+   change the arguments of this function make sure you define a
+   separate callback for gtkpod.glade */
 void create_add_playlists_dialog(void)
 {
     GtkWidget* fc ; /* The file chooser dialog */
@@ -416,6 +422,10 @@ static void add_dir_selected (gchar *dir)
     }
 }
 
+
+/* ATTENTION: directly used as callback in gtkpod.glade -- if you
+   change the arguments of this function make sure you define a
+   separate callback for gtkpod.glade */
 void dirbrowser_create (void)
 {
     if (dirbrowser)

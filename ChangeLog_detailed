@@ -7,6 +7,10 @@
 	* changed version to 0.91-CVS and made sure the itdb_* prefs
           settings are skipped for version < 0.91.
 
+	* removed remaining functions in callback.c to better
+          locations (mainly display.c), removed callbacks.c and
+          callbacks.h
+
 2005-06-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* included James Ligget's patch to replace the file selectors

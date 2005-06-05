@@ -1,8 +1,10 @@
-/* Time-stamp: <2005-05-28 00:27:25 jcs>
+/* Time-stamp: <2005-06-05 23:44:00 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
+|  Copyright (C) 2002-2205 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -28,13 +30,13 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "callbacks.h"
 #include "charset.h"
+#include "display_itdb.h"
+#include "info.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
 #include "prefs_window.h"
-#include "display_itdb.h"
 
 GladeXML *prefs_window_xml;
 GladeXML *sort_window_xml;
@@ -981,6 +983,57 @@ prefs_window_apply (void)
 }
 
 
+/* -----------------------------------------------------------------
+
+   Callbacks
+
+   ----------------------------------------------------------------- */
+
+void
+on_sorting_clicked                     (GtkButton       *button,
+					gpointer         user_data)
+{
+    sort_window_create ();
+}
+
+
+gboolean
+on_prefs_window_delete_event           (GtkWidget       *widget,
+					GdkEvent        *event,
+					gpointer         user_data)
+{
+  prefs_window_delete ();
+  gtkpod_statusbar_message(_("Preferences not updated"));
+  return FALSE;
+}
+
+
+void
+on_prefs_ok_clicked                    (GtkButton       *button,
+					gpointer         user_data)
+{
+    prefs_window_ok();
+}
+
+
+void
+on_prefs_cancel_clicked                (GtkButton       *button,
+					gpointer         user_data)
+{
+    prefs_window_cancel();
+    gtkpod_statusbar_message(_("Preferences not updated"));
+}
+
+
+void
+on_prefs_apply_clicked                 (GtkButton       *button,
+					gpointer         user_data)
+{
+    prefs_window_apply ();
+    gtkpod_statusbar_message(_("Preferences applied"));
+}
+
+
 void
 on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
@@ -1709,6 +1762,153 @@ void sort_window_set (void)
 	sortcfg_free (tsc);
     }
 }
+
+
+/* -----------------------------------------------------------------
+
+   Callbacks
+
+   ----------------------------------------------------------------- */
+
+void
+on_st_ascend_toggled                   (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_st_sort (SORT_ASCENDING);
+}
+
+
+void
+on_st_descend_toggled                  (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_st_sort (SORT_DESCENDING);
+}
+
+
+void
+on_st_none_toggled                     (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_st_sort (SORT_NONE);
+}
+
+
+void
+on_pm_ascend_toggled                   (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_pm_sort (SORT_ASCENDING);
+}
+
+
+void
+on_pm_descend_toggled                  (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_pm_sort (SORT_DESCENDING);
+}
+
+
+void
+on_pm_none_toggled                     (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_pm_sort (SORT_NONE);
+}
+
+
+void
+on_pm_autostore_toggled                (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    sort_window_set_pm_autostore (gtk_toggle_button_get_active(togglebutton));
+}
+
+
+
+void
+on_tm_ascend_toggled                   (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_tm_sort (SORT_ASCENDING);
+}
+
+
+void
+on_tm_descend_toggled                  (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_tm_sort (SORT_DESCENDING);
+}
+
+
+void
+on_tm_none_toggled                     (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    if (gtk_toggle_button_get_active(togglebutton))
+	sort_window_set_tm_sort (SORT_NONE);
+}
+
+void
+on_tm_autostore_toggled                (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    sort_window_set_tm_autostore (gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    sort_window_set_case_sensitive(
+	gtk_toggle_button_get_active(togglebutton));
+}
+
+
+void
+on_sort_apply_clicked                  (GtkButton       *button,
+					gpointer         user_data)
+{
+    sort_window_apply ();
+}
+
+
+void
+on_sort_cancel_clicked                 (GtkButton       *button,
+					gpointer         user_data)
+{
+    sort_window_cancel ();
+}
+
+
+void
+on_sort_ok_clicked                     (GtkButton       *button,
+					gpointer         user_data)
+{
+    sort_window_ok ();
+}
+
+
+gboolean
+on_sort_window_delete_event            (GtkWidget       *widget,
+					GdkEvent        *event,
+					gpointer         user_data)
+{
+    sort_window_delete ();
+    return FALSE;
+}
+
 
 
 /**

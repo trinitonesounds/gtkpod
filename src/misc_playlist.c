@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-25 00:13:57 jcs>
+/* Time-stamp: <2005-06-05 23:36:45 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -107,6 +107,14 @@ void add_new_pl_or_spl_user_name (iTunesDB *itdb,
 	    spl_edit_new (itdb, name, position);
 	}
     }
+}
+
+/* callback */
+void
+on_smart_playlist_activate             (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+    spl_edit_new (gp_get_active_itdb(), NULL, -1);
 }
 
 

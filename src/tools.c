@@ -1,8 +1,9 @@
-/* Time-stamp: <2005-05-27 00:08:58 jcs>
+/* Time-stamp: <2005-06-05 23:43:58 jcs>
 |
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -645,3 +646,25 @@ void tools_enqueue_tracks (GList *selected_tracks)
 
 
 
+/* ------------------------------------------------------------
+
+      Callbacks
+
+   ------------------------------------------------------------ */
+
+gboolean
+on_gtkpod_info_delete_event            (GtkWidget       *widget,
+					GdkEvent        *event,
+					gpointer         user_data)
+{
+    info_close_window ();
+    return TRUE; /* don't close again -- info_close_window() already does it */
+}
+
+
+void
+on_info_close_clicked                  (GtkButton       *button,
+					gpointer         user_data)
+{
+    info_close_window ();
+}

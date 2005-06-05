@@ -1,7 +1,8 @@
 /*
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 | 
 |  This program is free software; you can redistribute it and/or modify
@@ -39,7 +40,6 @@
 #include "misc_track.h"
 #include "info.h"
 #include "context_menus.h"
-#include "callbacks.h"
 
 /* pointer to the treeview for the playlist display */
 static GtkTreeView *playlist_treeview = NULL;
@@ -895,8 +895,6 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
     }
   return FALSE;
 }
-
-
 
 
 /* ---------------------------------------------------------------- */

@@ -35,7 +35,6 @@ itdb_SOURCES = \
 itdb_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
 gtkpod_SOURCES = \
-    callbacks.c callbacks.h \
     charset.c charset.h \
     clientserver.c clientserver.h \
     confirmation.c confirmation.h \

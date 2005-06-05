@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-06-03 00:13:29 jcs>
+|  Time-stamp: <2005-06-05 23:18:49 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -53,6 +53,9 @@
 
 static GtkWidget *about_window = NULL;
 
+/* ATTENTION: directly used as callback in gtkpod.glade -- if you
+   change the arguments of this function make sure you define a
+   separate callback for gtkpod.glade */
 void open_about_window ()
 {
   GtkLabel *about_label;
@@ -196,6 +199,27 @@ Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"),
 
   gtk_widget_show (about_window);
 }
+
+
+/* callback for close button */
+void
+on_about_window_close_button           (GtkButton       *button,
+					gpointer         user_data)
+{
+  close_about_window (); /* in misc.c */
+}
+
+
+/* callback for window close button */
+gboolean
+on_about_window_close                  (GtkWidget       *widget,
+					GdkEvent        *event,
+					gpointer         user_data)
+{
+  close_about_window (); /* in misc.c */
+  return FALSE;
+}
+
 
 void close_about_window (void)
 {

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-30 00:29:39 jcs>
+/* Time-stamp: <2005-06-05 22:15:22 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -981,6 +981,28 @@ void ipod_directories_head (const gchar *mountpoint)
     g_string_free (str, TRUE);
 }
 
+
+/* callback for quit menu entry */
+void
+on_quit1_activate                      (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+  if (!widgets_blocked) gtkpod_main_quit ();
+}
+
+
+/* callback for gtkpod window's close button */
+gboolean
+on_gtkpod_delete_event                 (GtkWidget       *widget,
+					GdkEvent        *event,
+					gpointer         user_data)
+{
+    if (!widgets_blocked)
+    {
+	return gtkpod_main_quit ();
+    }
+    return TRUE; /* don't quit -- would cause numerous error messages */
+}
 
 /**
  * gtkpod_main_quit

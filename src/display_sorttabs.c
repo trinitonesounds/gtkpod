@@ -1,8 +1,9 @@
-/* Time-stamp: <2005-05-30 23:29:46 jcs>
+/* Time-stamp: <2005-06-05 23:43:59 jcs>
 |
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 |
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -38,7 +39,6 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "context_menus.h"
-#include "callbacks.h"
 #include "date_parser.h"
 #include "itdb.h"
 #include <string.h>
@@ -253,6 +253,18 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 
     }
   return FALSE;
+}
+
+
+/* callback */
+void
+on_sorttab_switch_page                 (GtkNotebook     *notebook,
+					GtkNotebookPage *page,
+					guint            page_num,
+					gpointer         user_data)
+{
+    space_data_update ();
+    st_page_selected (notebook, page_num);
 }
 
 
@@ -745,6 +757,127 @@ void sp_conditions_changed (guint32 inst)
 	st_redisplay (inst);
     }
 }
+
+
+/* ---------------------------------------------------------------- */
+/*                                                                  */
+/* Callbacks for special sort tab display                           */
+/*                                                                  */
+/* ---------------------------------------------------------------- */
+
+void
+on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+
+    prefs_set_sp_or (inst, gtk_toggle_button_get_active (togglebutton));
+    sp_conditions_changed (inst);
+}
+
+
+void
+on_sp_cond_button_toggled            (GtkToggleButton *togglebutton,
+				      gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+    T_item cond = (guint32)user_data >> SP_SHIFT;
+
+/*     printf ("%d/%d/%d\n",inst,cond,gtk_toggle_button_get_active (togglebutton)); */
+    prefs_set_sp_cond (inst, cond,
+		       gtk_toggle_button_get_active (togglebutton));
+    sp_conditions_changed (inst);
+}
+
+void
+on_sp_rating_n_toggled                 (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+    guint32 n = (guint32)user_data >> SP_SHIFT;
+
+    prefs_set_sp_rating_n (inst, n,
+			   gtk_toggle_button_get_active (togglebutton));
+    if (prefs_get_sp_cond (inst, T_RATING))
+	sp_conditions_changed (inst);
+}
+
+
+void
+on_sp_entry_activate             (GtkEditable     *editable,
+				  gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+    T_item item = (guint32)user_data >> SP_SHIFT;
+    gchar *buf = gtk_editable_get_chars(editable,0, -1);
+
+/*    printf ("sp_entry_activate inst: %d, item: %d\n", inst, item);*/
+
+    prefs_set_sp_entry (inst, item, buf);
+    g_free (buf);
+    sp_update_date_interval_from_string (inst, item, TRUE);
+/*     if (prefs_get_sp_autodisplay (inst))  sp_go (inst); */
+    sp_go (inst);
+}
+
+
+void
+on_sp_cal_button_clicked        (GtkButton       *button,
+				 gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+    T_item item = (guint32)user_data >> SP_SHIFT;
+
+    cal_open_calendar (inst, item);
+}
+
+
+void
+on_sp_go_clicked                       (GtkButton       *button,
+					gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+    sp_go (inst);
+}
+
+
+void
+on_sp_go_always_toggled                (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+    gboolean state = gtk_toggle_button_get_active (togglebutton);
+
+    /* display data if autodisplay is turned on */
+    if (state)  on_sp_go_clicked (NULL, user_data);
+    prefs_set_sp_autodisplay(inst, state);
+}
+
+void
+on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
+					gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+
+    prefs_set_sp_playcount_low (inst,
+				gtk_spin_button_get_value (spinbutton));
+    if (prefs_get_sp_cond (inst, T_PLAYCOUNT))
+	sp_conditions_changed (inst);
+}
+
+
+void
+on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
+					gpointer         user_data)
+{
+    guint32 inst = (guint32)user_data & SP_MASK;
+
+    prefs_set_sp_playcount_high (inst,
+				 gtk_spin_button_get_value (spinbutton));
+    if (prefs_get_sp_cond (inst, T_PLAYCOUNT))
+	sp_conditions_changed (inst);
+}
+
 
 
 /* ---------------------------------------------------------------- */
