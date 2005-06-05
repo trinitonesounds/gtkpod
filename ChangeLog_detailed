@@ -1,7 +1,11 @@
 2005-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* fixed bug when setting up initial local and iPod databases
-          (added the iPod database twice, did not create local database)
+          (added the iPod database twice, did not create local
+          database)
+
+	* changed version to 0.91-CVS and made sure the itdb_* prefs
+          settings are skipped for version < 0.91.
 
 2005-06-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

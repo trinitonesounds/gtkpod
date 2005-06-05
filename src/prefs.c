@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 22:28:14 jcs>
+/* Time-stamp: <2005-06-05 21:45:54 jcs>
 |
 |  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -293,17 +293,18 @@ struct cfg *cfg_new(void)
 
 
 /* Compare strlen(@arg) chars of @arg with @line. Return strlen (@arg)
-   in @off */
+   in @off if @off != NULL */
 static gint arg_comp (const gchar *line, const gchar *arg, gint *off)
 {
     if (arg && line)
     {
-	*off = strlen (arg);
-	return g_ascii_strncasecmp (line, arg, *off);
+	gint len = strlen (arg);
+	if (off) *off = len;
+	return g_ascii_strncasecmp (line, arg, len);
     }
     else
     {
-	*off = 0;
+	if (*off)   *off = 0;
 	return 0;
     }
 }
@@ -868,7 +869,16 @@ read_prefs_from_file_desc(FILE *fp)
 	  {   /* All leftover options will be stored into the prefs
 		 setting hash (generic options -- should have had this
 		 idea much sooner... */
-	      prefs_set_string_value (line, arg);
+	      gboolean skip = FALSE;
+	      if (cfg->version < 0.91)
+	      {
+		  if(arg_comp (line, "itdb_", NULL) == 0)
+		  {   /* set incorrectly in 0.90 -- delete */
+		      skip = TRUE;
+		  }
+	      }
+	      if (!skip)
+		  prefs_set_string_value (line, arg);
 	  }
 	  g_free(line);
 	}
