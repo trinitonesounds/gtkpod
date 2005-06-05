@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-30 00:42:37 jcs>
+/* Time-stamp: <2005-06-05 14:50:26 jcs>
 |
 |  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -739,6 +739,7 @@ void init_data (GtkWidget *window)
 
 	/* local database. First check if a database file already
 	   exists -- if yes load it */
+	itdb = NULL;
 	fn = g_build_filename (cfgdir, "local_0.itdb", NULL);
 	if (g_file_test (fn, G_FILE_TEST_EXISTS))
 	{

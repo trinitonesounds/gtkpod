@@ -79,6 +79,8 @@ main (int argc, char *argv[])
   progname = g_find_program_in_path (argv[0]);
   if (progname)
   {
+      static const gchar *SEPsrcSEPgtkpod = G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod";
+
       if (!g_path_is_absolute (progname))
       {
 	  gchar *cur_dir = g_get_current_dir ();
@@ -92,7 +94,7 @@ main (int argc, char *argv[])
 	  g_free (cur_dir);
 	  progname = prog_absolute;
       }
-      #define SEPsrcSEPgtkpod G_DIR_SEPARATOR_S "src" G_DIR_SEPARATOR_S "gtkpod"
+
       if (g_str_has_suffix (progname, SEPsrcSEPgtkpod))
       {
 	  gchar *suffix = g_strrstr (progname, SEPsrcSEPgtkpod);

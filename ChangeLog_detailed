@@ -1,3 +1,8 @@
+2005-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* fixed bug when setting up initial local and iPod databases
+          (added the iPod database twice, did not create local database)
+
 2005-06-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* included James Ligget's patch to replace the file selectors
