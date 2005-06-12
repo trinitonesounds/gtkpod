@@ -17,8 +17,8 @@ IPOD_MOUNT=/mnt/ipod         # mountpoint of ipod
 EVOPATH='/opt/gnome/libexec/evolution/2.0:/usr/lib/evolution/2.0:/opt/gnome/bin'                        # additional path
 ENCODING=ISO-8859-15         # encoding used by ipod
 
-# Unless called with "-e=none" this script requires "recode" available
-# from ftp://ftp.iro.umontreal.ca/pub/recode/recode-3.6.tar.gz
+# Unless called with "-e=none" this script requires "iconv" available
+# from http://www.gnu.org/software/libiconv/
 
 # About the encoding used by the iPod (by Jorg Schuler):
 #
@@ -64,7 +64,7 @@ done
 if [ $ENCODING = "none" ] || [ $ENCODING = "NONE" ]; then
     RECODE="cat"    # no conversion
 else
-    RECODE="recode UTF8..$ENCODING"
+    RECODE="iconv -f UTF-8 -t $ENCODING"
 fi
 
 

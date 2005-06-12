@@ -1,8 +1,18 @@
-gtkpod V0.90
+gtkpod V0.91-CVS
 	Complete rewrite of reading/writing the iTunesDB
+
+	NEW FEATURE: 
 
 	BUGFIX: display and reading of compilation flag fixed (thanks
 	to Julien Oster for the patch)
+
+	BUGFIX: don't hang when parsing playlist files with empty lines
+
+	BUGFIX: When the original filename of tracks is available,
+        tracks were not copied from the iPod but from the original
+        location on the user's harddisk. If the original file has been
+        removed or the export was done on another computer, the export
+        would fail.
 
 	IMPROVEMENT: sync-notes.sh now also works on directories (thanks
 	to Thomas Perl)
@@ -13,6 +23,9 @@ gtkpod V0.90
 
 	IMPROVEMENT: Use of GTK filechoosers instead of fileselectors
 	(thanks to James Ligget)
+
+	CHANGE: use 'iconv' instead of 'recode' in the provided export
+	scripts. Thanks to Alexey Dokuchaev.
 
 gtkpod V0.88.2
 	IMPROVEMENT: Added '%p' (current playlist) identifier when

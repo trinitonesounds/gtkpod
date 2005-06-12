@@ -13,8 +13,8 @@ IPOD_MOUNT=/media/PERLIPOD                          # mountpoint of ipod
 NOTESPATH=~/Desktop/Notizen		  # path to folder containing notes
 ENCODING=ISO-8859-15                          # encoding used by ipod
 
-# Unless called with "-e=none" this script requires "recode" available
-# from ftp://ftp.iro.umontreal.ca/pub/recode/recode-3.6.tar.gz
+# Unless called with "-e=none" this script requires "iconv" available
+# from http://www.gnu.org/software/libiconv/
 
 # About the encoding used by the iPod (by Jorg Schuler):
 #
@@ -50,7 +50,7 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 # Added Usage-line, added check for vcard file, rearranged source
 #
 # 2004/07/03 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
-# Made "recode" optional (call with -e="none")
+# Made "iconv" optional (call with -e="none")
 #
 # Removed "dos2unix" as my iPod (firmware 1.3) happily accepted
 # DOS-type vcards as well. Instead changed the "grep" pattern to
@@ -66,6 +66,10 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 # * added support for directories inside of notes, syncing only 
 #   directories containing files
 # * added check to see if recode is installed
+# 
+# 2005/06/12 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
+# * added patch by Alexey Dokuchaev to replace recode by iconv
+# * changed check for recode to check of iconv
 
 # overwrite default settings with optional command line arguments
 while getopts i:d:e: option; do
@@ -83,12 +87,12 @@ done
 if [ $ENCODING = "none" ] || [ $ENCODING = "NONE" ]; then
     RECODE="cat"    # no conversion
 else
-    which recode >/dev/null 2>&1
+    which iconv >/dev/null 2>&1
     if [ "$?" != "0" ]; then
-      echo "recode utility not found. please install 'recode'."
+      echo "iconv utility not found. please install 'iconv'."
       exit
     fi
-    RECODE="recode UTF8..$ENCODING"
+    RECODE="iconv -f UTF-8 -t $ENCODING"
 fi
 
 

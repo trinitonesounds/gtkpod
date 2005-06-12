@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-03 00:07:39 jcs>
+/* Time-stamp: <2005-06-12 15:46:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -189,7 +189,8 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	gchar *bufp = buf;
 	gchar *filename = NULL;
 	gint len = strlen (bufp); /* remove newline */
-	if((len>0) && (bufp[len-1] == 0x0a))  bufp[len-1] = 0;
+	if (len == 0) continue;   /* skip empty lines */
+	if(bufp[len-1] == 0x0a)  bufp[len-1] = 0;
 	switch (type)
 	{
 	case FILE_TYPE_MISC:

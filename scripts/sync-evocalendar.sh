@@ -14,8 +14,8 @@ CALFILE=~/.evolution/calendar/local/system/calendar.ics # calendar data file
 TASKFILE=~/.evolution/tasks/local/system/tasks.ics # task data file
 ENCODING=ISO-8859-15                          # encoding used by ipod
 
-# Unless called with "-e=none" this script requires "recode" available
-# from ftp://ftp.iro.umontreal.ca/pub/recode/recode-3.6.tar.gz
+# Unless called with "-e=none" this script requires "iconv" available
+# from http://www.gnu.org/software/libiconv/
 
 # About the encoding used by the iPod (by Jorg Schuler):
 #
@@ -51,7 +51,7 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 # Added Usage-line, added check for vcard file, rearranged source
 #
 # 2004/07/03 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
-# Made "recode" optional (call with -e="none")
+# Made "iconv" optional (call with -e="none")
 #
 # Removed "dos2unix" as my iPod (firmware 1.3) happily accepted
 # DOS-type vcards as well. Instead changed the "grep" pattern to
@@ -78,7 +78,7 @@ done
 if [ $ENCODING = "none" ] || [ $ENCODING = "NONE" ]; then
     RECODE="cat"    # no conversion
 else
-    RECODE="recode UTF8..$ENCODING"
+    RECODE="iconv -f UTF-8 -t $ENCODING"
 fi
 
 

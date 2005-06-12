@@ -1,8 +1,9 @@
-/* Time-stamp: <2005-06-05 14:50:26 jcs>
+/* Time-stamp: <2005-06-06 22:10:32 jcs>
 |
-|  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-|
+| 
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -235,9 +236,10 @@ void gp_track_add_extra (Track *track)
    is returned. */
 Track *gp_track_add (iTunesDB *itdb, Track *track)
 {
-    Track *oldtrack, *result=NULL;
+    Track *result=NULL;
+    Track *oldtrack = md5_track_exists_insert (itdb, track);
 
-    if((oldtrack = md5_track_exists_insert (itdb, track)))
+    if(oldtrack)
     {
 	gp_duplicate_remove (oldtrack, track);
 	itdb_track_free (track);

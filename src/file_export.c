@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-27 00:17:40 jcs>
+/* Time-stamp: <2005-06-12 17:06:13 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Part of the gtkpod project.
@@ -293,25 +293,33 @@ track_get_export_filename (Track *track)
 static gboolean
 write_track(Track *s)
 {
-    gchar *dest_file = NULL;
     gboolean result = FALSE;
+    gchar *dest_file = track_get_export_filename(s);
     
-    if((dest_file = track_get_export_filename(s)))
+    if(dest_file)
     {
-	gchar *from_file = get_file_name(s);
-	gchar *filename, *dest_dir;
+	gchar *from_file = get_file_name_on_ipod (s);
+	if (from_file)
+	{
+	    gchar *filename, *dest_dir;
+	    prefs_get_string_value (EXPORT_FILES_PATH, &dest_dir);
+	    filename = g_build_filename (dest_dir, dest_file, NULL);
 
-	prefs_get_string_value (EXPORT_FILES_PATH, &dest_dir);
-	filename = g_build_filename (dest_dir, dest_file, NULL);
-
-	if (mkdirhier(filename)) {
-	    if(copy_file(from_file, filename))
-	        result = TRUE;
+	    if (mkdirhier(filename))
+	    {
+		if(copy_file(from_file, filename))
+		    result = TRUE;
+	    }
+	    g_free(from_file);
+	    g_free(dest_dir);
+	    g_free(filename);
 	}
-	g_free(from_file);
+	else
+	{
+	    gtkpod_warning (_("Could find file for '%s' on the iPod\n"),
+			    get_track_info (s));
+	}
 	g_free(dest_file);
-	g_free(dest_dir);
-	g_free(filename);
     }
     return(result);
 }
