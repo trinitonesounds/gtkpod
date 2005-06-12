@@ -2,10 +2,19 @@
 
 	* applied patch provided anonymously through the bugs
           tracker: don't hang when reading playlist files with empty
-          lines.
+          lines (provided by 'Matthias')
+
+	* added checks when adding playlist files to avoid adding
+          directories or the same playlist file again.
 
 	* applied patch provided by Alexey Dokuchaev to replace
           'recode' by 'iconv' in the export scripts provided.
+
+	* fixed bug when exporting tracks from the iPod: when the
+          original filename of tracks is stored, tracks were not
+          copied from the iPod but from the original location on the
+          user's harddisk. If that file has been removed in the
+          meanwhile, the export would fail.
 
 2005-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-12 15:46:45 jcs>
+/* Time-stamp: <2005-06-12 20:16:55 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -181,7 +181,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
     /* for now assume that all playlist files will be line-based
        all of these are line based -- add different code for different
        playlist files */
-    line = 0; /* nr of line being read */
+    line = -1; /* nr of line being read */
     tracks = 0; /* nr of tracks added */
     error = FALSE;
     while (!error && fgets (buf, PATH_MAX, fp))
@@ -189,8 +189,10 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	gchar *bufp = buf;
 	gchar *filename = NULL;
 	gint len = strlen (bufp); /* remove newline */
+
+	++line;
 	if (len == 0) continue;   /* skip empty lines */
-	if(bufp[len-1] == 0x0a)  bufp[len-1] = 0;
+	if (bufp[len-1] == 0x0a)  bufp[len-1] = 0;
 	switch (type)
 	{
 	case FILE_TYPE_MISC:
@@ -200,20 +202,12 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	    if ((*bufp == ';') || (*bufp == '#')) break;
 	    /* assume the rest of the line is a filename */
 	    filename = concat_dir_if_relative (dirname, bufp);
-	    if (add_track_by_filename (itdb, filename, plitem,
-				      prefs_get_add_recursively (),
-				      addtrackfunc, data))
-		++tracks;
 	    break;
 	case FILE_TYPE_M3U:
 	    /* comments start with '#' */
 	    if (*bufp == '#') break;
 	    /* assume the rest of the line is a filename */
 	    filename = concat_dir_if_relative (dirname, bufp);
-	    if (add_track_by_filename (itdb, filename, plitem,
-				      prefs_get_add_recursively (),
-				      addtrackfunc, data))
-		++tracks;
 	    break;
 	case FILE_TYPE_PLS:
 	    /* I don't know anything about pls playlist files and just
@@ -231,17 +225,30 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 		{
 		    ++bufp;
 		    filename = concat_dir_if_relative (dirname, bufp);
-		    if (add_track_by_filename
-			(itdb, filename, plitem,
-			 prefs_get_add_recursively (),
-			 addtrackfunc, data))
-			++tracks;
 		}
 	    }
 	    break;
 	}
-	++line;
-	g_free (filename);
+	if (filename)
+	{
+	    /* do not allow to add directories! */
+	    if (g_file_test (filename, G_FILE_TEST_IS_DIR))
+	    {
+		gtkpod_warning (_("Skipping '%s' because it is a directory.\n"), filename);
+	    }
+	    /* do not allow to add playlist file recursively */
+	    else if (strcmp (plfile, filename) == 0)
+	    {
+		gtkpod_warning (_("Skipping '%s' to avoid adding playlist file recursively\n"), filename);
+	    }
+	    else if (add_track_by_filename (itdb, filename, plitem,
+					    prefs_get_add_recursively (),
+					    addtrackfunc, data))
+	    {
+		++tracks;
+	    }
+	    g_free (filename);
+	}
     }
     fclose (fp);
     C_FREE (dirname);
