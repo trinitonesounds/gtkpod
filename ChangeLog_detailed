@@ -16,6 +16,8 @@
           user's harddisk. If that file has been removed in the
           meanwhile, the export would fail.
 
+	* added new Italian catalog (thanks to Edward Matteucci)
+
 2005-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* fixed bug when setting up initial local and iPod databases
