@@ -1,13 +1,11 @@
 # List of source files containing translatable strings.
 
-src/callbacks.c
 src/charset.c
 src/clientserver.c
 src/confirmation.c
 src/context_menus.c
 src/date_parser.l
 src/date_parser2.l
-src/dirbrowser.c
 src/display.c
 src/display_itdb.c
 src/display_playlists.c
@@ -17,6 +15,7 @@ src/display_spl.c
 src/file.c
 src/file_export.c
 src/file_itunesdb.c
+src/fileselection.c
 src/getopt1.c
 src/getopt.c
 src/info.c

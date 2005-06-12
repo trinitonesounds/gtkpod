@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-12 20:16:55 jcs>
+/* Time-stamp: <2005-06-12 23:33:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1367,7 +1367,7 @@ No valid directories have been found. Sync aborted.\n"));
 	if (g_hash_table_size (hash_removed) != 0)
 	{
 	    g_string_printf (str, 
-			     _("The (former) contents of the following directories will be removed:\n\n"));
+			     _("The (former) contents of the following directories will be removed from the database:\n\n"));
 	    g_hash_table_foreach (hash_removed,
 				  sync_add_dir_to_string, str);
 	    g_string_append_printf (str, "\n\n");

@@ -18,6 +18,10 @@
 
 	* added new Italian catalog (thanks to Edward Matteucci)
 
+	* updated po/POTFILES.in and updated all po-files
+
+	* updated German translation catalog (and some English typos)
+
 2005-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* fixed bug when setting up initial local and iPod databases
