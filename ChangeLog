@@ -1,12 +1,16 @@
 gtkpod V0.91-CVS
 	Complete rewrite of reading/writing the iTunesDB
 
-	NEW FEATURE: 
+	NEW FEATURE: Support of 'local database' containing tracks on
+	local harddisk. The contents of the local hard disk can be
+	browsed in the known gtkpod-fashion: by artist or genre or
+	album etc.
 
 	BUGFIX: display and reading of compilation flag fixed (thanks
 	to Julien Oster for the patch)
 
-	BUGFIX: don't hang when parsing playlist files with empty lines
+	BUGFIX: don't hang when parsing playlist files with empty
+	lines (thanks to Mattias Wadman)
 
 	BUGFIX: When the original filename of tracks is available,
         tracks were not copied from the iPod but from the original
@@ -26,6 +30,9 @@ gtkpod V0.91-CVS
 
 	CHANGE: use 'iconv' instead of 'recode' in the provided export
 	scripts. Thanks to Alexey Dokuchaev.
+
+	NEW FEATURE: sync-abook.sh and sync-webcalendar.sh scripts
+	provided by Daniel Kercher.
 
 gtkpod V0.88.2
 	IMPROVEMENT: Added '%p' (current playlist) identifier when

@@ -1,8 +1,14 @@
+2005-06-15 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* added sync-abook.sh and sync-webcalendar.sh scripts provided
+          by Daniel Kercher
+
+
 2005-06-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
-	* applied patch provided anonymously through the bugs
-          tracker: don't hang when reading playlist files with empty
-          lines (provided by 'Matthias')
+	* applied patch provided by Mattias Wadman: don't hang when
+          reading playlist files with empty lines (provided by
+          'Matthias')
 
 	* added checks when adding playlist files to avoid adding
           directories or the same playlist file again.
