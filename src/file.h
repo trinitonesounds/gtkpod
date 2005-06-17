@@ -1,9 +1,11 @@
-/*
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+/* Time-stamp: <2005-06-16 22:47:25 jcs>
+|
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-|
+| 
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
-|
+| 
 |  This program is free software; you can redistribute it and/or modify
 |  it under the terms of the GNU General Public License as published by
 |  the Free Software Foundation; either version 2 of the License, or
@@ -110,6 +112,12 @@ gboolean get_gain(Track *track);
 /* file_export.c */
 void export_files_init(GList *tracks);
 void export_playlist_file_init (GList *tracks);
+GList *export_tracklist_when_necessary (iTunesDB *itdb_s,
+					iTunesDB *itdb_d,
+					gchar *data);
+GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
+					 iTunesDB *itdb_d,
+					 GList *tracks);
 /* needed to adapt the prefs structure */
 extern const gchar *EXPORT_FILES_SPECIAL_CHARSET;
 extern const gchar *EXPORT_FILES_CHECK_EXISTING;

@@ -86,7 +86,7 @@ AC_SEARCH_LIBS(bind,
 
 dnl Check for Linux-specific headers (so we can compile Linux-specific
 dnl stuff only when compiling under Linux)
-AC_CHECK_HEADERS(linux/cdrom.h scsi/scsi.h scsi/scsi_ioctl.h)
+AC_CHECK_HEADERS(linux/cdrom.h scsi/sg.h scsi/scsi.h scsi/scsi_ioctl.h)
 
 AC_OUTPUT([
 Makefile

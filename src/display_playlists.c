@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-06 22:10:26 jcs>
+/* Time-stamp: <2005-06-16 22:47:26 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -522,7 +522,7 @@ static GdkDragAction pm_tm_get_action (Track *src, Playlist *dest,
 
 
 /* Print a message about the number of tracks copied (the number of
-   tracks moved is printed in tm-drag_data_delete */
+   tracks moved is printed in tm_drag_data_delete() */
 static void pm_tm_tracks_moved_or_copied (gchar *tracks, gboolean moved)
 {
     g_return_if_fail (tracks);
@@ -678,26 +678,41 @@ static void pm_drag_data_received (GtkWidget       *widget,
     switch (info)
     {
     case DND_GTKPOD_TRACKLIST:
-	/* get first playlist and check action */
+	/* get first track */
 	sscanf (data->data, "%p", &tr_s);
 	if (!tr_s)
 	{
 	    gtk_drag_finish (dc, FALSE, FALSE, time);
 	    g_return_if_reached ();
 	}
+
+	/* Find out action */
 	dc->action = pm_tm_get_action (tr_s, pl, pos, dc);
 
 	if (dc->action & GDK_ACTION_MOVE)
 	    del_src = TRUE;
 	else del_src = FALSE;
 
-
 	if ((pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) ||
 	    (pos == GTK_TREE_VIEW_DROP_INTO_OR_AFTER))
 	{ /* drop into existing playlist */
-	    add_tracklist_to_playlist (pl, data->data);
-	    pm_tm_tracks_moved_or_copied (data->data, del_src);
-	    gtk_drag_finish (dc, TRUE, del_src, time);
+	    /* copy files from iPod if necessary */
+	    GList *trackglist =
+		export_tracklist_when_necessary (tr_s->itdb,
+						 pl->itdb,
+						 data->data);
+	    if (trackglist)
+	    {
+		add_trackglist_to_playlist (pl, trackglist);
+		g_list_free (trackglist);
+		trackglist = NULL;
+		pm_tm_tracks_moved_or_copied (data->data, del_src);
+		gtk_drag_finish (dc, TRUE, del_src, time);
+	    }
+	    else
+	    {
+		gtk_drag_finish (dc, FALSE, FALSE, time);
+	    }
 	}
 	else
 	{ /* drop between playlists */
@@ -710,9 +725,25 @@ static void pm_drag_data_received (GtkWidget       *widget,
 
 	    if (plitem)
 	    {
-		add_tracklist_to_playlist (plitem, data->data);
-		pm_tm_tracks_moved_or_copied (data->data, del_src);
-		gtk_drag_finish (dc, TRUE, del_src, time);
+		/* copy files from iPod if necessary */
+		GList *trackglist =
+		    export_tracklist_when_necessary (tr_s->itdb,
+						     pl->itdb,
+						     data->data);
+		if (trackglist)
+		{
+		    add_trackglist_to_playlist (plitem, trackglist);
+		    g_list_free (trackglist);
+		    trackglist = NULL;
+		    pm_tm_tracks_moved_or_copied (data->data, del_src);
+		    gtk_drag_finish (dc, TRUE, del_src, time);
+		}
+		else
+		{
+		    gp_playlist_remove (plitem);
+		    plitem = NULL;
+		    gtk_drag_finish (dc, FALSE, FALSE, time);
+		}
 	    }
 	    else
 	    {
@@ -830,6 +861,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 	else
 	{   /*handle DND between two itdbs */
 	    /* set destination pl */
+	    GList *trackglist = NULL;
 	    pl_d = pl;
 	    /* if drop is between two playlists, create new playlist */
 	    /* FIXME: support copying of SPL data? */
@@ -840,19 +872,43 @@ static void pm_drag_data_received (GtkWidget       *widget,
 		pl_d = gp_playlist_add_new (pl->itdb, pl_s->name,
 					    FALSE, position+1);
 	    g_return_if_fail (pl_d);
-	    add_trackglist_to_playlist (pl_d, pl_s->members);
-	    switch (dc->action)
+
+	    /* copy files from iPod if necessary */
+	    trackglist = export_trackglist_when_necessary (pl_s->itdb,
+							   pl_d->itdb,
+							   pl_s->members);
+
+	    /* check if copying went fine (trackglist is empty if
+	       pl_s->members is empty, so this must not be counted as
+	       an error */
+	    if (trackglist || !pl_s->members)
 	    {
-	    case GDK_ACTION_MOVE:
-		gtk_drag_finish (dc, TRUE, TRUE, time);
-		break;
-	    case GDK_ACTION_COPY:
-		gtk_drag_finish (dc, TRUE, FALSE, time);
-		break;
-	    default:
-		gtk_drag_finish (dc, FALSE, FALSE, time);
-		break;
+		add_trackglist_to_playlist (pl_d, trackglist);
+		g_list_free (trackglist);
+		trackglist = NULL;
+		switch (dc->action)
+		{
+		case GDK_ACTION_MOVE:
+		    gtk_drag_finish (dc, TRUE, TRUE, time);
+		    break;
+		case GDK_ACTION_COPY:
+		    gtk_drag_finish (dc, TRUE, FALSE, time);
+		    break;
+		default:
+		    gtk_drag_finish (dc, FALSE, FALSE, time);
+		    break;
+		}
 	    }
+	    else
+	    {
+		if (pl_d != pl)
+		{   /* remove newly created playlist */
+		    gp_playlist_remove (pl_d);
+		    pl_d = NULL;
+		}
+		gtk_drag_finish (dc, FALSE, FALSE, time);
+	    }
+
 	}
 	break;
     default:

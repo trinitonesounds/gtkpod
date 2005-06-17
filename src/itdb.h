@@ -1,8 +1,9 @@
-/* Time-stamp: <2005-05-17 23:28:09 jcs>
+/* Time-stamp: <2005-06-17 22:25:30 jcs>
 |
-|  Copyright (C) 2002-2003 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-|
+| 
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  Most of the code in this file has been ported from the perl

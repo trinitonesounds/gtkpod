@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-06-12 23:40+0900\n"
-"PO-Revision-Date: 2005-06-12 23:59+0900\n"
+"PO-Revision-Date: 2005-06-17 20:52+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -2019,7 +2019,7 @@ msgstr ""
 
 #: src/misc.c:125
 msgid "Armando Atienza: Support with external playcounts\n"
-msgstr "Armando Atienza: Untersützung bezüglich externer Playcounts\n"
+msgstr "Armando Atienza: Unterstützung bezüglich externer Playcounts\n"
 
 #: src/misc.c:127
 msgid "D.L. Sharp: Support for m4b files (bookmarkable AAC files)\n"
@@ -2917,9 +2917,7 @@ msgstr "Kann '%s' nicht zum schreiben öffnen.\n"
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
-msgstr ""
-" Voreinstellungen: Kategorie (%d<%d?) oder SortTab (%d<%d?) außerhalb des "
-"erlabuten Bereichs.\n"
+msgstr " Voreinstellungen: Kategorie (%d<%d?) oder SortTab (%d<%d?) außerhalb des erlaubten Bereichs.\n"
 
 #: src/prefs.c:1603
 #, c-format
@@ -3048,7 +3046,7 @@ msgid ""
 "Please verify the setting in the 'Tools' section of the preferences dialog.\n"
 "\n"
 msgstr ""
-"Das Komando '%s' konnte nicht gefunden werden.\n"
+"Das Kommando '%s' konnte nicht gefunden werden.\n"
 "\n"
 "Bitte überprüfen Sie die Angabe im Einstellungsdialog unter 'Werkzeuge'\n"
 "\n"
@@ -3688,14 +3686,7 @@ msgid ""
 "changed ID3 tags to disk, and even to reconstruct your ipod's contents in "
 "case of file system corruption (change the \"transferred=\" entries in your "
 "backuped database)."
-msgstr ""
-"Diese Option wird dringend empfohlen, um einen schnelleren Import der "
-"iTunesDB bei eingeschalteter Duplikatenerkennung zu erreichen. Da außerdem "
-"die Originalfilenamen gespeichert werden, können Tag-Änderungen in das "
-"Originalfile übernommen werden, und es es sogar möglich, den Inhalt Ihres "
-"iPods im Falle eines Filesystemschadens (Neuformatierung des iPods) zu "
-"rekonstruieren (dazu müssen die 'transferred=' Einträge in der gesicherten "
-"Datenbank auf '0' gesetzt werden und 'offline' eingelesen werden)."
+msgstr "Diese Option wird dringend empfohlen, um einen schnelleren Import der iTunesDB bei eingeschalteter Duplikatenerkennung zu erreichen. Da außerdem die Originalfilenamen gespeichert werden, können Tag-Änderungen in das Originalfile übernommen werden, und es ist sogar möglich, den Inhalt Ihres iPods im Falle eines Filesystemschadens (Neuformatierung des iPods) zu rekonstruieren (dazu müssen die 'transferred=' Einträge in der gesicherten Datenbank auf '0' gesetzt werden und 'offline' eingelesen werden)."
 
 #: gtkpod.glade:3072 gtkpod.glade:11808
 msgid ""
@@ -3831,7 +3822,7 @@ msgstr ""
 
 #: gtkpod.glade:4424 gtkpod.glade:13977
 msgid "Display messages and warnings at startup"
-msgstr "Nachrichten und Warnungen beim Start des Programs anzeigen"
+msgstr "Nachrichten und Warnungen beim Start des Programms anzeigen"
 
 #: gtkpod.glade:4446
 msgid "Misc"

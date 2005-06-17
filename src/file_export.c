@@ -1,8 +1,10 @@
-/* Time-stamp: <2005-06-12 17:06:13 jcs>
+/* Time-stamp: <2005-06-16 23:15:32 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
 | 
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 | 
 |  This program is free software; you can redistribute it and/or modify
@@ -34,6 +36,7 @@
 #include "file.h"
 #include "charset.h"
 #include "info.h"
+#include "md5.h"
 #include <limits.h>
 #include <stdio.h>
 #include <errno.h>
@@ -317,7 +320,7 @@ write_track(Track *s)
 	else
 	{
 	    gtkpod_warning (_("Could find file for '%s' on the iPod\n"),
-			    get_track_info (s));
+			    get_track_info (s, FALSE));
 	}
 	g_free(dest_file);
     }
@@ -495,23 +498,12 @@ static void export_files_write (struct fcd *fcd)
     }
 }
 
-/******************************************************************
-   export_files_cleanup - free memory taken up by the fcd structure.
- ******************************************************************/
-static void export_files_cleanup (struct fcd *fcd)
-{
-    g_return_if_fail (fcd);
-    g_list_free (fcd->tracks);
-    g_free (fcd);
-    release_widgets ();
-}
-
 
 /******************************************************************
    export_files_retrieve_options - retrieve options and store
    them in the prefs.
  ******************************************************************/
-static void export_files_retrieve_options (struct fcd *fcd)
+static void export_files_store_option_settings (struct fcd *fcd)
 {
     g_return_if_fail (fcd && fcd->win_xml && fcd->fc);
 
@@ -526,45 +518,13 @@ static void export_files_retrieve_options (struct fcd *fcd)
 
 
 /******************************************************************
-   export_files_response - handle the response codes accordingly.
- ******************************************************************/
-static void export_files_response (GtkDialog *fc,
-				   gint response,
-				   struct fcd *fcd)
-{
-/*     printf ("received response code: %d\n", response); */
-    switch (response)
-    {
-    case RESPONSE_APPLY:
-	export_files_retrieve_options (fcd);
-	break;
-    case GTK_RESPONSE_ACCEPT:
-	export_files_retrieve_options (fcd);
-	export_files_write (fcd);
-	export_files_cleanup (fcd);
-	gtk_widget_destroy (GTK_WIDGET (fc));
-	break;
-    case GTK_RESPONSE_CANCEL:
-	export_files_cleanup (fcd);
-	gtk_widget_destroy (GTK_WIDGET (fc));
-	break;
-    case GTK_RESPONSE_DELETE_EVENT:
-	export_files_cleanup (fcd);
-	break;
-    default:
-	fprintf (stderr, "Programming error: export_files_response(): unknown response '%d'\n", response);
-	break;
-    }
-}
-
-
-/******************************************************************
    export_files_init - Export files off of your ipod to an arbitrary
    directory, specified by the file chooser dialog
    @tracks - GList with data of type (Track*) we want to write 
  ******************************************************************/
 void export_files_init (GList *tracks)
 {
+    gint response;
     GtkWidget *win; 
     GtkWidget *options;
     struct fcd *fcd = g_malloc0 (sizeof (struct fcd));
@@ -573,7 +533,6 @@ void export_files_init (GList *tracks)
 	NULL,
 	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-	GTK_STOCK_APPLY, RESPONSE_APPLY,
 	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
     GladeXML *export_files_xml;
@@ -608,17 +567,127 @@ void export_files_init (GList *tracks)
     /* set last template */
     option_set_string (export_files_xml, EXPORT_FILES_TPL, EXPORT_FILES_TPL_DFLT);
 
-    /* catch response codes */
-    g_signal_connect (fc, "response",
-		      G_CALLBACK (export_files_response),
-		      fcd);
+    response = gtk_dialog_run (GTK_DIALOG (fc));
 
-    gtk_widget_show (fc);
-    block_widgets ();
+    switch (response)
+    {
+    case GTK_RESPONSE_ACCEPT:
+	export_files_store_option_settings (fcd);
+	export_files_write (fcd);
+	break;
+    case GTK_RESPONSE_CANCEL:
+	break;
+    default:
+	break;
+    }
+
+    g_list_free (fcd->tracks);
+    g_free (fcd);
+    gtk_widget_destroy (GTK_WIDGET (fc));
+}
+
+
+/*------------------------------------------------------------------
+
+  Code for DND: export when dragging from the iPod to the local
+  database.
+
+  ------------------------------------------------------------------*/
+
+/* If tracks are dragged from the iPod to the local database, the
+   tracks need to be copied from the iPod to the harddisk. This
+   function will ask where to copy them to, and add the tracks to the
+   MPL of @itdb_d.
+   A list of tracks that needs to be processed by the drag is
+   returned.
+
+   If tracks are not dragged from the iPod to the local database, a
+   copy of @tracks is returned.
+
+   The returned GList must be g_list_free()'ed after it is no longer
+   used. */
+GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
+					 iTunesDB *itdb_d,
+					 GList *tracks)
+{
+    GList *gl;
+    GList *existing_tracks = NULL;
+    GList *new_tracks = NULL;
+
+    g_return_val_if_fail (!itdb_s, NULL);
+    g_return_val_if_fail (!itdb_d, NULL);
+
+    if (!(itdb_s->usertype & GP_ITDB_TYPE_IPOD) ||
+	!(itdb_s->usertype & GP_ITDB_TYPE_LOCAL))
+    {   /* drag is not from iPod to local database -> return copy of
+	 * @tracks */
+	return g_list_copy (tracks);
+    }
+
+    /* drag is from iPod to local database */
+
+    /* make a list of tracks that already exist in itdb_d and of those
+       that do not yet exist */
+    for (gl=tracks; gl; gl=gl->next)
+    {
+	Track *otr;
+	Track *tr = gl->data;
+	g_return_val_if_fail (tr, NULL);
+
+	otr = md5_track_exists (itdb_d, tr);
+
+	if (otr)
+	{
+	    existing_tracks = g_list_append (existing_tracks, otr);
+	}
+	else
+	{
+	    new_tracks = g_list_append (new_tracks, tr);
+	}
+    }
+
+    /* if new tracks exist, copy them from the iPod to the harddisk */
+    if (new_tracks)
+    {
+    }
+
+/* FIXME: not finished */
+    return NULL;
+
 }
 
 
 
+
+
+/* same as export_trackglist_when_necessary() but the tracks are
+   represented as pointers in ASCII format. This function parses the
+   tracks in @data and calls export_trackglist_when_necessary() */
+GList *export_tracklist_when_necessary (iTunesDB *itdb_s,
+					iTunesDB *itdb_d,
+					gchar *data)
+{
+    GList *result;
+    Track *tr;
+    GList *tracks = NULL;
+    gchar *datap = data;
+
+    g_return_val_if_fail (!itdb_s, NULL);
+    g_return_val_if_fail (!itdb_d, NULL);
+    g_return_val_if_fail (!data, NULL);
+
+    /* parse tracks and create GList */
+    while (parse_tracks_from_string (&datap, &tr))
+    {
+	tracks = g_list_append (tracks, tr);
+    }
+
+    result = export_trackglist_when_necessary (itdb_s, itdb_d, tracks);
+
+    g_list_free (tracks);
+ 
+    return result;
+}
 
 
 

@@ -1,9 +1,9 @@
-/* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-05-25 00:17:19 jcs>
+/* Time-stamp: <2005-06-17 22:12:14 jcs>
 |
-|  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-|
+| 
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -250,8 +250,8 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
        if (prefs_get_show_duplicates ())
        {
 	   /* add info about it to str */
-	   buf = get_track_info (track);
-	   buf2 = get_track_info (oldtrack);
+	   buf = get_track_info (track, TRUE);
+	   buf2 = get_track_info (oldtrack, TRUE);
 	   if (!str)
 	   {
 	       deltrack_nr = 0;
@@ -623,13 +623,14 @@ static void add_tracks_to_playlist (Playlist *pl,
 		   same track already exists in the database, the already
 		   existing track is returned and @duptr is freed */
 		addtr = gp_track_add (to_itdb, duptr);
-		gp_playlist_add_track (pl, addtr, TRUE);
+		/* check if we need to add to the MPL */
 		if (addtr == duptr)
-		{   /* check if we need to add to the MPL as well */
-		    if (pl->type == ITDB_PL_TYPE_NORM)
-		    {
-			itdb_playlist_add_track (to_mpl, addtr, -1);
-		    }
+		{
+		    itdb_playlist_add_track (to_mpl, addtr, -1);
+		}
+		if (pl->type == ITDB_PL_TYPE_NORM)
+		{
+		    gp_playlist_add_track (pl, addtr, TRUE);
 		}
 	    }
 	}
@@ -892,7 +893,7 @@ void gp_do_selected_playlist (void (*do_func)(GList *tracks))
 
 /* return some sensible input about the "track". Yo must free the
  * return string after use. */
-gchar *get_track_info (Track *track)
+gchar *get_track_info (Track *track, gboolean prefer_filename)
 {
     ExtraTrackData *etr;
 
@@ -900,8 +901,11 @@ gchar *get_track_info (Track *track)
     etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
 
-    if (etr->pc_path_utf8 && strlen(etr->pc_path_utf8))
-	return g_path_get_basename (etr->pc_path_utf8);
+    if (prefer_filename)
+    {
+	if (etr->pc_path_utf8 && strlen(etr->pc_path_utf8))
+	    return g_path_get_basename (etr->pc_path_utf8);
+    }
     if ((track->title && strlen(track->title)))
 	return g_strdup (track->title);
     if ((track->album && strlen(track->album)))
@@ -910,6 +914,12 @@ gchar *get_track_info (Track *track)
 	return g_strdup (track->artist);
     if ((track->composer && strlen(track->composer)))
 	return g_strdup (track->composer);
+    if (!prefer_filename)
+    {
+	if (etr->pc_path_utf8 && strlen(etr->pc_path_utf8))
+	    return g_path_get_basename (etr->pc_path_utf8);
+    }
+
     return g_strdup_printf ("iPod ID: %d", track->id);
 }
 

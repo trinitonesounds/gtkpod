@@ -1,9 +1,10 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-06-12 23:35:46 jcs>
+|  Time-stamp: <2005-06-17 21:01:40 jcs>
 |
-|  Copyright (C) 2002-2004 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-|
+| 
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -142,6 +143,12 @@ Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 tags\
 		       "\n",
 		       _("\
 James Ligget: replacement of old GTK file selection dialogs with new GTK filechooser dialogs\n"),
+		       "\n",
+		       _("\
+Daniel Kercher: sync scripts for abook and webcalendar\n"),
+		       "\n",
+		       _("\
+Clinton Gormley: sync scripts for thunderbird\n"),
 		       "\n",
 		       _("\
 Icons of buttons were made by Nicolas Chariot.\n\
@@ -335,8 +342,10 @@ GList *glist_duplicate (GList *list)
  *
  * Code to "eject" the iPod.
  *
- * Large parts of this code are Copyright (C) 1994-2001 Jeff Tranter
- * (tranter at pobox.com).  Repackaged to only include scsi eject code
+ * Large parts of this code are 
+ * Copyright (C) 1994-2001 Jeff Tranter (tranter at pobox.com).
+ * Copyright (C) 2004, 2005 Frank Lichtenheld (djpig@debian.org)
+ * Repackaged to only include scsi eject code
  * by Alex Tribble (prat at rice.edu). Integrated into gtkpod by Jorg
  * Schuler (jcsjcs at users.sourceforge.net)
  *
@@ -345,8 +354,9 @@ GList *glist_duplicate (GList *list)
 /* This code does not work with FreeBSD -- let me know if you know a
  * way around it. */
 
-#if (HAVE_LINUX_CDROM_H && HAVE_SCSI_SCSI_H && HAVE_SCSI_SCSI_IOCTL_H)
+#if (HAVE_LINUX_CDROM_H && HAVE_SCSI_SG_H && HAVE_SCSI_SCSI_H && HAVE_SCSI_SCSI_IOCTL_H)
 #include <linux/cdrom.h>
+#include <scsi/sg.h>
 #include <scsi/scsi.h>
 #include <scsi/scsi_ioctl.h>
 #include <sys/mount.h>
@@ -389,48 +399,47 @@ static gboolean EjectCdrom(int fd)
  */
 static gboolean EjectScsi(int fd)
 {
-    int status;
-    struct sdata {
-	int inlen;
-	int outlen;
-	char cmd[256];
-    } scsi_cmd;
+	int status, k;
+	sg_io_hdr_t io_hdr;
+	unsigned char allowRmBlk[6] = {ALLOW_MEDIUM_REMOVAL, 0, 0, 0, 0, 0};
+	unsigned char startStop1Blk[6] = {START_STOP, 0, 0, 0, 1, 0};
+	unsigned char startStop2Blk[6] = {START_STOP, 0, 0, 0, 2, 0};
+	unsigned char inqBuff[2];
+	unsigned char sense_buffer[32];
 
-    scsi_cmd.inlen = 0;
-    scsi_cmd.outlen = 0;
-    scsi_cmd.cmd[0] = ALLOW_MEDIUM_REMOVAL;
-    scsi_cmd.cmd[1] = 0;
-    scsi_cmd.cmd[2] = 0;
-    scsi_cmd.cmd[3] = 0;
-    scsi_cmd.cmd[4] = 0;
-    scsi_cmd.cmd[5] = 0;
-    status = ioctl(fd, SCSI_IOCTL_SEND_COMMAND, (void *)&scsi_cmd);
-    if (status != 0)	return FALSE;
+	if ((ioctl(fd, SG_GET_VERSION_NUM, &k) < 0) || (k < 30000)) {
+	  printf("not an sg device, or old sg driver\n");
+	  return 0;
+	}
 
-    scsi_cmd.inlen = 0;
-    scsi_cmd.outlen = 0;
-    scsi_cmd.cmd[0] = START_STOP;
-    scsi_cmd.cmd[1] = 0;
-    scsi_cmd.cmd[2] = 0;
-    scsi_cmd.cmd[3] = 0;
-    scsi_cmd.cmd[4] = 1;
-    scsi_cmd.cmd[5] = 0;
-    status = ioctl(fd, SCSI_IOCTL_SEND_COMMAND, (void *)&scsi_cmd);
-    if (status != 0)	return FALSE;
+	memset(&io_hdr, 0, sizeof(sg_io_hdr_t));
+	io_hdr.interface_id = 'S';
+	io_hdr.cmd_len = 6;
+	io_hdr.mx_sb_len = sizeof(sense_buffer);
+	io_hdr.dxfer_direction = SG_DXFER_NONE;
+	io_hdr.dxfer_len = 0;
+	io_hdr.dxferp = inqBuff;
+	io_hdr.sbp = sense_buffer;
+	io_hdr.timeout = 2000;
 
-    scsi_cmd.inlen = 0;
-    scsi_cmd.outlen = 0;
-    scsi_cmd.cmd[0] = START_STOP;
-    scsi_cmd.cmd[1] = 0;
-    scsi_cmd.cmd[2] = 0;
-    scsi_cmd.cmd[3] = 0;
-    scsi_cmd.cmd[4] = 2;
-    scsi_cmd.cmd[5] = 0;
-    status = ioctl(fd, SCSI_IOCTL_SEND_COMMAND, (void *)&scsi_cmd);
-    if (status != 0)	return FALSE;
+	io_hdr.cmdp = allowRmBlk;
+	status = ioctl(fd, SG_IO, (void *)&io_hdr);
+	if (status < 0)
+		return 0;
 
-    status = ioctl(fd, BLKRRPART);
-    return (status == 0);
+	io_hdr.cmdp = startStop1Blk;
+	status = ioctl(fd, SG_IO, (void *)&io_hdr);
+	if (status < 0)
+		return 0;
+
+	io_hdr.cmdp = startStop2Blk;
+	status = ioctl(fd, SG_IO, (void *)&io_hdr);
+	if (status < 0)
+		return 0;
+
+	/* force kernel to reread partition table when new disc inserted */
+	status = ioctl(fd, BLKRRPART);
+	return 1;
 }
 
 static void eject_ipod(gchar *ipod_device)

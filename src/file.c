@@ -1,8 +1,9 @@
-/* Time-stamp: <2005-06-12 23:33:28 jcs>
+/* Time-stamp: <2005-06-16 22:47:26 jcs>
 |
-|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
+|  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
-|
+| 
+|  URL: http://www.gtkpod.org/
 |  URL: http://gtkpod.sourceforge.net/
 |
 |  This program is free software; you can redistribute it and/or modify
@@ -925,7 +926,7 @@ void update_tracks (GList *selected_tracks)
     {
 	Track *track = gl->data;
 	g_return_if_fail (track);
-	gchar *buf = g_strdup_printf (_("Updating %s"), get_track_info (track));
+	gchar *buf = g_strdup_printf (_("Updating %s"), get_track_info (track, TRUE));
 	gtkpod_statusbar_message (buf);
 	g_free (buf);
 	update_track_from_file (track->itdb, track);
@@ -971,7 +972,7 @@ void mserv_from_file_tracks (GList *selected_tracks)
 	g_return_if_fail (track);
 	etr = track->userdata;
 	g_return_if_fail (etr);
-	buf = g_strdup_printf (_("Retrieving mserv data %s"), get_track_info (track));
+	buf = g_strdup_printf (_("Retrieving mserv data %s"), get_track_info (track, TRUE));
 	gtkpod_statusbar_message (buf);
 	g_free (buf);
 	if (etr->pc_path_locale && *etr->pc_path_locale)
@@ -1458,7 +1459,7 @@ void display_non_updated (Track *track, gchar *txt)
    else if (prefs_get_show_non_updated() && track)
    {
        /* add info about it to str */
-       buf = get_track_info (track);
+       buf = get_track_info (track, TRUE);
        if (!str)
        {
 	   track_nr = 0;
@@ -1522,7 +1523,7 @@ void display_updated (Track *track, gchar *txt)
    else if (prefs_get_show_updated() && track)
    {
        /* add info about it to str */
-       buf = get_track_info (track);
+       buf = get_track_info (track, TRUE);
        if (!str)
        {
 	   track_nr = 0;
@@ -1588,7 +1589,7 @@ void display_mserv_problems (Track *track, gchar *txt)
 	    prefs_get_mserv_report_probs() && track)
    {
        /* add info about it to str */
-       buf = get_track_info (track);
+       buf = get_track_info (track, TRUE);
        if (!str)
        {
 	   track_nr = 0;

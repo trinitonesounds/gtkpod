@@ -39,8 +39,6 @@ ENCODING=ISO-8859-15                            # encoding used by ipod
 # Received original script from Daniel Kercher and added character
 # conversion and command line options.
 
-[ -f $DATAFILE ] || exit 1
-
 # overwrite default settings with optional command line arguments
 while getopts i:d:e:f: option; do
     case $option in

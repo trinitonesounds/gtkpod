@@ -6,6 +6,9 @@ gtkpod V0.91-CVS
 	browsed in the known gtkpod-fashion: by artist or genre or
 	album etc.
 
+	NEW FEATURE: sync-abook.sh and sync-webcalendar.sh scripts
+	provided by Daniel Kercher.
+
 	BUGFIX: display and reading of compilation flag fixed (thanks
 	to Julien Oster for the patch)
 
@@ -30,9 +33,6 @@ gtkpod V0.91-CVS
 
 	CHANGE: use 'iconv' instead of 'recode' in the provided export
 	scripts. Thanks to Alexey Dokuchaev.
-
-	NEW FEATURE: sync-abook.sh and sync-webcalendar.sh scripts
-	provided by Daniel Kercher.
 
 gtkpod V0.88.2
 	IMPROVEMENT: Added '%p' (current playlist) identifier when
