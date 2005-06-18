@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-05 23:43:59 jcs>
+/* Time-stamp: <2005-06-18 00:09:52 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1004,7 +1004,7 @@ on_export_playlist_activate  (GtkMenuItem     *menuitem,
 	gtkpod_statusbar_message (_("No playlist selected"));
 	return;
     }
-    export_files_init (pl->members);
+    export_files_init (pl->members, NULL, FALSE, NULL);
 }
 
 
@@ -1027,7 +1027,7 @@ on_export_tab_entry_activate (GtkMenuItem     *menuitem,
 	g_free (str);
 	return;
     }
-    export_files_init (entry->members);
+    export_files_init (entry->members, NULL, FALSE, NULL);
 }
 
 
@@ -1039,7 +1039,7 @@ on_export_tracks_activate     (GtkMenuItem     *menuitem,
 
     if (tracks)
     {
-	export_files_init(tracks);
+	export_files_init (tracks, NULL, FALSE, NULL);
 	g_list_free (tracks);
     }
     else

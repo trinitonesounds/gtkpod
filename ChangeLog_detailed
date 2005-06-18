@@ -1,3 +1,9 @@
+2005-06-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* finished code automatically export tracks from iPod to
+          harddisk when dragging from the iPod database to the local
+          database.
+
 2005-06-15 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* integrated debian patches provided by Frank Lichtenheld

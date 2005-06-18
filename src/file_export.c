@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-16 23:15:32 jcs>
+/* Time-stamp: <2005-06-18 23:57:38 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -49,10 +49,11 @@
 /* Structure to keep all necessary information */
 struct fcd
 {
-    GList *tracks;  /* tracks to be written */
-    GtkWidget *fc;  /* file chooser */
+    GList *tracks;     /* tracks to be written */
+    GtkWidget *fc;     /* file chooser */
+    GList **filenames; /* pointer to GList to append the filenames used */
     GladeXML *win_xml; /* Glade xml reference */
-    gpointer user_data; 
+    Track *track;      /* current track to export */
 };
 
 
@@ -293,15 +294,14 @@ track_get_export_filename (Track *track)
  * @s - The Track reference we're manipulating
  * Returns - TRUE on success, FALSE on failure
  */
-static gboolean
-write_track(Track *s)
+static gboolean write_track (struct fcd *fcd)
 {
     gboolean result = FALSE;
-    gchar *dest_file = track_get_export_filename(s);
+    gchar *dest_file = track_get_export_filename (fcd->track);
     
     if(dest_file)
     {
-	gchar *from_file = get_file_name_on_ipod (s);
+	gchar *from_file = get_file_name_on_ipod (fcd->track);
 	if (from_file)
 	{
 	    gchar *filename, *dest_dir;
@@ -311,7 +311,15 @@ write_track(Track *s)
 	    if (mkdirhier(filename))
 	    {
 		if(copy_file(from_file, filename))
+		{
 		    result = TRUE;
+		    if (fcd->filenames)
+		    {   /* append filename to list */
+			*fcd->filenames = g_list_append (*fcd->filenames,
+							 filename);
+			filename = NULL;
+		    }
+		}
 	    }
 	    g_free(from_file);
 	    g_free(dest_dir);
@@ -320,7 +328,7 @@ write_track(Track *s)
 	else
 	{
 	    gtkpod_warning (_("Could find file for '%s' on the iPod\n"),
-			    get_track_info (s, FALSE));
+			    get_track_info (fcd->track, FALSE));
 	}
 	g_free(dest_file);
     }
@@ -329,11 +337,11 @@ write_track(Track *s)
 
 #ifdef G_THREADS_ENABLED
 /* Threaded write_track */
-static gpointer th_write_track (gpointer s)
+static gpointer th_write_track (gpointer fcd)
 {
     gboolean result = FALSE;
 
-    result = write_track ((Track *)s);
+    result = write_track (fcd);
 
     g_mutex_lock (mutex);
     mutex_data = TRUE;   /* signal that thread will end */
@@ -428,13 +436,14 @@ static void export_files_write (struct fcd *fcd)
 	start = time(NULL);
 	for(l = fcd->tracks; l && !abort; l = l->next)
 	{
-	    Track *s = (Track*)l->data;
+	    Track *tr = (Track*)l->data;
 	    gchar *buf;
 
-	    copied += s->size;
+	    fcd->track = tr;
+	    copied += tr->size;
 #ifdef G_THREADS_ENABLED
 	    mutex_data = FALSE;
-	    thread = g_thread_create (th_write_track, s, TRUE, NULL);
+	    thread = g_thread_create (th_write_track, fcd, TRUE, NULL);
 	    if (thread)
 	    {
 		g_mutex_lock (mutex);
@@ -452,14 +461,14 @@ static void export_files_write (struct fcd *fcd)
 	    }
 	    else {
 		g_warning ("Thread creation failed, falling back to default.\n");
-		result &= write_track (s);
+		result &= write_track (fcd);
 	    }
 #else
-	    result &= write_track (s);
+	    result &= write_track (fcd);
 #endif
 	    if (!result)
 	    {
-		gtkpod_warning (_("Failed to write '%s-%s'\n"), s->artist, s->title);	
+		gtkpod_warning (_("Failed to write '%s-%s'\n"), tr->artist, tr->title);	
 	    }
 
 	    ++count;
@@ -520,13 +529,19 @@ static void export_files_store_option_settings (struct fcd *fcd)
 /******************************************************************
    export_files_init - Export files off of your ipod to an arbitrary
    directory, specified by the file chooser dialog
-   @tracks - GList with data of type (Track*) we want to write 
+
+   @tracks    - GList with data of type (Track*) we want to write 
+   @filenames - a pointer to a GList where to store the filenames used
+                to write the tracks (or NULL)
+   @display   - TRUE: display a list of tracks to be exported
+   @message   - message to be displayed above the display of tracks
+
  ******************************************************************/
-void export_files_init (GList *tracks)
+void export_files_init (GList *tracks, GList **filenames,
+			gboolean display, gchar *message)
 {
     gint response;
-    GtkWidget *win; 
-    GtkWidget *options;
+    GtkWidget *win, *options, *message_box; 
     struct fcd *fcd = g_malloc0 (sizeof (struct fcd));
     GtkWidget *fc = gtk_file_chooser_dialog_new (
 	_("Select Export Destination Directory"),
@@ -540,10 +555,12 @@ void export_files_init (GList *tracks)
     export_files_xml = glade_xml_new (xml_file, "export_files_options", NULL);
     win = glade_xml_get_widget (export_files_xml, "export_files_options");
     options = glade_xml_get_widget (export_files_xml, "options_frame");
+    message_box = glade_xml_get_widget (export_files_xml, "message_box");
 
     /* Information needed to clean up later */
     fcd->tracks = g_list_copy (tracks);
     fcd->win_xml = export_files_xml;
+    fcd->filenames = filenames;
     fcd->fc = fc;
 
     /* according to GTK FAQ: move a widget to a new parent */
@@ -555,6 +572,46 @@ void export_files_init (GList *tracks)
     gtk_widget_unref (options);
 
     gtk_widget_destroy (win);
+
+
+    /* set message text */
+    if (display)
+    {
+	GList *gl;
+	GtkWidget *label = glade_xml_get_widget (export_files_xml,
+						 "message");
+	GtkWidget *tv = glade_xml_get_widget (export_files_xml,
+					      "textview");
+	GtkTextBuffer *tb = gtk_text_view_get_buffer (GTK_TEXT_VIEW(tv));
+	if (message)  gtk_label_set_text (GTK_LABEL (label), message);
+	else          gtk_widget_hide (label);
+	if (!tb)
+	{   /* set up textbuffer */
+	    tb = gtk_text_buffer_new (NULL);
+	    gtk_text_view_set_buffer (GTK_TEXT_VIEW (tv), tb);
+	    gtk_text_view_set_editable (GTK_TEXT_VIEW (tv), FALSE);
+	    gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW(tv), FALSE);
+	}
+	for (gl=tracks; gl; gl=gl->next)
+	{
+	    GtkTextIter ti;
+	    gchar *text;
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+
+	    text = get_track_info (tr, FALSE);
+	    /* append info to the end, incl. newline */
+	    gtk_text_buffer_get_end_iter (tb, &ti);
+	    gtk_text_buffer_insert (tb, &ti, text, -1);
+	    gtk_text_buffer_get_end_iter (tb, &ti);
+	    gtk_text_buffer_insert (tb, &ti, "\n", -1);
+	    g_free (text);
+	}
+    }
+    else
+    {
+	gtk_widget_hide (message_box);
+    }
 
     /* set last folder */
     option_set_folder (GTK_FILE_CHOOSER (fc),
@@ -613,12 +670,13 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
     GList *gl;
     GList *existing_tracks = NULL;
     GList *new_tracks = NULL;
+    GList *added_tracks = NULL;
 
-    g_return_val_if_fail (!itdb_s, NULL);
-    g_return_val_if_fail (!itdb_d, NULL);
+    g_return_val_if_fail (itdb_s, NULL);
+    g_return_val_if_fail (itdb_d, NULL);
 
     if (!(itdb_s->usertype & GP_ITDB_TYPE_IPOD) ||
-	!(itdb_s->usertype & GP_ITDB_TYPE_LOCAL))
+	!(itdb_d->usertype & GP_ITDB_TYPE_LOCAL))
     {   /* drag is not from iPod to local database -> return copy of
 	 * @tracks */
 	return g_list_copy (tracks);
@@ -649,13 +707,73 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
     /* if new tracks exist, copy them from the iPod to the harddisk */
     if (new_tracks)
     {
+	GList *filenames = NULL;
+	Playlist *mpl = itdb_playlist_mpl (itdb_d);
+	g_return_val_if_fail (mpl, NULL);
+
+	export_files_init (new_tracks, &filenames, TRUE,
+			   _("The following tracks have to be copied to your harddisk"));
+	printf ("finished export: filenames: %p\n", filenames);
+	/* add copied tracks to MPL of @itdb_d */
+	while (new_tracks && filenames)
+	{
+	    Track *dtr, *added_track;
+	    ExtraTrackData *edtr;
+	    Track *tr = new_tracks->data;
+	    gchar *filename = filenames->data;
+	    g_return_val_if_fail (tr, NULL);
+	    g_return_val_if_fail (filename, NULL);
+
+	    /* duplicate track */
+	    dtr = itdb_track_duplicate (tr);
+	    edtr = dtr->userdata;
+	    g_return_val_if_fail (edtr, NULL);
+
+	    /* set filename */
+	    g_free (edtr->pc_path_utf8);
+	    g_free (edtr->pc_path_locale);
+	    edtr->pc_path_utf8 = charset_to_utf8 (filename);
+	    edtr->pc_path_locale = filename;
+
+	    /* free ipod path */
+	    g_free (dtr->ipod_path);
+	    dtr->ipod_path = g_strdup ("");
+
+	    /* add track to itdb_d */
+	    added_track = gp_track_add (itdb_d, dtr);
+	    /* this cannot happen because we checked that the track is
+	       not in itdb_d before! */
+	    g_return_val_if_fail (added_track == dtr, NULL);
+	    /* add track to MPL */
+	    gp_playlist_add_track (mpl, dtr, TRUE);
+
+	    /* add track to added_tracks */
+	    added_tracks = g_list_append (added_tracks, dtr);
+
+	    /* remove the links from the GLists */
+	    new_tracks = g_list_delete_link (new_tracks, new_tracks);
+	    filenames = g_list_delete_link (filenames, filenames);
+	}
+
+	if (filenames)
+	{
+	    GList *gl;
+	    gtkpod_warning (_("Some tracks were not copied to your harddisk. Only the copied tracks will be included in the current drag and drop operation.\n\n"));
+	    for (gl=filenames; gl; gl=gl->next)
+	    {
+		g_free (gl->data);
+	    }
+	    g_list_free (filenames);
+	    filenames = NULL;
+	}
+	/* new_tracks must always be shorter than filenames! */
+	g_return_val_if_fail (!new_tracks, NULL);
     }
 
-/* FIXME: not finished */
-    return NULL;
-
+    /* return a list containing the existing tracks and the added
+       tracks */
+    return g_list_concat (existing_tracks, added_tracks);
 }
-
 
 
 
@@ -672,9 +790,9 @@ GList *export_tracklist_when_necessary (iTunesDB *itdb_s,
     GList *tracks = NULL;
     gchar *datap = data;
 
-    g_return_val_if_fail (!itdb_s, NULL);
-    g_return_val_if_fail (!itdb_d, NULL);
-    g_return_val_if_fail (!data, NULL);
+    g_return_val_if_fail (itdb_s, NULL);
+    g_return_val_if_fail (itdb_d, NULL);
+    g_return_val_if_fail (data, NULL);
 
     /* parse tracks and create GList */
     while (parse_tracks_from_string (&datap, &tr))

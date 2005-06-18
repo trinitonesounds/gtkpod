@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-16 22:47:25 jcs>
+/* Time-stamp: <2005-06-18 00:08:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -110,7 +110,8 @@ void parse_offline_playcount (void);
 gboolean get_gain(Track *track);
 
 /* file_export.c */
-void export_files_init(GList *tracks);
+void export_files_init (GList *tracks, GList **filenames,
+			gboolean display, gchar *message);
 void export_playlist_file_init (GList *tracks);
 GList *export_tracklist_when_necessary (iTunesDB *itdb_s,
 					iTunesDB *itdb_d,

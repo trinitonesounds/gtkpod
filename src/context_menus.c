@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:19 jcs>
+/* Time-stamp: <2005-06-18 00:08:41 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -63,7 +63,7 @@ static void
 export_entries(GtkWidget *w, gpointer data)
 {
     if(selected_tracks)
-	export_files_init(selected_tracks);
+	export_files_init (selected_tracks, NULL, FALSE, NULL);
 }
 
 /**

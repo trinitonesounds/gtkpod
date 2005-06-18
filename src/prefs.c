@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-05 23:44:00 jcs>
+/* Time-stamp: <2005-06-18 23:58:58 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -167,7 +167,7 @@ struct cfg *cfg_new(void)
     mycfg->deletion.local_file = TRUE;
     mycfg->deletion.database = TRUE;
     mycfg->deletion.syncing = TRUE;
-    mycfg->md5tracks = FALSE;
+    mycfg->md5tracks = TRUE;
     mycfg->update_existing = FALSE;
     mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
