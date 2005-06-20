@@ -1,0 +1,567 @@
+#!/usr/bin/perl
+# Copyright © 2004 Jamie Zawinski <jwz@jwz.org>
+#
+# Permission to use, copy, modify, distribute, and sell this software
+# and its documentation for any purpose is hereby granted without fee,
+# provided that the above copyright notice appear in all copies and
+# that both that copyright notice and this permission notice appear in
+# supporting documentation.  No representations are made about the
+# suitability of this software for any purpose.  It is provided "as
+# is" without express or implied warranty.
+#
+# Created:  3-Mar-2004 by Jamie Zawinski, Anonymous, and Jacob Post.
+#
+##########################################################################
+#
+# This program, originally by Jamie Zawinski for parsing mork files to
+# extract URLs from the history, has been repurposed by Clinton
+# Gormley to extract vCards from the Thunderbird default personal
+# addressbook (abook.mab), in a suitable format for importing into
+# Evolution or for storing on the iPod.
+#
+# It looks for abook.mab in the directories specified below in
+# ABOOK_PATHS.  If there are more paths that should be added by
+# default, please let me know.
+#
+# BUG : At the moment, there is no way of removing deleted addresses.
+# Thunderbird continues to store them in the address book, and I can't
+# see any way to find the deleted flag.  There is a key called
+# ns:addrbk:db:table:kind:deleted, but deleted records don't seem to
+# have this set.  So if you figure this one out, please let me know...
+#
+# If you would also like to include the Collected addresses, you can
+# specify the history.mab file on the command line.
+# 
+# I have done nothing with encoding in this program - on my system it
+# just works. If it doesn't for you, please send me the details.
+#
+# vCards should have a maximum line length of 75 chars. I have set the
+# line length lower in case there are characters which (when you
+# recode) take up more than one byte, so you have a degree of
+# flexibility with this. You may well run into problems if you are
+# using many non ASCII characters.
+#
+# The changes I have made to Jamie Zawinski's script enjoy the same
+# copyright as his original script (see above).
+#
+# The part of this script that parses the addressbook worked well for
+# me, but Jamie says that it is unreliable, and has given up trying to
+# improve it.  But until the Mozilla vcard project gets underway
+# (http://vcard.mozdev.org/) and uses Mozilla's own mork libraries,
+# you probably won't find anything better.
+# Mileage may vary... :)
+# 
+# Hope this helps!
+#
+# Clinton Gormley (perl@traveljury.com)
+#
+##########################################################################
+#
+# Contributed to the gtkpod project by Clinton Gormley
+# (perl@traveljury.com). This code can be used either under the
+# license mentioned above or under the terms of the GNU General Pulic
+# License as published by the Free Software Foundation; either version
+# 2 of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+##########################################################################
+#
+# And Now, The Ugly Truth Laid Bare:
+#
+#   In Netscape Navigator 1.0 through 4.0, the history.db file was
+#   just a Berkeley DBM file.  You could trivially bind to it from
+#   Perl, and pull out the URLs and last-access time.  In Mozilla,
+#   this has been replaced with a "Mork" database for which no tools
+#   exist.
+#
+#   Let me make it clear that McCusker is a complete barking lunatic.
+#   This is just about the stupidest file format I've ever seen.
+#
+#       http://www.mozilla.org/mailnews/arch/mork/primer.txt
+#       http://jwz.livejournal.com/312657.html
+#       http://www.jwz.org/doc/mailsum.html
+#       http://bugzilla.mozilla.org/show_bug.cgi?id=241438
+#
+#   In brief, let's count its sins:
+#
+#     - Two different numerical namespaces that overlap.
+#
+#     - It can't decide what kind of character-quoting syntax to use:
+#       Backslash?  Hex encoding with dollar-sign?
+#
+#     - C++ line comments are allowed sometimes, but sometimes // is just
+#       a pair of characters in a URL.
+#
+#     - It goes to all this serious compression effort (two different 
+#       string-interning hash tables) and then writes out Unicode strings
+#       without using UTF-8: writes out the unpacked wchar_t characters!
+#
+#     - Worse, it hex-encodes each wchar_t with a 3-byte encoding,
+#       meaning the file size will be 3x or 6x (depending on whether
+#       whchar_t is 2 bytes or 4 bytes.)
+#
+#     - It masquerades as a "textual" file format when in fact it's
+#       just another binary-blob file, except that it represents all its
+#       magic numbers in ASCII.  It's not human-readable, it's not
+#       hand-editable, so the only benefit there is to the fact that it
+#       uses short lines and doesn't use binary characters is that it
+#       makes the file bigger. Oh wait, my mistake, that isn't actually
+#       a benefit at all.
+#
+# Pure comedy.
+#
+##########################################################################
+
+
+
+require 5;
+#use diagnostics;
+use strict;
+use constant ABOOK_PATHS => qw (~/.thunderbird/);
+
+#use Data::Dumper;
+my $progname = $0; $progname =~ s@.*/@@g;
+my $version = q{ $Revision$ }; $version =~ s/^[^0-9]+([0-9.]+).*$/$1/;
+
+my (%key_table, %val_table, %row_hash);
+my ($total, $skipped) = (0, 0);
+
+##########################################################################
+# Returns a list of hashes, the contents of the mork file.
+##########################################################################
+
+sub mork_parse_file {
+  my $file = shift;
+  local $/ = undef;
+  local *IN;
+
+
+  ##########################################################################
+  # Define the messy regexen up here
+  ##########################################################################
+
+  my $top_level_comment = qr@//.*\n@;
+
+  my $key_table_re = qr/  < \s* <             # "< <"
+                         \( a=c \) >          # "(a=c)>"
+                         (?> ([^>]*) ) > \s*  # Grab anything that's not ">"
+                     /sx;
+
+  my $value_table_re = qr/ < ( .*?\) )> \s* /sx;
+
+  my $table_re = qr/ \{ -?        # "{" or "{-"
+                    [\da-f]+ :    # hex, ":"
+                    (?> .*?\{ )   # Eat up to a {...
+                   ((?> .*?\} )   # and then the closing }...
+                    (?> .*?\} ))  # Finally, grab the table section
+                 \s* /six;
+
+  my $row_re = qr/ ( (?> \[ [^]]* \]  # "["..."]"
+                         \s*)+ )      # Perhaps repeated many times
+                 /sx;
+
+  my $section_begin_re = qr/ \@\$\$\{    # "@$${"
+                             ([\dA-F]+)  # hex
+                             \{\@ \s*    # "{@"
+                           /six;
+
+  my $section_end_re = undef;
+  my $section = "top level";
+
+  ##########################################################################
+  # Read in the file.
+  ##########################################################################
+  open (IN, "<$file") || error ("$file: $!");
+
+  my $body = <IN>;
+  close IN;
+
+  $body =~ s/\r\n/\n/gs;    # Windows Mozilla uses \r\n
+  $body =~ s/\r/\n/gs;      # Presumably Mac Mozilla is similarly dumb
+
+  $body =~ s/\\\\/\$5C/gs;  # Sometimes backslash is quoted with a
+                            #  backslash; convert to hex.
+  $body =~ s/\\\)/\$29/gs;  # close-paren is quoted with a backslash;
+                            #  convert to hex.
+  $body =~ s/\\\n//gs;      # backslash at end of line is continuation.
+
+  ##########################################################################
+  # Figure out what we're looking at, and parse it.
+  ##########################################################################
+
+
+  pos($body) = 0;
+  my $length = length($body);
+
+  while( pos($body) < $length ) {
+
+    # Key table
+
+    if ( $body =~ m/\G$key_table_re/gc ) {
+      mork_parse_key_table($file, $section, $1);
+
+    # Values
+    } elsif ( $body =~ m/\G$value_table_re/gco ) {
+      mork_parse_value_table($file, $section, $1);
+
+    # Table
+    } elsif ( $body =~ m/\G$table_re/gco ) {
+      mork_parse_table($file, $section,  $1);
+
+    # Rows (-> table)
+    } elsif ( $body =~ m/\G$row_re/gco ) {
+      mork_parse_table($file, $section, $1);
+
+    # Section begin
+    } elsif ( $body =~ m/\G$section_begin_re/gco ) {
+      $section = $1;
+      $section_end_re = qr/\@\$\$\}$section\}\@\s*/s;
+
+    # Section end
+    } elsif ( $section_end_re && $body =~ m/\G$section_end_re/gc ) {
+      $section_end_re = undef;
+      $section = "top level";
+
+    # Comment
+    } elsif ( $body =~ m/\G$top_level_comment/gco ) {
+      #no-op
+
+    } else {
+#      $body =~ m/\G (.{0,300}) /gcsx; print "<$1>\n";
+      error("$file: $section: Cannot parse");
+    }
+  }
+
+  if($section_end_re) {
+    error("$file: Unterminated section $section");
+  }
+
+
+#  print STDERR "$progname: $file: sorting...\n" if ($verbose);
+
+  my @entries = values(%row_hash);
+  
+#  print STDERR "$progname: $file: done!  ($total total, $skipped skipped)\n"
+#    if ($verbose);
+# print Dumper(\%key_table,\%val_table,\%row_hash);
+  (%key_table, %val_table, %row_hash, $total, $skipped) = ();
+
+  return \@entries;
+}
+
+
+##########################################################################
+# parse a row and column table
+##########################################################################
+
+sub mork_parse_table {
+  my($file, $section, $table_part) = (@_);
+
+#  print STDERR "\n" if ($verbose > 3);
+
+  # Assumption: no relevant spaces in values in this section
+  $table_part =~ s/\s+//g;
+
+#  print $table_part; #exit(0);
+
+  #Grab each complete [...] block
+  while( $table_part =~ m/\G  [^[]*   \[  # find a "["
+                            ( [^]]+ ) \]  # capture up to "]"
+                        /gcx ) {
+    $_ = $1;
+
+    my %hash;
+    my ($id, @cells) = split (m/[()]+/s);
+    next unless scalar(@cells);
+    # Trim junk
+    $id =~ s/^-//;
+    $id =~ s/:.*//;
+
+    if($row_hash{$id}) {
+      %hash = ( %{$row_hash{$id}} );
+    } else {
+      %hash = ( 'ID'            => $id);
+    }
+
+    foreach (@cells) {
+      next unless $_;
+
+      my ($keyi, $which, $vali) =
+        m/^\^ ([-\dA-F]+)
+              ([\^=])
+              (.*)     
+          $/xi;
+
+      error ("$file: unparsable cell: $_\n") unless defined ($vali);
+
+      # If the key isn't in the key table, ignore it
+      #
+      my $key = $key_table{$keyi};
+      next unless defined($key);
+
+      my $val  = ($which eq '='
+                  ? $vali
+                  : $val_table{$vali});
+#print "$key : $val : $which : $vali : $val_table{$vali}\n";
+
+      $hash{$key} = $val;
+#print "$id: $key -> $val\n";
+    }
+
+
+
+    $total++;
+    $row_hash{$id} = \%hash;
+  }
+}
+
+
+##########################################################################
+# parse a values table
+##########################################################################
+
+sub mork_parse_value_table {
+  my($file, $section, $val_part) = (@_);
+
+  return unless $val_part;
+
+  my @pairs = split (m/\(([^\)]+)\)/, $val_part);
+  $val_part = undef;
+
+#  print STDERR "\n" if ($verbose > 3);
+
+  foreach (@pairs) {
+    next unless (m/[^\s]/s);
+    my ($key, $val) = m/([\dA-F]*)[\t\n ]*=[\t\n ]*(.*)/i;
+    if (! defined ($val)) {
+      print STDERR "$progname: $file: $section: unparsable val: $_\n";
+      next;
+    }
+
+    # Assume that URLs and LastVisited are never hexilated; so
+    # don't bother unhexilating if we won't be using Name, etc.
+    if($val =~ m/\$/) {
+      # Approximate wchar_t -> ASCII and remove NULs
+      $val =~ s/\$00//g;  # faster if we remove these first
+      $val =~ s/\$([\dA-F]{2})/chr(hex($1))/ge;
+    }
+
+    $val_table{$key} = $val;
+#    print STDERR "$progname: $file: $section: val $key = \"$val\"\n"
+#      if ($verbose > 3);
+  }
+}
+
+
+##########################################################################
+# parse a key table
+##########################################################################
+
+sub mork_parse_key_table {
+  my ($file, $section, $key_table) = (@_);
+
+#  print STDERR "\n" if ($verbose > 3);
+  $key_table =~ s@\s+//.*$@@gm;
+
+  my @pairs = split (m/\(([^\)]+)\)/s, $key_table);
+  $key_table = undef;
+
+  foreach (@pairs) {
+    next unless (m/[^\s]/s);
+    my ($key, $val) = m/([\dA-F]+)\s*=\s*(.*)/i;
+    error ("$file: $section: unparsable key: $_") unless defined ($val);
+
+    # If we're only emitting URLs and dates, don't even bother
+    # saving the other fields that we aren't interested in.
+    #
+    $key_table{$key} = $val;
+#    print STDERR "$progname: $file: $section: key $key = \"$val\"\n"
+#      if ($verbose > 3);
+  }
+}
+
+
+##########################################################################
+# Output the vcards
+##########################################################################
+sub output_vcards {
+	# Encoding?
+	# Fold lines
+	my $results = shift;
+	my %map = (
+		FN			=> [' ',qw(FirstName LastName)],
+		N			=> [';',qw(LastName FirstName null null null)],
+		'ADR;TYPE=WORK'		=> [';',qw(null WorkAddress WorkAddress2 WorkCity WorkState WorkCountry WorkZipCode)],
+		'ADR;TYPE=HOME'		=> [';',qw(null HomeAddress HomeAddress2 HomeCity HomeState HomeCountry HomeZipCode)],
+	   	'TEL;TYPE=HOME;TYPE=VOICE'
+	   			 	=> [' ',qw(HomePhone)],
+	   	'TEL;TYPE=FAX'	 	=> [' ',qw(FaxNumber)],
+	   	'TEL;TYPE=WORK;TYPE=VOICE'
+	   			 	=> [' ',qw(WorkPhone)],
+	   	'TEL;TYPE=PAGER;TYPE=VOICE'
+	   				=> [' ',qw(PagerNumber)],
+	   	'EMAIL;TYPE=INTERNET;X-EVOLUTION-UI-SLOT=1'
+	   				=> [' ',qw(PrimaryEmail)],
+	   	'EMAIL;TYPE=INTERNET;X-EVOLUTION-UI-SLOT=2'
+	   				=> [' ',qw(SecondEmail)],
+	   	'NICKNAME'		=> [',',qw(NickName)],
+	   	'NOTE'			=> [' ',qw(Notes)],
+	   	'ORG'			=> [';',qw(Company Department)],
+	   	'TITLE'			=> [' ',qw(JobTitle)],
+	   	'URL'			=> [' '],
+	   	'X-AIM'			=> [' ',qw(_AimScreenName)],
+
+	);
+	foreach my $vcard (@$results) {
+		print "BEGIN:VCARD\n";
+		foreach my $key (keys %map) {
+			my @fields = @{$map{$key}};
+			my $data;
+			if ($key eq 'URL') {
+				$data = $vcard->{WebPage1}||$vcard->{WebPage2}||'';
+			} elsif ($key eq 'X-MOZILLA-HTML') {
+				$data = $vcard->{PreferMailFormat}==2 ? 'TRUE' : 'FALSE';
+			} else {
+				$data = join($fields[0],map {$vcard->{$_}||''} @fields[1..$#fields]);
+			}
+			next unless $key=~/^F?N$/ || $data=~/[^${fields[0]}]/;
+			$data="$key:$data";
+			$data=~s/(.{1,65})/$1\r\n /g;   ## Kept lines short so that there is some room for recoded characters
+			chop $data;
+			print $data;
+		}
+		print "END:VCARD\n";
+	}
+}
+
+
+
+##########################################################################
+# Escape results in preparation for vcards
+##########################################################################
+sub escape_results {
+	my $old_results = shift;
+	my @results = ();
+	foreach my $old_card (@$old_results) {
+		my %vcard = map {$_=>''} qw (
+			FirstName LastName WorkAddress WorkAddress2 WorkCity WorkState WorkCountry WorkZipCode
+			HomeAddress HomeAddress2 HomeCity HomeState HomeCountry HomeZipCode 
+			HomePhone FaxNumber WorkPhone PagerNumber PrimaryEmail SecondEmail
+			NickName Notes Company Department JobTitle URL _AimScreenName
+			PreferMailFormat WebPage1 WebPage2
+		);
+
+		foreach my $key (keys %vcard) {
+			my $val = $old_card->{$key};
+			next unless $val;
+			$val=~s/([,;\\])/\\$1/g;
+			$val=~s/\n/\\n/g;
+			$vcard{$key} = $val;
+		}
+		$vcard{null} = '';
+		push @results,\%vcard;
+	}
+	return \@results;
+}
+
+
+
+##########################################################################
+# Find default address book
+##########################################################################
+sub locate_default_abook {
+	my @files;
+	foreach my $path (ABOOK_PATHS) {
+		my $dir = glob($path);
+	use Data::Dumper; print Dumper($dir);	
+		next unless $dir;
+		error ("$path is not a directory. Please correct ABOOK_PATHS in the script '$progname'")
+			unless -d $dir;
+		$dir=~s/\/*\s*$//;
+print Dumper($dir);
+		push @files,(glob $dir.'/abook.mab');
+		push @files,(glob $dir.'/*/abook.mab');
+		push @files,(glob $dir.'/*/*/abook.mab');
+	}
+	return $files[0] if @files==1;
+	if (@files) {
+		my $errstr = "More than one address book found - please specify the correct one on the command line:\n";
+		foreach my $file (@files) {
+			$errstr.="  $file\n";
+		}
+		error($errstr);
+	}
+	my $errstr = "Couldn't find the default address book in : \n";
+	foreach my $path (ABOOK_PATHS) {
+		$errstr.="  $path\n";
+	}
+	$errstr.="Please specify the file to use on the command line";
+	error($errstr);
+}
+
+##########################################################################
+# Throw errors
+##########################################################################
+
+sub error {
+  ($_) = @_;
+  print STDERR '*'x60;
+  print STDERR "\n$progname: $_\n";
+  print STDERR '*'x60;
+  usage();
+  exit 1;
+}
+
+
+##########################################################################
+# Usage
+##########################################################################
+
+sub usage {
+	print STDERR <<USAGE
+
+	Usage : $progname [filename]
+	  
+	If you don't specify a filename, $progname tried to find the personal
+	address book 'abook.mab' in your home folder. Alternatively, you can 
+	specify the filename that $progname should parse.
+
+	vCards are printed to STDOUT, so can be redirected in the usual way:
+
+	  $progname > vcards_file_name
+	  $progname | recode UTF8..ISO-8859-15 > vcards_file_name
+
+USAGE
+
+}
+
+
+##########################################################################
+# Main
+##########################################################################
+
+  exit(usage()) if $ARGV[0]=~/^-/;
+  
+  # get file name
+  my $file = $ARGV[0] || locate_default_abook; 	
+
+  error("Couldn't read file '$file' - please check the correct path and correct") 
+	unless -s $file && -r _;
+
+  print STDERR "Using file : $file\n";      
+
+  # read mork file
+  my $results = mork_parse_file ($file);
+
+  # Escape results
+  $results = escape_results($results);
+
+  # output as vcards
+  output_vcards ($results);  
+
+exit 0;
+
