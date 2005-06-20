@@ -9,6 +9,9 @@ gtkpod V0.91-CVS
 	NEW FEATURE: sync-abook.sh and sync-webcalendar.sh scripts
 	provided by Daniel Kercher.
 
+	NEW FEATURE: sync-thunderbird.sh script	provided by Clinton
+	Gormley.
+
 	BUGFIX: display and reading of compilation flag fixed (thanks
 	to Julien Oster for the patch)
 
@@ -33,6 +36,9 @@ gtkpod V0.91-CVS
 
 	CHANGE: use 'iconv' instead of 'recode' in the provided export
 	scripts. Thanks to Alexey Dokuchaev.
+
+	UPDATE: French, Swedish, Italian, German and Japanese catologs
+	updated.
 
 gtkpod V0.88.2
 	IMPROVEMENT: Added '%p' (current playlist) identifier when

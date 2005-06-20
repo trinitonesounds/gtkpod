@@ -1560,7 +1560,7 @@ tm_get_selected_trackids(void)
 GList *
 tm_get_all_trackids(void)
 {
-    static gboolean
+    gboolean
 	on_all_trackids_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
 				      GtkTreeIter *i, gpointer data)
 	{

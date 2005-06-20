@@ -1114,7 +1114,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
                     (useful when quitting program) */
 void pm_remove_playlist (Playlist *playlist, gboolean select)
 {
-    static gboolean pm_delete_playlist_fe (GtkTreeModel *model,
+    gboolean pm_delete_playlist_fe (GtkTreeModel *model,
 					   GtkTreePath *path,
 					   GtkTreeIter *iter,
 					   gpointer data)
@@ -1127,7 +1127,7 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 		return TRUE;
 	    }
 	    return FALSE;
-	}
+	};
     GtkTreeModel *model;
     gboolean have_iter = FALSE;
     GtkTreeIter i;
@@ -1448,7 +1448,7 @@ GtkTreePath *pm_get_path (Playlist *pl)
     };
     GtkTreeModel *model;
     struct userdata userdata;
-    static gboolean pm_get_path_fe (GtkTreeModel *model,
+    gboolean pm_get_path_fe (GtkTreeModel *model,
 				    GtkTreePath *path,
 				    GtkTreeIter *iter,
 				    gpointer data)

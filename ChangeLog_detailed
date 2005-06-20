@@ -1,3 +1,14 @@
+2005-06-20 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* applied gcc4.0 patch provided by Mark Mitchell
+
+	* included updated Japanese catalog (thanks to Kentaro
+          Fukuchi)
+
+	* added sync-thunderbird.sh and mab2vcard scripts provided by
+	  Clinton Gormley.
+
+
 2005-06-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* finished code automatically export tracks from iPod to

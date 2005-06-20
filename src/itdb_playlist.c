@@ -567,7 +567,7 @@ static GList *randomize_glist (GList *list)
 /* Duplicate a GList */
 static GList *glist_duplicate (GList *list)
 {
-    static void gl_dup_fe (gpointer data, GList **dup)
+    void gl_dup_fe (gpointer data, GList **dup)
 	{
 	    *dup = g_list_append (*dup, data);
 	}
