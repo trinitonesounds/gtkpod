@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-16 22:47:26 jcs>
+/* Time-stamp: <2005-06-20 23:10:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -62,12 +62,12 @@
  * -jlt
  */
 
-gint determine_file_type(gchar *path)
+gint determine_file_type (gchar *path)
 {
 	gchar *path_utf8, *suf;
 	gint type = FILE_TYPE_UNKNOWN;
 	
-	if (!path) return FILE_TYPE_ERROR;
+	g_return_val_if_fail (path, type);
 	
     	path_utf8 = charset_to_utf8 (path);
 	suf = strrchr (path_utf8, '.');
@@ -143,7 +143,6 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	type = determine_file_type(plfile);
 	switch (type)
 	{
-	case FILE_TYPE_ERROR:
 	case FILE_TYPE_MP3:
 	case FILE_TYPE_M4A:
 	case FILE_TYPE_M4P:
@@ -804,37 +803,48 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     Track *track = NULL;
     Track *nti = NULL;
     gint len;
+    gchar *name_utf8 = NULL;
 
-    if (!name) return NULL;
+    g_return_val_if_fail (name, NULL);
 
     if (g_file_test (name, G_FILE_TEST_IS_DIR)) return NULL;
-    if (!g_file_test (name, G_FILE_TEST_EXISTS)) return NULL;
 
-    /* reset the auto detection charset (see explanation in charset.c */
+    name_utf8 = charset_to_utf8 (name);
+
+    if (!g_file_test (name, G_FILE_TEST_EXISTS))
+    {
+	gtkpod_warning (_("The following track could not be processed (file does not exist): '%s'\n"), name_utf8);
+	g_free (name_utf8);
+	return NULL;
+    }
+
+    /* reset the auto detection charset (see explanation in charset.c) */
     charset_reset_auto ();
 
     /* check for filetype */
     len = strlen (name);
     if (len < 4) return NULL;
 
-    switch (determine_file_type(name)) {
-	case FILE_TYPE_MP3:
-	    nti = mp3_get_file_info (name);
-	    break;
-	case FILE_TYPE_M4A:
-	case FILE_TYPE_M4P:
-	case FILE_TYPE_M4B:
-	    nti = mp4_get_file_info (name);
-	    break;
-	case FILE_TYPE_WAV:
-	    nti = wav_get_file_info (name);
-	    break;
-	case FILE_TYPE_UNKNOWN:
-	case FILE_TYPE_M3U:
-	case FILE_TYPE_PLS:
-	case FILE_TYPE_ERROR:
-	    nti = NULL;
-	    break;
+    switch (determine_file_type(name))
+    {
+    case FILE_TYPE_MP3:
+	nti = mp3_get_file_info (name);
+	break;
+    case FILE_TYPE_M4A:
+    case FILE_TYPE_M4P:
+    case FILE_TYPE_M4B:
+	nti = mp4_get_file_info (name);
+	break;
+    case FILE_TYPE_WAV:
+	nti = wav_get_file_info (name);
+	break;
+    case FILE_TYPE_UNKNOWN:
+	gtkpod_warning (_("The following track could not be processed (filetype unknown): '%s'\n"), name_utf8);
+	g_free (name_utf8);
+	return NULL;
+    case FILE_TYPE_M3U:
+    case FILE_TYPE_PLS:
+	break;
     }
 
     if (nti)
@@ -894,10 +904,15 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 
 	update_mserv_data_from_file (name, track);
     }
+    else
+    {
+	gtkpod_warning (_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
+    }	
 
     while (widgets_blocked && gtk_events_pending ())
 	gtk_main_iteration ();
 
+    g_free (name_utf8);
     return track;
 }
 
@@ -1772,7 +1787,6 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 	  case FILE_TYPE_M4P:
 	  case FILE_TYPE_M4B:
 	  case FILE_TYPE_UNKNOWN:
-	  case FILE_TYPE_ERROR:
 		  break;
   }
 
@@ -1928,7 +1942,6 @@ static gboolean file_write_info (gchar *name, Track *track)
 	    case FILE_TYPE_M3U:
 	    case FILE_TYPE_PLS:
 	    case FILE_TYPE_UNKNOWN:
-	    case FILE_TYPE_ERROR:
 		break;
 	}
     }
@@ -2401,28 +2414,32 @@ gboolean get_gain (Track *track)
     gchar *path = get_file_name_verified (track);
     gboolean result = FALSE;
 
-    switch (determine_file_type (path))
+    if (path)
     {
-    case FILE_TYPE_MP3: 
-	result = mp3_get_gain (path, track);
-	break;
-    case FILE_TYPE_M4A: /* FIXME */
-    case FILE_TYPE_M4P: /* FIXME */
-    case FILE_TYPE_M4B: /* FIXME */
-    case FILE_TYPE_WAV: /* FIXME */
-    case FILE_TYPE_UNKNOWN: 
-	gtkpod_warning (
-	    _("Normalization failed: file type not supported.\n"));
-	break;
-    case FILE_TYPE_ERROR: 
+	switch (determine_file_type (path))
+	{
+	case FILE_TYPE_MP3: 
+	    result = mp3_get_gain (path, track);
+	    break;
+	case FILE_TYPE_M4A: /* FIXME */
+	case FILE_TYPE_M4P: /* FIXME */
+	case FILE_TYPE_M4B: /* FIXME */
+	case FILE_TYPE_WAV: /* FIXME */
+	case FILE_TYPE_UNKNOWN: 
+	    gtkpod_warning (
+		_("Normalization failed: file type not supported.\n"));
+	    break;
+	case FILE_TYPE_M3U: 
+	case FILE_TYPE_PLS: 
+	    break;
+	}
+	g_free (path);
+    }
+    else
+    {
 	gtkpod_warning (
 	    _("Normalization failed: file not available.\n"));
-	break;
-    case FILE_TYPE_M3U: 
-    case FILE_TYPE_PLS: 
-	break;
     }
-    g_free (path);
     return result;
 }
 

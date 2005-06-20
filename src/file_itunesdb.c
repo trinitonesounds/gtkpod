@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:18 jcs>
+/* Time-stamp: <2005-06-20 22:43:46 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1592,8 +1592,8 @@ gboolean files_are_saved (void)
 	g_return_val_if_fail (itdb, !changed);
 	eitdb = itdb->userdata;
 	g_return_val_if_fail (eitdb, !changed);
-printf ("itdb: %p, changed: %d, imported: %d\n",
-	itdb, eitdb->data_changed, eitdb->itdb_imported);
+/* printf ("itdb: %p, changed: %d, imported: %d\n",
+   itdb, eitdb->data_changed, eitdb->itdb_imported);*/
 	changed |= eitdb->data_changed;
     }
     return !changed;

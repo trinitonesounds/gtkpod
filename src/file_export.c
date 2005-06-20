@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-18 23:57:38 jcs>
+/* Time-stamp: <2005-06-20 22:43:46 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -372,6 +372,8 @@ static void export_files_write (struct fcd *fcd)
 
     g_return_if_fail (fcd && fcd->fc);
 
+    block_widgets ();
+
     abort = FALSE;
     n = g_list_length (fcd->tracks);
     /* calculate total length to be copied */
@@ -465,6 +467,8 @@ static void export_files_write (struct fcd *fcd)
 	    }
 #else
 	    result &= write_track (fcd);
+	    while (widgets_blocked && gtk_events_pending ())
+		gtk_main_iteration ();
 #endif
 	    if (!result)
 	    {
@@ -505,6 +509,7 @@ static void export_files_write (struct fcd *fcd)
 	if (!result || abort)
 	    gtkpod_statusbar_message (_("Some tracks were not copied."));
     }
+    release_widgets ();
 }
 
 
@@ -713,7 +718,6 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
 
 	export_files_init (new_tracks, &filenames, TRUE,
 			   _("The following tracks have to be copied to your harddisk"));
-	printf ("finished export: filenames: %p\n", filenames);
 	/* add copied tracks to MPL of @itdb_d */
 	while (new_tracks && filenames)
 	{

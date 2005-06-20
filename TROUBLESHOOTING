@@ -25,6 +25,7 @@ Contents:
 
 - Calendar entries mixed up
 
+- m4a files created by faac cannot be added by gtkpod (gentoo)
 
 ----------------------------------------------------------------------
 
@@ -154,3 +155,11 @@ a trailing 'Z'). KOrganizer seems to do this. If you know how to work
 around it let me know.
 
 
+----------------------------------------------------------------------
+m4a files created by faac cannot be added by gtkpod (gentoo)
+
+There appear to be some versions of faac that do not create 'good' m4a
+files. The problem could be solved under gentoo by using version 1.24.
+In order to make error tracking easier, more detailled error messages
+are displayed when tracks could not be added for any reason starting
+with version 0.91-CVS of gtkpod.

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-18 00:08:51 jcs>
+/* Time-stamp: <2005-06-20 23:05:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -43,7 +43,6 @@
 typedef enum
 {
     FILE_TYPE_MISC = -2,
-    FILE_TYPE_ERROR = -1,
     FILE_TYPE_UNKNOWN = 0,
     FILE_TYPE_MP3,
     FILE_TYPE_M4A,

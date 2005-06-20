@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:14 jcs>
+/* Time-stamp: <2005-06-20 23:08:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -781,7 +781,6 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 			    pl_playlist, pl_pos, trackaddfunc, data);
 			added = TRUE;
 			break;
-		    case FILE_TYPE_ERROR:
 		    case FILE_TYPE_UNKNOWN:
 			break;
 		    }

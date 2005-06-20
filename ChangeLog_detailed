@@ -8,6 +8,15 @@
 	* added sync-thunderbird.sh and mab2vcard scripts provided by
 	  Clinton Gormley.
 
+	* repaired progress dialog display when exporting tracks from
+          the iPod.
+
+	* added more detailled error messages when files could not be
+          added / refreshed.
+
+	* updated de.po
+
+	* added faac entry to TROUBLESHOOTING
 
 2005-06-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
