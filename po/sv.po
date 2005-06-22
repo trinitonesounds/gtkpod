@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-06-22 22:56+0900\n"
-"PO-Revision-Date: 2005-06-22 22:57+0900\n"
+"PO-Revision-Date: 2005-06-22 17:56+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
-"X-Generator: KBabel 1.10\n"
+"X-Generator: KBabel 1.11\n"
 
 #: src/charset.c:53
 msgid "Arabic (IBM-864)"
@@ -225,10 +225,8 @@ msgstr "Systemets kodning"
 #. we are not the first instance of gtkpod -- the socket is
 #. already being used, so we pass
 #: src/clientserver.c:215
-msgid ""
-"Another instance of gtkpod was detected. Playcount server not started.\n"
-msgstr ""
-"En annan instans av gtkpod detekterades. Spelningsservern startades inte.\n"
+msgid "Another instance of gtkpod was detected. Playcount server not started.\n"
+msgstr "En annan instans av gtkpod detekterades. Spelningsservern startades inte.\n"
 
 #: src/confirmation.c:363
 msgid "Confirmation Dialogue"
@@ -575,8 +573,7 @@ msgstr "Filens namn på iPod"
 msgid ""
 "Volume adjust in dB (replay gain) -- you need to activate 'soundcheck' on "
 "the iPod"
-msgstr ""
-"Volymjustering i dB (spelningsnivå): Du måste aktivera 'ljudkontroll' på iPod"
+msgstr "Volymjustering i dB (spelningsnivå): Du måste aktivera 'ljudkontroll' på iPod"
 
 #: src/display_songs.c:139
 msgid ""
@@ -925,8 +922,7 @@ msgstr "Hoppar över '%s' eftersom det är en katalog.\n"
 #: src/file.c:242
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
-msgstr ""
-"Hoppar över '%s' för att undvika att spellistfiler läggs till rekursivt.\n"
+msgstr "Hoppar över '%s' för att undvika att spellistfiler läggs till rekursivt.\n"
 
 #: src/file.c:497
 #, c-format
@@ -954,15 +950,14 @@ msgid "Track (%s) not in mserv music root directory (%s)"
 msgstr "Spåret (%s) finns inte i mserv rotkatalog för musik (%s)"
 
 #: src/file.c:816
-#, fuzzy, c-format
-msgid ""
-"The following track could not be processed (file does not exist): '%s'\n"
-msgstr "Följande spår kunde inte uppdateras"
+#, c-format
+msgid "The following track could not be processed (file does not exist): '%s'\n"
+msgstr "Följande spår kunde inte behandlas (filen finns inte): '%s'\n"
 
 #: src/file.c:842
-#, fuzzy, c-format
+#, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
-msgstr "Följande spår kunde inte uppdateras"
+msgstr "Följande spår kunde inte behandlas (filtypen okänd): '%s'\n"
 
 #: src/file.c:909
 #, c-format
@@ -970,6 +965,8 @@ msgid ""
 "The following track could not be processed (filetype is known but analysis "
 "failed): '%s'\n"
 msgstr ""
+"Följande spår kunde inte behandlas (filtypen känd, men analys "
+"misslyckades): '%s'\n"
 
 #: src/file.c:935 src/file.c:977
 msgid "Nothing to update"
@@ -1114,8 +1111,7 @@ msgstr "Uppdatering av spår lyckades"
 #: src/file.c:1573
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
-msgid_plural ""
-"No mserv information could be retrieved for the following %d tracks"
+msgid_plural "No mserv information could be retrieved for the following %d tracks"
 msgstr[0] "Ingen information kunde hämtas från mserv för följande spår"
 msgstr[1] "Ingen information kunde hämtas från mserv för följande %d spår"
 
@@ -1262,9 +1258,8 @@ msgid "Select Export Destination Directory"
 msgstr "Välj målkatalog för export"
 
 #: src/file_export.c:720
-#, fuzzy
 msgid "The following tracks have to be copied to your harddisk"
-msgstr "Följande spår har uppdaterats"
+msgstr "Följande spår måste kopieras till din hårddisk"
 
 #: src/file_export.c:765
 msgid ""
@@ -1272,6 +1267,9 @@ msgid ""
 "included in the current drag and drop operation.\n"
 "\n"
 msgstr ""
+"Vissa spår kopierades inte till din hårddisk. Bara de kopierade spåren kommer "
+"att ingå i den nuvarande drag och släpp åtgärden.\n"
+"\n"
 
 #: src/file_export.c:962
 #, c-format
@@ -1704,8 +1702,7 @@ msgstr ""
 #: src/itdb_itunesdb.c:1041 src/itdb_itunesdb.c:1700 src/itdb_itunesdb.c:1735
 #, c-format
 msgid "iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."
-msgstr ""
-"iTunes databas skadad: Datalängd 0 för data på position %ld i filen '%s'."
+msgstr "iTunes databas skadad: Datalängd 0 för data på position %ld i filen '%s'."
 
 #: src/itdb_itunesdb.c:1135
 msgid "Master-PL"
@@ -1737,8 +1734,7 @@ msgstr "OTG-spellistefil ('%s'): Huvudlängd mindre än väntat (%d < 20)"
 
 #: src/itdb_itunesdb.c:1504
 #, c-format
-msgid ""
-"OTG playlist file file ('%s'): entry length smaller than expected (%d<4)."
+msgid "OTG playlist file file ('%s'): entry length smaller than expected (%d<4)."
 msgstr "OTG-spellistefil ('%s'): Postlängd mindre än väntat (%d < 4)"
 
 #: src/itdb_itunesdb.c:1563
@@ -1763,8 +1759,7 @@ msgstr ""
 #: src/itdb_itunesdb.c:1654
 #, c-format
 msgid "iTunesDB '%s' corrupt: already found two playlist mhsds -- giving up."
-msgstr ""
-"iTunes databas '%s' skadad: Två mhsd för spellistor redan hittade. Ger upp."
+msgstr "iTunes databas '%s' skadad: Två mhsd för spellistor redan hittade. Ger upp."
 
 #. this should not be -- issue warning
 #: src/itdb_itunesdb.c:1715
@@ -1947,8 +1942,7 @@ msgstr ""
 
 #: src/misc.c:98
 msgid "Ramesh Dharan: Multi-Edit (edit tags of several tracks in one run)\n"
-msgstr ""
-"Ramesh Dharan: Redigera flera (redigera taggar för flera spår på en gång)\n"
+msgstr "Ramesh Dharan: Redigera flera (redigera taggar för flera spår på en gång)\n"
 
 #: src/misc.c:100
 msgid "Hiroshi Kawashima: Japanese charset autodetecion feature\n"
@@ -2007,8 +2001,7 @@ msgid "Yaroslav Halchenko: Orphaned and dangling tracks handling\n"
 msgstr "Yaroslav Halchenko: hantering av övergivna filer och saknade spår\n"
 
 #: src/misc.c:120
-msgid ""
-"Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"
+msgid "Andrew Huntwork: Filename case sensitivity fix and various other bugfixes\n"
 msgstr ""
 "Andrew Huntwork: rättning av skiftlägeskänsliga filnamn och diverse andra "
 "felrättningar\n"
@@ -2056,13 +2049,11 @@ msgstr "Flavio Stanchina: felrättningar\n"
 msgid ""
 "Chris Micacchi: when sorting ignore 'the' and similar at the beginning of "
 "the title\n"
-msgstr ""
-"Chris Micacchi: ignorera 'the' och liknande i titelns början vid sortering\n"
+msgstr "Chris Micacchi: ignorera 'the' och liknande i titelns början vid sortering\n"
 
 #: src/misc.c:138
 msgid "Steve Jay: use statvfs() instead of df (better portability, faster)\n"
-msgstr ""
-"Steve Jay: använd statvfs() istället för df (bättre flyttbarhet, snabbare)\n"
+msgstr "Steve Jay: använd statvfs() istället för df (bättre flyttbarhet, snabbare)\n"
 
 #: src/misc.c:141
 msgid ""
@@ -2082,11 +2073,11 @@ msgstr ""
 
 #: src/misc.c:147
 msgid "Daniel Kercher: sync scripts for abook and webcalendar\n"
-msgstr ""
+msgstr "Daniel Kercher: synkroniseringsskript för abook och webbkalender\n"
 
 #: src/misc.c:150
 msgid "Clinton Gormley: sync scripts for thunderbird\n"
-msgstr ""
+msgstr "Clinton Gormley: synkroniseringsskript för thunderbird\n"
 
 #: src/misc.c:153
 msgid ""
@@ -2125,15 +2116,13 @@ msgstr ""
 "mp3info/)\n"
 
 #: src/misc.c:165
-msgid ""
-"    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
+msgid "    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
 msgstr ""
 "    xmms:     katalogbläddring, detektering av MP3-spelningslängd  (http://"
 "www.xmms.org)\n"
 
 #: src/misc.c:168
-msgid ""
-"The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
+msgid "The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
 msgstr ""
 "Det grafiska gränssnittet skapades med hjälp av glade-2 (http://glade.gnome."
 "org/).\n"
@@ -2144,8 +2133,7 @@ msgstr "Franska:   David Le Brun (david snabela dyn-ns punkt net)\n"
 
 #: src/misc.c:185
 msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
-msgstr ""
-"Tyska:   Jorg Schuler (jcsjcs snabela users punkt sourceforge punkt net)\n"
+msgstr "Tyska:   Jorg Schuler (jcsjcs snabela users punkt sourceforge punkt net)\n"
 
 #: src/misc.c:187
 msgid ""
@@ -2229,15 +2217,12 @@ msgstr[1] "Ta bort spår helt från iPod?"
 
 #: src/misc_confirm.c:138 src/misc_confirm.c:178
 #, c-format
-msgid ""
-"Are you sure you want to remove the following track from the playlist \"%s\"?"
+msgid "Are you sure you want to remove the following track from the playlist \"%s\"?"
 msgid_plural ""
 "Are you sure you want to remove the following tracks from the playlist \"%s"
 "\"?"
-msgstr[0] ""
-"Är du säker på att du vill ta bort följande spår från spellistan \"%s\"?"
-msgstr[1] ""
-"Är du säker på att du vill ta bort följande spår från spellistan \"%s\"?"
+msgstr[0] "Är du säker på att du vill ta bort följande spår från spellistan \"%s\"?"
+msgstr[1] "Är du säker på att du vill ta bort följande spår från spellistan \"%s\"?"
 
 #: src/misc_confirm.c:142 src/misc_confirm.c:182
 msgid "Remove Track From Playlist?"
@@ -2706,8 +2691,7 @@ msgstr[1] "Följande %d duplicerade spår har tagits bort."
 
 #: src/misc_track.c:208
 #, c-format
-msgid ""
-"The following duplicate track has not been added to the master play list."
+msgid "The following duplicate track has not been added to the master play list."
 msgid_plural ""
 "The following %d duplicate tracks have not been added to the master play "
 "list."
@@ -2925,8 +2909,7 @@ msgstr "Kan inte öppna '%s' för skrivning\n"
 
 #: src/prefs.c:1554
 #, c-format
-msgid ""
-" Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
+msgid " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " Inställningar: Kategorinummer (%d<%d?) eller sorteringsfliknummer (%d<%d?) "
 "är utanför giltigt intervall.\n"
@@ -3047,8 +3030,7 @@ msgstr[1] "Normaliserade %d av %d spår."
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
-msgstr ""
-"Ange kommandot som ska anropas under 'Verktyg' i inställningsdialogrutan.\n"
+msgstr "Ange kommandot som ska anropas under 'Verktyg' i inställningsdialogrutan.\n"
 
 #: src/tools.c:425
 #, c-format
@@ -3431,8 +3413,7 @@ msgid " iPod Mount _Point:"
 msgstr " iPod monterings_punkt:"
 
 #: gtkpod.glade:1868
-msgid ""
-"Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar."
+msgid "Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar."
 msgstr ""
 "Platsen du monterade iPod-filsystemet. Oftast '/mnt/ipod' eller något "
 "liknande."
@@ -3517,8 +3498,7 @@ msgid "Don't allow file duplication"
 msgstr "Tillåt inte duplicerade filer"
 
 #: gtkpod.glade:2132
-msgid ""
-"Display the list of duplicates that have been detected after adding files."
+msgid "Display the list of duplicates that have been detected after adding files."
 msgstr "Visa listan med upptäckta duplikat efter filer har lagts till."
 
 #: gtkpod.glade:2134 gtkpod.glade:11530
@@ -3833,8 +3813,7 @@ msgstr "_Visa"
 msgid ""
 "The tags are written to the files on your harddrive and on the ipod (if "
 "available)."
-msgstr ""
-"Taggarna skrivs till filer på din hårddisk och på iPod (om tillgänglig)."
+msgstr "Taggarna skrivs till filer på din hårddisk och på iPod (om tillgänglig)."
 
 #: gtkpod.glade:4538 gtkpod.glade:14271
 msgid "Write ID3 tags to disk when modified in gtkpod"
@@ -3929,8 +3908,7 @@ msgstr " Antal spår i skapade spellistor: "
 
 #: gtkpod.glade:4794 gtkpod.glade:14588
 msgid "Also include tracks never played in \"Best Rated\" playlist"
-msgstr ""
-"Inkludera också spår som aldrig spelats i spellistan \"med bäst betyg\""
+msgstr "Inkludera också spår som aldrig spelats i spellistan \"med bäst betyg\""
 
 #: gtkpod.glade:4816
 msgid "Auto-Generated Playlists"
@@ -4739,3 +4717,4 @@ msgstr "Synkroniseringskommando för kalender:"
 #: gtkpod.glade:15395
 msgid "Notes sync command:"
 msgstr "Synkroniseringskommando för anteckningar:"
+
