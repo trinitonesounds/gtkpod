@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-20 23:21+0900\n"
-"PO-Revision-Date: 2005-06-20 23:25+0900\n"
+"POT-Creation-Date: 2005-06-22 22:56+0900\n"
+"PO-Revision-Date: 2005-06-22 22:57+0900\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -283,14 +283,12 @@ msgid "Delete From iPod"
 msgstr "Ta bort från iPod"
 
 #: src/context_menus.c:350
-#, fuzzy
 msgid "Delete From Harddisk"
-msgstr "Ta bort från spellista"
+msgstr "Ta bort från hårddisk"
 
 #: src/context_menus.c:355
-#, fuzzy
 msgid "Delete From Database"
-msgstr "Ta bort från spellista"
+msgstr "Ta bort från databas"
 
 #: src/context_menus.c:360
 msgid "Delete From Playlist"
@@ -301,27 +299,24 @@ msgid "Delete Including Tracks"
 msgstr "Ta bort inklusive spår"
 
 #: src/context_menus.c:374
-#, fuzzy
 msgid "Delete Including Tracks (Harddisk)"
-msgstr "Ta bort inklusive spår"
+msgstr "Ta bort inklusive spår (hårddisk)"
 
 #: src/context_menus.c:379
-#, fuzzy
 msgid "Delete Including Tracks (Database)"
-msgstr "Ta bort inklusive spår"
+msgstr "Ta bort inklusive spår (databas)"
 
 #: src/context_menus.c:384
 msgid "Delete But Keep Tracks"
 msgstr "Ta bort men behåll spår"
 
 #: src/context_menus.c:389
-#, fuzzy
 msgid "Remove All Tracks from iPod"
-msgstr "Kopiera s_pår från iPod"
+msgstr "Ta bort alla spår från iPod"
 
 #: src/context_menus.c:394
 msgid "Remove All Tracks from Database"
-msgstr ""
+msgstr "Ta bort alla spår från databasen"
 
 #: src/date_parser.l:269
 #, c-format
@@ -330,7 +325,7 @@ msgstr "Fel i datumformat: tecknet känns inte igen: '%s'\n"
 
 #: src/display.c:876
 msgid "Currently no iPod database selected"
-msgstr ""
+msgstr "För närvarande är ingen iPod-databas markerad"
 
 #: src/display.c:904 src/display.c:931
 msgid "Update selected entry of which sort tab?"
@@ -393,7 +388,7 @@ msgstr[1] "Kopierade %d spår"
 
 #: src/display_playlists.c:824
 msgid "Can't reorder sorted treeview."
-msgstr ""
+msgstr "Kan inte ordna om sorterad trädvy."
 
 #: src/display_playlists.c:915
 #, c-format
@@ -475,7 +470,6 @@ msgid "Rating"
 msgstr "Betyg"
 
 #: src/display_songs.c:98
-#, fuzzy
 msgid "Date played"
 msgstr "Senast spelad"
 
@@ -552,14 +546,12 @@ msgid "Star rating from 0 to 5"
 msgstr "Betyg med stjärnor från 0 till 5"
 
 #: src/display_songs.c:129
-#, fuzzy
 msgid "Date and time track has last been played"
-msgstr "Tiden spåret har spelats"
+msgstr "Datum och tid då spåret senast spelades"
 
 #: src/display_songs.c:130
-#, fuzzy
 msgid "Date and time track has last been modified"
-msgstr "Tiden då spåret senast ändrades"
+msgstr "Datum och tid då spåret senast ändrades"
 
 #. 15
 #: src/display_songs.c:131
@@ -571,9 +563,8 @@ msgid "CD Nr. and total number of CDS in set"
 msgstr "Cd-nummer och totalt antal cd i albumet"
 
 #: src/display_songs.c:134
-#, fuzzy
 msgid "Date and time track has been added"
-msgstr "Tidsspår har lagts till"
+msgstr "Datum och tid då spåret lades till"
 
 #: src/display_songs.c:135
 msgid "Name of file on the iPod"
@@ -603,9 +594,8 @@ msgstr[0] "Flyttade ett spår"
 msgstr[1] "Flyttade %d spår"
 
 #: src/display_songs.c:1185
-#, fuzzy
 msgid "Local Database"
-msgstr "iPod-databas sparad"
+msgstr "Lokal databas"
 
 #: src/display_songs.c:1828
 #, c-format
@@ -930,12 +920,13 @@ msgstr ""
 #: src/file.c:237
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
-msgstr ""
+msgstr "Hoppar över '%s' eftersom det är en katalog.\n"
 
 #: src/file.c:242
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr ""
+"Hoppar över '%s' för att undvika att spellistfiler läggs till rekursivt.\n"
 
 #: src/file.c:497
 #, c-format
@@ -1071,12 +1062,17 @@ msgid ""
 "database:\n"
 "\n"
 msgstr ""
+"Det (tidigare) innehållet i följande kataloger kommer att tas bort från "
+"databasen:\n"
+"\n"
 
 #: src/file.c:1394
 msgid ""
 "The following directories will be synchronized:\n"
 "\n"
 msgstr ""
+"Följande kataloger kommer att synkroniseras:\n"
+"\n"
 
 #. gint id,
 #. gboolean modal,
@@ -1200,12 +1196,12 @@ msgstr "Fel när %s skulle skapas: %s\n"
 #: src/file_export.c:204
 #, c-format
 msgid "Skipping existing file with same length: '%s'\n"
-msgstr ""
+msgstr "Hoppar över befintlig fil med samma längd: '%s'\n"
 
 #: src/file_export.c:212
-#, fuzzy, c-format
+#, c-format
 msgid "Overwriting existing file: '%s'\n"
-msgstr "FEL när tagg skulle skrivas till filen: '%s' (%s).\n"
+msgstr "Skriver över befintlig fil: '%s'\n"
 
 #: src/file_export.c:229
 #, c-format
@@ -1223,9 +1219,9 @@ msgid "Unable to open '%s' for reading\n"
 msgstr "Kan inte öppna '%s' för läsning.\n"
 
 #: src/file_export.c:330
-#, fuzzy, c-format
+#, c-format
 msgid "Could find file for '%s' on the iPod\n"
-msgstr "Filens namn på iPod"
+msgstr "Kunde hitta fil för '%s' på iPod\n"
 
 #. create the dialog window
 #: src/file_export.c:397 src/file_itunesdb.c:990 src/tools.c:148
@@ -1372,14 +1368,12 @@ msgstr ""
 "du har spår som inte överförts, går de förlorade.\n"
 
 #: src/file_itunesdb.c:447
-#, fuzzy
 msgid "Offline iPod database successfully imported"
 msgstr "Nerkopplad iPod-databas importerad med lyckat resultat"
 
 #: src/file_itunesdb.c:450
-#, fuzzy
 msgid "Local database successfully imported"
-msgstr "iPod-databasen importerad med lyckat resultat"
+msgstr "Lokal databas importerad med lyckat resultat"
 
 #: src/file_itunesdb.c:458
 #, c-format
@@ -1391,12 +1385,12 @@ msgstr ""
 "\n"
 
 #: src/file_itunesdb.c:462
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Local database import failed: '%s'\n"
 "\n"
 msgstr ""
-"Import av iPod-databasen misslyckades: '%s'\n"
+"Import av lokal databas misslyckades: '%s'\n"
 "\n"
 
 #: src/file_itunesdb.c:469
@@ -1408,12 +1402,11 @@ msgstr ""
 "\n"
 
 #: src/file_itunesdb.c:472
-#, fuzzy
 msgid ""
 "Local database import failed: \n"
 "\n"
 msgstr ""
-"Import av nerkopplad iPod-databas misslyckades: \n"
+"Import av lokal databas misslyckades: \n"
 "\n"
 
 #: src/file_itunesdb.c:479 src/file_itunesdb.c:527
@@ -1487,7 +1480,7 @@ msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Vissa spår skrevs inte till iPod. Export avbruten."
 
 #: src/file_itunesdb.c:1315
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
 "incorrect and will result in the loss of the existing database.\n"
@@ -1499,9 +1492,9 @@ msgstr ""
 "Du importerade inte befintlig iTunes databas ('%s'). Det är troligtvis "
 "felaktigt och orsakar förlust av den befintliga databasen.\n"
 "\n"
-"Klicka på 'Ok' om du vill fortsätta ändå eller 'Avbryt' för att avbryta. Om "
-"du avbryter, kan du importera befintlig databas innan du använder den här "
-"funktionen igen.\n"
+"Klicka på 'Ok' om du vill fortsätta ändå eller 'Avbryt' för att avbryta "
+"lagringen. Om du avbryter, kan du importera befintlig databas innan du "
+"använder den här funktionen igen.\n"
 
 #: src/file_itunesdb.c:1345
 msgid ""
@@ -1533,25 +1526,22 @@ msgid "Syncing contacts, calendar and notes..."
 msgstr "Synkroniserar kontakter, kalender och anteckningar..."
 
 #: src/fileselection.c:123
-#, fuzzy
 msgid "Successfully added files"
 msgstr "Filer tillagda med lyckat resultat"
 
 #: src/fileselection.c:125
 msgid "Some files were not added successfully"
-msgstr ""
+msgstr "Vissa filer kunde inte läggas till med lyckat resultat"
 
 #. Create the file chooser, and handle the response
 #: src/fileselection.c:148
-#, fuzzy
 msgid "Add Files"
-msgstr "Lägg till _filer"
+msgstr "Lägg till filer"
 
 #. Create the file chooser, and handle the response
 #: src/fileselection.c:227
-#, fuzzy
 msgid "Add Playlists"
-msgstr "Lägg till _spellista"
+msgstr "Lägg till spellistor"
 
 #: src/fileselection.c:438
 msgid "Select directory to add recursively"
@@ -1633,7 +1623,7 @@ msgid "offline"
 msgstr "nerkopplad"
 
 #: src/info.c:469
-#, fuzzy, c-format
+#, c-format
 msgid " P:%d T:%d/%d"
 msgstr " L:%d S:%d/%d"
 
@@ -1815,7 +1805,7 @@ msgstr "Databas i minnet skadad (spårlistepekare == NULL). Avbryter export."
 #: src/itdb_itunesdb.c:2671
 #, c-format
 msgid "Opening of '%s' for writing failed."
-msgstr "Fel när '%s' skulle öppnas för skriving."
+msgstr "Fel när '%s' skulle öppnas för skrivning."
 
 #: src/itdb_itunesdb.c:2682
 #, c-format
@@ -1851,7 +1841,7 @@ msgstr "Fel när '%s' skulle öppnas för läsning (%s)."
 #: src/itdb_itunesdb.c:3441
 #, c-format
 msgid "Error opening '%s' for writing (%s)."
-msgstr "Fel när '%s' skulle öppnas för skriving (%s)."
+msgstr "Fel när '%s' skulle öppnas för skrivning (%s)."
 
 #: src/itdb_itunesdb.c:3458
 #, c-format
@@ -2079,12 +2069,16 @@ msgid ""
 "Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 "
 "tags\n"
 msgstr ""
+"Christoph Kunz: hantering av kompatibilitetsfrågor när MP3-taggar av typ "
+"id3v2.4 skrivs\n"
 
 #: src/misc.c:144
 msgid ""
 "James Ligget: replacement of old GTK file selection dialogs with new GTK "
 "filechooser dialogs\n"
 msgstr ""
+"James Ligget: ersättning av gamla GTK dialogrutor för filmarkering med nya "
+"GTK dialogrutor för filval\n"
 
 #: src/misc.c:147
 msgid "Daniel Kercher: sync scripts for abook and webcalendar\n"
@@ -2183,12 +2177,12 @@ msgstr "Kunde inte ta bort säkerhetskopieringsfil: \"%s\"\n"
 #: src/misc.c:550
 #, c-format
 msgid "Unmounting of '%s' (%s) unsuccessful."
-msgstr ""
+msgstr "Avmontering av '%s' (%s) misslyckades."
 
 #: src/misc.c:554
 #, c-format
 msgid "Unmounting of '%s' unsuccessful."
-msgstr ""
+msgstr "Avmontering av '%s' misslyckades."
 
 #: src/misc.c:1139
 #, c-format
@@ -2212,7 +2206,6 @@ msgid "The following has occured:"
 msgstr "Följande har inträffat:"
 
 #: src/misc_confirm.c:124
-#, fuzzy
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "iPod? The number of playlists this track is a member of is indicated in "
@@ -2229,14 +2222,13 @@ msgstr[1] ""
 "spellistor som spåret finns i anges inom parentes."
 
 #: src/misc_confirm.c:128
-#, fuzzy
 msgid "Delete Track Completely from iPod?"
 msgid_plural "Delete Tracks Completey from iPod?"
-msgstr[0] "Tog bort ett spår helt från iPod"
-msgstr[1] "Tog bort %d spår helt från iPod"
+msgstr[0] "Ta bort spår helt från iPod?"
+msgstr[1] "Ta bort spår helt från iPod?"
 
 #: src/misc_confirm.c:138 src/misc_confirm.c:178
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Are you sure you want to remove the following track from the playlist \"%s\"?"
 msgid_plural ""
@@ -2248,14 +2240,12 @@ msgstr[1] ""
 "Är du säker på att du vill ta bort följande spår från spellistan \"%s\"?"
 
 #: src/misc_confirm.c:142 src/misc_confirm.c:182
-#, fuzzy
 msgid "Remove Track From Playlist?"
 msgid_plural "Remove Tracks From Playlist?"
 msgstr[0] "Ta bort spår från spellista?"
 msgstr[1] "Ta bort spår från spellista?"
 
 #: src/misc_confirm.c:164
-#, fuzzy
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "harddisk? The number of playlists this track is a member of is indicated in "
@@ -2265,21 +2255,19 @@ msgid_plural ""
 "harddisk? The number of playlists the tracks are member of is indicated in "
 "parentheses."
 msgstr[0] ""
-"Är du säker på att du vill ta bort följande spår helt från iPod? Antal "
+"Är du säker på att du vill ta bort följande spår helt från hårddisken? Antal "
 "spellistor som spåret finns i anges inom parentes."
 msgstr[1] ""
-"Är du säker på att du vill ta bort följande spår helt från iPod? Antal "
+"Är du säker på att du vill ta bort följande spår helt från hårddisken? Antal "
 "spellistor som spåret finns i anges inom parentes."
 
 #: src/misc_confirm.c:168
-#, fuzzy
 msgid "Delete Track from Harddisk?"
 msgid_plural "Delete Tracks from Harddisk?"
-msgstr[0] "Ta bort spår från spellista?"
-msgstr[1] "Ta bort spår från spellista?"
+msgstr[0] "Ta bort spår från hårddisk?"
+msgstr[1] "Ta bort spår från hårddisk?"
 
 #: src/misc_confirm.c:192
-#, fuzzy
 msgid ""
 "Are you sure you want to remove the following track completely from your "
 "local database? The number of playlists this track is a member of is "
@@ -2289,17 +2277,17 @@ msgid_plural ""
 "local database? The number of playlists the tracks are member of is "
 "indicated in parentheses."
 msgstr[0] ""
-"Är du säker på att du vill ta bort följande spår helt från iPod? Antal "
-"spellistor som spåret finns i anges inom parentes."
+"Är du säker på att du vill ta bort följande spår helt från den lokala "
+"databasen? Antal spellistor som spåret finns i anges inom parentes."
 msgstr[1] ""
-"Är du säker på att du vill ta bort följande spår helt från iPod? Antal "
-"spellistor som spåret finns i anges inom parentes."
+"Är du säker på att du vill ta bort följande spår helt från den lokala "
+"databasen? Antal spellistor som spåret finns i anges inom parentes."
 
 #: src/misc_confirm.c:196
 msgid "Remove Track from Local Database?"
 msgid_plural "Remove Tracks from Local Database?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ta bort spår från lokal databas?"
+msgstr[1] "Ta bort spår från lokal databas?"
 
 #: src/misc_confirm.c:259
 #, c-format
@@ -2309,25 +2297,25 @@ msgstr[0] "Tog bort ett spår helt från iPod"
 msgstr[1] "Tog bort %d spår helt från iPod"
 
 #: src/misc_confirm.c:265 src/misc_confirm.c:289
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted %d track from playlist '%s'"
 msgid_plural "Deleted %d tracks from playlist '%s'"
-msgstr[0] "Tog bort spår från spellistan '%s'"
-msgstr[1] "Tog bort spår från spellistan '%s'"
+msgstr[0] "Tog bort %d spår från spellistan '%s'"
+msgstr[1] "Tog bort %d spår från spellistan '%s'"
 
 #: src/misc_confirm.c:283
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted one track from harddisk"
 msgid_plural "Deleted %d tracks from harddisk"
-msgstr[0] "Tog bort spår från spellistan '%s'"
-msgstr[1] "Tog bort spår från spellistan '%s'"
+msgstr[0] "Tog bort ett spår från hårddisken"
+msgstr[1] "Tog bort %d spår från hårddisken"
 
 #: src/misc_confirm.c:295
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted track from local database"
 msgid_plural "Deleted %d tracks from local database"
-msgstr[0] "Tog bort spår från spellistan '%s'"
-msgstr[1] "Tog bort spår från spellistan '%s'"
+msgstr[0] "Tog bort spår från den lokala databasen"
+msgstr[1] "Tog bort %d spår från den lokala databasen"
 
 #. no playlist??? Cannot happen, but...
 #. no playlist selected
@@ -2351,9 +2339,9 @@ msgid "Cannot remove entry 'All'"
 msgstr "Kan inte ta bort raden 'Alla'"
 
 #: src/misc_confirm.c:541
-#, fuzzy, c-format
+#, c-format
 msgid "Removed all %d tracks from the iPod"
-msgstr "Innan spellistor eller spår tas bort från en iPod "
+msgstr "Tog bort alla %d spår från iPod"
 
 #: src/misc_confirm.c:549 src/misc_confirm.c:619
 #, c-format
@@ -2368,22 +2356,20 @@ msgid "Deleted playlist '%s'"
 msgstr "Tog bort spellistan '%s'"
 
 #: src/misc_confirm.c:596
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted playlist '%s' including %d member track on harddisk"
 msgid_plural "Deleted playlist '%s' including %d member tracks on harddisk"
-msgstr[0] "Tog bort spellistan '%s' inklusive %d ingående spår"
-msgstr[1] "Tog bort spellistan '%s' inklusive %d ingående spår"
+msgstr[0] "Tog bort spellistan '%s' inklusive %d ingående spår från hårddisken"
+msgstr[1] "Tog bort spellistan '%s' inklusive %d ingående spår från hårddisken"
 
 #: src/misc_confirm.c:611
 #, c-format
 msgid "Removed all %d tracks from the database"
-msgstr ""
+msgstr "Tog bort alla %d spår från databasen"
 
 #: src/misc_confirm.c:686
-#, fuzzy
 msgid "Are you sure you want to remove all tracks from your iPod?"
-msgstr ""
-"Är du säker på att du vill ta bort följande spår från spellistan \"%s\"?"
+msgstr "Är du säker på att du vill ta bort alla spår från iPod?"
 
 #: src/misc_confirm.c:694
 #, c-format
@@ -2408,7 +2394,7 @@ msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "Är du säker på att du vill ta bort spellistan '%s'?"
 
 #: src/misc_confirm.c:731
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and remove the following track "
 "from your harddisk? The number of playlists this track is a member of is "
@@ -2419,19 +2405,17 @@ msgid_plural ""
 "is indicated in parentheses."
 msgstr[0] ""
 "Är du säker på att du vill ta bort spellistan '%s' och följande spår helt "
-"från iPod? Antal spellistor som spåret finns i anges inom parentes."
+"från hårddisken? Antal spellistor som spåret finns i anges inom parentes."
 msgstr[1] ""
 "Är du säker på att du vill ta bort spellistan '%s' och följande spår helt "
-"från iPod? Antal spellistor som spåren finns i anges inom parentes."
+"från hårddisken? Antal spellistor som spåren finns i anges inom parentes."
 
 #: src/misc_confirm.c:739
-#, fuzzy
 msgid "Are you sure you want to remove all tracks from the database?"
-msgstr ""
-"Är du säker på att du vill ta bort följande spår från spellistan \"%s\"?"
+msgstr "Är du säker på att du vill ta bort alla spår från databasen?"
 
 #: src/misc_confirm.c:748
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and remove the following track "
 "from the database? The number of playlists this track is a member of is "
@@ -2442,15 +2426,15 @@ msgid_plural ""
 "is indicated in parentheses."
 msgstr[0] ""
 "Är du säker på att du vill ta bort spellistan '%s' och följande spår helt "
-"från iPod? Antal spellistor som spåret finns i anges inom parentes."
+"från databasen? Antal spellistor som spåret finns i anges inom parentes."
 msgstr[1] ""
 "Är du säker på att du vill ta bort spellistan '%s' och följande spår helt "
-"från iPod? Antal spellistor som spåren finns i anges inom parentes."
+"från databasen? Antal spellistor som spåren finns i anges inom parentes."
 
 #: src/misc_confirm.c:919
-#, fuzzy, c-format
+#, c-format
 msgid "Problem creating iPod directory: '%s'."
-msgstr "Problem att skapa iPod-kataloger i '%s'."
+msgstr "Problem att skapa iPod-katalog: '%s'."
 
 #: src/misc_confirm.c:921
 #, c-format
@@ -3686,7 +3670,7 @@ msgstr "Användarnamn att använda vid uppslagning i mserv databasen."
 
 #: gtkpod.glade:2987 gtkpod.glade:12593
 msgid "Show information about problems when accessing mserv"
-msgstr "Visa information om problem vid använding av mserv"
+msgstr "Visa information om problem vid användning av mserv"
 
 #: gtkpod.glade:3030
 msgid "mserv"
@@ -4306,7 +4290,7 @@ msgstr "Filstorlek (inte överförda)"
 
 #: gtkpod.glade:9401
 msgid "Effective free space"
-msgstr ""
+msgstr "Verkligt ledigt utrymme"
 
 #: gtkpod.glade:9427
 msgid ""
@@ -4657,19 +4641,16 @@ msgid "<b>Tooltips</b>"
 msgstr "<b>Verktygstips</b>"
 
 #: gtkpod.glade:13749
-#, fuzzy
 msgid "<b>Toolbar</b>"
-msgstr "<b>Verktygstips</b>"
+msgstr "<b>Verktygsrad</b>"
 
 #: gtkpod.glade:13959
-#, fuzzy
 msgid "<b>Misc</b>"
-msgstr "<b>Synkronisera</b>"
+msgstr "<b>Diverse</b>"
 
 #: gtkpod.glade:14121
-#, fuzzy
 msgid "Advanced Sorting Options"
-msgstr "Sorteringsalternativ"
+msgstr "Avancerade sorteringsalternativ"
 
 #: gtkpod.glade:14184
 msgid "Display"
@@ -4704,19 +4685,16 @@ msgid "<b>Delete Confirmation</b>"
 msgstr "<b>Bekräfta borttagning</b>"
 
 #: gtkpod.glade:14709
-#, fuzzy
 msgid "Before removing tracks from the iPod"
-msgstr "Innan spår tas bort helt från iPod"
+msgstr "Innan spår tas bort från iPod"
 
 #: gtkpod.glade:14729
-#, fuzzy
 msgid "Before removing tracks from the harddisk"
-msgstr "Innan spår tas bort helt från iPod"
+msgstr "Innan spår tas bort från hårddisken"
 
 #: gtkpod.glade:14749
-#, fuzzy
 msgid "Before removing tracks from the local database"
-msgstr "Innan spår tas bort helt från iPod"
+msgstr "Innan spår tas bort från den lokala databasen"
 
 #: gtkpod.glade:14769
 msgid ""
@@ -4761,47 +4739,3 @@ msgstr "Synkroniseringskommando för kalender:"
 #: gtkpod.glade:15395
 msgid "Notes sync command:"
 msgstr "Synkroniseringskommando för anteckningar:"
-
-#~ msgid "Delete selected entry of which sort tab?"
-#~ msgstr "Ta bort markerad rad för vilken sorts flik?"
-
-#~ msgid "Time played"
-#~ msgstr "Spelningstid"
-
-#~ msgid "Time modified"
-#~ msgstr "Ändringstid"
-
-#~ msgid "Time added"
-#~ msgstr "Tid tillagd"
-
-#~ msgid "'%s' does not exist. Ignored.\n"
-#~ msgstr "'%s' finns inte. Ignoreras.\n"
-
-#~ msgid "Import aborted.\n"
-#~ msgstr "Import avbruten.\n"
-
-#~ msgid "Delete Track Completely?"
-#~ msgid_plural "Delete Tracks Completey?"
-#~ msgstr[0] "Ta bort spår helt?"
-#~ msgstr[1] "Ta bort spår helt?"
-
-#~ msgid "Cannot delete master playlist."
-#~ msgstr "Kan inte ta bort huvudspellistan."
-
-#~ msgid "Delete Playlist?"
-#~ msgstr "Ta bort spellista?"
-
-#~ msgid "Select files or directories to add to '%s/%s'"
-#~ msgstr "Markera filer eller kataloger att lägga till i '%s/%s'"
-
-#~ msgid "Select files or directories to add to '%s'"
-#~ msgstr "Markera filer eller kataloger att lägga till i '%s'"
-
-#~ msgid "Select Playlist to add to '%s'"
-#~ msgstr "Markera spellistor att lägga till i '%s'"
-
-#~ msgid "Error opening MP3 file '%s'"
-#~ msgstr "Fel när MP3-filen '%s' skulle öppnas"
-
-#~ msgid "Free space on iPod"
-#~ msgstr "Ledigt utrymme på iPod"
