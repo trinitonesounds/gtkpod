@@ -1,10 +1,20 @@
-gtkpod V0.91-CVS
-	Complete rewrite of reading/writing the iTunesDB
+gtkpod V0.93
+	Complete rewrite of reading/writing the iTunesDB. The code for
+	reading and writing the iTunesDB (and other iPod/Shuffle
+	files) is completely self-contained (itdb*.[ch]) and can
+	easily be used in other projects.
 
 	NEW FEATURE: Support of 'local database' containing tracks on
 	local harddisk. The contents of the local hard disk can be
 	browsed in the known gtkpod-fashion: by artist or genre or
-	album etc.
+	album etc. Tracks and entire playlists can be dragged over to
+	the iPod or Shuffle database. By using smart playlists with
+	defined size in MBytes, the Shuffle can be filled effectively.
+
+	Drag and drop also works in the opposite direction: drag
+	tracks or entire playlists from the iPod/Shuffle database into
+	your local database. If necessary, the tracks are copied to
+	your harddisk automatically.
 
 	NEW FEATURE: sync-abook.sh and sync-webcalendar.sh scripts
 	provided by Daniel Kercher.
@@ -12,33 +22,32 @@ gtkpod V0.91-CVS
 	NEW FEATURE: sync-thunderbird.sh script	provided by Clinton
 	Gormley.
 
+	IMPROVEMENT: support MP3 disc numbers (thanks to Leigh Dyer)
+
+	IMPROVEMENT: Use of GTK filechoosers instead of fileselectors
+	(thanks to James Ligget)
+
+	IMPROVEMENT: sync-notes.sh now also works on directories (thanks
+	to Thomas Perl)
+
+	UPDATE: use 'iconv' instead of 'recode' in the provided export
+	scripts. Thanks to Alexey Dokuchaev.
+
+	UPDATE: All translation catlogs updated (French, German,
+	Italian, Japanese and Swedish)
+
 	BUGFIX: display and reading of compilation flag fixed (thanks
 	to Julien Oster for the patch)
 
 	BUGFIX: don't hang when parsing playlist files with empty
 	lines (thanks to Mattias Wadman)
 
-	BUGFIX: When the original filename of tracks is available,
-        tracks were not copied from the iPod but from the original
-        location on the user's harddisk. If the original file has been
-        removed or the export was done on another computer, the export
-        would fail.
-
-	IMPROVEMENT: sync-notes.sh now also works on directories (thanks
-	to Thomas Perl)
-
-	IMPROVEMENT: local database to browse local content
-
-	IMPROVEMENT: support MP3 disc numbers (thanks to Leigh Dyer)
-
-	IMPROVEMENT: Use of GTK filechoosers instead of fileselectors
-	(thanks to James Ligget)
-
-	CHANGE: use 'iconv' instead of 'recode' in the provided export
-	scripts. Thanks to Alexey Dokuchaev.
-
-	UPDATE: French, Swedish, Italian, German and Japanese catologs
-	updated.
+	BUGFIX: When exporting from the iPod: if the original filename
+        of a track was available, the track was not copied from the
+        iPod but from the original location on the user's
+        harddisk. Had the original file been removed or the export was
+        done on another computer (where the original file was not
+        present), the export failed.
 
 gtkpod V0.88.2
 	IMPROVEMENT: Added '%p' (current playlist) identifier when

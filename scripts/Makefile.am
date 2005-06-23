@@ -5,11 +5,15 @@ scriptdir = $(pkgdatadir)/scripts
 
 # these scripts will be installed
 script_SCRIPTS = \
-	sync-korganizer.sh \
-	sync-kaddressbook.sh \
-	sync-notes.sh \
+	sync-abook.sh \
+	sync-evocalendar.sh \
 	sync-evolution.sh \
-	sync-evocalendar.sh
+	sync-kaddressbook.sh \
+	sync-korganizer.sh \
+	sync-notes.sh \
+	sync-thunderbird.sh \
+	sync-webcalendar.sh \
+	mab2vcard
 
 # these scripts will go in the distribution. Actually, if they are to
 # be installed, they should go into the .tar.gz-file automatically...

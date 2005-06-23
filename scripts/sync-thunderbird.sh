@@ -43,6 +43,9 @@ ENCODING=ISO-8859-15         # encoding used by ipod
 #
 # 2004/12/15 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
 # Split evolution support into a new file.
+#
+# 2005/06/23 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
+# use 'iconv' instead of 'recode'
 
 
 # overwrite default settings with optional command line arguments
@@ -62,7 +65,7 @@ done
 if [ $ENCODING = "none" ] || [ $ENCODING = "NONE" ]; then
     RECODE="cat"    # no conversion
 else
-    RECODE="recode UTF8..$ENCODING"
+    RECODE="iconv -f UTF-8 -t $ENCODING"
 fi
 
 

@@ -132,35 +132,27 @@ Drag and Drop
 
 Drag and Drop can be used in several ways:
 
-- Drag tracks from the track view _onto_ an existing playlist: the tracks
-  will be added to that playlist.
-- Drag tracks from the track view _between_ two existing playlists or
-  behind the last playlist: a new playlist will be created and the
-  tracks will be added to that playlist.
-- Drag an entry of a sort tab _onto_ an existing playlist: all tracks
-  matching the entry will be added to that playlist.
-- Drag an entry of a sort tab _between_ two existing playlists or
-  behind the last playlist: a new playlist will be created and all
-  tracks matching the entry will be added to that playlist.
-- Drag tracks, directories, or playlist files _onto_ an existing
-  playlist: all tracks as well as the contents of playlist files will
-  be added to that playlist.
-- Drag tracks or directories _between_ two existing playlists or behind
-  the last playlist: a new playlist will be created and all tracks will
-  be added to that playlist.
-- Drag playlist files _between_ two existing playlists or behind the
-  last playlist: for each playlist file a new playlist named after the
-  file will be created and the corresponding tracks will be added to
-  that playlist.
-- Drag tracks, directories, or playlist files into the track view (note:
-  something must be displayed in the trackview before you can drop into
-  it -- drop onto the correpsonding playlist otherwise.): the tracks
-  will be inserted into the corresponding playlist at the position you
-  dropped them.
-- If holding the shift key when dropping tracks or a sort tab entry
-  onto an existing or new playlist, the tracks will be moved instead
-  of copied. Please keep in mind that tracks cannot be moved from or
-  to the master playlist.
+1) gtkpod internal
+
+- Playlists, entries of a sort tab, and tracks can be dragged.
+
+- A drop _onto_ an existing playlist will add the tracks to that
+  playlist
+
+- A drop _between_ two existing playlists or behind the last playlist
+  will create a new playlist to which the tracks are added.
+
+- The default action for the drop is either move or copy as appears
+  appropriate (e.g. playlists are moved within a database ('local' or
+  'iPod/Shuffle'), but copied when dragged across different
+  databases).  The applicable action is displayed within the drag
+  icon and can be changed by pressing the control key during the drop. 
+
+2) between external file browser and gtkpod
+
+- Tracks, directories or playlist files can be dropped onto the
+  playlist view or track view. Drops between two existing playlists
+  create a new playlist.
 
 
 Preferences File

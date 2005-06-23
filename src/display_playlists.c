@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-16 22:47:26 jcs>
+/* Time-stamp: <2005-06-23 22:26:32 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -79,9 +79,9 @@ static GtkTargetEntry pm_drop_types [] = {
  * For drag and drop within the playlist view the following rules apply:
  *
  * 1) Drags between different itdbs: playlists are copied (moved with
- *    SHIFT pressed)
+ *    CONTROL pressed)
  *
- * 2) Drags within the same itdb: playlist is moved (copied with SHIFT
+ * 2) Drags within the same itdb: playlist is moved (copied with CONTROL
  *    pressed)
  *
  * ---------------------------------------------------------------- */
