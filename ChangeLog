@@ -1,3 +1,11 @@
+gtkpod V0.94-CVS
+       BUGFIX: 'Copy from iPod' just failed in offline mode instead of
+       giving meaningful error messages -> fixed.
+
+       IMPROVEMENT: 'Copy from iPod' is not 'Export from Database' and
+       allows to export from the local database as well. This is
+       useful if you want to rename files in a consistant manner.
+
 gtkpod V0.93
 	Complete rewrite of reading/writing the iTunesDB. The code for
 	reading and writing the iTunesDB (and other iPod/Shuffle

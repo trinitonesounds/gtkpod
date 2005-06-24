@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-23 22:26:32 jcs>
+/* Time-stamp: <2005-06-25 00:35:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -417,6 +417,8 @@ pm_drag_data_get (GtkWidget       *widget,
 }
 
 
+/* get the action to be used for a drag and drop within the playlist
+ * view */
 static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
 				       GtkWidget *widget,
 				       GtkTreeViewDropPosition pos,
@@ -483,8 +485,16 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
 	}
     }
     else
-    {   /* DND between different itdbs -> default is copying, shift
-	   means moving */
+    {   /* DND between different itdbs */
+	/* Do not allow drags from the iPod in offline mode */
+	if (prefs_get_offline () &&
+	    (src->itdb->usertype & GP_ITDB_TYPE_IPOD))
+	{   /* give a notice on the statusbar -- otherwise the user
+	     * will never know why the drag is not possible */
+	    gtkpod_statusbar_message (_("Error: drag from iPod not possible in offline mode."));
+	    return 0;
+	}
+	/* default is copying, shift means moving */
 	if (mask & GDK_SHIFT_MASK)
 	    return GDK_ACTION_MOVE;
 	else
@@ -493,6 +503,8 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
 }
 
 
+/* get the action to be used for a drag and drop from the track view
+ * or filter tab view to the playlist view */
 static GdkDragAction pm_tm_get_action (Track *src, Playlist *dest,
 				       GtkTreeViewDropPosition pos,
 				       GdkDragContext *dc)
@@ -514,9 +526,18 @@ static GdkDragAction pm_tm_get_action (Track *src, Playlist *dest,
 	    (pos != GTK_TREE_VIEW_DROP_AFTER))
 	    return 0;
     }
-
+    else
+    {   /* drag between different itdbs */
+	/* Do not allow drags from the iPod in offline mode */
+	if (prefs_get_offline () &&
+	    (src->itdb->usertype & GP_ITDB_TYPE_IPOD))
+	{   /* give a notice on the statusbar -- otherwise the user
+	     * will never know why the drag is not possible */
+	    gtkpod_statusbar_message (_("Error: drag from iPod not possible in offline mode."));
+	    return 0;
+	}
+    }
     /* otherwise: do as suggested */
-
     return dc->suggested_action;
 }
 
@@ -791,7 +812,14 @@ static void pm_drag_data_received (GtkWidget       *widget,
 	    gtk_drag_finish (dc, FALSE, FALSE, time);
 	    g_return_if_reached ();
 	}
+
 	dc->action = pm_pm_get_action (pl_s, pl, widget, pos, dc);
+
+	if (dc->action == 0)
+	{
+	    gtk_drag_finish (dc, FALSE, FALSE, time);
+	    return;
+	}
 
 	if (pl->itdb == pl_s->itdb)
 	{   /* handle DND within the same itdb */

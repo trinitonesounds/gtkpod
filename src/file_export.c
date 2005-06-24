@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-20 22:43:46 jcs>
+/* Time-stamp: <2005-06-25 01:09:32 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -73,8 +73,6 @@ const gchar *EXPORT_FILES_PATH="export_files_path";
 const gchar *EXPORT_FILES_TPL="export_files_template";
 /* Default prefs settings */
 const gchar *EXPORT_FILES_TPL_DFLT="%o;%a - %t.mp3;%t.wav";
-
-
 
 
 /**
@@ -298,10 +296,26 @@ static gboolean write_track (struct fcd *fcd)
 {
     gboolean result = FALSE;
     gchar *dest_file = track_get_export_filename (fcd->track);
+
+    g_return_val_if_fail (fcd, FALSE);
+    g_return_val_if_fail (fcd->track, FALSE);
+    g_return_val_if_fail (fcd->track->itdb, FALSE);
     
     if(dest_file)
     {
-	gchar *from_file = get_file_name_on_ipod (fcd->track);
+	gchar *from_file = NULL;
+	if (fcd->track->itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    from_file = get_file_name_on_ipod (fcd->track);
+	}
+	else if (fcd->track->itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	{
+	    from_file = get_file_name_on_harddisk (fcd->track);
+	}
+	else
+	{
+	    g_return_val_if_reached (FALSE);
+	}
 	if (from_file)
 	{
 	    gchar *filename, *dest_dir;
@@ -547,15 +561,37 @@ void export_files_init (GList *tracks, GList **filenames,
 {
     gint response;
     GtkWidget *win, *options, *message_box; 
-    struct fcd *fcd = g_malloc0 (sizeof (struct fcd));
-    GtkWidget *fc = gtk_file_chooser_dialog_new (
+    struct fcd *fcd;
+    GtkWidget *fc;
+    GladeXML *export_files_xml;
+
+    /* no export possible if in offline mode */
+    if (tracks && prefs_get_offline ())
+    {
+	Track *tr = tracks->data;
+	g_return_if_fail (tr);
+	g_return_if_fail (tr->itdb);
+	if (tr->itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    GtkWidget *dialog = gtk_message_dialog_new (
+		GTK_WINDOW (gtkpod_window),
+		GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_WARNING,
+		GTK_BUTTONS_OK,
+		_("Export from iPod database not possible in offline mode."));
+	    gtk_dialog_run (GTK_DIALOG (dialog));
+	    gtk_widget_destroy (dialog);
+	    return;
+	}
+    }
+
+    fc = gtk_file_chooser_dialog_new (
 	_("Select Export Destination Directory"),
 	NULL,
 	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 	GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
-    GladeXML *export_files_xml;
 
     export_files_xml = glade_xml_new (xml_file, "export_files_options", NULL);
     win = glade_xml_get_widget (export_files_xml, "export_files_options");
@@ -563,6 +599,7 @@ void export_files_init (GList *tracks, GList **filenames,
     message_box = glade_xml_get_widget (export_files_xml, "message_box");
 
     /* Information needed to clean up later */
+    fcd = g_malloc0 (sizeof (struct fcd));
     fcd->tracks = g_list_copy (tracks);
     fcd->win_xml = export_files_xml;
     fcd->filenames = filenames;
@@ -679,6 +716,7 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
 
     g_return_val_if_fail (itdb_s, NULL);
     g_return_val_if_fail (itdb_d, NULL);
+    g_return_val_if_fail (gtkpod_window, NULL);
 
     if (!(itdb_s->usertype & GP_ITDB_TYPE_IPOD) ||
 	!(itdb_d->usertype & GP_ITDB_TYPE_LOCAL))
@@ -688,6 +726,20 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
     }
 
     /* drag is from iPod to local database */
+
+    /* no drag possible if in offline mode */
+    if (prefs_get_offline ())
+    {
+	GtkWidget *dialog = gtk_message_dialog_new (
+	    GTK_WINDOW (gtkpod_window),
+	    GTK_DIALOG_DESTROY_WITH_PARENT,
+	    GTK_MESSAGE_WARNING,
+	    GTK_BUTTONS_OK,
+	    _("Drag from iPod database not possible in offline mode."));
+	gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+	return NULL;
+    }
 
     /* make a list of tracks that already exist in itdb_d and of those
        that do not yet exist */

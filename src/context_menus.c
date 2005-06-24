@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-18 00:08:41 jcs>
+/* Time-stamp: <2005-06-25 01:05:39 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -278,6 +278,7 @@ void
 create_context_menu(CM_type type)
 {
     static GtkWidget *menu[CM_NUM];
+    static GtkWidget *mi_exp[CM_NUM];  /* Export Tracks */
     static GtkWidget *mi_pl[CM_NUM];   /* DELETE_ACTION_PLAYLIST */
     static GtkWidget *mi_ipod[CM_NUM]; /* DELETE_ACTION_IPOD     */
     static GtkWidget *mi_local[CM_NUM];/* DELETE_ACTION_LOCAL    */
@@ -301,8 +302,9 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (play_entries_now), NULL);
 	hookup_mi (menu[type], _("Enqueue"), "gtk-cdrom",
 		   G_CALLBACK (play_entries_enqueue), NULL);
-	hookup_mi (menu[type], _("Copy from iPod"), "gtk-floppy",
-		   G_CALLBACK (export_entries), NULL);
+	mi_exp[type] = hookup_mi (menu[type],
+				  _("Export Tracks"), "gtk-floppy",
+				  G_CALLBACK (export_entries), NULL);
 	hookup_mi (menu[type], _("Create Playlist File"), "gtk-floppy",
 		   G_CALLBACK (create_playlist_file), NULL);
 	hookup_mi (menu[type], _("Update"), "gtk-refresh",
@@ -397,13 +399,14 @@ create_context_menu(CM_type type)
 					 (gpointer)DELETE_ACTION_DATABASE);
 	}
     }
-    /* Make sure, only available delete options are displayed */
+    /* Make sure, only available options are displayed */
     pl = pm_get_selected_playlist();
     if (pl)
     {
 	iTunesDB *itdb = pl->itdb;
 	g_return_if_fail (itdb);
 
+	/* Make sure, only available delete options are displayed */
 	switch (type)
 	{
 	case CM_PM:
@@ -502,7 +505,19 @@ create_context_menu(CM_type type)
 	case CM_NUM:  /* to avoid compiler warning */
 	    break;
 	}
+	/* turn 'export tracks' insensitive when necessary */
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    gtk_widget_set_sensitive (mi_exp[type],
+				      !prefs_get_offline ());
+	}
+	else
+	{
+	    gtk_widget_set_sensitive (mi_exp[type], TRUE);
+	}
     }
+
+
     /* 
      * button should be button 0 as per the docs because we're calling
      * from a button release event

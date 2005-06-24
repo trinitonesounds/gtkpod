@@ -1,8 +1,14 @@
+2005-06-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* Renamed 'Copy from iPod' to 'Export from Database',
+          disabling Export from the iPod in offline mode, and fixing
+          export from local database.
+
 2005-06-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* sync-thunderbird.sh: use of 'iconv' instead of 'recode'
 
-	* bumped version to 0.93
+	* bumped version to 0.93 and released
 
 2005-06-22 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

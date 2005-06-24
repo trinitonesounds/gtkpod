@@ -245,11 +245,12 @@ Please feel free to submit further features.
 
 BUGLIST:
 
-Hallo,
-ich habe das teil bei mir seit längerem ohne probs laufen, ich habe es einfach unter windows initialisiert, dann hat man nicht die probleme mit hfs und so. Nach der ersteinrichtung kann man es dann ganz normal mounten (mit vfat) und mit gtkpod bespielen. Läuft wunderbar!
-NUR: Aufpassen, wenn man in seiner Musiksammlung m3u liegen hat, wenn die mit übertragen wird, kackt gtkpod ab...
-Grüße,
-Patrick
+drag playlist to track view: (JCS)
+(gtkpod:19911): Gtk-CRITICAL **: gtk_text_buffer_emit_insert: assertion `g_utf8_validate (text, len, NULL)' failed
+
+(gtkpod:19911): Gtk-CRITICAL **: gtk_text_buffer_emit_insert: assertion `g_utf8_validate (text, len, NULL)' failed
+
+(gtkpod:19911): Gtk-CRITICAL **: gtk_text_buffer_emit_insert: assertion `g_utf8_validate (text, len, NULL)' failed
 
 
 - Alexander C Gross
@@ -271,21 +272,6 @@ Patrick
 > you know a solution for this problem :)
 
 
-- Adam Pavlakovic (4th generation): 
-> > Hey, I am using korganizer and the script included in gtkpod to
-> > sync it, the only problem is that the ipod doesn't see it and even
-> > though the file is in the Calendars folder in the ipod, it won't
-> > be recognized and none of my dates will show up. Any help?
-  JCS: works with 2nd generation -- testing needed with 4th
-  generation!
-  CG : Works with 4th generation and evolution export - need a copy of
-  the original ics file and the version on the ipod
-
-> Ich habe inzwischen den Verdacht, daß gar nicht die ID3v2.3-Tags (am
-> Anfang der Datei), sondern die ID3v1.1-Tags (am Ende der Datei)
-> eingelesen werden. Das könnte die Beschränkung der Tracknummer auf 127
-> erklären. Deshalb habe ich jeweils den Anfang und das Ende der Dateien
-
 - special sorttab does not do date sorting correctly.
 
 - during a long operation (menues are blocked) the user can still edit
@@ -302,21 +288,6 @@ Patrick
 
 > '** (gtkpod:3839): WARNING **: Programming error: Could not create hash
 > value from itunesdb' -> not an error -- reading of file failed!
-
-------------
-> Steps to replicate:
-> 
-> mount /mnt/ipod
-> start gtkpod
-> - hit button Read on toolbar
-> - select track/song/file by left clicking on it
-> - Select Edit --> Delete completely from iPod
-> - hit button Sync on toolbar
-> quit gtkpod
-> umount /mnt/ipod
-> 
-> songs remains on ipod nonetheless!
-(Per Homer)
 
 
 ----------

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-18 23:58:58 jcs>
+/* Time-stamp: <2005-06-25 00:02:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1288,8 +1288,7 @@ void prefs_set_ipod_mount(const gchar *mp)
     else cfg->ipod_mount = g_strdup(mp);
     /* need to notify the info thread of new mount point */
     space_set_ipod_mount (cfg->ipod_mount);
-    /* FIXME: change mountpoint of all itdbs of type IPOD */
-    gp_itdb_set_mountpoint (mp);
+    gp_itdb_set_mountpoint (cfg->ipod_mount);
 }
 
 
