@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.87-CVS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-23 23:50+0900\n"
+"POT-Creation-Date: 2005-06-25 11:46+0900\n"
 "PO-Revision-Date: 2005-06-20 23:24+0900\n"
 "Last-Translator: David Le Brun <david@dyn-ns.net>\n"
 "Language-Team: none\n"
@@ -233,92 +233,93 @@ msgstr ""
 msgid "Confirmation Dialogue"
 msgstr "Message de confirmation"
 
-#: src/context_menus.c:298
+#: src/context_menus.c:299
 msgid "Edit"
 msgstr "Édition"
 
-#: src/context_menus.c:300 src/tools.c:632
+#: src/context_menus.c:301 src/tools.c:632
 msgid "Play Now"
 msgstr "Jouer maintenant"
 
-#: src/context_menus.c:302 src/tools.c:643
+#: src/context_menus.c:303 src/tools.c:643
 msgid "Enqueue"
 msgstr "Mettre dans la file d'attente"
 
-#: src/context_menus.c:304
-msgid "Copy from iPod"
-msgstr "Copier vers votre disque dur"
+#: src/context_menus.c:306
+#, fuzzy
+msgid "Export Tracks"
+msgstr "Zones de tri"
 
-#: src/context_menus.c:306 src/file_export.c:1039
+#: src/context_menus.c:308 src/file_export.c:1091
 msgid "Create Playlist File"
 msgstr "Créer un fichier de liste"
 
-#: src/context_menus.c:308
+#: src/context_menus.c:310
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: src/context_menus.c:310
+#: src/context_menus.c:312
 msgid "Sync Dirs"
 msgstr "Synchroniser les répertoires"
 
-#: src/context_menus.c:312
+#: src/context_menus.c:314
 msgid "Normalize"
 msgstr "Normaliser"
 
-#: src/context_menus.c:314
+#: src/context_menus.c:316
 msgid "Create new Playlist"
 msgstr "Créer une nouvelle liste"
 
-#: src/context_menus.c:317
+#: src/context_menus.c:319
 msgid "Edit Smart Playlist"
 msgstr "Éditer la liste intelligente"
 
-#: src/context_menus.c:323
+#: src/context_menus.c:325
 msgid "Alphabetize"
 msgstr "Trier"
 
-#: src/context_menus.c:345
+#: src/context_menus.c:347
 msgid "Delete From iPod"
 msgstr "Supprimer de l'iPod"
 
-#: src/context_menus.c:350
+#: src/context_menus.c:352
 #, fuzzy
 msgid "Delete From Harddisk"
 msgstr "Supprimer de la liste de lecture"
 
-#: src/context_menus.c:355
+#: src/context_menus.c:357
 #, fuzzy
 msgid "Delete From Database"
 msgstr "Supprimer de la liste de lecture"
 
-#: src/context_menus.c:360
+#: src/context_menus.c:362
 msgid "Delete From Playlist"
 msgstr "Supprimer de la liste de lecture"
 
-#: src/context_menus.c:369
+#: src/context_menus.c:371
 msgid "Delete Including Tracks"
 msgstr "Supprimer avec les morceaux"
 
-#: src/context_menus.c:374
+#: src/context_menus.c:376
 #, fuzzy
 msgid "Delete Including Tracks (Harddisk)"
 msgstr "Supprimer avec les morceaux"
 
-#: src/context_menus.c:379
+#: src/context_menus.c:381
 #, fuzzy
 msgid "Delete Including Tracks (Database)"
 msgstr "Supprimer avec les morceaux"
 
-#: src/context_menus.c:384
+#: src/context_menus.c:386
 msgid "Delete But Keep Tracks"
 msgstr "Supprimer mais garder les morceaux"
 
-#: src/context_menus.c:389
+#: src/context_menus.c:391
 #, fuzzy
 msgid "Remove All Tracks from iPod"
 msgstr "Copier les _morceaux vers votre disque dur"
 
-#: src/context_menus.c:394
+#: src/context_menus.c:396
 msgid "Remove All Tracks from Database"
 msgstr ""
 
@@ -387,18 +388,24 @@ msgstr "Local"
 msgid "Increased playcount for '%s'"
 msgstr "Compteur de lecture incrémenté pour '%s'"
 
-#: src/display_playlists.c:542 src/display_songs.c:349
+#. give a notice on the statusbar -- otherwise the user
+#. * will never know why the drag is not possible
+#: src/display_playlists.c:494 src/display_playlists.c:536
+msgid "Error: drag from iPod not possible in offline mode."
+msgstr ""
+
+#: src/display_playlists.c:563 src/display_songs.c:349
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "Un morceau copié"
 msgstr[1] "%d morceaux copiés"
 
-#: src/display_playlists.c:824
+#: src/display_playlists.c:852
 msgid "Can't reorder sorted treeview."
 msgstr ""
 
-#: src/display_playlists.c:915
+#: src/display_playlists.c:943
 #, c-format
 msgid ""
 "This DND type (%d) is not (yet) supported. If you feel implementing this "
@@ -408,7 +415,7 @@ msgstr ""
 "Ce type de DND (%d) n'est pas (encore) supporté. Si vous vous sentez prêt à "
 "l'implémenter, veuillez contacter l'auteur.\n"
 
-#: src/display_playlists.c:1783 gtkpod.glade:7746
+#: src/display_playlists.c:1811 gtkpod.glade:7746
 msgid "Playlists"
 msgstr "Listes de lecture"
 
@@ -1197,92 +1204,100 @@ msgstr "Échec de la normalisation: type de fichier non supporté.\n"
 msgid "Normalization failed: file not available.\n"
 msgstr "Échec de la normalisation: fichier non disponible.\n"
 
-#: src/file_export.c:108
+#: src/file_export.c:106
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "Erreur à la création de \"%s\" (%s)\n"
 
-#: src/file_export.c:204
+#: src/file_export.c:202
 #, c-format
 msgid "Skipping existing file with same length: '%s'\n"
 msgstr ""
 
-#: src/file_export.c:212
+#: src/file_export.c:210
 #, fuzzy, c-format
 msgid "Overwriting existing file: '%s'\n"
 msgstr "ERREUR pour écrire le tag dans le fichier: '%s' (%s).\n"
 
-#: src/file_export.c:229
+#: src/file_export.c:227
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
 msgstr "Impossible de copier '%s' vers '%s': Autorisation refusée (%s)\n"
 
-#: src/file_export.c:231
+#: src/file_export.c:229
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "Impossible de copier '%s' vers '%s' (erreur: %s)\n"
 
-#: src/file_export.c:239
+#: src/file_export.c:237
 #, c-format
 msgid "Unable to open '%s' for reading\n"
 msgstr "Impossible d'ouvrir le fichier '%s'\n"
 
-#: src/file_export.c:330
+#: src/file_export.c:344
 #, fuzzy, c-format
 msgid "Could find file for '%s' on the iPod\n"
 msgstr "Nom du fichier sur l'iPod"
 
 #. create the dialog window
-#: src/file_export.c:397 src/file_itunesdb.c:990 src/tools.c:148
+#: src/file_export.c:411 src/file_itunesdb.c:990 src/tools.c:148
 msgid "Information"
 msgstr "Information"
 
-#: src/file_export.c:408 src/tools.c:160
+#: src/file_export.c:422 src/tools.c:160
 msgid "Press button to abort."
 msgstr "Appuyer sur le bouton pour interrompre"
 
-#: src/file_export.c:421
+#: src/file_export.c:435
 msgid "copying..."
 msgstr "copie..."
 
-#: src/file_export.c:475
+#: src/file_export.c:489
 #, c-format
 msgid "Failed to write '%s-%s'\n"
 msgstr "Impossible d'écrire '%s-%s'\n"
 
-#: src/file_export.c:483
+#: src/file_export.c:497
 #, c-format
 msgid "Copied %d of %d track."
 msgid_plural "Copied %d of %d tracks."
 msgstr[0] "%d morceau copiés sur %d."
 msgstr[1] "%d morceaux copiés sur %d."
 
-#: src/file_export.c:501 src/file_itunesdb.c:1252 src/tools.c:307
+#: src/file_export.c:515 src/file_itunesdb.c:1252 src/tools.c:307
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d:%02d restant)"
 
-#: src/file_export.c:510
+#: src/file_export.c:524
 msgid "Some tracks were not copied."
 msgstr "Certains morceaux n'ont pas été copié."
 
-#: src/file_export.c:552
+#: src/file_export.c:581
+msgid "Export from iPod database not possible in offline mode."
+msgstr ""
+
+#: src/file_export.c:589
 msgid "Select Export Destination Directory"
 msgstr "Sélectionner le répertoire de destination d'export"
 
-#: src/file_export.c:720
+#: src/file_export.c:738
+msgid "Drag from iPod database not possible in offline mode."
+msgstr ""
+
+#: src/file_export.c:772
 #, fuzzy
 msgid "The following tracks have to be copied to your harddisk"
 msgstr "Le morceau suivant a été mis à jour"
 
-#: src/file_export.c:765
+#: src/file_export.c:817
 msgid ""
 "Some tracks were not copied to your harddisk. Only the copied tracks will be "
 "included in the current drag and drop operation.\n"
 "\n"
 msgstr ""
 
-#: src/file_export.c:962
+#: src/file_export.c:1014
 #, c-format
 msgid ""
 "No valid filename for: %s\n"
@@ -1291,14 +1306,14 @@ msgstr ""
 "Pas de nom de fichier valide pour : %s\n"
 "\n"
 
-#: src/file_export.c:978
+#: src/file_export.c:1030
 #, c-format
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
 msgstr[0] "Liste de lecture créée avec un morceau."
 msgstr[1] "Liste de lecture créée avec %d morceaux."
 
-#: src/file_export.c:985
+#: src/file_export.c:1037
 #, c-format
 msgid ""
 "Could not open '%s' for writing (%s).\n"
@@ -2969,36 +2984,36 @@ msgstr "Réglages non sauvés.\n"
 msgid "Unable to open '%s' for writing\n"
 msgstr "Impossible d'ouvrir en écriture \"%s\"\n"
 
-#: src/prefs.c:1554
+#: src/prefs.c:1553
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " Préférences: N° de catégorie (%d<%d?) ou n° de zone (%d<%d?) inexistant.\n"
 
-#: src/prefs.c:1603
+#: src/prefs.c:1602
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "Impossible de lancer 'mkdir %s'\n"
 
 #. illegal -- ignore
-#: src/prefs.c:1996
+#: src/prefs.c:1995
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: style '%d' non reconnu\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2038
+#: src/prefs.c:2037
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort: style '%d' non reconnu\n"
 
-#: src/prefs.c:2193
+#: src/prefs.c:2192
 #, c-format
 msgid "'%s': no arguments (%%...) allowed.\n"
 msgstr "'%s': aucun argument autorisé (%%s...).\n"
 
-#: src/prefs.c:2198
+#: src/prefs.c:2197
 #, c-format
 msgid "'%s': only '%%[%s]' allowed.\n"
 msgstr "'%s': seulement '%%s[%s]' autorisé.\n"
@@ -3198,8 +3213,9 @@ msgid "_Synchronize Directories"
 msgstr "_Synchroniser les répertoires"
 
 #: gtkpod.glade:318
-msgid "Copy _Tracks from iPod"
-msgstr "Copier les _morceaux vers votre disque dur"
+#, fuzzy
+msgid "_Export Tracks from Database"
+msgstr "_Mettre à jour les morceaux à partir des fichiers"
 
 #: gtkpod.glade:370
 msgid "Create _Playlist File"
@@ -4836,6 +4852,12 @@ msgstr ""
 #: gtkpod.glade:15395
 msgid "Notes sync command:"
 msgstr ""
+
+#~ msgid "Copy from iPod"
+#~ msgstr "Copier vers votre disque dur"
+
+#~ msgid "Copy _Tracks from iPod"
+#~ msgstr "Copier les _morceaux vers votre disque dur"
 
 #~ msgid "Delete selected entry of which sort tab?"
 #~ msgstr "Supprimer l'entrée séléctionnée de quelle zone de tri ?"

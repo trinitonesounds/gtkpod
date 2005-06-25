@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 01:09:32 jcs>
+/* Time-stamp: <2005-06-25 11:14:46 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>

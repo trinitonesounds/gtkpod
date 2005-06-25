@@ -1,3 +1,10 @@
+2005-06-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* Changing the mountpoint was not represented correctly in the
+          prefs.
+
+	* Release as 0.93.1
+
 2005-06-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* Renamed 'Copy from iPod' to 'Export from Database',

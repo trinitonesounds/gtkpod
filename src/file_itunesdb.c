@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-20 22:43:46 jcs>
+/* Time-stamp: <2005-06-25 11:20:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1608,20 +1608,28 @@ void gp_itdb_set_mountpoint (const gchar *mp)
     struct itdbs_head *itdbs_head;
 
     GList *gl;
+    gint i;
 
     g_return_if_fail (gtkpod_window);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
 				    "itdbs_head");
     if (!itdbs_head) return;
 
+    i=0;
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
 	iTunesDB *itdb = gl->data;
 	g_return_if_fail (itdb);
 	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
+	    /* store to prefs */
+	    gchar *pmp = g_strdup_printf ("itdb_%d_mountpoint", i);
+	    prefs_set_string_value (pmp, mp);
+	    g_free (pmp);
+	    /* store to itdb */
 	    g_free (itdb->mountpoint);
 	    itdb->mountpoint = g_strdup (mp);
 	}
+	++i;
     }
 }

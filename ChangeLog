@@ -1,4 +1,7 @@
-gtkpod V0.94-CVS
+gtkpod V0.93.1
+       BUGFIX: When changing the mountpoint, the change was not
+       written to the preferences file correctly.
+
        BUGFIX: 'Copy from iPod' just failed in offline mode instead of
        giving meaningful error messages -> fixed.
 
