@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-05 23:43:58 jcs>
+/* Time-stamp: <2005-06-25 14:48:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1608,28 +1608,27 @@ tm_get_selected_tracks(void)
 }
 
 
-static gboolean
-on_all_tracks_list_foreach (GtkTreeModel *tm, GtkTreePath *tp,
-			   GtkTreeIter *i, gpointer data)
-{
-    on_tracks_list_foreach (tm, tp, i, data);
-    return FALSE;
-}
-
 /* return a list containing pointers to all tracks currently being
-   displayed */
+   displayed. You must g_list_free() the list after use. */
 GList *
 tm_get_all_tracks(void)
 {
+    gboolean on_all_tracks_list_foreach (GtkTreeModel *tm,
+					 GtkTreePath *tp,
+					 GtkTreeIter *i,
+					 gpointer data)
+	{
+	    on_tracks_list_foreach (tm, tp, i, data);
+	    return FALSE;
+	}
     GList *result = NULL;
-    GtkTreeModel *model;
+    GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
 
-    if((model = gtk_tree_view_get_model (track_treeview)))
-    {
-	gtk_tree_model_foreach(model, on_all_tracks_list_foreach,
-			       &result);
-    }
-    return(result);
+    g_return_val_if_fail (model, NULL);
+
+    gtk_tree_model_foreach(model, on_all_tracks_list_foreach,
+			   &result);
+    return result;
 }
 
 
@@ -1665,8 +1664,12 @@ void tm_stop_editing (gboolean cancel)
 static gint tm_data_compare (Track *track1, Track *track2,
 			     TM_item tm_item)
 {
-  gint cmp;
+  gint cmp = 0;
   ExtraTrackData *etr1, *etr2;
+
+puts("compare");
+
+  g_return_val_if_fail (track1 && track2, 0);
 
   switch (tm_item)
   {
@@ -1676,69 +1679,101 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_COMPOSER:
   case TM_COLUMN_FDESC:
   case TM_COLUMN_GROUPING:
-      return compare_string (track_get_item (track1, TM_to_T (tm_item)),
-			     track_get_item (track2, TM_to_T (tm_item)));
+      cmp = compare_string (track_get_item (track1, TM_to_T (tm_item)),
+			    track_get_item (track2, TM_to_T (tm_item)));
+      break;
   case TM_COLUMN_ARTIST:
-      return compare_string_fuzzy (track_get_item (track1, TM_to_T (tm_item)),
-			     track_get_item (track2, TM_to_T (tm_item)));
+      cmp = compare_string_fuzzy (
+	  track_get_item (track1, TM_to_T (tm_item)),
+	  track_get_item (track2, TM_to_T (tm_item)));
+      break;
   case TM_COLUMN_TRACK_NR:
       cmp = track1->tracks - track2->tracks;
       if (cmp == 0) cmp = track1->track_nr - track2->track_nr;
-      return cmp;
+      break;
   case TM_COLUMN_CD_NR:
       cmp = track1->cds - track2->cds;
       if (cmp == 0) cmp = track1->cd_nr - track2->cd_nr;
-      return cmp;
+      break;
   case TM_COLUMN_IPOD_ID:
-      return track1->id - track2->id;
+      cmp = track1->id - track2->id;
+      break;
   case TM_COLUMN_PC_PATH:
-      g_return_val_if_fail (track1 && track2, 0);
       etr1 = track1->userdata;
       etr2 = track2->userdata;
       g_return_val_if_fail (etr1 && etr2, 0);
-      return g_utf8_collate (etr1->pc_path_utf8, etr2->pc_path_utf8);
+      cmp = g_utf8_collate (etr1->pc_path_utf8, etr2->pc_path_utf8);
+      break;
   case TM_COLUMN_IPOD_PATH:
-      return g_utf8_collate (track1->ipod_path, track2->ipod_path);
+      cmp = g_utf8_collate (track1->ipod_path, track2->ipod_path);
+      break;
   case TM_COLUMN_TRANSFERRED:
-      if(track1->transferred == track2->transferred) return 0;
-      if(track1->transferred == TRUE) return 1;
-      else return -1;
+      if(track1->transferred == track2->transferred)
+	  cmp = 0;
+      else if(track1->transferred == TRUE)
+	  cmp = 1;
+      else
+	  cmp = -1;
+      break;
   case TM_COLUMN_COMPILATION:
-      if(track1->compilation == track2->compilation) return 0;
-      if(track1->compilation == TRUE) return 1;
-      else return -1;
+      if(track1->compilation == track2->compilation)
+	  cmp = 0;
+      else if(track1->compilation == TRUE)
+	  cmp = 1;
+      else
+	  cmp = -1;
+      break;
   case TM_COLUMN_SIZE:
-      return track1->size - track2->size;
+      cmp = track1->size - track2->size;
   case TM_COLUMN_TRACKLEN:
-      return track1->tracklen - track2->tracklen;
+      cmp = track1->tracklen - track2->tracklen;
   case TM_COLUMN_BITRATE:
-      return track1->bitrate - track2->bitrate;
+      cmp = track1->bitrate - track2->bitrate;
+      break;
   case TM_COLUMN_SAMPLERATE:
-      return track1->samplerate - track2->samplerate;
+      cmp = track1->samplerate - track2->samplerate;
+      break;
   case TM_COLUMN_BPM:
-      return track1->BPM - track2->BPM;
+      cmp = track1->BPM - track2->BPM;
+      break;
   case TM_COLUMN_PLAYCOUNT:
-      return track1->playcount - track2->playcount;
+      cmp = track1->playcount - track2->playcount;
+      break;
   case  TM_COLUMN_RATING:
-      return track1->rating - track2->rating;
+      cmp = track1->rating - track2->rating;
+      break;
   case TM_COLUMN_TIME_ADDED:
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
-      return COMP (time_get_time (track1, tm_item),
-		   time_get_time (track2, tm_item));
+      cmp = COMP (time_get_time (track1, tm_item),
+		  time_get_time (track2, tm_item));
+      break;
   case  TM_COLUMN_VOLUME:
-      return track1->volume - track2->volume;
+      cmp = track1->volume - track2->volume;
+      break;
   case  TM_COLUMN_SOUNDCHECK:
       /* If soundcheck is unset (0) use 0 dB (1000) */
-      return (track1->soundcheck? track1->soundcheck:1000) - 
+      cmp = (track1->soundcheck? track1->soundcheck:1000) - 
 	  (track2->soundcheck? track2->soundcheck:1000);
+      break;
   case TM_COLUMN_YEAR:
-      return track1->year - track2->year;
+      cmp = track1->year - track2->year;
+      break;
   default:
       g_warning ("Programming error: tm_data_compare_func: no sort method for tm_item %d\n", tm_item);
       break;
   }
-  return 0;
+
+  /* implement stable sorting: if two items are the same, revert to
+     the last relative positition */
+  if (cmp == 0)
+  {
+      etr1 = track1->userdata;
+      etr2 = track2->userdata;
+      g_return_val_if_fail (etr1 && etr2, 0);
+      cmp = etr1->sortindex - etr2->sortindex;
+  }
+  return cmp;
 }
 
 
@@ -1770,7 +1805,7 @@ gint tm_data_compare_func (GtkTreeModel *model,
    @inc: negative: reset counter to 0
    @inc: positive or zero : add to counter
    return value: new value of the counter */
-static gint tm_sort_counter (gint inc)
+gint tm_sort_counter (gint inc)
 {
     static gint cnt = 0;
 
@@ -1832,13 +1867,27 @@ static void tm_unsort (void)
 }
 
 
-/* when clicking the same table header three times, the sorting is
-   aborted */
-static void
-tm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
+/* This is called before when changing the sort order or the sort
+   column, and before doing the sorting */
+static void tm_sort_column_changed (GtkTreeSortable *ts,
+				    gpointer user_data)
 {
     static gint lastcol = -1; /* which column was sorted last time? */
-    gint newcol = gtk_tree_view_column_get_sort_column_id (tvc);
+    gint newcol;
+    GtkSortType order;
+    GList *tracks, *gl;
+    gint32 i, inc;
+
+    gtk_tree_sortable_get_sort_column_id (ts, &newcol, &order);
+
+/*    printf ("scc -- col: %d, order: %d\n", newcol, order); */
+
+    /* don't do anything if no sort column is set */
+    if (newcol == -2)
+    {
+	lastcol = newcol;
+	return;
+    }
 
     if (newcol != lastcol)
     {
@@ -1852,11 +1901,38 @@ tm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
     }
     else
     {
-	prefs_set_tm_sort (gtk_tree_view_column_get_sort_order (tvc));
+	prefs_set_tm_sort (order);
     }
     prefs_set_tm_sortcol (newcol);
     if(prefs_get_tm_autostore ())  tm_rows_reordered ();
-/*     sort_window_update (); */
+    sort_window_update ();
+
+    /* stable sorting: index original order */
+    tracks = tm_get_all_tracks ();
+    /* make numbering ascending or decending depending on sort order
+       (then we don't have to worry about the sort order when doing
+       the comparison in tm_data_compare_func() */
+    if (order == GTK_SORT_ASCENDING)
+    {
+	i=0;
+	inc = 1;
+    }
+    else
+    {
+	i=-1;
+	inc = -1;
+    }
+    for (gl=tracks; gl; gl=gl->next)
+    {
+	ExtraTrackData *etr;
+	Track *tr = gl->data;
+	g_return_if_fail (tr);
+	etr = tr->userdata;
+	g_return_if_fail (etr);
+	etr->sortindex = i;
+	i+=inc;
+    }
+    g_list_free (tracks);
 }
 
 
@@ -1918,9 +1994,6 @@ static GtkTreeViewColumn *tm_add_text_column (TM_item col_id,
     gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_view_column_set_fixed_width (column,
 					  prefs_get_tm_col_width (col_id));
-    g_signal_connect (G_OBJECT (column), "clicked",
-		      G_CALLBACK (tm_track_column_button_clicked),
-		      (gpointer)col_id);
     gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), col_id,
 				     tm_data_compare_func, NULL, NULL);
     gtk_tree_view_column_set_reorderable (column, TRUE);
@@ -2105,6 +2178,7 @@ tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
     info_update_track_view_selected ();
 }
 
+
 /* Create tracks treeview */
 void tm_create_treeview (void)
 {
@@ -2199,6 +2273,9 @@ void tm_create_treeview (void)
   g_signal_connect ((gpointer) track_treeview, "button-press-event",
 		    G_CALLBACK (tm_button_press_event),
 		    NULL);
+  g_signal_connect (G_OBJECT (model), "sort-column-changed",
+		    G_CALLBACK (tm_sort_column_changed),
+		    (gpointer)0);
 }
 
 

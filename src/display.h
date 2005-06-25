@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-14 21:39:45 jcs>
+/* Time-stamp: <2005-06-25 13:23:46 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -290,6 +290,7 @@ void tm_store_col_order (void);
 void tm_adopt_order_in_sorttab (void);
 
 void tm_sort (TM_item col, GtkSortType order);
+gint tm_sort_counter (gint inc);
 GList* tm_get_selected_trackids(void);
 GList* tm_get_selected_tracks(void);
 GList* tm_get_all_trackids(void);

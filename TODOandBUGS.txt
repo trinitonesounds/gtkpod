@@ -130,13 +130,6 @@ On Tue, Mar 08, 2005 at 05:37:29PM +0000, Andy wrote:
 
 
 
-- stable column sorting:
-> BTW, the other thing that bothers me about gtkpod is that column sorting
-> isn't stable.  AFAIK, gtk doesn't have a stable column sorting option. 
-> Do you know of a good way to do this?  Basically I'd like to click
-> "Track number", "Artist", "Album" then get everything sorted by
-> album-artist-track. (request by David Helder, also by Stefan Onken)
-
 > 1) Ich erstelle beim Import von MP3 die ID3 Tags aus den Dateinamen. 
 > Dabei wuerde ich noch eine Vorschau ganz gut finden, in der man 
 > ggf. noch manuell eingreifen kann. (Stefan Onken)

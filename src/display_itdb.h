@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:18 jcs>
+/* Time-stamp: <2005-06-25 14:49:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -63,19 +63,20 @@ typedef struct
 {
   gint32  oldsize;        /* used when updating tracks: size on iPod */
   gchar   *year_str;      /* year as string -- always identical to year */
-  guint32 peak_signal;	  /* LAME Peak Signal * 0x800000            */
+  guint32 peak_signal;	  /* LAME Peak Signal * 0x800000             */
   gdouble radio_gain;	  /* RadioGain in dB
-			     (as defined by www.replaygain.org)     */
+			     (as defined by www.replaygain.org)      */
   gdouble audiophile_gain;/* AudiophileGain in dB 
-			     (as defined by www.replaygain.org)     */
-  gboolean peak_signal_set;    /* has the peak signal been set?     */
-  gboolean radio_gain_set;     /* has the radio gain been set?      */
-  gboolean audiophile_gain_set;/* has the audiophile gain been set? */
-  gchar   *pc_path_locale;/* path on PC (local encoding)            */
-  gchar   *pc_path_utf8;  /* PC filename in utf8 encoding           */
+			     (as defined by www.replaygain.org)      */
+  gboolean peak_signal_set;    /* has the peak signal been set?      */
+  gboolean radio_gain_set;     /* has the radio gain been set?       */
+  gboolean audiophile_gain_set;/* has the audiophile gain been set?  */
+  gchar   *pc_path_locale;/* path on PC (local encoding)             */
+  gchar   *pc_path_utf8;  /* PC filename in utf8 encoding            */
   gchar   *hostname;      /* name of host this file has been imported on*/
-  gchar   *md5_hash;      /* md5 hash of file (or NULL)             */
-  gchar   *charset;       /* charset used for ID3 tags              */
+  gchar   *md5_hash;      /* md5 hash of file (or NULL)              */
+  gchar   *charset;       /* charset used for ID3 tags               */
+  gint32 sortindex;       /* used for stable sorting (current order) */
 } ExtraTrackData;
 
 /* types for iTunesDB */

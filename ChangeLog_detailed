@@ -5,6 +5,13 @@
 
 	* Release as 0.93.1
 
+	* bumped to version 0.94-CVS
+
+	* update sort preferences window when clicking on track view
+          headers
+
+	* display_songs.c: implemented stable sorting
+
 2005-06-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* Renamed 'Copy from iPod' to 'Export from Database',

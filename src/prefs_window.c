@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:25:29 jcs>
+/* Time-stamp: <2005-06-25 13:32:47 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -1540,7 +1540,6 @@ void sort_window_create (void)
 
 	if(!tmpsortcfg && !origsortcfg)
 	{
-	    tmpsortcfg = clone_sortprefs();
 	    origsortcfg = clone_sortprefs();
 	}
 	else
@@ -1594,10 +1593,16 @@ void sort_window_create (void)
 /* Update sort_window's settings */
 void sort_window_update (void)
 {
-    if (sort_window && tmpsortcfg)
+    if (sort_window)
     {
 	gchar *str;
 	GtkWidget *w = NULL;
+
+	/* update or create tmpsortcfg */
+	if (tmpsortcfg)
+	    sortcfg_free (tmpsortcfg);
+	tmpsortcfg = clone_sortprefs();
+
 	switch (tmpsortcfg->pm_sort)
 	{
 	case SORT_ASCENDING:
@@ -1752,6 +1757,7 @@ void sort_window_set (void)
 	if ((tsc->tm_sort != tmpsortcfg->tm_sort) ||
 	    (tsc->tm_sortcol != tmpsortcfg->tm_sortcol))
 	{
+	    tm_sort_counter (-1);
 	    tm_sort (prefs_get_tm_sortcol (), tmpsortcfg->tm_sort);
 	}
 	/* if auto sort was changed to TRUE, store order */

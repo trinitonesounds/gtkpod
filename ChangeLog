@@ -1,3 +1,11 @@
+gtkpod V0.94-CVS
+       NEW FEATURE: stable sorting of track view. This allows you, for
+       example, to first sort by title, then by artist. The list will
+       then be sorted by artist, but all titles of each artist remain
+       sorted as well (before the tiles were random).
+       Arbitrary depth and order of stable sorting is possible by
+       clicking the sort columns in the desired order.
+
 gtkpod V0.93.1
        BUGFIX: When changing the mountpoint, the change was not
        written to the preferences file correctly.
