@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 13:32:47 jcs>
+/* Time-stamp: <2005-06-27 23:39:20 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -1521,6 +1521,14 @@ prefs_window_set_unused_gboolean3(gboolean val)
  *                                                              *
 \* ------------------------------------------------------------ */
 
+/* the following checkboxes exist */
+static const gint ign_fields[] = {
+    TM_COLUMN_TITLE, TM_COLUMN_ARTIST,
+    TM_COLUMN_ALBUM, TM_COLUMN_COMPOSER,
+    -1
+};
+
+
 /**
  * sort_window_create
  * Create, Initialize, and Show the sorting preferences window
@@ -1545,13 +1553,37 @@ void sort_window_create (void)
 	else
 	{
 	    g_warning ("Programming error: tmpsortcfg is not NULL!!\n");
-	    return;
+	    g_return_if_reached ();
 	}
 
 	sort_window_xml = glade_xml_new (xml_file, "sort_window", NULL);
 	glade_xml_signal_autoconnect (sort_window_xml);
 
 	sort_window = glade_xml_get_widget (sort_window_xml, "sort_window");
+
+	/* label the ignore-field checkbox-labels */
+	for (i=0; ign_fields[i] != -1; ++i)
+	{
+	    gchar *buf = g_strdup_printf ("sort_ign_field_%d",
+					  ign_fields[i]);
+	    GtkWidget *w = glade_xml_get_widget (sort_window_xml, buf);
+	    g_return_if_fail (w);
+	    gtk_button_set_label (
+		GTK_BUTTON (w),
+		gettext (tm_col_strings[ign_fields[i]]));
+	    gtk_toggle_button_set_active (
+		GTK_TOGGLE_BUTTON (w),
+		prefs_get_int (buf));
+	    /* set tooltip if available */
+/* 	    if (tm_col_tooltips[ign_fields[i]]) */
+/* 	    { */
+/* 		gtk_tooltips_set_tip ( */
+/* 		    tt, w, */
+/* 		    gettext (tm_col_tooltips[ign_fields[i]]), */
+/* 		    NULL); */
+/* 	    } */
+	    g_free (buf);
+	}
 
 	/* Set Sort-Column-Combo */
 	/* create the list in the order of the columns displayed */
@@ -1590,7 +1622,8 @@ void sort_window_create (void)
 
 
 
-/* Update sort_window's settings */
+/* Update sort_window's settings (except for ignore list and ignore
+ * fields) */
 void sort_window_update (void)
 {
     if (sort_window)
@@ -1740,6 +1773,7 @@ void sort_window_set (void)
 {
     if (tmpsortcfg && origsortcfg)
     {
+	gint i;
 	struct sortcfg *tsc = clone_sortprefs ();
 	prefs_set_pm_sort (tmpsortcfg->pm_sort);
 	prefs_set_pm_autostore (tmpsortcfg->pm_autostore);
@@ -1749,6 +1783,18 @@ void sort_window_set (void)
 	prefs_set_case_sensitive(tmpsortcfg->case_sensitive);
 	tmpsortcfg->tm_sortcol = sort_window_get_sort_col ();
 	prefs_set_tm_sortcol (tmpsortcfg->tm_sortcol);
+	/* read sort field states */
+	for (i=0; ign_fields[i] != -1; ++i)
+	{
+	    gchar *buf = g_strdup_printf ("sort_ign_field_%d",
+					  ign_fields[i]);
+	    GtkWidget *w = glade_xml_get_widget (sort_window_xml, buf);
+	    g_return_if_fail (w);
+	    prefs_set_int_value (
+		buf,
+		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)));
+	    g_free (buf);
+	}
 	/* if sort type has changed, initialize display */
 	if (tsc->pm_sort != tmpsortcfg->pm_sort)
 	    pm_sort (tmpsortcfg->pm_sort);

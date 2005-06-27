@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 14:48:15 jcs>
+/* Time-stamp: <2005-06-27 23:39:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -55,6 +55,9 @@ static GtkTreeViewColumn *tm_columns[TM_NUM_COLUMNS];
 /* column in which track pointer is stored */
 static const gint READOUT_COL = 0;
 
+/* compare function to be used for string comparisons */
+static gint (*string_compare_func) (gchar *str1, gchar *str2) = compare_string;
+
 static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint position);
 
 /* Drag and drop definitions */
@@ -73,12 +76,13 @@ static GtkTargetEntry tm_drop_types [] = {
 };
 
 
-/* Note: the toggle buttons for tag_autoset and display_col in the
- * prefs_window are named after the the TM_COLUM_* numbers defined in
- * display.h (Title: tag_autoset0, Artist: tag_autoset1 etc.). Since
- * the labels to the buttons are set in prefs_window.c when creating
- * the window, you only need to name the buttons in the intended order
- * using glade-2. There is no need to label them. */
+/* Note: the toggle buttons for tag_autoset, display_col, and
+ * ign_field in the prefs_window are named after the the TM_COLUM_*
+ * numbers defined in display.h (Title: tag_autoset0, Artist:
+ * tag_autoset1 etc.). Since the labels to the buttons are set in
+ * prefs_window.c when creating the window, you only need to name the
+ * buttons in the intended order using glade-2. There is no need to
+ * label them. */
 /* Strings associated to the column headers */
 const gchar *tm_col_strings[] = {
     N_("Title"),             /*  0 */
@@ -1667,7 +1671,6 @@ static gint tm_data_compare (Track *track1, Track *track2,
   gint cmp = 0;
   ExtraTrackData *etr1, *etr2;
 
-puts("compare");
 
   g_return_val_if_fail (track1 && track2, 0);
 
@@ -1679,11 +1682,11 @@ puts("compare");
   case TM_COLUMN_COMPOSER:
   case TM_COLUMN_FDESC:
   case TM_COLUMN_GROUPING:
-      cmp = compare_string (track_get_item (track1, TM_to_T (tm_item)),
-			    track_get_item (track2, TM_to_T (tm_item)));
-      break;
   case TM_COLUMN_ARTIST:
-      cmp = compare_string_fuzzy (
+      /* string_compare_func is set to either compare_string_fuzzy or
+	 compare_string in tm_sort_column_changed() which is called
+	 once before the comparing begins. */
+      cmp = string_compare_func (
 	  track_get_item (track1, TM_to_T (tm_item)),
 	  track_get_item (track2, TM_to_T (tm_item)));
       break;
@@ -1873,6 +1876,7 @@ static void tm_sort_column_changed (GtkTreeSortable *ts,
 				    gpointer user_data)
 {
     static gint lastcol = -1; /* which column was sorted last time? */
+    gchar *buf;
     gint newcol;
     GtkSortType order;
     GList *tracks, *gl;
@@ -1881,6 +1885,14 @@ static void tm_sort_column_changed (GtkTreeSortable *ts,
     gtk_tree_sortable_get_sort_column_id (ts, &newcol, &order);
 
 /*    printf ("scc -- col: %d, order: %d\n", newcol, order); */
+
+    /* set compare function for strings (to speed up sorting) */
+    buf = g_strdup_printf ("sort_ign_field_%d", newcol);
+    if (prefs_get_int (buf))
+	string_compare_func = compare_string_fuzzy;
+    else
+	string_compare_func = compare_string;
+    g_free (buf);
 
     /* don't do anything if no sort column is set */
     if (newcol == -2)

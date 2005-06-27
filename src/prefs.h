@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:12 jcs>
+/* Time-stamp: <2005-06-27 23:03:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -355,6 +355,8 @@ void prefs_set_int64_value (const gchar *key, gint64 value);
 gchar *prefs_get_string (const gchar *key);
 gboolean prefs_get_string_value (const gchar *key, gchar **value);
 gboolean prefs_get_int_value (const gchar *key, gint *value);
+gint prefs_get_int (const gchar *key);
 gboolean prefs_get_int64_value (const gchar *key, gint64 *value);
+gint64 prefs_get_int64 (const gchar *key);
 
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 00:02:05 jcs>
+/* Time-stamp: <2005-06-27 23:05:46 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2724,7 +2724,23 @@ gboolean prefs_get_int_value (const gchar *key, gint *value)
 }
 
 
-/* Retrieve an 64 bit integer setting. @value will be filled with the
+/* Retrieve an integer setting. */
+/* Return value: the set integer value or 0 if no value is set. */
+/* Use prefs_get_int_value if you need to know whether a value was
+   actually set in the prefs or not. */
+gint prefs_get_int (const gchar *key)
+{
+    if (prefs_hash && key)
+    {
+	gchar *str = g_hash_table_lookup (prefs_hash, key);
+	if (str)
+	    return atoi (str);
+    }
+    return 0;
+}
+
+
+/* Retrieve a 64 bit integer setting. @value will be filled with the
  * stored integer value. */
 /* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
  * @value is set to 0 */
@@ -2743,6 +2759,22 @@ gboolean prefs_get_int64_value (const gchar *key, gint64 *value)
 	}
     }
     return FALSE;
+}
+
+
+/* Retrieve a 64 bit integer setting. */
+/* Return value: the set integer value or 0 if no value is set. */
+/* Use prefs_get_int64_value if you need to know whether a value was
+   actually set in the prefs or not. */
+gint64 prefs_get_int64 (const gchar *key)
+{
+    if (prefs_hash && key)
+    {
+	gchar *str = g_hash_table_lookup (prefs_hash, key);
+	if (str)
+	    return (gint64)g_ascii_strtoull (str, NULL, 10);
+    }
+    return 0;
 }
 
 
