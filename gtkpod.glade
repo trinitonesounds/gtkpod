@@ -8554,7 +8554,7 @@ or tab entry (faster!)</property>
 		      <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
 
 		      <child>
-			<widget class="GtkTextView" id="sort_ign_words">
+			<widget class="GtkTextView" id="sort_ign_strings">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>

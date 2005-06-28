@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-27 23:39:20 jcs>
+/* Time-stamp: <2005-06-28 23:20:18 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -1529,6 +1529,51 @@ static const gint ign_fields[] = {
 };
 
 
+/* Copy the current ignore fields and ignore strings into scfg */
+static void sort_window_read_sort_ign (struct sortcfg *scfg)
+{
+    gint i;
+    GtkTextIter ts, te;
+    GtkTextView *tv;
+    GtkTextBuffer *tb;
+
+    g_return_if_fail (scfg);
+
+    /* remove old list */
+    g_list_free (scfg->tmp_sort_ign_fields);
+    scfg->tmp_sort_ign_fields = NULL;
+
+    /* read sort field states */
+    for (i=0; ign_fields[i] != -1; ++i)
+    {
+	gchar *buf = g_strdup_printf ("sort_ign_field_%d",
+				      ign_fields[i]);
+	GtkWidget *w = glade_xml_get_widget (sort_window_xml, buf);
+	g_return_if_fail (w);
+	scfg->tmp_sort_ign_fields = g_list_append (
+	    scfg->tmp_sort_ign_fields,
+	    (gpointer) gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (w)));
+	g_free (buf);
+    }
+
+    /* remove old strings */
+    g_free (scfg->tmp_sort_ign_strings);
+    scfg->tmp_sort_ign_strings = NULL;
+
+    /* read new ignore strings */
+    tv = GTK_TEXT_VIEW (glade_xml_get_widget (sort_window_xml,
+					      "sort_ign_strings"));
+    g_return_if_fail (tv);
+    tb = gtk_text_view_get_buffer (tv);
+    g_return_if_fail (tb);
+
+    gtk_text_buffer_get_bounds (tb, &ts, &te);
+    scfg->tmp_sort_ign_strings = gtk_text_buffer_get_text (tb,
+							   &ts, &te,
+							   TRUE);
+}
+
 /**
  * sort_window_create
  * Create, Initialize, and Show the sorting preferences window
@@ -1544,6 +1589,8 @@ void sort_window_create (void)
     {
 	GList *collist = NULL;
 	GtkWidget *w;
+	GtkTextView *tv;
+	GtkTextBuffer *tb;
 	gint i;
 
 	if(!tmpsortcfg && !origsortcfg)
@@ -1584,6 +1631,38 @@ void sort_window_create (void)
 /* 	    } */
 	    g_free (buf);
 	}
+	/* set the ignore strings */
+	tv = GTK_TEXT_VIEW (glade_xml_get_widget (sort_window_xml,
+						  "sort_ign_strings"));
+	tb = gtk_text_view_get_buffer (tv);
+	if (!tb)
+	{   /* text buffer doesn't exist yet */
+	    tb = gtk_text_buffer_new (NULL);
+	    gtk_text_view_set_buffer(tv, tb);
+	    gtk_text_view_set_editable(tv, FALSE);
+	    gtk_text_view_set_cursor_visible(tv, FALSE);
+	}
+	for (i=0; ; ++i)
+	{
+	    GtkTextIter ti;
+	    gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
+	    gchar *str = prefs_get_string (buf);
+
+	    g_free (buf);
+
+	    if (!str)  break;  /* end loop */
+
+	    /* append new text to the end */
+	    gtk_text_buffer_get_end_iter (tb, &ti);
+	    gtk_text_buffer_insert (tb, &ti, str, -1);
+	    /* append newline */
+	    gtk_text_buffer_get_end_iter (tb, &ti);
+	    gtk_text_buffer_insert (tb, &ti, "\n", -1);
+	    g_free (str);
+	}
+	/* update the origsortcfg with the original settings (ignore
+	 * fields and ignore strings) */
+	sort_window_read_sort_ign (origsortcfg);
 
 	/* Set Sort-Column-Combo */
 	/* create the list in the order of the columns displayed */
@@ -1769,50 +1848,89 @@ static TM_item sort_window_get_sort_col (void)
 
 
 /* copy newly set values from tmpsortcfg to the original cfg struct */
-void sort_window_set (void)
+static void sort_window_set (struct sortcfg *scfg)
 {
-    if (tmpsortcfg && origsortcfg)
+    struct sortcfg *tsc;
+    gint i;
+
+    g_return_if_fail (scfg);
+
+    tsc = clone_sortprefs ();
+
+    prefs_set_pm_sort (scfg->pm_sort);
+    prefs_set_pm_autostore (scfg->pm_autostore);
+    prefs_set_st_sort (scfg->st_sort);
+    prefs_set_tm_sort (scfg->tm_sort);
+    prefs_set_tm_autostore (scfg->tm_autostore);
+    prefs_set_case_sensitive (scfg->case_sensitive);
+    scfg->tm_sortcol = sort_window_get_sort_col ();
+    prefs_set_tm_sortcol (scfg->tm_sortcol);
+
+    /* set sort field states */
+    for (i=0; ign_fields[i] != -1; ++i)
     {
-	gint i;
-	struct sortcfg *tsc = clone_sortprefs ();
-	prefs_set_pm_sort (tmpsortcfg->pm_sort);
-	prefs_set_pm_autostore (tmpsortcfg->pm_autostore);
-	prefs_set_st_sort (tmpsortcfg->st_sort);
-	prefs_set_tm_sort (tmpsortcfg->tm_sort);
-	prefs_set_tm_autostore (tmpsortcfg->tm_autostore);
-	prefs_set_case_sensitive(tmpsortcfg->case_sensitive);
-	tmpsortcfg->tm_sortcol = sort_window_get_sort_col ();
-	prefs_set_tm_sortcol (tmpsortcfg->tm_sortcol);
-	/* read sort field states */
-	for (i=0; ign_fields[i] != -1; ++i)
-	{
-	    gchar *buf = g_strdup_printf ("sort_ign_field_%d",
-					  ign_fields[i]);
-	    GtkWidget *w = glade_xml_get_widget (sort_window_xml, buf);
-	    g_return_if_fail (w);
-	    prefs_set_int_value (
-		buf,
-		gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)));
-	    g_free (buf);
-	}
-	/* if sort type has changed, initialize display */
-	if (tsc->pm_sort != tmpsortcfg->pm_sort)
-	    pm_sort (tmpsortcfg->pm_sort);
-	if (tsc->st_sort != tmpsortcfg->st_sort)
-	    st_sort (tmpsortcfg->st_sort);
-	if ((tsc->tm_sort != tmpsortcfg->tm_sort) ||
-	    (tsc->tm_sortcol != tmpsortcfg->tm_sortcol))
-	{
-	    tm_sort_counter (-1);
-	    tm_sort (prefs_get_tm_sortcol (), tmpsortcfg->tm_sort);
-	}
-	/* if auto sort was changed to TRUE, store order */
-	if (!tsc->pm_autostore && tmpsortcfg->pm_autostore)
-	    pm_rows_reordered ();
-	if (!tsc->tm_autostore && tmpsortcfg->tm_autostore)
-	    tm_rows_reordered ();
-	sortcfg_free (tsc);
+	gchar *buf = g_strdup_printf ("sort_ign_field_%d",
+				      ign_fields[i]);
+	prefs_set_int_value (
+	    buf,
+	    (gint)g_list_nth_data (
+		scfg->tmp_sort_ign_fields, i));
+	g_free (buf);
     }
+    /* clean up old sort strings */
+    for (i=0; i>=0; ++i)
+    {
+	gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
+	if (prefs_get_string (buf))
+	{
+	    prefs_set_string_value (buf, NULL);
+	}
+	else
+	{
+	    i=-2;  /* end loop */
+	}
+	g_free (buf);
+    }
+    /* set new sort strings */
+    if (scfg->tmp_sort_ign_strings)
+    {
+	gchar **strings = g_strsplit(scfg->tmp_sort_ign_strings,
+				     "\n", -1);
+	gchar **strp = strings;
+	i=0;
+	while (*strp)
+	{
+	    g_strstrip (*strp);
+	    if (strlen (*strp) != 0)
+	    {
+		gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
+		prefs_set_string_value (buf, *strp);
+		++i;
+	    }
+	    ++strp;
+	}
+	g_strfreev (strings);
+    }
+
+
+    /* if sort type has changed, initialize display */
+    if (tsc->pm_sort != scfg->pm_sort)
+	pm_sort (scfg->pm_sort);
+    if (tsc->st_sort != scfg->st_sort)
+	st_sort (scfg->st_sort);
+    if ((tsc->tm_sort != scfg->tm_sort) ||
+	(tsc->tm_sortcol != scfg->tm_sortcol))
+    {
+	tm_sort_counter (-1);
+	tm_sort (prefs_get_tm_sortcol (), scfg->tm_sort);
+    }
+    /* if auto sort was changed to TRUE, store order */
+    if (!tsc->pm_autostore && scfg->pm_autostore)
+	pm_rows_reordered ();
+    if (!tsc->tm_autostore && scfg->tm_autostore)
+	tm_rows_reordered ();
+
+    sortcfg_free (tsc);
 }
 
 
@@ -1969,23 +2087,18 @@ on_sort_window_delete_event            (GtkWidget       *widget,
  * original values
  * Frees the tmpsortcfg and origsortcfg variable
  */
-void sort_window_cancel(void)
+void sort_window_cancel (void)
 {
-    struct sortcfg *tt;
-
-    /* exchange tmpsortcfg with origsortcfg */
-    tt = tmpsortcfg;
-    tmpsortcfg = origsortcfg;
-    origsortcfg = tt;
-    tt = NULL;
+    g_return_if_fail (tmpsortcfg);
+    g_return_if_fail (origsortcfg);
 
     /* "save" (i.e. reset) original configs */
-    sort_window_set ();
+    sort_window_set (origsortcfg);
 
     /* delete cfg struct */
     sortcfg_free (tmpsortcfg);
-    sortcfg_free (origsortcfg);
     tmpsortcfg = NULL;
+    sortcfg_free (origsortcfg);
     origsortcfg = NULL;
 
     /* close the window */
@@ -1997,6 +2110,9 @@ void sort_window_cancel(void)
 /* when window is deleted, we keep the currently applied prefs */
 void sort_window_delete(void)
 {
+    g_return_if_fail (tmpsortcfg);
+    g_return_if_fail (origsortcfg);
+
     /* delete sortcfg structs */
     sortcfg_free (tmpsortcfg);
     tmpsortcfg = NULL;
@@ -2013,8 +2129,13 @@ void sort_window_delete(void)
 /* Frees the tmpsortcfg and origsortcfg variable */
 void sort_window_ok (void)
 {
+    g_return_if_fail (tmpsortcfg);
+    g_return_if_fail (origsortcfg);
+
+    /* update the sort ignore strings */
+    sort_window_read_sort_ign (tmpsortcfg);
     /* save current settings */
-    sort_window_set ();
+    sort_window_set (tmpsortcfg);
 
     /* delete sortcfg structs */
     sortcfg_free (tmpsortcfg);
@@ -2032,8 +2153,13 @@ void sort_window_ok (void)
 /* apply the current settings, don't close the window */
 void sort_window_apply (void)
 {
+    g_return_if_fail (tmpsortcfg);
+    g_return_if_fail (origsortcfg);
+
+    /* update the sort ignore strings */
+    sort_window_read_sort_ign (tmpsortcfg);
     /* save current settings */
-    sort_window_set ();
+    sort_window_set (tmpsortcfg);
 }
 
 void sort_window_set_pm_autostore (gboolean val)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-27 23:03:01 jcs>
+/* Time-stamp: <2005-06-28 23:01:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -101,6 +101,8 @@ struct cfg
     gboolean pm_autostore;   /* save sort order automatically?    */
     gboolean tm_autostore;   /* save sort order automatically?    */
     gboolean case_sensitive; /* Should sorting be case-sensitive? */
+    GList *tmp_sort_ign_fields; /* used in prefs_window.c only     */
+    gchar *tmp_sort_ign_strings;/* used in prefs_window.c only     */
   } sortcfg;
   gboolean info_window;   /* is info window open (will then open on restart */
   gboolean mpl_autoselect;/* select mpl automatically? */

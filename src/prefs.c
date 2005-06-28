@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-27 23:05:46 jcs>
+/* Time-stamp: <2005-06-28 23:24:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -289,6 +289,7 @@ struct cfg *cfg_new(void)
     mycfg->mserv_use = FALSE;
     mycfg->mserv_report_probs = TRUE;
     mycfg->mserv_username = g_strdup ("");
+
     return(mycfg);
 }
 
@@ -1226,6 +1227,9 @@ void cfg_free(struct cfg *c)
 
 void sortcfg_free(struct sortcfg *c)
 {
+    g_return_if_fail (c);
+    g_list_free (c->tmp_sort_ign_fields);
+    g_free (c->tmp_sort_ign_strings);
     g_free (c);
 }
 
@@ -1481,6 +1485,9 @@ struct sortcfg *clone_sortprefs(void)
     {
 	result = g_memdup (&cfg->sortcfg, sizeof (struct sortcfg));
     }
+    /* GLists are not copied */
+    result->tmp_sort_ign_fields = NULL;
+    result->tmp_sort_ign_strings = NULL;
     return(result);
 }
 
