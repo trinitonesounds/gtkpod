@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:14 jcs>
+/* Time-stamp: <2005-07-01 01:07:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -41,6 +41,7 @@
 #include "charset.h"
 #include "itdb.h"
 #include "misc.h"
+#include "display.h"
 #include "prefs.h"
 #include <time.h>
 
@@ -49,7 +50,7 @@
 
 
 /* translates a TM_COLUMN_... (defined in display.h) into a
- * T_... (defined in track.h). Returns -1 in case a translation is not
+ * T_... (defined in display.h). Returns -1 in case a translation is not
  * possible */
 T_item TM_to_T (TM_item sm)
 {
@@ -89,7 +90,7 @@ T_item TM_to_T (TM_item sm)
 
 
 /* translates a ST_CAT_... (defined in display.h) into a
- * T_... (defined in track.h). Returns -1 in case a translation is not
+ * T_... (defined in display.h). Returns -1 in case a translation is not
  * possible */
 T_item ST_to_T (ST_CAT_item st)
 {
@@ -101,6 +102,26 @@ T_item ST_to_T (ST_CAT_item st)
     case ST_CAT_COMPOSER:    return T_COMPOSER;
     case ST_CAT_TITLE:       return T_TITLE;
     case ST_CAT_YEAR:        return T_YEAR;
+    case ST_CAT_SPECIAL:
+    case ST_CAT_NUM:         return -1;
+    }
+    return -1;
+}
+
+
+/* translates a ST_CAT_... (defined in display.h) into a
+ * TM_... (defined in display.h). Returns -1 in case a translation is not
+ * possible */
+TM_item ST_to_TM (ST_CAT_item st)
+{
+    switch (st)
+    {
+    case ST_CAT_ARTIST:      return TM_COLUMN_ARTIST;
+    case ST_CAT_ALBUM:       return TM_COLUMN_ALBUM;
+    case ST_CAT_GENRE:       return TM_COLUMN_GENRE;
+    case ST_CAT_COMPOSER:    return TM_COLUMN_COMPOSER;
+    case ST_CAT_TITLE:       return TM_COLUMN_TITLE;
+    case ST_CAT_YEAR:        return TM_COLUMN_YEAR;
     case ST_CAT_SPECIAL:
     case ST_CAT_NUM:         return -1;
     }

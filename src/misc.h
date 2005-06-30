@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 21:01:40 jcs>
+/* Time-stamp: <2005-07-01 01:05:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -89,6 +89,7 @@ void gtkpod_main_window_set_active(gboolean active);
 
 T_item TM_to_T (TM_item sm);
 T_item ST_to_T (ST_CAT_item st);
+TM_item ST_to_TM (ST_CAT_item st);
 gchar *get_track_info (Track *track, gboolean prefer_filename);
 
 void ipod_directories_head (const gchar *mountpoint);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-27 23:39:00 jcs>
+/* Time-stamp: <2005-07-01 01:05:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1884,7 +1884,7 @@ static void tm_sort_column_changed (GtkTreeSortable *ts,
 
     gtk_tree_sortable_get_sort_column_id (ts, &newcol, &order);
 
-/*    printf ("scc -- col: %d, order: %d\n", newcol, order); */
+/*     printf ("scc -- col: %d, order: %d\n", newcol, order);  */
 
     /* set compare function for strings (to speed up sorting) */
     buf = g_strdup_printf ("sort_ign_field_%d", newcol);

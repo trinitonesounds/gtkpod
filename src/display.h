@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 13:23:46 jcs>
+/* Time-stamp: <2005-07-01 01:05:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -123,7 +123,11 @@ typedef struct {
   TimeInfo ti_added;                 /* TimeInfo "added" (sp)  */
   TimeInfo ti_modified;              /* TimeInfo "modified" (sp) */
   TimeInfo ti_played;                /* TimeInfo "played" (sp)   */
-  GtkTooltipsData *sp_tooltips_data; /* pointer to tooltips in special st */
+  GtkTooltipsData *sp_tooltips_data; /* pointer to tooltips in special
+				      * st */
+  /* function used for string comparisons, set in on_st_switch_page */
+  gint (*string_compare_func) (gchar *str1, gchar *str2);
+
 } SortTab;
 
 /* "Column numbers" in sort tab model */

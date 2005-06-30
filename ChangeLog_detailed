@@ -4,6 +4,10 @@
           could not be read because of an error in the parse code
           (gtkpod would attempt to read beyond the end of the file)
 
+	* continued with user definable ignore list in
+          display_sorttabs.c (the list still is not used, but now only
+          the sort function needs to be updated)
+
 2005-06-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* continued with user definable ignore list during sorting

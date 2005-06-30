@@ -8,7 +8,7 @@ gtkpod V0.94-CVS
 
        BUGFIX: Some iTunesDB written by iTunes could not be read
        because of an error in the parse code (gtkpod would attempt to
-       read beyond the end of the file). 
+       read beyond the end of the file).
 
 gtkpod V0.93.1
        BUGFIX: When changing the mountpoint, the change was not

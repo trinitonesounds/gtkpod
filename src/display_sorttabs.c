@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-05 23:43:59 jcs>
+/* Time-stamp: <2005-07-01 01:08:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -48,6 +48,7 @@
 static SortTab *sorttab[SORT_TAB_MAX];
 /* pointer to paned elements holding the sort tabs */
 static GtkPaned *st_paned[PANED_NUM_ST];
+/* compare function to be used for string comparisons */
 
 static void sp_store_sp_entries (gint inst);
 
@@ -257,12 +258,23 @@ on_st_treeview_key_release_event       (GtkWidget       *widget,
 
 
 /* callback */
-void
-on_sorttab_switch_page                 (GtkNotebook     *notebook,
-					GtkNotebookPage *page,
-					guint            page_num,
-					gpointer         user_data)
+static void
+on_st_switch_page                 (GtkNotebook     *notebook,
+				   GtkNotebookPage *page,
+				   guint            page_num,
+				   gpointer         user_data)
 {
+    gchar *buf;
+    gint inst = (gint)user_data;
+
+/*     printf ("switch_page: inst/page: %d/%d\n", inst, page_num); */
+    /* set compare function for strings (to speed up sorting) */
+    buf = g_strdup_printf ("sort_ign_field_%d", ST_to_TM (page_num));
+    if (prefs_get_int (buf))
+	sorttab[inst]->string_compare_func = compare_string_fuzzy;
+    else
+	sorttab[inst]->string_compare_func = compare_string;
+    g_free (buf);
     space_data_update ();
     st_page_selected (notebook, page_num);
 }
@@ -2196,13 +2208,13 @@ gint st_data_compare_func (GtkTreeModel *model,
   if (entry2->master) return (corr);
 
   /* compare the two entries */
+  /* string_compare_func is set to either compare_string_fuzzy or
+     compare_string in on_st_switch_page() which is called
+     once before the comparing begins. */
+
   st = sorttab[inst];
-  switch ( st->current_category ) {
-    case ST_CAT_ARTIST:
-	return compare_string_fuzzy (entry1->name, entry2->name);
-    default:
-	return compare_string (entry1->name, entry2->name);
-  }
+
+  return st->string_compare_func (entry1->name, entry2->name);
 }
 
 /* Stop editing. If @cancel is TRUE, the edited value will be
@@ -2866,8 +2878,8 @@ void st_create_notebook (gint inst)
       gtk_paned_pack1 (paned, st0_notebook, FALSE, TRUE);
   gtk_notebook_set_scrollable (GTK_NOTEBOOK (st0_notebook), TRUE);
   g_signal_connect ((gpointer) st0_notebook, "switch_page",
-                    G_CALLBACK (on_sorttab_switch_page),
-                    NULL);
+                    G_CALLBACK (on_st_switch_page),
+                    (gpointer)inst);
 
   st->notebook = GTK_NOTEBOOK (st0_notebook);
   st_create_pages (inst);
@@ -2890,6 +2902,7 @@ void st_create_tabs (void)
   for (inst=SORT_TAB_MAX-1; inst>=0; --inst)
   {
 	sorttab[inst] = g_malloc0 (sizeof (SortTab));
+	sorttab[inst]->string_compare_func = compare_string;
 	st_create_notebook (inst);
   }
   st_show_visible ();
