@@ -6,6 +6,10 @@ gtkpod V0.94-CVS
        Arbitrary depth and order of stable sorting is possible by
        clicking the sort columns in the desired order.
 
+       BUGFIX: Some iTunesDB written by iTunes could not be read
+       because of an error in the parse code (gtkpod would attempt to
+       read beyond the end of the file). 
+
 gtkpod V0.93.1
        BUGFIX: When changing the mountpoint, the change was not
        written to the preferences file correctly.

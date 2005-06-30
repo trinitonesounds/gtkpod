@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:17 jcs>
+/* Time-stamp: <2005-07-01 00:14:29 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -294,8 +294,7 @@ gchar * itdb_resolve_path (const gchar *root,
 
 /* Check if the @seek with length @len is legal or out of
  * range. Returns TRUE if legal and FALSE when it is out of range, in
- * which case cts->error is set as well.
- * g_return_if_fails for cts and cts->contents are done as well. */
+ * which case cts->error is set as well. */
 static gboolean check_seek (FContents *cts, glong seek, glong len)
 {
     g_return_val_if_fail (cts, FALSE);
@@ -770,7 +769,7 @@ static void *get_mhod (FContents *cts, gulong mhod_seek,
   g_return_val_if_fail (cts, NULL);
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "get_mhod seek: %d\n", mhod_seek);
+  fprintf(stderr, "get_mhod seek: %ld\n", mhod_seek);
 #endif
 
   g_return_val_if_fail (cts, NULL);
@@ -1148,6 +1147,9 @@ static glong get_pl (FImport *fimp, glong seek)
   while (i<tracknum)
   {
       guint32 len = get32lint (cts, seek+8);
+#if ITUNESDB_DEBUG
+      fprintf(stderr, "  %lx: seeking track %d of %d\n", seek, i+1, (int)tracknum);
+#endif
       CHECK_ERROR (fimp, -1);
       /* We read the mhip headers and skip everything else (the mhips
        * seem to come in pairs: mhip/mhod mhip/mhod ...). */
@@ -1162,25 +1164,29 @@ static glong get_pl (FImport *fimp, glong seek)
       }
       if (cmp_n_bytes_seek (cts, "mhip", seek, 4))
       {
+#if ITUNESDB_DEBUG
+      fprintf(stderr, "  %lx: mhit\n", seek);
+#endif
 	  Itdb_Track *tr;
 	  gint32 pos = -1;
 	  guint32 posid;
 	  gint32 mhod_type;
 	  gint32 mhod_len;
-	  guint32 ref = get32lint(cts, seek+24);
+	  guint32 mhit_len;
+	  guint32 ref;
+	  mhit_len = get32lint(cts, seek+4);
+	  CHECK_ERROR (fimp, -1);
+	  ref = get32lint(cts, seek+24);
 	  CHECK_ERROR (fimp, -1);
 	  /* the mhod that follows gives us the position in the
 	     playlist (type 100) */
-	  mhod_type = get_mhod_type (cts, seek+len, NULL);
+	  mhod_type = get_mhod_type (cts, seek+mhit_len, NULL);
 	  CHECK_ERROR (fimp, -1);
 	  if (mhod_type == MHOD_ID_PLAYLIST)
 	  {
-	      posid = (guint32)get_mhod (cts, seek+len,
+	      posid = (guint32)get_mhod (cts, seek+mhit_len,
 					 &mhod_len, &mhod_type);
 	      CHECK_ERROR (fimp, -1);
-	      /* skip the mhod since we already used it */
-	      seek += len;
-	      len = mhod_len;
 	      /* The posids don't have to be in numeric order, but our
 		 database depends on the playlist members being sorted
 		 according to the order they appear in the
@@ -1197,7 +1203,9 @@ static glong get_pl (FImport *fimp, glong seek)
 	  }
 	  tr = itdb_track_id_tree_by_id (fimp->idtree, ref);
 	  if (tr)
+	  {
 	      itdb_playlist_add_track (plitem, tr, pos);
+	  }
 	  else
 	      g_warning (_("Itdb_Track ID '%d' not found.\n"), ref);
 	  ++i;
@@ -2551,7 +2559,7 @@ static gboolean write_playlist(FExport *fexp, Itdb_Playlist *pl)
     mhyp_seek = cts->pos;
 
 #if ITUNESDB_DEBUG
-  fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, track_num);
+  fprintf(stderr, "Playlist: %s (%d tracks)\n", pl->name, g_list_length (pl->members));
 #endif
 
     put_data (cts, "mhyp", 4);    /* header                    */

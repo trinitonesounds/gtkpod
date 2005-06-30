@@ -1,5 +1,11 @@
 2005-06-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+        * itdb_itunesdb.c: BUGFIX: Some iTunesDB written by iTunes
+          could not be read because of an error in the parse code
+          (gtkpod would attempt to read beyond the end of the file)
+
+2005-06-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	* continued with user definable ignore list during sorting
           ("The", "A",... at the beginning of fields). Prefs can be
           set, are stored and read, but they are not yet used. Also,
