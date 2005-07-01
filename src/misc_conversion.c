@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-01 01:07:02 jcs>
+/* Time-stamp: <2005-07-02 00:37:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -48,13 +48,88 @@
 
 #define DEBUG_MISC 0
 
+/* Note: the toggle buttons for tag_autoset and display_col in the
+ * prefs_window are named after the the TM_COLUM_* numbers defined in
+ * display.h (Title: tag_autoset0, Artist: tag_autoset1
+ * etc.). ign_field is named after T_*. Since the labels to the
+ * buttons are set in prefs_window.c when creating the window, you
+ * only need to name the buttons in the intended order using
+ * glade-2. There is no need to label them. */
+/* Strings associated to the column headers */
+static const gchar *t_strings[] = {
+    N_("All"),               /*  0 */
+    N_("Album"),
+    N_("Artist"),
+    N_("Title"),
+    N_("Genre"),
+    N_("Comment"),           /*  5 */
+    N_("Composer"),
+    N_("Kind"),
+    N_("PC File"),
+    N_("iPod File"),
+    N_("iPod ID"),           /* 10 */
+    N_("Track Nr (#)"),
+    N_("Transferred"),
+    N_("File Size"),
+    N_("Play Time"),
+    N_("Bitrate"),           /* 15 */
+    N_("Samplerate"),
+    N_("BPM"),
+    N_("Playcount"),
+    N_("Rating"),
+    N_("Date added"),        /* 20 */
+    N_("Date played"),
+    N_("Date modified"),
+    N_("Volume"),
+    N_("Soundcheck"),
+    N_("Year"),              /* 25 */
+    N_("CD Nr"),
+    N_("Grouping"),
+    N_("Compilation"),
+    NULL };
+
+/* Tooltips for prefs window */
+static const gchar *t_tooltips[] = {
+    NULL,                                              /*  0 */
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,                                              /*  5 */
+    NULL,
+    NULL,
+    N_("Name of file on PC, if available"),
+    N_("Name of file on the iPod"),
+    NULL,                                              /* 10 */
+    N_("Track Nr. and total number of tracks on CD"),
+    N_("Whether the file has already been "
+       "transferred to the iPod or not"),
+    NULL,
+    NULL,
+    NULL,                                              /* 15 */
+    NULL,
+    N_("Supposedly something that tells the iPod to "
+       "increase or decrease the playback speed"),
+    N_("Number of times the track has been played"),
+    N_("Star rating from 0 to 5"),
+    N_("Date and time track has been added"),          /* 20 */
+    N_("Date and time track has last been played"),
+    N_("Date and time track has last been modified"),
+    N_("Manual volume adjust"),
+    N_("Volume adjust in dB (replay gain) -- "
+       "you need to activate 'soundcheck' on the iPod"),
+    NULL,                                              /* 25 */
+    N_("CD Nr. and total number of CDS in set"),
+    NULL,
+    NULL };
+
 
 /* translates a TM_COLUMN_... (defined in display.h) into a
  * T_... (defined in display.h). Returns -1 in case a translation is not
  * possible */
-T_item TM_to_T (TM_item sm)
+T_item TM_to_T (TM_item tm)
 {
-    switch (sm)
+    switch (tm)
     {
     case TM_COLUMN_TITLE:         return T_TITLE;
     case TM_COLUMN_ARTIST:        return T_ARTIST;
@@ -109,24 +184,49 @@ T_item ST_to_T (ST_CAT_item st)
 }
 
 
-/* translates a ST_CAT_... (defined in display.h) into a
- * TM_... (defined in display.h). Returns -1 in case a translation is not
- * possible */
-TM_item ST_to_TM (ST_CAT_item st)
+/* return descriptive string (non-localized -- pass through gettext()
+ * for the localized version) for tm_item (usually used to name
+ * buttons or column headers). */
+const gchar *get_tm_string (TM_item tm)
 {
-    switch (st)
-    {
-    case ST_CAT_ARTIST:      return TM_COLUMN_ARTIST;
-    case ST_CAT_ALBUM:       return TM_COLUMN_ALBUM;
-    case ST_CAT_GENRE:       return TM_COLUMN_GENRE;
-    case ST_CAT_COMPOSER:    return TM_COLUMN_COMPOSER;
-    case ST_CAT_TITLE:       return TM_COLUMN_TITLE;
-    case ST_CAT_YEAR:        return TM_COLUMN_YEAR;
-    case ST_CAT_SPECIAL:
-    case ST_CAT_NUM:         return -1;
-    }
-    return -1;
+    T_item t = TM_to_T (tm);
+
+    if (t != -1)   return t_strings[t];
+    else           return ("");
 }
+
+
+/* return string (non-localized -- pass through gettext()
+ * for the localized version) for tm_item that can be used as a
+ * tooltip */
+const gchar *get_tm_tooltip (TM_item tm)
+{
+    T_item t = TM_to_T (tm);
+
+    if (t != -1)   return t_tooltips[t];
+    else           return ("");
+}
+
+
+/* return descriptive string (non-localized -- pass through gettext()
+ * for the localized version) for tm_item (usually used to name
+ * buttons or column headers). */
+const gchar *get_t_string (T_item t)
+{
+    if (t != -1)   return t_strings[t];
+    else           return ("");
+}
+
+
+/* return string (non-localized -- pass through gettext()
+ * for the localized version) for tm_item that can be used as a
+ * tooltip */
+const gchar *get_t_tooltip (T_item t)
+{
+    if ((t >= 0) && (t<T_ITEM_NUM))   return t_tooltips[t];
+    else                              return ("");
+}
+
 
 
 /*------------------------------------------------------------------*\

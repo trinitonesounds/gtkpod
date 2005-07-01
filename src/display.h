@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-01 01:05:51 jcs>
+/* Time-stamp: <2005-07-02 00:32:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -120,14 +120,12 @@ typedef struct {
   GList *sp_members;                 /* list of tracks in sorttab */
   GList *sp_selected;                /* list of tracks selected */
   gboolean is_go;                    /* pass new members on automatically */
-  TimeInfo ti_added;                 /* TimeInfo "added" (sp)  */
-  TimeInfo ti_modified;              /* TimeInfo "modified" (sp) */
-  TimeInfo ti_played;                /* TimeInfo "played" (sp)   */
-  GtkTooltipsData *sp_tooltips_data; /* pointer to tooltips in special
-				      * st */
-  /* function used for string comparisons, set in on_st_switch_page */
+  TimeInfo ti_added;                 /* TimeInfo "added" (sp)         */
+  TimeInfo ti_modified;              /* TimeInfo "modified" (sp)      */
+  TimeInfo ti_played;                /* TimeInfo "played" (sp)        */
+  GtkTooltipsData *sp_tooltips_data; /* ptr to tooltips in special st */
+  /* function used for string comparisons, set in on_st_switch_page   */
   gint (*string_compare_func) (gchar *str1, gchar *str2);
-
 } SortTab;
 
 /* "Column numbers" in sort tab model */
@@ -180,44 +178,43 @@ typedef enum  {
 /* A means to address the fields by uniform IDs. May be extended as
  * needed. You should extend "track_get_item_pointer()" defined in
  * track.c as well for string fields. */
+/* Used in prefs_window.c to label the sort_ign_field<num> buttons */
 typedef enum {
     T_ALL = 0,      /* all fields */
     T_ALBUM,
     T_ARTIST,
     T_TITLE,
     T_GENRE,
-    T_COMMENT,
+    T_COMMENT,      /*  5 */
     T_COMPOSER,
     T_FDESC,
     T_PC_PATH,
     T_IPOD_PATH,
-    T_IPOD_ID,
+    T_IPOD_ID,      /* 10 */
     T_TRACK_NR,
     T_TRANSFERRED,
     T_SIZE,
     T_TRACKLEN,
-    T_BITRATE,
+    T_BITRATE,      /* 15 */
     T_SAMPLERATE,
     T_BPM,
     T_PLAYCOUNT,
     T_RATING,
-    T_TIME_ADDED,
+    T_TIME_ADDED,   /* 20 */
     T_TIME_PLAYED,
     T_TIME_MODIFIED,
     T_VOLUME,
     T_SOUNDCHECK,
-    T_YEAR,
+    T_YEAR,         /* 25 */
     T_CD_NR,
     T_GROUPING,
     T_COMPILATION,
+    T_ITEM_NUM,
 } T_item;
 
 
 /* number of entries with "autoset empty tag to filename " feature */
 #define TM_NUM_TAGS_PREFS (5)
-
-extern const gchar *tm_col_strings[];
-extern const gchar *tm_col_tooltips[];
 
 /* "Column numbers" in playlist model */
 enum  {

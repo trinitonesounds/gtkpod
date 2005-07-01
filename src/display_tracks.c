@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-01 01:05:05 jcs>
+/* Time-stamp: <2005-07-02 00:38:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -76,76 +76,6 @@ static GtkTargetEntry tm_drop_types [] = {
 };
 
 
-/* Note: the toggle buttons for tag_autoset, display_col, and
- * ign_field in the prefs_window are named after the the TM_COLUM_*
- * numbers defined in display.h (Title: tag_autoset0, Artist:
- * tag_autoset1 etc.). Since the labels to the buttons are set in
- * prefs_window.c when creating the window, you only need to name the
- * buttons in the intended order using glade-2. There is no need to
- * label them. */
-/* Strings associated to the column headers */
-const gchar *tm_col_strings[] = {
-    N_("Title"),             /*  0 */
-    N_("Artist"),
-    N_("Album"),
-    N_("Genre"),
-    N_("Composer"),
-    N_("Track Nr (#)"),      /*  5 */
-    N_("iPod ID"),
-    N_("PC File"),
-    N_("Transferred"),
-    N_("File Size"),
-    N_("Play Time"),         /* 10 */
-    N_("Bitrate"),
-    N_("Playcount"),
-    N_("Rating"),
-    N_("Date played"),
-    N_("Date modified"),     /* 15 */
-    N_("Volume"),
-    N_("Year"),
-    N_("CD Nr"),
-    N_("Date added"),
-    N_("iPod File"),         /* 20 */
-    N_("Soundcheck"),
-    N_("Samplerate"),
-    N_("BPM"),
-    N_("Kind"),
-    N_("Grouping"),          /* 25 */
-    N_("Compilation"),
-    NULL };
-/* Tooltips for prefs window */
-const gchar *tm_col_tooltips[] = {
-    NULL,                                              /*  0 */
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    N_("Track Nr. and total number of tracks on CD"),  /*  5 */
-    NULL,
-    N_("Name of file on PC, if available"),
-    N_("Whether the file has already been "
-       "transferred to the iPod or not"),
-    NULL,
-    NULL,                                              /* 10 */
-    NULL,
-    N_("Number of times the track has been played"),
-    N_("Star rating from 0 to 5"),
-    N_("Date and time track has last been played"),
-    N_("Date and time track has last been modified"),      /* 15 */
-    N_("Manual volume adjust"),
-    NULL,
-    N_("CD Nr. and total number of CDS in set"),
-    N_("Date and time track has been added"),
-    N_("Name of file on the iPod"),                    /* 20 */
-    N_("Volume adjust in dB (replay gain) -- "
-       "you need to activate 'soundcheck' on the iPod"),
-    NULL,
-    N_("Supposedly something that tells the iPod to "
-       "increase or decrease the playback speed"),
-    NULL,
-    NULL,                  /* 25 */
-    NULL,
-    NULL };
 
 
 /* ---------------------------------------------------------------- */
@@ -1887,7 +1817,7 @@ static void tm_sort_column_changed (GtkTreeSortable *ts,
 /*     printf ("scc -- col: %d, order: %d\n", newcol, order);  */
 
     /* set compare function for strings (to speed up sorting) */
-    buf = g_strdup_printf ("sort_ign_field_%d", newcol);
+    buf = g_strdup_printf ("sort_ign_field_%d", TM_to_T (newcol));
     if (prefs_get_int (buf))
 	string_compare_func = compare_string_fuzzy;
     else
@@ -2033,7 +1963,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   g_return_val_if_fail (tm_item >= 0, NULL);
   g_return_val_if_fail (tm_item < TM_NUM_COLUMNS, NULL);
 
-  text = gettext (tm_col_strings[tm_item]);
+  text = gettext (get_tm_string (tm_item));
 
   g_return_val_if_fail (text, NULL);
 
@@ -2127,9 +2057,9 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       gtk_tree_view_column_set_visible (col,
 					prefs_get_col_visible (tm_item));
   }
-  if (tm_col_tooltips[tm_item])
+  if (get_tm_tooltip (tm_item))
       gtk_tooltips_set_tip (tt, col->button, 
-			    gettext (tm_col_tooltips[tm_item]),
+			    gettext (get_tm_tooltip (tm_item)),
 			    NULL);
   return col;
 }

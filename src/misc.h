@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-01 01:05:06 jcs>
+/* Time-stamp: <2005-07-02 01:28:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -89,7 +89,11 @@ void gtkpod_main_window_set_active(gboolean active);
 
 T_item TM_to_T (TM_item sm);
 T_item ST_to_T (ST_CAT_item st);
-TM_item ST_to_TM (ST_CAT_item st);
+const gchar *get_tm_string (TM_item tm);
+const gchar *get_tm_tooltip (TM_item tm);
+const gchar *get_t_string (T_item t);
+const gchar *get_t_tooltip (T_item t);
+
 gchar *get_track_info (Track *track, gboolean prefer_filename);
 
 void ipod_directories_head (const gchar *mountpoint);
@@ -128,6 +132,7 @@ void time_set_time (Track *track, time_t t, TM_item tm_item);
 gchar *get_filesize_as_string (double size);
 
 gint compare_string (gchar *str1, gchar *str2);
+void compare_string_fuzzy_generate_keys (void);
 gint compare_string_fuzzy (gchar *str1, gchar *str2);
 gint compare_string_case_insensitive (gchar *str1, gchar *str2);
 

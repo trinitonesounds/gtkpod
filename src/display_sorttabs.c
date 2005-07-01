@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-01 01:08:47 jcs>
+/* Time-stamp: <2005-07-02 00:37:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -269,7 +269,7 @@ on_st_switch_page                 (GtkNotebook     *notebook,
 
 /*     printf ("switch_page: inst/page: %d/%d\n", inst, page_num); */
     /* set compare function for strings (to speed up sorting) */
-    buf = g_strdup_printf ("sort_ign_field_%d", ST_to_TM (page_num));
+    buf = g_strdup_printf ("sort_ign_field_%d", ST_to_T (page_num));
     if (prefs_get_int (buf))
 	sorttab[inst]->string_compare_func = compare_string_fuzzy;
     else

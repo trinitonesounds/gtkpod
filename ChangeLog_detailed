@@ -1,4 +1,9 @@
-2005-06-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2005-07-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* finished user-definable sort ignore list (ctrl-s). Still
+          todo: resort automatically when changing the ignore list.
+
+2005-06-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
         * itdb_itunesdb.c: BUGFIX: Some iTunesDB written by iTunes
           could not be read because of an error in the parse code

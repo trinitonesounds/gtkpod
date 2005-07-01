@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-28 23:20:18 jcs>
+/* Time-stamp: <2005-07-02 01:28:41 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -657,14 +657,14 @@ prefs_window_create(void)
 	{
 	    /* set label */
 	    gtk_button_set_label (GTK_BUTTON (w),
-				  gettext (tm_col_strings[i]));
+				  gettext (get_tm_string (i)));
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 					 tmpcfg->col_visible[i]);
 	    /* set tooltip if available */
-	    if (tm_col_tooltips[i])
+	    if (get_tm_tooltip (i))
 	    {
 		gtk_tooltips_set_tip (tt, w, 
-				      gettext (tm_col_tooltips[i]),
+				      gettext (get_tm_tooltip (i)),
 				      NULL);
 	    }
 	    /* glade makes a "GTK_OBJECT (i)" which segfaults
@@ -1522,9 +1522,9 @@ prefs_window_set_unused_gboolean3(gboolean val)
 \* ------------------------------------------------------------ */
 
 /* the following checkboxes exist */
-static const gint ign_fields[] = {
-    TM_COLUMN_TITLE, TM_COLUMN_ARTIST,
-    TM_COLUMN_ALBUM, TM_COLUMN_COMPOSER,
+static const gint sort_ign_fields[] = {
+    T_TITLE, T_ARTIST,
+    T_ALBUM, T_COMPOSER,
     -1
 };
 
@@ -1544,10 +1544,10 @@ static void sort_window_read_sort_ign (struct sortcfg *scfg)
     scfg->tmp_sort_ign_fields = NULL;
 
     /* read sort field states */
-    for (i=0; ign_fields[i] != -1; ++i)
+    for (i=0; sort_ign_fields[i] != -1; ++i)
     {
 	gchar *buf = g_strdup_printf ("sort_ign_field_%d",
-				      ign_fields[i]);
+				      sort_ign_fields[i]);
 	GtkWidget *w = glade_xml_get_widget (sort_window_xml, buf);
 	g_return_if_fail (w);
 	scfg->tmp_sort_ign_fields = g_list_append (
@@ -1609,24 +1609,24 @@ void sort_window_create (void)
 	sort_window = glade_xml_get_widget (sort_window_xml, "sort_window");
 
 	/* label the ignore-field checkbox-labels */
-	for (i=0; ign_fields[i] != -1; ++i)
+	for (i=0; sort_ign_fields[i] != -1; ++i)
 	{
 	    gchar *buf = g_strdup_printf ("sort_ign_field_%d",
-					  ign_fields[i]);
+					  sort_ign_fields[i]);
 	    GtkWidget *w = glade_xml_get_widget (sort_window_xml, buf);
 	    g_return_if_fail (w);
 	    gtk_button_set_label (
 		GTK_BUTTON (w),
-		gettext (tm_col_strings[ign_fields[i]]));
+		gettext (get_t_string (sort_ign_fields[i])));
 	    gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (w),
 		prefs_get_int (buf));
 	    /* set tooltip if available */
-/* 	    if (tm_col_tooltips[ign_fields[i]]) */
+/* 	    if (tm_col_tooltips[sort_ign_fields[i]]) */
 /* 	    { */
 /* 		gtk_tooltips_set_tip ( */
 /* 		    tt, w, */
-/* 		    gettext (tm_col_tooltips[ign_fields[i]]), */
+/* 		    gettext (tm_col_tooltips[sort_ign_fields[i]]), */
 /* 		    NULL); */
 /* 	    } */
 	    g_free (buf);
@@ -1650,7 +1650,14 @@ void sort_window_create (void)
 
 	    g_free (buf);
 
-	    if (!str)  break;  /* end loop */
+           /* end loop if no string is set or if the the string
+	    * corresponds to the end marker */
+	    if (!str)  break;  
+	    if (strcmp (str, SORT_IGNORE_STRINGS_END) == 0)
+	    {
+		g_free (str);
+		break;
+	    }
 
 	    /* append new text to the end */
 	    gtk_text_buffer_get_end_iter (tb, &ti);
@@ -1674,7 +1681,7 @@ void sort_window_create (void)
 	    {
 		if (prefs_get_col_visible (col))
 		    collist = g_list_append (collist,
-					     gettext (tm_col_strings[col]));
+					     gettext (get_tm_string (col)));
 	    }
 	}
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
@@ -1684,7 +1691,7 @@ void sort_window_create (void)
 	    {
 		if (!prefs_get_col_visible (col))
 		    collist = g_list_append (collist,
-					     gettext (tm_col_strings[col]));
+					     gettext (get_tm_string (col)));
 	    }
 	}
 	w = glade_xml_get_widget (sort_window_xml, "sort_combo");
@@ -1777,7 +1784,7 @@ void sort_window_update (void)
 					 tmpsortcfg->case_sensitive);
 	}
 	/* set standard entry in combo */
-	str = gettext (tm_col_strings[prefs_get_tm_sortcol ()]);
+	str = gettext (get_tm_string (prefs_get_tm_sortcol ()));
 	w = glade_xml_get_widget (sort_window_xml, "sort_combo");
 	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
     }
@@ -1833,8 +1840,8 @@ static TM_item sort_window_get_sort_col (void)
     str = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (w)->entry));
     /* Check which string is selected in the combo */
     if (str)
-	for (i=0; tm_col_strings[i]; ++i)
-	    if (strcmp (gettext (tm_col_strings[i]), str) == 0)  break;
+	for (i=0; get_tm_string (i); ++i)
+	    if (strcmp (gettext (get_tm_string (i)), str) == 0)  break;
     if ((i<0) || (i>= TM_NUM_COLUMNS))
     {
 	fprintf (stderr,
@@ -1851,6 +1858,7 @@ static TM_item sort_window_get_sort_col (void)
 static void sort_window_set (struct sortcfg *scfg)
 {
     struct sortcfg *tsc;
+    gchar *buf;
     gint i;
 
     g_return_if_fail (scfg);
@@ -1867,10 +1875,10 @@ static void sort_window_set (struct sortcfg *scfg)
     prefs_set_tm_sortcol (scfg->tm_sortcol);
 
     /* set sort field states */
-    for (i=0; ign_fields[i] != -1; ++i)
+    for (i=0; sort_ign_fields[i] != -1; ++i)
     {
 	gchar *buf = g_strdup_printf ("sort_ign_field_%d",
-				      ign_fields[i]);
+				      sort_ign_fields[i]);
 	prefs_set_int_value (
 	    buf,
 	    (gint)g_list_nth_data (
@@ -1892,26 +1900,35 @@ static void sort_window_set (struct sortcfg *scfg)
 	g_free (buf);
     }
     /* set new sort strings */
+    i=0;
     if (scfg->tmp_sort_ign_strings)
     {
 	gchar **strings = g_strsplit(scfg->tmp_sort_ign_strings,
 				     "\n", -1);
 	gchar **strp = strings;
-	i=0;
 	while (*strp)
 	{
 	    g_strstrip (*strp);
 	    if (strlen (*strp) != 0)
 	    {
-		gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
-		prefs_set_string_value (buf, *strp);
+		/* add space to the ignore string */
+		gchar *str = g_strdup_printf ("%s ", *strp);
+		buf = g_strdup_printf ("sort_ign_string_%d", i);
+		prefs_set_string_value (buf, str);
+		g_free (str);
+		g_free (buf);
 		++i;
 	    }
 	    ++strp;
 	}
 	g_strfreev (strings);
     }
-
+    /* set end marker */
+    buf = g_strdup_printf ("sort_ign_string_%d", i);
+    prefs_set_string_value (buf, SORT_IGNORE_STRINGS_END);
+    g_free (buf);
+    /* update compare string keys */
+    compare_string_fuzzy_generate_keys ();
 
     /* if sort type has changed, initialize display */
     if (tsc->pm_sort != scfg->pm_sort)

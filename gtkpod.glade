@@ -8615,7 +8615,7 @@ or tab entry (faster!)</property>
 			  <property name="spacing">0</property>
 
 			  <child>
-			    <widget class="GtkCheckButton" id="sort_ign_field_0">
+			    <widget class="GtkCheckButton" id="sort_ign_field_3">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -8634,7 +8634,7 @@ or tab entry (faster!)</property>
 			  </child>
 
 			  <child>
-			    <widget class="GtkCheckButton" id="sort_ign_field_2">
+			    <widget class="GtkCheckButton" id="sort_ign_field_1">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -8674,7 +8674,7 @@ or tab entry (faster!)</property>
 			  <property name="spacing">0</property>
 
 			  <child>
-			    <widget class="GtkCheckButton" id="sort_ign_field_1">
+			    <widget class="GtkCheckButton" id="sort_ign_field_2">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>
@@ -8693,7 +8693,7 @@ or tab entry (faster!)</property>
 			  </child>
 
 			  <child>
-			    <widget class="GtkCheckButton" id="sort_ign_field_4">
+			    <widget class="GtkCheckButton" id="sort_ign_field_6">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
 			      <property name="label" translatable="yes"></property>

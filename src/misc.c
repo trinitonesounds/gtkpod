@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-06-17 21:01:40 jcs>
+|  Time-stamp: <2005-07-02 01:45:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -643,28 +643,70 @@ gint compare_string (gchar *str1, gchar *str2)
 	return compare_string_case_insensitive (str1, str2);
 }
 
-#define NUM_ARTICLES 	7
-static char* articles[NUM_ARTICLES] = {
-	"the ",
-	"a ",
-	"le ", 
-	"la ", 
-	"les ", 
-	"lo ", 
-	"los ", 
+struct csfk
+{
+    gint length;
+    gchar *key;
 };
+
+static GList *csfk_list = NULL;
+
+
+/* needs to be called everytime the sort_ign_strings in the prefs were
+   changed */
+void compare_string_fuzzy_generate_keys (void)
+{
+    GList *gl;
+    gint i;
+    /* remove old keys */
+    for (gl=csfk_list; gl; gl=gl->next)
+    {
+	struct csfk *csfk = gl->data;
+	g_return_if_fail (csfk);
+	g_free (csfk->key);
+	g_free (csfk);
+    }
+    g_list_free (csfk_list);
+    csfk_list = NULL;
+
+    /* create new keys */
+    for (i=0; ;++i)
+    {
+	gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
+	gchar *str = prefs_get_string (buf);
+	struct csfk *csfk;
+	gchar *tempStr;
+
+	g_free (buf);
+
+	/* end loop if no string is set or if the the string
+	 * corresponds to the end marker */
+	if (!str)  break;  
+	if (strcmp (str, SORT_IGNORE_STRINGS_END) == 0)
+	{
+	    g_free (str);
+	    break;
+	}
+
+	csfk = g_malloc (sizeof (struct csfk));
+	tempStr = g_utf8_casefold (str, -1 );
+	csfk->length = g_utf8_strlen (tempStr, -1 );
+	csfk->key = g_utf8_collate_key (tempStr, -1 );
+	g_free (tempStr);
+	g_free (str);
+
+	csfk_list = g_list_append (csfk_list, csfk);
+    }
+}
+
 
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings, and ignoring certain initial articles 
  * ("the", "le"/"la", etc) */
 gint compare_string_fuzzy (gchar *str1, gchar *str2)
 {
-    static gint   articleKeysGenerated = FALSE;
-    static gint   articleLengths[NUM_ARTICLES];
-    static gchar *articleKeys[NUM_ARTICLES];
     gchar *tempStr;
     gint   result;
-    gint   i;
     
     gchar *cleanStr1 = g_utf8_casefold (str1, -1);
     gchar *cleanStr2 = g_utf8_casefold (str2, -1);
@@ -674,45 +716,51 @@ gint compare_string_fuzzy (gchar *str1, gchar *str2)
     gchar *pcleanStr1 = cleanStr1;
     gchar *pcleanStr2 = cleanStr2;
     
+    GList *gl;
+
     /* If the article collations keys have not been generated, 
      * do that first
      */
-    if ( ! articleKeysGenerated ) {
-	for ( i = 0; i < NUM_ARTICLES; i += 1 ) {
-	    tempStr = g_utf8_casefold( articles[i], -1 );
-	    articleLengths[i] = g_utf8_strlen( tempStr, -1 );
-	    articleKeys[i] = g_utf8_collate_key( tempStr, -1 );
-	    g_free( tempStr );
-	}
-	articleKeysGenerated = TRUE;
-    } 
-    
+    if (!csfk_list)
+	compare_string_fuzzy_generate_keys ();
+
+    if (!csfk_list)
+	return compare_string (str1, str2);
+
     /* Check the beginnings of both strings for any of the 
      * articles we should ignore
      */
-    for ( i = 0; i < NUM_ARTICLES; i += 1 ) {
-    	tempStr = g_utf8_collate_key( cleanStr1, articleLengths[i] );
-	if ( strcmp( tempStr, articleKeys[i] ) == 0 ) {
+    for (gl=csfk_list; gl; gl=gl->next)
+    {
+	struct csfk *csfk = gl->data;
+	g_return_val_if_fail (csfk, 0);
+    	tempStr = g_utf8_collate_key (cleanStr1, csfk->length);
+	if (strcmp (tempStr, csfk->key) == 0)
+	{
 	    /* Found article, bump pointers ahead appropriate distance
 	     */
-	    pstr1 += articleLengths[i];
-	    pcleanStr1 = g_utf8_offset_to_pointer( cleanStr1, articleLengths[i] );
-	    g_free( tempStr );
+	    pstr1 += csfk->length;
+	    pcleanStr1 = g_utf8_offset_to_pointer (cleanStr1, csfk->length);
+	    g_free (tempStr);
 	    break;
 	}
-	g_free( tempStr );
+	g_free (tempStr);
     }
-    for ( i = 0; i < NUM_ARTICLES; i += 1 ) {
-    	tempStr = g_utf8_collate_key( cleanStr2, articleLengths[i] );
-	if ( strcmp( tempStr, articleKeys[i] ) == 0 ) {
+    for (gl=csfk_list; gl; gl=gl->next)
+    {
+	struct csfk *csfk = gl->data;
+	g_return_val_if_fail (csfk, 0);
+    	tempStr = g_utf8_collate_key (cleanStr2, csfk->length);
+	if (strcmp (tempStr, csfk->key) == 0)
+	{
 	    /* Found article, bump pointers ahead apropriate distance
 	     */
-	    pstr2 += articleLengths[i];
-	    pcleanStr2 = g_utf8_offset_to_pointer( cleanStr2, articleLengths[i] );
-	    g_free( tempStr );
+	    pstr2 += csfk->length;
+	    pcleanStr2 = g_utf8_offset_to_pointer (cleanStr2, csfk->length);
+	    g_free (tempStr);
 	    break;
 	}
-	g_free( tempStr );
+	g_free (tempStr);
     }
 
     if (prefs_get_case_sensitive ())

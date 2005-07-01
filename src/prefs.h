@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-28 23:01:11 jcs>
+/* Time-stamp: <2005-07-01 23:16:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -172,6 +172,8 @@ enum
     SORT_NONE = 10*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
 };
 
+/* marker for end of sort_ign_string_%d prefs settings */
+#define SORT_IGNORE_STRINGS_END "----++++----"
 
 gchar *prefs_get_cfgdir (void);
 void prefs_print(void);

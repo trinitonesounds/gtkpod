@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-28 23:24:08 jcs>
+/* Time-stamp: <2005-07-02 01:29:46 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -135,16 +135,17 @@ static void usage (FILE *file)
   usage_fpf(file, _("  --offline:    same as '-o'.\n"));
 }
 
+
 struct cfg *cfg_new(void)
 {
     struct cfg *mycfg = NULL;
-    gchar buf[PATH_MAX], *str;
+    gchar curdir[PATH_MAX], *str;
     gint i;
 
     mycfg = g_malloc0 (sizeof (struct cfg));
-    if(getcwd(buf, PATH_MAX))
+    if(getcwd(curdir, PATH_MAX))
     {
-	mycfg->last_dir.browse = g_strdup_printf ("%s/", buf);
+	mycfg->last_dir.browse = g_strdup_printf ("%s/", curdir);
     }
     else
     {
@@ -161,6 +162,7 @@ struct cfg *cfg_new(void)
     {
 	mycfg->ipod_mount = g_strdup("/mnt/ipod");
     }
+
     mycfg->charset = NULL;
     mycfg->deletion.track = TRUE;
     mycfg->deletion.ipod_file = TRUE;
@@ -330,13 +332,42 @@ static gint correct_sort (gint sort)
     return sort;
 }
 
+/* default ignore strings -- must end with a space */
+static char* sort_ign_strings[] =
+{
+    "the ",
+    "a ",
+    "le ", 
+    "la ", 
+    "les ", 
+    "lo ", 
+    "los ",
+    "der ",
+    "die ",
+    "das ",
+    SORT_IGNORE_STRINGS_END,  /* end marker */
+    NULL,
+};
+
 
 static void
 read_prefs_from_file_desc(FILE *fp)
 {
     gchar buf[PATH_MAX];
     gchar *line, *arg, *bufp;
-    gint len, off;
+    gint len, off, i;
+
+    /* set ignore strings */
+    for (i=0; sort_ign_strings[i]; ++i)
+    {
+	bufp = g_strdup_printf ("sort_ign_string_%d", i);
+	prefs_set_string_value (bufp, sort_ign_strings[i]);
+	g_free (bufp);
+    }
+    /* set ignore fields (ignore above words for artist) */
+    bufp = g_strdup_printf ("sort_ign_field_%d", T_ARTIST);
+    prefs_set_int_value (bufp, 1);
+    g_free (bufp);
 
     if(fp)
     {
