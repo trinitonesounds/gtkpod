@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-01 00:14:29 jcs>
+/* Time-stamp: <2005-07-02 09:52:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -999,16 +999,14 @@ static gunichar2 *get_mhod_string (FContents *cts, glong seek, gint32 *ml, gint3
 
 
 
-gint pos_comp (gpointer a, gpointer b)
-{
-    return ((gint)a - (gint)b);
-}
-
-
 /* Get a playlist. Returns the position where the next playlist should
    be. On error -1 is returned and fimp->error is set appropriately. */
-static glong get_pl (FImport *fimp, glong seek)
+static glong get_playlist (FImport *fimp, glong seek)
 {
+  gint pos_comp (gpointer a, gpointer b)
+      {
+	  return ((gint)b - (gint)a);
+      }
   gunichar2 *plname_utf16 = NULL;
   guint32 i, type, tracknum, mhod_num;
   glong nextseek;
@@ -1797,7 +1795,7 @@ static gboolean parse_fimp (FImport *fimp)
     fimp->idtree = itdb_track_id_tree_create (fimp->itdb);
     for (i=0; i<nr_playlists; ++i)
     {
-	seek = get_pl (fimp, seek);
+	seek = get_playlist (fimp, seek);
 	if (fimp->error) return FALSE;
 	if (seek == -1)
 	{   /* this should not be -- issue warning */
@@ -2094,13 +2092,14 @@ static void mk_mhbd (FExport *fexp)
 		     0x09: iTunes 4.2
 		     0x0a: iTunes 4.5
 		     0x0b: iTunes 4.7
-		     0x0c: required for shuffle */
-  fexp->itdb->version = 0x0c;
+		     0x0c: iTunes 4.71/4.8 (required for shuffle)
+                     0x0d: iTunes 4.9 */
+  fexp->itdb->version = 0x0d;
   put32lint (cts, fexp->itdb->version);
   put32lint (cts, 2);   /* 2 children (track list and playlist list) */
   put64lint (cts, fexp->itdb->id);
   put32lint (cts, 2);   /* ? */
-  put32_n0 (cts, 17);     /* dummy space */
+  put32_n0 (cts, 17);   /* dummy space */
 }
 
 /* Fill in the length of a standard header */
@@ -2448,7 +2447,7 @@ static void mk_mhip (FExport *fexp, guint32 pos, guint32 id)
 
   put_data (cts, "mhip", 4);
   put32lint (cts, 76);
-  put32lint (cts, 76);
+  put32lint (cts, -1);  /* fill in later */
   put32lint (cts, 1);
   put32lint (cts, pos);
   put32lint (cts, 0);   /* was: id */
@@ -2546,7 +2545,7 @@ static gboolean write_mhsd_one(FExport *fexp)
 static gboolean write_playlist(FExport *fexp, Itdb_Playlist *pl)
 {
     GList *gl;
-    gulong mhyp_seek;
+    gulong mhyp_seek, mhip_seek;
     guint32 i;
     WContents *cts;
 
@@ -2601,8 +2600,13 @@ static gboolean write_playlist(FExport *fexp, Itdb_Playlist *pl)
 			 _("Database in memory corrupt (track pointer == NULL). Aborting export."));
 	    return FALSE;
 	}
+	mhip_seek = cts->pos;
 	mk_mhip (fexp, i, track->id);
 	mk_mhod (cts, MHOD_ID_PLAYLIST, (void *)i);
+	/* note: with iTunes 4.9 the mhod is counted as a child to
+	   mhip, so we fill have put the total length of the mhip and
+	   mhod into the mhip header */
+	fix_header (cts, mhip_seek);
 	++i;
     }
     fix_header (cts, mhyp_seek);

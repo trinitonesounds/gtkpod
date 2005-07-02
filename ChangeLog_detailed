@@ -1,5 +1,16 @@
 2005-07-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	* Makefile.am: ln complained when installing the second time
+          into the same place -- remove target file before the ln
+          command.
+
+	* itdb_itunesdb.c: changed from version 0x0c (iTunes 4.71/4.8)
+          to version 0x0d (iTunes 4.9). mhods are now considered
+          children of mhips, and the total length of the mhip must be
+          adjusted accordingly.
+
+2005-07-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	* finished user-definable sort ignore list (ctrl-s). Still
           todo: resort automatically when changing the ignore list.
 

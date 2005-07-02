@@ -24,8 +24,9 @@ install-data-hook:
 	fi
 	for gladefile in gtkpod.glade gtkpod.gladep; do \
 	  if test -f $$gladefile; then \
-          $(INSTALL_DATA) $$gladefile $(DESTDIR)$(pkgdatadir); \
-	  ln -s $(DESTDIR)$(pkgdatadir)/$$gladefile $(DESTDIR)$(pkgdatadir)/pixmaps/$$gladefile; \
+            $(INSTALL_DATA) $$gladefile $(DESTDIR)$(pkgdatadir); \
+	    rm -f $(DESTDIR)$(pkgdatadir)/pixmaps/$$gladefile; \
+	    ln -s $(DESTDIR)$(pkgdatadir)/$$gladefile $(DESTDIR)$(pkgdatadir)/pixmaps/$$gladefile; \
 	  fi \
 	done
 
