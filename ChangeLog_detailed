@@ -1,3 +1,18 @@
+2005-07-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * itdb_itunesdb.c: fixed OTG playlist filename and handling
+           (thanks to "Todd")
+
+	 * Makefile.am: use relative path for symbolic link to
+           gtkpod.glade
+
+2005-07-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * misc.c: use 'eject' executable instead of eject code. Also
+           fixes the bug that 'could not unmount' was always
+           displayed, even if the umount was successful (thanks to
+           Andreas Hauber).
+
 2005-07-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* Makefile.am: ln complained when installing the second time

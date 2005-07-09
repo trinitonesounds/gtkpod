@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:17 jcs>
+/* Time-stamp: <2005-07-09 15:48:29 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -64,6 +64,7 @@ struct playcount {
     guint32 time_played;
     guint32 bookmark_time;
     gint32 rating;
+    gint32 unk16;
 };
 
 /* value to indicate that playcount was not set in struct playcount
@@ -95,7 +96,5 @@ typedef struct
 } FExport;
 
 
-gboolean itdb_playlist_add_tracknr (FImport *fimp, Itdb_Playlist *pl,
-				    gchar *filename, guint32 num);
 gboolean itdb_spl_action_known (SPLAction action);
 #endif

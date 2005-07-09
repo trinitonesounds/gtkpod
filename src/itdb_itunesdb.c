@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-02 09:52:15 jcs>
+/* Time-stamp: <2005-07-09 15:51:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -538,7 +538,7 @@ static gboolean playcounts_read (FImport *fimp, FContents *cts)
     entry_length = get32lint (cts, 8);
     CHECK_ERROR (fimp, FALSE);
     /* all the entries I know are 0x0c (firmware 1.3) or 0x10
-     * (firmware 2.0) in length */
+     * (firmware 2.0) or 0x14 (iTunesDB version 0x0d) in length */
     if (entry_length < 0x0c)
     {
 	g_set_error (&fimp->error,
@@ -580,7 +580,19 @@ static gboolean playcounts_read (FImport *fimp, FContents *cts)
 	    CHECK_ERROR (fimp, FALSE);
 	}
 	else
+	{
 	    playcount->rating = NO_PLAYCOUNT;
+	}
+	/* unk16 only exists if the entry length is at least 0x14 */
+	if (entry_length >= 0x10)
+	{
+	    playcount->unk16 = get32lint (cts, seek+16);
+	    CHECK_ERROR (fimp, FALSE);
+	}
+	else
+	{
+	    playcount->unk16 = 0;
+	}
     }
     return TRUE;
 }
@@ -1466,6 +1478,7 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
     guint32 header_length, entry_length, entry_num;
 
     g_return_val_if_fail (fimp && cts, FALSE);
+    g_return_val_if_fail (fimp->itdb, FALSE);
 
     if (!plname) plname = _("OTG Playlist");
 
@@ -1514,23 +1527,48 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
     /* number of entries */
     entry_num = get32lint (cts, 12);
     CHECK_ERROR (fimp, FALSE);
+
     if (entry_num > 0)
     {
 	gint i;
+	Itdb_Playlist *pl, *mpl;
+
+	/* Get Master Playlist */
+	mpl = itdb_playlist_mpl (fimp->itdb);
+	g_return_val_if_fail (mpl, FALSE);
 	/* Create new playlist */
-	Itdb_Playlist *pl = itdb_playlist_new (plname, FALSE);
+	pl = itdb_playlist_new (plname, FALSE);
+	/* Add new playlist */
+	itdb_playlist_add (fimp->itdb, pl, -1);
+
 	/* Add items */
 	for (i=0; i<entry_num; ++i)
 	{
+	    Itdb_Track *track;
 	    guint32 num = get32lint (cts,
 				     header_length + entry_length *i);
 	    CHECK_ERROR (fimp, FALSE);
-	    if (!itdb_playlist_add_tracknr (fimp, pl, cts->filename, num))
+
+	    track = g_list_nth_data (mpl->members, num);
+	    if (track)
+	    {
+		itdb_playlist_add_track (pl, track, -1);
+	    }
+	    else
+	    {
+		g_set_error (&fimp->error,
+			     ITDB_FILE_ERROR,
+			     ITDB_FILE_ERROR_CORRUPT,
+			     _("OTG playlist file '%s': reference to non-existent track (%d)."),
+			     cts->filename, num);
 		return FALSE;
+	    }
 	}
     }
     return TRUE;
 }
+
+
 
 
 /* Add the On-The-Go Playlist(s) to the database */
@@ -1539,7 +1577,7 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
    On error FALSE is returned and fimp->error is set accordingly. */
 static gboolean read_OTG_playlists (FImport *fimp)
 {
-    gchar *db[] = {"OTG_PlaylistInfo", NULL};
+    gchar *db[] = {"OTGPlaylistInfo", NULL};
     gchar *dirname, *otgname;
 
     g_return_val_if_fail (fimp, FALSE);
@@ -1551,14 +1589,14 @@ static gboolean read_OTG_playlists (FImport *fimp)
     otgname = itdb_resolve_path (dirname, (const gchar **)db);
 
 
-    /* only parse if "OTG_PlaylistInfo" exists */
+    /* only parse if "OTGPlaylistInfo" exists */
     if (otgname)
     {
 	gchar *filename;
 	gint i=1;
 	do
 	{
-	    db[0] = g_strdup_printf ("OTG_PlaylistInfo_%d", i);
+	    db[0] = g_strdup_printf ("OTGPlaylistInfo_%d", i);
 	    filename = itdb_resolve_path (dirname, (const gchar **)db);
 	    g_free (db[0]);
 	    if (filename)
@@ -2800,7 +2838,7 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
    An existing "Play Counts" file is renamed to "Play Counts.bak" if
    the export was successful.
 
-   An existing "OTG_PlaylistInfo" file is removed if the export was
+   An existing "OTGPlaylistInfo" file is removed if the export was
    successful.
 
    Returns TRUE on success, FALSE on error, in which case @error is
@@ -2964,7 +3002,7 @@ All integers in the iTunesSD file are in BIG endian form...
    An existing "Play Counts" file is renamed to "Play Counts.bak" if
    the export was successful.
 
-   An existing "OTG_PlaylistInfo" file is removed if the export was
+   An existing "OTGPlaylistInfo" file is removed if the export was
    successful.
 
    Returns TRUE on success, FALSE on error, in which case @error is
@@ -3161,7 +3199,7 @@ gboolean itdb_rename_files (const gchar *mp, GError **error)
 {
     const gchar *db_itd[] =  {"iPod_Control", "iTunes", NULL};
     const gchar *db_plc_o[] = {"Play Counts", NULL};
-    const gchar *db_otg[] = {"OTG_PlaylistInfo", NULL};
+    const gchar *db_otg[] = {"OTGPlaylistInfo", NULL};
     gchar *itunesdir;
     gchar *plcname_o;
     gchar *plcname_n;
@@ -3202,7 +3240,7 @@ gboolean itdb_rename_files (const gchar *mp, GError **error)
 	}
     }
 
-    /* remove "OTG_PlaylistInfo" (the iPod will remove the remaining
+    /* remove "OTGPlaylistInfo" (the iPod will remove the remaining
      * files */
     if (otgname)
     {

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:17 jcs>
+/* Time-stamp: <2005-07-09 15:48:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1147,34 +1147,6 @@ void itdb_playlist_add_track (Itdb_Playlist *pl,
     else  pl->members = g_list_insert (pl->members, track, pos);
 }
 
-
-
-/* Add track @num to playlist *pl. @num is the nth track in
-   fimp->itb->tracks. This function is used when reading the OTG
-   playlist files and should not be used normally. On error
-   fimp->error is set appropriately. */
-gboolean itdb_playlist_add_tracknr (FImport *fimp, Itdb_Playlist *pl,
-				    gchar *filename, guint32 num)
-{
-    Itdb_Track *track;
-
-    g_return_val_if_fail (fimp && pl && filename, FALSE);
-    g_return_val_if_fail (fimp->itdb, FALSE);
-
-    track = g_list_nth_data (fimp->itdb->tracks, num);
-    if (!track)
-    {
-	g_set_error (&fimp->error,
-		     ITDB_FILE_ERROR,
-		     ITDB_FILE_ERROR_CORRUPT,
-		     _("OTG playlist file '%s': reference to non-existent track (%d)."),
-		     filename, num);
-	return FALSE;
-    }
-
-    itdb_playlist_add_track (pl, track, -1);
-    return TRUE;
-}
 
 
 /* Remove track @track from playlist *pl. If @pl == NULL remove from

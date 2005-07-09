@@ -7,11 +7,17 @@ gtkpod V0.94-CVS
        clicking the sort columns in the desired order.
 
        NEW FEATURE: define your own ignore list of words that should
-       be ignored during sorting (sort options: ctrl-s)
+       be ignored during sorting (sort options: ctrl-s).
+
+       IMPROVEMENT: use 'eject' instead of 'umount'. Also fixes the
+       bug that 'could not unmount' was always displayed, even if the
+       umount was successful (thanks to Andreas Hauber).
 
        BUGFIX: Some iTunesDB written by iTunes could not be read
        because of an error in the parse code (gtkpod would attempt to
        read beyond the end of the file).
+
+       BUGFIX: Fixed On-The-Go playlist handling (thanks to "Todd").
 
 gtkpod V0.93.1
        BUGFIX: When changing the mountpoint, the change was not

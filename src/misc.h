@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-02 01:28:41 jcs>
+/* Time-stamp: <2005-07-09 14:32:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -200,4 +200,5 @@ gchar *get_string_from_template (Track *track,
 
 GList *glist_duplicate (GList *list);
 
+gchar *which (const gchar *exe);
 #endif

@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-07-02 02:01:37 jcs>
+|  Time-stamp: <2005-07-09 14:32:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -336,146 +336,6 @@ GList *glist_duplicate (GList *list)
 }
 
 
-
-
-/* ------------------------------------------------------------
- *
- * Code to "eject" the iPod.
- *
- * Large parts of this code are 
- * Copyright (C) 1994-2001 Jeff Tranter (tranter at pobox.com).
- * Copyright (C) 2004, 2005 Frank Lichtenheld (djpig@debian.org)
- * Repackaged to only include scsi eject code
- * by Alex Tribble (prat at rice.edu). Integrated into gtkpod by Jorg
- * Schuler (jcsjcs at users.sourceforge.net)
- *
- * ------------------------------------------------------------ */
-
-/* This code does not work with FreeBSD -- let me know if you know a
- * way around it. */
-
-#if (HAVE_LINUX_CDROM_H && HAVE_SCSI_SG_H && HAVE_SCSI_SCSI_H && HAVE_SCSI_SCSI_IOCTL_H)
-#include <linux/cdrom.h>
-#include <scsi/sg.h>
-#include <scsi/scsi.h>
-#include <scsi/scsi_ioctl.h>
-#include <sys/mount.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <fcntl.h>
-
-static gchar *getdevicename(const gchar *mount)
-{
-    if(mount) {
-	gchar device[256], point[256];
-	FILE *fp = fopen("/proc/mounts","r");
-	if (!fp)
-	    return NULL;
-	do {
-	    fscanf(fp, "%255s %255s %*s %*s %*s %*s", device, point);
-	    if( strcmp(mount,point) == 0 ) {
-		fclose(fp);
-		return strdup(device);
-	    }
-	} while(!feof(fp));
-	fclose(fp);
-    }
-    return NULL;
-}
-
-/*
- * Eject using CDROMEJECT ioctl. Return TRUE if successful, FALSE otherwise.
- */
-static gboolean EjectCdrom(int fd)
-{
-	int status;
-
-	status = ioctl(fd, CDROMEJECT);
-	return (status == 0);
-}
-
-/*
- * Eject using SCSI commands. Return TRUE if successful, FALSE otherwise.
- */
-static gboolean EjectScsi(int fd)
-{
-	int status, k;
-	sg_io_hdr_t io_hdr;
-	unsigned char allowRmBlk[6] = {ALLOW_MEDIUM_REMOVAL, 0, 0, 0, 0, 0};
-	unsigned char startStop1Blk[6] = {START_STOP, 0, 0, 0, 1, 0};
-	unsigned char startStop2Blk[6] = {START_STOP, 0, 0, 0, 2, 0};
-	unsigned char inqBuff[2];
-	unsigned char sense_buffer[32];
-
-	if ((ioctl(fd, SG_GET_VERSION_NUM, &k) < 0) || (k < 30000)) {
-	  printf("not an sg device, or old sg driver\n");
-	  return 0;
-	}
-
-	memset(&io_hdr, 0, sizeof(sg_io_hdr_t));
-	io_hdr.interface_id = 'S';
-	io_hdr.cmd_len = 6;
-	io_hdr.mx_sb_len = sizeof(sense_buffer);
-	io_hdr.dxfer_direction = SG_DXFER_NONE;
-	io_hdr.dxfer_len = 0;
-	io_hdr.dxferp = inqBuff;
-	io_hdr.sbp = sense_buffer;
-	io_hdr.timeout = 2000;
-
-	io_hdr.cmdp = allowRmBlk;
-	status = ioctl(fd, SG_IO, (void *)&io_hdr);
-	if (status < 0)
-		return 0;
-
-	io_hdr.cmdp = startStop1Blk;
-	status = ioctl(fd, SG_IO, (void *)&io_hdr);
-	if (status < 0)
-		return 0;
-
-	io_hdr.cmdp = startStop2Blk;
-	status = ioctl(fd, SG_IO, (void *)&io_hdr);
-	if (status < 0)
-		return 0;
-
-	/* force kernel to reread partition table when new disc inserted */
-	status = ioctl(fd, BLKRRPART);
-	return 1;
-}
-
-static void eject_ipod(gchar *ipod_device)
-{
-     if(ipod_device)
-     {
-	  int fd = open (ipod_device, O_RDONLY|O_NONBLOCK);
-	  if (fd == -1)
-	  {
-/*	      fprintf(stderr, "Unable to open '%s' to eject.\n",ipod_device); */
-	      /* just ignore the error, i.e. if we don't have write access */
-	  }
-	  else
-	  {
-	      /* 2G seems to need EjectCdrom(), 3G EjectScsi()? */
-	      if (!EjectCdrom (fd))
-		  EjectScsi (fd);
-	      close (fd);
-	  }
-     }
-}
-#else
-static gchar *getdevicename(const gchar *mount)
-{
-    return NULL;
-}
-static void eject_ipod(gchar *ipod_device)
-{
-}
-#endif
-
-/* ------------------------------------------------------------
- *                    end of eject code
- * ------------------------------------------------------------ */
-
-
 /***************************************************************************
  * Mount Calls
  *
@@ -485,6 +345,32 @@ static void eject_ipod(gchar *ipod_device)
  * does not check prefs to see if the current prefs want gtkpod itself to
  * mount the ipod drive, that should be checked before making this call.
  */
+#include <sys/mount.h>
+#include <errno.h>
+#include <stdio.h>
+
+
+static gchar *getdevicename(const gchar *mount)
+{
+    if(mount) {
+        gchar device[256], point[256];
+        FILE *fp = fopen("/proc/mounts","r");
+        if (!fp)
+            return NULL;
+        do {
+            fscanf(fp, "%255s %255s %*s %*s %*s %*s", device, point);
+            if( strcmp(mount,point) == 0 ) {
+                fclose(fp);
+                return strdup(device);
+            }
+        } while(!feof(fp));
+        fclose(fp);
+    }
+    return NULL;
+}
+
+
+
 void
 mount_ipod(void)
 {
@@ -499,7 +385,7 @@ mount_ipod(void)
 	{
 	    case 0: /* child */
 		execl(MOUNT_BIN, "mount", str, NULL);
-		exit(0);
+		exit (1);
 		break;
 	    case -1: /* parent and error */
 		break;
@@ -512,38 +398,38 @@ mount_ipod(void)
 }
 
 /**
- * umount_ipod - attempt to unmount the ipod from prefs_get_ipod_mount()
+ * unmount_ipod - attempt to eject the ipod from prefs_get_ipod_mount()
  * This does not check prefs to see if the current prefs want gtkpod itself
- * to unmount the ipod drive, that should be checked before making this
+ * to eject the ipod drive, that should be checked before making this
  * call.
- * After unmounting, an attempt to send the "eject" signal is
- * made. Errors are ignored.
  */
 void
 unmount_ipod(void)
 {
-    const gchar *str = prefs_get_ipod_mount ();
-    gchar *ipod_device = getdevicename (prefs_get_ipod_mount());
-    if (str)
+    const gchar *mp = prefs_get_ipod_mount ();
+    if (mp)
     {
 	pid_t pid, tpid;
 	int status;
+	gchar *eject_bin;
+	gchar *ipod_device = getdevicename (mp);
 
+	/* umount */
 	pid = fork ();
 	switch (pid)
 	{
 	    case 0: /* child */
-		execl (UMOUNT_BIN, "umount", str, NULL);
+		execl (UMOUNT_BIN, "umount", mp, NULL);
 		exit (1); /* this is only reached in case of an error */
 		break;
 	    case -1: /* parent and error */
 		break;
 	    default: /* parent -- let's wait for the child to terminate */
 		tpid = waitpid (pid, &status, 0);
-		if (status != 0);
+		if (status != 0)
 		{
-		    gchar *buf;
-		    gchar *str_utf8 = charset_to_utf8 (str);
+		   	gchar *buf;
+		    gchar *str_utf8 = charset_to_utf8 (mp);
 		    GtkWidget *dialog;
 		    if (ipod_device)
 			buf = g_strdup_printf (
@@ -564,11 +450,33 @@ unmount_ipod(void)
 		    gtk_widget_destroy (dialog);
 		    g_free (buf);
 		}
-		if (ipod_device) eject_ipod (ipod_device);
 		break;
 	}
+	/* eject -- only if ipod_device and are EJECT_BIN available */
+	eject_bin = which ("eject");
+	if (ipod_device && eject_bin)
+	{
+	    pid = fork ();
+	    switch (pid)
+	    {
+	    case 0: /* child */
+		execl (eject_bin, "eject", ipod_device, NULL);
+		exit (1); /* this is only reached in case of an error */
+		break;
+	    case -1: /* parent and error */
+		break;
+	    default: /* parent -- let's wait for the child to terminate */
+		tpid = waitpid (pid, &status, 0);
+		if (status != 0)
+		{
+		    /* fail silently */
+		}
+		break;
+	    }
+	    g_free (eject_bin);
+	}
+	g_free (ipod_device);
     }
-    g_free (ipod_device);
 }
 
 
@@ -1330,3 +1238,30 @@ gchar *get_string_from_template (Track *track,
 }
 
 
+/**
+ * which - run the shell command which, useful for querying default values
+ * for executable,
+ * @name - the executable we're trying to find the path for
+ * Returns the path to the executable, NULL on not found
+ */
+gchar *which (const gchar *exe)
+{
+    FILE *fp = NULL;
+    gchar *result = NULL;
+    gchar buf[PATH_MAX];
+    gchar *which_exec = NULL;
+
+    g_return_val_if_fail (exe, NULL);
+
+    memset(&buf[0], 0, PATH_MAX);
+    which_exec = g_strdup_printf("which %s", exe);
+    if((fp = popen(which_exec, "r")))
+    {
+        int read_bytes = 0;
+        if((read_bytes = fread(buf, sizeof(gchar), PATH_MAX, fp)) > 0)
+            result = g_strndup(buf, read_bytes-1);
+        pclose(fp);
+    }
+    g_free(which_exec);
+    return(result);
+}

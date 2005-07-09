@@ -26,7 +26,7 @@ install-data-hook:
 	  if test -f $$gladefile; then \
             $(INSTALL_DATA) $$gladefile $(DESTDIR)$(pkgdatadir); \
 	    rm -f $(DESTDIR)$(pkgdatadir)/pixmaps/$$gladefile; \
-	    ln -s $(DESTDIR)$(pkgdatadir)/$$gladefile $(DESTDIR)$(pkgdatadir)/pixmaps/$$gladefile; \
+	    ln -s ../$$gladefile $(DESTDIR)$(pkgdatadir)/pixmaps/$$gladefile; \
 	  fi \
 	done
 
