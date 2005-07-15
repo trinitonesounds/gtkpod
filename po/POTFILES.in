@@ -35,7 +35,6 @@ src/mp3file.c
 src/mp4file.c
 src/prefs.c
 src/prefs_window.c
-src/support.c
 src/tools.c
 src/wavfile.c
 gtkpod.glade

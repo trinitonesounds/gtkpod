@@ -19,6 +19,8 @@ gtkpod V0.94-CVS
 
        BUGFIX: Fixed On-The-Go playlist handling (thanks to "Todd").
 
+       UPDATE: Hebrew translation catalog. Thanks to Assaf Gillat!
+
 gtkpod V0.93.1
        BUGFIX: When changing the mountpoint, the change was not
        written to the preferences file correctly.

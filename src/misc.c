@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-07-09 14:32:11 jcs>
+|  Time-stamp: <2005-07-15 23:37:16 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -184,6 +184,8 @@ The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"),
 French:   David Le Brun (david at dyn-ns dot net)\n"),
 				     _("\
 German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"),
+			             _("\
+Hebrew: Assaf Gillat (gillata at gmail dot com)\n"),
 				     _("\
 Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot net)\n"),
 				     _("\

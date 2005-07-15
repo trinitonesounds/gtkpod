@@ -1,3 +1,7 @@
+2005-07-15 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * Added Hebrew translation -- thanks to Assaf Gillat!
+
 2005-07-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * itdb_itunesdb.c: fixed OTG playlist filename and handling

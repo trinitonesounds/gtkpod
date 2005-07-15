@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-09 15:51:04 jcs>
+/* Time-stamp: <2005-07-09 16:48:52 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1017,7 +1017,7 @@ static glong get_playlist (FImport *fimp, glong seek)
 {
   gint pos_comp (gpointer a, gpointer b)
       {
-	  return ((gint)b - (gint)a);
+	  return ((gint)a - (gint)b);
       }
   gunichar2 *plname_utf16 = NULL;
   guint32 i, type, tracknum, mhod_num;
@@ -1202,11 +1202,10 @@ static glong get_playlist (FImport *fimp, glong seek)
 		 according to the order they appear in the
 		 playlist. Therefore we need to find out at which
 		 position to insert the track */
-	      /* For performance reasons the pos_glist is reversed. */
 	      fimp->pos_glist = g_list_insert_sorted (
 		  fimp->pos_glist, (gpointer)posid,
 		  (GCompareFunc)pos_comp);
-	      pos = i - g_list_index (fimp->pos_glist, (gpointer)posid);
+	      pos = g_list_index (fimp->pos_glist, (gpointer)posid);
 	      /* For performance reasons set pos to -1 if position is
 		 end of list */
 	      if (pos == i) pos = -1;
