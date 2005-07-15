@@ -9,6 +9,10 @@ gtkpod V0.94-CVS
        NEW FEATURE: define your own ignore list of words that should
        be ignored during sorting (sort options: ctrl-s).
 
+       IMPROVEMENT: improved handling of dangling files (files that
+       are referenced in the iTunesDB but are not present on the
+       iPod).
+
        IMPROVEMENT: use 'eject' instead of 'umount'. Also fixes the
        bug that 'could not unmount' was always displayed, even if the
        umount was successful (thanks to Andreas Hauber).

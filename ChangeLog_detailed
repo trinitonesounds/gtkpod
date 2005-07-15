@@ -1,5 +1,13 @@
 2005-07-15 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * Improved handling of dangling files (files that are
+           referenced in the iTunesDB but are not present on the iPod)
+           after I had to use the function myself: iTunes 4.9 removed
+           most of my files from the iPod -- currently restoring with
+           an old iTunesDB copy.
+
+2005-07-15 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * Added Hebrew translation -- thanks to Assaf Gillat!
 
 2005-07-08 Jorg Schuler <jcsjcs@users.sourceforge.net>

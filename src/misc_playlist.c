@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:25:29 jcs>
+/* Time-stamp: <2005-07-16 01:40:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -798,19 +798,15 @@ gboolean remove_dangling (gpointer key, gpointer value, gpointer pl_dangling)
     etr = track->userdata;
     g_return_val_if_fail (etr, FALSE);
 
-
-    lind =                 /* to which list belongs */
-	(etr->pc_path_locale && *etr->pc_path_locale &&   /* file is specified */
-	 g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS) && /* file exists */
-	 etr->md5_hash &&                           /* md5 defined for the track */
-	 (!strcmp ((filehash=md5_hash_on_filename (
-			etr->pc_path_locale, FALSE)), etr->md5_hash)));
-    /* and md5 of the file is the same as in the track info */
-    /* 1 - Original file is present on PC and has the same md5*/
+    /* 1 - Original file is present on PC */
     /* 0 - Doesn't exist */
+    lind = 0;
+    if (etr->pc_path_locale && *etr->pc_path_locale &&
+	g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
+    {
+	lind = 1;
+    }
     l_dangling[lind]=g_list_append(l_dangling[lind], track);
-/*    printf( "Dangling %s %s-%s(%d)\n%s\n",_("Track"),
-      track->artist, track->title, track->ipod_id, track->pc_path_locale);*/
 
     g_free(filehash);
     return FALSE;               /* do not stop traversal */
@@ -889,22 +885,54 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 
     g_return_if_fail (itdb);
 
+    block_widgets ();
+
     /* traverse the list and append to the str */
     for (tlist = g_list_first(tlist);
 	 tlist != NULL;
 	 tlist = g_list_next(tlist))
     {
+	gchar *buf;
+	Track *oldtrack;
 	Track *track = tlist->data;
+	ExtraTrackData *etr;
+
 	g_return_if_fail (track);
+	etr = track->userdata;
+	g_return_if_fail (etr);
         /* printf("Handling track %d\n", track->ipod_id); */
-	track->transferred=FALSE; /* yes - we need to transfer it */
-/*            g_free(track->ipod_path);      */ /* need to reset ipod's path so it doesn't try to locate it there */
-/*            track->ipod_path=NULL;         */ /* zero it out */
-/*            update_track_from_file(track); */ /* please update information from the file */
+
+	buf = g_strdup_printf (_("Processing %s"),
+			       get_track_info (track, TRUE));
+	gtkpod_statusbar_message (buf);
+	g_free (buf);
+	while (widgets_blocked && gtk_events_pending ())
+	    gtk_main_iteration ();
+
+	/* Indicate that file needs to be transfered */
+	track->transferred=FALSE;
+	/* Update MD5 information */
+	/* remove track from md5 hash and reinsert it
+	   (hash value may have changed!) */
+	md5_track_remove (track);
+	/* need to remove the old value manually! */
+	etr->md5_hash = NULL;
+	oldtrack = md5_track_exists_insert (itdb, track);
+	if (oldtrack) { /* track exists, remove old track
+			  and register the new version */
+	    md5_track_remove (oldtrack);
+	    gp_duplicate_remove (track, oldtrack);
+	    md5_track_exists_insert (itdb, track);
+	}
     }
     g_list_free(l_dangling);
     data_changed (itdb);
     gtkpod_statusbar_message (_("Dangling tracks with files on PC were handled."));
+    /* I don't think it's too interesting to pop up the list of
+       duplicates -- but we should reset the list. */
+    gp_duplicate_remove (NULL, (void *)-1);
+
+    release_widgets ();
 }
 
 

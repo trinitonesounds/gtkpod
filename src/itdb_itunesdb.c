@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-09 16:48:52 jcs>
+/* Time-stamp: <2005-07-16 01:02:18 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -226,7 +226,7 @@ gchar * itdb_resolve_path (const gchar *root,
   guint32 i;
 
   if (!root) return NULL;
-    
+
   for(i = 0 ; components[i] ; i++) {
     GDir *cur_dir;
     gchar *component_as_filename;
@@ -584,7 +584,7 @@ static gboolean playcounts_read (FImport *fimp, FContents *cts)
 	    playcount->rating = NO_PLAYCOUNT;
 	}
 	/* unk16 only exists if the entry length is at least 0x14 */
-	if (entry_length >= 0x10)
+	if (entry_length >= 0x14)
 	{
 	    playcount->unk16 = get32lint (cts, seek+16);
 	    CHECK_ERROR (fimp, FALSE);

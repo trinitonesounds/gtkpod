@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-05 23:43:58 jcs>
+/* Time-stamp: <2005-07-16 01:08:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -588,7 +588,9 @@ do_command_on_entries (const gchar *command, const gchar *what,
 	    for(l = selected_tracks; l; l = l->next)
 	    {
 		if((str = get_file_name_verified((Track*)l->data)))
+		{
 		    g_ptr_array_add (args, str);
+		}
 	    }
 	    percs = TRUE; /* encountered a '%s' */
 	}

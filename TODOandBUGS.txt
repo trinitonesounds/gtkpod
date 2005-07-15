@@ -233,6 +233,13 @@ Please feel free to submit further features.
 
 BUGLIST:
 
+On Mon, Jul 11, 2005 at 06:54:46PM -0500, dj faké wrote:
+> After erasing my iPod with the new 6/26/05 iPod Updater, I had to add
+> one (1) song to it from iTunes in order to create the iPod Control
+> directory, after that, gtkpod function fine. . . before that, could not
+> add anything with gtkpod
+
+
 drag playlist to track view: (JCS)
 (gtkpod:19911): Gtk-CRITICAL **: gtk_text_buffer_emit_insert: assertion `g_utf8_validate (text, len, NULL)' failed
 
