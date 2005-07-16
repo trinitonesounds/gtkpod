@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-02 01:29:46 jcs>
+/* Time-stamp: <2005-07-16 16:11:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -337,14 +337,15 @@ static char* sort_ign_strings[] =
 {
     "the ",
     "a ",
-    "le ", 
+/*    "le ", 
     "la ", 
     "les ", 
     "lo ", 
     "los ",
     "der ",
     "die ",
-    "das ",
+    "das ",*/ /* will make sorting very slow -- only add the words you
+                 really want to skip */
     SORT_IGNORE_STRINGS_END,  /* end marker */
     NULL,
 };

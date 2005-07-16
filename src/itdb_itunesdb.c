@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-16 01:02:18 jcs>
+/* Time-stamp: <2005-07-16 15:34:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -103,8 +103,8 @@
    Jorg Schuler, 29.12.2004 */
 
 
-/* call itunesdb_parse () to read the Itdb_iTunesDB  */
-/* call itunesdb_write () to write the Itdb_iTunesDB */
+/* call itdb_parse () to read the Itdb_iTunesDB  */
+/* call itdb_write () to write the Itdb_iTunesDB */
 
 
 #ifdef HAVE_CONFIG_H
@@ -1530,12 +1530,8 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
     if (entry_num > 0)
     {
 	gint i;
-	Itdb_Playlist *pl, *mpl;
+	Itdb_Playlist *pl;
 
-	/* Get Master Playlist */
-	mpl = itdb_playlist_mpl (fimp->itdb);
-	g_return_val_if_fail (mpl, FALSE);
-	/* Create new playlist */
 	pl = itdb_playlist_new (plname, FALSE);
 	/* Add new playlist */
 	itdb_playlist_add (fimp->itdb, pl, -1);
@@ -1548,7 +1544,7 @@ static gboolean process_OTG_file (FImport *fimp, FContents *cts,
 				     header_length + entry_length *i);
 	    CHECK_ERROR (fimp, FALSE);
 
-	    track = g_list_nth_data (mpl->members, num);
+	    track = g_list_nth_data (fimp->itdb->tracks, num);
 	    if (track)
 	    {
 		itdb_playlist_add_track (pl, track, -1);
@@ -2483,13 +2479,13 @@ static void mk_mhip (FExport *fexp, guint32 pos, guint32 id)
   cts = fexp->itunesdb;
 
   put_data (cts, "mhip", 4);
-  put32lint (cts, 76);
-  put32lint (cts, -1);  /* fill in later */
-  put32lint (cts, 1);
-  put32lint (cts, pos);
-  put32lint (cts, 0);   /* was: id */
-  put32lint (cts, id);  /* id */
-  put32_n0 (cts, 12);
+  put32lint (cts, 76);                              /*  4 */
+  put32lint (cts, -1);  /* fill in later */         /*  8 */
+  put32lint (cts, 1);   /* number of children */    /* 12 */
+  put32lint (cts, 0);   /* unknown */               /* 16 */
+  put32lint (cts, 0);   /* unknown */               /* 20 */
+  put32lint (cts, id);  /* id */                    /* 24 */
+  put32_n0 (cts, 12);                               /* 28 */
 }
 
 
@@ -2761,12 +2757,24 @@ static void wcontents_free (WContents *cts)
 }
 
 
+/* reassign the iPod IDs and make sure the itdb->tracks are in the
+   same order as the mpl */
 static void reassign_ids (Itdb_iTunesDB *itdb)
 {
     guint32 id = 52;
     GList *gl;
+    Itdb_Playlist *mpl;
 
     g_return_if_fail (itdb);
+
+    /* copy mpl->members to itdb->tracks to make sure they are in the
+       same order (otherwise On-The-Go Playlists will not show the
+       correct content) */
+    mpl = itdb_playlist_mpl (itdb);
+    g_return_if_fail (mpl);
+    g_return_if_fail (g_list_length (mpl->members) == g_list_length (itdb->tracks));
+    g_list_free (itdb->tracks);
+    itdb->tracks = g_list_copy (mpl->members);
 
     /* assign unique IDs */
     for (gl=itdb->tracks; gl; gl=gl->next)

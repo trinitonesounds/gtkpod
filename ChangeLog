@@ -1,4 +1,4 @@
-gtkpod V0.94-CVS
+gtkpod V0.94.0
        NEW FEATURE: stable sorting of track view. This allows you, for
        example, to first sort by title, then by artist. The list will
        then be sorted by artist, but all titles of each artist remain
@@ -17,9 +17,15 @@ gtkpod V0.94-CVS
        bug that 'could not unmount' was always displayed, even if the
        umount was successful (thanks to Andreas Hauber).
 
-       BUGFIX: Some iTunesDB written by iTunes could not be read
+       BUGFIX: Some iTunesDB files written by iTunes could not be read
        because of an error in the parse code (gtkpod would attempt to
        read beyond the end of the file).
+
+       BUGFIX: Fixed compatibility issue with new firmware 3.1 and
+       iTunes 4.9 (only 256 tracks were shown on the iPod, iTunes
+       removed the majority of the tracks from the iPod). Podcasts are
+       still not supported, however, and will be lost when handled by
+       gtkpod.
 
        BUGFIX: Fixed On-The-Go playlist handling (thanks to "Todd").
 
@@ -32,7 +38,7 @@ gtkpod V0.93.1
        BUGFIX: 'Copy from iPod' just failed in offline mode instead of
        giving meaningful error messages -> fixed.
 
-       IMPROVEMENT: 'Copy from iPod' is not 'Export from Database' and
+       IMPROVEMENT: 'Copy from iPod' is now 'Export from Database' and
        allows to export from the local database as well. This is
        useful if you want to rename files in a consistant manner.
 
