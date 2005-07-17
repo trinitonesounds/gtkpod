@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-16 15:34:41 jcs>
+/* Time-stamp: <2005-07-18 00:52:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -477,9 +477,10 @@ static gunichar2 *fixup_big_utf16 (gunichar2 *utf16_string)
  * return value after use */
 static struct playcount *playcount_get_next (FImport *fimp)
 {
+    struct playcount *playcount;
     g_return_val_if_fail (fimp, NULL);
 
-    struct playcount *playcount = g_list_nth_data (fimp->playcounts, 0);
+    playcount = g_list_nth_data (fimp->playcounts, 0);
 
     if (playcount)
 	fimp->playcounts = g_list_remove (fimp->playcounts, playcount);
@@ -1779,9 +1780,10 @@ static gboolean parse_fimp (FImport *fimp)
 	if (cmp_n_bytes_seek (cts, "mhsd", seek, 4))
 	{   /* We just check if it's actually a playlist mhsd (type=2)
 	       or not (type = 1, should not be...) */
+	    guint32 type;
 	    guint32 len = get32lint (cts, seek+8);
 	    CHECK_ERROR (fimp, FALSE);
-	    guint32 type = get32lint (cts, seek+12);
+	    type = get32lint (cts, seek+12);
 	    CHECK_ERROR (fimp, FALSE);
 	    if (type != 2)
 	    {  /* this is not a playlist MHSD -> skip it */

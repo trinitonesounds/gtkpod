@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 00:35:45 jcs>
+/* Time-stamp: <2005-07-18 00:52:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1143,9 +1143,9 @@ void pm_add_playlist (Playlist *playlist, gint pos)
 void pm_remove_playlist (Playlist *playlist, gboolean select)
 {
     gboolean pm_delete_playlist_fe (GtkTreeModel *model,
-					   GtkTreePath *path,
-					   GtkTreeIter *iter,
-					   gpointer data)
+				    GtkTreePath *path,
+				    GtkTreeIter *iter,
+				    gpointer data)
 	{
 	    Playlist *playlist;
 	    
@@ -1155,7 +1155,7 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 		return TRUE;
 	    }
 	    return FALSE;
-	};
+	}
     GtkTreeModel *model;
     gboolean have_iter = FALSE;
     GtkTreeIter i;

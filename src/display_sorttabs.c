@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-02 00:37:37 jcs>
+/* Time-stamp: <2005-07-18 00:52:32 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2088,12 +2088,16 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  {
 	      ExtraTrackData *etr;
 	      Track *track = (Track *)g_list_nth_data (members, i);
+	      T_item t_item;
+
 	      g_return_if_fail (track);
 	      etr = track->userdata;
 	      g_return_if_fail (etr);
 	      g_return_if_fail (track->itdb);
 	      if (!itdb) itdb = track->itdb;
-	      T_item t_item = ST_to_T (sorttab[inst]->current_category);
+
+	      t_item = ST_to_T (sorttab[inst]->current_category);
+
 	      if (t_item == T_YEAR)
 	      {
 		  gint nr = atoi (new_text);

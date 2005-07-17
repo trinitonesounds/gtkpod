@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-20 23:08:22 jcs>
+/* Time-stamp: <2005-07-18 00:52:32 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -544,9 +544,10 @@ guint32 *track_get_timestamp_ptr (Track *track, T_item t_item)
    illegal, "0" is returned. */
 guint32 track_get_timestamp (Track *track, T_item t_item)
 {
+    guint32 *ptr;
     g_return_val_if_fail (track, 0);
 
-    guint32 *ptr = track_get_timestamp_ptr (track, t_item);
+    ptr = track_get_timestamp_ptr (track, t_item);
     if (ptr)  return *ptr;
     else      return 0;
 }

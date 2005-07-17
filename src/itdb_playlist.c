@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-09 15:48:30 jcs>
+/* Time-stamp: <2005-07-18 00:52:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1184,8 +1184,9 @@ Itdb_Playlist *itdb_playlist_by_id (Itdb_iTunesDB *itdb, guint64 id)
 /* Return playlist at position @num in @itdb */
 Itdb_Playlist *itdb_playlist_by_nr (Itdb_iTunesDB *itdb, guint32 num)
 {
+    Itdb_Playlist *pl;
     g_return_val_if_fail (itdb, NULL);
-    Itdb_Playlist *pl = g_list_nth_data (itdb->playlists, num);
+    pl = g_list_nth_data (itdb->playlists, num);
     g_return_val_if_fail (pl, NULL);
     return pl;
 }

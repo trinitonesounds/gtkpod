@@ -1,4 +1,8 @@
 2005-07-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+	 * fixed some gcc 2.95 compatibility issues (thanks to Arno
+	   Overgaauw)
+
+2005-07-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * Improved handling of dangling files (files that are
            referenced in the iTunesDB but are not present on the iPod)

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-16 15:42+0900\n"
+"POT-Creation-Date: 2005-07-16 16:18+0900\n"
 "PO-Revision-Date: 2005-06-22 17:56+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -2881,52 +2881,52 @@ msgstr ""
 msgid "  --offline:    same as '-o'.\n"
 msgstr "  --offline:    samma som '-o'.\n"
 
-#: src/prefs.c:381
+#: src/prefs.c:382
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "Fel vid läsning av inställningar: %s\n"
 
-#: src/prefs.c:947
+#: src/prefs.c:948
 #, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr "Kan inte öppna inställningsfilen '%s' för läsning\n"
 
-#: src/prefs.c:1051
+#: src/prefs.c:1052
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "Okänd väljare: %s\n"
 
-#: src/prefs.c:1099
+#: src/prefs.c:1100
 #, c-format
 msgid "# delete confirmation\n"
 msgstr "# bekräfta borttagning\n"
 
-#: src/prefs.c:1106
+#: src/prefs.c:1107
 #, c-format
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr "# sorteringsflik: välja 'Alla', senast valda sida (=kategori)\n"
 
-#: src/prefs.c:1125
+#: src/prefs.c:1126
 #, c-format
 msgid "# autoselect master playlist?\n"
 msgstr "# välj automatiskt huvudspellista?\n"
 
-#: src/prefs.c:1127
+#: src/prefs.c:1128
 #, c-format
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr "# titel=0, artist, album, genre, kompositör\n"
 
-#: src/prefs.c:1128
+#: src/prefs.c:1129
 #, c-format
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr "# spårnummer=5, iPod-id, PC-sökväg, överförda\n"
 
-#: src/prefs.c:1129
+#: src/prefs.c:1130
 #, c-format
 msgid "# autoset: set empty tag to filename?\n"
 msgstr "# välj automatiskt: ange filnamn i tom tagg?\n"
 
-#: src/prefs.c:1142
+#: src/prefs.c:1143
 #, c-format
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
@@ -2935,7 +2935,7 @@ msgstr ""
 "# position för skjutreglage (i rutor): spellistor, ovanför spår,\n"
 "# mellan sorteringsflikar, och i statusraden.\n"
 
-#: src/prefs.c:1177
+#: src/prefs.c:1178
 #, c-format
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
@@ -2944,16 +2944,16 @@ msgstr ""
 "# fönsterstorlekar: huvudfönster, bekräftelse med rullningslist,\n"
 "#   bekräftelse utan rullningslist, katalogbläddrare, inställningar\n"
 
-#: src/prefs.c:1214
+#: src/prefs.c:1215
 msgid "Settings are not saved.\n"
 msgstr "Inställningarna har inte sparats.\n"
 
-#: src/prefs.c:1227
+#: src/prefs.c:1228
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "Kan inte öppna '%s' för skrivning\n"
 
-#: src/prefs.c:1591
+#: src/prefs.c:1592
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
@@ -2961,29 +2961,29 @@ msgstr ""
 " Inställningar: Kategorinummer (%d<%d?) eller sorteringsfliknummer (%d<%d?) "
 "är utanför giltigt intervall.\n"
 
-#: src/prefs.c:1640
+#: src/prefs.c:1641
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "Kan inte skapa katalogen '%s'\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2033
+#: src/prefs.c:2034
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: felaktig stil '%d' ignoreras\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2075
+#: src/prefs.c:2076
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort: felaktig typ '%d' ignoreras\n"
 
-#: src/prefs.c:2230
+#: src/prefs.c:2231
 #, c-format
 msgid "'%s': no arguments (%%...) allowed.\n"
 msgstr "'%s': inga argument (%%...) tillåts.\n"
 
-#: src/prefs.c:2235
+#: src/prefs.c:2236
 #, c-format
 msgid "'%s': only '%%[%s]' allowed.\n"
 msgstr "'%s': bara '%%[%s]' tillåts.\n"

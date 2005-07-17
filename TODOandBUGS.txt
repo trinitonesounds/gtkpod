@@ -5,10 +5,6 @@ TODO:
   dirs are used no matter how many are present.
   Creation of directories should be moved to itdb_*
 
-- be able to select multiple genres, albums, etc. at the same
-  time. (should be possible -- difficulty is selecting several
-  playlists)
-
 - more features for mserv
 
 - icons should be themable
@@ -18,18 +14,7 @@ TODO:
 - Give status when adjusting offline_playcount after import of
   database (can take quite a while even for only 90 tracks).
 
-- Ignore common words when sorting
-
-  > I'm somewhat frustrated with the inconsistency between GTKPod and
-  > the iPod itself, however. items in the iPod are sorted with "the"
-  > as if it weren't there...
-  (Alex Perez)
-
 - Dangling/orphaned tracks
-    - Delete dangling tracks right away -- they can cause an error
-      message when exporting the iTunesDB. Instead display them in an
-      info window.
-
     - Open a progress window to display information instead of the
       statusbar messages.
 
@@ -56,14 +41,13 @@ TODO:
 
    HTH.
 
+- be able to select multiple genres, albums, etc. at the same
+  time. (should be possible -- difficulty is selecting several
+  playlists)
+
 
 Anton de Wet
 Feature Suggestion:
-  It would be very useful to be able to set the rating for all the
-  selected tracks. (i.e. change all tracks with rating 0 to rating 1 for
-  eg.) to then set specific tracks (like the Griffin iTrip frequency
-  changing tracks) to 0
-
   Also usefull would be able to set the "default" rating for all newly
   added tracks.
 
@@ -90,7 +74,7 @@ Torsten Curdt
 kulenfuster@...
 > Not sure from the documentation but it looks like there's no way to
 > sync tunes in the iPod into the desktop database.
-> 
+ > 
 > For instance situation:
 > 
 > Bob has two desktop machines - one at work, one at home.  He has
@@ -233,13 +217,6 @@ Please feel free to submit further features.
 
 BUGLIST:
 
-On Mon, Jul 11, 2005 at 06:54:46PM -0500, dj faké wrote:
-> After erasing my iPod with the new 6/26/05 iPod Updater, I had to add
-> one (1) song to it from iTunes in order to create the iPod Control
-> directory, after that, gtkpod function fine. . . before that, could not
-> add anything with gtkpod
-
-
 drag playlist to track view: (JCS)
 (gtkpod:19911): Gtk-CRITICAL **: gtk_text_buffer_emit_insert: assertion `g_utf8_validate (text, len, NULL)' failed
 
@@ -247,13 +224,6 @@ drag playlist to track view: (JCS)
 
 (gtkpod:19911): Gtk-CRITICAL **: gtk_text_buffer_emit_insert: assertion `g_utf8_validate (text, len, NULL)' failed
 
-
-- Alexander C Gross
-> I am a happy user of gtkpod and really like the intuitive editing of
-> mp3-tags. I have noticed though, that the tags are not updated in
-> the original files if you close and open gtkpod before editing the
-> tags even though the location of the original folder is saved. I
-> wonder if that is meant to be that way.
 
 
 - Eelco van Veldhuizen 
@@ -267,45 +237,13 @@ drag playlist to track view: (JCS)
 > you know a solution for this problem :)
 
 
-- special sorttab does not do date sorting correctly.
-
 - during a long operation (menues are blocked) the user can still edit
   the track data. This could potentially crash gtkpod -> need a way to
   block editing as well without blocking navigation.
 
-- when copying tracks to the iPod (export iTunesDB) and the iPod is
-  overfilled, libgtk sometimes segfaults (TreeModel changed but did
-  not notify TreeView?)
-
 - when deleting an entry in the last sort tab (of 2) sometimes gtkpod
   crashes
 
-
-> '** (gtkpod:3839): WARNING **: Programming error: Could not create hash
-> value from itunesdb' -> not an error -- reading of file failed!
-
-
-----------
-tamagucci at fastwebnet.it, gerald.miller at morris.com
-> Second, here's my story: 
-> I copied some mp3 files to a directory on ipod while at my windows PC at 
-> home because I like gtkpod better than the bundled windows software. I 
-> took my ipod to work and plugged it and ran gtkpod. 
-> 
-> I grabbed my files off the ipod and tried to import them into the iTunes 
-> database. When I was done, I unhooked my iPod and tried to listen to the 
-> songs... but it would just skip each one. 
-> 
-> I thought that maybe it didn't _really_ copy the mp3 into the iTunes 
-> database because it thought the songs were already on the iPod. To test, 
-> I copied the mp3s to my local hard drive and tried to sync again. 
-> Success! This time everything worked as it should. 
-> 
-> I do think I'm a couple of revisions behind on gtkpod, but I wanted to 
-> see if you were aware of this issue. 
-> 
-> Thanks for writing this software, 
-> and thanks for letting it be free, =) 
 
 stefano.brozzi
 > 1. on creating a smart playlist with a rule on title name,

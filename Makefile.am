@@ -37,6 +37,12 @@ uninstall-hook:
 	for gladefile in gtkpod.glade gtkpod.gladep; do \
 	    rm -f $(DESTDIR)$(pkgdatadir)/$$gladefile; \
 	done
+	if test -d $(DESTDIR)$(pkgdatadir)/scripts ; then \
+	    rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir)/scripts; \
+	fi
+	if test -d $(DESTDIR)$(pkgdatadir) ; then \
+	    rmdir --ignore-fail-on-non-empty $(DESTDIR)$(pkgdatadir); \
+	fi
 
 dist-hook:
 	for gladefile in gtkpod.glade gtkpod.gladep; do \
