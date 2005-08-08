@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-07-17 01:25:07 jcs>
+|  Time-stamp: <2005-08-07 12:29:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -347,6 +347,8 @@ GList *glist_duplicate (GList *list)
  * does not check prefs to see if the current prefs want gtkpod itself to
  * mount the ipod drive, that should be checked before making this call.
  */
+#include <sys/param.h>   /* seems to be needed for FreeBSD 5.4
+			    otherwise sys/mount.h throws an error */
 #include <sys/mount.h>
 #include <errno.h>
 #include <stdio.h>

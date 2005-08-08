@@ -1,4 +1,11 @@
-2005-07-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2005-08-07 Jorg Schuler <jcsjcs@users.sourceforge.net>
+         * UPDATED Hebrew translation (thanks to Assaf Gillat)
+
+	 * include <sys/param.h> in misc.c to avoid error when
+           including <sys/mount.h> under FreeBSD 5.4 (reported by
+           Pablo Cacho)
+
+2005-07-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 	 * fixed some gcc 2.95 compatibility issues (thanks to Arno
 	   Overgaauw)
 

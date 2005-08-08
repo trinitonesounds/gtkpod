@@ -1,3 +1,6 @@
+gtkpod V0.95.CVS
+       UPDATED Hebrew translation (thanks to Assaf Gillat)
+
 gtkpod V0.94.0
        NEW FEATURE: stable sorting of track view. This allows you, for
        example, to first sort by title, then by artist. The list will
