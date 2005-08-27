@@ -29,7 +29,7 @@ for details.
      - Synchronize Directories
      - Volume Normalization
      - Offline Mode
-     - Export of Tracks
+     - Export of Tracks (Copy from iPod)
      - Encoding of ID3 tags (charsets)
      - Extracting tag information from the filename
      - Checking iPod's files
@@ -333,11 +333,11 @@ iPod. The contents of your iPod hard drive are then brought up to
 date.
 
 
-Export of Tracks
-----------------
+Export of Tracks (Copy from iPod)
+---------------------------------
 
-- mark the tracks you want to export and select "Export Files to Disk"
-  from the menu
+- mark the tracks you want to export and select "Export Tracks from
+  Database" from the file menu (or use the context sensitive menu)
 - A file selection dialog window appears and you can choose the directory
   you'd like the selected files to be written to.
 - You can specify the output filename in the prefs dialog by

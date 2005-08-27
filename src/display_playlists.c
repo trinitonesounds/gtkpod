@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-18 00:52:33 jcs>
+/* Time-stamp: <2005-08-27 21:51:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -607,7 +607,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 
     if (path_m)
     {   /* this callback was caused by pm_drag_motion -- we are
-	 * supposed to gdk_drag_status () */
+	 * supposed to call gdk_drag_status () */
 /* puts ("...by motion"); */
         pos = (GtkTreeViewDropPosition)g_object_get_data (G_OBJECT (widget), "drag_data_by_motion_pos");
         /* unset flag that */ 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:13 jcs>
+/* Time-stamp: <2005-08-27 15:11:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -928,6 +928,11 @@ static guint get_track_time (gchar *path)
 #include <id3tag.h>
 #include "prefs.h"
 
+#ifndef ID3_FRAME_GROUP
+#define ID3_FRAME_GROUP "TPE2"
+#endif
+
+
 
 static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 {
@@ -1122,7 +1127,12 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
     if ((id3tag = id3_file_tag(id3file)))
     {
 	tag->title = id3_get_string (id3tag, ID3_FRAME_TITLE);
-	tag->artist = id3_get_string (id3tag, ID3_FRAME_ARTIST);
+	tag->artist = id3_get_string (id3tag, ID3_FRAME_GROUP);
+	if (!tag->artist || !*tag->artist)
+	{
+	    g_free (tag->artist);
+	    tag->artist = id3_get_string (id3tag, ID3_FRAME_ARTIST);
+	}
 	tag->album = id3_get_string (id3tag, ID3_FRAME_ALBUM);
 	tag->year = id3_get_string (id3tag, ID3_FRAME_YEAR);
 	tag->composer = id3_get_string (id3tag, "TCOM");

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-18 00:52:33 jcs>
+/* Time-stamp: <2005-08-27 21:51:32 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -939,7 +939,8 @@ SPLRule *splr_duplicate (SPLRule *splr)
 }
 
 
-/* Duplicate an existing playlist */
+/* Duplicate an existing playlist. pl_dup->id is set to zero, so that
+ * it will be set to a unique value when adding it to the itdb. */
 Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl)
 {
     Itdb_Playlist *pl_dup;
@@ -970,6 +971,10 @@ Itdb_Playlist *itdb_playlist_duplicate (Itdb_Playlist *pl)
 	pl_dup->splrules.rules = g_list_append (
 	    pl_dup->splrules.rules, splr_dup);
     }
+
+    /* Set id to 0, so it will be set to a unique value when adding
+     * this playlist to a itdb */
+    pl_dup->id = 0;
 
     /* Copy userdata */
     if (pl->userdata)
@@ -1012,19 +1017,15 @@ void itdb_spl_copy_rules (Itdb_Playlist *dest, Itdb_Playlist *src)
 
 
 /* Generate a new playlist structure. If @spl is TRUE, a smart
- * playlist is generated. */
+ * playlist is generated. pl->id is set when adding to an itdb by
+ * itdb_playlist_add()*/
 Itdb_Playlist *itdb_playlist_new (const gchar *title, gboolean spl)
 {
-    GRand *grand = g_rand_new ();
     Itdb_Playlist *pl = g_new0 (Itdb_Playlist, 1);
 
     pl->type = ITDB_PL_TYPE_NORM;
     pl->name = g_strdup (title);
     pl->is_spl = spl;
-    pl->id = ((guint64)g_rand_int (grand) << 32) |
-	((guint64)g_rand_int (grand));
-    /* FIXME: make sure this id is really unique (with 100 playlists the
-     * chance to create a duplicate is 1 in 184,467,440,737,095,516.16) */
     if (spl)
     {
 	pl->splpref.liveupdate = TRUE;
@@ -1060,7 +1061,8 @@ void itdb_playlist_free (Itdb_Playlist *pl)
 
 
 /* add playlist @pl to the database @itdb at position @pos (-1 for
- * "append to end") */
+ * "append to end"). A unique id is created if pl->id is equal to
+ * zero. */
 /* a critical message is logged if either itdb or pl is NULL */
 void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos)
 {
@@ -1070,6 +1072,28 @@ void itdb_playlist_add (Itdb_iTunesDB *itdb, Itdb_Playlist *pl, gint32 pos)
 
     pl->itdb = itdb;
 
+    /* set unique ID when not yet set */
+    if (pl->id == 0)
+    {
+	GRand *grand = g_rand_new ();
+	GList *gl;
+	guint64 id;
+	do
+	{
+	    id = ((guint64)g_rand_int (grand) << 32) |
+		((guint64)g_rand_int (grand));
+	    /* check if id is really random (with 100 playlists the
+	     * chance to create a duplicate is 1 in
+	     * 184,467,440,737,095,516.16) */
+	    for (gl=itdb->playlists; id && gl; gl=gl->next)
+	    {
+		Playlist *g_pl = gl->data;
+		g_return_if_fail (g_pl);
+		if (id == g_pl->id)  id = 0;
+	    }
+	} while (id == 0);
+	pl->id = id;
+    }
     if (pos == -1)  itdb->playlists = g_list_append (itdb->playlists, pl);
     else  itdb->playlists = g_list_insert (itdb->playlists, pl, pos);
 }

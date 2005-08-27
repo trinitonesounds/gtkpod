@@ -1,6 +1,17 @@
 gtkpod V0.95.CVS
        UPDATED Hebrew translation (thanks to Assaf Gillat)
 
+       CHANGE: MP3 tags: use 'Band/Orchestra/Accompaniment' (TPE2) as
+       artist if it exists. Otherwise use 'Lead artist/Lead
+       performer/Soloist/Performing group' (TPE1) as before. Let me
+       know if this causes problems for you.
+
+       BUGFIX: Copying playlists by drag and drop could confuse smart
+       playlists referencing these playlists. Fixed.
+
+After copying playlists by drag and drop, smart
+       playlists refering to these playlists could become confused.
+
 gtkpod V0.94.0
        NEW FEATURE: stable sorting of track view. This allows you, for
        example, to first sort by title, then by artist. The list will

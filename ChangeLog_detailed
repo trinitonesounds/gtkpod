@@ -1,3 +1,16 @@
+2005-08-27 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * MP3 tags: use 'Band/Orchestra/Accompaniment' (TPE2) as
+	   artist if it exists. Otherwise use 'Lead artist/Lead
+	   performer/Soloist/Performing group' (TPE1) as before. Let
+	   me know if this causes problems for you.
+
+	 * BUGFIX: Copying playlists by drag and drop could confuse
+           smart playlists referencing these playlists. This was due
+           because the DND duplicated the ID by which these playlists
+           were referenced. A new ID is now set automatically when
+           adding playlists by itdb_playlist_add().
+
 2005-08-07 Jorg Schuler <jcsjcs@users.sourceforge.net>
          * UPDATED Hebrew translation (thanks to Assaf Gillat)
 

@@ -1,5 +1,9 @@
 TODO:
 
+- photo support
+
+- lyrics support (http://www.jcbsoft.net/podlyrics/)
+
 - itdb/misc_confirm.c: number of F?? directories should be determined
   before starting copying files to the iPod. At the moment only 20
   dirs are used no matter how many are present.
