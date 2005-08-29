@@ -9,10 +9,13 @@ script_SCRIPTS = \
 	sync-evocalendar.sh \
 	sync-evolution.sh \
 	sync-kaddressbook.sh \
+	sync-knotes.sh \
 	sync-korganizer.sh \
+	sync-ldif.sh \
 	sync-notes.sh \
 	sync-thunderbird.sh \
 	sync-webcalendar.sh \
+	ldif2vcf.sh \
 	mab2vcard
 
 # these scripts will go in the distribution. Actually, if they are to

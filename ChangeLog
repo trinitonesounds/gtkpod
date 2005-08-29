@@ -1,10 +1,20 @@
 gtkpod V0.95.CVS
-       UPDATED Hebrew translation (thanks to Assaf Gillat)
+       NEW: script to sync addressbooks in ldif format provided by
+       Sebastien BERIDOT.
+
+       NEW: script to sync kNotes (KDE note program) provided by
+       Sebastian Scherer.
 
        CHANGE: MP3 tags: use 'Band/Orchestra/Accompaniment' (TPE2) as
        artist if it exists. Otherwise use 'Lead artist/Lead
        performer/Soloist/Performing group' (TPE1) as before. Let me
        know if this causes problems for you.
+
+       UPDATED Hebrew translation (thanks to Assaf Gillat)
+
+       SAFETY: call sync() and flush all buffers to the iPod after
+       writing the iTunesDB -- should minimise filesystem errors
+       caused by people disconnecting the iPod without unmounting.
 
        BUGFIX: Copying playlists by drag and drop could confuse smart
        playlists referencing these playlists. Fixed.

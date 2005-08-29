@@ -1,3 +1,17 @@
+2005-08-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+         * SAFETY: call sync() and flush all buffers to the iPod after
+           writing the iTunesDB -- should minimise filesystem errors
+           caused by people disconnecting the iPod without unmounting
+           (four instances in itdb_itunesdb.c)
+
+	 * NEW: script to sync addressbooks in ldif format provided by
+           Sebastien BERIDOT (scripts/sync-ldif.sh,
+           scripts/ldif2vcf.sh).
+
+         * NEW: script to sync kNotes (KDE note program) provided by
+           Sebastian Scherer (scripts/sync-knotes.sh).
+
 2005-08-27 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * MP3 tags: use 'Band/Orchestra/Accompaniment' (TPE2) as

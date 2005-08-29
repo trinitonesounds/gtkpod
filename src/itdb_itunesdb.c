@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-18 00:52:33 jcs>
+/* Time-stamp: <2005-08-29 23:23:59 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2837,6 +2837,10 @@ gboolean itdb_write_file (Itdb_iTunesDB *itdb, const gchar *filename,
 	g_free (itdb->filename);
 	itdb->filename = fn;
     }
+    /* make sure all buffers are flushed as some people tend to
+       disconnect as soon as gtkpod returns */
+    sync ();
+
     return result;
 }
 
@@ -2896,6 +2900,10 @@ gboolean itdb_write (Itdb_iTunesDB *itdb, const gchar *mp, GError **error)
 	g_free (itdb->mountpoint);
 	itdb->mountpoint = mnp;
     }
+
+    /* make sure all buffers are flushed as some people tend to
+       disconnect as soon as gtkpod returns */
+    sync ();
 
     return result;
 }
@@ -3064,6 +3072,10 @@ gboolean itdb_shuffle_write (Itdb_iTunesDB *itdb,
 	itdb->mountpoint = mnp;
     }
 
+    /* make sure all buffers are flushed as some people tend to
+       disconnect as soon as gtkpod returns */
+    sync ();
+
     return result;
 }
 
@@ -3179,6 +3191,11 @@ gboolean itdb_shuffle_write_file (Itdb_iTunesDB *itdb,
     }
     wcontents_free (cts);
     g_free (fexp);
+
+    /* make sure all buffers are flushed as some people tend to
+       disconnect as soon as gtkpod returns */
+    sync ();
+
     return result;
 }
 

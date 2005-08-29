@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-08-07 12:29:51 jcs>
+|  Time-stamp: <2005-08-29 23:41:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -149,6 +149,12 @@ Daniel Kercher: sync scripts for abook and webcalendar\n"),
 		       "\n",
 		       _("\
 Clinton Gormley: sync scripts for thunderbird\n"),
+		       "\n",
+		       _("\
+Sebastien Beridot: sync scripts for ldif addressbook format\n"),
+		       "\n",
+		       _("\
+Sebastian Scherer: sync scripts for kNotes\n"),
 		       "\n",
 		       _("\
 Icons of buttons were made by Nicolas Chariot.\n\
