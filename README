@@ -615,6 +615,11 @@ For USB and FireWire:
     * Filesystems    -> DOS/FAT/NT Filesystems - y
     *                -> DOS/FAT/NT Filesystems -> VFAT fs support - y
     *                -> Kernel automounter version 4 support - y
+    *                -> Native Language Support
+    *                            -> Codepage 437 (CONFIG_NLS_CODEPAGE_437)
+    *                            -> NLS ISO 8859-1 (CONFIG_NLS_ISO8859_1) 
+
+
 
 (for iPods formatted with the HFS filesystem choose
     * Filesystems -> Miscellaneous filesystems
@@ -713,6 +718,9 @@ At least for the new 4Gs and iPod minis you should _disable_
 (CONFIG_EFI_PARTITION, see Troubleshooting for more information):
     * File Systems -> Partition Types -> Advanced Partition Selection
 		   -> EFI GUID Partition support
+    *              -> Native Language Support
+    *                            -> Codepage 437 (CONFIG_NLS_CODEPAGE_437)
+    *                            -> NLS ISO 8859-1 (CONFIG_NLS_ISO8859_1) 
 
 
 3) Create /mnt/ipod:
@@ -834,7 +842,10 @@ Needed configuration:
 At least for the new 4Gs and iPod minis you should _disable_
 (CONFIG_EFI_PARTITION, see Troubleshooting for more information):
     * File Systems -> Partition Types -> Advanced Partition Selection
-		   -> EFI GUID Partition support
+    *	   	   -> EFI GUID Partition support
+    *              -> Native Language Support
+    *                          -> Codepage 437 (CONFIG_NLS_CODEPAGE_437)
+    *                          -> NLS ISO 8859-1 (CONFIG_NLS_ISO8859_1) 
 
 3) Create /mnt/ipod:
 
