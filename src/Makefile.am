@@ -52,7 +52,6 @@ gtkpod_SOURCES = \
     file_itunesdb.c \
     fileselection.h fileselection.c \
     info.c info.h \
-    itdb_itunesdb.c itdb_playlist.c  itdb_track.c itdb_private.h itdb.h \
     main.c \
     md5.c md5.h \
     misc.c misc.h \

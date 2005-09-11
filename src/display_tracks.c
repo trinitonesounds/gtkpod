@@ -947,7 +947,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
         nr = atoi (new_text);
         if ((nr >= 0) && (nr <= 5) && (nr != track->rating))
         {
-           track->rating = nr*RATING_STEP;
+           track->rating = nr*ITDB_RATING_STEP;
            changed = TRUE;
         }
         break;
@@ -1176,7 +1176,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_RATING:
-      snprintf (text, 20, "%d", track->rating/RATING_STEP);
+      snprintf (text, 20, "%d", track->rating/ITDB_RATING_STEP);
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,

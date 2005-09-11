@@ -432,7 +432,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     {
 	/* checked = TRUE: at least one condition was checked */
 	checked = TRUE;
-	cond = prefs_get_sp_rating_n (inst, track->rating/RATING_STEP);
+	cond = prefs_get_sp_rating_n (inst, track->rating/ITDB_RATING_STEP);
 	/* If one of the two combinations occur, we can take a
 	   shortcut and stop checking the other conditions */
 	if (sp_or && cond)       return TRUE;

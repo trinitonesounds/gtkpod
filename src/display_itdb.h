@@ -34,8 +34,8 @@
 #  include <config.h>
 #endif
 
-#include <itdb.h>
 #include <gtk/gtk.h>
+#include "itdb.h"
 
 struct itdbs_head
 {

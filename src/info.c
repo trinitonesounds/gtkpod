@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-05 23:43:58 jcs>
+/* Time-stamp: <2005-09-10 00:49:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -690,6 +690,8 @@ static gpointer th_space_thread (gpointer gp)
 	usleep (SPACE_TIMEOUT*1000);
 	if (!space_uptodate)   th_space_update ();
     }
+    /* To make gcc happy */
+    return (gpointer)NULL;
 }
 
 

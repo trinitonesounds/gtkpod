@@ -270,8 +270,8 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
        /* Set rating */
        if (oldtrack->rating && track->rating)
 	   oldtrack->rating =
-	       floor((double)(oldtrack->rating + track->rating + RATING_STEP) /
-		     (2 * RATING_STEP)) * RATING_STEP;
+	       floor((double)(oldtrack->rating + track->rating + ITDB_RATING_STEP) /
+		     (2 * ITDB_RATING_STEP)) * ITDB_RATING_STEP;
        else
 	   oldtrack->rating = MAX (oldtrack->rating, track->rating);
        /* Set 'modified' timestamp */

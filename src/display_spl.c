@@ -522,7 +522,7 @@ static void splr_entry_changed (GtkEditable *editable,
 	splr->fromvalue = atol (str);
 	if (splr->field == SPLFIELD_RATING)
 	{
-	    splr->fromvalue *= RATING_STEP;
+	    splr->fromvalue *= ITDB_RATING_STEP;
 	}
 	break;
     case spl_ET_FROMVALUE_DATE:
@@ -537,7 +537,7 @@ static void splr_entry_changed (GtkEditable *editable,
 	splr->tovalue = atol (str);
 	if (splr->field == SPLFIELD_RATING)
 	{
-	    splr->tovalue *= RATING_STEP;
+	    splr->tovalue *= ITDB_RATING_STEP;
 	}
 	break;
     case spl_ET_TOVALUE_DATE:
@@ -844,7 +844,7 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
 
     if (splr->field == SPLFIELD_RATING)
     {
-	stepsize = RATING_STEP;
+	stepsize = ITDB_RATING_STEP;
     }
 
     switch (et)

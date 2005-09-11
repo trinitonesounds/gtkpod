@@ -755,9 +755,9 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 			&& buff[usernamelen] == (gchar)'=')
 		    {
 			/* found it */
-			track->rating = atoi(&buff[usernamelen+1]) * RATING_STEP;
+			track->rating = atoi(&buff[usernamelen+1]) * ITDB_RATING_STEP;
 			/* printf("found it, = %d\n",
-			   orig_track->rating/RATING_STEP); */
+			   orig_track->rating/ITDB_RATING_STEP); */
 			success = TRUE;
 			break; /* while(fgets(... */
 		    }

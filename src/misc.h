@@ -40,7 +40,6 @@
 #include <stdio.h>
 #include "file.h"
 #include "display_itdb.h"
-#include "itdb.h"
 #include "display.h"
 #include "confirmation.h"
 #include "time.h"
