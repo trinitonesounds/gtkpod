@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 11:20:54 jcs>
+/* Time-stamp: <2005-09-13 23:00:16 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -532,10 +532,10 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	g_free (name_db);
     }
 
+    if (!itdb) return NULL;
+
     /* add Extra*Data */
     gp_itdb_add_extra_full (itdb);
-
-    if (!itdb) return NULL;
 
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);
@@ -546,7 +546,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     {
 	if (prefs_get_offline ())
 	{
-	    itdb->mountpoint = g_strdup (mp);
+	    itdb_set_mountpoint (itdb, mp);
 	    g_free (itdb->filename);
 	    itdb->filename = NULL;
 	}
@@ -935,7 +935,7 @@ static gpointer th_copy (gpointer s)
     etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
 
-    itdb_cp_track_to_ipod (mount, track, etr->pc_path_locale, &error);
+    itdb_cp_track_to_ipod (track, etr->pc_path_locale, &error);
     g_free (mount);
     /* delete old size */
     if (track->transferred) etr->oldsize = 0;
@@ -1628,7 +1628,7 @@ void gp_itdb_set_mountpoint (const gchar *mp)
 	    g_free (pmp);
 	    /* store to itdb */
 	    g_free (itdb->mountpoint);
-	    itdb->mountpoint = g_strdup (mp);
+	    itdb_set_mountpoint (itdb, mp);
 	}
 	++i;
     }

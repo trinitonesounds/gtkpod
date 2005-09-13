@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-16 01:51:01 jcs>
+/* Time-stamp: <2005-09-11 22:12:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -866,9 +866,9 @@ static void ipod_directories_ok (gchar *mp)
 	{
 	    if((mkdir(pbuf, 0755) != 0))
 		errordir = pbuf;
-	    else
-		g_free (pbuf);
 	}
+	if (!errordir)
+	    g_free (pbuf);
     }
     if (!errordir)
     {
@@ -877,9 +877,9 @@ static void ipod_directories_ok (gchar *mp)
 	{
 	    if((mkdir(pbuf, 0755) != 0))
 		errordir = pbuf;
-	    else
-		g_free (pbuf);
 	}
+	if (!errordir)
+	    g_free (pbuf);
     }
     if (!errordir)
     {
@@ -888,9 +888,9 @@ static void ipod_directories_ok (gchar *mp)
 	{
 	    if((mkdir(pbuf, 0755) != 0))
 		errordir = pbuf;
-	    else
-		g_free (pbuf);
 	}
+	if (!errordir)
+	    g_free (pbuf);
     }
     if (!errordir)
     {
@@ -899,9 +899,9 @@ static void ipod_directories_ok (gchar *mp)
 	{
 	    if((mkdir(pbuf, 0755) != 0))
 		errordir = pbuf;
-	    else
-		g_free (pbuf);
 	}
+	if (!errordir)
+	    g_free (pbuf);
     }
     if (!errordir)
     {
@@ -910,9 +910,9 @@ static void ipod_directories_ok (gchar *mp)
 	{
 	    if((mkdir(pbuf, 0755) != 0))
 		errordir = pbuf;
-	    else
-		g_free (pbuf);
 	}
+	if (!errordir)
+	    g_free (pbuf);
     }
     dirnum = ipod_directories_number (mp);
     for(i = 0; i < dirnum; i++)
@@ -926,10 +926,10 @@ static void ipod_directories_ok (gchar *mp)
 	    {
 		if((mkdir(pbuf, 0755) != 0))
 		    errordir = pbuf;
-		else
-		    g_free (pbuf);
 		g_free (num);
 	    }
+	    if (!errordir)
+		g_free (pbuf);
 	}
     }
 

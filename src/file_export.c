@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 11:14:46 jcs>
+/* Time-stamp: <2005-09-12 18:57:24 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -44,7 +44,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <math.h>
-
+#include <unistd.h>
 
 /* Structure to keep all necessary information */
 struct fcd
@@ -114,14 +114,14 @@ mkdirhier(char* filename)
 }
 
 /**
- * copy_file_from_fd_to_fd - given two open file descriptors, read from one
- * 	and write the data to the other
+ * copy_file_fd_sync - given two open file descriptors, read from one
+ * 	and write the data to the other, fsync() before returning.
  * @from - the file descriptor we're reading from
  * @to - the file descriptor we're writing to
  * Returns TRUE on write success, FALSE on write failure
  */
 static gboolean
-copy_file_fd(FILE *from, FILE *to)
+copy_file_fd_sync (FILE *from, FILE *to)
 {
     gboolean result = FALSE;
     gchar data[READ_WRITE_BLOCKSIZE];
@@ -162,6 +162,8 @@ copy_file_fd(FILE *from, FILE *to)
 	    
 	} while(!(feof(from)));
     }
+    if (!result)
+	result = fsync (fileno (to));
     return(result);
 }
 
@@ -216,7 +218,7 @@ copy_file(gchar *file, gchar *dest)
     {
 	if((to = fopen(dest, "w")))
 	{
-	    result = copy_file_fd(from, to);
+	    result = copy_file_fd_sync (from, to);
 	    fclose(to);
 	}
 	else

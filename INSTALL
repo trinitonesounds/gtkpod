@@ -27,6 +27,15 @@ How to compile/install gtkpod:
 
    ./bootstrap --disable-server ; make ; make install
 
+   If you install to /usr/local/lib please don't forget to add the
+   path to LD_LIBRARY_PATH:
+
+     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+     export LD_LIBRARY_PATH
+
+   You can add those lines to your ~/.bashrc or add it globally to
+   /etc/profile.
+
    If you install packages from your linux distribution, keep in mind
    that you will need to install the "-dev" packages as well to be
    able to compile.

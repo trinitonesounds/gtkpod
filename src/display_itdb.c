@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-16 22:47:26 jcs>
+/* Time-stamp: <2005-09-13 23:00:16 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -681,7 +681,8 @@ void init_data (GtkWidget *window)
 		    g_return_if_fail (eitdb);
 		    itdb->usertype = type;
 		    itdb->filename = filename;
-		    itdb->mountpoint = mountpoint;
+		    itdb_set_mountpoint (itdb, mountpoint);
+		    g_free (mountpoint);
 		    eitdb->offline_filename = offline_filename;
 
 		    nm = g_strdup_printf ("itdb_%d_name", i);
@@ -729,7 +730,7 @@ void init_data (GtkWidget *window)
 	eitdb = itdb->userdata;
 	g_return_if_fail (eitdb);
 	itdb->usertype = GP_ITDB_TYPE_IPOD;
-	itdb->mountpoint = g_strdup (prefs_get_ipod_mount ());
+	itdb_set_mountpoint (itdb, prefs_get_ipod_mount ());
 	eitdb->offline_filename = g_build_filename (
 	    cfgdir, "iTunesDB", NULL);
 	gp_itdb_add (itdb, -1);

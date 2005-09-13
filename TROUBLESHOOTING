@@ -3,7 +3,8 @@ Troubleshooting-FAQ:
 
 Contents:
 
-- mpeg4ip-1.1 "PACKAGE undefined"
+- Installed libmp4v2 from source to /usr/local/lib, but gtkpod is
+  unable to locate libmp4.so.0
 
 - Files copied to gtkpod but they don't appear in the database (0.80,
   Tony Williams)
@@ -29,27 +30,18 @@ Contents:
 
 ----------------------------------------------------------------------
 
+Installed libmp4v2 from source to /usr/local/lib, but gtkpod is unable
+to locate libmp4.so.0
 
-mpeg4ip-1.1 "PACKAGE undefined"
 
+If you install to /usr/local/lib please don't forget to add the path
+to LD_LIBRARY_PATH:
 
-Solution:
+     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+     export LD_LIBRARY_PATH
 
-Add
-
-#include <config.h>
-
-after
-
-#include <mp4.h>
-
-in
-
-mp4file.c
-
-This is a workaround to a problem in the mp4.h header files. It's
-included in V0.87 and above.
-
+You can add those lines to your ~/.bashrc or add it globally to
+/etc/profile.
 
 ----------------------------------------------------------------------
 Files copied to gtkpod but they don't appear in the database (0.80,

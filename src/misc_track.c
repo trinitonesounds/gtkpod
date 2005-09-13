@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-18 00:52:32 jcs>
+/* Time-stamp: <2005-09-13 23:00:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -413,7 +413,7 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 	    gchar *ipod_path;
 	    g_return_val_if_fail (track, NULL);
 	    mount = charset_from_utf8 (prefs_get_ipod_mount ());
-	    ipod_path = itdb_filename_on_ipod (mount, track);
+	    ipod_path = itdb_filename_on_ipod (track);
 	    g_free (mount);
 	    if (ipod_path)
 	    {

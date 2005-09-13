@@ -1,3 +1,24 @@
+2005-09-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * implemented changed API for itdb_filename_on_ipod()
+
+	 * use new function itdb_set_mountpoint() to set mountpoint.
+
+2005-09-11 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * bumped version to V0.96.CVS
+
+	 * gtkpod is now dependent on the new ligbpod
+
+	 * note about LD_LIBRARY_PATH when installing libmp4v2 to
+           /usr/local/lib
+
+	 * file_itunesdb.c: fixed critical assertion when calling
+           gp_itdb_add_extra_full () with itdb==NULL.
+
+	 * misc_confirm.c: (ipod_directories_ok): fixed small
+           potential memory leak.
+
 2005-08-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
          * SAFETY: call sync() and flush all buffers to the iPod after
