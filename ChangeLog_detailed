@@ -1,5 +1,9 @@
 2005-09-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * new fr.po by Eric Lassauge
+
+2005-09-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * implemented changed API for itdb_filename_on_ipod()
 
 	 * use new function itdb_set_mountpoint() to set mountpoint.
