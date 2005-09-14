@@ -19,10 +19,6 @@ src/fileselection.c
 src/getopt1.c
 src/getopt.c
 src/info.c
-src/itdb_itunesdb.c
-src/itdb_main.c
-src/itdb_playlist.c
-src/itdb_track.c
 src/main.c
 src/md5.c
 src/misc.c

@@ -1,6 +1,9 @@
 2005-09-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * new fr.po by Eric Lassauge
+	 * removed reference to itdb_ sourcefiles in POTFILES.in (have
+	   been moved to the libgpod project
+	 * updated de.po
 
 2005-09-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

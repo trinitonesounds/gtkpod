@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-16 16:18+0900\n"
+"POT-Creation-Date: 2005-09-14 22:03+0900\n"
 "PO-Revision-Date: 2005-06-20 23:25+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -250,7 +250,7 @@ msgstr "演奏キューに加える"
 msgid "Export Tracks"
 msgstr "ソートタブ"
 
-#: src/context_menus.c:308 src/file_export.c:1091
+#: src/context_menus.c:308 src/file_export.c:1093
 msgid "Create Playlist File"
 msgstr "プレイリストを作成"
 
@@ -370,11 +370,11 @@ msgstr "どのソートタブで選択された曲を演奏キューに加えますか？"
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "どのソートタブで選択された曲を平均化しますか？"
 
-#: src/display_itdb.c:691 src/display_itdb.c:758
+#: src/display_itdb.c:692 src/display_itdb.c:759
 msgid "Local"
 msgstr ""
 
-#: src/display_itdb.c:863
+#: src/display_itdb.c:864
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "'%s' の再生回数を増やしました"
@@ -469,11 +469,11 @@ msgstr "演奏日"
 msgid "Modified"
 msgstr "変更日"
 
-#: src/display_songs.c:2025 src/display_sorttabs.c:3040 gtkpod.glade:6369
+#: src/display_songs.c:2025 src/display_sorttabs.c:3044 gtkpod.glade:6369
 msgid "Added"
 msgstr "登録日"
 
-#: src/display_songs.c:2028 src/display_sorttabs.c:2785 src/display_spl.c:87
+#: src/display_songs.c:2028 src/display_sorttabs.c:2789 src/display_spl.c:87
 #: src/misc_conversion.c:85
 msgid "Year"
 msgstr "年"
@@ -502,40 +502,40 @@ msgstr "「登録日」の条件はエラーのために無視されました。"
 msgid "All"
 msgstr "すべて"
 
-#: src/display_sorttabs.c:2770 src/display_spl.c:84 src/misc_conversion.c:62
+#: src/display_sorttabs.c:2774 src/display_spl.c:84 src/misc_conversion.c:62
 #: gtkpod.glade:2579 gtkpod.glade:13823
 msgid "Artist"
 msgstr "アーティスト"
 
 #. 0
-#: src/display_sorttabs.c:2773 src/display_spl.c:83 src/misc_conversion.c:61
+#: src/display_sorttabs.c:2777 src/display_spl.c:83 src/misc_conversion.c:61
 #: gtkpod.glade:2630 gtkpod.glade:13867
 msgid "Album"
 msgstr "アルバム"
 
-#: src/display_sorttabs.c:2776 src/display_spl.c:88 src/misc_conversion.c:64
+#: src/display_sorttabs.c:2780 src/display_spl.c:88 src/misc_conversion.c:64
 #: gtkpod.glade:2598 gtkpod.glade:13845
 msgid "Genre"
 msgstr "ジャンル"
 
-#: src/display_sorttabs.c:2779
+#: src/display_sorttabs.c:2783
 msgid "Comp."
 msgstr "作曲者"
 
-#: src/display_sorttabs.c:2782 src/display_spl.c:82 src/misc_conversion.c:63
+#: src/display_sorttabs.c:2786 src/display_spl.c:82 src/misc_conversion.c:63
 #: gtkpod.glade:2681 gtkpod.glade:13911
 msgid "Title"
 msgstr "タイトル"
 
-#: src/display_sorttabs.c:2788
+#: src/display_sorttabs.c:2792
 msgid "Special"
 msgstr "スペシャル"
 
-#: src/display_sorttabs.c:3038
+#: src/display_sorttabs.c:3042
 msgid "Last Played"
 msgstr "最後に演奏した日"
 
-#: src/display_sorttabs.c:3039
+#: src/display_sorttabs.c:3043
 msgid "Last Modified"
 msgstr "最後に変更した日"
 
@@ -559,7 +559,7 @@ msgstr ""
 msgid "Hz"
 msgstr ""
 
-#: src/display_spl.c:74 src/display_spl.c:159 src/info.c:725
+#: src/display_spl.c:74 src/display_spl.c:159 src/info.c:727
 msgid "MB"
 msgstr ""
 
@@ -634,7 +634,7 @@ msgstr ""
 msgid "Grouping"
 msgstr ""
 
-#: src/display_spl.c:104 src/itdb_itunesdb.c:1146 gtkpod.glade:1314
+#: src/display_spl.c:104 gtkpod.glade:1314
 msgid "Playlist"
 msgstr "プレイリスト"
 
@@ -712,7 +712,7 @@ msgstr "曲"
 msgid "hours"
 msgstr "時間"
 
-#: src/display_spl.c:162 src/info.c:725
+#: src/display_spl.c:162 src/info.c:727
 msgid "GB"
 msgstr ""
 
@@ -866,39 +866,39 @@ msgid ""
 "failed): '%s'\n"
 msgstr ""
 
-#: src/file.c:935 src/file.c:978
+#: src/file.c:935 src/file.c:979
 msgid "Nothing to update"
 msgstr "更新されるデータはありません"
 
-#: src/file.c:944
+#: src/file.c:945
 #, c-format
 msgid "Updating %s"
 msgstr "%s を更新中"
 
-#: src/file.c:959
+#: src/file.c:960
 msgid "Updated selected tracks with info from file."
 msgstr "選択された曲の情報を、ファイルを元に更新しました。"
 
-#: src/file.c:991
+#: src/file.c:992
 #, c-format
 msgid "Retrieving mserv data %s"
 msgstr ""
 
 #. no path available
-#: src/file.c:997 src/file.c:1675
+#: src/file.c:998 src/file.c:1676
 msgid "no filename available"
 msgstr "ファイル名がわかりません"
 
-#: src/file.c:1002
+#: src/file.c:1003
 msgid "Updated selected tracks with data from mserv."
 msgstr ""
 
-#: src/file.c:1069
+#: src/file.c:1070
 #, c-format
 msgid "Syncing directory '%s'"
 msgstr "ディレクトリ '%s' の同期処理中"
 
-#: src/file.c:1094
+#: src/file.c:1095
 msgid "Syncing completed. No files deleted."
 msgstr "同期処理が終了しました。削除されたファイルはありません。"
 
@@ -907,29 +907,29 @@ msgstr "同期処理が終了しました。削除されたファイルはありません。"
 #. title
 #. label
 #. scrolled text
-#: src/file.c:1207
+#: src/file.c:1208
 msgid "Never delete any files when syncing"
 msgstr "同期処理でファイルを削除しない"
 
-#: src/file.c:1236
+#: src/file.c:1237
 msgid "Syncing completed."
 msgstr "同期処理が終了しました。"
 
-#: src/file.c:1256
+#: src/file.c:1257
 msgid "Syncing aborted"
 msgstr "同期処理は中断されました。"
 
-#: src/file.c:1294
+#: src/file.c:1295
 msgid "No tracks in selection"
 msgstr "曲が選択されていません"
 
-#: src/file.c:1344
+#: src/file.c:1345
 #, c-format
 msgid "'%s' is not a directory. Ignored.\n"
 msgstr "'%s' はディレクトリではありません。無視します。\n"
 
 #. no directory names available
-#: src/file.c:1374
+#: src/file.c:1375
 msgid ""
 "No directory names were stored. Make sure that you enable 'Write extended "
 "information' in the Export section of the preferences at the time of "
@@ -946,11 +946,11 @@ msgstr ""
 "ディレクトリの同期を今行うためには、設定メニューの「インポート」欄の中にあ"
 "る、「重複の検出」をオンにして、再び同期処理を行ってください。\n"
 
-#: src/file.c:1378
+#: src/file.c:1379
 msgid "No valid directories have been found. Sync aborted.\n"
 msgstr "正しいディレクトリが見付かりません。同期処理を中止します。\n"
 
-#: src/file.c:1387
+#: src/file.c:1388
 msgid ""
 "The (former) contents of the following directories will be removed from the "
 "database:\n"
@@ -959,7 +959,7 @@ msgstr ""
 "以下のディレクトリに含まれる内容は、データベースから削除されます:\n"
 "\n"
 
-#: src/file.c:1395
+#: src/file.c:1396
 msgid ""
 "The following directories will be synchronized:\n"
 "\n"
@@ -969,16 +969,16 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1406
+#: src/file.c:1407
 msgid "Synchronize directories"
 msgstr "ディレクトリの同期"
 
 #. title
-#: src/file.c:1407
+#: src/file.c:1408
 msgid "OK to synchronize the following directories?"
 msgstr "以下のディレクトリで同期処理をしてもよろしいですか?"
 
-#: src/file.c:1445
+#: src/file.c:1446
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -986,11 +986,11 @@ msgstr[0] "以下の%d曲を更新できませんでした"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1451
+#: src/file.c:1452
 msgid "Failed Track Update"
 msgstr "曲の更新に失敗"
 
-#: src/file.c:1509
+#: src/file.c:1510
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -998,11 +998,11 @@ msgstr[0] "以下の%d曲を更新しました"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1515
+#: src/file.c:1516
 msgid "Successful Track Update"
 msgstr "曲の更新を完了"
 
-#: src/file.c:1574
+#: src/file.c:1575
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
@@ -1011,67 +1011,67 @@ msgstr[0] ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1580
+#: src/file.c:1581
 msgid "mserv data retrieval problem"
 msgstr ""
 
-#: src/file.c:1721
+#: src/file.c:1722
 msgid "file not found"
 msgstr "ファイルが見つかりません"
 
-#: src/file.c:1725
+#: src/file.c:1726
 msgid "format not supported"
 msgstr "対応していない形式です"
 
-#: src/file.c:1799
+#: src/file.c:1800
 #, c-format
 msgid "Processing '%s'..."
 msgstr "'%s' の処理中..."
 
-#: src/file.c:1992 src/file.c:2006
+#: src/file.c:1993 src/file.c:2007
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "次のファイルのタグを変更できません: %s\n"
 
-#: src/file.c:2291
+#: src/file.c:2292
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "ファイル '%s' の読み込みおよび書き込みができません。\n"
 
-#: src/file.c:2298
+#: src/file.c:2299
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr ""
 
 #. error!
-#: src/file.c:2315 src/file.c:2324 src/file.c:2335 src/file.c:2345
+#: src/file.c:2316 src/file.c:2325 src/file.c:2336 src/file.c:2346
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:2374
+#: src/file.c:2375
 msgid "Remove offline playcounts?"
 msgstr "オフラインでの再生回数を削除しますか"
 
 #. title
-#: src/file.c:2375
+#: src/file.c:2376
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
 msgstr ""
 
-#: src/file.c:2392
+#: src/file.c:2393
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "'%s'の書き込み中にエラーが発生しました。\n"
 
-#: src/file.c:2431
+#: src/file.c:2432
 msgid "Normalization failed: file type not supported.\n"
 msgstr ""
 
-#: src/file.c:2442
+#: src/file.c:2443
 msgid "Normalization failed: file not available.\n"
 msgstr ""
 
@@ -1080,108 +1080,108 @@ msgstr ""
 msgid "Error creating %s: %s\n"
 msgstr "'%s'の作成に失敗: %s\n"
 
-#: src/file_export.c:202
+#: src/file_export.c:204
 #, c-format
 msgid "Skipping existing file with same length: '%s'\n"
 msgstr "同じ大きさのファイルを飛ばします: '%s'\n"
 
-#: src/file_export.c:210
+#: src/file_export.c:212
 #, c-format
 msgid "Overwriting existing file: '%s'\n"
 msgstr "ファイルを上書きします: '%s'\n"
 
-#: src/file_export.c:227
+#: src/file_export.c:229
 #, c-format
 msgid "Error copying '%s' to '%s': Permission Error (%s)\n"
 msgstr "'%s' を '%s' にコピー中にエラー発生: 許可がありません (%s)\n"
 
-#: src/file_export.c:229
+#: src/file_export.c:231
 #, c-format
 msgid "Error copying '%s' to '%s' (%s)\n"
 msgstr "'%s' を '%s' にコピー中にエラー発生: (%s)\n"
 
-#: src/file_export.c:237
+#: src/file_export.c:239
 #, c-format
 msgid "Unable to open '%s' for reading\n"
 msgstr "'%s' を読み込みのために開くことができません\n"
 
-#: src/file_export.c:344
+#: src/file_export.c:346
 #, c-format
 msgid "Could find file for '%s' on the iPod\n"
 msgstr "iPod 上の '%s' に相当するファイルが見つかりません\n"
 
 #. create the dialog window
-#: src/file_export.c:411 src/file_itunesdb.c:990 src/tools.c:148
+#: src/file_export.c:413 src/file_itunesdb.c:990 src/tools.c:148
 msgid "Information"
 msgstr "情報"
 
-#: src/file_export.c:422 src/tools.c:160
+#: src/file_export.c:424 src/tools.c:160
 msgid "Press button to abort."
 msgstr "ボタンを押すと中止します。"
 
-#: src/file_export.c:435
+#: src/file_export.c:437
 msgid "copying..."
 msgstr "コピー中..."
 
-#: src/file_export.c:489
+#: src/file_export.c:491
 #, c-format
 msgid "Failed to write '%s-%s'\n"
 msgstr "保存ができません '%s-%s'\n"
 
-#: src/file_export.c:497
+#: src/file_export.c:499
 #, c-format
 msgid "Copied %d of %d track."
 msgid_plural "Copied %d of %d tracks."
 msgstr[0] "%d曲中 %d曲をコピーしました。"
 
-#: src/file_export.c:515 src/file_itunesdb.c:1252 src/tools.c:307
+#: src/file_export.c:517 src/file_itunesdb.c:1252 src/tools.c:307
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (残り %d:%02d:%02d)"
 
-#: src/file_export.c:524
+#: src/file_export.c:526
 msgid "Some tracks were not copied."
 msgstr "一部の曲がコピーされませんでした。"
 
-#: src/file_export.c:581
+#: src/file_export.c:583
 msgid "Export from iPod database not possible in offline mode."
 msgstr ""
 
-#: src/file_export.c:589
+#: src/file_export.c:591
 msgid "Select Export Destination Directory"
 msgstr "ファイルの保存先ディレクトリを選択してください"
 
-#: src/file_export.c:738
+#: src/file_export.c:740
 msgid "Drag from iPod database not possible in offline mode."
 msgstr ""
 
-#: src/file_export.c:772
+#: src/file_export.c:774
 #, fuzzy
 msgid "The following tracks have to be copied to your harddisk"
 msgstr "以下の%d曲を更新しました"
 
-#: src/file_export.c:817
+#: src/file_export.c:819
 msgid ""
 "Some tracks were not copied to your harddisk. Only the copied tracks will be "
 "included in the current drag and drop operation.\n"
 "\n"
 msgstr ""
 
-#: src/file_export.c:1014
+#: src/file_export.c:1016
 #, c-format
 msgid ""
 "No valid filename for: %s\n"
 "\n"
 msgstr "'%s' のファイル名が不正です。\n"
 
-#: src/file_export.c:1030
+#: src/file_export.c:1032
 #, c-format
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
 msgstr[0] "新規プレイリストに 1曲登録しました。"
 msgstr[1] "新規プレイリストに %d曲登録しました。"
 
-#: src/file_export.c:1037
+#: src/file_export.c:1039
 #, c-format
 msgid ""
 "Could not open '%s' for writing (%s).\n"
@@ -1492,7 +1492,7 @@ msgstr "%s: 指定されたオプション `-W %s' は引数を取りません\n"
 msgid "n/c"
 msgstr ""
 
-#: src/info.c:382 src/info.c:786
+#: src/info.c:382 src/info.c:788
 msgid "offline"
 msgstr "オフライン"
 
@@ -1501,233 +1501,30 @@ msgstr "オフライン"
 msgid " P:%d T:%d/%d"
 msgstr ""
 
-#: src/info.c:725
+#: src/info.c:727
 msgid "B"
 msgstr ""
 
-#: src/info.c:725
+#: src/info.c:727
 msgid "kB"
 msgstr ""
 
-#: src/info.c:725
+#: src/info.c:727
 msgid "TB"
 msgstr ""
 
-#: src/info.c:771
+#: src/info.c:773
 #, c-format
 msgid " %s Free"
 msgstr "%s 空き"
 
-#: src/info.c:776
+#: src/info.c:778
 #, c-format
 msgid " %s Pending"
 msgstr "%s 不足"
 
-#: src/info.c:781
+#: src/info.c:783
 msgid " disconnected"
-msgstr ""
-
-#: src/itdb_itunesdb.c:313
-#, c-format
-msgid "Illegal seek to offset %ld (length %ld) in file '%s'."
-msgstr ""
-
-#: src/itdb_itunesdb.c:520
-#, c-format
-msgid "Not a Play Counts file: '%s' (missing mhdp header)."
-msgstr ""
-
-#: src/itdb_itunesdb.c:534
-#, c-format
-msgid "Play Counts file ('%s'): header length smaller than expected (%d<96)."
-msgstr ""
-
-#: src/itdb_itunesdb.c:547
-#, c-format
-msgid "Play Counts file ('%s'): entry length smaller than expected (%d<12)."
-msgstr ""
-
-#: src/itdb_itunesdb.c:801
-#, c-format
-msgid "iTunesDB corrupt: no MHOD at offset %ld in file '%s'."
-msgstr ""
-
-#: src/itdb_itunesdb.c:921
-#, c-format
-msgid ""
-"Length of smart playlist rule field (%d) not as expected. Trying to continue "
-"anyhow.\n"
-msgstr ""
-
-#: src/itdb_itunesdb.c:964
-msgid "Did not find SLst hunk as expected. Trying to continue.\n"
-msgstr ""
-
-#: src/itdb_itunesdb.c:970
-#, c-format
-msgid ""
-"Encountered unknown MHOD type (%d) while parsing the iTunesDB. Ignoring.\n"
-"\n"
-msgstr ""
-
-#: src/itdb_itunesdb.c:1050 src/itdb_itunesdb.c:1739 src/itdb_itunesdb.c:1774
-#, c-format
-msgid "iTunesDB corrupt: hunk length 0 for hunk at %ld in file '%s'."
-msgstr ""
-
-#: src/itdb_itunesdb.c:1144
-msgid "Master-PL"
-msgstr ""
-
-#: src/itdb_itunesdb.c:1171
-#, c-format
-msgid "iTunesDB corrupt: found mhyp at %ld in file '%s'."
-msgstr ""
-
-#: src/itdb_itunesdb.c:1219
-#, c-format
-msgid "Itdb_Track ID '%d' not found.\n"
-msgstr ""
-
-#: src/itdb_itunesdb.c:1482
-msgid "OTG Playlist"
-msgstr ""
-
-#: src/itdb_itunesdb.c:1496
-#, c-format
-msgid "Not a OTG playlist file: '%s' (missing mhpo header)."
-msgstr ""
-
-#: src/itdb_itunesdb.c:1510
-#, c-format
-msgid "OTG playlist file ('%s'): header length smaller than expected (%d<20)."
-msgstr ""
-
-#: src/itdb_itunesdb.c:1522
-#, c-format
-msgid ""
-"OTG playlist file file ('%s'): entry length smaller than expected (%d<4)."
-msgstr ""
-
-#: src/itdb_itunesdb.c:1557
-#, c-format
-msgid "OTG playlist file '%s': reference to non-existent track (%d)."
-msgstr ""
-
-#: src/itdb_itunesdb.c:1602
-#, c-format
-msgid "OTG Playlist %d"
-msgstr ""
-
-#: src/itdb_itunesdb.c:1645
-#, c-format
-msgid "Not a iTunesDB: '%s' (missing mhdb header)."
-msgstr ""
-
-#: src/itdb_itunesdb.c:1661
-#, c-format
-msgid ""
-"iTunesDB ('%s'): header length of mhsd hunk smaller than expected (%ld<32). "
-"Aborting."
-msgstr ""
-
-#: src/itdb_itunesdb.c:1693
-#, c-format
-msgid "iTunesDB '%s' corrupt: already found two playlist mhsds -- giving up."
-msgstr ""
-
-#. this should not be -- issue warning
-#: src/itdb_itunesdb.c:1754
-msgid ""
-"iTunesDB possibly corrupt: number of tracks (mhit hunks) inconsistent. "
-"Trying to continue.\n"
-msgstr ""
-
-#. this should not be -- issue warning
-#: src/itdb_itunesdb.c:1835
-msgid ""
-"iTunesDB possibly corrupt: number of playlists (mhyp hunks) inconsistent. "
-"Trying to continue.\n"
-msgstr ""
-
-#: src/itdb_itunesdb.c:1873
-#, c-format
-msgid "File not found: '%s'."
-msgstr "ファイルが見つかりません: '%s'"
-
-#: src/itdb_itunesdb.c:2394
-#, c-format
-msgid "Cannot write mhod of type %d\n"
-msgstr ""
-
-#: src/itdb_itunesdb.c:2520 src/itdb_itunesdb.c:2633
-msgid "Database in memory corrupt (track pointer == NULL). Aborting export."
-msgstr ""
-
-#: src/itdb_itunesdb.c:2676
-msgid "Database in memory corrupt (playlist pointer == NULL). Aborting export."
-msgstr ""
-
-#: src/itdb_itunesdb.c:2716
-#, c-format
-msgid "Opening of '%s' for writing failed."
-msgstr "'%s' を書き込みのために開けません。"
-
-#: src/itdb_itunesdb.c:2727
-#, c-format
-msgid "Writing to '%s' failed."
-msgstr "'%s'の書き込みに失敗しました。"
-
-#: src/itdb_itunesdb.c:2738
-#, c-format
-msgid "Writing to '%s' failed (%s)."
-msgstr "'%s'の書き込みに失敗しました。(%s)"
-
-#: src/itdb_itunesdb.c:2875 src/itdb_itunesdb.c:3042 src/itdb_itunesdb.c:3224
-#: src/itdb_itunesdb.c:3358
-#, c-format
-msgid "Path not found: '%s'."
-msgstr "パスが見つかりません: '%s'"
-
-#: src/itdb_itunesdb.c:3244
-#, c-format
-msgid "Error renaming '%s' to '%s' (%s)."
-msgstr "'%s'を'%s'に変更することができません。(%s)"
-
-#: src/itdb_itunesdb.c:3261
-#, c-format
-msgid "Error removing '%s' (%s)."
-msgstr "'%s'の削除中にエラーが発生しました。(%s)"
-
-#: src/itdb_itunesdb.c:3487
-#, c-format
-msgid "Error opening '%s' for reading (%s)."
-msgstr "'%s' を読み込みのために開くことができません。(%s)"
-
-#: src/itdb_itunesdb.c:3498
-#, c-format
-msgid "Error opening '%s' for writing (%s)."
-msgstr "'%s' を書き込みのために開くことができません。(%s)"
-
-#: src/itdb_itunesdb.c:3515
-#, c-format
-msgid "Error while reading from '%s' (%s)."
-msgstr "'%s' の読み込み中にエラーが発生しました。(%s)"
-
-#: src/itdb_itunesdb.c:3531
-#, c-format
-msgid "Error while writing to '%s' (%s)."
-msgstr "'%s' の書き込み中にエラーが発生しました。(%s)"
-
-#: src/itdb_itunesdb.c:3544 src/itdb_itunesdb.c:3554
-#, c-format
-msgid "Error when closing '%s' (%s)."
-msgstr "'%s' を閉じる際にエラーが発生しました。(%s)"
-
-#. New action!
-#: src/itdb_playlist.c:71
-#, c-format
-msgid "Unknown action (%d) in smart playlist will be ignored.\n"
 msgstr ""
 
 #: src/md5.c:159
@@ -1748,7 +1545,7 @@ msgstr ""
 
 #: src/misc.c:82
 msgid ""
-"(C) 2002 - 2003\n"
+"(C) 2002 - 2005\n"
 "Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 "Corey Donohoe (atmos at atmos dot org)\n"
 "\n"
@@ -1915,93 +1712,101 @@ msgid "Clinton Gormley: sync scripts for thunderbird\n"
 msgstr ""
 
 #: src/misc.c:153
+msgid "Sebastien Beridot: sync scripts for ldif addressbook format\n"
+msgstr ""
+
+#: src/misc.c:156
+msgid "Sebastian Scherer: sync scripts for kNotes\n"
+msgstr ""
+
+#: src/misc.c:159
 msgid ""
 "Icons of buttons were made by Nicolas Chariot.\n"
 "\n"
 "\n"
 msgstr ""
 
-#: src/misc.c:157
+#: src/misc.c:163
 msgid "This program borrows code from the following projects:\n"
 msgstr ""
 
-#: src/misc.c:159
+#: src/misc.c:165
 msgid ""
 "    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
 "(http://www.gnu.org/software/gnupod/)\n"
 msgstr ""
 
-#: src/misc.c:161
+#: src/misc.c:167
 msgid ""
 "    iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
 "code for smart playlists is based on his C++-classes.\n"
 msgstr ""
 
-#: src/misc.c:163
+#: src/misc.c:169
 msgid "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
 msgstr ""
 
-#: src/misc.c:165
+#: src/misc.c:171
 msgid ""
 "    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
 msgstr ""
 
-#: src/misc.c:168
+#: src/misc.c:174
 msgid ""
 "The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
 msgstr ""
 
-#: src/misc.c:183
+#: src/misc.c:189
 msgid "French:   David Le Brun (david at dyn-ns dot net)\n"
 msgstr ""
 
-#: src/misc.c:185
+#: src/misc.c:191
 msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 msgstr ""
 
-#: src/misc.c:187
+#: src/misc.c:193
 msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)\n"
 msgstr ""
 
-#: src/misc.c:189
+#: src/misc.c:195
 msgid ""
 "Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
 "net)\n"
 msgstr ""
 
-#: src/misc.c:191
+#: src/misc.c:197
 msgid "Japanese: Ayako Sano\n"
 msgstr ""
 
-#: src/misc.c:193
+#: src/misc.c:199
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 msgstr ""
 
-#: src/misc.c:195
+#: src/misc.c:201
 msgid "Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"
 msgstr ""
 
-#: src/misc.c:318
+#: src/misc.c:324
 #, c-format
 msgid "Could not delete backup file: \"%s\"\n"
 msgstr "バックアップファイルが削除できません: \"%s\"\n"
 
-#: src/misc.c:438
+#: src/misc.c:446
 #, c-format
 msgid "Unmounting of '%s' (%s) unsuccessful."
 msgstr ""
 
-#: src/misc.c:442
+#: src/misc.c:450
 #, c-format
 msgid "Unmounting of '%s' unsuccessful."
 msgstr ""
 
-#: src/misc.c:1097
+#: src/misc.c:1105
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
 msgstr ""
 
-#: src/misc.c:1190
+#: src/misc.c:1198
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr ""
@@ -2113,7 +1918,7 @@ msgstr[0] ""
 #. no playlist??? Cannot happen, but...
 #. no playlist selected
 #: src/misc_confirm.c:336 src/misc_confirm.c:432 src/misc_confirm.c:667
-#: src/misc_track.c:879
+#: src/misc_track.c:880
 msgid "No playlist selected."
 msgstr "プレイリストが選択されていません。"
 
@@ -2123,7 +1928,7 @@ msgid "No tracks selected."
 msgstr "曲が選択されていません。"
 
 #. no entry selected
-#: src/misc_confirm.c:441 src/misc_track.c:852
+#: src/misc_confirm.c:441 src/misc_track.c:853
 msgid "No entry selected."
 msgstr "何も選択されていません。"
 
@@ -2597,27 +2402,27 @@ msgstr[0] "以下の重複した%d曲はマスタープレイリストに追加されませんでした。"
 msgid "Duplicate detection"
 msgstr "重複の検出"
 
-#: src/misc_track.c:793
+#: src/misc_track.c:794
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "ドラッグアンドドロップ: '%s'は無視します\n"
 
-#: src/mp3file.c:1091
+#: src/mp3file.c:1096
 #, fuzzy, c-format
 msgid "Error setting ID3 field: %s\n"
 msgstr "'%s'の作成に失敗: %s\n"
 
-#: src/mp3file.c:1116 src/mp3file.c:1223 src/mp3file.c:1949
+#: src/mp3file.c:1121 src/mp3file.c:1233 src/mp3file.c:1959
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
-#: src/mp3file.c:1280
+#: src/mp3file.c:1290
 #, fuzzy, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
-#: src/mp3file.c:1793
+#: src/mp3file.c:1803
 #, c-format
 msgid ""
 "Could not find mp3gain. I tried to use the following executable: '%s'.\n"
@@ -2636,13 +2441,13 @@ msgstr ""
 "もし mp3gain をインストールしていない場合は、http://www.sourceforge.net/"
 "projects/mp3gain よりダウンロードしてください。"
 
-#: src/mp3file.c:1833
+#: src/mp3file.c:1843
 #, c-format
 msgid "Execution of mp3gain ('%s') failed."
 msgstr ""
 
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:2061
+#: src/mp3file.c:2071
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "ファイル \"%s\" は長さが0なので無視します。\n"
@@ -4566,6 +4371,42 @@ msgstr ""
 #: gtkpod.glade:17038
 msgid "Notes sync command:"
 msgstr ""
+
+#~ msgid "File not found: '%s'."
+#~ msgstr "ファイルが見つかりません: '%s'"
+
+#~ msgid "Opening of '%s' for writing failed."
+#~ msgstr "'%s' を書き込みのために開けません。"
+
+#~ msgid "Writing to '%s' failed."
+#~ msgstr "'%s'の書き込みに失敗しました。"
+
+#~ msgid "Writing to '%s' failed (%s)."
+#~ msgstr "'%s'の書き込みに失敗しました。(%s)"
+
+#~ msgid "Path not found: '%s'."
+#~ msgstr "パスが見つかりません: '%s'"
+
+#~ msgid "Error renaming '%s' to '%s' (%s)."
+#~ msgstr "'%s'を'%s'に変更することができません。(%s)"
+
+#~ msgid "Error removing '%s' (%s)."
+#~ msgstr "'%s'の削除中にエラーが発生しました。(%s)"
+
+#~ msgid "Error opening '%s' for reading (%s)."
+#~ msgstr "'%s' を読み込みのために開くことができません。(%s)"
+
+#~ msgid "Error opening '%s' for writing (%s)."
+#~ msgstr "'%s' を書き込みのために開くことができません。(%s)"
+
+#~ msgid "Error while reading from '%s' (%s)."
+#~ msgstr "'%s' の読み込み中にエラーが発生しました。(%s)"
+
+#~ msgid "Error while writing to '%s' (%s)."
+#~ msgstr "'%s' の書き込み中にエラーが発生しました。(%s)"
+
+#~ msgid "Error when closing '%s' (%s)."
+#~ msgstr "'%s' を閉じる際にエラーが発生しました。(%s)"
 
 #~ msgid "Couldn't find pixmap file: %s"
 #~ msgstr "以下の画像ファイルが見つかりません: %s"
