@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-13 23:00:16 jcs>
+/* Time-stamp: <2005-09-17 01:54:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -88,7 +88,9 @@ static float extendedinfoversion = 0.0;
 
 
 /* fills in extended info if available */
-void fill_in_extended_info (Track *track)
+/* num/total are used to give updates in case the md5 checksums have
+   to be matched against the files which is very time consuming */
+void fill_in_extended_info (Track *track, gint32 total, gint32 num)
 {
   gint ipod_id=0;
   ExtraTrackData *etr;
@@ -106,6 +108,14 @@ void fill_in_extended_info (Track *track)
   }
   if (!sei && extendedinfohash_md5)
   {
+      gchar *buf = g_strdup_printf (
+	  _("Matching MD5 checksum for file %d/%d"),
+	  num, total);
+      gtkpod_statusbar_message (buf);
+      while (widgets_blocked && gtk_events_pending ())
+	  gtk_main_iteration ();
+      g_free (buf);
+
       if (!etr->md5_hash)
       {
 	  gchar *filename = get_file_name_on_ipod (track);
@@ -260,9 +270,8 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		{
 		    hash_matched = FALSE;
 		    gtkpod_warning (_("iTunesDB '%s' does not match checksum in extended information file '%s'\ngtkpod will try to match the information using MD5 checksums. This may take a long time.\n\n"), itunes, name);
-		    while (gtk_events_pending ())  gtk_main_iteration ();
-/*		    success = FALSE;
-		    break;*/
+		    while (widgets_blocked && gtk_events_pending ())
+			gtk_main_iteration ();
 		}
 		else
 		{
@@ -408,12 +417,14 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     ExtraiTunesDBData *eitdb;
     iTunesDB *itdb = NULL;
     GError *error = NULL;
+    gint32 total, num;
 
     g_return_val_if_fail (!(type & GP_ITDB_TYPE_LOCAL) || name_loc, NULL);
     g_return_val_if_fail (!(type & GP_ITDB_TYPE_IPOD) || 
 			  (mp && name_off), NULL);
     g_return_val_if_fail (cfgdir, NULL);
 
+    block_widgets ();
     if (prefs_get_offline() || (type & GP_ITDB_TYPE_LOCAL))
     { /* offline or local database - requires extended info */
 	gchar *name_ext;
@@ -532,13 +543,17 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	g_free (name_db);
     }
 
-    if (!itdb) return NULL;
+    if (!itdb)
+    {
+	release_widgets ();
+	return NULL;
+    }
 
     /* add Extra*Data */
     gp_itdb_add_extra_full (itdb);
 
     eitdb = itdb->userdata;
-    g_return_val_if_fail (eitdb, NULL);
+    g_return_val_if_fail (eitdb, (release_widgets(), NULL));
 
     /* fill in additional info */
     itdb->usertype = type;
@@ -553,19 +568,22 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	eitdb->offline_filename = g_strdup (name_off);
     }	    
 
+    total = g_list_length (itdb->tracks);
+    num = 1;
     /* validate all tracks and fill in extended info */
     for (gl=itdb->tracks; gl; gl=gl->next)
     {
 	Track *track = gl->data;
-	g_return_val_if_fail (track, NULL);
-	fill_in_extended_info (track);
+	g_return_val_if_fail (track, (release_widgets(), NULL));
+	fill_in_extended_info (track, total, num);
 	gp_track_validate_entries (track);
+	++num;
     }
     /* take over the pending deletion information */
     while (extendeddeletion)
     {
 	Track *track = extendeddeletion->data;
-	g_return_val_if_fail (track, NULL);
+	g_return_val_if_fail (track, (release_widgets(), NULL));
 	mark_track_for_deletion (itdb, track);
 	extendeddeletion = g_list_delete_link (extendeddeletion,
 					       extendeddeletion);
@@ -588,15 +606,15 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	GHashTable *track_hash = g_hash_table_new (g_direct_hash,
 						   g_direct_equal);
 	Playlist *mpl = itdb_playlist_mpl (itdb);
-	g_return_val_if_fail (mpl, NULL);
-	g_return_val_if_fail (old_eitdb, NULL);
+	g_return_val_if_fail (mpl, (release_widgets(), NULL));
+	g_return_val_if_fail (old_eitdb, (release_widgets(), NULL));
 
 	/* add tracks from @old_itdb to new itdb */
 	for (gl=old_itdb->tracks; gl; gl=gl->next)
 	{
 	    Track *duptr, *addtr;
 	    Track *track = gl->data;
-	    g_return_val_if_fail (track, NULL);
+	    g_return_val_if_fail (track, (release_widgets(), NULL));
 	    duptr = itdb_track_duplicate (track);
 	    /* add to database -- if duplicate detection is on and the
 	       same track already exists in the database, the already
@@ -615,15 +633,15 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	    GList *glm;
 	    Playlist *duppl;
 	    Playlist *pl = gl->next->data; /* skip MPL */
-	    g_return_val_if_fail (pl, NULL);
+	    g_return_val_if_fail (pl, (release_widgets(), NULL));
 	    duppl = itdb_playlist_duplicate (pl);
 	    /* switch members */
 	    for (glm=duppl->members; glm; glm=glm->next)
 	    {
 		Track *newtr;
-		g_return_val_if_fail (glm->data, NULL);
+		g_return_val_if_fail (glm->data, (release_widgets(), NULL));
 		newtr = g_hash_table_lookup (track_hash, glm->data);
-		g_return_val_if_fail (newtr, NULL);
+		g_return_val_if_fail (newtr, (release_widgets(), NULL));
 		glm->data = newtr;
 	    }
 	    itdb_playlist_add (itdb, duppl, -1);
@@ -636,6 +654,8 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 
     /* update all SPLs */
     itdb_spl_update_all (itdb);
+
+    release_widgets();
 
     return itdb;
 }

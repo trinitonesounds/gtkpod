@@ -3,6 +3,9 @@
 	 * Check iPod's files (check_db()) now checks files in all
 	   available F.. directories.
 
+	 * Give progress information when matching MD5 checksums to
+           files in case iTunesDB was written by different software.
+
 2005-09-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * new fr.po by Eric Lassauge
