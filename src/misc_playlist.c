@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-16 15:42:28 jcs>
+/* Time-stamp: <2005-09-16 23:51:32 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -765,9 +765,6 @@ void since_last_pl (iTunesDB *itdb)
  *  can happen... didn't check yet
  ******************************************************************************/
 
-#define IPOD_MUSIC_DIRS 20
-#define IPOD_CONTROL_DIR "iPod_Control"
-
 
 /* compare @str1 and @str2 case-sensitively only */
 gint str_cmp (gconstpointer str1, gconstpointer str2, gpointer data)
@@ -1053,10 +1050,9 @@ void check_db (iTunesDB *itdb)
     gtkpod_tracks_statusbar_update();
     process_gtk_events_blocked();
 
-    for(h=0;h<IPOD_MUSIC_DIRS;h++)
+    for(h=0; h<itdb_musicdirs_number (itdb); h++)
     {
 	/* directory name */
-	/* FIXME: should not depend on IPOD_MUSIC_DIRS */
 	gchar *ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
 	gchar *ipod_fulldir;
 	const gchar * music[] = {"iPod_Control","Music", NULL, NULL,};
