@@ -4,6 +4,8 @@
            causing gtkpod to crash when exiting the preferences
            dialog (bug introduced on 9/13)
 
+	 * added 'Comment' field to displayed fields.
+
 2005-09-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * Check iPod's files (check_db()) now checks files in all

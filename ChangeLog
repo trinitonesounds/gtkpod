@@ -2,6 +2,8 @@ gtkpod V0.96.CVS
        NEW: transition to libgpod to read/write iTunesDB. See
        www.gtkpod.org/libgpod.html for details.
 
+       IMPROVEMENT: added 'comment' field to displayable fields.
+
 gtkpod V0.95.CVS
        NEW: script to sync addressbooks in ldif format provided by
        Sebastien BERIDOT.

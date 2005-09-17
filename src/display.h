@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-02 00:32:38 jcs>
+/* Time-stamp: <2005-09-17 19:00:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -141,9 +141,10 @@ typedef enum  {
  * etc.). Since the labels to the buttons are set in prefs_window.c
  * when creating the window, you only need to name the buttons in the
  * intended order using glade-2. There is no need to label them. */
-/* Note: the tm_col_strings[] in display_tracks.c are ordered according
-   to this enum list. Therefore, if you change the order, you must
-   also adjust the order of the tm_col_strings[] array. */
+/* Note: add corresponding entries to T_item, t_col_strings[], and
+ * TM_to_T() as well. 
+ * IMPORTANT: Do not change the order -- always add new entries at the
+ * end */
 typedef enum  {
   TM_COLUMN_TITLE = 0,
   TM_COLUMN_ARTIST,
@@ -172,6 +173,7 @@ typedef enum  {
   TM_COLUMN_FDESC,
   TM_COLUMN_GROUPING,         /* 25 */
   TM_COLUMN_COMPILATION,
+  TM_COLUMN_COMMENT,
   TM_NUM_COLUMNS
 } TM_item;
 

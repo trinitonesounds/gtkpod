@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-02 00:37:36 jcs>
+/* Time-stamp: <2005-09-17 19:00:40 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -158,6 +158,7 @@ T_item TM_to_T (TM_item tm)
     case TM_COLUMN_SOUNDCHECK:    return T_SOUNDCHECK;
     case TM_COLUMN_YEAR:          return T_YEAR;
     case TM_COLUMN_COMPILATION:   return T_COMPILATION;
+    case TM_COLUMN_COMMENT:       return T_COMMENT;
     case TM_NUM_COLUMNS:          return -1;
     }
     return -1;

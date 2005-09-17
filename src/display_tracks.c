@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 17:57:38 jcs>
+/* Time-stamp: <2005-09-17 18:54:18 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -875,6 +875,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_ARTIST:
      case TM_COLUMN_GENRE:
      case TM_COLUMN_COMPOSER:
+     case TM_COLUMN_COMMENT:
      case TM_COLUMN_FDESC:
      case TM_COLUMN_GROUPING:
         itemp_utf8 = track_get_item_pointer (track, TM_to_T (column));
@@ -1069,6 +1070,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
+  case TM_COLUMN_COMMENT:
   case TM_COLUMN_FDESC:
   case TM_COLUMN_GROUPING:
       item_utf8 = track_get_item (track, TM_to_T (column));
@@ -1610,6 +1612,7 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
+  case TM_COLUMN_COMMENT:
   case TM_COLUMN_FDESC:
   case TM_COLUMN_GROUPING:
   case TM_COLUMN_ARTIST:
@@ -1974,6 +1977,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
+  case TM_COLUMN_COMMENT:
   case TM_COLUMN_FDESC:
   case TM_COLUMN_GROUPING:
   case TM_COLUMN_RATING:
