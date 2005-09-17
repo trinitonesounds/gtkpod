@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-02 01:28:41 jcs>
+/* Time-stamp: <2005-09-17 17:59:58 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -940,7 +940,6 @@ prefs_window_ok (void)
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
-
     /* close path_fileselector windows */
     path_close_windows ();
 }

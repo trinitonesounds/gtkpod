@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 01:54:03 jcs>
+/* Time-stamp: <2005-09-17 18:01:42 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1647,7 +1647,6 @@ void gp_itdb_set_mountpoint (const gchar *mp)
 	    prefs_set_string_value (pmp, mp);
 	    g_free (pmp);
 	    /* store to itdb */
-	    g_free (itdb->mountpoint);
 	    itdb_set_mountpoint (itdb, mp);
 	}
 	++i;
