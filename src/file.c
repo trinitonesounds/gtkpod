@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-13 23:00:45 jcs>
+/* Time-stamp: <2005-09-17 21:55:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -661,7 +661,7 @@ Track *copy_new_info (Track *from, Track *to)
     C_FREE (to->genre);
     C_FREE (to->comment);
     C_FREE (to->composer);
-    C_FREE (to->fdesc);
+    C_FREE (to->filetype);
     C_FREE (eto->pc_path_utf8);
     C_FREE (eto->pc_path_locale);
     C_FREE (eto->charset);
@@ -672,7 +672,7 @@ Track *copy_new_info (Track *from, Track *to)
     to->genre = g_strdup (from->genre);
     to->comment = g_strdup (from->comment);
     to->composer = g_strdup (from->composer);
-    to->fdesc = g_strdup (from->fdesc);
+    to->filetype = g_strdup (from->filetype);
     eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
     eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
     eto->charset = g_strdup (efrom->charset);

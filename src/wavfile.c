@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:12 jcs>
+/* Time-stamp: <2005-09-17 21:55:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -165,7 +165,7 @@ Track *wav_get_file_info (gchar *filename)
     track->samplerate = wav_file->samples_per_sec;
     track->tracklen = 1000 * ((double)8*len / track->bitrate);
     track->bitrate /= 1000; /* change to kbps */
-    track->fdesc = g_strdup ("WAV audio file");
+    track->filetype = g_strdup ("WAV audio file");
 
     fclose(wav_file->file);
     g_free(wav_file);

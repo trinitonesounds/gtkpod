@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-13 23:00:44 jcs>
+/* Time-stamp: <2005-09-18 13:20:42 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -485,19 +485,55 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_COMPOSER:
 	result = &track->composer;
 	break;
-    case T_FDESC:
-	result = &track->fdesc;
-	break;
-    case T_GROUPING:
-	result = &track->grouping;
+    case T_FILETYPE:
+	result = &track->filetype;
 	break;
     case T_IPOD_PATH:
 	result = &track->ipod_path;
 	break;
+    case T_PC_PATH:
+	result = &etr->pc_path_utf8;
+	break;
     case T_YEAR:
 	result = &etr->year_str;
 	break;
-    default:
+    case T_GROUPING:
+	result = &track->grouping;
+	break;
+    case T_CATEGORY:
+	result = &track->category;
+	break;
+    case T_DESCRIPTION:
+	result = &track->description;
+	break;
+    case T_PODCASTURL:
+	result = &track->podcasturl;
+	break;
+    case T_PODCASTRSS:
+	result = &track->podcastrss;
+	break;
+    case T_SUBTITLE:
+	result = &track->subtitle;
+	break;
+    case T_ALL:
+    case T_IPOD_ID:
+    case T_TRACK_NR:
+    case T_TRANSFERRED:
+    case T_SIZE:
+    case T_TRACKLEN:
+    case T_BITRATE:
+    case T_SAMPLERATE:
+    case T_BPM:
+    case T_PLAYCOUNT:
+    case T_RATING:
+    case T_TIME_ADDED:
+    case T_TIME_PLAYED:
+    case T_TIME_MODIFIED:
+    case T_VOLUME:
+    case T_SOUNDCHECK:
+    case T_CD_NR:
+    case T_COMPILATION:
+    case T_ITEM_NUM:
 	g_return_val_if_reached (NULL);
     }
     return result;

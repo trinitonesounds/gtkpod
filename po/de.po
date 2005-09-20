@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-09-14 22:03+0900\n"
-"PO-Revision-Date: 2005-09-14 22:05+0900\n"
+"PO-Revision-Date: 2005-09-18 14:12+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -626,7 +626,7 @@ msgstr "CD-Nummer"
 
 #: src/display_spl.c:100 src/misc_conversion.c:79 gtkpod.glade:6228
 msgid "Rating"
-msgstr "Bwrtng"
+msgstr "Bewertung"
 
 #: src/display_spl.c:101 src/misc_conversion.c:88
 msgid "Compilation"

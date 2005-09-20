@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 18:54:18 jcs>
+/* Time-stamp: <2005-09-20 18:44:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -56,7 +56,7 @@ static GtkTreeViewColumn *tm_columns[TM_NUM_COLUMNS];
 static const gint READOUT_COL = 0;
 
 /* compare function to be used for string comparisons */
-static gint (*string_compare_func) (gchar *str1, gchar *str2) = compare_string;
+static gint (*string_compare_func) (const gchar *str1, const gchar *str2) = compare_string;
 
 static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint position);
 
@@ -876,8 +876,13 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_GENRE:
      case TM_COLUMN_COMPOSER:
      case TM_COLUMN_COMMENT:
-     case TM_COLUMN_FDESC:
+     case TM_COLUMN_FILETYPE:
      case TM_COLUMN_GROUPING:
+     case TM_COLUMN_CATEGORY:
+     case TM_COLUMN_DESCRIPTION:
+     case TM_COLUMN_PODCASTURL:
+     case TM_COLUMN_PODCASTRSS:
+     case TM_COLUMN_SUBTITLE:
         itemp_utf8 = track_get_item_pointer (track, TM_to_T (column));
         if (g_utf8_collate (*itemp_utf8, new_text) != 0)
         {
@@ -1071,8 +1076,13 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
   case TM_COLUMN_COMMENT:
-  case TM_COLUMN_FDESC:
+  case TM_COLUMN_FILETYPE:
   case TM_COLUMN_GROUPING:
+  case TM_COLUMN_CATEGORY:
+  case TM_COLUMN_DESCRIPTION:
+  case TM_COLUMN_PODCASTURL:
+  case TM_COLUMN_PODCASTRSS:
+  case TM_COLUMN_SUBTITLE:
       item_utf8 = track_get_item (track, TM_to_T (column));
       g_object_set (G_OBJECT (renderer),
 		    "text", item_utf8,
@@ -1613,9 +1623,14 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
   case TM_COLUMN_COMMENT:
-  case TM_COLUMN_FDESC:
+  case TM_COLUMN_FILETYPE:
   case TM_COLUMN_GROUPING:
   case TM_COLUMN_ARTIST:
+  case TM_COLUMN_CATEGORY:
+  case TM_COLUMN_DESCRIPTION:
+  case TM_COLUMN_PODCASTURL:
+  case TM_COLUMN_PODCASTRSS:
+  case TM_COLUMN_SUBTITLE:
       /* string_compare_func is set to either compare_string_fuzzy or
 	 compare_string in tm_sort_column_changed() which is called
 	 once before the comparing begins. */
@@ -1713,6 +1728,42 @@ static gint tm_data_compare (Track *track1, Track *track2,
 }
 
 
+/* Function used to compare rows with user's search string */
+gboolean tm_search_equal_func (GtkTreeModel *model,
+			       gint column,
+			       const gchar *key,
+			       GtkTreeIter *iter,
+			       gpointer search_data)
+{
+  Track *track1;
+  gboolean cmp = 0;
+  gtk_tree_model_get (model, iter, READOUT_COL, &track1, -1);
+  switch (column)
+  {
+  case TM_COLUMN_TITLE:
+  case TM_COLUMN_ALBUM:
+  case TM_COLUMN_GENRE:
+  case TM_COLUMN_COMPOSER:
+  case TM_COLUMN_COMMENT:
+  case TM_COLUMN_FILETYPE:
+  case TM_COLUMN_GROUPING:
+  case TM_COLUMN_ARTIST:
+  case TM_COLUMN_CATEGORY:
+  case TM_COLUMN_DESCRIPTION:
+  case TM_COLUMN_PODCASTURL:
+  case TM_COLUMN_PODCASTRSS:
+  case TM_COLUMN_SUBTITLE:
+    cmp = (compare_string_start_case_insensitive (
+	  track_get_item (track1, TM_to_T (column)),
+	  key) != 0);
+      break;
+  default:
+      g_warning ("Programming error: tm_search_equal_func: no sort method for column %d\n", column);
+      break;
+  }
+  return cmp;
+};
+
 /* Function used to compare two cells during sorting (track view) */
 gint tm_data_compare_func (GtkTreeModel *model,
 			GtkTreeIter *a,
@@ -1788,6 +1839,7 @@ static void tm_unsort (void)
 	prefs_set_tm_sort (SORT_NONE);
 	if (!BROKEN_GTK_TREE_SORT)
 	{
+	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), FALSE);
 	    gtk_tree_sortable_set_sort_column_id
 		(GTK_TREE_SORTABLE (model),
 		 GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
@@ -1849,6 +1901,31 @@ static void tm_sort_column_changed (GtkTreeSortable *ts,
 	prefs_set_tm_sort (order);
     }
     prefs_set_tm_sortcol (newcol);
+    if (track_treeview) {
+      gtk_tree_view_set_search_column (GTK_TREE_VIEW (track_treeview), newcol);
+      switch (newcol)
+	{
+	case TM_COLUMN_TITLE:
+	case TM_COLUMN_ALBUM:
+	case TM_COLUMN_GENRE:
+	case TM_COLUMN_COMPOSER:
+	case TM_COLUMN_COMMENT:
+	case TM_COLUMN_FILETYPE:
+	case TM_COLUMN_GROUPING:
+	case TM_COLUMN_ARTIST:
+	case TM_COLUMN_CATEGORY:
+	case TM_COLUMN_DESCRIPTION:
+	case TM_COLUMN_PODCASTURL:
+	case TM_COLUMN_PODCASTRSS:
+	case TM_COLUMN_SUBTITLE:
+	  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), TRUE);
+	  break;
+	default:
+	  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), FALSE);
+	  break;
+	}
+    }
+
     if(prefs_get_tm_autostore ())  tm_rows_reordered ();
     sort_window_update ();
 
@@ -1978,12 +2055,21 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_GENRE:
   case TM_COLUMN_COMPOSER:
   case TM_COLUMN_COMMENT:
-  case TM_COLUMN_FDESC:
+  case TM_COLUMN_FILETYPE:
   case TM_COLUMN_GROUPING:
-  case TM_COLUMN_RATING:
   case TM_COLUMN_BITRATE:
   case TM_COLUMN_SAMPLERATE:
   case TM_COLUMN_BPM:
+  case TM_COLUMN_CATEGORY:
+  case TM_COLUMN_DESCRIPTION:
+  case TM_COLUMN_PODCASTURL:
+  case TM_COLUMN_PODCASTRSS:
+  case TM_COLUMN_SUBTITLE:
+      break;
+  /* for some column names we want to use shorter alternatives to
+     get_tm_string() */
+  case TM_COLUMN_RATING:
+      text = _("Rtng");
       break;
   case TM_COLUMN_TRACK_NR:
       text = _("#");
@@ -2149,6 +2235,10 @@ void tm_create_treeview (void)
       gtk_list_store_new (1, G_TYPE_POINTER));
   gtk_tree_view_set_model (track_treeview, GTK_TREE_MODEL (model));
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (track_treeview), TRUE);
+  gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (track_treeview), 
+				       tm_search_equal_func,
+				       NULL,
+				       NULL);
   select = gtk_tree_view_get_selection (track_treeview);
   gtk_tree_selection_set_mode (select,
 			       GTK_SELECTION_MULTIPLE);

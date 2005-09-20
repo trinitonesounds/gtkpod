@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-09 14:32:12 jcs>
+/* Time-stamp: <2005-09-20 18:42:26 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -130,10 +130,13 @@ void time_set_time (Track *track, time_t t, TM_item tm_item);
 
 gchar *get_filesize_as_string (double size);
 
-gint compare_string (gchar *str1, gchar *str2);
+gint compare_string (const gchar *str1, const gchar *str2);
 void compare_string_fuzzy_generate_keys (void);
-gint compare_string_fuzzy (gchar *str1, gchar *str2);
-gint compare_string_case_insensitive (gchar *str1, gchar *str2);
+gint compare_string_fuzzy (const gchar *str1, const gchar *str2);
+gint compare_string_case_insensitive (const gchar *str1,
+				      const gchar *str2);
+gint compare_string_start_case_insensitive (const gchar *haystack,
+					    const gchar *needle);
 
 gchar *filename_from_uri (const char *uri,
 			  char      **hostname,

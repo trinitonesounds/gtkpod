@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-10 00:49:44 jcs>
+/* Time-stamp: <2005-09-18 22:58:46 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -685,12 +685,17 @@ static void th_space_update (void)
 /* keep space_ipod_free/used updated in regular intervals */
 static gpointer th_space_thread (gpointer gp)
 {
+    struct timespec req;
+
+    req.tv_sec = SPACE_TIMEOUT / 1000;
+    req.tv_nsec = (SPACE_TIMEOUT % 1000) * 1000000;
+
     for (;;)
     {
-	usleep (SPACE_TIMEOUT*1000);
+	nanosleep (&req, NULL);
 	if (!space_uptodate)   th_space_update ();
     }
-    /* To make gcc happy */
+    /* To make gcc happy (never reached) */
     return (gpointer)NULL;
 }
 

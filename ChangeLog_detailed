@@ -1,10 +1,37 @@
-2005-09-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2005-09-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * scripts/sync-palm-jppy.py: NEW: script to sync contacts
+	   from a Palm (via jppy). Thanks to Nick Piper,
+	   http://www.nickpiper.co.uk/)
+
+	 * type-ahead search functionality (thanks to Nick Piper)
+
+2005-09-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * added category, description, podcast url, podcast
+           rss and subtitle fields to displayable fields.
+
+         * BUGFIX: 'Check iPod's files' could crash under certain
+           circumstances (thanks to David Mansfield for the patch).
+
+	 * gp_playlist_remove_track(): when removing a track from the
+           database, only the first occurance of track in all other
+           playlists was removed.
+
+	 * replaced usleep() with nanosleep() in info.c (usleep would
+           not work for intervals larger than 1 second on some systems).
+
+2005-09-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file_itunesdb.c: fixed bug in gp_itdb_set_mountpoint
            causing gtkpod to crash when exiting the preferences
            dialog (bug introduced on 9/13)
 
 	 * added 'Comment' field to displayed fields.
+
+	 * libgpod API change: fdesc -> filetype
+
+	 * updated it.po (thanks to Edward Matteucci)
 
 2005-09-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

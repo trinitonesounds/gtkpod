@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 18:01:42 jcs>
+/* Time-stamp: <2005-09-19 01:59:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1165,11 +1165,10 @@ static gboolean flush_tracks (iTunesDB *itdb)
   GList *gl;
   gint count, n;
   gchar *buf;
-  Track  *track;
   gboolean result = TRUE;
   static gboolean abort_flag;
   GtkWidget *dialog, *progress_bar;
-  time_t diff, start, fullsecs, hrs, mins, secs;
+  time_t start;
   gchar *progtext = NULL;
   ExtraiTunesDBData *eitdb;
 #ifdef G_THREADS_ENABLED
@@ -1202,7 +1201,8 @@ static gboolean flush_tracks (iTunesDB *itdb)
 
   for (gl=itdb->tracks; gl && !abort_flag; gl=gl->next)
   {
-      track = gl->data;
+      time_t diff, fullsecs, hrs, mins, secs;
+      Track *track = gl->data;
       g_return_val_if_fail (track, FALSE); /* this will hang the
 					      application :-( */
       if (!track->transferred)             /* but this would crash

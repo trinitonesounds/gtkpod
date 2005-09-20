@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-08-27 15:11:07 jcs>
+/* Time-stamp: <2005-09-17 21:55:21 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1965,7 +1965,7 @@ Track *mp3_get_file_info (gchar *name)
     track = gp_track_new ();
     if (prefs_get_readtags() && (id3_tag_read (name, &filetag) == TRUE))
     {
-	track->fdesc = g_strdup ("MPEG audio file");
+	track->filetype = g_strdup ("MPEG audio file");
 
 	if (filetag.album)
 	{

@@ -69,8 +69,6 @@ Torsten Curdt
 > * I miss the easy click-on-burn-audio-cd button
 >   (any way passing this over to the nautilus cdwriter?)
   - doesn't DND work?
-> * The filter windows should also be key sensitive
->   (typing "C" should make me jump to "C")
 > * the rating should be stars not a numbers. ...at least
 >   a control that is easier than entering a number
 > 

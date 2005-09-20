@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 19:00:41 jcs>
+/* Time-stamp: <2005-09-20 18:44:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -125,7 +125,7 @@ typedef struct {
   TimeInfo ti_played;                /* TimeInfo "played" (sp)        */
   GtkTooltipsData *sp_tooltips_data; /* ptr to tooltips in special st */
   /* function used for string comparisons, set in on_st_switch_page   */
-  gint (*string_compare_func) (gchar *str1, gchar *str2);
+  gint (*string_compare_func) (const gchar *str1, const gchar *str2);
 } SortTab;
 
 /* "Column numbers" in sort tab model */
@@ -141,8 +141,8 @@ typedef enum  {
  * etc.). Since the labels to the buttons are set in prefs_window.c
  * when creating the window, you only need to name the buttons in the
  * intended order using glade-2. There is no need to label them. */
-/* Note: add corresponding entries to T_item, t_col_strings[], and
- * TM_to_T() as well. 
+/* Note: add corresponding entries to T_item and TM_to_T() as well 
+ * (below and in misc_conversion.c). 
  * IMPORTANT: Do not change the order -- always add new entries at the
  * end */
 typedef enum  {
@@ -170,16 +170,23 @@ typedef enum  {
   TM_COLUMN_SOUNDCHECK,
   TM_COLUMN_SAMPLERATE,
   TM_COLUMN_BPM,
-  TM_COLUMN_FDESC,
+  TM_COLUMN_FILETYPE,
   TM_COLUMN_GROUPING,         /* 25 */
   TM_COLUMN_COMPILATION,
   TM_COLUMN_COMMENT,
+  TM_COLUMN_CATEGORY,
+  TM_COLUMN_DESCRIPTION,
+  TM_COLUMN_PODCASTURL,       /* 30 */
+  TM_COLUMN_PODCASTRSS,
+  TM_COLUMN_SUBTITLE,
   TM_NUM_COLUMNS
 } TM_item;
 
 /* A means to address the fields by uniform IDs. May be extended as
  * needed. You should extend "track_get_item_pointer()" defined in
  * track.c as well for string fields. */
+/* Add corresponding entries to t_strings[] and t_tooltips[] in
+   misc_conversion.c! */
 /* Used in prefs_window.c to label the sort_ign_field<num> buttons */
 typedef enum {
     T_ALL = 0,      /* all fields */
@@ -189,7 +196,7 @@ typedef enum {
     T_GENRE,
     T_COMMENT,      /*  5 */
     T_COMPOSER,
-    T_FDESC,
+    T_FILETYPE,
     T_PC_PATH,
     T_IPOD_PATH,
     T_IPOD_ID,      /* 10 */
@@ -211,6 +218,11 @@ typedef enum {
     T_CD_NR,
     T_GROUPING,
     T_COMPILATION,
+    T_CATEGORY,
+    T_DESCRIPTION,  /* 30 */
+    T_PODCASTURL,
+    T_PODCASTRSS,
+    T_SUBTITLE,
     T_ITEM_NUM,
 } T_item;
 

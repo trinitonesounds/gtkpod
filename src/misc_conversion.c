@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 19:00:40 jcs>
+/* Time-stamp: <2005-09-18 13:15:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -64,7 +64,7 @@ static const gchar *t_strings[] = {
     N_("Genre"),
     N_("Comment"),           /*  5 */
     N_("Composer"),
-    N_("Kind"),
+    N_("File type"),
     N_("PC File"),
     N_("iPod File"),
     N_("iPod ID"),           /* 10 */
@@ -86,7 +86,12 @@ static const gchar *t_strings[] = {
     N_("CD Nr"),
     N_("Grouping"),
     N_("Compilation"),
-    NULL };
+    N_("Category"),
+    N_("Description"),       /* 30 */
+    N_("Podcast URL"),
+    N_("Podcast RSS"),
+    N_("Subtitle"),
+    NULL };  /* 34 */
 
 /* Tooltips for prefs window */
 static const gchar *t_tooltips[] = {
@@ -121,7 +126,14 @@ static const gchar *t_tooltips[] = {
     NULL,                                              /* 25 */
     N_("CD Nr. and total number of CDS in set"),
     NULL,
-    NULL };
+    NULL,
+    N_("The category (e.g. 'Technology' or 'Music') where the podcast was located."),
+    N_("Accessible by selecting the center button on the iPod."), /* 30 */
+    NULL,
+    NULL,
+    NULL,
+    NULL   /* 34 */
+ };
 
 
 /* translates a TM_COLUMN_... (defined in display.h) into a
@@ -136,7 +148,7 @@ T_item TM_to_T (TM_item tm)
     case TM_COLUMN_ALBUM:         return T_ALBUM;
     case TM_COLUMN_GENRE:         return T_GENRE;
     case TM_COLUMN_COMPOSER:      return T_COMPOSER;
-    case TM_COLUMN_FDESC:         return T_FDESC;
+    case TM_COLUMN_FILETYPE:      return T_FILETYPE;
     case TM_COLUMN_GROUPING:      return T_GROUPING;
     case TM_COLUMN_TRACK_NR:      return T_TRACK_NR;
     case TM_COLUMN_CD_NR:         return T_CD_NR;
@@ -159,6 +171,11 @@ T_item TM_to_T (TM_item tm)
     case TM_COLUMN_YEAR:          return T_YEAR;
     case TM_COLUMN_COMPILATION:   return T_COMPILATION;
     case TM_COLUMN_COMMENT:       return T_COMMENT;
+    case TM_COLUMN_CATEGORY:      return T_CATEGORY;
+    case TM_COLUMN_DESCRIPTION:   return T_DESCRIPTION;
+    case TM_COLUMN_PODCASTURL:    return T_PODCASTURL;
+    case TM_COLUMN_PODCASTRSS:    return T_PODCASTRSS;
+    case TM_COLUMN_SUBTITLE:      return T_SUBTITLE;
     case TM_NUM_COLUMNS:          return -1;
     }
     return -1;
@@ -192,8 +209,9 @@ const gchar *get_tm_string (TM_item tm)
 {
     T_item t = TM_to_T (tm);
 
-    if (t != -1)   return t_strings[t];
-    else           return ("");
+    g_return_val_if_fail (t != -1, "");
+
+    return t_strings[t];
 }
 
 
@@ -204,8 +222,9 @@ const gchar *get_tm_tooltip (TM_item tm)
 {
     T_item t = TM_to_T (tm);
 
-    if (t != -1)   return t_tooltips[t];
-    else           return ("");
+    g_return_val_if_fail (t != -1, "");
+
+    return t_tooltips[t];
 }
 
 
@@ -214,8 +233,9 @@ const gchar *get_tm_tooltip (TM_item tm)
  * buttons or column headers). */
 const gchar *get_t_string (T_item t)
 {
-    if (t != -1)   return t_strings[t];
-    else           return ("");
+    g_return_val_if_fail (t>=0 && t<T_ITEM_NUM, "");
+
+    return t_strings[t];
 }
 
 

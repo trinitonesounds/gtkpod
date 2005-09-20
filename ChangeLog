@@ -2,7 +2,21 @@ gtkpod V0.96.CVS
        NEW: transition to libgpod to read/write iTunesDB. See
        www.gtkpod.org/libgpod.html for details.
 
-       IMPROVEMENT: added 'comment' field to displayable fields.
+       NEW: script to sync contacts from a Palm (via jppy). Thanks to
+       Nick Piper, http://www.nickpiper.co.uk/)
+
+       NEW: type-ahead search functionality. Thanks to Nick Piper,
+       http://www.nickpiper.co.uk/
+
+       IMPROVEMENT: added comment, category, description, podcast url,
+       podcast rss and subtitle fields to displayable fields.
+
+       IMPROVEMENT: Support playcounts on iPod Shuffle as well
+
+       UPDATED: Italian translation (thanks to Edward Matteucci)
+
+       BUGFIX: 'Check iPod's files' could crash under certain
+       circumstances (thanks to David Mansfield for the patch).
 
 gtkpod V0.95.CVS
        NEW: script to sync addressbooks in ldif format provided by

@@ -2184,6 +2184,23 @@ static void st_cell_data_func (GtkTreeViewColumn *tree_column,
     }
 }
 
+/* Function used to compare rows with user's search string */
+gboolean st_search_equal_func (GtkTreeModel *model,
+			       gint column,
+			       const gchar *key,
+			       GtkTreeIter *iter,
+			       gpointer search_data)
+{
+  TabEntry *entry1;
+  gboolean cmp;
+  gtk_tree_model_get (model, iter, ST_COLUMN_ENTRY, &entry1, -1);
+
+  cmp = (compare_string_start_case_insensitive (
+	  entry1->name,
+	  key) != 0);
+  return cmp;
+};
+
 /* Function used to compare two cells during sorting (sorttab view) */
 gint st_data_compare_func (GtkTreeModel *model,
 			   GtkTreeIter *a,
@@ -2828,6 +2845,12 @@ static void st_create_page (gint inst, ST_CAT_item st_cat)
 			NULL);
       gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
       gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
+      gtk_tree_view_set_enable_search (GTK_TREE_VIEW (treeview), TRUE);
+      gtk_tree_view_set_search_column (GTK_TREE_VIEW (treeview), 0);
+      gtk_tree_view_set_search_equal_func (GTK_TREE_VIEW (treeview), 
+					   st_search_equal_func,
+					   NULL,
+					   NULL);
   }
 }
 

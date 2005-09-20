@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-08-29 23:41:25 jcs>
+|  Time-stamp: <2005-09-20 18:44:43 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -151,10 +151,13 @@ Daniel Kercher: sync scripts for abook and webcalendar\n"),
 Clinton Gormley: sync scripts for thunderbird\n"),
 		       "\n",
 		       _("\
-Sebastien Beridot: sync scripts for ldif addressbook format\n"),
+Sebastien Beridot: sync script for ldif addressbook format\n"),
 		       "\n",
 		       _("\
-Sebastian Scherer: sync scripts for kNotes\n"),
+Sebastian Scherer: sync script for kNotes\n"),
+		       "\n",
+		       _("\
+Nick Piper: sync script for Palm, type-ahead search\n"),
 		       "\n",
 		       _("\
 Icons of buttons were made by Nicolas Chariot.\n\
@@ -553,7 +556,7 @@ void call_script (gchar *script)
 
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings */
-gint compare_string (gchar *str1, gchar *str2)
+gint compare_string (const gchar *str1, const gchar *str2)
 {
     if (prefs_get_case_sensitive ())
 	return strcmp (str1, str2);
@@ -621,7 +624,7 @@ void compare_string_fuzzy_generate_keys (void)
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings, and ignoring certain initial articles 
  * ("the", "le"/"la", etc) */
-gint compare_string_fuzzy (gchar *str1, gchar *str2)
+gint compare_string_fuzzy (const gchar *str1, const gchar *str2)
 {
     gchar *tempStr;
     gint   result;
@@ -629,8 +632,8 @@ gint compare_string_fuzzy (gchar *str1, gchar *str2)
     gchar *cleanStr1 = g_utf8_casefold (str1, -1);
     gchar *cleanStr2 = g_utf8_casefold (str2, -1);
 
-    gchar *pstr1 = str1;
-    gchar *pstr2 = str2;
+    const gchar *pstr1 = str1;
+    const gchar *pstr2 = str2;
     gchar *pcleanStr1 = cleanStr1;
     gchar *pcleanStr2 = cleanStr2;
     
@@ -693,7 +696,7 @@ gint compare_string_fuzzy (gchar *str1, gchar *str2)
 
 /* compare @str1 and @str2 case-sensitively or case-insensitively
  * depending on prefs settings */
-gint compare_string_case_insensitive (gchar *str1, gchar *str2)
+gint compare_string_case_insensitive (const gchar *str1, const gchar *str2)
 {
     gchar *string1 = g_utf8_casefold (str1, -1);
     gchar *string2 = g_utf8_casefold (str2, -1);
@@ -702,6 +705,30 @@ gint compare_string_case_insensitive (gchar *str1, gchar *str2)
     g_free (string2);
     return result;
 }
+
+/* todo: optionally ignore 'the', 'a,' etc. */
+gboolean compare_string_start_case_insensitive (const gchar *haystack, const gchar *needle)
+{
+  gint cmp = 0;
+  gchar *nhaystack = g_utf8_normalize(haystack, -1, G_NORMALIZE_ALL);
+  gchar *lhaystack = g_utf8_casefold(nhaystack,-1);
+  gchar *nneedle = g_utf8_normalize(needle, -1, G_NORMALIZE_ALL);
+  gchar *lneedle = g_utf8_casefold(nneedle,-1);
+
+
+  cmp = strncmp(lhaystack, lneedle, strlen(lneedle));
+
+  /*
+    printf("searched for %s , matching against %s with %d bytes. say=%d\n", 
+    lneedle, lhaystack, strlen(lneedle), cmp);
+  */
+  
+  g_free(nhaystack);
+  g_free(lhaystack);
+  g_free(nneedle);
+  g_free(lneedle);
+  return cmp;
+};
 
 
 /* ------------------------------------------------------------

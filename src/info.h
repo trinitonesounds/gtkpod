@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:25:30 jcs>
+/* Time-stamp: <2005-09-18 22:59:43 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -57,7 +57,7 @@ void gtkpod_tracks_statusbar_init(void);
 void gtkpod_tracks_statusbar_update(void);
 
 /* space stuff */
-#define SPACE_TIMEOUT 4000
+#define SPACE_TIMEOUT 4000   /* update interval in ms */
 void space_set_ipod_mount (const gchar *mp);
 void space_data_update (void);
 gboolean ipod_connected (void);

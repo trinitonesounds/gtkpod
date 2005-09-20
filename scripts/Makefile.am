@@ -13,6 +13,7 @@ script_SCRIPTS = \
 	sync-korganizer.sh \
 	sync-ldif.sh \
 	sync-notes.sh \
+	sync-palm-jppy.py \
 	sync-thunderbird.sh \
 	sync-webcalendar.sh \
 	ldif2vcf.sh \

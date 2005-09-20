@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-13 23:00:16 jcs>
+/* Time-stamp: <2005-09-18 22:26:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -482,8 +482,11 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 	{  /* first we remove the track from all other playlists (i=1) */
 	    Playlist *pl = gl->data;
 	    g_return_if_fail (pl);
-	    pm_remove_track (pl, track);
-	    itdb_playlist_remove_track (pl, track);
+	    while (g_list_find (pl->members, track))
+	    {
+		pm_remove_track (pl, track);
+		itdb_playlist_remove_track (pl, track);
+	    }
 	    gl=gl->next;
 	}
 	md5_track_remove (track);
@@ -576,7 +579,7 @@ void gp_track_validate_entries (Track *track)
     if (!track->genre)           track->genre = g_strdup ("");
     if (!track->comment)         track->comment = g_strdup ("");
     if (!track->composer)        track->composer = g_strdup ("");
-    if (!track->fdesc)           track->fdesc = g_strdup ("");
+    if (!track->filetype)        track->filetype = g_strdup ("");
     if (!track->grouping)        track->grouping = g_strdup ("");
     if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
     if (!etr->pc_path_locale)    etr->pc_path_locale = g_strdup ("");

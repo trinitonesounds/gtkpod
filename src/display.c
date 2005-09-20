@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-18 00:09:52 jcs>
+/* Time-stamp: <2005-09-19 19:33:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -251,7 +251,7 @@ void display_set_info_window_menu (void)
 }
 
 /** Takes care about 'Check IPOD Files' Menu Item and makes it unavailable
- * if gtkpod is offline or DB wasn't imported.
+ * if gtkpod is offline.
  */
 void display_set_check_ipod_menu (void)
 {
@@ -259,8 +259,6 @@ void display_set_check_ipod_menu (void)
 
     if((w = glade_xml_get_widget (main_window_xml, "check_ipod_files_mi")))
         gtk_widget_set_sensitive(w, !prefs_get_offline());
-    else
-        g_warning ("check_ipod_files_mi(): Programming error: widget check_ipod_files_mi must be found\n");
 }
 
 /* make the tooltips visible or hide it depending on the value set in

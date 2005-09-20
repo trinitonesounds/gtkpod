@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-16 23:51:32 jcs>
+/* Time-stamp: <2005-09-18 22:59:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1029,18 +1029,34 @@ void check_db (iTunesDB *itdb)
 	Track *track = gl->data;
         gint ntok=0;
 	g_return_if_fail (track);
-        /* we don't want to report non-transferred files as dandgling */
+        /* we don't want to report non-transferred files as dangling */
 	if (!track->transferred) continue; 
 	tokens = g_strsplit(track->ipod_path,":",(track->ipod_path[0]==':'?4:3));
         ntok=ntokens(tokens);
 	if (ntok>=3)
+	{
 	    pathtrack=g_strdup (tokens[ntok-1]);
+	}
 	else
-	    fprintf(stderr, "Report the bug please: shouldn't be 0 at %s:%d\n",__FILE__,__LINE__);
-        if (localdebug)
-            fprintf(stdout,"File %s\n", pathtrack);
+	{
+	    /* illegal ipod_path */
+	    /* the track has NO ipod_path, so we want the item to
+	       ultimately be deleted from DB, * however, we need to
+	       add it to tree it such a way that:
+               a) it will be unique
+               b) it won't match to any existing file on the ipod
 
-	fflush(stdout);
+               so use something invented using the pointer to the
+               track structure as a way to generate uniqueness
+            */
+           pathtrack=g_strdup_printf ("NOFILE-%p", track);
+	}
+
+        if (localdebug)
+	{
+            fprintf(stdout,"File %s\n", pathtrack);
+	    fflush(stdout);
+	}
 
 	g_tree_insert (files_known, pathtrack, track);
 	g_strfreev(tokens);
