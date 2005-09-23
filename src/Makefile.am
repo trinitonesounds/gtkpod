@@ -60,6 +60,7 @@ gtkpod_SOURCES = \
     misc_track.c misc_track.h \
     mp3file.c mp3file.h \
     mp4file.c mp4file.h \
+    podcast.c podcast.h \
     prefs.c prefs.h \
     prefs_window.c prefs_window.h \
     tools.c tools.h \

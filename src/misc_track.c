@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-18 13:20:42 jcs>
+/* Time-stamp: <2005-09-23 19:23:59 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -529,6 +529,7 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_TIME_ADDED:
     case T_TIME_PLAYED:
     case T_TIME_MODIFIED:
+    case T_TIME_RELEASED:
     case T_VOLUME:
     case T_SOUNDCHECK:
     case T_CD_NR:
@@ -567,6 +568,8 @@ guint32 *track_get_timestamp_ptr (Track *track, T_item t_item)
 	return &track->time_played;
     case T_TIME_MODIFIED:
 	return &track->time_modified;
+    case T_TIME_RELEASED:
+	return &track->time_released;
     case T_TIME_ADDED:
 	return &track->time_added;
     default:

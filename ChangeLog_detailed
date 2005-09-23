@@ -1,8 +1,21 @@
+2005-09-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * added 'date released' to displayable colums
+
+	 * applied Alexander Dutton's patch for podcast support (first
+           stages thereof).
+
+2005-09-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file_itunesdb.c: ipod_dirs_present(): extend check to
+           iPod_Control/Music/F00/ because on the iPod nano
+           iPod_Control/Music/ exists, but the F.. directories don't.
+
 2005-09-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * scripts/sync-palm-jppy.py: NEW: script to sync contacts
-	   from a Palm (via jppy). Thanks to Nick Piper,
-	   http://www.nickpiper.co.uk/)
+	   from a Palm (via jppy http://wiki.zanu.org.uk/jppy). Thanks
+	   to Nick Piper, http://www.nickpiper.co.uk/)
 
 	 * type-ahead search functionality (thanks to Nick Piper)
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 21:55:22 jcs>
+/* Time-stamp: <2005-09-23 17:46:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2068,9 +2068,7 @@ gchar *get_file_name_on_ipod (Track *tr)
 
     if(tr &&  !prefs_get_offline ())
     {
-	gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
 	result = itdb_filename_on_ipod (tr);
-	g_free (mount);
     }
     return(result);
 }

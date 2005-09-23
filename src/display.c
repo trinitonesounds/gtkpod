@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-19 19:33:51 jcs>
+/* Time-stamp: <2005-09-24 02:20:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -40,6 +40,7 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "tools.h"
+#include "podcast.h"
 
 GtkWidget *gtkpod_window = NULL;
 
@@ -98,6 +99,9 @@ void display_create (void)
     display_set_info_window_menu ();
     /* check if info window should be opened */
     if (prefs_get_info_window ())  info_open_window ();
+
+    /* if we need to fetch podcasts, then do so */
+    if (prefs_get_pc_auto_fetch ())  podcast_fetch();
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and
@@ -753,6 +757,15 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget)
    void dirbrowser_create (void)
    void open_about_window ()
 */
+
+
+
+void
+on_podcast_button_clicked              (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    podcast_fetch();
+}
 
 
 /* callback for "add new playlist" button */

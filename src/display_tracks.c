@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-20 18:44:10 jcs>
+/* Time-stamp: <2005-09-23 23:53:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -960,6 +960,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_TIME_ADDED:
      case TM_COLUMN_TIME_PLAYED:
      case TM_COLUMN_TIME_MODIFIED:
+     case TM_COLUMN_TIME_RELEASED:
 	 t = time_string_to_time (new_text);
 	 if ((t != -1) && (t != time_get_time (track, column)))
 	 {
@@ -1101,8 +1102,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
 		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_IPOD_ID:
-      if ((track->id != -1) &&
-	  itdb->usertype & GP_ITDB_TYPE_IPOD)
+      if (track->id != -1)
       {
 	  snprintf (text, 20, "%d", track->id);
 	  g_object_set (G_OBJECT (renderer),
@@ -1197,6 +1197,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
   case TM_COLUMN_TIME_ADDED:
+  case TM_COLUMN_TIME_RELEASED:
       buf = time_field_to_string (track, column);
       g_object_set (G_OBJECT (renderer),
 		    "text", buf,
@@ -1696,6 +1697,7 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_TIME_ADDED:
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
+  case TM_COLUMN_TIME_RELEASED:
       cmp = COMP (time_get_time (track1, tm_item),
 		  time_get_time (track2, tm_item));
       break;
@@ -2113,6 +2115,9 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       break;
   case TM_COLUMN_TIME_ADDED:
       text = _("Added");
+      break;
+  case TM_COLUMN_TIME_RELEASED:
+      text = _("Released");
       break;
   case TM_COLUMN_YEAR:
       text = _("Year");

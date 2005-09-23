@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-18 13:15:08 jcs>
+/* Time-stamp: <2005-09-23 19:24:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -91,7 +91,8 @@ static const gchar *t_strings[] = {
     N_("Podcast URL"),
     N_("Podcast RSS"),
     N_("Subtitle"),
-    NULL };  /* 34 */
+    N_("Date released"),
+    NULL };  /* 35 */
 
 /* Tooltips for prefs window */
 static const gchar *t_tooltips[] = {
@@ -132,7 +133,8 @@ static const gchar *t_tooltips[] = {
     NULL,
     NULL,
     NULL,
-    NULL   /* 34 */
+    N_("Release date (for podcasts displayed next to the title on the iPod)"),
+    NULL   /* 35 */
  };
 
 
@@ -176,6 +178,7 @@ T_item TM_to_T (TM_item tm)
     case TM_COLUMN_PODCASTURL:    return T_PODCASTURL;
     case TM_COLUMN_PODCASTRSS:    return T_PODCASTRSS;
     case TM_COLUMN_SUBTITLE:      return T_SUBTITLE;
+    case TM_COLUMN_TIME_RELEASED: return T_TIME_RELEASED;
     case TM_NUM_COLUMNS:          return -1;
     }
     return -1;
@@ -377,7 +380,7 @@ time_t time_string_to_totime (const gchar *str)
 }
 
 
-/* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
+/* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED/RELEASED */
 time_t time_get_time (Track *track, TM_item tm_item)
 {
     guint32 mactime = 0;
@@ -392,6 +395,9 @@ time_t time_get_time (Track *track, TM_item tm_item)
 	break;
     case TM_COLUMN_TIME_MODIFIED:
 	mactime = track->time_modified;
+	break;
+    case TM_COLUMN_TIME_RELEASED:
+	mactime = track->time_released;
 	break;
     default:
 	mactime = 0;
@@ -408,7 +414,7 @@ gchar *time_field_to_string (Track *track, TM_item tm_item)
 }
 
 
-/* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED */
+/* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED/RELEASED */
 void time_set_time (Track *track, time_t time, TM_item tm_item)
 {
     guint32 mactime = itdb_time_host_to_mac (time);
@@ -423,6 +429,9 @@ void time_set_time (Track *track, time_t time, TM_item tm_item)
 	break;
     case TM_COLUMN_TIME_MODIFIED:
 	track->time_modified = mactime;
+	break;
+    case TM_COLUMN_TIME_RELEASED:
+	track->time_released = mactime;
 	break;
     default:
 	break;

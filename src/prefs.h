@@ -161,6 +161,20 @@ struct cfg
   gchar *mserv_username;        /* username for mserv? */
   gboolean unused_gboolean3;    /* unused */
   float version;                /* version of gtkpod writing the cfg file */
+
+  gchar *pc_dir;                /* directory to store podcasts */
+  gboolean pc_del_age;          /* whether to delete old podcasts */
+  gint pc_del_age_val;          /* how old a podcast must be to be deleted */
+  gboolean pc_del_copied;       /* whether to delete once copied to iPod */
+  gboolean pc_auto_fetch;       /* whether to fetch podcasts automatically */
+  gboolean pc_log;              /* whether to log podcast information */
+  gchar *pc_log_file;           /* where to log to */
+  gboolean pc_auto_sync;        /* whether to automatically sync podcasts */
+  gboolean pc_ipod_del_age;     /* whether to delete old podcasts from iPod */
+  gint pc_ipod_del_age_val;     /* how old a podcast must be to be deleted */
+  gboolean pc_ipod_del_played;  /* whether to delete played podcasts */
+  gboolean pc_ipod_inc_date;    /* whether to include date in iPod metadata */
+  gboolean pc_change_genre;     /* whether to change genres to 'Podcast' */
 };
 
 
@@ -350,6 +364,34 @@ const gchar *prefs_get_mserv_username(void);
 void prefs_set_mserv_username(const gchar *root);
 gboolean prefs_get_autoimport_commandline(void);
 void prefs_set_autoimport_commandline(gboolean val);
+
+/* Podcast preferences */
+void prefs_set_pc_dir(const gchar *str);
+const gchar *prefs_get_pc_dir(void);
+void prefs_set_pc_del_age(gboolean val);
+gboolean prefs_get_pc_del_age(void);
+void prefs_set_pc_del_age_val(gint val);
+gint prefs_get_pc_del_age_val(void);
+void prefs_set_pc_del_copied(gboolean val);
+gboolean prefs_get_pc_del_copied(void);
+void prefs_set_pc_auto_fetch(gboolean val);
+gboolean prefs_get_pc_auto_fetch(void);
+void prefs_set_pc_log(gboolean val);
+gboolean prefs_get_pc_log(void);
+void prefs_set_pc_log_file(const gchar *str);
+const gchar *prefs_get_pc_log_file(void);
+void prefs_set_pc_auto_sync(gboolean val);
+gboolean prefs_get_pc_auto_sync(void);
+void prefs_set_pc_ipod_del_age(gboolean val);
+gboolean prefs_get_pc_ipod_del_age(void);
+void prefs_set_pc_ipod_del_age_val(gint val);
+gint prefs_get_pc_ipod_del_age_val(void);
+void prefs_set_pc_ipod_del_played(gboolean val);
+gboolean prefs_get_pc_ipod_del_played(void);
+void prefs_set_pc_ipod_inc_date(gboolean val);
+gboolean prefs_get_pc_ipod_inc_date(void);
+void prefs_set_pc_change_genre(gboolean val);
+gboolean prefs_get_pc_change_genre(void);
 
 gboolean prefs_get_disable_sorting(void);
 

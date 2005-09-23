@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-19 01:59:47 jcs>
+/* Time-stamp: <2005-09-21 22:14:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -979,7 +979,7 @@ static void file_dialog_abort (gboolean *abort_flag)
 /* check if iPod directory stucture is present */
 static gboolean ipod_dirs_present (gchar *mountpoint)
 {
-    const gchar *music[] = {"iPod_Control","Music",NULL},
+    const gchar *music[] = {"iPod_Control", "Music", "F00", NULL},
       *itunes[] = {"iPod_Control","iTunes",NULL};
     gchar *file;
     gboolean result = TRUE;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 18:00:26 jcs>
+/* Time-stamp: <2005-07-16 16:11:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -102,6 +102,9 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
+#include "podcast.h"
+
+// #include "podcast.c"
 
 /* static function declarations */
 static void prefs_write_hash_values (FILE *fp);
@@ -291,6 +294,20 @@ struct cfg *cfg_new(void)
     mycfg->mserv_use = FALSE;
     mycfg->mserv_report_probs = TRUE;
     mycfg->mserv_username = g_strdup ("");
+
+    mycfg->pc_dir = g_strdup ("~/.gtkpod/podcasts");
+    mycfg->pc_del_age = FALSE;
+    mycfg->pc_del_age_val = 1;
+    mycfg->pc_del_copied = FALSE;
+    mycfg->pc_auto_fetch = FALSE;
+    mycfg->pc_log = TRUE;
+    mycfg->pc_log_file = g_strdup ("~/.gtkpod/podcast.log");
+    mycfg->pc_auto_sync = FALSE;
+    mycfg->pc_ipod_del_age = FALSE;
+    mycfg->pc_ipod_del_age_val = 1;
+    mycfg->pc_ipod_del_played = FALSE;
+    mycfg->pc_ipod_inc_date = FALSE;
+    mycfg->pc_change_genre = FALSE;
 
     return(mycfg);
 }
@@ -899,6 +916,59 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_mserv_username (arg);
 	  }
+	  else if(g_ascii_strcasecmp (line, "pc_dir") == 0)
+	  {
+	      prefs_set_pc_dir (arg);
+	  }
+          else if(g_ascii_strcasecmp (line, "pc_del_age") == 0)
+          {
+              prefs_set_pc_del_age ((gboolean)atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_del_age_val") == 0)
+          {
+              prefs_set_pc_del_age_val (atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_del_copied") == 0)
+          {
+              prefs_set_pc_del_copied ((gboolean)atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_auto_fetch") == 0)
+          {
+              prefs_set_pc_auto_fetch ((gboolean)atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_log") == 0)
+          {
+              prefs_set_pc_log ((gboolean)atoi(arg));
+          }
+	  else if(g_ascii_strcasecmp (line, "pc_log_file") == 0)
+	  {
+	      prefs_set_pc_log_file (arg);
+	  }
+          else if(g_ascii_strcasecmp (line, "pc_auto_sync") == 0)
+          {
+              prefs_set_pc_auto_sync ((gboolean)atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_ipod_del_age") == 0)
+          {
+              prefs_set_pc_ipod_del_age ((gboolean)atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_ipod_del_age_val") == 0)
+          {
+              prefs_set_pc_ipod_del_age_val (atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_ipod_del_played") == 0)
+          {
+              prefs_set_pc_ipod_del_played ((gboolean)atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_ipod_inc_date") == 0)
+          {
+              prefs_set_pc_ipod_inc_date ((gboolean)atoi(arg));
+          }
+          else if(g_ascii_strcasecmp (line, "pc_change_genre") == 0)
+          {
+              prefs_set_pc_change_genre ((gboolean)atoi(arg));
+          }
+
 	  else
 	  {   /* All leftover options will be stored into the prefs
 		 setting hash (generic options -- should have had this
@@ -948,6 +1018,7 @@ read_prefs_defaults(void)
 	      gtkpod_warning(_("Unable to open config file '%s' for reading\n"), filename);
 	  }
       }
+
   }
   if (!have_prefs)
   {
@@ -1054,6 +1125,9 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 	  exit(1);
       }
   }
+
+  podcast_read_from_file();
+
   menu = GTK_CHECK_MENU_ITEM (glade_xml_get_widget (main_window_xml, "offline_menu"));
   gtk_check_menu_item_set_active (menu, prefs_get_offline ());
   return result;
@@ -1198,7 +1272,19 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
     fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);
     fprintf (fp, "mserv_report_probs=%d\n", cfg->mserv_report_probs);
-    fprintf(fp, "mserv_username=%s\n", cfg->mserv_username);
+    fprintf(fp, "pc_dir=%s\n", cfg->pc_dir);
+    fprintf(fp, "pc_del_age=%d\n", cfg->pc_del_age);
+    fprintf(fp, "pc_del_age_val=%d\n", cfg->pc_del_age_val);
+    fprintf(fp, "pc_del_copied=%d\n", cfg->pc_del_copied);
+    fprintf(fp, "pc_auto_fetch=%d\n", cfg->pc_auto_fetch);
+    fprintf(fp, "pc_log=%d\n", cfg->pc_log);
+    fprintf(fp, "pc_log_file=%s\n", cfg->pc_log_file);
+    fprintf(fp, "pc_auto_sync=%d\n", cfg->pc_auto_sync);
+    fprintf(fp, "pc_ipod_del_age=%d\n", cfg->pc_ipod_del_age);
+    fprintf(fp, "pc_ipod_del_age_val=%d\n", cfg->pc_ipod_del_age_val);
+    fprintf(fp, "pc_ipod_del_played=%d\n", cfg->pc_ipod_del_played);
+    fprintf(fp, "pc_ipod_inc_date=%d\n", cfg->pc_ipod_inc_date);
+    fprintf(fp, "pc_change_genre=%d\n", cfg->pc_change_genre);
 /*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
 }
 
@@ -1228,6 +1314,7 @@ write_prefs (void)
 	    gtkpod_warning (_("Unable to open '%s' for writing\n"),
 			    filename);
 	  }
+
       }
     C_FREE (cfgdir);
 }
@@ -1505,6 +1592,8 @@ struct cfg *clone_prefs(void)
 	    result->path[i] = g_strdup (cfg->path[i]);
 	result->parsetags_template = g_strdup(cfg->parsetags_template);
 	result->mserv_username = g_strdup(cfg->mserv_username);
+	result->pc_dir = g_strdup(cfg->pc_dir);
+	result->pc_log_file = g_strdup(cfg->pc_log_file);
     }
     return(result);
 }
@@ -2656,6 +2745,144 @@ gboolean prefs_get_unused_gboolean3(void)
 void prefs_set_unused_gboolean3(gboolean val)
 {
     cfg->unused_gboolean3 = val;
+}
+
+void prefs_set_pc_dir (const gchar *str)
+{
+    if (str)
+    {
+        g_free (cfg->pc_dir);
+        cfg->pc_dir = g_strdup (str);
+    }
+}
+
+const gchar *prefs_get_pc_dir (void)
+{
+    return cfg->pc_dir;
+}
+
+void prefs_set_pc_del_age(gboolean val)
+{
+    cfg->pc_del_age = val;
+}
+
+gboolean prefs_get_pc_del_age(void)
+{
+    return cfg->pc_del_age;
+}
+
+void prefs_set_pc_del_age_val(gint val)
+{
+    cfg->pc_del_age_val = val;
+}
+
+gint prefs_get_pc_del_age_val(void)
+{
+    return cfg->pc_del_age_val;
+}
+
+void prefs_set_pc_del_copied(gboolean val)
+{
+    cfg->pc_del_copied = val;
+}
+
+gboolean prefs_get_pc_del_copied(void)
+{
+    return cfg->pc_del_copied;
+}
+
+void prefs_set_pc_auto_fetch(gboolean val)
+{
+    cfg->pc_auto_fetch = val;
+}
+
+gboolean prefs_get_pc_auto_fetch(void)
+{
+    return cfg->pc_auto_fetch;
+}
+
+void prefs_set_pc_log(gboolean val)
+{
+    cfg->pc_log = val;
+}
+
+gboolean prefs_get_pc_log(void)
+{
+    return cfg->pc_log;
+}
+
+void prefs_set_pc_log_file(const gchar *str)
+{
+    if (str)
+    {
+        g_free (cfg->pc_log_file);
+        cfg->pc_log_file = g_strdup (str);
+    }
+}
+
+const gchar *prefs_get_pc_log_file(void)
+{
+    return cfg->pc_log_file;
+}
+
+void prefs_set_pc_auto_sync(gboolean val)
+{
+    cfg->pc_auto_sync = val;
+}
+
+gboolean prefs_get_pc_auto_sync(void)
+{
+    return cfg->pc_auto_sync;
+}
+
+void prefs_set_pc_ipod_del_age(gboolean val)
+{
+    cfg->pc_ipod_del_age = val;
+}
+
+gboolean prefs_get_pc_ipod_del_age(void)
+{
+    return cfg->pc_ipod_del_age;
+}
+
+void prefs_set_pc_ipod_del_age_val(gint val)
+{
+    cfg->pc_ipod_del_age_val = val;
+}
+
+gint prefs_get_pc_ipod_del_age_val(void)
+{
+    return cfg->pc_ipod_del_age_val;
+}
+
+void prefs_set_pc_ipod_del_played(gboolean val)
+{
+    cfg->pc_ipod_del_played = val;
+}
+
+gboolean prefs_get_pc_ipod_del_played(void)
+{
+    return cfg->pc_ipod_del_played;
+}
+
+void prefs_set_pc_ipod_inc_date(gboolean val)
+{
+    cfg->pc_ipod_inc_date = val;
+}
+
+gboolean prefs_get_pc_ipod_inc_date(void)
+{
+    return cfg->pc_ipod_inc_date;
+}
+
+void prefs_set_pc_change_genre(gboolean val)
+{
+    cfg->pc_change_genre = val;
+}
+
+gboolean prefs_get_pc_change_genre(void)
+{
+    return cfg->pc_change_genre;
 }
 
 /* ------------------------------------------------------------

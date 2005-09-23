@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-20 18:44:10 jcs>
+/* Time-stamp: <2005-09-23 19:24:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -179,6 +179,7 @@ typedef enum  {
   TM_COLUMN_PODCASTURL,       /* 30 */
   TM_COLUMN_PODCASTRSS,
   TM_COLUMN_SUBTITLE,
+  TM_COLUMN_TIME_RELEASED,
   TM_NUM_COLUMNS
 } TM_item;
 
@@ -223,6 +224,7 @@ typedef enum {
     T_PODCASTURL,
     T_PODCASTRSS,
     T_SUBTITLE,
+    T_TIME_RELEASED,
     T_ITEM_NUM,
 } T_item;
 

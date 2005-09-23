@@ -39,7 +39,7 @@
 #include "prefs.h"
 #include "misc.h"
 #include "file.h"
-
+//#include "podcast.h"
 
 /* path to gtkpod.glade */
 gchar *xml_file;

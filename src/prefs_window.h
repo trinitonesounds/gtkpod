@@ -32,7 +32,6 @@
 
 #include <gtk/gtk.h>
 #include "prefs.h"
-
 extern const gchar *path_entry_names[];
 
 void prefs_window_update_default_sizes (void);
@@ -63,4 +62,7 @@ void sort_window_set_st_sort (gint val);
 void sort_window_set_tm_sort (gint val);
 void sort_window_set_case_sensitive (gboolean val);
 void sort_window_update (void);
+
+void create_subs_treeview (void);
 #endif
+
