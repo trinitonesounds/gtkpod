@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 02:20:36 jcs>
+/* Time-stamp: <2005-09-24 13:17:16 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -202,18 +202,29 @@ void display_adjust_delete_menus (void)
     }
     else
     {
-	switch (pl->type)
-	{
-	case ITDB_PL_TYPE_NORM:
-	    gtk_widget_set_sensitive (d, TRUE);
-	    gtk_widget_set_sensitive (df, TRUE);
-	    gtk_widget_set_sensitive (dp, TRUE);
-	    gtk_widget_set_sensitive (dfp, TRUE);
-	    break;
-	case ITDB_PL_TYPE_MPL:
+	if (itdb_playlist_is_mpl (pl))
+	{   /* Master Playlist */
 	    gtk_widget_set_sensitive (d, FALSE);
 	    gtk_widget_set_sensitive (df, TRUE);
 	    gtk_widget_set_sensitive (dfp, FALSE);
+	}
+	else
+	{
+	    if (itdb_playlist_is_podcasts (pl))
+	    {   /* Podcasts playlist */
+		/* FIXME: not well thought over yet */
+		gtk_widget_set_sensitive (d, TRUE);
+		gtk_widget_set_sensitive (df, TRUE);
+		gtk_widget_set_sensitive (dp, TRUE);
+		gtk_widget_set_sensitive (dfp, TRUE);
+	    }
+	    else
+	    {   /* normal playlist */
+		gtk_widget_set_sensitive (d, TRUE);
+		gtk_widget_set_sensitive (df, TRUE);
+		gtk_widget_set_sensitive (dp, TRUE);
+		gtk_widget_set_sensitive (dfp, TRUE);
+	    }
 	}
     }
 }

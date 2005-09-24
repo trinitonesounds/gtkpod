@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-11 22:12:24 jcs>
+/* Time-stamp: <2005-09-24 13:17:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -536,7 +536,7 @@ static void delete_playlist_ok (struct DeleteData *dd)
 		gp_playlist_remove_track (dd->pl, dd->pl->members->data,
 					  dd->deleteaction);
 	    }
-	    if (dd->pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (dd->pl))
 	    {
 		msg = g_strdup_printf (_("Removed all %d tracks from the iPod"), n);
 		display_reset (0);
@@ -553,7 +553,7 @@ static void delete_playlist_ok (struct DeleteData *dd)
 	    }
 	    break;
 	case DELETE_ACTION_PLAYLIST:
-	    if (dd->pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (dd->pl))
 	    {	/* not allowed -- programming error */
 		g_return_if_reached ();
 	    }
@@ -576,7 +576,7 @@ static void delete_playlist_ok (struct DeleteData *dd)
 	switch (dd->deleteaction)
 	{
 	case DELETE_ACTION_LOCAL:
-	    if (dd->pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (dd->pl))
 	    {   /* for safety reasons this is not implemented (would
 		   remove all tracks from your local harddisk */
 		g_return_if_reached ();
@@ -606,7 +606,7 @@ static void delete_playlist_ok (struct DeleteData *dd)
 		gp_playlist_remove_track (dd->pl, dd->pl->members->data,
 					  dd->deleteaction);
 	    }
-	    if (dd->pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (dd->pl))
 	    {
 		msg = g_strdup_printf (_("Removed all %d tracks from the database"), n);
 		display_reset (0);
@@ -623,7 +623,7 @@ static void delete_playlist_ok (struct DeleteData *dd)
 	    }
 	    break;
 	case DELETE_ACTION_PLAYLIST:
-	    if (dd->pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (dd->pl))
 	    {	/* not allowed -- programming error */
 		g_return_if_reached ();
 	    }
@@ -681,7 +681,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	switch (deleteaction)
 	{
 	case DELETE_ACTION_IPOD:
-	    if (pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (pl))
 	    {
 		label = g_strdup_printf (_("Are you sure you want to remove all tracks from your iPod?"));
 	    }
@@ -696,7 +696,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    }
 	    break;
 	case DELETE_ACTION_PLAYLIST:
-	    if (pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (pl))
 	    {	/* not allowed -- programming error */
 		g_return_if_reached ();
 	    }
@@ -717,7 +717,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	switch (deleteaction)
 	{
 	case DELETE_ACTION_LOCAL:
-	    if (pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (pl))
 	    {   /* for safety reasons this is not implemented (would
 		   remove all tracks from your local harddisk */
 		g_return_if_reached ();
@@ -734,7 +734,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    }
 	    break;
 	case DELETE_ACTION_DATABASE:
-	    if (pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (pl))
 	    {
 		label = g_strdup_printf (_("Are you sure you want to remove all tracks from the database?"));
 		
@@ -751,7 +751,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    }
 	    break;
 	case DELETE_ACTION_PLAYLIST:
-	    if (pl->type == ITDB_PL_TYPE_MPL)
+	    if (itdb_playlist_is_mpl (pl))
 	    {	/* not allowed -- programming error */
 		g_return_if_reached ();
 	    }

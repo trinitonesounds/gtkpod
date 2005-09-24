@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-18 22:26:07 jcs>
+/* Time-stamp: <2005-09-24 13:17:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -472,7 +472,7 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
     /* remove track from playlist */
     itdb_playlist_remove_track (plitem, track);
 
-    if (plitem->type == ITDB_PL_TYPE_MPL)
+    if (itdb_playlist_is_mpl (plitem))
     { /* if it's the MPL, we remove the track permanently */
 	GList *gl = g_list_nth (itdb->playlists, 1);
 	ExtraiTunesDBData *eitdb = itdb->userdata;
@@ -573,17 +573,22 @@ void gp_track_validate_entries (Track *track)
     etr = track->userdata;
     g_return_if_fail (etr);
 
-    if (!track->album)           track->album = g_strdup ("");
-    if (!track->artist)          track->artist = g_strdup ("");
     if (!track->title)           track->title = g_strdup ("");
+    if (!track->artist)          track->artist = g_strdup ("");
+    if (!track->album)           track->album = g_strdup ("");
     if (!track->genre)           track->genre = g_strdup ("");
-    if (!track->comment)         track->comment = g_strdup ("");
     if (!track->composer)        track->composer = g_strdup ("");
+    if (!track->comment)         track->comment = g_strdup ("");
     if (!track->filetype)        track->filetype = g_strdup ("");
     if (!track->grouping)        track->grouping = g_strdup ("");
+    if (!track->category)        track->category = g_strdup ("");
+    if (!track->description)     track->description = g_strdup ("");
+    if (!track->podcasturl)      track->podcasturl = g_strdup ("");
+    if (!track->podcastrss)      track->podcastrss = g_strdup ("");
+    if (!track->subtitle)        track->subtitle = g_strdup ("");
+    if (!track->ipod_path)       track->ipod_path = g_strdup ("");
     if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
     if (!etr->pc_path_locale)    etr->pc_path_locale = g_strdup ("");
-    if (!track->ipod_path)       track->ipod_path = g_strdup ("");
     /* Make sure year_str is identical to year */
     g_free (etr->year_str);
     etr->year_str = g_strdup_printf ("%d", track->year);

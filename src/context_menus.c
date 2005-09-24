@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 01:05:39 jcs>
+/* Time-stamp: <2005-09-24 13:17:16 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -423,7 +423,7 @@ create_context_menu(CM_type type)
 		gtk_widget_hide (mi_local [type]);
 		gtk_widget_hide (mi_db [type]);
 		gtk_widget_hide (mi_db_all [type]);
-		if (pl->type == ITDB_PL_TYPE_MPL)
+		if (itdb_playlist_is_mpl (pl))
 		{
 		    gtk_widget_hide (mi_sep [type]);
 		    gtk_widget_hide (mi_ipod [type]);
@@ -442,7 +442,7 @@ create_context_menu(CM_type type)
 	    {
 		gtk_widget_hide (mi_ipod [type]);
 		gtk_widget_hide (mi_ipod_all [type]);
-		if (pl->type == ITDB_PL_TYPE_MPL)
+		if (itdb_playlist_is_mpl (pl))
 		{
 		    gtk_widget_hide (mi_sep [type]);
 		    gtk_widget_hide (mi_local [type]);
@@ -474,7 +474,7 @@ create_context_menu(CM_type type)
 	    {
 		gtk_widget_hide (mi_local [type]);
 		gtk_widget_hide (mi_db [type]);
-		if (pl->type == ITDB_PL_TYPE_MPL)
+		if (itdb_playlist_is_mpl (pl))
 		{
 		    gtk_widget_show (mi_ipod [type]);
 		    gtk_widget_hide (mi_pl [type]);
@@ -488,7 +488,7 @@ create_context_menu(CM_type type)
 	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	    {
 		gtk_widget_hide (mi_ipod [type]);
-		if (pl->type == ITDB_PL_TYPE_MPL)
+		if (itdb_playlist_is_mpl (pl))
 		{
 		    gtk_widget_show (mi_local [type]);
 		    gtk_widget_show (mi_db [type]);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-23 17:46:38 jcs>
+/* Time-stamp: <2005-09-24 13:17:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1815,7 +1815,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 	  update_track_from_file (itdb, oldtrack);
       }
       /* add to current playlist if it's not already in there */
-      if (plitem->type != ITDB_PL_TYPE_MPL)
+      if (!itdb_playlist_is_mpl (plitem))
       {
 	  if (!itdb_playlist_contains_track (plitem, oldtrack))
 	  {
@@ -1873,7 +1873,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 
 	  if (addtrackfunc)
 	  {
-	      if (plitem->type == ITDB_PL_TYPE_MPL)
+	      if (itdb_playlist_is_mpl (plitem))
 	      {   /* add track to master playlist (if it wasn't a
 		     duplicate */
 		  if (added_track == track)
@@ -1898,7 +1898,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 		      gp_playlist_add_track (mpl, added_track,
 					     TRUE);
 		  /* add track to specified playlist, but not to MPL */
-		  if (plitem->type != ITDB_PL_TYPE_MPL)
+		  if (!itdb_playlist_is_mpl (plitem))
 		      gp_playlist_add_track (plitem, added_track, TRUE);
 	  }
 	  /* indicate that non-transferred files exist */

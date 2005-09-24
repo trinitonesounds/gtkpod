@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-08-27 21:51:04 jcs>
+/* Time-stamp: <2005-09-24 13:17:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -437,12 +437,12 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
 	NULL, NULL, &mask);
 
     /* don't allow copy/move before the MPL */
-    if ((dest->type == ITDB_PL_TYPE_MPL) &&
+    if ((itdb_playlist_is_mpl (dest)) && 
 	(pos == GTK_TREE_VIEW_DROP_BEFORE))
 	return 0;
 
     /* don't allow moving of MPL */
-    if (src->type == ITDB_PL_TYPE_MPL)
+    if (itdb_playlist_is_mpl (src))
 	return GDK_ACTION_COPY;
 
     /* don't allow drop onto itself */
@@ -454,7 +454,7 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
     if (src->itdb == dest->itdb)
     {   /* DND within the same itdb */
         /* don't allow copy/move onto MPL */
-	if ((dest->type == ITDB_PL_TYPE_MPL) &&
+	if ((itdb_playlist_is_mpl (dest)) &&
 	    (pos != GTK_TREE_VIEW_DROP_AFTER))
 	    return 0;
 
@@ -515,14 +515,14 @@ static GdkDragAction pm_tm_get_action (Track *src, Playlist *dest,
 
 
     /* don't allow copy/move before the MPL */
-    if ((dest->type == ITDB_PL_TYPE_MPL) &&
+    if ((itdb_playlist_is_mpl (dest)) &&
 	(pos == GTK_TREE_VIEW_DROP_BEFORE))
 	return 0;
 
     if (src->itdb == dest->itdb)
     {   /* DND within the same itdb */
         /* don't allow copy/move onto MPL */
-	if ((dest->type == ITDB_PL_TYPE_MPL) &&
+	if ((itdb_playlist_is_mpl (dest)) &&
 	    (pos != GTK_TREE_VIEW_DROP_AFTER))
 	    return 0;
     }
@@ -999,7 +999,7 @@ void pm_remove_track (Playlist *playlist, Track *track)
 	if (track->itdb == current_playlist->itdb)
 	{
 	    if ((playlist == current_playlist) ||
-		(current_playlist->type == ITDB_PL_TYPE_MPL))
+		itdb_playlist_is_mpl (current_playlist))
 	    {
 		st_remove_track (track, 0);
 	    }
@@ -1079,7 +1079,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
   model = GTK_TREE_MODEL (gtk_tree_view_get_model (playlist_treeview));
   g_return_if_fail (model);
 
-  if (playlist->type == ITDB_PL_TYPE_MPL)
+  if (itdb_playlist_is_mpl (playlist))
   {   /* MPLs are always added top-level */
       mpl = NULL;
   }
@@ -1127,7 +1127,7 @@ void pm_add_playlist (Playlist *playlist, gint pos)
       /* If it's the first playlist (no playlist selected AND playlist is
 	 the MPL, we select it, unless prefs_get_mpl_autoselect() says
 	 otherwise */
-      if ((playlist->type == ITDB_PL_TYPE_MPL) && prefs_get_mpl_autoselect())
+      if (itdb_playlist_is_mpl(playlist) && prefs_get_mpl_autoselect())
       {
 	  selection = gtk_tree_view_get_selection (playlist_treeview);
 	  gtk_tree_selection_select_iter (selection, &iter);
@@ -1439,9 +1439,8 @@ void pm_add_itdb (iTunesDB *itdb, gint pos)
     {
 	Playlist *pl = gl_pl->data;
 	g_return_if_fail (pl);
-	if (pl->type == ITDB_PL_TYPE_MPL)
-	     pm_add_playlist (pl, pos);
-	else pm_add_playlist (pl, -1);
+	if (itdb_playlist_is_mpl (pl))     pm_add_playlist (pl, pos);
+	else                               pm_add_playlist (pl, -1);
     }
 }
 
@@ -1606,7 +1605,7 @@ pm_rows_reordered (void)
 	/* get master playlist */
 	gtk_tree_model_get (tm, &parent, PM_COLUMN_PLAYLIST, &pl, -1); 
 	g_return_if_fail (pl);
-	g_return_if_fail (pl->type == ITDB_PL_TYPE_MPL);
+	g_return_if_fail (itdb_playlist_is_mpl (pl));
 	itdb = pl->itdb;
 	g_return_if_fail (itdb);
 
@@ -1621,7 +1620,7 @@ pm_rows_reordered (void)
 	    if (itdb_playlist_by_nr (itdb, pos) != pl)
 	    {
 		/* move the playlist to indicated position */
-		g_return_if_fail (pl->type != ITDB_PL_TYPE_MPL);
+		g_return_if_fail (!itdb_playlist_is_mpl (pl));
 		itdb_playlist_move (pl, pos);
 		data_changed (itdb);
 	    }
@@ -1658,8 +1657,8 @@ gint pm_data_compare_func (GtkTreeModel *model,
   /* We make sure that the master playlist always stays on top */
   if (order == GTK_SORT_ASCENDING) corr = +1;
   else                             corr = -1;
-  if (playlist1->type == ITDB_PL_TYPE_MPL) return (-corr);
-  if (playlist2->type == ITDB_PL_TYPE_MPL) return (corr);
+  if (itdb_playlist_is_mpl (playlist1)) return (-corr);
+  if (itdb_playlist_is_mpl (playlist2)) return (corr);
 
   /* compare the two entries */
   return compare_string (playlist1->name, playlist2->name);
@@ -1734,7 +1733,7 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   switch (column)
     {  /* We only have one column, so this code is overkill... */
     case PM_COLUMN_PLAYLIST: 
-	if (playlist->type == ITDB_PL_TYPE_MPL)
+	if (itdb_playlist_is_mpl (playlist))
 	{   /* mark MPL */
 	    g_object_set (G_OBJECT (renderer),
 			  "text", playlist->name, 
@@ -1781,7 +1780,7 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 	    g_object_set (G_OBJECT (renderer),
 			  "stock-id", "gtk-properties", NULL);
 	}
-	else if (playlist->type != ITDB_PL_TYPE_MPL)
+	else if (!itdb_playlist_is_mpl (playlist))
 	{
 	    g_object_set (G_OBJECT (renderer),
 			  "stock-id", "gtk-justify-left", NULL);

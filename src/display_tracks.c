@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-23 23:53:24 jcs>
+/* Time-stamp: <2005-09-24 13:17:17 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -259,7 +259,7 @@ static void tm_drag_data_delete (GtkWidget *widget,
     if (num == 0) return;
 
     /* Check if we really have to delete the tracks */
-    if (pl->type == ITDB_PL_TYPE_NORM)
+    if (!itdb_playlist_is_mpl (pl))
     {	/* get list of selected tracks */
 	GString *reply = g_string_sized_new (2000);
 	gchar *str;
