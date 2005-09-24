@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 13:17:15 jcs>
+/* Time-stamp: <2005-09-24 15:30:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1739,15 +1739,29 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
 			  "text", playlist->name, 
 			  "editable", TRUE,
 			  "weight", PANGO_WEIGHT_BOLD,
+			  "style", PANGO_STYLE_NORMAL,
 			  NULL);
 	}
 	else
 	{
-	    g_object_set (G_OBJECT (renderer),
-			  "text", playlist->name, 
-			  "editable", TRUE,
-			  "weight", PANGO_WEIGHT_NORMAL,
-			  NULL);
+	    if (itdb_playlist_is_podcasts (playlist))
+	    {
+		g_object_set (G_OBJECT (renderer),
+			      "text", playlist->name, 
+			      "editable", TRUE,
+			      "weight", PANGO_WEIGHT_SEMIBOLD,
+			      "style", PANGO_STYLE_ITALIC,
+			      NULL);
+	    }
+	    else
+	    {
+		g_object_set (G_OBJECT (renderer),
+			      "text", playlist->name, 
+			      "editable", TRUE,
+			      "weight", PANGO_WEIGHT_NORMAL,
+			      "style", PANGO_STYLE_NORMAL,
+			      NULL);
+	    }
 	}
 	break;
     }
