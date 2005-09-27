@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 13:17:17 jcs>
+/* Time-stamp: <2005-09-26 19:50:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1677,8 +1677,10 @@ static gint tm_data_compare (Track *track1, Track *track2,
       break;
   case TM_COLUMN_SIZE:
       cmp = track1->size - track2->size;
+      break;
   case TM_COLUMN_TRACKLEN:
       cmp = track1->tracklen - track2->tracklen;
+      break;
   case TM_COLUMN_BITRATE:
       cmp = track1->bitrate - track2->bitrate;
       break;

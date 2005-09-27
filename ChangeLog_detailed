@@ -1,3 +1,9 @@
+2005-09-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * display_songs.c: sorting by size and tracklength did not
+           work because of two missing break statements... Thanks to
+           Flavio Stanchina for tracking this down!
+
 2005-09-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * phased out use of ITDB_PL_TYPE_MPL/NORM and replaced with
