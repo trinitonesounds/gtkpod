@@ -48,18 +48,26 @@
 #include "misc.h"
 #include "prefs.h"
 #include "podcast.h"
-//#include "podcast_window.h"
 #include "info.h"
 #include <time.h>
-#include <sys/socket.h>
-
+#include <curl/curl.h>
+#include <curl/multi.h>
+#include <curl/types.h>
 GList *podcasts = NULL;
 GList *podcast_files = NULL;
 
 GladeXML *podcast_window_xml;
 static GtkWidget *podcast_window = NULL;
+static GtkTreeView *podcast_list = NULL;
 
-static pthread_t      podcast_fetch_tid;
+static long transfer_total, transfer_done;
+static gint retrieve_url_to_path (gchar *url, gchar *path);
+static gint parse_file_for_podcast_files(gchar *file);
+static void podcast_log (gchar *msg);
+static void create_podcast_list ();
+static gchar *choose_filename(gchar *url);
+
+static void podcast_window_create(void);
 
 void podcast_add (gchar *name, gchar *url)
 {
@@ -111,7 +119,7 @@ static void podcast_delete_all ()
     }
 }
 
-void podcast_write_from_store (GtkTreeStore *store)
+void podcast_write_from_store (GtkListStore *store)
 {
     gchar *cfgdir = NULL;
     gchar filename[PATH_MAX+1];
@@ -163,7 +171,7 @@ void podcast_write_from_store (GtkTreeStore *store)
     }
 }
 
-void podcast_read_into_store (GtkTreeStore *store)
+void podcast_read_into_store (GtkListStore *store)
 {
     int i = 0;
     struct podcast *podcast = NULL;
@@ -173,8 +181,8 @@ void podcast_read_into_store (GtkTreeStore *store)
     while(i < g_list_length(podcasts))
     {
         podcast = g_list_nth_data(podcasts, i);
-        gtk_list_store_append (GTK_LIST_STORE(store), &iter);
-        gtk_list_store_set (GTK_LIST_STORE(store), &iter,
+        gtk_list_store_append (store, &iter);
+        gtk_list_store_set (store, &iter,
                             PC_SUBS_NAME, podcast->name,
                             PC_SUBS_URL, podcast->url,
                             -1);
@@ -248,7 +256,7 @@ void podcast_read_from_file ()
 void podcast_file_add (gchar *title, gchar *url, 
                        gchar *desc, gchar *artist, 
                        gchar pubdate[14], gchar fetchdate[14], 
-                       glong size,
+                       glong size, gchar *local,
                        gboolean fetched, gboolean tofetch)
 {
     // assign some memory to hold data for new podcast
@@ -257,6 +265,7 @@ void podcast_file_add (gchar *title, gchar *url,
     podcast_file->url = g_strdup(url);
     podcast_file->desc = g_strdup(desc);
     podcast_file->artist = g_strdup(artist);
+    podcast_file->local = g_strdup(local);
 //    podcast_file->pubdate = pubdate;
 //    podcast_file->fetchdate = fetchdate;
     podcast_file->size = size;
@@ -286,15 +295,72 @@ gboolean podcast_already_have_url (gchar *url)
     return FALSE;
 }
 
-GList *podcast_file_find_to_fetch ()
+gint podcast_file_read_from_file()
 {
+    gchar *cfgdir = prefs_get_cfgdir ();
+    if (cfgdir)
+    {
+        gchar *filename = g_strdup_printf("%s/podcast.xml", cfgdir);
+        parse_file_for_podcast_files(filename);
+        g_free(filename);
+        g_free(cfgdir);
+        return 0;
+    } else {
+        g_free(cfgdir);
+        return 1;
+    }
+}
 
+gint podcast_file_write_to_file()
+{
+    gchar *cfgdir = prefs_get_cfgdir ();
+
+    if (cfgdir)
+    {
+        gchar *filename = g_strdup_printf("%s/podcast.xml", cfgdir);
+        FILE *fp = fopen(filename, "w");
+        int i = 0;
+        struct podcast_file *podcast_file;
+
+        fprintf(fp, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        fprintf(fp, "<rss xmlns:itunes=\"http://example.com/DTDs/Podcast-1.0.dtd\" version=\"2.0\">\n");
+        fprintf(fp, "<channel>\n");
+        fprintf(fp, "  <title>gtkpod local podcast file</title>\n\n");
+
+        while(i < g_list_length(podcast_files))
+        {
+            podcast_file = g_list_nth_data(podcast_files, i);
+
+            fprintf(fp, "  <item>\n");
+            fprintf(fp, "    <title>%s</title>\n",                   podcast_file->title);
+            fprintf(fp, "    <itunes:author>%s</itunes:author>\n",    podcast_file->artist);
+            fprintf(fp, "    <enclosure url=\"%s\" length=%ld />\n",  podcast_file->url, podcast_file->size);
+            fprintf(fp, "    <description>%s</description>\n",       podcast_file->desc);
+            if (podcast_file->local)
+                fprintf(fp, "    <gtkpod:local>%s</gtkpod:local>\n",     podcast_file->local);
+            fprintf(fp, "    <gtkpod:fetched>%d</gtkpod:fetched>\n", podcast_file->fetched);
+            fprintf(fp, "    <gtkpod:tofetch>%d</gtkpod:tofetch>\n", podcast_file->tofetch);
+            fprintf(fp, "  </item>\n");       
+
+            ++i;
+        }
+
+        fprintf(fp, "</channel>\n</rss>\n");
+
+        fclose(fp);
+        return 0;
+    } else {
+        return 1;
+    }
+    
 }
 
 void podcast_fetch ()
 {
     podcast_window_create();
-    pthread_create(&podcast_fetch_tid, NULL, &podcast_fetch_thread, NULL);
+    //pthread_create(&podcast_fetch_tid, NULL, &podcast_fetch_thread, NULL);
+    //podcast_fetch_thread();
+    g_thread_create(&podcast_fetch_thread, NULL, FALSE, NULL);
 }
 
 void podcast_fetch_thread(gpointer data)
@@ -309,11 +375,11 @@ void podcast_fetch_thread(gpointer data)
 
     if (g_list_length(podcasts) == 0)
     {
-//        gtkpod_statusbar_message(_("No podcasts to fetch"));
+        podcast_log(_("Fetch started, but no podcasts to fetch"));
         return;
     }
 
-//    gtkpod_statusbar_message(_("Beginning to fetch podcasts"));
+    podcast_log(_("Beginning to fetch podcasts"));
     cfgdir = prefs_get_cfgdir ();
 
     if (cfgdir)
@@ -325,12 +391,18 @@ void podcast_fetch_thread(gpointer data)
             podcast = g_list_nth_data(podcasts, i);
             if (retrieve_url_to_path(podcast->url, filename))
             {
-                status_msg = g_strdup_printf("Could not fetch '%s' (%d of %d metafiles), finding %d podcasts", podcast->name, (i+1), g_list_length(podcasts), found);
+                status_msg = g_strdup_printf("Could not fetch '%s' (%d of %d metafiles)", podcast->name, (i+1), g_list_length(podcasts));
+                podcast_log(_(status_msg));
                 podcast_set_status(_(status_msg));
                 g_free(status_msg);
             } else {
                 found = parse_file_for_podcast_files(filename);
-                status_msg = g_strdup_printf("Fetched '%s' (%d of %d metafiles), finding %d podcasts", podcast->name, (i+1), g_list_length(podcasts), found);
+                if (found == 1)
+                  status_msg = g_strdup_printf("Fetched '%s' (%d of %d metafiles), finding %d new podcast", podcast->name, (i+1), g_list_length(podcasts), found);
+                else
+                  status_msg = g_strdup_printf("Fetched '%s' (%d of %d metafiles), finding %d new podcasts", podcast->name, (i+1), g_list_length(podcasts), found);
+
+                podcast_log(_(status_msg));
                 podcast_set_status(_(status_msg));
                 g_free(status_msg);
             }
@@ -340,50 +412,129 @@ void podcast_fetch_thread(gpointer data)
         g_free(filename);
         i = 0;
 
+        GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model(podcast_list));
+        GtkTreeIter iter;
+        gtk_list_store_clear (model);
+        gchar *pending = "Pending", *fetching = "Fetching", *failed = "Failed", *done = "Done";
+
+        transfer_total = 0;
         while(i < g_list_length(podcast_files))
         {
             podcast_file = g_list_nth_data(podcast_files, i);
             if (podcast_file->tofetch)
             {
-                filename = g_strdup_printf("%s%i.mp3", prefs_get_pc_dir(), i);
-                if (retrieve_url_to_path(podcast_file->url, filename))
-                {
-                    status_msg = g_strdup_printf("Could not fetch '%s'", podcast_file->title);
-                    podcast_set_status(_(status_msg));
-                    g_free(status_msg);
-                } else {
-                    podcast_file->tofetch = FALSE;
-                    podcast_file->fetched = TRUE;
-                    status_msg = g_strdup_printf("Fetched '%s'", podcast_file->title);
-                    podcast_set_status(_(status_msg));
-                    g_free(status_msg);
-                }
+                status_msg = g_strdup_printf("%.2fMb", (double) podcast_file->size / 1024 / 1024);
+                transfer_total += podcast_file->size;
+                gtk_list_store_append (model, &iter);
+                gtk_list_store_set (model, &iter,
+                                    PCL_TITLE, podcast_file->title,
+                                    PCL_SIZE, status_msg,
+                                  //  PCL_PROGRESS, pending,
+                                    -1);
+                g_free(status_msg);
             }
             ++i;
         }
 
-    }
+//        gtk_tree_model_get_iter_first (GTK_TREE_MODEL(model), &iter);
+        i = 0;
+        while(i < g_list_length(podcast_files))
+        {
+            podcast_file = g_list_nth_data(podcast_files, i);
+            if (podcast_file->tofetch)
+            {
+//                gtk_list_store_set(model, &iter, PCL_PROGRESS, fetching);
 
-    gtkpod_statusbar_message(_("All podcasts fetched"));
+                filename = choose_filename(podcast_file->url);
+                status_msg = g_strdup_printf("Starting download of '%s' to '%s' (%ld bytes)", podcast_file->url, filename, podcast_file->size);
+                podcast_log(_(status_msg));
+                g_free(status_msg);
+                if (retrieve_url_to_path(podcast_file->url, filename))
+                {
+  //                  gtk_list_store_set(model, &iter, PCL_PROGRESS, "Failed");
+                    status_msg = g_strdup_printf("Could not fetch '%s'", podcast_file->title);
+                    podcast_log(_(status_msg));
+                    podcast_set_status(_(status_msg));
+                    g_free(status_msg);
+                } else {
+    //                gtk_list_store_set(model, &iter, PCL_PROGRESS, "Done");
+                    transfer_done += podcast_file->size;
+                    podcast_file->tofetch = FALSE;
+                    podcast_file->fetched = TRUE;
+                    g_free(podcast_file->local);
+                    podcast_file->local = g_strdup(filename);
+                    status_msg = g_strdup_printf("Fetched '%s'", podcast_file->title);
+                    podcast_log(_(status_msg));
+                    podcast_set_status(_(status_msg));
+                    g_free(status_msg);
+                }
+                g_free(filename);
+            }
+//            gtk_tree_model_iter_next (GTK_TREE_MODEL(model), &iter);
+    podcast_file_write_to_file();
+            ++i;
+        }
+
+    }
+    podcast_log(_("Completed fetch"));
+    podcast_set_status(_("Completed fetch"));
 
     podcast_fetch_in_progress = FALSE;
 }
 
+static gchar *choose_filename(gchar *url)
+{
+    gchar *working = g_strdup_printf("%s/%s", prefs_get_pc_dir(), g_strrstr(url, "/")+1);
+    return working;
+}
+
 static gint retrieve_url_to_path (gchar *url, gchar *path)
 {
-#if 1
-    podcast_set_cur_file_name(url);
-    gchar *to_run = g_strconcat("wget '", url, "' -O ", path, " ", NULL);
-    gint ret = system(to_run);
-    podcast_set_cur_file_name("");
-//    g_free(to_run);
-    return ret;
-#else
+gdk_threads_enter();
+podcast_set_cur_file_name(url);
+gdk_threads_leave();
+int ret = 0;
 
-//int socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+CURL *curl = curl_easy_init();
 
+if (curl)
+{
+FILE *fp = fopen(path, "w");
 
-#endif
+curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, update_progress);
+curl_easy_setopt(curl, CURLOPT_NOPROGRESS, FALSE);
+curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, NULL);
+curl_easy_setopt(curl, CURLOPT_URL, url);
+curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15);
+
+ret = curl_easy_perform(curl);
+
+fclose(fp);
+curl_easy_cleanup(curl);
+curl_global_cleanup();
+}
+return ret;
+}
+
+int update_progress(gpointer *data,
+                    double t, /* dltotal */
+                    double d, /* dlnow */
+                    double ultotal,
+                    double ulnow)
+{
+/*  printf("%d / %d (%g %%)\n", d, t, d*100.0/t);*/
+if (t == 0 || transfer_total == 0) return 0;
+if (d/t > 1 || (d+transfer_done)/transfer_total > 1) return 0;
+  gdk_threads_enter();
+  gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "file_progressbar")), d/t);
+  gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "total_progressbar")), (d+transfer_done)/transfer_total);
+  gchar *tmp = g_strdup_printf("%.2fMb of %.2fMb (%.0f%%), 12:32 remaining", (double) (d+transfer_done)/1024/1024, (double) transfer_total/1024/1024, 100*(d+transfer_done)/transfer_total);
+  gtk_progress_bar_set_text(GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "total_progressbar")), tmp);
+  g_free(tmp);
+
+  gdk_threads_leave();
+  return 0;
 }
 
 static gint parse_file_for_podcast_files(gchar *file)
@@ -391,14 +542,15 @@ static gint parse_file_for_podcast_files(gchar *file)
     /* This function will get all the information we want  *
      * but it does so ignoring all heirachies in the file. */
     FILE *fp = NULL;
-    gchar buf[1023], cur;
+    gchar buf[20000], cur;
     gint i = 0, found = 0;
     gboolean is_xml = FALSE, is_rss = FALSE;
-    gchar *tag = NULL, *info = NULL, *value = NULL, *status_msg = NULL;
+    gchar *tag = NULL, *info = NULL, *value = NULL, *status_msg = NULL, *local = NULL;
 
     gchar *title = NULL, *desc = NULL, *url = NULL, *artist = NULL;
     glong size;
     gboolean tofetch = TRUE, fetched = FALSE;
+    gboolean looking_for_cdata_end = FALSE;
 
     if((fp = fopen(file, "r")))
     {
@@ -408,36 +560,60 @@ static gint parse_file_for_podcast_files(gchar *file)
         {
             while ((cur = fgetc(fp)))
             {
-                if (cur != 0x20 && cur != 0x3E)           /* a ' ' or a '>' will denote the end of the tag name */
-                { buf[i++] = cur; }
-                else
-                { break; }
+                looking_for_cdata_end = FALSE;
+                if (cur != 0x20 && cur !=0x3E)            /* a space or a '>' will denote the end of the tag name */
+                {
+                    buf[i++] = cur;
+                    if (i == 8)
+                    {
+                        buf[i] = 0;
+                        if (strcasecmp(buf, "![CDATA[") == 0)
+                          {  looking_for_cdata_end = TRUE; i = 0; }
+                    }
+                } else {
+                    break;
+                }
+                if (looking_for_cdata_end) break;
             }
-            buf[i++] = 0;
-            tag = g_strdup(buf);                          /* retrieve the tag name from the buffer */
-            i = 0;
 
-            while (cur != 0x3E)                           // make our way to the end of the tag
+            if (!looking_for_cdata_end)
             {
-                cur = fgetc(fp);
-                buf[i++] = cur;
-            }
 
-            if (i > 0)
-            {
-                buf[i] = 0;
-                info = strdup(buf);
+                buf[i++] = 0;
+                tag = strdup(buf);                          /* retrieve the tag name from the buffer */
                 i = 0;
+
+                while (cur != 0x3E)                           // make our way to the end of the tag
+                {
+                    cur = fgetc(fp);
+                    buf[i++] = cur;
+                }
+
+                if (i > 0)
+                {
+                    buf[i] = 0;
+                    info = strdup(buf);
+                    i = 0;
+                }
+
             }
 
             while ((cur = fgetc(fp)))
             {
-                if (feof(fp) || i == 1023) break;         /* either we've reached the end of the file
-                                                           * or we've run out of space in the buffer */
-                if (cur != 0x3C)                          /* we're looking for the beginning of the next tag */
-                { buf[i++] = cur; }
+                if (feof(fp)) break;
+
+                if (!(cur == 0x3C && !looking_for_cdata_end))  /* if we're in a CDATA, we're looking for the end of a tag */
+                {
+                     buf[i++] = cur;
+                }
                 else
                 { break; }
+
+                if (buf[i-3] == 0x5D && buf[i-2] == 0x5D && buf[i-1] == 0x3E && looking_for_cdata_end)
+                {
+                    i -= 3;
+                    looking_for_cdata_end = 0;
+                }
             }
 
             buf[i++] = 0;
@@ -457,6 +633,8 @@ static gint parse_file_for_podcast_files(gchar *file)
                 tofetch = atoi(value);
             if (g_ascii_strcasecmp (tag, "gtkpod:fetched") == 0)
                 fetched = atoi(value);
+            if (g_ascii_strcasecmp (tag, "gtkpod:local") == 0)
+                { g_free(local);  local = g_strdup(value); }
             if (strcasecmp (tag, "enclosure") == 0)
             {
                 url = podcast_get_tag_attr(info, "url=");
@@ -471,7 +649,7 @@ static gint parse_file_for_podcast_files(gchar *file)
                     podcast_file_add(title, url,
                                      desc, artist,
                                      NULL, NULL,
-                                     size,
+                                     size, local,
                                      fetched, tofetch);
                     tofetch = TRUE; fetched = FALSE;
                     found++;
@@ -503,15 +681,15 @@ static gint parse_file_for_podcast_files(gchar *file)
 gchar *podcast_get_tag_attr(gchar *attrs, gchar *req)
 {
     char *ret = strstr(attrs, req) + strlen(req);
-    char *ret2 = strndup(ret, strstr(ret, " ") - ret);            /* unless malformed, the end of this tag
-                                                                reads: ' />'. That space has to be there */
+    char *ret2 = g_strndup(ret, strstr(ret, " ") - ret);            /* unless malformed, the end of this tag
+                                                                     reads: ' />'. That space has to be there */
     if ((*ret2) == 0x22 && *(ret2 + strlen(ret2) - 1) == 0x22)
     {
         ++ret2;
         *(ret2 + strlen(ret2) - 1) = 0x00;
     }
     //free(ret);
-    return strdup(ret2);
+    return g_strdup(ret2);
 }
 
 static void podcast_log (gchar *msg)
@@ -527,31 +705,50 @@ static void podcast_log (gchar *msg)
         time ( &rawtime );
         timeinfo = localtime ( &rawtime );
 
-        if (fp = fopen(filename, "a"))
+        fp = fopen(filename, "a");
+        if (fp)
         {
-            fprintf (fp, "%s: %s", asctime (timeinfo), msg);
+            fprintf (fp, "%s: %s\n", asctime (timeinfo), msg);
             fclose(fp);
         }
     }
 }
 
+gboolean
+on_podcast_window_delete_event         (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data)
+{
+  if (podcast_fetch_in_progress)
+  {
+/*    GtkWidget *dialog, *label;
+    dialog = gtk_dialog_new_with_buttons ("Notice",
+                                          NULL,
+                                          GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          GTK_STOCK_OK,
+                                          GTK_RESPONSE_NONE,
+                                          NULL);
+    label = gtk_label_new ("You cannot close this window until all downloads have finished or you click 'Abort All'");
+    g_signal_connect_swapped (dialog,
+                              "response", 
+                              G_CALLBACK (gtk_widget_destroy),
+                              dialog);
+    gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),
+                       label);
+    gtk_widget_show_all (dialog); */
+  }
+  return podcast_fetch_in_progress;
+}
 
 
-
-
-
-void
+static void
 podcast_window_create(void)
 {
-    GtkWidget *w = NULL;
-    GtkTooltips *tt;
-    GtkTooltipsData *tooltipsdata;
-
-    if (podcast_window)
-    {   /* prefs window already open -- raise to the top */
+/*    if (podcast_window)
+    {    podcast window already open -- raise to the top 
         gdk_window_raise (podcast_window->window);
         return;
-    }
+    } */
 
     podcast_window_xml = glade_xml_new (xml_file, "podcast_window", NULL);
     glade_xml_signal_autoconnect (podcast_window_xml);
@@ -560,15 +757,70 @@ podcast_window_create(void)
 
     g_return_if_fail (podcast_window);
 
+    create_podcast_list();
+
     gtk_widget_show(podcast_window);
 
 }
+
+static void create_podcast_list ()
+{
+    GtkCellRenderer     *renderer;
+    GtkTreeModel        *model;
+
+    podcast_list = GTK_TREE_VIEW(gtk_tree_view_new ());
+//    gtk_widget_set_size_request(GTK_WIDGET (podcast_list), 270, 105);
+
+    renderer = gtk_cell_renderer_text_new ();
+    gtk_tree_view_insert_column_with_attributes (podcast_list,
+                                                 -1,
+                                                 "Title",
+                                                 renderer,
+                                                 "text", PCL_TITLE,
+                                                 NULL);
+
+    renderer = gtk_cell_renderer_text_new ();
+    gtk_tree_view_insert_column_with_attributes (podcast_list,
+                                                 -1,
+                                                 "Size",
+                                                 renderer,
+                                                 "text", PCL_SIZE,
+                                                 NULL);
+
+/*    renderer = gtk_cell_renderer_text_new ();
+    gtk_tree_view_insert_column_with_attributes (podcast_list,
+                                                 -1,
+                                                 "Progress",
+                                                 renderer,
+                                                 "text", PCL_PROGRESS,
+                                                 NULL); */
+
+    model = GTK_TREE_MODEL(gtk_list_store_new (PCL_PROGRESS, G_TYPE_STRING, G_TYPE_STRING));
+    gtk_tree_view_set_model (GTK_TREE_VIEW (podcast_list), model);
+
+    /* The tree view has acquired its own reference to the
+     *  model, so we can drop ours. That way the model will
+     *  be freed automatically when the tree view is destroyed */
+
+    g_object_unref (model);
+
+    GtkWidget *podcast_list_window = glade_xml_get_widget (podcast_window_xml, "podcast_list_window");
+
+    gtk_container_add (GTK_CONTAINER (podcast_list_window), GTK_WIDGET(podcast_list));
+if(podcast_list_window)
+    gtk_widget_show_all (podcast_list_window);
+return;
+}
+
+
+
 
 void podcast_set_status(gchar *status)
 { gtk_label_set_text (GTK_LABEL (glade_xml_get_widget (podcast_window_xml, "status_label")), status); }
 
 void podcast_set_cur_file_name(gchar *text)
 {
-    gchar *tmp = g_strrstr(text, "/");
-    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "file_progressbar")), tmp);
+    gchar *working = g_strdup_printf("%s", g_strrstr(text, "/")+1);
+    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "file_progressbar")), working);
+    g_free(working);
 }

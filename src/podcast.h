@@ -30,8 +30,6 @@
 #ifndef __PODCAST_H__
 #define __PODCAST_H__
 
-//#include "podcast.c"
-
 struct podcast
 {
     gchar *name;                 /* of the podcast */
@@ -47,6 +45,7 @@ struct podcast_file
     gchar pubdate[14];           /* "YYYYMMDDHHMMSS" in UTC/GMT*/
     gchar fetchdate[14];         /* same as above */
     glong size;                  /* filesize */
+    gchar *local;                /* where the file is kept on the local system */
     gboolean fetched;            /* whether or not this podcast has been fetched */
     gboolean tofetch;            /* whether we should fetch this podcast */
 };
@@ -58,16 +57,24 @@ enum
   PC_SUBS_NUM_COLS
 };
 
+enum
+{
+  PCL_TITLE = 0,
+  PCL_SIZE,
+  PCL_PROGRESS,
+  PCL_NUM_COLS
+};
+
 gboolean podcast_fetch_in_progress;
 
-void podcast_write_from_store (GtkTreeStore *store);
-void podcast_read_into_store (GtkTreeStore *store);
+void podcast_write_from_store (GtkListStore *store);
+void podcast_read_into_store (GtkListStore *store);
 void podcast_read_from_file ();
 
 void podcast_file_add (gchar *title, gchar *url, 
                        gchar *desc, gchar *artist, 
                        gchar pubdate[14], gchar fetchdate[14], 
-                       glong size,
+                       glong size, gchar *local,
                        gboolean fetched, gboolean tofetch);
 void podcast_file_delete_by_url (gchar *url);
 gboolean podcast_already_have_url (gchar *url);
@@ -75,12 +82,15 @@ GList *podcast_file_find_to_fetch ();
 void podcast_fetch ();
 void podcast_fetch_thread ();
 
-static gint retrieve_url_to_path (gchar *url, gchar *path);
-static gint parse_file_for_podcast_files(gchar *file);
 gchar *podcast_get_tag_attr(gchar *attrs, gchar *req);
-static void podcast_log (gchar *msg);
 
 void podcast_set_status(gchar *status);
 void podcast_set_cur_file_name(gchar *text);
+
+int update_progress(gpointer *data,
+                    double t, /* dltotal */
+                    double d, /* dlnow */
+                    double ultotal,
+                    double ulnow);
 
 #endif

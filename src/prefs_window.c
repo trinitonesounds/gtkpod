@@ -1052,7 +1052,7 @@ prefs_window_ok (void)
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
     prefs_set_size_prefs (defx, defy);
 
-    GtkTreeStore *store = GTK_TREE_STORE(gtk_tree_view_get_model(pc_subs_list));
+    GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list));
     podcast_write_from_store(store);
 
     /* close the window */
@@ -1100,7 +1100,7 @@ prefs_window_apply (void)
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
     prefs_set_size_prefs (defx, defy);
 
-    GtkTreeStore *store = GTK_TREE_STORE(gtk_tree_view_get_model(pc_subs_list));
+    GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list));
     podcast_write_from_store(store);
 }
 
@@ -1129,7 +1129,7 @@ void create_subs_treeview ()
                                                  NULL);
 
     model = GTK_TREE_MODEL(gtk_list_store_new (PC_SUBS_NUM_COLS, G_TYPE_STRING, G_TYPE_STRING));
-    podcast_read_into_store (GTK_TREE_STORE(model));
+    podcast_read_into_store (GTK_LIST_STORE(model));
     gtk_tree_view_set_model (GTK_TREE_VIEW (pc_subs_list), model);
 
     /* The tree view has acquired its own reference to the

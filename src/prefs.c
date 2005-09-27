@@ -104,8 +104,6 @@
 #include "prefs.h"
 #include "podcast.h"
 
-// #include "podcast.c"
-
 /* static function declarations */
 static void prefs_write_hash_values (FILE *fp);
 
@@ -295,7 +293,7 @@ struct cfg *cfg_new(void)
     mycfg->mserv_report_probs = TRUE;
     mycfg->mserv_username = g_strdup ("");
 
-    mycfg->pc_dir = g_strdup ("~/.gtkpod/podcasts");
+    mycfg->pc_dir = g_strdup_printf ("%s/podcasts", prefs_get_cfgdir());
     mycfg->pc_del_age = FALSE;
     mycfg->pc_del_age_val = 1;
     mycfg->pc_del_copied = FALSE;
@@ -1127,6 +1125,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
   }
 
   podcast_read_from_file();
+  podcast_file_read_from_file();
 
   menu = GTK_CHECK_MENU_ITEM (glade_xml_get_widget (main_window_xml, "offline_menu"));
   gtk_check_menu_item_set_active (menu, prefs_get_offline ());
