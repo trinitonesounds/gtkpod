@@ -2751,7 +2751,12 @@ void prefs_set_pc_dir (const gchar *str)
     if (str)
     {
         g_free (cfg->pc_dir);
-        cfg->pc_dir = g_strdup (str);
+        if (*(str + strlen(str) - 1) == 0x2F)
+        {
+            cfg->pc_dir = g_strndup (str, strlen(str) - 1);
+        } else {
+            cfg->pc_dir = g_strdup (str);
+        }
     }
 }
 
