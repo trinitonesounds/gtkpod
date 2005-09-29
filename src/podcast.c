@@ -357,10 +357,9 @@ gint podcast_file_write_to_file()
 
 void podcast_fetch ()
 {
-    podcast_window_create();
     //pthread_create(&podcast_fetch_tid, NULL, &podcast_fetch_thread, NULL);
-    //podcast_fetch_thread();
-    g_thread_create(&podcast_fetch_thread, NULL, FALSE, NULL);
+    podcast_fetch_thread();
+    //g_thread_create(podcast_fetch_thread, NULL, FALSE, NULL);
 }
 
 void podcast_fetch_thread(gpointer data)
@@ -372,6 +371,12 @@ void podcast_fetch_thread(gpointer data)
     guint i = 0;
     gint found = 0;
     gchar *status_msg = NULL, *cfgdir = NULL, *filename = NULL;
+
+    gdk_threads_enter();
+    podcast_window_create();
+    gdk_threads_leave();
+
+    while (gtk_events_pending())  gtk_main_iteration();
 
     if (g_list_length(podcasts) == 0)
     {
@@ -412,6 +417,8 @@ void podcast_fetch_thread(gpointer data)
         g_free(filename);
         i = 0;
 
+        gdk_threads_enter();
+
         GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model(podcast_list));
         GtkTreeIter iter;
         gtk_list_store_clear (model);
@@ -435,6 +442,9 @@ void podcast_fetch_thread(gpointer data)
             }
             ++i;
         }
+
+        gdk_threads_leave();
+        while (gtk_events_pending())  gtk_main_iteration();
 
 //        gtk_tree_model_get_iter_first (GTK_TREE_MODEL(model), &iter);
         i = 0;
@@ -496,6 +506,7 @@ gdk_threads_leave();
 int ret = 0;
 
 CURL *curl = curl_easy_init();
+CURLM *curlm = curl_multi_init();
 
 if (curl)
 {
@@ -505,10 +516,15 @@ curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, update_progress);
 curl_easy_setopt(curl, CURLOPT_NOPROGRESS, FALSE);
 curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, NULL);
 curl_easy_setopt(curl, CURLOPT_URL, url);
+curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15);
 
-ret = curl_easy_perform(curl);
+curl_multi_add_handle(curlm, curl);
+
+int running_handles = 1;
+while (running_handles > 0) {curl_multi_perform(curlm, &running_handles);  while (gtk_events_pending())  gtk_main_iteration(); }
+
 
 fclose(fp);
 curl_easy_cleanup(curl);
@@ -534,6 +550,7 @@ if (d/t > 1 || (d+transfer_done)/transfer_total > 1) return 0;
   g_free(tmp);
 
   gdk_threads_leave();
+    while (gtk_events_pending())  gtk_main_iteration();
   return 0;
 }
 
@@ -683,6 +700,11 @@ gchar *podcast_get_tag_attr(gchar *attrs, gchar *req)
     char *ret = strstr(attrs, req) + strlen(req);
     char *ret2 = g_strndup(ret, strstr(ret, " ") - ret);            /* unless malformed, the end of this tag
                                                                      reads: ' />'. That space has to be there */
+    if ((*ret2) == 0x27 && *(ret2 + strlen(ret2) - 1) == 0x27)
+    {
+        ++ret2;
+        *(ret2 + strlen(ret2) - 1) = 0x00;
+    }
     if ((*ret2) == 0x22 && *(ret2 + strlen(ret2) - 1) == 0x22)
     {
         ++ret2;
@@ -816,7 +838,12 @@ return;
 
 
 void podcast_set_status(gchar *status)
-{ gtk_label_set_text (GTK_LABEL (glade_xml_get_widget (podcast_window_xml, "status_label")), status); }
+{
+    gdk_threads_enter();
+    gtk_label_set_text (GTK_LABEL (glade_xml_get_widget (podcast_window_xml, "status_label")), status);
+    gdk_threads_leave();
+    while (gtk_events_pending())  gtk_main_iteration();
+}
 
 void podcast_set_cur_file_name(gchar *text)
 {

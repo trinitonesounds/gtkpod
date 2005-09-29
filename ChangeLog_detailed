@@ -1,3 +1,10 @@
+2005-09-29 Alexander Dutton <asdutton@users.sourceforge.net>
+
+	 * podcast.c: removed dependence on gdk_threads_init() as
+	   fetching is now done without threads. Also set up to follow
+	   Location: headers (as used by libsyn.com). Now ready for
+	   integration with the rest of gtkpod.
+
 2005-09-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * mp3file.c: fixed incorrect reading of lame replay gain
