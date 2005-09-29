@@ -69,6 +69,9 @@ dnl Check for libid3tag
 AC_CHECK_LIB([id3tag], [id3_frame_field], ,
              AC_MSG_ERROR([*** id3tag >= 0.15 lib not found (0.14 will not work!)]))
 
+AC_CHECK_LIB([curl],  [curl_easy_init], ,
+	     AC_MSG_ERROR([*** curl lib not found!]))
+
 dnl Check for libmp4v2 (and mp4.h)
 AC_SEARCH_LIBS(MP4FileInfo,
 	["mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++"],
@@ -107,6 +110,7 @@ Configuration for $PACKAGE $VERSION :
  GTK2 version .........: `pkg-config gtk+-2.0 --modversion`
  GLib2/GThread version : `pkg-config gthread-2.0 --modversion`
  id3tag lib ...........: yes
+ curl lib .............: yes
  mp4v2 ................: $have_mp4v2
  NLS/gettext ..........: $USE_NLS
 

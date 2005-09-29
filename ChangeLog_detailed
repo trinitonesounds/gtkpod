@@ -1,8 +1,14 @@
+2005-09-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * mp3file.c: fixed incorrect reading of lame replay gain
+
 2005-09-29 Alexander Dutton <asdutton@users.sourceforge.net>
+
          * prefs.c: added validation code to prefs_set_pc_dir() to
            remove any trailing slashes from the podcast directory.
 
 2005-09-27 Alexander Dutton <asdutton@users.sourceforge.net>
+
          * podcast.c: added podcast_window, which displays progress.
            Code behind it fetches podcasts from XML files which are
            behaving (ie conform to Apple XML schema at
@@ -10,6 +16,10 @@
            being worked on. At present gdk_threads_init() at main.c:65
            needs commenting in for things to work, breaking other stuff.
            I'll look into this!
+
+2005-09-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * configure.in: check for libcurl (Jerry Dueitt)
 
 2005-09-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

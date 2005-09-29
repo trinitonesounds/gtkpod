@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 21:55:21 jcs>
+/* Time-stamp: <2005-09-28 22:56:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1359,7 +1359,10 @@ static gint lame_vcmp(gchar a[5], gchar b[5]) {
 }
 
 
-static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
+/* buf[] must be declared unsigned -- otherwise the casts, shifts and
+   additions below produce funny results */             
+static void read_lame_replaygain(unsigned char buf[],
+				 Track *track, int gain_adjust) {
 	char oc, nc;
 	gint gain;
 	ExtraTrackData *etr;
@@ -1367,6 +1370,13 @@ static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
 	g_return_if_fail (track);
 	etr = track->userdata;
 	g_return_if_fail (etr);
+
+	/* buf[0] and buf[1] are a bit field:
+	   3 bits: name  (mask: 0xe0 = 11100000)
+	   3 bits: originator (mask: 0x1c = 00011100)
+	   1 bit: negative if set (mask: 0x02 = 00000010)
+	   9 bits: value
+	*/
 
 	/* check originator */
 	oc = (buf[0] & 0x1c) >> 2;
@@ -1376,7 +1386,7 @@ static void read_lame_replaygain(char buf[], Track *track, int gain_adjust) {
 	nc = buf[0] & 0xe0;
 	if (!((nc == 0x20) || (nc == 0x40))) return;
 	
-	gain = ((buf[0] & 0x1) << 8) + buf[1];
+	gain = ((((guint)buf[0]) & 0x1) << 8) + buf[1];
 	
 	/* This would be a value of -0.
 	 * That value however is illegal by current standards and reserved for
