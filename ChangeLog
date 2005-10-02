@@ -44,8 +44,8 @@ gtkpod V0.95.CVS
        BUGFIX: Copying playlists by drag and drop could confuse smart
        playlists referencing these playlists. Fixed.
 
-After copying playlists by drag and drop, smart
-       playlists refering to these playlists could become confused.
+       After copying playlists by drag and drop, smart playlists
+       refering to these playlists could become confused.
 
 gtkpod V0.94.0
        NEW FEATURE: stable sorting of track view. This allows you, for

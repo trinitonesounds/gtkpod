@@ -35,9 +35,6 @@ PKG_CHECK_MODULES(PACKAGE, [gtk+-2.0 >= 2.4.0 gthread-2.0 >= 0.14.0 glib-2.0 > 2
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
 
-dnl used in itunesdb.c to figure out whether we run gtkpod
-AC_DEFINE_UNQUOTED([ITDB_USE_ABBREV], 1, [Define this to have itdb provide abbreviations to its types])
-
 dnl we need 'flex'
 AM_PROG_LEX
 

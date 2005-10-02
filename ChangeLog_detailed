@@ -1,4 +1,13 @@
-2005-09-29 Alexander Dutton <asdutton@users.sourceforge.net>
+2005-10-02 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file_itunesdb.c: add podcasts list when creating empty
+           databases. Add podcasts list when importing database
+           without podcasts. Merge podcasts list when importing
+           database with podcasts list present. NOTE: special
+           behaviour of podcasts (i.e. not being listed in MPL and
+           consequences thereof) is not yet addressed.
+
+2005-09-30 Alexander Dutton <asdutton@users.sourceforge.net>
 
 	 * podcast.c: removed dependence on gdk_threads_init() as
 	   fetching is now done without threads. Also set up to follow

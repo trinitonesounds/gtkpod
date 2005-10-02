@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-21 22:14:00 jcs>
+/* Time-stamp: <2005-10-02 23:19:40 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -644,7 +644,23 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 		g_return_val_if_fail (newtr, (release_widgets(), NULL));
 		glm->data = newtr;
 	    }
-	    itdb_playlist_add (itdb, duppl, -1);
+	    /* if it's the podcasts list, don't add the list again if
+	       it already exists, but only the members. */
+	    if (itdb_playlist_is_podcasts (duppl) &&
+		itdb_playlist_podcasts (itdb))
+	    {
+		Playlist *podcasts = itdb_playlist_podcasts (itdb);
+		for (glm=duppl->members; glm; glm=glm->next)
+		{
+		    g_return_val_if_fail (glm->data, (release_widgets(), NULL));
+		    itdb_playlist_add_track (podcasts, glm->data, -1);
+		}
+		itdb_playlist_free (duppl);
+	    }
+	    else
+	    {
+		itdb_playlist_add (itdb, duppl, -1);
+	    }
 	    gl = gl->next;
 	}
 	g_hash_table_destroy (track_hash);
@@ -1391,6 +1407,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   while (widgets_blocked && gtk_events_pending ())
       gtk_main_iteration ();
 
+
   if (success && !prefs_get_offline () &&
       (itdb->usertype & GP_ITDB_TYPE_IPOD))
   {   /* write to the iPod */
@@ -1405,6 +1422,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 	  g_error_free (error);
 	  error = NULL;
       }
+
       if (success)
       {   /* write shuffle data */
 	  if (!itdb_shuffle_write (itdb, NULL, &error))

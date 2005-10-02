@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 13:17:15 jcs>
+/* Time-stamp: <2005-10-02 19:15:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -704,7 +704,7 @@ void init_data (GtkWidget *window)
 		    pl = gp_playlist_new (name, FALSE);
 		    g_free (name);
 		    g_free (nm);
-		    pl->type = ITDB_PL_TYPE_MPL;
+		    itdb_playlist_set_mpl (pl);
 		    itdb_playlist_add (itdb, pl, -1);
 
 		    eitdb->data_changed = FALSE;
@@ -715,6 +715,17 @@ void init_data (GtkWidget *window)
 		    g_free (filename);
 		    g_free (mountpoint);
 		    g_free (offline_filename);
+		}
+
+		/* Check if Podcast Playlist is present and add if not */
+		if (!itdb_playlist_podcasts (itdb))
+		{
+		    pl = gp_playlist_new (_("Podcasts"), FALSE);
+		    itdb_playlist_set_podcasts (pl);
+		    itdb_playlist_add (itdb, pl, -1);
+		    eitdb = itdb->userdata;
+		    g_return_if_fail (eitdb);
+		    eitdb->data_changed = FALSE;
 		}
 
 		/* add to the display */
@@ -743,7 +754,7 @@ void init_data (GtkWidget *window)
 	    cfgdir, "iTunesDB", NULL);
 	gp_itdb_add (itdb, -1);
 	pl = gp_playlist_new ("gtkpod", FALSE);
-	pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
+	itdb_playlist_set_mpl (pl);   /* MPL! */
 	gp_playlist_add (itdb, pl, -1);
 	g_return_if_fail (itdb->userdata);
 	eitdb->data_changed = FALSE;
@@ -757,6 +768,7 @@ void init_data (GtkWidget *window)
 	    itdb = gp_import_itdb (NULL, GP_ITDB_TYPE_LOCAL,
 				   NULL, NULL, fn);
 	}
+
 	if (!itdb)
 	{   /* local database does not exist or cannot be loaded */
 	    itdb = gp_itdb_new ();
@@ -765,9 +777,21 @@ void init_data (GtkWidget *window)
 	    itdb->usertype = GP_ITDB_TYPE_LOCAL;
 	    itdb->filename = g_strdup (fn);
 	    pl = gp_playlist_new (_("Local"), FALSE);
-	    pl->type = ITDB_PL_TYPE_MPL;  /* MPL! */
+	    itdb_playlist_set_mpl (pl);   /* MPL! */
 	    itdb_playlist_add (itdb, pl, -1);
 	}
+
+	/* Check if Podcast Playlist is present and add if not */
+	if (!itdb_playlist_podcasts (itdb))
+	{
+	    Playlist *pl = gp_playlist_new (_("Podcasts"), FALSE);
+	    itdb_playlist_set_podcasts (pl);
+	    itdb_playlist_add (itdb, pl, -1);
+	    eitdb = itdb->userdata;
+	    g_return_if_fail (eitdb);
+	    eitdb->data_changed = FALSE;
+	}
+
 	gp_itdb_add (itdb, -1);
 	g_free (fn);
     }
