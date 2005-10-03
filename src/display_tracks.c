@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-26 19:50:27 jcs>
+/* Time-stamp: <2005-10-03 23:17:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -59,6 +59,7 @@ static const gint READOUT_COL = 0;
 static gint (*string_compare_func) (const gchar *str1, const gchar *str2) = compare_string;
 
 static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint position);
+static TM_item tm_lookup_col_id (GtkTreeViewColumn *column);
 
 /* Drag and drop definitions */
 static GtkTargetEntry tm_drag_types [] = {
@@ -75,7 +76,8 @@ static GtkTargetEntry tm_drop_types [] = {
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 
-
+/* prefs strings */
+const gchar *TM_PREFS_SEARCH_COLUMN = "tm_prefs_search_column";
 
 
 /* ---------------------------------------------------------------- */
@@ -608,7 +610,6 @@ on_track_treeview_key_release_event     (GtkWidget       *widget,
     }
     return FALSE;
 }
-
 
 /* ---------------------------------------------------------------- */
 /* Section for track display                                        */
@@ -1757,11 +1758,32 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   case TM_COLUMN_PODCASTURL:
   case TM_COLUMN_PODCASTRSS:
   case TM_COLUMN_SUBTITLE:
+  case TM_COLUMN_PC_PATH:
+  case TM_COLUMN_YEAR:
+  case TM_COLUMN_IPOD_PATH:
+  case TM_COLUMN_COMPILATION:
     cmp = (compare_string_start_case_insensitive (
 	  track_get_item (track1, TM_to_T (column)),
 	  key) != 0);
-      break;
-  default:
+    break;
+  case TM_COLUMN_TRACK_NR:
+  case TM_COLUMN_IPOD_ID:
+  case TM_COLUMN_TRANSFERRED:
+  case TM_COLUMN_SIZE:
+  case TM_COLUMN_TRACKLEN:
+  case TM_COLUMN_BITRATE:
+  case TM_COLUMN_PLAYCOUNT:
+  case TM_COLUMN_RATING:
+  case TM_COLUMN_TIME_PLAYED:
+  case TM_COLUMN_TIME_MODIFIED:
+  case TM_COLUMN_VOLUME:
+  case TM_COLUMN_CD_NR:
+  case TM_COLUMN_TIME_ADDED:
+  case TM_COLUMN_SOUNDCHECK:
+  case TM_COLUMN_SAMPLERATE:
+  case TM_COLUMN_BPM:
+  case TM_COLUMN_TIME_RELEASED:
+  case TM_NUM_COLUMNS:
       g_warning ("Programming error: tm_search_equal_func: no sort method for column %d\n", column);
       break;
   }
@@ -1843,7 +1865,10 @@ static void tm_unsort (void)
 	prefs_set_tm_sort (SORT_NONE);
 	if (!BROKEN_GTK_TREE_SORT)
 	{
-	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), FALSE);
+/* no need to comment this out -- searching still works, but for lack
+   of a ctrl-g only the first occurence will be found */
+/*	    gtk_tree_view_set_enable_search (GTK_TREE_VIEW
+ * (track_treeview), FALSE);*/ 
 	    gtk_tree_sortable_set_sort_column_id
 		(GTK_TREE_SORTABLE (model),
 		 GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
@@ -1856,6 +1881,59 @@ static void tm_unsort (void)
 	}
 	tm_sort_counter (-1);
     }
+}
+
+
+static void tm_set_search_column (gint newcol)
+{
+/*     printf ("track_treeview: %p, col: %d\n", track_treeview, newcol); */
+    g_return_if_fail (track_treeview);
+
+    gtk_tree_view_set_search_column (GTK_TREE_VIEW (track_treeview),
+				       newcol);
+    switch (newcol)
+    {
+    case TM_COLUMN_TITLE:
+    case TM_COLUMN_ALBUM:
+    case TM_COLUMN_GENRE:
+    case TM_COLUMN_COMPOSER:
+    case TM_COLUMN_COMMENT:
+    case TM_COLUMN_FILETYPE:
+    case TM_COLUMN_GROUPING:
+    case TM_COLUMN_ARTIST:
+    case TM_COLUMN_CATEGORY:
+    case TM_COLUMN_DESCRIPTION:
+    case TM_COLUMN_PODCASTURL:
+    case TM_COLUMN_PODCASTRSS:
+    case TM_COLUMN_SUBTITLE:
+    case TM_COLUMN_PC_PATH:
+    case TM_COLUMN_YEAR:
+    case TM_COLUMN_IPOD_PATH:
+    case TM_COLUMN_COMPILATION:
+	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), TRUE);
+	break;
+    case TM_COLUMN_TRACK_NR:
+    case TM_COLUMN_IPOD_ID:
+    case TM_COLUMN_TRANSFERRED:
+    case TM_COLUMN_SIZE:
+    case TM_COLUMN_TRACKLEN:
+    case TM_COLUMN_BITRATE:
+    case TM_COLUMN_PLAYCOUNT:
+    case TM_COLUMN_RATING:
+    case TM_COLUMN_TIME_PLAYED:
+    case TM_COLUMN_TIME_MODIFIED:
+    case TM_COLUMN_VOLUME:
+    case TM_COLUMN_CD_NR:
+    case TM_COLUMN_TIME_ADDED:
+    case TM_COLUMN_SOUNDCHECK:
+    case TM_COLUMN_SAMPLERATE:
+    case TM_COLUMN_BPM:
+    case TM_COLUMN_TIME_RELEASED:
+    case TM_NUM_COLUMNS:
+	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), FALSE);
+	break;
+    }
+    prefs_set_int_value (TM_PREFS_SEARCH_COLUMN, newcol);
 }
 
 
@@ -1905,30 +1983,8 @@ static void tm_sort_column_changed (GtkTreeSortable *ts,
 	prefs_set_tm_sort (order);
     }
     prefs_set_tm_sortcol (newcol);
-    if (track_treeview) {
-      gtk_tree_view_set_search_column (GTK_TREE_VIEW (track_treeview), newcol);
-      switch (newcol)
-	{
-	case TM_COLUMN_TITLE:
-	case TM_COLUMN_ALBUM:
-	case TM_COLUMN_GENRE:
-	case TM_COLUMN_COMPOSER:
-	case TM_COLUMN_COMMENT:
-	case TM_COLUMN_FILETYPE:
-	case TM_COLUMN_GROUPING:
-	case TM_COLUMN_ARTIST:
-	case TM_COLUMN_CATEGORY:
-	case TM_COLUMN_DESCRIPTION:
-	case TM_COLUMN_PODCASTURL:
-	case TM_COLUMN_PODCASTRSS:
-	case TM_COLUMN_SUBTITLE:
-	  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), TRUE);
-	  break;
-	default:
-	  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), FALSE);
-	  break;
-	}
-    }
+
+    tm_set_search_column (newcol);
 
     if(prefs_get_tm_autostore ())  tm_rows_reordered ();
     sort_window_update ();
@@ -2214,6 +2270,17 @@ tm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 static void
 tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
 {
+    GtkTreeView *treeview = gtk_tree_selection_get_tree_view (selection);
+    GtkTreePath *path;
+    GtkTreeViewColumn *column;
+    TM_item col_id;
+
+    gtk_tree_view_get_cursor (treeview, &path, &column);
+    if (path)
+    {
+	col_id = tm_lookup_col_id (column);
+	if (col_id != -1)  tm_set_search_column (col_id);
+    }
     info_update_track_view_selected ();
 }
 
@@ -2224,6 +2291,7 @@ void tm_create_treeview (void)
   GtkTreeModel *model = NULL;
   GtkWidget *track_window = glade_xml_get_widget (main_window_xml, "track_window");
   GtkTreeSelection *select;
+  gint col;
   GtkWidget *stv = gtk_tree_view_new ();
 
   /* create tree view */
@@ -2319,6 +2387,18 @@ void tm_create_treeview (void)
   g_signal_connect (G_OBJECT (model), "sort-column-changed",
 		    G_CALLBACK (tm_sort_column_changed),
 		    (gpointer)0);
+
+  /* initialize sorting */
+  tm_sort (prefs_get_tm_sortcol (), prefs_get_tm_sort ());
+  /* set correct column for typeahead */
+  if (prefs_get_int_value (TM_PREFS_SEARCH_COLUMN, &col))
+  {
+      tm_set_search_column (col);
+  }
+  else
+  {   /* reasonable default */
+      tm_set_search_column (TM_COLUMN_TITLE);
+  }
 }
 
 
@@ -2356,6 +2436,23 @@ void tm_update_default_sizes (void)
 				    gtk_tree_view_column_get_width (col));
 	}
     }
+}
+
+
+/* get the TM_ITEM column id for @column. Returns -1 if column could
+   not be found */
+static TM_item tm_lookup_col_id (GtkTreeViewColumn *column)
+{
+    gint i;
+
+    if (column)
+    {
+	for (i=0; i<TM_NUM_COLUMNS; ++i)
+	{
+	    if (column == tm_columns[i]) return i;
+	}
+    }
+    return -1;
 }
 
 

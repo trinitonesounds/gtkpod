@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-14 22:12:11 jcs>
+/* Time-stamp: <2005-10-03 22:10:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -96,6 +96,9 @@ void tm_enable_disable_view_sort (gboolean enable);
 #define DND_GTKPOD_TRACKLIST_TYPE "application/gtkpod-tracklist"
 #define DND_GTKPOD_TM_PATHLIST_TYPE "application/gtkpod-tm_pathlist"
 #define DND_GTKPOD_PLAYLISTLIST_TYPE "application/gtkpod-playlistlist"
+
+/* Prefs strings */
+extern const gchar *TM_PREFS_SEARCH_COLUMN;
 
 struct asf_data
 {

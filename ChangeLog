@@ -7,7 +7,10 @@ gtkpod V0.96.CVS
        http://www.nickpiper.co.uk/)
 
        NEW: type-ahead search functionality. Thanks to Nick Piper,
-       http://www.nickpiper.co.uk/
+       http://www.nickpiper.co.uk/ -- please note that the list view
+       you want to search in needs to have keyboard focus. Selection
+       of the search column is done by clicking anywhere inside the
+       column.
 
        IMPROVEMENT: added comment, category, description, podcast url,
        podcast rss, subtitle fields and release date to displayable

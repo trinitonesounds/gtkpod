@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 13:17:16 jcs>
+/* Time-stamp: <2005-10-03 22:20:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -84,8 +84,7 @@ void display_create (void)
     display_show_hide_tooltips ();
     /* change standard g_print () handler */
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
-    /* initialize sorting */
-    tm_sort (prefs_get_tm_sortcol (), prefs_get_tm_sort ());
+
     /* activate the delete menus correctly */
     display_adjust_delete_menus ();
     /* activate/deactive the menu item 'check iPod' */

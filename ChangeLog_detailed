@@ -1,5 +1,13 @@
 2005-10-02 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * display_songs.c: allow to select interactive typeahead
+           search row by clicking on the row -- it is no longer
+           necessary to click in the header and initiate sorting.
+	   Please note that the Treeview needs to have keyboard
+           focus.
+
+2005-10-02 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * file_itunesdb.c: add podcasts list when creating empty
            databases. Add podcasts list when importing database
            without podcasts. Merge podcasts list when importing
