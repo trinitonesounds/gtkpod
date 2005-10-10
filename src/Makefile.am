@@ -25,18 +25,6 @@ BUILT_SOURCES = \
 ## so this should be portable
 LEX_OUTPUT_ROOT = lex.yy
 
-# itdb is a simple test program for reading and writing the iTunesDB.
-# Use it as an example to learn how to read and write the iTunesDB
-# in your own project.
-#itdb_SOURCES = \
-#	itdb_main.c \
-#	itdb.h \
-#	itdb_itunesdb.c \
-#	itdb_playlist.c \
-#	itdb_private.h \
-#	itdb_track.c
-#
-#itdb_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) @LIBOBJS@
 
 gtkpod_SOURCES = \
     charset.c charset.h \

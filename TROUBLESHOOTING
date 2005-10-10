@@ -13,7 +13,7 @@ Contents:
   is not working as expected.
 
 - The following error message is displayed when accessing the device
-  (Markus Gaugusch):
+  (Markus Gaugusch, Justin Thiessen):
      ieee1394: sbp2: aborting sbp2 command
      Test Unit Ready 00 00 00 00 00
 
@@ -27,6 +27,8 @@ Contents:
 - Calendar entries mixed up
 
 - m4a files created by faac cannot be added by gtkpod (gentoo)
+
+- gtkpod crashes when reading the iTunesDB (Fedora)
 
 ----------------------------------------------------------------------
 
@@ -72,17 +74,33 @@ on which way you use to mount the iPod -- see the README file for more
 details.
 
 ----------------------------------------------------------------------
-The following error message is displayed when accessing the device
-(Markus Gaugusch):
+The following error message is displayed when accessing the device:
 
 ieee1394: sbp2: aborting sbp2 command
 Test Unit Ready 00 00 00 00 00
 
 Solution:
 
+(Markus Gaugusch):
 It is possible that hotplug and the "sg" support are not working well
 together. Try disabling "sg" support in the kernel configuration or
 unload the "sg" module if you are using modules.
+
+(Justin Thiessen):
+Forcing the sbp2 module to serialized I/O seems (so far) to have
+solved the problem.
+
+Ref.:
+------
+http://www.netzwerk-aktiv.com/pub/doc/newsletters/linux1394-user/html/1676.html
+http://www.ubuntuforums.org/printthread.php?t=6678
+http://66.102.7.104/search?q=cache:Xh_gu43y6w8J:themikecam.com/newmikecam/blog/index.php/geek/2005/+ipod+serialize_io&hl=en
+
+Looks like the driver is going to be set to default to serialized I/O
+in kernel 2.6.14, anyways.
+
+http://linuxtoday.com/developer/2005093001026NWKNDV
+
 
 ----------------------------------------------------------------------
 When connecting an iPod via USB to a 2.6 kernel machine the iPod will
@@ -155,3 +173,11 @@ files. The problem could be solved under gentoo by using version 1.24.
 In order to make error tracking easier, more detailled error messages
 are displayed when tracks could not be added for any reason starting
 with version 0.91-CVS of gtkpod.
+
+
+----------------------------------------------------------------------
+gtkpod crashes when reading the iTunesDB (Fedora)
+
+It appears that crashes were observed with kernel version
+2.6.11-1.35_FC3. An upgrade to 2.6.12-1.1376_FC3 got rid of the
+problem. This was with gtkpod-0.94.0 and Athlon64 3000+. 

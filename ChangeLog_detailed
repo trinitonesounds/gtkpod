@@ -1,3 +1,9 @@
+2005-10-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file.c: fixed possible segfault in update_tracks() that can
+           occur when updating tracks that become duplicates through
+           updating. Thanks to Thorsten Brehm.
+
 2005-10-02 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * display_songs.c: allow to select interactive typeahead

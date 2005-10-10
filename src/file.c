@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 13:17:15 jcs>
+/* Time-stamp: <2005-10-10 22:25:26 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -939,14 +939,20 @@ void update_tracks (GList *selected_tracks)
     block_widgets ();
     for (gl=selected_tracks; gl; gl=gl->next)
     {
-	gchar *buf;
 	Track *track = gl->data;
 	g_return_if_fail (track);
-	buf = g_strdup_printf (_("Updating %s"),
-			       get_track_info (track, TRUE));
-	gtkpod_statusbar_message (buf);
-	g_free (buf);
-	update_track_from_file (track->itdb, track);
+	g_return_if_fail (track->itdb);
+	/* update_track_from_file() may possibly remove tracks from
+	   the database, so we need to check if the track we are
+	   referencing to is still valid */
+	if (g_list_find (track->itdb->tracks, track))
+	{
+	    gchar *buf = g_strdup_printf (_("Updating %s"),
+					  get_track_info (track, TRUE));
+	    gtkpod_statusbar_message (buf);
+	    g_free (buf);
+	    update_track_from_file (track->itdb, track);
+	}
     }
     release_widgets ();
     /* display log of non-updated tracks */
