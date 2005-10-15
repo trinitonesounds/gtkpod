@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-11 00:35:23 jcs>
+/* Time-stamp: <2005-10-16 01:59:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2057,7 +2057,8 @@ gchar* get_file_name(Track *tr)
     etr = tr->userdata;
     g_return_val_if_fail (etr, result);
 
-    result = get_file_name_on_ipod (tr);
+    if (tr->itdb)
+	result = get_file_name_on_ipod (tr);
     if(!result &&
        (etr->pc_path_locale) && (strlen(etr->pc_path_locale) > 0))
     {

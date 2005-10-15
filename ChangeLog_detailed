@@ -1,5 +1,9 @@
 2005-10-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * file.c: (get_file_name) fixed assertion when adding files.
+
+2005-10-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * file.c: fixed possible segfault in update_tracks() that can
            occur when updating tracks that become duplicates through
            updating. Thanks to Thorsten Brehm.
