@@ -1151,7 +1151,7 @@ void on_pc_add_button_clicked          (GtkButton *button,
                                         gpointer user_data)
 {
 
-    gchar *text[1];
+    static gchar *text[1];
     GtkEditable *w = GTK_EDITABLE(glade_xml_get_widget (prefs_window_xml, "pc_name"));
     text[0] = gtk_editable_get_chars(w, 0, -1);
     gtk_editable_delete_text(w, 0, -1);

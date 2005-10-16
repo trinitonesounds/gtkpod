@@ -60,9 +60,17 @@ enum
 enum
 {
   PCL_TITLE = 0,
+  PCL_URL,
   PCL_SIZE,
   PCL_PROGRESS,
   PCL_NUM_COLS
+};
+
+enum
+{
+  ABORT_SELECTED = 0,
+  ABORT_CURRENT,
+  ABORT_ALL
 };
 
 gboolean podcast_fetch_in_progress;

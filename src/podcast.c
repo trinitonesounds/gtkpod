@@ -74,6 +74,8 @@ static iTunesDB *get_itdb_local();
 
 static void podcast_window_create(void);
 
+static void abort_fetch_response(GtkDialog *dialog, gint arg1, gpointer user_data);
+static void abort_fetch (gint what);
 
 void podcast_add (gchar *name, gchar *url)
 {
@@ -774,7 +776,7 @@ static void podcast_log (gchar *msg)
     if (prefs_get_pc_log())
     {
         FILE *fp = NULL;
-        gchar *filename = prefs_get_pc_log_file();
+        gchar *filename = g_strdup(prefs_get_pc_log_file());
 
         time_t rawtime;
         struct tm * timeinfo;
@@ -788,6 +790,8 @@ static void podcast_log (gchar *msg)
             fprintf (fp, "%s: %s\n", asctime (timeinfo), msg);
             fclose(fp);
         }
+
+        g_free(filename);
     }
 }
 
@@ -841,7 +845,7 @@ on_abort_all_button_clicked            (GtkWidget       *widget,
   return FALSE;
 }
 
-void abort_fetch (gint what)
+static void abort_fetch (gint what)
 {
     struct podcast_file *podcast_file = NULL;
     switch (what)
@@ -870,7 +874,7 @@ void abort_fetch (gint what)
                 podcast_file = podcast_files->data;
                 if (podcast_file->tofetch)
                     abort_urls_to_add = g_list_append(abort_urls_to_add, g_strdup(podcast_file->url));
-            } while (podcast_files = g_list_next(podcast_files));
+            } while ((podcast_files = g_list_next(podcast_files)));
             break;
     }
 
@@ -879,7 +883,7 @@ void abort_fetch (gint what)
     GtkWidget *dialog, *label;
 
     dialog = gtk_dialog_new_with_buttons ("Aborting podcast fetching",
-                                          podcast_window,
+                                          GTK_WINDOW(podcast_window),
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
                                           GTK_STOCK_YES,
                                           GTK_RESPONSE_YES,
@@ -890,13 +894,13 @@ void abort_fetch (gint what)
                                           NULL);
     label = gtk_label_new("You have chosen to abort one or more podcasts.\nWould you like these to be aborted permanently?\n");
     
-    g_signal_connect(dialog, "response", abort_fetch_response, NULL);
+    g_signal_connect(dialog, "response", G_CALLBACK(abort_fetch_response), NULL);
 
     gtk_container_add(GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), label);
     gtk_widget_show_all(dialog);
 }
 
-void        abort_fetch_response           (GtkDialog *dialog,
+static void abort_fetch_response           (GtkDialog *dialog,
                                             gint arg1,
                                             gpointer user_data)
 {
@@ -1007,9 +1011,12 @@ void podcast_set_status(gchar *status)
 
 void podcast_set_cur_file_name(gchar *text)
 {
-    gchar *working = g_strdup_printf("%s", g_strrstr(text, "/")+1);
-    gtk_progress_bar_set_text (GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "file_progressbar")), working);
-    g_free(working);
+    if (g_strrstr(text, "/"))
+    {
+        gchar *working = g_strdup_printf("%s", g_strrstr(text, "/")+1);
+        gtk_progress_bar_set_text (GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "file_progressbar")), working);
+        g_free(working);
+    }
 }
 
 /* Get the local itdb */

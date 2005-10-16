@@ -1,3 +1,14 @@
+2005-10-17 Alexander Dutton <alexdutton@f2s.com>
+
+	 * podcast.c: added function prototypes for abort_fetch(),
+	   abort_fetch_response(), removed some warnings and fixed a
+	   segfault when an URL contains no '/' in 
+	   podcast_set_cur_file_name().
+	 * podcast.h: added extra items to enums (forgot to update file
+	   earlier.
+	 * prefs_window.c: declared *text[1] static to fix a segfault.
+	   Thanks to Bodo Bauer for these.
+
 2005-10-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file.c: (get_file_name) fixed assertion when adding files.
