@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-02 01:28:41 jcs>
+/* Time-stamp: <2005-10-17 22:47:32 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -1151,7 +1151,7 @@ void on_pc_add_button_clicked          (GtkButton *button,
                                         gpointer user_data)
 {
 
-    static gchar *text[1];
+    gchar *text[2];
     GtkEditable *w = GTK_EDITABLE(glade_xml_get_widget (prefs_window_xml, "pc_name"));
     text[0] = gtk_editable_get_chars(w, 0, -1);
     gtk_editable_delete_text(w, 0, -1);

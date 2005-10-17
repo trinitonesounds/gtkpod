@@ -1,3 +1,8 @@
+2005-10-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * podcast.c: (on_pc_add_button_clicked) declared *text[2]
+	   instead of *text[1] to fix a segfault.
+
 2005-10-17 Alexander Dutton <alexdutton@f2s.com>
 
 	 * podcast.c: added function prototypes for abort_fetch(),
