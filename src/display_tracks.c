@@ -1374,7 +1374,7 @@ tm_get_nr_of_tracks(void)
 
 static gint comp_int (gconstpointer a, gconstpointer b)
 {
-    return ((gint)a)-((gint)b);
+    return (GPOINTER_TO_INT(a)-(GPOINTER_TO_INT(b)));
 }
 
 
@@ -1421,7 +1421,7 @@ tm_rows_reordered (void)
 	       happen if track has been added to playlist more than
 	       once */
 	    while ((old_position != -1) &&
-		   g_list_find (old_pos_l, (gpointer)old_position))
+		   g_list_find (old_pos_l, GINT_TO_POINTER(old_position)))
 	    {  /* find next occurence */
 		GList *link;
 		gint next;
@@ -1432,7 +1432,7 @@ tm_rows_reordered (void)
 	    }
 	    /* we make a sorted list of the old positions */
 	    old_pos_l = g_list_insert_sorted (old_pos_l,
-					      (gpointer)old_position,
+					      GINT_TO_POINTER(old_position),
 					      comp_int);
 	    valid = gtk_tree_model_iter_next (tm, &i);
 	}
@@ -1441,7 +1441,7 @@ tm_rows_reordered (void)
 	while (nlp && olp)
 	{
 	    GList *old_link;
-	    gint position = (gint)olp->data;
+	    guint position = GPOINTER_TO_INT(olp->data);
 
 	    /* if position == -1 one of the tracks in the track view
 	       could not be found in the selected playlist -> stop! */
@@ -1482,7 +1482,7 @@ on_trackids_list_foreach ( GtkTreeModel *tm, GtkTreePath *tp,
     GList *l = *((GList**)data);
     gtk_tree_model_get(tm, i, READOUT_COL, &tr, -1);
     g_return_if_fail (tr);
-    l = g_list_append(l, (gpointer)tr->id);
+    l = g_list_append(l, GUINT_TO_POINTER(tr->id));
     *((GList**)data) = l;
 }
 
@@ -2063,7 +2063,7 @@ static GtkTreeViewColumn *tm_add_text_column (TM_item col_id,
 	g_signal_connect (G_OBJECT (renderer), "edited",
 			  G_CALLBACK (tm_cell_edited), model);
     }
-    g_object_set_data (G_OBJECT (renderer), "editable", (gint *)editable);
+    g_object_set_data (G_OBJECT (renderer), "editable", (gint *)GINT_TO_POINTER(editable));
     g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
     column = gtk_tree_view_column_new ();
     gtk_tree_view_column_set_title (column, name);

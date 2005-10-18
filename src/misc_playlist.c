@@ -638,7 +638,7 @@ static gint All_Ratings_CF (gconstpointer aa, gconstpointer bb)
 /* Insert function: determines whether a track is entered into the playlist */
 static gboolean All_Ratings_IF (Track *track, gpointer user_data)
 {
-    gint playlist_nr = (gint)user_data;
+    guint playlist_nr = GPOINTER_TO_UINT(user_data);
     if (track) return (track->rating == playlist_nr*20);
     return FALSE;
 }
@@ -647,7 +647,7 @@ static gboolean All_Ratings_IF (Track *track, gpointer user_data)
 void each_rating_pl(iTunesDB *itdb)
 {
     gchar *str;
-    gint playlist_nr;
+    guint playlist_nr;
 
     g_return_if_fail (itdb);
     str = _("Unrated tracks");
@@ -659,7 +659,7 @@ void each_rating_pl(iTunesDB *itdb)
 	} 
     	update_ranked_playlist (itdb, str, 0,
 				All_Ratings_IF, All_Ratings_CF,
-				(gpointer)playlist_nr);
+				GUINT_TO_POINTER(playlist_nr));
     }
     g_free (str);
 }

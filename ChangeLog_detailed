@@ -1,3 +1,8 @@
+2005-10-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * added a number of 64bit patches received from Bodo Bauer --
+           thanks!
+
 2005-10-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * podcast.c: (on_pc_add_button_clicked) declared *text[2]

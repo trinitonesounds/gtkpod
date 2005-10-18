@@ -695,7 +695,7 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
 
     spl_dup = g_object_get_data (G_OBJECT (spl_window), "spl_work");
     spl_orig = g_object_get_data (G_OBJECT (spl_window), "spl_orig");
-    pos =  (gint32)g_object_get_data (G_OBJECT (spl_window), "spl_pos");
+    pos =  (gint32)GPOINTER_TO_INT(g_object_get_data (G_OBJECT (spl_window), "spl_pos"));
     itdb = g_object_get_data (G_OBJECT (spl_window), "spl_itdb");
 
     g_return_if_fail (spl_dup != NULL);
@@ -852,7 +852,7 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
     case spl_ET_FROMVALUE:
 	if (splr->fromvalue == SPLDATE_IDENTIFIER)
 	    splr->fromvalue = 0;
-	snprintf (str, WNLEN, "%lld", splr->fromvalue / stepsize);
+	snprintf (str, WNLEN, "%lld", (long long int)(splr->fromvalue / stepsize));
 	break;
     case spl_ET_FROMVALUE_DATE:
 	if (splr->fromvalue == SPLDATE_IDENTIFIER)
@@ -860,12 +860,12 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
 	set_timestring (str, splr->fromvalue, et);
 	break;
     case spl_ET_FROMDATE:
-	snprintf (str, WNLEN, "%lld", splr->fromdate);
+	snprintf (str, WNLEN, "%lld",  (long long int)splr->fromdate);
 	break;
     case spl_ET_TOVALUE:
 	if (splr->tovalue == SPLDATE_IDENTIFIER)
 	    splr->tovalue = 0;
-	snprintf (str, WNLEN, "%lld", splr->tovalue / stepsize);
+	snprintf (str, WNLEN, "%lld",  (long long int)(splr->tovalue / stepsize));
 	break;
     case spl_ET_TOVALUE_DATE:
 	if (splr->tovalue == SPLDATE_IDENTIFIER)
@@ -873,10 +873,10 @@ const gchar *entry_get_string (gchar *str, SPLRule *splr,
 	set_timestring (str, splr->tovalue, et);
 	break;
     case spl_ET_TODATE:
-	snprintf (str, WNLEN, "%lld", splr->todate);
+	snprintf (str, WNLEN, "%lld",  (long long int)splr->todate);
 	break;
     case spl_ET_INTHELAST:
-	snprintf (str, WNLEN, "%lld", -splr->fromdate);
+	snprintf (str, WNLEN, "%lld",  (long long int)-splr->fromdate);
 	break;
     case spl_ET_STRING:
 /*	gtk_entry_set_width_chars (GTK_ENTRY (entry), 20);*/
@@ -1339,7 +1339,7 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     /* Store pointers to original playlist and duplicate */
     g_object_set_data (G_OBJECT (spl_window), "spl_orig", spl);
     g_object_set_data (G_OBJECT (spl_window), "spl_work", spl_dup);
-    g_object_set_data (G_OBJECT (spl_window), "spl_pos", (gpointer)pos);
+    g_object_set_data (G_OBJECT (spl_window), "spl_pos",  GINT_TO_POINTER(pos));
     g_object_set_data (G_OBJECT (spl_window), "spl_itdb", itdb);
     /* Set checkboxes and connect signal handlers */
     if ((w = glade_xml_get_widget (spl_window_xml, "spl_name_entry")))

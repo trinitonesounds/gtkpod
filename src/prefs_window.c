@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-17 22:47:32 jcs>
+/* Time-stamp: <2005-10-18 08:57:40 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -132,7 +132,7 @@ static void on_cfg_st_autoselect_toggled (GtkToggleButton *togglebutton,
 					  gpointer         user_data)
 {
     prefs_window_set_st_autoselect (
-	(guint32)user_data,
+	GPOINTER_TO_UINT(user_data),
 	gtk_toggle_button_get_active(togglebutton));
 }
 
@@ -140,7 +140,7 @@ static void on_cfg_autosettags_toggled (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     prefs_window_set_autosettags (
-	(guint32)user_data,
+	GPOINTER_TO_UINT(user_data),
 	gtk_toggle_button_get_active(togglebutton));
 }
 
@@ -149,7 +149,7 @@ static void on_cfg_col_visible_toggled (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     prefs_window_set_col_visible (
-	(guint32)user_data,
+	GPOINTER_TO_UINT(user_data),
 	gtk_toggle_button_get_active(togglebutton));
 }
 
@@ -584,7 +584,7 @@ prefs_window_create(void)
 	    g_signal_connect ((gpointer)as,
 			      "toggled",
 			      G_CALLBACK (on_cfg_st_autoselect_toggled),
-			      (gpointer)i);
+			      GUINT_TO_POINTER(i));
 	    g_free (buf);
 	}
     }
@@ -596,7 +596,7 @@ prefs_window_create(void)
 	    g_signal_connect ((gpointer)w,
 			      "clicked",
 			      G_CALLBACK (on_path_button_pressed),
-			      (gpointer)i);
+			      GUINT_TO_POINTER(i));
 	}
 	if ((w = glade_xml_get_widget (prefs_window_xml, path_entry_names[i])))
 	{
@@ -611,7 +611,7 @@ prefs_window_create(void)
 	    g_signal_connect ((gpointer)w,
 			      "changed",
 			      G_CALLBACK (on_path_entry_changed),
-			      (gpointer)i);
+			      GUINT_TO_POINTER(i));
 	}
     }
     if((w = glade_xml_get_widget (prefs_window_xml, "cfg_mpl_autoselect")))
@@ -633,7 +633,7 @@ prefs_window_create(void)
 	    g_signal_connect ((gpointer)w,
 			      "toggled",
 			      G_CALLBACK (on_cfg_autosettags_toggled),
-			      (gpointer)i);
+			      GUINT_TO_POINTER(i));
 	}
 	g_free (buf);
     }
@@ -689,7 +689,7 @@ prefs_window_create(void)
 	    g_signal_connect ((gpointer)w,
 			      "toggled",
 			      G_CALLBACK (on_cfg_col_visible_toggled),
-			      (gpointer)i);
+			      GUINT_TO_POINTER(i));
 	}
 	g_free (buf);
     }
@@ -1189,7 +1189,7 @@ void on_pc_update_button_clicked       (GtkButton *button,
 
     if (gtk_tree_selection_get_selected(selection, &model, &iter) || 1)
     {
-        gchar *text[1];
+        gchar *text[2];
         GtkEditable *w = GTK_EDITABLE(glade_xml_get_widget (prefs_window_xml, "pc_name"));
         text[0] = gtk_editable_get_chars(w, 0, -1);
         gtk_editable_delete_text(w, 0, -1);
@@ -1213,7 +1213,7 @@ static void on_pc_subs_list_row_activated       (GtkTreeView *view,
 
     GtkTreeModel *model;
     GtkTreeIter   iter;
-    gchar *text[1];
+    gchar *text[2];
 
     model = gtk_tree_view_get_model(view);
     gtk_tree_model_get_iter(model, &iter, path);
@@ -1797,8 +1797,8 @@ static void sort_window_read_sort_ign (struct sortcfg *scfg)
 	g_return_if_fail (w);
 	scfg->tmp_sort_ign_fields = g_list_append (
 	    scfg->tmp_sort_ign_fields,
-	    (gpointer) gtk_toggle_button_get_active (
-		GTK_TOGGLE_BUTTON (w)));
+	    GUINT_TO_POINTER( gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (w))));
 	g_free (buf);
     }
 
@@ -2126,8 +2126,8 @@ static void sort_window_set (struct sortcfg *scfg)
 				      sort_ign_fields[i]);
 	prefs_set_int_value (
 	    buf,
-	    (gint)g_list_nth_data (
-		scfg->tmp_sort_ign_fields, i));
+	    GPOINTER_TO_UINT(g_list_nth_data (
+		scfg->tmp_sort_ign_fields, i)));
 	g_free (buf);
     }
     /* clean up old sort strings */

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:19 jcs>
+/* Time-stamp: <2005-10-18 23:23:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -62,7 +62,7 @@ static void cleanup (gpointer id)
 {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, &id);
+    cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
 	gint defx, defy;
@@ -72,7 +72,7 @@ static void cleanup (gpointer id)
 	else
 	    prefs_set_size_conf (defx, defy);
 	gtk_widget_destroy (cd->window);
-	g_hash_table_remove (id_hash, &id);
+	g_hash_table_remove (id_hash, id);
     }
 }
 
@@ -81,7 +81,7 @@ static void on_ok_clicked (GtkWidget *w, gpointer id)
 {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, &id);
+    cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
 	if (cd->ok_handler)
@@ -94,7 +94,7 @@ static void on_apply_clicked (GtkWidget *w, gpointer id)
 {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, &id);
+    cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
 	if (cd->apply_handler)
@@ -107,7 +107,7 @@ static void on_cancel_clicked (GtkWidget *w, gpointer id)
 {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, &id);
+    cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
 	if (cd->cancel_handler)
@@ -121,6 +121,7 @@ static void on_cancel_clicked (GtkWidget *w, gpointer id)
    action is required */
 void CONF_NULL_HANDLER (gpointer d1, gpointer d2)
 {
+    return;
 }
 
 
@@ -128,7 +129,7 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
 {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, &id);
+    cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
 	if (cd->confirm_again_handler)
@@ -140,7 +141,7 @@ static void on_option1_toggled (GtkToggleButton *t, gpointer id)
 {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, &id);
+    cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
 	if (cd->option1_handler)
@@ -156,7 +157,7 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
 {
     ConfData *cd;
 
-    cd = g_hash_table_lookup (id_hash, &id);
+    cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
 	if (cd->option2_handler)
@@ -172,7 +173,7 @@ static void on_response (GtkWidget *w, gint response, gpointer id)
 {
     ConfData *cd;
 /*     printf ("r: %d, i: %d\n", response, id); */
-    cd = g_hash_table_lookup (id_hash, &id);
+    cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
 	switch (response)
@@ -278,17 +279,16 @@ GtkResponseType gtkpod_confirmation (gint id,
     GtkWidget *window, *w;
     ConfData *cd;
     gint defx, defy;
-    gint *idp;
     GladeXML *confirm_xml;
 
     if (id_hash == NULL)
     {  /* initialize hash table to store IDs */
-	id_hash = g_hash_table_new_full (g_int_hash, g_int_equal,
-					      g_free, g_free);
+	id_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal,
+					      NULL, g_free);
     }
     if (id >= 0)
     {
-	if ((cd = g_hash_table_lookup (id_hash, &id)))
+	if ((cd = g_hash_table_lookup (id_hash, GINT_TO_POINTER(id))))
 	{ /* window with same ID already open -- add @text and return
 	   * */
 	    if (text && *text &&
@@ -323,7 +323,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 	do
 	{
 	    --id;
-	    cd = g_hash_table_lookup (id_hash, &id);
+	    cd = g_hash_table_lookup (id_hash, GINT_TO_POINTER(id));
 	} while (cd != NULL);
     }
 
@@ -341,8 +341,6 @@ GtkResponseType gtkpod_confirmation (gint id,
     window = glade_xml_get_widget (confirm_xml, "confirm_dialog");
 
     /* insert ID into hash table */
-    idp = g_malloc (sizeof (gint));
-    *idp = id;
     cd = g_malloc (sizeof (ConfData));
     cd->window = window;
     cd->window_xml = confirm_xml;
@@ -354,7 +352,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     cd->cancel_handler = cancel_handler;
     cd->user_data1 = user_data1;
     cd->user_data2 = user_data2;
-    g_hash_table_insert (id_hash, idp, cd);
+    g_hash_table_insert (id_hash, GINT_TO_POINTER(id), cd);
 
     /* Set title */
     if (title)
@@ -413,7 +411,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 	g_signal_connect ((gpointer)option1_button,
 			  "toggled",
 			  G_CALLBACK (on_option1_toggled),
-			  (gpointer)id);
+			  GINT_TO_POINTER(id));
     }
 
     /* Set "Option 2" checkbox */
@@ -439,7 +437,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 	g_signal_connect ((gpointer)option2_button,
 			  "toggled",
 			  G_CALLBACK (on_option2_toggled),
-			  (gpointer)id);
+			  GINT_TO_POINTER(id));
     }
 
     /* Set "Never Again" checkbox */
@@ -451,7 +449,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 	g_signal_connect ((gpointer)w,
 			  "toggled",
 			  G_CALLBACK (on_never_again_toggled),
-			  (gpointer)id);
+			  GINT_TO_POINTER(id));
     }
     else if (w)
     { /* hide "never again" button */
@@ -488,14 +486,14 @@ GtkResponseType gtkpod_confirmation (gint id,
     g_signal_connect (GTK_OBJECT (window),
 		      "delete_event",
 		      G_CALLBACK (on_cancel_clicked),
-		      (gpointer) id);
+		      GINT_TO_POINTER(id));
 
     if (modal)
     {
 	/* use gtk_dialog_run() to block the application */
 	gint response = gtk_dialog_run (GTK_DIALOG (window));
 	/* cleanup hash, store window size */
-	cleanup ((gpointer)id);
+	cleanup (GINT_TO_POINTER(id));
 	switch (response)
 	{
 	case GTK_RESPONSE_OK:
@@ -511,7 +509,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 	g_signal_connect (GTK_OBJECT (window),
 			  "response",
 			  G_CALLBACK (on_response),
-			  (gpointer) id);
+			  GINT_TO_POINTER(id));
 	gtk_widget_show (window);
 	return GTK_RESPONSE_ACCEPT;
     }

@@ -265,7 +265,7 @@ on_st_switch_page                 (GtkNotebook     *notebook,
 				   gpointer         user_data)
 {
     gchar *buf;
-    gint inst = (gint)user_data;
+    guint inst = GPOINTER_TO_UINT( user_data );
 
 /*     printf ("switch_page: inst/page: %d/%d\n", inst, page_num); */
     /* set compare function for strings (to speed up sorting) */
@@ -532,7 +532,7 @@ static void st_add_track_special (Track *track, gboolean final,
 /* Callback for sp_go() */
 static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 {
-    guint32 inst = (guint32)user_data1;
+    guint32 inst = (guint32)GPOINTER_TO_UINT(user_data1);
     SortTab *st = sorttab[inst];
 
 #if DEBUG_TIMING
@@ -664,7 +664,7 @@ void sp_go (guint32 inst)
        "callback". Currently running display updates will be stopped
        before the sp_go_cb is actually called */
     add_selection_callback (inst, sp_go_cb,
-			    (gpointer)inst, NULL);
+			    GUINT_TO_POINTER(inst), NULL);
 }
 
 
@@ -781,7 +781,7 @@ void
 on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
+    guint32 inst = (guint32)(GPOINTER_TO_UINT(user_data) & SP_MASK);
 
     prefs_set_sp_or (inst, gtk_toggle_button_get_active (togglebutton));
     sp_conditions_changed (inst);
@@ -792,8 +792,8 @@ void
 on_sp_cond_button_toggled            (GtkToggleButton *togglebutton,
 				      gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
-    T_item cond = (guint32)user_data >> SP_SHIFT;
+    guint32 inst = (guint32)(GPOINTER_TO_UINT(user_data) & SP_MASK);
+    T_item cond = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
 
 /*     printf ("%d/%d/%d\n",inst,cond,gtk_toggle_button_get_active (togglebutton)); */
     prefs_set_sp_cond (inst, cond,
@@ -805,8 +805,8 @@ void
 on_sp_rating_n_toggled                 (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
-    guint32 n = (guint32)user_data >> SP_SHIFT;
+    guint32 inst = (guint32)(GPOINTER_TO_UINT(user_data) & SP_MASK);
+    guint32 n = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
 
     prefs_set_sp_rating_n (inst, n,
 			   gtk_toggle_button_get_active (togglebutton));
@@ -819,8 +819,8 @@ void
 on_sp_entry_activate             (GtkEditable     *editable,
 				  gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
-    T_item item = (guint32)user_data >> SP_SHIFT;
+    guint32 inst = (guint32)(GPOINTER_TO_UINT(user_data) & SP_MASK);
+    T_item item = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
     gchar *buf = gtk_editable_get_chars(editable,0, -1);
 
 /*    printf ("sp_entry_activate inst: %d, item: %d\n", inst, item);*/
@@ -837,8 +837,8 @@ void
 on_sp_cal_button_clicked        (GtkButton       *button,
 				 gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
-    T_item item = (guint32)user_data >> SP_SHIFT;
+    guint32 inst = (guint32)GPOINTER_TO_UINT(user_data) & SP_MASK;
+    T_item item = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
 
     cal_open_calendar (inst, item);
 }
@@ -848,7 +848,7 @@ void
 on_sp_go_clicked                       (GtkButton       *button,
 					gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
+    guint32 inst = (guint32)GPOINTER_TO_UINT(user_data) & SP_MASK;
     sp_go (inst);
 }
 
@@ -857,7 +857,7 @@ void
 on_sp_go_always_toggled                (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
+    guint32 inst = (guint32)GPOINTER_TO_UINT(user_data) & SP_MASK;
     gboolean state = gtk_toggle_button_get_active (togglebutton);
 
     /* display data if autodisplay is turned on */
@@ -869,7 +869,7 @@ void
 on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
 					gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
+    guint32 inst = (guint32)GPOINTER_TO_UINT(user_data) & SP_MASK;
 
     prefs_set_sp_playcount_low (inst,
 				gtk_spin_button_get_value (spinbutton));
@@ -882,7 +882,7 @@ void
 on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
 					gpointer         user_data)
 {
-    guint32 inst = (guint32)user_data & SP_MASK;
+    guint32 inst = (guint32)GPOINTER_TO_UINT(user_data) & SP_MASK;
 
     prefs_set_sp_playcount_high (inst,
 				 gtk_spin_button_get_value (spinbutton));
@@ -1723,7 +1723,7 @@ void st_init (ST_CAT_item new_category, guint32 inst)
 static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 {
   GtkNotebook *notebook = (GtkNotebook *)user_data1;
-  guint page = (guint)user_data2;
+  guint page = (guint)GPOINTER_TO_UINT(user_data2);
   guint32 inst = st_get_instance_from_notebook (notebook);
   guint oldpage;
   gboolean is_go;
@@ -1830,7 +1830,7 @@ void st_page_selected (GtkNotebook *notebook, guint page)
      new playlist and so on. Therefore we subtract 1 from the
      instance. */
   add_selection_callback (inst-1, st_page_selected_cb,
-			  (gpointer)notebook, (gpointer)page);
+			  (gpointer)notebook, GUINT_TO_POINTER(page));
 }
 
 
@@ -1897,7 +1897,7 @@ void st_sort (GtkSortType order)
 static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 {
   GtkTreeSelection *selection = (GtkTreeSelection *)user_data1;
-  guint32 inst = (guint32)user_data2;
+  guint32 inst = (guint32)GPOINTER_TO_UINT(user_data2);
   GtkTreeModel *model;
   GtkTreeIter  iter;
   TabEntry *new_entry;
@@ -2012,7 +2012,7 @@ static void st_selection_changed (GtkTreeSelection *selection,
     printf("st_s_c enter (inst: %d)\n", (gint)user_data);
 #endif
     space_data_update ();
-    add_selection_callback ((gint)user_data, st_selection_changed_cb,
+    add_selection_callback ((gint)GPOINTER_TO_INT(user_data), st_selection_changed_cb,
 			    (gpointer)selection, user_data);
 #if DEBUG_CB_INIT
     printf("st_s_c exit (inst: %d)\n", (gint)user_data);
@@ -2037,7 +2037,7 @@ st_cell_edited (GtkCellRendererText *renderer,
   GList *members;
   SortTab *st;
 
-  inst = (guint32)data;
+  inst = (guint32)GPOINTER_TO_UINT(data);
   st = sorttab[inst];
   model = st->model;
   path = gtk_tree_path_new_from_string (path_string);
@@ -2158,7 +2158,7 @@ static void st_cell_data_func (GtkTreeViewColumn *tree_column,
   TabEntry *entry;
   gint column;
 
-  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
+  column = (gint)GPOINTER_TO_INT(g_object_get_data (G_OBJECT (renderer), "column"));
   gtk_tree_model_get (model, iter, ST_COLUMN_ENTRY, &entry, -1);
 
   switch (column)
@@ -2214,7 +2214,7 @@ gint st_data_compare_func (GtkTreeModel *model,
   gint inst;
   SortTab *st;
 
-  inst = (guint32)user_data;
+  inst = (guint32)GPOINTER_TO_UINT(user_data);
 
   gtk_tree_model_get (model, a, ST_COLUMN_ENTRY, &entry1, -1);
   gtk_tree_model_get (model, b, ST_COLUMN_ENTRY, &entry2, -1);
@@ -2307,7 +2307,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 			gtk_tree_sortable_set_sort_func (
 			    GTK_TREE_SORTABLE (st->model),
 			    ST_COLUMN_ENTRY,
-			    st_data_compare_func, (gpointer)inst, NULL);
+			    st_data_compare_func, GINT_TO_POINTER(inst), NULL);
 		    }
 		    else
 		    {
@@ -2521,8 +2521,8 @@ st_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
 	switch(e->button)
 	{
 	    case 3:
-		st_select_current_position ((gint)data, e->x, e->y);
-		st_context_menu_init((gint)data);
+		st_select_current_position (GPOINTER_TO_INT(data), e->x, e->y);
+		st_context_menu_init(GPOINTER_TO_INT(data));
 		return TRUE;
 	    default:
 		break;
@@ -2565,7 +2565,7 @@ static void st_create_listview (gint inst)
 	  gtk_tree_selection_set_mode (selection, GTK_SELECTION_SINGLE);
 	  g_signal_connect (G_OBJECT (selection), "changed",
 			    G_CALLBACK (st_selection_changed),
-			    (gpointer)inst);
+			    GINT_TO_POINTER(inst));
 	  /* Add column */
 	  renderer = gtk_cell_renderer_text_new ();
 	  g_signal_connect (G_OBJECT (renderer), "edited",
@@ -2583,7 +2583,7 @@ static void st_create_listview (gint inst)
 	  gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
 	  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (liststore),
 					   ST_COLUMN_ENTRY,
-					   st_data_compare_func, (gpointer)inst, NULL);
+					   st_data_compare_func, GINT_TO_POINTER(inst), NULL);
 	  gtk_tree_view_append_column (treeview, column);
       }
   }
@@ -2619,7 +2619,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       w = glade_xml_get_widget (special_xml, "sp_or_button");
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_or_button_toggled),
-			(gpointer)inst);
+			GINT_TO_POINTER(inst));
       if (prefs_get_sp_or (inst))
 	  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
       else
@@ -2632,7 +2632,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       w = glade_xml_get_widget (special_xml, "sp_rating_button");
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((T_RATING<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_RATING<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_cond (inst, T_RATING));
       for (i=0; i<=RATING_MAX; ++i)
@@ -2641,7 +2641,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 	  w = glade_xml_get_widget (special_xml, buf);
 	  g_signal_connect ((gpointer)w,
 			    "toggled", G_CALLBACK (on_sp_rating_n_toggled),
-			    (gpointer)((i<<SP_SHIFT) + inst));
+			    GUINT_TO_POINTER((i<<SP_SHIFT) + inst));
 	  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				       prefs_get_sp_rating_n (inst, i));
 	  g_free (buf);
@@ -2651,21 +2651,21 @@ static void st_create_special (gint inst, GtkWidget *window)
       w = glade_xml_get_widget (special_xml, "sp_playcount_button");
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((T_PLAYCOUNT<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_PLAYCOUNT<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_cond (inst, T_PLAYCOUNT));
       w = glade_xml_get_widget (special_xml, "sp_playcount_low");
       g_signal_connect ((gpointer)w,
 			"value_changed",
 			G_CALLBACK (on_sp_playcount_low_value_changed),
-			(gpointer)inst);
+			GINT_TO_POINTER(inst));
       gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
 				 prefs_get_sp_playcount_low (inst));
       w = glade_xml_get_widget (special_xml, "sp_playcount_high");
       g_signal_connect ((gpointer)w,
 			"value_changed",
 			G_CALLBACK (on_sp_playcount_high_value_changed),
-			(gpointer)inst);
+			GINT_TO_POINTER(inst));
       gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
 				 prefs_get_sp_playcount_high (inst));
 
@@ -2674,7 +2674,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       st->ti_played.active = w;
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((T_TIME_PLAYED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_cond (inst, T_TIME_PLAYED));
       w = glade_xml_get_widget (special_xml, "sp_played_entry");
@@ -2683,19 +2683,19 @@ static void st_create_special (gint inst, GtkWidget *window)
 			  prefs_get_sp_entry (inst, T_TIME_PLAYED));
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
-			(gpointer)((T_TIME_PLAYED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)glade_xml_get_widget (special_xml,
 						 "sp_played_cal_button"),
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
-			(gpointer)((T_TIME_PLAYED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
 
       /* MODIFIED */
       w = glade_xml_get_widget (special_xml, "sp_modified_button");
       st->ti_modified.active = w;
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((T_TIME_MODIFIED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_cond (inst, T_TIME_MODIFIED));
       w = glade_xml_get_widget (special_xml, "sp_modified_entry");
@@ -2704,19 +2704,19 @@ static void st_create_special (gint inst, GtkWidget *window)
 			  prefs_get_sp_entry (inst, T_TIME_MODIFIED));
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
-			(gpointer)((T_TIME_MODIFIED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)glade_xml_get_widget (special_xml,
 						 "sp_modified_cal_button"),
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
-			(gpointer)((T_TIME_MODIFIED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
 
       /* ADDED */
       w = glade_xml_get_widget (special_xml, "sp_added_button");
       st->ti_added.active = w;
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
-			(gpointer)((T_TIME_ADDED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_cond (inst, T_TIME_ADDED));
       w = glade_xml_get_widget (special_xml, "sp_added_entry");
@@ -2725,21 +2725,21 @@ static void st_create_special (gint inst, GtkWidget *window)
 			  prefs_get_sp_entry (inst, T_TIME_ADDED));
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
-			(gpointer)((T_TIME_ADDED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
       g_signal_connect ((gpointer)glade_xml_get_widget (special_xml,
 						 "sp_added_cal_button"),
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
-			(gpointer)((T_TIME_ADDED<<SP_SHIFT) + inst));
+			GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
 
 
       g_signal_connect ((gpointer)glade_xml_get_widget (special_xml, "sp_go"),
 			"clicked", G_CALLBACK (on_sp_go_clicked),
-			(gpointer)inst);
+			GINT_TO_POINTER(inst));
       w = glade_xml_get_widget (special_xml, "sp_go_always");
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_go_always_toggled),
-			(gpointer)inst);
+			GINT_TO_POINTER(inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				   prefs_get_sp_autodisplay (inst));
 
@@ -2906,7 +2906,7 @@ void st_create_notebook (gint inst)
   gtk_notebook_set_scrollable (GTK_NOTEBOOK (st0_notebook), TRUE);
   g_signal_connect ((gpointer) st0_notebook, "switch_page",
                     G_CALLBACK (on_st_switch_page),
-                    (gpointer)inst);
+                    GINT_TO_POINTER(inst));
 
   st->notebook = GTK_NOTEBOOK (st0_notebook);
   st_create_pages (inst);

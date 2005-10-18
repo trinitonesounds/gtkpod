@@ -85,6 +85,8 @@ void podcast_file_add (gchar *title, gchar *url,
                        glong size, gchar *local,
                        gboolean fetched, gboolean tofetch);
 void podcast_file_delete_by_url (gchar *url);
+gint podcast_file_read_from_file();
+
 gboolean podcast_already_have_url (gchar *url);
 GList *podcast_file_find_to_fetch ();
 void podcast_fetch ();

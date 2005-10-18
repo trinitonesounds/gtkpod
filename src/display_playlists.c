@@ -1685,7 +1685,7 @@ pm_cell_edited (GtkCellRendererText *renderer,
       g_return_if_reached ();
   }
 
-  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
+  column = GPOINTER_TO_INT ( g_object_get_data (G_OBJECT (renderer), "column") );
   gtk_tree_model_get (model, &iter, column, &playlist, -1);
   g_return_if_fail (playlist);
 
@@ -1726,7 +1726,7 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
   g_return_if_fail (model);
   g_return_if_fail (iter);
 
-  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
+  column = GPOINTER_TO_INT ( g_object_get_data (G_OBJECT (renderer), "column") );
   gtk_tree_model_get (model, iter, column, &playlist, -1);
   g_return_if_fail (playlist);
 
@@ -1782,7 +1782,7 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
   g_return_if_fail (model);
   g_return_if_fail (iter);
 
-  column = (gint)g_object_get_data (G_OBJECT (renderer), "column");
+  column = GPOINTER_TO_INT ( g_object_get_data (G_OBJECT (renderer), "column") );
   gtk_tree_model_get (model, iter, column, &playlist, -1);
   g_return_if_fail (playlist);
 

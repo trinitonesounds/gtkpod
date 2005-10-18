@@ -947,14 +947,14 @@ static gboolean write_extended_info (iTunesDB *itdb)
 /* returns: int result (of remove()) */
 static gpointer th_remove (gpointer filename)
 {
-    int result;
+    guint result;
 
     result = remove ((gchar *)filename);
     g_mutex_lock (mutex);
     mutex_data = TRUE; /* signal that thread will end */
     g_cond_signal (cond);
     g_mutex_unlock (mutex);
-    return (gpointer)result;
+    return GUINT_TO_POINTER(result);
 }
 #endif
 
@@ -1126,7 +1126,7 @@ static gboolean delete_files (iTunesDB *itdb)
 
       if(filename)
       {
-	  gint rmres;
+	  guint rmres;
 #ifdef G_THREADS_ENABLED
 	  mutex_data = FALSE;
 	  thread = g_thread_create (th_remove, filename, TRUE, NULL);
@@ -1143,7 +1143,7 @@ static gboolean delete_files (iTunesDB *itdb)
 		  g_cond_timed_wait (cond, mutex, &gtime);
 	      } while(!mutex_data);
 	      g_mutex_unlock (mutex);
-	      rmres = (gint)g_thread_join (thread);
+	      rmres = GPOINTER_TO_UINT(g_thread_join (thread));
 	      if (rmres == -1) result = FALSE;
 	  }
 	  else {

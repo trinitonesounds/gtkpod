@@ -663,8 +663,8 @@ void display_remove_autoscroll_row_timeout (GtkWidget *widget)
 
     g_return_if_fail (widget);
 
-    timeout = (guint)g_object_get_data (G_OBJECT (widget),
-					"scroll_row_timeout");
+    timeout = GPOINTER_TO_UINT(g_object_get_data (G_OBJECT (widget),
+					"scroll_row_timeout"));
 
     if (timeout != 0)
     {
@@ -679,7 +679,7 @@ static gint display_autoscroll_row_timeout (gpointer data)
     gint px, py;
     GdkModifierType mask;
     GdkRectangle vis_rect;
-    gint times;
+    guint times;
     gboolean resp = TRUE;
     const gint SCROLL_EDGE_SIZE = 12;
 
@@ -687,7 +687,7 @@ static gint display_autoscroll_row_timeout (gpointer data)
 
     gdk_threads_enter ();
 
-    times = (gint)g_object_get_data (G_OBJECT (data), "scroll_row_times");
+    times = GPOINTER_TO_UINT(g_object_get_data (G_OBJECT (data), "scroll_row_times"));
     
     gdk_window_get_pointer (gtk_tree_view_get_bin_window (treeview),
 			    &px, &py, &mask);
@@ -729,7 +729,7 @@ static gint display_autoscroll_row_timeout (gpointer data)
 	times = 0;
     }
     g_object_set_data (G_OBJECT (data), "scroll_row_times",
-		       (gpointer)times);
+		       GUINT_TO_POINTER(times));
     if (mask == 0)
     {
 	_remove_scroll_row_timeout (data);
@@ -746,7 +746,7 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget)
 	guint timeout = g_timeout_add (75, display_autoscroll_row_timeout,
 				       widget);
 	g_object_set_data (G_OBJECT (widget), "scroll_row_timeout",
-			   (gpointer)timeout);
+			   GUINT_TO_POINTER(timeout));
     }
 }
 

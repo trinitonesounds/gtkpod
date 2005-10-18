@@ -364,7 +364,7 @@ static gpointer th_write_track (gpointer fcd)
     g_cond_signal (cond);
     g_mutex_unlock (mutex);
 
-    return (gpointer)result;
+    return GINT_TO_POINTER(result);
 }
 #endif
 
@@ -475,7 +475,7 @@ static void export_files_write (struct fcd *fcd)
 		    g_cond_timed_wait (cond, mutex, &gtime);
 		} while(!mutex_data);
 		g_mutex_unlock (mutex);
-		result &= (gboolean)g_thread_join (thread);
+		result &= (gboolean)GPOINTER_TO_INT(g_thread_join (thread));
 	    }
 	    else {
 		g_warning ("Thread creation failed, falling back to default.\n");

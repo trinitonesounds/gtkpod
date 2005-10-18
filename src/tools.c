@@ -95,7 +95,7 @@ static gpointer th_nm_get_soundcheck (gpointer track)
    mutex_data = TRUE; /* signal that thread will end */
    g_cond_signal (cond);
    g_mutex_unlock (mutex);
-   return (gpointer)gain;
+   return GUINT_TO_POINTER(gain);
 }
 #endif
 
@@ -257,7 +257,7 @@ void nm_tracks_list (GList *list)
 	     g_cond_timed_wait (cond, mutex, &gtime);
 	 }
 	 while(!mutex_data);
-	 new_soundcheck = (gint)g_thread_join (thread);
+	 new_soundcheck = GPOINTER_TO_UINT(g_thread_join (thread));
 	 g_mutex_unlock (mutex);
      }
      else
