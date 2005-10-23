@@ -1412,7 +1412,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
       (itdb->usertype & GP_ITDB_TYPE_IPOD))
   {   /* write to the iPod */
       GError *error = NULL;
-      if (!itdb_write (itdb, NULL, &error))
+      if (!itdb_write (itdb, &error))
       {   /* an error occured */
 	  success = FALSE;
 	  if (error && error->message)

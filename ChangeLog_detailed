@@ -1,3 +1,8 @@
+2005-10-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * removed mountpoint as parameter in itdb_write() as it was
+           not used.
+
 2005-10-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * added a number of 64bit patches received from Bodo Bauer --
