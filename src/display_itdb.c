@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-02 19:15:09 jcs>
+/* Time-stamp: <2005-10-24 23:49:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -272,6 +272,25 @@ void gp_itdb_add (iTunesDB *itdb, gint pos)
     itdbs_head->itdbs = g_list_insert (itdbs_head->itdbs, itdb, pos);
     pm_add_itdb (itdb, pos);
 }
+
+/* return the podcast itdb */
+iTunesDB *gp_itdb_get_podcast ()
+{
+    GList *gl;
+
+    g_return_val_if_fail (itdbs_head, NULL);
+
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_val_if_fail (itdb, NULL);
+
+	if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
+	    return itdb;
+    }
+    return NULL;
+}
+
 
 /* Also replaces @old_itdb in the itdbs GList and take care that the
  * displayed itdb gets replaced as well */
@@ -696,7 +715,9 @@ void init_data (GtkWidget *window)
 		    nm = g_strdup_printf ("itdb_%d_name", i);
 		    if (!prefs_get_string_value (nm, &name))
 		    {
-			if (type & GP_ITDB_TYPE_LOCAL)
+			if (type & GP_ITDB_TYPE_PODCASTS)
+			    name = g_strdup (_("Podcasts"));
+			else if (type & GP_ITDB_TYPE_LOCAL)
 			    name = g_strdup (_("Local"));
 			else
 			    name = g_strdup ("gtkpod");
@@ -717,9 +738,12 @@ void init_data (GtkWidget *window)
 		    g_free (offline_filename);
 		}
 
-		/* Check if Podcast Playlist is present and add if not */
-		if (!itdb_playlist_podcasts (itdb))
-		{
+		/* Check if Podcast Playlist is present on IPOD itdb
+		 * and add if not. If Podcast Playlist is present on
+		 * local itdb remove it. */
+		pl = itdb_playlist_podcasts (itdb);
+		if ((type & GP_ITDB_TYPE_IPOD) && !pl)
+		{   /* add podcast playlist */
 		    pl = gp_playlist_new (_("Podcasts"), FALSE);
 		    itdb_playlist_set_podcasts (pl);
 		    itdb_playlist_add (itdb, pl, -1);
@@ -727,7 +751,21 @@ void init_data (GtkWidget *window)
 		    g_return_if_fail (eitdb);
 		    eitdb->data_changed = FALSE;
 		}
-
+		if ((type & GP_ITDB_TYPE_LOCAL) && pl)
+		{   /* Remove podcast playlist. Normally no playlist
+		     * should be present, except for a few people who
+		     * used the CVS version between September and
+		     * October 2005. */
+		    if (itdb_playlist_tracks_number (pl) == 0)
+		    {
+			gp_playlist_remove (pl);
+		    }
+		    else
+		    {   /* OK, let's be nice and just drop the
+			   'podcast' flag instead of removing */
+			pl->podcastflag = 0;
+		    }
+		}
 		/* add to the display */
 		gp_itdb_add (itdb, -1);
 	    }
@@ -781,15 +819,38 @@ void init_data (GtkWidget *window)
 	    itdb_playlist_add (itdb, pl, -1);
 	}
 
-	/* Check if Podcast Playlist is present and add if not */
-	if (!itdb_playlist_podcasts (itdb))
+	gp_itdb_add (itdb, -1);
+	g_free (fn);
+    }
+
+    /* Add poscast itdb if not present */
+    if (!gp_itdb_get_podcast ())
+    {
+	iTunesDB *itdb;
+	ExtraiTunesDBData *eitdb;
+	gchar *fn;
+	Playlist *pl;
+
+	/*First check if a database file already exists -- if yes load
+	   it */
+	itdb = NULL;
+	fn = g_build_filename (cfgdir, "podcasts.itdb", NULL);
+	if (g_file_test (fn, G_FILE_TEST_EXISTS))
 	{
-	    Playlist *pl = gp_playlist_new (_("Podcasts"), FALSE);
-	    itdb_playlist_set_podcasts (pl);
-	    itdb_playlist_add (itdb, pl, -1);
+	    itdb = gp_import_itdb (NULL, GP_ITDB_TYPE_PODCASTS|GP_ITDB_TYPE_LOCAL,
+				   NULL, NULL, fn);
+	}
+
+	if (!itdb)
+	{   /* local database does not exist or cannot be loaded */
+	    itdb = gp_itdb_new ();
 	    eitdb = itdb->userdata;
 	    g_return_if_fail (eitdb);
-	    eitdb->data_changed = FALSE;
+	    itdb->usertype = GP_ITDB_TYPE_PODCASTS|GP_ITDB_TYPE_LOCAL;
+	    itdb->filename = g_strdup (fn);
+	    pl = gp_playlist_new (_("Podcasts"), FALSE);
+	    itdb_playlist_set_mpl (pl);   /* MPL! */
+	    itdb_playlist_add (itdb, pl, -1);
 	}
 
 	gp_itdb_add (itdb, -1);

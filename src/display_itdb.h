@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-25 14:49:19 jcs>
+/* Time-stamp: <2005-10-24 23:49:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -82,8 +82,9 @@ typedef struct
 /* types for iTunesDB */
 typedef enum
 {
-    GP_ITDB_TYPE_LOCAL = 1<<0,   /* local browsing */
+    GP_ITDB_TYPE_LOCAL = 1<<0,    /* local browsing, normal music */
     GP_ITDB_TYPE_IPOD  = 1<<1,    /* iPod */
+    GP_ITDB_TYPE_PODCASTS = 1<<2, /* local browsing, podcasts */
 } GpItdbType;
 
 /* Delete actions */
@@ -114,6 +115,7 @@ void gp_itdb_add (iTunesDB *itdb, gint pos);
 void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb);
 void gp_itdb_add_extra (iTunesDB *itdb);
 void gp_itdb_add_extra_full (iTunesDB *itdb);
+iTunesDB *gp_itdb_get_podcast (void);
 
 Track *gp_track_new (void);
 #define gp_track_free itdb_track_free

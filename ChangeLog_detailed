@@ -1,5 +1,9 @@
 2005-10-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * display_itdb.c: added gp_itdb_get_podcasts()
+
+	 * file_itunesdb.c: set up 'Podcasts' local store on startup.
+
 	 * removed mountpoint as parameter in itdb_write() as it was
            not used.
 
