@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-05-21 11:27:14 jcs>
+/* Time-stamp: <2005-10-25 22:52:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -603,6 +603,40 @@ static void spl_playlist_changed (GtkComboBox *combobox,
 }
 
 
+/* deactivate "minus" (delete rule) button if only one rule is
+   displayed, activate all "minus" (delete rule) buttons, if more than
+   one rule is displayed */
+static void spl_check_number_of_rules (GtkWidget *spl_window)
+{
+    Playlist *spl;
+    GtkTable *table;
+    gint i, numrules;
+
+    g_return_if_fail (spl_window);
+
+    spl =  g_object_get_data (G_OBJECT (spl_window), "spl_work");
+    g_return_if_fail (spl);
+
+    table = g_object_get_data (G_OBJECT (spl_window), "spl_rules_table");
+    g_return_if_fail (table);
+
+    numrules = g_list_length (spl->splrules.rules);
+
+    for (i=0; i<numrules; ++i)
+    {
+	gchar name[WNLEN];
+	GtkWidget *button;
+
+	snprintf (name, WNLEN, "spl_button-%d", i);
+	button = g_object_get_data (G_OBJECT (table), name);
+	g_return_if_fail (button);
+	if (numrules > 1)
+	    gtk_widget_set_sensitive (button, TRUE);
+	else
+	    gtk_widget_set_sensitive (button, FALSE);
+    }
+}
+
 
 static void spl_button_minus_clicked (GtkButton *button,
 				      GtkWidget *spl_window)
@@ -624,6 +658,8 @@ static void spl_button_minus_clicked (GtkButton *button,
 
     itdb_splr_remove (spl, splr);
     spl_update_rules_from_row (spl_window, row);
+
+    spl_check_number_of_rules (spl_window);
 }
 
 
@@ -647,6 +683,8 @@ static void spl_button_plus_clicked (GtkButton *button,
 
     itdb_splr_add_new (spl, row+1);
     spl_update_rules_from_row (spl_window, row+1);
+
+    spl_check_number_of_rules (spl_window);
 }
 
 
@@ -1217,6 +1255,8 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
     /* create hbox with buttons */
     hbox = gtk_hbox_new (TRUE, 2);
     gtk_widget_show (hbox);
+    g_object_set_data (G_OBJECT (table), name, hbox);
+
     button = gtk_button_new_with_label (_("-"));
     gtk_widget_show (button);
     gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
@@ -1224,6 +1264,9 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 		      G_CALLBACK (spl_button_minus_clicked),
 		      spl_window);
     g_object_set_data (G_OBJECT (button), "spl_rule", splr);
+    snprintf (name, WNLEN, "spl_button-%d", row);
+    g_object_set_data (G_OBJECT (table), name, button);
+
     button = gtk_button_new_with_label (_("+"));
     gtk_widget_show (button);
     gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
@@ -1231,10 +1274,12 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
 		      G_CALLBACK (spl_button_plus_clicked),
 		      spl_window);
     g_object_set_data (G_OBJECT (button), "spl_rule", splr);
+    snprintf (name, WNLEN, "spl_button+%d", row);
+    g_object_set_data (G_OBJECT (table), name, button);
+
     gtk_table_attach (table, hbox, 3,4, row,row+1,
 		      0,0,   /* expand options */
 		      XPAD,YPAD);  /* padding options */
-    g_object_set_data (G_OBJECT (table), name, hbox);
 }
 
 /* Display all rules stored in "spl_work" */
@@ -1261,6 +1306,8 @@ static void spl_display_rules (GtkWidget *spl_window)
 
     for (gl=spl->splrules.rules; gl; gl=gl->next)
 	spl_update_rule (spl_window, gl->data);
+
+    spl_check_number_of_rules (spl_window);
 }
 
 
@@ -1350,29 +1397,29 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 
     if ((w = glade_xml_get_widget (spl_window_xml, "spl_all_radio")))
     {
-	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (w),
-	    (spl_dup->splrules.match_operator == SPLMATCH_AND));
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (spl_all_radio_toggled),
 			  spl_window);
+	gtk_toggle_button_set_active (
+	    GTK_TOGGLE_BUTTON (w),
+	    (spl_dup->splrules.match_operator == SPLMATCH_AND));
     }
     if ((w = glade_xml_get_widget (spl_window_xml, "spl_any_radio")))
     {
-	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (w),
-	    (spl_dup->splrules.match_operator == SPLMATCH_OR));
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (spl_any_radio_toggled),
 			  spl_window);
+	gtk_toggle_button_set_active (
+	    GTK_TOGGLE_BUTTON (w),
+	    (spl_dup->splrules.match_operator == SPLMATCH_OR));
     }
     if ((w = glade_xml_get_widget (spl_window_xml, "spl_none_radio")))
     {
-	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (w), !spl_dup->splpref.checkrules);
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (spl_none_radio_toggled),
 			  spl_window);
+	gtk_toggle_button_set_active (
+	    GTK_TOGGLE_BUTTON (w), !spl_dup->splpref.checkrules);
     }
 
     if ((w = glade_xml_get_widget (spl_window_xml, "spl_matchcheckedonly_button")))

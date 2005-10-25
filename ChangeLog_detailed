@@ -1,5 +1,14 @@
 2005-10-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * display_spl.c: turn "-" button (delete rule) insensitive
+           when only one rule is left to avoid that all rules are
+           deleted which would result in a corrupted iTunesDB.
+
+	 * display_spl.c: make sure rule frame is turned insensitive
+           when "ignore rules" is active when the spl window opens.
+
+2005-10-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * display_itdb.c: added gp_itdb_get_podcasts()
 
 	 * file_itunesdb.c: set up 'Podcasts' local store on startup.

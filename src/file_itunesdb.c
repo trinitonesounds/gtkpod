@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-24 23:13:56 jcs>
+/* Time-stamp: <2005-10-25 00:06:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -403,7 +403,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 /* Import an iTunesDB and return an iTunesDB structure.
  * If @old_itdb is set, it will be merged into the newly imported
  * one. @old_itdb will not be changed.
- * @type: GP_ITDB_TYPE_LOCAL/IPOD/PODCASTS
+ * @type: GP_ITDB_TYPE_LOCAL/IPOD (bitwise flags!)
  * @mp: mount point of iPod (if reading an iPod iTunesDB)
  * @name_off: name of the iTunesDB in offline mode
  * @name_loc: name of iTunesDB (if reading a local file browser) */
