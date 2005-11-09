@@ -1,3 +1,7 @@
+2005-11-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file_itunesdb.c: API for itdb_shuffle_write() changed.
+
 2005-10-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * display_spl.c: turn "-" button (delete rule) insensitive

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-25 00:06:36 jcs>
+/* Time-stamp: <2005-11-10 08:57:52 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1425,7 +1425,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 
       if (success)
       {   /* write shuffle data */
-	  if (!itdb_shuffle_write (itdb, NULL, &error))
+	  if (!itdb_shuffle_write (itdb, &error))
 	  {   /* an error occured */
 	      success = FALSE;
 	      if (error && error->message)

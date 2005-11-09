@@ -26,6 +26,9 @@ gtkpod V0.96.CVS
        BUGFIX: Lame's Replay Gain was read incorrectly for certain
        values. Thanks to Chris Brotherton for tracking this down.
 
+       BUGFIX: Prevent that all rules in a smart playlist get deleted,
+       which would mess up the iTunesDB.
+
 gtkpod V0.95.CVS
        NEW: script to sync addressbooks in ldif format provided by
        Sebastien BERIDOT.
