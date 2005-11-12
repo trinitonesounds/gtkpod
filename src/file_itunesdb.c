@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-10 08:57:52 jcs>
+/* Time-stamp: <2005-11-12 18:10:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1077,13 +1077,14 @@ static gboolean delete_files (iTunesDB *itdb)
   gboolean result = TRUE;
   static gboolean abort_flag;
   ExtraiTunesDBData *eitdb;
-  const gchar *mp = NULL;
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
   GTimeVal gtime;
   if (!mutex) mutex = g_mutex_new ();
   if (!cond) cond = g_cond_new ();
 #endif
+
+
 
   g_return_val_if_fail (itdb, FALSE);
   eitdb = itdb->userdata;
@@ -1096,8 +1097,7 @@ static gboolean delete_files (iTunesDB *itdb)
 
   if (itdb->usertype & GP_ITDB_TYPE_IPOD)
   {
-      mp = prefs_get_ipod_mount ();
-      g_return_val_if_fail (mp, FALSE);
+      g_return_val_if_fail (itdb->mountpoint, FALSE);
   }
 
   abort_flag = FALSE;
@@ -1117,7 +1117,9 @@ static gboolean delete_files (iTunesDB *itdb)
 
       if (itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
-	  filename = get_file_name_on_ipod (track);
+	  track->itdb = itdb;
+	  filename = itdb_filename_on_ipod (track);
+	  track->itdb = NULL;
       }
       if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
       {

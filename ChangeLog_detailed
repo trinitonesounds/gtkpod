@@ -4,6 +4,9 @@
 
 	 * prefs.c: handle filenames somewhat more decently
 
+	 * file_itunesdb.c: bugfix: tracks marked for deletion were
+           not deleted from the iPod.
+
 2005-11-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * moved mkdirhier() from file_export.c to misc.c
