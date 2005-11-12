@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-16 01:59:05 jcs>
+/* Time-stamp: <2005-11-12 23:38:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1755,8 +1755,8 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
  *                                                                  *
 \*------------------------------------------------------------------*/
 
-/* Append file @name to the list of tracks.
-   @name is in the current locale
+/* Append file @fname to the list of tracks.
+   @fname is in the current locale
    @plitem: if != NULL, add track to plitem as well (unless it's the MPL)
    descend: TRUE:  add directories recursively
             FALSE: add contents of directories passed but don't descend
@@ -1764,7 +1764,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 /* @addtrackfunc: if != NULL this will be called instead of
    "add_track_to_playlist () -- used for dropping tracks at a specific
    position in the track view */
-gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
+gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 				Playlist *plitem, gboolean descend,
 			       AddTrackFunc addtrackfunc, gpointer data)
 {
@@ -1776,23 +1776,23 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
   Playlist *mpl;
   gboolean result = TRUE;
 
-  g_return_val_if_fail (name, FALSE);
+  g_return_val_if_fail (fname, FALSE);
   g_return_val_if_fail (itdb, FALSE);
   mpl = itdb_playlist_mpl (itdb);
   g_return_val_if_fail (mpl, FALSE);
 
   if (!plitem)  plitem = mpl;
 
-  if (g_file_test (name, G_FILE_TEST_IS_DIR))
+  if (g_file_test (fname, G_FILE_TEST_IS_DIR))
   {
-      return add_directory_by_name (itdb, name, plitem, descend, addtrackfunc, data);
+      return add_directory_by_name (itdb, fname, plitem, descend, addtrackfunc, data);
   }
 
   /* check if file is a playlist */
-  switch (determine_file_type(name)) {
+  switch (determine_file_type(fname)) {
 	  case FILE_TYPE_M3U:
 	  case FILE_TYPE_PLS:
-	      if (add_playlist_by_filename (itdb, name, plitem, -1,
+	      if (add_playlist_by_filename (itdb, fname, plitem, -1,
 					    addtrackfunc, data))
 		  return TRUE;
 	      return FALSE;
@@ -1805,7 +1805,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
   }
 
   /* print a message about which file is being processed */
-  basename = g_path_get_basename (name);
+  basename = g_path_get_basename (fname);
   if (basename)
   {
       gchar *bn_utf8 = charset_to_utf8 (basename);
@@ -1817,7 +1817,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
   C_FREE (basename);
 
   /* Check if there exists already a track with the same filename */
-  oldtrack = gp_track_by_filename (itdb, name);
+  oldtrack = gp_track_by_filename (itdb, fname);
   /* If a track already exists in the database, either update it or
      just add it to the current playlist (if it doesn't already exist) */
   if (oldtrack)
@@ -1839,9 +1839,8 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
       }
   }
   else  /* oldtrack == NULL */
-  {  /* Only read the new track if there doesn't already exist an old
-	track with the same filename in the database */
-      Track *track = get_track_info_from_file (name, NULL);
+  {   /* OK, the same filename does not already exist */
+      Track *track = get_track_info_from_file (fname, NULL);
       if (track)
       {
           Track *added_track = NULL;
@@ -1851,25 +1850,26 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 	  track->id = 0;
 	  track->transferred = FALSE;
 
-	  /* is 'name' on the iPod? */
+	  /* is 'fname' on the iPod? -- if yes mark as transfered, if
+	   * it's in the ipod_control directory */
 	  if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	  {
 	      g_return_val_if_fail (itdb->mountpoint, FALSE);
-	      if (strstr (name, itdb->mountpoint) == name)
+	      if (strstr (fname, itdb->mountpoint) == fname)
 	      {   /* Yes */
-		  /* is 'name' in the iPod_Control directory? */
-		  gchar *name_i = name + strlen (itdb->mountpoint);
-		  gchar *name_l;
-		  if (*name_i == G_DIR_SEPARATOR) ++name_i;
-		  name_l = g_ascii_strdown (name_i, -1);
-		  if (strstr (name_l, "ipod_control") == name_l)
+		  /* is 'fname' in the iPod_Control directory? */
+		  gchar *fname_i = fname + strlen (itdb->mountpoint);
+		  gchar *fname_l;
+		  if (*fname_i == G_DIR_SEPARATOR) ++fname_i;
+		  fname_l = g_ascii_strdown (fname_i, -1);
+		  if (strstr (fname_l, "ipod_control") == fname_l)
 		  {   /* Yes */
 		      track->transferred = TRUE;
 		      track->ipod_path = g_strdup_printf (
-			  "%c%s", G_DIR_SEPARATOR, name_i);
+			  "%c%s", G_DIR_SEPARATOR, fname_i);
 		      itdb_filename_fs2ipod (track->ipod_path);
 		  }
-		  g_free (name_l);
+		  g_free (fname_l);
 	      }
 	  }
 
@@ -1886,17 +1886,19 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 	  if (addtrackfunc)
 	  {
 	      if (itdb_playlist_is_mpl (plitem))
-	      {   /* add track to master playlist (if it wasn't a
+	      {   /* add track to master playlist if it wasn't a
 		     duplicate */
 		  if (added_track == track)
 		      addtrackfunc (plitem, added_track, data);
 	      }
 	      else
-	      {   /* add track to master playlist (if it wasn't a
-		   * duplicate) */
+	      {   /* add track to master playlist if it wasn't a
+		   * duplicate and plitem is not the podcasts playlist
+		   */
 		  if (added_track == track)
 		  {
-		      gp_playlist_add_track (mpl, added_track, TRUE);
+		      if (!itdb_playlist_is_podcasts (plitem))
+			  gp_playlist_add_track (mpl, added_track, TRUE);
 		  }
 		  /* add track to specified playlist */
 		  addtrackfunc (plitem, added_track, data);
@@ -1904,14 +1906,27 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *name,
 	  }
 	  else  /* no addtrackfunc */
 	  {
-		  /* add track to master playlist (if it wasn't a
-		   * duplicate) */
+	      if (itdb_playlist_is_mpl (plitem))
+	      {
+		  /* add track to master playlist if it wasn't a
+		   * duplicate */
 		  if (added_track == track)
-		      gp_playlist_add_track (mpl, added_track,
+		      gp_playlist_add_track (plitem, added_track,
 					     TRUE);
-		  /* add track to specified playlist, but not to MPL */
-		  if (!itdb_playlist_is_mpl (plitem))
-		      gp_playlist_add_track (plitem, added_track, TRUE);
+	      }
+	      else
+	      {
+		  /* add track to master playlist if it wasn't a
+		   * duplicate and plitem is not the podcasts playlist
+		   */
+		  if (added_track == track)
+		  {
+		      if (!itdb_playlist_is_podcasts (plitem))
+			  gp_playlist_add_track (mpl, added_track, TRUE);
+		  }
+		  /* add track to specified playlist */
+		  gp_playlist_add_track (plitem, added_track, TRUE);
+	      }
 	  }
 	  /* indicate that non-transferred files exist */
 	  data_changed (itdb);

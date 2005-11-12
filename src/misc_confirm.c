@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 13:17:12 jcs>
+/* Time-stamp: <2005-11-13 01:39:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -541,6 +541,11 @@ static void delete_playlist_ok (struct DeleteData *dd)
 		msg = g_strdup_printf (_("Removed all %d tracks from the iPod"), n);
 		display_reset (0);
 	    }
+	    else if (itdb_playlist_is_podcasts (dd->pl))
+	    {
+		msg = g_strdup_printf (_("Removed all podcasts from the iPod"));
+		display_reset (0);
+	    }
 	    else
 	    {
 		/* remove playlist */
@@ -684,6 +689,11 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    if (itdb_playlist_is_mpl (pl))
 	    {
 		label = g_strdup_printf (_("Are you sure you want to remove all tracks from your iPod?"));
+	    }
+	    else if (itdb_playlist_is_podcasts (pl))
+	    {   /* podcasts playlist */
+		dd->selected_tracks = g_list_copy (pl->members);
+		label = g_strdup_printf (_("Are you sure you want to remove all podcasts from your iPod?"));
 	    }
 	    else 
 	    {   /* normal playlist */

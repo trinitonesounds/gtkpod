@@ -38,6 +38,12 @@ AC_SUBST(PACKAGE_LIBS)
 dnl we need 'flex'
 AM_PROG_LEX
 
+if ! test `which $LEX`; then
+   echo LEX: $LEX
+   AC_MSG_FAILURE([**** flex or lex required])
+fi
+
+
 dnl Retrieve the path of mount and umount binaries
 AC_PATH_PROG(MOUNT, mount)
 AC_SUBST(MOUNT)

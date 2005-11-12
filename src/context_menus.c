@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 17:34:06 jcs>
+/* Time-stamp: <2005-11-13 01:50:32 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -282,15 +282,16 @@ create_context_menu(CM_type type)
 {
     static GtkWidget *menu[CM_NUM];
     static GtkWidget *mi_exp[CM_NUM];  /* Export Tracks */
-    static GtkWidget *mi_pl[CM_NUM];   /* DELETE_ACTION_PLAYLIST */
-    static GtkWidget *mi_ipod[CM_NUM]; /* DELETE_ACTION_IPOD     */
-    static GtkWidget *mi_local[CM_NUM];/* DELETE_ACTION_LOCAL    */
-    static GtkWidget *mi_db[CM_NUM];   /* DELETE_ACTION_DATABASE */
-    static GtkWidget *mi_sep[CM_NUM];  /* separator              */
+    static GtkWidget *mi_delpl[CM_NUM];   /* DELETE_ACTION_PLAYLIST */
+    static GtkWidget *mi_delipod[CM_NUM]; /* DELETE_ACTION_IPOD     */
+    static GtkWidget *mi_dellocal[CM_NUM];/* DELETE_ACTION_LOCAL    */
+    static GtkWidget *mi_deldb[CM_NUM];   /* DELETE_ACTION_DATABASE */
+    static GtkWidget *mi_delpcipod[CM_NUM]; /* DELETE_ACTION_IPOD   */
+    static GtkWidget *mi_delsep[CM_NUM];  /* separator              */
     static GtkWidget *mi_spl[CM_NUM];  /* edit smart playlist    */
-    static GtkWidget *mi_ipod_all[CM_NUM];/* DELETE_ACTION_IPOD (all
+    static GtkWidget *mi_delipod_all[CM_NUM];/* DELETE_ACTION_IPOD (all
 					   * tracks)      */
-    static GtkWidget *mi_db_all[CM_NUM];  /* DELETE_ACTION_DATABASE
+    static GtkWidget *mi_deldb_all[CM_NUM];  /* DELETE_ACTION_DATABASE
 					   * (all tracks  */
     static GtkWidget *mi_podcasts_sep[CM_NUM]; /* Podcasts Separator */
     static GtkWidget *mi_podcasts_update[CM_NUM]; /* Update Podcasts */
@@ -349,61 +350,78 @@ create_context_menu(CM_type type)
 	}
 	if ((type == CM_ST) || (type == CM_TM))
 	{
-	    mi_sep[type] = add_separator (menu[type]);
-	    mi_ipod[type] = hookup_mi (menu[type],
-				       _("Delete From iPod"),
-				       GTK_STOCK_DELETE,
-				       G_CALLBACK (delete_entries),
-				       GINT_TO_POINTER (DELETE_ACTION_IPOD));
-	    mi_local[type] = hookup_mi (menu[type],
-					_("Delete From Harddisk"),
-					GTK_STOCK_DELETE,
-					G_CALLBACK (delete_entries),
-					GINT_TO_POINTER (DELETE_ACTION_LOCAL));
-	    mi_db[type] = hookup_mi (menu[type],
-				     _("Delete From Database"),
-				     GTK_STOCK_DELETE,
-				     G_CALLBACK (delete_entries),
-				     GINT_TO_POINTER (DELETE_ACTION_DATABASE));
-	    mi_pl[type] = hookup_mi (menu[type],
-				     _("Delete From Playlist"),
-				     GTK_STOCK_DELETE,
-				     G_CALLBACK (delete_entries),
-				     GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
+	    mi_delsep[type] = add_separator (menu[type]);
+	    mi_delipod[type] =
+		hookup_mi (menu[type],
+			   _("Delete From iPod"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
+	    mi_dellocal[type] = 
+		hookup_mi (menu[type],
+			   _("Delete From Harddisk"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_LOCAL));
+	    mi_deldb[type] =
+		hookup_mi (menu[type],
+			   _("Delete From Database"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+	    mi_delpl[type] =
+		hookup_mi (menu[type],
+			   _("Delete From Playlist"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
 	}
 	if (type == CM_PM)
 	{
-	    mi_sep[type] = add_separator (menu[type]);
-	    mi_ipod[type] = hookup_mi (menu[type],
-				       _("Delete Including Tracks"),
-				       GTK_STOCK_DELETE,
-				       G_CALLBACK (delete_entries),
-				       GINT_TO_POINTER (DELETE_ACTION_IPOD));
-	    mi_local[type] = hookup_mi (menu[type],
-					_("Delete Including Tracks (Harddisk)"),
-					GTK_STOCK_DELETE,
-					G_CALLBACK (delete_entries),
-					GINT_TO_POINTER (DELETE_ACTION_LOCAL));
-	    mi_db[type] = hookup_mi (menu[type],
-				     _("Delete Including Tracks (Database)"),
-				     GTK_STOCK_DELETE,
-				     G_CALLBACK (delete_entries),
-				     GINT_TO_POINTER (DELETE_ACTION_DATABASE));
-	    mi_pl[type] = hookup_mi (menu[type],
-				     _("Delete But Keep Tracks"),
-				     GTK_STOCK_DELETE,
-				     G_CALLBACK (delete_entries),
-				     GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
-	    mi_ipod_all[type] = hookup_mi (menu[type],
-					   _("Remove All Tracks from iPod"),
-					   GTK_STOCK_DELETE,
-					   G_CALLBACK (delete_entries),
-					   GINT_TO_POINTER (DELETE_ACTION_IPOD));
-	    mi_db_all[type] = hookup_mi (menu[type],
-					 _("Remove All Tracks from Database"),
-					 GTK_STOCK_DELETE,
-					 G_CALLBACK (delete_entries),
-					 GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+	    mi_delsep[type] = add_separator (menu[type]);
+	    mi_delipod[type] =
+		hookup_mi (menu[type],
+			   _("Delete Including Tracks"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
+	    mi_dellocal[type] =
+		hookup_mi (menu[type],
+			   _("Delete Including Tracks (Harddisk)"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_LOCAL));
+	    mi_deldb[type] =
+		hookup_mi (menu[type],
+			   _("Delete Including Tracks (Database)"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+	    mi_delpl[type] =
+		hookup_mi (menu[type],
+			   _("Delete But Keep Tracks"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
+	    mi_delipod_all[type] =
+		hookup_mi (menu[type],
+			   _("Remove All Tracks from iPod"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
+	    mi_deldb_all[type] =
+		hookup_mi (menu[type],
+			   _("Remove All Tracks from Database"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+
+	    mi_delpcipod[type] =
+		hookup_mi (menu[type],
+			   _("Remove All Podcasts from iPod"),
+			   GTK_STOCK_DELETE,
+			   G_CALLBACK (delete_entries),
+			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
 
 	    mi_podcasts_sep[type] = add_separator (menu[type]);
 
@@ -433,107 +451,99 @@ create_context_menu(CM_type type)
 	switch (type)
 	{
 	case CM_PM:
+	    gtk_widget_hide (mi_spl[type]);
+	    gtk_widget_hide (mi_dellocal[type]);
+	    gtk_widget_hide (mi_delpl[type]);
+	    gtk_widget_hide (mi_deldb[type]);
+	    gtk_widget_hide (mi_deldb_all[type]);
+	    gtk_widget_hide (mi_delsep[type]);
+	    gtk_widget_hide (mi_delipod[type]);
+	    gtk_widget_hide (mi_delipod_all[type]);
+	    gtk_widget_hide (mi_delpcipod[type]);
+	    gtk_widget_hide (mi_dellocal[type]);
+	    gtk_widget_hide (mi_podcasts_sep[type]);
+	    gtk_widget_hide (mi_podcasts_update[type]);
+	    gtk_widget_hide (mi_podcasts_prefs[type]);
+
 	    if (pl->is_spl)
 	    {
 		gtk_widget_show (mi_spl[type]);
 	    }
-	    else
-	    {
-		gtk_widget_hide (mi_spl[type]);
-	    }
 	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	    {
-		gtk_widget_hide (mi_local [type]);
-		gtk_widget_hide (mi_db [type]);
-		gtk_widget_hide (mi_db_all [type]);
 		if (itdb_playlist_is_mpl (pl))
 		{
-		    gtk_widget_hide (mi_sep [type]);
-		    gtk_widget_hide (mi_ipod [type]);
-		    gtk_widget_hide (mi_pl [type]);
-		    gtk_widget_show (mi_ipod_all [type]);
+		    gtk_widget_show (mi_delipod_all[type]);
 		}
 		else
 		{
-		    gtk_widget_show (mi_sep [type]);
-		    gtk_widget_show (mi_ipod [type]);
-		    gtk_widget_show (mi_pl [type]);
-		    gtk_widget_hide (mi_ipod_all [type]);
+		    if (itdb_playlist_is_podcasts (pl))
+		    {
+			gtk_widget_show (mi_delpcipod[type]);
+		    }
+		    else
+		    {
+			gtk_widget_show (mi_delsep[type]);
+			gtk_widget_show (mi_delipod[type]);
+			gtk_widget_show (mi_delpl[type]);
+		    }
 		}
 	    }
 	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	    {
-		gtk_widget_hide (mi_ipod [type]);
-		gtk_widget_hide (mi_ipod_all [type]);
 		if (itdb_playlist_is_mpl (pl))
 		{
-		    gtk_widget_hide (mi_sep [type]);
-		    gtk_widget_hide (mi_local [type]);
-		    gtk_widget_hide (mi_db [type]);
-		    gtk_widget_hide (mi_pl [type]);
-		    gtk_widget_show (mi_db_all [type]);
+		    gtk_widget_show (mi_deldb_all[type]);
 		}
 		else
 		{
-		    gtk_widget_show (mi_sep [type]);
-		    gtk_widget_show (mi_local [type]);
-		    gtk_widget_show (mi_db [type]);
-		    gtk_widget_show (mi_pl [type]);
-		    gtk_widget_hide (mi_db_all [type]);
+		    gtk_widget_show (mi_delsep[type]);
+		    gtk_widget_show (mi_dellocal[type]);
+		    gtk_widget_show (mi_deldb[type]);
+		    gtk_widget_show (mi_delpl[type]);
 		}
 	    }
+
 	    if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
 	    {
+		gtk_widget_show (mi_delsep[type]);
 		gtk_widget_show (mi_podcasts_sep[type]);
 		gtk_widget_show (mi_podcasts_update[type]);
 		gtk_widget_show (mi_podcasts_prefs[type]);
 	    }
-	    else
-	    {
-		gtk_widget_hide (mi_podcasts_sep[type]);
-		gtk_widget_hide (mi_podcasts_update[type]);
-		gtk_widget_hide (mi_podcasts_prefs[type]);
-	    }
 	    break;
 	case CM_ST:
 	case CM_TM:
+	    gtk_widget_hide (mi_spl[type]);
+	    gtk_widget_hide (mi_dellocal[type]);
+	    gtk_widget_hide (mi_deldb[type]);
+	    gtk_widget_hide (mi_delpl[type]);
+	    gtk_widget_hide (mi_delipod[type]);
+
 	    if (pl->is_spl)
 	    {
 		gtk_widget_show (mi_spl[type]);
 	    }
-	    else
-	    {
-		gtk_widget_hide (mi_spl[type]);
-	    }
 	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	    {
-		gtk_widget_hide (mi_local [type]);
-		gtk_widget_hide (mi_db [type]);
-		if (itdb_playlist_is_mpl (pl))
+		gtk_widget_show (mi_delipod[type]);
+		if (!itdb_playlist_is_mpl (pl) &&
+		    !itdb_playlist_is_podcasts (pl))
 		{
-		    gtk_widget_show (mi_ipod [type]);
-		    gtk_widget_hide (mi_pl [type]);
-		}
-		else
-		{
-		    gtk_widget_show (mi_ipod [type]);
-		    gtk_widget_show (mi_pl [type]);
+		    gtk_widget_show (mi_delpl[type]);
 		}
 	    }
 	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	    {
-		gtk_widget_hide (mi_ipod [type]);
-		if (itdb_playlist_is_mpl (pl))
+		gtk_widget_show (mi_dellocal[type]);
+		gtk_widget_show (mi_deldb[type]);
+		/* actually, local repositories are not supposed to
+		   have podcasts playlists, but for completeness' sake
+		   I'll test anyway*/
+		if(!itdb_playlist_is_mpl (pl) &&
+		   !itdb_playlist_is_podcasts (pl))
 		{
-		    gtk_widget_show (mi_local [type]);
-		    gtk_widget_show (mi_db [type]);
-		    gtk_widget_hide (mi_pl [type]);
-		}
-		else
-		{
-		    gtk_widget_show (mi_local [type]);
-		    gtk_widget_show (mi_db [type]);
-		    gtk_widget_show (mi_pl [type]);
+		    gtk_widget_show (mi_delpl[type]);
 		}
 	    }
 	    break;

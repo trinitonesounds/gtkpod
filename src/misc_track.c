@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 13:17:17 jcs>
+/* Time-stamp: <2005-11-12 23:57:26 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -647,9 +647,14 @@ static void add_tracks_to_playlist (Playlist *pl,
 /* 	    printf ("add tr %p to pl: %p\n", track, pl); */
 	    if (from_itdb == to_itdb)
 	    {   /* DND within the same itdb */
+		if (!itdb_playlist_contains_track (to_mpl, track))
+		{   /* add to MPL if not already present (will happen
+		     * if dragged from the podcasts playlist */
+		    gp_playlist_add_track (to_mpl, track, TRUE);
+		}
 		if (!itdb_playlist_is_mpl (pl))
-		{   /* not necessary to add to MPL as track has to be
-		     * present already */
+		{
+		    /* add to designated playlist */
 		    gp_playlist_add_track (pl, track, TRUE);
 		}
 	    }
@@ -663,11 +668,31 @@ static void add_tracks_to_playlist (Playlist *pl,
 		   same track already exists in the database, the already
 		   existing track is returned and @duptr is freed */
 		addtr = gp_track_add (to_itdb, duptr);
-		/* check if we need to add to the MPL */
+
 		if (addtr == duptr)
-		{
-		    itdb_playlist_add_track (to_mpl, addtr, -1);
+		{   /* no duplicate */
+		    /* we need to add to the MPL if the track is no
+		       duplicate and will not be added to the podcasts
+		       playlist */
+		    if (!itdb_playlist_is_podcasts (pl))
+		    {   /* don't add to mpl if we add to the podcasts
+			   playlist */
+			gp_playlist_add_track (to_mpl, addtr, TRUE);
+		    }
 		}
+		else
+		{   /* duplicate */
+		    /* we also need to add to the MPL if the track is a
+		       duplicate, does not yet exist in the MPL and will
+		       not be added to a podcast list (this happens if
+		       it's already in the podcast list) */
+		    if ((!itdb_playlist_contains_track (to_mpl, addtr)) &&
+			(!itdb_playlist_is_podcasts (pl)))
+		    {
+			gp_playlist_add_track (to_mpl, addtr, TRUE);
+		    }
+		}
+		/* add to designated playlist (if not mpl) */
 		if (!itdb_playlist_is_mpl (pl))
 		{
 		    gp_playlist_add_track (pl, addtr, TRUE);

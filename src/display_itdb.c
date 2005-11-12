@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-24 23:49:51 jcs>
+/* Time-stamp: <2005-11-13 01:39:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -462,6 +462,8 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 			       DeleteAction deleteaction)
 {
     iTunesDB *itdb;
+    Playlist *mpl;
+    gboolean remove_track = FALSE;
 
     g_return_if_fail (track);
     itdb = track->itdb;
@@ -472,8 +474,10 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
     case DELETE_ACTION_IPOD:
     case DELETE_ACTION_LOCAL:
     case DELETE_ACTION_DATABASE:
-	/* remove from MPL in these cases */
-	plitem = NULL;
+	/* remove from MPL in these cases (unless we are removing
+	   podcasts) */
+	if (!(plitem && itdb_playlist_is_podcasts (plitem)))
+	    plitem = NULL;
 	break;
     case DELETE_ACTION_PLAYLIST:
 	/* cannot remove from MPL */
@@ -481,7 +485,10 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 	break;
     }
 
-    if (plitem == NULL)  plitem = itdb_playlist_mpl (track->itdb);
+    mpl = itdb_playlist_mpl (track->itdb);
+
+    if (plitem == NULL)
+	plitem = mpl;
     
     g_return_if_fail (plitem);
 
@@ -490,6 +497,17 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 
     /* remove track from playlist */
     itdb_playlist_remove_track (plitem, track);
+
+    /* if we removed a podcasts, remove it from memory as well, unless
+       it's present in the MPL (this happens if this podcast was on
+       the iPod as podcast as well as standard track) */
+    if (itdb_playlist_is_podcasts (plitem))
+    {
+	if (!itdb_playlist_contains_track (mpl, track))
+	{
+	    remove_track = TRUE;
+	}
+    }
 
     if (itdb_playlist_is_mpl (plitem))
     { /* if it's the MPL, we remove the track permanently */
@@ -508,8 +526,12 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 	    }
 	    gl=gl->next;
 	}
-	md5_track_remove (track);
+	remove_track = TRUE;
+    }
 
+    if (remove_track)
+    {
+	md5_track_remove (track);
 	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
 	    switch (deleteaction)

@@ -10,6 +10,12 @@
 	 * gtkpod.glade: added scrollbars for smart playlist
            rules-view.
 
+	 * display_spl.c: remember last size of edit smartlist window.
+
+	 * display_itdb.c, context_menus.c, misc_confirm.c,
+           misc_track.c: provisions for podcasts DND and podcasts
+           deletion.
+
 2005-11-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * moved mkdirhier() from file_export.c to misc.c
