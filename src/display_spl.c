@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-25 22:52:04 jcs>
+/* Time-stamp: <2005-11-12 22:22:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -40,7 +40,8 @@
 #include "display.h"
 #include "prefs.h"
 
-
+static const gchar *SPL_WINDOW_DEFX="spl_window_defx";
+static const gchar *SPL_WINDOW_DEFY="spl_window_defy";
 
 static void spl_display_checklimits (GtkWidget *spl_window);
 static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr);
@@ -688,6 +689,15 @@ static void spl_button_plus_clicked (GtkButton *button,
 }
 
 
+static void spl_store_window_size (GtkWidget *spl_window)
+{
+    gint defx, defy;
+
+    gtk_window_get_size (GTK_WINDOW (spl_window), &defx, &defy);
+    prefs_set_int_value (SPL_WINDOW_DEFX, defx);
+    prefs_set_int_value (SPL_WINDOW_DEFY, defy);
+}
+
 static void spl_cancel (GtkButton *button, GtkWidget *spl_window)
 {
     Playlist *spl_dup = g_object_get_data (G_OBJECT (spl_window),
@@ -707,6 +717,9 @@ static void spl_cancel (GtkButton *button, GtkWidget *spl_window)
     {   /* Delete */
 	itdb_playlist_free (spl_orig);
     }
+
+    spl_store_window_size (spl_window);
+
     gtk_widget_destroy (spl_window);
 
     release_widgets ();
@@ -764,6 +777,9 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
     }
 
     itdb_playlist_free (spl_dup);
+
+    spl_store_window_size (spl_window);
+
     gtk_widget_destroy (spl_window);
 
     release_widgets ();
@@ -1369,6 +1385,7 @@ static void spl_update_rules_from_row (GtkWidget *spl_window, gint row)
 void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
 {
     GtkWidget *spl_window, *w;
+    gint defx, defy;
     Playlist *spl_dup;
 
     g_return_if_fail (spl != NULL);
@@ -1457,6 +1474,12 @@ void spl_edit_all (iTunesDB *itdb, Playlist *spl, gint32 pos)
     spl_display_checklimits (spl_window);
 
     spl_display_rules (spl_window);
+
+    /* set default size */
+    defx = prefs_get_int (SPL_WINDOW_DEFX);
+    defy = prefs_get_int (SPL_WINDOW_DEFY);
+    if ((defx != 0) && (defy != 0))
+	gtk_window_set_default_size (GTK_WINDOW (spl_window), defx, defy);
 
     gtk_widget_show (spl_window);
 

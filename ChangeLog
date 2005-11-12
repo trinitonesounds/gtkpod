@@ -18,6 +18,9 @@ gtkpod V0.96.CVS
 
        IMPROVEMENT: Support playcounts on iPod Shuffle as well
 
+       IMPROVEMENT: Remember size of 'Edit Smart Playlist' dialog and
+       use scrolled window for the rules display.
+
        UPDATED: Italian translation (thanks to Edward Matteucci)
 
        BUGFIX: 'Check iPod's files' could crash under certain
