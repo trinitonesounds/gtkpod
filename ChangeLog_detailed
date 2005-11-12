@@ -1,3 +1,13 @@
+2005-11-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * podcasts: some code cleanup, added context menus
+
+	 * prefs.c: handle filenames somewhat more decently
+
+2005-11-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * moved mkdirhier() from file_export.c to misc.c
+
 2005-11-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file_itunesdb.c: API for itdb_shuffle_write() changed.

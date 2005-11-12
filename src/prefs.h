@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-01 23:16:54 jcs>
+/* Time-stamp: <2005-11-12 16:05:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -367,7 +367,7 @@ void prefs_set_autoimport_commandline(gboolean val);
 
 /* Podcast preferences */
 void prefs_set_pc_dir(const gchar *str);
-const gchar *prefs_get_pc_dir(void);
+gchar *prefs_get_pc_dir(void);
 void prefs_set_pc_del_age(gboolean val);
 gboolean prefs_get_pc_del_age(void);
 void prefs_set_pc_del_age_val(gint val);
@@ -379,7 +379,7 @@ gboolean prefs_get_pc_auto_fetch(void);
 void prefs_set_pc_log(gboolean val);
 gboolean prefs_get_pc_log(void);
 void prefs_set_pc_log_file(const gchar *str);
-const gchar *prefs_get_pc_log_file(void);
+gchar *prefs_get_pc_log_file(void);
 void prefs_set_pc_auto_sync(gboolean val);
 gboolean prefs_get_pc_auto_sync(void);
 void prefs_set_pc_ipod_del_age(gboolean val);

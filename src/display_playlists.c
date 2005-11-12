@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 15:30:36 jcs>
+/* Time-stamp: <2005-11-12 17:31:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1792,12 +1792,12 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 	if (playlist->is_spl)
 	{
 	    g_object_set (G_OBJECT (renderer),
-			  "stock-id", "gtk-properties", NULL);
+			  "stock-id", GTK_STOCK_PROPERTIES, NULL);
 	}
 	else if (!itdb_playlist_is_mpl (playlist))
 	{
 	    g_object_set (G_OBJECT (renderer),
-			  "stock-id", "gtk-justify-left", NULL);
+			  "stock-id", GTK_STOCK_JUSTIFY_LEFT, NULL);
 	}
 	else
 	{

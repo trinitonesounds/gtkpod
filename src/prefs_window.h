@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 21:01:39 jcs>
+/* Time-stamp: <2005-11-12 17:16:12 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -41,8 +41,9 @@ void prefs_window_show_hide_tooltips (void);
 void prefs_window_ok (void);
 void prefs_window_apply (void);
 void prefs_window_cancel (void);
-void prefs_window_create (void);
+void prefs_window_create (gint page);
 void prefs_window_delete (void);
+void prefs_window_podcasts (void);
 
 void prefs_window_set_unused_gboolean3 (gboolean val);
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-01 23:16:54 asd>
+/* Time-stamp: <2005-11-12 15:31:44 jcs>
 |
 |  Copyright (C) 2002-2005 Alexander Dutton <alexdutton at f2s dot com>
 |  Part of the gtkpod project.
@@ -30,26 +30,6 @@
 #ifndef __PODCAST_H__
 #define __PODCAST_H__
 
-struct podcast
-{
-    gchar *name;                 /* of the podcast */
-    gchar *url;                  /* of XML file */
-};
-
-struct podcast_file
-{
-    gchar *title;                 /* of each individual audio file */
-    gchar *url;                  /* where the audio file is to be found */
-    gchar *desc;                 /* description of audio file (from XML) */
-    gchar *artist;               /* itunes:author in actuality */
-    gchar pubdate[14];           /* "YYYYMMDDHHMMSS" in UTC/GMT*/
-    gchar fetchdate[14];         /* same as above */
-    glong size;                  /* filesize */
-    gchar *local;                /* where the file is kept on the local system */
-    gboolean fetched;            /* whether or not this podcast has been fetched */
-    gboolean tofetch;            /* whether we should fetch this podcast */
-};
-
 enum
 {
   PC_SUBS_NAME = 0,
@@ -57,21 +37,6 @@ enum
   PC_SUBS_NUM_COLS
 };
 
-enum
-{
-  PCL_TITLE = 0,
-  PCL_URL,
-  PCL_SIZE,
-  PCL_PROGRESS,
-  PCL_NUM_COLS
-};
-
-enum
-{
-  ABORT_SELECTED = 0,
-  ABORT_CURRENT,
-  ABORT_ALL
-};
 
 gboolean podcast_fetch_in_progress;
 
@@ -96,11 +61,5 @@ gchar *podcast_get_tag_attr(gchar *attrs, gchar *req);
 
 void podcast_set_status(gchar *status);
 void podcast_set_cur_file_name(gchar *text);
-
-int update_progress(gpointer *data,
-                    double t, /* dltotal */
-                    double d, /* dlnow */
-                    double ultotal,
-                    double ulnow);
 
 #endif

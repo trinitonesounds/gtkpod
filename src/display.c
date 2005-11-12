@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-03 22:20:08 jcs>
+/* Time-stamp: <2005-11-12 17:41:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -769,12 +769,10 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget)
 */
 
 
-
-void
-on_podcast_button_clicked              (GtkButton       *button,
-                                        gpointer         user_data)
+void on_update_podcasts_activate (GtkButton       *button,
+				  gpointer         user_data)
 {
-    podcast_fetch();
+    podcast_fetch ();
 }
 
 
@@ -799,7 +797,7 @@ void
 on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    if(!widgets_blocked)  prefs_window_create();
+    if(!widgets_blocked)  prefs_window_create (-1);
 }
 
 

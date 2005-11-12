@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-20 18:42:26 jcs>
+/* Time-stamp: <2005-11-12 15:53:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -162,6 +162,10 @@ guint32 utf16_strlen (gunichar2 *utf16);
 gunichar2 *utf16_strdup (gunichar2 *utf16);
 
 void check_db (iTunesDB *db);
+
+gboolean mkdirhier(const gchar *dirname);
+gboolean mkdirhierfile(const gchar *filename);
+gchar *convert_filename (const gchar *filename);
 
 guint32 replaygain_to_soundcheck (gdouble gain);
 gdouble soundcheck_to_replaygain (guint32 soundcheck);

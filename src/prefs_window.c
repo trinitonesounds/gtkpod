@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-18 08:57:40 jcs>
+/* Time-stamp: <2005-11-12 17:18:55 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -122,7 +122,6 @@ static const GtkFileChooserAction path_type[] =
     -1
 };
 
-static GtkListStore *subs_store;
 
 /* pointers to fileselectors */
 static GtkWidget *path_filechooser[PATH_NUM];
@@ -335,13 +334,26 @@ void prefs_window_show_hide_tooltips (void)
 }
 
 
+/* Opens the podcasts options */
+void prefs_window_podcasts ()
+{
+    prefs_window_create (5);
+}
+
+
+
 /**
  * create_gtk_prefs_window
  * Create, Initialize, and Show the preferences window
  * allocate a static cfg struct for temporary variables
+ *
+ * If the window is already open, it is raised to the front and @page
+ * is selected (unless it's -1).
+ *
+ * @page: -1 for 'last page'.
  */
 void
-prefs_window_create(void)
+prefs_window_create (gint page)
 {
     gint i;
     gint defx, defy;
@@ -352,6 +364,14 @@ prefs_window_create(void)
     if (prefs_window)
     {   /* prefs window already open -- raise to the top */
 	gdk_window_raise (prefs_window->window);
+	if (page != -1)
+	{
+	    g_return_if_fail (prefs_window_xml);
+	    if ((w = glade_xml_get_widget (prefs_window_xml, "notebook")))
+	    {
+		gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
+	    }
+	}
 	return;
     }
 
@@ -702,8 +722,15 @@ prefs_window_create(void)
     
     if ((w = glade_xml_get_widget (prefs_window_xml, "notebook")))
     {
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
-				       prefs_get_last_prefs_page ());
+	if (page == -1)
+	{
+	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
+					   prefs_get_last_prefs_page ());
+	}
+	else
+	{
+	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
+	}
     }
     if ((w = glade_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
     {

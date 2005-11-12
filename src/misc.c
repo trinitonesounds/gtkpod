@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-09-20 18:44:43 jcs>
+|  Time-stamp: <2005-11-12 15:54:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1301,4 +1301,70 @@ gchar *which (const gchar *exe)
     }
     g_free(which_exec);
     return(result);
+}
+
+/**
+ * Recursively make directories.
+ * @return FALSE is this is not possible.
+ */
+gboolean mkdirhier(const gchar *dirname)
+{
+    gchar *dn, *p;
+
+    g_return_val_if_fail (dirname && *dirname, FALSE);
+
+    if (strncmp ("~/", dirname, 2) == 0)
+	 dn = g_build_filename (g_get_home_dir(), dirname+2, NULL);
+    else dn = g_strdup (dirname);
+
+    p = dn;
+
+    do
+    {
+	++p;
+	p = index (p, G_DIR_SEPARATOR);
+
+	if (p)   *p = '\0';
+
+	if (!g_file_test(dn, G_FILE_TEST_EXISTS))
+	{
+	    if (mkdir(dn, 0755) == -1)
+	    {
+		gtkpod_warning (_("Error creating %s: %s\n"),
+				dn, g_strerror(errno));
+		g_free (dn);
+		return FALSE;
+	    }
+	}
+	if (p)   *p = G_DIR_SEPARATOR;
+    } while (p);
+
+    g_free (dn);
+    return TRUE;
+}
+
+/**
+ * Recursively make directories in the given filename.
+ * @return FALSE is this is not possible.
+ */
+gboolean mkdirhierfile(const gchar *filename)
+{
+    gboolean result;
+    gchar *dirname = g_path_get_dirname (filename);
+    result = mkdirhier (filename);
+    g_free (dirname);
+    return result;
+}
+
+
+/**
+ * Convert "~/" to "/home/.../"
+ *
+ * g_free() return value when no longer needed.
+ */
+gchar *convert_filename (const gchar *filename)
+{
+    if (strncmp ("~/", filename, 2) == 0)
+	 return g_build_filename (g_get_home_dir(), filename+2, NULL);
+    else return g_strdup (filename);
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-24 13:17:16 jcs>
+/* Time-stamp: <2005-11-12 17:34:06 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -32,13 +32,14 @@
 #  include <config.h>
 #endif
 
+#include "itdb.h"
 #include "display.h"
 #include "file.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
 #include "tools.h"
-#include "itdb.h"
+#include "podcast.h"
 
 static guint entry_inst = -1;
 static GList *selected_tracks = NULL;
@@ -158,8 +159,10 @@ sync_dirs_entries(GtkMenuItem *mi, gpointer data)
  * @data - ignored, should be NULL
  */
 static void 
-delete_entries(GtkMenuItem *mi, DeleteAction deleteaction)
+delete_entries(GtkMenuItem *mi, gpointer data)
 {
+    DeleteAction deleteaction = GPOINTER_TO_INT (data);
+
     if (selected_playlist)
 	delete_playlist_head (deleteaction);
     else if(selected_entry)
@@ -289,6 +292,9 @@ create_context_menu(CM_type type)
 					   * tracks)      */
     static GtkWidget *mi_db_all[CM_NUM];  /* DELETE_ACTION_DATABASE
 					   * (all tracks  */
+    static GtkWidget *mi_podcasts_sep[CM_NUM]; /* Podcasts Separator */
+    static GtkWidget *mi_podcasts_update[CM_NUM]; /* Update Podcasts */
+    static GtkWidget *mi_podcasts_prefs[CM_NUM];  /* Podcasts Prefs */
 
     Playlist *pl;
 
@@ -298,31 +304,32 @@ create_context_menu(CM_type type)
 #if 0
 	hookup_mi (menu[type], _("Edit"), NULL, G_CALLBACK (edit_entries));
 #endif
-	hookup_mi (menu[type], _("Play Now"), "gtk-cdrom",
+	hookup_mi (menu[type], _("Play Now"), GTK_STOCK_CDROM,
 		   G_CALLBACK (play_entries_now), NULL);
-	hookup_mi (menu[type], _("Enqueue"), "gtk-cdrom",
+	hookup_mi (menu[type], _("Enqueue"), GTK_STOCK_CDROM,
 		   G_CALLBACK (play_entries_enqueue), NULL);
-	mi_exp[type] = hookup_mi (menu[type],
-				  _("Export Tracks"), "gtk-floppy",
+	mi_exp[type] = hookup_mi (menu[type], 
+				  _("Export Tracks"), GTK_STOCK_FLOPPY,
 				  G_CALLBACK (export_entries), NULL);
-	hookup_mi (menu[type], _("Create Playlist File"), "gtk-floppy",
+	hookup_mi (menu[type], _("Create Playlist File"), GTK_STOCK_FLOPPY,
 		   G_CALLBACK (create_playlist_file), NULL);
-	hookup_mi (menu[type], _("Update"), "gtk-refresh",
+	hookup_mi (menu[type], _("Update"), GTK_STOCK_REFRESH,
 		   G_CALLBACK (update_entries), NULL);
-	hookup_mi (menu[type], _("Sync Dirs"), "gtk-refresh",
+	hookup_mi (menu[type], _("Sync Dirs"), GTK_STOCK_REFRESH,
 		   G_CALLBACK (sync_dirs_entries), NULL);
 	hookup_mi (menu[type], _("Normalize"), NULL,
 		   G_CALLBACK (normalize_entries), NULL);
 	hookup_mi (menu[type], _("Create new Playlist"),
-		   "gtk-justify-left",
+		   GTK_STOCK_JUSTIFY_LEFT,
 		   G_CALLBACK (create_playlist_from_entries), NULL);
 	mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
-				  "gtk-properties",
+				  GTK_STOCK_PROPERTIES,
 				  G_CALLBACK (edit_spl), NULL);
 
 	if (type == CM_ST)
 	{
-	    hookup_mi (menu[type], _("Alphabetize"), "gtk-sort-ascending",
+	    hookup_mi (menu[type], _("Alphabetize"),
+		       GTK_STOCK_SORT_ASCENDING,
 		       G_CALLBACK (alphabetize), NULL);
 /* example for sub menus!
 	    GtkWidget *mi;
@@ -332,11 +339,11 @@ create_context_menu(CM_type type)
 	    sub = gtk_menu_new ();
 	    gtk_widget_show (sub);
 	    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
-	    hookup_mi (sub, _("Ascending"), "gtk-sort-ascending",
+	    hookup_mi (sub, _("Ascending"), GTK_STOCK_SORT_ASCENDING,
 		       G_CALLBACK (alphabetize_ascending), NULL);
-	    hookup_mi (sub, _("Descending"), "gtk-sort-descending",
+	    hookup_mi (sub, _("Descending"), GTK_STOCK_SORT_DESCENDING,
 		       G_CALLBACK (alphabetize_descending), NULL);
-	    hookup_mi (sub, _("Reset"), "gtk-undo",
+	    hookup_mi (sub, _("Reset"), GTK_STOCK_UNDO,
 	               G_CALLBACK (reset_alphabetize), NULL);
 */
 	}
@@ -345,58 +352,74 @@ create_context_menu(CM_type type)
 	    mi_sep[type] = add_separator (menu[type]);
 	    mi_ipod[type] = hookup_mi (menu[type],
 				       _("Delete From iPod"),
-				       "gtk-delete",
+				       GTK_STOCK_DELETE,
 				       G_CALLBACK (delete_entries),
-				       (gpointer)DELETE_ACTION_IPOD);
+				       GINT_TO_POINTER (DELETE_ACTION_IPOD));
 	    mi_local[type] = hookup_mi (menu[type],
 					_("Delete From Harddisk"),
-					"gtk-delete",
+					GTK_STOCK_DELETE,
 					G_CALLBACK (delete_entries),
-					(gpointer)DELETE_ACTION_LOCAL);
+					GINT_TO_POINTER (DELETE_ACTION_LOCAL));
 	    mi_db[type] = hookup_mi (menu[type],
 				     _("Delete From Database"),
-				     "gtk-delete",
+				     GTK_STOCK_DELETE,
 				     G_CALLBACK (delete_entries),
-				     (gpointer)DELETE_ACTION_DATABASE);
+				     GINT_TO_POINTER (DELETE_ACTION_DATABASE));
 	    mi_pl[type] = hookup_mi (menu[type],
 				     _("Delete From Playlist"),
-				     "gtk-delete",
+				     GTK_STOCK_DELETE,
 				     G_CALLBACK (delete_entries),
-				     (gpointer)DELETE_ACTION_PLAYLIST);
+				     GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
 	}
 	if (type == CM_PM)
 	{
 	    mi_sep[type] = add_separator (menu[type]);
 	    mi_ipod[type] = hookup_mi (menu[type],
 				       _("Delete Including Tracks"),
-				       "gtk-delete",
+				       GTK_STOCK_DELETE,
 				       G_CALLBACK (delete_entries),
-				       (gpointer)DELETE_ACTION_IPOD);
+				       GINT_TO_POINTER (DELETE_ACTION_IPOD));
 	    mi_local[type] = hookup_mi (menu[type],
 					_("Delete Including Tracks (Harddisk)"),
-					"gtk-delete",
+					GTK_STOCK_DELETE,
 					G_CALLBACK (delete_entries),
-					(gpointer)DELETE_ACTION_LOCAL);
+					GINT_TO_POINTER (DELETE_ACTION_LOCAL));
 	    mi_db[type] = hookup_mi (menu[type],
 				     _("Delete Including Tracks (Database)"),
-				     "gtk-delete",
+				     GTK_STOCK_DELETE,
 				     G_CALLBACK (delete_entries),
-				     (gpointer)DELETE_ACTION_DATABASE);
+				     GINT_TO_POINTER (DELETE_ACTION_DATABASE));
 	    mi_pl[type] = hookup_mi (menu[type],
 				     _("Delete But Keep Tracks"),
-				     "gtk-delete",
+				     GTK_STOCK_DELETE,
 				     G_CALLBACK (delete_entries),
-				     (gpointer)DELETE_ACTION_PLAYLIST);
+				     GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
 	    mi_ipod_all[type] = hookup_mi (menu[type],
 					   _("Remove All Tracks from iPod"),
-					   "gtk-delete",
+					   GTK_STOCK_DELETE,
 					   G_CALLBACK (delete_entries),
-					   (gpointer)DELETE_ACTION_IPOD);
+					   GINT_TO_POINTER (DELETE_ACTION_IPOD));
 	    mi_db_all[type] = hookup_mi (menu[type],
 					 _("Remove All Tracks from Database"),
-					 "gtk-delete",
+					 GTK_STOCK_DELETE,
 					 G_CALLBACK (delete_entries),
-					 (gpointer)DELETE_ACTION_DATABASE);
+					 GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+
+	    mi_podcasts_sep[type] = add_separator (menu[type]);
+
+	    mi_podcasts_update[type] =
+		hookup_mi (menu[type],
+			   _("Update Podcasts"),
+			   GTK_STOCK_REFRESH,
+			   G_CALLBACK (podcast_fetch),
+			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+
+	    mi_podcasts_prefs[type] =
+		hookup_mi (menu[type],
+			   _("Podcasts Preferences"),
+			   GTK_STOCK_PREFERENCES,
+			   G_CALLBACK (prefs_window_podcasts),
+			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
 	}
     }
     /* Make sure, only available options are displayed */
@@ -458,6 +481,18 @@ create_context_menu(CM_type type)
 		    gtk_widget_show (mi_pl [type]);
 		    gtk_widget_hide (mi_db_all [type]);
 		}
+	    }
+	    if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
+	    {
+		gtk_widget_show (mi_podcasts_sep[type]);
+		gtk_widget_show (mi_podcasts_update[type]);
+		gtk_widget_show (mi_podcasts_prefs[type]);
+	    }
+	    else
+	    {
+		gtk_widget_hide (mi_podcasts_sep[type]);
+		gtk_widget_hide (mi_podcasts_update[type]);
+		gtk_widget_hide (mi_podcasts_prefs[type]);
 	    }
 	    break;
 	case CM_ST:

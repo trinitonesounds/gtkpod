@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-12 18:57:24 jcs>
+/* Time-stamp: <2005-11-12 01:31:58 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -89,29 +89,6 @@ static gboolean mutex_data = FALSE;
 #endif
 
 
-
-/**
- * Recursively make directories in the given filename.
- * @return FALSE is this is not possible.
- */
-gboolean
-mkdirhier(char* filename)
-{
-	char* p = filename;
-	if (*p == G_DIR_SEPARATOR) p++;
-	while ((p = index(p, G_DIR_SEPARATOR)) != NULL) {
-		*p = '\0';
-		if (!g_file_test(filename, G_FILE_TEST_EXISTS)) {
-			if (mkdir(filename, 0755) == -1) {
-				gtkpod_warning (_("Error creating %s: %s\n"), filename, g_strerror(errno));
-				return FALSE;
-			}
-		}
-		*p = G_DIR_SEPARATOR;
-		p++;
-	}
-	return TRUE;
-}
 
 /**
  * copy_file_fd_sync - given two open file descriptors, read from one
@@ -324,7 +301,7 @@ static gboolean write_track (struct fcd *fcd)
 	    prefs_get_string_value (EXPORT_FILES_PATH, &dest_dir);
 	    filename = g_build_filename (dest_dir, dest_file, NULL);
 
-	    if (mkdirhier(filename))
+	    if (mkdirhierfile(filename))
 	    {
 		if(copy_file(from_file, filename))
 		{

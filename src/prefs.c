@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-16 16:11:00 jcs>
+/* Time-stamp: <2005-11-12 17:49:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -141,23 +141,23 @@ struct cfg *cfg_new(void)
 {
     struct cfg *mycfg = NULL;
     gchar curdir[PATH_MAX], *str;
+    gchar *cfgdir;
     gint i;
+
+    cfgdir = prefs_get_cfgdir ();
 
     mycfg = g_malloc0 (sizeof (struct cfg));
     if(getcwd(curdir, PATH_MAX))
     {
-	mycfg->last_dir.browse = g_strdup_printf ("%s/", curdir);
+	mycfg->last_dir.browse = g_strdup (curdir);
     }
     else
     {
-	mycfg->last_dir.browse = g_strdup ("~/");
+	mycfg->last_dir.browse = convert_filename ("~/");
     }
     if((str = getenv("IPOD_MOUNTPOINT")))
     {
-	if (strncmp ("~/", str, 2) == 0)
-	    mycfg->ipod_mount = g_build_filename (g_get_home_dir(),
-						  str+2, NULL);
-	else mycfg->ipod_mount = g_strdup(str);
+	mycfg->ipod_mount = convert_filename (str);
     }
     else
     {
@@ -293,19 +293,21 @@ struct cfg *cfg_new(void)
     mycfg->mserv_report_probs = TRUE;
     mycfg->mserv_username = g_strdup ("");
 
-    mycfg->pc_dir = g_strdup_printf ("%s/podcasts", prefs_get_cfgdir());
+    mycfg->pc_dir = g_build_filename (cfgdir, "podcasts", NULL);
     mycfg->pc_del_age = FALSE;
     mycfg->pc_del_age_val = 1;
     mycfg->pc_del_copied = FALSE;
     mycfg->pc_auto_fetch = FALSE;
     mycfg->pc_log = TRUE;
-    mycfg->pc_log_file = g_strdup ("~/.gtkpod/podcast.log");
+    mycfg->pc_log_file = g_build_filename (cfgdir, "podcast.log", NULL);
     mycfg->pc_auto_sync = FALSE;
     mycfg->pc_ipod_del_age = FALSE;
     mycfg->pc_ipod_del_age_val = 1;
     mycfg->pc_ipod_del_played = FALSE;
     mycfg->pc_ipod_inc_date = FALSE;
     mycfg->pc_change_genre = FALSE;
+
+    g_free (cfgdir);
 
     return(mycfg);
 }
@@ -994,33 +996,32 @@ void
 read_prefs_defaults(void)
 {
   gchar *cfgdir = NULL;
-  gchar filename[PATH_MAX+1];
+  gchar *filename;
   FILE *fp = NULL;
   gboolean have_prefs = FALSE;
 
   cfgdir = prefs_get_cfgdir ();
-  if (cfgdir)
-  {
-      snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
-      filename[PATH_MAX] = 0;
-      if(g_file_test(filename, G_FILE_TEST_EXISTS))
-      {
-	  if((fp = fopen(filename, "r")))
-	  {
-	      read_prefs_from_file_desc(fp);
-	      fclose(fp);
-	      have_prefs = TRUE; /* read prefs */
-	  }
-	  else
-	  {
-	      gtkpod_warning(_("Unable to open config file '%s' for reading\n"), filename);
-	  }
-      }
 
+  filename = g_build_filename (cfgdir, "prefs", NULL);
+  if(g_file_test(filename, G_FILE_TEST_EXISTS))
+  {
+      if((fp = fopen(filename, "r")))
+      {
+	  read_prefs_from_file_desc(fp);
+	  fclose(fp);
+	  have_prefs = TRUE; /* read prefs */
+      }
+      else
+      {
+	  gtkpod_warning(_("Unable to open config file '%s' for reading\n"), filename);
+	  }
   }
+  g_free (filename);
+
   if (!have_prefs)
   {
-      snprintf (filename, PATH_MAX, "/etc/gtkpod/prefs");
+      filename = g_build_filename ("/etc", "gtkpod", "prefs", NULL);
+
       if (g_file_test (filename, G_FILE_TEST_EXISTS))
       {
 	  if((fp = fopen(filename, "r")))
@@ -1030,8 +1031,9 @@ read_prefs_defaults(void)
 	      have_prefs = TRUE; /* read prefs */
 	  }
       }
+      g_free (filename);
   }
-  C_FREE (cfgdir);
+  g_free (cfgdir);
   /* set version of the prefs file to "current" if none was read */
   if (!have_prefs)   cfg->version = g_ascii_strtod (VERSION, NULL);
 
@@ -1287,35 +1289,30 @@ write_prefs_to_file_desc(FILE *fp)
 /*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
 }
 
+
 void
 write_prefs (void)
 {
-    gchar filename[PATH_MAX+1];
+    gchar *filename;
     gchar *cfgdir;
     FILE *fp = NULL;
 
     cfgdir = prefs_get_cfgdir ();
-    if(!cfgdir)
-      {
-	gtkpod_warning (_("Settings are not saved.\n"));
-      }
-    else
-      {
-	snprintf(filename, PATH_MAX, "%s/prefs", cfgdir);
-	filename[PATH_MAX] = 0;
-	if((fp = fopen(filename, "w")))
-	  {
-	    write_prefs_to_file_desc(fp);
-	    fclose(fp);
-	  }
-	else
-	  {
-	    gtkpod_warning (_("Unable to open '%s' for writing\n"),
-			    filename);
-	  }
 
-      }
-    C_FREE (cfgdir);
+    filename = g_build_filename (cfgdir, "prefs", NULL);
+    if((fp = fopen(filename, "w")))
+    {
+	write_prefs_to_file_desc(fp);
+	fclose(fp);
+    }
+    else
+    {
+	gtkpod_warning (_("Unable to open '%s' for writing\n"),
+			filename);
+    }
+
+    g_free (filename);
+    g_free (cfgdir);
 }
 
 
@@ -1355,24 +1352,12 @@ void sortcfg_free(struct sortcfg *c)
 static gchar *
 get_dirname_of_filename(const gchar *file)
 {
-    gint len;
-    gchar *buf, *result = NULL;
-
     if (!file) return NULL;
 
     if (g_file_test(file, G_FILE_TEST_IS_DIR))
-	buf = g_strdup (file);
+	return g_strdup (file);
     else
-	buf = g_path_get_dirname (file);
-
-    len = strlen (buf);
-    if (len && (buf[len-1] == '/'))	result = buf;
-    else
-    {
-	result = g_strdup_printf ("%s/", buf);
-	g_free (buf);
-    }
-    return result;
+	return g_path_get_dirname (file);
 }
 
 
@@ -1405,9 +1390,7 @@ void prefs_set_ipod_mount(const gchar *mp)
     if(cfg->ipod_mount) g_free(cfg->ipod_mount);
     /* if new mount point starts with "~/", we replace it with the
        home directory */
-    if (strncmp ("~/", mp, 2) == 0)
-      cfg->ipod_mount = g_build_filename (g_get_home_dir (), mp+2, NULL);
-    else cfg->ipod_mount = g_strdup(mp);
+    cfg->ipod_mount = convert_filename (mp);
     /* need to notify the info thread of new mount point */
     space_set_ipod_mount (cfg->ipod_mount);
     gp_itdb_set_mountpoint (cfg->ipod_mount);
@@ -1712,25 +1695,24 @@ void prefs_set_tm_col_width (gint col, gint width)
 }
 
 
-/* Returns "$HOME/.gtkpod" or NULL if dir does not exist and cannot be
-   created. You must g_free the string after use */
+/* Returns "$HOME/.gtkpod" and tries to create it if it does not
+   exist. */
 gchar *prefs_get_cfgdir (void)
 {
   G_CONST_RETURN gchar *str;
   gchar *cfgdir=NULL;
 
   if((str = g_get_home_dir ()))
-    {
+  {
       cfgdir = g_build_filename (str, ".gtkpod", NULL);
       if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
-	{
+      {
 	  if(mkdir(cfgdir, 0755) == -1)
-	    {
+	  {
 	      gtkpod_warning(_("Unable to 'mkdir %s'\n"), cfgdir);
-	      C_FREE (cfgdir); /*defined in misc.h*/
-	    }
-	}
-    }
+	  }
+      }
+  }
   return cfgdir;
 }
 
@@ -2748,21 +2730,16 @@ void prefs_set_unused_gboolean3(gboolean val)
 
 void prefs_set_pc_dir (const gchar *str)
 {
-    if (str)
-    {
-        g_free (cfg->pc_dir);
-        if (*(str + strlen(str) - 1) == 0x2F)
-        {
-            cfg->pc_dir = g_strndup (str, strlen(str) - 1);
-        } else {
-            cfg->pc_dir = g_strdup (str);
-        }
-    }
+    g_return_if_fail (str);
+
+    g_free (cfg->pc_dir);
+    cfg->pc_dir = convert_filename (str);
 }
 
-const gchar *prefs_get_pc_dir (void)
+/* g_free() after use */
+gchar *prefs_get_pc_dir (void)
 {
-    return cfg->pc_dir;
+    return g_strdup (cfg->pc_dir);
 }
 
 void prefs_set_pc_del_age(gboolean val)
@@ -2820,13 +2797,14 @@ void prefs_set_pc_log_file(const gchar *str)
     if (str)
     {
         g_free (cfg->pc_log_file);
-        cfg->pc_log_file = g_strdup (str);
+        cfg->pc_log_file = convert_filename (str);
     }
 }
 
-const gchar *prefs_get_pc_log_file(void)
+/* g_free() after use */
+gchar *prefs_get_pc_log_file(void)
 {
-    return cfg->pc_log_file;
+    return g_strdup (cfg->pc_log_file);
 }
 
 void prefs_set_pc_auto_sync(gboolean val)
