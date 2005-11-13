@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-13 01:39:07 jcs>
+/* Time-stamp: <2005-11-13 16:29:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -209,6 +209,7 @@ Track *gp_track_new (void)
     Track *track = itdb_track_new ();
     /* Add ExtraTrackData */
     gp_track_add_extra (track);
+    gp_track_set_flags_default (track);
     return track;
 }
 
@@ -506,6 +507,10 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 	if (!itdb_playlist_contains_track (mpl, track))
 	{
 	    remove_track = TRUE;
+	}
+	else
+	{   /* strip the podcast flags */
+	    gp_track_set_flags_default (track);
 	}
     }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 18:10:50 jcs>
+/* Time-stamp: <2005-11-13 16:21:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -577,6 +577,9 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	g_return_val_if_fail (track, (release_widgets(), NULL));
 	fill_in_extended_info (track, total, num);
 	gp_track_validate_entries (track);
+	/* set new default value for flag1 (unknown) */
+	if (track->flag1 == 0)
+	    track->flag1 = 0x02;
 	++num;
     }
     /* take over the pending deletion information */

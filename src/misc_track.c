@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 23:57:26 jcs>
+/* Time-stamp: <2005-11-13 16:29:42 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -647,6 +647,11 @@ static void add_tracks_to_playlist (Playlist *pl,
 /* 	    printf ("add tr %p to pl: %p\n", track, pl); */
 	    if (from_itdb == to_itdb)
 	    {   /* DND within the same itdb */
+
+		/* set flags to 'podcast' if adding to podcast list */
+		if (itdb_playlist_is_podcasts (pl))
+		    gp_track_set_flags_podcast (track);
+
 		if (!itdb_playlist_contains_track (to_mpl, track))
 		{   /* add to MPL if not already present (will happen
 		     * if dragged from the podcasts playlist */
@@ -668,6 +673,10 @@ static void add_tracks_to_playlist (Playlist *pl,
 		   same track already exists in the database, the already
 		   existing track is returned and @duptr is freed */
 		addtr = gp_track_add (to_itdb, duptr);
+
+		/* set flags to 'podcast' if adding to podcast list */
+		if (itdb_playlist_is_podcasts (pl))
+		    gp_track_set_flags_podcast (addtr);
 
 		if (addtr == duptr)
 		{   /* no duplicate */
@@ -873,6 +882,33 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
     if (pl) return pl;
     if (pl_playlist_created) return pl_playlist_created;
     return NULL;
+}
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ * Functions setting default values on tracks                       *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+/* set podcast-specific flags for @track */
+void gp_track_set_flags_podcast (Track *track)
+{
+    g_return_if_fail (track);
+    track->flag1 = 0x02;  /* unknown */
+    track->flag2 = 0x01;  /* skip when shuffling */
+    track->flag3 = 0x01;  /* remember playback position */
+    track->flag4 = 0x01;  /* Show Title/Album on the 'Now Playing' page */
+}
+
+/* set podcast-specific flags for @track */
+void gp_track_set_flags_default (Track *track)
+{
+    g_return_if_fail (track);
+    track->flag1 = 0x02;  /* unknown */
+    track->flag2 = 0x00;  /* do not skip when shuffling */
+    track->flag3 = 0x00;  /* do not remember playback position */
+    track->flag4 = 0x00;  /* Show Title/Album/Artist on the 'Now
+			     Playing' page */
 }
 
 

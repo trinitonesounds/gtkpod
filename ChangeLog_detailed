@@ -1,3 +1,11 @@
+2005-11-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file.c: strip whitespace when getting tags from filename
+           via template.
+
+	 * take care of flag1/2/3/4 when adding and removing podcasts,
+           normal tracks...
+
 2005-11-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * podcasts: some code cleanup, added context menus

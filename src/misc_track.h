@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:14 jcs>
+/* Time-stamp: <2005-11-13 16:28:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -56,5 +56,7 @@ void gp_do_selected_tracks (void (*do_func)(GList *tracks));
 void gp_do_selected_entry (void (*do_func)(GList *tracks), gint inst);
 void gp_do_selected_playlist (void (*do_func)(GList *tracks));
 
+void gp_track_set_flags_podcast (Track *track);
+void gp_track_set_flags_default (Track *track);
 
 #endif

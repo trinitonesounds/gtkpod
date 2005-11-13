@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 23:38:13 jcs>
+/* Time-stamp: <2005-11-13 16:29:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -426,7 +426,7 @@ static gboolean parse_filename_with_template (Track *track,
 #ifdef DEBUG
 		printf ("%s: '%s'\n", token, fnp);
 #endif
-		itm = g_strdup (fnp);
+		itm = g_strstrip (g_strdup (fnp));
 		switch (token[1])
 		{
 		case 'a': /* artist */
@@ -1882,6 +1882,10 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 	     identical one (MD5 checksum) was found */
 	  added_track = gp_track_add (itdb, track);
 	  g_return_val_if_fail (added_track, FALSE);
+
+	  /* set flags to 'podcast' if adding to podcast list */
+	  if (itdb_playlist_is_podcasts (plitem))
+	      gp_track_set_flags_podcast (added_track);
 
 	  if (addtrackfunc)
 	  {
