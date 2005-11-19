@@ -1,0 +1,7 @@
+If you install from CVS, call
+
+./autogen.sh
+make
+make install
+
+See the INSTALL and TROUBLESHOOTING file for more information.
