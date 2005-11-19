@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-03 23:27:04 jcs>
+/* Time-stamp: <2005-11-19 15:41:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -280,6 +280,7 @@ void pm_stop_editing (gboolean cancel);
 
 void st_stop_editing (gint inst, gboolean cancel);
 void st_page_selected (GtkNotebook *notebook, guint page);
+void st_redisplay (guint32 inst);
 void st_sort (GtkSortType order);
 void st_remove_entry (TabEntry *entry, guint32 inst);
 gint st_get_instance_from_treeview (GtkTreeView *tv);

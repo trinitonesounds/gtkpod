@@ -3,6 +3,9 @@
 	 * file.c, file.h, file_itunesdb.c: basic video support --
            thanks to Uwe Hermann for the input.
 
+	 * updated smart playlists automatically if 'live updating' is
+           set.
+
 2005-11-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * configure.in: make check for flex fatal.

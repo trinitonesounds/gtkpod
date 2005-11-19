@@ -24,6 +24,9 @@ gtkpod V0.96.CVS
        IMPROVEMENT: Remember size of 'Edit Smart Playlist' dialog and
        use scrolled window for the rules display.
 
+       IMPROVEMENT: Update smart playlists automatically (on
+       load/display/save) if 'live updating' is set.
+
        UPDATED: Italian translation (thanks to Edward Matteucci)
 
        BUGFIX: 'Check iPod's files' could crash under certain

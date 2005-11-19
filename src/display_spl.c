@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 22:22:49 jcs>
+/* Time-stamp: <2005-11-19 15:41:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -762,13 +762,7 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
 
     itdb_spl_copy_rules (spl_orig, spl_dup);
 
-    itdb_spl_update (itdb, spl_orig);
-
-    if (pm_get_selected_playlist () == spl_orig)
-    {   /* redisplay */
-	pm_unselect_playlist (spl_orig);
-	pm_select_playlist (spl_orig);
-    }
+    itdb_playlist_free (spl_dup);
 
     /* does playlist already exist in itdb? */
     if (!itdb_playlist_exists (itdb, spl_orig))
@@ -776,7 +770,13 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
 	gp_playlist_add (itdb, spl_orig, pos);
     }
 
-    itdb_playlist_free (spl_dup);
+    itdb_spl_update (spl_orig);
+
+    if (pm_get_selected_playlist () == spl_orig)
+    {   /* redisplay */
+	pm_unselect_playlist (spl_orig);
+	pm_select_playlist (spl_orig);
+    }
 
     spl_store_window_size (spl_window);
 

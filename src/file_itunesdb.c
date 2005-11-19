@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 13:46:13 jcs>
+/* Time-stamp: <2005-11-19 16:27:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -674,8 +674,8 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	eitdb->data_changed = old_eitdb->data_changed;
     }
 
-    /* update all SPLs */
-    itdb_spl_update_all (itdb);
+    /* update all live SPLs */
+    itdb_spl_update_live (itdb);
 
     release_widgets();
 
@@ -1585,7 +1585,18 @@ void handle_export (void)
 	eitdb = itdb->userdata;
 	g_return_if_fail (eitdb);
 	if (eitdb->data_changed || eitdb->itdb_imported)
+	{
+	    Playlist *pl;
+	    /* update smart playlists before writing */
+	    itdb_spl_update_live (itdb);
+	    pl = pm_get_selected_playlist ();
+	    if (pl && (pl->itdb == itdb) &&
+		pl->is_spl && pl->splpref.liveupdate)
+	    {   /* Update display if necessary */
+		st_redisplay (0);
+	    }
 	    success &= gp_write_itdb (itdb);
+	}
     }
 
     if (prefs_get_concal_autosync ())

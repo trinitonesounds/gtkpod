@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 17:31:33 jcs>
+/* Time-stamp: <2005-11-19 16:24:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1324,6 +1324,8 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       st_init (-1, 0);
 
       current_playlist = new_playlist;
+      if (new_playlist->is_spl && new_playlist->splpref.liveupdate)
+	  itdb_spl_update (new_playlist);
       if (new_playlist->members)
       {
 	  GTimeVal time;
