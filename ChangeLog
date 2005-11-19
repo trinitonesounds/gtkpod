@@ -12,6 +12,9 @@ gtkpod V0.96.CVS
        of the search column is done by clicking anywhere inside the
        column.
 
+       NEW: very basic iPod video support (you can add Videos but no
+       metadata is filled in). Thanks to Uwe Herman for the input.
+
        IMPROVEMENT: added comment, category, description, podcast url,
        podcast rss, subtitle fields and release date to displayable
        fields.

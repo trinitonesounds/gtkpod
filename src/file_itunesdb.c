@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-13 16:21:35 jcs>
+/* Time-stamp: <2005-11-19 13:46:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -580,6 +580,9 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	/* set new default value for flag1 (unknown) */
 	if (track->flag1 == 0)
 	    track->flag1 = 0x02;
+	/* set unk208 to audio if unset (important only for iPod Video) */
+	if (track->unk208 == 0)
+	    track->unk208 = 0x00000001;
 	++num;
     }
     /* take over the pending deletion information */

@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-11-12 15:54:12 jcs>
+|  Time-stamp: <2005-11-19 14:31:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -158,6 +158,9 @@ Sebastian Scherer: sync script for kNotes\n"),
 		       "\n",
 		       _("\
 Nick Piper: sync script for Palm, type-ahead search\n"),
+		       "\n",
+		       _("\
+Uwe Hermann: help with support for iPod Video\n"),
 		       "\n",
 		       _("\
 Icons of buttons were made by Nicolas Chariot.\n\

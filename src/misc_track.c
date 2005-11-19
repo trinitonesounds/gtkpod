@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-13 16:29:42 jcs>
+/* Time-stamp: <2005-11-19 13:48:31 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -829,7 +829,7 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 		}
 		if (g_file_test (decoded_file, G_FILE_TEST_IS_REGULAR))
 		{   /* regular file */
-		    gint ftype = determine_file_type (decoded_file);
+		    FileType ftype = determine_file_type (decoded_file);
 		    switch (ftype)
 		    {
 		    case FILE_TYPE_MP3:
@@ -837,6 +837,10 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 		    case FILE_TYPE_M4P:
 		    case FILE_TYPE_M4B:
 		    case FILE_TYPE_WAV:
+		    case FILE_TYPE_M4V:
+		    case FILE_TYPE_MP4:
+		    case FILE_TYPE_MOV:
+		    case FILE_TYPE_MPG:
 			if (!pl)
 			{  /* no playlist yet -- create new one */
 			    pl = add_new_pl_user_name (itdb, NULL,
