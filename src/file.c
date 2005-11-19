@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 13:49:30 jcs>
+/* Time-stamp: <2005-11-19 16:34:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -909,6 +909,12 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	break;
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
+	/* I don't know if .m4v and .mp4 can simply be handled like
+	   this. Let's see if someone complains. */
+	nti = mp4_get_file_info (name);
+	/* Set unk208 to video */
+	track->unk208 = 0x00000002;
+	break;
     case FILE_TYPE_MOV:
     case FILE_TYPE_MPG:
 	/* for now treat all the same */
