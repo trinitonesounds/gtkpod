@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 01:31:58 jcs>
+/* Time-stamp: <2005-11-22 00:32:15 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -297,11 +297,12 @@ static gboolean write_track (struct fcd *fcd)
 	}
 	if (from_file)
 	{
-	    gchar *filename, *dest_dir;
+	    gchar *filename, *dest_dir, *dirname;
 	    prefs_get_string_value (EXPORT_FILES_PATH, &dest_dir);
 	    filename = g_build_filename (dest_dir, dest_file, NULL);
+	    dirname = g_path_get_dirname (filename);
 
-	    if (mkdirhierfile(filename))
+	    if (mkdirhierfile(dirname))
 	    {
 		if(copy_file(from_file, filename))
 		{
@@ -317,6 +318,7 @@ static gboolean write_track (struct fcd *fcd)
 	    g_free(from_file);
 	    g_free(dest_dir);
 	    g_free(filename);
+	    g_free(dirname);
 	}
 	else
 	{

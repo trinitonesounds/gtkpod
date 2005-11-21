@@ -38,6 +38,9 @@ gtkpod V0.96.CVS
        BUGFIX: Prevent that all rules in a smart playlist get deleted,
        which would mess up the iTunesDB.
 
+       BUGFIX: Automatic copy from iPod should now work when dragging
+       tracks to local repositories.
+
 gtkpod V0.95.CVS
        NEW: script to sync addressbooks in ldif format provided by
        Sebastien BERIDOT.

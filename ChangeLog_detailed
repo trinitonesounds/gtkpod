@@ -1,8 +1,16 @@
+2005-11-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file_export.c: Files were not copied from iPod to harddisk
+           during DND.
+
 2005-11-20 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * gtkpod.glade: added tooltips that disappeared when
            remodelling the prefs window one or two versions
            earlier. Removed prefs_window_old from gtkpod.glade.
+
+	 * gtkpod.glade, details.c, details.h: started work on window
+           to display details.
 
 2005-11-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
