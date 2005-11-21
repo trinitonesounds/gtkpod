@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 16:34:28 jcs>
+/* Time-stamp: <2005-11-21 19:51:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -759,7 +759,7 @@ Track *copy_new_info (Track *from, Track *to)
     to->year = from->year;
     g_free (eto->year_str);
     eto->year_str = g_strdup_printf ("%d", to->year);
-
+    to->unk208 = from->unk208;
     return to;
 }
 
@@ -893,19 +893,19 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     case FILE_TYPE_MP3:
 	nti = mp3_get_file_info (name);
 	/* Set unk208 to audio */
-	track->unk208 = 0x00000001;
+	nti->unk208 = 0x00000001;
 	break;
     case FILE_TYPE_M4A:
     case FILE_TYPE_M4P:
     case FILE_TYPE_M4B:
 	nti = mp4_get_file_info (name);
 	/* Set unk208 to audio */
-	track->unk208 = 0x00000001;
+	nti->unk208 = 0x00000001;
 	break;
     case FILE_TYPE_WAV:
 	nti = wav_get_file_info (name);
 	/* Set unk208 to audio */
-	track->unk208 = 0x00000001;
+	nti->unk208 = 0x00000001;
 	break;
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
@@ -913,14 +913,14 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	   this. Let's see if someone complains. */
 	nti = mp4_get_file_info (name);
 	/* Set unk208 to video */
-	track->unk208 = 0x00000002;
+	nti->unk208 = 0x00000002;
 	break;
     case FILE_TYPE_MOV:
     case FILE_TYPE_MPG:
 	/* for now treat all the same */
 	nti = video_get_file_info (name);
 	/* Set unk208 to video */
-	track->unk208 = 0x00000002;
+	nti->unk208 = 0x00000002;
 	break;
     case FILE_TYPE_UNKNOWN:
 	gtkpod_warning (_("The following track could not be processed (filetype unknown): '%s'\n"), name_utf8);
@@ -1976,51 +1976,44 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 	  if (itdb_playlist_is_podcasts (plitem))
 	      gp_track_set_flags_podcast (added_track);
 
-	  if (addtrackfunc)
-	  {
-	      if (itdb_playlist_is_mpl (plitem))
-	      {   /* add track to master playlist if it wasn't a
-		     duplicate */
-		  if (added_track == track)
+	  if (itdb_playlist_is_mpl (plitem))
+	  {   /* add track to master playlist if it wasn't a
+		 duplicate */
+	      if (added_track == track)
+	      {
+		  if (addtrackfunc)
 		      addtrackfunc (plitem, added_track, data);
-	      }
-	      else
-	      {   /* add track to master playlist if it wasn't a
-		   * duplicate and plitem is not the podcasts playlist
-		   */
-		  if (added_track == track)
-		  {
-		      if (!itdb_playlist_is_podcasts (plitem))
-			  gp_playlist_add_track (mpl, added_track, TRUE);
-		  }
-		  /* add track to specified playlist */
-		  addtrackfunc (plitem, added_track, data);
+		  else
+		      gp_playlist_add_track (plitem, added_track, TRUE);
 	      }
 	  }
-	  else  /* no addtrackfunc */
-	  {
-	      if (itdb_playlist_is_mpl (plitem))
+	  else
+	  {   /* add track to master playlist if it wasn't a
+	       * duplicate and plitem is not the podcasts playlist
+	       */
+	      if (added_track == track)
 	      {
-		  /* add track to master playlist if it wasn't a
-		   * duplicate */
-		  if (added_track == track)
-		      gp_playlist_add_track (plitem, added_track,
-					     TRUE);
+		  if (!itdb_playlist_is_podcasts (plitem))
+		      gp_playlist_add_track (mpl, added_track, TRUE);
+	      }
+	      /* add track to specified playlist -- unless adding
+	       * to podcasts list and track already exists there */
+	      if (itdb_playlist_is_podcasts (plitem) &&
+		  g_list_find (plitem->members, added_track))
+	      {
+		  gchar *buf = get_track_info (added_track, FALSE);
+		  gtkpod_warning (_("Podcast already present: '%s'\n\n"), buf);
+		  g_free (buf);
 	      }
 	      else
 	      {
-		  /* add track to master playlist if it wasn't a
-		   * duplicate and plitem is not the podcasts playlist
-		   */
-		  if (added_track == track)
-		  {
-		      if (!itdb_playlist_is_podcasts (plitem))
-			  gp_playlist_add_track (mpl, added_track, TRUE);
-		  }
-		  /* add track to specified playlist */
-		  gp_playlist_add_track (plitem, added_track, TRUE);
+		  if (addtrackfunc)
+		      addtrackfunc (plitem, added_track, data);
+		  else
+		      gp_playlist_add_track (plitem, added_track, TRUE);
 	      }
 	  }
+
 	  /* indicate that non-transferred files exist */
 	  data_changed (itdb);
 	  ++count;
