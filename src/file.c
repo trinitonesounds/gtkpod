@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-21 19:51:51 jcs>
+/* Time-stamp: <2005-11-22 09:02:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -893,34 +893,35 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     case FILE_TYPE_MP3:
 	nti = mp3_get_file_info (name);
 	/* Set unk208 to audio */
-	nti->unk208 = 0x00000001;
+	if (nti) nti->unk208 = 0x00000001;
 	break;
     case FILE_TYPE_M4A:
     case FILE_TYPE_M4P:
     case FILE_TYPE_M4B:
 	nti = mp4_get_file_info (name);
 	/* Set unk208 to audio */
-	nti->unk208 = 0x00000001;
+	if (nti) nti->unk208 = 0x00000001;
 	break;
     case FILE_TYPE_WAV:
 	nti = wav_get_file_info (name);
 	/* Set unk208 to audio */
-	nti->unk208 = 0x00000001;
+	if (nti) nti->unk208 = 0x00000001;
 	break;
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
 	/* I don't know if .m4v and .mp4 can simply be handled like
 	   this. Let's see if someone complains. */
 	nti = mp4_get_file_info (name);
+	if (!nti) video_get_file_info (name);
 	/* Set unk208 to video */
-	nti->unk208 = 0x00000002;
+	if (nti) nti->unk208 = 0x00000002;
 	break;
     case FILE_TYPE_MOV:
     case FILE_TYPE_MPG:
 	/* for now treat all the same */
 	nti = video_get_file_info (name);
 	/* Set unk208 to video */
-	nti->unk208 = 0x00000002;
+	if (nti) nti->unk208 = 0x00000002;
 	break;
     case FILE_TYPE_UNKNOWN:
 	gtkpod_warning (_("The following track could not be processed (filetype unknown): '%s'\n"), name_utf8);
