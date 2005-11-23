@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-13 01:39:08 jcs>
+/* Time-stamp: <2005-11-19 23:26:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -544,7 +544,9 @@ static void delete_playlist_ok (struct DeleteData *dd)
 	    else if (itdb_playlist_is_podcasts (dd->pl))
 	    {
 		msg = g_strdup_printf (_("Removed all podcasts from the iPod"));
-		display_reset (0);
+		if (pm_get_selected_playlist () == dd->pl)
+		    st_redisplay (0);
+//		display_reset (0);
 	    }
 	    else
 	    {

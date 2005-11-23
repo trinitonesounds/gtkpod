@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-03 23:17:44 jcs>
+/* Time-stamp: <2005-11-21 00:39:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -777,44 +777,6 @@ GList *gtk_tree_selection_get_selected_rows (GtkTreeSelection *selection,
 #endif
 
 
-/* Returns a string to be displayed in track_nr/tracks column */
-/* You must not free or modify the returned string */
-static const gchar *display_get_track_string (Track *track)
-{
-    static gchar str[20];
-
-    /* Erase string */
-    str[0] = 0;
-    if (track)
-    {
-	if (track->tracks == 0)
-	    snprintf (str, 20, "%d", track->track_nr);
-	else
-	    snprintf (str, 20, "%d/%d", track->track_nr, track->tracks);
-    }
-    return str;
-}
-
-
-/* Returns a string to be displayed in disk_nr/disks column */
-/* You must not free or modify the returned string */
-static const gchar *display_get_disk_string (Track *track)
-{
-    static gchar str[20];
-
-    /* Erase string */
-    str[0] = 0;
-    if (track)
-    {
-	if (track->cds == 0)
-	    snprintf (str, 20, "%d", track->cd_nr);
-	else
-	    snprintf (str, 20, "%d/%d", track->cd_nr, track->cds);
-    }
-    return str;
-}
-
-
 /* Called when editable cell is being edited. Stores new data to the
    track list. ID3 tags in the corresponding files are updated as
    well, if activated in the pref settings */
@@ -909,8 +871,9 @@ tm_cell_edited (GtkCellRendererText *renderer,
 		changed = TRUE;
 	    }
 	}
-	g_object_set (G_OBJECT (renderer),
-		      "text", display_get_track_string (track), NULL);
+	str = track_get_text (track, T_CD_NR);
+	g_object_set (G_OBJECT (renderer), "text", str, NULL);
+	g_free (str);
         break;
      case TM_COLUMN_CD_NR:
         nr = atoi (new_text);
@@ -929,8 +892,9 @@ tm_cell_edited (GtkCellRendererText *renderer,
 		changed = TRUE;
 	    }
 	}
-	g_object_set (G_OBJECT (renderer),
-		      "text", display_get_disk_string (track), NULL);
+	str = track_get_text (track, T_TRACK_NR);
+	g_object_set (G_OBJECT (renderer), "text", str, NULL);
+	g_free (str);
         break;
      case TM_COLUMN_YEAR:
         nr = atoi (new_text);
@@ -963,9 +927,9 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_TIME_MODIFIED:
      case TM_COLUMN_TIME_RELEASED:
 	 t = time_string_to_time (new_text);
-	 if ((t != -1) && (t != time_get_time (track, column)))
+	 if ((t != -1) && (t != time_get_time (track, TM_to_T (column))))
 	 {
-	     time_set_time (track, t, column);
+	     time_set_time (track, t, TM_to_T (column));
 	     changed = TRUE;
 	 }
 	 break;
@@ -1058,17 +1022,20 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   ExtraTrackData *etr;
   iTunesDB *itdb;
   TM_item column;
-  gchar text[21];
-  gchar *buf = NULL;
-  gchar *item_utf8 = NULL;
+  gchar *text;
 
   column = (TM_item)g_object_get_data (G_OBJECT (renderer), "column");
+
+  g_return_if_fail ((column >= 0) && (column < TM_NUM_COLUMNS));
+
   gtk_tree_model_get (model, iter, READOUT_COL, &track, -1);
   g_return_if_fail (track);
   etr = track->userdata;
   g_return_if_fail (etr);
   itdb = track->itdb;
   g_return_if_fail (itdb);
+
+  text = track_get_text (track, TM_to_T (column));
 
   switch (column)
   {
@@ -1085,149 +1052,59 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_PODCASTURL:
   case TM_COLUMN_PODCASTRSS:
   case TM_COLUMN_SUBTITLE:
-      item_utf8 = track_get_item (track, TM_to_T (column));
+  case TM_COLUMN_TIME_PLAYED:
+  case TM_COLUMN_TIME_MODIFIED:
+  case TM_COLUMN_TIME_ADDED:
+  case TM_COLUMN_TIME_RELEASED:
       g_object_set (G_OBJECT (renderer),
-		    "text", item_utf8,
-		    "editable", TRUE, NULL);
+		    "text", text,
+		    "editable", TRUE,
+		    "xalign", 0.0, NULL);
       break;
   case TM_COLUMN_TRACK_NR:
-      g_object_set (G_OBJECT (renderer),
-		    "text", display_get_track_string (track),
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
   case TM_COLUMN_CD_NR:
+  case TM_COLUMN_BITRATE:
+  case TM_COLUMN_SAMPLERATE:
+  case TM_COLUMN_BPM:
+  case TM_COLUMN_PLAYCOUNT:
+  case TM_COLUMN_YEAR:
+  case TM_COLUMN_RATING:
+  case TM_COLUMN_VOLUME:
+  case TM_COLUMN_SOUNDCHECK:
       g_object_set (G_OBJECT (renderer),
-		    "text", display_get_disk_string (track),
+		    "text", text,
 		    "editable", TRUE,
 		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_IPOD_ID:
-      if (track->id != -1)
-      {
-	  snprintf (text, 20, "%d", track->id);
-	  g_object_set (G_OBJECT (renderer),
-			"text", text,
-			"xalign", 1.0, NULL);
-      }
-      else
-      {
-	  g_object_set (G_OBJECT (renderer),
-			"text", "--",
-			"xalign", 1.0, NULL);
-      }
+  case TM_COLUMN_SIZE:
+  case TM_COLUMN_TRACKLEN:
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", FALSE,
+		    "xalign", 1.0, NULL);
       break;
   case TM_COLUMN_PC_PATH:
-      g_object_set (G_OBJECT (renderer), "text", etr->pc_path_utf8, NULL);
-      break;
   case TM_COLUMN_IPOD_PATH:
-      if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-      {
-	  g_object_set (G_OBJECT (renderer), "text",
-			track->ipod_path, NULL);
-      }
-      if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-      {
-	  g_object_set (G_OBJECT (renderer), "text",
-			_("Local Database"), NULL);
-      }
+      g_object_set (G_OBJECT (renderer),
+		    "text", text,
+		    "editable", FALSE,
+		    "xalign", 0.0, NULL);
       break;
   case TM_COLUMN_TRANSFERRED:
-      g_object_set (G_OBJECT (renderer), "active", track->transferred, NULL);
+      g_object_set (G_OBJECT (renderer),
+		    "active", track->transferred,
+		    "activatable", FALSE, NULL);
       break;
   case TM_COLUMN_COMPILATION:
       g_object_set (G_OBJECT (renderer),
 		    "active", track->compilation,
 		    "activatable", TRUE, NULL);
       break;
-  case TM_COLUMN_SIZE:
-      snprintf (text, 20, "%d", track->size);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_TRACKLEN:
-      snprintf (text, 20, "%d:%02d", track->tracklen/60000,
-                                     (track->tracklen/1000)%60);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_BITRATE:
-      snprintf (text, 20, "%dk", track->bitrate);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_SAMPLERATE:
-      snprintf (text, 20, "%d", track->samplerate);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_BPM:
-      snprintf (text, 20, "%d", track->BPM);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_PLAYCOUNT:
-      snprintf (text, 20, "%d", track->playcount);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_YEAR:
-      snprintf (text, 20, "%d", track->year);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_RATING:
-      snprintf (text, 20, "%d", track->rating/ITDB_RATING_STEP);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_TIME_PLAYED:
-  case TM_COLUMN_TIME_MODIFIED:
-  case TM_COLUMN_TIME_ADDED:
-  case TM_COLUMN_TIME_RELEASED:
-      buf = time_field_to_string (track, column);
-      g_object_set (G_OBJECT (renderer),
-		    "text", buf,
- 		    "editable", TRUE,
-		    "xalign", 0.0, NULL);
-      C_FREE (buf);
-      break;
-  case TM_COLUMN_VOLUME:
-      snprintf (text, 20, "%d", track->volume);
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  case TM_COLUMN_SOUNDCHECK:
-/*       printf ("%p:%f : %d\n", track, */
-/* 	      soundcheck_to_replaygain (track->soundcheck), */
-/* 	      track->soundcheck); */
-      snprintf (text, 20, "%0.2f",
-		soundcheck_to_replaygain (track->soundcheck));
-      g_object_set (G_OBJECT (renderer),
-		    "text", text,
-		    "editable", TRUE,
-		    "xalign", 1.0, NULL);
-      break;
-  default:
-      g_warning ("Programming error: unknown column in tm_cell_data_func: %d\n", column);
+  case TM_NUM_COLUMNS:
       break;
   }
+  g_free (text);
 }
 
 
@@ -1303,6 +1180,13 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
 /*        pm_track_changed (track);  notify playlist model... -- not
  *        necessary here because only the track model is affected */
         data_changed (track->itdb);  /* indicate that data has changed */
+        
+        /* If the changed column is the compilation flag update the file
+           if required */
+        if (column == TM_COLUMN_COMPILATION)
+           if (prefs_get_id3_write())
+              write_tags_to_file (track);
+        
      }
      while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
@@ -1701,8 +1585,8 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_TIME_PLAYED:
   case TM_COLUMN_TIME_MODIFIED:
   case TM_COLUMN_TIME_RELEASED:
-      cmp = COMP (time_get_time (track1, tm_item),
-		  time_get_time (track2, tm_item));
+      cmp = COMP (time_get_time (track1, TM_to_T (tm_item)),
+		  time_get_time (track2, TM_to_T (tm_item)));
       break;
   case  TM_COLUMN_VOLUME:
       cmp = track1->volume - track2->volume;

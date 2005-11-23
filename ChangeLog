@@ -15,6 +15,12 @@ gtkpod V0.96.CVS
        NEW: very basic iPod video support (you can add Videos but no
        metadata is filled in). Thanks to Uwe Herman for the input.
 
+       NEW: Window for display of track details. Non-stable with known
+       issues (no sync of data between main display and details
+       display -> deleting of tracks with the details window open may
+       segfault the appliction if the details window consequently
+       attempts to access the track and similar).
+
        IMPROVEMENT: added comment, category, description, podcast url,
        podcast rss, subtitle fields and release date to displayable
        fields.
@@ -27,6 +33,12 @@ gtkpod V0.96.CVS
        IMPROVEMENT: Update smart playlists automatically (on
        load/display/save) if 'live updating' is set.
 
+       IMPROVEMENT: Support for more mp3 file tags: Compilation
+       (TCMP), Podcast URL/Title (TID), Podcast Description (TDS),
+       Podcast Subtitle (TT3), Podcast RSS (WFD), Podcast Release Date
+       (TDR). Mostly reading only because of limited support on
+       id3tag's side.
+
        UPDATED: Italian translation (thanks to Edward Matteucci)
 
        BUGFIX: 'Check iPod's files' could crash under certain
@@ -37,9 +49,6 @@ gtkpod V0.96.CVS
 
        BUGFIX: Prevent that all rules in a smart playlist get deleted,
        which would mess up the iTunesDB.
-
-       BUGFIX: Automatic copy from iPod should now work when dragging
-       tracks to local repositories.
 
 gtkpod V0.95.CVS
        NEW: script to sync addressbooks in ldif format provided by

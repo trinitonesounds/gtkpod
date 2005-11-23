@@ -32,6 +32,7 @@ gtkpod_SOURCES = \
     confirmation.c confirmation.h \
     context_menus.c context_menus.h \
     date_parser.l date_parser2.l date_parser.h \
+    details.c details.h \
     display.c display_playlists.c display_sorttabs.c \
     display.h display_private.h \
     display_itdb.c display_itdb.h \

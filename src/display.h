@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 15:41:47 jcs>
+/* Time-stamp: <2005-11-21 20:44:26 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -189,6 +189,7 @@ typedef enum  {
 /* Add corresponding entries to t_strings[] and t_tooltips[] in
    misc_conversion.c! */
 /* Used in prefs_window.c to label the sort_ign_field<num> buttons */
+/* Used in display.c to label the detail_label_<num> labels */
 typedef enum {
     T_ALL = 0,      /* all fields */
     T_ALBUM,
@@ -225,6 +226,7 @@ typedef enum {
     T_PODCASTRSS,
     T_SUBTITLE,
     T_TIME_RELEASED,
+    T_CHECKED,      /* 35 */
     T_ITEM_NUM,
 } T_item;
 

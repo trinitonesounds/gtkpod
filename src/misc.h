@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 15:53:06 jcs>
+/* Time-stamp: <2005-11-22 21:34:59 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -124,9 +124,9 @@ gchar *time_totime_to_string (time_t t);
 time_t time_string_to_time (const gchar *str);
 time_t time_string_to_fromtime (const gchar *str);
 time_t time_string_to_totime (const gchar *str);
-time_t time_get_time (Track *track, TM_item tm_item);
+time_t time_get_time (Track *track, T_item t_item);
 gchar *time_field_to_string (Track *track, TM_item tm_item);
-void time_set_time (Track *track, time_t t, TM_item tm_item);
+void time_set_time (Track *track, time_t t, T_item t_item);
 
 gchar *get_filesize_as_string (double size);
 
@@ -207,4 +207,6 @@ gchar *get_string_from_template (Track *track,
 GList *glist_duplicate (GList *list);
 
 gchar *which (const gchar *exe);
+
+GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, gchar *name);
 #endif

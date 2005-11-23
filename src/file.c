@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-22 09:02:28 jcs>
+/* Time-stamp: <2005-11-23 01:34:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -718,16 +718,20 @@ Track *copy_new_info (Track *from, Track *to)
     g_return_val_if_fail (efrom, NULL);
     g_return_val_if_fail (eto, NULL);
 
-    C_FREE (to->album);
-    C_FREE (to->artist);
-    C_FREE (to->title);
-    C_FREE (to->genre);
-    C_FREE (to->comment);
-    C_FREE (to->composer);
-    C_FREE (to->filetype);
-    C_FREE (eto->pc_path_utf8);
-    C_FREE (eto->pc_path_locale);
-    C_FREE (eto->charset);
+    g_free (to->title);
+    g_free (to->artist);
+    g_free (to->album);
+    g_free (to->genre);
+    g_free (to->composer);
+    g_free (to->comment);
+    g_free (to->filetype);
+    g_free (to->description);
+    g_free (to->podcasturl);
+    g_free (to->podcastrss);
+    g_free (to->subtitle);
+    g_free (eto->pc_path_utf8);
+    g_free (eto->pc_path_locale);
+    g_free (eto->charset);
     /* copy strings */
     to->album = g_strdup (from->album);
     to->artist = g_strdup (from->artist);
@@ -736,6 +740,10 @@ Track *copy_new_info (Track *from, Track *to)
     to->comment = g_strdup (from->comment);
     to->composer = g_strdup (from->composer);
     to->filetype = g_strdup (from->filetype);
+    to->podcasturl = g_strdup (from->podcasturl);
+    to->podcastrss = g_strdup (from->podcastrss);
+    to->subtitle = g_strdup (from->subtitle);
+    to->description = g_strdup (from->description);
     eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
     eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
     eto->charset = g_strdup (efrom->charset);
@@ -757,6 +765,7 @@ Track *copy_new_info (Track *from, Track *to)
     to->time_added = from->time_added;
     to->time_modified = from->time_modified;
     to->year = from->year;
+    to->compilation = from->compilation;
     g_free (eto->year_str);
     eto->year_str = g_strdup_printf ("%d", to->year);
     to->unk208 = from->unk208;

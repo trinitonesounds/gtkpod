@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-13 16:29:00 jcs>
+/* Time-stamp: <2005-11-19 22:52:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -504,6 +504,13 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
        the iPod as podcast as well as standard track) */
     if (itdb_playlist_is_podcasts (plitem))
     {
+	/* just for safety: remove possible duplicates of @track in
+	   the podcast playlist before removing it from memory */
+	while (g_list_find (plitem->members, track))
+	{
+	    pm_remove_track (plitem, track);
+	    itdb_playlist_remove_track (plitem, track);
+	}
 	if (!itdb_playlist_contains_track (mpl, track))
 	{
 	    remove_track = TRUE;

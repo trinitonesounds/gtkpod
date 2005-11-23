@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-23 19:24:05 jcs>
+/* Time-stamp: <2005-11-21 21:58:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -92,7 +92,8 @@ static const gchar *t_strings[] = {
     N_("Podcast RSS"),
     N_("Subtitle"),
     N_("Date released"),
-    NULL };  /* 35 */
+    N_("Checked"),           /* 35 */
+    NULL };
 
 /* Tooltips for prefs window */
 static const gchar *t_tooltips[] = {
@@ -134,7 +135,8 @@ static const gchar *t_tooltips[] = {
     NULL,
     NULL,
     N_("Release date (for podcasts displayed next to the title on the iPod)"),
-    NULL   /* 35 */
+    NULL,   /* 35 */
+    NULL
  };
 
 
@@ -381,22 +383,22 @@ time_t time_string_to_totime (const gchar *str)
 
 
 /* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED/RELEASED */
-time_t time_get_time (Track *track, TM_item tm_item)
+time_t time_get_time (Track *track, T_item t_item)
 {
     guint32 mactime = 0;
 
-    if (track) switch (tm_item)
+    if (track) switch (t_item)
     {
-    case TM_COLUMN_TIME_ADDED:
+    case T_TIME_ADDED:
 	mactime = track->time_added;
 	break;
-    case TM_COLUMN_TIME_PLAYED:
+    case T_TIME_PLAYED:
 	mactime = track->time_played;
 	break;
-    case TM_COLUMN_TIME_MODIFIED:
+    case T_TIME_MODIFIED:
 	mactime = track->time_modified;
 	break;
-    case TM_COLUMN_TIME_RELEASED:
+    case T_TIME_RELEASED:
 	mactime = track->time_released;
 	break;
     default:
@@ -408,29 +410,29 @@ time_t time_get_time (Track *track, TM_item tm_item)
 
 
 /* hopefully obvious */
-gchar *time_field_to_string (Track *track, TM_item tm_item)
+gchar *time_field_to_string (Track *track, T_item t_item)
 {
-    return (time_time_to_string (time_get_time (track, tm_item)));
+    return (time_time_to_string (time_get_time (track, t_item)));
 }
 
 
 /* get the timestamp TM_COLUMN_TIME_CREATE/PLAYED/MODIFIED/RELEASED */
-void time_set_time (Track *track, time_t time, TM_item tm_item)
+void time_set_time (Track *track, time_t time, T_item t_item)
 {
     guint32 mactime = itdb_time_host_to_mac (time);
 
-    if (track) switch (tm_item)
+    if (track) switch (t_item)
     {
-    case TM_COLUMN_TIME_ADDED:
+    case T_TIME_ADDED:
 	track->time_added = mactime;
 	break;
-    case TM_COLUMN_TIME_PLAYED:
+    case T_TIME_PLAYED:
 	track->time_played = mactime;
 	break;
-    case TM_COLUMN_TIME_MODIFIED:
+    case T_TIME_MODIFIED:
 	track->time_modified = mactime;
 	break;
-    case TM_COLUMN_TIME_RELEASED:
+    case T_TIME_RELEASED:
 	track->time_released = mactime;
 	break;
     default:

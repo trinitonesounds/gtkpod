@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 13:48:31 jcs>
+/* Time-stamp: <2005-11-21 20:52:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -534,15 +534,17 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_SOUNDCHECK:
     case T_CD_NR:
     case T_COMPILATION:
+    case T_CHECKED:
     case T_ITEM_NUM:
 	g_return_val_if_reached (NULL);
     }
     return result;
 }
 
+
 /* return the UTF8 item @t_item. @t_item is one of
    (the applicable) T_* defined in track.h */
-gchar *track_get_item (Track *track, T_item t_item)
+const gchar *track_get_item (Track *track, T_item t_item)
 {
     gchar **ptr;
 
@@ -589,6 +591,118 @@ guint32 track_get_timestamp (Track *track, T_item t_item)
     ptr = track_get_timestamp_ptr (track, t_item);
     if (ptr)  return *ptr;
     else      return 0;
+}
+
+
+/* Return text for display. g_free() after use. */
+gchar *track_get_text (Track *track, T_item item)
+{
+    gchar *text = NULL;
+    ExtraTrackData *etr;
+    iTunesDB *itdb;
+
+    g_return_val_if_fail ((item > 0) && (item < T_ITEM_NUM), NULL);
+    g_return_val_if_fail (track, NULL);
+    etr = track->userdata;
+    g_return_val_if_fail (etr, NULL);
+    itdb = track->itdb;
+    g_return_val_if_fail (itdb, NULL);
+
+    switch (item)
+    {
+    case T_TITLE:
+    case T_ARTIST:
+    case T_ALBUM:
+    case T_GENRE:
+    case T_COMPOSER:
+    case T_COMMENT:
+    case T_FILETYPE:
+    case T_GROUPING:
+    case T_CATEGORY:
+    case T_DESCRIPTION:
+    case T_PODCASTURL:
+    case T_PODCASTRSS:
+    case T_SUBTITLE:
+	text = g_strdup (track_get_item (track, item));
+	break;
+    case T_TRACK_NR:
+	if (track->tracks == 0)
+	    text = g_strdup_printf ("%d", track->track_nr);
+	else
+	    text = g_strdup_printf ("%d/%d",
+				    track->track_nr, track->tracks);
+	break;
+    case T_CD_NR:
+	if (track->cds == 0)
+	    text = g_strdup_printf ("%d", track->cd_nr);
+	else
+	    text = g_strdup_printf ("%d/%d", track->cd_nr, track->cds);
+	break;
+    case T_IPOD_ID:
+	if (track->id != -1)
+	    text = g_strdup_printf ("%d", track->id);
+	else
+	    text = g_strdup ("--");
+	break;
+    case T_PC_PATH:
+	text = g_strdup (etr->pc_path_utf8);
+	break;
+    case T_IPOD_PATH:
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    text = g_strdup (track->ipod_path);
+	}
+	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	{
+	    text = g_strdup (_("Local Database"));
+	}
+	break;
+    case T_SIZE:
+	text = g_strdup_printf ("%d", track->size);
+	break;
+    case T_TRACKLEN:
+	text = g_strdup_printf ("%d:%02d",
+				track->tracklen/60000,
+				(track->tracklen/1000)%60);
+	break;
+    case T_BITRATE:
+	text = g_strdup_printf ("%dk", track->bitrate);
+	break;
+    case T_SAMPLERATE:
+	text = g_strdup_printf ("%d", track->samplerate);
+	break;
+    case T_BPM:
+	text = g_strdup_printf ("%d", track->BPM);
+	break;
+    case T_PLAYCOUNT:
+	text = g_strdup_printf ("%d", track->playcount);
+	break;
+    case T_YEAR:
+	text = g_strdup_printf ("%d", track->year);
+	break;
+    case T_RATING:
+	text = g_strdup_printf ("%d", track->rating/ITDB_RATING_STEP);
+	break;
+    case T_TIME_PLAYED:
+    case T_TIME_MODIFIED:
+    case T_TIME_ADDED:
+    case T_TIME_RELEASED:
+	text = time_field_to_string (track, item);
+	break;
+    case T_VOLUME:
+	text = g_strdup_printf ("%d", track->volume);
+	break;
+    case T_SOUNDCHECK:
+	text = g_strdup_printf ("%0.2f", soundcheck_to_replaygain (track->soundcheck));
+	break;
+    case T_TRANSFERRED:
+    case T_COMPILATION:
+    case T_ALL:
+    case T_CHECKED:
+    case T_ITEM_NUM:
+	break;
+    }
+    return text;
 }
 
 
@@ -659,8 +773,19 @@ static void add_tracks_to_playlist (Playlist *pl,
 		}
 		if (!itdb_playlist_is_mpl (pl))
 		{
-		    /* add to designated playlist */
-		    gp_playlist_add_track (pl, track, TRUE);
+		    /* add to designated playlist -- unless adding
+		     * to podcasts list and track already exists there */
+		    if (itdb_playlist_is_podcasts (pl) &&
+			g_list_find (pl->members, track))
+		    {
+			gchar *buf = get_track_info (track, FALSE);
+			gtkpod_warning (_("Podcast already present: '%s'\n\n"), buf);
+			g_free (buf);
+		    }
+		    else
+		    {
+			gp_playlist_add_track (pl, track, TRUE);
+		    }
 		}
 	    }
 	    else
@@ -701,10 +826,22 @@ static void add_tracks_to_playlist (Playlist *pl,
 			gp_playlist_add_track (to_mpl, addtr, TRUE);
 		    }
 		}
-		/* add to designated playlist (if not mpl) */
+		/* add to designated playlist (if not mpl) -- unless
+		 * adding to podcasts list and track already * exists
+		 * there */
 		if (!itdb_playlist_is_mpl (pl))
 		{
-		    gp_playlist_add_track (pl, addtr, TRUE);
+		    if (itdb_playlist_is_podcasts (pl) &&
+			g_list_find (pl->members, addtr))
+		    {
+			gchar *buf = get_track_info (addtr, FALSE);
+			gtkpod_warning (_("Podcast already present: '%s'\n\n"), buf);
+			g_free (buf);
+		    }
+		    else
+		    {
+			gp_playlist_add_track (pl, addtr, TRUE);
+		    }
 		}
 	    }
 	}

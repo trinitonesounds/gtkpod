@@ -1,3 +1,21 @@
+2005-11-22 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * details.c, details.h: detailled display of tracks. Alpha
+           with known issues (no sync of data between main display and
+           details display -> deleting of tracks with the details
+           window open may segfault the appliction if the details
+           window consequently attempts to access the track and
+           similar).
+	   TODO: create menu entries (currently only context menu).
+
+2005-11-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * added support for compilation flag in mp3 files. Thanks to
+           Iain Benson for the patch.
+
+	 * added read support for TID, WFD, TDS, TDR, TT3 tags (used
+           by podcasts)
+
 2005-11-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file_export.c: Files were not copied from iPod to harddisk

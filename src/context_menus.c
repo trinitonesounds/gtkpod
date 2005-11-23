@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-13 01:50:32 jcs>
+/* Time-stamp: <2005-11-23 12:56:32 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -33,6 +33,7 @@
 #endif
 
 #include "itdb.h"
+#include "details.h"
 #include "display.h"
 #include "file.h"
 #include "misc.h"
@@ -40,6 +41,8 @@
 #include "prefs.h"
 #include "tools.h"
 #include "podcast.h"
+
+#define LOCALDEBUG 0
 
 static guint entry_inst = -1;
 static GList *selected_tracks = NULL;
@@ -55,10 +58,48 @@ typedef enum {
 } CM_type;
 
 
+#ifdef LOCALDEBUG
+/**
+ * do_special - for debugging: change as needed to obtain information
+ * on selected tracks
+ * @mi - the menu item selected
+ * @data - ignored, should be NULL
+ */
+static void 
+do_special(GtkWidget *w, gpointer data)
+{
+	GList *gl;
+	for (gl=selected_tracks; gl; gl=gl->next)
+	{
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+ 	    printf ("track: %p: thumbnails: %p id: %d num: %d\n",
+ 		    tr, tr->thumbnails, tr->image_id, g_list_length (tr->thumbnails));
+	    if (tr->thumbnails)
+	    {
+		GList *gl2;
+		for (gl2=tr->thumbnails; gl2; gl2=gl2->next)
+		{
+		    guchar *chardata;
+		    Image *img = gl2->data;
+		    g_return_if_fail (img);
+		    printf ("  %s offset: %d\n", img->filename, img->offset);
+		chardata = itdb_image_get_rgb_data (tr->itdb, img);
+		if (chardata) printf ("%s\n", chardata);
+		g_free (chardata);
+		}
+	    }
+	}
+	details_show (selected_tracks);
+}
+#endif
+
+
+
 /**
  * export_entries - export the currently selected files to disk
  * @mi - the menu item selected
- * @data - ignored, shoould be NULL
+ * @data - ignored, should be NULL
  */
 static void 
 export_entries(GtkWidget *w, gpointer data)
@@ -71,7 +112,7 @@ export_entries(GtkWidget *w, gpointer data)
  * create_playlist_file - write a playlist file containing the
  * currently selected tracks.
  * @mi - the menu item selected
- * @data - ignored, shoould be NULL
+ * @data - ignored, should be NULL
  */
 static void 
 create_playlist_file(GtkWidget *w, gpointer data)
@@ -118,6 +159,22 @@ play_entries_enqueue (GtkMenuItem *mi, gpointer data)
     tools_enqueue_tracks (selected_tracks);
 }
 
+
+/*
+ * show_details_entries - show details of tracks currently selected
+ * @mi - the menu item selected
+ * @data - Ignored, should be NULL
+ */
+static void 
+show_details_entries(GtkMenuItem *mi, gpointer data)
+{
+    if (selected_playlist)
+	details_show (selected_playlist->members);
+    else if(selected_entry)
+	details_show (selected_entry->members);
+    else if(selected_tracks)
+	details_show (selected_tracks);
+}
 
 /*
  * update_entries - update the entries currently selected
@@ -314,6 +371,8 @@ create_context_menu(CM_type type)
 				  G_CALLBACK (export_entries), NULL);
 	hookup_mi (menu[type], _("Create Playlist File"), GTK_STOCK_FLOPPY,
 		   G_CALLBACK (create_playlist_file), NULL);
+	hookup_mi (menu[type], _("Show Details"), NULL,
+		   G_CALLBACK (show_details_entries), NULL);
 	hookup_mi (menu[type], _("Update"), GTK_STOCK_REFRESH,
 		   G_CALLBACK (update_entries), NULL);
 	hookup_mi (menu[type], _("Sync Dirs"), GTK_STOCK_REFRESH,
@@ -376,6 +435,15 @@ create_context_menu(CM_type type)
 			   G_CALLBACK (delete_entries),
 			   GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
 	}
+#ifdef LOCALDEBUG
+	/* This is for debugging purposes -- this allows to inspect
+	 * any track with a custom function */
+	if (type == CM_TM)
+	{
+	    hookup_mi (menu[type], "Special", GTK_STOCK_STOP,
+		       G_CALLBACK (do_special), NULL);
+	}
+#endif
 	if (type == CM_PM)
 	{
 	    mi_delsep[type] = add_separator (menu[type]);

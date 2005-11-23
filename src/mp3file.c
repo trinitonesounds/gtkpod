@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-28 22:56:27 jcs>
+/* Time-stamp: <2005-11-23 02:36:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -63,6 +63,12 @@ struct _File_Tag
     /* CD/disc number handling */
     gchar *cdnostring;    /* Position of disc in the album */
     gchar *cdno_total;    /* The number of discs in the album (ex: 1/2) */
+    gchar *compilation;   /* The track is a member of a compilation */
+    gchar *podcasturl;    /* The following are mainly used for podcasts */
+    gchar *description;
+    gchar *podcastrss;
+    gchar *time_released;
+    gchar *subtitle;
 };
 
 /* This code is taken from the mp3info code. Only the code needed for
@@ -936,37 +942,52 @@ static guint get_track_time (gchar *path)
 
 static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 {
-    const id3_ucs4_t *string;
+    const id3_ucs4_t *string = NULL;
+    const id3_byte_t *binary = NULL;
+    id3_length_t len = 0;
     struct id3_frame *frame;
     union id3_field *field;
     gchar *utf8 = NULL;
     enum id3_field_textencoding encoding = ID3_FIELD_TEXTENCODING_ISO_8859_1;
 
     frame = id3_tag_findframe (tag, frame_name, 0);
+/*     printf ("frame: %p\n", frame); */
+
     if (!frame) return NULL;
 
     /* Find the encoding used for the field */
     field = id3_frame_field (frame, 0);
 /*     printf ("field: %p\n", field); */
+
     if (field && (id3_field_type (field) == ID3_FIELD_TYPE_TEXTENCODING))
     {
 	encoding = field->number.value;
 /*	printf ("encoding: %d\n", encoding); */
     }
 
-    if (frame_name == ID3_FRAME_COMMENT)
-	field = id3_frame_field (frame, 3);
-    else
-	field = id3_frame_field (frame, 1);
+    /* The last field contains the data */
+    field = id3_frame_field (frame, frame->nfields-1);
 
 /*     printf ("field: %p\n", field); */
 
     if (!field) return NULL;
 
-    if (frame_name == ID3_FRAME_COMMENT)
-	string = id3_field_getfullstring (field);
-    else
+    switch (field->type)
+    {
+    case ID3_FIELD_TYPE_STRINGLIST:
 	string = id3_field_getstrings (field, 0);
+	break;
+    case ID3_FIELD_TYPE_STRINGFULL:
+	string = id3_field_getfullstring (field);
+	break;
+    case ID3_FIELD_TYPE_BINARYDATA:
+	binary = id3_field_getbinarydata(field, &len);
+	if (len > 0)
+	    return charset_to_utf8 (binary+1);
+	break;
+    default:
+	break;
+    }
 
 /*     printf ("string: %p\n", string); */
 
@@ -1138,6 +1159,13 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 	tag->composer = id3_get_string (id3tag, "TCOM");
 	tag->comment = id3_get_string (id3tag, ID3_FRAME_COMMENT);
 	tag->genre = id3_get_string (id3tag, ID3_FRAME_GENRE);
+	tag->compilation = id3_get_string (id3tag, "TCMP");
+	tag->subtitle = id3_get_string (id3tag, "TIT3");
+
+	tag->podcasturl = id3_get_string (id3tag, "YTID");
+	tag->podcastrss = id3_get_string (id3tag, "YWFD");
+	tag->description = id3_get_string (id3tag, "YTDS");
+	tag->time_released = id3_get_string (id3tag, "YTDR");
 
 	string = id3_get_string (id3tag, "TLEN");
 	if (string)
@@ -1216,6 +1244,34 @@ static enum id3_field_textencoding get_encoding (struct id3_tag *tag)
 }
 
 
+/* I'm not really sure about this: The original TAG identifier was
+   "TID", but no matter what I do I end up writing "YTID" */
+void set_uncommon_tag (struct id3_tag *id3tag,
+		       const gchar *id,
+		       const gchar *text,
+		       enum id3_field_textencoding encoding)
+{
+#if 0
+    struct id3_frame *frame;
+
+    frame = id3_tag_findframe (id3tag, id, 0);
+	union id3_field *field;
+	frame->flags = 0;
+	field = id3_frame_field (frame, 0);
+	    if (field)
+	    {
+		string1 = g_strdup_printf ("%c%s", '\0',
+					   track->podcasturl);
+		id3_field_setbinarydata (field, string1,
+					 strlen(track->podcasturl)+1);
+		g_free (string1);
+	    }
+
+#endif
+}
+
+
+
 /**
  * Write the ID3 tags to the file.
  * @returns: TRUE on success, else FALSE.
@@ -1265,6 +1321,12 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	id3_set_string (id3tag, ID3_FRAME_ALBUM, track->album, encoding);
 	id3_set_string (id3tag, ID3_FRAME_GENRE, track->genre, encoding);
 	id3_set_string (id3tag, ID3_FRAME_COMMENT, track->comment, encoding);
+	id3_set_string (id3tag, "TIT3", track->subtitle, encoding);
+
+	set_uncommon_tag (id3tag, "YTID", track->podcasturl, encoding);
+	set_uncommon_tag (id3tag, "YTDS", track->description, encoding);
+	set_uncommon_tag (id3tag, "YWFD", track->podcastrss, encoding);
+
 	id3_set_string (id3tag, "TCOM", track->composer, encoding);
 
 	if (track->tracks)
@@ -1282,6 +1344,10 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	    string1 = g_strdup_printf ("%d", track->cd_nr);
 	id3_set_string (id3tag, "TPOS", string1, encoding);
 	g_free(string1);
+        
+       string1 = g_strdup_printf ("%d", track->compilation);
+       id3_set_string (id3tag, "TCMP", string1, encoding);
+       g_free(string1);
     } 
 
     if (id3_file_update(id3file) != 0)
@@ -2006,6 +2072,27 @@ Track *mp3_get_file_info (gchar *name)
 	{
 	    track->comment = filetag.comment;
 	}
+
+	if (filetag.podcasturl)
+	{
+	    track->podcasturl = filetag.podcasturl;
+	}
+
+	if (filetag.podcastrss)
+	{
+	    track->podcastrss = filetag.podcastrss;
+	}
+
+	if (filetag.subtitle)
+	{
+	    track->subtitle = filetag.subtitle;
+	}
+
+	if (filetag.description)
+	{
+	    track->description = filetag.description;
+	}
+
 	if (filetag.year == NULL)
 	{
 	    track->year = 0;
@@ -2054,6 +2141,16 @@ Track *mp3_get_file_info (gchar *name)
 	{
 	    track->cds = atoi(filetag.cdno_total);
 	    g_free (filetag.cdno_total);
+	}
+
+	if (filetag.compilation == NULL)
+	{
+	    track->compilation = 0;
+	}
+	else
+	{
+	    track->compilation = atoi(filetag.compilation);
+	    g_free (filetag.compilation);
 	}
     }
 

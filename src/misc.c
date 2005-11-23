@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-11-19 14:31:11 jcs>
+|  Time-stamp: <2005-11-22 22:34:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -163,7 +163,9 @@ Nick Piper: sync script for Palm, type-ahead search\n"),
 Uwe Hermann: help with support for iPod Video\n"),
 		       "\n",
 		       _("\
-Icons of buttons were made by Nicolas Chariot.\n\
+Iain Benson: support for compilation flag in mp3 files\n"),
+		       _("\
+Nicolas Chariot: icons of buttons\n\
 \n\
 \n"),
 		       _("\
@@ -334,16 +336,14 @@ void cleanup_backup_and_extended_files (void)
 }
 
 
-/* used by glist_duplicate */
-static void gl_dup_fe (gpointer data, GList **dup)
-{
-    *dup = g_list_append (*dup, data);
-}
-
-
-/* Duplicate a GList */
+/* Duplicate a GList (shallow copy) */
 GList *glist_duplicate (GList *list)
 {
+    auto void gl_dup_fe (gpointer data, GList **dup);
+    void gl_dup_fe (gpointer data, GList **dup)
+	{
+	    *dup = g_list_append (*dup, data);
+	}
     GList *dup = NULL;
     g_list_foreach (list, (GFunc)gl_dup_fe, &dup);
     return dup;
@@ -1354,7 +1354,7 @@ gboolean mkdirhierfile(const gchar *filename)
 {
     gboolean result;
     gchar *dirname = g_path_get_dirname (filename);
-    result = mkdirhier (filename);
+    result = mkdirhier (dirname);
     g_free (dirname);
     return result;
 }
@@ -1370,4 +1370,22 @@ gchar *convert_filename (const gchar *filename)
     if (strncmp ("~/", filename, 2) == 0)
 	 return g_build_filename (g_get_home_dir(), filename+2, NULL);
     else return g_strdup (filename);
+}
+
+
+
+/**
+ * Wrapper for glade_xml_get_widget() giving out a warning if widget
+ * could not be found.
+ *
+ **/
+GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, gchar *name)
+{
+    GtkWidget *w=glade_xml_get_widget (xml, name);
+
+    if (!w)
+	fprintf (stderr, "*** Programming error: Widget not found: '%s'\n",
+		 name);
+
+    return w;
 }

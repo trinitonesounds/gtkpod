@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-18 22:59:44 jcs>
+/* Time-stamp: <2005-11-21 00:27:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -173,7 +173,7 @@ void generate_category_playlists (iTunesDB *itdb, T_item cat)
 	Track *track = gl->data;
 	Playlist *cat_pl = NULL;
 	gchar *category = NULL;
-	gchar *track_cat;
+	const gchar *track_cat;
 
 	track_cat = track_get_item (track, cat);
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-17 21:55:21 jcs>
+/* Time-stamp: <2005-11-22 22:34:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -54,8 +54,15 @@
    gchar   *genre;            /+ genre (utf8)          +/
    gchar   *comment;          /+ comment (utf8)        +/
    gchar   *composer;         /+ Composer (utf8)       +/
-   gchar   *fdesc;            /+ Format description (utf8) +/
-   gchar   *charset;          /+ charset used for tags +/
+   gchar   *fdesc;            /+ Format description (utf8)   +/
+   gchar   *charset;          /+ charset used for tags       +/
+   gchar   *description;      /+ Description text (podcasts) +/
+   gchar   *podcasturl;       /+ URL/Title (podcasts)        +/
+   gchar   *podcastrss;       /+ Podcast RSS                 +/
+   gchar   *subtitle;         /+ Subtitle (podcasts)         +/
+   guint32 time_released;     /+ For podcasts: release date as
+				 displayed next to the title in the
+				 Podcast playlist  +/
    gint32  cd_nr;             /+ CD number             +/
    gint32  cds;               /+ number of CDs         +/
    gint32  track_nr;          /+ track number          +/
@@ -72,7 +79,7 @@
    gboolean peak_signal_set;  /+ has the peak signal been set?       +/
    gboolean radio_gain_set;   /+ has the radio gain been set?        +/
    gboolean audiophile_gain_set;/+ has the audiophile gain been set? +/
-
+   gboolean compilation;      /+ Track is part of a compilation CD   +/
 
    If prefs_get_tag_readtags() returns FALSE you only should fill in
    tracklen, bitrate and fdesc

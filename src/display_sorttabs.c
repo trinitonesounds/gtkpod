@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-18 00:52:32 jcs>
+/* Time-stamp: <2005-11-21 20:52:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1178,7 +1178,7 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
 
 /* Get the correct name for the entry according to currently
    selected category (page). Do _not_ g_free() the return value! */
-static gchar *st_get_entryname (Track *track, guint32 inst)
+static const gchar *st_get_entryname (Track *track, guint32 inst)
 {
     T_item t_item = ST_to_T (sorttab[inst]->current_category);
 
@@ -1209,7 +1209,7 @@ static TabEntry *st_get_entry_by_track (Track *track, guint32 inst)
 /* Find TabEntry with name "name". Return NULL if no entry was found.
    If "name" is {-1, 0x00}, it returns the master entry. Otherwise
    it skips the master entry. */
-static TabEntry *st_get_entry_by_name (gchar *name, guint32 inst)
+static TabEntry *st_get_entry_by_name (const gchar *name, guint32 inst)
 {
   TabEntry *entry = NULL;
   SortTab *st = sorttab[inst];
@@ -1443,7 +1443,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 {
     SortTab *st;
     TabEntry *entry, *master_entry, *iter_entry;
-    gchar *entryname;
+    const gchar *entryname;
     GtkTreeSelection *selection;
     GtkTreeIter iter;
     TabEntry *select_entry = NULL;
