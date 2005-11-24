@@ -1,4 +1,9 @@
-2005-11-22 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2005-11-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * details.c: added support for thumbnails display in "Show
+           Details" window. Requires libgpod version 0.2.1
+
+2005-11-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * details.c, details.h: detailled display of tracks. Alpha
            with known issues (no sync of data between main display and

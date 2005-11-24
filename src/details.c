@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-23 13:09:07 jcs>
+/* Time-stamp: <2005-11-25 00:27:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -417,6 +417,8 @@ static void details_set_track (Detail *detail, Track *track)
     gboolean first, last;
 
     g_return_if_fail (detail);
+    g_return_if_fail (track);
+    g_return_if_fail (track->itdb);
 
     index = g_list_index (detail->tracks, track);
     g_return_if_fail (index != -1);
@@ -447,6 +449,40 @@ static void details_set_track (Detail *detail, Track *track)
 	gtk_label_set_markup (GTK_LABEL (w), buf);
 	g_free (buf);
     }
+
+    /* Set thumbnail */
+    if ((w = gtkpod_xml_get_widget (detail->xml, "details_image_thumbnail")))
+    {
+	GList *gl;
+	GtkImage *img = GTK_IMAGE (w);
+
+	gtk_image_set_from_pixbuf (img, NULL);
+
+	/* Find large cover */
+	for (gl=track->thumbnails; gl; gl=gl->next)
+	{
+	    Image *thumb = gl->data;
+	    g_return_if_fail (thumb);
+
+	    if (thumb->type == 1)
+	    {   /* 1 == IPOD_COVER_LARGE */
+		GdkPixbuf *pixbuf;
+		pixbuf = itdb_image_get_gdk_pixbuf (track->itdb, thumb);
+		if (pixbuf)
+		{
+		    gtk_image_set_from_pixbuf (img, pixbuf);
+		    gdk_pixbuf_unref (pixbuf);
+		}
+	    }
+	}
+
+	if (gtk_image_get_storage_type (img) == GTK_IMAGE_EMPTY)
+	{
+	    gtk_image_set_from_stock (img, GTK_STOCK_MISSING_IMAGE,
+				      GTK_ICON_SIZE_DIALOG);
+	}
+    }
+    
 
     /* inactivate prev/next buttons when at the beginning/end of the
      * list */
@@ -564,6 +600,8 @@ void details_show (GList *selected_tracks)
     defy = prefs_get_int (DETAILS_WINDOW_DEFY);
 
     if ((defx != 0) && (defy != 0))
+/* 	gtk_window_set_default_size (GTK_WINDOW (detail->window), */
+/* 				     defx, defy); */
 	gtk_window_resize (GTK_WINDOW (detail->window),
 			   defx, defy);
 

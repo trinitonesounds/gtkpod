@@ -21,6 +21,9 @@ gtkpod V0.96.CVS
        segfault the appliction if the details window consequently
        attempts to access the track and similar).
 
+       NEW: Display of thumbnail images. Choose "Show Details" from
+       the context menu (right mouse-button).
+
        IMPROVEMENT: added comment, category, description, podcast url,
        podcast rss, subtitle fields and release date to displayable
        fields.

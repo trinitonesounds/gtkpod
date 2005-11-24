@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-24 20:30:02 jcs>
+/* Time-stamp: <2005-11-24 20:52:04 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -90,7 +90,6 @@ do_special(GtkWidget *w, gpointer data)
 		}
 	    }
 	}
-	details_show (selected_tracks);
 }
 #endif
 
