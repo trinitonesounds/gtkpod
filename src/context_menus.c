@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-23 12:56:32 jcs>
+/* Time-stamp: <2005-11-24 20:30:02 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -58,7 +58,7 @@ typedef enum {
 } CM_type;
 
 
-#ifdef LOCALDEBUG
+#if LOCALDEBUG
 /**
  * do_special - for debugging: change as needed to obtain information
  * on selected tracks
@@ -435,7 +435,7 @@ create_context_menu(CM_type type)
 			   G_CALLBACK (delete_entries),
 			   GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
 	}
-#ifdef LOCALDEBUG
+#if LOCALDEBUG
 	/* This is for debugging purposes -- this allows to inspect
 	 * any track with a custom function */
 	if (type == CM_TM)
