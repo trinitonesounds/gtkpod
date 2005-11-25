@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-21 21:58:10 jcs>
+/* Time-stamp: <2005-11-25 09:13:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.

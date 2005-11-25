@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 16:24:19 jcs>
+/* Time-stamp: <2005-11-25 09:07:58 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -34,6 +34,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
+#include <pango/pango-font.h>
 
 #include "display_private.h"
 #include "prefs.h"

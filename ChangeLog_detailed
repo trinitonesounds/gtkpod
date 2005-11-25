@@ -1,7 +1,13 @@
 2005-11-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * misc.h: corrected delcaration for (time_field_to_string).
+
+	 * display_playlists.c: include <pango/pango-font.h>.
+
+2005-11-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * details.c: added support for thumbnails display in "Show
-           Details" window. Requires libgpod version 0.2.1
+           Details" window. Requires libgpod version 0.2.2
 
 2005-11-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

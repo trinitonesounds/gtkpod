@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-22 21:34:59 jcs>
+/* Time-stamp: <2005-11-25 09:13:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -125,7 +125,7 @@ time_t time_string_to_time (const gchar *str);
 time_t time_string_to_fromtime (const gchar *str);
 time_t time_string_to_totime (const gchar *str);
 time_t time_get_time (Track *track, T_item t_item);
-gchar *time_field_to_string (Track *track, TM_item tm_item);
+gchar *time_field_to_string (Track *track, T_item t_item);
 void time_set_time (Track *track, time_t t, T_item t_item);
 
 gchar *get_filesize_as_string (double size);
