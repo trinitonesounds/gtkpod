@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-11-22 22:34:49 jcs>
+|  Time-stamp: <2005-11-25 23:05:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -163,7 +163,7 @@ Nick Piper: sync script for Palm, type-ahead search\n"),
 Uwe Hermann: help with support for iPod Video\n"),
 		       "\n",
 		       _("\
-Iain Benson: support for compilation flag in mp3 files\n"),
+Iain Benson: support for compilation tag in mp3 files and separate display of compilations in the sort tab.\n"),
 		       _("\
 Nicolas Chariot: icons of buttons\n\
 \n\
@@ -1379,7 +1379,7 @@ gchar *convert_filename (const gchar *filename)
  * could not be found.
  *
  **/
-GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, gchar *name)
+GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name)
 {
     GtkWidget *w=glade_xml_get_widget (xml, name);
 

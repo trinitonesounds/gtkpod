@@ -1,3 +1,15 @@
+2005-11-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * display_sorttabs.c, prefs.[ch], prefs_window.[ch],
+           gtkpod.glade: compilation CD changes (patch by Iain
+           Benson).
+
+	 * prefs_window.c: change glade_xml_get_widget() to
+           gtkpod_xml_get_widget() (the latter gives a warning when
+           accessing non-existing widgets).
+
+	 * display_playlists.c: compatibility fix for libpango < 1.8
+
 2005-11-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * misc.h: corrected delcaration for (time_field_to_string).

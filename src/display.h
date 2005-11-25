@@ -89,6 +89,7 @@ enum {
 typedef struct {
   gchar *name;
   gboolean master; /* set if this is the "All" entry */
+  gboolean compilation; /* set if this is the "Compilation" entry */
   GList *members;  /* GList with member tracks (pointer to "Track") */
 } TabEntry;
 

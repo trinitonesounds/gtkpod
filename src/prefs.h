@@ -147,6 +147,7 @@ struct cfg
   gboolean write_charset;       /* Use selected charset when writing track? */
   gboolean add_recursively;     /* Add directories recursively? */
   gint sort_tab_num;            /* number of sort tabs displayed */
+  gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
   gchar *path[PATH_NUM];    /* path for 'Play Now...' (see PathType) */
@@ -312,6 +313,8 @@ gboolean prefs_get_case_sensitive (void);
 void prefs_set_case_sensitive (gboolean val);
 gint prefs_get_sort_tab_num (void);
 void prefs_set_sort_tab_num (gint i, gboolean update_display);
+gboolean prefs_get_group_compilations (void);
+void prefs_set_group_compilations (gboolean val, gboolean update_display);
 GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
 gint prefs_get_last_prefs_page (void);

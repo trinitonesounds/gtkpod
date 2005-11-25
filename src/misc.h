@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 09:13:45 jcs>
+/* Time-stamp: <2005-11-25 23:05:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -208,5 +208,5 @@ GList *glist_duplicate (GList *list);
 
 gchar *which (const gchar *exe);
 
-GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, gchar *name);
+GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name);
 #endif

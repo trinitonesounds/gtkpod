@@ -999,11 +999,20 @@ static void st_add_entry (TabEntry *entry, guint32 inst)
     st = sorttab[inst];
     model = st->model;
     g_return_if_fail (model != NULL);
-    gtk_list_store_append (GTK_LIST_STORE (model), &iter);
+    /* Insert the compilation entry between All and the first entry
+       so it remains at the top even when the list is not sorted */
+    if (entry->compilation) 
+    {
+        gtk_list_store_insert (GTK_LIST_STORE (model), &iter, 1);
+    }
+    else 
+    {
+        gtk_list_store_append (GTK_LIST_STORE (model), &iter);
+    }
     gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 			ST_COLUMN_ENTRY, entry, -1);
     st->entries = g_list_append (st->entries, entry);
-    if (!entry->master)
+    if (!entry->master && !entry->compilation)
     {
 	if (!st->entry_hash)
 	{
@@ -1229,6 +1238,22 @@ static TabEntry *st_get_entry_by_name (const gchar *name, guint32 inst)
   return entry;
 }
 
+/* Find TabEntry with compilation set true. Return NULL if no entry was found. */
+static TabEntry *st_get_compilation_entry (guint32 inst)
+{
+  GList *entries;
+  TabEntry *entry;
+  guint i;
+
+  entries = sorttab[inst]->entries;
+  i=1; /* skip master entry, which is supposed to be at first position */
+  while ((entry = (TabEntry *)g_list_nth_data (entries, i)) != NULL)
+    {
+      if (entry->compilation)   break; /* found! */
+      ++i;
+    }
+  return entry;
+}
 
 /* moves a track from the entry it is currently in to the one it
    should be in according to its tags (if a Tag had been changed).
@@ -1260,6 +1285,7 @@ static gboolean st_recategorize_track (Track *track, guint32 inst)
       newentry = g_malloc0 (sizeof (TabEntry));
       newentry->name = g_strdup (entryname);
       newentry->master = FALSE;
+      newentry->compilation = FALSE;
       st_add_entry (newentry, inst);
     }
   if (newentry != oldentry)
@@ -1443,11 +1469,12 @@ static void st_add_track_normal (Track *track, gboolean final,
 {
     SortTab *st;
     TabEntry *entry, *master_entry, *iter_entry;
-    const gchar *entryname;
+    const gchar *entryname = NULL;
     GtkTreeSelection *selection;
     GtkTreeIter iter;
     TabEntry *select_entry = NULL;
     gboolean first = FALSE;
+    gboolean group_track = FALSE;
 
     st = sorttab[inst];
     st->final = final;
@@ -1464,17 +1491,37 @@ static void st_add_track_normal (Track *track, gboolean final,
 	    master_entry = g_malloc0 (sizeof (TabEntry));
 	    master_entry->name = g_strdup (_("All"));
 	    master_entry->master = TRUE;
+	    master_entry->compilation = FALSE;
 	    st_add_entry (master_entry, inst);
 	    first = TRUE; /* this is the first track */
 	}
 	master_entry->members = g_list_append (master_entry->members, track);
+	/* Check if this track should go in the compilation artist group */
+	group_track = ( prefs_get_group_compilations() &&
+	    (track->compilation == TRUE) && 
+	    (st->current_category == ST_CAT_ARTIST) );
 	/* Check whether entry of same name already exists */
-	entryname = st_get_entryname (track, inst);
-	entry = st_get_entry_by_name (entryname, inst);
+	if ( group_track )
+	{
+	    entry = st_get_compilation_entry (inst);
+	}
+	else
+	{
+	    entryname = st_get_entryname (track, inst);
+	    entry = st_get_entry_by_name (entryname, inst);
+	}
 	if (entry == NULL)
 	{ /* not found, create new one */
 	    entry = g_malloc0 (sizeof (TabEntry));
-	    entry->name = g_strdup (entryname);
+	    if ( group_track )
+	    {
+		entry->name = g_strdup (_("Compilations"));
+	    }
+	    else
+	    {
+		entry->name = g_strdup (entryname);
+	    }
+	    entry->compilation = group_track;
 	    entry->master = FALSE;
 	    st_add_entry (entry, inst);
 	}
@@ -2164,7 +2211,7 @@ static void st_cell_data_func (GtkTreeViewColumn *tree_column,
   switch (column)
     {  /* We only have one column, so this code is overkill... */
     case ST_COLUMN_ENTRY:
-      if (entry->master)
+      if (entry->master || entry->compilation)
       {   /* mark the "All" entry */
 	  g_object_set (G_OBJECT (renderer),
 			"text", entry->name,
@@ -2222,11 +2269,14 @@ gint st_data_compare_func (GtkTreeModel *model,
 					   &colid, &order) == FALSE)
       return 0;
 
-  /* We make sure that the "all" entry always stays on top */
+  /* We make sure that the "all" entry always stays on top, closely followed
+     by the compilation entry */
   if (order == GTK_SORT_ASCENDING) corr = +1;
   else                             corr = -1;
   if (entry1->master) return (-corr);
   if (entry2->master) return (corr);
+  if (entry1->compilation) return (-corr);
+  if (entry2->compilation) return (corr);
 
   /* compare the two entries */
   /* string_compare_func is set to either compare_string_fuzzy or

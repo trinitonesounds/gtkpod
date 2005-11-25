@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 09:07:58 jcs>
+/* Time-stamp: <2005-11-25 21:33:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -34,7 +34,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
-#include <pango/pango-font.h>
 
 #include "display_private.h"
 #include "prefs.h"
@@ -67,6 +66,10 @@ static GtkTargetEntry pm_drop_types [] = {
 };
 
 
+/* SEMIBOLD was introduced with version 1.8 */
+#ifndef PANGO_WEIGHT_SEMIBOLD
+#define PANGO_WEIGHT_SEMIBOLD 600
+#endif
 
 
 /* ---------------------------------------------------------------- */

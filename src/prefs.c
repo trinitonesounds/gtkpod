@@ -675,6 +675,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_sort_tab_num(atoi(arg), FALSE);
 	  }
+	  else if(g_ascii_strcasecmp (line, "group_compilations") == 0)
+	  {
+	      prefs_set_group_compilations((gboolean)atoi(arg), FALSE);
+	  }
 	  else if(g_ascii_strcasecmp (line, "toolbar_style") == 0)
 	  {
 	      prefs_set_toolbar_style(atoi(arg));
@@ -1221,6 +1225,7 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
     }
     fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
+    fprintf(fp, "group_compilations=%d\n",prefs_get_group_compilations());
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
@@ -2082,6 +2087,17 @@ void prefs_set_sort_tab_num (gint i, gboolean update_display)
 	    if (update_display) st_show_visible ();
 	}
     }
+}
+
+gboolean prefs_get_group_compilations (void)
+{
+    return cfg->group_compilations;
+}
+
+void prefs_set_group_compilations (gboolean val, gboolean update_display)
+{
+    cfg->group_compilations = val;
+    if (update_display) st_show_visible ();
 }
 
 GtkToolbarStyle prefs_get_toolbar_style (void)

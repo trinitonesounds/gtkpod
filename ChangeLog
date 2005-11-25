@@ -1,19 +1,13 @@
 gtkpod V0.96.CVS
-       NEW: transition to libgpod to read/write iTunesDB. See
-       www.gtkpod.org/libgpod.html for details.
-
-       NEW: script to sync contacts from a Palm (via jppy
-       http://wiki.zanu.org.uk/jppy). Thanks to Nick Piper,
-       http://www.nickpiper.co.uk/)
-
        NEW: type-ahead search functionality. Thanks to Nick Piper,
        http://www.nickpiper.co.uk/ -- please note that the list view
        you want to search in needs to have keyboard focus. Selection
        of the search column is done by clicking anywhere inside the
        column.
 
-       NEW: very basic iPod video support (you can add Videos but no
-       metadata is filled in). Thanks to Uwe Herman for the input.
+       NEW: Handle Compilations decently. The compilation mp3 tag is
+       read and written, and compilation artists can be grouped into
+       "Compilations" in the Artist filter tab. Thanks to Iain Benson!
 
        NEW: Window for display of track details. Non-stable with known
        issues (no sync of data between main display and details
@@ -23,6 +17,16 @@ gtkpod V0.96.CVS
 
        NEW: Display of thumbnail images. Choose "Show Details" from
        the context menu (right mouse-button).
+
+       NEW: very basic iPod video support (you can add Videos but no
+       metadata is filled in). Thanks to Uwe Herman for the input.
+
+       NEW: script to sync contacts from a Palm (via jppy
+       http://wiki.zanu.org.uk/jppy). Thanks to Nick Piper,
+       http://www.nickpiper.co.uk/)
+
+       NEW: transition to libgpod to read/write iTunesDB. See
+       www.gtkpod.org/libgpod.html for details.
 
        IMPROVEMENT: added comment, category, description, podcast url,
        podcast rss, subtitle fields and release date to displayable
