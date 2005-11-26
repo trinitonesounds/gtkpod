@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:15 jcs>
+/* Time-stamp: <2005-11-25 23:52:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -264,7 +264,7 @@ static GList *add_blocked_widget (GList *blocked_widgets, gchar *name)
     GtkWidget *w;
     struct blocked_widget *bw;
 
-    if((w = glade_xml_get_widget (main_window_xml,  name)))
+    if((w = gtkpod_xml_get_widget (main_window_xml,  name)))
     {
 	bw = g_malloc0 (sizeof (struct blocked_widget));
 	bw->widget = w;

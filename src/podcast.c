@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 16:08:34 jcs>
+/* Time-stamp: <2005-11-25 23:52:11 jcs>
 |
 |  Copyright (C) 2002-2005 Alexander Dutton <alexdutton at f2s dot com>
 |  Part of the gtkpod project.
@@ -680,10 +680,10 @@ int update_progress(gpointer *data,
     if (t == 0 || transfer_total == 0) return 0;
     if (d/t > 1 || (d+transfer_done)/transfer_total > 1) return 0;
     gdk_threads_enter();
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "file_progressbar")), d/t);
-    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "total_progressbar")), (d+transfer_done)/transfer_total);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (gtkpod_xml_get_widget (podcast_window_xml, "file_progressbar")), d/t);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (gtkpod_xml_get_widget (podcast_window_xml, "total_progressbar")), (d+transfer_done)/transfer_total);
     tmp = g_strdup_printf("%.2fMb of %.2fMb (%.0f%%), 12:32 remaining", (double) (d+transfer_done)/1024/1024, (double) transfer_total/1024/1024, 100*(d+transfer_done)/transfer_total);
-    gtk_progress_bar_set_text(GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "total_progressbar")), tmp);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR (gtkpod_xml_get_widget (podcast_window_xml, "total_progressbar")), tmp);
     g_free(tmp);
 
     gdk_threads_leave();
@@ -1011,7 +1011,7 @@ podcast_window_create(void)
     podcast_window_xml = glade_xml_new (xml_file, "podcast_window", NULL);
     glade_xml_signal_autoconnect (podcast_window_xml);
 
-    podcast_window = glade_xml_get_widget(podcast_window_xml,"podcast_window");
+    podcast_window = gtkpod_xml_get_widget(podcast_window_xml,"podcast_window");
 
     g_return_if_fail (podcast_window);
 
@@ -1071,7 +1071,7 @@ static void create_podcast_list ()
 
     g_object_unref (model);
 
-    podcast_list_window = glade_xml_get_widget (podcast_window_xml, "podcast_list_window");
+    podcast_list_window = gtkpod_xml_get_widget (podcast_window_xml, "podcast_list_window");
 
     gtk_container_add (GTK_CONTAINER (podcast_list_window), GTK_WIDGET(podcast_list));
 if(podcast_list_window)
@@ -1085,7 +1085,7 @@ return;
 void podcast_set_status(gchar *status)
 {
     gdk_threads_enter();
-    gtk_label_set_text (GTK_LABEL (glade_xml_get_widget (podcast_window_xml, "status_label")), status);
+    gtk_label_set_text (GTK_LABEL (gtkpod_xml_get_widget (podcast_window_xml, "status_label")), status);
     gdk_threads_leave();
     while (gtk_events_pending())  gtk_main_iteration();
 }
@@ -1095,7 +1095,7 @@ void podcast_set_cur_file_name(gchar *text)
     if (g_strrstr(text, "/"))
     {
         gchar *working = g_strdup_printf("%s", g_strrstr(text, "/")+1);
-        gtk_progress_bar_set_text (GTK_PROGRESS_BAR (glade_xml_get_widget (podcast_window_xml, "file_progressbar")), working);
+        gtk_progress_bar_set_text (GTK_PROGRESS_BAR (gtkpod_xml_get_widget (podcast_window_xml, "file_progressbar")), working);
         g_free(working);
     }
 }

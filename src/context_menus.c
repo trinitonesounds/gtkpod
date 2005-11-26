@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-24 20:52:04 jcs>
+/* Time-stamp: <2005-11-26 22:41:24 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -80,13 +80,9 @@ do_special(GtkWidget *w, gpointer data)
 		GList *gl2;
 		for (gl2=tr->thumbnails; gl2; gl2=gl2->next)
 		{
-		    guchar *chardata;
 		    Image *img = gl2->data;
 		    g_return_if_fail (img);
-		    printf ("  %s offset: %d\n", img->filename, img->offset);
-		chardata = itdb_image_get_rgb_data (tr->itdb, img);
-		if (chardata) printf ("%s\n", chardata);
-		g_free (chardata);
+		    printf ("  %s offset: %d size: %d width: %d height: %d\n", img->filename, img->offset, img->size, img->width, img->height);
 		}
 	    }
 	}

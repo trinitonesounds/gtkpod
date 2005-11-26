@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-08 23:04:28 jcs>
+/* Time-stamp: <2005-11-25 23:52:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -120,7 +120,7 @@ main (int argc, char *argv[])
 
   glade_xml_signal_autoconnect (main_window_xml);
   
-  gtkpod_window = glade_xml_get_widget (main_window_xml, "gtkpod");
+  gtkpod_window = gtkpod_xml_get_widget (main_window_xml, "gtkpod");
   
   if (!read_prefs (gtkpod_window, argc, argv)) return 0;
 

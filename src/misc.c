@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-11-25 23:05:02 jcs>
+|  Time-stamp: <2005-11-26 16:51:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -71,10 +71,10 @@ void open_about_window ()
 
   about_xml = glade_xml_new (xml_file, "gtkpod_about_window", NULL);
   glade_xml_signal_autoconnect (about_xml);
-  about_window = glade_xml_get_widget (about_xml, "gtkpod_about_window");
+  about_window = gtkpod_xml_get_widget (about_xml, "gtkpod_about_window");
   
   
-  about_label = GTK_LABEL (glade_xml_get_widget (about_xml, "about_label"));
+  about_label = GTK_LABEL (gtkpod_xml_get_widget (about_xml, "about_label"));
   label_text = g_strdup_printf (_("gtkpod Version %s: Cross-Platform Multi-Lingual Interface to Apple's iPod(tm)."), VERSION);
   gtk_label_set_text (about_label, label_text);
   g_free (label_text);
@@ -183,7 +183,7 @@ This program borrows code from the following projects:\n"),
 The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"),
 		       NULL };
       gchar **strp = text;
-      textview = GTK_TEXT_VIEW (glade_xml_get_widget (about_xml, "credits_textview"));
+      textview = GTK_TEXT_VIEW (gtkpod_xml_get_widget (about_xml, "credits_textview"));
       tb = gtk_text_view_get_buffer (textview);
       while (*strp)
       {
@@ -210,7 +210,7 @@ Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"),
 Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"),
 				     NULL };
       gchar **strp = text;
-      textview = GTK_TEXT_VIEW (glade_xml_get_widget (about_xml, "translators_textview"));
+      textview = GTK_TEXT_VIEW (gtkpod_xml_get_widget (about_xml, "translators_textview"));
       tb = gtk_text_view_get_buffer (textview);
       while (*strp)
       {
@@ -807,7 +807,7 @@ void option_set_radio_button (GladeXML *win_xml,
 	prefs_set_int_value (prefs_string, 0);
 	wnum = 0;
     }
-    w = glade_xml_get_widget (win_xml, widgets[wnum]);
+    w = gtkpod_xml_get_widget (win_xml, widgets[wnum]);
     if (w)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
 }
@@ -825,7 +825,7 @@ gint option_get_radio_button (GladeXML *win_xml,
 
     for (i=0; widgets[i]; ++i)
     {
-	GtkWidget *w = glade_xml_get_widget (win_xml, widgets[i]);
+	GtkWidget *w = gtkpod_xml_get_widget (win_xml, widgets[i]);
 	if (w)
 	{
 	    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)))
@@ -927,7 +927,7 @@ void option_set_string (GladeXML *win_xml,
     if (!string)
 	string = g_strdup (dflt);
 
-    entry = glade_xml_get_widget (win_xml, name);
+    entry = gtkpod_xml_get_widget (win_xml, name);
 
     if (entry)
 	gtk_entry_set_text(GTK_ENTRY(entry), string);
@@ -947,7 +947,7 @@ void option_get_string (GladeXML *win_xml,
 
     g_return_if_fail (win_xml && name);
 
-    entry = glade_xml_get_widget (win_xml, name);
+    entry = gtkpod_xml_get_widget (win_xml, name);
 
     if (entry)
     {
@@ -972,7 +972,7 @@ void option_set_toggle_button (GladeXML *win_xml,
     if (!prefs_get_int_value (name, &active))
 	active = dflt;
 
-    button = glade_xml_get_widget (win_xml, name);
+    button = gtkpod_xml_get_widget (win_xml, name);
 
     if (button)
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(button),
@@ -990,7 +990,7 @@ gboolean option_get_toggle_button (GladeXML *win_xml,
 
     g_return_val_if_fail (win_xml && name, active);
 
-    button = glade_xml_get_widget (win_xml, name);
+    button = gtkpod_xml_get_widget (win_xml, name);
 
     if (button)
     {
@@ -1375,7 +1375,7 @@ gchar *convert_filename (const gchar *filename)
 
 
 /**
- * Wrapper for glade_xml_get_widget() giving out a warning if widget
+ * Wrapper for gtkpod_xml_get_widget() giving out a warning if widget
  * could not be found.
  *
  **/

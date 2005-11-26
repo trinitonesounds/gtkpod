@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-09-18 22:58:46 jcs>
+/* Time-stamp: <2005-11-25 23:52:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -94,7 +94,7 @@ static void fill_label_uint (gchar *w_name, guint32 nr)
 
     g_return_if_fail (info_window);
     g_return_if_fail (w_name);
-    w = glade_xml_get_widget (info_xml, w_name);
+    w = gtkpod_xml_get_widget (info_xml, w_name);
     if (w)
     {
 	gchar *str = g_strdup_printf ("%u", nr);
@@ -109,7 +109,7 @@ static void fill_label_time (gchar *w_name, guint32 secs)
 
     g_return_if_fail (info_window);
     g_return_if_fail (w_name);
-    w = glade_xml_get_widget (info_xml, w_name);
+    w = gtkpod_xml_get_widget (info_xml, w_name);
     if (w)
     {
 	gchar *str = g_strdup_printf ("%u:%02u:%02u",
@@ -127,7 +127,7 @@ static void fill_label_size (gchar *w_name, gdouble size)
 
     g_return_if_fail (info_window);
     g_return_if_fail (w_name);
-    w = glade_xml_get_widget (info_xml, w_name);
+    w = gtkpod_xml_get_widget (info_xml, w_name);
     if (w)
     {
 	gchar *str = get_filesize_as_string (size);
@@ -142,7 +142,7 @@ static void fill_label_string (gchar *w_name, const char *str)
 
     g_return_if_fail (info_window);
     g_return_if_fail (w_name);
-    w = glade_xml_get_widget (info_xml, w_name);
+    w = gtkpod_xml_get_widget (info_xml, w_name);
     if (w)
     {
 	gtk_label_set_text (GTK_LABEL (w), str);
@@ -162,7 +162,7 @@ void info_open_window (void)
     
     info_xml = glade_xml_new (xml_file, "gtkpod_info", NULL);
     glade_xml_signal_autoconnect (info_xml);
-    info_window = glade_xml_get_widget (info_xml, "gtkpod_info");
+    info_window = gtkpod_xml_get_widget (info_xml, "gtkpod_info");
     
     if (info_window)
     {
@@ -394,7 +394,7 @@ void info_update_totals_view_space (void)
 void
 gtkpod_statusbar_init(void)
 {
-    gtkpod_statusbar = glade_xml_get_widget (main_window_xml, "gtkpod_status");
+    gtkpod_statusbar = gtkpod_xml_get_widget (main_window_xml, "gtkpod_status");
 }
 
 static gint
@@ -440,7 +440,7 @@ void
 gtkpod_tracks_statusbar_init()
 {
     gtkpod_tracks_statusbar =
-	glade_xml_get_widget (main_window_xml, "tracks_statusbar");
+	gtkpod_xml_get_widget (main_window_xml, "tracks_statusbar");
     gtkpod_tracks_statusbar_update();
 }
 
@@ -804,7 +804,7 @@ gtkpod_space_statusbar_update(void)
 void
 gtkpod_space_statusbar_init(void)
 {
-    gtkpod_space_statusbar = glade_xml_get_widget (main_window_xml, "space_statusbar");
+    gtkpod_space_statusbar = gtkpod_xml_get_widget (main_window_xml, "space_statusbar");
 
     if (!space_mutex)
     {

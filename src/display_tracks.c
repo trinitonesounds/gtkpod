@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-21 00:39:50 jcs>
+/* Time-stamp: <2005-11-25 23:52:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2173,7 +2173,7 @@ tm_selection_changed_event(GtkTreeSelection *selection, gpointer data)
 void tm_create_treeview (void)
 {
   GtkTreeModel *model = NULL;
-  GtkWidget *track_window = glade_xml_get_widget (main_window_xml, "track_window");
+  GtkWidget *track_window = gtkpod_xml_get_widget (main_window_xml, "track_window");
   GtkTreeSelection *select;
   gint col;
   GtkWidget *stv = gtk_tree_view_new ();

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 17:49:22 jcs>
+/* Time-stamp: <2005-11-25 23:52:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1133,7 +1133,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
   podcast_read_from_file();
   podcast_file_read_from_file();
 
-  menu = GTK_CHECK_MENU_ITEM (glade_xml_get_widget (main_window_xml, "offline_menu"));
+  menu = GTK_CHECK_MENU_ITEM (gtkpod_xml_get_widget (main_window_xml, "offline_menu"));
   gtk_check_menu_item_set_active (menu, prefs_get_offline ());
   return result;
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-18 23:23:44 jcs>
+/* Time-stamp: <2005-11-25 23:52:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -292,7 +292,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 	{ /* window with same ID already open -- add @text and return
 	   * */
 	    if (text && *text &&
-		cd->window && ((w = glade_xml_get_widget (cd->window_xml, "text"))))
+		cd->window && ((w = gtkpod_xml_get_widget (cd->window_xml, "text"))))
 	    {
 		GtkTextIter ti;
 		GtkTextBuffer *tb = gtk_text_view_get_buffer(GTK_TEXT_VIEW(w));
@@ -303,7 +303,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 		    gtk_text_view_set_buffer(GTK_TEXT_VIEW(w), tb);
 		    gtk_text_view_set_editable(GTK_TEXT_VIEW(w), FALSE);
 		    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(w), FALSE);
-		    if ((w1 =  glade_xml_get_widget (cd->window_xml, "scroller")))
+		    if ((w1 =  gtkpod_xml_get_widget (cd->window_xml, "scroller")))
 			gtk_widget_show (w1);
 		    cd->scrolled = TRUE;
 		}
@@ -338,7 +338,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 
     /* window = create_confirm_dialog (); */
     confirm_xml = glade_xml_new (xml_file, "confirm_dialog", NULL);
-    window = glade_xml_get_widget (confirm_xml, "confirm_dialog");
+    window = gtkpod_xml_get_widget (confirm_xml, "confirm_dialog");
 
     /* insert ID into hash table */
     cd = g_malloc (sizeof (ConfData));
@@ -361,11 +361,11 @@ GtkResponseType gtkpod_confirmation (gint id,
 	gtk_window_set_title (GTK_WINDOW(window), _("Confirmation Dialogue"));
 
     /* Set label */
-    if (label && (w = glade_xml_get_widget (confirm_xml, "label")))
+    if (label && (w = gtkpod_xml_get_widget (confirm_xml, "label")))
 	gtk_label_set_text(GTK_LABEL(w), label);
 
     /* Set text */
-    w = glade_xml_get_widget (confirm_xml, "text");
+    w = gtkpod_xml_get_widget (confirm_xml, "text");
     if (text)
     {
 	if (w)
@@ -381,7 +381,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     }
     else
     { /* no text -> hide widget */
-	if ((w = glade_xml_get_widget (confirm_xml, "scroller")))
+	if ((w = gtkpod_xml_get_widget (confirm_xml, "scroller")))
 	    gtk_widget_hide (w);
 	cd->scrolled = FALSE;
 	prefs_get_size_conf (&defx, &defy);
@@ -389,7 +389,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     gtk_window_set_default_size (GTK_WINDOW (window), defx, defy);
 
     /* Set "Option 1" checkbox */
-    w = glade_xml_get_widget (confirm_xml, "option_vbox");
+    w = gtkpod_xml_get_widget (confirm_xml, "option_vbox");
     if (w && option1_handler && option1_text)
     {
 	gboolean state, invert;
@@ -415,7 +415,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     }
 
     /* Set "Option 2" checkbox */
-    w = glade_xml_get_widget (confirm_xml, "option_vbox");
+    w = gtkpod_xml_get_widget (confirm_xml, "option_vbox");
     if (w && option2_handler && option2_text)
     {
 	gboolean state, invert;
@@ -441,7 +441,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     }
 
     /* Set "Never Again" checkbox */
-    w = glade_xml_get_widget (confirm_xml, "never_again");
+    w = gtkpod_xml_get_widget (confirm_xml, "never_again");
     if (w && confirm_again_handler)
     { /* connect signal */
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -459,7 +459,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     /* Hide and set "default" button that can be activated by pressing
        ENTER in the window (usually OK)*/
     /* Hide or default CANCEL button */
-    if ((w = glade_xml_get_widget (confirm_xml, "cancel")))
+    if ((w = gtkpod_xml_get_widget (confirm_xml, "cancel")))
     {
 	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (w);
@@ -467,7 +467,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     }
 
     /* Hide or default APPLY button */
-    if ((w = glade_xml_get_widget (confirm_xml, "apply")))
+    if ((w = gtkpod_xml_get_widget (confirm_xml, "apply")))
     {
 	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (w);
@@ -475,7 +475,7 @@ GtkResponseType gtkpod_confirmation (gint id,
     }
 
     /* Hide or default OK button */
-    if ((w = glade_xml_get_widget (confirm_xml, "ok")))
+    if ((w = gtkpod_xml_get_widget (confirm_xml, "ok")))
     {
 	GTK_WIDGET_SET_FLAGS (w, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default (w);

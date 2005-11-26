@@ -1,3 +1,8 @@
+2005-11-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * globally changed glade_xml_get_widget() to
+           gtkpod_xml_get_widget()
+
 2005-11-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * display_sorttabs.c, prefs.[ch], prefs_window.[ch],

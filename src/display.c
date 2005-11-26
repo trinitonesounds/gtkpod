@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 17:41:37 jcs>
+/* Time-stamp: <2005-11-25 23:52:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -76,7 +76,7 @@ void display_create (void)
     st_set_default_sizes ();
     pm_create_treeview ();
     /* Hide the "stop_button" */
-    stop_button = glade_xml_get_widget (main_window_xml, "stop_button");
+    stop_button = gtkpod_xml_get_widget (main_window_xml, "stop_button");
     if (stop_button) gtk_widget_hide (stop_button);
     /* Hide/Show the toolbar */
     display_show_hide_toolbar ();
@@ -159,7 +159,7 @@ display_disable_gtkpod_import_buttons(void)
 
     g_return_if_fail (gtkpod_window);
 
-    if((w = glade_xml_get_widget (main_window_xml, "import_button")))
+    if((w = gtkpod_xml_get_widget (main_window_xml, "import_button")))
     {
 	gtk_widget_set_sensitive(w, FALSE);
 	/* in case this widget has been blocked, we need to tell
@@ -167,7 +167,7 @@ display_disable_gtkpod_import_buttons(void)
 	update_blocked_widget (w, FALSE);
     }
 
-    if((w = glade_xml_get_widget (main_window_xml, "import_itunes_mi")))
+    if((w = gtkpod_xml_get_widget (main_window_xml, "import_itunes_mi")))
     {
 	gtk_widget_set_sensitive(w, FALSE);
 	/* in case this widget has been blocked, we need to tell
@@ -180,17 +180,17 @@ display_disable_gtkpod_import_buttons(void)
 /* make sure only suitable delete menu items are available */
 void display_adjust_delete_menus (void)
 {
-    GtkWidget *d  = glade_xml_get_widget (main_window_xml, "delete_menu");
-    GtkWidget *dp = glade_xml_get_widget (main_window_xml, "delete_playlist_menu");
-    GtkWidget *df  = glade_xml_get_widget (main_window_xml, "delete_full_menu");
-    GtkWidget *dfp = glade_xml_get_widget (main_window_xml, "delete_full_playlist_menu");
+    GtkWidget *d  = gtkpod_xml_get_widget (main_window_xml, "delete_menu");
+    GtkWidget *dp = gtkpod_xml_get_widget (main_window_xml, "delete_playlist_menu");
+    GtkWidget *df  = gtkpod_xml_get_widget (main_window_xml, "delete_full_menu");
+    GtkWidget *dfp = gtkpod_xml_get_widget (main_window_xml, "delete_full_playlist_menu");
 #if 0
 /* not used */
-    GtkWidget *de = glade_xml_get_widget (main_window_xml, "delete_tab_entry_menu");
-    GtkWidget *dt = glade_xml_get_widget (main_window_xml, "delete_tracks_menu");
-    GtkWidget *dfe = glade_xml_get_widget (main_window_xml,
+    GtkWidget *de = gtkpod_xml_get_widget (main_window_xml, "delete_tab_entry_menu");
+    GtkWidget *dt = gtkpod_xml_get_widget (main_window_xml, "delete_tracks_menu");
+    GtkWidget *dfe = gtkpod_xml_get_widget (main_window_xml,
 				    "delete_full_tab_entry_menu");
-    GtkWidget *dft = glade_xml_get_widget (main_window_xml, "delete_full_tracks_menu");
+    GtkWidget *dft = gtkpod_xml_get_widget (main_window_xml, "delete_full_tracks_menu");
 #endif
 
     Playlist *pl = pm_get_selected_playlist ();
@@ -232,8 +232,8 @@ void display_adjust_delete_menus (void)
    the prefs */
 void display_show_hide_toolbar (void)
 {
-    GtkWidget *tb = glade_xml_get_widget (main_window_xml, "toolbar");
-    GtkWidget *mi = glade_xml_get_widget (main_window_xml, "toolbar_menu");
+    GtkWidget *tb = gtkpod_xml_get_widget (main_window_xml, "toolbar");
+    GtkWidget *mi = gtkpod_xml_get_widget (main_window_xml, "toolbar_menu");
 
     if (prefs_get_display_toolbar ())
     {
@@ -252,7 +252,7 @@ void display_show_hide_toolbar (void)
    prefs. */
 void display_set_info_window_menu (void)
 {
-    GtkWidget *mi = glade_xml_get_widget (main_window_xml, "info_window_menu");
+    GtkWidget *mi = gtkpod_xml_get_widget (main_window_xml, "info_window_menu");
 
     if (prefs_get_info_window ())
     {
@@ -271,7 +271,7 @@ void display_set_check_ipod_menu (void)
 {
     GtkWidget *w = NULL;
 
-    if((w = glade_xml_get_widget (main_window_xml, "check_ipod_files_mi")))
+    if((w = gtkpod_xml_get_widget (main_window_xml, "check_ipod_files_mi")))
         gtk_widget_set_sensitive(w, !prefs_get_offline());
 }
 
@@ -292,8 +292,8 @@ void display_show_hide_tooltips (void)
 			    "main_tooltips_initialised")) return;
 
     mi = GTK_CHECK_MENU_ITEM (
-	glade_xml_get_widget (main_window_xml, "tooltips_menu"));
-    tb = GTK_TOOLBAR (glade_xml_get_widget (main_window_xml, "toolbar"));
+	gtkpod_xml_get_widget (main_window_xml, "tooltips_menu"));
+    tb = GTK_TOOLBAR (gtkpod_xml_get_widget (main_window_xml, "toolbar"));
     mt = g_object_get_data (G_OBJECT (gtkpod_window), "main_tooltips");
 
     g_return_if_fail (mi);
@@ -452,7 +452,7 @@ static void block_release_selection (gint inst, gint action,
     /* lookup stop_button */
     if (stop_button == NULL)
     {
-	stop_button = glade_xml_get_widget (main_window_xml, "stop_button");
+	stop_button = gtkpod_xml_get_widget (main_window_xml, "stop_button");
 	if (stop_button == NULL)
 	    g_warning ("Programming error: stop_button not found\n");
     }

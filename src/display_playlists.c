@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 21:33:12 jcs>
+/* Time-stamp: <2005-11-25 23:52:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1897,7 +1897,7 @@ void pm_create_treeview (void)
   GtkWidget *playlist_window;
   GtkWidget *tree;
 
-  playlist_window = glade_xml_get_widget (main_window_xml, "playlist_window");
+  playlist_window = gtkpod_xml_get_widget (main_window_xml, "playlist_window");
   g_return_if_fail (playlist_window);
 
   /* destroy old treeview */
