@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-20 00:58:09 jcs>
+/* Time-stamp: <2005-11-27 15:52:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -45,5 +45,6 @@
 typedef Itdb_iTunesDB iTunesDB;
 typedef Itdb_Playlist Playlist;
 typedef Itdb_Track Track;
-typedef Itdb_Image Image;
+typedef Itdb_Thumb Thumb;
+typedef Itdb_Artwork Artwork;
 #endif

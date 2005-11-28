@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-26 22:41:24 jcs>
+/* Time-stamp: <2005-11-27 16:37:21 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -42,7 +42,7 @@
 #include "tools.h"
 #include "podcast.h"
 
-#define LOCALDEBUG 0
+#define LOCALDEBUG 1
 
 static guint entry_inst = -1;
 static GList *selected_tracks = NULL;
@@ -68,24 +68,31 @@ typedef enum {
 static void 
 do_special(GtkWidget *w, gpointer data)
 {
-	GList *gl;
-	for (gl=selected_tracks; gl; gl=gl->next)
+    GList *gl;
+
+    for (gl=selected_tracks; gl; gl=gl->next)
+    {
+	gchar *mp;
+	Track *tr = gl->data;
+	g_return_if_fail (tr);
+
+	g_object_get (tr->itdb->device, "mount-point", &mp, NULL);
+	printf ("mountpoint: %s\n", mp);
+	g_free (mp);
+
+	printf ("track: %p: thumbnails: %p id: %d num: %d\n",
+		tr, tr->artwork->thumbnails, tr->artwork->id, g_list_length (tr->artwork->thumbnails));
+	if (tr->artwork->thumbnails)
 	{
-	    Track *tr = gl->data;
-	    g_return_if_fail (tr);
- 	    printf ("track: %p: thumbnails: %p id: %d num: %d\n",
- 		    tr, tr->thumbnails, tr->image_id, g_list_length (tr->thumbnails));
-	    if (tr->thumbnails)
+	    GList *gl2;
+	    for (gl2=tr->artwork->thumbnails; gl2; gl2=gl2->next)
 	    {
-		GList *gl2;
-		for (gl2=tr->thumbnails; gl2; gl2=gl2->next)
-		{
-		    Image *img = gl2->data;
-		    g_return_if_fail (img);
-		    printf ("  %s offset: %d size: %d width: %d height: %d\n", img->filename, img->offset, img->size, img->width, img->height);
-		}
+		Thumb *img = gl2->data;
+		g_return_if_fail (img);
+		printf ("  %s offset: %d size: %d width: %d height: %d\n", img->filename, img->offset, img->size, img->width, img->height);
 	    }
 	}
+    }
 }
 #endif
 

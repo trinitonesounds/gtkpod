@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-05 22:40:10 jcs>
+/* Time-stamp: <2005-11-27 19:08:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -251,6 +251,53 @@ void create_add_playlists_dialog(void)
     }	
     gtk_widget_destroy(fc);
 }
+
+
+
+
+/* 
+ * Add Cover Art
+ */
+gchar *fileselection_get_cover_filename (void)
+{
+    GtkWidget* fc;  /* The file chooser dialog */
+    gint response;  /* The response of the filechooser */
+    gchar *filename = NULL; /* The chosen file */
+
+    /* Create the file chooser, and handle the response */
+    fc = gtk_file_chooser_dialog_new (_("Set Cover"),
+				      NULL,
+				      GTK_FILE_CHOOSER_ACTION_OPEN,
+				      GTK_STOCK_CANCEL,
+				      GTK_RESPONSE_CANCEL,
+				      GTK_STOCK_OPEN,
+				      GTK_RESPONSE_ACCEPT,
+				      NULL);
+
+    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), FALSE);
+    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
+					 prefs_get_last_dir_browse ());
+
+    response = gtk_dialog_run(GTK_DIALOG(fc));
+	
+    switch (response)
+    {
+    case GTK_RESPONSE_ACCEPT:
+	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
+	break;
+    case GTK_RESPONSE_CANCEL:
+	break;
+    default:	/* Fall through */
+	break;
+    }		
+    gtk_widget_destroy(fc);
+    return filename;
+}
+
+
+
+
+
 
 
 

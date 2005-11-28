@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 00:27:50 jcs>
+/* Time-stamp: <2005-11-29 00:56:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include "details.h"
+#include "fileselection.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
@@ -72,6 +73,7 @@ static const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE="details_window_notebook_page";
 
 
 /* Declarations */
+static void details_update_thumbnail (Detail *detail);
 static void details_set_track (Detail *detail, Track *track);
 static void details_free (Detail *detail);
 
@@ -180,6 +182,38 @@ void details_button_last_clicked (GtkCheckButton *button,
     last = g_list_last (detail->tracks);
     if (last)
 	details_set_track (detail, last->data);
+}
+
+
+/****** Thumbnail Control *****/
+static void details_button_set_artwork_clicked (GtkButton *button,
+						Detail *detail)
+{
+    gchar *filename;
+
+    g_return_if_fail (detail);
+    g_return_if_fail (detail->track);
+
+    filename = fileselection_get_cover_filename ();
+
+    if (filename)
+    {
+	if (itdb_track_set_thumbnails (detail->track, filename) != TRUE)
+	{
+	    gtkpod_warning (_("Could not set cover art: '%s'"),
+			    filename);
+	}
+	details_update_thumbnail (detail);
+    }
+
+    g_free (filename);
+}
+
+static void details_button_remove_artwork_clicked (GtkButton *button,
+						   Detail *detail)
+{
+    itdb_track_remove_thumbnails (detail->track);
+    details_update_thumbnail (detail);
 }
 
 
@@ -408,11 +442,50 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 }
 
 
+/* Update the displayed thumbnail */
+static void details_update_thumbnail (Detail *detail)
+{
+    Thumb *thumb;
+    GtkImage *img;
+
+    g_return_if_fail (detail);
+    g_return_if_fail (detail->track);
+
+    img = GTK_IMAGE (gtkpod_xml_get_widget (detail->xml,
+					    "details_image_thumbnail"));
+
+    gtk_image_set_from_pixbuf (img, NULL);
+
+    /* Get large cover */
+    thumb = itdb_artwork_get_thumb_by_type (detail->track->artwork,
+					    ITDB_THUMB_COVER_LARGE);
+
+    if (thumb)
+    {
+	GdkPixbuf *pixbuf;
+	pixbuf = itdb_thumb_get_gdk_pixbuf (detail->track->itdb->device,
+					    thumb);
+	if (pixbuf)
+	{
+	    gtk_image_set_from_pixbuf (img, pixbuf);
+	    gdk_pixbuf_unref (pixbuf);
+	}
+    }
+
+    if (gtk_image_get_storage_type (img) == GTK_IMAGE_EMPTY)
+    {
+	gtk_image_set_from_stock (img, GTK_STOCK_MISSING_IMAGE,
+				  GTK_ICON_SIZE_DIALOG);
+    }
+}
+
+
 /* Set the display to @track */
 static void details_set_track (Detail *detail, Track *track)
 {
     GtkWidget *w;
     gint index;
+    gchar *buf;
     T_item item;
     gboolean first, last;
 
@@ -426,14 +499,12 @@ static void details_set_track (Detail *detail, Track *track)
     detail->tracknr = index;
     detail->track = track;
 
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_label_index")))
-    {
-	gchar *buf = g_strdup_printf ("%d / %d",
-				      index+1,
-				      g_list_length (detail->tracks));
-	gtk_label_set_text (GTK_LABEL (w), buf);
-	g_free (buf);
-    }
+    w = gtkpod_xml_get_widget (detail->xml, "details_label_index");
+    buf = g_strdup_printf ("%d / %d",
+			   index+1,
+			   g_list_length (detail->tracks));
+    gtk_label_set_text (GTK_LABEL (w), buf);
+    g_free (buf);
 
     for (item=1; item<T_ITEM_NUM; ++item)
     {
@@ -451,38 +522,7 @@ static void details_set_track (Detail *detail, Track *track)
     }
 
     /* Set thumbnail */
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_image_thumbnail")))
-    {
-	GList *gl;
-	GtkImage *img = GTK_IMAGE (w);
-
-	gtk_image_set_from_pixbuf (img, NULL);
-
-	/* Find large cover */
-	for (gl=track->thumbnails; gl; gl=gl->next)
-	{
-	    Image *thumb = gl->data;
-	    g_return_if_fail (thumb);
-
-	    if (thumb->type == 1)
-	    {   /* 1 == IPOD_COVER_LARGE */
-		GdkPixbuf *pixbuf;
-		pixbuf = itdb_image_get_gdk_pixbuf (track->itdb, thumb);
-		if (pixbuf)
-		{
-		    gtk_image_set_from_pixbuf (img, pixbuf);
-		    gdk_pixbuf_unref (pixbuf);
-		}
-	    }
-	}
-
-	if (gtk_image_get_storage_type (img) == GTK_IMAGE_EMPTY)
-	{
-	    gtk_image_set_from_stock (img, GTK_STOCK_MISSING_IMAGE,
-				      GTK_ICON_SIZE_DIALOG);
-	}
-    }
-    
+    details_update_thumbnail (detail);
 
     /* inactivate prev/next buttons when at the beginning/end of the
      * list */
@@ -546,22 +586,32 @@ void details_show (GList *selected_tracks)
     }
 
     /* Navigation */
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_first")))
-	g_signal_connect (w, "clicked",
-			  G_CALLBACK (details_button_first_clicked),
-			  detail);
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_previous")))
-	g_signal_connect (w, "clicked",
-			  G_CALLBACK (details_button_previous_clicked),
-			  detail);
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_next")))
-	g_signal_connect (w, "clicked",
-			  G_CALLBACK (details_button_next_clicked),
-			  detail);
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_last")))
-	g_signal_connect (w, "clicked",
-			  G_CALLBACK (details_button_last_clicked),
-			  detail);
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_first");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_first_clicked),
+		      detail);
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_previous");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_previous_clicked),
+		      detail);
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_next");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_next_clicked),
+		      detail);
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_last");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_last_clicked),
+		      detail);
+
+    /* Thumbnail control */
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_set_artwork");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_set_artwork_clicked),
+		      detail);
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_remove_artwork");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_remove_artwork_clicked),
+		      detail);
 
     /* Window control */
     if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_apply")))

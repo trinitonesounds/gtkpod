@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 23:26:22 jcs>
+/* Time-stamp: <2005-11-27 17:57:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -918,6 +918,17 @@ static void ipod_directories_ok (gchar *mp)
     if (!errordir)
     {
 	pbuf = g_build_filename (mp, "iPod_Control", "iTunes", NULL);
+	if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
+	{
+	    if((mkdir(pbuf, 0755) != 0))
+		errordir = pbuf;
+	}
+	if (!errordir)
+	    g_free (pbuf);
+    }
+    if (!errordir)
+    {
+	pbuf = g_build_filename (mp, "iPod_Control", "Artwork", NULL);
 	if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
 	{
 	    if((mkdir(pbuf, 0755) != 0))

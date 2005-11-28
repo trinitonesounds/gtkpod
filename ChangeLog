@@ -15,8 +15,10 @@ gtkpod V0.96.CVS
        segfault the appliction if the details window consequently
        attempts to access the track and similar).
 
-       NEW: Display of thumbnail images. Choose "Show Details" from
-       the context menu (right mouse-button).
+       NEW: Display and setting/removing of thumbnail images. Choose
+       "Show Details" from the context menu (right mouse-button). New
+       thumbnails are displayed by the iPod but get wiped by iTunes,
+       however.
 
        NEW: very basic iPod video support (you can add Videos but no
        metadata is filled in). Thanks to Uwe Herman for the input.

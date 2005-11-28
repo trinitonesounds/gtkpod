@@ -1,3 +1,7 @@
+2005-11-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * details.c: support for set_thumbnails / remove thumbnails.
+
 2005-11-26 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * globally changed glade_xml_get_widget() to
