@@ -1,3 +1,8 @@
+2005-11-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * mp4file.c: patch by Simon MARTIN fixing support for video
+           mp4.
+
 2005-11-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * details.c: support for set_thumbnails / remove thumbnails.

@@ -159,7 +159,7 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 
 	trackId = MP4FindTrackId(mp4File, 0, NULL, 0);
 	trackType = MP4GetTrackType(mp4File, trackId);
-	if (trackType && (strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0))
+	if (trackType && ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) || (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0)))
 	{
 	    gchar *value;
 	    guint16 numvalue, numvalue2;
@@ -185,6 +185,8 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		    track->filetype = g_strdup ("Protected AAC audio file");
 		if (g_strcasecmp (value, ".m4b") == 0)
 		    track->filetype = g_strdup ("AAC audio book file");
+		if (g_strcasecmp (value, ".mp4") == 0)
+		    track->filetype = g_strdup ("MP4 video file");
 	    }
 	    if (prefs_get_readtags ())
 	    {
@@ -269,7 +271,7 @@ gboolean mp4_write_file_info (gchar *mp4FileName, Track *track)
 
 	trackId = MP4FindTrackId(mp4File, 0, NULL, 0);
 	trackType = MP4GetTrackType(mp4File, trackId);
-	if (trackType && (strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0))
+	if (trackType && ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0)||(strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0)))
 	{
 	    gchar *value;
 
