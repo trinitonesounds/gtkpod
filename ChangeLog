@@ -9,7 +9,7 @@ gtkpod V0.96.CVS
        read and written, and compilation artists can be grouped into
        "Compilations" in the Artist filter tab. Thanks to Iain Benson!
 
-       NEW: Window for display of track details. Non-stable with known
+       NEW: Window for edit of track details. Non-stable with known
        issues (no sync of data between main display and details
        display -> deleting of tracks with the details window open may
        segfault the appliction if the details window consequently

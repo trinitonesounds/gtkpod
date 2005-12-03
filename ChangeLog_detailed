@@ -1,3 +1,15 @@
+2005-12-04 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * details.c: apply/undo functionality
+
+	 * file_itunesdb.c: save thumbnail filename in .ext database
+
+	 * misc_track.c: new: track_set_text()
+
+	 * misc_conversion.c: recognize "--" as unset time
+
+	 * display_songs.c: use track_set_text(), track_copy_item()
+
 2005-11-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * mp4file.c: patch by Simon MARTIN fixing support for video

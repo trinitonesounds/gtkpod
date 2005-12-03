@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-29 00:56:25 jcs>
+/* Time-stamp: <2005-12-04 01:10:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -36,6 +36,7 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
+#include <string.h>
 
 /*
 void details_close (void);
@@ -49,18 +50,15 @@ static GList *details = NULL;
 
 struct _Detail
 {
-    /* XML info */
-    GladeXML *xml; 
-    /* pointer to details window */
-    GtkWidget *window;
-    /* tracks displayed in details window */
-    GList *orig_tracks;
-    /* tracks displayed in details window */
-    GList *tracks;
-    /* currently displayed track */
-    Track *track;
-    /* index of currently displayed track */
-    gint tracknr;
+    GladeXML *xml;      /* XML info                           */
+    GtkWidget *window;  /* pointer to details window          */
+    iTunesDB *itdb;     /* pointer to the original itdb       */
+    GList *orig_tracks; /* tracks displayed in details window */
+    GList *tracks;      /* tracks displayed in details window */
+    Track *track;       /* currently displayed track          */
+    gint tracknr;       /* index of currently displayed track */
+    gboolean changed;   /* at lease one track was changed     */
+
 };
 
 typedef struct _Detail Detail;
@@ -73,9 +71,16 @@ static const gchar *DETAILS_WINDOW_NOTEBOOK_PAGE="details_window_notebook_page";
 
 
 /* Declarations */
+static void details_update_buttons (Detail *detail);
 static void details_update_thumbnail (Detail *detail);
 static void details_set_track (Detail *detail, Track *track);
 static void details_free (Detail *detail);
+static void details_get_item (Detail *detail, T_item item,
+			      gboolean assumechanged);
+static void details_get_changes (Detail *detail);
+static gboolean details_copy_artwork (Track *frtrack, Track *totrack);
+static void details_undo_track (Detail *detail, Track *track);
+static void details_update_headline (Detail *detail);
 
 
 
@@ -99,12 +104,39 @@ static void details_store_window_state (Detail *detail)
 }
 
 
+/* Query the state of the writethrough checkbox */
+static gboolean details_writethrough (Detail *detail)
+{
+    GtkWidget *w;
+
+    g_return_val_if_fail (detail, FALSE);
+
+    w = gtkpod_xml_get_widget (detail->xml,
+			       "details_checkbutton_writethrough");
+    return gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
+}
 
 /* ------------------------------------------------------------
  *
  *        Callback functions
  *
  * ------------------------------------------------------------ */
+
+static void details_text_changed (GtkWidget *widget,
+				  Detail *detail)
+{
+    ExtraTrackData *etr;
+
+    g_return_if_fail (detail);
+    g_return_if_fail (detail->track);
+    etr = detail->track->userdata;
+    g_return_if_fail (etr);
+    
+    detail->changed = TRUE;
+    etr->tchanged = TRUE;
+    details_update_buttons (detail);
+}
+
 
 static void details_entry_activate (GtkEntry *entry,
 				    Detail *detail)
@@ -118,7 +150,9 @@ static void details_entry_activate (GtkEntry *entry,
 
     g_return_if_fail ((item > 0) && (item < T_ITEM_NUM));
 
-    printf ("details_entry_activate: %d\n", item);
+    details_get_item (detail, item, TRUE);
+
+    details_update_headline (detail);
 }
 
 
@@ -134,7 +168,7 @@ static void details_checkbutton_toggled (GtkCheckButton *button,
     
     g_return_if_fail ((item > 0) && (item < T_ITEM_NUM));
 
-    printf ("details_checkbutton_toggled: %d\n", item);
+    details_get_item (detail, item, FALSE);
 }
 
 
@@ -147,6 +181,8 @@ void details_button_first_clicked (GtkCheckButton *button,
 
     first = g_list_first (detail->tracks);
 
+    details_get_changes (detail);
+
     if (first)
 	details_set_track (detail, first->data);
 }
@@ -156,10 +192,14 @@ void details_button_previous_clicked (GtkCheckButton *button,
 {
     g_return_if_fail (detail);
 
+    details_get_changes (detail);
+
     if (detail->tracknr != 0)
+    {
 	details_set_track (detail,
 			   g_list_nth_data (detail->tracks,
 					    detail->tracknr - 1));
+    }
 }
 
 void details_button_next_clicked (GtkCheckButton *button,
@@ -169,6 +209,9 @@ void details_button_next_clicked (GtkCheckButton *button,
     g_return_if_fail (detail);
 
     next = g_list_nth_data (detail->tracks, detail->tracknr + 1);
+
+    details_get_changes (detail);
+
     if (next)
 	details_set_track (detail, next);
 }
@@ -180,6 +223,9 @@ void details_button_last_clicked (GtkCheckButton *button,
     g_return_if_fail (detail);
 
     last = g_list_last (detail->tracks);
+
+    details_get_changes (detail);
+
     if (last)
 	details_set_track (detail, last->data);
 }
@@ -198,22 +244,52 @@ static void details_button_set_artwork_clicked (GtkButton *button,
 
     if (filename)
     {
-	if (itdb_track_set_thumbnails (detail->track, filename) != TRUE)
-	{
-	    gtkpod_warning (_("Could not set cover art: '%s'"),
-			    filename);
+	if (details_writethrough (detail))
+	{   /* Set thumbnail for all tracks */
+	    GList *gl;
+	    for (gl=detail->tracks; gl; gl=gl->next)
+	    {
+		ExtraTrackData *etr;
+		Track *tr = gl->data;
+		g_return_if_fail (tr);
+		etr = tr->userdata;
+		g_return_if_fail (etr);
+		gp_track_set_thumbnails (tr, filename);
+		etr->tchanged = TRUE;
+	    }
 	}
+	else
+	{   /* Only change current track */
+	    ExtraTrackData *etr = detail->track->userdata;
+	    g_return_if_fail (etr);
+	    gp_track_set_thumbnails (detail->track, filename);
+	    etr->tchanged = TRUE;
+	}
+	detail->changed = TRUE;
 	details_update_thumbnail (detail);
     }
-
     g_free (filename);
+
+    details_update_buttons (detail);
 }
 
 static void details_button_remove_artwork_clicked (GtkButton *button,
 						   Detail *detail)
 {
-    itdb_track_remove_thumbnails (detail->track);
+    ExtraTrackData *etr;
+
+    g_return_if_fail (detail);
+    g_return_if_fail (detail->track);
+    etr = detail->track->userdata;
+    g_return_if_fail (etr);
+
+    gp_track_remove_thumbnails (detail->track);
+    etr->tchanged = TRUE;
+    detail->changed = TRUE;
+
     details_update_thumbnail (detail);
+
+    details_update_buttons (detail);
 }
 
 
@@ -221,7 +297,55 @@ static void details_button_remove_artwork_clicked (GtkButton *button,
 static void details_button_apply_clicked (GtkButton *button,
 					  Detail *detail)
 {
+    GList *gl, *gl_orig;
+    gboolean changed = FALSE;
 
+    g_return_if_fail (detail);
+
+    details_get_changes (detail);
+
+    for (gl=detail->tracks, gl_orig=detail->orig_tracks;
+	 gl && gl_orig;
+	 gl=gl->next, gl_orig=gl_orig->next)
+    {
+	Track *tr = gl->data;
+	Track *tr_orig = gl_orig->data;
+	ExtraTrackData *etr;
+	g_return_if_fail (tr);
+	g_return_if_fail (tr_orig);
+
+	etr = tr->userdata;
+	g_return_if_fail (etr);
+
+	if (etr->tchanged)
+	{
+	    T_item item;
+	    gboolean tr_changed = FALSE;
+
+	    for (item=1; item<T_ITEM_NUM; ++item)
+	    {
+		tr_changed |= track_copy_item (tr, tr_orig, item);
+	    }
+
+	    tr_changed |= details_copy_artwork (tr, tr_orig);
+
+	    if (tr_changed)
+	    {
+		pm_track_changed (tr_orig);
+	    }
+	    changed |= tr_changed;
+	    etr->tchanged = FALSE;
+	}
+    }
+
+    detail->changed = FALSE;
+
+    if (changed)
+	data_changed (detail->itdb);
+
+    details_update_headline (detail);
+
+    details_update_buttons (detail);
 }
 
 static void details_button_cancel_clicked (GtkButton *button,
@@ -236,11 +360,73 @@ static void details_button_cancel_clicked (GtkButton *button,
     details_free (detail);
 }
 
+
 static void details_button_ok_clicked (GtkButton *button,
 				       Detail *detail)
 {
+    g_return_if_fail (detail);
 
+    details_button_apply_clicked (NULL, detail);
+    details_button_cancel_clicked (NULL, detail);
 }
+
+
+/* Check if any tracks are still modified and set detail->changed
+   accordingly */
+static void details_update_changed_state (Detail *detail)
+{
+    gboolean changed = FALSE;
+    GList *gl;
+
+    g_return_if_fail (detail);
+
+    for (gl=detail->tracks; gl; gl=gl->next)
+    {
+	ExtraTrackData *etr;
+	Track *track = gl->data;
+	g_return_if_fail (track);
+	etr = track->userdata;
+	g_return_if_fail (etr);
+	changed |= etr->tchanged;
+    }
+
+    detail->changed = changed;
+}
+
+
+static void details_button_undo_track_clicked (GtkButton *button,
+					       Detail *detail)
+{
+    g_return_if_fail (detail);
+
+    details_undo_track (detail, detail->track);
+
+    details_update_changed_state (detail);
+
+    details_set_track (detail, detail->track);
+}
+
+
+static void details_button_undo_all_clicked (GtkButton *button,
+					     Detail *detail)
+{
+    GList *gl;
+
+    g_return_if_fail (detail);
+
+    for (gl=detail->tracks; gl; gl=gl->next)
+    {
+	Track *track = gl->data;
+	g_return_if_fail (track);
+
+	details_undo_track (detail, track);
+    }
+
+    detail->changed = FALSE;
+
+    details_set_track (detail, detail->track);
+}
+
 
 static void details_delete_event (GtkWidget *widget,
 				  GdkEvent *event,
@@ -250,11 +436,90 @@ static void details_delete_event (GtkWidget *widget,
 }
 
 
+/****** Copy artwork data if filaname has changed ****** */
+static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
+{
+    gboolean changed = FALSE;
+    ExtraTrackData *fretr, *toetr;
+
+    g_return_val_if_fail (frtrack, FALSE);
+    g_return_val_if_fail (totrack, FALSE);
+
+    fretr = frtrack->userdata;
+    toetr = totrack->userdata;
+
+    g_return_val_if_fail (fretr, FALSE);
+    g_return_val_if_fail (toetr, FALSE);
+
+    g_return_val_if_fail (fretr->thumb_path_locale, FALSE);
+    g_return_val_if_fail (toetr->thumb_path_locale, FALSE);
+
+    if (strcmp (fretr->thumb_path_locale, toetr->thumb_path_locale) != 0)
+    {
+	itdb_artwork_free (totrack->artwork);
+	totrack->artwork = itdb_artwork_duplicate (frtrack->artwork);
+	g_free (toetr->thumb_path_locale);
+	g_free (toetr->thumb_path_utf8);
+	toetr->thumb_path_locale = g_strdup (fretr->thumb_path_locale);
+	toetr->thumb_path_utf8 = g_strdup (fretr->thumb_path_utf8);
+	changed = TRUE;
+    }
+    return changed;
+}
+
+
+
+/****** Undo one track (no display action) ****** */
+static void details_undo_track (Detail *detail, Track *track)
+{
+    gint i;
+    T_item item;
+    Track *tr_orig;
+    ExtraTrackData *etr;
+
+    g_return_if_fail (detail);
+    g_return_if_fail (track);
+
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    i = g_list_index (detail->tracks, track);
+    g_return_if_fail (i != -1);
+
+    tr_orig = g_list_nth_data (detail->orig_tracks, i);
+    g_return_if_fail (tr_orig);
+
+    for (item=1; item<T_ITEM_NUM; ++item)
+    {
+	track_copy_item (tr_orig, track, item);
+    }
+
+    details_copy_artwork (tr_orig, track);
+
+    etr->tchanged = FALSE;
+}
+
+
+/****** Read out widgets of current track ******/
+static void details_get_changes (Detail *detail)
+{
+    T_item item;
+
+    g_return_if_fail (detail);
+    g_return_if_fail (detail->track);
+
+    for (item=1; item<T_ITEM_NUM; ++item)
+    {
+	details_get_item (detail, item, FALSE);
+    }
+}
+
 
 
 /****** Setup of widgets ******/
 static void details_setup_widget (Detail *detail, T_item item)
 {
+    GtkTextBuffer *tb;
     GtkWidget *w;
     gchar *buf;
 
@@ -262,11 +527,8 @@ static void details_setup_widget (Detail *detail, T_item item)
     g_return_if_fail ((item > 0) && (item < T_ITEM_NUM));
 
     buf = g_strdup_printf ("details_label_%d", item);
-    if ((w = gtkpod_xml_get_widget (detail->xml, buf)))
-    {
-	gtk_label_set_text (GTK_LABEL (w),
-			    gettext (get_t_string (item)));
-    }
+    w = gtkpod_xml_get_widget (detail->xml, buf);
+    gtk_label_set_text (GTK_LABEL (w), gettext (get_t_string (item)));
     g_free (buf);
 
     buf = NULL;
@@ -304,32 +566,32 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_TIME_MODIFIED:
     case T_TIME_RELEASED:
 	buf = g_strdup_printf ("details_entry_%d", item);
-	if ((w = gtkpod_xml_get_widget (detail->xml, buf)))
-	{
-	    g_signal_connect (w, "activate",
-			      G_CALLBACK (details_entry_activate),
-			      detail);
-	}
+	w = gtkpod_xml_get_widget (detail->xml, buf);
+	g_signal_connect (w, "activate",
+			  G_CALLBACK (details_entry_activate),
+			  detail);
+	g_signal_connect (w, "changed",
+			  G_CALLBACK (details_text_changed),
+			  detail);
 	break;
     case T_COMPILATION:
     case T_TRANSFERRED:
     case T_CHECKED:
 	buf = g_strdup_printf ("details_checkbutton_%d", item);
-	if ((w = gtkpod_xml_get_widget (detail->xml, buf)))
-	{
-	    g_signal_connect (w, "toggled",
-			      G_CALLBACK (details_checkbutton_toggled),
-			      detail);
-	}
+	w = gtkpod_xml_get_widget (detail->xml, buf);
+	g_signal_connect (w, "toggled",
+			  G_CALLBACK (details_checkbutton_toggled),
+			  detail);
 	break;
     case T_DESCRIPTION:
     case T_SUBTITLE:
     case T_COMMENT:
 	buf = g_strdup_printf ("details_textview_%d", item);
-	if ((w = gtkpod_xml_get_widget (detail->xml, buf)))
-	{
-
-	}
+	w = gtkpod_xml_get_widget (detail->xml, buf);
+	tb = gtk_text_view_get_buffer (GTK_TEXT_VIEW (w));
+	g_signal_connect (tb, "changed",
+			  G_CALLBACK (details_text_changed),
+			  detail);
 	break;
     case T_ALL:
     case T_ITEM_NUM:
@@ -349,6 +611,7 @@ static void details_setup_widget (Detail *detail, T_item item)
 
 static void details_set_item (Detail *detail, Track *track, T_item item)
 {
+    GtkTextBuffer *tb;
     GtkWidget *w = NULL;
     gchar *text;
     gchar *entry, *checkbutton, *textview;
@@ -360,7 +623,11 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     entry = g_strdup_printf ("details_entry_%d", item);
     checkbutton = g_strdup_printf ("details_checkbutton_%d", item);
     textview = g_strdup_printf ("details_textview_%d", item);
+
+    track->itdb = detail->itdb;
     text = track_get_text (track, item);
+    track->itdb = NULL;
+
 
     switch (item)
     {
@@ -393,20 +660,21 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     case T_TIME_PLAYED:
     case T_TIME_MODIFIED:
     case T_TIME_RELEASED:
-	if ((w = gtkpod_xml_get_widget (detail->xml, entry)))
-	{
-	    gtk_entry_set_text (GTK_ENTRY (w), text);
-	}
+	w = gtkpod_xml_get_widget (detail->xml, entry);
+	g_signal_handlers_block_by_func (w, details_text_changed, detail);
+	gtk_entry_set_text (GTK_ENTRY (w), text);
+	g_signal_handlers_unblock_by_func(w, details_text_changed,detail);
 	break;
     case T_COMMENT:
     case T_DESCRIPTION:
     case T_SUBTITLE:
-	if ((w = gtkpod_xml_get_widget (detail->xml, textview)))
-	{
-	    GtkTextBuffer *tb = gtk_text_view_get_buffer (
-		GTK_TEXT_VIEW (w));
-	    gtk_text_buffer_set_text (tb, text, -1);
-	}
+	w = gtkpod_xml_get_widget (detail->xml, textview);
+	tb= gtk_text_view_get_buffer (GTK_TEXT_VIEW (w));
+	g_signal_handlers_block_by_func (tb,
+					 details_text_changed, detail);
+	gtk_text_buffer_set_text (tb, text, -1);
+	g_signal_handlers_unblock_by_func (tb,
+					   details_text_changed, detail);
 	break;
     case T_COMPILATION:
 	if ((w = gtkpod_xml_get_widget (detail->xml, checkbutton)))
@@ -442,6 +710,221 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 }
 
 
+
+/* assumechanged: normally the other tracks are only changed if a
+ * change has been done. assumechanged==TRUE will write the
+ * the value to all other tracks even if no change has taken place
+ * (e.g. when ENTER is pressed in a text field) */
+static void details_get_item (Detail *detail, T_item item,
+			      gboolean assumechanged)
+{
+    GtkWidget *w = NULL;
+    gchar *entry, *checkbutton, *textview;
+    gboolean changed = FALSE;
+    ExtraTrackData *etr;
+    Track *track;
+
+    g_return_if_fail (detail);
+    track = detail->track;
+    g_return_if_fail (track);
+    g_return_if_fail ((item > 0) && (item < T_ITEM_NUM));
+
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    entry = g_strdup_printf ("details_entry_%d", item);
+    checkbutton = g_strdup_printf ("details_checkbutton_%d", item);
+    textview = g_strdup_printf ("details_textview_%d", item);
+
+    switch (item)
+    {
+    case T_ALBUM:
+    case T_ARTIST:
+    case T_TITLE:
+    case T_GENRE:
+    case T_COMPOSER:
+    case T_FILETYPE:
+    case T_GROUPING:
+    case T_CATEGORY:
+    case T_PODCASTURL:
+    case T_PODCASTRSS:
+    case T_SIZE:
+    case T_BITRATE:
+    case T_SAMPLERATE:
+    case T_PLAYCOUNT:
+    case T_BPM:
+    case T_RATING:
+    case T_VOLUME:
+    case T_CD_NR:
+    case T_TRACK_NR:
+    case T_YEAR:
+    case T_TIME_ADDED:
+    case T_TIME_PLAYED:
+    case T_TIME_MODIFIED:
+    case T_TIME_RELEASED:
+    case T_TRACKLEN:
+    case T_SOUNDCHECK:
+	if ((w = gtkpod_xml_get_widget (detail->xml, entry)))
+	{
+	    const gchar *text;
+
+	    text = gtk_entry_get_text (GTK_ENTRY (w));
+
+	    /* for tracklen and soundcheck the displayed value is only
+	       a rounded figure -> unless 'assumechanged' is set,
+	       compare the string to the original one before assuming
+	       a change took place */
+	    if (!assumechanged &&
+		((item == T_TRACKLEN) || (item == T_SOUNDCHECK)))
+	    {
+		gchar *buf;
+		track->itdb = detail->itdb;
+		buf = track_get_text (track, item);
+		track->itdb = NULL;
+		g_return_if_fail (buf);
+		if (strcmp (text, buf) != 0)
+		    changed = track_set_text (track, text, item);
+		g_free (buf);
+	    }
+	    else
+	    {
+	    changed = track_set_text (track, text, item);
+	    }
+	    /* redisplay some items to be on the safe side */
+	    switch (item)
+	    {
+	    case T_TRACK_NR:
+	    case T_CD_NR:
+	    case T_TRACKLEN:
+	    case T_TIME_ADDED:
+	    case T_TIME_PLAYED:
+	    case T_TIME_MODIFIED:
+	    case T_TIME_RELEASED:
+		details_set_item (detail, track, item);
+		break;
+	    default:
+		break;
+	    }
+	}
+	break;
+    case T_COMMENT:
+    case T_DESCRIPTION:
+    case T_SUBTITLE:
+	if ((w = gtkpod_xml_get_widget (detail->xml, textview)))
+	{
+	    gchar *text;
+	    GtkTextIter start, end;
+	    GtkTextBuffer *tb = gtk_text_view_get_buffer (
+		GTK_TEXT_VIEW (w));
+	    gtk_text_buffer_get_start_iter  (tb, &start);
+	    gtk_text_buffer_get_end_iter  (tb, &end);
+
+	    text = gtk_text_buffer_get_text (tb, &start, &end, TRUE);
+
+	    changed = track_set_text (track, text, item);
+	}
+	break;
+    case T_COMPILATION:
+	if ((w = gtkpod_xml_get_widget (detail->xml, checkbutton)))
+	{
+	    gboolean state;
+	    state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
+
+	    if (track->compilation != state)
+	    {
+		track->compilation = state;
+		changed = TRUE;
+	    }
+	}
+	break;
+    case T_CHECKED:
+	if ((w = gtkpod_xml_get_widget (detail->xml, checkbutton)))
+	{
+	    gboolean state;
+	    state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
+
+	    if ((state && (track->checked == 1)) ||
+		(!state && (track->checked == 0)))
+	    {
+		changed = TRUE;
+		if (state)  track->checked = 0;
+		else        track->checked = 1;
+	    }
+	}
+	break;
+    case T_TRANSFERRED:
+    case T_PC_PATH:
+    case T_IPOD_PATH:
+    case T_IPOD_ID:
+	/* These are read-only only */
+	break;
+    case T_ALL:
+    case T_ITEM_NUM:
+	/* cannot happen because of assertion above */
+	g_return_if_reached ();
+    }
+
+    etr->tchanged |= changed;
+    detail->changed |= changed;
+
+/*     if (changed)  printf ("changed (%d)\n", item); */
+
+    /* Check if this has to be copied to the other tracks as well
+       (writethrough) */
+    if ((changed || assumechanged) &&
+	details_writethrough (detail))
+    {   /* change for all tracks */
+	GList *gl;
+	for (gl=detail->tracks; gl; gl=gl->next)
+	{
+	    Track *gltr = gl->data;
+	    g_return_if_fail (gltr);
+
+	    if (gltr != track)
+	    {
+		ExtraTrackData *gletr= gltr->userdata;
+		g_return_if_fail (gletr);
+
+		gletr->tchanged |= track_copy_item (track, gltr, item);
+		detail->changed |= gletr->tchanged;
+	    }
+	}
+    }
+
+    g_free (entry);
+    g_free (checkbutton);
+    g_free (textview);
+
+    details_update_buttons (detail);
+}
+
+
+/* Render the Apply button insensitive as long as no changes were done */
+static void details_update_buttons (Detail *detail)
+{
+    GtkWidget *w;
+    ExtraTrackData *etr;
+
+    g_return_if_fail (detail);
+    g_return_if_fail (detail->track);
+    etr = detail->track->userdata;
+    g_return_if_fail (etr);
+
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_apply");
+    gtk_widget_set_sensitive (w, detail->changed);
+
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_undo_track");
+    gtk_widget_set_sensitive (w, etr->tchanged);
+
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_undo_all");
+    gtk_widget_set_sensitive (w, detail->changed);
+
+    w = gtkpod_xml_get_widget (detail->xml,
+			       "details_button_remove_artwork");
+    gtk_widget_set_sensitive (w, (detail->track->artwork->thumbnails != NULL));
+}
+
+
 /* Update the displayed thumbnail */
 static void details_update_thumbnail (Detail *detail)
 {
@@ -463,7 +946,7 @@ static void details_update_thumbnail (Detail *detail)
     if (thumb)
     {
 	GdkPixbuf *pixbuf;
-	pixbuf = itdb_thumb_get_gdk_pixbuf (detail->track->itdb->device,
+	pixbuf = itdb_thumb_get_gdk_pixbuf (detail->itdb->device,
 					    thumb);
 	if (pixbuf)
 	{
@@ -479,6 +962,24 @@ static void details_update_thumbnail (Detail *detail)
     }
 }
 
+static void details_update_headline (Detail *detail)
+{
+    GtkWidget *w;
+    gchar *buf;
+
+    g_return_if_fail (detail);
+    g_return_if_fail (detail->track);
+
+    /* Set Artist/Title label */
+    w = gtkpod_xml_get_widget (detail->xml, "details_label_artist_title");
+
+    buf = g_markup_printf_escaped ("<b>%s / %s</b>",
+				   detail->track->artist,
+				   detail->track->title);
+    gtk_label_set_markup (GTK_LABEL (w), buf);
+    g_free (buf);
+}
+
 
 /* Set the display to @track */
 static void details_set_track (Detail *detail, Track *track)
@@ -491,7 +992,6 @@ static void details_set_track (Detail *detail, Track *track)
 
     g_return_if_fail (detail);
     g_return_if_fail (track);
-    g_return_if_fail (track->itdb);
 
     index = g_list_index (detail->tracks, track);
     g_return_if_fail (index != -1);
@@ -511,15 +1011,7 @@ static void details_set_track (Detail *detail, Track *track)
 	details_set_item (detail, track, item);
     }
 
-    /* Set Artist/Title label */
-    if ((w = gtkpod_xml_get_widget (detail->xml,
-				   "details_label_artist_title")))
-    {
-	gchar *buf = g_markup_printf_escaped ("<b>%s / %s</b>",
-				      track->artist, track->title);
-	gtk_label_set_markup (GTK_LABEL (w), buf);
-	g_free (buf);
-    }
+    details_update_headline (detail);
 
     /* Set thumbnail */
     details_update_thumbnail (detail);
@@ -539,6 +1031,8 @@ static void details_set_track (Detail *detail, Track *track)
 	gtk_widget_set_sensitive (w, !last);
     if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_last")))
 	gtk_widget_set_sensitive (w, !last);
+
+    details_update_buttons (detail);
 }
 
 
@@ -546,13 +1040,48 @@ static void details_set_track (Detail *detail, Track *track)
  * replace. */
 static void details_set_tracks (Detail *detail, GList *tracks)
 {
+    GList *gl;
     g_return_if_fail (detail);
+    g_return_if_fail (tracks);
 
+    if (detail->orig_tracks)
+    {
+	g_list_free (detail->orig_tracks);
+	detail->orig_tracks = NULL;
+    }
     if (detail->tracks)
+    {
+	for (gl=detail->tracks; gl; gl=gl->next)
+	{
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+	    itdb_track_free (tr);
+	}
 	g_list_free (detail->tracks);
-    detail->tracks = glist_duplicate (tracks);
+	detail->tracks = NULL;
+    }
+
+    detail->itdb = ((Track *)tracks->data)->itdb;
+
+    detail->orig_tracks = glist_duplicate (tracks);
+
+    /* Create duplicated list to work on until "Apply" is pressed */
+    for (gl=g_list_last (tracks); gl; gl=gl->prev)
+    {
+	Track *tr_dup;
+	ExtraTrackData *etr_dup;
+	Track *tr = gl->data;
+	g_return_if_fail (tr);
+	
+	tr_dup = itdb_track_duplicate (tr);
+	etr_dup = tr_dup->userdata;
+	g_return_if_fail (etr_dup);
+	etr_dup->tchanged = FALSE;
+	detail->tracks = g_list_prepend (detail->tracks, tr_dup);
+    }
 
     detail->track = NULL;
+    detail->changed = FALSE;
 
     details_set_track (detail, g_list_nth_data (detail->tracks, 0));
 }
@@ -561,11 +1090,11 @@ static void details_set_tracks (Detail *detail, GList *tracks)
 
 /* Open the details window and display the selected tracks, starting
  * with the first track */
-void details_show (GList *selected_tracks)
+void details_edit (GList *selected_tracks)
 {
     Detail *detail;
     GtkWidget *w;
-    gint defx, defy;
+    gint defx, defy, page;
     T_item i;
 
     g_return_if_fail (selected_tracks);
@@ -590,14 +1119,17 @@ void details_show (GList *selected_tracks)
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_first_clicked),
 		      detail);
+
     w = gtkpod_xml_get_widget (detail->xml, "details_button_previous");
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_previous_clicked),
 		      detail);
+
     w = gtkpod_xml_get_widget (detail->xml, "details_button_next");
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_next_clicked),
 		      detail);
+
     w = gtkpod_xml_get_widget (detail->xml, "details_button_last");
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_last_clicked),
@@ -608,42 +1140,49 @@ void details_show (GList *selected_tracks)
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_set_artwork_clicked),
 		      detail);
+
     w = gtkpod_xml_get_widget (detail->xml, "details_button_remove_artwork");
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_remove_artwork_clicked),
 		      detail);
 
     /* Window control */
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_apply")))
-    {
-	g_signal_connect (w, "clicked",
-			  G_CALLBACK (details_button_apply_clicked),
-			  detail);
-	gtk_widget_set_sensitive (w, FALSE);
-    }
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_cancel")))
-	g_signal_connect (w, "clicked",
-			  G_CALLBACK (details_button_cancel_clicked),
-			  detail);
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_button_ok")))
-    {
-	g_signal_connect (w, "clicked",
-			  G_CALLBACK (details_button_ok_clicked),
-			  detail);
-	gtk_widget_set_sensitive (w, FALSE);
-    }
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_apply");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_apply_clicked),
+		      detail);
+
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_cancel");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_cancel_clicked),
+		      detail);
+
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_ok");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_ok_clicked),
+		      detail);
+
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_undo_all");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_undo_all_clicked),
+		      detail);
+
+    w = gtkpod_xml_get_widget (detail->xml, "details_button_undo_track");
+    g_signal_connect (w, "clicked",
+		      G_CALLBACK (details_button_undo_track_clicked),
+		      detail);
+
+
     g_signal_connect (detail->window, "delete_event",
 		      G_CALLBACK (details_delete_event), detail);
 
     details_set_tracks (detail, selected_tracks);
 
     /* set notebook page */
-    if ((w = gtkpod_xml_get_widget (detail->xml, "details_notebook")))
-    {
-	gint page = prefs_get_int (DETAILS_WINDOW_NOTEBOOK_PAGE);
-	if ((page >= 0) && (page < 3))
-	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
-    }
+    w = gtkpod_xml_get_widget (detail->xml, "details_notebook");
+    page = prefs_get_int (DETAILS_WINDOW_NOTEBOOK_PAGE);
+    if ((page >= 0) && (page < 3))
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
 
     /* set default size */
     defx = prefs_get_int (DETAILS_WINDOW_DEFX);
@@ -678,6 +1217,13 @@ static void details_free (Detail *detail)
 
     if (detail->tracks)
     {
+	GList *gl;
+	for (gl=detail->tracks; gl; gl=gl->next)
+	{
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+	    itdb_track_free (tr);
+	}
 	g_list_free (detail->tracks);
     }
 

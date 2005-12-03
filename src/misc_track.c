@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-21 20:52:10 jcs>
+/* Time-stamp: <2005-12-04 00:30:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -39,6 +39,7 @@
 #include "info.h"
 #include "charset.h"
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -542,6 +543,11 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
 }
 
 
+
+
+
+
+
 /* return the UTF8 item @t_item. @t_item is one of
    (the applicable) T_* defined in track.h */
 const gchar *track_get_item (Track *track, T_item t_item)
@@ -554,6 +560,187 @@ const gchar *track_get_item (Track *track, T_item t_item)
 
     if (ptr)     return *ptr;
     else         return NULL;
+}
+
+
+/* Copy item @item from @frtrack to @totrack.
+   Return value:
+     TRUE: @totrack was changed
+     FALSE: @totrack is unchanged
+*/
+gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
+{
+    gboolean changed = FALSE;
+    const gchar *fritem;
+    gchar **toitem_ptr;
+
+    g_return_val_if_fail (frtrack, FALSE);
+    g_return_val_if_fail (totrack, FALSE);
+    g_return_val_if_fail ((item > 0) && (item < T_ITEM_NUM), FALSE);
+
+    if (frtrack == totrack) return FALSE;
+
+    switch (item)
+    {
+    case T_ALBUM:
+    case T_ARTIST:
+    case T_TITLE:
+    case T_GENRE:
+    case T_COMMENT:
+    case T_COMPOSER:
+    case T_FILETYPE:
+    case T_IPOD_PATH:
+    case T_PC_PATH:
+    case T_YEAR:
+    case T_GROUPING:
+    case T_CATEGORY:
+    case T_DESCRIPTION:
+    case T_PODCASTURL:
+    case T_PODCASTRSS:
+    case T_SUBTITLE:
+	fritem = track_get_item (frtrack, item);
+	toitem_ptr = track_get_item_pointer (totrack, item);
+	g_return_val_if_fail (fritem, FALSE);
+	g_return_val_if_fail (toitem_ptr, FALSE);
+	if ((*toitem_ptr == NULL) || (strcmp (fritem, *toitem_ptr) != 0))
+	{
+	    g_free (*toitem_ptr);
+	    *toitem_ptr = g_strdup (fritem);
+	    changed = TRUE;
+	}
+	break;
+    case T_IPOD_ID:
+	if (frtrack->id != totrack->id)
+	{
+	    totrack->id = frtrack->id;
+	    changed = TRUE;
+	}
+	break;
+    case T_TRACK_NR:
+	if (frtrack->track_nr != totrack->track_nr)
+	{
+	    totrack->track_nr = frtrack->track_nr;
+	    changed = TRUE;
+	}
+	if (frtrack->tracks != totrack->tracks)
+	{
+	    totrack->tracks = frtrack->tracks;
+	    changed = TRUE;
+	}
+	break;
+    case T_TRANSFERRED:
+	if (frtrack->transferred != totrack->transferred)
+	{
+	    totrack->transferred = frtrack->transferred;
+	    changed = TRUE;
+	}
+	break;
+    case T_SIZE:
+	if (frtrack->size != totrack->size)
+	{
+	    totrack->size = frtrack->size;
+	    changed = TRUE;
+	}
+	break;
+    case T_TRACKLEN:
+	if (frtrack->tracklen != totrack->tracklen)
+	{
+	    totrack->tracklen = frtrack->tracklen;
+	    changed = TRUE;
+	}
+	break;
+    case T_BITRATE:
+	if (frtrack->bitrate != totrack->bitrate)
+	{
+	    totrack->bitrate = frtrack->bitrate;
+	    changed = TRUE;
+	}
+	break;
+    case T_SAMPLERATE:
+	if (frtrack->samplerate != totrack->samplerate)
+	{
+	    totrack->samplerate = frtrack->samplerate;
+	    changed = TRUE;
+	}
+	break;
+    case T_BPM:
+	if (frtrack->BPM != totrack->BPM)
+	{
+	    totrack->BPM = frtrack->BPM;
+	    changed = TRUE;
+	}
+	break;
+    case T_PLAYCOUNT:
+	if (frtrack->playcount != totrack->playcount)
+	{
+	    totrack->playcount = frtrack->playcount;
+	    changed = TRUE;
+	}
+	break;
+    case T_RATING:
+	if (frtrack->rating != totrack->rating)
+	{
+	    totrack->rating = frtrack->rating;
+	    changed = TRUE;
+	}
+	break;
+    case T_TIME_ADDED:
+    case T_TIME_PLAYED:
+    case T_TIME_MODIFIED:
+    case T_TIME_RELEASED:
+	if (time_get_time (frtrack, item) !=
+	    time_get_time (totrack, item))
+	{
+	    time_set_time (totrack, time_get_time (frtrack, item), item);
+	    changed = TRUE;
+	}
+	break;
+    case T_VOLUME:
+	if (frtrack->volume != totrack->volume)
+	{
+	    totrack->volume = frtrack->volume;
+	    changed = TRUE;
+	}
+	break;
+    case T_SOUNDCHECK:
+	if (frtrack->soundcheck != totrack->soundcheck)
+	{
+	    totrack->soundcheck = frtrack->soundcheck;
+	    changed = TRUE;
+	}
+	break;
+    case T_CD_NR:
+	if (frtrack->cd_nr != totrack->cd_nr)
+	{
+	    totrack->cd_nr = frtrack->cd_nr;
+	    changed = TRUE;
+	}
+	if (frtrack->cds != totrack->cds)
+	{
+	    totrack->cds = frtrack->cds;
+	    changed = TRUE;
+	}
+	break;
+    case T_COMPILATION:
+	if (frtrack->compilation != totrack->compilation)
+	{
+	    totrack->compilation = frtrack->compilation;
+	    changed = TRUE;
+	}
+	break;
+    case T_CHECKED:
+	if (frtrack->checked != totrack->checked)
+	{
+	    totrack->checked = frtrack->checked;
+	    changed = TRUE;
+	}
+	break;
+    case T_ITEM_NUM:
+    case T_ALL:
+	g_return_val_if_reached (FALSE);
+
+    }	
+    return changed;
 }
 
 
@@ -704,6 +891,206 @@ gchar *track_get_text (Track *track, T_item item)
     }
     return text;
 }
+
+
+
+/* Set track data according to @new_text
+
+   Return value: TRUE, if the track data was modified, FALSE otherwise
+*/
+gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
+{
+    gboolean changed = FALSE;
+    gchar **itemp_utf8;
+    const gchar *str;
+    ExtraTrackData *etr;
+    gint32 nr;
+    time_t t;
+
+    g_return_val_if_fail (track, FALSE);
+    g_return_val_if_fail (new_text, FALSE);
+
+    etr = track->userdata;
+    g_return_val_if_fail (etr, FALSE);
+
+
+    switch(item)
+    {
+    case T_TITLE:
+    case T_ALBUM:
+    case T_ARTIST:
+    case T_GENRE:
+    case T_COMPOSER:
+    case T_COMMENT:
+    case T_FILETYPE:
+    case T_GROUPING:
+    case T_CATEGORY:
+    case T_DESCRIPTION:
+    case T_PODCASTURL:
+    case T_PODCASTRSS:
+    case T_SUBTITLE:
+        itemp_utf8 = track_get_item_pointer (track, item);
+        if (g_utf8_collate (*itemp_utf8, new_text) != 0)
+        {
+	    g_free (*itemp_utf8);
+	    *itemp_utf8 = g_strdup (new_text);
+	    changed = TRUE;
+        }
+        break;
+    case T_TRACK_NR:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->track_nr))
+        {
+	    track->track_nr = nr;
+	    changed = TRUE;
+        }
+	str = strrchr (new_text, '/');
+	if (str)
+	{
+	    nr = atoi (str+1);
+	    if ((nr >= 0) && (nr != track->tracks))
+	    {
+		track->tracks = nr;
+		changed = TRUE;
+	    }
+	}
+        break;
+    case T_CD_NR:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->cd_nr))
+        {
+	    track->cd_nr = nr;
+	    changed = TRUE;
+        }
+	str = strrchr (new_text, '/');
+	if (str)
+	{
+	    nr = atoi (str+1);
+	    if ((nr >= 0) && (nr != track->cds))
+	    {
+		track->cds = nr;
+		changed = TRUE;
+	    }
+	}
+        break;
+    case T_YEAR:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->year))
+        {
+	    g_free (etr->year_str);
+	    etr->year_str = g_strdup_printf ("%d", nr);
+	    track->year = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_PLAYCOUNT:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr != track->playcount))
+        {
+	    track->playcount = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_RATING:
+        nr = atoi (new_text);
+        if ((nr >= 0) && (nr <= 5) && (nr != track->rating))
+        {
+	    track->rating = nr*ITDB_RATING_STEP;
+	    changed = TRUE;
+        }
+        break;
+    case T_TIME_ADDED:
+    case T_TIME_PLAYED:
+    case T_TIME_MODIFIED:
+    case T_TIME_RELEASED:
+	t = time_string_to_time (new_text);
+	if ((t != -1) && (t != time_get_time (track, item)))
+	{
+	    time_set_time (track, t, item);
+	    changed = TRUE;
+	}
+	break;
+    case T_VOLUME:
+        nr = atoi (new_text);
+        if (nr != track->volume)
+        {
+	    track->volume = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_SOUNDCHECK:
+	nr = replaygain_to_soundcheck (atof (new_text));
+/* 	printf("%d : %f\n", nr, atof (new_text)); */
+        if (nr != track->soundcheck)
+        {
+	    track->soundcheck = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_SIZE:
+        nr = atoi (new_text);
+        if (nr != track->size)
+        {
+	    track->size = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_BITRATE:
+        nr = atoi (new_text);
+        if (nr != track->bitrate)
+        {
+	    track->bitrate = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_SAMPLERATE:
+        nr = atoi (new_text);
+        if (nr != track->samplerate)
+        {
+	    track->samplerate = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_BPM:
+        nr = atoi (new_text);
+        if (nr != track->BPM)
+        {
+	    track->BPM = nr;
+	    changed = TRUE;
+        }
+        break;
+    case T_TRACKLEN:
+	str = strrchr (new_text, ':');
+	if (str)
+	{   /* MM:SS */
+	    nr = 1000 * (60 * atoi (new_text) + atoi (str+1));
+	}
+	else
+	{   /* SS */
+	    nr = 1000 * atoi (new_text);
+	}
+	if (nr != track->tracklen)
+	{
+	    track->tracklen = nr;
+	    changed = TRUE;
+	}
+	break;
+    case T_PC_PATH:
+    case T_IPOD_PATH:
+    case T_IPOD_ID:
+    case T_TRANSFERRED:
+    case T_COMPILATION:
+    case T_CHECKED:
+    case T_ALL:
+    case T_ITEM_NUM:
+	gtkpod_warning ("Programming error: track_set_text() called with illegal argument (item: %d)\n", item);
+	break;
+    }
+
+    return changed;
+}
+
+
 
 
 /* Fills @size with the size and @num with the number of

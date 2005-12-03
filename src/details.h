@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-20 20:53:39 jcs>
+/* Time-stamp: <2005-12-04 00:38:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -38,7 +38,7 @@
 #include "itdb.h"
 
 /* details window */
-void details_show (GList *selected_tracks);
+void details_edit (GList *selected_tracks);
 void details_close (void);
 void details_update_default_sizes (void);
 void details_update_track (Track *track);

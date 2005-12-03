@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 09:13:15 jcs>
+/* Time-stamp: <2005-12-03 20:39:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -343,13 +343,15 @@ time_t time_string_to_time (const gchar *str)
 
 
 /* convert the string @str to a time stamp, assuming 0:00:00 if no
- * time is given */
+ * time is given. Returns 0 if @str is "--" */
 time_t time_string_to_fromtime (const gchar *str)
 {
     time_t t;
     struct tm tm;
 
     g_return_val_if_fail (str, -1);
+
+    if (strcmp (str, "--") == 0)  return 0;
 
     t = time (NULL);
     localtime_r (&t, &tm);

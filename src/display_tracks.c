@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:14 jcs>
+/* Time-stamp: <2005-12-03 20:53:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -792,7 +792,6 @@ tm_cell_edited (GtkCellRendererText *renderer,
   gboolean multi_edit;
   gint sel_rows_num;
   GList *row_list, *row_node, *first;
-  time_t t;
 
 
   column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
@@ -819,8 +818,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
      ExtraTrackData *etr;
      gboolean changed;
      GtkTreeIter iter;
-     gint32 nr;
-     gchar **itemp_utf8, *str;
+     gchar *str;
 
      gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) row_node->data);
      gtk_tree_model_get(model, &iter, READOUT_COL, &track, -1);
@@ -846,134 +844,41 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_PODCASTURL:
      case TM_COLUMN_PODCASTRSS:
      case TM_COLUMN_SUBTITLE:
-        itemp_utf8 = track_get_item_pointer (track, TM_to_T (column));
-        if (g_utf8_collate (*itemp_utf8, new_text) != 0)
-        {
-           g_free (*itemp_utf8);
-           *itemp_utf8 = g_strdup (new_text);
-           changed = TRUE;
-        }
-        break;
      case TM_COLUMN_TRACK_NR:
-        nr = atoi (new_text);
-        if ((nr >= 0) && (nr != track->track_nr))
-        {
-           track->track_nr = nr;
-           changed = TRUE;
-        }
-	str = strrchr (new_text, '/');
-	if (str)
-	{
-	    nr = atoi (str+1);
-	    if ((nr >= 0) && (nr != track->tracks))
-	    {
-		track->tracks = nr;
-		changed = TRUE;
-	    }
-	}
-	str = track_get_text (track, T_CD_NR);
-	g_object_set (G_OBJECT (renderer), "text", str, NULL);
-	g_free (str);
-        break;
+     case TM_COLUMN_TRACKLEN:
      case TM_COLUMN_CD_NR:
-        nr = atoi (new_text);
-        if ((nr >= 0) && (nr != track->cd_nr))
-        {
-           track->cd_nr = nr;
-           changed = TRUE;
-        }
-	str = strrchr (new_text, '/');
-	if (str)
-	{
-	    nr = atoi (str+1);
-	    if ((nr >= 0) && (nr != track->cds))
-	    {
-		track->cds = nr;
-		changed = TRUE;
-	    }
-	}
-	str = track_get_text (track, T_TRACK_NR);
-	g_object_set (G_OBJECT (renderer), "text", str, NULL);
-	g_free (str);
-        break;
      case TM_COLUMN_YEAR:
-        nr = atoi (new_text);
-        if ((nr >= 0) && (nr != track->year))
-        {
-	   g_free (etr->year_str);
-	   etr->year_str = g_strdup_printf ("%d", nr);
-           track->year = nr;
-           changed = TRUE;
-        }
-        break;
      case TM_COLUMN_PLAYCOUNT:
-        nr = atoi (new_text);
-        if ((nr >= 0) && (nr != track->playcount))
-        {
-           track->playcount = nr;
-           changed = TRUE;
-        }
-        break;
      case TM_COLUMN_RATING:
-        nr = atoi (new_text);
-        if ((nr >= 0) && (nr <= 5) && (nr != track->rating))
-        {
-           track->rating = nr*ITDB_RATING_STEP;
-           changed = TRUE;
-        }
-        break;
      case TM_COLUMN_TIME_ADDED:
      case TM_COLUMN_TIME_PLAYED:
      case TM_COLUMN_TIME_MODIFIED:
      case TM_COLUMN_TIME_RELEASED:
-	 t = time_string_to_time (new_text);
-	 if ((t != -1) && (t != time_get_time (track, TM_to_T (column))))
+     case TM_COLUMN_VOLUME:
+     case TM_COLUMN_SOUNDCHECK:
+     case TM_COLUMN_BITRATE:
+     case TM_COLUMN_SAMPLERATE:
+     case TM_COLUMN_BPM:
+	 changed = track_set_text (track, new_text, TM_to_T (column));
+	 
+	 /* redisplay some items to be on the safe side */
+	 switch (column)
 	 {
-	     time_set_time (track, t, TM_to_T (column));
-	     changed = TRUE;
+	 case TM_COLUMN_TRACK_NR:
+	 case TM_COLUMN_CD_NR:
+	 case TM_COLUMN_TRACKLEN:
+	 case TM_COLUMN_TIME_ADDED:
+	 case TM_COLUMN_TIME_PLAYED:
+	 case TM_COLUMN_TIME_MODIFIED:
+	 case TM_COLUMN_TIME_RELEASED:
+	     str = track_get_text (track, TM_to_T (column));
+	     g_object_set (G_OBJECT (renderer), "text", str, NULL);
+	     g_free (str);
+	     break;
+	 default:
+	     break;
 	 }
 	 break;
-     case TM_COLUMN_VOLUME:
-        nr = atoi (new_text);
-        if (nr != track->volume)
-        {
-	    track->volume = nr;
-	    changed = TRUE;
-        }
-        break;
-     case TM_COLUMN_SOUNDCHECK:
-	nr = replaygain_to_soundcheck (atof (new_text));
-/* 	printf("%d : %f\n", nr, atof (new_text)); */
-        if (nr != track->soundcheck)
-        {
-	    track->soundcheck = nr;
-	    changed = TRUE;
-        }
-        break;
-     case TM_COLUMN_BITRATE:
-        nr = atoi (new_text);
-        if (nr != track->bitrate)
-        {
-	    track->bitrate = nr;
-	    changed = TRUE;
-        }
-        break;
-     case TM_COLUMN_SAMPLERATE:
-        nr = atoi (new_text);
-        if (nr != track->samplerate)
-        {
-	    track->samplerate = nr;
-	    changed = TRUE;
-        }
-        break;
-     case TM_COLUMN_BPM:
-        nr = atoi (new_text);
-        if (nr != track->BPM)
-        {
-	    track->BPM = nr;
-	    changed = TRUE;
-        }
-        break;
      default:
         g_warning ("Programming error: tm_cell_edited: unknown track cell (%d) edited\n", column);
         break;
@@ -1071,6 +976,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
   case TM_COLUMN_RATING:
   case TM_COLUMN_VOLUME:
   case TM_COLUMN_SOUNDCHECK:
+  case TM_COLUMN_TRACKLEN:
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", TRUE,
@@ -1078,7 +984,6 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   case TM_COLUMN_IPOD_ID:
   case TM_COLUMN_SIZE:
-  case TM_COLUMN_TRACKLEN:
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", FALSE,
@@ -1138,7 +1043,7 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
 
   first = g_list_first (row_list);
 
-
+  /* active will show the old state -- before the toggle */
   g_object_get (G_OBJECT (renderer), "active", &active, NULL);
 
   for (row_node = first;
@@ -1933,21 +1838,20 @@ void tm_sort (TM_item col, GtkSortType order)
 /* Add one column at position @pos. This code is used over and over
    by tm_add_column() -- therefore I put it into a separate function */
 static GtkTreeViewColumn *tm_add_text_column (TM_item col_id,
-					      gchar *name,
+					      const gchar *name,
 					      GtkCellRenderer *renderer,
-					      gboolean editable,
 					      gint pos)
 {
     GtkTreeViewColumn *column;
     GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
 
-    if (!renderer)    renderer = gtk_cell_renderer_text_new ();
-    if (editable)
-    {
+    if (!renderer)
+    {   /* text renderer -- editable/not editable is done in
+	   tm_cell_data_func() */
+	renderer = gtk_cell_renderer_text_new ();
 	g_signal_connect (G_OBJECT (renderer), "edited",
 			  G_CALLBACK (tm_cell_edited), model);
     }
-    g_object_set_data (G_OBJECT (renderer), "editable", (gint *)GINT_TO_POINTER(editable));
     g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
     column = gtk_tree_view_column_new ();
     gtk_tree_view_column_set_title (column, name);
@@ -1975,8 +1879,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
   GtkTreeViewColumn *col = NULL;
-  gchar *text = NULL;
-  gboolean editable = TRUE;          /* default */
+  const gchar *text = NULL;
   GtkCellRenderer *renderer = NULL;  /* default */
   GtkTooltips *tt;
 
@@ -2009,6 +1912,9 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_PODCASTURL:
   case TM_COLUMN_PODCASTRSS:
   case TM_COLUMN_SUBTITLE:
+  case TM_COLUMN_PC_PATH:
+  case TM_COLUMN_IPOD_PATH:
+  case TM_COLUMN_SIZE:
       break;
   /* for some column names we want to use shorter alternatives to
      get_tm_string() */
@@ -2023,28 +1929,17 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       break;
   case TM_COLUMN_IPOD_ID:
       text = _("ID");
-      editable = FALSE;
-      break;
-  case TM_COLUMN_PC_PATH:
-  case TM_COLUMN_IPOD_PATH:
-      editable = FALSE;
       break;
   case TM_COLUMN_TRANSFERRED:
       text = _("Trnsfrd");
-      editable = FALSE;
       renderer = gtk_cell_renderer_toggle_new ();
       break;
   case TM_COLUMN_COMPILATION:
       text = _("Cmpl");
-      editable = FALSE;
       renderer = gtk_cell_renderer_toggle_new ();
-      break;
-  case TM_COLUMN_SIZE:
-      editable = FALSE;
       break;
   case TM_COLUMN_TRACKLEN:
       text = _("Time");
-      editable = FALSE;
       break;
   case TM_COLUMN_PLAYCOUNT:
       text = _("Plycnt");
@@ -2071,9 +1966,10 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       text = _("Sndchk.");
       break;
   case TM_NUM_COLUMNS:
+      g_return_val_if_reached (NULL);
       break;
   }
-  col = tm_add_text_column (tm_item, text, renderer, editable, pos);
+  col = tm_add_text_column (tm_item, text, renderer, pos);
   if (col && (tm_item == TM_COLUMN_TITLE))
   {
       renderer = gtk_cell_renderer_toggle_new ();

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-10-24 23:49:22 jcs>
+/* Time-stamp: <2005-12-03 17:39:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -73,10 +73,13 @@ typedef struct
   gboolean audiophile_gain_set;/* has the audiophile gain been set?  */
   gchar   *pc_path_locale;/* path on PC (local encoding)             */
   gchar   *pc_path_utf8;  /* PC filename in utf8 encoding            */
+  gchar   *thumb_path_locale; /* same for thumbnail                  */
+  gchar   *thumb_path_utf8;   /* same for thumbnail                  */
   gchar   *hostname;      /* name of host this file has been imported on*/
   gchar   *md5_hash;      /* md5 hash of file (or NULL)              */
   gchar   *charset;       /* charset used for ID3 tags               */
   gint32 sortindex;       /* used for stable sorting (current order) */
+  gboolean tchanged;      /* temporary use, e.g. in detail.c         */
 } ExtraTrackData;
 
 /* types for iTunesDB */
@@ -122,6 +125,8 @@ Track *gp_track_new (void);
 Track *gp_track_add (iTunesDB *itdb, Track *track);
 void gp_track_add_extra (Track *track);
 void gp_track_validate_entries (Track *track);
+gboolean gp_track_set_thumbnails (Track *track, const gchar *filename);
+void gp_track_remove_thumbnails (Track *track);
 
 Playlist *gp_playlist_new (const gchar *title, gboolean spl);
 void gp_playlist_add (iTunesDB *itdb, Playlist *pl, gint32 pos);

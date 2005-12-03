@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 16:27:44 jcs>
+/* Time-stamp: <2005-12-03 02:08:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -57,6 +57,8 @@ struct track_extended_info
     guint ipod_id;
     gchar *pc_path_locale;
     gchar *pc_path_utf8;
+    gchar *thumb_path_locale;
+    gchar *thumb_path_utf8;
     gchar *md5_hash;
     gchar *charset;
     gchar *hostname;
@@ -133,6 +135,10 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
 	  etr->pc_path_locale = g_strdup (sei->pc_path_locale);
       if (sei->pc_path_utf8 && !etr->pc_path_utf8)
 	  etr->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
+      if (sei->thumb_path_locale && !etr->thumb_path_locale)
+	  etr->thumb_path_locale = g_strdup (sei->thumb_path_locale);
+      if (sei->thumb_path_utf8 && !etr->thumb_path_utf8)
+	  etr->thumb_path_utf8 = g_strdup (sei->thumb_path_utf8);
       if (sei->md5_hash && !etr->md5_hash)
 	  etr->md5_hash = g_strdup (sei->md5_hash);
       if (sei->charset && !etr->charset)
@@ -181,12 +187,14 @@ static void hash_delete (gpointer data)
 
     if (sei)
     {
-	C_FREE (sei->pc_path_locale);
-	C_FREE (sei->pc_path_utf8);
-	C_FREE (sei->md5_hash);
-	C_FREE (sei->charset);
-	C_FREE (sei->hostname);
-	C_FREE (sei->ipod_path);
+	g_free (sei->pc_path_locale);
+	g_free (sei->pc_path_utf8);
+	g_free (sei->thumb_path_locale);
+	g_free (sei->thumb_path_utf8);
+	g_free (sei->md5_hash);
+	g_free (sei->charset);
+	g_free (sei->hostname);
+	g_free (sei->ipod_path);
 	g_free (sei);
     }
 }
@@ -351,6 +359,10 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->pc_path_locale = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "filename_utf8") == 0)
 		sei->pc_path_utf8 = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "thumbnail_locale") == 0)
+		sei->thumb_path_locale = g_strdup (arg);
+	    else if (g_ascii_strcasecmp (line, "thumbnail_utf8") == 0)
+		sei->thumb_path_utf8 = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "md5_hash") == 0)
 	    {   /* only accept hash value if version is >= 0.53 or
 		   PATH_MAX is 4096 -- in 0.53 I changed the MD5 hash
@@ -574,7 +586,10 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     for (gl=itdb->tracks; gl; gl=gl->next)
     {
 	Track *track = gl->data;
+	ExtraTrackData *etr;
 	g_return_val_if_fail (track, (release_widgets(), NULL));
+	etr = track->userdata;
+	g_return_val_if_fail (etr, (release_widgets(), NULL));
 	fill_in_extended_info (track, total, num);
 	gp_track_validate_entries (track);
 	/* set new default value for flag1 (unknown) */
@@ -583,6 +598,17 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	/* set unk208 to audio if unset (important only for iPod Video) */
 	if (track->unk208 == 0)
 	    track->unk208 = 0x00000001;
+	/* restore deleted thumbnails */
+	if ((track->artwork->thumbnails == NULL) &&
+	    (strlen (etr->thumb_path_locale) != 0))
+	{
+	    /* !! gp_track_set_thumbnails() writes on
+	       etr->thumb_path_locale, so we need to g_strdup()
+	       first !! */
+	    gchar *filename = g_strdup (etr->thumb_path_locale);
+	    gp_track_set_thumbnails (track, filename);
+	    g_free (filename);
+	}
 	++num;
     }
     /* take over the pending deletion information */
@@ -891,17 +917,19 @@ static gboolean write_extended_info (iTunesDB *itdb)
       fprintf (fp, "id=%d\n", track->id);
       if (etr->hostname)
 	  fprintf (fp, "hostname=%s\n", etr->hostname);
-      if (strlen (etr->pc_path_locale) != 0)
+      if (etr->pc_path_locale && *etr->pc_path_locale)
 	  fprintf (fp, "filename_locale=%s\n", etr->pc_path_locale);
-      if (strlen (etr->pc_path_utf8) != 0)
-	  fprintf (fp, "filename_utf8=%s\n", etr->pc_path_utf8);
+      if (etr->pc_path_utf8 && *etr->pc_path_utf8)
+	  fprintf (fp, "thumbnail_utf8=%s\n", etr->pc_path_utf8);
+      if (etr->thumb_path_locale && *etr->thumb_path_locale)
+	  fprintf (fp, "thumbnail_locale=%s\n", etr->thumb_path_locale);
+      if (etr->thumb_path_utf8 && *etr->thumb_path_utf8)
+	  fprintf (fp, "filename_utf8=%s\n", etr->thumb_path_utf8);
       /* this is just for convenience for people looking for a track
 	 on the ipod away from gktpod/itunes etc. */
-      if (strlen (track->ipod_path) != 0)
-	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
-      if (etr->md5_hash)
+      if (etr->md5_hash && *etr->md5_hash)
 	  fprintf (fp, "md5_hash=%s\n", etr->md5_hash);
-      if (etr->charset)
+      if (etr->charset && *etr->charset)
 	  fprintf (fp, "charset=%s\n", etr->charset);
       if (!track->transferred && etr->oldsize)
 	  fprintf (fp, "oldsize=%d\n", etr->oldsize);

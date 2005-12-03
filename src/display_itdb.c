@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-19 22:52:27 jcs>
+/* Time-stamp: <2005-12-03 02:10:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -34,6 +34,7 @@
 #include <math.h>
 #include <string.h>
 
+#include "charset.h"
 #include "display_itdb.h"
 #include "display.h"
 #include "md5.h"
@@ -113,6 +114,8 @@ ExtraTrackData *gp_track_extra_duplicate (ExtraTrackData *etr)
 	etr_dup->year_str = g_strdup (etr->year_str);
 	etr_dup->pc_path_locale = g_strdup (etr->pc_path_locale);
 	etr_dup->pc_path_utf8 = g_strdup (etr->pc_path_utf8);
+	etr_dup->thumb_path_locale = g_strdup (etr->thumb_path_locale);
+	etr_dup->thumb_path_utf8 = g_strdup (etr->thumb_path_utf8);
 	etr_dup->hostname = g_strdup (etr->hostname);
 	etr_dup->md5_hash = g_strdup (etr->md5_hash);
 	etr_dup->charset = g_strdup (etr->charset);
@@ -258,6 +261,54 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
     data_changed (itdb);
     return result;
 }
+
+
+/* Set a thumbnail and store the filename in ExtraTrackData */
+gboolean gp_track_set_thumbnails (Track *track, const gchar *filename)
+{
+    gboolean result;
+    ExtraTrackData *etr;
+
+    g_return_val_if_fail (track, FALSE);
+    g_return_val_if_fail (filename, FALSE);
+
+    etr = track->userdata;
+    g_return_val_if_fail (etr, FALSE);
+
+    result = itdb_track_set_thumbnails (track, filename);
+    if (result == TRUE)
+    {
+	g_free (etr->thumb_path_locale);
+	g_free (etr->thumb_path_utf8);
+	etr->thumb_path_locale = g_strdup (filename);
+	etr->thumb_path_utf8 = charset_to_utf8 (filename);
+    }
+    else
+    {
+	g_free (etr->thumb_path_locale);
+	g_free (etr->thumb_path_utf8);
+	etr->thumb_path_locale = g_strdup ("");
+	etr->thumb_path_utf8 = g_strdup ("");
+	gtkpod_warning (_("Failed to set cover art: '%s'"), filename);
+    }
+    return result;
+}
+
+/* Remove a thumbnail and remove the filename in ExtraTrackData */
+void gp_track_remove_thumbnails (Track *track)
+{
+    ExtraTrackData *etr;
+    g_return_if_fail (track);
+    etr = track->userdata;
+    g_return_if_fail (etr);
+
+    itdb_track_remove_thumbnails (track);
+    g_free (etr->thumb_path_locale);
+    g_free (etr->thumb_path_utf8);
+    etr->thumb_path_locale = g_strdup ("");
+    etr->thumb_path_utf8 = g_strdup ("");
+}
+
 
 /* add itdb to itdbs */
 void gp_itdb_add (iTunesDB *itdb, gint pos)
@@ -642,6 +693,8 @@ void gp_track_validate_entries (Track *track)
     if (!track->ipod_path)       track->ipod_path = g_strdup ("");
     if (!etr->pc_path_utf8)      etr->pc_path_utf8 = g_strdup ("");
     if (!etr->pc_path_locale)    etr->pc_path_locale = g_strdup ("");
+    if (!etr->thumb_path_utf8)   etr->thumb_path_utf8 = g_strdup ("");
+    if (!etr->thumb_path_locale) etr->thumb_path_locale = g_strdup ("");
     /* Make sure year_str is identical to year */
     g_free (etr->year_str);
     etr->year_str = g_strdup_printf ("%d", track->year);

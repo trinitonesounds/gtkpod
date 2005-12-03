@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-27 16:37:21 jcs>
+/* Time-stamp: <2005-12-04 00:38:28 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -168,14 +168,14 @@ play_entries_enqueue (GtkMenuItem *mi, gpointer data)
  * @data - Ignored, should be NULL
  */
 static void 
-show_details_entries(GtkMenuItem *mi, gpointer data)
+edit_details_entries(GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	details_show (selected_playlist->members);
+	details_edit (selected_playlist->members);
     else if(selected_entry)
-	details_show (selected_entry->members);
+	details_edit (selected_entry->members);
     else if(selected_tracks)
-	details_show (selected_tracks);
+	details_edit (selected_tracks);
 }
 
 /*
@@ -373,8 +373,8 @@ create_context_menu(CM_type type)
 				  G_CALLBACK (export_entries), NULL);
 	hookup_mi (menu[type], _("Create Playlist File"), GTK_STOCK_FLOPPY,
 		   G_CALLBACK (create_playlist_file), NULL);
-	hookup_mi (menu[type], _("Show Details"), NULL,
-		   G_CALLBACK (show_details_entries), NULL);
+	hookup_mi (menu[type], _("Edit Details"), NULL,
+		   G_CALLBACK (edit_details_entries), NULL);
 	hookup_mi (menu[type], _("Update"), GTK_STOCK_REFRESH,
 		   G_CALLBACK (update_entries), NULL);
 	hookup_mi (menu[type], _("Sync Dirs"), GTK_STOCK_REFRESH,
