@@ -17,6 +17,9 @@
 	 * details.c: copy artwork_count and _size when copying
            artwork, remember last directory.
 
+	 * file_itunesdb.c: fixed error when writing iTunesDB.ext
+           (filename/thumbnail)
+
 2005-11-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * mp4file.c: patch by Simon MARTIN fixing support for video

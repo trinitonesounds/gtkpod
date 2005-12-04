@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 19:12:35 jcs>
+/* Time-stamp: <2005-12-04 22:54:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1128,6 +1128,39 @@ static void details_set_tracks (Detail *detail, GList *tracks)
 
 
 
+/* Free memory taken by @detail */
+static void details_free (Detail *detail)
+{
+    g_return_if_fail (detail);
+
+    /* FIXME: how do we free the detail->xml? */
+
+    if (detail->window)
+    {
+	gtk_widget_destroy (detail->window);
+    }
+
+    if (detail->orig_tracks)
+    {
+	g_list_free (detail->orig_tracks);
+    }
+
+    if (detail->tracks)
+    {
+	GList *gl;
+	for (gl=detail->tracks; gl; gl=gl->next)
+	{
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+	    itdb_track_free (tr);
+	}
+	g_list_free (detail->tracks);
+    }
+
+    g_free (detail);
+}
+
+
 /* Open the details window and display the selected tracks, starting
  * with the first track */
 void details_edit (GList *selected_tracks)
@@ -1245,35 +1278,10 @@ void details_edit (GList *selected_tracks)
 }
 
 
-/* Free memory taken by @detail */
-static void details_free (Detail *detail)
+/* Use the dimension of the first open window */
+void details_update_default_sizes (void)
 {
-    g_return_if_fail (detail);
-
-    /* FIXME: how do we free the detail->xml? */
-
-    if (detail->window)
-    {
-	gtk_widget_destroy (detail->window);
-    }
-
-    if (detail->orig_tracks)
-    {
-	g_list_free (detail->orig_tracks);
-    }
-
-    if (detail->tracks)
-    {
-	GList *gl;
-	for (gl=detail->tracks; gl; gl=gl->next)
-	{
-	    Track *tr = gl->data;
-	    g_return_if_fail (tr);
-	    itdb_track_free (tr);
-	}
-	g_list_free (detail->tracks);
-    }
-
-    g_free (detail);
+    if (details)
+	details_store_window_state (details->data);
 }
 

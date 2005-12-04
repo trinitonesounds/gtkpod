@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-03 02:08:19 jcs>
+/* Time-stamp: <2005-12-04 23:45:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -920,11 +920,11 @@ static gboolean write_extended_info (iTunesDB *itdb)
       if (etr->pc_path_locale && *etr->pc_path_locale)
 	  fprintf (fp, "filename_locale=%s\n", etr->pc_path_locale);
       if (etr->pc_path_utf8 && *etr->pc_path_utf8)
-	  fprintf (fp, "thumbnail_utf8=%s\n", etr->pc_path_utf8);
+	  fprintf (fp, "filename_utf8=%s\n", etr->pc_path_utf8);
       if (etr->thumb_path_locale && *etr->thumb_path_locale)
 	  fprintf (fp, "thumbnail_locale=%s\n", etr->thumb_path_locale);
       if (etr->thumb_path_utf8 && *etr->thumb_path_utf8)
-	  fprintf (fp, "filename_utf8=%s\n", etr->thumb_path_utf8);
+	  fprintf (fp, "thumbnail_utf8=%s\n", etr->thumb_path_utf8);
       /* this is just for convenience for people looking for a track
 	 on the ipod away from gktpod/itunes etc. */
       if (etr->md5_hash && *etr->md5_hash)
