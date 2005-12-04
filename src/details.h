@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 00:38:09 jcs>
+/* Time-stamp: <2005-12-05 01:29:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -39,7 +39,6 @@
 
 /* details window */
 void details_edit (GList *selected_tracks);
-void details_close (void);
 void details_update_default_sizes (void);
 void details_update_track (Track *track);
 void details_remove_track (Track *track);

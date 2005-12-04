@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 22:53:33 jcs>
+/* Time-stamp: <2005-12-05 01:29:59 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include "display_private.h"
 #include "info.h"
+#include "details.h"
 #include "prefs.h"
 #include "prefs_window.h"
 #include "misc.h"
