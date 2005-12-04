@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 01:10:10 jcs>
+/* Time-stamp: <2005-12-04 19:12:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -172,6 +172,13 @@ static void details_checkbutton_toggled (GtkCheckButton *button,
 }
 
 
+static void details_writethrough_toggled (GtkCheckButton *button,
+					  Detail *detail)
+{
+    details_update_buttons (detail);
+}
+
+
 /****** Navigation *****/
 void details_button_first_clicked (GtkCheckButton *button,
 				   Detail *detail)
@@ -276,16 +283,31 @@ static void details_button_set_artwork_clicked (GtkButton *button,
 static void details_button_remove_artwork_clicked (GtkButton *button,
 						   Detail *detail)
 {
-    ExtraTrackData *etr;
-
     g_return_if_fail (detail);
     g_return_if_fail (detail->track);
-    etr = detail->track->userdata;
-    g_return_if_fail (etr);
 
-    gp_track_remove_thumbnails (detail->track);
-    etr->tchanged = TRUE;
-    detail->changed = TRUE;
+    if (details_writethrough (detail))
+    {   /* Remove thumbnail on all tracks */
+	GList *gl;
+	for (gl=detail->tracks; gl; gl=gl->next)
+	{
+	    ExtraTrackData *etr;
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+	    etr = tr->userdata;
+	    g_return_if_fail (etr);
+
+	    etr->tchanged |= gp_track_remove_thumbnails (tr);
+	    detail->changed |= etr->tchanged;
+	}
+    }
+    else
+    {   /* Only change current track */
+	ExtraTrackData *etr = detail->track->userdata;
+	g_return_if_fail (etr);
+	etr->tchanged |= gp_track_remove_thumbnails (detail->track);
+	detail->changed |= etr->tchanged;
+    }
 
     details_update_thumbnail (detail);
 
@@ -458,6 +480,8 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
     {
 	itdb_artwork_free (totrack->artwork);
 	totrack->artwork = itdb_artwork_duplicate (frtrack->artwork);
+	totrack->artwork_size = frtrack->artwork_size;
+	totrack->artwork_count = frtrack->artwork_count;
 	g_free (toetr->thumb_path_locale);
 	g_free (toetr->thumb_path_utf8);
 	toetr->thumb_path_locale = g_strdup (fretr->thumb_path_locale);
@@ -910,6 +934,8 @@ static void details_update_buttons (Detail *detail)
     etr = detail->track->userdata;
     g_return_if_fail (etr);
 
+    details_update_changed_state (detail);
+
     w = gtkpod_xml_get_widget (detail->xml, "details_button_apply");
     gtk_widget_set_sensitive (w, detail->changed);
 
@@ -921,9 +947,23 @@ static void details_update_buttons (Detail *detail)
 
     w = gtkpod_xml_get_widget (detail->xml,
 			       "details_button_remove_artwork");
-    gtk_widget_set_sensitive (w, (detail->track->artwork->thumbnails != NULL));
+    if (!details_writethrough (detail))
+    {
+	gtk_widget_set_sensitive (w, (detail->track->artwork->thumbnails != NULL));
+    }
+    else
+    {
+	gboolean sensitive = FALSE;
+	GList *gl;
+	for (gl=detail->tracks; gl && !sensitive; gl=gl->next)
+	{
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+	    sensitive |= (tr->artwork->thumbnails != NULL);
+	}
+	gtk_widget_set_sensitive (w, sensitive);
+    }
 }
-
 
 /* Update the displayed thumbnail */
 static void details_update_thumbnail (Detail *detail)
@@ -1171,6 +1211,13 @@ void details_edit (GList *selected_tracks)
     g_signal_connect (w, "clicked",
 		      G_CALLBACK (details_button_undo_track_clicked),
 		      detail);
+
+    w = gtkpod_xml_get_widget (detail->xml,
+			       "details_checkbutton_writethrough");
+    g_signal_connect (w, "toggled",
+		      G_CALLBACK (details_writethrough_toggled),
+		      detail);
+
 
 
     g_signal_connect (detail->window, "delete_event",

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-03 02:10:13 jcs>
+/* Time-stamp: <2005-12-04 14:12:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -295,18 +295,28 @@ gboolean gp_track_set_thumbnails (Track *track, const gchar *filename)
 }
 
 /* Remove a thumbnail and remove the filename in ExtraTrackData */
-void gp_track_remove_thumbnails (Track *track)
+/* Return value:
+   FALSE: track did not have any thumbnails, so no change was done
+   TRUE: track did have thumbnails which were removed */
+gboolean gp_track_remove_thumbnails (Track *track)
 {
+    gboolean changed=FALSE;
+
     ExtraTrackData *etr;
-    g_return_if_fail (track);
+    g_return_val_if_fail (track, FALSE);
     etr = track->userdata;
-    g_return_if_fail (etr);
+    g_return_val_if_fail (etr, FALSE);
+
+    if (track->artwork->thumbnails)
+	changed = TRUE;
 
     itdb_track_remove_thumbnails (track);
     g_free (etr->thumb_path_locale);
     g_free (etr->thumb_path_utf8);
     etr->thumb_path_locale = g_strdup ("");
     etr->thumb_path_utf8 = g_strdup ("");
+
+    return changed;
 }
 
 

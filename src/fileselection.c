@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-27 19:08:07 jcs>
+/* Time-stamp: <2005-12-04 17:02:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -263,6 +263,8 @@ gchar *fileselection_get_cover_filename (void)
     GtkWidget* fc;  /* The file chooser dialog */
     gint response;  /* The response of the filechooser */
     gchar *filename = NULL; /* The chosen file */
+    const gchar *dir1;
+    gchar *dir2;
 
     /* Create the file chooser, and handle the response */
     fc = gtk_file_chooser_dialog_new (_("Set Cover"),
@@ -275,14 +277,18 @@ gchar *fileselection_get_cover_filename (void)
 				      NULL);
 
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), FALSE);
-    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
-					 prefs_get_last_dir_browse ());
+
+    dir1 = prefs_get_last_dir_browse ();
+    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc), dir1);
 
     response = gtk_dialog_run(GTK_DIALOG(fc));
-	
+
     switch (response)
     {
     case GTK_RESPONSE_ACCEPT:
+	dir2 = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (fc));
+	prefs_set_last_dir_browse (dir2);
+	g_free (dir2);
 	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
 	break;
     case GTK_RESPONSE_CANCEL:

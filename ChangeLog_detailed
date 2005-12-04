@@ -10,6 +10,13 @@
 
 	 * display_songs.c: use track_set_text(), track_copy_item()
 
+	 * details.c: writethrough for "remove cover art" added.
+
+	 * gtkpod.glade: change "charset" to "encoding"
+
+	 * details.c: copy artwork_count and _size when copying
+           artwork, remember last directory.
+
 2005-11-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * mp4file.c: patch by Simon MARTIN fixing support for video
