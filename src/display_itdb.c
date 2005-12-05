@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 14:12:38 jcs>
+/* Time-stamp: <2005-12-06 01:21:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -35,6 +35,7 @@
 #include <string.h>
 
 #include "charset.h"
+#include "details.h"
 #include "display_itdb.h"
 #include "display.h"
 #include "md5.h"
@@ -260,6 +261,32 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
     }
     data_changed (itdb);
     return result;
+}
+
+
+/* Remove track and notify all windows of the change
+   NOTE: you need to notify the main display via pm_remove_track()
+   before when you make sure @track is no longer referenced in any
+   playlist -- see gp_playlist_remove_track for details */
+void gp_track_remove (Track *track)
+{
+    /* currently only the details window may be accessing the tracks */
+    details_remove_track (track);
+    /* remove from database */
+    itdb_track_remove (track);
+}
+
+
+/* Unlink track and notify all windows of the change
+   NOTE: you need to notify the main display via pm_remove_track()
+   before when you make sure @track is no longer referenced in any
+   playlist -- see gp_playlist_remove_track for details */
+void gp_track_unlink (Track *track)
+{
+    /* currently only the details window may be accessing the tracks */
+    details_remove_track (track);
+    /* remove from database */
+    itdb_track_unlink (track);
 }
 
 
@@ -612,17 +639,17 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 	    case DELETE_ACTION_DATABASE:
 		/* ATTENTION: this might create a dangling file on the
 		   iPod! */
-		itdb_track_remove (track);
+		gp_track_remove (track);
 		break;
 	    case DELETE_ACTION_IPOD:
 		if (track->transferred)
 		{
-		    itdb_track_unlink (track);
+		    gp_track_unlink (track);
 		    mark_track_for_deletion (itdb, track);
 		}
 		else
 		{
-		    itdb_track_remove (track);
+		    gp_track_remove (track);
 		}
 		break;
 	    case DELETE_ACTION_PLAYLIST:
@@ -638,11 +665,11 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 	    switch (deleteaction)
 	    {
 	    case DELETE_ACTION_LOCAL:
-		itdb_track_unlink (track);
+		gp_track_unlink (track);
 		mark_track_for_deletion (itdb, track);
 		break;
 	    case DELETE_ACTION_DATABASE:
-		itdb_track_remove (track);
+		gp_track_remove (track);
 		break;
 	    case DELETE_ACTION_PLAYLIST:
 	    case DELETE_ACTION_IPOD:

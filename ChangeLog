@@ -9,11 +9,9 @@ gtkpod V0.96.CVS
        read and written, and compilation artists can be grouped into
        "Compilations" in the Artist filter tab. Thanks to Iain Benson!
 
-       NEW: Window for edit of track details. Non-stable with known
-       issues (no sync of data between main display and details
-       display -> deleting of tracks with the details window open may
-       segfault the appliction if the details window consequently
-       attempts to access the track and similar).
+       NEW: Window for edit of track details, including functionality
+       to set thumbnails. Currently no Tags are written to file when
+       doing any changes.
 
        NEW: Display and setting/removing of thumbnail images. Choose
        "Show Details" from the context menu (right mouse-button). New

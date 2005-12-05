@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 14:11:57 jcs>
+/* Time-stamp: <2005-12-06 01:22:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -123,6 +123,8 @@ iTunesDB *gp_itdb_get_podcast (void);
 Track *gp_track_new (void);
 #define gp_track_free itdb_track_free
 Track *gp_track_add (iTunesDB *itdb, Track *track);
+void gp_track_remove (Track *track);
+void gp_track_unlink (Track *track);
 void gp_track_add_extra (Track *track);
 void gp_track_validate_entries (Track *track);
 gboolean gp_track_set_thumbnails (Track *track, const gchar *filename);

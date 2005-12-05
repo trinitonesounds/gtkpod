@@ -1,3 +1,8 @@
+2005-12-06 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * details.c, display_itdb.h: notify details window when
+           tracks are being removed.
+
 2005-12-04 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * details.c: apply/undo functionality

@@ -13320,7 +13320,7 @@ synchronizing directories</property>
       </child>
 
       <child>
-	<widget class="GtkViewport" id="viewport11">
+	<widget class="GtkViewport" id="details_viewport">
 	  <property name="border_width">2</property>
 	  <property name="visible">True</property>
 	  <property name="shadow_type">GTK_SHADOW_IN</property>
