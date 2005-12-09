@@ -18,7 +18,7 @@ for details.
   - Using gtkpod
   - Features
      - Tracks
-     - Sort Tabs
+     - Filter Tabs
      - Playlists
      - Drag and Drop
      - Duplicate Detection
@@ -28,6 +28,7 @@ for details.
      - Refresh (Update) Track Info From File
      - Synchronize Directories
      - Volume Normalization
+     - Podcasts
      - Offline Mode
      - Export of Tracks (Copy from iPod)
      - Encoding of ID3 tags (charsets)
@@ -103,12 +104,12 @@ Tracks
   corresponding mp3 file(s) should also be updated
 
 
-Sort Tabs
+Filter Tabs
 ---------
 
-- The two notebooks above the track display are called "Sort Tabs"
+- The two notebooks above the track display are called "Filter Tabs"
 - They allow you to filter which tracks to display
-- If you edit an entry in the sort tab, the corresponding entry in all
+- If you edit an entry in the filter tab, the corresponding entry in all
   associated tracks will be updated as well. When writing the tags to
   disk as well, updating of a large number of tracks may take a while
 
@@ -134,7 +135,7 @@ Drag and Drop can be used in several ways:
 
 1) gtkpod internal
 
-- Playlists, entries of a sort tab, and tracks can be dragged.
+- Playlists, entries of a filter tab, and tracks can be dragged.
 
 - A drop _onto_ an existing playlist will add the tracks to that
   playlist
@@ -237,7 +238,7 @@ File" (see above) is needed.
 available, and set the soundcheck field. If no replay-gain tag is
 available, the soundcheck field will be erased.
 
-You can also select entries in the sort tab or entire playlists for
+You can also select entries in the filter tab or entire playlists for
 refresh.
 
 
@@ -303,6 +304,20 @@ Once the replay-gain tag has been read, it is stored in the extended
 information file 'iTunesDB.ext'. When you call 'Normalize volume'
 again, the stored value will be used to re-populate the soundcheck
 field. Use 'Update Track' to re-read the tag from the file.
+
+
+Podcasts
+--------
+
+Podcasts should be added directly into the 'Podcasts' playlist, for
+example by selecting the Podcasts playlist before manually adding
+files/directories. In that case the podcasts will appear only in the
+Podcasts section on the iPod.
+
+If you add podcasts to the main playlist 'gtkpod' or any other
+playlist first and then drag them over to the Podcasts playlist, the
+podcasts will appear in the Podcasts section on the iPod, as well as
+in the normal music section.
 
 
 Offline Mode
@@ -1073,7 +1088,7 @@ Good Luck.
 
 - Display of large number of tracks is awfully slow (mainly because of
   the use of the standard GTK2 tree views) -> deactivate "Automatically
-  select "All" in first sort tab" and/or deactivate "Automatically
+  select "All" in first filter tab" and/or deactivate "Automatically
   select master playlist". You could also "block the display" to speed
   up the display update. Further, decreasing the window size
   considerably speeds up the display.
@@ -1082,8 +1097,8 @@ Good Luck.
   considerable amount of time. Update may become more intelligent in
   the future -- until then close the info window for more speed.
 
-- When changing selections in the sort tabs while importing the
+- When changing selections in the filter tabs while importing the
   iTunesDB, sometimes the interface freezes. I tried to track this
   problem down but only found out that gtk+ does not return control
-  back to gtkpod. Selecting the "All" sort tabs seems to unfreeze the
+  back to gtkpod. Selecting the "All" filter tabs seems to unfreeze the
   interace again.

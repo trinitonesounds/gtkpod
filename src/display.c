@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-05 01:29:59 jcs>
+/* Time-stamp: <2005-12-10 00:51:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -767,7 +767,7 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget)
    void create_add_files_dialog (void)
    void create_add_playlists_dialog(void)
    void dirbrowser_create (void)
-   void open_about_window ()
+   void open_about_window (void)
 */
 
 
@@ -775,6 +775,54 @@ void on_update_podcasts_activate (GtkButton       *button,
 				  gpointer         user_data)
 {
     podcast_fetch ();
+}
+
+
+void on_edit_details_selected_playlist (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+
+    if (!pl)
+    {
+	gtkpod_statusbar_message (_("No playlist selected"));
+	return;
+    }
+    details_edit (pl->members);
+}
+
+void on_edit_details_selected_tab_entry (GtkMenuItem     *menuitem,
+					 gpointer         user_data)
+{
+    gint inst = get_sort_tab_number (
+	_("Edit selected entry of which sort tab?"));
+
+    if (inst != -1)
+    {
+	TabEntry *entry = st_get_selected_entry (inst);
+	if (entry == NULL)
+	{  /* no entry selected */
+	    gtkpod_statusbar_message (_("No entry selected."));
+	    return;
+	}
+	details_edit (entry->members);
+    }
+}
+
+void on_edit_details_selected_tracks (GtkMenuItem     *menuitem,
+				      gpointer         user_data)
+{
+    GList *tracks = tm_get_selected_tracks ();
+
+    if (tracks)
+    {
+	details_edit (tracks);
+	g_list_free (tracks);
+    }
+    else
+    {
+	gtkpod_statusbar_message (_("No tracks selected"));
+    }
 }
 
 

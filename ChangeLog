@@ -10,8 +10,9 @@ gtkpod V0.96.CVS
        "Compilations" in the Artist filter tab. Thanks to Iain Benson!
 
        NEW: Window for edit of track details, including functionality
-       to set thumbnails. Currently no Tags are written to file when
-       doing any changes.
+       to set thumbnails. The thumbnails are not stored as tags in the
+       file as iTunes does it. Instead, the original filename is
+       stored.
 
        NEW: Display and setting/removing of thumbnail images. Choose
        "Show Details" from the context menu (right mouse-button). New
