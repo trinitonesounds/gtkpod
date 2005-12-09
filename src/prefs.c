@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:11 jcs>
+/* Time-stamp: <2005-12-09 23:52:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1712,7 +1712,7 @@ gchar *prefs_get_cfgdir (void)
       cfgdir = g_build_filename (str, ".gtkpod", NULL);
       if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
       {
-	  if(mkdir(cfgdir, 0755) == -1)
+	  if(mkdir(cfgdir, 0777) == -1)
 	  {
 	      gtkpod_warning(_("Unable to 'mkdir %s'\n"), cfgdir);
 	  }

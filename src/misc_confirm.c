@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-27 17:57:06 jcs>
+/* Time-stamp: <2005-12-09 23:52:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -876,7 +876,7 @@ static void ipod_directories_ok (gchar *mp)
 	pbuf = g_build_filename (mp, "Calendars", NULL);
 	if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
 	{
-	    if((mkdir(pbuf, 0755) != 0))
+	    if((mkdir(pbuf, 0777) != 0))
 		errordir = pbuf;
 	}
 	if (!errordir)
@@ -887,7 +887,7 @@ static void ipod_directories_ok (gchar *mp)
 	pbuf = g_build_filename (mp, "Contacts", NULL);
 	if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
 	{
-	    if((mkdir(pbuf, 0755) != 0))
+	    if((mkdir(pbuf, 0777) != 0))
 		errordir = pbuf;
 	}
 	if (!errordir)
@@ -898,7 +898,7 @@ static void ipod_directories_ok (gchar *mp)
 	pbuf = g_build_filename (mp, "iPod_Control", NULL);
 	if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
 	{
-	    if((mkdir(pbuf, 0755) != 0))
+	    if((mkdir(pbuf, 0777) != 0))
 		errordir = pbuf;
 	}
 	if (!errordir)
@@ -909,7 +909,7 @@ static void ipod_directories_ok (gchar *mp)
 	pbuf = g_build_filename (mp, "iPod_Control", "Music", NULL);
 	if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
 	{
-	    if((mkdir(pbuf, 0755) != 0))
+	    if((mkdir(pbuf, 0777) != 0))
 		errordir = pbuf;
 	}
 	if (!errordir)
@@ -920,7 +920,7 @@ static void ipod_directories_ok (gchar *mp)
 	pbuf = g_build_filename (mp, "iPod_Control", "iTunes", NULL);
 	if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
 	{
-	    if((mkdir(pbuf, 0755) != 0))
+	    if((mkdir(pbuf, 0777) != 0))
 		errordir = pbuf;
 	}
 	if (!errordir)
@@ -931,7 +931,7 @@ static void ipod_directories_ok (gchar *mp)
 	pbuf = g_build_filename (mp, "iPod_Control", "Artwork", NULL);
 	if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
 	{
-	    if((mkdir(pbuf, 0755) != 0))
+	    if((mkdir(pbuf, 0777) != 0))
 		errordir = pbuf;
 	}
 	if (!errordir)
@@ -947,7 +947,7 @@ static void ipod_directories_ok (gchar *mp)
 				     "iPod_Control", "Music", num, NULL);
 	    if (!g_file_test (pbuf, G_FILE_TEST_EXISTS))
 	    {
-		if((mkdir(pbuf, 0755) != 0))
+		if((mkdir(pbuf, 0777) != 0))
 		    errordir = pbuf;
 		g_free (num);
 	    }

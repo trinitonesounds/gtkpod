@@ -1,3 +1,8 @@
+2005-12-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * change permissions to 0777 when creating directories (will
+           be modified by user's umask).
+
 2005-12-06 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * details.c, display_itdb.h: notify details window when

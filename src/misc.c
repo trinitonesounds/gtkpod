@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-11-26 16:51:11 jcs>
+|  Time-stamp: <2005-12-09 23:51:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1331,7 +1331,7 @@ gboolean mkdirhier(const gchar *dirname)
 
 	if (!g_file_test(dn, G_FILE_TEST_EXISTS))
 	{
-	    if (mkdir(dn, 0755) == -1)
+	    if (mkdir(dn, 0777) == -1)
 	    {
 		gtkpod_warning (_("Error creating %s: %s\n"),
 				dn, g_strerror(errno));
