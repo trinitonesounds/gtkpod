@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 00:30:49 jcs>
+/* Time-stamp: <2005-12-11 02:00:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1384,6 +1384,7 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 			added = TRUE;
 			break;
 		    case FILE_TYPE_UNKNOWN:
+		    case FILE_TYPE_IMAGE:
 			break;
 		    }
 		}

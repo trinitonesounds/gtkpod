@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:05:03 jcs>
+/* Time-stamp: <2005-12-11 00:15:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -201,8 +201,11 @@ gboolean option_get_toggle_button (GladeXML *win_xml,
 				   const gchar *name);
 
 gchar *get_string_from_template (Track *track,
-				 const gchar *full_template,
+				 const gchar *template,
 				 gboolean is_filename);
+gchar *get_string_from_full_template (Track *track,
+				      const gchar *full_template,
+				      gboolean is_filename);
 
 GList *glist_duplicate (GList *list);
 

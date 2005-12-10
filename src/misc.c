@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-12-09 23:51:00 jcs>
+|  Time-stamp: <2005-12-11 00:15:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1057,7 +1057,10 @@ static gchar *fix_path(gchar *orig)
 /* Match a list of templates @p separated by ';' with the type of the
    filename. E.g. '%s.mp3;%t.wav' will return '%s.mp3' if @track is an
    mp3 file, or '%t.wav' if @track is a wav file. If no template can
-   be matched, an empty string is returned. */
+   be matched, an empty string is returned.
+
+   String be freed after use.
+*/
 static gchar *select_template (Track *track, const gchar *p)
 {
     gchar **templates, **tplp;
@@ -1105,56 +1108,38 @@ static gchar *select_template (Track *track, const gchar *p)
 }
 
 
-/* Return a string for @track built according to @full_template.
-   @full_template can contain several templates separated by ';',
-   e.g. '%s.mp3;%t.wav'. The correct one is selected using
-   select_template() defined above.
-   If @is_filename is TRUE, potentially harmful characters are
-   replaced in an attempt to create a valid filename.
-   If @is_filename is FALSE, the extension (e.g. '.mp3' will be
-   removed). */
+/* Return a string for @track built according to @template.
+
+   @is_filename: if TRUE, remove potentially harmful characters.*/
 gchar *get_string_from_template (Track *track,
-				 const gchar *full_template,
+				 const gchar *template,
 				 gboolean is_filename)
 {
     GString *result;
-    gchar *p, *res_utf8;
+    gchar *res_utf8;
+    const gchar *p;
     gchar *basename = NULL;
-    gchar *template;
+    gchar *basename_noext = NULL;
     ExtraTrackData *etr;
 
-    g_return_val_if_fail (track && full_template, NULL);
+    g_return_val_if_fail (track, NULL);
+    g_return_val_if_fail (template, NULL);
     etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
-
-    template = select_template (track, full_template);
-
-    if (!template)
-    {
-	gchar *fn = get_file_name (track);
-	gtkpod_warning (_("Template ('%s') does not match file type '%s'\n"), full_template, fn ? fn:"");
-	g_free (fn);
-	return NULL;
-    }
-
-    if (!is_filename)
-    {   /* remove an extension, if present ('.???' or '.????'  at the
-	   end) */
-	gchar *pnt = strrchr (template, '.');
-	if (pnt)
-	{
-	    if (pnt == template+strlen(template)-3)
-		*pnt = 0;
-	    if (pnt == template+strlen(template)-4)
-		*pnt = 0;
-	}
-    }
 
     result = g_string_new ("");
 
     /* try to get the original filename */
     if (etr->pc_path_utf8)
 	basename = g_path_get_basename (etr->pc_path_utf8);
+    /* get original filename without extension */
+    if (basename)
+    {
+	gchar *ptr;
+	basename_noext = g_strdup (basename);
+	ptr = strrchr (basename_noext, '.');
+	if (ptr) *ptr = '\0';
+    }
 
     p=template;
     while (*p != '\0') {
@@ -1168,6 +1153,12 @@ gchar *get_string_from_template (Track *track,
 		if (basename)
 		{
 		    tmp = basename;
+		}
+		break;
+	    case 'O':
+		if (basename_noext)
+		{
+		    tmp = basename_noext;
 		}
 		break;
 	    case 'p':
@@ -1273,6 +1264,61 @@ gchar *get_string_from_template (Track *track,
 	    g_free (extst);
 	}
     }
+
+    g_free (basename);
+    g_free (basename_noext);
+
+    return res_utf8;
+}
+
+
+
+/* Return a string for @track built according to @full_template.
+   @full_template can contain several templates separated by ';',
+   e.g. '%s.mp3;%t.wav'. The correct one is selected using
+   select_template() defined above.
+
+   If @is_filename is TRUE, potentially harmful characters are
+   replaced in an attempt to create a valid filename.
+
+   If @is_filename is FALSE, the extension (e.g. '.mp3' will be
+   removed). */
+gchar *get_string_from_full_template (Track *track,
+				      const gchar *full_template,
+				      gboolean is_filename)
+{
+    gchar *res_utf8;
+    gchar *template;
+
+    g_return_val_if_fail (track, NULL);
+    g_return_val_if_fail (full_template, NULL);
+
+    template = select_template (track, full_template);
+
+    if (!template)
+    {
+	gchar *fn = get_file_name (track);
+	gtkpod_warning (_("Template ('%s') does not match file type '%s'\n"), full_template, fn ? fn:"");
+	g_free (fn);
+	return NULL;
+    }
+
+    if (!is_filename)
+    {   /* remove an extension, if present ('.???' or '.????'  at the
+	   end) */
+	gchar *pnt = strrchr (template, '.');
+	if (pnt)
+	{
+	    if (pnt == template+strlen(template)-3)
+		*pnt = 0;
+	    if (pnt == template+strlen(template)-4)
+		*pnt = 0;
+	}
+    }
+
+    res_utf8 = get_string_from_template (track, template, is_filename);
+
+    g_free (template);
 
     return res_utf8;
 }

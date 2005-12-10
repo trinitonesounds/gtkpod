@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:04:16 jcs>
+/* Time-stamp: <2005-12-10 22:52:53 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -685,6 +685,23 @@ prefs_window_create (gint page)
 	}
 	gtk_widget_set_sensitive (w, tmpcfg->parsetags);
     }
+    if((w = gtkpod_xml_get_widget (prefs_window_xml, "coverart")))
+    {
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				     tmpcfg->coverart);
+    }
+    if((w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template")))
+    {
+	if (tmpcfg->coverart_template)
+	{  /* we should copy the new path first because by setting
+	      the text we might get a callback destroying the old
+	      value... */
+	    gchar *buf = g_strdup (tmpcfg->coverart_template);
+	    gtk_entry_set_text(GTK_ENTRY(w), buf);
+	    g_free (buf);
+	}
+	gtk_widget_set_sensitive (w, tmpcfg->coverart);
+    }
 
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
@@ -923,6 +940,8 @@ prefs_window_set(void)
 	prefs_set_parsetags(tmpcfg->parsetags);
 	prefs_set_parsetags_overwrite(tmpcfg->parsetags_overwrite);
 	prefs_set_parsetags_template(tmpcfg->parsetags_template);
+	prefs_set_coverart(tmpcfg->coverart);
+	prefs_set_coverart_template(tmpcfg->coverart_template);
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{
 	    prefs_set_col_visible (i, tmpcfg->col_visible[i]);
@@ -1505,10 +1524,10 @@ on_parsetags_toggled                   (GtkToggleButton *togglebutton,
     GtkWidget *w;
 
     tmpcfg->parsetags = val;
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_overwrite")))
-	gtk_widget_set_sensitive (w, val);
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_template")))
-	gtk_widget_set_sensitive (w, val);
+    w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_overwrite");
+    gtk_widget_set_sensitive (w, val);
+    w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_template");
+    gtk_widget_set_sensitive (w, val);
 }
 
 void
@@ -1521,10 +1540,30 @@ on_parsetags_overwrite_toggled         (GtkToggleButton *togglebutton,
 
 void
 on_parsetags_template_changed             (GtkEditable     *editable,
-					gpointer         user_data)
+					   gpointer         user_data)
 {
     g_free (tmpcfg->parsetags_template);
     tmpcfg->parsetags_template = gtk_editable_get_chars (editable,0, -1);
+}
+
+void
+on_coverart_toggled                   (GtkToggleButton *togglebutton,
+				       gpointer         user_data)
+{
+    gboolean val = gtk_toggle_button_get_active(togglebutton);
+    GtkWidget *w;
+
+    tmpcfg->coverart = val;
+    w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template");
+    gtk_widget_set_sensitive (w, val);
+}
+
+void
+on_coverart_template_changed             (GtkEditable     *editable,
+					gpointer         user_data)
+{
+    g_free (tmpcfg->coverart_template);
+    tmpcfg->coverart_template = gtk_editable_get_chars (editable,0, -1);
 }
 
 void prefs_window_set_col_visible (gint column, gboolean visible)

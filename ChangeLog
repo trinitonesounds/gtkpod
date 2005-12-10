@@ -19,6 +19,12 @@ gtkpod V0.96.CVS
        thumbnails are displayed by the iPod but get wiped by iTunes,
        however.
 
+       NEW: Automatic adding of thumbnail images when adding new
+       tracks or updating existing ones. See the option on the 'Track
+       Info' page of the preferences dialog for settings about which
+       filename will be used. Any filename is possible, even filenames
+       constructed from the album or artist name.
+
        NEW: very basic iPod video support (you can add Videos but no
        metadata is filled in). Thanks to Uwe Herman for the input.
 

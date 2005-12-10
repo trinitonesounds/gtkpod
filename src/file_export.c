@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:13 jcs>
+/* Time-stamp: <2005-12-11 00:14:03 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -247,7 +247,7 @@ track_get_export_filename (Track *track)
     g_return_val_if_fail (track, NULL);
 
     prefs_get_string_value (EXPORT_FILES_TPL, &template);
-    res_utf8 = get_string_from_template (track, template, TRUE);
+    res_utf8 = get_string_from_full_template (track, template, TRUE);
     C_FREE (template);
 
     prefs_get_int_value (EXPORT_FILES_SPECIAL_CHARSET, &special_charset);
@@ -952,9 +952,8 @@ static void export_playlist_file_write (struct fcd *fcd)
 	for (n=0,i=0; i<num; ++i)
 	{
 	    Track *track = g_list_nth_data (fcd->tracks, i);
-	    gchar *infotext_utf8 = get_string_from_template (track,
-							     template,
-							     FALSE);
+	    gchar *infotext_utf8 = get_string_from_full_template (
+		track, template, FALSE);
 	    gchar *filename = get_file_name_from_source (track,
 							 source);
 	    gchar *infotext;

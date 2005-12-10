@@ -1,6 +1,10 @@
-2005-12-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2005-12-11 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
-	 * re-enable delete menu (in addition to context menu).
+	 * file.c, misc.c: add thumbnail images automatically.
+
+2005-12-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * re-enable delete menus (in addition to context menu).
 
 2005-12-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

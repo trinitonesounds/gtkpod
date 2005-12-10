@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 17:12:50 jcs>
+/* Time-stamp: <2005-12-10 17:30:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1106,17 +1106,7 @@ void on_delete_selected_tracks_from_playlist (GtkMenuItem *mi,
 void on_delete_selected_tracks_from_harddisk (GtkMenuItem *mi,
 					      gpointer data)
 {
-    GList *tracks = tm_get_selected_tracks ();
-
-    if (tracks)
-    {
-	delete_track_head (DELETE_ACTION_LOCAL);
-	g_list_free (tracks);
-    }
-    else
-    {
-	gtkpod_statusbar_message (_("No tracks selected"));
-    }
+    delete_selected_tracks (DELETE_ACTION_LOCAL);
 }
 
 

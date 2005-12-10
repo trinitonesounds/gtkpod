@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-23 01:34:07 jcs>
+/* Time-stamp: <2005-12-11 02:00:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -55,6 +55,11 @@
 #include "wavfile.h"
 
 
+static const gchar *imageext[] =
+{".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff",
+ ".gif", NULL};
+
+
 /*------------------------------------------------------------------*\
  *                                                                  *
  *      Temporary Video stuff -- move to appropriate files when     *
@@ -88,6 +93,7 @@ Track *video_get_file_info (gchar *filename)
     case FILE_TYPE_WAV:
     case FILE_TYPE_M3U:
     case FILE_TYPE_PLS:
+    case FILE_TYPE_IMAGE:
 	g_free (track);
 	g_return_val_if_reached (NULL);
     }
@@ -128,6 +134,20 @@ FileType determine_file_type (gchar *path)
 
 	else if (g_strcasecmp (suf, ".m3u") == 0) type = FILE_TYPE_M3U;
 	else if (g_strcasecmp (suf, ".pls") == 0) type = FILE_TYPE_PLS;
+
+	else
+	{
+	    const gchar **extp=imageext;
+	    while (*extp)
+	    {
+		if (g_strcasecmp (suf, *extp) == 0)
+		{
+		    type = FILE_TYPE_IMAGE;
+		    break;
+		}
+		++extp;
+	    }
+	}
     }
 
     g_free(path_utf8);
@@ -198,6 +218,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	case FILE_TYPE_MP4:
 	case FILE_TYPE_MOV:
 	case FILE_TYPE_MPG:
+	case FILE_TYPE_IMAGE:
 	    gtkpod_warning (_("'%s' is a not a known playlist file.\n\n"),
 			      plfile);
 	    g_free(plname);
@@ -290,6 +311,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	case FILE_TYPE_MP4:
 	case FILE_TYPE_MOV:
 	case FILE_TYPE_MPG:
+	case FILE_TYPE_IMAGE:
 	    break;
 	}
 	if (filename)
@@ -707,7 +729,7 @@ void update_charset_info (Track *track)
 
 /* Copy "new" info read from file to an old Track structure.
    Return value: a pointer to the track the data was copied to. */
-Track *copy_new_info (Track *from, Track *to)
+static Track *copy_new_info (Track *from, Track *to)
 {
     ExtraTrackData *efrom, *eto;
 
@@ -732,6 +754,9 @@ Track *copy_new_info (Track *from, Track *to)
     g_free (eto->pc_path_utf8);
     g_free (eto->pc_path_locale);
     g_free (eto->charset);
+    g_free (eto->thumb_path_utf8);
+    g_free (eto->thumb_path_locale);
+    itdb_artwork_free (to->artwork);
     /* copy strings */
     to->album = g_strdup (from->album);
     to->artist = g_strdup (from->artist);
@@ -769,6 +794,9 @@ Track *copy_new_info (Track *from, Track *to)
     g_free (eto->year_str);
     eto->year_str = g_strdup_printf ("%d", to->year);
     to->unk208 = from->unk208;
+    /* copy artwork */
+    to->artwork = itdb_artwork_duplicate (from->artwork);
+
     return to;
 }
 
@@ -865,15 +893,87 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 }
 
 
+
+/* look for a picture specified by coverart_template  */
+static void add_artwork (Track *tr)
+{
+    ExtraTrackData *etr;
+    const gchar *full_template;
+    gchar **templates, **tplp;
+    gchar *dirname;
+    gchar *filename_local = NULL;
+
+    g_return_if_fail (tr);
+    etr = tr->userdata;
+    g_return_if_fail (etr);
+
+    dirname = g_path_get_dirname (etr->pc_path_utf8);
+
+    full_template = prefs_get_coverart_template ();
+
+    templates = g_strsplit (full_template, ";", 0);
+    tplp = templates;
+    while (*tplp && !filename_local)
+    {
+	gchar *filename_utf8;
+	gchar *fname = get_string_from_template (tr, *tplp, TRUE);
+	if (fname)
+	{
+	    if (strchr (fname, '.') != NULL)
+	    {   /* if fname has an extension, try if it is valid */
+		filename_utf8 = g_build_filename (dirname, fname, NULL);
+		filename_local = charset_from_utf8 (filename_utf8);
+		g_free (filename_utf8);
+		if (!g_file_test (filename_local, G_FILE_TEST_EXISTS))
+		{
+		    g_free (filename_local);
+		    filename_local = NULL;
+		}
+	    }
+	    else
+	    {   /* otherwise try out different extensions */
+		const gchar **extp = imageext;
+		while (*extp && !filename_local)
+		{
+		    gchar *ffname;
+		    ffname = g_strconcat (fname, *extp, NULL);
+		    filename_utf8 = g_build_filename (dirname, ffname, NULL);
+		    g_free (ffname);
+		    filename_local = charset_from_utf8 (filename_utf8);
+		    g_free (filename_utf8);
+		    if (!g_file_test (filename_local, G_FILE_TEST_EXISTS))
+		    {
+			g_free (filename_local);
+			filename_local = NULL;
+		    }
+		    ++extp;
+		}
+	    }
+	}
+	g_free (fname);
+	++tplp;
+    }
+
+    if (filename_local)
+    {
+	gp_track_set_thumbnails (tr, filename_local);
+    }
+
+    g_strfreev (templates);
+}
+
+
+
 /* Fills the supplied @orig_track with data from the file @name. If
  * @or_track is NULL, a new track struct is created. The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists */
 /* Returns NULL on error, a pointer to the Track otherwise */
-Track *get_track_info_from_file (gchar *name, Track *orig_track)
+static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 {
     Track *track = NULL;
     Track *nti = NULL;
+    FileType filetype;
     gint len;
     gchar *name_utf8 = NULL;
 
@@ -897,7 +997,8 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     len = strlen (name);
     if (len < 4) return NULL;
 
-    switch (determine_file_type(name))
+    filetype = determine_file_type(name);
+    switch (filetype)
     {
     case FILE_TYPE_MP3:
 	nti = mp3_get_file_info (name);
@@ -936,6 +1037,7 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	gtkpod_warning (_("The following track could not be processed (filetype unknown): '%s'\n"), name_utf8);
 	g_free (name_utf8);
 	return NULL;
+    case FILE_TYPE_IMAGE:
     case FILE_TYPE_M3U:
     case FILE_TYPE_PLS:
 	break;
@@ -971,15 +1073,22 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
 		replaygain_to_soundcheck (enti->radio_gain);
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);
-	/* Make sure all strings are initialized -- that way we don't
-	   have to worry about it when we are handling the
-	   strings. Also, validate_entries() will fill in the utf16
-	   strings if that hasn't already been done. */
-	/* exception: md5_hash, charset and hostname: these may be NULL. */
+
+	/* Set coverart */
+	if (prefs_get_coverart())
+	    add_artwork (nti);
+
 	/* Set modification date to *now* */
 	nti->time_modified = itdb_time_get_mac_time ();
 	/* Set added date to *now* */
 	nti->time_added = nti->time_modified;
+
+	/* Make sure all strings are initialized -- that way we don't
+	   have to worry about it when we are handling the
+	   strings. Also, validate_entries() will fill in the utf16
+	   strings if that hasn't already been done. */
+	/* exception: md5_hash, charset and hostname: these may be
+	 * NULL. */
 
 	gp_track_validate_entries (nti);
 
@@ -1000,8 +1109,17 @@ Track *get_track_info_from_file (gchar *name, Track *orig_track)
     }
     else
     {
-	gtkpod_warning (_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
-    }	
+	switch (filetype)
+	{
+	case FILE_TYPE_IMAGE:
+	case FILE_TYPE_M3U:
+	case FILE_TYPE_PLS:
+	    break;
+	default:
+	    gtkpod_warning (_("The following track could not be processed (filetype is known but analysis failed): '%s'\n"), name_utf8);
+	    break;
+	}
+    }
 
     while (widgets_blocked && gtk_events_pending ())
 	gtk_main_iteration ();
@@ -1883,24 +2001,26 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
   }
 
   /* check if file is a playlist */
-  switch (determine_file_type(fname)) {
-	  case FILE_TYPE_M3U:
-	  case FILE_TYPE_PLS:
-	      if (add_playlist_by_filename (itdb, fname, plitem, -1,
-					    addtrackfunc, data))
-		  return TRUE;
-	      return FALSE;
-	  case FILE_TYPE_MP3:
-	  case FILE_TYPE_M4A:
-	  case FILE_TYPE_M4P:
-	  case FILE_TYPE_M4B:
-	  case FILE_TYPE_WAV:
-	  case FILE_TYPE_M4V:
-	  case FILE_TYPE_MP4:
-	  case FILE_TYPE_MOV:
-	  case FILE_TYPE_MPG:
-	  case FILE_TYPE_UNKNOWN:
-		  break;
+  switch (determine_file_type(fname))
+  {
+  case FILE_TYPE_M3U:
+  case FILE_TYPE_PLS:
+      if (add_playlist_by_filename (itdb, fname, plitem, -1,
+				    addtrackfunc, data))
+	  return TRUE;
+      return FALSE;
+  case FILE_TYPE_MP3:
+  case FILE_TYPE_M4A:
+  case FILE_TYPE_M4P:
+  case FILE_TYPE_M4B:
+  case FILE_TYPE_WAV:
+  case FILE_TYPE_M4V:
+  case FILE_TYPE_MP4:
+  case FILE_TYPE_MOV:
+  case FILE_TYPE_MPG:
+  case FILE_TYPE_IMAGE:
+  case FILE_TYPE_UNKNOWN:
+      break;
   }
 
   /* print a message about which file is being processed */
@@ -1918,7 +2038,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
   /* Check if there exists already a track with the same filename */
   oldtrack = gp_track_by_filename (itdb, fname);
   /* If a track already exists in the database, either update it or
-     just add it to the current playlist (if it doesn't already exist) */
+     just add it to the current playlist (if it's not already there) */
   if (oldtrack)
   {
       if (prefs_get_update_existing ())
@@ -2079,6 +2199,7 @@ static gboolean file_write_info (gchar *name, Track *track)
 	break;
     case FILE_TYPE_M3U:
     case FILE_TYPE_PLS:
+    case FILE_TYPE_IMAGE:
     case FILE_TYPE_UNKNOWN:
 	break;
     }
@@ -2580,6 +2701,7 @@ gboolean get_gain (Track *track)
 	    break;
 	case FILE_TYPE_M3U: 
 	case FILE_TYPE_PLS: 
+	case FILE_TYPE_IMAGE: 
 	    break;
 	}
 	g_free (path);

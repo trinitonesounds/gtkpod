@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 16:05:19 jcs>
+/* Time-stamp: <2005-12-10 22:46:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -131,6 +131,8 @@ struct cfg
   gboolean parsetags;           /* Get tags by parsing filename? */
   gchar   *parsetags_template;  /* template for parsing tags */
   gboolean parsetags_overwrite; /* Overwrite tags already set? */
+  gboolean coverart;            /* Read coverart when adding files? */
+  gchar *coverart_template;     /* template for coverart filename   */
   gboolean autosettags[TM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 
@@ -229,6 +231,10 @@ void prefs_set_autosettags (gint category, gboolean autoset);
 gboolean prefs_get_autosettags (gint category);
 void prefs_set_parsetags_template (const gchar *tpl);
 const gchar *prefs_get_parsetags_template (void);
+void prefs_set_coverart (gboolean active);
+gboolean prefs_get_coverart(void);
+void prefs_set_coverart_template (const gchar *tpl);
+const gchar *prefs_get_coverart_template (void);
 void prefs_set_last_dir_browse (const gchar * dir);
 const gchar *prefs_get_last_dir_browse (void);
 void prefs_set_charset (gchar *charset);

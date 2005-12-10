@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-09 23:52:06 jcs>
+/* Time-stamp: <2005-12-10 22:52:53 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -232,6 +232,8 @@ struct cfg *cfg_new(void)
     mycfg->parsetags = FALSE;
     mycfg->parsetags_overwrite = FALSE;
     mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3;%t.wav");
+    mycfg->coverart = TRUE;
+    mycfg->coverart_template = g_strdup ("%A;folder.jpg");
     for (i=0; i<PANED_NUM; ++i)
     {
 	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
@@ -651,6 +653,14 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "parsetags_template") == 0)
 	  {
 	      prefs_set_parsetags_template(strdup(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "coverart") == 0)
+	  {
+	      prefs_set_coverart((gboolean)atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "coverart_template") == 0)
+	  {
+	      prefs_set_coverart_template(strdup(arg));
 	  }
 	  else if(arg_comp (line, "col_visible", &off) == 0)
 	  {
@@ -1219,6 +1229,8 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "parsetags=%d\n", prefs_get_parsetags());
     fprintf(fp, "parsetags_overwrite=%d\n", prefs_get_parsetags_overwrite());
     fprintf(fp, "parsetags_template=%s\n",cfg->parsetags_template);
+    fprintf(fp, "coverart=%d\n", prefs_get_coverart());
+    fprintf(fp, "coverart_template=%s\n",cfg->coverart_template);
     fprintf(fp, _("# position of sliders (paned): playlists, above tracks,\n# between sort tabs, and in statusbar.\n"));
     for (i=0; i<PANED_NUM; ++i)
     {
@@ -1578,6 +1590,7 @@ struct cfg *clone_prefs(void)
 	for (i=0; i<PATH_NUM; ++i)
 	    result->path[i] = g_strdup (cfg->path[i]);
 	result->parsetags_template = g_strdup(cfg->parsetags_template);
+	result->coverart_template = g_strdup(cfg->coverart_template);
 	result->mserv_username = g_strdup(cfg->mserv_username);
 	result->pc_dir = g_strdup(cfg->pc_dir);
 	result->pc_log_file = g_strdup(cfg->pc_log_file);
@@ -1904,6 +1917,29 @@ void prefs_set_parsetags_template (const gchar *tpl)
     }
 }
 
+void prefs_set_coverart(gboolean active)
+{
+  cfg->coverart = active;
+}
+
+gboolean prefs_get_coverart(void)
+{
+  return cfg->coverart;
+}
+
+const gchar *prefs_get_coverart_template (void)
+{
+    return cfg->coverart_template;
+}
+
+void prefs_set_coverart_template (const gchar *tpl)
+{
+    if (tpl)
+    {
+	g_free(cfg->coverart_template);
+	cfg->coverart_template = g_strdup (tpl);
+    }
+}
 
 /* Display column tm_item @visible: new value */
 void prefs_set_col_visible (TM_item tm_item, gboolean visible)
