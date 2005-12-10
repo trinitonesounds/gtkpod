@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 00:51:22 jcs>
+/* Time-stamp: <2005-12-10 17:12:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -87,7 +87,7 @@ void display_create (void)
     g_set_print_handler ((GPrintFunc)gtkpod_warning);
 
     /* activate the delete menus correctly */
-    display_adjust_delete_menus ();
+    display_adjust_menus ();
     /* activate/deactive the menu item 'check iPod' */
     display_set_check_ipod_menu ();
     /* activate status bars */
@@ -179,51 +179,179 @@ display_disable_gtkpod_import_buttons(void)
 
 
 /* make sure only suitable delete menu items are available */
-void display_adjust_delete_menus (void)
+void display_adjust_menus (void)
 {
-    GtkWidget *d  = gtkpod_xml_get_widget (main_window_xml, "delete_menu");
-    GtkWidget *dp = gtkpod_xml_get_widget (main_window_xml, "delete_playlist_menu");
-    GtkWidget *df  = gtkpod_xml_get_widget (main_window_xml, "delete_full_menu");
-    GtkWidget *dfp = gtkpod_xml_get_widget (main_window_xml, "delete_full_playlist_menu");
-#if 0
-/* not used */
-    GtkWidget *de = gtkpod_xml_get_widget (main_window_xml, "delete_tab_entry_menu");
-    GtkWidget *dt = gtkpod_xml_get_widget (main_window_xml, "delete_tracks_menu");
-    GtkWidget *dfe = gtkpod_xml_get_widget (main_window_xml,
-				    "delete_full_tab_entry_menu");
-    GtkWidget *dft = gtkpod_xml_get_widget (main_window_xml, "delete_full_tracks_menu");
-#endif
+    GtkWidget *delete, *edit;
+    GtkWidget *dtfpl, *dtfip, *dtfdb, *dtfhd;
+    GtkWidget *defpl, *defip, *defdb, *defhd;
+    GtkWidget *dpl, *dpltfip, *dpltfdb, *dpltfhd;
+    GtkWidget *dsep1, *dsep2;
+    GtkWidget *espl;
+    Playlist *pl;
 
-    Playlist *pl = pm_get_selected_playlist ();
+    delete = gtkpod_xml_get_widget (main_window_xml, "delete_menu");
+    edit = gtkpod_xml_get_widget (main_window_xml, "edit_menu");
+    dtfpl = gtkpod_xml_get_widget (main_window_xml,
+				   "delete_selected_tracks_from_playlist");
+    dtfip = gtkpod_xml_get_widget (main_window_xml,
+				   "delete_selected_tracks_from_ipod");
+    dtfdb = gtkpod_xml_get_widget (main_window_xml,
+				   "delete_selected_tracks_from_database");
+    dtfhd = gtkpod_xml_get_widget (main_window_xml,
+				   "delete_selected_tracks_from_harddisk");
+    defpl = gtkpod_xml_get_widget (main_window_xml,
+				   "delete_selected_entry_from_playlist");
+    defip = gtkpod_xml_get_widget (main_window_xml,
+				   "delete_selected_entry_from_ipod");
+    defdb = gtkpod_xml_get_widget (main_window_xml,
+				   "delete_selected_entry_from_database");
+    defhd = gtkpod_xml_get_widget (main_window_xml,
+				   "delete_selected_entry_from_harddisk");
+    dpl = gtkpod_xml_get_widget (main_window_xml,
+				 "delete_selected_playlist");
+    dpltfip = gtkpod_xml_get_widget (main_window_xml,
+				     "delete_selected_playlist_including_tracks_from_ipod");
+    dpltfdb = gtkpod_xml_get_widget (main_window_xml,
+				     "delete_selected_playlist_including_tracks_from_database");
+    dpltfhd = gtkpod_xml_get_widget (main_window_xml,
+				     "delete_selected_playlist_including_tracks_from_harddisk");
+    dsep1 = gtkpod_xml_get_widget (main_window_xml, "delete_separator1");
+    dsep2 = gtkpod_xml_get_widget (main_window_xml, "delete_separator2");
+    espl = gtkpod_xml_get_widget (main_window_xml,
+				  "edit_smart_playlist");
+
+
+    pl = pm_get_selected_playlist ();
+
     if (pl == NULL)
     {
-	gtk_widget_set_sensitive (d, FALSE);
-	gtk_widget_set_sensitive (df, FALSE);
+	gtk_widget_set_sensitive (delete, FALSE);
+	gtk_widget_set_sensitive (edit, FALSE);
     }
     else
     {
-	if (itdb_playlist_is_mpl (pl))
-	{   /* Master Playlist */
-	    gtk_widget_set_sensitive (d, FALSE);
-	    gtk_widget_set_sensitive (df, TRUE);
-	    gtk_widget_set_sensitive (dfp, FALSE);
-	}
-	else
+	iTunesDB *itdb = pl->itdb;
+	g_return_if_fail (itdb);
+
+	gtk_widget_set_sensitive (delete, TRUE);
+	gtk_widget_set_sensitive (edit, TRUE);
+
+	gtk_widget_hide (dtfpl);
+	gtk_widget_hide (dtfip);
+	gtk_widget_hide (dtfdb);
+	gtk_widget_hide (dtfhd);
+
+	gtk_widget_hide (defpl);
+	gtk_widget_hide (defip);
+	gtk_widget_hide (defdb);
+	gtk_widget_hide (defhd);
+
+	gtk_widget_hide (dpl);
+	gtk_widget_hide (dpltfip);
+	gtk_widget_hide (dpltfdb);
+	gtk_widget_hide (dpltfhd);
+
+	gtk_widget_hide (dsep1);
+	gtk_widget_hide (dsep2);
+
+	gtk_widget_set_sensitive (espl, FALSE);
+
+	if (pl->is_spl)
 	{
-	    if (itdb_playlist_is_podcasts (pl))
-	    {   /* Podcasts playlist */
-		/* FIXME: not well thought over yet */
-		gtk_widget_set_sensitive (d, TRUE);
-		gtk_widget_set_sensitive (df, TRUE);
-		gtk_widget_set_sensitive (dp, TRUE);
-		gtk_widget_set_sensitive (dfp, TRUE);
+	    gtk_widget_set_sensitive (espl, TRUE);
+	}
+
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    if (itdb_playlist_is_mpl (pl))
+	    {
+		gtk_widget_show (dtfip);
+		gtk_widget_show (defip);
 	    }
 	    else
-	    {   /* normal playlist */
-		gtk_widget_set_sensitive (d, TRUE);
-		gtk_widget_set_sensitive (df, TRUE);
-		gtk_widget_set_sensitive (dp, TRUE);
-		gtk_widget_set_sensitive (dfp, TRUE);
+	    {
+		if (itdb_playlist_is_podcasts (pl))
+		{
+		    gtk_widget_show (dtfip);
+		    gtk_widget_show (defip);
+		}
+		else
+		{
+		    gtk_widget_show (dpl);
+		    gtk_widget_show (dpltfip);
+
+		    gtk_widget_show (dsep1);
+
+		    gtk_widget_show (defpl);
+		    gtk_widget_show (defip);
+
+		    gtk_widget_show (dsep2);
+
+		    gtk_widget_show (dtfpl);
+		    gtk_widget_show (dtfip);
+		}
+	    }
+	}
+	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	{
+	    if (itdb_playlist_is_mpl (pl))
+	    {
+		gtk_widget_show (dtfdb);
+		gtk_widget_show (dtfhd);
+
+		gtk_widget_show (dsep2);
+
+		gtk_widget_show (defdb);
+		gtk_widget_show (defhd);
+	    }
+	    else
+	    {
+		gtk_widget_show (dtfpl);
+		gtk_widget_show (dtfdb);
+		gtk_widget_show (dtfhd);
+
+		gtk_widget_show (dsep1);
+
+		gtk_widget_show (defpl);
+		gtk_widget_show (defdb);
+		gtk_widget_show (defhd);
+
+		gtk_widget_show (dsep2);
+
+		gtk_widget_show (dpl);
+		gtk_widget_show (dpltfdb);
+		gtk_widget_show (dpltfhd);
+	    }
+	}
+	if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
+	{
+	    if (itdb_playlist_is_mpl (pl))
+	    {
+		gtk_widget_show (dtfdb);
+		gtk_widget_show (dtfhd);
+
+		gtk_widget_show (dsep2);
+
+		gtk_widget_show (defdb);
+		gtk_widget_show (defhd);
+	    }
+	    else
+	    {
+		gtk_widget_show (dtfpl);
+		gtk_widget_show (dtfdb);
+		gtk_widget_show (dtfhd);
+
+		gtk_widget_show (dsep1);
+
+		gtk_widget_show (defpl);
+		gtk_widget_show (defdb);
+		gtk_widget_show (defhd);
+
+		gtk_widget_show (dsep2);
+
+		gtk_widget_show (dpl);
+		gtk_widget_show (dpltfdb);
+		gtk_widget_show (dpltfhd);
 	    }
 	}
     }
@@ -876,64 +1004,167 @@ on_import_button_clicked               (GtkButton       *button,
 }
 
 
-void
-on_delete_tracks_activate               (GtkMenuItem     *menuitem,
-					gpointer         user_data)
+void on_edit_smart_playlist (GtkMenuItem *mi,
+			     gpointer data)
 {
-    g_print ("not supported yet");
-//    delete_track_head (FALSE);
+    Playlist *pl = pm_get_selected_playlist ();
+
+    if (!pl)
+    {
+	gtkpod_statusbar_message (_("No playlist selected"));
+	return;
+    }
+    spl_edit (pl);
+}
+
+
+static void delete_selected_tracks (DeleteAction deleteaction)
+{
+    GList *tracks = tm_get_selected_tracks ();
+
+    if (tracks)
+    {
+	delete_track_head (deleteaction);
+	g_list_free (tracks);
+    }
+    else
+    {
+	gtkpod_statusbar_message (_("No tracks selected"));
+    }
+}    
+
+static void delete_selected_entry (DeleteAction deleteaction,
+				   gchar *text)
+{
+    TabEntry *entry;
+    gint inst;
+
+    inst = get_sort_tab_number (text);
+    if (inst == -1) return;
+
+    entry = st_get_selected_entry (inst);
+    if (!entry)
+    {
+	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
+				     inst+1);
+	gtkpod_statusbar_message (str);
+	g_free (str);
+	return;
+    }
+    delete_entry_head (inst, deleteaction);
+}
+
+static void delete_selected_playlist (DeleteAction deleteaction)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+
+    if (!pl)
+    {
+	gtkpod_statusbar_message (_("No playlist selected"));
+	return;
+    }
+    delete_playlist_head (deleteaction);
+}
+
+void on_delete_selected_tracks_from_database (GtkMenuItem *mi,
+					      gpointer data)
+{
+    delete_selected_tracks (DELETE_ACTION_DATABASE);
+}
+
+void
+on_delete_selected_playlist_including_tracks_from_harddisk (GtkMenuItem *mi,
+							    gpointer data)
+{
+    delete_selected_playlist (DELETE_ACTION_LOCAL);
+}
+
+
+void on_delete_selected_entry_from_database (GtkMenuItem *mi,
+					     gpointer data)
+{
+    delete_selected_entry (DELETE_ACTION_DATABASE, 
+			   _("Remove entry of which sort tab from database?"));
+}
+
+
+void on_delete_selected_entry_from_ipod (GtkMenuItem *mi,
+					 gpointer data)
+{
+    delete_selected_entry (DELETE_ACTION_IPOD,
+			   _("Remove tracks in selected entry of which filter tab from the iPod?"));
+}
+
+
+void on_delete_selected_tracks_from_playlist (GtkMenuItem *mi,
+					      gpointer data)
+{
+    delete_selected_tracks (DELETE_ACTION_PLAYLIST);
+}
+
+
+void on_delete_selected_tracks_from_harddisk (GtkMenuItem *mi,
+					      gpointer data)
+{
+    GList *tracks = tm_get_selected_tracks ();
+
+    if (tracks)
+    {
+	delete_track_head (DELETE_ACTION_LOCAL);
+	g_list_free (tracks);
+    }
+    else
+    {
+	gtkpod_statusbar_message (_("No tracks selected"));
+    }
+}
+
+
+void on_delete_selected_entry_from_harddisk (GtkMenuItem *mi,
+					     gpointer data)
+{
+    delete_selected_entry (DELETE_ACTION_LOCAL,
+			   _("Remove tracks in selected entry of which filter tab from the harddisk?"));
+}
+
+
+void on_delete_selected_tracks_from_ipod (GtkMenuItem *mi,
+					  gpointer data)
+{
+    delete_selected_tracks (DELETE_ACTION_IPOD);
+}
+
+
+void on_delete_selected_playlist (GtkMenuItem *mi,
+				  gpointer data)
+{
+    delete_selected_playlist (DELETE_ACTION_PLAYLIST);
 }
 
 
 void
-on_delete_playlist_activate                (GtkMenuItem     *menuitem,
-					gpointer         user_data)
+on_delete_selected_playlist_including_tracks_from_database (GtkMenuItem *mi,
+							    gpointer data)
 {
-    g_print ("not supported yet");
-//    delete_playlist_head (FALSE);
+    delete_selected_playlist (DELETE_ACTION_DATABASE);
 }
 
-void
-on_delete_tab_entry_activate           (GtkMenuItem     *menuitem,
-					gpointer         user_data)
-{
-    g_print ("not supported yet");
-/*     gint inst = get_sort_tab_number ( */
-/* 	_("Delete selected entry of which sort tab?")); */
 
-/*     if (inst != -1)   delete_entry_head (inst, FALSE); */
-}
-
-void
-on_delete_full_tracks_activate               (GtkMenuItem     *menuitem,
-					gpointer         user_data)
+void on_delete_selected_entry_from_playlist (GtkMenuItem *mi,
+					     gpointer data)
 {
-    g_print ("not supported yet");
-//     delete_track_head (TRUE);
+    delete_selected_entry (DELETE_ACTION_PLAYLIST,
+			   _("Remove tracks in selected entry of which filter tab from playlist?"));
 }
 
 
 void
-on_delete_full_playlist_activate                (GtkMenuItem     *menuitem,
-					gpointer         user_data)
+on_delete_selected_playlist_including_tracks_from_ipod (GtkMenuItem *mi,
+							gpointer data)
 {
-    g_print ("not supported yet");
-//    delete_playlist_head (TRUE);
+    delete_selected_playlist (DELETE_ACTION_IPOD);
 }
 
-void
-on_delete_full_tab_entry_activate           (GtkMenuItem     *menuitem,
-					gpointer         user_data)
-{
-    g_print ("not supported yet");
-/*     gint inst = get_sort_tab_number ( */
-/* 	_("Delete selected entry of which sort tab?")); */
-
-/*     if (inst != -1) */
-/*     { */
-/* 	delete_entry_head (inst, TRUE); */
-/*     } */
-}
 
 void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,

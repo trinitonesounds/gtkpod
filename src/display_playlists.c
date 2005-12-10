@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:14 jcs>
+/* Time-stamp: <2005-12-10 14:43:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1382,7 +1382,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  time.tv_sec % 3600, time.tv_usec);
 #endif 
   /* make only suitable delete menu items available */
-  display_adjust_delete_menus ();
+  display_adjust_menus ();
 }
 
 /* Callback function called when the selection

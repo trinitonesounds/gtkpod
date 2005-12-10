@@ -1,5 +1,9 @@
 2005-12-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * re-enable delete menu (in addition to context menu).
+
+2005-12-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * change permissions to 0777 when creating directories (will
            be modified by user's umask).
 
