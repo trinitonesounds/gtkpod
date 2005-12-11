@@ -2,6 +2,9 @@
 
 	 * details.c: fix problem with 'checked' checkbox. 
 
+	 * prefs_windows.c, context_menu.c, display.c: hide unfinished
+           references to podcast download support.
+
 2005-12-11 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file.c, misc.c: add thumbnail images automatically.

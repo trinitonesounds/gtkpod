@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 17:30:07 jcs>
+/* Time-stamp: <2005-12-11 17:42:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -186,7 +186,7 @@ void display_adjust_menus (void)
     GtkWidget *defpl, *defip, *defdb, *defhd;
     GtkWidget *dpl, *dpltfip, *dpltfdb, *dpltfhd;
     GtkWidget *dsep1, *dsep2;
-    GtkWidget *espl;
+    GtkWidget *espl, *w;
     Playlist *pl;
 
     delete = gtkpod_xml_get_widget (main_window_xml, "delete_menu");
@@ -220,6 +220,11 @@ void display_adjust_menus (void)
     espl = gtkpod_xml_get_widget (main_window_xml,
 				  "edit_smart_playlist");
 
+    /* FIXME: PODCASTS: remove Podcast menu */
+    w = gtkpod_xml_get_widget (main_window_xml, "update_podcasts");
+    gtk_widget_hide (w);
+    w = gtkpod_xml_get_widget (main_window_xml, "update_podcasts_sep");
+    gtk_widget_hide (w);
 
     pl = pm_get_selected_playlist ();
 

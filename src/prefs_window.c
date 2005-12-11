@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 22:52:53 jcs>
+/* Time-stamp: <2005-12-11 17:42:25 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -416,229 +416,191 @@ prefs_window_create (gint page)
 	    g_free (buf);
 	}
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "charset_combo")))
-    {
-	charset_init_combo (GTK_COMBO (w));
-    }
+    w = gtkpod_xml_get_widget (prefs_window_xml, "charset_combo");
+    charset_init_combo (GTK_COMBO (w));
     
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_md5tracks")))
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_md5tracks");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->md5tracks);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_existing");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->update_existing);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_duplicates");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->show_duplicates);
+    if (!tmpcfg->md5tracks) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_updated");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->show_updated);
+    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_non_updated");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->show_non_updated);
+    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_sync_dirs");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->show_sync_dirs);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->sync_remove);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_toolbar");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->display_toolbar);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_icons");
+    if (tmpcfg->toolbar_style == GTK_TOOLBAR_ICONS)
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_text");
+    if (tmpcfg->toolbar_style == GTK_TOOLBAR_TEXT)
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_both");
+    if (tmpcfg->toolbar_style == GTK_TOOLBAR_BOTH)
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_main");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->display_tooltips_main);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_prefs");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->display_tooltips_prefs);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_multi_edit");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->multi_edit);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_not_played_track");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->not_played_track);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_misc_track_nr");
+    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w), 0, 0xffffffff);
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
+			       prefs_get_misc_track_nr ());
+    tmpcfg->misc_track_nr = tmpcfg->misc_track_nr;
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_multi_edit_title");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->multi_edit_title);
+    gtk_widget_set_sensitive (w, tmpcfg->multi_edit);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_charset");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->update_charset);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_block_display");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->block_display);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->id3_write);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write_id3v24");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->id3_write_id3v24);
+    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_charset");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->write_charset);
+    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_add_recursively");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->add_recursively);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_delete_track_from_playlist");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->deletion.track);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_delete_track_from_ipod");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->deletion.ipod_file);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_track_local_file_deletion");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->deletion.local_file);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_track_database_deletion");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->deletion.database);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->deletion.syncing);
+    gtk_widget_set_sensitive (w, tmpcfg->sync_remove);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm2");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->deletion.syncing);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml,  "cfg_autoimport");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->autoimport);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "autoselect_hbox");
+    for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->md5tracks);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_existing")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->update_existing);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_duplicates")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->show_duplicates);
-	if (!tmpcfg->md5tracks) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_updated")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->show_updated);
-	if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_non_updated")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->show_non_updated);
-	if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_sync_dirs")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->show_sync_dirs);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->sync_remove);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_toolbar")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->display_toolbar);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_icons")))
-    {
-	if (tmpcfg->toolbar_style == GTK_TOOLBAR_ICONS)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-	if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_text")))
-    {
-	if (tmpcfg->toolbar_style == GTK_TOOLBAR_TEXT)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-	if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_both")))
-    {
-	if (tmpcfg->toolbar_style == GTK_TOOLBAR_BOTH)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-	if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_main")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->display_tooltips_main);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_prefs")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->display_tooltips_prefs);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_multi_edit")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->multi_edit);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_not_played_track")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->not_played_track);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_misc_track_nr")))
-    {
-	gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
-				   0, 0xffffffff);
-	gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-				   prefs_get_misc_track_nr ());
-	tmpcfg->misc_track_nr = tmpcfg->misc_track_nr;
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_multi_edit_title")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->multi_edit_title);
-	gtk_widget_set_sensitive (w, tmpcfg->multi_edit);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_charset")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->update_charset);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_block_display")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->block_display);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->id3_write);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write_id3v24")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->id3_write_id3v24);
-	if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_charset")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->write_charset);
-	if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_add_recursively")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->add_recursively);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_delete_track_from_playlist")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->deletion.track);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_delete_track_from_ipod")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->deletion.ipod_file);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_track_local_file_deletion")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->deletion.local_file);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_track_database_deletion")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->deletion.database);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->deletion.syncing);
-	gtk_widget_set_sensitive (w, tmpcfg->sync_remove);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm2")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->deletion.syncing);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml,  "cfg_autoimport")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->autoimport);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "autoselect_hbox")))
-    {
-	for (i=0; i<SORT_TAB_MAX; ++i)
-	{
-	    gchar *buf;
-	    GtkWidget *as;
-	    gint padding;
+	gchar *buf;
+	GtkWidget *as;
+	gint padding;
 	    
-	    buf = g_strdup_printf ("%d", i+1);
-	    as = gtk_check_button_new_with_mnemonic (buf);
-	    autoselect_widget[i] = as;
-	    gtk_widget_show (as);
-	    if (i==0) padding = 0;
-	    else      padding = 5;
-	    gtk_box_pack_start (GTK_BOX (w), as, FALSE, FALSE, padding);
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(as),
-					 tmpcfg->st[i].autoselect);
-	    g_signal_connect ((gpointer)as,
-			      "toggled",
-			      G_CALLBACK (on_cfg_st_autoselect_toggled),
-			      GUINT_TO_POINTER(i));
-	    g_free (buf);
-	}
+	buf = g_strdup_printf ("%d", i+1);
+	as = gtk_check_button_new_with_mnemonic (buf);
+	autoselect_widget[i] = as;
+	gtk_widget_show (as);
+	if (i==0) padding = 0;
+	else      padding = 5;
+	gtk_box_pack_start (GTK_BOX (w), as, FALSE, FALSE, padding);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(as),
+				     tmpcfg->st[i].autoselect);
+	g_signal_connect ((gpointer)as,
+			  "toggled",
+			  G_CALLBACK (on_cfg_st_autoselect_toggled),
+			  GUINT_TO_POINTER(i));
+	g_free (buf);
     }
     /* connect signals for path entrys and selectors */
     for (i=0; i<PATH_NUM; ++i)
     {
-	if ((w = gtkpod_xml_get_widget (prefs_window_xml, path_button_names[i])))
-	{
-	    g_signal_connect ((gpointer)w,
-			      "clicked",
-			      G_CALLBACK (on_path_button_pressed),
-			      GUINT_TO_POINTER(i));
+	w = gtkpod_xml_get_widget (prefs_window_xml, path_button_names[i]);
+	g_signal_connect ((gpointer)w,
+			  "clicked",
+			  G_CALLBACK (on_path_button_pressed),
+			  GUINT_TO_POINTER(i));
+
+	w = gtkpod_xml_get_widget (prefs_window_xml, path_entry_names[i]);
+	if (tmpcfg->path[i])
+	{  /* we should copy the new path first because by setting
+	      the text we might get a callback destroying the old
+	      value... */
+	    gchar *buf = g_strdup (tmpcfg->path[i]);
+	    gtk_entry_set_text(GTK_ENTRY(w), buf);
+	    g_free (buf);
 	}
-	if ((w = gtkpod_xml_get_widget (prefs_window_xml, path_entry_names[i])))
-	{
-	    if (tmpcfg->path[i])
-	    {  /* we should copy the new path first because by setting
-		  the text we might get a callback destroying the old
-		  value... */
-		gchar *buf = g_strdup (tmpcfg->path[i]);
-		gtk_entry_set_text(GTK_ENTRY(w), buf);
-		g_free (buf);
-	    }
-	    g_signal_connect ((gpointer)w,
-			      "changed",
-			      G_CALLBACK (on_path_entry_changed),
-			      GUINT_TO_POINTER(i));
-	}
+	g_signal_connect ((gpointer)w,
+			  "changed",
+			  G_CALLBACK (on_path_entry_changed),
+			  GUINT_TO_POINTER(i));
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mpl_autoselect")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->mpl_autoselect);
-    }
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mpl_autoselect");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->mpl_autoselect);
+
     for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
     {
 	gchar *buf;
@@ -657,51 +619,45 @@ prefs_window_create (gint page)
 	}
 	g_free (buf);
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "readtags")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->readtags);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "readtags");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->readtags);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->parsetags);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_overwrite");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->parsetags_overwrite);
+    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_template");
+    if (tmpcfg->parsetags_template)
+    {  /* we should copy the new path first because by setting
+	  the text we might get a callback destroying the old
+	  value... */
+	gchar *buf = g_strdup (tmpcfg->parsetags_template);
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free (buf);
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->parsetags);
+    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "coverart");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->coverart);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template");
+    if (tmpcfg->coverart_template)
+    {  /* we should copy the new path first because by setting
+	  the text we might get a callback destroying the old
+	  value... */
+	gchar *buf = g_strdup (tmpcfg->coverart_template);
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free (buf);
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_overwrite")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->parsetags_overwrite);
-	gtk_widget_set_sensitive (w, tmpcfg->parsetags);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_template")))
-    {
-	if (tmpcfg->parsetags_template)
-	{  /* we should copy the new path first because by setting
-	      the text we might get a callback destroying the old
-	      value... */
-	    gchar *buf = g_strdup (tmpcfg->parsetags_template);
-	    gtk_entry_set_text(GTK_ENTRY(w), buf);
-	    g_free (buf);
-	}
-	gtk_widget_set_sensitive (w, tmpcfg->parsetags);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "coverart")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->coverart);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template")))
-    {
-	if (tmpcfg->coverart_template)
-	{  /* we should copy the new path first because by setting
-	      the text we might get a callback destroying the old
-	      value... */
-	    gchar *buf = g_strdup (tmpcfg->coverart_template);
-	    gtk_entry_set_text(GTK_ENTRY(w), buf);
-	    g_free (buf);
-	}
-	gtk_widget_set_sensitive (w, tmpcfg->coverart);
-    }
+    gtk_widget_set_sensitive (w, tmpcfg->coverart);
 
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
@@ -731,25 +687,12 @@ prefs_window_create (gint page)
 	g_free (buf);
     }
     
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_extended")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->write_extended_info);
-    }
-    
-    if ((w = gtkpod_xml_get_widget (prefs_window_xml, "notebook")))
-    {
-	if (page == -1)
-	{
-	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
-					   prefs_get_last_prefs_page ());
-	}
-	else
-	{
-	    gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
-	}
-    }
-    if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_extended");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->write_extended_info);
+
+
+if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
     {
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				     prefs_get_automount());
@@ -767,127 +710,106 @@ prefs_window_create (gint page)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				     prefs_get_group_compilations());
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "concal_autosync")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->concal_autosync);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_tmp_disable_sort")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->tmp_disable_sort);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_startup_messages")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->startup_messages);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mserv_use")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->mserv_use);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mserv_report_probs")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     tmpcfg->mserv_report_probs);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "mserv_username_entry")))
-    {
-	if (tmpcfg->mserv_username)
-	{  /* we should copy the new path first because by setting
-	      the text we might get a callback destroying the old
-	      value... */
-	    gchar *buf = g_strdup (tmpcfg->mserv_username);
-	    gtk_entry_set_text(GTK_ENTRY(w), buf);
-	    g_free (buf);
-	}
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_dir")))
-    {
-        if (tmpcfg->pc_dir)
-        {  /* we should copy the new path first because by setting
-              the text we might get a callback destroying the old
-              value... */
-            gchar *buf = g_strdup (tmpcfg->pc_dir);
-            gtk_entry_set_text(GTK_ENTRY(w), buf);
-            g_free (buf);
-        }
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_age")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_del_age);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_age_val")))
-    {
-        gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
-                                   0, 255);
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-                                   prefs_get_pc_del_age_val ());
-        if (!tmpcfg->pc_del_age) gtk_widget_set_sensitive (w, FALSE);
+    w = gtkpod_xml_get_widget (prefs_window_xml, "concal_autosync");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->concal_autosync);
 
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_tmp_disable_sort");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->tmp_disable_sort);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_startup_messages");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->startup_messages);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mserv_use");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->mserv_use);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mserv_report_probs");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->mserv_report_probs);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "mserv_username_entry");
+    if (tmpcfg->mserv_username)
+    {  /* we should copy the new path first because by setting
+	  the text we might get a callback destroying the old
+	  value... */
+	gchar *buf = g_strdup (tmpcfg->mserv_username);
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free (buf);
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_copied")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_del_copied);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_dir");
+    if (tmpcfg->pc_dir)
+    {  /* we should copy the new path first because by setting
+	  the text we might get a callback destroying the old
+	  value... */
+	gchar *buf = g_strdup (tmpcfg->pc_dir);
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free (buf);
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_auto_fetch")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_auto_fetch);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_age");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_del_age);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_age_val");
+    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
+			       0, 255);
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
+			       prefs_get_pc_del_age_val ());
+    if (!tmpcfg->pc_del_age) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_copied");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_del_copied);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_auto_fetch");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_auto_fetch);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_log");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_log);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_log_file");
+    if (tmpcfg->pc_log_file)
+    {  /* we should copy the new path first because by setting
+	  the text we might get a callback destroying the old
+	  value... */
+	gchar *buf = g_strdup (tmpcfg->pc_log_file);
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free (buf);
     }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_log")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_log);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_log_file")))
-    {
-        if (tmpcfg->pc_log_file)
-        {  /* we should copy the new path first because by setting
-              the text we might get a callback destroying the old
-              value... */
-            gchar *buf = g_strdup (tmpcfg->pc_log_file);
-            gtk_entry_set_text(GTK_ENTRY(w), buf);
-            g_free (buf);
-        }
-        if (!tmpcfg->pc_log) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_auto_sync")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_auto_sync);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_age")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_ipod_del_age);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_age_val")))
-    {
-        gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
-                                   0, 255);
-        gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-                                   prefs_get_pc_ipod_del_age_val ());
-        if (!tmpcfg->pc_ipod_del_age) gtk_widget_set_sensitive (w, FALSE);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_played")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_ipod_del_played);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_inc_date")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_ipod_inc_date);
-    }
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "pc_change_genre")))
-    {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-                                     tmpcfg->pc_change_genre);
-    }
+    if (!tmpcfg->pc_log) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_auto_sync");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_auto_sync);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_age");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_ipod_del_age);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_age_val");
+    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w), 0, 255);
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
+			       prefs_get_pc_ipod_del_age_val ());
+    if (!tmpcfg->pc_ipod_del_age) gtk_widget_set_sensitive (w, FALSE);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_played");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_ipod_del_played);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_inc_date");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_ipod_inc_date);
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_change_genre");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 tmpcfg->pc_change_genre);
+
 
 
 /* 	if((w = lookup_widget(prefs_window, "cfg_unused_gboolean3"))) */
@@ -895,12 +817,25 @@ prefs_window_create (gint page)
 /* 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), */
 /* 					 tmpcfg->unused_gboolean3); */
 /* 	} */
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "prefs_label_syncexamples")))
+    w = gtkpod_xml_get_widget (prefs_window_xml, "prefs_label_syncexamples");
+    gchar *str = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
+    gtk_label_set_markup (GTK_LABEL (w), str);
+    g_free (str);
+
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
+    if (page == -1)
     {
-	gchar *str = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
-	gtk_label_set_markup (GTK_LABEL (w), str);
-	g_free (str);
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
+				       prefs_get_last_prefs_page ());
     }
+    else
+    {
+	gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
+    }
+    /* FIXME: PODCASTS: remove Podcast options */
+    gtk_notebook_remove_page (GTK_NOTEBOOK (w), -1);
+
     prefs_window_show_hide_tooltips ();
     gtk_widget_show(prefs_window);
 }

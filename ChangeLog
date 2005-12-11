@@ -32,6 +32,10 @@ gtkpod V0.96.CVS
        http://wiki.zanu.org.uk/jppy). Thanks to Nick Piper,
        http://www.nickpiper.co.uk/)
 
+       NEW: basic podcast support (use e.g. bashpodder or gpodder to
+       download podcasts, then add them directly into the podcast
+       playlist on the iPod).
+
        NEW: transition to libgpod to read/write iTunesDB. See
        www.gtkpod.org/libgpod.html for details.
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 00:38:28 jcs>
+/* Time-stamp: <2005-12-11 17:43:43 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -553,9 +553,12 @@ create_context_menu(CM_type type)
 		    }
 		    else
 		    {
+			/* FIXME: PODCASTS: remove Podcast menu */
+			/*
 			gtk_widget_show (mi_delsep[type]);
 			gtk_widget_show (mi_delipod[type]);
 			gtk_widget_show (mi_delpl[type]);
+			*/
 		    }
 		}
 	    }
@@ -577,9 +580,12 @@ create_context_menu(CM_type type)
 	    if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
 	    {
 		gtk_widget_show (mi_delsep[type]);
+		/* FIXME: PODCASTS: remove Podcast menu */
+		/*
 		gtk_widget_show (mi_podcasts_sep[type]);
 		gtk_widget_show (mi_podcasts_update[type]);
 		gtk_widget_show (mi_podcasts_prefs[type]);
+		*/
 	    }
 	    break;
 	case CM_ST:
