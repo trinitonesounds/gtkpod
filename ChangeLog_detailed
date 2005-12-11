@@ -11,6 +11,8 @@
 
 	 * bumped version to 0.99.0 for release
 
+	 * bumped version to 0.99.1 for CVS version
+
 2005-12-11 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file.c, misc.c: add thumbnail images automatically.
