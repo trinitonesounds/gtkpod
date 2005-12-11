@@ -1,4 +1,4 @@
-gtkpod V0.96.CVS
+gtkpod V0.99.0
        NEW: type-ahead search functionality. Thanks to Nick Piper,
        http://www.nickpiper.co.uk/ -- please note that the list view
        you want to search in needs to have keyboard focus. Selection
