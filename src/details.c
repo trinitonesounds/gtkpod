@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-06 01:32:44 jcs>
+/* Time-stamp: <2005-12-11 17:06:58 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -735,7 +735,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 	{
 	    if (track)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
-					      track->checked);
+					      !track->checked);
 	    else
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
 					      FALSE);
@@ -886,7 +886,6 @@ static void details_get_item (Detail *detail, T_item item,
 	{
 	    gboolean state;
 	    state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
-
 	    if ((state && (track->checked == 1)) ||
 		(!state && (track->checked == 0)))
 	    {
