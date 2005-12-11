@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-06 01:21:48 jcs>
+/* Time-stamp: <2005-12-11 17:54:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -844,7 +844,7 @@ void init_data (GtkWidget *window)
 			else if (type & GP_ITDB_TYPE_LOCAL)
 			    name = g_strdup (_("Local"));
 			else
-			    name = g_strdup ("gtkpod");
+			    name = g_strdup ("iPod");
 		    }
 		    pl = gp_playlist_new (name, FALSE);
 		    g_free (name);
@@ -915,7 +915,7 @@ void init_data (GtkWidget *window)
 	eitdb->offline_filename = g_build_filename (
 	    cfgdir, "iTunesDB", NULL);
 	gp_itdb_add (itdb, -1);
-	pl = gp_playlist_new ("gtkpod", FALSE);
+	pl = gp_playlist_new ("iPod", FALSE);
 	itdb_playlist_set_mpl (pl);   /* MPL! */
 	gp_playlist_add (itdb, pl, -1);
 	g_return_if_fail (itdb->userdata);

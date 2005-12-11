@@ -105,7 +105,7 @@ Tracks
 
 
 Filter Tabs
----------
+-----------
 
 - The two notebooks above the track display are called "Filter Tabs"
 - They allow you to filter which tracks to display
@@ -309,15 +309,24 @@ field. Use 'Update Track' to re-read the tag from the file.
 Podcasts
 --------
 
-Podcasts should be added directly into the 'Podcasts' playlist, for
-example by selecting the Podcasts playlist before manually adding
-files/directories. In that case the podcasts will appear only in the
-Podcasts section on the iPod.
+You have to download podcasts using a third party tool like bashpooder
+(http://linc.homeunix.org:8080/scripts/bashpodder/) or gpodder
+(http://perli.net/projekte/gpodder/)
 
-If you add podcasts to the main playlist 'gtkpod' or any other
-playlist first and then drag them over to the Podcasts playlist, the
-podcasts will appear in the Podcasts section on the iPod, as well as
-in the normal music section.
+Podcasts should be added directly into the 'Podcasts' playlist of the
+iPod repository, for example by selecting the Podcasts playlist before
+manually adding files/directories. Podcasts will then appear only in
+the Podcasts section on the iPod.
+
+If you add podcasts to the main playlist 'gtkpod/iPod' or any other
+iPod playlist first and then drag them over to the Podcasts playlist,
+the podcasts will appear in the Podcasts section on the iPod, as well
+as in the normal music section.
+
+The podcast 'repository' is a local repository (like 'Local') where
+you can keep all local podcasts. No mechanism exists to automatically
+synchronize the iPod repository with the Podcast repository at this
+time. You have to drag the podcasts over manually.
 
 
 Offline Mode
