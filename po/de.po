@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-11 18:00+0900\n"
+"POT-Creation-Date: 2005-12-11 23:40+0900\n"
 "PO-Revision-Date: 2005-12-11 18:41+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
@@ -380,15 +380,20 @@ msgstr "Markierten Eintrag aus welchem Filter-Tab entfernen?"
 
 #: src/display.c:1100
 msgid "Remove tracks in selected entry of which filter tab from the iPod?"
-msgstr "Stücke im ausgewählten Eintrag aus welchem Filter-Tab vom iPod löschen?"
+msgstr ""
+"Stücke im ausgewählten Eintrag aus welchem Filter-Tab vom iPod löschen?"
 
 #: src/display.c:1122
 msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
-msgstr "Stücke im ausgewählten Eintrag aus welchem Filter-Tab von der Festplatte löschen?"
+msgstr ""
+"Stücke im ausgewählten Eintrag aus welchem Filter-Tab von der Festplatte "
+"löschen?"
 
 #: src/display.c:1152
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
-msgstr "Stücke im ausgewählten Eintrag aus welchem Filter-Tab von der Wiedergabeliste löschen?"
+msgstr ""
+"Stücke im ausgewählten Eintrag aus welchem Filter-Tab von der "
+"Wiedergabeliste löschen?"
 
 #: src/display.c:1171
 msgid "Currently no iPod database selected"
@@ -1901,7 +1906,8 @@ msgstr "Clinton Gormley: Snychronisationsskripte für 'tunderbird'\n"
 
 #: src/misc.c:153
 msgid "Sebastien Beridot: sync script for ldif addressbook format\n"
-msgstr "Sebastien Beridot: Snychronisationsskripte für das ldif Adressbuchformat\n"
+msgstr ""
+"Sebastien Beridot: Snychronisationsskripte für das ldif Adressbuchformat\n"
 
 #: src/misc.c:156
 msgid "Sebastian Scherer: sync script for kNotes\n"
@@ -1919,14 +1925,19 @@ msgstr "Uwe Hermann: Hilfe mit iPod Video Unterstützung\n"
 msgid ""
 "Iain Benson: support for compilation tag in mp3 files and separate display "
 "of compilations in the sort tab.\n"
-msgstr "Iain Benson: Unterstützung für Sampler-Tags in mp3 Dateien und Darstellung von Sampler in den Filter-Tabs.\n"
+msgstr ""
+"Iain Benson: Unterstützung für Sampler-Tags in mp3 Dateien und Darstellung "
+"von Sampler in den Filter-Tabs.\n"
 
 #: src/misc.c:167
 msgid ""
 "Nicolas Chariot: icons of buttons\n"
 "\n"
 "\n"
-msgstr "Nicolas Chariot: Icons für Knöpfe\n\n\n"
+msgstr ""
+"Nicolas Chariot: Icons für Knöpfe\n"
+"\n"
+"\n"
 
 #: src/misc.c:171
 msgid "This program borrows code from the following projects:\n"
@@ -2466,7 +2477,9 @@ msgstr "CD-Nummer und Gesamtzahl der CDs im Set"
 #: src/misc_conversion.c:132
 msgid ""
 "The category (e.g. 'Technology' or 'Music') where the podcast was located."
-msgstr "Die Kategorie (z.B. 'Technologie' oder 'Musik') wo das Podcast eingeordnet war."
+msgstr ""
+"Die Kategorie (z.B. 'Technologie' oder 'Musik') wo das Podcast eingeordnet "
+"war."
 
 #: src/misc_conversion.c:133
 msgid "Accessible by selecting the center button on the iPod."
@@ -2474,7 +2487,9 @@ msgstr "Wird angezeigt, wenn der mittlere Knopf auf dem iPod gedrückt wird."
 
 #: src/misc_conversion.c:137
 msgid "Release date (for podcasts displayed next to the title on the iPod)"
-msgstr "Veröffentlichungsdatum (wird bei Podcasts auf dem iPod neben dem Titel angezeigt)"
+msgstr ""
+"Veröffentlichungsdatum (wird bei Podcasts auf dem iPod neben dem Titel "
+"angezeigt)"
 
 #: src/misc_conversion.c:639
 #, c-format
@@ -3035,7 +3050,11 @@ msgid ""
 "<i>Have a look at the scripts provided in '%s'. If you write a new script, "
 "please send it to jcsjcs at users.sourceforge.net for inclusion into the "
 "next release.</i>"
-msgstr "<i>Schauen Sie sich die Skipte an, die in '%s' zur Verfügung gestellt wurden. Wenn Sie ein neues Script schreiben, schicken Sie es bitte an jcsjcs at users.sourceforge.net, damit es in die nächste Version aufgenommen werden kann.</i>"
+msgstr ""
+"<i>Schauen Sie sich die Skipte an, die in '%s' zur Verfügung gestellt "
+"wurden. Wenn Sie ein neues Script schreiben, schicken Sie es bitte an jcsjcs "
+"at users.sourceforge.net, damit es in die nächste Version aufgenommen werden "
+"kann.</i>"
 
 #: src/prefs_window.c:1238 src/prefs_window.c:1256
 msgid "Preferences not updated"
@@ -3236,11 +3255,13 @@ msgstr "Ausgewählte Wiedergabeliste einschließlich der Stücke vom iPod"
 
 #: gtkpod.glade:630
 msgid "Selected playlist including tracks from database"
-msgstr "Ausgewählte Wiedergabeliste einschließlich der Stücke von der Datenbank"
+msgstr ""
+"Ausgewählte Wiedergabeliste einschließlich der Stücke von der Datenbank"
 
 #: gtkpod.glade:639
 msgid "Selected playlist including tracks from harddisk"
-msgstr "Ausgewählte Wiedergabeliste einschließlich der Stücke von der Festplatte"
+msgstr ""
+"Ausgewählte Wiedergabeliste einschließlich der Stücke von der Festplatte"
 
 #: gtkpod.glade:654
 msgid "Selected filter tab entry from playlist"
@@ -4090,7 +4111,9 @@ msgstr "Verzeichnisse rekursiv hinzufügen"
 
 #: gtkpod.glade:8004
 msgid "Duplicate Recognition is based on a (modified) md5 hash over the file."
-msgstr "Die Duplikatenerkennung basiert auf einem (modifizierten) md5-Hash über die Dateien."
+msgstr ""
+"Die Duplikatenerkennung basiert auf einem (modifizierten) md5-Hash über die "
+"Dateien."
 
 #: gtkpod.glade:8006
 msgid "Don't allow file duplication"
@@ -4266,7 +4289,15 @@ msgid ""
 "original filename (requires extended information file): %o, original "
 "filename without file extension: %O, current playlist: %p, the character "
 "'%': %%."
-msgstr "Bestimmt, wie der Dateiname von Stücken gewählt wird, die vom iPod kopiert werden. Bsp.: '%a/%A/%T - %t.mp3' oder '%o'. Mehrere Schablonen können durch Semikolons getrennt werden -- gtkpod ermittelt die passende Schablone anhand des Dateinamensuffix. Künstler: %a, Album: %A, Komponist: %c, Titel: %t, Musikrichtung: %G, Stück-Nr.: %T, CD-Nr.: %C, Jahr: %Y,  ursprünglicher Dateiname (benötigt 'Erweiterte Informationen'): %o, ursprügnlicher Dateiname ohne Erweiterung: %O, die aktuelle Wiedergabelist: %p, das Zeichen '%': %%."
+msgstr ""
+"Bestimmt, wie der Dateiname von Stücken gewählt wird, die vom iPod kopiert "
+"werden. Bsp.: '%a/%A/%T - %t.mp3' oder '%o'. Mehrere Schablonen können durch "
+"Semikolons getrennt werden -- gtkpod ermittelt die passende Schablone anhand "
+"des Dateinamensuffix. Künstler: %a, Album: %A, Komponist: %c, Titel: %t, "
+"Musikrichtung: %G, Stück-Nr.: %T, CD-Nr.: %C, Jahr: %Y,  ursprünglicher "
+"Dateiname (benötigt 'Erweiterte Informationen'): %o, ursprügnlicher "
+"Dateiname ohne Erweiterung: %O, die aktuelle Wiedergabelist: %p, das Zeichen "
+"'%': %%."
 
 #: gtkpod.glade:8981
 msgid "<b>Examples</b>"
@@ -4802,7 +4833,9 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-msgstr "\n\n"
+msgstr ""
+"\n"
+"\n"
 
 #: gtkpod.glade:13787
 msgid "Abort selected"
@@ -4833,7 +4866,10 @@ msgid ""
 "If you check this, information (cover art and meta information) changed for "
 "this track will be copied to all other selected tracks as well. Use with "
 "care."
-msgstr "Wenn diese Option gewählt wird, werden alle Änderungen für das dargestellte Stück (Artwork und sonstige Angaben) automatisch in alle ausgweählten Stücke kopiert. Bitte mit Vorsicht verwenden."
+msgstr ""
+"Wenn diese Option gewählt wird, werden alle Änderungen für das dargestellte "
+"Stück (Artwork und sonstige Angaben) automatisch in alle ausgweählten Stücke "
+"kopiert. Bitte mit Vorsicht verwenden."
 
 #: gtkpod.glade:14068
 msgid ""
