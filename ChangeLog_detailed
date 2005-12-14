@@ -9,6 +9,8 @@
 
 	 * bumped to 0.99.2 for release
 
+	 * bumped to 0.99.3 for CVS version
+
 2005-12-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * details.c: fix problem with 'checked' checkbox. 
