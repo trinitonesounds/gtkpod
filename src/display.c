@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 17:42:39 jcs>
+/* Time-stamp: <2005-12-14 23:13:26 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -101,7 +101,8 @@ void display_create (void)
     if (prefs_get_info_window ())  info_open_window ();
 
     /* if we need to fetch podcasts, then do so */
-    if (prefs_get_pc_auto_fetch ())  podcast_fetch();
+/* FIXME: PODCASTS: remove Podcast menu */
+/*     if (prefs_get_pc_auto_fetch ())  podcast_fetch(); */
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and
@@ -904,12 +905,14 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget)
 */
 
 
+/* FIXME: PODCASTS: remove Podcast menu */
 void on_update_podcasts_activate (GtkButton       *button,
 				  gpointer         user_data)
 {
+#if 0
     podcast_fetch ();
+#endif
 }
-
 
 void on_edit_details_selected_playlist (GtkMenuItem     *menuitem,
 					gpointer         user_data)

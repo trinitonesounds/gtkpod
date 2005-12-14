@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-11 23:40+0900\n"
+"POT-Creation-Date: 2005-12-14 23:51+0900\n"
 "PO-Revision-Date: 2005-06-20 23:25+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -233,105 +233,105 @@ msgstr "gtkpod がすでに動作中です。プレイカウントサーバーは起動しません。\n"
 msgid "Confirmation Dialogue"
 msgstr "確認"
 
-#: src/context_menus.c:365 gtkpod.glade:530
+#: src/context_menus.c:368 gtkpod.glade:530
 msgid "Edit"
 msgstr "編集"
 
-#: src/context_menus.c:367 src/tools.c:634
+#: src/context_menus.c:370 src/tools.c:634
 msgid "Play Now"
 msgstr "今すぐ演奏"
 
-#: src/context_menus.c:369 src/tools.c:645
+#: src/context_menus.c:372 src/tools.c:645
 msgid "Enqueue"
 msgstr "演奏キューに加える"
 
-#: src/context_menus.c:372
+#: src/context_menus.c:375
 #, fuzzy
 msgid "Export Tracks"
 msgstr "ソートタブ"
 
-#: src/context_menus.c:374 src/file_export.c:1069
+#: src/context_menus.c:377 src/file_export.c:1069
 msgid "Create Playlist File"
 msgstr "プレイリストを作成"
 
-#: src/context_menus.c:376
+#: src/context_menus.c:379
 msgid "Edit Details"
 msgstr ""
 
-#: src/context_menus.c:378 gtkpod.glade:12816
+#: src/context_menus.c:381 gtkpod.glade:12816
 msgid "Update"
 msgstr "更新"
 
-#: src/context_menus.c:380
+#: src/context_menus.c:383
 msgid "Sync Dirs"
 msgstr "ディレクトリの同期"
 
-#: src/context_menus.c:382
+#: src/context_menus.c:385
 msgid "Normalize"
 msgstr "音量の平均化"
 
-#: src/context_menus.c:384
+#: src/context_menus.c:387
 msgid "Create new Playlist"
 msgstr "プレイリストの新規作成"
 
-#: src/context_menus.c:387
+#: src/context_menus.c:390
 msgid "Edit Smart Playlist"
 msgstr "スマートプレイリストの編集"
 
-#: src/context_menus.c:393
+#: src/context_menus.c:396
 msgid "Alphabetize"
 msgstr "並べ換え"
 
-#: src/context_menus.c:417
+#: src/context_menus.c:420
 msgid "Delete From iPod"
 msgstr "iPodから削除"
 
-#: src/context_menus.c:423
+#: src/context_menus.c:426
 msgid "Delete From Harddisk"
 msgstr "ハードディスクから削除"
 
-#: src/context_menus.c:429
+#: src/context_menus.c:432
 msgid "Delete From Database"
 msgstr "データベースから削除"
 
-#: src/context_menus.c:435
+#: src/context_menus.c:438
 msgid "Delete From Playlist"
 msgstr "プレイリストから削除"
 
-#: src/context_menus.c:454
+#: src/context_menus.c:457
 msgid "Delete Including Tracks"
 msgstr "中の曲ごと削除"
 
-#: src/context_menus.c:460
+#: src/context_menus.c:463
 msgid "Delete Including Tracks (Harddisk)"
 msgstr "中の曲ごと削除 (ハードディスクから)"
 
-#: src/context_menus.c:466
+#: src/context_menus.c:469
 msgid "Delete Including Tracks (Database)"
 msgstr "中の曲ごと削除 (データベースから)"
 
-#: src/context_menus.c:472
+#: src/context_menus.c:475
 msgid "Delete But Keep Tracks"
 msgstr "曲は残したまま削除"
 
-#: src/context_menus.c:478
+#: src/context_menus.c:481
 msgid "Remove All Tracks from iPod"
 msgstr "iPodから曲を削除"
 
-#: src/context_menus.c:484
+#: src/context_menus.c:487
 msgid "Remove All Tracks from Database"
 msgstr "すべての曲をデータベースから削除"
 
-#: src/context_menus.c:491
+#: src/context_menus.c:494
 #, fuzzy
 msgid "Remove All Podcasts from iPod"
 msgstr "iPodから曲を削除"
 
-#: src/context_menus.c:500 gtkpod.glade:156
+#: src/context_menus.c:505 gtkpod.glade:156
 msgid "Update Podcasts"
 msgstr ""
 
-#: src/context_menus.c:507
+#: src/context_menus.c:512
 #, fuzzy
 msgid "Podcasts Preferences"
 msgstr "設定(_E)"
@@ -350,82 +350,82 @@ msgstr "不可"
 msgid "<b>n/a</b>"
 msgstr "<b>再生</b>"
 
-#: src/display.c:921 src/display.c:1019 src/display.c:1068 src/display.c:1299
-#: src/display.c:1355 src/display.c:1410 src/display.c:1461 src/display.c:1625
+#: src/display.c:924 src/display.c:1022 src/display.c:1071 src/display.c:1302
+#: src/display.c:1358 src/display.c:1413 src/display.c:1464 src/display.c:1628
 #: src/misc_playlist.c:274
 msgid "No playlist selected"
 msgstr "プレイリストが選択されていません"
 
-#: src/display.c:931
+#: src/display.c:934
 #, fuzzy
 msgid "Edit selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものを更新しますか？"
 
 #. no entry selected
-#: src/display.c:938 src/misc_confirm.c:441 src/misc_track.c:1482
+#: src/display.c:941 src/misc_confirm.c:441 src/misc_track.c:1482
 msgid "No entry selected."
 msgstr "何も選択されていません。"
 
-#: src/display.c:957 src/display.c:1037 src/display.c:1342 src/display.c:1398
-#: src/display.c:1449 src/display.c:1500
+#: src/display.c:960 src/display.c:1040 src/display.c:1345 src/display.c:1401
+#: src/display.c:1452 src/display.c:1503
 msgid "No tracks selected"
 msgstr "曲が選択されていません"
 
-#: src/display.c:1053 src/display.c:1319 src/display.c:1375 src/display.c:1427
-#: src/display.c:1478 src/display.c:1647
+#: src/display.c:1056 src/display.c:1322 src/display.c:1378 src/display.c:1430
+#: src/display.c:1481 src/display.c:1650
 #, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "ソートタブ %d 内では何も選択されていません"
 
-#: src/display.c:1092
+#: src/display.c:1095
 #, fuzzy
 msgid "Remove entry of which sort tab from database?"
 msgstr "どのソートタブで選択されたものをエクスポートしますか？"
 
-#: src/display.c:1100
+#: src/display.c:1103
 #, fuzzy
 msgid "Remove tracks in selected entry of which filter tab from the iPod?"
 msgstr "どのソートタブで選択された曲を演奏キューに加えますか？"
 
-#: src/display.c:1122
+#: src/display.c:1125
 #, fuzzy
 msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
 msgstr "どのソートタブで選択された曲を演奏キューに加えますか？"
 
-#: src/display.c:1152
+#: src/display.c:1155
 #, fuzzy
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
 msgstr "どのソートタブで選択された曲を演奏キューに加えますか？"
 
-#: src/display.c:1171
+#: src/display.c:1174
 msgid "Currently no iPod database selected"
 msgstr "iPod データベースが選択されていません"
 
-#: src/display.c:1199 src/display.c:1226
+#: src/display.c:1202 src/display.c:1229
 msgid "Update selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものを更新しますか？"
 
-#: src/display.c:1245
+#: src/display.c:1248
 msgid "Sync dirs of selected entry in which sort tab?"
 msgstr "どのソートタブで選択されたディレクトリを更新しますか？"
 
-#: src/display.c:1313
+#: src/display.c:1316
 msgid "Export selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものをエクスポートしますか？"
 
-#: src/display.c:1369
+#: src/display.c:1372
 msgid "Create playlist file from selected entry of which sort tab?"
 msgstr "どのソートタブで選択されたものからプレイリストを作成しますか？"
 
-#: src/display.c:1421
+#: src/display.c:1424
 msgid "Play tracks in selected entry of which sort tab?"
 msgstr "どのソートタブで選択された曲を演奏しますか？"
 
-#: src/display.c:1472
+#: src/display.c:1475
 msgid "Enqueue tracks in selected entry of which sort tab?"
 msgstr "どのソートタブで選択された曲を演奏キューに加えますか？"
 
-#: src/display.c:1637
+#: src/display.c:1640
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "どのソートタブで選択された曲を平均化しますか？"
 
@@ -2729,118 +2729,118 @@ msgstr "設定ファイル \"%s\" を開けません\n"
 msgid "Unknown option: %s\n"
 msgstr "不明なオプション: %s\n"
 
-#: src/prefs.c:1189
+#: src/prefs.c:1190
 #, c-format
 msgid "# delete confirmation\n"
 msgstr ""
 
-#: src/prefs.c:1196
+#: src/prefs.c:1197
 #, c-format
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
 
-#: src/prefs.c:1215
+#: src/prefs.c:1216
 #, c-format
 msgid "# autoselect master playlist?\n"
 msgstr ""
 
-#: src/prefs.c:1217
+#: src/prefs.c:1218
 #, c-format
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr ""
 
-#: src/prefs.c:1218
+#: src/prefs.c:1219
 #, c-format
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr ""
 
-#: src/prefs.c:1219
+#: src/prefs.c:1220
 #, c-format
 msgid "# autoset: set empty tag to filename?\n"
 msgstr ""
 
-#: src/prefs.c:1234
+#: src/prefs.c:1235
 #, c-format
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
 "# between sort tabs, and in statusbar.\n"
 msgstr ""
 
-#: src/prefs.c:1270
+#: src/prefs.c:1271
 #, c-format
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser, prefs\n"
 msgstr ""
 
-#: src/prefs.c:1327
+#: src/prefs.c:1328
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "ファイル \"%s\" を開けません\n"
 
-#: src/prefs.c:1681
+#: src/prefs.c:1682
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " 設定: カテゴリーの数 (%d<%d?) か、ソートタブの数 (%d<%d?) が多過ぎます。\n"
 
-#: src/prefs.c:1730
+#: src/prefs.c:1731
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "\"mkdir %s\" を実行できませんでした\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2156
+#: src/prefs.c:2157
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: 不正なスタイル '%d' は無視されました\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2198
+#: src/prefs.c:2199
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort: 不正な型 '%d' は無視されました\n"
 
-#: src/prefs.c:2353
+#: src/prefs.c:2354
 #, c-format
 msgid "'%s': no arguments (%%...) allowed.\n"
 msgstr "'%s': 引数 (%%...) は使えません。\n"
 
-#: src/prefs.c:2358
+#: src/prefs.c:2359
 #, c-format
 msgid "'%s': only '%%[%s]' allowed.\n"
 msgstr "'%s': '%%%s' は一つまでしか使えません。\n"
 
-#: src/prefs_window.c:103
+#: src/prefs_window.c:105
 msgid "Please select command for 'Play Now'"
 msgstr ""
 
-#: src/prefs_window.c:104
+#: src/prefs_window.c:106
 msgid "Please select command for 'Enqueue'"
 msgstr ""
 
-#: src/prefs_window.c:105
+#: src/prefs_window.c:107
 msgid "Please select the mp3gain executable"
 msgstr ""
 
-#: src/prefs_window.c:106
+#: src/prefs_window.c:108
 msgid "Please select command to sync contacts"
 msgstr ""
 
-#: src/prefs_window.c:107
+#: src/prefs_window.c:109
 msgid "Please select command to sync calendar"
 msgstr ""
 
-#: src/prefs_window.c:108
+#: src/prefs_window.c:110
 msgid "Select the mserv music root directory"
 msgstr ""
 
-#: src/prefs_window.c:109
+#: src/prefs_window.c:111
 msgid "Select the mserv trackinfo root directory"
 msgstr ""
 
-#: src/prefs_window.c:821
+#: src/prefs_window.c:824
 #, c-format
 msgid ""
 "<i>Have a look at the scripts provided in '%s'. If you write a new script, "
@@ -2848,11 +2848,11 @@ msgid ""
 "next release.</i>"
 msgstr ""
 
-#: src/prefs_window.c:1238 src/prefs_window.c:1256
+#: src/prefs_window.c:1257 src/prefs_window.c:1275
 msgid "Preferences not updated"
 msgstr "設定は更新されません"
 
-#: src/prefs_window.c:1265
+#: src/prefs_window.c:1284
 msgid "Preferences applied"
 msgstr "設定を適用しました"
 

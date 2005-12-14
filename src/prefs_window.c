@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 17:42:25 jcs>
+/* Time-stamp: <2005-12-14 23:22:13 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -58,6 +58,8 @@ static void prefs_window_set_col_visible (gint column, gboolean visible);
 static void prefs_window_set_path (PathType i, const gchar *path);
 static void prefs_window_set_sort_tab_num (gint num);
 
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
 static void on_pc_subs_list_row_activated (GtkTreeView *view,
                                            GtkTreePath *path,
                                            GtkTreeViewColumn *col,
@@ -66,7 +68,7 @@ static void on_pc_subs_list_row_activated (GtkTreeView *view,
 
 /* Pointer to the treeview that holds the podcast subscriptions */
 static GtkTreeView *pc_subs_list = NULL;
-
+#endif
 /* Definition of path button names.
    E.g. path_button_names[PATH_PLAY_ENQUEUE] is
    "play_enqueue_path_button".
@@ -403,7 +405,8 @@ prefs_window_create (gint page)
 
 /* Code to add subscriptions list box */
 
-    create_subs_treeview();
+    /* FIXME: PODCASTS: remove Podcast menu */
+/*     create_subs_treeview(); */
 
     if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mount_point")))
     {
@@ -1038,9 +1041,9 @@ prefs_window_ok (void)
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
     prefs_set_size_prefs (defx, defy);
-
-    GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list));
-    podcast_write_from_store(store);
+    /* FIXME: PODCASTS: remove Podcast menu */
+/*     GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list)); */
+/*     podcast_write_from_store(store); */
 
     /* close the window */
     if(prefs_window)
@@ -1087,10 +1090,13 @@ prefs_window_apply (void)
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
     prefs_set_size_prefs (defx, defy);
 
-    GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list));
-    podcast_write_from_store(store);
+    /* FIXME: PODCASTS: remove Podcast menu */
+/*     GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list)); */
+/*     podcast_write_from_store(store); */
 }
 
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
 void create_subs_treeview ()
 {
     GtkCellRenderer     *renderer;
@@ -1133,11 +1139,13 @@ void create_subs_treeview ()
 
     gtk_widget_show_all (pc_subs_window);
 }
+#endif
 
 void on_pc_add_button_clicked          (GtkButton *button,
                                         gpointer user_data)
 {
-
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
     gchar *text[2];
     GtkEditable *w = GTK_EDITABLE(gtkpod_xml_get_widget (prefs_window_xml, "pc_name"));
     text[0] = gtk_editable_get_chars(w, 0, -1);
@@ -1154,22 +1162,28 @@ void on_pc_add_button_clicked          (GtkButton *button,
                         PC_SUBS_NAME, text[0],
                         PC_SUBS_URL, text[1],
                         -1);
+#endif
 }
 
 void on_pc_delete_button_clicked       (GtkButton *button,
                                         gpointer user_data)
 {
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
     GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pc_subs_list));
     GtkTreeModel     *model = gtk_tree_view_get_model(pc_subs_list);
     GtkTreeIter       iter;
 
     if (gtk_tree_selection_get_selected(selection, &model, &iter))
         gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+#endif
 }
 
 void on_pc_update_button_clicked       (GtkButton *button,
                                         gpointer user_data)
 {
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
     GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pc_subs_list));
     GtkTreeModel     *model = gtk_tree_view_get_model(pc_subs_list);
     GtkTreeIter       iter;
@@ -1189,15 +1203,17 @@ void on_pc_update_button_clicked       (GtkButton *button,
                             PC_SUBS_URL, text[1],
                             -1);
     }
+#endif
 }
 
 
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
 static void on_pc_subs_list_row_activated       (GtkTreeView *view,
                                           GtkTreePath *path,
                                           GtkTreeViewColumn *col,
                                           gpointer user_data)
 {
-
     GtkTreeModel *model;
     GtkTreeIter   iter;
     gchar *text[2];
@@ -1215,6 +1231,9 @@ static void on_pc_subs_list_row_activated       (GtkTreeView *view,
     w = gtkpod_xml_get_widget (prefs_window_xml, "pc_url");
     gtk_entry_set_text(GTK_ENTRY (w), text[1]);
 }
+#endif
+
+
 /* -----------------------------------------------------------------
 
    Callbacks

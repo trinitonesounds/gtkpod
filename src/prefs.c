@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 22:52:53 jcs>
+/* Time-stamp: <2005-12-14 23:13:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1140,8 +1140,9 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       }
   }
 
-  podcast_read_from_file();
-  podcast_file_read_from_file();
+/* FIXME: PODCASTS: remove Podcast menu */
+/*   podcast_read_from_file(); */
+/*   podcast_file_read_from_file(); */
 
   menu = GTK_CHECK_MENU_ITEM (gtkpod_xml_get_widget (main_window_xml, "offline_menu"));
   gtk_check_menu_item_set_active (menu, prefs_get_offline ());

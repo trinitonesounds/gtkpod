@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-12-11 23:40+0900\n"
-"PO-Revision-Date: 2005-12-11 18:41+0900\n"
+"POT-Creation-Date: 2005-12-14 23:51+0900\n"
+"PO-Revision-Date: 2005-12-14 23:22+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -235,103 +235,103 @@ msgstr ""
 msgid "Confirmation Dialogue"
 msgstr "Sicherheitsabfrage"
 
-#: src/context_menus.c:365 gtkpod.glade:530
+#: src/context_menus.c:368 gtkpod.glade:530
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: src/context_menus.c:367 src/tools.c:634
+#: src/context_menus.c:370 src/tools.c:634
 msgid "Play Now"
 msgstr "Jetzt Spielen"
 
-#: src/context_menus.c:369 src/tools.c:645
+#: src/context_menus.c:372 src/tools.c:645
 msgid "Enqueue"
 msgstr "Zum Abspielen Vormerken"
 
-#: src/context_menus.c:372
+#: src/context_menus.c:375
 msgid "Export Tracks"
 msgstr "Stücke Exportieren"
 
-#: src/context_menus.c:374 src/file_export.c:1069
+#: src/context_menus.c:377 src/file_export.c:1069
 msgid "Create Playlist File"
 msgstr "Wiedergabelistendatei erstellen"
 
-#: src/context_menus.c:376
+#: src/context_menus.c:379
 msgid "Edit Details"
 msgstr "Details editieren"
 
-#: src/context_menus.c:378 gtkpod.glade:12816
+#: src/context_menus.c:381 gtkpod.glade:12816
 msgid "Update"
 msgstr "Aktualisieren"
 
-#: src/context_menus.c:380
+#: src/context_menus.c:383
 msgid "Sync Dirs"
 msgstr "Verzeichnisse abgleichen"
 
-#: src/context_menus.c:382
+#: src/context_menus.c:385
 msgid "Normalize"
 msgstr "Lautstärkenormalisierung"
 
-#: src/context_menus.c:384
+#: src/context_menus.c:387
 msgid "Create new Playlist"
 msgstr "Neue Wiedergabeliste erstellen"
 
-#: src/context_menus.c:387
+#: src/context_menus.c:390
 msgid "Edit Smart Playlist"
 msgstr "Intelligente Wiedergabeliste editieren"
 
-#: src/context_menus.c:393
+#: src/context_menus.c:396
 msgid "Alphabetize"
 msgstr "Sortieren"
 
-#: src/context_menus.c:417
+#: src/context_menus.c:420
 msgid "Delete From iPod"
 msgstr "Vom iPod entfernen "
 
-#: src/context_menus.c:423
+#: src/context_menus.c:426
 msgid "Delete From Harddisk"
 msgstr "Von der Festplatte löschen"
 
-#: src/context_menus.c:429
+#: src/context_menus.c:432
 msgid "Delete From Database"
 msgstr "Aus der Datenbank entfernen"
 
-#: src/context_menus.c:435
+#: src/context_menus.c:438
 msgid "Delete From Playlist"
 msgstr "Von der Wiedergabeliste entfernen"
 
-#: src/context_menus.c:454
+#: src/context_menus.c:457
 msgid "Delete Including Tracks"
 msgstr "Löschen inklusive der Stücke"
 
-#: src/context_menus.c:460
+#: src/context_menus.c:463
 msgid "Delete Including Tracks (Harddisk)"
 msgstr "Löschen inklusive der Stücke (Festplatte)"
 
-#: src/context_menus.c:466
+#: src/context_menus.c:469
 msgid "Delete Including Tracks (Database)"
 msgstr "Löschen inklusive der Stücke (Datenbank)"
 
-#: src/context_menus.c:472
+#: src/context_menus.c:475
 msgid "Delete But Keep Tracks"
 msgstr "Löschen aber Stücke behalten"
 
-#: src/context_menus.c:478
+#: src/context_menus.c:481
 msgid "Remove All Tracks from iPod"
 msgstr "Alle Stücke vom iPod entfernen"
 
-#: src/context_menus.c:484
+#: src/context_menus.c:487
 msgid "Remove All Tracks from Database"
 msgstr "Alle Stücke aus der Datenbank entfernen"
 
-#: src/context_menus.c:491
+#: src/context_menus.c:494
 msgid "Remove All Podcasts from iPod"
 msgstr "Alle Podcasts vom iPod entfernen"
 
-#: src/context_menus.c:500 gtkpod.glade:156
+#: src/context_menus.c:505 gtkpod.glade:156
 msgid "Update Podcasts"
 msgstr "Podcasts erneuern"
 
-#: src/context_menus.c:507
+#: src/context_menus.c:512
 msgid "Podcasts Preferences"
 msgstr "Podcasts Einstellungen"
 
@@ -348,84 +348,84 @@ msgstr "---"
 msgid "<b>n/a</b>"
 msgstr "<b>---</b>"
 
-#: src/display.c:921 src/display.c:1019 src/display.c:1068 src/display.c:1299
-#: src/display.c:1355 src/display.c:1410 src/display.c:1461 src/display.c:1625
+#: src/display.c:924 src/display.c:1022 src/display.c:1071 src/display.c:1302
+#: src/display.c:1358 src/display.c:1413 src/display.c:1464 src/display.c:1628
 #: src/misc_playlist.c:274
 msgid "No playlist selected"
 msgstr "Keine Wiedergabeliste ausgewählt"
 
-#: src/display.c:931
+#: src/display.c:934
 msgid "Edit selected entry of which sort tab?"
 msgstr "Markierten Eintrag aus welchem Filter-Tab editieren?"
 
 #. no entry selected
-#: src/display.c:938 src/misc_confirm.c:441 src/misc_track.c:1482
+#: src/display.c:941 src/misc_confirm.c:441 src/misc_track.c:1482
 msgid "No entry selected."
 msgstr "Kein Tab-Eintrag ausgewählt."
 
-#: src/display.c:957 src/display.c:1037 src/display.c:1342 src/display.c:1398
-#: src/display.c:1449 src/display.c:1500
+#: src/display.c:960 src/display.c:1040 src/display.c:1345 src/display.c:1401
+#: src/display.c:1452 src/display.c:1503
 msgid "No tracks selected"
 msgstr "Keine Stücke ausgewählt"
 
-#: src/display.c:1053 src/display.c:1319 src/display.c:1375 src/display.c:1427
-#: src/display.c:1478 src/display.c:1647
+#: src/display.c:1056 src/display.c:1322 src/display.c:1378 src/display.c:1430
+#: src/display.c:1481 src/display.c:1650
 #, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "Kein Eintrag im Sort Tab %d ausgewählt"
 
-#: src/display.c:1092
+#: src/display.c:1095
 msgid "Remove entry of which sort tab from database?"
 msgstr "Markierten Eintrag aus welchem Filter-Tab entfernen?"
 
-#: src/display.c:1100
+#: src/display.c:1103
 msgid "Remove tracks in selected entry of which filter tab from the iPod?"
 msgstr ""
 "Stücke im ausgewählten Eintrag aus welchem Filter-Tab vom iPod löschen?"
 
-#: src/display.c:1122
+#: src/display.c:1125
 msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
 msgstr ""
 "Stücke im ausgewählten Eintrag aus welchem Filter-Tab von der Festplatte "
 "löschen?"
 
-#: src/display.c:1152
+#: src/display.c:1155
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
 msgstr ""
 "Stücke im ausgewählten Eintrag aus welchem Filter-Tab von der "
 "Wiedergabeliste löschen?"
 
-#: src/display.c:1171
+#: src/display.c:1174
 msgid "Currently no iPod database selected"
 msgstr "Keine iPod Datenbank ausgewählt"
 
-#: src/display.c:1199 src/display.c:1226
+#: src/display.c:1202 src/display.c:1229
 msgid "Update selected entry of which sort tab?"
 msgstr "Markierten Eintrag aus welchem Sort Tab aktualisieren?"
 
-#: src/display.c:1245
+#: src/display.c:1248
 msgid "Sync dirs of selected entry in which sort tab?"
 msgstr "Verzeichnisse aus welchem Sort Tab abgleichen?"
 
-#: src/display.c:1313
+#: src/display.c:1316
 msgid "Export selected entry of which sort tab?"
 msgstr "Markierten Eintrag aus welchem Sort Tab aktualisieren?"
 
-#: src/display.c:1369
+#: src/display.c:1372
 msgid "Create playlist file from selected entry of which sort tab?"
 msgstr ""
 "Datei mit Wiedergabeliste für ausgewählten Eintrag aus welchem Sort Tab "
 "erstellen?"
 
-#: src/display.c:1421
+#: src/display.c:1424
 msgid "Play tracks in selected entry of which sort tab?"
 msgstr "Stücke aus welchem Sort Tab abspielen?"
 
-#: src/display.c:1472
+#: src/display.c:1475
 msgid "Enqueue tracks in selected entry of which sort tab?"
 msgstr "Stücke aus welchem Sort Tab zum abspielen vormerken?"
 
-#: src/display.c:1637
+#: src/display.c:1640
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "Stücke aus welchem Sort Tab normalisieren?"
 
@@ -2926,38 +2926,38 @@ msgstr "Kann Datei '%s' mit den Einstellungen nicht lesen.\n"
 msgid "Unknown option: %s\n"
 msgstr "Unbekannte Option: %s\n"
 
-#: src/prefs.c:1189
+#: src/prefs.c:1190
 #, c-format
 msgid "# delete confirmation\n"
 msgstr "# Sicherheitsabfrage beim Löschen\n"
 
-#: src/prefs.c:1196
+#: src/prefs.c:1197
 #, c-format
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
 "# Sort Tab: 'Alle' automatisch wählen, letze gewählte Seite (=Kategorie)\n"
 
-#: src/prefs.c:1215
+#: src/prefs.c:1216
 #, c-format
 msgid "# autoselect master playlist?\n"
 msgstr "# Hauptplayliste automatisch auswählen?\n"
 
-#: src/prefs.c:1217
+#: src/prefs.c:1218
 #, c-format
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr "# Titel=0, Künstler, Album, Musikrichtung, Komponist\n"
 
-#: src/prefs.c:1218
+#: src/prefs.c:1219
 #, c-format
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr "# Track_Nr=5, iPod_ID, PC_Pfad, Transferred\n"
 
-#: src/prefs.c:1219
+#: src/prefs.c:1220
 #, c-format
 msgid "# autoset: set empty tag to filename?\n"
 msgstr "# autoset: Leere ID3-Tags mit dem Filenamen initialiseren?\n"
 
-#: src/prefs.c:1234
+#: src/prefs.c:1235
 #, c-format
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
@@ -2966,7 +2966,7 @@ msgstr ""
 "# Position der Schiebeelemente (paned): Wiedergabelisten,\n"
 "# über der Stückanzeige, zwischen den Sort Tabs\n"
 
-#: src/prefs.c:1270
+#: src/prefs.c:1271
 #, c-format
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
@@ -2976,12 +2976,12 @@ msgstr ""
 "#                Bestätigungsfenster (ungescrollt), Verzeichnisbaum\n"
 "#                Einstellungsfenster\n"
 
-#: src/prefs.c:1327
+#: src/prefs.c:1328
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "Kann '%s' nicht zum schreiben öffnen.\n"
 
-#: src/prefs.c:1681
+#: src/prefs.c:1682
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
@@ -2989,62 +2989,62 @@ msgstr ""
 " Voreinstellungen: Kategorie (%d<%d?) oder SortTab (%d<%d?) außerhalb des "
 "erlaubten Bereichs.\n"
 
-#: src/prefs.c:1730
+#: src/prefs.c:1731
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "Kann 'mkdir %s' nicht ausführen.\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2156
+#: src/prefs.c:2157
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: ungültiger Stil '%d' ignoriert\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2198
+#: src/prefs.c:2199
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: ungültiger Typ '%d' ignoriert\n"
 
-#: src/prefs.c:2353
+#: src/prefs.c:2354
 #, c-format
 msgid "'%s': no arguments (%%...) allowed.\n"
 msgstr "'%s': keine Argumente (%%...) erlaubt.\n"
 
-#: src/prefs.c:2358
+#: src/prefs.c:2359
 #, c-format
 msgid "'%s': only '%%[%s]' allowed.\n"
 msgstr "'%s': nur '%%[%s]' erlaubt.\n"
 
-#: src/prefs_window.c:103
+#: src/prefs_window.c:105
 msgid "Please select command for 'Play Now'"
 msgstr "Programm für 'Jetzt abspielen'"
 
-#: src/prefs_window.c:104
+#: src/prefs_window.c:106
 msgid "Please select command for 'Enqueue'"
 msgstr "Programm für 'Zum Abspielen Vormerken':"
 
-#: src/prefs_window.c:105
+#: src/prefs_window.c:107
 msgid "Please select the mp3gain executable"
 msgstr "Genauer Pfad des mp3gain-Programms"
 
-#: src/prefs_window.c:106
+#: src/prefs_window.c:108
 msgid "Please select command to sync contacts"
 msgstr "Skript zum Exportieren der Kontakte"
 
-#: src/prefs_window.c:107
+#: src/prefs_window.c:109
 msgid "Please select command to sync calendar"
 msgstr "Skript zum Exportieren des Terminkalenders"
 
-#: src/prefs_window.c:108
+#: src/prefs_window.c:110
 msgid "Select the mserv music root directory"
 msgstr "Wählen Sie das mserv Stammverzeichnis für Musik"
 
-#: src/prefs_window.c:109
+#: src/prefs_window.c:111
 msgid "Select the mserv trackinfo root directory"
 msgstr "Wählen Sie das mserv Stammverzeichnis (trackinfo)"
 
-#: src/prefs_window.c:821
+#: src/prefs_window.c:824
 #, c-format
 msgid ""
 "<i>Have a look at the scripts provided in '%s'. If you write a new script, "
@@ -3056,11 +3056,11 @@ msgstr ""
 "at users.sourceforge.net, damit es in die nächste Version aufgenommen werden "
 "kann.</i>"
 
-#: src/prefs_window.c:1238 src/prefs_window.c:1256
+#: src/prefs_window.c:1257 src/prefs_window.c:1275
 msgid "Preferences not updated"
 msgstr "Die Einstellungen wurden nicht übernommen"
 
-#: src/prefs_window.c:1265
+#: src/prefs_window.c:1284
 msgid "Preferences applied"
 msgstr "Die Einstellungen wurden übernommen"
 
@@ -4341,7 +4341,7 @@ msgstr "folder.jpg;%a.jpg"
 
 #: gtkpod.glade:9227
 msgid "First try <i>folder.jpg</i>, then <i>&lt;artist&gt;.jpg</i>"
-msgstr "Versuche zuerst <i>folder.jpg</i>, dann <i>&lt;Künstler&gt;.jpg"
+msgstr "Versuche zuerst <i>folder.jpg</i>, dann <i>&lt;Künstler&gt;.jpg</i>"
 
 #: gtkpod.glade:9311
 msgid "<b>mserv</b>"

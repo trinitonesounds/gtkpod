@@ -1,3 +1,13 @@
+gtkpod V0.99.2
+       BUGFIX: Fix segfault when applying preferences.
+
+       BUGFIX: Don't require libcurl (not actively used).
+
+       UPDATE: Swedish translation catalog
+
+       IMPROVEMENT: Allow export of multiple thunderbird address
+       books (by naming the output filename).
+
 gtkpod V0.99.0
        NEW: type-ahead search functionality. Thanks to Nick Piper,
        http://www.nickpiper.co.uk/ -- please note that the list view

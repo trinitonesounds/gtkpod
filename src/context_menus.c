@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 17:43:43 jcs>
+/* Time-stamp: <2005-12-14 23:12:43 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -352,9 +352,12 @@ create_context_menu(CM_type type)
 					   * tracks)      */
     static GtkWidget *mi_deldb_all[CM_NUM];  /* DELETE_ACTION_DATABASE
 					   * (all tracks  */
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
     static GtkWidget *mi_podcasts_sep[CM_NUM]; /* Podcasts Separator */
     static GtkWidget *mi_podcasts_update[CM_NUM]; /* Update Podcasts */
     static GtkWidget *mi_podcasts_prefs[CM_NUM];  /* Podcasts Prefs */
+#endif
 
     Playlist *pl;
 
@@ -493,6 +496,8 @@ create_context_menu(CM_type type)
 			   G_CALLBACK (delete_entries),
 			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
 
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
 	    mi_podcasts_sep[type] = add_separator (menu[type]);
 
 	    mi_podcasts_update[type] =
@@ -508,6 +513,7 @@ create_context_menu(CM_type type)
 			   GTK_STOCK_PREFERENCES,
 			   G_CALLBACK (prefs_window_podcasts),
 			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+#endif
 	}
     }
     /* Make sure, only available options are displayed */
@@ -531,10 +537,12 @@ create_context_menu(CM_type type)
 	    gtk_widget_hide (mi_delipod_all[type]);
 	    gtk_widget_hide (mi_delpcipod[type]);
 	    gtk_widget_hide (mi_dellocal[type]);
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
 	    gtk_widget_hide (mi_podcasts_sep[type]);
 	    gtk_widget_hide (mi_podcasts_update[type]);
 	    gtk_widget_hide (mi_podcasts_prefs[type]);
-
+#endif
 	    if (pl->is_spl)
 	    {
 		gtk_widget_show (mi_spl[type]);

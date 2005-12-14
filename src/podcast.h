@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-12 15:31:44 jcs>
+/* Time-stamp: <2005-12-14 23:10:59 jcs>
 |
 |  Copyright (C) 2002-2005 Alexander Dutton <alexdutton at f2s dot com>
 |  Part of the gtkpod project.
@@ -30,6 +30,8 @@
 #ifndef __PODCAST_H__
 #define __PODCAST_H__
 
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
 enum
 {
   PC_SUBS_NAME = 0,
@@ -61,5 +63,5 @@ gchar *podcast_get_tag_attr(gchar *attrs, gchar *req);
 
 void podcast_set_status(gchar *status);
 void podcast_set_cur_file_name(gchar *text);
-
+#endif
 #endif

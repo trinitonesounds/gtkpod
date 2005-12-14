@@ -1,3 +1,14 @@
+2005-12-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * sync-thunderbird.sh: Ben Ford's patch to allow export of
+           several address books (by specifying the output filename)
+
+	 * remove all podcast code and libcurl dependency (#if 0...)
+
+	 * sv.po: updated catalog by Stefan Asserhäll
+
+	 * bumped to 0.99.2 for release
+
 2005-12-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * details.c: fix problem with 'checked' checkbox. 

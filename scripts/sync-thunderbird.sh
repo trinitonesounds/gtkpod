@@ -7,13 +7,20 @@
 # 
 # sync-thunderbird.sh [-i <ipod mountpoint>] [-e <encoding>]
 #                      [-d <path to thunderbird address book>]
+#                      [-n <name of exported file>]
 #
-# (specify '-d' if your thunderbird address book is not in ~/.thunderbird/)
+# specify '-d' if your thunderbird address book is not in
+# ~/.thunderbird/
 #
+# specify '-n' if you want to export more than one address book
+# (otherwise the second call to this script will overwrite the output
+# of the first call)
+
 # with the following defaults: 
 
 IPOD_MOUNT=/mnt/ipod         # mountpoint of ipod
 ENCODING=ISO-8859-15         # encoding used by ipod
+NAME=thunderbird             # default file export name
 
 # Unless called with "-e=none" this script requires "recode" available
 # from ftp://ftp.iro.umontreal.ca/pub/recode/recode-3.6.tar.gz
@@ -49,13 +56,14 @@ ENCODING=ISO-8859-15         # encoding used by ipod
 
 
 # overwrite default settings with optional command line arguments
-while getopts i:d:e: option; do
+while getopts i:d:e:n: option; do
     case $option in
         i) IPOD_MOUNT=$OPTARG;;
         d) THUNPATH=$OPTARG;;
         e) ENCODING=$OPTARG;;
+	n) NAME=$OPTARG;;
         
-        \?) echo "Usage: `basename $0 ` [-i <ipod mountpoint>] [-e <encoding>] [-d <path to thunderbird address book>]"
+        \?) echo "Usage: `basename $0 ` [-i <ipod mountpoint>] [-e <encoding>] [-d <path to thunderbird address book>] [-n <name of exported file>]"
 	    exit 1;;
     esac
 done
@@ -75,5 +83,5 @@ MAB2VCARD=`dirname $0`/mab2vcard
 
 # remove all empty lines and recode if necessary
 echo -n "Syncing iPod ... [Contacts] "
-$MAB2VCARD $THUNPATH | grep -v '^[[:space:]]$\|^$' | $RECODE > $IPOD_MOUNT/Contacts/thunderbird
+$MAB2VCARD $THUNPATH | grep -v '^[[:space:]]$\|^$' | $RECODE > $IPOD_MOUNT/Contacts/${NAME}.vcf
 echo "done!"

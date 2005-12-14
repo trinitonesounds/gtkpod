@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:11 jcs>
+/* Time-stamp: <2005-12-14 23:11:00 jcs>
 |
 |  Copyright (C) 2002-2005 Alexander Dutton <alexdutton at f2s dot com>
 |  Part of the gtkpod project.
@@ -27,6 +27,8 @@
 |  $Id$
 */
 
+/* FIXME: PODCASTS: remove Podcast menu */
+#if 0
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
@@ -1099,3 +1101,4 @@ void podcast_set_cur_file_name(gchar *text)
         g_free(working);
     }
 }
+#endif
