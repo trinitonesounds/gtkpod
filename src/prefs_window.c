@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-14 23:22:13 jcs>
+/* Time-stamp: <2006-01-02 22:56:30 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -58,13 +58,16 @@ static void prefs_window_set_col_visible (gint column, gboolean visible);
 static void prefs_window_set_path (PathType i, const gchar *path);
 static void prefs_window_set_sort_tab_num (gint num);
 
+/* where to find the scripts */
+static const gchar *scriptdir = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
+
+
 /* FIXME: PODCASTS: remove Podcast menu */
 #if 0
 static void on_pc_subs_list_row_activated (GtkTreeView *view,
                                            GtkTreePath *path,
                                            GtkTreeViewColumn *col,
                                            gpointer user_data);
-
 
 /* Pointer to the treeview that holds the podcast subscriptions */
 static GtkTreeView *pc_subs_list = NULL;
@@ -109,6 +112,7 @@ static const gchar *path_fileselector_titles[] =
     N_("Please select command to sync calendar"),
     N_("Select the mserv music root directory"),
     N_("Select the mserv trackinfo root directory"),
+    N_("Please select command to sync notes"),
     NULL
 };
 static const GtkFileChooserAction path_type[] =
@@ -118,9 +122,9 @@ static const GtkFileChooserAction path_type[] =
     GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_OPEN,
-    GTK_FILE_CHOOSER_ACTION_OPEN,
     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, /* select folder */
     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+    GTK_FILE_CHOOSER_ACTION_OPEN,
     -1
 };
 
@@ -269,16 +273,42 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
     else
 	buf = g_strdup (path);
 
-    /* get full path */
+    /* get full path -- if the file cannot be found it can't be
+     * selected in the filechooser */
     fbuf = g_find_program_in_path (buf);
-    if (!fbuf) fbuf = g_strdup (buf);
 
-    if (fbuf)
+    if (!fbuf)
+    {   /* set some default */
+	switch (i)
+	{
+	case PATH_SYNC_CONTACTS:
+	case PATH_SYNC_CALENDAR:
+	case PATH_SYNC_NOTES:
+	    fbuf = g_strdup (scriptdir);
+	    break;
+	case PATH_PLAY_NOW:
+	case PATH_PLAY_ENQUEUE:
+	case PATH_MP3GAIN:
+	case PATH_MSERV_MUSIC_ROOT:
+	case PATH_MSERV_TRACKINFO_ROOT:
+	case PATH_NUM:
+	    break;
+	}
+    }
+
+    if (fbuf && *fbuf)
     {
 	gchar *fbuf_utf8 = g_filename_from_utf8 (fbuf, -1, NULL, NULL, NULL);
 	if (path_type[i] == GTK_FILE_CHOOSER_ACTION_OPEN)
 	{
-	    gtk_file_chooser_set_filename (fc, fbuf_utf8);
+	    if (g_file_test (fbuf, G_FILE_TEST_IS_DIR))
+	    {
+		gtk_file_chooser_set_current_folder (fc, fbuf_utf8);
+	    }
+	    else
+	    {
+		gtk_file_chooser_set_filename (fc, fbuf_utf8);
+	    }
 	}
 	if (path_type[i] == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
 	{
@@ -821,7 +851,7 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 /* 					 tmpcfg->unused_gboolean3); */
 /* 	} */
     w = gtkpod_xml_get_widget (prefs_window_xml, "prefs_label_syncexamples");
-    gchar *str = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S);
+    gchar *str = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), scriptdir);
     gtk_label_set_markup (GTK_LABEL (w), str);
     g_free (str);
 

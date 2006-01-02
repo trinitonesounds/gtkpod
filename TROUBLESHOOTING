@@ -3,8 +3,8 @@ Troubleshooting-FAQ:
 
 Contents:
 
-- Installed libmp4v2 from source to /usr/local/lib, but gtkpod is
-  unable to locate libmp4.so.0
+- Installed libmp4v2 or libgpod from source to /usr/local/lib, but
+  gtkpod is unable to locate libmp4.so.0 or libgpod.so.0
 
 - Files copied to gtkpod but they don't appear in the database (0.80,
   Tony Williams)
@@ -32,8 +32,8 @@ Contents:
 
 ----------------------------------------------------------------------
 
-Installed libmp4v2 from source to /usr/local/lib, but gtkpod is unable
-to locate libmp4.so.0
+Installed libmp4v2 or libgpod from source to /usr/local/lib, but
+gtkpod is unable to locate libmp4.so.0 or libgpod.so.0
 
 
 If you install to /usr/local/lib please don't forget to add the path

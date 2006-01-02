@@ -1,3 +1,8 @@
+2006-01-02 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * prefs_windows.c: browse button for "Sync Notes Script"
+           opened a dirbrowser instead of a file browser.
+
 2005-12-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * sync-thunderbird.sh: Ben Ford's patch to allow export of
@@ -10,6 +15,9 @@
 	 * bumped to 0.99.2 for release
 
 	 * bumped to 0.99.3 for CVS version
+
+	 * TROUBLESHOOTING: added hint about LD_LIBRARY_PATH and
+           libgpod
 
 2005-12-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
