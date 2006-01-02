@@ -1,4 +1,4 @@
-gtkpod V0.99.4
+gtkpod V0.99.3
 
        BUGFIX: Browse button for "Sync Notes Script" opened a
        directory browser instead of a file browser.

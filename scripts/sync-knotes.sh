@@ -52,8 +52,8 @@ mkdir -p $IPOD_MOUNT/Notes
 rm -rf $IPOD_MOUNT/Notes/*
 
 #Add new notes
-INDICES=`dcop knotes KNotesIface notes| awk --field-separator '->' '{print $1}'`
-TITLES=`dcop knotes KNotesIface notes | awk --field-separator '->' '{print $2}'`
+INDICES=`dcop knotes KNotesIface notes| awk -F '->' '{print $1}'`
+TITLES=`dcop knotes KNotesIface notes | awk -F '->' '{print $2}'`
 COUNT=1
 for INDEX in $INDICES
 do

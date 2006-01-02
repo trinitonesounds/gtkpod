@@ -1,7 +1,11 @@
 2006-01-02 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
-	 * prefs_windows.c: browse button for "Sync Notes Script"
+	 * src/prefs_windows.c: browse button for "Sync Notes Script"
            opened a dirbrowser instead of a file browser.
+
+	 * scripts/sync-knotes.sh: changed awk option
+           "--field-separator" to "-F" for better partability. Thanks
+           to cacedo.
 
 2005-12-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
