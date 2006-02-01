@@ -17,6 +17,12 @@ Contents:
      ieee1394: sbp2: aborting sbp2 command
      Test Unit Ready 00 00 00 00 00
 
+- The following error message is displayed when accessing the device
+  (Ingo Reimann)
+     usb-storage: Attempting to get CSW...
+     usb-storage: usb_stor_bulk_transfer_buf: xfer 13 bytes
+     usb-storage: Status code -75; transferred 0/13
+
 - When connecting an iPod via USB to a 2.6 kernel machine the iPod will
   be recognized but not work correctly. In /var/log/messages you'll
   see the a bunch of "Buffer I/O error on device sd?" when connecting
@@ -76,8 +82,8 @@ details.
 ----------------------------------------------------------------------
 The following error message is displayed when accessing the device:
 
-ieee1394: sbp2: aborting sbp2 command
-Test Unit Ready 00 00 00 00 00
+     ieee1394: sbp2: aborting sbp2 command
+     Test Unit Ready 00 00 00 00 00
 
 Solution:
 
@@ -100,6 +106,23 @@ Looks like the driver is going to be set to default to serialized I/O
 in kernel 2.6.14, anyways.
 
 http://linuxtoday.com/developer/2005093001026NWKNDV
+
+
+----------------------------------------------------------------------
+The following error message is displayed when accessing the device
+
+     usb-storage: Attempting to get CSW...
+     usb-storage: usb_stor_bulk_transfer_buf: xfer 13 bytes
+     usb-storage: Status code -75; transferred 0/13
+
+Solution (by Ingo Reimann):
+
+I tried to use an iPod Mini with my nforce2-Board, kernel
+2.6.14/2.6.15 debian sid and got messages like [above] in
+dmesg. /dev/sda appeared, but fdisk -l did not show anything
+
+The solution, that i found in a discussion on
+http://kerneltrap.org/node/3844 was to unload ehci_hcd.
 
 
 ----------------------------------------------------------------------

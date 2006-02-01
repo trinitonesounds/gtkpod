@@ -3,6 +3,8 @@
 	 * scripts/mab2vcard: added support for mobile phone entries
            in thunderbird address books. Thanks to Sebastian Cruz.
 
+	 * TROUBLESHOOTING: added hint by Ingo Reimann
+
 2006-01-07 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * INSTALL: hint about PKG_CONFIG_PATH and LD_LIBRARY_PATH.
