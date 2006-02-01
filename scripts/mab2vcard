@@ -57,6 +57,16 @@
 #
 ##########################################################################
 #
+# Just added support for parsing mobile phones (cell phones) entries in
+# address books from Thunderbird.
+# My work was so lame hacking this file that I couldn't help myself
+# being in the credits too. :-P
+# Of course, my lines of program are GPL licensed too.
+#
+# Sebastian Cruz (crux@lugmen.org.ar)
+#
+##########################################################################
+#
 # Contributed to the gtkpod project by Clinton Gormley
 # (perl@traveljury.com). This code can be used either under the
 # license mentioned above or under the terms of the GNU General Pulic
@@ -402,6 +412,8 @@ sub output_vcards {
 	   	'TEL;TYPE=FAX'	 	=> [' ',qw(FaxNumber)],
 	   	'TEL;TYPE=WORK;TYPE=VOICE'
 	   			 	=> [' ',qw(WorkPhone)],
+		'TEL;TYPE=CELL;TYPE=VOICE'
+	   				=> [' ',qw(CellularNumber)],
 	   	'TEL;TYPE=PAGER;TYPE=VOICE'
 	   				=> [' ',qw(PagerNumber)],
 	   	'EMAIL;TYPE=INTERNET;X-EVOLUTION-UI-SLOT=1'
@@ -450,7 +462,7 @@ sub escape_results {
 		my %vcard = map {$_=>''} qw (
 			FirstName LastName WorkAddress WorkAddress2 WorkCity WorkState WorkCountry WorkZipCode
 			HomeAddress HomeAddress2 HomeCity HomeState HomeCountry HomeZipCode 
-			HomePhone FaxNumber WorkPhone PagerNumber PrimaryEmail SecondEmail
+			HomePhone FaxNumber WorkPhone CellularNumber PagerNumber PrimaryEmail SecondEmail
 			NickName Notes Company Department JobTitle URL _AimScreenName
 			PreferMailFormat WebPage1 WebPage2
 		);

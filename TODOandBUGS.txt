@@ -1,5 +1,8 @@
 TODO:
 
+>         {"S492", 30 * GB, MODEL_TYPE_REGULAR, FOURTH_GENERATION},
+HP-iPod.
+
 - photo support
 
 - lyrics support (http://www.jcbsoft.net/podlyrics/)

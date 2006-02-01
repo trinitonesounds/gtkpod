@@ -27,11 +27,13 @@ How to compile/install gtkpod:
 
    ./bootstrap --disable-server ; make ; make install
 
-   If you install to /usr/local/lib please don't forget to add the
-   path to LD_LIBRARY_PATH:
+2. If you install libraries to /usr/local/lib please don't forget to
+   add the path to LD_LIBRARY_PATH and PKG_CONFIG_PATH
 
      LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+     PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib
      export LD_LIBRARY_PATH
+     export PKG_CONFIG_PATH
 
    You can add those lines to your ~/.bashrc or add it globally to
    /etc/profile.
@@ -40,7 +42,7 @@ How to compile/install gtkpod:
    that you will need to install the "-dev" packages as well to be
    able to compile.
 
-2. Run the gtkpod 'configure' script to set up the compile
+3. Run the gtkpod 'configure' script to set up the compile
 
    ./configure
 
@@ -48,11 +50,11 @@ How to compile/install gtkpod:
 
    ./configure --help
 
-3. Compile the gtkpod software:
+4. Compile the gtkpod software:
 
    make
 
-4. Install the gtkpod software (may require root privileges):
+5. Install the gtkpod software (may require root privileges):
 
    make install
 
