@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-14 23:13:45 jcs>
+/* Time-stamp: <2006-02-04 21:00:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1405,7 +1405,7 @@ const gchar *prefs_get_last_dir_browse(void)
 void prefs_set_ipod_mount(const gchar *mp)
 {
     if (!mp) return; /* ignore NULL pointer */
-    if(cfg->ipod_mount) g_free(cfg->ipod_mount);
+    g_free (cfg->ipod_mount);
     /* if new mount point starts with "~/", we replace it with the
        home directory */
     cfg->ipod_mount = convert_filename (mp);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 23:45:22 jcs>
+/* Time-stamp: <2006-02-04 21:00:31 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1698,7 +1698,29 @@ void gp_itdb_set_mountpoint (const gchar *mp)
     g_return_if_fail (gtkpod_window);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
 				    "itdbs_head");
-    if (!itdbs_head) return;
+    if (!itdbs_head)
+    {  /* this means we are called before all the data is set up, for
+	* example because gtkpod was called with the '-m' flag.
+	* We'll set all itdb_n_mountpoint for which itdb_n_type is
+	* GP_ITDB_TYPE_IPOD */
+	gboolean valid;
+	i=0;
+	do
+	{
+	    gchar *property = g_strdup_printf ("itdb_%d_type", i);
+	    gint type;
+	    valid = prefs_get_int_value (property, &type);
+	    g_free (property);
+	    if (valid && (type & GP_ITDB_TYPE_IPOD))
+	    {
+		gchar *pmp = g_strdup_printf ("itdb_%d_mountpoint", i);
+		prefs_set_string_value (pmp, mp);
+		g_free (pmp);
+	    }
+	    ++i;
+	} while (valid);
+	return;
+    }
 
     i=0;
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)

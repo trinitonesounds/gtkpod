@@ -1,3 +1,8 @@
+2006-02-04 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/file_itunesdb.c: (gp_itdb_set_mountpoint): command line
+           option '-m' to set the mountpoint did not work.
+
 2006-02-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * scripts/mab2vcard: added support for mobile phone entries
