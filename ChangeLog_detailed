@@ -1,3 +1,12 @@
+2006-02-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * Allow to run autogen.sh if autoconf/automake/libtool
+	 * installations aren't necessarily installed as "automake",
+	 * "aclocal", etc. This is typically the case when several
+	 * different versions of the autotools are installed, with the
+	 * correct binary paths set in the respective environment
+	 * variables. (thanks to Mike Heffner)
+
 2006-02-04 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/file_itunesdb.c: (gp_itdb_set_mountpoint): command line
