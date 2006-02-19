@@ -6,6 +6,9 @@
 	 * mp3file.c. Set encoding before setting text fields. Thanks
            to 't0c' for the patch.
 
+	 * context_menus.c: context menu to remove playlists on the
+           iPod were not displayed.
+
 2006-02-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * Allow to run autogen.sh if autoconf/automake/libtool

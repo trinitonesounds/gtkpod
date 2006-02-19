@@ -9,6 +9,9 @@ gtkpod V0.99.3
        BUGFIX: Writing ID3v2.4 tags in UTF8 did not always
        work. Thanks to 't0c' for the patch.
 
+       BUGFIX: Context Menus for removing playlists from the iPod were
+       not displayed. Thanks to 'rob' for pointing this out.
+
 gtkpod V0.99.2
        BUGFIX: Fix segfault when applying preferences.
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-01-28 13:49:09 jcs>
+/* Time-stamp: <2006-02-19 19:58:45 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -123,21 +123,6 @@ create_playlist_file(GtkWidget *w, gpointer data)
 	export_playlist_file_init(selected_tracks);
 }
 
-
-/**
- * edit_entries - open a dialog to edit the track(s) or playlist
- * @mi - the menu item selected
- * @data - Ignored, should be NULL
- * FIXME: How this should work needs to be decided
- */
-#if 0
-static void 
-edit_entries(GtkButton *b, gpointer data)
-{
-
-    fprintf(stderr, "edit entries Selected\n");
-}
-#endif
 
 /*
  * play_entries_now - play the entries currently selected in xmms
@@ -364,9 +349,6 @@ create_context_menu(CM_type type)
     if(!menu[type])
     {
 	menu[type] =  gtk_menu_new();
-#if 0
-	hookup_mi (menu[type], _("Edit"), NULL, G_CALLBACK (edit_entries));
-#endif
 	hookup_mi (menu[type], _("Play Now"), GTK_STOCK_CDROM,
 		   G_CALLBACK (play_entries_now), NULL);
 	hookup_mi (menu[type], _("Enqueue"), GTK_STOCK_CDROM,
@@ -561,12 +543,9 @@ create_context_menu(CM_type type)
 		    }
 		    else
 		    {
-			/* FIXME: PODCASTS: remove Podcast menu */
-			/*
 			gtk_widget_show (mi_delsep[type]);
 			gtk_widget_show (mi_delipod[type]);
 			gtk_widget_show (mi_delpl[type]);
-			*/
 		    }
 		}
 	    }
