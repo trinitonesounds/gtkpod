@@ -3,6 +3,9 @@
 	 * file.c (copy_new_info): forgot to copy
            thumb_path_utf8/locale resulting in segfaults.
 
+	 * mp3file.c. Set encoding before setting text fields. Thanks
+           to 't0c' for the patch.
+
 2006-02-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * Allow to run autogen.sh if autoconf/automake/libtool

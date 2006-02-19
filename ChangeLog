@@ -6,6 +6,9 @@ gtkpod V0.99.3
        BUGFIX: Browse button for "Sync Notes Script" opened a
        directory browser instead of a file browser.
 
+       BUGFIX: Writing ID3v2.4 tags in UTF8 did not always
+       work. Thanks to 't0c' for the patch.
+
 gtkpod V0.99.2
        BUGFIX: Fix segfault when applying preferences.
 

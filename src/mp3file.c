@@ -1037,6 +1037,10 @@ static void id3_set_string (struct id3_tag *tag,
 
     frame = id3_frame_new (frame_name);
     id3_tag_attachframe (tag, frame);
+
+    /* Use the specified text encoding */
+    field = id3_frame_field (frame, 0);
+    id3_field_settextencoding(field, encoding);
    
     if (frame_name == ID3_FRAME_COMMENT)
     {
@@ -1048,9 +1052,6 @@ static void id3_set_string (struct id3_tag *tag,
 	field = id3_frame_field (frame, 1);
 	field->type = ID3_FIELD_TYPE_STRINGLIST;
     }
-
-    /* Use the specified text encoding */
-    id3_field_settextencoding(field, encoding);
 
 
     /* maybe could be optimized see
