@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 02:00:47 jcs>
+/* Time-stamp: <2006-02-19 14:35:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -772,6 +772,8 @@ static Track *copy_new_info (Track *from, Track *to)
     eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
     eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
     eto->charset = g_strdup (efrom->charset);
+    eto->thumb_path_utf8 = g_strdup (efrom->thumb_path_utf8);
+    eto->thumb_path_locale = g_strdup (efrom->thumb_path_locale);
     to->size = from->size;
     to->tracklen = from->tracklen;
     to->cd_nr = from->cd_nr;

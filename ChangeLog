@@ -1,5 +1,8 @@
 gtkpod V0.99.3
 
+       BUGFIX: Fixed segfault when updating tracks or directories with
+       artowrk present.
+
        BUGFIX: Browse button for "Sync Notes Script" opened a
        directory browser instead of a file browser.
 
