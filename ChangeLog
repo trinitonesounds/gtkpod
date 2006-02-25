@@ -10,7 +10,7 @@ gtkpod V0.99.3
        work. Thanks to 't0c' for the patch.
 
        BUGFIX: Context Menus for removing playlists from the iPod were
-       not displayed. Thanks to 'rob' for pointing this out.
+       not displayed. Thanks to 'rob/biffhero' for pointing this out.
 
 gtkpod V0.99.2
        BUGFIX: Fix segfault when applying preferences.

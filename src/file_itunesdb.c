@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-02-04 21:00:31 jcs>
+/* Time-stamp: <2006-02-25 22:36:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -927,6 +927,8 @@ static gboolean write_extended_info (iTunesDB *itdb)
 	  fprintf (fp, "thumbnail_utf8=%s\n", etr->thumb_path_utf8);
       /* this is just for convenience for people looking for a track
 	 on the ipod away from gktpod/itunes etc. */
+      if (strlen (track->ipod_path) != 0)
+	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
       if (etr->md5_hash && *etr->md5_hash)
 	  fprintf (fp, "md5_hash=%s\n", etr->md5_hash);
       if (etr->charset && *etr->charset)
