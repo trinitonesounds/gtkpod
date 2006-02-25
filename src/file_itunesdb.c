@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-02-25 22:36:49 jcs>
+/* Time-stamp: <2006-02-25 22:56:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1571,8 +1571,9 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   if (success)
   {
       eitdb->data_changed = FALSE;
-      /* block menu item and button */
-      display_disable_gtkpod_import_buttons();
+      /* block menu item and button if successfully written to iPod */
+      if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	  display_disable_gtkpod_import_buttons();
       gtkpod_statusbar_message(_("iPod Database Saved"));
   }
 
