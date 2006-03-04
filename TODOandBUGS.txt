@@ -225,6 +225,8 @@ Please feel free to submit further features.
 
 BUGLIST:
 
+- segfault when sorting the playlists (0.99.2)
+
 drag playlist to track view: (JCS)
 (gtkpod:19911): Gtk-CRITICAL **: gtk_text_buffer_emit_insert: assertion `g_utf8_validate (text, len, NULL)' failed
 

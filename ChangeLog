@@ -1,5 +1,8 @@
 gtkpod V0.99.3
 
+       BUGFIX: Options for exporting playlist files could not be
+       changed.
+
        BUGFIX: Fixed segfault when updating tracks or directories with
        artowrk present.
 

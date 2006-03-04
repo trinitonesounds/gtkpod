@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 00:14:03 jcs>
+/* Time-stamp: <2006-03-04 11:00:52 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -1079,6 +1079,8 @@ void export_playlist_file_init (GList *tracks)
     win = gtkpod_xml_get_widget (export_playlist_xml, "export_playlist_file_options");
 
     options = gtkpod_xml_get_widget (export_playlist_xml, "options_frame");
+
+    fcd->win_xml = export_playlist_xml;
 
     /* Information needed to clean up later */
     fcd->tracks = g_list_copy (tracks);

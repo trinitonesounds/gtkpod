@@ -1,7 +1,17 @@
+2006-03-04 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file_export.c (export_playlist_file_init): missing
+           initialization of fcd->win_xml made it impossible to change
+           any options when exporting playlists.
+
 2006-02-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file_itunesdb.c (write_extended_info): added ipod_path
            again (got lost somewhere along the way). Thanks to Todd.
+
+	 * file_itunesdb.c (gp_write_itdb): do not disable 'Import'
+           button if iTunesDB was not written to the iPod
+           successfully.
 
 2006-02-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
