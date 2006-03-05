@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-04 17:02:33 jcs>
+/* Time-stamp: <2006-03-05 18:25:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -495,18 +495,28 @@ void dirbrowser_create (void)
     gtk_widget_show (dirbrowser);
 }
 
+/* called when dirbrowser gets destroyed with the window-close button */
+static void dirbrowser_destroyed (GtkWidget *w, gpointer userdata)
+{
+    g_return_if_fail (dirbrowser);
+
+    dirbrowser = NULL;
+}
+
+
 /* called when the file selector is closed */
 static void add_dir_close (GtkWidget *w1, GtkWidget *w2)
 {
-    if (dirbrowser)
-    {
-	gint x,y;
-	gtk_window_get_size (GTK_WINDOW (dirbrowser), &x, &y);
-	/* stor size for next time */
-	prefs_set_size_dirbr (x, y);
-	gtk_widget_destroy(dirbrowser);
-	dirbrowser = NULL;
-    }
+    gint x,y;
+
+    g_return_if_fail (dirbrowser);
+
+    gtk_window_get_size (GTK_WINDOW (dirbrowser), &x, &y);
+    /* store size for next time */
+    prefs_set_size_dirbr (x, y);
+    gtk_widget_destroy(dirbrowser);
+    /* dirbrowser = NULL; -- will be done by the dirbrowser_destroy()
+       as part of the callback */
 }
 
 
@@ -762,6 +772,10 @@ static GtkWidget *xmms_create_dir_browser (const char *title,
 			      GTK_SIGNAL_FUNC(add_dir_close),
 			      GTK_OBJECT(window));
     gtk_widget_show(cancel);
+
+    gtk_signal_connect(GTK_OBJECT(window), "destroy",
+		       GTK_SIGNAL_FUNC(dirbrowser_destroyed),
+		       NULL);
 
     gtk_box_pack_start(GTK_BOX(vbox), bbox, FALSE, FALSE, 0);
     gtk_widget_show(bbox);

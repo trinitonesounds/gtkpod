@@ -1,3 +1,8 @@
+2006-03-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * fileselection.c: did not properly clean up after closing
+           the dirbrowser window with the window-close button.
+
 2006-03-04 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file_export.c (export_playlist_file_init): missing
