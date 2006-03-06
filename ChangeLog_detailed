@@ -1,5 +1,7 @@
 2006-03-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * bumped to V0.99.4 for release
+
 	 * fileselection.c: did not properly clean up after closing
            the dirbrowser window with the window-close button.
 
