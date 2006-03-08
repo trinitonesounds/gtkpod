@@ -10,8 +10,13 @@
 # with the following defaults: 
 
 IPOD_MOUNT=/mnt/ipod                          # mountpoint of ipod
-CALFILE=~/.evolution/calendar/local/system/calendar.ics # calendar data file
-TASKFILE=~/.evolution/tasks/local/system/tasks.ics # task data file
+
+#get all the local evolution calendars
+CALFILES=`find ~/.evolution/calendar/local/ -name "calendar.ics"`
+
+#get all the local evolution tasks
+TASKFILES=`find ~/.evolution/tasks/local/ -name "tasks.ics"`
+
 ENCODING=ISO-8859-15                          # encoding used by ipod
 
 # Unless called with "-e=none" this script requires "iconv" available
@@ -37,6 +42,11 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 
 # Changelog:
 #
+# 2006/03/08 (Michele C. Soccio <michele at soccio dot it>:
+# Changed to get all the local calendar and task files
+#
+# Changed to correct the calendar file(s) and task file(s) command line option
+# 
 # 2004/06/27 (Jorg Schuler <jcsjcs at users dot sourceforge dot net>):
 # Changed to accept ipod-mountpath and encoding as command line
 # option
@@ -62,11 +72,11 @@ ENCODING=ISO-8859-15                          # encoding used by ipod
 
 
 # overwrite default settings with optional command line arguments
-while getopts i:d:e: option; do
+while getopts i:c:t:e: option; do
     case $option in
-        i) IPOD_MOUNT=$OPTARG;;
-        c) CALFILE=$OPTARG;;
-        t) TASKFILE=$OPTARG;;
+	i) IPOD_MOUNT=$OPTARG;;
+        c) CALFILES=$OPTARG;;
+        t) TASKFILES=$OPTARG;;
         e) ENCODING=$OPTARG;;
         \?) echo "Usage: `basename $0` [-i <ipod mountpoint>] [-c <evolution calendar file>] [-t <evolution tasks file>] [-e <encoding>]"
 	    exit 1;;
@@ -82,20 +92,26 @@ else
 fi
 
 
-# check if CALFILE exists
-if [ ! -f $CALFILE ]; then
-    echo "Error: $CALFILE does not exist"
-    exit 1
-fi
+# check if CALFILES exist
+for i in $CALFILES; do
+	if [ ! -f $CALFILE ]; then
+	    echo "Error: $i does not exist"
+	    exit 1
+	fi
+done
 
-# check if TASKFILE exists
-if [ ! -f $TASKFILE ]; then
-    echo "Error: $TASKFILE does not exist"
-    exit 1
-fi
+# check if each TASKFILES exist
+for j in $TASKFILES; do
+	if [ ! -f $j ]; then
+	    echo "Error: $TASKFILE does not exist"
+	    exit 1
+	fi
+done
 
-
+echo $CALFILES
+echo $TASKFILES
+sleep 30
 # remove all empty lines and recode if necessary
 echo -n "Syncing iPod ... [Calendar] "
-cat $CALFILE $TASKFILE | grep -v '^[[:space:]]$\|^$' | $RECODE > $IPOD_MOUNT/Calendars/evolution
+	cat $CALFILES $TASKFILES | grep -v '^[[:space:]]$\|^$' | $RECODE > $IPOD_MOUNT/Calendars/evolution
 echo "done!"

@@ -1,3 +1,8 @@
+2006-03-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * scripts/sync-evocalendar.sh: handle multiple calendar and
+           task files. Thanks to Michele C. Soccio
+
 2006-03-06 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * bumped to V0.99.5CVS for further development

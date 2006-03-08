@@ -1,3 +1,8 @@
+gtkpod V0.99.5CVS
+
+       IMPROVEMENT: handle multiple calendar and task files in
+       sync-evocalendar script. Thanks to Michele C. Soccio
+
 gtkpod V0.99.4
 
        BUGFIX: Options for exporting playlist files could not be
