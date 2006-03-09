@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-02-04 21:00:33 jcs>
+/* Time-stamp: <2006-03-09 23:24:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1728,7 +1728,12 @@ gchar *prefs_get_cfgdir (void)
       {
 	  if(mkdir(cfgdir, 0777) == -1)
 	  {
-	      gtkpod_warning(_("Unable to 'mkdir %s'\n"), cfgdir);
+	      /* if this error occurs before we have initialized config
+		 and display we crash --> resort to fprintf() */
+	      if (cfg)
+		  gtkpod_warning(_("Unable to 'mkdir %s'\n"), cfgdir);
+	      else
+		  fprintf(stderr, _("Unable to 'mkdir %s'\n"), cfgdir);
 	  }
       }
   }

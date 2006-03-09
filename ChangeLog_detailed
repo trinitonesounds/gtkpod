@@ -1,5 +1,10 @@
 2006-03-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * prefs.c (prefs_get_cfgdir): fix bug that crashes
+           application when cfgdir cannot be created.
+
+2006-03-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * scripts/sync-evocalendar.sh: handle multiple calendar and
            task files. Thanks to Michele C. Soccio
 
