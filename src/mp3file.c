@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-23 02:36:10 jcs>
+/* Time-stamp: <2006-03-12 01:31:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -69,6 +69,9 @@ struct _File_Tag
     gchar *podcastrss;
     gchar *time_released;
     gchar *subtitle;
+    gchar *lyrics;        /* does not appear to be the full lyrics --
+			     only used to set the flag 'lyrics_flag'
+			     of the Track structure */
 };
 
 /* This code is taken from the mp3info code. Only the code needed for
@@ -1162,7 +1165,7 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 	tag->genre = id3_get_string (id3tag, ID3_FRAME_GENRE);
 	tag->compilation = id3_get_string (id3tag, "TCMP");
 	tag->subtitle = id3_get_string (id3tag, "TIT3");
-
+	tag->lyrics = id3_get_string (id3tag, "USLT");
 	tag->podcasturl = id3_get_string (id3tag, "YTID");
 	tag->podcastrss = id3_get_string (id3tag, "YWFD");
 	tag->description = id3_get_string (id3tag, "YTDS");
@@ -2153,6 +2156,16 @@ Track *mp3_get_file_info (gchar *name)
 	    track->compilation = atoi(filetag.compilation);
 	    g_free (filetag.compilation);
 	}
+
+	if (filetag.lyrics)
+	{
+	    track->lyrics_flag = 0x01;
+	    g_free (filetag.lyrics);
+	}
+	else
+	{
+	    track->lyrics_flag = 0x00;
+	}	    
     }
 
     mp3_read_gain (name, track);

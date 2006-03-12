@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-02-19 14:35:41 jcs>
+/* Time-stamp: <2006-03-12 18:46:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -796,6 +796,8 @@ static Track *copy_new_info (Track *from, Track *to)
     g_free (eto->year_str);
     eto->year_str = g_strdup_printf ("%d", to->year);
     to->unk208 = from->unk208;
+    to->lyrics_flag = from->lyrics_flag;
+    to->movie_flag = from->movie_flag;
     /* copy artwork */
     to->artwork = itdb_artwork_duplicate (from->artwork);
 
@@ -1012,12 +1014,18 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
     case FILE_TYPE_M4B:
 	nti = mp4_get_file_info (name);
 	/* Set unk208 to audio */
-	if (nti) nti->unk208 = 0x00000001;
+	if (nti)
+	{
+	    nti->unk208 = 0x00000001;
+	}
 	break;
     case FILE_TYPE_WAV:
 	nti = wav_get_file_info (name);
 	/* Set unk208 to audio */
-	if (nti) nti->unk208 = 0x00000001;
+	if (nti)
+	{
+	    nti->unk208 = 0x00000001;
+	}
 	break;
     case FILE_TYPE_M4V:
     case FILE_TYPE_MP4:
@@ -1026,14 +1034,22 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	nti = mp4_get_file_info (name);
 	if (!nti) video_get_file_info (name);
 	/* Set unk208 to video */
-	if (nti) nti->unk208 = 0x00000002;
+	if (nti)
+	{
+	    nti->unk208 = 0x00000002;
+	    nti->movie_flag = 0x01;
+	}	
 	break;
     case FILE_TYPE_MOV:
     case FILE_TYPE_MPG:
 	/* for now treat all the same */
 	nti = video_get_file_info (name);
 	/* Set unk208 to video */
-	if (nti) nti->unk208 = 0x00000002;
+	if (nti)
+	{
+	    nti->unk208 = 0x00000002;
+	    nti->movie_flag = 0x01;
+	}
 	break;
     case FILE_TYPE_UNKNOWN:
 	gtkpod_warning (_("The following track could not be processed (filetype unknown): '%s'\n"), name_utf8);

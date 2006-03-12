@@ -1,7 +1,12 @@
 gtkpod V0.99.5CVS
 
-       IMPROVEMENT: handle multiple calendar and task files in
+       IMPROVEMENT: Handle multiple calendar and task files in
        sync-evocalendar script. Thanks to Michele C. Soccio
+
+       IMPROVEMENT: Lyrics are displayed on the iPod when available.
+
+       BUGFIX: When updating tracks, files were not copied to the iPod
+       even if the file was changed.
 
 gtkpod V0.99.4
 

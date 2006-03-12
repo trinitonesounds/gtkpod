@@ -1,3 +1,12 @@
+2006-03-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * md5.c (md5_hash_track): prefer filename on disk over
+           filename on iPod -> changed files are copied to iPod when
+           updating. This was an old bug.
+
+	 * file.c (copy_new_info), (get_track_info_from_file);
+           mp3file.c: support new 'lyrics_flag' and 'movie_flag'.
+
 2006-03-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * prefs.c (prefs_get_cfgdir): fix bug that crashes

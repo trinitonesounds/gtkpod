@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:16 jcs>
+/* Time-stamp: <2006-03-12 18:44:39 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -182,10 +182,14 @@ md5_hash_track(Track * s)
    {
        result = g_strdup(etr->md5_hash);
    }
-   else if ((filename = get_file_name (s)) != NULL)
+   else
    {
-       result = md5_hash_on_filename (filename, FALSE);
-       g_free(filename);
+       filename = get_file_name_from_source (s, SOURCE_PREFER_LOCAL);
+       if (filename)
+       {
+	   result = md5_hash_on_filename (filename, FALSE);
+	   g_free(filename);
+       }
    }
    return (result);
 }
