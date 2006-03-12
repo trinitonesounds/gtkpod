@@ -7,6 +7,8 @@
 	 * file.c (copy_new_info), (get_track_info_from_file);
            mp3file.c: support new 'lyrics_flag' and 'movie_flag'.
 
+	 * configure.in: require libgpod 0.3.3 (CVS version)
+
 2006-03-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * prefs.c (prefs_get_cfgdir): fix bug that crashes
