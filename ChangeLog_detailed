@@ -9,6 +9,8 @@
 
 	 * configure.in: require libgpod 0.3.3 (CVS version)
 
+	 * po/ja.po: updated catalog (thanks to Kentaro Fukuchi)
+
 2006-03-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * prefs.c (prefs_get_cfgdir): fix bug that crashes

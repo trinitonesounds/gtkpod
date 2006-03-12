@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 14:43:34 jcs>
+/* Time-stamp: <2006-03-12 23:34:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1542,7 +1542,7 @@ static void pm_unsort ()
 void pm_sort (GtkSortType order)
 {
     GtkTreeModel *model= gtk_tree_view_get_model (playlist_treeview);
-    g_return_if_fail (playlist_treeview);
+    g_return_if_fail (model);
     if (order != SORT_NONE)
     {
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (model),
