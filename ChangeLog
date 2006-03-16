@@ -11,6 +11,9 @@ gtkpod V0.99.5CVS
        BUGFIX: When updating tracks, files were not copied to the iPod
        even if the file was changed.
 
+       WORKAROUND: Disable sorting of playlist view as this crashed
+       gtkpod.
+
 gtkpod V0.99.4
 
        BUGFIX: Options for exporting playlist files could not be

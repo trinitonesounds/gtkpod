@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-16 23:52:04 jcs>
+/* Time-stamp: <2006-03-17 00:48:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1070,10 +1070,8 @@ void check_db (iTunesDB *itdb)
 	/* directory name */
 	gchar *ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
 	gchar *ipod_fulldir;
-	const gchar *p_music[] = {NULL, NULL,};
-	p_music[0] = ipod_dir;
 	/* full path */
-	ipod_fulldir = itdb_resolve_path (music_dir, p_music);
+	ipod_fulldir = itdb_get_path (music_dir, ipod_dir);
 	if(ipod_fulldir && (dir_des=g_dir_open(ipod_fulldir,0,NULL))) {
 	    while ((ipod_filename=g_strdup(g_dir_read_name(dir_des))))
 		/* we have a file in the directory*/
@@ -1153,7 +1151,6 @@ void check_db (iTunesDB *itdb)
 	    }
             g_dir_close(dir_des);
 	}
-        p_music[0] = NULL;
         g_free(ipod_dir);
  	g_free(ipod_fulldir);
 	process_gtk_events_blocked();

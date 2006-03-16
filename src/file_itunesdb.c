@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-16 23:52:04 jcs>
+/* Time-stamp: <2006-03-17 00:48:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -508,16 +508,14 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     }
     else
     { /* GP_ITDB_TYPE_IPOD _and_ iPod is connected */
-	const gchar *ext_db[] = {"iTunesDB.ext",NULL};
-	const gchar *db[] = {"iTunesDB",NULL};
 	gchar *name_ext=NULL, *name_db=NULL;
 
 	gchar *itunes_dir = itdb_get_itunes_dir (mp);
 
 	if (itunes_dir)
 	{
-	    name_ext = itdb_resolve_path (itunes_dir, ext_db);
-	    name_db = itdb_resolve_path (itunes_dir, db);
+	    name_ext = itdb_get_path (itunes_dir, "iTunesDB.ext");
+	    name_db  = itdb_get_path (itunes_dir, "iTunesDB");
 	}
 	if (name_db)
 	{
@@ -1040,7 +1038,6 @@ static void file_dialog_abort (gboolean *abort_flag)
 /* check if iPod directory stucture is present */
 static gboolean ipod_dirs_present (const gchar *mountpoint)
 {
-    const gchar *f00[] = {"F00", NULL};
     gchar *file;
     gchar *dir;
     gboolean result = TRUE;
@@ -1051,7 +1048,7 @@ static gboolean ipod_dirs_present (const gchar *mountpoint)
     if (!dir)
 	return FALSE;
 
-    file = itdb_resolve_path(dir, f00);
+    file = itdb_get_path (dir, "F00");
     if (!file || !g_file_test(file, G_FILE_TEST_IS_DIR))
 	result = FALSE;
     g_free (file);
