@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-21 00:27:51 jcs>
+/* Time-stamp: <2006-03-16 23:52:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -934,8 +934,8 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 
 
 
-/* checks iTunesDB for presence of dangling links and checks IPODs Music directory
- * on subject of orphaned files */
+/* checks iTunesDB for presence of dangling links and checks IPODs
+ * Music directory on subject of orphaned files */
 void check_db (iTunesDB *itdb)
 {
 
@@ -980,9 +980,10 @@ void check_db (iTunesDB *itdb)
     gint norphaned = 0;
     gint ndangling = 0;
     gchar ** tokens;
-    gchar *ipod_path_as_filename = charset_from_utf8 (prefs_get_ipod_mount ());
+    const gchar *mountpoint = itdb_get_mountpoint (itdb);
     ExtraiTunesDBData *eitdb;
     GList *gl;
+    gchar *music_dir = NULL;
 
     g_return_if_fail (itdb);
     eitdb = itdb->userdata;
@@ -992,10 +993,8 @@ void check_db (iTunesDB *itdb)
        a mistake and we should tell him about it */
     if (!eitdb->itdb_imported)
     {
-	const gchar *itunes_components[] = {"iPod_Control", "iTunes", NULL};
-	gchar *itunes_filename = resolve_path(ipod_path_as_filename,
-					      itunes_components);
-	if (g_file_test (itunes_filename, G_FILE_TEST_EXISTS))
+	gchar *itunesdb_filename = itdb_get_itunesdb_path (mountpoint);
+	if (itunesdb_filename)
 	{
 	    GtkWidget *dialog = gtk_message_dialog_new (
 		GTK_WINDOW (gtkpod_window),
@@ -1005,14 +1004,12 @@ void check_db (iTunesDB *itdb)
 		_("You did not import the existing iTunesDB. This is most likely incorrect and will result in the loss of the existing database.\n\nPress 'OK' if you want to proceed anyhow or 'Cancel' to abort. If you cancel, you can import the existing database before calling this function again.\n"));
 	    gint result = gtk_dialog_run (GTK_DIALOG (dialog));
 	    gtk_widget_destroy (dialog);
+	    g_free (itunesdb_filename);
 	    if (result == GTK_RESPONSE_CANCEL)
 	    {
-		g_free (ipod_path_as_filename);
-		g_free (itunes_filename);
 		return;
 	    }
 	}
-	g_free (itunes_filename);
     }
 
     prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
@@ -1066,15 +1063,17 @@ void check_db (iTunesDB *itdb)
     gtkpod_tracks_statusbar_update();
     process_gtk_events_blocked();
 
+    music_dir = itdb_get_music_dir (mountpoint);
+
     for(h=0; h<itdb_musicdirs_number (itdb); h++)
     {
 	/* directory name */
 	gchar *ipod_dir=g_strdup_printf("F%02d",h); /* just directory name */
 	gchar *ipod_fulldir;
-	const gchar * music[] = {"iPod_Control","Music", NULL, NULL,};
-	music[2] = ipod_dir;
+	const gchar *p_music[] = {NULL, NULL,};
+	p_music[0] = ipod_dir;
 	/* full path */
-	ipod_fulldir = resolve_path(ipod_path_as_filename,music);
+	ipod_fulldir = itdb_resolve_path (music_dir, p_music);
 	if(ipod_fulldir && (dir_des=g_dir_open(ipod_fulldir,0,NULL))) {
 	    while ((ipod_filename=g_strdup(g_dir_read_name(dir_des))))
 		/* we have a file in the directory*/
@@ -1098,12 +1097,10 @@ void check_db (iTunesDB *itdb)
 		    gchar *num_str = g_strdup_printf ("F%02d", h);
 		    Track *dupl_track;
 
-		    const gchar *dcomps[] =
-			{ "iPod_Control", "Music", num_str,
-			  ipod_filename, NULL };
+		    const gchar *p_dcomps[] =
+			{ num_str, ipod_filename, NULL };
 
-		    fn_orphaned = resolve_path (
-			prefs_get_ipod_mount(), dcomps);
+		    fn_orphaned = itdb_resolve_path (music_dir, p_dcomps);
 
 		    if (!pl_orphaned)
 		    {
@@ -1122,9 +1119,15 @@ void check_db (iTunesDB *itdb)
 			  It will be removed with the next sync */
 			Track *track = gp_track_new ();
 			gchar *fn_utf8 = charset_to_utf8 (fn_orphaned);
+			const gchar *dir_rel = music_dir + strlen (mountpoint);
+			if (*dir_rel == G_DIR_SEPARATOR) ++dir_rel;
 			track->ipod_path = g_strdup_printf (
-			    ":iPod_Control:Music:%s:%s",
-			    num_str, ipod_filename);
+			    "%c%s%c%s%c%s",
+			    G_DIR_SEPARATOR, dir_rel,
+			    G_DIR_SEPARATOR, num_str,
+			    G_DIR_SEPARATOR, ipod_filename);
+			itdb_filename_fs2ipod (track->ipod_path);
+
 			gp_track_validate_entries (track);
 			mark_track_for_deletion (itdb, track);
 			gtkpod_warning (_(
@@ -1150,7 +1153,7 @@ void check_db (iTunesDB *itdb)
 	    }
             g_dir_close(dir_des);
 	}
-        music[3] = NULL;
+        p_music[0] = NULL;
         g_free(ipod_dir);
  	g_free(ipod_fulldir);
 	process_gtk_events_blocked();
@@ -1164,6 +1167,8 @@ void check_db (iTunesDB *itdb)
     gtkpod_tracks_statusbar_update();
 
     g_free(buf);
+    g_free(music_dir);
+    music_dir = NULL;
 
     /* Now lets deal with dangling tracks */
     /* Traverse the tree - leftovers are dangling - put them in two lists */
@@ -1214,7 +1219,6 @@ void check_db (iTunesDB *itdb)
     }
 
     if (pl_orphaned) data_changed (itdb);
-    g_free (ipod_path_as_filename);
     g_tree_destroy (files_known);
     buf = g_strdup_printf (_("Found %d orphaned and %d dangling files. Done."),
 			   norphaned, ndangling);

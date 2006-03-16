@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-02-25 22:56:41 jcs>
+/* Time-stamp: <2006-03-16 23:52:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -508,10 +508,17 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     }
     else
     { /* GP_ITDB_TYPE_IPOD _and_ iPod is connected */
-	const gchar *ext_db[] = { "iPod_Control","iTunes","iTunesDB.ext",NULL};
-	const gchar *db[] = {"iPod_Control","iTunes","iTunesDB",NULL};
-	gchar *name_ext = resolve_path (mp, ext_db);
-	gchar *name_db = resolve_path (mp, db);
+	const gchar *ext_db[] = {"iTunesDB.ext",NULL};
+	const gchar *db[] = {"iTunesDB",NULL};
+	gchar *name_ext=NULL, *name_db=NULL;
+
+	gchar *itunes_dir = itdb_get_itunes_dir (mp);
+
+	if (itunes_dir)
+	{
+	    name_ext = itdb_resolve_path (itunes_dir, ext_db);
+	    name_db = itdb_resolve_path (itunes_dir, db);
+	}
 	if (name_db)
 	{
 	    if (prefs_get_write_extended_info ())
@@ -547,12 +554,13 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	    gchar *name = g_build_filename (
 		mp,
 		"iPod_Control","iTunes","iTunesDB",NULL);
-	    gtkpod_warning (_("'%s' does not exist. Import aborted.\n\n"),
+	    gtkpod_warning (_("'%s' (or similar) does not exist. Import aborted.\n\n"),
 			    name);
 	    g_free (name);
 	}
 	g_free (name_ext);
 	g_free (name_db);
+	g_free (itunes_dir);
     }
 
     if (!itdb)
@@ -762,11 +770,12 @@ void gp_merge_itdb (iTunesDB *old_itdb)
     }
     else if (old_itdb->usertype & GP_ITDB_TYPE_IPOD)
     {
-	g_return_if_fail (old_itdb->mountpoint);
+	const gchar *mountpoint = itdb_get_mountpoint (old_itdb);
+	g_return_if_fail (mountpoint);
 	g_return_if_fail (old_eitdb->offline_filename);
 
 	new_itdb = gp_import_itdb (old_itdb, old_itdb->usertype,
-				   old_itdb->mountpoint,
+				   mountpoint,
 				   old_eitdb->offline_filename,
 				   NULL);
     }
@@ -1029,25 +1038,30 @@ static void file_dialog_abort (gboolean *abort_flag)
 
 
 /* check if iPod directory stucture is present */
-static gboolean ipod_dirs_present (gchar *mountpoint)
+static gboolean ipod_dirs_present (const gchar *mountpoint)
 {
-    const gchar *music[] = {"iPod_Control", "Music", "F00", NULL},
-      *itunes[] = {"iPod_Control","iTunes",NULL};
+    const gchar *f00[] = {"F00", NULL};
     gchar *file;
+    gchar *dir;
     gboolean result = TRUE;
 
     g_return_val_if_fail (mountpoint, FALSE);
 
-    file = resolve_path(mountpoint, music);
-    if(!file || !g_file_test(file,G_FILE_TEST_IS_DIR))
+    dir = itdb_get_music_dir (mountpoint);
+    if (!dir)
+	return FALSE;
+
+    file = itdb_resolve_path(dir, f00);
+    if (!file || !g_file_test(file, G_FILE_TEST_IS_DIR))
+	result = FALSE;
+    g_free (file);
+    g_free (dir);
+
+    dir = itdb_get_itunes_dir (mountpoint);
+    if(!dir || !g_file_test(dir, G_FILE_TEST_IS_DIR))
       result = FALSE;
-    g_free(file);
-    
-    file = resolve_path(mountpoint, itunes);
-    if(!file || !g_file_test(file,G_FILE_TEST_IS_DIR))
-      result = FALSE;
-    g_free(file);
-    
+    g_free(dir);
+
     return result;
 }
 
@@ -1133,7 +1147,7 @@ static gboolean delete_files (iTunesDB *itdb)
 
   if (itdb->usertype & GP_ITDB_TYPE_IPOD)
   {
-      g_return_val_if_fail (itdb->mountpoint, FALSE);
+      g_return_val_if_fail (itdb_get_mountpoint (itdb), FALSE);
   }
 
   abort_flag = FALSE;
@@ -1372,11 +1386,9 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 	  }
 	  else
 	  {
-	      const gchar *itunes_components[] = {"iPod_Control",
-						  "iTunes",
-						  "iTunesDB", NULL};
-	      g_return_val_if_fail (itdb->mountpoint, FALSE);
-	      tunes = resolve_path (itdb->mountpoint, itunes_components);
+	      const gchar *mountpoint = itdb_get_mountpoint (itdb);
+	      g_return_val_if_fail (mountpoint, FALSE);
+	      tunes = itdb_get_itunesdb_path (mountpoint);
 	  }
       }
       else
@@ -1408,13 +1420,14 @@ gboolean gp_write_itdb (iTunesDB *itdb)
 
   if((itdb->usertype & GP_ITDB_TYPE_IPOD) && !prefs_get_offline ())
   {
-      g_return_val_if_fail (itdb->mountpoint, FALSE);
+      const gchar *mountpoint = itdb_get_mountpoint (itdb);
+      g_return_val_if_fail (mountpoint, FALSE);
       /* check if iPod directories are present */
-      if (!ipod_dirs_present (itdb->mountpoint))
+      if (!ipod_dirs_present (mountpoint))
       {   /* no -- create them */
-	  ipod_directories_head (itdb->mountpoint);
+	  ipod_directories_head (mountpoint);
 	  /* if still not present abort */
-	  if (!ipod_dirs_present (itdb->mountpoint))
+	  if (!ipod_dirs_present (mountpoint))
 	  {
 	      gtkpod_warning (_("iPod directory structure must be present before synching to the iPod can be performed.\n"));
 	      success = FALSE;

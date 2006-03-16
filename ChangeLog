@@ -1,5 +1,8 @@
 gtkpod V0.99.5CVS
 
+       NEW FEATURE: Preliminary support for mobile phones supporting
+       iTunes (see Changelog_detailed for details)
+
        IMPROVEMENT: Handle multiple calendar and task files in
        sync-evocalendar script. Thanks to Michele C. Soccio
 

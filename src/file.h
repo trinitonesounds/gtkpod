@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 01:53:26 jcs>
+/* Time-stamp: <2006-03-15 23:14:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -106,7 +106,6 @@ void unmark_track_for_deletion (iTunesDB *itdb, Track *track);
 void gp_info_deleted_tracks (iTunesDB *itdb,
 			     gdouble *size, guint32 *num);
 void update_charset_info (Track *track);
-gchar *resolve_path(const gchar *,const gchar * const *);
 void parse_offline_playcount (void);
 
 gboolean get_gain(Track *track);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-12 23:34:35 jcs>
+/* Time-stamp: <2006-03-13 00:27:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1558,6 +1558,9 @@ void pm_sort (GtkSortType order)
     }
 }
 
+
+#if 0
+FIXME: see comments at pm_data_compare_func()
 /**
  * pm_track_column_button_clicked
  * @tvc - the tree view colum that was clicked
@@ -1581,7 +1584,7 @@ pm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
 	if (prefs_get_pm_autostore ())  pm_rows_reordered ();
     }
 }
-
+#endif
 
 
 /**
@@ -1649,15 +1652,25 @@ gint pm_data_compare_func (GtkTreeModel *model,
   GtkSortType order;
   gint corr, colid;
 
-/*  g_return_val_if_fail (model, 0);
+  return 0;  /* FIXME: see below -- deactivated for now */
+
+  g_return_val_if_fail (model, 0);
   g_return_val_if_fail (a, 0);
-  g_return_val_if_fail (b, 0);*/
+  g_return_val_if_fail (b, 0);
 
   if (gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (model),
 					    &colid, &order) == FALSE)
       return 0;
+
   gtk_tree_model_get (model, a, colid, &playlist1, -1);
   gtk_tree_model_get (model, b, colid, &playlist2, -1);
+
+/* FIXME: this function crashes because it is provided illegal
+ * GtkTreeIters. */
+/* FIXME: after the introduction of a GtkTreeView rather than a
+ * ListView, sorting should be done by a customs sort mechanism
+ * anyway. */
+
   g_return_val_if_fail (playlist1 && playlist2, 0);
 
   /* We make sure that the master playlist always stays on top */
@@ -1828,8 +1841,10 @@ static void pm_add_columns (void)
   /* playlist column */
   column = gtk_tree_view_column_new ();
   gtk_tree_view_column_set_title (column, _("Playlists"));
-  gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
   gtk_tree_view_column_set_resizable (column, TRUE);
+/* FIXME: see comments at pm_data_compare_func() */
+/*
+  gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
   gtk_tree_view_column_set_sort_order (column, GTK_SORT_ASCENDING);
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model),
 				   PM_COLUMN_PLAYLIST,
@@ -1838,6 +1853,7 @@ static void pm_add_columns (void)
   g_signal_connect (G_OBJECT (column), "clicked",
 		    G_CALLBACK (pm_track_column_button_clicked),
 				(gpointer)PM_COLUMN_PLAYLIST);
+*/
   gtk_tree_view_append_column (playlist_treeview, column);
 
   /* cell for playlist name */

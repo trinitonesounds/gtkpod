@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-12 18:46:35 jcs>
+/* Time-stamp: <2006-03-16 23:52:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2088,25 +2088,30 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 	  track->transferred = FALSE;
 
 	  /* is 'fname' on the iPod? -- if yes mark as transfered, if
-	   * it's in the ipod_control directory */
+	   * it's in the music directory */
 	  if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	  {
-	      g_return_val_if_fail (itdb->mountpoint, FALSE);
-	      if (strstr (fname, itdb->mountpoint) == fname)
+	      const gchar *mountpoint = itdb_get_mountpoint (itdb);
+	      g_return_val_if_fail (mountpoint, FALSE);
+	      if (strstr (fname, mountpoint) == fname)
 	      {   /* Yes */
-		  /* is 'fname' in the iPod_Control directory? */
-		  gchar *fname_i = fname + strlen (itdb->mountpoint);
-		  gchar *fname_l;
-		  if (*fname_i == G_DIR_SEPARATOR) ++fname_i;
-		  fname_l = g_ascii_strdown (fname_i, -1);
-		  if (strstr (fname_l, "ipod_control") == fname_l)
-		  {   /* Yes */
-		      track->transferred = TRUE;
-		      track->ipod_path = g_strdup_printf (
-			  "%c%s", G_DIR_SEPARATOR, fname_i);
-		      itdb_filename_fs2ipod (track->ipod_path);
+		  /* is 'fname' in the iPod's Music directory? */
+		  gchar *control_dir = itdb_get_music_dir (mountpoint);
+		  if (control_dir)
+		  {
+		      gchar *cdir = g_strdup_printf ("%s%c", control_dir,
+						     G_DIR_SEPARATOR);
+		      g_free (control_dir);
+		      if (g_strncasecmp (fname, cdir, strlen (cdir)) == 0)
+		      {   /* Yes */
+			  gchar *fname_i = fname + strlen (mountpoint);
+			  if (*fname_i == G_DIR_SEPARATOR) ++fname_i;
+			  track->transferred = TRUE;
+			  track->ipod_path = g_strdup_printf (
+			      "%c%s", G_DIR_SEPARATOR, fname_i);
+			  itdb_filename_fs2ipod (track->ipod_path);
+		      }
 		  }
-		  g_free (fname_l);
 	      }
 	  }
 
@@ -2441,98 +2446,6 @@ gchar *get_file_name_from_source (Track *track, FileSource source)
 }
 
 
-
-
-
-
-/* There seems to be a problem with some distributions
-      (kernel versions or whatever -- even identical version
-      numbers don't don't show identical behaviour...): even
-      though vfat is supposed to be case insensitive, a
-     difference is made between upper and lower case under
-     some special circumstances. As in
-     "/iPod_Control/Music/F00" and "/iPod_Control/Music/f00
-     "... If the former filename does not exist, we try to find an
-     existing case insensitive match for each component of the
-     filename.  If we can find such a match, we return it.  Otherwise,
-     we return NULL.*/
-     
-   /* We start by assuming that the ipod mount point exists.  Then,
-    * for each component c of track->ipod_path, we try to find an
-    * entry d in good_path that is case-insensitively equal to c.  If
-    * we find d, we append d to good_path and make the result the new
-    * good_path.  Otherwise, we quit and return NULL.  @root: in local
-    * encoding, @components: in utf8
- */
-gchar * resolve_path(const gchar *root,const gchar * const * components) {
-  gchar *good_path = g_strdup(root);
-  guint32 i;
-
-  if (!root) return NULL;
-    
-  for(i = 0 ; components[i] ; i++) {
-    GDir *cur_dir;
-    gchar *component_as_filename;
-    gchar *test_path;
-    gchar *component_stdcase;
-    const gchar *dir_file=NULL;
-
-    /* skip empty components */
-    if (strlen (components[i]) == 0) continue;
-    component_as_filename = 
-      g_filename_from_utf8(components[i],-1,NULL,NULL,NULL);
-    test_path = g_build_filename(good_path,component_as_filename,NULL);
-    g_free(component_as_filename);
-    if(g_file_test(test_path,G_FILE_TEST_EXISTS)) {
-      /* This component does not require fixup */
-      g_free(good_path);
-      good_path = test_path;
-      continue;
-    }
-    g_free(test_path);
-    component_stdcase = g_utf8_casefold(components[i],-1);
-    /* Case insensitively compare the current component with each entry
-     * in the current directory. */
-
-    cur_dir = g_dir_open(good_path,0,NULL);
-    if (cur_dir) while ((dir_file = g_dir_read_name(cur_dir)))
-    {
-	gchar *file_utf8 = g_filename_to_utf8(dir_file,-1,NULL,NULL,NULL);
-	gchar *file_stdcase = g_utf8_casefold(file_utf8,-1);
-	gboolean found = !g_utf8_collate(file_stdcase,component_stdcase);
-	gchar *new_good_path;
-	g_free(file_stdcase);
-	if(!found)
-	{
-	    /* This is not the matching entry */
-	    g_free(file_utf8);
-	    continue;
-	}
-      
-	new_good_path = dir_file ? g_build_filename(good_path,dir_file,NULL) : NULL;
-	g_free(good_path);
-	good_path= new_good_path;
-	/* This is the matching entry, so we can stop searching */
-	break;
-    }
-    
-    if(!dir_file) {
-      /* We never found a matching entry */
-      g_free(good_path);
-      good_path = NULL;
-    }
-
-    g_free(component_stdcase);
-    if (cur_dir) g_dir_close(cur_dir);
-    if(!good_path || !g_file_test(good_path,G_FILE_TEST_EXISTS))
-      break; /* We couldn't fix this component, so don't try later ones */
-  }
-    
-  if(good_path && g_file_test(good_path,G_FILE_TEST_EXISTS))
-    return good_path;
-          
-  return NULL;
-}
 
 
 

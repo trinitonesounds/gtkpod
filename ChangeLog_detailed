@@ -1,3 +1,21 @@
+2006-03-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * Preliminary support for mobile phones supporting iTunes
+           (requires the following directory structure to be present:
+	   <mountpoint>/iTunes
+	   <mountpoint>/iTunes/iTunes_Control
+	   <mountpoint>/iTunes/iTunes_Control/iTunes
+	   <mountpoint>/iTunes/iTunes_Control/Music
+	   <mountpoint>/iTunes/iTunes_Control/Music/F00
+	   <mountpoint>/iTunes/iTunes_Control/Music/F01
+	   <mountpoint>/iTunes/iTunes_Control/Music/F02)
+
+	 * cosmetic changes to compile with the newest CVS version of
+           libgpod.
+
+	 * use of itdb_get_..._dir() functions to get directory names
+           on the iPod.
+
 2006-03-12 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * md5.c (md5_hash_track): prefer filename on disk over

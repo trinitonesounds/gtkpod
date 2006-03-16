@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-14 23:13:26 jcs>
+/* Time-stamp: <2006-03-16 23:52:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1175,7 +1175,7 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
     }
     else
     {
-	ipod_directories_head (itdb->mountpoint);
+	ipod_directories_head (itdb_get_mountpoint (itdb));
     }
 }
 

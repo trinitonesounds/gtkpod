@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 17:54:30 jcs>
+/* Time-stamp: <2006-03-16 23:52:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1033,7 +1033,7 @@ void gp_update_itdb_prefs (void)
 	else if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
 	    prefs_set_string_value (prop, eitdb->offline_filename);
-	    prefs_set_string_value (prop2, itdb->mountpoint);
+	    prefs_set_string_value (prop2, itdb_get_mountpoint (itdb));
 	}
 	else
 	{
