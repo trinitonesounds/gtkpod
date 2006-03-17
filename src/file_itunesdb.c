@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-17 00:48:56 jcs>
+/* Time-stamp: <2006-03-18 00:31:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -511,7 +511,6 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	gchar *name_ext=NULL, *name_db=NULL;
 
 	gchar *itunes_dir = itdb_get_itunes_dir (mp);
-
 	if (itunes_dir)
 	{
 	    name_ext = itdb_get_path (itunes_dir, "iTunesDB.ext");
@@ -584,7 +583,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	    itdb->filename = NULL;
 	}
 	eitdb->offline_filename = g_strdup (name_off);
-    }	    
+    }
 
     total = g_list_length (itdb->tracks);
     num = 1;

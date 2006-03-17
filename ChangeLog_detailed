@@ -1,3 +1,8 @@
+2006-03-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file.c (copy_new_info): copy artwork related -- should
+           solve issue of updated artwork not displaying on iPod
+
 2006-03-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * Preliminary support for mobile phones supporting iTunes

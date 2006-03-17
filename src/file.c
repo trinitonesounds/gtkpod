@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-16 23:52:04 jcs>
+/* Time-stamp: <2006-03-18 01:26:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -741,39 +741,61 @@ static Track *copy_new_info (Track *from, Track *to)
     g_return_val_if_fail (eto, NULL);
 
     g_free (to->title);
-    g_free (to->artist);
-    g_free (to->album);
-    g_free (to->genre);
-    g_free (to->composer);
-    g_free (to->comment);
-    g_free (to->filetype);
-    g_free (to->description);
-    g_free (to->podcasturl);
-    g_free (to->podcastrss);
-    g_free (to->subtitle);
-    g_free (eto->pc_path_utf8);
-    g_free (eto->pc_path_locale);
-    g_free (eto->charset);
-    g_free (eto->thumb_path_utf8);
-    g_free (eto->thumb_path_locale);
-    itdb_artwork_free (to->artwork);
-    /* copy strings */
-    to->album = g_strdup (from->album);
-    to->artist = g_strdup (from->artist);
     to->title = g_strdup (from->title);
+
+    g_free (to->artist);
+    to->artist = g_strdup (from->artist);
+
+    g_free (to->album);
+    to->album = g_strdup (from->album);
+
+    g_free (to->genre);
     to->genre = g_strdup (from->genre);
-    to->comment = g_strdup (from->comment);
+
+    g_free (to->composer);
     to->composer = g_strdup (from->composer);
+
+    g_free (to->comment);
+    to->comment = g_strdup (from->comment);
+
+    g_free (to->filetype);
     to->filetype = g_strdup (from->filetype);
-    to->podcasturl = g_strdup (from->podcasturl);
-    to->podcastrss = g_strdup (from->podcastrss);
-    to->subtitle = g_strdup (from->subtitle);
+
+    g_free (to->description);
     to->description = g_strdup (from->description);
-    eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
-    eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
-    eto->charset = g_strdup (efrom->charset);
+
+    g_free (to->podcasturl);
+    to->podcasturl = g_strdup (from->podcasturl);
+
+    g_free (to->podcastrss);
+    to->podcastrss = g_strdup (from->podcastrss);
+
+    g_free (to->subtitle);
+    to->subtitle = g_strdup (from->subtitle);
+
+    g_free (eto->pc_path_utf8);
     eto->thumb_path_utf8 = g_strdup (efrom->thumb_path_utf8);
+
+    g_free (eto->pc_path_locale);
     eto->thumb_path_locale = g_strdup (efrom->thumb_path_locale);
+
+    g_free (eto->charset);
+    eto->charset = g_strdup (efrom->charset);
+
+    g_free (eto->thumb_path_utf8);
+    eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
+
+    g_free (eto->thumb_path_locale);
+    eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
+
+    g_free (eto->year_str);
+    eto->year_str = g_strdup_printf ("%d", to->year);
+
+    itdb_artwork_free (to->artwork);
+    to->artwork = itdb_artwork_duplicate (from->artwork);
+    to->artwork_size = from->artwork_size;
+    to->artwork_count = from->artwork_count;
+
     to->size = from->size;
     to->tracklen = from->tracklen;
     to->cd_nr = from->cd_nr;
@@ -793,13 +815,9 @@ static Track *copy_new_info (Track *from, Track *to)
     to->time_modified = from->time_modified;
     to->year = from->year;
     to->compilation = from->compilation;
-    g_free (eto->year_str);
-    eto->year_str = g_strdup_printf ("%d", to->year);
     to->unk208 = from->unk208;
     to->lyrics_flag = from->lyrics_flag;
     to->movie_flag = from->movie_flag;
-    /* copy artwork */
-    to->artwork = itdb_artwork_duplicate (from->artwork);
 
     return to;
 }
@@ -1094,7 +1112,9 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 
 	/* Set coverart */
 	if (prefs_get_coverart())
+	{
 	    add_artwork (nti);
+	}
 
 	/* Set modification date to *now* */
 	nti->time_modified = itdb_time_get_mac_time ();
@@ -1887,7 +1907,6 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
     g_return_if_fail (track);
     etr = track->userdata;
     g_return_if_fail (etr);
-
     /* remember size of track on iPod */
     if (track->transferred) oldsize = track->size;
     else                    oldsize = 0;
@@ -1954,7 +1973,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	/* notify display model */
 	pm_track_changed (track);
 	display_updated (track, NULL);
-        C_FREE (oldhash);
+        g_free (oldhash);
     }
     else
     { /* update not successful -- log this track for later display */
@@ -1973,7 +1992,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }
-    C_FREE (trackpath);
+    g_free (trackpath);
 
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 }
@@ -2101,7 +2120,6 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 		  {
 		      gchar *cdir = g_strdup_printf ("%s%c", control_dir,
 						     G_DIR_SEPARATOR);
-		      g_free (control_dir);
 		      if (g_strncasecmp (fname, cdir, strlen (cdir)) == 0)
 		      {   /* Yes */
 			  gchar *fname_i = fname + strlen (mountpoint);
@@ -2111,6 +2129,8 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 			      "%c%s", G_DIR_SEPARATOR, fname_i);
 			  itdb_filename_fs2ipod (track->ipod_path);
 		      }
+		      g_free (control_dir);
+		      g_free (cdir);
 		  }
 	      }
 	  }
