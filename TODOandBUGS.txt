@@ -1,8 +1,13 @@
 TODO:
 
->         {"S492", 30 * GB, MODEL_TYPE_REGULAR, FOURTH_GENERATION},
-HP-iPod.
+- support for www.last.fm
 
+  http://www.last.fm is a web site that you report your listening
+  habits to.  The site can then give you recommendations on other
+  music that you may also like. The site also has music charts for
+  users and also for the entire site.  You can tag music and they also
+  have a Radio that you can download and it plays songs for you. -
+  Joshua
 
 - retag tracks with database information
 
