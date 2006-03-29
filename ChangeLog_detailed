@@ -1,3 +1,9 @@
+2006-03-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * misc_confirm.c (delete_playlist_ok): use of playlist->name
+           after removing the playlist could/should crash
+           gtkpod. Fixed.
+
 2006-03-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file.c (copy_new_info): copy artwork related -- should

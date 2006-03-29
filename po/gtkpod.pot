@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-16 00:14+0900\n"
+"POT-Creation-Date: 2006-03-22 00:40+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -339,7 +339,7 @@ msgstr ""
 msgid "n/a"
 msgstr ""
 
-#: src/details.c:1099
+#: src/details.c:1098
 msgid "<b>n/a</b>"
 msgstr ""
 
@@ -882,77 +882,77 @@ msgstr ""
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr ""
 
-#: src/file.c:819
+#: src/file.c:837
 #, c-format
 msgid "Local filename not valid (%s)"
 msgstr ""
 
-#: src/file.c:872
+#: src/file.c:890
 #, c-format
 msgid "No information found for user '%s' in '%s'"
 msgstr ""
 
-#: src/file.c:879
+#: src/file.c:897
 #, c-format
 msgid "mserv data file (%s) not available for track (%s)"
 msgstr ""
 
-#: src/file.c:887
+#: src/file.c:905
 #, c-format
 msgid "Track (%s) not in mserv music root directory (%s)"
 msgstr ""
 
-#: src/file.c:992
+#: src/file.c:1010
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr ""
 
-#: src/file.c:1055
+#: src/file.c:1073
 #, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
 msgstr ""
 
-#: src/file.c:1137
+#: src/file.c:1157
 #, c-format
 msgid ""
 "The following track could not be processed (filetype is known but analysis "
 "failed): '%s'\n"
 msgstr ""
 
-#: src/file.c:1166 src/file.c:1221
+#: src/file.c:1186 src/file.c:1241
 msgid "Nothing to update"
 msgstr ""
 
-#: src/file.c:1186
+#: src/file.c:1206
 #, c-format
 msgid "Updating %s"
 msgstr ""
 
-#: src/file.c:1202
+#: src/file.c:1222
 msgid "Updated selected tracks with info from file."
 msgstr ""
 
-#: src/file.c:1234
+#: src/file.c:1254
 #, c-format
 msgid "Retrieving mserv data %s"
 msgstr ""
 
 #. no path available
-#: src/file.c:1240 src/file.c:1918
+#: src/file.c:1260 src/file.c:1937
 msgid "no filename available"
 msgstr ""
 
-#: src/file.c:1245
+#: src/file.c:1265
 msgid "Updated selected tracks with data from mserv."
 msgstr ""
 
-#: src/file.c:1312
+#: src/file.c:1332
 #, c-format
 msgid "Syncing directory '%s'"
 msgstr ""
 
-#: src/file.c:1337
+#: src/file.c:1357
 msgid "Syncing completed. No files deleted."
 msgstr ""
 
@@ -961,29 +961,29 @@ msgstr ""
 #. title
 #. label
 #. scrolled text
-#: src/file.c:1450
+#: src/file.c:1470
 msgid "Never delete any files when syncing"
 msgstr ""
 
-#: src/file.c:1479
+#: src/file.c:1499
 msgid "Syncing completed."
 msgstr ""
 
-#: src/file.c:1499
+#: src/file.c:1519
 msgid "Syncing aborted"
 msgstr ""
 
-#: src/file.c:1537
+#: src/file.c:1557
 msgid "No tracks in selection"
 msgstr ""
 
-#: src/file.c:1587
+#: src/file.c:1607
 #, c-format
 msgid "'%s' is not a directory. Ignored.\n"
 msgstr ""
 
 #. no directory names available
-#: src/file.c:1617
+#: src/file.c:1637
 msgid ""
 "No directory names were stored. Make sure that you enable 'Write extended "
 "information' in the Export section of the preferences at the time of "
@@ -994,18 +994,18 @@ msgid ""
 "want to sync again.\n"
 msgstr ""
 
-#: src/file.c:1621
+#: src/file.c:1641
 msgid "No valid directories have been found. Sync aborted.\n"
 msgstr ""
 
-#: src/file.c:1630
+#: src/file.c:1650
 msgid ""
 "The (former) contents of the following directories will be removed from the "
 "database:\n"
 "\n"
 msgstr ""
 
-#: src/file.c:1638
+#: src/file.c:1658
 msgid ""
 "The following directories will be synchronized:\n"
 "\n"
@@ -1013,16 +1013,16 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1649
+#: src/file.c:1669
 msgid "Synchronize directories"
 msgstr ""
 
 #. title
-#: src/file.c:1650
+#: src/file.c:1670
 msgid "OK to synchronize the following directories?"
 msgstr ""
 
-#: src/file.c:1688
+#: src/file.c:1708
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -1031,11 +1031,11 @@ msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1694
+#: src/file.c:1714
 msgid "Failed Track Update"
 msgstr ""
 
-#: src/file.c:1752
+#: src/file.c:1772
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -1044,11 +1044,11 @@ msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1758
+#: src/file.c:1778
 msgid "Successful Track Update"
 msgstr ""
 
-#: src/file.c:1817
+#: src/file.c:1837
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
@@ -1058,84 +1058,84 @@ msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1823
+#: src/file.c:1843
 msgid "mserv data retrieval problem"
 msgstr ""
 
-#: src/file.c:1964
+#: src/file.c:1983
 msgid "file not found"
 msgstr ""
 
-#: src/file.c:1968
+#: src/file.c:1987
 msgid "format not supported"
 msgstr ""
 
-#: src/file.c:2049
+#: src/file.c:2068
 #, c-format
 msgid "Processing '%s'..."
 msgstr ""
 
-#: src/file.c:2158 src/misc_track.c:1169 src/misc_track.c:1225
+#: src/file.c:2178 src/misc_track.c:1169 src/misc_track.c:1225
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
 "\n"
 msgstr ""
 
-#: src/file.c:2219
+#: src/file.c:2239
 #, c-format
 msgid ""
 "Writing to video files not yet supported (%s).\n"
 "\n"
 msgstr ""
 
-#: src/file.c:2273 src/file.c:2287
+#: src/file.c:2293 src/file.c:2307
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr ""
 
-#: src/file.c:2479
+#: src/file.c:2499
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr ""
 
-#: src/file.c:2486
+#: src/file.c:2506
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr ""
 
 #. error!
-#: src/file.c:2503 src/file.c:2512 src/file.c:2523 src/file.c:2533
+#: src/file.c:2523 src/file.c:2532 src/file.c:2543 src/file.c:2553
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:2562
+#: src/file.c:2582
 msgid "Remove offline playcounts?"
 msgstr ""
 
 #. title
-#: src/file.c:2563
+#: src/file.c:2583
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
 msgstr ""
 
-#: src/file.c:2580
+#: src/file.c:2600
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr ""
 
-#: src/file.c:2629
+#: src/file.c:2649
 #, c-format
 msgid ""
 "Normalization failed: file type not supported (%s).\n"
 "\n"
 msgstr ""
 
-#: src/file.c:2644
+#: src/file.c:2664
 #, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -1173,7 +1173,7 @@ msgid "Could find file for '%s' on the iPod\n"
 msgstr ""
 
 #. create the dialog window
-#: src/file_export.c:390 src/file_itunesdb.c:1076 src/tools.c:148
+#: src/file_export.c:390 src/file_itunesdb.c:1072 src/tools.c:148
 msgid "Information"
 msgstr ""
 
@@ -1197,7 +1197,7 @@ msgid_plural "Copied %d of %d tracks."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/file_export.c:494 src/file_itunesdb.c:1340 src/tools.c:307
+#: src/file_export.c:494 src/file_itunesdb.c:1336 src/tools.c:307
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr ""
@@ -1348,69 +1348,69 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/file_itunesdb.c:528
+#: src/file_itunesdb.c:525
 msgid "Extended info will not be used.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:535
+#: src/file_itunesdb.c:532
 msgid "iPod Database Successfully Imported"
 msgstr ""
 
-#: src/file_itunesdb.c:542
+#: src/file_itunesdb.c:539
 #, c-format
 msgid ""
 "iPod Database Import Failed: '%s'\n"
 "\n"
 msgstr ""
 
-#: src/file_itunesdb.c:548
+#: src/file_itunesdb.c:545
 msgid ""
 "iPod Database Import Failed.\n"
 "\n"
 msgstr ""
 
-#: src/file_itunesdb.c:557
+#: src/file_itunesdb.c:554
 #, c-format
 msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
 "\n"
 msgstr ""
 
-#: src/file_itunesdb.c:899
+#: src/file_itunesdb.c:896
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:914
+#: src/file_itunesdb.c:911
 msgid "Aborted writing of extended info.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:1087
+#: src/file_itunesdb.c:1083
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
 msgstr ""
 
-#: src/file_itunesdb.c:1156
+#: src/file_itunesdb.c:1152
 msgid "deleting..."
 msgstr ""
 
-#: src/file_itunesdb.c:1260
+#: src/file_itunesdb.c:1256
 msgid "preparing to copy..."
 msgstr ""
 
-#: src/file_itunesdb.c:1323
+#: src/file_itunesdb.c:1319
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/file_itunesdb.c:1350
+#: src/file_itunesdb.c:1346
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr ""
 
-#: src/file_itunesdb.c:1401
+#: src/file_itunesdb.c:1397
 #, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -1421,30 +1421,30 @@ msgid ""
 "again.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:1432
+#: src/file_itunesdb.c:1428
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
 msgstr ""
 
-#: src/file_itunesdb.c:1441
+#: src/file_itunesdb.c:1437
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr ""
 
-#: src/file_itunesdb.c:1457
+#: src/file_itunesdb.c:1453
 msgid "Now writing iTunesDB. Please wait..."
 msgstr ""
 
-#: src/file_itunesdb.c:1503
+#: src/file_itunesdb.c:1499
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr ""
 
-#: src/file_itunesdb.c:1590
+#: src/file_itunesdb.c:1586
 msgid "iPod Database Saved"
 msgstr ""
 
-#: src/file_itunesdb.c:1649
+#: src/file_itunesdb.c:1645
 msgid "Syncing contacts, calendar and notes..."
 msgstr ""
 
@@ -2422,11 +2422,11 @@ msgstr ""
 msgid "Checking iPOD files against known files in DB"
 msgstr ""
 
-#: src/misc_playlist.c:1107
+#: src/misc_playlist.c:1105
 msgid "Orphaned"
 msgstr ""
 
-#: src/misc_playlist.c:1134
+#: src/misc_playlist.c:1132
 #, c-format
 msgid ""
 "The following orphaned file had already been added to the iPod again. It "
@@ -2435,12 +2435,12 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/misc_playlist.c:1163
+#: src/misc_playlist.c:1160
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
 msgstr ""
 
-#: src/misc_playlist.c:1188
+#: src/misc_playlist.c:1185
 #, c-format
 msgid ""
 "The following dangling track has a file on PC.\n"
@@ -2453,7 +2453,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/misc_playlist.c:1193
+#: src/misc_playlist.c:1190
 #, c-format
 msgid ""
 "The following dangling track doesn't have file on PC. \n"
@@ -2466,11 +2466,11 @@ msgstr[1] ""
 
 #. we want unique window for each
 #. gboolean modal,
-#: src/misc_playlist.c:1200
+#: src/misc_playlist.c:1197
 msgid "Dangling Tracks"
 msgstr ""
 
-#: src/misc_playlist.c:1223
+#: src/misc_playlist.c:1220
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
 msgstr ""

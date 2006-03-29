@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 17:06:58 jcs>
+/* Time-stamp: <2006-03-21 23:06:40 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1057,7 +1057,6 @@ static void details_update_thumbnail (Detail *detail)
 	/* Get large cover */
 	thumb = itdb_artwork_get_thumb_by_type (detail->track->artwork,
 						ITDB_THUMB_COVER_LARGE);
-
 	if (thumb)
 	{
 	    GdkPixbuf *pixbuf;
