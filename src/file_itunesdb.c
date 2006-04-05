@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-18 00:31:20 jcs>
+/* Time-stamp: <2006-04-04 00:08:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -597,9 +597,19 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	g_return_val_if_fail (etr, (release_widgets(), NULL));
 	fill_in_extended_info (track, total, num);
 	gp_track_validate_entries (track);
-	/* set new default value for flag1 (unknown) */
-	if (track->flag1 == 0)
-	    track->flag1 = 0x02;
+	/* properly set value for has_artwork */
+	if ((track->has_artwork == 0x00) ||
+	    ((track->has_artwork == 0x02) &&
+	     (extendedinfoversion > 0.0) && (extendedinfoversion <= 0.99)))
+	{   /* if has_artwork is not set (0x00), or it has been
+	       (potentially wrongly) set to 0x02 by gtkpod V0.99 or
+	       smaller, determine the correct(?) value */
+	    if (track->artwork->thumbnails)
+		track->has_artwork = 0x01;
+	    else
+		track->has_artwork = 0x02;
+	}
+
 	/* set unk208 to audio if unset (important only for iPod Video) */
 	if (track->unk208 == 0)
 	    track->unk208 = 0x00000001;

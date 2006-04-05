@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.94\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-22 00:40+0900\n"
+"POT-Creation-Date: 2006-04-04 00:21+0900\n"
 "PO-Revision-Date: 2005-09-14 21:46+0900\n"
 "Last-Translator: Éric Lassauge <lassauge@users.sf.net>\n"
 "Language-Team: FR\n"
@@ -361,7 +361,7 @@ msgid "Edit selected entry of which sort tab?"
 msgstr "Mettre à jour l'entrée sélectionnée de quelle zone de tri ?"
 
 #. no entry selected
-#: src/display.c:941 src/misc_confirm.c:441 src/misc_track.c:1482
+#: src/display.c:941 src/misc_confirm.c:441 src/misc_track.c:1480
 msgid "No entry selected."
 msgstr "Aucun élément sélectionné."
 
@@ -444,16 +444,16 @@ msgid "Failed to set cover art: '%s'"
 msgstr "Impossible d'écrire «%s-%s»\n"
 
 #. add podcast playlist
-#: src/display_itdb.c:843 src/display_itdb.c:871 src/display_itdb.c:975
+#: src/display_itdb.c:850 src/display_itdb.c:878 src/display_itdb.c:982
 #: gtkpod.glade:13669
 msgid "Podcasts"
 msgstr ""
 
-#: src/display_itdb.c:845 src/display_itdb.c:941
+#: src/display_itdb.c:852 src/display_itdb.c:948
 msgid "Local"
 msgstr "Local"
 
-#: src/display_itdb.c:1081
+#: src/display_itdb.c:1088
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "Compteur de lecture incrémenté pour «%s»"
@@ -1231,7 +1231,7 @@ msgid "Could find file for '%s' on the iPod\n"
 msgstr "Impossible de trouver le fichier pour «%s» sur l'iPod\n"
 
 #. create the dialog window
-#: src/file_export.c:390 src/file_itunesdb.c:1072 src/tools.c:148
+#: src/file_export.c:390 src/file_itunesdb.c:1082 src/tools.c:148
 msgid "Information"
 msgstr "Information"
 
@@ -1255,7 +1255,7 @@ msgid_plural "Copied %d of %d tracks."
 msgstr[0] "%d morceau copiés sur %d."
 msgstr[1] "%d morceaux copiés sur %d."
 
-#: src/file_export.c:494 src/file_itunesdb.c:1336 src/tools.c:307
+#: src/file_export.c:494 src/file_itunesdb.c:1346 src/tools.c:307
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d :%02d restant)"
@@ -1476,16 +1476,16 @@ msgstr ""
 "'%s' n'existe pas. Import annulé.\n"
 "\n"
 
-#: src/file_itunesdb.c:896
+#: src/file_itunesdb.c:906
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "Ne peut ouvrir en écriture le fichier d'infos étendues «%s».\n"
 
-#: src/file_itunesdb.c:911
+#: src/file_itunesdb.c:921
 msgid "Aborted writing of extended info.\n"
 msgstr "Écriture des infos étendues interrompue.\n"
 
-#: src/file_itunesdb.c:1083
+#: src/file_itunesdb.c:1093
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
@@ -1493,26 +1493,26 @@ msgstr ""
 "Appuyer sur le bouton pour Interrompre.\n"
 "L'export peut être repris plus tard."
 
-#: src/file_itunesdb.c:1152
+#: src/file_itunesdb.c:1162
 msgid "deleting..."
 msgstr "suppression..."
 
-#: src/file_itunesdb.c:1256
+#: src/file_itunesdb.c:1266
 msgid "preparing to copy..."
 msgstr "préparation de la copie..."
 
-#: src/file_itunesdb.c:1319
+#: src/file_itunesdb.c:1329
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
 msgstr[0] "%d sur %d du nouveau morceau copié."
 msgstr[1] "%d sur %d des nouveaux morceaux copiés."
 
-#: src/file_itunesdb.c:1346
+#: src/file_itunesdb.c:1356
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Des morceaux n'ont pas été copiés sur l'iPod. Export annulé!"
 
-#: src/file_itunesdb.c:1397
+#: src/file_itunesdb.c:1407
 #, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -1529,7 +1529,7 @@ msgstr ""
 "annulez, vous pouvez importer la base existante avant d'appeler de nouveau "
 "cette fonction.\n"
 
-#: src/file_itunesdb.c:1428
+#: src/file_itunesdb.c:1438
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -1537,24 +1537,24 @@ msgstr ""
 "Les répertoires systèmes de l'iPod doivent exister avant de pouvoir "
 "synchroniser l'ipod.\n"
 
-#: src/file_itunesdb.c:1437
+#: src/file_itunesdb.c:1447
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "Des morceaux ne peuvent pas être supprimés de l'iPod. Export annulé!"
 
-#: src/file_itunesdb.c:1453
+#: src/file_itunesdb.c:1463
 msgid "Now writing iTunesDB. Please wait..."
 msgstr "Écriture de la base iTunesDB. Veuillez patienter..."
 
-#: src/file_itunesdb.c:1499
+#: src/file_itunesdb.c:1509
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Fichier d'infos étendues non supprimé : «%s»"
 
-#: src/file_itunesdb.c:1586
+#: src/file_itunesdb.c:1596
 msgid "iPod Database Saved"
 msgstr "Base de l'iPod sauvegardée"
 
-#: src/file_itunesdb.c:1645
+#: src/file_itunesdb.c:1655
 msgid "Syncing contacts, calendar and notes..."
 msgstr "Synchronisation du calendrier, contacts et notes..."
 
@@ -2170,8 +2170,8 @@ msgstr[1] "%d morceaux supprimés de la base de données locale"
 
 #. no playlist??? Cannot happen, but...
 #. no playlist selected
-#: src/misc_confirm.c:336 src/misc_confirm.c:432 src/misc_confirm.c:674
-#: src/misc_track.c:1509
+#: src/misc_confirm.c:336 src/misc_confirm.c:432 src/misc_confirm.c:681
+#: src/misc_track.c:1507
 msgid "No playlist selected."
 msgstr "Pas de liste de lecture sélectionnée."
 
@@ -2194,40 +2194,41 @@ msgstr "Suppression des %d morceaux de l'iPod"
 msgid "Removed all podcasts from the iPod"
 msgstr "Suppression des %d morceaux de l'iPod"
 
-#: src/misc_confirm.c:556 src/misc_confirm.c:626
+#: src/misc_confirm.c:555 src/misc_confirm.c:629
 #, c-format
 msgid "Deleted playlist '%s' including %d member track"
 msgid_plural "Deleted playlist '%s' including %d member tracks"
 msgstr[0] "Liste de lecture «%s» supprimée avec %d morceau"
 msgstr[1] "Liste de lecture «%s» supprimée avec %d morceaux"
 
-#: src/misc_confirm.c:570 src/misc_confirm.c:640
+#. first use playlist name
+#: src/misc_confirm.c:571 src/misc_confirm.c:645
 #, c-format
 msgid "Deleted playlist '%s'"
 msgstr "Liste de lecture effacée «%s»"
 
-#: src/misc_confirm.c:603
+#: src/misc_confirm.c:605
 #, c-format
 msgid "Deleted playlist '%s' including %d member track on harddisk"
 msgid_plural "Deleted playlist '%s' including %d member tracks on harddisk"
 msgstr[0] "Liste de lecture «%s» supprimée avec %d morceau sur le disque dur."
 msgstr[1] "Liste de lecture «%s» supprimée avec %d morceaux sur le disque dur."
 
-#: src/misc_confirm.c:618
+#: src/misc_confirm.c:622
 #, c-format
 msgid "Removed all %d tracks from the database"
 msgstr "Suppression des %d morceaux de la base de données"
 
-#: src/misc_confirm.c:693
+#: src/misc_confirm.c:700
 msgid "Are you sure you want to remove all tracks from your iPod?"
 msgstr "Êtes-vous sûr de vouloir supprimer tous les morceaux de votre iPod ?"
 
-#: src/misc_confirm.c:698
+#: src/misc_confirm.c:705
 #, fuzzy
 msgid "Are you sure you want to remove all podcasts from your iPod?"
 msgstr "Êtes-vous sûr de vouloir supprimer tous les morceaux de votre iPod ?"
 
-#: src/misc_confirm.c:706
+#: src/misc_confirm.c:713
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and the following track "
@@ -2246,12 +2247,12 @@ msgstr[1] ""
 "votre iPod ? Le nombre de liste dont ces morceaux font partie est indiqué "
 "entre parenthèses."
 
-#: src/misc_confirm.c:717 src/misc_confirm.c:772
+#: src/misc_confirm.c:724 src/misc_confirm.c:779
 #, c-format
 msgid "Are you sure you want to delete the playlist '%s'?"
 msgstr "Êtes-vous sûr de vouloir supprimer la liste de lecture «%s» ?"
 
-#: src/misc_confirm.c:743
+#: src/misc_confirm.c:750
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and remove the following track "
@@ -2270,12 +2271,12 @@ msgstr[1] ""
 "votre disque dur ? Le nombre de liste dont ces morceaux font partie est "
 "indiqué entre parenthèses."
 
-#: src/misc_confirm.c:751
+#: src/misc_confirm.c:758
 msgid "Are you sure you want to remove all tracks from the database?"
 msgstr ""
 "Êtes-vous sûr de vouloir supprimer tous les morceaux de la base de données ?"
 
-#: src/misc_confirm.c:760
+#: src/misc_confirm.c:767
 #, c-format
 msgid ""
 "Are you sure you want to delete playlist '%s' and remove the following track "
@@ -2294,28 +2295,28 @@ msgstr[1] ""
 "votre base de données ? Le nombre de liste dont ces morceaux font partie est "
 "indiqué entre parenthèses."
 
-#: src/misc_confirm.c:960
+#: src/misc_confirm.c:967
 #, c-format
 msgid "Problem creating iPod directory: '%s'."
 msgstr "Problème à la création du répertoire de l'iPod : «%s»."
 
-#: src/misc_confirm.c:962
+#: src/misc_confirm.c:969
 #, c-format
 msgid "Successfully created iPod directories in '%s'."
 msgstr "Création réussie des répertoires de l'iPod dans «%s»."
 
 #. gint id,
 #. gboolean modal,
-#: src/misc_confirm.c:1001
+#: src/misc_confirm.c:1008
 msgid "Create iPod directories"
 msgstr "Créer les répertoires de l'iPod"
 
 #. title
-#: src/misc_confirm.c:1002
+#: src/misc_confirm.c:1009
 msgid "OK to create the following directories?"
 msgstr "Créer les répertoires suivants ?"
 
-#: src/misc_confirm.c:1066
+#: src/misc_confirm.c:1073
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"

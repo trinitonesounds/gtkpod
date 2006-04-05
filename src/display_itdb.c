@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-16 23:52:05 jcs>
+/* Time-stamp: <2006-04-01 01:32:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -687,6 +687,8 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
    playlist @pl. It then lets the display model know.
    @display: if TRUE, track is added the display.  Otherwise it's only
    added to memory */
+/* All tracks added to the podcast playlist will get the mark_unplayed
+   flag get set */
 void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
 {
     iTunesDB *itdb;
@@ -696,7 +698,12 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
     itdb = pl->itdb;
     g_return_if_fail (itdb);
 
-    pl->members = g_list_append (pl->members, track);
+    itdb_playlist_add_track (pl, track, -1);
+    if (itdb_playlist_is_podcasts (pl))
+    {   /* have the iPod display a bullet in front of the track as it
+	   has been newly added */
+	track->mark_unplayed = 0x02;
+    }
     if (display)  pm_add_track (pl, track, TRUE);
 
     data_changed (itdb);

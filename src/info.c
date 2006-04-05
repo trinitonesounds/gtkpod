@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:12 jcs>
+/* Time-stamp: <2006-03-30 23:23:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -529,7 +529,7 @@ gboolean ipod_connected (void)
 
 /* we'll use statvfs to determine free space on the iPod where
    available, df otherwise */
-#ifdef HAVE_statvfs
+#ifdef HAVE_STATVFS
 #include <sys/types.h>
 #include <sys/statvfs.h>
 /* update space_ipod_free and space_ipod_used */

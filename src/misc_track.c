@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 02:00:14 jcs>
+/* Time-stamp: <2006-04-04 00:08:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1423,7 +1423,6 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 void gp_track_set_flags_podcast (Track *track)
 {
     g_return_if_fail (track);
-    track->flag1 = 0x02;  /* unknown */
     track->flag2 = 0x01;  /* skip when shuffling */
     track->flag3 = 0x01;  /* remember playback position */
     track->flag4 = 0x01;  /* Show Title/Album on the 'Now Playing' page */
@@ -1433,7 +1432,6 @@ void gp_track_set_flags_podcast (Track *track)
 void gp_track_set_flags_default (Track *track)
 {
     g_return_if_fail (track);
-    track->flag1 = 0x02;  /* unknown */
     track->flag2 = 0x00;  /* do not skip when shuffling */
     track->flag3 = 0x00;  /* do not remember playback position */
     track->flag4 = 0x00;  /* Show Title/Album/Artist on the 'Now

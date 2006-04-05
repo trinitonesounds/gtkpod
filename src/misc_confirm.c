@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-29 23:35:27 jcs>
+/* Time-stamp: <2006-03-30 23:23:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -40,7 +40,7 @@
 #include "prefs.h"
 #include "info.h"
 
-#ifdef HAVE_statvfs
+#ifdef HAVE_STATVFS
 #include <sys/types.h>
 #include <sys/statvfs.h>
 #endif
@@ -843,7 +843,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 static gint ipod_directories_number (gchar *mp)
 {
     const gint default_nr = 20;
-#ifdef HAVE_statvfs
+#ifdef HAVE_STATVFS
     struct statvfs stat;
     int	status;
     gdouble size;

@@ -36,6 +36,8 @@ Contents:
 
 - gtkpod crashes when reading the iTunesDB (Fedora)
 
+- Problems connecting the iPod to Solaris/SPARC
+
 ----------------------------------------------------------------------
 
 Installed libmp4v2 or libgpod from source to /usr/local/lib, but
@@ -204,3 +206,29 @@ gtkpod crashes when reading the iTunesDB (Fedora)
 It appears that crashes were observed with kernel version
 2.6.11-1.35_FC3. An upgrade to 2.6.12-1.1376_FC3 got rid of the
 problem. This was with gtkpod-0.94.0 and Athlon64 3000+. 
+
+
+----------------------------------------------------------------------
+Problems connecting the iPod to Solaris/SPARC
+
+Current (as of 2006/03/30) versions of the Solaris pcfs SPARC driver
+have a bug where the correct filesystem/partition layout may not be
+recognized, and this is true for iPods.  This prevents the iPod
+partition from being mounted on Solaris SPARC.  In order to work
+around this, one must prevent pcfs from detecting the first FAT32
+filesystem, forcing it to move on to the second one.  This can be done
+by changing the filesystem identifier like so:
+
+# dd if=/dev/rdsk/c3t0d0s2 of=/tmp/ipod.orig count=1
+# cp /tmp/ipod.orig /tmp/ipod.modified
+<edit /tmp/ipod.modified and change the first occurance of "FAT32" (at
+offset 0x52 for me) to something else like "CAT32">
+# dd if=/tmp/ipod.modified of=/dev/rdsk/c3t0d0s2 count=1
+
+The above modification may or may not affect usage on other systems. 
+Some reports encounter no problems using the iPod or iTunes after
+making it.  In my own experience, my iPod hard locked moving from a
+SPARC system to an x86 system, and I had to undo the change.  Wrapper
+scripts to handle this may be desirable on SPARC.
+
+Eric Enright

@@ -1,4 +1,23 @@
+2006-04-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * file_itunesdb.c (gp_import_itdb): correct has_artwork flag
+           (formerly flag1) for each track if unset or potentially set
+           incorrectly.
+
+	 * bumped version to 0.99.6CVS
+
+2006-03-31 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * added hint about using iPod with Solaris/SPARC to
+           TROUBLESHOOTING file. Thanks to Eric Enright.
+
+	 * added Spanish translation catalog es.po. Thanks to
+           Alejandro Lamas.
+
 2006-03-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+         * info.c, misc_confirm.c: fixed typo: HAVE_statvfs ->
+           HAVE_STATVFS
 
 	 * misc_confirm.c (delete_playlist_ok): use of playlist->name
            after removing the playlist could/should crash

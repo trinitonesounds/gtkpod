@@ -1,3 +1,14 @@
+gtkpod V0.99.6CVS
+
+       IMPROVEMENT: Probably displays artwork on some newer iPod
+       models now as well -- this includes the new mobile phone iPods.
+
+       IMPROVEMENT: Podcasts are marked as unplayed (on the iPod, with
+       a bullet in front of the title) when newly added to the podcast
+       list, and unmarked once they have been played once on the iPod.
+
+       NEW: Spanish translation. Thanks to Alejandro Lamas.
+
 gtkpod V0.99.5CVS
 
        NEW FEATURE: Preliminary support for mobile phones supporting
