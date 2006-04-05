@@ -1736,7 +1736,7 @@ void gp_itdb_set_mountpoint (const gchar *mp)
 	    if (valid && (type & GP_ITDB_TYPE_IPOD))
 	    {
 		gchar *pmp = g_strdup_printf ("itdb_%d_mountpoint", i);
-		prefs_set_string_value (pmp, mp);
+		prefs_set_string (pmp, mp);
 		g_free (pmp);
 	    }
 	    ++i;
@@ -1753,7 +1753,7 @@ void gp_itdb_set_mountpoint (const gchar *mp)
 	{
 	    /* store to prefs */
 	    gchar *pmp = g_strdup_printf ("itdb_%d_mountpoint", i);
-	    prefs_set_string_value (pmp, mp);
+	    prefs_set_string (pmp, mp);
 	    g_free (pmp);
 	    /* store to itdb */
 	    itdb_set_mountpoint (itdb, mp);

@@ -1,3 +1,8 @@
+2006-04-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * applied James Liggett's preferences patch (transition in
+           progress).
+
 2006-04-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file_itunesdb.c (gp_import_itdb): correct has_artwork flag

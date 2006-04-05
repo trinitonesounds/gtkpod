@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-04-01 01:32:08 jcs>
+/* Time-stamp: <2006-04-05 23:20:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1021,26 +1021,26 @@ void gp_update_itdb_prefs (void)
 	g_return_if_fail (eitdb);
 
 	prop = g_strdup_printf ("itdb_%d_type", i);
-	prefs_set_int_value (prop, itdb->usertype);
+	prefs_set_int (prop, itdb->usertype);
 	g_free (prop);
 
 	mpl = itdb_playlist_mpl (itdb);
 	g_return_if_fail (mpl);
 	prop = g_strdup_printf ("itdb_%d_name", i);
-	prefs_set_string_value (prop, mpl->name);
+	prefs_set_string (prop, mpl->name);
 	g_free (prop);
 
 	prop = g_strdup_printf ("itdb_%d_filename", i);
 	prop2 = g_strdup_printf ("itdb_%d_mountpoint", i);
 	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	{
-	    prefs_set_string_value (prop, itdb->filename);
-	    prefs_set_string_value (prop2, NULL);
+	    prefs_set_string (prop, itdb->filename);
+	    prefs_set_string (prop2, NULL);
 	}
 	else if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
-	    prefs_set_string_value (prop, eitdb->offline_filename);
-	    prefs_set_string_value (prop2, itdb_get_mountpoint (itdb));
+	    prefs_set_string (prop, eitdb->offline_filename);
+	    prefs_set_string (prop2, itdb_get_mountpoint (itdb));
 	}
 	else
 	{

@@ -1080,6 +1080,7 @@ gtkpod_main_quit(void)
 	server_shutdown (); /* stop accepting requests for playcount updates */
 
 	write_prefs ();
+	cleanup_prefs();
 
 /* FIXME: release memory in a clean way */
 #if 0

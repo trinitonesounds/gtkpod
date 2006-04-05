@@ -39,6 +39,10 @@
 #include "display.h"
 
 
+
+/* End-of-list marker for variable-length lists */
+#define LIST_END_MARKER "----++++----"
+
 /* Different paths that can be set in the prefs window */
 typedef enum
 {
@@ -189,8 +193,117 @@ enum
     SORT_NONE = 10*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
 };
 
-/* marker for end of sort_ign_string_%d prefs settings */
-#define SORT_IGNORE_STRINGS_END "----++++----"
+/* New prefs backend. Will replace the stuff above */
+
+/* 
+ * Wrapper data types for temp prefrences
+ */
+
+/* A wrapper around a GTree for regular temporary prefrences */
+typedef struct 
+{
+	GTree *tree;
+} TempPrefs;
+
+/* A wrapper around a GTree for variable-length list */
+typedef struct 
+{
+	GTree *tree;
+} TempLists;
+
+/* Prefrences setup and cleanup */
+void init_prefs(int argc, char *argv[]);
+void cleanup_prefs();
+
+/*
+ * Functions that are used to manipulate prefrences.
+ * The prefrences table shouldn't be modified directly.
+ */
+
+/* Functions that set prefrence values */
+
+void prefs_set_string(const gchar *key, const gchar *value);
+
+void prefs_set_int(const gchar *key, const gint value);
+
+void prefs_set_int64(const gchar *key, const gint64 value);
+														
+/* The index parameter is used for numbered preference keys.
+ * (i.e. pref0, pref1, etc) */
+void prefs_set_string_index(const gchar *key, const guint index,
+																	const gchar *value);
+
+void prefs_set_int_index(const gchar *key, const guint index, 
+												  		 const gint value);
+
+void prefs_set_int64_index(const gchar *key, guint index, 
+													 const gint64 value);
+
+/* Functions that get prefrence values */
+gchar *prefs_get_string(const gchar *key);
+gboolean prefs_get_string_value(const gchar *key, gchar **value);
+gint prefs_get_int(const gchar *key);
+gboolean prefs_get_int_value(const gchar *key, gint *value);
+gint64 prefs_get_int64(const gchar *key);
+gboolean prefs_get_int64_value(const gchar *key, gint64 *value);
+
+/* Numbered prefs functions */																
+gchar *prefs_get_string_index(const gchar *key, const guint index);
+
+gboolean prefs_get_string_value_index(const gchar *key, const guint index, 
+																			gchar **value);
+
+gint prefs_get_int_index(const gchar *key, const guint index);
+																 
+gboolean prefs_get_int_value_index(const gchar *key, const guint index, 
+																	 gint *value);
+																	 
+gint64 prefs_get_int64_index(const gchar *key, const guint index);
+
+gboolean prefs_get_int64_value_index(const gchar *key, const guint index, 
+																		 gint64 *value);
+
+/* 
+ * Temp prefs functions
+ */
+TempPrefs *create_temp_prefs();
+void destroy_temp_prefs(TempPrefs *temp_prefs);
+void apply_temp_prefs(TempPrefs *temp_prefs);
+
+/*
+ * Functions that add various types of info to the temp prefs tree.
+ */
+void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key, 
+													 const gchar *value);
+													 
+void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key, 
+												const gint value);
+												
+void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key, 
+													const gint64 value);
+																															 
+/* Numbered prefrences functions */
+void temp_prefs_set_string_index(TempPrefs *temp_prefs, const gchar *key,  
+																 const guint index, const gchar *value);
+																	
+void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,  
+															const guint index, const gint value);
+															 
+void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,  
+																const guint index, const gint64 value);
+																			
+/* 
+ * Functions for variable-length lists
+ */
+ 
+TempLists *create_temp_lists();
+void destroy_temp_lists(TempLists *temp_lists);
+void add_temp_list(TempLists *temp_lists, const gchar *key, GList *list);
+void apply_temp_lists(TempLists *temp_lists);
+void prefs_apply_list(gchar *key, GList *list);
+GList *prefs_get_list(const gchar *key);
+void prefs_free_list(GList *list);
+GList *get_list_from_buffer(GtkTextBuffer *buffer);
 
 gchar *prefs_get_cfgdir (void);
 void prefs_print(void);
@@ -201,7 +314,7 @@ void discard_prefs (void);
 struct cfg* clone_prefs(void);
 struct sortcfg* clone_sortprefs(void);
 void prefs_set_ipod_mount(const gchar *mp);
-gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[]);
+gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 gchar *prefs_validate_path (const gchar *path, const gchar *allowed);
 
 void prefs_set_offline(gboolean active);
@@ -403,15 +516,5 @@ void prefs_set_pc_change_genre(gboolean val);
 gboolean prefs_get_pc_change_genre(void);
 
 gboolean prefs_get_disable_sorting(void);
-
-void prefs_set_string_value (const gchar *key, const gchar *value);
-void prefs_set_int_value (const gchar *key, gint value);
-void prefs_set_int64_value (const gchar *key, gint64 value);
-gchar *prefs_get_string (const gchar *key);
-gboolean prefs_get_string_value (const gchar *key, gchar **value);
-gboolean prefs_get_int_value (const gchar *key, gint *value);
-gint prefs_get_int (const gchar *key);
-gboolean prefs_get_int64_value (const gchar *key, gint64 *value);
-gint64 prefs_get_int64 (const gchar *key);
 
 #endif

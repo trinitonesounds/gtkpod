@@ -1327,7 +1327,7 @@ on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
 }
 
 void
-on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
+ on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     tmpcfg->block_display = gtk_toggle_button_get_active (togglebutton);
@@ -1961,7 +1961,7 @@ void sort_window_create (void)
            /* end loop if no string is set or if the the string
 	    * corresponds to the end marker */
 	    if (!str)  break;  
-	    if (strcmp (str, SORT_IGNORE_STRINGS_END) == 0)
+	    if (strcmp (str, LIST_END_MARKER) == 0)
 	    {
 		g_free (str);
 		break;
@@ -2187,7 +2187,7 @@ static void sort_window_set (struct sortcfg *scfg)
     {
 	gchar *buf = g_strdup_printf ("sort_ign_field_%d",
 				      sort_ign_fields[i]);
-	prefs_set_int_value (
+	prefs_set_int (
 	    buf,
 	    GPOINTER_TO_UINT(g_list_nth_data (
 		scfg->tmp_sort_ign_fields, i)));
@@ -2199,7 +2199,7 @@ static void sort_window_set (struct sortcfg *scfg)
 	gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
 	if (prefs_get_string (buf))
 	{
-	    prefs_set_string_value (buf, NULL);
+	    prefs_set_string (buf, NULL);
 	}
 	else
 	{
@@ -2222,7 +2222,7 @@ static void sort_window_set (struct sortcfg *scfg)
 		/* add space to the ignore string */
 		gchar *str = g_strdup_printf ("%s ", *strp);
 		buf = g_strdup_printf ("sort_ign_string_%d", i);
-		prefs_set_string_value (buf, str);
+		prefs_set_string (buf, str);
 		g_free (str);
 		g_free (buf);
 		++i;
@@ -2233,7 +2233,7 @@ static void sort_window_set (struct sortcfg *scfg)
     }
     /* set end marker */
     buf = g_strdup_printf ("sort_ign_string_%d", i);
-    prefs_set_string_value (buf, SORT_IGNORE_STRINGS_END);
+    prefs_set_string (buf, LIST_END_MARKER);
     g_free (buf);
     /* update compare string keys */
     compare_string_fuzzy_generate_keys ();

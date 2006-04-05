@@ -694,8 +694,8 @@ static void spl_store_window_size (GtkWidget *spl_window)
     gint defx, defy;
 
     gtk_window_get_size (GTK_WINDOW (spl_window), &defx, &defy);
-    prefs_set_int_value (SPL_WINDOW_DEFX, defx);
-    prefs_set_int_value (SPL_WINDOW_DEFY, defy);
+    prefs_set_int (SPL_WINDOW_DEFX, defx);
+    prefs_set_int (SPL_WINDOW_DEFY, defy);
 }
 
 static void spl_cancel (GtkButton *button, GtkWidget *spl_window)

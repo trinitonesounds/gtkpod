@@ -92,13 +92,13 @@ static void details_store_window_state (Detail *detail)
     g_return_if_fail (detail);
 
     gtk_window_get_size (GTK_WINDOW (detail->window), &defx, &defy);
-    prefs_set_int_value (DETAILS_WINDOW_DEFX, defx);
-    prefs_set_int_value (DETAILS_WINDOW_DEFY, defy);
+    prefs_set_int (DETAILS_WINDOW_DEFX, defx);
+    prefs_set_int (DETAILS_WINDOW_DEFY, defy);
 
     if ((w = gtkpod_xml_get_widget (detail->xml, "details_notebook")))
     {
 	gint page = gtk_notebook_get_current_page (GTK_NOTEBOOK (w));
-	prefs_set_int_value (DETAILS_WINDOW_NOTEBOOK_PAGE, page);
+	prefs_set_int (DETAILS_WINDOW_NOTEBOOK_PAGE, page);
     }
 }
 

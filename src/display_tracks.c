@@ -1722,7 +1722,7 @@ static void tm_set_search_column (gint newcol)
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), FALSE);
 	break;
     }
-    prefs_set_int_value (TM_PREFS_SEARCH_COLUMN, newcol);
+    prefs_set_int (TM_PREFS_SEARCH_COLUMN, newcol);
 }
 
 

@@ -606,7 +606,7 @@ void compare_string_fuzzy_generate_keys (void)
 	/* end loop if no string is set or if the the string
 	 * corresponds to the end marker */
 	if (!str)  break;  
-	if (strcmp (str, SORT_IGNORE_STRINGS_END) == 0)
+	if (strcmp (str, LIST_END_MARKER) == 0)
 	{
 	    g_free (str);
 	    break;
@@ -804,7 +804,7 @@ void option_set_radio_button (GladeXML *win_xml,
 	fprintf (stderr, "Programming error: wnum > num (%d,%d,%s)\n",
 		 wnum, num, prefs_string);
 	/* set to reasonable default value */
-	prefs_set_int_value (prefs_string, 0);
+	prefs_set_int (prefs_string, 0);
 	wnum = 0;
     }
     w = gtkpod_xml_get_widget (win_xml, widgets[wnum]);
@@ -838,7 +838,7 @@ gint option_get_radio_button (GladeXML *win_xml,
 	/* set reasonable default */
 	i=0;
     }
-    prefs_set_int_value (prefs_string, i);
+    prefs_set_int (prefs_string, i);
     return i;
 }
 
@@ -870,7 +870,7 @@ void option_get_folder (GtkFileChooser *fc,
     g_return_if_fail (fc && prefs_string);
 
     folder = gtk_file_chooser_get_current_folder (fc);
-    prefs_set_string_value (prefs_string, folder);
+    prefs_set_string (prefs_string, folder);
 
     if (value) *value = folder;
     else       g_free (folder);
@@ -904,7 +904,7 @@ void option_get_filename (GtkFileChooser *fc,
     g_return_if_fail (fc && prefs_string);
 
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(fc));
-    prefs_set_string_value (prefs_string, filename);
+    prefs_set_string (prefs_string, filename);
 
     if (value) *value = filename;
     else       g_free (filename);
@@ -952,7 +952,7 @@ void option_get_string (GladeXML *win_xml,
     if (entry)
     {
 	const gchar *str = gtk_entry_get_text (GTK_ENTRY (entry));
-	prefs_set_string_value (name, str);
+	prefs_set_string (name, str);
 	if (value) *value = g_strdup (str);
     }
 }
@@ -995,7 +995,7 @@ gboolean option_get_toggle_button (GladeXML *win_xml,
     if (button)
     {
 	active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(button));
-	prefs_set_int_value (name, active);
+	prefs_set_int (name, active);
     }
     return active;
 }

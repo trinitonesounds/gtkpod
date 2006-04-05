@@ -64,7 +64,7 @@
  *   new_option from the prefs file
  *
  * - if you want new_option to be a command line option as well, add
- *   code to usage() and read_prefs()
+ *   code to usage() and read_prefs_old()
  *
  * ---------------------------------------------------------------- */
 
@@ -104,8 +104,953 @@
 #include "prefs.h"
 #include "podcast.h"
 
-/* static function declarations */
-static void prefs_write_hash_values (FILE *fp);
+/* New prefs backend. Will replace stuff above */
+
+/*
+ * Data global to this module only
+ */
+
+/* Pointer to prefrences hash table */
+static GHashTable *prefs_table = NULL;
+
+/*
+ * Functions used by this module only
+ */
+
+/* Set default prefrences */
+static void set_default_prefrences()
+{
+	
+}
+
+/* Initialize default variable-length list entries */
+static void set_default_list_entries()
+{
+	if (!prefs_get_string_value_index("sort_ign_strings_", 0, NULL))
+	{
+		prefs_set_string_index("sort_ign_string_", 0, "a");
+		prefs_set_string_index("sort_ign_string_", 1, "an");
+	}
+}
+
+/* A printf-like function that outputs in the system locale */
+static void locale_fprintf(FILE *fp, const gchar *format, ...)
+{
+	gchar *utf8_string; /* Raw UTF-8 string */
+	gchar *locale_string;  /* String in system locale format */
+	va_list format_list;  /* Printf-like formatting arguments */
+	
+	/* Create the locale format string based on the given format */
+	va_start(format_list, format);
+	utf8_string = g_strdup_vprintf(format, format_list);
+	va_end(format_list);
+	
+	locale_string = g_locale_from_utf8 (utf8_string, -1, NULL, NULL, NULL);
+	
+	if (fp)
+		fprintf(fp, "%s", locale_string);
+	
+	g_free(utf8_string);
+	g_free(locale_string);
+}
+
+/* Print commandline usage information */
+static void usage(FILE *fp)
+{
+  locale_fprintf(fp, _("gtkpod version %s usage:\n"), VERSION);
+  locale_fprintf(fp, _("  -h, --help:   display this message\n"));
+  locale_fprintf(fp, _("  -p <filename>:increment playcount for file by one\n"));
+  locale_fprintf(fp, _("  -m path:      define the mountpoint of your iPod\n"));
+  locale_fprintf(fp, _("  --mountpoint: same as '-m'.\n"));
+  locale_fprintf(fp, _("  -a:           import database automatically after start.\n"));
+  locale_fprintf(fp, _("  --auto:       same as '-a'.\n"));
+  locale_fprintf(fp, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n                used with 'Offline' deactivated.\n"));
+  locale_fprintf(fp, _("  --offline:    same as '-o'.\n"));
+}
+
+/* Not quite ready to use this--disable for now */
+#if 0
+/* Parse commandline based options */
+static gboolean read_commandline(int argc, char *argv[])
+{
+	int option; /* Code returned by getopt */
+	
+	/* The options data structure. The format is standard getopt. */
+	struct option const options[] =
+  {
+  	{"h",           no_argument,				NULL, GP_HELP},
+    {"help",        no_argument,				NULL, GP_HELP},
+    {"m",           required_argument,	NULL, GP_MOUNT},
+    {"mountpoint",  required_argument,	NULL, GP_MOUNT},
+    {0, 0, 0, 0}
+	};
+	
+	/* Handle commandline options */
+	while ((option = getopt_long_only(argc, argv, "", options, NULL)) != -1)
+	{
+		switch (option)
+		{
+			case GP_HELP:
+				usage(stdout);
+				exit(0);
+				return FALSE;
+				break;
+			case GP_MOUNT:
+				prefs_set_string("mountpoint", optarg);
+				return TRUE;
+				break;
+			default:
+				locale_fprintf(stderr, "Unknown option: %s\n", argv[optind]);
+				usage(stderr);
+				exit(1);
+				return FALSE;
+				break;
+		};
+	}
+	return TRUE;	
+}
+#endif
+
+/* Not ready for this--disable */
+#if 0
+/* Read options from environment variables */
+static void read_environment()
+{
+	prefs_set_string("mountpoint", getenv("IPOD_MOUNTPOINT"));
+}
+#endif
+ 
+/* Key compate function for temp prefs tree */
+static gint string_compare(gconstpointer a, gconstpointer b, 
+													 gpointer user_data)
+{
+	guint hash1, hash2;  /* Numerical hash values for two input strings */
+	
+	hash1 = g_str_hash(a);
+	hash2 = g_str_hash(b);
+	
+	return (hash2 - hash1);
+}
+
+/* Create a full numbered key from a base key string and a number.
+ * Free returned string. */
+static gchar *create_full_key(const gchar *base_key, gint index)
+{
+	if (base_key)
+		return g_strdup_printf("%s%i", base_key, index);
+	else 
+		return NULL;
+}
+
+/* Copy key data from the temp prefs tree to the hash table */
+static gboolean copy_key(gpointer key, gpointer value, gpointer user_data)
+{
+	if (prefs_table)
+	{
+		g_hash_table_replace(prefs_table, (gpointer)g_strdup(key), 
+												 (gpointer)g_strdup(value));
+	}
+	
+	return FALSE;
+}
+
+/* Copy a variable-length list to the prefs table */
+static gboolean copy_list(gpointer key, gpointer value, gpointer user_data)
+{
+	prefs_apply_list((gchar*)key, (GList*)value);
+	return FALSE;
+}
+ 
+/* Callback that writes pref table data to a file */
+static void write_key(gpointer key, gpointer value, gpointer user_data)
+{
+	FILE *fp;  /* file pointer passed in through user_data */
+	
+	/* Write out each key and value to the given file */
+	fp = (FILE*)user_data;
+	
+	if (fp)
+		fprintf(fp, "%s=%s\n", (gchar*)key, (gchar*)value);
+}
+
+/* Gets a string that contains ~/.gtkpod/ If the folder doesn't exist,
+ * create it. Free the string when you are done with it.
+ * If the folder wasn't found, and couldn't be created, return NULL */
+gchar *get_config_dir()
+{
+	gchar *folder;  /* Folder path */
+	
+	/* Create the folder path. If the folder doesn't exist, create it. */
+	folder = g_build_filename(g_get_home_dir(), ".gtkpod", NULL);
+	
+	if (!g_file_test(folder, G_FILE_TEST_IS_DIR))
+	{
+		if ((mkdir(folder, 0755)) == -1)
+		{
+			printf("Couldn't create ~/.gtkpod");
+			return NULL;
+		}
+	}
+	
+	return folder;
+}
+
+/* Read prefrences from a file */
+static void read_prefs_from_file(FILE *fp)
+{
+	gchar buf[PATH_MAX];  /* Buffer that contains one line */
+	gchar *buf_start; /* Pointer to where actual useful data starts in line */
+	gchar *key;  /* Pref value key */
+	gchar *value; /* Pref value */
+	size_t len;  /* string length */
+	
+	if (fp)
+	{
+		while (fgets(buf, PATH_MAX, fp))
+		{
+			/* Strip out any comments (lines that begin with ; or #) */
+			if ((buf[0] == ';') || (buf[0] == '#')) 
+				continue;
+			
+			/* Find the key and value, and look for malformed lines */
+			value = strchr(buf, '=');
+			
+			if ((!value) || (value == buf))
+				printf("Parse error reading prefs: %s", buf);
+			
+			/* Strip off whitespace */
+			buf_start = buf;
+			
+			while (g_ascii_isspace(*buf_start))
+				buf_start++;
+			
+			/* Find the key name */
+			key = g_strndup(buf, (value - buf_start));
+			value++;
+			
+			/* remove newline */
+			len = strlen(value);
+			
+			if ((len > 0) && (value[len - 1] == 0x0a))
+				value[len - 1] = 0;
+			
+			/* Strip whitespace off the key value */
+			while (g_ascii_isspace(*value))
+				value++;
+			
+			/* Finally, load each key/value pair into the pref hash table */
+			if (prefs_table)
+			{
+				g_hash_table_insert(prefs_table, (gpointer)key, 
+					                  (gpointer)g_strdup(value));
+			}
+		}
+	}
+}
+
+/* Write prefs to file */
+static void write_prefs_to_file(FILE *fp)
+{
+	if (prefs_table)
+		g_hash_table_foreach(prefs_table, write_key, (gpointer)fp);
+}
+
+/* Load prefrences, first loading the defaults, and then overwrite that with
+ * prefrences in the user home folder. */
+static void load_prefs()
+{
+	gchar *filename; /* Config path to open */
+	gchar *config_dir;  /* Directory where config is (usually ~/.gtkpod) */
+	FILE *fp;
+	
+	/* Start by initializing the prefs to their default values */
+	set_default_prefrences();
+	
+	/* and then override those values with those found in the home folder. */
+	config_dir = get_config_dir();
+	
+	if (config_dir)
+	{
+		filename = g_build_filename(config_dir, "prefs", NULL);
+		
+		if (filename)
+		{
+			fp = fopen(filename, "r");
+			
+			if (fp)
+			{
+				read_prefs_from_file(fp);
+				fclose(fp);
+			}
+			
+			g_free(filename);
+		}
+		
+		g_free(config_dir);
+	}
+	
+	/* Finally, initialize variable-length lists. Do this after everything else
+	 * so that list defaults don't hang out in the table after prefs have been
+	 * read from the file. */
+	set_default_list_entries();
+}
+
+/* Save prefrences to user home folder (~/gtkpod/prefs) */
+static void save_prefs()
+{
+	gchar *filename;  /* Path of file to write to */
+	gchar *config_dir;   /* Folder where prefs file is */
+	FILE *fp;  /* File pointer */
+	
+	/* Open $HOME/.gtkpod/prefs, and write prefs */
+	config_dir = get_config_dir();
+	
+	if (config_dir)
+	{
+		filename = g_build_filename(config_dir, "prefs", NULL);
+		
+		if (filename)
+		{
+			fp = fopen(filename, "a");
+			
+			if (fp)
+			{
+				write_prefs_to_file(fp);
+				fclose(fp);
+			}
+		
+			g_free(filename);
+		}
+		
+		g_free(config_dir);
+	}
+}
+
+/* Removes already existing list keys from the prefs table */
+static void wipe_list(const gchar *key)
+{
+	gchar *full_key; /* Complete key, with its number suffix */
+	guint i;  /* Loop counter */
+	
+	/* Go through the prefs table, starting at key<number>, delete it and go 
+	 * through key<number+1>... until there are no keys left */
+	
+	for (i = 0;;i++)
+	{
+		full_key = create_full_key(key, i);
+		
+		if (g_hash_table_remove(prefs_table, full_key))
+		{
+			g_free(full_key);
+			continue;
+		}
+		else /* We got all the unneeded keys, leave the loop... */
+		{
+			g_free(full_key);
+			break;
+		}
+	}		
+}
+
+/* Initialize the prefs table and read configuration */
+void init_prefs(int argc, char *argv[])
+{
+	/* Create the prefs hash table */
+	prefs_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
+																			g_free);
+	
+	/* Load prefrences */
+	load_prefs();
+	
+	#if 0
+	/* Read environment variables */
+	read_environment(); 
+	
+	/* Read commandline arguments */
+	read_commandline(argc, argv);
+	#endif
+}
+
+/* Save prefs data to a file, and then delete the hash table */
+void cleanup_prefs()
+{
+	if (prefs_table)
+	{
+		/* Save prefs */
+		save_prefs();
+		
+		/* Delete the prefs hash table */
+		g_hash_table_destroy(prefs_table);
+		prefs_table = NULL;
+	}
+}
+
+/* Create the temp prefs tree */
+/* Free the returned structure with delete_temp_prefs */
+TempPrefs *create_temp_prefs()
+{
+	TempPrefs *temp_prefs;  /* Retunred temp prefs structure */
+
+	temp_prefs = (TempPrefs*)g_malloc(sizeof(TempPrefs));
+
+	temp_prefs->tree = g_tree_new_full(string_compare, NULL, g_free, g_free);
+
+	return temp_prefs;	
+}
+
+/* Delete temp prefs */
+void destroy_temp_prefs(TempPrefs *temp_prefs)
+{
+	if (temp_prefs)
+	{
+		if (temp_prefs->tree)
+			g_tree_destroy(temp_prefs->tree);
+		
+		g_free(temp_prefs);
+	}
+}
+
+/* Copy the data from the temp prefs tree to the permanent prefs table */
+void apply_temp_prefs(TempPrefs *temp_prefs)
+{
+	if (temp_prefs)
+	{
+		if (temp_prefs->tree)
+			g_tree_foreach(temp_prefs->tree, copy_key, NULL);
+	}
+}
+
+
+/* Functions for non-numbered pref keys */
+
+/* Set a string value with the given key */
+void prefs_set_string(const gchar *key, const gchar *value)
+{
+	if (prefs_table)
+	{
+		if (value)
+		{
+			g_hash_table_insert(prefs_table, g_strdup(key), 
+													g_strdup(value));
+		}
+	}
+}
+
+/* Set a key value to a given integer */
+void prefs_set_int(const gchar *key, const gint value)
+{
+	gchar *strvalue; /* String value converted from integer */
+
+	if (prefs_table)
+	{
+		strvalue = g_strdup_printf("%i", value);
+		g_hash_table_insert(prefs_table, g_strdup(key), strvalue);
+	}
+}
+
+/* Set a key to an int64 value */
+void prefs_set_int64(const gchar *key, const gint64 value)
+{
+	gchar *strvalue; /* String value converted from int64 */
+	
+	if (prefs_table)
+	{
+		strvalue = g_strdup_printf("%llu", value);
+		g_hash_table_insert(prefs_table, g_strdup(key), strvalue);	
+	}
+}
+
+/* Get a string value associated with a key. Free returned string. */
+gchar *prefs_get_string(const gchar *key)
+{	
+	if (prefs_table)
+		return g_strdup(g_hash_table_lookup(prefs_table, key));
+	else
+		return NULL;
+}
+
+/* Use this if you need to know if the given key actually exists */
+/* The value parameter can be NULL if you don't need the value itself. */
+gboolean prefs_get_string_value(const gchar *key, gchar **value)
+{
+	gchar *string;  /* String value from prefs table */
+	
+	if (prefs_table)
+	{
+		string = g_hash_table_lookup(prefs_table, key);
+		
+		if (string)
+		{
+			if (value)
+				*value = g_strdup(string);
+			
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+/* Get an integer value from a key */
+gint prefs_get_int(const gchar *key)
+{
+	gchar *string; /* Hash value string */
+	gint value;  /* Retunred value */
+	
+	value = 0;
+	
+	if (prefs_table)
+	{
+		string = g_hash_table_lookup(prefs_table, key);
+		
+		if (string)
+			value = atoi(string);
+	}
+
+	return value;
+}
+
+/* Use this if you need to know if the given key actually exists */
+/* The value parameter can be NULL if you don't need the value itself. */
+gboolean prefs_get_int_value(const gchar *key, gint *value)
+{
+	gchar *string;  /* String value from prefs table */
+	
+	if (prefs_table)
+	{
+		string = g_hash_table_lookup(prefs_table, key);
+		
+		if (string)
+		{
+			if (value)
+				*value = atoi(string);
+			
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+/* Get a 64 bit integer value from a key */
+gint64 prefs_get_int64(const gchar *key)
+{
+	gchar *string;  /* Key value string */
+	gint64 value;  /* Retunred value */
+	
+	value = 0;
+
+	if (prefs_table)
+	{
+		string = g_hash_table_lookup(prefs_table, key);
+
+		if (string)
+			value = g_ascii_strtoull(string, NULL, 10);
+	}
+	
+	return value;
+}
+
+/* Get a 64 bit integer value from a key */
+/* Use this if you need to know if the given key actually exists */
+/* The value parameter can be NULL if you don't need the value itself. */
+gboolean prefs_get_int64_value(const gchar *key, gint64 *value)
+{
+	gchar *string;  /* String value from prefs table */
+	
+	if (prefs_table)
+	{
+		string = g_hash_table_lookup(prefs_table, key);
+		
+		if (string)
+		{
+			if (value)
+				*value = g_ascii_strtoull(string, NULL, 10);
+			
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+/* Functions for numbered pref keys */
+
+/* Set a string value with the given key */
+void prefs_set_string_index(const gchar *key, const guint index, 
+														const gchar *value)
+{
+	gchar *full_key; /* Complete numbered key */
+	
+	full_key = create_full_key(key, index);
+	prefs_set_string(full_key, value);
+	
+	g_free(full_key);
+}
+
+/* Set a key value to a given integer */
+void prefs_set_int_index(const gchar *key, const guint index, 
+												 const gint value)
+{
+	gchar *full_key; /* Complete numbered key */
+	
+	full_key = create_full_key(key, index);
+	prefs_set_int(full_key, value);
+	
+	g_free(full_key);
+}
+
+/* Set a key to an int64 value */
+void prefs_set_int64_index(const gchar *key, const guint index, 
+													 const gint64 value)
+{
+	gchar *full_key; /* Complete numbered key */
+	
+	full_key = create_full_key(key, index);
+	prefs_set_int64(full_key, value);
+	
+	g_free(full_key);
+}
+
+/* Get a string value associated with a key. Free returned string. */
+gchar *prefs_get_string_index(const gchar *key, const guint index)
+{	
+	gchar *full_key; /* Complete numbered key */
+	gchar *string;  /* Return string */
+	
+	full_key = create_full_key(key, index);
+	string = prefs_get_string(full_key);
+	
+	g_free(full_key);
+	return string;
+}
+
+/* Get a string value associated with a key. Free returned string. */
+/* Use this if you need to know if the given key actually exists */
+gboolean prefs_get_string_value_index(const gchar *key, const guint index, 
+																			gchar **value)
+{
+	gchar *full_key; /* Complete numbered key */
+	gboolean ret; /* Return value */
+	
+	full_key = create_full_key(key, index);
+	ret = prefs_get_string_value(full_key, value);
+	
+	g_free(full_key);
+	return ret;
+}
+
+/* Get an integer value from a key */
+gint prefs_get_int_index(const gchar *key, const guint index)
+{
+	gchar *full_key; /* Complete numbered key */
+	gint value;  /* Returned integer value */
+
+	full_key = create_full_key(key, index);
+	value = prefs_get_int(full_key);
+	
+	g_free(full_key);
+	return value;
+}
+
+/* Get an integer value from a key */
+/* Use this if you need to know if the given key actually exists */
+gboolean prefs_get_int_value_index(const gchar *key, const guint index,  
+																	 gint *value)
+{
+	gchar *full_key; /* Complete numbered key */
+	gboolean ret; /* Return value */
+	
+	full_key = create_full_key(key, index);
+	ret = prefs_get_int_value(full_key, value);
+	
+	g_free(full_key);
+	return ret;
+}
+
+/* Get a 64 bit integer value from a key */
+gint64 prefs_get_int64_index(const gchar *key, const guint index)
+{
+	gchar *full_key; /* Complete numbered key */
+	gint64 value; /* Return value */
+	
+	full_key = create_full_key(key, index);
+	value = prefs_get_int64(full_key);
+	
+	g_free(full_key);
+	return value;
+}
+
+/* Get a 64 bit integer value from a key */
+/* Use this if you need to know if the given key actually exists */
+gboolean prefs_get_int64_value_index(const gchar *key, const guint index, 
+																		 gint64 *value)
+{
+	gchar *full_key; /* Complete numbered key */
+	gboolean ret; /* Return value */
+	
+	full_key = create_full_key(key, index);
+	ret = prefs_get_int64_value(key, value);
+	
+	g_free(full_key);
+	return ret;
+}
+
+/* Add string value with the given key to temp prefs */
+void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key, 
+													 const gchar *value)
+{
+	if (prefs_table)
+	{
+		if (temp_prefs)
+		{
+			if (temp_prefs->tree)
+				g_tree_insert(temp_prefs->tree, g_strdup(key), g_strdup(value));
+		}
+	}
+}
+
+/* Add an integer value to temp prefs */
+void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key, 
+												const gint value)
+{
+	gchar *strvalue; /* String value converted from integer */
+
+	if (prefs_table)
+	{
+		if (temp_prefs)
+		{
+			if (temp_prefs->tree)
+			{
+				strvalue = g_strdup_printf("%i", value);
+				g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
+			}
+		}
+	}
+}
+
+/* Add an int64 to temp prefs */
+void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key, 
+													const gint64 value)
+{
+	gchar *strvalue; /* String value converted from int64 */
+	
+	if (prefs_table)
+	{
+		if (temp_prefs)
+		{
+			if (temp_prefs->tree)
+			{
+				strvalue = g_strdup_printf("%llu", value);
+				g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
+			}
+		}
+	}
+}
+
+/* Functions for numbered pref keys */
+
+/* Set a string value with the given key */
+void temp_prefs_set_string_index(TempPrefs *temp_prefs, const gchar *key,  
+																 const guint index, const gchar *value)
+{
+	gchar *full_key; /* Complete numbered key */
+	
+	full_key = create_full_key(key, index);
+	temp_prefs_set_string(temp_prefs, full_key, value);
+	
+	g_free(full_key);
+}
+
+/* Set a key value to a given integer */
+void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,  
+															const guint index, const gint value)
+{
+	gchar *full_key; /* Complete numbered key */
+	
+	full_key = create_full_key(key, index);
+	temp_prefs_set_int(temp_prefs, full_key, value);
+	
+	g_free(full_key);
+}
+
+/* Set a key to an int64 value */
+void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,  
+																const guint index, const gint64 value)
+{
+	gchar *full_key; /* Complete numbered key */
+	
+	full_key = create_full_key(key, index);
+	temp_prefs_set_int64(temp_prefs, full_key, value);
+	
+	g_free(full_key);
+}
+
+/* Functions for variable-length lists */
+
+/* Create a tree that contains lists that need to be rebuilt */
+/* Free the returned structure with destroy_temp_lists */
+TempLists *create_temp_lists()
+{
+	TempLists *temp_lists;  /* Allocated temp list structure */
+	
+	temp_lists = (TempLists*)g_malloc(sizeof(TempLists));
+	
+
+	temp_lists->tree = g_tree_new_full(string_compare, NULL, g_free, 
+												 						 (GDestroyNotify)prefs_free_list);
+	
+	return temp_lists;
+}
+
+/* Destroys the list tree */
+void destroy_temp_lists(TempLists *temp_lists)
+{
+	if (temp_lists)
+	{
+		if (temp_lists->tree)
+			g_tree_destroy(temp_lists->tree);
+		
+		g_free(temp_lists);
+	}
+}
+
+/* Add a list with the given key prefix to a temp list tree */
+void add_temp_list(TempLists *temp_lists, const gchar *key, GList *list)
+{
+	if (temp_lists)
+	{
+		if (temp_lists->tree)
+			g_tree_insert(temp_lists->tree, g_strdup(key), list);
+	}
+}
+		
+/* Copy the items of the lists in the given tree to the prefs table */
+void apply_temp_lists(TempLists *temp_lists)
+{
+	if (temp_lists)
+	{
+		if (temp_lists->tree)
+			g_tree_foreach(temp_lists->tree, copy_list, NULL);
+	}
+}
+
+/* Copy one list to the prefs table. Useful for lists not changed by a window */
+void prefs_apply_list(gchar *key, GList *list)
+{
+	GList *node;  /* Current list node */
+	guint i;  /* Counter */
+	
+	i = 0;
+	
+	if (prefs_table)
+	{
+		/* Clean the existing list */
+		wipe_list(key);
+		
+		node = list;
+		
+		/* Add the new list items to the table */
+		while (node)
+		{
+			g_hash_table_insert(prefs_table, create_full_key(key, i), 
+													g_strdup(node->data));
+				
+			node = g_list_next(node);
+			i++;
+		}
+		
+		/* Add the end marker */
+		g_hash_table_insert(prefs_table, create_full_key(key, i),
+												g_strdup(LIST_END_MARKER));
+	}
+}
+
+/* Get the items in a variable-length list from the prefs table */
+GList *prefs_get_list(const gchar *key)
+{
+	guint end_marker_hash;  /* Hash value of the list end marker */
+	guint item_hash;  /* Hash value of current list string */
+	gchar *item_string;  /* List iterm string */
+	guint i;  /* Counter */
+	GList *list;  /* List that contains items */
+	
+	/* Go through each key in the table until we find the end marker */
+	end_marker_hash = g_str_hash(LIST_END_MARKER);
+	list = NULL;
+	
+	for (i = 0;;i++)
+	{
+		item_string = prefs_get_string_index(key, i);
+		
+		if (item_string)
+		{
+			item_hash = g_str_hash(item_string);
+			
+			if (item_hash != end_marker_hash)
+			{
+				list = g_list_append(list, item_string);
+				continue;
+			}
+			else
+			{
+				g_free(item_string);
+				break;
+			}
+		}
+	}
+	
+	return list;
+}
+
+/* Free a list and its strings */
+void prefs_free_list(GList *list)
+{
+	GList *node;  /* Current list node */
+	
+	node = list;
+	
+	/* Go through the list, freeing the strings */
+	
+	while (node)
+	{
+		if (node->data)
+			g_free(node->data);
+		
+		node = g_list_next(node);
+	}
+	
+	g_list_free(list);
+}
+
+/* Creates a list from lines in a GtkTextBuffer. Free the list when done. */
+GList *get_list_from_buffer(GtkTextBuffer *buffer)
+{
+	GtkTextIter start_iter; /* Start of buffer text */
+	GtkTextIter end_iter; /* End of buffer text */
+	gchar *text_buffer; /* Raw text buffer */
+	gchar **string_array; /* Contains each line of the buffer */
+	gchar **string_iter;  /* Pointer for iterating through the string vector */
+	GList *list; /* List that contains each string */
+	
+	list = NULL;
+	
+	/* Grab the text from the buffer, and then split it up by lines */
+	gtk_text_buffer_get_start_iter(buffer, &start_iter);
+	gtk_text_buffer_get_end_iter(buffer, &end_iter);
+	
+	text_buffer = gtk_text_buffer_get_text(buffer, &start_iter, &end_iter, FALSE);
+	string_array = g_strsplit(text_buffer, "\n", -1);
+	string_iter = string_array;
+	
+	/* Go through each string and put it in the list */
+	while (*string_iter)
+	{
+		if (strlen(*string_iter) != 0)
+			list = g_list_append(list, g_strdup(*string_iter));
+		
+		string_iter++;
+	}
+	
+	return list;
+}
 
 /* config struct */
 static struct cfg *cfg = NULL;
@@ -118,23 +1063,6 @@ enum {
   GP_AUTO,
   GP_OFFLINE
 };
-
-
-/* need to convert to locale charset before printing to console */
-#define usage_fpf(file, ...) do { gchar *utf8=g_strdup_printf (__VA_ARGS__); gchar *loc=g_locale_from_utf8 (utf8, -1, NULL, NULL, NULL); fprintf (file, "%s", loc); g_free (loc); g_free (utf8);} while (FALSE)
-
-static void usage (FILE *file)
-{
-  usage_fpf(file, _("gtkpod version %s usage:\n"), VERSION);
-  usage_fpf(file, _("  -h, --help:   display this message\n"));
-  usage_fpf(file, _("  -p <filename>:increment playcount for file by one\n"));
-  usage_fpf(file, _("  -m path:      define the mountpoint of your iPod\n"));
-  usage_fpf(file, _("  --mountpoint: same as '-m'.\n"));
-  usage_fpf(file, _("  -a:           import database automatically after start.\n"));
-  usage_fpf(file, _("  --auto:       same as '-a'.\n"));
-  usage_fpf(file, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n                used with 'Offline' deactivated.\n"));
-  usage_fpf(file, _("  --offline:    same as '-o'.\n"));
-}
 
 
 struct cfg *cfg_new(void)
@@ -365,7 +1293,7 @@ static char* sort_ign_strings[] =
     "die ",
     "das ",*/ /* will make sorting very slow -- only add the words you
                  really want to skip */
-    SORT_IGNORE_STRINGS_END,  /* end marker */
+   LIST_END_MARKER,  /* end marker */
     NULL,
 };
 
@@ -381,12 +1309,12 @@ read_prefs_from_file_desc(FILE *fp)
     for (i=0; sort_ign_strings[i]; ++i)
     {
 	bufp = g_strdup_printf ("sort_ign_string_%d", i);
-	prefs_set_string_value (bufp, sort_ign_strings[i]);
+	prefs_set_string (bufp, sort_ign_strings[i]);
 	g_free (bufp);
     }
     /* set ignore fields (ignore above words for artist) */
     bufp = g_strdup_printf ("sort_ign_field_%d", T_ARTIST);
-    prefs_set_int_value (bufp, 1);
+    prefs_set_int (bufp, 1);
     g_free (bufp);
 
     if(fp)
@@ -490,7 +1418,7 @@ read_prefs_from_file_desc(FILE *fp)
 			  ++sp;
 		      }
 		  }
-		  prefs_set_string_value (EXPORT_FILES_TPL, arg);
+		  prefs_set_string (EXPORT_FILES_TPL, arg);
 	      }
 	  }
 	  else if(g_ascii_strcasecmp (line, "charset") == 0)
@@ -741,7 +1669,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
 	  {
-	      prefs_set_string_value (EXPORT_FILES_PATH, arg);
+	      prefs_set_string (EXPORT_FILES_PATH, arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "show_duplicates") == 0)
 	  {
@@ -875,7 +1803,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "export_check_existing") == 0)
 	  {
-	      prefs_set_int_value (EXPORT_FILES_CHECK_EXISTING,
+	      prefs_set_int (EXPORT_FILES_CHECK_EXISTING,
 				   atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "fix_path") == 0)
@@ -915,7 +1843,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
-	      prefs_set_int_value (EXPORT_FILES_SPECIAL_CHARSET,
+	      prefs_set_int (EXPORT_FILES_SPECIAL_CHARSET,
 				   atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "mserv_use") == 0)
@@ -996,7 +1924,7 @@ read_prefs_from_file_desc(FILE *fp)
 		  }
 	      }
 	      if (!skip)
-		  prefs_set_string_value (line, arg);
+		  prefs_set_string (line, arg);
 	  }
 	  g_free(line);
 	}
@@ -1087,7 +2015,7 @@ read_prefs_defaults(void)
 
 /* Read Preferences and initialise the cfg-struct */
 /* Return value: FALSE if "-p" argument was given -> stop program */
-gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
+gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
 {
   GtkCheckMenuItem *menu;
   int opt;
@@ -1105,7 +2033,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
       { "auto",        no_argument,	NULL, GP_AUTO },
       { 0, 0, 0, 0 }
     };
-
+		
   if (cfg != NULL) discard_prefs ();
 
   cfg = cfg_new();
@@ -1134,7 +2062,7 @@ gboolean read_prefs (GtkWidget *gtkpod, int argc, char *argv[])
 	  prefs_set_offline (TRUE);
 	  break;
       default:
-	  usage_fpf(stderr, _("Unknown option: %s\n"), argv[optind]);
+	  locale_fprintf(stderr, _("Unknown option: %s\n"), argv[optind]);
 	  usage(stderr);
 	  exit(1);
       }
@@ -1286,7 +2214,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
-    prefs_write_hash_values (fp);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
     fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
     fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);
@@ -2923,178 +3850,4 @@ void prefs_set_pc_change_genre(gboolean val)
 gboolean prefs_get_pc_change_genre(void)
 {
     return cfg->pc_change_genre;
-}
-
-/* ------------------------------------------------------------
-
-   Functions for generic preferences settings
-
-   ------------------------------------------------------------ */
-
-GHashTable *prefs_hash = NULL;
-
-/* Set a string setting (e.g. @key="export_path") to @value */
-void prefs_set_string_value (const gchar *key, const gchar *value)
-{
-    if (!key)  return;
-
-    if (!prefs_hash)
-	prefs_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
-					    g_free, g_free);
-
-    if (!value)
-    {
-	g_hash_table_remove (prefs_hash, key);
-    }
-    else
-    {
-	g_hash_table_insert (prefs_hash,
-			     g_strdup (key), g_strdup (value));
-    }
-}
-
-
-/* Set a integer setting (e.g. @key="file_type") to @value */
-void prefs_set_int_value (const gchar *key, gint value)
-{
-    gchar *str;
-
-    if (!key)  return;
-
-    str = g_strdup_printf ("%d", value);
-    prefs_set_string_value (key, str);
-    g_free (str);
-}
-
-
-/* Set a integer setting (e.g. @key="file_type") to @value */
-void prefs_set_int64_value (const gchar *key, gint64 value)
-{
-    gchar *str;
-
-    if (!key)  return;
-
-    str = g_strdup_printf ("%llu", value);
-    prefs_set_string_value (key, str);
-    g_free (str);
-}
-
-
-/* Retrieve a string setting. @value will be filled with a copy of the
- * value. */
-/* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
- * @value is set to NULL */
-gboolean prefs_get_string_value (const gchar *key, gchar **value)
-{
-    g_return_val_if_fail (value, FALSE);
-
-    *value = NULL;
-    if (prefs_hash && key)
-    {
-	*value = g_strdup (g_hash_table_lookup (prefs_hash, key));
-    }
-    return (*value != NULL);
-}
-
-
-/* Same as prefs_get_string_value() but easier to use. The string is
-   simply returned, a returned NULL value means that the @key could
-   not be found. g_free() the result when it's no longer needed */
-gchar *prefs_get_string (const gchar *key)
-{
-    if (prefs_hash && key)
-	return g_strdup (g_hash_table_lookup (prefs_hash, key));
-    return NULL;
-}
-
-
-/* Retrieve an integer setting. @value will be filled with the stored
- * integer value. */
-/* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
- * @value is set to 0 */
-gboolean prefs_get_int_value (const gchar *key, gint *value)
-{
-    g_return_val_if_fail (value, FALSE);
-
-    *value = 0;
-    if (prefs_hash && key)
-    {
-	gchar *str = g_hash_table_lookup (prefs_hash, key);
-	if (str)
-	{
-	    *value = atoi (str);
-	    return TRUE;
-	}
-    }
-    return FALSE;
-}
-
-
-/* Retrieve an integer setting. */
-/* Return value: the set integer value or 0 if no value is set. */
-/* Use prefs_get_int_value if you need to know whether a value was
-   actually set in the prefs or not. */
-gint prefs_get_int (const gchar *key)
-{
-    if (prefs_hash && key)
-    {
-	gchar *str = g_hash_table_lookup (prefs_hash, key);
-	if (str)
-	    return atoi (str);
-    }
-    return 0;
-}
-
-
-/* Retrieve a 64 bit integer setting. @value will be filled with the
- * stored integer value. */
-/* Return value: TRUE, if @key could be retrieved. Otherwise FALSE and
- * @value is set to 0 */
-gboolean prefs_get_int64_value (const gchar *key, gint64 *value)
-{
-    g_return_val_if_fail (value, FALSE);
-
-    *value = 0;
-    if (prefs_hash && key)
-    {
-	gchar *str = g_hash_table_lookup (prefs_hash, key);
-	if (str)
-	{
-	    *value = (gint64)g_ascii_strtoull (str, NULL, 10);
-	    return TRUE;
-	}
-    }
-    return FALSE;
-}
-
-
-/* Retrieve a 64 bit integer setting. */
-/* Return value: the set integer value or 0 if no value is set. */
-/* Use prefs_get_int64_value if you need to know whether a value was
-   actually set in the prefs or not. */
-gint64 prefs_get_int64 (const gchar *key)
-{
-    if (prefs_hash && key)
-    {
-	gchar *str = g_hash_table_lookup (prefs_hash, key);
-	if (str)
-	    return (gint64)g_ascii_strtoull (str, NULL, 10);
-    }
-    return 0;
-}
-
-
-/* write the values in the hash table out into the preferences file
-   @fp */
-static void prefs_write_hash_values (FILE *fp)
-{
-    void prefs_write_hash_func (gpointer key, gpointer value,
-				gpointer fp)
-	{
-	    g_return_if_fail (key && value && fp);
-	    fprintf ((FILE *)fp, "%s=%s\n", (gchar *)key, (gchar *)value);
-	}
-
-    if (prefs_hash)
-	g_hash_table_foreach (prefs_hash, prefs_write_hash_func, fp);
 }
