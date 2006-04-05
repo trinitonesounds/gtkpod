@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-18 01:26:09 jcs>
+/* Time-stamp: <2006-04-06 00:28:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -795,6 +795,7 @@ static Track *copy_new_info (Track *from, Track *to)
     to->artwork = itdb_artwork_duplicate (from->artwork);
     to->artwork_size = from->artwork_size;
     to->artwork_count = from->artwork_count;
+    to->has_artwork = from->has_artwork;
 
     to->size = from->size;
     to->tracklen = from->tracklen;

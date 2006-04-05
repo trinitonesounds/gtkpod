@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-21 23:06:40 jcs>
+/* Time-stamp: <2006-04-06 00:27:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -485,6 +485,7 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
 	totrack->artwork = itdb_artwork_duplicate (frtrack->artwork);
 	totrack->artwork_size = frtrack->artwork_size;
 	totrack->artwork_count = frtrack->artwork_count;
+	totrack->has_artwork = frtrack->has_artwork;
 	g_free (toetr->thumb_path_locale);
 	g_free (toetr->thumb_path_utf8);
 	toetr->thumb_path_locale = g_strdup (fretr->thumb_path_locale);

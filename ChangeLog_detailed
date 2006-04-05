@@ -3,6 +3,9 @@
 	 * applied James Liggett's preferences patch (transition in
            progress).
 
+	 * details.c, file.c: copy 'has_artwork' flag when copying
+           artwork info from one track to another.
+
 2006-04-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * file_itunesdb.c (gp_import_itdb): correct has_artwork flag
