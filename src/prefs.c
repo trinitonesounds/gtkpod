@@ -120,7 +120,7 @@ static GHashTable *prefs_table = NULL;
 /* Set default prefrences */
 static void set_default_prefrences()
 {
-	
+	prefs_set_int("update_existing", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -411,7 +411,7 @@ static void save_prefs()
 		
 		if (filename)
 		{
-			fp = fopen(filename, "a");
+			fp = fopen(filename, "w");
 			
 			if (fp)
 			{
@@ -1099,7 +1099,6 @@ struct cfg *cfg_new(void)
     mycfg->deletion.database = TRUE;
     mycfg->deletion.syncing = TRUE;
     mycfg->md5tracks = TRUE;
-    mycfg->update_existing = FALSE;
     mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_MAX; ++i)
@@ -1440,10 +1439,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
 	  {
 	      prefs_set_md5tracks((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "update_existing") == 0)
-	  {
-	      prefs_set_update_existing((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
 	  {
@@ -2113,7 +2108,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "id3=%d\n", prefs_get_id3_write ());
     fprintf(fp, "id3_write_id3v24=%d\n", prefs_get_id3_write_id3v24 ());
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
-    fprintf(fp, "update_existing=%d\n",prefs_get_update_existing ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, _("# delete confirmation\n"));
     fprintf(fp, "delete_file=%d\n",prefs_get_track_playlist_deletion());
@@ -2245,7 +2239,7 @@ write_prefs (void)
     cfgdir = prefs_get_cfgdir ();
 
     filename = g_build_filename (cfgdir, "prefs", NULL);
-    if((fp = fopen(filename, "w")))
+    if((fp = fopen(filename, "a")))
     {
 	write_prefs_to_file_desc(fp);
 	fclose(fp);
@@ -2377,16 +2371,6 @@ void prefs_set_md5tracks (gboolean active)
 gboolean prefs_get_md5tracks(void)
 {
     return cfg->md5tracks;
-}
-
-void prefs_set_update_existing(gboolean active)
-{
-    cfg->update_existing = active;
-}
-
-gboolean prefs_get_update_existing(void)
-{
-    return cfg->update_existing;
 }
 
 /* Should the display be blocked (be insenstive) while it is updated

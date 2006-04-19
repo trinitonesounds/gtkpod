@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-04 00:21+0900\n"
+"POT-Creation-Date: 2006-04-07 00:11+0900\n"
 "PO-Revision-Date: 2005-08-02 21:19+0300\n"
 "Last-Translator: Assaf Gillat\n"
 "Language-Team: HEBREW <kde-il@yahoogroups.com>\n"
@@ -338,11 +338,11 @@ msgstr "_עריכת העדפות"
 msgid "Date format error: unrecognized character: '%s'\n"
 msgstr "פורמט תאריך שגוי: תו לא מזוהה: '%s'\n"
 
-#: src/details.c:1035 gtkpod.glade:4365
+#: src/details.c:1036 gtkpod.glade:4365
 msgid "n/a"
 msgstr "ל/ז"
 
-#: src/details.c:1098
+#: src/details.c:1099
 #, fuzzy
 msgid "<b>n/a</b>"
 msgstr "<b>נגן</b>"
@@ -906,77 +906,77 @@ msgstr "מדלג על '%s' על מנת להתחמק מהוספת קובץ רשי
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "הסימן '%s' בתבנית '%s' לא ידוע\n"
 
-#: src/file.c:837
+#: src/file.c:838
 #, c-format
 msgid "Local filename not valid (%s)"
 msgstr "שם קובץ מקומי לא תקין (%s)"
 
-#: src/file.c:890
+#: src/file.c:891
 #, c-format
 msgid "No information found for user '%s' in '%s'"
 msgstr "לא קיים מידע למשתמש '%s' ב- '%s'"
 
-#: src/file.c:897
+#: src/file.c:898
 #, c-format
 msgid "mserv data file (%s) not available for track (%s)"
 msgstr "מידע קובץ mserv (%s) לא זמין עבור רצועה (%s)"
 
-#: src/file.c:905
+#: src/file.c:906
 #, c-format
 msgid "Track (%s) not in mserv music root directory (%s)"
 msgstr "הרצועה (%s) לא קיימת בתיקיית השורש של mserv (%s)"
 
-#: src/file.c:1010
+#: src/file.c:1011
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "אי אפשר לעבד את הרצועה הבאה (הקובץ לא קיים): '%s'\n"
 
-#: src/file.c:1073
+#: src/file.c:1074
 #, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
 msgstr "אי אפשר לעבד את הרצועה הבאה (סוג קובץ לא ידוע): '%s'\n"
 
-#: src/file.c:1157
+#: src/file.c:1158
 #, c-format
 msgid ""
 "The following track could not be processed (filetype is known but analysis "
 "failed): '%s'\n"
 msgstr "אי אפשר לעבד את הרצועה הבאה (סוג קובץ ידוע, אך הבדיקה נכשלה): '%s'\n"
 
-#: src/file.c:1186 src/file.c:1241
+#: src/file.c:1187 src/file.c:1242
 msgid "Nothing to update"
 msgstr "אין מה לעדכן"
 
-#: src/file.c:1206
+#: src/file.c:1207
 #, c-format
 msgid "Updating %s"
 msgstr "מעדכן %s"
 
-#: src/file.c:1222
+#: src/file.c:1223
 msgid "Updated selected tracks with info from file."
 msgstr "מעדכן רצועות נבחרות עם מידע מקובץ."
 
-#: src/file.c:1254
+#: src/file.c:1255
 #, c-format
 msgid "Retrieving mserv data %s"
 msgstr "מאחזר נתוני mserv %s"
 
 #. no path available
-#: src/file.c:1260 src/file.c:1937
+#: src/file.c:1261 src/file.c:1938
 msgid "no filename available"
 msgstr "קובץ לא קיים"
 
-#: src/file.c:1265
+#: src/file.c:1266
 msgid "Updated selected tracks with data from mserv."
 msgstr "עודכנו רצועות נבחרות עם נתונים מ-mserv"
 
-#: src/file.c:1332
+#: src/file.c:1333
 #, c-format
 msgid "Syncing directory '%s'"
 msgstr "מסנכרן תיקיית '%s'"
 
-#: src/file.c:1357
+#: src/file.c:1358
 msgid "Syncing completed. No files deleted."
 msgstr "הסנכרון הושלם. קבצים לא נמחקו."
 
@@ -985,29 +985,29 @@ msgstr "הסנכרון הושלם. קבצים לא נמחקו."
 #. title
 #. label
 #. scrolled text
-#: src/file.c:1470
+#: src/file.c:1471
 msgid "Never delete any files when syncing"
 msgstr "בזמן סנכרון, אל תמחק שום קובץ"
 
-#: src/file.c:1499
+#: src/file.c:1500
 msgid "Syncing completed."
 msgstr "סנכרון הושלם."
 
-#: src/file.c:1519
+#: src/file.c:1520
 msgid "Syncing aborted"
 msgstr "סנכרון בוטל"
 
-#: src/file.c:1557
+#: src/file.c:1558
 msgid "No tracks in selection"
 msgstr "אין רצועות בבחירה"
 
-#: src/file.c:1607
+#: src/file.c:1608
 #, c-format
 msgid "'%s' is not a directory. Ignored.\n"
 msgstr "'%s' היא לא תיקייה. מתעלם.\n"
 
 #. no directory names available
-#: src/file.c:1637
+#: src/file.c:1638
 msgid ""
 "No directory names were stored. Make sure that you enable 'Write extended "
 "information' in the Export section of the preferences at the time of "
@@ -1023,11 +1023,11 @@ msgstr ""
 "על מנת לסנכרן תיקיות עכשיו, הפעל את זיהוי כפילויות ('אל תרשה כפילויות') בחלק "
 "הייבוא והוסף את התיקייה שאתה רוצה לסנכרן שוב.\n"
 
-#: src/file.c:1641
+#: src/file.c:1642
 msgid "No valid directories have been found. Sync aborted.\n"
 msgstr "לא נמצאו תיקיות תקינות. סנכרון בוטל.\n"
 
-#: src/file.c:1650
+#: src/file.c:1651
 msgid ""
 "The (former) contents of the following directories will be removed from the "
 "database:\n"
@@ -1036,7 +1036,7 @@ msgstr ""
 "התוכן (הקודם) של התיקיות הבאות יוסר ממסד הנתונים:\n"
 "\n"
 
-#: src/file.c:1658
+#: src/file.c:1659
 msgid ""
 "The following directories will be synchronized:\n"
 "\n"
@@ -1046,16 +1046,16 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1669
+#: src/file.c:1670
 msgid "Synchronize directories"
 msgstr "מסנכרן תיקיות"
 
 #. title
-#: src/file.c:1670
+#: src/file.c:1671
 msgid "OK to synchronize the following directories?"
 msgstr "האם לסנכרן את התיקיות הבאות?"
 
-#: src/file.c:1708
+#: src/file.c:1709
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -1064,11 +1064,11 @@ msgstr[1] "%d הרצועות הבאות אינן יכולות להתעדכן"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1714
+#: src/file.c:1715
 msgid "Failed Track Update"
 msgstr "עדכון רצועה נכשל"
 
-#: src/file.c:1772
+#: src/file.c:1773
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -1077,11 +1077,11 @@ msgstr[1] "עודכנו %d הרצועות הבאות"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1778
+#: src/file.c:1779
 msgid "Successful Track Update"
 msgstr "הרצועה עודכנה בהצלחה"
 
-#: src/file.c:1837
+#: src/file.c:1838
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
@@ -1091,66 +1091,66 @@ msgstr[1] "לא ניתן להשיג מידע mserv מ-%d הרצועות הבאו
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1843
+#: src/file.c:1844
 msgid "mserv data retrieval problem"
 msgstr "בעיה בהשגת מידע מ-mserv"
 
-#: src/file.c:1983
+#: src/file.c:1984
 msgid "file not found"
 msgstr "הקובץ לא נמצא"
 
-#: src/file.c:1987
+#: src/file.c:1988
 msgid "format not supported"
 msgstr "הפורמט לא נתמך"
 
-#: src/file.c:2068
+#: src/file.c:2069
 #, c-format
 msgid "Processing '%s'..."
 msgstr "מעבד '%s'..."
 
-#: src/file.c:2178 src/misc_track.c:1169 src/misc_track.c:1225
+#: src/file.c:2179 src/misc_track.c:1169 src/misc_track.c:1225
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
 "\n"
 msgstr ""
 
-#: src/file.c:2239
+#: src/file.c:2240
 #, fuzzy, c-format
 msgid ""
 "Writing to video files not yet supported (%s).\n"
 "\n"
 msgstr "נרמול נכשל: סוג קובץ לא נתמך.\n"
 
-#: src/file.c:2293 src/file.c:2307
+#: src/file.c:2294 src/file.c:2308
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "לא מסוגל לשנות תג של קובץ: %s\n"
 
-#: src/file.c:2499
+#: src/file.c:2500
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "אי אפשר לפתוח את '%s' לקריאה וכתיבה.\n"
 
-#: src/file.c:2506
+#: src/file.c:2507
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "אי אשפר להשיג נעילה על '%s'.\n"
 
 #. error!
-#: src/file.c:2523 src/file.c:2532 src/file.c:2543 src/file.c:2553
+#: src/file.c:2524 src/file.c:2533 src/file.c:2544 src/file.c:2554
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "שורה לא תקינה ב '%s' : %s\n"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:2582
+#: src/file.c:2583
 msgid "Remove offline playcounts?"
 msgstr "הסר מספור השמעות לא מקוון?"
 
 #. title
-#: src/file.c:2583
+#: src/file.c:2584
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -1158,19 +1158,19 @@ msgstr ""
 "אי אפשר לאתר מספר רצועות שנוגנו בצורה לא מקוונת ב-iTunesDB. לחץ על 'אישור' "
 "להסיר אותן ממספור ההשמעה הלא מקוון, ועל 'ביטול' להשאיר אותן."
 
-#: src/file.c:2600
+#: src/file.c:2601
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "תקלה בכתיבה ל-'%s'.\n"
 
-#: src/file.c:2649
+#: src/file.c:2650
 #, fuzzy, c-format
 msgid ""
 "Normalization failed: file type not supported (%s).\n"
 "\n"
 msgstr "נרמול נכשל: סוג קובץ לא נתמך.\n"
 
-#: src/file.c:2664
+#: src/file.c:2665
 #, fuzzy, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -2760,36 +2760,36 @@ msgstr ""
 "ללא הספריה mp4v2. אתה חייב להדר את קוד המקור של gtkpod ביחד עם ספריית "
 "mp4v2.\n"
 
-#: src/prefs.c:128
+#: src/prefs.c:160
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "גרסה %s של gtkpod, שימוש:\n"
 
-#: src/prefs.c:129
+#: src/prefs.c:161
 msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help:   display this message\n"
 
-#: src/prefs.c:130
+#: src/prefs.c:162
 msgid "  -p <filename>:increment playcount for file by one\n"
 msgstr "  -p <filename>:increment playcount for file by one\n"
 
-#: src/prefs.c:131
+#: src/prefs.c:163
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m path:      define the mountpoint of your iPod\n"
 
-#: src/prefs.c:132
+#: src/prefs.c:164
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr "  --mountpoint: same as '-m'.\n"
 
-#: src/prefs.c:133
+#: src/prefs.c:165
 msgid "  -a:           import database automatically after start.\n"
 msgstr "  -a:           import database automatically after start.\n"
 
-#: src/prefs.c:134
+#: src/prefs.c:166
 msgid "  --auto:       same as '-a'.\n"
 msgstr "  --auto:       same as '-a'.\n"
 
-#: src/prefs.c:135
+#: src/prefs.c:167
 msgid ""
 "  -o:           use offline mode. No changes are exported to the iPod,\n"
 "                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
@@ -2799,56 +2799,56 @@ msgstr ""
 "                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
 "                used with 'Offline' deactivated.\n"
 
-#: src/prefs.c:136
+#: src/prefs.c:168
 msgid "  --offline:    same as '-o'.\n"
 msgstr "  --offline:    same as '-o'.\n"
 
-#: src/prefs.c:401
+#: src/prefs.c:1329
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "שגיאה בזמן קריאת העדפות: %s\n"
 
-#: src/prefs.c:1030
+#: src/prefs.c:1958
 #, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr "אי אפשר לפתוח את קובץ הקונפיגורציה '%s' לקריאה\n"
 
-#: src/prefs.c:1137
+#: src/prefs.c:2065
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "אפשרות לא ידועה: %s\n"
 
-#: src/prefs.c:1190
+#: src/prefs.c:2118
 #, c-format
 msgid "# delete confirmation\n"
 msgstr "# וידוא מחיקה\n"
 
-#: src/prefs.c:1197
+#: src/prefs.c:2125
 #, c-format
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr "# כרטיסיית מיון: בחר 'הכל', הדף הנבחר אחרון (=קטגוריה)\n"
 
-#: src/prefs.c:1216
+#: src/prefs.c:2144
 #, c-format
 msgid "# autoselect master playlist?\n"
 msgstr "# בחירה אוטומטית של רשימת ראשית להשמעה?\n"
 
-#: src/prefs.c:1218
+#: src/prefs.c:2146
 #, c-format
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr "# שם רצועה=0, אמן, כותר, סגנון, יוצר\n"
 
-#: src/prefs.c:1219
+#: src/prefs.c:2147
 #, c-format
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr "# מספר_רצועה=5, מזהה_ipod, נתיב_ב-PC, הועברו\n"
 
-#: src/prefs.c:1220
+#: src/prefs.c:2148
 #, c-format
 msgid "# autoset: set empty tag to filename?\n"
 msgstr "# קביעה אוטומטית: קבע תג ריקה לקובץ?\n"
 
-#: src/prefs.c:1235
+#: src/prefs.c:2163
 #, c-format
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
@@ -2857,7 +2857,7 @@ msgstr ""
 "# מיקום הגלילות : רשימות השמעה, מעל הרצועות,\n"
 "# בין כרטיסיות מיון, ובסרגל הסטטוס.\n"
 
-#: src/prefs.c:1271
+#: src/prefs.c:2199
 #, c-format
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
@@ -2865,41 +2865,41 @@ msgid ""
 msgstr ""
 "# גדלי חלונות: חלון ראשי, ווידוא לא נגלל, ווידוא נגלל, סייר תיקיות, הגדרות\n"
 
-#: src/prefs.c:1328
+#: src/prefs.c:2255
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "אי אפשר לפתוח '%s' לכתיבה\n"
 
-#: src/prefs.c:1682
+#: src/prefs.c:2609
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " העדפות: מספר קטגוריה (%d<%d?) או מספר כרטיסיית מיון (%d<%d?) מתוך לטווח.\n"
 
-#: src/prefs.c:1734 src/prefs.c:1736
+#: src/prefs.c:2661 src/prefs.c:2663
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "אי אפשר לעשות 'mkdir %s'\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2162
+#: src/prefs.c:3089
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style: התעלמות מסגנון לא חוקי '%d' \n"
 
 #. illegal -- ignore
-#: src/prefs.c:2204
+#: src/prefs.c:3131
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort: התעלמות מסוג לא חוקי '%d'\n"
 
-#: src/prefs.c:2359
+#: src/prefs.c:3286
 #, c-format
 msgid "'%s': no arguments (%%...) allowed.\n"
 msgstr "ארגומנטים לא מותרים (%%...) : '%s'\n"
 
-#: src/prefs.c:2364
+#: src/prefs.c:3291
 #, c-format
 msgid "'%s': only '%%[%s]' allowed.\n"
 msgstr "רק '%%[%s]' מותר : '%s'\n"

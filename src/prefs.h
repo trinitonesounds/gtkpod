@@ -70,7 +70,6 @@ struct cfg
   gboolean id3_write;       /* should changes to ID3 tags be written to file */
   gboolean id3_write_id3v24;/* should all ID3 tags be updated */
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
-  gboolean update_existing; /* when adding track, update existing track */
   gboolean block_display;   /* block display during change of selection? */
   gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
   gboolean startup_messages;/* show startup messages/warnings? */
@@ -330,7 +329,6 @@ void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
 void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_md5tracks(gboolean active);
-void prefs_set_update_existing(gboolean active);
 void prefs_set_block_display(gboolean active);
 void prefs_set_id3_write (gboolean active);
 void prefs_set_id3_write_id3v24 (gboolean active);
@@ -394,7 +392,6 @@ gint prefs_get_tm_col_width (gint col);
 gboolean prefs_get_col_visible (TM_item tm_item);
 TM_item prefs_get_col_order (gint pos);
 gboolean prefs_get_md5tracks(void);
-gboolean prefs_get_update_existing(void);
 gboolean prefs_get_block_display(void);
 gint prefs_get_paned_pos (gint i);
 guint32 prefs_get_statusbar_timeout (void);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-04 00:21+0900\n"
+"POT-Creation-Date: 2006-04-07 00:11+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -335,11 +335,11 @@ msgstr ""
 msgid "Date format error: unrecognized character: '%s'\n"
 msgstr ""
 
-#: src/details.c:1035 gtkpod.glade:4365
+#: src/details.c:1036 gtkpod.glade:4365
 msgid "n/a"
 msgstr ""
 
-#: src/details.c:1098
+#: src/details.c:1099
 msgid "<b>n/a</b>"
 msgstr ""
 
@@ -882,77 +882,77 @@ msgstr ""
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr ""
 
-#: src/file.c:837
+#: src/file.c:838
 #, c-format
 msgid "Local filename not valid (%s)"
 msgstr ""
 
-#: src/file.c:890
+#: src/file.c:891
 #, c-format
 msgid "No information found for user '%s' in '%s'"
 msgstr ""
 
-#: src/file.c:897
+#: src/file.c:898
 #, c-format
 msgid "mserv data file (%s) not available for track (%s)"
 msgstr ""
 
-#: src/file.c:905
+#: src/file.c:906
 #, c-format
 msgid "Track (%s) not in mserv music root directory (%s)"
 msgstr ""
 
-#: src/file.c:1010
+#: src/file.c:1011
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr ""
 
-#: src/file.c:1073
+#: src/file.c:1074
 #, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
 msgstr ""
 
-#: src/file.c:1157
+#: src/file.c:1158
 #, c-format
 msgid ""
 "The following track could not be processed (filetype is known but analysis "
 "failed): '%s'\n"
 msgstr ""
 
-#: src/file.c:1186 src/file.c:1241
+#: src/file.c:1187 src/file.c:1242
 msgid "Nothing to update"
 msgstr ""
 
-#: src/file.c:1206
+#: src/file.c:1207
 #, c-format
 msgid "Updating %s"
 msgstr ""
 
-#: src/file.c:1222
+#: src/file.c:1223
 msgid "Updated selected tracks with info from file."
 msgstr ""
 
-#: src/file.c:1254
+#: src/file.c:1255
 #, c-format
 msgid "Retrieving mserv data %s"
 msgstr ""
 
 #. no path available
-#: src/file.c:1260 src/file.c:1937
+#: src/file.c:1261 src/file.c:1938
 msgid "no filename available"
 msgstr ""
 
-#: src/file.c:1265
+#: src/file.c:1266
 msgid "Updated selected tracks with data from mserv."
 msgstr ""
 
-#: src/file.c:1332
+#: src/file.c:1333
 #, c-format
 msgid "Syncing directory '%s'"
 msgstr ""
 
-#: src/file.c:1357
+#: src/file.c:1358
 msgid "Syncing completed. No files deleted."
 msgstr ""
 
@@ -961,29 +961,29 @@ msgstr ""
 #. title
 #. label
 #. scrolled text
-#: src/file.c:1470
+#: src/file.c:1471
 msgid "Never delete any files when syncing"
 msgstr ""
 
-#: src/file.c:1499
+#: src/file.c:1500
 msgid "Syncing completed."
 msgstr ""
 
-#: src/file.c:1519
+#: src/file.c:1520
 msgid "Syncing aborted"
 msgstr ""
 
-#: src/file.c:1557
+#: src/file.c:1558
 msgid "No tracks in selection"
 msgstr ""
 
-#: src/file.c:1607
+#: src/file.c:1608
 #, c-format
 msgid "'%s' is not a directory. Ignored.\n"
 msgstr ""
 
 #. no directory names available
-#: src/file.c:1637
+#: src/file.c:1638
 msgid ""
 "No directory names were stored. Make sure that you enable 'Write extended "
 "information' in the Export section of the preferences at the time of "
@@ -994,18 +994,18 @@ msgid ""
 "want to sync again.\n"
 msgstr ""
 
-#: src/file.c:1641
+#: src/file.c:1642
 msgid "No valid directories have been found. Sync aborted.\n"
 msgstr ""
 
-#: src/file.c:1650
+#: src/file.c:1651
 msgid ""
 "The (former) contents of the following directories will be removed from the "
 "database:\n"
 "\n"
 msgstr ""
 
-#: src/file.c:1658
+#: src/file.c:1659
 msgid ""
 "The following directories will be synchronized:\n"
 "\n"
@@ -1013,16 +1013,16 @@ msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1669
+#: src/file.c:1670
 msgid "Synchronize directories"
 msgstr ""
 
 #. title
-#: src/file.c:1670
+#: src/file.c:1671
 msgid "OK to synchronize the following directories?"
 msgstr ""
 
-#: src/file.c:1708
+#: src/file.c:1709
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -1031,11 +1031,11 @@ msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1714
+#: src/file.c:1715
 msgid "Failed Track Update"
 msgstr ""
 
-#: src/file.c:1772
+#: src/file.c:1773
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -1044,11 +1044,11 @@ msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1778
+#: src/file.c:1779
 msgid "Successful Track Update"
 msgstr ""
 
-#: src/file.c:1837
+#: src/file.c:1838
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
@@ -1058,84 +1058,84 @@ msgstr[1] ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1843
+#: src/file.c:1844
 msgid "mserv data retrieval problem"
 msgstr ""
 
-#: src/file.c:1983
+#: src/file.c:1984
 msgid "file not found"
 msgstr ""
 
-#: src/file.c:1987
+#: src/file.c:1988
 msgid "format not supported"
 msgstr ""
 
-#: src/file.c:2068
+#: src/file.c:2069
 #, c-format
 msgid "Processing '%s'..."
 msgstr ""
 
-#: src/file.c:2178 src/misc_track.c:1169 src/misc_track.c:1225
+#: src/file.c:2179 src/misc_track.c:1169 src/misc_track.c:1225
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
 "\n"
 msgstr ""
 
-#: src/file.c:2239
+#: src/file.c:2240
 #, c-format
 msgid ""
 "Writing to video files not yet supported (%s).\n"
 "\n"
 msgstr ""
 
-#: src/file.c:2293 src/file.c:2307
+#: src/file.c:2294 src/file.c:2308
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr ""
 
-#: src/file.c:2499
+#: src/file.c:2500
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr ""
 
-#: src/file.c:2506
+#: src/file.c:2507
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr ""
 
 #. error!
-#: src/file.c:2523 src/file.c:2532 src/file.c:2543 src/file.c:2553
+#: src/file.c:2524 src/file.c:2533 src/file.c:2544 src/file.c:2554
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr ""
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:2582
+#: src/file.c:2583
 msgid "Remove offline playcounts?"
 msgstr ""
 
 #. title
-#: src/file.c:2583
+#: src/file.c:2584
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
 msgstr ""
 
-#: src/file.c:2600
+#: src/file.c:2601
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr ""
 
-#: src/file.c:2649
+#: src/file.c:2650
 #, c-format
 msgid ""
 "Normalization failed: file type not supported (%s).\n"
 "\n"
 msgstr ""
 
-#: src/file.c:2664
+#: src/file.c:2665
 #, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -2584,139 +2584,139 @@ msgid ""
 "the mp4v2 library.\n"
 msgstr ""
 
-#: src/prefs.c:128
+#: src/prefs.c:160
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr ""
 
-#: src/prefs.c:129
+#: src/prefs.c:161
 msgid "  -h, --help:   display this message\n"
 msgstr ""
 
-#: src/prefs.c:130
+#: src/prefs.c:162
 msgid "  -p <filename>:increment playcount for file by one\n"
 msgstr ""
 
-#: src/prefs.c:131
+#: src/prefs.c:163
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr ""
 
-#: src/prefs.c:132
+#: src/prefs.c:164
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr ""
 
-#: src/prefs.c:133
+#: src/prefs.c:165
 msgid "  -a:           import database automatically after start.\n"
 msgstr ""
 
-#: src/prefs.c:134
+#: src/prefs.c:166
 msgid "  --auto:       same as '-a'.\n"
 msgstr ""
 
-#: src/prefs.c:135
+#: src/prefs.c:167
 msgid ""
 "  -o:           use offline mode. No changes are exported to the iPod,\n"
 "                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
 "                used with 'Offline' deactivated.\n"
 msgstr ""
 
-#: src/prefs.c:136
+#: src/prefs.c:168
 msgid "  --offline:    same as '-o'.\n"
 msgstr ""
 
-#: src/prefs.c:401
+#: src/prefs.c:1329
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr ""
 
-#: src/prefs.c:1030
+#: src/prefs.c:1958
 #, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr ""
 
-#: src/prefs.c:1137
+#: src/prefs.c:2065
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr ""
 
-#: src/prefs.c:1190
+#: src/prefs.c:2118
 #, c-format
 msgid "# delete confirmation\n"
 msgstr ""
 
-#: src/prefs.c:1197
+#: src/prefs.c:2125
 #, c-format
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr ""
 
-#: src/prefs.c:1216
+#: src/prefs.c:2144
 #, c-format
 msgid "# autoselect master playlist?\n"
 msgstr ""
 
-#: src/prefs.c:1218
+#: src/prefs.c:2146
 #, c-format
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr ""
 
-#: src/prefs.c:1219
+#: src/prefs.c:2147
 #, c-format
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr ""
 
-#: src/prefs.c:1220
+#: src/prefs.c:2148
 #, c-format
 msgid "# autoset: set empty tag to filename?\n"
 msgstr ""
 
-#: src/prefs.c:1235
+#: src/prefs.c:2163
 #, c-format
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
 "# between sort tabs, and in statusbar.\n"
 msgstr ""
 
-#: src/prefs.c:1271
+#: src/prefs.c:2199
 #, c-format
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
 "#               confirmation non-scrolled, dirbrowser, prefs\n"
 msgstr ""
 
-#: src/prefs.c:1328
+#: src/prefs.c:2255
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr ""
 
-#: src/prefs.c:1682
+#: src/prefs.c:2609
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 
-#: src/prefs.c:1734 src/prefs.c:1736
+#: src/prefs.c:2661 src/prefs.c:2663
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr ""
 
 #. illegal -- ignore
-#: src/prefs.c:2162
+#: src/prefs.c:3089
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr ""
 
 #. illegal -- ignore
-#: src/prefs.c:2204
+#: src/prefs.c:3131
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr ""
 
-#: src/prefs.c:2359
+#: src/prefs.c:3286
 #, c-format
 msgid "'%s': no arguments (%%...) allowed.\n"
 msgstr ""
 
-#: src/prefs.c:2364
+#: src/prefs.c:3291
 #, c-format
 msgid "'%s': only '%%[%s]' allowed.\n"
 msgstr ""

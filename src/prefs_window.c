@@ -49,6 +49,10 @@ static struct cfg *origcfg = NULL;
 static struct sortcfg *tmpsortcfg = NULL;
 static struct sortcfg *origsortcfg = NULL;
 
+/* New prefs temp handling */
+static TempPrefs *temp_prefs;
+static TempLists *temp_lists;
+
 /* keeps the check buttons for "Select Entry 'All' in Sorttab %d" */
 static GtkWidget *autoselect_widget[SORT_TAB_MAX];
 
@@ -406,6 +410,10 @@ prefs_window_create (gint page)
 	}
 	return;
     }
+		
+		/* Initialize temp prefs structures */
+		temp_prefs = create_temp_prefs();
+		temp_lists = create_temp_lists();
 
     if(!tmpcfg && !origcfg)
     {
@@ -458,7 +466,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_existing");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->update_existing);
+				 prefs_get_int("update_existing"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_duplicates");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -468,12 +476,12 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_updated");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 tmpcfg->show_updated);
-    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("update_existing")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_non_updated");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 tmpcfg->show_non_updated);
-    if (!tmpcfg->update_existing) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("update_existing")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_sync_dirs");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -927,7 +935,6 @@ prefs_window_set(void)
 	prefs_set_show_sync_dirs(tmpcfg->show_sync_dirs);
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
-	prefs_set_update_existing(tmpcfg->update_existing);
 	prefs_set_block_display(tmpcfg->block_display);
 	prefs_set_sort_tab_num(tmpcfg->sort_tab_num, TRUE);
 	prefs_set_group_compilations(tmpcfg->group_compilations, TRUE);
@@ -1027,6 +1034,12 @@ void prefs_window_delete(void)
     tmpcfg = NULL;
     cfg_free (origcfg);
     origcfg = NULL;
+	
+		/* Delete temp prefs structures */
+		destroy_temp_prefs(temp_prefs);
+		temp_prefs = NULL;
+		destroy_temp_lists(temp_lists);
+		temp_lists = NULL;
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
@@ -1062,6 +1075,10 @@ prefs_window_ok (void)
     tmpcfg = NULL;
     cfg_free (origcfg);
     origcfg = NULL;
+	
+    /* Committ temp prefs to prefs table */
+    apply_temp_prefs(temp_prefs);
+    apply_temp_lists(temp_lists);
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
@@ -1094,6 +1111,10 @@ prefs_window_apply (void)
 
     /* save current settings */
     prefs_window_set ();
+	
+		/* Committ temp prefs to prefs table */
+		apply_temp_prefs(temp_prefs);
+		apply_temp_lists(temp_lists);
 
     /* reset the validated path entries */
     for (i=0; i<PATH_NUM; ++i)
@@ -1340,7 +1361,7 @@ on_cfg_update_existing_toggled         (GtkToggleButton *togglebutton,
     gboolean val = gtk_toggle_button_get_active (togglebutton);
     GtkWidget *w;
 
-    tmpcfg->update_existing = val;
+    temp_prefs_set_int(temp_prefs, "update_existing", val);
 
     if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_updated")))
 	gtk_widget_set_sensitive (w, val);

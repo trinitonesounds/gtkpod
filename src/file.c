@@ -1379,14 +1379,14 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     g_return_if_fail (itdb);
 
     /* set "update existing" to TRUE */
-    update = prefs_get_update_existing();
-    prefs_set_update_existing (TRUE);
+    update = prefs_get_int("update_existing");
+    prefs_set_int("update_existing", TRUE);
 
     /* sync all dirs stored in the hash */
     g_hash_table_foreach (sd->hash_tosync, sync_dir, sd->pl);
 
     /* reset "update existing" */
-    prefs_set_update_existing (update);
+    prefs_set_int("update_existing", update);
 
     /* display log of non-updated tracks */
     display_non_updated (NULL, NULL);
@@ -2079,7 +2079,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
      just add it to the current playlist (if it's not already there) */
   if (oldtrack)
   {
-      if (prefs_get_update_existing ())
+      if (prefs_get_int("update_existing"))
       {   /* update the information */
 	  update_track_from_file (itdb, oldtrack);
       }
@@ -2667,5 +2667,3 @@ gboolean get_gain (Track *track)
     }
     return result;
 }
-
-
