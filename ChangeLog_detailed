@@ -6,6 +6,9 @@
 	 * applied Peter Lieverdink' patch to allow import of h.264
            video via the mp4file.c interface.
 
+	 * mp3file.c (id3_set_string): fixed memory leak (thanks to
+           Scott Guthridge)
+
 2006-04-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * applied James Liggett's preferences patches.

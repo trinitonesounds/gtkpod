@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-12 01:31:20 jcs>
+/* Time-stamp: <2006-04-25 00:08:59 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1033,6 +1033,7 @@ static void id3_set_string (struct id3_tag *tag,
     while ((frame = id3_tag_findframe (tag, frame_name, 0)))
     {
 	id3_tag_detachframe (tag, frame);
+        id3_frame_delete (frame);
     }
 
     if ((data == NULL) || (strlen(data) == 0))
