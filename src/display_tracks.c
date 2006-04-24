@@ -890,7 +890,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
         pm_track_changed (track);    /* notify playlist model... */
         data_changed (track->itdb); /* indicate that data has changed */
 
-        if (prefs_get_id3_write())
+        if (prefs_get_int("id3_write"))
         {
 	    /* T_item tag_id;*/
            /* should we update all ID3 tags or just the one
@@ -1089,7 +1089,7 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
         /* If the changed column is the compilation flag update the file
            if required */
         if (column == TM_COLUMN_COMPILATION)
-           if (prefs_get_id3_write())
+           if (prefs_get_int("id3_write"))
               write_tags_to_file (track);
         
      }
@@ -2419,4 +2419,3 @@ gboolean tm_add_filelist (gchar *data,
     C_FREE (buf);
     return TRUE;
 }
-

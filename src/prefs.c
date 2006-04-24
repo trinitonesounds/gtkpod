@@ -121,6 +121,7 @@ static GHashTable *prefs_table = NULL;
 static void set_default_prefrences()
 {
 	prefs_set_int("update_existing", FALSE);
+ prefs_set_int("id3_write", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1122,7 +1123,6 @@ struct cfg *cfg_new(void)
     mycfg->mpl_autoselect = TRUE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
-    mycfg->id3_write = FALSE;
     mycfg->id3_write_id3v24 = FALSE;
     mycfg->size_gtkpod.x = 600;
     mycfg->size_gtkpod.y = 500;
@@ -1423,10 +1423,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "charset") == 0)
 	  {
 		if(strlen (arg))      prefs_set_charset(arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "id3") == 0)
-	  {
-	      prefs_set_id3_write((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "id3_all") == 0)
 	  {
@@ -2105,7 +2101,6 @@ write_prefs_to_file_desc(FILE *fp)
     } else {
 	fprintf(fp, "charset=\n");
     }
-    fprintf(fp, "id3=%d\n", prefs_get_id3_write ());
     fprintf(fp, "id3_write_id3v24=%d\n", prefs_get_id3_write_id3v24 ());
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
@@ -2383,16 +2378,6 @@ void prefs_set_block_display(gboolean active)
 gboolean prefs_get_block_display(void)
 {
     return cfg->block_display;
-}
-
-void prefs_set_id3_write(gboolean active)
-{
-    cfg->id3_write = active;
-}
-
-gboolean prefs_get_id3_write(void)
-{
-    return cfg->id3_write;
 }
 
 void prefs_set_id3_write_id3v24(gboolean active)

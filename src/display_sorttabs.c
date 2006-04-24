@@ -2130,7 +2130,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  members = g_list_copy (entry->members);
 	  n = g_list_length (members);
 	  /* block user input if we write tags (might take a while) */
-	  if (prefs_get_id3_write ())   block_widgets ();
+	  if (prefs_get_int("id3_write"))   block_widgets ();
 	  for (i=0; i<n; ++i)
 	  {
 	      ExtraTrackData *etr;
@@ -2163,7 +2163,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	      track->time_modified = itdb_time_get_mac_time ();
 	      pm_track_changed (track);
 	      /* If prefs say to write changes to file, do so */
-	      if (prefs_get_id3_write ())
+	      if (prefs_get_int("id3_write"))
 	      {
 		  /* T_item tag_id;*/
 		  /* should we update all ID3 tags or just the one
@@ -2177,7 +2177,7 @@ st_cell_edited (GtkCellRendererText *renderer,
 	  }
 	  g_list_free (members);
 	  /* allow user input again */
-	  if (prefs_get_id3_write ())   release_widgets ();
+	  if (prefs_get_int("id3_write"))   release_widgets ();
 	  /* display possible duplicates that have been removed */
 	  gp_duplicate_remove (NULL, NULL);
 	  /* indicate that data has changed */

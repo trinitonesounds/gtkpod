@@ -52,6 +52,8 @@ static struct sortcfg *origsortcfg = NULL;
 /* New prefs temp handling */
 static TempPrefs *temp_prefs;
 static TempLists *temp_lists;
+static TempPrefs *sort_temp_prefs;
+static TempLists *sort_temp_lists;
 
 /* keeps the check buttons for "Select Entry 'All' in Sorttab %d" */
 static GtkWidget *autoselect_widget[SORT_TAB_MAX];
@@ -547,17 +549,17 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->id3_write);
+				 prefs_get_int("id3_write"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write_id3v24");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 tmpcfg->id3_write_id3v24);
-    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("id3_write")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_charset");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 tmpcfg->write_charset);
-    if (!tmpcfg->id3_write) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("id3_write")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_add_recursively");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -896,7 +898,6 @@ prefs_window_set(void)
 	/* Need this in case user reordered column order (we don't
 	 * catch the reorder signal) */
 	tm_store_col_order ();
-	prefs_set_id3_write(tmpcfg->id3_write);
 	prefs_set_id3_write_id3v24(tmpcfg->id3_write_id3v24);
 	prefs_set_ipod_mount(tmpcfg->ipod_mount);
 	for (i=0; i<PATH_NUM; ++i)
@@ -1376,7 +1377,7 @@ on_cfg_id3_write_toggled                (GtkToggleButton *togglebutton,
     gboolean val = gtk_toggle_button_get_active (togglebutton);
     GtkWidget *w;
 
-    tmpcfg->id3_write = val;
+    temp_prefs_set_int(temp_prefs, "id3_write", val);
     if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write_id3v24")))
 	gtk_widget_set_sensitive (w, val);
     if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_charset")))
@@ -1931,6 +1932,9 @@ void sort_window_create (void)
 	    g_warning ("Programming error: tmpsortcfg is not NULL!!\n");
 	    g_return_if_reached ();
 	}
+  
+  sort_temp_prefs = create_temp_prefs();
+  sort_temp_lists = create_temp_lists();
 
 	sort_window_xml = glade_xml_new (xml_file, "sort_window", NULL);
 	glade_xml_signal_autoconnect (sort_window_xml);
@@ -2564,6 +2568,11 @@ void sort_window_delete(void)
 {
     g_return_if_fail (tmpsortcfg);
     g_return_if_fail (origsortcfg);
+  
+    destroy_temp_prefs(sort_temp_prefs);
+    sort_temp_prefs = NULL;
+    destroy_temp_lists(sort_temp_lists);
+    sort_temp_lists = NULL;
 
     /* delete sortcfg structs */
     sortcfg_free (tmpsortcfg);
@@ -2588,6 +2597,9 @@ void sort_window_ok (void)
     sort_window_read_sort_ign (tmpsortcfg);
     /* save current settings */
     sort_window_set (tmpsortcfg);
+  
+    apply_temp_prefs(sort_temp_prefs);
+    apply_temp_lists(sort_temp_lists);
 
     /* delete sortcfg structs */
     sortcfg_free (tmpsortcfg);
@@ -2607,6 +2619,9 @@ void sort_window_apply (void)
 {
     g_return_if_fail (tmpsortcfg);
     g_return_if_fail (origsortcfg);
+  
+    apply_temp_prefs(sort_temp_prefs);
+    apply_temp_lists(sort_temp_lists);
 
     /* update the sort ignore strings */
     sort_window_read_sort_ign (tmpsortcfg);
