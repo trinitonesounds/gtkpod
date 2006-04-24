@@ -3,6 +3,9 @@
 	 * applied James Liggett's preferences patches (id3-write,
            sort-prefs)
 
+	 * applied Peter Lieverdink' patch to allow import of h.264
+           video via the mp4file.c interface.
+
 2006-04-19 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * applied James Liggett's preferences patches.

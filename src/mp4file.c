@@ -159,7 +159,7 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 
 	trackId = MP4FindTrackId(mp4File, 0, NULL, 0);
 	trackType = MP4GetTrackType(mp4File, trackId);
-	if (trackType && ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) || (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0)))
+	if (trackType && ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) || (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0) || (strcmp(trackType, MP4_OD_TRACK_TYPE) == 0)))
 	{
 	    gchar *value;
 	    guint16 numvalue, numvalue2;

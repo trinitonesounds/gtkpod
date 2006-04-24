@@ -7,6 +7,9 @@ gtkpod V0.99.6CVS
        a bullet in front of the title) when newly added to the podcast
        list, and unmarked once they have been played once on the iPod.
 
+       NEW: Preliminary (no meta data) support of h.264 video format
+       via the libmp4v2 interface. Thanks to Peter Lieverdink.
+
        NEW: Spanish translation. Thanks to Alejandro Lamas.
 
 gtkpod V0.99.5CVS
