@@ -3,6 +3,11 @@
 	 * applied James Liggett's preferences patches
            (id3-write-id3v24)
 
+	 * added scripts/sync-thunderbird-nano.sh (writes one file per
+           address to work around a bug in old firmware versions, but
+           may be useful for other users as well). Thanks to Paul
+           Oremland
+
 2006-04-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * applied James Liggett's preferences patches (id3-write,

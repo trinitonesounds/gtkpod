@@ -7,6 +7,12 @@ gtkpod V0.99.6CVS
        a bullet in front of the title) when newly added to the podcast
        list, and unmarked once they have been played once on the iPod.
 
+       IMPROVEMENT: Support to sync thunderbird's address book to an
+       iPod Nano with old firmware that would otherwise only display
+       the first address. This script may be useful to other users as
+       well as it writes out one vcf file per contact instead of just
+       one big file containing all contacts. Thanks to Paul Oremland.
+
        NEW: Preliminary (no meta data) support of h.264 video format
        via the libmp4v2 interface. Thanks to Peter Lieverdink.
 

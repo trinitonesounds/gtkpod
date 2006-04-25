@@ -1,5 +1,7 @@
 TODO:
 
+- set flag3/4 automatically for podcasts.
+
 - support for www.last.fm
 
   http://www.last.fm is a web site that you report your listening
