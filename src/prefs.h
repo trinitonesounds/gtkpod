@@ -67,7 +67,6 @@ struct cfg
 {
   gchar    *ipod_mount;     /* mount point of iPod */
   gchar    *charset;        /* CHARSET to use with file operations */
-  gboolean id3_write_id3v24;/* should all ID3 tags be updated */
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   gboolean block_display;   /* block display during change of selection? */
   gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
@@ -329,7 +328,6 @@ void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_block_display(gboolean active);
-void prefs_set_id3_write_id3v24 (gboolean active);
 void prefs_set_readtags (gboolean active);
 gboolean prefs_get_readtags(void);
 void prefs_set_parsetags (gboolean active);
@@ -375,7 +373,6 @@ gboolean prefs_get_autoimport(void);
 gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
-gboolean prefs_get_id3_write_id3v24(void);
 const gchar *prefs_get_ipod_mount (void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);

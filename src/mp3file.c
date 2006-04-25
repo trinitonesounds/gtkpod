@@ -1307,7 +1307,7 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	encoding = get_encoding (id3tag);
 	/* ...unless it's ISO_8859_1 and prefs say we should use
 	   unicode (i.e. ID3v2.4) */
-	if (prefs_get_id3_write_id3v24 () &&
+	if (prefs_get_int("id3_write_id3v24") &&
 	    (encoding == ID3_FIELD_TEXTENCODING_ISO_8859_1))
 	    encoding = ID3_FIELD_TEXTENCODING_UTF_8;
 

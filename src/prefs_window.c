@@ -553,7 +553,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write_id3v24");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->id3_write_id3v24);
+				 prefs_get_int("id3_write_id3v24"));
     if (!prefs_get_int("id3_write")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_charset");
@@ -898,7 +898,6 @@ prefs_window_set(void)
 	/* Need this in case user reordered column order (we don't
 	 * catch the reorder signal) */
 	tm_store_col_order ();
-	prefs_set_id3_write_id3v24(tmpcfg->id3_write_id3v24);
 	prefs_set_ipod_mount(tmpcfg->ipod_mount);
 	for (i=0; i<PATH_NUM; ++i)
 	{
@@ -1389,7 +1388,8 @@ void
 on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->id3_write_id3v24 = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs,"id3_write_id3v24",
+                       gtk_toggle_button_get_active (togglebutton));
 }
 
 
