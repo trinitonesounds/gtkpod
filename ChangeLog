@@ -16,6 +16,9 @@ gtkpod V0.99.6CVS
        NEW: Preliminary (no meta data) support of h.264 video format
        via the libmp4v2 interface. Thanks to Peter Lieverdink.
 
+       NEW: Script to sync notes from Tomboy to the iPod. Thanks to
+       Tejas Dinkar.
+
        NEW: Spanish translation. Thanks to Alejandro Lamas.
 
 gtkpod V0.99.5CVS

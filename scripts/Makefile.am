@@ -16,6 +16,7 @@ script_SCRIPTS = \
 	sync-palm-jppy.py \
 	sync-thunderbird.sh \
 	sync-thunderbird-nano.sh \
+	sync-tomboy.sh \
 	sync-webcalendar.sh \
 	ldif2vcf.sh \
 	mab2vcard

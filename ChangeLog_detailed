@@ -1,3 +1,7 @@
+2006-04-27 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * scripts/sync-tomboy.sh: contributed by Tejas Dinkar
+
 2006-04-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * applied James Liggett's preferences patches
