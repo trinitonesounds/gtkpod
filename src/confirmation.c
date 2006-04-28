@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:15 jcs>
+/* Time-stamp: <2006-04-28 23:51:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -84,6 +84,7 @@ static void on_ok_clicked (GtkWidget *w, gpointer id)
     cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
+	gtk_widget_set_sensitive (cd->window, FALSE);
 	if (cd->ok_handler)
 	    cd->ok_handler (cd->user_data1, cd->user_data2);
 	cleanup (id);
@@ -97,9 +98,10 @@ static void on_apply_clicked (GtkWidget *w, gpointer id)
     cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
+	gtk_widget_set_sensitive (cd->window, FALSE);
 	if (cd->apply_handler)
 	    cd->apply_handler (cd->user_data1, cd->user_data2);
-	cleanup (id);
+	gtk_widget_set_sensitive (cd->window, TRUE);
     }
 }
 
@@ -110,6 +112,7 @@ static void on_cancel_clicked (GtkWidget *w, gpointer id)
     cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
+	gtk_widget_set_sensitive (cd->window, FALSE);
 	if (cd->cancel_handler)
 	    cd->cancel_handler (cd->user_data1, cd->user_data2);
 	cleanup (id);

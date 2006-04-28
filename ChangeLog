@@ -19,6 +19,9 @@ gtkpod V0.99.6CVS
        NEW: Script to sync notes from Tomboy to the iPod. Thanks to
        Tejas Dinkar.
 
+       BUGFIX: Pressing 'OK' when syncing directories several times
+       could crash gtkpod.
+
        NEW: Spanish translation. Thanks to Alejandro Lamas.
 
 gtkpod V0.99.5CVS
