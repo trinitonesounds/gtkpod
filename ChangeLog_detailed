@@ -2,7 +2,12 @@
 
 	 * src/confirmation.c: pressing 'OK' several time would call
            the ok_handler several times, most likely resulting in a
-           crash. Thanks to dforsi for pointing this out.
+           crash. Thanks to dforsi for pointing this out. Fixed by
+           turning the dialog insensitive while before calling the
+           handler.
+
+	 * src/misc.c (select_template): templates were compared
+           case-sensitively, which could lead to non-exported files.
 
 2006-04-27 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

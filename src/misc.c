@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2005-12-11 00:15:39 jcs>
+|  Time-stamp: <2006-04-29 00:01:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1097,7 +1097,8 @@ static gchar *select_template (Track *track, const gchar *p)
 	}
 	else if (ext && (strlen (*tplp) >= strlen (ext)))
 	{  /* this template is valid if the extensions match */
-	    if (strcmp (&((*tplp)[strlen (*tplp) - strlen (ext)]), ext) == 0)
+	    if (strcasecmp (&((*tplp)[strlen (*tplp) - strlen (ext)]),
+			    ext) == 0)
 		break;
 	}
 	++tplp;

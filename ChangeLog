@@ -20,7 +20,11 @@ gtkpod V0.99.6CVS
        Tejas Dinkar.
 
        BUGFIX: Pressing 'OK' when syncing directories several times
-       could crash gtkpod.
+       could crash gtkpod. Thanks to dforsi.
+
+       BUGFIX: Exporting tracks did not work if the template
+       extensions (.mp3...) did not match case-sensitively, possibly
+       leading to non-exported tracks. Thanks to Mattias Wadman.
 
        NEW: Spanish translation. Thanks to Alejandro Lamas.
 
