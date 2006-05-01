@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-01-02 22:56:30 jcs>
+/* Time-stamp: <2006-05-01 15:01:51 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -68,16 +68,6 @@ static void prefs_window_set_sort_tab_num (gint num);
 static const gchar *scriptdir = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
 
 
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-static void on_pc_subs_list_row_activated (GtkTreeView *view,
-                                           GtkTreePath *path,
-                                           GtkTreeViewColumn *col,
-                                           gpointer user_data);
-
-/* Pointer to the treeview that holds the podcast subscriptions */
-static GtkTreeView *pc_subs_list = NULL;
-#endif
 /* Definition of path button names.
    E.g. path_button_names[PATH_PLAY_ENQUEUE] is
    "play_enqueue_path_button".
@@ -445,9 +435,6 @@ prefs_window_create (gint page)
 
 /* Code to add subscriptions list box */
 
-    /* FIXME: PODCASTS: remove Podcast menu */
-/*     create_subs_treeview(); */
-
     if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mount_point")))
     {
 	if (tmpcfg->ipod_mount)
@@ -783,77 +770,6 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 	g_free (buf);
     }
 
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_dir");
-    if (tmpcfg->pc_dir)
-    {  /* we should copy the new path first because by setting
-	  the text we might get a callback destroying the old
-	  value... */
-	gchar *buf = g_strdup (tmpcfg->pc_dir);
-	gtk_entry_set_text(GTK_ENTRY(w), buf);
-	g_free (buf);
-    }
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_age");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_del_age);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_age_val");
-    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
-			       0, 255);
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-			       prefs_get_pc_del_age_val ());
-    if (!tmpcfg->pc_del_age) gtk_widget_set_sensitive (w, FALSE);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_copied");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_del_copied);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_auto_fetch");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_auto_fetch);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_log");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_log);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_log_file");
-    if (tmpcfg->pc_log_file)
-    {  /* we should copy the new path first because by setting
-	  the text we might get a callback destroying the old
-	  value... */
-	gchar *buf = g_strdup (tmpcfg->pc_log_file);
-	gtk_entry_set_text(GTK_ENTRY(w), buf);
-	g_free (buf);
-    }
-    if (!tmpcfg->pc_log) gtk_widget_set_sensitive (w, FALSE);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_auto_sync");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_auto_sync);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_age");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_ipod_del_age);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_age_val");
-    gtk_spin_button_set_range (GTK_SPIN_BUTTON (w), 0, 255);
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-			       prefs_get_pc_ipod_del_age_val ());
-    if (!tmpcfg->pc_ipod_del_age) gtk_widget_set_sensitive (w, FALSE);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_played");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_ipod_del_played);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_inc_date");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_ipod_inc_date);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_change_genre");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->pc_change_genre);
-
-
 
 /* 	if((w = lookup_widget(prefs_window, "cfg_unused_gboolean3"))) */
 /* 	{ */
@@ -876,9 +792,6 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
     {
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
     }
-    /* FIXME: PODCASTS: remove Podcast options */
-    gtk_notebook_remove_page (GTK_NOTEBOOK (w), -1);
-
     prefs_window_show_hide_tooltips ();
     gtk_widget_show(prefs_window);
 }
@@ -957,19 +870,6 @@ prefs_window_set(void)
 	prefs_set_mserv_use(tmpcfg->mserv_use);
 	prefs_set_mserv_report_probs(tmpcfg->mserv_report_probs);
 	prefs_set_mserv_username(tmpcfg->mserv_username);
-	prefs_set_pc_dir(tmpcfg->pc_dir);
-	prefs_set_pc_del_age(tmpcfg->pc_del_age);
-	prefs_set_pc_del_age_val(tmpcfg->pc_del_age_val);
-	prefs_set_pc_del_copied(tmpcfg->pc_del_copied);
-	prefs_set_pc_auto_fetch(tmpcfg->pc_auto_fetch);
-	prefs_set_pc_log(tmpcfg->pc_log);
-	prefs_set_pc_log_file(tmpcfg->pc_log_file);
-	prefs_set_pc_auto_sync(tmpcfg->pc_auto_sync);
-	prefs_set_pc_ipod_del_age(tmpcfg->pc_ipod_del_age);
-	prefs_set_pc_ipod_del_age_val(tmpcfg->pc_ipod_del_age_val);
-	prefs_set_pc_ipod_del_played(tmpcfg->pc_ipod_del_played);
-	prefs_set_pc_ipod_inc_date(tmpcfg->pc_ipod_inc_date);
-	prefs_set_pc_change_genre(tmpcfg->pc_change_genre);
 	prefs_set_unused_gboolean3(tmpcfg->unused_gboolean3);
 
 	tm_show_preferred_columns();
@@ -1088,9 +988,6 @@ prefs_window_ok (void)
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
     prefs_set_size_prefs (defx, defy);
-    /* FIXME: PODCASTS: remove Podcast menu */
-/*     GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list)); */
-/*     podcast_write_from_store(store); */
 
     /* close the window */
     if(prefs_window)
@@ -1141,148 +1038,8 @@ prefs_window_apply (void)
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
     prefs_set_size_prefs (defx, defy);
 
-    /* FIXME: PODCASTS: remove Podcast menu */
-/*     GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list)); */
-/*     podcast_write_from_store(store); */
 }
 
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-void create_subs_treeview ()
-{
-    GtkCellRenderer     *renderer;
-    GtkTreeModel        *model;
-
-    pc_subs_list = GTK_TREE_VIEW(gtk_tree_view_new ());
-    gtk_widget_set_size_request(GTK_WIDGET (pc_subs_list), 270, 105);
-
-    renderer = gtk_cell_renderer_text_new ();
-    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (pc_subs_list),
-                                                 -1,      
-                                                 "Name",  
-                                                 renderer,
-                                                 "text", PC_SUBS_NAME,
-                                                 NULL);
-
-    renderer = gtk_cell_renderer_text_new ();
-    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (pc_subs_list),
-                                                 -1,
-                                                 "URL",
-                                                 renderer,
-                                                 "text", PC_SUBS_URL,
-                                                 NULL);
-
-    model = GTK_TREE_MODEL(gtk_list_store_new (PC_SUBS_NUM_COLS, G_TYPE_STRING, G_TYPE_STRING));
-    podcast_read_into_store (GTK_LIST_STORE(model));
-    gtk_tree_view_set_model (GTK_TREE_VIEW (pc_subs_list), model);
-
-    /* The tree view has acquired its own reference to the
-     *  model, so we can drop ours. That way the model will
-     *  be freed automatically when the tree view is destroyed */
-
-    g_object_unref (model);
-
-    g_signal_connect(pc_subs_list, "row-activated", G_CALLBACK(on_pc_subs_list_row_activated), NULL);
-
-    GtkWidget *pc_subs_window = gtkpod_xml_get_widget (prefs_window_xml, "pc_subs_window");
-
-    gtk_container_add (GTK_CONTAINER (pc_subs_window), GTK_WIDGET(pc_subs_list));
-
-    gtk_widget_show_all (pc_subs_window);
-}
-#endif
-
-void on_pc_add_button_clicked          (GtkButton *button,
-                                        gpointer user_data)
-{
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-    gchar *text[2];
-    GtkEditable *w = GTK_EDITABLE(gtkpod_xml_get_widget (prefs_window_xml, "pc_name"));
-    text[0] = gtk_editable_get_chars(w, 0, -1);
-    gtk_editable_delete_text(w, 0, -1);
-    w = GTK_EDITABLE(gtkpod_xml_get_widget (prefs_window_xml, "pc_url"));
-    text[1] = gtk_editable_get_chars(w, 0, -1);
-    gtk_editable_delete_text(w, 0, -1);
-
-    GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model(pc_subs_list));
-    GtkTreeIter iter;
-
-    gtk_list_store_append (model, &iter);
-    gtk_list_store_set (model, &iter,
-                        PC_SUBS_NAME, text[0],
-                        PC_SUBS_URL, text[1],
-                        -1);
-#endif
-}
-
-void on_pc_delete_button_clicked       (GtkButton *button,
-                                        gpointer user_data)
-{
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pc_subs_list));
-    GtkTreeModel     *model = gtk_tree_view_get_model(pc_subs_list);
-    GtkTreeIter       iter;
-
-    if (gtk_tree_selection_get_selected(selection, &model, &iter))
-        gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
-#endif
-}
-
-void on_pc_update_button_clicked       (GtkButton *button,
-                                        gpointer user_data)
-{
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pc_subs_list));
-    GtkTreeModel     *model = gtk_tree_view_get_model(pc_subs_list);
-    GtkTreeIter       iter;
-
-    if (gtk_tree_selection_get_selected(selection, &model, &iter) || 1)
-    {
-        gchar *text[2];
-        GtkEditable *w = GTK_EDITABLE(gtkpod_xml_get_widget (prefs_window_xml, "pc_name"));
-        text[0] = gtk_editable_get_chars(w, 0, -1);
-        gtk_editable_delete_text(w, 0, -1);
-        w = GTK_EDITABLE(gtkpod_xml_get_widget (prefs_window_xml, "pc_url"));
-        text[1] = gtk_editable_get_chars(w, 0, -1);
-        gtk_editable_delete_text(w, 0, -1);
-
-        gtk_list_store_set (GTK_LIST_STORE(model), &iter,
-                            PC_SUBS_NAME, text[0],
-                            PC_SUBS_URL, text[1],
-                            -1);
-    }
-#endif
-}
-
-
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-static void on_pc_subs_list_row_activated       (GtkTreeView *view,
-                                          GtkTreePath *path,
-                                          GtkTreeViewColumn *col,
-                                          gpointer user_data)
-{
-    GtkTreeModel *model;
-    GtkTreeIter   iter;
-    gchar *text[2];
-
-    model = gtk_tree_view_get_model(view);
-    gtk_tree_model_get_iter(model, &iter, path);
-    gtk_tree_model_get (model, &iter,
-                        PC_SUBS_NAME, &text[0],
-                        PC_SUBS_URL, &text[1],
-                        -1);
-
-    GtkWidget *w = gtkpod_xml_get_widget (prefs_window_xml, "pc_name");
-    gtk_entry_set_text(GTK_ENTRY (w), text[0]);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "pc_url");
-    gtk_entry_set_text(GTK_ENTRY (w), text[1]);
-}
-#endif
 
 
 /* -----------------------------------------------------------------
@@ -2393,112 +2150,6 @@ on_sort_case_sensitive_toggled         (GtkToggleButton *togglebutton,
 {
     sort_window_set_case_sensitive(
 	gtk_toggle_button_get_active(togglebutton));
-}
-
-
-void
-on_pc_dir_changed                      (GtkEditable     *editable,
-                                        gpointer         user_data)
-{
-    g_free (tmpcfg->pc_dir);
-    tmpcfg->pc_dir = gtk_editable_get_chars(editable,0, -1);
-}
-
-void
-on_pc_del_age_toggled                  (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    gboolean val = gtk_toggle_button_get_active (togglebutton);
-    GtkWidget *w = gtkpod_xml_get_widget (prefs_window_xml, "pc_del_age_val");
-
-    tmpcfg->pc_del_age = val;
-    if(w)       gtk_widget_set_sensitive (w, val);
-}
-
-void
-on_pc_del_age_val_value_changed        (GtkSpinButton   *spinbutton,
-                                        gpointer         user_data)
-{
-    tmpcfg->pc_del_age_val = gtk_spin_button_get_value  (spinbutton);
-}
-
-void
-on_pc_del_copied_toggled               (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    tmpcfg->pc_del_copied = gtk_toggle_button_get_active (togglebutton);
-}
-
-void
-on_pc_auto_fetch_toggled               (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    tmpcfg->pc_auto_fetch = gtk_toggle_button_get_active (togglebutton);
-}
-
-void
-on_pc_log_toggled                      (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    gboolean val = gtk_toggle_button_get_active (togglebutton);
-    GtkWidget *w = gtkpod_xml_get_widget (prefs_window_xml, "pc_log_file");
-
-    tmpcfg->pc_log = val;
-    if(w)       gtk_widget_set_sensitive (w, val);
-}
-
-void
-on_pc_log_file_changed                 (GtkEditable     *editable,
-                                        gpointer         user_data)
-{
-    g_free (tmpcfg->pc_log_file);
-    tmpcfg->pc_log_file = gtk_editable_get_chars(editable,0, -1);
-}
-
-void
-on_pc_auto_sync_toggled                (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    tmpcfg->pc_auto_sync = gtk_toggle_button_get_active (togglebutton);
-}
-
-void
-on_pc_ipod_del_age_toggled             (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    gboolean val = gtk_toggle_button_get_active (togglebutton);
-    GtkWidget *w = gtkpod_xml_get_widget (prefs_window_xml, "pc_ipod_del_age_val");
-
-    tmpcfg->pc_ipod_del_age = val;
-    if(w)       gtk_widget_set_sensitive (w, val);
-}
-
-void
-on_pc_ipod_del_age_val_value_changed   (GtkSpinButton   *spinbutton,
-                                        gpointer         user_data)
-{
-    tmpcfg->pc_ipod_del_age_val = gtk_spin_button_get_value  (spinbutton);
-}
-
-void
-on_pc_ipod_del_played_toggled          (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    tmpcfg->pc_ipod_del_played = gtk_toggle_button_get_active (togglebutton);
-}
-
-void
-on_pc_ipod_inc_date_toggled            (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    tmpcfg->pc_ipod_inc_date = gtk_toggle_button_get_active (togglebutton);
-}
-
-void
-on_pc_change_genre_toggled             (GtkToggleButton *togglebutton,
-                                        gpointer         user_data)
-{
-    tmpcfg->pc_change_genre = gtk_toggle_button_get_active (togglebutton);
 }
 
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-14 23:10:59 jcs>
+/* Time-stamp: <2006-05-01 14:56:00 jcs>
 |
 |  Copyright (C) 2002-2005 Alexander Dutton <alexdutton at f2s dot com>
 |  Part of the gtkpod project.
@@ -30,38 +30,4 @@
 #ifndef __PODCAST_H__
 #define __PODCAST_H__
 
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-enum
-{
-  PC_SUBS_NAME = 0,
-  PC_SUBS_URL,
-  PC_SUBS_NUM_COLS
-};
-
-
-gboolean podcast_fetch_in_progress;
-
-void podcast_write_from_store (GtkListStore *store);
-void podcast_read_into_store (GtkListStore *store);
-void podcast_read_from_file ();
-
-void podcast_file_add (gchar *title, gchar *url, 
-                       gchar *desc, gchar *artist, 
-                       gchar pubdate[14], gchar fetchdate[14], 
-                       glong size, gchar *local,
-                       gboolean fetched, gboolean tofetch);
-void podcast_file_delete_by_url (gchar *url);
-gint podcast_file_read_from_file();
-
-gboolean podcast_already_have_url (gchar *url);
-GList *podcast_file_find_to_fetch ();
-void podcast_fetch ();
-void podcast_fetch_thread ();
-
-gchar *podcast_get_tag_attr(gchar *attrs, gchar *req);
-
-void podcast_set_status(gchar *status);
-void podcast_set_cur_file_name(gchar *text);
-#endif
 #endif

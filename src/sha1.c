@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-12 18:44:39 jcs>
+/* Time-stamp: <2006-05-01 14:48:40 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -132,7 +132,7 @@ md5_hash_on_file(FILE * fp)
        {
 	   guint8 *hash = NULL;
 	   int bread = 0, x = 0, last = 0;
-	   gchar file_chunk[chunk_size + sizeof(int)];
+	   guchar file_chunk[chunk_size + sizeof(int)];
 
 	   /* allocate the digest we're returning */
 	   result = g_malloc0(sizeof(gchar) * 41);

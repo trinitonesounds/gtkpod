@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:25:31 jcs>
+/* Time-stamp: <2006-05-01 15:04:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -264,8 +264,10 @@ gchar *charset_to_description (gchar *charset)
 
 /* code for automatic detection of Japanese char-subset donated by
    Hiroshi Kawashima */
-static const gchar *charset_check_k_code (const guchar *p)
+static const gchar *charset_check_k_code (const gchar *p2)
 {
+    guchar *p = (guchar *)p2;
+
     while (p && *p && (*p != '\n'))
     {
 	if ((p[0] == 0x1b) &&
@@ -286,7 +288,7 @@ static const gchar *charset_check_k_code (const guchar *p)
 }
 
 /* same as check_k_code, but defaults to "EUC-JP" if no match is found */
-static const gchar *charset_check_k_code_with_default (const guchar *p)
+static const gchar *charset_check_k_code_with_default (const gchar *p)
 {
     const gchar *result=NULL;
 

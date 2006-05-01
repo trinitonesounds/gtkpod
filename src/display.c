@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-16 23:52:05 jcs>
+/* Time-stamp: <2006-05-01 14:57:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -99,10 +99,6 @@ void display_create (void)
     display_set_info_window_menu ();
     /* check if info window should be opened */
     if (prefs_get_info_window ())  info_open_window ();
-
-    /* if we need to fetch podcasts, then do so */
-/* FIXME: PODCASTS: remove Podcast menu */
-/*     if (prefs_get_pc_auto_fetch ())  podcast_fetch(); */
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and
@@ -187,7 +183,7 @@ void display_adjust_menus (void)
     GtkWidget *defpl, *defip, *defdb, *defhd;
     GtkWidget *dpl, *dpltfip, *dpltfdb, *dpltfhd;
     GtkWidget *dsep1, *dsep2;
-    GtkWidget *espl, *w;
+    GtkWidget *espl;
     Playlist *pl;
 
     delete = gtkpod_xml_get_widget (main_window_xml, "delete_menu");
@@ -220,12 +216,6 @@ void display_adjust_menus (void)
     dsep2 = gtkpod_xml_get_widget (main_window_xml, "delete_separator2");
     espl = gtkpod_xml_get_widget (main_window_xml,
 				  "edit_smart_playlist");
-
-    /* FIXME: PODCASTS: remove Podcast menu */
-    w = gtkpod_xml_get_widget (main_window_xml, "update_podcasts");
-    gtk_widget_hide (w);
-    w = gtkpod_xml_get_widget (main_window_xml, "update_podcasts_sep");
-    gtk_widget_hide (w);
 
     pl = pm_get_selected_playlist ();
 
@@ -904,15 +894,6 @@ void display_install_autoscroll_row_timeout (GtkWidget *widget)
    void open_about_window (void)
 */
 
-
-/* FIXME: PODCASTS: remove Podcast menu */
-void on_update_podcasts_activate (GtkButton       *button,
-				  gpointer         user_data)
-{
-#if 0
-    podcast_fetch ();
-#endif
-}
 
 void on_edit_details_selected_playlist (GtkMenuItem     *menuitem,
 					gpointer         user_data)

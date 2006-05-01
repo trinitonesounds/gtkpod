@@ -1,3 +1,12 @@
+2006-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/md5.c (sha1_hash): corrected signedness warning.
+	 * src/charset.c (charset_check_k_code),
+	   (charset_check_k_code_with_default): corrected signedness
+	   warning. 
+	 * src/...: removed incomplete podcast code
+	 * gtkpod.glade: removed corresponding podcast references
+
 2006-04-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/confirmation.c: pressing 'OK' several time would call

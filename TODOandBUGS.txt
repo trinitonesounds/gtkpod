@@ -1,5 +1,11 @@
 TODO:
 
+- Actually, there is an option to see all the dirs that
+are going to be synced but it's impossible to change
+them.It would be nice to have a tree whit all the dirs
+and sub-dirs, like in the amarok colection maker, so we
+can have a full control of the sync dirs.
+
 - set flag3/4 automatically for podcasts.
 
 - support for www.last.fm

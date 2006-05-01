@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 22:46:54 jcs>
+/* Time-stamp: <2006-05-01 15:01:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -165,20 +165,6 @@ struct cfg
   gchar *mserv_username;        /* username for mserv? */
   gboolean unused_gboolean3;    /* unused */
   float version;                /* version of gtkpod writing the cfg file */
-
-  gchar *pc_dir;                /* directory to store podcasts */
-  gboolean pc_del_age;          /* whether to delete old podcasts */
-  gint pc_del_age_val;          /* how old a podcast must be to be deleted */
-  gboolean pc_del_copied;       /* whether to delete once copied to iPod */
-  gboolean pc_auto_fetch;       /* whether to fetch podcasts automatically */
-  gboolean pc_log;              /* whether to log podcast information */
-  gchar *pc_log_file;           /* where to log to */
-  gboolean pc_auto_sync;        /* whether to automatically sync podcasts */
-  gboolean pc_ipod_del_age;     /* whether to delete old podcasts from iPod */
-  gint pc_ipod_del_age_val;     /* how old a podcast must be to be deleted */
-  gboolean pc_ipod_del_played;  /* whether to delete played podcasts */
-  gboolean pc_ipod_inc_date;    /* whether to include date in iPod metadata */
-  gboolean pc_change_genre;     /* whether to change genres to 'Podcast' */
 };
 
 
