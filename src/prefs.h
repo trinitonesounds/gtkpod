@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-01 15:01:50 jcs>
+/* Time-stamp: <2006-05-02 21:25:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -206,21 +206,17 @@ void cleanup_prefs();
 /* Functions that set prefrence values */
 
 void prefs_set_string(const gchar *key, const gchar *value);
-
 void prefs_set_int(const gchar *key, const gint value);
-
 void prefs_set_int64(const gchar *key, const gint64 value);
-														
+
 /* The index parameter is used for numbered preference keys.
  * (i.e. pref0, pref1, etc) */
 void prefs_set_string_index(const gchar *key, const guint index,
-																	const gchar *value);
-
-void prefs_set_int_index(const gchar *key, const guint index, 
-												  		 const gint value);
-
-void prefs_set_int64_index(const gchar *key, guint index, 
-													 const gint64 value);
+			    const gchar *value);
+void prefs_set_int_index(const gchar *key, const guint index,
+			 const gint value);
+void prefs_set_int64_index(const gchar *key, guint index,
+			   const gint64 value);
 
 /* Functions that get prefrence values */
 gchar *prefs_get_string(const gchar *key);
@@ -230,59 +226,62 @@ gboolean prefs_get_int_value(const gchar *key, gint *value);
 gint64 prefs_get_int64(const gchar *key);
 gboolean prefs_get_int64_value(const gchar *key, gint64 *value);
 
-/* Numbered prefs functions */																
+/* Numbered prefs functions */
 gchar *prefs_get_string_index(const gchar *key, const guint index);
-
-gboolean prefs_get_string_value_index(const gchar *key, const guint index, 
-																			gchar **value);
-
+gboolean prefs_get_string_value_index(const gchar *key,
+				      const guint index, gchar **value);
 gint prefs_get_int_index(const gchar *key, const guint index);
-																 
-gboolean prefs_get_int_value_index(const gchar *key, const guint index, 
-																	 gint *value);
-																	 
+gboolean prefs_get_int_value_index(const gchar *key, const guint index,
+				   gint *value);
 gint64 prefs_get_int64_index(const gchar *key, const guint index);
-
-gboolean prefs_get_int64_value_index(const gchar *key, const guint index, 
-																		 gint64 *value);
+gboolean prefs_get_int64_value_index(const gchar *key,
+				     const guint index, gint64 *value);
 
 /* 
  * Temp prefs functions
  */
-TempPrefs *create_temp_prefs();
-void destroy_temp_prefs(TempPrefs *temp_prefs);
-void apply_temp_prefs(TempPrefs *temp_prefs);
+TempPrefs *temp_prefs_create (void);
+void temp_prefs_destroy (TempPrefs *temp_prefs);
+void temp_prefs_apply (TempPrefs *temp_prefs);
 
 /*
  * Functions that add various types of info to the temp prefs tree.
  */
-void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key, 
-													 const gchar *value);
-													 
-void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key, 
-												const gint value);
-												
-void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key, 
-													const gint64 value);
-																															 
+void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key,
+			   const gchar *value);
+void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key,
+			const gint value);
+void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key,
+			  const gint64 value);
+
+/*
+ * Functions that retrieve various types of info from the temp prefs tree.
+ */
+gchar *temp_prefs_get_string(TempPrefs *temp_prefs, const gchar *key);
+gboolean temp_prefs_get_string_value(TempPrefs *temp_prefs,
+				     const gchar *key, gchar **value);
+gint temp_prefs_get_int(TempPrefs *temp_prefs, const gchar *key);
+gboolean temp_prefs_get_int_value(TempPrefs *temp_prefs,
+				  const gchar *key, gint *value);
+
+
 /* Numbered prefrences functions */
-void temp_prefs_set_string_index(TempPrefs *temp_prefs, const gchar *key,  
-																 const guint index, const gchar *value);
-																	
-void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,  
-															const guint index, const gint value);
-															 
-void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,  
-																const guint index, const gint64 value);
-																			
+void temp_prefs_set_string_index(TempPrefs *temp_prefs, const gchar *key,
+				 const guint index, const gchar *value);
+void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,
+			      const guint index, const gint value);
+void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,
+				const guint index, const gint64 value);
+
+
 /* 
  * Functions for variable-length lists
  */
  
-TempLists *create_temp_lists();
-void destroy_temp_lists(TempLists *temp_lists);
-void add_temp_list(TempLists *temp_lists, const gchar *key, GList *list);
-void apply_temp_lists(TempLists *temp_lists);
+TempLists *temp_lists_create (void);
+void temp_lists_destroy(TempLists *temp_lists);
+void temp_list_add(TempLists *temp_lists, const gchar *key, GList *list);
+void temp_lists_apply(TempLists *temp_lists);
 void prefs_apply_list(gchar *key, GList *list);
 GList *prefs_get_list(const gchar *key);
 void prefs_free_list(GList *list);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-02 19:17:01 jcs>
+/* Time-stamp: <2006-05-02 21:27:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -514,17 +514,20 @@ void temp_prefs_apply(TempPrefs *temp_prefs)
 
 /* Functions for non-numbered pref keys */
 
-/* Set a string value with the given key */
+/* Set a string value with the given key, or remove key if @value is
+   NULL */
 void prefs_set_string(const gchar *key, const gchar *value)
 {
-	if (prefs_table)
-	{
-		if (value)
-		{
-			g_hash_table_insert(prefs_table, g_strdup(key), 
-													g_strdup(value));
-		}
-	}
+    g_return_if_fail (key);
+
+    if (prefs_table)
+    {
+	if (value)
+	    g_hash_table_insert (prefs_table,
+				 g_strdup(key), g_strdup(value));
+	else
+	    g_hash_table_remove (prefs_table, key);
+    }
 }
 
 /* Set a key value to a given integer */
@@ -570,13 +573,10 @@ gboolean prefs_get_string_value(const gchar *key, gchar **value)
 	{
 		string = g_hash_table_lookup(prefs_table, key);
 		
+		if (value)
+			*value = g_strdup (string);
 		if (string)
-		{
-			if (value)
-				*value = g_strdup(string);
-			
-			return TRUE;
-		}
+		        return TRUE;
 	}
 	return FALSE;
 }
@@ -609,14 +609,17 @@ gboolean prefs_get_int_value(const gchar *key, gint *value)
 	if (prefs_table)
 	{
 		string = g_hash_table_lookup(prefs_table, key);
-		
-		if (string)
+
+		if (value)
 		{
-			if (value)
+		        if (string)
 				*value = atoi(string);
-			
-			return TRUE;
+			else
+			        *value = 0;
 		}
+
+		if (string)
+			return TRUE;
 	}
 	return FALSE;
 }
@@ -784,94 +787,167 @@ gboolean prefs_get_int64_value_index(const gchar *key, const guint index,
 	return ret;
 }
 
-/* Add string value with the given key to temp prefs */
+/* Add string value with the given key to temp prefs. Remove the key
+ * if @value is NULL. */
 void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key, 
 													 const gchar *value)
 {
-	if (prefs_table)
-	{
-		if (temp_prefs)
-		{
-			if (temp_prefs->tree)
-				g_tree_insert(temp_prefs->tree, g_strdup(key), g_strdup(value));
-		}
-	}
+    g_return_if_fail (temp_prefs && temp_prefs->tree);
+    g_return_if_fail (key);
+
+    if (value)
+	g_tree_insert (temp_prefs->tree, g_strdup(key), g_strdup(value));
+    else
+	g_tree_remove (temp_prefs->tree, key);
 }
 
 /* Add an integer value to temp prefs */
 void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key, 
 												const gint value)
 {
-	gchar *strvalue; /* String value converted from integer */
+    gchar *strvalue; /* String value converted from integer */
 
-	if (prefs_table)
-	{
-		if (temp_prefs)
-		{
-			if (temp_prefs->tree)
-			{
-				strvalue = g_strdup_printf("%i", value);
-				g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
-			}
-		}
-	}
+    g_return_if_fail (temp_prefs && temp_prefs->tree);
+    g_return_if_fail (key);
+
+    strvalue = g_strdup_printf("%i", value);
+    g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
 }
 
 /* Add an int64 to temp prefs */
 void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key, 
 													const gint64 value)
 {
-	gchar *strvalue; /* String value converted from int64 */
+    gchar *strvalue; /* String value converted from int64 */
 	
-	if (prefs_table)
-	{
-		if (temp_prefs)
-		{
-			if (temp_prefs->tree)
-			{
-				strvalue = g_strdup_printf("%llu", value);
-				g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
-			}
-		}
-	}
+    g_return_if_fail (temp_prefs && temp_prefs->tree);
+    g_return_if_fail (key);
+
+    strvalue = g_strdup_printf("%llu", value);
+    g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
 }
+
+/* Get a string value associated with a key. Free returned string. */
+gchar *temp_prefs_get_string(TempPrefs *temp_prefs, const gchar *key)
+{	
+    g_return_val_if_fail (temp_prefs && temp_prefs->tree, NULL);
+    g_return_val_if_fail (key, NULL);
+
+    return g_strdup (g_tree_lookup (temp_prefs->tree, key));
+}
+
+/* Use this if you need to know if the given key actually exists */
+/* The value parameter can be NULL if you don't need the value itself. */
+gboolean temp_prefs_get_string_value(TempPrefs *temp_prefs,
+				     const gchar *key, gchar **value)
+{
+    gchar *string;  /* String value from prefs table */
+	
+    g_return_val_if_fail (temp_prefs && temp_prefs->tree, FALSE);
+    g_return_val_if_fail (key, FALSE);
+
+    string = g_tree_lookup (temp_prefs->tree, key);
+
+    if (value)
+	*value = g_strdup (string);
+
+    if (string)
+	return TRUE;
+    else
+	return FALSE;
+}
+
+/* Get an integer value from a key */
+gint temp_prefs_get_int(TempPrefs *temp_prefs, const gchar *key)
+{
+    gchar *string; /* Hash value string */
+    gint value;  /* Retunred value */
+	
+    g_return_val_if_fail (temp_prefs && temp_prefs->tree, 0);
+    g_return_val_if_fail (key, 0);
+
+    value = 0;
+	
+    string = g_tree_lookup (temp_prefs->tree, key);
+		
+    if (string)
+	value = atoi(string);
+
+    return value;
+}
+
+/* Use this if you need to know if the given key actually exists */
+/* The value parameter can be NULL if you don't need the value itself. */
+gboolean temp_prefs_get_int_value(TempPrefs *temp_prefs,
+				  const gchar *key, gint *value)
+{
+    gchar *string;  /* String value from prefs table */
+	
+    g_return_val_if_fail (temp_prefs && temp_prefs->tree, FALSE);
+    g_return_val_if_fail (key, FALSE);
+
+    string = g_hash_table_lookup (prefs_table, key);
+
+    if (value)
+    {
+	if (string)
+	    *value = atoi(string);
+	else
+	    *value = 0;
+    }
+
+    if (string)
+	return TRUE;
+    else
+	return FALSE;
+}
+
 
 /* Functions for numbered pref keys */
 
 /* Set a string value with the given key */
-void temp_prefs_set_string_index(TempPrefs *temp_prefs, const gchar *key,  
-																 const guint index, const gchar *value)
+void temp_prefs_set_string_index(TempPrefs *temp_prefs, const gchar *key,
+				 const guint index, const gchar *value)
 {
-	gchar *full_key; /* Complete numbered key */
+    gchar *full_key; /* Complete numbered key */
 	
-	full_key = create_full_key(key, index);
-	temp_prefs_set_string(temp_prefs, full_key, value);
+    g_return_if_fail (temp_prefs && temp_prefs->tree);
+    g_return_if_fail (key);
+
+    full_key = create_full_key(key, index);
+    temp_prefs_set_string(temp_prefs, full_key, value);
 	
-	g_free(full_key);
+    g_free(full_key);
 }
 
 /* Set a key value to a given integer */
-void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,  
-															const guint index, const gint value)
+void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,
+			      const guint index, const gint value)
 {
-	gchar *full_key; /* Complete numbered key */
-	
-	full_key = create_full_key(key, index);
-	temp_prefs_set_int(temp_prefs, full_key, value);
-	
-	g_free(full_key);
+    gchar *full_key; /* Complete numbered key */
+
+    g_return_if_fail (temp_prefs && temp_prefs->tree);
+    g_return_if_fail (key);
+
+    full_key = create_full_key(key, index);
+    temp_prefs_set_int(temp_prefs, full_key, value);
+
+    g_free(full_key);
 }
 
 /* Set a key to an int64 value */
 void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,  
 																const guint index, const gint64 value)
 {
-	gchar *full_key; /* Complete numbered key */
-	
-	full_key = create_full_key(key, index);
-	temp_prefs_set_int64(temp_prefs, full_key, value);
-	
-	g_free(full_key);
+    gchar *full_key; /* Complete numbered key */
+
+    g_return_if_fail (temp_prefs && temp_prefs->tree);
+    g_return_if_fail (key);
+
+    full_key = create_full_key(key, index);
+    temp_prefs_set_int64(temp_prefs, full_key, value);
+
+    g_free(full_key);
 }
 
 /* Functions for variable-length lists */

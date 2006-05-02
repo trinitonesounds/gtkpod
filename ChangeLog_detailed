@@ -7,6 +7,9 @@
            (otherwise keys cannot be retrieved safely because
            g_str_hash() is not unique.
 
+	 * src/prefs.[ch]: added temp_prefs_get... functions as well
+           as reformatted some code a bit (way too much whitespace?!)
+
 2006-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/md5.c (sha1_hash): corrected signedness warning.
