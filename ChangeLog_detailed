@@ -1,5 +1,14 @@
 2006-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * src/prefs.[ch], src/prefswindow.c: renamed some temp_prefs
+           and temp_list function names.
+
+	 * src/prefs.c: use strcmp() to compare keys for temp_prefs
+           (otherwise keys cannot be retrieved safely because
+           g_str_hash() is not unique.
+
+2006-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * src/md5.c (sha1_hash): corrected signedness warning.
 	 * src/charset.c (charset_check_k_code),
 	   (charset_check_k_code_with_default): corrected signedness

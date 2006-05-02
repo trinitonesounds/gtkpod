@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-01 15:01:51 jcs>
+/* Time-stamp: <2006-05-02 19:17:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -222,18 +222,6 @@ static void read_environment()
 }
 #endif
  
-/* Key compate function for temp prefs tree */
-static gint string_compare(gconstpointer a, gconstpointer b, 
-													 gpointer user_data)
-{
-	guint hash1, hash2;  /* Numerical hash values for two input strings */
-	
-	hash1 = g_str_hash(a);
-	hash2 = g_str_hash(b);
-	
-	return (hash2 - hash1);
-}
-
 /* Create a full numbered key from a base key string and a number.
  * Free returned string. */
 static gchar *create_full_key(const gchar *base_key, gint index)
@@ -488,20 +476,21 @@ void cleanup_prefs()
 }
 
 /* Create the temp prefs tree */
-/* Free the returned structure with delete_temp_prefs */
-TempPrefs *create_temp_prefs()
+/* Free the returned structure with delete_temp_prefs() */
+TempPrefs *temp_prefs_create()
 {
 	TempPrefs *temp_prefs;  /* Retunred temp prefs structure */
 
 	temp_prefs = (TempPrefs*)g_malloc(sizeof(TempPrefs));
 
-	temp_prefs->tree = g_tree_new_full(string_compare, NULL, g_free, g_free);
+	temp_prefs->tree = g_tree_new_full((GCompareDataFunc)strcmp, NULL,
+					   g_free, g_free);
 
 	return temp_prefs;	
 }
 
 /* Delete temp prefs */
-void destroy_temp_prefs(TempPrefs *temp_prefs)
+void temp_prefs_destroy(TempPrefs *temp_prefs)
 {
 	if (temp_prefs)
 	{
@@ -513,7 +502,7 @@ void destroy_temp_prefs(TempPrefs *temp_prefs)
 }
 
 /* Copy the data from the temp prefs tree to the permanent prefs table */
-void apply_temp_prefs(TempPrefs *temp_prefs)
+void temp_prefs_apply(TempPrefs *temp_prefs)
 {
 	if (temp_prefs)
 	{
@@ -889,21 +878,21 @@ void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,
 
 /* Create a tree that contains lists that need to be rebuilt */
 /* Free the returned structure with destroy_temp_lists */
-TempLists *create_temp_lists()
+TempLists *temp_lists_create()
 {
 	TempLists *temp_lists;  /* Allocated temp list structure */
 	
 	temp_lists = (TempLists*)g_malloc(sizeof(TempLists));
 	
 
-	temp_lists->tree = g_tree_new_full(string_compare, NULL, g_free, 
-												 						 (GDestroyNotify)prefs_free_list);
-	
+	temp_lists->tree = g_tree_new_full((GCompareDataFunc)strcmp, NULL,
+					   g_free,
+					   (GDestroyNotify)prefs_free_list);
 	return temp_lists;
 }
 
 /* Destroys the list tree */
-void destroy_temp_lists(TempLists *temp_lists)
+void temp_lists_destroy(TempLists *temp_lists)
 {
 	if (temp_lists)
 	{
@@ -915,7 +904,7 @@ void destroy_temp_lists(TempLists *temp_lists)
 }
 
 /* Add a list with the given key prefix to a temp list tree */
-void add_temp_list(TempLists *temp_lists, const gchar *key, GList *list)
+void temp_list_add(TempLists *temp_lists, const gchar *key, GList *list)
 {
 	if (temp_lists)
 	{
@@ -925,7 +914,7 @@ void add_temp_list(TempLists *temp_lists, const gchar *key, GList *list)
 }
 		
 /* Copy the items of the lists in the given tree to the prefs table */
-void apply_temp_lists(TempLists *temp_lists)
+void temp_lists_apply(TempLists *temp_lists)
 {
 	if (temp_lists)
 	{
