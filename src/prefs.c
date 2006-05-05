@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-05 18:02:11 jcs>
+/* Time-stamp: <2006-05-05 18:22:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -492,23 +492,29 @@ TempPrefs *temp_prefs_create()
 /* Delete temp prefs */
 void temp_prefs_destroy(TempPrefs *temp_prefs)
 {
-	if (temp_prefs)
-	{
-		if (temp_prefs->tree)
-			g_tree_destroy(temp_prefs->tree);
-		
-		g_free(temp_prefs);
-	}
+    g_return_if_fail (temp_prefs);
+    g_return_if_fail (temp_prefs->tree);
+
+    g_tree_destroy(temp_prefs->tree);
+    g_free(temp_prefs);
 }
 
 /* Copy the data from the temp prefs tree to the permanent prefs table */
 void temp_prefs_apply(TempPrefs *temp_prefs)
 {
-	if (temp_prefs)
-	{
-		if (temp_prefs->tree)
-			g_tree_foreach(temp_prefs->tree, copy_key, NULL);
-	}
+    g_return_if_fail (temp_prefs);
+    g_return_if_fail (temp_prefs->tree);
+
+    g_tree_foreach(temp_prefs->tree, copy_key, NULL);
+}
+
+/* Return the number of keys stored in @temp_prefs */
+gint temp_prefs_size (TempPrefs *temp_prefs)
+{
+    g_return_if_fail (temp_prefs);
+    g_return_if_fail (temp_prefs->tree);
+
+    return g_tree_nnodes (temp_prefs->tree);
 }
 
 
@@ -799,9 +805,6 @@ void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key,
 	g_tree_insert (temp_prefs->tree, g_strdup(key), g_strdup(value));
     else
 	g_tree_remove (temp_prefs->tree, key);
-
-    printf ("tp: itdb_1_playlist_5719415708354392858_syncmode: %s\n",
-	    temp_prefs_get_string (temp_prefs, "itdb_1_playlist_5719415708354392858_syncmode"));
 }
 
 /* Add an integer value to temp prefs */
@@ -815,9 +818,6 @@ void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key,
 
     strvalue = g_strdup_printf("%i", value);
     g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
-
-    printf ("tp: itdb_1_playlist_5719415708354392858_syncmode: %s\n",
-	    temp_prefs_get_string (temp_prefs, "itdb_1_playlist_5719415708354392858_syncmode"));
 }
 
 /* Add an int64 to temp prefs */

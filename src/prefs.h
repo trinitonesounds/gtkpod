@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-05 14:38:22 jcs>
+/* Time-stamp: <2006-05-05 18:22:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -239,6 +239,7 @@ gboolean prefs_get_int64_value_index(const gchar *key,
 TempPrefs *temp_prefs_create (void);
 void temp_prefs_destroy (TempPrefs *temp_prefs);
 void temp_prefs_apply (TempPrefs *temp_prefs);
+gint temp_prefs_size (TempPrefs *temp_prefs);
 
 /*
  * Functions that add various types of info to the temp prefs tree.
