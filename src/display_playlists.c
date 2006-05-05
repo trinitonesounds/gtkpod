@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-13 00:27:07 jcs>
+/* Time-stamp: <2006-05-02 14:08:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1025,9 +1025,9 @@ void pm_add_track (Playlist *playlist, Track *track, gboolean display)
 /* Used by pm_name_changed() to find the playlist that
    changed name. If found, emit a "row changed" signal to display the change */
 static gboolean sr_model_playlist_name_changed (GtkTreeModel *model,
-					GtkTreePath *path,
-					GtkTreeIter *iter,
-					gpointer data)
+						GtkTreePath *path,
+						GtkTreeIter *iter,
+						gpointer data)
 {
   Playlist *playlist;
 

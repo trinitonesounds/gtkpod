@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-02 21:27:14 jcs>
+/* Time-stamp: <2006-05-05 18:02:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -799,6 +799,9 @@ void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key,
 	g_tree_insert (temp_prefs->tree, g_strdup(key), g_strdup(value));
     else
 	g_tree_remove (temp_prefs->tree, key);
+
+    printf ("tp: itdb_1_playlist_5719415708354392858_syncmode: %s\n",
+	    temp_prefs_get_string (temp_prefs, "itdb_1_playlist_5719415708354392858_syncmode"));
 }
 
 /* Add an integer value to temp prefs */
@@ -812,6 +815,9 @@ void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key,
 
     strvalue = g_strdup_printf("%i", value);
     g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
+
+    printf ("tp: itdb_1_playlist_5719415708354392858_syncmode: %s\n",
+	    temp_prefs_get_string (temp_prefs, "itdb_1_playlist_5719415708354392858_syncmode"));
 }
 
 /* Add an int64 to temp prefs */
@@ -886,7 +892,7 @@ gboolean temp_prefs_get_int_value(TempPrefs *temp_prefs,
     g_return_val_if_fail (temp_prefs && temp_prefs->tree, FALSE);
     g_return_val_if_fail (key, FALSE);
 
-    string = g_hash_table_lookup (prefs_table, key);
+    string = g_tree_lookup (temp_prefs->tree, key);
 
     if (value)
     {
@@ -1144,11 +1150,13 @@ struct cfg *cfg_new(void)
     mycfg = g_malloc0 (sizeof (struct cfg));
     if(getcwd(curdir, PATH_MAX))
     {
-	mycfg->last_dir.browse = g_strdup (curdir);
+	prefs_set_string ("last_dir_browsed", curdir);
     }
     else
     {
-	mycfg->last_dir.browse = convert_filename ("~/");
+	gchar *dir = convert_filename ("~/");
+	prefs_set_string ("last_dir_browsed", dir);
+	g_free (dir);
     }
     if((str = getenv("IPOD_MOUNTPOINT")))
     {
@@ -1703,7 +1711,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "dir_browse") == 0)
 	  {
-	      prefs_set_last_dir_browse(strdup(arg));
+	      prefs_set_string ("last_dir_browsed", arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
 	  {
@@ -2149,7 +2157,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
-    fprintf(fp, "dir_browse=%s\n",cfg->last_dir.browse);
     fprintf(fp, "show_duplicates=%d\n",prefs_get_show_duplicates());
     fprintf(fp, "show_updated=%d\n",prefs_get_show_updated());
     fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
@@ -2243,7 +2250,6 @@ void cfg_free(struct cfg *c)
 
       g_free (c->ipod_mount);
       g_free (c->charset);
-      g_free (c->last_dir.browse);
       for (i=0; i<PATH_NUM; ++i)
 	  g_free (c->path[i]);
       g_free (c->mserv_username);
@@ -2260,18 +2266,6 @@ void sortcfg_free(struct sortcfg *c)
 }
 
 
-static gchar *
-get_dirname_of_filename(const gchar *file)
-{
-    if (!file) return NULL;
-
-    if (g_file_test(file, G_FILE_TEST_IS_DIR))
-	return g_strdup (file);
-    else
-	return g_path_get_dirname (file);
-}
-
-
 void prefs_set_offline(gboolean active)
 {
   if (cfg->offline != active)   space_data_update ();
@@ -2281,18 +2275,6 @@ void prefs_set_offline(gboolean active)
 void prefs_set_write_extended_info(gboolean active)
 {
   cfg->write_extended_info = active;
-}
-void prefs_set_last_dir_browse(const gchar *file)
-{
-    if (file)
-    {
-	C_FREE(cfg->last_dir.browse);
-	cfg->last_dir.browse = get_dirname_of_filename(file);
-    }
-}
-const gchar *prefs_get_last_dir_browse(void)
-{
-    return cfg->last_dir.browse;
 }
 
 void prefs_set_ipod_mount(const gchar *mp)
@@ -2450,7 +2432,6 @@ struct cfg *clone_prefs(void)
 	result = g_memdup (cfg, sizeof (struct cfg));
 	result->ipod_mount = g_strdup(cfg->ipod_mount);
 	result->charset = g_strdup(cfg->charset);
-	result->last_dir.browse = g_strdup(cfg->last_dir.browse);
 	for (i=0; i<PATH_NUM; ++i)
 	    result->path[i] = g_strdup (cfg->path[i]);
 	result->parsetags_template = g_strdup(cfg->parsetags_template);

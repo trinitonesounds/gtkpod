@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-02 21:25:47 jcs>
+/* Time-stamp: <2006-05-05 14:38:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -110,10 +110,6 @@ struct cfg
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean write_extended_info; /* write additional file with PC
 				   filenames etc? */
-  struct
-  {
-      gchar *browse;
-  } last_dir;	          /* last directories used by the fileselections */
   struct
   {
       gboolean track, ipod_file, local_file, database, syncing;
@@ -327,8 +323,6 @@ void prefs_set_coverart (gboolean active);
 gboolean prefs_get_coverart(void);
 void prefs_set_coverart_template (const gchar *tpl);
 const gchar *prefs_get_coverart_template (void);
-void prefs_set_last_dir_browse (const gchar * dir);
-const gchar *prefs_get_last_dir_browse (void);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_size_gtkpod (gint x, gint y);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-04-05 23:20:44 jcs>
+/* Time-stamp: <2006-05-02 14:15:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -49,6 +49,14 @@
 /* A struct containing a list with available iTunesDBs. A pointer to
    this struct is stored in gtkpod_window as itdbs_head */
 static struct itdbs_head *itdbs_head = NULL;
+
+/* for convenience */
+struct itdbs_head *gp_get_itdbs_head (GtkWidget *gtkpod_win)
+{
+    g_return_val_if_fail (gtkpod_win, NULL);
+    return g_object_get_data (G_OBJECT (gtkpod_win),
+			      "itdbs_head");
+}
 
 void gp_itdb_extra_destroy (ExtraiTunesDBData *eitdb)
 {

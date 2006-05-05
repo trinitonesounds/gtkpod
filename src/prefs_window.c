@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-01 15:01:51 jcs>
+/* Time-stamp: <2006-05-02 16:48:26 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -38,6 +38,7 @@
 #include "prefs.h"
 #include "prefs_window.h"
 #include "podcast.h"
+#include "repository.h"
 
 GladeXML *prefs_window_xml;
 GladeXML *sort_window_xml;
@@ -404,8 +405,8 @@ prefs_window_create (gint page)
     }
 		
 		/* Initialize temp prefs structures */
-		temp_prefs = create_temp_prefs();
-		temp_lists = create_temp_lists();
+		temp_prefs = temp_prefs_create();
+		temp_lists = temp_lists_create();
 
     if(!tmpcfg && !origcfg)
     {
@@ -936,9 +937,9 @@ void prefs_window_delete(void)
     origcfg = NULL;
 	
 		/* Delete temp prefs structures */
-		destroy_temp_prefs(temp_prefs);
+		temp_prefs_destroy(temp_prefs);
 		temp_prefs = NULL;
-		destroy_temp_lists(temp_lists);
+		temp_lists_destroy(temp_lists);
 		temp_lists = NULL;
 
     /* save current notebook page */
@@ -977,8 +978,8 @@ prefs_window_ok (void)
     origcfg = NULL;
 	
     /* Committ temp prefs to prefs table */
-    apply_temp_prefs(temp_prefs);
-    apply_temp_lists(temp_lists);
+    temp_prefs_apply(temp_prefs);
+    temp_lists_apply(temp_lists);
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
@@ -1010,8 +1011,8 @@ prefs_window_apply (void)
     prefs_window_set ();
 	
 		/* Committ temp prefs to prefs table */
-		apply_temp_prefs(temp_prefs);
-		apply_temp_lists(temp_lists);
+		temp_prefs_apply(temp_prefs);
+		temp_lists_apply(temp_lists);
 
     /* reset the validated path entries */
     for (i=0; i<PATH_NUM; ++i)
@@ -1053,6 +1054,14 @@ on_sorting_clicked                     (GtkButton       *button,
 					gpointer         user_data)
 {
     sort_window_create ();
+}
+
+
+void
+on_edit_repository_clicked           (GtkButton       *button,
+				      gpointer         user_data)
+{
+    repository_edit (NULL, NULL);
 }
 
 
@@ -1690,8 +1699,8 @@ void sort_window_create (void)
 	    g_return_if_reached ();
 	}
   
-  sort_temp_prefs = create_temp_prefs();
-  sort_temp_lists = create_temp_lists();
+	sort_temp_prefs = temp_prefs_create();
+	sort_temp_lists = temp_lists_create();
 
 	sort_window_xml = glade_xml_new (xml_file, "sort_window", NULL);
 	glade_xml_signal_autoconnect (sort_window_xml);
@@ -2220,9 +2229,9 @@ void sort_window_delete(void)
     g_return_if_fail (tmpsortcfg);
     g_return_if_fail (origsortcfg);
   
-    destroy_temp_prefs(sort_temp_prefs);
+    temp_prefs_destroy(sort_temp_prefs);
     sort_temp_prefs = NULL;
-    destroy_temp_lists(sort_temp_lists);
+    temp_lists_destroy(sort_temp_lists);
     sort_temp_lists = NULL;
 
     /* delete sortcfg structs */
@@ -2249,8 +2258,8 @@ void sort_window_ok (void)
     /* save current settings */
     sort_window_set (tmpsortcfg);
   
-    apply_temp_prefs(sort_temp_prefs);
-    apply_temp_lists(sort_temp_lists);
+    temp_prefs_apply(sort_temp_prefs);
+    temp_lists_apply(sort_temp_lists);
 
     /* delete sortcfg structs */
     sortcfg_free (tmpsortcfg);
@@ -2271,8 +2280,8 @@ void sort_window_apply (void)
     g_return_if_fail (tmpsortcfg);
     g_return_if_fail (origsortcfg);
   
-    apply_temp_prefs(sort_temp_prefs);
-    apply_temp_lists(sort_temp_lists);
+    temp_prefs_apply(sort_temp_prefs);
+    temp_lists_apply(sort_temp_lists);
 
     /* update the sort ignore strings */
     sort_window_read_sort_ign (tmpsortcfg);

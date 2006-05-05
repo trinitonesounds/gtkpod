@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-06 01:22:11 jcs>
+/* Time-stamp: <2006-05-02 14:14:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -112,6 +112,8 @@ struct DeleteData
 };
 
 void init_data (GtkWidget *window);
+
+struct itdbs_head *gp_get_itdbs_head (GtkWidget *gtkpod_win);
 
 iTunesDB *gp_itdb_new (void);
 void gp_itdb_add (iTunesDB *itdb, gint pos);

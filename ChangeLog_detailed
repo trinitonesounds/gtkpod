@@ -1,3 +1,12 @@
+2006-05-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/*: moved 'prefs_get_last_dir_browse()' to new prefs
+           system.
+
+	 * src/prefs.c: fixed bug introduced in temp_prefs_get_int().
+
+	 * src/fileselection.[ch]: new: fileselection_get_dir().
+
 2006-05-01 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/prefs.[ch], src/prefswindow.c: renamed some temp_prefs

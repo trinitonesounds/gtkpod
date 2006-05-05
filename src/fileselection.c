@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-05 18:25:08 jcs>
+/* Time-stamp: <2006-05-05 15:57:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -96,8 +96,12 @@ static void add_files_ok(GtkFileChooser* filechooser)
     current = names;
 
     if (current)
-	prefs_set_last_dir_browse ((gchar *)current->data);
-	
+    {
+	gchar *dirname = gtk_file_chooser_get_current_folder (filechooser);
+	prefs_set_string ("last_dir_browsed", dirname);
+	g_free (dirname);
+    }
+
     /* Get the filenames and add them */
     while (current != NULL)
     {
@@ -139,6 +143,7 @@ void create_add_files_dialog (void)
 {
     GtkWidget* fc;  /* The file chooser dialog */
     gint response;  /* The response of the filechooser */
+    gchar *last_dir;
 	
     /* Grab the current playlist to add songs to */
     fc_active_itdb = gp_get_active_itdb ();
@@ -155,8 +160,13 @@ void create_add_files_dialog (void)
 				      NULL);
 
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), TRUE);
-    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
-					 prefs_get_last_dir_browse ());
+    last_dir = prefs_get_string ("last_dir_browsed");
+    if (last_dir)
+    {
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
+					     last_dir);
+	g_free (last_dir);
+    }
 
     response = gtk_dialog_run(GTK_DIALOG(fc));
 	
@@ -191,7 +201,11 @@ static void add_playlists_ok(GtkFileChooser* filechooser)
     current = names;
 
     if (current)
-	prefs_set_last_dir_browse ((gchar *)current->data);
+    {
+	gchar *dirname = gtk_file_chooser_get_current_folder (filechooser);
+	prefs_set_string ("last_dir_browsed", dirname);
+	g_free (dirname);
+    }
 
     while (current != NULL)
     {
@@ -218,6 +232,7 @@ void create_add_playlists_dialog(void)
 {
     GtkWidget* fc ; /* The file chooser dialog */
     gint response;  /* The response of the filechooser */
+    gchar *last_dir;
 	
     /* Grab the current playlist to add songs to */
     fc_active_itdb = gp_get_active_itdb ();
@@ -234,8 +249,13 @@ void create_add_playlists_dialog(void)
 				      NULL);
 	
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), TRUE);
-    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
-					 prefs_get_last_dir_browse ());
+    last_dir = prefs_get_string ("last_dir_browsed");
+    if (last_dir)
+    {
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
+					     last_dir);
+	g_free (last_dir);
+    }
 
     response = gtk_dialog_run(GTK_DIALOG(fc));
 	
@@ -263,8 +283,7 @@ gchar *fileselection_get_cover_filename (void)
     GtkWidget* fc;  /* The file chooser dialog */
     gint response;  /* The response of the filechooser */
     gchar *filename = NULL; /* The chosen file */
-    const gchar *dir1;
-    gchar *dir2;
+    gchar *last_dir, *new_dir;
 
     /* Create the file chooser, and handle the response */
     fc = gtk_file_chooser_dialog_new (_("Set Cover"),
@@ -278,17 +297,22 @@ gchar *fileselection_get_cover_filename (void)
 
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), FALSE);
 
-    dir1 = prefs_get_last_dir_browse ();
-    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc), dir1);
+    last_dir = prefs_get_string ("last_dir_browsed");
+    if (last_dir)
+    {
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
+					     last_dir);
+	g_free (last_dir);
+    }
 
     response = gtk_dialog_run(GTK_DIALOG(fc));
 
     switch (response)
     {
     case GTK_RESPONSE_ACCEPT:
-	dir2 = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (fc));
-	prefs_set_last_dir_browse (dir2);
-	g_free (dir2);
+	new_dir = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (fc));
+	prefs_set_string ("last_dir_browsed", new_dir);
+	g_free (new_dir);
 	filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
 	break;
     case GTK_RESPONSE_CANCEL:
@@ -302,8 +326,66 @@ gchar *fileselection_get_cover_filename (void)
 
 
 
+/* Get a directory
+ *
+ * @title: title for the file selection dialog
+ * @cur_dir: initial directory to be selected. If NULL, then use
+ * last_dir_browse.
+ */
+gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir)
+{
+    GtkWidget* fc;  /* The file chooser dialog */
+    gint response;  /* The response of the filechooser */
+    gchar *new_dir = NULL; /* The chosen dir */
 
+    g_return_val_if_fail (title, NULL);
 
+    /* Create the file chooser, and handle the response */
+    fc = gtk_file_chooser_dialog_new (
+	title,
+	NULL,
+	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	GTK_STOCK_OPEN,	GTK_RESPONSE_ACCEPT,
+	NULL);
+
+    gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), FALSE);
+
+    if (cur_dir)
+    {
+	/* Sanity checks: must exist and be absolute */
+	if (g_path_is_absolute (cur_dir))
+	    gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fc),
+					   cur_dir);
+	else
+	    cur_dir = NULL;
+    }
+    if (cur_dir == NULL)
+    {
+	gchar *dirname = prefs_get_string ("last_dir_browsed");
+	if (dirname)
+	{
+	    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
+						 dirname);
+	    g_free (dirname);
+	}
+    }
+
+    response = gtk_dialog_run(GTK_DIALOG(fc));
+
+    switch (response)
+    {
+    case GTK_RESPONSE_ACCEPT:
+	new_dir = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
+	break;
+    case GTK_RESPONSE_CANCEL:
+	break;
+    default:	/* Fall through */
+	break;
+    }		
+    gtk_widget_destroy(fc);
+    return new_dir;
+}
 
 
 
@@ -461,7 +543,7 @@ static void add_dir_selected (gchar *dir)
 	add_directory_by_name (db_active_itdb, dir, plitem,
 			       prefs_get_add_recursively (),
 			       NULL, NULL);
-	prefs_set_last_dir_browse(dir);
+	prefs_set_string ("last_dir_browsed", dir);
 	gtkpod_tracks_statusbar_update();
     }
     else
@@ -481,17 +563,21 @@ static void add_dir_selected (gchar *dir)
    separate callback for gtkpod.glade */
 void dirbrowser_create (void)
 {
+    gchar *cur_dir;
+
     if (dirbrowser)
     {   /* file selector already open -- raise to the top */
 	gdk_window_raise (dirbrowser->window);
 	return;
     }
     db_active_itdb = gp_get_active_itdb ();
+    cur_dir = prefs_get_string ("last_dir_browsed");
     dirbrowser = xmms_create_dir_browser (
 	_("Select directory to add recursively"),
-	prefs_get_last_dir_browse (),
+	cur_dir,
 	GTK_SELECTION_MULTIPLE,
 	add_dir_selected);
+    g_free (cur_dir);
     gtk_widget_show (dirbrowser);
 }
 

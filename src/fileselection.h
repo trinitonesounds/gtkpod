@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-27 19:05:47 jcs>
+/* Time-stamp: <2006-05-05 15:20:42 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -42,6 +42,7 @@
 void create_add_files_dialog(void);
 void create_add_playlists_dialog(void);
 gchar *fileselection_get_cover_filename(void);
+gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir);
 
 /* dirbrowser */
 void dirbrowser_block (void);
