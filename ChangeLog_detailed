@@ -1,3 +1,9 @@
+2006-05-06 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/prefs.[ch]: new: temp_prefs_create_subset(),
+           temp_prefs_flush(), prefs_flush_subkey(),
+	   prefs_rename_subkey(), temp_prefs_subkey_exists()
+
 2006-05-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/*: moved 'prefs_get_last_dir_browse()' to new prefs

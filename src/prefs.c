@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-05 18:22:04 jcs>
+/* Time-stamp: <2006-05-06 01:21:17 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -110,6 +110,14 @@
  * Data global to this module only
  */
 
+struct sub_data
+{
+    TempPrefs *temp_prefs;
+    const gchar *subkey;
+    const gchar *subkey2;
+    gboolean exists;
+};
+
 /* Pointer to prefrences hash table */
 static GHashTable *prefs_table = NULL;
 
@@ -118,11 +126,11 @@ static GHashTable *prefs_table = NULL;
  */
 
 /* Set default prefrences */
-static void set_default_prefrences()
+static void set_default_preferences()
 {
-	prefs_set_int("update_existing", FALSE);
-  prefs_set_int("id3_write", FALSE);
-  prefs_set_int("id3_write_id3v24", FALSE);
+    prefs_set_int("update_existing", FALSE);
+    prefs_set_int("id3_write", FALSE);
+    prefs_set_int("id3_write_id3v24", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -244,6 +252,85 @@ static gboolean copy_key(gpointer key, gpointer value, gpointer user_data)
 	return FALSE;
 }
 
+/* Remove key present in the temp prefs tree from the hash table */
+static gboolean flush_key (gpointer key, gpointer value, gpointer user_data)
+{
+    g_return_val_if_fail (prefs_table, FALSE);
+
+    g_hash_table_remove (prefs_table, key);
+
+    return FALSE;
+}
+
+
+/* Copy key data from the temp prefs tree to the hash table */
+static gboolean subst_key (gpointer key, gpointer value, gpointer user_data)
+{
+    struct sub_data *sub_data = user_data;
+    gint len;
+
+    g_return_val_if_fail (prefs_table, FALSE);
+    g_return_val_if_fail (key && value && user_data, FALSE);
+    g_return_val_if_fail (sub_data->subkey && sub_data->subkey2, FALSE);
+
+    len = strlen (sub_data->subkey);
+
+    if (strncmp (key, sub_data->subkey, len) == 0)
+    {
+	gchar *new_key = g_strdup_printf ("%s%s",
+					  sub_data->subkey2,
+					  ((gchar *)key)+len);
+	g_hash_table_insert (prefs_table, new_key, g_strdup(value));
+    }
+    return FALSE;
+}
+
+/* return TRUE if @key starts with @subkey */
+static gboolean match_subkey (gpointer key, gpointer value, gpointer subkey)
+{
+    g_return_val_if_fail (key && subkey, FALSE);
+
+    if (strncmp (key, subkey, strlen (subkey)) == 0)  return TRUE;
+    return FALSE;
+}
+
+
+/* return TRUE and set sub_data->exists to TRUE if @key starts with
+ * @subkey */
+static gboolean check_subkey (gpointer key, gpointer value, gpointer user_data)
+{
+    struct sub_data *sub_data = user_data;
+
+    g_return_val_if_fail (key && user_data, TRUE);
+    g_return_val_if_fail (sub_data->subkey, TRUE);
+
+    if (strncmp (key, sub_data->subkey, strlen (sub_data->subkey)) == 0)
+    {
+	sub_data->exists = TRUE;
+	return TRUE;
+    }
+    return FALSE;
+}
+
+
+
+/* Add key/value to temp_prefs if it matches subkey -- called by
+ * create_temp_prefs_subset() */
+void get_subset (gpointer key, gpointer value, gpointer user_data)
+{
+    struct sub_data *sub_data = user_data;
+
+    g_return_if_fail (key && value && user_data);
+    g_return_if_fail (sub_data->subkey && sub_data->temp_prefs);
+
+    if (strncmp (key, sub_data->subkey,
+		 strlen (sub_data->subkey)) == 0)
+    {  /* match */
+	temp_prefs_set_string (sub_data->temp_prefs, key, value);
+    }
+}
+
+
 /* Copy a variable-length list to the prefs table */
 static gboolean copy_list(gpointer key, gpointer value, gpointer user_data)
 {
@@ -285,7 +372,7 @@ gchar *get_config_dir()
 	return folder;
 }
 
-/* Read prefrences from a file */
+/* Read preferences from a file */
 static void read_prefs_from_file(FILE *fp)
 {
 	gchar buf[PATH_MAX];  /* Buffer that contains one line */
@@ -345,8 +432,8 @@ static void write_prefs_to_file(FILE *fp)
 		g_hash_table_foreach(prefs_table, write_key, (gpointer)fp);
 }
 
-/* Load prefrences, first loading the defaults, and then overwrite that with
- * prefrences in the user home folder. */
+/* Load preferences, first loading the defaults, and then overwrite that with
+ * preferences in the user home folder. */
 static void load_prefs()
 {
 	gchar *filename; /* Config path to open */
@@ -354,7 +441,7 @@ static void load_prefs()
 	FILE *fp;
 	
 	/* Start by initializing the prefs to their default values */
-	set_default_prefrences();
+	set_default_preferences();
 	
 	/* and then override those values with those found in the home folder. */
 	config_dir = get_config_dir();
@@ -385,7 +472,7 @@ static void load_prefs()
 	set_default_list_entries();
 }
 
-/* Save prefrences to user home folder (~/gtkpod/prefs) */
+/* Save preferences to user home folder (~/gtkpod/prefs) */
 static void save_prefs()
 {
 	gchar *filename;  /* Path of file to write to */
@@ -449,7 +536,7 @@ void init_prefs(int argc, char *argv[])
 	prefs_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
 																			g_free);
 	
-	/* Load prefrences */
+	/* Load preferences */
 	load_prefs();
 	
 	#if 0
@@ -505,16 +592,97 @@ void temp_prefs_apply(TempPrefs *temp_prefs)
     g_return_if_fail (temp_prefs);
     g_return_if_fail (temp_prefs->tree);
 
-    g_tree_foreach(temp_prefs->tree, copy_key, NULL);
+    g_tree_foreach (temp_prefs->tree, copy_key, NULL);
+}
+
+
+/* Create a temp_prefs tree containing a subset of keys in the
+   permanent prefs table (those starting with @subkey */
+TempPrefs *temp_prefs_create_subset (const gchar *subkey)
+{
+    struct sub_data sub_data;
+
+    g_return_val_if_fail (prefs_table, NULL);
+
+    sub_data.temp_prefs = temp_prefs_create ();
+    sub_data.subkey = subkey;
+
+    g_hash_table_foreach (prefs_table, get_subset, &sub_data);
+
+    return sub_data.temp_prefs;
+}
+
+
+/* Remove all keys in the temp prefs tree from the permanent prefs
+   table */
+void temp_prefs_flush(TempPrefs *temp_prefs)
+{
+    g_return_if_fail (temp_prefs);
+    g_return_if_fail (temp_prefs->tree);
+
+    g_tree_foreach (temp_prefs->tree, flush_key, NULL);
 }
 
 /* Return the number of keys stored in @temp_prefs */
 gint temp_prefs_size (TempPrefs *temp_prefs)
 {
-    g_return_if_fail (temp_prefs);
-    g_return_if_fail (temp_prefs->tree);
+    g_return_val_if_fail (temp_prefs, 0);
+    g_return_val_if_fail (temp_prefs->tree, 0);
 
     return g_tree_nnodes (temp_prefs->tree);
+}
+
+
+/* Returns TRUE if at least one key starting with @subkey exists */
+gboolean temp_prefs_subkey_exists (TempPrefs *temp_prefs,
+				   const gchar *subkey)
+{
+    struct sub_data sub_data;
+
+    g_return_val_if_fail (temp_prefs && subkey, FALSE);
+
+    sub_data.temp_prefs = NULL;
+    sub_data.subkey = subkey;
+    sub_data.exists = FALSE;
+
+    g_tree_foreach (temp_prefs->tree, check_subkey, &sub_data);
+
+    return sub_data.exists;
+}
+
+
+/* Special functions */
+
+/* Remove all keys that start with @subkey */
+void prefs_flush_subkey (const gchar *subkey)
+{
+    g_return_if_fail (prefs_table);
+
+    g_hash_table_foreach_remove (prefs_table, match_subkey, (gchar *)subkey);
+}
+
+
+/* Rename all keys that start with @subkey_old in such a way that they
+   start with @subkey_new */
+void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new){
+    struct sub_data sub_data;
+
+    g_return_if_fail (prefs_table);
+    g_return_if_fail (subkey_old);
+    g_return_if_fail (subkey_new);
+
+    sub_data.temp_prefs = temp_prefs_create_subset (subkey_old);
+
+    if (temp_prefs_size (sub_data.temp_prefs) > 0)
+    {
+	prefs_flush_subkey (subkey_old);
+
+	sub_data.subkey = subkey_old;
+	sub_data.subkey2 = subkey_new;
+	g_tree_foreach (sub_data.temp_prefs->tree, subst_key, &sub_data);
+    }
+
+    temp_prefs_destroy (sub_data.temp_prefs);
 }
 
 

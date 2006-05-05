@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-05 18:22:04 jcs>
+/* Time-stamp: <2006-05-06 01:22:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -233,12 +233,20 @@ gint64 prefs_get_int64_index(const gchar *key, const guint index);
 gboolean prefs_get_int64_value_index(const gchar *key,
 				     const guint index, gint64 *value);
 
+/* Special functions */
+void prefs_flush_subkey (const gchar *subkey);
+void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new);
+gboolean temp_prefs_subkey_exists (TempPrefs *temp_prefs,
+				   const gchar *subkey);
+
 /* 
  * Temp prefs functions
  */
 TempPrefs *temp_prefs_create (void);
+TempPrefs *temp_prefs_create_subset (const gchar *subkey);
 void temp_prefs_destroy (TempPrefs *temp_prefs);
 void temp_prefs_apply (TempPrefs *temp_prefs);
+void temp_prefs_flush(TempPrefs *temp_prefs);
 gint temp_prefs_size (TempPrefs *temp_prefs);
 
 /*
