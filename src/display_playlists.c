@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-02 14:08:30 jcs>
+/* Time-stamp: <2006-05-06 14:22:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1029,7 +1029,7 @@ static gboolean sr_model_playlist_name_changed (GtkTreeModel *model,
 						GtkTreeIter *iter,
 						gpointer data)
 {
-  Playlist *playlist;
+  Playlist *playlist=NULL;
 
   gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   if(playlist == (Playlist *)data) {
@@ -1151,7 +1151,7 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 				    GtkTreeIter *iter,
 				    gpointer data)
 	{
-	    Playlist *playlist;
+	    Playlist *playlist=NULL;
 	    
 	    gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
 	    if(playlist == (Playlist *)data) {
@@ -1239,7 +1239,7 @@ void pm_select_playlist (Playlist *playlist)
 				    GtkTreeIter *iter,
 				    gpointer data)
 	{
-	    Playlist *playlist;
+	    Playlist *playlist=NULL;
 
 	    gtk_tree_model_get (model, iter,
 				PM_COLUMN_PLAYLIST, &playlist, -1);
@@ -1273,7 +1273,7 @@ void pm_unselect_playlist (Playlist *playlist)
 				      GtkTreeIter *iter,
 				      gpointer data)
 	{
-	    Playlist *playlist;
+	    Playlist *playlist=NULL;
 
 	    gtk_tree_model_get (model, iter,
 				PM_COLUMN_PLAYLIST, &playlist, -1);
@@ -1647,8 +1647,8 @@ gint pm_data_compare_func (GtkTreeModel *model,
 			GtkTreeIter *b,
 			gpointer user_data)
 {
-  Playlist *playlist1;
-  Playlist *playlist2;
+  Playlist *playlist1=NULL;
+  Playlist *playlist2=NULL;
   GtkSortType order;
   gint corr, colid;
 
@@ -1692,37 +1692,29 @@ pm_cell_edited (GtkCellRendererText *renderer,
 		const gchar         *new_text,
 		gpointer             data)
 {
-  GtkTreeModel *model;
+  GtkTreeModel *model = data;
   GtkTreeIter iter;
-  Playlist *playlist;
-  gint column;
+  Playlist *playlist = NULL;
 
-  model = (GtkTreeModel *)data;
   g_return_if_fail (model);
+  g_return_if_fail (new_text);
   if (!gtk_tree_model_get_iter_from_string (model, &iter, path_string))
   {
       g_return_if_reached ();
   }
 
-  column = GPOINTER_TO_INT ( g_object_get_data (G_OBJECT (renderer), "column") );
-  gtk_tree_model_get (model, &iter, column, &playlist, -1);
+  gtk_tree_model_get (model, &iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   g_return_if_fail (playlist);
 
-  /*printf("pm_cell_edited: column: %d  track:%lx\n", column, track);*/
+  /*printf("pm_cell_edited: column: %d  track:%lx\n", PM_COLUMN_PLAYLIST, track);*/
 
-  switch (column)
+  /* We only do something, if the name actually got changed */
+  if (!playlist->name ||
+      g_utf8_collate (playlist->name, new_text) != 0)
   {
-  case PM_COLUMN_PLAYLIST:
-      g_return_if_fail (new_text);
-      /* We only do something, if the name actually got changed */
-      if (!playlist->name ||
-	  g_utf8_collate (playlist->name, new_text) != 0)
-      {
-	  g_free (playlist->name);
-	  playlist->name = g_strdup (new_text);
-	  data_changed (playlist->itdb);
-      }
-      break;
+      g_free (playlist->name);
+      playlist->name = g_strdup (new_text);
+      data_changed (playlist->itdb);
   }
 }
 
@@ -1738,52 +1730,60 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
 			       GtkTreeIter       *iter,
 			       gpointer           data)
 {
-  Playlist *playlist;
-  gint column;
+  Playlist *playlist = NULL;
+  ExtraiTunesDBData *eitdb;
 
   g_return_if_fail (renderer);
   g_return_if_fail (model);
   g_return_if_fail (iter);
 
-  column = GPOINTER_TO_INT ( g_object_get_data (G_OBJECT (renderer), "column") );
-  gtk_tree_model_get (model, iter, column, &playlist, -1);
+  gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   g_return_if_fail (playlist);
+  g_return_if_fail (playlist->itdb);
+  eitdb = playlist->itdb->userdata;
+  g_return_if_fail (eitdb);
 
-  switch (column)
-    {  /* We only have one column, so this code is overkill... */
-    case PM_COLUMN_PLAYLIST: 
-	if (itdb_playlist_is_mpl (playlist))
-	{   /* mark MPL */
-	    g_object_set (G_OBJECT (renderer),
-			  "text", playlist->name, 
-			  "editable", TRUE,
-			  "weight", PANGO_WEIGHT_BOLD,
-			  "style", PANGO_STYLE_NORMAL,
-			  NULL);
-	}
-	else
-	{
-	    if (itdb_playlist_is_podcasts (playlist))
-	    {
-		g_object_set (G_OBJECT (renderer),
-			      "text", playlist->name, 
-			      "editable", TRUE,
-			      "weight", PANGO_WEIGHT_SEMIBOLD,
-			      "style", PANGO_STYLE_ITALIC,
-			      NULL);
-	    }
-	    else
-	    {
-		g_object_set (G_OBJECT (renderer),
-			      "text", playlist->name, 
-			      "editable", TRUE,
-			      "weight", PANGO_WEIGHT_NORMAL,
-			      "style", PANGO_STYLE_NORMAL,
-			      NULL);
-	    }
-	}
-	break;
-    }
+  if (itdb_playlist_is_mpl (playlist))
+  {   /* mark MPL */
+      g_object_set (G_OBJECT (renderer),
+		    "text", playlist->name, 
+		    "editable", TRUE,
+		    "weight", PANGO_WEIGHT_BOLD,
+		    NULL);
+      if (eitdb->data_changed)
+      {
+	  g_object_set (G_OBJECT (renderer),
+			"style", PANGO_STYLE_ITALIC,
+			NULL);
+      }
+      else
+      {
+	  g_object_set (G_OBJECT (renderer),
+			"style", PANGO_STYLE_NORMAL,
+			NULL);
+      }
+  }
+  else
+  {
+      if (itdb_playlist_is_podcasts (playlist))
+      {
+	  g_object_set (G_OBJECT (renderer),
+			"text", playlist->name, 
+			"editable", TRUE,
+			"weight", PANGO_WEIGHT_SEMIBOLD,
+			"style", PANGO_STYLE_ITALIC,
+			NULL);
+      }
+      else
+      {
+	  g_object_set (G_OBJECT (renderer),
+			"text", playlist->name, 
+			"editable", TRUE,
+			"weight", PANGO_WEIGHT_NORMAL,
+			"style", PANGO_STYLE_NORMAL,
+			NULL);
+      }
+  }
 }
 
 
@@ -1794,37 +1794,39 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 				   GtkTreeIter       *iter,
 				   gpointer           data)
 {
-  Playlist *playlist;
-  gint column;
+  Playlist *playlist=NULL;
 
   g_return_if_fail (renderer);
   g_return_if_fail (model);
   g_return_if_fail (iter);
 
-  column = GPOINTER_TO_INT ( g_object_get_data (G_OBJECT (renderer), "column") );
-  gtk_tree_model_get (model, iter, column, &playlist, -1);
+  gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   g_return_if_fail (playlist);
+  g_return_if_fail (playlist->itdb);
 
-  switch (column)
-    {  /* We only have one column, so this code is overkill... */
-    case PM_COLUMN_PLAYLIST: 
-	if (playlist->is_spl)
-	{
-	    g_object_set (G_OBJECT (renderer),
-			  "stock-id", GTK_STOCK_PROPERTIES, NULL);
-	}
-	else if (!itdb_playlist_is_mpl (playlist))
-	{
-	    g_object_set (G_OBJECT (renderer),
-			  "stock-id", GTK_STOCK_JUSTIFY_LEFT, NULL);
-	}
-	else
-	{
-	    g_object_set (G_OBJECT (renderer),
-			  "stock-id", NULL, NULL);
-	}
-	break;
-    }
+  if (playlist->is_spl)
+  {
+      g_object_set (G_OBJECT (renderer),
+		    "stock-id", GTK_STOCK_PROPERTIES, NULL);
+  }
+  else if (!itdb_playlist_is_mpl (playlist))
+  {
+      g_object_set (G_OBJECT (renderer),
+		    "stock-id", GTK_STOCK_JUSTIFY_LEFT, NULL);
+  }
+  else
+  {
+      if (playlist->itdb->usertype & GP_ITDB_TYPE_LOCAL)
+      {
+	  g_object_set (G_OBJECT (renderer),
+			"stock-id", GTK_STOCK_HARDDISK, NULL);
+      }
+      else
+      {
+	  g_object_set (G_OBJECT (renderer),
+			"stock-id", NULL, NULL);
+      }
+  }
 }
 
 
@@ -1856,20 +1858,20 @@ static void pm_add_columns (void)
 */
   gtk_tree_view_append_column (playlist_treeview, column);
 
+  /* cell for graphic indicator */
+  renderer = gtk_cell_renderer_pixbuf_new ();
+  gtk_tree_view_column_pack_start (column, renderer, FALSE); 
+  gtk_tree_view_column_set_cell_data_func (column, renderer,
+					   pm_cell_data_func_pix,
+					   NULL, NULL);
   /* cell for playlist name */
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (G_OBJECT (renderer), "edited",
 		    G_CALLBACK (pm_cell_edited), model);
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)PM_COLUMN_PLAYLIST);
-  gtk_tree_view_column_pack_end (column, renderer, FALSE);
-  gtk_tree_view_column_set_cell_data_func (column, renderer, pm_cell_data_func, NULL, NULL);
-
-
-  /* cell for graphic indicator */
-  renderer = gtk_cell_renderer_pixbuf_new ();
-  g_object_set_data (G_OBJECT (renderer), "column", (gint *)PM_COLUMN_PLAYLIST);
-  gtk_tree_view_column_pack_start (column, renderer, FALSE); 
-  gtk_tree_view_column_set_cell_data_func (column, renderer, pm_cell_data_func_pix, NULL, NULL);
+  gtk_tree_view_column_pack_start (column, renderer, FALSE);
+  gtk_tree_view_column_set_cell_data_func (column, renderer,
+					   pm_cell_data_func,
+					   NULL, NULL);
 }
 
 
