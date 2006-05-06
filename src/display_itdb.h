@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-02 14:14:13 jcs>
+/* Time-stamp: <2006-05-06 11:51:52 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -117,6 +117,8 @@ struct itdbs_head *gp_get_itdbs_head (GtkWidget *gtkpod_win);
 
 iTunesDB *gp_itdb_new (void);
 void gp_itdb_add (iTunesDB *itdb, gint pos);
+void gp_itdb_remove (iTunesDB *itdb);
+#define gp_itdb_free itdb_free
 void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb);
 void gp_itdb_add_extra (iTunesDB *itdb);
 void gp_itdb_add_extra_full (iTunesDB *itdb);

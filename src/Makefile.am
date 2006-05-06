@@ -53,6 +53,7 @@ gtkpod_SOURCES = \
     podcast.c podcast.h \
     prefs.c prefs.h \
     prefs_window.c prefs_window.h \
+    repository.c repository.h \
     tools.c tools.h \
     wavfile.c wavfile.h
 

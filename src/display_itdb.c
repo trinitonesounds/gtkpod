@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-02 14:15:38 jcs>
+/* Time-stamp: <2006-05-06 11:51:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -354,8 +354,7 @@ gboolean gp_track_remove_thumbnails (Track *track)
     return changed;
 }
 
-
-/* add itdb to itdbs */
+/* add itdb to itdbs (and add to display) */
 void gp_itdb_add (iTunesDB *itdb, gint pos)
 {
     ExtraiTunesDBData *eitdb;
@@ -368,6 +367,17 @@ void gp_itdb_add (iTunesDB *itdb, gint pos)
     eitdb->itdbs_head = itdbs_head;
     itdbs_head->itdbs = g_list_insert (itdbs_head->itdbs, itdb, pos);
     pm_add_itdb (itdb, pos);
+}
+
+/* Remove itdb to itdbs (and remove from display). Call
+ * itdb_free() to free the memory of the itdb. */
+void gp_itdb_remove (iTunesDB *itdb)
+{
+    g_return_if_fail (itdbs_head);
+    g_return_if_fail (itdb);
+
+    pm_remove_playlist (itdb_playlist_mpl (itdb), FALSE);
+    itdbs_head->itdbs = g_list_remove (itdbs_head->itdbs, itdb);
 }
 
 /* return the podcast itdb */
@@ -439,7 +449,7 @@ void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
     new_eitdb->itdbs_head = itdbs_head;
     old_link->data = new_itdb;
     /* free old_itdb */
-    itdb_free (old_itdb);
+    gp_itdb_free (old_itdb);
 
     /* display replacement */
     pm_add_itdb (new_itdb, pos);

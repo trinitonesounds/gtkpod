@@ -4,6 +4,13 @@
            temp_prefs_flush(), prefs_flush_subkey(),
 	   prefs_rename_subkey(), temp_prefs_subkey_exists()
 
+	 * src/display_itdb.[ch]: new: gp_itdb_remove(),
+           gp_itdb_free().
+
+	 * src/repository.[ch]: new -- repository prefs. Work in
+           progress, but you probably get the idea about what is to
+           be.
+
 2006-05-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/*: moved 'prefs_get_last_dir_browse()' to new prefs
