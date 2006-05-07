@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-06 01:22:19 jcs>
+/* Time-stamp: <2006-05-07 12:56:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -65,7 +65,6 @@ struct win_size {
 
 struct cfg
 {
-  gchar    *ipod_mount;     /* mount point of iPod */
   gchar    *charset;        /* CHARSET to use with file operations */
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   gboolean block_display;   /* block display during change of selection? */
@@ -300,7 +299,6 @@ void write_prefs (void);
 void discard_prefs (void);
 struct cfg* clone_prefs(void);
 struct sortcfg* clone_sortprefs(void);
-void prefs_set_ipod_mount(const gchar *mp);
 gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 gchar *prefs_validate_path (const gchar *path, const gchar *allowed);
 
@@ -361,7 +359,6 @@ gboolean prefs_get_autoimport(void);
 gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
-const gchar *prefs_get_ipod_mount (void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);
 void prefs_get_size_cal (gint *x, gint *y);

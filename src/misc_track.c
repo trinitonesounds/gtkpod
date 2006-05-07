@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-04-04 00:08:13 jcs>
+/* Time-stamp: <2006-05-08 00:55:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -399,29 +399,37 @@ void gp_itdb_hash (iTunesDB *itdb)
  * found. This function also works if @name is on the iPod. */
 Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 {
+    gchar *musicdir = NULL;
+    Track *result = NULL;
+
     g_return_val_if_fail (itdb, NULL);
     g_return_val_if_fail (filename, NULL);
 
+    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+    {
+	gchar *key = get_itdb_key (get_itdb_index (itdb), "mountpoint");
+	gchar *mountpoint = prefs_get_string (key);
+	g_free (key);
+	g_return_val_if_fail (mountpoint, NULL);
+	musicdir = itdb_get_music_dir (mountpoint);
+	g_free (mountpoint);
+    }
+
     if ((itdb->usertype & GP_ITDB_TYPE_IPOD) &&
-	(strncmp (filename, prefs_get_ipod_mount (),
-		  strlen (prefs_get_ipod_mount ())) == 0))
-    {   /* handle track on iPod */
+	(strncmp (filename, musicdir, strlen (musicdir)) == 0))
+    {   /* handle track on iPod (in music dir) */
 	GList *gl;
-	for (gl=itdb->tracks; gl; gl=gl->next)
+	for (gl=itdb->tracks; gl&&!result; gl=gl->next)
 	{
 	    Track *track = gl->data;
-	    gchar *mount;
 	    gchar *ipod_path;
 	    g_return_val_if_fail (track, NULL);
-	    mount = charset_from_utf8 (prefs_get_ipod_mount ());
 	    ipod_path = itdb_filename_on_ipod (track);
-	    g_free (mount);
 	    if (ipod_path)
 	    {
 		if (strcmp (ipod_path, filename) == 0)
 		{
-		    g_free (ipod_path);
-		    return track;
+		    result = track;
 		}
 		g_free (ipod_path);
 	    }
@@ -440,11 +448,11 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 	    if (etr->pc_path_locale)
 	    {
 		if (strcmp (etr->pc_path_locale, filename) == 0)
-		    return track;
+		    result = track;
 	    }
 	}
     }
-    return NULL;
+    return result;
 }
 
 

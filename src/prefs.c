@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-06 01:21:17 jcs>
+/* Time-stamp: <2006-05-08 00:53:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -206,7 +206,7 @@ static gboolean read_commandline(int argc, char *argv[])
 				return FALSE;
 				break;
 			case GP_MOUNT:
-				prefs_set_string("mountpoint", optarg);
+				prefs_set_string("initial_mountpoint", optarg);
 				return TRUE;
 				break;
 			default:
@@ -226,7 +226,7 @@ static gboolean read_commandline(int argc, char *argv[])
 /* Read options from environment variables */
 static void read_environment()
 {
-	prefs_set_string("mountpoint", getenv("IPOD_MOUNTPOINT"));
+	prefs_set_string("initial_mountpoint", getenv("IPOD_MOUNTPOINT"));
 }
 #endif
  
@@ -1328,11 +1328,13 @@ struct cfg *cfg_new(void)
     }
     if((str = getenv("IPOD_MOUNTPOINT")))
     {
-	mycfg->ipod_mount = convert_filename (str);
+	gchar *mp = convert_filename (str);
+	prefs_set_string ("inital_mountpoint", mp);
+	g_free (mp);
     }
     else
     {
-	mycfg->ipod_mount = g_strdup("/mnt/ipod");
+	prefs_set_string ("inital_mountpoint", "/mnt/ipod");
     }
 
     mycfg->charset = NULL;
@@ -1570,7 +1572,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "mountpoint") == 0)
 	  {
-	      prefs_set_ipod_mount (arg);
+	      prefs_set_string ("initial_mountpoint", arg);
 	  }
 	  else if((arg_comp (line, "toolpath", &off) == 0) ||
 		  (arg_comp (line, "path", &off) == 0))
@@ -2201,7 +2203,7 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
   cfg = cfg_new();
   read_prefs_defaults();
 
-  prefs_set_ipod_mount (getenv("IPOD_MOUNTPOINT"));
+  prefs_set_string ("initial_mountpoint", getenv("IPOD_MOUNTPOINT"));
 
   while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
     switch(opt)
@@ -2215,7 +2217,7 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
 	  result = FALSE;
 	  break;
       case GP_MOUNT:
-	  prefs_set_ipod_mount (optarg);
+	  prefs_set_string ("initial_mountpoint", optarg);
 	  break;
       case GP_AUTO:
 	  prefs_set_autoimport_commandline (TRUE);
@@ -2250,7 +2252,6 @@ write_prefs_to_file_desc(FILE *fp)
     tm_store_col_order ();
 
     fprintf(fp, "version=%s\n", VERSION);
-    fprintf(fp, "mountpoint=%s\n", cfg->ipod_mount);
     for (i=0; i<PATH_NUM; ++i)
     {
 	gchar *buf = g_strdup (path_entry_names[i]);
@@ -2416,7 +2417,6 @@ void cfg_free(struct cfg *c)
     {
       gint i;
 
-      g_free (c->ipod_mount);
       g_free (c->charset);
       for (i=0; i<PATH_NUM; ++i)
 	  g_free (c->path[i]);
@@ -2444,19 +2444,6 @@ void prefs_set_write_extended_info(gboolean active)
 {
   cfg->write_extended_info = active;
 }
-
-void prefs_set_ipod_mount(const gchar *mp)
-{
-    if (!mp) return; /* ignore NULL pointer */
-    g_free (cfg->ipod_mount);
-    /* if new mount point starts with "~/", we replace it with the
-       home directory */
-    cfg->ipod_mount = convert_filename (mp);
-    /* need to notify the info thread of new mount point */
-    space_set_ipod_mount (cfg->ipod_mount);
-    gp_itdb_set_mountpoint (cfg->ipod_mount);
-}
-
 
 /* If the status of md5 hash flag changes, free or re-init the md5
    hash table */
@@ -2598,7 +2585,6 @@ struct cfg *clone_prefs(void)
 	gint i;
 
 	result = g_memdup (cfg, sizeof (struct cfg));
-	result->ipod_mount = g_strdup(cfg->ipod_mount);
 	result->charset = g_strdup(cfg->charset);
 	for (i=0; i<PATH_NUM; ++i)
 	    result->path[i] = g_strdup (cfg->path[i]);
@@ -2748,12 +2734,6 @@ gchar *prefs_get_cfgdir (void)
       }
   }
   return cfgdir;
-}
-
-/* Returns the ipod_mount. Don't modify it! */
-const gchar *prefs_get_ipod_mount (void)
-{
-    return cfg->ipod_mount;
 }
 
 /* Sets the default size for the gtkpod window. -2 means: don't change

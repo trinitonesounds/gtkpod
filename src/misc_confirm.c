@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-30 23:23:33 jcs>
+/* Time-stamp: <2006-05-08 00:55:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1093,7 +1093,7 @@ gtkpod_main_quit(void)
 
 	if(prefs_get_automount())
 	{
-	    unmount_ipod ();
+/*	    unmount_ipod ();*/
 	}
 	call_script ("gtkpod.out");
 	gtk_main_quit ();

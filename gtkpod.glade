@@ -8144,63 +8144,7 @@ for this filename.</property>
 				  <property name="spacing">6</property>
 
 				  <child>
-				    <widget class="GtkHBox" id="hbox108">
-				      <property name="visible">True</property>
-				      <property name="homogeneous">False</property>
-				      <property name="spacing">8</property>
-
-				      <child>
-					<widget class="GtkLabel" id="label255">
-					  <property name="visible">True</property>
-					  <property name="label" translatable="yes">iPod Mount _Point:</property>
-					  <property name="use_underline">True</property>
-					  <property name="use_markup">False</property>
-					  <property name="justify">GTK_JUSTIFY_LEFT</property>
-					  <property name="wrap">False</property>
-					  <property name="selectable">False</property>
-					  <property name="xalign">0.5</property>
-					  <property name="yalign">0.5</property>
-					  <property name="xpad">0</property>
-					  <property name="ypad">0</property>
-					  <property name="mnemonic_widget">cfg_mount_point</property>
-					  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-					  <property name="width_chars">-1</property>
-					  <property name="single_line_mode">False</property>
-					  <property name="angle">0</property>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">False</property>
-					  <property name="fill">False</property>
-					</packing>
-				      </child>
-
-				      <child>
-					<widget class="GtkEntry" id="cfg_mount_point">
-					  <property name="visible">True</property>
-					  <property name="tooltip" translatable="yes">Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar.</property>
-					  <property name="can_focus">True</property>
-					  <property name="editable">True</property>
-					  <property name="visibility">True</property>
-					  <property name="max_length">0</property>
-					  <property name="text" translatable="yes"></property>
-					  <property name="has_frame">True</property>
-					  <property name="invisible_char">*</property>
-					  <property name="activates_default">False</property>
-					  <signal name="changed" handler="on_cfg_mount_point_changed" last_modification_time="Thu, 14 Apr 2005 19:37:39 GMT"/>
-					</widget>
-					<packing>
-					  <property name="padding">0</property>
-					  <property name="expand">True</property>
-					  <property name="fill">True</property>
-					</packing>
-				      </child>
-				    </widget>
-				    <packing>
-				      <property name="padding">0</property>
-				      <property name="expand">False</property>
-				      <property name="fill">True</property>
-				    </packing>
+				    <placeholder/>
 				  </child>
 
 				  <child>

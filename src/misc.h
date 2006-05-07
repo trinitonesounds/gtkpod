@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-11 00:15:38 jcs>
+/* Time-stamp: <2006-05-08 00:55:31 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -110,8 +110,8 @@ void block_widgets (void);
 void release_widgets (void);
 void update_blocked_widget (GtkWidget *w, gboolean sens);
 
-void mount_ipod(void);
-void unmount_ipod(void);
+/*void mount_ipod(void);
+  void unmount_ipod(void);*/
 void call_script (gchar *script);
 
 void delete_track_ok (struct DeleteData *dd);
@@ -212,4 +212,8 @@ GList *glist_duplicate (GList *list);
 gchar *which (const gchar *exe);
 
 GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name);
+
+gchar *get_itdb_key (gint index, const gchar *subkey);
+gchar *get_playlist_key (gint index, Playlist *pl, const gchar *subkey);
+gint get_itdb_index (iTunesDB *itdb);
 #endif

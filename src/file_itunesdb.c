@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-04-04 00:08:13 jcs>
+/* Time-stamp: <2006-05-08 00:33:57 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -87,7 +87,6 @@ static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
 static GList *extendeddeletion = NULL;
 static float extendedinfoversion = 0.0;
-
 
 /* fills in extended info if available */
 /* num/total are used to give updates in case the md5 checksums have
@@ -792,7 +791,6 @@ void gp_merge_itdb (iTunesDB *old_itdb)
     if (new_itdb)
 	gp_replace_itdb (old_itdb, new_itdb);
 
-    gp_update_itdb_prefs ();
     gtkpod_tracks_statusbar_update ();
 }
 
@@ -1013,18 +1011,17 @@ static gpointer th_remove (gpointer filename)
 
 /* Threaded copy of ipod track */
 /* Returns: GError *error */
-static gpointer th_copy (gpointer s)
+static gpointer th_copy (gpointer data)
 {
-    Track *track = s;
+    Track *track = data;
     ExtraTrackData *etr;
-    gchar *mount = charset_from_utf8 (prefs_get_ipod_mount ());
     GError *error = NULL;
     g_return_val_if_fail (track, NULL);
     etr = track->userdata;
     g_return_val_if_fail (etr, NULL);
 
     itdb_cp_track_to_ipod (track, etr->pc_path_locale, &error);
-    g_free (mount);
+
     /* delete old size */
     if (track->transferred) etr->oldsize = 0;
 #ifdef G_THREADS_ENABLED
@@ -1351,6 +1348,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
       }
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   } /* for (.;.;.) */
+
   if (abort_flag)      result = FALSE;   /* negative result if user aborted */
   if (result == FALSE)
       gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
@@ -1707,57 +1705,3 @@ gboolean files_are_saved (void)
 }
 
 
-/* FIXME: transitional function to set the mountpoint of all
- * GP_ITDB_TYPE_IPOD itdbs. Should be replaced with a new system to
- * individually define the mountpoints */
-void gp_itdb_set_mountpoint (const gchar *mp)
-{
-    struct itdbs_head *itdbs_head;
-
-    GList *gl;
-    gint i;
-
-    g_return_if_fail (gtkpod_window);
-    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
-				    "itdbs_head");
-    if (!itdbs_head)
-    {  /* this means we are called before all the data is set up, for
-	* example because gtkpod was called with the '-m' flag.
-	* We'll set all itdb_n_mountpoint for which itdb_n_type is
-	* GP_ITDB_TYPE_IPOD */
-	gboolean valid;
-	i=0;
-	do
-	{
-	    gchar *property = g_strdup_printf ("itdb_%d_type", i);
-	    gint type;
-	    valid = prefs_get_int_value (property, &type);
-	    g_free (property);
-	    if (valid && (type & GP_ITDB_TYPE_IPOD))
-	    {
-		gchar *pmp = g_strdup_printf ("itdb_%d_mountpoint", i);
-		prefs_set_string (pmp, mp);
-		g_free (pmp);
-	    }
-	    ++i;
-	} while (valid);
-	return;
-    }
-
-    i=0;
-    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
-    {
-	iTunesDB *itdb = gl->data;
-	g_return_if_fail (itdb);
-	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	{
-	    /* store to prefs */
-	    gchar *pmp = g_strdup_printf ("itdb_%d_mountpoint", i);
-	    prefs_set_string (pmp, mp);
-	    g_free (pmp);
-	    /* store to itdb */
-	    itdb_set_mountpoint (itdb, mp);
-	}
-	++i;
-    }
-}

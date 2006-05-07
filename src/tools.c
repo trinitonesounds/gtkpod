@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-07-16 01:08:24 jcs>
+/* Time-stamp: <2006-05-08 00:59:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -342,12 +342,25 @@ typedef enum
 } SyncType;
 
 
+/* FIXME: tools need to be defined for each itdb separately */
 /* replace %i in all strings of argv with prefs_get_ipod_mount() */
 static void tools_sync_replace_percent_i (gchar **argv)
 {
-    const gchar *ipod_mount = prefs_get_ipod_mount ();
-    gint ipod_mount_len = strlen (ipod_mount);
+    gchar *ipod_mount;
+    gint ipod_mount_len;
+    gchar *key;
+    iTunesDB *itdb;
     gint offset = 0;
+
+    itdb = gp_get_ipod_itdb ();
+    if (!itdb) return;
+
+    key = get_itdb_key (get_itdb_index (itdb), "mountpoint");
+    ipod_mount = prefs_get_string (key);
+    g_free (key);
+    if (!ipod_mount) return;
+
+    ipod_mount_len = strlen (ipod_mount);
 
     while (argv && *argv)
     {
@@ -374,6 +387,8 @@ static void tools_sync_replace_percent_i (gchar **argv)
 	    ++argv;
 	}
     }
+
+    g_free (ipod_mount);
 }
 
 

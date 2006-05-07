@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-06 11:51:52 jcs>
+/* Time-stamp: <2006-05-08 00:33:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -122,7 +122,6 @@ void gp_itdb_remove (iTunesDB *itdb);
 void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb);
 void gp_itdb_add_extra (iTunesDB *itdb);
 void gp_itdb_add_extra_full (iTunesDB *itdb);
-iTunesDB *gp_itdb_get_podcast (void);
 
 Track *gp_track_new (void);
 #define gp_track_free itdb_track_free
@@ -151,5 +150,5 @@ void gp_playlist_add_extra (Playlist *pl);
 gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num);
 iTunesDB *gp_get_active_itdb (void);
 iTunesDB *gp_get_ipod_itdb (void);
-void gp_update_itdb_prefs (void);
+iTunesDB *gp_get_podcast_itdb (void);
 #endif

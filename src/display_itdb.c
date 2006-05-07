@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-06 11:51:51 jcs>
+/* Time-stamp: <2006-05-08 01:02:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -380,25 +380,6 @@ void gp_itdb_remove (iTunesDB *itdb)
     itdbs_head->itdbs = g_list_remove (itdbs_head->itdbs, itdb);
 }
 
-/* return the podcast itdb */
-iTunesDB *gp_itdb_get_podcast ()
-{
-    GList *gl;
-
-    g_return_val_if_fail (itdbs_head, NULL);
-
-    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
-    {
-	iTunesDB *itdb = gl->data;
-	g_return_val_if_fail (itdb, NULL);
-
-	if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
-	    return itdb;
-    }
-    return NULL;
-}
-
-
 /* Also replaces @old_itdb in the itdbs GList and take care that the
  * displayed itdb gets replaced as well */
 void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
@@ -406,6 +387,7 @@ void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
     ExtraiTunesDBData *new_eitdb;
     Playlist *old_pl, *mpl;
     GList *old_link;
+    gchar *key;
     gchar *old_pl_name = NULL;
     GtkTreePath *path;
     gint pos = -1; /* default: add to the end */
@@ -460,9 +442,13 @@ void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
 	Playlist *pl = itdb_playlist_by_name (new_itdb, old_pl_name);
 	if (pl) pm_select_playlist (pl);
     }
+
+    /* Set prefs system with name of MPL */
+    mpl = itdb_playlist_mpl (new_itdb);
+    key = get_itdb_key (get_itdb_index (new_itdb), "name");
+    prefs_set_string (key, mpl->name);
+    g_free (key);
 }    
-
-
 
 
 /* add playlist to itdb and to display */
@@ -775,7 +761,7 @@ void gp_track_validate_entries (Track *track)
 void init_data (GtkWidget *window)
 {
     gchar *cfgdir;
-    gint type;
+    gint i;
 
     g_return_if_fail (window);
     g_return_if_fail (itdbs_head == NULL);
@@ -786,289 +772,175 @@ void init_data (GtkWidget *window)
 
     g_object_set_data (G_OBJECT (window), "itdbs_head", itdbs_head);
 
-    if (prefs_get_int_value ("itdb_0_type", &type))
-    {   /* databases have been set up previously -- use what is stored
-	 * in the prefs */
-	gint i;
-	for (i=0;;++i)
+    if (!prefs_get_int_value ("itdb_0_type", NULL))
+    {
+	/* databases have not been set up previously -- take care of
+	   this */
+	gchar *mountpoint, *filename;
+
+	/* iPod database */
+	mountpoint = prefs_get_string ("initial_mountpoint");
+	filename = g_build_filename (cfgdir, "iTunesDB", NULL);
+	prefs_set_int ("itdb_0_type", GP_ITDB_TYPE_IPOD);
+	prefs_set_string ("itdb_0_name", _("iPod"));
+	prefs_set_string ("itdb_0_filename", filename);
+	prefs_set_string ("itdb_0_mountpoint", mountpoint);
+	g_free (mountpoint);
+	g_free (filename);
+
+	/* Local database */
+	filename = g_build_filename (cfgdir, "local_0.itdb", NULL);
+	prefs_set_int ("itdb_1_type", GP_ITDB_TYPE_LOCAL);
+	prefs_set_string ("itdb_1_name", _("Local"));
+	prefs_set_string ("itdb_1_filename", filename);
+	g_free (filename);
+
+	/* Podcasts database */
+	filename = g_build_filename (cfgdir, "podcasts.itdb", NULL);
+	prefs_set_int ("itdb_2_type",
+		       GP_ITDB_TYPE_PODCASTS|GP_ITDB_TYPE_LOCAL);
+	prefs_set_string ("itdb_2_name", _("Podcasts"));
+	prefs_set_string ("itdb_2_filename", filename);
+	g_free (filename);
+    }
+
+    for (i=0;;++i)
+    {
+	gchar *property = get_itdb_key (i, "type");
+	gint type;
+	gboolean valid = prefs_get_int_value (property, &type);
+	g_free (property);
+	if (valid)
 	{
-	    gchar *property = g_strdup_printf ("itdb_%d_type", i);
-	    gboolean valid = prefs_get_int_value (property, &type);
-	    g_free (property);
-	    if (valid)
+	    iTunesDB *itdb = NULL;
+	    Playlist *pl = NULL;
+	    ExtraiTunesDBData *eitdb;
+	    gchar *filename = NULL;
+	    gchar *mountpoint = NULL;
+	    gchar *offline_filename = NULL;
+
+	    if (type & GP_ITDB_TYPE_LOCAL)
 	    {
-		iTunesDB *itdb = NULL;
-		Playlist *pl = NULL;
-		ExtraiTunesDBData *eitdb;
-		gchar *filename = NULL;
-		gchar *mountpoint = NULL;
-		gchar *offline_filename = NULL;
+		gchar *fn = get_itdb_key (i, "filename");
 
-		if (type & GP_ITDB_TYPE_LOCAL)
+		filename = prefs_get_string (fn);
+
+		if (!filename)
 		{
-		    gchar *fn = g_strdup_printf ("itdb_%d_filename", i);
-
-		    filename = prefs_get_string (fn);
-
-		    if (!filename)
-		    {
-			gchar *local = g_strdup_printf ("local%d.itdb",i);
-			filename = g_build_filename (cfgdir, local, NULL);
-			g_free (local);
-		    }
-		    g_free (fn);
-		    if (g_file_test (filename, G_FILE_TEST_EXISTS))
-			itdb = gp_import_itdb (NULL, type,
+		    gchar *local = g_strdup_printf ("local%d.itdb",i);
+		    filename = g_build_filename (cfgdir, local, NULL);
+		    g_free (local);
+		}
+		g_free (fn);
+		if (g_file_test (filename, G_FILE_TEST_EXISTS))
+		    itdb = gp_import_itdb (NULL, type,
 					       NULL, NULL, filename);
-		}
-		else if (type & GP_ITDB_TYPE_IPOD)
+	    }
+	    else if (type & GP_ITDB_TYPE_IPOD)
+	    {
+		gchar *key;
+
+		key = get_itdb_key (i, "mountpoint");
+		mountpoint = prefs_get_string (key);
+		g_free (key);
+
+		key = get_itdb_key (i, "filename");
+		offline_filename = prefs_get_string (key);
+		g_free (key);
+
+		if (!offline_filename)
 		{
-		    gchar *mp = g_strdup_printf ("itdb_%d_mountpoint", i);
-		    gchar *fn = g_strdup_printf ("itdb_%d_filename", i);
-		    
-
-		    offline_filename = prefs_get_string (fn);
-		    mountpoint = prefs_get_string (mp);
-
-		    if (!offline_filename)
-		    {
-			gchar *local = g_strdup_printf ("gtkpod_%d.itdb",i);
-			offline_filename = g_build_filename (
-			    cfgdir, local, NULL);
-			g_free (local);
-		    }
-		    if (!mountpoint)
-			mountpoint = g_strdup (prefs_get_ipod_mount ());
-		    g_free (fn);
-		    g_free (mp);
+		    gchar *local = g_strdup_printf ("gtkpod_%d.itdb",i);
+		    offline_filename = g_build_filename (
+			cfgdir, local, NULL);
+		    g_free (local);
 		}
-		else
-		{
-		    g_return_if_reached ();
-		}
-
-
-		if (!itdb)
-		{
-		    gchar *nm, *name;
-
-		    itdb = gp_itdb_new ();
-		    eitdb = itdb->userdata;
-		    g_return_if_fail (eitdb);
-		    itdb->usertype = type;
-		    itdb->filename = filename;
-		    itdb_set_mountpoint (itdb, mountpoint);
-		    g_free (mountpoint);
-		    eitdb->offline_filename = offline_filename;
-
-		    nm = g_strdup_printf ("itdb_%d_name", i);
-		    if (!prefs_get_string_value (nm, &name))
-		    {
-			if (type & GP_ITDB_TYPE_PODCASTS)
-			    name = g_strdup (_("Podcasts"));
-			else if (type & GP_ITDB_TYPE_LOCAL)
-			    name = g_strdup (_("Local"));
-			else
-			    name = g_strdup ("iPod");
-		    }
-		    pl = gp_playlist_new (name, FALSE);
-		    g_free (name);
-		    g_free (nm);
-		    itdb_playlist_set_mpl (pl);
-		    itdb_playlist_add (itdb, pl, -1);
-
-		    eitdb->data_changed = FALSE;
-		    eitdb->itdb_imported = FALSE;
-		}
-		else
-		{
-		    g_free (filename);
-		    g_free (mountpoint);
-		    g_free (offline_filename);
-		}
-
-		/* Check if Podcast Playlist is present on IPOD itdb
-		 * and add if not. If Podcast Playlist is present on
-		 * local itdb remove it. */
-		pl = itdb_playlist_podcasts (itdb);
-		if ((type & GP_ITDB_TYPE_IPOD) && !pl)
-		{   /* add podcast playlist */
-		    pl = gp_playlist_new (_("Podcasts"), FALSE);
-		    itdb_playlist_set_podcasts (pl);
-		    itdb_playlist_add (itdb, pl, -1);
-		    eitdb = itdb->userdata;
-		    g_return_if_fail (eitdb);
-		    eitdb->data_changed = FALSE;
-		}
-		if ((type & GP_ITDB_TYPE_LOCAL) && pl)
-		{   /* Remove podcast playlist. Normally no playlist
-		     * should be present, except for a few people who
-		     * used the CVS version between September and
-		     * October 2005. */
-		    if (itdb_playlist_tracks_number (pl) == 0)
-		    {
-			gp_playlist_remove (pl);
-		    }
-		    else
-		    {   /* OK, let's be nice and just drop the
-			   'podcast' flag instead of removing */
-			pl->podcastflag = 0;
-		    }
-		}
-		/* add to the display */
-		gp_itdb_add (itdb, -1);
 	    }
 	    else
 	    {
-		break; /* for (i=0;;++i) */
+		g_return_if_reached ();
 	    }
+
+
+	    if (!itdb)
+	    {
+		gchar *nm, *name;
+
+		itdb = gp_itdb_new ();
+		eitdb = itdb->userdata;
+		g_return_if_fail (eitdb);
+		itdb->usertype = type;
+		itdb->filename = filename;
+		itdb_set_mountpoint (itdb, mountpoint);
+		eitdb->offline_filename = offline_filename;
+
+		nm = g_strdup_printf ("itdb_%d_name", i);
+		if (!prefs_get_string_value (nm, &name))
+		{
+		    if (type & GP_ITDB_TYPE_PODCASTS)
+			name = g_strdup (_("Podcasts"));
+		    else if (type & GP_ITDB_TYPE_LOCAL)
+			name = g_strdup (_("Local"));
+		    else
+			name = g_strdup ("iPod");
+		}
+		pl = gp_playlist_new (name, FALSE);
+		g_free (name);
+		g_free (nm);
+		itdb_playlist_set_mpl (pl);
+		itdb_playlist_add (itdb, pl, -1);
+
+		eitdb->data_changed = FALSE;
+		eitdb->itdb_imported = FALSE;
+	    }
+	    else
+	    {
+		g_free (filename);
+		g_free (offline_filename);
+	    }
+	    g_free (mountpoint);
+
+	    /* Check if Podcast Playlist is present on IPOD itdb
+	     * and add if not. If Podcast Playlist is present on
+	     * local itdb remove it. */
+	    pl = itdb_playlist_podcasts (itdb);
+	    if ((type & GP_ITDB_TYPE_IPOD) && !pl)
+	    {   /* add podcast playlist */
+		pl = gp_playlist_new (_("Podcasts"), FALSE);
+		itdb_playlist_set_podcasts (pl);
+		itdb_playlist_add (itdb, pl, -1);
+		eitdb = itdb->userdata;
+		g_return_if_fail (eitdb);
+		eitdb->data_changed = FALSE;
+	    }
+	    if ((type & GP_ITDB_TYPE_LOCAL) && pl)
+	    {   /* Remove podcast playlist. Normally no playlist
+		 * should be present, except for a few people who
+		 * used the CVS version between September and
+		 * October 2005. */
+		if (itdb_playlist_tracks_number (pl) == 0)
+		{
+		    gp_playlist_remove (pl);
+		}
+		else
+		{   /* OK, let's be nice and just drop the
+		       'podcast' flag instead of removing */
+		    pl->podcastflag = 0;
+		}
+	    }
+	    /* add to the display */
+	    gp_itdb_add (itdb, -1);
 	}
-    }
-    else
-    {   /* first run -- set up a local database and an iPod database */
-	iTunesDB *itdb;
-	ExtraiTunesDBData *eitdb;
-	gchar *fn;
-	Playlist *pl;
-
-	/* iPod database */
-	itdb = gp_itdb_new ();
-	eitdb = itdb->userdata;
-	g_return_if_fail (eitdb);
-	itdb->usertype = GP_ITDB_TYPE_IPOD;
-	itdb_set_mountpoint (itdb, prefs_get_ipod_mount ());
-	eitdb->offline_filename = g_build_filename (
-	    cfgdir, "iTunesDB", NULL);
-	gp_itdb_add (itdb, -1);
-	pl = gp_playlist_new ("iPod", FALSE);
-	itdb_playlist_set_mpl (pl);   /* MPL! */
-	gp_playlist_add (itdb, pl, -1);
-	g_return_if_fail (itdb->userdata);
-	eitdb->data_changed = FALSE;
-
-	/* local database. First check if a database file already
-	   exists -- if yes load it */
-	itdb = NULL;
-	fn = g_build_filename (cfgdir, "local_0.itdb", NULL);
-	if (g_file_test (fn, G_FILE_TEST_EXISTS))
+	else
 	{
-	    itdb = gp_import_itdb (NULL, GP_ITDB_TYPE_LOCAL,
-				   NULL, NULL, fn);
+	    break; /* for (i=0;;++i) */
 	}
-
-	if (!itdb)
-	{   /* local database does not exist or cannot be loaded */
-	    itdb = gp_itdb_new ();
-	    eitdb = itdb->userdata;
-	    g_return_if_fail (eitdb);
-	    itdb->usertype = GP_ITDB_TYPE_LOCAL;
-	    itdb->filename = g_strdup (fn);
-	    pl = gp_playlist_new (_("Local"), FALSE);
-	    itdb_playlist_set_mpl (pl);   /* MPL! */
-	    itdb_playlist_add (itdb, pl, -1);
-	}
-
-	gp_itdb_add (itdb, -1);
-	g_free (fn);
-    }
-
-    /* Add poscast itdb if not present */
-    if (!gp_itdb_get_podcast ())
-    {
-	iTunesDB *itdb;
-	ExtraiTunesDBData *eitdb;
-	gchar *fn;
-	Playlist *pl;
-
-	/*First check if a database file already exists -- if yes load
-	   it */
-	itdb = NULL;
-	fn = g_build_filename (cfgdir, "podcasts.itdb", NULL);
-	if (g_file_test (fn, G_FILE_TEST_EXISTS))
-	{
-	    itdb = gp_import_itdb (NULL, GP_ITDB_TYPE_PODCASTS|GP_ITDB_TYPE_LOCAL,
-				   NULL, NULL, fn);
-	}
-
-	if (!itdb)
-	{   /* local database does not exist or cannot be loaded */
-	    itdb = gp_itdb_new ();
-	    eitdb = itdb->userdata;
-	    g_return_if_fail (eitdb);
-	    itdb->usertype = GP_ITDB_TYPE_PODCASTS|GP_ITDB_TYPE_LOCAL;
-	    itdb->filename = g_strdup (fn);
-	    pl = gp_playlist_new (_("Podcasts"), FALSE);
-	    itdb_playlist_set_mpl (pl);   /* MPL! */
-	    itdb_playlist_add (itdb, pl, -1);
-	}
-
-	gp_itdb_add (itdb, -1);
-	g_free (fn);
     }
 
     /* set md5 */
     prefs_set_md5tracks (prefs_get_md5tracks ());
 
-    /* update prefs with new information in case it's needed */
-    gp_update_itdb_prefs ();
-
     g_free (cfgdir);
-}
-
-
-/* Update the information about the itdbs in the prefs structure */
-void gp_update_itdb_prefs (void)
-{
-    struct itdbs_head *itdbs_head;
-    GList *gl;
-    gint i=0;
-
-    g_return_if_fail (gtkpod_window);
-    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
-				    "itdbs_head");
-    g_return_if_fail (itdbs_head);
-    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
-    {
-	gchar *prop, *prop2;
-	Playlist *mpl;
-	ExtraiTunesDBData *eitdb;
-	iTunesDB *itdb = gl->data;
-
-	g_return_if_fail (itdb);
-	eitdb = itdb->userdata;
-	g_return_if_fail (eitdb);
-
-	prop = g_strdup_printf ("itdb_%d_type", i);
-	prefs_set_int (prop, itdb->usertype);
-	g_free (prop);
-
-	mpl = itdb_playlist_mpl (itdb);
-	g_return_if_fail (mpl);
-	prop = g_strdup_printf ("itdb_%d_name", i);
-	prefs_set_string (prop, mpl->name);
-	g_free (prop);
-
-	prop = g_strdup_printf ("itdb_%d_filename", i);
-	prop2 = g_strdup_printf ("itdb_%d_mountpoint", i);
-	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-	{
-	    prefs_set_string (prop, itdb->filename);
-	    prefs_set_string (prop2, NULL);
-	}
-	else if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	{
-	    prefs_set_string (prop, eitdb->offline_filename);
-	    prefs_set_string (prop2, itdb_get_mountpoint (itdb));
-	}
-	else
-	{
-	    g_return_if_reached ();
-	}
-	g_free (prop);
-	g_free (prop2);
-
-	++i;
-    }
 }
 
 
@@ -1141,8 +1013,8 @@ iTunesDB *gp_get_active_itdb (void)
 
 
 /* get the "ipod" itdb, that's the first itdb with
-   type==GP_ITDB_TYPE_IPOD. Returns NULL and prints error when no
-   matching itdb can be found */
+   type==GP_ITDB_TYPE_IPOD. Returns NULL if no matching itdb can be
+   found */
 iTunesDB *gp_get_ipod_itdb (void)
 {
     struct itdbs_head *itdbs_head;
@@ -1151,12 +1023,36 @@ iTunesDB *gp_get_ipod_itdb (void)
     g_return_val_if_fail (gtkpod_window, NULL);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
 				    "itdbs_head");
-    g_return_val_if_fail (itdbs_head, NULL);
+
+    if (itdbs_head == NULL) return NULL;
+
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
 	iTunesDB *itdb = gl->data;
 	g_return_val_if_fail (itdb, NULL);
-	if (itdb->usertype & GP_ITDB_TYPE_IPOD)  return itdb;
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	    return itdb;
     }
-    g_return_val_if_reached (NULL);
+    return NULL;
 }
+
+
+/* return the podcast itdb */
+iTunesDB *gp_get_podcast_itdb ()
+{
+    GList *gl;
+
+    g_return_val_if_fail (itdbs_head, NULL);
+
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_val_if_fail (itdb, NULL);
+
+	if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
+	    return itdb;
+    }
+    return NULL;
+}
+
+

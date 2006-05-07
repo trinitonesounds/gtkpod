@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-06 12:44:23 jcs>
+/* Time-stamp: <2006-05-08 01:06:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -35,6 +35,7 @@
 #include <gtk/gtk.h>
 #include "display_itdb.h"
 #include "fileselection.h"
+#include "info.h"
 #include "misc.h"
 #include "prefs.h"
 #include "repository.h"
@@ -113,39 +114,6 @@ static void store_window_state (RepWin *repwin)
     prefs_set_int (REPOSITORY_WINDOW_DEFX, defx);
     prefs_set_int (REPOSITORY_WINDOW_DEFY, defy);
 }
-
-
-
-/* ------------------------------------------------------------
- *
- *        Helper functions for pref keys
- *
- * ------------------------------------------------------------ */
-
-
-/* Helper function to construct prefs key for itdb,
-   e.g. itdb_1_mountpoint... */
-/* gfree() after use */
-gchar *get_itdb_key (gint index, const gchar *subkey)
-{
-    g_return_val_if_fail (subkey, NULL);
-
-    return g_strdup_printf ("itdb_%d_%s", index, subkey);
-}
-
-
-/* Helper function to construct prefs key for playlists,
-   e.g. itdb_1_playlist_xxxxxxxxxxx_syncmode... */
-/* gfree() after use */
-gchar *get_playlist_key (gint index, Playlist *pl, const gchar *subkey)
-{
-    g_return_val_if_fail (pl, NULL);
-    g_return_val_if_fail (subkey, NULL);
-
-    return g_strdup_printf ("itdb_%d_playlist_%llu_%s",
-			    index, (unsigned long long)pl->id, subkey);
-}
-
 
 
 
@@ -541,7 +509,9 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
     del_num = 0;
     for (i=0; i<itdb_num; ++i)
     {
-	gchar *subkey;
+	gchar *key, *subkey;
+	gboolean deleted=FALSE;
+
 	iTunesDB *itdb = g_list_nth_data (itdbs_head->itdbs, i-del_num);
 	g_return_if_fail (itdb);
 
@@ -549,7 +519,6 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 	if (temp_prefs_subkey_exists (repwin->extra_prefs, subkey))
 	{
 	    gboolean deleted;
-	    gchar *key;
 	    GList *gl;
 
 	    key = get_itdb_key (i, "deleted");
@@ -601,7 +570,6 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 		{
 		    Playlist *pl = gl->data;
 		    gint val;
-
 		    g_return_if_fail (pl);
 		    key = get_playlist_key (i, pl, "liveupdate");
 		    if (temp_prefs_get_int_value (repwin->extra_prefs, key, &val))
@@ -611,11 +579,26 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 		    }
 		    g_free (key);
 		}
+
 	    }
 	}
 
-	if (temp_prefs_subkey_exists (repwin->temp_prefs, subkey))
+	if (!deleted &&
+	    temp_prefs_subkey_exists (repwin->temp_prefs, subkey))
 	{
+	    gchar *mp;
+
+	    key = get_itdb_key (i, "mountpoint");
+	    mp = temp_prefs_get_string (repwin->temp_prefs, key);
+	    g_free (key);
+
+	    if (mp)
+	    {   /* have to set mountpoint */
+		itdb_set_mountpoint (itdb, mp);
+		space_set_ipod_mount (mp);
+		g_free (mp);
+	    }
+
 	    data_changed (itdb);
 	}
 	g_free (subkey);
@@ -743,15 +726,11 @@ static void select_repository (RepWin *repwin,
 
     if (itdb)
     {
-	struct itdbs_head *itdbs_head;
 	gint index;
 
 	repwin->next_playlist = playlist;
 
-	itdbs_head = gp_get_itdbs_head (gtkpod_window);
-	g_return_if_fail (itdbs_head);
-	
-	index = g_list_index (itdbs_head->itdbs, itdb);
+	index = get_itdb_index (itdb);
 
 	gtk_combo_box_set_active (
 	    GTK_COMBO_BOX (gtkpod_xml_get_widget (repwin->xml,

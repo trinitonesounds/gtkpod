@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-04-29 00:01:38 jcs>
+|  Time-stamp: <2006-05-08 00:53:26 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -365,7 +365,7 @@ GList *glist_duplicate (GList *list)
 #include <errno.h>
 #include <stdio.h>
 
-
+#if 0
 static gchar *getdevicename(const gchar *mount)
 {
     if(mount) {
@@ -385,33 +385,6 @@ static gchar *getdevicename(const gchar *mount)
     return NULL;
 }
 
-
-
-void
-mount_ipod(void)
-{
-    const gchar *str = prefs_get_ipod_mount ();
-    if(str)
-    {
-	pid_t pid, tpid;
-	int status;
-
-	pid = fork ();
-	switch (pid)
-	{
-	    case 0: /* child */
-		execl(MOUNT_BIN, "mount", str, NULL);
-		exit (1);
-		break;
-	    case -1: /* parent and error */
-		break;
-	    default: /* parent -- let's wait for the child to terminate */
-		tpid = waitpid (pid, &status, 0);
-		/* we could evaluate tpid and status now */
-		break;
-	}
-    }
-}
 
 /**
  * unmount_ipod - attempt to eject the ipod from prefs_get_ipod_mount()
@@ -494,7 +467,7 @@ unmount_ipod(void)
 	g_free (ipod_device);
     }
 }
-
+#endif
 
 /***************************************************************************
  * gtkpod.in,out calls
@@ -1435,4 +1408,57 @@ GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name)
 		 name);
 
     return w;
+}
+
+
+  gchar    *ipod_mount;     /* mount point of iPod */
+/* ------------------------------------------------------------
+ *
+ *        Helper functions for pref keys
+ *
+ * ------------------------------------------------------------ */
+
+
+/**
+ * Helper function to construct prefs key for itdb,
+ * e.g. itdb_1_mountpoint...
+ * gfree() after use
+ *
+ **/
+gchar *get_itdb_key (gint index, const gchar *subkey)
+{
+    g_return_val_if_fail (subkey, NULL);
+
+    return g_strdup_printf ("itdb_%d_%s", index, subkey);
+}
+
+
+/**
+ * Helper function to construct prefs key for playlists,
+ * e.g. itdb_1_playlist_xxxxxxxxxxx_syncmode...
+ *
+ * gfree() after use
+ **/
+gchar *get_playlist_key (gint index, Playlist *pl, const gchar *subkey)
+{
+    g_return_val_if_fail (pl, NULL);
+    g_return_val_if_fail (subkey, NULL);
+
+    return g_strdup_printf ("itdb_%d_playlist_%llu_%s",
+			    index, (unsigned long long)pl->id, subkey);
+}
+
+
+/**
+ * Helper function to retrieve the index number of @itdb needed to
+ * construct any keys (see above)
+ **/
+gint get_itdb_index (iTunesDB *itdb)
+{
+	struct itdbs_head *itdbs_head;
+
+	itdbs_head = gp_get_itdbs_head (gtkpod_window);
+	g_return_val_if_fail (itdbs_head, 0);
+	
+	return g_list_index (itdbs_head->itdbs, itdb);
 }

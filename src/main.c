@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:12 jcs>
+/* Time-stamp: <2006-05-08 00:55:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -134,7 +134,7 @@ main (int argc, char *argv[])
 
   gtk_widget_show (gtkpod_window);
 
-  if(prefs_get_automount())      mount_ipod();
+/*  if(prefs_get_automount())      mount_ipod();*/
   if(prefs_get_autoimport() || prefs_get_autoimport_commandline())
       gp_merge_ipod_itdbs ();
 

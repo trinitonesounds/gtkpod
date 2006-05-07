@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-02 16:48:26 jcs>
+/* Time-stamp: <2006-05-08 00:53:25 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -436,17 +436,6 @@ prefs_window_create (gint page)
 
 /* Code to add subscriptions list box */
 
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mount_point")))
-    {
-	if (tmpcfg->ipod_mount)
-	{  /* we should copy the new path first because by setting
-	      the text we might get a callback destroying the old
-	      value... */
-	    gchar *buf = g_strdup (tmpcfg->ipod_mount);
-	    gtk_entry_set_text(GTK_ENTRY(w), buf);
-	    g_free (buf);
-	}
-    }
     w = gtkpod_xml_get_widget (prefs_window_xml, "charset_combo");
     charset_init_combo (GTK_COMBO (w));
     
@@ -812,7 +801,6 @@ prefs_window_set(void)
 	/* Need this in case user reordered column order (we don't
 	 * catch the reorder signal) */
 	tm_store_col_order ();
-	prefs_set_ipod_mount(tmpcfg->ipod_mount);
 	for (i=0; i<PATH_NUM; ++i)
 	{
 	    prefs_set_path (i, tmpcfg->path[i]);
@@ -1158,26 +1146,6 @@ on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
                        gtk_toggle_button_get_active (togglebutton));
 }
 
-
-void
-on_cfg_mount_point_changed             (GtkEditable     *editable,
-					gpointer         user_data)
-{
-    g_free (tmpcfg->ipod_mount);
-    tmpcfg->ipod_mount = gtk_editable_get_chars(editable,0, -1);
-}
-
-
-/**
- * prefs_window_set_mount_point
- * @mp - set the temporary config variable to the mount point specified
- */
-void
-prefs_window_set_mount_point(const gchar *mp)
-{
-    g_free (tmpcfg->ipod_mount);
-    tmpcfg->ipod_mount = g_strdup(mp);
-}
 
 static void prefs_window_set_path (PathType i, const gchar *path)
 {

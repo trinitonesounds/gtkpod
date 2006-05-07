@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-30 23:23:34 jcs>
+/* Time-stamp: <2006-05-08 00:48:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -496,10 +496,12 @@ void space_set_ipod_mount (const gchar *mp)
 
     /* update the free space data if mount point changed */
     if (!space_mp || (strcmp (space_mp, mp) != 0))
-	space_data_update ();
+    {
+	g_free (space_mp);
+	space_mp = g_strdup (mp);
 
-    g_free (space_mp);
-    space_mp = g_strdup (mp);
+	space_data_update ();
+    }
 
     if (space_mutex)   g_mutex_unlock (space_mutex);
 }
@@ -810,9 +812,21 @@ gtkpod_space_statusbar_init(void)
     {
 	space_mutex = g_mutex_new ();
 	if (!space_mp)
-	    space_mp = g_strdup (prefs_get_ipod_mount ());
-	th_space_update ();  /* make sure we have current data */
-	space_thread = g_thread_create (th_space_thread, NULL, FALSE, NULL);
+	{
+	    iTunesDB *itdb = gp_get_ipod_itdb ();
+
+	    if (itdb)
+	    {
+		gchar *key;
+		key = get_itdb_key (get_itdb_index (itdb),
+				    "mountpoint");
+		space_mp = prefs_get_string (key);
+		g_free (key);
+		th_space_update ();  /* make sure we have current data */
+	    }
+	}
+	space_thread = g_thread_create (th_space_thread,
+					    NULL, FALSE, NULL);
     }
     gtkpod_space_statusbar_update();
     gtk_timeout_add(1000, (GtkFunction) gtkpod_space_statusbar_update, NULL);
