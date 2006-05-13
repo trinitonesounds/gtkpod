@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-07 12:56:33 jcs>
+/* Time-stamp: <2006-05-10 00:48:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -148,13 +148,11 @@ struct cfg
   gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
-  gchar *path[PATH_NUM];    /* path for 'Play Now...' (see PathType) */
   gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
-  gboolean concal_autosync;     /* sync contacts and calendar on iTunesDB sync? */
   gboolean mserv_use;           /* use mserv data (rating)? */
   gboolean mserv_report_probs;  /* report problems while updating? */
   gchar *mserv_username;        /* username for mserv? */
@@ -414,8 +412,6 @@ GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
 gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
-void prefs_set_path (PathType type, const gchar *path);
-const gchar *prefs_get_path (PathType type);
 gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
 void prefs_set_sp_or (guint32 inst, gboolean state);
@@ -448,8 +444,6 @@ void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
 void prefs_set_unused_gboolean3(gboolean val);
 gboolean prefs_get_unused_gboolean3(void);
-void prefs_set_concal_autosync(gboolean val);
-gboolean prefs_get_concal_autosync(void);
 void prefs_set_tmp_disable_sort(gboolean val);
 gboolean prefs_get_tmp_disable_sort(void);
 void prefs_set_startup_messages(gboolean val);

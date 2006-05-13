@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-01 14:57:09 jcs>
+/* Time-stamp: <2006-05-10 00:02:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1699,7 +1699,20 @@ void
 on_sync_all_activate                   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-	tools_sync_all ();
+    struct itdbs_head *itdbs_head = gp_get_itdbs_head (gtkpod_window);
+    GList *gl;
+
+    g_return_if_fail (itdbs_head);
+
+    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+    {
+	iTunesDB *itdb = gl->data;
+	g_return_if_fail (gl);
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    tools_sync_all (itdb);
+	}
+    }
 }
 
 
@@ -1707,7 +1720,17 @@ void
 on_sync_calendar_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    tools_sync_calendar ();
+    /* Select an iPod repository. If the currently selected repository
+       is not an iPod repository, select the first iPod repository. */
+    iTunesDB *itdb = gp_get_active_itdb();
+    if (itdb)
+    {
+	if (! (itdb->usertype & GP_ITDB_TYPE_IPOD))
+	{
+	    itdb = gp_get_ipod_itdb();
+	}
+    }
+    tools_sync_calendar (itdb);
 }
 
 
@@ -1715,7 +1738,17 @@ void
 on_sync_contacts_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    tools_sync_contacts ();
+    /* Select an iPod repository. If the currently selected repository
+       is not an iPod repository, select the first iPod repository. */
+    iTunesDB *itdb = gp_get_active_itdb();
+    if (itdb)
+    {
+	if (! (itdb->usertype & GP_ITDB_TYPE_IPOD))
+	{
+	    itdb = gp_get_ipod_itdb();
+	}
+    }
+    tools_sync_contacts (itdb);
 }
 
 
@@ -1723,7 +1756,17 @@ void
 on_sync_notes_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-	tools_sync_notes ();
+    /* Select an iPod repository. If the currently selected repository
+       is not an iPod repository, select the first iPod repository. */
+    iTunesDB *itdb = gp_get_active_itdb();
+    if (itdb)
+    {
+	if (! (itdb->usertype & GP_ITDB_TYPE_IPOD))
+	{
+	    itdb = gp_get_ipod_itdb();
+	}
+    }
+    tools_sync_notes (itdb);
 
 }
 

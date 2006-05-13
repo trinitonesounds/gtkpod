@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-03 20:08:42 jcs>
+/* Time-stamp: <2006-05-14 00:54:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -34,6 +34,8 @@
 #  include <config.h>
 #endif
 
+#include "display.h"
+
 void gp_duplicate_remove (Track *oldtrack, Track *track);
 void gp_md5_hash_tracks_itdb (iTunesDB *itdb);
 void gp_md5_hash_tracks (void);
@@ -63,4 +65,5 @@ void gp_do_selected_playlist (void (*do_func)(GList *tracks));
 void gp_track_set_flags_podcast (Track *track);
 void gp_track_set_flags_default (Track *track);
 
+gchar *get_track_info (Track *track, gboolean prefer_filename);
 #endif

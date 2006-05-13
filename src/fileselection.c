@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-05 15:57:36 jcs>
+/* Time-stamp: <2006-05-09 23:22:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -346,7 +346,7 @@ gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir)
 	NULL,
 	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
 	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-	GTK_STOCK_OPEN,	GTK_RESPONSE_ACCEPT,
+	GTK_STOCK_OK,GTK_RESPONSE_ACCEPT,
 	NULL);
 
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), FALSE);
@@ -386,6 +386,102 @@ gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir)
     gtk_widget_destroy(fc);
     return new_dir;
 }
+
+
+/* Used by the prefs system (prefs_windows.c, repository.c) when a
+ * script should be selected. Takes into account that command line
+ * arguments can be present
+ *
+ * @opath: the current path to the script including command line
+ *         arguments. May be NULL.
+ * @fallback: default dir in case @key is not set.
+ * @title: title of the file selection window.
+ * @additional_text: additional explanotary text to be displayed
+ *
+ * Return value: The new script including command line arguments. NULL
+ * if the selection was aborted.
+ */
+gchar *fileselection_select_script (const gchar *opath,
+				    const gchar *fallback,
+				    const gchar *title,
+				    const gchar *additional_text)
+{
+    gchar *npath=NULL;
+    gchar *buf, *fbuf;
+    const gchar *opathp;
+    GtkFileChooser *fc;
+    gint response;  /* The response of the filechooser */
+
+    fc = GTK_FILE_CHOOSER (gtk_file_chooser_dialog_new (
+			       title,
+			       NULL,
+			       GTK_FILE_CHOOSER_ACTION_OPEN,
+			       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			       GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+			       NULL));
+
+    /* find first whitespace separating path from command line
+     * arguments */
+
+    if (opath)
+	opathp = strchr (opath, ' ');
+    else
+	opathp = NULL;
+
+    if (opathp)
+	buf = g_strndup (opath, opathp-opath);
+    else
+	buf = g_strdup (opath);
+
+    /* get full path -- if the file cannot be found it can't be
+     * selected in the filechooser */
+    fbuf = g_find_program_in_path (buf);
+    g_free (buf);
+
+    if (!fbuf)
+    {   /* set default */
+	fbuf = g_strdup (fallback);
+    }
+
+    if (fbuf && *fbuf)
+    {
+	gchar *fbuf_utf8 = g_filename_from_utf8 (fbuf, -1, NULL, NULL, NULL);
+	if (g_file_test (fbuf, G_FILE_TEST_IS_DIR))
+	{
+	    gtk_file_chooser_set_current_folder (fc, fbuf_utf8);
+	}
+	else
+	{
+	    gtk_file_chooser_set_filename (fc, fbuf_utf8);
+	}
+	g_free (fbuf_utf8);
+    }
+    g_free (fbuf);
+
+    response = gtk_dialog_run(GTK_DIALOG(fc));
+
+    switch (response)
+    {
+    case GTK_RESPONSE_ACCEPT:
+	buf = gtk_file_chooser_get_filename (fc);
+	/* attach command line arguments if present */
+	if (opathp)
+	    npath = g_strdup_printf ("%s%s", buf, opathp);
+	else
+	    npath = g_strdup (buf);
+	g_free (buf);
+	break;
+    case GTK_RESPONSE_CANCEL:
+	break;
+    default:	/* Fall through */
+	break;
+    }
+    gtk_widget_destroy(GTK_WIDGET (fc));
+
+    return npath;
+}
+
+
 
 
 

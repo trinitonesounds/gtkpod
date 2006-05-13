@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:12 jcs>
+/* Time-stamp: <2006-05-10 00:01:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -46,10 +46,10 @@
 void nm_new_tracks (iTunesDB *itdb);
 void nm_tracks_list (GList *list);
 
-gboolean tools_sync_all (void);
-gboolean tools_sync_contacts (void);
-gboolean tools_sync_calendar (void);
-gboolean tools_sync_notes (void);
+gboolean tools_sync_all (iTunesDB *itdb);
+gboolean tools_sync_contacts (iTunesDB *itdb);
+gboolean tools_sync_calendar (iTunesDB *itdb);
+gboolean tools_sync_notes (iTunesDB *itdb);
 
 void do_command_on_entries (const gchar *command, const gchar *what,
 			    GList *selected_tracks);

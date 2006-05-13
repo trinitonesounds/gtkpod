@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:33:56 jcs>
+/* Time-stamp: <2006-05-13 00:37:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -73,12 +73,13 @@ typedef struct
   gboolean audiophile_gain_set;/* has the audiophile gain been set?  */
   gchar   *pc_path_locale;/* path on PC (local encoding)             */
   gchar   *pc_path_utf8;  /* PC filename in utf8 encoding            */
+  time_t  mtime;          /* modification date of PC file            */
   gchar   *thumb_path_locale; /* same for thumbnail                  */
   gchar   *thumb_path_utf8;   /* same for thumbnail                  */
   gchar   *hostname;      /* name of host this file has been imported on*/
   gchar   *md5_hash;      /* md5 hash of file (or NULL)              */
   gchar   *charset;       /* charset used for ID3 tags               */
-  gint32 sortindex;       /* used for stable sorting (current order) */
+  gint32  sortindex;      /* used for stable sorting (current order) */
   gboolean tchanged;      /* temporary use, e.g. in detail.c         */
 } ExtraTrackData;
 

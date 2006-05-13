@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 01:06:05 jcs>
+/* Time-stamp: <2006-05-13 23:57:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -59,10 +59,16 @@ struct _RepWin
 
 typedef struct _RepWin RepWin;
 
+/* where to find the scripts */
+static const gchar *scriptdir = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
 
-/* string constants for preferences */
-static const gchar *REPOSITORY_WINDOW_DEFX="repository_window_defx";
-static const gchar *REPOSITORY_WINDOW_DEFY="repository_window_defy";
+typedef enum
+{
+    IPOD_SYNC_CONTACTS,
+    IPOD_SYNC_CALENDAR,
+    IPOD_SYNC_NOTES
+} iPodSyncType;
+
 
 /* string constants for window widgets used more than once */
 static const gchar *PLAYLIST_COMBO="playlist_combo";
@@ -87,6 +93,41 @@ static const gchar *MANUAL_SYNCDIR_BUTTON="manual_syncdir_button";
 static const gchar *DELETE_REPOSITORY_CHECKBUTTON="delete_repository_checkbutton";
 static const gchar *DELETE_REPOSITORY_BUTTON="delete_repository_button";
 static const gchar *REPOSITORY_VBOX="repository_vbox";
+static const gchar *IPOD_SYNC_LABEL="ipod_sync_label";
+static const gchar *IPOD_SYNC_CONTACTS_LABEL="ipod_sync_contacts_label";
+static const gchar *IPOD_SYNC_CONTACTS_ENTRY="ipod_sync_contacts_entry";
+static const gchar *IPOD_SYNC_CONTACTS_BUTTON="ipod_sync_contacts_button";
+static const gchar *IPOD_SYNC_CALENDAR_LABEL="ipod_sync_calendar_label";
+static const gchar *IPOD_SYNC_CALENDAR_ENTRY="ipod_sync_calendar_entry";
+static const gchar *IPOD_SYNC_CALENDAR_BUTTON="ipod_sync_calendar_button";
+static const gchar *IPOD_SYNC_NOTES_LABEL="ipod_sync_notes_label";
+static const gchar *IPOD_SYNC_NOTES_ENTRY="ipod_sync_notes_entry";
+static const gchar *IPOD_SYNC_NOTES_BUTTON="ipod_sync_notes_button";
+static const gchar *IPOD_CONCAL_AUTOSYNC_TOGGLE="ipod_concal_autosync_toggle";
+static const gchar *SYNC_OPTIONS_HBOX="sync_options_hbox";
+static const gchar *PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE="playlist_sync_delete_tracks_toggle";
+static const gchar *PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE="playlist_sync_confirm_delete_toggle";
+static const gchar *PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE="playlist_sync_show_summary_toggle";
+
+
+/* string constants for preferences */
+static const gchar *KEY_REPOSITORY_WINDOW_DEFX="repository_window_defx";
+static const gchar *KEY_REPOSITORY_WINDOW_DEFY="repository_window_defy";
+
+/* some key names used several times */
+static const gchar *KEY_CONCAL_AUTOSYNC="concal_autosync";
+static const gchar *KEY_SYNC_DELETE_TRACKS="sync_delete_tracks";
+static const gchar *KEY_SYNC_CONFIRM_DELETE="sync_confirm_delete";
+static const gchar *KEY_SYNC_SHOW_SUMMARY="sync_show_summary";
+static const gchar *KEY_MOUNTPOINT="mountpoint";
+static const gchar *KEY_IPOD_MODEL="ipod_model";
+static const gchar *KEY_FILENAME="filename";
+static const gchar *KEY_PATH_SYNC_CONTACTS="path_sync_contacts";
+static const gchar *KEY_PATH_SYNC_CALENDAR="path_sync_calendar";
+static const gchar *KEY_PATH_SYNC_NOTES="path_sync_notes";
+
+
+
 
 
 /* shortcut to reference widgets when repwin->xml is already set */
@@ -111,8 +152,8 @@ static void store_window_state (RepWin *repwin)
     g_return_if_fail (repwin);
 
     gtk_window_get_size (GTK_WINDOW (repwin->window), &defx, &defy);
-    prefs_set_int (REPOSITORY_WINDOW_DEFX, defx);
-    prefs_set_int (REPOSITORY_WINDOW_DEFY, defy);
+    prefs_set_int (KEY_REPOSITORY_WINDOW_DEFX, defx);
+    prefs_set_int (KEY_REPOSITORY_WINDOW_DEFY, defy);
 }
 
 
@@ -263,43 +304,19 @@ printf ("removing '%s'.\n", key);
 }
 
 
-/* text in mountpoint entry has changed */
-static void mountpoint_changed (GtkEditable *editable,
-				RepWin *repwin)
+/* text in standard text entry has changed */
+static void standard_itdb_entry_changed (GtkEditable *editable,
+					 RepWin *repwin)
 {
+    const gchar *keybase;
     gchar *key;
 
     g_return_if_fail (repwin);
 
-    key = get_itdb_key (repwin->itdb_index, "mountpoint");
+    keybase = g_object_get_data (G_OBJECT (editable), "key");
+    g_return_if_fail (keybase);
 
-    finish_editable_storage (repwin, key, editable);
-}
-
-
-/* text for ipod_model has changed */
-static void ipod_model_changed (GtkEditable *editable,
-				RepWin *repwin)
-{
-    gchar *key;
-
-    g_return_if_fail (repwin);
-
-    key = get_itdb_key (repwin->itdb_index, "ipod_model");
-
-    finish_editable_storage (repwin, key, editable);
-}
-
-
-/* text for local_path has changed */
-static void local_path_changed (GtkEditable *editable,
-				RepWin *repwin)
-{
-    gchar *key;
-
-    g_return_if_fail (repwin);
-
-    key = get_itdb_key (repwin->itdb_index, "filename");
+    key = get_itdb_prefs_key (repwin->itdb_index, keybase);
 
     finish_editable_storage (repwin, key, editable);
 }
@@ -314,7 +331,7 @@ static void manual_syncdir_changed (GtkEditable *editable,
 
     g_return_if_fail (repwin);
 
-    key = get_playlist_key (repwin->itdb_index, repwin->playlist,
+    key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
 			    "manual_syncdir");
 
     changed = finish_editable_storage (repwin, key, editable);
@@ -336,12 +353,16 @@ static void playlist_autosync_mode_none_toggled (GtkToggleButton *togglebutton,
 
     g_return_if_fail (repwin);
 
-    key = get_playlist_key (repwin->itdb_index, repwin->playlist,
+    key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
 			    "syncmode");
 
     if (gtk_toggle_button_get_active (togglebutton))
+    {
 	finish_int_storage (repwin, key,
 			    PLAYLIST_AUTOSYNC_MODE_NONE);
+	gtk_widget_set_sensitive (GET_WIDGET (SYNC_OPTIONS_HBOX),
+				  FALSE);
+    }
 }
 
 
@@ -353,12 +374,16 @@ static void playlist_autosync_mode_manual_toggled (GtkToggleButton *togglebutton
 
     g_return_if_fail (repwin);
 
-    key = get_playlist_key (repwin->itdb_index, repwin->playlist,
+    key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
 			    "syncmode");
 
     if (gtk_toggle_button_get_active (togglebutton))
+    {
 	finish_int_storage (repwin, key,
 			    PLAYLIST_AUTOSYNC_MODE_MANUAL);
+	gtk_widget_set_sensitive (GET_WIDGET (SYNC_OPTIONS_HBOX),
+				  TRUE);
+    }
 }
 
 
@@ -370,12 +395,49 @@ static void playlist_autosync_mode_automatic_toggled (GtkToggleButton *togglebut
 
     g_return_if_fail (repwin);
 
-    key = get_playlist_key (repwin->itdb_index, repwin->playlist,
+    key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
 			    "syncmode");
 
     if (gtk_toggle_button_get_active (togglebutton))
+    {
 	finish_int_storage (repwin, key,
 			    PLAYLIST_AUTOSYNC_MODE_AUTOMATIC);
+	gtk_widget_set_sensitive (GET_WIDGET (SYNC_OPTIONS_HBOX),
+				  TRUE);
+    }
+}
+
+
+static void standard_itdb_checkbutton_toggled (GtkToggleButton *togglebutton,
+					       RepWin *repwin)
+{
+    const gchar *keybase;
+    gchar *key;
+
+    g_return_if_fail (repwin);
+
+    keybase = g_object_get_data (G_OBJECT (togglebutton), "key");
+    g_return_if_fail (keybase);
+    key = get_itdb_prefs_key (repwin->itdb_index, keybase);
+    finish_int_storage (repwin, key,
+			gtk_toggle_button_get_active (togglebutton));
+}
+
+
+static void standard_playlist_checkbutton_toggled (GtkToggleButton *togglebutton,
+						   RepWin *repwin)
+{
+    const gchar *keybase;
+    gchar *key;
+
+    g_return_if_fail (repwin);
+
+    keybase = g_object_get_data (G_OBJECT (togglebutton), "key");
+    g_return_if_fail (keybase);
+    key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
+				  keybase);
+    finish_int_storage (repwin, key,
+			gtk_toggle_button_get_active (togglebutton));
 }
 
 
@@ -389,7 +451,7 @@ static void spl_live_update_toggled (GtkToggleButton *togglebutton,
     g_return_if_fail (repwin);
     g_return_if_fail (repwin->playlist);
 
-    key = get_playlist_key (repwin->itdb_index, repwin->playlist,
+    key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
 			    "liveupdate");
 
     val = gtk_toggle_button_get_active (togglebutton);
@@ -413,7 +475,7 @@ static void delete_repository_checkbutton_toggled (GtkToggleButton *togglebutton
 
     if (!gtk_toggle_button_get_active (togglebutton))
     {   /* Un-delete if necessary */
-	gchar *key = get_itdb_key (repwin->itdb_index, "deleted");
+	gchar *key = get_itdb_prefs_key (repwin->itdb_index, "deleted");
 
 	temp_prefs_set_string (repwin->extra_prefs, key, NULL);
 	g_free (key);
@@ -431,7 +493,7 @@ static void delete_repository_button_clicked (GtkButton *button,
 
     g_return_if_fail (repwin);
 
-    key = get_itdb_key (repwin->itdb_index, "deleted");
+    key = get_itdb_prefs_key (repwin->itdb_index, "deleted");
 
     temp_prefs_set_int (repwin->extra_prefs, key, TRUE);
     g_free (key);
@@ -446,9 +508,9 @@ static void mountpoint_button_clicked (GtkButton *button, RepWin *repwin)
 
     g_return_if_fail (repwin);
 
-    key = get_itdb_key (repwin->itdb_index, "mountpoint");
-
+    key = get_itdb_prefs_key (repwin->itdb_index, "mountpoint");
     old_dir = get_current_prefs_string (repwin, key);
+    g_free (key);
 
     new_dir = fileselection_get_dir (_("Select mountpoint"), old_dir);
 
@@ -458,7 +520,6 @@ static void mountpoint_button_clicked (GtkButton *button, RepWin *repwin)
 			    new_dir);
 	g_free (new_dir);
     }
-    g_free (key);
 }
 
 
@@ -470,7 +531,7 @@ static void manual_syncdir_button_clicked (GtkButton *button,
 
     g_return_if_fail (repwin);
 
-    key = get_playlist_key (repwin->itdb_index, repwin->playlist,
+    key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
 			    "manual_syncdir");
 
     old_dir = get_current_prefs_string (repwin, key);
@@ -485,6 +546,87 @@ static void manual_syncdir_button_clicked (GtkButton *button,
     }
     g_free (key);
 }
+
+
+
+static void ipod_sync_button_clicked (RepWin *repwin, iPodSyncType type)
+{
+    const gchar *title;
+    const gchar *entry;
+    gchar *text, *key, *oldpath, *newpath;
+
+    g_return_if_fail (repwin);
+
+    switch (type)
+    {
+    case IPOD_SYNC_CONTACTS:
+	title = _("Please select command to sync contacts");
+	entry = IPOD_SYNC_CONTACTS_ENTRY;
+	key = get_itdb_prefs_key (repwin->itdb_index,
+				  "path_sync_contacts");
+	break;
+    case IPOD_SYNC_CALENDAR:
+	title = _("Please select command to sync calendar");
+	entry = IPOD_SYNC_CALENDAR_ENTRY;
+	key = get_itdb_prefs_key (repwin->itdb_index,
+				  "path_sync_calendar");
+	break;
+    case IPOD_SYNC_NOTES:
+	title = _("Please select command to sync notes");
+	entry = IPOD_SYNC_NOTES_ENTRY;
+	key = get_itdb_prefs_key (repwin->itdb_index,
+				  "path_sync_notes");
+	break;
+    default:
+	g_return_if_reached ();
+    }
+
+    oldpath = prefs_get_string (key);
+    g_free (key);
+
+    text = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), scriptdir);
+
+    newpath = fileselection_select_script (oldpath,
+					   scriptdir,
+					   title,
+					   text);
+    g_free (oldpath);
+    g_free (text);
+
+    if (newpath)
+    {
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (entry)), newpath);
+	g_free (newpath);
+    }
+}
+
+
+
+/* Callback */
+static void ipod_sync_contacts_button_clicked (GtkButton *button,
+					  RepWin *repwin)
+{
+    ipod_sync_button_clicked (repwin, IPOD_SYNC_CONTACTS);
+}
+
+
+/* Callback */
+static void ipod_sync_calendar_button_clicked (GtkButton *button,
+					  RepWin *repwin)
+{
+    ipod_sync_button_clicked (repwin, IPOD_SYNC_CALENDAR);
+
+}
+
+
+/* Callback */
+static void ipod_sync_notes_button_clicked (GtkButton *button,
+				       RepWin *repwin)
+{
+    ipod_sync_button_clicked (repwin, IPOD_SYNC_NOTES);
+
+}
+
 
 
 /* ------------------------------------------------------------
@@ -515,13 +657,13 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 	iTunesDB *itdb = g_list_nth_data (itdbs_head->itdbs, i-del_num);
 	g_return_if_fail (itdb);
 
-	subkey = get_itdb_key (i, "");
+	subkey = get_itdb_prefs_key (i, "");
 	if (temp_prefs_subkey_exists (repwin->extra_prefs, subkey))
 	{
 	    gboolean deleted;
 	    GList *gl;
 
-	    key = get_itdb_key (i, "deleted");
+	    key = get_itdb_prefs_key (i, "deleted");
 	    deleted = temp_prefs_get_int (repwin->extra_prefs, key);
 	    g_free (key);
 	    if (deleted)
@@ -533,14 +675,14 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 		    gint j;
 
 		    /* flush all keys relating to the deleted itdb */
-		    key = get_itdb_key (i-del_num, "");
+		    key = get_itdb_prefs_key (i-del_num, "");
 		    prefs_flush_subkey (key);
 		    g_free (key);
 
 		    for (j=i-del_num; j<itdb_num-del_num-1; ++j)
 		    {
-			gchar *from_key = get_itdb_key (j+1, "");
-			gchar *to_key = get_itdb_key (j, "");
+			gchar *from_key = get_itdb_prefs_key (j+1, "");
+			gchar *to_key = get_itdb_prefs_key (j, "");
 			prefs_rename_subkey (from_key, to_key);
 			g_free (from_key);
 			g_free (to_key);
@@ -571,7 +713,7 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 		    Playlist *pl = gl->data;
 		    gint val;
 		    g_return_if_fail (pl);
-		    key = get_playlist_key (i, pl, "liveupdate");
+		    key = get_playlist_prefs_key (i, pl, "liveupdate");
 		    if (temp_prefs_get_int_value (repwin->extra_prefs, key, &val))
 		    {
 			pl->splpref.liveupdate = val;
@@ -588,7 +730,7 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 	{
 	    gchar *mp;
 
-	    key = get_itdb_key (i, "mountpoint");
+	    key = get_itdb_prefs_key (i, "mountpoint");
 	    mp = temp_prefs_get_string (repwin->temp_prefs, key);
 	    g_free (key);
 
@@ -746,6 +888,21 @@ static void select_repository (RepWin *repwin,
 }
 
 
+/* set @entry with value of @key */
+static void set_entry (RepWin *repwin,
+		       const gchar *key, const gchar *entry)
+{
+    gchar *buf;
+
+    g_return_if_fail (repwin && key && entry);
+
+    buf = get_current_prefs_string (repwin, key);
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (entry)),
+			buf);
+    g_free (buf);
+}
+
+
 /****** Fill in info about selected repository *****/
 static void display_repository_info (RepWin *repwin)
 {
@@ -783,46 +940,111 @@ static void display_repository_info (RepWin *repwin)
     /* Hide/show corresponding widgets in table */
     if (itdb->usertype & GP_ITDB_TYPE_IPOD)
     {
-	gtk_widget_show (GET_WIDGET (MOUNTPOINT_LABEL));
-	gtk_widget_show (GET_WIDGET (MOUNTPOINT_ENTRY));
-	gtk_widget_show (GET_WIDGET (MOUNTPOINT_BUTTON));
-	gtk_widget_show (GET_WIDGET (BACKUP_LABEL));
-	gtk_widget_show (GET_WIDGET (BACKUP_ENTRY));
-	gtk_widget_show (GET_WIDGET (IPOD_MODEL_LABEL));
-	gtk_widget_show (GET_WIDGET (IPOD_MODEL_ENTRY));
-	gtk_widget_hide (GET_WIDGET (LOCAL_PATH_LABEL));
-	gtk_widget_hide (GET_WIDGET (LOCAL_PATH_ENTRY));
-	key = get_itdb_key (index, "mountpoint");
-	buf = get_current_prefs_string (repwin, key);
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)),
-			    buf);
+	const gchar *widgets_show[] = {
+	    MOUNTPOINT_LABEL,
+	    MOUNTPOINT_ENTRY,
+	    MOUNTPOINT_BUTTON,
+	    BACKUP_LABEL,
+	    BACKUP_ENTRY,
+	    IPOD_MODEL_LABEL,
+	    IPOD_MODEL_ENTRY,
+	    LOCAL_PATH_ENTRY,
+	    IPOD_SYNC_LABEL,
+	    IPOD_SYNC_CONTACTS_LABEL,
+	    IPOD_SYNC_CONTACTS_ENTRY,
+	    IPOD_SYNC_CONTACTS_BUTTON,
+	    IPOD_SYNC_CALENDAR_LABEL,
+	    IPOD_SYNC_CALENDAR_ENTRY,
+	    IPOD_SYNC_CALENDAR_BUTTON,
+	    IPOD_SYNC_NOTES_LABEL,
+	    IPOD_SYNC_NOTES_ENTRY,
+	    IPOD_SYNC_NOTES_BUTTON,
+	    IPOD_CONCAL_AUTOSYNC_TOGGLE,
+	    NULL};
+	const gchar *widgets_hide[] = {
+	    LOCAL_PATH_LABEL,
+	    LOCAL_PATH_ENTRY,
+	    NULL};
+	const gchar **widget;
+
+	for (widget=widgets_show; *widget; ++widget)
+	{
+	    gtk_widget_show (GET_WIDGET (*widget));
+	}
+	for (widget=widgets_hide; *widget; ++widget)
+	{
+	    gtk_widget_hide (GET_WIDGET (*widget));
+	}
+
+	key = get_itdb_prefs_key (index, "mountpoint");
+	set_entry (repwin, key, MOUNTPOINT_ENTRY);
 	g_free (key);
-	g_free (buf);
+
+	key = get_itdb_prefs_key (index, "path_sync_contacts");
+	set_entry (repwin, key, IPOD_SYNC_CONTACTS_ENTRY);
+	g_free (key);
+
+	key = get_itdb_prefs_key (index, "path_sync_calendar");
+	set_entry (repwin, key, IPOD_SYNC_CALENDAR_ENTRY);
+	g_free (key);
+
+	key = get_itdb_prefs_key (index, "path_sync_notes");
+	set_entry (repwin, key, IPOD_SYNC_NOTES_ENTRY);
+	g_free (key);
+
+	key = get_itdb_prefs_key (index, KEY_CONCAL_AUTOSYNC);
+	gtk_toggle_button_set_active (
+	    GTK_TOGGLE_BUTTON (GET_WIDGET (IPOD_CONCAL_AUTOSYNC_TOGGLE)),
+	    get_current_prefs_int (repwin, key));
+	g_free (key);
     }
     else if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
     {
-	gtk_widget_hide (GET_WIDGET (MOUNTPOINT_LABEL));
-	gtk_widget_hide (GET_WIDGET (MOUNTPOINT_ENTRY));
-	gtk_widget_hide (GET_WIDGET (MOUNTPOINT_BUTTON));
-	gtk_widget_hide (GET_WIDGET (BACKUP_LABEL));
-	gtk_widget_hide (GET_WIDGET (BACKUP_ENTRY));
-	gtk_widget_hide (GET_WIDGET (IPOD_MODEL_LABEL));
-	gtk_widget_hide (GET_WIDGET (IPOD_MODEL_ENTRY));
-	gtk_widget_show (GET_WIDGET (LOCAL_PATH_LABEL));
-	gtk_widget_show (GET_WIDGET (LOCAL_PATH_ENTRY));
-	key = get_itdb_key (index, "filename");
-	buf = get_current_prefs_string (repwin, key);
-	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)),
-			    buf);
+	const gchar *widgets_show[] = {
+	    LOCAL_PATH_LABEL,
+	    LOCAL_PATH_ENTRY,
+	    NULL};
+	const gchar *widgets_hide[] = {
+	    MOUNTPOINT_LABEL,
+	    MOUNTPOINT_ENTRY,
+	    MOUNTPOINT_BUTTON,
+	    BACKUP_LABEL,
+	    BACKUP_ENTRY,
+	    IPOD_MODEL_LABEL,
+	    IPOD_MODEL_ENTRY,
+	    IPOD_SYNC_LABEL,
+	    IPOD_SYNC_CONTACTS_LABEL,
+	    IPOD_SYNC_CONTACTS_ENTRY,
+	    IPOD_SYNC_CONTACTS_BUTTON,
+	    IPOD_SYNC_CALENDAR_LABEL,
+	    IPOD_SYNC_CALENDAR_ENTRY,
+	    IPOD_SYNC_CALENDAR_BUTTON,
+	    IPOD_SYNC_NOTES_LABEL,
+	    IPOD_SYNC_NOTES_ENTRY,
+	    IPOD_SYNC_NOTES_BUTTON,
+	    IPOD_CONCAL_AUTOSYNC_TOGGLE,
+	    NULL};
+	const gchar **widget;
+
+	for (widget=widgets_show; *widget; ++widget)
+	{
+	    gtk_widget_show (GET_WIDGET (*widget));
+	}
+	for (widget=widgets_hide; *widget; ++widget)
+	{
+	    gtk_widget_hide (GET_WIDGET (*widget));
+	}
+
+	key = get_itdb_prefs_key (index, "filename");
+	set_entry (repwin, key, LOCAL_PATH_ENTRY);
 	g_free (key);
-	g_free (buf);
     }
     else
     {
 	g_return_if_reached ();
     }
 
-    key = get_itdb_key (repwin->itdb_index, "deleted");
+    key = get_itdb_prefs_key (index, "deleted");
     gtk_toggle_button_set_active (
 	GTK_TOGGLE_BUTTON (GET_WIDGET (DELETE_REPOSITORY_CHECKBUTTON)),
 	temp_prefs_get_int (repwin->extra_prefs, key));
@@ -836,7 +1058,17 @@ static void display_playlist_info (RepWin *repwin)
     gchar *buf, *key;
     Playlist *playlist;
     iTunesDB *itdb;
-    gint index;
+    gint i, index;
+    const gchar *widget_names[] = {
+	PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE,
+	PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE,
+	PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE,
+	NULL };
+    const gchar *key_names[] = {
+	KEY_SYNC_DELETE_TRACKS,
+	KEY_SYNC_CONFIRM_DELETE,
+	KEY_SYNC_SHOW_SUMMARY,
+	NULL };
 
     g_return_if_fail (repwin);
     g_return_if_fail (repwin->itdb);
@@ -874,9 +1106,10 @@ static void display_playlist_info (RepWin *repwin)
 	gint liveupdate;
 
 	gtk_widget_show (GET_WIDGET (SPL_VBOX));
+	gtk_widget_show (GET_WIDGET (PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
 	gtk_widget_hide (GET_WIDGET (STANDARD_PLAYLIST_VBOX));
 
-	key = get_playlist_key (index, playlist, "liveupdate");
+	key = get_playlist_prefs_key (index, playlist, "liveupdate");
 	if (!temp_prefs_get_int_value (repwin->extra_prefs,
 				       key, &liveupdate))
 	    liveupdate = playlist->splpref.liveupdate;
@@ -893,7 +1126,18 @@ static void display_playlist_info (RepWin *repwin)
 	gtk_widget_show (GET_WIDGET (STANDARD_PLAYLIST_VBOX));
 	gtk_widget_hide (GET_WIDGET (SPL_VBOX));
 
-	key = get_playlist_key (index, playlist, "syncmode");
+	if (itdb_playlist_is_mpl (playlist))
+	{
+	    gtk_widget_hide (
+		GET_WIDGET (PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
+	}
+	else
+	{   
+	    gtk_widget_show (
+		GET_WIDGET (PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
+	}
+
+	key = get_playlist_prefs_key (index, playlist, "syncmode");
 	syncmode = get_current_prefs_int (repwin, key);
 	g_free (key);
 
@@ -901,7 +1145,7 @@ static void display_playlist_info (RepWin *repwin)
 	   syncmode to 'MANUAL' -- this will be corrected by setting
 	   the radio button with the original syncmode setting further
 	   down. */
-	key = get_playlist_key (index, playlist, "manual_syncdir");
+	key = get_playlist_prefs_key (index, playlist, "manual_syncdir");
 	dir = get_current_prefs_string (repwin, key);
 	g_free (key);
 	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (MANUAL_SYNCDIR_ENTRY)),
@@ -932,6 +1176,18 @@ static void display_playlist_info (RepWin *repwin)
 		GTK_TOGGLE_BUTTON (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_NONE_RADIO)),
 		TRUE);
 	    break;
+	}
+	/* make options available where appropriate */
+	gtk_widget_set_sensitive (GET_WIDGET (SYNC_OPTIONS_HBOX),
+				  syncmode != PLAYLIST_AUTOSYNC_MODE_NONE);
+	/* set standard toggle buttons */
+	for (i=0; widget_names[i]; ++i)
+	{
+	    key = get_playlist_prefs_key (index, playlist, key_names[i]);
+	    gtk_toggle_button_set_active (
+		GTK_TOGGLE_BUTTON (GET_WIDGET (widget_names[i])),
+		get_current_prefs_int (repwin, key));
+	    g_free (key);
 	}
     }
 }
@@ -1255,7 +1511,7 @@ static void update_buttons (RepWin *repwin)
 	gtk_widget_set_sensitive (GET_WIDGET (REPOSITORY_VBOX), TRUE);
 
 	/* Check if this itdb is marked for deletion */
-	key = get_itdb_key (repwin->itdb_index, "deleted");
+	key = get_itdb_prefs_key (repwin->itdb_index, "deleted");
 	deleted = temp_prefs_get_int (repwin->extra_prefs, key);
 	g_free (key);
 
@@ -1297,6 +1553,42 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 {
     RepWin *repwin;
     gint defx, defy;
+    gint i;
+    /* widget names and corresponding keys for 'standard' toggle
+       options */
+    const gchar *playlist_widget_names_toggle[] = {
+	PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE,
+	PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE,
+	PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE,
+	NULL };
+    const gchar *playlist_key_names_toggle[] = {
+	KEY_SYNC_DELETE_TRACKS,
+	KEY_SYNC_CONFIRM_DELETE,
+	KEY_SYNC_SHOW_SUMMARY,
+	NULL };
+    const gchar *itdb_widget_names_toggle[] = {
+	IPOD_CONCAL_AUTOSYNC_TOGGLE,
+	NULL };
+    const gchar *itdb_key_names_toggle[] = {
+	KEY_CONCAL_AUTOSYNC,
+	NULL };
+    /* widget names and corresponding keys for 'standard' strings */
+    const gchar *itdb_widget_names_entry[] = {
+	MOUNTPOINT_ENTRY,
+	IPOD_MODEL_ENTRY,
+	LOCAL_PATH_ENTRY,
+	IPOD_SYNC_CONTACTS_ENTRY,
+	IPOD_SYNC_CALENDAR_ENTRY,
+	IPOD_SYNC_NOTES_ENTRY,
+	NULL };
+    const gchar *itdb_key_names_entry[] = {
+	KEY_MOUNTPOINT,
+	KEY_IPOD_MODEL,
+	KEY_FILENAME,
+	KEY_PATH_SYNC_CONTACTS,
+	KEY_PATH_SYNC_CALENDAR,
+	KEY_PATH_SYNC_NOTES,
+	NULL };
 
     /* If window is already open, raise existing window to the top */
     if (repwins)
@@ -1333,17 +1625,19 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 		      G_CALLBACK (delete_event), repwin);
 
     /* Entry callbacks */
-    g_signal_connect (GET_WIDGET (MOUNTPOINT_ENTRY), "changed",
-		      G_CALLBACK (mountpoint_changed), repwin);
-
-    g_signal_connect (GET_WIDGET (IPOD_MODEL_ENTRY), "changed",
-		      G_CALLBACK (ipod_model_changed), repwin);
-
-    g_signal_connect (GET_WIDGET (LOCAL_PATH_ENTRY), "changed",
-		      G_CALLBACK (local_path_changed), repwin);
-
     g_signal_connect (GET_WIDGET (MANUAL_SYNCDIR_ENTRY), "changed",
 		      G_CALLBACK (manual_syncdir_changed), repwin);
+    /* connect standard text entries */
+    for (i=0; itdb_widget_names_entry[i]; ++i)
+    {
+	GtkWidget *w = GET_WIDGET (itdb_widget_names_entry[i]);
+
+	g_signal_connect (w, "changed",
+			  G_CALLBACK (standard_itdb_entry_changed),
+			  repwin);
+	g_object_set_data (G_OBJECT (w), "key",
+			   (gpointer)itdb_key_names_entry[i]);
+    }
 
     /* Togglebutton callbacks */
     g_signal_connect (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_NONE_RADIO),
@@ -1361,13 +1655,35 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 		      G_CALLBACK (playlist_autosync_mode_automatic_toggled),
 		      repwin);
 
-    g_signal_connect (GET_WIDGET (SPL_LIVE_UPDATE_TOGGLE), "toggled",
+    g_signal_connect (GET_WIDGET (SPL_LIVE_UPDATE_TOGGLE),
+		      "toggled",
 		      G_CALLBACK (spl_live_update_toggled), repwin);
 
     g_signal_connect (GET_WIDGET (DELETE_REPOSITORY_CHECKBUTTON),
 		      "toggled",
 		      G_CALLBACK (delete_repository_checkbutton_toggled),
 		      repwin);
+    /* connect standard toggle buttons */
+    for (i=0; playlist_widget_names_toggle[i]; ++i)
+    {
+	GtkWidget *w = GET_WIDGET (playlist_widget_names_toggle[i]);
+
+	g_signal_connect (w, "toggled",
+			  G_CALLBACK (standard_playlist_checkbutton_toggled),
+			  repwin);
+	g_object_set_data (G_OBJECT (w), "key",
+			   (gpointer)playlist_key_names_toggle[i]);
+    }
+    for (i=0; itdb_widget_names_toggle[i]; ++i)
+    {
+	GtkWidget *w = GET_WIDGET (itdb_widget_names_toggle[i]);
+
+	g_signal_connect (w, "toggled",
+			  G_CALLBACK (standard_itdb_checkbutton_toggled),
+			  repwin);
+	g_object_set_data (G_OBJECT (w), "key",
+			   (gpointer)itdb_key_names_toggle[i]);
+    }
 
 
     /* Button callbacks */
@@ -1380,11 +1696,20 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
     g_signal_connect (GET_WIDGET (DELETE_REPOSITORY_BUTTON), "clicked",
  		      G_CALLBACK (delete_repository_button_clicked), repwin);
 
+    g_signal_connect (GET_WIDGET (IPOD_SYNC_CONTACTS_BUTTON), "clicked",
+ 		      G_CALLBACK (ipod_sync_contacts_button_clicked), repwin);
+
+    g_signal_connect (GET_WIDGET (IPOD_SYNC_CALENDAR_BUTTON), "clicked",
+ 		      G_CALLBACK (ipod_sync_calendar_button_clicked), repwin);
+
+    g_signal_connect (GET_WIDGET (IPOD_SYNC_NOTES_BUTTON), "clicked",
+ 		      G_CALLBACK (ipod_sync_notes_button_clicked), repwin);
+
     init_repository_combo (repwin);
 
     /* set default size */
-    defx = prefs_get_int (REPOSITORY_WINDOW_DEFX);
-    defy = prefs_get_int (REPOSITORY_WINDOW_DEFY);
+    defx = prefs_get_int (KEY_REPOSITORY_WINDOW_DEFX);
+    defy = prefs_get_int (KEY_REPOSITORY_WINDOW_DEFY);
 
     if ((defx == 0) || (defy == 0))
     {

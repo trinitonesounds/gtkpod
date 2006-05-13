@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:55:31 jcs>
+/* Time-stamp: <2006-05-14 00:54:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -84,7 +84,6 @@ void close_about_window (void);
 gboolean parse_tracks_from_string(gchar **s, Track **track);
 void cleanup_backup_and_extended_files (void);
 gboolean gtkpod_main_quit(void);
-void gtkpod_main_window_set_active(gboolean active);
 
 T_item TM_to_T (TM_item sm);
 T_item ST_to_T (ST_CAT_item st);
@@ -92,8 +91,6 @@ const gchar *get_tm_string (TM_item tm);
 const gchar *get_tm_tooltip (TM_item tm);
 const gchar *get_t_string (T_item t);
 const gchar *get_t_tooltip (T_item t);
-
-gchar *get_track_info (Track *track, gboolean prefer_filename);
 
 void ipod_directories_head (const gchar *mountpoint);
 void delete_playlist_head (DeleteAction deleteaction);
@@ -213,7 +210,16 @@ gchar *which (const gchar *exe);
 
 GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name);
 
-gchar *get_itdb_key (gint index, const gchar *subkey);
-gchar *get_playlist_key (gint index, Playlist *pl, const gchar *subkey);
+gchar *get_itdb_prefs_key (gint index, const gchar *subkey);
+gchar *get_playlist_prefs_key (gint index, Playlist *pl, const gchar *subkey);
 gint get_itdb_index (iTunesDB *itdb);
+gchar *get_itdb_prefs_string (iTunesDB *itdb, const gchar *subkey);
+gint get_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey);
+gboolean get_itdb_prefs_string_value (iTunesDB *itdb, const gchar *subkey,
+				      gchar **value);
+gboolean get_itdb_prefs_int_value (iTunesDB *itdb, const gchar *subkey,
+				   gint *value);
+void set_itdb_prefs_string (iTunesDB *itdb,
+			    const gchar *subkey, const gchar *value);
+void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value);
 #endif

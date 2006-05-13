@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-05 15:20:42 jcs>
+/* Time-stamp: <2006-05-09 23:21:53 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -39,10 +39,16 @@
 #ifndef _FILESELECTION_H
 #define _FILESELECTION_H
 
+#include "prefs.h"
+
 void create_add_files_dialog(void);
 void create_add_playlists_dialog(void);
 gchar *fileselection_get_cover_filename(void);
 gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir);
+gchar *fileselection_select_script (const gchar *opath,
+				    const gchar *fallback,
+				    const gchar *title,
+				    const gchar *additional_text);
 
 /* dirbrowser */
 void dirbrowser_block (void);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-04 11:00:52 jcs>
+/* Time-stamp: <2006-05-14 00:58:08 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -31,19 +31,20 @@
 #  include <config.h>
 #endif
 
-#include "misc.h"
-#include "prefs.h"
-#include "file.h"
 #include "charset.h"
+#include "file.h"
 #include "info.h"
 #include "md5.h"
-#include <limits.h>
-#include <stdio.h>
+#include "misc.h"
+#include "misc_track.h"
+#include "prefs.h"
 #include <errno.h>
+#include <limits.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <string.h>
-#include <math.h>
 #include <unistd.h>
 
 /* Structure to keep all necessary information */
@@ -320,8 +321,10 @@ static gboolean write_track (struct fcd *fcd)
 	}
 	else
 	{
+	    gchar *buf = get_track_info (fcd->track, FALSE);
 	    gtkpod_warning (_("Could find file for '%s' on the iPod\n"),
-			    get_track_info (fcd->track, FALSE));
+			    buf);
+	    g_free (buf);
 	}
 	g_free(dest_file);
     }

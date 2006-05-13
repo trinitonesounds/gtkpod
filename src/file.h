@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-07 23:26:24 jcs>
+/* Time-stamp: <2006-05-13 01:22:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -54,7 +54,8 @@ typedef enum
     FILE_TYPE_MPG,
     FILE_TYPE_M3U,
     FILE_TYPE_PLS,
-    FILE_TYPE_IMAGE
+    FILE_TYPE_IMAGE,
+    FILE_TYPE_DIRECTORY
 } FileType;
 
 typedef enum

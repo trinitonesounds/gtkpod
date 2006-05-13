@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:33:57 jcs>
+/* Time-stamp: <2006-05-13 00:37:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -57,6 +57,7 @@ struct track_extended_info
     guint ipod_id;
     gchar *pc_path_locale;
     gchar *pc_path_utf8;
+    time_t mtime;
     gchar *thumb_path_locale;
     gchar *thumb_path_utf8;
     gchar *md5_hash;
@@ -131,7 +132,10 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
   if (sei) /* found info for this id! */
   {
       if (sei->pc_path_locale && !etr->pc_path_locale)
+      {
 	  etr->pc_path_locale = g_strdup (sei->pc_path_locale);
+	  etr->mtime = sei->mtime;
+      }
       if (sei->pc_path_utf8 && !etr->pc_path_utf8)
 	  etr->pc_path_utf8 = g_strdup (sei->pc_path_utf8);
       if (sei->thumb_path_locale && !etr->thumb_path_locale)
@@ -397,6 +401,10 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 	    {
 		sei->audiophile_gain_set = TRUE;
 		sei->audiophile_gain = g_ascii_strtod (arg, NULL);
+	    }
+	    else if (g_ascii_strcasecmp (line, "pc_mtime") == 0)
+	    {
+		sei->mtime = (time_t)g_ascii_strtoull (arg, NULL, 10);
 	    }
     }
     g_free (md5);
@@ -967,6 +975,8 @@ static gboolean write_extended_info (iTunesDB *itdb)
 	  g_ascii_dtostr (buf, 20, etr->audiophile_gain);
 	  fprintf (fp, "audiophile_gain=%s\n", buf);
       }
+      if (etr->mtime)
+	  fprintf (fp, "pc_mtime=%llu\n", (unsigned long long)etr->mtime);
       fprintf (fp, "transferred=%d\n", track->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
@@ -1645,18 +1655,13 @@ void handle_export (void)
 	    }
 	    success &= gp_write_itdb (itdb);
 	}
-    }
-
-    if (prefs_get_concal_autosync ())
-    {
-	const gchar *str;
-	gtkpod_statusbar_message (_("Syncing contacts, calendar and notes..."));
-	str = prefs_get_path (PATH_SYNC_CONTACTS);
-	if (str && *str)    tools_sync_contacts ();
-	str = prefs_get_path (PATH_SYNC_CALENDAR);
-	if (str && *str)    tools_sync_calendar ();
-	str = prefs_get_path (PATH_SYNC_NOTES);
-	if (str && *str)    tools_sync_notes ();
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    if (get_itdb_prefs_int (itdb, "concal_autosync"))
+	    {
+		tools_sync_all (itdb);
+	    }
+	}
     }
 
     release_widgets ();

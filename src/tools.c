@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:59:47 jcs>
+/* Time-stamp: <2006-05-10 00:32:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -344,21 +344,17 @@ typedef enum
 
 /* FIXME: tools need to be defined for each itdb separately */
 /* replace %i in all strings of argv with prefs_get_ipod_mount() */
-static void tools_sync_replace_percent_i (gchar **argv)
+static void tools_sync_replace_percent_i (iTunesDB *itdb, gchar **argv)
 {
     gchar *ipod_mount;
     gint ipod_mount_len;
-    gchar *key;
-    iTunesDB *itdb;
     gint offset = 0;
 
-    itdb = gp_get_ipod_itdb ();
     if (!itdb) return;
 
-    key = get_itdb_key (get_itdb_index (itdb), "mountpoint");
-    ipod_mount = prefs_get_string (key);
-    g_free (key);
-    if (!ipod_mount) return;
+    ipod_mount = get_itdb_prefs_string (itdb, "mountpoint");
+
+    if (!ipod_mount) ipod_mount = g_strdup ("");
 
     ipod_mount_len = strlen (ipod_mount);
 
@@ -394,7 +390,7 @@ static void tools_sync_replace_percent_i (gchar **argv)
 
 /* execute the specified script, giving out error/status messages on
    the way */
-static gboolean tools_sync_script (SyncType type)
+static gboolean tools_sync_script (iTunesDB *itdb, SyncType type)
 {
     gchar *script=NULL;
     gchar *script_path, *buf;
@@ -407,13 +403,13 @@ static gboolean tools_sync_script (SyncType type)
     switch (type)
     {
     case SYNC_CONTACTS:
-	script = g_strdup (prefs_get_path (PATH_SYNC_CONTACTS));
+	script = get_itdb_prefs_string (itdb, "path_sync_contacts");
 	break;
     case SYNC_CALENDAR:
-	script = g_strdup (prefs_get_path (PATH_SYNC_CALENDAR));
+	script = get_itdb_prefs_string (itdb, "path_sync_calendar");
 	break;
     case SYNC_NOTES:
-	script = g_strdup (prefs_get_path (PATH_SYNC_NOTES));
+	script = get_itdb_prefs_string (itdb, "path_sync_notes");
 	break;
     default:
 	fprintf (stderr, "Programming error: tools_sync_script () called with %d\n", type);
@@ -432,7 +428,7 @@ static gboolean tools_sync_script (SyncType type)
 
     argv = g_strsplit (script, " ", -1);
 
-    tools_sync_replace_percent_i (argv);
+    tools_sync_replace_percent_i (itdb, argv);
 
     script_path = g_find_program_in_path (argv[0]);
     if (!script_path)
@@ -492,33 +488,31 @@ static gboolean tools_sync_script (SyncType type)
     return TRUE;
 }
 
-gboolean tools_sync_all (void)
+gboolean tools_sync_all (iTunesDB *itdb)
 {
-    gboolean x;
-    x = tools_sync_script (SYNC_CALENDAR);
-    if (!x) {
-	return x;
-    }
-    tools_sync_script (SYNC_CONTACTS);
-    if (!x) {
-	return x;
-    }
-    return tools_sync_script (SYNC_NOTES);
+    gboolean success;
+
+    success = tools_sync_script (itdb, SYNC_CALENDAR);
+    if (success)
+	success = tools_sync_script (itdb, SYNC_CONTACTS);
+    if (success)
+	tools_sync_script (itdb, SYNC_NOTES);
+    return success;
 }
 
-gboolean tools_sync_contacts (void)
+gboolean tools_sync_contacts (iTunesDB *itdb)
 {
-    return tools_sync_script (SYNC_CONTACTS);
+    return tools_sync_script (itdb, SYNC_CONTACTS);
 }
 
-gboolean tools_sync_calendar (void)
+gboolean tools_sync_calendar (iTunesDB *itdb)
 {
-    return tools_sync_script (SYNC_CALENDAR);
+    return tools_sync_script (itdb, SYNC_CALENDAR);
 }
 
-gboolean tools_sync_notes (void)
+gboolean tools_sync_notes (iTunesDB *itdb)
 {
-    return tools_sync_script (SYNC_NOTES);
+    return tools_sync_script (itdb, SYNC_NOTES);
 }
 
 /* ------------------------------------------------------------
@@ -645,9 +639,11 @@ do_command_on_entries (const gchar *command, const gchar *what,
  */
 void tools_play_tracks (GList *selected_tracks)
 {
-    do_command_on_entries (prefs_get_path (PATH_PLAY_NOW),
+    gchar *path = prefs_get_string ("path_play_now");
+    do_command_on_entries (path,
 			   _("Play Now"),
 			   selected_tracks);
+    g_free (path);
 }
 
 /*
@@ -656,9 +652,11 @@ void tools_play_tracks (GList *selected_tracks)
  */
 void tools_enqueue_tracks (GList *selected_tracks)
 {
-    do_command_on_entries (prefs_get_path (PATH_PLAY_ENQUEUE),
+    gchar *path = prefs_get_string ("path_play_enqueue");
+    do_command_on_entries (path,
 			   _("Enqueue"),
 			   selected_tracks);
+    g_free (path);
 }
 
 

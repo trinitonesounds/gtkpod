@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:53:25 jcs>
+/* Time-stamp: <2006-05-11 00:42:56 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -33,6 +33,7 @@
 #include "charset.h"
 #include "display_itdb.h"
 #include "info.h"
+#include "fileselection.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
@@ -62,12 +63,7 @@ static GtkWidget *autoselect_widget[SORT_TAB_MAX];
 static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
 static void prefs_window_set_autosettags (gint category, gboolean autoset);
 static void prefs_window_set_col_visible (gint column, gboolean visible);
-static void prefs_window_set_path (PathType i, const gchar *path);
 static void prefs_window_set_sort_tab_num (gint num);
-
-/* where to find the scripts */
-static const gchar *scriptdir = PACKAGE_DATA_DIR G_DIR_SEPARATOR_S PACKAGE G_DIR_SEPARATOR_S "scripts" G_DIR_SEPARATOR_S;
-
 
 /* Definition of path button names.
    E.g. path_button_names[PATH_PLAY_ENQUEUE] is
@@ -81,11 +77,23 @@ static const gchar *path_button_names[] =
     "play_now_path_button",
     "play_enqueue_path_button",
     "mp3gain_path_button",
-    "sync_contacts_path_button",
-    "sync_calendar_path_button",
+    "",
+    "",
     "mserv_music_root_button",
     "mserv_trackinfo_root_button",
-    "sync_notes_path_button",
+    "",
+    NULL
+};
+static const gchar *path_key_names[] =
+{
+    "path_play_now",
+    "path_play_enqueue",
+    "path_mp3gain",
+    "",
+    "",
+    "path_mserv_music_root",
+    "path_mserv_trackinfo_root",
+    "",
     NULL
 };
 const gchar *path_entry_names[] =
@@ -93,11 +101,11 @@ const gchar *path_entry_names[] =
     "play_now_path_entry",
     "play_enqueue_path_entry",
     "mp3gain_path_entry",
-    "sync_contacts_path_entry",
-    "sync_calendar_path_entry",
+    "",
+    "",
     "mserv_music_root_entry",
     "mserv_trackinfo_root_entry",
-    "sync_notes_path_entry",
+    "",
     NULL
 };
 static const gchar *path_fileselector_titles[] =
@@ -105,11 +113,11 @@ static const gchar *path_fileselector_titles[] =
     N_("Please select command for 'Play Now'"),
     N_("Please select command for 'Enqueue'"),
     N_("Please select the mp3gain executable"),
-    N_("Please select command to sync contacts"),
-    N_("Please select command to sync calendar"),
+    "",
+    "",
     N_("Select the mserv music root directory"),
     N_("Select the mserv trackinfo root directory"),
-    N_("Please select command to sync notes"),
+    "",
     NULL
 };
 static const GtkFileChooserAction path_type[] =
@@ -124,10 +132,6 @@ static const GtkFileChooserAction path_type[] =
     GTK_FILE_CHOOSER_ACTION_OPEN,
     -1
 };
-
-
-/* pointers to fileselectors */
-static GtkWidget *path_filechooser[PATH_NUM];
 
 
 static void on_cfg_st_autoselect_toggled (GtkToggleButton *togglebutton,
@@ -156,167 +160,50 @@ static void on_cfg_col_visible_toggled (GtkToggleButton *togglebutton,
 }
 
 
-/* Close all open path filechoosers */
-static void path_close_windows (void)
+/* one of the "..." buttons has been pressed -> open a file chooser
+   dialog and let the user select a file or directory */
+static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 {
-    gint i;
-    for (i=0; i<PATH_NUM; ++i)
-    {
-	if (path_filechooser[i])
-	{
-	    gtk_widget_destroy (path_filechooser[i]);
-	    path_filechooser[i] = NULL;
-	}
-    }
-}
+    PathType i = (PathType)user_data;
+    gchar *oldpath, *newpath;
 
-
-/* ok button on path fileselector window was pressed */
-static void on_path_ok (PathType i)
-{
+    g_return_if_fail (temp_prefs);
     g_return_if_fail (i>=0 && i<PATH_NUM);
 
-    if (path_filechooser[i])
+    oldpath = temp_prefs_get_string (temp_prefs, path_key_names[i]);
+
+    switch (path_type[i])
     {
-	const gchar *npath = gtk_file_chooser_get_filename (
-	    GTK_FILE_CHOOSER (path_filechooser[i]));
-	const gchar *opath = tmpcfg->path[i];
-	/* find command line arguments */
-	const gchar *opathp = strchr (opath, ' ');
-	gchar *newpath;
-	GtkWidget *w;
+    case GTK_FILE_CHOOSER_ACTION_OPEN:
+	/* script */
+	newpath = fileselection_select_script (
+	    oldpath,
+	    NULL,
+	    _(path_fileselector_titles[i]),
+	    NULL);
+	break;
+    case GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER:
+	/* directory */
+	newpath = fileselection_get_dir (_(path_fileselector_titles[i]),
+					 oldpath);
+	break;
+    default:
+	g_return_if_reached ();
+    }
+    g_free (oldpath);
 
-	/* attach command line arguments if present */
-	if (opathp)
-	    newpath = g_strdup_printf ("%s%s", npath, opathp);
-	else
-	    newpath = g_strdup (npath);
-
-	if ((w = gtkpod_xml_get_widget (prefs_window_xml, path_entry_names[i])))
+    if (newpath)
+    {
+	GtkWidget *w = gtkpod_xml_get_widget (prefs_window_xml,
+					      path_entry_names[i]);
+	if (w)
 	{
 	    gchar *newpath_utf8 = g_filename_to_utf8 (newpath, -1, NULL, NULL, NULL);
 	    gtk_entry_set_text(GTK_ENTRY(w), newpath_utf8);
 	    g_free (newpath_utf8);
 	}
 	g_free (newpath);
-
-	gtk_widget_destroy (path_filechooser[i]);
-	path_filechooser[i] = NULL;
     }
-}
-
-
-static void on_fc_response (GtkFileChooser *fc,
-			    gint response,
-			    PathType i)
-{
-    g_return_if_fail (i>=0 && i<PATH_NUM && path_filechooser[i]);
-
-    switch (response)
-    {
-    case GTK_RESPONSE_CANCEL:
-	gtk_widget_destroy (path_filechooser[i]);
-	path_filechooser[i] = NULL;
-	break;
-    case GTK_RESPONSE_ACCEPT:
-	on_path_ok (i);
-	break;
-    case GTK_RESPONSE_NONE:
-    case GTK_RESPONSE_DELETE_EVENT:
-	path_filechooser[i] = NULL;
-	break;
-    default:
-	printf ("programming error: received unknown response %d in on_fc_response\n", response);
-	break;
-    }
-}
-
-
-/* one of the "..." buttons has been pressed -> open a file chooser
-   dialog and let the user select a file or directory */
-static void on_path_button_pressed (GtkButton *button, gpointer user_data)
-{
-    PathType i = (PathType)user_data;
-    GtkFileChooser *fc;
-    const gchar *path, *pathp;
-    gchar *buf, *fbuf;
-
-    g_return_if_fail (tmpcfg);
-    g_return_if_fail (i>=0 && i<PATH_NUM);
-
-    if (path_filechooser[i])
-    {  /* filechooser already open --> simply raise to the top */
-	gdk_window_raise(path_filechooser[i]->window);
-	return;
-    }
-    path_filechooser[i] = gtk_file_chooser_dialog_new (
-	_(path_fileselector_titles[i]),
-	NULL,
-	path_type[i],
-	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-	GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-	NULL);
-    /* for convenience */
-    fc = GTK_FILE_CHOOSER (path_filechooser[i]);
-    g_signal_connect (fc, "response",
-		      G_CALLBACK (on_fc_response),
-		      (gpointer)i);
-    /* find first whitespace separating path from command line
-     * arguments */
-    path = tmpcfg->path[i];
-    pathp = strchr (path, ' ');
-    if (pathp)
-	buf = g_strndup (path, pathp-path);
-    else
-	buf = g_strdup (path);
-
-    /* get full path -- if the file cannot be found it can't be
-     * selected in the filechooser */
-    fbuf = g_find_program_in_path (buf);
-
-    if (!fbuf)
-    {   /* set some default */
-	switch (i)
-	{
-	case PATH_SYNC_CONTACTS:
-	case PATH_SYNC_CALENDAR:
-	case PATH_SYNC_NOTES:
-	    fbuf = g_strdup (scriptdir);
-	    break;
-	case PATH_PLAY_NOW:
-	case PATH_PLAY_ENQUEUE:
-	case PATH_MP3GAIN:
-	case PATH_MSERV_MUSIC_ROOT:
-	case PATH_MSERV_TRACKINFO_ROOT:
-	case PATH_NUM:
-	    break;
-	}
-    }
-
-    if (fbuf && *fbuf)
-    {
-	gchar *fbuf_utf8 = g_filename_from_utf8 (fbuf, -1, NULL, NULL, NULL);
-	if (path_type[i] == GTK_FILE_CHOOSER_ACTION_OPEN)
-	{
-	    if (g_file_test (fbuf, G_FILE_TEST_IS_DIR))
-	    {
-		gtk_file_chooser_set_current_folder (fc, fbuf_utf8);
-	    }
-	    else
-	    {
-		gtk_file_chooser_set_filename (fc, fbuf_utf8);
-	    }
-	}
-	if (path_type[i] == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
-	{
-	    gtk_file_chooser_set_current_folder (fc, fbuf_utf8);
-	}
-	g_free (fbuf_utf8);
-	g_free (fbuf);
-    }
-    g_free (buf);
-
-    gtk_widget_show (path_filechooser[i]);
 }
 
 
@@ -325,7 +212,8 @@ static void on_path_entry_changed (GtkEditable     *editable,
 {
     PathType i = (PathType)user_data;
     gchar *buf = gtk_editable_get_chars(editable, 0, -1);
-    prefs_window_set_path (i, buf);
+
+    temp_prefs_set_string (temp_prefs, path_key_names[i], buf);
     g_free (buf);
 }
 
@@ -596,6 +484,10 @@ prefs_window_create (gint page)
     /* connect signals for path entrys and selectors */
     for (i=0; i<PATH_NUM; ++i)
     {
+	gchar *path;
+	/* "" is not a valid button name -> skip */
+	if (strlen (path_button_names[i]) == 0) continue;
+	/* Otherwise connect handler */
 	w = gtkpod_xml_get_widget (prefs_window_xml, path_button_names[i]);
 	g_signal_connect ((gpointer)w,
 			  "clicked",
@@ -603,13 +495,12 @@ prefs_window_create (gint page)
 			  GUINT_TO_POINTER(i));
 
 	w = gtkpod_xml_get_widget (prefs_window_xml, path_entry_names[i]);
-	if (tmpcfg->path[i])
-	{  /* we should copy the new path first because by setting
-	      the text we might get a callback destroying the old
-	      value... */
-	    gchar *buf = g_strdup (tmpcfg->path[i]);
-	    gtk_entry_set_text(GTK_ENTRY(w), buf);
-	    g_free (buf);
+
+	path = temp_prefs_get_string (temp_prefs, path_button_names[i]);
+	if (path)
+	{
+	    gtk_entry_set_text(GTK_ENTRY(w), path);
+	    g_free (path);
 	}
 	g_signal_connect ((gpointer)w,
 			  "changed",
@@ -730,9 +621,6 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				     prefs_get_group_compilations());
     }
-    w = gtkpod_xml_get_widget (prefs_window_xml, "concal_autosync");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->concal_autosync);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_tmp_disable_sort");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -766,11 +654,6 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 /* 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), */
 /* 					 tmpcfg->unused_gboolean3); */
 /* 	} */
-    w = gtkpod_xml_get_widget (prefs_window_xml, "prefs_label_syncexamples");
-    gchar *str = g_markup_printf_escaped (_("<i>Have a look at the scripts provided in '%s'. If you write a new script, please send it to jcsjcs at users.sourceforge.net for inclusion into the next release.</i>"), scriptdir);
-    gtk_label_set_markup (GTK_LABEL (w), str);
-    g_free (str);
-
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
     if (page == -1)
@@ -801,10 +684,6 @@ prefs_window_set(void)
 	/* Need this in case user reordered column order (we don't
 	 * catch the reorder signal) */
 	tm_store_col_order ();
-	for (i=0; i<PATH_NUM; ++i)
-	{
-	    prefs_set_path (i, tmpcfg->path[i]);
-	}
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_autoimport(tmpcfg->autoimport);
 	for (i=0; i<SORT_TAB_MAX; ++i) {
@@ -853,7 +732,6 @@ prefs_window_set(void)
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
 	prefs_set_automount(tmpcfg->automount);
-	prefs_set_concal_autosync(tmpcfg->concal_autosync);
 	prefs_set_tmp_disable_sort(tmpcfg->tmp_disable_sort);
 	prefs_set_startup_messages(tmpcfg->startup_messages);
 	prefs_set_mserv_use(tmpcfg->mserv_use);
@@ -906,9 +784,6 @@ prefs_window_cancel(void)
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
-
-    /* close path_fileselector windows */
-    path_close_windows ();
 }
 
 /* when window is deleted, we keep the currently applied prefs and
@@ -943,9 +818,6 @@ void prefs_window_delete(void)
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
-
-    /* close path_fileselector windows */
-    path_close_windows ();
 }
 
 /* apply the current settings and close the window */
@@ -982,9 +854,6 @@ prefs_window_ok (void)
     if(prefs_window)
 	gtk_widget_destroy(prefs_window);
     prefs_window = NULL;
-
-    /* close path_fileselector windows */
-    path_close_windows ();
 }
 
 
@@ -992,7 +861,7 @@ prefs_window_ok (void)
 void
 prefs_window_apply (void)
 {
-    gint defx, defy, i;
+    gint defx, defy;
     GtkWidget *nb, *w;
 
     /* save current settings */
@@ -1001,16 +870,6 @@ prefs_window_apply (void)
 		/* Committ temp prefs to prefs table */
 		temp_prefs_apply(temp_prefs);
 		temp_lists_apply(temp_lists);
-
-    /* reset the validated path entries */
-    for (i=0; i<PATH_NUM; ++i)
-    {
-	if((w = gtkpod_xml_get_widget (prefs_window_xml, path_entry_names[i])))
-	{
-	    gtk_entry_set_text(GTK_ENTRY(w), tmpcfg->path[i]);
-	    /* tmpcfg gets set by the "changed" callback */
-	}
-    }
 
     if((w = gtkpod_xml_get_widget (prefs_window_xml, "mserv_username_entry")))
     {
@@ -1026,7 +885,6 @@ prefs_window_apply (void)
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
     prefs_set_size_prefs (defx, defy);
-
 }
 
 
@@ -1049,7 +907,24 @@ void
 on_edit_repository_clicked           (GtkButton       *button,
 				      gpointer         user_data)
 {
-    repository_edit (NULL, NULL);
+    repository_edit (gp_get_active_itdb(), NULL);
+}
+
+void
+on_calendar_contact_notes_options_clicked (GtkButton       *button,
+					   gpointer         user_data)
+{
+    /* Select an iPod repository. If the currently selected repository
+       is not an iPod repository, select the first iPod repository. */
+    iTunesDB *itdb = gp_get_active_itdb();
+    if (itdb)
+    {
+	if (! (itdb->usertype & GP_ITDB_TYPE_IPOD))
+	{
+	    itdb = gp_get_ipod_itdb();
+	}
+    }
+    repository_edit (itdb, NULL);
 }
 
 
@@ -1146,14 +1021,6 @@ on_cfg_id3_write_id3v24_toggled            (GtkToggleButton *togglebutton,
                        gtk_toggle_button_get_active (togglebutton));
 }
 
-
-static void prefs_window_set_path (PathType i, const gchar *path)
-{
-    if (!path) return;
-    g_return_if_fail (i>=0 && i<PATH_NUM);
-    g_free (tmpcfg->path[i]);
-    tmpcfg->path[i] = g_strdup (path);
-}
 
 void
 on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
@@ -1513,13 +1380,6 @@ on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
     tmpcfg->automount = gtk_toggle_button_get_active (togglebutton);
-}
-
-void
-on_concal_autosync_toggled             (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    tmpcfg->concal_autosync = gtk_toggle_button_get_active (togglebutton);
 }
 
 void

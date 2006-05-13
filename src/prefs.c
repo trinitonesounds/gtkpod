@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:53:25 jcs>
+/* Time-stamp: <2006-05-10 00:51:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -84,6 +84,7 @@
 #  include <config.h>
 #endif
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1423,29 +1424,13 @@ struct cfg *cfg_new(void)
     mycfg->sort_tab_num = 2;
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
-    for (i=0; i<PATH_NUM; ++i)
-    {  /* the switch() will cause the compiler to complain if we
-	  forget to initialize one of the paths */
-	switch ((PathType)i)
-	{
-	case PATH_PLAY_NOW:
-	    mycfg->path[i] = g_strdup ("xmms %s"); break;
-	case PATH_PLAY_ENQUEUE:
-	    mycfg->path[i] = g_strdup ("xmms -e %s"); break;
-	case PATH_MP3GAIN:
-	case PATH_SYNC_CONTACTS:
-	case PATH_SYNC_CALENDAR:
-	case PATH_SYNC_NOTES:
-	case PATH_MSERV_MUSIC_ROOT:
-	    mycfg->path[i] = g_strdup (""); break;
-	case PATH_MSERV_TRACKINFO_ROOT:
-	    mycfg->path[i] = g_strdup ("/var/lib/mserv/trackinfo/");
-	case PATH_NUM:
-	    break;
-	}
-    }
+
+    prefs_set_string ("path_play_now", "xmms %s");
+    prefs_set_string ("path_play_enqueue", "xmms -e %s");
+    prefs_set_string ("path_mserv_trackinfo_root",
+		      "/var/lib/mserv/trackinfo/");
+
     mycfg->unused_gboolean3 = FALSE;
-    mycfg->concal_autosync = FALSE;
     mycfg->tmp_disable_sort = TRUE;
     mycfg->startup_messages = TRUE;
     mycfg->automount = FALSE;
@@ -1577,35 +1562,60 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if((arg_comp (line, "toolpath", &off) == 0) ||
 		  (arg_comp (line, "path", &off) == 0))
 	  {
-	      gint i = atoi (line+off);
-	      prefs_set_path (i, arg);
-	      if ((i == PATH_PLAY_NOW) && (cfg->version < 0.87))
-	      {  /* default changed from "xmms -p %s" to "xmms %s" which
-		    avoids xmms from hanging -- thanks to Chris	Vine */
-		  if (strcmp (arg, "xmms -p %s") == 0)
+	      if (isdigit (*(line+off)) && (strlen (arg) > 0))
+	      {
+		  gint i = atoi (line+off);
+		  switch (i)
 		  {
-		      prefs_set_path (i, "xmms %s");
+		  case PATH_PLAY_NOW:
+		      prefs_set_string ("path_play_now", arg);
+		      if (cfg->version < 0.87)
+		      {  /* default changed from "xmms -p %s" to "xmms
+			    %s" which avoids xmms from hanging --
+			    thanks to Chris Vine */
+			  if (strcmp (arg, "xmms -p %s") == 0)
+			  {
+			      prefs_set_string ("path_play_now", "xmms %s");
+			  }
+		      }
+		      break;
+		  case PATH_PLAY_ENQUEUE:
+		      prefs_set_string ("path_play_enqueue", arg);
+		      break;
+		  case PATH_MP3GAIN:
+		      prefs_set_string ("path_mp3gain", arg);
+		      break;
+		  case PATH_SYNC_CONTACTS:
+		      prefs_set_string ("itdb_0_path_sync_contacts", arg);
+		      break;
+		  case PATH_SYNC_CALENDAR:
+		      prefs_set_string ("itdb_0_path_sync_calendar", arg);
+		      break;
+		  case PATH_MSERV_MUSIC_ROOT:
+		      prefs_set_string ("path_mserv_music_root", arg);
+		      break;
+		  case PATH_MSERV_TRACKINFO_ROOT:
+		      prefs_set_string ("path_mserv_trackinfo_root", arg);
+		      break;
+		  case PATH_SYNC_NOTES:
+		      prefs_set_string ("itdb_0_path_sync_notes", arg);
+		      break;
+		  case PATH_NUM:
+		      break;
 		  }
 	      }
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
 	  {
-	      if (strcmp (arg, "xmms -p %s") == 0)
-	      {
-		  prefs_set_path (PATH_PLAY_NOW, "xmms %s");
-	      }
-	      else
-	      {
-		  prefs_set_path (PATH_PLAY_NOW, arg);
-	      }
+	      /* ignore */
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_enqueue_path") == 0)
 	  {
-	      prefs_set_path (PATH_PLAY_ENQUEUE, arg);
+	      /* ignore */
 	  }
 	  else if(g_ascii_strcasecmp (line, "mp3gain_path") == 0)
 	  {
-	      prefs_set_path (PATH_MP3GAIN, arg);
+	      /* ignore */
 	  }
 	  else if(g_ascii_strcasecmp (line, "time_format") == 0)
 	  {
@@ -2045,7 +2055,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "concal_autosync") == 0)
 	  {
-	      prefs_set_concal_autosync ((gboolean)atoi(arg));
+	      prefs_set_int ("itdb_0_concal_autosync", atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "tmp_disable_sort") == 0)
 	  {
@@ -2252,17 +2262,6 @@ write_prefs_to_file_desc(FILE *fp)
     tm_store_col_order ();
 
     fprintf(fp, "version=%s\n", VERSION);
-    for (i=0; i<PATH_NUM; ++i)
-    {
-	gchar *buf = g_strdup (path_entry_names[i]);
-	gchar *bufp = strrchr (buf, '_');
-	/* we cut off the "_entry" of the entry name, making it easier
-	   to read for humans */
-	if (bufp) *bufp = '\0';
-	fprintf (fp, ";%s\n", buf);
-	fprintf (fp, "path%d=%s\n", i, cfg->path[i]);
-	g_free (buf);
-    }
     if (cfg->charset)
     {
 	fprintf(fp, "charset=%s\n", cfg->charset);
@@ -2368,7 +2367,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "size_info.y=%d\n", cfg->size_info.y);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
-    fprintf (fp, "concal_autosync=%d\n", cfg->concal_autosync);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
     fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
     fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);
@@ -2415,11 +2413,7 @@ void cfg_free(struct cfg *c)
 {
     if(c)
     {
-      gint i;
-
       g_free (c->charset);
-      for (i=0; i<PATH_NUM; ++i)
-	  g_free (c->path[i]);
       g_free (c->mserv_username);
       g_free (c);
     }
@@ -2582,12 +2576,8 @@ struct cfg *clone_prefs(void)
 
     if(cfg)
     {
-	gint i;
-
 	result = g_memdup (cfg, sizeof (struct cfg));
 	result->charset = g_strdup(cfg->charset);
-	for (i=0; i<PATH_NUM; ++i)
-	    result->path[i] = g_strdup (cfg->path[i]);
 	result->parsetags_template = g_strdup(cfg->parsetags_template);
 	result->coverart_template = g_strdup(cfg->coverart_template);
 	result->mserv_username = g_strdup(cfg->mserv_username);
@@ -3372,42 +3362,6 @@ gchar *prefs_validate_path (const gchar *path, const gchar *allowed)
 }
 
 
-void prefs_set_path (PathType i, const gchar *path)
-{
-    switch (i)
-    {
-    case PATH_PLAY_NOW:
-    case PATH_PLAY_ENQUEUE:
-	g_free (cfg->path[i]);
-	cfg->path[i] = prefs_validate_path (path, "s");
-	break;
-    case PATH_MP3GAIN:
-    case PATH_MSERV_MUSIC_ROOT:
-    case PATH_MSERV_TRACKINFO_ROOT:
-	g_free (cfg->path[i]);
-	if (path)
-	    cfg->path[i] = g_strstrip (g_strdup (path));
-	else
-	    cfg->path[i] = g_strdup ("");
-	break;
-    case PATH_SYNC_CONTACTS:
-    case PATH_SYNC_CALENDAR:
-    case PATH_SYNC_NOTES:
-	g_free (cfg->path[i]);
-	cfg->path[i] = prefs_validate_path (path, "i");
-	break;
-    case PATH_NUM:
-	break;
-    }
-}
-
-
-const gchar *prefs_get_path (PathType i)
-{
-    g_return_val_if_fail (i>=0 && i<PATH_NUM, "");
-    return cfg->path[i];
-}
-
 gboolean 
 prefs_get_automount (void)
 {
@@ -3691,16 +3645,6 @@ void prefs_set_sp_playcount_high (guint32 inst, gint32 limit)
 	cfg->st[inst].sp_playcount_high = limit;
     else
 	fprintf (stderr, "prefs_set_sp_playcount_high(): !inst=%d!\n", inst);
-}
-
-gboolean prefs_get_concal_autosync(void)
-{
-    return(cfg->concal_autosync);
-}
-
-void prefs_set_concal_autosync(gboolean val)
-{
-    cfg->concal_autosync = val;
 }
 
 gboolean prefs_get_tmp_disable_sort(void)

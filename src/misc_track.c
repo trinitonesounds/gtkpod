@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:55:05 jcs>
+/* Time-stamp: <2006-05-13 01:27:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -407,9 +407,7 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 
     if (itdb->usertype & GP_ITDB_TYPE_IPOD)
     {
-	gchar *key = get_itdb_key (get_itdb_index (itdb), "mountpoint");
-	gchar *mountpoint = prefs_get_string (key);
-	g_free (key);
+	gchar *mountpoint = get_itdb_prefs_string (itdb, "mountpoint");
 	g_return_val_if_fail (mountpoint, NULL);
 	musicdir = itdb_get_music_dir (mountpoint);
 	g_free (mountpoint);
@@ -1392,6 +1390,7 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 			added = TRUE;
 			break;
 		    case FILE_TYPE_UNKNOWN:
+		    case FILE_TYPE_DIRECTORY:
 		    case FILE_TYPE_IMAGE:
 			break;
 		    }

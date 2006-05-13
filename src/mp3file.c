@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-01 14:49:29 jcs>
+/* Time-stamp: <2006-05-10 00:33:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1862,7 +1862,7 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
     gint k,n;  /*for's counter*/
     gchar *mp3gain_path;
     gchar *mp3gain_exec;
-    const gchar *mp3gain_set;
+    gchar *mp3gain_set;
     pid_t pid,tpid;
     int ret = 2;
     int status;
@@ -1873,9 +1873,10 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
     n=0;
 
     /* see if full path to mp3gain was set using the prefs dialogue */
-    mp3gain_set = prefs_get_path (PATH_MP3GAIN);
+    mp3gain_set = prefs_get_string ("path_mp3gain");
     /* use default if not */
-    if (!mp3gain_set || !(*mp3gain_set)) mp3gain_set = "mp3gain";
+    if (!mp3gain_set || !(*mp3gain_set))
+	mp3gain_set = g_strdup ("mp3gain");
     /* find full path */
     mp3gain_path = g_find_program_in_path (mp3gain_set);
     /* show error message if mp3gain cannot be found */
@@ -1889,6 +1890,7 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
 				"mp3gain installed, you can download it from "
 				"http://www.sourceforge.net/projects/mp3gain."),
 			mp3gain_set);
+	g_free (mp3gain_set);
 	return FALSE;
     }
 
@@ -1929,6 +1931,7 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
     /*free everything left*/
     g_free (mp3gain_path);
     g_free (mp3gain_exec);
+    g_free (mp3gain_set);
 
     /*and happily return the right value*/
     return (ret > 1) ? FALSE : TRUE;

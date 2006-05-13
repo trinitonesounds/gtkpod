@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-04-06 00:28:54 jcs>
+/* Time-stamp: <2006-05-13 01:51:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -94,6 +94,7 @@ Track *video_get_file_info (gchar *filename)
     case FILE_TYPE_M3U:
     case FILE_TYPE_PLS:
     case FILE_TYPE_IMAGE:
+    case FILE_TYPE_DIRECTORY:
 	g_free (track);
 	g_return_val_if_reached (NULL);
     }
@@ -115,7 +116,10 @@ FileType determine_file_type (gchar *path)
     FileType type = FILE_TYPE_UNKNOWN;
 	
     g_return_val_if_fail (path, type);
-	
+
+    if (g_file_test (path, G_FILE_TEST_IS_DIR))
+	return FILE_TYPE_DIRECTORY;
+
     path_utf8 = charset_to_utf8 (path);
     suf = strrchr (path_utf8, '.');
     if (suf)
@@ -219,6 +223,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	case FILE_TYPE_MOV:
 	case FILE_TYPE_MPG:
 	case FILE_TYPE_IMAGE:
+	case FILE_TYPE_DIRECTORY:
 	    gtkpod_warning (_("'%s' is a not a known playlist file.\n\n"),
 			      plfile);
 	    g_free(plname);
@@ -302,6 +307,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 	    }
 	    break;
 	case FILE_TYPE_UNKNOWN:
+	case FILE_TYPE_DIRECTORY:
 	case FILE_TYPE_MP3:
 	case FILE_TYPE_M4A:
 	case FILE_TYPE_M4P:
@@ -812,6 +818,7 @@ static Track *copy_new_info (Track *from, Track *to)
     eto->peak_signal_set = efrom->peak_signal_set;
     eto->radio_gain_set = efrom->radio_gain_set;
     eto->audiophile_gain_set = efrom->audiophile_gain_set;
+    eto->mtime = efrom->mtime;
     to->time_added = from->time_added;
     to->time_modified = from->time_modified;
     to->year = from->year;
@@ -844,11 +851,15 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
     if (prefs_get_mserv_use())
     {
 	/* try getting the user's rating from the mserv db */
-	const gchar *music_root = prefs_get_path(PATH_MSERV_MUSIC_ROOT);
-	const gchar *trackinfo_root = prefs_get_path (PATH_MSERV_TRACKINFO_ROOT);
-	/* music_root and trackinfo_root guaranteed to be != NULL */
-	g_return_val_if_fail (music_root && trackinfo_root, FALSE);
+	gchar *music_root = prefs_get_string ("path_mserv_music_root");
+	gchar *trackinfo_root = prefs_get_string ("path_mserv_trackinfo_root");
 
+	/* we expect music_root and trackinfo_root to be initialized */
+	if (!music_root)
+	    music_root = g_strdup ("");
+	if (!trackinfo_root)
+	    trackinfo_root = g_strdup ("");
+	
 	success = FALSE;
         /* printf("mroot %s troot %s fname %s\n", music_root, trackinfo_root, name); */
 
@@ -907,6 +918,8 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 	    display_mserv_problems (track, buf);
 	    g_free (buf);
 	}
+	g_free (music_root);
+	g_free (trackinfo_root);
     }
 
     while (widgets_blocked && gtk_events_pending ())
@@ -1075,6 +1088,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	g_free (name_utf8);
 	return NULL;
     case FILE_TYPE_IMAGE:
+    case FILE_TYPE_DIRECTORY:
     case FILE_TYPE_M3U:
     case FILE_TYPE_PLS:
 	break;
@@ -1100,6 +1114,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	/* set length of file */
 	stat (name, &filestat);
 	nti->size = filestat.st_size; /* get the filesize in bytes */
+	enti->mtime = filestat.st_mtime; /* get the modification date */
 	if (nti->bitrate == 0)
 	{  /* estimate bitrate */
 	    if (nti->tracklen)
@@ -1277,12 +1292,8 @@ void mserv_from_file_tracks (GList *selected_tracks)
  * again if it already exists */
 static void sync_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 {
-    iTunesDB *itdb;
-
     g_return_if_fail (plitem);
     g_return_if_fail (track);
-    itdb = plitem->itdb;
-    g_return_if_fail (itdb);
 
     /* only add if @track isn't already a member of the current
        playlist */
@@ -2058,6 +2069,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
   case FILE_TYPE_MPG:
   case FILE_TYPE_IMAGE:
   case FILE_TYPE_UNKNOWN:
+  case FILE_TYPE_DIRECTORY:
       break;
   }
 
@@ -2245,6 +2257,7 @@ static gboolean file_write_info (gchar *name, Track *track)
     case FILE_TYPE_PLS:
     case FILE_TYPE_IMAGE:
     case FILE_TYPE_UNKNOWN:
+    case FILE_TYPE_DIRECTORY:
 	break;
     }
 
@@ -2654,6 +2667,7 @@ gboolean get_gain (Track *track)
 	case FILE_TYPE_M3U: 
 	case FILE_TYPE_PLS: 
 	case FILE_TYPE_IMAGE: 
+	case FILE_TYPE_DIRECTORY:
 	    break;
 	}
 	g_free (path);

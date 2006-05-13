@@ -1,3 +1,29 @@
+2006-05-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/syncdir.c:
+	 * src/syncdir.h:
+	 * src/Makefile.am:
+	   Added new source files for a complete rewrite of the
+	   synchronization code.
+	 * file_itunesdb.c:
+	 * file.c:
+	   added support for modification time of the song (needed for
+	   fast syncing)
+
+2006-05-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * moved path[i] and concal_autosync pref keys over to the
+           new prefs system. Work in progress: currently the scripts
+           for syncing cannot be set (this will be done from within
+           the repository options).
+
+2006-05-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * misc.[ch]: renamed get_itdb/playlist_key() to
+           get_itdb/playlist_prefs_key()
+
+	 * misc.[ch]: new: get/set_itdb/playlist_prefs_string/int().
+
 2006-05-07 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * preliminarily moved "mountpoint" to new prefs system.

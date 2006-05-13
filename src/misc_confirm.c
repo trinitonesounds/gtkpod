@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:55:06 jcs>
+/* Time-stamp: <2006-05-13 23:09:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -387,15 +387,6 @@ void delete_track_head (DeleteAction deleteaction)
     g_free (label);
     g_free (title);
     g_string_free (str, TRUE);
-}
-
-void
-gtkpod_main_window_set_active(gboolean active)
-{
-    if(gtkpod_window)
-    {
-	gtk_widget_set_sensitive(gtkpod_window, active);
-    }
 }
 
 
