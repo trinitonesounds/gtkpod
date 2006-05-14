@@ -100,7 +100,7 @@ void delete_entry_head (gint entry_inst, DeleteAction deleteaction);
 void delete_populate_settings (struct DeleteData *dd,
 			       gchar **label, gchar **title,
 			       gboolean *confirm_again,
-			       ConfHandlerOpt *confirm_again_handler,
+			       gchar **confirm_again_key,
 			       GString **str);
 
 void block_widgets (void);

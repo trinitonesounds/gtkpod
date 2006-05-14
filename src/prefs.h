@@ -132,11 +132,6 @@ struct cfg
   gboolean autosettags[TM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
   gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 
-  gboolean show_duplicates;     /* show duplicate notification ?*/
-  gboolean show_updated;        /* show update notification ?*/
-  gboolean show_non_updated;    /* show update notification ?*/
-  gboolean show_sync_dirs;      /* show dirs to be synced ? */
-  gboolean sync_remove;         /* delete tracks removed from synced dirs? */
   gboolean display_toolbar;     /* should toolbar be displayed */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
   gboolean display_tooltips_main; /* should tooltips be displayed (main) */
@@ -154,7 +149,6 @@ struct cfg
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   gboolean mserv_use;           /* use mserv data (rating)? */
-  gboolean mserv_report_probs;  /* report problems while updating? */
   gchar *mserv_username;        /* username for mserv? */
   gboolean unused_gboolean3;    /* unused */
   float version;                /* version of gtkpod writing the cfg file */
@@ -372,27 +366,6 @@ gboolean prefs_get_md5tracks(void);
 gboolean prefs_get_block_display(void);
 gint prefs_get_paned_pos (gint i);
 guint32 prefs_get_statusbar_timeout (void);
-gboolean prefs_get_show_duplicates (void);
-void prefs_set_show_duplicates (gboolean val);
-gboolean prefs_get_show_updated (void);
-void prefs_set_show_updated (gboolean val);
-gboolean prefs_get_show_non_updated (void);
-void prefs_set_show_non_updated (gboolean val);
-gboolean prefs_get_show_sync_dirs (void);
-void prefs_set_show_sync_dirs (gboolean val);
-gboolean prefs_get_sync_remove (void);
-void prefs_set_sync_remove (gboolean val);
-
-void prefs_set_sync_remove_confirm(gboolean val);
-gboolean prefs_get_sync_remove_confirm(void);
-void prefs_set_track_playlist_deletion(gboolean val);
-gboolean prefs_get_track_playlist_deletion(void);
-void prefs_set_track_ipod_file_deletion(gboolean val);
-gboolean prefs_get_track_ipod_file_deletion(void);
-void prefs_set_track_database_deletion(gboolean val);
-gboolean prefs_get_track_database_deletion(void);
-void prefs_set_track_local_file_deletion(gboolean val);
-gboolean prefs_get_track_local_file_deletion(void);
 
 gboolean prefs_get_display_toolbar (void);
 void prefs_set_display_toolbar (gboolean val);
@@ -450,8 +423,6 @@ void prefs_set_startup_messages(gboolean val);
 gboolean prefs_get_startup_messages(void);
 gboolean prefs_get_mserv_use(void);
 void prefs_set_mserv_use(gboolean val);
-gboolean prefs_get_mserv_report_probs(void);
-void prefs_set_mserv_report_probs(gboolean val);
 const gchar *prefs_get_mserv_username(void);
 void prefs_set_mserv_username(const gchar *root);
 gboolean prefs_get_autoimport_commandline(void);

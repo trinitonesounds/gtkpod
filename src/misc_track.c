@@ -192,7 +192,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 
 /*   printf ("%p, %p, '%s'\n", oldtrack, track, str?str->str:"empty");*/
 
-   if (prefs_get_show_duplicates() && !oldtrack && !track && str)
+   if (prefs_get_int("show_duplicates") && !oldtrack && !track && str)
    {
        if (str->len)
        { /* Some tracks have been deleted. Print a notice */
@@ -219,7 +219,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 		NULL, 0, NULL,      /* option 1 */
 		NULL, 0, NULL,      /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
-		prefs_set_show_duplicates,
+		"show_duplicates",
 		                    /* ConfHandlerCA confirm_again_handler,*/
 		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
 		NULL,               /* don't show "Apply" button */
@@ -248,7 +248,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
        g_return_if_fail (oldetr);
        g_return_if_fail (etr);
 
-       if (prefs_get_show_duplicates ())
+       if (prefs_get_int("show_duplicates"))
        {
 	   /* add info about it to str */
 	   buf = get_track_info (track, TRUE);
@@ -1556,4 +1556,3 @@ gchar *get_track_info (Track *track, gboolean prefer_filename)
 
     return g_strdup_printf ("iPod ID: %d", track->id);
 }
-

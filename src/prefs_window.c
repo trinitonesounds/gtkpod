@@ -337,26 +337,26 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_duplicates");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->show_duplicates);
+				 prefs_get_int("show_duplicates"));
     if (!tmpcfg->md5tracks) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_updated");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->show_updated);
+				 prefs_get_int("show_updated"));
     if (!prefs_get_int("update_existing")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_non_updated");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->show_non_updated);
+				 prefs_get_int("show_non_updated"));
     if (!prefs_get_int("update_existing")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_sync_dirs");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->show_sync_dirs);
+				 prefs_get_int("show_sync_dirs"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->sync_remove);
+				 prefs_get_int("sync_remove"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_toolbar");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -432,24 +432,24 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_delete_track_from_playlist");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->deletion.track);
+				 prefs_get_int("delete_track"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_delete_track_from_ipod");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->deletion.ipod_file);
+				 prefs_get_int("delete_ipod"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_track_local_file_deletion");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->deletion.local_file);
+				 prefs_get_int("delete_local_file"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_track_database_deletion");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->deletion.database);
+				 prefs_get_int("delete_database"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->deletion.syncing);
-    gtk_widget_set_sensitive (w, tmpcfg->sync_remove);
+				 prefs_get_int("sync_remove_confirm"));
+    gtk_widget_set_sensitive (w, prefs_get_int("sync_remove"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm2");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -636,7 +636,7 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mserv_report_probs");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->mserv_report_probs);
+				 prefs_get_int("mserv_report_probs"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "mserv_username_entry");
     if (tmpcfg->mserv_username)
@@ -704,22 +704,13 @@ prefs_window_set(void)
 	    prefs_set_col_visible (i, tmpcfg->col_visible[i]);
 	}
 	prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
-	prefs_set_track_playlist_deletion(tmpcfg->deletion.track);
-	prefs_set_track_ipod_file_deletion(tmpcfg->deletion.ipod_file);
-	prefs_set_track_local_file_deletion(tmpcfg->deletion.local_file);
-	prefs_set_track_database_deletion(tmpcfg->deletion.database);
-	prefs_set_sync_remove_confirm(tmpcfg->deletion.syncing);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
-	prefs_set_show_duplicates(tmpcfg->show_duplicates);
-	prefs_set_show_updated(tmpcfg->show_updated);
-	prefs_set_show_non_updated(tmpcfg->show_non_updated);
-	prefs_set_show_sync_dirs(tmpcfg->show_sync_dirs);
+
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
 	prefs_set_block_display(tmpcfg->block_display);
 	prefs_set_sort_tab_num(tmpcfg->sort_tab_num, TRUE);
 	prefs_set_group_compilations(tmpcfg->group_compilations, TRUE);
-	prefs_set_sync_remove(tmpcfg->sync_remove);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
@@ -735,7 +726,6 @@ prefs_window_set(void)
 	prefs_set_tmp_disable_sort(tmpcfg->tmp_disable_sort);
 	prefs_set_startup_messages(tmpcfg->startup_messages);
 	prefs_set_mserv_use(tmpcfg->mserv_use);
-	prefs_set_mserv_report_probs(tmpcfg->mserv_report_probs);
 	prefs_set_mserv_username(tmpcfg->mserv_username);
 	prefs_set_unused_gboolean3(tmpcfg->unused_gboolean3);
 
@@ -1034,8 +1024,8 @@ void
 on_cfg_delete_track_from_playlist_toggled (GtkToggleButton *togglebutton,
 					   gpointer         user_data)
 {
-    tmpcfg->deletion.track = 
-	gtk_toggle_button_get_active(togglebutton);
+	temp_prefs_set_int(temp_prefs, "delete_file",
+                     gtk_toggle_button_get_active(togglebutton));
 }
 
 
@@ -1043,32 +1033,32 @@ void
 on_cfg_delete_track_from_ipod_toggled  (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->deletion.ipod_file =
-	gtk_toggle_button_get_active(togglebutton);
+	temp_prefs_set_int(temp_prefs, "delete_ipod", 
+                     gtk_toggle_button_get_active(togglebutton));
 }
 
 void
 on_cfg_track_local_file_deletion_toggled (GtkToggleButton *togglebutton,
 					  gpointer         user_data)
 {
-    tmpcfg->deletion.local_file =
-	gtk_toggle_button_get_active(togglebutton);
+	temp_prefs_set_int(temp_prefs, "delete_local_file",
+                     gtk_toggle_button_get_active(togglebutton));
 }
 
 void
 on_cfg_track_database_deletion_toggled (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->deletion.database =
-	gtk_toggle_button_get_active(togglebutton);
+	temp_prefs_set_int(temp_prefs, "delete_database",
+                     gtk_toggle_button_get_active(togglebutton));
 }
 
 void
 on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->deletion.syncing = 
-	gtk_toggle_button_get_active(togglebutton);
+	temp_prefs_set_int(temp_prefs, "sync_remove_confirm",
+                     gtk_toggle_button_get_active(togglebutton));
 }
 
 
@@ -1183,8 +1173,8 @@ void
 on_cfg_show_duplicates_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->show_duplicates =
-	gtk_toggle_button_get_active (togglebutton);
+	temp_prefs_set_int(temp_prefs, "show_duplicates", 
+                     gtk_toggle_button_get_active (togglebutton));
 
 }
 
@@ -1193,7 +1183,8 @@ void
 on_cfg_show_updated_toggled            (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->show_updated = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "show_updated",
+                       gtk_toggle_button_get_active (togglebutton));
 }
 
 
@@ -1201,14 +1192,16 @@ void
 on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->show_non_updated = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "show_non_updated", 
+                       gtk_toggle_button_get_active (togglebutton));
 }
 
 void
 on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
 				      gpointer         user_data)
 {
-    tmpcfg->show_sync_dirs = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "show_sync_dirs",
+                       gtk_toggle_button_get_active (togglebutton));
 }
 
 void
@@ -1218,7 +1211,7 @@ on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
     gboolean val = gtk_toggle_button_get_active (togglebutton);
     GtkWidget *w;
 
-    tmpcfg->sync_remove = val;
+    temp_prefs_set_int(temp_prefs, "sync_remove", val);
     if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm")))
 	gtk_widget_set_sensitive (w, val);
 }
@@ -1417,8 +1410,8 @@ void
 on_mserv_report_probs_toggled          (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    tmpcfg->mserv_report_probs =
-	gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "mserv_report_probs", 
+                       gtk_toggle_button_get_active (togglebutton));
 }
 
 void

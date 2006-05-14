@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-04-28 23:51:49 jcs>
+/* Time-stamp: <2006-05-14 14:13:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -43,11 +43,11 @@ typedef struct {
     GtkWidget *window;
     GladeXML *window_xml;
     gboolean  scrolled;
-    ConfHandlerOpt option1_handler;
+    gchar *option1_key;
     gboolean option1_invert;
-    ConfHandlerOpt option2_handler;
+    gchar *option2_key;
     gboolean option2_invert;
-    ConfHandlerOpt confirm_again_handler;
+    gchar *confirm_again_key;
     ConfHandler ok_handler;
     ConfHandler apply_handler;
     ConfHandler cancel_handler;
@@ -73,6 +73,10 @@ static void cleanup (gpointer id)
 	    prefs_set_size_conf (defx, defy);
 	gtk_widget_destroy (cd->window);
 	g_hash_table_remove (id_hash, id);
+  
+  g_free(cd->option1_key);
+  g_free(cd->option2_key);
+  g_free(cd->confirm_again_key);
     }
 }
 
@@ -135,8 +139,8 @@ static void on_never_again_toggled (GtkToggleButton *t, gpointer id)
     cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
-	if (cd->confirm_again_handler)
-	    cd->confirm_again_handler (!gtk_toggle_button_get_active(t));
+	if (cd->confirm_again_key)
+	    prefs_set_int(cd->confirm_again_key, !gtk_toggle_button_get_active(t));
     }
 }
 
@@ -147,11 +151,11 @@ static void on_option1_toggled (GtkToggleButton *t, gpointer id)
     cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
-	if (cd->option1_handler)
+	if (cd->option1_key)
 	{
 	    gboolean state = gtk_toggle_button_get_active(t);
-	    if (cd->option1_invert)  cd->option1_handler (!state);
-	    else                     cd->option1_handler (state);
+	    if (cd->option1_invert)  prefs_set_int (cd->option1_key, !state);
+	    else                     prefs_set_int (cd->option1_key, state);
 	}
     }
 }
@@ -163,11 +167,11 @@ static void on_option2_toggled (GtkToggleButton *t, gpointer id)
     cd = g_hash_table_lookup (id_hash, id);
     if (cd)
     {
-	if (cd->option2_handler)
+	if (cd->option2_key)
 	{
 	    gboolean state = gtk_toggle_button_get_active(t);
-	    if (cd->option2_invert)  cd->option2_handler (!state);
-	    else                     cd->option2_handler (state);
+	    if (cd->option2_invert)  prefs_set_int (cd->option2_key, !state);
+	    else                     prefs_set_int (cd->option2_key, state);
 	}
     }
 }
@@ -221,11 +225,12 @@ static void on_response (GtkWidget *w, gint response, gpointer id)
            whether the handler should be called with the inverse state
            of the toggle button: CONF_STATE_TRUE, CONF_STATE_FALSE,
 	   CONF_STATE_INVERT_TRUE, CONF_STATE_INVERT_FALSE
-   @option_handler: callback for the option (is called with the
-           current state of the toggle box)
+   @option_key: prefs key for the option (is set to the state of the
+           toggle box)
    @confirm_again:    state of the "confirm again" flag
-   @confirm_again_handler: callback for the checkbox (is called with the
-                    inverted current state of the toggle box)
+   @confirm_again_key: prefs key for the 'never show this dialog
+           again' toggle box (is set to the inverted current state
+	   of the toggle box)
    @ok_handler:     function to be called when the OK button is pressed
    @apply_handler:  function to be called when the Apply button is pressed
    @cancel_handler: function to be called when the cancel button is pressed
@@ -262,17 +267,17 @@ static void on_response (GtkWidget *w, gint response, gpointer id)
 
 GtkResponseType gtkpod_confirmation (gint id,
 				     gboolean modal,
-				     gchar *title,
-				     gchar *label,
-				     gchar *text,
-				     gchar *option1_text,
+				     const gchar *title,
+				     const gchar *label,
+				     const gchar *text,
+				     const gchar *option1_text,
 				     CONF_STATE option1_state,
-				     ConfHandlerOpt option1_handler,
-				     gchar *option2_text,
+				     const gchar *option1_key,
+				     const gchar *option2_text,
 				     CONF_STATE option2_state,
-				     ConfHandlerOpt option2_handler,
+				     const gchar *option2_key,
 				     gboolean confirm_again,
-				     ConfHandlerOpt confirm_again_handler,
+				     const gchar *confirm_again_key,
 				     ConfHandler ok_handler,
 				     ConfHandler apply_handler,
 				     ConfHandler cancel_handler,
@@ -347,9 +352,9 @@ GtkResponseType gtkpod_confirmation (gint id,
     cd = g_malloc (sizeof (ConfData));
     cd->window = window;
     cd->window_xml = confirm_xml;
-    cd->option1_handler = option1_handler;
-    cd->option2_handler = option2_handler;
-    cd->confirm_again_handler = confirm_again_handler;
+    cd->option1_key = g_strdup(option1_key);
+    cd->option2_key = g_strdup(option2_key);
+    cd->confirm_again_key = g_strdup(confirm_again_key);
     cd->ok_handler = ok_handler;
     cd->apply_handler = apply_handler;
     cd->cancel_handler = cancel_handler;
@@ -393,7 +398,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 
     /* Set "Option 1" checkbox */
     w = gtkpod_xml_get_widget (confirm_xml, "option_vbox");
-    if (w && option1_handler && option1_text)
+    if (w && option1_key && option1_text)
     {
 	gboolean state, invert;
 	GtkWidget *option1_button =
@@ -419,7 +424,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 
     /* Set "Option 2" checkbox */
     w = gtkpod_xml_get_widget (confirm_xml, "option_vbox");
-    if (w && option2_handler && option2_text)
+    if (w && option2_key && option2_text)
     {
 	gboolean state, invert;
 	GtkWidget *option2_button =
@@ -445,7 +450,7 @@ GtkResponseType gtkpod_confirmation (gint id,
 
     /* Set "Never Again" checkbox */
     w = gtkpod_xml_get_widget (confirm_xml, "never_again");
-    if (w && confirm_again_handler)
+    if (w && confirm_again_key)
     { /* connect signal */
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				     !confirm_again);

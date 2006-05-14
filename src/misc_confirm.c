@@ -74,7 +74,7 @@ void gtkpod_warning (const gchar *format, ...)
 			 NULL, 0, NULL,       /* option 1 */
 			 NULL, 0, NULL,       /* option 2 */
 			 TRUE,                /* gboolean confirm_again, */
-			 NULL, /* ConfHandlerOpt confirm_again_handler, */
+			 NULL, /* ConfHandlerOpt confirm_again_key, */
 			 CONF_NULL_HANDLER,   /* ConfHandler ok_handler,*/
 			 NULL,                /* don't show "Apply" */
 			 NULL,                /* cancel_handler,*/
@@ -95,7 +95,7 @@ void gtkpod_warning (const gchar *format, ...)
 void delete_populate_settings (struct DeleteData *dd,
 			       gchar **label, gchar **title,
 			       gboolean *confirm_again,
-			       ConfHandlerOpt *confirm_again_handler,
+			       gchar **confirm_again_key,
 			       GString **str)
 {
     Track *s;
@@ -128,9 +128,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Delete Track Completely from iPod?",
 			      "Delete Tracks Completey from iPod?", n));
 	    if (confirm_again)
-		*confirm_again = prefs_get_track_ipod_file_deletion ();
-	    if (confirm_again_handler)
-		*confirm_again_handler = prefs_set_track_ipod_file_deletion;
+		*confirm_again = prefs_get_int("delete_ipod");
+	    if (confirm_again_key)
+		*confirm_again_key = g_strdup("delete_ipod");
 	    break;
 	case DELETE_ACTION_PLAYLIST:
 	    if (label)
@@ -142,9 +142,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Remove Track From Playlist?",
 			      "Remove Tracks From Playlist?", n));
 	    if (confirm_again)
-		*confirm_again = prefs_get_track_playlist_deletion ();
-	    if (confirm_again_handler)
-		*confirm_again_handler = prefs_set_track_playlist_deletion;
+		*confirm_again = prefs_get_int("delete_track");
+	    if (confirm_again_key)
+		*confirm_again_key = g_strdup("delete_track");
 	    break;
 	default:
 	    g_return_if_reached ();
@@ -168,9 +168,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Delete Track from Harddisk?",
 			      "Delete Tracks from Harddisk?", n));
 	    if (confirm_again)
-		*confirm_again = prefs_get_track_local_file_deletion ();
-	    if (confirm_again_handler)
-		*confirm_again_handler = prefs_set_track_local_file_deletion;
+		*confirm_again = prefs_get_int("delete_local_file");
+	    if (confirm_again_key)
+		*confirm_again_key = g_strdup("delete_local_file");
 	    break;
 	case DELETE_ACTION_PLAYLIST:
 	    if (label)
@@ -182,9 +182,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Remove Track From Playlist?",
 			      "Remove Tracks From Playlist?", n));
 	    if (confirm_again)
-		*confirm_again = prefs_get_track_playlist_deletion ();
-	    if (confirm_again_handler)
-		*confirm_again_handler = prefs_set_track_playlist_deletion;
+		*confirm_again = prefs_get_int("delete_file");
+	    if (confirm_again_key)
+		*confirm_again_key = g_strdup("delete_file");
 	    break;
 	case DELETE_ACTION_DATABASE:
 	    if (label)
@@ -196,9 +196,9 @@ void delete_populate_settings (struct DeleteData *dd,
 		    ngettext ("Remove Track from Local Database?",
 			      "Remove Tracks from Local Database?", n));
 	    if (confirm_again)
-		*confirm_again = prefs_get_track_database_deletion ();
-	    if (confirm_again_handler)
-		*confirm_again_handler = prefs_set_track_database_deletion;
+		*confirm_again = prefs_get_int("delete_database");
+	    if (confirm_again_key)
+		*confirm_again_key = g_strdup("delete_database");
 	    break;
 	default:
 	    g_return_if_reached ();
@@ -328,7 +328,7 @@ void delete_track_head (DeleteAction deleteaction)
     struct DeleteData *dd;
     iTunesDB *itdb;
     GtkResponseType response;
-    ConfHandlerOpt confirm_again_handler;
+    gchar *confirm_again_key;
 
     pl = pm_get_selected_playlist ();
     if (pl == NULL)
@@ -354,7 +354,7 @@ void delete_track_head (DeleteAction deleteaction)
 
     delete_populate_settings (dd,
 			      &label, &title,
-			      &confirm_again, &confirm_again_handler,
+			      &confirm_again, &confirm_again_key,
 			      &str);
     /* open window */
     response = gtkpod_confirmation
@@ -366,7 +366,7 @@ void delete_track_head (DeleteAction deleteaction)
 	 NULL, 0, NULL,        /* option 1 */
 	 NULL, 0, NULL,        /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
-	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
+	 confirm_again_key,/* ConfHandlerOpt confirm_again_key,*/
 	 CONF_NULL_HANDLER,    /* ConfHandler ok_handler,*/
 	 NULL,                 /* don't show "Apply" button */
 	 CONF_NULL_HANDLER,    /* cancel_handler,*/
@@ -386,6 +386,7 @@ void delete_track_head (DeleteAction deleteaction)
 
     g_free (label);
     g_free (title);
+    g_free(confirm_again_key);
     g_string_free (str, TRUE);
 }
 
@@ -409,7 +410,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
     GString *str;
     gchar *label = NULL, *title = NULL;
     gboolean confirm_again;
-    ConfHandlerOpt confirm_again_handler;
+    gchar *confirm_again_key;
     TabEntry *entry;
     GtkResponseType response;
     iTunesDB *itdb;
@@ -450,7 +451,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
 
     delete_populate_settings (dd,
 			      &label, &title,
-			      &confirm_again, &confirm_again_handler,
+			      &confirm_again, &confirm_again_key,
 			      &str);
 
     /* open window */
@@ -463,7 +464,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
 	 NULL, 0, NULL,        /* option 1 */
 	 NULL, 0, NULL,        /* option 2 */
 	 confirm_again,        /* gboolean confirm_again, */
-	 confirm_again_handler,/* ConfHandlerOpt confirm_again_handler,*/
+	 confirm_again_key,/* ConfHandlerOpt confirm_again_key,*/
 	 CONF_NULL_HANDLER,    /* ConfHandler ok_handler,*/
 	 NULL,                 /* don't show "Apply" button */
 	 CONF_NULL_HANDLER,    /* cancel_handler,*/
@@ -485,6 +486,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
 
     g_free (label);
     g_free (title);
+    g_free(confirm_again_key);
     g_string_free (str, TRUE);
 }
 
@@ -663,7 +665,7 @@ void delete_playlist_head (DeleteAction deleteaction)
     GString *str;
     gchar *label = NULL, *title = NULL;
     gboolean confirm_again;
-    ConfHandlerOpt confirm_again_handler;
+    gchar *confirm_again_key;
     guint32 n = 0;
 
     pl = pm_get_selected_playlist();
@@ -780,7 +782,7 @@ void delete_playlist_head (DeleteAction deleteaction)
     delete_populate_settings (dd,
 			      NULL, &title,
 			      &confirm_again,
-			      &confirm_again_handler,
+			      &confirm_again_key,
 			      &str);
 
     response = gtkpod_confirmation
@@ -792,7 +794,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	 NULL, 0, NULL,          /* option 1 */
 	 NULL, 0, NULL,          /* option 2 */
 	 confirm_again,          /* gboolean confirm_again, */
-	 confirm_again_handler,  /* ConfHandlerOpt confirm_again_handler,*/
+	 confirm_again_key,  /* ConfHandlerOpt confirm_again_key,*/
 	 CONF_NULL_HANDLER,      /* ConfHandler ok_handler,*/
 	 NULL,                   /* don't show "Apply" button */
 	 CONF_NULL_HANDLER,      /* cancel_handler,*/
@@ -801,6 +803,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 
     g_free (label);
     g_free (title);
+    g_free(confirm_again_key);
     g_string_free (str, TRUE);
 
     switch (response)
@@ -1002,7 +1005,7 @@ void ipod_directories_head (const gchar *mountpoint)
 			 NULL, 0, NULL,       /* option 1 */
 			 NULL, 0, NULL,       /* option 2 */
 			 TRUE,                /* gboolean confirm_again, */
-			 NULL, /* ConfHandlerOpt confirm_again_handler, */
+			 NULL, /* ConfHandlerOpt confirm_again_key, */
 			 CONF_NULL_HANDLER,   /* ConfHandler ok_handler,*/
 			 NULL,                /* don't show "Apply" */
 			 CONF_NULL_HANDLER,   /* cancel_handler,*/

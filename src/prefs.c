@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-10 00:51:10 jcs>
+/* Time-stamp: <2006-05-14 14:09:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -129,9 +129,20 @@ static GHashTable *prefs_table = NULL;
 /* Set default prefrences */
 static void set_default_preferences()
 {
-    prefs_set_int("update_existing", FALSE);
-    prefs_set_int("id3_write", FALSE);
-    prefs_set_int("id3_write_id3v24", FALSE);
+	 prefs_set_int("update_existing", FALSE);
+  prefs_set_int("id3_write", FALSE);
+  prefs_set_int("id3_write_id3v24", FALSE);
+  prefs_set_int("sync_remove", TRUE);
+  prefs_set_int("sync_remove_confirm", TRUE);
+  prefs_set_int("show_duplicates", TRUE);
+  prefs_set_int("show_sync_dirs", TRUE);
+  prefs_set_int("show_non_updated", TRUE);
+  prefs_set_int("show_updated", TRUE);
+  prefs_set_int("mserv_report_probs", TRUE);
+  prefs_set_int("delete_ipod", TRUE);
+  prefs_set_int("delete_file", TRUE);
+  prefs_set_int("delete_local_file", TRUE);
+  prefs_set_int("delete_database", TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1338,12 +1349,7 @@ struct cfg *cfg_new(void)
 	prefs_set_string ("inital_mountpoint", "/mnt/ipod");
     }
 
-    mycfg->charset = NULL;
-    mycfg->deletion.track = TRUE;
-    mycfg->deletion.ipod_file = TRUE;
-    mycfg->deletion.local_file = TRUE;
-    mycfg->deletion.database = TRUE;
-    mycfg->deletion.syncing = TRUE;
+    mycfg->charset = NULL;    
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
@@ -1409,11 +1415,6 @@ struct cfg *cfg_new(void)
     {
 	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
     }
-    mycfg->show_duplicates = TRUE;
-    mycfg->show_updated = TRUE;
-    mycfg->show_non_updated = TRUE;
-    mycfg->show_sync_dirs = TRUE;
-    mycfg->sync_remove = TRUE;
     mycfg->display_toolbar = TRUE;
     mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->display_tooltips_main = TRUE;
@@ -1447,7 +1448,6 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.tm_autostore = FALSE;
     mycfg->sortcfg.case_sensitive = FALSE;
     mycfg->mserv_use = FALSE;
-    mycfg->mserv_report_probs = TRUE;
     mycfg->mserv_username = g_strdup ("");
 
     g_free (cfgdir);
@@ -1675,26 +1675,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_block_display((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "delete_file") == 0)
-	  {
-	      prefs_set_track_playlist_deletion((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "delete_database") == 0)
-	  {
-	      prefs_set_track_database_deletion((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "delete_local_file") == 0)
-	  {
-	      prefs_set_track_local_file_deletion((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "delete_playlist") == 0)
-	  {
-	      /* ignore -- no longer supported as of 0.61-CVS */
-	  }
-	  else if(g_ascii_strcasecmp (line, "sync_remove_confirm") == 0)
-	  {
-	      prefs_set_sync_remove_confirm((gboolean)atoi(arg));
-	  }
 	  else if((g_ascii_strcasecmp (line, "auto_import") == 0) ||
 		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
@@ -1897,26 +1877,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_string (EXPORT_FILES_PATH, arg);
 	  }
-	  else if(g_ascii_strcasecmp (line, "show_duplicates") == 0)
-	  {
-	      prefs_set_show_duplicates((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "show_updated") == 0)
-	  {
-	      prefs_set_show_updated((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "show_non_updated") == 0)
-	  {
-	      prefs_set_show_non_updated((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "show_sync_dirs") == 0)
-	  {
-	      prefs_set_show_sync_dirs((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "sync_remove") == 0)
-	  {
-	      prefs_set_sync_remove((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "display_toolbar") == 0)
 	  {
 	      prefs_set_display_toolbar((gboolean)atoi(arg));
@@ -2075,10 +2035,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "mserv_use") == 0)
 	  {
 	      prefs_set_mserv_use ((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "mserv_report_probs") == 0)
-	  {
-	      prefs_set_mserv_report_probs ((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "mserv_username") == 0)
 	  {
@@ -2271,11 +2227,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, _("# delete confirmation\n"));
-    fprintf(fp, "delete_file=%d\n",prefs_get_track_playlist_deletion());
-    fprintf(fp, "delete_ipod=%d\n",prefs_get_track_ipod_file_deletion());
-    fprintf(fp, "delete_database=%d\n",prefs_get_track_database_deletion());
-    fprintf(fp, "delete_local_file=%d\n",prefs_get_track_local_file_deletion());
-    fprintf(fp, "sync_remove_confirm=%d\n",prefs_get_sync_remove_confirm());
     fprintf(fp, "autoimport=%d\n",prefs_get_autoimport());
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
@@ -2325,11 +2276,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
-    fprintf(fp, "show_duplicates=%d\n",prefs_get_show_duplicates());
-    fprintf(fp, "show_updated=%d\n",prefs_get_show_updated());
-    fprintf(fp, "show_non_updated=%d\n",prefs_get_show_non_updated());
-    fprintf(fp, "show_sync_dirs=%d\n",prefs_get_show_sync_dirs());
-    fprintf(fp, "sync_remove=%d\n",prefs_get_sync_remove());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
     fprintf(fp, "pm_autostore=%d\n",prefs_get_pm_autostore());
@@ -2369,8 +2315,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
     fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
-    fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);
-    fprintf (fp, "mserv_report_probs=%d\n", cfg->mserv_report_probs);
+    fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);    
 /*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
 }
 
@@ -2498,62 +2443,10 @@ gboolean prefs_get_write_extended_info(void)
   return cfg->write_extended_info;
 }
 
-void prefs_set_track_playlist_deletion(gboolean val)
-{
-    cfg->deletion.track = val;
-}
-
-gboolean prefs_get_track_playlist_deletion(void)
-{
-    return(cfg->deletion.track);
-}
-
-void prefs_set_track_ipod_file_deletion(gboolean val)
-{
-    cfg->deletion.ipod_file = val;
-}
-
-gboolean prefs_get_track_ipod_file_deletion(void)
-{
-    return(cfg->deletion.ipod_file);
-}
-
-void prefs_set_track_database_deletion(gboolean val)
-{
-    cfg->deletion.database = val;
-}
-
-gboolean prefs_get_track_database_deletion(void)
-{
-    return (cfg->deletion.database);
-}
-
-void prefs_set_track_local_file_deletion(gboolean val)
-{
-    cfg->deletion.local_file = val;
-}
-
-gboolean prefs_get_track_local_file_deletion(void)
-{
-    return cfg->deletion.local_file;
-}
-
-
-void prefs_set_sync_remove_confirm(gboolean val)
-{
-    cfg->deletion.syncing = val;
-}
-
-gboolean prefs_get_sync_remove_confirm(void)
-{
-    return(cfg->deletion.syncing);
-}
-
 void prefs_set_charset (gchar *charset)
 {
     prefs_cfg_set_charset (cfg, charset);
 }
-
 
 void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
 {
@@ -2562,7 +2455,6 @@ void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
 	cfgd->charset = g_strdup (charset);
 /*     printf ("set_charset: '%s'\n", charset);	 */
 }
-
 
 gchar *prefs_get_charset (void)
 {
@@ -2991,56 +2883,6 @@ void prefs_set_statusbar_timeout (guint32 val)
 guint32 prefs_get_statusbar_timeout (void)
 {
     return cfg->statusbar_timeout;
-}
-
-gboolean prefs_get_show_duplicates (void)
-{
-    return cfg->show_duplicates;
-}
-
-void prefs_set_show_duplicates (gboolean val)
-{
-    cfg->show_duplicates = val;
-}
-
-gboolean prefs_get_show_updated (void)
-{
-    return cfg->show_updated;
-}
-
-void prefs_set_show_updated (gboolean val)
-{
-    cfg->show_updated = val;
-}
-
-gboolean prefs_get_show_non_updated (void)
-{
-    return cfg->show_non_updated;
-}
-
-void prefs_set_show_non_updated (gboolean val)
-{
-    cfg->show_non_updated = val;
-}
-
-gboolean prefs_get_show_sync_dirs (void)
-{
-    return cfg->show_sync_dirs;
-}
-
-void prefs_set_show_sync_dirs (gboolean val)
-{
-    cfg->show_sync_dirs = val;
-}
-
-gboolean prefs_get_sync_remove (void)
-{
-    return cfg->sync_remove;
-}
-
-void prefs_set_sync_remove (gboolean val)
-{
-    cfg->sync_remove = val;
 }
 
 gboolean prefs_get_display_toolbar (void)
@@ -3685,17 +3527,6 @@ void prefs_set_mserv_use(gboolean val)
     cfg->mserv_use = val;
 }
 
-/* whether or not to report problems reading from mserv database */
-gboolean prefs_get_mserv_report_probs(void)
-{
-    return(cfg->mserv_report_probs);
-}
-
-void prefs_set_mserv_report_probs(gboolean val)
-{
-    cfg->mserv_report_probs = val;
-}
-
 void prefs_set_mserv_username (const gchar *str)
 {
     if (str)
@@ -3719,4 +3550,3 @@ void prefs_set_unused_gboolean3(gboolean val)
 {
     cfg->unused_gboolean3 = val;
 }
-

@@ -1406,7 +1406,7 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
     /* display log of detected duplicates */
     gp_duplicate_remove (NULL, NULL);
 
-    if (prefs_get_sync_remove ())
+    if (prefs_get_int("sync_remove"))
     {   /* remove tracks that are no longer present in the dirs */
 	GList *tracklist = NULL;
 	struct DeleteData *dd;
@@ -1481,10 +1481,10 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 		 str->str,             /* scrolled text */
 		 _("Never delete any files when syncing"),/* opt 1 text */
 		 CONF_STATE_INVERT_FALSE,                 /* opt 1 state */
-		 prefs_set_sync_remove,                   /* opt 1 handler */
+		 "sync_remove",                   /* opt 1 handler */
 		 NULL, 0, NULL,        /* option 2 */
-		 prefs_get_sync_remove_confirm(), /* gboolean confirm_again, */
-		 prefs_set_sync_remove_confirm,   /* confirm_again_handler,*/
+		 prefs_get_int("sync_remove_confirm"), /* gboolean confirm_again, */
+		 "sync_remove_confirm",   /* confirm_again_key,*/
 		 CONF_NULL_HANDLER,    /* ConfHandler ok_handler,*/
 		 NULL,                 /* don't show "Apply" button */
 		 CONF_NULL_HANDLER,    /* cancel_handler,*/
@@ -1683,8 +1683,8 @@ No valid directories have been found. Sync aborted.\n"));
 		str->str,               /* text */
 		NULL, 0, NULL,          /* option 1 */
 		NULL, 0, NULL,          /* option 2 */
-		prefs_get_show_sync_dirs(),/* gboolean confirm_again, */
-		prefs_set_show_sync_dirs,/* confirm_again_handler*/
+		prefs_get_int("show_sync_dirs"),/* gboolean confirm_again, */
+		"show_sync_dirs",/* confirm_again_key*/
 		sync_dir_ok,            /* ConfHandler ok_handler,*/
 		NULL,                   /* don't show "Apply" */
 		sync_dir_cancel,        /* cancel_handler,*/
@@ -1714,7 +1714,7 @@ void display_non_updated (Track *track, gchar *txt)
 
    if ((track == NULL) && str)
    {
-       if (prefs_get_show_non_updated() && str->len)
+       if (prefs_get_int("show_non_updated") && str->len)
        { /* Some tracks have not been updated. Print a notice */
 	   buf = g_strdup_printf (
 	       ngettext ("The following track could not be updated",
@@ -1729,7 +1729,7 @@ void display_non_updated (Track *track, gchar *txt)
 		NULL, 0, NULL,          /* option 1 */
 		NULL, 0, NULL,          /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
-		prefs_set_show_non_updated,/* confirm_again_handler,*/
+		"show_non_updated",/* confirm_again_key,*/
 		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
 		NULL,               /* don't show "Apply" button */
 		NULL,               /* cancel_handler,*/
@@ -1747,7 +1747,7 @@ void display_non_updated (Track *track, gchar *txt)
        track_nr = 0;
        gtkpod_tracks_statusbar_update();
    }
-   else if (prefs_get_show_non_updated() && track)
+   else if (prefs_get_int("show_non_updated") && track)
    {
        /* add info about it to str */
        buf = get_track_info (track, TRUE);
@@ -1776,7 +1776,7 @@ void display_updated (Track *track, gchar *txt)
    static gint track_nr = 0;
    static GString *str = NULL;
 
-   if (prefs_get_show_updated() && (track == NULL) && str)
+   if (prefs_get_int("show_updated") && (track == NULL) && str)
    {
        if (str->len)
        { /* Some tracks have been updated. Print a notice */
@@ -1793,7 +1793,7 @@ void display_updated (Track *track, gchar *txt)
 		NULL, 0, NULL,          /* option 1 */
 		NULL, 0, NULL,          /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
-		prefs_set_show_updated,/* confirm_again_handler,*/
+		"show_updated",/* confirm_again_key,*/
 		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
 		NULL,               /* don't show "Apply" button */
 		NULL,               /* cancel_handler,*/
@@ -1811,7 +1811,7 @@ void display_updated (Track *track, gchar *txt)
        track_nr = 0;
        gtkpod_tracks_statusbar_update();
    }
-   else if (prefs_get_show_updated() && track)
+   else if (prefs_get_int("show_updated") && track)
    {
        /* add info about it to str */
        buf = get_track_info (track, TRUE);
@@ -1843,7 +1843,7 @@ void display_mserv_problems (Track *track, gchar *txt)
    if ((track == NULL) && str)
    {
        if (prefs_get_mserv_use() &&
-	   prefs_get_mserv_report_probs() && str->len)
+	   prefs_get_int("mserv_report_probs") && str->len)
        { /* Some tracks have had problems. Print a notice */
 	   buf = g_strdup_printf (
 	       ngettext ("No mserv information could be retrieved for the following track",
@@ -1858,7 +1858,7 @@ void display_mserv_problems (Track *track, gchar *txt)
 		NULL, 0, NULL,          /* option 1 */
 		NULL, 0, NULL,          /* option 2 */
 		TRUE,               /* gboolean confirm_again, */
-		prefs_set_mserv_report_probs,/* confirm_again_handler,*/
+		"mserv_report_probs",/* confirm_again_key,*/
 		CONF_NULL_HANDLER,  /* ConfHandler ok_handler,*/
 		NULL,               /* don't show "Apply" button */
 		NULL,               /* cancel_handler,*/
@@ -1877,7 +1877,7 @@ void display_mserv_problems (Track *track, gchar *txt)
        gtkpod_tracks_statusbar_update();
    }
    else if (prefs_get_mserv_use() &&
-	    prefs_get_mserv_report_probs() && track)
+	    prefs_get_int("mserv_report_probs") && track)
    {
        /* add info about it to str */
        buf = get_track_info (track, TRUE);
@@ -2599,7 +2599,7 @@ void parse_offline_playcount (void)
 	     NULL, 0, NULL,         /* option 1 */
 	     NULL, 0, NULL,         /* option 2 */
 	     TRUE,                  /* confirm_again, */
-	     NULL,                  /* confirm_again_handler,*/
+	     NULL,                  /* confirm_again_key,*/
 	     CONF_NULL_HANDLER,     /* ConfHandler ok_handler,*/
 	     NULL,                  /* don't show "Apply" button */
 	     CONF_NULL_HANDLER,     /* cancel_handler,*/

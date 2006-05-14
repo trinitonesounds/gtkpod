@@ -1,3 +1,12 @@
+2006-05-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * move over gtkpod_confirmation() to using the new prefs
+           system, along with a couple of keys (sync_remove,
+           sync_remove_confirm, show_duplicates, show_sync_dirs,
+           show_non_updated, show_updated, mserv_report_probs,
+           delete_ipod, delete_file, delete_local_file,
+           delete_database). Thanks to James Liggett!
+
 2006-05-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/syncdir.c:
