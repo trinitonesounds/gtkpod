@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 01:02:24 jcs>
+/* Time-stamp: <2006-05-09 00:07:59 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -387,7 +387,6 @@ void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
     ExtraiTunesDBData *new_eitdb;
     Playlist *old_pl, *mpl;
     GList *old_link;
-    gchar *key;
     gchar *old_pl_name = NULL;
     GtkTreePath *path;
     gint pos = -1; /* default: add to the end */
@@ -445,9 +444,7 @@ void gp_replace_itdb (iTunesDB *old_itdb, iTunesDB *new_itdb)
 
     /* Set prefs system with name of MPL */
     mpl = itdb_playlist_mpl (new_itdb);
-    key = get_itdb_key (get_itdb_index (new_itdb), "name");
-    prefs_set_string (key, mpl->name);
-    g_free (key);
+    set_itdb_prefs_string (new_itdb, "name", mpl->name);
 }    
 
 
@@ -806,7 +803,7 @@ void init_data (GtkWidget *window)
 
     for (i=0;;++i)
     {
-	gchar *property = get_itdb_key (i, "type");
+	gchar *property = get_itdb_prefs_key (i, "type");
 	gint type;
 	gboolean valid = prefs_get_int_value (property, &type);
 	g_free (property);
@@ -821,7 +818,7 @@ void init_data (GtkWidget *window)
 
 	    if (type & GP_ITDB_TYPE_LOCAL)
 	    {
-		gchar *fn = get_itdb_key (i, "filename");
+		gchar *fn = get_itdb_prefs_key (i, "filename");
 
 		filename = prefs_get_string (fn);
 
@@ -840,11 +837,11 @@ void init_data (GtkWidget *window)
 	    {
 		gchar *key;
 
-		key = get_itdb_key (i, "mountpoint");
+		key = get_itdb_prefs_key (i, "mountpoint");
 		mountpoint = prefs_get_string (key);
 		g_free (key);
 
-		key = get_itdb_key (i, "filename");
+		key = get_itdb_prefs_key (i, "filename");
 		offline_filename = prefs_get_string (key);
 		g_free (key);
 

@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-05-08 00:53:26 jcs>
+|  Time-stamp: <2006-05-09 00:07:59 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1425,7 +1425,7 @@ GtkWidget *gtkpod_xml_get_widget (GladeXML *xml, const gchar *name)
  * gfree() after use
  *
  **/
-gchar *get_itdb_key (gint index, const gchar *subkey)
+gchar *get_itdb_prefs_key (gint index, const gchar *subkey)
 {
     g_return_val_if_fail (subkey, NULL);
 
@@ -1439,7 +1439,8 @@ gchar *get_itdb_key (gint index, const gchar *subkey)
  *
  * gfree() after use
  **/
-gchar *get_playlist_key (gint index, Playlist *pl, const gchar *subkey)
+gchar *get_playlist_prefs_key (gint index,
+			       Playlist *pl, const gchar *subkey)
 {
     g_return_val_if_fail (pl, NULL);
     g_return_val_if_fail (subkey, NULL);
@@ -1462,3 +1463,123 @@ gint get_itdb_index (iTunesDB *itdb)
 	
 	return g_list_index (itdbs_head->itdbs, itdb);
 }
+
+
+/**
+ * Helper function to retrieve a string prefs entry for @itdb.
+ * 
+ * gfree() after use
+ **/
+gchar *get_itdb_prefs_string (iTunesDB *itdb, const gchar *subkey)
+{
+    gchar *key, *value;
+
+    g_return_val_if_fail (itdb, NULL);
+    g_return_val_if_fail (subkey, NULL);
+
+    key = get_itdb_prefs_key (get_itdb_index (itdb), subkey);
+    value = prefs_get_string (key);
+    g_free (key);
+
+    return value;
+}
+
+
+/**
+ * Helper function to retrieve an in prefs entry for @itdb.
+ * 
+ **/
+gint get_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey)
+{
+    gchar *key;
+    gint value;
+
+    g_return_val_if_fail (itdb, 0);
+    g_return_val_if_fail (subkey, 0);
+
+    key = get_itdb_prefs_key (get_itdb_index (itdb), subkey);
+    value = prefs_get_int (key);
+    g_free (key);
+
+    return value;
+}
+
+/**
+ * Helper function to retrieve a string prefs entry for @itdb.
+ *
+ * Returns TRUE if the key was actually set in the prefs. 
+ * 
+ * gfree() after use
+ **/
+gboolean get_itdb_prefs_string_value (iTunesDB *itdb, const gchar *subkey,
+				      gchar **value)
+{
+    gchar *key;
+    gboolean result;
+
+    g_return_val_if_fail (itdb, FALSE);
+    g_return_val_if_fail (subkey, FALSE);
+
+    key = get_itdb_prefs_key (get_itdb_index (itdb), subkey);
+    result = prefs_get_string_value (key, value);
+    g_free (key);
+
+    return result;
+}
+
+
+/**
+ * Helper function to retrieve an in prefs entry for @itdb.
+ * 
+ **/
+gboolean get_itdb_prefs_int_value (iTunesDB *itdb, const gchar *subkey,
+				   gint *value)
+{
+    gchar *key;
+    gboolean result;
+
+    g_return_val_if_fail (itdb, FALSE);
+    g_return_val_if_fail (subkey, FALSE);
+
+    key = get_itdb_prefs_key (get_itdb_index (itdb), subkey);
+    result = prefs_get_int_value (key, value);
+    g_free (key);
+
+    return result;
+}
+
+/**
+ * Helper function to set a string prefs entry for @itdb.
+ * 
+ * gfree() after use
+ **/
+void set_itdb_prefs_string (iTunesDB *itdb,
+			    const gchar *subkey, const gchar *value)
+{
+    gchar *key;
+
+    g_return_if_fail (itdb);
+    g_return_if_fail (subkey);
+
+    key = get_itdb_prefs_key (get_itdb_index (itdb), subkey);
+    prefs_set_string (key, value);
+    g_free (key);
+}
+
+
+/**
+ * Helper function to set an in prefs entry for @itdb.
+ * 
+ **/
+void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value)
+{
+    gchar *key;
+
+    g_return_if_fail (itdb);
+    g_return_if_fail (subkey);
+
+    key = get_itdb_prefs_key (get_itdb_index (itdb), subkey);
+    prefs_set_int (key, value);
+    g_free (key);
+}
+

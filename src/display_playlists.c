@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:48:50 jcs>
+/* Time-stamp: <2006-05-09 00:05:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1331,12 +1331,10 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       g_return_if_fail (new_playlist->itdb);
       if (new_playlist->itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
-	  gchar *key = get_itdb_key (get_itdb_index (new_playlist->itdb),
-				     "mountpoint");
-	  gchar *mp = prefs_get_string (key);
+	  gchar *mp = get_itdb_prefs_string (new_playlist->itdb,
+					     "mountpoint");
 	  space_set_ipod_mount (mp);
 	  g_free (mp);
-	  g_free (key);
       }
 
       /* remove all entries from sort tab 0 */
@@ -1733,10 +1731,7 @@ pm_cell_edited (GtkCellRendererText *renderer,
       data_changed (playlist->itdb);
       if (itdb_playlist_is_mpl (playlist))
       {   /* Need to change name in prefs system */
-	  gchar *key = get_itdb_key (get_itdb_index (playlist->itdb),
-				     "name");
-	  prefs_set_string (key, new_text);
-	  g_free (key);
+	  set_itdb_prefs_string (playlist->itdb, "name", new_text);
       }
   }
 }
