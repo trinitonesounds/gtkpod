@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-13 11:32:07 jcs>
+/* Time-stamp: <2006-05-15 00:54:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -41,7 +41,11 @@
 void sync_playlist (Playlist *playlist,
 		    const gchar *syncdir,
 		    const gchar *key_sync_confirm_dirs,
+		    gboolean sync_confirm_dirs,
 		    const gchar *key_sync_delete_tracks,
+		    gboolean sync_delete_tracks,
 		    const gchar *key_sync_confirm_delete,
-		    const gchar *key_sync_show_summary);
+		    gboolean sync_confirm_delete,
+		    const gchar *key_sync_show_summary,
+		    gboolean sync_show_summary);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-13 00:37:48 jcs>
+/* Time-stamp: <2006-05-15 00:11:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -108,7 +108,7 @@ struct DeleteData
 {
     iTunesDB *itdb;
     Playlist *pl;
-    GList *selected_tracks;
+    GList *tracks;
     DeleteAction deleteaction;
 };
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-13 01:22:25 jcs>
+/* Time-stamp: <2006-05-14 23:30:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -94,6 +94,7 @@ void gp_merge_ipod_itdbs (void);
 void gp_merge_itdb (iTunesDB *old_itdb);
 void handle_export (void);
 void data_changed (iTunesDB *itdb);
+void data_unchanged (iTunesDB *itdb);
 gboolean files_are_saved (void);
 gchar* get_file_name(Track *tr);
 gchar* get_file_name_on_ipod(Track *tr);

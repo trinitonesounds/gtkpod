@@ -7,6 +7,16 @@
            delete_ipod, delete_file, delete_local_file,
            delete_database). Thanks to James Liggett!
 
+	 * src/file.c: copy_new_info() incorrectly handled pc_path and
+           thumbnail_path, possibly leading to corruption of both when
+           updating tracks.
+
+	 * src/repository.[ch]
+	 * src/syncdir.[ch]
+	   It's now possible to sync directories from within the
+	   repository option catalog. Next step: automatic sync at the
+	   time of loading the database. Almost there!
+
 2006-05-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/syncdir.c:

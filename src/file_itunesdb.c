@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-13 00:37:48 jcs>
+/* Time-stamp: <2006-05-14 23:32:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -649,7 +649,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     gp_md5_hash_tracks_itdb (itdb);
 
     /* mark the data as unchanged */
-    eitdb->data_changed = FALSE;
+    data_unchanged (itdb);
     /* set mark that this itdb struct contains an imported iTunesDB */
     eitdb->itdb_imported = TRUE;
 
@@ -1597,7 +1597,7 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   /* indicate that files and/or database is saved */
   if (success)
   {
-      eitdb->data_changed = FALSE;
+      data_unchanged (itdb);
       /* block menu item and button if successfully written to iPod */
       if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	  display_disable_gtkpod_import_buttons();
@@ -1670,7 +1670,8 @@ void handle_export (void)
 
 
 
-/* indicate that data was changed and update the free space indicator */
+/* indicate that data was changed and update the free space indicator,
+ * as well as the changed indicator in the playlist view */
 void data_changed (iTunesDB *itdb)
 {
     ExtraiTunesDBData *eitdb;
@@ -1679,6 +1680,22 @@ void data_changed (iTunesDB *itdb)
     g_return_if_fail (eitdb);
 
     eitdb->data_changed = TRUE;
+    pm_name_changed (itdb_playlist_mpl (itdb));
+    space_data_update ();
+}
+
+
+/* indicate that data was changed and update the free space indicator,
+ * as well as the changed indicator in the playlist view */
+void data_unchanged (iTunesDB *itdb)
+{
+    ExtraiTunesDBData *eitdb;
+    g_return_if_fail (itdb);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+
+    eitdb->data_changed = FALSE;
+    pm_name_changed (itdb_playlist_mpl (itdb));
     space_data_update ();
 }
 

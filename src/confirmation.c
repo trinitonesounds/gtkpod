@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 14:13:41 jcs>
+/* Time-stamp: <2006-05-14 19:17:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -190,6 +190,7 @@ static void on_response (GtkWidget *w, gint response, gpointer id)
 	    break;
 	case GTK_RESPONSE_NONE:
 	case GTK_RESPONSE_CANCEL:
+	case GTK_RESPONSE_DELETE_EVENT:
 	    on_cancel_clicked (w, id);
 	    break;
 	case GTK_RESPONSE_APPLY:
@@ -218,7 +219,7 @@ static void on_response (GtkWidget *w, gint response, gpointer id)
            with the same ID.
    @modal: should the window be modal (i.e. block the program)?
    @title: title of the window
-   @label: the text on the top of the window
+   @label: the text at the top of the window
    @text:  the text displayed in a scrolled window
    @option_text: text for the option checkbox (or NULL)
    @option_state: initial state of the option + a flag indicating
@@ -369,8 +370,16 @@ GtkResponseType gtkpod_confirmation (gint id,
 	gtk_window_set_title (GTK_WINDOW(window), _("Confirmation Dialogue"));
 
     /* Set label */
-    if (label && (w = gtkpod_xml_get_widget (confirm_xml, "label")))
+    w = gtkpod_xml_get_widget (confirm_xml, "label");
+    if (label)
+    {
+	gtk_widget_show (w);
 	gtk_label_set_text(GTK_LABEL(w), label);
+    }
+    else
+    {
+	gtk_widget_hide (w);
+    }
 
     /* Set text */
     w = gtkpod_xml_get_widget (confirm_xml, "text");

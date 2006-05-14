@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 01:02:00 jcs>
+/* Time-stamp: <2006-05-15 00:55:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -31,17 +31,24 @@
  * with a playlist */
 
 #include <libintl.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include "display_itdb.h"
 #include "file.h"
+#include "info.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
 #include "syncdir.h"
 
 
+struct add_files_data
+{
+    Playlist *playlist;
+    GList    **tracks_updated;
+};
 
 
 /**
@@ -51,7 +58,7 @@
  * @key_sync_confirm_dirs: preference key to specify whether or not
  *            the list of directories should be confirmed. The
  *            confirmation dialog may change the value of this prefs
- *            entry. If NULL, no confirmation takes place.
+ *            entry. If NULL confirmation takes place.
  *
  * Have the user confirm which directories should be included into the
  * confirmation process.
@@ -64,14 +71,11 @@ static gboolean confirm_sync_dirs (GHashTable *dirs_hash,
 {
     g_return_val_if_fail (dirs_hash, FALSE);
 
-    if (key_sync_confirm_dirs == NULL)
-	return TRUE;
-
-    if (!prefs_get_int (key_sync_confirm_dirs))
+    if (key_sync_confirm_dirs && !prefs_get_int (key_sync_confirm_dirs))
 	return TRUE;
 
     /* FIXME: implement confirmation (doesn't strike me as a major
-     * feature -- feel free to contribute
+     * feature -- feel free to contribute)
      *
      * The idea would be to have the user check/uncheck each of the
      * individual directories. @dirs_hash will be adjusted to reflect
@@ -89,8 +93,7 @@ static gboolean confirm_sync_dirs (GHashTable *dirs_hash,
  * @key_sync_confirm_delete: preference key to specify whether or not
  *          the removal of tracks should be confirmed. The
  *          confirmation dialog may change the value of this prefs
- *          entry. If NULL, no confirmation takes place (TRUE is
- *          returned).
+ *          entry. If NULL confirmation takes place.
  *
  * Return value: TRUE: it's OK to remove the tracks. FALSE: it's not
  *               OK to remove the tracks. TRUE is also given if no
@@ -101,16 +104,18 @@ static gboolean confirm_sync_dirs (GHashTable *dirs_hash,
 static gboolean confirm_delete_tracks (GList *tracks,
 				       const gchar *key_sync_confirm_delete)
 {
+    GtkResponseType response;
+    struct DeleteData dd;
+    gchar *label, *title;
+    GString *string;
     iTunesDB *itdb;
     Track *tr;
 
     if (tracks == NULL)
 	return TRUE;
 
-    if (key_sync_confirm_delete == NULL)
-	return TRUE;
-
-    if (!prefs_get_int (key_sync_confirm_delete))
+    if (key_sync_confirm_delete &&
+	!prefs_get_int (key_sync_confirm_delete))
 	return TRUE;
 
     tr = g_list_nth_data (tracks, 0);
@@ -118,9 +123,50 @@ static gboolean confirm_delete_tracks (GList *tracks,
     itdb = tr->itdb;
     g_return_val_if_fail (itdb, FALSE);
 
-    /* FIXME: display tracks using a function similar to
-     * 'delete_track_head' in misc_confirm.c. */
-    return TRUE;
+    dd.itdb = itdb;
+    dd.pl = NULL;
+    dd.tracks = tracks;
+    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	dd.deleteaction = DELETE_ACTION_IPOD;
+    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	dd.deleteaction = DELETE_ACTION_DATABASE;
+
+    delete_populate_settings (&dd,
+			      &label, &title,
+			      NULL, NULL,
+			      &string);
+
+    response = gtkpod_confirmation (
+	-1,                       /* gint id, */
+	TRUE,                     /* gboolean modal, */
+	title,                    /* title */
+	label,                    /* label */
+	string->str,              /* scrolled text */
+	NULL, 0, NULL,            /* option 1 */
+	NULL, 0, NULL,            /* option 2 */
+	TRUE,                     /* gboolean confirm_again, */
+	key_sync_confirm_delete,  /* ConfHandlerOpt confirm_again_key,*/
+	CONF_NULL_HANDLER,        /* ConfHandler ok_handler,*/
+	NULL,                     /* don't show "Apply" button */
+	CONF_NULL_HANDLER,        /* cancel_handler,*/
+	NULL,                     /* gpointer user_data1,*/
+	NULL);                    /* gpointer user_data2,*/
+
+
+    g_free (label);
+    g_free (title);
+    g_string_free (string, TRUE);
+
+    if (response == GTK_RESPONSE_OK)
+    {
+	/* it's OK to remove the tracks */
+	return TRUE;
+    }
+    else
+    {
+	/* better not delete the tracks */
+	return FALSE;
+    }
 }
 
 
@@ -133,19 +179,22 @@ static void sync_add_tracks (GString *str,
     g_return_if_fail (str);
     g_return_if_fail (title);
 
-    g_string_append_printf (str, title);
-
-    for (gl=tracks; gl; gl=gl->next)
+    if (tracks)
     {
-	gchar *buf;
-	Track *tr = gl->data;
-	g_return_if_fail (tr);
+	g_string_append (str, title);
 
-	buf = get_track_info (tr, FALSE);
-	g_string_append_printf (str, "%s\n", buf);
-	g_free (buf);
+	for (gl=tracks; gl; gl=gl->next)
+	{
+	    gchar *buf;
+	    Track *tr = gl->data;
+	    g_return_if_fail (tr);
+
+	    buf = get_track_info (tr, FALSE);
+	    g_string_append_printf (str, "%s\n", buf);
+	    g_free (buf);
+	}
+	g_string_append_printf (str, "\n\n");
     }
-    g_string_append_printf (str, "\n\n");
 }
 
 
@@ -154,7 +203,7 @@ static void sync_add_tracks (GString *str,
  * sync_show_summary:
  *
  * @key_sync_show_summary: preference key to specify whether or not a
- *          summary should be shown or not. If NULL, no summary is
+ *          summary should be shown or not. If NULL, the summary is
  *          shown. This key may be changed by the confirmation dialog.
  * @playlist: playlist where are syncing with.
  * @tracks_to_delete_from_ipod: GList with tracks to be deleted from
@@ -163,31 +212,39 @@ static void sync_add_tracks (GString *str,
  *          from @playlist.
  * @tracks_updated: GList with tracks that have been updated.
  */
-static void sync_show_summary (const gchar *key_sync_show_summary,
+static void show_sync_summary (const gchar *key_sync_show_summary,
 			       Playlist *playlist,
 			       GList *tracks_to_delete_from_ipod,
 			       GList *tracks_to_delete_from_playlist,
 			       GList *tracks_updated)
 {
     GString *summary;
-    gchar *str;
+    Playlist *mpl;
+    gint no_length;
 
     g_return_if_fail (playlist);
     g_return_if_fail (playlist->itdb);
 
-    if (key_sync_show_summary == NULL)
-	return;
-
-    if (!prefs_get_int (key_sync_show_summary))
+    if (key_sync_show_summary && !prefs_get_int (key_sync_show_summary))
 	return;
 
     summary = g_string_sized_new (2000);
 
+    /* mpl->name is the repository's name */
+    mpl = itdb_playlist_mpl (playlist->itdb);
+    g_return_if_fail (mpl);
+    g_string_append_printf (summary,
+			    _("Sync summary for %s/%s\n"),
+			    mpl->name, playlist->name);
+
+    /* used to check whether data was added or not */
+    no_length = strlen (summary->str);
+
     sync_add_tracks (
 	summary,
 	tracks_updated,
-	ngettext ("The following track has been updated:\n\n",
-		  "The following tracks have been updated:\n\n",
+	ngettext ("The following track has been added or updated:\n",
+		  "The following tracks have been added or updated:\n",
 		  g_list_length (tracks_updated)));
 
     if (playlist->itdb->usertype & GP_ITDB_TYPE_IPOD)
@@ -195,8 +252,8 @@ static void sync_show_summary (const gchar *key_sync_show_summary,
 	sync_add_tracks (
 	    summary,
 	    tracks_to_delete_from_ipod,
-	    ngettext ("The following track has been completely removed from the iPod:\n\n",
-		      "The following tracks have been completely removed from the iPod:\n\n",
+	    ngettext ("The following track has been completely removed from the iPod:\n",
+		      "The following tracks have been completely removed from the iPod:\n",
 		      g_list_length (tracks_to_delete_from_ipod)));
     }
     else
@@ -204,23 +261,33 @@ static void sync_show_summary (const gchar *key_sync_show_summary,
 	sync_add_tracks (
 	    summary,
 	    tracks_to_delete_from_ipod,
-	    ngettext ("The following track has been removed from the repository:\n\n",
-		      "The following tracks have been removed from the repository:\n\n",
+	    ngettext ("The following track has been removed from the repository:\n",
+		      "The following tracks have been removed from the repository:\n",
 		      g_list_length (tracks_to_delete_from_ipod)));
     }
 
-    str = g_strdup_printf (
-	ngettext ("The following track has been removed from playlist '%s':\n\n",
-		  "The following tracks have been removed from playlist '%s':\n\n",
-		  g_list_length (tracks_to_delete_from_playlist)),
-	playlist->name);
     sync_add_tracks (summary,
 		     tracks_to_delete_from_playlist,
-		     str);
-    g_free (str);
+		     ngettext ("The following track has been removed from the playlist:\n",
+			       "The following tracks have been removed from the playlist:\n",
+			       g_list_length (tracks_to_delete_from_playlist)));
 
-    /* FIXME: use proper gtkpod_confirmation dialog */
-    gtkpod_warning (summary->str);
+    if (strlen (summary->str) == no_length)
+    {
+	g_string_append (summary, _("Nothing was changed.\n"));
+    }
+
+    gtkpod_confirmation (CONF_ID_SYNC_SUMMARY,
+			 FALSE,
+			 _("Sync summary"),
+			 NULL,
+			 summary->str,
+			 NULL, 0, NULL,
+			 NULL, 0, NULL,
+			 TRUE,
+			 key_sync_show_summary,
+			 CONF_NULL_HANDLER, NULL, NULL,
+			 NULL, NULL);
 
     g_string_free (summary, TRUE);
 }
@@ -245,15 +312,20 @@ static void sync_addtrackfunc (Playlist *plitem, Track *track, gpointer data)
 /**
  * add_files:
  *
- * add all music/video files to the playlist (@user_data)
+ * add all music/video files to the playlist @userdata->playlist. 
+ * updated/newly added tracks are appended to @userdata->tracks_updated.
  */
 static void add_files (gpointer key, gpointer value, gpointer user_data)
 {
-    Playlist *pl = user_data;
+    struct add_files_data *afd = user_data;
+    Playlist *pl;
     gchar *dirname = key;
 
     g_return_if_fail (key);
-    g_return_if_fail (user_data);
+    g_return_if_fail (afd);
+    g_return_if_fail (afd->playlist);
+    g_return_if_fail (afd->tracks_updated);
+    pl = afd->playlist;
 
     if (g_file_test (dirname, G_FILE_TEST_IS_DIR))
     {
@@ -265,6 +337,7 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
 	    {
 		gchar *filename = g_build_filename (dirname, next, NULL);
 		FileType filetype = determine_file_type (filename);
+		gboolean updated = FALSE;
 		Track *tr=NULL;
 
 		switch (filetype)
@@ -297,13 +370,21 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
 			if (!itdb_playlist_contains_track (pl, tr))
 			{
 			    gp_playlist_add_track (pl, tr, TRUE);
+			    updated = TRUE;
 			}
 
 			stat (filename, &filestat);
+/*
+printf ("%ld %ld (%s)\n, %ld %d\n",
+	filestat.st_mtime, etr->mtime,
+	filename,
+	filestat.st_size, tr->size);
+*/
 			if ((filestat.st_mtime != etr->mtime) ||
 			    (filestat.st_size != tr->size))
 			{
 			    update_track_from_file (pl->itdb, tr);
+			    updated = TRUE;
 			}
 		    }
 		    else
@@ -315,8 +396,15 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
 			add_track_by_filename (pl->itdb, filename,
 					       pl, FALSE,
 					       sync_addtrackfunc, NULL);
+			tr = gp_track_by_filename (pl->itdb, filename);
+			updated = TRUE;
 		    }
 		    break;
+		}
+		if (tr && updated)
+		{
+		    *afd->tracks_updated =
+			g_list_append (*afd->tracks_updated, tr);
 		}
 		g_free (filename);
 	    }
@@ -338,8 +426,10 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
  * @key_sync_confirm_dirs: preference key to specify whether or not
  *            the list of directories should be confirmed. The
  *            confirmation dialog may change the value of this prefs
- *            entry. If NULL, no confirmation takes place.
+ *            entry. If NULL, @sync_confirm_dirs decides whether
+ *            confirmation takes place or not.
  *            FIXME: not implemented at present.
+ * @sync_confirm_dirs: see under @key_sync_confirm_dirs.
  * @key_sync_delete_tracks: preference key to specify whether or not
  *            tracks no longer present in the directory list should be
  *            removed from the iPod/database or not. Normally tracks
@@ -347,16 +437,22 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
  *            value is set to TRUE (1), they will be removed from the
  *            iPod /database completely, if they are not a member of
  *            other playlists.
- *            If NULL, tracks will be removed. If @playlist is the
+ *            If NULL, @sync_delete_tracks will determine whether
+ *            tracks are removed or not. Also, if @playlist is the
  *            MPL, tracks will be removed irrespective of this key's
  *            value. 
+ * @sync_delete_tracks: see under @key_sync_delete_tracks.
  * @key_sync_confirm_delete: preference key to specify whether or not
  *            the removal of tracks should be confirmed. The
  *            confirmation dialog may change the value of this prefs
- *            entry. If NULL, no confirmation takes place.
+ *            entry. If NULL, @sync_confirm_delete will determine
+ *            whether or not confirmation takes place.
+ * @sync_confirm_delete: see under @key_sync_confirm_delete
  * @key_sync_show_summary: preference key to specify whether or not a
  *            summary of removed and newly added or updated tracks
- *            should be displayed. If NULL, nothing is displayed.
+ *            should be displayed. If NULL, @sync_show_shummary will
+ *            determine whether or not a summary is displayed.
+ * @sync_show_shummary: see under @key_sync_show_shummary
  *
  * Return value: none, but will give status information via the
  * statusbar and information windows.
@@ -364,9 +460,13 @@ static void add_files (gpointer key, gpointer value, gpointer user_data)
 void sync_playlist (Playlist *playlist,
 		    const gchar *syncdir,
 		    const gchar *key_sync_confirm_dirs,
+		    gboolean sync_confirm_dirs,
 		    const gchar *key_sync_delete_tracks,
+		    gboolean sync_delete_tracks,
 		    const gchar *key_sync_confirm_delete,
-		    const gchar *key_sync_show_summary)
+		    gboolean sync_confirm_delete,
+		    const gchar *key_sync_show_summary,
+		    gboolean sync_show_summary)
 {
     GHashTable *dirs_hash;
     gboolean delete_tracks;
@@ -374,6 +474,7 @@ void sync_playlist (Playlist *playlist,
     GList *tracks_to_delete_from_ipod = NULL;
     GList *tracks_to_delete_from_playlist = NULL;
     GList *tracks_updated = NULL;
+    struct add_files_data afd;
     GList *gl;
 
     g_return_if_fail (playlist);
@@ -431,10 +532,13 @@ void sync_playlist (Playlist *playlist,
     }
 
     /* Confirm directories */
-    if (!confirm_sync_dirs (dirs_hash, key_sync_confirm_dirs))
-    {   /* aborted */
-	g_hash_table_destroy (dirs_hash);
-	return;
+    if (key_sync_confirm_dirs || sync_confirm_dirs)
+    {
+	if (!confirm_sync_dirs (dirs_hash, key_sync_confirm_dirs))
+	{   /* aborted */
+	    g_hash_table_destroy (dirs_hash);
+	    return;
+	}
     }
 
     /* current_time can be used to recognize newly added/updated
@@ -442,7 +546,9 @@ void sync_playlist (Playlist *playlist,
     current_time = itdb_time_get_mac_time ();
 
     /* Add all files in all directories entered into dirs_hash */
-    g_hash_table_foreach (dirs_hash, add_files, playlist);
+    afd.playlist = playlist;
+    afd.tracks_updated = &tracks_updated;
+    g_hash_table_foreach (dirs_hash, add_files, &afd);
 
     /* Should tracks be deleted that were not present in the
      * directories? */
@@ -456,8 +562,7 @@ void sync_playlist (Playlist *playlist,
     }
 
     /* Identify all tracks in playlist not being located in one of the
-       specified dirs, or no longer existing. At the same time
-       identify all tracks having been updated. */
+       specified dirs, or no longer existing. */
     for (gl=playlist->members; gl; gl=gl->next)
     {
 	ExtraTrackData *etr;
@@ -474,7 +579,8 @@ void sync_playlist (Playlist *playlist,
 	    gchar *dirname_local;
 
 	    dirname_local = g_path_get_dirname (etr->pc_path_locale);
-	    if (!g_hash_table_lookup (dirs_hash, dirname_local))
+	    if (!g_hash_table_lookup_extended (dirs_hash, dirname_local,
+					       NULL, NULL))
 	    {   /* file is not in one of the specified directories */
 		remove = TRUE;
 	    }
@@ -484,15 +590,6 @@ void sync_playlist (Playlist *playlist,
 				 G_FILE_TEST_EXISTS) == FALSE)
 		{   /* no -- remove */
 		    remove = TRUE;
-		}
-		else
-		{   /* check if track was added or updated during the
-		       sync process */
-		    if (tr->time_modified >= current_time)
-		    {
-			tracks_updated = g_list_append (tracks_updated,
-							tr);
-		    }
 		}
 	    }
 	}
@@ -517,6 +614,7 @@ void sync_playlist (Playlist *playlist,
     }
 
     if (tracks_to_delete_from_ipod &&
+	(key_sync_confirm_delete || sync_confirm_delete) &&
 	(confirm_delete_tracks (tracks_to_delete_from_ipod,
 				key_sync_confirm_delete) == FALSE))
     {   /* User doesn't want us to remove those tracks from the
@@ -532,11 +630,15 @@ void sync_playlist (Playlist *playlist,
 	tracks_to_delete_from_ipod = NULL;
     }
 
-    sync_show_summary (key_sync_show_summary,
-		       playlist,
-		       tracks_to_delete_from_ipod,
-		       tracks_to_delete_from_playlist,
-		       tracks_updated);
+
+    if (key_sync_show_summary || sync_show_summary)
+    {
+	show_sync_summary (key_sync_show_summary,
+			   playlist,
+			   tracks_to_delete_from_ipod,
+			   tracks_to_delete_from_playlist,
+			   tracks_updated);
+    }
 
     /* Remove completely */
     for (gl=tracks_to_delete_from_ipod; gl; gl=gl->next)
@@ -565,6 +667,7 @@ void sync_playlist (Playlist *playlist,
 	tracks_updated)
     {
 	data_changed (playlist->itdb);
+	gtkpod_tracks_statusbar_update ();
     }
 
     g_list_free (tracks_to_delete_from_ipod);

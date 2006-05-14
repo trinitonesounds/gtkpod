@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-13 01:51:14 jcs>
+/* Time-stamp: <2006-05-15 00:13:16 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -733,18 +733,17 @@ void update_charset_info (Track *track)
 }
 
 
-/* Copy "new" info read from file to an old Track structure.
-   Return value: a pointer to the track the data was copied to. */
-static Track *copy_new_info (Track *from, Track *to)
+/* Copy "new" info read from file to an old Track structure. */
+static void copy_new_info (Track *from, Track *to)
 {
     ExtraTrackData *efrom, *eto;
 
-    g_return_val_if_fail (from, NULL);
-    g_return_val_if_fail (to, NULL);
+    g_return_if_fail (from);
+    g_return_if_fail (to);
     efrom = from->userdata;
     eto = to->userdata;
-    g_return_val_if_fail (efrom, NULL);
-    g_return_val_if_fail (eto, NULL);
+    g_return_if_fail (efrom);
+    g_return_if_fail (eto);
 
     g_free (to->title);
     to->title = g_strdup (from->title);
@@ -779,20 +778,20 @@ static Track *copy_new_info (Track *from, Track *to)
     g_free (to->subtitle);
     to->subtitle = g_strdup (from->subtitle);
 
-    g_free (eto->pc_path_utf8);
+    g_free (eto->thumb_path_utf8);
     eto->thumb_path_utf8 = g_strdup (efrom->thumb_path_utf8);
 
-    g_free (eto->pc_path_locale);
+    g_free (eto->thumb_path_locale);
     eto->thumb_path_locale = g_strdup (efrom->thumb_path_locale);
+
+    g_free (eto->pc_path_utf8);
+    eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
+
+    g_free (eto->pc_path_locale);
+    eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
 
     g_free (eto->charset);
     eto->charset = g_strdup (efrom->charset);
-
-    g_free (eto->thumb_path_utf8);
-    eto->pc_path_utf8 = g_strdup (efrom->pc_path_utf8);
-
-    g_free (eto->thumb_path_locale);
-    eto->pc_path_locale = g_strdup (efrom->pc_path_locale);
 
     g_free (eto->year_str);
     eto->year_str = g_strdup_printf ("%d", to->year);
@@ -826,8 +825,6 @@ static Track *copy_new_info (Track *from, Track *to)
     to->unk208 = from->unk208;
     to->lyrics_flag = from->lyrics_flag;
     to->movie_flag = from->movie_flag;
-
-    return to;
 }
 
 /* Updates mserv data (rating only) of @track using filename @name to
@@ -1001,7 +998,7 @@ static void add_artwork (Track *tr)
 
 
 /* Fills the supplied @orig_track with data from the file @name. If
- * @or_track is NULL, a new track struct is created. The entries
+ * @orig_track is NULL, a new track struct is created. The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
  * exists */
 /* Returns NULL on error, a pointer to the Track otherwise */
@@ -1149,7 +1146,8 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	if (orig_track)
 	{ /* we need to copy all information over to the original
 	   * track */
-	    track = copy_new_info (nti, orig_track);
+	    copy_new_info (nti, orig_track);
+	    track = orig_track;
 	    itdb_track_free (nti);
 	    nti = NULL;
 	}
@@ -1179,6 +1177,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	gtk_main_iteration ();
 
     g_free (name_utf8);
+
     return track;
 }
 
@@ -1363,7 +1362,7 @@ static void sync_remove_cancel (struct DeleteData *dd)
 {
     g_return_if_fail (dd);
 
-    g_list_free (dd->selected_tracks);
+    g_list_free (dd->tracks);
     g_free (dd);
 
     gtkpod_statusbar_message (_("Syncing completed. No files deleted."));
@@ -1440,7 +1439,7 @@ static void sync_dir_ok (gpointer user_data1, gpointer user_data2)
 	dd = g_malloc0 (sizeof (struct DeleteData));
 	dd->pl = sd->pl;
 	dd->itdb = itdb;
-	dd->selected_tracks = tracklist;
+	dd->tracks = tracklist;
 	dd->deleteaction = -1;
 	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	    dd->deleteaction = DELETE_ACTION_DATABASE;
@@ -2128,10 +2127,10 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 	      if (strstr (fname, mountpoint) == fname)
 	      {   /* Yes */
 		  /* is 'fname' in the iPod's Music directory? */
-		  gchar *control_dir = itdb_get_music_dir (mountpoint);
-		  if (control_dir)
+		  gchar *music_dir = itdb_get_music_dir (mountpoint);
+		  if (music_dir)
 		  {
-		      gchar *cdir = g_strdup_printf ("%s%c", control_dir,
+		      gchar *cdir = g_strdup_printf ("%s%c", music_dir,
 						     G_DIR_SEPARATOR);
 		      if (g_strncasecmp (fname, cdir, strlen (cdir)) == 0)
 		      {   /* Yes */
@@ -2142,7 +2141,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
 			      "%c%s", G_DIR_SEPARATOR, fname_i);
 			  itdb_filename_fs2ipod (track->ipod_path);
 		      }
-		      g_free (control_dir);
+		      g_free (music_dir);
 		      g_free (cdir);
 		  }
 	      }

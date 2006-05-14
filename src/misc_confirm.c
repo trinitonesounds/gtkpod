@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-13 23:09:36 jcs>
+/* Time-stamp: <2006-05-15 00:29:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -104,10 +104,9 @@ void delete_populate_settings (struct DeleteData *dd,
 
     g_return_if_fail (dd);
     g_return_if_fail (dd->itdb);
-    g_return_if_fail (dd->pl);
 
     /* write title and label */
-    n = g_list_length (dd->selected_tracks);
+    n = g_list_length (dd->tracks);
 
     if (dd->itdb->usertype & GP_ITDB_TYPE_IPOD)
     {
@@ -133,6 +132,7 @@ void delete_populate_settings (struct DeleteData *dd,
 		*confirm_again_key = g_strdup("delete_ipod");
 	    break;
 	case DELETE_ACTION_PLAYLIST:
+	    g_return_if_fail (dd->pl);
 	    if (label)
 		*label = g_strdup_printf(
 		    ngettext ("Are you sure you want to remove the following track from the playlist \"%s\"?",
@@ -173,6 +173,7 @@ void delete_populate_settings (struct DeleteData *dd,
 		*confirm_again_key = g_strdup("delete_local_file");
 	    break;
 	case DELETE_ACTION_PLAYLIST:
+	    g_return_if_fail (dd->pl);
 	    if (label)
 		*label = g_strdup_printf(
 		    ngettext ("Are you sure you want to remove the following track from the playlist \"%s\"?",
@@ -209,7 +210,7 @@ void delete_populate_settings (struct DeleteData *dd,
     if (str)
     {
 	*str = g_string_sized_new (2000);
-	for(l = dd->selected_tracks; l; l = l->next)
+	for(l = dd->tracks; l; l = l->next)
 	{
 	    s = l->data;
 	    g_return_if_fail (s);
@@ -227,7 +228,7 @@ static void delete_track_cancel (struct DeleteData *dd)
 {
     g_return_if_fail (dd);
 
-    g_list_free (dd->selected_tracks);
+    g_list_free (dd->tracks);
     g_free (dd);
 }
 
@@ -246,10 +247,10 @@ void delete_track_ok (struct DeleteData *dd)
     g_return_if_fail (dd->itdb);
 
     /* should never happen */
-    if (!dd->selected_tracks)	delete_track_cancel (dd);
+    if (!dd->tracks)	delete_track_cancel (dd);
 
     /* nr of tracks to be deleted */
-    n = g_list_length (dd->selected_tracks);
+    n = g_list_length (dd->tracks);
     if (dd->itdb->usertype & GP_ITDB_TYPE_IPOD)
     {
 	switch (dd->deleteaction)
@@ -303,14 +304,14 @@ void delete_track_ok (struct DeleteData *dd)
 	    break;
 	}
     }
-    for (l = dd->selected_tracks; l; l = l->next)
+    for (l = dd->tracks; l; l = l->next)
     {
 	gp_playlist_remove_track (dd->pl, l->data, dd->deleteaction);
     }
     gtkpod_statusbar_message (buf);
     g_free (buf);
 
-    g_list_free (dd->selected_tracks);
+    g_list_free (dd->tracks);
     g_free (dd);
 
     gtkpod_tracks_statusbar_update ();
@@ -348,7 +349,7 @@ void delete_track_head (DeleteAction deleteaction)
 
     dd = g_malloc0 (sizeof (struct DeleteData));
     dd->deleteaction = deleteaction;
-    dd->selected_tracks = selected_tracks;
+    dd->tracks = selected_tracks;
     dd->pl = pl;
     dd->itdb = itdb;
 
@@ -445,7 +446,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
 
     dd = g_malloc0 (sizeof (struct DeleteData));
     dd->deleteaction = deleteaction;
-    dd->selected_tracks = selected_tracks;
+    dd->tracks = selected_tracks;
     dd->pl = pl;
     dd->itdb = itdb;
 
@@ -503,7 +504,7 @@ static void delete_playlist_cleanup (struct DeleteData *dd)
 {
     g_return_if_fail (dd);
 
-    g_list_free (dd->selected_tracks);
+    g_list_free (dd->tracks);
     g_free (dd);
 }
 
@@ -694,14 +695,14 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    }
 	    else if (itdb_playlist_is_podcasts (pl))
 	    {   /* podcasts playlist */
-		dd->selected_tracks = g_list_copy (pl->members);
+		dd->tracks = g_list_copy (pl->members);
 		label = g_strdup_printf (_("Are you sure you want to remove all podcasts from your iPod?"));
 	    }
 	    else 
 	    {   /* normal playlist */
 		/* we set selected_tracks to get a list printed by
 		 * delete_populate_settings() further down */
-		dd->selected_tracks = g_list_copy (pl->members);
+		dd->tracks = g_list_copy (pl->members);
 		label = g_strdup_printf (
 		    ngettext ("Are you sure you want to delete playlist '%s' and the following track completely from your ipod? The number of playlists this track is a member of is indicated in parentheses.",
 			      "Are you sure you want to delete playlist '%s' and the following tracks completely from your ipod? The number of playlists the tracks are member of is indicated in parentheses.", n), pl->name);
@@ -738,7 +739,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    {
 		/* we set selected_tracks to get a list printed by
 		 * delete_populate_settings() further down */
-		dd->selected_tracks = g_list_copy (pl->members);
+		dd->tracks = g_list_copy (pl->members);
 		label = g_strdup_printf (
 		    ngettext ("Are you sure you want to delete playlist '%s' and remove the following track from your harddisk? The number of playlists this track is a member of is indicated in parentheses.",
 			      "Are you sure you want to delete playlist '%s' and remove the following tracks from your harddisk? The number of playlists the tracks are member of is indicated in parentheses.",
@@ -755,7 +756,7 @@ void delete_playlist_head (DeleteAction deleteaction)
 	    {
 		/* we set selected_tracks to get a list printed by
 		 * delete_populate_settings() further down */
-		dd->selected_tracks = g_list_copy (pl->members);
+		dd->tracks = g_list_copy (pl->members);
 		label = g_strdup_printf (
 		    ngettext ("Are you sure you want to delete playlist '%s' and remove the following track from the database? The number of playlists this track is a member of is indicated in parentheses.",
 			      "Are you sure you want to delete playlist '%s' and remove the following tracks from the database? The number of playlists the tracks are member of is indicated in parentheses.",
