@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 23:30:19 jcs>
+/* Time-stamp: <2006-05-16 00:41:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -83,7 +83,6 @@ gboolean write_tags_to_file(Track *s);
 void update_track_from_file (iTunesDB *itdb, Track *track);
 void update_tracks (GList *selected_tracks);
 void mserv_from_file_tracks (GList *selected_tracks);
-void sync_tracks (GList *selected_tracks);
 void display_non_updated (Track *track, gchar *txt);
 void display_updated (Track *track, gchar *txt);
 void display_mserv_problems (Track *track, gchar *txt);

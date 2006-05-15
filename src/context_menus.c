@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-02-19 19:58:45 jcs>
+/* Time-stamp: <2006-05-16 00:23:29 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -41,6 +41,7 @@
 #include "prefs.h"
 #include "tools.h"
 #include "podcast.h"
+#include "syncdir.h"
 
 #define LOCALDEBUG 1
 
@@ -51,7 +52,7 @@ static TabEntry *selected_entry = NULL;
 static iTunesDB *active_itdb = NULL;
 /* types of context menus (PM/ST/TM) */
 typedef enum {
-    CM_PM = 0,
+    CM_PL = 0,
     CM_ST,
     CM_TM,
     CM_NUM
@@ -180,20 +181,26 @@ update_entries(GtkMenuItem *mi, gpointer data)
 }
 
 /*
- * sync_dirs_ entries - sync the directories of the entries
- *                      selected
+ * sync_dirs_ entries - sync the directories of the selected playlist
+ *
  * @mi - the menu item selected
  * @data - Ignored, should be NULL
  */
 static void 
-sync_dirs_entries(GtkMenuItem *mi, gpointer data)
+sync_dirs (GtkMenuItem *mi, gpointer data)
 {
     if (selected_playlist)
-	gp_do_selected_playlist (sync_tracks);
-    else if(selected_entry)
-	gp_do_selected_entry (sync_tracks, entry_inst);
-    else if(selected_tracks)
-	gp_do_selected_tracks (sync_tracks);
+    {
+	sync_playlist (selected_playlist, NULL,
+		       KEY_SYNC_CONFIRM_DIRS, 0,
+		       KEY_SYNC_DELETE_TRACKS, 0,
+		       KEY_SYNC_CONFIRM_DELETE, 0,
+		       KEY_SYNC_SHOW_SUMMARY, 0);
+    }
+    else
+    {
+	g_return_if_reached ();
+    }
 }
 
 /**
@@ -336,13 +343,7 @@ create_context_menu(CM_type type)
     static GtkWidget *mi_delipod_all[CM_NUM];/* DELETE_ACTION_IPOD (all
 					   * tracks)      */
     static GtkWidget *mi_deldb_all[CM_NUM];  /* DELETE_ACTION_DATABASE
-					   * (all tracks  */
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-    static GtkWidget *mi_podcasts_sep[CM_NUM]; /* Podcasts Separator */
-    static GtkWidget *mi_podcasts_update[CM_NUM]; /* Update Podcasts */
-    static GtkWidget *mi_podcasts_prefs[CM_NUM];  /* Podcasts Prefs */
-#endif
+					   * (all tracks)  */
 
     Playlist *pl;
 
@@ -360,10 +361,14 @@ create_context_menu(CM_type type)
 		   G_CALLBACK (create_playlist_file), NULL);
 	hookup_mi (menu[type], _("Edit Details"), NULL,
 		   G_CALLBACK (edit_details_entries), NULL);
-	hookup_mi (menu[type], _("Update"), GTK_STOCK_REFRESH,
+	hookup_mi (menu[type], _("Update Tracks"), GTK_STOCK_REFRESH,
 		   G_CALLBACK (update_entries), NULL);
-	hookup_mi (menu[type], _("Sync Dirs"), GTK_STOCK_REFRESH,
-		   G_CALLBACK (sync_dirs_entries), NULL);
+	if (type == CM_PL)
+	{
+	    hookup_mi (menu[type], _("Sync Playlist with Dir(s)"),
+		       GTK_STOCK_REFRESH,
+		       G_CALLBACK (sync_dirs), NULL);
+	}
 	hookup_mi (menu[type], _("Normalize"), NULL,
 		   G_CALLBACK (normalize_entries), NULL);
 	hookup_mi (menu[type], _("Create new Playlist"),
@@ -431,7 +436,7 @@ create_context_menu(CM_type type)
 		       G_CALLBACK (do_special), NULL);
 	}
 #endif
-	if (type == CM_PM)
+	if (type == CM_PL)
 	{
 	    mi_delsep[type] = add_separator (menu[type]);
 	    mi_delipod[type] =
@@ -508,7 +513,7 @@ create_context_menu(CM_type type)
 	/* Make sure, only available delete options are displayed */
 	switch (type)
 	{
-	case CM_PM:
+	case CM_PL:
 	    gtk_widget_hide (mi_spl[type]);
 	    gtk_widget_hide (mi_dellocal[type]);
 	    gtk_widget_hide (mi_delpl[type]);
@@ -674,7 +679,7 @@ pm_context_menu_init(void)
     if(selected_playlist)
     {
 	selected_tracks = g_list_copy (selected_playlist->members);
-	create_context_menu (CM_PM);
+	create_context_menu (CM_PL);
     }
 }
 /**

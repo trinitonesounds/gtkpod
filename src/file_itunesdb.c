@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 23:32:34 jcs>
+/* Time-stamp: <2006-05-15 22:58:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -42,6 +42,7 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
+#include "syncdir.h"
 #include "tools.h"
 
 /*------------------------------------------------------------------*\
@@ -798,6 +799,9 @@ void gp_merge_itdb (iTunesDB *old_itdb)
 
     if (new_itdb)
 	gp_replace_itdb (old_itdb, new_itdb);
+
+    /* take care of autosync... */
+    sync_all_playlists (new_itdb);
 
     gtkpod_tracks_statusbar_update ();
 }

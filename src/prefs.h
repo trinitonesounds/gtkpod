@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-10 00:48:09 jcs>
+/* Time-stamp: <2006-05-16 00:20:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -58,6 +58,36 @@ typedef enum
 } PathType;
 
 
+/* Not sure where to put these (maybe prefkeys.h?): prefs keys used */
+/* repository.c */
+extern const gchar *KEY_CONCAL_AUTOSYNC;
+extern const gchar *KEY_SYNC_DELETE_TRACKS;
+extern const gchar *KEY_SYNC_CONFIRM_DIRS;
+extern const gchar *KEY_SYNC_CONFIRM_DELETE;
+extern const gchar *KEY_SYNC_SHOW_SUMMARY;
+extern const gchar *KEY_MOUNTPOINT;
+extern const gchar *KEY_IPOD_MODEL;
+extern const gchar *KEY_FILENAME;
+extern const gchar *KEY_PATH_SYNC_CONTACTS;
+extern const gchar *KEY_PATH_SYNC_CALENDAR;
+extern const gchar *KEY_PATH_SYNC_NOTES;
+extern const gchar *KEY_SYNCMODE;
+extern const gchar *KEY_MANUAL_SYNCDIR;
+
+
+/* Not sure where to put these (maybe prefkeys.h?: Playlist-Autosync
+ * options */
+enum
+{
+    /* no auto-sync */
+    PLAYLIST_AUTOSYNC_MODE_NONE = 0,
+    /* use dirs from filenames in playlist */
+    PLAYLIST_AUTOSYNC_MODE_AUTOMATIC = 1,
+    /* use specified dir */
+    PLAYLIST_AUTOSYNC_MODE_MANUAL = 2
+};
+
+
 struct win_size {
     gint x;
     gint y;
@@ -111,7 +141,7 @@ struct cfg
 				   filenames etc? */
   struct
   {
-      gboolean track, ipod_file, local_file, database, syncing;
+      gboolean track, ipod_file, local_file, database;
   } deletion;
   struct win_size size_gtkpod;  /* last size of gtkpod main window */
   struct win_size size_cal;     /* last size of calendar window */

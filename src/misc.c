@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-05-09 00:07:59 jcs>
+|  Time-stamp: <2006-05-15 22:02:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1486,7 +1486,26 @@ gchar *get_itdb_prefs_string (iTunesDB *itdb, const gchar *subkey)
 
 
 /**
- * Helper function to retrieve an in prefs entry for @itdb.
+ * Helper function to retrieve a string prefs entry for @playlist.
+ * 
+ **/
+gchar *get_playlist_prefs_string (Playlist *playlist, const gchar *subkey)
+{
+    gchar *key, *value;
+
+    g_return_val_if_fail (playlist, 0);
+    g_return_val_if_fail (subkey, 0);
+
+    key = get_playlist_prefs_key (get_itdb_index (playlist->itdb),
+				  playlist, subkey);
+    value = prefs_get_string (key);
+    g_free (key);
+
+    return value;
+}
+
+/**
+ * Helper function to retrieve an int prefs entry for @itdb.
  * 
  **/
 gint get_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey)
@@ -1498,6 +1517,26 @@ gint get_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey)
     g_return_val_if_fail (subkey, 0);
 
     key = get_itdb_prefs_key (get_itdb_index (itdb), subkey);
+    value = prefs_get_int (key);
+    g_free (key);
+
+    return value;
+}
+
+/**
+ * Helper function to retrieve an int prefs entry for @playlist.
+ * 
+ **/
+gint get_playlist_prefs_int (Playlist *playlist, const gchar *subkey)
+{
+    gchar *key;
+    gint value;
+
+    g_return_val_if_fail (playlist, 0);
+    g_return_val_if_fail (subkey, 0);
+
+    key = get_playlist_prefs_key (get_itdb_index (playlist->itdb),
+				  playlist, subkey);
     value = prefs_get_int (key);
     g_free (key);
 
@@ -1547,6 +1586,7 @@ gboolean get_itdb_prefs_int_value (iTunesDB *itdb, const gchar *subkey,
 
     return result;
 }
+
 
 /**
  * Helper function to set a string prefs entry for @itdb.

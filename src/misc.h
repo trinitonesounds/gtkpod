@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 00:54:51 jcs>
+/* Time-stamp: <2006-05-15 22:02:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -214,7 +214,9 @@ gchar *get_itdb_prefs_key (gint index, const gchar *subkey);
 gchar *get_playlist_prefs_key (gint index, Playlist *pl, const gchar *subkey);
 gint get_itdb_index (iTunesDB *itdb);
 gchar *get_itdb_prefs_string (iTunesDB *itdb, const gchar *subkey);
+gchar *get_playlist_prefs_string (Playlist *playlist, const gchar *subkey);
 gint get_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey);
+gint get_playlist_prefs_int (Playlist *playlist, const gchar *subkey);
 gboolean get_itdb_prefs_string_value (iTunesDB *itdb, const gchar *subkey,
 				      gchar **value);
 gboolean get_itdb_prefs_int_value (iTunesDB *itdb, const gchar *subkey,

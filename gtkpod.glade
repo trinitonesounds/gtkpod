@@ -51,7 +51,7 @@
 		      <signal name="activate" handler="on_import_itunes_mi_activate" last_modification_time="Tue, 07 Jan 2003 20:31:20 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3471">
+			<widget class="GtkImage" id="image3492">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-top</property>
 			  <property name="icon_size">1</property>
@@ -72,7 +72,7 @@
 		      <signal name="activate" handler="create_add_files_dialog" last_modification_time="Sun, 05 Jun 2005 13:03:47 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3472">
+			<widget class="GtkImage" id="image3493">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -93,7 +93,7 @@
 		      <signal name="activate" handler="dirbrowser_create" last_modification_time="Sun, 05 Jun 2005 13:09:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3473">
+			<widget class="GtkImage" id="image3494">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -114,7 +114,7 @@
 		      <signal name="activate" handler="create_add_playlists_dialog" last_modification_time="Sun, 05 Jun 2005 13:14:57 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3474">
+			<widget class="GtkImage" id="image3495">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -135,7 +135,7 @@
 		      <signal name="activate" handler="handle_export" last_modification_time="Sun, 05 Jun 2005 13:09:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3475">
+			<widget class="GtkImage" id="image3496">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-goto-bottom</property>
 			  <property name="icon_size">1</property>
@@ -161,7 +161,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3476">
+			<widget class="GtkImage" id="image3497">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -213,7 +213,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3477">
+			<widget class="GtkImage" id="image3498">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -261,11 +261,12 @@
 		  <child>
 		    <widget class="GtkImageMenuItem" id="sync_menu">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">_Synchronize Directories</property>
+		      <property name="label" translatable="yes">_Synchronize Playlist</property>
 		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_sync_playlist_activate" last_modification_time="Mon, 15 May 2006 15:39:05 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3478">
+			<widget class="GtkImage" id="image3499">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-refresh</property>
 			  <property name="icon_size">1</property>
@@ -273,38 +274,6 @@
 			  <property name="yalign">0.5</property>
 			  <property name="xpad">0</property>
 			  <property name="ypad">0</property>
-			</widget>
-		      </child>
-
-		      <child>
-			<widget class="GtkMenu" id="sync_menu_menu">
-
-			  <child>
-			    <widget class="GtkMenuItem" id="sync_playlist_menu">
-			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">Selected _Playlist</property>
-			      <property name="use_underline">True</property>
-			      <signal name="activate" handler="on_sync_playlist_activate" last_modification_time="Sun, 23 Mar 2003 09:00:04 GMT"/>
-			    </widget>
-			  </child>
-
-			  <child>
-			    <widget class="GtkMenuItem" id="sync_tab_entry_menu">
-			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">Selected Tab _Entry</property>
-			      <property name="use_underline">True</property>
-			      <signal name="activate" handler="on_sync_tab_entry_activate" last_modification_time="Sat, 15 Mar 2003 03:49:29 GMT"/>
-			    </widget>
-			  </child>
-
-			  <child>
-			    <widget class="GtkMenuItem" id="sync_tracks_menu">
-			      <property name="visible">True</property>
-			      <property name="label" translatable="yes">Selected _Tracks</property>
-			      <property name="use_underline">True</property>
-			      <signal name="activate" handler="on_sync_tracks_activate" last_modification_time="Sun, 23 Mar 2003 09:00:04 GMT"/>
-			    </widget>
-			  </child>
 			</widget>
 		      </child>
 		    </widget>
@@ -323,7 +292,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3479">
+			<widget class="GtkImage" id="image3500">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -375,7 +344,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3480">
+			<widget class="GtkImage" id="image3501">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-floppy</property>
 			  <property name="icon_size">1</property>
@@ -450,7 +419,7 @@
 		      <signal name="activate" handler="on_ipod_directories_menu" last_modification_time="Sat, 18 Jan 2003 02:10:39 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3481">
+			<widget class="GtkImage" id="image3502">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-execute</property>
 			  <property name="icon_size">1</property>
@@ -508,7 +477,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3482">
+			<widget class="GtkImage" id="image3503">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-edit</property>
 			  <property name="icon_size">1</property>
@@ -569,7 +538,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3483">
+			<widget class="GtkImage" id="image3504">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-delete</property>
 			  <property name="icon_size">1</property>
@@ -720,7 +689,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3484">
+			<widget class="GtkImage" id="image3505">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-copy</property>
 			  <property name="icon_size">1</property>
@@ -915,7 +884,7 @@
 		      <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3485">
+			<widget class="GtkImage" id="image3506">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-sort-ascending</property>
 			  <property name="icon_size">1</property>
@@ -937,7 +906,7 @@
 		      <accelerator key="s" modifiers="GDK_CONTROL_MASK | GDK_SHIFT_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3486">
+			<widget class="GtkImage" id="image3507">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-justify-fill</property>
 			  <property name="icon_size">1</property>
@@ -965,7 +934,7 @@
 		      <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3487">
+			<widget class="GtkImage" id="image3508">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-preferences</property>
 			  <property name="icon_size">1</property>
@@ -1030,7 +999,7 @@
 		      <signal name="activate" handler="on_more_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3488">
+			<widget class="GtkImage" id="image3509">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-add</property>
 			  <property name="icon_size">1</property>
@@ -1051,7 +1020,7 @@
 		      <signal name="activate" handler="on_less_sort_tabs_activate" last_modification_time="Fri, 14 Mar 2003 11:57:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3489">
+			<widget class="GtkImage" id="image3510">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-remove</property>
 			  <property name="icon_size">1</property>
@@ -1093,7 +1062,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3490">
+			<widget class="GtkImage" id="image3511">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -1145,7 +1114,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3491">
+			<widget class="GtkImage" id="image3512">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cdrom</property>
 			  <property name="icon_size">1</property>
@@ -1327,7 +1296,7 @@
 		      <signal name="activate" handler="open_about_window" last_modification_time="Sun, 05 Jun 2005 13:09:31 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image3492">
+			<widget class="GtkImage" id="image3513">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-info</property>
 			  <property name="icon_size">1</property>
@@ -8621,7 +8590,7 @@ existing tracks with identical filenames</property>
 				  <child>
 				    <widget class="GtkLabel" id="label262">
 				      <property name="visible">True</property>
-				      <property name="label" translatable="yes">When syncing directories</property>
+				      <property name="label" translatable="yes">When syncing playlists</property>
 				      <property name="use_underline">False</property>
 				      <property name="use_markup">False</property>
 				      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -8678,11 +8647,10 @@ existing tracks with identical filenames</property>
 					<widget class="GtkVBox" id="vbox116">
 					  <property name="visible">True</property>
 					  <property name="homogeneous">False</property>
-					  <property name="spacing">0</property>
+					  <property name="spacing">4</property>
 
 					  <child>
-					    <widget class="GtkCheckButton" id="cfg_show_sync_dirs">
-					      <property name="visible">True</property>
+					    <widget class="GtkCheckButton" id="sync_confirm_dirs_toggle">
 					      <property name="can_focus">True</property>
 					      <property name="label" translatable="yes">Confirm lists of directories</property>
 					      <property name="use_underline">True</property>
@@ -8691,7 +8659,6 @@ existing tracks with identical filenames</property>
 					      <property name="active">False</property>
 					      <property name="inconsistent">False</property>
 					      <property name="draw_indicator">True</property>
-					      <signal name="toggled" handler="on_cfg_show_sync_dirs_toggled" last_modification_time="Thu, 14 Apr 2005 19:39:27 GMT"/>
 					    </widget>
 					    <packing>
 					      <property name="padding">0</property>
@@ -8701,18 +8668,20 @@ existing tracks with identical filenames</property>
 					  </child>
 
 					  <child>
-					    <widget class="GtkCheckButton" id="cfg_sync_remove">
+					    <widget class="GtkCheckButton" id="sync_delete_tracks_toggle">
 					      <property name="visible">True</property>
-					      <property name="tooltip" translatable="yes">If you check this option, tracks that have been removed from the synced directories will be removed from the iPod as well.</property>
+					      <property name="tooltip" translatable="yes">Normally, if a track is no longer present in the sync directory, it will be removed from the playlist, but not from the iPod or local repository.
+If this option is checked, tracks will be completely removed from the iPod or local repository, unless the track is a member of other playlists as well.
+NOTE: if you sync with the master playlist, you must check this option if you want tracks to be removed, because removing from the master playlist means removing from the iPod.</property>
 					      <property name="can_focus">True</property>
-					      <property name="label" translatable="yes">Delete tracks that have been removed</property>
+					      <property name="label" translatable="yes">Delete tracks that are no longer present from the
+ipod or repository</property>
 					      <property name="use_underline">True</property>
 					      <property name="relief">GTK_RELIEF_NORMAL</property>
 					      <property name="focus_on_click">True</property>
 					      <property name="active">False</property>
 					      <property name="inconsistent">False</property>
 					      <property name="draw_indicator">True</property>
-					      <signal name="toggled" handler="on_cfg_sync_remove_toggled" last_modification_time="Thu, 14 Apr 2005 19:39:46 GMT"/>
 					    </widget>
 					    <packing>
 					      <property name="padding">0</property>
@@ -8722,18 +8691,38 @@ existing tracks with identical filenames</property>
 					  </child>
 
 					  <child>
-					    <widget class="GtkCheckButton" id="cfg_sync_remove_confirm">
+					    <widget class="GtkCheckButton" id="sync_confirm_delete_toggle">
 					      <property name="visible">True</property>
 					      <property name="tooltip" translatable="yes">This is the same option as in 'Edit/Delete Confirmation'</property>
 					      <property name="can_focus">True</property>
-					      <property name="label" translatable="yes">Confirm before removing tracks</property>
+					      <property name="label" translatable="yes">Confirm before removing tracks from the iPod or repository</property>
 					      <property name="use_underline">True</property>
 					      <property name="relief">GTK_RELIEF_NORMAL</property>
 					      <property name="focus_on_click">True</property>
 					      <property name="active">False</property>
 					      <property name="inconsistent">False</property>
 					      <property name="draw_indicator">True</property>
-					      <signal name="toggled" handler="on_cfg_sync_remove_confirm_toggled" last_modification_time="Thu, 14 Apr 2005 19:39:50 GMT"/>
+					      <signal name="toggled" handler="on_sync_confirm_delete_toggled" last_modification_time="Mon, 15 May 2006 15:28:49 GMT"/>
+					    </widget>
+					    <packing>
+					      <property name="padding">0</property>
+					      <property name="expand">False</property>
+					      <property name="fill">False</property>
+					    </packing>
+					  </child>
+
+					  <child>
+					    <widget class="GtkCheckButton" id="sync_show_summary_toggle">
+					      <property name="visible">True</property>
+					      <property name="tooltip" translatable="yes">Will show a list of tracks removed and a list of tracks newly added or updated.</property>
+					      <property name="can_focus">True</property>
+					      <property name="label" translatable="yes">Show summary of sync result</property>
+					      <property name="use_underline">True</property>
+					      <property name="relief">GTK_RELIEF_NORMAL</property>
+					      <property name="focus_on_click">True</property>
+					      <property name="active">False</property>
+					      <property name="inconsistent">False</property>
+					      <property name="draw_indicator">True</property>
 					    </widget>
 					    <packing>
 					      <property name="padding">0</property>
@@ -12547,18 +12536,18 @@ when writing tags</property>
 			  </child>
 
 			  <child>
-			    <widget class="GtkCheckButton" id="cfg_sync_remove_confirm2">
+			    <widget class="GtkCheckButton" id="sync_confirm_delete_toggle2">
 			      <property name="visible">True</property>
 			      <property name="can_focus">True</property>
-			      <property name="label" translatable="yes">Before removing tracks completely when
-synchronizing directories</property>
+			      <property name="label" translatable="yes">Confirm before removing tracks from the iPod or repository
+when syncing playlists</property>
 			      <property name="use_underline">True</property>
 			      <property name="relief">GTK_RELIEF_NORMAL</property>
 			      <property name="focus_on_click">True</property>
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
-			      <signal name="toggled" handler="on_cfg_sync_remove_confirm_toggled" last_modification_time="Thu, 28 Apr 2005 18:10:20 GMT"/>
+			      <signal name="toggled" handler="on_sync_confirm_delete_toggled" last_modification_time="Mon, 15 May 2006 15:29:44 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -17392,9 +17381,10 @@ simultaneously</property>
 							  <property name="visible">True</property>
 							  <property name="tooltip" translatable="yes">Normally, if a track is no longer present in the sync directory, it will be removed from the playlist, but not from the iPod or local repository.
 If this option is checked, tracks will be completely removed from the iPod or local repository, unless the track is a member of other playlists as well.
-NOTE: if you sync with the master playlist, non-existent tracks are always removed completely. This option is therefore not displayed for master playlists.</property>
+NOTE: if you sync with the master playlist, you must check this option if you want tracks to be removed, because removing from the master playlist means removing from the iPod.</property>
 							  <property name="can_focus">True</property>
-							  <property name="label" translatable="yes">Delete tracks from iPod that are no longer present</property>
+							  <property name="label" translatable="yes">Delete tracks that are no longer present from the
+ipod or repository</property>
 							  <property name="use_underline">True</property>
 							  <property name="relief">GTK_RELIEF_NORMAL</property>
 							  <property name="focus_on_click">True</property>
@@ -17413,7 +17403,7 @@ NOTE: if you sync with the master playlist, non-existent tracks are always remov
 							<widget class="GtkCheckButton" id="playlist_sync_confirm_delete_toggle">
 							  <property name="visible">True</property>
 							  <property name="can_focus">True</property>
-							  <property name="label" translatable="yes">Confirm before removing tracks from the iPod</property>
+							  <property name="label" translatable="yes">Confirm before removing tracks from the iPod or repository</property>
 							  <property name="use_underline">True</property>
 							  <property name="relief">GTK_RELIEF_NORMAL</property>
 							  <property name="focus_on_click">True</property>

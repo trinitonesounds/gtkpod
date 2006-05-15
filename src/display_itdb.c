@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-09 00:07:59 jcs>
+/* Time-stamp: <2006-05-15 22:53:57 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -44,6 +44,7 @@
 #include "misc_track.h"
 #include "info.h"
 #include "prefs.h"
+#include "syncdir.h"
 
 
 /* A struct containing a list with available iTunesDBs. A pointer to
@@ -879,7 +880,7 @@ void init_data (GtkWidget *window)
 		    else if (type & GP_ITDB_TYPE_LOCAL)
 			name = g_strdup (_("Local"));
 		    else
-			name = g_strdup ("iPod");
+			name = g_strdup (_("iPod"));
 		}
 		pl = gp_playlist_new (name, FALSE);
 		g_free (name);
@@ -927,6 +928,14 @@ void init_data (GtkWidget *window)
 	    }
 	    /* add to the display */
 	    gp_itdb_add (itdb, -1);
+
+	    /* update/sync playlists according to options set */
+	    eitdb = itdb->userdata;
+	    g_return_if_fail (eitdb);
+	    if (eitdb->itdb_imported)
+	    {
+		sync_all_playlists (itdb);
+	    }
 	}
 	else
 	{

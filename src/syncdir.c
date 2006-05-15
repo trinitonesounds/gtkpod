@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 00:55:37 jcs>
+/* Time-stamp: <2006-05-16 00:20:46 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -436,7 +436,8 @@ printf ("%ld %ld (%s)\n, %ld %d\n",
  *            are only removed from the current playlist. If this key's
  *            value is set to TRUE (1), they will be removed from the
  *            iPod /database completely, if they are not a member of
- *            other playlists.
+ *            other playlists. Note: to remove tracks from the MPL,
+ *            this has to be TRUE.
  *            If NULL, @sync_delete_tracks will determine whether
  *            tracks are removed or not. Also, if @playlist is the
  *            MPL, tracks will be removed irrespective of this key's
@@ -469,7 +470,7 @@ void sync_playlist (Playlist *playlist,
 		    gboolean sync_show_summary)
 {
     GHashTable *dirs_hash;
-    gboolean delete_tracks;
+    gboolean delete_tracks, is_mpl;
     guint64 current_time;
     GList *tracks_to_delete_from_ipod = NULL;
     GList *tracks_to_delete_from_playlist = NULL;
@@ -560,6 +561,8 @@ void sync_playlist (Playlist *playlist,
     {
 	delete_tracks = prefs_get_int (key_sync_delete_tracks);
     }
+    /* Is playlist the MPL? */
+    is_mpl = itdb_playlist_is_mpl (playlist);
 
     /* Identify all tracks in playlist not being located in one of the
        specified dirs, or no longer existing. */
@@ -597,21 +600,25 @@ void sync_playlist (Playlist *playlist,
 	if (remove)
 	{   /* decide whether track needs to be removed from the iPod
 	     * (only member of this playlist) or only from this
-	     * playlist */
-	    if (itdb_playlist_is_mpl (playlist) ||
-		(delete_tracks &&
-		 (itdb_playlist_contain_track_number (tr) == 1)))
+	     * playlist (if delete_tracks is not set, no tracks are
+	     * removed from the MPL) */
+	    if (delete_tracks &&
+		(is_mpl || (itdb_playlist_contain_track_number (tr)==1)))
 	    {
 		tracks_to_delete_from_ipod =
 		    g_list_append (tracks_to_delete_from_ipod, tr);
 	    }
 	    else
 	    {
-		tracks_to_delete_from_playlist =
-		    g_list_append (tracks_to_delete_from_playlist, tr);
-	    }			
+		if (!is_mpl)
+		{
+		    tracks_to_delete_from_playlist =
+			g_list_append (tracks_to_delete_from_playlist, tr);
+		}
+	    }
 	}
     }
+
 
     if (tracks_to_delete_from_ipod &&
 	(key_sync_confirm_delete || sync_confirm_delete) &&
@@ -620,13 +627,16 @@ void sync_playlist (Playlist *playlist,
     {   /* User doesn't want us to remove those tracks from the
 	 * iPod. We'll therefore just remove them from the playlist
 	 * (if playlist is the MPL, don't remove at all) */
-	if (!itdb_playlist_is_mpl (playlist))
+	if (!is_mpl)
 	{
 	    tracks_to_delete_from_playlist = g_list_concat (
 		tracks_to_delete_from_playlist,
 		tracks_to_delete_from_ipod);
 	}
-	g_list_free (tracks_to_delete_from_ipod);
+	else
+	{
+	    g_list_free (tracks_to_delete_from_ipod);
+	}
 	tracks_to_delete_from_ipod = NULL;
     }
 
@@ -673,4 +683,68 @@ void sync_playlist (Playlist *playlist,
     g_list_free (tracks_to_delete_from_ipod);
     g_list_free (tracks_to_delete_from_playlist);
     g_list_free (tracks_updated);
+}
+
+
+/**
+ * sync_all_playlists:
+ *
+ * @itdb: repository whose playlists are to be updated
+ * 
+ * Will update all playlists in @itdb according to options set. The
+ * following pref subkeys are relevant:
+ * 
+ * sync_confirm_dirs
+ * sync_delete_tracks
+ * sync_confirm_delete
+ * sync_show_summary
+ */
+
+void sync_all_playlists (iTunesDB *itdb)
+{
+    gint index;
+    GList *gl;
+
+    g_return_if_fail (itdb);
+
+    index = get_itdb_index (itdb);
+
+    for (gl=itdb->playlists; gl; gl=gl->next)
+    {
+	gint syncmode;
+	Playlist *pl = gl->data;
+	g_return_if_fail (pl);
+
+	syncmode = get_playlist_prefs_int (pl, KEY_SYNCMODE);
+	if (syncmode != PLAYLIST_AUTOSYNC_MODE_NONE)
+	{
+	    gchar *key_sync_confirm_dirs =
+		get_playlist_prefs_key (index, pl, KEY_SYNC_CONFIRM_DIRS);
+	    gchar *key_sync_delete_tracks =
+		get_playlist_prefs_key (index, pl, KEY_SYNC_DELETE_TRACKS);
+	    gchar *key_sync_confirm_delete =
+		get_playlist_prefs_key (index, pl, KEY_SYNC_CONFIRM_DELETE);
+	    gchar *key_sync_show_summary =
+		get_playlist_prefs_key (index, pl, KEY_SYNC_SHOW_SUMMARY);
+	    gchar *syncdir = NULL;
+
+	    if (syncmode == PLAYLIST_AUTOSYNC_MODE_MANUAL)
+	    {
+		syncdir = get_playlist_prefs_string (pl,
+						     KEY_MANUAL_SYNCDIR);
+	    }
+
+	    sync_playlist (pl, syncdir,
+			   key_sync_confirm_dirs, 0,
+			   key_sync_delete_tracks, 0,
+			   key_sync_confirm_delete, 0,
+			   key_sync_show_summary, 0);
+
+	    g_free (key_sync_confirm_dirs);
+	    g_free (key_sync_delete_tracks);
+	    g_free (key_sync_confirm_delete);
+	    g_free (key_sync_show_summary);
+	    g_free (syncdir);
+	}
+    }
 }

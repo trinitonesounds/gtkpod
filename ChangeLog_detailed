@@ -1,3 +1,20 @@
+2006-05-15 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/misc.[ch]: (get_playlist_prefs_int),
+           get_playlist_prefs_string): new
+
+	 * src/display_itdb.c
+	   src/file_itunesdb.c: automatically sync playlists on
+	   startup (when loading database).
+
+	 * src/prefs_window.c: redefined the sync settings, set up
+           easy-to extend handling for standard toggle checkboxes.
+
+	 * src/context_menu.c
+	   src/display.c: moved 'Sync' over to new 'Sync Playlist'.
+
+	 * src/file.c: removed old sync-related code.
+
 2006-05-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * move over gtkpod_confirmation() to using the new prefs

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-03 01:15:30 jcs>
+/* Time-stamp: <2006-05-15 21:59:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -37,17 +37,6 @@
 #include <gtk/gtk.h>
 #include "itdb.h"
 
-/* Not sure where to put these:
-   Playlist-Autosync options */
-enum
-{
-    /* no auto-sync */
-    PLAYLIST_AUTOSYNC_MODE_NONE = 0,
-    /* use dirs from filenames in playlist */
-    PLAYLIST_AUTOSYNC_MODE_AUTOMATIC = 1,
-    /* use specified dir */
-    PLAYLIST_AUTOSYNC_MODE_MANUAL = 2
-};
 
 
 /* repository window */

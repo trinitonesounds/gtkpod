@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 00:53:57 jcs>
+/* Time-stamp: <2006-05-16 00:20:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -117,18 +117,19 @@ static const gchar *KEY_REPOSITORY_WINDOW_DEFX="repository_window_defx";
 static const gchar *KEY_REPOSITORY_WINDOW_DEFY="repository_window_defy";
 
 /* some key names used several times */
-static const gchar *KEY_CONCAL_AUTOSYNC="concal_autosync";
-static const gchar *KEY_SYNC_DELETE_TRACKS="sync_delete_tracks";
-static const gchar *KEY_SYNC_CONFIRM_DELETE="sync_confirm_delete";
-static const gchar *KEY_SYNC_SHOW_SUMMARY="sync_show_summary";
-static const gchar *KEY_MOUNTPOINT="mountpoint";
-static const gchar *KEY_IPOD_MODEL="ipod_model";
-static const gchar *KEY_FILENAME="filename";
-static const gchar *KEY_PATH_SYNC_CONTACTS="path_sync_contacts";
-static const gchar *KEY_PATH_SYNC_CALENDAR="path_sync_calendar";
-static const gchar *KEY_PATH_SYNC_NOTES="path_sync_notes";
-static const gchar *KEY_SYNCMODE="syncmode";
-static const gchar *KEY_MANUAL_SYNCDIR="manual_syncdir";
+const gchar *KEY_CONCAL_AUTOSYNC="concal_autosync";
+const gchar *KEY_SYNC_DELETE_TRACKS="sync_delete_tracks";
+const gchar *KEY_SYNC_CONFIRM_DELETE="sync_confirm_delete";
+const gchar *KEY_SYNC_CONFIRM_DIRS="sync_confirm_dirs";
+const gchar *KEY_SYNC_SHOW_SUMMARY="sync_show_summary";
+const gchar *KEY_MOUNTPOINT="mountpoint";
+const gchar *KEY_IPOD_MODEL="ipod_model";
+const gchar *KEY_FILENAME="filename";
+const gchar *KEY_PATH_SYNC_CONTACTS="path_sync_contacts";
+const gchar *KEY_PATH_SYNC_CALENDAR="path_sync_calendar";
+const gchar *KEY_PATH_SYNC_NOTES="path_sync_notes";
+const gchar *KEY_SYNCMODE="syncmode";
+const gchar *KEY_MANUAL_SYNCDIR="manual_syncdir";
 
 
 
@@ -1276,17 +1277,6 @@ static void display_playlist_info (RepWin *repwin)
 	gchar *dir;
 	gtk_widget_show (GET_WIDGET (STANDARD_PLAYLIST_VBOX));
 	gtk_widget_hide (GET_WIDGET (SPL_VBOX));
-
-	if (itdb_playlist_is_mpl (playlist))
-	{
-	    gtk_widget_hide (
-		GET_WIDGET (PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
-	}
-	else
-	{   
-	    gtk_widget_show (
-		GET_WIDGET (PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
-	}
 
 	key = get_playlist_prefs_key (index, playlist, KEY_SYNCMODE);
 	syncmode = get_current_prefs_int (repwin, key);

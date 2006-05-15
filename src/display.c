@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-10 00:02:54 jcs>
+/* Time-stamp: <2006-05-16 00:41:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -41,7 +41,8 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "tools.h"
-#include "podcast.h"
+#include "syncdir.h"
+
 
 GtkWidget *gtkpod_window = NULL;
 
@@ -1217,27 +1218,21 @@ void
 on_sync_playlist_activate (GtkMenuItem     *menuitem,
 			     gpointer         user_data)
 {
-    gp_do_selected_playlist (sync_tracks);
+    Playlist *pl;
+
+    pl = pm_get_selected_playlist();
+    if (!pl)
+    { /* no playlist selected */
+	gtkpod_statusbar_message (_("No playlist selected."));
+	return;
+    }
+
+    sync_playlist (pl, NULL,
+		   KEY_SYNC_CONFIRM_DIRS, 0,
+		   KEY_SYNC_DELETE_TRACKS, 0,
+		   KEY_SYNC_CONFIRM_DELETE, 0,
+		   KEY_SYNC_SHOW_SUMMARY, 0);
 }
-
-/* sync tracks in tab entry */
-void
-on_sync_tab_entry_activate        (GtkMenuItem     *menuitem,
-				     gpointer         user_data)
-{
-    gint inst = get_sort_tab_number (
-	_("Sync dirs of selected entry in which sort tab?"));
-
-    if (inst != -1) gp_do_selected_entry (sync_tracks, inst);
-}
-
-void
-on_sync_tracks_activate            (GtkMenuItem     *menuitem,
-				     gpointer         user_data)
-{
-    gp_do_selected_tracks (sync_tracks);
-}
-
 
 void
 on_save_track_order1_activate           (GtkMenuItem     *menuitem,

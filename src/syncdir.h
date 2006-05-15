@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 00:54:13 jcs>
+/* Time-stamp: <2006-05-15 21:56:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -48,4 +48,6 @@ void sync_playlist (Playlist *playlist,
 		    gboolean sync_confirm_delete,
 		    const gchar *key_sync_show_summary,
 		    gboolean sync_show_summary);
+
+void sync_all_playlists (iTunesDB *itdb);
 #endif

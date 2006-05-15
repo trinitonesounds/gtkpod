@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-08 00:55:06 jcs>
+/* Time-stamp: <2006-05-15 21:37:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -127,12 +127,12 @@ main (int argc, char *argv[])
   
 	display_create ();
 
+  gtk_widget_show (gtkpod_window);
+
   init_data (gtkpod_window);   /* setup base data */
 
   /* stuff to be done before starting gtkpod */
   call_script ("gtkpod.in");
-
-  gtk_widget_show (gtkpod_window);
 
 /*  if(prefs_get_automount())      mount_ipod();*/
   if(prefs_get_autoimport() || prefs_get_autoimport_commandline())

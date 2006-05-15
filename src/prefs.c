@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 14:09:25 jcs>
+/* Time-stamp: <2006-05-16 00:33:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -129,20 +129,20 @@ static GHashTable *prefs_table = NULL;
 /* Set default prefrences */
 static void set_default_preferences()
 {
-	 prefs_set_int("update_existing", FALSE);
-  prefs_set_int("id3_write", FALSE);
-  prefs_set_int("id3_write_id3v24", FALSE);
-  prefs_set_int("sync_remove", TRUE);
-  prefs_set_int("sync_remove_confirm", TRUE);
-  prefs_set_int("show_duplicates", TRUE);
-  prefs_set_int("show_sync_dirs", TRUE);
-  prefs_set_int("show_non_updated", TRUE);
-  prefs_set_int("show_updated", TRUE);
-  prefs_set_int("mserv_report_probs", TRUE);
-  prefs_set_int("delete_ipod", TRUE);
-  prefs_set_int("delete_file", TRUE);
-  prefs_set_int("delete_local_file", TRUE);
-  prefs_set_int("delete_database", TRUE);
+    prefs_set_int("update_existing", FALSE);
+    prefs_set_int("id3_write", FALSE);
+    prefs_set_int("id3_write_id3v24", FALSE);
+    prefs_set_int(KEY_SYNC_DELETE_TRACKS, TRUE);
+    prefs_set_int(KEY_SYNC_CONFIRM_DELETE, TRUE);
+    prefs_set_int(KEY_SYNC_SHOW_SUMMARY, TRUE);
+    prefs_set_int("show_duplicates", TRUE);
+    prefs_set_int("show_non_updated", TRUE);
+    prefs_set_int("show_updated", TRUE);
+    prefs_set_int("mserv_report_probs", TRUE);
+    prefs_set_int("delete_ipod", TRUE);
+    prefs_set_int("delete_file", TRUE);
+    prefs_set_int("delete_local_file", TRUE);
+    prefs_set_int("delete_database", TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1606,6 +1606,18 @@ read_prefs_from_file_desc(FILE *fp)
 	      }
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
+	  {
+	      /* ignore */
+	  }
+	  else if(g_ascii_strcasecmp (line, "sync_remove") == 0)
+	  {
+	      /* ignore */
+	  }
+	  else if(g_ascii_strcasecmp (line, "sync_remove_confirm") == 0)
+	  {
+	      /* ignore */
+	  }
+	  else if(g_ascii_strcasecmp (line, "show_sync_dirs") == 0)
 	  {
 	      /* ignore */
 	  }

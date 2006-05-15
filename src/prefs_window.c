@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-11 00:42:56 jcs>
+/* Time-stamp: <2006-05-16 00:30:11 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -41,6 +41,7 @@
 #include "podcast.h"
 #include "repository.h"
 
+
 GladeXML *prefs_window_xml;
 GladeXML *sort_window_xml;
 
@@ -64,6 +65,12 @@ static void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect);
 static void prefs_window_set_autosettags (gint category, gboolean autoset);
 static void prefs_window_set_col_visible (gint column, gboolean visible);
 static void prefs_window_set_sort_tab_num (gint num);
+
+/* Some declarations */
+static void standard_toggle_toggled (GtkToggleButton *togglebutton,
+				     const gchar *key);
+
+
 
 /* Definition of path button names.
    E.g. path_button_names[PATH_PLAY_ENQUEUE] is
@@ -277,6 +284,20 @@ prefs_window_create (gint page)
     GtkWidget *w = NULL;
     GtkTooltips *tt;
     GtkTooltipsData *tooltipsdata;
+    /* List of standard toggle widget names */
+    const gchar *toggle_widget_names[] = {
+	"sync_confirm_dirs_toggle",
+	"sync_delete_tracks_toggle",
+	"sync_show_summary_toggle",
+	NULL
+    };
+    /* ... and corresponding keys */
+    const gchar *toggle_key_names[] = {
+	KEY_SYNC_CONFIRM_DIRS,
+	KEY_SYNC_DELETE_TRACKS,
+	KEY_SYNC_SHOW_SUMMARY,
+	NULL
+    };
 
     if (prefs_window)
     {   /* prefs window already open -- raise to the top */
@@ -322,7 +343,28 @@ prefs_window_create (gint page)
     prefs_get_size_prefs (&defx, &defy);
     gtk_window_set_default_size (GTK_WINDOW (prefs_window), defx, defy);
 
-/* Code to add subscriptions list box */
+    /* Code to add subscriptions list box */
+
+    /* Set up standard toggles */
+    for (i=0; toggle_widget_names[i]; ++i)
+    {
+	w = gtkpod_xml_get_widget (prefs_window_xml,
+				   toggle_widget_names[i]);
+	g_signal_connect (w, "toggled",
+			  G_CALLBACK (standard_toggle_toggled),
+			  (gpointer)toggle_key_names[i]);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
+				      prefs_get_int (toggle_key_names[i]));
+    }
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "sync_confirm_delete_toggle");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 prefs_get_int (KEY_SYNC_CONFIRM_DELETE));
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "sync_confirm_delete_toggle2");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 prefs_get_int (KEY_SYNC_CONFIRM_DELETE));
+
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "charset_combo");
     charset_init_combo (GTK_COMBO (w));
@@ -349,14 +391,6 @@ prefs_window_create (gint page)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("show_non_updated"));
     if (!prefs_get_int("update_existing")) gtk_widget_set_sensitive (w, FALSE);
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_sync_dirs");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("show_sync_dirs"));
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("sync_remove"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_toolbar");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -445,15 +479,6 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_track_database_deletion");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("delete_database"));
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("sync_remove_confirm"));
-    gtk_widget_set_sensitive (w, prefs_get_int("sync_remove"));
-
-    w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm2");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->deletion.syncing);
 
     w = gtkpod_xml_get_widget (prefs_window_xml,  "cfg_autoimport");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -1053,12 +1078,36 @@ on_cfg_track_database_deletion_toggled (GtkToggleButton *togglebutton,
                      gtk_toggle_button_get_active(togglebutton));
 }
 
-void
-on_cfg_sync_remove_confirm_toggled     (GtkToggleButton *togglebutton,
-					gpointer         user_data)
+static void standard_toggle_toggled (GtkToggleButton *togglebutton,
+				     const gchar *key)
 {
-	temp_prefs_set_int(temp_prefs, "sync_remove_confirm",
-                     gtk_toggle_button_get_active(togglebutton));
+    g_return_if_fail (key);
+
+    temp_prefs_set_int (temp_prefs, key, 
+			gtk_toggle_button_get_active (togglebutton));
+}
+
+void
+on_sync_confirm_delete_toggled     (GtkToggleButton *togglebutton,
+				    gpointer         user_data)
+{
+    GtkToggleButton *w;
+    gboolean active = gtk_toggle_button_get_active(togglebutton);
+
+    temp_prefs_set_int(temp_prefs, KEY_SYNC_CONFIRM_DELETE, active);
+		       
+
+    w = GTK_TOGGLE_BUTTON(
+	gtkpod_xml_get_widget (prefs_window_xml,
+			       "sync_confirm_delete_toggle"));
+    if (w != togglebutton)
+	gtk_toggle_button_set_active(w, active);
+
+    w = GTK_TOGGLE_BUTTON(
+	gtkpod_xml_get_widget (prefs_window_xml,
+			       "sync_confirm_delete_toggle2"));
+    if (w != togglebutton)
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), active);
 }
 
 
@@ -1194,26 +1243,6 @@ on_cfg_show_non_updated_toggled        (GtkToggleButton *togglebutton,
 {
     temp_prefs_set_int(temp_prefs, "show_non_updated", 
                        gtk_toggle_button_get_active (togglebutton));
-}
-
-void
-on_cfg_show_sync_dirs_toggled        (GtkToggleButton *togglebutton,
-				      gpointer         user_data)
-{
-    temp_prefs_set_int(temp_prefs, "show_sync_dirs",
-                       gtk_toggle_button_get_active (togglebutton));
-}
-
-void
-on_cfg_sync_remove_toggled             (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    gboolean val = gtk_toggle_button_get_active (togglebutton);
-    GtkWidget *w;
-
-    temp_prefs_set_int(temp_prefs, "sync_remove", val);
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sync_remove_confirm")))
-	gtk_widget_set_sensitive (w, val);
 }
 
 void
