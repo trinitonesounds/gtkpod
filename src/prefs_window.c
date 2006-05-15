@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 00:30:11 jcs>
+/* Time-stamp: <2006-05-16 01:05:38 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -350,11 +350,11 @@ prefs_window_create (gint page)
     {
 	w = gtkpod_xml_get_widget (prefs_window_xml,
 				   toggle_widget_names[i]);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
+				      prefs_get_int (toggle_key_names[i]));
 	g_signal_connect (w, "toggled",
 			  G_CALLBACK (standard_toggle_toggled),
 			  (gpointer)toggle_key_names[i]);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
-				      prefs_get_int (toggle_key_names[i]));
     }
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "sync_confirm_delete_toggle");
