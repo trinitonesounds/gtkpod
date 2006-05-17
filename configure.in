@@ -15,8 +15,14 @@ AM_PROG_CC_STDC
 dnl Only use -Wall if we have gcc
 if test "x$GCC" = "xyes"; then
   if test -z "`echo "$CFLAGS" | grep "\-Wall" 2> /dev/null`" ; then
-    CFLAGS="$CFLAGS -Wall  -Wno-pointer-sign"
+    CFLAGS="$CFLAGS -Wall"
   fi
+  # gcc < 4.0 does not know '-Wno-pointer-sign'. Try to find out
+  # whether we can set this option or not.
+  CFLAGS_orig=$CFLAGS
+  CFLAGS="$CFLAGS -Wno-pointer-sign"
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>]])],
+                    [], [CFLAGS=$CFLAGS_orig])
 fi
 
 GETTEXT_PACKAGE=gtkpod

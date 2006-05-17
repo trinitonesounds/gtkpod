@@ -1,3 +1,17 @@
+2006-05-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * scripts/sync-tomboy.sh: recommitted
+	 * configure.in: gcc < 4.0 does not know -Wno-pointer-sign
+
+2006-05-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/repository.c: (sync_or_update_playlist): implemented
+           update of smart playlist.
+
+	 * src/file_itunesdb.c
+	   src/display_itdb.h: make sure, live playlists are updated
+	   _after_ syncing of playlists has taken place.
+
 2006-05-15 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/misc.[ch]: (get_playlist_prefs_int),
