@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-01 14:48:40 jcs>
+/* Time-stamp: <2006-05-17 22:10:35 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -96,16 +96,16 @@ static void little_endian(hblock * stupidblock, int blocks);
  * @fp - the filepointer we want the filesize for
  * Returns - the filesize in bytes
  */
-static int
+static guint32
 get_filesize_for_file_descriptor(FILE *fp)
 {
-    int result = 0;
+    off_t result = 0;
     struct stat stat_info;
     int file_no = fileno(fp);
 
     if((fstat(file_no, &stat_info) == 0))	/* returns 0 on success */
 	result = (int)stat_info.st_size;
-    return(result);
+    return (guint32)result;
 }
 
 /**
@@ -130,6 +130,7 @@ md5_hash_on_file(FILE * fp)
 
        if(fsize > 0)
        {
+	   guint32 fsize_normal;
 	   guint8 *hash = NULL;
 	   int bread = 0, x = 0, last = 0;
 	   guchar file_chunk[chunk_size + sizeof(int)];
@@ -138,7 +139,8 @@ md5_hash_on_file(FILE * fp)
 	   result = g_malloc0(sizeof(gchar) * 41);
 
 	   /* put filesize in the first 32 bits */
-	   memcpy(file_chunk, &fsize, sizeof(int));
+	   fsize_normal = GINT32_TO_LE (fsize);
+	   memcpy(file_chunk, &fsize_normal, sizeof(guint32));
 
 	   /* read chunk_size from fp */
 	   bread = fread(&file_chunk[sizeof(int)], sizeof(gchar),

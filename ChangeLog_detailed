@@ -2,6 +2,8 @@
 
 	 * scripts/sync-tomboy.sh: recommitted
 	 * configure.in: gcc < 4.0 does not know -Wno-pointer-sign
+	 * src/md5.c: hash turned out different on little and big
+	   endian machines
 
 2006-05-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
