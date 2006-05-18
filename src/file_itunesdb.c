@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 22:58:09 jcs>
+/* Time-stamp: <2006-05-16 23:25:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -723,9 +723,6 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 	eitdb->data_changed = old_eitdb->data_changed;
     }
 
-    /* update all live SPLs */
-    itdb_spl_update_live (itdb);
-
     release_widgets();
 
     return itdb;
@@ -802,6 +799,9 @@ void gp_merge_itdb (iTunesDB *old_itdb)
 
     /* take care of autosync... */
     sync_all_playlists (new_itdb);
+
+    /* update all live SPLs */
+    itdb_spl_update_live (new_itdb);
 
     gtkpod_tracks_statusbar_update ();
 }

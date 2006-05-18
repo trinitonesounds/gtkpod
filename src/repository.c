@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 00:20:45 jcs>
+/* Time-stamp: <2006-05-16 23:37:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -116,7 +116,10 @@ static const gchar *UPDATE_ALL_PLAYLISTS_BUTTON="update_all_playlists_button";
 static const gchar *KEY_REPOSITORY_WINDOW_DEFX="repository_window_defx";
 static const gchar *KEY_REPOSITORY_WINDOW_DEFY="repository_window_defy";
 
-/* some key names used several times */
+/* some private key names used several times */
+static const gchar *KEY_LIVEUPDATE="liveupdate";
+
+/* some public key names used several times */
 const gchar *KEY_CONCAL_AUTOSYNC="concal_autosync";
 const gchar *KEY_SYNC_DELETE_TRACKS="sync_delete_tracks";
 const gchar *KEY_SYNC_CONFIRM_DELETE="sync_confirm_delete";
@@ -428,41 +431,32 @@ static void standard_playlist_checkbutton_toggled (GtkToggleButton *togglebutton
 						   RepWin *repwin)
 {
     const gchar *keybase;
+    gboolean active;
     gchar *key;
 
     g_return_if_fail (repwin);
+    g_return_if_fail (repwin->playlist);
 
     keybase = g_object_get_data (G_OBJECT (togglebutton), "key");
     g_return_if_fail (keybase);
     key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
 				  keybase);
-    finish_int_storage (repwin, key,
-			gtk_toggle_button_get_active (togglebutton));
-}
+    active = gtk_toggle_button_get_active (togglebutton);
 
+    /* Check if this is the liveupdate toggle which needs special
+     * treatment. */
+    if (keybase == KEY_LIVEUPDATE)
+    {
+	if (active == repwin->playlist->splpref.liveupdate)
+	    temp_prefs_set_string (repwin->extra_prefs, key, NULL);
+	else
+	    temp_prefs_set_int (repwin->extra_prefs, key, active);
 
-/* spl_live_update was toggled */
-static void spl_live_update_toggled (GtkToggleButton *togglebutton,
-				     RepWin *repwin)
-{
-    gchar *key;
-    gboolean val;
-
-    g_return_if_fail (repwin);
-    g_return_if_fail (repwin->playlist);
-
-    key = get_playlist_prefs_key (repwin->itdb_index, repwin->playlist,
-			    "liveupdate");
-
-    val = gtk_toggle_button_get_active (togglebutton);
-
-    if (val == repwin->playlist->splpref.liveupdate)
-	temp_prefs_set_string (repwin->extra_prefs, key, NULL);
-    else
-	temp_prefs_set_int (repwin->extra_prefs, key, val);
-
-    update_buttons (repwin);
-    g_free (key);
+	update_buttons (repwin);
+	return;
+    }
+	
+    finish_int_storage (repwin, key, active);
 }
 
 
@@ -643,7 +637,15 @@ static void sync_or_update_playlist (RepWin *repwin,
 
     if (playlist->is_spl)
     {
-	/* live update */
+	itdb_spl_update (playlist);
+
+	if (pm_get_selected_playlist () == playlist)
+	{   /* redisplay */
+	    pm_unselect_playlist (playlist);
+	    pm_select_playlist (playlist);
+	}
+
+	gtkpod_statusbar_message (_("Smart playlist updated."));
     }
     else
     {
@@ -865,7 +867,7 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 		    Playlist *pl = gl->data;
 		    gint val;
 		    g_return_if_fail (pl);
-		    key = get_playlist_prefs_key (i, pl, "liveupdate");
+		    key = get_playlist_prefs_key (i, pl, KEY_LIVEUPDATE);
 		    if (temp_prefs_get_int_value (repwin->extra_prefs, key, &val))
 		    {
 			pl->splpref.liveupdate = val;
@@ -1261,7 +1263,7 @@ static void display_playlist_info (RepWin *repwin)
 	gtk_widget_show (GET_WIDGET (PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE));
 	gtk_widget_hide (GET_WIDGET (STANDARD_PLAYLIST_VBOX));
 
-	key = get_playlist_prefs_key (index, playlist, "liveupdate");
+	key = get_playlist_prefs_key (index, playlist, KEY_LIVEUPDATE);
 	if (!temp_prefs_get_int_value (repwin->extra_prefs,
 				       key, &liveupdate))
 	    liveupdate = playlist->splpref.liveupdate;
@@ -1329,6 +1331,12 @@ static void display_playlist_info (RepWin *repwin)
 	    gtk_toggle_button_set_active (
 		GTK_TOGGLE_BUTTON (GET_WIDGET (widget_names[i])),
 		get_current_prefs_int (repwin, key));
+	    if (key_names[i] == KEY_SYNC_DELETE_TRACKS)
+	    {
+		gtk_widget_set_sensitive (
+		    GET_WIDGET (PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE),
+		    get_current_prefs_int (repwin, key));
+	    }
 	    g_free (key);
 	}
     }
@@ -1659,7 +1667,7 @@ static void update_buttons (RepWin *repwin)
 
 	gtk_widget_set_sensitive (GET_WIDGET ("path_table_ipod"), !deleted);
 	gtk_widget_set_sensitive (GET_WIDGET ("update_all_playlists_button"), !deleted);
-	gtk_widget_set_sensitive (GET_WIDGET ("playlist_info_view"), !deleted);
+	gtk_widget_set_sensitive (GET_WIDGET ("playlist_frame"), !deleted);
 	gtk_widget_set_sensitive (GET_WIDGET ("delete_repository_button"),
 				  !deleted && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (GET_WIDGET (DELETE_REPOSITORY_CHECKBUTTON))));
 
@@ -1672,18 +1680,27 @@ static void update_buttons (RepWin *repwin)
 	    }
 	    else
 	    {
-		gint mode;
+		gint val;
 		key = get_playlist_prefs_key (repwin->itdb_index,
 					      repwin->playlist,
 					      KEY_SYNCMODE);
-		mode = get_current_prefs_int (repwin, key);
+		val = get_current_prefs_int (repwin, key);
 		g_free (key);
-		if (mode != PLAYLIST_AUTOSYNC_MODE_NONE)
+		if (val != PLAYLIST_AUTOSYNC_MODE_NONE)
 		{
 		    sens = TRUE;
 		}
 		gtk_widget_set_sensitive (GET_WIDGET (SYNC_OPTIONS_HBOX),
 					  sens);
+
+		key = get_playlist_prefs_key (repwin->itdb_index,
+					      repwin->playlist,
+					      KEY_SYNC_DELETE_TRACKS);
+		val = get_current_prefs_int (repwin, key);
+		g_free (key);
+		gtk_widget_set_sensitive (
+		    GET_WIDGET (PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE),
+		    val);
 	    }
 	    gtk_widget_set_sensitive (GET_WIDGET (UPDATE_PLAYLIST_BUTTON),
 				      sens);
@@ -1728,11 +1745,13 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 	PLAYLIST_SYNC_DELETE_TRACKS_TOGGLE,
 	PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE,
 	PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE,
+	SPL_LIVE_UPDATE_TOGGLE,
 	NULL };
     const gchar *playlist_key_names_toggle[] = {
 	KEY_SYNC_DELETE_TRACKS,
 	KEY_SYNC_CONFIRM_DELETE,
 	KEY_SYNC_SHOW_SUMMARY,
+	KEY_LIVEUPDATE,
 	NULL };
     const gchar *itdb_widget_names_toggle[] = {
 	IPOD_CONCAL_AUTOSYNC_TOGGLE,
@@ -1822,10 +1841,6 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 		      "toggled",
 		      G_CALLBACK (playlist_autosync_mode_automatic_toggled),
 		      repwin);
-
-    g_signal_connect (GET_WIDGET (SPL_LIVE_UPDATE_TOGGLE),
-		      "toggled",
-		      G_CALLBACK (spl_live_update_toggled), repwin);
 
     g_signal_connect (GET_WIDGET (DELETE_REPOSITORY_CHECKBUTTON),
 		      "toggled",

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-09 00:05:05 jcs>
+/* Time-stamp: <2006-05-19 00:30:42 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1813,6 +1813,8 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 				   gpointer           data)
 {
   Playlist *playlist=NULL;
+  iTunesDB *itdb;
+  ExtraiTunesDBData *eitdb;
 
   g_return_if_fail (renderer);
   g_return_if_fail (model);
@@ -1821,6 +1823,9 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
   gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   g_return_if_fail (playlist);
   g_return_if_fail (playlist->itdb);
+  itdb = playlist->itdb;
+  g_return_if_fail (itdb->userdata);
+  eitdb = itdb->userdata;
 
   if (playlist->is_spl)
   {
@@ -1834,19 +1839,148 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
   }
   else
   {
-      if (playlist->itdb->usertype & GP_ITDB_TYPE_LOCAL)
+      if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
       {
 	  g_object_set (G_OBJECT (renderer),
 			"stock-id", GTK_STOCK_HARDDISK, NULL);
       }
       else
       {
-	  g_object_set (G_OBJECT (renderer),
-			"stock-id", NULL, NULL);
+#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 6))
+#define GTK_STOCK_DISCONNECT GTK_STOCK_FIND
+#define GTK_STOCK_CONNECT GTK_STOCK_GOTO_TOP
+#endif
+	  if (eitdb->itdb_imported)
+	  {
+	      g_object_set (G_OBJECT (renderer),
+			    "stock-id", GTK_STOCK_CONNECT, NULL);
+	  }
+	  else
+	  {
+	      g_object_set (G_OBJECT (renderer),
+			    "stock-id", GTK_STOCK_DISCONNECT, NULL);
+	  }
       }
   }
 }
 
+
+static void pm_select_current_position (gint x, gint y)
+{
+    GtkTreePath *path;
+
+    g_return_if_fail (playlist_treeview);
+
+    gtk_tree_view_get_path_at_pos (playlist_treeview,
+				   x, y, &path, NULL, NULL, NULL);
+    if (path)
+    {
+	GtkTreeSelection *ts = gtk_tree_view_get_selection
+	    (playlist_treeview);
+	gtk_tree_selection_select_path (ts, path);
+	gtk_tree_path_free (path);
+    }
+}
+
+
+
+/* Return the number (0...) of the renderer the click was in or -1 if
+   no renderer was found. @cell (if != NULL) is filled with a pointer
+   to the renderer. */
+gint tree_view_get_cell_from_pos(GtkTreeView *view, guint x, guint y,
+				 GtkCellRenderer **cell)
+{
+    GtkTreeViewColumn *col = NULL;
+    GList             *node, *cells;
+    gint               pos = 0;
+    GdkRectangle       rect;
+    GtkTreePath        *path = NULL;
+    gint               cell_x, cell_y;
+
+    g_return_val_if_fail ( view != NULL, -1 );
+
+    if (cell)
+	*cell = NULL;
+
+    gtk_tree_view_get_path_at_pos (view, x, y, &path, &col,
+				   &cell_x, &cell_y);
+
+    if (col == NULL)
+	return -1; /* not found */
+
+    cells = gtk_tree_view_column_get_cell_renderers(col);
+
+    gtk_tree_view_get_cell_area (view, path, col, &rect);
+
+    /* gtk_tree_view_get_cell_area() should return the rectangle
+       _excluding_ the expander arrow(s), but seems to forget about
+       the space occupied by the top level expander arrow. We
+       therefore need to add the width of one expander arrow */
+
+    if (col ==  gtk_tree_view_get_expander_column (view))
+    {
+	GValue *es = g_malloc0 (sizeof (GValue)); 
+	g_value_init (es, G_TYPE_INT);
+	gtk_widget_style_get_property (GTK_WIDGET (view),
+				       "expander_size",
+				       es);
+	rect.x += g_value_get_int (es);
+	rect.width -= g_value_get_int (es);
+	g_free (es);
+    }
+
+    for (node = cells;  node != NULL;  node = node->next)
+    {
+	GtkCellRenderer *checkcell = (GtkCellRenderer*)node->data;
+	gint start_pos, width;
+
+	if (gtk_tree_view_column_cell_get_position (col, checkcell,
+						    &start_pos, &width))
+	{
+	    if (x >= (rect.x + start_pos) &&
+		x < (rect.x + start_pos + width))
+	    {
+		if (cell)
+		    *cell = checkcell;
+		g_list_free(cells);
+		return pos;
+	    }
+	}
+	++pos;
+    }
+
+    g_list_free(cells);
+    return -1; /* not found */
+}
+
+
+
+static gboolean
+pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
+{
+    gint cell_nr;
+
+    g_return_val_if_fail (w && e, FALSE);
+    switch(e->button)
+    {
+    case 1:
+	cell_nr = tree_view_get_cell_from_pos (GTK_TREE_VIEW(w),
+					       e->x, e->y, NULL);
+	if (cell_nr == 0)
+	{
+	    printf ("Pressed in cell %d (%f/%f)\n", cell_nr, e->x, e->y);
+	    return TRUE;
+	}
+	break;
+    case 3:
+	pm_select_current_position (e->x, e->y);
+	pm_context_menu_init ();
+	return TRUE;
+    default:
+	break;
+    }
+    return FALSE;
+}
 
 /* Adds the columns to our playlist_treeview */
 static void pm_add_columns (void)
@@ -1858,10 +1992,10 @@ static void pm_add_columns (void)
   model = gtk_tree_view_get_model (playlist_treeview);
   g_return_if_fail (model);
 
+
   /* playlist column */
   column = gtk_tree_view_column_new ();
   gtk_tree_view_column_set_title (column, _("Playlists"));
-  gtk_tree_view_column_set_resizable (column, TRUE);
 /* FIXME: see comments at pm_data_compare_func() */
 /*
   gtk_tree_view_column_set_sort_column_id (column, PM_COLUMN_PLAYLIST);
@@ -1890,40 +2024,9 @@ static void pm_add_columns (void)
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					   pm_cell_data_func,
 					   NULL, NULL);
+
 }
 
-
-static void pm_select_current_position (gint x, gint y)
-{
-    GtkTreePath *path;
-
-    g_return_if_fail (playlist_treeview);
-
-    gtk_tree_view_get_path_at_pos (playlist_treeview,
-				   x, y, &path, NULL, NULL, NULL);
-    if (path)
-    {
-	GtkTreeSelection *ts = gtk_tree_view_get_selection
-	    (playlist_treeview);
-	gtk_tree_selection_select_path (ts, path);
-	gtk_tree_path_free (path);
-    }
-}
-
-static gboolean
-pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
-{
-    g_return_val_if_fail (w && e, FALSE);
-    switch(e->button)
-    {
-    case 3:
-	pm_select_current_position (e->x, e->y);
-	pm_context_menu_init ();
-	return TRUE;
-    default:
-	return FALSE;
-    }
-}
 
 /* Create playlist listview */
 void pm_create_treeview (void)

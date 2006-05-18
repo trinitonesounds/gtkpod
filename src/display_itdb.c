@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 22:53:57 jcs>
+/* Time-stamp: <2006-05-16 23:25:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -934,7 +934,11 @@ void init_data (GtkWidget *window)
 	    g_return_if_fail (eitdb);
 	    if (eitdb->itdb_imported)
 	    {
+		/* take care of autosync... */
 		sync_all_playlists (itdb);
+
+		/* update all live SPLs */
+		itdb_spl_update_live (itdb);
 	    }
 	}
 	else

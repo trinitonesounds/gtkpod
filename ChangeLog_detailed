@@ -1,4 +1,12 @@
-2006-05-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2006-05-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/display_songs.c: simplified code for setup of columns.
+
+	 * src/display_playlists.c: connect/disconnect icon for iPods,
+           identify if icon is clicked (printf a statement for the
+           time being -- work in progress!)
+
+2006-05-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * scripts/sync-tomboy.sh: recommitted
 	 * configure.in: gcc < 4.0 does not know -Wno-pointer-sign

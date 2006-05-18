@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-03 20:53:34 jcs>
+/* Time-stamp: <2006-05-19 00:11:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1835,42 +1835,6 @@ void tm_sort (TM_item col, GtkSortType order)
 }
 
 
-/* Add one column at position @pos. This code is used over and over
-   by tm_add_column() -- therefore I put it into a separate function */
-static GtkTreeViewColumn *tm_add_text_column (TM_item col_id,
-					      const gchar *name,
-					      GtkCellRenderer *renderer,
-					      gint pos)
-{
-    GtkTreeViewColumn *column;
-    GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
-
-    if (!renderer)
-    {   /* text renderer -- editable/not editable is done in
-	   tm_cell_data_func() */
-	renderer = gtk_cell_renderer_text_new ();
-	g_signal_connect (G_OBJECT (renderer), "edited",
-			  G_CALLBACK (tm_cell_edited), model);
-    }
-    g_object_set_data (G_OBJECT (renderer), "column", (gint *)col_id);
-    column = gtk_tree_view_column_new ();
-    gtk_tree_view_column_set_title (column, name);
-    gtk_tree_view_column_pack_end (column, renderer, FALSE);
-    gtk_tree_view_column_set_cell_data_func (column, renderer,
-					     tm_cell_data_func, NULL, NULL);
-    gtk_tree_view_column_set_sort_column_id (column, col_id);
-    gtk_tree_view_column_set_resizable (column, TRUE);
-/*     gtk_tree_view_column_set_clickable(column, TRUE); */
-    gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_fixed_width (column,
-					  prefs_get_tm_col_width (col_id));
-    gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), col_id,
-				     tm_data_compare_func, NULL, NULL);
-    gtk_tree_view_column_set_reorderable (column, TRUE);
-    gtk_tree_view_insert_column (track_treeview, column, pos);
-    tm_columns[col_id] = column;
-    return column;
-}
 
 
 
@@ -1879,7 +1843,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 {
   GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
   GtkTreeViewColumn *col = NULL;
-  const gchar *text = NULL;
+  const gchar *text;
   GtkCellRenderer *renderer = NULL;  /* default */
   GtkTooltips *tt;
 
@@ -1894,9 +1858,23 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 
   g_return_val_if_fail (text, NULL);
 
+  col = gtk_tree_view_column_new ();
+
   switch (tm_item)
   {
   case TM_COLUMN_TITLE:
+      /* Add additional toggle box for 'checked' property */
+      renderer = gtk_cell_renderer_toggle_new ();
+      g_object_set_data (G_OBJECT (renderer), "column",
+			 (gint *)tm_item);
+      g_signal_connect (G_OBJECT (renderer), "toggled",
+			G_CALLBACK (tm_cell_toggled), model);
+      gtk_tree_view_column_pack_start (col, renderer, FALSE);
+      gtk_tree_view_column_set_cell_data_func (col, renderer,
+					       tm_cell_data_func_toggle,
+					       NULL, NULL);
+      renderer = NULL;
+      break;
   case TM_COLUMN_ARTIST:
   case TM_COLUMN_ALBUM:
   case TM_COLUMN_GENRE:
@@ -1937,6 +1915,8 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_COMPILATION:
       text = _("Cmpl");
       renderer = gtk_cell_renderer_toggle_new ();
+      g_signal_connect (G_OBJECT (renderer), "toggled",
+			G_CALLBACK (tm_cell_toggled), model);
       break;
   case TM_COLUMN_TRACKLEN:
       text = _("Time");
@@ -1969,23 +1949,35 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
       g_return_val_if_reached (NULL);
       break;
   }
-  col = tm_add_text_column (tm_item, text, renderer, pos);
-  if (col && (tm_item == TM_COLUMN_TITLE))
-  {
-      renderer = gtk_cell_renderer_toggle_new ();
-      g_object_set_data (G_OBJECT (renderer), "column",
-			 (gint *)tm_item);
-      g_signal_connect (G_OBJECT (renderer), "toggled",
-			G_CALLBACK (tm_cell_toggled), model);
-      gtk_tree_view_column_pack_start (col, renderer, FALSE);
-      gtk_tree_view_column_set_cell_data_func (col, renderer, tm_cell_data_func_toggle, NULL, NULL);
+
+  if (!renderer)
+  {   /* text renderer -- editable/not editable is done in
+	 tm_cell_data_func() */
+      renderer = gtk_cell_renderer_text_new ();
+      g_signal_connect (G_OBJECT (renderer), "edited",
+			G_CALLBACK (tm_cell_edited), model);
   }
-  if (col && (tm_item == TM_COLUMN_COMPILATION))
-  {
-      g_signal_connect (G_OBJECT (renderer), "toggled",
-			G_CALLBACK (tm_cell_toggled), model);
-  }      
-  if (col && (pos != -1))
+
+  g_object_set_data (G_OBJECT (renderer), "column",
+		     (gint *)tm_item);
+
+  gtk_tree_view_column_set_title (col, text);
+  gtk_tree_view_column_pack_start (col, renderer, FALSE);
+  gtk_tree_view_column_set_cell_data_func (col, renderer,
+					   tm_cell_data_func, NULL, NULL);
+  gtk_tree_view_column_set_sort_column_id (col, tm_item);
+  gtk_tree_view_column_set_resizable (col, TRUE);
+/*     gtk_tree_view_column_set_clickable(column, TRUE); */
+  gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
+  gtk_tree_view_column_set_fixed_width (col,
+					prefs_get_tm_col_width (tm_item));
+  gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), tm_item,
+				   tm_data_compare_func, NULL, NULL);
+  gtk_tree_view_column_set_reorderable (col, TRUE);
+  gtk_tree_view_insert_column (track_treeview, col, pos);
+  tm_columns[tm_item] = col;
+
+  if (pos != -1)
   {
       gtk_tree_view_column_set_visible (col,
 					prefs_get_col_visible (tm_item));
@@ -2034,14 +2026,21 @@ tm_button_press_event(GtkWidget *w, GdkEventButton *e, gpointer data)
     {
 	switch(e->button)
 	{
-	    case 3:
-		tm_select_current_position (e->x, e->y);
-		tm_context_menu_init ();
-		return TRUE;
-	    default:
-		break;
+	case 1:
+/*
+	    printf ("Pressed in cell %d (%f/%f)\n\n",
+		    tree_view_get_cell_from_pos(GTK_TREE_VIEW(w),
+						(guint)e->x, (guint)e->y, NULL),
+		    e->x, e->y);
+*/
+	    break;
+	case 3:
+	    tm_select_current_position (e->x, e->y);
+	    tm_context_menu_init ();
+	    return TRUE;
+	default:
+	    break;
 	}
-
     }
     return(FALSE);
 }
