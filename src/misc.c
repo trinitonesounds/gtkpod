@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-05-15 22:02:39 jcs>
+|  Time-stamp: <2006-05-20 16:50:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -32,6 +32,7 @@
 #  include <config.h>
 #endif
 
+#include <errno.h>
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
@@ -351,132 +352,28 @@ GList *glist_duplicate (GList *list)
 
 
 /***************************************************************************
- * Mount Calls
- *
- **************************************************************************/
-/**
- * mount_ipod - attempt to mount the ipod to prefs_get_ipod_mount() This
- * does not check prefs to see if the current prefs want gtkpod itself to
- * mount the ipod drive, that should be checked before making this call.
- */
-#include <sys/param.h>   /* seems to be needed for FreeBSD 5.4
-			    otherwise sys/mount.h throws an error */
-#include <sys/mount.h>
-#include <errno.h>
-#include <stdio.h>
-
-#if 0
-static gchar *getdevicename(const gchar *mount)
-{
-    if(mount) {
-        gchar device[256], point[256];
-        FILE *fp = fopen("/proc/mounts","r");
-        if (!fp)
-            return NULL;
-        do {
-            fscanf(fp, "%255s %255s %*s %*s %*s %*s", device, point);
-            if( strcmp(mount,point) == 0 ) {
-                fclose(fp);
-                return strdup(device);
-            }
-        } while(!feof(fp));
-        fclose(fp);
-    }
-    return NULL;
-}
-
-
-/**
- * unmount_ipod - attempt to eject the ipod from prefs_get_ipod_mount()
- * This does not check prefs to see if the current prefs want gtkpod itself
- * to eject the ipod drive, that should be checked before making this
- * call.
- */
-void
-unmount_ipod(void)
-{
-    const gchar *mp = prefs_get_ipod_mount ();
-    if (mp)
-    {
-	pid_t pid, tpid;
-	int status;
-	gchar *eject_bin;
-	gchar *ipod_device = getdevicename (mp);
-
-	/* umount */
-	pid = fork ();
-	switch (pid)
-	{
-	    case 0: /* child */
-		execl (UMOUNT_BIN, "umount", mp, NULL);
-		exit (1); /* this is only reached in case of an error */
-		break;
-	    case -1: /* parent and error */
-		break;
-	    default: /* parent -- let's wait for the child to terminate */
-		tpid = waitpid (pid, &status, 0);
-		if (status != 0)
-		{
-		   	gchar *buf;
-		    gchar *str_utf8 = charset_to_utf8 (mp);
-		    GtkWidget *dialog;
-		    if (ipod_device)
-			buf = g_strdup_printf (
-			    _("Unmounting of '%s' (%s) unsuccessful."),
-			    str_utf8, ipod_device);
-		    else
-			buf = g_strdup_printf (
-			    _("Unmounting of '%s' unsuccessful."),
-			    str_utf8);
-		    g_free (str_utf8);
-		    dialog = gtk_message_dialog_new (
-			GTK_WINDOW (gtkpod_window),
-			GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_MESSAGE_WARNING,
-			GTK_BUTTONS_OK,
-			buf);
-		    gtk_dialog_run (GTK_DIALOG (dialog));
-		    gtk_widget_destroy (dialog);
-		    g_free (buf);
-		}
-		break;
-	}
-	/* eject -- only if ipod_device and are EJECT_BIN available */
-	eject_bin = which ("eject");
-	if (ipod_device && eject_bin)
-	{
-	    pid = fork ();
-	    switch (pid)
-	    {
-	    case 0: /* child */
-		execl (eject_bin, "eject", ipod_device, NULL);
-		exit (1); /* this is only reached in case of an error */
-		break;
-	    case -1: /* parent and error */
-		break;
-	    default: /* parent -- let's wait for the child to terminate */
-		tpid = waitpid (pid, &status, 0);
-		if (status != 0)
-		{
-		    /* fail silently */
-		}
-		break;
-	    }
-	    g_free (eject_bin);
-	}
-	g_free (ipod_device);
-    }
-}
-#endif
-
-/***************************************************************************
  * gtkpod.in,out calls
  *
  **************************************************************************/
 
-/* tries to call "/bin/sh @script" */
-static void do_script (gchar *script)
+/* tries to call "/bin/sh @script" with command line options */
+static void do_script (const gchar *script, va_list args)
 {
+    char *str;
+    char **argv;
+    GPtrArray *ptra = g_ptr_array_sized_new (10);
+
+    /* prepend args with "sh" and the name of the script */
+    g_ptr_array_add (ptra, "sh");
+    g_ptr_array_add (ptra, (gpointer)script);
+    /* add remaining args */
+    while ((str = va_arg (args, char *)))
+    {
+	g_ptr_array_add (ptra, str);
+    }
+    g_ptr_array_add (ptra, NULL);
+    argv = (char **)g_ptr_array_free (ptra, FALSE);
+
     if (script)
     {
 	pid_t pid, tpid;
@@ -486,7 +383,7 @@ static void do_script (gchar *script)
 	switch (pid)
 	{
 	case 0: /* child */
-	    execl("/bin/sh", "sh", script, NULL);
+	    execv("/bin/sh", argv);
 	    exit(0);
 	break;
 	case -1: /* parent and error */
@@ -497,23 +394,29 @@ static void do_script (gchar *script)
 	    break;
 	}
     }
+    g_free (argv);
 }
 
 
 /* tries to execute "/bin/sh ~/.gtkpod/@script" or
- * "/bin/sh /etc/gtkpod/@script" if the former does not exist */
-void call_script (gchar *script)
+ * "/bin/sh /etc/gtkpod/@script" if the former does not exist. This
+ * function accepts command line arguments that must be terminated by
+ * NULL. */
+void call_script (gchar *script, ...)
 {
     gchar *cfgdir;
+    va_list args;
     gchar *file;
 
     if (!script) return;
 
     cfgdir =  prefs_get_cfgdir ();
     file = g_build_filename (cfgdir, script, NULL);
+
+    va_start (args, script);
     if (g_file_test (file, G_FILE_TEST_EXISTS))
     {
-	do_script (file);
+	do_script (file, args);
     }
     else
     {
@@ -521,11 +424,13 @@ void call_script (gchar *script)
 	file = g_build_filename ("/etc/gtkpod/", script, NULL);
 	if (g_file_test (file, G_FILE_TEST_EXISTS))
 	{
-	    do_script (file);
+	    do_script (file, args);
 	}
     }
-    C_FREE (file);
-    C_FREE (cfgdir);
+    va_end (args);
+
+    g_free (file);
+    g_free (cfgdir);
 }
 
 

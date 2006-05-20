@@ -24,6 +24,7 @@ for details.
      - Duplicate Detection
      - Preferences File
      - Startup and Shutdown scripts
+     - Load iPod and eject iPod scripts
      - Extended Information File
      - Refresh (Update) Track Info From File
      - Synchronize Directories
@@ -168,18 +169,35 @@ Startup and Shutdown Scripts
 
 After reading the preferences file gtkpod will try to execute
 ~/.gtkpod/gtkpod.in (or /etc/gtkpod/gtkpod.in if the former doesn't
-exist) during startup. This is done before attempting to mount the
-iPod directory (optional) or read the iTunesDB (optional)).
+exist) during startup.
 
-When leaving the program, gtkpod can unmount the iPod for you
-(option). In this case, gtkpod will also try to send an "eject"
-command to the iPod. For this to work, however, you need write access
-to the device file (e.g. /dev/sda2). After this the following scripts
-will be executed: ~/.gtkpod/gtkpod.out (or /etc/gtkpod/gtkpod.out if
-the former doesn't exist).
+Just before exiting the program, gtkpod will try to execute
+~/.gtkpod/gtkpod.out (or /etc/gtkpod/gtkpod.out if the former doesn't
+exist).
 
 Please see the section "Sick of loading the sbp2 modules by hand?" for
 an example of how to use this functionality.
+
+
+
+Load iPod and eject iPod scripts
+--------------------------------
+
+Before loading the contents of an iPod, gtkpod will call
+~/.gtkpod/gtkpod.load with the iPod's mountpoint as the only
+command line argument. Put any commands here needed to access the
+iPod.
+
+When ejecting an iPod, gtkpod will call ~/.gtkpod/gtkpod.eject
+with the the iPod's mountpoint as the only command line argument. Put
+any commands here you want to execute after gtkpod has written the
+changes to the iPod. One major candidate will probably be 
+
+sudo eject $1
+
+gtkpod will not attempt to do any magic of it's own to
+mount/unmount/eject the iPod.
+
 
 
 Duplicate Detection

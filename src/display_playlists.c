@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-19 00:30:42 jcs>
+/* Time-stamp: <2006-05-20 23:26:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -65,11 +65,6 @@ static GtkTargetEntry pm_drop_types [] = {
     { "STRING", 0, DND_TEXT_PLAIN }
 };
 
-
-/* SEMIBOLD was introduced with version 1.8 */
-#ifndef PANGO_WEIGHT_SEMIBOLD
-#define PANGO_WEIGHT_SEMIBOLD 600
-#endif
 
 
 /* ---------------------------------------------------------------- */
@@ -1846,10 +1841,6 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
       }
       else
       {
-#if ((GTK_MAJOR_VERSION == 2) && (GTK_MINOR_VERSION < 6))
-#define GTK_STOCK_DISCONNECT GTK_STOCK_FIND
-#define GTK_STOCK_CONNECT GTK_STOCK_GOTO_TOP
-#endif
 	  if (eitdb->itdb_imported)
 	  {
 	      g_object_set (G_OBJECT (renderer),
@@ -1911,6 +1902,7 @@ gint tree_view_get_cell_from_pos(GtkTreeView *view, guint x, guint y,
     cells = gtk_tree_view_column_get_cell_renderers(col);
 
     gtk_tree_view_get_cell_area (view, path, col, &rect);
+    gtk_tree_path_free (path);
 
     /* gtk_tree_view_get_cell_area() should return the rectangle
        _excluding_ the expander arrow(s), but seems to forget about
@@ -1959,6 +1951,11 @@ static gboolean
 pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
 {
     gint cell_nr;
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    GtkTreeIter iter;
+    Playlist *pl;
+    ExtraiTunesDBData *eitdb;
 
     g_return_val_if_fail (w && e, FALSE);
     switch(e->button)
@@ -1968,8 +1965,48 @@ pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
 					       e->x, e->y, NULL);
 	if (cell_nr == 0)
 	{
-	    printf ("Pressed in cell %d (%f/%f)\n", cell_nr, e->x, e->y);
-	    return TRUE;
+	    /* */
+	    model= gtk_tree_view_get_model (GTK_TREE_VIEW (w));
+	    gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW(w),
+					   e->x, e->y,
+					   &path, NULL,
+					   NULL, NULL);
+	    gtk_tree_model_get_iter (model, &iter, path);
+	    gtk_tree_path_free (path);
+	    gtk_tree_model_get (model, &iter,
+				PM_COLUMN_PLAYLIST, &pl,
+				-1);
+	    if (pl == NULL)
+		break;
+
+	    g_return_val_if_fail (pl->itdb, FALSE);
+
+	    if (!itdb_playlist_is_mpl (pl))
+		break;
+
+	    if (pl->itdb->usertype & GP_ITDB_TYPE_IPOD)
+	    {
+
+		/* the user clicked on the connect/disconnect icon of
+		 * an iPod */
+		eitdb = pl->itdb->userdata;
+		g_return_val_if_fail (eitdb, FALSE);
+		if (!eitdb->itdb_imported)
+		{
+		    gp_load_ipod (pl->itdb);
+		}
+		else
+		{
+		    gp_eject_ipod (pl->itdb);
+		}
+		return TRUE;
+	    }
+	    if (pl->itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	    {
+
+		/* the user clicked on the 'harddisk' icon of
+		 * a local repository */
+	    }
 	}
 	break;
     case 3:

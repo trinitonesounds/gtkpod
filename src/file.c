@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 00:36:07 jcs>
+/* Time-stamp: <2006-05-20 22:22:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1475,9 +1475,9 @@ void display_mserv_problems (Track *track, gchar *txt)
 }
 
 
-/* Update information of @track from data in original file. This
-   requires that the original filename is available, and that the file
-   exists.
+/* Update information of @track from data in original file. If the
+ * original filename is not available, information will be updated
+ * from the copy on the iPod and a warning is printed.
 
    A list of non-updated tracks can be displayed by calling
    display_non_updated (NULL, NULL). This list can be deleted by
@@ -1518,21 +1518,51 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	prefs_set_charset (etr->charset);
     }
 
-    if (etr->pc_path_locale)
-    {   /* need to copy because we cannot pass track->pc_path_locale to
-	get_track_info_from_file () since track->pc_path gets g_freed
-	there */
-	trackpath = g_strdup (etr->pc_path_locale);
-    }
+    trackpath = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
 
+    
     if (!(etr->pc_path_locale && *etr->pc_path_locale))
     { /* no path available */
-	display_non_updated (track, _("no filename available"));
+	if (trackpath)
+	{
+	    display_non_updated (track, _("no local filename available, file on the iPod will be used instead"));
+	}
+	else
+	{
+	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	    {
+		display_non_updated (track, _("no local filename available and copy on iPod cannot be found"));
+	    }
+	    else
+	    {
+		display_non_updated (track, _("no local filename available"));
+	    }
+	}
     }
-    else if (get_track_info_from_file (trackpath, track))
+    else if (!g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
+    {
+	if (trackpath)
+	{
+	    display_non_updated (track, _("local file could not be found, file on the iPod will be used instead"));
+	}
+	else
+	{
+	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	    {
+		display_non_updated (track, _("local file as well as copy on the iPod cannot be found"));
+	    }
+	    else
+	    {
+		display_non_updated (track, _("no local filename available"));
+	    }
+	}
+    }
+
+    if (trackpath && get_track_info_from_file (trackpath, track))
     { /* update successfull */
 	/* remove track from md5 hash and reinsert it
 	   (hash value may have changed!) */
+	gchar *name_on_ipod;
 	gchar *oldhash = etr->md5_hash;
 	md5_track_remove (track);
 	/* need to remove the old value manually! */
@@ -1547,19 +1577,28 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	/* track may have to be copied to iPod on next export */
 	/* since it will copied under the same name as before, we
 	   don't have to manually remove it */
-	if (oldhash && etr->md5_hash)
-	{   /* do we really have to copy the track again? */
-	    if (strcmp (oldhash, etr->md5_hash) != 0)
-	    {
+	name_on_ipod = get_file_name_from_source (track, SOURCE_IPOD);
+	if (strcmp (name_on_ipod, trackpath) != 0)
+	{   /* trackpath is not on the iPod */
+	    if (oldhash && etr->md5_hash)
+	    {   /* do we really have to copy the track again? */
+		if (strcmp (oldhash, etr->md5_hash) != 0)
+		{
+		    data_changed (itdb);
+		    g_free (name_on_ipod);
+		}
+	    }
+	    else
+	    {   /* no hash available -- copy! */
 		track->transferred = FALSE;
 		data_changed (itdb);
 	    }
 	}
 	else
-	{   /* no hash available -- copy! */
-	    track->transferred = FALSE;
+	{
 	    data_changed (itdb);
 	}
+	
 	/* set old size if track has to be transferred (for free space
 	 * calculation) */
 	if (!track->transferred) etr->oldsize = oldsize;
@@ -1568,23 +1607,16 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	display_updated (track, NULL);
         g_free (oldhash);
     }
-    else
+    else if (trackpath)
     { /* update not successful -- log this track for later display */
-	if (g_file_test (trackpath,
-			 G_FILE_TEST_EXISTS) == FALSE)
-	{
-	    display_non_updated (track, _("file not found"));
-	}
-	else
-	{
-	    display_non_updated (track, _("format not supported"));
-	}
+	display_non_updated (track, _("update failed (format no supported?)"));
     }
 
     if (!prefs_get_update_charset () && charset_set)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }
+
     g_free (trackpath);
 
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();

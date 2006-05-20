@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 21:37:12 jcs>
+/* Time-stamp: <2006-05-20 16:50:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -132,11 +132,11 @@ main (int argc, char *argv[])
   init_data (gtkpod_window);   /* setup base data */
 
   /* stuff to be done before starting gtkpod */
-  call_script ("gtkpod.in");
+  call_script ("gtkpod.in", NULL);
 
 /*  if(prefs_get_automount())      mount_ipod();*/
   if(prefs_get_autoimport() || prefs_get_autoimport_commandline())
-      gp_merge_ipod_itdbs ();
+      gp_load_ipods ();
 
   server_setup ();   /* start server to accept playcount updates */
 

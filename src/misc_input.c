@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:11 jcs>
+/* Time-stamp: <2006-05-20 23:23:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -291,12 +291,12 @@ static void block_release_widgets (gint action, GtkWidget *w, gboolean sens)
     if (bws == NULL)
     {
 	bws = add_blocked_widget (bws, "menubar");
-	bws = add_blocked_widget (bws, "import_button");
+	bws = add_blocked_widget (bws, "load_ipods_button");
+	bws = add_blocked_widget (bws, "save_changes_button");
 	bws = add_blocked_widget (bws, "add_files_button");
 	bws = add_blocked_widget (bws, "add_dirs_button");
 	bws = add_blocked_widget (bws, "add_PL_button");
 	bws = add_blocked_widget (bws, "new_PL_button");
-	bws = add_blocked_widget (bws, "export_button");
 	widgets_blocked = FALSE;
     }
 

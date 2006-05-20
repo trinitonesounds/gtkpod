@@ -1,7 +1,14 @@
 gtkpod V0.99.6CVS
 
-       IMPROVEMENT: Probably displays artwork on some newer iPod
-       models now as well -- this includes the new mobile phone iPods.
+       NEW FEATURE: Support of several iPods (currently you need to
+       edit the itdb_* entries in ~/.gtkpod/prefs to add
+       repositories). Each iPod can be loaded/ejected
+       individually. Scripts are called before loading (gtkpod.load)
+       and after saving (gtkpod.eject) with the mountpoint as the
+       first argument.
+
+       IMPROVEMENT: Displays artwork on some newer iPod models now as
+       well -- this includes the new mobile phone iPods.
 
        IMPROVEMENT: Podcasts are marked as unplayed (on the iPod, with
        a bullet in front of the title) when newly added to the podcast

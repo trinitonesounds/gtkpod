@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 23:25:10 jcs>
+/* Time-stamp: <2006-05-20 23:24:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -89,6 +89,11 @@ static GHashTable *extendedinfohash = NULL;
 static GHashTable *extendedinfohash_md5 = NULL;
 static GList *extendeddeletion = NULL;
 static float extendedinfoversion = 0.0;
+
+
+/* Some declarations */
+static gboolean gp_write_itdb (iTunesDB *itdb);
+
 
 /* fills in extended info if available */
 /* num/total are used to give updates in case the md5 checksums have
@@ -729,7 +734,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 }
 
 /* attempts to import all iPod databases */
-void gp_merge_ipod_itdbs (void)
+void gp_load_ipods (void)
 {
     struct itdbs_head *itdbs_head;
     GList *gl;
@@ -748,10 +753,9 @@ void gp_merge_ipod_itdbs (void)
 	g_return_if_fail (eitdb);
 	if ((itdb->usertype & GP_ITDB_TYPE_IPOD) && !eitdb->itdb_imported)
 	{
-	    gp_merge_itdb (itdb);
+	    gp_load_ipod (itdb);
 	}
     }
-    display_disable_gtkpod_import_buttons ();
 }
 
 
@@ -763,19 +767,20 @@ void gp_merge_ipod_itdbs (void)
  * ->eitdb->offline_filename must be set according to usertype and
  * will be used to read the new itdb
  *
+ * Return value: pointer to the new repository
  */
-void gp_merge_itdb (iTunesDB *old_itdb)
+iTunesDB *gp_merge_itdb (iTunesDB *old_itdb)
 {
     ExtraiTunesDBData *old_eitdb;
     iTunesDB *new_itdb;
 
-    g_return_if_fail (old_itdb);
+    g_return_val_if_fail (old_itdb, NULL);
     old_eitdb = old_itdb->userdata;
-    g_return_if_fail (old_eitdb);
+    g_return_val_if_fail (old_eitdb, NULL);
 
     if (old_itdb->usertype & GP_ITDB_TYPE_LOCAL)
     {
-	g_return_if_fail (old_itdb->filename);
+	g_return_val_if_fail (old_itdb->filename, NULL);
 
 	new_itdb = gp_import_itdb (old_itdb, old_itdb->usertype,
 				   NULL, NULL, old_itdb->filename);
@@ -783,8 +788,8 @@ void gp_merge_itdb (iTunesDB *old_itdb)
     else if (old_itdb->usertype & GP_ITDB_TYPE_IPOD)
     {
 	const gchar *mountpoint = itdb_get_mountpoint (old_itdb);
-	g_return_if_fail (mountpoint);
-	g_return_if_fail (old_eitdb->offline_filename);
+	g_return_val_if_fail (mountpoint, NULL);
+	g_return_val_if_fail (old_eitdb->offline_filename, NULL);
 
 	new_itdb = gp_import_itdb (old_itdb, old_itdb->usertype,
 				   mountpoint,
@@ -792,19 +797,138 @@ void gp_merge_itdb (iTunesDB *old_itdb)
 				   NULL);
     }
     else
-	g_return_if_reached ();
+	g_return_val_if_reached (NULL);
 
     if (new_itdb)
+    {
 	gp_replace_itdb (old_itdb, new_itdb);
 
-    /* take care of autosync... */
-    sync_all_playlists (new_itdb);
+	/* take care of autosync... */
+	sync_all_playlists (new_itdb);
 
-    /* update all live SPLs */
-    itdb_spl_update_live (new_itdb);
+	/* update all live SPLs */
+	itdb_spl_update_live (new_itdb);
+    }
 
     gtkpod_tracks_statusbar_update ();
+
+    return new_itdb;
 }
+
+
+/**
+ * gp_load_ipod: loads the contents of an iPod into @itdb. If data
+ * already exists in @itdb, data is merged.
+ *
+ * @itdb: repository to load iPod contents into. mountpoint must be
+ * set, and the iPod must not be loaded already
+ * (eitdb->itdb_imported).
+ *
+ * Return value: the new repository holding the contents of the iPod.
+ */
+iTunesDB *gp_load_ipod (iTunesDB *itdb)
+{
+    ExtraiTunesDBData *eitdb;
+    iTunesDB *new_itdb = NULL;
+    gchar *mountpoint;
+
+    g_return_val_if_fail (itdb, NULL);
+    g_return_val_if_fail (itdb->usertype & GP_ITDB_TYPE_IPOD, NULL);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, NULL);
+    g_return_val_if_fail (eitdb->itdb_imported == FALSE, NULL);
+
+    mountpoint = get_itdb_prefs_string (itdb, "mountpoint");
+    call_script ("gtkpod.load", mountpoint, NULL);
+    g_free (mountpoint);
+
+    new_itdb = gp_merge_itdb (itdb);
+
+    return new_itdb;
+}
+
+
+/**
+ * gp_eject_ipod: store @itdb and call ~/.gtkpod/gtkpod.eject with the
+ * mountpoint as parameter. Then @itdb is deleted and replaced with an
+ * empty version. eitdb->ejected is set.
+ *
+ * @itdb: must be an iPod itdb (eject does not make sense otherwise)
+ *
+ * Return value: TRUE if saving was successful, FALSE otherwise.
+ */
+gboolean gp_eject_ipod (iTunesDB *itdb)
+{
+
+    g_return_val_if_fail (itdb, FALSE);
+    g_return_val_if_fail (itdb->usertype & GP_ITDB_TYPE_IPOD, FALSE);
+
+    if (gp_save_itdb (itdb))
+    {
+	gint index;
+	gchar *mountpoint;
+	iTunesDB *new_itdb;
+
+	mountpoint = get_itdb_prefs_string (itdb, "mountpoint");
+	call_script ("gtkpod.eject", mountpoint, FALSE);
+	g_free (mountpoint);
+
+	index = get_itdb_index (itdb);
+	new_itdb = setup_itdb_n (index);
+	if (new_itdb)
+	{
+	    ExtraiTunesDBData *new_eitdb;
+
+	    new_eitdb = new_itdb->userdata;
+	    g_return_val_if_fail (new_eitdb, TRUE);
+
+	    gp_replace_itdb (itdb, new_itdb);
+
+	    new_eitdb->ipod_ejected = TRUE;
+    	}
+	return TRUE;
+    }
+    return FALSE;
+}
+
+
+/**
+ * gp_save_itdb: Save a repository after updating smart playlists. If
+ * the repository is an iPod, contacts, notes and calendar are also
+ * updated.
+ *
+ * @itdb: repository to save
+ *
+ * return value: TRUE on succes, FALSE when an error occured.
+ */
+gboolean gp_save_itdb (iTunesDB *itdb)
+{
+    Playlist *pl;
+    gboolean success;
+    g_return_val_if_fail (itdb, FALSE);
+
+    /* update smart playlists before writing */
+    itdb_spl_update_live (itdb);
+    pl = pm_get_selected_playlist ();
+    if (pl && (pl->itdb == itdb) &&
+	pl->is_spl && pl->splpref.liveupdate)
+    {   /* Update display if necessary */
+	st_redisplay (0);
+    }
+
+    success = gp_write_itdb (itdb);
+
+    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+    {
+	if (get_itdb_prefs_int (itdb, "concal_autosync"))
+	{
+	    tools_sync_all (itdb);
+	}
+    }
+
+    return success;
+}
+
 
 
 /*------------------------------------------------------------------*\
@@ -1280,7 +1404,6 @@ static gboolean flush_tracks (iTunesDB *itdb)
   g_free (progtext);
 
   /* count number of tracks to be transferred */
-  if (n != 0)  display_disable_gtkpod_import_buttons();
   count = 0; /* tracks transferred */
   start = time (NULL);
 
@@ -1373,7 +1496,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
 }
 
 
-gboolean gp_write_itdb (iTunesDB *itdb)
+static gboolean gp_write_itdb (iTunesDB *itdb)
 {
   gchar *cfgdir;
   gboolean success = TRUE;
@@ -1602,9 +1725,6 @@ gboolean gp_write_itdb (iTunesDB *itdb)
   if (success)
   {
       data_unchanged (itdb);
-      /* block menu item and button if successfully written to iPod */
-      if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	  display_disable_gtkpod_import_buttons();
       gtkpod_statusbar_message(_("iPod Database Saved"));
   }
 
@@ -1641,30 +1761,15 @@ void handle_export (void)
 
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
-	iTunesDB *itdb = gl->data;
 	ExtraiTunesDBData *eitdb;
+	iTunesDB *itdb = gl->data;
 	g_return_if_fail (itdb);
 	eitdb = itdb->userdata;
 	g_return_if_fail (eitdb);
-	if (eitdb->data_changed || eitdb->itdb_imported)
+
+	if (eitdb->data_changed)
 	{
-	    Playlist *pl;
-	    /* update smart playlists before writing */
-	    itdb_spl_update_live (itdb);
-	    pl = pm_get_selected_playlist ();
-	    if (pl && (pl->itdb == itdb) &&
-		pl->is_spl && pl->splpref.liveupdate)
-	    {   /* Update display if necessary */
-		st_redisplay (0);
-	    }
-	    success &= gp_write_itdb (itdb);
-	}
-	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	{
-	    if (get_itdb_prefs_int (itdb, "concal_autosync"))
-	    {
-		tools_sync_all (itdb);
-	    }
+	    success &= gp_save_itdb (itdb);
 	}
     }
 

@@ -1,3 +1,37 @@
+2006-05-20 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * po/POTFILES.in: updated file list -> updated .po files.
+
+	 * src/misc.c: call_script now accepts an arbitary number of
+	   command line arguments.
+
+	 * src/file.c (update_track_from_file): if no local filename
+           is available, use the copy on the iPod to update.
+
+	 * src/display_songs.c (tm_cell_edited): when changing the
+           track length also update starttime, stoptime and filesize
+           (all needed to have the iPod play the hole file).
+
+         * src/context_menus.c
+           src/display.c
+           src/display.h
+           src/display_itdb.c
+           src/display_itdb.h
+           src/display_playlists.c
+           src/display_songs.c
+           src/file.h
+           src/file_itunesdb.c
+           src/main.c
+           src/misc.h
+           src/misc_confirm.c
+           src/misc_input.c
+           src/misc_track.c
+	   gtkpod.glade: Introduction of load/eject ipod(s) and 'save
+           changes'. ~/.gtkpod/gtkpod.load and ~/.gtkpod/gtkpod.eject
+           are called before loading/after saving the iPod. Several
+           iPods are supported.
+
+
 2006-05-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/display_songs.c: simplified code for setup of columns.
@@ -9,7 +43,9 @@
 2006-05-17 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * scripts/sync-tomboy.sh: recommitted
+
 	 * configure.in: gcc < 4.0 does not know -Wno-pointer-sign
+
 	 * src/md5.c: hash turned out different on little and big
 	   endian machines
 

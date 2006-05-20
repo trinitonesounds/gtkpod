@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-19 00:11:20 jcs>
+/* Time-stamp: <2006-05-20 22:44:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -31,12 +31,15 @@
 #  include <config.h>
 #endif
 
-#include <gtk/gtk.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <limits.h>
 #include <gdk/gdkkeysyms.h>
+#include <gtk/gtk.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "prefs.h"
 #include "display_private.h"
@@ -860,7 +863,20 @@ tm_cell_edited (GtkCellRendererText *renderer,
      case TM_COLUMN_SAMPLERATE:
      case TM_COLUMN_BPM:
 	 changed = track_set_text (track, new_text, TM_to_T (column));
-	 
+	 if (changed && (column == TM_COLUMN_TRACKLEN))
+	 {  /* be on the safe side and reset starttime, stoptime and
+	     * filesize */
+	     gchar *path = get_file_name_from_source (track,
+						      SOURCE_PREFER_LOCAL);
+	     track->starttime = 0;
+	     track->stoptime = 0;
+	     if (path)
+	     {
+		 struct stat filestat;
+		 stat (path, &filestat);
+		 track->size = filestat.st_size;
+	     }
+	 }
 	 /* redisplay some items to be on the safe side */
 	 switch (column)
 	 {

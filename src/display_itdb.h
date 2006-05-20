@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 00:11:37 jcs>
+/* Time-stamp: <2006-05-20 22:59:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -52,6 +52,7 @@ typedef struct
 				      (only for GP_ITDP_TYPE_IPOD)     */
     gboolean data_changed;         /* data changed since import?       */
     gboolean itdb_imported;        /* has in iTunesDB been imported?   */
+    gboolean ipod_ejected;         /* if iPod was ejected              */
 } ExtraiTunesDBData;
 
 typedef struct
@@ -113,6 +114,7 @@ struct DeleteData
 };
 
 void init_data (GtkWidget *window);
+iTunesDB *setup_itdb_n (gint i);
 
 struct itdbs_head *gp_get_itdbs_head (GtkWidget *gtkpod_win);
 

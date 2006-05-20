@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 00:23:29 jcs>
+/* Time-stamp: <2006-05-21 00:09:17 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -280,6 +280,42 @@ static void normalize_entries (GtkMenuItem *mi, gpointer data)
 }
 
 
+static void load_ipod (GtkMenuItem *mi, gpointer data)
+{
+    g_return_if_fail (selected_playlist);
+
+    gp_load_ipod (selected_playlist->itdb);
+}
+
+
+static void eject_ipod (GtkMenuItem *mi, gpointer data)
+{
+    iTunesDB *itdb;
+    ExtraiTunesDBData *eitdb;
+
+    /* all of the checks below indicate a programming error -> give a
+       warning through the g_..._fail macros */
+    g_return_if_fail (selected_playlist);
+    itdb = selected_playlist->itdb;
+    g_return_if_fail (itdb);
+    g_return_if_fail (itdb->usertype & GP_ITDB_TYPE_IPOD);
+    eitdb = itdb->userdata;
+    g_return_if_fail (eitdb);
+    g_return_if_fail (eitdb->itdb_imported == TRUE);
+
+    gp_eject_ipod (itdb);
+}
+
+
+static void save_changes (GtkMenuItem *mi, gpointer data)
+{
+    g_return_if_fail (selected_playlist);
+
+    gp_save_itdb (selected_playlist->itdb);
+}
+
+
+
 /* Attach a menu item to your context menu */
 /* @m - the GtkMenu we're attaching to
  * @str - a gchar* with the menu label
@@ -344,6 +380,11 @@ create_context_menu(CM_type type)
 					   * tracks)      */
     static GtkWidget *mi_deldb_all[CM_NUM];  /* DELETE_ACTION_DATABASE
 					   * (all tracks)  */
+    static GtkWidget *mi_io_sep;          /* separator for iPod/repository
+					     load/eject/save changes */
+    static GtkWidget *mi_ipodio_load;
+    static GtkWidget *mi_ipodio_eject;
+    static GtkWidget *mi_io_save;
 
     Playlist *pl;
 
@@ -483,6 +524,27 @@ create_context_menu(CM_type type)
 			   G_CALLBACK (delete_entries),
 			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
 
+	    mi_io_sep = add_separator (menu[type]);
+
+	    mi_ipodio_load =
+		hookup_mi (menu[type],
+			   _("Load iPod"),
+			   GTK_STOCK_CONNECT,
+			   G_CALLBACK (load_ipod), NULL);
+
+	    mi_ipodio_eject =
+		hookup_mi (menu[type],
+			   _("Eject iPod"),
+			   GTK_STOCK_DISCONNECT,
+			   G_CALLBACK (eject_ipod), NULL);
+
+	    mi_io_save =
+		hookup_mi (menu[type],
+			   _("Save Changes"),
+			   GTK_STOCK_SAVE,
+			   G_CALLBACK (save_changes), NULL);
+
+
 /* FIXME: PODCASTS: remove Podcast menu */
 #if 0
 	    mi_podcasts_sep[type] = add_separator (menu[type]);
@@ -507,8 +569,11 @@ create_context_menu(CM_type type)
     pl = pm_get_selected_playlist();
     if (pl)
     {
+	ExtraiTunesDBData *eitdb;
 	iTunesDB *itdb = pl->itdb;
 	g_return_if_fail (itdb);
+	eitdb = itdb->userdata;
+	g_return_if_fail (eitdb);
 
 	/* Make sure, only available delete options are displayed */
 	switch (type)
@@ -524,6 +589,10 @@ create_context_menu(CM_type type)
 	    gtk_widget_hide (mi_delipod_all[type]);
 	    gtk_widget_hide (mi_delpcipod[type]);
 	    gtk_widget_hide (mi_dellocal[type]);
+	    gtk_widget_hide (mi_io_sep);
+	    gtk_widget_hide (mi_ipodio_load);
+	    gtk_widget_hide (mi_ipodio_eject);
+	    gtk_widget_hide (mi_io_save);
 /* FIXME: PODCASTS: remove Podcast menu */
 #if 0
 	    gtk_widget_hide (mi_podcasts_sep[type]);
@@ -534,11 +603,21 @@ create_context_menu(CM_type type)
 	    {
 		gtk_widget_show (mi_spl[type]);
 	    }
+
 	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	    {
 		if (itdb_playlist_is_mpl (pl))
 		{
 		    gtk_widget_show (mi_delipod_all[type]);
+		    gtk_widget_show (mi_io_sep);
+		    if (eitdb->itdb_imported)
+		    {
+			gtk_widget_show (mi_ipodio_eject);
+		    }
+		    else
+		    {
+			gtk_widget_show (mi_ipodio_load);
+		    }
 		}
 		else
 		{
@@ -554,11 +633,18 @@ create_context_menu(CM_type type)
 		    }
 		}
 	    }
+
 	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	    {
 		if (itdb_playlist_is_mpl (pl))
 		{
 		    gtk_widget_show (mi_deldb_all[type]);
+		    if (eitdb->data_changed)
+		    {
+			gtk_widget_show (mi_io_sep);
+			gtk_widget_show (mi_io_save);
+		    }
+
 		}
 		else
 		{

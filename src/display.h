@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-10 14:43:34 jcs>
+/* Time-stamp: <2006-05-20 15:02:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -258,7 +258,6 @@ enum {
 void display_create (void);
 void display_cleanup (void);
 void display_adjust_menus (void);
-void display_disable_gtkpod_import_buttons(void);
 void display_show_hide_toolbar (void);
 void display_reset (gint inst);
 GList *display_get_selection (guint32 inst);

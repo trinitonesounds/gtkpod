@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 00:41:00 jcs>
+/* Time-stamp: <2006-05-20 23:23:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -142,37 +142,6 @@ void display_reset (gint inst)
 void display_cleanup (void)
 {
     st_cleanup ();
-}
-
-
-/**
- * disable_import_buttons
- * Upon successfull itunes db importing we want to disable the import
- * buttons.  This retrieves the import buttons from the main gtkpod widget
- * and disables them from taking input.
- */
-void
-display_disable_gtkpod_import_buttons(void)
-{
-    GtkWidget *w = NULL;
-
-    g_return_if_fail (gtkpod_window);
-
-    if((w = gtkpod_xml_get_widget (main_window_xml, "import_button")))
-    {
-	gtk_widget_set_sensitive(w, FALSE);
-	/* in case this widget has been blocked, we need to tell
-	   update the desired state upon release */
-	update_blocked_widget (w, FALSE);
-    }
-
-    if((w = gtkpod_xml_get_widget (main_window_xml, "import_itunes_mi")))
-    {
-	gtk_widget_set_sensitive(w, FALSE);
-	/* in case this widget has been blocked, we need to tell
-	   update the desired state upon release */
-	update_blocked_widget (w, FALSE);
-    }
 }
 
 
@@ -979,19 +948,37 @@ on_offline1_activate                   (GtkMenuItem     *menuitem,
 }
 
 void
-on_import_itunes_mi_activate           (GtkMenuItem     *menuitem,
-					gpointer         user_data)
+on_load_ipods_mi           (GtkMenuItem     *menuitem,
+			    gpointer         user_data)
 {
-  gp_merge_ipod_itdbs ();
+    gp_load_ipods ();
 }
 
 
 void
-on_import_button_clicked               (GtkButton       *button,
-					gpointer         user_data)
+on_load_ipods_clicked               (GtkButton       *button,
+				     gpointer         user_data)
 {
-  gp_merge_ipod_itdbs ();
+    gp_load_ipods ();
 }
+
+
+void
+on_save_changes_mi           (GtkMenuItem     *menuitem,
+			      gpointer         user_data)
+{
+    handle_export ();
+}
+
+
+
+void
+on_save_changes_clicked               (GtkButton       *button,
+				     gpointer         user_data)
+{
+    handle_export ();
+}
+
 
 
 void on_edit_smart_playlist (GtkMenuItem *mi,

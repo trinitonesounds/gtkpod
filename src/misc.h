@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 22:02:39 jcs>
+/* Time-stamp: <2006-05-20 16:13:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -68,6 +68,21 @@ extern gboolean widgets_blocked;
 /* full path to 'gtkpod.glade', defined in main.c */
 extern gchar *xml_file;
 
+/* Some symbols not necessarily defined */
+
+/* Introduced in 1.6 */
+#ifndef GTK_STOCK_DISCONNECT
+#define GTK_STOCK_DISCONNECT GTK_STOCK_GOTO_TOP
+#define GTK_STOCK_CONNECT GTK_STOCK_GOTO_BOTTOM
+#endif
+/* SEMIBOLD was introduced with version 1.8 */
+#ifndef PANGO_WEIGHT_SEMIBOLD
+#define PANGO_WEIGHT_SEMIBOLD 600
+#endif
+
+
+
+
 gchar *get_user_string (gchar *title, gchar *message, gchar *dflt,
 			gchar *opt_msg, gboolean *opt_state);
 Playlist *add_new_pl_user_name (iTunesDB *itdb, gchar *dflt, gint32 pos);
@@ -109,7 +124,7 @@ void update_blocked_widget (GtkWidget *w, gboolean sens);
 
 /*void mount_ipod(void);
   void unmount_ipod(void);*/
-void call_script (gchar *script);
+void call_script (gchar *script, ...);
 
 void delete_track_ok (struct DeleteData *dd);
 
