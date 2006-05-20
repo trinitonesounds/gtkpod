@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 23:23:44 jcs>
+/* Time-stamp: <2006-05-21 01:04:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1022,10 +1022,8 @@ static void delete_selected_entry (DeleteAction deleteaction,
     entry = st_get_selected_entry (inst);
     if (!entry)
     {
-	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
-				     inst+1);
-	gtkpod_statusbar_message (str);
-	g_free (str);
+	gtkpod_statusbar_message (_("No entry selected in Sort Tab %d"),
+				  inst+1);
 	return;
     }
     delete_entry_head (inst, deleteaction);
@@ -1282,10 +1280,8 @@ on_export_tab_entry_activate (GtkMenuItem     *menuitem,
     entry = st_get_selected_entry (inst);
     if (!entry)
     {
-	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
-				     inst+1);
-	gtkpod_statusbar_message (str);
-	g_free (str);
+	gtkpod_statusbar_message (_("No entry selected in Sort Tab %d"),
+				  inst+1);
 	return;
     }
     export_files_init (entry->members, NULL, FALSE, NULL);
@@ -1338,10 +1334,8 @@ on_playlist_file_tab_entry_activate    (GtkMenuItem     *menuitem,
     entry = st_get_selected_entry (inst);
     if (!entry)
     {
-	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
-				     inst+1);
-	gtkpod_statusbar_message (str);
-	g_free (str);
+	gtkpod_statusbar_message (_("No entry selected in Sort Tab %d"),
+				  inst+1);
 	return;
     }
     export_playlist_file_init (entry->members);
@@ -1390,10 +1384,8 @@ on_play_tab_entry_activate             (GtkMenuItem     *menuitem,
     entry = st_get_selected_entry (inst);
     if (!entry)
     {
-	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
-				     inst+1);
-	gtkpod_statusbar_message (str);
-	g_free (str);
+	gtkpod_statusbar_message (_("No entry selected in Sort Tab %d"),
+				  inst+1);
 	return;
     }
     tools_play_tracks (entry->members);
@@ -1441,10 +1433,8 @@ on_enqueue_tab_entry_activate          (GtkMenuItem     *menuitem,
     entry = st_get_selected_entry (inst);
     if (!entry)
     {
-	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
-				     inst+1);
-	gtkpod_statusbar_message (str);
-	g_free (str);
+	gtkpod_statusbar_message (_("No entry selected in Sort Tab %d"),
+				  inst+1);
 	return;
     }
     tools_enqueue_tracks (entry->members);
@@ -1610,10 +1600,8 @@ on_normalize_selected_tab_entry_activate
     }
     else
     {
-	gchar *str = g_strdup_printf(_("No entry selected in Sort Tab %d"),
-				     inst+1);
-	gtkpod_statusbar_message (str);
-	g_free (str);
+	gtkpod_statusbar_message (_("No entry selected in Sort Tab %d"),
+				  inst+1);
 	return;
     }
 }

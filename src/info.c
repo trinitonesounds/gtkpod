@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-09 00:10:31 jcs>
+/* Time-stamp: <2006-05-21 00:49:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -422,16 +422,20 @@ gtkpod_statusbar_reset_timeout (void)
 
 
 void
-gtkpod_statusbar_message(const gchar *message)
+gtkpod_statusbar_message(const gchar *message, ...)
 {
     if(gtkpod_statusbar)
     {
-	gchar buf[PATH_MAX];
+	va_list arg;
+	gchar *text;
 	guint context = 1;
 
-	snprintf(buf, PATH_MAX, "  %s", message);
+	va_start (arg, message);
+	text = g_strdup_vprintf (message, arg);
+	va_end (arg);
+
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_statusbar), context);
-	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  buf);
+	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_statusbar), context,  text);
 	gtkpod_statusbar_reset_timeout ();
     }
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 23:24:47 jcs>
+/* Time-stamp: <2006-05-21 01:04:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -116,13 +116,11 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
   }
   if (!sei && extendedinfohash_md5)
   {
-      gchar *buf = g_strdup_printf (
+      gtkpod_statusbar_message (
 	  _("Matching MD5 checksum for file %d/%d"),
 	  num, total);
-      gtkpod_statusbar_message (buf);
       while (widgets_blocked && gtk_events_pending ())
 	  gtk_main_iteration ();
-      g_free (buf);
 
       if (!etr->md5_hash)
       {
@@ -1373,7 +1371,6 @@ static gboolean flush_tracks (iTunesDB *itdb)
 {
   GList *gl;
   gint count, n;
-  gchar *buf;
   gboolean result = TRUE;
   static gboolean abort_flag;
   GtkWidget *dialog, *progress_bar;
@@ -1460,12 +1457,11 @@ static gboolean flush_tracks (iTunesDB *itdb)
 	      prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
 	  if (count == n)  /* we need to reset timeout */
 	      prefs_set_statusbar_timeout (0);
-	  buf = g_strdup_printf (ngettext ("Copied %d of %d new track.",
-					   "Copied %d of %d new tracks.", n),
-				 count, n);
-	  gtkpod_statusbar_message(buf);
-	  g_free (buf);
-	  
+	  gtkpod_statusbar_message (
+	      ngettext ("Copied %d of %d new track.",
+			"Copied %d of %d new tracks.", n),
+	      count, n);
+
 	  gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR (progress_bar),
 					(gdouble) count/n);
 	  
@@ -1595,7 +1591,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
   }
 
   if (success)
-      gtkpod_statusbar_message (_("Now writing iTunesDB. Please wait..."));
+      gtkpod_statusbar_message (_("Now writing database. Please wait..."));
   while (widgets_blocked && gtk_events_pending ())
       gtk_main_iteration ();
 
@@ -1641,9 +1637,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 	      {
 		  if (remove (ext) != 0)
 		  {
-		      gchar *buf = g_strdup_printf (_("Extended information file not deleted: '%s\'"), ext);
-		      gtkpod_statusbar_message (buf);
-		      g_free (buf);
+		      gtkpod_statusbar_message (_("Extended information file not deleted: '%s\'"), ext);
 		  }
 	      }
 	  }
@@ -1724,8 +1718,17 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
   /* indicate that files and/or database is saved */
   if (success)
   {
+      Playlist *mpl = itdb_playlist_mpl (itdb);
+      g_return_val_if_fail (mpl, success);
       data_unchanged (itdb);
-      gtkpod_statusbar_message(_("iPod Database Saved"));
+      if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+      {
+	  gtkpod_statusbar_message(_("%s: Database saved"), mpl);
+      }
+      else
+      {
+	  gtkpod_statusbar_message(_("%s: Changes saved"), mpl);
+      }
   }
 
   g_free (cfgdir);

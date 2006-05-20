@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 22:44:39 jcs>
+/* Time-stamp: <2006-05-21 01:04:29 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -251,7 +251,6 @@ static void tm_drag_data_delete (GtkWidget *widget,
 {
     GtkTreeSelection *ts;
     Playlist *pl = pm_get_selected_playlist ();
-    gchar *buf;
     gint num;
 
 /*     puts ("tm_drag_data_delete"); */
@@ -280,19 +279,13 @@ static void tm_drag_data_delete (GtkWidget *widget,
 	}
 	g_string_free (reply, TRUE);
 
-	buf = g_strdup_printf (ngettext ("Moved one track",
-					 "Moved %d tracks", num), num);
+	gtkpod_statusbar_message (ngettext ("Moved one track",
+					    "Moved %d tracks", num), num);
     }
     else
     {
-	buf = g_strdup_printf (ngettext ("Copied one track",
-					 "Copied %d tracks", num), num);
-    }
-
-    if (buf)
-    {
-	gtkpod_statusbar_message (buf);
-	g_free (buf);
+	gtkpod_statusbar_message (ngettext ("Copied one track",
+					    "Copied %d tracks", num), num);
     }
 }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 00:58:08 jcs>
+/* Time-stamp: <2006-05-21 01:04:28 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -435,7 +435,6 @@ static void export_files_write (struct fcd *fcd)
 	for(l = fcd->tracks; l && !abort; l = l->next)
 	{
 	    Track *tr = (Track*)l->data;
-	    gchar *buf;
 
 	    fcd->track = tr;
 	    copied += tr->size;
@@ -476,11 +475,9 @@ static void export_files_write (struct fcd *fcd)
 		prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
 	    if (count == n)  /* we need to reset timeout */
 		prefs_set_statusbar_timeout (0);
-	    buf = g_strdup_printf (ngettext ("Copied %d of %d track.",
-					     "Copied %d of %d tracks.", n),
-				   count, n);
-	    gtkpod_statusbar_message(buf);
-	    g_free (buf);
+	    gtkpod_statusbar_message (ngettext ("Copied %d of %d track.",
+						"Copied %d of %d tracks.", n),
+				      count, n);
 
 	    fraction = copied/total;
 
@@ -940,7 +937,6 @@ static void export_playlist_file_write (struct fcd *fcd)
     if (file)
     {
 	guint i,n;
-	gchar *buf;
 
 	switch (type)
 	{
@@ -1007,11 +1003,9 @@ static void export_playlist_file_write (struct fcd *fcd)
 	    break;
 	}
 	fclose (file);
-	buf = g_strdup_printf (
+	gtkpod_statusbar_message  (
 	    ngettext ("Created playlist with one track.",
 		      "Created playlist with %d tracks.", n), n);
-	gtkpod_statusbar_message (buf);
-	g_free (buf);
     }
     else
     {

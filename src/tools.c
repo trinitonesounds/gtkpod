@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-10 00:32:35 jcs>
+/* Time-stamp: <2006-05-21 01:13:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -133,7 +133,7 @@ void nm_tracks_list (GList *list)
   GtkWidget *dialog, *progress_bar, *label, *track_label;
   GtkWidget *image, *hbox;
   time_t diff, start, fullsecs, hrs, mins, secs;
-  gchar *buf, *progtext = NULL;
+  gchar *progtext = NULL;
 
 #ifdef G_THREADS_ENABLED
   GThread *thread = NULL;
@@ -217,13 +217,12 @@ void nm_tracks_list (GList *list)
   {
      Track  *track = list->data;
      gchar *label_buf = g_strdup_printf ("%d/%d", count, n);
-     gchar *sb_buf = g_strdup_printf (_("%s - %s"),
-				      track->artist, track->title);
 
      gtk_label_set_text (GTK_LABEL (track_label), label_buf);
-     gtkpod_statusbar_message(sb_buf);
+
+     gtkpod_statusbar_message (_("%s - %s"),
+			       track->artist, track->title);
      C_FREE (label_buf);
-     C_FREE (sb_buf);
 
      while (widgets_blocked && gtk_events_pending ())
 	 gtk_main_iteration ();
@@ -273,12 +272,10 @@ void nm_tracks_list (GList *list)
      if(new_soundcheck == TRACKVOLERROR)
      {
 	 gchar *path = get_file_name_verified (track);
-	 gchar *buf = g_strdup_printf (
+	 gtkpod_warning (
 	     _("'%s-%s' (%s) could not be normalized.\n\n"),
 	     track->artist, track->title, path? path:"");
-	 gtkpod_warning (buf);
 	 g_free (path);
-	 g_free (buf);
      }
      else
      {
@@ -316,11 +313,9 @@ void nm_tracks_list (GList *list)
 
   prefs_set_statusbar_timeout (0);
 
-  buf = g_strdup_printf (ngettext ("Normalized %d of %d tracks.",
-				   "Normalized %d of %d tracks.", n),
-			 count, n);
-  gtkpod_statusbar_message(buf);
-  g_free (buf);
+  gtkpod_statusbar_message (ngettext ("Normalized %d of %d tracks.",
+				      "Normalized %d of %d tracks.", n),
+			    count, n);
 
   gtk_widget_destroy (dialog);
   release_widgets();
@@ -541,9 +536,7 @@ do_command_on_entries (const gchar *command, const gchar *what,
 
     if ((!command) || (strlen (command) == 0))
     {
-	gchar *buf = g_strdup_printf (_("No command set for '%s'"), what);
-	gtkpod_statusbar_message (buf);
-	C_FREE (buf);
+	gtkpod_statusbar_message  (_("No command set for '%s'"), what);
 	return;
     }
 
@@ -562,11 +555,9 @@ do_command_on_entries (const gchar *command, const gchar *what,
     commandc = g_find_program_in_path (str);
     if (!commandc)
     {
-	gchar *buf = g_strdup_printf (_("Could not find command '%s' specified for '%s'"),
-				      str, what);
-	gtkpod_statusbar_message (buf);
-	C_FREE (buf);
-	C_FREE (str);
+	gtkpod_statusbar_message  (_("Could not find command '%s' specified for '%s'"),
+				   str, what);
+	g_free (str);
 	return;
     }
     C_FREE (str);

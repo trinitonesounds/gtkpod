@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 16:50:10 jcs>
+/* Time-stamp: <2006-05-21 01:04:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -239,7 +239,6 @@ static void delete_track_cancel (struct DeleteData *dd)
 void delete_track_ok (struct DeleteData *dd)
 {
     gint n;
-    gchar *buf = NULL;
     GList *l;
 
     g_return_if_fail (dd);
@@ -256,13 +255,13 @@ void delete_track_ok (struct DeleteData *dd)
 	switch (dd->deleteaction)
 	{
 	case DELETE_ACTION_IPOD:
-	    buf = g_strdup_printf (
+	    gtkpod_statusbar_message (
 		ngettext ("Deleted one track completely from iPod",
 			  "Deleted %d tracks completely from iPod",
 			  n), n);
 	    break;
 	case DELETE_ACTION_PLAYLIST:
-	    buf = g_strdup_printf (
+	    gtkpod_statusbar_message (
 		ngettext ("Deleted %d track from playlist '%s'",
 			  "Deleted %d tracks from playlist '%s'",
 			  n), n, dd->pl->name);
@@ -280,19 +279,19 @@ void delete_track_ok (struct DeleteData *dd)
 	switch (dd->deleteaction)
 	{
 	case DELETE_ACTION_LOCAL:
-	    buf = g_strdup_printf (
+	    gtkpod_statusbar_message (
 		ngettext ("Deleted one track from harddisk",
 			  "Deleted %d tracks from harddisk",
 			  n), n);
 	    break;
 	case DELETE_ACTION_PLAYLIST:
-	    buf = g_strdup_printf (
+	    gtkpod_statusbar_message (
 		ngettext ("Deleted %d track from playlist '%s'",
 			  "Deleted %d tracks from playlist '%s'",
 			  n), n, dd->pl->name);
 	    break;
 	case DELETE_ACTION_DATABASE:
-	    buf = g_strdup_printf (
+	    gtkpod_statusbar_message (
 		ngettext ("Deleted track from local database",
 			  "Deleted %d tracks from local database",
 			  n), n);
@@ -308,8 +307,6 @@ void delete_track_ok (struct DeleteData *dd)
     {
 	gp_playlist_remove_track (dd->pl, l->data, dd->deleteaction);
     }
-    gtkpod_statusbar_message (buf);
-    g_free (buf);
 
     g_list_free (dd->tracks);
     g_free (dd);
@@ -867,7 +864,7 @@ static gint ipod_directories_number (gchar *mp)
 /* @user_data1 is the mount point of the iPod */
 static void ipod_directories_ok (gchar *mp)
 {
-    gchar *buf, *errordir=NULL;
+    gchar *errordir=NULL;
     gchar *pbuf;
     gint i, dirnum;
 
@@ -959,11 +956,9 @@ static void ipod_directories_ok (gchar *mp)
     }
 
     if (errordir)
-	buf = g_strdup_printf (_("Problem creating iPod directory: '%s'."), errordir);
+	gtkpod_statusbar_message (_("Problem creating iPod directory: '%s'."), errordir);
     else
-	buf = g_strdup_printf (_("Successfully created iPod directories in '%s'."), mp);
-    gtkpod_statusbar_message(buf);
-    g_free (buf);
+	gtkpod_statusbar_message (_("Successfully created iPod directories in '%s'."), mp);
     g_free (errordir);
 }
 

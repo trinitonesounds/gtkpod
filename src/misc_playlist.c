@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-03-17 00:48:56 jcs>
+/* Time-stamp: <2006-05-21 01:13:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -354,7 +354,6 @@ Playlist *generate_playlist_with_name (iTunesDB *itdb,GList *tracks,
 {
     Playlist *new_pl=NULL;
     gint n = g_list_length (tracks);
-    gchar *str;
 
     g_return_val_if_fail (itdb, new_pl);
 
@@ -387,7 +386,7 @@ Playlist *generate_playlist_with_name (iTunesDB *itdb,GList *tracks,
 	    g_return_val_if_fail (track, new_pl);
 	    gp_playlist_add_track (new_pl, track, TRUE);
 	}
-	str = g_strdup_printf (
+	gtkpod_statusbar_message (
 	    ngettext ("Created playlist '%s' with %d track.",
 		      "Created playlist '%s' with %d tracks.",
 		      n), pl_name, n);
@@ -399,11 +398,9 @@ Playlist *generate_playlist_with_name (iTunesDB *itdb,GList *tracks,
     }
     else
     {   /* n==0 */
-	str = g_strdup_printf (_("No tracks available, playlist not created"));
+	gtkpod_statusbar_message (_("No tracks available, playlist not created"));
     }
-    gtkpod_statusbar_message (str);
     gtkpod_tracks_statusbar_update();
-    g_free (str);
     return new_pl;
 }
 
@@ -889,7 +886,6 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 	 tlist != NULL;
 	 tlist = g_list_next(tlist))
     {
-	gchar *buf;
 	Track *oldtrack;
 	Track *track = tlist->data;
 	ExtraTrackData *etr;
@@ -899,10 +895,8 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 	g_return_if_fail (etr);
         /* printf("Handling track %d\n", track->ipod_id); */
 
-	buf = g_strdup_printf (_("Processing '%s'"),
-			       get_track_info (track, TRUE));
-	gtkpod_statusbar_message (buf);
-	g_free (buf);
+	gtkpod_statusbar_message (_("Processing '%s'"),
+				  get_track_info (track, TRUE));
 	while (widgets_blocked && gtk_events_pending ())
 	    gtk_main_iteration ();
 
@@ -967,7 +961,6 @@ void check_db (iTunesDB *itdb)
 
     gchar *pathtrack=NULL;
     gchar *ipod_filename = NULL;
-    gchar *buf = NULL;
 #   define localdebug  0      /* may be later becomes more general verbose param */
     Playlist* pl_orphaned = NULL;
     GList * l_dangling[2] = {NULL, NULL}; /* 2 kinds of dangling tracks: with approp
@@ -1157,13 +1150,11 @@ void check_db (iTunesDB *itdb)
     }
 
     ndangling=g_tree_nnodes(files_known);
-    buf=g_strdup_printf(_("Found %d orphaned and %d dangling files. Processing..."),
-			norphaned, ndangling);
-
-    gtkpod_statusbar_message(buf);
+    gtkpod_statusbar_message (_("Found %d orphaned and %d dangling files. Processing..."),
+			      norphaned, ndangling);
+    
     gtkpod_tracks_statusbar_update();
 
-    g_free(buf);
     g_free(music_dir);
     music_dir = NULL;
 
@@ -1175,6 +1166,7 @@ void check_db (iTunesDB *itdb)
     {
 	GString *str_dangs = g_string_sized_new(2000);
 	gint ndang=0;
+	gchar *buf;
 
 	glist_list_tracks(l_dangling[i], str_dangs); /* compose String list of the tracks */
 	ndang = g_list_length(l_dangling[i]);
@@ -1217,10 +1209,8 @@ void check_db (iTunesDB *itdb)
 
     if (pl_orphaned) data_changed (itdb);
     g_tree_destroy (files_known);
-    buf = g_strdup_printf (_("Found %d orphaned and %d dangling files. Done."),
-			   norphaned, ndangling);
-    gtkpod_statusbar_message(buf);
-    g_free (buf);
+    gtkpod_statusbar_message (_("Found %d orphaned and %d dangling files. Done."),
+			      norphaned, ndangling);
     prefs_set_statusbar_timeout (0);
     release_widgets ();
 }

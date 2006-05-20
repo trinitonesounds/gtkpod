@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 22:58:22 jcs>
+/* Time-stamp: <2006-05-21 01:04:29 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -993,14 +993,13 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 	if (!track)	  track = gp_track_by_filename (itdb, file);
 	if (track)
 	{
-	    gchar *buf1, *buf;
+	    gchar *buf1;
 	    track->playcount += num;
 	    data_changed (itdb);
 	    pm_track_changed (track);
 	    buf1 = get_track_info (track, TRUE);
-	    buf = g_strdup_printf (_("Increased playcount for '%s'"), buf1);
-	    gtkpod_statusbar_message (buf);
-	    g_free (buf);
+	    gtkpod_statusbar_message (_("Increased playcount for '%s'"),
+				      buf1);
 	    g_free (buf1);
 	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)    result = TRUE;
 	}

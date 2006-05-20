@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 22:22:03 jcs>
+/* Time-stamp: <2006-05-21 01:13:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1218,10 +1218,8 @@ void update_tracks (GList *selected_tracks)
 	g_return_if_fail (itdb);
 	if (g_list_find (itdb->tracks, track))
 	{
-	    gchar *buf = g_strdup_printf (_("Updating %s"),
-					  get_track_info (track, TRUE));
-	    gtkpod_statusbar_message (buf);
-	    g_free (buf);
+	    gtkpod_statusbar_message (_("Updating %s"),
+				      get_track_info (track, TRUE));
 	    update_track_from_file (track->itdb, track);
 	}
     }
@@ -1261,14 +1259,12 @@ void mserv_from_file_tracks (GList *selected_tracks)
     for (gl = selected_tracks; gl; gl=gl->next)
     {
 	ExtraTrackData *etr;
-	gchar *buf;
 	Track *track = gl->data;
 	g_return_if_fail (track);
 	etr = track->userdata;
 	g_return_if_fail (etr);
-	buf = g_strdup_printf (_("Retrieving mserv data %s"), get_track_info (track, TRUE));
-	gtkpod_statusbar_message (buf);
-	g_free (buf);
+	gtkpod_statusbar_message (_("Retrieving mserv data %s"),
+				  get_track_info (track, TRUE));
 	if (etr->pc_path_locale && *etr->pc_path_locale)
 	    update_mserv_data_from_file (etr->pc_path_locale, track);
 	else
@@ -1578,7 +1574,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	/* since it will copied under the same name as before, we
 	   don't have to manually remove it */
 	name_on_ipod = get_file_name_from_source (track, SOURCE_IPOD);
-	if (strcmp (name_on_ipod, trackpath) != 0)
+	if (name_on_ipod && (strcmp (name_on_ipod, trackpath) != 0))
 	{   /* trackpath is not on the iPod */
 	    if (oldhash && etr->md5_hash)
 	    {   /* do we really have to copy the track again? */
@@ -1598,6 +1594,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	{
 	    data_changed (itdb);
 	}
+	g_free (name_on_ipod);
 	
 	/* set old size if track has to be transferred (for free space
 	 * calculation) */
@@ -1691,8 +1688,7 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
   if (basename)
   {
       gchar *bn_utf8 = charset_to_utf8 (basename);
-      snprintf (str, PATH_MAX, _("Processing '%s'..."), bn_utf8);
-      gtkpod_statusbar_message (str);
+      gtkpod_statusbar_message (_("Processing '%s'..."), bn_utf8);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
       g_free (bn_utf8);
   }

@@ -1,3 +1,26 @@
+2006-05-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/file.c (update_track_from_file): fixed possible segfault.
+
+	 * po/POTFILES.in: corrected file list.
+
+	 * src/display.c
+	   src/display_itdb.c
+	   src/display_playlists.c
+	   src/display_songs.c
+	   src/file.c
+	   src/file_export.c
+	   src/file_itunesdb.c
+	   src/info.c
+	   src/info.h
+	   src/misc_confirm.c
+	   src/misc_playlist.c
+	   src/misc_track.c
+	   src/tools.c: simplified code by having
+	   gtkpod_statusbar_message() accept printf style arguments.
+
+
+
 2006-05-20 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * po/POTFILES.in: updated file list -> updated .po files.

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 23:26:04 jcs>
+/* Time-stamp: <2006-05-21 01:04:29 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -548,7 +548,7 @@ static void pm_tm_tracks_moved_or_copied (gchar *tracks, gboolean moved)
     g_return_if_fail (tracks);
     if (!moved)
     {
-	gchar *buf, *ptr = tracks;
+	gchar *ptr = tracks;
 	gint n = 0;
 
 	/* count the number of tracks */
@@ -557,13 +557,10 @@ static void pm_tm_tracks_moved_or_copied (gchar *tracks, gboolean moved)
 	    ++n;
 	    ++ptr;
 	}
-	/* create message */
-	buf = g_strdup_printf (
+	/* display message in statusbar */
+	gtkpod_statusbar_message (
 	    ngettext ("Copied one track",
 		      "Copied %d tracks", n), n);
-	/* display message in statusbar */
-	gtkpod_statusbar_message (buf);
-	g_free (buf);
     }
 }
 

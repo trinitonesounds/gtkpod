@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 22:43:02 jcs>
+/* Time-stamp: <2006-05-21 01:13:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -56,7 +56,6 @@
 void gp_md5_hash_tracks_itdb (iTunesDB *itdb)
 {
    gint ns, count;
-   gchar *buf;
    GList *gl;
 
    g_return_if_fail (itdb);
@@ -88,13 +87,11 @@ void gp_md5_hash_tracks_itdb (iTunesDB *itdb)
        ++count;
        if (((count % 20) == 1) || (count == ns))
        { /* update for count == 1, 21, 41 ... and for count == n */
-	   buf = g_strdup_printf (ngettext ("Hashed %d of %d track.",
-					    "Hashed %d of %d tracks.", ns),
-				  count, ns);
-	   gtkpod_statusbar_message (buf);
+	   gtkpod_statusbar_message  (ngettext ("Hashed %d of %d track.",
+						"Hashed %d of %d tracks.", ns),
+				      count, ns);
 	   while (widgets_blocked && gtk_events_pending ())
 	       gtk_main_iteration ();
-	   g_free (buf);
        }
    }
    gp_duplicate_remove (NULL, NULL); /* show info dialogue */
@@ -341,7 +338,6 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 void gp_itdb_hash (iTunesDB *itdb)
 {
    gint ns, count, track_nr;
-   gchar *buf;
    Track *track, *oldtrack;
 
    g_return_if_fail (itdb);
@@ -365,12 +361,10 @@ void gp_itdb_hash (iTunesDB *itdb)
        if (!prefs_get_block_display() &&
 	   (((count % 20) == 1) || (count == ns)))
        { /* update for count == 1, 21, 41 ... and for count == n */
-	   buf = g_strdup_printf (ngettext ("Hashed %d of %d track.",
-					    "Hashed %d of %d tracks.", ns),
-				  count, ns);
-	   gtkpod_statusbar_message(buf);
+	   gtkpod_statusbar_message (ngettext ("Hashed %d of %d track.",
+					       "Hashed %d of %d tracks.", ns),
+				     count, ns);
 	   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
-	   g_free (buf);
        }
        if (oldtrack)
        {
