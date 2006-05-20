@@ -1394,6 +1394,8 @@ gchar *convert_filename (const gchar *filename)
     else 
       return g_strdup (filename);
   }
+  
+  return NULL;
 }
 
 
