@@ -1387,9 +1387,13 @@ gboolean mkdirhierfile(const gchar *filename)
  */
 gchar *convert_filename (const gchar *filename)
 {
+  if (filename)
+  {    
     if (strncmp ("~/", filename, 2) == 0)
-	 return g_build_filename (g_get_home_dir(), filename+2, NULL);
-    else return g_strdup (filename);
+      return g_build_filename (g_get_home_dir(), filename+2, NULL);
+    else 
+      return g_strdup (filename);
+  }
 }
 
 
@@ -1622,4 +1626,3 @@ void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value)
     prefs_set_int (key, value);
     g_free (key);
 }
-

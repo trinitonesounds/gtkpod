@@ -143,6 +143,7 @@ static void set_default_preferences()
     prefs_set_int("delete_file", TRUE);
     prefs_set_int("delete_local_file", TRUE);
     prefs_set_int("delete_database", TRUE);
+    prefs_set_string("initial_mountpoint", "/mnt/ipod");
 }
 
 /* Initialize default variable-length list entries */
@@ -233,14 +234,15 @@ static gboolean read_commandline(int argc, char *argv[])
 }
 #endif
 
-/* Not ready for this--disable */
-#if 0
 /* Read options from environment variables */
 static void read_environment()
 {
-	prefs_set_string("initial_mountpoint", getenv("IPOD_MOUNTPOINT"));
+	gchar *buf; 
+  
+  buf = convert_filename(getenv("IPOD_MOUNTPOINT"));
+  prefs_set_string("initial_mountpoint", buf);
+  g_free(buf);
 }
-#endif
  
 /* Create a full numbered key from a base key string and a number.
  * Free returned string. */
@@ -551,10 +553,10 @@ void init_prefs(int argc, char *argv[])
 	/* Load preferences */
 	load_prefs();
 	
-	#if 0
 	/* Read environment variables */
 	read_environment(); 
 	
+  #if 0
 	/* Read commandline arguments */
 	read_commandline(argc, argv);
 	#endif
@@ -1321,7 +1323,7 @@ enum {
 struct cfg *cfg_new(void)
 {
     struct cfg *mycfg = NULL;
-    gchar curdir[PATH_MAX], *str;
+    gchar curdir[PATH_MAX];
     gchar *cfgdir;
     gint i;
 
@@ -1337,16 +1339,6 @@ struct cfg *cfg_new(void)
 	gchar *dir = convert_filename ("~/");
 	prefs_set_string ("last_dir_browsed", dir);
 	g_free (dir);
-    }
-    if((str = getenv("IPOD_MOUNTPOINT")))
-    {
-	gchar *mp = convert_filename (str);
-	prefs_set_string ("inital_mountpoint", mp);
-	g_free (mp);
-    }
-    else
-    {
-	prefs_set_string ("inital_mountpoint", "/mnt/ipod");
     }
 
     mycfg->charset = NULL;    
@@ -1554,10 +1546,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  if(g_ascii_strcasecmp (line, "version") == 0)
 	  {
 	      cfg->version = g_ascii_strtod (arg, NULL);
-	  }
-	  else if(g_ascii_strcasecmp (line, "mountpoint") == 0)
-	  {
-	      prefs_set_string ("initial_mountpoint", arg);
 	  }
 	  else if((arg_comp (line, "toolpath", &off) == 0) ||
 		  (arg_comp (line, "path", &off) == 0))
@@ -2180,8 +2168,6 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
 
   cfg = cfg_new();
   read_prefs_defaults();
-
-  prefs_set_string ("initial_mountpoint", getenv("IPOD_MOUNTPOINT"));
 
   while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
     switch(opt)
