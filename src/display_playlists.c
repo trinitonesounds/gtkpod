@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 01:04:29 jcs>
+/* Time-stamp: <2006-05-22 00:27:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1323,10 +1323,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
       g_return_if_fail (new_playlist->itdb);
       if (new_playlist->itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
-	  gchar *mp = get_itdb_prefs_string (new_playlist->itdb,
-					     "mountpoint");
-	  space_set_ipod_mount (mp);
-	  g_free (mp);
+	  space_set_ipod_itdb (new_playlist->itdb);
       }
 
       /* remove all entries from sort tab 0 */

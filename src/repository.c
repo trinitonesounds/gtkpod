@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 23:37:15 jcs>
+/* Time-stamp: <2006-05-22 00:38:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -891,7 +891,7 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 	    if (mp)
 	    {   /* have to set mountpoint */
 		itdb_set_mountpoint (itdb, mp);
-		space_set_ipod_mount (mp);
+		space_set_ipod_itdb (itdb);
 		g_free (mp);
 	    }
 

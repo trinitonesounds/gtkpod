@@ -31,6 +31,12 @@
 
 	 * Menu entry to display repository/iPod options.
 
+	 * gtkpod.glade: Rearranged 'Edit' main menu
+
+	 * info.c: space update will use @itdb instead of 'mountpoint'
+           to deisplay free space -> space_get_ipod_itdb(),
+           gp_free_itdb().
+
 2006-05-20 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * po/POTFILES.in: updated file list -> updated .po files.

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 00:49:12 jcs>
+/* Time-stamp: <2006-05-22 00:44:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -55,9 +55,10 @@ static guint statusbar_timeout_id = 0;
 static GMutex *space_mutex = NULL;
 static GThread *space_thread = NULL;
 static gboolean space_uptodate = FALSE;
-static gchar *space_mp = NULL;
-static gdouble space_ipod_free = 0;
-static gdouble space_ipod_used = 0;
+static gchar *space_mp = NULL;      /* thread save access through mutex */
+static iTunesDB *space_itdb = NULL; /* no thread save access */
+static gdouble space_ipod_free = 0; /* thread save access through mutex */
+static gdouble space_ipod_used = 0; /* thread save access through mutex */
 
 
 static gdouble get_ipod_free_space(void);
@@ -454,26 +455,26 @@ gtkpod_tracks_statusbar_update(void)
     if(gtkpod_tracks_statusbar)
     {
 	gchar *buf;
-	iTunesDB *itdb;
 	Playlist *pl;
 	pl = pm_get_selected_playlist ();
 	/* select of which iTunesDB data should be displayed */
 	if (pl)
 	{
-	    itdb = pl->itdb;
+	    iTunesDB *itdb = pl->itdb;
+	    g_return_if_fail (itdb);
+
+	    buf = g_strdup_printf (_(" P:%d T:%d/%d"),
+				   itdb_playlists_number (itdb) - 1,
+				   tm_get_nr_of_tracks (),
+				   itdb_tracks_number (itdb));
 	}
 	else
 	{
-	    itdb = get_itdb_ipod ();
+	    buf = g_strdup ("");
 	}
 	/* gets called before itdbs are setup up -> fail silently */
 /*	g_return_if_fail (itdb);*/
-	if (!itdb) return;
 	
-	buf = g_strdup_printf (_(" P:%d T:%d/%d"),
-			       itdb_playlists_number (itdb) - 1,
-			       tm_get_nr_of_tracks (),
-			       itdb_tracks_number (itdb));
 	gtk_statusbar_pop(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1);
 	gtk_statusbar_push(GTK_STATUSBAR(gtkpod_tracks_statusbar), 1,  buf);
 	g_free (buf);
@@ -493,13 +494,25 @@ gtkpod_tracks_statusbar_update(void)
    be accessed securely by using a locking mechanism. Therefore we
    keep a copy of the mount point here. Access must only be done
    after locking. */
-void space_set_ipod_mount (const gchar *mp)
+void space_set_ipod_itdb (iTunesDB *itdb)
 {
-    g_return_if_fail (mp);
+    const gchar *mp = NULL;
+
+    if (itdb)
+    {
+	ExtraiTunesDBData *eitdb = itdb->userdata;
+	g_return_if_fail (eitdb);
+
+	if (!eitdb->ipod_ejected)
+	{
+	    mp = itdb_get_mountpoint (itdb);
+	}
+    }
+
     if (space_mutex)  g_mutex_lock (space_mutex);
 
     /* update the free space data if mount point changed */
-    if (!space_mp || (strcmp (space_mp, mp) != 0))
+    if (!space_mp || !mp || (strcmp (space_mp, mp) != 0))
     {
 	g_free (space_mp);
 	space_mp = g_strdup (mp);
@@ -508,7 +521,17 @@ void space_set_ipod_mount (const gchar *mp)
     }
 
     if (space_mutex)   g_mutex_unlock (space_mutex);
+
+    space_itdb = itdb;
 }
+
+/* retrieve the currently set ipod itdb -- needed in case the itdb is
+   deleted */
+iTunesDB *space_get_ipod_itdb (void)
+{
+    return space_itdb;
+}
+
 
 
 /* iPod space has to be reread */
@@ -771,7 +794,7 @@ gtkpod_space_statusbar_update(void)
 	    if (ipod_connected ())
 	    {
 		gdouble left, pending, deleted;
-		iTunesDB *itdb = get_itdb_ipod ();
+		iTunesDB *itdb = space_itdb;
 		/* we may be called before any itdb is present */
 		if (!itdb) return TRUE;
 

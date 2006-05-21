@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 01:04:29 jcs>
+/* Time-stamp: <2006-05-22 00:38:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -140,6 +140,17 @@ iTunesDB *gp_itdb_new (void)
     iTunesDB *itdb = itdb_new ();
     gp_itdb_add_extra (itdb);
     return itdb;
+}
+
+
+/* Free itdb and take care of dependencies */
+void gp_itdb_free (iTunesDB *itdb)
+{
+    if (space_get_ipod_itdb () == itdb)
+    {
+	space_set_ipod_itdb (NULL);
+    }
+    itdb_free (itdb);
 }
 
 

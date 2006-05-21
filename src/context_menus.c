@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 12:36:15 jcs>
+/* Time-stamp: <2006-05-21 23:59:58 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -392,13 +392,15 @@ create_context_menu(CM_type type)
 	hookup_mi (menu[type], _("Enqueue"), GTK_STOCK_CDROM,
 		   G_CALLBACK (play_entries_enqueue), NULL);
 	mi_exp[type] = hookup_mi (menu[type], 
-				  _("Copy Tracks to Filesystem"), GTK_STOCK_FLOPPY,
+				  _("Copy Tracks to Filesystem"), GTK_STOCK_SAVE_AS,
 				  G_CALLBACK (export_entries), NULL);
-	hookup_mi (menu[type], _("Create Playlist File"), GTK_STOCK_FLOPPY,
+	hookup_mi (menu[type], _("Create Playlist File"), GTK_STOCK_SAVE_AS,
 		   G_CALLBACK (create_playlist_file), NULL);
-	hookup_mi (menu[type], _("Edit Track Details"), NULL,
+	hookup_mi (menu[type], _("Edit Track Details"),
+		   GTK_STOCK_EDIT,
 		   G_CALLBACK (edit_details_entries), NULL);
-	hookup_mi (menu[type], _("Update Tracks from File"), GTK_STOCK_REFRESH,
+	hookup_mi (menu[type], _("Update Tracks from File"),
+		   GTK_STOCK_REFRESH,
 		   G_CALLBACK (update_entries), NULL);
 	if (type == CM_PL)
 	{
