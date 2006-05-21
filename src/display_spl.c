@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:13 jcs>
+/* Time-stamp: <2006-05-21 11:51:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -777,6 +777,8 @@ static void spl_ok (GtkButton *button, GtkWidget *spl_window)
 	pm_unselect_playlist (spl_orig);
 	pm_select_playlist (spl_orig);
     }
+
+    data_changed (itdb);
 
     spl_store_window_size (spl_window);
 

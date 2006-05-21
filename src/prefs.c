@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 00:33:19 jcs>
+/* Time-stamp: <2006-05-21 12:24:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -103,7 +103,6 @@
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
-#include "podcast.h"
 
 /* New prefs backend. Will replace stuff above */
 

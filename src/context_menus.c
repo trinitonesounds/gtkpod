@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 00:09:17 jcs>
+/* Time-stamp: <2006-05-21 12:36:15 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -40,7 +40,7 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include "tools.h"
-#include "podcast.h"
+#include "repository.h"
 #include "syncdir.h"
 
 #define LOCALDEBUG 1
@@ -234,6 +234,14 @@ static void edit_spl (GtkMenuItem *mi, gpointer data)
     spl_edit (pl);
 }
 
+/* Display repository options */
+static void edit_properties (GtkMenuItem *mi, gpointer data)
+{
+    g_return_if_fail (selected_playlist);
+
+    repository_edit (selected_playlist->itdb, selected_playlist);
+}
+
 
 static void
 create_playlist_from_entries (GtkMenuItem *mi, gpointer data)
@@ -266,17 +274,6 @@ alphabetize(GtkMenuItem *mi, gpointer data)
 	}
 	st_sort (prefs_get_st_sort ());
     }
-}
-
-
-static void normalize_entries (GtkMenuItem *mi, gpointer data)
-{
-    if (selected_playlist)
-	nm_tracks_list (selected_playlist->members);
-    else if(selected_entry)
-	nm_tracks_list (selected_entry->members);
-    else if(selected_tracks)
-	nm_tracks_list (selected_tracks);
 }
 
 
@@ -382,9 +379,8 @@ create_context_menu(CM_type type)
 					   * (all tracks)  */
     static GtkWidget *mi_io_sep;          /* separator for iPod/repository
 					     load/eject/save changes */
-    static GtkWidget *mi_ipodio_load;
-    static GtkWidget *mi_ipodio_eject;
-    static GtkWidget *mi_io_save;
+    static GtkWidget *mi_ipodio_load, *mi_ipodio_eject, *mi_io_save;
+    static GtkWidget *mi_prop_pl, *mi_prop_rep, *mi_prop_ipod;
 
     Playlist *pl;
 
@@ -400,9 +396,9 @@ create_context_menu(CM_type type)
 				  G_CALLBACK (export_entries), NULL);
 	hookup_mi (menu[type], _("Create Playlist File"), GTK_STOCK_FLOPPY,
 		   G_CALLBACK (create_playlist_file), NULL);
-	hookup_mi (menu[type], _("Edit Details"), NULL,
+	hookup_mi (menu[type], _("Edit Track Details"), NULL,
 		   G_CALLBACK (edit_details_entries), NULL);
-	hookup_mi (menu[type], _("Update Tracks"), GTK_STOCK_REFRESH,
+	hookup_mi (menu[type], _("Update Tracks from File"), GTK_STOCK_REFRESH,
 		   G_CALLBACK (update_entries), NULL);
 	if (type == CM_PL)
 	{
@@ -410,14 +406,28 @@ create_context_menu(CM_type type)
 		       GTK_STOCK_REFRESH,
 		       G_CALLBACK (sync_dirs), NULL);
 	}
-	hookup_mi (menu[type], _("Normalize"), NULL,
-		   G_CALLBACK (normalize_entries), NULL);
 	hookup_mi (menu[type], _("Create new Playlist"),
 		   GTK_STOCK_JUSTIFY_LEFT,
 		   G_CALLBACK (create_playlist_from_entries), NULL);
 	mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
 				  GTK_STOCK_PROPERTIES,
 				  G_CALLBACK (edit_spl), NULL);
+	if (type == CM_PL)
+	{
+	    mi_prop_pl = hookup_mi (menu[type], 
+				    _("Edit Playlist Properties"),
+				    GTK_STOCK_PREFERENCES,
+				    G_CALLBACK (edit_properties), NULL);
+	    mi_prop_rep = hookup_mi (menu[type], 
+				     _("Edit Repository Properties"),
+				     GTK_STOCK_PREFERENCES,
+				     G_CALLBACK (edit_properties), NULL);
+	    mi_prop_ipod = hookup_mi (menu[type], 
+				      _("Edit iPod Properties"),
+				      GTK_STOCK_PREFERENCES,
+				      G_CALLBACK (edit_properties), NULL);
+	}
+
 
 	if (type == CM_ST)
 	{
@@ -545,24 +555,6 @@ create_context_menu(CM_type type)
 			   G_CALLBACK (save_changes), NULL);
 
 
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-	    mi_podcasts_sep[type] = add_separator (menu[type]);
-
-	    mi_podcasts_update[type] =
-		hookup_mi (menu[type],
-			   _("Update Podcasts"),
-			   GTK_STOCK_REFRESH,
-			   G_CALLBACK (podcast_fetch),
-			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
-
-	    mi_podcasts_prefs[type] =
-		hookup_mi (menu[type],
-			   _("Podcasts Preferences"),
-			   GTK_STOCK_PREFERENCES,
-			   G_CALLBACK (prefs_window_podcasts),
-			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
-#endif
 	}
     }
     /* Make sure, only available options are displayed */
@@ -593,12 +585,10 @@ create_context_menu(CM_type type)
 	    gtk_widget_hide (mi_ipodio_load);
 	    gtk_widget_hide (mi_ipodio_eject);
 	    gtk_widget_hide (mi_io_save);
-/* FIXME: PODCASTS: remove Podcast menu */
-#if 0
-	    gtk_widget_hide (mi_podcasts_sep[type]);
-	    gtk_widget_hide (mi_podcasts_update[type]);
-	    gtk_widget_hide (mi_podcasts_prefs[type]);
-#endif
+	    gtk_widget_hide (mi_prop_pl);
+	    gtk_widget_hide (mi_prop_rep);
+	    gtk_widget_hide (mi_prop_ipod);
+
 	    if (pl->is_spl)
 	    {
 		gtk_widget_show (mi_spl[type]);
@@ -610,6 +600,7 @@ create_context_menu(CM_type type)
 		{
 		    gtk_widget_show (mi_delipod_all[type]);
 		    gtk_widget_show (mi_io_sep);
+		    gtk_widget_show (mi_prop_ipod);
 		    if (eitdb->itdb_imported)
 		    {
 			gtk_widget_show (mi_ipodio_eject);
@@ -621,6 +612,7 @@ create_context_menu(CM_type type)
 		}
 		else
 		{
+		    gtk_widget_show (mi_prop_pl);
 		    if (itdb_playlist_is_podcasts (pl))
 		    {
 			gtk_widget_show (mi_delpcipod[type]);
@@ -638,6 +630,7 @@ create_context_menu(CM_type type)
 	    {
 		if (itdb_playlist_is_mpl (pl))
 		{
+		    gtk_widget_show (mi_prop_rep);
 		    gtk_widget_show (mi_deldb_all[type]);
 		    if (eitdb->data_changed)
 		    {
@@ -648,6 +641,7 @@ create_context_menu(CM_type type)
 		}
 		else
 		{
+		    gtk_widget_show (mi_prop_pl);
 		    gtk_widget_show (mi_delsep[type]);
 		    gtk_widget_show (mi_dellocal[type]);
 		    gtk_widget_show (mi_deldb[type]);
@@ -658,12 +652,6 @@ create_context_menu(CM_type type)
 	    if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
 	    {
 		gtk_widget_show (mi_delsep[type]);
-		/* FIXME: PODCASTS: remove Podcast menu */
-		/*
-		gtk_widget_show (mi_podcasts_sep[type]);
-		gtk_widget_show (mi_podcasts_update[type]);
-		gtk_widget_show (mi_podcasts_prefs[type]);
-		*/
 	    }
 	    break;
 	case CM_ST:

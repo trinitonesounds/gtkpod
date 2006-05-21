@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 01:05:38 jcs>
+/* Time-stamp: <2006-05-21 12:24:56 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -38,7 +38,6 @@
 #include "misc_track.h"
 #include "prefs.h"
 #include "prefs_window.h"
-#include "podcast.h"
 #include "repository.h"
 
 
@@ -255,13 +254,6 @@ void prefs_window_show_hide_tooltips (void)
     g_return_if_fail (tt);
     if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
     else                                     gtk_tooltips_disable (tt);
-}
-
-
-/* Opens the podcasts options */
-void prefs_window_podcasts ()
-{
-    prefs_window_create (5);
 }
 
 

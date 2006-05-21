@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 01:04:30 jcs>
+/* Time-stamp: <2006-05-21 12:42:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -31,17 +31,18 @@
 #  include <config.h>
 #endif
 
-#include <string.h>
-#include <stdlib.h>
+#include "details.h"
 #include "display_private.h"
 #include "info.h"
-#include "details.h"
-#include "prefs.h"
-#include "prefs_window.h"
 #include "misc.h"
 #include "misc_track.h"
-#include "tools.h"
+#include "prefs.h"
+#include "prefs_window.h"
+#include "repository.h"
 #include "syncdir.h"
+#include "tools.h"
+#include <stdlib.h>
+#include <string.h>
 
 
 GtkWidget *gtkpod_window = NULL;
@@ -931,12 +932,27 @@ on_new_playlist1_activate              (GtkMenuItem     *menuitem,
 }
 
 void
-on_edit_preferences1_activate          (GtkMenuItem     *menuitem,
+on_edit_preferences_activate          (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     if(!widgets_blocked)  prefs_window_create (-1);
 }
 
+void
+on_edit_repository_options_activate          (GtkMenuItem     *menuitem,
+					      gpointer         user_data)
+{
+    Playlist *pl = pm_get_selected_playlist ();
+
+    if (pl)
+    {
+	repository_edit (pl->itdb, pl);
+    }
+    else
+    {
+	repository_edit (NULL, NULL);
+    }
+}
 
 void
 on_offline1_activate                   (GtkMenuItem     *menuitem,

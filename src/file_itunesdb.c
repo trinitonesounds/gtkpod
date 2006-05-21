@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 01:04:28 jcs>
+/* Time-stamp: <2006-05-21 12:06:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1723,11 +1723,11 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
       data_unchanged (itdb);
       if (itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
-	  gtkpod_statusbar_message(_("%s: Database saved"), mpl);
+	  gtkpod_statusbar_message(_("%s: Database saved"), mpl->name);
       }
       else
       {
-	  gtkpod_statusbar_message(_("%s: Changes saved"), mpl);
+	  gtkpod_statusbar_message(_("%s: Changes saved"), mpl->name);
       }
   }
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 16:50:28 jcs>
+/* Time-stamp: <2006-05-21 12:24:57 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -39,7 +39,6 @@
 #include "prefs.h"
 #include "misc.h"
 #include "file.h"
-//#include "podcast.h"
 
 /* path to gtkpod.glade */
 gchar *xml_file;

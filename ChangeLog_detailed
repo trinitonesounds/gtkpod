@@ -19,7 +19,17 @@
 	   src/tools.c: simplified code by having
 	   gtkpod_statusbar_message() accept printf style arguments.
 
+	 * display_spl.c (spl_ok): mark data as changed.
 
+	 * context_menus.c: removed (volumne) 'Normalize'. Accessible
+           via Tools-menu.
+
+	 * file_itunesdb.c (gp_write_itdb): statusbar message was
+           incorrect (passed mpl instead of mpl->name to be printed).
+
+	 * removed remaining code for podcast download support
+
+	 * Menu entry to display repository/iPod options.
 
 2006-05-20 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
