@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 12:24:56 jcs>
+/* Time-stamp: <2006-05-22 23:24:27 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -190,8 +190,10 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 	break;
     case GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER:
 	/* directory */
-	newpath = fileselection_get_dir (_(path_fileselector_titles[i]),
-					 oldpath);
+	newpath = fileselection_get_file_or_dir (
+	    _(path_fileselector_titles[i]),
+	    oldpath,
+	    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 	break;
     default:
 	g_return_if_reached ();

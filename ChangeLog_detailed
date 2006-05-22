@@ -1,3 +1,10 @@
+2006-05-22 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/fileselection.[ch]: replaced fileselection_get_dir()
+           with fileselection_get_file_or_dir().
+
+	 * src/repository.c: started 'Create Repository' dialog.
+
 2006-05-21 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/file.c (update_track_from_file): fixed possible segfault.

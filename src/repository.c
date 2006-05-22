@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-22 00:38:00 jcs>
+/* Time-stamp: <2006-05-23 00:09:55 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -79,6 +79,7 @@ static const gchar *MOUNTPOINT_ENTRY="mountpoint_entry";
 static const gchar *MOUNTPOINT_BUTTON="mountpoint_button";
 static const gchar *BACKUP_LABEL="backup_label";
 static const gchar *BACKUP_ENTRY="backup_entry";
+static const gchar *BACKUP_BUTTON="backup_button";
 static const gchar *IPOD_MODEL_LABEL="ipod_model_label";
 static const gchar *IPOD_MODEL_ENTRY="ipod_model_entry";
 static const gchar *LOCAL_PATH_LABEL="local_path_label";
@@ -111,6 +112,7 @@ static const gchar *PLAYLIST_SYNC_CONFIRM_DELETE_TOGGLE="playlist_sync_confirm_d
 static const gchar *PLAYLIST_SYNC_SHOW_SUMMARY_TOGGLE="playlist_sync_show_summary_toggle";
 static const gchar *UPDATE_PLAYLIST_BUTTON="update_playlist_button";
 static const gchar *UPDATE_ALL_PLAYLISTS_BUTTON="update_all_playlists_button";
+static const gchar *NEW_REPOSITORY_BUTTON="new_repository_button";
 
 /* string constants for preferences */
 static const gchar *KEY_REPOSITORY_WINDOW_DEFX="repository_window_defx";
@@ -126,6 +128,7 @@ const gchar *KEY_SYNC_CONFIRM_DELETE="sync_confirm_delete";
 const gchar *KEY_SYNC_CONFIRM_DIRS="sync_confirm_dirs";
 const gchar *KEY_SYNC_SHOW_SUMMARY="sync_show_summary";
 const gchar *KEY_MOUNTPOINT="mountpoint";
+const gchar *KEY_BACKUP="filename";
 const gchar *KEY_IPOD_MODEL="ipod_model";
 const gchar *KEY_FILENAME="filename";
 const gchar *KEY_PATH_SYNC_CONTACTS="path_sync_contacts";
@@ -147,7 +150,7 @@ static void init_repository_combo (RepWin *repwin);
 static void init_playlist_combo (RepWin *repwin);
 static void select_repository (RepWin *repwin,
 			       iTunesDB *itdb, Playlist *playlist);
-
+static void create_repository (RepWin *repwin);
 
 
 /* Store the window size */
@@ -502,11 +505,14 @@ static void mountpoint_button_clicked (GtkButton *button, RepWin *repwin)
 
     g_return_if_fail (repwin);
 
-    key = get_itdb_prefs_key (repwin->itdb_index, "mountpoint");
+    key = get_itdb_prefs_key (repwin->itdb_index, KEY_MOUNTPOINT);
     old_dir = get_current_prefs_string (repwin, key);
     g_free (key);
 
-    new_dir = fileselection_get_dir (_("Select mountpoint"), old_dir);
+    new_dir = fileselection_get_file_or_dir (
+	_("Select mountpoint"),
+	old_dir,
+	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 
     if (new_dir)
     {
@@ -514,6 +520,41 @@ static void mountpoint_button_clicked (GtkButton *button, RepWin *repwin)
 			    new_dir);
 	g_free (new_dir);
     }
+}
+
+
+/* mountpoint browse button was clicked */
+static void backup_button_clicked (GtkButton *button, RepWin *repwin)
+{
+    gchar *key, *old_backup, *new_backup;
+
+    g_return_if_fail (repwin);
+
+    key = get_itdb_prefs_key (repwin->itdb_index, KEY_FILENAME);
+    old_backup = get_current_prefs_string (repwin, key);
+    g_free (key);
+
+    new_backup = fileselection_get_file_or_dir (
+	_("Select mountpoint"),
+	old_backup,
+	GTK_FILE_CHOOSER_ACTION_SAVE);
+
+    if (new_backup)
+    {
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (BACKUP_ENTRY)),
+			    new_backup);
+	g_free (new_backup);
+    }
+}
+
+
+/* mountpoint browse button was clicked */
+static void new_repository_button_clicked (GtkButton *button,
+					   RepWin *repwin)
+{
+    g_return_if_fail (repwin);
+
+    create_repository (repwin);
 }
 
 
@@ -530,7 +571,10 @@ static void manual_syncdir_button_clicked (GtkButton *button,
 
     old_dir = get_current_prefs_string (repwin, key);
 
-    new_dir = fileselection_get_dir (_("Select directory for synchronization"), old_dir);
+    new_dir = fileselection_get_file_or_dir (
+	_("Select directory for synchronization"),
+	old_dir,
+	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 
     if (new_dir)
     {
@@ -557,19 +601,19 @@ static void ipod_sync_button_clicked (RepWin *repwin, iPodSyncType type)
 	title = _("Please select command to sync contacts");
 	entry = IPOD_SYNC_CONTACTS_ENTRY;
 	key = get_itdb_prefs_key (repwin->itdb_index,
-				  "path_sync_contacts");
+				  KEY_PATH_SYNC_CONTACTS);
 	break;
     case IPOD_SYNC_CALENDAR:
 	title = _("Please select command to sync calendar");
 	entry = IPOD_SYNC_CALENDAR_ENTRY;
 	key = get_itdb_prefs_key (repwin->itdb_index,
-				  "path_sync_calendar");
+				  KEY_PATH_SYNC_CALENDAR);
 	break;
     case IPOD_SYNC_NOTES:
 	title = _("Please select command to sync notes");
 	entry = IPOD_SYNC_NOTES_ENTRY;
 	key = get_itdb_prefs_key (repwin->itdb_index,
-				  "path_sync_notes");
+				  KEY_PATH_SYNC_NOTES);
 	break;
     default:
 	g_return_if_reached ();
@@ -789,7 +833,7 @@ static void update_playlist_button_clicked (GtkButton *button,
  *
  * ------------------------------------------------------------ */
 
-static void apply_clicked (GtkButton *button, RepWin *repwin)
+static void edit_apply_clicked (GtkButton *button, RepWin *repwin)
 {
     gint i, itdb_num, del_num;
     struct itdbs_head *itdbs_head;
@@ -884,7 +928,7 @@ static void apply_clicked (GtkButton *button, RepWin *repwin)
 	{
 	    gchar *mp;
 
-	    key = get_itdb_prefs_key (i, "mountpoint");
+	    key = get_itdb_prefs_key (i, KEY_MOUNTPOINT);
 	    mp = temp_prefs_get_string (repwin->temp_prefs, key);
 	    g_free (key);
 
@@ -927,7 +971,7 @@ printf ("index: %d\n", repwin->itdb_index);
     update_buttons (repwin);
 }
 
-static void cancel_clicked (GtkButton *button, RepWin *repwin)
+static void edit_cancel_clicked (GtkButton *button, RepWin *repwin)
 {
     g_return_if_fail (repwin);
 
@@ -939,20 +983,20 @@ static void cancel_clicked (GtkButton *button, RepWin *repwin)
 }
 
 
-static void ok_clicked (GtkButton *button, RepWin *repwin)
+static void edit_ok_clicked (GtkButton *button, RepWin *repwin)
 {
     g_return_if_fail (repwin);
 
-    apply_clicked (NULL, repwin);
-    cancel_clicked (NULL, repwin);
+    edit_apply_clicked (NULL, repwin);
+    edit_cancel_clicked (NULL, repwin);
 }
 
 
-static void delete_event (GtkWidget *widget,
-			  GdkEvent *event,
-			  RepWin *repwin)
+static void edit_delete_event (GtkWidget *widget,
+			       GdkEvent *event,
+			       RepWin *repwin)
 {
-    cancel_clicked (NULL, repwin);
+    edit_cancel_clicked (NULL, repwin);
 }
 
 
@@ -1130,19 +1174,23 @@ static void display_repository_info (RepWin *repwin)
 	    gtk_widget_hide (GET_WIDGET (*widget));
 	}
 
-	key = get_itdb_prefs_key (index, "mountpoint");
+	key = get_itdb_prefs_key (index, KEY_MOUNTPOINT);
 	set_entry (repwin, key, MOUNTPOINT_ENTRY);
 	g_free (key);
 
-	key = get_itdb_prefs_key (index, "path_sync_contacts");
+	key = get_itdb_prefs_key (index, KEY_FILENAME);
+	set_entry (repwin, key, BACKUP_ENTRY);
+	g_free (key);
+
+	key = get_itdb_prefs_key (index, KEY_PATH_SYNC_CONTACTS);
 	set_entry (repwin, key, IPOD_SYNC_CONTACTS_ENTRY);
 	g_free (key);
 
-	key = get_itdb_prefs_key (index, "path_sync_calendar");
+	key = get_itdb_prefs_key (index, KEY_PATH_SYNC_CALENDAR);
 	set_entry (repwin, key, IPOD_SYNC_CALENDAR_ENTRY);
 	g_free (key);
 
-	key = get_itdb_prefs_key (index, "path_sync_notes");
+	key = get_itdb_prefs_key (index, KEY_PATH_SYNC_NOTES);
 	set_entry (repwin, key, IPOD_SYNC_NOTES_ENTRY);
 	g_free (key);
 
@@ -1189,7 +1237,7 @@ static void display_repository_info (RepWin *repwin)
 	    gtk_widget_hide (GET_WIDGET (*widget));
 	}
 
-	key = get_itdb_prefs_key (index, "filename");
+	key = get_itdb_prefs_key (index, KEY_FILENAME);
 	set_entry (repwin, key, LOCAL_PATH_ENTRY);
 	g_free (key);
     }
@@ -1719,7 +1767,7 @@ static void repwin_free (RepWin *repwin)
 {
     g_return_if_fail (repwin);
 
-    /* FIXME: how do we free the repwin->xml? */
+    g_object_unref (repwin->xml);
 
     if (repwin->window)
     {
@@ -1762,6 +1810,7 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
     /* widget names and corresponding keys for 'standard' strings */
     const gchar *itdb_widget_names_entry[] = {
 	MOUNTPOINT_ENTRY,
+	BACKUP_ENTRY,
 	IPOD_MODEL_ENTRY,
 	LOCAL_PATH_ENTRY,
 	IPOD_SYNC_CONTACTS_ENTRY,
@@ -1770,6 +1819,7 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 	NULL };
     const gchar *itdb_key_names_entry[] = {
 	KEY_MOUNTPOINT,
+	KEY_BACKUP,
 	KEY_IPOD_MODEL,
 	KEY_FILENAME,
 	KEY_PATH_SYNC_CONTACTS,
@@ -1793,23 +1843,23 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 /*  no signals to connect -> comment out */
 /*     glade_xml_signal_autoconnect (detail->xml); */
     repwin->window = gtkpod_xml_get_widget (repwin->xml,
-						"repository_window");
+					    "repository_window");
     g_return_if_fail (repwin->window);
 
     repwins = g_list_append (repwins, repwin);
 
     /* Window control */
     g_signal_connect (GET_WIDGET ("apply_button"), "clicked",
-		      G_CALLBACK (apply_clicked), repwin);
+		      G_CALLBACK (edit_apply_clicked), repwin);
 
     g_signal_connect (GET_WIDGET ("cancel_button"), "clicked",
-		      G_CALLBACK (cancel_clicked), repwin);
+		      G_CALLBACK (edit_cancel_clicked), repwin);
 
     g_signal_connect (GET_WIDGET ("ok_button"), "clicked",
-		      G_CALLBACK (ok_clicked), repwin);
+		      G_CALLBACK (edit_ok_clicked), repwin);
 
     g_signal_connect (repwin->window, "delete_event",
-		      G_CALLBACK (delete_event), repwin);
+		      G_CALLBACK (edit_delete_event), repwin);
 
     /* Entry callbacks */
     g_signal_connect (GET_WIDGET (MANUAL_SYNCDIR_ENTRY), "changed",
@@ -1873,6 +1923,9 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
     g_signal_connect (GET_WIDGET (MOUNTPOINT_BUTTON), "clicked",
 		      G_CALLBACK (mountpoint_button_clicked), repwin);
 
+    g_signal_connect (GET_WIDGET (BACKUP_BUTTON), "clicked",
+		      G_CALLBACK (backup_button_clicked), repwin);
+
     g_signal_connect (GET_WIDGET (MANUAL_SYNCDIR_BUTTON), "clicked",
  		      G_CALLBACK (manual_syncdir_button_clicked), repwin);
 
@@ -1893,6 +1946,9 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 
     g_signal_connect (GET_WIDGET (UPDATE_ALL_PLAYLISTS_BUTTON), "clicked",
  		      G_CALLBACK (update_all_playlists_button_clicked), repwin);
+
+    g_signal_connect (GET_WIDGET (NEW_REPOSITORY_BUTTON), "clicked",
+ 		      G_CALLBACK (new_repository_button_clicked), repwin);
 
     init_repository_combo (repwin);
 
@@ -1936,4 +1992,120 @@ void update_default_sizes (void)
 {
     if (repwins)
 	store_window_state (repwins->data);
+}
+
+
+
+
+/* ------------------------------------------------------------
+ *
+ * Create Repository Dialog
+ *
+ * ------------------------------------------------------------ */
+
+struct _CreateRep
+{
+    GladeXML *xml;           /* XML info                             */
+    GtkWidget *window;       /* pointer to repository window         */
+};
+
+typedef struct _CreateRep CreateRep;
+
+static CreateRep *createrep = NULL;
+
+/* shortcut to reference widgets when repwin->xml is already set */
+#undef GET_WIDGET
+#define GET_WIDGET(a) gtkpod_xml_get_widget (createrep->xml,a)
+
+
+/* ------------------------------------------------------------
+ *
+ *        Callback functions (windows control)
+ *
+ * ------------------------------------------------------------ */
+
+
+/* Free memory taken by @createrep */
+static void createrep_free (CreateRep *cr)
+{
+    g_return_if_fail (cr);
+
+    g_object_unref (cr->xml);
+
+    if (cr->window)
+    {
+	gtk_widget_destroy (cr->window);
+    }
+
+    g_free (cr);
+}
+
+
+
+static void create_cancel_clicked (GtkButton *button, RepWin *repwin)
+{
+    g_return_if_fail (repwin);
+
+    createrep_free (createrep);
+
+    createrep = NULL;
+}
+
+
+static void create_ok_clicked (GtkButton *button, RepWin *repwin)
+{
+    g_return_if_fail (repwin);
+
+    create_cancel_clicked (NULL, repwin);
+}
+
+
+static void create_delete_event (GtkWidget *widget,
+			       GdkEvent *event,
+			       RepWin *repwin)
+{
+    create_cancel_clicked (NULL, repwin);
+}
+
+
+
+
+/**
+ * create_repository: Create a new repository.
+ * 
+ * @repwin: if given, @repwin will be updated.
+ *
+ * Note: this is a modal dialog.
+ */
+
+static void create_repository (RepWin *repwin)
+{
+    /* If window is already open, raise existing window to the top */
+    if (createrep)
+    {
+	g_return_if_fail (createrep->window);
+	gdk_window_raise (createrep->window->window);
+	return;
+    }
+
+    createrep = g_malloc0 (sizeof (CreateRep));
+
+    createrep->xml = glade_xml_new (xml_file, "create_repository_window",
+				    NULL);
+/*  no signals to connect -> comment out */
+/*     glade_xml_signal_autoconnect (detail->xml); */
+    createrep->window = gtkpod_xml_get_widget (createrep->xml,
+					       "create_repository_window");
+
+    g_return_if_fail (createrep->window);
+
+    /* Window control */
+    g_signal_connect (GET_WIDGET ("cancel_button"), "clicked",
+		      G_CALLBACK (create_cancel_clicked), repwin);
+
+    g_signal_connect (GET_WIDGET ("ok_button"), "clicked",
+		      G_CALLBACK (create_ok_clicked), repwin);
+
+    g_signal_connect (repwin->window, "delete_event",
+		      G_CALLBACK (create_delete_event), repwin);
 }

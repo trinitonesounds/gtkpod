@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-09 23:22:03 jcs>
+/* Time-stamp: <2006-05-22 23:19:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -326,17 +326,37 @@ gchar *fileselection_get_cover_filename (void)
 
 
 
-/* Get a directory
+/* Get a file or directory
  *
- * @title: title for the file selection dialog
- * @cur_dir: initial directory to be selected. If NULL, then use
- * last_dir_browse.
+ * @title:    title for the file selection dialog
+ * @cur_file: initial file to be selected. If NULL, then use
+ *            last_dir_browse.
+ * @action:
+ *   GTK_FILE_CHOOSER_ACTION_OPEN   Indicates open mode. The file chooser
+ *                                  will only let the user pick an
+ *                                  existing file.
+ *   GTK_FILE_CHOOSER_ACTION_SAVE   Indicates save mode. The file
+ *                                  chooser will let the user pick an
+ *                                  existing file, or type in a new
+ *                                  filename.
+ *   GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+ *                                  Indicates an Open mode for
+ *                                  selecting folders. The file
+ *                                  chooser will let the user pick an
+ *                                  existing folder.
+ *   GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER
+ *                                  Indicates a mode for creating a
+ *                                  new folder. The file chooser will
+ *                                  let the user name an existing or
+ *                                  new folder.
  */
-gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir)
+gchar *fileselection_get_file_or_dir (const gchar *title,
+				      const gchar *cur_file,
+				      GtkFileChooserAction action)
 {
     GtkWidget* fc;  /* The file chooser dialog */
     gint response;  /* The response of the filechooser */
-    gchar *new_dir = NULL; /* The chosen dir */
+    gchar *new_file = NULL; /* The chosen file */
 
     g_return_val_if_fail (title, NULL);
 
@@ -344,30 +364,30 @@ gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir)
     fc = gtk_file_chooser_dialog_new (
 	title,
 	NULL,
-	GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+	action,
 	GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 	GTK_STOCK_OK,GTK_RESPONSE_ACCEPT,
 	NULL);
 
     gtk_file_chooser_set_select_multiple (GTK_FILE_CHOOSER (fc), FALSE);
 
-    if (cur_dir)
+    if (cur_file)
     {
 	/* Sanity checks: must exist and be absolute */
-	if (g_path_is_absolute (cur_dir))
+	if (g_path_is_absolute (cur_file))
 	    gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (fc),
-					   cur_dir);
+					   cur_file);
 	else
-	    cur_dir = NULL;
+	    cur_file = NULL;
     }
-    if (cur_dir == NULL)
+    if (cur_file == NULL)
     {
-	gchar *dirname = prefs_get_string ("last_dir_browsed");
-	if (dirname)
+	gchar *filename = prefs_get_string ("last_dir_browsed");
+	if (filename)
 	{
 	    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (fc),
-						 dirname);
-	    g_free (dirname);
+						 filename);
+	    g_free (filename);
 	}
     }
 
@@ -376,7 +396,7 @@ gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir)
     switch (response)
     {
     case GTK_RESPONSE_ACCEPT:
-	new_dir = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
+	new_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (fc));
 	break;
     case GTK_RESPONSE_CANCEL:
 	break;
@@ -384,8 +404,9 @@ gchar *fileselection_get_dir (const gchar *title, const gchar *cur_dir)
 	break;
     }		
     gtk_widget_destroy(fc);
-    return new_dir;
+    return new_file;
 }
+
 
 
 /* Used by the prefs system (prefs_windows.c, repository.c) when a
