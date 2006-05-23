@@ -1,3 +1,12 @@
+2006-05-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/repository.c: continued 'Create Repository' dialog.
+
+	 * src/display_playlist.c
+	   src/display.h: new functions pm_set_renderer_pix() and
+	   pm_set_renderer_text() to be able to use the same style for
+	   displayling playlist/repository names throughout gtkpod.
+
 2006-05-22 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/fileselection.[ch]: replaced fileselection_get_dir()

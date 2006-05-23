@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-22 00:27:02 jcs>
+/* Time-stamp: <2006-05-24 00:57:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1726,6 +1726,131 @@ pm_cell_edited (GtkCellRendererText *renderer,
 }
 
 
+/**
+ * pm_set_renderer_text
+ *
+ * Set the playlist name in appropriate style.
+ *
+ * @renderer: renderer to be set
+ * @playlist: playlist to consider.
+ */
+void pm_set_renderer_text (GtkCellRenderer *renderer,
+			   Playlist *playlist)
+{
+    if (playlist)
+    {
+	ExtraiTunesDBData *eitdb;
+
+	g_return_if_fail (playlist->itdb);
+	eitdb = playlist->itdb->userdata;
+	g_return_if_fail (eitdb);
+
+	if (itdb_playlist_is_mpl (playlist))
+	{   /* mark MPL */
+	    g_object_set (G_OBJECT (renderer),
+			  "text", playlist->name, 
+			  "weight", PANGO_WEIGHT_BOLD,
+			  NULL);
+	    if (eitdb->data_changed)
+	    {
+		g_object_set (G_OBJECT (renderer),
+			      "style", PANGO_STYLE_ITALIC,
+			      NULL);
+	    }
+	    else
+	    {
+		g_object_set (G_OBJECT (renderer),
+			      "style", PANGO_STYLE_NORMAL,
+			      NULL);
+	    }
+	}
+	else
+	{
+	    if (itdb_playlist_is_podcasts (playlist))
+	    {
+		g_object_set (G_OBJECT (renderer),
+			      "text", playlist->name, 
+			      "weight", PANGO_WEIGHT_SEMIBOLD,
+			      "style", PANGO_STYLE_ITALIC,
+			      NULL);
+	    }
+	    else
+	    {
+		g_object_set (G_OBJECT (renderer),
+			      "text", playlist->name, 
+			      "weight", PANGO_WEIGHT_NORMAL,
+			      "style", PANGO_STYLE_NORMAL,
+			      NULL);
+	    }
+	}
+    }
+    else
+    {
+	g_object_set (G_OBJECT (renderer),
+		      "text", "",
+		      NULL);
+    }
+}
+
+
+/**
+ * pm_set_renderer_pix
+ *
+ * Set the appropriate playlist icon.
+ *
+ * @renderer: renderer to be set
+ * @playlist: playlist to consider.
+ */
+void pm_set_renderer_pix (GtkCellRenderer *renderer,
+			  Playlist *playlist)
+{
+    const gchar *stock_id=NULL;
+
+    g_return_if_fail (renderer);
+
+    if (playlist)
+    {
+	iTunesDB *itdb;
+	ExtraiTunesDBData *eitdb;
+
+	g_return_if_fail (playlist->itdb);
+	itdb = playlist->itdb;
+	g_return_if_fail (itdb->userdata);
+	eitdb = itdb->userdata;
+
+	if (playlist->is_spl)
+	{
+	    stock_id = GTK_STOCK_PROPERTIES;
+	}
+	else if (!itdb_playlist_is_mpl (playlist))
+	{
+	    stock_id = GTK_STOCK_JUSTIFY_LEFT;
+	}
+	else
+	{
+	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	    {
+		stock_id = GTK_STOCK_HARDDISK;
+	    }
+	    else
+	    {
+		if (eitdb->itdb_imported)
+		{
+		    stock_id = GTK_STOCK_CONNECT;
+		}
+		else
+		{
+		    stock_id = GTK_STOCK_DISCONNECT;
+		}
+	    }
+	}
+    }
+
+  g_object_set (G_OBJECT (renderer),
+		"stock-id", stock_id, NULL);
+}
+
+
 /* The playlist data is stored in a separate list
    and only pointers to the corresponding playlist structure are placed
    into the model.
@@ -1738,7 +1863,6 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
 			       gpointer           data)
 {
   Playlist *playlist = NULL;
-  ExtraiTunesDBData *eitdb;
 
   g_return_if_fail (renderer);
   g_return_if_fail (model);
@@ -1746,51 +1870,8 @@ static void pm_cell_data_func (GtkTreeViewColumn *tree_column,
 
   gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   g_return_if_fail (playlist);
-  g_return_if_fail (playlist->itdb);
-  eitdb = playlist->itdb->userdata;
-  g_return_if_fail (eitdb);
 
-  if (itdb_playlist_is_mpl (playlist))
-  {   /* mark MPL */
-      g_object_set (G_OBJECT (renderer),
-		    "text", playlist->name, 
-		    "editable", TRUE,
-		    "weight", PANGO_WEIGHT_BOLD,
-		    NULL);
-      if (eitdb->data_changed)
-      {
-	  g_object_set (G_OBJECT (renderer),
-			"style", PANGO_STYLE_ITALIC,
-			NULL);
-      }
-      else
-      {
-	  g_object_set (G_OBJECT (renderer),
-			"style", PANGO_STYLE_NORMAL,
-			NULL);
-      }
-  }
-  else
-  {
-      if (itdb_playlist_is_podcasts (playlist))
-      {
-	  g_object_set (G_OBJECT (renderer),
-			"text", playlist->name, 
-			"editable", TRUE,
-			"weight", PANGO_WEIGHT_SEMIBOLD,
-			"style", PANGO_STYLE_ITALIC,
-			NULL);
-      }
-      else
-      {
-	  g_object_set (G_OBJECT (renderer),
-			"text", playlist->name, 
-			"editable", TRUE,
-			"weight", PANGO_WEIGHT_NORMAL,
-			"style", PANGO_STYLE_NORMAL,
-			NULL);
-      }
-  }
+  pm_set_renderer_text (renderer, playlist);
 }
 
 
@@ -1802,8 +1883,6 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 				   gpointer           data)
 {
   Playlist *playlist=NULL;
-  iTunesDB *itdb;
-  ExtraiTunesDBData *eitdb;
 
   g_return_if_fail (renderer);
   g_return_if_fail (model);
@@ -1811,42 +1890,8 @@ static void pm_cell_data_func_pix (GtkTreeViewColumn *tree_column,
 
   gtk_tree_model_get (model, iter, PM_COLUMN_PLAYLIST, &playlist, -1);
   g_return_if_fail (playlist);
-  g_return_if_fail (playlist->itdb);
-  itdb = playlist->itdb;
-  g_return_if_fail (itdb->userdata);
-  eitdb = itdb->userdata;
 
-  if (playlist->is_spl)
-  {
-      g_object_set (G_OBJECT (renderer),
-		    "stock-id", GTK_STOCK_PROPERTIES, NULL);
-  }
-  else if (!itdb_playlist_is_mpl (playlist))
-  {
-      g_object_set (G_OBJECT (renderer),
-		    "stock-id", GTK_STOCK_JUSTIFY_LEFT, NULL);
-  }
-  else
-  {
-      if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-      {
-	  g_object_set (G_OBJECT (renderer),
-			"stock-id", GTK_STOCK_HARDDISK, NULL);
-      }
-      else
-      {
-	  if (eitdb->itdb_imported)
-	  {
-	      g_object_set (G_OBJECT (renderer),
-			    "stock-id", GTK_STOCK_CONNECT, NULL);
-	  }
-	  else
-	  {
-	      g_object_set (G_OBJECT (renderer),
-			    "stock-id", GTK_STOCK_DISCONNECT, NULL);
-	  }
-      }
-  }
+  pm_set_renderer_pix (renderer, playlist);
 }
 
 
@@ -2043,6 +2088,7 @@ static void pm_add_columns (void)
 
   /* cell for graphic indicator */
   renderer = gtk_cell_renderer_pixbuf_new ();
+
   gtk_tree_view_column_pack_start (column, renderer, FALSE); 
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					   pm_cell_data_func_pix,
@@ -2055,7 +2101,9 @@ static void pm_add_columns (void)
   gtk_tree_view_column_set_cell_data_func (column, renderer,
 					   pm_cell_data_func,
 					   NULL, NULL);
-
+  g_object_set (G_OBJECT (renderer),
+		"editable", TRUE,
+		NULL);
 }
 
 

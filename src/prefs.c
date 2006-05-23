@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 12:24:56 jcs>
+/* Time-stamp: <2006-05-24 00:58:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -239,7 +239,8 @@ static void read_environment()
 	gchar *buf; 
   
   buf = convert_filename(getenv("IPOD_MOUNTPOINT"));
-  prefs_set_string("initial_mountpoint", buf);
+  if (buf)
+      prefs_set_string("initial_mountpoint", buf);
   g_free(buf);
 }
  
@@ -1546,10 +1547,10 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      cfg->version = g_ascii_strtod (arg, NULL);
 	  }
-    else if(g_ascii_strcasecmp (line, "mountpoint") == 0)
-    {
-        prefs_set_string ("initial_mountpoint", arg);
-    }
+	  else if(g_ascii_strcasecmp (line, "mountpoint") == 0)
+	  {
+	      prefs_set_string ("initial_mountpoint", arg);
+	  }
 	  else if((arg_comp (line, "toolpath", &off) == 0) ||
 		  (arg_comp (line, "path", &off) == 0))
 	  {

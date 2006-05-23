@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 15:02:03 jcs>
+/* Time-stamp: <2006-05-23 23:48:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -279,6 +279,10 @@ void pm_name_changed (Playlist *playlist);
 void pm_track_changed (Track *track);
 void pm_sort (GtkSortType order);
 void pm_stop_editing (gboolean cancel);
+void pm_set_renderer_pix (GtkCellRenderer *renderer,
+			  Playlist *playlist);
+void pm_set_renderer_text (GtkCellRenderer *renderer,
+			   Playlist *playlist);
 
 void st_stop_editing (gint inst, gboolean cancel);
 void st_page_selected (GtkNotebook *notebook, guint page);
