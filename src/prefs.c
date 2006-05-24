@@ -432,13 +432,8 @@ static void read_prefs_from_file(FILE *fp)
 			/* Finally, load each key/value pair into the pref hash table */
 			if (prefs_table)
 			{
-				/* If there wasn't a default pref for this key, ignore it */
-        if (g_hash_table_lookup_extended(prefs_table, (gpointer)key,
-                                         NULL, NULL))
-        {
-        g_hash_table_insert(prefs_table, (gpointer)key, 
+				g_hash_table_insert(prefs_table, (gpointer)key, 
 					                  (gpointer)g_strdup(value));
-        }
 			}
 		}
 	}
