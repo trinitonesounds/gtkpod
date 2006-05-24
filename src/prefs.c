@@ -148,10 +148,10 @@ static void set_default_preferences()
 /* Initialize default variable-length list entries */
 static void set_default_list_entries()
 {
-	if (!prefs_get_string_value_index("sort_ign_strings_", 0, NULL))
+	if (!prefs_get_string_value_index("sort_ign_string_", 0, NULL))
 	{
-		prefs_set_string_index("sort_ign_string_", 0, "a");
-		prefs_set_string_index("sort_ign_string_", 1, "an");
+		prefs_set_string_index("sort_ign_string_", 0, "a ");
+		prefs_set_string_index("sort_ign_string_", 1, "an ");
 	}
 }
 
