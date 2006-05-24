@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 23:59:57 jcs>
+/* Time-stamp: <2006-05-24 23:40:18 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -241,5 +241,9 @@ gboolean get_itdb_prefs_int_value (iTunesDB *itdb, const gchar *subkey,
 				   gint *value);
 void set_itdb_prefs_string (iTunesDB *itdb,
 			    const gchar *subkey, const gchar *value);
+void set_itdb_index_prefs_string (gint index,
+				  const gchar *subkey, const gchar *value);
 void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value);
+void set_itdb_index_prefs_int (gint index,
+			       const gchar *subkey, gint value);
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-24 00:58:07 jcs>
+/* Time-stamp: <2006-05-25 01:03:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -113,6 +113,7 @@
 struct sub_data
 {
     TempPrefs *temp_prefs;
+    TempPrefs *temp_prefs_orig;
     const gchar *subkey;
     const gchar *subkey2;
     gboolean exists;
@@ -277,15 +278,19 @@ static gboolean flush_key (gpointer key, gpointer value, gpointer user_data)
 }
 
 
-/* Copy key data from the temp prefs tree to the hash table */
+/* Copy key data from the temp prefs tree to the hash table (or to
+ * sub_data->temp_prefs_orig if non-NULL). The old key is removed. */
 static gboolean subst_key (gpointer key, gpointer value, gpointer user_data)
 {
     struct sub_data *sub_data = user_data;
     gint len;
 
-    g_return_val_if_fail (prefs_table, FALSE);
     g_return_val_if_fail (key && value && user_data, FALSE);
     g_return_val_if_fail (sub_data->subkey && sub_data->subkey2, FALSE);
+    if (!sub_data->temp_prefs_orig)
+	g_return_val_if_fail (prefs_table, FALSE);
+    if (sub_data->temp_prefs_orig)
+	g_return_val_if_fail (sub_data->temp_prefs_orig->tree, FALSE);
 
     len = strlen (sub_data->subkey);
 
@@ -294,7 +299,17 @@ static gboolean subst_key (gpointer key, gpointer value, gpointer user_data)
 	gchar *new_key = g_strdup_printf ("%s%s",
 					  sub_data->subkey2,
 					  ((gchar *)key)+len);
-	g_hash_table_insert (prefs_table, new_key, g_strdup(value));
+	if (sub_data->temp_prefs_orig)
+	{
+	    g_tree_remove (sub_data->temp_prefs_orig->tree, key);
+	    g_tree_insert (sub_data->temp_prefs_orig->tree,
+			   new_key, g_strdup(value));
+	}
+	else
+	{
+	    g_hash_table_remove (prefs_table, key);
+	    g_hash_table_insert (prefs_table, new_key, g_strdup(value));
+	}
     }
     return FALSE;
 }
@@ -329,19 +344,20 @@ static gboolean check_subkey (gpointer key, gpointer value, gpointer user_data)
 
 
 /* Add key/value to temp_prefs if it matches subkey -- called by
- * create_temp_prefs_subset() */
-void get_subset (gpointer key, gpointer value, gpointer user_data)
+ * prefs_create_subset() and temp_prefs_create_subset() */
+gboolean get_subset (gpointer key, gpointer value, gpointer user_data)
 {
     struct sub_data *sub_data = user_data;
 
-    g_return_if_fail (key && value && user_data);
-    g_return_if_fail (sub_data->subkey && sub_data->temp_prefs);
+    g_return_val_if_fail (key && value && user_data, TRUE);
+    g_return_val_if_fail (sub_data->subkey && sub_data->temp_prefs, TRUE);
 
     if (strncmp (key, sub_data->subkey,
 		 strlen (sub_data->subkey)) == 0)
     {  /* match */
 	temp_prefs_set_string (sub_data->temp_prefs, key, value);
     }
+    return FALSE; /* continue traversal (g_tree), ignored for g_hash */
 }
 
 
@@ -612,7 +628,7 @@ void temp_prefs_apply(TempPrefs *temp_prefs)
 
 /* Create a temp_prefs tree containing a subset of keys in the
    permanent prefs table (those starting with @subkey */
-TempPrefs *temp_prefs_create_subset (const gchar *subkey)
+TempPrefs *prefs_create_subset (const gchar *subkey)
 {
     struct sub_data sub_data;
 
@@ -621,7 +637,26 @@ TempPrefs *temp_prefs_create_subset (const gchar *subkey)
     sub_data.temp_prefs = temp_prefs_create ();
     sub_data.subkey = subkey;
 
-    g_hash_table_foreach (prefs_table, get_subset, &sub_data);
+    g_hash_table_foreach (prefs_table, (GHFunc)get_subset, &sub_data);
+
+    return sub_data.temp_prefs;
+}
+
+
+/* Create a temp_prefs tree containing a subset of keys in the
+   permanent prefs table (those starting with @subkey */
+TempPrefs *temp_prefs_create_subset (TempPrefs *temp_prefs,
+				     const gchar *subkey)
+{
+    struct sub_data sub_data;
+
+    g_return_val_if_fail (temp_prefs, NULL);
+    g_return_val_if_fail (temp_prefs->tree, NULL);
+
+    sub_data.temp_prefs = temp_prefs_create ();
+    sub_data.subkey = subkey;
+
+    g_tree_foreach (temp_prefs->tree, get_subset, &sub_data);
 
     return sub_data.temp_prefs;
 }
@@ -685,12 +720,11 @@ void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new){
     g_return_if_fail (subkey_old);
     g_return_if_fail (subkey_new);
 
-    sub_data.temp_prefs = temp_prefs_create_subset (subkey_old);
+    sub_data.temp_prefs = prefs_create_subset (subkey_old);
+    sub_data.temp_prefs_orig = NULL;
 
     if (temp_prefs_size (sub_data.temp_prefs) > 0)
     {
-	prefs_flush_subkey (subkey_old);
-
 	sub_data.subkey = subkey_old;
 	sub_data.subkey2 = subkey_new;
 	g_tree_foreach (sub_data.temp_prefs->tree, subst_key, &sub_data);
@@ -698,6 +732,35 @@ void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new){
 
     temp_prefs_destroy (sub_data.temp_prefs);
 }
+
+
+/* Rename all keys that start with @subkey_old in such a way that they
+   start with @subkey_new */
+void temp_prefs_rename_subkey (TempPrefs *temp_prefs,
+			       const gchar *subkey_old,
+			       const gchar *subkey_new)
+{
+    struct sub_data sub_data;
+
+    g_return_if_fail (temp_prefs);
+    g_return_if_fail (subkey_old);
+    g_return_if_fail (subkey_new);
+
+    sub_data.temp_prefs_orig = temp_prefs;
+    sub_data.temp_prefs = temp_prefs_create_subset (temp_prefs,
+						    subkey_old);
+
+    if (temp_prefs_size (sub_data.temp_prefs) > 0)
+    {
+	sub_data.subkey = subkey_old;
+	sub_data.subkey2 = subkey_new;
+	g_tree_foreach (sub_data.temp_prefs->tree, subst_key, &sub_data);
+    }
+
+    temp_prefs_destroy (sub_data.temp_prefs);
+}
+
+
 
 
 /* Functions for non-numbered pref keys */

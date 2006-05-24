@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-05-20 16:50:11 jcs>
+|  Time-stamp: <2006-05-24 23:30:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1519,6 +1519,24 @@ void set_itdb_prefs_string (iTunesDB *itdb,
 
 
 /**
+ * Helper function to set a string prefs entry for @itdb.
+ * 
+ * gfree() after use
+ **/
+void set_itdb_index_prefs_string (gint index,
+				  const gchar *subkey, const gchar *value)
+{
+    gchar *key;
+
+    g_return_if_fail (subkey);
+
+    key = get_itdb_prefs_key (index, subkey);
+    prefs_set_string (key, value);
+    g_free (key);
+}
+
+
+/**
  * Helper function to set an in prefs entry for @itdb.
  * 
  **/
@@ -1530,6 +1548,23 @@ void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value)
     g_return_if_fail (subkey);
 
     key = get_itdb_prefs_key (get_itdb_index (itdb), subkey);
+    prefs_set_int (key, value);
+    g_free (key);
+}
+
+
+/**
+ * Helper function to set an in prefs entry for @itdb.
+ * 
+ **/
+void set_itdb_index_prefs_int (gint index,
+			       const gchar *subkey, gint value)
+{
+    gchar *key;
+
+    g_return_if_fail (subkey);
+
+    key = get_itdb_prefs_key (index, subkey);
     prefs_set_int (key, value);
     g_free (key);
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-24 00:58:06 jcs>
+/* Time-stamp: <2006-05-25 00:39:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -959,10 +959,11 @@ static void edit_apply_clicked (GtkButton *button, RepWin *repwin)
     {   /* at least one repository has been removed */
 	iTunesDB *new_itdb = g_list_nth_data (itdbs_head->itdbs,
 					      repwin->itdb_index);
+	iTunesDB *old_itdb = repwin->itdb;
 	Playlist *old_playlist = repwin->playlist;
 
 	init_repository_combo (repwin);
-	if (new_itdb == repwin->itdb)
+	if (new_itdb == old_itdb)
 	{
 	    select_repository (repwin, new_itdb, old_playlist);
 	}
@@ -1745,10 +1746,75 @@ static void repwin_free (RepWin *repwin)
 }
 
 
-/* Open the repository options window and display repository @itdb and
-   playlist @playlist. If @itdb and @playlist is NULL, display first
-   repository and playlist. If @itdb is NULL and @playlist is not
-   NULL, display @playlist and assume repository is playlist->itdb. */
+/**
+ * repository_edit_itdb_added:
+ *
+ * Notify the dialog that a new itdb was added to the display.
+ *
+ * @itdb: newly added itdb
+ * @select: select the new itdb if TRUE.
+ */
+static void repository_edit_itdb_added (iTunesDB *itdb, gboolean select)
+{
+    struct itdbs_head *itdbs_head;
+    gint index, num;
+    GList *gl;
+
+
+    g_return_if_fail (itdb);
+    itdbs_head = gp_get_itdbs_head (gtkpod_window);
+    g_return_if_fail (itdbs_head);
+ 
+    index = g_list_index (itdbs_head->itdbs, itdb);
+    g_return_if_fail (index != -1);
+    num = g_list_length (itdbs_head->itdbs);
+
+    /* Cycle through all open windows */
+    for (gl=repwins; gl; gl=gl->next)
+    {
+	gint i;
+	iTunesDB *old_itdb;
+	Playlist *old_playlist;
+	RepWin *repwin = gl->data;
+	g_return_if_fail (repwin);
+
+	/* rename keys */
+	for (i=num-2; i>=index; --i)
+	{
+	    gchar *from_key = get_itdb_prefs_key (i, "");
+	    gchar *to_key = get_itdb_prefs_key (i+1, "");
+printf ("TP renaming %d to %d\n", i, i+1);
+	    temp_prefs_rename_subkey (repwin->temp_prefs,
+				      from_key, to_key);
+	    g_free (from_key);
+	    g_free (to_key);
+	}
+
+	old_itdb = repwin->itdb;
+	old_playlist = repwin->playlist;
+
+	init_repository_combo (repwin);
+
+	if (select)
+	{
+	    select_repository (repwin, itdb, NULL);
+	}
+	else
+	{
+	    select_repository (repwin, old_itdb, old_playlist);
+	}
+    }
+}
+
+
+/**
+ * repository_edit:
+ *
+ * Open the repository options window and display repository @itdb and
+ * playlist @playlist. If @itdb and @playlist is NULL, display first
+ * repository and playlist. If @itdb is NULL and @playlist is not
+ * NULL, display @playlist and assume repository is playlist->itdb.
+ */
 void repository_edit (iTunesDB *itdb, Playlist *playlist)
 {
     RepWin *repwin;
@@ -2000,6 +2066,7 @@ enum
 /* somes widget names used several times */
 static const gchar *REPOSITORY_TYPE_COMBO="repository_type_combo";
 static const gchar *INSERT_BEFORE_AFTER_COMBO="insert_before_after_combo";
+static const gchar *REPOSITORY_NAME_ENTRY="repository_name_entry";
 
 
 /* shortcut to reference widgets when repwin->xml is already set */
@@ -2043,8 +2110,95 @@ static void create_cancel_clicked (GtkButton *button, CreateRep *cr)
 
 static void create_ok_clicked (GtkButton *button, CreateRep *cr)
 {
+    struct itdbs_head *itdbs_head;
+    gint type, bef_after, itdb_index;
+    const gchar *name, *mountpoint, *backup, *ipod_model, *local_path;
+    iTunesDB *itdb;
+    gint n,i;
+
     g_return_if_fail (cr);
 
+    itdbs_head = gp_get_itdbs_head (gtkpod_window);
+    g_return_if_fail (itdbs_head);
+    n = g_list_length (itdbs_head->itdbs);
+
+    /* retrieve current settings */
+    type = gtk_combo_box_get_active (
+	GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_TYPE_COMBO)));
+
+    bef_after = gtk_combo_box_get_active (
+	GTK_COMBO_BOX (GET_WIDGET (INSERT_BEFORE_AFTER_COMBO)));
+
+    itdb_index = gtk_combo_box_get_active (
+	GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_COMBO)));
+
+    name = gtk_entry_get_text (
+	GTK_ENTRY (GET_WIDGET (REPOSITORY_NAME_ENTRY)));
+
+    mountpoint = gtk_entry_get_text (
+	GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)));
+
+    backup = gtk_entry_get_text (
+	GTK_ENTRY (GET_WIDGET (BACKUP_ENTRY)));
+
+    ipod_model = gtk_entry_get_text (
+	GTK_ENTRY (GET_WIDGET (IPOD_MODEL_ENTRY)));
+
+    local_path = gtk_entry_get_text (
+	GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)));
+
+    /* adjust position where new itdb is to be inserted */
+    if (bef_after == INSERT_AFTER)
+	++itdb_index;
+
+    /* rename pref keys */
+    for (i=n-1; i>=itdb_index; --i)
+    {
+	gchar *from_key = get_itdb_prefs_key (i, "");
+	gchar *to_key = get_itdb_prefs_key (i+1, "");
+printf ("renaming %d to %d\n", i, i+1);
+	prefs_rename_subkey (from_key, to_key);
+	g_free (from_key);
+	g_free (to_key);
+    }
+
+    /* Setup prefs for new itdb */
+    set_itdb_index_prefs_string (itdb_index, "name", name);
+    switch (type)
+    {
+    case REPOSITORY_TYPE_IPOD:
+	set_itdb_index_prefs_string (itdb_index,
+				     KEY_MOUNTPOINT, mountpoint);
+	set_itdb_index_prefs_string (itdb_index,
+				     KEY_BACKUP, backup);
+	set_itdb_index_prefs_int (itdb_index, "type", GP_ITDB_TYPE_IPOD);
+	break;
+    case REPOSITORY_TYPE_LOCAL:
+	set_itdb_index_prefs_string (itdb_index,
+				     KEY_FILENAME, local_path);
+	set_itdb_index_prefs_int (itdb_index, "type", GP_ITDB_TYPE_LOCAL);
+	break;
+    case REPOSITORY_TYPE_PODCAST:
+	set_itdb_index_prefs_string (itdb_index,
+				     KEY_FILENAME, local_path);
+	set_itdb_index_prefs_int (itdb_index, "type",
+				  GP_ITDB_TYPE_PODCASTS|GP_ITDB_TYPE_LOCAL);
+	break;
+    default:
+	g_return_if_reached ();
+    }
+
+    /* Create new itdb */
+    itdb = setup_itdb_n (itdb_index);
+    g_return_if_fail (itdb);
+
+    /* add to the display */
+    gp_itdb_add (itdb, itdb_index);
+
+    /* notify repository_edit dialog */
+    repository_edit_itdb_added (itdb, TRUE);
+
+    /* Finish */
     create_cancel_clicked (NULL, cr);
 }
 
@@ -2215,7 +2369,8 @@ static void cr_local_path_button_clicked (GtkButton *button,
 static void create_repository (RepWin *repwin1)
 {
     CreateRep *cr;
-    gchar *str;
+    gchar *str, *buf1, *buf2;
+    struct itdbs_head *itdbs_head = gp_get_itdbs_head (gtkpod_window);
 
     /* If window is already open, raise existing window to the top */
     if (createrep)
@@ -2278,18 +2433,32 @@ static void create_repository (RepWin *repwin1)
 	GTK_COMBO_BOX (GET_WIDGET (REPOSITORY_COMBO)),
 	0);
 
+    /* Set default repository name */
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (REPOSITORY_NAME_ENTRY)),
+			_("New Repository"));
+
     /* Set initial mountpoint */
     str = prefs_get_string ("initial_mountpoint");
     gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (MOUNTPOINT_ENTRY)),
 			str);
     g_free (str);
 
+    buf1 = prefs_get_cfgdir ();
+    g_return_if_fail (buf1);
     /* Set initial backup path */
-    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (BACKUP_ENTRY)),
-			"not implemented");
+    buf2 = g_strdup_printf ("backupDB_%d",
+			    g_list_length (itdbs_head->itdbs));
+    str = g_build_filename (buf1, buf2, NULL);
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (BACKUP_ENTRY)), str);
+    g_free (str);
+    g_free (buf2);
 
     /* Set local repository file */
-    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)),
-			"not implemented");
-
+    buf2 = g_strdup_printf ("local_%d.itdb",
+			    g_list_length (itdbs_head->itdbs));
+    str = g_build_filename (buf1, buf2, NULL);
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)), str);
+    g_free (str);
+    g_free (buf2);
+    g_free (buf1);
 }
