@@ -36,6 +36,9 @@ gtkpod V0.99.6CVS
        BUGFIX: When updating tracks, the filename of the music file
        and the filename of the thumbnail could be messed up. Fixed.
 
+       BUGFIX: The Edit Detail dialog did not handle the 'Year' field
+       correctly.
+
        NEW: Spanish translation. Thanks to Alejandro Lamas.
 
 gtkpod V0.99.5CVS

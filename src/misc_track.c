@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 01:13:19 jcs>
+/* Time-stamp: <2006-05-26 00:04:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -607,6 +607,14 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 	    g_free (*toitem_ptr);
 	    *toitem_ptr = g_strdup (fritem);
 	    changed = TRUE;
+	}
+	if (item == T_YEAR)
+	{
+	    if (totrack->year != frtrack->year)
+	    {
+		totrack->year = frtrack->year;
+		changed = TRUE;
+	    }
 	}
 	break;
     case T_IPOD_ID:

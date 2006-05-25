@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.94\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-22 22:52+0900\n"
+"POT-Creation-Date: 2006-05-25 01:23+0900\n"
 "PO-Revision-Date: 2005-09-14 21:46+0900\n"
 "Last-Translator: Éric Lassauge <lassauge@users.sf.net>\n"
 "Language-Team: FR\n"
@@ -198,7 +198,7 @@ msgid "Empty Playlist"
 msgstr "Vide"
 
 #: gtkpod.glade:717 gtkpod.glade:7424 src/misc_playlist.c:97
-#: src/repository.c:1251
+#: src/repository.c:1302
 msgid "Smart Playlist"
 msgstr "Intelligente"
 
@@ -621,7 +621,7 @@ msgstr "Décroissant"
 msgid "None"
 msgstr "Aucun"
 
-#: gtkpod.glade:4068 src/display_playlists.c:2029
+#: gtkpod.glade:4068 src/display_playlists.c:2074
 msgid "Playlists"
 msgstr "Listes de lecture"
 
@@ -1110,7 +1110,7 @@ msgstr "Lors de la synchronisation des répertoires"
 msgid "Confirm lists of directories"
 msgstr "Confirmer la liste des répertoires"
 
-#: gtkpod.glade:8699 gtkpod.glade:17461
+#: gtkpod.glade:8699 gtkpod.glade:17481
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1122,7 +1122,7 @@ msgid ""
 "means removing from the iPod."
 msgstr ""
 
-#: gtkpod.glade:8703 gtkpod.glade:17465
+#: gtkpod.glade:8703 gtkpod.glade:17485
 msgid ""
 "Delete tracks that are no longer present from the\n"
 "ipod or repository"
@@ -1132,18 +1132,18 @@ msgstr ""
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
 msgstr "C'est la même option que dans «Édition/Confirmation de suppression»"
 
-#: gtkpod.glade:8724 gtkpod.glade:17485
+#: gtkpod.glade:8724 gtkpod.glade:17505
 #, fuzzy
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "Avant de supprimer complètement les morceaux de l'iPod"
 
-#: gtkpod.glade:8743 gtkpod.glade:17503
+#: gtkpod.glade:8743 gtkpod.glade:17523
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
 msgstr ""
 
-#: gtkpod.glade:8745 gtkpod.glade:17505
+#: gtkpod.glade:8745 gtkpod.glade:17525
 msgid "Show summary of sync result"
 msgstr ""
 
@@ -1354,8 +1354,8 @@ msgstr "Utilisateur pour se connecter à la base mserv."
 
 #: gtkpod.glade:10074 gtkpod.glade:10093 gtkpod.glade:12765 gtkpod.glade:12839
 #: gtkpod.glade:12996 gtkpod.glade:16901 gtkpod.glade:16921 gtkpod.glade:16941
-#: gtkpod.glade:16961 gtkpod.glade:17382 gtkpod.glade:17967 gtkpod.glade:18011
-#: gtkpod.glade:18031
+#: gtkpod.glade:16961 gtkpod.glade:16981 gtkpod.glade:17402 gtkpod.glade:17987
+#: gtkpod.glade:18031 gtkpod.glade:18051
 msgid "Browse"
 msgstr "Parcourir"
 
@@ -1748,20 +1748,20 @@ msgstr "Options de tri"
 msgid "Add new repository/iPod"
 msgstr ""
 
-#: gtkpod.glade:16454 gtkpod.glade:17866
+#: gtkpod.glade:16454 gtkpod.glade:17886
 #, fuzzy
 msgid "iPod mountpoint:"
 msgstr "Point de montage de l'iPod :"
 
-#: gtkpod.glade:16482 gtkpod.glade:17838
+#: gtkpod.glade:16482 gtkpod.glade:17858
 msgid "iTunesDB backup:"
 msgstr ""
 
-#: gtkpod.glade:16510 gtkpod.glade:17810
+#: gtkpod.glade:16510 gtkpod.glade:17830
 msgid "Model:"
 msgstr ""
 
-#: gtkpod.glade:16538 gtkpod.glade:17782
+#: gtkpod.glade:16538 gtkpod.glade:17802
 msgid "Path:"
 msgstr ""
 
@@ -1786,8 +1786,8 @@ msgid "Call automatically when synchronizing iTunesDB"
 msgstr "Exécuter en même temps que la synchronisation de la base iTunesDB"
 
 #: gtkpod.glade:16732 gtkpod.glade:16756 gtkpod.glade:16804 gtkpod.glade:16828
-#: gtkpod.glade:16852 gtkpod.glade:16876 gtkpod.glade:17361 gtkpod.glade:17894
-#: gtkpod.glade:17942 gtkpod.glade:17986
+#: gtkpod.glade:16852 gtkpod.glade:16876 gtkpod.glade:17381 gtkpod.glade:17914
+#: gtkpod.glade:17962 gtkpod.glade:18006 gtkpod.glade:18185
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
@@ -1795,79 +1795,90 @@ msgstr ""
 "Indiquer le chemin exact ainsi que les paramètres de ligne de commande. '%i' "
 "sera remplacé par le point de montage de l'iPod."
 
-#: gtkpod.glade:16780 gtkpod.glade:17918
+#: gtkpod.glade:16780 gtkpod.glade:17938
 msgid ""
 "Set this to the model number of your iPod (e.g. \"A003\") in case it is not "
 "automatically detected and you want to use cover art."
 msgstr ""
 
-#: gtkpod.glade:16997
+#: gtkpod.glade:17017
 msgid "Update/Sync all playlists now"
 msgstr ""
 
-#: gtkpod.glade:17017
+#: gtkpod.glade:17037
 #, fuzzy
 msgid "Delete repository"
 msgstr "Supprimer de l'iPod"
 
-#: gtkpod.glade:17037
+#: gtkpod.glade:17057
 msgid "I'm sure"
 msgstr ""
 
-#: gtkpod.glade:17093
+#: gtkpod.glade:17113
 #, fuzzy
 msgid "<b>Repositories</b>"
 msgstr "<b>Infobulles</b>"
 
-#: gtkpod.glade:17290
+#: gtkpod.glade:17310
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr ""
 
-#: gtkpod.glade:17292
+#: gtkpod.glade:17312
 msgid "On startup automatically sync with playlist directories"
 msgstr ""
 
-#: gtkpod.glade:17311
+#: gtkpod.glade:17331
 #, fuzzy
 msgid "On startup automatically sync with the following directory"
 msgstr "Prêt à synchroniser les répertoires suivants ?"
 
-#: gtkpod.glade:17405
+#: gtkpod.glade:17425
 #, fuzzy
 msgid "Don't automatically sync on startup"
 msgstr "Importer les données de l'iPod au démarrage de gtkpod"
 
-#: gtkpod.glade:17551
+#: gtkpod.glade:17571
 msgid "On startup automatically update (Live Playlist)"
 msgstr ""
 
-#: gtkpod.glade:17581
+#: gtkpod.glade:17601
 msgid "Update/Sync playlist now"
 msgstr ""
 
-#: gtkpod.glade:17628
+#: gtkpod.glade:17648
 #, fuzzy
 msgid "<b>Playlists</b>"
 msgstr "<b>Jouer</b>"
 
-#: gtkpod.glade:17745
+#: gtkpod.glade:17765
 #, fuzzy
 msgid "Create Repository"
 msgstr "Supprimer de l'iPod"
 
-#: gtkpod.glade:18050
+#: gtkpod.glade:18070
+msgid ""
+"Insert before\n"
+"Insert after"
+msgstr ""
+
+#: gtkpod.glade:18108
 #, fuzzy
 msgid "Repository type:"
 msgstr "Options de tri"
 
-#: gtkpod.glade:18078
+#: gtkpod.glade:18136
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
 "Local Repository (Podcasts)\n"
 msgstr ""
+
+#: gtkpod.glade:18157
+#, fuzzy
+msgid "Repository name:"
+msgstr "Options de tri"
 
 #: src/charset.c:53
 msgid "Arabic (IBM-864)"
@@ -2297,7 +2308,7 @@ msgstr ""
 msgid "Failed to set cover art: '%s'"
 msgstr "Impossible d'écrire «%s-%s»\n"
 
-#: src/display_itdb.c:794 src/display_itdb.c:929 src/repository.c:1076
+#: src/display_itdb.c:794 src/display_itdb.c:929 src/repository.c:1126
 #, fuzzy
 msgid "iPod"
 msgstr "_iPod"
@@ -3319,15 +3330,15 @@ msgstr "Ajouter une liste de lecture"
 msgid "Set Cover"
 msgstr ""
 
-#: src/fileselection.c:672
+#: src/fileselection.c:693
 msgid "Select directory to add recursively"
 msgstr "Sélectionner un répertoire à ajouter récursivement"
 
-#: src/fileselection.c:941
+#: src/fileselection.c:962
 msgid "Ok"
 msgstr "Ok"
 
-#: src/fileselection.c:950
+#: src/fileselection.c:971
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -4574,38 +4585,38 @@ msgstr ""
 "Mise à jour des données m4a/m4p annulée (\"%s\") : pas de support des "
 "formats m4a/m4p.Vous devez compiler gtkpod avec la bibliothèque mp4v2.\n"
 
-#: src/prefs.c:182
+#: src/prefs.c:183
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "gtkpod version %s usage :\n"
 
-#: src/prefs.c:183
+#: src/prefs.c:184
 msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help :   affiche ce message\n"
 
-#: src/prefs.c:184
+#: src/prefs.c:185
 msgid "  -p <filename>:increment playcount for file by one\n"
 msgstr "  -p <fichier> : incrémente le compteur de lecture du fichier\n"
 
-#: src/prefs.c:185
+#: src/prefs.c:186
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m chemin :    définit le point de montage de votre iPod\n"
 
-#: src/prefs.c:186
+#: src/prefs.c:187
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr "  --mountpoint : identique à «-m».\n"
 
-#: src/prefs.c:187
+#: src/prefs.c:188
 msgid "  -a:           import database automatically after start.\n"
 msgstr ""
 "  -a :           importe les données de l'iPod automatiquement au "
 "démarrage.\n"
 
-#: src/prefs.c:188
+#: src/prefs.c:189
 msgid "  --auto:       same as '-a'.\n"
 msgstr "  --auto :       identique à «-a».\n"
 
-#: src/prefs.c:189
+#: src/prefs.c:190
 msgid ""
 "  -o:           use offline mode. No changes are exported to the iPod,\n"
 "                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
@@ -4616,57 +4627,57 @@ msgstr ""
 "                \"Exporter\" est appelé et le mode \"deconnecté\" n'est \n"
 "                pas activé\n"
 
-#: src/prefs.c:190
+#: src/prefs.c:191
 msgid "  --offline:    same as '-o'.\n"
 msgstr "  --offline     identique à «-o».\n"
 
-#: src/prefs.c:1533
+#: src/prefs.c:1597
 #, c-format
 msgid "Error while reading prefs: %s\n"
 msgstr "Erreur lors de la lecture des options : %s\n"
 
-#: src/prefs.c:2091
+#: src/prefs.c:2155
 #, c-format
 msgid "Unable to open config file '%s' for reading\n"
 msgstr "Impossible d'ouvrir en lecture le fichier des options «%s»\n"
 
-#: src/prefs.c:2196
+#: src/prefs.c:2260
 #, c-format
 msgid "Unknown option: %s\n"
 msgstr "Option inconnue : %s\n"
 
-#: src/prefs.c:2230
+#: src/prefs.c:2294
 #, c-format
 msgid "# delete confirmation\n"
 msgstr "# confirmation de suppression\n"
 
-#: src/prefs.c:2232
+#: src/prefs.c:2296
 #, c-format
 msgid "# sort tab: select 'All', last selected page (=category)\n"
 msgstr "# zones : choix «Tous», dernière page sélectionnée (=catégorie)\n"
 
-#: src/prefs.c:2251
+#: src/prefs.c:2315
 #, c-format
 msgid "# autoselect master playlist?\n"
 msgstr "# sélection automatique de liste de lecture principale ?\n"
 
-#: src/prefs.c:2253
+#: src/prefs.c:2317
 #, c-format
 msgid "# title=0, artist, album, genre, composer\n"
 msgstr "# titre=0, artiste, album, genre, compositeur\n"
 
-#: src/prefs.c:2254
+#: src/prefs.c:2318
 #, c-format
 msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
 msgstr "# no_piste=5, ipod_id, pc_path, transféré\n"
 
-#: src/prefs.c:2255
+#: src/prefs.c:2319
 #, c-format
 msgid "# autoset: set empty tag to filename?\n"
 msgstr ""
 "# Définition automatique : mettre à vide les attributs dans le fichier ?\n"
 
-#: src/prefs.c:2270
+#: src/prefs.c:2334
 #, c-format
 msgid ""
 "# position of sliders (paned): playlists, above tracks,\n"
@@ -4676,7 +4687,7 @@ msgstr ""
 "morceaux,\n"
 "# entre les zones et dans la barre d'état.\n"
 
-#: src/prefs.c:2300
+#: src/prefs.c:2364
 #, c-format
 msgid ""
 "# window sizes: main window, confirmation scrolled,\n"
@@ -4686,41 +4697,41 @@ msgstr ""
 "#                       confirmation sans défilement, explorateur de "
 "fichiers\n"
 
-#: src/prefs.c:2341
+#: src/prefs.c:2405
 #, c-format
 msgid "Unable to open '%s' for writing\n"
 msgstr "Impossible d'ouvrir en écriture «%s»\n"
 
-#: src/prefs.c:2561
+#: src/prefs.c:2625
 #, c-format
 msgid ""
 " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
 msgstr ""
 " Préférences : N° de catégorie (%d<%d?) ou n° de zone (%d<%d ?) inexistant.\n"
 
-#: src/prefs.c:2613 src/prefs.c:2615
+#: src/prefs.c:2677 src/prefs.c:2679
 #, c-format
 msgid "Unable to 'mkdir %s'\n"
 msgstr "Impossible de lancer «mkdir %s»\n"
 
 #. illegal -- ignore
-#: src/prefs.c:2985
+#: src/prefs.c:3049
 #, c-format
 msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
 msgstr "prefs_set_toolbar_style : style «%d» non reconnu\n"
 
 #. illegal -- ignore
-#: src/prefs.c:3027
+#: src/prefs.c:3091
 #, c-format
 msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
 msgstr "prefs_set_pm_sort : style «%d» non reconnu\n"
 
-#: src/prefs.c:3182
+#: src/prefs.c:3246
 #, c-format
 msgid "'%s': no arguments (%%...) allowed.\n"
 msgstr "«%s» : aucun argument autorisé (%%s...).\n"
 
-#: src/prefs.c:3187
+#: src/prefs.c:3251
 #, c-format
 msgid "'%s': only '%%[%s]' allowed.\n"
 msgstr "«%s» : seulement «%%s[%s]» autorisé.\n"
@@ -4745,38 +4756,42 @@ msgstr "Sélectionner le répertoire racine de musique mserv"
 msgid "Select the mserv trackinfo root directory"
 msgstr "Sélectionner le répertoire racine d'infos mserv"
 
-#: src/prefs_window.c:944 src/prefs_window.c:962
+#: src/prefs_window.c:946 src/prefs_window.c:964
 msgid "Preferences not updated"
 msgstr "Préférences non mises à jour"
 
-#: src/prefs_window.c:971
+#: src/prefs_window.c:973
 msgid "Preferences applied"
 msgstr "Préférences mises à jour"
 
-#: src/repository.c:509
+#: src/repository.c:514 src/repository.c:2292
 #, fuzzy
 msgid "Select mountpoint"
 msgstr "Point de montage de l'iPod :"
 
-#: src/repository.c:533
+#: src/repository.c:541 src/repository.c:2318
+msgid "Set backup file"
+msgstr ""
+
+#: src/repository.c:580
 #, fuzzy
 msgid "Select directory for synchronization"
 msgstr "Sélectionner un répertoire à ajouter récursivement"
 
-#: src/repository.c:557
+#: src/repository.c:606
 msgid "Please select command to sync contacts"
 msgstr "Ligne de commande pour synchroniser les contacts"
 
-#: src/repository.c:563
+#: src/repository.c:612
 msgid "Please select command to sync calendar"
 msgstr "Ligne de commande pour synchroniser le calendrier"
 
-#: src/repository.c:569
+#: src/repository.c:618
 #, fuzzy
 msgid "Please select command to sync notes"
 msgstr "Ligne de commande pour synchroniser les contacts"
 
-#: src/repository.c:581
+#: src/repository.c:630
 #, fuzzy, c-format
 msgid ""
 "<i>Have a look at the scripts provided in '%s'. If you write a new script, "
@@ -4788,35 +4803,45 @@ msgstr ""
 "sourceforge.net afin qu'il soit ajouté dans les prochaines versions de "
 "gtkpod."
 
-#: src/repository.c:648
+#: src/repository.c:697
 #, fuzzy
 msgid "Smart playlist updated."
 msgstr "Intelligente"
 
-#: src/repository.c:1080
+#: src/repository.c:1130
 #, fuzzy
 msgid "Podcasts Repository"
 msgstr "Supprimer de l'iPod"
 
-#: src/repository.c:1084
+#: src/repository.c:1134
 #, fuzzy
 msgid "Local Repository"
 msgstr "Supprimer de l'iPod"
 
-#: src/repository.c:1243
+#: src/repository.c:1294
 #, fuzzy
 msgid "Master Playlist"
 msgstr "...liste de lecture principale"
 
-#: src/repository.c:1247
+#: src/repository.c:1298
 #, fuzzy
 msgid "Podcasts Playlist"
 msgstr "Intelligente"
 
-#: src/repository.c:1255
+#: src/repository.c:1306
 #, fuzzy
 msgid "Regular Playlist"
 msgstr "Intelligente"
+
+#: src/repository.c:2346
+#, fuzzy
+msgid "Set local repository file"
+msgstr "Supprimer de l'iPod"
+
+#: src/repository.c:2438
+#, fuzzy
+msgid "New Repository"
+msgstr "Supprimer de l'iPod"
 
 #: src/support.c:90 src/support.c:114
 #, fuzzy, c-format

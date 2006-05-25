@@ -1,6 +1,16 @@
+2006-05-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * po/sv.po: updated catalog from Stefan Asserhall
+
+	 * src/misc_track.c (track_copy_item): T_YEAR was not copied
+           correctly.
+
 2006-05-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
-	 * src/prefs.c: new: temp_prefs_rename_subkey()
+	 * src/prefs.[ch]: new: temp_prefs_rename_subkey()
+
+	 * src/misc.[ch]: new: void set_itdb_index_prefs_string(),
+           set_itdb_index_prefs_int()
 
 	 * src/repository.c: it's now possible to add new repositories
            (hardly tested)

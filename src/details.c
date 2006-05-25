@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-04-06 00:27:38 jcs>
+/* Time-stamp: <2006-05-25 23:59:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -130,7 +130,7 @@ static void details_text_changed (GtkWidget *widget,
     g_return_if_fail (detail->track);
     etr = detail->track->userdata;
     g_return_if_fail (etr);
-    
+
     detail->changed = TRUE;
     etr->tchanged = TRUE;
     details_update_buttons (detail);
@@ -833,7 +833,7 @@ static void details_get_item (Detail *detail, T_item item,
 	    }
 	    else
 	    {
-	    changed = track_set_text (track, text, item);
+		changed = track_set_text (track, text, item);
 	    }
 	    /* redisplay some items to be on the safe side */
 	    switch (item)
