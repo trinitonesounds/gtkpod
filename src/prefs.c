@@ -566,16 +566,6 @@ static void wipe_list(const gchar *key)
 	}		
 }
 
-/* Delete a key from the prefs table */
-static void remove_key(const gchar *key)
-{
-  if (prefs_table)
-  {
-    if (key)
-      g_hash_table_remove(prefs_table, key);
-  }
-}
-
 /* Delete and rename keys */
 static void cleanup_keys()
 {
@@ -587,7 +577,7 @@ static void cleanup_keys()
   {
     prefs_set_string("initial_mountpoint", buf);
     g_free(buf);
-    remove_key("mountpoint");
+    prefs_set_string("mountpoint", NULL);
   }
 }
 
