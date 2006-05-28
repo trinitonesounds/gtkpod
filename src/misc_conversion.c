@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-12-03 20:39:08 jcs>
+/* Time-stamp: <2006-05-28 23:20:47 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -93,6 +93,10 @@ static const gchar *t_strings[] = {
     N_("Subtitle"),
     N_("Date released"),
     N_("Checked"),           /* 35 */
+    N_("Start time"),
+    N_("Stop time"),
+    N_("Remember Playback Position"),
+    N_("Skip when Suffling"),
     NULL };
 
 /* Tooltips for prefs window */
@@ -136,6 +140,10 @@ static const gchar *t_tooltips[] = {
     NULL,
     N_("Release date (for podcasts displayed next to the title on the iPod)"),
     NULL,   /* 35 */
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     NULL
  };
 

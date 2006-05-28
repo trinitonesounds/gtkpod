@@ -29,6 +29,9 @@ gtkpod V0.99.6CVS
        NEW: Support of iTunes iTunNORM tag for volume normalisation of
        mp4 tracks.
 
+       NEW: Support for start time, stop time, skip when shuffling and
+       remember playback position.
+
        BUGFIX: Pressing 'OK' when syncing directories several times
        could crash gtkpod. Thanks to dforsi.
 

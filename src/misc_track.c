@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-28 20:50:00 jcs>
+/* Time-stamp: <2006-05-29 00:41:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -529,6 +529,8 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_TRANSFERRED:
     case T_SIZE:
     case T_TRACKLEN:
+    case T_STARTTIME:
+    case T_STOPTIME:
     case T_BITRATE:
     case T_SAMPLERATE:
     case T_BPM:
@@ -542,6 +544,8 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_SOUNDCHECK:
     case T_CD_NR:
     case T_COMPILATION:
+    case T_REMEMBER_PLAYBACK_POSITION:
+    case T_SKIP_WHEN_SHUFFLING:
     case T_CHECKED:
     case T_ITEM_NUM:
 	g_return_val_if_reached (NULL);
@@ -664,6 +668,20 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 	    changed = TRUE;
 	}
 	break;
+    case T_STARTTIME:
+	if (frtrack->starttime != totrack->starttime)
+	{
+	    totrack->starttime = frtrack->starttime;
+	    changed = TRUE;
+	}
+	break;
+    case T_STOPTIME:
+	if (frtrack->stoptime != totrack->stoptime)
+	{
+	    totrack->stoptime = frtrack->stoptime;
+	    changed = TRUE;
+	}
+	break;
     case T_BITRATE:
 	if (frtrack->bitrate != totrack->bitrate)
 	{
@@ -743,6 +761,20 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
 	    changed = TRUE;
 	}
 	break;
+    case T_REMEMBER_PLAYBACK_POSITION:
+	if (frtrack->remember_playback_position != totrack->remember_playback_position)
+	{
+	    totrack->remember_playback_position = frtrack->remember_playback_position;
+	    changed = TRUE;
+	}
+	break;
+    case T_SKIP_WHEN_SHUFFLING:
+	if (frtrack->skip_when_shuffling != totrack->skip_when_shuffling)
+	{
+	    totrack->skip_when_shuffling = frtrack->skip_when_shuffling;
+	    changed = TRUE;
+	}
+	break;
     case T_CHECKED:
 	if (frtrack->checked != totrack->checked)
 	{
@@ -793,6 +825,15 @@ guint32 track_get_timestamp (Track *track, T_item t_item)
     ptr = track_get_timestamp_ptr (track, t_item);
     if (ptr)  return *ptr;
     else      return 0;
+}
+
+
+/* unified format for TRACKLEN, STARTTIME, STOPTIME */
+static gchar *track_get_length_string (gint32 length)
+{
+    return g_strdup_printf ("%d:%06.3f",
+			    length/60000,
+			    ((float)(length%60000)) / 1000);
 }
 
 
@@ -863,9 +904,16 @@ gchar *track_get_text (Track *track, T_item item)
 	text = g_strdup_printf ("%d", track->size);
 	break;
     case T_TRACKLEN:
-	text = g_strdup_printf ("%d:%02d",
-				track->tracklen/60000,
-				(track->tracklen/1000)%60);
+	text = track_get_length_string (track->tracklen);
+	break;
+    case T_STARTTIME:
+	text = track_get_length_string (track->starttime);
+	break;
+    case T_STOPTIME:
+	if (track->stoptime == 0)
+	    text = track_get_length_string (track->tracklen);
+	else
+	    text = track_get_length_string (track->stoptime);
 	break;
     case T_BITRATE:
 	text = g_strdup_printf ("%dk", track->bitrate);
@@ -899,6 +947,8 @@ gchar *track_get_text (Track *track, T_item item)
 	break;
     case T_TRANSFERRED:
     case T_COMPILATION:
+    case T_REMEMBER_PLAYBACK_POSITION:
+    case T_SKIP_WHEN_SHUFFLING:
     case T_ALL:
     case T_CHECKED:
     case T_ITEM_NUM:
@@ -907,6 +957,27 @@ gchar *track_get_text (Track *track, T_item item)
     return text;
 }
 
+
+/* unified scanner for TRACKLEN, STARTTIME, STOPTIME */
+static gint32 track_scan_length (const gchar *new_text)
+{
+    gint32 nr;
+    const gchar *str;
+
+    g_return_val_if_fail (new_text, 0);
+
+    str = strrchr (new_text, ':');
+    if (str)
+    {   /* MM:SS */
+	nr = 1000 * (((float)(60 * atoi (new_text))) + atof (str+1));
+    }
+    else
+    {   /* SS */
+	nr = 1000 * atof (new_text);
+    }
+
+    return nr;
+}
 
 
 /* Set track data according to @new_text
@@ -1075,18 +1146,36 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
         }
         break;
     case T_TRACKLEN:
-	str = strrchr (new_text, ':');
-	if (str)
-	{   /* MM:SS */
-	    nr = 1000 * (60 * atoi (new_text) + atoi (str+1));
-	}
-	else
-	{   /* SS */
-	    nr = 1000 * atoi (new_text);
-	}
+	nr = track_scan_length (new_text);
 	if (nr != track->tracklen)
 	{
 	    track->tracklen = nr;
+	    changed = TRUE;
+	}
+	break;
+    case T_STARTTIME:
+	nr = track_scan_length (new_text);
+	if (nr != track->starttime)
+	{
+	    track->starttime = nr;
+	    changed = TRUE;
+	    /* Set stoptime to 0 if stoptime is the same as tracklen */
+	    if (track->stoptime == track->tracklen)
+		track->stoptime = 0;
+	}
+	break;
+    case T_STOPTIME:
+	nr = track_scan_length (new_text);
+	/* if stoptime is identical to tracklen, set stoptime to 0 if
+	 * starttime is 0 as well */
+	if ((nr == track->tracklen) &&
+	    (track->starttime == 0))
+	{
+	    nr = 0;
+	}
+	if (nr != track->stoptime)
+	{
+	    track->stoptime = nr;
 	    changed = TRUE;
 	}
 	break;
@@ -1095,6 +1184,8 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
     case T_IPOD_ID:
     case T_TRANSFERRED:
     case T_COMPILATION:
+    case T_REMEMBER_PLAYBACK_POSITION:
+    case T_SKIP_WHEN_SHUFFLING:
     case T_CHECKED:
     case T_ALL:
     case T_ITEM_NUM:
@@ -1439,8 +1530,9 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 void gp_track_set_flags_podcast (Track *track)
 {
     g_return_if_fail (track);
-    track->flag2 = 0x01;  /* skip when shuffling */
-    track->flag3 = 0x01;  /* remember playback position */
+    track->skip_when_shuffling = 0x01;         /* skip when shuffling */
+    track->remember_playback_position = 0x01;  /* remember playback
+						* position */
     track->flag4 = 0x01;  /* Show Title/Album on the 'Now Playing' page */
 }
 
@@ -1448,8 +1540,9 @@ void gp_track_set_flags_podcast (Track *track)
 void gp_track_set_flags_default (Track *track)
 {
     g_return_if_fail (track);
-    track->flag2 = 0x00;  /* do not skip when shuffling */
-    track->flag3 = 0x00;  /* do not remember playback position */
+    track->skip_when_shuffling = 0x00;  /* do not skip when shuffling */
+    track->remember_playback_position = 0x00;  /* do not remember
+						* playback position */
     track->flag4 = 0x00;  /* Show Title/Album/Artist on the 'Now
 			     Playing' page */
 }

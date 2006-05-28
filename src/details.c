@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-25 23:59:47 jcs>
+/* Time-stamp: <2006-05-29 00:45:09 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -554,10 +554,24 @@ static void details_setup_widget (Detail *detail, T_item item)
     g_return_if_fail (detail);
     g_return_if_fail ((item > 0) && (item < T_ITEM_NUM));
 
-    buf = g_strdup_printf ("details_label_%d", item);
-    w = gtkpod_xml_get_widget (detail->xml, buf);
-    gtk_label_set_text (GTK_LABEL (w), gettext (get_t_string (item)));
-    g_free (buf);
+    /* Setup label */
+    switch (item)
+    {
+    case T_COMPILATION:
+    case T_CHECKED:
+    case T_REMEMBER_PLAYBACK_POSITION:
+    case T_SKIP_WHEN_SHUFFLING:
+	buf = g_strdup_printf ("details_checkbutton_%d", item);
+	w = gtkpod_xml_get_widget (detail->xml, buf);
+	gtk_button_set_label (GTK_BUTTON (w),
+			      gettext (get_t_string (item)));
+	break;
+    default:
+	buf = g_strdup_printf ("details_label_%d", item);
+	w = gtkpod_xml_get_widget (detail->xml, buf);
+	gtk_label_set_text (GTK_LABEL (w), gettext (get_t_string (item)));
+	g_free (buf);
+    }
 
     buf = NULL;
     w = NULL;
@@ -579,6 +593,8 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_IPOD_ID:
     case T_SIZE:
     case T_TRACKLEN:
+    case T_STARTTIME:
+    case T_STOPTIME:
     case T_BITRATE:
     case T_SAMPLERATE:
     case T_PLAYCOUNT:
@@ -605,6 +621,8 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_COMPILATION:
     case T_TRANSFERRED:
     case T_CHECKED:
+    case T_REMEMBER_PLAYBACK_POSITION:
+    case T_SKIP_WHEN_SHUFFLING:
 	buf = g_strdup_printf ("details_checkbutton_%d", item);
 	w = gtkpod_xml_get_widget (detail->xml, buf);
 	g_signal_connect (w, "toggled",
@@ -679,6 +697,8 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     case T_IPOD_ID:
     case T_SIZE:
     case T_TRACKLEN:
+    case T_STARTTIME:
+    case T_STOPTIME:
     case T_BITRATE:
     case T_SAMPLERATE:
     case T_PLAYCOUNT:
@@ -726,6 +746,28 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 	    if (track)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
 					      track->transferred);
+	    else
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
+					      FALSE);
+	}
+	break;
+    case T_REMEMBER_PLAYBACK_POSITION:
+	if ((w = gtkpod_xml_get_widget (detail->xml, checkbutton)))
+	{
+	    if (track)
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
+					      track->remember_playback_position);
+	    else
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
+					      FALSE);
+	}
+	break;
+    case T_SKIP_WHEN_SHUFFLING:
+	if ((w = gtkpod_xml_get_widget (detail->xml, checkbutton)))
+	{
+	    if (track)
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
+					      track->skip_when_shuffling);
 	    else
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
 					      FALSE);
@@ -808,6 +850,8 @@ static void details_get_item (Detail *detail, T_item item,
     case T_TIME_MODIFIED:
     case T_TIME_RELEASED:
     case T_TRACKLEN:
+    case T_STARTTIME:
+    case T_STOPTIME:
     case T_SOUNDCHECK:
 	if ((w = gtkpod_xml_get_widget (detail->xml, entry)))
 	{
@@ -815,12 +859,12 @@ static void details_get_item (Detail *detail, T_item item,
 
 	    text = gtk_entry_get_text (GTK_ENTRY (w));
 
-	    /* for tracklen and soundcheck the displayed value is only
-	       a rounded figure -> unless 'assumechanged' is set,
-	       compare the string to the original one before assuming
-	       a change took place */
+	    /* for soundcheck the displayed value is only a rounded
+	       figure -> unless 'assumechanged' is set, compare the
+	       string to the original one before assuming a change
+	       took place */
 	    if (!assumechanged &&
-		((item == T_TRACKLEN) || (item == T_SOUNDCHECK)))
+		(item == T_SOUNDCHECK))
 	    {
 		gchar *buf;
 		track->itdb = detail->itdb;
@@ -841,6 +885,8 @@ static void details_get_item (Detail *detail, T_item item,
 	    case T_TRACK_NR:
 	    case T_CD_NR:
 	    case T_TRACKLEN:
+	    case T_STARTTIME:
+	    case T_STOPTIME:
 	    case T_TIME_ADDED:
 	    case T_TIME_PLAYED:
 	    case T_TIME_MODIFIED:
@@ -878,6 +924,32 @@ static void details_get_item (Detail *detail, T_item item,
 	    if (track->compilation != state)
 	    {
 		track->compilation = state;
+		changed = TRUE;
+	    }
+	}
+	break;
+    case T_REMEMBER_PLAYBACK_POSITION:
+	if ((w = gtkpod_xml_get_widget (detail->xml, checkbutton)))
+	{
+	    gboolean state;
+	    state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
+
+	    if (track->remember_playback_position != state)
+	    {
+		track->remember_playback_position = state;
+		changed = TRUE;
+	    }
+	}
+	break;
+    case T_SKIP_WHEN_SHUFFLING:
+	if ((w = gtkpod_xml_get_widget (detail->xml, checkbutton)))
+	{
+	    gboolean state;
+	    state = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
+
+	    if (track->skip_when_shuffling != state)
+	    {
+		track->skip_when_shuffling = state;
 		changed = TRUE;
 	    }
 	}

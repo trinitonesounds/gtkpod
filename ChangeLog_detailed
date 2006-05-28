@@ -1,3 +1,13 @@
+2006-05-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/details, display.h, misc_conversion.c... 
+	   Support for start time, stop time, skip when shuffling and
+	   remember playback position.
+	   
+	   ******************************************************
+	   Will require photosupport branch of libgpod to compile
+	   ******************************************************
+
 2006-05-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/display_playlists.c (tree_view_get_cell_from_pos): take
