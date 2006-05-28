@@ -566,6 +566,31 @@ static void wipe_list(const gchar *key)
 	}		
 }
 
+/* Delete a key from the prefs table */
+static void remove_key(const gchar *key)
+{
+  if (prefs_table)
+  {
+    if (key)
+      g_hash_table_remove(prefs_table, key);
+  }
+}
+
+/* Delete and rename keys */
+static void cleanup_keys()
+{
+  gchar *buf;
+  
+  /* rename mountpoint to initial_mountpoint */
+  
+  if (prefs_get_string_value("mountpoint", &buf))
+  {
+    prefs_set_string("initial_mountpoint", buf);
+    g_free(buf);
+    remove_key("mountpoint");
+  }
+}
+
 /* Initialize the prefs table and read configuration */
 void init_prefs(int argc, char *argv[])
 {
@@ -583,6 +608,12 @@ void init_prefs(int argc, char *argv[])
 	/* Read commandline arguments */
 	read_commandline(argc, argv);
 	#endif
+  
+  /* Leave this here--will work when transition is complete */
+  #if 0
+  /* Clean up old prefs keys */
+  cleanup_keys();
+  #endif
 }
 
 /* Save prefs data to a file, and then delete the hash table */
@@ -1617,10 +1648,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      cfg->version = g_ascii_strtod (arg, NULL);
 	  }
-	  else if(g_ascii_strcasecmp (line, "mountpoint") == 0)
-	  {
-	      prefs_set_string ("initial_mountpoint", arg);
-	  }
 	  else if((arg_comp (line, "toolpath", &off) == 0) ||
 		  (arg_comp (line, "path", &off) == 0))
 	  {
@@ -2155,6 +2182,7 @@ read_prefs_defaults(void)
       {
 	  read_prefs_from_file_desc(fp);
 	  fclose(fp);
+    cleanup_keys();
 	  have_prefs = TRUE; /* read prefs */
       }
       else
