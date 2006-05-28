@@ -4,6 +4,12 @@
            into account that bug in gtk_tree_view_get_cell_area() was
            fixed with GTK+2.8.18 (upon submitting bug report)
 
+	 * src/misc_track.c (gp_track_by_filename): fix segfault when
+           adding tracks to iPod without iPod connected.
+
+	 * src/mp4file.c (mp4_get_file_info): read iTunNORM tag if
+           present to set soundcheck (volumne normalisation)
+
 2006-05-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * po/sv.po: updated catalog from Stefan Asserhall

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-22 22:34:20 jcs>
+/* Time-stamp: <2006-05-28 20:58:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -190,6 +190,9 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 	    }
 	    if (prefs_get_readtags ())
 	    {
+		u_int8_t *ppValue;
+		u_int32_t pValueSize;
+
 		if (MP4GetMetadataName(mp4File, &value) && value != NULL)
 		{
 		    track->title = charset_to_utf8 (value);
@@ -234,6 +237,26 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		{
 		    track->genre = charset_to_utf8 (value);
 		    g_free(value);
+		}
+		if (MP4GetMetadataFreeForm(mp4File, "iTunNORM",
+					   &ppValue, &pValueSize))
+		{
+		    gchar *str;
+		    guint sc1=0, sc2=0;
+		    str = g_malloc0((pValueSize+1)*sizeof(gchar));
+		    memcpy(str, ppValue, pValueSize*sizeof(gchar));
+		    /* This field consists of a number of hex numbers
+		       represented in ASCII, e.g. " 00000FA7 00000B3F
+		       000072CF 00006AB6 0001CF53 00016310 0000743A
+		       00007C1F 00023DD5 000162E2". iTunes seems to
+		       choose the larger one of the first or second
+		       number as the value for track->soundcheck */
+		    sscanf (str, "%x %x", &sc1, &sc2);
+		    g_free (str);
+		    if (sc1 > sc2)
+			track->soundcheck = sc1;
+		    else
+			track->soundcheck = sc2;
 		}
 	    }
 	}

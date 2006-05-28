@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-26 00:04:51 jcs>
+/* Time-stamp: <2006-05-28 20:50:00 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -404,10 +404,16 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 	gchar *mountpoint = get_itdb_prefs_string (itdb, "mountpoint");
 	g_return_val_if_fail (mountpoint, NULL);
 	musicdir = itdb_get_music_dir (mountpoint);
+	if (!musicdir)
+	{
+	    /* FIXME: guess */
+	    musicdir = g_build_filename (mountpoint, "iPod_Control",
+					 "Music", NULL);
+	}
 	g_free (mountpoint);
     }
-
     if ((itdb->usertype & GP_ITDB_TYPE_IPOD) &&
+	(musicdir != NULL) &&
 	(strncmp (filename, musicdir, strlen (musicdir)) == 0))
     {   /* handle track on iPod (in music dir) */
 	GList *gl;
@@ -419,7 +425,7 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 	    ipod_path = itdb_filename_on_ipod (track);
 	    if (ipod_path)
 	    {
-		if (strcmp (ipod_path, filename) == 0)
+		if (strcasecmp (ipod_path, filename) == 0)
 		{
 		    result = track;
 		}
@@ -444,6 +450,7 @@ Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename)
 	    }
 	}
     }
+    g_free (musicdir);
     return result;
 }
 
