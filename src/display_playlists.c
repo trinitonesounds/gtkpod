@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-24 00:57:30 jcs>
+/* Time-stamp: <2006-05-28 12:59:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1944,20 +1944,22 @@ gint tree_view_get_cell_from_pos(GtkTreeView *view, guint x, guint y,
     gtk_tree_path_free (path);
 
     /* gtk_tree_view_get_cell_area() should return the rectangle
-       _excluding_ the expander arrow(s), but seems to forget about
-       the space occupied by the top level expander arrow. We
+       _excluding_ the expander arrow(s), but until 2.8.17 it forgets
+       about the space occupied by the top level expander arrow. We
        therefore need to add the width of one expander arrow */
-
-    if (col ==  gtk_tree_view_get_expander_column (view))
+    if (!RUNTIME_GTK_CHECK_VERSION(2,8,18))
     {
-	GValue *es = g_malloc0 (sizeof (GValue)); 
-	g_value_init (es, G_TYPE_INT);
-	gtk_widget_style_get_property (GTK_WIDGET (view),
-				       "expander_size",
-				       es);
-	rect.x += g_value_get_int (es);
-	rect.width -= g_value_get_int (es);
-	g_free (es);
+	if (col ==  gtk_tree_view_get_expander_column (view))
+	{
+	    GValue *es = g_malloc0 (sizeof (GValue)); 
+	    g_value_init (es, G_TYPE_INT);
+	    gtk_widget_style_get_property (GTK_WIDGET (view),
+					   "expander_size",
+					   es);
+	    rect.x += g_value_get_int (es);
+	    rect.width -= g_value_get_int (es);
+	    g_free (es);
+	}
     }
 
     for (node = cells;  node != NULL;  node = node->next)

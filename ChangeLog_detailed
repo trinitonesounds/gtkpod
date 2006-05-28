@@ -1,3 +1,9 @@
+2006-05-28 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/display_playlists.c (tree_view_get_cell_from_pos): take
+           into account that bug in gtk_tree_view_get_cell_area() was
+           fixed with GTK+2.8.18 (upon submitting bug report)
+
 2006-05-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * po/sv.po: updated catalog from Stefan Asserhall
