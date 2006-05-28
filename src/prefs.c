@@ -402,6 +402,8 @@ gchar *get_config_dir()
 	return folder;
 }
 
+/* Disable this until the transition is done */
+#if 0
 /* Read preferences from a file */
 static void read_prefs_from_file(FILE *fp)
 {
@@ -454,6 +456,7 @@ static void read_prefs_from_file(FILE *fp)
 		}
 	}
 }
+#endif
 
 /* Write prefs to file */
 static void write_prefs_to_file(FILE *fp)
@@ -466,13 +469,16 @@ static void write_prefs_to_file(FILE *fp)
  * preferences in the user home folder. */
 static void load_prefs()
 {
-	gchar *filename; /* Config path to open */
+	#if 0
+  gchar *filename; /* Config path to open */
 	gchar *config_dir;  /* Directory where config is (usually ~/.gtkpod) */
 	FILE *fp;
+  #endif
 	
 	/* Start by initializing the prefs to their default values */
 	set_default_preferences();
 	
+  #if 0
 	/* and then override those values with those found in the home folder. */
 	config_dir = get_config_dir();
 	
@@ -495,6 +501,7 @@ static void load_prefs()
 		
 		g_free(config_dir);
 	}
+  #endif
 	
 	/* Finally, initialize variable-length lists. Do this after everything else
 	 * so that list defaults don't hang out in the table after prefs have been
