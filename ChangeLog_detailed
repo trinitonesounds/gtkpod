@@ -1,3 +1,9 @@
+2006-05-29 James Liggett <freethinkerjim@users.sourceforge.net>
+   * src/prefs.c: Clean up paths keys
+           - Defaults for path_play_now, path_play_enqueue, and 
+             path_mserv_trackinfo_root are set in set_default_prefrences
+           - Key cleanup done in cleanup_keys 
+
 2006-05-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/details, display.h, misc_conversion.c... 

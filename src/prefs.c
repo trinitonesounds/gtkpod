@@ -144,6 +144,9 @@ static void set_default_preferences()
     prefs_set_int("delete_local_file", TRUE);
     prefs_set_int("delete_database", TRUE);
     prefs_set_string("initial_mountpoint", "/mnt/ipod");
+    prefs_set_string ("path_play_now", "xmms %s");
+    prefs_set_string ("path_play_enqueue", "xmms -e %s");
+    prefs_set_string ("path_mserv_trackinfo_root", "/var/lib/mserv/trackinfo/");
 }
 
 /* Initialize default variable-length list entries */
@@ -578,6 +581,147 @@ static void cleanup_keys()
     prefs_set_string("initial_mountpoint", buf);
     g_free(buf);
     prefs_set_string("mountpoint", NULL);
+  }
+  
+  /* Convert old path numbered keys to named ones */
+  
+  
+  /* Play Now */
+  if (prefs_get_string_value_index("path", PATH_PLAY_NOW, &buf))
+  {
+    prefs_set_string("path_play_now", buf);
+    g_free(buf);
+    prefs_set_string_index("path", PATH_PLAY_NOW, NULL);
+  }
+  
+  if (prefs_get_string_value_index("toolpath", PATH_PLAY_NOW, &buf))
+  {
+    prefs_set_string("path_play_now", buf);
+    g_free(buf);
+    prefs_set_string_index("toolpath", PATH_PLAY_NOW, NULL);
+  }
+  
+  /* Enqueue */
+  if (prefs_get_string_value_index("path", PATH_PLAY_ENQUEUE, &buf))
+  {
+    prefs_set_string("path_play_enqueue", buf);
+    g_free(buf);
+    prefs_set_string_index("path", PATH_PLAY_ENQUEUE, NULL);
+  }
+  
+  if (prefs_get_string_value_index("toolpath", PATH_PLAY_ENQUEUE, &buf))
+  {
+    prefs_set_string("path_play_enqueue", buf);
+    g_free(buf);
+    prefs_set_string_index("toolpath", PATH_PLAY_ENQUEUE, NULL);
+  }
+  
+  /* MP3 Gain */
+  if (prefs_get_string_value_index("path", PATH_MP3GAIN, &buf))
+  {
+    prefs_set_string("path_mp3gain", buf);
+    g_free(buf);
+    prefs_set_string_index("path", PATH_MP3GAIN, NULL);
+  }
+  
+  if (prefs_get_string_value_index("toolpath", PATH_MP3GAIN, &buf))
+  {
+    prefs_set_string("path_mp3gain", buf);
+    g_free(buf);
+    prefs_set_string_index("toolpath", PATH_MP3GAIN, NULL);
+  }
+  
+  /* Sync contacts */
+  if (prefs_get_string_value_index("path", PATH_SYNC_CONTACTS, &buf))
+  {
+    prefs_set_string("itdb_0_path_sync_contacts", buf);
+    g_free(buf);
+    prefs_set_string_index("path", PATH_SYNC_CONTACTS, NULL);
+  }
+  
+  if (prefs_get_string_value_index("toolpath", PATH_SYNC_CONTACTS, &buf))
+  {
+    prefs_set_string("itdb_0_path_sync_contacts", buf);
+    g_free(buf);
+    prefs_set_string_index("toolpath", PATH_SYNC_CONTACTS, NULL);
+  }
+  
+  /* Sync calendar */
+  if (prefs_get_string_value_index("path", PATH_SYNC_CALENDAR, &buf))
+  {
+    prefs_set_string("itdb_0_path_sync_calendar", buf);
+    g_free(buf);
+    prefs_set_string_index("path", PATH_SYNC_CALENDAR, NULL);
+  }
+  
+  if (prefs_get_string_value_index("toolpath", PATH_SYNC_CALENDAR, &buf))
+  {
+    prefs_set_string("itdb_0_path_sync_calendar", buf);
+    g_free(buf);
+    prefs_set_string_index("toolpath", PATH_SYNC_CALENDAR, NULL);
+  }
+  
+  /* Sync notes */
+  if (prefs_get_string_value_index("path", PATH_SYNC_NOTES, &buf))
+  {
+    prefs_set_string("itdb_0_path_sync_notes", buf);
+    g_free(buf);
+    prefs_set_string_index("path", PATH_SYNC_NOTES, NULL);
+  }
+  
+  if (prefs_get_string_value_index("toolpath", PATH_SYNC_NOTES, &buf))
+  {
+    prefs_set_string("itdb_0_path_sync_notes", buf);
+    g_free(buf);
+    prefs_set_string_index("toolpath", PATH_SYNC_NOTES, NULL);
+  }
+  
+  /* MSERV music root */
+  if (prefs_get_string_value_index("path", PATH_MSERV_MUSIC_ROOT, &buf))
+  {
+    prefs_set_string("path_mserv_music_root", buf);
+    g_free(buf);
+    prefs_set_string_index("path", PATH_MSERV_MUSIC_ROOT, NULL);
+  }
+  
+  if (prefs_get_string_value_index("toolpath", PATH_MSERV_MUSIC_ROOT, &buf))
+  {
+    prefs_set_string("path_mserv_music_root", buf);
+    g_free(buf);
+    prefs_set_string_index("toolpath", PATH_MSERV_MUSIC_ROOT, NULL);
+  }
+  
+  /* MSERV track info root */
+  if (prefs_get_string_value_index("path", PATH_MSERV_TRACKINFO_ROOT, &buf))
+  {
+    prefs_set_string("path_mserv_trackinfo_root", buf);
+    g_free(buf);
+    prefs_set_string_index("path", PATH_MSERV_TRACKINFO_ROOT, NULL);
+  }
+  
+  if (prefs_get_string_value_index("toolpath", PATH_MSERV_TRACKINFO_ROOT, &buf))
+  {
+    prefs_set_string("path_mserv_trackinfo_root", buf);
+    g_free(buf);
+    prefs_set_string_index("toolpath", PATH_MSERV_TRACKINFO_ROOT, NULL);
+  }
+
+  /* If there's an extra (PATH_NUM) key, delete it */
+  if (prefs_get_string_value_index("path", PATH_NUM, NULL))
+    prefs_set_string_index("path", PATH_NUM, NULL);
+  
+  if (prefs_get_string_value_index("toolpath", PATH_NUM, NULL))
+    prefs_set_string_index("toolpath", PATH_NUM, NULL);
+  
+  /* Play now path: default changed from "xmms -p %s" to "xmms
+	   %s" which avoids xmms from hanging -- thanks to Chris Vine */
+  
+  if (prefs_get_string_value("play_now_path", &buf))
+  {
+    if (strcmp(buf, "xmms -p %s") == 0)
+      prefs_set_string("play_now_path", "xmms %s");
+    
+    g_free(buf);
   }
 }
 
@@ -1509,11 +1653,6 @@ struct cfg *cfg_new(void)
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
 
-    prefs_set_string ("path_play_now", "xmms %s");
-    prefs_set_string ("path_play_enqueue", "xmms -e %s");
-    prefs_set_string ("path_mserv_trackinfo_root",
-		      "/var/lib/mserv/trackinfo/");
-
     mycfg->unused_gboolean3 = FALSE;
     mycfg->tmp_disable_sort = TRUE;
     mycfg->startup_messages = TRUE;
@@ -1637,52 +1776,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  if(g_ascii_strcasecmp (line, "version") == 0)
 	  {
 	      cfg->version = g_ascii_strtod (arg, NULL);
-	  }
-	  else if((arg_comp (line, "toolpath", &off) == 0) ||
-		  (arg_comp (line, "path", &off) == 0))
-	  {
-	      if (isdigit (*(line+off)) && (strlen (arg) > 0))
-	      {
-		  gint i = atoi (line+off);
-		  switch (i)
-		  {
-		  case PATH_PLAY_NOW:
-		      prefs_set_string ("path_play_now", arg);
-		      if (cfg->version < 0.87)
-		      {  /* default changed from "xmms -p %s" to "xmms
-			    %s" which avoids xmms from hanging --
-			    thanks to Chris Vine */
-			  if (strcmp (arg, "xmms -p %s") == 0)
-			  {
-			      prefs_set_string ("path_play_now", "xmms %s");
-			  }
-		      }
-		      break;
-		  case PATH_PLAY_ENQUEUE:
-		      prefs_set_string ("path_play_enqueue", arg);
-		      break;
-		  case PATH_MP3GAIN:
-		      prefs_set_string ("path_mp3gain", arg);
-		      break;
-		  case PATH_SYNC_CONTACTS:
-		      prefs_set_string ("itdb_0_path_sync_contacts", arg);
-		      break;
-		  case PATH_SYNC_CALENDAR:
-		      prefs_set_string ("itdb_0_path_sync_calendar", arg);
-		      break;
-		  case PATH_MSERV_MUSIC_ROOT:
-		      prefs_set_string ("path_mserv_music_root", arg);
-		      break;
-		  case PATH_MSERV_TRACKINFO_ROOT:
-		      prefs_set_string ("path_mserv_trackinfo_root", arg);
-		      break;
-		  case PATH_SYNC_NOTES:
-		      prefs_set_string ("itdb_0_path_sync_notes", arg);
-		      break;
-		  case PATH_NUM:
-		      break;
-		  }
-	      }
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
 	  {
