@@ -1,5 +1,14 @@
+2006-05-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/prefs.c (clenaup_keys): added check for version
+           dependent transition of 'path_play_now' key.
+
+	 * src/prefs.c (save_prefs): update version string before
+           writing to file.
+
 2006-05-29 James Liggett <freethinkerjim@users.sourceforge.net>
-   * src/prefs.c: Clean up paths keys
+
+         * src/prefs.c: Clean up paths keys
            - Defaults for path_play_now, path_play_enqueue, and 
              path_mserv_trackinfo_root are set in set_default_prefrences
            - Key cleanup done in cleanup_keys 
@@ -28,19 +37,16 @@
 
 2006-05-27 James Liggett <freethinkerjim@users.sourceforge.net>
    
-   * src/prefs.c: Removed remove_key as it's not needed. 
+	 * src/prefs.c: Removed remove_key as it's not needed. 
    
-2006-05-27 James Liggett <freethinkerjim@users.sourceforge.net>
-   
-   * src/prefs.c: Added new functions remove_key and cleanup_keys to allow for 
-           deleting/renaming old or changed keys
+	 * src/prefs.c: Added new functions remove_key and
+	   cleanup_keys to allow for deleting/renaming old or changed
+	   keys
            
-2006-05-27 James Liggett <freethinkerjim@users.sourceforge.net>
-   
-   * src/main.c
-   * src/prefs.c: Disable prefs reading by new prefs system; let  
-           read_prefs_from_file_desc handle it until the transition is finished 
-           so we don't read prefs twice.
+	 * src/main.c
+	   src/prefs.c: Disable prefs reading by new prefs system; let
+           read_prefs_from_file_desc handle it until the transition is
+           finished so we don't read prefs twice.
 
 2006-05-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
@@ -63,17 +69,15 @@
 
 2006-05-23 Todd Zullinger <tmz@pobox.com>
    
-   * src/prefs.c: Fix sort ignore list not working after prefs changes
+         * src/prefs.c: Fix sort ignore list not working after prefs
+           changes
    
-2006-05-23 James Liggett <freethinkerjim@users.sourceforge.net>
+	 * src/prefs.c: Reverse previous patch as it breaks lists (argh!!)
    
-   * src/prefs.c: Reverse previous patch as it breaks lists (argh!!)
-   
-2006-05-23 James Liggett <freethinkerjim@users.sourceforge.net>
-   
-   * src/prefs.c: Filter out deprecated/other prefs that the new system doesn't 
-           manage, getting rid of the prefs duplication problem and negating 
-           the need to filter out unneeded prefs manually
+         * src/prefs.c: Filter out deprecated/other prefs that the new
+           system doesn't manage, getting rid of the prefs duplication
+           problem and negating the need to filter out unneeded prefs
+           manually
 
 2006-05-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
@@ -165,34 +169,31 @@
            
 2006-05-19 James Liggett <freethinkerjim@users.sourceforge.net>
    
-   * src/prefs.c: Fix a build warning in convert_filename caused by my last 
-           patches...
+	 * src/prefs.c: Fix a build warning in convert_filename caused
+           by my last patches...
 
-2006-05-19 James Liggett <freethinkerjim@users.sourceforge.net>
+	 * src/prefs.c: Reversed part of previous patch on advice from
+           Jorg
    
-   * src/prefs.c: Reversed part of previous patch on advice from Jorg
-   
-2006-05-19 James Liggett <freethinkerjim@users.sourceforge.net>
-   
-   * src/misc.c 
-     src/prefs.c: 
+	 * src/misc.c 
+	   src/prefs.c: 
      
-       * Clean up initial_mountpoint:
-        - Set default in set_default_prefrences rather than cfg_new
-        - Remove unneeded code in read_prefs_from_file_desc
-          (new prefs shouldn't use this/other deprecated prefs 
-           functions)
-        - Got rid of some superflous envionment reads 
-          (needs to only be done once in read_environment)
+	 * Clean up initial_mountpoint:
+	   - Set default in set_default_prefrences rather than cfg_new
+	   - Remove unneeded code in read_prefs_from_file_desc
+	     (new prefs shouldn't use this/other deprecated prefs 
+	     functions)
+	   - Got rid of some superflous envionment reads 
+	     (needs to only be done once in read_environment)
        
-       * New prefs backend function read_environment is now enabled and used
+         * New prefs backend function read_environment is now enabled
+           and used
        
-       * Fixed convert_filename for use with read_envrionment
-        - Added NULL string pointer check
+         * Fixed convert_filename for use with read_envrionment
+           - Added NULL string pointer check
    
-2006-05-19 James Liggett <freethinkerjim@users.sourceforge.net>
-   
-   * src/prefs.c: Reversed part of previous patch on advice from Jorg
+         * src/prefs.c: Reversed part of previous patch on advice from
+           Jorg
 
 2006-05-18 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

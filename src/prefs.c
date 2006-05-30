@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-25 01:03:39 jcs>
+/* Time-stamp: <2006-05-30 21:26:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -532,6 +532,7 @@ static void save_prefs()
 			
 			if (fp)
 			{
+			        prefs_set_string ("version", VERSION);
 				write_prefs_to_file(fp);
 				fclose(fp);
 			}
@@ -573,9 +574,22 @@ static void wipe_list(const gchar *key)
 static void cleanup_keys()
 {
   gchar *buf;
-  
+  float version=0;
+
+  /* get version */
+  if (prefs_get_string_value ("version", &buf))
+  {
+      version = g_ascii_strtod (buf, NULL);
+      g_free (buf);
+  }
+  else
+  {
+      /* version must only be set to VERSION if no prefs file was
+	 found --> elsewhere */
+      g_return_if_reached ();
+  }
+
   /* rename mountpoint to initial_mountpoint */
-  
   if (prefs_get_string_value("mountpoint", &buf))
   {
     prefs_set_string("initial_mountpoint", buf);
@@ -590,8 +604,17 @@ static void cleanup_keys()
   if (prefs_get_string_value_index("path", PATH_PLAY_NOW, &buf))
   {
     prefs_set_string("path_play_now", buf);
-    g_free(buf);
     prefs_set_string_index("path", PATH_PLAY_NOW, NULL);
+    if (version < 0.87)
+    {  /* default changed from "xmms -p %s" to "xmms
+          %s" which avoids xmms from hanging --
+          thanks to Chris Vine */
+        if (strcmp (buf, "xmms -p %s") == 0)
+        {
+            prefs_set_string ("path_play_now", "xmms %s");
+        }
+    }
+    g_free(buf);
   }
   
   if (prefs_get_string_value_index("toolpath", PATH_PLAY_NOW, &buf))
@@ -1776,6 +1799,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  if(g_ascii_strcasecmp (line, "version") == 0)
 	  {
 	      cfg->version = g_ascii_strtod (arg, NULL);
+	      prefs_set_string ("version", arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
 	  {
@@ -2292,7 +2316,11 @@ read_prefs_defaults(void)
   }
   g_free (cfgdir);
   /* set version of the prefs file to "current" if none was read */
-  if (!have_prefs)   cfg->version = g_ascii_strtod (VERSION, NULL);
+  if (!have_prefs)
+  {
+      cfg->version = g_ascii_strtod (VERSION, NULL);
+      prefs_set_string ("version", VERSION);
+  }
 
   /* handle version changes in prefs */
   if (cfg->version == 0.0)
