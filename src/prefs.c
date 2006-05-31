@@ -738,17 +738,6 @@ static void cleanup_keys()
   
   if (prefs_get_string_value_index("toolpath", PATH_NUM, NULL))
     prefs_set_string_index("toolpath", PATH_NUM, NULL);
-  
-  /* Play now path: default changed from "xmms -p %s" to "xmms
-	   %s" which avoids xmms from hanging -- thanks to Chris Vine */
-  
-  if (prefs_get_string_value("play_now_path", &buf))
-  {
-    if (strcmp(buf, "xmms -p %s") == 0)
-      prefs_set_string("play_now_path", "xmms %s");
-    
-    g_free(buf);
-  }
 
   prefs_set_string ("version", VERSION);
 }
