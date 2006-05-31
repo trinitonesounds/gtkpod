@@ -1,5 +1,13 @@
 2006-05-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * src/prefs.c (cleanup_keys): set "version" after cleanup is
+           done.
+
+	 * src/prefs.c (save_prefs): write version string at the start
+           of the file until the old prefs system is completely gone.
+
+2006-05-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * src/prefs.c (clenaup_keys): added check for version
            dependent transition of 'path_play_now' key.
 

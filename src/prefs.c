@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-30 21:26:13 jcs>
+/* Time-stamp: <2006-05-31 21:53:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -529,10 +529,13 @@ static void save_prefs()
 		if (filename)
 		{
 			fp = fopen(filename, "w");
-			
+
 			if (fp)
 			{
-			        prefs_set_string ("version", VERSION);
+			    /* remove fprintf() once the old prefs
+			       system is completely gone. */
+				fprintf(fp, "version=%s\n", VERSION);
+
 				write_prefs_to_file(fp);
 				fclose(fp);
 			}
@@ -746,6 +749,8 @@ static void cleanup_keys()
     
     g_free(buf);
   }
+
+  prefs_set_string ("version", VERSION);
 }
 
 /* Initialize the prefs table and read configuration */
@@ -2428,7 +2433,6 @@ write_prefs_to_file_desc(FILE *fp)
     /* update order of track view columns */
     tm_store_col_order ();
 
-    fprintf(fp, "version=%s\n", VERSION);
     if (cfg->charset)
     {
 	fprintf(fp, "charset=%s\n", cfg->charset);
