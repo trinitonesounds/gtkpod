@@ -738,7 +738,31 @@ static void cleanup_keys()
   
   if (prefs_get_string_value_index("toolpath", PATH_NUM, NULL))
     prefs_set_string_index("toolpath", PATH_NUM, NULL);
-
+  
+  /* Ignore play_now_path */
+  if (prefs_get_string_value("play_now_path", NULL))
+    prefs_set_string("play_now_path", NULL);
+  
+  /* Ignore sync_remove */
+  if (prefs_get_string_value("sync_remove", NULL))
+    prefs_set_string("sync_remove", NULL);
+  
+  /* Ignore sync_remove_confirm */
+  if (prefs_get_string_value("sync_remove_confirm", NULL))
+    prefs_set_string("sync_remove_confirm", NULL);
+  
+  /* Ignore show_sync_dirs */
+  if (prefs_get_string_value("show_sync_dirs", NULL))
+    prefs_set_string("show_sync_dirs", NULL);
+  
+  /* Ignore play_enqueue_path */
+  if (prefs_get_string_value("play_enqueue_path", NULL))
+    prefs_set_string("play_enqueue_path", NULL);
+  
+  /* Ignore mp3gain_path */
+  if (prefs_get_string_value("mp3gain_path", NULL))
+    prefs_set_string("mp3gain_path", NULL);
+  
   prefs_set_string ("version", VERSION);
 }
 
@@ -1794,30 +1818,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      cfg->version = g_ascii_strtod (arg, NULL);
 	      prefs_set_string ("version", arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "play_now_path") == 0)
-	  {
-	      /* ignore */
-	  }
-	  else if(g_ascii_strcasecmp (line, "sync_remove") == 0)
-	  {
-	      /* ignore */
-	  }
-	  else if(g_ascii_strcasecmp (line, "sync_remove_confirm") == 0)
-	  {
-	      /* ignore */
-	  }
-	  else if(g_ascii_strcasecmp (line, "show_sync_dirs") == 0)
-	  {
-	      /* ignore */
-	  }
-	  else if(g_ascii_strcasecmp (line, "play_enqueue_path") == 0)
-	  {
-	      /* ignore */
-	  }
-	  else if(g_ascii_strcasecmp (line, "mp3gain_path") == 0)
-	  {
-	      /* ignore */
 	  }
 	  else if(g_ascii_strcasecmp (line, "time_format") == 0)
 	  {
