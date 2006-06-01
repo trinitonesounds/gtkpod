@@ -105,7 +105,6 @@ struct cfg
 				   * import files as set by commandline */
   struct
   {
-    guint    category;       /* which category was selected last? */
     /* the following fields are for the "special" tab */
     gboolean sp_or;          /* logic operation: OR? (FALSE: AND) */
     gboolean sp_rating;      /* consider rating? */
