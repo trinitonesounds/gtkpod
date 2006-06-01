@@ -106,7 +106,6 @@ struct cfg
   struct
   {
     /* the following fields are for the "special" tab */
-    gboolean sp_or;          /* logic operation: OR? (FALSE: AND) */
     gboolean sp_rating;      /* consider rating? */
     guint32  sp_rating_state;/* pass which rating? (1 star: bit 1...) */
     gboolean sp_playcount;   /* consider playcount? */
@@ -416,8 +415,6 @@ gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
 gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
-void prefs_set_sp_or (guint32 inst, gboolean state);
-gboolean prefs_get_sp_or (guint32 inst);
 void prefs_set_sp_cond (guint32 inst, T_item t_item, gboolean state);
 gboolean prefs_get_sp_cond (guint32 inst, T_item t_item);
 void prefs_set_sp_rating_n (guint32 inst, gint n, gboolean state);

@@ -155,6 +155,7 @@ static void set_default_preferences()
     {
       prefs_set_int_index("st_autoselect", i, TRUE);
       prefs_set_int_index("st_category", i, (i < ST_CAT_NUM ? i : 0));
+      prefs_set_int_index("sp_or", i, FALSE);
     }
 }
 
@@ -1633,7 +1634,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	mycfg->st[i].sp_or = FALSE;
 	mycfg->st[i].sp_rating = FALSE;
 	mycfg->st[i].sp_rating_state = 0;
 	mycfg->st[i].sp_playcount = FALSE;
@@ -1889,11 +1889,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
-	  }
-	  else if(arg_comp (line, "sp_or", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_or (i, atoi (arg));
 	  }
 	  else if(arg_comp (line, "sp_rating_cond", &off) == 0)
 	  {
@@ -2433,7 +2428,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	fprintf(fp, "sp_or%d=%d\n", i, prefs_get_sp_or (i));
 	fprintf(fp, "sp_rating_cond%d=%d\n", i, prefs_get_sp_cond (i, T_RATING));
 	fprintf(fp, "sp_rating_state%d=%d\n", i, prefs_get_sp_rating_state(i));
 	fprintf(fp, "sp_playcount_cond%d=%d\n", i, prefs_get_sp_cond (i, T_PLAYCOUNT));
@@ -3375,17 +3369,6 @@ void
 prefs_set_info_window(gboolean val)
 {
     cfg->info_window = val;
-}
-
-void prefs_set_sp_or (guint32 inst, gboolean state)
-{
-    if (inst < SORT_TAB_MAX)	cfg->st[inst].sp_or = state;
-}
-
-gboolean prefs_get_sp_or (guint32 inst)
-{
-    if (inst < SORT_TAB_MAX)	return cfg->st[inst].sp_or;
-    return FALSE;
 }
 
 /* Set whether condition @t_item in sort tab @inst is activated or not */

@@ -418,7 +418,7 @@ static IntervalState sp_check_time (guint32 inst, T_item item, Track *track)
  * Return value:  TRUE: satisfies, FALSE: does not satisfy */
 static gboolean sp_check_track (Track *track, guint32 inst)
 {
-    gboolean sp_or = prefs_get_sp_or (inst);
+    gboolean sp_or = prefs_get_int_index("sp_or", inst);
     gboolean result, cond, checked=FALSE;
 
     if (!track) return FALSE;
@@ -783,8 +783,10 @@ on_sp_or_button_toggled                (GtkToggleButton *togglebutton,
 {
     guint32 inst = (guint32)(GPOINTER_TO_UINT(user_data) & SP_MASK);
 
-    prefs_set_sp_or (inst, gtk_toggle_button_get_active (togglebutton));
-    sp_conditions_changed (inst);
+    prefs_set_int_index("sp_or", inst, 
+                        gtk_toggle_button_get_active (togglebutton));
+    
+  sp_conditions_changed (inst);
 }
 
 
@@ -2670,7 +2672,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       g_signal_connect ((gpointer)w,
 			"toggled", G_CALLBACK (on_sp_or_button_toggled),
 			GINT_TO_POINTER(inst));
-      if (prefs_get_sp_or (inst))
+      if (prefs_get_int_index("sp_or", inst))
 	  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
       else
       {
