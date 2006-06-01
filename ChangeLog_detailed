@@ -1,5 +1,12 @@
 2006-05-31 James Liggett <freethinkerjim@users.sourceforge.net>
 
+   * src/display_sorttabs.c
+     src/prefs.h
+     src/prefs.c
+     src/prefs_window.h: Move st_category to new prefs.
+
+2006-05-31 James Liggett <freethinkerjim@users.sourceforge.net>
+
    * src/prefs.c: Add list end marker when setting variable-length list default
            entries.
 

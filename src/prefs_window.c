@@ -705,9 +705,6 @@ prefs_window_set(void)
 	tm_store_col_order ();
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_autoimport(tmpcfg->autoimport);
-	for (i=0; i<SORT_TAB_MAX; ++i) {
-	    prefs_set_st_category (i, tmpcfg->st[i].category);
-	}
 	for (i=0; i<TM_NUM_TAGS_PREFS; ++i) {
 	    prefs_set_autosettags (i, tmpcfg->autosettags[i]);
 	}

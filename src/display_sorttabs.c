@@ -1760,7 +1760,7 @@ void st_init (ST_CAT_item new_category, guint32 inst)
       if (new_category != -1)
       {
 	  st->current_category = new_category;
-	  prefs_set_st_category (inst, new_category);
+	  prefs_set_int_index("st_category", inst, new_category);
       }
       st_init (-1, inst+1);
   }
@@ -2960,7 +2960,7 @@ void st_create_notebook (gint inst)
 
   st->notebook = GTK_NOTEBOOK (st0_notebook);
   st_create_pages (inst);
-  page = prefs_get_st_category (inst);
+  page = prefs_get_int_index("st_category", inst);
   st->current_category = page;
   gtk_notebook_set_current_page (st->notebook, page);
   if (prefs_get_st_sort () != SORT_NONE)

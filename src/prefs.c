@@ -154,6 +154,7 @@ static void set_default_preferences()
     for (i = 0; i < SORT_TAB_MAX; i++)
     {
       prefs_set_int_index("st_autoselect", i, TRUE);
+      prefs_set_int_index("st_category", i, (i < ST_CAT_NUM ? i : 0));
     }
 }
 
@@ -1632,7 +1633,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	mycfg->st[i].category = (i<ST_CAT_NUM ? i:0);
 	mycfg->st[i].sp_or = FALSE;
 	mycfg->st[i].sp_rating = FALSE;
 	mycfg->st[i].sp_rating_state = 0;
@@ -1889,11 +1889,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
-	  }
-	  else if(arg_comp (line, "st_category", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_st_category (i, atoi (arg));
 	  }
 	  else if(arg_comp (line, "sp_or", &off) == 0)
 	  {
@@ -2438,7 +2433,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
 	fprintf(fp, "sp_or%d=%d\n", i, prefs_get_sp_or (i));
 	fprintf(fp, "sp_rating_cond%d=%d\n", i, prefs_get_sp_cond (i, T_RATING));
 	fprintf(fp, "sp_rating_state%d=%d\n", i, prefs_get_sp_rating_state(i));
@@ -2717,33 +2711,6 @@ void prefs_set_autoimport_commandline(gboolean val)
     cfg->autoimport_commandline = val;
 }
 
-/* "inst": the instance of the sort tab */
-guint prefs_get_st_category (guint32 inst)
-{
-    if (inst < SORT_TAB_MAX)
-    {
-	return cfg->st[inst].category;
-    }
-    else
-    {
-	return TRUE; /* hmm.... this should not happen... */
-    }
-}
-
-/* "inst": the instance of the sort tab, "category": one of the
-   ST_CAT_... */
-void prefs_set_st_category (guint32 inst, guint category)
-{
-    if ((inst < SORT_TAB_MAX) && (category < ST_CAT_NUM))
-    {
-	cfg->st[inst].category = category;
-    }
-    else
-    {
-	gtkpod_warning (_(" Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"), category, ST_CAT_NUM, inst, SORT_TAB_MAX);
-    }
-}
-
 gboolean prefs_get_mpl_autoselect (void)
 {
     return cfg->mpl_autoselect;
@@ -2754,7 +2721,6 @@ void prefs_set_mpl_autoselect (gboolean autoselect)
 {
     cfg->mpl_autoselect = autoselect;
 }
-
 
 /* retrieve the width of the track display columns. "col": one of the
    TM_COLUMN_... */
