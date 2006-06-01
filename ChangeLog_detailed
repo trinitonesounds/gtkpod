@@ -1,5 +1,10 @@
 2006-05-31 James Liggett <freethinkerjim@users.sourceforge.net>
 
+   * src/prefs.c: Add list end marker when setting variable-length list default
+           entries.
+
+2006-05-31 James Liggett <freethinkerjim@users.sourceforge.net>
+
    * src/prefs.c
      src/prefs.h
      src/prefs_window.c

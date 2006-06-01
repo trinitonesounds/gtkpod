@@ -164,6 +164,7 @@ static void set_default_list_entries()
 	{
 		prefs_set_string_index("sort_ign_string_", 0, "a ");
 		prefs_set_string_index("sort_ign_string_", 1, "an ");
+    prefs_set_string_index("sort_ign_string_", 2, LIST_END_MARKER);
 	}
 }
 
