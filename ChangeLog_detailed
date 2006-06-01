@@ -1,3 +1,19 @@
+2006-05-31 James Liggett <freethinkerjim@users.sourceforge.net>
+
+   * src/prefs.c
+     src/prefs.h
+     src/prefs_window.c
+     src/display_sorttabs.c: Move sort tabs autoselect key to new prefs
+
+2006-05-31 James Liggett <freethinkerjim@users.sourceforge.net>
+
+   * src/prefs.c: Clean up dead path keys in cleanup_keys
+
+2006-05-31 James Liggett <freethinkerjim@users.sourceforge.net>
+
+   * src/prefs.c: Delete a duplicate check for XMMS command. For some reason, 
+           this was in cleanup_keys twice.
+
 2006-05-30 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/prefs.c (cleanup_keys): set "version" after cleanup is

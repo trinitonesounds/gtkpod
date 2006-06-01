@@ -1118,8 +1118,8 @@ void st_remove_all_entries_from_model (guint32 inst)
  * (it's empty).
  * If the entry is currently selected (usually will be), the next
  * or previous entry will be selected automatically (unless it's the
- * master entry and prefs_get_st_autoselect() says don't select the 'All'
- * entry). If no new entry is selected, the next sort tab will be
+ * master entry and prefs_get_int_index("st_autoselect", inst) says don't select
+ * the 'All' entry). If no new entry is selected, the next sort tab will be
  * redisplayed (should be empty) */
 void st_remove_entry (TabEntry *entry, guint32 inst)
 {
@@ -1171,7 +1171,7 @@ void st_remove_entry (TabEntry *entry, guint32 inst)
 		if (!valid) next = NULL;
 	    }
 	    /* don't select master entry 'All' until requested to do so */
-	    if (next && next->master && !prefs_get_st_autoselect (inst))
+	    if (next && next->master && !prefs_get_int_index("st_autoselect", inst))
 		next = NULL;
 	}
     }
@@ -1540,7 +1540,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 	    {
 		/* no last selection -- check if we should select "All" */
 		/* only select "All" when currently adding the first track */
-		if (first && prefs_get_st_autoselect (inst))
+		if (first && prefs_get_int_index("st_autoselect", inst))
 		{
 		    select_entry = master_entry;
 		}
@@ -1561,9 +1561,9 @@ static void st_add_track_normal (Track *track, gboolean final,
     }
     /* select "All" if it's the last track added, no entry currently
        selected (including "select_entry", which is to be selected" and
-       prefs_get_st_autoselect() allows us to select "All" */
+       prefs_get_int_index("st_autoselect", index) allows us to select "All" */
     if (final && !st->current_entry && !select_entry &&
-	!st->unselected && prefs_get_st_autoselect (inst))
+	!st->unselected && prefs_get_int_index("st_autoselect", inst))
     { /* auto-select entry "All" */
 	select_entry = g_list_nth_data (st->entries, 0);
     }
@@ -1603,7 +1603,7 @@ static void st_add_track_normal (Track *track, gboolean final,
    sort tab. The last sort tab will pass the track on to the
    track model (currently two sort tabs).
    When the first track is added, the "All" entry is created.
-   If prefs_get_st_autoselect(inst) is true, the "All" entry is
+   If prefs_get_int_index("st_autoselect", inst) is true, the "All" entry is
    automatically selected, if there was no former selection
    @display: TRUE: add to track model (i.e. display it) */
 void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)

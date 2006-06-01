@@ -493,7 +493,7 @@ prefs_window_create (gint page)
 	else      padding = 5;
 	gtk_box_pack_start (GTK_BOX (w), as, FALSE, FALSE, padding);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(as),
-				     tmpcfg->st[i].autoselect);
+				     prefs_get_int_index("st_autoselect", i));
 	g_signal_connect ((gpointer)as,
 			  "toggled",
 			  G_CALLBACK (on_cfg_st_autoselect_toggled),
@@ -706,7 +706,6 @@ prefs_window_set(void)
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_autoimport(tmpcfg->autoimport);
 	for (i=0; i<SORT_TAB_MAX; ++i) {
-	    prefs_set_st_autoselect (i, tmpcfg->st[i].autoselect);
 	    prefs_set_st_category (i, tmpcfg->st[i].category);
 	}
 	for (i=0; i<TM_NUM_TAGS_PREFS; ++i) {
@@ -1130,7 +1129,8 @@ void prefs_window_set_st_autoselect (guint32 inst, gboolean autoselect)
 {
     if ((inst >= 0) && (inst < SORT_TAB_MAX))
     {
-	tmpcfg->st[inst].autoselect = autoselect;
+      temp_prefs_set_int_index(temp_prefs, "st_autoselect", inst, 
+                               autoselect);
     }
 }
 

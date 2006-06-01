@@ -105,7 +105,6 @@ struct cfg
 				   * import files as set by commandline */
   struct
   {
-    gboolean autoselect;     /* automatically select "All" in sort tab? */
     guint    category;       /* which category was selected last? */
     /* the following fields are for the "special" tab */
     gboolean sp_or;          /* logic operation: OR? (FALSE: AND) */
@@ -338,7 +337,6 @@ void prefs_set_tm_autostore (gboolean active);
 void prefs_set_pm_autostore (gboolean active);
 void prefs_set_write_extended_info(gboolean active);
 void prefs_set_autoimport(gboolean val);
-void prefs_set_st_autoselect (guint32 inst, gboolean autoselect);
 void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_st_category (guint32 inst, guint category);
 void prefs_set_md5tracks(gboolean active);
@@ -383,7 +381,6 @@ gboolean prefs_get_tm_autostore (void);
 gboolean prefs_get_pm_autostore (void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_autoimport(void);
-gboolean prefs_get_st_autoselect (guint32 inst);
 gboolean prefs_get_mpl_autoselect (void);
 guint prefs_get_st_category (guint32 inst);
 gchar * prefs_get_charset (void);

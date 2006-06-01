@@ -129,6 +129,8 @@ static GHashTable *prefs_table = NULL;
 /* Set default prefrences */
 static void set_default_preferences()
 {
+    int i; 
+  
     prefs_set_int("update_existing", FALSE);
     prefs_set_int("id3_write", FALSE);
     prefs_set_int("id3_write_id3v24", FALSE);
@@ -147,6 +149,12 @@ static void set_default_preferences()
     prefs_set_string ("path_play_now", "xmms %s");
     prefs_set_string ("path_play_enqueue", "xmms -e %s");
     prefs_set_string ("path_mserv_trackinfo_root", "/var/lib/mserv/trackinfo/");
+  
+    /* Set sorting tab defaults */
+    for (i = 0; i < SORT_TAB_MAX; i++)
+    {
+      prefs_set_int_index("st_autoselect", i, TRUE);
+    }
 }
 
 /* Initialize default variable-length list entries */
@@ -1623,7 +1631,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	mycfg->st[i].autoselect = TRUE;
 	mycfg->st[i].category = (i<ST_CAT_NUM ? i:0);
 	mycfg->st[i].sp_or = FALSE;
 	mycfg->st[i].sp_rating = FALSE;
@@ -1881,11 +1888,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
-	  }
-	  else if(arg_comp (line, "st_autoselect", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_st_autoselect (i, atoi (arg));
 	  }
 	  else if(arg_comp (line, "st_category", &off) == 0)
 	  {
@@ -2435,7 +2437,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	fprintf(fp, "st_autoselect%d=%d\n", i, prefs_get_st_autoselect (i));
 	fprintf(fp, "st_category%d=%d\n", i, prefs_get_st_category (i));
 	fprintf(fp, "sp_or%d=%d\n", i, prefs_get_sp_or (i));
 	fprintf(fp, "sp_rating_cond%d=%d\n", i, prefs_get_sp_cond (i, T_RATING));
@@ -2713,29 +2714,6 @@ gboolean prefs_get_autoimport_commandline(void)
 void prefs_set_autoimport_commandline(gboolean val)
 {
     cfg->autoimport_commandline = val;
-}
-
-/* "inst": the instance of the sort tab */
-gboolean prefs_get_st_autoselect (guint32 inst)
-{
-    if (inst < SORT_TAB_MAX)
-    {
-	return cfg->st[inst].autoselect;
-    }
-    else
-    {
-	return TRUE;
-    }
-}
-
-/* "inst": the instance of the sort tab, "autoselect": should "All" be
- * selected automatically? */
-void prefs_set_st_autoselect (guint32 inst, gboolean autoselect)
-{
-    if (inst < SORT_TAB_MAX)
-    {
-	cfg->st[inst].autoselect = autoselect;
-    }
 }
 
 /* "inst": the instance of the sort tab */
