@@ -2,6 +2,12 @@
 
    * src/display_sorttabs.c
      src/prefs.h
+     src/prefs.c: Move sp_*_cond to new prefs.
+
+2006-06-01 James Liggett <freethinkerjim@users.sourceforge.net>
+
+   * src/display_sorttabs.c
+     src/prefs.h
      src/prefs.c: Move sp_or to new prefs.
 
 2006-05-31 James Liggett <freethinkerjim@users.sourceforge.net>

@@ -588,6 +588,8 @@ static void wipe_list(const gchar *key)
 static void cleanup_keys()
 {
   gchar *buf;
+  gint int_buf;
+  gint i;
   float version=0;
 
   /* get version */
@@ -773,6 +775,13 @@ static void cleanup_keys()
   /* Ignore mp3gain_path */
   if (prefs_get_string_value("mp3gain_path", NULL))
     prefs_set_string("mp3gain_path", NULL);
+  
+  /* sp_created_cond renamed to sp_added_cond */
+  for (i = 0; i < SORT_TAB_MAX; i++)
+  {
+    if (prefs_get_int_value_index("sp_created_cond", i, &int_buf))
+      prefs_set_int_index("sp_added_cond", i, int_buf);
+  }
   
   prefs_set_string ("version", VERSION);
 }
@@ -1890,32 +1899,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
 	  }
-	  else if(arg_comp (line, "sp_rating_cond", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_cond (i, T_RATING, atoi (arg));
-	  }
-	  else if(arg_comp (line, "sp_playcount_cond", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_cond (i, T_PLAYCOUNT, atoi (arg));
-	  }
-	  else if(arg_comp (line, "sp_played_cond", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_cond (i, T_TIME_PLAYED, atoi (arg));
-	  }
-	  else if(arg_comp (line, "sp_modified_cond", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_cond (i, T_TIME_MODIFIED, atoi (arg));
-	  }
-	  else if((arg_comp (line, "sp_created_cond", &off) == 0) ||
-		  arg_comp (line, "sp_added_cond", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_cond (i, T_TIME_ADDED, atoi (arg));
-	  }
 	  else if(arg_comp (line, "sp_rating_state", &off) == 0)
 	  {
 	      gint i = atoi (line+off);
@@ -2428,16 +2411,11 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	fprintf(fp, "sp_rating_cond%d=%d\n", i, prefs_get_sp_cond (i, T_RATING));
 	fprintf(fp, "sp_rating_state%d=%d\n", i, prefs_get_sp_rating_state(i));
-	fprintf(fp, "sp_playcount_cond%d=%d\n", i, prefs_get_sp_cond (i, T_PLAYCOUNT));
 	fprintf(fp, "sp_playcount_low%d=%d\n", i, prefs_get_sp_playcount_low (i));
 	fprintf(fp, "sp_playcount_high%d=%d\n", i, prefs_get_sp_playcount_high (i));
-	fprintf(fp, "sp_played_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_PLAYED));
 	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_PLAYED));
-	fprintf(fp, "sp_modified_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_MODIFIED));
 	fprintf(fp, "sp_modified_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_MODIFIED));
-	fprintf(fp, "sp_added_cond%d=%d\n", i, prefs_get_sp_cond (i, T_TIME_ADDED));
 	fprintf(fp, "sp_added_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_ADDED));
 	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
     }

@@ -428,7 +428,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     else       result = TRUE;   /* AND */
 
     /* RATING */
-    if (prefs_get_sp_cond (inst, T_RATING))
+    if (prefs_get_int_index("sp_rating_cond", inst))
     {
 	/* checked = TRUE: at least one condition was checked */
 	checked = TRUE;
@@ -442,7 +442,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     }
 
     /* PLAYCOUNT */
-    if (prefs_get_sp_cond (inst, T_PLAYCOUNT))
+    if (prefs_get_int_index("sp_playcount_cond", inst))
     {
 	guint32 low = prefs_get_sp_playcount_low (inst);
 	/* "-1" will translate into about 4 billion because I use
@@ -458,7 +458,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
 	if ((!sp_or) && (!cond)) return FALSE;
     }
     /* time played */
-    if (prefs_get_sp_cond (inst, T_TIME_PLAYED))
+    if (prefs_get_int_index("sp_played_cond", inst))
     {
 	IntervalState result = sp_check_time (inst, T_TIME_PLAYED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
@@ -466,7 +466,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
 	if (result != IS_ERROR)                  checked = TRUE;
     }
     /* time modified */
-    if (prefs_get_sp_cond (inst, T_TIME_MODIFIED))
+    if (prefs_get_int_index("sp_modified_cond", inst))
     {
 	IntervalState result = sp_check_time (inst, T_TIME_MODIFIED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
@@ -474,7 +474,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
 	if (result != IS_ERROR)                  checked = TRUE;
     }
     /* time added */
-    if (prefs_get_sp_cond (inst, T_TIME_ADDED))
+    if (prefs_get_int_index("sp_added_cond", inst))
     {
 	IntervalState result = sp_check_time (inst, T_TIME_ADDED, track);
 	if (sp_or && (result == IS_INSIDE))      return TRUE;
@@ -797,9 +797,31 @@ on_sp_cond_button_toggled            (GtkToggleButton *togglebutton,
     guint32 inst = (guint32)(GPOINTER_TO_UINT(user_data) & SP_MASK);
     T_item cond = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
 
-/*     printf ("%d/%d/%d\n",inst,cond,gtk_toggle_button_get_active (togglebutton)); */
-    prefs_set_sp_cond (inst, cond,
-		       gtk_toggle_button_get_active (togglebutton));
+  switch (cond)
+	{
+	case T_RATING:
+	    prefs_set_int_index("sp_rating_cond", inst, 
+                          gtk_toggle_button_get_active(togglebutton));
+	    break;
+	case T_PLAYCOUNT:
+	    prefs_set_int_index("sp_playcount_cond", inst, 
+                          gtk_toggle_button_get_active(togglebutton));
+	    break;
+	case T_TIME_PLAYED:
+	    prefs_set_int_index("sp_played_cond", inst, 
+                          gtk_toggle_button_get_active(togglebutton));
+	    break;
+	case T_TIME_MODIFIED:
+	    prefs_set_int_index("sp_modified_cond", inst, 
+                          gtk_toggle_button_get_active(togglebutton));
+	    break;
+	case T_TIME_ADDED:
+	    prefs_set_int_index("sp_added_cond", inst, 
+                          gtk_toggle_button_get_active(togglebutton));
+	    break;
+	default:
+	    break;
+	}
     sp_conditions_changed (inst);
 }
 
@@ -812,7 +834,7 @@ on_sp_rating_n_toggled                 (GtkToggleButton *togglebutton,
 
     prefs_set_sp_rating_n (inst, n,
 			   gtk_toggle_button_get_active (togglebutton));
-    if (prefs_get_sp_cond (inst, T_RATING))
+    if (prefs_get_int_index("sp_rating_cond", inst))
 	sp_conditions_changed (inst);
 }
 
@@ -875,7 +897,7 @@ on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
 
     prefs_set_sp_playcount_low (inst,
 				gtk_spin_button_get_value (spinbutton));
-    if (prefs_get_sp_cond (inst, T_PLAYCOUNT))
+    if (prefs_get_int_index("sp_playcount_cond", inst))
 	sp_conditions_changed (inst);
 }
 
@@ -888,7 +910,7 @@ on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
 
     prefs_set_sp_playcount_high (inst,
 				 gtk_spin_button_get_value (spinbutton));
-    if (prefs_get_sp_cond (inst, T_PLAYCOUNT))
+    if (prefs_get_int_index("sp_playcount_cond", inst))
 	sp_conditions_changed (inst);
 }
 
@@ -2686,7 +2708,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			GUINT_TO_POINTER((T_RATING<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, T_RATING));
+				   prefs_get_int_index("sp_rating_cond", inst));
       for (i=0; i<=RATING_MAX; ++i)
       {
 	  gchar *buf = g_strdup_printf ("sp_rating%d", i);
@@ -2705,7 +2727,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			GUINT_TO_POINTER((T_PLAYCOUNT<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, T_PLAYCOUNT));
+				   prefs_get_int_index("sp_playcound_cond", inst));
       w = gtkpod_xml_get_widget (special_xml, "sp_playcount_low");
       g_signal_connect ((gpointer)w,
 			"value_changed",
@@ -2728,7 +2750,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, T_TIME_PLAYED));
+				   prefs_get_int_index("sp_played_cond", inst));
       w = gtkpod_xml_get_widget (special_xml, "sp_played_entry");
       st->ti_played.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
@@ -2749,7 +2771,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, T_TIME_MODIFIED));
+				   prefs_get_int_index("sp_modified_cond", inst));
       w = gtkpod_xml_get_widget (special_xml, "sp_modified_entry");
       st->ti_modified.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
@@ -2770,7 +2792,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"toggled", G_CALLBACK (on_sp_cond_button_toggled),
 			GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_cond (inst, T_TIME_ADDED));
+				   prefs_get_int_index("sp_added_cond", inst));
       w = gtkpod_xml_get_widget (special_xml, "sp_added_entry");
       st->ti_added.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
