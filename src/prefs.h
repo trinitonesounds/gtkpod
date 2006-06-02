@@ -106,16 +106,11 @@ struct cfg
   struct
   {
     /* the following fields are for the "special" tab */
-    gboolean sp_rating;      /* consider rating? */
     guint32  sp_rating_state;/* pass which rating? (1 star: bit 1...) */
-    gboolean sp_playcount;   /* consider playcount? */
     guint sp_playcount_low;  /* lower limit for playcounts */
     guint sp_playcount_high; /* higher limit for playcounts */
-    gboolean sp_played;      /* consider last played? */
     gchar *sp_played_state;  /* current "played" string */
-    gboolean sp_modified;    /* consider last modified? */
     gchar *sp_modified_state;/* current "modified" string */
-    gboolean sp_added;       /* consider added? */
     gchar *sp_added_state;   /* current "added" string */
     gboolean sp_autodisplay; /* display automatically? */
   } st[SORT_TAB_MAX];

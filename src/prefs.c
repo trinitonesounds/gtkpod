@@ -156,6 +156,11 @@ static void set_default_preferences()
       prefs_set_int_index("st_autoselect", i, TRUE);
       prefs_set_int_index("st_category", i, (i < ST_CAT_NUM ? i : 0));
       prefs_set_int_index("sp_or", i, FALSE);
+      prefs_set_int_index("sp_rating_cond", i, FALSE);
+      prefs_set_int_index("sp_playcount_cond", i, FALSE);
+      prefs_set_int_index("sp_played_cond", i, FALSE);
+      prefs_set_int_index("sp_modified_cond", i, FALSE);
+      prefs_set_int_index("sp_added_cond", i, FALSE);
     }
 }
 
@@ -1643,16 +1648,11 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	mycfg->st[i].sp_rating = FALSE;
 	mycfg->st[i].sp_rating_state = 0;
-	mycfg->st[i].sp_playcount = FALSE;
 	mycfg->st[i].sp_playcount_low = 0;
 	mycfg->st[i].sp_playcount_high = -1;
-	mycfg->st[i].sp_played = FALSE;
 	mycfg->st[i].sp_played_state = g_strdup (">4w");
-	mycfg->st[i].sp_modified = FALSE;
 	mycfg->st[i].sp_modified_state = g_strdup ("<1d");
-	mycfg->st[i].sp_added = FALSE;
 	mycfg->st[i].sp_added_state = g_strdup ("<1d");
 	mycfg->st[i].sp_autodisplay = FALSE;
     }
@@ -3348,78 +3348,6 @@ prefs_set_info_window(gboolean val)
 {
     cfg->info_window = val;
 }
-
-/* Set whether condition @t_item in sort tab @inst is activated or not */
-void prefs_set_sp_cond (guint32 inst, T_item t_item, gboolean state)
-{
-    if (inst < SORT_TAB_MAX)
-    {
-	switch (t_item)
-	{
-	case T_RATING:
-	    cfg->st[inst].sp_rating = state;
-	    break;
-	case T_PLAYCOUNT:
-	    cfg->st[inst].sp_playcount = state;
-	    break;
-	case T_TIME_PLAYED:
-	    cfg->st[inst].sp_played = state;
-	    break;
-	case T_TIME_MODIFIED:
-	    cfg->st[inst].sp_modified = state;
-	    break;
-	case T_TIME_ADDED:
-	    cfg->st[inst].sp_added = state;
-	    break;
-	default:
-	    /* programming error */
-	    fprintf (stderr, "prefs_set_sp_cond(): inst=%d, !t_item=%d!\n",
-		     inst, t_item);
-	    break;
-	}
-    }
-    else
-    {
-	/* programming error */
-	fprintf (stderr, "prefs_set_sp_cond(): !inst=%d! t_item=%d\n",
-		 inst, t_item);
-    }
-}
-
-
-/* Set whether condition @t_item in sort tab @inst is activated or not */
-gboolean prefs_get_sp_cond (guint32 inst, T_item t_item)
-{
-    if (inst < SORT_TAB_MAX)
-    {
-	switch (t_item)
-	{
-	case T_RATING:
-	    return cfg->st[inst].sp_rating;
-	case T_PLAYCOUNT:
-	    return cfg->st[inst].sp_playcount;
-	case T_TIME_PLAYED:
-	    return cfg->st[inst].sp_played;
-	case T_TIME_MODIFIED:
-	    return cfg->st[inst].sp_modified;
-	case T_TIME_ADDED:
-	    return cfg->st[inst].sp_added;
-	default:
-	    /* programming error */
-	    fprintf (stderr, "prefs_get_sp_cond(): inst=%d !t_item=%d!\n",
-		     inst, t_item);
-	    break;
-	}
-    }
-    else
-    {
-	/* programming error */
-	fprintf (stderr, "prefs_get_sp_cond(): !inst=%d! t_item=%d\n",
-		 inst, t_item);
-    }
-    return FALSE;
-}
-
 
 void prefs_set_sp_rating_n (guint32 inst, gint n, gboolean state)
 {
