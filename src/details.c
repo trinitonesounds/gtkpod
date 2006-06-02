@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-29 00:45:09 jcs>
+/* Time-stamp: <2006-06-03 02:52:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -491,6 +491,12 @@ static gboolean details_copy_artwork (Track *frtrack, Track *totrack)
 	toetr->thumb_path_locale = g_strdup (fretr->thumb_path_locale);
 	toetr->thumb_path_utf8 = g_strdup (fretr->thumb_path_utf8);
 	changed = TRUE;
+    }
+    /* make sure artwork gets removed, even if both thumb_paths were
+       unset ("") */
+    if (!frtrack->artwork->thumbnails)
+    {
+	changed |= gp_track_remove_thumbnails (totrack);
     }
     return changed;
 }
