@@ -41,6 +41,7 @@ gtkpod_SOURCES = \
     file_itunesdb.c \
     fileselection.h fileselection.c \
     info.c info.h \
+    ipod_init.c ipod_init.h \
     itdb.h \
     main.c \
     md5.c md5.h \

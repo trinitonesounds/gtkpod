@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-24 23:40:18 jcs>
+/* Time-stamp: <2006-06-05 00:33:43 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -70,7 +70,7 @@ extern gchar *xml_file;
 
 /* Some symbols not necessarily defined */
 
-/* Introduced in 1.6 */
+/* Introduced in 2.6 */
 #ifndef GTK_STOCK_DISCONNECT
 #define GTK_STOCK_DISCONNECT GTK_STOCK_GOTO_TOP
 #define GTK_STOCK_CONNECT GTK_STOCK_GOTO_BOTTOM
@@ -78,7 +78,10 @@ extern gchar *xml_file;
 #ifndef GTK_STOCK_EDIT
 #define GTK_STOCK_EDIT NULL
 #endif
-/* SEMIBOLD was introduced with version 1.8 */
+#ifndef G_IS_DIR_SEPARATOR
+#define G_IS_DIR_SEPARATOR(c) (c == G_DIR_SEPARATOR)
+#endif
+/* SEMIBOLD was introduced with version 2.8 */
 #ifndef PANGO_WEIGHT_SEMIBOLD
 #define PANGO_WEIGHT_SEMIBOLD 600
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-22 00:38:00 jcs>
+/* Time-stamp: <2006-06-04 23:35:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -885,7 +885,7 @@ iTunesDB *setup_itdb_n (gint i)
 	{
 	    gchar *key;
 
-	    key = get_itdb_prefs_key (i, "mountpoint");
+	    key = get_itdb_prefs_key (i, KEY_MOUNTPOINT);
 	    mountpoint = prefs_get_string (key);
 	    g_free (key);
 

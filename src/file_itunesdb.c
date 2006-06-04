@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 12:06:05 jcs>
+/* Time-stamp: <2006-06-04 23:35:21 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -44,6 +44,7 @@
 #include "prefs.h"
 #include "syncdir.h"
 #include "tools.h"
+#include "ipod_init.h"
 
 /*------------------------------------------------------------------*\
  *                                                                  *
@@ -829,6 +830,8 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     ExtraiTunesDBData *eitdb;
     iTunesDB *new_itdb = NULL;
     gchar *mountpoint;
+    gchar *itunes_control;
+    gboolean load = TRUE;
 
     g_return_val_if_fail (itdb, NULL);
     g_return_val_if_fail (itdb->usertype & GP_ITDB_TYPE_IPOD, NULL);
@@ -836,12 +839,41 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     g_return_val_if_fail (eitdb, NULL);
     g_return_val_if_fail (eitdb->itdb_imported == FALSE, NULL);
 
-    mountpoint = get_itdb_prefs_string (itdb, "mountpoint");
+    mountpoint = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
     call_script ("gtkpod.load", mountpoint, NULL);
+
+    itdb_device_set_mountpoint (itdb->device, mountpoint);
+
+    itunes_control = itdb_get_control_dir (mountpoint);
+    if (!itunes_control)
+    {
+	gchar *str = g_strdup_printf (_("Could not find iPod directory structure at '%s'. If you are sure that the iPod is properly mounted, gtkpod can create the directory structure for you.\n\nDo you want to create the directory structure now?\n"), mountpoint);
+	GtkWidget *dialog = gtk_message_dialog_new (
+	    GTK_WINDOW (gtkpod_window),
+	    GTK_DIALOG_DESTROY_WITH_PARENT,
+	    GTK_MESSAGE_WARNING,
+	    GTK_BUTTONS_YES_NO,
+	    str);
+	gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+	gtk_widget_destroy (dialog);
+	g_free (str);
+
+	if (result == GTK_RESPONSE_YES)
+	{
+	    load = ipod_init (itdb);
+	}
+	else
+	{
+	    load = FALSE;
+	}
+    }
+    g_free (itunes_control);
     g_free (mountpoint);
 
-    new_itdb = gp_merge_itdb (itdb);
-
+    if (load)
+    {
+	new_itdb = gp_merge_itdb (itdb);
+    }
     return new_itdb;
 }
 
@@ -867,7 +899,7 @@ gboolean gp_eject_ipod (iTunesDB *itdb)
 	gchar *mountpoint;
 	iTunesDB *new_itdb;
 
-	mountpoint = get_itdb_prefs_string (itdb, "mountpoint");
+	mountpoint = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
 	call_script ("gtkpod.eject", mountpoint, FALSE);
 	g_free (mountpoint);
 

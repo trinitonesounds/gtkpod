@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-22 00:44:48 jcs>
+/* Time-stamp: <2006-06-04 23:35:21 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -844,7 +844,7 @@ gtkpod_space_statusbar_init(void)
 
 	    if (itdb)
 	    {
-		space_mp = get_itdb_prefs_string (itdb, "mountpoint");
+		space_mp = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
 		th_space_update ();  /* make sure we have current data */
 	    }
 	}

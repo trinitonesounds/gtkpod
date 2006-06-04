@@ -2,6 +2,10 @@
 
 	 * src/details.c: removing of artwork did not really work.
 
+	 * src/file_itunesdb, src/ipod_init.[ch]: started dialog to
+           create directories when not present on 'load'. Work in
+           progress.
+
 2006-06-02 James Liggett <freethinkerjim@users.sourceforge.net>
 
 	 * src/display_sorttabs.c
