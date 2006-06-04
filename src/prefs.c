@@ -161,6 +161,7 @@ static void set_default_preferences()
       prefs_set_int_index("sp_played_cond", i, FALSE);
       prefs_set_int_index("sp_modified_cond", i, FALSE);
       prefs_set_int_index("sp_added_cond", i, FALSE);
+      prefs_set_int_index("sp_rating_state", i, 0);
     }
 }
 
@@ -1648,7 +1649,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	mycfg->st[i].sp_rating_state = 0;
 	mycfg->st[i].sp_playcount_low = 0;
 	mycfg->st[i].sp_playcount_high = -1;
 	mycfg->st[i].sp_played_state = g_strdup (">4w");
@@ -1898,11 +1898,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
-	  }
-	  else if(arg_comp (line, "sp_rating_state", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_rating_state (i, atoi (arg));
 	  }
 	  else if(arg_comp (line, "sp_playcount_low", &off) == 0)
 	  {
@@ -2411,7 +2406,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	fprintf(fp, "sp_rating_state%d=%d\n", i, prefs_get_sp_rating_state(i));
 	fprintf(fp, "sp_playcount_low%d=%d\n", i, prefs_get_sp_playcount_low (i));
 	fprintf(fp, "sp_playcount_high%d=%d\n", i, prefs_get_sp_playcount_high (i));
 	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_PLAYED));
@@ -3348,53 +3342,6 @@ prefs_set_info_window(gboolean val)
 {
     cfg->info_window = val;
 }
-
-void prefs_set_sp_rating_n (guint32 inst, gint n, gboolean state)
-{
-    if ((inst < SORT_TAB_MAX) && (n <=RATING_MAX))
-    {
-	if (state)
-	    cfg->st[inst].sp_rating_state |= (1<<n);
-	else
-	    cfg->st[inst].sp_rating_state &= ~(1<<n);
-    }
-    else
-	fprintf (stderr, "prefs_set_sp_rating_n(): inst=%d, n=%d\n", inst, n);
-}
-
-
-gboolean prefs_get_sp_rating_n (guint32 inst, gint n)
-{
-    if ((inst < SORT_TAB_MAX) && (n <=RATING_MAX))
-    {
-	if ((cfg->st[inst].sp_rating_state & (1<<n)) != 0)
-	    return TRUE;
-	else
-	    return FALSE;
-    }
-    fprintf (stderr, "prefs_get_sp_rating_n(): inst=%d, n=%d\n", inst, n);
-    return FALSE;
-}
-
-
-void prefs_set_sp_rating_state (guint32 inst, guint32 state)
-{
-    if (inst < SORT_TAB_MAX)
-	/* only keep the 'RATING_MAX+1' lowest bits */
-	cfg->st[inst].sp_rating_state = (state & ((1<<(RATING_MAX+1))-1));
-    else
-	fprintf (stderr, "prefs_set_sp_rating_state(): inst=%d\n", inst);
-}
-
-
-guint32 prefs_get_sp_rating_state (guint32 inst)
-{
-    if (inst < SORT_TAB_MAX)
-	return cfg->st[inst].sp_rating_state;
-    fprintf (stderr, "prefs_get_sp_rating_state(): inst=%d\n", inst);
-    return 0;
-}
-
 
 void prefs_set_sp_entry (guint32 inst, T_item t_item, const gchar *str)
 {

@@ -1,3 +1,9 @@
+2006-06-04 James Liggett <freethinkerjim@users.sourceforge.net>
+
+   * src/display_sorttabs.c
+     src/prefs.h
+     src/prefs.c: Move sp_rating_state to new prefs.
+
 2006-06-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/details.c: removing of artwork did not really work.

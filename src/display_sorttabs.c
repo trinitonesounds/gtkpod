@@ -287,6 +287,40 @@ on_st_switch_page                 (GtkNotebook     *notebook,
 /*                                                                  */
 /* ---------------------------------------------------------------- */
 
+/* Set rating  for tab @inst and rating @n */
+static void set_sp_rating_n(guint32 inst, gint n, gboolean state)
+{
+  guint32 rating;
+  
+  if ((inst <= SORT_TAB_MAX) && (n <= RATING_MAX))
+  {
+    rating = (guint32) prefs_get_int_index("sp_rating_state", inst);
+    
+    if (state)
+      rating |= (1 << n);
+    else
+      rating &= ~(1 << n);
+    
+    prefs_set_int_index("sp_rating_state", inst, rating);
+  }
+}
+
+static gboolean get_sp_rating_n(guint32 inst, gint n)
+{
+  guint32 rating;
+  
+  if ((inst <= SORT_TAB_MAX) && (n <= RATING_MAX))
+  {
+    rating = (guint32) prefs_get_int_index("sp_rating_state", inst);
+    
+    if ((rating & (1 << n)) != 0)
+      return TRUE;
+    else
+      return FALSE;      
+  }
+  
+  return FALSE;
+}
 
 /* Remove all members of special sort tab (ST_CAT_SPECIAL) in instance
  * @inst */
@@ -432,7 +466,7 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     {
 	/* checked = TRUE: at least one condition was checked */
 	checked = TRUE;
-	cond = prefs_get_sp_rating_n (inst, track->rating/ITDB_RATING_STEP);
+	cond = get_sp_rating_n (inst, track->rating/ITDB_RATING_STEP);
 	/* If one of the two combinations occur, we can take a
 	   shortcut and stop checking the other conditions */
 	if (sp_or && cond)       return TRUE;
@@ -832,8 +866,8 @@ on_sp_rating_n_toggled                 (GtkToggleButton *togglebutton,
     guint32 inst = (guint32)(GPOINTER_TO_UINT(user_data) & SP_MASK);
     guint32 n = (guint32)GPOINTER_TO_UINT(user_data) >> SP_SHIFT;
 
-    prefs_set_sp_rating_n (inst, n,
-			   gtk_toggle_button_get_active (togglebutton));
+    set_sp_rating_n (inst, n,
+			               gtk_toggle_button_get_active (togglebutton));
     if (prefs_get_int_index("sp_rating_cond", inst))
 	sp_conditions_changed (inst);
 }
@@ -2717,7 +2751,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			    "toggled", G_CALLBACK (on_sp_rating_n_toggled),
 			    GUINT_TO_POINTER((i<<SP_SHIFT) + inst));
 	  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				       prefs_get_sp_rating_n (inst, i));
+				       get_sp_rating_n (inst, i));
 	  g_free (buf);
       }
 

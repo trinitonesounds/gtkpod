@@ -106,7 +106,6 @@ struct cfg
   struct
   {
     /* the following fields are for the "special" tab */
-    guint32  sp_rating_state;/* pass which rating? (1 star: bit 1...) */
     guint sp_playcount_low;  /* lower limit for playcounts */
     guint sp_playcount_high; /* higher limit for playcounts */
     gchar *sp_played_state;  /* current "played" string */
@@ -410,10 +409,6 @@ gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
 gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
-void prefs_set_sp_rating_n (guint32 inst, gint n, gboolean state);
-gboolean prefs_get_sp_rating_n (guint32 inst, gint n);
-void prefs_set_sp_rating_state (guint32 inst, guint32 state);
-guint32 prefs_get_sp_rating_state (guint32 inst);
 void prefs_set_sp_entry (guint32 inst, T_item t_item, const gchar *str);
 gchar *prefs_get_sp_entry (guint32 inst, T_item t_item);
 void prefs_set_sp_autodisplay (guint32 inst, gboolean state);
