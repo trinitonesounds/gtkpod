@@ -167,6 +167,7 @@ static void set_default_preferences()
       prefs_set_string_index("sp_added_state", i, "<1d");
       prefs_set_int_index("sp_playcount_low", i, 0);
       prefs_set_int_index("sp_playcount_high", i, -1);
+      prefs_set_int_index("sp_autodisplay", i, FALSE);
     }
 }
 
@@ -1659,10 +1660,6 @@ struct cfg *cfg_new(void)
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
-    for (i=0; i<SORT_TAB_MAX; ++i)
-    {
-	mycfg->st[i].sp_autodisplay = FALSE;
-    }
     mycfg->mpl_autoselect = TRUE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
@@ -1905,11 +1902,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
-	  }
-	  else if(arg_comp (line, "sp_autodisplay", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_autodisplay (i, atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "mpl_autoselect") == 0)
 	  {
@@ -2385,10 +2377,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# delete confirmation\n"));
     fprintf(fp, "autoimport=%d\n",prefs_get_autoimport());
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
-    for (i=0; i<SORT_TAB_MAX; ++i)
-    {
-	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
-    }
+
     fprintf(fp, _("# autoselect master playlist?\n"));
     fprintf(fp, "mpl_autoselect=%d\n", prefs_get_mpl_autoselect ());
     fprintf(fp, _("# title=0, artist, album, genre, composer\n"));
@@ -3317,24 +3306,6 @@ void
 prefs_set_info_window(gboolean val)
 {
     cfg->info_window = val;
-}
-
-void prefs_set_sp_autodisplay (guint32 inst, gboolean state)
-{
-    if (inst < SORT_TAB_MAX)
-	cfg->st[inst].sp_autodisplay = state;
-    else
-	fprintf (stderr, "prefs_set_sp_autodisplay(): !inst=%d!\n", inst);
-}
-
-
-gboolean prefs_get_sp_autodisplay (guint32 inst)
-{
-    if (inst < SORT_TAB_MAX)
-	return cfg->st[inst].sp_autodisplay;
-    else
-	fprintf (stderr, "prefs_get_sp_autodisplay(): !inst=%d!\n", inst);
-    return FALSE;
 }
 
 gboolean prefs_get_tmp_disable_sort(void)

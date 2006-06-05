@@ -562,7 +562,7 @@ static void st_add_track_special (Track *track, gboolean final,
 	/* Add track to member list */
 	st->sp_members = g_list_append (st->sp_members, track);
 	/* Check if track is to be passed on to next sort tab */
-	if (st->is_go || prefs_get_sp_autodisplay (inst))
+	if (st->is_go || prefs_get_int_index("sp_autodisplay", inst))
 	{   /* Check if track matches sort criteria to be displayed */
 	    if (sp_check_track (track, inst))
 	    {
@@ -573,7 +573,7 @@ static void st_add_track_special (Track *track, gboolean final,
     }
     if (!track && final)
     {
-	if (st->is_go || prefs_get_sp_autodisplay (inst))
+	if (st->is_go || prefs_get_int_index("sp_autodisplay", inst))
 	    st_add_track (NULL, final, display, inst+1);
 
     }
@@ -704,9 +704,6 @@ void sp_go (guint32 inst)
     /* Sanity */
     if (st->current_category != ST_CAT_SPECIAL) return;
 
-    /* check if members are already displayed */
-    /* if (st->is_go || prefs_get_sp_autodisplay (inst))  return; */
-
     /* Make sure the information typed into the entries is actually
      * being used (maybe the user 'forgot' to press enter */
     sp_store_sp_entries (inst);
@@ -815,7 +812,7 @@ void sp_conditions_changed (guint32 inst)
 
     /* Only redisplay if data is actually being passed on to the next
        sort tab */
-    if (st->is_go || prefs_get_sp_autodisplay (inst))
+    if (st->is_go || prefs_get_int_index("sp_autodisplay", inst))
     {
 	st_redisplay (inst);
     }
@@ -917,7 +914,6 @@ on_sp_entry_activate             (GtkEditable     *editable,
   
     g_free (buf);
     sp_update_date_interval_from_string (inst, item, TRUE);
-/*     if (prefs_get_sp_autodisplay (inst))  sp_go (inst); */
     sp_go (inst);
 }
 
@@ -951,7 +947,7 @@ on_sp_go_always_toggled                (GtkToggleButton *togglebutton,
 
     /* display data if autodisplay is turned on */
     if (state)  on_sp_go_clicked (NULL, user_data);
-    prefs_set_sp_autodisplay(inst, state);
+    prefs_set_int_index("sp_autodisplay", inst, state);
 }
 
 void
@@ -2891,7 +2887,7 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"toggled", G_CALLBACK (on_sp_go_always_toggled),
 			GINT_TO_POINTER(inst));
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				   prefs_get_sp_autodisplay (inst));
+				   prefs_get_int_index("sp_autodisplay", inst));
 
       /* Safe pointer to tooltips */
       st->sp_tooltips_data = gtk_tooltips_data_get(gtkpod_xml_get_widget (special_xml, "sp_modified_entry"));

@@ -103,11 +103,7 @@ struct cfg
   gboolean autoimport;	    /* whether or not to automatically import files */
   gboolean autoimport_commandline;/* whether or not to automatically
 				   * import files as set by commandline */
-  struct
-  {
-    /* the following fields are for the "special" tab */
-    gboolean sp_autodisplay; /* display automatically? */
-  } st[SORT_TAB_MAX];
+  
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
     gint pm_sort;            /* sort type for playlists           */
@@ -404,8 +400,6 @@ gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
 gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
-void prefs_set_sp_autodisplay (guint32 inst, gboolean state);
-gboolean prefs_get_sp_autodisplay (guint32 inst);
 void prefs_set_display_tooltips_main (gboolean state);
 gboolean prefs_get_display_tooltips_main (void);
 void prefs_set_display_tooltips_prefs (gboolean state);
