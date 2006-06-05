@@ -2,6 +2,10 @@
     
    * src/display_sorttabs.c
      src/prefs.h
+     src/prefs.c: Move sp_playcount_low/high to new prefs.
+   
+   * src/display_sorttabs.c
+     src/prefs.h
      src/prefs.c: Move sp_played_state, sp_modified_state, 
            and sp_added_state to new prefs.
    
@@ -130,13 +134,15 @@
    
          * src/prefs.c: Fix sort ignore list not working after prefs
            changes
-   
+           
+2006-05-23 James Liggett <freethinkerjim@users.sourceforge.net>
+
 	 * src/prefs.c: Reverse previous patch as it breaks lists (argh!!)
    
-         * src/prefs.c: Filter out deprecated/other prefs that the new
-           system doesn't manage, getting rid of the prefs duplication
-           problem and negating the need to filter out unneeded prefs
-           manually
+   * src/prefs.c: Filter out deprecated/other prefs that the new
+     system doesn't manage, getting rid of the prefs duplication
+     problem and negating the need to filter out unneeded prefs
+     manually
 
 2006-05-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

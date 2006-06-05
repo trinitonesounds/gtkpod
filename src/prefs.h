@@ -106,8 +106,6 @@ struct cfg
   struct
   {
     /* the following fields are for the "special" tab */
-    guint sp_playcount_low;  /* lower limit for playcounts */
-    guint sp_playcount_high; /* higher limit for playcounts */
     gboolean sp_autodisplay; /* display automatically? */
   } st[SORT_TAB_MAX];
   struct sortcfg
@@ -408,10 +406,6 @@ gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
 void prefs_set_sp_autodisplay (guint32 inst, gboolean state);
 gboolean prefs_get_sp_autodisplay (guint32 inst);
-gint32 prefs_get_sp_playcount_low (guint32 inst);
-gint32 prefs_get_sp_playcount_high (guint32 inst);
-void prefs_set_sp_playcount_low (guint32 inst, gint32 limit);
-void prefs_set_sp_playcount_high (guint32 inst, gint32 limit);
 void prefs_set_display_tooltips_main (gboolean state);
 gboolean prefs_get_display_tooltips_main (void);
 void prefs_set_display_tooltips_prefs (gboolean state);

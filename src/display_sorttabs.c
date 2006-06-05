@@ -495,11 +495,11 @@ static gboolean sp_check_track (Track *track, guint32 inst)
     /* PLAYCOUNT */
     if (prefs_get_int_index("sp_playcount_cond", inst))
     {
-	guint32 low = prefs_get_sp_playcount_low (inst);
+	guint32 low = prefs_get_int_index("sp_playcount_low", inst);
 	/* "-1" will translate into about 4 billion because I use
 	   guint32 instead of gint32. Since 4 billion means "no upper
 	   limit" the logic works fine */
-	guint32 high = prefs_get_sp_playcount_high (inst);
+	guint32 high = prefs_get_int_index("sp_playcount_high", inst);
 	checked = TRUE;
 	if ((low <= track->playcount) && (track->playcount <= high))
 	    cond = TRUE;
@@ -960,7 +960,7 @@ on_sp_playcount_low_value_changed      (GtkSpinButton   *spinbutton,
 {
     guint32 inst = (guint32)GPOINTER_TO_UINT(user_data) & SP_MASK;
 
-    prefs_set_sp_playcount_low (inst,
+    prefs_set_int_index("sp_playcount_low", inst,
 				gtk_spin_button_get_value (spinbutton));
     if (prefs_get_int_index("sp_playcount_cond", inst))
 	sp_conditions_changed (inst);
@@ -973,7 +973,7 @@ on_sp_playcount_high_value_changed     (GtkSpinButton   *spinbutton,
 {
     guint32 inst = (guint32)GPOINTER_TO_UINT(user_data) & SP_MASK;
 
-    prefs_set_sp_playcount_high (inst,
+    prefs_set_int_index("sp_playcount_high", inst,
 				 gtk_spin_button_get_value (spinbutton));
     if (prefs_get_int_index("sp_playcount_cond", inst))
 	sp_conditions_changed (inst);
@@ -2800,14 +2800,14 @@ static void st_create_special (gint inst, GtkWidget *window)
 			G_CALLBACK (on_sp_playcount_low_value_changed),
 			GINT_TO_POINTER(inst));
       gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-				 prefs_get_sp_playcount_low (inst));
+				 prefs_get_int_index("sp_playcount_low", inst));
       w = gtkpod_xml_get_widget (special_xml, "sp_playcount_high");
       g_signal_connect ((gpointer)w,
 			"value_changed",
 			G_CALLBACK (on_sp_playcount_high_value_changed),
 			GINT_TO_POINTER(inst));
       gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-				 prefs_get_sp_playcount_high (inst));
+				 prefs_get_int_index("sp_playcount_high", inst));
 
       /* PLAYED */
       buf = prefs_get_string_index("sp_played_state", inst);

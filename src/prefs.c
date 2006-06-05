@@ -165,6 +165,8 @@ static void set_default_preferences()
       prefs_set_string_index("sp_played_state", i, ">4w");
       prefs_set_string_index("sp_modified_state", i, "<1d");
       prefs_set_string_index("sp_added_state", i, "<1d");
+      prefs_set_int_index("sp_playcount_low", i, 0);
+      prefs_set_int_index("sp_playcount_high", i, -1);
     }
 }
 
@@ -1659,8 +1661,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	mycfg->st[i].sp_playcount_low = 0;
-	mycfg->st[i].sp_playcount_high = -1;
 	mycfg->st[i].sp_autodisplay = FALSE;
     }
     mycfg->mpl_autoselect = TRUE;
@@ -1905,16 +1905,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
-	  }
-	  else if(arg_comp (line, "sp_playcount_low", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_playcount_low (i, atoi (arg));
-	  }
-	  else if(arg_comp (line, "sp_playcount_high", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_playcount_high (i, atoi (arg));
 	  }
 	  else if(arg_comp (line, "sp_autodisplay", &off) == 0)
 	  {
@@ -2397,8 +2387,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	fprintf(fp, "sp_playcount_low%d=%d\n", i, prefs_get_sp_playcount_low (i));
-	fprintf(fp, "sp_playcount_high%d=%d\n", i, prefs_get_sp_playcount_high (i));
 	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
     }
     fprintf(fp, _("# autoselect master playlist?\n"));
@@ -3347,44 +3335,6 @@ gboolean prefs_get_sp_autodisplay (guint32 inst)
     else
 	fprintf (stderr, "prefs_get_sp_autodisplay(): !inst=%d!\n", inst);
     return FALSE;
-}
-
-
-gint32 prefs_get_sp_playcount_low (guint32 inst)
-{
-    if (inst < SORT_TAB_MAX)
-	return cfg->st[inst].sp_playcount_low;
-    else
-	fprintf (stderr, "prefs_get_sp_playcount_low(): !inst=%d!\n", inst);
-    return 0;
-}
-
-
-gint32 prefs_get_sp_playcount_high (guint32 inst)
-{
-    if (inst < SORT_TAB_MAX)
-	return cfg->st[inst].sp_playcount_high;
-    else
-	fprintf (stderr, "prefs_get_sp_playcount_high(): !inst=%d!\n", inst);
-    return (guint32)-1;
-}
-
-
-void prefs_set_sp_playcount_low (guint32 inst, gint32 limit)
-{
-    if (inst < SORT_TAB_MAX)
-	cfg->st[inst].sp_playcount_low = limit;
-    else
-	fprintf (stderr, "prefs_set_sp_playcount_low(): !inst=%d!\n", inst);
-}
-
-
-void prefs_set_sp_playcount_high (guint32 inst, gint32 limit)
-{
-    if (inst < SORT_TAB_MAX)
-	cfg->st[inst].sp_playcount_high = limit;
-    else
-	fprintf (stderr, "prefs_set_sp_playcount_high(): !inst=%d!\n", inst);
 }
 
 gboolean prefs_get_tmp_disable_sort(void)
