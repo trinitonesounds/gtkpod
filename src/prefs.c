@@ -162,6 +162,9 @@ static void set_default_preferences()
       prefs_set_int_index("sp_modified_cond", i, FALSE);
       prefs_set_int_index("sp_added_cond", i, FALSE);
       prefs_set_int_index("sp_rating_state", i, 0);
+      prefs_set_string_index("sp_played_state", i, ">4w");
+      prefs_set_string_index("sp_modified_state", i, "<1d");
+      prefs_set_string_index("sp_added_state", i, "<1d");
     }
 }
 
@@ -787,6 +790,13 @@ static void cleanup_keys()
   {
     if (prefs_get_int_value_index("sp_created_cond", i, &int_buf))
       prefs_set_int_index("sp_added_cond", i, int_buf);
+  }
+  
+  /* sp_created_state renamed to sp_added_state */
+  for (i = 0; i < SORT_TAB_MAX; i++)
+  {
+    if (prefs_get_int_value_index("sp_created_state", i, &int_buf))
+      prefs_set_int_index("sp_added_state", i, int_buf);
   }
   
   prefs_set_string ("version", VERSION);
@@ -1651,9 +1661,6 @@ struct cfg *cfg_new(void)
     {
 	mycfg->st[i].sp_playcount_low = 0;
 	mycfg->st[i].sp_playcount_high = -1;
-	mycfg->st[i].sp_played_state = g_strdup (">4w");
-	mycfg->st[i].sp_modified_state = g_strdup ("<1d");
-	mycfg->st[i].sp_added_state = g_strdup ("<1d");
 	mycfg->st[i].sp_autodisplay = FALSE;
     }
     mycfg->mpl_autoselect = TRUE;
@@ -1908,22 +1915,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint i = atoi (line+off);
 	      prefs_set_sp_playcount_high (i, atoi (arg));
-	  }
-	  else if(arg_comp (line, "sp_played_state", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_entry (i, T_TIME_PLAYED, arg);
-	  }
-	  else if(arg_comp (line, "sp_modified_state", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_entry (i, T_TIME_MODIFIED, arg);
-	  }
-	  else if((arg_comp (line, "sp_created_state", &off) == 0) ||
-		  (arg_comp (line, "sp_added_state", &off) == 0))
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_sp_entry (i, T_TIME_ADDED, arg);
 	  }
 	  else if(arg_comp (line, "sp_autodisplay", &off) == 0)
 	  {
@@ -2408,9 +2399,6 @@ write_prefs_to_file_desc(FILE *fp)
     {
 	fprintf(fp, "sp_playcount_low%d=%d\n", i, prefs_get_sp_playcount_low (i));
 	fprintf(fp, "sp_playcount_high%d=%d\n", i, prefs_get_sp_playcount_high (i));
-	fprintf(fp, "sp_played_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_PLAYED));
-	fprintf(fp, "sp_modified_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_MODIFIED));
-	fprintf(fp, "sp_added_state%d=%s\n", i, prefs_get_sp_entry (i, T_TIME_ADDED));
 	fprintf(fp, "sp_autodisplay%d=%d\n", i, prefs_get_sp_autodisplay (i));
     }
     fprintf(fp, _("# autoselect master playlist?\n"));
@@ -3342,81 +3330,6 @@ prefs_set_info_window(gboolean val)
 {
     cfg->info_window = val;
 }
-
-void prefs_set_sp_entry (guint32 inst, T_item t_item, const gchar *str)
-{
-/*    printf("psse: %d, %d, %s\n", inst, t_item, str);*/
-    if (inst < SORT_TAB_MAX)
-    {
-	gchar *cstr = NULL;
-
-	if (str)  cstr = g_strdup (str);
-
-	switch (t_item)
-	{
-	case T_TIME_PLAYED:
-	    g_free (cfg->st[inst].sp_played_state);
-	    cfg->st[inst].sp_played_state = cstr;
-	    break;
-	case T_TIME_MODIFIED:
-	    g_free (cfg->st[inst].sp_modified_state);
-	    cfg->st[inst].sp_modified_state = cstr;
-	    break;
-	case T_TIME_ADDED:
-	    g_free (cfg->st[inst].sp_added_state);
-	    cfg->st[inst].sp_added_state = cstr;
-	    break;
-	default:
-	    /* programming error */
-	    g_free (cstr);
-	    fprintf (stderr, "prefs_set_sp_entry(): inst=%d !t_item=%d!\n",
-		     inst, t_item);
-	    break;
-	}
-    }
-    else
-    {
-	/* programming error */
-	fprintf (stderr, "prefs_set_sp_entry(): !inst=%d! t_item=%d\n",
-		 inst, t_item);
-    }
-}
-
-
-/* Returns the current default or a pointer to "". Guaranteed to never
-   return NULL */
-gchar *prefs_get_sp_entry (guint32 inst, T_item t_item)
-{
-    gchar *result = NULL;
-
-    if (inst < SORT_TAB_MAX)
-    {
-	switch (t_item)
-	{
-	case T_TIME_PLAYED:
-	    result = cfg->st[inst].sp_played_state;
-	    break;
-	case T_TIME_MODIFIED:
-	    result = cfg->st[inst].sp_modified_state;
-	    break;
-	case T_TIME_ADDED:
-	    result = cfg->st[inst].sp_added_state;
-	    break;
-	default:
-	    /* programming error */
-	    fprintf (stderr, "prefs_get_sp_entry(): !t_item=%d!\n", t_item);
-	    break;
-	}
-    }
-    else
-    {
-	/* programming error */
-	fprintf (stderr, "prefs_get_sp_entry(): !inst=%d!\n", inst);
-    }
-    if (result == NULL)    result = "";
-    return result;
-}
-
 
 void prefs_set_sp_autodisplay (guint32 inst, gboolean state)
 {

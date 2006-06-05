@@ -383,6 +383,7 @@ TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 {
     SortTab *st;
     TimeInfo *ti;
+    
 
     if (inst >= SORT_TAB_MAX) return NULL;
 
@@ -391,7 +392,21 @@ TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 
     if (ti)
     {
-	gchar *new_string = prefs_get_sp_entry (inst, item);
+      gchar *new_string; 
+      switch (item)
+      {
+      case T_TIME_PLAYED:
+          new_string = prefs_get_string_index("sp_played_state", inst);
+          break;
+      case T_TIME_MODIFIED:
+          new_string = prefs_get_string_index("sp_modified_state", inst);
+          break;
+      case T_TIME_ADDED:
+          new_string = prefs_get_string_index("sp_added_state", inst);;
+          break;
+      default:
+          break;
+  }
 
 	if (force_update || !ti->int_str ||
 	    (strcmp (new_string, ti->int_str) != 0))
@@ -400,7 +415,9 @@ TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 	    ti->int_str = g_strdup (new_string);
 	    dp2_parse (ti);
 	}
+    g_free(new_string);
     }
+    
     return ti;
 }
 
@@ -661,11 +678,11 @@ static void sp_store_sp_entries (gint inst)
     /* Sanity */
     if (!st || (st->current_category != ST_CAT_SPECIAL)) return;
 
-    prefs_set_sp_entry (inst, T_TIME_PLAYED,
+    prefs_set_string_index("sp_played_state", inst,
 			gtk_entry_get_text (GTK_ENTRY(st->ti_played.entry)));
-    prefs_set_sp_entry (inst, T_TIME_MODIFIED,
+    prefs_set_string_index("sp_modified_state", inst,
 			gtk_entry_get_text (GTK_ENTRY(st->ti_modified.entry)));
-    prefs_set_sp_entry (inst, T_TIME_ADDED,
+    prefs_set_string_index("sp_added_state", inst,
 			gtk_entry_get_text (GTK_ENTRY(st->ti_added.entry)));
 }
 
@@ -883,7 +900,21 @@ on_sp_entry_activate             (GtkEditable     *editable,
 
 /*    printf ("sp_entry_activate inst: %d, item: %d\n", inst, item);*/
 
-    prefs_set_sp_entry (inst, item, buf);
+	switch (item)
+	{
+	case T_TIME_PLAYED:
+	    prefs_set_string_index("sp_played_state", inst, buf);
+	    break;
+	case T_TIME_MODIFIED:
+	    prefs_set_string_index("sp_modified_state", inst, buf);
+	    break;
+	case T_TIME_ADDED:
+	    prefs_set_string_index("sp_added_state", inst, buf);
+	    break;
+	default:
+	    break;
+  }
+  
     g_free (buf);
     sp_update_date_interval_from_string (inst, item, TRUE);
 /*     if (prefs_get_sp_autodisplay (inst))  sp_go (inst); */
@@ -2708,6 +2739,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       SortTab   *st = sorttab[inst];
       gint i;
       GladeXML *special_xml;
+      gchar *buf;
 
       special_xml = glade_xml_new (xml_file, "special_sorttab", NULL);
       special = gtkpod_xml_get_widget (special_xml, "special_sorttab");
@@ -2778,6 +2810,8 @@ static void st_create_special (gint inst, GtkWidget *window)
 				 prefs_get_sp_playcount_high (inst));
 
       /* PLAYED */
+      buf = prefs_get_string_index("sp_played_state", inst);
+      
       w = gtkpod_xml_get_widget (special_xml, "sp_played_button");
       st->ti_played.active = w;
       g_signal_connect ((gpointer)w,
@@ -2788,7 +2822,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       w = gtkpod_xml_get_widget (special_xml, "sp_played_entry");
       st->ti_played.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
-			  prefs_get_sp_entry (inst, T_TIME_PLAYED));
+			  buf);
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
 			GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
@@ -2797,8 +2831,12 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
 			GUINT_TO_POINTER((T_TIME_PLAYED<<SP_SHIFT) + inst));
+      
+      g_free(buf);
 
       /* MODIFIED */
+      buf = prefs_get_string_index("sp_modified_state", inst);
+      
       w = gtkpod_xml_get_widget (special_xml, "sp_modified_button");
       st->ti_modified.active = w;
       g_signal_connect ((gpointer)w,
@@ -2809,7 +2847,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       w = gtkpod_xml_get_widget (special_xml, "sp_modified_entry");
       st->ti_modified.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
-			  prefs_get_sp_entry (inst, T_TIME_MODIFIED));
+			  buf);
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
 			GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
@@ -2818,8 +2856,12 @@ static void st_create_special (gint inst, GtkWidget *window)
 			"clicked",
 			G_CALLBACK (on_sp_cal_button_clicked),
 			GUINT_TO_POINTER((T_TIME_MODIFIED<<SP_SHIFT) + inst));
+      
+      g_free(buf);
 
       /* ADDED */
+      buf = prefs_get_string_index("sp_added_state", inst);
+      
       w = gtkpod_xml_get_widget (special_xml, "sp_added_button");
       st->ti_added.active = w;
       g_signal_connect ((gpointer)w,
@@ -2830,7 +2872,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       w = gtkpod_xml_get_widget (special_xml, "sp_added_entry");
       st->ti_added.entry = w;
       gtk_entry_set_text (GTK_ENTRY (w),
-			  prefs_get_sp_entry (inst, T_TIME_ADDED));
+			  buf);
       g_signal_connect ((gpointer)w,
 			"activate", G_CALLBACK (on_sp_entry_activate),
 			GUINT_TO_POINTER((T_TIME_ADDED<<SP_SHIFT) + inst));

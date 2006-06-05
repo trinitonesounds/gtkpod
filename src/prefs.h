@@ -108,9 +108,6 @@ struct cfg
     /* the following fields are for the "special" tab */
     guint sp_playcount_low;  /* lower limit for playcounts */
     guint sp_playcount_high; /* higher limit for playcounts */
-    gchar *sp_played_state;  /* current "played" string */
-    gchar *sp_modified_state;/* current "modified" string */
-    gchar *sp_added_state;   /* current "added" string */
     gboolean sp_autodisplay; /* display automatically? */
   } st[SORT_TAB_MAX];
   struct sortcfg
@@ -409,8 +406,6 @@ gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
 gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
-void prefs_set_sp_entry (guint32 inst, T_item t_item, const gchar *str);
-gchar *prefs_get_sp_entry (guint32 inst, T_item t_item);
 void prefs_set_sp_autodisplay (guint32 inst, gboolean state);
 gboolean prefs_get_sp_autodisplay (guint32 inst);
 gint32 prefs_get_sp_playcount_low (guint32 inst);
