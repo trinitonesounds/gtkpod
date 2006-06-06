@@ -598,7 +598,7 @@ prefs_window_create (gint page)
 	    gtk_button_set_label (GTK_BUTTON (w),
 				  gettext (get_tm_string (i)));
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpcfg->col_visible[i]);
+					 prefs_get_int_index("col_visible", i));
 	    /* set tooltip if available */
 	    if (get_tm_tooltip (i))
 	    {
@@ -714,10 +714,6 @@ prefs_window_set(void)
 	prefs_set_parsetags_template(tmpcfg->parsetags_template);
 	prefs_set_coverart(tmpcfg->coverart);
 	prefs_set_coverart_template(tmpcfg->coverart_template);
-	for (i=0; i<TM_NUM_COLUMNS; ++i)
-	{
-	    prefs_set_col_visible (i, tmpcfg->col_visible[i]);
-	}
 	prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
 
@@ -1206,7 +1202,7 @@ on_coverart_template_changed             (GtkEditable     *editable,
 void prefs_window_set_col_visible (gint column, gboolean visible)
 {
     if (column < TM_NUM_COLUMNS)
-	tmpcfg->col_visible[column] = visible;
+	    temp_prefs_set_int_index(temp_prefs, "col_visible", column, visible);
 }
 
 void
@@ -1619,7 +1615,7 @@ void sort_window_create (void)
 	    TM_item col = prefs_get_col_order (i);
 	    if (col != -1)
 	    {
-		if (prefs_get_col_visible (col))
+		if (prefs_get_int_index("col_visible", col))
 		    collist = g_list_append (collist,
 					     gettext (get_tm_string (col)));
 	    }
@@ -1629,7 +1625,7 @@ void sort_window_create (void)
 	    TM_item col = prefs_get_col_order (i);
 	    if (col != -1)
 	    {
-		if (!prefs_get_col_visible (col))
+		if (!prefs_get_int_index("col_visible", col))
 		    collist = g_list_append (collist,
 					     gettext (get_tm_string (col)));
 	    }

@@ -1989,7 +1989,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   if (pos != -1)
   {
       gtk_tree_view_column_set_visible (col,
-					prefs_get_col_visible (tm_item));
+					prefs_get_int_index("col_visible", tm_item));
   }
   if (get_tm_tooltip (tm_item))
       gtk_tooltips_set_tip (tt, col->button, 
@@ -2200,7 +2200,7 @@ tm_show_preferred_columns(void)
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	tvc = gtk_tree_view_get_column (track_treeview, i);
-	visible = prefs_get_col_visible (prefs_get_col_order (i));
+	visible = prefs_get_int_index("col_visible", prefs_get_col_order (i));
 	gtk_tree_view_column_set_visible (tvc, visible);
     }
 }

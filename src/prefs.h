@@ -132,7 +132,6 @@ struct cfg
   struct win_size size_dirbr;   /* last size of dirbrowser window */
   struct win_size size_prefs;   /* last size of prefs window */
   struct win_size size_info;    /* last size of info window */
-  gboolean col_visible[TM_NUM_COLUMNS]; /* displayed track model colums */
   TM_item col_order[TM_NUM_COLUMNS];    /* order of columns */
   gboolean readtags;            /* Read tags from file contents? */
   gboolean parsetags;           /* Get tags by parsing filename? */
@@ -345,7 +344,6 @@ void prefs_set_size_conf (gint x, gint y);
 void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_size_prefs (gint x, gint y);
 void prefs_set_size_info (gint x, gint y);
-void prefs_set_col_visible (TM_item tm_item, gboolean visible);
 void prefs_set_col_order (gint pos, TM_item col);
 void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
@@ -370,7 +368,6 @@ void prefs_get_size_conf (gint *x, gint *y);
 void prefs_get_size_dirbr (gint *x, gint *y);
 void prefs_get_size_prefs (gint *x, gint *y);
 void prefs_get_size_info (gint *x, gint *y);
-gboolean prefs_get_col_visible (TM_item tm_item);
 TM_item prefs_get_col_order (gint pos);
 gboolean prefs_get_md5tracks(void);
 gboolean prefs_get_block_display(void);

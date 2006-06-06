@@ -174,7 +174,15 @@ static void set_default_preferences()
     for (i = 0; i < TM_NUM_COLUMNS; i++)
     {
       prefs_set_int_index("tm_col_width", i, 80);
+      prefs_set_int_index("col_visible", i, FALSE);
     }
+    
+    prefs_set_int_index("col_visible", TM_COLUMN_ARTIST, TRUE);
+    prefs_set_int_index("col_visible", TM_COLUMN_ALBUM, TRUE);
+    prefs_set_int_index("col_visible", TM_COLUMN_TITLE, TRUE);
+    prefs_set_int_index("col_visible", TM_COLUMN_GENRE, TRUE);
+    prefs_set_int_index("col_visible", TM_COLUMN_PLAYCOUNT, TRUE);
+    prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1692,15 +1700,8 @@ struct cfg *cfg_new(void)
     mycfg->size_info.y = 300;
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	mycfg->col_visible[i] = FALSE;
 	mycfg->col_order[i] = i;
     }
-    mycfg->col_visible[TM_COLUMN_ARTIST] = TRUE;
-    mycfg->col_visible[TM_COLUMN_ALBUM] = TRUE;
-    mycfg->col_visible[TM_COLUMN_TITLE] = TRUE;
-    mycfg->col_visible[TM_COLUMN_GENRE] = TRUE;
-    mycfg->col_visible[TM_COLUMN_PLAYCOUNT] = TRUE;
-    mycfg->col_visible[TM_COLUMN_RATING] = TRUE;
     for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
     {
 	mycfg->autosettags[i] = FALSE;
@@ -1947,11 +1948,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "coverart_template") == 0)
 	  {
 	      prefs_set_coverart_template(strdup(arg));
-	  }
-	  else if(arg_comp (line, "col_visible", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_col_visible (i, atoi (arg));
 	  }
 	  else if(arg_comp (line, "col_order", &off) == 0)
 	  {
@@ -2391,7 +2387,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# autoset: set empty tag to filename?\n"));
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	fprintf(fp, "col_visible%d=%d\n",  i, prefs_get_col_visible (i));
 	fprintf(fp, "col_order%d=%d\n",  i, prefs_get_col_order (i));
 	if (i < TM_NUM_TAGS_PREFS)
 	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_autosettags (i));
@@ -2883,22 +2878,6 @@ void prefs_set_coverart_template (const gchar *tpl)
 	g_free(cfg->coverart_template);
 	cfg->coverart_template = g_strdup (tpl);
     }
-}
-
-/* Display column tm_item @visible: new value */
-void prefs_set_col_visible (TM_item tm_item, gboolean visible)
-{
-    if (tm_item < TM_NUM_COLUMNS)
-	cfg->col_visible[tm_item] = visible;
-}
-
-
-/* Display column tm_item? */
-gboolean prefs_get_col_visible (TM_item tm_item)
-{
-    if (tm_item < TM_NUM_COLUMNS)
-	return cfg->col_visible[tm_item];
-    return FALSE;
 }
 
 /* Display which column at nr @pos? */
