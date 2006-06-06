@@ -5,6 +5,9 @@
 
 2006-06-06 James Liggett <freethinkerjim@users.sourceforge.net>
 
+         * src/prefs_window.c: Fix columns not appearing after being set in 
+           prefs dialog
+         
          * src/display_songs.c
            src/prefs.h
            src/prefs.c

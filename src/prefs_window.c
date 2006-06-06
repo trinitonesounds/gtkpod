@@ -829,6 +829,10 @@ prefs_window_ok (void)
     gint defx, defy;
     GtkWidget *nb;
 
+    /* Committ temp prefs to prefs table */
+    temp_prefs_apply(temp_prefs);
+    temp_lists_apply(temp_lists);
+  
     /* save current settings */
     prefs_window_set ();
 
@@ -837,10 +841,6 @@ prefs_window_ok (void)
     tmpcfg = NULL;
     cfg_free (origcfg);
     origcfg = NULL;
-	
-    /* Committ temp prefs to prefs table */
-    temp_prefs_apply(temp_prefs);
-    temp_lists_apply(temp_lists);
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
@@ -865,12 +865,12 @@ prefs_window_apply (void)
     gint defx, defy;
     GtkWidget *nb, *w;
 
-    /* save current settings */
-    prefs_window_set ();
-	
 		/* Committ temp prefs to prefs table */
 		temp_prefs_apply(temp_prefs);
 		temp_lists_apply(temp_lists);
+  
+    /* save current settings */
+    prefs_window_set ();
 
     if((w = gtkpod_xml_get_widget (prefs_window_xml, "mserv_username_entry")))
     {
