@@ -169,6 +169,12 @@ static void set_default_preferences()
       prefs_set_int_index("sp_playcount_high", i, -1);
       prefs_set_int_index("sp_autodisplay", i, FALSE);
     }
+    
+    /* Set colum prefrences */
+    for (i = 0; i < TM_NUM_COLUMNS; i++)
+    {
+      prefs_set_int_index("tm_col_width", i, 80);
+    }
 }
 
 /* Initialize default variable-length list entries */
@@ -800,6 +806,13 @@ static void cleanup_keys()
   {
     if (prefs_get_int_value_index("sp_created_state", i, &int_buf))
       prefs_set_int_index("sp_added_state", i, int_buf);
+  }
+  
+  /* sm_col_width renamed to tm_col_width */
+  for (i = 0; i < TM_NUM_COLUMNS; i++)
+  {
+    if (prefs_get_int_value_index("sm_col_width", i, &int_buf))
+      prefs_set_int_index("tm_col_width", i, int_buf);
   }
   
   prefs_set_string ("version", VERSION);
@@ -1679,7 +1692,6 @@ struct cfg *cfg_new(void)
     mycfg->size_info.y = 300;
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	mycfg->tm_col_width[i] = 80;
 	mycfg->col_visible[i] = FALSE;
 	mycfg->col_order[i] = i;
     }
@@ -1906,12 +1918,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "mpl_autoselect") == 0)
 	  {
 	      prefs_set_mpl_autoselect((gboolean)atoi(arg));
-	  }
-	  else if((arg_comp (line, "tm_col_width", &off) == 0) ||
-		  (g_ascii_strncasecmp (line, "sm_col_width", 12) == 0))
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_tm_col_width (i, atoi (arg));
 	  }
 	  else if(arg_comp (line, "tag_autoset", &off) == 0)
 	  {
@@ -2385,7 +2391,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, _("# autoset: set empty tag to filename?\n"));
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	fprintf(fp, "tm_col_width%d=%d\n", i, prefs_get_tm_col_width (i));
 	fprintf(fp, "col_visible%d=%d\n",  i, prefs_get_col_visible (i));
 	fprintf(fp, "col_order%d=%d\n",  i, prefs_get_col_order (i));
 	if (i < TM_NUM_TAGS_PREFS)
@@ -2652,25 +2657,6 @@ void prefs_set_mpl_autoselect (gboolean autoselect)
 {
     cfg->mpl_autoselect = autoselect;
 }
-
-/* retrieve the width of the track display columns. "col": one of the
-   TM_COLUMN_... */
-gint prefs_get_tm_col_width (gint col)
-{
-    if (col < TM_NUM_COLUMNS && (cfg->tm_col_width[col] > 0))
-	return cfg->tm_col_width[col];
-    return 80;  /* default -- col should be smaller than
-		   TM_NUM_COLUMNS) */
-}
-
-/* set the width of the track display columns. "col": one of the
-   TM_COLUMN_..., "width": current width */
-void prefs_set_tm_col_width (gint col, gint width)
-{
-    if (col < TM_NUM_COLUMNS && width > 0)
-	cfg->tm_col_width[col] = width;
-}
-
 
 /* Returns "$HOME/.gtkpod" and tries to create it if it does not
    exist. */

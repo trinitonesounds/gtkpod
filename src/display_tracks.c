@@ -1979,7 +1979,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
 /*     gtk_tree_view_column_set_clickable(column, TRUE); */
   gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
   gtk_tree_view_column_set_fixed_width (col,
-					prefs_get_tm_col_width (tm_item));
+					prefs_get_int_index("tm_col_width", tm_item));
   gtk_tree_sortable_set_sort_func (GTK_TREE_SORTABLE (model), tm_item,
 				   tm_data_compare_func, NULL, NULL);
   gtk_tree_view_column_set_reorderable (col, TRUE);
@@ -2213,6 +2213,7 @@ void tm_update_default_sizes (void)
 {
     gint i;
     GtkTreeViewColumn *col;
+    gint col_width;
 
     /* column widths */
     for (i=0; i<TM_NUM_COLUMNS; ++i)
@@ -2220,8 +2221,13 @@ void tm_update_default_sizes (void)
 	col = tm_columns [i];
 	if (col)
 	{
-	    prefs_set_tm_col_width (i,
-				    gtk_tree_view_column_get_width (col));
+    col_width = gtk_tree_view_column_get_width (col);
+    
+    if (col_width > 0)
+	    prefs_set_int_index ("tm_col_width", i, col_width);
+    else
+      prefs_set_int_index ("tm_col_width", i, 80);
+   
 	}
     }
 }
