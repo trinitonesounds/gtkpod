@@ -17997,7 +17997,6 @@ ipod or repository</property>
 	  <child>
 	    <widget class="GtkEntry" id="local_path_entry">
 	      <property name="visible">True</property>
-	      <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
 	      <property name="can_focus">True</property>
 	      <property name="editable">False</property>
 	      <property name="visibility">True</property>
@@ -18021,7 +18020,7 @@ ipod or repository</property>
 	  <child>
 	    <widget class="GtkEntry" id="ipod_model_entry">
 	      <property name="visible">True</property>
-	      <property name="tooltip" translatable="yes">Set this to the model number of your iPod (e.g. &quot;A003&quot;) in case it is not automatically detected and you want to use cover art.</property>
+	      <property name="tooltip" translatable="yes">Set this to the model number of your iPod (e.g. &quot;MA003&quot;) in case it is not automatically detected and you want to use cover art.</property>
 	      <property name="can_focus">True</property>
 	      <property name="editable">True</property>
 	      <property name="visibility">True</property>
@@ -18045,7 +18044,6 @@ ipod or repository</property>
 	  <child>
 	    <widget class="GtkEntry" id="backup_entry">
 	      <property name="visible">True</property>
-	      <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
 	      <property name="can_focus">True</property>
 	      <property name="editable">False</property>
 	      <property name="visibility">True</property>
@@ -18089,7 +18087,6 @@ ipod or repository</property>
 	  <child>
 	    <widget class="GtkEntry" id="mountpoint_entry">
 	      <property name="visible">True</property>
-	      <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
 	      <property name="can_focus">True</property>
 	      <property name="editable">True</property>
 	      <property name="visibility">True</property>
@@ -18501,7 +18498,6 @@ Local Repository (Podcasts)
 		      <child>
 			<widget class="GtkEntry" id="mountpoint_entry">
 			  <property name="visible">True</property>
-			  <property name="tooltip" translatable="yes">Specify exact path including command line options. '%i' will be replaced with the mount point of the iPod.</property>
 			  <property name="can_focus">True</property>
 			  <property name="editable">True</property>
 			  <property name="visibility">True</property>

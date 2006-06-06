@@ -1,3 +1,7 @@
+2006-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/ipod_init.c: pretty much finished ipod_init dialog.
+
 2006-06-05 James Liggett <freethinkerjim@users.sourceforge.net>
 
    * src/display_sorttabs.c

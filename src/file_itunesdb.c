@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-04 23:35:21 jcs>
+/* Time-stamp: <2006-06-06 00:42:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -830,7 +830,7 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     ExtraiTunesDBData *eitdb;
     iTunesDB *new_itdb = NULL;
     gchar *mountpoint;
-    gchar *itunes_control;
+    gchar *itunesdb;
     gboolean load = TRUE;
 
     g_return_val_if_fail (itdb, NULL);
@@ -844,8 +844,8 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
 
     itdb_device_set_mountpoint (itdb->device, mountpoint);
 
-    itunes_control = itdb_get_control_dir (mountpoint);
-    if (!itunes_control)
+    itunesdb = itdb_get_itunesdb_path (mountpoint);
+    if (!itunesdb)
     {
 	gchar *str = g_strdup_printf (_("Could not find iPod directory structure at '%s'. If you are sure that the iPod is properly mounted, gtkpod can create the directory structure for you.\n\nDo you want to create the directory structure now?\n"), mountpoint);
 	GtkWidget *dialog = gtk_message_dialog_new (
@@ -867,7 +867,7 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
 	    load = FALSE;
 	}
     }
-    g_free (itunes_control);
+    g_free (itunesdb);
     g_free (mountpoint);
 
     if (load)
