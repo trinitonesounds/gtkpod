@@ -170,6 +170,8 @@ static void set_default_preferences()
       prefs_set_int_index("sp_autodisplay", i, FALSE);
     }
     
+    prefs_set_int("sort_tab_num", 2);
+    
     /* Set colum prefrences */
     for (i = 0; i < TM_NUM_COLUMNS; i++)
     {
@@ -184,6 +186,8 @@ static void set_default_preferences()
     prefs_set_int_index("col_visible", TM_COLUMN_GENRE, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_PLAYCOUNT, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
+    
+    
 }
 
 /* Initialize default variable-length list entries */
@@ -1731,7 +1735,6 @@ struct cfg *cfg_new(void)
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
     mycfg->add_recursively = TRUE;
-    mycfg->sort_tab_num = 2;
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
 
@@ -1964,10 +1967,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
 	      prefs_set_offline((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "sort_tab_num") == 0)
-	  {
-	      prefs_set_sort_tab_num(atoi(arg), FALSE);
 	  }
 	  else if(g_ascii_strcasecmp (line, "group_compilations") == 0)
 	  {
@@ -2396,7 +2395,6 @@ write_prefs_to_file_desc(FILE *fp)
     {
 	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
     }
-    fprintf(fp, "sort_tab_num=%d\n",prefs_get_sort_tab_num());
     fprintf(fp, "group_compilations=%d\n",prefs_get_group_compilations());
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
@@ -2957,23 +2955,6 @@ gboolean prefs_get_case_sensitive (void)
 void prefs_set_case_sensitive (gboolean val)
 {
     cfg->sortcfg.case_sensitive = val;
-}
-
-gint prefs_get_sort_tab_num (void)
-{
-    return cfg->sort_tab_num;
-}
-
-void prefs_set_sort_tab_num (gint i, gboolean update_display)
-{
-    if ((i>=0) && (i<=SORT_TAB_MAX))
-    {
-	if (cfg->sort_tab_num != i)
-	{
-	    cfg->sort_tab_num = i;
-	    if (update_display) st_show_visible ();
-	}
-    }
 }
 
 gboolean prefs_get_group_compilations (void)

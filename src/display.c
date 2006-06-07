@@ -466,9 +466,9 @@ GList *display_get_selection (guint32 inst)
 	if (pl)  return g_list_copy (pl->members);
 	else     return NULL;
     }
-    if ((inst >= 0) && (inst < prefs_get_sort_tab_num ()))
+    if ((inst >= 0) && (inst < prefs_get_int("sort_tab_num")))
 	return g_list_copy (st_get_selected_members (inst));
-    if (inst >= prefs_get_sort_tab_num ())
+    if (inst >= prefs_get_int("sort_tab_num"))
 	return tm_get_selected_tracks ();
     return NULL;
 }
@@ -1257,7 +1257,8 @@ void
 on_more_sort_tabs_activate             (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    prefs_set_sort_tab_num (prefs_get_sort_tab_num()+1, TRUE);
+    prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num")+1);
+    st_show_visible();
 }
 
 
@@ -1265,7 +1266,8 @@ void
 on_less_sort_tabs_activate             (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    prefs_set_sort_tab_num (prefs_get_sort_tab_num()-1, TRUE);
+    prefs_set_int("sort_tab_num", prefs_get_int("sort_tab_num")-1);
+    st_show_visible();
 }
 
 void

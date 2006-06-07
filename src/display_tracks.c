@@ -1646,7 +1646,7 @@ void tm_adopt_order_in_sorttab (void)
 	   the last sort tab or from the selected playlist if no sort
 	   tabs are being used */
 	tm_remove_all_tracks ();
-	tracks = display_get_selected_members (prefs_get_sort_tab_num()-1);
+	tracks = display_get_selected_members (prefs_get_int("sort_tab_num")-1);
 	for (gl=tracks; gl; gl=gl->next)
 	    tm_add_track_to_track_model ((Track *)gl->data, NULL);
     }

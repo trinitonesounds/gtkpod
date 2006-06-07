@@ -189,7 +189,7 @@ gint get_sort_tab_number (gchar *text)
     gtk_widget_show (combo);
     gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), combo);
 
-    stn = prefs_get_sort_tab_num ();
+    stn = prefs_get_int("sort_tab_num");
     /* Create list */
     for (i=1; i<=stn; ++i)
     {

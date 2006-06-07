@@ -632,8 +632,8 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 	gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
 				   0, SORT_TAB_MAX);
 	gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-				   prefs_get_sort_tab_num ());
-	prefs_window_set_sort_tab_num (tmpcfg->sort_tab_num);
+				   prefs_get_int("sort_tab_num"));
+	prefs_window_set_sort_tab_num (prefs_get_int("sort_tab_num"));
     }
     if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_group_compilations")))
     {
@@ -697,7 +697,14 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 static void
 prefs_window_set(void)
 {
-    if (tmpcfg)
+   if (temp_prefs)
+   {
+     /* Update the display if we changed the number of sort tabs */
+     if (temp_prefs_get_int_value(temp_prefs, "sort_tab_num", NULL))
+      st_show_visible();
+   }
+  
+   if (tmpcfg)
     {
 	gint i;
 	/* Need this in case user reordered column order (we don't
@@ -720,7 +727,6 @@ prefs_window_set(void)
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
 	prefs_set_block_display(tmpcfg->block_display);
-	prefs_set_sort_tab_num(tmpcfg->sort_tab_num, TRUE);
 	prefs_set_group_compilations(tmpcfg->group_compilations, TRUE);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
@@ -1325,7 +1331,7 @@ static void prefs_window_set_sort_tab_num (gint num)
 {
     gint i;
 
-    tmpcfg->sort_tab_num = num;
+    temp_prefs_set_int(temp_prefs, "sort_tab_num", num);
     for (i=0; i<SORT_TAB_MAX; ++i)
     {   /* make all checkboxes with i<num sensitive, the others
 	   insensitive */

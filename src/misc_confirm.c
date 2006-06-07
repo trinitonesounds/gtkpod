@@ -414,7 +414,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
     iTunesDB *itdb;
 
     g_return_if_fail (inst >= 0);
-    g_return_if_fail (inst <= prefs_get_sort_tab_num ());
+    g_return_if_fail (inst <= prefs_get_int("sort_tab_num"));
 
     pl = pm_get_selected_playlist();
     if (pl == NULL)

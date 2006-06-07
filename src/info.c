@@ -221,7 +221,7 @@ static void info_update_track_view_displayed (void)
     GList *displayed;
 
     g_return_if_fail (info_window);
-    displayed = display_get_selected_members (prefs_get_sort_tab_num()-1);
+    displayed = display_get_selected_members (prefs_get_int("sort_tab_num")-1);
     fill_in_info (displayed, &tracks, &playtime, &filesize);
     fill_label_uint ("tracks_displayed", tracks);
     fill_label_time ("playtime_displayed", playtime);
@@ -235,7 +235,7 @@ void info_update_track_view_selected (void)
     GList *selected;
 
     if (!info_window) return; /* not open */
-    selected = display_get_selection (prefs_get_sort_tab_num ());
+    selected = display_get_selection (prefs_get_int("sort_tab_num"));
     fill_in_info (selected, &tracks, &playtime, &filesize);
     g_list_free (selected);
     fill_label_uint ("tracks_selected", tracks);

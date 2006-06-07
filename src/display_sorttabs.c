@@ -329,7 +329,7 @@ static void sp_remove_all_members (guint32 inst)
     SortTab *st;
 
     /* Sanity */
-    if (inst >= prefs_get_sort_tab_num ())  return;
+    if (inst >= prefs_get_int("sort_tab_num"))  return;
 
     st = sorttab[inst];
 
@@ -545,7 +545,7 @@ static void st_add_track_special (Track *track, gboolean final,
     SortTab *st;
 
     /* Sanity */
-    if (inst >= prefs_get_sort_tab_num ())  return;
+    if (inst >= prefs_get_int("sort_tab_num"))  return;
 
     st = sorttab[inst];
 
@@ -671,7 +671,7 @@ static void sp_store_sp_entries (gint inst)
     SortTab *st;
 
     /* Sanity */
-    if (inst >= prefs_get_sort_tab_num ())  return;
+    if (inst >= prefs_get_int("sort_tab_num"))  return;
 
     st = sorttab[inst];
 
@@ -697,7 +697,7 @@ void sp_go (guint32 inst)
 #endif
 
     /* Sanity */
-    if (inst >= prefs_get_sort_tab_num ())  return;
+    if (inst >= prefs_get_int("sort_tab_num"))  return;
 
     st = sorttab[inst];
 
@@ -723,7 +723,7 @@ static void st_remove_track_special (Track *track, guint32 inst)
     GList *link;
 
     /* Sanity */
-    if (inst >= prefs_get_sort_tab_num ())  return;
+    if (inst >= prefs_get_int("sort_tab_num"))  return;
 
     st = sorttab[inst];
 
@@ -749,7 +749,7 @@ static void st_track_changed_special (Track *track,
     SortTab *st;
 
     /* Sanity */
-    if (inst >= prefs_get_sort_tab_num ())  return;
+    if (inst >= prefs_get_int("sort_tab_num"))  return;
 
     st = sorttab[inst];
 
@@ -804,7 +804,7 @@ void sp_conditions_changed (guint32 inst)
     SortTab *st;
 
     /* Sanity */
-    if (inst >= prefs_get_sort_tab_num ())  return;
+    if (inst >= prefs_get_int("sort_tab_num"))  return;
 
     st = sorttab[inst];
     /* Sanity */
@@ -993,7 +993,7 @@ GList *st_get_selected_members (guint32 inst)
     SortTab *st;
 
     /* Sanity */
-    if (inst >= prefs_get_sort_tab_num ())  return NULL;
+    if (inst >= prefs_get_int("sort_tab_num"))  return NULL;
 
     st = sorttab[inst];
 
@@ -1469,12 +1469,12 @@ static void st_track_changed_normal (Track *track, gboolean removed, guint32 ins
   tabs he/she just edited, disappeared from the display */
 void st_track_changed (Track *track, gboolean removed, guint32 inst)
 {
-  if (inst == prefs_get_sort_tab_num ())
+  if (inst == prefs_get_int("sort_tab_num"))
     {
       tm_track_changed (track);
       return;
     }
-  else if (inst < prefs_get_sort_tab_num ())
+  else if (inst < prefs_get_int("sort_tab_num"))
   {
       switch (sorttab[inst]->current_category)
       {
@@ -1518,7 +1518,7 @@ void st_adopt_order_in_playlist (void)
 #endif
 
     /* first delete all tracks in all visible sort tabs */
-    for (inst = 0; inst< prefs_get_sort_tab_num (); ++inst)
+    for (inst = 0; inst< prefs_get_int("sort_tab_num"); ++inst)
     {
 	SortTab *st = sorttab[inst];
 	GList *link;
@@ -1700,13 +1700,13 @@ void st_add_track (Track *track, gboolean final, gboolean display, guint32 inst)
 	  inst, final, display, track);
 #endif
 
-  if (inst == prefs_get_sort_tab_num ())
+  if (inst == prefs_get_int("sort_tab_num"))
   {  /* just add to track model */
       if ((track != NULL) && display)    tm_add_track_to_track_model (track, NULL);
       if (final || (++count % 20 == 0))
 	  gtkpod_tracks_statusbar_update();
   }
-  else if (inst < prefs_get_sort_tab_num ())
+  else if (inst < prefs_get_int("sort_tab_num"))
   {
       switch (sorttab[inst]->current_category)
       {
@@ -1755,11 +1755,11 @@ static void st_remove_track_normal (Track *track, guint32 inst)
  * tab: it might have been recategorized, but still be displayed. JCS */
 void st_remove_track (Track *track, guint32 inst)
 {
-    if (inst == prefs_get_sort_tab_num ())
+    if (inst == prefs_get_int("sort_tab_num"))
     {
 	tm_remove_track (track);
     }
-    else if (inst < prefs_get_sort_tab_num ())
+    else if (inst < prefs_get_int("sort_tab_num"))
     {
 	switch (sorttab[inst]->current_category)
 	{
@@ -1789,13 +1789,13 @@ void st_remove_track (Track *track, guint32 inst)
    select "All" in accordance to the prefs settings. */
 void st_init (ST_CAT_item new_category, guint32 inst)
 {
-  if (inst == prefs_get_sort_tab_num ())
+  if (inst == prefs_get_int("sort_tab_num"))
   {
       tm_remove_all_tracks ();
       gtkpod_tracks_statusbar_update ();
       return;
   }
-  if (inst < prefs_get_sort_tab_num ())
+  if (inst < prefs_get_int("sort_tab_num"))
   {
       SortTab *st = sorttab[inst];
 
@@ -1969,7 +1969,7 @@ void st_page_selected (GtkNotebook *notebook, guint page)
 /* Redisplay the sort tab "inst" */
 void st_redisplay (guint32 inst)
 {
-    if (inst < prefs_get_sort_tab_num ())
+    if (inst < prefs_get_int("sort_tab_num"))
     {
 	if (sorttab[inst])
 	    st_page_selected (sorttab[inst]->notebook,
@@ -1980,7 +1980,7 @@ void st_redisplay (guint32 inst)
 /* Start sorting */
 static void st_sort_inst (guint32 inst, GtkSortType order)
 {
-    if (inst < prefs_get_sort_tab_num ())
+    if (inst < prefs_get_int("sort_tab_num"))
     {
 	SortTab *st = sorttab[inst];
 	if (st)
@@ -2021,7 +2021,7 @@ static void st_sort_inst (guint32 inst, GtkSortType order)
 void st_sort (GtkSortType order)
 {
     gint i;
-    for (i=0; i<prefs_get_sort_tab_num (); ++i)
+    for (i=0; i < prefs_get_int("sort_tab_num"); ++i)
 	st_sort_inst (i, order);
 }
 
@@ -2378,7 +2378,7 @@ gint st_data_compare_func (GtkTreeModel *model,
    work quite the way intended). */
 void st_stop_editing (gint inst, gboolean cancel)
 {
-    if (inst < prefs_get_sort_tab_num ())
+    if (inst < prefs_get_int("sort_tab_num"))
     {
 	SortTab *st = sorttab[inst];
 	if (st)
@@ -2415,7 +2415,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 {
     static gint disable_count[SORT_TAB_MAX];
 
-    if (inst >= prefs_get_sort_tab_num ())
+    if (inst >= prefs_get_int("sort_tab_num"))
     {
 	tm_enable_disable_view_sort (enable);
 	return;
@@ -2495,7 +2495,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 
 void st_select_current_position (gint inst, gint x, gint y)
 {
-    if (inst < prefs_get_sort_tab_num ())
+    if (inst < prefs_get_int("sort_tab_num"))
     {
 	SortTab *st = sorttab[inst];
 	if (st)
@@ -2526,10 +2526,10 @@ void st_show_visible (void)
     if (!st_paned[0])  return;
 
     /* first initialize (clear) all sorttabs */
-    n = prefs_get_sort_tab_num ();
-    prefs_set_sort_tab_num (SORT_TAB_MAX, FALSE);
+    n = prefs_get_int("sort_tab_num");
+    prefs_set_int("sort_tab_num", SORT_TAB_MAX);
     st_init (-1, 0);
-    prefs_set_sort_tab_num (n, FALSE);
+    prefs_set_int("sort_tab_num", n);
 
     /* set the visible elements */
     for (i=0; i<n; ++i)
@@ -2566,7 +2566,7 @@ static void st_set_visible_sort_tab_paned (void)
 {
     gint i, x, y, p0, num, width;
 
-    num = prefs_get_sort_tab_num ();
+    num = prefs_get_int("sort_tab_num");
     if (num > 0)
     {
 	gchar *buf;
@@ -2593,7 +2593,7 @@ void st_arrange_visible_sort_tabs (void)
 {
     gint i, num;
 
-    num = prefs_get_sort_tab_num ();
+    num = prefs_get_int("sort_tab_num");
     if (num > 0)
     {
 	st_set_visible_sort_tab_paned ();
@@ -3038,7 +3038,7 @@ void st_create_notebook (gint inst)
   if (!st_paned[0])   st_create_paned ();
 
   st0_notebook = gtk_notebook_new ();
-  if (inst < prefs_get_sort_tab_num ()) gtk_widget_show (st0_notebook);
+  if (inst < prefs_get_int("sort_tab_num")) gtk_widget_show (st0_notebook);
   else                                  gtk_widget_hide (st0_notebook);
   /* which pane? */
   if (inst == SORT_TAB_MAX-1)  i = inst-1;

@@ -5,6 +5,16 @@
 
 2006-06-06 James Liggett <freethinkerjim@users.sourceforge.net>
 
+   * src/display.c
+     src/display_songs.c
+     src/display_sorttabs.c
+     src/info.c
+     src/misc_confirm.c
+     src/misc_input.c
+     src/prefs.h
+     src/prefs.c
+     prefs_window.c: Move sort_tab_num to new prefs.
+
    * src/display_songs.c
      src/prefs.h
      src/prefs.c

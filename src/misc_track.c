@@ -1581,7 +1581,7 @@ void gp_do_selected_entry (void (*do_func)(GList *tracks), gint inst)
 
     g_return_if_fail (do_func);
 
-    g_return_if_fail ((inst >= 0) && (inst <= prefs_get_sort_tab_num()));
+    g_return_if_fail ((inst >= 0) && (inst <= prefs_get_int("sort_tab_num")));
 
     entry = st_get_selected_entry (inst);
     if (entry == NULL)
