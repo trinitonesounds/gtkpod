@@ -704,7 +704,7 @@ void tm_store_col_order (void)
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	col = gtk_tree_view_get_column (track_treeview, i);
-	prefs_set_col_order (i, col->sort_column_id);
+	prefs_set_int_index("col_order", i, col->sort_column_id);
     }
 }
 
@@ -2006,7 +2006,7 @@ static void tm_add_columns (void)
 
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	tm_add_column (prefs_get_col_order (i), -1);
+	tm_add_column (prefs_get_int_index("col_order", i), -1);
     }
     tm_show_preferred_columns();
 }
@@ -2200,7 +2200,8 @@ tm_show_preferred_columns(void)
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
 	tvc = gtk_tree_view_get_column (track_treeview, i);
-	visible = prefs_get_int_index("col_visible", prefs_get_col_order (i));
+	visible = prefs_get_int_index("col_visible", 
+      prefs_get_int_index("col_order", i));
 	gtk_tree_view_column_set_visible (tvc, visible);
     }
 }

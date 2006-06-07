@@ -5,13 +5,20 @@
 
 2006-06-06 James Liggett <freethinkerjim@users.sourceforge.net>
 
-         * src/prefs_window.c: Fix columns not appearing after being set in 
+   * src/display_songs.c
+     src/prefs.h
+     src/prefs.c
+     src/prefs_window.c: Move tm_col_order to new prefs. Also added a 
+           finalize_prefs function to allow prefs to do things before the file  
+           gets saved.
+   
+   * src/prefs_window.c: Fix columns not appearing after being set in 
            prefs dialog
-         
-         * src/display_songs.c
-           src/prefs.h
-           src/prefs.c
-           src/prefs_window.c: Move tm_col_visible to new prefs.
+   
+   * src/display_songs.c
+     src/prefs.h
+     src/prefs.c
+     src/prefs_window.c: Move tm_col_visible to new prefs.
 
 2006-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
@@ -29,18 +36,18 @@
    
 2006-06-04 James Liggett <freethinkerjim@users.sourceforge.net>
     
-         * src/display_sorttabs.c
-           src/prefs.h
-           src/prefs.c: Move sp_playcount_low/high to new prefs.
-   
-         * src/display_sorttabs.c
-           src/prefs.h
-           src/prefs.c: Move sp_played_state, sp_modified_state, 
+   * src/display_sorttabs.c
+     src/prefs.h
+     src/prefs.c: Move sp_playcount_low/high to new prefs.
+
+   * src/display_sorttabs.c
+     src/prefs.h
+     src/prefs.c: Move sp_played_state, sp_modified_state, 
            and sp_added_state to new prefs.
-   
-         * src/display_sorttabs.c
-           src/prefs.h
-           src/prefs.c: Move sp_rating_state to new prefs.
+
+   * src/display_sorttabs.c
+     src/prefs.h
+     src/prefs.c: Move sp_rating_state to new prefs.
 
 
 2006-06-03 Jorg Schuler <jcsjcs@users.sourceforge.net>

@@ -175,6 +175,7 @@ static void set_default_preferences()
     {
       prefs_set_int_index("tm_col_width", i, 80);
       prefs_set_int_index("col_visible", i, FALSE);
+      prefs_set_int_index("col_order", i, i);
     }
     
     prefs_set_int_index("col_visible", TM_COLUMN_ARTIST, TRUE);
@@ -826,6 +827,13 @@ static void cleanup_keys()
   prefs_set_string ("version", VERSION);
 }
 
+/* Do things that need to be done before saving prefs */
+static void finalize_prefs()
+{
+  /* Sort column order needs to be stored */
+  tm_store_col_order();
+}
+
 /* Initialize the prefs table and read configuration */
 void init_prefs(int argc, char *argv[])
 {
@@ -856,7 +864,10 @@ void cleanup_prefs()
 {
 	if (prefs_table)
 	{
-		/* Save prefs */
+		/* Let prefs do some things before saving */
+    finalize_prefs();
+    
+    /* Save prefs */
 		save_prefs();
 		
 		/* Delete the prefs hash table */
@@ -1698,10 +1709,6 @@ struct cfg *cfg_new(void)
     mycfg->size_prefs.y = 480;
     mycfg->size_info.x = 510;
     mycfg->size_info.y = 300;
-    for (i=0; i<TM_NUM_COLUMNS; ++i)
-    {
-	mycfg->col_order[i] = i;
-    }
     for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
     {
 	mycfg->autosettags[i] = FALSE;
@@ -1948,11 +1955,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "coverart_template") == 0)
 	  {
 	      prefs_set_coverart_template(strdup(arg));
-	  }
-	  else if(arg_comp (line, "col_order", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_col_order (i, atoi (arg));
 	  }
 	  else if(arg_comp (line, "paned_pos_", &off) == 0)
 	  {
@@ -2365,8 +2367,6 @@ write_prefs_to_file_desc(FILE *fp)
     /* update column widths, x,y-size of main window and GtkPaned
      * positions */
     display_update_default_sizes ();
-    /* update order of track view columns */
-    tm_store_col_order ();
 
     if (cfg->charset)
     {
@@ -2382,15 +2382,9 @@ write_prefs_to_file_desc(FILE *fp)
 
     fprintf(fp, _("# autoselect master playlist?\n"));
     fprintf(fp, "mpl_autoselect=%d\n", prefs_get_mpl_autoselect ());
-    fprintf(fp, _("# title=0, artist, album, genre, composer\n"));
-    fprintf(fp, _("# track_nr=5, ipod_id, pc_path, transferred\n"));
-    fprintf(fp, _("# autoset: set empty tag to filename?\n"));
-    for (i=0; i<TM_NUM_COLUMNS; ++i)
-    {
-	fprintf(fp, "col_order%d=%d\n",  i, prefs_get_col_order (i));
 	if (i < TM_NUM_TAGS_PREFS)
 	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_autosettags (i));
-    }
+  
     fprintf(fp, "readtags=%d\n", prefs_get_readtags());
     fprintf(fp, "parsetags=%d\n", prefs_get_parsetags());
     fprintf(fp, "parsetags_overwrite=%d\n", prefs_get_parsetags_overwrite());
@@ -2878,22 +2872,6 @@ void prefs_set_coverart_template (const gchar *tpl)
 	g_free(cfg->coverart_template);
 	cfg->coverart_template = g_strdup (tpl);
     }
-}
-
-/* Display which column at nr @pos? */
-void prefs_set_col_order (gint pos, TM_item tm_item)
-{
-    if (pos < TM_NUM_COLUMNS)
-	cfg->col_order[pos] = tm_item;
-}
-
-
-/* Display column nr @pos? */
-TM_item prefs_get_col_order (gint pos)
-{
-    if (pos < TM_NUM_COLUMNS)
-	return cfg->col_order[pos];
-    return -1;
 }
 
 /* get position of GtkPaned element nr. "i" */

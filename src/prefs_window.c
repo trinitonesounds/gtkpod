@@ -1612,7 +1612,7 @@ void sort_window_create (void)
 	tm_store_col_order ();
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{   /* first the visible columns */
-	    TM_item col = prefs_get_col_order (i);
+	    TM_item col = prefs_get_int_index("col_order", i);
 	    if (col != -1)
 	    {
 		if (prefs_get_int_index("col_visible", col))
@@ -1622,7 +1622,7 @@ void sort_window_create (void)
 	}
 	for (i=0; i<TM_NUM_COLUMNS; ++i)
 	{   /* first the visible columns */
-	    TM_item col = prefs_get_col_order (i);
+	    TM_item col = prefs_get_int_index("col_order", i);
 	    if (col != -1)
 	    {
 		if (!prefs_get_int_index("col_visible", col))
