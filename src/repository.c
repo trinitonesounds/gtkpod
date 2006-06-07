@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-25 00:39:02 jcs>
+/* Time-stamp: <2006-06-08 01:19:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -861,6 +861,7 @@ static void edit_apply_clicked (GtkButton *button, RepWin *repwin)
 	g_return_if_fail (itdb);
 
 	subkey = get_itdb_prefs_key (i, "");
+
 	if (temp_prefs_subkey_exists (repwin->extra_prefs, subkey))
 	{
 	    gboolean deleted;
@@ -911,6 +912,8 @@ static void edit_apply_clicked (GtkButton *button, RepWin *repwin)
 
 	    if (!deleted)
 	    {
+		/* apply the "live update flag", which is kept inside
+		   the playlist struct */
 		for (gl=itdb->playlists; gl; gl=gl->next)
 		{
 		    Playlist *pl = gl->data;
@@ -924,26 +927,39 @@ static void edit_apply_clicked (GtkButton *button, RepWin *repwin)
 		    }
 		    g_free (key);
 		}
-
 	    }
 	}
 
 	if (!deleted &&
 	    temp_prefs_subkey_exists (repwin->temp_prefs, subkey))
 	{
-	    gchar *mp;
-
+	    gchar *str;
+	    /* check if mountpoint has changed */
 	    key = get_itdb_prefs_key (i, KEY_MOUNTPOINT);
-	    mp = temp_prefs_get_string (repwin->temp_prefs, key);
+	    str = temp_prefs_get_string (repwin->temp_prefs, key);
 	    g_free (key);
-
-	    if (mp)
+	    if (str)
 	    {   /* have to set mountpoint */
-		itdb_set_mountpoint (itdb, mp);
+		itdb_set_mountpoint (itdb, str);
 		space_set_ipod_itdb (itdb);
-		g_free (mp);
+		g_free (str);
 	    }
 
+	    /* check if model_number has changed */
+	    key = get_itdb_prefs_key (i, KEY_IPOD_MODEL);
+	    str = temp_prefs_get_string (repwin->temp_prefs, key);
+	    g_free (key);
+	    if (str)
+	    {   /* set model */
+		if (itdb->usertype && GP_ITDB_TYPE_IPOD)
+		{
+		    itdb_device_set_sysinfo (itdb->device,
+					     "ModelNumStr", str);
+		}
+		g_free (str);
+	    }
+
+	    /* this repository was changed */
 	    data_changed (itdb);
 	}
 	g_free (subkey);
@@ -1093,17 +1109,27 @@ static void select_repository (RepWin *repwin,
 
 
 /* set @entry with value of @key */
-static void set_entry (RepWin *repwin,
-		       const gchar *key, const gchar *entry)
+static void set_entry_index (RepWin *repwin, gint itdb_index,
+			     const gchar *subkey, const gchar *entry)
 {
     gchar *buf;
+    gchar *key;
 
-    g_return_if_fail (repwin && key && entry);
+    g_return_if_fail (repwin && subkey && entry);
+
+    key = get_itdb_prefs_key (itdb_index, subkey);
 
     buf = get_current_prefs_string (repwin, key);
-    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (entry)),
-			buf);
+    if (buf)
+    {
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (entry)), buf);
+    }
+    else
+    {
+	gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (entry)), "");
+    }
     g_free (buf);
+    g_free (key);
 }
 
 
@@ -1180,25 +1206,20 @@ static void display_repository_info (RepWin *repwin)
 	    gtk_widget_hide (GET_WIDGET (*widget));
 	}
 
-	key = get_itdb_prefs_key (index, KEY_MOUNTPOINT);
-	set_entry (repwin, key, MOUNTPOINT_ENTRY);
-	g_free (key);
+	set_entry_index (repwin, index, KEY_MOUNTPOINT, MOUNTPOINT_ENTRY);
 
-	key = get_itdb_prefs_key (index, KEY_FILENAME);
-	set_entry (repwin, key, BACKUP_ENTRY);
-	g_free (key);
+	set_entry_index (repwin, index, KEY_FILENAME, BACKUP_ENTRY);
 
-	key = get_itdb_prefs_key (index, KEY_PATH_SYNC_CONTACTS);
-	set_entry (repwin, key, IPOD_SYNC_CONTACTS_ENTRY);
-	g_free (key);
+	set_entry_index (repwin, index,
+			 KEY_PATH_SYNC_CONTACTS, IPOD_SYNC_CONTACTS_ENTRY);
 
-	key = get_itdb_prefs_key (index, KEY_PATH_SYNC_CALENDAR);
-	set_entry (repwin, key, IPOD_SYNC_CALENDAR_ENTRY);
-	g_free (key);
+	set_entry_index (repwin, index,
+			 KEY_PATH_SYNC_CALENDAR, IPOD_SYNC_CALENDAR_ENTRY);
 
-	key = get_itdb_prefs_key (index, KEY_PATH_SYNC_NOTES);
-	set_entry (repwin, key, IPOD_SYNC_NOTES_ENTRY);
-	g_free (key);
+	set_entry_index (repwin, index,
+			 KEY_PATH_SYNC_NOTES, IPOD_SYNC_NOTES_ENTRY);
+
+	set_entry_index (repwin, index, KEY_IPOD_MODEL, IPOD_MODEL_ENTRY);
 
 	key = get_itdb_prefs_key (index, KEY_CONCAL_AUTOSYNC);
 	gtk_toggle_button_set_active (
@@ -1244,9 +1265,7 @@ static void display_repository_info (RepWin *repwin)
 	    gtk_widget_hide (GET_WIDGET (*widget));
 	}
 
-	key = get_itdb_prefs_key (index, KEY_FILENAME);
-	set_entry (repwin, key, LOCAL_PATH_ENTRY);
-	g_free (key);
+	set_entry_index (repwin, index, KEY_FILENAME, LOCAL_PATH_ENTRY);
     }
     else
     {

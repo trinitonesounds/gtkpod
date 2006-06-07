@@ -1,36 +1,46 @@
+2006-06-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/repository.c: set_entry() -> set_entry_index() to
+	   simplify code.
+
+	   Display iPod model number and allow editing.
+
+	   TODO: 
+	   - reset model number if iPod with different number is loaded
+	   - write model number to iPod if iPod without model number
+	     is loaded.
+
+2006-06-06 James Liggett <freethinkerjim@users.sourceforge.net>
+
+         * src/display.c
+           src/display_songs.c
+           src/display_sorttabs.c
+           src/info.c
+           src/misc_confirm.c
+           src/misc_input.c
+           src/prefs.h
+           src/prefs.c
+           prefs_window.c: Move sort_tab_num to new prefs.
+
+         * src/display_songs.c
+           src/prefs.h
+           src/prefs.c
+           src/prefs_window.c: Move tm_col_order to new prefs. Also
+           added a finalize_prefs function to allow prefs to do things
+           before the file gets saved.
+   
+         * src/prefs_window.c: Fix columns not appearing after being
+	   set in prefs dialog
+   
+         * src/display_songs.c
+           src/prefs.h
+           src/prefs.c
+           src/prefs_window.c: Move tm_col_visible to new prefs.
+
 2006-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/file.c: fixed double g_free() (thanks to Florent
 	   Bouchez).
-
-2006-06-06 James Liggett <freethinkerjim@users.sourceforge.net>
-
-   * src/display.c
-     src/display_songs.c
-     src/display_sorttabs.c
-     src/info.c
-     src/misc_confirm.c
-     src/misc_input.c
-     src/prefs.h
-     src/prefs.c
-     prefs_window.c: Move sort_tab_num to new prefs.
-
-   * src/display_songs.c
-     src/prefs.h
-     src/prefs.c
-     src/prefs_window.c: Move tm_col_order to new prefs. Also added a 
-           finalize_prefs function to allow prefs to do things before the file  
-           gets saved.
-   
-   * src/prefs_window.c: Fix columns not appearing after being set in 
-           prefs dialog
-   
-   * src/display_songs.c
-     src/prefs.h
-     src/prefs.c
-     src/prefs_window.c: Move tm_col_visible to new prefs.
-
-2006-06-05 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/ipod_init.c: pretty much finished ipod_init dialog.
 
@@ -46,19 +56,18 @@
    
 2006-06-04 James Liggett <freethinkerjim@users.sourceforge.net>
     
-   * src/display_sorttabs.c
-     src/prefs.h
-     src/prefs.c: Move sp_playcount_low/high to new prefs.
+         * src/display_sorttabs.c
+           src/prefs.h
+           src/prefs.c: Move sp_playcount_low/high to new prefs.
 
-   * src/display_sorttabs.c
-     src/prefs.h
-     src/prefs.c: Move sp_played_state, sp_modified_state, 
-           and sp_added_state to new prefs.
+         * src/display_sorttabs.c
+           src/prefs.h
+           src/prefs.c: Move sp_played_state, sp_modified_state, 
+                        and sp_added_state to new prefs.
 
-   * src/display_sorttabs.c
-     src/prefs.h
-     src/prefs.c: Move sp_rating_state to new prefs.
-
+         * src/display_sorttabs.c
+           src/prefs.h
+           src/prefs.c: Move sp_rating_state to new prefs.
 
 2006-06-03 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

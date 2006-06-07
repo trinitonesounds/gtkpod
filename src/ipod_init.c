@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-06 01:09:34 jcs>
+/* Time-stamp: <2006-06-08 00:16:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -307,6 +307,9 @@ gboolean ipod_init (iTunesDB *itdb)
 	{   /* User didn't choose a model */
 	    model[0] = 0;
 	}
+
+	/* Set model in the prefs system */
+	set_itdb_prefs_string (itdb, KEY_IPOD_MODEL, model);
 
 	name = get_itdb_prefs_string (itdb, "name");
 	result = itdb_init_ipod (mountpoint, model, name, &error);
