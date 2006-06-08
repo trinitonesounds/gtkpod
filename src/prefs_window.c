@@ -538,7 +538,7 @@ prefs_window_create (gint page)
 	if((w = gtkpod_xml_get_widget (prefs_window_xml, buf)))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpcfg->autosettags[i]);
+					 prefs_get_int_index("tag_autoset", i));
 	    /* glade makes a "GTK_OBJECT (i)" which segfaults
 	       because "i" is not a GTK object. So we have to set up
 	       the signal handlers ourselves */
@@ -706,15 +706,12 @@ prefs_window_set(void)
   
    if (tmpcfg)
     {
-	gint i;
 	/* Need this in case user reordered column order (we don't
 	 * catch the reorder signal) */
 	tm_store_col_order ();
 	prefs_set_charset(tmpcfg->charset);
 	prefs_set_autoimport(tmpcfg->autoimport);
-	for (i=0; i<TM_NUM_TAGS_PREFS; ++i) {
-	    prefs_set_autosettags (i, tmpcfg->autosettags[i]);
-	}
+
 	prefs_set_readtags(tmpcfg->readtags);
 	prefs_set_parsetags(tmpcfg->parsetags);
 	prefs_set_parsetags_overwrite(tmpcfg->parsetags_overwrite);
@@ -1144,7 +1141,7 @@ on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
 void prefs_window_set_autosettags (gint category, gboolean autoset)
 {
     if (category < TM_NUM_TAGS_PREFS)
-	tmpcfg->autosettags[category] = autoset;
+			temp_prefs_set_int_index(temp_prefs, "tag_autoset", category, autoset);
 }
 
 void

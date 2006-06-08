@@ -138,7 +138,6 @@ struct cfg
   gboolean parsetags_overwrite; /* Overwrite tags already set? */
   gboolean coverart;            /* Read coverart when adding files? */
   gchar *coverart_template;     /* template for coverart filename   */
-  gboolean autosettags[TM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
 
   gboolean display_toolbar;     /* should toolbar be displayed */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
@@ -324,8 +323,6 @@ void prefs_set_parsetags (gboolean active);
 gboolean prefs_get_parsetags(void);
 void prefs_set_parsetags_overwrite (gboolean active);
 gboolean prefs_get_parsetags_overwrite(void);
-void prefs_set_autosettags (gint category, gboolean autoset);
-gboolean prefs_get_autosettags (gint category);
 void prefs_set_parsetags_template (const gchar *tpl);
 const gchar *prefs_get_parsetags_template (void);
 void prefs_set_coverart (gboolean active);

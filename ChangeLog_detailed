@@ -12,6 +12,11 @@
 			 
 2006-06-07 James Liggett <freethinkerjim@users.sourceforge.net>
 	 
+	 * src/file.c
+		 src/prefs.h
+		 src/prefs.c
+		 src/prefs_window.c: Move tag_autoset to new prefs.
+	 
 	 * src/display_sorttabs.c
 	   src/prefs.h
 	   src/prefs.c: Move paned_pos_ keys to new prefs

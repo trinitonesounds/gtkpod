@@ -661,7 +661,7 @@ static void set_entry_from_filename (Track *track, gint column)
     etr = track->userdata;
     g_return_if_fail (etr);
 
-    if (prefs_get_autosettags (column) &&
+    if (prefs_get_int_index("tag_autoset", column) &&
 	etr->pc_path_utf8 && strlen (etr->pc_path_utf8))
     {
 	switch (column)
@@ -695,18 +695,21 @@ static void set_unset_entries_from_filename (Track *track)
 {
     /* try to fill tags from filename */
     if (prefs_get_parsetags ())
-	parse_filename (track);
+			parse_filename (track);
     /* fill up what is left unset */
-    if (!track->album && prefs_get_autosettags (TM_COLUMN_ALBUM))
-	set_entry_from_filename (track, TM_COLUMN_ALBUM);
-    if (!track->artist && prefs_get_autosettags (TM_COLUMN_ARTIST))
-	set_entry_from_filename (track, TM_COLUMN_ARTIST);
-    if (!track->title && prefs_get_autosettags (TM_COLUMN_TITLE))
-	set_entry_from_filename (track, TM_COLUMN_TITLE);
-    if (!track->genre && prefs_get_autosettags (TM_COLUMN_GENRE))
-	set_entry_from_filename (track, TM_COLUMN_GENRE);
-    if (!track->composer && prefs_get_autosettags (TM_COLUMN_COMPOSER))
-	set_entry_from_filename (track, TM_COLUMN_COMPOSER);
+    if (!track->album && prefs_get_int_index("tag_autoset", TM_COLUMN_ALBUM))
+			set_entry_from_filename (track, TM_COLUMN_ALBUM);
+    if (!track->artist && prefs_get_int_index("tag_autoset", TM_COLUMN_ARTIST))
+			set_entry_from_filename (track, TM_COLUMN_ARTIST);
+    if (!track->title && prefs_get_int_index("tag_autoset", TM_COLUMN_TITLE))
+			set_entry_from_filename (track, TM_COLUMN_TITLE);
+    if (!track->genre && prefs_get_int_index("tag_autoset", TM_COLUMN_GENRE))
+			set_entry_from_filename (track, TM_COLUMN_GENRE);
+    if (!track->composer && prefs_get_int_index("tag_autoset", 
+																								TM_COLUMN_COMPOSER))
+		{
+			set_entry_from_filename (track, TM_COLUMN_COMPOSER);
+		}
 }
 
 

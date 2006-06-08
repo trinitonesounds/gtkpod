@@ -179,6 +179,11 @@ static void set_default_preferences()
       prefs_set_int_index("col_visible", i, FALSE);
       prefs_set_int_index("col_order", i, i);
     }
+		
+		for (i = 0; i < TM_NUM_TAGS_PREFS; i++)
+			prefs_set_int_index("tag_autoset", i, FALSE);
+		
+		prefs_set_int_index("tag_autoset", TM_COLUMN_TITLE, TRUE);
     
     prefs_set_int_index("col_visible", TM_COLUMN_ARTIST, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_ALBUM, TRUE);
@@ -1712,7 +1717,6 @@ struct cfg *cfg_new(void)
     struct cfg *mycfg = NULL;
     gchar curdir[PATH_MAX];
     gchar *cfgdir;
-    gint i;
 
     cfgdir = prefs_get_cfgdir ();
 
@@ -1749,11 +1753,6 @@ struct cfg *cfg_new(void)
     mycfg->size_prefs.y = 480;
     mycfg->size_info.x = 510;
     mycfg->size_info.y = 300;
-    for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
-    {
-	mycfg->autosettags[i] = FALSE;
-    }
-    mycfg->autosettags[TM_COLUMN_TITLE] = TRUE;
     mycfg->readtags = TRUE;
     mycfg->parsetags = FALSE;
     mycfg->parsetags_overwrite = FALSE;
@@ -1855,7 +1854,7 @@ read_prefs_from_file_desc(FILE *fp)
 {
     gchar buf[PATH_MAX];
     gchar *line, *arg, *bufp;
-    gint len, off, i;
+    gint len, i;
 
     /* set ignore strings */
     for (i=0; sort_ign_strings[i]; ++i)
@@ -1961,11 +1960,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "mpl_autoselect") == 0)
 	  {
 	      prefs_set_mpl_autoselect((gboolean)atoi(arg));
-	  }
-	  else if(arg_comp (line, "tag_autoset", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_autosettags (i, atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "readtags") == 0)
 	  {
@@ -2352,7 +2346,6 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
 static void
 write_prefs_to_file_desc(FILE *fp)
 {
-    gint i;
 
     if(!fp)
 	fp = stderr;
@@ -2372,8 +2365,6 @@ write_prefs_to_file_desc(FILE *fp)
 
     fprintf(fp, _("# autoselect master playlist?\n"));
     fprintf(fp, "mpl_autoselect=%d\n", prefs_get_mpl_autoselect ());
-	if (i < TM_NUM_TAGS_PREFS)
-	    fprintf(fp, "tag_autoset%d=%d\n", i, prefs_get_autosettags (i));
   
     fprintf(fp, "readtags=%d\n", prefs_get_readtags());
     fprintf(fp, "parsetags=%d\n", prefs_get_parsetags());
@@ -2769,25 +2760,6 @@ void prefs_get_size_info (gint *x, gint *y)
 {
     *x = cfg->size_info.x;
     *y = cfg->size_info.y;
-}
-
-
-/* Should empty tags be set to filename? -- "category": one of the
-   TM_COLUMN_..., "autoset": new value */
-void prefs_set_autosettags (gint category, gboolean autoset)
-{
-    if (category < TM_NUM_TAGS_PREFS)
-	cfg->autosettags[category] = autoset;
-}
-
-
-/* Should empty tags be set to filename? -- "category": one of the
-   TM_COLUMN_... */
-gboolean prefs_get_autosettags (gint category)
-{
-    if (category < TM_NUM_TAGS_PREFS)
-	return cfg->autosettags[category];
-    return FALSE;
 }
 
 void prefs_set_readtags(gboolean active)
