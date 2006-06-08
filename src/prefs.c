@@ -192,9 +192,11 @@ static void set_default_preferences()
     prefs_set_int_index("col_visible", TM_COLUMN_PLAYCOUNT, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
     
-   /* Set pane positions--Let gtk worry about position */
-   for (i = 0; i < PANED_NUM; i++)
-    prefs_set_int_index("paned_pos_", i, -1);    
+    /* Set pane positions--Let gtk worry about position */
+    for (i = 0; i < PANED_NUM; i++)
+			prefs_set_int_index("paned_pos_", i, -1);
+
+		prefs_set_int("mpl_autoselect", TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1736,7 +1738,6 @@ struct cfg *cfg_new(void)
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
     mycfg->autoimport = FALSE;
-    mycfg->mpl_autoselect = TRUE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
     mycfg->size_gtkpod.x = 600;
@@ -1956,10 +1957,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  (g_ascii_strcasecmp (line, "autoimport") == 0))
 	  {
 	      prefs_set_autoimport((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "mpl_autoselect") == 0)
-	  {
-	      prefs_set_mpl_autoselect((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "readtags") == 0)
 	  {
@@ -2359,12 +2356,7 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
-    fprintf(fp, _("# delete confirmation\n"));
     fprintf(fp, "autoimport=%d\n",prefs_get_autoimport());
-    fprintf(fp, _("# sort tab: select 'All', last selected page (=category)\n"));
-
-    fprintf(fp, _("# autoselect master playlist?\n"));
-    fprintf(fp, "mpl_autoselect=%d\n", prefs_get_mpl_autoselect ());
   
     fprintf(fp, "readtags=%d\n", prefs_get_readtags());
     fprintf(fp, "parsetags=%d\n", prefs_get_parsetags());
@@ -2611,16 +2603,6 @@ void prefs_set_autoimport_commandline(gboolean val)
     cfg->autoimport_commandline = val;
 }
 
-gboolean prefs_get_mpl_autoselect (void)
-{
-    return cfg->mpl_autoselect;
-}
-
-/* Should the MPL be selected automatically? */
-void prefs_set_mpl_autoselect (gboolean autoselect)
-{
-    cfg->mpl_autoselect = autoselect;
-}
 
 /* Returns "$HOME/.gtkpod" and tries to create it if it does not
    exist. */

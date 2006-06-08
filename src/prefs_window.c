@@ -529,7 +529,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mpl_autoselect");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->mpl_autoselect);
+				 prefs_get_int("mpl_autoselect"));
 
     for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
     {
@@ -718,7 +718,6 @@ prefs_window_set(void)
 	prefs_set_parsetags_template(tmpcfg->parsetags_template);
 	prefs_set_coverart(tmpcfg->coverart);
 	prefs_set_coverart_template(tmpcfg->coverart_template);
-	prefs_set_mpl_autoselect (tmpcfg->mpl_autoselect);
 	prefs_set_write_extended_info(tmpcfg->write_extended_info);
 
 	/* this call well automatically destroy/setup the md5 hash table */
@@ -1134,8 +1133,8 @@ void
 on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->mpl_autoselect =
-	gtk_toggle_button_get_active(togglebutton);
+	temp_prefs_set_int(temp_prefs, "mpl_autoselect", 
+										 gtk_toggle_button_get_active(togglebutton));
 }
 
 void prefs_window_set_autosettags (gint category, gboolean autoset)

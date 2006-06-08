@@ -117,7 +117,6 @@ struct cfg
     gchar *tmp_sort_ign_strings;/* used in prefs_window.c only     */
   } sortcfg;
   gboolean info_window;   /* is info window open (will then open on restart */
-  gboolean mpl_autoselect;/* select mpl automatically? */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean write_extended_info; /* write additional file with PC
 				   filenames etc? */
@@ -314,7 +313,6 @@ void prefs_set_tm_autostore (gboolean active);
 void prefs_set_pm_autostore (gboolean active);
 void prefs_set_write_extended_info(gboolean active);
 void prefs_set_autoimport(gboolean val);
-void prefs_set_mpl_autoselect (gboolean autoselect);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_block_display(gboolean active);
 void prefs_set_readtags (gboolean active);
@@ -351,7 +349,6 @@ gboolean prefs_get_tm_autostore (void);
 gboolean prefs_get_pm_autostore (void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_autoimport(void);
-gboolean prefs_get_mpl_autoselect (void);
 gchar * prefs_get_charset (void);
 void prefs_get_size_gtkpod (gint *x, gint *y);
 void prefs_get_size_cal (gint *x, gint *y);
