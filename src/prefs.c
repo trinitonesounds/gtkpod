@@ -191,12 +191,16 @@ static void set_default_preferences()
     prefs_set_int_index("col_visible", TM_COLUMN_GENRE, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_PLAYCOUNT, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
-    
-    /* Set pane positions--Let gtk worry about position */
-    for (i = 0; i < PANED_NUM; i++)
-			prefs_set_int_index("paned_pos_", i, -1);
 
-		prefs_set_int("mpl_autoselect", TRUE);
+	/* Set pane positions--Let gtk worry about position */
+	for (i = 0; i < PANED_NUM; i++)
+		prefs_set_int_index("paned_pos_", i, -1);
+	
+	prefs_set_int("mpl_autoselect", TRUE);
+	
+	/* Set window sizes */
+	prefs_set_int("size_gtkpod.x", 600);
+	prefs_set_int("size_gtkpod.y", 500);
 }
 
 /* Initialize default variable-length list entries */
@@ -855,17 +859,20 @@ static void cleanup_keys()
   /* set statusbar paned to a decent value if unset */
   if (prefs_get_int_index("paned_pos_", PANED_STATUS1) == -1)
   {
-      prefs_get_size_gtkpod (&x, &y);
-      /* set to about 2/3 of the window width */
-      if (x>0)   prefs_set_int_index("paned_pos_", PANED_STATUS1, 20*x/30);
+		x = prefs_get_int("size_gtkpod.x");
+		/* set to about 2/3 of the window width */
+		if (x>0)   
+			prefs_set_int_index("paned_pos_", PANED_STATUS1, 20*x/30);
   }
   
   if (prefs_get_int_index("paned_pos_", PANED_STATUS2) == -1)
   {
-      prefs_get_size_gtkpod (&x, &y);
-      p = prefs_get_int_index("paned_pos_", PANED_STATUS1);
-      /* set to about half of the remaining window */
-      if (x>0)   prefs_set_int_index("paned_pos_", PANED_STATUS2, (x-p)/2 );
+		x = prefs_get_int("size_gtkpod.x");
+		y = prefs_get_int("size_gtkpod.y");
+		p = prefs_get_int_index("paned_pos_", PANED_STATUS1);
+		/* set to about half of the remaining window */
+		if (x>0)   
+			prefs_set_int_index("paned_pos_", PANED_STATUS2, (x-p)/2 );
   }
   
   prefs_set_string ("version", VERSION);
@@ -1740,8 +1747,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
-    mycfg->size_gtkpod.x = 600;
-    mycfg->size_gtkpod.y = 500;
     mycfg->size_cal.x = 500;
     mycfg->size_cal.y = 350;
     mycfg->size_conf_sw.x = 300;
@@ -2094,14 +2099,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
 	  }
-	  else if(g_ascii_strcasecmp (line, "size_gtkpod.x") == 0)
-	  {
-	      prefs_set_size_gtkpod (atoi (arg), -2);
-	  }
-	  else if(g_ascii_strcasecmp (line, "size_gtkpod.y") == 0)
-	  {
-	      prefs_set_size_gtkpod (-2, atoi (arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "size_cal.x") == 0)
 	  {
 	      prefs_set_size_cal (atoi (arg), -2);
@@ -2113,14 +2110,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "size_conf_sw.x") == 0)
 	  {
 	      prefs_set_size_conf_sw (atoi (arg), -2);
-	  }
-	  else if(g_ascii_strcasecmp (line, "size_conf_sw.y") == 0)
-	  {
-	      prefs_set_size_conf_sw (-2, atoi (arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "size_conf.x") == 0)
-	  {
-	      prefs_set_size_conf (atoi (arg), -2);
 	  }
 	  else if(g_ascii_strcasecmp (line, "size_conf.y") == 0)
 	  {
@@ -2389,8 +2378,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser, prefs\n"));
-    fprintf (fp, "size_gtkpod.x=%d\n", cfg->size_gtkpod.x);
-    fprintf (fp, "size_gtkpod.y=%d\n", cfg->size_gtkpod.y);
     fprintf (fp, "size_cal.x=%d\n", cfg->size_cal.x);
     fprintf (fp, "size_cal.y=%d\n", cfg->size_cal.y);
     fprintf (fp, "size_conf_sw.x=%d\n", cfg->size_conf_sw.x);
@@ -2630,14 +2617,6 @@ gchar *prefs_get_cfgdir (void)
   return cfgdir;
 }
 
-/* Sets the default size for the gtkpod window. -2 means: don't change
- * the current size */
-void prefs_set_size_gtkpod (gint x, gint y)
-{
-    if (x != -2) cfg->size_gtkpod.x = x;
-    if (y != -2) cfg->size_gtkpod.y = y;
-}
-
 /* Sets the default size for the calendar window. -2 means: don't change
  * the current size */
 void prefs_set_size_cal (gint x, gint y)
@@ -2684,14 +2663,6 @@ void prefs_set_size_info (gint x, gint y)
 {
     if (x != -2) cfg->size_info.x = x;
     if (y != -2) cfg->size_info.y = y;
-}
-
-/* Writes the current default size for the gtkpod window in "x" and
-   "y" */
-void prefs_get_size_gtkpod (gint *x, gint *y)
-{
-    *x = cfg->size_gtkpod.x;
-    *y = cfg->size_gtkpod.y;
 }
 
 /* Writes the current default size for the gtkpod window in "x" and

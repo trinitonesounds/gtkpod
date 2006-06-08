@@ -1,3 +1,9 @@
+2006-06-08 James Liggett <freethinkerjim@users.sourceforge.net>
+
+	 * src/display.c
+	   src/prefs.h
+	   src/prefs.c: Move size_gtkpod to new prefs
+
 2006-06-08 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/repository.c: set_entry() -> set_entry_index() to

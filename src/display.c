@@ -60,7 +60,8 @@ void display_create (void)
     g_return_if_fail (gtkpod_window);
 
     /* x,y-size */
-    prefs_get_size_gtkpod (&defx, &defy);
+    defx = prefs_get_int("size_gtkpod.x");
+		defy = prefs_get_int("size_gtkpod.y");
     gtk_window_set_default_size (GTK_WINDOW (gtkpod_window), defx, defy);
 /* we need to use the following line if the main window is already
    displayed */
@@ -430,8 +431,9 @@ void display_update_default_sizes (void)
     /* x,y size of main window */
     if (gtkpod_window)
     {
-	gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
-	prefs_set_size_gtkpod (x, y);
+			gtk_window_get_size (GTK_WINDOW (gtkpod_window), &x, &y);
+			prefs_set_int("size_gtkpod.x", x);
+			prefs_set_int("size_gtkpod.y", y);
     }
     tm_update_default_sizes ();
     st_update_default_sizes ();
