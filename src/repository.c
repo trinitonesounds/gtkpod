@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-08 01:19:05 jcs>
+/* Time-stamp: <2006-06-09 00:36:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -36,6 +36,7 @@
 #include "display_itdb.h"
 #include "fileselection.h"
 #include "info.h"
+#include "ipod_init.h"
 #include "misc.h"
 #include "prefs.h"
 #include "repository.h"
@@ -81,7 +82,8 @@ static const gchar *BACKUP_LABEL="backup_label";
 static const gchar *BACKUP_ENTRY="backup_entry";
 static const gchar *BACKUP_BUTTON="backup_button";
 static const gchar *IPOD_MODEL_LABEL="ipod_model_label";
-static const gchar *IPOD_MODEL_ENTRY="ipod_model_entry";
+static const gchar *IPOD_MODEL_COMBO="ipod_model_combo";
+static const gchar *IPOD_MODEL_ENTRY="ipod_model_entry--not-a-glade-name";
 static const gchar *LOCAL_PATH_LABEL="local_path_label";
 static const gchar *LOCAL_PATH_BUTTON="local_path_button";
 static const gchar *LOCAL_PATH_ENTRY="local_path_entry";
@@ -140,10 +142,6 @@ const gchar *KEY_MANUAL_SYNCDIR="manual_syncdir";
 
 
 
-/* shortcut to reference widgets when repwin->xml is already set */
-#define GET_WIDGET(a) gtkpod_xml_get_widget (repwin->xml,a)
-
-
 /* Declarations */
 static void update_buttons (RepWin *repwin);
 static void repwin_free (RepWin *repwin);
@@ -152,6 +150,34 @@ static void init_playlist_combo (RepWin *repwin);
 static void select_repository (RepWin *repwin,
 			       iTunesDB *itdb, Playlist *playlist);
 static void create_repository (RepWin *repwin);
+
+
+
+/* ------------------------------------------------------------
+ *
+ *        Helper functions to retrieve widgets.
+ *
+ * ------------------------------------------------------------ */
+/* shortcut to reference widgets when repwin->xml is already set */
+#define GET_WIDGET(a) repository_xml_get_widget (repwin->xml,a)
+
+
+/* This is quite dirty: MODEL_ENTRY is not a real widget
+   name. Instead it's the entry of a ComboBoxEntry -- hide this from
+   the application */
+GtkWidget *repository_xml_get_widget (GladeXML *xml, const gchar *name)
+{
+    if (name == IPOD_MODEL_ENTRY)
+    {
+	GtkWidget *cb = gtkpod_xml_get_widget (xml, IPOD_MODEL_COMBO);
+	return gtk_bin_get_child (GTK_BIN (cb));
+    }
+    else
+    {
+	return gtkpod_xml_get_widget (xml, name);
+    }
+}
+
 
 
 /* Store the window size */
@@ -165,7 +191,6 @@ static void store_window_state (RepWin *repwin)
     prefs_set_int (KEY_REPOSITORY_WINDOW_DEFX, defx);
     prefs_set_int (KEY_REPOSITORY_WINDOW_DEFY, defy);
 }
-
 
 
 /* ------------------------------------------------------------
@@ -1176,8 +1201,9 @@ static void display_repository_info (RepWin *repwin)
 	    MOUNTPOINT_BUTTON,
 	    BACKUP_LABEL,
 	    BACKUP_ENTRY,
+	    BACKUP_BUTTON,
 	    IPOD_MODEL_LABEL,
-	    IPOD_MODEL_ENTRY,
+	    IPOD_MODEL_COMBO,
 	    LOCAL_PATH_ENTRY,
 	    IPOD_SYNC_LABEL,
 	    IPOD_SYNC_CONTACTS_LABEL,
@@ -1241,7 +1267,7 @@ static void display_repository_info (RepWin *repwin)
 	    BACKUP_ENTRY,
 	    BACKUP_BUTTON,
 	    IPOD_MODEL_LABEL,
-	    IPOD_MODEL_ENTRY,
+	    IPOD_MODEL_COMBO,
 	    IPOD_SYNC_LABEL,
 	    IPOD_SYNC_CONTACTS_LABEL,
 	    IPOD_SYNC_CONTACTS_ENTRY,
@@ -1837,6 +1863,7 @@ printf ("TP renaming %d to %d\n", i, i+1);
 void repository_edit (iTunesDB *itdb, Playlist *playlist)
 {
     RepWin *repwin;
+    GtkComboBox *cb;
     gint defx, defy;
     gint i;
     /* widget names and corresponding keys for 'standard' toggle
@@ -1899,6 +1926,11 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
     g_return_if_fail (repwin->window);
 
     repwins = g_list_append (repwins, repwin);
+
+
+    /* Setup model number combo */
+    cb = GTK_COMBO_BOX (GET_WIDGET (IPOD_MODEL_COMBO));
+    init_model_number_combo (cb);
 
     /* Window control */
     g_signal_connect (GET_WIDGET ("apply_button"), "clicked",
@@ -2088,9 +2120,11 @@ static const gchar *INSERT_BEFORE_AFTER_COMBO="insert_before_after_combo";
 static const gchar *REPOSITORY_NAME_ENTRY="repository_name_entry";
 
 
+
+
 /* shortcut to reference widgets when repwin->xml is already set */
 #undef GET_WIDGET
-#define GET_WIDGET(a) gtkpod_xml_get_widget (cr->xml,a)
+#define GET_WIDGET(a) repository_xml_get_widget (cr->xml,a)
 
 
 /* ------------------------------------------------------------
@@ -2162,6 +2196,10 @@ static void create_ok_clicked (GtkButton *button, CreateRep *cr)
 
     ipod_model = gtk_entry_get_text (
 	GTK_ENTRY (GET_WIDGET (IPOD_MODEL_ENTRY)));
+    if (strcmp (ipod_model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0)
+    {   /* User didn't choose a model */
+	ipod_model = "";
+    }
 
     local_path = gtk_entry_get_text (
 	GTK_ENTRY (GET_WIDGET (LOCAL_PATH_ENTRY)));
@@ -2191,6 +2229,9 @@ printf ("renaming %d to %d\n", i, i+1);
 	set_itdb_index_prefs_string (itdb_index,
 				     KEY_BACKUP, backup);
 	set_itdb_index_prefs_int (itdb_index, "type", GP_ITDB_TYPE_IPOD);
+	if (strlen (ipod_model) != 0)
+	    set_itdb_index_prefs_string (itdb_index,
+					 KEY_IPOD_MODEL, ipod_model);
 	break;
     case REPOSITORY_TYPE_LOCAL:
 	set_itdb_index_prefs_string (itdb_index,
@@ -2246,7 +2287,7 @@ static void repository_type_changed (GtkComboBox *cb,
     const gchar *show_ipod[] = {
 	MOUNTPOINT_LABEL, MOUNTPOINT_ENTRY, MOUNTPOINT_BUTTON,
 	BACKUP_LABEL, BACKUP_ENTRY, BACKUP_BUTTON,
-	IPOD_MODEL_LABEL, IPOD_MODEL_ENTRY,
+	IPOD_MODEL_LABEL, IPOD_MODEL_COMBO,
 	NULL };
     /* widgets to show for local repositories */
     const gchar *show_local[] = {
@@ -2256,7 +2297,7 @@ static void repository_type_changed (GtkComboBox *cb,
     const gchar *hide_all[] = {
 	MOUNTPOINT_LABEL, MOUNTPOINT_ENTRY, MOUNTPOINT_BUTTON,
 	BACKUP_LABEL, BACKUP_ENTRY, BACKUP_BUTTON,
-	IPOD_MODEL_LABEL, IPOD_MODEL_ENTRY,
+	IPOD_MODEL_LABEL, IPOD_MODEL_COMBO,
 	LOCAL_PATH_LABEL, LOCAL_PATH_ENTRY, LOCAL_PATH_BUTTON,
 	NULL };
 
@@ -2388,6 +2429,7 @@ static void cr_local_path_button_clicked (GtkButton *button,
 static void create_repository (RepWin *repwin1)
 {
     CreateRep *cr;
+    GtkComboBox *cb;
     gchar *str, *buf1, *buf2;
     struct itdbs_head *itdbs_head = gp_get_itdbs_head (gtkpod_window);
 
@@ -2435,6 +2477,12 @@ static void create_repository (RepWin *repwin1)
 
     g_signal_connect (GET_WIDGET (LOCAL_PATH_BUTTON), "clicked",
 		      G_CALLBACK (cr_local_path_button_clicked), cr);
+
+    /* Setup model number combo */
+    cb = GTK_COMBO_BOX (GET_WIDGET (IPOD_MODEL_COMBO));
+    init_model_number_combo (cb);
+    gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (IPOD_MODEL_ENTRY)),
+			gettext (SELECT_OR_ENTER_YOUR_MODEL));
 
     /* Set initial repository type */
     gtk_combo_box_set_active (

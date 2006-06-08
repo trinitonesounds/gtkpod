@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-08 00:16:13 jcs>
+/* Time-stamp: <2006-06-09 00:16:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -138,20 +138,23 @@ set_cell (GtkCellLayout   *cell_layout,
 }
 
 
-void init_model_combo (IpodInit *ii)
+
+/**
+ * init_model_number_combo:
+ *
+ * Set up the the model for a model_number combo with all iPod models
+ * known to libgpod.
+ *
+ * @cb: the combobox that should be set up with a model.
+ */
+void init_model_number_combo (GtkComboBox *cb)
 {
     const IpodInfo *table;
     Itdb_IpodGeneration generation;
     GtkCellRenderer *renderer;
     GtkTreeStore *store;
     gboolean info_found;
-    GtkComboBox *cb;
-    const IpodInfo *info;
-    const gint BUFLEN = 50;
-    gchar buf[BUFLEN];
-    GtkEntry *entry;
-
-    g_return_if_fail (ii && ii->itdb);
+    gchar buf[PATH_MAX];
 
     table = itdb_info_get_ipod_info_table ();
     g_return_if_fail (table);
@@ -167,8 +170,9 @@ void init_model_combo (IpodInit *ii)
     do
     {
 	GtkTreeIter iter;
-	info = table;
+	const IpodInfo *info = table;
 	info_found = FALSE;
+
 	while (info->model_number)
 	{
 	    if (info->ipod_generation == generation)
@@ -186,7 +190,7 @@ void init_model_combo (IpodInit *ii)
 		gtk_tree_store_append (store, &iter_child, &iter);
 		/* gtk_tree_store_set() is intelligent enough to copy
 		   strings we pass to it */
-		g_snprintf (buf, BUFLEN, "x%s", info->model_number);
+		g_snprintf (buf, PATH_MAX, "x%s", info->model_number);
 		gtk_tree_store_set (store, &iter_child,
 				    COL_POINTER, info,
 				    COL_STRING, buf,
@@ -200,7 +204,6 @@ void init_model_combo (IpodInit *ii)
     /* set the model, specify the text column, and clear the cell
        layout (glade seems to automatically add a text column which
        messes up the entire layout) */
-    cb = GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO));
     gtk_combo_box_set_model (cb, GTK_TREE_MODEL (store));
     g_object_unref (store);
     gtk_combo_box_entry_set_text_column (GTK_COMBO_BOX_ENTRY (cb),
@@ -213,19 +216,6 @@ void init_model_combo (IpodInit *ii)
 					renderer,
 					set_cell,
 					NULL, NULL);
-
-    /* If available set current model, otherwise indicate that */
-    info = itdb_device_get_ipod_info (ii->itdb->device);
-    if (info && (info->ipod_generation != ITDB_IPOD_GENERATION_UNKNOWN))
-    {
-	g_snprintf (buf, BUFLEN, "x%s", info->model_number);
-    }
-    else
-    {
-	g_snprintf (buf, BUFLEN, "%s", gettext (SELECT_OR_ENTER_YOUR_MODEL));
-    }
-    entry = GTK_ENTRY (gtk_bin_get_child(GTK_BIN (cb)));
-    gtk_entry_set_text (entry, buf);
 }
 
 
@@ -237,6 +227,10 @@ gboolean ipod_init (iTunesDB *itdb)
     gboolean result = FALSE;
     gchar *mountpoint, *new_mount, *name, *model;
     GError *error = NULL;
+    GtkEntry *entry;
+    gchar buf[PATH_MAX];
+    GtkComboBox *cb;
+    const IpodInfo *info;
 
     g_return_val_if_fail (itdb, FALSE);
 
@@ -260,8 +254,25 @@ gboolean ipod_init (iTunesDB *itdb)
     g_signal_connect (GET_WIDGET (MOUNTPOINT_BUTTON), "clicked",
 		      G_CALLBACK (mountpoint_button_clicked), ii);
 
-    /* Setup model combo */
-    init_model_combo (ii);
+
+    /* Setup model number combo */
+    cb = GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO));
+    init_model_number_combo (cb);
+
+    /* If available set current model number, otherwise indicate that
+       none is available */
+    info = itdb_device_get_ipod_info (ii->itdb->device);
+    if (info && (info->ipod_generation != ITDB_IPOD_GENERATION_UNKNOWN))
+    {
+	g_snprintf (buf, PATH_MAX, "x%s", info->model_number);
+    }
+    else
+    {
+	g_snprintf (buf, PATH_MAX, "%s", gettext (SELECT_OR_ENTER_YOUR_MODEL));
+    }
+    entry = GTK_ENTRY (gtk_bin_get_child(GTK_BIN (cb)));
+    gtk_entry_set_text (entry, buf);
+
 
     response = gtk_dialog_run (GTK_DIALOG (ii->window));
 

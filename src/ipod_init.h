@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-04 21:14:50 jcs>
+/* Time-stamp: <2006-06-09 00:31:54 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -38,5 +38,8 @@
 #include "itdb.h"
 
 
+extern const gchar *SELECT_OR_ENTER_YOUR_MODEL;
+
 gboolean ipod_init (iTunesDB *itdb);
+void init_model_number_combo (GtkComboBox *cb);
 #endif

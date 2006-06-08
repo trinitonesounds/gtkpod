@@ -9,6 +9,9 @@
 	   - reset model number if iPod with different number is loaded
 	   - write model number to iPod if iPod without model number
 	     is loaded.
+
+	 * src/repository.c: use GtkComboEntry to select iPod model
+	   just like in ipod_init.c
 			 
 2006-06-07 James Liggett <freethinkerjim@users.sourceforge.net>
 	 
@@ -27,6 +30,10 @@
 	   src/prefs.c: Move paned_pos_ keys to new prefs
 		 
 2006-06-06 James Liggett <freethinkerjim@users.sourceforge.net>
+
+	 * src/repository.c: use ComboBoxEntry to allow the selection
+           of the iPod model in the same way as in the ipod_init
+           dialog.
 
 	 * src/display.c
 	   src/display_songs.c
