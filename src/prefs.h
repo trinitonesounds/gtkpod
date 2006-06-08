@@ -139,7 +139,6 @@ struct cfg
   gboolean coverart;            /* Read coverart when adding files? */
   gchar *coverart_template;     /* template for coverart filename   */
   gboolean autosettags[TM_NUM_TAGS_PREFS]; /* autoset empty tags to filename?*/
-  gint paned_pos[PANED_NUM];    /* position of the GtkPaned elements */
 
   gboolean display_toolbar;     /* should toolbar be displayed */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
@@ -342,7 +341,6 @@ void prefs_set_size_conf (gint x, gint y);
 void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_size_prefs (gint x, gint y);
 void prefs_set_size_info (gint x, gint y);
-void prefs_set_paned_pos (gint i, gint pos);
 void prefs_set_statusbar_timeout (guint32 val);
 void prefs_set_automount(gboolean val);
 void prefs_set_info_window(gboolean val);
@@ -367,7 +365,6 @@ void prefs_get_size_prefs (gint *x, gint *y);
 void prefs_get_size_info (gint *x, gint *y);
 gboolean prefs_get_md5tracks(void);
 gboolean prefs_get_block_display(void);
-gint prefs_get_paned_pos (gint i);
 guint32 prefs_get_statusbar_timeout (void);
 
 gboolean prefs_get_display_toolbar (void);

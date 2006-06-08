@@ -187,7 +187,9 @@ static void set_default_preferences()
     prefs_set_int_index("col_visible", TM_COLUMN_PLAYCOUNT, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
     
-    
+   /* Set pane positions--Let gtk worry about position */
+   for (i = 0; i < PANED_NUM; i++)
+    prefs_set_int_index("paned_pos_", i, -1);    
 }
 
 /* Initialize default variable-length list entries */
@@ -621,6 +623,7 @@ static void cleanup_keys()
   gchar *buf;
   gint int_buf;
   gint i;
+  gint x, y, p;  /* Window position */
   float version=0;
 
   /* get version */
@@ -828,6 +831,36 @@ static void cleanup_keys()
       prefs_set_int_index("tm_col_width", i, int_buf);
   }
   
+  /* handle version changes in prefs */
+  if (version == 0.0)
+  {
+      /* most likely prefs file written by V0.50 */
+      /* I added two new PANED elements since V0.50 --> shift */
+      for (i=PANED_NUM_ST-1; i>=0; --i)
+      {
+	      prefs_set_int_index("paned_pos_", PANED_NUM_GLADE + i,
+			       prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i - 2));
+      }
+      prefs_set_int_index("paned_pos_", PANED_STATUS1, -1);
+      prefs_set_int_index("paned_pos_", PANED_STATUS2, -1);
+  }
+
+  /* set statusbar paned to a decent value if unset */
+  if (prefs_get_int_index("paned_pos_", PANED_STATUS1) == -1)
+  {
+      prefs_get_size_gtkpod (&x, &y);
+      /* set to about 2/3 of the window width */
+      if (x>0)   prefs_set_int_index("paned_pos_", PANED_STATUS1, 20*x/30);
+  }
+  
+  if (prefs_get_int_index("paned_pos_", PANED_STATUS2) == -1)
+  {
+      prefs_get_size_gtkpod (&x, &y);
+      p = prefs_get_int_index("paned_pos_", PANED_STATUS1);
+      /* set to about half of the remaining window */
+      if (x>0)   prefs_set_int_index("paned_pos_", PANED_STATUS2, (x-p)/2 );
+  }
+  
   prefs_set_string ("version", VERSION);
 }
 
@@ -836,6 +869,9 @@ static void finalize_prefs()
 {
   /* Sort column order needs to be stored */
   tm_store_col_order();
+  
+  /* Update default sizes */
+  display_update_default_sizes();
 }
 
 /* Initialize the prefs table and read configuration */
@@ -1724,10 +1760,6 @@ struct cfg *cfg_new(void)
     mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3;%t.wav");
     mycfg->coverart = TRUE;
     mycfg->coverart_template = g_strdup ("%A;folder.jpg");
-    for (i=0; i<PANED_NUM; ++i)
-    {
-	mycfg->paned_pos[i] = -1;  /* -1 means: let gtk worry about position */
-    }
     mycfg->display_toolbar = TRUE;
     mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->display_tooltips_main = TRUE;
@@ -1958,11 +1990,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "coverart_template") == 0)
 	  {
 	      prefs_set_coverart_template(strdup(arg));
-	  }
-	  else if(arg_comp (line, "paned_pos_", &off) == 0)
-	  {
-	      gint i = atoi (line+off);
-	      prefs_set_paned_pos (i, atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
@@ -2262,39 +2289,6 @@ read_prefs_defaults(void)
       cfg->version = g_ascii_strtod (VERSION, NULL);
       prefs_set_string ("version", VERSION);
   }
-
-  /* handle version changes in prefs */
-  if (cfg->version == 0.0)
-  {
-      /* most likely prefs file written by V0.50 */
-      /* I added two new PANED elements since V0.50 --> shift */
-      gint i;
-      for (i=PANED_NUM_ST-1; i>=0; --i)
-      {
-	  prefs_set_paned_pos (PANED_NUM_GLADE + i,
-			       prefs_get_paned_pos (PANED_NUM_GLADE + i - 2));
-      }
-      prefs_set_paned_pos (PANED_STATUS1, -1);
-      prefs_set_paned_pos (PANED_STATUS2, -1);
-  }
-
-  /* set statusbar paned to a decent value if unset */
-  if (prefs_get_paned_pos (PANED_STATUS1) == -1)
-  {
-      gint x,y;
-      prefs_get_size_gtkpod (&x, &y);
-      /* set to about 2/3 of the window width */
-      if (x>0)   prefs_set_paned_pos (PANED_STATUS1, 20*x/30);
-  }
-  /* set statusbar paned to a decent value if unset */
-  if (prefs_get_paned_pos (PANED_STATUS2) == -1)
-  {
-      gint x,y,p;
-      prefs_get_size_gtkpod (&x, &y);
-      p = prefs_get_paned_pos (PANED_STATUS1);
-      /* set to about half of the remaining window */
-      if (x>0)   prefs_set_paned_pos (PANED_STATUS2, (x-p)/2 );
-  }
 }
 
 /* Read Preferences and initialise the cfg-struct */
@@ -2363,9 +2357,6 @@ write_prefs_to_file_desc(FILE *fp)
     if(!fp)
 	fp = stderr;
 
-    /* update column widths, x,y-size of main window and GtkPaned
-     * positions */
-    display_update_default_sizes ();
 
     if (cfg->charset)
     {
@@ -2390,11 +2381,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "parsetags_template=%s\n",cfg->parsetags_template);
     fprintf(fp, "coverart=%d\n", prefs_get_coverart());
     fprintf(fp, "coverart_template=%s\n",cfg->coverart_template);
-    fprintf(fp, _("# position of sliders (paned): playlists, above tracks,\n# between sort tabs, and in statusbar.\n"));
-    for (i=0; i<PANED_NUM; ++i)
-    {
-	fprintf(fp, "paned_pos_%d=%d\n", i, prefs_get_paned_pos (i));
-    }
     fprintf(fp, "group_compilations=%d\n",prefs_get_group_compilations());
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
@@ -2871,27 +2857,6 @@ void prefs_set_coverart_template (const gchar *tpl)
 	cfg->coverart_template = g_strdup (tpl);
     }
 }
-
-/* get position of GtkPaned element nr. "i" */
-/* return value: -1: don't change position */
-gint prefs_get_paned_pos (gint i)
-{
-    if (i < PANED_NUM)
-	return cfg->paned_pos[i];
-    else
-    {
-	g_warning ("Programming error: prefs_get_paned_pos: arg out of range (%d)\n", i);
-	return 100; /* something reasonable? */
-    }
-}
-
-/* set position of GtkPaned element nr. "i" */
-void prefs_set_paned_pos (gint i, gint pos)
-{
-    if (i < PANED_NUM)
-	cfg->paned_pos[i] = pos;
-}
-
 
 /* A value of "0" will set the default defined in misc.c */
 void prefs_set_statusbar_timeout (guint32 val)

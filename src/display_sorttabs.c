@@ -2580,7 +2580,7 @@ static void st_set_visible_sort_tab_paned (void)
 	    width = (x-p0) / num;
 	    for (i=0; i<num; ++i)
 	    {
-		prefs_set_paned_pos (PANED_NUM_GLADE+i, width);
+		prefs_set_int_index("paned_pos_", PANED_NUM_GLADE+i, width);
 	    }
 	}
 	g_free (buf);
@@ -2599,11 +2599,11 @@ void st_arrange_visible_sort_tabs (void)
 	st_set_visible_sort_tab_paned ();
 	for (i=0; i<num; ++i)
 	{
-	    if (prefs_get_paned_pos (PANED_NUM_GLADE + i) != -1)
+	    if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i) != -1)
 	    {
 		if (st_paned[i])
 		    gtk_paned_set_position (
-			st_paned[i], prefs_get_paned_pos (PANED_NUM_GLADE+i));
+			st_paned[i], prefs_get_int_index("paned_pos_", PANED_NUM_GLADE+i));
 	    }
 	}
     }
@@ -2644,7 +2644,7 @@ static void st_create_paned (void)
     }
     /* set position of visible paned to decent values if not already
        set */
-    if (prefs_get_paned_pos (PANED_NUM_GLADE) == -1)
+    if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE) == -1)
 	st_set_visible_sort_tab_paned ();
 }
 
@@ -3119,20 +3119,20 @@ void st_set_default_sizes (void)
 	GtkWidget *w = gtkpod_xml_get_widget (main_window_xml,  buf);
 	g_free (buf);
 	g_return_if_fail (w);
-	if (prefs_get_paned_pos (i) != -1)
+	if (prefs_get_int_index("paned_pos_", i) != -1)
 	{
 	    gtk_paned_set_position (GTK_PANED (w),
-				    prefs_get_paned_pos (i));
+				    prefs_get_int_index("paned_pos_", i));
 	}
     }
     /* Elements defined with display.c (sort tab hpaned) */
     for (i=0; i<PANED_NUM_ST; ++i)
     {
 	g_return_if_fail (st_paned[i]);
-	if (prefs_get_paned_pos (PANED_NUM_GLADE + i) != -1)
+	if (prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i) != -1)
 	{
 	    gtk_paned_set_position (
-		st_paned[i], prefs_get_paned_pos (PANED_NUM_GLADE+i));
+		st_paned[i], prefs_get_int_index("paned_pos_", PANED_NUM_GLADE+i));
 	}
     }
 }
@@ -3155,7 +3155,7 @@ void st_update_default_sizes (void)
 	    buf = g_strdup_printf ("paned%d", i);
 	    if((w = gtkpod_xml_get_widget (main_window_xml,  buf)))
 	    {
-		prefs_set_paned_pos (i,
+		prefs_set_int_index("paned_pos_", i,
 				     gtk_paned_get_position (GTK_PANED (w)));
 	    }
 	    g_free (buf);
@@ -3164,7 +3164,7 @@ void st_update_default_sizes (void)
 	for (i=0; i<PANED_NUM_ST; ++i)
 	{
 	    if (st_paned[i])
-		prefs_set_paned_pos (i + PANED_NUM_GLADE,
+		prefs_set_int_index("paned_pos_", i + PANED_NUM_GLADE,
 				     gtk_paned_get_position (st_paned[i]));
 	}
     }
