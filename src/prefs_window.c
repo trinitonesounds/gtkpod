@@ -334,7 +334,8 @@ prefs_window_create (gint page)
     tt = tooltipsdata->tooltips;
     g_return_if_fail (tt);
 
-    prefs_get_size_prefs (&defx, &defy);
+    defx = prefs_get_int("size_prefs.x");
+    defy = prefs_get_int("size_prefs.y");
     gtk_window_set_default_size (GTK_WINDOW (prefs_window), defx, defy);
 
     /* Code to add subscriptions list box */
@@ -754,7 +755,8 @@ void prefs_window_update_default_sizes (void)
     {
 	gint defx, defy;
 	gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
-	prefs_set_size_prefs (defx, defy);
+	prefs_set_int("size_prefs.x", defx);
+  prefs_set_int("size_prefs.y", defy);
     }
 }
 
@@ -815,7 +817,8 @@ void prefs_window_delete(void)
 
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
-    prefs_set_size_prefs (defx, defy);
+	  prefs_set_int("size_prefs.x", defx);
+    prefs_set_int("size_prefs.y", defy);
 
     /* close the window */
     if(prefs_window)
@@ -851,7 +854,8 @@ prefs_window_ok (void)
 
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
-    prefs_set_size_prefs (defx, defy);
+    prefs_set_int("size_prefs.x", defx);
+    prefs_set_int("size_prefs.y", defy);
 
     /* close the window */
     if(prefs_window)
@@ -887,7 +891,8 @@ prefs_window_apply (void)
 
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
-    prefs_set_size_prefs (defx, defy);
+    prefs_set_int("size_prefs.x", defx);
+    prefs_set_int("size_prefs.y", defy);
 }
 
 

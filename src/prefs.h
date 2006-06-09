@@ -124,7 +124,6 @@ struct cfg
   {
       gboolean track, ipod_file, local_file, database;
   } deletion;
-  struct win_size size_prefs;   /* last size of prefs window */
   struct win_size size_info;    /* last size of info window */
   gboolean readtags;            /* Read tags from file contents? */
   gboolean parsetags;           /* Get tags by parsing filename? */
@@ -324,7 +323,6 @@ void prefs_set_coverart_template (const gchar *tpl);
 const gchar *prefs_get_coverart_template (void);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
-void prefs_set_size_prefs (gint x, gint y);
 void prefs_set_size_info (gint x, gint y);
 void prefs_set_statusbar_timeout (guint32 val);
 void prefs_set_automount(gboolean val);
@@ -340,7 +338,6 @@ gboolean prefs_get_pm_autostore (void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_autoimport(void);
 gchar * prefs_get_charset (void);
-void prefs_get_size_prefs (gint *x, gint *y);
 void prefs_get_size_info (gint *x, gint *y);
 gboolean prefs_get_md5tracks(void);
 gboolean prefs_get_block_display(void);
