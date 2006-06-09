@@ -68,7 +68,10 @@ static void cleanup (gpointer id)
 	gint defx, defy;
 	gtk_window_get_size (GTK_WINDOW (cd->window), &defx, &defy);
 	if (cd->scrolled)
-	    prefs_set_size_conf_sw (defx, defy);
+	{
+		prefs_set_int("size_conf_sw.x", defx);
+		prefs_set_int("size_conf_sw.y", defy);
+	}
 	else
 	    prefs_set_size_conf (defx, defy);
 	gtk_widget_destroy (cd->window);
@@ -394,7 +397,8 @@ GtkResponseType gtkpod_confirmation (gint id,
 	    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(w), FALSE);
 	}
 	cd->scrolled = TRUE;
-	prefs_get_size_conf_sw (&defx, &defy);
+	defx = prefs_get_int("size_conf_sw.x");
+	defy = prefs_get_int("size_conf_sw.y");
     }
     else
     { /* no text -> hide widget */

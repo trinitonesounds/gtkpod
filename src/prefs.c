@@ -201,6 +201,10 @@ static void set_default_preferences()
 	/* Set window sizes */
 	prefs_set_int("size_gtkpod.x", 600);
 	prefs_set_int("size_gtkpod.y", 500);
+	prefs_set_int("size_cal.x", 500);
+	prefs_set_int("size_cal.y", 300);
+	prefs_set_int("size_conf_sw.x", 300);
+	prefs_set_int("size_conf_sw.y", 300);
 }
 
 /* Initialize default variable-length list entries */
@@ -1747,10 +1751,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
-    mycfg->size_cal.x = 500;
-    mycfg->size_cal.y = 350;
-    mycfg->size_conf_sw.x = 300;
-    mycfg->size_conf_sw.y = 300;
     mycfg->size_conf.x = 300;
     mycfg->size_conf.y = -1;
     mycfg->size_dirbr.x = 300;
@@ -2099,22 +2099,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
 	  }
-	  else if(g_ascii_strcasecmp (line, "size_cal.x") == 0)
-	  {
-	      prefs_set_size_cal (atoi (arg), -2);
-	  }
-	  else if(g_ascii_strcasecmp (line, "size_cal.y") == 0)
-	  {
-	      prefs_set_size_cal (-2, atoi (arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "size_conf_sw.x") == 0)
-	  {
-	      prefs_set_size_conf_sw (atoi (arg), -2);
-	  }
-	  else if(g_ascii_strcasecmp (line, "size_conf.y") == 0)
-	  {
-	      prefs_set_size_conf (-2, atoi (arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "size_dirbr.x") == 0)
 	  {
 	      prefs_set_size_dirbr (atoi (arg), -2);
@@ -2378,10 +2362,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser, prefs\n"));
-    fprintf (fp, "size_cal.x=%d\n", cfg->size_cal.x);
-    fprintf (fp, "size_cal.y=%d\n", cfg->size_cal.y);
-    fprintf (fp, "size_conf_sw.x=%d\n", cfg->size_conf_sw.x);
-    fprintf (fp, "size_conf_sw.y=%d\n", cfg->size_conf_sw.y);
     fprintf (fp, "size_conf.x=%d\n", cfg->size_conf.x);
     fprintf (fp, "size_conf.y=%d\n", cfg->size_conf.y);
     fprintf (fp, "size_dirbr.x=%d\n", cfg->size_dirbr.x);
@@ -2617,22 +2597,6 @@ gchar *prefs_get_cfgdir (void)
   return cfgdir;
 }
 
-/* Sets the default size for the calendar window. -2 means: don't change
- * the current size */
-void prefs_set_size_cal (gint x, gint y)
-{
-    if (x != -2) cfg->size_cal.x = x;
-    if (y != -2) cfg->size_cal.y = y;
-}
-
-/* Sets the default size for the scrolled conf window. -2 means: don't
- * change the current size */
-void prefs_set_size_conf_sw (gint x, gint y)
-{
-    if (x != -2) cfg->size_conf_sw.x = x;
-    if (y != -2) cfg->size_conf_sw.y = y;
-}
-
 /* Sets the default size for the non-scrolled conf window. -2 means:
  * don't change the current size */
 void prefs_set_size_conf (gint x, gint y)
@@ -2663,22 +2627,6 @@ void prefs_set_size_info (gint x, gint y)
 {
     if (x != -2) cfg->size_info.x = x;
     if (y != -2) cfg->size_info.y = y;
-}
-
-/* Writes the current default size for the gtkpod window in "x" and
-   "y" */
-void prefs_get_size_cal (gint *x, gint *y)
-{
-    *x = cfg->size_cal.x;
-    *y = cfg->size_cal.y;
-}
-
-/* Writes the current default size for the scrolled conf window in "x"
-   and "y" */
-void prefs_get_size_conf_sw (gint *x, gint *y)
-{
-    *x = cfg->size_conf_sw.x;
-    *y = cfg->size_conf_sw.y;
 }
 
 /* Writes the current default size for the non-scrolled conf window in

@@ -3527,7 +3527,9 @@ static void cal_save_default_geometry (GtkWindow *cal)
     gint x,y;
 
     gtk_window_get_size (cal, &x, &y);
-    prefs_set_size_cal (x, y);
+    prefs_set_int("size_cal.x", x);
+	prefs_set_int("size_cal.y", y);
+	
 }
 
 /* Callback for 'delete' event */
@@ -3587,7 +3589,8 @@ void cal_open_calendar (gint inst, T_item item)
     cal = gtkpod_xml_get_widget (cal_xml, "calendar_window");
 
     /* Set to saved size */
-    prefs_get_size_cal (&defx, &defy);
+    defx = prefs_get_int("size_cal.x");
+		defy = prefs_get_int("size_cal.y");
     gtk_window_set_default_size (GTK_WINDOW (cal), defx, defy);
 
     /* Set sorttab number */

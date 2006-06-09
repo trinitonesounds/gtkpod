@@ -124,8 +124,6 @@ struct cfg
   {
       gboolean track, ipod_file, local_file, database;
   } deletion;
-  struct win_size size_cal;     /* last size of calendar window */
-  struct win_size size_conf_sw; /* last size of conf window (scrolled) */
   struct win_size size_conf;    /* last size of conf window */
   struct win_size size_dirbr;   /* last size of dirbrowser window */
   struct win_size size_prefs;   /* last size of prefs window */
@@ -328,8 +326,6 @@ void prefs_set_coverart_template (const gchar *tpl);
 const gchar *prefs_get_coverart_template (void);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
-void prefs_set_size_cal (gint x, gint y);
-void prefs_set_size_conf_sw (gint x, gint y);
 void prefs_set_size_conf (gint x, gint y);
 void prefs_set_size_dirbr (gint x, gint y);
 void prefs_set_size_prefs (gint x, gint y);
@@ -348,8 +344,6 @@ gboolean prefs_get_pm_autostore (void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_autoimport(void);
 gchar * prefs_get_charset (void);
-void prefs_get_size_cal (gint *x, gint *y);
-void prefs_get_size_conf_sw (gint *x, gint *y);
 void prefs_get_size_conf (gint *x, gint *y);
 void prefs_get_size_dirbr (gint *x, gint *y);
 void prefs_get_size_prefs (gint *x, gint *y);
