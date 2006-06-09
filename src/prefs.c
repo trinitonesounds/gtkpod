@@ -207,6 +207,8 @@ static void set_default_preferences()
 	prefs_set_int("size_conf_sw.y", 300);
 	prefs_set_int("size_conf.x", 300);
 	prefs_set_int("size_conf.y", -1);
+	prefs_set_int("size_dirbr.x", 300);
+	prefs_set_int("size_dirbr.y", 400);
 }
 
 /* Initialize default variable-length list entries */
@@ -1753,8 +1755,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
-    mycfg->size_dirbr.x = 300;
-    mycfg->size_dirbr.y = 400;
     mycfg->size_prefs.x = -1;
     mycfg->size_prefs.y = 480;
     mycfg->size_info.x = 510;
@@ -2099,14 +2099,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
 	  }
-	  else if(g_ascii_strcasecmp (line, "size_dirbr.x") == 0)
-	  {
-	      prefs_set_size_dirbr (atoi (arg), -2);
-	  }
-	  else if(g_ascii_strcasecmp (line, "size_dirbr.y") == 0)
-	  {
-	      prefs_set_size_dirbr (-2, atoi (arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "size_prefs.x") == 0)
 	  {
 	      prefs_set_size_prefs (atoi (arg), -2);
@@ -2362,8 +2354,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
     fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser, prefs\n"));
-    fprintf (fp, "size_dirbr.x=%d\n", cfg->size_dirbr.x);
-    fprintf (fp, "size_dirbr.y=%d\n", cfg->size_dirbr.y);
     fprintf (fp, "size_prefs.x=%d\n", cfg->size_prefs.x);
     fprintf (fp, "size_prefs.y=%d\n", cfg->size_prefs.y);
     fprintf (fp, "size_info.x=%d\n", cfg->size_info.x);
@@ -2595,14 +2585,6 @@ gchar *prefs_get_cfgdir (void)
   return cfgdir;
 }
 
-/* Sets the default size for the dirbrowser window. -2 means:
- * don't change the current size */
-void prefs_set_size_dirbr (gint x, gint y)
-{
-    if (x != -2) cfg->size_dirbr.x = x;
-    if (y != -2) cfg->size_dirbr.y = y;
-}
-
 /* Sets the default size for the prefs window. -2 means:
  * don't change the current size */
 void prefs_set_size_prefs (gint x, gint y)
@@ -2618,15 +2600,6 @@ void prefs_set_size_info (gint x, gint y)
     if (x != -2) cfg->size_info.x = x;
     if (y != -2) cfg->size_info.y = y;
 }
-
-/* Writes the current default size for the dirbrowser window in
-   "x" and "y" */
-void prefs_get_size_dirbr (gint *x, gint *y)
-{
-    *x = cfg->size_dirbr.x;
-    *y = cfg->size_dirbr.y;
-}
-
 
 /* Writes the current default size for the info window in
    "x" and "y" */

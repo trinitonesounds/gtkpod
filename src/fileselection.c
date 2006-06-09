@@ -716,7 +716,8 @@ static void add_dir_close (GtkWidget *w1, GtkWidget *w2)
 
     gtk_window_get_size (GTK_WINDOW (dirbrowser), &x, &y);
     /* store size for next time */
-    prefs_set_size_dirbr (x, y);
+    prefs_set_int("size_dirbr.x", x);
+    prefs_set_int("size_dirbr.y", y);
     gtk_widget_destroy(dirbrowser);
     /* dirbrowser = NULL; -- will be done by the dirbrowser_destroy()
        as part of the callback */
@@ -896,7 +897,8 @@ static GtkWidget *xmms_create_dir_browser (const char *title,
     gint x,y;
 
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    prefs_get_size_dirbr (&x, &y);
+    x = prefs_get_int("size_dirbr.x");
+    y = prefs_get_int("size_dirbr.y");
     gtk_window_set_default_size(GTK_WINDOW(window), x, y);
     gtk_window_set_title(GTK_WINDOW(window), title);
     gtk_container_border_width(GTK_CONTAINER(window), 10);

@@ -1,8 +1,12 @@
 2006-06-08 James Liggett <freethinkerjim@users.sourceforge.net>
 
-	 * src/confirmation.c
+	 * src/fileselection.c
+     	   src/prefs.h
+    	   src/prefs.c: Move size_dirbr to new prefs
+
+   	 * src/confirmation.c
 	   src/prefs.h
-		 src/prefs.c: Move size_conf to new prefs
+	   src/prefs.c: Move size_conf to new prefs
 	 
 	 * src/confirmation.c
 	   src/display_sorttabs.c
