@@ -1,6 +1,10 @@
 2006-06-08 James Liggett <freethinkerjim@users.sourceforge.net>
 
 	 * src/confirmation.c
+	   src/prefs.h
+		 src/prefs.c: Move size_conf to new prefs
+	 
+	 * src/confirmation.c
 	   src/display_sorttabs.c
 	   src/prefs.h
 	   src/prefs.c: Move size_cal and size_conf_sw to new prefs

@@ -73,7 +73,10 @@ static void cleanup (gpointer id)
 		prefs_set_int("size_conf_sw.y", defy);
 	}
 	else
-	    prefs_set_size_conf (defx, defy);
+	{
+		prefs_set_int("size_conf.x", defx);
+		prefs_set_int("size_conf.y", defy);
+	}
 	gtk_widget_destroy (cd->window);
 	g_hash_table_remove (id_hash, id);
   
@@ -405,7 +408,8 @@ GtkResponseType gtkpod_confirmation (gint id,
 	if ((w = gtkpod_xml_get_widget (confirm_xml, "scroller")))
 	    gtk_widget_hide (w);
 	cd->scrolled = FALSE;
-	prefs_get_size_conf (&defx, &defy);
+	defx = prefs_get_int("size_conf.x");
+	defy = prefs_get_int("size_conf.y");
     }
     gtk_window_set_default_size (GTK_WINDOW (window), defx, defy);
 
