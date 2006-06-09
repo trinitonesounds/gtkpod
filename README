@@ -681,7 +681,8 @@ At least for the new 4Gs and iPod minis you should _disable_
 
 4) Write rules for udev (/etc/udev/udev.rules, add at the beginning)
    to recognize your iPod automatically (mind the spaces within
-   "iPod..."):
+   "iPod...", and be aware that some distributions require a double
+   equal after the BUS keyworkd (BUS=="scsi"...)):
 
 BUS="scsi", SYSFS{model}="iPod            ", KERNEL="sd?2", NAME="%k", SYMLINK="ipod"
 
