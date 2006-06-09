@@ -1,5 +1,9 @@
 2006-06-08 James Liggett <freethinkerjim@users.sourceforge.net>
 
+   * src/info.c
+     src/prefs.h
+     src/prefs.c: Move size_info to new prefs. Also did some minor cleanup
+
    * src/prefs.h
      src/prefs.c
      src/prefs_window.c: Move size_prefs to new prefs	 

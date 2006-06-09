@@ -211,6 +211,8 @@ static void set_default_preferences()
 	prefs_set_int("size_dirbr.y", 400);
   prefs_set_int("size_prefs.x", -1);
   prefs_set_int("size_prefs.y", 480);
+  prefs_set_int("size_info.x", 510);
+  prefs_set_int("size_info.y", 300);
 }
 
 /* Initialize default variable-length list entries */
@@ -883,6 +885,13 @@ static void cleanup_keys()
 		/* set to about half of the remaining window */
 		if (x>0)   
 			prefs_set_int_index("paned_pos_", PANED_STATUS2, (x-p)/2 );
+  }
+
+  /* Changed layout of info window between 0.72 and 0.73 */
+  if (version < 0.73)
+  {
+    prefs_set_string("size_info.x", NULL);
+    prefs_set_string("size_info.y", NULL);
   }
   
   prefs_set_string ("version", VERSION);
@@ -1757,8 +1766,6 @@ struct cfg *cfg_new(void)
     mycfg->autoimport = FALSE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
-    mycfg->size_info.x = 510;
-    mycfg->size_info.y = 300;
     mycfg->readtags = TRUE;
     mycfg->parsetags = FALSE;
     mycfg->parsetags_overwrite = FALSE;
@@ -2099,18 +2106,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
 	  }
-	  else if(g_ascii_strcasecmp (line, "size_info.x") == 0)
-	  {
-	      /* changed layout of info window between 0.72 and 0.73 */
-	      if (cfg->version >= 0.73)
-		  prefs_set_size_info (atoi (arg), -2);
-	  }
-	  else if(g_ascii_strcasecmp (line, "size_info.y") == 0)
-	  {
-	      /* changed layout of info window between 0.72 and 0.73 */
-	      if (cfg->version >= 0.73)
-		  prefs_set_size_info (-2, atoi (arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "export_check_existing") == 0)
 	  {
 	      prefs_set_int (EXPORT_FILES_CHECK_EXISTING,
@@ -2345,9 +2340,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
-    fprintf(fp, _("# window sizes: main window, confirmation scrolled,\n#               confirmation non-scrolled, dirbrowser, prefs\n"));
-    fprintf (fp, "size_info.x=%d\n", cfg->size_info.x);
-    fprintf (fp, "size_info.y=%d\n", cfg->size_info.y);
     fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
@@ -2573,22 +2565,6 @@ gchar *prefs_get_cfgdir (void)
       }
   }
   return cfgdir;
-}
-
-/* Sets the default size for the info window. -2 means:
- * don't change the current size */
-void prefs_set_size_info (gint x, gint y)
-{
-    if (x != -2) cfg->size_info.x = x;
-    if (y != -2) cfg->size_info.y = y;
-}
-
-/* Writes the current default size for the info window in
-   "x" and "y" */
-void prefs_get_size_info (gint *x, gint *y)
-{
-    *x = cfg->size_info.x;
-    *y = cfg->size_info.y;
 }
 
 void prefs_set_readtags(gboolean active)

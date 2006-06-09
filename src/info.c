@@ -168,7 +168,8 @@ void info_open_window (void)
     if (info_window)
     {
 	gint defx, defy;
-	prefs_get_size_info (&defx, &defy);
+	defx = prefs_get_int("size_info.x");
+  defy = prefs_get_int("size_info.y");
 	gtk_window_set_default_size (GTK_WINDOW (info_window), defx, defy);
 	prefs_set_info_window (TRUE); /* notify prefs */
 	info_update ();
@@ -201,7 +202,8 @@ void info_update_default_sizes (void)
     {
 	gint defx, defy;
 	gtk_window_get_size (GTK_WINDOW (info_window), &defx, &defy);
-	prefs_set_size_info (defx, defy);
+	prefs_set_int("size_info.x", defx);
+  prefs_set_int("size_info.y", defy);
     }
 }
 
