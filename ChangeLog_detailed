@@ -15,6 +15,9 @@
 	   support mp3gain any more. "Normalize" would then just
 	   re-read the gain tags.
 
+	 * src/mp3file.c: renamed GainData *etr; to GainData *gd; to
+           avoid confusion (63 occurences)
+
 2006-06-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/ipod_init.[ch]...: renamed init_model_number_combo()
