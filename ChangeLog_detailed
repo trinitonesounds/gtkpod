@@ -10,6 +10,9 @@
 	 * ipod_init.[ch]: new: gp_ipod_init_set_model() asking for a
            model number string and storing it.
 
+	 * ipod_init.c (gp_ipod_init_set_model): mention mountpoint
+           when asking for the model.
+
 2006-06-10 James Liggett <freethinkerjim@users.sourceforge.net>
 
 	 * src/prefs.h

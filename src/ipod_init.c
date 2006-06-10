@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 19:21:29 jcs>
+/* Time-stamp: <2006-06-10 19:58:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -384,7 +384,7 @@ void gp_ipod_init_set_model (iTunesDB *itdb, const gchar *old_model)
     GladeXML *xml;
     GtkWidget *window;
     gint response;
-    gchar *model;
+    gchar *model, *mountpoint;
     GtkEntry *entry;
     gchar buf[PATH_MAX];
     GtkComboBox *cb;
@@ -396,6 +396,13 @@ void gp_ipod_init_set_model (iTunesDB *itdb, const gchar *old_model)
     xml = glade_xml_new (xml_file, "set_ipod_model_dialog", NULL);
     window = GET_WIDGET ("set_ipod_model_dialog");
     g_return_if_fail (window);
+
+    /* Set up label */
+    mountpoint = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
+    g_return_if_fail (mountpoint);
+    g_snprintf (buf, PATH_MAX, _("<b>Please select your iPod model at </b><i>%s</i>"), mountpoint);
+    gtk_label_set_markup (GTK_LABEL (GET_WIDGET ("label")), buf);
+    g_free (mountpoint);
 
     /* Setup model number combo */
     cb = GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO));
