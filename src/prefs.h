@@ -114,7 +114,6 @@ struct cfg
   gboolean write_extended_info; /* write additional file with PC
 				   filenames etc? */
 
-  gboolean readtags;            /* Read tags from file contents? */
   gboolean parsetags;           /* Get tags by parsing filename? */
   gchar   *parsetags_template;  /* template for parsing tags */
   gboolean parsetags_overwrite; /* Overwrite tags already set? */
@@ -295,8 +294,6 @@ void prefs_set_tm_autostore (gboolean active);
 void prefs_set_write_extended_info(gboolean active);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_block_display(gboolean active);
-void prefs_set_readtags (gboolean active);
-gboolean prefs_get_readtags(void);
 void prefs_set_parsetags (gboolean active);
 gboolean prefs_get_parsetags(void);
 void prefs_set_parsetags_overwrite (gboolean active);

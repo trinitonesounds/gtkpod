@@ -553,7 +553,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "readtags");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->readtags);
+				 prefs_get_int("readtags"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -705,7 +705,6 @@ prefs_window_set(void)
 	tm_store_col_order ();
 	prefs_set_charset(tmpcfg->charset);
 
-	prefs_set_readtags(tmpcfg->readtags);
 	prefs_set_parsetags(tmpcfg->parsetags);
 	prefs_set_parsetags_overwrite(tmpcfg->parsetags_overwrite);
 	prefs_set_parsetags_template(tmpcfg->parsetags_template);
@@ -1143,8 +1142,8 @@ void
 on_readtags_toggled                    (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->readtags = 
-	gtk_toggle_button_get_active(togglebutton);
+    temp_prefs_set_int(temp_prefs, "readtags",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void

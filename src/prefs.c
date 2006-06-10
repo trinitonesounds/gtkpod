@@ -215,6 +215,7 @@ static void set_default_preferences()
     prefs_set_int("size_info.y", 300);
 
     prefs_set_int("autoimport", FALSE);
+    prefs_set_int("readtags", TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1774,7 +1775,6 @@ struct cfg *cfg_new(void)
     mycfg->block_display = FALSE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
-    mycfg->readtags = TRUE;
     mycfg->parsetags = FALSE;
     mycfg->parsetags_overwrite = FALSE;
     mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3;%t.wav");
@@ -1970,10 +1970,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
 	  {
 	      prefs_set_block_display((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "readtags") == 0)
-	  {
-	      prefs_set_readtags((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "parsetags") == 0)
 	  {
@@ -2305,7 +2301,6 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
-    fprintf(fp, "readtags=%d\n", prefs_get_readtags());
     fprintf(fp, "parsetags=%d\n", prefs_get_parsetags());
     fprintf(fp, "parsetags_overwrite=%d\n", prefs_get_parsetags_overwrite());
     fprintf(fp, "parsetags_template=%s\n",cfg->parsetags_template);
@@ -2548,16 +2543,6 @@ gchar *prefs_get_cfgdir (void)
       }
   }
   return cfgdir;
-}
-
-void prefs_set_readtags(gboolean active)
-{
-  cfg->readtags = active;
-}
-
-gboolean prefs_get_readtags(void)
-{
-  return cfg->readtags;
 }
 
 void prefs_set_parsetags(gboolean active)

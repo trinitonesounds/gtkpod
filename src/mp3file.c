@@ -2077,7 +2077,7 @@ Track *mp3_get_file_info (gchar *name)
     }
 
     track = gp_track_new ();
-    if (prefs_get_readtags() && (id3_tag_read (name, &filetag) == TRUE))
+    if (prefs_get_int("readtags") && (id3_tag_read (name, &filetag) == TRUE))
     {
 	track->filetype = g_strdup ("MPEG audio file");
 

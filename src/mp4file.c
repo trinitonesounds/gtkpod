@@ -74,7 +74,7 @@
    guint32 peak_signal;	      /+ LAME Peak Signal * 0x800000         +/
    gboolean compilation;      /+ Track is part of a compilation CD   +/
 
-   If prefs_get_tag_readtags() returns FALSE you only should fill in
+   If prefs_get_int("readtags") returns FALSE you only should fill in
    tracklen, bitrate and fdesc
 
    Please note that the iPod will only play as much of the track as
@@ -181,7 +181,7 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		if (g_strcasecmp (value, ".mp4") == 0)
 		    track->filetype = g_strdup ("MP4 video file");
 	    }
-	    if (prefs_get_readtags ())
+	    if (prefs_get_int("readtags"))
 	    {
 		u_int8_t *ppValue;
 		u_int32_t pValueSize;
