@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-10 00:33:54 jcs>
+/* Time-stamp: <2006-06-11 01:36:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -48,6 +48,8 @@
  * Description of each item of the TagList list
  */
 typedef struct _File_Tag File_Tag;
+typedef struct _GainData GainData;
+
 struct _File_Tag
 {
     gchar *title;          /* Title of track */
@@ -73,6 +75,20 @@ struct _File_Tag
 			     only used to set the flag 'lyrics_flag'
 			     of the Track structure */
 };
+
+
+struct _GainData
+{
+  guint32 peak_signal;	  /* LAME Peak Signal * 0x800000             */
+  gdouble radio_gain;	  /* RadioGain in dB
+			     (as defined by www.replaygain.org)      */
+  gdouble audiophile_gain;/* AudiophileGain in dB 
+			     (as defined by www.replaygain.org)      */
+  gboolean peak_signal_set;    /* has the peak signal been set?      */
+  gboolean radio_gain_set;     /* has the radio gain been set?       */
+  gboolean audiophile_gain_set;/* has the audiophile gain been set?  */
+};
+
 
 /* This code is taken from the mp3info code. Only the code needed for
  * the playlength calculation has been extracted */
@@ -1433,13 +1449,10 @@ static gint lame_vcmp(gchar a[5], gchar b[5]) {
 /* buf[] must be declared unsigned -- otherwise the casts, shifts and
    additions below produce funny results */             
 static void read_lame_replaygain(unsigned char buf[],
-				 Track *track, int gain_adjust) {
+				 GainData *etr, int gain_adjust) {
 	char oc, nc;
 	gint gain;
-	ExtraTrackData *etr;
 
-	g_return_if_fail (track);
-	etr = track->userdata;
 	g_return_if_fail (etr);
 
 	/* buf[0] and buf[1] are a bit field:
@@ -1509,7 +1522,7 @@ static inline guint32 parse_lame_uint32(char *buf) {
  * TODO: Check CRC.
  */
 
-gboolean mp3_get_track_lame_replaygain (gchar *path, Track *track)
+gboolean mp3_get_track_lame_replaygain (gchar *path, GainData *etr)
 {
 	struct {
 		/* All members are defined in terms of chars so padding does not
@@ -1527,10 +1540,7 @@ gboolean mp3_get_track_lame_replaygain (gchar *path, Track *track)
 	int gain_adjust = 0;
 	int sideinfo;
 	guint32 ps;
-	ExtraTrackData *etr;
 
-	g_return_val_if_fail (track, FALSE);
-	etr = track->userdata;
 	g_return_val_if_fail (etr, FALSE);
 
 	etr->radio_gain = 0;
@@ -1660,13 +1670,13 @@ gboolean mp3_get_track_lame_replaygain (gchar *path, Track *track)
 		goto rg_fail;
 
 	/* radio gain */
-	read_lame_replaygain (buf, track, gain_adjust);
+	read_lame_replaygain (buf, etr, gain_adjust);
 
 	if (fread(&buf[0], 1, 2, file) != 2)
 		goto rg_fail;
 
 	/* audiophile gain */
-	read_lame_replaygain (buf, track, gain_adjust);
+	read_lame_replaygain (buf, etr, gain_adjust);
 
 	fclose(file);
 	return TRUE;
@@ -1688,7 +1698,7 @@ rg_fail:
  * The function only modifies the gains if they have not previously been set.
  */
 
-gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
+gboolean mp3_get_track_ape_replaygain(gchar *path, GainData *etr)
 {
 	/* The Ape Tag is located a t the end of the file. Or at least that
 	 * seems where it can most likely be found. Either it is at the very end
@@ -1709,10 +1719,7 @@ gboolean mp3_get_track_ape_replaygain(gchar *path, Track *track)
 	guint32 entry_length = 0;
 	guint32 entries;
 	double d;
-	ExtraTrackData *etr;
 
-	g_return_val_if_fail (track, FALSE);
-	etr = track->userdata;
 	g_return_val_if_fail (etr, FALSE);
 	g_return_val_if_fail (path, FALSE);
 
@@ -1955,25 +1962,40 @@ static gboolean mp3_calc_gain (gchar *path, Track *track)
 
 gboolean mp3_get_gain (gchar *path, Track *track) 
 {
-    ExtraTrackData *etr;
+    GainData etr;
 
     g_return_val_if_fail (track, FALSE);
-    etr = track->userdata;
-    g_return_val_if_fail (etr, FALSE);
 
-    etr->radio_gain_set = FALSE;
-    etr->audiophile_gain_set = FALSE;
-    etr->peak_signal_set = FALSE;
+    memset (&etr, 0, sizeof (GainData));
 
-    mp3_get_track_lame_replaygain (path, track);
-/*    printf ("%d:%d\n", track->radio_gain_set, track->peak_signal_set); */
-    if (etr->radio_gain_set && etr->peak_signal_set) return TRUE;
-    mp3_get_track_ape_replaygain (path, track);
-    if (etr->radio_gain_set) return TRUE;
+    etr.radio_gain_set = FALSE;
+    etr.audiophile_gain_set = FALSE;
+    etr.peak_signal_set = FALSE;
+
+    mp3_get_track_lame_replaygain (path, &etr);
+    if (etr.radio_gain_set)
+    {
+	track->soundcheck = replaygain_to_soundcheck (etr.radio_gain);
+	return TRUE;
+    }
+
+    mp3_get_track_ape_replaygain (path, &etr);
+    if (etr.radio_gain_set)
+    {
+	track->soundcheck = replaygain_to_soundcheck (etr.radio_gain);
+	return TRUE;
+    }
 	    
     if (mp3_calc_gain (path, track))
-	mp3_get_track_ape_replaygain (path, track);
-    if (etr->radio_gain_set) return TRUE;
+    {
+	mp3_get_track_ape_replaygain (path, &etr);
+    }
+    if (etr.radio_gain_set)
+    {
+	track->soundcheck = replaygain_to_soundcheck (etr.radio_gain);
+	return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -1983,27 +2005,35 @@ gboolean mp3_get_gain (gchar *path, Track *track)
  * mp3_read_gain - as mp3_get_gain() above, but will never run
  * mp3gain.
  *
- * Returns TRUE if at least the radio_gain could be read.
+ * Returns TRUE if the soundcheck field could be set.
  */
 
 gboolean mp3_read_gain (gchar *path, Track *track) 
 {
-    ExtraTrackData *etr;
+    GainData etr;
 
     g_return_val_if_fail (track, FALSE);
-    etr = track->userdata;
-    g_return_val_if_fail (etr, FALSE);
 
-    etr->radio_gain_set = FALSE;
-    etr->audiophile_gain_set = FALSE;
-    etr->peak_signal_set = FALSE;
+    memset (&etr, 0, sizeof (GainData));
 
-    mp3_get_track_lame_replaygain (path, track);
-    if (etr->radio_gain_set && etr->peak_signal_set) return TRUE;
+    etr.radio_gain_set = FALSE;
+    etr.audiophile_gain_set = FALSE;
+    etr.peak_signal_set = FALSE;
 
-    mp3_get_track_ape_replaygain (path, track);
-    if (etr->radio_gain_set) return TRUE;
-    
+    mp3_get_track_lame_replaygain (path, &etr);
+    if (etr.radio_gain_set)
+    {
+	track->soundcheck = replaygain_to_soundcheck (etr.radio_gain);
+	return TRUE;
+    }
+
+    mp3_get_track_ape_replaygain (path, &etr);
+    if (etr.radio_gain_set)
+    {
+	track->soundcheck = replaygain_to_soundcheck (etr.radio_gain);
+	return TRUE;
+    }
+
     return FALSE;
 }
 

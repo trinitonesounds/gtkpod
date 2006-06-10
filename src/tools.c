@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 01:13:19 jcs>
+/* Time-stamp: <2006-06-11 01:44:51 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -70,18 +70,21 @@ static gboolean mutex_data = FALSE;
 /* will get the volume either from mp3gain or from LAME's ReplayGain */
 static gint32 nm_get_soundcheck (Track *track)
 {
-    ExtraTrackData *etr;
     gint32 sc = TRACKVOLERROR;
 
     g_return_val_if_fail (track, sc);
-    etr = track->userdata;
-    g_return_val_if_fail (etr, sc);
 
-    if (!etr->radio_gain_set)
-	get_gain (track);
-    if (etr->radio_gain_set) 
-	sc = replaygain_to_soundcheck (etr->radio_gain);
-    return sc;
+    if (track->soundcheck != 0)
+    {
+	return track->soundcheck;
+    }
+    else
+    {
+	if (get_gain (track))
+	    return track->soundcheck;
+	else
+	    return sc;
+    }
 }
 
 
@@ -129,6 +132,7 @@ void nm_tracks_list (GList *list)
 {
   gint count, succ_count, n, nrs;
   gint32 new_soundcheck = 0;
+  gint32 old_soundcheck = 0;
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *track_label;
   GtkWidget *image, *hbox;
@@ -226,6 +230,8 @@ void nm_tracks_list (GList *list)
 
      while (widgets_blocked && gtk_events_pending ())
 	 gtk_main_iteration ();
+
+     old_soundcheck = track->soundcheck;
 
 #ifdef G_THREADS_ENABLED
      mutex_data = FALSE;

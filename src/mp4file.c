@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 01:11:48 jcs>
+/* Time-stamp: <2006-06-11 01:35:38 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -72,13 +72,6 @@
    gint32  bitrate;           /+ bitrate in kbps       +/
    guint16 samplerate;        /+ e.g.: CD is 44100     +/
    guint32 peak_signal;	      /+ LAME Peak Signal * 0x800000         +/
-   gint32  radio_gain;	      /+ RadioGain in dB*10
-				(as defined by www.replaygain.org)   +/
-   gint32  audiophile_gain;   /+ AudiophileGain in dB*10 
-				(as defined by www.replaygain.org)   +/
-   gboolean peak_signal_set;  /+ has the peak signal been set?       +/
-   gboolean radio_gain_set;   /+ has the radio gain been set?        +/
-   gboolean audiophile_gain_set;/+ has the audiophile gain been set? +/
    gboolean compilation;      /+ Track is part of a compilation CD   +/
 
    If prefs_get_tag_readtags() returns FALSE you only should fill in

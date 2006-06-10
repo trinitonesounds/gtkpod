@@ -2,6 +2,19 @@
 
 	 * src/mp4file.c: read aacgain if present.
 
+	 * src/display_itdb.h
+	   src/file.c
+	   src/file_itunesdb.c
+	   src/mp3file.c
+	   src/mp4file.c
+	   src/tools.c
+	   Got rid of radio_gain, audiophile_gain, peak_signal_set,
+	   radio_gain_set, audiophile_gain_set.
+
+	   TODO: rework normalisation process -- probably do not
+	   support mp3gain any more. "Normalize" would then just
+	   re-read the gain tags.
+
 2006-06-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/ipod_init.[ch]...: renamed init_model_number_combo()

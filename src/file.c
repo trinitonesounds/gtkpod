@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-06 21:50:44 jcs>
+/* Time-stamp: <2006-06-11 01:37:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -814,12 +814,6 @@ static void copy_new_info (Track *from, Track *to)
     to->bitrate = from->bitrate;
     to->samplerate = from->samplerate;
     to->soundcheck = from->soundcheck;
-    eto->peak_signal = efrom->peak_signal;
-    eto->radio_gain = efrom->radio_gain;
-    eto->audiophile_gain = efrom->audiophile_gain;
-    eto->peak_signal_set = efrom->peak_signal_set;
-    eto->radio_gain_set = efrom->radio_gain_set;
-    eto->audiophile_gain_set = efrom->audiophile_gain_set;
     eto->mtime = efrom->mtime;
     to->time_added = from->time_added;
     to->time_modified = from->time_modified;
@@ -1120,9 +1114,6 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    if (nti->tracklen)
 		nti->bitrate = nti->size * 8 / nti->tracklen;
 	}
-	if (enti->radio_gain_set) 
-	    nti->soundcheck = 
-		replaygain_to_soundcheck (enti->radio_gain);
 	/* Set unset strings (album...) from filename */
 	set_unset_entries_from_filename (nti);
 

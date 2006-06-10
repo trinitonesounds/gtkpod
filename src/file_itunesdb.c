@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 18:20:19 jcs>
+/* Time-stamp: <2006-06-11 01:38:32 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -69,12 +69,6 @@ struct track_extended_info
     gint32 oldsize;
     guint32 playcount;
     guint32 rating;        /* still read but never written */
-    guint32 peak_signal;
-    gdouble radio_gain;
-    gdouble audiophile_gain;
-    gboolean peak_signal_set;
-    gboolean radio_gain_set;
-    gboolean audiophile_gain_set;
     gboolean transferred;
 };
 
@@ -155,27 +149,6 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
 	  etr->hostname = g_strdup (sei->hostname);
       etr->oldsize = sei->oldsize;
       track->playcount += sei->playcount;
-      if (sei->peak_signal_set)
-      {
-	  etr->peak_signal_set = sei->peak_signal_set;
-	  etr->peak_signal = sei->peak_signal;
-      }
-      if (extendedinfoversion > 0.81)
-      {
-	  /* before 0.82 we used gint instead of double, so re-reading
-	     the tags is safer (0.81 was CVS only and was a bit messed
-	     up for a while) */
-	  if (sei->radio_gain_set)
-	  {
-	      etr->radio_gain_set = sei->radio_gain_set;
-	      etr->radio_gain = sei->radio_gain;
-	  }
-	  if (sei->audiophile_gain_set)
-	  {
-	      etr->audiophile_gain_set = sei->audiophile_gain_set;
-	      etr->audiophile_gain = sei->audiophile_gain;
-	  }
-      }
       /* FIXME: This means that the rating can never be reset to 0
        * by the iPod */
       if (track->rating == 0)
@@ -392,21 +365,6 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->transferred = atoi (arg);
 	    else if (g_ascii_strcasecmp (line, "filename_ipod") == 0)
 		sei->ipod_path = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "peak_signal") == 0)
-	    {
-		sei->peak_signal_set = TRUE;
-		sei->peak_signal = g_ascii_strtod (arg, NULL);
-	    }
-	    else if (g_ascii_strcasecmp (line, "radio_gain") == 0)
-	    {
-		sei->radio_gain_set = TRUE;
-		sei->radio_gain = g_ascii_strtod (arg, NULL);
-	    }
-	    else if (g_ascii_strcasecmp (line, "audiophile_gain") == 0)
-	    {
-		sei->audiophile_gain_set = TRUE;
-		sei->audiophile_gain = g_ascii_strtod (arg, NULL);
-	    }
 	    else if (g_ascii_strcasecmp (line, "pc_mtime") == 0)
 	    {
 		sei->mtime = (time_t)g_ascii_strtoull (arg, NULL, 10);
@@ -1149,24 +1107,6 @@ static gboolean write_extended_info (iTunesDB *itdb)
 	  fprintf (fp, "charset=%s\n", etr->charset);
       if (!track->transferred && etr->oldsize)
 	  fprintf (fp, "oldsize=%d\n", etr->oldsize);
-      if (etr->peak_signal_set)
-      {
-	  gchar buf[20];
-	  g_ascii_dtostr (buf, 20, (gdouble)etr->peak_signal);
-	  fprintf (fp, "peak_signal=%s\n", buf);
-      }
-      if (etr->radio_gain_set)
-      {
-	  gchar buf[20];
-	  g_ascii_dtostr (buf, 20, etr->radio_gain);
-	  fprintf (fp, "radio_gain=%s\n", buf);
-      }
-      if (etr->audiophile_gain_set)
-      {
-	  gchar buf[20];
-	  g_ascii_dtostr (buf, 20, etr->audiophile_gain);
-	  fprintf (fp, "audiophile_gain=%s\n", buf);
-      }
       if (etr->mtime)
 	  fprintf (fp, "pc_mtime=%llu\n", (unsigned long long)etr->mtime);
       fprintf (fp, "transferred=%d\n", track->transferred);
