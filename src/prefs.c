@@ -153,21 +153,21 @@ static void set_default_preferences()
     /* Set sorting tab defaults */
     for (i = 0; i < SORT_TAB_MAX; i++)
     {
-      prefs_set_int_index("st_autoselect", i, TRUE);
-      prefs_set_int_index("st_category", i, (i < ST_CAT_NUM ? i : 0));
-      prefs_set_int_index("sp_or", i, FALSE);
-      prefs_set_int_index("sp_rating_cond", i, FALSE);
-      prefs_set_int_index("sp_playcount_cond", i, FALSE);
-      prefs_set_int_index("sp_played_cond", i, FALSE);
-      prefs_set_int_index("sp_modified_cond", i, FALSE);
-      prefs_set_int_index("sp_added_cond", i, FALSE);
-      prefs_set_int_index("sp_rating_state", i, 0);
-      prefs_set_string_index("sp_played_state", i, ">4w");
-      prefs_set_string_index("sp_modified_state", i, "<1d");
-      prefs_set_string_index("sp_added_state", i, "<1d");
-      prefs_set_int_index("sp_playcount_low", i, 0);
-      prefs_set_int_index("sp_playcount_high", i, -1);
-      prefs_set_int_index("sp_autodisplay", i, FALSE);
+	prefs_set_int_index("st_autoselect", i, TRUE);
+	prefs_set_int_index("st_category", i, (i < ST_CAT_NUM ? i : 0));
+	prefs_set_int_index("sp_or", i, FALSE);
+	prefs_set_int_index("sp_rating_cond", i, FALSE);
+	prefs_set_int_index("sp_playcount_cond", i, FALSE);
+	prefs_set_int_index("sp_played_cond", i, FALSE);
+	prefs_set_int_index("sp_modified_cond", i, FALSE);
+	prefs_set_int_index("sp_added_cond", i, FALSE);
+	prefs_set_int_index("sp_rating_state", i, 0);
+	prefs_set_string_index("sp_played_state", i, ">4w");
+	prefs_set_string_index("sp_modified_state", i, "<1d");
+	prefs_set_string_index("sp_added_state", i, "<1d");
+	prefs_set_int_index("sp_playcount_low", i, 0);
+	prefs_set_int_index("sp_playcount_high", i, -1);
+	prefs_set_int_index("sp_autodisplay", i, FALSE);
     }
     
     prefs_set_int("sort_tab_num", 2);
@@ -175,15 +175,15 @@ static void set_default_preferences()
     /* Set colum prefrences */
     for (i = 0; i < TM_NUM_COLUMNS; i++)
     {
-      prefs_set_int_index("tm_col_width", i, 80);
-      prefs_set_int_index("col_visible", i, FALSE);
-      prefs_set_int_index("col_order", i, i);
+	prefs_set_int_index("tm_col_width", i, 80);
+	prefs_set_int_index("col_visible", i, FALSE);
+	prefs_set_int_index("col_order", i, i);
     }
 		
-		for (i = 0; i < TM_NUM_TAGS_PREFS; i++)
-			prefs_set_int_index("tag_autoset", i, FALSE);
+    for (i = 0; i < TM_NUM_TAGS_PREFS; i++)
+	prefs_set_int_index("tag_autoset", i, FALSE);
 		
-		prefs_set_int_index("tag_autoset", TM_COLUMN_TITLE, TRUE);
+    prefs_set_int_index("tag_autoset", TM_COLUMN_TITLE, TRUE);
     
     prefs_set_int_index("col_visible", TM_COLUMN_ARTIST, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_ALBUM, TRUE);
@@ -192,59 +192,59 @@ static void set_default_preferences()
     prefs_set_int_index("col_visible", TM_COLUMN_PLAYCOUNT, TRUE);
     prefs_set_int_index("col_visible", TM_COLUMN_RATING, TRUE);
 
-	/* Set pane positions--Let gtk worry about position */
-	for (i = 0; i < PANED_NUM; i++)
-		prefs_set_int_index("paned_pos_", i, -1);
+    /* Set pane positions--Let gtk worry about position */
+    for (i = 0; i < PANED_NUM; i++)
+	prefs_set_int_index("paned_pos_", i, -1);
 	
-	prefs_set_int("mpl_autoselect", TRUE);
+    prefs_set_int("mpl_autoselect", TRUE);
 	
-	/* Set window sizes */
-	prefs_set_int("size_gtkpod.x", 600);
-	prefs_set_int("size_gtkpod.y", 500);
-	prefs_set_int("size_cal.x", 500);
-	prefs_set_int("size_cal.y", 300);
-	prefs_set_int("size_conf_sw.x", 300);
-	prefs_set_int("size_conf_sw.y", 300);
-	prefs_set_int("size_conf.x", 300);
-	prefs_set_int("size_conf.y", -1);
-	prefs_set_int("size_dirbr.x", 300);
-	prefs_set_int("size_dirbr.y", 400);
-  prefs_set_int("size_prefs.x", -1);
-  prefs_set_int("size_prefs.y", 480);
-  prefs_set_int("size_info.x", 510);
-  prefs_set_int("size_info.y", 300);
+    /* Set window sizes */
+    prefs_set_int("size_gtkpod.x", 600);
+    prefs_set_int("size_gtkpod.y", 500);
+    prefs_set_int("size_cal.x", 500);
+    prefs_set_int("size_cal.y", 300);
+    prefs_set_int("size_conf_sw.x", 300);
+    prefs_set_int("size_conf_sw.y", 300);
+    prefs_set_int("size_conf.x", 300);
+    prefs_set_int("size_conf.y", -1);
+    prefs_set_int("size_dirbr.x", 300);
+    prefs_set_int("size_dirbr.y", 400);
+    prefs_set_int("size_prefs.x", -1);
+    prefs_set_int("size_prefs.y", 480);
+    prefs_set_int("size_info.x", 510);
+    prefs_set_int("size_info.y", 300);
 }
 
 /* Initialize default variable-length list entries */
 static void set_default_list_entries()
 {
-	if (!prefs_get_string_value_index("sort_ign_string_", 0, NULL))
-	{
-		prefs_set_string_index("sort_ign_string_", 0, "a ");
-		prefs_set_string_index("sort_ign_string_", 1, "an ");
-    prefs_set_string_index("sort_ign_string_", 2, LIST_END_MARKER);
-	}
+    if (!prefs_get_string_value_index("sort_ign_string_", 0, NULL))
+    {
+	prefs_set_string_index("sort_ign_string_", 0, "a ");
+	prefs_set_string_index("sort_ign_string_", 1, "an ");
+	prefs_set_string_index("sort_ign_string_", 2, LIST_END_MARKER);
+    }
 }
 
 /* A printf-like function that outputs in the system locale */
 static void locale_fprintf(FILE *fp, const gchar *format, ...)
 {
-	gchar *utf8_string; /* Raw UTF-8 string */
-	gchar *locale_string;  /* String in system locale format */
-	va_list format_list;  /* Printf-like formatting arguments */
+    gchar *utf8_string; /* Raw UTF-8 string */
+    gchar *locale_string;  /* String in system locale format */
+    va_list format_list;  /* Printf-like formatting arguments */
 	
-	/* Create the locale format string based on the given format */
-	va_start(format_list, format);
-	utf8_string = g_strdup_vprintf(format, format_list);
-	va_end(format_list);
+    /* Create the locale format string based on the given format */
+    va_start(format_list, format);
+    utf8_string = g_strdup_vprintf(format, format_list);
+    va_end(format_list);
 	
-	locale_string = g_locale_from_utf8 (utf8_string, -1, NULL, NULL, NULL);
+    locale_string = g_locale_from_utf8 (utf8_string, -1, NULL, NULL, NULL);
 	
-	if (fp)
-		fprintf(fp, "%s", locale_string);
+    if (fp)
+	fprintf(fp, "%s", locale_string);
 	
-	g_free(utf8_string);
-	g_free(locale_string);
+    g_free(utf8_string);
+    g_free(locale_string);
 }
 
 /* Print commandline usage information */
@@ -266,75 +266,75 @@ static void usage(FILE *fp)
 /* Parse commandline based options */
 static gboolean read_commandline(int argc, char *argv[])
 {
-	int option; /* Code returned by getopt */
+    int option; /* Code returned by getopt */
 	
-	/* The options data structure. The format is standard getopt. */
-	struct option const options[] =
-  {
-  	{"h",           no_argument,				NULL, GP_HELP},
-    {"help",        no_argument,				NULL, GP_HELP},
-    {"m",           required_argument,	NULL, GP_MOUNT},
-    {"mountpoint",  required_argument,	NULL, GP_MOUNT},
-    {0, 0, 0, 0}
+    /* The options data structure. The format is standard getopt. */
+    struct option const options[] =
+	{
+	    {"h",           no_argument,				NULL, GP_HELP},
+	    {"help",        no_argument,				NULL, GP_HELP},
+	    {"m",           required_argument,	NULL, GP_MOUNT},
+	    {"mountpoint",  required_argument,	NULL, GP_MOUNT},
+	    {0, 0, 0, 0}
 	};
 	
-	/* Handle commandline options */
-	while ((option = getopt_long_only(argc, argv, "", options, NULL)) != -1)
+    /* Handle commandline options */
+    while ((option = getopt_long_only(argc, argv, "", options, NULL)) != -1)
+    {
+	switch (option)
 	{
-		switch (option)
-		{
-			case GP_HELP:
-				usage(stdout);
-				exit(0);
-				return FALSE;
-				break;
-			case GP_MOUNT:
-				prefs_set_string("initial_mountpoint", optarg);
-				return TRUE;
-				break;
-			default:
-				locale_fprintf(stderr, "Unknown option: %s\n", argv[optind]);
-				usage(stderr);
-				exit(1);
-				return FALSE;
-				break;
-		};
-	}
-	return TRUE;	
+	case GP_HELP:
+	    usage(stdout);
+	    exit(0);
+	    return FALSE;
+	    break;
+	case GP_MOUNT:
+	    prefs_set_string("initial_mountpoint", optarg);
+	    return TRUE;
+	    break;
+	default:
+	    locale_fprintf(stderr, "Unknown option: %s\n", argv[optind]);
+	    usage(stderr);
+	    exit(1);
+	    return FALSE;
+	    break;
+	};
+    }
+    return TRUE;	
 }
 #endif
 
 /* Read options from environment variables */
 static void read_environment()
 {
-	gchar *buf; 
+    gchar *buf; 
   
-  buf = convert_filename(getenv("IPOD_MOUNTPOINT"));
-  if (buf)
-      prefs_set_string("initial_mountpoint", buf);
-  g_free(buf);
+    buf = convert_filename(getenv("IPOD_MOUNTPOINT"));
+    if (buf)
+	prefs_set_string("initial_mountpoint", buf);
+    g_free(buf);
 }
  
 /* Create a full numbered key from a base key string and a number.
  * Free returned string. */
 static gchar *create_full_key(const gchar *base_key, gint index)
 {
-	if (base_key)
-		return g_strdup_printf("%s%i", base_key, index);
-	else 
-		return NULL;
+    if (base_key)
+	return g_strdup_printf("%s%i", base_key, index);
+    else 
+	return NULL;
 }
 
 /* Copy key data from the temp prefs tree to the hash table */
 static gboolean copy_key(gpointer key, gpointer value, gpointer user_data)
 {
-	if (prefs_table)
-	{
-		g_hash_table_replace(prefs_table, (gpointer)g_strdup(key), 
-												 (gpointer)g_strdup(value));
-	}
+    if (prefs_table)
+    {
+	g_hash_table_replace(prefs_table, (gpointer)g_strdup(key), 
+			     (gpointer)g_strdup(value));
+    }
 	
-	return FALSE;
+    return FALSE;
 }
 
 /* Remove key present in the temp prefs tree from the hash table */
@@ -441,13 +441,13 @@ static gboolean copy_list(gpointer key, gpointer value, gpointer user_data)
 /* Callback that writes pref table data to a file */
 static void write_key(gpointer key, gpointer value, gpointer user_data)
 {
-	FILE *fp;  /* file pointer passed in through user_data */
+    FILE *fp;  /* file pointer passed in through user_data */
 	
-	/* Write out each key and value to the given file */
-	fp = (FILE*)user_data;
+    /* Write out each key and value to the given file */
+    fp = (FILE*)user_data;
 	
-	if (fp)
-		fprintf(fp, "%s=%s\n", (gchar*)key, (gchar*)value);
+    if (fp)
+	fprintf(fp, "%s=%s\n", (gchar*)key, (gchar*)value);
 }
 
 /* Gets a string that contains ~/.gtkpod/ If the folder doesn't exist,
@@ -455,21 +455,21 @@ static void write_key(gpointer key, gpointer value, gpointer user_data)
  * If the folder wasn't found, and couldn't be created, return NULL */
 gchar *get_config_dir()
 {
-	gchar *folder;  /* Folder path */
+    gchar *folder;  /* Folder path */
 	
-	/* Create the folder path. If the folder doesn't exist, create it. */
-	folder = g_build_filename(g_get_home_dir(), ".gtkpod", NULL);
+    /* Create the folder path. If the folder doesn't exist, create it. */
+    folder = g_build_filename(g_get_home_dir(), ".gtkpod", NULL);
 	
-	if (!g_file_test(folder, G_FILE_TEST_IS_DIR))
+    if (!g_file_test(folder, G_FILE_TEST_IS_DIR))
+    {
+	if ((mkdir(folder, 0755)) == -1)
 	{
-		if ((mkdir(folder, 0755)) == -1)
-		{
-			printf("Couldn't create ~/.gtkpod");
-			return NULL;
-		}
+	    printf("Couldn't create ~/.gtkpod");
+	    return NULL;
 	}
+    }
 	
-	return folder;
+    return folder;
 }
 
 /* Disable this until the transition is done */
@@ -477,424 +477,424 @@ gchar *get_config_dir()
 /* Read preferences from a file */
 static void read_prefs_from_file(FILE *fp)
 {
-	gchar buf[PATH_MAX];  /* Buffer that contains one line */
-	gchar *buf_start; /* Pointer to where actual useful data starts in line */
-	gchar *key;  /* Pref value key */
-	gchar *value; /* Pref value */
-	size_t len;  /* string length */
+    gchar buf[PATH_MAX];  /* Buffer that contains one line */
+    gchar *buf_start; /* Pointer to where actual useful data starts in line */
+    gchar *key;  /* Pref value key */
+    gchar *value; /* Pref value */
+    size_t len;  /* string length */
 	
-	if (fp)
+    if (fp)
+    {
+	while (fgets(buf, PATH_MAX, fp))
 	{
-		while (fgets(buf, PATH_MAX, fp))
-		{
-			/* Strip out any comments (lines that begin with ; or #) */
-			if ((buf[0] == ';') || (buf[0] == '#')) 
-				continue;
+	    /* Strip out any comments (lines that begin with ; or #) */
+	    if ((buf[0] == ';') || (buf[0] == '#')) 
+		continue;
 			
-			/* Find the key and value, and look for malformed lines */
-			value = strchr(buf, '=');
+	    /* Find the key and value, and look for malformed lines */
+	    value = strchr(buf, '=');
 			
-			if ((!value) || (value == buf))
-				printf("Parse error reading prefs: %s", buf);
+	    if ((!value) || (value == buf))
+		printf("Parse error reading prefs: %s", buf);
 			
-			/* Strip off whitespace */
-			buf_start = buf;
+	    /* Strip off whitespace */
+	    buf_start = buf;
 			
-			while (g_ascii_isspace(*buf_start))
-				buf_start++;
+	    while (g_ascii_isspace(*buf_start))
+		buf_start++;
 			
-			/* Find the key name */
-			key = g_strndup(buf, (value - buf_start));
-			value++;
+	    /* Find the key name */
+	    key = g_strndup(buf, (value - buf_start));
+	    value++;
 			
-			/* remove newline */
-			len = strlen(value);
+	    /* remove newline */
+	    len = strlen(value);
 			
-			if ((len > 0) && (value[len - 1] == 0x0a))
-				value[len - 1] = 0;
+	    if ((len > 0) && (value[len - 1] == 0x0a))
+		value[len - 1] = 0;
 			
-			/* Strip whitespace off the key value */
-			while (g_ascii_isspace(*value))
-				value++;
+	    /* Strip whitespace off the key value */
+	    while (g_ascii_isspace(*value))
+		value++;
 			
-			/* Finally, load each key/value pair into the pref hash table */
-			if (prefs_table)
-			{
-				g_hash_table_insert(prefs_table, (gpointer)key, 
-					                  (gpointer)g_strdup(value));
-			}
-		}
+	    /* Finally, load each key/value pair into the pref hash table */
+	    if (prefs_table)
+	    {
+		g_hash_table_insert(prefs_table, (gpointer)key, 
+				    (gpointer)g_strdup(value));
+	    }
 	}
+    }
 }
 #endif
 
 /* Write prefs to file */
 static void write_prefs_to_file(FILE *fp)
 {
-	if (prefs_table)
-		g_hash_table_foreach(prefs_table, write_key, (gpointer)fp);
+    if (prefs_table)
+	g_hash_table_foreach(prefs_table, write_key, (gpointer)fp);
 }
 
 /* Load preferences, first loading the defaults, and then overwrite that with
  * preferences in the user home folder. */
 static void load_prefs()
 {
-	#if 0
-  gchar *filename; /* Config path to open */
-	gchar *config_dir;  /* Directory where config is (usually ~/.gtkpod) */
-	FILE *fp;
-  #endif
+#if 0
+    gchar *filename; /* Config path to open */
+    gchar *config_dir;  /* Directory where config is (usually ~/.gtkpod) */
+    FILE *fp;
+#endif
 	
-	/* Start by initializing the prefs to their default values */
-	set_default_preferences();
+    /* Start by initializing the prefs to their default values */
+    set_default_preferences();
 	
-  #if 0
-	/* and then override those values with those found in the home folder. */
-	config_dir = get_config_dir();
+#if 0
+    /* and then override those values with those found in the home folder. */
+    config_dir = get_config_dir();
 	
-	if (config_dir)
+    if (config_dir)
+    {
+	filename = g_build_filename(config_dir, "prefs", NULL);
+		
+	if (filename)
 	{
-		filename = g_build_filename(config_dir, "prefs", NULL);
-		
-		if (filename)
-		{
-			fp = fopen(filename, "r");
+	    fp = fopen(filename, "r");
 			
-			if (fp)
-			{
-				read_prefs_from_file(fp);
-				fclose(fp);
-			}
+	    if (fp)
+	    {
+		read_prefs_from_file(fp);
+		fclose(fp);
+	    }
 			
-			g_free(filename);
-		}
-		
-		g_free(config_dir);
+	    g_free(filename);
 	}
-  #endif
+		
+	g_free(config_dir);
+    }
+#endif
 	
-	/* Finally, initialize variable-length lists. Do this after everything else
-	 * so that list defaults don't hang out in the table after prefs have been
-	 * read from the file. */
-	set_default_list_entries();
+    /* Finally, initialize variable-length lists. Do this after everything else
+     * so that list defaults don't hang out in the table after prefs have been
+     * read from the file. */
+    set_default_list_entries();
 }
 
 /* Save preferences to user home folder (~/gtkpod/prefs) */
 static void save_prefs()
 {
-	gchar *filename;  /* Path of file to write to */
-	gchar *config_dir;   /* Folder where prefs file is */
-	FILE *fp;  /* File pointer */
+    gchar *filename;  /* Path of file to write to */
+    gchar *config_dir;   /* Folder where prefs file is */
+    FILE *fp;  /* File pointer */
 	
-	/* Open $HOME/.gtkpod/prefs, and write prefs */
-	config_dir = get_config_dir();
+    /* Open $HOME/.gtkpod/prefs, and write prefs */
+    config_dir = get_config_dir();
 	
-	if (config_dir)
+    if (config_dir)
+    {
+	filename = g_build_filename(config_dir, "prefs", NULL);
+		
+	if (filename)
 	{
-		filename = g_build_filename(config_dir, "prefs", NULL);
-		
-		if (filename)
-		{
-			fp = fopen(filename, "w");
+	    fp = fopen(filename, "w");
 
-			if (fp)
-			{
-			    /* remove fprintf() once the old prefs
-			       system is completely gone. */
-				fprintf(fp, "version=%s\n", VERSION);
+	    if (fp)
+	    {
+		/* remove fprintf() once the old prefs
+		   system is completely gone. */
+		fprintf(fp, "version=%s\n", VERSION);
 
-				write_prefs_to_file(fp);
-				fclose(fp);
-			}
+		write_prefs_to_file(fp);
+		fclose(fp);
+	    }
 		
-			g_free(filename);
-		}
-		
-		g_free(config_dir);
+	    g_free(filename);
 	}
+		
+	g_free(config_dir);
+    }
 }
 
 /* Removes already existing list keys from the prefs table */
 static void wipe_list(const gchar *key)
 {
-	gchar *full_key; /* Complete key, with its number suffix */
-	guint i;  /* Loop counter */
+    gchar *full_key; /* Complete key, with its number suffix */
+    guint i;  /* Loop counter */
 	
-	/* Go through the prefs table, starting at key<number>, delete it and go 
-	 * through key<number+1>... until there are no keys left */
+    /* Go through the prefs table, starting at key<number>, delete it and go 
+     * through key<number+1>... until there are no keys left */
 	
-	for (i = 0;;i++)
-	{
-		full_key = create_full_key(key, i);
+    for (i = 0;;i++)
+    {
+	full_key = create_full_key(key, i);
 		
-		if (g_hash_table_remove(prefs_table, full_key))
-		{
-			g_free(full_key);
-			continue;
-		}
-		else /* We got all the unneeded keys, leave the loop... */
-		{
-			g_free(full_key);
-			break;
-		}
-	}		
+	if (g_hash_table_remove(prefs_table, full_key))
+	{
+	    g_free(full_key);
+	    continue;
+	}
+	else /* We got all the unneeded keys, leave the loop... */
+	{
+	    g_free(full_key);
+	    break;
+	}
+    }		
 }
 
 /* Delete and rename keys */
 static void cleanup_keys()
 {
-  gchar *buf;
-  gint int_buf;
-  gint i;
-  gint x, y, p;  /* Window position */
-  float version=0;
+    gchar *buf;
+    gint int_buf;
+    gint i;
+    gint x, y, p;  /* Window position */
+    float version=0;
 
-  /* get version */
-  if (prefs_get_string_value ("version", &buf))
-  {
-      version = g_ascii_strtod (buf, NULL);
-      g_free (buf);
-  }
-  else
-  {
-      /* version must only be set to VERSION if no prefs file was
-	 found --> elsewhere */
-      g_return_if_reached ();
-  }
-
-  /* rename mountpoint to initial_mountpoint */
-  if (prefs_get_string_value("mountpoint", &buf))
-  {
-    prefs_set_string("initial_mountpoint", buf);
-    g_free(buf);
-    prefs_set_string(KEY_MOUNTPOINT, NULL);
-  }
-  
-  /* Convert old path numbered keys to named ones */
-  
-  
-  /* Play Now */
-  if (prefs_get_string_value_index("path", PATH_PLAY_NOW, &buf))
-  {
-    prefs_set_string("path_play_now", buf);
-    prefs_set_string_index("path", PATH_PLAY_NOW, NULL);
-    if (version < 0.87)
-    {  /* default changed from "xmms -p %s" to "xmms
-          %s" which avoids xmms from hanging --
-          thanks to Chris Vine */
-        if (strcmp (buf, "xmms -p %s") == 0)
-        {
-            prefs_set_string ("path_play_now", "xmms %s");
-        }
+    /* get version */
+    if (prefs_get_string_value ("version", &buf))
+    {
+	version = g_ascii_strtod (buf, NULL);
+	g_free (buf);
     }
-    g_free(buf);
-  }
-  
-  if (prefs_get_string_value_index("toolpath", PATH_PLAY_NOW, &buf))
-  {
-    prefs_set_string("path_play_now", buf);
-    g_free(buf);
-    prefs_set_string_index("toolpath", PATH_PLAY_NOW, NULL);
-  }
-  
-  /* Enqueue */
-  if (prefs_get_string_value_index("path", PATH_PLAY_ENQUEUE, &buf))
-  {
-    prefs_set_string("path_play_enqueue", buf);
-    g_free(buf);
-    prefs_set_string_index("path", PATH_PLAY_ENQUEUE, NULL);
-  }
-  
-  if (prefs_get_string_value_index("toolpath", PATH_PLAY_ENQUEUE, &buf))
-  {
-    prefs_set_string("path_play_enqueue", buf);
-    g_free(buf);
-    prefs_set_string_index("toolpath", PATH_PLAY_ENQUEUE, NULL);
-  }
-  
-  /* MP3 Gain */
-  if (prefs_get_string_value_index("path", PATH_MP3GAIN, &buf))
-  {
-    prefs_set_string("path_mp3gain", buf);
-    g_free(buf);
-    prefs_set_string_index("path", PATH_MP3GAIN, NULL);
-  }
-  
-  if (prefs_get_string_value_index("toolpath", PATH_MP3GAIN, &buf))
-  {
-    prefs_set_string("path_mp3gain", buf);
-    g_free(buf);
-    prefs_set_string_index("toolpath", PATH_MP3GAIN, NULL);
-  }
-  
-  /* Sync contacts */
-  if (prefs_get_string_value_index("path", PATH_SYNC_CONTACTS, &buf))
-  {
-    prefs_set_string("itdb_0_path_sync_contacts", buf);
-    g_free(buf);
-    prefs_set_string_index("path", PATH_SYNC_CONTACTS, NULL);
-  }
-  
-  if (prefs_get_string_value_index("toolpath", PATH_SYNC_CONTACTS, &buf))
-  {
-    prefs_set_string("itdb_0_path_sync_contacts", buf);
-    g_free(buf);
-    prefs_set_string_index("toolpath", PATH_SYNC_CONTACTS, NULL);
-  }
-  
-  /* Sync calendar */
-  if (prefs_get_string_value_index("path", PATH_SYNC_CALENDAR, &buf))
-  {
-    prefs_set_string("itdb_0_path_sync_calendar", buf);
-    g_free(buf);
-    prefs_set_string_index("path", PATH_SYNC_CALENDAR, NULL);
-  }
-  
-  if (prefs_get_string_value_index("toolpath", PATH_SYNC_CALENDAR, &buf))
-  {
-    prefs_set_string("itdb_0_path_sync_calendar", buf);
-    g_free(buf);
-    prefs_set_string_index("toolpath", PATH_SYNC_CALENDAR, NULL);
-  }
-  
-  /* Sync notes */
-  if (prefs_get_string_value_index("path", PATH_SYNC_NOTES, &buf))
-  {
-    prefs_set_string("itdb_0_path_sync_notes", buf);
-    g_free(buf);
-    prefs_set_string_index("path", PATH_SYNC_NOTES, NULL);
-  }
-  
-  if (prefs_get_string_value_index("toolpath", PATH_SYNC_NOTES, &buf))
-  {
-    prefs_set_string("itdb_0_path_sync_notes", buf);
-    g_free(buf);
-    prefs_set_string_index("toolpath", PATH_SYNC_NOTES, NULL);
-  }
-  
-  /* MSERV music root */
-  if (prefs_get_string_value_index("path", PATH_MSERV_MUSIC_ROOT, &buf))
-  {
-    prefs_set_string("path_mserv_music_root", buf);
-    g_free(buf);
-    prefs_set_string_index("path", PATH_MSERV_MUSIC_ROOT, NULL);
-  }
-  
-  if (prefs_get_string_value_index("toolpath", PATH_MSERV_MUSIC_ROOT, &buf))
-  {
-    prefs_set_string("path_mserv_music_root", buf);
-    g_free(buf);
-    prefs_set_string_index("toolpath", PATH_MSERV_MUSIC_ROOT, NULL);
-  }
-  
-  /* MSERV track info root */
-  if (prefs_get_string_value_index("path", PATH_MSERV_TRACKINFO_ROOT, &buf))
-  {
-    prefs_set_string("path_mserv_trackinfo_root", buf);
-    g_free(buf);
-    prefs_set_string_index("path", PATH_MSERV_TRACKINFO_ROOT, NULL);
-  }
-  
-  if (prefs_get_string_value_index("toolpath", PATH_MSERV_TRACKINFO_ROOT, &buf))
-  {
-    prefs_set_string("path_mserv_trackinfo_root", buf);
-    g_free(buf);
-    prefs_set_string_index("toolpath", PATH_MSERV_TRACKINFO_ROOT, NULL);
-  }
+    else
+    {
+	/* version must only be set to VERSION if no prefs file was
+	   found --> elsewhere */
+	g_return_if_reached ();
+    }
 
-  /* If there's an extra (PATH_NUM) key, delete it */
-  if (prefs_get_string_value_index("path", PATH_NUM, NULL))
-    prefs_set_string_index("path", PATH_NUM, NULL);
+    /* rename mountpoint to initial_mountpoint */
+    if (prefs_get_string_value("mountpoint", &buf))
+    {
+	prefs_set_string("initial_mountpoint", buf);
+	g_free(buf);
+	prefs_set_string(KEY_MOUNTPOINT, NULL);
+    }
   
-  if (prefs_get_string_value_index("toolpath", PATH_NUM, NULL))
-    prefs_set_string_index("toolpath", PATH_NUM, NULL);
+    /* Convert old path numbered keys to named ones */
   
-  /* Ignore play_now_path */
-  if (prefs_get_string_value("play_now_path", NULL))
-    prefs_set_string("play_now_path", NULL);
   
-  /* Ignore sync_remove */
-  if (prefs_get_string_value("sync_remove", NULL))
-    prefs_set_string("sync_remove", NULL);
+    /* Play Now */
+    if (prefs_get_string_value_index("path", PATH_PLAY_NOW, &buf))
+    {
+	prefs_set_string("path_play_now", buf);
+	prefs_set_string_index("path", PATH_PLAY_NOW, NULL);
+	if (version < 0.87)
+	{  /* default changed from "xmms -p %s" to "xmms
+	      %s" which avoids xmms from hanging --
+	      thanks to Chris Vine */
+	    if (strcmp (buf, "xmms -p %s") == 0)
+	    {
+		prefs_set_string ("path_play_now", "xmms %s");
+	    }
+	}
+	g_free(buf);
+    }
   
-  /* Ignore sync_remove_confirm */
-  if (prefs_get_string_value("sync_remove_confirm", NULL))
-    prefs_set_string("sync_remove_confirm", NULL);
+    if (prefs_get_string_value_index("toolpath", PATH_PLAY_NOW, &buf))
+    {
+	prefs_set_string("path_play_now", buf);
+	g_free(buf);
+	prefs_set_string_index("toolpath", PATH_PLAY_NOW, NULL);
+    }
   
-  /* Ignore show_sync_dirs */
-  if (prefs_get_string_value("show_sync_dirs", NULL))
-    prefs_set_string("show_sync_dirs", NULL);
+    /* Enqueue */
+    if (prefs_get_string_value_index("path", PATH_PLAY_ENQUEUE, &buf))
+    {
+	prefs_set_string("path_play_enqueue", buf);
+	g_free(buf);
+	prefs_set_string_index("path", PATH_PLAY_ENQUEUE, NULL);
+    }
   
-  /* Ignore play_enqueue_path */
-  if (prefs_get_string_value("play_enqueue_path", NULL))
-    prefs_set_string("play_enqueue_path", NULL);
+    if (prefs_get_string_value_index("toolpath", PATH_PLAY_ENQUEUE, &buf))
+    {
+	prefs_set_string("path_play_enqueue", buf);
+	g_free(buf);
+	prefs_set_string_index("toolpath", PATH_PLAY_ENQUEUE, NULL);
+    }
   
-  /* Ignore mp3gain_path */
-  if (prefs_get_string_value("mp3gain_path", NULL))
-    prefs_set_string("mp3gain_path", NULL);
+    /* MP3 Gain */
+    if (prefs_get_string_value_index("path", PATH_MP3GAIN, &buf))
+    {
+	prefs_set_string("path_mp3gain", buf);
+	g_free(buf);
+	prefs_set_string_index("path", PATH_MP3GAIN, NULL);
+    }
   
-  /* sp_created_cond renamed to sp_added_cond */
-  for (i = 0; i < SORT_TAB_MAX; i++)
-  {
-    if (prefs_get_int_value_index("sp_created_cond", i, &int_buf))
-      prefs_set_int_index("sp_added_cond", i, int_buf);
-  }
+    if (prefs_get_string_value_index("toolpath", PATH_MP3GAIN, &buf))
+    {
+	prefs_set_string("path_mp3gain", buf);
+	g_free(buf);
+	prefs_set_string_index("toolpath", PATH_MP3GAIN, NULL);
+    }
   
-  /* sp_created_state renamed to sp_added_state */
-  for (i = 0; i < SORT_TAB_MAX; i++)
-  {
-    if (prefs_get_int_value_index("sp_created_state", i, &int_buf))
-      prefs_set_int_index("sp_added_state", i, int_buf);
-  }
+    /* Sync contacts */
+    if (prefs_get_string_value_index("path", PATH_SYNC_CONTACTS, &buf))
+    {
+	prefs_set_string("itdb_0_path_sync_contacts", buf);
+	g_free(buf);
+	prefs_set_string_index("path", PATH_SYNC_CONTACTS, NULL);
+    }
   
-  /* sm_col_width renamed to tm_col_width */
-  for (i = 0; i < TM_NUM_COLUMNS; i++)
-  {
-    if (prefs_get_int_value_index("sm_col_width", i, &int_buf))
-      prefs_set_int_index("tm_col_width", i, int_buf);
-  }
+    if (prefs_get_string_value_index("toolpath", PATH_SYNC_CONTACTS, &buf))
+    {
+	prefs_set_string("itdb_0_path_sync_contacts", buf);
+	g_free(buf);
+	prefs_set_string_index("toolpath", PATH_SYNC_CONTACTS, NULL);
+    }
   
-  /* handle version changes in prefs */
-  if (version == 0.0)
-  {
-      /* most likely prefs file written by V0.50 */
-      /* I added two new PANED elements since V0.50 --> shift */
-      for (i=PANED_NUM_ST-1; i>=0; --i)
-      {
-	      prefs_set_int_index("paned_pos_", PANED_NUM_GLADE + i,
-			       prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i - 2));
-      }
-      prefs_set_int_index("paned_pos_", PANED_STATUS1, -1);
-      prefs_set_int_index("paned_pos_", PANED_STATUS2, -1);
-  }
+    /* Sync calendar */
+    if (prefs_get_string_value_index("path", PATH_SYNC_CALENDAR, &buf))
+    {
+	prefs_set_string("itdb_0_path_sync_calendar", buf);
+	g_free(buf);
+	prefs_set_string_index("path", PATH_SYNC_CALENDAR, NULL);
+    }
+  
+    if (prefs_get_string_value_index("toolpath", PATH_SYNC_CALENDAR, &buf))
+    {
+	prefs_set_string("itdb_0_path_sync_calendar", buf);
+	g_free(buf);
+	prefs_set_string_index("toolpath", PATH_SYNC_CALENDAR, NULL);
+    }
+  
+    /* Sync notes */
+    if (prefs_get_string_value_index("path", PATH_SYNC_NOTES, &buf))
+    {
+	prefs_set_string("itdb_0_path_sync_notes", buf);
+	g_free(buf);
+	prefs_set_string_index("path", PATH_SYNC_NOTES, NULL);
+    }
+  
+    if (prefs_get_string_value_index("toolpath", PATH_SYNC_NOTES, &buf))
+    {
+	prefs_set_string("itdb_0_path_sync_notes", buf);
+	g_free(buf);
+	prefs_set_string_index("toolpath", PATH_SYNC_NOTES, NULL);
+    }
+  
+    /* MSERV music root */
+    if (prefs_get_string_value_index("path", PATH_MSERV_MUSIC_ROOT, &buf))
+    {
+	prefs_set_string("path_mserv_music_root", buf);
+	g_free(buf);
+	prefs_set_string_index("path", PATH_MSERV_MUSIC_ROOT, NULL);
+    }
+  
+    if (prefs_get_string_value_index("toolpath", PATH_MSERV_MUSIC_ROOT, &buf))
+    {
+	prefs_set_string("path_mserv_music_root", buf);
+	g_free(buf);
+	prefs_set_string_index("toolpath", PATH_MSERV_MUSIC_ROOT, NULL);
+    }
+  
+    /* MSERV track info root */
+    if (prefs_get_string_value_index("path", PATH_MSERV_TRACKINFO_ROOT, &buf))
+    {
+	prefs_set_string("path_mserv_trackinfo_root", buf);
+	g_free(buf);
+	prefs_set_string_index("path", PATH_MSERV_TRACKINFO_ROOT, NULL);
+    }
+  
+    if (prefs_get_string_value_index("toolpath", PATH_MSERV_TRACKINFO_ROOT, &buf))
+    {
+	prefs_set_string("path_mserv_trackinfo_root", buf);
+	g_free(buf);
+	prefs_set_string_index("toolpath", PATH_MSERV_TRACKINFO_ROOT, NULL);
+    }
 
-  /* set statusbar paned to a decent value if unset */
-  if (prefs_get_int_index("paned_pos_", PANED_STATUS1) == -1)
-  {
-		x = prefs_get_int("size_gtkpod.x");
-		/* set to about 2/3 of the window width */
-		if (x>0)   
-			prefs_set_int_index("paned_pos_", PANED_STATUS1, 20*x/30);
-  }
+    /* If there's an extra (PATH_NUM) key, delete it */
+    if (prefs_get_string_value_index("path", PATH_NUM, NULL))
+	prefs_set_string_index("path", PATH_NUM, NULL);
   
-  if (prefs_get_int_index("paned_pos_", PANED_STATUS2) == -1)
-  {
-		x = prefs_get_int("size_gtkpod.x");
-		y = prefs_get_int("size_gtkpod.y");
-		p = prefs_get_int_index("paned_pos_", PANED_STATUS1);
-		/* set to about half of the remaining window */
-		if (x>0)   
-			prefs_set_int_index("paned_pos_", PANED_STATUS2, (x-p)/2 );
-  }
+    if (prefs_get_string_value_index("toolpath", PATH_NUM, NULL))
+	prefs_set_string_index("toolpath", PATH_NUM, NULL);
+  
+    /* Ignore play_now_path */
+    if (prefs_get_string_value("play_now_path", NULL))
+	prefs_set_string("play_now_path", NULL);
+  
+    /* Ignore sync_remove */
+    if (prefs_get_string_value("sync_remove", NULL))
+	prefs_set_string("sync_remove", NULL);
+  
+    /* Ignore sync_remove_confirm */
+    if (prefs_get_string_value("sync_remove_confirm", NULL))
+	prefs_set_string("sync_remove_confirm", NULL);
+  
+    /* Ignore show_sync_dirs */
+    if (prefs_get_string_value("show_sync_dirs", NULL))
+	prefs_set_string("show_sync_dirs", NULL);
+  
+    /* Ignore play_enqueue_path */
+    if (prefs_get_string_value("play_enqueue_path", NULL))
+	prefs_set_string("play_enqueue_path", NULL);
+  
+    /* Ignore mp3gain_path */
+    if (prefs_get_string_value("mp3gain_path", NULL))
+	prefs_set_string("mp3gain_path", NULL);
+  
+    /* sp_created_cond renamed to sp_added_cond */
+    for (i = 0; i < SORT_TAB_MAX; i++)
+    {
+	if (prefs_get_int_value_index("sp_created_cond", i, &int_buf))
+	    prefs_set_int_index("sp_added_cond", i, int_buf);
+    }
+  
+    /* sp_created_state renamed to sp_added_state */
+    for (i = 0; i < SORT_TAB_MAX; i++)
+    {
+	if (prefs_get_int_value_index("sp_created_state", i, &int_buf))
+	    prefs_set_int_index("sp_added_state", i, int_buf);
+    }
+  
+    /* sm_col_width renamed to tm_col_width */
+    for (i = 0; i < TM_NUM_COLUMNS; i++)
+    {
+	if (prefs_get_int_value_index("sm_col_width", i, &int_buf))
+	    prefs_set_int_index("tm_col_width", i, int_buf);
+    }
+  
+    /* handle version changes in prefs */
+    if (version == 0.0)
+    {
+	/* most likely prefs file written by V0.50 */
+	/* I added two new PANED elements since V0.50 --> shift */
+	for (i=PANED_NUM_ST-1; i>=0; --i)
+	{
+	    prefs_set_int_index("paned_pos_", PANED_NUM_GLADE + i,
+				prefs_get_int_index("paned_pos_", PANED_NUM_GLADE + i - 2));
+	}
+	prefs_set_int_index("paned_pos_", PANED_STATUS1, -1);
+	prefs_set_int_index("paned_pos_", PANED_STATUS2, -1);
+    }
 
-  /* Changed layout of info window between 0.72 and 0.73 */
-  if (version < 0.73)
-  {
-    prefs_set_string("size_info.x", NULL);
-    prefs_set_string("size_info.y", NULL);
-  }
+    /* set statusbar paned to a decent value if unset */
+    if (prefs_get_int_index("paned_pos_", PANED_STATUS1) == -1)
+    {
+	x = prefs_get_int("size_gtkpod.x");
+	/* set to about 2/3 of the window width */
+	if (x>0)   
+	    prefs_set_int_index("paned_pos_", PANED_STATUS1, 20*x/30);
+    }
   
-  prefs_set_string ("version", VERSION);
+    if (prefs_get_int_index("paned_pos_", PANED_STATUS2) == -1)
+    {
+	x = prefs_get_int("size_gtkpod.x");
+	y = prefs_get_int("size_gtkpod.y");
+	p = prefs_get_int_index("paned_pos_", PANED_STATUS1);
+	/* set to about half of the remaining window */
+	if (x>0)   
+	    prefs_set_int_index("paned_pos_", PANED_STATUS2, (x-p)/2 );
+    }
+
+    /* Changed layout of info window between 0.72 and 0.73 */
+    if (version < 0.73)
+    {
+	prefs_set_string("size_info.x", NULL);
+	prefs_set_string("size_info.y", NULL);
+    }
+  
+    prefs_set_string ("version", VERSION);
 }
 
 /* Do things that need to be done before saving prefs */
@@ -910,57 +910,57 @@ static void finalize_prefs()
 /* Initialize the prefs table and read configuration */
 void init_prefs(int argc, char *argv[])
 {
-	/* Create the prefs hash table */
-	prefs_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
-																			g_free);
+    /* Create the prefs hash table */
+    prefs_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
+					g_free);
 	
-	/* Load preferences */
-	load_prefs();
+    /* Load preferences */
+    load_prefs();
 	
-	/* Read environment variables */
-	read_environment(); 
+    /* Read environment variables */
+    read_environment(); 
 	
-  #if 0
-	/* Read commandline arguments */
-	read_commandline(argc, argv);
-	#endif
+#if 0
+    /* Read commandline arguments */
+    read_commandline(argc, argv);
+#endif
   
-  /* Leave this here--will work when transition is complete */
-  #if 0
-  /* Clean up old prefs keys */
-  cleanup_keys();
-  #endif
+    /* Leave this here--will work when transition is complete */
+#if 0
+    /* Clean up old prefs keys */
+    cleanup_keys();
+#endif
 }
 
 /* Save prefs data to a file, and then delete the hash table */
 void cleanup_prefs()
 {
-	if (prefs_table)
-	{
-		/* Let prefs do some things before saving */
-    finalize_prefs();
+    if (prefs_table)
+    {
+	/* Let prefs do some things before saving */
+	finalize_prefs();
     
-    /* Save prefs */
-		save_prefs();
+	/* Save prefs */
+	save_prefs();
 		
-		/* Delete the prefs hash table */
-		g_hash_table_destroy(prefs_table);
-		prefs_table = NULL;
-	}
+	/* Delete the prefs hash table */
+	g_hash_table_destroy(prefs_table);
+	prefs_table = NULL;
+    }
 }
 
 /* Create the temp prefs tree */
 /* Free the returned structure with delete_temp_prefs() */
 TempPrefs *temp_prefs_create()
 {
-	TempPrefs *temp_prefs;  /* Retunred temp prefs structure */
+    TempPrefs *temp_prefs;  /* Retunred temp prefs structure */
 
-	temp_prefs = (TempPrefs*)g_malloc(sizeof(TempPrefs));
+    temp_prefs = (TempPrefs*)g_malloc(sizeof(TempPrefs));
 
-	temp_prefs->tree = g_tree_new_full((GCompareDataFunc)strcmp, NULL,
-					   g_free, g_free);
+    temp_prefs->tree = g_tree_new_full((GCompareDataFunc)strcmp, NULL,
+				       g_free, g_free);
 
-	return temp_prefs;	
+    return temp_prefs;	
 }
 
 /* Delete temp prefs */
@@ -1141,114 +1141,114 @@ void prefs_set_string(const gchar *key, const gchar *value)
 /* Set a key value to a given integer */
 void prefs_set_int(const gchar *key, const gint value)
 {
-	gchar *strvalue; /* String value converted from integer */
+    gchar *strvalue; /* String value converted from integer */
 
-	if (prefs_table)
-	{
-		strvalue = g_strdup_printf("%i", value);
-		g_hash_table_insert(prefs_table, g_strdup(key), strvalue);
-	}
+    if (prefs_table)
+    {
+	strvalue = g_strdup_printf("%i", value);
+	g_hash_table_insert(prefs_table, g_strdup(key), strvalue);
+    }
 }
 
 /* Set a key to an int64 value */
 void prefs_set_int64(const gchar *key, const gint64 value)
 {
-	gchar *strvalue; /* String value converted from int64 */
+    gchar *strvalue; /* String value converted from int64 */
 	
-	if (prefs_table)
-	{
-		strvalue = g_strdup_printf("%llu", value);
-		g_hash_table_insert(prefs_table, g_strdup(key), strvalue);	
-	}
+    if (prefs_table)
+    {
+	strvalue = g_strdup_printf("%llu", value);
+	g_hash_table_insert(prefs_table, g_strdup(key), strvalue);	
+    }
 }
 
 /* Get a string value associated with a key. Free returned string. */
 gchar *prefs_get_string(const gchar *key)
 {	
-	if (prefs_table)
-		return g_strdup(g_hash_table_lookup(prefs_table, key));
-	else
-		return NULL;
+    if (prefs_table)
+	return g_strdup(g_hash_table_lookup(prefs_table, key));
+    else
+	return NULL;
 }
 
 /* Use this if you need to know if the given key actually exists */
 /* The value parameter can be NULL if you don't need the value itself. */
 gboolean prefs_get_string_value(const gchar *key, gchar **value)
 {
-	gchar *string;  /* String value from prefs table */
+    gchar *string;  /* String value from prefs table */
 	
-	if (prefs_table)
-	{
-		string = g_hash_table_lookup(prefs_table, key);
+    if (prefs_table)
+    {
+	string = g_hash_table_lookup(prefs_table, key);
 		
-		if (value)
-			*value = g_strdup (string);
-		if (string)
-		        return TRUE;
-	}
-	return FALSE;
+	if (value)
+	    *value = g_strdup (string);
+	if (string)
+	    return TRUE;
+    }
+    return FALSE;
 }
 
 /* Get an integer value from a key */
 gint prefs_get_int(const gchar *key)
 {
-	gchar *string; /* Hash value string */
-	gint value;  /* Retunred value */
+    gchar *string; /* Hash value string */
+    gint value;  /* Retunred value */
 	
-	value = 0;
+    value = 0;
 	
-	if (prefs_table)
-	{
-		string = g_hash_table_lookup(prefs_table, key);
+    if (prefs_table)
+    {
+	string = g_hash_table_lookup(prefs_table, key);
 		
-		if (string)
-			value = atoi(string);
-	}
+	if (string)
+	    value = atoi(string);
+    }
 
-	return value;
+    return value;
 }
 
 /* Use this if you need to know if the given key actually exists */
 /* The value parameter can be NULL if you don't need the value itself. */
 gboolean prefs_get_int_value(const gchar *key, gint *value)
 {
-	gchar *string;  /* String value from prefs table */
+    gchar *string;  /* String value from prefs table */
 	
-	if (prefs_table)
+    if (prefs_table)
+    {
+	string = g_hash_table_lookup(prefs_table, key);
+
+	if (value)
 	{
-		string = g_hash_table_lookup(prefs_table, key);
-
-		if (value)
-		{
-		        if (string)
-				*value = atoi(string);
-			else
-			        *value = 0;
-		}
-
-		if (string)
-			return TRUE;
+	    if (string)
+		*value = atoi(string);
+	    else
+		*value = 0;
 	}
-	return FALSE;
+
+	if (string)
+	    return TRUE;
+    }
+    return FALSE;
 }
 
 /* Get a 64 bit integer value from a key */
 gint64 prefs_get_int64(const gchar *key)
 {
-	gchar *string;  /* Key value string */
-	gint64 value;  /* Retunred value */
+    gchar *string;  /* Key value string */
+    gint64 value;  /* Retunred value */
 	
-	value = 0;
+    value = 0;
 
-	if (prefs_table)
-	{
-		string = g_hash_table_lookup(prefs_table, key);
+    if (prefs_table)
+    {
+	string = g_hash_table_lookup(prefs_table, key);
 
-		if (string)
-			value = g_ascii_strtoull(string, NULL, 10);
-	}
+	if (string)
+	    value = g_ascii_strtoull(string, NULL, 10);
+    }
 	
-	return value;
+    return value;
 }
 
 /* Get a 64 bit integer value from a key */
@@ -1256,149 +1256,149 @@ gint64 prefs_get_int64(const gchar *key)
 /* The value parameter can be NULL if you don't need the value itself. */
 gboolean prefs_get_int64_value(const gchar *key, gint64 *value)
 {
-	gchar *string;  /* String value from prefs table */
+    gchar *string;  /* String value from prefs table */
 	
-	if (prefs_table)
-	{
-		string = g_hash_table_lookup(prefs_table, key);
+    if (prefs_table)
+    {
+	string = g_hash_table_lookup(prefs_table, key);
 		
-		if (string)
-		{
-			if (value)
-				*value = g_ascii_strtoull(string, NULL, 10);
+	if (string)
+	{
+	    if (value)
+		*value = g_ascii_strtoull(string, NULL, 10);
 			
-			return TRUE;
-		}
+	    return TRUE;
 	}
-	return FALSE;
+    }
+    return FALSE;
 }
 
 /* Functions for numbered pref keys */
 
 /* Set a string value with the given key */
 void prefs_set_string_index(const gchar *key, const guint index, 
-														const gchar *value)
+			    const gchar *value)
 {
-	gchar *full_key; /* Complete numbered key */
+    gchar *full_key; /* Complete numbered key */
 	
-	full_key = create_full_key(key, index);
-	prefs_set_string(full_key, value);
+    full_key = create_full_key(key, index);
+    prefs_set_string(full_key, value);
 	
-	g_free(full_key);
+    g_free(full_key);
 }
 
 /* Set a key value to a given integer */
 void prefs_set_int_index(const gchar *key, const guint index, 
-												 const gint value)
+			 const gint value)
 {
-	gchar *full_key; /* Complete numbered key */
+    gchar *full_key; /* Complete numbered key */
 	
-	full_key = create_full_key(key, index);
-	prefs_set_int(full_key, value);
+    full_key = create_full_key(key, index);
+    prefs_set_int(full_key, value);
 	
-	g_free(full_key);
+    g_free(full_key);
 }
 
 /* Set a key to an int64 value */
 void prefs_set_int64_index(const gchar *key, const guint index, 
-													 const gint64 value)
+			   const gint64 value)
 {
-	gchar *full_key; /* Complete numbered key */
+    gchar *full_key; /* Complete numbered key */
 	
-	full_key = create_full_key(key, index);
-	prefs_set_int64(full_key, value);
+    full_key = create_full_key(key, index);
+    prefs_set_int64(full_key, value);
 	
-	g_free(full_key);
+    g_free(full_key);
 }
 
 /* Get a string value associated with a key. Free returned string. */
 gchar *prefs_get_string_index(const gchar *key, const guint index)
 {	
-	gchar *full_key; /* Complete numbered key */
-	gchar *string;  /* Return string */
+    gchar *full_key; /* Complete numbered key */
+    gchar *string;  /* Return string */
 	
-	full_key = create_full_key(key, index);
-	string = prefs_get_string(full_key);
+    full_key = create_full_key(key, index);
+    string = prefs_get_string(full_key);
 	
-	g_free(full_key);
-	return string;
+    g_free(full_key);
+    return string;
 }
 
 /* Get a string value associated with a key. Free returned string. */
 /* Use this if you need to know if the given key actually exists */
 gboolean prefs_get_string_value_index(const gchar *key, const guint index, 
-																			gchar **value)
+				      gchar **value)
 {
-	gchar *full_key; /* Complete numbered key */
-	gboolean ret; /* Return value */
+    gchar *full_key; /* Complete numbered key */
+    gboolean ret; /* Return value */
 	
-	full_key = create_full_key(key, index);
-	ret = prefs_get_string_value(full_key, value);
+    full_key = create_full_key(key, index);
+    ret = prefs_get_string_value(full_key, value);
 	
-	g_free(full_key);
-	return ret;
+    g_free(full_key);
+    return ret;
 }
 
 /* Get an integer value from a key */
 gint prefs_get_int_index(const gchar *key, const guint index)
 {
-	gchar *full_key; /* Complete numbered key */
-	gint value;  /* Returned integer value */
+    gchar *full_key; /* Complete numbered key */
+    gint value;  /* Returned integer value */
 
-	full_key = create_full_key(key, index);
-	value = prefs_get_int(full_key);
+    full_key = create_full_key(key, index);
+    value = prefs_get_int(full_key);
 	
-	g_free(full_key);
-	return value;
+    g_free(full_key);
+    return value;
 }
 
 /* Get an integer value from a key */
 /* Use this if you need to know if the given key actually exists */
 gboolean prefs_get_int_value_index(const gchar *key, const guint index,  
-																	 gint *value)
+				   gint *value)
 {
-	gchar *full_key; /* Complete numbered key */
-	gboolean ret; /* Return value */
+    gchar *full_key; /* Complete numbered key */
+    gboolean ret; /* Return value */
 	
-	full_key = create_full_key(key, index);
-	ret = prefs_get_int_value(full_key, value);
+    full_key = create_full_key(key, index);
+    ret = prefs_get_int_value(full_key, value);
 	
-	g_free(full_key);
-	return ret;
+    g_free(full_key);
+    return ret;
 }
 
 /* Get a 64 bit integer value from a key */
 gint64 prefs_get_int64_index(const gchar *key, const guint index)
 {
-	gchar *full_key; /* Complete numbered key */
-	gint64 value; /* Return value */
+    gchar *full_key; /* Complete numbered key */
+    gint64 value; /* Return value */
 	
-	full_key = create_full_key(key, index);
-	value = prefs_get_int64(full_key);
+    full_key = create_full_key(key, index);
+    value = prefs_get_int64(full_key);
 	
-	g_free(full_key);
-	return value;
+    g_free(full_key);
+    return value;
 }
 
 /* Get a 64 bit integer value from a key */
 /* Use this if you need to know if the given key actually exists */
 gboolean prefs_get_int64_value_index(const gchar *key, const guint index, 
-																		 gint64 *value)
+				     gint64 *value)
 {
-	gchar *full_key; /* Complete numbered key */
-	gboolean ret; /* Return value */
+    gchar *full_key; /* Complete numbered key */
+    gboolean ret; /* Return value */
 	
-	full_key = create_full_key(key, index);
-	ret = prefs_get_int64_value(key, value);
+    full_key = create_full_key(key, index);
+    ret = prefs_get_int64_value(key, value);
 	
-	g_free(full_key);
-	return ret;
+    g_free(full_key);
+    return ret;
 }
 
 /* Add string value with the given key to temp prefs. Remove the key
  * if @value is NULL. */
 void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key, 
-													 const gchar *value)
+			   const gchar *value)
 {
     g_return_if_fail (temp_prefs && temp_prefs->tree);
     g_return_if_fail (key);
@@ -1411,7 +1411,7 @@ void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key,
 
 /* Add an integer value to temp prefs */
 void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key, 
-												const gint value)
+			const gint value)
 {
     gchar *strvalue; /* String value converted from integer */
 
@@ -1424,7 +1424,7 @@ void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key,
 
 /* Add an int64 to temp prefs */
 void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key, 
-													const gint64 value)
+			  const gint64 value)
 {
     gchar *strvalue; /* String value converted from int64 */
 	
@@ -1545,7 +1545,7 @@ void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,
 
 /* Set a key to an int64 value */
 void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,  
-																const guint index, const gint64 value)
+				const guint index, const gint64 value)
 {
     gchar *full_key; /* Complete numbered key */
 
@@ -1564,167 +1564,167 @@ void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,
 /* Free the returned structure with destroy_temp_lists */
 TempLists *temp_lists_create()
 {
-	TempLists *temp_lists;  /* Allocated temp list structure */
+    TempLists *temp_lists;  /* Allocated temp list structure */
 	
-	temp_lists = (TempLists*)g_malloc(sizeof(TempLists));
+    temp_lists = (TempLists*)g_malloc(sizeof(TempLists));
 	
 
-	temp_lists->tree = g_tree_new_full((GCompareDataFunc)strcmp, NULL,
-					   g_free,
-					   (GDestroyNotify)prefs_free_list);
-	return temp_lists;
+    temp_lists->tree = g_tree_new_full((GCompareDataFunc)strcmp, NULL,
+				       g_free,
+				       (GDestroyNotify)prefs_free_list);
+    return temp_lists;
 }
 
 /* Destroys the list tree */
 void temp_lists_destroy(TempLists *temp_lists)
 {
-	if (temp_lists)
-	{
-		if (temp_lists->tree)
-			g_tree_destroy(temp_lists->tree);
+    if (temp_lists)
+    {
+	if (temp_lists->tree)
+	    g_tree_destroy(temp_lists->tree);
 		
-		g_free(temp_lists);
-	}
+	g_free(temp_lists);
+    }
 }
 
 /* Add a list with the given key prefix to a temp list tree */
 void temp_list_add(TempLists *temp_lists, const gchar *key, GList *list)
 {
-	if (temp_lists)
-	{
-		if (temp_lists->tree)
-			g_tree_insert(temp_lists->tree, g_strdup(key), list);
-	}
+    if (temp_lists)
+    {
+	if (temp_lists->tree)
+	    g_tree_insert(temp_lists->tree, g_strdup(key), list);
+    }
 }
 		
 /* Copy the items of the lists in the given tree to the prefs table */
 void temp_lists_apply(TempLists *temp_lists)
 {
-	if (temp_lists)
-	{
-		if (temp_lists->tree)
-			g_tree_foreach(temp_lists->tree, copy_list, NULL);
-	}
+    if (temp_lists)
+    {
+	if (temp_lists->tree)
+	    g_tree_foreach(temp_lists->tree, copy_list, NULL);
+    }
 }
 
 /* Copy one list to the prefs table. Useful for lists not changed by a window */
 void prefs_apply_list(gchar *key, GList *list)
 {
-	GList *node;  /* Current list node */
-	guint i;  /* Counter */
+    GList *node;  /* Current list node */
+    guint i;  /* Counter */
 	
-	i = 0;
+    i = 0;
 	
-	if (prefs_table)
+    if (prefs_table)
+    {
+	/* Clean the existing list */
+	wipe_list(key);
+		
+	node = list;
+		
+	/* Add the new list items to the table */
+	while (node)
 	{
-		/* Clean the existing list */
-		wipe_list(key);
-		
-		node = list;
-		
-		/* Add the new list items to the table */
-		while (node)
-		{
-			g_hash_table_insert(prefs_table, create_full_key(key, i), 
-													g_strdup(node->data));
+	    g_hash_table_insert(prefs_table, create_full_key(key, i), 
+				g_strdup(node->data));
 				
-			node = g_list_next(node);
-			i++;
-		}
-		
-		/* Add the end marker */
-		g_hash_table_insert(prefs_table, create_full_key(key, i),
-												g_strdup(LIST_END_MARKER));
+	    node = g_list_next(node);
+	    i++;
 	}
+		
+	/* Add the end marker */
+	g_hash_table_insert(prefs_table, create_full_key(key, i),
+			    g_strdup(LIST_END_MARKER));
+    }
 }
 
 /* Get the items in a variable-length list from the prefs table */
 GList *prefs_get_list(const gchar *key)
 {
-	guint end_marker_hash;  /* Hash value of the list end marker */
-	guint item_hash;  /* Hash value of current list string */
-	gchar *item_string;  /* List iterm string */
-	guint i;  /* Counter */
-	GList *list;  /* List that contains items */
+    guint end_marker_hash;  /* Hash value of the list end marker */
+    guint item_hash;  /* Hash value of current list string */
+    gchar *item_string;  /* List iterm string */
+    guint i;  /* Counter */
+    GList *list;  /* List that contains items */
 	
-	/* Go through each key in the table until we find the end marker */
-	end_marker_hash = g_str_hash(LIST_END_MARKER);
-	list = NULL;
+    /* Go through each key in the table until we find the end marker */
+    end_marker_hash = g_str_hash(LIST_END_MARKER);
+    list = NULL;
 	
-	for (i = 0;;i++)
-	{
-		item_string = prefs_get_string_index(key, i);
+    for (i = 0;;i++)
+    {
+	item_string = prefs_get_string_index(key, i);
 		
-		if (item_string)
-		{
-			item_hash = g_str_hash(item_string);
+	if (item_string)
+	{
+	    item_hash = g_str_hash(item_string);
 			
-			if (item_hash != end_marker_hash)
-			{
-				list = g_list_append(list, item_string);
-				continue;
-			}
-			else
-			{
-				g_free(item_string);
-				break;
-			}
-		}
+	    if (item_hash != end_marker_hash)
+	    {
+		list = g_list_append(list, item_string);
+		continue;
+	    }
+	    else
+	    {
+		g_free(item_string);
+		break;
+	    }
 	}
+    }
 	
-	return list;
+    return list;
 }
 
 /* Free a list and its strings */
 void prefs_free_list(GList *list)
 {
-	GList *node;  /* Current list node */
+    GList *node;  /* Current list node */
 	
-	node = list;
+    node = list;
 	
-	/* Go through the list, freeing the strings */
+    /* Go through the list, freeing the strings */
 	
-	while (node)
-	{
-		if (node->data)
-			g_free(node->data);
+    while (node)
+    {
+	if (node->data)
+	    g_free(node->data);
 		
-		node = g_list_next(node);
-	}
+	node = g_list_next(node);
+    }
 	
-	g_list_free(list);
+    g_list_free(list);
 }
 
 /* Creates a list from lines in a GtkTextBuffer. Free the list when done. */
 GList *get_list_from_buffer(GtkTextBuffer *buffer)
 {
-	GtkTextIter start_iter; /* Start of buffer text */
-	GtkTextIter end_iter; /* End of buffer text */
-	gchar *text_buffer; /* Raw text buffer */
-	gchar **string_array; /* Contains each line of the buffer */
-	gchar **string_iter;  /* Pointer for iterating through the string vector */
-	GList *list; /* List that contains each string */
+    GtkTextIter start_iter; /* Start of buffer text */
+    GtkTextIter end_iter; /* End of buffer text */
+    gchar *text_buffer; /* Raw text buffer */
+    gchar **string_array; /* Contains each line of the buffer */
+    gchar **string_iter;  /* Pointer for iterating through the string vector */
+    GList *list; /* List that contains each string */
 	
-	list = NULL;
+    list = NULL;
 	
-	/* Grab the text from the buffer, and then split it up by lines */
-	gtk_text_buffer_get_start_iter(buffer, &start_iter);
-	gtk_text_buffer_get_end_iter(buffer, &end_iter);
+    /* Grab the text from the buffer, and then split it up by lines */
+    gtk_text_buffer_get_start_iter(buffer, &start_iter);
+    gtk_text_buffer_get_end_iter(buffer, &end_iter);
 	
-	text_buffer = gtk_text_buffer_get_text(buffer, &start_iter, &end_iter, FALSE);
-	string_array = g_strsplit(text_buffer, "\n", -1);
-	string_iter = string_array;
+    text_buffer = gtk_text_buffer_get_text(buffer, &start_iter, &end_iter, FALSE);
+    string_array = g_strsplit(text_buffer, "\n", -1);
+    string_iter = string_array;
 	
-	/* Go through each string and put it in the list */
-	while (*string_iter)
-	{
-		if (strlen(*string_iter) != 0)
-			list = g_list_append(list, g_strdup(*string_iter));
+    /* Go through each string and put it in the list */
+    while (*string_iter)
+    {
+	if (strlen(*string_iter) != 0)
+	    list = g_list_append(list, g_strdup(*string_iter));
 		
-		string_iter++;
-	}
+	string_iter++;
+    }
 	
-	return list;
+    return list;
 }
 
 /* config struct */
