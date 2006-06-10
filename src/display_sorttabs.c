@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-11-25 23:52:13 jcs>
+/* Time-stamp: <2006-06-10 14:02:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -392,7 +392,7 @@ TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 
     if (ti)
     {
-      gchar *new_string; 
+      gchar *new_string=NULL; 
       switch (item)
       {
       case T_TIME_PLAYED:
@@ -406,16 +406,21 @@ TimeInfo *sp_update_date_interval_from_string (guint32 inst,
           break;
       default:
           break;
-  }
+      }
 
-	if (force_update || !ti->int_str ||
-	    (strcmp (new_string, ti->int_str) != 0))
-	{   /* Re-evaluate the interval */
-	    g_free (ti->int_str);
-	    ti->int_str = g_strdup (new_string);
-	    dp2_parse (ti);
-	}
-    g_free(new_string);
+      if (!new_string)
+      {
+	  new_string = g_strdup ("");
+      }
+
+      if (force_update || !ti->int_str ||
+	  (strcmp (new_string, ti->int_str) != 0))
+      {   /* Re-evaluate the interval */
+	  g_free (ti->int_str);
+	  ti->int_str = g_strdup (new_string);
+	  dp2_parse (ti);
+      }
+      g_free(new_string);
     }
     
     return ti;

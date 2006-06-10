@@ -1,8 +1,14 @@
+2006-06-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/display_sorttabs.c
+	   (sp_update_date_interval_from_string): fix compilation
+	   warning and possible segfault.
+
 2006-06-09 James Liggett <freethinkerjim@users.sourceforge.net>
 
-	* src/prefs.c: Miscellaneous formatting fixes. I've now
-	  switched to using emacs, so I hope this won't be a problem
-	  anymore :)
+	 * src/prefs.c: Miscellaneous formatting fixes. I've now
+	   switched to using emacs, so I hope this won't be a problem
+	   anymore :)
 
 2006-06-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
