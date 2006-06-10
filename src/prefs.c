@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 12:12:25 jcs>
+/* Time-stamp: <2006-06-10 20:19:32 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1794,7 +1794,6 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.st_sort = SORT_NONE;
     mycfg->sortcfg.tm_sort = SORT_NONE;
     mycfg->sortcfg.tm_sortcol = TM_COLUMN_TITLE;
-    mycfg->sortcfg.pm_autostore = FALSE;
     mycfg->sortcfg.tm_autostore = FALSE;
     mycfg->sortcfg.case_sensitive = FALSE;
     mycfg->mserv_use = FALSE;
@@ -2007,7 +2006,7 @@ read_prefs_from_file_desc(FILE *fp)
 	  }
 	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
 	  {
-	      prefs_set_pm_autostore((gboolean)atoi(arg));
+	      /* ignore */
 	  }
 	  else if((g_ascii_strcasecmp (line, "tm_autostore") == 0) ||
 		  (g_ascii_strcasecmp (line, "sm_autostore") == 0))
@@ -2317,7 +2316,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
-    fprintf(fp, "pm_autostore=%d\n",prefs_get_pm_autostore());
     fprintf(fp, "tm_autostore=%d\n",prefs_get_tm_autostore());
     fprintf(fp, "pm_sort=%d\n",prefs_get_pm_sort());
     fprintf(fp, "st_sort=%d\n",prefs_get_st_sort());
@@ -2727,16 +2725,6 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
 
     cfg->toolbar_style = i;
     display_show_hide_toolbar ();
-}
-
-gboolean prefs_get_pm_autostore (void)
-{
-    return cfg->sortcfg.pm_autostore;
-}
-
-void prefs_set_pm_autostore (gboolean val)
-{
-    cfg->sortcfg.pm_autostore = val;
 }
 
 gboolean prefs_get_tm_autostore (void)

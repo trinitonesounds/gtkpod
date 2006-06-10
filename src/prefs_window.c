@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-22 23:24:27 jcs>
+/* Time-stamp: <2006-06-10 20:19:45 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -1697,11 +1697,6 @@ void sort_window_update (void)
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	w = gtkpod_xml_get_widget (sort_window_xml, "pm_autostore");
-	if (w)
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpsortcfg->pm_autostore);
-
 	w = gtkpod_xml_get_widget (sort_window_xml, "tm_autostore");
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -1795,7 +1790,6 @@ static void sort_window_set (struct sortcfg *scfg)
     tsc = clone_sortprefs ();
 
     prefs_set_pm_sort (scfg->pm_sort);
-    prefs_set_pm_autostore (scfg->pm_autostore);
     prefs_set_st_sort (scfg->st_sort);
     prefs_set_tm_sort (scfg->tm_sort);
     prefs_set_tm_autostore (scfg->tm_autostore);
@@ -1871,8 +1865,6 @@ static void sort_window_set (struct sortcfg *scfg)
 	tm_sort (prefs_get_tm_sortcol (), scfg->tm_sort);
     }
     /* if auto sort was changed to TRUE, store order */
-    if (!tsc->pm_autostore && scfg->pm_autostore)
-	pm_rows_reordered ();
     if (!tsc->tm_autostore && scfg->tm_autostore)
 	tm_rows_reordered ();
 
@@ -1938,15 +1930,6 @@ on_pm_none_toggled                     (GtkToggleButton *togglebutton,
     if (gtk_toggle_button_get_active(togglebutton))
 	sort_window_set_pm_sort (SORT_NONE);
 }
-
-
-void
-on_pm_autostore_toggled                (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    sort_window_set_pm_autostore (gtk_toggle_button_get_active(togglebutton));
-}
-
 
 
 void
@@ -2117,11 +2100,6 @@ void sort_window_apply (void)
     sort_window_read_sort_ign (tmpsortcfg);
     /* save current settings */
     sort_window_set (tmpsortcfg);
-}
-
-void sort_window_set_pm_autostore (gboolean val)
-{
-    tmpsortcfg->pm_autostore = val;
 }
 
 void sort_window_set_tm_autostore (gboolean val)

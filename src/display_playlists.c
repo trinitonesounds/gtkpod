@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-28 12:59:38 jcs>
+/* Time-stamp: <2006-06-10 22:15:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -880,6 +880,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 		gtk_drag_finish (dc, FALSE, FALSE, time);
 		g_return_if_reached ();
 	    }
+	    pm_rows_reordered ();
 	    return;
 	}
 	else
@@ -934,6 +935,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 	    }
 
 	}
+	pm_rows_reordered ();
 	break;
     default:
 	gtkpod_warning (_("This DND type (%d) is not (yet) supported. If you feel implementing this would be useful, please contact the author.\n\n"), info);
@@ -1584,7 +1586,7 @@ pm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
     else
     {
 	prefs_set_pm_sort (gtk_tree_view_column_get_sort_order (tvc));
-	if (prefs_get_pm_autostore ())  pm_rows_reordered ();
+	pm_rows_reordered ();
     }
 }
 #endif

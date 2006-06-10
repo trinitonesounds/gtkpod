@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 12:42:41 jcs>
+/* Time-stamp: <2006-06-10 22:15:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1242,7 +1242,6 @@ on_save_track_order1_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     tm_rows_reordered ();
-    pm_rows_reordered ();
 }
 
 

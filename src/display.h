@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-28 23:20:47 jcs>
+/* Time-stamp: <2006-06-10 22:15:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -309,7 +309,6 @@ TimeInfo *sp_update_date_interval_from_string (guint32 inst,
 void tm_add_track_to_track_model (Track *track, GtkTreeIter *into_iter);
 guint tm_get_nr_of_tracks(void);
 void tm_rows_reordered(void);
-void pm_rows_reordered(void);
 gboolean tm_add_filelist (gchar *data, GtkTreePath *path,
 			  GtkTreeViewDropPosition pos);
 void tm_stop_editing (gboolean cancel);

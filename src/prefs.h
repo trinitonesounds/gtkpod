@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-25 00:56:55 jcs>
+/* Time-stamp: <2006-06-10 20:17:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -105,7 +105,6 @@ struct cfg
     gint st_sort;            /* sort type for sort tabs           */
     gint tm_sort;            /* sort type for tracks              */
     TM_item tm_sortcol;      /* sort column for tracks            */
-    gboolean pm_autostore;   /* save sort order automatically?    */
     gboolean tm_autostore;   /* save sort order automatically?    */
     gboolean case_sensitive; /* Should sorting be case-sensitive? */
     GList *tmp_sort_ign_fields; /* used in prefs_window.c only     */
@@ -294,7 +293,6 @@ void prefs_set_tm_sort (gint type);
 void prefs_set_st_sort (gint type);
 void prefs_set_tm_sortcol (TM_item col);
 void prefs_set_tm_autostore (gboolean active);
-void prefs_set_pm_autostore (gboolean active);
 void prefs_set_write_extended_info(gboolean active);
 void prefs_set_autoimport(gboolean val);
 void prefs_set_md5tracks(gboolean active);
@@ -323,7 +321,6 @@ gint prefs_get_st_sort (void);
 gint prefs_get_tm_sort (void);
 TM_item prefs_get_tm_sortcol (void);
 gboolean prefs_get_tm_autostore (void);
-gboolean prefs_get_pm_autostore (void);
 gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_autoimport(void);
 gchar * prefs_get_charset (void);

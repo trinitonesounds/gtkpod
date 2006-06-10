@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtkpod 0.52\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-05-29 00:50+0900\n"
-"PO-Revision-Date: 2005-12-14 23:22+0900\n"
+"PO-Revision-Date: 2006-06-10 22:38+0900\n"
 "Last-Translator: Jörg Schuler <jcsjcs at users.sourceforge.net>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -660,7 +660,7 @@ msgstr "Beim Sortieren Groß-/Kleinschreibung beachten"
 
 #: gtkpod.glade:4776
 msgid "<b>Ignore Frequent Words</b>"
-msgstr "<b>Ignoriere oftverwendete Wörter</b>"
+msgstr "<b>Ignoriere oft verwendete Wörter</b>"
 
 #: gtkpod.glade:4876
 msgid "Ignore these words when at the beginning of the following fields:"
