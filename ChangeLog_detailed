@@ -41,6 +41,10 @@
 
 2006-06-10 James Liggett <freethinkerjim@users.sourceforge.net>
 	 
+	 * src/main.c
+	   src/prefs.h
+	   src/prefs.c: Moved autoimport_commandline to new prefs.	 
+
 	 * src/mp3file.c
 	   src/mp4file.c
 	   src/prefs.h

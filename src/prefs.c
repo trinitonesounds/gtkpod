@@ -2268,7 +2268,7 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
 	  prefs_set_string ("initial_mountpoint", optarg);
 	  break;
       case GP_AUTO:
-	  prefs_set_autoimport_commandline (TRUE);
+	  prefs_set_int("autoimport_commandline", TRUE);
 	  break;
       case GP_OFFLINE:
 	  prefs_set_offline (TRUE);
@@ -2507,17 +2507,6 @@ struct sortcfg *clone_sortprefs(void)
     result->tmp_sort_ign_strings = NULL;
     return(result);
 }
-
-gboolean prefs_get_autoimport_commandline(void)
-{
-    return(cfg->autoimport_commandline);
-}
-
-void prefs_set_autoimport_commandline(gboolean val)
-{
-    cfg->autoimport_commandline = val;
-}
-
 
 /* Returns "$HOME/.gtkpod" and tries to create it if it does not
    exist. */

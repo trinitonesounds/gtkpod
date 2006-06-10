@@ -95,8 +95,6 @@ struct cfg
   gboolean block_display;   /* block display during change of selection? */
   gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
   gboolean startup_messages;/* show startup messages/warnings? */
-  gboolean autoimport_commandline;/* whether or not to automatically
-				   * import files as set by commandline */
   
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
@@ -361,7 +359,6 @@ gboolean prefs_get_mserv_use(void);
 void prefs_set_mserv_use(gboolean val);
 const gchar *prefs_get_mserv_username(void);
 void prefs_set_mserv_username(const gchar *root);
-void prefs_set_autoimport_commandline(gboolean val);
 
 /* Podcast preferences */
 void prefs_set_pc_dir(const gchar *str);
