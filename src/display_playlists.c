@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 22:15:19 jcs>
+/* Time-stamp: <2006-06-11 00:56:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -64,6 +64,9 @@ static GtkTargetEntry pm_drop_types [] = {
     { "text/plain", 0, DND_TEXT_PLAIN },
     { "STRING", 0, DND_TEXT_PLAIN }
 };
+
+
+void pm_rows_reordered (void);
 
 
 

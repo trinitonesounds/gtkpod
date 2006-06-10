@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-28 20:58:39 jcs>
+/* Time-stamp: <2006-06-11 01:11:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -257,6 +257,17 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 			track->soundcheck = sc1;
 		    else
 			track->soundcheck = sc2;
+		}
+		if (MP4GetMetadataFreeForm(mp4File, "replaygain_track_gain",
+					   &ppValue, &pValueSize))
+		{
+		    gchar *str;
+		    gdouble rg;
+		    str = g_malloc0((pValueSize+1)*sizeof(gchar));
+		    memcpy(str, ppValue, pValueSize*sizeof(gchar));
+		    rg = g_strtod (str, NULL);
+		    track->soundcheck = replaygain_to_soundcheck (rg);
+		    g_free (str);
 		}
 	    }
 	}
