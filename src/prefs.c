@@ -1782,7 +1782,6 @@ struct cfg *cfg_new(void)
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
 
-    mycfg->unused_gboolean3 = FALSE;
     mycfg->tmp_disable_sort = TRUE;
     mycfg->startup_messages = TRUE;
     mycfg->automount = FALSE;
@@ -2128,10 +2127,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* ignore -- not used any more */
 	  }
-	  else if(g_ascii_strcasecmp (line, "unused_gboolean3") == 0)
-	  {
-	      prefs_set_unused_gboolean3 ((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "concal_autosync") == 0)
 	  {
 	      prefs_set_int ("itdb_0_concal_autosync", atoi(arg));
@@ -2344,8 +2339,7 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
     fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
-    fprintf (fp, "mserv_use=%d\n", cfg->mserv_use);    
-/*     fprintf (fp, "unused_gboolean3=%d\n", cfg->unused_gboolean3); */
+    fprintf (fp, "mserv_use=%d\n", cfg->mserv_use); 
 }
 
 
@@ -3026,12 +3020,4 @@ const gchar *prefs_get_mserv_username (void)
     return cfg->mserv_username;
 }
 
-gboolean prefs_get_unused_gboolean3(void)
-{
-    return(cfg->unused_gboolean3);
-}
 
-void prefs_set_unused_gboolean3(gboolean val)
-{
-    cfg->unused_gboolean3 = val;
-}

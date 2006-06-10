@@ -1,3 +1,9 @@
+2006-06-10 James Liggett <freethinkerjim@users.sourceforge.net>
+
+	* src/prefs.h
+	  src/prefs.c
+	  src/prefs_window.c: Got rid of unused_gboolean3.
+
 2006-06-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/display_sorttabs.c

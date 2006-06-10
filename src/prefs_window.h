@@ -44,8 +44,6 @@ void prefs_window_cancel (void);
 void prefs_window_create (gint page);
 void prefs_window_delete (void);
 
-void prefs_window_set_unused_gboolean3 (gboolean val);
-
 void sort_window_create (void);
 void sort_window_block (void);
 void sort_window_release (void);

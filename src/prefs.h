@@ -140,7 +140,6 @@ struct cfg
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   gboolean mserv_use;           /* use mserv data (rating)? */
   gchar *mserv_username;        /* username for mserv? */
-  gboolean unused_gboolean3;    /* unused */
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -362,8 +361,6 @@ void prefs_set_not_played_track (gboolean state);
 gboolean prefs_get_not_played_track (void);
 void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
-void prefs_set_unused_gboolean3(gboolean val);
-gboolean prefs_get_unused_gboolean3(void);
 void prefs_set_tmp_disable_sort(gboolean val);
 gboolean prefs_get_tmp_disable_sort(void);
 void prefs_set_startup_messages(gboolean val);

@@ -668,13 +668,6 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 	g_free (buf);
     }
 
-
-/* 	if((w = lookup_widget(prefs_window, "cfg_unused_gboolean3"))) */
-/* 	{ */
-/* 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), */
-/* 					 tmpcfg->unused_gboolean3); */
-/* 	} */
-
     w = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
     if (page == -1)
     {
@@ -741,7 +734,6 @@ prefs_window_set(void)
 	prefs_set_startup_messages(tmpcfg->startup_messages);
 	prefs_set_mserv_use(tmpcfg->mserv_use);
 	prefs_set_mserv_username(tmpcfg->mserv_username);
-	prefs_set_unused_gboolean3(tmpcfg->unused_gboolean3);
 
 	tm_show_preferred_columns();
     }
@@ -1446,12 +1438,6 @@ on_mserv_username_entry_changed              (GtkEditable     *editable,
     if (!val) return;
     g_free (tmpcfg->mserv_username);
     tmpcfg->mserv_username = val;
-}
-
-void
-prefs_window_set_unused_gboolean3(gboolean val)
-{
-    tmpcfg->unused_gboolean3 = val;
 }
 
 
