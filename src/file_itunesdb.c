@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-06 00:42:56 jcs>
+/* Time-stamp: <2006-06-10 18:20:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -847,7 +847,7 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     itunesdb = itdb_get_itunesdb_path (mountpoint);
     if (!itunesdb)
     {
-	gchar *str = g_strdup_printf (_("Could not find iPod directory structure at '%s'. If you are sure that the iPod is properly mounted, gtkpod can create the directory structure for you.\n\nDo you want to create the directory structure now?\n"), mountpoint);
+	gchar *str = g_strdup_printf (_("Could not find iPod directory structure at '%s'. If you are sure that the iPod is properly mounted at '%s', gtkpod can create the directory structure for you.\n\nDo you want to create the directory structure now?\n"), mountpoint, mountpoint);
 	GtkWidget *dialog = gtk_message_dialog_new (
 	    GTK_WINDOW (gtkpod_window),
 	    GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -860,7 +860,7 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
 
 	if (result == GTK_RESPONSE_YES)
 	{
-	    load = ipod_init (itdb);
+	    load = gp_ipod_init (itdb);
 	}
 	else
 	{
@@ -873,6 +873,40 @@ iTunesDB *gp_load_ipod (iTunesDB *itdb)
     if (load)
     {
 	new_itdb = gp_merge_itdb (itdb);
+	if (new_itdb)
+	{
+	    gchar *old_model = get_itdb_prefs_string (new_itdb,
+						      KEY_IPOD_MODEL);
+	    gchar *new_model = itdb_device_get_sysinfo (new_itdb->device,
+							"ModelNumStr");
+
+	    if (!old_model && new_model)
+	    {
+		set_itdb_prefs_string (new_itdb, KEY_IPOD_MODEL, new_model);
+	    }
+	    else if (old_model && !new_model)
+	    {
+		gp_ipod_init_set_model (new_itdb, old_model);
+	    }
+	    else if (!old_model && !new_model)
+	    {
+		gp_ipod_init_set_model (new_itdb, NULL);
+	    }
+	    else
+	    {   /* old_model && new_model are set */
+#if 0
+		const gchar *old_ptr = old_model;
+		const gchar *new_ptr = new_model;
+		/* Normalize model number */
+		if (isalpha (old_model[0]))   ++old_ptr;
+		if (isalpha (new_model[0]))   ++new_ptr;
+		if (strcmp (old_ptr, new_ptr) != 0)
+		{   /* Model number has changed -- confirm */
+                }
+#endif		
+		set_itdb_prefs_string (new_itdb, KEY_IPOD_MODEL, new_model);
+	    }
+	}
     }
     return new_itdb;
 }
@@ -1869,5 +1903,3 @@ gboolean files_are_saved (void)
     }
     return !changed;
 }
-
-

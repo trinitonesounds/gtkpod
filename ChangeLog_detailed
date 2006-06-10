@@ -1,20 +1,30 @@
+2006-06-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/ipod_init.[ch]...: renamed init_model_number_combo()
+           and init_ipod() to gp_...()
+
+	 * src/file_itunesdb (gp_load_ipod): ask for model number of
+	   the iPod if none is available. If one is available from
+	   SysInfo file, store that information in the prefs system.
+
+	 * ipod_init.[ch]: new: gp_ipod_init_set_model() asking for a
+           model number string and storing it.
+
 2006-06-10 James Liggett <freethinkerjim@users.sourceforge.net>
 
-	* src/prefs.h
-	  src/prefs.c
-	  src/prefs_window.c: Got rid of unused_gboolean3.
+	 * src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Got rid of unused_gboolean3.
+
+	 * src/prefs.c: Miscellaneous formatting fixes. I've now
+	   switched to using emacs, so I hope this won't be a problem
+	   anymore :)
 
 2006-06-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/display_sorttabs.c
 	   (sp_update_date_interval_from_string): fix compilation
 	   warning and possible segfault.
-
-2006-06-09 James Liggett <freethinkerjim@users.sourceforge.net>
-
-	 * src/prefs.c: Miscellaneous formatting fixes. I've now
-	   switched to using emacs, so I hope this won't be a problem
-	   anymore :)
 
 2006-06-09 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

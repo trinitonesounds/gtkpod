@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-09 00:36:22 jcs>
+/* Time-stamp: <2006-06-10 15:39:52 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1930,7 +1930,7 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
 
     /* Setup model number combo */
     cb = GTK_COMBO_BOX (GET_WIDGET (IPOD_MODEL_COMBO));
-    init_model_number_combo (cb);
+    gp_init_model_number_combo (cb);
 
     /* Window control */
     g_signal_connect (GET_WIDGET ("apply_button"), "clicked",
@@ -2480,7 +2480,7 @@ static void create_repository (RepWin *repwin1)
 
     /* Setup model number combo */
     cb = GTK_COMBO_BOX (GET_WIDGET (IPOD_MODEL_COMBO));
-    init_model_number_combo (cb);
+    gp_init_model_number_combo (cb);
     gtk_entry_set_text (GTK_ENTRY (GET_WIDGET (IPOD_MODEL_ENTRY)),
 			gettext (SELECT_OR_ENTER_YOUR_MODEL));
 

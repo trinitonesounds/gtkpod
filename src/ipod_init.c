@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-09 00:16:50 jcs>
+/* Time-stamp: <2006-06-10 19:21:29 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -60,7 +60,7 @@ enum
 };
 
 
-/* shortcut to reference widgets when repwin->xml is already set */
+/* shortcut to reference widgets when ii->xml is already set */
 #define GET_WIDGET(a) gtkpod_xml_get_widget (ii->xml,a)
 
 /* mountpoint browse button was clicked -> open a directory browser
@@ -140,14 +140,14 @@ set_cell (GtkCellLayout   *cell_layout,
 
 
 /**
- * init_model_number_combo:
+ * gp_init_model_number_combo:
  *
  * Set up the the model for a model_number combo with all iPod models
  * known to libgpod.
  *
  * @cb: the combobox that should be set up with a model.
  */
-void init_model_number_combo (GtkComboBox *cb)
+void gp_init_model_number_combo (GtkComboBox *cb)
 {
     const IpodInfo *table;
     Itdb_IpodGeneration generation;
@@ -219,8 +219,16 @@ void init_model_number_combo (GtkComboBox *cb)
 }
 
 
-
-gboolean ipod_init (iTunesDB *itdb)
+/**
+ * gp_ipod_init:
+ *
+ * Ask for the iPod model and mountpoint and then create the directory
+ * structure on the iPod.
+ *
+ * @itdb: itdb from where to extract the mountpoint. After
+ * initialisation the model number is set.
+ */
+gboolean gp_ipod_init (iTunesDB *itdb)
 {
     IpodInit *ii;
     gint response;
@@ -257,7 +265,7 @@ gboolean ipod_init (iTunesDB *itdb)
 
     /* Setup model number combo */
     cb = GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO));
-    init_model_number_combo (cb);
+    gp_init_model_number_combo (cb);
 
     /* If available set current model number, otherwise indicate that
        none is available */
@@ -316,7 +324,8 @@ gboolean ipod_init (iTunesDB *itdb)
 	    GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO)));
 	if (strcmp (model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0)
 	{   /* User didn't choose a model */
-	    model[0] = 0;
+	    g_free (model);
+	    model = NULL;
 	}
 
 	/* Set model in the prefs system */
@@ -353,4 +362,85 @@ gboolean ipod_init (iTunesDB *itdb)
     g_free (ii);
 
     return result;
+}
+
+
+/* Redefine shortcut to reference widgets.*/
+#undef GET_WIDGET
+#define GET_WIDGET(a) gtkpod_xml_get_widget (xml,a)
+
+
+/**
+ * gp_ipod_init_set_model:
+ *
+ * Ask for the iPod model, pre-select @old_model, set the selected
+ * model in the preferences.
+ *
+ * @itdb: the itdb to set
+ * @old_model: the model number string to initially propose.
+ */
+void gp_ipod_init_set_model (iTunesDB *itdb, const gchar *old_model)
+{
+    GladeXML *xml;
+    GtkWidget *window;
+    gint response;
+    gchar *model;
+    GtkEntry *entry;
+    gchar buf[PATH_MAX];
+    GtkComboBox *cb;
+    const IpodInfo *info;
+
+    g_return_if_fail (itdb);
+
+    /* Create window */
+    xml = glade_xml_new (xml_file, "set_ipod_model_dialog", NULL);
+    window = GET_WIDGET ("set_ipod_model_dialog");
+    g_return_if_fail (window);
+
+    /* Setup model number combo */
+    cb = GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO));
+    gp_init_model_number_combo (cb);
+
+    /* If available set current model number, otherwise indicate that
+       none is available */
+    info = itdb_device_get_ipod_info (itdb->device);
+    if (info && (info->ipod_generation != ITDB_IPOD_GENERATION_UNKNOWN))
+    {
+	g_snprintf (buf, PATH_MAX, "x%s", info->model_number);
+    }
+    else
+    {
+	g_snprintf (buf, PATH_MAX, "%s", gettext (SELECT_OR_ENTER_YOUR_MODEL));
+    }
+    entry = GTK_ENTRY (gtk_bin_get_child(GTK_BIN (cb)));
+    gtk_entry_set_text (entry, buf);
+
+
+    response = gtk_dialog_run (GTK_DIALOG (window));
+
+    switch (response)
+    {
+    case GTK_RESPONSE_OK:
+	model = gtk_combo_box_get_active_text (
+	    GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO)));
+	if (strcmp (model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0)
+	{   /* User didn't choose a model */
+	    g_free (model);
+	    model = NULL;
+	}
+	if (model)
+	{
+	    /* Set model in the prefs system */
+	    set_itdb_prefs_string (itdb, KEY_IPOD_MODEL, model);
+	    /* Set the model on the iPod */
+	    itdb_device_set_sysinfo (itdb->device, "ModelNumStr", model);
+	    g_free (model);
+	}
+	break;
+    default:
+	/* canceled -- do nothing */
+	break;
+    }
+
+    gtk_widget_destroy (window);
 }
