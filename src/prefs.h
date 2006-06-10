@@ -95,7 +95,6 @@ struct cfg
   gboolean block_display;   /* block display during change of selection? */
   gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
   gboolean startup_messages;/* show startup messages/warnings? */
-  gboolean autoimport;	    /* whether or not to automatically import files */
   gboolean autoimport_commandline;/* whether or not to automatically
 				   * import files as set by commandline */
   
@@ -294,7 +293,6 @@ void prefs_set_st_sort (gint type);
 void prefs_set_tm_sortcol (TM_item col);
 void prefs_set_tm_autostore (gboolean active);
 void prefs_set_write_extended_info(gboolean active);
-void prefs_set_autoimport(gboolean val);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_block_display(gboolean active);
 void prefs_set_readtags (gboolean active);
@@ -366,7 +364,6 @@ gboolean prefs_get_mserv_use(void);
 void prefs_set_mserv_use(gboolean val);
 const gchar *prefs_get_mserv_username(void);
 void prefs_set_mserv_username(const gchar *root);
-gboolean prefs_get_autoimport_commandline(void);
 void prefs_set_autoimport_commandline(gboolean val);
 
 /* Podcast preferences */

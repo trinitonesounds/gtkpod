@@ -134,7 +134,7 @@ main (int argc, char *argv[])
   call_script ("gtkpod.in", NULL);
 
 /*  if(prefs_get_automount())      mount_ipod();*/
-  if(prefs_get_autoimport() || prefs_get_autoimport_commandline())
+  if(prefs_get_int("autoimport") || prefs_get_autoimport_commandline())
       gp_load_ipods ();
 
   server_setup ();   /* start server to accept playcount updates */

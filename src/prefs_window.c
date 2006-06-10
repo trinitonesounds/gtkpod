@@ -477,7 +477,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml,  "cfg_autoimport");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->autoimport);
+				 prefs_get_int("autoimport"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "autoselect_hbox");
     for (i=0; i<SORT_TAB_MAX; ++i)
@@ -704,7 +704,6 @@ prefs_window_set(void)
 	 * catch the reorder signal) */
 	tm_store_col_order ();
 	prefs_set_charset(tmpcfg->charset);
-	prefs_set_autoimport(tmpcfg->autoimport);
 
 	prefs_set_readtags(tmpcfg->readtags);
 	prefs_set_parsetags(tmpcfg->parsetags);
@@ -1100,8 +1099,8 @@ void
 on_cfg_autoimport_toggled              (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->autoimport =
-	gtk_toggle_button_get_active(togglebutton);
+    temp_prefs_set_int(temp_prefs, "autoimport",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void

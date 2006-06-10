@@ -213,6 +213,8 @@ static void set_default_preferences()
     prefs_set_int("size_prefs.y", 480);
     prefs_set_int("size_info.x", 510);
     prefs_set_int("size_info.y", 300);
+
+    prefs_set_int("autoimport", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -893,7 +895,14 @@ static void cleanup_keys()
 	prefs_set_string("size_info.x", NULL);
 	prefs_set_string("size_info.y", NULL);
     }
-  
+    
+    /* auto_import reanmed to autoimport */
+    if (prefs_get_int_value("auto_import", &int_buf))
+    {
+	prefs_set_int("autoimport", int_buf);
+	prefs_set_string("auto_import", NULL);
+    }
+
     prefs_set_string ("version", VERSION);
 }
 
@@ -1763,7 +1772,6 @@ struct cfg *cfg_new(void)
     mycfg->charset = NULL;    
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
-    mycfg->autoimport = FALSE;
     mycfg->offline = FALSE;
     mycfg->write_extended_info = TRUE;
     mycfg->readtags = TRUE;
@@ -1962,11 +1970,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
 	  {
 	      prefs_set_block_display((gboolean)atoi(arg));
-	  }
-	  else if((g_ascii_strcasecmp (line, "auto_import") == 0) ||
-		  (g_ascii_strcasecmp (line, "autoimport") == 0))
-	  {
-	      prefs_set_autoimport((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "readtags") == 0)
 	  {
@@ -2302,8 +2305,6 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
-    fprintf(fp, "autoimport=%d\n",prefs_get_autoimport());
-  
     fprintf(fp, "readtags=%d\n", prefs_get_readtags());
     fprintf(fp, "parsetags=%d\n", prefs_get_parsetags());
     fprintf(fp, "parsetags_overwrite=%d\n", prefs_get_parsetags_overwrite());
@@ -2510,16 +2511,6 @@ struct sortcfg *clone_sortprefs(void)
     result->tmp_sort_ign_fields = NULL;
     result->tmp_sort_ign_strings = NULL;
     return(result);
-}
-
-gboolean prefs_get_autoimport(void)
-{
-    return(cfg->autoimport);
-}
-
-void prefs_set_autoimport(gboolean val)
-{
-    cfg->autoimport = val;
 }
 
 gboolean prefs_get_autoimport_commandline(void)

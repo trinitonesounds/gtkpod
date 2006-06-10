@@ -40,7 +40,12 @@
 	   Did away with pm_autostore.
 
 2006-06-10 James Liggett <freethinkerjim@users.sourceforge.net>
-
+	 
+	 * src/main.c
+	   src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Moved autoimport to new prefs.
+	
 	 * src/prefs.h
 	   src/prefs.c
 	   src/prefs_window.c: Got rid of unused_gboolean3.
