@@ -522,7 +522,7 @@ static gboolean parse_filename_with_template (Track *track,
 		{
 		case 'a': /* artist */
 		    if (track &&
-			(!track->artist || prefs_get_parsetags_overwrite ()))
+			(!track->artist || prefs_get_int("parsetags_overwrite")))
 		    {
 			g_free (track->artist);
 			track->artist = itm;
@@ -530,7 +530,7 @@ static gboolean parse_filename_with_template (Track *track,
 		    break;
 		case 'A': /* album */
 		    if (track &&
-			(!track->album || prefs_get_parsetags_overwrite ()))
+			(!track->album || prefs_get_int("parsetags_overwrite")))
 		    {
 			g_free (track->album);
 			track->album = itm;
@@ -538,7 +538,7 @@ static gboolean parse_filename_with_template (Track *track,
 		    break;
 		case 'c': /* composer */
 		    if (track &&
-			(!track->composer || prefs_get_parsetags_overwrite ()))
+			(!track->composer || prefs_get_int("parsetags_overwrite")))
 		    {
 			g_free (track->composer);
 			track->composer = itm;
@@ -546,7 +546,7 @@ static gboolean parse_filename_with_template (Track *track,
 		    break;
 		case 't': /* title */
 		    if (track &&
-			(!track->title || prefs_get_parsetags_overwrite ()))
+			(!track->title || prefs_get_int("parsetags_overwrite")))
 		    {
 			g_free (track->title);
 			track->title = itm;
@@ -555,7 +555,7 @@ static gboolean parse_filename_with_template (Track *track,
 		case 'g': /* genre */
 		case 'G': /* genre */
 		    if (track &&
-			(!track->genre || prefs_get_parsetags_overwrite ()))
+			(!track->genre || prefs_get_int("parsetags_overwrite")))
 		    {
 			g_free (track->genre);
 			track->genre = itm;
@@ -564,19 +564,19 @@ static gboolean parse_filename_with_template (Track *track,
 		case 'T': /* track */
 		    if (track &&
 			((track->track_nr == 0) ||
-			 prefs_get_parsetags_overwrite ()))
+			 prefs_get_int("parsetags_overwrite")))
 			track->track_nr = atoi (itm);
 		    g_free (itm);
 		    break;
 		case 'C': /* CD */
 		    if (track &&
-			(track->cd_nr == 0 || prefs_get_parsetags_overwrite ()))
+			(track->cd_nr == 0 || prefs_get_int("parsetags_overwrite")))
 			track->cd_nr = atoi (itm);
 		    g_free (itm);
 		    break;
 		case 'Y': /* year */
 		    if (track &&
-			(track->year == 0 || prefs_get_parsetags_overwrite ()))
+			(track->year == 0 || prefs_get_int("parsetags_overwrite")))
 			track->year = atoi (itm);
 		    g_free (itm);
 		    break;

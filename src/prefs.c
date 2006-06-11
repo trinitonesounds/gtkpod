@@ -218,6 +218,7 @@ static void set_default_preferences()
     prefs_set_int("readtags", TRUE);
     prefs_set_int("write_extended_info", TRUE);
     prefs_set_int("parsetags", FALSE);
+    prefs_set_int("parsetags_overwrite", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1776,7 +1777,6 @@ struct cfg *cfg_new(void)
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
     mycfg->offline = FALSE;
-    mycfg->parsetags_overwrite = FALSE;
     mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3;%t.wav");
     mycfg->coverart = TRUE;
     mycfg->coverart_template = g_strdup ("%A;folder.jpg");
@@ -1970,10 +1970,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
 	  {
 	      prefs_set_block_display((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "parsetags_overwrite") == 0)
-	  {
-	      prefs_set_parsetags_overwrite((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "parsetags_template") == 0)
 	  {
@@ -2293,7 +2289,6 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
-    fprintf(fp, "parsetags_overwrite=%d\n", prefs_get_parsetags_overwrite());
     fprintf(fp, "parsetags_template=%s\n",cfg->parsetags_template);
     fprintf(fp, "coverart=%d\n", prefs_get_coverart());
     fprintf(fp, "coverart_template=%s\n",cfg->coverart_template);
@@ -2513,16 +2508,6 @@ gchar *prefs_get_cfgdir (void)
       }
   }
   return cfgdir;
-}
-
-void prefs_set_parsetags_overwrite(gboolean active)
-{
-  cfg->parsetags_overwrite = active;
-}
-
-gboolean prefs_get_parsetags_overwrite(void)
-{
-  return cfg->parsetags_overwrite;
 }
 
 const gchar *prefs_get_parsetags_template (void)

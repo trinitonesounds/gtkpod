@@ -111,7 +111,6 @@ struct cfg
   gboolean offline;       /* are we working offline, i.e. without iPod? */
 
   gchar   *parsetags_template;  /* template for parsing tags */
-  gboolean parsetags_overwrite; /* Overwrite tags already set? */
   gboolean coverart;            /* Read coverart when adding files? */
   gchar *coverart_template;     /* template for coverart filename   */
 
