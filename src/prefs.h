@@ -110,10 +110,6 @@ struct cfg
   gboolean info_window;   /* is info window open (will then open on restart */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
 
-  gchar   *parsetags_template;  /* template for parsing tags */
-  gboolean coverart;            /* Read coverart when adding files? */
-  gchar *coverart_template;     /* template for coverart filename   */
-
   gboolean display_toolbar;     /* should toolbar be displayed */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
   gboolean display_tooltips_main; /* should tooltips be displayed (main) */
@@ -286,10 +282,6 @@ void prefs_set_tm_sortcol (TM_item col);
 void prefs_set_tm_autostore (gboolean active);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_block_display(gboolean active);
-void prefs_set_coverart (gboolean active);
-gboolean prefs_get_coverart(void);
-void prefs_set_coverart_template (const gchar *tpl);
-const gchar *prefs_get_coverart_template (void);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_statusbar_timeout (guint32 val);

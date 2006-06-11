@@ -929,7 +929,7 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 static void add_artwork (Track *tr)
 {
     ExtraTrackData *etr;
-    const gchar *full_template;
+    gchar *full_template;
     gchar **templates, **tplp;
     gchar *dirname;
     gchar *filename_local = NULL;
@@ -940,7 +940,7 @@ static void add_artwork (Track *tr)
 
     dirname = g_path_get_dirname (etr->pc_path_utf8);
 
-    full_template = prefs_get_coverart_template ();
+    full_template = prefs_get_string("coverart_template");
 
     templates = g_strsplit (full_template, ";", 0);
     tplp = templates;
@@ -991,6 +991,7 @@ static void add_artwork (Track *tr)
     }
 
     g_strfreev (templates);
+    g_free(full_template);
 }
 
 
@@ -1119,7 +1120,7 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	set_unset_entries_from_filename (nti);
 
 	/* Set coverart */
-	if (prefs_get_coverart())
+	if (prefs_get_int("coverart"))
 	{
 	    add_artwork (nti);
 	}

@@ -575,18 +575,13 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "coverart");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->coverart);
+				 prefs_get_int("coverart"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template");
-    if (tmpcfg->coverart_template)
-    {  /* we should copy the new path first because by setting
-	  the text we might get a callback destroying the old
-	  value... */
-	buf = g_strdup (tmpcfg->coverart_template);
-	gtk_entry_set_text(GTK_ENTRY(w), buf);
-	g_free (buf);
-    }
-    gtk_widget_set_sensitive (w, tmpcfg->coverart);
+    buf = prefs_get_string("coverart_template");
+    gtk_entry_set_text(GTK_ENTRY(w), buf);
+    g_free(buf);
+    gtk_widget_set_sensitive (w, prefs_get_int("coverart"));
 
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
@@ -702,9 +697,6 @@ prefs_window_set(void)
 	 * catch the reorder signal) */
 	tm_store_col_order ();
 	prefs_set_charset(tmpcfg->charset);
-
-	prefs_set_coverart(tmpcfg->coverart);
-	prefs_set_coverart_template(tmpcfg->coverart_template);
 
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
@@ -1177,7 +1169,7 @@ on_coverart_toggled                   (GtkToggleButton *togglebutton,
     gboolean val = gtk_toggle_button_get_active(togglebutton);
     GtkWidget *w;
 
-    tmpcfg->coverart = val;
+    temp_prefs_set_int(temp_prefs, "coverart", val);
     w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template");
     gtk_widget_set_sensitive (w, val);
 }
@@ -1186,8 +1178,8 @@ void
 on_coverart_template_changed             (GtkEditable     *editable,
 					gpointer         user_data)
 {
-    g_free (tmpcfg->coverart_template);
-    tmpcfg->coverart_template = gtk_editable_get_chars (editable,0, -1);
+    temp_prefs_set_string(temp_prefs, "coverart_template",
+			  gtk_editable_get_chars (editable,0, -1));
 }
 
 void prefs_window_set_col_visible (gint column, gboolean visible)

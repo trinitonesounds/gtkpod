@@ -220,6 +220,8 @@ static void set_default_preferences()
     prefs_set_int("parsetags", FALSE);
     prefs_set_int("parsetags_overwrite", FALSE);
     prefs_set_string("parsetags_template", "%a - %A/%T %t.mp3;%t.wav");
+    prefs_set_int("coverart", TRUE);
+    prefs_set_string("coverart_template", "%A;folder.jpg");
 }
 
 /* Initialize default variable-length list entries */
@@ -1778,8 +1780,6 @@ struct cfg *cfg_new(void)
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
     mycfg->offline = FALSE;
-    mycfg->coverart = TRUE;
-    mycfg->coverart_template = g_strdup ("%A;folder.jpg");
     mycfg->display_toolbar = TRUE;
     mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->display_tooltips_main = TRUE;
@@ -1970,14 +1970,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
 	  {
 	      prefs_set_block_display((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "coverart") == 0)
-	  {
-	      prefs_set_coverart((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "coverart_template") == 0)
-	  {
-	      prefs_set_coverart_template(strdup(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
@@ -2285,8 +2277,6 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
-    fprintf(fp, "coverart=%d\n", prefs_get_coverart());
-    fprintf(fp, "coverart_template=%s\n",cfg->coverart_template);
     fprintf(fp, "group_compilations=%d\n",prefs_get_group_compilations());
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
@@ -2458,7 +2448,6 @@ struct cfg *clone_prefs(void)
     {
 	result = g_memdup (cfg, sizeof (struct cfg));
 	result->charset = g_strdup(cfg->charset);
-	result->coverart_template = g_strdup(cfg->coverart_template);
 	result->mserv_username = g_strdup(cfg->mserv_username);
     }
     return(result);
@@ -2502,30 +2491,6 @@ gchar *prefs_get_cfgdir (void)
       }
   }
   return cfgdir;
-}
-
-void prefs_set_coverart(gboolean active)
-{
-  cfg->coverart = active;
-}
-
-gboolean prefs_get_coverart(void)
-{
-  return cfg->coverart;
-}
-
-const gchar *prefs_get_coverart_template (void)
-{
-    return cfg->coverart_template;
-}
-
-void prefs_set_coverart_template (const gchar *tpl)
-{
-    if (tpl)
-    {
-	g_free(cfg->coverart_template);
-	cfg->coverart_template = g_strdup (tpl);
-    }
 }
 
 /* A value of "0" will set the default defined in misc.c */
