@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 01:13:35 jcs>
+/* Time-stamp: <2006-06-11 14:15:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -889,14 +889,17 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 	Track *oldtrack;
 	Track *track = tlist->data;
 	ExtraTrackData *etr;
+	gchar *buf;
 
 	g_return_if_fail (track);
 	etr = track->userdata;
 	g_return_if_fail (etr);
         /* printf("Handling track %d\n", track->ipod_id); */
 
-	gtkpod_statusbar_message (_("Processing '%s'"),
-				  get_track_info (track, TRUE));
+	buf = get_track_info (track, TRUE);
+	gtkpod_statusbar_message (_("Processing '%s'"), buf);
+	g_free (buf);
+				  
 	while (widgets_blocked && gtk_events_pending ())
 	    gtk_main_iteration ();
 

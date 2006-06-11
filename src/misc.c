@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-05-24 23:30:14 jcs>
+|  Time-stamp: <2006-06-11 18:00:37 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -942,15 +942,25 @@ static gchar *fix_path(gchar *orig)
 static gchar *select_template (Track *track, const gchar *p)
 {
     gchar **templates, **tplp;
-    gchar *tname, *ext = NULL;
+    gchar *ext = NULL;
+    const gchar *tname;
     gchar *result;
     ExtraTrackData *etr;
 
     g_return_val_if_fail (track, strdup (""));
     etr = track->userdata;
     g_return_val_if_fail (etr, strdup (""));
-    tname = get_file_name (track);
-    if (!tname) return (NULL);         /* this should not happen... */
+    if (etr->pc_path_locale && strlen(etr->pc_path_locale))
+	tname = etr->pc_path_locale;
+    else
+	tname = track->ipod_path;
+    if (!tname)
+    {   /* this should not happen... */
+	gchar *buf = get_track_info (track, TRUE);
+	gtkpod_warning (_("Could not process '%s' (no filename available)"),
+			buf);
+	g_free (buf);
+    }
     ext = strrchr (tname, '.');        /* pointer to filename extension */
 
     templates = g_strsplit (p, ";", 0);
@@ -963,7 +973,7 @@ static gchar *select_template (Track *track, const gchar *p)
 	    if (etr->pc_path_locale && strlen(etr->pc_path_locale))  break;
 	}
 	else if (strrchr (*tplp, '.') == NULL)
-	{   /* this templlate does not have an extension and therefore
+	{   /* this template does not have an extension and therefore
 	     * matches */
 	    if (ext)
 	    {   /* if we have an extension, add it */
@@ -1176,7 +1186,7 @@ gchar *get_string_from_full_template (Track *track,
 
     if (!template)
     {
-	gchar *fn = get_file_name (track);
+	gchar *fn = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
 	gtkpod_warning (_("Template ('%s') does not match file type '%s'\n"), full_template, fn ? fn:"");
 	g_free (fn);
 	return NULL;

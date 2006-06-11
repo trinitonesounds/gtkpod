@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 01:04:28 jcs>
+/* Time-stamp: <2006-06-11 18:05:04 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -286,11 +286,13 @@ static gboolean write_track (struct fcd *fcd)
 	gchar *from_file = NULL;
 	if (fcd->track->itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
-	    from_file = get_file_name_on_ipod (fcd->track);
+	    from_file = get_file_name_from_source (fcd->track,
+						   SOURCE_IPOD);
 	}
 	else if (fcd->track->itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	{
-	    from_file = get_file_name_on_harddisk (fcd->track);
+	    from_file = get_file_name_from_source (fcd->track,
+						   SOURCE_LOCAL);
 	}
 	else
 	{

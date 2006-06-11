@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 01:55:27 jcs>
+/* Time-stamp: <2006-06-12 00:57:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1860,155 +1860,24 @@ rg_fail:
 #include <fcntl.h>
 
 
-/* this function initiates mp3gain on a given track and causes it to write the
- * Radio Replay Gain and Peak to an Ape Tag */
-
-/* mp3gain version 1.4.2 */
-static gboolean mp3_calc_gain (gchar *path, Track *track)
-{
-    gint k,n;  /*for's counter*/
-    gchar *mp3gain_path;
-    gchar *mp3gain_exec;
-    gchar *mp3gain_set;
-    pid_t pid,tpid;
-    int ret = 2;
-    int status;
-    int errsv;
-    int fdnull;
-
-    k=0;
-    n=0;
-
-    /* see if full path to mp3gain was set using the prefs dialogue */
-    mp3gain_set = prefs_get_string ("path_mp3gain");
-    /* use default if not */
-    if (!mp3gain_set || !(*mp3gain_set))
-	mp3gain_set = g_strdup ("mp3gain");
-    /* find full path */
-    mp3gain_path = g_find_program_in_path (mp3gain_set);
-    /* show error message if mp3gain cannot be found */
-    if (!mp3gain_path)
-    {
-	gtkpod_warning (_("Could not find mp3gain. I tried to use the following "
-				"executable: '%s'.\n\nIf the mp3gain executable "
-				"is not in your path or named differently, you "
-				"can set the full path in the 'Tools' section of "
-				"the preferences dialog.\n\nIf you do not have "
-				"mp3gain installed, you can download it from "
-				"http://www.sourceforge.net/projects/mp3gain."),
-			mp3gain_set);
-	g_free (mp3gain_set);
-	return FALSE;
-    }
-
-    mp3gain_exec = g_path_get_basename (mp3gain_path);
-
-    /*fork*/
-    pid=fork();
-
-    /*and cast mp3gain*/
-    switch (pid)
-    {
-    case -1: /* parent and error, now what?*/
-	break;
-    case 0: /*child*/
-	/* redirect output to /dev/null */
-	if ((fdnull = open("/dev/null", O_WRONLY | O_NDELAY)) != -1) {
-		dup2(fdnull, fileno(stdout));
-	}
-	
-	/* this call may add a tag to the mp3file!! */
-        execl(mp3gain_path, mp3gain_exec, 
-			"-q", /* quiet */
-			"-k", /* set ReplayGain so that clipping is prevented */
-			path, NULL);
-	errsv = errno;
-        fprintf(stderr, "execl() failed: %s\n", strerror(errsv));
-	/* mp3gain (can) return 1 on success. So only values greater 1 can
-	 * designate failure. */
-	exit(2);
-    default: /*parent*/
-	tpid = waitpid (pid, &status, 0); /*wait mp3gain termination */
-	if WIFEXITED(status) ret = WEXITSTATUS(status);
-	if (ret > 1) gtkpod_warning (_("Execution of mp3gain ('%s') failed."),
-			mp3gain_set);
-	break;
-    }/*end switch*/
-
-    /*free everything left*/
-    g_free (mp3gain_path);
-    g_free (mp3gain_exec);
-    g_free (mp3gain_set);
-
-    /*and happily return the right value*/
-    return (ret > 1) ? FALSE : TRUE;
-}
 
 
 
 
-/* 
- * mp3_get_gain - try to read the ReplayGain values from the LAME or Ape
- * Tags. If that does not work run mp3gain. And try to read again.
+/** 
+ * mp3_read_soundcheck:
+ *
+ * try to read the ReplayGain values from the LAME or Ape Tags and set
+ * the track's soundcheck field accordingly.
  *
  * @path: localtion of the file
  * @track: structure holding track information
  *
- * The function always rereads the gains. Even if they have been
- * previuosly known.
- *
- * Returns TRUE if at least the radio_gain could be read.
- */
-
-gboolean mp3_get_gain (gchar *path, Track *track) 
-{
-    GainData gd;
-
-    g_return_val_if_fail (track, FALSE);
-
-    memset (&gd, 0, sizeof (GainData));
-
-    gd.radio_gain_set = FALSE;
-    gd.audiophile_gain_set = FALSE;
-    gd.peak_signal_set = FALSE;
-
-    mp3_get_track_lame_replaygain (path, &gd);
-    if (gd.radio_gain_set)
-    {
-	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
-	return TRUE;
-    }
-
-    mp3_get_track_ape_replaygain (path, &gd);
-    if (gd.radio_gain_set)
-    {
-	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
-	return TRUE;
-    }
-	    
-    if (mp3_calc_gain (path, track))
-    {
-	mp3_get_track_ape_replaygain (path, &gd);
-    }
-    if (gd.radio_gain_set)
-    {
-	track->soundcheck = replaygain_to_soundcheck (gd.radio_gain);
-	return TRUE;
-    }
-
-    return FALSE;
-}
-
-
-
-/* 
- * mp3_read_gain - as mp3_get_gain() above, but will never run
- * mp3gain.
+ * The function always rereads the gain from the file.
  *
  * Returns TRUE if the soundcheck field could be set.
  */
-
-gboolean mp3_read_gain (gchar *path, Track *track) 
+gboolean mp3_read_soundcheck (gchar *path, Track *track) 
 {
     GainData gd;
 
@@ -2202,7 +2071,7 @@ Track *mp3_get_file_info (gchar *name)
 	}	    
     }
 
-    mp3_read_gain (name, track);
+    mp3_read_soundcheck (name, track);
 
     /* Get additional info (play time and bitrate */
     if (mp3i)

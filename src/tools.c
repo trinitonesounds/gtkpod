@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 01:44:51 jcs>
+/* Time-stamp: <2006-06-12 00:39:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -32,16 +32,20 @@
 #endif
 
 
-#include <sys/wait.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
 #include "info.h"
 #include "misc.h"
+#include "misc_track.h"
 #include "mp3file.h"
-#include "tools.h"
 #include "prefs.h"
+#include "tools.h"
+#include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 
 /*pipe's definition*/
@@ -67,24 +71,227 @@ static GCond  *cond = NULL;
 static gboolean mutex_data = FALSE;
 #endif
 
-/* will get the volume either from mp3gain or from LAME's ReplayGain */
-static gint32 nm_get_soundcheck (Track *track)
+
+/* Run @command on @track_path.
+ *
+ * Command may include options, like "mp3gain -q -k %s"
+ *
+ * %s is replaced by @track_path if present, otherwise @track_path is
+ * added at the end.
+ *
+ * Return value: TRUE if the command ran successfully, FALSE if any
+ * error occured.
+ */
+static gboolean run_exec_on_track (const gchar *commandline,
+				   const gchar *track_path)
 {
-    gint32 sc = TRACKVOLERROR;
+    gchar *command_full_path = NULL;
+    gchar *command = NULL;
+    gchar *command_base = NULL;
+    const gchar *nextarg;
+    gboolean success = FALSE;
+    gboolean percs = FALSE;
+    GPtrArray *args;
 
-    g_return_val_if_fail (track, sc);
+    int status, fdnull, ret;
+    pid_t tpid;
 
-    if (track->soundcheck != 0)
+    g_return_val_if_fail (commandline, FALSE);
+    g_return_val_if_fail (track_path, FALSE);
+
+
+    /* skip whitespace */
+    while (g_ascii_isspace (*commandline))  ++commandline;
+
+    /* find the command itself -- separated by ' ' */
+    nextarg = strchr (commandline, ' ');
+    if (!nextarg)
     {
-	return track->soundcheck;
+	nextarg = commandline + strlen (commandline);
+    }
+
+    command = g_strndup (commandline, nextarg-commandline);
+
+    command_full_path = g_find_program_in_path (command);
+
+    if (!command_full_path)
+    {
+	gtkpod_warning (_("Could not find '%s'\n. Please specifiy the exact path in the Tools section of the preference dialog or install the programm if it is not installed on your system.\n\n"), command);
+	goto cleanup;
+    }
+
+    command_base = g_path_get_basename (command_full_path);
+
+    /* Create the command line to be used with execv(). */
+    args =  g_ptr_array_sized_new (strlen (commandline));
+    /* add the full path */
+    g_ptr_array_add (args, command_full_path);
+    /* add the basename */
+    g_ptr_array_add (args, command_base);
+    /* add the command line arguments */
+
+    commandline = nextarg;
+
+    /* skip whitespace */
+    while (g_ascii_isspace (*commandline))  ++commandline;
+
+    while (*commandline != 0)
+    {
+	const gchar *next;
+
+	next = strchr (commandline, ' ');
+	/* next argument is everything to the end */
+	if (!next)
+	    next = commandline + strlen (commandline);
+
+	if (strncmp (commandline, "%s", 2) == 0)
+	{   /* substitute %s with @track_path */
+	    g_ptr_array_add (args, g_strdup (track_path));
+	    percs = TRUE;
+	}
+	else
+	{
+	    g_ptr_array_add (args,
+			     g_strndup (commandline, next-commandline));
+	}
+
+	/* skip to next argument */
+	commandline = next;
+
+	/* skip whitespace */
+	while (g_ascii_isspace (*commandline))  ++commandline;
+    } 
+
+    /* Add @track_path if "%s" was not present */
+    if (!percs)
+	g_ptr_array_add (args, g_strdup (track_path));
+
+    /* need NULL pointer */
+    g_ptr_array_add (args, NULL);
+
+    tpid = fork ();
+
+    switch (tpid)
+    {
+    case 0: /* we are the child */
+    {
+	gchar **argv = (gchar **)args->pdata;
+#if 0
+	gchar **bufp = argv;
+	while (*bufp)	{ puts (*bufp); ++bufp;	}
+#endif
+	/* redirect output to /dev/null */
+	if ((fdnull = open("/dev/null", O_WRONLY | O_NDELAY)) != -1)
+	{
+	    dup2(fdnull, fileno(stdout));
+	}
+	execv(argv[0], &argv[1]);
+	exit(0);
+	break;
+    }
+    case -1: /* we are the parent, fork() failed  */
+	g_ptr_array_free (args, TRUE);
+	break;
+    default: /* we are the parent, everything's fine */
+	tpid = waitpid (tpid, &status, 0);
+	g_ptr_array_free (args, TRUE);
+	if (WIFEXITED(status))
+	    ret = WEXITSTATUS(status);
+	else
+	    ret = 2;
+	if (ret > 1)
+	{
+	    gtkpod_warning (_("Execution of '%s' failed.\n\n"),
+			    command_full_path);
+	}
+	else
+	{
+	    success = TRUE;
+	}
+	break;
+    }
+
+
+  cleanup:
+    g_free (command_full_path);
+    g_free (command);
+    g_free (command_base);
+ 
+    return success;
+}
+
+
+
+
+/* reread the soundcheck value from the file */
+static gboolean nm_get_soundcheck (Track *track)
+{
+    gboolean success = FALSE;
+    gchar *path;
+    gchar *commandline = NULL;
+
+    g_return_val_if_fail (track, FALSE);
+
+    if (read_soundcheck (track))
+	return TRUE;
+
+    path = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
+
+    if (path)
+    {
+	switch (determine_file_type (path))
+	{
+	case FILE_TYPE_MP3: 
+	    commandline = prefs_get_string ("path_mp3gain");
+	    if (!commandline)
+	    {
+		gtkpod_warning (
+		    _("Did not normalize '%s'. Set mp3gain path in the Tools section of the preferences.\n"), path);
+	    }
+	    break;
+	case FILE_TYPE_M4A:
+	case FILE_TYPE_M4P:
+	case FILE_TYPE_M4B:
+	    commandline = prefs_get_string ("path_aacgain");
+	    if (!commandline)
+	    {
+		gtkpod_warning (
+		    _("Did not normalize '%s'. Set aacgain path in the Tools section of the preferences.\n"), path);
+	    }
+	    break;
+	case FILE_TYPE_WAV: /* FIXME */
+	case FILE_TYPE_M4V:
+	case FILE_TYPE_MP4:
+	case FILE_TYPE_MOV:
+	case FILE_TYPE_MPG:
+	case FILE_TYPE_UNKNOWN:
+	    gtkpod_warning (
+		_("Normalization failed: file type not supported (%s).\n\n"),
+		path);
+	    break;
+	case FILE_TYPE_M3U: 
+	case FILE_TYPE_PLS: 
+	case FILE_TYPE_IMAGE: 
+	case FILE_TYPE_DIRECTORY:
+	    break;
+	}
+	if (commandline)
+	    success = run_exec_on_track (commandline, path);
+	g_free (path);
     }
     else
     {
-	if (get_gain (track))
-	    return track->soundcheck;
-	else
-	    return sc;
+	gchar *buf = get_track_info (track, FALSE);
+	gtkpod_warning (
+	    _("Normalization failed: file not available (%s).\n\n"),
+	    buf);
+	g_free (buf);
     }
+
+    if (success)
+	return read_soundcheck (track);
+    else
+	return FALSE;
 }
 
 
@@ -93,12 +300,12 @@ static gint32 nm_get_soundcheck (Track *track)
 /* Threaded getTrackGain*/
 static gpointer th_nm_get_soundcheck (gpointer track)
 {
-   gint32 gain=nm_get_soundcheck ((Track *)track);
+   gboolean success = nm_get_soundcheck ((Track *)track);
    g_mutex_lock (mutex);
    mutex_data = TRUE; /* signal that thread will end */
    g_cond_signal (cond);
    g_mutex_unlock (mutex);
-   return GUINT_TO_POINTER(gain);
+   return GUINT_TO_POINTER(success);
 }
 #endif
 
@@ -131,8 +338,8 @@ static void normalization_abort(gboolean *abort)
 void nm_tracks_list (GList *list)
 {
   gint count, succ_count, n, nrs;
-  gint32 new_soundcheck = 0;
-  gint32 old_soundcheck = 0;
+  guint32 old_soundcheck;
+  gboolean success;
   static gboolean abort;
   GtkWidget *dialog, *progress_bar, *label, *track_label;
   GtkWidget *image, *hbox;
@@ -231,6 +438,7 @@ void nm_tracks_list (GList *list)
      while (widgets_blocked && gtk_events_pending ())
 	 gtk_main_iteration ();
 
+     /* need to know so we can update the display when necessary */
      old_soundcheck = track->soundcheck;
 
 #ifdef G_THREADS_ENABLED
@@ -262,22 +470,22 @@ void nm_tracks_list (GList *list)
 	     g_cond_timed_wait (cond, mutex, &gtime);
 	 }
 	 while(!mutex_data);
-	 new_soundcheck = GPOINTER_TO_UINT(g_thread_join (thread));
+	 success = GPOINTER_TO_UINT(g_thread_join (thread));
 	 g_mutex_unlock (mutex);
      }
      else
      {
 	 g_warning ("Thread creation failed, falling back to default.\n");
-	 new_soundcheck = nm_get_soundcheck (track);
+	 success = nm_get_soundcheck (track);
      }
 #else
-     new_soundcheck = nm_get_soundcheck (track);
+     success = nm_get_soundcheck (track);
 #endif
 
      /*normalization part*/
-     if(new_soundcheck == TRACKVOLERROR)
+     if(!success)
      {
-	 gchar *path = get_file_name_verified (track);
+	 gchar *path = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
 	 gtkpod_warning (
 	     _("'%s-%s' (%s) could not be normalized.\n\n"),
 	     track->artist, track->title, path? path:"");
@@ -286,9 +494,8 @@ void nm_tracks_list (GList *list)
      else
      {
 	 ++succ_count;
-	 if(new_soundcheck != track->soundcheck)
+	 if(old_soundcheck != track->soundcheck)
 	 {
-	     track->soundcheck = new_soundcheck;
 	     pm_track_changed (track);
 	     data_changed (track->itdb);
 	 }
@@ -546,6 +753,8 @@ do_command_on_entries (const gchar *command, const gchar *what,
 	return;
     }
 
+    while (g_ascii_isspace (*command))  ++command;
+
     /* find the command itself -- separated by ' ' */
     next = strchr (command, ' ');
     if (!next)
@@ -556,7 +765,6 @@ do_command_on_entries (const gchar *command, const gchar *what,
     {
 	str = g_strndup (command, next-command);
     }
-    while (g_ascii_isspace (*command))  ++command;
     /* get the full path */
     commandc = g_find_program_in_path (str);
     if (!commandc)
@@ -593,7 +801,10 @@ do_command_on_entries (const gchar *command, const gchar *what,
 	{
 	    for(l = selected_tracks; l; l = l->next)
 	    {
-		if((str = get_file_name_verified((Track*)l->data)))
+		Track *tr = l->data;
+		g_return_if_fail (tr);
+		str = get_file_name_from_source(tr, SOURCE_PREFER_LOCAL);
+		if(str)
 		{
 		    g_ptr_array_add (args, str);
 		}

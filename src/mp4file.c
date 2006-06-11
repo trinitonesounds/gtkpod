@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 01:35:38 jcs>
+/* Time-stamp: <2006-06-11 14:39:57 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -94,26 +94,22 @@
    You also have to write a function to write TAGs back to the
    file. That function should be named
 
-   gboolean xxx_write_file_info (gchar *filename, Track *track, T_item tag_id)
+   gboolean xxx_write_file_info (gchar *filename, Track *track)
 
    and return TRUE on success or FALSE on error. In that case it
    should log an error message using gtkpod_warning().
-
-   @tag_id determines which TAGs of @track out of the list above are
-   to be updated. If @tag_id==T_ALL, upudate all (supported) TAGs.
 
    You need to add your handler to file_write_info() in file.c
 
 
    Finally, you may want to provide a function that can
-   read/calculate the replay gain
+   read and set the soundcheck field: 
 
-   gboolean xxx_get_gain (gchar *filename, Track *track)
+   gboolean xxx_read_soundcheck (gchar *filename, Track *track)
 
-   and return TRUE when the replay gain could be determined (as an
-   example see mp3_get_gain() in mp3file.c.
+   and return TRUE when the soundcheck value could be determined.
 
-   You need to add your handler to get_gain() in file.c.
+   You need to add your handler to read_soundcheck() in file.c.
 
    ------------------------------------------------------------ */
 
@@ -140,10 +136,65 @@
    PACKAGE */
 #include <config.h>
 
-Track *mp4_get_file_info (gchar *mp4FileName)
+
+static gboolean mp4_scan_soundcheck (MP4FileHandle mp4File, Track *track)
 {
-    Track *track = NULL;
-    MP4FileHandle mp4File = MP4Read(mp4FileName, 0);
+    gboolean success = FALSE;
+    u_int8_t *ppValue;
+    u_int32_t pValueSize;
+
+
+    g_return_val_if_fail (mp4File != MP4_INVALID_FILE_HANDLE, FALSE);
+
+    if (MP4GetMetadataFreeForm(mp4File, "iTunNORM",
+			       &ppValue, &pValueSize))
+    {
+	gchar *str;
+	guint sc1=0, sc2=0;
+	str = g_malloc0((pValueSize+1)*sizeof(gchar));
+	memcpy(str, ppValue, pValueSize*sizeof(gchar));
+	/* This field consists of a number of hex numbers
+	   represented in ASCII, e.g. " 00000FA7 00000B3F
+	   000072CF 00006AB6 0001CF53 00016310 0000743A
+	   00007C1F 00023DD5 000162E2". iTunes seems to
+	   choose the larger one of the first two numbers
+	   as the value for track->soundcheck */
+	sscanf (str, "%x %x", &sc1, &sc2);
+	g_free (str);
+	if (sc1 > sc2)
+	    track->soundcheck = sc1;
+	else
+	    track->soundcheck = sc2;
+	success = TRUE;
+    }
+
+    if (MP4GetMetadataFreeForm(mp4File, "replaygain_track_gain",
+			       &ppValue, &pValueSize))
+    {
+	gchar *str;
+	gdouble rg;
+	str = g_malloc0((pValueSize+1)*sizeof(gchar));
+	memcpy(str, ppValue, pValueSize*sizeof(gchar));
+	rg = g_strtod (str, NULL);
+	track->soundcheck = replaygain_to_soundcheck (rg);
+	g_free (str);
+
+	success = TRUE;
+    }
+
+    return success;
+}
+
+
+gboolean mp4_read_soundcheck (gchar *mp4FileName, Track *track)
+{
+    gboolean success = FALSE;
+    MP4FileHandle mp4File;
+
+    g_return_val_if_fail (mp4FileName, FALSE);
+    g_return_val_if_fail (track, FALSE);
+
+    mp4File = MP4Read(mp4FileName, 0);
 
     if (mp4File != MP4_INVALID_FILE_HANDLE)
     {
@@ -152,7 +203,57 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 
 	trackId = MP4FindTrackId(mp4File, 0, NULL, 0);
 	trackType = MP4GetTrackType(mp4File, trackId);
-	if (trackType && ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) || (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0) || (strcmp(trackType, MP4_OD_TRACK_TYPE) == 0)))
+
+	if (trackType &&
+	    ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) ||
+	     (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0) ||
+	     (strcmp(trackType, MP4_OD_TRACK_TYPE) == 0)))
+	{
+	    success = mp4_scan_soundcheck (mp4File, track);
+	}
+	else
+	{
+	    gchar *filename = charset_to_utf8 (mp4FileName);
+	    gtkpod_warning (_("'%s' does not appear to be a mp4 audio file.\n"),
+			    filename);
+	    g_free (filename);
+	}
+	MP4Close(mp4File);
+    }
+    else
+    {
+	gchar *filename = charset_to_utf8 (mp4FileName);
+	gtkpod_warning (
+	    _("Could not open '%s' for reading, or file is not an mp4 file.\n"),
+	    filename);
+	g_free (filename);
+    }
+
+    return success;
+}
+
+
+
+Track *mp4_get_file_info (gchar *mp4FileName)
+{
+    Track *track = NULL;
+    MP4FileHandle mp4File;
+
+    g_return_val_if_fail (mp4FileName, NULL);
+
+    mp4File = MP4Read(mp4FileName, 0);
+
+    if (mp4File != MP4_INVALID_FILE_HANDLE)
+    {
+	MP4TrackId trackId;
+	const char *trackType;
+
+	trackId = MP4FindTrackId(mp4File, 0, NULL, 0);
+	trackType = MP4GetTrackType(mp4File, trackId);
+	if (trackType &&
+	    ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) ||
+	     (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0) ||
+	     (strcmp(trackType, MP4_OD_TRACK_TYPE) == 0)))
 	{
 	    gchar *value;
 	    guint16 numvalue, numvalue2;
@@ -183,9 +284,6 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 	    }
 	    if (prefs_get_int("readtags"))
 	    {
-		u_int8_t *ppValue;
-		u_int32_t pValueSize;
-
 		if (MP4GetMetadataName(mp4File, &value) && value != NULL)
 		{
 		    track->title = charset_to_utf8 (value);
@@ -231,37 +329,7 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		    track->genre = charset_to_utf8 (value);
 		    g_free(value);
 		}
-		if (MP4GetMetadataFreeForm(mp4File, "iTunNORM",
-					   &ppValue, &pValueSize))
-		{
-		    gchar *str;
-		    guint sc1=0, sc2=0;
-		    str = g_malloc0((pValueSize+1)*sizeof(gchar));
-		    memcpy(str, ppValue, pValueSize*sizeof(gchar));
-		    /* This field consists of a number of hex numbers
-		       represented in ASCII, e.g. " 00000FA7 00000B3F
-		       000072CF 00006AB6 0001CF53 00016310 0000743A
-		       00007C1F 00023DD5 000162E2". iTunes seems to
-		       choose the larger one of the first or second
-		       number as the value for track->soundcheck */
-		    sscanf (str, "%x %x", &sc1, &sc2);
-		    g_free (str);
-		    if (sc1 > sc2)
-			track->soundcheck = sc1;
-		    else
-			track->soundcheck = sc2;
-		}
-		if (MP4GetMetadataFreeForm(mp4File, "replaygain_track_gain",
-					   &ppValue, &pValueSize))
-		{
-		    gchar *str;
-		    gdouble rg;
-		    str = g_malloc0((pValueSize+1)*sizeof(gchar));
-		    memcpy(str, ppValue, pValueSize*sizeof(gchar));
-		    rg = g_strtod (str, NULL);
-		    track->soundcheck = replaygain_to_soundcheck (rg);
-		    g_free (str);
-		}
+		mp4_scan_soundcheck (mp4File, track);
 	    }
 	}
 	else

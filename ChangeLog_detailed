@@ -2,6 +2,25 @@
 
 	 * src/prefs.h: removed unused declarations.
 
+	 * src/file.c: fixed two memory leaks.
+
+	 * src/misc_playlist.c: fixed memory leak.
+
+	 * src/file.c:
+	   Got rid of get_file_name_verified(),
+	   get_file_name_on_ipod)( as they can be emulated by
+	   get_file_name_from_source().
+
+	   Got rid of get_file_name() and get_file_name_on_harddisk
+	   (substituted where used) used).
+
+	 * src/mp3file.c: removed mp3gain code
+
+	 * src/tools.c: added mp3gain and aacgain code.
+
+	 * src/prefs_windows.c: added aacgain path in the Tools
+           section, improved layout.
+
 2006-06-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/mp4file.c: read aacgain if present.

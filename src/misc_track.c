@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-04 23:35:20 jcs>
+/* Time-stamp: <2006-06-11 14:15:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1627,7 +1627,7 @@ void gp_do_selected_playlist (void (*do_func)(GList *tracks))
 }
 
 
-/* return some sensible input about the "track". Yo must free the
+/* return some sensible input about the "track". You must free the
  * return string after use. */
 gchar *get_track_info (Track *track, gboolean prefer_filename)
 {

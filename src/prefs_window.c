@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 20:19:45 jcs>
+/* Time-stamp: <2006-06-12 00:53:58 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -88,6 +88,7 @@ static const gchar *path_button_names[] =
     "mserv_music_root_button",
     "mserv_trackinfo_root_button",
     "",
+    "aacgain_path_button",
     NULL
 };
 static const gchar *path_key_names[] =
@@ -100,6 +101,7 @@ static const gchar *path_key_names[] =
     "path_mserv_music_root",
     "path_mserv_trackinfo_root",
     "",
+    "aacgain_path",
     NULL
 };
 const gchar *path_entry_names[] =
@@ -112,6 +114,7 @@ const gchar *path_entry_names[] =
     "mserv_music_root_entry",
     "mserv_trackinfo_root_entry",
     "",
+    "aacgain_path_entry",
     NULL
 };
 static const gchar *path_fileselector_titles[] =
@@ -124,6 +127,7 @@ static const gchar *path_fileselector_titles[] =
     N_("Select the mserv music root directory"),
     N_("Select the mserv trackinfo root directory"),
     "",
+    N_("Please select the aacgain executable"),
     NULL
 };
 static const GtkFileChooserAction path_type[] =

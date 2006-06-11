@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-20 23:04:54 jcs>
+/* Time-stamp: <2006-06-11 18:05:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -61,6 +61,7 @@ typedef enum
 typedef enum
 {
     SOURCE_PREFER_LOCAL = 0,
+    SOURCE_PREFER_IPOD,
     SOURCE_LOCAL,
     SOURCE_IPOD
 } FileSource;
@@ -98,10 +99,6 @@ void handle_export (void);
 void data_changed (iTunesDB *itdb);
 void data_unchanged (iTunesDB *itdb);
 gboolean files_are_saved (void);
-gchar* get_file_name(Track *tr);
-gchar* get_file_name_on_ipod(Track *tr);
-gchar *get_file_name_on_harddisk (Track *tr);
-gchar *get_file_name_verified (Track *tr);
 gchar *get_file_name_from_source (Track *track, FileSource source);
 gchar* get_preferred_track_name_format(Track *s);
 void mark_track_for_deletion (iTunesDB *itdb, Track *track);
@@ -111,7 +108,7 @@ void gp_info_deleted_tracks (iTunesDB *itdb,
 void update_charset_info (Track *track);
 void parse_offline_playcount (void);
 
-gboolean get_gain(Track *track);
+gboolean read_soundcheck (Track *track);
 
 /* file_export.c */
 void export_files_init (GList *tracks, GList **filenames,

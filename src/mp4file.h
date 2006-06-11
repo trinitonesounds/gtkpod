@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:13 jcs>
+/* Time-stamp: <2006-06-11 14:39:42 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -34,4 +34,5 @@
 
 gboolean mp4_write_file_info (gchar *filename, Track *track);
 Track *mp4_get_file_info (gchar *name);
+gboolean mp4_read_soundcheck (gchar *filename, Track *track);
 #endif

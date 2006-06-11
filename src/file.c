@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 01:37:08 jcs>
+/* Time-stamp: <2006-06-11 18:05:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1213,8 +1213,9 @@ void update_tracks (GList *selected_tracks)
 	g_return_if_fail (itdb);
 	if (g_list_find (itdb->tracks, track))
 	{
-	    gtkpod_statusbar_message (_("Updating %s"),
-				      get_track_info (track, TRUE));
+	    gchar *buf = get_track_info (track, TRUE);
+	    gtkpod_statusbar_message (_("Updating %s"), buf);
+	    g_free (buf);
 	    update_track_from_file (track->itdb, track);
 	}
     }
@@ -1255,11 +1256,14 @@ void mserv_from_file_tracks (GList *selected_tracks)
     {
 	ExtraTrackData *etr;
 	Track *track = gl->data;
+	gchar *buf;
 	g_return_if_fail (track);
 	etr = track->userdata;
 	g_return_if_fail (etr);
-	gtkpod_statusbar_message (_("Retrieving mserv data %s"),
-				  get_track_info (track, TRUE));
+
+	buf = get_track_info (track, TRUE);
+	gtkpod_statusbar_message (_("Retrieving mserv data %s"), buf);
+	g_free (buf);
 	if (etr->pc_path_locale && *etr->pc_path_locale)
 	    update_mserv_data_from_file (etr->pc_path_locale, track);
 	else
@@ -1917,7 +1921,7 @@ gboolean write_tags_to_file (Track *track)
 	(g_utf8_strlen (track->ipod_path, -1) > 0))
     {
 	/* need to get ipod filename */
-	ipod_fullpath = get_file_name_on_ipod (track);
+	ipod_fullpath = get_file_name_from_source (track, SOURCE_IPOD);
 	if (file_write_info (
 		ipod_fullpath, track) == FALSE)
 	{
@@ -1945,106 +1949,8 @@ gboolean write_tags_to_file (Track *track)
 }
 
 
-/**
- * get_file_name
- * Function to retrieve the filename on disk for the specified Track.  It
- * returns the valid filename whether the file has been copied to the ipod,
- * or has yet to be copied.  So it's useful for file operations on a track.
- * @s - The Track data structure we want the on disk file for
- * Returns - the filename for this Track. Must be g_free'd.
- */
-gchar* get_file_name(Track *tr)
-{
-    ExtraTrackData *etr;
-    gchar *result = NULL;
-
-    g_return_val_if_fail (tr, result);
-    etr = tr->userdata;
-    g_return_val_if_fail (etr, result);
-
-    if (tr->itdb)
-	result = get_file_name_on_ipod (tr);
-    if(!result &&
-       (etr->pc_path_locale) && (strlen(etr->pc_path_locale) > 0))
-    {
-	result = g_strdup (etr->pc_path_locale);
-    }
-    return result;
-}
-
-
-/* Return the full iPod filename as stored in @s.
-   @s: track
-   Return value: full filename to @s on the iPod or NULL if no
-   filename is set in @s. NOTE: the file does not necessarily
-   exist. NOTE: the in itunesdb.c code works around a problem on some
-   systems (see below) and might return a filename with different case
-   than the original filename. Don't copy it back to @s */
-gchar *get_file_name_on_ipod (Track *tr)
-{
-    gchar *result = NULL;
-
-    if(tr &&  !prefs_get_offline ())
-    {
-	result = itdb_filename_on_ipod (tr);
-    }
-    return(result);
-}
-
-
-/* Return the full path of track @tr on the local harddisk or NULL if
- * no path was stored. Return value must be g_free'd when it is no
- * longer needed */
-gchar *get_file_name_on_harddisk (Track *tr)
-{
-    ExtraTrackData *etr;
-    gchar *result = NULL;
-
-    g_return_val_if_fail (tr, NULL);
-    etr = tr->userdata;
-    g_return_val_if_fail (etr, result);
-
-    if ((etr->pc_path_locale) && (strlen(etr->pc_path_locale) > 0))
-    {
-	result = g_strdup (etr->pc_path_locale);
-    }
-    return result;
-}
-
-
-/* Like get_file_name(), but verifies the track actually exists.  Must
-   g_free return value after use */
-gchar *get_file_name_verified (Track *track)
-{
-    gchar *name = NULL;
-    ExtraTrackData *etr;
-
-    g_return_val_if_fail (track, NULL);
-    etr = track->userdata;
-    g_return_val_if_fail (etr, NULL);
-
-    if (!prefs_get_offline ())
-    {
-	name = get_file_name_on_ipod (track);
-	if (name)
-	{
-	    if (!g_file_test (name, G_FILE_TEST_EXISTS))
-	    {
-		g_free (name);
-		name = NULL;
-	    }
-	}
-    }
-    if(!name && etr->pc_path_locale && (*etr->pc_path_locale))
-    {
-	if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
-	    name = g_strdup (etr->pc_path_locale);
-    }
-    return name;
-}
-
-
 /* Get file name from source @source */
+/* File is guaranteed to exist, otherwise NULL is returned. */
 gchar *get_file_name_from_source (Track *track, FileSource source)
 {
     gchar *result = NULL;
@@ -2057,14 +1963,14 @@ gchar *get_file_name_from_source (Track *track, FileSource source)
     switch (source)
     {
     case SOURCE_PREFER_LOCAL:
-	if (etr->pc_path_locale && (*etr->pc_path_locale))
-	{
-	    if (g_file_test (etr->pc_path_locale, G_FILE_TEST_EXISTS))
-	    {
-		result = g_strdup (etr->pc_path_locale);
-	    }
-	}
-	if (!result) result = get_file_name_on_ipod (track);
+	result = get_file_name_from_source (track, SOURCE_LOCAL);
+	if (!result)
+	    result = get_file_name_from_source (track, SOURCE_IPOD);
+	break;
+    case SOURCE_PREFER_IPOD:
+	result = get_file_name_from_source (track, SOURCE_IPOD);
+	if (!result)
+	    result = get_file_name_from_source (track, SOURCE_LOCAL);
 	break;
     case SOURCE_LOCAL:
 	if (etr->pc_path_locale && (*etr->pc_path_locale))
@@ -2076,7 +1982,10 @@ gchar *get_file_name_from_source (Track *track, FileSource source)
 	}
 	break;
     case SOURCE_IPOD:
-	result = get_file_name_on_ipod (track);
+	if(track &&  !prefs_get_offline ())
+	{
+	    result = itdb_filename_on_ipod (track);
+	}
 	break;
     }
     return result;
@@ -2234,8 +2143,12 @@ void parse_offline_playcount (void)
         Reading of gain tags
 
    ------------------------------------------------------------ */
-/* Set the gain value in @track. Return value: TRUE, if gain could be set */
-gboolean get_gain (Track *track) 
+/**
+ * Read the soundcheck value for @track.
+ *
+ * Return value: TRUE, if gain could be read
+ */
+gboolean read_soundcheck (Track *track) 
 {
     gchar *path;
     gchar *buf;
@@ -2243,18 +2156,20 @@ gboolean get_gain (Track *track)
 
     g_return_val_if_fail (track, FALSE);
 
-    path = get_file_name_verified (track);
+    path = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
 
     if (path)
     {
 	switch (determine_file_type (path))
 	{
 	case FILE_TYPE_MP3: 
-	    result = mp3_get_gain (path, track);
+	    result = mp3_read_soundcheck (path, track);
 	    break;
-	case FILE_TYPE_M4A: /* FIXME */
-	case FILE_TYPE_M4P: /* FIXME */
-	case FILE_TYPE_M4B: /* FIXME */
+	case FILE_TYPE_M4A:
+	case FILE_TYPE_M4P:
+	case FILE_TYPE_M4B:
+	    result = mp4_read_soundcheck (path, track);
+	    break;
 	case FILE_TYPE_WAV: /* FIXME */
 	case FILE_TYPE_M4V:
 	case FILE_TYPE_MP4:
@@ -2281,6 +2196,7 @@ gboolean get_gain (Track *track)
 	gtkpod_warning (
 	    _("Normalization failed: file not available (%s).\n\n"),
 	    buf);
+	g_free (buf);
     }
     return result;
 }

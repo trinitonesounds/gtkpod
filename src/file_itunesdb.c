@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 01:38:32 jcs>
+/* Time-stamp: <2006-06-11 18:06:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -119,7 +119,7 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
 
       if (!etr->md5_hash)
       {
-	  gchar *filename = get_file_name_on_ipod (track);
+	  gchar *filename = get_file_name_from_source (track, SOURCE_IPOD);
 	  etr->md5_hash = md5_hash_on_filename (filename, FALSE);
 	  g_free (filename);
       }
@@ -1313,12 +1313,12 @@ static gboolean delete_files (iTunesDB *itdb)
       if (itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
 	  track->itdb = itdb;
-	  filename = itdb_filename_on_ipod (track);
+	  filename = get_file_name_from_source (track, SOURCE_IPOD);
 	  track->itdb = NULL;
       }
       if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
       {
-	  filename = get_file_name_on_harddisk (track);
+	  filename = get_file_name_from_source (track, SOURCE_LOCAL);
       }
 
       if(filename)

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 14:02:30 jcs>
+/* Time-stamp: <2006-06-11 17:10:33 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -129,7 +129,7 @@ on_st_dnd_get_file_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	Track *tr = gl->data;
 
 	g_return_if_fail (tr);
-	name = get_file_name_verified (tr);
+	name = get_file_name_from_source (tr, SOURCE_PREFER_LOCAL);
 	if (name)
 	{
 	    g_string_append_printf (filelist, "file:%s\n", name);
@@ -175,7 +175,7 @@ on_st_dnd_get_uri_foreach(GtkTreeModel *tm, GtkTreePath *tp,
 	Track *tr = gl->data;
 
 	g_return_if_fail (tr);
-	name = get_file_name_verified (tr);
+	name = get_file_name_from_source (tr, SOURCE_PREFER_LOCAL);
 	if (name)
 	{
 	    gchar *uri = g_filename_to_uri (name, NULL, NULL);
