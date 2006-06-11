@@ -43,6 +43,9 @@
 
 2006-06-10 James Liggett <freethinkerjim@users.sourceforge.net>
 	
+	 * src/prefs.h
+	   src/prefs.c: Got rid of prefs_validate path.
+	
 	 * src/file.c
 	   src/prefs.h
 	   src/prefs.c

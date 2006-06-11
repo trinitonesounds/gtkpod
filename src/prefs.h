@@ -277,7 +277,6 @@ void discard_prefs (void);
 struct cfg* clone_prefs(void);
 struct sortcfg* clone_sortprefs(void);
 gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
-gchar *prefs_validate_path (const gchar *path, const gchar *allowed);
 
 void prefs_set_offline(gboolean active);
 void prefs_set_pm_sort (gint type);

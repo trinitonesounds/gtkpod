@@ -2783,63 +2783,13 @@ void prefs_set_last_prefs_page (gint i)
     cfg->last_prefs_page = i;
 }
 
-/* validate the the play_path @path and return a valid copy that has
- * to be freed with g_free when it's not needed any more. */
-/* Rules: - must be '%(member of allowed)'
-	  - removes all invalid '%' */
-gchar *prefs_validate_path (const gchar *path, const gchar *allowed)
-{
-    const gchar *pp;
-    gchar *npp, *npath=NULL;
-
-    if ((!path) || (strlen (path) == 0)) return g_strdup ("");
-    if (!allowed)  allowed = "";
-
-    npath = g_malloc0 (strlen (path)+1); /* new path can only be shorter
-					    than old path */
-    pp = path;
-    npp = npath;
-    while (*pp)
-    {
-	if (*pp == '%')
-	{
-	    if (*(pp+1) && strchr (allowed, *(pp+1)) == NULL)
-	    {
-		if (strlen (allowed) == 0)
-		{
-		    gtkpod_warning (_("'%s': no arguments (%%...) allowed.\n"),
-				    path);
-		}
-		else
-		{
-		    gtkpod_warning (_("'%s': only '%%[%s]' allowed.\n"),
-				    path, allowed);
-		}
-		++pp; /* skip '%...' */
-	    }
-	    else
-	    {   /* copy '%s' */
-		*npp++ = *pp++;
-		*npp++ = *pp;
-	    }
-	}
-	else
-	{
-	    *npp++ = *pp;
-	}
-	if (*pp) ++pp; /* increment if we are not at the end */
-    }
-    return npath;
-}
-
-
 gboolean 
 prefs_get_automount (void)
 {
     return cfg->automount;
 }
-void
 
+void
 prefs_set_automount(gboolean val)
 {
     cfg->automount = val;
