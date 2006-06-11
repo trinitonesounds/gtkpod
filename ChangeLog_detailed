@@ -40,7 +40,13 @@
 	   Did away with pm_autostore.
 
 2006-06-10 James Liggett <freethinkerjim@users.sourceforge.net>
-	 
+	
+	 * src/file_itunesdb.c
+	   src/misc.c
+	   src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Moved write_extended_info to new prefs.
+	
 	 * src/main.c
 	   src/prefs.h
 	   src/prefs.c: Moved autoimport_commandline to new prefs.	 

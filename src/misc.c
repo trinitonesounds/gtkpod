@@ -326,7 +326,7 @@ void cleanup_backup_and_extended_files (void)
   if (cfgdir && !prefs_get_offline ())
     {
       gchar *cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
-      if (!prefs_get_write_extended_info ())
+      if (!prefs_get_int("write_extended_info"))
 	/* delete extended info file from computer */
 	if (g_file_test (cfe, G_FILE_TEST_EXISTS))
 	  if (remove (cfe) != 0)

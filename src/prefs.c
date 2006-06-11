@@ -216,6 +216,7 @@ static void set_default_preferences()
 
     prefs_set_int("autoimport", FALSE);
     prefs_set_int("readtags", TRUE);
+    prefs_set_int("write_extended_info", TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1774,7 +1775,6 @@ struct cfg *cfg_new(void)
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
     mycfg->offline = FALSE;
-    mycfg->write_extended_info = TRUE;
     mycfg->parsetags = FALSE;
     mycfg->parsetags_overwrite = FALSE;
     mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3;%t.wav");
@@ -2041,10 +2041,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* removed with version after 0.82-CVS */
 	  }
-	  else if(g_ascii_strcasecmp (line, "extended_info") == 0)
-	  {
-	      prefs_set_write_extended_info((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "dir_browse") == 0)
 	  {
 	      prefs_set_string ("last_dir_browsed", arg);
@@ -2309,7 +2305,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "group_compilations=%d\n",prefs_get_group_compilations());
     fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
-    fprintf(fp, "extended_info=%d\n",prefs_get_write_extended_info());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
     fprintf(fp, "tm_autostore=%d\n",prefs_get_tm_autostore());
@@ -2396,10 +2391,6 @@ void prefs_set_offline(gboolean active)
   cfg->offline = active;
   info_update_totals_view_space ();
 }
-void prefs_set_write_extended_info(gboolean active)
-{
-  cfg->write_extended_info = active;
-}
 
 /* If the status of md5 hash flag changes, free or re-init the md5
    hash table */
@@ -2453,11 +2444,6 @@ gboolean prefs_get_block_display(void)
 gboolean prefs_get_offline(void)
 {
   return cfg->offline;
-}
-
-gboolean prefs_get_write_extended_info(void)
-{
-  return cfg->write_extended_info;
 }
 
 void prefs_set_charset (gchar *charset)

@@ -620,7 +620,7 @@ prefs_window_create (gint page)
     
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_extended");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->write_extended_info);
+				 prefs_get_int("write_extended_info"));
 
 
 if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
@@ -710,7 +710,6 @@ prefs_window_set(void)
 	prefs_set_parsetags_template(tmpcfg->parsetags_template);
 	prefs_set_coverart(tmpcfg->coverart);
 	prefs_set_coverart_template(tmpcfg->coverart_template);
-	prefs_set_write_extended_info(tmpcfg->write_extended_info);
 
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
@@ -1024,8 +1023,8 @@ void
 on_cfg_write_extended_info_toggled     (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->write_extended_info = 
-	gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "write_extended_info",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void

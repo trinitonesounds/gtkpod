@@ -109,8 +109,6 @@ struct cfg
   } sortcfg;
   gboolean info_window;   /* is info window open (will then open on restart */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
-  gboolean write_extended_info; /* write additional file with PC
-				   filenames etc? */
 
   gboolean parsetags;           /* Get tags by parsing filename? */
   gchar   *parsetags_template;  /* template for parsing tags */
@@ -289,7 +287,6 @@ void prefs_set_tm_sort (gint type);
 void prefs_set_st_sort (gint type);
 void prefs_set_tm_sortcol (TM_item col);
 void prefs_set_tm_autostore (gboolean active);
-void prefs_set_write_extended_info(gboolean active);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_block_display(gboolean active);
 void prefs_set_parsetags (gboolean active);
@@ -314,7 +311,6 @@ gint prefs_get_st_sort (void);
 gint prefs_get_tm_sort (void);
 TM_item prefs_get_tm_sortcol (void);
 gboolean prefs_get_tm_autostore (void);
-gboolean prefs_get_write_extended_info(void);
 gboolean prefs_get_autoimport(void);
 gchar * prefs_get_charset (void);
 gboolean prefs_get_md5tracks(void);
