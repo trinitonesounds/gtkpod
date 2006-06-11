@@ -110,7 +110,6 @@ struct cfg
   gboolean info_window;   /* is info window open (will then open on restart */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
 
-  gboolean parsetags;           /* Get tags by parsing filename? */
   gchar   *parsetags_template;  /* template for parsing tags */
   gboolean parsetags_overwrite; /* Overwrite tags already set? */
   gboolean coverart;            /* Read coverart when adding files? */
@@ -289,8 +288,6 @@ void prefs_set_tm_sortcol (TM_item col);
 void prefs_set_tm_autostore (gboolean active);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_block_display(gboolean active);
-void prefs_set_parsetags (gboolean active);
-gboolean prefs_get_parsetags(void);
 void prefs_set_parsetags_overwrite (gboolean active);
 gboolean prefs_get_parsetags_overwrite(void);
 void prefs_set_parsetags_template (const gchar *tpl);

@@ -694,7 +694,7 @@ static void set_entry_from_filename (Track *track, gint column)
 static void set_unset_entries_from_filename (Track *track)
 {
     /* try to fill tags from filename */
-    if (prefs_get_parsetags ())
+    if (prefs_get_int("parsetags"))
 			parse_filename (track);
     /* fill up what is left unset */
     if (!track->album && prefs_get_int_index("tag_autoset", TM_COLUMN_ALBUM))

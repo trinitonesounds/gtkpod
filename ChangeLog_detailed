@@ -41,6 +41,11 @@
 
 2006-06-10 James Liggett <freethinkerjim@users.sourceforge.net>
 	
+	 * src/file.c
+	   src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Moved parsetags to new prefs.
+	
 	 * src/file_itunesdb.c
 	   src/misc.c
 	   src/prefs.h

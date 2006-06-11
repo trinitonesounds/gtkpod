@@ -557,12 +557,12 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->parsetags);
+				 prefs_get_int("parsetags"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_overwrite");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 tmpcfg->parsetags_overwrite);
-    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
+    gtk_widget_set_sensitive (w, prefs_get_int("parsetags"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_template");
     if (tmpcfg->parsetags_template)
@@ -573,7 +573,7 @@ prefs_window_create (gint page)
 	gtk_entry_set_text(GTK_ENTRY(w), buf);
 	g_free (buf);
     }
-    gtk_widget_set_sensitive (w, tmpcfg->parsetags);
+    gtk_widget_set_sensitive (w, prefs_get_int("parsetags"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "coverart");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -705,7 +705,6 @@ prefs_window_set(void)
 	tm_store_col_order ();
 	prefs_set_charset(tmpcfg->charset);
 
-	prefs_set_parsetags(tmpcfg->parsetags);
 	prefs_set_parsetags_overwrite(tmpcfg->parsetags_overwrite);
 	prefs_set_parsetags_template(tmpcfg->parsetags_template);
 	prefs_set_coverart(tmpcfg->coverart);
@@ -1152,7 +1151,7 @@ on_parsetags_toggled                   (GtkToggleButton *togglebutton,
     gboolean val = gtk_toggle_button_get_active(togglebutton);
     GtkWidget *w;
 
-    tmpcfg->parsetags = val;
+    temp_prefs_set_int(temp_prefs, "parsetags", val);
     w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_overwrite");
     gtk_widget_set_sensitive (w, val);
     w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_template");
