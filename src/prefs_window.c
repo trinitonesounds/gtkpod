@@ -278,6 +278,7 @@ prefs_window_create (gint page)
     GtkWidget *w = NULL;
     GtkTooltips *tt;
     GtkTooltipsData *tooltipsdata;
+    gchar *buf = NULL;
     /* List of standard toggle widget names */
     const gchar *toggle_widget_names[] = {
 	"sync_confirm_dirs_toggle",
@@ -482,7 +483,6 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "autoselect_hbox");
     for (i=0; i<SORT_TAB_MAX; ++i)
     {
-	gchar *buf;
 	GtkWidget *as;
 	gint padding;
 	    
@@ -534,7 +534,6 @@ prefs_window_create (gint page)
 
     for (i=0; i<TM_NUM_TAGS_PREFS; ++i)
     {
-	gchar *buf;
 	buf = g_strdup_printf ("tag_autoset%d", i);
 	if((w = gtkpod_xml_get_widget (prefs_window_xml, buf)))
 	{
@@ -565,15 +564,10 @@ prefs_window_create (gint page)
     gtk_widget_set_sensitive (w, prefs_get_int("parsetags"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_template");
-    if (tmpcfg->parsetags_template)
-    {  /* we should copy the new path first because by setting
-	  the text we might get a callback destroying the old
-	  value... */
-	gchar *buf = g_strdup (tmpcfg->parsetags_template);
-	gtk_entry_set_text(GTK_ENTRY(w), buf);
-	g_free (buf);
-    }
     gtk_widget_set_sensitive (w, prefs_get_int("parsetags"));
+    buf = prefs_get_string("parsetags_template");
+    gtk_entry_set_text(GTK_ENTRY(w), buf);
+    g_free(buf);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "coverart");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -584,7 +578,7 @@ prefs_window_create (gint page)
     {  /* we should copy the new path first because by setting
 	  the text we might get a callback destroying the old
 	  value... */
-	gchar *buf = g_strdup (tmpcfg->coverart_template);
+	buf = g_strdup (tmpcfg->coverart_template);
 	gtk_entry_set_text(GTK_ENTRY(w), buf);
 	g_free (buf);
     }
@@ -592,7 +586,7 @@ prefs_window_create (gint page)
 
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
-	gchar *buf = g_strdup_printf ("col_visible%d", i);
+	buf = g_strdup_printf ("col_visible%d", i);
 	if((w = gtkpod_xml_get_widget (prefs_window_xml, buf)))
 	{
 	    /* set label */
@@ -705,7 +699,6 @@ prefs_window_set(void)
 	tm_store_col_order ();
 	prefs_set_charset(tmpcfg->charset);
 
-	prefs_set_parsetags_template(tmpcfg->parsetags_template);
 	prefs_set_coverart(tmpcfg->coverart);
 	prefs_set_coverart_template(tmpcfg->coverart_template);
 
@@ -1169,8 +1162,8 @@ void
 on_parsetags_template_changed             (GtkEditable     *editable,
 					   gpointer         user_data)
 {
-    g_free (tmpcfg->parsetags_template);
-    tmpcfg->parsetags_template = gtk_editable_get_chars (editable,0, -1);
+    temp_prefs_set_string(temp_prefs, "parsetags_template",
+			  gtk_editable_get_chars (editable,0, -1));
 }
 
 void

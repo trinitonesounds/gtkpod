@@ -46,6 +46,12 @@
 	 * src/file.c
 	   src/prefs.h
 	   src/prefs.c
+	   src/prefs_window.c: Moved parsetags_template to 
+	   new prefs.	
+
+	 * src/file.c
+	   src/prefs.h
+	   src/prefs.c
 	   src/prefs_window.c: Moved parsetags_overwrite to 
 	   new prefs
 	

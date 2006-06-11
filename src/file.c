@@ -624,19 +624,19 @@ static gboolean parse_filename_with_template (Track *track,
 }
 
 /* parse the filename of @track and extract the tags as specified in
-   prefs_get_parsetags_template(). Several templates can be separated
+   prefs_get_string("parsetags_template"). Several templates can be separated
    with the "," character. */
 static void parse_filename (Track *track)
 {
     ExtraTrackData *etr;
-    const gchar *template;
+    gchar *template;
     gchar **templates, **tplp;
 
     g_return_if_fail (track);
     etr = track->userdata;
     g_return_if_fail (etr);
 
-    template = prefs_get_parsetags_template ();
+    template = prefs_get_string("parsetags_template");
     if (!template) return;
     templates = g_strsplit (template, ";", 0);
     tplp = templates;
@@ -648,6 +648,7 @@ static void parse_filename (Track *track)
     }
     if (*tplp)  parse_filename_with_template (track, etr->pc_path_utf8, *tplp);
     g_strfreev (templates);
+    g_free(template);
 }
 
 /* Set entry "column" (TM_COLUMN_TITLE etc) according to filename */

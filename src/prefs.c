@@ -219,6 +219,7 @@ static void set_default_preferences()
     prefs_set_int("write_extended_info", TRUE);
     prefs_set_int("parsetags", FALSE);
     prefs_set_int("parsetags_overwrite", FALSE);
+    prefs_set_string("parsetags_template", "%a - %A/%T %t.mp3;%t.wav");
 }
 
 /* Initialize default variable-length list entries */
@@ -1777,7 +1778,6 @@ struct cfg *cfg_new(void)
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
     mycfg->offline = FALSE;
-    mycfg->parsetags_template = g_strdup ("%a - %A/%T %t.mp3;%t.wav");
     mycfg->coverart = TRUE;
     mycfg->coverart_template = g_strdup ("%A;folder.jpg");
     mycfg->display_toolbar = TRUE;
@@ -1970,10 +1970,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
 	  {
 	      prefs_set_block_display((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "parsetags_template") == 0)
-	  {
-	      prefs_set_parsetags_template(strdup(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "coverart") == 0)
 	  {
@@ -2289,7 +2285,6 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
-    fprintf(fp, "parsetags_template=%s\n",cfg->parsetags_template);
     fprintf(fp, "coverart=%d\n", prefs_get_coverart());
     fprintf(fp, "coverart_template=%s\n",cfg->coverart_template);
     fprintf(fp, "group_compilations=%d\n",prefs_get_group_compilations());
@@ -2463,7 +2458,6 @@ struct cfg *clone_prefs(void)
     {
 	result = g_memdup (cfg, sizeof (struct cfg));
 	result->charset = g_strdup(cfg->charset);
-	result->parsetags_template = g_strdup(cfg->parsetags_template);
 	result->coverart_template = g_strdup(cfg->coverart_template);
 	result->mserv_username = g_strdup(cfg->mserv_username);
     }
@@ -2508,20 +2502,6 @@ gchar *prefs_get_cfgdir (void)
       }
   }
   return cfgdir;
-}
-
-const gchar *prefs_get_parsetags_template (void)
-{
-    return cfg->parsetags_template;
-}
-
-void prefs_set_parsetags_template (const gchar *tpl)
-{
-    if (tpl)
-    {
-	g_free(cfg->parsetags_template);
-	cfg->parsetags_template = g_strdup (tpl);
-    }
 }
 
 void prefs_set_coverart(gboolean active)
@@ -2928,5 +2908,3 @@ const gchar *prefs_get_mserv_username (void)
 {
     return cfg->mserv_username;
 }
-
-
