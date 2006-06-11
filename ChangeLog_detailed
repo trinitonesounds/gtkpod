@@ -1,5 +1,9 @@
 2006-06-11 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * src/prefs.h: removed unused declarations.
+
+2006-06-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
 	 * src/mp4file.c: read aacgain if present.
 
 	 * src/display_itdb.h
@@ -17,8 +21,6 @@
 
 	 * src/mp3file.c: renamed GainData *etr; to GainData *gd; to
            avoid confusion (63 occurences)
-
-2006-06-10 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/ipod_init.[ch]...: renamed init_model_number_combo()
            and init_ipod() to gp_...()
