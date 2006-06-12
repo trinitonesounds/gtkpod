@@ -231,6 +231,7 @@ static void set_default_preferences()
     prefs_set_int("last_prefs_page", 0);
     prefs_set_int("tmp_disable_sort", TRUE);
     prefs_set_int("multi_edit_title", TRUE);
+    prefs_set_int("multi_edit", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1796,7 +1797,6 @@ struct cfg *cfg_new(void)
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
 
-    mycfg->multi_edit = FALSE;
     mycfg->not_played_track = TRUE;
     mycfg->misc_track_nr = 25;
     mycfg->sortcfg.pm_sort = SORT_NONE;
@@ -2036,10 +2036,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_display_tooltips_prefs((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "multi_edit") == 0)
-	  {
-	      prefs_set_multi_edit((gboolean)atoi(arg));
-	  }
 	  else if((g_ascii_strcasecmp (line, "not_played_track") == 0) ||
 		  (g_ascii_strcasecmp (line, "not_played_song") == 0))
 	  {
@@ -2250,7 +2246,6 @@ write_prefs_to_file_desc(FILE *fp)
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
 	    prefs_get_display_tooltips_prefs());
-    fprintf(fp, "multi_edit=%d\n", prefs_get_multi_edit());
     fprintf(fp, "misc_track_nr=%d\n", prefs_get_misc_track_nr());
     fprintf(fp, "not_played_track=%d\n", prefs_get_not_played_track());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
@@ -2636,16 +2631,6 @@ void prefs_set_display_tooltips_prefs (gboolean state)
 gboolean prefs_get_display_tooltips_prefs (void)
 {
     return cfg->display_tooltips_prefs;
-}
-
-void prefs_set_multi_edit (gboolean state)
-{
-    cfg->multi_edit = state;
-}
-
-gboolean prefs_get_multi_edit (void)
-{
-    return cfg->multi_edit;
 }
 
 void prefs_set_not_played_track (gboolean state)

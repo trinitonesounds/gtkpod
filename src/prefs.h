@@ -115,7 +115,6 @@ struct cfg
   gboolean write_charset;       /* Use selected charset when writing track? */
   gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
-  gboolean multi_edit;          /* multi edit enabled? */
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   float version;                /* version of gtkpod writing the cfg file */
@@ -305,8 +304,6 @@ void prefs_set_display_tooltips_main (gboolean state);
 gboolean prefs_get_display_tooltips_main (void);
 void prefs_set_display_tooltips_prefs (gboolean state);
 gboolean prefs_get_display_tooltips_prefs (void);
-void prefs_set_multi_edit (gboolean state);
-gboolean prefs_get_multi_edit (void);
 void prefs_set_misc_track_nr (gint state);
 gint prefs_get_misc_track_nr (void);
 void prefs_set_not_played_track (gboolean state);

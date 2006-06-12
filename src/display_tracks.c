@@ -791,7 +791,7 @@ tm_cell_edited (GtkCellRendererText *renderer,
 
 
   column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
-  multi_edit = prefs_get_multi_edit ();
+  multi_edit = prefs_get_int("multi_edit");
   if (column == TM_COLUMN_TITLE)
       multi_edit &= prefs_get_int("multi_edit_title");
   selection = gtk_tree_view_get_selection(track_treeview);
@@ -1039,7 +1039,7 @@ tm_cell_toggled (GtkCellRendererToggle *renderer,
   gboolean active;
 
   column = (TM_item) g_object_get_data(G_OBJECT(renderer), "column");
-  multi_edit = prefs_get_multi_edit ();
+  multi_edit = prefs_get_int("multi_edit");
   selection = gtk_tree_view_get_selection(track_treeview);
   row_list = gtk_tree_selection_get_selected_rows(selection, &model);
 
@@ -1393,13 +1393,13 @@ void tm_stop_editing (gboolean cancel)
 	/* Before removing the widget we set multi_edit to FALSE. That
 	   way at most one entry will be changed (this also doesn't
 	   seem to work the way intended) */
-	gboolean me = prefs_get_multi_edit ();
-	prefs_set_multi_edit (FALSE);
+	gboolean me = prefs_get_int("multi_edit");
+	prefs_set_int("multi_edit", FALSE);
 	if (!cancel && col->editable_widget)
 	    gtk_cell_editable_editing_done (col->editable_widget);
 	if (col->editable_widget)
 	    gtk_cell_editable_remove_widget (col->editable_widget);
-	prefs_set_multi_edit (me);
+	prefs_set_int("multi_edit", me);
     }
 }
 

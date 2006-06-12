@@ -3,6 +3,11 @@
 	 * src/display_songs.c
 	   src/prefs.h
 	   src/prefs.c
+	   src/prefs_window.c: Moved multi_edit to new prefs.
+
+	 * src/display_songs.c
+	   src/prefs.h
+	   src/prefs.c
 	   src/prefs_window.c: Moved multi_edit_title to new prefs.
 
 	 * src/prefs.h
