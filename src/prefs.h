@@ -106,7 +106,6 @@ struct cfg
     GList *tmp_sort_ign_fields; /* used in prefs_window.c only     */
     gchar *tmp_sort_ign_strings;/* used in prefs_window.c only     */
   } sortcfg;
-  gboolean info_window;   /* is info window open (will then open on restart */
   gboolean offline;       /* are we working offline, i.e. without iPod? */
 
   gboolean display_toolbar;     /* should toolbar be displayed */
@@ -280,7 +279,6 @@ void prefs_set_block_display(gboolean active);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_statusbar_timeout (guint32 val);
-void prefs_set_info_window(gboolean val);
 
 gboolean prefs_get_offline(void);
 gint prefs_get_pm_sort (void);
@@ -308,7 +306,6 @@ GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
 gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
-gboolean prefs_get_info_window (void);
 void prefs_set_display_tooltips_main (gboolean state);
 gboolean prefs_get_display_tooltips_main (void);
 void prefs_set_display_tooltips_prefs (gboolean state);

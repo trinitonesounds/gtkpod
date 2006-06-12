@@ -226,6 +226,8 @@ static void set_default_preferences()
     prefs_set_string("mserv_username", "");
     prefs_set_int("automount", FALSE);
     prefs_set_int("startup_messages", TRUE);
+    prefs_set_int("add_recursively", TRUE);
+    prefs_set_int("info_window", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1794,7 +1796,6 @@ struct cfg *cfg_new(void)
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
 
     mycfg->tmp_disable_sort = TRUE;
-    mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
     mycfg->multi_edit_title = TRUE;
     mycfg->not_played_track = TRUE;
@@ -2084,10 +2085,6 @@ read_prefs_from_file_desc(FILE *fp)
 	      /* ignore -- wie always fix the export path (replace
 	       * non-compatible chars) */
 	  }
-	  else if(g_ascii_strcasecmp (line, "info_window") == 0)
-	  {
-	      prefs_set_info_window (atoi (arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
 	  {
 	      /* ignore -- not used any more */
@@ -2274,7 +2271,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
-    fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
 }
 
@@ -2706,18 +2702,6 @@ gint prefs_get_last_prefs_page (void)
 void prefs_set_last_prefs_page (gint i)
 {
     cfg->last_prefs_page = i;
-}
-
-gboolean
-prefs_get_info_window(void)
-{
-    return cfg->info_window;
-}
-void
-
-prefs_set_info_window(gboolean val)
-{
-    cfg->info_window = val;
 }
 
 gboolean prefs_get_tmp_disable_sort(void)

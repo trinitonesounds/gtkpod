@@ -101,7 +101,7 @@ void display_create (void)
     /* CAREFUL: must be done after calling ..._space_statusbar_init() */
     display_set_info_window_menu ();
     /* check if info window should be opened */
-    if (prefs_get_info_window ())  info_open_window ();
+    if (prefs_get_int("info_window"))  info_open_window ();
 }
 
 /* redisplay the entire display (playlists, sort tabs, track view) and
@@ -351,7 +351,7 @@ void display_set_info_window_menu (void)
 {
     GtkWidget *mi = gtkpod_xml_get_widget (main_window_xml, "info_window_menu");
 
-    if (prefs_get_info_window ())
+    if (prefs_get_int("info_window"))
     {
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), TRUE);
     }

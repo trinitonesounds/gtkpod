@@ -171,7 +171,7 @@ void info_open_window (void)
 	defx = prefs_get_int("size_info.x");
   defy = prefs_get_int("size_info.y");
 	gtk_window_set_default_size (GTK_WINDOW (info_window), defx, defy);
-	prefs_set_info_window (TRUE); /* notify prefs */
+	prefs_set_int("info_window", TRUE); /* notify prefs */
 	info_update ();
 	gtk_widget_show (info_window);
 	/* set the menu item for the info window correctly */
@@ -190,7 +190,7 @@ void info_close_window (void)
     win = info_window;
     info_window = NULL;
     gtk_widget_destroy (win);
-     prefs_set_info_window (FALSE); /* notify prefs */
+     prefs_set_int("info_window", FALSE); /* notify prefs */
     /* set the menu item for the info window correctly */
     display_set_info_window_menu ();
 }
