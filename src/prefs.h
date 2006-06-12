@@ -54,6 +54,7 @@ typedef enum
     PATH_MSERV_MUSIC_ROOT,
     PATH_MSERV_TRACKINFO_ROOT,
     PATH_SYNC_NOTES,
+    PATH_AACGAIN,
     PATH_NUM
 } PathType;
 

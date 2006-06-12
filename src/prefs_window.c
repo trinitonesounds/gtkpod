@@ -520,7 +520,7 @@ prefs_window_create (gint page)
 
 	w = gtkpod_xml_get_widget (prefs_window_xml, path_entry_names[i]);
 
-	path = temp_prefs_get_string (temp_prefs, path_button_names[i]);
+	path = prefs_get_string (path_key_names[i]);
 	if (path)
 	{
 	    gtk_entry_set_text(GTK_ENTRY(w), path);
