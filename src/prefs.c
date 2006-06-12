@@ -233,6 +233,7 @@ static void set_default_preferences()
     prefs_set_int("multi_edit_title", TRUE);
     prefs_set_int("multi_edit", FALSE);
     prefs_set_int("not_played_track", TRUE);
+    prefs_set_int("misc_track_nr", 25);
 }
 
 /* Initialize default variable-length list entries */
@@ -935,6 +936,13 @@ static void cleanup_keys()
     {
 	prefs_set_int("not_played_track", int_buf);
 	prefs_set_string("not_played_song", NULL);
+    }
+
+    /* misc_song_nr renamed to misc_track_nr */
+    if (prefs_get_int_value("misc_song_nr", &int_buf))
+    {
+	prefs_set_int("misc_track_nr", int_buf);
+	prefs_set_string("misc_song_nr", NULL);
     }
 
     prefs_set_string ("version", VERSION);
@@ -1814,7 +1822,6 @@ struct cfg *cfg_new(void)
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
 
-    mycfg->misc_track_nr = 25;
     mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.st_sort = SORT_NONE;
     mycfg->sortcfg.tm_sort = SORT_NONE;
@@ -2052,11 +2059,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_display_tooltips_prefs((gboolean)atoi(arg));
 	  }
-	  else if((g_ascii_strcasecmp (line, "misc_track_nr") == 0) ||
-		  (g_ascii_strcasecmp (line, "misc_song_nr") == 0))
-	  {
-	      prefs_set_misc_track_nr(atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "update_charset") == 0)
 	  {
 	      prefs_set_update_charset((gboolean)atoi(arg));
@@ -2257,7 +2259,6 @@ write_prefs_to_file_desc(FILE *fp)
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
 	    prefs_get_display_tooltips_prefs());
-    fprintf(fp, "misc_track_nr=%d\n", prefs_get_misc_track_nr());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
@@ -2641,16 +2642,6 @@ void prefs_set_display_tooltips_prefs (gboolean state)
 gboolean prefs_get_display_tooltips_prefs (void)
 {
     return cfg->display_tooltips_prefs;
-}
-
-void prefs_set_misc_track_nr (gint state)
-{
-    cfg->misc_track_nr = state;
-}
-
-gint prefs_get_misc_track_nr (void)
-{
-    return cfg->misc_track_nr;
 }
 
 /* sorting gets disabled temporarily if either of the options

@@ -117,7 +117,6 @@ struct cfg
   gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
-  gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -305,8 +304,6 @@ void prefs_set_display_tooltips_main (gboolean state);
 gboolean prefs_get_display_tooltips_main (void);
 void prefs_set_display_tooltips_prefs (gboolean state);
 gboolean prefs_get_display_tooltips_prefs (void);
-void prefs_set_misc_track_nr (gint state);
-gint prefs_get_misc_track_nr (void);
 gboolean prefs_get_disable_sorting(void);
 
 #endif

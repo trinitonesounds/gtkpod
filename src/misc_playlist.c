@@ -231,7 +231,7 @@ Playlist *generate_selected_playlist (void)
 
 
 /* Generates a playlist containing a random selection of
-   prefs_get_misc_track_nr() tracks in random order from the currently
+   prefs_get_int("misc_track_nr") tracks in random order from the currently
    displayed tracks */
 Playlist *generate_random_playlist (iTunesDB *itdb)
 {
@@ -240,7 +240,7 @@ Playlist *generate_random_playlist (iTunesDB *itdb)
     gchar *pl_name, *pl_name1;
     GList *rtracks = NULL;
     GList *tracks = tm_get_all_tracks ();
-    gint tracks_max = prefs_get_misc_track_nr();
+    gint tracks_max = prefs_get_int("misc_track_nr");
     gint tracks_nr = 0;
 
 
@@ -520,7 +520,7 @@ static gboolean Most_Listened_IF (Track *track, gpointer userdata)
 
 void most_listened_pl (iTunesDB *itdb)
 {
-    gint tracks_nr = prefs_get_misc_track_nr();
+    gint tracks_nr = prefs_get_int("misc_track_nr");
     gchar *str;
 
     g_return_if_fail (itdb);
@@ -601,7 +601,7 @@ static gboolean Most_Rated_IF (Track *track, gpointer userdata)
 
 void most_rated_pl (iTunesDB *itdb)
 {
-    gint tracks_nr = prefs_get_misc_track_nr();
+    gint tracks_nr = prefs_get_int("misc_track_nr");
     gchar *str;
 
     g_return_if_fail (itdb);
@@ -691,7 +691,7 @@ static gboolean Last_Listened_IF (Track *track, gpointer userdata)
 
 void last_listened_pl (iTunesDB *itdb)
 {
-    gint tracks_nr = prefs_get_misc_track_nr();
+    gint tracks_nr = prefs_get_int("misc_track_nr");
     gchar *str;
 
     g_return_if_fail (itdb);

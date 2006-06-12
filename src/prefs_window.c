@@ -430,8 +430,7 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_misc_track_nr");
     gtk_spin_button_set_range (GTK_SPIN_BUTTON (w), 0, 0xffffffff);
     gtk_spin_button_set_value (GTK_SPIN_BUTTON (w),
-			       prefs_get_misc_track_nr ());
-    tmpcfg->misc_track_nr = tmpcfg->misc_track_nr;
+			       prefs_get_int("misc_track_nr"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_multi_edit_title");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -700,7 +699,6 @@ prefs_window_set(void)
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
 	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
-	prefs_set_misc_track_nr (tmpcfg->misc_track_nr);
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	tm_show_preferred_columns();
@@ -1280,7 +1278,8 @@ void
 on_cfg_misc_track_nr_value_changed      (GtkSpinButton   *spinbutton,
 					gpointer         user_data)
 {
-    tmpcfg->misc_track_nr = gtk_spin_button_get_value  (spinbutton);
+    temp_prefs_set_int(temp_prefs, "misc_track_nr",
+		       gtk_spin_button_get_value  (spinbutton));
 }
 
 static void prefs_window_set_sort_tab_num (gint num)

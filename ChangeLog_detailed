@@ -1,6 +1,11 @@
 2006-06-12 James Liggett <freethinkerjim@users.sourceforge.net>
 
-	 * src/misc_playlists.c
+	 * src/misc_playlist.c
+	   src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Moved misc_track_nr to new prefs.
+	
+	 * src/misc_playlist.c
 	   src/prefs.h
 	   src/prefs.c
 	   src/prefs_window.c: Moved not_played_track to new prefs.
