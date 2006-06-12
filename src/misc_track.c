@@ -1453,7 +1453,7 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 			if (!pl)  break; /* while (*filesp) */
 		    }
 		    add_directory_by_name (itdb, decoded_file, pl,
-					   prefs_get_add_recursively (),
+					   prefs_get_int("add_recursively"),
 					   trackaddfunc, data);
 		    added = TRUE;
 		}
@@ -1478,7 +1478,7 @@ Playlist *add_text_plain_to_playlist (iTunesDB *itdb, Playlist *pl,
 			    if (!pl)  break; /* while (*filesp) */
 			}
 			add_track_by_filename (itdb, decoded_file, pl,
-					       prefs_get_add_recursively (),
+					       prefs_get_int("add_recursively"),
 					       trackaddfunc, data);
 			added = TRUE;
 			break;

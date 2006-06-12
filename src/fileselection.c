@@ -108,7 +108,7 @@ static void add_files_ok(GtkFileChooser* filechooser)
 	result &= add_track_by_filename(fc_active_itdb,
 					(gchar*)current->data,
 					playlist,
-					prefs_get_add_recursively(),
+					prefs_get_int("add_recursively"),
 					NULL, NULL);
 	current = current->next;
     }
@@ -658,7 +658,7 @@ static void add_dir_selected (gchar *dir)
     {
 	Playlist *plitem = pm_get_selected_playlist ();
 	add_directory_by_name (db_active_itdb, dir, plitem,
-			       prefs_get_add_recursively (),
+			       prefs_get_int("add_recursively"),
 			       NULL, NULL);
 	prefs_set_string ("last_dir_browsed", dir);
 	gtkpod_tracks_statusbar_update();

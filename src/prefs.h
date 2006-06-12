@@ -115,7 +115,6 @@ struct cfg
   gboolean display_tooltips_prefs;/* should toolbar be displayed (prefs) */
   gboolean update_charset;      /* Update charset when updating track? */
   gboolean write_charset;       /* Use selected charset when writing track? */
-  gboolean add_recursively;     /* Add directories recursively? */
   gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
@@ -301,8 +300,6 @@ gboolean prefs_get_update_charset (void);
 void prefs_set_update_charset (gboolean val);
 gboolean prefs_get_write_charset (void);
 void prefs_set_write_charset (gboolean val);
-gboolean prefs_get_add_recursively (void);
-void prefs_set_add_recursively (gboolean val);
 gboolean prefs_get_case_sensitive (void);
 void prefs_set_case_sensitive (gboolean val);
 gboolean prefs_get_group_compilations (void);

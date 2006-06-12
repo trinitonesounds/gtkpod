@@ -1790,7 +1790,6 @@ struct cfg *cfg_new(void)
     mycfg->display_tooltips_prefs = TRUE;
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
-    mycfg->add_recursively = TRUE;
     mycfg->last_prefs_page = 0;
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
 
@@ -2067,10 +2066,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_write_charset((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "add_recursively") == 0)
-	  {
-	      prefs_set_add_recursively((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "case_sensitive") == 0)
 	  {
 	      prefs_set_case_sensitive((gboolean)atoi(arg));
@@ -2278,7 +2273,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "not_played_track=%d\n", prefs_get_not_played_track());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
-    fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
@@ -2511,16 +2505,6 @@ gboolean prefs_get_write_charset (void)
 void prefs_set_write_charset (gboolean val)
 {
     cfg->write_charset = val;
-}
-
-gboolean prefs_get_add_recursively (void)
-{
-    return cfg->add_recursively;
-}
-
-void prefs_set_add_recursively (gboolean val)
-{
-    cfg->add_recursively = val;
 }
 
 gboolean prefs_get_case_sensitive (void)

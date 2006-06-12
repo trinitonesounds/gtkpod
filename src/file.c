@@ -333,7 +333,7 @@ add_playlist_by_filename (iTunesDB *itdb, gchar *plfile,
 		gtkpod_warning (_("Skipping '%s' to avoid adding playlist file recursively\n"), filename);
 	    }
 	    else if (add_track_by_filename (itdb, filename, plitem,
-					    prefs_get_add_recursively (),
+					    prefs_get_int("add_recursively"),
 					    addtrackfunc, data))
 	    {
 		++tracks;
