@@ -435,7 +435,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_multi_edit_title");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->multi_edit_title);
+				 prefs_get_int("multi_edit_title"));
     gtk_widget_set_sensitive (w, tmpcfg->multi_edit);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_charset");
@@ -701,7 +701,6 @@ prefs_window_set(void)
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
 	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
 	prefs_set_multi_edit (tmpcfg->multi_edit);
-	prefs_set_multi_edit_title (tmpcfg->multi_edit_title);
 	prefs_set_misc_track_nr (tmpcfg->misc_track_nr);
 	prefs_set_not_played_track (tmpcfg->not_played_track);
 	prefs_set_update_charset(tmpcfg->update_charset);
@@ -1245,8 +1244,8 @@ void
 on_cfg_multi_edit_title_toggled        (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->multi_edit_title =
-	gtk_toggle_button_get_active  (togglebutton);
+    temp_prefs_set_int(temp_prefs, "multi_edit_title",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void

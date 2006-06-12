@@ -116,7 +116,6 @@ struct cfg
   gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gboolean multi_edit;          /* multi edit enabled? */
-  gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
   float version;                /* version of gtkpod writing the cfg file */
@@ -312,8 +311,6 @@ void prefs_set_misc_track_nr (gint state);
 gint prefs_get_misc_track_nr (void);
 void prefs_set_not_played_track (gboolean state);
 gboolean prefs_get_not_played_track (void);
-void prefs_set_multi_edit_title (gboolean state);
-gboolean prefs_get_multi_edit_title (void);
 gboolean prefs_get_disable_sorting(void);
 
 #endif
