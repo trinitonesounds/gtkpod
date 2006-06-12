@@ -120,7 +120,6 @@ struct cfg
   gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
   gint last_prefs_page;         /* last page selected in prefs window */
-  gboolean automount;		/* whether we should mount/unmount the ipod */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
@@ -283,7 +282,6 @@ void prefs_set_block_display(gboolean active);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_statusbar_timeout (guint32 val);
-void prefs_set_automount(gboolean val);
 void prefs_set_info_window(gboolean val);
 
 gboolean prefs_get_offline(void);
@@ -314,7 +312,6 @@ GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
 gint prefs_get_last_prefs_page (void);
 void prefs_set_last_prefs_page (gint i);
-gboolean prefs_get_automount (void);
 gboolean prefs_get_info_window (void);
 void prefs_set_display_tooltips_main (gboolean state);
 gboolean prefs_get_display_tooltips_main (void);

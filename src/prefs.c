@@ -224,6 +224,7 @@ static void set_default_preferences()
     prefs_set_string("coverart_template", "%A;folder.jpg");
     prefs_set_int("mserv_use", FALSE);
     prefs_set_string("mserv_username", "");
+    prefs_set_int("automount", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1794,7 +1795,6 @@ struct cfg *cfg_new(void)
 
     mycfg->tmp_disable_sort = TRUE;
     mycfg->startup_messages = TRUE;
-    mycfg->automount = FALSE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
     mycfg->multi_edit_title = TRUE;
@@ -2089,10 +2089,6 @@ read_prefs_from_file_desc(FILE *fp)
 	      /* ignore -- wie always fix the export path (replace
 	       * non-compatible chars) */
 	  }
-	  else if(g_ascii_strcasecmp (line, "automount") == 0)
-	  {
-	      prefs_set_automount (atoi (arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "info_window") == 0)
 	  {
 	      prefs_set_info_window (atoi (arg));
@@ -2290,7 +2286,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "add_recursively=%d\n",prefs_get_add_recursively());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
-    fprintf (fp, "automount=%d\n", cfg->automount);
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
     fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
@@ -2734,18 +2729,6 @@ gint prefs_get_last_prefs_page (void)
 void prefs_set_last_prefs_page (gint i)
 {
     cfg->last_prefs_page = i;
-}
-
-gboolean 
-prefs_get_automount (void)
-{
-    return cfg->automount;
-}
-
-void
-prefs_set_automount(gboolean val)
-{
-    cfg->automount = val;
 }
 
 gboolean

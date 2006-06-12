@@ -1081,10 +1081,11 @@ gtkpod_main_quit(void)
 #endif
 	display_cleanup ();
 
-	if(prefs_get_automount())
+	if(prefs_get_int("automount"))
 	{
 /*	    unmount_ipod ();*/
 	}
+
 	call_script ("gtkpod.out", NULL);
 	gtk_main_quit ();
 	return FALSE;

@@ -133,7 +133,7 @@ main (int argc, char *argv[])
   /* stuff to be done before starting gtkpod */
   call_script ("gtkpod.in", NULL);
 
-/*  if(prefs_get_automount())      mount_ipod();*/
+/*  if(prefs_get_int("automount"))      mount_ipod();*/
   if(prefs_get_int("autoimport") || prefs_get_int("autoimport_commandline"))
       gp_load_ipods ();
 

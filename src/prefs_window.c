@@ -619,7 +619,7 @@ prefs_window_create (gint page)
 if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
     {
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     prefs_get_automount());
+				     prefs_get_int("automount"));
     }
     if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sort_tab_num_sb")))
     {
@@ -707,7 +707,6 @@ prefs_window_set(void)
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	prefs_set_add_recursively(tmpcfg->add_recursively);
-	prefs_set_automount(tmpcfg->automount);
 	prefs_set_tmp_disable_sort(tmpcfg->tmp_disable_sort);
 	prefs_set_startup_messages(tmpcfg->startup_messages);
 	tm_show_preferred_columns();
@@ -1356,7 +1355,8 @@ void
 on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->automount = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "automount",
+		       gtk_toggle_button_get_active (togglebutton));
 }
 
 void
