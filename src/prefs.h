@@ -116,7 +116,6 @@ struct cfg
   gboolean write_charset;       /* Use selected charset when writing track? */
   gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
-  gint last_prefs_page;         /* last page selected in prefs window */
   gboolean multi_edit;          /* multi edit enabled? */
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
@@ -304,8 +303,6 @@ gboolean prefs_get_group_compilations (void);
 void prefs_set_group_compilations (gboolean val, gboolean update_display);
 GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
-gint prefs_get_last_prefs_page (void);
-void prefs_set_last_prefs_page (gint i);
 void prefs_set_display_tooltips_main (gboolean state);
 gboolean prefs_get_display_tooltips_main (void);
 void prefs_set_display_tooltips_prefs (gboolean state);

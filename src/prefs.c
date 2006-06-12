@@ -228,6 +228,7 @@ static void set_default_preferences()
     prefs_set_int("startup_messages", TRUE);
     prefs_set_int("add_recursively", TRUE);
     prefs_set_int("info_window", FALSE);
+    prefs_set_int("last_prefs_page", 0);
 }
 
 /* Initialize default variable-length list entries */
@@ -1792,8 +1793,6 @@ struct cfg *cfg_new(void)
     mycfg->display_tooltips_prefs = TRUE;
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
-    mycfg->last_prefs_page = 0;
-    mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
 
     mycfg->tmp_disable_sort = TRUE;
     mycfg->multi_edit = FALSE;
@@ -2012,10 +2011,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  (g_ascii_strcasecmp (line, "sm_sortcol") == 0))
 	  {
 	      prefs_set_tm_sortcol(atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "last_prefs_page") == 0)
-	  {
-	      prefs_set_last_prefs_page(atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "backups") == 0)
 	  {
@@ -2251,7 +2246,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, "group_compilations=%d\n",prefs_get_group_compilations());
-    fprintf(fp, "last_prefs_page=%d\n",prefs_get_last_prefs_page());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
@@ -2692,16 +2686,6 @@ void prefs_set_multi_edit_title (gboolean state)
 gboolean prefs_get_multi_edit_title (void)
 {
     return cfg->multi_edit_title;
-}
-
-gint prefs_get_last_prefs_page (void)
-{
-    return cfg->last_prefs_page;
-}
-
-void prefs_set_last_prefs_page (gint i)
-{
-    cfg->last_prefs_page = i;
 }
 
 gboolean prefs_get_tmp_disable_sort(void)

@@ -659,7 +659,7 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
     if (page == -1)
     {
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (w),
-				       prefs_get_last_prefs_page ());
+				       prefs_get_int("last_prefs_page"));
     }
     else
     {
@@ -776,8 +776,8 @@ void prefs_window_delete(void)
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
-    prefs_set_last_prefs_page (gtk_notebook_get_current_page (
-				   GTK_NOTEBOOK (nb)));
+    prefs_set_int("last_prefs_page", gtk_notebook_get_current_page (
+		  GTK_NOTEBOOK (nb)));
 
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
@@ -813,8 +813,8 @@ prefs_window_ok (void)
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
-    prefs_set_last_prefs_page (gtk_notebook_get_current_page (
-				   GTK_NOTEBOOK (nb)));
+    prefs_set_int("last_prefs_page",gtk_notebook_get_current_page (
+		  GTK_NOTEBOOK (nb)));
 
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
@@ -844,8 +844,8 @@ prefs_window_apply (void)
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
-    prefs_set_last_prefs_page (gtk_notebook_get_current_page (
-				   GTK_NOTEBOOK (nb)));
+    prefs_set_int("last_prefs_page", gtk_notebook_get_current_page (
+		  GTK_NOTEBOOK (nb)));
 
     /* save current window size */
     gtk_window_get_size (GTK_WINDOW (prefs_window), &defx, &defy);
