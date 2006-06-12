@@ -222,6 +222,8 @@ static void set_default_preferences()
     prefs_set_string("parsetags_template", "%a - %A/%T %t.mp3;%t.wav");
     prefs_set_int("coverart", TRUE);
     prefs_set_string("coverart_template", "%A;folder.jpg");
+    prefs_set_int("mserv_use", FALSE);
+    prefs_set_string("mserv_username", "");
 }
 
 /* Initialize default variable-length list entries */
@@ -1804,8 +1806,6 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.tm_sortcol = TM_COLUMN_TITLE;
     mycfg->sortcfg.tm_autostore = FALSE;
     mycfg->sortcfg.case_sensitive = FALSE;
-    mycfg->mserv_use = FALSE;
-    mycfg->mserv_username = g_strdup ("");
 
     g_free (cfgdir);
 
@@ -2120,15 +2120,6 @@ read_prefs_from_file_desc(FILE *fp)
 	      prefs_set_int (EXPORT_FILES_SPECIAL_CHARSET,
 				   atoi (arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "mserv_use") == 0)
-	  {
-	      prefs_set_mserv_use ((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "mserv_username") == 0)
-	  {
-	      prefs_set_mserv_username (arg);
-	  }
-
 	  else
 	  {   /* All leftover options will be stored into the prefs
 		 setting hash (generic options -- should have had this
@@ -2303,7 +2294,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
     fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
-    fprintf (fp, "mserv_use=%d\n", cfg->mserv_use); 
 }
 
 
@@ -2346,7 +2336,6 @@ void cfg_free(struct cfg *c)
     if(c)
     {
       g_free (c->charset);
-      g_free (c->mserv_username);
       g_free (c);
     }
 }
@@ -2448,7 +2437,6 @@ struct cfg *clone_prefs(void)
     {
 	result = g_memdup (cfg, sizeof (struct cfg));
 	result->charset = g_strdup(cfg->charset);
-	result->mserv_username = g_strdup(cfg->mserv_username);
     }
     return(result);
 }
@@ -2799,27 +2787,3 @@ gboolean prefs_get_disable_sorting(void)
     return (prefs_get_block_display() || prefs_get_tmp_disable_sort());
 }
 
-/* whether or not to read ratings from mserv db */
-gboolean prefs_get_mserv_use(void)
-{
-    return(cfg->mserv_use);
-}
-
-void prefs_set_mserv_use(gboolean val)
-{
-    cfg->mserv_use = val;
-}
-
-void prefs_set_mserv_username (const gchar *str)
-{
-    if (str)
-    {
-	g_free (cfg->mserv_username);
-	cfg->mserv_username = g_strdup (str);
-    }
-}
-
-const gchar *prefs_get_mserv_username (void)
-{
-    return cfg->mserv_username;
-}

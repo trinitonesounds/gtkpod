@@ -843,7 +843,7 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 	return FALSE;
     }
 
-    if (prefs_get_mserv_use())
+    if (prefs_get_int("mserv_use"))
     {
 	/* try getting the user's rating from the mserv db */
 	gchar *music_root = prefs_get_string ("path_mserv_music_root");
@@ -871,14 +871,14 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 	    {
 		/* printf("opened\n");*/
 		gchar buff[PATH_MAX];
-		const gchar *username = prefs_get_mserv_username ();
+		gchar *username = prefs_get_string("mserv_username");
 		guint usernamelen;
 		g_return_val_if_fail (username, (fclose (fp), FALSE));
 		usernamelen = strlen (username);
 		while (fgets(buff, PATH_MAX, fp))
 		{
 		    /* printf("username %s (%d) read %s\n",
-		     * prefs_get_mserv_username(), usernamelen,
+		     * prefs_get_string("mserv_username"), usernamelen,
 		     * buff);*/
 		    if (strncmp(buff, username, usernamelen) == 0
 			&& buff[usernamelen] == (gchar)'=')
@@ -892,11 +892,15 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 		    }
 		}
 		fclose(fp);
+		g_free(username);
 		if (!success)
 		{
-		    gchar *buf = g_strdup_printf (_("No information found for user '%s' in '%s'"), prefs_get_mserv_username(), infoname);
+		    gchar *username = prefs_get_string("mserv_username");
+		    gchar *buf = g_strdup_printf (_("No information found for user '%s' in '%s'"), 
+						  username, infoname);
 		    display_mserv_problems (track, buf);
 		    g_free (buf);
+		    g_free(username);
 		}
 	    }
 	    else
@@ -1419,7 +1423,7 @@ void display_mserv_problems (Track *track, gchar *txt)
 
    if ((track == NULL) && str)
    {
-       if (prefs_get_mserv_use() &&
+       if (prefs_get_int("mserv_use") &&
 	   prefs_get_int("mserv_report_probs") && str->len)
        { /* Some tracks have had problems. Print a notice */
 	   buf = g_strdup_printf (
@@ -1453,7 +1457,7 @@ void display_mserv_problems (Track *track, gchar *txt)
        track_nr = 0;
        gtkpod_tracks_statusbar_update();
    }
-   else if (prefs_get_mserv_use() &&
+   else if (prefs_get_int("mserv_use") &&
 	    prefs_get_int("mserv_report_probs") && track)
    {
        /* add info about it to str */

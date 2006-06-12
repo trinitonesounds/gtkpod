@@ -125,8 +125,6 @@ struct cfg
   gboolean multi_edit_title;    /* multi edit also enabled for title field? */
   gboolean not_played_track;    /* not played track in Highest rated playlist?*/
   gint misc_track_nr;            /* track's nr in the Highest rated, most played and most recently played pl*/
-  gboolean mserv_use;           /* use mserv data (rating)? */
-  gchar *mserv_username;        /* username for mserv? */
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -334,10 +332,6 @@ void prefs_set_tmp_disable_sort(gboolean val);
 gboolean prefs_get_tmp_disable_sort(void);
 void prefs_set_startup_messages(gboolean val);
 gboolean prefs_get_startup_messages(void);
-gboolean prefs_get_mserv_use(void);
-void prefs_set_mserv_use(gboolean val);
-const gchar *prefs_get_mserv_username(void);
-void prefs_set_mserv_username(const gchar *root);
 gboolean prefs_get_disable_sorting(void);
 
 #endif

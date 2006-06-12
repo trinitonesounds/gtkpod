@@ -645,22 +645,16 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mserv_use");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->mserv_use);
+				 prefs_get_int("mserv_use"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_mserv_report_probs");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("mserv_report_probs"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "mserv_username_entry");
-    if (tmpcfg->mserv_username)
-    {  /* we should copy the new path first because by setting
-	  the text we might get a callback destroying the old
-	  value... */
-	gchar *buf = g_strdup (tmpcfg->mserv_username);
-	gtk_entry_set_text(GTK_ENTRY(w), buf);
-	g_free (buf);
-    }
-
+    buf = prefs_get_string("mserv_username");
+    gtk_entry_set_text(GTK_ENTRY(w), buf);
+    g_free(buf);
     w = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
     if (page == -1)
     {
@@ -716,9 +710,6 @@ prefs_window_set(void)
 	prefs_set_automount(tmpcfg->automount);
 	prefs_set_tmp_disable_sort(tmpcfg->tmp_disable_sort);
 	prefs_set_startup_messages(tmpcfg->startup_messages);
-	prefs_set_mserv_use(tmpcfg->mserv_use);
-	prefs_set_mserv_username(tmpcfg->mserv_username);
-
 	tm_show_preferred_columns();
     }
 }
@@ -845,20 +836,14 @@ void
 prefs_window_apply (void)
 {
     gint defx, defy;
-    GtkWidget *nb, *w;
+    GtkWidget *nb;
 
-		/* Committ temp prefs to prefs table */
-		temp_prefs_apply(temp_prefs);
-		temp_lists_apply(temp_lists);
+    /* Committ temp prefs to prefs table */
+    temp_prefs_apply(temp_prefs);
+    temp_lists_apply(temp_lists);
   
     /* save current settings */
     prefs_window_set ();
-
-    if((w = gtkpod_xml_get_widget (prefs_window_xml, "mserv_username_entry")))
-    {
-	gtk_entry_set_text(GTK_ENTRY(w), prefs_get_mserv_username ());
-	/* tmpcfg gets set by the "changed" callback */
-    }
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
@@ -1402,7 +1387,8 @@ void
 on_mserv_use_toggled                   (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    tmpcfg->mserv_use = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "mserv_use",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void
@@ -1420,8 +1406,8 @@ on_mserv_username_entry_changed              (GtkEditable     *editable,
     gchar *val = gtk_editable_get_chars (editable,0, -1);
 
     if (!val) return;
-    g_free (tmpcfg->mserv_username);
-    tmpcfg->mserv_username = val;
+    temp_prefs_set_string(temp_prefs, "mserv_username", val);
+    g_free(val);
 }
 
 
