@@ -595,7 +595,7 @@ static gint Most_Rated_CF (gconstpointer aa, gconstpointer bb)
 /* Insert function: determines whether a track is entered into the playlist */
 static gboolean Most_Rated_IF (Track *track, gpointer userdata)
 {
-    if (track) return ((track->playcount != 0) || prefs_get_not_played_track());
+    if (track) return ((track->playcount != 0) || prefs_get_int("not_played_track"));
     return FALSE;
 }
 

@@ -425,7 +425,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_not_played_track");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->not_played_track);
+				 prefs_get_int("not_played_track"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_misc_track_nr");
     gtk_spin_button_set_range (GTK_SPIN_BUTTON (w), 0, 0xffffffff);
@@ -701,7 +701,6 @@ prefs_window_set(void)
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
 	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
 	prefs_set_misc_track_nr (tmpcfg->misc_track_nr);
-	prefs_set_not_played_track (tmpcfg->not_played_track);
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	tm_show_preferred_columns();
@@ -1273,8 +1272,8 @@ void
 on_cfg_not_played_track_toggled         (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->not_played_track =
-	gtk_toggle_button_get_active  (togglebutton);
+    temp_prefs_set_int(temp_prefs, "not_played_track",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void

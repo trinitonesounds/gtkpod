@@ -232,6 +232,7 @@ static void set_default_preferences()
     prefs_set_int("tmp_disable_sort", TRUE);
     prefs_set_int("multi_edit_title", TRUE);
     prefs_set_int("multi_edit", FALSE);
+    prefs_set_int("not_played_track", TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -856,21 +857,30 @@ static void cleanup_keys()
     for (i = 0; i < SORT_TAB_MAX; i++)
     {
 	if (prefs_get_int_value_index("sp_created_cond", i, &int_buf))
+	{
 	    prefs_set_int_index("sp_added_cond", i, int_buf);
+	    prefs_set_string("sp_created_cond", NULL);
+	}
     }
   
     /* sp_created_state renamed to sp_added_state */
     for (i = 0; i < SORT_TAB_MAX; i++)
     {
 	if (prefs_get_int_value_index("sp_created_state", i, &int_buf))
+	{
 	    prefs_set_int_index("sp_added_state", i, int_buf);
+	    prefs_set_string("sp_created_state", NULL);
+	}
     }
   
     /* sm_col_width renamed to tm_col_width */
     for (i = 0; i < TM_NUM_COLUMNS; i++)
     {
 	if (prefs_get_int_value_index("sm_col_width", i, &int_buf))
+	{
 	    prefs_set_int_index("tm_col_width", i, int_buf);
+	    prefs_set_string_index("sm_col_width", i, NULL);
+	}
     }
   
     /* handle version changes in prefs */
@@ -918,6 +928,13 @@ static void cleanup_keys()
     {
 	prefs_set_int("autoimport", int_buf);
 	prefs_set_string("auto_import", NULL);
+    }
+
+    /* not_played_song renamed to not_played_track */
+    if (prefs_get_int_value("not_played_song", &int_buf))
+    {
+	prefs_set_int("not_played_track", int_buf);
+	prefs_set_string("not_played_song", NULL);
     }
 
     prefs_set_string ("version", VERSION);
@@ -1797,7 +1814,6 @@ struct cfg *cfg_new(void)
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
 
-    mycfg->not_played_track = TRUE;
     mycfg->misc_track_nr = 25;
     mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.st_sort = SORT_NONE;
@@ -2036,11 +2052,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_display_tooltips_prefs((gboolean)atoi(arg));
 	  }
-	  else if((g_ascii_strcasecmp (line, "not_played_track") == 0) ||
-		  (g_ascii_strcasecmp (line, "not_played_song") == 0))
-	  {
-	      prefs_set_not_played_track((gboolean)atoi(arg));
-	  }
 	  else if((g_ascii_strcasecmp (line, "misc_track_nr") == 0) ||
 		  (g_ascii_strcasecmp (line, "misc_song_nr") == 0))
 	  {
@@ -2247,7 +2258,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "display_tooltips_prefs=%d\n",
 	    prefs_get_display_tooltips_prefs());
     fprintf(fp, "misc_track_nr=%d\n", prefs_get_misc_track_nr());
-    fprintf(fp, "not_played_track=%d\n", prefs_get_not_played_track());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
@@ -2631,16 +2641,6 @@ void prefs_set_display_tooltips_prefs (gboolean state)
 gboolean prefs_get_display_tooltips_prefs (void)
 {
     return cfg->display_tooltips_prefs;
-}
-
-void prefs_set_not_played_track (gboolean state)
-{
-    cfg->not_played_track = state;
-}
-
-gboolean prefs_get_not_played_track (void)
-{
-    return cfg->not_played_track;
 }
 
 void prefs_set_misc_track_nr (gint state)

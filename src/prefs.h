@@ -307,8 +307,6 @@ void prefs_set_display_tooltips_prefs (gboolean state);
 gboolean prefs_get_display_tooltips_prefs (void);
 void prefs_set_misc_track_nr (gint state);
 gint prefs_get_misc_track_nr (void);
-void prefs_set_not_played_track (gboolean state);
-gboolean prefs_get_not_played_track (void);
 gboolean prefs_get_disable_sorting(void);
 
 #endif
