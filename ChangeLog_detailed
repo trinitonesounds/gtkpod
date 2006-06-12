@@ -2,6 +2,10 @@
 	
 	 * src/prefs.h
 	   src/prefs.c
+	   src/prefs_window.c: Moved tmp_disable_sort to new prefs.
+
+	 * src/prefs.h
+	   src/prefs.c
 	   src/prefs_window.c: Moved last_prefs_page to new prefs.
 
 	 * src/display.c

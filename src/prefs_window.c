@@ -637,7 +637,7 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_tmp_disable_sort");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->tmp_disable_sort);
+				 prefs_get_int("tmp_disable_sort"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_startup_messages");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -706,7 +706,6 @@ prefs_window_set(void)
 	prefs_set_not_played_track (tmpcfg->not_played_track);
 	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
-	prefs_set_tmp_disable_sort(tmpcfg->tmp_disable_sort);
 	tm_show_preferred_columns();
     }
 }
@@ -1362,8 +1361,8 @@ void
 on_cfg_temporarily_disable_sorting     (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-    tmpcfg->tmp_disable_sort =
-	gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "tmp_disable_sort",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 void
 on_cfg_startup_messages                (GtkToggleButton *togglebutton,

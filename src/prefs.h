@@ -93,7 +93,6 @@ struct cfg
   gchar    *charset;        /* CHARSET to use with file operations */
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   gboolean block_display;   /* block display during change of selection? */
-  gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
   
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
@@ -315,8 +314,6 @@ void prefs_set_not_played_track (gboolean state);
 gboolean prefs_get_not_played_track (void);
 void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
-void prefs_set_tmp_disable_sort(gboolean val);
-gboolean prefs_get_tmp_disable_sort(void);
 gboolean prefs_get_disable_sorting(void);
 
 #endif

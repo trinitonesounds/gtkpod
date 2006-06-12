@@ -229,6 +229,7 @@ static void set_default_preferences()
     prefs_set_int("add_recursively", TRUE);
     prefs_set_int("info_window", FALSE);
     prefs_set_int("last_prefs_page", 0);
+    prefs_set_int("tmp_disable_sort", TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1794,7 +1795,6 @@ struct cfg *cfg_new(void)
     mycfg->update_charset = FALSE;
     mycfg->write_charset = FALSE;
 
-    mycfg->tmp_disable_sort = TRUE;
     mycfg->multi_edit = FALSE;
     mycfg->multi_edit_title = TRUE;
     mycfg->not_played_track = TRUE;
@@ -2088,10 +2088,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_int ("itdb_0_concal_autosync", atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "tmp_disable_sort") == 0)
-	  {
-	      prefs_set_tmp_disable_sort ((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
 	      prefs_set_int (EXPORT_FILES_SPECIAL_CHARSET,
@@ -2265,7 +2261,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
-    fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
 }
 
 
@@ -2688,20 +2683,10 @@ gboolean prefs_get_multi_edit_title (void)
     return cfg->multi_edit_title;
 }
 
-gboolean prefs_get_tmp_disable_sort(void)
-{
-    return(cfg->tmp_disable_sort);
-}
-
-void prefs_set_tmp_disable_sort(gboolean val)
-{
-    cfg->tmp_disable_sort = val;
-}
-
 /* sorting gets disabled temporarily if either of the options
    'tmp_disable_sort' or 'block_display' is checked */
 gboolean prefs_get_disable_sorting(void)
 {
-    return (prefs_get_block_display() || prefs_get_tmp_disable_sort());
+    return (prefs_get_block_display() || prefs_get_int("tmp_disable_sort"));
 }
 
