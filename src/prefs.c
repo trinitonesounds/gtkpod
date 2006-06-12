@@ -225,6 +225,7 @@ static void set_default_preferences()
     prefs_set_int("mserv_use", FALSE);
     prefs_set_string("mserv_username", "");
     prefs_set_int("automount", FALSE);
+    prefs_set_int("startup_messages", TRUE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1794,7 +1795,6 @@ struct cfg *cfg_new(void)
     mycfg->statusbar_timeout = STATUSBAR_TIMEOUT;
 
     mycfg->tmp_disable_sort = TRUE;
-    mycfg->startup_messages = TRUE;
     mycfg->info_window = FALSE;
     mycfg->multi_edit = FALSE;
     mycfg->multi_edit_title = TRUE;
@@ -2105,12 +2105,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_tmp_disable_sort ((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "startup_messages") == 0)
-	  {
-	      /* only set if no upgrade/downgrade was performed */
-	      if (cfg->version == g_ascii_strtod (VERSION, NULL))
-		  prefs_set_startup_messages ((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
 	  {
 	      prefs_set_int (EXPORT_FILES_SPECIAL_CHARSET,
@@ -2288,7 +2282,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
     fprintf (fp, "info_window=%d\n", cfg->info_window);
     fprintf (fp, "tmp_disable_sort=%d\n", cfg->tmp_disable_sort);
-    fprintf (fp, "startup_messages=%d\n", cfg->startup_messages);
 }
 
 
@@ -2751,16 +2744,6 @@ gboolean prefs_get_tmp_disable_sort(void)
 void prefs_set_tmp_disable_sort(gboolean val)
 {
     cfg->tmp_disable_sort = val;
-}
-
-gboolean prefs_get_startup_messages(void)
-{
-    return(cfg->startup_messages);
-}
-
-void prefs_set_startup_messages(gboolean val)
-{
-    cfg->startup_messages = val;
 }
 
 /* sorting gets disabled temporarily if either of the options

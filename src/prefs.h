@@ -94,7 +94,6 @@ struct cfg
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   gboolean block_display;   /* block display during change of selection? */
   gboolean tmp_disable_sort;/* tmp. disable sorting during change of slctn? */
-  gboolean startup_messages;/* show startup messages/warnings? */
   
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
@@ -327,8 +326,6 @@ void prefs_set_multi_edit_title (gboolean state);
 gboolean prefs_get_multi_edit_title (void);
 void prefs_set_tmp_disable_sort(gboolean val);
 gboolean prefs_get_tmp_disable_sort(void);
-void prefs_set_startup_messages(gboolean val);
-gboolean prefs_get_startup_messages(void);
 gboolean prefs_get_disable_sorting(void);
 
 #endif
