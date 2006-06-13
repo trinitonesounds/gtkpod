@@ -98,7 +98,6 @@ struct cfg
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
     gint pm_sort;            /* sort type for playlists           */
-    gint st_sort;            /* sort type for sort tabs           */
     gint tm_sort;            /* sort type for tracks              */
     TM_item tm_sortcol;      /* sort column for tracks            */
     gboolean tm_autostore;   /* save sort order automatically?    */
@@ -264,7 +263,6 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 void prefs_set_offline(gboolean active);
 void prefs_set_pm_sort (gint type);
 void prefs_set_tm_sort (gint type);
-void prefs_set_st_sort (gint type);
 void prefs_set_tm_sortcol (TM_item col);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_block_display(gboolean active);
@@ -274,7 +272,6 @@ void prefs_set_statusbar_timeout (guint32 val);
 
 gboolean prefs_get_offline(void);
 gint prefs_get_pm_sort (void);
-gint prefs_get_st_sort (void);
 gint prefs_get_tm_sort (void);
 TM_item prefs_get_tm_sortcol (void);
 gboolean prefs_get_autoimport(void);

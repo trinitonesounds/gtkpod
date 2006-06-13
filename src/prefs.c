@@ -239,6 +239,7 @@ static void set_default_preferences()
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
     prefs_set_int("tm_autostore", FALSE);
+    prefs_set_int("st_sort", SORT_NONE);
 }
 
 /* Initialize default variable-length list entries */
@@ -666,6 +667,21 @@ static void wipe_list(const gchar *key)
     }		
 }
 
+/* sort order was reversed between V0.82_CVS and V0.83.CVS */
+static gint correct_sort (gint sort)
+{
+    switch (sort)
+    {
+    case SORT_ASCENDING:
+	sort = SORT_DESCENDING;
+	break;
+    case SORT_DESCENDING:
+	sort = SORT_ASCENDING;
+	break;
+    }
+    return sort;
+}
+
 /* Delete and rename keys */
 static void cleanup_keys()
 {
@@ -673,6 +689,7 @@ static void cleanup_keys()
     gint int_buf;
     gint i;
     gint x, y, p;  /* Window position */
+    gint sort;  /* sort order */
     float version=0;
 
     /* get version */
@@ -956,6 +973,12 @@ static void cleanup_keys()
 	prefs_set_int("tm_autostore", int_buf);
 	prefs_set_string("sm_autostore", NULL);
     }
+
+    /* Correct sort order */
+    sort = prefs_get_int("st_sort");
+    sort = correct_sort(sort);
+    prefs_set_int("st_sort", sort);
+    
 
     prefs_set_string ("version", VERSION);
 }
@@ -1833,7 +1856,6 @@ struct cfg *cfg_new(void)
     mycfg->display_tooltips_prefs = TRUE;
 
     mycfg->sortcfg.pm_sort = SORT_NONE;
-    mycfg->sortcfg.st_sort = SORT_NONE;
     mycfg->sortcfg.tm_sort = SORT_NONE;
     mycfg->sortcfg.tm_sortcol = TM_COLUMN_TITLE;
 
@@ -1860,24 +1882,6 @@ static gint arg_comp (const gchar *line, const gchar *arg, gint *off)
     }
 }
 
-
-/* sort order was reversed between V0.82_CVS and V0.83.CVS */
-static gint correct_sort (gint sort)
-{
-    if (cfg && (cfg->version < 0.83))
-    {
-	switch (sort)
-	{
-	case SORT_ASCENDING:
-	    sort = SORT_DESCENDING;
-	    break;
-	case SORT_DESCENDING:
-	    sort = SORT_ASCENDING;
-	    break;
-	}
-    }
-    return sort;
-}
 
 /* default ignore strings -- must end with a space */
 static char* sort_ign_strings[] =
@@ -2021,11 +2025,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      gint sort = correct_sort (atoi(arg));
 	      prefs_set_pm_sort(sort);
-	  }
-	  else if(g_ascii_strcasecmp (line, "st_sort") == 0)
-	  {
-	      gint sort = correct_sort (atoi(arg));
-	      prefs_set_st_sort(sort);
 	  }
 	  else if((g_ascii_strcasecmp (line, "tm_sort_") == 0) ||
 		  (g_ascii_strcasecmp (line, "sm_sort_") == 0))
@@ -2242,7 +2241,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
     fprintf(fp, "pm_sort=%d\n",prefs_get_pm_sort());
-    fprintf(fp, "st_sort=%d\n",prefs_get_st_sort());
     fprintf(fp, "tm_sort_=%d\n",prefs_get_tm_sort());
     fprintf(fp, "tm_sortcol=%d\n",prefs_get_tm_sortcol());
     fprintf(fp, "display_tooltips_main=%d\n",
@@ -2515,26 +2513,6 @@ void prefs_set_pm_sort (gint i)
     }
 
     cfg->sortcfg.pm_sort = i;
-}
-
-gint prefs_get_st_sort (void)
-{
-    return cfg->sortcfg.st_sort;
-}
-
-void prefs_set_st_sort (gint i)
-{
-    switch (i)
-    {
-    case SORT_ASCENDING:
-    case SORT_DESCENDING:
-    case SORT_NONE:
-	cfg->sortcfg.st_sort = i;
-	break;
-    default:  /* illegal -- ignore */
-	gtkpod_warning ("Programming error: prefs_set_st_sort: illegal type '%d' ignored\n", i);
-	break;
-    }
 }
 
 gint prefs_get_tm_sort (void)

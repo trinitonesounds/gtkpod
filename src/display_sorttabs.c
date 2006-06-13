@@ -1190,7 +1190,7 @@ void st_remove_all_entries_from_model (guint32 inst)
       if (st->entry_hash)  g_hash_table_destroy (st->entry_hash);
       st->entry_hash = NULL;
 
-      if((prefs_get_st_sort () == SORT_NONE) &&
+      if((prefs_get_int("st_sort") == SORT_NONE) &&
 	 gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (st->model),
 					       &column, &order))
       { /* recreate track treeview to unset sorted column */
@@ -2434,7 +2434,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 	if (disable_count[inst] == 0)
 	{
 	    /* Re-enable sorting */
-	    if ((prefs_get_st_sort () != SORT_NONE) &&
+	    if ((prefs_get_int("st_sort") != SORT_NONE) &&
 		prefs_get_disable_sorting ())
 	    {
 		SortTab *st = sorttab[inst];
@@ -2454,7 +2454,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 			gtk_tree_sortable_set_sort_column_id (
 			    GTK_TREE_SORTABLE (st->model),
 			    ST_COLUMN_ENTRY,
-			    prefs_get_st_sort ());
+			    prefs_get_int("st_sort"));
 		    }
 		}
 	    }
@@ -2466,7 +2466,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 	if (disable_count[inst] == 0)
 	{
 	    /* Disable sorting */
-	    if ((prefs_get_st_sort () != SORT_NONE) &&
+	    if ((prefs_get_int("st_sort") != SORT_NONE) &&
 		prefs_get_disable_sorting ())
 	    {
 		SortTab *st = sorttab[inst];
@@ -2486,7 +2486,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 			gtk_tree_sortable_set_sort_column_id (
 			    GTK_TREE_SORTABLE (st->model),
 			    GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID,
-			    prefs_get_st_sort ());
+			    prefs_get_int("st_sort"));
 		    }
 		}
 	    }
@@ -3064,8 +3064,8 @@ void st_create_notebook (gint inst)
   page = prefs_get_int_index("st_category", inst);
   st->current_category = page;
   gtk_notebook_set_current_page (st->notebook, page);
-  if (prefs_get_st_sort () != SORT_NONE)
-    st_sort_inst (inst, prefs_get_st_sort ());
+  if (prefs_get_int("st_sort") != SORT_NONE)
+    st_sort_inst (inst, prefs_get_int("st_sort"));
 }
 
 

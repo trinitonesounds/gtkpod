@@ -260,19 +260,19 @@ alphabetize(GtkMenuItem *mi, gpointer data)
 {
     if (selected_entry)
     {
-	switch (prefs_get_st_sort ())
+	switch (prefs_get_int("st_sort"))
 	{
 	case SORT_ASCENDING:
-	    prefs_set_st_sort (SORT_DESCENDING);
+	    prefs_set_int("st_sort", SORT_DESCENDING);
 	    break;
 	case SORT_DESCENDING:
-	    prefs_set_st_sort (SORT_NONE);
+	    prefs_set_int("st_sort", SORT_NONE);
 	    break;
 	case SORT_NONE:
-	    prefs_set_st_sort (SORT_ASCENDING);
+	    prefs_set_int("st_sort", SORT_ASCENDING);
 	    break;
 	}
-	st_sort (prefs_get_st_sort ());
+	st_sort (prefs_get_int("st_sort"));
     }
 }
 
