@@ -240,6 +240,7 @@ static void set_default_preferences()
     prefs_set_int("case_sensitive", FALSE);
     prefs_set_int("tm_autostore", FALSE);
     prefs_set_int("st_sort", SORT_NONE);
+    prefs_set_int("pm_sort", SORT_NONE);
 }
 
 /* Initialize default variable-length list entries */
@@ -978,6 +979,7 @@ static void cleanup_keys()
     sort = prefs_get_int("st_sort");
     sort = correct_sort(sort);
     prefs_set_int("st_sort", sort);
+    prefs_set_int("pm_sort", sort);
     
 
     prefs_set_string ("version", VERSION);
@@ -1855,7 +1857,6 @@ struct cfg *cfg_new(void)
     mycfg->display_tooltips_main = TRUE;
     mycfg->display_tooltips_prefs = TRUE;
 
-    mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.tm_sort = SORT_NONE;
     mycfg->sortcfg.tm_sortcol = TM_COLUMN_TITLE;
 
@@ -2020,11 +2021,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
 	  {
 	      /* ignore */
-	  }
-	  else if(g_ascii_strcasecmp (line, "pm_sort") == 0)
-	  {
-	      gint sort = correct_sort (atoi(arg));
-	      prefs_set_pm_sort(sort);
 	  }
 	  else if((g_ascii_strcasecmp (line, "tm_sort_") == 0) ||
 		  (g_ascii_strcasecmp (line, "sm_sort_") == 0))
@@ -2240,7 +2236,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
-    fprintf(fp, "pm_sort=%d\n",prefs_get_pm_sort());
     fprintf(fp, "tm_sort_=%d\n",prefs_get_tm_sort());
     fprintf(fp, "tm_sortcol=%d\n",prefs_get_tm_sortcol());
     fprintf(fp, "display_tooltips_main=%d\n",
@@ -2492,27 +2487,6 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
 
     cfg->toolbar_style = i;
     display_show_hide_toolbar ();
-}
-
-gint prefs_get_pm_sort (void)
-{
-    return cfg->sortcfg.pm_sort;
-}
-
-void prefs_set_pm_sort (gint i)
-{
-    switch (i)
-    {
-    case SORT_ASCENDING:
-    case SORT_DESCENDING:
-    case SORT_NONE:
-	break;
-    default:  /* illegal -- ignore */
-	gtkpod_warning (_("prefs_set_pm_sort: illegal type '%d' ignored\n"), i);
-	return;
-    }
-
-    cfg->sortcfg.pm_sort = i;
 }
 
 gint prefs_get_tm_sort (void)

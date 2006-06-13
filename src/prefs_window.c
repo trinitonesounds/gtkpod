@@ -1615,7 +1615,7 @@ void sort_window_update (void)
 	    sortcfg_free (tmpsortcfg);
 	tmpsortcfg = clone_sortprefs();
 
-	switch (tmpsortcfg->pm_sort)
+	switch (temp_prefs_get_int(sort_temp_prefs, "pm_sort"))
 	{
 	case SORT_ASCENDING:
 	    w = gtkpod_xml_get_widget (sort_window_xml, "pm_ascend");
@@ -1754,7 +1754,6 @@ static void sort_window_set (struct sortcfg *scfg)
 
     tsc = clone_sortprefs ();
 
-    prefs_set_pm_sort (scfg->pm_sort);
     prefs_set_tm_sort (scfg->tm_sort);
     scfg->tm_sortcol = sort_window_get_sort_col ();
     prefs_set_tm_sortcol (scfg->tm_sortcol);
@@ -1816,8 +1815,8 @@ static void sort_window_set (struct sortcfg *scfg)
     compare_string_fuzzy_generate_keys ();
 
     /* if sort type has changed, initialize display */
-    if (tsc->pm_sort != scfg->pm_sort)
-	pm_sort (scfg->pm_sort);
+    if (temp_prefs_get_int_value(sort_temp_prefs, "pm_sort", &val))
+	pm_sort (val);
     if (temp_prefs_get_int_value(sort_temp_prefs, "st_sort", &val))
 	st_sort (val);
     if ((tsc->tm_sort != scfg->tm_sort) ||
@@ -2071,7 +2070,7 @@ void sort_window_set_tm_autostore (gboolean val)
 
 void sort_window_set_pm_sort (gint val)
 {
-    tmpsortcfg->pm_sort = val;
+    temp_prefs_set_int(sort_temp_prefs, "pm_sort", val);
 }
 
 void sort_window_set_st_sort (gint val)

@@ -846,7 +846,7 @@ static void pm_drag_data_received (GtkWidget       *widget,
 		gtk_drag_finish (dc, TRUE, FALSE, time);
 		break;
 	    case GDK_ACTION_MOVE:
-		if (prefs_get_pm_sort () != SORT_NONE)
+		if (prefs_get_int("pm_sort") != SORT_NONE)
 		{
 		    gtkpod_statusbar_message (_("Can't reorder sorted treeview."));
 		    gtk_drag_finish (dc, FALSE, FALSE, time);
@@ -1583,12 +1583,12 @@ pm_track_column_button_clicked(GtkTreeViewColumn *tvc, gpointer data)
     gint cnt = pm_sort_counter (1);
     if (cnt >= 3)
     {
-	prefs_set_pm_sort (SORT_NONE);
+	prefs_set_int("pm_sort", SORT_NONE);
 	pm_unsort (); /* also resets the sort_counter */
     }
     else
     {
-	prefs_set_pm_sort (gtk_tree_view_column_get_sort_order (tvc));
+	prefs_set_int("pm_sort", gtk_tree_view_column_get_sort_order (tvc));
 	pm_rows_reordered ();
     }
 }

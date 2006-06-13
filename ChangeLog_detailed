@@ -1,5 +1,16 @@
 2006-06-12 James Liggett <freethinkerjim@users.sourceforge.net>
-
+	
+	 * src/display_playlists.c
+	   src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Moved pm_sort to new prefs.
+	
+	 * src/context_menus.c
+	   src/display_sorttabs.c
+	   src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Moved st_sort to new prefs.
+	 
 	 * src/display_songs.c
 	   src/misc_playlist.c
 	   src/prefs.h
