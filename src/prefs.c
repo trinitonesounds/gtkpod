@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 20:19:32 jcs>
+/* Time-stamp: <2006-06-13 23:52:53 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -125,6 +125,23 @@ static GHashTable *prefs_table = NULL;
 /*
  * Functions used by this module only
  */
+
+/* Different paths that can be set in the prefs window */
+typedef enum
+{
+    PATH_PLAY_NOW = 0,
+    PATH_PLAY_ENQUEUE,
+    PATH_MP3GAIN,
+    PATH_SYNC_CONTACTS,
+    PATH_SYNC_CALENDAR,
+    PATH_MSERV_MUSIC_ROOT,
+    PATH_MSERV_TRACKINFO_ROOT,
+    PATH_SYNC_NOTES,
+    PATH_AACGAIN,
+    PATH_NUM
+} PathType;
+
+
 
 /* Set default prefrences */
 static void set_default_preferences()

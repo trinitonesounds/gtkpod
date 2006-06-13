@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-12 00:53:58 jcs>
+/* Time-stamp: <2006-06-13 23:56:46 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -140,6 +140,7 @@ static const GtkFileChooserAction path_type[] =
     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, /* select folder */
     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
     GTK_FILE_CHOOSER_ACTION_OPEN,
+    GTK_FILE_CHOOSER_ACTION_OPEN,
     -1
 };
 
@@ -174,11 +175,10 @@ static void on_cfg_col_visible_toggled (GtkToggleButton *togglebutton,
    dialog and let the user select a file or directory */
 static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 {
-    PathType i = (PathType)user_data;
+    gint i = GPOINTER_TO_INT (user_data);
     gchar *oldpath, *newpath;
 
     g_return_if_fail (temp_prefs);
-    g_return_if_fail (i>=0 && i<PATH_NUM);
 
     oldpath = temp_prefs_get_string (temp_prefs, path_key_names[i]);
 
@@ -222,7 +222,7 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
 static void on_path_entry_changed (GtkEditable     *editable,
 				   gpointer         user_data)
 {
-    PathType i = (PathType)user_data;
+    gint i = GPOINTER_TO_INT (user_data);
     gchar *buf = gtk_editable_get_chars(editable, 0, -1);
 
     temp_prefs_set_string (temp_prefs, path_key_names[i], buf);
@@ -505,7 +505,7 @@ prefs_window_create (gint page)
 	g_free (buf);
     }
     /* connect signals for path entrys and selectors */
-    for (i=0; i<PATH_NUM; ++i)
+    for (i=0; path_button_names[i]; ++i)
     {
 	gchar *path;
 	/* "" is not a valid button name -> skip */

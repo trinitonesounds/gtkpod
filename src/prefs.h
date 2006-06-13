@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 12:16:33 jcs>
+/* Time-stamp: <2006-06-13 23:52:53 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -42,22 +42,6 @@
 
 /* End-of-list marker for variable-length lists */
 #define LIST_END_MARKER "----++++----"
-
-/* Different paths that can be set in the prefs window */
-typedef enum
-{
-    PATH_PLAY_NOW = 0,
-    PATH_PLAY_ENQUEUE,
-    PATH_MP3GAIN,
-    PATH_SYNC_CONTACTS,
-    PATH_SYNC_CALENDAR,
-    PATH_MSERV_MUSIC_ROOT,
-    PATH_MSERV_TRACKINFO_ROOT,
-    PATH_SYNC_NOTES,
-    PATH_AACGAIN,
-    PATH_NUM
-} PathType;
-
 
 /* Not sure where to put these (maybe prefkeys.h?): prefs keys used */
 /* repository.c */

@@ -1,3 +1,10 @@
+2006-06-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/prefs.h
+	   src/prefs.c
+	   src/prefs_windows: Made PathType enum redundant outside
+	   prefs.c (needed only for key conversion).
+
 2006-06-12 James Liggett <freethinkerjim@users.sourceforge.net>
 	
 	 * src/display_playlists.c
