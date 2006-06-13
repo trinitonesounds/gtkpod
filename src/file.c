@@ -1508,7 +1508,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
     if (etr->charset)  charset_set = TRUE;
     else               charset_set = FALSE;
 
-    if (!prefs_get_update_charset () && charset_set)
+    if (!prefs_get_int("update_charset") && charset_set)
     {   /* we should use the initial charset for the update */
 	if (prefs_get_charset ())
 	{   /* remember the charset originally set */
@@ -1612,7 +1612,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	display_non_updated (track, _("update failed (format no supported?)"));
     }
 
-    if (!prefs_get_update_charset () && charset_set)
+    if (!prefs_get_int("update_charset") && charset_set)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }

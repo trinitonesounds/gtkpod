@@ -234,6 +234,7 @@ static void set_default_preferences()
     prefs_set_int("multi_edit", FALSE);
     prefs_set_int("not_played_track", TRUE);
     prefs_set_int("misc_track_nr", 25);
+    prefs_set_int("update_charset", FALSE);
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
@@ -1822,8 +1823,6 @@ struct cfg *cfg_new(void)
     mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
     mycfg->display_tooltips_main = TRUE;
     mycfg->display_tooltips_prefs = TRUE;
-    mycfg->update_charset = FALSE;
-    mycfg->write_charset = FALSE;
 
     mycfg->sortcfg.pm_sort = SORT_NONE;
     mycfg->sortcfg.st_sort = SORT_NONE;
@@ -2061,10 +2060,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_display_tooltips_prefs((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "update_charset") == 0)
-	  {
-	      prefs_set_update_charset((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "write_charset") == 0)
 	  {
 	      prefs_set_write_charset((gboolean)atoi(arg));
@@ -2257,7 +2252,6 @@ write_prefs_to_file_desc(FILE *fp)
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
 	    prefs_get_display_tooltips_prefs());
-    fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
 }
 
@@ -2468,16 +2462,6 @@ void prefs_set_display_toolbar (gboolean val)
 {
     cfg->display_toolbar = val;
     display_show_hide_toolbar ();
-}
-
-gboolean prefs_get_update_charset (void)
-{
-    return cfg->update_charset;
-}
-
-void prefs_set_update_charset (gboolean val)
-{
-    cfg->update_charset = val;
 }
 
 gboolean prefs_get_write_charset (void)

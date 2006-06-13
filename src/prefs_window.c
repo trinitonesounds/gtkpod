@@ -439,7 +439,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_charset");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->update_charset);
+				 prefs_get_int("update_charset"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_block_display");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -699,7 +699,6 @@ prefs_window_set(void)
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
 	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
-	prefs_set_update_charset(tmpcfg->update_charset);
 	prefs_set_write_charset(tmpcfg->write_charset);
 	tm_show_preferred_columns();
     }
@@ -1248,7 +1247,8 @@ void
 on_cfg_update_charset_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->update_charset = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "update_charset",
+		       gtk_toggle_button_get_active (togglebutton));
 }
 
 void
