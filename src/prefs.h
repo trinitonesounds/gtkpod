@@ -102,7 +102,6 @@ struct cfg
     gint tm_sort;            /* sort type for tracks              */
     TM_item tm_sortcol;      /* sort column for tracks            */
     gboolean tm_autostore;   /* save sort order automatically?    */
-    gboolean case_sensitive; /* Should sorting be case-sensitive? */
     GList *tmp_sort_ign_fields; /* used in prefs_window.c only     */
     gchar *tmp_sort_ign_strings;/* used in prefs_window.c only     */
   } sortcfg;
@@ -294,8 +293,6 @@ gboolean prefs_get_update_charset (void);
 void prefs_set_update_charset (gboolean val);
 gboolean prefs_get_write_charset (void);
 void prefs_set_write_charset (gboolean val);
-gboolean prefs_get_case_sensitive (void);
-void prefs_set_case_sensitive (gboolean val);
 gboolean prefs_get_group_compilations (void);
 void prefs_set_group_compilations (gboolean val, gboolean update_display);
 GtkToolbarStyle prefs_get_toolbar_style (void);

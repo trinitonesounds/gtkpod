@@ -439,7 +439,7 @@ void call_script (gchar *script, ...)
  * depending on prefs settings */
 gint compare_string (const gchar *str1, const gchar *str2)
 {
-    if (prefs_get_case_sensitive ())
+    if (prefs_get_int("case_sensitive"))
 	return strcmp (str1, str2);
     else
 	return compare_string_case_insensitive (str1, str2);
@@ -565,7 +565,7 @@ gint compare_string_fuzzy (const gchar *str1, const gchar *str2)
 	g_free (tempStr);
     }
 
-    if (prefs_get_case_sensitive ())
+    if (prefs_get_int("case_sensitive"))
 	result = strcmp(pstr1, pstr2);
     else
     	result = g_utf8_collate(pcleanStr1, pcleanStr2);

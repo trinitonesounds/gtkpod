@@ -234,6 +234,9 @@ static void set_default_preferences()
     prefs_set_int("multi_edit", FALSE);
     prefs_set_int("not_played_track", TRUE);
     prefs_set_int("misc_track_nr", 25);
+
+    /* Set sorting prefs */
+    prefs_set_int("case_sensitive", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -1827,7 +1830,6 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.tm_sort = SORT_NONE;
     mycfg->sortcfg.tm_sortcol = TM_COLUMN_TITLE;
     mycfg->sortcfg.tm_autostore = FALSE;
-    mycfg->sortcfg.case_sensitive = FALSE;
 
     g_free (cfgdir);
 
@@ -2067,10 +2069,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_write_charset((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "case_sensitive") == 0)
-	  {
-	      prefs_set_case_sensitive((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
@@ -2261,7 +2259,6 @@ write_prefs_to_file_desc(FILE *fp)
 	    prefs_get_display_tooltips_prefs());
     fprintf(fp, "update_charset=%d\n",prefs_get_update_charset());
     fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
-    fprintf(fp, "case_sensitive=%d\n",prefs_get_case_sensitive());
 }
 
 
@@ -2491,16 +2488,6 @@ gboolean prefs_get_write_charset (void)
 void prefs_set_write_charset (gboolean val)
 {
     cfg->write_charset = val;
-}
-
-gboolean prefs_get_case_sensitive (void)
-{
-    return cfg->sortcfg.case_sensitive;
-}
-
-void prefs_set_case_sensitive (gboolean val)
-{
-    cfg->sortcfg.case_sensitive = val;
 }
 
 gboolean prefs_get_group_compilations (void)

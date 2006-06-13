@@ -1669,7 +1669,7 @@ void sort_window_update (void)
 	if((w = gtkpod_xml_get_widget (sort_window_xml, "cfg_case_sensitive")))
 	{
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpsortcfg->case_sensitive);
+					 prefs_get_int("case_sensitive"));
 	}
 	/* set standard entry in combo */
 	str = gettext (get_tm_string (prefs_get_tm_sortcol ()));
@@ -1757,7 +1757,6 @@ static void sort_window_set (struct sortcfg *scfg)
     prefs_set_st_sort (scfg->st_sort);
     prefs_set_tm_sort (scfg->tm_sort);
     prefs_set_tm_autostore (scfg->tm_autostore);
-    prefs_set_case_sensitive (scfg->case_sensitive);
     scfg->tm_sortcol = sort_window_get_sort_col ();
     prefs_set_tm_sortcol (scfg->tm_sortcol);
 
@@ -2088,5 +2087,6 @@ void sort_window_set_tm_sort (gint val)
 
 void sort_window_set_case_sensitive (gboolean val)
 {
-    tmpsortcfg->case_sensitive = val;
+    temp_prefs_set_int(sort_temp_prefs, "case_sensitive",
+		       val);
 }

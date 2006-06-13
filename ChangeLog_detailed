@@ -1,5 +1,10 @@
 2006-06-12 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	 * src/misc.c
+	   src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Moved case_sensitive to new prefs.
+
 	 * src/misc_playlist.c
 	   src/prefs.h
 	   src/prefs.c
