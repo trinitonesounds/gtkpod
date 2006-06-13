@@ -1784,7 +1784,7 @@ static void tm_sort_column_changed (GtkTreeSortable *ts,
 
     tm_set_search_column (newcol);
 
-    if(prefs_get_tm_autostore ())  tm_rows_reordered ();
+    if(prefs_get_int("tm_autostore"))  tm_rows_reordered ();
     sort_window_update ();
 
     /* stable sorting: index original order */

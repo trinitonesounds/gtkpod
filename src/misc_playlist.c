@@ -275,9 +275,9 @@ void randomize_current_playlist (void)
 	return;
     }
 
-    if (prefs_get_tm_autostore ())
+    if (prefs_get_int("tm_autostore"))
     {
-	prefs_set_tm_autostore (FALSE);
+	prefs_set_int("tm_autostore", FALSE);
 	gtkpod_warning (_("Auto Store of track view disabled.\n\n"));
 /* 	sort_window_update (); */
     }

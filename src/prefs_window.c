@@ -1664,7 +1664,7 @@ void sort_window_update (void)
 	w = gtkpod_xml_get_widget (sort_window_xml, "tm_autostore");
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-					 tmpsortcfg->tm_autostore);
+					 prefs_get_int("tm_autostore"));
 
 	if((w = gtkpod_xml_get_widget (sort_window_xml, "cfg_case_sensitive")))
 	{
@@ -1756,7 +1756,6 @@ static void sort_window_set (struct sortcfg *scfg)
     prefs_set_pm_sort (scfg->pm_sort);
     prefs_set_st_sort (scfg->st_sort);
     prefs_set_tm_sort (scfg->tm_sort);
-    prefs_set_tm_autostore (scfg->tm_autostore);
     scfg->tm_sortcol = sort_window_get_sort_col ();
     prefs_set_tm_sortcol (scfg->tm_sortcol);
 
@@ -1828,7 +1827,7 @@ static void sort_window_set (struct sortcfg *scfg)
 	tm_sort (prefs_get_tm_sortcol (), scfg->tm_sort);
     }
     /* if auto sort was changed to TRUE, store order */
-    if (!tsc->tm_autostore && scfg->tm_autostore)
+    if (!temp_prefs_get_int(sort_temp_prefs, "tm_autostore"))
 	tm_rows_reordered ();
 
     sortcfg_free (tsc);
@@ -2067,7 +2066,7 @@ void sort_window_apply (void)
 
 void sort_window_set_tm_autostore (gboolean val)
 {
-    tmpsortcfg->tm_autostore = val;
+    temp_prefs_set_int(sort_temp_prefs, "tm_autostore", val);
 }
 
 void sort_window_set_pm_sort (gint val)

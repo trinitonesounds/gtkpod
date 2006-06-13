@@ -238,6 +238,7 @@ static void set_default_preferences()
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
+    prefs_set_int("tm_autostore", FALSE);
 }
 
 /* Initialize default variable-length list entries */
@@ -947,6 +948,13 @@ static void cleanup_keys()
     {
 	prefs_set_int("misc_track_nr", int_buf);
 	prefs_set_string("misc_song_nr", NULL);
+    }
+
+    /* sm_autostore renamed to tm_autostore */
+    if (prefs_get_int_value("sm_autostore", &int_buf))
+    {
+	prefs_set_int("tm_autostore", int_buf);
+	prefs_set_string("sm_autostore", NULL);
     }
 
     prefs_set_string ("version", VERSION);
@@ -1828,7 +1836,6 @@ struct cfg *cfg_new(void)
     mycfg->sortcfg.st_sort = SORT_NONE;
     mycfg->sortcfg.tm_sort = SORT_NONE;
     mycfg->sortcfg.tm_sortcol = TM_COLUMN_TITLE;
-    mycfg->sortcfg.tm_autostore = FALSE;
 
     g_free (cfgdir);
 
@@ -2009,11 +2016,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
 	  {
 	      /* ignore */
-	  }
-	  else if((g_ascii_strcasecmp (line, "tm_autostore") == 0) ||
-		  (g_ascii_strcasecmp (line, "sm_autostore") == 0))
-	  {
-	      prefs_set_tm_autostore((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "pm_sort") == 0)
 	  {
@@ -2239,7 +2241,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
-    fprintf(fp, "tm_autostore=%d\n",prefs_get_tm_autostore());
     fprintf(fp, "pm_sort=%d\n",prefs_get_pm_sort());
     fprintf(fp, "st_sort=%d\n",prefs_get_st_sort());
     fprintf(fp, "tm_sort_=%d\n",prefs_get_tm_sort());
@@ -2493,16 +2494,6 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
 
     cfg->toolbar_style = i;
     display_show_hide_toolbar ();
-}
-
-gboolean prefs_get_tm_autostore (void)
-{
-    return cfg->sortcfg.tm_autostore;
-}
-
-void prefs_set_tm_autostore (gboolean val)
-{
-    cfg->sortcfg.tm_autostore = val;
 }
 
 gint prefs_get_pm_sort (void)
