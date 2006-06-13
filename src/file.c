@@ -1897,7 +1897,7 @@ gboolean write_tags_to_file (Track *track)
        the track, change the prefs settings temporarily */
     if (etr->charset)  track_charset_set = TRUE;
     else               track_charset_set = FALSE;
-    if (!prefs_get_write_charset () && track_charset_set)
+    if (!prefs_get_int("write_charset") && track_charset_set)
     {   /* we should use the initial charset for the update */
 	if (prefs_get_charset ())
 	{   /* remember the charset originally set */
@@ -1945,7 +1945,7 @@ gboolean write_tags_to_file (Track *track)
 	md5_track_exists_insert (itdb, track);
     }
 
-    if (!prefs_get_write_charset () && track_charset_set)
+    if (!prefs_get_int("write_charset") && track_charset_set)
     {   /* reset charset */
 	prefs_set_charset (prefs_charset);
     }

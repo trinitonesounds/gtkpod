@@ -2060,10 +2060,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_display_tooltips_prefs((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "write_charset") == 0)
-	  {
-	      prefs_set_write_charset((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
@@ -2252,7 +2248,6 @@ write_prefs_to_file_desc(FILE *fp)
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
 	    prefs_get_display_tooltips_prefs());
-    fprintf(fp, "write_charset=%d\n",prefs_get_write_charset());
 }
 
 
@@ -2462,16 +2457,6 @@ void prefs_set_display_toolbar (gboolean val)
 {
     cfg->display_toolbar = val;
     display_show_hide_toolbar ();
-}
-
-gboolean prefs_get_write_charset (void)
-{
-    return cfg->write_charset;
-}
-
-void prefs_set_write_charset (gboolean val)
-{
-    cfg->write_charset = val;
 }
 
 gboolean prefs_get_group_compilations (void)

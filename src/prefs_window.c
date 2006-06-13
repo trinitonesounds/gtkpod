@@ -456,7 +456,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_write_charset");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->write_charset);
+				 prefs_get_int("write_charset"));
     if (!prefs_get_int("id3_write")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_add_recursively");
@@ -699,7 +699,6 @@ prefs_window_set(void)
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
 	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
-	prefs_set_write_charset(tmpcfg->write_charset);
 	tm_show_preferred_columns();
     }
 }
@@ -1255,7 +1254,8 @@ void
 on_cfg_write_charset_toggled           (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->write_charset = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "write_charset",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void
