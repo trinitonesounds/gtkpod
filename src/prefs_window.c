@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-13 23:56:46 jcs>
+/* Time-stamp: <2006-06-14 00:22:15 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -181,6 +181,10 @@ static void on_path_button_pressed (GtkButton *button, gpointer user_data)
     g_return_if_fail (temp_prefs);
 
     oldpath = temp_prefs_get_string (temp_prefs, path_key_names[i]);
+    if (!oldpath)
+    {
+	oldpath = prefs_get_string (path_key_names[i]);
+    }
 
     switch (path_type[i])
     {

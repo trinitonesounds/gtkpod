@@ -1,5 +1,11 @@
 2006-06-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	 * src/prefs_window.c (on_path_button_pressed): corrected
+           error when "Browse" button was pressed (current path
+           sometimes was not passed to fileselector)
+
+	 * src/fileselection.c: avoid run-time warning.
+
 	 * src/prefs.h
 	   src/prefs.c
 	   src/prefs_windows: Made PathType enum redundant outside

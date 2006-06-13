@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-22 23:19:00 jcs>
+/* Time-stamp: <2006-06-14 00:18:04 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -415,7 +415,7 @@ gchar *fileselection_get_file_or_dir (const gchar *title,
  *
  * @opath: the current path to the script including command line
  *         arguments. May be NULL.
- * @fallback: default dir in case @key is not set.
+ * @fallback: default dir in case @opath is not set.
  * @title: title of the file selection window.
  * @additional_text: additional explanotary text to be displayed
  *
@@ -456,8 +456,15 @@ gchar *fileselection_select_script (const gchar *opath,
 
     /* get full path -- if the file cannot be found it can't be
      * selected in the filechooser */
-    fbuf = g_find_program_in_path (buf);
-    g_free (buf);
+    if (buf)
+    {
+	fbuf = g_find_program_in_path (buf);
+	g_free (buf);
+    }
+    else
+    {
+	fbuf = NULL;
+    }
 
     if (!fbuf)
     {   /* set default */
