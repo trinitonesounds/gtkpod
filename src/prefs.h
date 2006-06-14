@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-13 23:52:53 jcs>
+/* Time-stamp: <2006-06-15 00:55:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -58,19 +58,6 @@ extern const gchar *KEY_PATH_SYNC_CALENDAR;
 extern const gchar *KEY_PATH_SYNC_NOTES;
 extern const gchar *KEY_SYNCMODE;
 extern const gchar *KEY_MANUAL_SYNCDIR;
-
-
-/* Not sure where to put these (maybe prefkeys.h?: Playlist-Autosync
- * options */
-enum
-{
-    /* no auto-sync */
-    PLAYLIST_AUTOSYNC_MODE_NONE = 0,
-    /* use dirs from filenames in playlist */
-    PLAYLIST_AUTOSYNC_MODE_AUTOMATIC = 1,
-    /* use specified dir */
-    PLAYLIST_AUTOSYNC_MODE_MANUAL = 2
-};
 
 
 struct cfg

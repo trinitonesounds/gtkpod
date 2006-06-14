@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-15 21:56:47 jcs>
+/* Time-stamp: <2006-06-15 00:55:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -36,6 +36,17 @@
  
 #include <gtk/gtk.h>
 #include "itdb.h"
+
+
+enum
+{
+    /* no auto-sync */
+    SYNC_PLAYLIST_MODE_NONE = 0,
+    /* use dirs from filenames in playlist */
+    SYNC_PLAYLIST_MODE_AUTOMATIC = 1,
+    /* use specified dir */
+    SYNC_PLAYLIST_MODE_MANUAL = 2
+};
 
 
 void sync_playlist (Playlist *playlist,

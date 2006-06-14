@@ -5,6 +5,14 @@
 
 	* Changelog_detailled: formatting (9 space -> 8 spaces)
 
+	* src/prefs.h
+	  src/syncdir.h
+	  src/syndir.c
+	  src/repositories.c: moved PLAYLIST_AUTOSYNC enum to
+	  syncdir.h and renamed.
+
+	* src/context_menu.c: very first phase of rearrangement.
+
 2006-06-13 James Liggett <freethinkerjimWusers.sourceforge.net>
 	
 	* src/display_songs.c

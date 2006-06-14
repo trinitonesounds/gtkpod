@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-16 00:20:46 jcs>
+/* Time-stamp: <2006-06-15 00:59:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -716,7 +716,7 @@ void sync_all_playlists (iTunesDB *itdb)
 	g_return_if_fail (pl);
 
 	syncmode = get_playlist_prefs_int (pl, KEY_SYNCMODE);
-	if (syncmode != PLAYLIST_AUTOSYNC_MODE_NONE)
+	if (syncmode != SYNC_PLAYLIST_MODE_NONE)
 	{
 	    gchar *key_sync_confirm_dirs =
 		get_playlist_prefs_key (index, pl, KEY_SYNC_CONFIRM_DIRS);
@@ -728,7 +728,7 @@ void sync_all_playlists (iTunesDB *itdb)
 		get_playlist_prefs_key (index, pl, KEY_SYNC_SHOW_SUMMARY);
 	    gchar *syncdir = NULL;
 
-	    if (syncmode == PLAYLIST_AUTOSYNC_MODE_MANUAL)
+	    if (syncmode == SYNC_PLAYLIST_MODE_MANUAL)
 	    {
 		syncdir = get_playlist_prefs_string (pl,
 						     KEY_MANUAL_SYNCDIR);

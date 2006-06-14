@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 23:59:58 jcs>
+/* Time-stamp: <2006-06-15 00:53:19 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -414,22 +414,6 @@ create_context_menu(CM_type type)
 	mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
 				  GTK_STOCK_PROPERTIES,
 				  G_CALLBACK (edit_spl), NULL);
-	if (type == CM_PL)
-	{
-	    mi_prop_pl = hookup_mi (menu[type], 
-				    _("Edit Playlist Properties"),
-				    GTK_STOCK_PREFERENCES,
-				    G_CALLBACK (edit_properties), NULL);
-	    mi_prop_rep = hookup_mi (menu[type], 
-				     _("Edit Repository Properties"),
-				     GTK_STOCK_PREFERENCES,
-				     G_CALLBACK (edit_properties), NULL);
-	    mi_prop_ipod = hookup_mi (menu[type], 
-				      _("Edit iPod Properties"),
-				      GTK_STOCK_PREFERENCES,
-				      G_CALLBACK (edit_properties), NULL);
-	}
-
 
 	if (type == CM_ST)
 	{
@@ -537,6 +521,19 @@ create_context_menu(CM_type type)
 			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
 
 	    mi_io_sep = add_separator (menu[type]);
+
+	    mi_prop_pl = hookup_mi (menu[type], 
+				    _("Edit Playlist Properties"),
+				    GTK_STOCK_PREFERENCES,
+				    G_CALLBACK (edit_properties), NULL);
+	    mi_prop_rep = hookup_mi (menu[type], 
+				     _("Edit Repository Properties"),
+				     GTK_STOCK_PREFERENCES,
+				     G_CALLBACK (edit_properties), NULL);
+	    mi_prop_ipod = hookup_mi (menu[type], 
+				      _("Edit iPod Properties"),
+				      GTK_STOCK_PREFERENCES,
+				      G_CALLBACK (edit_properties), NULL);
 
 	    mi_ipodio_load =
 		hookup_mi (menu[type],

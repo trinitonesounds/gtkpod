@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 15:39:52 jcs>
+/* Time-stamp: <2006-06-15 00:58:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -90,9 +90,9 @@ static const gchar *LOCAL_PATH_ENTRY="local_path_entry";
 static const gchar *STANDARD_PLAYLIST_VBOX="standard_playlist_vbox";
 static const gchar *SPL_VBOX="spl_vbox";
 static const gchar *SPL_LIVE_UPDATE_TOGGLE="spl_live_update_toggle";
-static const gchar *PLAYLIST_AUTOSYNC_MODE_NONE_RADIO="playlist_autosync_mode_none_radio";
-static const gchar *PLAYLIST_AUTOSYNC_MODE_AUTOMATIC_RADIO="playlist_autosync_mode_automatic_radio";
-static const gchar *PLAYLIST_AUTOSYNC_MODE_MANUAL_RADIO="playlist_autosync_mode_manual_radio";
+static const gchar *SYNC_PLAYLIST_MODE_NONE_RADIO="sync_playlist_mode_none_radio";
+static const gchar *SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO="sync_playlist_mode_automatic_radio";
+static const gchar *SYNC_PLAYLIST_MODE_MANUAL_RADIO="sync_playlist_mode_manual_radio";
 static const gchar *MANUAL_SYNCDIR_ENTRY="manual_syncdir_entry";
 static const gchar *MANUAL_SYNCDIR_BUTTON="manual_syncdir_button";
 static const gchar *DELETE_REPOSITORY_CHECKBUTTON="delete_repository_checkbutton";
@@ -374,14 +374,14 @@ static void manual_syncdir_changed (GtkEditable *editable,
     if (changed)
     {
 	gtk_toggle_button_set_active (
-	    GTK_TOGGLE_BUTTON (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_MANUAL_RADIO)),
+	    GTK_TOGGLE_BUTTON (GET_WIDGET (SYNC_PLAYLIST_MODE_MANUAL_RADIO)),
 	    TRUE);
     }
 }
 
 
-/* playlist_autosync_mode_none was toggled */
-static void playlist_autosync_mode_none_toggled (GtkToggleButton *togglebutton,
+/* sync_playlist_mode_none was toggled */
+static void sync_playlist_mode_none_toggled (GtkToggleButton *togglebutton,
 						 RepWin *repwin)
 {
     gchar *key;
@@ -394,14 +394,14 @@ static void playlist_autosync_mode_none_toggled (GtkToggleButton *togglebutton,
     if (gtk_toggle_button_get_active (togglebutton))
     {
 	finish_int_storage (repwin, key,
-			    PLAYLIST_AUTOSYNC_MODE_NONE);
+			    SYNC_PLAYLIST_MODE_NONE);
 	update_buttons (repwin);
     }
 }
 
 
-/* playlist_autosync_mode_none was toggled */
-static void playlist_autosync_mode_manual_toggled (GtkToggleButton *togglebutton,
+/* sync_playlist_mode_none was toggled */
+static void sync_playlist_mode_manual_toggled (GtkToggleButton *togglebutton,
 						   RepWin *repwin)
 {
     gchar *key;
@@ -414,14 +414,14 @@ static void playlist_autosync_mode_manual_toggled (GtkToggleButton *togglebutton
     if (gtk_toggle_button_get_active (togglebutton))
     {
 	finish_int_storage (repwin, key,
-			    PLAYLIST_AUTOSYNC_MODE_MANUAL);
+			    SYNC_PLAYLIST_MODE_MANUAL);
 	update_buttons (repwin);
     }
 }
 
 
-/* playlist_autosync_mode_none was toggled */
-static void playlist_autosync_mode_automatic_toggled (GtkToggleButton *togglebutton,
+/* sync_playlist_mode_none was toggled */
+static void sync_playlist_mode_automatic_toggled (GtkToggleButton *togglebutton,
 						      RepWin *repwin)
 {
     gchar *key;
@@ -434,7 +434,7 @@ static void playlist_autosync_mode_automatic_toggled (GtkToggleButton *togglebut
     if (gtk_toggle_button_get_active (togglebutton))
     {
 	finish_int_storage (repwin, key,
-			    PLAYLIST_AUTOSYNC_MODE_AUTOMATIC);
+			    SYNC_PLAYLIST_MODE_AUTOMATIC);
 	update_buttons (repwin);
     }
 }
@@ -771,13 +771,13 @@ static void sync_or_update_playlist (RepWin *repwin,
 	/* sync directory or directories */
 	switch (get_current_prefs_int (repwin, key_syncmode))
 	{
-	case PLAYLIST_AUTOSYNC_MODE_NONE:
+	case SYNC_PLAYLIST_MODE_NONE:
 	    break; /* should never happen */
-	case PLAYLIST_AUTOSYNC_MODE_MANUAL:
+	case SYNC_PLAYLIST_MODE_MANUAL:
 	    manual_sync_dir = 
 		get_current_prefs_string (repwin, key_manual_sync_dir);
 	    /* no break;! we continue calling sync_playlist() */
-	case PLAYLIST_AUTOSYNC_MODE_AUTOMATIC:
+	case SYNC_PLAYLIST_MODE_AUTOMATIC:
 	    sync_playlist (playlist,
 			   manual_sync_dir,
 			   NULL, FALSE,
@@ -1398,32 +1398,32 @@ static void display_playlist_info (RepWin *repwin)
 
 	switch (syncmode)
 	{
-	case PLAYLIST_AUTOSYNC_MODE_NONE:
+	case SYNC_PLAYLIST_MODE_NONE:
 	    gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_NONE_RADIO)),
+		GTK_TOGGLE_BUTTON (GET_WIDGET (SYNC_PLAYLIST_MODE_NONE_RADIO)),
 		TRUE);
 	    break;
-	case PLAYLIST_AUTOSYNC_MODE_MANUAL:
+	case SYNC_PLAYLIST_MODE_MANUAL:
 	    gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_MANUAL_RADIO)),
+		GTK_TOGGLE_BUTTON (GET_WIDGET (SYNC_PLAYLIST_MODE_MANUAL_RADIO)),
 		TRUE);
 	    break;
-	case PLAYLIST_AUTOSYNC_MODE_AUTOMATIC:
+	case SYNC_PLAYLIST_MODE_AUTOMATIC:
 	    gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_AUTOMATIC_RADIO)),
+		GTK_TOGGLE_BUTTON (GET_WIDGET (SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO)),
 		TRUE);
 	    break;
 	default:
 	    /* repair broken prefs */
-	    prefs_set_int (key, PLAYLIST_AUTOSYNC_MODE_NONE);
+	    prefs_set_int (key, SYNC_PLAYLIST_MODE_NONE);
 	    gtk_toggle_button_set_active (
-		GTK_TOGGLE_BUTTON (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_NONE_RADIO)),
+		GTK_TOGGLE_BUTTON (GET_WIDGET (SYNC_PLAYLIST_MODE_NONE_RADIO)),
 		TRUE);
 	    break;
 	}
 	/* make options available where appropriate */
 	gtk_widget_set_sensitive (GET_WIDGET (SYNC_OPTIONS_HBOX),
-				  syncmode != PLAYLIST_AUTOSYNC_MODE_NONE);
+				  syncmode != SYNC_PLAYLIST_MODE_NONE);
 	/* set standard toggle buttons */
 	for (i=0; widget_names[i]; ++i)
 	{
@@ -1747,7 +1747,7 @@ static void update_buttons (RepWin *repwin)
 					      KEY_SYNCMODE);
 		val = get_current_prefs_int (repwin, key);
 		g_free (key);
-		if (val != PLAYLIST_AUTOSYNC_MODE_NONE)
+		if (val != SYNC_PLAYLIST_MODE_NONE)
 		{
 		    sens = TRUE;
 		}
@@ -1961,19 +1961,19 @@ void repository_edit (iTunesDB *itdb, Playlist *playlist)
     }
 
     /* Togglebutton callbacks */
-    g_signal_connect (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_NONE_RADIO),
+    g_signal_connect (GET_WIDGET (SYNC_PLAYLIST_MODE_NONE_RADIO),
 		      "toggled",
-		      G_CALLBACK (playlist_autosync_mode_none_toggled),
+		      G_CALLBACK (sync_playlist_mode_none_toggled),
 		      repwin);
 
-    g_signal_connect (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_MANUAL_RADIO),
+    g_signal_connect (GET_WIDGET (SYNC_PLAYLIST_MODE_MANUAL_RADIO),
 		      "toggled",
-		      G_CALLBACK (playlist_autosync_mode_manual_toggled),
+		      G_CALLBACK (sync_playlist_mode_manual_toggled),
 		      repwin);
 
-    g_signal_connect (GET_WIDGET (PLAYLIST_AUTOSYNC_MODE_AUTOMATIC_RADIO),
+    g_signal_connect (GET_WIDGET (SYNC_PLAYLIST_MODE_AUTOMATIC_RADIO),
 		      "toggled",
-		      G_CALLBACK (playlist_autosync_mode_automatic_toggled),
+		      G_CALLBACK (sync_playlist_mode_automatic_toggled),
 		      repwin);
 
     g_signal_connect (GET_WIDGET (DELETE_REPOSITORY_CHECKBUTTON),

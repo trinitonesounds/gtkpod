@@ -17430,7 +17430,7 @@ simultaneously</property>
 						      <property name="spacing">8</property>
 
 						      <child>
-							<widget class="GtkRadioButton" id="playlist_autosync_mode_automatic_radio">
+							<widget class="GtkRadioButton" id="sync_playlist_mode_automatic_radio">
 							  <property name="visible">True</property>
 							  <property name="tooltip" translatable="yes">Directories to sync with are determined from the filenames of the tracks in the playlist.</property>
 							  <property name="can_focus">True</property>
@@ -17450,7 +17450,7 @@ simultaneously</property>
 						      </child>
 
 						      <child>
-							<widget class="GtkRadioButton" id="playlist_autosync_mode_manual_radio">
+							<widget class="GtkRadioButton" id="sync_playlist_mode_manual_radio">
 							  <property name="visible">True</property>
 							  <property name="can_focus">True</property>
 							  <property name="label" translatable="yes">On startup automatically sync with the following directory</property>
@@ -17460,7 +17460,7 @@ simultaneously</property>
 							  <property name="active">False</property>
 							  <property name="inconsistent">False</property>
 							  <property name="draw_indicator">True</property>
-							  <property name="group">playlist_autosync_mode_automatic_radio</property>
+							  <property name="group">sync_playlist_mode_automatic_radio</property>
 							</widget>
 							<packing>
 							  <property name="padding">0</property>
@@ -17544,7 +17544,7 @@ simultaneously</property>
 						      </child>
 
 						      <child>
-							<widget class="GtkRadioButton" id="playlist_autosync_mode_none_radio">
+							<widget class="GtkRadioButton" id="sync_playlist_mode_none_radio">
 							  <property name="visible">True</property>
 							  <property name="can_focus">True</property>
 							  <property name="label" translatable="yes">Don't automatically sync on startup</property>
@@ -17554,7 +17554,7 @@ simultaneously</property>
 							  <property name="active">False</property>
 							  <property name="inconsistent">False</property>
 							  <property name="draw_indicator">True</property>
-							  <property name="group">playlist_autosync_mode_automatic_radio</property>
+							  <property name="group">sync_playlist_mode_automatic_radio</property>
 							</widget>
 							<packing>
 							  <property name="padding">0</property>
