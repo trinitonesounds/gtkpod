@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 14:39:57 jcs>
+/* Time-stamp: <2006-06-14 20:47:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -485,6 +485,12 @@ Track *mp4_get_file_info (gchar *name)
 gboolean mp4_write_file_info (gchar *filename, Track *track)
 {
     gtkpod_warning (_("m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), filename);
+    return FALSE;
+}
+
+gboolean mp4_read_soundcheck (gchar *filename, Track *track)
+{
+    gtkpod_warning (_("m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. You must compile the gtkpod source together with the mp4v2 library.\n"), filename);
     return FALSE;
 }
 #endif

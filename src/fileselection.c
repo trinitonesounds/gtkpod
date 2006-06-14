@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-14 00:18:04 jcs>
+/* Time-stamp: <2006-06-14 00:40:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -325,6 +325,7 @@ gchar *fileselection_get_cover_filename (void)
 }
 
 
+/* BY JCS */
 
 /* Get a file or directory
  *
@@ -408,6 +409,8 @@ gchar *fileselection_get_file_or_dir (const gchar *title,
 }
 
 
+
+/* BY JCS */
 
 /* Used by the prefs system (prefs_windows.c, repository.c) when a
  * script should be selected. Takes into account that command line

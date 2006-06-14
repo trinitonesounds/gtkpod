@@ -1,3 +1,8 @@
+2006-06-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	 * src/mp4file.c: mp4_read_soundcheck not defined when mp4v2
+           library was not present.
+
 2006-06-13 James Liggett <freethinkerjimWusers.sourceforge.net>
 	 
 	 * src/display_songs.c
