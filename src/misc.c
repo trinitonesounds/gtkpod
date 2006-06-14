@@ -459,7 +459,9 @@ static GList *csfk_list = NULL;
 void compare_string_fuzzy_generate_keys (void)
 {
     GList *gl;
-    gint i;
+    GList *sort_ign_strings;
+    GList *current;
+
     /* remove old keys */
     for (gl=csfk_list; gl; gl=gl->next)
     {
@@ -472,33 +474,25 @@ void compare_string_fuzzy_generate_keys (void)
     csfk_list = NULL;
 
     /* create new keys */
-    for (i=0; ;++i)
+    sort_ign_strings = prefs_get_list("sort_ign_string_");
+    current = sort_ign_strings;
+    while (current)
     {
-	gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
-	gchar *str = prefs_get_string (buf);
+	gchar *str = current->data;
 	struct csfk *csfk;
 	gchar *tempStr;
-
-	g_free (buf);
-
-	/* end loop if no string is set or if the the string
-	 * corresponds to the end marker */
-	if (!str)  break;  
-	if (strcmp (str, LIST_END_MARKER) == 0)
-	{
-	    g_free (str);
-	    break;
-	}
+	
+	current = g_list_next(current);
 
 	csfk = g_malloc (sizeof (struct csfk));
 	tempStr = g_utf8_casefold (str, -1 );
 	csfk->length = g_utf8_strlen (tempStr, -1 );
 	csfk->key = g_utf8_collate_key (tempStr, -1 );
 	g_free (tempStr);
-	g_free (str);
 
 	csfk_list = g_list_append (csfk_list, csfk);
     }
+    prefs_free_list(sort_ign_strings);
 }
 
 

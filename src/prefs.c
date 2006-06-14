@@ -1920,39 +1920,14 @@ static gint arg_comp (const gchar *line, const gchar *arg, gint *off)
 }
 
 
-/* default ignore strings -- must end with a space */
-static char* sort_ign_strings[] =
-{
-    "the ",
-    "a ",
-/*    "le ", 
-    "la ", 
-    "les ", 
-    "lo ", 
-    "los ",
-    "der ",
-    "die ",
-    "das ",*/ /* will make sorting very slow -- only add the words you
-                 really want to skip */
-   LIST_END_MARKER,  /* end marker */
-    NULL,
-};
-
 
 static void
 read_prefs_from_file_desc(FILE *fp)
 {
     gchar buf[PATH_MAX];
     gchar *line, *arg, *bufp;
-    gint len, i;
+    gint len;
 
-    /* set ignore strings */
-    for (i=0; sort_ign_strings[i]; ++i)
-    {
-	bufp = g_strdup_printf ("sort_ign_string_%d", i);
-	prefs_set_string (bufp, sort_ign_strings[i]);
-	g_free (bufp);
-    }
     /* set ignore fields (ignore above words for artist) */
     bufp = g_strdup_printf ("sort_ign_field_%d", T_ARTIST);
     prefs_set_int (bufp, 1);
@@ -2315,7 +2290,6 @@ void sortcfg_free(struct sortcfg *c)
 {
     g_return_if_fail (c);
     g_list_free (c->tmp_sort_ign_fields);
-    g_free (c->tmp_sort_ign_strings);
     g_free (c);
 }
 
@@ -2422,7 +2396,6 @@ struct sortcfg *clone_sortprefs(void)
     }
     /* GLists are not copied */
     result->tmp_sort_ign_fields = NULL;
-    result->tmp_sort_ign_strings = NULL;
     return(result);
 }
 

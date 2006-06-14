@@ -69,7 +69,6 @@ struct cfg
   struct sortcfg
   {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
     GList *tmp_sort_ign_fields; /* used in prefs_window.c only     */
-    gchar *tmp_sort_ign_strings;/* used in prefs_window.c only     */
   } sortcfg;
   gboolean offline;       /* are we working offline, i.e. without iPod? */
 

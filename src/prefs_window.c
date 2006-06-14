@@ -1427,9 +1427,11 @@ static const gint sort_ign_fields[] = {
 static void sort_window_read_sort_ign (struct sortcfg *scfg)
 {
     gint i;
-    GtkTextIter ts, te;
     GtkTextView *tv;
     GtkTextBuffer *tb;
+    GList *sort_ign_strings;
+    GList *current;
+    gchar *buf;
 
     g_return_if_fail (scfg);
 
@@ -1440,7 +1442,7 @@ static void sort_window_read_sort_ign (struct sortcfg *scfg)
     /* read sort field states */
     for (i=0; sort_ign_fields[i] != -1; ++i)
     {
-	gchar *buf = g_strdup_printf ("sort_ign_field_%d",
+	buf = g_strdup_printf ("sort_ign_field_%d",
 				      sort_ign_fields[i]);
 	GtkWidget *w = gtkpod_xml_get_widget (sort_window_xml, buf);
 	g_return_if_fail (w);
@@ -1450,22 +1452,33 @@ static void sort_window_read_sort_ign (struct sortcfg *scfg)
 		GTK_TOGGLE_BUTTON (w))));
 	g_free (buf);
     }
-
-    /* remove old strings */
-    g_free (scfg->tmp_sort_ign_strings);
-    scfg->tmp_sort_ign_strings = NULL;
-
-    /* read new ignore strings */
+    
+    /* Read sort ignore strings */
     tv = GTK_TEXT_VIEW (gtkpod_xml_get_widget (sort_window_xml,
 					      "sort_ign_strings"));
     g_return_if_fail (tv);
     tb = gtk_text_view_get_buffer (tv);
     g_return_if_fail (tb);
 
-    gtk_text_buffer_get_bounds (tb, &ts, &te);
-    scfg->tmp_sort_ign_strings = gtk_text_buffer_get_text (tb,
-							   &ts, &te,
-							   TRUE);
+    sort_ign_strings = get_list_from_buffer(tb);
+    current = sort_ign_strings;
+    
+    /* Add a trailing whitespace to strings */
+    while (current)
+    {
+	g_strstrip(current->data);
+	
+        if (strlen(current->data) != 0)
+	{
+	    buf = g_strdup_printf("%s ",(gchar *) current->data);
+	    g_free(current->data);
+	    current->data = buf;
+	}
+
+	current = g_list_next(current);
+    }
+	
+    temp_list_add(sort_temp_lists, "sort_ign_string_", sort_ign_strings);
 }
 
 /**
@@ -1482,10 +1495,14 @@ void sort_window_create (void)
     else
     {
 	GList *collist = NULL;
+	GList *sort_ign_strings;
+	GList *current;  /* current sort ignore item */
 	GtkWidget *w;
 	GtkTextView *tv;
 	GtkTextBuffer *tb;
 	gint i;
+	GtkTextIter ti;
+	gchar *str;
 
 	if(!tmpsortcfg && !origsortcfg)
 	{
@@ -1539,22 +1556,13 @@ void sort_window_create (void)
 	    gtk_text_view_set_editable(tv, FALSE);
 	    gtk_text_view_set_cursor_visible(tv, FALSE);
 	}
-	for (i=0; ; ++i)
+	
+	sort_ign_strings = prefs_get_list("sort_ign_string_");
+	current = sort_ign_strings;
+	while (current)
 	{
-	    GtkTextIter ti;
-	    gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
-	    gchar *str = prefs_get_string (buf);
-
-	    g_free (buf);
-
-           /* end loop if no string is set or if the the string
-	    * corresponds to the end marker */
-	    if (!str)  break;  
-	    if (strcmp (str, LIST_END_MARKER) == 0)
-	    {
-		g_free (str);
-		break;
-	    }
+	    str = (gchar *)current->data;
+	    current = g_list_next(current);
 
 	    /* append new text to the end */
 	    gtk_text_buffer_get_end_iter (tb, &ti);
@@ -1562,8 +1570,10 @@ void sort_window_create (void)
 	    /* append newline */
 	    gtk_text_buffer_get_end_iter (tb, &ti);
 	    gtk_text_buffer_insert (tb, &ti, "\n", -1);
-	    g_free (str);
 	}
+	
+	prefs_free_list(sort_ign_strings);
+
 	/* update the origsortcfg with the original settings (ignore
 	 * fields and ignore strings) */
 	sort_window_read_sort_ign (origsortcfg);
@@ -1750,7 +1760,6 @@ static TM_item sort_window_get_sort_col (void)
 static void sort_window_set (struct sortcfg *scfg)
 {
     struct sortcfg *tsc;
-    gchar *buf;
     gint i;
     gint val; /* A value from temp prefs */
     TM_item sortcol_new;
@@ -1775,48 +1784,6 @@ static void sort_window_set (struct sortcfg *scfg)
 		scfg->tmp_sort_ign_fields, i)));
 	g_free (buf);
     }
-    /* clean up old sort strings */
-    for (i=0; i>=0; ++i)
-    {
-	gchar *buf = g_strdup_printf ("sort_ign_string_%d", i);
-	if (prefs_get_string (buf))
-	{
-	    prefs_set_string (buf, NULL);
-	}
-	else
-	{
-	    i=-2;  /* end loop */
-	}
-	g_free (buf);
-    }
-    /* set new sort strings */
-    i=0;
-    if (scfg->tmp_sort_ign_strings)
-    {
-	gchar **strings = g_strsplit(scfg->tmp_sort_ign_strings,
-				     "\n", -1);
-	gchar **strp = strings;
-	while (*strp)
-	{
-	    g_strstrip (*strp);
-	    if (strlen (*strp) != 0)
-	    {
-		/* add space to the ignore string */
-		gchar *str = g_strdup_printf ("%s ", *strp);
-		buf = g_strdup_printf ("sort_ign_string_%d", i);
-		prefs_set_string (buf, str);
-		g_free (str);
-		g_free (buf);
-		++i;
-	    }
-	    ++strp;
-	}
-	g_strfreev (strings);
-    }
-    /* set end marker */
-    buf = g_strdup_printf ("sort_ign_string_%d", i);
-    prefs_set_string (buf, LIST_END_MARKER);
-    g_free (buf);
     /* update compare string keys */
     compare_string_fuzzy_generate_keys ();
 
