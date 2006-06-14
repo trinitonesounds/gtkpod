@@ -258,6 +258,8 @@ static void set_default_preferences()
     prefs_set_int("tm_autostore", FALSE);
     prefs_set_int("st_sort", SORT_NONE);
     prefs_set_int("pm_sort", SORT_NONE);
+    prefs_set_int("tm_sortcol", TM_COLUMN_TITLE);
+    prefs_set_int("tm_sort_", SORT_NONE);
 }
 
 /* Initialize default variable-length list entries */
@@ -992,12 +994,32 @@ static void cleanup_keys()
 	prefs_set_string("sm_autostore", NULL);
     }
 
+    /* sm_sortcol renamed to tm_sortcol */
+    if (prefs_get_int_value("sm_sortcol", &int_buf))
+    {
+	prefs_set_int("tm_sortcol", int_buf);
+	prefs_set_string("sm_sortcol", NULL);
+    }
+
+    /* sm_sort_ renamed to tm_sort */
+    if (prefs_get_int_value("sm_sort_", &int_buf))
+    {
+	prefs_set_int("tm_sort_", int_buf);
+	prefs_set_string("sm_sort_", NULL);
+    }
+
     /* Correct sort order */
     sort = prefs_get_int("st_sort");
     sort = correct_sort(sort);
     prefs_set_int("st_sort", sort);
+
+    sort = prefs_get_int("pm_sort");
+    sort = correct_sort(sort);
     prefs_set_int("pm_sort", sort);
-    
+
+    sort = prefs_get_int("tm_sort");
+    sort = correct_sort(sort);
+    prefs_set_int("tm_sort_", sort);
 
     prefs_set_string ("version", VERSION);
 }
@@ -1874,9 +1896,6 @@ struct cfg *cfg_new(void)
     mycfg->display_tooltips_main = TRUE;
     mycfg->display_tooltips_prefs = TRUE;
 
-    mycfg->sortcfg.tm_sort = SORT_NONE;
-    mycfg->sortcfg.tm_sortcol = TM_COLUMN_TITLE;
-
     g_free (cfgdir);
 
     return(mycfg);
@@ -2038,17 +2057,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
 	  {
 	      /* ignore */
-	  }
-	  else if((g_ascii_strcasecmp (line, "tm_sort_") == 0) ||
-		  (g_ascii_strcasecmp (line, "sm_sort_") == 0))
-	  {
-	      gint sort = correct_sort (atoi(arg));
-	      prefs_set_tm_sort(sort);
-	  }
-	  else if((g_ascii_strcasecmp (line, "tm_sortcol") == 0) ||
-		  (g_ascii_strcasecmp (line, "sm_sortcol") == 0))
-	  {
-	      prefs_set_tm_sortcol(atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "backups") == 0)
 	  {
@@ -2253,8 +2261,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
-    fprintf(fp, "tm_sort_=%d\n",prefs_get_tm_sort());
-    fprintf(fp, "tm_sortcol=%d\n",prefs_get_tm_sortcol());
     fprintf(fp, "display_tooltips_main=%d\n",
 	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
@@ -2504,38 +2510,6 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
 
     cfg->toolbar_style = i;
     display_show_hide_toolbar ();
-}
-
-gint prefs_get_tm_sort (void)
-{
-    return cfg->sortcfg.tm_sort;
-}
-
-void prefs_set_tm_sort (gint i)
-{
-    switch (i)
-    {
-    case SORT_ASCENDING:
-    case SORT_DESCENDING:
-    case SORT_NONE:
-	cfg->sortcfg.tm_sort = i;
-	break;
-    default:  /* illegal -- ignore */
-	gtkpod_warning ("Programming error: prefs_set_tm_sort: illegal type '%d' ignored\n", i);
-	break;
-    }
-
-}
-
-TM_item prefs_get_tm_sortcol (void)
-{
-    return cfg->sortcfg.tm_sortcol;
-}
-
-void prefs_set_tm_sortcol (TM_item i)
-{
-    if (i < TM_NUM_COLUMNS)
-	cfg->sortcfg.tm_sortcol = i;
 }
 
 void prefs_set_display_tooltips_main (gboolean state)

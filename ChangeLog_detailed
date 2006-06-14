@@ -1,3 +1,11 @@
+2006-06-13 James Liggett <freethinkerjimWusers.sourceforge.net>
+	 
+	 * src/display_songs.c
+	   src/prefs.h
+	   src/prefs.c
+	   src/prefs_window.c: Moved tm_sortcol and tm_sort to 
+	   new prefs.
+
 2006-06-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	 * src/prefs_window.c (on_path_button_pressed): corrected

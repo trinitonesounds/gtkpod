@@ -764,11 +764,11 @@ void prefs_window_delete(void)
     cfg_free (origcfg);
     origcfg = NULL;
 	
-		/* Delete temp prefs structures */
-		temp_prefs_destroy(temp_prefs);
-		temp_prefs = NULL;
-		temp_lists_destroy(temp_lists);
-		temp_lists = NULL;
+    /* Delete temp prefs structures */
+    temp_prefs_destroy(temp_prefs);
+    temp_prefs = NULL;
+    temp_lists_destroy(temp_lists);
+    temp_lists = NULL;
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
@@ -1092,8 +1092,8 @@ void
 on_cfg_mpl_autoselect_toggled          (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-	temp_prefs_set_int(temp_prefs, "mpl_autoselect", 
-										 gtk_toggle_button_get_active(togglebutton));
+    temp_prefs_set_int(temp_prefs, "mpl_autoselect", 
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void prefs_window_set_autosettags (gint category, gboolean autoset)
@@ -1619,7 +1619,7 @@ void sort_window_update (void)
 	    sortcfg_free (tmpsortcfg);
 	tmpsortcfg = clone_sortprefs();
 
-	switch (temp_prefs_get_int(sort_temp_prefs, "pm_sort"))
+	switch (prefs_get_int("pm_sort"))
 	{
 	case SORT_ASCENDING:
 	    w = gtkpod_xml_get_widget (sort_window_xml, "pm_ascend");
@@ -1650,7 +1650,7 @@ void sort_window_update (void)
 	if (w)
 	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
 
-	switch (tmpsortcfg->tm_sort)
+	switch (prefs_get_int("tm_sort_"))
 	{
 	case SORT_ASCENDING:
 	    w = gtkpod_xml_get_widget (sort_window_xml, "tm_ascend");
@@ -1676,7 +1676,7 @@ void sort_window_update (void)
 					 prefs_get_int("case_sensitive"));
 	}
 	/* set standard entry in combo */
-	str = gettext (get_tm_string (prefs_get_tm_sortcol ()));
+	str = gettext (get_tm_string (prefs_get_int("tm_sortcol")));
 	w = gtkpod_xml_get_widget (sort_window_xml, "sort_combo");
 	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), str);
     }
@@ -1753,14 +1753,16 @@ static void sort_window_set (struct sortcfg *scfg)
     gchar *buf;
     gint i;
     gint val; /* A value from temp prefs */
+    TM_item sortcol_new;
+    TM_item sortcol_old;
 
     g_return_if_fail (scfg);
 
     tsc = clone_sortprefs ();
 
-    prefs_set_tm_sort (scfg->tm_sort);
-    scfg->tm_sortcol = sort_window_get_sort_col ();
-    prefs_set_tm_sortcol (scfg->tm_sortcol);
+    sortcol_old = prefs_get_int("tm_sortcol");
+    sortcol_new = sort_window_get_sort_col();
+    prefs_set_int("tm_sortcol", sortcol_new);
 
     /* set sort field states */
     for (i=0; sort_ign_fields[i] != -1; ++i)
@@ -1823,11 +1825,11 @@ static void sort_window_set (struct sortcfg *scfg)
 	pm_sort (val);
     if (temp_prefs_get_int_value(sort_temp_prefs, "st_sort", &val))
 	st_sort (val);
-    if ((tsc->tm_sort != scfg->tm_sort) ||
-	(tsc->tm_sortcol != scfg->tm_sortcol))
+    if (temp_prefs_get_int_value(sort_temp_prefs, "tm_sort_", NULL) ||
+	(sortcol_old != sortcol_new))
     {
 	tm_sort_counter (-1);
-	tm_sort (prefs_get_tm_sortcol (), scfg->tm_sort);
+	tm_sort (prefs_get_int("tm_sortcol"), sortcol_new);
     }
     /* if auto sort was changed to TRUE, store order */
     if (!temp_prefs_get_int(sort_temp_prefs, "tm_autostore"))
@@ -2031,14 +2033,14 @@ void sort_window_ok (void)
     g_return_if_fail (tmpsortcfg);
     g_return_if_fail (origsortcfg);
 
+    temp_prefs_apply(sort_temp_prefs);
+    temp_lists_apply(sort_temp_lists);
+
     /* update the sort ignore strings */
     sort_window_read_sort_ign (tmpsortcfg);
     /* save current settings */
     sort_window_set (tmpsortcfg);
   
-    temp_prefs_apply(sort_temp_prefs);
-    temp_lists_apply(sort_temp_lists);
-
     /* delete sortcfg structs */
     sortcfg_free (tmpsortcfg);
     tmpsortcfg = NULL;
@@ -2084,7 +2086,7 @@ void sort_window_set_st_sort (gint val)
 
 void sort_window_set_tm_sort (gint val)
 {
-    tmpsortcfg->tm_sort = val;
+    temp_prefs_set_int(sort_temp_prefs, "tm_sort_", val);
 }
 
 void sort_window_set_case_sensitive (gboolean val)
