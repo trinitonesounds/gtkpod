@@ -2286,14 +2286,6 @@ void cfg_free(struct cfg *c)
     }
 }
 
-void sortcfg_free(struct sortcfg *c)
-{
-    g_return_if_fail (c);
-    g_list_free (c->tmp_sort_ign_fields);
-    g_free (c);
-}
-
-
 void prefs_set_offline(gboolean active)
 {
   if (cfg->offline != active)   space_data_update ();
@@ -2383,19 +2375,6 @@ struct cfg *clone_prefs(void)
 	result = g_memdup (cfg, sizeof (struct cfg));
 	result->charset = g_strdup(cfg->charset);
     }
-    return(result);
-}
-
-struct sortcfg *clone_sortprefs(void)
-{
-    struct sortcfg *result = NULL;
-
-    if(cfg)
-    {
-	result = g_memdup (&cfg->sortcfg, sizeof (struct sortcfg));
-    }
-    /* GLists are not copied */
-    result->tmp_sort_ign_fields = NULL;
     return(result);
 }
 

@@ -1,10 +1,15 @@
 2006-06-14 James Liggett <freethinkerjim@users.sourceforge.net>
 
-	 * src/misc.c
-	   src/prefs.h
-	   src/prefs.c
-	   src/prefs_window.c: sort_ign_string_ list now fully uses new
-	   prefs interfaces.
+	* src/misc.c
+	  src/prefs.h
+	  src/prefs.c
+	  src/prefs_window.c: sort_ign_string_ list now fully uses new
+	  prefs interfaces
+
+	* src/prefs.h
+	  src/prefs.c
+	  src/prefs_window.c: Moved sort_ign_fields_ to new prefs. 
+	  Also got rid of sortcfg.
 
 2006-06-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
 

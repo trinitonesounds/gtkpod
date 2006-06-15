@@ -48,8 +48,6 @@ static GtkWidget *prefs_window = NULL;
 static GtkWidget *sort_window = NULL;
 static struct cfg *tmpcfg = NULL;
 static struct cfg *origcfg = NULL;
-static struct sortcfg *tmpsortcfg = NULL;
-static struct sortcfg *origsortcfg = NULL;
 
 /* New prefs temp handling */
 static TempPrefs *temp_prefs;
@@ -1424,7 +1422,7 @@ static const gint sort_ign_fields[] = {
 
 
 /* Copy the current ignore fields and ignore strings into scfg */
-static void sort_window_read_sort_ign (struct sortcfg *scfg)
+static void sort_window_read_sort_ign ()
 {
     gint i;
     GtkTextView *tv;
@@ -1433,11 +1431,6 @@ static void sort_window_read_sort_ign (struct sortcfg *scfg)
     GList *current;
     gchar *buf;
 
-    g_return_if_fail (scfg);
-
-    /* remove old list */
-    g_list_free (scfg->tmp_sort_ign_fields);
-    scfg->tmp_sort_ign_fields = NULL;
 
     /* read sort field states */
     for (i=0; sort_ign_fields[i] != -1; ++i)
@@ -1446,10 +1439,9 @@ static void sort_window_read_sort_ign (struct sortcfg *scfg)
 				      sort_ign_fields[i]);
 	GtkWidget *w = gtkpod_xml_get_widget (sort_window_xml, buf);
 	g_return_if_fail (w);
-	scfg->tmp_sort_ign_fields = g_list_append (
-	    scfg->tmp_sort_ign_fields,
-	    GUINT_TO_POINTER( gtk_toggle_button_get_active (
-		GTK_TOGGLE_BUTTON (w))));
+	prefs_set_int( buf,
+	     gtk_toggle_button_get_active (
+		GTK_TOGGLE_BUTTON (w)));
 	g_free (buf);
     }
     
@@ -1504,16 +1496,6 @@ void sort_window_create (void)
 	GtkTextIter ti;
 	gchar *str;
 
-	if(!tmpsortcfg && !origsortcfg)
-	{
-	    origsortcfg = clone_sortprefs();
-	}
-	else
-	{
-	    g_warning ("Programming error: tmpsortcfg is not NULL!!\n");
-	    g_return_if_reached ();
-	}
-  
 	sort_temp_prefs = temp_prefs_create();
 	sort_temp_lists = temp_lists_create();
 
@@ -1574,9 +1556,7 @@ void sort_window_create (void)
 	
 	prefs_free_list(sort_ign_strings);
 
-	/* update the origsortcfg with the original settings (ignore
-	 * fields and ignore strings) */
-	sort_window_read_sort_ign (origsortcfg);
+	sort_window_read_sort_ign ();
 
 	/* Set Sort-Column-Combo */
 	/* create the list in the order of the columns displayed */
@@ -1623,11 +1603,6 @@ void sort_window_update (void)
     {
 	gchar *str;
 	GtkWidget *w = NULL;
-
-	/* update or create tmpsortcfg */
-	if (tmpsortcfg)
-	    sortcfg_free (tmpsortcfg);
-	tmpsortcfg = clone_sortprefs();
 
 	switch (prefs_get_int("pm_sort"))
 	{
@@ -1756,34 +1731,17 @@ static TM_item sort_window_get_sort_col (void)
 }
 
 
-/* copy newly set values from tmpsortcfg to the original cfg struct */
-static void sort_window_set (struct sortcfg *scfg)
+/* Prepare keys to be copied to prefs table */
+static void sort_window_set ()
 {
-    struct sortcfg *tsc;
-    gint i;
     gint val; /* A value from temp prefs */
     TM_item sortcol_new;
     TM_item sortcol_old;
-
-    g_return_if_fail (scfg);
-
-    tsc = clone_sortprefs ();
 
     sortcol_old = prefs_get_int("tm_sortcol");
     sortcol_new = sort_window_get_sort_col();
     prefs_set_int("tm_sortcol", sortcol_new);
 
-    /* set sort field states */
-    for (i=0; sort_ign_fields[i] != -1; ++i)
-    {
-	gchar *buf = g_strdup_printf ("sort_ign_field_%d",
-				      sort_ign_fields[i]);
-	prefs_set_int (
-	    buf,
-	    GPOINTER_TO_UINT(g_list_nth_data (
-		scfg->tmp_sort_ign_fields, i)));
-	g_free (buf);
-    }
     /* update compare string keys */
     compare_string_fuzzy_generate_keys ();
 
@@ -1802,7 +1760,6 @@ static void sort_window_set (struct sortcfg *scfg)
     if (!temp_prefs_get_int(sort_temp_prefs, "tm_autostore"))
 	tm_rows_reordered ();
 
-    sortcfg_free (tsc);
 }
 
 
@@ -1948,21 +1905,11 @@ on_sort_window_delete_event            (GtkWidget       *widget,
  * sort_window_cancel
  * UI has requested sort prefs changes be ignored -- write back the
  * original values
- * Frees the tmpsortcfg and origsortcfg variable
  */
 void sort_window_cancel (void)
 {
-    g_return_if_fail (tmpsortcfg);
-    g_return_if_fail (origsortcfg);
-
     /* "save" (i.e. reset) original configs */
-    sort_window_set (origsortcfg);
-
-    /* delete cfg struct */
-    sortcfg_free (tmpsortcfg);
-    tmpsortcfg = NULL;
-    sortcfg_free (origsortcfg);
-    origsortcfg = NULL;
+    sort_window_set ();
 
     /* close the window */
     if(sort_window)
@@ -1973,19 +1920,10 @@ void sort_window_cancel (void)
 /* when window is deleted, we keep the currently applied prefs */
 void sort_window_delete(void)
 {
-    g_return_if_fail (tmpsortcfg);
-    g_return_if_fail (origsortcfg);
-  
     temp_prefs_destroy(sort_temp_prefs);
     sort_temp_prefs = NULL;
     temp_lists_destroy(sort_temp_lists);
     sort_temp_lists = NULL;
-
-    /* delete sortcfg structs */
-    sortcfg_free (tmpsortcfg);
-    tmpsortcfg = NULL;
-    sortcfg_free (origsortcfg);
-    origsortcfg = NULL;
 
     /* close the window */
     if(sort_window)
@@ -1994,26 +1932,16 @@ void sort_window_delete(void)
 }
 
 /* apply the current settings and close the window */
-/* Frees the tmpsortcfg and origsortcfg variable */
 void sort_window_ok (void)
 {
-    g_return_if_fail (tmpsortcfg);
-    g_return_if_fail (origsortcfg);
-
     temp_prefs_apply(sort_temp_prefs);
     temp_lists_apply(sort_temp_lists);
 
     /* update the sort ignore strings */
-    sort_window_read_sort_ign (tmpsortcfg);
+    sort_window_read_sort_ign ();
     /* save current settings */
-    sort_window_set (tmpsortcfg);
+    sort_window_set ();
   
-    /* delete sortcfg structs */
-    sortcfg_free (tmpsortcfg);
-    tmpsortcfg = NULL;
-    sortcfg_free (origsortcfg);
-    origsortcfg = NULL;
-
     /* close the window */
     if(sort_window)
 	gtk_widget_destroy(sort_window);
@@ -2024,16 +1952,13 @@ void sort_window_ok (void)
 /* apply the current settings, don't close the window */
 void sort_window_apply (void)
 {
-    g_return_if_fail (tmpsortcfg);
-    g_return_if_fail (origsortcfg);
-  
     temp_prefs_apply(sort_temp_prefs);
     temp_lists_apply(sort_temp_lists);
 
     /* update the sort ignore strings */
-    sort_window_read_sort_ign (tmpsortcfg);
+    sort_window_read_sort_ign ();
     /* save current settings */
-    sort_window_set (tmpsortcfg);
+    sort_window_set ();
 }
 
 void sort_window_set_tm_autostore (gboolean val)

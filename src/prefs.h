@@ -66,12 +66,8 @@ struct cfg
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   gboolean block_display;   /* block display during change of selection? */
   
-  struct sortcfg
-  {         /* sort type: SORT_ASCENDING, SORT_DESCENDING, SORT_NONE */
-    GList *tmp_sort_ign_fields; /* used in prefs_window.c only     */
-  } sortcfg;
+  
   gboolean offline;       /* are we working offline, i.e. without iPod? */
-
   gboolean display_toolbar;     /* should toolbar be displayed */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
   gboolean display_tooltips_main; /* should tooltips be displayed (main) */
@@ -83,7 +79,7 @@ struct cfg
 };
 
 
-/* types for sortcfg.xx_sort */
+/* types for sort */
 enum
 {
     SORT_ASCENDING = GTK_SORT_ASCENDING,
@@ -219,11 +215,9 @@ GList *get_list_from_buffer(GtkTextBuffer *buffer);
 gchar *prefs_get_cfgdir (void);
 void prefs_print(void);
 void cfg_free(struct cfg *c);
-void sortcfg_free(struct sortcfg *c);
 void write_prefs (void);
 void discard_prefs (void);
 struct cfg* clone_prefs(void);
-struct sortcfg* clone_sortprefs(void);
 gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 
 void prefs_set_offline(gboolean active);
