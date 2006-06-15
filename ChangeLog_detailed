@@ -1,3 +1,10 @@
+2006-06-15 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* src/prefs.c
+	  src/prefs.h:
+	  src/misc.h: moved LIST_END_MARKER to prefs.c (private),
+	  moved SORT_... enum to display.h
+
 2006-06-14 James Liggett <freethinkerjim@users.sourceforge.net>
 
 	* src/misc.c
@@ -11,7 +18,7 @@
 	  src/prefs_window.c: Moved sort_ign_fields_ to new prefs. 
 	  Also got rid of sortcfg.
 
-2006-06-13 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2006-06-14 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/mp4file.c: mp4_read_soundcheck not defined when mp4v2
           library was not present.

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-13 23:52:53 jcs>
+/* Time-stamp: <2006-06-15 23:32:55 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -109,6 +109,9 @@
 /*
  * Data global to this module only
  */
+
+/* End-of-list marker for variable-length lists */
+#define LIST_END_MARKER "----++++----"
 
 struct sub_data
 {
@@ -687,21 +690,6 @@ static void wipe_list(const gchar *key)
     }		
 }
 
-/* sort order was reversed between V0.82_CVS and V0.83.CVS */
-static gint correct_sort (gint sort)
-{
-    switch (sort)
-    {
-    case SORT_ASCENDING:
-	sort = SORT_DESCENDING;
-	break;
-    case SORT_DESCENDING:
-	sort = SORT_ASCENDING;
-	break;
-    }
-    return sort;
-}
-
 /* Delete and rename keys */
 static void cleanup_keys()
 {
@@ -709,7 +697,6 @@ static void cleanup_keys()
     gint int_buf;
     gint i;
     gint x, y, p;  /* Window position */
-    gint sort;  /* sort order */
     float version=0;
 
     /* get version */
@@ -1007,19 +994,6 @@ static void cleanup_keys()
 	prefs_set_int("tm_sort_", int_buf);
 	prefs_set_string("sm_sort_", NULL);
     }
-
-    /* Correct sort order */
-    sort = prefs_get_int("st_sort");
-    sort = correct_sort(sort);
-    prefs_set_int("st_sort", sort);
-
-    sort = prefs_get_int("pm_sort");
-    sort = correct_sort(sort);
-    prefs_set_int("pm_sort", sort);
-
-    sort = prefs_get_int("tm_sort");
-    sort = correct_sort(sort);
-    prefs_set_int("tm_sort_", sort);
 
     prefs_set_string ("version", VERSION);
 }

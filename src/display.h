@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 22:15:20 jcs>
+/* Time-stamp: <2006-06-15 23:31:30 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -44,6 +44,14 @@ GladeXML *main_window_xml;
 
 /* pointer to main window */
 extern GtkWidget *gtkpod_window;
+
+/* types for sort */
+enum
+{
+    SORT_ASCENDING = GTK_SORT_ASCENDING,
+    SORT_DESCENDING = GTK_SORT_DESCENDING,
+    SORT_NONE = 10*(GTK_SORT_ASCENDING+GTK_SORT_DESCENDING),
+};
 
 /* Categories in each sort tab (page numbers) */
 typedef enum {
