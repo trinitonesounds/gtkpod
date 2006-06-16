@@ -1754,7 +1754,7 @@ static void sort_window_set ()
 	(sortcol_old != sortcol_new))
     {
 	tm_sort_counter (-1);
-	tm_sort (prefs_get_int("tm_sortcol"), sortcol_new);
+	tm_sort (prefs_get_int("tm_sortcol"), prefs_get_int("tm_sort_"));
     }
     /* if auto sort was changed to TRUE, store order */
     if (!temp_prefs_get_int(sort_temp_prefs, "tm_autostore"))
