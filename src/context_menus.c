@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-15 00:53:19 jcs>
+/* Time-stamp: <2006-06-17 02:11:32 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -57,6 +57,7 @@ typedef enum {
     CM_TM,
     CM_NUM
 } CM_type;
+
 
 
 #if LOCALDEBUG
@@ -361,8 +362,265 @@ GtkWidget *add_separator (GtkWidget *m)
 }
 
 
-void
-create_context_menu(CM_type type)
+static GtkWidget *add_play_now (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Play Now"), GTK_STOCK_CDROM,
+		      G_CALLBACK (play_entries_now), NULL);
+}
+
+static GtkWidget *add_enqueue (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Enqueue"), GTK_STOCK_CDROM,
+		      G_CALLBACK (play_entries_enqueue), NULL);
+}
+
+static GtkWidget *add_copy_track_to_filesystem (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Copy Tracks to Filesystem"),
+		      GTK_STOCK_SAVE_AS,
+		      G_CALLBACK (export_entries), NULL);
+}
+
+static GtkWidget *add_create_playlist_file (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Create Playlist File"),
+		      GTK_STOCK_SAVE_AS,
+		   G_CALLBACK (create_playlist_file), NULL);
+}
+
+static GtkWidget *add_update_tracks_from_file (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Update Tracks from File"),
+		      GTK_STOCK_REFRESH,
+		      G_CALLBACK (update_entries), NULL);
+}
+
+static GtkWidget *add_edit_smart_playlist (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Edit Smart Playlist"),
+		      GTK_STOCK_PROPERTIES,
+		      G_CALLBACK (edit_spl), NULL);
+}
+
+static GtkWidget *add_sync_playlist_with_dirs (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Sync Playlist with Dir(s)"),
+		      GTK_STOCK_REFRESH,
+		      G_CALLBACK (sync_dirs), NULL);
+}
+
+static GtkWidget *add_remove_all_tracks_from_ipod (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Remove All Tracks from iPod"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_IPOD));
+}
+
+static GtkWidget *add_remove_all_podcasts_from_ipod (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Remove All Podcasts from iPod"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_IPOD));
+}
+
+static GtkWidget *add_delete_including_tracks (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Delete Including Tracks"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_IPOD));
+}
+
+static GtkWidget *add_delete_but_keep_tracks (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Delete But Keep Tracks"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
+}
+
+static GtkWidget *add_edit_ipod_properties (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Edit iPod Properties"),
+		      GTK_STOCK_PREFERENCES,
+		      G_CALLBACK (edit_properties), NULL);
+}
+
+static GtkWidget *add_edit_track_details (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Edit Track Details"),
+		      GTK_STOCK_EDIT,
+		      G_CALLBACK (edit_details_entries), NULL);
+}
+
+static GtkWidget *add_check_ipod_files (GtkWidget *menu)
+{
+    /* FIXME */
+    return NULL;
+}
+
+static GtkWidget *add_load_ipod (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Load iPod"),
+		      GTK_STOCK_CONNECT,
+		      G_CALLBACK (load_ipod), NULL);
+}
+
+static GtkWidget *add_eject_ipod (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Eject iPod"),
+		      GTK_STOCK_DISCONNECT,
+		      G_CALLBACK (eject_ipod), NULL);
+}
+
+static GtkWidget *add_remove_all_tracks_from_database (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Remove All Tracks from Database"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+}
+
+static GtkWidget *add_delete_including_tracks_harddisk (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Delete Including Tracks (Harddisk)"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_LOCAL));
+}
+
+static GtkWidget *add_delete_including_tracks_database (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Delete Including Tracks (Database)"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+}
+
+static GtkWidget *add_edit_playlist_properties (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Edit Playlist Properties"),
+		      GTK_STOCK_PREFERENCES,
+		      G_CALLBACK (edit_properties), NULL);
+}
+
+
+
+static GtkMenu *create_context_menu_pl (void)
+{
+    static GtkWidget *menu = NULL;
+    Playlist *pl;
+
+    if (menu)
+    {
+	gtk_widget_destroy (menu);
+	menu = NULL;
+    }
+
+    pl = pm_get_selected_playlist();
+    if (pl)
+    {
+	ExtraiTunesDBData *eitdb;
+	iTunesDB *itdb = pl->itdb;
+
+	g_return_val_if_fail (itdb, NULL);
+	eitdb = itdb->userdata;
+	g_return_val_if_fail (eitdb, NULL);
+
+	menu = gtk_menu_new ();
+
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    if (eitdb->itdb_imported)
+	    {
+		add_play_now (menu);
+		add_enqueue (menu);
+		add_copy_track_to_filesystem (menu);
+		add_create_playlist_file (menu);
+		add_update_tracks_from_file (menu);
+		if (!pl->is_spl)
+		{
+		    add_sync_playlist_with_dirs (menu);
+		}
+		add_separator (menu);
+		if (itdb_playlist_is_mpl (pl))
+		{
+		    add_remove_all_tracks_from_ipod (menu);
+		}
+		else if (itdb_playlist_is_podcasts (pl))
+		{
+		    add_remove_all_podcasts_from_ipod (menu);
+		}
+		else
+		{
+		    add_delete_including_tracks (menu);
+		    add_delete_but_keep_tracks (menu);
+		}
+		add_separator (menu);
+		add_edit_track_details (menu);
+		if (pl->is_spl)
+		{
+		    add_edit_smart_playlist (menu);
+		}
+		if (itdb_playlist_is_mpl (pl) || pl->is_spl)
+		{
+		    add_edit_ipod_properties (menu);
+		}
+		else
+		{
+		    add_edit_playlist_properties (menu);
+		}
+		add_check_ipod_files (menu);
+		add_eject_ipod (menu);
+	    }
+	    else
+	    {   /* not imported */
+		add_edit_ipod_properties (menu);
+		add_check_ipod_files (menu);
+		add_separator (menu);
+		add_load_ipod (menu);
+	    }
+	}
+	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	{
+	    add_play_now (menu);
+	    add_enqueue (menu);
+	    add_copy_track_to_filesystem (menu);
+	    add_create_playlist_file (menu);
+	    add_update_tracks_from_file (menu);
+	    if (!pl->is_spl)
+	    {
+		add_sync_playlist_with_dirs (menu);
+	    }
+	    add_separator (menu);
+	    if (itdb_playlist_is_mpl (pl))
+	    {
+		add_remove_all_tracks_from_database (menu);
+	    }
+	    else
+	    {
+		add_delete_including_tracks_database (menu);
+		add_delete_including_tracks_harddisk (menu);
+		add_delete_but_keep_tracks (menu);
+	    }
+	    add_separator (menu);
+	    add_edit_track_details (menu);
+	    if (pl->is_spl)
+	    {
+		add_edit_smart_playlist (menu);
+	    }
+	    add_edit_playlist_properties (menu);
+	}
+    }
+
+    return GTK_MENU (menu);
+}
+
+
+
+static GtkMenu *create_context_menu_old (CM_type type)
 {
     static GtkWidget *menu[CM_NUM];
     static GtkWidget *mi_exp[CM_NUM];  /* Export Tracks */
@@ -562,9 +820,9 @@ create_context_menu(CM_type type)
     {
 	ExtraiTunesDBData *eitdb;
 	iTunesDB *itdb = pl->itdb;
-	g_return_if_fail (itdb);
+	g_return_val_if_fail (itdb, NULL);
 	eitdb = itdb->userdata;
-	g_return_if_fail (eitdb);
+	g_return_val_if_fail (eitdb, NULL);
 
 	/* Make sure, only available delete options are displayed */
 	switch (type)
@@ -703,14 +961,44 @@ create_context_menu(CM_type type)
 	}
     }
 
+    return GTK_MENU (menu[type]);
+}
+
+
+
+void create_context_menu (CM_type type)
+{
+    GtkMenu *menu = NULL;
+
+    switch (type)
+    {
+    case CM_PL:
+	menu = create_context_menu_pl ();
+	break;
+    case CM_ST:
+/* 	create_context_menu_st (); */
+	menu = create_context_menu_old (CM_ST);
+	break;
+    case CM_TM:
+/* 	create_context_menu_tm (); */
+	create_context_menu_old (CM_TM);
+	break;
+    case CM_NUM:
+	g_return_if_reached ();
+    }
+
 
     /* 
      * button should be button 0 as per the docs because we're calling
      * from a button release event
      */
-    gtk_menu_popup(GTK_MENU(menu[type]), NULL, NULL,
-	    NULL, NULL, 0, gtk_get_current_event_time()); 
+    if (menu)
+    {
+	gtk_menu_popup (menu, NULL, NULL,
+			NULL, NULL, 0, gtk_get_current_event_time()); 
+    }
 }
+
 
 /**
  * tm_context_menu_init - initialize the right click menu for tracks

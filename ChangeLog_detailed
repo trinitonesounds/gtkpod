@@ -1,3 +1,8 @@
+2006-06-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* src/context_menus.c: started rewrite of context menu
+	  setup. Cleaned up the playlist context menu.
+
 2006-06-15 James Liggett <freethinkerjim@users.sourceforge.net>
 
 	* src/prefs_window.c: Fixed some sorting window bugs:
