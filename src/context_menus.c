@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-17 02:11:32 jcs>
+/* Time-stamp: <2006-06-17 02:20:53 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -981,7 +981,7 @@ void create_context_menu (CM_type type)
 	break;
     case CM_TM:
 /* 	create_context_menu_tm (); */
-	create_context_menu_old (CM_TM);
+	menu = create_context_menu_old (CM_TM);
 	break;
     case CM_NUM:
 	g_return_if_reached ();
