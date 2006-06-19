@@ -1,3 +1,9 @@
+2006-06-19 James Liggett <freethinkerjim@users.sourceforge.net>
+
+	* src/display_sorttabs.c:
+	  src/prefs.c
+	  src/prefs_window.c: Moved group compilations to new prefs.
+
 2006-06-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/context_menus.c: started rewrite of context menu

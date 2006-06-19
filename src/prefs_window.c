@@ -633,7 +633,7 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
     if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_group_compilations")))
     {
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     prefs_get_group_compilations());
+				     prefs_get_int("group_compilations"));
     }
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_tmp_disable_sort");
@@ -696,12 +696,13 @@ prefs_window_set(void)
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
 	prefs_set_block_display(tmpcfg->block_display);
-	prefs_set_group_compilations(tmpcfg->group_compilations, TRUE);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	prefs_set_display_tooltips_main (tmpcfg->display_tooltips_main);
 	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
 	tm_show_preferred_columns();
+	st_show_visible();
+	
     }
 }
 
@@ -1308,7 +1309,8 @@ void
 on_cfg_group_compilations_toggled      (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->group_compilations = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "group_compilations",
+		       gtk_toggle_button_get_active (togglebutton));
 }
 
 void

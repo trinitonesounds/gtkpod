@@ -1995,10 +1995,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_offline((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "group_compilations") == 0)
-	  {
-	      prefs_set_group_compilations((gboolean)atoi(arg), FALSE);
-	  }
 	  else if(g_ascii_strcasecmp (line, "toolbar_style") == 0)
 	  {
 	      prefs_set_toolbar_style(atoi(arg));
@@ -2206,7 +2202,6 @@ write_prefs_to_file_desc(FILE *fp)
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
-    fprintf(fp, "group_compilations=%d\n",prefs_get_group_compilations());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
@@ -2400,17 +2395,6 @@ void prefs_set_display_toolbar (gboolean val)
 {
     cfg->display_toolbar = val;
     display_show_hide_toolbar ();
-}
-
-gboolean prefs_get_group_compilations (void)
-{
-    return cfg->group_compilations;
-}
-
-void prefs_set_group_compilations (gboolean val, gboolean update_display)
-{
-    cfg->group_compilations = val;
-    if (update_display) st_show_visible ();
 }
 
 GtkToolbarStyle prefs_get_toolbar_style (void)

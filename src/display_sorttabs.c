@@ -1587,7 +1587,7 @@ static void st_add_track_normal (Track *track, gboolean final,
 	}
 	master_entry->members = g_list_append (master_entry->members, track);
 	/* Check if this track should go in the compilation artist group */
-	group_track = ( prefs_get_group_compilations() &&
+	group_track = ( prefs_get_int("group_compilations") &&
 	    (track->compilation == TRUE) && 
 	    (st->current_category == ST_CAT_ARTIST) );
 	/* Check whether entry of same name already exists */
