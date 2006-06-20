@@ -398,7 +398,7 @@ void display_show_hide_tooltips (void)
     g_return_if_fail (mt);
 
 
-    if (prefs_get_display_tooltips_main ())
+    if (prefs_get_int("display_tooltips_main"))
     {
 	gtk_tooltips_enable (mt);
 	gtk_check_menu_item_set_active (mi, TRUE);
@@ -1487,8 +1487,10 @@ void
 on_tooltips_menu_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    prefs_set_display_tooltips_main (
+    prefs_set_int("display_tooltips_main",
 	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
+    display_show_hide_tooltips();
+    
 }
 
 void

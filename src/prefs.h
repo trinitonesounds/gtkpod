@@ -67,11 +67,8 @@ struct cfg
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   gboolean display_toolbar;     /* should toolbar be displayed */
   GtkToolbarStyle toolbar_style;/* style of toolbar */
-  gboolean display_tooltips_main; /* should tooltips be displayed (main) */
   gboolean display_tooltips_prefs;/* should toolbar be displayed (prefs) */
-  gboolean group_compilations;  /* group compilations when browsing */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
-  gboolean not_played_track;    /* not played track in Highest rated playlist?*/
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -224,12 +221,8 @@ guint32 prefs_get_statusbar_timeout (void);
 
 gboolean prefs_get_display_toolbar (void);
 void prefs_set_display_toolbar (gboolean val);
-gboolean prefs_get_group_compilations (void);
-void prefs_set_group_compilations (gboolean val, gboolean update_display);
 GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
-void prefs_set_display_tooltips_main (gboolean state);
-gboolean prefs_get_display_tooltips_main (void);
 void prefs_set_display_tooltips_prefs (gboolean state);
 gboolean prefs_get_display_tooltips_prefs (void);
 gboolean prefs_get_disable_sorting(void);

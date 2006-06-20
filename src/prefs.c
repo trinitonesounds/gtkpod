@@ -255,6 +255,7 @@ static void set_default_preferences()
     prefs_set_int("not_played_track", TRUE);
     prefs_set_int("misc_track_nr", 25);
     prefs_set_int("update_charset", FALSE);
+    prefs_set_int("display_tooltips_main", TRUE);
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
@@ -1867,7 +1868,6 @@ struct cfg *cfg_new(void)
     mycfg->offline = FALSE;
     mycfg->display_toolbar = TRUE;
     mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
-    mycfg->display_tooltips_main = TRUE;
     mycfg->display_tooltips_prefs = TRUE;
 
     g_free (cfgdir);
@@ -2018,10 +2018,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "display_toolbar") == 0)
 	  {
 	      prefs_set_display_toolbar((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "display_tooltips_main") == 0)
-	  {
-	      prefs_set_display_tooltips_main((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "display_tooltips_prefs") == 0)
 	  {
@@ -2205,8 +2201,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "offline=%d\n",prefs_get_offline());
     fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
     fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
-    fprintf(fp, "display_tooltips_main=%d\n",
-	    prefs_get_display_tooltips_main());
     fprintf(fp, "display_tooltips_prefs=%d\n",
 	    prefs_get_display_tooltips_prefs());
 }
@@ -2420,17 +2414,6 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
 
     cfg->toolbar_style = i;
     display_show_hide_toolbar ();
-}
-
-void prefs_set_display_tooltips_main (gboolean state)
-{
-    cfg->display_tooltips_main = state;
-    display_show_hide_tooltips ();
-}
-
-gboolean prefs_get_display_tooltips_main (void)
-{
-    return cfg->display_tooltips_main;
 }
 
 void prefs_set_display_tooltips_prefs (gboolean state)

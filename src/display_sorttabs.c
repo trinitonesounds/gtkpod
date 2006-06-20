@@ -2898,7 +2898,7 @@ static void st_create_special (gint inst, GtkWidget *window)
       st->sp_tooltips_data = gtk_tooltips_data_get(gtkpod_xml_get_widget (special_xml, "sp_modified_entry"));
       /* Show / don't show tooltips */
       g_return_if_fail (st->sp_tooltips_data);
-      if (prefs_get_display_tooltips_main ()) 
+      if (prefs_get_int("display_tooltips_main")) 
 	  gtk_tooltips_enable (st->sp_tooltips_data->tooltips);
       else gtk_tooltips_disable (st->sp_tooltips_data->tooltips);
       /* we don't need this any more */
@@ -3193,7 +3193,7 @@ void st_show_hide_tooltips (void)
 	tt = ttd->tooltips;
 	g_return_if_fail (tt);
 
-	if (prefs_get_display_tooltips_main ())
+	if (prefs_get_int("display_tooltips_main"))
 	    gtk_tooltips_enable (tt);
 	else   gtk_tooltips_disable (tt);
     }

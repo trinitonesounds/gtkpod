@@ -1,7 +1,14 @@
 2006-06-19 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/display.c
+	  src/display_sorttabs.c
+	  src/prefs.h
+	  src/prefs.c
+	  src/prefs_window.c: Moved display_tooltips_main to new prefs.
+
 	* src/display_sorttabs.c:
 	  src/prefs.c
+	  src/prefs.h
 	  src/prefs_window.c: Moved group compilations to new prefs.
 
 2006-06-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
