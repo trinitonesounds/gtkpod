@@ -717,7 +717,8 @@ static void set_unset_entries_from_filename (Track *track)
 /* update the track->charset info with the currently used charset */
 void update_charset_info (Track *track)
 {
-    const gchar *charset = prefs_get_charset ();
+    gchar *charset = prefs_get_string("charset");
+    const gchar *locale_charset;
     ExtraTrackData *etr;
 
     g_return_if_fail (track);
@@ -725,14 +726,24 @@ void update_charset_info (Track *track)
     g_return_if_fail (etr);
 
     C_FREE (etr->charset);
-    if (!charset || !strlen (charset))
-    {    /* use standard locale charset */
-	g_get_charset (&charset);
-    }
+    /* If we can get a charset from prefs, use that one.
+     * Otherwise, use the system locale charset. */
     /* only set charset if it's not GTKPOD_JAPAN_AUTOMATIC */
-    if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) != 0))
+    if (!charset || !strlen (charset))
+    { 
+	g_free(charset);
+	g_get_charset (&locale_charset);
+
+	if (locale_charset && 
+	    (strcmp (locale_charset, GTKPOD_JAPAN_AUTOMATIC) != 0))
+	{
+	    etr->charset = g_strdup (locale_charset);
+	}
+    }
+    else
     {
-	etr->charset = g_strdup (charset);
+	if (strcmp(charset, GTKPOD_JAPAN_AUTOMATIC) != 0)
+	    etr->charset = charset;
     }
 }
 
@@ -1510,12 +1521,8 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 
     if (!prefs_get_int("update_charset") && charset_set)
     {   /* we should use the initial charset for the update */
-	if (prefs_get_charset ())
-	{   /* remember the charset originally set */
-	    prefs_charset = g_strdup (prefs_get_charset ());
-	}
-	/* use the charset used when first importing the track */
-	prefs_set_charset (etr->charset);
+	prefs_charset = prefs_get_string("charset");
+	prefs_set_string("charset", etr->charset);
     }
 
     trackpath = get_file_name_from_source (track, SOURCE_PREFER_LOCAL);
@@ -1614,10 +1621,11 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 
     if (!prefs_get_int("update_charset") && charset_set)
     {   /* reset charset */
-	prefs_set_charset (prefs_charset);
+	prefs_set_string("charset", prefs_charset);
     }
 
     g_free (trackpath);
+    g_free(prefs_charset);
 
     while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
 }
@@ -1899,12 +1907,9 @@ gboolean write_tags_to_file (Track *track)
     else               track_charset_set = FALSE;
     if (!prefs_get_int("write_charset") && track_charset_set)
     {   /* we should use the initial charset for the update */
-	if (prefs_get_charset ())
-	{   /* remember the charset originally set */
-	    prefs_charset = g_strdup (prefs_get_charset ());
-	}
 	/* use the charset used when first importing the track */
-	prefs_set_charset (etr->charset);
+	prefs_charset = prefs_get_string("charset");
+	prefs_set_string("charset", etr->charset);
     }
     else
     {   /* we should update the track->charset information */
@@ -1947,7 +1952,7 @@ gboolean write_tags_to_file (Track *track)
 
     if (!prefs_get_int("write_charset") && track_charset_set)
     {   /* reset charset */
-	prefs_set_charset (prefs_charset);
+	prefs_set_string("charset", prefs_charset);
     }
     g_free (prefs_charset);
     return TRUE;

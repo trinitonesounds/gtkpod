@@ -260,6 +260,7 @@ static void set_default_preferences()
     prefs_set_int("display_toolbar", TRUE);
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
     prefs_set_int("block_display", FALSE);
+    prefs_set_string("charset", "");
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
@@ -1866,7 +1867,6 @@ struct cfg *cfg_new(void)
 	g_free (dir);
     }
 
-    mycfg->charset = NULL;    
     mycfg->md5tracks = TRUE;
     mycfg->offline = FALSE;
 
@@ -1974,10 +1974,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  }
 		  prefs_set_string (EXPORT_FILES_TPL, arg);
 	      }
-	  }
-	  else if(g_ascii_strcasecmp (line, "charset") == 0)
-	  {
-		if(strlen (arg))      prefs_set_charset(arg);
 	  }
 	  else if(g_ascii_strcasecmp (line, "id3_all") == 0)
 	  {
@@ -2173,13 +2169,6 @@ write_prefs_to_file_desc(FILE *fp)
     if(!fp)
 	fp = stderr;
 
-
-    if (cfg->charset)
-    {
-	fprintf(fp, "charset=%s\n", cfg->charset);
-    } else {
-	fprintf(fp, "charset=\n");
-    }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
 }
@@ -2223,7 +2212,6 @@ void cfg_free(struct cfg *c)
 {
     if(c)
     {
-      g_free (c->charset);
       g_free (c);
     }
 }
@@ -2277,25 +2265,6 @@ gboolean prefs_get_offline(void)
   return cfg->offline;
 }
 
-void prefs_set_charset (gchar *charset)
-{
-    prefs_cfg_set_charset (cfg, charset);
-}
-
-void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
-{
-    C_FREE (cfgd->charset);
-    if (charset && strlen (charset))
-	cfgd->charset = g_strdup (charset);
-/*     printf ("set_charset: '%s'\n", charset);	 */
-}
-
-gchar *prefs_get_charset (void)
-{
-    return cfg->charset;
-/*     printf ("get_charset: '%s'\n", cfg->charset); */
-}
-
 struct cfg *clone_prefs(void)
 {
     struct cfg *result = NULL;
@@ -2303,7 +2272,6 @@ struct cfg *clone_prefs(void)
     if(cfg)
     {
 	result = g_memdup (cfg, sizeof (struct cfg));
-	result->charset = g_strdup(cfg->charset);
     }
     return(result);
 }
