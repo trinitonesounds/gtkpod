@@ -1,3 +1,11 @@
+2006-06-20 James Liggett <freethinkerjim@users.sourceforge.net>
+
+	* src/display_songs.c
+	  src/display_sorttabs.c
+	  src/misc.h
+	  src/misc.c: Renamed disable_sorting to sorting_disabled
+	  to avoid confusion. 
+
 2006-06-19 James Liggett <freethinkerjim@users.sourceforge.net>
 
 	* src/display_playlists.c

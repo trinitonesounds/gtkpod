@@ -2275,7 +2275,7 @@ void tm_enable_disable_view_sort (gboolean enable)
 	if (disable_count == 0 && track_treeview)
 	{
 	    if ((prefs_get_int("tm_sort_") != SORT_NONE) &&
-		disable_sorting())
+		sorting_disabled())
 	    {
 		/* Re-enable sorting */
 		GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
@@ -2301,7 +2301,7 @@ void tm_enable_disable_view_sort (gboolean enable)
 	if (disable_count == 0 && track_treeview)
 	{
 	    if ((prefs_get_int("tm_sort_") != SORT_NONE) &&
-		disable_sorting ())
+		sorting_disabled ())
 	    {
 		/* Disable sorting */
 		GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);

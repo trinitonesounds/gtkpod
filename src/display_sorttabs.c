@@ -2435,7 +2435,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 	{
 	    /* Re-enable sorting */
 	    if ((prefs_get_int("st_sort") != SORT_NONE) &&
-		disable_sorting ())
+		sorting_disabled ())
 	    {
 		SortTab *st = sorttab[inst];
 		if (st && 
@@ -2467,7 +2467,7 @@ void st_enable_disable_view_sort (gint inst, gboolean enable)
 	{
 	    /* Disable sorting */
 	    if ((prefs_get_int("st_sort") != SORT_NONE) &&
-		disable_sorting ())
+		sorting_disabled ())
 	    {
 		SortTab *st = sorttab[inst];
 		if (st && 
