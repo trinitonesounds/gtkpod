@@ -249,4 +249,5 @@ void set_itdb_index_prefs_string (gint index,
 void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value);
 void set_itdb_index_prefs_int (gint index,
 			       const gchar *subkey, gint value);
+gboolean disable_sorting();
 #endif

@@ -222,6 +222,5 @@ gboolean prefs_get_display_toolbar (void);
 void prefs_set_display_toolbar (gboolean val);
 GtkToolbarStyle prefs_get_toolbar_style (void);
 void prefs_set_toolbar_style (GtkToolbarStyle i);
-gboolean prefs_get_disable_sorting(void);
 
 #endif

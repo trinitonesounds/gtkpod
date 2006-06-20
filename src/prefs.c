@@ -2410,9 +2410,3 @@ void prefs_set_toolbar_style (GtkToolbarStyle i)
     display_show_hide_toolbar ();
 }
 
-/* sorting gets disabled temporarily if either of the options
-   'tmp_disable_sort' or 'block_display' is checked */
-gboolean prefs_get_disable_sorting(void)
-{
-    return (prefs_get_block_display() || prefs_get_int("tmp_disable_sort"));
-}

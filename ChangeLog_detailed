@@ -1,5 +1,11 @@
 2006-06-19 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/misc.h
+	  src/misc.c
+	  src/prefs.h
+	  src/prefs.c: Renamed prefs_get_disable_sorting to 
+	  disable_sorting and moved to misc.c/h. 
+
 	* src/prefs.h
 	  src/prefs.c
 	  src/prefs_window.c: Moved display_tooltips_prefs to new prefs.

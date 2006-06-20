@@ -1572,3 +1572,11 @@ void set_itdb_index_prefs_int (gint index,
     prefs_set_int (key, value);
     g_free (key);
 }
+
+/* Sorting gets disabled if either tmp disable sort or
+ * block display are true */
+gboolean disable_sorting()
+{
+    return (prefs_get_block_display() || 
+	    prefs_get_int("tmp_disable_sort"));
+}
