@@ -257,6 +257,8 @@ static void set_default_preferences()
     prefs_set_int("update_charset", FALSE);
     prefs_set_int("display_tooltips_main", TRUE);
     prefs_set_int("display_tooltips_prefs", TRUE);
+    prefs_set_int("display_toolbar", TRUE);
+    prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
@@ -1867,8 +1869,6 @@ struct cfg *cfg_new(void)
     mycfg->md5tracks = TRUE;
     mycfg->block_display = FALSE;
     mycfg->offline = FALSE;
-    mycfg->display_toolbar = TRUE;
-    mycfg->toolbar_style = GTK_TOOLBAR_BOTH;
 
     g_free (cfgdir);
 
@@ -1995,10 +1995,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      prefs_set_offline((gboolean)atoi(arg));
 	  }
-	  else if(g_ascii_strcasecmp (line, "toolbar_style") == 0)
-	  {
-	      prefs_set_toolbar_style(atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
 	  {
 	      /* ignore */
@@ -2014,10 +2010,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
 	  {
 	      prefs_set_string (EXPORT_FILES_PATH, arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "display_toolbar") == 0)
-	  {
-	      prefs_set_display_toolbar((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
@@ -2195,8 +2187,6 @@ write_prefs_to_file_desc(FILE *fp)
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
-    fprintf(fp, "display_toolbar=%d\n",prefs_get_display_toolbar());
-    fprintf(fp, "toolbar_style=%d\n",prefs_get_toolbar_style());
 }
 
 
@@ -2374,39 +2364,4 @@ guint32 prefs_get_statusbar_timeout (void)
     return cfg->statusbar_timeout;
 }
 
-gboolean prefs_get_display_toolbar (void)
-{
-    return cfg->display_toolbar;
-}
-
-void prefs_set_display_toolbar (gboolean val)
-{
-    cfg->display_toolbar = val;
-    display_show_hide_toolbar ();
-}
-
-GtkToolbarStyle prefs_get_toolbar_style (void)
-{
-    return cfg->toolbar_style;
-}
-
-void prefs_set_toolbar_style (GtkToolbarStyle i)
-{
-    switch (i)
-    {
-    case GTK_TOOLBAR_ICONS:
-    case GTK_TOOLBAR_TEXT:
-    case GTK_TOOLBAR_BOTH:
-	break;
-    case GTK_TOOLBAR_BOTH_HORIZ:
-	i = GTK_TOOLBAR_BOTH;
-	break;
-    default:  /* illegal -- ignore */
-	gtkpod_warning (_("prefs_set_toolbar_style: illegal style '%d' ignored\n"), i);
-	return;
-    }
-
-    cfg->toolbar_style = i;
-    display_show_hide_toolbar ();
-}
 

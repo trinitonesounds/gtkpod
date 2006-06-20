@@ -1,5 +1,11 @@
 2006-06-19 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/display.c
+	  src/prefs.h
+	  src/prefs.c
+	  src/prefs_window.c: Moved display_toolbar and 
+	  toolbar_style to new prefs.
+
 	* src/misc.h
 	  src/misc.c
 	  src/prefs.h

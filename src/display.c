@@ -332,9 +332,9 @@ void display_show_hide_toolbar (void)
     GtkWidget *tb = gtkpod_xml_get_widget (main_window_xml, "toolbar");
     GtkWidget *mi = gtkpod_xml_get_widget (main_window_xml, "toolbar_menu");
 
-    if (prefs_get_display_toolbar ())
+    if (prefs_get_int("display_toolbar"))
     {
-	gtk_toolbar_set_style (GTK_TOOLBAR (tb), prefs_get_toolbar_style ());
+	gtk_toolbar_set_style (GTK_TOOLBAR (tb), prefs_get_int("toolbar_style"));
 	gtk_widget_show (tb);
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), TRUE);
     }
@@ -1249,8 +1249,9 @@ void
 on_toolbar_menu_activate               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    prefs_set_display_toolbar (
+    prefs_set_int("display_toolbar",
 	gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
+    display_show_hide_toolbar();
 }
 
 

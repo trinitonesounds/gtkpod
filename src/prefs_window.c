@@ -284,6 +284,7 @@ prefs_window_create (gint page)
     GtkWidget *w = NULL;
     GtkTooltips *tt;
     GtkTooltipsData *tooltipsdata;
+    GtkToolbarStyle toolbar_style;
     gchar *buf = NULL;
     /* List of standard toggle widget names */
     const gchar *toggle_widget_names[] = {
@@ -396,22 +397,24 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_toolbar");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->display_toolbar);
+				 prefs_get_int("display_toolbar"));
+
+    toolbar_style = prefs_get_int("toolbar_style");
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_icons");
-    if (tmpcfg->toolbar_style == GTK_TOOLBAR_ICONS)
+    if (toolbar_style == GTK_TOOLBAR_ICONS)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("display_toolbar")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_text");
-    if (tmpcfg->toolbar_style == GTK_TOOLBAR_TEXT)
+    if (toolbar_style == GTK_TOOLBAR_TEXT)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("display_toolbar")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_both");
-    if (tmpcfg->toolbar_style == GTK_TOOLBAR_BOTH)
+    if (toolbar_style == GTK_TOOLBAR_BOTH)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
-    if (!tmpcfg->display_toolbar) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("display_toolbar")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_main");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -696,11 +699,10 @@ prefs_window_set(void)
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
 	prefs_set_block_display(tmpcfg->block_display);
-	prefs_set_toolbar_style(tmpcfg->toolbar_style);
-	prefs_set_display_toolbar(tmpcfg->display_toolbar);
 	tm_show_preferred_columns();
 	st_show_visible();
 	display_show_hide_tooltips();
+	display_show_hide_toolbar();
 	
     }
 }
@@ -1217,7 +1219,7 @@ on_cfg_display_toolbar_toggled         (GtkToggleButton *togglebutton,
     GtkWidget *w2 = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_text");
     GtkWidget *w3 = gtkpod_xml_get_widget (prefs_window_xml, "cfg_toolbar_style_both");
 
-    tmpcfg->display_toolbar = val;
+    temp_prefs_set_int(temp_prefs, "display_toolbar", val);
 
     if (w1) gtk_widget_set_sensitive (w1, val);
     if (w2) gtk_widget_set_sensitive (w2, val);
@@ -1318,7 +1320,8 @@ on_cfg_toolbar_style_both_toggled      (GtkToggleButton *togglebutton,
 {
     if (gtk_toggle_button_get_active (togglebutton))
     {
-	tmpcfg->toolbar_style = GTK_TOOLBAR_BOTH;
+	temp_prefs_set_int(temp_prefs, "toolbar_style",  
+			   GTK_TOOLBAR_BOTH);
     }
 }
 
@@ -1329,7 +1332,8 @@ on_cfg_toolbar_style_text_toggled      (GtkToggleButton *togglebutton,
 {
     if (gtk_toggle_button_get_active (togglebutton))
     {
-	tmpcfg->toolbar_style = GTK_TOOLBAR_TEXT;
+	temp_prefs_set_int(temp_prefs, "toolbar_style",
+			   GTK_TOOLBAR_TEXT);
     }
 }
 
@@ -1340,7 +1344,8 @@ on_cfg_toolbar_style_icons_toggled      (GtkToggleButton *togglebutton,
 {
     if (gtk_toggle_button_get_active (togglebutton))
     {
-	tmpcfg->toolbar_style = GTK_TOOLBAR_ICONS;
+	temp_prefs_set_int(temp_prefs, "toolbar_style",
+			   GTK_TOOLBAR_ICONS);
     }
 }
 
