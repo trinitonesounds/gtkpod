@@ -260,7 +260,7 @@ void prefs_window_show_hide_tooltips (void)
     g_return_if_fail (tooltipsdata);
     tt = tooltipsdata->tooltips;
     g_return_if_fail (tt);
-    if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
+    if (prefs_get_int("display_tooltips_prefs")) gtk_tooltips_enable (tt);
     else                                     gtk_tooltips_disable (tt);
 }
 
@@ -419,7 +419,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_display_tooltips_prefs");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->display_tooltips_prefs);
+				 prefs_get_int("display_tooltips_prefs"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_multi_edit");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -698,7 +698,6 @@ prefs_window_set(void)
 	prefs_set_block_display(tmpcfg->block_display);
 	prefs_set_toolbar_style(tmpcfg->toolbar_style);
 	prefs_set_display_toolbar(tmpcfg->display_toolbar);
-	prefs_set_display_tooltips_prefs (tmpcfg->display_tooltips_prefs);
 	tm_show_preferred_columns();
 	st_show_visible();
 	display_show_hide_tooltips();
@@ -1204,8 +1203,8 @@ void
 on_cfg_display_tooltips_prefs_toggled  (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->display_tooltips_prefs =
-	gtk_toggle_button_get_active  (togglebutton);
+    temp_prefs_set_int(temp_prefs, "display_tooltips_prefs",
+		       gtk_toggle_button_get_active  (togglebutton));
 }
 
 
@@ -1697,8 +1696,10 @@ void sort_window_show_hide_tooltips (void)
 	tt = tooltips_data->tooltips;
 	if (tt)
 	{
-	    if (prefs_get_display_tooltips_prefs ()) gtk_tooltips_enable (tt);
-	    else                                     gtk_tooltips_disable (tt);
+	    if (prefs_get_int("display_tooltips_prefs")) 
+		gtk_tooltips_enable (tt);
+	    else                                     
+		gtk_tooltips_disable (tt);
 	}
 	else
 	{

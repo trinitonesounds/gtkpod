@@ -1,5 +1,9 @@
 2006-06-19 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/prefs.h
+	  src/prefs.c
+	  src/prefs_window.c: Moved display_tooltips_prefs to new prefs.
+
 	* src/display.c
 	  src/display_sorttabs.c
 	  src/prefs.h
