@@ -1,5 +1,13 @@
 2006-06-19 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/display_playlists.c
+	  src/display_sorttabs.c
+	  src/misc.c
+	  src/misc_track.c
+	  src/prefs.h
+	  src/prefs.c
+	  src/prefs_window.c: Moved block_display to new prefs.
+	
 	* src/display.c
 	  src/prefs.h
 	  src/prefs.c

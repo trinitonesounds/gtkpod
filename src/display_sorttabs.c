@@ -621,7 +621,7 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 	float ms;
 	GList *gl;
 
-	if (!prefs_get_block_display ())
+	if (!prefs_get_int("block_display"))
 	{
 	    block_selection (inst);
 	    g_get_current_time (&time);
@@ -637,7 +637,7 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 		st_add_track (track, FALSE, TRUE, inst+1);
 	    }
 	    --count;
-	    if ((count < 0) && !prefs_get_block_display ())
+	    if ((count < 0) && !prefs_get_int("block_display"))
 	    {
 		gtkpod_tracks_statusbar_update();
 		while (gtk_events_pending ())       gtk_main_iteration ();
@@ -656,7 +656,7 @@ static void sp_go_cb (gpointer user_data1, gpointer user_data2)
 	st_enable_disable_view_sort (inst+1, TRUE);
 	if (stop_add > (gint)inst)
 	    st_add_track (NULL, TRUE, st->final, inst+1);
-	if (!prefs_get_block_display ())
+	if (!prefs_get_int("block_display"))
 	{
 	    while (gtk_events_pending ())	  gtk_main_iteration ();
 	    release_selection (inst);
@@ -1897,7 +1897,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
       float ms;
       GList *gl;
       /* block playlist view and all sort tab notebooks <= inst */
-      if (!prefs_get_block_display ())
+      if (!prefs_get_int("block_display"))
       {
 	  block_selection (inst-1);
 	  g_get_current_time (&time);
@@ -1910,7 +1910,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 	  if (stop_add < (gint)inst)  break;
 	  st_add_track (track, FALSE, TRUE, inst);
 	  --count;
-	  if ((count < 0) && !prefs_get_block_display ())
+	  if ((count < 0) && !prefs_get_int("block_display"))
 	  {
 	      gtkpod_tracks_statusbar_update();
 	      while (gtk_events_pending ())       gtk_main_iteration ();
@@ -1935,7 +1935,7 @@ static void st_page_selected_cb (gpointer user_data1, gpointer user_data2)
 	  if ((inst > 0) && (sorttab[inst-1])) final = sorttab[inst-1]->final;
 	  st_add_track (NULL, final, TRUE, inst);
       }
-      if (!prefs_get_block_display ())
+      if (!prefs_get_int("block_display"))
       {
 	  while (gtk_events_pending ())      gtk_main_iteration ();
 	  release_selection (inst-1);
@@ -2090,7 +2090,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  gint count = max_count - 1;
 	  float ms;
 	  GList *gl;
-	  if (!prefs_get_block_display ())
+	  if (!prefs_get_int("block_display"))
 	  {
 	      block_selection (inst);
 	      g_get_current_time (&time);
@@ -2102,7 +2102,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      if (stop_add <= (gint)inst) break;
 	      st_add_track (track, FALSE, TRUE, inst+1);
 	      --count;
-	      if ((count < 0) && !prefs_get_block_display ())
+	      if ((count < 0) && !prefs_get_int("block_display"))
 	      {
 		  gtkpod_tracks_statusbar_update();
 		  while (gtk_events_pending ())       gtk_main_iteration ();
@@ -2121,7 +2121,7 @@ static void st_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  st_enable_disable_view_sort (inst+1, TRUE);
 	  if (stop_add > (gint)inst)
 	      st_add_track (NULL, TRUE, st->final, inst+1);
-	  if (!prefs_get_block_display ())
+	  if (!prefs_get_int("block_display"))
 	  {
 	      while (gtk_events_pending ())	  gtk_main_iteration ();
 	      release_selection (inst);

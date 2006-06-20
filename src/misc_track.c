@@ -358,7 +358,7 @@ void gp_itdb_hash (iTunesDB *itdb)
        oldtrack = md5_track_exists_insert (itdb, track);
        ++count;
 /*        printf("%d:%d:%p:%p\n", count, track_nr, track, oldtrack); */
-       if (!prefs_get_block_display() &&
+       if (!prefs_get_int("block_display") &&
 	   (((count % 20) == 1) || (count == ns)))
        { /* update for count == 1, 21, 41 ... and for count == n */
 	   gtkpod_statusbar_message (ngettext ("Hashed %d of %d track.",

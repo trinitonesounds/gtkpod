@@ -1346,7 +1346,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  float ms;
 	  GList *gl;
 
-	  if (!prefs_get_block_display ())
+	  if (!prefs_get_int("block_display"))
 	  {
 	      block_selection (-1);
 	      g_get_current_time (&time);
@@ -1358,7 +1358,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	      if (stop_add == -1)  break;
 	      st_add_track (track, FALSE, TRUE, 0);
 	      --count;
-	      if ((count < 0) && !prefs_get_block_display ())
+	      if ((count < 0) && !prefs_get_int("block_display"))
 	      {
 		  gtkpod_tracks_statusbar_update();
 		  while (gtk_events_pending ())       gtk_main_iteration ();
@@ -1376,7 +1376,7 @@ static void pm_selection_changed_cb (gpointer user_data1, gpointer user_data2)
 	  }
 	  st_enable_disable_view_sort (0, TRUE);
 	  if (stop_add != -1) st_add_track (NULL, TRUE, TRUE, 0);
-	  if (!prefs_get_block_display ())
+	  if (!prefs_get_int("block_display"))
 	  {
 	      while (gtk_events_pending ())	      gtk_main_iteration ();
 	      release_selection (-1);

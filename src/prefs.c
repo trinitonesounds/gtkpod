@@ -259,6 +259,7 @@ static void set_default_preferences()
     prefs_set_int("display_tooltips_prefs", TRUE);
     prefs_set_int("display_toolbar", TRUE);
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
+    prefs_set_int("block_display", FALSE);
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
@@ -1867,7 +1868,6 @@ struct cfg *cfg_new(void)
 
     mycfg->charset = NULL;    
     mycfg->md5tracks = TRUE;
-    mycfg->block_display = FALSE;
     mycfg->offline = FALSE;
 
     g_free (cfgdir);
@@ -1986,10 +1986,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
 	  {
 	      prefs_set_md5tracks((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "block_display") == 0)
-	  {
-	      prefs_set_block_display((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
@@ -2185,7 +2181,6 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "charset=\n");
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
-    fprintf(fp, "block_display=%d\n",prefs_get_block_display());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
 }
 
@@ -2275,18 +2270,6 @@ void prefs_set_md5tracks (gboolean active)
 gboolean prefs_get_md5tracks(void)
 {
     return cfg->md5tracks;
-}
-
-/* Should the display be blocked (be insenstive) while it is updated
-   after a selection (playlist, tab entry) change? */
-void prefs_set_block_display(gboolean active)
-{
-    cfg->block_display = active;
-}
-
-gboolean prefs_get_block_display(void)
-{
-    return cfg->block_display;
 }
 
 gboolean prefs_get_offline(void)

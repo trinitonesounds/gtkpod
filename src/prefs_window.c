@@ -448,7 +448,7 @@ prefs_window_create (gint page)
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_block_display");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->block_display);
+				 prefs_get_int("block_display"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_id3_write");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -698,7 +698,6 @@ prefs_window_set(void)
 
 	/* this call well automatically destroy/setup the md5 hash table */
 	prefs_set_md5tracks(tmpcfg->md5tracks);
-	prefs_set_block_display(tmpcfg->block_display);
 	tm_show_preferred_columns();
 	st_show_visible();
 	display_show_hide_tooltips();
@@ -942,7 +941,8 @@ void
  on_cfg_block_display_toggled           (GtkToggleButton *togglebutton,
 					gpointer         user_data)
 {
-    tmpcfg->block_display = gtk_toggle_button_get_active (togglebutton);
+    temp_prefs_set_int(temp_prefs, "block_display",
+		       gtk_toggle_button_get_active(togglebutton));
 }
 
 void

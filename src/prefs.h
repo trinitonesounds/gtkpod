@@ -61,8 +61,6 @@ struct cfg
 {
   gchar    *charset;        /* CHARSET to use with file operations */
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
-  gboolean block_display;   /* block display during change of selection? */
-  
   
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   guint32 statusbar_timeout;    /* timeout for statusbar messages */
@@ -205,7 +203,6 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 
 void prefs_set_offline(gboolean active);
 void prefs_set_md5tracks(gboolean active);
-void prefs_set_block_display(gboolean active);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 void prefs_set_statusbar_timeout (guint32 val);
@@ -213,7 +210,6 @@ void prefs_set_statusbar_timeout (guint32 val);
 gboolean prefs_get_offline(void);
 gchar * prefs_get_charset (void);
 gboolean prefs_get_md5tracks(void);
-gboolean prefs_get_block_display(void);
 guint32 prefs_get_statusbar_timeout (void);
 
 #endif
