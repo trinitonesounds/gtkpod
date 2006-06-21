@@ -261,6 +261,7 @@ static void set_default_preferences()
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
     prefs_set_int("block_display", FALSE);
     prefs_set_string("charset", "");
+    prefs_set_int("statusbar_timeout", STATUSBAR_TIMEOUT);
     prefs_set_int("md5", TRUE);
 
     /* Set sorting prefs */
@@ -1013,6 +1014,9 @@ static void finalize_prefs()
   
   /* Update default sizes */
   display_update_default_sizes();
+
+  /* Don't save statusbar_timeout */
+  prefs_set_string("statusbar_timeout", NULL);
 }
 
 /* Initialize the prefs table and read configuration */
