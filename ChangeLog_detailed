@@ -1,5 +1,13 @@
 2006-06-20 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/file_export.c
+	  src/file_itunesdb.c
+	  src/info.c
+	  src/misc_playlists.c
+	  src/prefs.h
+	  src/prefs.c
+	  src/tools.c: Moved statusbar_timeout to new prefs.
+
 	* src/charset.c
 	  src/prefs.h
 	  src/prefs.c

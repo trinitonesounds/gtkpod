@@ -422,7 +422,8 @@ void nm_tracks_list (GList *list)
   else
   {
       /* we need ***much*** longer timeout */
-      prefs_set_statusbar_timeout (30*STATUSBAR_TIMEOUT);
+      prefs_set_int("statusbar_timeout", 30*STATUSBAR_TIMEOUT);
+      gtkpod_statusbar_reset_timeout();
   }
   while (!abort &&  (list!=NULL))
   {
@@ -524,7 +525,8 @@ void nm_tracks_list (GList *list)
      list=g_list_next(list);
   } /*end while*/
 
-  prefs_set_statusbar_timeout (0);
+  prefs_set_int("statusbar_timeout", STATUSBAR_TIMEOUT);
+  gtkpod_statusbar_reset_timeout();
 
   gtkpod_statusbar_message (ngettext ("Normalized %d of %d tracks.",
 				      "Normalized %d of %d tracks.", n),

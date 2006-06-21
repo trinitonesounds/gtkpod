@@ -62,7 +62,6 @@ struct cfg
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   
   gboolean offline;       /* are we working offline, i.e. without iPod? */
-  guint32 statusbar_timeout;    /* timeout for statusbar messages */
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -202,10 +201,8 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 
 void prefs_set_offline(gboolean active);
 void prefs_set_md5tracks(gboolean active);
-void prefs_set_statusbar_timeout (guint32 val);
 
 gboolean prefs_get_offline(void);
 gboolean prefs_get_md5tracks(void);
-guint32 prefs_get_statusbar_timeout (void);
 
 #endif

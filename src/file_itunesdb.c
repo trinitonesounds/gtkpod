@@ -1460,9 +1460,17 @@ static gboolean flush_tracks (iTunesDB *itdb)
 				  and more files to the iPod */
 	  ++count;
 	  if (count == 1)  /* we need longer timeout */
-	      prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
+	  {
+	      prefs_set_int("statusbar_timeout", 
+			    3*STATUSBAR_TIMEOUT);
+	      gtkpod_statusbar_reset_timeout();
+	  }
 	  if (count == n)  /* we need to reset timeout */
-	      prefs_set_statusbar_timeout (0);
+	  {
+	      prefs_set_int("statusbar_timeout", 
+			    STATUSBAR_TIMEOUT);
+	      gtkpod_statusbar_reset_timeout();
+          }
 	  gtkpod_statusbar_message (
 	      ngettext ("Copied %d of %d new track.",
 			"Copied %d of %d new tracks.", n),
@@ -1491,7 +1499,8 @@ static gboolean flush_tracks (iTunesDB *itdb)
   if (abort_flag)      result = FALSE;   /* negative result if user aborted */
   if (result == FALSE)
       gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
-  prefs_set_statusbar_timeout (0);
+  prefs_set_int("statusbar_timeout", 0);
+  gtkpod_statusbar_reset_timeout();
   gtk_widget_destroy (dialog);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   return result;

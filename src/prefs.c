@@ -2302,17 +2302,5 @@ gchar *prefs_get_cfgdir (void)
   return cfgdir;
 }
 
-/* A value of "0" will set the default defined in misc.c */
-void prefs_set_statusbar_timeout (guint32 val)
-{
-    if (val == 0)  val = STATUSBAR_TIMEOUT;
-    cfg->statusbar_timeout = val;
-    gtkpod_statusbar_reset_timeout ();
-}
-
-guint32 prefs_get_statusbar_timeout (void)
-{
-    return cfg->statusbar_timeout;
-}
 
 

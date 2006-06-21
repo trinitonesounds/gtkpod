@@ -473,10 +473,18 @@ static void export_files_write (struct fcd *fcd)
 	    }
 
 	    ++count;
-	    if (count == 1)  /* we need longer timeout */
-		prefs_set_statusbar_timeout (3*STATUSBAR_TIMEOUT);
+	    if (count == 1) /* we need longer timeout */
+	    {
+		prefs_set_int("statusbar_timeout", 3*STATUSBAR_TIMEOUT);
+		gtkpod_statusbar_reset_timeout();
+	    }
+	        
 	    if (count == n)  /* we need to reset timeout */
-		prefs_set_statusbar_timeout (0);
+	    {
+		prefs_set_int("statusbar_timeout", 
+			      STATUSBAR_TIMEOUT);
+		gtkpod_statusbar_reset_timeout();
+	    }
 	    gtkpod_statusbar_message (ngettext ("Copied %d of %d track.",
 						"Copied %d of %d tracks.", n),
 				      count, n);

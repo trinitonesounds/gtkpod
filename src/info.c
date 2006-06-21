@@ -418,7 +418,7 @@ gtkpod_statusbar_reset_timeout (void)
 {
     if (statusbar_timeout_id != 0) /* remove last timeout, if still present */
 	gtk_timeout_remove (statusbar_timeout_id);
-    statusbar_timeout_id = gtk_timeout_add(prefs_get_statusbar_timeout (),
+    statusbar_timeout_id = gtk_timeout_add(prefs_get_int("statusbar_timeout"),
 					   (GtkFunction) gtkpod_statusbar_clear,
 					   NULL);
 }
