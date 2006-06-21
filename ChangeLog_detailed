@@ -1,5 +1,9 @@
 2006-06-20 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/prefs.c: read_prefs_from_file_desc shouldn't 
+	  read in new prefs keys. Also set last_dir_browsed 
+	  default in set_default_preferences. 
+
 	* src/prefs.c: Fixed statusbar regression.
 
 	* src/display_itdb.c

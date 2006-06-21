@@ -150,6 +150,8 @@ typedef enum
 static void set_default_preferences()
 {
     int i; 
+    gchar curdir[PATH_MAX]; /* These are for the current directory */
+    gchar *dir;
   
     prefs_set_int("update_existing", FALSE);
     prefs_set_int("id3_write", FALSE);
@@ -263,6 +265,16 @@ static void set_default_preferences()
     prefs_set_string("charset", "");
     prefs_set_int("statusbar_timeout", STATUSBAR_TIMEOUT);
     prefs_set_int("md5", TRUE);
+
+    /* Set last directory browsed */
+    if (getcwd(curdir, PATH_MAX))
+	prefs_set_string("last_dir_browsed", curdir);
+    else
+    {
+	dir = convert_filename("~/");
+	prefs_set_string("last_dir_browsed", dir);
+	g_free(dir);
+    }
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
@@ -1855,26 +1867,10 @@ enum {
 struct cfg *cfg_new(void)
 {
     struct cfg *mycfg = NULL;
-    gchar curdir[PATH_MAX];
-    gchar *cfgdir;
-
-    cfgdir = prefs_get_cfgdir ();
 
     mycfg = g_malloc0 (sizeof (struct cfg));
-    if(getcwd(curdir, PATH_MAX))
-    {
-	prefs_set_string ("last_dir_browsed", curdir);
-    }
-    else
-    {
-	gchar *dir = convert_filename ("~/");
-	prefs_set_string ("last_dir_browsed", dir);
-	g_free (dir);
-    }
 
     mycfg->offline = FALSE;
-
-    g_free (cfgdir);
 
     return(mycfg);
 }
@@ -1995,22 +1991,9 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* removed with version after 0.82-CVS */
 	  }
-	  else if(g_ascii_strcasecmp (line, "dir_browse") == 0)
-	  {
-	      prefs_set_string ("last_dir_browsed", arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
-	  {
-	      prefs_set_string (EXPORT_FILES_PATH, arg);
-	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
-	  }
-	  else if(g_ascii_strcasecmp (line, "export_check_existing") == 0)
-	  {
-	      prefs_set_int (EXPORT_FILES_CHECK_EXISTING,
-				   atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "fix_path") == 0)
 	  {
@@ -2020,15 +2003,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
 	  {
 	      /* ignore -- not used any more */
-	  }
-	  else if(g_ascii_strcasecmp (line, "concal_autosync") == 0)
-	  {
-	      prefs_set_int ("itdb_0_concal_autosync", atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
-	  {
-	      prefs_set_int (EXPORT_FILES_SPECIAL_CHARSET,
-				   atoi (arg));
 	  }
 	  else
 	  {   /* All leftover options will be stored into the prefs
