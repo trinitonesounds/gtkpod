@@ -45,6 +45,8 @@
 #include "file.h"
 #include "prefs.h"
 #include "misc.h"
+#include "misc_track.h"
+#include "display.h"
 #include "display_itdb.h"
 
 
@@ -89,6 +91,30 @@ static void little_endian(hblock * stupidblock, int blocks);
  */
 #define NR_PATH_MAX_BLOCKS 4
 #define PATH_MAX_MD5 4096
+
+/* Set up or destory the md5 hash table */
+void setup_md5(gboolean active)
+{
+    struct itdbs_head *itdbs_head;
+
+    g_return_if_fail (gtkpod_window);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+
+    /* gets called before itdbs are set up -> fail silently */
+    if (itdbs_head)
+    {
+	if (active)  /* MD5 hashing turned on */
+	{
+	    gp_md5_hash_tracks();
+	
+	    /* Display duplicates */
+	    gp_duplicate_remove(NULL, NULL);
+	}
+	else
+	    gp_md5_free_hash();
+    }
+}
 
 /**
  * get_filesize_for_file_descriptor - get the filesize on disk for the given
@@ -272,7 +298,7 @@ Track *md5_track_exists_insert (iTunesDB *itdb, Track * s)
     etr = s->userdata;
     g_return_val_if_fail (etr, NULL);
 
-    if (prefs_get_md5tracks ())
+    if (prefs_get_int("md5"))
     {
 	if (eitdb->md5hash == NULL)
 	{
@@ -315,7 +341,7 @@ Track *md5_track_exists (iTunesDB *itdb, Track *s)
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);
 
-    if (prefs_get_md5tracks() && eitdb->md5hash)
+    if (prefs_get_int("md5") && eitdb->md5hash)
     {
 	gchar *val = md5_hash_track (s);
 	if (val)
@@ -343,7 +369,7 @@ Track *md5_file_exists (iTunesDB *itdb, gchar *file, gboolean silent)
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);
 
-    if (prefs_get_md5tracks() && eitdb->md5hash)
+    if (prefs_get_int("md5") && eitdb->md5hash)
     {
 	gchar *val = md5_hash_on_filename (file, silent);
 	if (val)
@@ -372,7 +398,7 @@ Track *md5_md5_exists (iTunesDB *itdb, gchar *md5)
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, NULL);
 
-    if (prefs_get_md5tracks() && eitdb->md5hash)
+    if (prefs_get_int("md5") && eitdb->md5hash)
     {
 	track = g_hash_table_lookup (eitdb->md5hash, md5);
     }
@@ -392,7 +418,7 @@ void md5_track_remove (Track *s)
     eitdb = s->itdb->userdata;
     g_return_if_fail (eitdb);
 
-    if (prefs_get_md5tracks() && eitdb->md5hash)
+    if (prefs_get_int("md5") && eitdb->md5hash)
     {
 	gchar *val = md5_hash_track (s);
 	if (val)
@@ -538,3 +564,5 @@ little_endian(hblock * stupidblock, int blocks)
    }
 }
 #endif
+
+

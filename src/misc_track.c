@@ -60,7 +60,7 @@ void gp_md5_hash_tracks_itdb (iTunesDB *itdb)
 
    g_return_if_fail (itdb);
 
-   if (!prefs_get_md5tracks ()) return;
+   if (!prefs_get_int("md5")) return;
    ns = itdb_tracks_number (itdb);   /* number of tracks */
    if (ns == 0)                 return;
 
@@ -342,7 +342,7 @@ void gp_itdb_hash (iTunesDB *itdb)
 
    g_return_if_fail (itdb);
 
-   if (!prefs_get_md5tracks ()) return;
+   if (!prefs_get_int("md5")) return;
 
    ns = itdb_tracks_number (itdb);
    if (ns == 0)                 return;

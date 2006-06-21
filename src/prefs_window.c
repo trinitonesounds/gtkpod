@@ -34,6 +34,7 @@
 #include "display_itdb.h"
 #include "info.h"
 #include "fileselection.h"
+#include "md5.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
@@ -374,7 +375,7 @@ prefs_window_create (gint page)
     
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_md5tracks");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 tmpcfg->md5tracks);
+				 prefs_get_int("md5"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_update_existing");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -383,7 +384,7 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_duplicates");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("show_duplicates"));
-    if (!tmpcfg->md5tracks) gtk_widget_set_sensitive (w, FALSE);
+    if (!prefs_get_int("md5")) gtk_widget_set_sensitive (w, FALSE);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_updated");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
@@ -682,27 +683,34 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 static void
 prefs_window_set(void)
 {
-   if (temp_prefs)
-   {
-     /* Update the display if we changed the number of sort tabs */
-     if (temp_prefs_get_int_value(temp_prefs, "sort_tab_num", NULL))
-      st_show_visible();
-   }
-  
-   if (tmpcfg)
-    {
-	/* Need this in case user reordered column order (we don't
-	 * catch the reorder signal) */
-	tm_store_col_order ();
+    gboolean md5active;
 
-	/* this call well automatically destroy/setup the md5 hash table */
-	prefs_set_md5tracks(tmpcfg->md5tracks);
-	tm_show_preferred_columns();
-	st_show_visible();
-	display_show_hide_tooltips();
-	display_show_hide_toolbar();
-	
+    if (temp_prefs)
+    {
+	/* Update the display if we changed the number of sort tabs */
+	if (temp_prefs_get_int_value(temp_prefs, "sort_tab_num", NULL))
+	    st_show_visible();
+
+        /* Free/re-initialize the md5 tabe if the setting was changed */
+	if (temp_prefs_get_int_value(temp_prefs, "md5", &md5active))
+	    setup_md5(md5active);
     }
+	    
+  
+    /* Need this in case user reordered column order (we don't
+     * catch the reorder signal) */
+    tm_store_col_order ();
+
+    /* update columns if user reordered them */
+    tm_show_preferred_columns();
+   
+    /* update sort tab display */
+    st_show_visible();
+   
+    /* update tooltip/toolbar displays */
+    display_show_hide_tooltips();
+    display_show_hide_toolbar();
+	
 }
 
 
@@ -932,7 +940,7 @@ on_cfg_md5tracks_toggled                (GtkToggleButton *togglebutton,
     gboolean val = gtk_toggle_button_get_active(togglebutton);
     GtkWidget *w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_show_duplicates");
 
-    tmpcfg->md5tracks = val;
+    temp_prefs_set_int(temp_prefs, "md5", val);
     if(w)	gtk_widget_set_sensitive (w, val);
 }
 

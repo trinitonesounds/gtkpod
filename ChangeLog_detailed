@@ -1,5 +1,12 @@
 2006-06-20 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/display_itdb.c
+	  src/md5.h
+	  src/md5.c
+	  src/prefs.h
+	  src/prefs.c
+	  src/prefs_window.c: Moved md5 to new prefs.
+
 	* src/file_export.c
 	  src/file_itunesdb.c
 	  src/info.c

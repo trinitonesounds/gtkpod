@@ -59,7 +59,6 @@ extern const gchar *KEY_MANUAL_SYNCDIR;
 
 struct cfg
 {
-  gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   
   gboolean offline;       /* are we working offline, i.e. without iPod? */
   float version;                /* version of gtkpod writing the cfg file */
@@ -200,9 +199,6 @@ struct cfg* clone_prefs(void);
 gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 
 void prefs_set_offline(gboolean active);
-void prefs_set_md5tracks(gboolean active);
-
 gboolean prefs_get_offline(void);
-gboolean prefs_get_md5tracks(void);
 
 #endif

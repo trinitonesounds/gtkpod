@@ -838,9 +838,6 @@ void init_data (GtkWidget *window)
 	}
     }
 
-    /* set md5 */
-    prefs_set_md5tracks (prefs_get_md5tracks ());
-
     g_free (cfgdir);
 }
 

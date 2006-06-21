@@ -33,6 +33,7 @@
 
 #include "display_itdb.h"
 
+void setup_md5(gboolean active);
 gchar *md5_hash_on_filename (gchar *name, gboolean silent);
 /* Any calls to the following functions immediately return if md5sums
  * is not on */
@@ -43,4 +44,5 @@ Track *md5_track_exists_insert (iTunesDB *itdb, Track *s);
 void md5_track_remove (Track *s);
 void md5_free (iTunesDB *itdb);
 void md5_free_eitdb (ExtraiTunesDBData *eitdb);
+
 #endif

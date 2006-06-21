@@ -261,6 +261,7 @@ static void set_default_preferences()
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
     prefs_set_int("block_display", FALSE);
     prefs_set_string("charset", "");
+    prefs_set_int("md5", TRUE);
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
@@ -1867,7 +1868,6 @@ struct cfg *cfg_new(void)
 	g_free (dir);
     }
 
-    mycfg->md5tracks = TRUE;
     mycfg->offline = FALSE;
 
     g_free (cfgdir);
@@ -1978,10 +1978,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "id3_all") == 0)
 	  {
 	      /* obsoleted since 0.71 */
-	  }
-	  else if(g_ascii_strcasecmp (line, "md5") == 0)
-	  {
-	      prefs_set_md5tracks((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
@@ -2169,7 +2165,6 @@ write_prefs_to_file_desc(FILE *fp)
     if(!fp)
 	fp = stderr;
 
-    fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
 }
 
@@ -2221,43 +2216,6 @@ void prefs_set_offline(gboolean active)
   if (cfg->offline != active)   space_data_update ();
   cfg->offline = active;
   info_update_totals_view_space ();
-}
-
-/* If the status of md5 hash flag changes, free or re-init the md5
-   hash table */
-void prefs_set_md5tracks (gboolean active)
-{
-    struct itdbs_head *itdbs_head;
-
-    g_return_if_fail (gtkpod_window);
-    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
-				    "itdbs_head");
-/*    g_return_if_fail (itdbs_head);*/
-    /* gets called before itdbs are set up -> fail silently */
-    if (!itdbs_head)
-    {
-	cfg->md5tracks = active;
-	return;
-    }
-
-    if (cfg->md5tracks && !active)
-    { /* md5 checksums have been turned off */
-	cfg->md5tracks = FALSE;
-	gp_md5_free_hash ();
-    }
-    if (!cfg->md5tracks && active)
-    { /* md5 checksums have been turned on */
-	cfg->md5tracks = TRUE; /* must be set before calling
-				  gp_md5_hash_tracks() */
-	gp_md5_hash_tracks ();
-	/* display duplicates */
-	gp_duplicate_remove (NULL, NULL);
-    }
-}
-
-gboolean prefs_get_md5tracks(void)
-{
-    return cfg->md5tracks;
 }
 
 gboolean prefs_get_offline(void)
