@@ -150,8 +150,6 @@ typedef enum
 static void set_default_preferences()
 {
     int i; 
-    gchar curdir[PATH_MAX]; /* These are for the current directory */
-    gchar *dir;
   
     prefs_set_int("update_existing", FALSE);
     prefs_set_int("id3_write", FALSE);
@@ -262,19 +260,6 @@ static void set_default_preferences()
     prefs_set_int("display_toolbar", TRUE);
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
     prefs_set_int("block_display", FALSE);
-    prefs_set_string("charset", "");
-    prefs_set_int("statusbar_timeout", STATUSBAR_TIMEOUT);
-    prefs_set_int("md5", TRUE);
-
-    /* Set last directory browsed */
-    if (getcwd(curdir, PATH_MAX))
-	prefs_set_string("last_dir_browsed", curdir);
-    else
-    {
-	dir = convert_filename("~/");
-	prefs_set_string("last_dir_browsed", dir);
-	g_free(dir);
-    }
 
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
@@ -1026,9 +1011,6 @@ static void finalize_prefs()
   
   /* Update default sizes */
   display_update_default_sizes();
-
-  /* Don't save statusbar_timeout */
-  prefs_set_string("statusbar_timeout", NULL);
 }
 
 /* Initialize the prefs table and read configuration */
@@ -1867,10 +1849,28 @@ enum {
 struct cfg *cfg_new(void)
 {
     struct cfg *mycfg = NULL;
+    gchar curdir[PATH_MAX];
+    gchar *cfgdir;
+
+    cfgdir = prefs_get_cfgdir ();
 
     mycfg = g_malloc0 (sizeof (struct cfg));
+    if(getcwd(curdir, PATH_MAX))
+    {
+	prefs_set_string ("last_dir_browsed", curdir);
+    }
+    else
+    {
+	gchar *dir = convert_filename ("~/");
+	prefs_set_string ("last_dir_browsed", dir);
+	g_free (dir);
+    }
 
+    mycfg->charset = NULL;    
+    mycfg->md5tracks = TRUE;
     mycfg->offline = FALSE;
+
+    g_free (cfgdir);
 
     return(mycfg);
 }
@@ -1975,9 +1975,17 @@ read_prefs_from_file_desc(FILE *fp)
 		  prefs_set_string (EXPORT_FILES_TPL, arg);
 	      }
 	  }
+	  else if(g_ascii_strcasecmp (line, "charset") == 0)
+	  {
+		if(strlen (arg))      prefs_set_charset(arg);
+	  }
 	  else if(g_ascii_strcasecmp (line, "id3_all") == 0)
 	  {
 	      /* obsoleted since 0.71 */
+	  }
+	  else if(g_ascii_strcasecmp (line, "md5") == 0)
+	  {
+	      prefs_set_md5tracks((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "offline") == 0)
 	  {
@@ -1991,9 +1999,22 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* removed with version after 0.82-CVS */
 	  }
+	  else if(g_ascii_strcasecmp (line, "dir_browse") == 0)
+	  {
+	      prefs_set_string ("last_dir_browsed", arg);
+	  }
+	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
+	  {
+	      prefs_set_string (EXPORT_FILES_PATH, arg);
+	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
+	  }
+	  else if(g_ascii_strcasecmp (line, "export_check_existing") == 0)
+	  {
+	      prefs_set_int (EXPORT_FILES_CHECK_EXISTING,
+				   atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "fix_path") == 0)
 	  {
@@ -2003,6 +2024,15 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
 	  {
 	      /* ignore -- not used any more */
+	  }
+	  else if(g_ascii_strcasecmp (line, "concal_autosync") == 0)
+	  {
+	      prefs_set_int ("itdb_0_concal_autosync", atoi(arg));
+	  }
+	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
+	  {
+	      prefs_set_int (EXPORT_FILES_SPECIAL_CHARSET,
+				   atoi (arg));
 	  }
 	  else
 	  {   /* All leftover options will be stored into the prefs
@@ -2143,6 +2173,14 @@ write_prefs_to_file_desc(FILE *fp)
     if(!fp)
 	fp = stderr;
 
+
+    if (cfg->charset)
+    {
+	fprintf(fp, "charset=%s\n", cfg->charset);
+    } else {
+	fprintf(fp, "charset=\n");
+    }
+    fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
     fprintf(fp, "offline=%d\n",prefs_get_offline());
 }
 
@@ -2185,6 +2223,7 @@ void cfg_free(struct cfg *c)
 {
     if(c)
     {
+      g_free (c->charset);
       g_free (c);
     }
 }
@@ -2196,9 +2235,65 @@ void prefs_set_offline(gboolean active)
   info_update_totals_view_space ();
 }
 
+/* If the status of md5 hash flag changes, free or re-init the md5
+   hash table */
+void prefs_set_md5tracks (gboolean active)
+{
+    struct itdbs_head *itdbs_head;
+
+    g_return_if_fail (gtkpod_window);
+    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+				    "itdbs_head");
+/*    g_return_if_fail (itdbs_head);*/
+    /* gets called before itdbs are set up -> fail silently */
+    if (!itdbs_head)
+    {
+	cfg->md5tracks = active;
+	return;
+    }
+
+    if (cfg->md5tracks && !active)
+    { /* md5 checksums have been turned off */
+	cfg->md5tracks = FALSE;
+	gp_md5_free_hash ();
+    }
+    if (!cfg->md5tracks && active)
+    { /* md5 checksums have been turned on */
+	cfg->md5tracks = TRUE; /* must be set before calling
+				  gp_md5_hash_tracks() */
+	gp_md5_hash_tracks ();
+	/* display duplicates */
+	gp_duplicate_remove (NULL, NULL);
+    }
+}
+
+gboolean prefs_get_md5tracks(void)
+{
+    return cfg->md5tracks;
+}
+
 gboolean prefs_get_offline(void)
 {
   return cfg->offline;
+}
+
+void prefs_set_charset (gchar *charset)
+{
+    prefs_cfg_set_charset (cfg, charset);
+}
+
+void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
+{
+    C_FREE (cfgd->charset);
+    if (charset && strlen (charset))
+	cfgd->charset = g_strdup (charset);
+/*     printf ("set_charset: '%s'\n", charset);	 */
+}
+
+gchar *prefs_get_charset (void)
+{
+    return cfg->charset;
+/*     printf ("get_charset: '%s'\n", cfg->charset); */
 }
 
 struct cfg *clone_prefs(void)
@@ -2208,6 +2303,7 @@ struct cfg *clone_prefs(void)
     if(cfg)
     {
 	result = g_memdup (cfg, sizeof (struct cfg));
+	result->charset = g_strdup(cfg->charset);
     }
     return(result);
 }
@@ -2238,5 +2334,17 @@ gchar *prefs_get_cfgdir (void)
   return cfgdir;
 }
 
+/* A value of "0" will set the default defined in misc.c */
+void prefs_set_statusbar_timeout (guint32 val)
+{
+    if (val == 0)  val = STATUSBAR_TIMEOUT;
+    cfg->statusbar_timeout = val;
+    gtkpod_statusbar_reset_timeout ();
+}
+
+guint32 prefs_get_statusbar_timeout (void)
+{
+    return cfg->statusbar_timeout;
+}
 
 

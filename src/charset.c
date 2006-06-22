@@ -154,7 +154,7 @@ void charset_init_combo (GtkCombo *combo)
     static GList *charsets = NULL; /* list with choices -- takes a while to
 				     * initialize, so we only do it once */
     
-    current_charset = prefs_get_string("charset");
+    current_charset = prefs_get_charset ();
     if ((current_charset == NULL) || (strlen (current_charset) == 0))
     {
 	description = g_strdup (_("System Charset"));
@@ -163,7 +163,6 @@ void charset_init_combo (GtkCombo *combo)
     {
 	description = charset_to_description (current_charset);
     }
-    g_free(current_charset);
     if (charsets == NULL)
     { /* set up list with charsets */
 	FILE *fp;
@@ -303,16 +302,12 @@ static const gchar *charset_check_k_code_with_default (const gchar *p)
  * feature. So far only Japanese Auto Detecion is implemented */
 static const gchar *charset_check_auto (const gchar *str)
 {
-    gchar *charset;
+    const gchar *charset;
 
     if (str == NULL) return NULL; /* sanity */
-    charset = prefs_get_string("charset");
+    charset = prefs_get_charset ();
     if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
-    {
-	g_free(charset);
-	return (charset_check_k_code ((gchar *)str));
-    }
-    g_free(charset);
+	return (charset_check_k_code (str));
     return NULL;
 }
 
@@ -335,31 +330,23 @@ void charset_reset_auto (void)
 /* Must free the returned string yourself */
 gchar *charset_to_utf8 (const gchar *str)
 {
-    gchar *charset;  /* From prefs */
-    const gchar *locale_charset; /* Used if prefs doesn't have a charset */
-    gchar *ret;
+    const gchar *charset;
 
     if (str == NULL) return NULL;  /* sanity */
-    charset = (gchar *)charset_check_auto ((gchar *)str);
+    charset = charset_check_auto (str);
     if (charset)
     {
 	auto_charset = charset;
     }
     else
     {
-	charset = prefs_get_string("charset");
+	charset = prefs_get_charset ();
 	if (!charset || !strlen (charset))
 	{    /* use standard locale charset */
-	    g_free(charset);
-	    g_get_charset (&locale_charset);
-	    ret = charset_to_charset ((gchar *)locale_charset, "UTF-8", str);
-	    g_free(charset);
-	    return ret;
+	    g_get_charset (&charset);
 	}
     }
-    ret = charset_to_charset ((gchar *)charset, "UTF-8", str);
-    g_free(charset);
-    return ret;
+    return charset_to_charset ((gchar *)charset, "UTF-8", str);
 }
 
 
@@ -369,23 +356,15 @@ gchar *charset_to_utf8 (const gchar *str)
 /* Must free the returned string yourself */
 gchar *charset_from_utf8 (const gchar *str)
 {
-    gchar *charset;
-    const gchar *locale_charset;
-    gchar *ret;
+    const gchar *charset;
 
     if (str == NULL) return NULL;  /* sanity */
-    charset = prefs_get_string("charset");
+    charset = prefs_get_charset ();
     if (!charset || !strlen (charset))
-    {   
-       /* use standard locale charset */
-	g_free(charset);
-	g_get_charset (&locale_charset);
-	ret = charset_to_charset ("UTF-8", (gchar *)locale_charset, str);
-	return ret;
+    {    /* use standard locale charset */
+	g_get_charset (&charset);
     }
-    ret = charset_to_charset ("UTF-8", (gchar *)charset, str);
-    g_free(charset);
-    return ret;
+    return charset_to_charset ("UTF-8", (gchar *)charset, str);
 }
 
 /* Convert "str" from utf8 to the charset specified in @s->charset. If
@@ -394,9 +373,7 @@ gchar *charset_from_utf8 (const gchar *str)
 /* Must free the returned string yourself */
 gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
 {
-    gchar *charset;
-    const gchar *locale_charset;
-    gchar *ret;
+    const gchar *charset = NULL;
     ExtraTrackData *etd;
 
     g_return_val_if_fail (s, NULL);
@@ -407,18 +384,13 @@ gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
     etd = s->userdata;
 
     if (etd->charset && strlen (etd->charset))
-	   charset = g_strdup( etd->charset);
-    else   charset = prefs_get_string("charset");
+	   charset = etd->charset;
+    else   charset = prefs_get_charset ();
     if (!charset || !strlen (charset))
     {    /* use standard locale charset */
-	g_free(charset);
-	g_get_charset (&locale_charset);
-	ret = charset_to_charset ("UTF-8", (gchar *)locale_charset, str);
-	return ret;	
+	g_get_charset (&charset);
     }
-    ret = charset_to_charset ("UTF-8", (gchar *)charset, str);
-    g_free(charset);
-    return ret;
+    return charset_to_charset ("UTF-8", (gchar *)charset, str);
 }
 
 /* Convert "str" from "from_charset" to "to_charset", trying to skip
