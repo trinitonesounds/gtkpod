@@ -1,4 +1,7 @@
-2006-06-16 Jorg Schuler <jcsjcs@users.sourceforge.net>
+2006-06-22 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* src/context_menus.c: moved context menus over to new
+          system. 
 
 	* src/charset.c
 	  src/prefs.h

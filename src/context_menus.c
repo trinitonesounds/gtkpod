@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-17 02:20:53 jcs>
+/* Time-stamp: <2006-06-23 00:55:05 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -43,7 +43,7 @@
 #include "repository.h"
 #include "syncdir.h"
 
-#define LOCALDEBUG 1
+#define LOCALDEBUG 0
 
 static guint entry_inst = -1;
 static GList *selected_tracks = NULL;
@@ -385,7 +385,14 @@ static GtkWidget *add_create_playlist_file (GtkWidget *menu)
 {
     return hookup_mi (menu, _("Create Playlist File"),
 		      GTK_STOCK_SAVE_AS,
-		   G_CALLBACK (create_playlist_file), NULL);
+		      G_CALLBACK (create_playlist_file), NULL);
+}
+
+static GtkWidget *add_create_new_playlist (GtkWidget *menu)
+{
+    return hookup_mi (menu, _("Create new Playlist"),
+		      GTK_STOCK_JUSTIFY_LEFT,
+		      G_CALLBACK (create_playlist_from_entries), NULL);
 }
 
 static GtkWidget *add_update_tracks_from_file (GtkWidget *menu)
@@ -475,6 +482,13 @@ static GtkWidget *add_eject_ipod (GtkWidget *menu)
 		      G_CALLBACK (eject_ipod), NULL);
 }
 
+static GtkWidget *add_save_changes (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Save Changes"),
+		      GTK_STOCK_SAVE,
+		      G_CALLBACK (save_changes), NULL);
+}
+
 static GtkWidget *add_remove_all_tracks_from_database (GtkWidget *menu)
 {
     return hookup_mi (menu,  _("Remove All Tracks from Database"),
@@ -499,6 +513,54 @@ static GtkWidget *add_delete_including_tracks_database (GtkWidget *menu)
 		      GINT_TO_POINTER (DELETE_ACTION_DATABASE));
 }
 
+static GtkWidget *add_delete_from_ipod (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Delete From iPod"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_IPOD));
+}
+
+static GtkWidget *add_delete_from_playlist (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Delete From Playlist"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
+}
+
+static GtkWidget *add_delete_from_harddisk (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Delete From Harddisk"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_LOCAL));
+}
+
+static GtkWidget *add_delete_from_database (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Delete From Database"),
+		      GTK_STOCK_DELETE,
+		      G_CALLBACK (delete_entries),
+		      GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+}
+
+static GtkWidget *add_alphabetize (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Alphabetize"),
+		      GTK_STOCK_SORT_ASCENDING,
+		      G_CALLBACK (alphabetize), NULL);
+}
+
+#if LOCALDEBUG
+static GtkWidget *add_special (GtkWidget *menu)
+{
+    return hookup_mi (menu, "Special",
+		      GTK_STOCK_STOP,
+		      G_CALLBACK (do_special), NULL);
+}
+#endif
+
 static GtkWidget *add_edit_playlist_properties (GtkWidget *menu)
 {
     return hookup_mi (menu,  _("Edit Playlist Properties"),
@@ -507,14 +569,13 @@ static GtkWidget *add_edit_playlist_properties (GtkWidget *menu)
 }
 
 
-
-static GtkMenu *create_context_menu_pl (void)
+void create_context_menu (CM_type type)
 {
     static GtkWidget *menu = NULL;
     Playlist *pl;
 
     if (menu)
-    {
+    {   /* free memory for last menu */
 	gtk_widget_destroy (menu);
 	menu = NULL;
     }
@@ -524,16 +585,68 @@ static GtkMenu *create_context_menu_pl (void)
     {
 	ExtraiTunesDBData *eitdb;
 	iTunesDB *itdb = pl->itdb;
-
-	g_return_val_if_fail (itdb, NULL);
+	g_return_if_fail (itdb);
 	eitdb = itdb->userdata;
-	g_return_val_if_fail (eitdb, NULL);
+	g_return_if_fail (eitdb);
 
 	menu = gtk_menu_new ();
 
-	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	switch (type)
 	{
-	    if (eitdb->itdb_imported)
+	case CM_PL:
+	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
+	    {
+		if (eitdb->itdb_imported)
+		{
+		    add_play_now (menu);
+		    add_enqueue (menu);
+		    add_copy_track_to_filesystem (menu);
+		    add_create_playlist_file (menu);
+		    add_update_tracks_from_file (menu);
+		    if (!pl->is_spl)
+		    {
+			add_sync_playlist_with_dirs (menu);
+		    }
+		    add_separator (menu);
+		    if (itdb_playlist_is_mpl (pl))
+		    {
+			add_remove_all_tracks_from_ipod (menu);
+		    }
+		    else if (itdb_playlist_is_podcasts (pl))
+		    {
+			add_remove_all_podcasts_from_ipod (menu);
+		    }
+		    else
+		    {
+			add_delete_including_tracks (menu);
+			add_delete_but_keep_tracks (menu);
+		    }
+		    add_separator (menu);
+		    add_edit_track_details (menu);
+		    if (pl->is_spl)
+		    {
+			add_edit_smart_playlist (menu);
+		    }
+		    if (itdb_playlist_is_mpl (pl) || pl->is_spl)
+		    {
+			add_edit_ipod_properties (menu);
+		    }
+		    else
+		    {
+			add_edit_playlist_properties (menu);
+		    }
+		    add_check_ipod_files (menu);
+		    add_eject_ipod (menu);
+		}
+		else
+		{   /* not imported */
+		    add_edit_ipod_properties (menu);
+		    add_check_ipod_files (menu);
+		    add_separator (menu);
+		    add_load_ipod (menu);
+		}
+	    }
+	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	    {
 		add_play_now (menu);
 		add_enqueue (menu);
@@ -547,15 +660,12 @@ static GtkMenu *create_context_menu_pl (void)
 		add_separator (menu);
 		if (itdb_playlist_is_mpl (pl))
 		{
-		    add_remove_all_tracks_from_ipod (menu);
-		}
-		else if (itdb_playlist_is_podcasts (pl))
-		{
-		    add_remove_all_podcasts_from_ipod (menu);
+		    add_remove_all_tracks_from_database (menu);
 		}
 		else
 		{
-		    add_delete_including_tracks (menu);
+		    add_delete_including_tracks_database (menu);
+		    add_delete_including_tracks_harddisk (menu);
 		    add_delete_but_keep_tracks (menu);
 		}
 		add_separator (menu);
@@ -564,437 +674,66 @@ static GtkMenu *create_context_menu_pl (void)
 		{
 		    add_edit_smart_playlist (menu);
 		}
-		if (itdb_playlist_is_mpl (pl) || pl->is_spl)
-		{
-		    add_edit_ipod_properties (menu);
-		}
-		else
-		{
-		    add_edit_playlist_properties (menu);
-		}
-		add_check_ipod_files (menu);
-		add_eject_ipod (menu);
+		add_edit_playlist_properties (menu);
+		add_save_changes (menu);
 	    }
-	    else
-	    {   /* not imported */
-		add_edit_ipod_properties (menu);
-		add_check_ipod_files (menu);
-		add_separator (menu);
-		add_load_ipod (menu);
-	    }
-	}
-	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-	{
+	    break;
+	case CM_ST:
+	case CM_TM:
 	    add_play_now (menu);
 	    add_enqueue (menu);
 	    add_copy_track_to_filesystem (menu);
 	    add_create_playlist_file (menu);
+	    add_create_new_playlist (menu);
 	    add_update_tracks_from_file (menu);
 	    if (!pl->is_spl)
 	    {
 		add_sync_playlist_with_dirs (menu);
 	    }
-	    add_separator (menu);
-	    if (itdb_playlist_is_mpl (pl))
+	    if (type == CM_ST)
 	    {
-		add_remove_all_tracks_from_database (menu);
+		add_alphabetize (menu);
 	    }
-	    else
+	    add_separator (menu);
+	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	    {
-		add_delete_including_tracks_database (menu);
-		add_delete_including_tracks_harddisk (menu);
-		add_delete_but_keep_tracks (menu);
+		add_delete_from_ipod (menu);
+		if (!itdb_playlist_is_mpl (pl))
+		{
+		    add_delete_from_playlist (menu);
+		}
+	    }
+	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	    {
+		add_delete_from_harddisk (menu);
+		add_delete_from_database (menu);
+		if (!itdb_playlist_is_mpl (pl))
+		{
+		    add_delete_from_playlist (menu);
+		}
 	    }
 	    add_separator (menu);
 	    add_edit_track_details (menu);
-	    if (pl->is_spl)
-	    {
-		add_edit_smart_playlist (menu);
-	    }
-	    add_edit_playlist_properties (menu);
-	}
-    }
-
-    return GTK_MENU (menu);
-}
-
-
-
-static GtkMenu *create_context_menu_old (CM_type type)
-{
-    static GtkWidget *menu[CM_NUM];
-    static GtkWidget *mi_exp[CM_NUM];  /* Export Tracks */
-    static GtkWidget *mi_delpl[CM_NUM];   /* DELETE_ACTION_PLAYLIST */
-    static GtkWidget *mi_delipod[CM_NUM]; /* DELETE_ACTION_IPOD     */
-    static GtkWidget *mi_dellocal[CM_NUM];/* DELETE_ACTION_LOCAL    */
-    static GtkWidget *mi_deldb[CM_NUM];   /* DELETE_ACTION_DATABASE */
-    static GtkWidget *mi_delpcipod[CM_NUM]; /* DELETE_ACTION_IPOD   */
-    static GtkWidget *mi_delsep[CM_NUM];  /* separator              */
-    static GtkWidget *mi_spl[CM_NUM];  /* edit smart playlist    */
-    static GtkWidget *mi_delipod_all[CM_NUM];/* DELETE_ACTION_IPOD (all
-					   * tracks)      */
-    static GtkWidget *mi_deldb_all[CM_NUM];  /* DELETE_ACTION_DATABASE
-					   * (all tracks)  */
-    static GtkWidget *mi_io_sep;          /* separator for iPod/repository
-					     load/eject/save changes */
-    static GtkWidget *mi_ipodio_load, *mi_ipodio_eject, *mi_io_save;
-    static GtkWidget *mi_prop_pl, *mi_prop_rep, *mi_prop_ipod;
-
-    Playlist *pl;
-
-    if(!menu[type])
-    {
-	menu[type] =  gtk_menu_new();
-	hookup_mi (menu[type], _("Play Now"), GTK_STOCK_CDROM,
-		   G_CALLBACK (play_entries_now), NULL);
-	hookup_mi (menu[type], _("Enqueue"), GTK_STOCK_CDROM,
-		   G_CALLBACK (play_entries_enqueue), NULL);
-	mi_exp[type] = hookup_mi (menu[type], 
-				  _("Copy Tracks to Filesystem"), GTK_STOCK_SAVE_AS,
-				  G_CALLBACK (export_entries), NULL);
-	hookup_mi (menu[type], _("Create Playlist File"), GTK_STOCK_SAVE_AS,
-		   G_CALLBACK (create_playlist_file), NULL);
-	hookup_mi (menu[type], _("Edit Track Details"),
-		   GTK_STOCK_EDIT,
-		   G_CALLBACK (edit_details_entries), NULL);
-	hookup_mi (menu[type], _("Update Tracks from File"),
-		   GTK_STOCK_REFRESH,
-		   G_CALLBACK (update_entries), NULL);
-	if (type == CM_PL)
-	{
-	    hookup_mi (menu[type], _("Sync Playlist with Dir(s)"),
-		       GTK_STOCK_REFRESH,
-		       G_CALLBACK (sync_dirs), NULL);
-	}
-	hookup_mi (menu[type], _("Create new Playlist"),
-		   GTK_STOCK_JUSTIFY_LEFT,
-		   G_CALLBACK (create_playlist_from_entries), NULL);
-	mi_spl[type] = hookup_mi (menu[type], _("Edit Smart Playlist"),
-				  GTK_STOCK_PROPERTIES,
-				  G_CALLBACK (edit_spl), NULL);
-
-	if (type == CM_ST)
-	{
-	    hookup_mi (menu[type], _("Alphabetize"),
-		       GTK_STOCK_SORT_ASCENDING,
-		       G_CALLBACK (alphabetize), NULL);
-/* example for sub menus!
-	    GtkWidget *mi;
-	    GtkWidget *sub;
-
-	    mi = hookup_mi (menu[type], _("Alphabetize"), NULL, NULL);
-	    sub = gtk_menu_new ();
-	    gtk_widget_show (sub);
-	    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
-	    hookup_mi (sub, _("Ascending"), GTK_STOCK_SORT_ASCENDING,
-		       G_CALLBACK (alphabetize_ascending), NULL);
-	    hookup_mi (sub, _("Descending"), GTK_STOCK_SORT_DESCENDING,
-		       G_CALLBACK (alphabetize_descending), NULL);
-	    hookup_mi (sub, _("Reset"), GTK_STOCK_UNDO,
-	               G_CALLBACK (reset_alphabetize), NULL);
-*/
-	}
-	if ((type == CM_ST) || (type == CM_TM))
-	{
-	    mi_delsep[type] = add_separator (menu[type]);
-	    mi_delipod[type] =
-		hookup_mi (menu[type],
-			   _("Delete From iPod"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
-	    mi_dellocal[type] = 
-		hookup_mi (menu[type],
-			   _("Delete From Harddisk"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_LOCAL));
-	    mi_deldb[type] =
-		hookup_mi (menu[type],
-			   _("Delete From Database"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
-	    mi_delpl[type] =
-		hookup_mi (menu[type],
-			   _("Delete From Playlist"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
-	}
 #if LOCALDEBUG
-	/* This is for debugging purposes -- this allows to inspect
-	 * any track with a custom function */
-	if (type == CM_TM)
-	{
-	    hookup_mi (menu[type], "Special", GTK_STOCK_STOP,
-		       G_CALLBACK (do_special), NULL);
-	}
+	    /* This is for debugging purposes -- this allows to inspect
+	     * any track with a custom function */
+	    if (type == CM_TM)
+	    {
+		add_special (menu);
+	    }
 #endif
-	if (type == CM_PL)
-	{
-	    mi_delsep[type] = add_separator (menu[type]);
-	    mi_delipod[type] =
-		hookup_mi (menu[type],
-			   _("Delete Including Tracks"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
-	    mi_dellocal[type] =
-		hookup_mi (menu[type],
-			   _("Delete Including Tracks (Harddisk)"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_LOCAL));
-	    mi_deldb[type] =
-		hookup_mi (menu[type],
-			   _("Delete Including Tracks (Database)"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
-	    mi_delpl[type] =
-		hookup_mi (menu[type],
-			   _("Delete But Keep Tracks"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_PLAYLIST));
-	    mi_delipod_all[type] =
-		hookup_mi (menu[type],
-			   _("Remove All Tracks from iPod"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
-	    mi_deldb_all[type] =
-		hookup_mi (menu[type],
-			   _("Remove All Tracks from Database"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_DATABASE));
-
-	    mi_delpcipod[type] =
-		hookup_mi (menu[type],
-			   _("Remove All Podcasts from iPod"),
-			   GTK_STOCK_DELETE,
-			   G_CALLBACK (delete_entries),
-			   GINT_TO_POINTER (DELETE_ACTION_IPOD));
-
-	    mi_io_sep = add_separator (menu[type]);
-
-	    mi_prop_pl = hookup_mi (menu[type], 
-				    _("Edit Playlist Properties"),
-				    GTK_STOCK_PREFERENCES,
-				    G_CALLBACK (edit_properties), NULL);
-	    mi_prop_rep = hookup_mi (menu[type], 
-				     _("Edit Repository Properties"),
-				     GTK_STOCK_PREFERENCES,
-				     G_CALLBACK (edit_properties), NULL);
-	    mi_prop_ipod = hookup_mi (menu[type], 
-				      _("Edit iPod Properties"),
-				      GTK_STOCK_PREFERENCES,
-				      G_CALLBACK (edit_properties), NULL);
-
-	    mi_ipodio_load =
-		hookup_mi (menu[type],
-			   _("Load iPod"),
-			   GTK_STOCK_CONNECT,
-			   G_CALLBACK (load_ipod), NULL);
-
-	    mi_ipodio_eject =
-		hookup_mi (menu[type],
-			   _("Eject iPod"),
-			   GTK_STOCK_DISCONNECT,
-			   G_CALLBACK (eject_ipod), NULL);
-
-	    mi_io_save =
-		hookup_mi (menu[type],
-			   _("Save Changes"),
-			   GTK_STOCK_SAVE,
-			   G_CALLBACK (save_changes), NULL);
-
-
+	    break;
+	case CM_NUM:
+	    g_return_if_reached ();
 	}
     }
-    /* Make sure, only available options are displayed */
-    pl = pm_get_selected_playlist();
-    if (pl)
-    {
-	ExtraiTunesDBData *eitdb;
-	iTunesDB *itdb = pl->itdb;
-	g_return_val_if_fail (itdb, NULL);
-	eitdb = itdb->userdata;
-	g_return_val_if_fail (eitdb, NULL);
-
-	/* Make sure, only available delete options are displayed */
-	switch (type)
-	{
-	case CM_PL:
-	    gtk_widget_hide (mi_spl[type]);
-	    gtk_widget_hide (mi_dellocal[type]);
-	    gtk_widget_hide (mi_delpl[type]);
-	    gtk_widget_hide (mi_deldb[type]);
-	    gtk_widget_hide (mi_deldb_all[type]);
-	    gtk_widget_hide (mi_delsep[type]);
-	    gtk_widget_hide (mi_delipod[type]);
-	    gtk_widget_hide (mi_delipod_all[type]);
-	    gtk_widget_hide (mi_delpcipod[type]);
-	    gtk_widget_hide (mi_dellocal[type]);
-	    gtk_widget_hide (mi_io_sep);
-	    gtk_widget_hide (mi_ipodio_load);
-	    gtk_widget_hide (mi_ipodio_eject);
-	    gtk_widget_hide (mi_io_save);
-	    gtk_widget_hide (mi_prop_pl);
-	    gtk_widget_hide (mi_prop_rep);
-	    gtk_widget_hide (mi_prop_ipod);
-
-	    if (pl->is_spl)
-	    {
-		gtk_widget_show (mi_spl[type]);
-	    }
-
-	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	    {
-		if (itdb_playlist_is_mpl (pl))
-		{
-		    gtk_widget_show (mi_delipod_all[type]);
-		    gtk_widget_show (mi_io_sep);
-		    gtk_widget_show (mi_prop_ipod);
-		    if (eitdb->itdb_imported)
-		    {
-			gtk_widget_show (mi_ipodio_eject);
-		    }
-		    else
-		    {
-			gtk_widget_show (mi_ipodio_load);
-		    }
-		}
-		else
-		{
-		    gtk_widget_show (mi_prop_pl);
-		    if (itdb_playlist_is_podcasts (pl))
-		    {
-			gtk_widget_show (mi_delpcipod[type]);
-		    }
-		    else
-		    {
-			gtk_widget_show (mi_delsep[type]);
-			gtk_widget_show (mi_delipod[type]);
-			gtk_widget_show (mi_delpl[type]);
-		    }
-		}
-	    }
-
-	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-	    {
-		if (itdb_playlist_is_mpl (pl))
-		{
-		    gtk_widget_show (mi_prop_rep);
-		    gtk_widget_show (mi_deldb_all[type]);
-		    if (eitdb->data_changed)
-		    {
-			gtk_widget_show (mi_io_sep);
-			gtk_widget_show (mi_io_save);
-		    }
-
-		}
-		else
-		{
-		    gtk_widget_show (mi_prop_pl);
-		    gtk_widget_show (mi_delsep[type]);
-		    gtk_widget_show (mi_dellocal[type]);
-		    gtk_widget_show (mi_deldb[type]);
-		    gtk_widget_show (mi_delpl[type]);
-		}
-	    }
-
-	    if (itdb->usertype & GP_ITDB_TYPE_PODCASTS)
-	    {
-		gtk_widget_show (mi_delsep[type]);
-	    }
-	    break;
-	case CM_ST:
-	case CM_TM:
-	    gtk_widget_hide (mi_spl[type]);
-	    gtk_widget_hide (mi_dellocal[type]);
-	    gtk_widget_hide (mi_deldb[type]);
-	    gtk_widget_hide (mi_delpl[type]);
-	    gtk_widget_hide (mi_delipod[type]);
-
-	    if (pl->is_spl)
-	    {
-		gtk_widget_show (mi_spl[type]);
-	    }
-	    if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	    {
-		gtk_widget_show (mi_delipod[type]);
-		if (!itdb_playlist_is_mpl (pl) &&
-		    !itdb_playlist_is_podcasts (pl))
-		{
-		    gtk_widget_show (mi_delpl[type]);
-		}
-	    }
-	    if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
-	    {
-		gtk_widget_show (mi_dellocal[type]);
-		gtk_widget_show (mi_deldb[type]);
-		/* actually, local repositories are not supposed to
-		   have podcasts playlists, but for completeness' sake
-		   I'll test anyway*/
-		if(!itdb_playlist_is_mpl (pl) &&
-		   !itdb_playlist_is_podcasts (pl))
-		{
-		    gtk_widget_show (mi_delpl[type]);
-		}
-	    }
-	    break;
-	case CM_NUM:  /* to avoid compiler warning */
-	    break;
-	}
-	/* turn 'export tracks' insensitive when necessary */
-	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	{
-	    gtk_widget_set_sensitive (mi_exp[type],
-				      !prefs_get_offline ());
-	}
-	else
-	{
-	    gtk_widget_set_sensitive (mi_exp[type], TRUE);
-	}
-    }
-
-    return GTK_MENU (menu[type]);
-}
-
-
-
-void create_context_menu (CM_type type)
-{
-    GtkMenu *menu = NULL;
-
-    switch (type)
-    {
-    case CM_PL:
-	menu = create_context_menu_pl ();
-	break;
-    case CM_ST:
-/* 	create_context_menu_st (); */
-	menu = create_context_menu_old (CM_ST);
-	break;
-    case CM_TM:
-/* 	create_context_menu_tm (); */
-	menu = create_context_menu_old (CM_TM);
-	break;
-    case CM_NUM:
-	g_return_if_reached ();
-    }
-
-
     /* 
      * button should be button 0 as per the docs because we're calling
      * from a button release event
      */
     if (menu)
     {
-	gtk_menu_popup (menu, NULL, NULL,
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
 			NULL, NULL, 0, gtk_get_current_event_time()); 
     }
 }
