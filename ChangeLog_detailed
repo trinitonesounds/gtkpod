@@ -1,5 +1,9 @@
 2006-06-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	*  src/display.c
+	   src/display_itdb.c (gp_get_ipod_itdb): changed default
+           behavior in case more than one iPod itdb is present.
+
 	*  src/context_menus.c
 	   src/display.c
 	   src/display_itdb.c

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 00:00:10 jcs>
+/* Time-stamp: <2006-06-24 01:21:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1034,13 +1034,23 @@ iTunesDB *gp_get_selected_itdb (void)
 }
 
 
-/* get the "ipod" itdb, that's the first itdb with
-   type==GP_ITDB_TYPE_IPOD. Returns NULL if no matching itdb can be
-   found */
+/* Get the "ipod" itdb. If only one iPod itdb exists, this itdb is
+ * returned. If more than one iPod itdb exists, the currently selected
+ * itdb is returned if it's an iPod itdb, otherwise NULL is returned.
+ */
 iTunesDB *gp_get_ipod_itdb (void)
 {
     struct itdbs_head *itdbs_head;
+    iTunesDB *itdb;
     GList *gl;
+    gint i;
+
+    /* if an iPod itdb is selected, return this */
+    itdb = gp_get_selected_itdb ();
+    if (itdb && (itdb->usertype & GP_ITDB_TYPE_IPOD))
+	return itdb;
+
+    itdb = NULL;
 
     g_return_val_if_fail (gtkpod_window, NULL);
     itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
@@ -1048,13 +1058,21 @@ iTunesDB *gp_get_ipod_itdb (void)
 
     if (itdbs_head == NULL) return NULL;
 
+    i=0;
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
-	iTunesDB *itdb = gl->data;
-	g_return_val_if_fail (itdb, NULL);
-	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
-	    return itdb;
+	iTunesDB *itdbgl = gl->data;
+	g_return_val_if_fail (itdbgl, NULL);
+	if (itdbgl->usertype & GP_ITDB_TYPE_IPOD)
+	{
+	    itdb = itdbgl;
+	    ++i;
+	}
     }
+    /* return iPod itdb if only one was found */
+    if (i == 1)
+	return itdb;
+
     return NULL;
 }
 

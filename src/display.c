@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 00:41:07 jcs>
+/* Time-stamp: <2006-06-24 01:18:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1189,13 +1189,13 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
     iTunesDB *itdb = gp_get_ipod_itdb ();
-    if (!itdb)
+    if (itdb)
     {
-	gtkpod_statusbar_message (_("Currently no iPod database selected"));
+	ipod_directories_head (itdb_get_mountpoint (itdb));
     }
     else
     {
-	ipod_directories_head (itdb_get_mountpoint (itdb));
+	message_sb_no_ipod_itdb_selected ();
     }
 }
 
@@ -1203,7 +1203,15 @@ void
 on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    check_db (gp_get_ipod_itdb());
+    iTunesDB *itdb = gp_get_ipod_itdb ();
+    if (itdb)
+    {
+	check_db (itdb);
+    }
+    else
+    {
+	message_sb_no_ipod_itdb_selected ();
+    }
 }
 
 
