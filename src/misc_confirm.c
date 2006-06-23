@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-31 21:53:06 jcs>
+/* Time-stamp: <2006-06-24 01:59:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -331,7 +331,7 @@ void delete_track_head (DeleteAction deleteaction)
     pl = pm_get_selected_playlist ();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
-	gtkpod_statusbar_message (_("No playlist selected."));
+	message_sb_no_playlist_selected ();
 	return;
     }
     itdb = pl->itdb;
@@ -340,7 +340,7 @@ void delete_track_head (DeleteAction deleteaction)
     selected_tracks = tm_get_selected_tracks();
     if (selected_tracks == NULL)
     {  /* no tracks selected */
-	gtkpod_statusbar_message (_("No tracks selected."));
+	message_sb_no_tracks_selected ();
 	return;
     }
 
@@ -419,7 +419,7 @@ void delete_entry_head (gint inst, DeleteAction deleteaction)
     pl = pm_get_selected_playlist();
     if (pl == NULL)
     { /* no playlist??? Cannot happen, but... */
-	gtkpod_statusbar_message (_("No playlist selected."));
+	message_sb_no_playlist_selected ();
 	return;
     }
     itdb = pl->itdb;
@@ -669,7 +669,7 @@ void delete_playlist_head (DeleteAction deleteaction)
     pl = pm_get_selected_playlist();
     if (!pl)
     { /* no playlist selected */
-	gtkpod_statusbar_message (_("No playlist selected."));
+	message_sb_no_playlist_selected ();
 	return;
     }
 

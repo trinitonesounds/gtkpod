@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 14:15:48 jcs>
+/* Time-stamp: <2006-06-24 01:53:44 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1613,7 +1613,7 @@ void gp_do_selected_playlist (void (*do_func)(GList *tracks))
     pl = pm_get_selected_playlist();
     if (!pl)
     { /* no playlist selected */
-	gtkpod_statusbar_message (_("No playlist selected."));
+	message_sb_no_playlist_selected ();
 	return;
     }
     for (gl=pl->members; gl; gl=gl->next)

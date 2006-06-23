@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:38:21 jcs>
+/* Time-stamp: <2006-06-24 01:53:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -288,7 +288,7 @@ void randomize_current_playlist (void)
 
     if (!pl)
     {
-	gtkpod_statusbar_message (_("No playlist selected"));
+	message_sb_no_playlist_selected ();
 	return;
     }
 

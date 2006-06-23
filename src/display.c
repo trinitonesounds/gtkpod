@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:18:27 jcs>
+/* Time-stamp: <2006-06-24 01:53:45 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -886,12 +886,14 @@ void on_edit_details_selected_playlist (GtkMenuItem     *menuitem,
 {
     Playlist *pl = pm_get_selected_playlist ();
 
-    if (!pl)
+    if (pl)
     {
-	gtkpod_statusbar_message (_("No playlist selected"));
-	return;
+	details_edit (pl->members);
     }
-    details_edit (pl->members);
+    else
+    {
+	message_sb_no_playlist_selected ();
+    }
 }
 
 void on_edit_details_selected_tab_entry (GtkMenuItem     *menuitem,
@@ -1275,17 +1277,18 @@ on_sync_playlist_activate (GtkMenuItem     *menuitem,
     Playlist *pl;
 
     pl = pm_get_selected_playlist();
-    if (!pl)
-    { /* no playlist selected */
-	gtkpod_statusbar_message (_("No playlist selected."));
-	return;
+    if (pl)
+    {
+	sync_playlist (pl, NULL,
+		       KEY_SYNC_CONFIRM_DIRS, 0,
+		       KEY_SYNC_DELETE_TRACKS, 0,
+		       KEY_SYNC_CONFIRM_DELETE, 0,
+		       KEY_SYNC_SHOW_SUMMARY, 0);
     }
-
-    sync_playlist (pl, NULL,
-		   KEY_SYNC_CONFIRM_DIRS, 0,
-		   KEY_SYNC_DELETE_TRACKS, 0,
-		   KEY_SYNC_CONFIRM_DELETE, 0,
-		   KEY_SYNC_SHOW_SUMMARY, 0);
+    else
+    {
+	message_sb_no_playlist_selected ();
+    }
 }
 
 void
@@ -1331,10 +1334,12 @@ on_export_playlist_activate  (GtkMenuItem     *menuitem,
 
     if (!pl)
     {
-	gtkpod_statusbar_message (_("No playlist selected"));
-	return;
+	export_files_init (pl->members, NULL, FALSE, NULL);
     }
-    export_files_init (pl->members, NULL, FALSE, NULL);
+    else
+    {
+	message_sb_no_playlist_selected ();
+    }
 }
 
 
@@ -1372,7 +1377,7 @@ on_export_tracks_activate     (GtkMenuItem     *menuitem,
     }
     else
     {
-	gtkpod_statusbar_message (_("No tracks selected"));
+	message_sb_no_tracks_selected ();
     }
 }
 
@@ -1383,12 +1388,14 @@ on_playlist_file_playlist_activate     (GtkMenuItem     *menuitem,
 {
     Playlist *pl = pm_get_selected_playlist ();
 
-    if (!pl)
+    if (pl)
     {
-	gtkpod_statusbar_message (_("No playlist selected"));
-	return;
+	export_playlist_file_init (pl->members);
     }
-    export_playlist_file_init (pl->members);
+    else
+    {
+	message_sb_no_playlist_selected ();
+    }
 }
 
 
@@ -1426,7 +1433,7 @@ on_playlist_file_tracks_activate       (GtkMenuItem     *menuitem,
     }
     else
     {
-	gtkpod_statusbar_message (_("No tracks selected"));
+	message_sb_no_tracks_selected ();
     }
 }
 
@@ -1436,9 +1443,13 @@ on_play_playlist_activate              (GtkMenuItem     *menuitem,
 {
     Playlist *pl = pm_get_selected_playlist ();
     if (pl)
+    {
 	tools_play_tracks (pl->members);
+    }
     else
-	gtkpod_statusbar_message (_("No playlist selected"));
+    {
+	message_sb_no_playlist_selected ();
+    }
 }
 
 
@@ -1475,7 +1486,9 @@ on_play_tracks_activate                 (GtkMenuItem     *menuitem,
 	tracks = NULL;
     }
     else
-	gtkpod_statusbar_message (_("No tracks selected"));
+    {
+	message_sb_no_tracks_selected ();
+    }
 }
 
 
@@ -1485,9 +1498,13 @@ on_enqueue_playlist_activate           (GtkMenuItem     *menuitem,
 {
     Playlist *pl = pm_get_selected_playlist ();
     if (pl)
+    {
 	tools_enqueue_tracks (pl->members);
+    }
     else
-	gtkpod_statusbar_message (_("No playlist selected"));
+    {
+	message_sb_no_playlist_selected ();
+    }
 }
 
 
@@ -1524,7 +1541,9 @@ on_enqueue_tracks_activate              (GtkMenuItem     *menuitem,
 	tracks = NULL;
     }
     else
-	gtkpod_statusbar_message (_("No tracks selected"));
+    {
+	message_sb_no_tracks_selected ();
+    }    
 }
 
 
