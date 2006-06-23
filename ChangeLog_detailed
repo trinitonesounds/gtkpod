@@ -1,5 +1,17 @@
 2006-06-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	*  src/file_export.c
+	   src/file_itunesdb.c
+	   src/info.c
+	   src/info.h
+	   src/misc_playlist.c
+	   src/prefs.c
+	   src/prefs.h
+	   src/tools.c: removed 'statusbar_timeout' prefs key and
+	   introduced 'gtkpod_statusbar_timeout()' call
+	   instead (the value doesn't have to be saved). Statusbar
+	   messages are now displayed again.
+
 	*  src/display.c
 	   src/display_itdb.c (gp_get_ipod_itdb): changed default
            behavior in case more than one iPod itdb is present.

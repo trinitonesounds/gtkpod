@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-23 23:32:23 jcs>
+/* Time-stamp: <2006-06-24 01:41:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -50,6 +50,7 @@ static GtkWidget *gtkpod_statusbar = NULL;
 static GtkWidget *gtkpod_tracks_statusbar = NULL;
 static GtkWidget *gtkpod_space_statusbar = NULL;
 static guint statusbar_timeout_id = 0;
+static guint statusbar_timeout = STATUSBAR_TIMEOUT;
 
 /* lock for size related variables (used by child and parent) */
 static GMutex *space_mutex = NULL;
@@ -398,6 +399,7 @@ void
 gtkpod_statusbar_init(void)
 {
     gtkpod_statusbar = gtkpod_xml_get_widget (main_window_xml, "gtkpod_status");
+    statusbar_timeout = STATUSBAR_TIMEOUT;
 }
 
 static gint
@@ -413,14 +415,25 @@ gtkpod_statusbar_clear(gpointer data)
 }
 
 
-void
+static void
 gtkpod_statusbar_reset_timeout (void)
 {
     if (statusbar_timeout_id != 0) /* remove last timeout, if still present */
 	gtk_timeout_remove (statusbar_timeout_id);
-    statusbar_timeout_id = gtk_timeout_add(prefs_get_int("statusbar_timeout"),
-					   (GtkFunction) gtkpod_statusbar_clear,
-					   NULL);
+    statusbar_timeout_id = gtk_timeout_add (statusbar_timeout,
+					    (GtkFunction) gtkpod_statusbar_clear,
+					    NULL);
+}
+
+void
+gtkpod_statusbar_timeout (guint timeout)
+{
+    if (timeout == 0)
+	statusbar_timeout = STATUSBAR_TIMEOUT;
+    else
+	statusbar_timeout = timeout;
+
+    gtkpod_statusbar_reset_timeout ();
 }
 
 

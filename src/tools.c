@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-12 00:39:56 jcs>
+/* Time-stamp: <2006-06-24 01:38:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -422,8 +422,7 @@ void nm_tracks_list (GList *list)
   else
   {
       /* we need ***much*** longer timeout */
-      prefs_set_int("statusbar_timeout", 30*STATUSBAR_TIMEOUT);
-      gtkpod_statusbar_reset_timeout();
+      gtkpod_statusbar_timeout (30*STATUSBAR_TIMEOUT);
   }
   while (!abort &&  (list!=NULL))
   {
@@ -525,8 +524,7 @@ void nm_tracks_list (GList *list)
      list=g_list_next(list);
   } /*end while*/
 
-  prefs_set_int("statusbar_timeout", STATUSBAR_TIMEOUT);
-  gtkpod_statusbar_reset_timeout();
+  gtkpod_statusbar_timeout (0);
 
   gtkpod_statusbar_message (ngettext ("Normalized %d of %d tracks.",
 				      "Normalized %d of %d tracks.", n),

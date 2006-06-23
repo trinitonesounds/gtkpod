@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 00:00:10 jcs>
+/* Time-stamp: <2006-06-24 01:38:21 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1025,8 +1025,7 @@ void check_db (iTunesDB *itdb)
 	}
     }
 
-    prefs_set_int("statusbar_timeout", 30*STATUSBAR_TIMEOUT);
-    gtkpod_statusbar_reset_timeout();
+    gtkpod_statusbar_timeout (30*STATUSBAR_TIMEOUT);
     block_widgets();
 
     gtkpod_statusbar_message(_("Creating a tree of known files"));
@@ -1232,7 +1231,6 @@ void check_db (iTunesDB *itdb)
     g_tree_destroy (files_known);
     gtkpod_statusbar_message (_("Found %d orphaned and %d dangling files. Done."),
 			      norphaned, ndangling);
-    prefs_set_int("statusbar_timeout", STATUSBAR_TIMEOUT);
-    gtkpod_statusbar_reset_timeout();
+    gtkpod_statusbar_timeout (0);
     release_widgets ();
 }

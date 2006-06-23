@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-15 23:31:30 jcs>
+/* Time-stamp: <2006-06-24 01:38:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -63,7 +63,6 @@ struct cfg
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   
   gboolean offline;       /* are we working offline, i.e. without iPod? */
-  guint32 statusbar_timeout;    /* timeout for statusbar messages */
   float version;                /* version of gtkpod writing the cfg file */
 };
 
@@ -205,11 +204,9 @@ void prefs_set_offline(gboolean active);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
-void prefs_set_statusbar_timeout (guint32 val);
 
 gboolean prefs_get_offline(void);
 gchar * prefs_get_charset (void);
 gboolean prefs_get_md5tracks(void);
-guint32 prefs_get_statusbar_timeout (void);
 
 #endif

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 18:06:33 jcs>
+/* Time-stamp: <2006-06-24 01:38:21 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1461,15 +1461,11 @@ static gboolean flush_tracks (iTunesDB *itdb)
 	  ++count;
 	  if (count == 1)  /* we need longer timeout */
 	  {
-	      prefs_set_int("statusbar_timeout", 
-			    3*STATUSBAR_TIMEOUT);
-	      gtkpod_statusbar_reset_timeout();
+	      gtkpod_statusbar_timeout (3*STATUSBAR_TIMEOUT);
 	  }
 	  if (count == n)  /* we need to reset timeout */
 	  {
-	      prefs_set_int("statusbar_timeout", 
-			    STATUSBAR_TIMEOUT);
-	      gtkpod_statusbar_reset_timeout();
+	      gtkpod_statusbar_timeout (0);
           }
 	  gtkpod_statusbar_message (
 	      ngettext ("Copied %d of %d new track.",
@@ -1499,8 +1495,7 @@ static gboolean flush_tracks (iTunesDB *itdb)
   if (abort_flag)      result = FALSE;   /* negative result if user aborted */
   if (result == FALSE)
       gtkpod_statusbar_message (_("Some tracks were not written to iPod. Export aborted!"));
-  prefs_set_int("statusbar_timeout", 0);
-  gtkpod_statusbar_reset_timeout();
+  gtkpod_statusbar_timeout (0);
   gtk_widget_destroy (dialog);
   while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   return result;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 18:05:04 jcs>
+/* Time-stamp: <2006-06-24 01:38:22 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -475,15 +475,12 @@ static void export_files_write (struct fcd *fcd)
 	    ++count;
 	    if (count == 1) /* we need longer timeout */
 	    {
-		prefs_set_int("statusbar_timeout", 3*STATUSBAR_TIMEOUT);
-		gtkpod_statusbar_reset_timeout();
+		gtkpod_statusbar_timeout (3*STATUSBAR_TIMEOUT);
 	    }
 	        
 	    if (count == n)  /* we need to reset timeout */
 	    {
-		prefs_set_int("statusbar_timeout", 
-			      STATUSBAR_TIMEOUT);
-		gtkpod_statusbar_reset_timeout();
+		gtkpod_statusbar_timeout (0);
 	    }
 	    gtkpod_statusbar_message (ngettext ("Copied %d of %d track.",
 						"Copied %d of %d tracks.", n),

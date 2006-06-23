@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-15 23:32:55 jcs>
+/* Time-stamp: <2006-06-24 01:38:19 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -858,36 +858,18 @@ static void cleanup_keys()
     }
 
     /* If there's an extra (PATH_NUM) key, delete it */
-    if (prefs_get_string_value_index("path", PATH_NUM, NULL))
-	prefs_set_string_index("path", PATH_NUM, NULL);
-  
-    if (prefs_get_string_value_index("toolpath", PATH_NUM, NULL))
-	prefs_set_string_index("toolpath", PATH_NUM, NULL);
-  
-    /* Ignore play_now_path */
-    if (prefs_get_string_value("play_now_path", NULL))
-	prefs_set_string("play_now_path", NULL);
-  
-    /* Ignore sync_remove */
-    if (prefs_get_string_value("sync_remove", NULL))
-	prefs_set_string("sync_remove", NULL);
-  
-    /* Ignore sync_remove_confirm */
-    if (prefs_get_string_value("sync_remove_confirm", NULL))
-	prefs_set_string("sync_remove_confirm", NULL);
-  
-    /* Ignore show_sync_dirs */
-    if (prefs_get_string_value("show_sync_dirs", NULL))
-	prefs_set_string("show_sync_dirs", NULL);
-  
-    /* Ignore play_enqueue_path */
-    if (prefs_get_string_value("play_enqueue_path", NULL))
-	prefs_set_string("play_enqueue_path", NULL);
-  
-    /* Ignore mp3gain_path */
-    if (prefs_get_string_value("mp3gain_path", NULL))
-	prefs_set_string("mp3gain_path", NULL);
-  
+    prefs_set_string_index("path", PATH_NUM, NULL);
+    prefs_set_string_index("toolpath", PATH_NUM, NULL);
+
+    /* Ignore/remove some keys */
+    prefs_set_string("play_now_path", NULL);
+    prefs_set_string("sync_remove", NULL);
+    prefs_set_string("sync_remove_confirm", NULL);
+    prefs_set_string("show_sync_dirs", NULL);
+    prefs_set_string("play_enqueue_path", NULL);
+    prefs_set_string("mp3gain_path", NULL);
+    prefs_set_string("statusbar_timeout", NULL);
+
     /* sp_created_cond renamed to sp_added_cond */
     for (i = 0; i < SORT_TAB_MAX; i++)
     {
@@ -2333,18 +2315,3 @@ gchar *prefs_get_cfgdir (void)
   }
   return cfgdir;
 }
-
-/* A value of "0" will set the default defined in misc.c */
-void prefs_set_statusbar_timeout (guint32 val)
-{
-    if (val == 0)  val = STATUSBAR_TIMEOUT;
-    cfg->statusbar_timeout = val;
-    gtkpod_statusbar_reset_timeout ();
-}
-
-guint32 prefs_get_statusbar_timeout (void)
-{
-    return cfg->statusbar_timeout;
-}
-
-
