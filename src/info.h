@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-22 00:38:01 jcs>
+/* Time-stamp: <2006-06-23 23:32:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -63,4 +63,11 @@ void space_set_ipod_itdb (iTunesDB *itdb);
 iTunesDB *space_get_ipod_itdb (void);
 void space_data_update (void);
 gboolean ipod_connected (void);
+
+/* standard messages */
+void message_sb_no_itdb_selected (void);
+void message_sb_no_tracks_selected (void);
+void message_sb_no_playlist_selected (void);
+void message_sb_no_ipod_itdb_selected (void);
+
 #endif

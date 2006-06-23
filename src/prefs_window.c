@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-14 00:22:15 jcs>
+/* Time-stamp: <2006-06-24 00:00:09 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -868,24 +868,57 @@ void
 on_edit_repository_clicked           (GtkButton       *button,
 				      gpointer         user_data)
 {
-    repository_edit (gp_get_active_itdb(), NULL);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	repository_edit (itdb, NULL);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 void
 on_calendar_contact_notes_options_clicked (GtkButton       *button,
 					   gpointer         user_data)
 {
-    /* Select an iPod repository. If the currently selected repository
-       is not an iPod repository, select the first iPod repository. */
-    iTunesDB *itdb = gp_get_active_itdb();
-    if (itdb)
+    iTunesDB *itdb = gp_get_ipod_itdb();
+
+    /* no iPod itdb selected -> try to use the first iPod itdb */
+    if (!itdb)
     {
-	if (! (itdb->usertype & GP_ITDB_TYPE_IPOD))
+	struct itdbs_head *itdbs_head;
+
+	g_return_if_fail (gtkpod_window);
+	itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
+					"itdbs_head");
+	if (itdbs_head)
 	{
-	    itdb = gp_get_ipod_itdb();
+	    GList *gl;
+	    for (gl=itdbs_head->itdbs; gl; gl=gl->next)
+	    {
+		iTunesDB *itdbgl = gl->data;
+		g_return_if_fail (itdbgl);
+		if (itdbgl->usertype & GP_ITDB_TYPE_IPOD)
+		    break;
+	    }
+	    if (gl)
+	    {
+		itdb = gl->data;
+	    }
 	}
     }
-    repository_edit (itdb, NULL);
+
+    if (itdb)
+    {
+	repository_edit (itdb, NULL);
+    }
+    else
+    {
+	message_sb_no_ipod_itdb_selected ();
+    }
 }
 
 

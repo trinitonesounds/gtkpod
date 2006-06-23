@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-04 23:35:21 jcs>
+/* Time-stamp: <2006-06-23 23:32:23 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -856,3 +856,32 @@ gtkpod_space_statusbar_init(void)
     gtkpod_space_statusbar_update();
     gtk_timeout_add(1000, (GtkFunction) gtkpod_space_statusbar_update, NULL);
 }
+
+
+
+/*------------------------------------------------------------------*\
+ *                                                                  *
+ *              Frequently used error messages                      *
+ *                                                                  *
+\*------------------------------------------------------------------*/
+
+void message_sb_no_itdb_selected ()
+{
+    gtkpod_statusbar_message (_("No database or playlist selected"));
+}
+
+void message_sb_no_tracks_selected ()
+{
+    gtkpod_statusbar_message (_("No tracks selected"));
+}
+
+void message_sb_no_playlist_selected ()
+{
+    gtkpod_statusbar_message (_("No playlist selected"));
+}
+
+void message_sb_no_ipod_itdb_selected ()
+{
+    gtkpod_statusbar_message (_("No iPod or iPod playlist selected"));
+}
+

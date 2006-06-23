@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-23 00:55:05 jcs>
+/* Time-stamp: <2006-06-23 23:33:50 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -751,7 +751,7 @@ tm_context_menu_init(void)
 
     selected_entry = NULL; 
     selected_playlist = NULL;
-    active_itdb = gp_get_active_itdb ();
+    active_itdb = gp_get_selected_itdb ();
     entry_inst = -1;
     if (selected_tracks)  g_list_free (selected_tracks);
     selected_tracks = tm_get_selected_tracks();
@@ -775,7 +775,7 @@ pm_context_menu_init(void)
     selected_entry = NULL;
     entry_inst = -1;
     selected_playlist = pm_get_selected_playlist();
-    active_itdb = gp_get_active_itdb ();
+    active_itdb = gp_get_selected_itdb ();
     if(selected_playlist)
     {
 	selected_tracks = g_list_copy (selected_playlist->members);
@@ -797,7 +797,7 @@ st_context_menu_init(gint inst)
     selected_tracks = NULL;
     selected_playlist = NULL;
     selected_entry = st_get_selected_entry (inst);
-    active_itdb = gp_get_active_itdb ();
+    active_itdb = gp_get_selected_itdb ();
     if(selected_entry)
     {
 	entry_inst = inst;

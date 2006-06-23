@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-04 23:35:22 jcs>
+/* Time-stamp: <2006-06-24 00:00:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1016,12 +1016,11 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 }
 
 
-/* determine "active" itdb -- it's either the itdb of the playlist
- * currently selected, or the first itdb if none is selected */
-iTunesDB *gp_get_active_itdb (void)
+/* get the currently selected itdb. NULL is
+ * returned if no itdb is active. */
+iTunesDB *gp_get_selected_itdb (void)
 {
     Playlist *pl = pm_get_selected_playlist ();
-    struct itdbs_head *itdbs_head;
 
     /* If playlist is selected, use the itdb of the playlist as the
        active itdb */
@@ -1031,14 +1030,7 @@ iTunesDB *gp_get_active_itdb (void)
 	return pl->itdb;
     }
 
-    /* Otherwise choose the first itdb */
-    g_return_val_if_fail (gtkpod_window, NULL);
-    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
-				    "itdbs_head");
-    g_return_val_if_fail (itdbs_head, NULL);
-    g_return_val_if_fail (itdbs_head->itdbs, NULL);
-    g_return_val_if_fail (itdbs_head->itdbs->data, NULL);
-    return itdbs_head->itdbs->data;
+    return NULL;
 }
 
 

@@ -1,3 +1,28 @@
+2006-06-23 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	*  src/context_menus.c
+	   src/display.c
+	   src/display_itdb.c
+	   src/display_itdb.h
+	   src/display_playlists.c
+	   src/display_songs.c
+	   src/fileselection.c
+	   src/misc_playlist.c
+	   src/prefs_window.c: changed default behavior of
+	   gp_get_active_itdb() to return NULL when no itdb is
+	   selected and renamed to gp_get_selected_itdb(). Print message
+	   when no itdb is selected when one is needed.
+
+	*  src/info.c
+	   src/info.h: added standard error messages, used in the conversion above.
+	      void message_sb_no_itdb_selected (void);
+	      void message_sb_no_tracks_selected (void);
+	      void message_sb_no_playlist_selected (void);
+	      void message_sb_no_ipod_itdb_selected (void);
+
+	* src/display.c (display_adjust_menus): don't completely
+          disable edit menu when no itdb is present.
+
 2006-06-22 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/context_menus.c: moved context menus over to new

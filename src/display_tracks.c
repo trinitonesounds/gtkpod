@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 17:10:34 jcs>
+/* Time-stamp: <2006-06-23 23:52:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1354,19 +1354,23 @@ tm_get_selected_tracks(void)
 }
 
 
+
+    /* used by tm_get_all_tracks */
+    static gboolean on_all_tracks_list_foreach (GtkTreeModel *tm,
+						GtkTreePath *tp,
+						GtkTreeIter *i,
+						gpointer data)
+    {
+	on_tracks_list_foreach (tm, tp, i, data);
+	return FALSE;
+    }
+
+
 /* return a list containing pointers to all tracks currently being
    displayed. You must g_list_free() the list after use. */
 GList *
 tm_get_all_tracks(void)
 {
-    gboolean on_all_tracks_list_foreach (GtkTreeModel *tm,
-					 GtkTreePath *tp,
-					 GtkTreeIter *i,
-					 gpointer data)
-	{
-	    on_tracks_list_foreach (tm, tp, i, data);
-	    return FALSE;
-	}
     GList *result = NULL;
     GtkTreeModel *model = gtk_tree_view_get_model (track_treeview);
 

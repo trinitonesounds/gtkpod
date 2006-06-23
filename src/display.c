@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 22:15:20 jcs>
+/* Time-stamp: <2006-06-24 00:41:07 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -150,7 +150,8 @@ void display_cleanup (void)
 /* make sure only suitable delete menu items are available */
 void display_adjust_menus (void)
 {
-    GtkWidget *delete, *edit;
+    GtkWidget *delete;
+    GtkWidget *edit1, *edit2, *edit3, *edit4, *edit5;
     GtkWidget *dtfpl, *dtfip, *dtfdb, *dtfhd;
     GtkWidget *defpl, *defip, *defdb, *defhd;
     GtkWidget *dpl, *dpltfip, *dpltfdb, *dpltfhd;
@@ -159,7 +160,11 @@ void display_adjust_menus (void)
     Playlist *pl;
 
     delete = gtkpod_xml_get_widget (main_window_xml, "delete_menu");
-    edit = gtkpod_xml_get_widget (main_window_xml, "edit_menu");
+    edit1 = gtkpod_xml_get_widget (main_window_xml, "edit_details_menu");
+    edit2 = gtkpod_xml_get_widget (main_window_xml, "delete_menu");
+    edit3 = gtkpod_xml_get_widget (main_window_xml, "create_playlists_menu");
+    edit4 = gtkpod_xml_get_widget (main_window_xml, "randomize_current_playlist_menu");
+    edit5 = gtkpod_xml_get_widget (main_window_xml, "save_track_order_menu");
     dtfpl = gtkpod_xml_get_widget (main_window_xml,
 				   "delete_selected_tracks_from_playlist");
     dtfip = gtkpod_xml_get_widget (main_window_xml,
@@ -194,7 +199,11 @@ void display_adjust_menus (void)
     if (pl == NULL)
     {
 	gtk_widget_set_sensitive (delete, FALSE);
-	gtk_widget_set_sensitive (edit, FALSE);
+	gtk_widget_set_sensitive (edit1, FALSE);
+	gtk_widget_set_sensitive (edit2, FALSE);
+	gtk_widget_set_sensitive (edit3, FALSE);
+	gtk_widget_set_sensitive (edit4, FALSE);
+	gtk_widget_set_sensitive (edit5, FALSE);
     }
     else
     {
@@ -202,7 +211,11 @@ void display_adjust_menus (void)
 	g_return_if_fail (itdb);
 
 	gtk_widget_set_sensitive (delete, TRUE);
-	gtk_widget_set_sensitive (edit, TRUE);
+	gtk_widget_set_sensitive (edit1, TRUE);
+	gtk_widget_set_sensitive (edit2, TRUE);
+	gtk_widget_set_sensitive (edit3, TRUE);
+	gtk_widget_set_sensitive (edit4, TRUE);
+	gtk_widget_set_sensitive (edit5, TRUE);
 
 	gtk_widget_hide (dtfpl);
 	gtk_widget_hide (dtfip);
@@ -911,7 +924,7 @@ void on_edit_details_selected_tracks (GtkMenuItem     *menuitem,
     }
     else
     {
-	gtkpod_statusbar_message (_("No tracks selected"));
+	message_sb_no_tracks_selected ();
     }
 }
 
@@ -921,7 +934,16 @@ void
 on_new_playlist_button                 (GtkButton       *button,
 					gpointer         user_data)
 {
-  add_new_pl_or_spl_user_name (gp_get_active_itdb (), NULL, -1);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	add_new_pl_or_spl_user_name (itdb, NULL, -1);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -930,7 +952,16 @@ void
 on_new_playlist1_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-  add_new_pl_or_spl_user_name (gp_get_active_itdb(), NULL, -1);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	add_new_pl_or_spl_user_name (itdb, NULL, -1);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 void
@@ -1004,12 +1035,14 @@ void on_edit_smart_playlist (GtkMenuItem *mi,
 {
     Playlist *pl = pm_get_selected_playlist ();
 
-    if (!pl)
+    if (pl)
     {
-	gtkpod_statusbar_message (_("No playlist selected"));
-	return;
+	spl_edit (pl);
     }
-    spl_edit (pl);
+    else
+    {
+	message_sb_no_playlist_selected ();
+    }
 }
 
 
@@ -1024,7 +1057,7 @@ static void delete_selected_tracks (DeleteAction deleteaction)
     }
     else
     {
-	gtkpod_statusbar_message (_("No tracks selected"));
+	message_sb_no_tracks_selected ();
     }
 }    
 
@@ -1051,12 +1084,14 @@ static void delete_selected_playlist (DeleteAction deleteaction)
 {
     Playlist *pl = pm_get_selected_playlist ();
 
-    if (!pl)
+    if (pl)
     {
-	gtkpod_statusbar_message (_("No playlist selected"));
-	return;
+	delete_playlist_head (deleteaction);
     }
-    delete_playlist_head (deleteaction);
+    else
+    {
+	message_sb_no_playlist_selected ();
+    }
 }
 
 void on_delete_selected_tracks_from_database (GtkMenuItem *mi,
@@ -1153,7 +1188,7 @@ void
 on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    iTunesDB *itdb = gp_get_active_itdb ();
+    iTunesDB *itdb = gp_get_ipod_itdb ();
     if (!itdb)
     {
 	gtkpod_statusbar_message (_("Currently no iPod database selected"));
@@ -1163,6 +1198,14 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
 	ipod_directories_head (itdb_get_mountpoint (itdb));
     }
 }
+
+void
+on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
+					gpointer         user_data)
+{
+    check_db (gp_get_ipod_itdb());
+}
+
 
 void
 on_stop_button_clicked                 (GtkButton       *button,
@@ -1512,28 +1555,64 @@ void
 on_pl_for_each_artist_activate         (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    generate_category_playlists (gp_get_active_itdb(), T_ARTIST);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	generate_category_playlists (itdb, T_ARTIST);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 void
 on_pl_for_each_album_activate         (GtkMenuItem     *menuitem,
 				       gpointer         user_data)
 {
-    generate_category_playlists (gp_get_active_itdb(), T_ALBUM);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	generate_category_playlists (itdb, T_ALBUM);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 void
 on_pl_for_each_genre_activate         (GtkMenuItem     *menuitem,
 				       gpointer         user_data)
 {
-    generate_category_playlists (gp_get_active_itdb(), T_GENRE);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	generate_category_playlists (itdb, T_GENRE);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 void
 on_pl_for_each_composer_activate         (GtkMenuItem     *menuitem,
 					  gpointer         user_data)
 {
-    generate_category_playlists (gp_get_active_itdb(), T_COMPOSER);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	generate_category_playlists (itdb, T_COMPOSER);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -1541,7 +1620,16 @@ void
 on_pl_for_each_year_activate           (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    generate_category_playlists (gp_get_active_itdb(), T_YEAR);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	generate_category_playlists (itdb, T_YEAR);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -1549,7 +1637,16 @@ void
 on_most_listened_tracks1_activate       (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    most_listened_pl(gp_get_active_itdb());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	most_listened_pl (itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -1558,7 +1655,16 @@ on_all_tracks_never_listened_to1_activate
 					(GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    never_listened_pl(gp_get_active_itdb());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	never_listened_pl (itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 void
@@ -1566,7 +1672,16 @@ on_most_rated_tracks_playlist_s1_activate
 					(GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    most_rated_pl(gp_get_active_itdb());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	most_rated_pl (itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -1574,14 +1689,32 @@ void
 on_most_recent_played_tracks_activate   (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    last_listened_pl(gp_get_active_itdb());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	last_listened_pl (itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 void
 on_played_since_last_time1_activate    (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    since_last_pl(gp_get_active_itdb());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	since_last_pl (itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 void
@@ -1600,7 +1733,7 @@ on_normalize_selected_playlist_activate
     if (pl)
 	nm_tracks_list (pl->members);
     else
-	gtkpod_statusbar_message (_("No playlist selected"));
+	message_sb_no_playlist_selected ();
 }
 
 
@@ -1653,12 +1786,18 @@ void
 on_normalize_all_tracks                (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    iTunesDB *itdb = gp_get_active_itdb ();
-    Playlist *mpl;
-    g_return_if_fail (itdb);
-    mpl = itdb_playlist_mpl (itdb);
-    g_return_if_fail (mpl);
-    nm_tracks_list (mpl->members);
+    iTunesDB *itdb = gp_get_selected_itdb ();
+
+    if (itdb)
+    {
+	Playlist *mpl = itdb_playlist_mpl (itdb);
+	g_return_if_fail (mpl);
+	nm_tracks_list (mpl->members);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -1666,7 +1805,16 @@ void
 on_normalize_newly_added_tracks        (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    nm_new_tracks (gp_get_active_itdb ());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	nm_new_tracks (itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -1678,14 +1826,6 @@ on_info_window1_activate               (GtkMenuItem     *menuitem,
 	 info_open_window ();
     else info_close_window ();
 }
-
-void
-on_check_ipod_files_activate           (GtkMenuItem     *menuitem,
-					gpointer         user_data)
-{
-    check_db (gp_get_ipod_itdb());
-}
-
 
 void
 on_sync_all_activate                   (GtkMenuItem     *menuitem,
@@ -1712,17 +1852,15 @@ void
 on_sync_calendar_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    /* Select an iPod repository. If the currently selected repository
-       is not an iPod repository, select the first iPod repository. */
-    iTunesDB *itdb = gp_get_active_itdb();
+    iTunesDB *itdb = gp_get_ipod_itdb ();
     if (itdb)
     {
-	if (! (itdb->usertype & GP_ITDB_TYPE_IPOD))
-	{
-	    itdb = gp_get_ipod_itdb();
-	}
+	tools_sync_calendar (itdb);
     }
-    tools_sync_calendar (itdb);
+    else
+    {
+	message_sb_no_ipod_itdb_selected ();
+    }
 }
 
 
@@ -1730,17 +1868,15 @@ void
 on_sync_contacts_activate              (GtkMenuItem     *menuitem,
 					gpointer         user_data)
 {
-    /* Select an iPod repository. If the currently selected repository
-       is not an iPod repository, select the first iPod repository. */
-    iTunesDB *itdb = gp_get_active_itdb();
+    iTunesDB *itdb = gp_get_ipod_itdb ();
     if (itdb)
     {
-	if (! (itdb->usertype & GP_ITDB_TYPE_IPOD))
-	{
-	    itdb = gp_get_ipod_itdb();
-	}
+	tools_sync_contacts (itdb);
     }
-    tools_sync_contacts (itdb);
+    else
+    {
+	message_sb_no_ipod_itdb_selected ();
+    }
 }
 
 
@@ -1748,18 +1884,15 @@ void
 on_sync_notes_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    /* Select an iPod repository. If the currently selected repository
-       is not an iPod repository, select the first iPod repository. */
-    iTunesDB *itdb = gp_get_active_itdb();
+    iTunesDB *itdb = gp_get_ipod_itdb ();
     if (itdb)
     {
-	if (! (itdb->usertype & GP_ITDB_TYPE_IPOD))
-	{
-	    itdb = gp_get_ipod_itdb();
-	}
+	tools_sync_notes (itdb);
     }
-    tools_sync_notes (itdb);
-
+    else
+    {
+	message_sb_no_ipod_itdb_selected ();
+    }
 }
 
 void
@@ -1767,7 +1900,16 @@ on_all_tracks_not_listed_in_any_playlist1_activate
                                         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    generate_not_listed_playlist (gp_get_active_itdb ());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	generate_not_listed_playlist (itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -1775,7 +1917,16 @@ void
 on_random_playlist_activate            (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    generate_random_playlist(gp_get_active_itdb ());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	generate_random_playlist(itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -1790,5 +1941,14 @@ void
 on_pl_for_each_rating_activate         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    each_rating_pl (gp_get_active_itdb ());
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	each_rating_pl (itdb);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }

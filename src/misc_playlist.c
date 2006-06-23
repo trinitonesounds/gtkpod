@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 14:15:49 jcs>
+/* Time-stamp: <2006-06-24 00:00:10 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -115,7 +115,16 @@ void
 on_smart_playlist_activate             (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-    spl_edit_new (gp_get_active_itdb(), NULL, -1);
+    iTunesDB *itdb = gp_get_selected_itdb();
+
+    if (itdb)
+    {
+	spl_edit_new (itdb, NULL, -1);
+    }
+    else
+    {
+	message_sb_no_itdb_selected ();
+    }
 }
 
 
@@ -211,9 +220,13 @@ void generate_category_playlists (iTunesDB *itdb, T_item cat)
 Playlist *generate_displayed_playlist (void)
 {
     GList *tracks = tm_get_all_tracks ();
-    Playlist *result = generate_new_playlist (gp_get_active_itdb (),
-					      tracks);
-    g_list_free (tracks);
+    Playlist *result = NULL;
+
+    if (tracks)
+    {
+	result= generate_new_playlist (gp_get_selected_itdb (), tracks);
+	g_list_free (tracks);
+    }
     return result;
 }
 
@@ -223,9 +236,13 @@ Playlist *generate_displayed_playlist (void)
 Playlist *generate_selected_playlist (void)
 {
     GList *tracks = tm_get_selected_tracks ();
-    Playlist *result = generate_new_playlist (gp_get_active_itdb (),
-					      tracks);
-    g_list_free (tracks);
+    Playlist *result=NULL;
+
+    if (tracks)
+    {
+	result= generate_new_playlist (gp_get_selected_itdb (), tracks);
+	g_list_free (tracks);
+    }
     return result;
 }
 

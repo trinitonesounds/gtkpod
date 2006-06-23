@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-14 00:40:14 jcs>
+/* Time-stamp: <2006-06-23 23:59:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -146,8 +146,12 @@ void create_add_files_dialog (void)
     gchar *last_dir;
 	
     /* Grab the current playlist to add songs to */
-    fc_active_itdb = gp_get_active_itdb ();
-    g_return_if_fail (fc_active_itdb);
+    fc_active_itdb = gp_get_selected_itdb ();
+    if (!fc_active_itdb)
+    {
+	message_sb_no_itdb_selected ();
+	return;
+    }
 	
     /* Create the file chooser, and handle the response */
     fc = gtk_file_chooser_dialog_new (_("Add Files"),
@@ -235,8 +239,12 @@ void create_add_playlists_dialog(void)
     gchar *last_dir;
 	
     /* Grab the current playlist to add songs to */
-    fc_active_itdb = gp_get_active_itdb ();
-    g_return_if_fail (fc_active_itdb);
+    fc_active_itdb = gp_get_selected_itdb ();
+    if (!fc_active_itdb)
+    {
+	message_sb_no_itdb_selected ();
+	return;
+    }
 	
     /* Create the file chooser, and handle the response */
     fc = gtk_file_chooser_dialog_new (_("Add Playlists"),
@@ -697,7 +705,14 @@ void dirbrowser_create (void)
 	gdk_window_raise (dirbrowser->window);
 	return;
     }
-    db_active_itdb = gp_get_active_itdb ();
+
+    db_active_itdb = gp_get_selected_itdb ();
+    if (!db_active_itdb)
+    {
+	message_sb_no_itdb_selected ();
+	return;
+    }
+
     cur_dir = prefs_get_string ("last_dir_browsed");
     dirbrowser = xmms_create_dir_browser (
 	_("Select directory to add recursively"),

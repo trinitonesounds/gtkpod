@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 17:10:34 jcs>
+/* Time-stamp: <2006-06-23 23:52:48 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -965,14 +965,22 @@ on_playlist_treeview_key_release_event (GtkWidget       *widget,
 
     if(!widgets_blocked && (mods & GDK_CONTROL_MASK))
     {
+	iTunesDB *itdb = gp_get_selected_itdb();
+
 	switch(event->keyval)
 	{
 /* 	    case GDK_u: */
 /* 		gp_do_selected_playlist (update_tracks); */
 /* 		break; */
 	    case GDK_n:
-		add_new_pl_or_spl_user_name (gp_get_active_itdb(),
-					     NULL, -1);
+		if (itdb)
+		{
+		    add_new_pl_or_spl_user_name (itdb, NULL, -1);
+		}
+		else
+		{
+		    message_sb_no_itdb_selected ();
+		}
 		break;
 	    default:
 		break;
