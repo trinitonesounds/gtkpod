@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 23:54:22 jcs>
+/* Time-stamp: <2006-06-25 01:18:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -191,10 +191,8 @@ void prefs_free_list(GList *list);
 GList *get_list_from_buffer(GtkTextBuffer *buffer);
 
 gchar *prefs_get_cfgdir (void);
-void prefs_print(void);
 void cfg_free(struct cfg *c);
 void write_prefs (void);
-void discard_prefs (void);
 struct cfg* clone_prefs(void);
 gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 

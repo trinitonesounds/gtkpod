@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 23:54:22 jcs>
+/* Time-stamp: <2006-06-25 01:18:23 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -128,6 +128,7 @@ static GHashTable *prefs_table = NULL;
 /*
  * Functions used by this module only
  */
+void discard_prefs (void);
 
 /* Different paths that can be set in the prefs window */
 typedef enum

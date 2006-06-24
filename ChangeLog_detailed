@@ -1,5 +1,8 @@
 2006-06-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	* src/prefs.[ch]: removed unused prefs_print() declaration,
+          moved discard_prefs() declaration to prefs.c
+
 	* gtkpod.glade
 	  src/display.c
 	  src/display.h
