@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-05 00:33:43 jcs>
+/* Time-stamp: <2006-06-24 20:55:40 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -113,7 +113,6 @@ const gchar *get_tm_tooltip (TM_item tm);
 const gchar *get_t_string (T_item t);
 const gchar *get_t_tooltip (T_item t);
 
-void ipod_directories_head (const gchar *mountpoint);
 void delete_playlist_head (DeleteAction deleteaction);
 void delete_track_head (DeleteAction deleteaction);
 void delete_entry_head (gint entry_inst, DeleteAction deleteaction);

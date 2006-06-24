@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:53:45 jcs>
+/* Time-stamp: <2006-06-24 15:56:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -34,6 +34,7 @@
 #include "details.h"
 #include "display_private.h"
 #include "info.h"
+#include "ipod_init.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
@@ -1193,7 +1194,30 @@ on_ipod_directories_menu               (GtkMenuItem     *menuitem,
     iTunesDB *itdb = gp_get_ipod_itdb ();
     if (itdb)
     {
-	ipod_directories_head (itdb_get_mountpoint (itdb));
+	ExtraiTunesDBData *eitdb = itdb->userdata;
+
+	g_return_if_fail (eitdb);
+
+
+	if (!eitdb->itdb_imported)
+	{
+	    gchar *mountpoint = get_itdb_prefs_string (itdb, KEY_MOUNTPOINT);
+	    gchar *str = g_strdup_printf (_("iPod at '%s' is not loaded.\nPlease load it first."), mountpoint);
+	    GtkWidget *dialog = gtk_message_dialog_new (
+		GTK_WINDOW (gtkpod_window),
+		GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_WARNING,
+		GTK_BUTTONS_OK,
+		str);
+	    gtk_dialog_run (GTK_DIALOG (dialog));
+	    gtk_widget_destroy (dialog);
+	    g_free (str);
+	    g_free (mountpoint);
+	}
+	else
+	{
+	     gp_ipod_init (itdb);
+	}
     }
     else
     {
