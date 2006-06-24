@@ -1,5 +1,8 @@
 2006-06-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	* src/display.c (on_check_ipod_files_activate): require that
+          the iPod is loaded before checking files.
+
 	* src/display.c (on_ipod_directories_new): use new
 	  gp_ipod_init() function to create directories.
 
