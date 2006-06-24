@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:41:06 jcs>
+/* Time-stamp: <2006-06-25 00:22:55 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -57,7 +57,9 @@ static GMutex *space_mutex = NULL;
 static GThread *space_thread = NULL;
 static gboolean space_uptodate = FALSE;
 static gchar *space_mp = NULL;      /* thread save access through mutex */
-static iTunesDB *space_itdb = NULL; /* no thread save access */
+static iTunesDB *space_itdb = NULL; /* semi thread save access
+				     * (space_itdb will not be changed
+				     * while locked) */
 static gdouble space_ipod_free = 0; /* thread save access through mutex */
 static gdouble space_ipod_used = 0; /* thread save access through mutex */
 
@@ -368,7 +370,7 @@ void info_update_totals_view_space (void)
 	gp_info_deleted_tracks (itdb, &del_filesize, &del_tracks);
 	fill_label_uint ("deleted_tracks", del_tracks);
 	fill_label_size ("deleted_filesize", del_filesize);
-	if (!prefs_get_offline ())
+	if (!get_offline (itdb))
 	{
 	    if (ipod_connected ())
 	    {
@@ -526,6 +528,8 @@ void space_set_ipod_itdb (iTunesDB *itdb)
 
     if (space_mutex)  g_mutex_lock (space_mutex);
 
+    space_itdb = itdb;
+
     /* update the free space data if mount point changed */
     if (!space_mp || !mp || (strcmp (space_mp, mp) != 0))
     {
@@ -537,7 +541,6 @@ void space_set_ipod_itdb (iTunesDB *itdb)
 
     if (space_mutex)   g_mutex_unlock (space_mutex);
 
-    space_itdb = itdb;
 }
 
 /* retrieve the currently set ipod itdb -- needed in case the itdb is
@@ -583,15 +586,13 @@ static void th_space_update (void)
     struct statvfs stat;
     int	status;
 
-    /* don't read info when in offline mode */
-    if (!prefs_get_offline ())
-    {
-	g_mutex_lock (space_mutex);
-	mp = g_strdup (space_mp);
-	g_mutex_unlock (space_mutex);
-    }
-
     g_mutex_lock (space_mutex);
+
+    /* don't read info when in offline mode */
+    if (space_itdb && !get_offline (space_itdb))
+    {
+	mp = g_strdup (space_mp);
+    }
     if (mp)
     {
 	status = statvfs (mp, &stat);
@@ -799,22 +800,19 @@ get_filesize_as_string(gdouble size)
 static guint
 gtkpod_space_statusbar_update(void)
 {
-    if(gtkpod_space_statusbar)
+    if(space_itdb && gtkpod_space_statusbar)
     {
 	gchar *buf = NULL;
 	gchar *str = NULL;
 
-	if (!prefs_get_offline ())
+	if (!get_offline (space_itdb))
 	{
 	    if (ipod_connected ())
 	    {
 		gdouble left, pending, deleted;
-		iTunesDB *itdb = space_itdb;
-		/* we may be called before any itdb is present */
-		if (!itdb) return TRUE;
 
-		gp_info_deleted_tracks (itdb, &deleted, NULL);
-		gp_info_nontransferred_tracks (itdb, &pending, NULL);
+		gp_info_deleted_tracks (space_itdb, &deleted, NULL);
+		gp_info_nontransferred_tracks (space_itdb, &pending, NULL);
 		left = get_ipod_free_space() + deleted;
 		if((left-pending) > 0)
 		{
@@ -842,7 +840,7 @@ gtkpod_space_statusbar_update(void)
 	g_free (str);
     }
     info_update_totals_view_space ();
-    return(TRUE);
+    return TRUE;
 }
 
 void

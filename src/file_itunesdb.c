@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 21:25:02 jcs>
+/* Time-stamp: <2006-06-25 00:25:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -407,7 +407,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     g_return_val_if_fail (cfgdir, NULL);
 
     block_widgets ();
-    if (prefs_get_offline() || (type & GP_ITDB_TYPE_LOCAL))
+    if (get_offline(old_itdb) || (type & GP_ITDB_TYPE_LOCAL))
     { /* offline or local database - requires extended info */
 	gchar *name_ext;
 	gchar *name_db;
@@ -546,7 +546,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     itdb->usertype = type;
     if (type & GP_ITDB_TYPE_IPOD)
     {
-	if (prefs_get_offline ())
+	if (get_offline (itdb))
 	{
 	    itdb_set_mountpoint (itdb, mp);
 	    g_free (itdb->filename);
@@ -1112,7 +1112,7 @@ static gboolean write_extended_info (iTunesDB *itdb)
       fprintf (fp, "transferred=%d\n", track->transferred);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
   }
-  if (prefs_get_offline())
+  if (get_offline(itdb))
   { /* we are offline and also need to export the list of tracks that
        are to be deleted */
       for(gl = eitdb->pending_deletion; gl; gl = gl->next)
@@ -1527,7 +1527,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
       }
       else if (itdb->usertype & GP_ITDB_TYPE_IPOD)
       {
-	  if (prefs_get_offline ())
+	  if (get_offline (itdb))
 	  {
 	      tunes = g_strdup (eitdb->offline_filename);
 	  }
@@ -1565,7 +1565,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
 
   block_widgets (); /* block user input */
 
-  if((itdb->usertype & GP_ITDB_TYPE_IPOD) && !prefs_get_offline ())
+  if((itdb->usertype & GP_ITDB_TYPE_IPOD) && !get_offline (itdb))
   {
       const gchar *mountpoint = itdb_get_mountpoint (itdb);
       g_return_val_if_fail (mountpoint, FALSE);
@@ -1606,7 +1606,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
       gtk_main_iteration ();
 
 
-  if (success && !prefs_get_offline () &&
+  if (success && !get_offline (itdb) &&
       (itdb->usertype & GP_ITDB_TYPE_IPOD))
   {   /* write to the iPod */
       GError *error = NULL;
@@ -1685,7 +1685,7 @@ static gboolean gp_write_itdb (iTunesDB *itdb)
       }
   }
 
-  if (success && prefs_get_offline () &&
+  if (success && get_offline (itdb) &&
       (itdb->usertype & GP_ITDB_TYPE_IPOD))
   {   /* write to cfgdir */
       GError *error = NULL;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-23 23:52:48 jcs>
+/* Time-stamp: <2006-06-25 00:25:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -489,7 +489,7 @@ static GdkDragAction pm_pm_get_action (Playlist *src, Playlist *dest,
     else
     {   /* DND between different itdbs */
 	/* Do not allow drags from the iPod in offline mode */
-	if (prefs_get_offline () &&
+	if (get_offline (src->itdb) &&
 	    (src->itdb->usertype & GP_ITDB_TYPE_IPOD))
 	{   /* give a notice on the statusbar -- otherwise the user
 	     * will never know why the drag is not possible */
@@ -531,7 +531,7 @@ static GdkDragAction pm_tm_get_action (Track *src, Playlist *dest,
     else
     {   /* drag between different itdbs */
 	/* Do not allow drags from the iPod in offline mode */
-	if (prefs_get_offline () &&
+	if (get_offline (src->itdb) &&
 	    (src->itdb->usertype & GP_ITDB_TYPE_IPOD))
 	{   /* give a notice on the statusbar -- otherwise the user
 	     * will never know why the drag is not possible */

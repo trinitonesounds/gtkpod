@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:38:22 jcs>
+/* Time-stamp: <2006-06-25 00:22:56 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -550,14 +550,22 @@ void export_files_init (GList *tracks, GList **filenames,
     struct fcd *fcd;
     GtkWidget *fc;
     GladeXML *export_files_xml;
+    iTunesDB *itdb = NULL;
 
-    /* no export possible if in offline mode */
-    if (tracks && prefs_get_offline ())
+    if (tracks)
     {
 	Track *tr = tracks->data;
 	g_return_if_fail (tr);
-	g_return_if_fail (tr->itdb);
-	if (tr->itdb->usertype & GP_ITDB_TYPE_IPOD)
+	itdb = tr->itdb;
+	g_return_if_fail (itdb);
+    }
+
+    /* no export possible if in offline mode */
+    if (tracks && get_offline (itdb))
+    {
+	Track *tr = tracks->data;
+	g_return_if_fail (tr);
+	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
 	    GtkWidget *dialog = gtk_message_dialog_new (
 		GTK_WINDOW (gtkpod_window),
@@ -714,7 +722,7 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
     /* drag is from iPod to local database */
 
     /* no drag possible if in offline mode */
-    if (prefs_get_offline ())
+    if (get_offline (itdb_s))
     {
 	GtkWidget *dialog = gtk_message_dialog_new (
 	    GTK_WINDOW (gtkpod_window),

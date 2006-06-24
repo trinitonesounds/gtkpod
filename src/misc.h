@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 20:55:40 jcs>
+/* Time-stamp: <2006-06-25 00:25:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -103,7 +103,6 @@ gint get_sort_tab_number (gchar *text);
 void open_about_window (void);
 void close_about_window (void);
 gboolean parse_tracks_from_string(gchar **s, Track **track);
-void cleanup_backup_and_extended_files (void);
 gboolean gtkpod_main_quit(void);
 
 T_item TM_to_T (TM_item sm);
@@ -248,5 +247,6 @@ void set_itdb_index_prefs_string (gint index,
 void set_itdb_prefs_int (iTunesDB *itdb, const gchar *subkey, gint value);
 void set_itdb_index_prefs_int (gint index,
 			       const gchar *subkey, gint value);
+gboolean get_offline (iTunesDB *itdb);
 gboolean sorting_disabled();
 #endif

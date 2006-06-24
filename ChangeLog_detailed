@@ -1,5 +1,22 @@
 2006-06-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
+	* gtkpod.glade
+	  src/display.c
+	  src/display.h
+	  src/display_itdb.h
+	  src/display_playlists.c
+	  src/file.c
+	  src/file_export.c
+	  src/file_itunesdb.c
+	  src/info.c
+	  src/misc.c
+	  src/misc.h
+	  src/prefs.c
+	  src/prefs.h: removed global offline prefs key and moved it
+	  to the individual itdbs (ExtraiTunesDBData). The offline
+	  code is still available, but currently not used (no
+	  possibility to toggle offline mode from the GUI).
+
 	* src/display.c (on_check_ipod_files_activate): require that
           the iPod is loaded before checking files.
 

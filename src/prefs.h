@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:38:20 jcs>
+/* Time-stamp: <2006-06-24 23:54:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -61,9 +61,7 @@ struct cfg
 {
   gchar    *charset;        /* CHARSET to use with file operations */
   gboolean md5tracks;	    /* don't allow track duplication on your ipod */
-  
-  gboolean offline;       /* are we working offline, i.e. without iPod? */
-  float version;                /* version of gtkpod writing the cfg file */
+  float version;            /* version of gtkpod writing the cfg file */
 };
 
 
@@ -200,12 +198,10 @@ void discard_prefs (void);
 struct cfg* clone_prefs(void);
 gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
 
-void prefs_set_offline(gboolean active);
 void prefs_set_md5tracks(gboolean active);
 void prefs_set_charset (gchar *charset);
 void prefs_cfg_set_charset (struct cfg *cfg, gchar *charset);
 
-gboolean prefs_get_offline(void);
 gchar * prefs_get_charset (void);
 gboolean prefs_get_md5tracks(void);
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-11 18:05:03 jcs>
+/* Time-stamp: <2006-06-25 00:22:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1920,7 +1920,7 @@ gboolean write_tags_to_file (Track *track)
 			    etr->pc_path_locale);
 	}
     }
-    if (!prefs_get_offline () &&
+    if (!get_offline (itdb) &&
 	track->transferred &&
 	track->ipod_path &&
 	(g_utf8_strlen (track->ipod_path, -1) > 0))
@@ -1987,7 +1987,7 @@ gchar *get_file_name_from_source (Track *track, FileSource source)
 	}
 	break;
     case SOURCE_IPOD:
-	if(track &&  !prefs_get_offline ())
+	if(track &&  !get_offline (track->itdb))
 	{
 	    result = itdb_filename_on_ipod (track);
 	}

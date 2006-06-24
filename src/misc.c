@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-06-11 18:00:37 jcs>
+|  Time-stamp: <2006-06-25 00:28:34 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -315,26 +315,6 @@ parse_tracks_from_string(gchar **s, Track **track)
     return FALSE;
 }
 
-
-
-void cleanup_backup_and_extended_files (void)
-{
-  gchar *cfgdir;
-
-  cfgdir = prefs_get_cfgdir ();
-  /* in offline mode, there are no backup files! */
-  if (cfgdir && !prefs_get_offline ())
-    {
-      gchar *cfe = g_build_filename (cfgdir, "iTunesDB.ext", NULL);
-      if (!prefs_get_int("write_extended_info"))
-	/* delete extended info file from computer */
-	if (g_file_test (cfe, G_FILE_TEST_EXISTS))
-	  if (remove (cfe) != 0)
-	    gtkpod_warning (_("Could not delete backup file: \"%s\"\n"), cfe);
-      g_free (cfe);
-    }
-  C_FREE (cfgdir);
-}
 
 
 /* Duplicate a GList (shallow copy) */
@@ -1579,4 +1559,16 @@ gboolean sorting_disabled()
 {
     return (prefs_get_int("block_display") || 
 	    prefs_get_int("tmp_disable_sort"));
+}
+
+/* retrieve offline mode from itdb (convenience function) */
+gboolean get_offline (iTunesDB *itdb)
+{
+    ExtraiTunesDBData *eitdb;
+
+    g_return_val_if_fail (itdb, FALSE);
+    eitdb = itdb->userdata;
+    g_return_val_if_fail (eitdb, FALSE);
+
+    return eitdb->offline;
 }

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 21:48:17 jcs>
+/* Time-stamp: <2006-06-25 00:22:56 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -92,8 +92,6 @@ void display_create (void)
 
     /* activate the delete menus correctly */
     display_adjust_menus ();
-    /* activate/deactive the menu item 'check iPod' */
-    display_set_check_ipod_menu ();
     /* activate status bars */
     gtkpod_statusbar_init ();
     gtkpod_tracks_statusbar_init ();
@@ -373,17 +371,6 @@ void display_set_info_window_menu (void)
     {
 	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mi), FALSE);
     }
-}
-
-/** Takes care about 'Check IPOD Files' Menu Item and makes it unavailable
- * if gtkpod is offline.
- */
-void display_set_check_ipod_menu (void)
-{
-    GtkWidget *w = NULL;
-
-    if((w = gtkpod_xml_get_widget (main_window_xml, "check_ipod_files_mi")))
-        gtk_widget_set_sensitive(w, !prefs_get_offline());
 }
 
 /* make the tooltips visible or hide it depending on the value set in
@@ -988,15 +975,6 @@ on_edit_repository_options_activate          (GtkMenuItem     *menuitem,
     {
 	repository_edit (NULL, NULL);
     }
-}
-
-void
-on_offline1_activate                   (GtkMenuItem     *menuitem,
-					gpointer         user_data)
-{
-  prefs_set_offline (
-     gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem)));
-  display_set_check_ipod_menu ();
 }
 
 void

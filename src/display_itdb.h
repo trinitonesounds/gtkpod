@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-23 23:33:49 jcs>
+/* Time-stamp: <2006-06-24 23:54:21 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -50,6 +50,7 @@ typedef struct
 				      media                            */
     gchar *offline_filename;       /* filename for offline database
 				      (only for GP_ITDP_TYPE_IPOD)     */
+    gboolean offline;              /* offline mode?                    */
     gboolean data_changed;         /* data changed since import?       */
     gboolean itdb_imported;        /* has in iTunesDB been imported?   */
     gboolean ipod_ejected;         /* if iPod was ejected              */

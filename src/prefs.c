@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:38:19 jcs>
+/* Time-stamp: <2006-06-24 23:54:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -312,8 +312,6 @@ static void usage(FILE *fp)
   locale_fprintf(fp, _("  --mountpoint: same as '-m'.\n"));
   locale_fprintf(fp, _("  -a:           import database automatically after start.\n"));
   locale_fprintf(fp, _("  --auto:       same as '-a'.\n"));
-  locale_fprintf(fp, _("  -o:           use offline mode. No changes are exported to the iPod,\n                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n                used with 'Offline' deactivated.\n"));
-  locale_fprintf(fp, _("  --offline:    same as '-o'.\n"));
 }
 
 /* Not quite ready to use this--disable for now */
@@ -869,6 +867,7 @@ static void cleanup_keys()
     prefs_set_string("play_enqueue_path", NULL);
     prefs_set_string("mp3gain_path", NULL);
     prefs_set_string("statusbar_timeout", NULL);
+    prefs_set_string("offline", NULL);
 
     /* sp_created_cond renamed to sp_added_cond */
     for (i = 0; i < SORT_TAB_MAX; i++)
@@ -1824,7 +1823,6 @@ enum {
   GP_PLAYCOUNT,
   GP_MOUNT,
   GP_AUTO,
-  GP_OFFLINE
 };
 
 
@@ -1850,7 +1848,6 @@ struct cfg *cfg_new(void)
 
     mycfg->charset = NULL;    
     mycfg->md5tracks = TRUE;
-    mycfg->offline = FALSE;
 
     g_free (cfgdir);
 
@@ -1968,10 +1965,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "md5") == 0)
 	  {
 	      prefs_set_md5tracks((gboolean)atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "offline") == 0)
-	  {
-	      prefs_set_offline((gboolean)atoi(arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
 	  {
@@ -2094,7 +2087,6 @@ read_prefs_defaults(void)
 /* Return value: FALSE if "-p" argument was given -> stop program */
 gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
 {
-  GtkCheckMenuItem *menu;
   int opt;
   int option_index;
   gboolean result = TRUE;
@@ -2105,7 +2097,6 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
       { "p",           required_argument,       NULL, GP_PLAYCOUNT },
       { "m",           required_argument,	NULL, GP_MOUNT },
       { "mountpoint",  required_argument,	NULL, GP_MOUNT },
-      { "offline",     no_argument,	NULL, GP_OFFLINE },
       { "a",           no_argument,	NULL, GP_AUTO },
       { "auto",        no_argument,	NULL, GP_AUTO },
       { 0, 0, 0, 0 }
@@ -2133,9 +2124,6 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
       case GP_AUTO:
 	  prefs_set_int("autoimport_commandline", TRUE);
 	  break;
-      case GP_OFFLINE:
-	  prefs_set_offline (TRUE);
-	  break;
       default:
 	  locale_fprintf(stderr, _("Unknown option: %s\n"), argv[optind]);
 	  usage(stderr);
@@ -2143,8 +2131,6 @@ gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
       }
   }
 
-  menu = GTK_CHECK_MENU_ITEM (gtkpod_xml_get_widget (main_window_xml, "offline_menu"));
-  gtk_check_menu_item_set_active (menu, prefs_get_offline ());
   return result;
 }
 
@@ -2163,7 +2149,6 @@ write_prefs_to_file_desc(FILE *fp)
 	fprintf(fp, "charset=\n");
     }
     fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
-    fprintf(fp, "offline=%d\n",prefs_get_offline());
 }
 
 
@@ -2210,13 +2195,6 @@ void cfg_free(struct cfg *c)
     }
 }
 
-void prefs_set_offline(gboolean active)
-{
-  if (cfg->offline != active)   space_data_update ();
-  cfg->offline = active;
-  info_update_totals_view_space ();
-}
-
 /* If the status of md5 hash flag changes, free or re-init the md5
    hash table */
 void prefs_set_md5tracks (gboolean active)
@@ -2252,11 +2230,6 @@ void prefs_set_md5tracks (gboolean active)
 gboolean prefs_get_md5tracks(void)
 {
     return cfg->md5tracks;
-}
-
-gboolean prefs_get_offline(void)
-{
-  return cfg->offline;
 }
 
 void prefs_set_charset (gchar *charset)
