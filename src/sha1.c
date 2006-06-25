@@ -93,7 +93,7 @@ static void little_endian(hblock * stupidblock, int blocks);
 #define PATH_MAX_MD5 4096
 
 /* Set up or destory the md5 hash table */
-void setup_md5(gboolean active)
+void setup_md5()
 {
     struct itdbs_head *itdbs_head;
 
@@ -104,7 +104,7 @@ void setup_md5(gboolean active)
     /* gets called before itdbs are set up -> fail silently */
     if (itdbs_head)
     {
-	if (active)  /* MD5 hashing turned on */
+	if (prefs_get_int("md5"))  /* MD5 hashing turned on */
 	{
 	    gp_md5_hash_tracks();
 	

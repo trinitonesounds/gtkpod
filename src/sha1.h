@@ -33,7 +33,7 @@
 
 #include "display_itdb.h"
 
-void setup_md5(gboolean active);
+void setup_md5();
 gchar *md5_hash_on_filename (gchar *name, gboolean silent);
 /* Any calls to the following functions immediately return if md5sums
  * is not on */

@@ -1,3 +1,14 @@
+2006-06-25 James Liggett <freethinkerjim@users.sourceforge.net>
+
+	* src/md5.c
+	  src/md5.h
+	  src/prefs.c
+	  src/prefs.h
+	  src/prefs_window.c: Fixed the fallout from the charset fiasco:
+			      	- MD5 checksums work again
+				- Reapplied other patches trashed by the reversal
+				- Old prefs is now just a stub (will be removed shortly)
+
 2006-06-25 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/repository.c

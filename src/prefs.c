@@ -150,8 +150,9 @@ typedef enum
 /* Set default prefrences */
 static void set_default_preferences()
 {
-    int i; 
-  
+    int i;
+    gchar *dir; /* Last directory browsed to */
+
     prefs_set_int("update_existing", FALSE);
     prefs_set_int("id3_write", FALSE);
     prefs_set_int("id3_write_id3v24", FALSE);
@@ -261,7 +262,19 @@ static void set_default_preferences()
     prefs_set_int("display_toolbar", TRUE);
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
     prefs_set_int("block_display", FALSE);
+    prefs_set_int("md5", TRUE);
 
+    /* Set last browsed directory */
+    dir = g_get_current_dir();
+
+    if (dir)
+    {
+	prefs_set_string("last_dir_browsed", dir);
+	g_free(dir);
+    }
+    else
+	prefs_set_string("last_dir_browsed", g_get_home_dir());
+    
     /* Set sorting prefs */
     prefs_set_int("case_sensitive", FALSE);
     prefs_set_int("tm_autostore", FALSE);
@@ -1816,7 +1829,7 @@ GList *get_list_from_buffer(GtkTextBuffer *buffer)
 		
 	string_iter++;
     }
-	
+    
     return list;
 }
 
@@ -1835,27 +1848,9 @@ enum {
 struct cfg *cfg_new(void)
 {
     struct cfg *mycfg = NULL;
-    gchar curdir[PATH_MAX];
-    gchar *cfgdir;
-
-    cfgdir = prefs_get_cfgdir ();
 
     mycfg = g_malloc0 (sizeof (struct cfg));
-    if(getcwd(curdir, PATH_MAX))
-    {
-	prefs_set_string ("last_dir_browsed", curdir);
-    }
-    else
-    {
-	gchar *dir = convert_filename ("~/");
-	prefs_set_string ("last_dir_browsed", dir);
-	g_free (dir);
-    }
 
-    mycfg->charset = NULL;    
-    mycfg->md5tracks = TRUE;
-
-    g_free (cfgdir);
 
     return(mycfg);
 }
@@ -1964,10 +1959,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* obsoleted since 0.71 */
 	  }
-	  else if(g_ascii_strcasecmp (line, "md5") == 0)
-	  {
-	      prefs_set_md5tracks((gboolean)atoi(arg));
-	  }
 	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
 	  {
 	      /* ignore */
@@ -1976,22 +1967,9 @@ read_prefs_from_file_desc(FILE *fp)
 	  {
 	      /* removed with version after 0.82-CVS */
 	  }
-	  else if(g_ascii_strcasecmp (line, "dir_browse") == 0)
-	  {
-	      prefs_set_string ("last_dir_browsed", arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "dir_export") == 0)
-	  {
-	      prefs_set_string (EXPORT_FILES_PATH, arg);
-	  }
 	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
 	  {
 	      /* ignore option -- has been deleted with 0.53 */
-	  }
-	  else if(g_ascii_strcasecmp (line, "export_check_existing") == 0)
-	  {
-	      prefs_set_int (EXPORT_FILES_CHECK_EXISTING,
-				   atoi (arg));
 	  }
 	  else if(g_ascii_strcasecmp (line, "fix_path") == 0)
 	  {
@@ -2001,15 +1979,6 @@ read_prefs_from_file_desc(FILE *fp)
 	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
 	  {
 	      /* ignore -- not used any more */
-	  }
-	  else if(g_ascii_strcasecmp (line, "concal_autosync") == 0)
-	  {
-	      prefs_set_int ("itdb_0_concal_autosync", atoi(arg));
-	  }
-	  else if(g_ascii_strcasecmp (line, "special_export_charset") == 0)
-	  {
-	      prefs_set_int (EXPORT_FILES_SPECIAL_CHARSET,
-				   atoi (arg));
 	  }
 	  else
 	  {   /* All leftover options will be stored into the prefs
@@ -2143,14 +2112,6 @@ write_prefs_to_file_desc(FILE *fp)
     if(!fp)
 	fp = stderr;
 
-
-    if (cfg->charset)
-    {
-	fprintf(fp, "charset=%s\n", cfg->charset);
-    } else {
-	fprintf(fp, "charset=\n");
-    }
-    fprintf(fp, "md5=%d\n",prefs_get_md5tracks ());
 }
 
 
@@ -2192,46 +2153,8 @@ void cfg_free(struct cfg *c)
 {
     if(c)
     {
-      g_free (c->charset);
       g_free (c);
     }
-}
-
-/* If the status of md5 hash flag changes, free or re-init the md5
-   hash table */
-void prefs_set_md5tracks (gboolean active)
-{
-    struct itdbs_head *itdbs_head;
-
-    g_return_if_fail (gtkpod_window);
-    itdbs_head = g_object_get_data (G_OBJECT (gtkpod_window),
-				    "itdbs_head");
-/*    g_return_if_fail (itdbs_head);*/
-    /* gets called before itdbs are set up -> fail silently */
-    if (!itdbs_head)
-    {
-	cfg->md5tracks = active;
-	return;
-    }
-
-    if (cfg->md5tracks && !active)
-    { /* md5 checksums have been turned off */
-	cfg->md5tracks = FALSE;
-	gp_md5_free_hash ();
-    }
-    if (!cfg->md5tracks && active)
-    { /* md5 checksums have been turned on */
-	cfg->md5tracks = TRUE; /* must be set before calling
-				  gp_md5_hash_tracks() */
-	gp_md5_hash_tracks ();
-	/* display duplicates */
-	gp_duplicate_remove (NULL, NULL);
-    }
-}
-
-gboolean prefs_get_md5tracks(void)
-{
-    return cfg->md5tracks;
 }
 
 struct cfg *clone_prefs(void)
@@ -2241,7 +2164,6 @@ struct cfg *clone_prefs(void)
     if(cfg)
     {
 	result = g_memdup (cfg, sizeof (struct cfg));
-	result->charset = g_strdup(cfg->charset);
     }
     return(result);
 }

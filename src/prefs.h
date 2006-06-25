@@ -59,8 +59,6 @@ extern const gchar *KEY_MANUAL_SYNCDIR;
 
 struct cfg
 {
-  gchar    *charset;        /* CHARSET to use with file operations */
-  gboolean md5tracks;	    /* don't allow track duplication on your ipod */
   float version;            /* version of gtkpod writing the cfg file */
 };
 
