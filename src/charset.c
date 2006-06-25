@@ -41,7 +41,7 @@
    set with each call of charset_to_utf8(). You can get a copy of its
    value by calling charset_get_auto().
    This variable will only be reset by calling charset_reset_auto(). */
-static const gchar *auto_charset = NULL;
+static gchar *auto_charset = NULL;
 
 typedef struct {
 	gchar *descr;
@@ -300,15 +300,22 @@ static const gchar *charset_check_k_code_with_default (const gchar *p)
 
 /* return the charset actually used for the "auto detection"
  * feature. So far only Japanese Auto Detecion is implemented */
-static const gchar *charset_check_auto (const gchar *str)
+static gchar *charset_check_auto (const gchar *str)
 {
-    const gchar *charset;
+    gchar *charset;
+    gchar *result;
 
     if (str == NULL) return NULL; /* sanity */
-    charset = prefs_get_charset ();
+
+    charset = prefs_get_string("charset");
+
     if (charset && (strcmp (charset, GTKPOD_JAPAN_AUTOMATIC) == 0))
-	return (charset_check_k_code (str));
-    return NULL;
+	result = g_strdup(charset_check_k_code (str));
+    else
+	result = NULL;
+
+    g_free(charset);
+    return result;
 }
 
 /* See description at the definition of gchar *auto_charset; for
@@ -330,23 +337,31 @@ void charset_reset_auto (void)
 /* Must free the returned string yourself */
 gchar *charset_to_utf8 (const gchar *str)
 {
-    const gchar *charset;
+    gchar *charset;  /* From prefs */
+    const gchar *locale_charset; /* Used if prefs doesn't have a charset */
+    gchar *result;
 
     if (str == NULL) return NULL;  /* sanity */
     charset = charset_check_auto (str);
     if (charset)
     {
-	auto_charset = charset;
+	g_free(auto_charset);
+	auto_charset = g_strdup(charset);
     }
     else
     {
-	charset = prefs_get_charset ();
+	charset = prefs_get_string("charset");
 	if (!charset || !strlen (charset))
 	{    /* use standard locale charset */
-	    g_get_charset (&charset);
+	    g_free(charset);
+	    g_get_charset (&locale_charset);
+	    charset = g_strdup(locale_charset);
 	}
     }
-    return charset_to_charset ((gchar *)charset, "UTF-8", str);
+    
+    result = charset_to_charset ((gchar *)charset, "UTF-8", str);
+    g_free(charset);
+    return result;
 }
 
 
@@ -356,15 +371,23 @@ gchar *charset_to_utf8 (const gchar *str)
 /* Must free the returned string yourself */
 gchar *charset_from_utf8 (const gchar *str)
 {
-    const gchar *charset;
+    gchar *charset;
+    const gchar *locale_charset;
+    gchar *result;
 
     if (str == NULL) return NULL;  /* sanity */
-    charset = prefs_get_charset ();
+    charset = prefs_get_string("charset");
     if (!charset || !strlen (charset))
-    {    /* use standard locale charset */
-	g_get_charset (&charset);
+    {   
+       /* use standard locale charset */
+	g_free(charset);
+	g_get_charset (&locale_charset);
+	charset = g_strdup(locale_charset);
     }
-    return charset_to_charset ("UTF-8", (gchar *)charset, str);
+
+    result = charset_to_charset ("UTF-8", (gchar *)charset, str);
+    g_free(charset);
+    return result;
 }
 
 /* Convert "str" from utf8 to the charset specified in @s->charset. If
@@ -373,7 +396,9 @@ gchar *charset_from_utf8 (const gchar *str)
 /* Must free the returned string yourself */
 gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
 {
-    const gchar *charset = NULL;
+    gchar *charset;
+    const gchar *locale_charset;
+    gchar *result;
     ExtraTrackData *etd;
 
     g_return_val_if_fail (s, NULL);
@@ -385,12 +410,17 @@ gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
 
     if (etd->charset && strlen (etd->charset))
 	   charset = etd->charset;
-    else   charset = prefs_get_charset ();
+    else   charset = prefs_get_string("charset");
     if (!charset || !strlen (charset))
     {    /* use standard locale charset */
-	g_get_charset (&charset);
+	g_free(charset);
+	g_get_charset (&locale_charset);
+	charset = g_strdup(locale_charset);
     }
-    return charset_to_charset ("UTF-8", (gchar *)charset, str);
+
+    result = charset_to_charset ("UTF-8", (gchar *)charset, str);
+    g_free(charset);
+    return result;
 }
 
 /* Convert "str" from "from_charset" to "to_charset", trying to skip

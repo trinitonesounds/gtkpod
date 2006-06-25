@@ -382,11 +382,7 @@ static gchar *create_full_key(const gchar *base_key, gint index)
 /* Copy key data from the temp prefs tree to the hash table */
 static gboolean copy_key(gpointer key, gpointer value, gpointer user_data)
 {
-    if (prefs_table)
-    {
-	g_hash_table_replace(prefs_table, (gpointer)g_strdup(key), 
-			     (gpointer)g_strdup(value));
-    }
+    prefs_set_string(key, value);
 	
     return FALSE;
 }
@@ -1493,8 +1489,6 @@ void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key,
 
     if (value)
 	g_tree_insert (temp_prefs->tree, g_strdup(key), g_strdup(value));
-    else
-	g_tree_remove (temp_prefs->tree, key);
 }
 
 /* Add an integer value to temp prefs */
