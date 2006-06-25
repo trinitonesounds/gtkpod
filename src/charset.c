@@ -360,7 +360,7 @@ gchar *charset_to_utf8 (const gchar *str)
 	}
     }
     
-    result = charset_to_charset ((gchar *)charset, "UTF-8", str);
+    result = charset_to_charset (charset, "UTF-8", str);
     g_free(charset);
     return result;
 }
@@ -386,7 +386,7 @@ gchar *charset_from_utf8 (const gchar *str)
 	charset = g_strdup(locale_charset);
     }
 
-    result = charset_to_charset ("UTF-8", (gchar *)charset, str);
+    result = charset_to_charset ("UTF-8", charset, str);
     g_free(charset);
     return result;
 }
@@ -410,8 +410,10 @@ gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
     etd = s->userdata;
 
     if (etd->charset && strlen (etd->charset))
-	   charset = etd->charset;
-    else   charset = prefs_get_string("charset");
+	   charset = g_strdup(etd->charset);
+    else   
+	charset = prefs_get_string("charset");
+   
     if (!charset || !strlen (charset))
     {    /* use standard locale charset */
 	g_free(charset);
@@ -419,7 +421,7 @@ gchar *charset_track_charset_from_utf8 (Track *s, const gchar *str)
 	charset = g_strdup(locale_charset);
     }
 
-    result = charset_to_charset ("UTF-8", (gchar *)charset, str);
+    result = charset_to_charset ("UTF-8", charset, str);
     g_free(charset);
     return result;
 }
