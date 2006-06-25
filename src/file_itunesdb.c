@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 00:25:34 jcs>
+/* Time-stamp: <2006-06-25 15:57:03 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -400,14 +400,21 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     iTunesDB *itdb = NULL;
     GError *error = NULL;
     gint32 total, num;
+    gboolean offline;
+
 
     g_return_val_if_fail (!(type & GP_ITDB_TYPE_LOCAL) || name_loc, NULL);
     g_return_val_if_fail (!(type & GP_ITDB_TYPE_IPOD) || 
 			  (mp && name_off), NULL);
     g_return_val_if_fail (cfgdir, NULL);
 
+    if (old_itdb)
+	offline = get_offline (old_itdb);
+    else
+	offline = FALSE;
+
     block_widgets ();
-    if (get_offline(old_itdb) || (type & GP_ITDB_TYPE_LOCAL))
+    if (offline || (type & GP_ITDB_TYPE_LOCAL))
     { /* offline or local database - requires extended info */
 	gchar *name_ext;
 	gchar *name_db;
@@ -542,11 +549,13 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     eitdb = itdb->userdata;
     g_return_val_if_fail (eitdb, (release_widgets(), NULL));
 
+    eitdb->offline = offline;
+
     /* fill in additional info */
     itdb->usertype = type;
     if (type & GP_ITDB_TYPE_IPOD)
     {
-	if (get_offline (itdb))
+	if (offline)
 	{
 	    itdb_set_mountpoint (itdb, mp);
 	    g_free (itdb->filename);

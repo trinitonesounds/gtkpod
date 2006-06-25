@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 01:18:23 jcs>
+/* Time-stamp: <2006-06-25 21:40:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -377,14 +377,6 @@ static gchar *create_full_key(const gchar *base_key, gint index)
 	return g_strdup_printf("%s%i", base_key, index);
     else 
 	return NULL;
-}
-
-/* Copy key data from the temp prefs tree to the hash table */
-static gboolean copy_key(gpointer key, gpointer value, gpointer user_data)
-{
-    prefs_set_string(key, value);
-	
-    return FALSE;
 }
 
 /* Remove key present in the temp prefs tree from the hash table */
@@ -1057,6 +1049,14 @@ void temp_prefs_destroy(TempPrefs *temp_prefs)
     g_free(temp_prefs);
 }
 
+/* Copy key data from the temp prefs tree to the hash table */
+static gboolean copy_key(gpointer key, gpointer value, gpointer user_data)
+{
+    prefs_set_string(key, value);
+	
+    return FALSE;
+}
+
 /* Copy the data from the temp prefs tree to the permanent prefs table */
 void temp_prefs_apply(TempPrefs *temp_prefs)
 {
@@ -1479,16 +1479,27 @@ gboolean prefs_get_int64_value_index(const gchar *key, const guint index,
     return ret;
 }
 
-/* Add string value with the given key to temp prefs. Remove the key
- * if @value is NULL. */
+/* Add string value with the given key to temp prefs. Note: use
+ * temp_prefs_remove_key() to remove key from the temp prefs. Setting
+ * it to NULL will not remove the key. It will instead remove the key
+ * in the main prefs table when you call temp_prefs_apply(). */
 void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key, 
 			   const gchar *value)
 {
     g_return_if_fail (temp_prefs && temp_prefs->tree);
     g_return_if_fail (key);
 
-    if (value)
-	g_tree_insert (temp_prefs->tree, g_strdup(key), g_strdup(value));
+    g_tree_insert (temp_prefs->tree, g_strdup(key), g_strdup(value));
+}
+
+/* Add string value with the given key to temp prefs. Remove the key
+ * if @value is NULL. */
+void temp_prefs_remove_key (TempPrefs *temp_prefs, const gchar *key)
+{
+    g_return_if_fail (temp_prefs && temp_prefs->tree);
+    g_return_if_fail (key);
+
+    g_tree_remove (temp_prefs->tree, key);
 }
 
 /* Add an integer value to temp prefs */

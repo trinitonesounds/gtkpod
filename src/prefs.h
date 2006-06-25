@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 01:18:22 jcs>
+/* Time-stamp: <2006-06-25 15:57:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -150,6 +150,7 @@ gint temp_prefs_size (TempPrefs *temp_prefs);
 /*
  * Functions that add various types of info to the temp prefs tree.
  */
+void temp_prefs_remove_key (TempPrefs *temp_prefs, const gchar *key);
 void temp_prefs_set_string(TempPrefs *temp_prefs, const gchar *key,
 			   const gchar *value);
 void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key,

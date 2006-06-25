@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-15 00:58:25 jcs>
+/* Time-stamp: <2006-06-25 21:40:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -42,9 +42,11 @@
 #include "repository.h"
 #include "syncdir.h"
 
+/* print local debug message */
+#define LOCAL_DEBUG 0
+
 /* List with all repository edit windows (we only allow one, however) */
 static GList *repwins = NULL;
-
 
 struct _RepWin
 {
@@ -273,15 +275,19 @@ static gboolean finish_string_storage (RepWin *repwin,
 	(prefs_str && (strcmp (str, prefs_str) != 0)))
     {   /* value has changed with respect to the value stored in the
 	   prefs */
-printf ("setting '%s' to '%s'\n", key, str);
+#       if LOCAL_DEBUG
+	printf ("setting '%s' to '%s'\n", key, str);
+#       endif
 	temp_prefs_set_string (repwin->temp_prefs, key, str);
 	result = TRUE;
     }
     else
     {   /* value has not changed -- remove key from temp prefs (in
 	   case it exists */
-printf ("removing '%s'.\n", key);
-	temp_prefs_set_string (repwin->temp_prefs, key, NULL);
+#       if LOCAL_DEBUG
+	printf ("removing '%s'.\n", key);
+#       endif
+	temp_prefs_remove_key (repwin->temp_prefs, key);
 	result = FALSE;
     }
     update_buttons (repwin);
@@ -325,14 +331,18 @@ static void finish_int_storage (RepWin *repwin,
     if (prefs_val != val)
     {   /* value has changed with respect to the value stored in the
 	   prefs */
-printf ("setting '%s' to '%d'\n", key, val);
+#       if LOCAL_DEBUG
+	printf ("setting '%s' to '%d'\n", key, val);
+#       endif
 	temp_prefs_set_int (repwin->temp_prefs, key, val);
     }
     else
     {   /* value has not changed -- remove key from temp prefs (in
 	   case it exists */
-printf ("removing '%s'.\n", key);
-	temp_prefs_set_string (repwin->temp_prefs, key, NULL);
+#       if LOCAL_DEBUG
+	printf ("removing '%s'.\n", key);
+#       endif
+	temp_prefs_remove_key (repwin->temp_prefs, key);
     }
     update_buttons (repwin);
     g_free (key);
@@ -477,7 +487,7 @@ static void standard_playlist_checkbutton_toggled (GtkToggleButton *togglebutton
     if (keybase == KEY_LIVEUPDATE)
     {
 	if (active == repwin->playlist->splpref.liveupdate)
-	    temp_prefs_set_string (repwin->extra_prefs, key, NULL);
+	    temp_prefs_remove_key (repwin->extra_prefs, key);
 	else
 	    temp_prefs_set_int (repwin->extra_prefs, key, active);
 
@@ -500,7 +510,7 @@ static void delete_repository_checkbutton_toggled (GtkToggleButton *togglebutton
     {   /* Un-delete if necessary */
 	gchar *key = get_itdb_prefs_key (repwin->itdb_index, "deleted");
 
-	temp_prefs_set_string (repwin->extra_prefs, key, NULL);
+	temp_prefs_remove_key (repwin->extra_prefs, key);
 	g_free (key);
     }
     update_buttons (repwin);
@@ -1013,7 +1023,9 @@ static void edit_apply_clicked (GtkButton *button, RepWin *repwin)
 	    select_repository (repwin, new_itdb, NULL);
 	}
     }
-printf ("index: %d\n", repwin->itdb_index);
+#   if LOCAL_DEBUG
+    printf ("index: %d\n", repwin->itdb_index);
+#   endif
 
     update_buttons (repwin);
 }
@@ -1452,7 +1464,9 @@ static void repository_changed (GtkComboBox *cb,
     iTunesDB *itdb;
     gint index;
 
-printf ("Repository changed (%p)\n", repwin);
+#   if LOCAL_DEBUG
+    printf ("Repository changed (%p)\n", repwin);
+#   endif
 
     g_return_if_fail (repwin);
 
@@ -1484,7 +1498,9 @@ static void playlist_changed (GtkComboBox *cb,
     GtkTreeIter iter;
     gint index;
 
-printf ("Playlist changed (%p)\n", repwin);
+#   if LOCAL_DEBUG
+    printf ("Playlist changed (%p)\n", repwin);
+#   endif
 
     g_return_if_fail (repwin);
 
@@ -1828,7 +1844,9 @@ static void repository_edit_itdb_added (iTunesDB *itdb, gboolean select)
 	{
 	    gchar *from_key = get_itdb_prefs_key (i, "");
 	    gchar *to_key = get_itdb_prefs_key (i+1, "");
-printf ("TP renaming %d to %d\n", i, i+1);
+#           if LOCAL_DEBUG
+	    printf ("TP renaming %d to %d\n", i, i+1);
+#           endif
 	    temp_prefs_rename_subkey (repwin->temp_prefs,
 				      from_key, to_key);
 	    g_free (from_key);
@@ -2213,7 +2231,9 @@ static void create_ok_clicked (GtkButton *button, CreateRep *cr)
     {
 	gchar *from_key = get_itdb_prefs_key (i, "");
 	gchar *to_key = get_itdb_prefs_key (i+1, "");
-printf ("renaming %d to %d\n", i, i+1);
+#       if LOCAL_DEBUG
+	printf ("renaming %d to %d\n", i, i+1);
+#       endif
 	prefs_rename_subkey (from_key, to_key);
 	g_free (from_key);
 	g_free (to_key);
