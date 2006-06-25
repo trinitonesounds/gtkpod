@@ -689,23 +689,17 @@ prefs_window_set(void)
       st_show_visible();
    }
   
-   if (tmpcfg)
-    {
-	/* Need this in case user reordered column order (we don't
-	 * catch the reorder signal) */
-	tm_store_col_order ();
-	prefs_set_charset(tmpcfg->charset);
+   /* Need this in case user reordered column order (we don't
+    * catch the reorder signal) */
+   tm_store_col_order ();
 
-	/* this call well automatically destroy/setup the md5 hash table */
-	prefs_set_md5tracks(tmpcfg->md5tracks);
-	tm_show_preferred_columns();
-	st_show_visible();
-	display_show_hide_tooltips();
-	display_show_hide_toolbar();
-	
-    }
+   /* this call well automatically destroy/setup the md5 hash table */
+   prefs_set_md5tracks(tmpcfg->md5tracks);
+   tm_show_preferred_columns();
+   st_show_visible();
+   display_show_hide_tooltips();
+   display_show_hide_toolbar();
 }
-
 
 /* save current window size */
 void prefs_window_update_default_sizes (void)
@@ -1107,7 +1101,7 @@ on_charset_combo_entry_changed          (GtkEditable     *editable,
 
     descr = gtk_editable_get_chars (editable, 0, -1);
     charset = charset_from_description (descr);
-    prefs_cfg_set_charset (tmpcfg, charset);
+    temp_prefs_set_string(temp_prefs, "charset", charset);
     g_free (descr);
     g_free (charset);
 }

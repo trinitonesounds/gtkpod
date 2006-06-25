@@ -4,6 +4,11 @@
 	  src/prefs.c
 	  src/prefs.h: Redid charset patch.
 
+	* src/charset.c
+	  src/file.c
+	  src/prefs.c
+	  src/prefs_window.c: Finish up charset fixes.
+
 2006-06-24 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/prefs.[ch]: removed unused prefs_print() declaration,

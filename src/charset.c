@@ -154,7 +154,7 @@ void charset_init_combo (GtkCombo *combo)
     static GList *charsets = NULL; /* list with choices -- takes a while to
 				     * initialize, so we only do it once */
     
-    current_charset = prefs_get_charset ();
+    current_charset = prefs_get_string("charset");
     if ((current_charset == NULL) || (strlen (current_charset) == 0))
     {
 	description = g_strdup (_("System Charset"));
@@ -206,6 +206,7 @@ void charset_init_combo (GtkCombo *combo)
     /* set standard entry */
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), description);
     g_free (description);
+    g_free(current_charset);
 }
 
 

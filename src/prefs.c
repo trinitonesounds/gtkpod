@@ -1949,10 +1949,6 @@ read_prefs_from_file_desc(FILE *fp)
 		  prefs_set_string (EXPORT_FILES_TPL, arg);
 	      }
 	  }
-	  else if(g_ascii_strcasecmp (line, "charset") == 0)
-	  {
-		if(strlen (arg))      prefs_set_charset(arg);
-	  }
 	  else if(g_ascii_strcasecmp (line, "id3_all") == 0)
 	  {
 	      /* obsoleted since 0.71 */
@@ -2225,25 +2221,6 @@ void prefs_set_md5tracks (gboolean active)
 gboolean prefs_get_md5tracks(void)
 {
     return cfg->md5tracks;
-}
-
-void prefs_set_charset (gchar *charset)
-{
-    prefs_cfg_set_charset (cfg, charset);
-}
-
-void prefs_cfg_set_charset (struct cfg *cfgd, gchar *charset)
-{
-    C_FREE (cfgd->charset);
-    if (charset && strlen (charset))
-	cfgd->charset = g_strdup (charset);
-/*     printf ("set_charset: '%s'\n", charset);	 */
-}
-
-gchar *prefs_get_charset (void)
-{
-    return cfg->charset;
-/*     printf ("get_charset: '%s'\n", cfg->charset); */
 }
 
 struct cfg *clone_prefs(void)
