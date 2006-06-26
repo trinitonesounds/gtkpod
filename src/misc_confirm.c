@@ -866,7 +866,6 @@ gtkpod_main_quit(void)
 	server_shutdown (); /* stop accepting requests for playcount updates */
 
 	cleanup_prefs();
-	write_prefs();
 
 /* FIXME: release memory in a clean way */
 #if 0

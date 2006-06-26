@@ -56,13 +56,6 @@ extern const gchar *KEY_PATH_SYNC_NOTES;
 extern const gchar *KEY_SYNCMODE;
 extern const gchar *KEY_MANUAL_SYNCDIR;
 
-
-struct cfg
-{
-  float version;            /* version of gtkpod writing the cfg file */
-};
-
-
 /* New prefs backend. Will replace the stuff above */
 
 /* 
@@ -95,6 +88,7 @@ void cleanup_prefs();
 void prefs_set_string(const gchar *key, const gchar *value);
 void prefs_set_int(const gchar *key, const gint value);
 void prefs_set_int64(const gchar *key, const gint64 value);
+void prefs_set_double(const gchar *key, gdouble value);
 
 /* The index parameter is used for numbered preference keys.
  * (i.e. pref0, pref1, etc) */
@@ -104,6 +98,8 @@ void prefs_set_int_index(const gchar *key, const guint index,
 			 const gint value);
 void prefs_set_int64_index(const gchar *key, guint index,
 			   const gint64 value);
+void prefs_set_double_index(const gchar *key, guint index,
+			    gdouble value);
 
 /* Functions that get prefrence values */
 gchar *prefs_get_string(const gchar *key);
@@ -112,6 +108,8 @@ gint prefs_get_int(const gchar *key);
 gboolean prefs_get_int_value(const gchar *key, gint *value);
 gint64 prefs_get_int64(const gchar *key);
 gboolean prefs_get_int64_value(const gchar *key, gint64 *value);
+gdouble prefs_get_double(const gchar *key);
+gboolean prefs_get_double_value(const gchar *key, gdouble *value);
 
 /* Numbered prefs functions */
 gchar *prefs_get_string_index(const gchar *key, const guint index);
@@ -123,7 +121,10 @@ gboolean prefs_get_int_value_index(const gchar *key, const guint index,
 gint64 prefs_get_int64_index(const gchar *key, const guint index);
 gboolean prefs_get_int64_value_index(const gchar *key,
 				     const guint index, gint64 *value);
-
+gdouble prefs_get_double_index(const gchar *key,
+			       guint index);
+gboolean prefs_get_double_value_index(const gchar *key, guint index,
+				      gdouble *value);
 /* Special functions */
 void prefs_flush_subkey (const gchar *subkey);
 void prefs_rename_subkey (const gchar *subkey_old, const gchar *subkey_new);
@@ -155,6 +156,8 @@ void temp_prefs_set_int(TempPrefs *temp_prefs, const gchar *key,
 			const gint value);
 void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key,
 			  const gint64 value);
+void temp_prefs_set_double(TempPrefs *temp_prefs, const gchar *key,
+			   gdouble value);
 
 /*
  * Functions that retrieve various types of info from the temp prefs tree.
@@ -165,7 +168,9 @@ gboolean temp_prefs_get_string_value(TempPrefs *temp_prefs,
 gint temp_prefs_get_int(TempPrefs *temp_prefs, const gchar *key);
 gboolean temp_prefs_get_int_value(TempPrefs *temp_prefs,
 				  const gchar *key, gint *value);
-
+gdouble temp_prefs_get_double(TempPrefs *temp_prefs, const gchar *key);
+gboolean temp_prefs_get_double_value(TempPrefs *temp_prefs, const gchar *key,
+				    gdouble *value);
 
 /* Numbered prefrences functions */
 void temp_prefs_set_string_index(TempPrefs *temp_prefs, const gchar *key,
@@ -174,6 +179,8 @@ void temp_prefs_set_int_index(TempPrefs *temp_prefs, const gchar *key,
 			      const guint index, const gint value);
 void temp_prefs_set_int64_index(TempPrefs *temp_prefs, const gchar *key,
 				const guint index, const gint64 value);
+void temp_prefs_set_double_index(TempPrefs *temp_prefs, const gchar *key,
+				 guint index, gdouble value);
 
 
 /* 
@@ -190,12 +197,4 @@ void prefs_free_list(GList *list);
 GList *get_list_from_buffer(GtkTextBuffer *buffer);
 
 gchar *prefs_get_cfgdir (void);
-void cfg_free(struct cfg *c);
-void write_prefs (void);
-struct cfg* clone_prefs(void);
-gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[]);
-
-void prefs_set_md5tracks(gboolean active);
-gboolean prefs_get_md5tracks(void);
-
 #endif

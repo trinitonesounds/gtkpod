@@ -47,8 +47,6 @@ GladeXML *sort_window_xml;
 
 static GtkWidget *prefs_window = NULL;
 static GtkWidget *sort_window = NULL;
-static struct cfg *tmpcfg = NULL;
-static struct cfg *origcfg = NULL;
 
 /* New prefs temp handling */
 static TempPrefs *temp_prefs;
@@ -316,20 +314,9 @@ prefs_window_create (gint page)
 	return;
     }
 		
-		/* Initialize temp prefs structures */
-		temp_prefs = temp_prefs_create();
-		temp_lists = temp_lists_create();
-
-    if(!tmpcfg && !origcfg)
-    {
-	tmpcfg = clone_prefs();
-	origcfg = clone_prefs();
-    }
-    else
-    {
-	g_warning ("Programming error: tmpcfg is not NULL!!\n");
-	return;
-    }
+    /* Initialize temp prefs structures */
+    temp_prefs = temp_prefs_create();
+    temp_lists = temp_lists_create();
 
     prefs_window_xml = glade_xml_new (xml_file, "prefs_window", NULL);
     glade_xml_signal_autoconnect (prefs_window_xml);
@@ -726,17 +713,8 @@ void prefs_window_update_default_sizes (void)
 void
 prefs_window_cancel(void)
 {
-    cfg_free (tmpcfg);
-    /* exchange tmpcfg for origcfg */
-    tmpcfg = origcfg;
-    origcfg = NULL;
-
     /* "save" (i.e. reset) original configs */
     prefs_window_set ();
-
-    /* delete cfg struct */
-    cfg_free (tmpcfg);
-    tmpcfg = NULL;
 
     /* save current window size */
     prefs_window_update_default_sizes ();
@@ -753,12 +731,6 @@ void prefs_window_delete(void)
 {
     gint defx, defy;
     GtkWidget *nb;
-
-    /* delete cfg structs */
-    cfg_free (tmpcfg);
-    tmpcfg = NULL;
-    cfg_free (origcfg);
-    origcfg = NULL;
 	
     /* Delete temp prefs structures */
     temp_prefs_destroy(temp_prefs);
@@ -790,18 +762,12 @@ prefs_window_ok (void)
     gint defx, defy;
     GtkWidget *nb;
 
-    /* Committ temp prefs to prefs table */
+    /* Commit temp prefs to prefs table */
     temp_prefs_apply(temp_prefs);
     temp_lists_apply(temp_lists);
   
     /* save current settings */
     prefs_window_set ();
-
-    /* delete cfg structs */
-    cfg_free (tmpcfg);
-    tmpcfg = NULL;
-    cfg_free (origcfg);
-    origcfg = NULL;
 
     /* save current notebook page */
     nb = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
@@ -827,7 +793,7 @@ prefs_window_apply (void)
     gint defx, defy;
     GtkWidget *nb;
 
-    /* Committ temp prefs to prefs table */
+    /* Commit temp prefs to prefs table */
     temp_prefs_apply(temp_prefs);
     temp_lists_apply(temp_lists);
   
@@ -1946,9 +1912,6 @@ on_sort_window_delete_event            (GtkWidget       *widget,
  */
 void sort_window_cancel (void)
 {
-    /* "save" (i.e. reset) original configs */
-    sort_window_set ();
-
     /* close the window */
     if(sort_window)
 	gtk_widget_destroy(sort_window);

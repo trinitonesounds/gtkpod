@@ -1,3 +1,13 @@
+2006-06-26 James Liggett <freethinkerjim@users.sourceforge.net>
+
+	* src/main.c
+	  src/misc_confirm.c
+	  src/prefs.c
+	  src/prefs.h
+	  src/prefs_window.c: Got rid of old prefs infrastructure :)
+	  Also added prefs functions for handling double/float keys.
+	 	
+
 2006-06-25 James Liggett <freethinkerjim@users.sourceforge.net>
 
 	* src/md5.c

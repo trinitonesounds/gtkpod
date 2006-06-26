@@ -145,7 +145,13 @@ typedef enum
     PATH_NUM
 } PathType;
 
-
+/* enum for reading of options */
+enum {
+  GP_HELP,
+  GP_PLAYCOUNT,
+  GP_MOUNT,
+  GP_AUTO,
+};
 
 /* Set default prefrences */
 static void set_default_preferences()
@@ -263,6 +269,7 @@ static void set_default_preferences()
     prefs_set_int("toolbar_style", GTK_TOOLBAR_BOTH);
     prefs_set_int("block_display", FALSE);
     prefs_set_int("md5", TRUE);
+    prefs_set_string("export_template", "%o;%a - %t.mp3;%t.wav");
 
     /* Set last browsed directory */
     dir = g_get_current_dir();
@@ -328,21 +335,22 @@ static void usage(FILE *fp)
   locale_fprintf(fp, _("  --auto:       same as '-a'.\n"));
 }
 
-/* Not quite ready to use this--disable for now */
-#if 0
 /* Parse commandline based options */
-static gboolean read_commandline(int argc, char *argv[])
+static void read_commandline(int argc, char *argv[])
 {
     int option; /* Code returned by getopt */
 	
     /* The options data structure. The format is standard getopt. */
     struct option const options[] =
 	{
-	    {"h",           no_argument,				NULL, GP_HELP},
-	    {"help",        no_argument,				NULL, GP_HELP},
-	    {"m",           required_argument,	NULL, GP_MOUNT},
-	    {"mountpoint",  required_argument,	NULL, GP_MOUNT},
-	    {0, 0, 0, 0}
+	    { "h",           no_argument,	NULL, GP_HELP },
+	    { "help",        no_argument,	NULL, GP_HELP },
+	    { "p",           required_argument,       NULL, GP_PLAYCOUNT },
+	    { "m",           required_argument,	NULL, GP_MOUNT },
+	    { "mountpoint",  required_argument,	NULL, GP_MOUNT },
+	    { "a",           no_argument,	NULL, GP_AUTO },
+	    { "auto",        no_argument,	NULL, GP_AUTO },
+	    { 0, 0, 0, 0 }
 	};
 	
     /* Handle commandline options */
@@ -353,23 +361,25 @@ static gboolean read_commandline(int argc, char *argv[])
 	case GP_HELP:
 	    usage(stdout);
 	    exit(0);
-	    return FALSE;
+	    break;
+	case GP_PLAYCOUNT:
+	    client_playcount(optarg);
+	    exit(0);
 	    break;
 	case GP_MOUNT:
 	    prefs_set_string("initial_mountpoint", optarg);
-	    return TRUE;
+	    break;
+	case GP_AUTO:
+	    prefs_set_int("autoimport_commandline", TRUE);
 	    break;
 	default:
 	    locale_fprintf(stderr, "Unknown option: %s\n", argv[optind]);
 	    usage(stderr);
 	    exit(1);
-	    return FALSE;
 	    break;
 	};
     }
-    return TRUE;	
 }
-#endif
 
 /* Read options from environment variables */
 static void read_environment()
@@ -508,7 +518,7 @@ static void write_key(gpointer key, gpointer value, gpointer user_data)
 /* Gets a string that contains ~/.gtkpod/ If the folder doesn't exist,
  * create it. Free the string when you are done with it.
  * If the folder wasn't found, and couldn't be created, return NULL */
-gchar *get_config_dir()
+gchar *prefs_get_cfgdir()
 {
     gchar *folder;  /* Folder path */
 	
@@ -527,8 +537,6 @@ gchar *get_config_dir()
     return folder;
 }
 
-/* Disable this until the transition is done */
-#if 0
 /* Read preferences from a file */
 static void read_prefs_from_file(FILE *fp)
 {
@@ -581,7 +589,6 @@ static void read_prefs_from_file(FILE *fp)
 	}
     }
 }
-#endif
 
 /* Write prefs to file */
 static void write_prefs_to_file(FILE *fp)
@@ -594,18 +601,15 @@ static void write_prefs_to_file(FILE *fp)
  * preferences in the user home folder. */
 static void load_prefs()
 {
-#if 0
     gchar *filename; /* Config path to open */
     gchar *config_dir;  /* Directory where config is (usually ~/.gtkpod) */
     FILE *fp;
-#endif
 	
     /* Start by initializing the prefs to their default values */
     set_default_preferences();
 	
-#if 0
     /* and then override those values with those found in the home folder. */
-    config_dir = get_config_dir();
+    config_dir = prefs_get_cfgdir();
 	
     if (config_dir)
     {
@@ -626,7 +630,6 @@ static void load_prefs()
 		
 	g_free(config_dir);
     }
-#endif
 	
     /* Finally, initialize variable-length lists. Do this after everything else
      * so that list defaults don't hang out in the table after prefs have been
@@ -642,7 +645,7 @@ static void save_prefs()
     FILE *fp;  /* File pointer */
 	
     /* Open $HOME/.gtkpod/prefs, and write prefs */
-    config_dir = get_config_dir();
+    config_dir = prefs_get_cfgdir();
 	
     if (config_dir)
     {
@@ -654,10 +657,6 @@ static void save_prefs()
 
 	    if (fp)
 	    {
-		/* remove fprintf() once the old prefs
-		   system is completely gone. */
-		fprintf(fp, "version=%s\n", VERSION);
-
 		write_prefs_to_file(fp);
 		fclose(fp);
 	    }
@@ -699,23 +698,14 @@ static void wipe_list(const gchar *key)
 static void cleanup_keys()
 {
     gchar *buf;
+    gchar *sp = NULL;
     gint int_buf;
     gint i;
     gint x, y, p;  /* Window position */
     float version=0;
 
-    /* get version */
-    if (prefs_get_string_value ("version", &buf))
-    {
-	version = g_ascii_strtod (buf, NULL);
-	g_free (buf);
-    }
-    else
-    {
-	/* version must only be set to VERSION if no prefs file was
-	   found --> elsewhere */
-	g_return_if_reached ();
-    }
+    /* Get version */
+    version = prefs_get_double("version");
 
     /* rename mountpoint to initial_mountpoint */
     if (prefs_get_string_value("mountpoint", &buf))
@@ -870,6 +860,14 @@ static void cleanup_keys()
     prefs_set_string("mp3gain_path", NULL);
     prefs_set_string("statusbar_timeout", NULL);
     prefs_set_string("offline", NULL);
+    prefs_set_string("time_format", NULL);
+    prefs_set_string("id3_all", NULL);
+    prefs_set_string("pm_autostore", NULL);
+    prefs_set_string("backups", NULL);
+    prefs_set_string("save_sorted_order", NULL);
+    prefs_set_string("fix_path", NULL);
+    prefs_set_string("write_gaintag", NULL);
+
 
     /* sp_created_cond renamed to sp_added_cond */
     for (i = 0; i < SORT_TAB_MAX; i++)
@@ -983,6 +981,52 @@ static void cleanup_keys()
 	prefs_set_string("sm_sort_", NULL);
     }
 
+    /* filename_format renamed to export_template */
+    if (prefs_get_string_value("filename_format", &buf))
+    {
+	prefs_set_string("export_template", buf);
+	g_free(buf);
+	prefs_set_string("filename_format", NULL);
+    }
+
+    /* This string was a wrong autoconvert--just ignore it */
+    buf = prefs_get_string("export_template");
+    
+    if (strcmp(buf, "%a - %a/%T - %T.mp3") == 0)
+	prefs_set_string("export_template", NULL);
+
+    /* We changed the meaning of the %x in export_template */
+    if (version < 0.72)
+    {
+	/* changed the meaning of the %x in export_template */
+	if (sp) while (*sp)
+	{
+	    if (sp[0] == '%')
+	    {
+		switch (sp[1]) {
+		case 'A':
+		    sp[1] = 'a';
+		    break;
+		case 'd':
+		    sp[1] = 'A';
+		    break;
+		case 'n':
+		    sp[1] = 't';
+		    break;
+		case 't':
+		    sp[1] = 'T';
+		    break;
+		default:
+		    break;
+		}
+	    }
+	}
+    }
+
+    /* For versions < 0.91, remove all itdb keys */
+    if (version < 0.91)
+	prefs_flush_subkey("itdb_");
+   
     prefs_set_string ("version", VERSION);
 }
 
@@ -1005,20 +1049,15 @@ void init_prefs(int argc, char *argv[])
 	
     /* Load preferences */
     load_prefs();
+
+    /* Clean up old prefs keys */
+    cleanup_keys();
 	
     /* Read environment variables */
     read_environment(); 
 	
-#if 0
     /* Read commandline arguments */
-    read_commandline(argc, argv);
-#endif
-  
-    /* Leave this here--will work when transition is complete */
-#if 0
-    /* Clean up old prefs keys */
-    cleanup_keys();
-#endif
+    read_commandline(argc, argv);  
 }
 
 /* Save prefs data to a file, and then delete the hash table */
@@ -1214,9 +1253,6 @@ void temp_prefs_rename_subkey (TempPrefs *temp_prefs,
     temp_prefs_destroy (sub_data.temp_prefs);
 }
 
-
-
-
 /* Functions for non-numbered pref keys */
 
 /* Set a string value with the given key, or remove key if @value is
@@ -1256,6 +1292,17 @@ void prefs_set_int64(const gchar *key, const gint64 value)
     {
 	strvalue = g_strdup_printf("%llu", value);
 	g_hash_table_insert(prefs_table, g_strdup(key), strvalue);	
+    }
+}
+
+void prefs_set_double(const gchar *key, gdouble value)
+{
+    gchar *strvalue; /* String value converted from integer */
+
+    if (prefs_table)
+    {
+	strvalue = g_strdup_printf("%f", value);
+	g_hash_table_insert(prefs_table, g_strdup(key), strvalue);
     }
 }
 
@@ -1370,6 +1417,43 @@ gboolean prefs_get_int64_value(const gchar *key, gint64 *value)
     return FALSE;
 }
 
+gdouble prefs_get_double(const gchar *key)
+{
+    gchar *string;  /* Key value string */
+    gdouble value;  /* Retunred value */
+	
+    value = 0;
+
+    if (prefs_table)
+    {
+	string = g_hash_table_lookup(prefs_table, key);
+
+	if (string)
+	    value = g_ascii_strtod(string, NULL);
+    }
+	
+    return value;
+}
+
+gboolean prefs_get_double_value(const gchar *key, gdouble *value)
+{
+    gchar *string;  /* String value from prefs table */
+	
+    if (prefs_table)
+    {
+	string = g_hash_table_lookup(prefs_table, key);
+		
+	if (string)
+	{
+	    if (value)
+		*value = g_ascii_strtod(string, NULL);
+			
+	    return TRUE;
+	}
+    }
+    return FALSE;
+}
+
 /* Functions for numbered pref keys */
 
 /* Set a string value with the given key */
@@ -1404,6 +1488,18 @@ void prefs_set_int64_index(const gchar *key, const guint index,
 	
     full_key = create_full_key(key, index);
     prefs_set_int64(full_key, value);
+	
+    g_free(full_key);
+}
+
+/* Set a key to a gdouble value */
+void prefs_set_double_index(const gchar *key, guint index,
+			     gdouble value)
+{
+    gchar *full_key; /* Complete numbered key */
+	
+    full_key = create_full_key(key, index);
+    prefs_set_double(full_key, value);
 	
     g_free(full_key);
 }
@@ -1486,7 +1582,32 @@ gboolean prefs_get_int64_value_index(const gchar *key, const guint index,
     gboolean ret; /* Return value */
 	
     full_key = create_full_key(key, index);
-    ret = prefs_get_int64_value(key, value);
+    ret = prefs_get_int64_value(full_key, value);
+	
+    g_free(full_key);
+    return ret;
+}
+
+gdouble prefs_get_double_index(const gchar *key, guint index)
+{
+    gchar *full_key; /* Complete numbered key */
+    gdouble value; /* Return value */
+	
+    full_key = create_full_key(key, index);
+    value = prefs_get_double(full_key);
+	
+    g_free(full_key);
+    return value;
+}
+
+gboolean prefs_get_double_value_index(const gchar *key, guint index,
+				      gdouble *value)
+{
+    gchar *full_key; /* Complete numbered key */
+    gboolean ret; /* Return value */
+	
+    full_key = create_full_key(key, index);
+    ret = prefs_get_double_value(full_key, value);
 	
     g_free(full_key);
     return ret;
@@ -1538,6 +1659,18 @@ void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key,
     g_return_if_fail (key);
 
     strvalue = g_strdup_printf("%llu", value);
+    g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
+}
+
+void temp_prefs_set_double(TempPrefs *temp_prefs, const gchar *key,
+			   gdouble value)
+{
+    gchar *strvalue; /* String value converted from int64 */
+	
+    g_return_if_fail (temp_prefs && temp_prefs->tree);
+    g_return_if_fail (key);
+
+    strvalue = g_strdup_printf("%fu", value);
     g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
 }
 
@@ -1616,6 +1749,48 @@ gboolean temp_prefs_get_int_value(TempPrefs *temp_prefs,
 	return FALSE;
 }
 
+gdouble temp_prefs_get_double(TempPrefs *temp_prefs,
+			      const gchar *key)
+{
+    gchar *string; /* Hash value string */
+    gdouble value;  /* Retunred value */
+	
+    g_return_val_if_fail (temp_prefs && temp_prefs->tree, 0);
+    g_return_val_if_fail (key, 0);
+
+    value = 0.0f;
+	
+    string = g_tree_lookup (temp_prefs->tree, key);
+		
+    if (string)
+	value = g_ascii_strtod(string, NULL);
+
+    return value;    
+}
+
+gboolean temp_prefs_get_double_value(TempPrefs *temp_prefs,
+				    const gchar *key, gdouble *value)
+{
+    gchar *string;  /* String value from prefs table */
+	
+    g_return_val_if_fail (temp_prefs && temp_prefs->tree, FALSE);
+    g_return_val_if_fail (key, FALSE);
+
+    string = g_tree_lookup (temp_prefs->tree, key);
+
+    if (value)
+    {
+	if (string)
+	    *value = g_ascii_strtod(string, NULL);
+	else
+	    *value = 0;
+    }
+
+    if (string)
+	return TRUE;
+    else
+	return FALSE;
+}
 
 /* Functions for numbered pref keys */
 
@@ -1831,365 +2006,4 @@ GList *get_list_from_buffer(GtkTextBuffer *buffer)
     }
     
     return list;
-}
-
-/* config struct */
-static struct cfg *cfg = NULL;
-
-/* enum for reading of options */
-enum {
-  GP_HELP,
-  GP_PLAYCOUNT,
-  GP_MOUNT,
-  GP_AUTO,
-};
-
-
-struct cfg *cfg_new(void)
-{
-    struct cfg *mycfg = NULL;
-
-    mycfg = g_malloc0 (sizeof (struct cfg));
-
-
-    return(mycfg);
-}
-
-
-/* Compare strlen(@arg) chars of @arg with @line. Return strlen (@arg)
-   in @off if @off != NULL */
-static gint arg_comp (const gchar *line, const gchar *arg, gint *off)
-{
-    if (arg && line)
-    {
-	gint len = strlen (arg);
-	if (off) *off = len;
-	return g_ascii_strncasecmp (line, arg, len);
-    }
-    else
-    {
-	if (*off)   *off = 0;
-	return 0;
-    }
-}
-
-
-
-static void
-read_prefs_from_file_desc(FILE *fp)
-{
-    gchar buf[PATH_MAX];
-    gchar *line, *arg, *bufp;
-    gint len;
-
-    /* set ignore fields (ignore above words for artist) */
-    bufp = g_strdup_printf ("sort_ign_field_%d", T_ARTIST);
-    prefs_set_int (bufp, 1);
-    g_free (bufp);
-
-    if(fp)
-    {
-      while (fgets (buf, PATH_MAX, fp))
-	{
-	  /* allow comments */
-	  if ((buf[0] == ';') || (buf[0] == '#')) continue;
-	  arg = strchr (buf, '=');
-	  if (!arg || (arg == buf))
-	    {
-	      gtkpod_warning (_("Error while reading prefs: %s\n"), buf);
-	      continue;
-	    }
-	  /* skip whitespace */
-	  bufp = buf;
-	  while (g_ascii_isspace(*bufp)) ++bufp;
-	  line = g_strndup (buf, arg-bufp);
-	  ++arg;
-	  len = strlen (arg); /* remove newline */
-	  if((len>0) && (arg[len-1] == 0x0a))  arg[len-1] = 0;
-	  /* skip whitespace */
-	  while (g_ascii_isspace(*arg)) ++arg;
-	  if(g_ascii_strcasecmp (line, "version") == 0)
-	  {
-	      cfg->version = g_ascii_strtod (arg, NULL);
-	      prefs_set_string ("version", arg);
-	  }
-	  else if(g_ascii_strcasecmp (line, "time_format") == 0)
-	  {
-	      /* removed in 0.87 */
-	  }
-	  else if((g_ascii_strcasecmp (line, "filename_format") == 0) ||
-		  (g_ascii_strcasecmp (line, "export_template") == 0))
-	  {  /* changed to "export_template" in 0.73CVS */
-	      /* this "funky" string was the result of a wrong
-		 autoconvert -- just ignore it */
-	      if (strcmp (arg, "%a - %a/%T - %T.mp3") != 0)
-	      {
-		  if (cfg->version < 0.72)
-		  {
-		      /* changed the meaning of the %x in export_template */
-		      gchar *sp = arg;
-		      if (sp) while (*sp)
-		      {
-			  if (sp[0] == '%')
-			  {
-			      switch (sp[1]) {
-			      case 'A':
-				  sp[1] = 'a';
-				  break;
-			      case 'd':
-				  sp[1] = 'A';
-				  break;
-			      case 'n':
-				  sp[1] = 't';
-				  break;
-			      case 't':
-				  sp[1] = 'T';
-				  break;
-			      default:
-				  break;
-			      }
-			  }
-			  ++sp;
-		      }
-		  }
-		  prefs_set_string (EXPORT_FILES_TPL, arg);
-	      }
-	  }
-	  else if(g_ascii_strcasecmp (line, "id3_all") == 0)
-	  {
-	      /* obsoleted since 0.71 */
-	  }
-	  else if(g_ascii_strcasecmp (line, "pm_autostore") == 0)
-	  {
-	      /* ignore */
-	  }
-	  else if(g_ascii_strcasecmp (line, "backups") == 0)
-	  {
-	      /* removed with version after 0.82-CVS */
-	  }
-	  else if(g_ascii_strcasecmp (line, "save_sorted_order") == 0)
-	  {
-	      /* ignore option -- has been deleted with 0.53 */
-	  }
-	  else if(g_ascii_strcasecmp (line, "fix_path") == 0)
-	  {
-	      /* ignore -- wie always fix the export path (replace
-	       * non-compatible chars) */
-	  }
-	  else if(g_ascii_strcasecmp (line, "write_gaintag") == 0)
-	  {
-	      /* ignore -- not used any more */
-	  }
-	  else
-	  {   /* All leftover options will be stored into the prefs
-		 setting hash (generic options -- should have had this
-		 idea much sooner... */
-	      gboolean skip = FALSE;
-	      if (cfg->version < 0.91)
-	      {
-		  if(arg_comp (line, "itdb_", NULL) == 0)
-		  {   /* set incorrectly in 0.90 -- delete */
-		      skip = TRUE;
-		  }
-	      }
-	      if (!skip)
-		  prefs_set_string (line, arg);
-	  }
-	  g_free(line);
-	}
-    }
-}
-
-
-/* we first read from /etc/gtkpod/prefs and then overwrite the
-   settings with ~/.gtkpod/prefs */
-void
-read_prefs_defaults(void)
-{
-  gchar *cfgdir = NULL;
-  gchar *filename;
-  FILE *fp = NULL;
-  gboolean have_prefs = FALSE;
-
-  cfgdir = prefs_get_cfgdir ();
-
-  filename = g_build_filename (cfgdir, "prefs", NULL);
-  if(g_file_test(filename, G_FILE_TEST_EXISTS))
-  {
-      if((fp = fopen(filename, "r")))
-      {
-	  read_prefs_from_file_desc(fp);
-	  fclose(fp);
-    cleanup_keys();
-	  have_prefs = TRUE; /* read prefs */
-      }
-      else
-      {
-	  gtkpod_warning(_("Unable to open config file '%s' for reading\n"), filename);
-	  }
-  }
-  g_free (filename);
-
-  if (!have_prefs)
-  {
-      filename = g_build_filename ("/etc", "gtkpod", "prefs", NULL);
-
-      if (g_file_test (filename, G_FILE_TEST_EXISTS))
-      {
-	  if((fp = fopen(filename, "r")))
-	  {
-	      read_prefs_from_file_desc(fp);
-	      fclose(fp);
-	      have_prefs = TRUE; /* read prefs */
-	  }
-      }
-      g_free (filename);
-  }
-  g_free (cfgdir);
-  /* set version of the prefs file to "current" if none was read */
-  if (!have_prefs)
-  {
-      cfg->version = g_ascii_strtod (VERSION, NULL);
-      prefs_set_string ("version", VERSION);
-  }
-}
-
-/* Read Preferences and initialise the cfg-struct */
-/* Return value: FALSE if "-p" argument was given -> stop program */
-gboolean read_prefs_old (GtkWidget *gtkpod, int argc, char *argv[])
-{
-  int opt;
-  int option_index;
-  gboolean result = TRUE;
-  struct option const options[] =
-    {
-      { "h",           no_argument,	NULL, GP_HELP },
-      { "help",        no_argument,	NULL, GP_HELP },
-      { "p",           required_argument,       NULL, GP_PLAYCOUNT },
-      { "m",           required_argument,	NULL, GP_MOUNT },
-      { "mountpoint",  required_argument,	NULL, GP_MOUNT },
-      { "a",           no_argument,	NULL, GP_AUTO },
-      { "auto",        no_argument,	NULL, GP_AUTO },
-      { 0, 0, 0, 0 }
-    };
-		
-  if (cfg != NULL) discard_prefs ();
-
-  cfg = cfg_new();
-  read_prefs_defaults();
-
-  while((opt=getopt_long_only(argc, argv, "", options, &option_index)) != -1) {
-    switch(opt)
-      {
-      case GP_HELP:
-	  usage(stdout);
-	  exit(0);
-	  break;
-      case GP_PLAYCOUNT:
-	  client_playcount (optarg);
-	  result = FALSE;
-	  break;
-      case GP_MOUNT:
-	  prefs_set_string ("initial_mountpoint", optarg);
-	  break;
-      case GP_AUTO:
-	  prefs_set_int("autoimport_commandline", TRUE);
-	  break;
-      default:
-	  locale_fprintf(stderr, _("Unknown option: %s\n"), argv[optind]);
-	  usage(stderr);
-	  exit(1);
-      }
-  }
-
-  return result;
-}
-
-static void
-write_prefs_to_file_desc(FILE *fp)
-{
-
-    if(!fp)
-	fp = stderr;
-
-}
-
-
-void
-write_prefs (void)
-{
-    gchar *filename;
-    gchar *cfgdir;
-    FILE *fp = NULL;
-
-    cfgdir = prefs_get_cfgdir ();
-
-    filename = g_build_filename (cfgdir, "prefs", NULL);
-    if((fp = fopen(filename, "a")))
-    {
-	write_prefs_to_file_desc(fp);
-	fclose(fp);
-    }
-    else
-    {
-	gtkpod_warning (_("Unable to open '%s' for writing\n"),
-			filename);
-    }
-
-    g_free (filename);
-    g_free (cfgdir);
-}
-
-
-
-/* Free all memory including the cfg-struct itself. */
-void discard_prefs ()
-{
-    cfg_free(cfg);
-    cfg = NULL;
-}
-
-void cfg_free(struct cfg *c)
-{
-    if(c)
-    {
-      g_free (c);
-    }
-}
-
-struct cfg *clone_prefs(void)
-{
-    struct cfg *result = NULL;
-
-    if(cfg)
-    {
-	result = g_memdup (cfg, sizeof (struct cfg));
-    }
-    return(result);
-}
-
-/* Returns "$HOME/.gtkpod" and tries to create it if it does not
-   exist. */
-gchar *prefs_get_cfgdir (void)
-{
-  G_CONST_RETURN gchar *str;
-  gchar *cfgdir=NULL;
-
-  if((str = g_get_home_dir ()))
-  {
-      cfgdir = g_build_filename (str, ".gtkpod", NULL);
-      if(!g_file_test(cfgdir, G_FILE_TEST_IS_DIR))
-      {
-	  if(mkdir(cfgdir, 0777) == -1)
-	  {
-	      /* if this error occurs before we have initialized config
-		 and display we crash --> resort to fprintf() */
-	      if (cfg)
-		  gtkpod_warning(_("Unable to 'mkdir %s'\n"), cfgdir);
-	      else
-		  fprintf(stderr, _("Unable to 'mkdir %s'\n"), cfgdir);
-	  }
-      }
-  }
-  return cfgdir;
 }
