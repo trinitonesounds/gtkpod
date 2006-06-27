@@ -1,6 +1,7 @@
 /* Time-stamp: <2006-06-25 21:40:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
+|  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
 |  Part of the gtkpod project.
 |
 |  URL: http://www.gtkpod.org/
@@ -33,46 +34,23 @@
  *
  * - add the desired option to the prefs window using glade-2
  *
- * - modify the cfg structure in prefs.h accordingly
- *
- * - set the default value of new_option in cfg_new() in prefs.c
- *
- * - add function prefs_get_new_option() and
- *   prefs_set_new_option() to prefs.[ch]. These functions are
- *   called from within gtkpod to query/set the state of the option.
- *   prefs_set_new_option() should verify that the value passed is
- *   valid.
+ * - set the default value of new_option in set_default_preferences() in prefs.c
  *
  * - add a callback on_new_option_*() to prefs_windows.c to set the
- *   new value in the temporary prefs struct.
+ *   new value.
  *   The value is applied to the actual prefs when pressing the "OK"
  *   or "Apply" button in the prefs window.
- *
- * - if your option is a pointer to data, make sure the data is copied
- *   in clone_prefs() in prefs.c
  *
  * - add code to prefs_window_create() in prefs_window.c to set the
  *   correct state of the option in the prefs window.
  *
- * - add code to prefs_window_set() in prefs_window.c to actually take
- *   over the new state when closing the prefs window
- *
- * - add code to write_prefs_to_file_desc() to write the state of
- *   new_option to the prefs file
- *
- * - add code to read_prefs_from_file_desc() to read the
- *   new_option from the prefs file
- *
  * - if you want new_option to be a command line option as well, add
- *   code to usage() and read_prefs_old()
+ *   code to usage() and read_commandline().
+ *
+ * - for environment variables, add code to read_environment().
  *
  * ---------------------------------------------------------------- */
 
-/* FIXME: simplify code to make adding of new options easier:
-		  prefs_window_create()
-		  write_prefs_to_file_desc()
-		  read_prefs_from_file_desc()
-*/
 
 /* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
    Ditto for AIX 3.2 and <stdlib.h>.  */

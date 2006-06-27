@@ -143,8 +143,9 @@ Steve Jay: use statvfs() instead of df (better portability, faster)\n"),
 Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 tags\n"),
 		       "\n",
 		       _("\
-James Ligget: replacement of old GTK file selection dialogs with new GTK filechooser dialogs\n"),
-		       "\n",
+James Liggett:\n     replacement of old GTK file selection dialogs with new GTK filechooser dialogs\n"),
+		       "     refactored user preferences system.\n",
+                       "\n",
 		       _("\
 Daniel Kercher: sync scripts for abook and webcalendar\n"),
 		       "\n",

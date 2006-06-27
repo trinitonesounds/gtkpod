@@ -1,5 +1,9 @@
 2006-06-26 James Liggett <freethinkerjim@users.sourceforge.net>
-
+	
+	* src/misc.c
+	  src/prefs.c: Updated copyright info, prefs howto,
+	  and about box. 
+	
 	* src/prefs_window.c: Fixed sort ignore list bug.
 
 	* src/main.c
