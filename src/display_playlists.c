@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 00:25:34 jcs>
+/* Time-stamp: <2006-06-28 01:25:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1145,16 +1145,12 @@ void pm_add_playlist (Playlist *playlist, gint pos)
 }
 
 
-/* Remove "playlist" from the display model. 
-   "select": TRUE: a new playlist is selected
-             FALSE: no selection is taking place
-                    (useful when quitting program) */
-void pm_remove_playlist (Playlist *playlist, gboolean select)
-{
-    gboolean pm_delete_playlist_fe (GtkTreeModel *model,
-				    GtkTreePath *path,
-				    GtkTreeIter *iter,
-				    gpointer data)
+
+    /* former inline function: used by pm_remove_playlist() */
+    static gboolean pm_delete_playlist_fe (GtkTreeModel *model,
+					   GtkTreePath *path,
+					   GtkTreeIter *iter,
+					   gpointer data)
 	{
 	    Playlist *playlist=NULL;
 	    
@@ -1165,6 +1161,13 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 	    }
 	    return FALSE;
 	}
+
+/* Remove "playlist" from the display model. 
+   "select": TRUE: a new playlist is selected
+             FALSE: no selection is taking place
+                    (useful when quitting program) */
+void pm_remove_playlist (Playlist *playlist, gboolean select)
+{
     GtkTreeModel *model;
     gboolean have_iter = FALSE;
     GtkTreeIter i;
@@ -1173,11 +1176,21 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
   g_return_if_fail (playlist);
   model = gtk_tree_view_get_model (playlist_treeview);
   g_return_if_fail (model);
-  
+
   ts = gtk_tree_view_get_selection (playlist_treeview);
+
+  if (itdb_playlist_is_mpl (playlist) && current_playlist &&
+      (playlist->itdb == current_playlist->itdb))
+  {   /* We are about to remove the entire itdb (playlist is MPL) and
+       * a playlist of this itdb is selected --> clear display
+       * (pm_unselect_playlist probably works as well, but the
+       * unselect won't be done until later (callback)) */
+      st_init (-1, 0);
+      current_playlist = NULL;
+  }
+
   if (select && (current_playlist == playlist))
-  {
-      /* We are about to delete the currently selected
+  {   /* We are about to delete the currently selected
 	 playlist. Try to select the next. */
       if (gtk_tree_selection_get_selected (ts, NULL, &i))
       {
@@ -1197,6 +1210,7 @@ void pm_remove_playlist (Playlist *playlist, gboolean select)
 	  gtk_tree_path_free (path);
       }
   }
+
   /* find the pl and delete it */
   gtk_tree_model_foreach (model, pm_delete_playlist_fe, playlist);
   /* select our new iter !!! */
@@ -1235,14 +1249,11 @@ void pm_remove_all_playlists (gboolean clear_sort)
 }
 
 
-
-/* Select specified playlist */
-void pm_select_playlist (Playlist *playlist)
-{
-    gboolean pm_select_playlist_fe (GtkTreeModel *model,
-				    GtkTreePath *path,
-				    GtkTreeIter *iter,
-				    gpointer data)
+    /* former inline function: used by pm_select_playlist */
+    static gboolean pm_select_playlist_fe (GtkTreeModel *model,
+					   GtkTreePath *path,
+					   GtkTreeIter *iter,
+					   gpointer data)
 	{
 	    Playlist *playlist=NULL;
 
@@ -1257,6 +1268,10 @@ void pm_select_playlist (Playlist *playlist)
 	    }
 	    return FALSE;
 	}
+
+/* Select specified playlist */
+void pm_select_playlist (Playlist *playlist)
+{
     GtkTreeModel *model;
 
     g_return_if_fail (playlist_treeview);
@@ -1270,13 +1285,11 @@ void pm_select_playlist (Playlist *playlist)
 }
 
 
-/* Unselect specified playlist */
-void pm_unselect_playlist (Playlist *playlist)
-{
-    gboolean pm_unselect_playlist_fe (GtkTreeModel *model,
-				      GtkTreePath *path,
-				      GtkTreeIter *iter,
-				      gpointer data)
+    /* former inline function: used by pm_unselect_playlist */
+    static gboolean pm_unselect_playlist_fe (GtkTreeModel *model,
+					     GtkTreePath *path,
+					     GtkTreeIter *iter,
+					     gpointer data)
 	{
 	    Playlist *playlist=NULL;
 
@@ -1291,6 +1304,10 @@ void pm_unselect_playlist (Playlist *playlist)
 	    }
 	    return FALSE;
 	}
+
+/* Unselect specified playlist */
+void pm_unselect_playlist (Playlist *playlist)
+{
     GtkTreeModel *model;
 
     g_return_if_fail (playlist_treeview);

@@ -1,3 +1,10 @@
+2006-06-27 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* src/display_playlist (pm_remove_playlist): if entire itdb is
+          removed, clear display (filter tabs, playlist view) first to
+          avoid segfaults when non-existent tracks are accessed for
+          display updates.
+
 2006-06-26 James Liggett <freethinkerjim@users.sourceforge.net>
 	
 	* src/misc.c

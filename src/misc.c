@@ -1,5 +1,5 @@
 /* -*- coding: utf-8; -*-
-|  Time-stamp: <2006-06-25 15:20:33 jcs>
+|  Time-stamp: <2006-06-28 01:21:08 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -143,8 +143,8 @@ Steve Jay: use statvfs() instead of df (better portability, faster)\n"),
 Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 tags\n"),
 		       "\n",
 		       _("\
-James Liggett:\n     replacement of old GTK file selection dialogs with new GTK filechooser dialogs\n"),
-                       _("\
+James Liggett:\n\
+     replacement of old GTK file selection dialogs with new GTK filechooser dialogs\n\
      refactored user preferences system.\n"),
                        "\n",
 		       _("\
