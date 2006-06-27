@@ -1,5 +1,7 @@
 2006-06-26 James Liggett <freethinkerjim@users.sourceforge.net>
 
+	* src/prefs_window.c: Fixed sort ignore list bug.
+
 	* src/main.c
 	  src/misc_confirm.c
 	  src/prefs.c

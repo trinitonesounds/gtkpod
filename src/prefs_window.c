@@ -1935,11 +1935,12 @@ void sort_window_delete(void)
 /* apply the current settings and close the window */
 void sort_window_ok (void)
 {
+    /* update the sort ignore strings */
+    sort_window_read_sort_ign ();
+
     temp_prefs_apply(sort_temp_prefs);
     temp_lists_apply(sort_temp_lists);
 
-    /* update the sort ignore strings */
-    sort_window_read_sort_ign ();
     /* save current settings */
     sort_window_set ();
   
@@ -1953,11 +1954,12 @@ void sort_window_ok (void)
 /* apply the current settings, don't close the window */
 void sort_window_apply (void)
 {
+    /* update the sort ignore strings */
+    sort_window_read_sort_ign ();
+
     temp_prefs_apply(sort_temp_prefs);
     temp_lists_apply(sort_temp_lists);
 
-    /* update the sort ignore strings */
-    sort_window_read_sort_ign ();
     /* save current settings */
     sort_window_set ();
 }
