@@ -144,7 +144,8 @@ Christoph Kunz: address compatibility issues when writing id3v2.4 type mp3 tags\
 		       "\n",
 		       _("\
 James Liggett:\n     replacement of old GTK file selection dialogs with new GTK filechooser dialogs\n"),
-		       "     refactored user preferences system.\n",
+                       _("\
+     refactored user preferences system.\n"),
                        "\n",
 		       _("\
 Daniel Kercher: sync scripts for abook and webcalendar\n"),

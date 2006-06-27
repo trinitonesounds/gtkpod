@@ -1,6 +1,10 @@
 2006-06-26 James Liggett <freethinkerjim@users.sourceforge.net>
 	
 	* src/misc.c
+	  src/prefs.h: Fixed a translation problem, 
+	  updated copyright. 
+
+	* src/misc.c
 	  src/prefs.c: Updated copyright info, prefs howto,
 	  and about box. 
 	
