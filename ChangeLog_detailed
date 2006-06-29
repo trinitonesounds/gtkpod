@@ -1,3 +1,9 @@
+2006-06-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
+
+	* src/confirmation.c: Add safety to "remove all tracks"
+          context menu.
+
+
 2006-06-27 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/display_playlist (pm_remove_playlist): if entire itdb is

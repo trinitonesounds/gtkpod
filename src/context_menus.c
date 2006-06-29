@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-23 23:33:50 jcs>
+/* Time-stamp: <2006-06-29 20:41:31 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -418,18 +418,38 @@ static GtkWidget *add_sync_playlist_with_dirs (GtkWidget *menu)
 
 static GtkWidget *add_remove_all_tracks_from_ipod (GtkWidget *menu)
 {
-    return hookup_mi (menu, _("Remove All Tracks from iPod"),
-		      GTK_STOCK_DELETE,
-		      G_CALLBACK (delete_entries),
-		      GINT_TO_POINTER (DELETE_ACTION_IPOD));
+    GtkWidget *mi;
+    GtkWidget *sub;
+
+    mi = hookup_mi (menu, _("Remove All Tracks from iPod"),
+		    GTK_STOCK_DELETE,
+		    NULL, NULL);
+    sub = gtk_menu_new ();
+    gtk_widget_show (sub);
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
+    hookup_mi (sub, _("I'm sure"),
+	       NULL,
+	       G_CALLBACK (delete_entries),
+	       GINT_TO_POINTER (DELETE_ACTION_IPOD));
+    return mi;
 }
 
 static GtkWidget *add_remove_all_podcasts_from_ipod (GtkWidget *menu)
 {
-    return hookup_mi (menu, _("Remove All Podcasts from iPod"),
-		      GTK_STOCK_DELETE,
-		      G_CALLBACK (delete_entries),
-		      GINT_TO_POINTER (DELETE_ACTION_IPOD));
+    GtkWidget *mi;
+    GtkWidget *sub;
+
+    mi = hookup_mi (menu, _("Remove All Podcasts from iPod"),
+		    GTK_STOCK_DELETE,
+		    NULL, NULL);
+    sub = gtk_menu_new ();
+    gtk_widget_show (sub);
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
+    hookup_mi (sub, _("I'm sure"),
+	       NULL,
+	       G_CALLBACK (delete_entries),
+	       GINT_TO_POINTER (DELETE_ACTION_IPOD));
+    return mi;
 }
 
 static GtkWidget *add_delete_including_tracks (GtkWidget *menu)
@@ -491,10 +511,20 @@ static GtkWidget *add_save_changes (GtkWidget *menu)
 
 static GtkWidget *add_remove_all_tracks_from_database (GtkWidget *menu)
 {
-    return hookup_mi (menu,  _("Remove All Tracks from Database"),
-		      GTK_STOCK_DELETE,
-		      G_CALLBACK (delete_entries),
-		      GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+    GtkWidget *mi;
+    GtkWidget *sub;
+
+    mi = hookup_mi (menu, _("Remove All Tracks from Database"),
+		    GTK_STOCK_DELETE,
+		    NULL, NULL);
+    sub = gtk_menu_new ();
+    gtk_widget_show (sub);
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (mi), sub);
+    hookup_mi (sub, _("I'm sure"),
+	       NULL,
+	       G_CALLBACK (delete_entries),
+	       GINT_TO_POINTER (DELETE_ACTION_DATABASE));
+    return mi;
 }
 
 static GtkWidget *add_delete_including_tracks_harddisk (GtkWidget *menu)
