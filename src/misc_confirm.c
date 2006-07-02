@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-29 20:44:06 jcs>
+/* Time-stamp: <2006-07-02 13:42:35 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -664,6 +664,7 @@ void delete_playlist_head (DeleteAction deleteaction)
     gboolean confirm_again;
     gchar *confirm_again_key;
     guint32 n = 0;
+    GString *str;
 
     pl = pm_get_selected_playlist();
     if (!pl)

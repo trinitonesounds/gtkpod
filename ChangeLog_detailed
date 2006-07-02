@@ -1,3 +1,8 @@
+2006-07-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/misc_confirm.c (delete_playlist_head): fixed stupid
+          compile error.
+
 2006-06-29 Jorg Schuler <jcsjcs@users.sourceforge.net>
 
 	* src/confirmation.c: Add safety to "remove all tracks"
