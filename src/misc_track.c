@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:53:44 jcs>
+/* Time-stamp: <2006-07-05 00:34:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -969,11 +969,14 @@ static gint32 track_scan_length (const gchar *new_text)
     str = strrchr (new_text, ':');
     if (str)
     {   /* MM:SS */
-	nr = 1000 * (((float)(60 * atoi (new_text))) + atof (str+1));
+	/* A simple cast to gint32 can sometimes produce a number
+	   that's "1" too small (14.9999999999 -> 14 instead of 15) ->
+	   add 0.1 */
+	nr = 1000 * (((gdouble)(60 * atoi (new_text))) + atof (str+1)) + 0.1;
     }
     else
     {   /* SS */
-	nr = 1000 * atof (new_text);
+	nr = 1000 * atof (new_text) + 0.1;
     }
 
     return nr;

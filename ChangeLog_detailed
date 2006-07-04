@@ -1,3 +1,10 @@
+2006-07-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/misc_track (track_scan_length): work around problem in
+          conversion from gdouble to gint32 which caused playlength
+          be set incorrectly (most notable in write-through mode in
+          the edit details window).
+
 2006-07-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_confirm.c (delete_playlist_head): fixed stupid
