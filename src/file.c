@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 00:22:56 jcs>
+/* Time-stamp: <2006-08-18 10:31:58 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1129,10 +1129,10 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	    add_artwork (nti);
 	}
 
-	/* Set modification date to *now* */
-	nti->time_modified = itdb_time_get_mac_time ();
+	/* Set modification date to the files modified date */
+	nti->time_modified = itdb_time_host_to_mac(enti->mtime);
 	/* Set added date to *now* */
-	nti->time_added = nti->time_modified;
+	nti->time_added = itdb_time_get_mac_time ();
 
 	/* Make sure all strings are initialized -- that way we don't
 	   have to worry about it when we are handling the
@@ -1561,6 +1561,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	   (hash value may have changed!) */
 	gchar *name_on_ipod;
 	gchar *oldhash = etr->md5_hash;
+
 	md5_track_remove (track);
 	/* need to remove the old value manually! */
 	etr->md5_hash = NULL;

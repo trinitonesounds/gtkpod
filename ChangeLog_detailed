@@ -1,3 +1,9 @@
+2006-08-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file.c (get_track_info_from_file): set time_modified to
+          modification date of file instead of current time. Thanks to
+          Richard Hyde.
+
 2006-07-04 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/misc_track (track_scan_length): work around problem in
