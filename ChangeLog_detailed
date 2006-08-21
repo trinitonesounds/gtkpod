@@ -1,5 +1,10 @@
 2006-08-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* TROUBLESHOOTING: added hint for ubuntu users. Thanks to
+          Marcelo Varanda.
+
+2006-08-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* src/file.c (get_track_info_from_file): set time_modified to
           modification date of file instead of current time. Thanks to
           Richard Hyde.

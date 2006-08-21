@@ -12,6 +12,8 @@ Contents:
 - Filenames on the iPod appear in DOS 8.3 format and syncing to the iPod
   is not working as expected.
 
+- ./autogen.sh does not work
+
 - The following error message is displayed when accessing the device
   (Markus Gaugusch, Justin Thiessen):
      ieee1394: sbp2: aborting sbp2 command
@@ -80,6 +82,15 @@ Solution:
 You need to specify "vfat" as file system type. How to do that depends
 on which way you use to mount the iPod -- see the README file for more
 details.
+
+----------------------------------------------------------------------
+./autogen.sh does not work
+
+A ubunto user has reported that he had to set
+
+ACLOCAL_FLAGS=" -I /usr/share/aclocal/"
+
+in order to get ./autogen.sh to work.
 
 ----------------------------------------------------------------------
 The following error message is displayed when accessing the device:
