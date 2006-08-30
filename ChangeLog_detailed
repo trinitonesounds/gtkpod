@@ -1,4 +1,9 @@
-2006-08-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2006-08-30 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* file.c (get_track_info_from_file): don't reset time_added
+          when updating files.
+
+2006-08-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* TROUBLESHOOTING: added hint for ubuntu users. Thanks to
           Marcelo Varanda.

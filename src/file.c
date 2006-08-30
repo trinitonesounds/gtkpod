@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-08-18 10:31:58 jcs>
+/* Time-stamp: <2006-08-29 23:05:02 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1003,7 +1003,7 @@ static void add_artwork (Track *tr)
 /* Fills the supplied @orig_track with data from the file @name. If
  * @orig_track is NULL, a new track struct is created. The entries
  * pc_path_utf8 and pc_path_locale are not changed if an entry already
- * exists */
+ * exists. time_added is not modified if already set. */
 /* Returns NULL on error, a pointer to the Track otherwise */
 static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 {
@@ -1146,7 +1146,14 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	if (orig_track)
 	{ /* we need to copy all information over to the original
 	   * track */
+	    guint32 time_added = orig_track->time_added;
+
 	    copy_new_info (nti, orig_track);
+
+	    /* restore time_added */
+	    if (time_added != 0)
+		orig_track->time_added = time_added;
+
 	    track = orig_track;
 	    itdb_track_free (nti);
 	    nti = NULL;
