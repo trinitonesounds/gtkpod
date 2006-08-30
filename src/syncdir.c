@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-15 00:59:12 jcs>
+/* Time-stamp: <2006-08-31 00:34:18 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -658,7 +658,7 @@ void sync_playlist (Playlist *playlist,
 
 	if (tr->itdb->usertype & GP_ITDB_TYPE_IPOD)
 	    gp_playlist_remove_track (NULL, tr, DELETE_ACTION_IPOD);
-	if (tr->itdb->usertype & GP_ITDB_TYPE_LOCAL)
+	else if (tr->itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	    gp_playlist_remove_track (NULL, tr, DELETE_ACTION_DATABASE);
     }
 
