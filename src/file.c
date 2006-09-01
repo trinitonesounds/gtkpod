@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-08-29 23:05:02 jcs>
+/* Time-stamp: <2006-09-01 22:12:31 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -156,6 +156,37 @@ FileType determine_file_type (gchar *path)
 
     g_free(path_utf8);
     return type;
+}
+
+
+/** check a filename against the "excludes file mask" from the preferences
+ *  and return TRUE if it should be excluded based on the mask
+ */
+static gboolean excludefile (gchar *filename)
+{
+    gboolean matched = FALSE;
+    gchar **masks, *prefs_masks;
+
+    prefs_masks = prefs_get_string ("exclude_file_mask");
+    
+    if (prefs_masks == NULL) 
+        return FALSE;
+    
+    masks = g_strsplit (prefs_masks, ";", -1);
+
+    if (masks != NULL)
+    {
+	gint i;
+        for(i=0; !matched && masks[i]; i++)
+	{
+	    matched = g_pattern_match_simple (g_strstrip(masks[i]), filename);
+	}
+        g_strfreev (masks);
+    }
+    
+    g_free(prefs_masks);
+    
+    return matched;
 }
 
 
@@ -1700,6 +1731,15 @@ gboolean add_track_by_filename (iTunesDB *itdb, gchar *fname,
       gtkpod_statusbar_message (_("Processing '%s'..."), bn_utf8);
       while (widgets_blocked && gtk_events_pending ())  gtk_main_iteration ();
       g_free (bn_utf8);
+
+      if (excludefile(basename))
+      {
+          gtkpod_warning (_("File skipped. match exclude masks: '%s'\n"), basename);
+	  while (widgets_blocked && gtk_events_pending ())
+	      gtk_main_iteration ();
+	  g_free (basename);
+	  return FALSE;
+      }
   }
   C_FREE (basename);
 
@@ -2208,3 +2248,4 @@ gboolean read_soundcheck (Track *track)
     }
     return result;
 }
+

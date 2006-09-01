@@ -1,3 +1,10 @@
+2006-09-01 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* gtkpod.glade
+	  src/file.c
+	  src/prefs_window.c: file exclusion mask when adding tracks
+	  -- thanks to Richard Hyde for the patch.
+
 2006-08-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* syncdir.c (sync_playlist): fix segfault when removing track

@@ -230,7 +230,6 @@ static void on_path_entry_changed (GtkEditable     *editable,
     g_free (buf);
 }
 
-
 /* turn the prefs window insensitive (if it's open) */
 void prefs_window_block (void)
 {
@@ -657,6 +656,12 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
     {
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (w), page);
     }
+    
+    w = gtkpod_xml_get_widget (prefs_window_xml, "exclude_file_mask_entry");
+    buf = prefs_get_string("exclude_file_mask");
+    gtk_entry_set_text(GTK_ENTRY(w), buf);
+    g_free(buf);
+    
     prefs_window_show_hide_tooltips ();
     gtk_widget_show(prefs_window);
 }
@@ -1989,3 +1994,13 @@ void sort_window_set_case_sensitive (gboolean val)
     temp_prefs_set_int(sort_temp_prefs, "case_sensitive",
 		       val);
 }
+
+void on_exclude_file_mask_entry_changed (GtkEditable	*editable,
+					 gpointer	user_data)
+{
+    gchar *buf = gtk_editable_get_chars(editable, 0, -1);
+
+    temp_prefs_set_string (temp_prefs, "exclude_file_mask", buf);
+    g_free (buf);
+}
+
