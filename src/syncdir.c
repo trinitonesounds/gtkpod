@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-08-31 00:34:18 jcs>
+/* Time-stamp: <2006-09-01 22:30:24 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -491,7 +491,18 @@ void sync_playlist (Playlist *playlist,
 
     if (syncdir)
     {
-	g_hash_table_insert (dirs_hash, g_strdup (syncdir), NULL);
+	/* make sure the directory name does not end in '/' -- the
+	   code below does not seem to like this */
+	gint len = strlen (syncdir);
+	gchar *dir = g_strdup (syncdir);
+	if (len > 1)
+	{
+	    if (G_IS_DIR_SEPARATOR (dir[len-1]))
+	    {
+		dir[len-1] = 0;
+	    }
+	}
+	g_hash_table_insert (dirs_hash, dir, NULL);
     }
     else
     {

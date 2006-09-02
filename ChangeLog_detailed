@@ -3,7 +3,10 @@
 	* gtkpod.glade
 	  src/file.c
 	  src/prefs_window.c: file exclusion mask when adding tracks
-	  -- thanks to Richard Hyde for the patch.
+	  -- thanks to Richard Hyde for the patch. Will have to add
+	  exclude-support for syncing and updating.
+
+	* src/syncdir.c: fix problem when directory to sync ends with '/'.
 
 2006-08-31 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
