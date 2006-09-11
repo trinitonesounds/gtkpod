@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-01 22:12:31 jcs>
+/* Time-stamp: <2006-09-12 00:31:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -996,8 +996,8 @@ static void add_artwork (Track *tr)
 		    filename_local = NULL;
 		}
 	    }
-	    else
-	    {   /* otherwise try out different extensions */
+	    if (!filename_local)
+	    {   /* if no filename is found try out different extensions */
 		const gchar **extp = imageext;
 		while (*extp && !filename_local)
 		{
