@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-21 11:51:00 jcs>
+/* Time-stamp: <2006-09-12 01:18:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -1265,39 +1265,46 @@ static void spl_update_rule (GtkWidget *spl_window, SPLRule *splr)
     /* ----------- */
     snprintf (name, WNLEN, "spl_buttonhbox%d", row);
     hbox = g_object_get_data (G_OBJECT (table), name);
-    if (hbox)
+    if (!hbox)
     {
-	gtk_widget_destroy (hbox);
-	hbox = NULL;
+	/* create hbox with buttons */
+	hbox = gtk_hbox_new (TRUE, 2);
+	gtk_widget_show (hbox);
+	g_object_set_data (G_OBJECT (table), name, hbox);
+	gtk_table_attach (table, hbox, 3,4, row,row+1,
+			  0,0,   /* expand options */
+			  XPAD,YPAD);  /* padding options */
     }
-    /* create hbox with buttons */
-    hbox = gtk_hbox_new (TRUE, 2);
-    gtk_widget_show (hbox);
-    g_object_set_data (G_OBJECT (table), name, hbox);
 
-    button = gtk_button_new_with_label (_("-"));
-    gtk_widget_show (button);
-    gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
-    g_signal_connect (button, "clicked",
-		      G_CALLBACK (spl_button_minus_clicked),
-		      spl_window);
-    g_object_set_data (G_OBJECT (button), "spl_rule", splr);
     snprintf (name, WNLEN, "spl_button-%d", row);
-    g_object_set_data (G_OBJECT (table), name, button);
-
-    button = gtk_button_new_with_label (_("+"));
-    gtk_widget_show (button);
-    gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
-    g_signal_connect (button, "clicked",
-		      G_CALLBACK (spl_button_plus_clicked),
-		      spl_window);
+    button = g_object_get_data (G_OBJECT (table), name);
+    if (!button)
+    {
+	button = gtk_button_new_with_label (_("-"));
+	gtk_widget_show (button);
+	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (spl_button_minus_clicked),
+			  spl_window);
+	g_object_set_data (G_OBJECT (table), name, button);
+    }
     g_object_set_data (G_OBJECT (button), "spl_rule", splr);
-    snprintf (name, WNLEN, "spl_button+%d", row);
-    g_object_set_data (G_OBJECT (table), name, button);
 
-    gtk_table_attach (table, hbox, 3,4, row,row+1,
-		      0,0,   /* expand options */
-		      XPAD,YPAD);  /* padding options */
+
+    snprintf (name, WNLEN, "spl_button+%d", row);
+    button = g_object_get_data (G_OBJECT (table), name);
+    if (!button)
+    {
+	button = gtk_button_new_with_label (_("+"));
+	gtk_widget_show (button);
+	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
+	g_signal_connect (button, "clicked",
+			  G_CALLBACK (spl_button_plus_clicked),
+			  spl_window);
+	g_object_set_data (G_OBJECT (table), name, button);
+	snprintf (name, WNLEN, "spl_button+%d", row);
+    }
+    g_object_set_data (G_OBJECT (button), "spl_rule", splr);
 }
 
 /* Display all rules stored in "spl_work" */
@@ -1377,6 +1384,11 @@ static void spl_update_rules_from_row (GtkWidget *spl_window, gint row)
 	removed =  splremove (table, "spl_fieldcombo", i);
 	removed |= splremove (table, "spl_actioncombo", i);
 	removed |= splremove (table, "spl_actionhbox", i);
+	/* remove spl_button+/- BEFORE removing spl_buttonhbox, as
+	   removing spl_buttonhbox will destroy the buttons as well --
+	   we'd have to g_object_set_data(..., NULL) manually. */
+	removed |= splremove (table, "spl_button+", i);
+	removed |= splremove (table, "spl_button-", i);
 	removed |= splremove (table, "spl_buttonhbox", i);
     }
 }

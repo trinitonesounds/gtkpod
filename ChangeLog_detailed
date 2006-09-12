@@ -1,5 +1,10 @@
 2006-09-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* display_spl.c (spl_update_rule): don't reactivate the '-'
+          button when changing the rule.
+
+2006-09-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* file.c (add_artwork): fix problem when artwork template
           expands into something containing a '.'. Thanks to Thorsten.
 
