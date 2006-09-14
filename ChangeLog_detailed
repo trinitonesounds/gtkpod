@@ -1,3 +1,8 @@
+2006-09-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* display_spl.c (spl_check_number_of_rules): simplify
+          activation/deactivation of button to remove rules.
+
 2006-09-11 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* display_spl.c (spl_update_rule): don't reactivate the '-'

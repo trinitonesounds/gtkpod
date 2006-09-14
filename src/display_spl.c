@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-12 01:18:13 jcs>
+/* Time-stamp: <2006-09-15 00:20:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -604,14 +604,16 @@ static void spl_playlist_changed (GtkComboBox *combobox,
 }
 
 
-/* deactivate "minus" (delete rule) button if only one rule is
-   displayed, activate all "minus" (delete rule) buttons, if more than
-   one rule is displayed */
+/* Deactivate "minus" (delete rule) button if only one rule is
+   displayed, activate the "minus" (delete rule) buttons if more than
+   one rule is displayed. This affects only the first button
+   (spl_button-0) */
 static void spl_check_number_of_rules (GtkWidget *spl_window)
 {
     Playlist *spl;
     GtkTable *table;
-    gint i, numrules;
+    gint numrules;
+    GtkWidget *button;
 
     g_return_if_fail (spl_window);
 
@@ -623,19 +625,14 @@ static void spl_check_number_of_rules (GtkWidget *spl_window)
 
     numrules = g_list_length (spl->splrules.rules);
 
-    for (i=0; i<numrules; ++i)
-    {
-	gchar name[WNLEN];
-	GtkWidget *button;
+    g_return_if_fail (numrules > 0);
 
-	snprintf (name, WNLEN, "spl_button-%d", i);
-	button = g_object_get_data (G_OBJECT (table), name);
-	g_return_if_fail (button);
-	if (numrules > 1)
-	    gtk_widget_set_sensitive (button, TRUE);
-	else
-	    gtk_widget_set_sensitive (button, FALSE);
-    }
+    button = g_object_get_data (G_OBJECT (table), "spl_button-0");
+    g_return_if_fail (button);
+    if (numrules > 1)
+	gtk_widget_set_sensitive (button, TRUE);
+    else
+	gtk_widget_set_sensitive (button, FALSE);
 }
 
 
