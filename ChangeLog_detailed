@@ -6,6 +6,8 @@
 	* ipod_init.c (set_cell): display iPod sizes smaller 1 GB in
           MB, instead of displaying "0 GB".
 
+	* INSTALL: update with list of dependencies (thanks to Todd)
+
 2006-09-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* display_spl.c (spl_check_number_of_rules): simplify

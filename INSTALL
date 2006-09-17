@@ -10,8 +10,8 @@ How to compile/install gtkpod:
    library -- they are not related. libid3tag is part of the MAD
    project (http://sourceforge.net/projects/mad/).
 
-   Starting with version 0.96 gtkpod is using the gpod library. The
-   gpod library should soon be available as a standard package for
+   Starting with version 0.96 gtkpod is using the gpod
+   library. libgpod should soon be available as a standard package for
    major linux distributions. You can also install the library from
    source. Download instructions for the tarball or CVS snapshot can
    be found at http://www.gtkpod.org/libgpod.html
@@ -26,6 +26,24 @@ How to compile/install gtkpod:
    libmp4v2 was successfully compiled and install with
 
    ./bootstrap --disable-server ; make ; make install
+
+
+   The following packages are required for building gtkpod:
+
+        autoconf (at least 2.55)
+        flex (or lex)
+	glib (at least 2.4.0)
+        gtk+ (at least 2.4.0)
+        libglade (at least 2.4.0)
+        libgpod (at least 0.4.0)
+        libid3tag (at least 0.15)
+        pkgconfig
+
+   Optional packages:
+
+        gettext (for internationalization)
+        libmpv4 (for AAC/M4A support)
+
 
 2. If you install libraries to /usr/local/lib please don't forget to
    add the path to LD_LIBRARY_PATH and PKG_CONFIG_PATH
@@ -42,6 +60,7 @@ How to compile/install gtkpod:
    that you will need to install the "-dev" packages as well to be
    able to compile.
 
+
 3. Run the gtkpod 'configure' script to set up the compile
 
    ./configure
@@ -50,9 +69,11 @@ How to compile/install gtkpod:
 
    ./configure --help
 
+
 4. Compile the gtkpod software:
 
    make
+
 
 5. Install the gtkpod software (may require root privileges):
 
@@ -83,19 +104,3 @@ How to compile/install gtkpod:
    install gtkpod into $HOME/Applications/gtkpod.  Do this instead:
 
     CFLAGS="-I$HOME/Applications/mpeg4ip/include -L$HOME/Applications/mpeg4ip/lib -I$HOME/Applications/libid3tag/include -L$HOME/Applications/libid3tag/lib" ./configure --prefix=$HOME/Applications/gtkpod ; make ; make install 
-
-
-
-----------------------------------------------------------------------
-Version of libraries used by jcsjcs at users dot sourceforge dot net
-to compile gtkpod-0.80:
-
-	libgtk2 (2.4.3 -- at least 2.0.0)
-	libglib2 (2.4.2 -- at least 2.0.0)
-	libid3tag (0.15.0b -- 0.14 will not work)
-	libmp4v2 (1.0RC1, needed only for aac files)
-	C compiler (gcc 3.3.4)
-	libstdc++5 (3.3.4)
-	gettext (0.14.1)  for internationalization
-
-------------------------------------------------------------
