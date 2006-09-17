@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-12 00:57:49 jcs>
+/* Time-stamp: <2006-09-18 02:09:40 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -26,6 +26,10 @@
 |
 |  $Id$
 */
+
+
+#define LOCALDEBUG 0
+
 
 /* The code in the first section of this file is taken from the
  * mp3info (http://www.ibiblio.org/mp3info/) project. Only the code
@@ -74,6 +78,8 @@ struct _File_Tag
     gchar *lyrics;        /* does not appear to be the full lyrics --
 			     only used to set the flag 'lyrics_flag'
 			     of the Track structure */
+    guchar *coverart;     /* Raw data */
+    gsize coverart_len;   /* Size of coverart data */
 };
 
 
@@ -959,6 +965,123 @@ static guint get_track_time (gchar *path)
 
 
 
+static const gchar* id3_get_binary (struct id3_tag *tag,
+				    char *frame_name,
+				    id3_length_t *len)
+{
+    const id3_byte_t *binary = NULL;
+    struct id3_frame *frame;
+    union id3_field *field;
+
+    g_return_val_if_fail (len, NULL);
+
+    *len = 0;
+
+    frame = id3_tag_findframe (tag, frame_name, 0);
+#if LOCALDEBUG
+    printf ("frame: %p\n", frame); 
+#endif
+
+    if (!frame) return NULL;
+
+#if LOCALDEBUG
+    printf (" nfields: %d\n", frame->nfields); 
+#endif
+
+
+#if 0
+/*-----------------*/
+/* just to show that this field (before last) contains the d8 ff e0 ff
+   part of the start of a jpeg file when the coverart war embedded by iTunes */
+
+    const id3_ucs4_t *string = NULL;
+    gchar *raw = NULL;
+
+    /* The last field contains the data */
+    field = id3_frame_field (frame, frame->nfields-2);
+
+#if LOCALDEBUG
+     printf (" field: %p\n", field);
+#endif
+
+    if (!field) return NULL;
+
+#if LOCALDEBUG
+     printf (" type: %d\n", field->type);
+#endif
+
+    switch (field->type)
+    {
+    case ID3_FIELD_TYPE_STRING:
+	string = id3_field_getstring (field);
+	break;
+    default:
+	break;
+    }
+  
+    /* ISO_8859_1 is just a "marker" -- most people just drop
+       whatever coding system they are using into it, so we use
+       charset_to_utf8() to convert to utf8 */
+
+    if (string)
+    {
+	raw = id3_ucs4_latin1duplicate (string);
+    }
+
+
+#if LOCALDEBUG
+    {
+	FILE *file;
+	printf (" string len: %d\n", raw?strlen(raw):0);
+	file = fopen ("/tmp/folder1.jpg", "w");
+	fwrite (raw, 1, raw?strlen(raw):0, file);
+	fclose (file);
+    }
+#endif
+    g_free (raw);
+
+/*-----------------*/
+#endif
+
+    /* The last field contains the data */
+    field = id3_frame_field (frame, frame->nfields-1);
+
+#if LOCALDEBUG
+     printf (" field: %p\n", field);
+#endif
+
+    if (!field) return NULL;
+
+#if LOCALDEBUG
+     printf (" type: %d\n", field->type);
+#endif
+
+    switch (field->type)
+    {
+    case ID3_FIELD_TYPE_BINARYDATA:
+	binary = id3_field_getbinarydata(field, len);
+	break;
+    default:
+	break;
+    }
+
+#if LOCALDEBUG
+    {
+	FILE *file;
+	printf (" binary len: %ld\n", *len);
+	file = fopen ("/tmp/folder2.jpg", "w");
+	fwrite (binary, 1, *len, file);
+	fclose (file);
+    }
+#endif
+
+
+
+    return binary;
+}
+
+
+
 static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 {
     const id3_ucs4_t *string = NULL;
@@ -970,26 +1093,40 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
     enum id3_field_textencoding encoding = ID3_FIELD_TEXTENCODING_ISO_8859_1;
 
     frame = id3_tag_findframe (tag, frame_name, 0);
-/*     printf ("frame: %p\n", frame); */
+#if LOCALDEGUB
+    printf ("frame: %p\n", frame); 
+#endif
 
     if (!frame) return NULL;
 
     /* Find the encoding used for the field */
     field = id3_frame_field (frame, 0);
-/*     printf ("field: %p\n", field); */
+#if LOCALDEBUG
+    printf ("field: %p\n", field); 
+    printf ("type: %d\n", id3_field_type (field));
+#endif
 
     if (field && (id3_field_type (field) == ID3_FIELD_TYPE_TEXTENCODING))
     {
 	encoding = field->number.value;
-/*	printf ("encoding: %d\n", encoding); */
+#if LOCALDEBUG
+	printf ("encoding: %d\n", encoding);
+#endif
     }
 
     /* The last field contains the data */
     field = id3_frame_field (frame, frame->nfields-1);
 
-/*     printf ("field: %p\n", field); */
+#if LOCALDEBUG
+     printf ("field: %p\n", field);
+#endif
 
     if (!field) return NULL;
+
+#if LOCALDEBUG
+     printf ("type: %d\n", field->type);
+#endif
+
 
     switch (field->type)
     {
@@ -1001,6 +1138,9 @@ static gchar* id3_get_string (struct id3_tag *tag, char *frame_name)
 	break;
     case ID3_FIELD_TYPE_BINARYDATA:
 	binary = id3_field_getbinarydata(field, &len);
+#if LOCALDEBUG
+	printf ("len: %ld\nbinary: %s\n", len, binary+1);
+#endif
 	if (len > 0)
 	    return charset_to_utf8 (binary+1);
 	break;
@@ -1168,6 +1308,48 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 
     if ((id3tag = id3_file_tag(id3file)))
     {
+	id3_length_t len;
+	const guchar *coverart;
+
+	tag->coverart = NULL;
+	tag->coverart_len = 0;
+	coverart = id3_get_binary (id3tag, "APIC", &len);
+
+	if (coverart)
+	{   /* I guess iTunes is doing something wrong -- the
+	     * beginning of the coverart data ends up in a different
+	       field... We'll just add the missing data manually. */
+	    const guchar itunes_broken_jfif_marker[] =
+		{ 0x10, 'J', 'F', 'I', 'F'};
+	    if (len >= 5)
+	    {
+		if (strncmp (itunes_broken_jfif_marker, coverart,  5) == 0)
+		{
+		    const guchar itunes_missing_header[] =
+			{ 0xff, 0xd8, 0xff, 0xe0, 0x00 };
+		    tag->coverart = g_malloc (len+5);
+		    memcpy (tag->coverart, itunes_missing_header, 5);
+		    memcpy (tag->coverart+5, coverart, len);
+		    tag->coverart_len = len+5;
+		}
+	    }
+	    if (!tag->coverart)
+	    {
+		tag->coverart = g_malloc (len);
+		memcpy (tag->coverart, coverart, len);
+		tag->coverart_len = len;
+	    }
+#if LOCALDEBUG
+	    if (tag->coverart)
+	    {
+		FILE *file;
+		file = fopen ("/tmp/folder.jpg", "w");
+		fwrite (tag->coverart, 1, tag->coverart_len, file);
+		fclose (file);
+	    }
+#endif
+	}    
+
 	tag->title = id3_get_string (id3tag, ID3_FRAME_TITLE);
 	tag->artist = id3_get_string (id3tag, ID3_FRAME_GROUP);
 	if (!tag->artist || !*tag->artist)
@@ -2068,7 +2250,16 @@ Track *mp3_get_file_info (gchar *name)
 	else
 	{
 	    track->lyrics_flag = 0x00;
-	}	    
+	}
+
+	if (filetag.coverart)
+	{
+	    itdb_track_set_thumbnails_from_data (track,
+						 filetag.coverart,
+						 filetag.coverart_len);
+	    g_free (filetag.coverart);
+	    filetag.coverart = NULL;
+	}
     }
 
     mp3_read_soundcheck (name, track);
