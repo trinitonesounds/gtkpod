@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-29 00:50+0900\n"
+"POT-Creation-Date: 2006-09-17 13:55+0900\n"
 "PO-Revision-Date: 2006-05-25 17:17+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@comhem.se>\n"
 "Language-Team: Svenska <sv@li.org>\n"
@@ -49,17 +49,17 @@ msgid "_Update Tracks from File"
 msgstr "_Uppdatera spår från fil"
 
 #: gtkpod.glade:180 gtkpod.glade:232 gtkpod.glade:311 gtkpod.glade:363
-#: gtkpod.glade:1108 gtkpod.glade:1160 gtkpod.glade:1206
+#: gtkpod.glade:1092 gtkpod.glade:1144 gtkpod.glade:1190
 msgid "Selected _Playlist"
 msgstr "Markerad _spellista"
 
 #: gtkpod.glade:189 gtkpod.glade:241 gtkpod.glade:320 gtkpod.glade:372
-#: gtkpod.glade:1117 gtkpod.glade:1169 gtkpod.glade:1215
+#: gtkpod.glade:1101 gtkpod.glade:1153 gtkpod.glade:1199
 msgid "Selected Tab _Entry"
 msgstr "Markerad _flikrad"
 
 #: gtkpod.glade:198 gtkpod.glade:250 gtkpod.glade:329 gtkpod.glade:381
-#: gtkpod.glade:514 gtkpod.glade:1126 gtkpod.glade:1178 gtkpod.glade:1224
+#: gtkpod.glade:498 gtkpod.glade:1110 gtkpod.glade:1162 gtkpod.glade:1208
 msgid "Selected _Tracks"
 msgstr "Markerade s_pår"
 
@@ -80,14 +80,10 @@ msgid "Create _Playlist File"
 msgstr "Skapa sp_ellistefil"
 
 #: gtkpod.glade:400
-msgid "_Offline"
-msgstr "_Nerkopplad"
-
-#: gtkpod.glade:416
 msgid "_Create iPod's Directories"
 msgstr "Skapa iPod-ka_taloger"
 
-#: gtkpod.glade:437
+#: gtkpod.glade:421
 msgid ""
 "Find orphan files (files with no track info in DB) and dangling tracks "
 "(tracks with no corresponding files on iPOD)"
@@ -95,260 +91,260 @@ msgstr ""
 "Hitta övergivna filer (filer utan någon spårinformation i databasen) och "
 "saknade spår (spår utan motsvarande filer på iPod)"
 
-#: gtkpod.glade:438
+#: gtkpod.glade:422
 msgid "_Check iPod's Files"
 msgstr "K_ontrollera iPod-filer"
 
-#: gtkpod.glade:466 gtkpod.glade:12615
+#: gtkpod.glade:450 gtkpod.glade:12647
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: gtkpod.glade:475 src/context_menus.c:399
+#: gtkpod.glade:459 src/context_menus.c:480
 msgid "Edit Track Details"
 msgstr "Redigera detaljinformation om spår"
 
-#: gtkpod.glade:496
+#: gtkpod.glade:480
 msgid "Tracks in Selected _Playlist"
 msgstr "Spår i markerad _spellista"
 
-#: gtkpod.glade:505
+#: gtkpod.glade:489
 msgid "Tracks in Selected Tab _Entry"
 msgstr "Spår i markerad _flikrad"
 
-#: gtkpod.glade:527 src/context_menus.c:414
+#: gtkpod.glade:511 src/context_menus.c:407
 msgid "Edit Smart Playlist"
 msgstr "Redigera smart spellista"
 
-#: gtkpod.glade:536
+#: gtkpod.glade:520
 msgid "_Delete"
 msgstr "_Ta bort"
 
-#: gtkpod.glade:557
+#: gtkpod.glade:541
 msgid "Selected playlist"
 msgstr "Markerade spellista"
 
-#: gtkpod.glade:566
+#: gtkpod.glade:550
 msgid "Selected playlist including tracks from iPod"
 msgstr "Markerade spellistan som innehåller spår från iPod"
 
-#: gtkpod.glade:575
+#: gtkpod.glade:559
 msgid "Selected playlist including tracks from database"
 msgstr "Markerade spellistan som innehåller spår från databasen"
 
-#: gtkpod.glade:584
+#: gtkpod.glade:568
 msgid "Selected playlist including tracks from harddisk"
 msgstr "Markerade spellistan som innehåller spår från hårddisken"
 
-#: gtkpod.glade:599
+#: gtkpod.glade:583
 msgid "Selected filter tab entry from playlist"
 msgstr "Markerade filterflikrad från spellistan"
 
-#: gtkpod.glade:608
+#: gtkpod.glade:592
 msgid "Selected filter tab entry from iPod"
 msgstr "Markerade filterflikrad från iPod"
 
-#: gtkpod.glade:617
+#: gtkpod.glade:601
 msgid "Selected filter tab entry from database"
 msgstr "Markerade filterflikrad från databasen"
 
-#: gtkpod.glade:626
+#: gtkpod.glade:610
 msgid "Selected filter tab entry from harddisk"
 msgstr "Markerade filterflikrad från hårddisken"
 
-#: gtkpod.glade:641
+#: gtkpod.glade:625
 msgid "Selected tracks from playlist"
 msgstr "Markerade spår från spellistan"
 
-#: gtkpod.glade:650
+#: gtkpod.glade:634
 msgid "Selected tracks from iPod"
 msgstr "Markerade spår från iPod"
 
-#: gtkpod.glade:659
+#: gtkpod.glade:643
 msgid "Selected tracks from database"
 msgstr "Markerade spår från databasen"
 
-#: gtkpod.glade:668
+#: gtkpod.glade:652
 msgid "Selected tracks from harddisk"
 msgstr "Markerade spår från hårddisken"
 
-#: gtkpod.glade:687
+#: gtkpod.glade:671
 msgid "_Create Playlists"
 msgstr "_Skapa spellistor"
 
-#: gtkpod.glade:708
+#: gtkpod.glade:692
 msgid "Empty Playlist"
 msgstr "Tom spellista"
 
-#: gtkpod.glade:717 gtkpod.glade:7424 src/misc_playlist.c:97
-#: src/repository.c:1302
+#: gtkpod.glade:701 gtkpod.glade:7379 src/misc_playlist.c:97
+#: src/repository.c:1359
 msgid "Smart Playlist"
 msgstr "Smart spellista"
 
-#: gtkpod.glade:732
+#: gtkpod.glade:716
 msgid "Random Playlist from Displayed Tracks"
 msgstr "Slumpmässig spellista från visade spår"
 
-#: gtkpod.glade:741
+#: gtkpod.glade:725
 msgid "Containing Displayed Tracks"
 msgstr "Som innehåller visade spår"
 
-#: gtkpod.glade:750
+#: gtkpod.glade:734
 msgid "Containing Selected Tracks"
 msgstr "Som innehåller markerade spår"
 
-#: gtkpod.glade:759
+#: gtkpod.glade:743
 msgid "One for each Artist"
 msgstr "En för varje artist"
 
-#: gtkpod.glade:768
+#: gtkpod.glade:752
 msgid "One for each Album"
 msgstr "En för varje album"
 
-#: gtkpod.glade:777
+#: gtkpod.glade:761
 msgid "One for each Genre"
 msgstr "En för varje genre"
 
-#: gtkpod.glade:786
+#: gtkpod.glade:770
 msgid "One for each Composer"
 msgstr "En för varje kompositör"
 
-#: gtkpod.glade:795
+#: gtkpod.glade:779
 msgid "One for each Year"
 msgstr "En för varje år"
 
-#: gtkpod.glade:804
+#: gtkpod.glade:788
 msgid "One for each Rating"
 msgstr "En för varje betyg"
 
-#: gtkpod.glade:813
+#: gtkpod.glade:797
 msgid "Best Rated Tracks"
 msgstr "Spår med bäst betyg"
 
-#: gtkpod.glade:822
+#: gtkpod.glade:806
 msgid "Tracks Most Often Listened To"
 msgstr "Spår som oftast lyssnats på"
 
-#: gtkpod.glade:831
+#: gtkpod.glade:815
 msgid "Most Recently Played Tracks"
 msgstr "Spår som nyligen spelats"
 
-#: gtkpod.glade:840
+#: gtkpod.glade:824
 msgid "All Tracks Played Since Last Time"
 msgstr "Alla spår som spelats sedan sist"
 
-#: gtkpod.glade:849
+#: gtkpod.glade:833
 msgid "All Tracks Never Listened To"
 msgstr "Alla spår som aldrig lyssnats på"
 
-#: gtkpod.glade:858
+#: gtkpod.glade:842
 msgid "All Tracks not Listed in any Playlist"
 msgstr "Alla spår som inte finns i någon spellista"
 
-#: gtkpod.glade:877
+#: gtkpod.glade:861
 msgid "_Sorting"
 msgstr "S_ortera"
 
-#: gtkpod.glade:899
+#: gtkpod.glade:883
 msgid "Randomize Current Playlist"
 msgstr "Gör nuvarande spellista slumpmässig"
 
-#: gtkpod.glade:908
+#: gtkpod.glade:892
 msgid "_Save Displayed Track Order"
 msgstr "Spara _visad spårordning"
 
-#: gtkpod.glade:936
+#: gtkpod.glade:920
 msgid "Edit Repository/iPod Options"
 msgstr "Redigera arkiv- och iPodalternativ"
 
-#: gtkpod.glade:957
+#: gtkpod.glade:941
 msgid "Edit _Preferences"
 msgstr "Redigera in_ställningar"
 
-#: gtkpod.glade:983
+#: gtkpod.glade:967
 msgid "_View"
 msgstr "_Visa"
 
-#: gtkpod.glade:992
+#: gtkpod.glade:976
 msgid "_Toolbar"
 msgstr "_Verktygsrad"
 
-#: gtkpod.glade:1002
+#: gtkpod.glade:986
 msgid "_Tooltips"
 msgstr "Verktygs_tips"
 
-#: gtkpod.glade:1012
+#: gtkpod.glade:996
 msgid "_Info Window"
 msgstr "_Informationsfönster"
 
-#: gtkpod.glade:1023
+#: gtkpod.glade:1007
 msgid "_More Sort Tabs"
 msgstr "_Fler sorteringsflikar"
 
-#: gtkpod.glade:1044
+#: gtkpod.glade:1028
 msgid "_Less Sort Tabs"
 msgstr "Färre _sorteringsflikar"
 
-#: gtkpod.glade:1065
+#: gtkpod.glade:1049
 msgid "_Arrange Sort Tabs"
 msgstr "_Ordna sorteringsflikar"
 
-#: gtkpod.glade:1078 gtkpod.glade:13152
+#: gtkpod.glade:1062 gtkpod.glade:13257
 msgid "_Tools"
 msgstr "Verk_tyg"
 
-#: gtkpod.glade:1087
+#: gtkpod.glade:1071
 msgid "_Play Now"
 msgstr "S_pela nu"
 
-#: gtkpod.glade:1139
+#: gtkpod.glade:1123
 msgid "_Enqueue"
 msgstr "_Köa"
 
-#: gtkpod.glade:1197
+#: gtkpod.glade:1181
 msgid "_Normalize Volume"
 msgstr "_Normalisera volym"
 
-#: gtkpod.glade:1233
+#: gtkpod.glade:1217
 msgid "_Displayed Tracks"
 msgstr "_Visade spår"
 
-#: gtkpod.glade:1242
+#: gtkpod.glade:1226
 msgid "_All Tracks"
 msgstr "_Alla spår"
 
-#: gtkpod.glade:1251
+#: gtkpod.glade:1235
 msgid "_Newly Added Tracks"
 msgstr "_Nytillagda spår"
 
-#: gtkpod.glade:1270
+#: gtkpod.glade:1254
 msgid "Synchronise Contacts, Calendar and Notes"
 msgstr "Synkronisera kontakter, kalender och anteckningar"
 
-#: gtkpod.glade:1271
+#: gtkpod.glade:1255
 msgid "Synchronize All"
 msgstr "Synkronisera allt"
 
-#: gtkpod.glade:1280
+#: gtkpod.glade:1264
 msgid "Synchronize Contacts"
 msgstr "Synkronisera kontakter"
 
-#: gtkpod.glade:1289
+#: gtkpod.glade:1273
 msgid "Synchronize Calendar"
 msgstr "Synkronisera kalender"
 
-#: gtkpod.glade:1298
+#: gtkpod.glade:1282
 msgid "Synchronize Notes"
 msgstr "Synkronisera anteckningar"
 
-#: gtkpod.glade:1311
+#: gtkpod.glade:1295
 msgid "_Help"
 msgstr "_Hjälp"
 
-#: gtkpod.glade:1320
+#: gtkpod.glade:1304
 msgid "_About"
 msgstr "_Om"
 
-#: gtkpod.glade:1360
+#: gtkpod.glade:1344
 msgid ""
 "Try to load contents of all connected iPods. For each iPod a separate "
 "repository must be set up."
@@ -356,123 +352,123 @@ msgstr ""
 "Försök ladda innehållet från alla anslutna iPod-enheter. Ett separat arkiv "
 "måste ställas in för varje iPod."
 
-#: gtkpod.glade:1361
+#: gtkpod.glade:1345
 msgid "Load iPod(s)"
 msgstr "Ladda iPod"
 
-#: gtkpod.glade:1378
+#: gtkpod.glade:1362
 msgid "Write all changes made to the disk and the iPod(s)."
 msgstr "Skriv alla ändringar gjorda på disk och iPod."
 
-#: gtkpod.glade:1379 src/context_menus.c:555
+#: gtkpod.glade:1363 src/context_menus.c:507
 msgid "Save Changes"
 msgstr "Spara ändringar"
 
-#: gtkpod.glade:1396
+#: gtkpod.glade:1380
 msgid "Add Files or Directories"
 msgstr "Lägg till filer eller kataloger"
 
-#: gtkpod.glade:1397
+#: gtkpod.glade:1381
 msgid "Files"
 msgstr "Filer"
 
-#: gtkpod.glade:1414
+#: gtkpod.glade:1398
 msgid "Add Directories Recursively"
 msgstr "Lägg till kataloger rekursivt"
 
-#: gtkpod.glade:1415
+#: gtkpod.glade:1399
 msgid "Dirs"
 msgstr "Kataloger"
 
-#: gtkpod.glade:1432
+#: gtkpod.glade:1416
 msgid "Add playlist from file"
 msgstr "Lägg till spellista från fil"
 
-#: gtkpod.glade:1433 src/display_spl.c:105
+#: gtkpod.glade:1417 src/display_spl.c:105
 msgid "Playlist"
 msgstr "Spellista"
 
-#: gtkpod.glade:1450
+#: gtkpod.glade:1434
 msgid "Create New Playlist"
 msgstr "Skapa ny spellista"
 
-#: gtkpod.glade:1451
+#: gtkpod.glade:1435
 msgid "New PL"
 msgstr "Ny spellista"
 
-#: gtkpod.glade:1467
+#: gtkpod.glade:1451
 msgid "Stop Display Update"
 msgstr "Stoppa uppdatering av skärmen"
 
-#: gtkpod.glade:1468
+#: gtkpod.glade:1452
 msgid "Stop"
 msgstr "Stoppa"
 
-#: gtkpod.glade:1641
+#: gtkpod.glade:1625
 msgid "About gtkpod"
 msgstr "Om gtkpod"
 
-#: gtkpod.glade:1768
+#: gtkpod.glade:1752
 msgid "Credits"
 msgstr "Tack till"
 
-#: gtkpod.glade:1826
+#: gtkpod.glade:1810
 msgid "Translators"
 msgstr "Översättare"
 
-#: gtkpod.glade:1884
+#: gtkpod.glade:1868
 msgid "special_sorttab -- Don't translate!"
 msgstr "special_sorttab -- Don't translate!"
 
-#: gtkpod.glade:1919
+#: gtkpod.glade:1903
 msgid " Logic: "
 msgstr " Logiskt: "
 
-#: gtkpod.glade:1945
+#: gtkpod.glade:1929
 msgid "Any (OR)"
 msgstr "Någon (eller)"
 
-#: gtkpod.glade:1964
+#: gtkpod.glade:1948
 msgid "All (AND)"
 msgstr "Alla (och)"
 
-#: gtkpod.glade:2017
+#: gtkpod.glade:2001
 msgid "0"
 msgstr "0"
 
-#: gtkpod.glade:2036
+#: gtkpod.glade:2020
 msgid "1"
 msgstr "1"
 
-#: gtkpod.glade:2055
+#: gtkpod.glade:2039
 msgid "2"
 msgstr "2"
 
-#: gtkpod.glade:2074
+#: gtkpod.glade:2058
 msgid "3"
 msgstr "3"
 
-#: gtkpod.glade:2093
+#: gtkpod.glade:2077
 msgid "4"
 msgstr "4"
 
-#: gtkpod.glade:2112
+#: gtkpod.glade:2096
 msgid "5"
 msgstr "5"
 
-#: gtkpod.glade:2151
+#: gtkpod.glade:2135
 msgid "Select '0' for no lower limit."
 msgstr "Välj '0' för ingen undre gräns."
 
-#: gtkpod.glade:2172
+#: gtkpod.glade:2156
 msgid " <= cts <= "
 msgstr " <= antal <= "
 
-#: gtkpod.glade:2197
+#: gtkpod.glade:2181
 msgid "Select '-1' for no upper limit."
 msgstr "Välj '-1' för ingen övre gräns."
 
-#: gtkpod.glade:2240 gtkpod.glade:2317 gtkpod.glade:2487
+#: gtkpod.glade:2224 gtkpod.glade:2301 gtkpod.glade:2471
 msgid ""
 "'DD/MM/YYYY HH:MM < d < DD/MM/YYYY HH:MM' or similar. Press 'enter' when "
 "finished."
@@ -480,43 +476,43 @@ msgstr ""
 "'ÅÅÅÅ-MM-DD TT:MM < d < ÅÅÅÅ-MM-DD TT:MM' eller liknande. Tryck på "
 "returtangenten när du är klar."
 
-#: gtkpod.glade:2286 gtkpod.glade:2363 gtkpod.glade:2533 gtkpod.glade:2712
+#: gtkpod.glade:2270 gtkpod.glade:2347 gtkpod.glade:2517 gtkpod.glade:2696
 msgid "Calendar"
 msgstr "Kalender"
 
-#: gtkpod.glade:2388
+#: gtkpod.glade:2372
 msgid "Specify interval"
 msgstr "Ange intervall"
 
-#: gtkpod.glade:2390 src/display_spl.c:98 src/misc_conversion.c:78
+#: gtkpod.glade:2374 src/display_spl.c:98 src/misc_conversion.c:78
 msgid "Playcount"
 msgstr "Spelningsantal"
 
-#: gtkpod.glade:2413 src/display_spl.c:101 src/misc_conversion.c:79
+#: gtkpod.glade:2397 src/display_spl.c:101 src/misc_conversion.c:79
 msgid "Rating"
 msgstr "Betyg"
 
-#: gtkpod.glade:2436 src/display_songs.c:1937
+#: gtkpod.glade:2420 src/display_songs.c:1941
 msgid "Played"
 msgstr "Spelad"
 
-#: gtkpod.glade:2459 src/display_songs.c:1940
+#: gtkpod.glade:2443 src/display_songs.c:1944
 msgid "Modified"
 msgstr "Ändrad"
 
-#: gtkpod.glade:2558 src/display_songs.c:1943 src/display_sorttabs.c:3117
+#: gtkpod.glade:2542 src/display_songs.c:1947 src/display_sorttabs.c:3218
 msgid "Added"
 msgstr "Tillagd"
 
-#: gtkpod.glade:2603
+#: gtkpod.glade:2587
 msgid "Display tracks that match the criteria entered above."
 msgstr "Visa spår som uppfyller ovan inskrivna villkor."
 
-#: gtkpod.glade:2646 gtkpod.glade:11937
+#: gtkpod.glade:2630 gtkpod.glade:11969
 msgid "_Display"
 msgstr "_Visa"
 
-#: gtkpod.glade:2682
+#: gtkpod.glade:2666
 msgid ""
 "Automatically start displaying tracks that match the criteria entered above. "
 "If not selected, you must press 'Display' to start displaying."
@@ -524,64 +520,64 @@ msgstr ""
 "Börja automatiskt visa spår som motsvarar villkoren som skrivs in ovan. Om "
 "inte markerad, måste du klicka på 'Visa' för att börja visningen."
 
-#: gtkpod.glade:2684
+#: gtkpod.glade:2668
 msgid "Start display automatically"
 msgstr "Börja visa automatiskt"
 
-#: gtkpod.glade:2759
+#: gtkpod.glade:2743
 msgid "Sorttab: "
 msgstr "Sorteringsflik: "
 
-#: gtkpod.glade:2803
+#: gtkpod.glade:2787
 msgid "     "
 msgstr "     "
 
-#: gtkpod.glade:2829
+#: gtkpod.glade:2813
 msgid "Category: "
 msgstr "Kategori: "
 
-#: gtkpod.glade:2910
+#: gtkpod.glade:2894
 msgid "Please specify a time interval"
 msgstr "Ange ett tidsintervall"
 
-#: gtkpod.glade:2959
+#: gtkpod.glade:2943
 msgid "Lower Margin"
 msgstr "Under gräns"
 
-#: gtkpod.glade:3010 gtkpod.glade:3224
+#: gtkpod.glade:2994 gtkpod.glade:3208
 msgid "Time:"
 msgstr "Tid:"
 
-#: gtkpod.glade:3053 gtkpod.glade:3267
+#: gtkpod.glade:3037 gtkpod.glade:3251
 msgid ":"
 msgstr ":"
 
-#: gtkpod.glade:3130
+#: gtkpod.glade:3114
 msgid "No lower margin"
 msgstr "Ingen undre gräns"
 
-#: gtkpod.glade:3173
+#: gtkpod.glade:3157
 msgid "Upper margin"
 msgstr "Övre gräns"
 
-#: gtkpod.glade:3344
+#: gtkpod.glade:3328
 msgid "No upper margin"
 msgstr "Ingen övre gräns"
 
-#: gtkpod.glade:3442
+#: gtkpod.glade:3426
 msgid "Sorting Options"
 msgstr "Sorteringsalternativ"
 
-#: gtkpod.glade:3474
+#: gtkpod.glade:3458
 msgid "<b>Sort Order</b>"
 msgstr "<b>Sorteringsordning</b>"
 
-#: gtkpod.glade:3505 gtkpod.glade:4807 gtkpod.glade:11566 gtkpod.glade:12062
-#: gtkpod.glade:12177
+#: gtkpod.glade:3489 gtkpod.glade:4762 gtkpod.glade:11598 gtkpod.glade:12094
+#: gtkpod.glade:12209
 msgid "    "
 msgstr "    "
 
-#: gtkpod.glade:3537
+#: gtkpod.glade:3521
 msgid ""
 "In order to save the displayed track order to the iPod choose 'Save "
 "Displayed Track Order' from the 'Edit' menu or select 'Auto Store' below."
@@ -589,47 +585,47 @@ msgstr ""
 "För att lagra visad spårordning i iPod måste du välja 'Spara visad "
 "spårordning' i menyn 'Redigera' eller välja 'Lagra automatiskt' nedan."
 
-#: gtkpod.glade:3924
+#: gtkpod.glade:3905
 msgid "Ascending"
 msgstr "Stigande"
 
-#: gtkpod.glade:3972
+#: gtkpod.glade:3953
 msgid "Descending"
 msgstr "Fallande"
 
-#: gtkpod.glade:4020
+#: gtkpod.glade:4001
 msgid "None"
 msgstr "Ingen"
 
-#: gtkpod.glade:4068 src/display_playlists.c:2076
+#: gtkpod.glade:4048 src/display_playlists.c:2106
 msgid "Playlists"
 msgstr "Spellistor"
 
-#: gtkpod.glade:4117
+#: gtkpod.glade:4097
 msgid "Sorttabs"
 msgstr "Sorteringsflikar"
 
-#: gtkpod.glade:4166
+#: gtkpod.glade:4146
 msgid "Tracks"
 msgstr "Spår"
 
-#: gtkpod.glade:4327
+#: gtkpod.glade:4306
 msgid "Auto Store"
 msgstr "Lagra automatiskt"
 
-#: gtkpod.glade:4376 gtkpod.glade:4422
+#: gtkpod.glade:4349
 msgid "Please refer to the notice below."
 msgstr "Se anmärkningen nedan."
 
-#: gtkpod.glade:4456 src/details.c:1108
+#: gtkpod.glade:4383 gtkpod.glade:4564 src/details.c:1114
 msgid "n/a"
 msgstr "ej tillgänglig"
 
-#: gtkpod.glade:4658
+#: gtkpod.glade:4613
 msgid "Sort tracks according to: "
 msgstr "Sortera spår enligt: "
 
-#: gtkpod.glade:4692
+#: gtkpod.glade:4647
 msgid ""
 "You can also use the table headers, but this allows you to sort according to "
 "a column that is not displayed."
@@ -637,7 +633,7 @@ msgstr ""
 "Du kan också använda tabellhuvuden, men här kan du sortera enligt en kolumn "
 "som inte visas."
 
-#: gtkpod.glade:4728
+#: gtkpod.glade:4683
 msgid ""
 "If checked, sorting will be case sensitive. Please note that case sensitive "
 "sorting will not work well with most charsets."
@@ -645,64 +641,64 @@ msgstr ""
 "Om markerat är sorteringen skiftlägeskänslig. Observera att "
 "skiftlägeskänslig sortering inte fungerar bra med de flesta teckenkodningar."
 
-#: gtkpod.glade:4730
+#: gtkpod.glade:4685
 msgid "Sorting case sensitive"
 msgstr "Skiftlägeskänslig sortering"
 
-#: gtkpod.glade:4776
+#: gtkpod.glade:4731
 msgid "<b>Ignore Frequent Words</b>"
 msgstr "<b>Ignorera vanliga ord</b>"
 
-#: gtkpod.glade:4876
+#: gtkpod.glade:4831
 msgid "Ignore these words when at the beginning of the following fields:"
 msgstr "Ignorera dessa ord i början av följande fält:"
 
-#: gtkpod.glade:5151
+#: gtkpod.glade:5106
 msgid "gtkpod Info"
 msgstr "Information om gtkpod"
 
-#: gtkpod.glade:5472 gtkpod.glade:5559 gtkpod.glade:5588 gtkpod.glade:6306
-#: gtkpod.glade:6451
+#: gtkpod.glade:5427 gtkpod.glade:5514 gtkpod.glade:5543 gtkpod.glade:6261
+#: gtkpod.glade:6406
 msgid "      "
 msgstr "      "
 
-#: gtkpod.glade:5877
+#: gtkpod.glade:5832
 msgid "Number of tracks"
 msgstr "Antal spår"
 
-#: gtkpod.glade:5907
+#: gtkpod.glade:5862
 msgid "Play time"
 msgstr "Speltid"
 
-#: gtkpod.glade:5938
+#: gtkpod.glade:5893
 msgid "File size"
 msgstr "Filstorlek"
 
-#: gtkpod.glade:5968
+#: gtkpod.glade:5923
 msgid "Number of playlists"
 msgstr "Antal spellistor"
 
-#: gtkpod.glade:5998
+#: gtkpod.glade:5953
 msgid "Deleted tracks"
 msgstr "Borttagna spår"
 
-#: gtkpod.glade:6028
+#: gtkpod.glade:5983
 msgid "File size (deleted)"
 msgstr "Filstorlek (borttagna)"
 
-#: gtkpod.glade:6058
+#: gtkpod.glade:6013
 msgid "Non-transferred tracks"
 msgstr "Spår som inte överförts"
 
-#: gtkpod.glade:6088
+#: gtkpod.glade:6043
 msgid "File size (non-transferred)"
 msgstr "Filstorlek (inte överförda)"
 
-#: gtkpod.glade:6118
+#: gtkpod.glade:6073
 msgid "Effective free space"
 msgstr "Verkligt ledigt utrymme"
 
-#: gtkpod.glade:6148
+#: gtkpod.glade:6103
 msgid ""
 "Total\n"
 "(iPod)"
@@ -710,7 +706,7 @@ msgstr ""
 "Totalt\n"
 "(iPod)"
 
-#: gtkpod.glade:6180
+#: gtkpod.glade:6135
 msgid ""
 "Selected\n"
 "Playlist"
@@ -718,7 +714,7 @@ msgstr ""
 "Markerad\n"
 "spellista"
 
-#: gtkpod.glade:6212
+#: gtkpod.glade:6167
 msgid ""
 "Displayed\n"
 "Tracks"
@@ -726,7 +722,7 @@ msgstr ""
 "Visade\n"
 "spår"
 
-#: gtkpod.glade:6244
+#: gtkpod.glade:6199
 msgid ""
 "Selected\n"
 "Tracks"
@@ -734,7 +730,7 @@ msgstr ""
 "Markerade\n"
 "spår"
 
-#: gtkpod.glade:6276
+#: gtkpod.glade:6231
 msgid ""
 "Total\n"
 "(local)"
@@ -742,27 +738,27 @@ msgstr ""
 "Totalt\n"
 "(lokalt)"
 
-#: gtkpod.glade:6696
+#: gtkpod.glade:6651
 msgid "label21"
 msgstr "etikett21"
 
-#: gtkpod.glade:6791
+#: gtkpod.glade:6746
 msgid "Never show this dialogue again"
 msgstr "Visa aldrig den här dialogrutan igen"
 
-#: gtkpod.glade:6836 gtkpod.glade:7180
+#: gtkpod.glade:6791 gtkpod.glade:7135
 msgid "window1"
 msgstr "fönster1"
 
-#: gtkpod.glade:6895
+#: gtkpod.glade:6850
 msgid "_M3U"
 msgstr "_M3U"
 
-#: gtkpod.glade:6914
+#: gtkpod.glade:6869
 msgid "_PLS"
 msgstr "_PLS"
 
-#: gtkpod.glade:6952
+#: gtkpod.glade:6907
 msgid ""
 "If available, the local copy of the track is referenced in the playlist. "
 "Otherwise the file on the iPod is used."
@@ -770,11 +766,11 @@ msgstr ""
 "Om tillgänglig, hänvisar spellistan till den lokala kopian av spåret. Annars "
 "används filen på iPod."
 
-#: gtkpod.glade:6954
+#: gtkpod.glade:6909
 msgid "_Prefer Local"
 msgstr "_Föredra lokal"
 
-#: gtkpod.glade:6972
+#: gtkpod.glade:6927
 msgid ""
 "The local copy of the track is referenced in the playlist. If the track is "
 "not available locally, an error message is displayed."
@@ -782,31 +778,31 @@ msgstr ""
 "Spellistan hänvisar till den lokala kopian av spåret. Om spåret inte är "
 "tillgängligt lokalt, visas ett felmeddelande."
 
-#: gtkpod.glade:6974
+#: gtkpod.glade:6929
 msgid "_Local"
 msgstr "_Lokal"
 
-#: gtkpod.glade:6993
+#: gtkpod.glade:6948
 msgid "The track on the iPod is referenced in the playlist file."
 msgstr "Spellistan hänvisar till spåret på iPod."
 
-#: gtkpod.glade:6995
+#: gtkpod.glade:6950
 msgid "_iPod"
 msgstr "_iPod"
 
-#: gtkpod.glade:7028
+#: gtkpod.glade:6983
 msgid "Playlist type:"
 msgstr "Typ av spellista:"
 
-#: gtkpod.glade:7057
+#: gtkpod.glade:7012
 msgid "Source:"
 msgstr "Källa:"
 
-#: gtkpod.glade:7100
+#: gtkpod.glade:7055
 msgid "Template for info field: "
 msgstr "Mall för informationsfält:"
 
-#: gtkpod.glade:7125
+#: gtkpod.glade:7080
 msgid ""
 "Determines how the string for the info field should be constructed, e.g '%a/%"
 "A/%T - %t.mp3' or '%o'.  You can separate several templates by semicolons -- "
@@ -822,15 +818,15 @@ msgstr ""
 "C, år: %Y, ursprungligt filnamn (kräver fil med utökad information): %o, "
 "tecknet '%': %%."
 
-#: gtkpod.glade:7156 gtkpod.glade:7400
+#: gtkpod.glade:7111 gtkpod.glade:7355
 msgid "gtkpod options"
 msgstr "Inställningar för gtkpod"
 
-#: gtkpod.glade:7218
+#: gtkpod.glade:7173
 msgid "Filename Format: "
 msgstr "Filnamnsformat: "
 
-#: gtkpod.glade:7243
+#: gtkpod.glade:7198
 msgid ""
 "Determines the filename of tracks you copy from the iPod, e.g '%a/%A/%T - %t."
 "mp3' or '%o'.  You can separate several patterns by semicolons -- gtkpod "
@@ -846,11 +842,11 @@ msgstr ""
 "ursprungligt filnamn (kräver fil med utökad information): %o, nuvarande "
 "spellista: %p, tecknet '%': %%."
 
-#: gtkpod.glade:7248
+#: gtkpod.glade:7203
 msgid " "
 msgstr " "
 
-#: gtkpod.glade:7270
+#: gtkpod.glade:7225
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "for the filename. If you set this option you can set a different charset "
@@ -867,7 +863,7 @@ msgstr ""
 "importerats innan version 0.51 har ingen teckenkodning lagrad. Istället "
 "används då teckensnittet som anges."
 
-#: gtkpod.glade:7272
+#: gtkpod.glade:7227
 msgid ""
 "Use selected charset (Preferences/'Adding/Updating/ Syncing')\n"
 "for this filename."
@@ -875,7 +871,7 @@ msgstr ""
 "Använd vald teckenkodning för detta filnamn\n"
 "(Inställningar/'Tillägg, uppdatering, synkronisering')."
 
-#: gtkpod.glade:7291
+#: gtkpod.glade:7246
 msgid ""
 "When copying from iPod no check is performed on whether the destination file "
 "exists. Enabling this option will make gtkpod check whether the length of "
@@ -887,63 +883,63 @@ msgstr ""
 "från iPod. Om det är fallet hoppas filen över, vilket gör det möjligt att "
 "snabbt synkronisera innehållet i iPod."
 
-#: gtkpod.glade:7293
+#: gtkpod.glade:7248
 msgid "Check for existing files when copying from iPod."
 msgstr "Titta efter befintliga filer vid kopiering från iPod."
 
-#: gtkpod.glade:7468
+#: gtkpod.glade:7423
 msgid "Playlist name:"
 msgstr "Spellistans namn:"
 
-#: gtkpod.glade:7537
+#: gtkpod.glade:7492
 msgid "Match al_l of the following"
 msgstr "Matcha a_lla följande"
 
-#: gtkpod.glade:7556
+#: gtkpod.glade:7511
 msgid "Match an_y of the following"
 msgstr "Matcha _någon av följande"
 
-#: gtkpod.glade:7576
+#: gtkpod.glade:7531
 msgid "_Ignore rules"
 msgstr "_Ignorera regler"
 
-#: gtkpod.glade:7646
+#: gtkpod.glade:7601
 msgid "Rules"
 msgstr "Regler"
 
-#: gtkpod.glade:7683
+#: gtkpod.glade:7638
 msgid "_Limit to"
 msgstr "_Begränsa till"
 
-#: gtkpod.glade:7734
+#: gtkpod.glade:7689
 msgid "   Sort by:"
 msgstr "   Sortera enligt:"
 
-#: gtkpod.glade:7786
+#: gtkpod.glade:7741
 msgid "Match only _checked tracks"
 msgstr "Matcha bara _kryssmarkerade spår"
 
-#: gtkpod.glade:7818
+#: gtkpod.glade:7773
 msgid "Live _updating"
 msgstr "_Uppdatering under tiden"
 
-#: gtkpod.glade:7909
+#: gtkpod.glade:7864
 msgid "Preferences"
 msgstr "Inställningar"
 
-#: gtkpod.glade:7972
+#: gtkpod.glade:7927
 msgid "<b>Mountpoint and individual repository/playlist options</b>"
 msgstr "<b>Alternativ för monteringspunkt, enskilda arkiv och spellistor</b>"
 
-#: gtkpod.glade:8035
+#: gtkpod.glade:7990
 msgid "Set mountpoint or edit repository options"
 msgstr "Ange monteringspunkt eller redigera arkivalternativ"
 
-#: gtkpod.glade:8082
+#: gtkpod.glade:8037
 msgid "<b>Import</b>"
 msgstr "<b>Importera</b>"
 
-#: gtkpod.glade:8148
+#: gtkpod.glade:8103
 msgid ""
 "On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount "
 "<ipod mountpoint>' call is carried out. For more complicated arrangements "
@@ -953,23 +949,31 @@ msgstr ""
 "utförs anropet 'umount <iPod monteringspunkt>'. För mer komplicerad "
 "hantering, använd skripten ~/.gtkpod/gtkpod.in och  ~/.gtkpod/gtkpod.out."
 
-#: gtkpod.glade:8150
+#: gtkpod.glade:8105
 msgid "Handle mounting/unmounting of iPod drive"
 msgstr "Hantera montering och avmontering av iPod-enheten"
 
-#: gtkpod.glade:8170
+#: gtkpod.glade:8125
 msgid "Automatically import iTunesDB on startup"
 msgstr "Importera automatiskt iTunes databas vid start"
 
-#: gtkpod.glade:8216
+#: gtkpod.glade:8171
 msgid "<b>Adding/Updating/Syncing</b>"
 msgstr "<b>Tillägg, uppdatering, synkronisering</b>"
 
-#: gtkpod.glade:8284
+#: gtkpod.glade:8243
+msgid "Exclude file mask(s)"
+msgstr ""
+
+#: gtkpod.glade:8268
+msgid "Semicolon seperated list of file exclusion masks, e.g. '*.mp3'"
+msgstr ""
+
+#: gtkpod.glade:8302
 msgid "_Encoding (ID3, files):"
 msgstr "_Teckenkodning (ID3, filer):"
 
-#: gtkpod.glade:8319
+#: gtkpod.glade:8337
 msgid ""
 "gtkpod expects the ID3 tags and the filenames to be in the encoding "
 "specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' "
@@ -980,7 +984,7 @@ msgstr ""
 "kataloger'. 'Systemets kodning' är den kodning som används i din aktuella "
 "landsinställning."
 
-#: gtkpod.glade:8356
+#: gtkpod.glade:8374
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to update the track information. If you have chosen a wrong charset when "
@@ -998,7 +1002,7 @@ msgstr ""
 "importerats innan version 0.51 har ingen teckenkodning lagrad. Istället "
 "används då teckensnittet som anges ovan."
 
-#: gtkpod.glade:8358
+#: gtkpod.glade:8376
 msgid ""
 "Use selected encoding also when updating \n"
 "or syncing tracks"
@@ -1006,33 +1010,33 @@ msgstr ""
 "Använd också vald kodning vid uppdatering\n"
 "eller synkronisering av spår"
 
-#: gtkpod.glade:8378
+#: gtkpod.glade:8396
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
 msgstr "Om du markerar det här, går gtkpod ner i underkataloger rekursivt."
 
-#: gtkpod.glade:8380
+#: gtkpod.glade:8398
 msgid "Add directories recursively"
 msgstr "Lägg till kataloger rekursivt"
 
-#: gtkpod.glade:8399
+#: gtkpod.glade:8417
 msgid "Duplicate Recognition is based on a (modified) md5 hash over the file."
 msgstr ""
 "Igenkänning av duplikat är baserat på filens (modifierade) MD5-checksumma."
 
-#: gtkpod.glade:8401
+#: gtkpod.glade:8419
 msgid "Don't allow file duplication"
 msgstr "Tillåt inte duplicerade filer"
 
-#: gtkpod.glade:8451
+#: gtkpod.glade:8469
 msgid ""
 "Display the list of duplicates that have been detected after adding files."
 msgstr "Visa listan med upptäckta duplikat efter filer har lagts till."
 
-#: gtkpod.glade:8453
+#: gtkpod.glade:8471
 msgid "Display info about detected duplicates"
 msgstr "Visa information om detekterade duplikat"
 
-#: gtkpod.glade:8479
+#: gtkpod.glade:8497
 msgid ""
 "If the filename (full path) of an existing track matches that of a track to "
 "be added, this option allows you to update the information about the "
@@ -1046,7 +1050,7 @@ msgstr ""
 "spåret helt. Ingen uppdatering sker om filen inte har ändrats och du har "
 "valt alternativet 'Tillåt inte duplicerade filer' ovan."
 
-#: gtkpod.glade:8481
+#: gtkpod.glade:8499
 msgid ""
 "When adding dirs/files, update information of\n"
 "existing tracks with identical filenames"
@@ -1054,31 +1058,31 @@ msgstr ""
 "När kataloger och filer läggs till, uppdatera information\n"
 "om befintliga spår med identiska filnamn"
 
-#: gtkpod.glade:8532
+#: gtkpod.glade:8550
 msgid "Display a list of tracks that could actually be updated."
 msgstr "Visa en lista med spår som skulle kunna uppdateras."
 
-#: gtkpod.glade:8534
+#: gtkpod.glade:8552
 msgid "Display info about updated tracks"
 msgstr "Visa information om uppdaterade spår"
 
-#: gtkpod.glade:8591
+#: gtkpod.glade:8609
 msgid "Display a list of tracks that could not be updated."
 msgstr "Visa en lista med spår som inte kunde uppdateras."
 
-#: gtkpod.glade:8593
+#: gtkpod.glade:8611
 msgid "Display info about non-updated tracks"
 msgstr "Visa information om spår som inte uppdaterats"
 
-#: gtkpod.glade:8619
+#: gtkpod.glade:8637
 msgid "When syncing playlists"
 msgstr "Vid synkronisering av spellistor"
 
-#: gtkpod.glade:8681
+#: gtkpod.glade:8711
 msgid "Confirm lists of directories"
 msgstr "Bekräfta lista med kataloger"
 
-#: gtkpod.glade:8699 gtkpod.glade:17567
+#: gtkpod.glade:8729 gtkpod.glade:17667
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1097,7 +1101,7 @@ msgstr ""
 "alternativet om du vill att spår ska tas bort, eftersom att ta bort från "
 "huvudspellistan innebär att ta bort från iPod."
 
-#: gtkpod.glade:8703 gtkpod.glade:17571
+#: gtkpod.glade:8733 gtkpod.glade:17671
 msgid ""
 "Delete tracks that are no longer present from the\n"
 "ipod or repository"
@@ -1105,15 +1109,15 @@ msgstr ""
 "Ta bort spår som inte längre finns\n"
 "från iPod eller arkiv"
 
-#: gtkpod.glade:8722
+#: gtkpod.glade:8752
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
 msgstr "Det här är samma alternativ som i 'Redigera/Bekräfta "
 
-#: gtkpod.glade:8724 gtkpod.glade:17591
+#: gtkpod.glade:8754 gtkpod.glade:17691
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "Bekräfta innan spår tas bort från iPod eller arkiv"
 
-#: gtkpod.glade:8743 gtkpod.glade:17609
+#: gtkpod.glade:8773 gtkpod.glade:17709
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
@@ -1121,15 +1125,15 @@ msgstr ""
 "Visar en lista med borttagna spår och en lista med spår som är nytillagda "
 "eller uppdaterade."
 
-#: gtkpod.glade:8745 gtkpod.glade:17611
+#: gtkpod.glade:8775 gtkpod.glade:17711
 msgid "Show summary of sync result"
 msgstr "Visa sammanfattning av synkroniseringsresultat"
 
-#: gtkpod.glade:8804
+#: gtkpod.glade:8836
 msgid "<b>Sync</b>"
 msgstr "<b>Synkronisera</b>"
 
-#: gtkpod.glade:8860
+#: gtkpod.glade:8892
 msgid ""
 "Highly recommended for faster import when taking advantage of the "
 "duplication recognition. Also, having the PC filenames allows writing "
@@ -1143,7 +1147,7 @@ msgstr ""
 "innehållet i iPod om filsystemet blir skadat (ändra raderna \"transferred=\" "
 "i den säkerhetskopierade databasen)."
 
-#: gtkpod.glade:8862
+#: gtkpod.glade:8894
 msgid ""
 "Write extended information (PC filenames,\n"
 " MD5 hashes, encoding). Recommended."
@@ -1151,19 +1155,19 @@ msgstr ""
 "Skriv utökad information (PC-filnamn, MD5-\n"
 "checksummor, teckenkodning). Rekommenderas."
 
-#: gtkpod.glade:8906 gtkpod.glade:14543
+#: gtkpod.glade:8938 gtkpod.glade:14648
 msgid "_General"
 msgstr "_Allmänt"
 
-#: gtkpod.glade:8942
+#: gtkpod.glade:8974
 msgid "<b>Tag Reading</b>"
 msgstr "<b>Taggläsning</b>"
 
-#: gtkpod.glade:9005
+#: gtkpod.glade:9037
 msgid "Read tags from file contents (e.g. ID3 tags in MP3 files)"
 msgstr "Läs spår från filinnehåll (t.ex. ID3-taggar i MP3-filer)"
 
-#: gtkpod.glade:9024 gtkpod.glade:9377
+#: gtkpod.glade:9056 gtkpod.glade:9409
 msgid ""
 "artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
 "nr: %C, year: %Y, skip data: %*, the character '%': %%. You can separate "
@@ -1175,15 +1179,15 @@ msgstr ""
 "flera mallar åt med ';'. Den första som stämmer med filnamnet används. "
 "Exempel: '%a - %A/%T %t.mp3;%t.wav'."
 
-#: gtkpod.glade:9026
+#: gtkpod.glade:9058
 msgid "Use this template to parse filename for tag information:"
 msgstr "Använd mallen för att tolka filnamnet som tagginformation:"
 
-#: gtkpod.glade:9103
+#: gtkpod.glade:9135
 msgid "Overwrite tags that are already set"
 msgstr "Skriv över taggar som redan är angivna"
 
-#: gtkpod.glade:9136
+#: gtkpod.glade:9168
 msgid ""
 "As a last resort set the following tags to the\n"
 "filename if they are (still) empty:"
@@ -1191,41 +1195,41 @@ msgstr ""
 "Om följande taggar (fortfarande) är tomma,\n"
 "lagra filnamnet i dem som en sista utväg:"
 
-#: gtkpod.glade:9172 src/display_sorttabs.c:2841 src/display_spl.c:85
+#: gtkpod.glade:9204 src/display_sorttabs.c:2942 src/display_spl.c:85
 #: src/misc_conversion.c:62
 msgid "Artist"
 msgstr "Artist"
 
-#: gtkpod.glade:9194 src/display_sorttabs.c:2847 src/display_spl.c:89
+#: gtkpod.glade:9226 src/display_sorttabs.c:2948 src/display_spl.c:89
 #: src/misc_conversion.c:64
 msgid "Genre"
 msgstr "Genre"
 
 #. 0
-#: gtkpod.glade:9216 src/display_sorttabs.c:2844 src/display_spl.c:84
+#: gtkpod.glade:9248 src/display_sorttabs.c:2945 src/display_spl.c:84
 #: src/misc_conversion.c:61
 msgid "Album"
 msgstr "Album"
 
 #. 5
-#: gtkpod.glade:9238 src/display_spl.c:97 src/misc_conversion.c:66
+#: gtkpod.glade:9270 src/display_spl.c:97 src/misc_conversion.c:66
 msgid "Composer"
 msgstr "Kompositör"
 
-#: gtkpod.glade:9260 src/display_sorttabs.c:2853 src/display_spl.c:83
+#: gtkpod.glade:9292 src/display_sorttabs.c:2954 src/display_spl.c:83
 #: src/misc_conversion.c:63
 msgid "Title"
 msgstr "Titel"
 
-#: gtkpod.glade:9315
+#: gtkpod.glade:9347
 msgid "<b>Artwork</b>"
 msgstr "<b>Omslag</b>"
 
-#: gtkpod.glade:9379
+#: gtkpod.glade:9411
 msgid "Add artwork from file using the following template"
 msgstr "Lägg till omslag från fil med följande mall"
 
-#: gtkpod.glade:9435
+#: gtkpod.glade:9467
 msgid ""
 "Determines the name of the file with the cover art. You can separate several "
 "patterns by semicolons which will be tried in order. Artist: %a, album: %A, "
@@ -1240,129 +1244,129 @@ msgstr ""
 "ursprungligt filnamn (kräver fil med utökad information): %o, ursprungligt "
 "filnamn utan filändelse: %O, nuvarande spellista: %p, tecknet '%': %%."
 
-#: gtkpod.glade:9456
+#: gtkpod.glade:9488
 msgid "<b>Examples</b>"
 msgstr "<b>Exempel</b>"
 
-#: gtkpod.glade:9490
+#: gtkpod.glade:9522
 msgid "folder.jpg"
 msgstr "katalog.jpg"
 
-#: gtkpod.glade:9518
+#: gtkpod.glade:9550
 msgid "folder"
 msgstr "katalog"
 
-#: gtkpod.glade:9546
+#: gtkpod.glade:9578
 msgid "../%A.jpg"
 msgstr "../%A.jpg"
 
-#: gtkpod.glade:9574
+#: gtkpod.glade:9606
 msgid "%A"
 msgstr "%A"
 
-#: gtkpod.glade:9602
+#: gtkpod.glade:9634
 msgid "Use <i>folder.jpg</i> as cover art."
 msgstr "Använd <i>katalog.jpg</i> som omslagsbild."
 
-#: gtkpod.glade:9630
+#: gtkpod.glade:9662
 msgid "Use <i>folder.jpg</i>, <i>folder.png</i>..."
 msgstr "Använd <i>katalog.jpg</i>, <i>katalog.png</i>..."
 
-#: gtkpod.glade:9658
+#: gtkpod.glade:9690
 msgid "Use <i>&lt;Album&gt;.jpg</i> in the parent directory"
 msgstr "Använd <i>&lt;Album&gt;.jpg</i> i överliggande katalog"
 
-#: gtkpod.glade:9686
+#: gtkpod.glade:9718
 msgid "Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>..."
 msgstr "Använd <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>..."
 
-#: gtkpod.glade:9714
+#: gtkpod.glade:9746
 msgid "folder.jpg;%a.jpg"
 msgstr "katalog.jpg;%a.jpg"
 
-#: gtkpod.glade:9742
+#: gtkpod.glade:9774
 msgid "First try <i>folder.jpg</i>, then <i>&lt;artist&gt;.jpg</i>"
 msgstr ""
 "Försök först med <i>katalog.jpg</i>, därefter med <i>&lt;artist&gt;.jpg</i>"
 
-#: gtkpod.glade:9830
+#: gtkpod.glade:9862
 msgid "<b>mserv</b>"
 msgstr "<b>mServ</b>"
 
-#: gtkpod.glade:9892 gtkpod.glade:10118
+#: gtkpod.glade:9924 gtkpod.glade:10150
 msgid "Currently only rating is supported."
 msgstr "För närvarande stöds bara ett betyg"
 
-#: gtkpod.glade:9894
+#: gtkpod.glade:9926
 msgid "Use mserv database to fill additional information"
 msgstr "Använd mserv databas för att fylla i ytterligare information"
 
-#: gtkpod.glade:9922
+#: gtkpod.glade:9954
 msgid "Music Root:"
 msgstr "Musikrot:"
 
-#: gtkpod.glade:9950
+#: gtkpod.glade:9982
 msgid "mserv database lookup will be done for music in this directory."
 msgstr "Uppslagning av musik för mserv databasen görs i den här katalogen."
 
-#: gtkpod.glade:9972
+#: gtkpod.glade:10004
 msgid "mserv Root:"
 msgstr "Rot för mserv:"
 
-#: gtkpod.glade:10000
+#: gtkpod.glade:10032
 msgid "Root directory of mserv database (trackinfo root)."
 msgstr "Rotkatalog för mserv databasen (rot för spårinformation)."
 
-#: gtkpod.glade:10022
+#: gtkpod.glade:10054
 msgid "Username:"
 msgstr "Användarnamn:"
 
-#: gtkpod.glade:10050
+#: gtkpod.glade:10082
 msgid "Username to be used for mserv database lookup."
 msgstr "Användarnamn att använda vid uppslagning i mserv databasen."
 
-#: gtkpod.glade:10074 gtkpod.glade:10093 gtkpod.glade:12765 gtkpod.glade:12839
-#: gtkpod.glade:12996 gtkpod.glade:16987 gtkpod.glade:17007 gtkpod.glade:17027
-#: gtkpod.glade:17047 gtkpod.glade:17067 gtkpod.glade:17488 gtkpod.glade:18073
-#: gtkpod.glade:18117 gtkpod.glade:18137
+#: gtkpod.glade:10106 gtkpod.glade:10125 gtkpod.glade:12849 gtkpod.glade:12868
+#: gtkpod.glade:13029 gtkpod.glade:13098 gtkpod.glade:17068 gtkpod.glade:17088
+#: gtkpod.glade:17108 gtkpod.glade:17128 gtkpod.glade:17148 gtkpod.glade:17588
+#: gtkpod.glade:18147 gtkpod.glade:18190 gtkpod.glade:18210 gtkpod.glade:18620
 msgid "Browse"
 msgstr "Bläddra"
 
-#: gtkpod.glade:10120
+#: gtkpod.glade:10152
 msgid "Show information about problems when accessing mserv"
 msgstr "Visa information om problem vid användning av mserv"
 
-#: gtkpod.glade:10166
+#: gtkpod.glade:10198
 msgid "_Track Info"
 msgstr "_Spårinformation"
 
-#: gtkpod.glade:10216
+#: gtkpod.glade:10248
 msgid "<b>Displayed Track Attributes</b>"
 msgstr "<b>Visade spåregenskaper</b>"
 
-#: gtkpod.glade:11011
+#: gtkpod.glade:11043
 msgid "<b>Sort Tabs</b>"
 msgstr "<b>Sorteringsflikar</b>"
 
-#: gtkpod.glade:11073
+#: gtkpod.glade:11105
 msgid "Keeps all compilation CDs grouped together in the artists sort tab."
 msgstr ""
 "Behåller alla samlingsskivor grupperade tillsammans i sorteringsfliken för "
 "artister"
 
-#: gtkpod.glade:11075
+#: gtkpod.glade:11107
 msgid "Group artists on compilation CDs"
 msgstr "Gruppera artister på samlingsskivor"
 
-#: gtkpod.glade:11100
+#: gtkpod.glade:11132
 msgid "_Number of sort tabs:"
 msgstr "A_ntal sorteringsflikar:"
 
-#: gtkpod.glade:11180
+#: gtkpod.glade:11212
 msgid "<b>Automatically select...</b>"
 msgstr "<b>Välj automatiskt...</b>"
 
-#: gtkpod.glade:11242
+#: gtkpod.glade:11274
 msgid ""
 "If you don't select the master playlist automatically, the initial database "
 "import is much faster because the display dosn't have to be updated."
@@ -1370,51 +1374,51 @@ msgstr ""
 "Om du inte väljer huvudspellistan automatiskt, går den ursprungliga importen "
 "av databasen mycket snabbare eftersom skärmen inte behöver uppdateras."
 
-#: gtkpod.glade:11244
+#: gtkpod.glade:11276
 msgid "...master playlist"
 msgstr "...huvudspellista"
 
-#: gtkpod.glade:11264
+#: gtkpod.glade:11296
 msgid "...entry 'All' in sort tab..."
 msgstr "...raden 'Alla' i sorteringsflikar"
 
-#: gtkpod.glade:11349
+#: gtkpod.glade:11381
 msgid "<b>Tooltips</b>"
 msgstr "<b>Verktygstips</b>"
 
-#: gtkpod.glade:11412
+#: gtkpod.glade:11444
 msgid "Display tooltips in main window"
 msgstr "Visa verktygstips i huvudfönstret"
 
-#: gtkpod.glade:11432
+#: gtkpod.glade:11464
 msgid "Display tooltips in prefs window"
 msgstr "Visa verktygstips i inställningsfönstret"
 
-#: gtkpod.glade:11478
+#: gtkpod.glade:11510
 msgid "<b>Toolbar</b>"
 msgstr "<b>Verktygsrad</b>"
 
-#: gtkpod.glade:11541
+#: gtkpod.glade:11573
 msgid "Display toolbar..."
 msgstr "Visa verktygsrad..."
 
-#: gtkpod.glade:11598
+#: gtkpod.glade:11630
 msgid "...as icons"
 msgstr "...som ikoner"
 
-#: gtkpod.glade:11618
+#: gtkpod.glade:11650
 msgid "...as text"
 msgstr "...som text"
 
-#: gtkpod.glade:11639
+#: gtkpod.glade:11671
 msgid "...both as icons and text"
 msgstr "...både som ikoner och text"
 
-#: gtkpod.glade:11700
+#: gtkpod.glade:11732
 msgid "<b>Misc</b>"
 msgstr "<b>Diverse</b>"
 
-#: gtkpod.glade:11762
+#: gtkpod.glade:11794
 msgid ""
 "It is much faster to sort the display after all tracks have been added. Some "
 "people might feel irritated by this behaviour and should uncheck this option."
@@ -1423,7 +1427,7 @@ msgstr ""
 "Några personer kanske känner sig irriterade av detta beteende, och kan då "
 "avmarkera alternativet."
 
-#: gtkpod.glade:11764
+#: gtkpod.glade:11796
 msgid ""
 "Temporarily disable sorting when changing playlist\n"
 "or tab entry (faster!)"
@@ -1431,7 +1435,7 @@ msgstr ""
 "Inaktivera sortering tillfälligt när spellistor\n"
 "eller flikar ändras (snabbare)"
 
-#: gtkpod.glade:11784
+#: gtkpod.glade:11816
 msgid ""
 "The display can be blocked after changing a selection. The display update is "
 "faster, but you have to wait until it's finished. When using this option, "
@@ -1441,7 +1445,7 @@ msgstr ""
 "snabbare, men du måste vänta till den är klar. När du använder det här "
 "alternativet är sortering också tillfälligt avstängd (se alternativet ovan)."
 
-#: gtkpod.glade:11786
+#: gtkpod.glade:11818
 msgid ""
 "Block display when changing playlist or tab\n"
 " entry (faster!)"
@@ -1449,34 +1453,34 @@ msgstr ""
 "Blockera skärmen när spellistor\n"
 "eller flikar ändras (snabbare)"
 
-#: gtkpod.glade:11806
+#: gtkpod.glade:11838
 msgid "This option will be re-activated when you upgrade gtkpod."
 msgstr "Det här alternativet aktiveras igen när du uppdaterar gtkpod."
 
-#: gtkpod.glade:11808
+#: gtkpod.glade:11840
 msgid "Display messages and warnings at startup"
 msgstr "Visa meddelanden och varningar vid start"
 
-#: gtkpod.glade:11870
+#: gtkpod.glade:11902
 msgid "Advanced Sorting Options"
 msgstr "Avancerade sorteringsalternativ"
 
-#: gtkpod.glade:11973
+#: gtkpod.glade:12005
 msgid "<b>Track Editing</b>"
 msgstr "<b>Spårredigering</b>"
 
-#: gtkpod.glade:12035
+#: gtkpod.glade:12067
 msgid ""
 "The tags are written to the files on your harddrive and on the ipod (if "
 "available)."
 msgstr ""
 "Taggarna skrivs till filer på din hårddisk och på iPod (om tillgänglig)."
 
-#: gtkpod.glade:12037
+#: gtkpod.glade:12069
 msgid "Write ID3 tags to disk when modified in gtkpod"
 msgstr "Skriv ID3-taggar till disk när de ändrats i gtkpod"
 
-#: gtkpod.glade:12093
+#: gtkpod.glade:12125
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to write the tags. If you have chosen a wrong charset when first importing a "
@@ -1495,7 +1499,7 @@ msgstr ""
 "teckenkodning lagrad. Istället används då teckensnittet som anges på sidan "
 "'In- och utmatning'."
 
-#: gtkpod.glade:12095
+#: gtkpod.glade:12127
 msgid ""
 "Use selected encoding (on the 'General' page)\n"
 "when writing tags"
@@ -1503,7 +1507,7 @@ msgstr ""
 "Använd vald teckenkodning (från sidan 'Allmänt')\n"
 "vid skrivning av taggar"
 
-#: gtkpod.glade:12115
+#: gtkpod.glade:12147
 msgid ""
 "This is the way to go, but maybe not all programs support it yet. ID3v2.4 "
 "uses unicode to store the tags, so you won't have to worry about charsets "
@@ -1517,11 +1521,11 @@ msgstr ""
 "storleken av rena ASCII-taggar. ID3v2.2/4-taggar skrivs också om de redan "
 "finns i filen som skrivs."
 
-#: gtkpod.glade:12117
+#: gtkpod.glade:12149
 msgid "Always write ID3v2.4 tags (only applies to MP3)"
 msgstr "Skriv alltid ID3v2.4-taggar (gäller bara MP3)"
 
-#: gtkpod.glade:12150
+#: gtkpod.glade:12182
 msgid ""
 "If you select several tracks in the track list and edit a tag of the first "
 "track, the tags in the other tracks are updated as well."
@@ -1529,11 +1533,11 @@ msgstr ""
 "Om du markerar flera spår i spårlistan och redigerar taggen för det första "
 "spåret, uppdateras också taggarna för övriga spår."
 
-#: gtkpod.glade:12152
+#: gtkpod.glade:12184
 msgid "Use 'Multi-Edit' for tracks selections"
 msgstr "Använd 'Redigera flera' för markerade spår"
 
-#: gtkpod.glade:12202
+#: gtkpod.glade:12234
 msgid ""
 "Usually you don't want to set the title of several tracks to the same text. "
 "This option might avoid unwanted results (especially since there is no "
@@ -1543,19 +1547,19 @@ msgstr ""
 "alternativet kan undvika oönskade resultat (särskilt eftersom funktionen "
 "'Ångra' inte finns ännu)."
 
-#: gtkpod.glade:12204
+#: gtkpod.glade:12236
 msgid "Use 'Multi-Edit' also for title field"
 msgstr "Använd också 'Redigera flera' för titelfältet"
 
-#: gtkpod.glade:12257
+#: gtkpod.glade:12289
 msgid "<b>Auto-Generated Playlists</b>"
 msgstr "<b>Automatiskt skapade spellistor</b>"
 
-#: gtkpod.glade:12325
+#: gtkpod.glade:12357
 msgid "Number of tracks in generated playlists:"
 msgstr "Antal spår i skapade spellistor:"
 
-#: gtkpod.glade:12350
+#: gtkpod.glade:12382
 msgid ""
 "Number of tracks in the generated playlists 'Most Often Listened', 'Best "
 "Rated' and 'Most Recently Played'. Choose '0' for 'no limit'."
@@ -1563,32 +1567,32 @@ msgstr ""
 "Antal spår i de skapade spellistorna 'oftast lyssnats på', 'med bäst betyg' "
 "och 'nyligen spelats'. Ange '0' för 'ingen begränsning'."
 
-#: gtkpod.glade:12379
+#: gtkpod.glade:12411
 msgid "Also include tracks never played in \"Best Rated\" playlist"
 msgstr ""
 "Inkludera också spår som aldrig spelats i spellistan \"med bäst betyg\""
 
-#: gtkpod.glade:12425
+#: gtkpod.glade:12457
 msgid "<b>Delete Confirmation</b>"
 msgstr "<b>Bekräfta borttagning</b>"
 
-#: gtkpod.glade:12488
+#: gtkpod.glade:12520
 msgid "Before removing playlists or tracks from a playlist"
 msgstr "Innan spellistor eller spår tas bort från en spellista"
 
-#: gtkpod.glade:12508
+#: gtkpod.glade:12540
 msgid "Before removing tracks from the iPod"
 msgstr "Innan spår tas bort från iPod"
 
-#: gtkpod.glade:12528
+#: gtkpod.glade:12560
 msgid "Before removing tracks from the harddisk"
 msgstr "Innan spår tas bort från hårddisken"
 
-#: gtkpod.glade:12548
+#: gtkpod.glade:12580
 msgid "Before removing tracks from the local database"
 msgstr "Innan spår tas bort från den lokala databasen"
 
-#: gtkpod.glade:12568
+#: gtkpod.glade:12600
 msgid ""
 "Confirm before removing tracks from the iPod or repository\n"
 "when syncing playlists"
@@ -1596,15 +1600,19 @@ msgstr ""
 "Bekräfta innan spår tas bort från iPod eller arkiv\n"
 "vid synkronisering av spellistor"
 
-#: gtkpod.glade:12651
+#: gtkpod.glade:12683
 msgid "<b>Play</b>"
 msgstr "<b>Spela</b>"
 
-#: gtkpod.glade:12719
+#: gtkpod.glade:12748
 msgid "Command for 'Play now':"
 msgstr "Kommando för 'Spela nu':"
 
-#: gtkpod.glade:12744
+#: gtkpod.glade:12776
+msgid "Command for 'Enqueue':"
+msgstr "Kommando för 'Köa':"
+
+#: gtkpod.glade:12804
 msgid ""
 "For example, 'xmms %s' will clear xmms' current playlist, add the selected "
 "tracks and start playing."
@@ -1612,11 +1620,7 @@ msgstr ""
 "Till exempel rensas XMM:s nuvarande spellista, de markerade spåren läggs "
 "till och uppspelning startar med 'xmms %s'."
 
-#: gtkpod.glade:12793
-msgid "Command for 'Enqueue':"
-msgstr "Kommando för 'Köa':"
-
-#: gtkpod.glade:12818
+#: gtkpod.glade:12826
 msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected tracks to xmms' "
 "current playlist."
@@ -1624,55 +1628,54 @@ msgstr ""
 "Till exempel läggs de markerade spåren till sist i XMM:s nuvarande spellista "
 "(köas) med 'xmms -e %s'."
 
-#: gtkpod.glade:12888
+#: gtkpod.glade:12913
 msgid "<b>Volume Normalization</b>"
 msgstr "<b>Normalisering av volym</b>"
 
-#: gtkpod.glade:12950
+#: gtkpod.glade:12978
 msgid "'mp3gain' executable:"
 msgstr "Körbart program 'mp3gain':"
 
-#: gtkpod.glade:12975
+#: gtkpod.glade:13006
 msgid ""
-"You only need to specify this if your 'mp3gain' executable is not in your "
-"default path. Example: '/usr/local/foo/mp3gain'. mp3gain will write the "
-"calculated gain value back to the file -- if you don't want this, set this "
-"entry to /bin/true or similar. mp3gain is only called if appropriate tags "
-"are not already set by your encoder. E.g. lame version 0.95 already writes "
-"the gain values into tags. The exact conversion factor between mp3gain's "
-"gain value and iPod's volume tag is not known yet -- your input is "
-"appreciated."
+"Set this to 'mp3gain -q -k' to use the 'Normalize volume' functionality in "
+"the Tools Menu. If this is set, missing normalization data for mp3 files "
+"will be calculated and written to your mp3 file using this command."
 msgstr ""
-"Du behöver bara ange det här om det körbara programmet 'mp3gain' inte finns "
-"i din standardsökväg. Till exempel '/usr/local/foo/mp3gain'. mp3gain skriver "
-"tillbaka det beräknade nivåvärdet i filen. Om du inte vill det, ange "
-"alternativet som /bin/true eller något liknande. mp3gain anropas bara om "
-"lämpliga taggar inte redan angivits av kodaren. Version 0.95 av lame skriver "
-"till exempel redan nivåvärden i taggar. Det exakta konverteringsvärdet "
-"mellan nivåvärdet från mp3gain och volymtaggen i iPod är inte ännu känt: "
-"återmatning från dig uppskattas."
 
-#: gtkpod.glade:13038
+#: gtkpod.glade:13047
+#, fuzzy
+msgid "'aacgain' executable:"
+msgstr "Körbart program 'mp3gain':"
+
+#: gtkpod.glade:13075
+msgid ""
+"Set this to 'aacgain -q -k' to use the 'Normalize volume' functionality in "
+"the Tools Menu. If this is set, missing normalization data for .m4a and .m4b "
+"files will be calculated and written to your music file using this command."
+msgstr ""
+
+#: gtkpod.glade:13143
 msgid "<b>Calendar/Contacts/Notes</b>"
 msgstr "<b>Kalender, kontakter och anteckningar</b>"
 
-#: gtkpod.glade:13101
+#: gtkpod.glade:13206
 msgid "Set options for Calendar/Contacts/Notes"
 msgstr "Ange alternativ för kalender, kontakter och anteckningar"
 
-#: gtkpod.glade:13236
+#: gtkpod.glade:13341
 msgid "Details"
 msgstr "Detaljinformation"
 
-#: gtkpod.glade:13304
+#: gtkpod.glade:13409
 msgid "Cover"
 msgstr "Omslag"
 
-#: gtkpod.glade:13393
+#: gtkpod.glade:13498
 msgid "Set Cover Art"
 msgstr "Ange omslagsbild"
 
-#: gtkpod.glade:13430
+#: gtkpod.glade:13535
 msgid ""
 "If you check this, information (cover art and meta information) changed for "
 "this track will be copied to all other selected tracks as well. Use with "
@@ -1682,7 +1685,7 @@ msgstr ""
 "som ändrats för spåret också till alla andra markerade spår. Använd med "
 "försiktighet."
 
-#: gtkpod.glade:13476
+#: gtkpod.glade:13581
 msgid ""
 "Change all tracks\n"
 "simultaneously"
@@ -1690,78 +1693,77 @@ msgstr ""
 "Ändra alla spår\n"
 "samtidigt"
 
-#: gtkpod.glade:13568
+#: gtkpod.glade:13673
 msgid "Remove Cover Art"
 msgstr "Ta bort omslagsbild"
 
-#: gtkpod.glade:14501
+#: gtkpod.glade:14606
 #, fuzzy
 msgid "(Checked)"
 msgstr "Kontrollerad"
 
-#: gtkpod.glade:14943
+#: gtkpod.glade:15048
 msgid "_Podcasts"
 msgstr "_Podradiosändningar"
 
-#: gtkpod.glade:15931
+#: gtkpod.glade:16036
 msgid "_Other"
 msgstr "Ö_vriga"
 
-#: gtkpod.glade:16229
+#: gtkpod.glade:16334
 msgid "_Undo All"
 msgstr "Å_ngra alla"
 
-#: gtkpod.glade:16303
+#: gtkpod.glade:16408
 msgid "_Undo Track"
 msgstr "Å_ngra spår"
 
-#: gtkpod.glade:16350
+#: gtkpod.glade:16455
 msgid "Repository Options"
 msgstr "Arkivalternativ"
 
-#: gtkpod.glade:16471
+#: gtkpod.glade:16576
 msgid "Add new repository/iPod"
 msgstr "Lägg till nytt arkiv eller iPod"
 
-#: gtkpod.glade:16540 gtkpod.glade:17972
+#: gtkpod.glade:16645 gtkpod.glade:18072 gtkpod.glade:18568
 msgid "iPod mountpoint:"
 msgstr "iPod monteringspunkt:"
 
-#: gtkpod.glade:16568 gtkpod.glade:17944
+#: gtkpod.glade:16673 gtkpod.glade:18044
 msgid "iTunesDB backup:"
 msgstr "Säkerhetskopia av iTunes databas:"
 
-#: gtkpod.glade:16596 gtkpod.glade:17916
+#: gtkpod.glade:16701 gtkpod.glade:18016 gtkpod.glade:18639 gtkpod.glade:18831
 msgid "Model:"
 msgstr "Modell:"
 
-#: gtkpod.glade:16624 gtkpod.glade:17888
+#: gtkpod.glade:16729 gtkpod.glade:17988
 msgid "Path:"
 msgstr "Sökväg:"
 
-#: gtkpod.glade:16652
+#: gtkpod.glade:16757
 msgid "<b>Synchronization</b>"
 msgstr "<b>Synkronisering</b>"
 
-#: gtkpod.glade:16710
+#: gtkpod.glade:16815
 msgid "Contacts sync command:"
 msgstr "Synkroniseringskommando för kontakter:"
 
-#: gtkpod.glade:16738
+#: gtkpod.glade:16843
 msgid "Calendar sync command:"
 msgstr "Synkroniseringskommando för kalender:"
 
-#: gtkpod.glade:16766
+#: gtkpod.glade:16871
 msgid "Notes sync command:"
 msgstr "Synkroniseringskommando för anteckningar:"
 
-#: gtkpod.glade:16795
+#: gtkpod.glade:16900
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr "Anropa automatiskt vid synkronisering av iTunes databas"
 
-#: gtkpod.glade:16818 gtkpod.glade:16842 gtkpod.glade:16890 gtkpod.glade:16914
-#: gtkpod.glade:16938 gtkpod.glade:16962 gtkpod.glade:17467 gtkpod.glade:18000
-#: gtkpod.glade:18048 gtkpod.glade:18092 gtkpod.glade:18271
+#: gtkpod.glade:16923 gtkpod.glade:16947 gtkpod.glade:16971 gtkpod.glade:16995
+#: gtkpod.glade:17019 gtkpod.glade:17043 gtkpod.glade:17567 gtkpod.glade:18344
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
@@ -1769,66 +1771,59 @@ msgstr ""
 "Ange fullständig sökväg inklusive kommandoradsväljare. '%i' ersätts med "
 "monteringspunkten för iPod."
 
-#: gtkpod.glade:16866 gtkpod.glade:18024
-msgid ""
-"Set this to the model number of your iPod (e.g. \"A003\") in case it is not "
-"automatically detected and you want to use cover art."
-msgstr ""
-"Ställ in det här till modellnumret för din iPod (t.ex. \"A003\") om det inte "
-"automatiskt detekteras och du vill använda omslagsbilder."
-
-#: gtkpod.glade:17103
+#: gtkpod.glade:17203
 msgid "Update/Sync all playlists now"
 msgstr "Uppdatera och synkronisera alla spellistor nu"
 
-#: gtkpod.glade:17123
+#: gtkpod.glade:17223
 msgid "Delete repository"
 msgstr "Ta bort arkiv"
 
-#: gtkpod.glade:17143
+#: gtkpod.glade:17243 src/context_menus.c:430 src/context_menus.c:448
+#: src/context_menus.c:523
 msgid "I'm sure"
 msgstr "Jag är säker"
 
-#: gtkpod.glade:17199
+#: gtkpod.glade:17299
 msgid "<b>Repositories</b>"
 msgstr "<b>Arkiv</b>"
 
-#: gtkpod.glade:17396
+#: gtkpod.glade:17496
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr ""
 "Kataloger att synkronisera avgörs från filnamnen hos spåren i spellistan."
 
-#: gtkpod.glade:17398
+#: gtkpod.glade:17498
 msgid "On startup automatically sync with playlist directories"
 msgstr "Synkronisera automatiskt med spellistekataloger vid start"
 
-#: gtkpod.glade:17417
+#: gtkpod.glade:17517
 msgid "On startup automatically sync with the following directory"
 msgstr "Synkronisera automatiskt med följande katalog vid start"
 
-#: gtkpod.glade:17511
+#: gtkpod.glade:17611
 msgid "Don't automatically sync on startup"
 msgstr "Synkronisera inte automatiskt vid start"
 
-#: gtkpod.glade:17657
+#: gtkpod.glade:17757
 msgid "On startup automatically update (Live Playlist)"
 msgstr "Uppdatera automatiskt vid start (levande spellista)"
 
-#: gtkpod.glade:17687
+#: gtkpod.glade:17787
 msgid "Update/Sync playlist now"
 msgstr "Uppdatera och synkronisera spellista nu"
 
-#: gtkpod.glade:17734
+#: gtkpod.glade:17834
 msgid "<b>Playlists</b>"
 msgstr "<b>Spellistor</b>"
 
-#: gtkpod.glade:17851
+#: gtkpod.glade:17951
 msgid "Create Repository"
 msgstr "Skapa arkiv"
 
-#: gtkpod.glade:18156
+#: gtkpod.glade:18229
 msgid ""
 "Insert before\n"
 "Insert after"
@@ -1836,11 +1831,11 @@ msgstr ""
 "Infoga innan\n"
 "Infoga efter"
 
-#: gtkpod.glade:18194
+#: gtkpod.glade:18267
 msgid "Repository type:"
 msgstr "Arkivtyp:"
 
-#: gtkpod.glade:18222
+#: gtkpod.glade:18295
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
@@ -1850,9 +1845,17 @@ msgstr ""
 "Lokalt arkiv (standard)\n"
 "Lokalt arkiv (podradiosändningar)\n"
 
-#: gtkpod.glade:18243
+#: gtkpod.glade:18316
 msgid "Repository name:"
 msgstr "Arkivnamn:"
+
+#: gtkpod.glade:18452 gtkpod.glade:18715
+msgid "Initialize iPod"
+msgstr ""
+
+#: gtkpod.glade:18522
+msgid "<b>Please select mountpoint and your iPod model</b>"
+msgstr ""
 
 #: src/charset.c:53
 msgid "Arabic (IBM-864)"
@@ -2056,7 +2059,7 @@ msgstr "Västlig (Windows-1252)"
 
 #. sanity!
 #. check for "System Charset" and return NULL
-#: src/charset.c:160 src/charset.c:170 src/charset.c:222
+#: src/charset.c:160 src/charset.c:170 src/charset.c:223
 msgid "System Charset"
 msgstr "Systemets kodning"
 
@@ -2068,192 +2071,172 @@ msgid ""
 msgstr ""
 "En annan instans av gtkpod detekterades. Spelningsservern startades inte.\n"
 
-#: src/confirmation.c:370
+#: src/confirmation.c:376
 msgid "Confirmation Dialogue"
 msgstr "Bekräftelsedialogruta"
 
-#: src/context_menus.c:390 src/tools.c:635
+#: src/context_menus.c:367 src/tools.c:852
 msgid "Play Now"
 msgstr "Spela nu"
 
-#: src/context_menus.c:392 src/tools.c:648
+#: src/context_menus.c:373 src/tools.c:865
 msgid "Enqueue"
 msgstr "Köa"
 
-#: src/context_menus.c:395
+#: src/context_menus.c:379
 msgid "Copy Tracks to Filesystem"
 msgstr "Kopiera spår till filsystem"
 
-#: src/context_menus.c:397 src/file_export.c:1066
+#: src/context_menus.c:386 src/file_export.c:1081
 msgid "Create Playlist File"
 msgstr "Skapa spellistefil"
 
-#: src/context_menus.c:402
-msgid "Update Tracks from File"
-msgstr "Uppdatera spår från fil"
-
-#: src/context_menus.c:407
-msgid "Sync Playlist with Dir(s)"
-msgstr "Synkronisera spellista med katalog(er)"
-
-#: src/context_menus.c:411
+#: src/context_menus.c:393
 msgid "Create new Playlist"
 msgstr "Skapa ny spellista"
 
-#: src/context_menus.c:420
-msgid "Edit Playlist Properties"
-msgstr "Redigera spellisteegenskaper"
+#: src/context_menus.c:400
+msgid "Update Tracks from File"
+msgstr "Uppdatera spår från fil"
+
+#: src/context_menus.c:414
+msgid "Sync Playlist with Dir(s)"
+msgstr "Synkronisera spellista med katalog(er)"
 
 #: src/context_menus.c:424
-msgid "Edit Repository Properties"
-msgstr "Redigera arkivegenskaper"
-
-#: src/context_menus.c:428
-msgid "Edit iPod Properties"
-msgstr "Redigera iPod-egenskaper"
-
-#: src/context_menus.c:436
-msgid "Alphabetize"
-msgstr "Sortera alfabetiskt"
-
-#: src/context_menus.c:460
-msgid "Delete From iPod"
-msgstr "Ta bort från iPod"
-
-#: src/context_menus.c:466
-msgid "Delete From Harddisk"
-msgstr "Ta bort från hårddisk"
-
-#: src/context_menus.c:472
-msgid "Delete From Database"
-msgstr "Ta bort från databas"
-
-#: src/context_menus.c:478
-msgid "Delete From Playlist"
-msgstr "Ta bort från spellista"
-
-#: src/context_menus.c:497
-msgid "Delete Including Tracks"
-msgstr "Ta bort inklusive spår"
-
-#: src/context_menus.c:503
-msgid "Delete Including Tracks (Harddisk)"
-msgstr "Ta bort inklusive spår (hårddisk)"
-
-#: src/context_menus.c:509
-msgid "Delete Including Tracks (Database)"
-msgstr "Ta bort inklusive spår (databas)"
-
-#: src/context_menus.c:515
-msgid "Delete But Keep Tracks"
-msgstr "Ta bort men behåll spår"
-
-#: src/context_menus.c:521
 msgid "Remove All Tracks from iPod"
 msgstr "Ta bort alla spår från iPod"
 
-#: src/context_menus.c:527
-msgid "Remove All Tracks from Database"
-msgstr "Ta bort alla spår från databasen"
-
-#: src/context_menus.c:534
+#: src/context_menus.c:442
 msgid "Remove All Podcasts from iPod"
 msgstr "Ta bort alla podradiosändningar från iPod"
 
-#: src/context_menus.c:543
+#: src/context_menus.c:457
+msgid "Delete Including Tracks"
+msgstr "Ta bort inklusive spår"
+
+#: src/context_menus.c:465
+msgid "Delete But Keep Tracks"
+msgstr "Ta bort men behåll spår"
+
+#: src/context_menus.c:473
+msgid "Edit iPod Properties"
+msgstr "Redigera iPod-egenskaper"
+
+#: src/context_menus.c:493
 msgid "Load iPod"
 msgstr "Ladda iPod"
 
-#: src/context_menus.c:549
+#: src/context_menus.c:500
 msgid "Eject iPod"
 msgstr "Mata ut iPod"
+
+#: src/context_menus.c:517
+msgid "Remove All Tracks from Database"
+msgstr "Ta bort alla spår från databasen"
+
+#: src/context_menus.c:532
+msgid "Delete Including Tracks (Harddisk)"
+msgstr "Ta bort inklusive spår (hårddisk)"
+
+#: src/context_menus.c:540
+msgid "Delete Including Tracks (Database)"
+msgstr "Ta bort inklusive spår (databas)"
+
+#: src/context_menus.c:548
+msgid "Delete From iPod"
+msgstr "Ta bort från iPod"
+
+#: src/context_menus.c:556
+msgid "Delete From Playlist"
+msgstr "Ta bort från spellista"
+
+#: src/context_menus.c:564
+msgid "Delete From Harddisk"
+msgstr "Ta bort från hårddisk"
+
+#: src/context_menus.c:572
+msgid "Delete From Database"
+msgstr "Ta bort från databas"
+
+#: src/context_menus.c:580
+msgid "Alphabetize"
+msgstr "Sortera alfabetiskt"
+
+#: src/context_menus.c:596
+msgid "Edit Playlist Properties"
+msgstr "Redigera spellisteegenskaper"
 
 #: src/date_parser.l:269
 #, c-format
 msgid "Date format error: unrecognized character: '%s'\n"
 msgstr "Fel i datumformat: tecknet känns inte igen: '%s'\n"
 
-#: src/details.c:1171
+#: src/details.c:1177
 msgid "<b>n/a</b>"
 msgstr "<b>ej tillgänglig</b>"
 
-#: src/display.c:876 src/display.c:1007 src/display.c:1054 src/display.c:1279
-#: src/display.c:1333 src/display.c:1386 src/display.c:1435 src/display.c:1597
-#: src/misc_playlist.c:274
-msgid "No playlist selected"
-msgstr "Ingen spellista markerad"
-
-#: src/display.c:886
+#: src/display.c:891
 msgid "Edit selected entry of which sort tab?"
 msgstr "Redigera markerad rad för vilken sorts flik?"
 
 #. no entry selected
-#: src/display.c:893 src/misc_confirm.c:431 src/misc_track.c:1589
+#: src/display.c:898 src/misc_confirm.c:431 src/misc_track.c:1592
 msgid "No entry selected."
 msgstr "Ingen rad markerad."
 
-#: src/display.c:912 src/display.c:1025 src/display.c:1320 src/display.c:1374
-#: src/display.c:1423 src/display.c:1472
-msgid "No tracks selected"
-msgstr "Inga spår markerade"
-
-#: src/display.c:1041 src/display.c:1299 src/display.c:1353 src/display.c:1403
-#: src/display.c:1452 src/display.c:1619
+#: src/display.c:1057 src/display.c:1384 src/display.c:1440 src/display.c:1494
+#: src/display.c:1549 src/display.c:1810
 #, c-format
 msgid "No entry selected in Sort Tab %d"
 msgstr "Ingen rad markerad i sorteringsflik %d"
 
-#: src/display.c:1078
+#: src/display.c:1096
 msgid "Remove entry of which sort tab from database?"
 msgstr "Ta bort rad för vilken sorts flik från databasen?"
 
-#: src/display.c:1086
+#: src/display.c:1104
 msgid "Remove tracks in selected entry of which filter tab from the iPod?"
 msgstr "Ta bort spår i markerad rad för vilken sorts filterflik från iPod?"
 
-#: src/display.c:1108
+#: src/display.c:1126
 msgid "Remove tracks in selected entry of which filter tab from the harddisk?"
 msgstr ""
 "Ta bort spår i markerad rad för vilken sorts filterflik från hårddisken?"
 
-#: src/display.c:1138
+#: src/display.c:1156
 msgid "Remove tracks in selected entry of which filter tab from playlist?"
 msgstr ""
 "Ta bort spår i markerad rad för vilken sorts filterflik från spellistan?"
 
-#: src/display.c:1157
-msgid "Currently no iPod database selected"
-msgstr "För närvarande är ingen iPod-databas markerad"
+#: src/display.c:1183 src/display.c:1221
+#, c-format
+msgid ""
+"iPod at '%s' is not loaded.\n"
+"Please load it first."
+msgstr ""
 
-#: src/display.c:1185 src/display.c:1212
+#: src/display.c:1265 src/display.c:1292
 msgid "Update selected entry of which sort tab?"
 msgstr "Uppdatera markerad rad för vilken sorts flik?"
 
-#. no playlist selected
-#. no playlist??? Cannot happen, but...
-#. no playlist selected
-#: src/display.c:1227 src/misc_confirm.c:334 src/misc_confirm.c:422
-#: src/misc_confirm.c:672 src/misc_track.c:1616
-msgid "No playlist selected."
-msgstr "Ingen spellista markerad."
-
-#: src/display.c:1293
+#: src/display.c:1378
 msgid "Export selected entry of which sort tab?"
 msgstr "Exportera markerad rad för vilken sorts flik?"
 
-#: src/display.c:1347
+#: src/display.c:1434
 msgid "Create playlist file from selected entry of which sort tab?"
 msgstr "Skapa spellistefil från markerad rad för vilken sorts flik?"
 
-#: src/display.c:1397
+#: src/display.c:1488
 msgid "Play tracks in selected entry of which sort tab?"
 msgstr "Spela spår i markerad rad för vilken sorts flik?"
 
-#: src/display.c:1446
+#: src/display.c:1543
 msgid "Enqueue tracks in selected entry of which sort tab?"
 msgstr "Köa spår i markerad rad för vilken sorts flik?"
 
-#: src/display.c:1609
+#: src/display.c:1800
 msgid "Normalize tracks in selected entry of which sort tab?"
 msgstr "Normalisera spår i markerad rad för vilken sorts flik?"
 
@@ -2262,42 +2245,42 @@ msgstr "Normalisera spår i markerad rad för vilken sorts flik?"
 msgid "Failed to set cover art: '%s'"
 msgstr "Misslyckades ange omslagsbild: '%s'"
 
-#: src/display_itdb.c:794 src/display_itdb.c:929 src/repository.c:1126
+#: src/display_itdb.c:794 src/display_itdb.c:926 src/repository.c:1189
 msgid "iPod"
 msgstr "iPod"
 
-#: src/display_itdb.c:803 src/display_itdb.c:927
+#: src/display_itdb.c:803 src/display_itdb.c:924
 msgid "Local"
 msgstr "Lokal"
 
 #. add podcast playlist
-#: src/display_itdb.c:811 src/display_itdb.c:925 src/display_itdb.c:953
+#: src/display_itdb.c:811 src/display_itdb.c:922 src/display_itdb.c:950
 msgid "Podcasts"
 msgstr "Podradiosändningar"
 
-#: src/display_itdb.c:1012
+#: src/display_itdb.c:1009
 #, c-format
 msgid "Increased playcount for '%s'"
 msgstr "ökade spelningsantal för '%s'"
 
 #. give a notice on the statusbar -- otherwise the user
 #. * will never know why the drag is not possible
-#: src/display_playlists.c:493 src/display_playlists.c:535
+#: src/display_playlists.c:496 src/display_playlists.c:538
 msgid "Error: drag from iPod not possible in offline mode."
 msgstr "Fel: att dra från iPod är inte möjligt i nerkopplat läge."
 
-#: src/display_playlists.c:562 src/display_songs.c:287
+#: src/display_playlists.c:565 src/display_songs.c:287
 #, c-format
 msgid "Copied one track"
 msgid_plural "Copied %d tracks"
 msgstr[0] "Kopierade ett spår"
 msgstr[1] "Kopierade %d spår"
 
-#: src/display_playlists.c:848
+#: src/display_playlists.c:851
 msgid "Can't reorder sorted treeview."
 msgstr "Kan inte ordna om sorterad trädvy."
 
-#: src/display_playlists.c:939
+#: src/display_playlists.c:944
 #, c-format
 msgid ""
 "This DND type (%d) is not (yet) supported. If you feel implementing this "
@@ -2315,7 +2298,7 @@ msgid_plural "Moved %d tracks"
 msgstr[0] "Flyttade ett spår"
 msgstr[1] "Flyttade %d spår"
 
-#: src/display_songs.c:1678
+#: src/display_songs.c:1682
 #, c-format
 msgid ""
 "Cannot unsort track view because of a bug in the GTK lib you are using (%d.%"
@@ -2328,88 +2311,88 @@ msgstr ""
 "tillbaka till det osorterade tillståndet.\n"
 "\n"
 
-#: src/display_songs.c:1909
+#: src/display_songs.c:1913
 msgid "Rtng"
 msgstr "Betyg"
 
-#: src/display_songs.c:1912
+#: src/display_songs.c:1916
 msgid "#"
 msgstr "#"
 
-#: src/display_songs.c:1915
+#: src/display_songs.c:1919
 msgid "CD"
 msgstr "Cd"
 
-#: src/display_songs.c:1918
+#: src/display_songs.c:1922
 msgid "ID"
 msgstr "Id"
 
-#: src/display_songs.c:1921
+#: src/display_songs.c:1925
 msgid "Trnsfrd"
 msgstr "Överfört"
 
-#: src/display_songs.c:1925
+#: src/display_songs.c:1929
 msgid "Cmpl"
 msgstr "Komp."
 
-#: src/display_songs.c:1931 src/display_spl.c:94
+#: src/display_songs.c:1935 src/display_spl.c:94
 msgid "Time"
 msgstr "Tid"
 
-#: src/display_songs.c:1934
+#: src/display_songs.c:1938
 msgid "Plycnt"
 msgstr "Speln."
 
-#: src/display_songs.c:1946
+#: src/display_songs.c:1950
 msgid "Released"
 msgstr "Utgiven"
 
-#: src/display_songs.c:1949 src/display_sorttabs.c:2856 src/display_spl.c:88
+#: src/display_songs.c:1953 src/display_sorttabs.c:2957 src/display_spl.c:88
 #: src/misc_conversion.c:85
 msgid "Year"
 msgstr "År"
 
-#: src/display_songs.c:1952
+#: src/display_songs.c:1956
 msgid "Vol."
 msgstr "Vol."
 
-#: src/display_songs.c:1955
+#: src/display_songs.c:1959
 msgid "Sndchk."
 msgstr "Ljudkontr."
 
-#: src/display_sorttabs.c:400
+#: src/display_sorttabs.c:456
 msgid "'Played' condition ignored because of error."
 msgstr "Tillståndet 'Spelad' ignoreras på grund av fel."
 
-#: src/display_sorttabs.c:403
+#: src/display_sorttabs.c:459
 msgid "'Modified' condition ignored because of error."
 msgstr "Tillståndet 'Ändrad' ignoreras på grund av fel."
 
-#: src/display_sorttabs.c:406
+#: src/display_sorttabs.c:462
 msgid "'Added' condition ignored because of error."
 msgstr "Tillståndet 'Tillagd' ignoreras på grund av fel."
 
-#: src/display_sorttabs.c:1492 src/misc_conversion.c:60
+#: src/display_sorttabs.c:1582 src/misc_conversion.c:60
 msgid "All"
 msgstr "Alla"
 
-#: src/display_sorttabs.c:1518
+#: src/display_sorttabs.c:1608
 msgid "Compilations"
 msgstr "Samlingar"
 
-#: src/display_sorttabs.c:2850
+#: src/display_sorttabs.c:2951
 msgid "Comp."
 msgstr "Komp."
 
-#: src/display_sorttabs.c:2859
+#: src/display_sorttabs.c:2960
 msgid "Special"
 msgstr "Special"
 
-#: src/display_sorttabs.c:3115
+#: src/display_sorttabs.c:3216
 msgid "Last Played"
 msgstr "Senast spelad"
 
-#: src/display_sorttabs.c:3116
+#: src/display_sorttabs.c:3217
 msgid "Last Modified"
 msgstr "Senast ändrad"
 
@@ -2433,7 +2416,7 @@ msgstr "kbps"
 msgid "Hz"
 msgstr "Hz"
 
-#: src/display_spl.c:75 src/display_spl.c:160 src/info.c:761
+#: src/display_spl.c:75 src/display_spl.c:160 src/info.c:777
 msgid "MB"
 msgstr "Mibyte"
 
@@ -2568,7 +2551,7 @@ msgstr "spår"
 msgid "hours"
 msgstr "timmar"
 
-#: src/display_spl.c:163 src/info.c:761
+#: src/display_spl.c:163 src/info.c:777
 msgid "GB"
 msgstr "Gibyte"
 
@@ -2624,25 +2607,25 @@ msgstr "högst betyg"
 msgid "lowest rating"
 msgstr "lägst betyg"
 
-#: src/display_spl.c:1051 src/display_spl.c:1066
+#: src/display_spl.c:1047 src/display_spl.c:1062
 msgid "to"
 msgstr "till"
 
-#: src/display_spl.c:1278
+#: src/display_spl.c:1279
 msgid "-"
 msgstr "-"
 
-#: src/display_spl.c:1288
+#: src/display_spl.c:1294
 msgid "+"
 msgstr "+"
 
-#: src/display_spl.c:1505 src/misc_playlist.c:67 src/misc_playlist.c:69
-#: src/misc_playlist.c:94 src/misc_playlist.c:96 src/misc_playlist.c:412
-#: src/misc_playlist.c:414
+#: src/display_spl.c:1513 src/misc_playlist.c:67 src/misc_playlist.c:69
+#: src/misc_playlist.c:94 src/misc_playlist.c:96 src/misc_playlist.c:429
+#: src/misc_playlist.c:431
 msgid "New Playlist"
 msgstr "Ny spellista"
 
-#: src/file.c:199
+#: src/file.c:230
 #, c-format
 msgid ""
 "'%s' is a directory, not a playlist file.\n"
@@ -2651,7 +2634,7 @@ msgstr ""
 "'%s' är en katalog, inte en spellistefil.\n"
 "\n"
 
-#: src/file.c:227
+#: src/file.c:258
 #, c-format
 msgid ""
 "'%s' is a not a known playlist file.\n"
@@ -2660,7 +2643,7 @@ msgstr ""
 "'%s' är inte en känd spellistefil.\n"
 "\n"
 
-#: src/file.c:244
+#: src/file.c:275
 #, c-format
 msgid ""
 "Cannot open '%s' for reading.\n"
@@ -2669,54 +2652,54 @@ msgstr ""
 "Kan inte öppna '%s' för läsning.\n"
 "\n"
 
-#: src/file.c:328
+#: src/file.c:359
 #, c-format
 msgid "Skipping '%s' because it is a directory.\n"
 msgstr "Hoppar över '%s' eftersom det är en katalog.\n"
 
-#: src/file.c:333
+#: src/file.c:364
 #, c-format
 msgid "Skipping '%s' to avoid adding playlist file recursively\n"
 msgstr ""
 "Hoppar över '%s' för att undvika att spellistfiler läggs till rekursivt.\n"
 
-#: src/file.c:588
+#: src/file.c:619
 #, c-format
 msgid "Unknown token '%s' in template '%s'\n"
 msgstr "Okänd beteckning '%s' i mallen '%s'\n"
 
-#: src/file.c:842
+#: src/file.c:871
 #, c-format
 msgid "Local filename not valid (%s)"
 msgstr "Lokalt filnamn inte giltigt (%s)"
 
-#: src/file.c:899
+#: src/file.c:930
 #, c-format
 msgid "No information found for user '%s' in '%s'"
 msgstr "Ingen information hittades för användaren '%s' i '%s'"
 
-#: src/file.c:906
+#: src/file.c:939
 #, c-format
 msgid "mserv data file (%s) not available for track (%s)"
 msgstr "Datafilen från mserv (%s) är inte tillgänglig för spåret (%s)"
 
-#: src/file.c:914
+#: src/file.c:947
 #, c-format
 msgid "Track (%s) not in mserv music root directory (%s)"
 msgstr "Spåret (%s) finns inte i mserv rotkatalog för musik (%s)"
 
-#: src/file.c:1021
+#: src/file.c:1055
 #, c-format
 msgid ""
 "The following track could not be processed (file does not exist): '%s'\n"
 msgstr "Följande spår kunde inte behandlas (filen finns inte): '%s'\n"
 
-#: src/file.c:1084
+#: src/file.c:1118
 #, c-format
 msgid "The following track could not be processed (filetype unknown): '%s'\n"
 msgstr "Följande spår kunde inte behandlas (filtypen okänd): '%s'\n"
 
-#: src/file.c:1171
+#: src/file.c:1209
 #, c-format
 msgid ""
 "The following track could not be processed (filetype is known but analysis "
@@ -2725,33 +2708,33 @@ msgstr ""
 "Följande spår kunde inte behandlas (filtypen känd, men analys misslyckades): "
 "'%s'\n"
 
-#: src/file.c:1201 src/file.c:1254
+#: src/file.c:1239 src/file.c:1293
 msgid "Nothing to update"
 msgstr "Ingenting att uppdatera"
 
-#: src/file.c:1221
+#: src/file.c:1260
 #, c-format
 msgid "Updating %s"
 msgstr "Uppdaterar %s"
 
-#: src/file.c:1235
+#: src/file.c:1274
 msgid "Updated selected tracks with info from file."
 msgstr "Uppdaterar markerade spår med information från fil."
 
-#: src/file.c:1266
+#: src/file.c:1308
 #, c-format
 msgid "Retrieving mserv data %s"
 msgstr "Hämtar data från mserv %s"
 
-#: src/file.c:1271
+#: src/file.c:1313
 msgid "no filename available"
 msgstr "inget filnamn tillgängligt"
 
-#: src/file.c:1276
+#: src/file.c:1318
 msgid "Updated selected tracks with data from mserv."
 msgstr "Uppdaterar markerade spår med data från mserv."
 
-#: src/file.c:1297
+#: src/file.c:1339
 #, c-format
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
@@ -2760,11 +2743,11 @@ msgstr[1] "Följande %d spår kunde inte uppdateras"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1303
+#: src/file.c:1345
 msgid "Failed Track Update"
 msgstr "Uppdatering av spår misslyckades"
 
-#: src/file.c:1361
+#: src/file.c:1403
 #, c-format
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
@@ -2773,11 +2756,11 @@ msgstr[1] "Följande %d spår har uppdaterats"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1367
+#: src/file.c:1409
 msgid "Successful Track Update"
 msgstr "Uppdatering av spår lyckades"
 
-#: src/file.c:1426
+#: src/file.c:1468
 #, c-format
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
@@ -2787,41 +2770,46 @@ msgstr[1] "Ingen information kunde hämtas från mserv för följande %d spår"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:1432
+#: src/file.c:1474
 msgid "mserv data retrieval problem"
 msgstr "Problem att hämta data från mserv"
 
-#: src/file.c:1524
+#: src/file.c:1563
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr "inget lokalt filnamn tillgängligt, filen på iPod används istället"
 
-#: src/file.c:1530
+#: src/file.c:1569
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr "inget lokalt filnamn tillgängligt och kopian på iPod kan inte hittas"
 
-#: src/file.c:1534 src/file.c:1552
+#: src/file.c:1573 src/file.c:1591
 msgid "no local filename available"
 msgstr "inget lokalt filnamn tillgängligt"
 
-#: src/file.c:1542
+#: src/file.c:1581
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr "den lokala filen kunde inte hittas, filen på iPod används istället"
 
-#: src/file.c:1548
+#: src/file.c:1587
 msgid "local file as well as copy on the iPod cannot be found"
 msgstr "den lokala filen samt kopian på iPod kan inte hittas"
 
 #. update not successful -- log this track for later display
-#: src/file.c:1609
+#: src/file.c:1648
 msgid "update failed (format no supported?)"
 msgstr "uppdatering misslyckades (formatet stöds kanske inte)"
 
-#: src/file.c:1691
+#: src/file.c:1731
 #, c-format
 msgid "Processing '%s'..."
 msgstr "Behandlar '%s'..."
 
-#: src/file.c:1800 src/misc_track.c:1275 src/misc_track.c:1331
+#: src/file.c:1737
+#, c-format
+msgid "File skipped. match exclude masks: '%s'\n"
+msgstr ""
+
+#: src/file.c:1849 src/misc_track.c:1278 src/misc_track.c:1334
 #, c-format
 msgid ""
 "Podcast already present: '%s'\n"
@@ -2830,7 +2818,7 @@ msgstr ""
 "Podradiosändning finns redan: '%s'\n"
 "\n"
 
-#: src/file.c:1861
+#: src/file.c:1910
 #, c-format
 msgid ""
 "Writing to video files not yet supported (%s).\n"
@@ -2839,35 +2827,35 @@ msgstr ""
 "Att skriva till videofiler stöds inte än (%s).\n"
 "\n"
 
-#: src/file.c:1916 src/file.c:1930
+#: src/file.c:1962 src/file.c:1976
 #, c-format
 msgid "Couldn't change tags of file: %s\n"
 msgstr "Kunde inte ändra taggar för filen: %s\n"
 
-#: src/file.c:2122
+#: src/file.c:2073
 #, c-format
 msgid "Could not open '%s' for reading and writing.\n"
 msgstr "Kunde inte öppna '%s' för läsning och skrivning.\n"
 
-#: src/file.c:2129
+#: src/file.c:2080
 #, c-format
 msgid "Could not obtain lock on '%s'.\n"
 msgstr "Kunde inte låsa '%s'.\n"
 
 #. error!
-#: src/file.c:2146 src/file.c:2155 src/file.c:2166 src/file.c:2176
+#: src/file.c:2097 src/file.c:2106 src/file.c:2117 src/file.c:2127
 #, c-format
 msgid "Malformed line in '%s': %s\n"
 msgstr "Felaktig rad i '%s': %s\n"
 
 #. gint id,
 #. gboolean modal,
-#: src/file.c:2205
+#: src/file.c:2156
 msgid "Remove offline playcounts?"
 msgstr "Ta bort nerkopplade spelningsantal?"
 
 #. title
-#: src/file.c:2206
+#: src/file.c:2157
 msgid ""
 "Some tracks played offline could not be found in the iTunesDB. Press 'OK' to "
 "remove them from the offline playcount file, 'Cancel' to keep them."
@@ -2876,12 +2864,12 @@ msgstr ""
 "Klicka på 'Ok' för att ta bort dem från filen med nerkopplade "
 "spelningsantal, eller 'Avbryt' för att behålla dem."
 
-#: src/file.c:2223
+#: src/file.c:2174
 #, c-format
 msgid "Error writing to '%s'.\n"
 msgstr "Fel vid skrivning till '%s'.\n"
 
-#: src/file.c:2272
+#: src/file.c:2229 src/tools.c:269
 #, c-format
 msgid ""
 "Normalization failed: file type not supported (%s).\n"
@@ -2890,7 +2878,7 @@ msgstr ""
 "Normalisering misslyckades: Filtypen stöds inte (%s).\n"
 "\n"
 
-#: src/file.c:2288
+#: src/file.c:2245 src/tools.c:286
 #, c-format
 msgid ""
 "Normalization failed: file not available (%s).\n"
@@ -2924,62 +2912,62 @@ msgstr "Fel vid kopiering av '%s' till '%s' (%s)\n"
 msgid "Unable to open '%s' for reading\n"
 msgstr "Kan inte öppna '%s' för läsning.\n"
 
-#: src/file_export.c:325
+#: src/file_export.c:327
 #, c-format
 msgid "Could find file for '%s' on the iPod\n"
 msgstr "Kunde hitta fil för '%s' på iPod\n"
 
 #. create the dialog window
-#: src/file_export.c:393 src/file_itunesdb.c:1215 src/tools.c:148
+#: src/file_export.c:395 src/file_itunesdb.c:1230 src/tools.c:359
 msgid "Information"
 msgstr "Information"
 
-#: src/file_export.c:404 src/tools.c:160
+#: src/file_export.c:406 src/tools.c:371
 msgid "Press button to abort."
 msgstr "Tryck på knappen för att avbryta."
 
-#: src/file_export.c:417
+#: src/file_export.c:419
 msgid "copying..."
 msgstr "kopierar..."
 
-#: src/file_export.c:470
+#: src/file_export.c:472
 #, c-format
 msgid "Failed to write '%s-%s'\n"
 msgstr "Misslyckades skriva '%s-%s'\n"
 
-#: src/file_export.c:478
+#: src/file_export.c:485
 #, c-format
 msgid "Copied %d of %d track."
 msgid_plural "Copied %d of %d tracks."
 msgstr[0] "Kopierade %d av %d spår."
 msgstr[1] "Kopierade %d av %d spår."
 
-#: src/file_export.c:494 src/file_itunesdb.c:1476 src/tools.c:304
+#: src/file_export.c:501 src/file_itunesdb.c:1495 src/tools.c:517
 #, c-format
 msgid "%d%% (%d:%02d:%02d left)"
 msgstr "%d%% (%d:%02d:%02d kvar)"
 
-#: src/file_export.c:503
+#: src/file_export.c:510
 msgid "Some tracks were not copied."
 msgstr "Några spår kopierades inte."
 
-#: src/file_export.c:560
+#: src/file_export.c:575
 msgid "Export from iPod database not possible in offline mode."
 msgstr "Export från iPod-databasen är inte möjlig i nerkopplat läge."
 
-#: src/file_export.c:568
+#: src/file_export.c:583
 msgid "Select Export Destination Directory"
 msgstr "Välj målkatalog för export"
 
-#: src/file_export.c:717
+#: src/file_export.c:732
 msgid "Drag from iPod database not possible in offline mode."
 msgstr "Att dra från iPod-databasen är inte möjlig i nerkopplat läge."
 
-#: src/file_export.c:751
+#: src/file_export.c:766
 msgid "The following tracks have to be copied to your harddisk"
 msgstr "Följande spår måste kopieras till din hårddisk"
 
-#: src/file_export.c:796
+#: src/file_export.c:811
 msgid ""
 "Some tracks were not copied to your harddisk. Only the copied tracks will be "
 "included in the current drag and drop operation.\n"
@@ -2989,7 +2977,7 @@ msgstr ""
 "kommer att ingå i den nuvarande drag och släpp åtgärden.\n"
 "\n"
 
-#: src/file_export.c:991
+#: src/file_export.c:1006
 #, c-format
 msgid ""
 "No valid filename for: %s\n"
@@ -2998,14 +2986,14 @@ msgstr ""
 "Inget giltigt filnamn för: %s\n"
 "\n"
 
-#: src/file_export.c:1007
+#: src/file_export.c:1022
 #, c-format
 msgid "Created playlist with one track."
 msgid_plural "Created playlist with %d tracks."
 msgstr[0] "Skapade spellista med ett spår."
 msgstr[1] "Skapade spellista med %d spår."
 
-#: src/file_export.c:1012
+#: src/file_export.c:1027
 #, c-format
 msgid ""
 "Could not open '%s' for writing (%s).\n"
@@ -3014,25 +3002,25 @@ msgstr ""
 "Kunde inte öppna '%s' för skrivning (%s).\n"
 "\n"
 
-#: src/file_itunesdb.c:120
+#: src/file_itunesdb.c:115
 #, c-format
 msgid "Matching MD5 checksum for file %d/%d"
 msgstr "Matchande MD5-checksumma för filen %d/%d"
 
-#: src/file_itunesdb.c:249
+#: src/file_itunesdb.c:223
 msgid "Could not open \"iTunesDB.ext\" for reading extended info.\n"
 msgstr "Kunde inte öppna \"iTunesDB.ext\" för att läsa utökad information.\n"
 
-#: src/file_itunesdb.c:256
+#: src/file_itunesdb.c:230
 msgid "Could not create hash value from itunesdb\n"
 msgstr "Kunde inte skapa checksumma från itunesdb\n"
 
-#: src/file_itunesdb.c:270
+#: src/file_itunesdb.c:244
 #, c-format
 msgid "Error while reading extended info: %s\n"
 msgstr "Fel vid läsning av utökad information: %s\n"
 
-#: src/file_itunesdb.c:287
+#: src/file_itunesdb.c:261
 #, c-format
 msgid ""
 "iTunesDB '%s' does not match checksum in extended information file '%s'\n"
@@ -3046,7 +3034,7 @@ msgstr ""
 "Det kan ta lång tid.\n"
 "\n"
 
-#: src/file_itunesdb.c:299
+#: src/file_itunesdb.c:273
 #, c-format
 msgid ""
 "%s:\n"
@@ -3055,7 +3043,7 @@ msgstr ""
 "%s:\n"
 "Förväntande \"itunesdb_hash=\", men hittade \"%s\"\n"
 
-#: src/file_itunesdb.c:359
+#: src/file_itunesdb.c:333
 #, c-format
 msgid ""
 "%s:\n"
@@ -3064,7 +3052,7 @@ msgstr ""
 "%s:\n"
 "Formatfel: %s\n"
 
-#: src/file_itunesdb.c:418
+#: src/file_itunesdb.c:377
 msgid ""
 "No MD5 checksums on individual tracks are available.\n"
 "\n"
@@ -3080,7 +3068,7 @@ msgstr ""
 "med andra program än gtkpod.\n"
 "\n"
 
-#: src/file_itunesdb.c:473
+#: src/file_itunesdb.c:439
 msgid ""
 "Extended info will not be used. If you have non-transferred tracks,\n"
 "these will be lost.\n"
@@ -3088,15 +3076,15 @@ msgstr ""
 "Utökad information kommer inte att användas. Om\n"
 "du har spår som inte överförts, går de förlorade.\n"
 
-#: src/file_itunesdb.c:481
+#: src/file_itunesdb.c:447
 msgid "Offline iPod database successfully imported"
 msgstr "Nerkopplad iPod-databas importerad med lyckat resultat"
 
-#: src/file_itunesdb.c:484
+#: src/file_itunesdb.c:450
 msgid "Local database successfully imported"
 msgstr "Lokal databas importerad med lyckat resultat"
 
-#: src/file_itunesdb.c:492
+#: src/file_itunesdb.c:458
 #, c-format
 msgid ""
 "Offline iPod database import failed: '%s'\n"
@@ -3105,7 +3093,7 @@ msgstr ""
 "Import av nerkopplad iPod-databas misslyckades: '%s'\n"
 "\n"
 
-#: src/file_itunesdb.c:496
+#: src/file_itunesdb.c:462
 #, c-format
 msgid ""
 "Local database import failed: '%s'\n"
@@ -3114,7 +3102,7 @@ msgstr ""
 "Import av lokal databas misslyckades: '%s'\n"
 "\n"
 
-#: src/file_itunesdb.c:503
+#: src/file_itunesdb.c:469
 msgid ""
 "Offline iPod database import failed: \n"
 "\n"
@@ -3122,7 +3110,7 @@ msgstr ""
 "Import av nerkopplad iPod-databas misslyckades: \n"
 "\n"
 
-#: src/file_itunesdb.c:506
+#: src/file_itunesdb.c:472
 msgid ""
 "Local database import failed: \n"
 "\n"
@@ -3130,7 +3118,7 @@ msgstr ""
 "Import av lokal databas misslyckades: \n"
 "\n"
 
-#: src/file_itunesdb.c:513
+#: src/file_itunesdb.c:479
 #, c-format
 msgid ""
 "'%s' does not exist. Import aborted.\n"
@@ -3139,15 +3127,15 @@ msgstr ""
 "'%s' finns inte. Import avbruten.\n"
 "\n"
 
-#: src/file_itunesdb.c:536
+#: src/file_itunesdb.c:502
 msgid "Extended info will not be used.\n"
 msgstr "Utökad information kommer inte att användas.\n"
 
-#: src/file_itunesdb.c:543
+#: src/file_itunesdb.c:509
 msgid "iPod Database Successfully Imported"
 msgstr "iPod-databasen importerad med lyckat resultat"
 
-#: src/file_itunesdb.c:550
+#: src/file_itunesdb.c:516
 #, c-format
 msgid ""
 "iPod Database Import Failed: '%s'\n"
@@ -3156,7 +3144,7 @@ msgstr ""
 "Import av iPod-databasen misslyckades: '%s'\n"
 "\n"
 
-#: src/file_itunesdb.c:556
+#: src/file_itunesdb.c:522
 msgid ""
 "iPod Database Import Failed.\n"
 "\n"
@@ -3164,7 +3152,7 @@ msgstr ""
 "Import av iPod-databasen misslyckades.\n"
 "\n"
 
-#: src/file_itunesdb.c:565
+#: src/file_itunesdb.c:531
 #, c-format
 msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
@@ -3173,16 +3161,26 @@ msgstr ""
 "'%s' (eller liknande) finns inte. Import avbruten.\n"
 "\n"
 
-#: src/file_itunesdb.c:1038
+#: src/file_itunesdb.c:817
+#, c-format
+msgid ""
+"Could not find iPod directory structure at '%s'.\n"
+"If you are sure that the iPod is properly mounted at '%s', gtkpod can create "
+"the directory structure for you.\n"
+"\n"
+"Do you want to create the directory structure now?\n"
+msgstr ""
+
+#: src/file_itunesdb.c:1071
 #, c-format
 msgid "Could not open \"%s\" for writing extended info.\n"
 msgstr "Kunde inte öppna \"%s\" för att skriva utökad information.\n"
 
-#: src/file_itunesdb.c:1053
+#: src/file_itunesdb.c:1086
 msgid "Aborted writing of extended info.\n"
 msgstr "Avbröt skrivning av utökad information.\n"
 
-#: src/file_itunesdb.c:1226
+#: src/file_itunesdb.c:1241
 msgid ""
 "Press button to abort.\n"
 "Export can be continued at a later time."
@@ -3190,26 +3188,26 @@ msgstr ""
 "Tryck på knappen för att avbryta.\n"
 "Exporten kan fortsättas vid ett senare tillfälle."
 
-#: src/file_itunesdb.c:1295
+#: src/file_itunesdb.c:1310
 msgid "deleting..."
 msgstr "tar bort..."
 
-#: src/file_itunesdb.c:1398
+#: src/file_itunesdb.c:1413
 msgid "preparing to copy..."
 msgstr "förbereder kopiering..."
 
-#: src/file_itunesdb.c:1461
+#: src/file_itunesdb.c:1480
 #, c-format
 msgid "Copied %d of %d new track."
 msgid_plural "Copied %d of %d new tracks."
 msgstr[0] "Kopierade %d av %d nya spår."
 msgstr[1] "Kopierade %d av %d nya spår."
 
-#: src/file_itunesdb.c:1487
+#: src/file_itunesdb.c:1506
 msgid "Some tracks were not written to iPod. Export aborted!"
 msgstr "Vissa spår skrevs inte till iPod. Export avbruten."
 
-#: src/file_itunesdb.c:1538
+#: src/file_itunesdb.c:1557
 #, c-format
 msgid ""
 "You did not import the existing iTunesDB ('%s'). This is most likely "
@@ -3226,7 +3224,7 @@ msgstr ""
 "lagringen. Om du avbryter, kan du importera befintlig databas innan du "
 "använder den här funktionen igen.\n"
 
-#: src/file_itunesdb.c:1569
+#: src/file_itunesdb.c:1588
 msgid ""
 "iPod directory structure must be present before synching to the iPod can be "
 "performed.\n"
@@ -3234,25 +3232,25 @@ msgstr ""
 "Katalogstrukturen i iPod måste finnas innan synkronisering av iPod kan "
 "utföras.\n"
 
-#: src/file_itunesdb.c:1578
+#: src/file_itunesdb.c:1597
 msgid "Some tracks could not be deleted from the iPod. Export aborted!"
 msgstr "Vissa spår kunde inte tas bort från iPod. Export avbruten."
 
-#: src/file_itunesdb.c:1594
+#: src/file_itunesdb.c:1613
 msgid "Now writing database. Please wait..."
 msgstr "Skriver nu databas. Vänta..."
 
-#: src/file_itunesdb.c:1640
+#: src/file_itunesdb.c:1659
 #, c-format
 msgid "Extended information file not deleted: '%s'"
 msgstr "Filen med utökad information inte borttagen: '%s'"
 
-#: src/file_itunesdb.c:1726
+#: src/file_itunesdb.c:1745
 #, c-format
 msgid "%s: Database saved"
 msgstr "%s: Databas sparad"
 
-#: src/file_itunesdb.c:1730
+#: src/file_itunesdb.c:1749
 #, c-format
 msgid "%s: Changes saved"
 msgstr "%s: Ändringar sparade"
@@ -3266,29 +3264,29 @@ msgid "Some files were not added successfully"
 msgstr "Vissa filer kunde inte läggas till med lyckat resultat"
 
 #. Create the file chooser, and handle the response
-#: src/fileselection.c:153
+#: src/fileselection.c:157
 msgid "Add Files"
 msgstr "Lägg till filer"
 
 #. Create the file chooser, and handle the response
-#: src/fileselection.c:242
+#: src/fileselection.c:250
 msgid "Add Playlists"
 msgstr "Lägg till spellistor"
 
 #. Create the file chooser, and handle the response
-#: src/fileselection.c:289
+#: src/fileselection.c:297
 msgid "Set Cover"
 msgstr "Ange omslag"
 
-#: src/fileselection.c:693
+#: src/fileselection.c:718
 msgid "Select directory to add recursively"
 msgstr "Markera katalog att lägga till rekursivt"
 
-#: src/fileselection.c:962
+#: src/fileselection.c:989
 msgid "Ok"
 msgstr "Ok"
 
-#: src/fileselection.c:971
+#: src/fileselection.c:998
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -3351,50 +3349,68 @@ msgstr "%s: väljaren `-W %s' är tvetydig\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: väljaren `-W %s' tillåter inte något argument\n"
 
-#: src/info.c:378
+#: src/info.c:383
 msgid "n/c"
 msgstr "okänt"
 
-#: src/info.c:383 src/info.c:822
+#: src/info.c:388 src/info.c:835
 msgid "offline"
 msgstr "nerkopplad"
 
-#: src/info.c:466
+#: src/info.c:483
 #, c-format
 msgid " P:%d T:%d/%d"
 msgstr " L:%d S:%d/%d"
 
-#: src/info.c:761
+#: src/info.c:777
 msgid "B"
 msgstr "byte"
 
-#: src/info.c:761
+#: src/info.c:777
 msgid "kB"
 msgstr "Kibyte"
 
-#: src/info.c:761
+#: src/info.c:777
 msgid "TB"
 msgstr "Tibyte"
 
-#: src/info.c:807
+#: src/info.c:820
 #, c-format
 msgid " %s Free"
 msgstr " %s fritt"
 
-#: src/info.c:812
+#: src/info.c:825
 #, c-format
 msgid " %s Pending"
 msgstr " %s återstår"
 
-#: src/info.c:817
+#: src/info.c:830
 msgid " disconnected"
 msgstr " nerkopplad"
 
-#: src/md5.c:161
+#: src/info.c:881
+#, fuzzy
+msgid "No database or playlist selected"
+msgstr "Ingen spellista markerad"
+
+#: src/info.c:886
+msgid "No tracks selected"
+msgstr "Inga spår markerade"
+
+#: src/info.c:891
+msgid "No playlist selected"
+msgstr "Ingen spellista markerad"
+
+#: src/info.c:896
+#, fuzzy
+msgid "No iPod or iPod playlist selected"
+msgstr "Ingen spellista markerad"
+
+#: src/md5.c:187
 msgid "Hashed file is 0 bytes long\n"
 msgstr "Filen med checksumma har storleken 0 byte\n"
 
-#: src/md5.c:214
+#: src/md5.c:240
 #, c-format
 msgid "Could not open '%s' to calculate MD5 checksum: %s\n"
 msgstr "Kunde inte öppna '%s' för att beräkna MD5-checksumma: %s\n"
@@ -3594,39 +3610,42 @@ msgstr ""
 "id3v2.4 skrivs\n"
 
 #: src/misc.c:145
+#, fuzzy
 msgid ""
-"James Ligget: replacement of old GTK file selection dialogs with new GTK "
-"filechooser dialogs\n"
+"James Liggett:\n"
+"     replacement of old GTK file selection dialogs with new GTK filechooser "
+"dialogs\n"
+"     refactored user preferences system.\n"
 msgstr ""
 "James Ligget: ersättning av gamla GTK dialogrutor för filmarkering med nya "
 "GTK dialogrutor för filval\n"
 
-#: src/misc.c:148
+#: src/misc.c:150
 msgid "Daniel Kercher: sync scripts for abook and webcalendar\n"
 msgstr "Daniel Kercher: synkroniseringsskript för abook och webbkalender\n"
 
-#: src/misc.c:151
+#: src/misc.c:153
 msgid "Clinton Gormley: sync scripts for thunderbird\n"
 msgstr "Clinton Gormley: synkroniseringsskript för thunderbird\n"
 
-#: src/misc.c:154
+#: src/misc.c:156
 msgid "Sebastien Beridot: sync script for ldif addressbook format\n"
 msgstr "Sebastien Beridot: synkroniseringsskript för LDIF-adressboksformat\n"
 
-#: src/misc.c:157
+#: src/misc.c:159
 msgid "Sebastian Scherer: sync script for kNotes\n"
 msgstr "Sebastian Scherer: synkroniseringsskript för Knotes\n"
 
-#: src/misc.c:160
+#: src/misc.c:162
 msgid "Nick Piper: sync script for Palm, type-ahead search\n"
 msgstr ""
 "Nick Piper: synkroniseringsskript för Palm, sökning under inskrivning\n"
 
-#: src/misc.c:163
+#: src/misc.c:165
 msgid "Uwe Hermann: help with support for iPod Video\n"
 msgstr "Uwe Hermann: hjälp med stöd för iPod-video\n"
 
-#: src/misc.c:166
+#: src/misc.c:168
 msgid ""
 "Iain Benson: support for compilation tag in mp3 files and separate display "
 "of compilations in the sort tab.\n"
@@ -3634,7 +3653,7 @@ msgstr ""
 "Iain Benson: stöd för samlingstaggen i mp3-filer och separat visning av "
 "samlingar i sorteringsfliken.\n"
 
-#: src/misc.c:168
+#: src/misc.c:170
 msgid ""
 "Nicolas Chariot: icons of buttons\n"
 "\n"
@@ -3644,11 +3663,11 @@ msgstr ""
 "\n"
 "\n"
 
-#: src/misc.c:172
+#: src/misc.c:174
 msgid "This program borrows code from the following projects:\n"
 msgstr "Detta program lånar kod från följande projekt:\n"
 
-#: src/misc.c:174
+#: src/misc.c:176
 msgid ""
 "    gnutools: (mktunes.pl, ported to C) reading and writing of iTunesDB "
 "(http://www.gnu.org/software/gnupod/)\n"
@@ -3656,7 +3675,7 @@ msgstr ""
 "    gnutools: (mktunes.pl, överförd till C) läsning och skrivning av iTunes "
 "databas (http://www.gnu.org/software/gnupod/)\n"
 
-#: src/misc.c:176
+#: src/misc.c:178
 msgid ""
 "    iPod.cpp, iPod.h by Samuel Wood (sam dot wood at gmail dot com): some "
 "code for smart playlists is based on his C++-classes.\n"
@@ -3664,40 +3683,40 @@ msgstr ""
 "    iPod.cpp, iPod.h av Samuel Wood (sam punkt wood snabela gmail punkt "
 "com): viss kod för smarta spellistor är baserad på hans C++ klasser.\n"
 
-#: src/misc.c:178
+#: src/misc.c:180
 msgid "    mp3info:  mp3 playlength detection (http://ibiblio.org/mp3info/)\n"
 msgstr ""
 "    mp3info:  detektering av MP3-spelningslängd (http://ibiblio.org/"
 "mp3info/)\n"
 
-#: src/misc.c:180
+#: src/misc.c:182
 msgid ""
 "    xmms:     dirbrowser, mp3 playlength detection (http://www.xmms.org)\n"
 msgstr ""
 "    xmms:     katalogbläddring, detektering av MP3-spelningslängd  (http://"
 "www.xmms.org)\n"
 
-#: src/misc.c:183
+#: src/misc.c:185
 msgid ""
 "The GUI was created with the help of glade-2 (http://glade.gnome.org/).\n"
 msgstr ""
 "Det grafiska gränssnittet skapades med hjälp av glade-2 (http://glade.gnome."
 "org/).\n"
 
-#: src/misc.c:198
+#: src/misc.c:200
 msgid "French:   David Le Brun (david at dyn-ns dot net)\n"
 msgstr "Franska:   David Le Brun (david snabela dyn-ns punkt net)\n"
 
-#: src/misc.c:200
+#: src/misc.c:202
 msgid "German:   Jorg Schuler (jcsjcs at users dot sourceforge dot net)\n"
 msgstr ""
 "Tyska:   Jorg Schuler (jcsjcs snabela users punkt sourceforge punkt net)\n"
 
-#: src/misc.c:202
+#: src/misc.c:204
 msgid "Hebrew: Assaf Gillat (gillata at gmail dot com)\n"
 msgstr "Hebreiska: Assaf Gillat (gillata snabela gmail punkt com)\n"
 
-#: src/misc.c:204
+#: src/misc.c:206
 msgid ""
 "Italian:  Edward Matteucci (edward_matteucc at users dot sourceforge dot "
 "net)\n"
@@ -3705,36 +3724,36 @@ msgstr ""
 "Italienska:  Edward Matteucci (edward_matteucc snabela users punkt "
 "sourceforge punkt net)\n"
 
-#: src/misc.c:206
+#: src/misc.c:208
 msgid "Japanese: Ayako Sano\n"
 msgstr "Japanska: Ayako Sano\n"
 
-#: src/misc.c:208
+#: src/misc.c:210
 msgid "Japanese: Kentaro Fukuchi (fukuchi at users dot sourceforge dot net)\n"
 msgstr ""
 "Japanska: Kentaro Fukuchi (fukuchi snabela users punkt sourceforge punkt "
 "net)\n"
 
-#: src/misc.c:210
+#: src/misc.c:212
 msgid "Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"
 msgstr "Svenska: Stefan Asserhäll (stefan asserhall snabela comhem punkt se)\n"
 
-#: src/misc.c:333
-#, c-format
-msgid "Could not delete backup file: \"%s\"\n"
-msgstr "Kunde inte ta bort säkerhetskopieringsfil: \"%s\"\n"
+#: src/misc.c:936
+#, fuzzy, c-format
+msgid "Could not process '%s' (no filename available)"
+msgstr "inget lokalt filnamn tillgängligt"
 
-#: src/misc.c:1098
+#: src/misc.c:1084
 #, c-format
 msgid "Unknown token '%%%c' in template '%s'"
 msgstr "Okänd beteckning '%%%c' i mallen '%s'"
 
-#: src/misc.c:1180
+#: src/misc.c:1166
 #, c-format
 msgid "Template ('%s') does not match file type '%s'\n"
 msgstr "Mallen ('%s') passar inte ihop med filtypen '%s'\n"
 
-#: src/misc.c:1261
+#: src/misc.c:1247
 #, c-format
 msgid "Error creating %s: %s\n"
 msgstr "Fel när %s skulle skapas: %s\n"
@@ -3862,11 +3881,6 @@ msgid_plural "Deleted %d tracks from local database"
 msgstr[0] "Tog bort spår från den lokala databasen"
 msgstr[1] "Tog bort %d spår från den lokala databasen"
 
-#. no tracks selected
-#: src/misc_confirm.c:343
-msgid "No tracks selected."
-msgstr "Inga spår markerade."
-
 #: src/misc_confirm.c:438
 msgid "Cannot remove entry 'All'"
 msgstr "Kan inte ta bort raden 'Alla'"
@@ -3877,7 +3891,6 @@ msgid "Removed all %d tracks from the iPod"
 msgstr "Tog bort alla %d spår från iPod"
 
 #: src/misc_confirm.c:537
-#, c-format
 msgid "Removed all podcasts from the iPod"
 msgstr "Tog bort alla podradiosändningar från iPod"
 
@@ -3907,12 +3920,10 @@ msgid "Removed all %d tracks from the database"
 msgstr "Tog bort alla %d spår från databasen"
 
 #: src/misc_confirm.c:691
-#, c-format
 msgid "Are you sure you want to remove all tracks from your iPod?"
 msgstr "Är du säker på att du vill ta bort alla spår från iPod?"
 
 #: src/misc_confirm.c:696
-#, c-format
 msgid "Are you sure you want to remove all podcasts from your iPod?"
 msgstr "Är du säker på att du vill ta bort alla podradiosändningar från iPod?"
 
@@ -3956,7 +3967,6 @@ msgstr[1] ""
 "från hårddisken? Antal spellistor som spåren finns i anges inom parentes."
 
 #: src/misc_confirm.c:749
-#, c-format
 msgid "Are you sure you want to remove all tracks from the database?"
 msgstr "Är du säker på att du vill ta bort alla spår från databasen?"
 
@@ -3977,28 +3987,7 @@ msgstr[1] ""
 "Är du säker på att du vill ta bort spellistan '%s' och följande spår helt "
 "från databasen? Antal spellistor som spåren finns i anges inom parentes."
 
-#: src/misc_confirm.c:959
-#, c-format
-msgid "Problem creating iPod directory: '%s'."
-msgstr "Problem att skapa iPod-katalog: '%s'."
-
-#: src/misc_confirm.c:961
-#, c-format
-msgid "Successfully created iPod directories in '%s'."
-msgstr "Skapade iPod-kataloger i '%s' med lyckat resultat."
-
-#. gint id,
-#. gboolean modal,
-#: src/misc_confirm.c:998
-msgid "Create iPod directories"
-msgstr "Skapa iPod-kataloger"
-
-#. title
-#: src/misc_confirm.c:999
-msgid "OK to create the following directories?"
-msgstr "Ok att skapa följande kataloger?"
-
-#: src/misc_confirm.c:1063
+#: src/misc_confirm.c:859
 msgid ""
 "Data has been changed and not been saved.\n"
 "OK to exit gtkpod?"
@@ -4102,7 +4091,7 @@ msgid "Remember Playback Position"
 msgstr ""
 
 #: src/misc_conversion.c:99
-msgid "Skip when Suffling"
+msgid "Skip when Shuffling"
 msgstr ""
 
 #: src/misc_conversion.c:112
@@ -4206,40 +4195,40 @@ msgstr "Värddator för webbadressen '%s' är ogiltig"
 msgid "The URI '%s' contains invalidly escaped characters"
 msgstr "Webbadressen '%s' innehåller felaktiga specialtecken"
 
-#: src/misc_playlist.c:68 src/misc_playlist.c:95 src/misc_playlist.c:413
+#: src/misc_playlist.c:68 src/misc_playlist.c:95 src/misc_playlist.c:430
 msgid "Please enter a name for the new playlist"
 msgstr "Skriv in ett namn på den nya spellistan"
 
-#: src/misc_playlist.c:146
+#: src/misc_playlist.c:155
 msgid "AR:"
 msgstr "AR:"
 
-#: src/misc_playlist.c:149
+#: src/misc_playlist.c:158
 msgid "AL:"
 msgstr "AL:"
 
-#: src/misc_playlist.c:152
+#: src/misc_playlist.c:161
 msgid "GE:"
 msgstr "GE:"
 
-#: src/misc_playlist.c:155
+#: src/misc_playlist.c:164
 msgid "CO:"
 msgstr "KO:"
 
-#: src/misc_playlist.c:158
+#: src/misc_playlist.c:167
 msgid "YE:"
 msgstr "ÅR:"
 
-#: src/misc_playlist.c:186
+#: src/misc_playlist.c:195
 msgid "Unknown"
 msgstr "Okänd"
 
-#: src/misc_playlist.c:256
+#: src/misc_playlist.c:273
 #, c-format
 msgid "Random (%d)"
 msgstr "Slumpmässig (%d)"
 
-#: src/misc_playlist.c:281
+#: src/misc_playlist.c:298
 msgid ""
 "Auto Store of track view disabled.\n"
 "\n"
@@ -4247,11 +4236,11 @@ msgstr ""
 "Automatisk lagring av spårvy inaktiverad.\n"
 "\n"
 
-#: src/misc_playlist.c:340
+#: src/misc_playlist.c:357
 msgid "Not Listed"
 msgstr "Inte listad"
 
-#: src/misc_playlist.c:390
+#: src/misc_playlist.c:407
 #, c-format
 msgid "Created playlist '%s' with %d track."
 msgid_plural "Created playlist '%s' with %d tracks."
@@ -4259,70 +4248,68 @@ msgstr[0] "Skapade spellistan '%s' med %d spår."
 msgstr[1] "Skapade spellistan '%s' med %d spår."
 
 #. n==0
-#: src/misc_playlist.c:401
+#: src/misc_playlist.c:418
 msgid "No tracks available, playlist not created"
 msgstr "Inga spår tillgängliga, spellistan skapades inte"
 
-#: src/misc_playlist.c:527
+#: src/misc_playlist.c:544
 #, c-format
 msgid "Most Listened (%d)"
 msgstr "Oftast lyssnade på (%d)"
 
-#: src/misc_playlist.c:568
-#, c-format
+#: src/misc_playlist.c:585
 msgid "Never Listened"
 msgstr "Aldrig lyssnade på"
 
-#: src/misc_playlist.c:608
+#: src/misc_playlist.c:625
 #, c-format
 msgid "Best Rated (%d)"
 msgstr "Med bäst betyg (%d)"
 
-#: src/misc_playlist.c:650
+#: src/misc_playlist.c:667
 msgid "Unrated tracks"
 msgstr "Spår utan betyg"
 
-#: src/misc_playlist.c:655
+#: src/misc_playlist.c:672
 #, c-format
 msgid "Rated %d"
 msgstr "Betyg %d"
 
-#: src/misc_playlist.c:698
+#: src/misc_playlist.c:715
 #, c-format
 msgid "Recent (%d)"
 msgstr "Senaste (%d)"
 
-#: src/misc_playlist.c:737
+#: src/misc_playlist.c:754
 msgid "Last Time"
 msgstr "Sista gången"
 
-#: src/misc_playlist.c:828
+#: src/misc_playlist.c:845
 msgid "Removal of dangling tracks with no files on PC was canceled."
 msgstr "Borttagning av spår med saknade filer utan filer på PC:n avbröts."
 
-#: src/misc_playlist.c:838
+#: src/misc_playlist.c:855
 msgid "Handling of dangling tracks with files on PC was canceled."
 msgstr "Hantering av spår med saknade filer som har filer på PC:n avbröts."
 
-#: src/misc_playlist.c:866
+#: src/misc_playlist.c:883
 msgid "Dangling tracks with no files on PC were removed."
 msgstr "Spår med saknade filer utan filer på PC:n har tagits bort."
 
-#. printf("Handling track %d\n", track->ipod_id);
-#: src/misc_playlist.c:898
+#: src/misc_playlist.c:917
 #, c-format
 msgid "Processing '%s'"
 msgstr "Behandlar '%s'"
 
-#: src/misc_playlist.c:921
+#: src/misc_playlist.c:941
 msgid "Dangling tracks with files on PC were handled."
 msgstr "Spår med saknade filer som har filer på PC:n har hanterats."
 
-#: src/misc_playlist.c:954
+#: src/misc_playlist.c:974
 msgid "Track"
 msgstr "Spår"
 
-#: src/misc_playlist.c:997
+#: src/misc_playlist.c:1017
 msgid ""
 "You did not import the existing iTunesDB. This is most likely incorrect and "
 "will result in the loss of the existing database.\n"
@@ -4338,19 +4325,19 @@ msgstr ""
 "du avbryter, kan du importera befintlig databas innan du använder den här "
 "funktionen igen.\n"
 
-#: src/misc_playlist.c:1011
+#: src/misc_playlist.c:1031
 msgid "Creating a tree of known files"
 msgstr "Skapar träd med kända filer"
 
-#: src/misc_playlist.c:1055
+#: src/misc_playlist.c:1075
 msgid "Checking iPOD files against known files in DB"
 msgstr "Kontrollerar iPod-filer med kända filer i databasen"
 
-#: src/misc_playlist.c:1098
+#: src/misc_playlist.c:1118
 msgid "Orphaned"
 msgstr "Övergivna"
 
-#: src/misc_playlist.c:1125
+#: src/misc_playlist.c:1145
 #, c-format
 msgid ""
 "The following orphaned file had already been added to the iPod again. It "
@@ -4363,12 +4350,12 @@ msgstr ""
 "%s\n"
 "\n"
 
-#: src/misc_playlist.c:1153
+#: src/misc_playlist.c:1173
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Processing..."
 msgstr "Hittade %d övergivna filer och %d spår med saknade filer. Behandlar..."
 
-#: src/misc_playlist.c:1177
+#: src/misc_playlist.c:1197
 #, c-format
 msgid ""
 "The following dangling track has a file on PC.\n"
@@ -4387,7 +4374,7 @@ msgstr[1] ""
 "Klicka på Ok för att överföra filerna vid nästa synkronisering. Avbryt för "
 "att lämna dem som de är."
 
-#: src/misc_playlist.c:1182
+#: src/misc_playlist.c:1202
 #, c-format
 msgid ""
 "The following dangling track doesn't have file on PC. \n"
@@ -4404,11 +4391,11 @@ msgstr[1] ""
 
 #. we want unique window for each
 #. gboolean modal,
-#: src/misc_playlist.c:1189
+#: src/misc_playlist.c:1209
 msgid "Dangling Tracks"
 msgstr "Spår med saknade filer"
 
-#: src/misc_playlist.c:1212
+#: src/misc_playlist.c:1232
 #, c-format
 msgid "Found %d orphaned and %d dangling files. Done."
 msgstr "Hittade %d övergivna filer och %d spår med saknade filer. Klar."
@@ -4448,73 +4435,48 @@ msgstr "Detektering av duplikat"
 msgid "Local Database"
 msgstr "Lokal databas"
 
-#: src/misc_track.c:1503
+#: src/misc_track.c:1506
 #, c-format
 msgid "drag and drop: ignored '%s'\n"
 msgstr "drag och släpp: ignorerade '%s'\n"
 
-#: src/mp3file.c:1122
+#: src/mp3file.c:1138
 #, c-format
 msgid "Error setting ID3 field: %s\n"
 msgstr "Fel när ID3-fält skulle ändras: %s\n"
 
-#: src/mp3file.c:1147 src/mp3file.c:1294 src/mp3file.c:2043
+#: src/mp3file.c:1163 src/mp3file.c:1310 src/mp3file.c:1942
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "FEL när filen skulle öppnas: '%s' (%s).\n"
 
-#: src/mp3file.c:1361
+#: src/mp3file.c:1377
 #, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "FEL när tagg skulle skrivas till filen: '%s' (%s).\n"
 
-#: src/mp3file.c:1885
-#, c-format
-msgid ""
-"Could not find mp3gain. I tried to use the following executable: '%s'.\n"
-"\n"
-"If the mp3gain executable is not in your path or named differently, you can "
-"set the full path in the 'Tools' section of the preferences dialog.\n"
-"\n"
-"If you do not have mp3gain installed, you can download it from http://www."
-"sourceforge.net/projects/mp3gain."
-msgstr ""
-"Kunde inte hitta mp3gain. Följande körbara program försökte användas: '%s'\n"
-"\n"
-"Om det körbara programmet mp3gain inte finns i din sökväg eller har ett "
-"annat namn, kan du ange fullständig sökväg i avdelningen 'Verktyg' i "
-"inställningsdialogrutan.\n"
-"\n"
-"Om du inte har installerat mp3gain, kan du ladda ner det från http://www."
-"sourceforge.net/projects/mp3gain."
-
-#: src/mp3file.c:1926
-#, c-format
-msgid "Execution of mp3gain ('%s') failed."
-msgstr "Körning av mp3gain ('%s') misslyckades."
-
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:2196
+#: src/mp3file.c:2095
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "Filen \"%s\" har spelningslängden noll. Ignoreras.\n"
 
-#: src/mp4file.c:266 src/mp4file.c:385
+#: src/mp4file.c:217 src/mp4file.c:338 src/mp4file.c:457
 #, c-format
 msgid "'%s' does not appear to be a mp4 audio file.\n"
 msgstr "'%s' verkar inte vara en mp4-ljudfil.\n"
 
-#: src/mp4file.c:276
+#: src/mp4file.c:227 src/mp4file.c:348
 #, c-format
 msgid "Could not open '%s' for reading, or file is not an mp4 file.\n"
 msgstr "Kunde inte öppna '%s' för läsning, eller är filen inte en mp4-fil.\n"
 
-#: src/mp4file.c:396
+#: src/mp4file.c:468
 #, c-format
 msgid "Could not open '%s' for writing, or file is not an mp4 file.\n"
 msgstr "Kunde inte öppna '%s' för skrivning, eller är filen inte en mp4-fil.\n"
 
-#: src/mp4file.c:409
+#: src/mp4file.c:481
 #, c-format
 msgid ""
 "Import of '%s' failed: m4a/m4p/m4b not supported without the mp4v2 library. "
@@ -4523,7 +4485,7 @@ msgstr ""
 "Import av '%s' misslyckades: m4a/m4p/m4b stöds inte utan biblioteket mp4v2. "
 "Du måste kompilera källkoden för gtkpod tillsammans med biblioteket mp4v2.\n"
 
-#: src/mp4file.c:415
+#: src/mp4file.c:487
 #, c-format
 msgid ""
 "m4a/m4p/m4b metadata update for '%s' failed: m4a/m4p/m4b not supported "
@@ -4534,153 +4496,45 @@ msgstr ""
 "inte utan biblioteket mp4v2. Du måste kompilera källkoden för gtkpod "
 "tillsammans med biblioteket mp4v2.\n"
 
-#: src/prefs.c:183
+#: src/mp4file.c:493
+#, fuzzy, c-format
+msgid ""
+"m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
+"without the mp4v2 library. You must compile the gtkpod source together with "
+"the mp4v2 library.\n"
+msgstr ""
+"Uppdatering av m4a/m4p/m4b metadata för '%s' misslyckades: m4a/m4p/m4b stöds "
+"inte utan biblioteket mp4v2. Du måste kompilera källkoden för gtkpod "
+"tillsammans med biblioteket mp4v2.\n"
+
+#: src/prefs.c:307
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "Användning av gtkpod version %s:\n"
 
-#: src/prefs.c:184
+#: src/prefs.c:308
 msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help:   visa det här meddelandet\n"
 
-#: src/prefs.c:185
+#: src/prefs.c:309
 msgid "  -p <filename>:increment playcount for file by one\n"
 msgstr "  -p <filnamn>: öka spelningsantalet för filen med ett\n"
 
-#: src/prefs.c:186
+#: src/prefs.c:310
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m sökväg:  definiera monteringspunkt för iPod\n"
 
-#: src/prefs.c:187
+#: src/prefs.c:311
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr "  --mountpoint: samma som '-m'.\n"
 
-#: src/prefs.c:188
+#: src/prefs.c:312
 msgid "  -a:           import database automatically after start.\n"
 msgstr "  -a:           importera databas automatiskt efter start.\n"
 
-#: src/prefs.c:189
+#: src/prefs.c:313
 msgid "  --auto:       same as '-a'.\n"
 msgstr "  --auto:       samma som '-a'.\n"
-
-#: src/prefs.c:190
-msgid ""
-"  -o:           use offline mode. No changes are exported to the iPod,\n"
-"                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
-"                used with 'Offline' deactivated.\n"
-msgstr ""
-"  -o:           använd nerkopplat läge. Inga ändringar exporteras till "
-"iPod,\n"
-"                utan istället till ~/.gtkpod/. iPod uppdateras om "
-"'Synkronisera'\n"
-"                används med 'Nerkopplad' inaktiverat.\n"
-
-#: src/prefs.c:191
-msgid "  --offline:    same as '-o'.\n"
-msgstr "  --offline:    samma som '-o'.\n"
-
-#: src/prefs.c:1625
-#, c-format
-msgid "Error while reading prefs: %s\n"
-msgstr "Fel vid läsning av inställningar: %s\n"
-
-#: src/prefs.c:2180
-#, c-format
-msgid "Unable to open config file '%s' for reading\n"
-msgstr "Kan inte öppna inställningsfilen '%s' för läsning\n"
-
-#: src/prefs.c:2285
-#, c-format
-msgid "Unknown option: %s\n"
-msgstr "Okänd väljare: %s\n"
-
-#: src/prefs.c:2319
-#, c-format
-msgid "# delete confirmation\n"
-msgstr "# bekräfta borttagning\n"
-
-#: src/prefs.c:2321
-#, c-format
-msgid "# sort tab: select 'All', last selected page (=category)\n"
-msgstr "# sorteringsflik: välja 'Alla', senast valda sida (=kategori)\n"
-
-#: src/prefs.c:2340
-#, c-format
-msgid "# autoselect master playlist?\n"
-msgstr "# välj automatiskt huvudspellista?\n"
-
-#: src/prefs.c:2342
-#, c-format
-msgid "# title=0, artist, album, genre, composer\n"
-msgstr "# titel=0, artist, album, genre, kompositör\n"
-
-#: src/prefs.c:2343
-#, c-format
-msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
-msgstr "# spårnummer=5, iPod-id, PC-sökväg, överförda\n"
-
-#: src/prefs.c:2344
-#, c-format
-msgid "# autoset: set empty tag to filename?\n"
-msgstr "# välj automatiskt: ange filnamn i tom tagg?\n"
-
-#: src/prefs.c:2359
-#, c-format
-msgid ""
-"# position of sliders (paned): playlists, above tracks,\n"
-"# between sort tabs, and in statusbar.\n"
-msgstr ""
-"# position för skjutreglage (i rutor): spellistor, ovanför spår,\n"
-"# mellan sorteringsflikar, och i statusraden.\n"
-
-#: src/prefs.c:2389
-#, c-format
-msgid ""
-"# window sizes: main window, confirmation scrolled,\n"
-"#               confirmation non-scrolled, dirbrowser, prefs\n"
-msgstr ""
-"# fönsterstorlekar: huvudfönster, bekräftelse med rullningslist,\n"
-"#   bekräftelse utan rullningslist, katalogbläddrare, inställningar\n"
-
-#: src/prefs.c:2430
-#, c-format
-msgid "Unable to open '%s' for writing\n"
-msgstr "Kan inte öppna '%s' för skrivning\n"
-
-#: src/prefs.c:2650
-#, c-format
-msgid ""
-" Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
-msgstr ""
-" Inställningar: Kategorinummer (%d<%d?) eller sorteringsfliknummer (%d<%d?) "
-"är utanför giltigt intervall.\n"
-
-#: src/prefs.c:2702 src/prefs.c:2704
-#, c-format
-msgid "Unable to 'mkdir %s'\n"
-msgstr "Kan inte skapa katalogen '%s'\n"
-
-#. illegal -- ignore
-#: src/prefs.c:3074
-#, c-format
-msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
-msgstr "prefs_set_toolbar_style: felaktig stil '%d' ignoreras\n"
-
-#. illegal -- ignore
-#: src/prefs.c:3116
-#, c-format
-msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
-msgstr "prefs_set_pm_sort: felaktig typ '%d' ignoreras\n"
-
-#: src/prefs.c:3271
-#, c-format
-msgid "'%s': no arguments (%%...) allowed.\n"
-msgstr "'%s': inga argument (%%...) tillåts.\n"
-
-#: src/prefs.c:3276
-#, c-format
-msgid "'%s': only '%%[%s]' allowed.\n"
-msgstr "'%s': bara '%%[%s]' tillåts.\n"
 
 #: src/prefs_window.c:119
 msgid "Please select command for 'Play Now'"
@@ -4702,39 +4556,44 @@ msgstr "Välj mserv rotkatalog för musik"
 msgid "Select the mserv trackinfo root directory"
 msgstr "Välj mserv rotkatalog för spårinformation"
 
-#: src/prefs_window.c:946 src/prefs_window.c:964
+#: src/prefs_window.c:127
+#, fuzzy
+msgid "Please select the aacgain executable"
+msgstr "Välj körbart program mp3gain"
+
+#: src/prefs_window.c:899 src/prefs_window.c:917
 msgid "Preferences not updated"
 msgstr "Inställningarna har inte uppdaterats"
 
-#: src/prefs_window.c:973
+#: src/prefs_window.c:926
 msgid "Preferences applied"
 msgstr "Inställningar ändrade"
 
-#: src/repository.c:514 src/repository.c:2292
+#: src/repository.c:549 src/repository.c:2372
 msgid "Select mountpoint"
 msgstr "Markera monteringspunkt"
 
-#: src/repository.c:541 src/repository.c:2318
+#: src/repository.c:576 src/repository.c:2398
 msgid "Set backup file"
 msgstr "Ange fil för säkerhetskopia"
 
-#: src/repository.c:580
+#: src/repository.c:615
 msgid "Select directory for synchronization"
 msgstr "Markera katalog för synkronisering"
 
-#: src/repository.c:606
+#: src/repository.c:641
 msgid "Please select command to sync contacts"
 msgstr "Välj kommando för att synkronisera kontakter"
 
-#: src/repository.c:612
+#: src/repository.c:647
 msgid "Please select command to sync calendar"
 msgstr "Välj kommando för att synkronisera kalender"
 
-#: src/repository.c:618
+#: src/repository.c:653
 msgid "Please select command to sync notes"
 msgstr "Välj kommando för att synkronisera anteckningar"
 
-#: src/repository.c:630
+#: src/repository.c:665
 #, c-format
 msgid ""
 "<i>Have a look at the scripts provided in '%s'. If you write a new script, "
@@ -4745,35 +4604,35 @@ msgstr ""
 "skript, skicka det gärna till \"jcsjcs snabela users.sourceforge.net\" för "
 "att lägga till det i nästa utgåva.</i>"
 
-#: src/repository.c:697
+#: src/repository.c:732
 msgid "Smart playlist updated."
 msgstr "Smart spellista uppdaterad."
 
-#: src/repository.c:1130
+#: src/repository.c:1193
 msgid "Podcasts Repository"
 msgstr "Podsändningsarkiv"
 
-#: src/repository.c:1134
+#: src/repository.c:1197
 msgid "Local Repository"
 msgstr "Lokalt arkiv"
 
-#: src/repository.c:1294
+#: src/repository.c:1351
 msgid "Master Playlist"
 msgstr "Huvudspellista"
 
-#: src/repository.c:1298
+#: src/repository.c:1355
 msgid "Podcasts Playlist"
 msgstr "Podsändningsspellista"
 
-#: src/repository.c:1306
+#: src/repository.c:1363
 msgid "Regular Playlist"
 msgstr "Vanlig spellista"
 
-#: src/repository.c:2346
+#: src/repository.c:2426
 msgid "Set local repository file"
 msgstr "Ange lokal arkivfil"
 
-#: src/repository.c:2438
+#: src/repository.c:2525
 msgid "New Repository"
 msgstr "Nytt arkiv"
 
@@ -4820,24 +4679,66 @@ msgstr "Ingenting har ändrats.\n"
 msgid "Sync summary"
 msgstr "Sammanfattning av synkronisering"
 
-#: src/tools.c:173
+#: src/tools.c:119
+#, fuzzy, c-format
+msgid ""
+"Could not find '%s'\n"
+". Please specifiy the exact path in the Tools section of the preference "
+"dialog or install the programm if it is not installed on your system.\n"
+"\n"
+msgstr ""
+"Kunde inte hitta kommandot '%s'.\n"
+"\n"
+"Kontrollera inställningarna under 'Verktyg' i inställningsdialogrutan.\n"
+"\n"
+
+#: src/tools.c:204
+#, fuzzy, c-format
+msgid ""
+"Execution of '%s' failed.\n"
+"\n"
+msgstr "Körning av mp3gain ('%s') misslyckades."
+
+#: src/tools.c:249
+#, fuzzy, c-format
+msgid ""
+"Did not normalize '%s'. Set mp3gain path in the Tools section of the "
+"preferences.\n"
+msgstr ""
+"Kunde inte hitta kommandot '%s'.\n"
+"\n"
+"Kontrollera inställningarna under 'Verktyg' i inställningsdialogrutan.\n"
+"\n"
+
+#: src/tools.c:259
+#, fuzzy, c-format
+msgid ""
+"Did not normalize '%s'. Set aacgain path in the Tools section of the "
+"preferences.\n"
+msgstr ""
+"Kunde inte hitta kommandot '%s'.\n"
+"\n"
+"Kontrollera inställningarna under 'Verktyg' i inställningsdialogrutan.\n"
+"\n"
+
+#: src/tools.c:384
 msgid "Normalizing..."
 msgstr "Normaliserar..."
 
-#: src/tools.c:223
+#: src/tools.c:434
 #, c-format
 msgid "%s - %s"
 msgstr "%s - %s"
 
-#: src/tools.c:246
+#: src/tools.c:460
 msgid "Aborting..."
 msgstr "Avbryter..."
 
-#: src/tools.c:250
+#: src/tools.c:464
 msgid "Will abort after current mp3gain process ends."
 msgstr "Avbryter efter aktuell mp3gain process slutar."
 
-#: src/tools.c:276
+#: src/tools.c:490
 #, c-format
 msgid ""
 "'%s-%s' (%s) could not be normalized.\n"
@@ -4846,21 +4747,21 @@ msgstr ""
 "'%s-%s' (%s) kunde inte normaliseras.\n"
 "\n"
 
-#: src/tools.c:316
+#: src/tools.c:529
 #, c-format
 msgid "Normalized %d of %d tracks."
 msgid_plural "Normalized %d of %d tracks."
 msgstr[0] "Normaliserade %d av %d spår."
 msgstr[1] "Normaliserade %d av %d spår."
 
-#: src/tools.c:419
+#: src/tools.c:632
 msgid ""
 "Please specify the command to be called on the 'Tools' section of the "
 "preferences dialog.\n"
 msgstr ""
 "Ange kommandot som ska anropas under 'Verktyg' i inställningsdialogrutan.\n"
 
-#: src/tools.c:431
+#: src/tools.c:644
 #, c-format
 msgid ""
 "Could not find the command '%s'.\n"
@@ -4873,7 +4774,7 @@ msgstr ""
 "Kontrollera inställningarna under 'Verktyg' i inställningsdialogrutan.\n"
 "\n"
 
-#: src/tools.c:472
+#: src/tools.c:685
 #, c-format
 msgid ""
 "'%s' returned the following output:\n"
@@ -4882,12 +4783,12 @@ msgstr ""
 "'%s' returnerade följande utmatning.\n"
 "%s\n"
 
-#: src/tools.c:539
+#: src/tools.c:752
 #, c-format
 msgid "No command set for '%s'"
 msgstr "Inget kommando angivet för '%s'"
 
-#: src/tools.c:558
+#: src/tools.c:772
 #, c-format
 msgid "Could not find command '%s' specified for '%s'"
 msgstr "Kunde inte hitta kommandot '%s' som angavs för '%s'"
@@ -4901,3 +4802,157 @@ msgstr "Kunde inte öppna '%s' för läsning.\n"
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s verkar inte vara en wav-fil som stöds.\n"
+
+#~ msgid "_Offline"
+#~ msgstr "_Nerkopplad"
+
+#~ msgid ""
+#~ "You only need to specify this if your 'mp3gain' executable is not in your "
+#~ "default path. Example: '/usr/local/foo/mp3gain'. mp3gain will write the "
+#~ "calculated gain value back to the file -- if you don't want this, set "
+#~ "this entry to /bin/true or similar. mp3gain is only called if appropriate "
+#~ "tags are not already set by your encoder. E.g. lame version 0.95 already "
+#~ "writes the gain values into tags. The exact conversion factor between "
+#~ "mp3gain's gain value and iPod's volume tag is not known yet -- your input "
+#~ "is appreciated."
+#~ msgstr ""
+#~ "Du behöver bara ange det här om det körbara programmet 'mp3gain' inte "
+#~ "finns i din standardsökväg. Till exempel '/usr/local/foo/mp3gain'. "
+#~ "mp3gain skriver tillbaka det beräknade nivåvärdet i filen. Om du inte "
+#~ "vill det, ange alternativet som /bin/true eller något liknande. mp3gain "
+#~ "anropas bara om lämpliga taggar inte redan angivits av kodaren. Version "
+#~ "0.95 av lame skriver till exempel redan nivåvärden i taggar. Det exakta "
+#~ "konverteringsvärdet mellan nivåvärdet från mp3gain och volymtaggen i iPod "
+#~ "är inte ännu känt: återmatning från dig uppskattas."
+
+#~ msgid ""
+#~ "Set this to the model number of your iPod (e.g. \"A003\") in case it is "
+#~ "not automatically detected and you want to use cover art."
+#~ msgstr ""
+#~ "Ställ in det här till modellnumret för din iPod (t.ex. \"A003\") om det "
+#~ "inte automatiskt detekteras och du vill använda omslagsbilder."
+
+#~ msgid "Edit Repository Properties"
+#~ msgstr "Redigera arkivegenskaper"
+
+#~ msgid "Currently no iPod database selected"
+#~ msgstr "För närvarande är ingen iPod-databas markerad"
+
+#~ msgid "No playlist selected."
+#~ msgstr "Ingen spellista markerad."
+
+#~ msgid "Could not delete backup file: \"%s\"\n"
+#~ msgstr "Kunde inte ta bort säkerhetskopieringsfil: \"%s\"\n"
+
+#~ msgid "No tracks selected."
+#~ msgstr "Inga spår markerade."
+
+#~ msgid "Problem creating iPod directory: '%s'."
+#~ msgstr "Problem att skapa iPod-katalog: '%s'."
+
+#~ msgid "Successfully created iPod directories in '%s'."
+#~ msgstr "Skapade iPod-kataloger i '%s' med lyckat resultat."
+
+#~ msgid "Create iPod directories"
+#~ msgstr "Skapa iPod-kataloger"
+
+#~ msgid "OK to create the following directories?"
+#~ msgstr "Ok att skapa följande kataloger?"
+
+#~ msgid ""
+#~ "Could not find mp3gain. I tried to use the following executable: '%s'.\n"
+#~ "\n"
+#~ "If the mp3gain executable is not in your path or named differently, you "
+#~ "can set the full path in the 'Tools' section of the preferences dialog.\n"
+#~ "\n"
+#~ "If you do not have mp3gain installed, you can download it from http://www."
+#~ "sourceforge.net/projects/mp3gain."
+#~ msgstr ""
+#~ "Kunde inte hitta mp3gain. Följande körbara program försökte användas: '%"
+#~ "s'\n"
+#~ "\n"
+#~ "Om det körbara programmet mp3gain inte finns i din sökväg eller har ett "
+#~ "annat namn, kan du ange fullständig sökväg i avdelningen 'Verktyg' i "
+#~ "inställningsdialogrutan.\n"
+#~ "\n"
+#~ "Om du inte har installerat mp3gain, kan du ladda ner det från http://www."
+#~ "sourceforge.net/projects/mp3gain."
+
+#~ msgid ""
+#~ "  -o:           use offline mode. No changes are exported to the iPod,\n"
+#~ "                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
+#~ "                used with 'Offline' deactivated.\n"
+#~ msgstr ""
+#~ "  -o:           använd nerkopplat läge. Inga ändringar exporteras till "
+#~ "iPod,\n"
+#~ "                utan istället till ~/.gtkpod/. iPod uppdateras om "
+#~ "'Synkronisera'\n"
+#~ "                används med 'Nerkopplad' inaktiverat.\n"
+
+#~ msgid "  --offline:    same as '-o'.\n"
+#~ msgstr "  --offline:    samma som '-o'.\n"
+
+#~ msgid "Error while reading prefs: %s\n"
+#~ msgstr "Fel vid läsning av inställningar: %s\n"
+
+#~ msgid "Unable to open config file '%s' for reading\n"
+#~ msgstr "Kan inte öppna inställningsfilen '%s' för läsning\n"
+
+#~ msgid "Unknown option: %s\n"
+#~ msgstr "Okänd väljare: %s\n"
+
+#~ msgid "# delete confirmation\n"
+#~ msgstr "# bekräfta borttagning\n"
+
+#~ msgid "# sort tab: select 'All', last selected page (=category)\n"
+#~ msgstr "# sorteringsflik: välja 'Alla', senast valda sida (=kategori)\n"
+
+#~ msgid "# autoselect master playlist?\n"
+#~ msgstr "# välj automatiskt huvudspellista?\n"
+
+#~ msgid "# title=0, artist, album, genre, composer\n"
+#~ msgstr "# titel=0, artist, album, genre, kompositör\n"
+
+#~ msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
+#~ msgstr "# spårnummer=5, iPod-id, PC-sökväg, överförda\n"
+
+#~ msgid "# autoset: set empty tag to filename?\n"
+#~ msgstr "# välj automatiskt: ange filnamn i tom tagg?\n"
+
+#~ msgid ""
+#~ "# position of sliders (paned): playlists, above tracks,\n"
+#~ "# between sort tabs, and in statusbar.\n"
+#~ msgstr ""
+#~ "# position för skjutreglage (i rutor): spellistor, ovanför spår,\n"
+#~ "# mellan sorteringsflikar, och i statusraden.\n"
+
+#~ msgid ""
+#~ "# window sizes: main window, confirmation scrolled,\n"
+#~ "#               confirmation non-scrolled, dirbrowser, prefs\n"
+#~ msgstr ""
+#~ "# fönsterstorlekar: huvudfönster, bekräftelse med rullningslist,\n"
+#~ "#   bekräftelse utan rullningslist, katalogbläddrare, inställningar\n"
+
+#~ msgid "Unable to open '%s' for writing\n"
+#~ msgstr "Kan inte öppna '%s' för skrivning\n"
+
+#~ msgid ""
+#~ " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
+#~ msgstr ""
+#~ " Inställningar: Kategorinummer (%d<%d?) eller sorteringsfliknummer (%d<%"
+#~ "d?) är utanför giltigt intervall.\n"
+
+#~ msgid "Unable to 'mkdir %s'\n"
+#~ msgstr "Kan inte skapa katalogen '%s'\n"
+
+#~ msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
+#~ msgstr "prefs_set_toolbar_style: felaktig stil '%d' ignoreras\n"
+
+#~ msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
+#~ msgstr "prefs_set_pm_sort: felaktig typ '%d' ignoreras\n"
+
+#~ msgid "'%s': no arguments (%%...) allowed.\n"
+#~ msgstr "'%s': inga argument (%%...) tillåts.\n"
+
+#~ msgid "'%s': only '%%[%s]' allowed.\n"
+#~ msgstr "'%s': bara '%%[%s]' tillåts.\n"

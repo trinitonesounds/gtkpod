@@ -1,3 +1,8 @@
+2006-09-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* misc_conversion.c: Typo: "Suffling" -> "Shuffling". Thanks
+          to Todd for pointing this out.
+
 2006-09-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* display_spl.c (spl_check_number_of_rules): simplify

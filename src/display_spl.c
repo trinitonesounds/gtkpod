@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-15 00:20:06 jcs>
+/* Time-stamp: <2006-09-15 00:24:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
 |  Part of the gtkpod project.
@@ -624,7 +624,6 @@ static void spl_check_number_of_rules (GtkWidget *spl_window)
     g_return_if_fail (table);
 
     numrules = g_list_length (spl->splrules.rules);
-
     g_return_if_fail (numrules > 0);
 
     button = g_object_get_data (G_OBJECT (table), "spl_button-0");

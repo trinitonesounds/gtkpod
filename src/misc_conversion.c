@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-28 23:20:47 jcs>
+/* Time-stamp: <2006-09-17 13:54:43 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -96,7 +96,7 @@ static const gchar *t_strings[] = {
     N_("Start time"),
     N_("Stop time"),
     N_("Remember Playback Position"),
-    N_("Skip when Suffling"),
+    N_("Skip when Shuffling"),
     NULL };
 
 /* Tooltips for prefs window */
