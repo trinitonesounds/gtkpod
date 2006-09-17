@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-10 19:58:33 jcs>
+/* Time-stamp: <2006-09-17 16:11:25 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -112,10 +112,18 @@ set_cell (GtkCellLayout   *cell_layout,
   }
   else
   {
-      if (info->capacity > 0)
-      {
-	  text = g_strdup_printf ("%2.0fGB %s (x%s)",
+      if (info->capacity >= 1)
+      {   /* size in GB */
+	  text = g_strdup_printf ("%2.0f GB %s (x%s)",
 				  info->capacity,
+				  itdb_info_get_ipod_model_name_string (
+				      info->ipod_model),
+				  info->model_number);
+      }
+      else if (info->capacity > 0)
+      {   /* size in MB */
+	  text = g_strdup_printf ("%3.0f MB %s (x%s)",
+				  info->capacity * 1024,
 				  itdb_info_get_ipod_model_name_string (
 				      info->ipod_model),
 				  info->model_number);
