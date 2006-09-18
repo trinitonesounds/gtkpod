@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-12 00:31:49 jcs>
+/* Time-stamp: <2006-09-18 15:57:40 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -961,7 +961,7 @@ gboolean update_mserv_data_from_file (gchar *name, Track *track)
 
 
 /* look for a picture specified by coverart_template  */
-static void add_artwork (Track *tr)
+static void add_coverart (Track *tr)
 {
     ExtraTrackData *etr;
     gchar *full_template;
@@ -1155,9 +1155,11 @@ static Track *get_track_info_from_file (gchar *name, Track *orig_track)
 	set_unset_entries_from_filename (nti);
 
 	/* Set coverart */
-	if (prefs_get_int("coverart"))
+	if (prefs_get_int("coverart_file"))
 	{
-	    add_artwork (nti);
+	    /* APIC data takes precedence */
+	    if (!nti->artwork || !nti->artwork->thumbnails)
+		add_coverart (nti);
 	}
 
 	/* Set modification date to the files modified date */

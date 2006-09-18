@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-14 20:47:27 jcs>
+/* Time-stamp: <2006-09-18 16:03:15 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -54,7 +54,7 @@
    gchar   *genre;            /+ genre (utf8)          +/
    gchar   *comment;          /+ comment (utf8)        +/
    gchar   *composer;         /+ Composer (utf8)       +/
-   gchar   *fdesc;            /+ Format description (utf8)   +/
+   gchar   *filetype;         /+ Format description (utf8)   +/
    gchar   *charset;          /+ charset used for tags       +/
    gchar   *description;      /+ Description text (podcasts) +/
    gchar   *podcasturl;       /+ URL/Title (podcasts)        +/
@@ -75,7 +75,11 @@
    gboolean compilation;      /+ Track is part of a compilation CD   +/
 
    If prefs_get_int("readtags") returns FALSE you only should fill in
-   tracklen, bitrate and fdesc
+   tracklen, bitrate, samplerate, soundcheck and filetype
+
+   If prefs_get_int("coverart_apic") returns TRUE you should try to
+   read APIC coverart data from the tags and set it with
+   gp_set_thumbnails_from_data().
 
    Please note that the iPod will only play as much of the track as
    specified in "tracklen".
@@ -329,8 +333,8 @@ Track *mp4_get_file_info (gchar *mp4FileName)
 		    track->genre = charset_to_utf8 (value);
 		    g_free(value);
 		}
-		mp4_scan_soundcheck (mp4File, track);
 	    }
+	    mp4_scan_soundcheck (mp4File, track);
 	}
 	else
 	{

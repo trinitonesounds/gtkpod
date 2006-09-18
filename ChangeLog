@@ -7,8 +7,11 @@ gtkpod V0.99.6CVS
        and after saving (gtkpod.eject) with the mountpoint as the
        first argument.
 
-       IMPROVEMENT: Displays artwork on some newer iPod models now as
+       IMPROVEMENT: Displays coverart on some newer iPod models now as
        well -- this includes the new mobile phone iPods.
+
+       IMPROVEMENT: Coverart can be read from the APIC tag if present.
+       Up to now coverart had to be provided in spearate files.
 
        IMPROVEMENT: Podcasts are marked as unplayed (on the iPod, with
        a bullet in front of the title) when newly added to the podcast

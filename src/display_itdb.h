@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 23:54:21 jcs>
+/* Time-stamp: <2006-09-18 15:27:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -127,6 +127,9 @@ void gp_track_unlink (Track *track);
 void gp_track_add_extra (Track *track);
 void gp_track_validate_entries (Track *track);
 gboolean gp_track_set_thumbnails (Track *track, const gchar *filename);
+gboolean gp_track_set_thumbnails_from_data (Track *track,
+					    const guchar *image_data,
+					    gsize image_data_len);
 gboolean gp_track_remove_thumbnails (Track *track);
 
 Playlist *gp_playlist_new (const gchar *title, gboolean spl);

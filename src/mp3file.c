@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-18 02:09:40 jcs>
+/* Time-stamp: <2006-09-18 15:57:55 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -78,8 +78,6 @@ struct _File_Tag
     gchar *lyrics;        /* does not appear to be the full lyrics --
 			     only used to set the flag 'lyrics_flag'
 			     of the Track structure */
-    guchar *coverart;     /* Raw data */
-    gsize coverart_len;   /* Size of coverart data */
 };
 
 
@@ -1280,6 +1278,78 @@ static void id3_set_string (struct id3_tag *tag,
 
 
 /***
+ * Reads id3v1.x / id3v2 apic data
+ * @returns: TRUE on success, else FALSE.
+ */
+static gboolean id3_apic_read (gchar *filename,
+			       guchar **image_data, gsize *image_data_len)
+{
+    struct id3_file *id3file;
+    struct id3_tag *id3tag;
+
+    g_return_val_if_fail (filename, FALSE);
+    g_return_val_if_fail (image_data, FALSE);
+    g_return_val_if_fail (image_data_len, FALSE);
+
+    *image_data = NULL;
+    *image_data_len = 0;
+
+    if (!(id3file = id3_file_open (filename, ID3_FILE_MODE_READONLY)))
+    {
+	gchar *fbuf = charset_to_utf8 (filename);
+	g_print(_("ERROR while opening file: '%s' (%s).\n"),
+		fbuf, g_strerror(errno));
+	g_free (fbuf);
+	return FALSE;
+    }
+
+    if ((id3tag = id3_file_tag(id3file)))
+    {
+	id3_length_t len;
+	const guchar *coverart;
+
+	coverart = id3_get_binary (id3tag, "APIC", &len);
+
+	if (coverart)
+	{   /* I guess iTunes is doing something wrong -- the
+	     * beginning of the coverart data ends up in a different
+	       field... We'll just add the missing data manually. */
+	    const guchar itunes_broken_jfif_marker[] =
+		{ 0x10, 'J', 'F', 'I', 'F'};
+	    if (len >= 5)
+	    {
+		if (strncmp (itunes_broken_jfif_marker, coverart,  5) == 0)
+		{
+		    const guchar itunes_missing_header[] =
+			{ 0xff, 0xd8, 0xff, 0xe0, 0x00 };
+		    *image_data = g_malloc (len+5);
+		    memcpy (*image_data, itunes_missing_header, 5);
+		    memcpy ((*image_data)+5, coverart, len);
+		    *image_data_len = len+5;
+		}
+	    }
+	    if (!*image_data)
+	    {
+		*image_data = g_malloc (len);
+		memcpy (*image_data, coverart, len);
+		*image_data_len = len;
+	    }
+#if LOCALDEBUG
+	    if (*image_data)
+	    {
+		FILE *file;
+		file = fopen ("/tmp/folder.jpg", "w");
+		fwrite (*image_data, 1, *image_data_len, file);
+		fclose (file);
+	    }
+#endif
+	}    
+    }
+    id3_file_close (id3file);
+    return TRUE;
+}
+
+/***
  * Reads id3v1.x / id3v2 tag and load data into the Id3tag structure.
  * If a tag entry exists (ex: title), we allocate memory, else value
  * stays to NULL
@@ -1308,48 +1378,6 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
 
     if ((id3tag = id3_file_tag(id3file)))
     {
-	id3_length_t len;
-	const guchar *coverart;
-
-	tag->coverart = NULL;
-	tag->coverart_len = 0;
-	coverart = id3_get_binary (id3tag, "APIC", &len);
-
-	if (coverart)
-	{   /* I guess iTunes is doing something wrong -- the
-	     * beginning of the coverart data ends up in a different
-	       field... We'll just add the missing data manually. */
-	    const guchar itunes_broken_jfif_marker[] =
-		{ 0x10, 'J', 'F', 'I', 'F'};
-	    if (len >= 5)
-	    {
-		if (strncmp (itunes_broken_jfif_marker, coverart,  5) == 0)
-		{
-		    const guchar itunes_missing_header[] =
-			{ 0xff, 0xd8, 0xff, 0xe0, 0x00 };
-		    tag->coverart = g_malloc (len+5);
-		    memcpy (tag->coverart, itunes_missing_header, 5);
-		    memcpy (tag->coverart+5, coverart, len);
-		    tag->coverart_len = len+5;
-		}
-	    }
-	    if (!tag->coverart)
-	    {
-		tag->coverart = g_malloc (len);
-		memcpy (tag->coverart, coverart, len);
-		tag->coverart_len = len;
-	    }
-#if LOCALDEBUG
-	    if (tag->coverart)
-	    {
-		FILE *file;
-		file = fopen ("/tmp/folder.jpg", "w");
-		fwrite (tag->coverart, 1, tag->coverart_len, file);
-		fclose (file);
-	    }
-#endif
-	}    
-
 	tag->title = id3_get_string (id3tag, ID3_FRAME_TITLE);
 	tag->artist = id3_get_string (id3tag, ID3_FRAME_GROUP);
 	if (!tag->artist || !*tag->artist)
@@ -1408,6 +1436,8 @@ gboolean id3_tag_read (gchar *filename, File_Tag *tag)
     id3_file_close (id3file);
     return TRUE;
 }
+
+
 
 static enum id3_field_textencoding get_encoding_of (struct id3_tag *tag, const char *frame_name)
 {
@@ -2104,6 +2134,8 @@ Track *mp3_get_file_info (gchar *name)
     File_Tag filetag;
     MP3Info *mp3i=NULL;
     FILE *file;
+    guchar *image_data = NULL;
+    gsize image_data_len = 0;
 
     g_return_val_if_fail (name, NULL);
 
@@ -2128,9 +2160,10 @@ Track *mp3_get_file_info (gchar *name)
     }
 
     track = gp_track_new ();
+    track->filetype = g_strdup ("MPEG audio file");
+
     if (prefs_get_int("readtags") && (id3_tag_read (name, &filetag) == TRUE))
     {
-	track->filetype = g_strdup ("MPEG audio file");
 
 	if (filetag.album)
 	{
@@ -2251,14 +2284,17 @@ Track *mp3_get_file_info (gchar *name)
 	{
 	    track->lyrics_flag = 0x00;
 	}
+    }
 
-	if (filetag.coverart)
+    if (prefs_get_int("coverart_apic") &&
+	(id3_apic_read (name, &image_data, &image_data_len) == TRUE))
+    {
+	if (image_data)
 	{
-	    itdb_track_set_thumbnails_from_data (track,
-						 filetag.coverart,
-						 filetag.coverart_len);
-	    g_free (filetag.coverart);
-	    filetag.coverart = NULL;
+	    gp_track_set_thumbnails_from_data (track,
+					       image_data,
+					       image_data_len);
+	    g_free (image_data);
 	}
     }
 

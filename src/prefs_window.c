@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 00:00:09 jcs>
+/* Time-stamp: <2006-09-18 15:35:32 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -561,18 +561,29 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml, "parsetags_template");
     gtk_widget_set_sensitive (w, prefs_get_int("parsetags"));
     buf = prefs_get_string("parsetags_template");
-    gtk_entry_set_text(GTK_ENTRY(w), buf);
-    g_free(buf);
+    if (buf)
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free(buf);
+    }
 
-    w = gtkpod_xml_get_widget (prefs_window_xml, "coverart");
+    w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_apic");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 prefs_get_int("coverart"));
+				 prefs_get_int("coverart_apic"));
+
+
+    w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_file");
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
+				 prefs_get_int("coverart_file"));
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template");
     buf = prefs_get_string("coverart_template");
-    gtk_entry_set_text(GTK_ENTRY(w), buf);
-    g_free(buf);
-    gtk_widget_set_sensitive (w, prefs_get_int("coverart"));
+    if (buf)
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free(buf);
+    }
+    gtk_widget_set_sensitive (w, prefs_get_int("coverart_file"));
 
     for (i=0; i<TM_NUM_COLUMNS; ++i)
     {
@@ -644,8 +655,11 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "mserv_username_entry");
     buf = prefs_get_string("mserv_username");
-    gtk_entry_set_text(GTK_ENTRY(w), buf);
-    g_free(buf);
+    if (buf)
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free(buf);
+    }
     w = gtkpod_xml_get_widget (prefs_window_xml, "notebook");
     if (page == -1)
     {
@@ -659,8 +673,11 @@ if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
     
     w = gtkpod_xml_get_widget (prefs_window_xml, "exclude_file_mask_entry");
     buf = prefs_get_string("exclude_file_mask");
-    gtk_entry_set_text(GTK_ENTRY(w), buf);
-    g_free(buf);
+    if (buf)
+    {
+	gtk_entry_set_text(GTK_ENTRY(w), buf);
+	g_free(buf);
+    }
     
     prefs_window_show_hide_tooltips ();
     gtk_widget_show(prefs_window);
@@ -1142,13 +1159,25 @@ on_parsetags_template_changed             (GtkEditable     *editable,
 }
 
 void
-on_coverart_toggled                   (GtkToggleButton *togglebutton,
-				       gpointer         user_data)
+on_coverart_file_toggled                   (GtkToggleButton *togglebutton,
+					    gpointer         user_data)
 {
     gboolean val = gtk_toggle_button_get_active(togglebutton);
     GtkWidget *w;
 
-    temp_prefs_set_int(temp_prefs, "coverart", val);
+    temp_prefs_set_int(temp_prefs, "coverart_file", val);
+    w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template");
+    gtk_widget_set_sensitive (w, val);
+}
+
+void
+on_coverart_apic_toggled                   (GtkToggleButton *togglebutton,
+					    gpointer         user_data)
+{
+    gboolean val = gtk_toggle_button_get_active(togglebutton);
+    GtkWidget *w;
+
+    temp_prefs_set_int(temp_prefs, "coverart_apic", val);
     w = gtkpod_xml_get_widget (prefs_window_xml, "coverart_template");
     gtk_widget_set_sensitive (w, val);
 }

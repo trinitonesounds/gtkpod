@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:21:01 jcs>
+/* Time-stamp: <2006-09-18 15:28:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -310,36 +310,77 @@ void gp_track_unlink (Track *track)
 }
 
 
-/* Set a thumbnail and store the filename in ExtraTrackData */
-gboolean gp_track_set_thumbnails (Track *track, const gchar *filename)
+/* Set a thumbnail and update ExtraTrackData (e.g. filename) */
+static gboolean gp_track_set_thumbnails_internal (Track *track,
+						  const gchar *filename,
+						  const guchar *image_data,
+						  gsize image_data_len)
 {
-    gboolean result;
+    gboolean result = FALSE;
     ExtraTrackData *etr;
 
     g_return_val_if_fail (track, FALSE);
-    g_return_val_if_fail (filename, FALSE);
 
     etr = track->userdata;
     g_return_val_if_fail (etr, FALSE);
 
-    result = itdb_track_set_thumbnails (track, filename);
-    if (result == TRUE)
+    if (filename)
     {
-	g_free (etr->thumb_path_locale);
-	g_free (etr->thumb_path_utf8);
+	result = itdb_track_set_thumbnails (track, filename);
+    }
+    else if (image_data)
+    {
+	result = itdb_track_set_thumbnails_from_data (track,
+						      image_data,
+						      image_data_len);
+    }
+
+    g_free (etr->thumb_path_locale);
+    g_free (etr->thumb_path_utf8);
+
+    if (filename && (result == TRUE))
+    {
 	etr->thumb_path_locale = g_strdup (filename);
 	etr->thumb_path_utf8 = charset_to_utf8 (filename);
     }
     else
     {
-	g_free (etr->thumb_path_locale);
-	g_free (etr->thumb_path_utf8);
 	etr->thumb_path_locale = g_strdup ("");
 	etr->thumb_path_utf8 = g_strdup ("");
-	gtkpod_warning (_("Failed to set cover art: '%s'"), filename);
     }
+
+    if (result == FALSE)
+    {
+	if (filename)
+	    gtkpod_warning (_("Failed to set cover art: '%s'"), filename);
+    }
+
     return result;
 }
+
+/* Set a thumbnail and update data in ExtraTrackData */
+gboolean gp_track_set_thumbnails_from_data (Track *track,
+					    const guchar *image_data,
+					    gsize image_data_len)
+{
+    g_return_val_if_fail (track, FALSE);
+    g_return_val_if_fail (image_data, FALSE);
+
+    return gp_track_set_thumbnails_internal (track, NULL,
+					     image_data, image_data_len);
+}
+
+
+/* Set a thumbnail and store the filename in ExtraTrackData */
+gboolean gp_track_set_thumbnails (Track *track, const gchar *filename)
+{
+    g_return_val_if_fail (track, FALSE);
+    g_return_val_if_fail (filename, FALSE);
+
+    return gp_track_set_thumbnails_internal (track, filename,
+					     NULL, 0);
+}
+
 
 /* Remove a thumbnail and remove the filename in ExtraTrackData */
 /* Return value:

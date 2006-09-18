@@ -3,6 +3,20 @@
 	* mp3file.c: support reading of coverart from APIC
           tag. Work around non-conformant tags written by iTunes.
 
+	* mp4file.c: update instructions at the beginnging of the
+          file, read soundcheck values irrespective of "readtags"
+          setting.
+
+	* gtkpod.glade
+	  src/prefs.c
+	  src/prefs_windows.c
+	  src/mp3file.c
+	  src/file.c: implement "coverart_apic" prefs key allowing to
+	  select whether coverart stored in tags should be used or not.
+
+	* src/display_itdb.c
+	  src/display_itdb.h: new: gp_track_set_thumbnails_from_data()
+
 2006-09-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* misc_conversion.c: Typo: "Suffling" -> "Shuffling". Thanks

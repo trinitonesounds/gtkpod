@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 21:40:01 jcs>
+/* Time-stamp: <2006-09-18 15:27:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
@@ -226,7 +226,8 @@ static void set_default_preferences()
     prefs_set_int("parsetags", FALSE);
     prefs_set_int("parsetags_overwrite", FALSE);
     prefs_set_string("parsetags_template", "%a - %A/%T %t.mp3;%t.wav");
-    prefs_set_int("coverart", TRUE);
+    prefs_set_int("coverart_apic", TRUE);
+    prefs_set_int("coverart_file", TRUE);
     prefs_set_string("coverart_template", "%A;folder.jpg");
     prefs_set_int("mserv_use", FALSE);
     prefs_set_string("mserv_username", "");
@@ -686,11 +687,19 @@ static void cleanup_keys()
     version = prefs_get_double("version");
 
     /* rename mountpoint to initial_mountpoint */
-    if (prefs_get_string_value("mountpoint", &buf))
+    if (prefs_get_string_value(KEY_MOUNTPOINT, &buf))
     {
 	prefs_set_string("initial_mountpoint", buf);
 	g_free(buf);
 	prefs_set_string(KEY_MOUNTPOINT, NULL);
+    }
+  
+    /* rename coverart to coverart_file */
+    if (prefs_get_string_value("coverart", &buf))
+    {
+	prefs_set_string("coverart_file", buf);
+	g_free(buf);
+	prefs_set_string("coverart", NULL);
     }
   
     /* Convert old path numbered keys to named ones */
