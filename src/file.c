@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-18 15:57:40 jcs>
+/* Time-stamp: <2006-09-21 20:45:20 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1622,6 +1622,7 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	    {   /* do we really have to copy the track again? */
 		if (strcmp (oldhash, etr->md5_hash) != 0)
 		{
+		    track->transferred = FALSE;
 		    data_changed (itdb);
 		}
 	    }

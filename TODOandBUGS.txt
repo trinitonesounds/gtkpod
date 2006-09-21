@@ -1,5 +1,7 @@
 TODO:
 
+- cddb lookup. See also http://musicbrainz.org/doc/libmusicbrainzDownload
+
 - wildcards for filename templates (automatic setting of tags from
   filename/cover art).
 

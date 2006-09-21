@@ -1,3 +1,9 @@
+2006-09-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file.c: (update_track_from_file): forgot to flag track
+          for re-transfer when hash value had changed (thanks to Todd
+          Zullinger).
+
 2006-09-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* mp3file.c: support reading of coverart from APIC
