@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-18 15:28:13 jcs>
+/* Time-stamp: <2006-09-21 23:56:52 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -352,7 +352,7 @@ static gboolean gp_track_set_thumbnails_internal (Track *track,
     if (result == FALSE)
     {
 	if (filename)
-	    gtkpod_warning (_("Failed to set cover art: '%s'"), filename);
+	    gtkpod_warning (_("Failed to set cover art: '%s'\n"), filename);
     }
 
     return result;

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-21 20:45:20 jcs>
+/* Time-stamp: <2006-09-21 22:56:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -982,11 +982,11 @@ static void add_coverart (Track *tr)
     while (*tplp && !filename_local)
     {
 	gchar *filename_utf8;
-	gchar *fname = get_string_from_template (tr, *tplp, TRUE);
+	gchar *fname = get_string_from_template (tr, *tplp, FALSE);
 	if (fname)
 	{
-	    if (strchr (fname, '.') != NULL)
-	    {   /* if fname has an extension, try if it is valid */
+	    if (strchr (*tplp, '.') != NULL)
+	    {   /* if template has an extension, try if it is valid */
 		filename_utf8 = g_build_filename (dirname, fname, NULL);
 		filename_local = charset_from_utf8 (filename_utf8);
 		g_free (filename_utf8);

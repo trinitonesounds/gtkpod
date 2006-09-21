@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-07-05 00:34:11 jcs>
+/* Time-stamp: <2006-09-21 23:51:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -523,6 +523,9 @@ gchar **track_get_item_pointer (Track *track, T_item t_item)
     case T_SUBTITLE:
 	result = &track->subtitle;
 	break;
+    case T_THUMB_PATH:
+	result = &etr->thumb_path_utf8;
+	break;
     case T_ALL:
     case T_IPOD_ID:
     case T_TRACK_NR:
@@ -609,6 +612,7 @@ gboolean track_copy_item (Track *frtrack, Track *totrack, T_item item)
     case T_PODCASTURL:
     case T_PODCASTRSS:
     case T_SUBTITLE:
+    case T_THUMB_PATH:
 	fritem = track_get_item (frtrack, item);
 	toitem_ptr = track_get_item_pointer (totrack, item);
 	g_return_val_if_fail (fritem, FALSE);
@@ -898,6 +902,22 @@ gchar *track_get_text (Track *track, T_item item)
 	if (itdb->usertype & GP_ITDB_TYPE_LOCAL)
 	{
 	    text = g_strdup (_("Local Database"));
+	}
+	break;
+    case T_THUMB_PATH:
+	text = g_strdup (etr->thumb_path_utf8);
+	if (!text || (strlen (text) == 0))
+	{   /* no path set */
+	    g_free (text);
+	    text = NULL;
+	    if (track->artwork && track->artwork->thumbnails)
+	    {   /* artwork is set */
+		text = g_strdup (_("Embedded or filename was lost"));
+	    }
+	    else
+	    {
+		text = g_strdup (_("Artwork not set"));
+	    }
 	}
 	break;
     case T_SIZE:
@@ -1192,6 +1212,7 @@ gboolean track_set_text (Track *track, const gchar *new_text, T_item item)
     case T_CHECKED:
     case T_ALL:
     case T_ITEM_NUM:
+    case T_THUMB_PATH: // TODO: this should in fact be settable
 	gtkpod_warning ("Programming error: track_set_text() called with illegal argument (item: %d)\n", item);
 	break;
     }

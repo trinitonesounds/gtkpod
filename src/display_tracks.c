@@ -1000,6 +1000,7 @@ static void tm_cell_data_func (GtkTreeViewColumn *tree_column,
       break;
   case TM_COLUMN_PC_PATH:
   case TM_COLUMN_IPOD_PATH:
+  case TM_COLUMN_THUMB_PATH:
       g_object_set (G_OBJECT (renderer),
 		    "text", text,
 		    "editable", FALSE,
@@ -1462,6 +1463,12 @@ static gint tm_data_compare (Track *track1, Track *track2,
   case TM_COLUMN_IPOD_PATH:
       cmp = g_utf8_collate (track1->ipod_path, track2->ipod_path);
       break;
+  case TM_COLUMN_THUMB_PATH:
+      etr1 = track1->userdata;
+      etr2 = track2->userdata;
+      g_return_val_if_fail (etr1 && etr2, 0);
+      cmp = g_utf8_collate (etr1->thumb_path_utf8, etr2->thumb_path_utf8);
+      break;
   case TM_COLUMN_TRANSFERRED:
       if(track1->transferred == track2->transferred)
 	  cmp = 0;
@@ -1564,6 +1571,7 @@ gboolean tm_search_equal_func (GtkTreeModel *model,
   case TM_COLUMN_YEAR:
   case TM_COLUMN_IPOD_PATH:
   case TM_COLUMN_COMPILATION:
+  case TM_COLUMN_THUMB_PATH:
     cmp = (compare_string_start_case_insensitive (
 	  track_get_item (track1, TM_to_T (column)),
 	  key) != 0);
@@ -1712,6 +1720,7 @@ static void tm_set_search_column (gint newcol)
     case TM_COLUMN_YEAR:
     case TM_COLUMN_IPOD_PATH:
     case TM_COLUMN_COMPILATION:
+    case TM_COLUMN_THUMB_PATH:
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (track_treeview), TRUE);
 	break;
     case TM_COLUMN_TRACK_NR:
@@ -1905,6 +1914,7 @@ static GtkTreeViewColumn *tm_add_column (TM_item tm_item, gint pos)
   case TM_COLUMN_SUBTITLE:
   case TM_COLUMN_PC_PATH:
   case TM_COLUMN_IPOD_PATH:
+  case TM_COLUMN_THUMB_PATH:
   case TM_COLUMN_SIZE:
       break;
   /* for some column names we want to use shorter alternatives to

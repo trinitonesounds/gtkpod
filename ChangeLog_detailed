@@ -4,6 +4,20 @@
           for re-transfer when hash value had changed (thanks to Todd
           Zullinger).
 
+	* src/file.c (add_coverart): handle templates better (no
+	  "safety" substitutions of characters). Thanks to Flavio
+	  Stanchino.
+
+	* gtkpod.glade
+	  src/details.c
+	  src/display.h
+	  src/display_itdb.c
+	  src/display_songs.c
+	  src/file.c
+	  src/misc_conversion.c
+	  src/misc_track.c: Display artwork path (thanks to Flavio
+	  Stanchino for most of the patch).
+
 2006-09-18 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* mp3file.c: support reading of coverart from APIC

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 00:22:57 jcs>
+/* Time-stamp: <2006-09-21 23:12:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -189,6 +189,7 @@ typedef enum  {
   TM_COLUMN_PODCASTRSS,
   TM_COLUMN_SUBTITLE,
   TM_COLUMN_TIME_RELEASED,
+  TM_COLUMN_THUMB_PATH,
   TM_NUM_COLUMNS
 } TM_item;
 
@@ -240,6 +241,7 @@ typedef enum {
     T_STOPTIME,
     T_REMEMBER_PLAYBACK_POSITION,
     T_SKIP_WHEN_SHUFFLING,
+    T_THUMB_PATH,   /* 40 */
     T_ITEM_NUM,
 } T_item;
 

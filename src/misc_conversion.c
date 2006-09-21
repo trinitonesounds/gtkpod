@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-17 13:54:43 jcs>
+/* Time-stamp: <2006-09-21 23:16:41 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -97,6 +97,7 @@ static const gchar *t_strings[] = {
     N_("Stop time"),
     N_("Remember Playback Position"),
     N_("Skip when Shuffling"),
+    N_("Artwork Path"),      /* 40 */
     NULL };
 
 /* Tooltips for prefs window */
@@ -189,7 +190,8 @@ T_item TM_to_T (TM_item tm)
     case TM_COLUMN_PODCASTRSS:    return T_PODCASTRSS;
     case TM_COLUMN_SUBTITLE:      return T_SUBTITLE;
     case TM_COLUMN_TIME_RELEASED: return T_TIME_RELEASED;
-    case TM_NUM_COLUMNS:          return -1;
+    case TM_COLUMN_THUMB_PATH:    return T_THUMB_PATH;
+    case TM_NUM_COLUMNS:          g_return_val_if_reached (-1);
     }
     return -1;
 }
@@ -209,7 +211,7 @@ T_item ST_to_T (ST_CAT_item st)
     case ST_CAT_TITLE:       return T_TITLE;
     case ST_CAT_YEAR:        return T_YEAR;
     case ST_CAT_SPECIAL:
-    case ST_CAT_NUM:         return -1;
+    case ST_CAT_NUM:         g_return_val_if_reached (-1);
     }
     return -1;
 }

@@ -1,6 +1,7 @@
 TODO:
 
-- cddb lookup. See also http://musicbrainz.org/doc/libmusicbrainzDownload
+- cddb lookup (http://freedb.freedb.org). See also
+  http://musicbrainz.org/doc/libmusicbrainzDownload
 
 - wildcards for filename templates (automatic setting of tags from
   filename/cover art).
@@ -291,6 +292,11 @@ sourceforge dot net).
 
 
 -----------------------------------------
+Coverart (JCS):
+Dragging tracks with coverart from Local to iPod may not work. It will
+definitely not work for coverart embedded in the MP3 file.
+
+
 Equalizer: (Julien Oster)
 As you certainly have noticed, the internal iPod equalizer is causing 
 ugly clipping (and thus horrible bass distortion) when using bass 

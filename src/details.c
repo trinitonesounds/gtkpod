@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-07-04 23:59:08 jcs>
+/* Time-stamp: <2006-09-21 23:31:59 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -596,6 +596,7 @@ static void details_setup_widget (Detail *detail, T_item item)
     case T_PODCASTRSS:
     case T_PC_PATH:
     case T_IPOD_PATH:
+    case T_THUMB_PATH:
     case T_IPOD_ID:
     case T_SIZE:
     case T_TRACKLEN:
@@ -700,6 +701,7 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
     case T_PODCASTRSS:
     case T_PC_PATH:
     case T_IPOD_PATH:
+    case T_THUMB_PATH:
     case T_IPOD_ID:
     case T_SIZE:
     case T_TRACKLEN:
@@ -978,7 +980,9 @@ static void details_get_item (Detail *detail, T_item item,
     case T_PC_PATH:
     case T_IPOD_PATH:
     case T_IPOD_ID:
+    case T_THUMB_PATH:
 	/* These are read-only only */
+	break;
 	break;
     case T_ALL:
     case T_ITEM_NUM:
@@ -1147,6 +1151,7 @@ static void details_update_thumbnail (Detail *detail)
 		gdk_pixbuf_unref (pixbuf);
 	    }
 	}
+	details_set_item (detail,  detail->track, T_THUMB_PATH);
     }
 
     if (gtk_image_get_storage_type (img) == GTK_IMAGE_EMPTY)
