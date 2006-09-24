@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-18 15:57:55 jcs>
+/* Time-stamp: <2006-09-24 12:52:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1561,6 +1561,10 @@ gboolean mp3_write_file_info (gchar *filename, Track *track)
 	set_uncommon_tag (id3tag, "YWFD", track->podcastrss, encoding);
 
 	id3_set_string (id3tag, "TCOM", track->composer, encoding);
+
+	string1 = g_strdup_printf("%d", track->year);
+	id3_set_string(id3tag, ID3_FRAME_YEAR, string1, encoding);
+	g_free(string1);
 
 	if (track->tracks)
 	    string1 = g_strdup_printf ("%d/%d",
