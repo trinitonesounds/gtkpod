@@ -186,7 +186,7 @@ Load iPod and eject iPod scripts
 Before loading the contents of an iPod, gtkpod will call
 ~/.gtkpod/gtkpod.load with the iPod's mountpoint as the only
 command line argument. Put any commands here needed to access the
-iPod.
+iPod, for example if you need to mount the iPod manually.
 
 When ejecting an iPod, gtkpod will call ~/.gtkpod/gtkpod.eject
 with the the iPod's mountpoint as the only command line argument. Put

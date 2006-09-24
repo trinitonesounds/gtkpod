@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-18 15:27:13 jcs>
+/* Time-stamp: <2006-09-24 20:49:39 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
@@ -231,7 +231,6 @@ static void set_default_preferences()
     prefs_set_string("coverart_template", "%A;folder.jpg");
     prefs_set_int("mserv_use", FALSE);
     prefs_set_string("mserv_username", "");
-    prefs_set_int("automount", FALSE);
     prefs_set_int("startup_messages", TRUE);
     prefs_set_int("add_recursively", TRUE);
     prefs_set_int("info_window", FALSE);
@@ -854,6 +853,7 @@ static void cleanup_keys()
     prefs_set_string("save_sorted_order", NULL);
     prefs_set_string("fix_path", NULL);
     prefs_set_string("write_gaintag", NULL);
+    prefs_set_string("automount", NULL);
 
 
     /* sp_created_cond renamed to sp_added_cond */

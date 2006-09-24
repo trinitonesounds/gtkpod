@@ -8098,31 +8098,14 @@ for this filename.</property>
 				  </child>
 
 				  <child>
-				    <widget class="GtkCheckButton" id="cfg_automount_ipod">
-				      <property name="visible">True</property>
-				      <property name="tooltip" translatable="yes">On startup gtkpod will call 'mount &lt;ipod mountpoint&gt;', on exit a 'umount &lt;ipod mountpoint&gt;' call is carried out. For more complicated arrangements please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts.</property>
-				      <property name="can_focus">True</property>
-				      <property name="label" translatable="yes">Handle mounting/unmounting of iPod drive</property>
-				      <property name="use_underline">True</property>
-				      <property name="relief">GTK_RELIEF_NORMAL</property>
-				      <property name="focus_on_click">True</property>
-				      <property name="active">False</property>
-				      <property name="inconsistent">False</property>
-				      <property name="draw_indicator">True</property>
-				      <signal name="toggled" handler="on_cfg_automount_ipod_toggled" last_modification_time="Thu, 14 Apr 2005 19:38:02 GMT"/>
-				    </widget>
-				    <packing>
-				      <property name="padding">0</property>
-				      <property name="expand">False</property>
-				      <property name="fill">False</property>
-				    </packing>
+				    <placeholder/>
 				  </child>
 
 				  <child>
 				    <widget class="GtkCheckButton" id="cfg_autoimport">
 				      <property name="visible">True</property>
 				      <property name="can_focus">True</property>
-				      <property name="label" translatable="yes">Automatically import iTunesDB on startup</property>
+				      <property name="label" translatable="yes">Automatically import iTunesDBs on startup</property>
 				      <property name="use_underline">True</property>
 				      <property name="relief">GTK_RELIEF_NORMAL</property>
 				      <property name="focus_on_click">True</property>

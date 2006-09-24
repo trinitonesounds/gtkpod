@@ -9,6 +9,13 @@
 
 	* po/es.po: updated version by Alejandro Lamas Daviña
 
+	* README
+	  src/main.c
+	  src/misc_confirm.c
+	  src/prefs.c
+	  src/prefs_window.c: removed references to "automount".
+
+
 2006-09-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file.c: (update_track_from_file): forgot to flag track

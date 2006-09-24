@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-18 15:35:32 jcs>
+/* Time-stamp: <2006-09-24 20:49:38 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -618,11 +618,6 @@ prefs_window_create (gint page)
 				 prefs_get_int("write_extended_info"));
 
 
-if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_automount_ipod")))
-    {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				     prefs_get_int("automount"));
-    }
     if ((w = gtkpod_xml_get_widget (prefs_window_xml, "cfg_sort_tab_num_sb")))
     {
 	gtk_spin_button_set_range (GTK_SPIN_BUTTON (w),
@@ -1381,14 +1376,6 @@ on_cfg_toolbar_style_icons_toggled      (GtkToggleButton *togglebutton,
 
 void prefs_window_set_toolbar_style (GtkToolbarStyle style)
 {
-}
-
-void
-on_cfg_automount_ipod_toggled          (GtkToggleButton *togglebutton,
-					gpointer         user_data)
-{
-    temp_prefs_set_int(temp_prefs, "automount",
-		       gtk_toggle_button_get_active (togglebutton));
 }
 
 void

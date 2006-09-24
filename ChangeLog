@@ -5,13 +5,19 @@ gtkpod V0.99.6CVS
        repositories). Each iPod can be loaded/ejected
        individually. Scripts are called before loading (gtkpod.load)
        and after saving (gtkpod.eject) with the mountpoint as the
-       first argument.
+       first argument. If you need to mount the iPod manually, put the
+       mount command in gtkpod.load.
 
-       IMPROVEMENT: Displays coverart on some newer iPod models now as
-       well -- this includes the new mobile phone iPods.
-
-       IMPROVEMENT: Coverart can be read from the APIC tag if present.
-       Up to now coverart had to be provided in spearate files.
+       IMPROVEMENT: Support for coverart has been improved. You may
+       have to select your iPod model from a list of available models
+       if your iPod cannot be identified automatically, as is the case
+       for iTunes mobile phones or the new 6th generation iPod Nanos.
+       Coverart embedded in the music file (APIC tag) can now also
+       read. Support to read the coverart from specified files is
+       still available though. Please note that at present APIC
+       support only works when adding tracks directly to the iPod. It
+       does not work when you add tracks to a LOCAL repository first
+       and use Drag and Drop to move the track to your iPod.
 
        IMPROVEMENT: Podcasts are marked as unplayed (on the iPod, with
        a bullet in front of the title) when newly added to the podcast
