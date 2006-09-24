@@ -15,6 +15,7 @@
 	  src/prefs.c
 	  src/prefs_window.c: removed references to "automount".
 
+	* configure.in: bumped to V0.99.8 for release
 
 2006-09-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
