@@ -17,6 +17,8 @@
 
 	* configure.in: bumped to V0.99.8 for release
 
+	* configure.in: bumped to V0.99.9CVS for new CVS version
+
 2006-09-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file.c: (update_track_from_file): forgot to flag track

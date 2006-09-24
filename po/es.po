@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-24 18:02+0900\n"
+"POT-Creation-Date: 2006-09-24 23:08+0900\n"
 "PO-Revision-Date: 2006-07-29 21:59+0200\n"
 "Last-Translator: Alejandro Lamas Daviña <alejandro.lamas@ific.uv.es>\n"
 "Language-Team:  <es_ES>\n"
@@ -97,7 +97,7 @@ msgstr ""
 msgid "_Check iPod's Files"
 msgstr "_Comprobar ficheros del iPod"
 
-#: gtkpod.glade:450 gtkpod.glade:12704
+#: gtkpod.glade:450 gtkpod.glade:12687
 msgid "_Edit"
 msgstr "_Editar"
 
@@ -291,7 +291,7 @@ msgstr "M_enos pestañas"
 msgid "_Arrange Sort Tabs"
 msgstr "_Ordenar pestañas"
 
-#: gtkpod.glade:1062 gtkpod.glade:13314
+#: gtkpod.glade:1062 gtkpod.glade:13297
 msgid "_Tools"
 msgstr "_Herramientas"
 
@@ -511,7 +511,7 @@ msgstr "Añadido"
 msgid "Display tracks that match the criteria entered above."
 msgstr "Mostrar las pistas que concuerden con el criterio de búsqueda."
 
-#: gtkpod.glade:2630 gtkpod.glade:12026
+#: gtkpod.glade:2630 gtkpod.glade:12009
 msgid "_Display"
 msgstr "_Mostrar"
 
@@ -576,8 +576,8 @@ msgstr "Opciones de ordenamiento"
 msgid "<b>Sort Order</b>"
 msgstr "<b>Opción de ordenamiento</b>"
 
-#: gtkpod.glade:3489 gtkpod.glade:4762 gtkpod.glade:11655 gtkpod.glade:12151
-#: gtkpod.glade:12266
+#: gtkpod.glade:3489 gtkpod.glade:4762 gtkpod.glade:11638 gtkpod.glade:12134
+#: gtkpod.glade:12249
 msgid "    "
 msgstr "    "
 
@@ -951,42 +951,29 @@ msgstr "Configurar el punto de montaje o editar las opciones de repositorio"
 msgid "<b>Import</b>"
 msgstr "<b>Importar</b>"
 
-#: gtkpod.glade:8103
-msgid ""
-"On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount "
-"<ipod mountpoint>' call is carried out. For more complicated arrangements "
-"please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."
-msgstr ""
-"En el arranque de gtkpod, éste intentará montar el ipod y al terminar "
-"intentará desmontarlo. Usar los guiones ~/.gtkpod/gtkpod.in y ~/.gtkpod/"
-"gtkpod.out para configuraciones avanzadas."
-
-#: gtkpod.glade:8105
-msgid "Handle mounting/unmounting of iPod drive"
-msgstr "Manejo del montaje/desmontaje del iPod"
-
-#: gtkpod.glade:8125
-msgid "Automatically import iTunesDB on startup"
+#: gtkpod.glade:8108
+#, fuzzy
+msgid "Automatically import iTunesDBs on startup"
 msgstr ""
 "Importar automáticamente la base de datos iTunes del iPod en el arranque"
 
-#: gtkpod.glade:8171
+#: gtkpod.glade:8154
 msgid "<b>Adding/Updating/Syncing</b>"
 msgstr "<b>Añadir/Actualizar/Sincronizar</b>"
 
-#: gtkpod.glade:8243
+#: gtkpod.glade:8226
 msgid "Exclude file mask(s)"
 msgstr ""
 
-#: gtkpod.glade:8268
+#: gtkpod.glade:8251
 msgid "Semicolon seperated list of file exclusion masks, e.g. '*.mp3'"
 msgstr ""
 
-#: gtkpod.glade:8302
+#: gtkpod.glade:8285
 msgid "_Encoding (ID3, files):"
 msgstr "Codificación(ID3, fich_eros):"
 
-#: gtkpod.glade:8337
+#: gtkpod.glade:8320
 msgid ""
 "gtkpod expects the ID3 tags and the filenames to be in the encoding "
 "specified here. You can change it for consecutive 'Add Files' and 'Add Dirs' "
@@ -997,7 +984,7 @@ msgstr ""
 "'Añadir ficheros' y 'Añadir directorios'. El juego de caracteres del sistema "
 "es el de la localización en uso."
 
-#: gtkpod.glade:8374
+#: gtkpod.glade:8357
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to update the track information. If you have chosen a wrong charset when "
@@ -1015,7 +1002,7 @@ msgstr ""
 "datos iTunes' mas abajo). Las pistas importadas con versiones previas a la "
 "0.51 no tienen almacenado el juego de caracteres."
 
-#: gtkpod.glade:8376
+#: gtkpod.glade:8359
 msgid ""
 "Use selected encoding also when updating \n"
 "or syncing tracks"
@@ -1023,37 +1010,37 @@ msgstr ""
 "Usar codificación seleccionada al actualizar\n"
 "o sincronizar las pistas"
 
-#: gtkpod.glade:8396
+#: gtkpod.glade:8379
 msgid "If you check this, gtkpod will descend into subdirectories recursively."
 msgstr ""
 "Con esta opción, gtkpod descenderá recursivamente en los subdirectorios."
 
-#: gtkpod.glade:8398
+#: gtkpod.glade:8381
 msgid "Add directories recursively"
 msgstr "Añadir directorios recursivamente"
 
-#: gtkpod.glade:8417
+#: gtkpod.glade:8400
 msgid "Duplicate Recognition is based on a (modified) md5 hash over the file."
 msgstr ""
 "El reconocimiento de duplicados está basado en una función de resumen MD5 "
 "(modificada) sobre el fichero."
 
-#: gtkpod.glade:8419
+#: gtkpod.glade:8402
 msgid "Don't allow file duplication"
 msgstr "No permitir ficheros duplicados"
 
-#: gtkpod.glade:8469
+#: gtkpod.glade:8452
 msgid ""
 "Display the list of duplicates that have been detected after adding files."
 msgstr ""
 "Mostrar la lista de ficheros duplicados que han sido detectados al añadir "
 "ficheros."
 
-#: gtkpod.glade:8471
+#: gtkpod.glade:8454
 msgid "Display info about detected duplicates"
 msgstr "Mostar información sobre los ficheros duplicados detectados"
 
-#: gtkpod.glade:8497
+#: gtkpod.glade:8480
 msgid ""
 "If the filename (full path) of an existing track matches that of a track to "
 "be added, this option allows you to update the information about the "
@@ -1067,7 +1054,7 @@ msgstr ""
 "fichero no ha cambiado y está seleccionada la opción 'No permitir ficheros "
 "duplicados' más abajo."
 
-#: gtkpod.glade:8499
+#: gtkpod.glade:8482
 msgid ""
 "When adding dirs/files, update information of\n"
 "existing tracks with identical filenames"
@@ -1075,31 +1062,31 @@ msgstr ""
 "Actualizar la información de las pistas existentes al añadir directorios/"
 "ficheros con el mismo nombre"
 
-#: gtkpod.glade:8550
+#: gtkpod.glade:8533
 msgid "Display a list of tracks that could actually be updated."
 msgstr "Mostrar las pistas que pueden ser actualizadas."
 
-#: gtkpod.glade:8552
+#: gtkpod.glade:8535
 msgid "Display info about updated tracks"
 msgstr "Mostrar información sobre las pistas actualizadas"
 
-#: gtkpod.glade:8609
+#: gtkpod.glade:8592
 msgid "Display a list of tracks that could not be updated."
 msgstr "Mostrar las pistas que no pueden ser actualizadas."
 
-#: gtkpod.glade:8611
+#: gtkpod.glade:8594
 msgid "Display info about non-updated tracks"
 msgstr "Mostrar información sobre las pistas no actualizadas"
 
-#: gtkpod.glade:8637
+#: gtkpod.glade:8620
 msgid "When syncing playlists"
 msgstr "Al sincronizar listas de reproducción"
 
-#: gtkpod.glade:8711
+#: gtkpod.glade:8694
 msgid "Confirm lists of directories"
 msgstr "Confirmar la lista de directorios"
 
-#: gtkpod.glade:8729 gtkpod.glade:17775
+#: gtkpod.glade:8712 gtkpod.glade:17758
 msgid ""
 "Normally, if a track is no longer present in the sync directory, it will be "
 "removed from the playlist, but not from the iPod or local repository.\n"
@@ -1120,7 +1107,7 @@ msgstr ""
 "debe estar seleccionada, porque borrar de la lista de reproducción maestra "
 "significa borrar del iPod."
 
-#: gtkpod.glade:8733 gtkpod.glade:17779
+#: gtkpod.glade:8716 gtkpod.glade:17762
 msgid ""
 "Delete tracks that are no longer present from the\n"
 "ipod or repository"
@@ -1128,15 +1115,15 @@ msgstr ""
 "Borrar las pistas que no se encuentran presentes\n"
 "del iPod o del repositorio"
 
-#: gtkpod.glade:8752
+#: gtkpod.glade:8735
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
 msgstr "Esta es la misma opcion que en 'Confirmar Editar/Borrar'"
 
-#: gtkpod.glade:8754 gtkpod.glade:17799
+#: gtkpod.glade:8737 gtkpod.glade:17782
 msgid "Confirm before removing tracks from the iPod or repository"
 msgstr "Confirmar antes de borrar pistas del iPod o del repositorio"
 
-#: gtkpod.glade:8773 gtkpod.glade:17817
+#: gtkpod.glade:8756 gtkpod.glade:17800
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
@@ -1144,15 +1131,15 @@ msgstr ""
 "Se mostrará una lista de las pistas eliminadas y una lista de las pistas "
 "añadidas o actualizadas."
 
-#: gtkpod.glade:8775 gtkpod.glade:17819
+#: gtkpod.glade:8758 gtkpod.glade:17802
 msgid "Show summary of sync result"
 msgstr "Mostrar resumen del resultado de la sincronización"
 
-#: gtkpod.glade:8836
+#: gtkpod.glade:8819
 msgid "<b>Sync</b>"
 msgstr "<b>Sincronizar</b>"
 
-#: gtkpod.glade:8892
+#: gtkpod.glade:8875
 msgid ""
 "Highly recommended for faster import when taking advantage of the "
 "duplication recognition. Also, having the PC filenames allows writing "
@@ -1163,7 +1150,7 @@ msgstr ""
 "Recomendado para conseguir una importación más rápida cuando se está usando "
 "la detección de duplicados."
 
-#: gtkpod.glade:8894
+#: gtkpod.glade:8877
 msgid ""
 "Write extended information (PC filenames,\n"
 " MD5 hashes, encoding). Recommended."
@@ -1171,20 +1158,20 @@ msgstr ""
 "Escribir la información extendida (nombre de fichero en PC,\n"
 "función resumen MD5, codificación). Recomendado."
 
-#: gtkpod.glade:8938 gtkpod.glade:14705
+#: gtkpod.glade:8921 gtkpod.glade:14688
 msgid "_General"
 msgstr "_General"
 
-#: gtkpod.glade:8974
+#: gtkpod.glade:8957
 msgid "<b>Tag Reading</b>"
 msgstr "<b>Lectura de los atributos</b>"
 
-#: gtkpod.glade:9037
+#: gtkpod.glade:9020
 msgid "Read tags from file contents (e.g. ID3 tags in MP3 files)"
 msgstr ""
 "Leer atributos del contenido del fichero (p.e: atributos ID3 en ficheros MP3)"
 
-#: gtkpod.glade:9056 gtkpod.glade:9430
+#: gtkpod.glade:9039 gtkpod.glade:9413
 msgid ""
 "artist: %a, album: %A, composer: %c, title: %t, genre: %G, track nr: %T, CD "
 "nr: %C, year: %Y, skip data: %*, the character '%': %%. You can separate "
@@ -1197,17 +1184,17 @@ msgstr ""
 "concuerde con el nombre de fichero será usada. Ejemplo: '%a - %A/%T %t.mp3;%"
 "t.wav'."
 
-#: gtkpod.glade:9058
+#: gtkpod.glade:9041
 msgid "Use this template to parse filename for tag information:"
 msgstr ""
 "Usar esta plantilla para analizar sintácticamente el nombre de fichero para "
 "la información de los atributos."
 
-#: gtkpod.glade:9135
+#: gtkpod.glade:9118
 msgid "Overwrite tags that are already set"
 msgstr "Sobreescribir atributos ya establecidos"
 
-#: gtkpod.glade:9168
+#: gtkpod.glade:9151
 msgid ""
 "As a last resort set the following tags to the\n"
 "filename if they are (still) empty:"
@@ -1215,53 +1202,53 @@ msgstr ""
 "Como último recurso, establecer los siguientes\n"
 " atributos al nombre de fichero si (todavía) están vacíos."
 
-#: gtkpod.glade:9204 src/display_sorttabs.c:2942 src/display_spl.c:85
+#: gtkpod.glade:9187 src/display_sorttabs.c:2942 src/display_spl.c:85
 #: src/misc_conversion.c:62
 msgid "Artist"
 msgstr "Artista"
 
-#: gtkpod.glade:9226 src/display_sorttabs.c:2948 src/display_spl.c:89
+#: gtkpod.glade:9209 src/display_sorttabs.c:2948 src/display_spl.c:89
 #: src/misc_conversion.c:64
 msgid "Genre"
 msgstr "Género"
 
 #. 0
-#: gtkpod.glade:9248 src/display_sorttabs.c:2945 src/display_spl.c:84
+#: gtkpod.glade:9231 src/display_sorttabs.c:2945 src/display_spl.c:84
 #: src/misc_conversion.c:61
 msgid "Album"
 msgstr "Álbum"
 
 #. 5
-#: gtkpod.glade:9270 src/display_spl.c:97 src/misc_conversion.c:66
+#: gtkpod.glade:9253 src/display_spl.c:97 src/misc_conversion.c:66
 msgid "Composer"
 msgstr "Compositor"
 
-#: gtkpod.glade:9292 src/display_sorttabs.c:2954 src/display_spl.c:83
+#: gtkpod.glade:9275 src/display_sorttabs.c:2954 src/display_spl.c:83
 #: src/misc_conversion.c:63
 msgid "Title"
 msgstr "Título"
 
-#: gtkpod.glade:9347
+#: gtkpod.glade:9330
 #, fuzzy
 msgid "<b>Coverart</b>"
 msgstr "<b>Importar</b>"
 
-#: gtkpod.glade:9409
+#: gtkpod.glade:9392
 msgid ""
 "Music files can have images embedded in the APIC tag. Currently this is only "
 "supported for MP3 files."
 msgstr ""
 
-#: gtkpod.glade:9411
+#: gtkpod.glade:9394
 msgid "Read coverart from embedded APIC data"
 msgstr ""
 
-#: gtkpod.glade:9432
+#: gtkpod.glade:9415
 #, fuzzy
 msgid "Add coverart from file using the following template"
 msgstr "Añadir carátulas desde fichero usando la siguiente plantilla"
 
-#: gtkpod.glade:9488
+#: gtkpod.glade:9471
 msgid ""
 "Determines the name of the file with the cover art. You can separate several "
 "patterns by semicolons which will be tried in order. Artist: %a, album: %A, "
@@ -1277,133 +1264,133 @@ msgstr ""
 "de información extendida): %o, nombre de fichero sin extensión: %O, actual "
 "lista de reproducción: %p, el carácter '%': %%."
 
-#: gtkpod.glade:9509
+#: gtkpod.glade:9492
 msgid "<b>Examples</b>"
 msgstr "<b>Ejemplos</b>"
 
-#: gtkpod.glade:9543
+#: gtkpod.glade:9526
 msgid "folder.jpg"
 msgstr "folder.jpg"
 
-#: gtkpod.glade:9571
+#: gtkpod.glade:9554
 msgid "folder"
 msgstr "folder"
 
-#: gtkpod.glade:9599
+#: gtkpod.glade:9582
 msgid "../%A.jpg"
 msgstr "../%A.jpg"
 
-#: gtkpod.glade:9627
+#: gtkpod.glade:9610
 msgid "%A"
 msgstr "%A"
 
-#: gtkpod.glade:9655
+#: gtkpod.glade:9638
 msgid "Use <i>folder.jpg</i> as cover art."
 msgstr "Usar <i>folder.jpg</i> como carátula."
 
-#: gtkpod.glade:9683
+#: gtkpod.glade:9666
 msgid "Use <i>folder.jpg</i>, <i>folder.png</i>..."
 msgstr "Usar <i>folder.jpg</i>, <i>folder.png</i>..."
 
-#: gtkpod.glade:9711
+#: gtkpod.glade:9694
 msgid "Use <i>&lt;Album&gt;.jpg</i> in the parent directory"
 msgstr "Usar <i>&lt;Álbum&gt;.jpg</i> en el directorio padre"
 
-#: gtkpod.glade:9739
+#: gtkpod.glade:9722
 msgid "Use <i>&lt;Album&gt;.jpg</i>, <i>&lt;Album&gt;.png</i>..."
 msgstr "Usar <i>&lt;Álbum&gt;.jpg</i>, <i>&lt;Álbum&gt;.png</i>..."
 
-#: gtkpod.glade:9767
+#: gtkpod.glade:9750
 msgid "folder.jpg;%a.jpg"
 msgstr "folder.jpg;%a.jpg"
 
-#: gtkpod.glade:9795
+#: gtkpod.glade:9778
 msgid "First try <i>folder.jpg</i>, then <i>&lt;artist&gt;.jpg</i>"
 msgstr "Intentar primero <i>folder.jpg</i>, después <i>&lt;artist&gt;.jpg</i>"
 
-#: gtkpod.glade:9852
+#: gtkpod.glade:9835
 msgid "If both options are selected, embedded APIC data takes precedence."
 msgstr ""
 
-#: gtkpod.glade:9904
+#: gtkpod.glade:9887
 msgid "<b>mserv</b>"
 msgstr "<b>mserv</b>"
 
-#: gtkpod.glade:9966 gtkpod.glade:10192
+#: gtkpod.glade:9949 gtkpod.glade:10175
 msgid "Currently only rating is supported."
 msgstr "De momento sólo se puede puntuar."
 
-#: gtkpod.glade:9968
+#: gtkpod.glade:9951
 msgid "Use mserv database to fill additional information"
 msgstr "Usar la base de datos mserv para rellenar la información adicional"
 
-#: gtkpod.glade:9996
+#: gtkpod.glade:9979
 msgid "Music Root:"
 msgstr "Directorio raíz de la música:"
 
-#: gtkpod.glade:10024
+#: gtkpod.glade:10007
 msgid "mserv database lookup will be done for music in this directory."
 msgstr "La base de datos mserv buscará música en este directorio."
 
-#: gtkpod.glade:10046
+#: gtkpod.glade:10029
 msgid "mserv Root:"
 msgstr "Directorio raíz de mserv:"
 
-#: gtkpod.glade:10074
+#: gtkpod.glade:10057
 msgid "Root directory of mserv database (trackinfo root)."
 msgstr ""
 "Directorio raíz de la base de datos mserv (raíz de la información sobre las "
 "pistas)."
 
-#: gtkpod.glade:10096
+#: gtkpod.glade:10079
 msgid "Username:"
 msgstr "Nombre de usuario:"
 
-#: gtkpod.glade:10124
+#: gtkpod.glade:10107
 msgid "Username to be used for mserv database lookup."
 msgstr ""
 "Nombre de usuario que se usará en la búsqueda de la base de datos mserv."
 
-#: gtkpod.glade:10148 gtkpod.glade:10167 gtkpod.glade:12906 gtkpod.glade:12925
-#: gtkpod.glade:13086 gtkpod.glade:13155 gtkpod.glade:17176 gtkpod.glade:17196
-#: gtkpod.glade:17216 gtkpod.glade:17236 gtkpod.glade:17256 gtkpod.glade:17696
-#: gtkpod.glade:18255 gtkpod.glade:18298 gtkpod.glade:18318 gtkpod.glade:18728
+#: gtkpod.glade:10131 gtkpod.glade:10150 gtkpod.glade:12889 gtkpod.glade:12908
+#: gtkpod.glade:13069 gtkpod.glade:13138 gtkpod.glade:17159 gtkpod.glade:17179
+#: gtkpod.glade:17199 gtkpod.glade:17219 gtkpod.glade:17239 gtkpod.glade:17679
+#: gtkpod.glade:18238 gtkpod.glade:18281 gtkpod.glade:18301 gtkpod.glade:18711
 msgid "Browse"
 msgstr "Examinar"
 
-#: gtkpod.glade:10194
+#: gtkpod.glade:10177
 msgid "Show information about problems when accessing mserv"
 msgstr "Mostrar errores en el acceso a mserv"
 
-#: gtkpod.glade:10240
+#: gtkpod.glade:10223
 msgid "_Track Info"
 msgstr "_Información de la pista"
 
-#: gtkpod.glade:10290
+#: gtkpod.glade:10273
 msgid "<b>Displayed Track Attributes</b>"
 msgstr "<b>Atributos de la pista mostrados</b>"
 
-#: gtkpod.glade:11100
+#: gtkpod.glade:11083
 msgid "<b>Sort Tabs</b>"
 msgstr "<b>Pestañas</b>"
 
-#: gtkpod.glade:11162
+#: gtkpod.glade:11145
 msgid "Keeps all compilation CDs grouped together in the artists sort tab."
 msgstr "Mantiene agrupados en la pestaña de artistas todos los CDs generados."
 
-#: gtkpod.glade:11164
+#: gtkpod.glade:11147
 msgid "Group artists on compilation CDs"
 msgstr "Agrupar los artistas en los CDs generados"
 
-#: gtkpod.glade:11189
+#: gtkpod.glade:11172
 msgid "_Number of sort tabs:"
 msgstr "_Número de pestañas:"
 
-#: gtkpod.glade:11269
+#: gtkpod.glade:11252
 msgid "<b>Automatically select...</b>"
 msgstr "<b>Seleccionar automáticamente...</b>"
 
-#: gtkpod.glade:11331
+#: gtkpod.glade:11314
 msgid ""
 "If you don't select the master playlist automatically, the initial database "
 "import is much faster because the display dosn't have to be updated."
@@ -1412,51 +1399,51 @@ msgstr ""
 "importación inicial de la base de datos es mucho más rápida porque no es "
 "necesario actualizar la pantalla."
 
-#: gtkpod.glade:11333
+#: gtkpod.glade:11316
 msgid "...master playlist"
 msgstr "...lista de reproducción principal"
 
-#: gtkpod.glade:11353
+#: gtkpod.glade:11336
 msgid "...entry 'All' in sort tab..."
 msgstr "...entrada 'Todo' en la pestaña..."
 
-#: gtkpod.glade:11438
+#: gtkpod.glade:11421
 msgid "<b>Tooltips</b>"
 msgstr "<b>Sugerencias</b>"
 
-#: gtkpod.glade:11501
+#: gtkpod.glade:11484
 msgid "Display tooltips in main window"
 msgstr "Mostrar sugerencias en la ventana principal"
 
-#: gtkpod.glade:11521
+#: gtkpod.glade:11504
 msgid "Display tooltips in prefs window"
 msgstr "Mostrar sugerencias en la ventana de preferencias"
 
-#: gtkpod.glade:11567
+#: gtkpod.glade:11550
 msgid "<b>Toolbar</b>"
 msgstr "<b>Barra de herramientas</b>"
 
-#: gtkpod.glade:11630
+#: gtkpod.glade:11613
 msgid "Display toolbar..."
 msgstr "Mostrar barra de herramientas..."
 
-#: gtkpod.glade:11687
+#: gtkpod.glade:11670
 msgid "...as icons"
 msgstr "...como iconos"
 
-#: gtkpod.glade:11707
+#: gtkpod.glade:11690
 msgid "...as text"
 msgstr "...como texto"
 
-#: gtkpod.glade:11728
+#: gtkpod.glade:11711
 msgid "...both as icons and text"
 msgstr "...ambos. Como iconos y como texto"
 
-#: gtkpod.glade:11789
+#: gtkpod.glade:11772
 msgid "<b>Misc</b>"
 msgstr "<b>Miscelaneo</b>"
 
-#: gtkpod.glade:11851
+#: gtkpod.glade:11834
 msgid ""
 "It is much faster to sort the display after all tracks have been added. Some "
 "people might feel irritated by this behaviour and should uncheck this option."
@@ -1465,7 +1452,7 @@ msgstr ""
 "pistas. A las personas que les moleste este comportamiento no deben usar "
 "esta opción."
 
-#: gtkpod.glade:11853
+#: gtkpod.glade:11836
 msgid ""
 "Temporarily disable sorting when changing playlist\n"
 "or tab entry (faster!)"
@@ -1473,7 +1460,7 @@ msgstr ""
 "Deshabilitar temporalmente la ordenación en los cambios \n"
 "de lista de reproducción o de pestañas (¡más rápido!)"
 
-#: gtkpod.glade:11873
+#: gtkpod.glade:11856
 msgid ""
 "The display can be blocked after changing a selection. The display update is "
 "faster, but you have to wait until it's finished. When using this option, "
@@ -1484,7 +1471,7 @@ msgstr ""
 "usar esta opción, también el ordenamiento está desactivado temporalmente "
 "(ver opción superior)."
 
-#: gtkpod.glade:11875
+#: gtkpod.glade:11858
 msgid ""
 "Block display when changing playlist or tab\n"
 " entry (faster!)"
@@ -1492,23 +1479,23 @@ msgstr ""
 "Bloquear la visualización al cambiar de lista de\n"
 " reproducción o de pestaña (¡más rápido!)"
 
-#: gtkpod.glade:11895
+#: gtkpod.glade:11878
 msgid "This option will be re-activated when you upgrade gtkpod."
 msgstr "Esta opción se reactivará al acualizar gtkpod."
 
-#: gtkpod.glade:11897
+#: gtkpod.glade:11880
 msgid "Display messages and warnings at startup"
 msgstr "Mostrar mensajes y avisos al inicio"
 
-#: gtkpod.glade:11959
+#: gtkpod.glade:11942
 msgid "Advanced Sorting Options"
 msgstr "Opciones de ordenación avanzadas"
 
-#: gtkpod.glade:12062
+#: gtkpod.glade:12045
 msgid "<b>Track Editing</b>"
 msgstr "<b>Edición de pistas</b>"
 
-#: gtkpod.glade:12124
+#: gtkpod.glade:12107
 msgid ""
 "The tags are written to the files on your harddrive and on the ipod (if "
 "available)."
@@ -1516,11 +1503,11 @@ msgstr ""
 "Los atributos son escritos en los ficheros del disco duro y en el iPod (si "
 "está disponible)."
 
-#: gtkpod.glade:12126
+#: gtkpod.glade:12109
 msgid "Write ID3 tags to disk when modified in gtkpod"
 msgstr "Escribir los atributos ID3 al disco cuando se modifiquen en gtkpod"
 
-#: gtkpod.glade:12182
+#: gtkpod.glade:12165
 msgid ""
 "Normally the charset specified when first importing the track will be used "
 "to write the tags. If you have chosen a wrong charset when first importing a "
@@ -1540,7 +1527,7 @@ msgstr ""
 "caracteres almacenado, el juego de caracteres usado será el especificado en "
 "el apartado de 'Entrada/Salida'."
 
-#: gtkpod.glade:12184
+#: gtkpod.glade:12167
 msgid ""
 "Use selected encoding (on the 'General' page)\n"
 "when writing tags"
@@ -1548,7 +1535,7 @@ msgstr ""
 "Usar la condificación seleccionada (en la pestaña 'General')\n"
 "al escribir los atributos"
 
-#: gtkpod.glade:12204
+#: gtkpod.glade:12187
 msgid ""
 "This is the way to go, but maybe not all programs support it yet. ID3v2.4 "
 "uses unicode to store the tags, so you won't have to worry about charsets "
@@ -1563,11 +1550,11 @@ msgstr ""
 "en ASCII. Los atributos ID·v2.2/4 también serán escritos si se encuentran "
 "previamente en el fichero a escribir."
 
-#: gtkpod.glade:12206
+#: gtkpod.glade:12189
 msgid "Always write ID3v2.4 tags (only applies to MP3)"
 msgstr "Escribir siempre atributos ID3v2.4 (aplicable sólo a ficheros MP3)"
 
-#: gtkpod.glade:12239
+#: gtkpod.glade:12222
 msgid ""
 "If you select several tracks in the track list and edit a tag of the first "
 "track, the tags in the other tracks are updated as well."
@@ -1576,11 +1563,11 @@ msgstr ""
 "en una de las pistas, el atributo también es actualizado en el resto de las "
 "pistas seleccionadas."
 
-#: gtkpod.glade:12241
+#: gtkpod.glade:12224
 msgid "Use 'Multi-Edit' for tracks selections"
 msgstr "Usar 'Multi-Edición' en la selección de las pistas"
 
-#: gtkpod.glade:12291
+#: gtkpod.glade:12274
 msgid ""
 "Usually you don't want to set the title of several tracks to the same text. "
 "This option might avoid unwanted results (especially since there is no "
@@ -1590,20 +1577,20 @@ msgstr ""
 "texto. Esta opción evita resultados no deseados (especialmente al no "
 "disponer de la opción 'deshacer')"
 
-#: gtkpod.glade:12293
+#: gtkpod.glade:12276
 msgid "Use 'Multi-Edit' also for title field"
 msgstr "Usar 'Multi-Edición' también para el campo título"
 
-#: gtkpod.glade:12346
+#: gtkpod.glade:12329
 msgid "<b>Auto-Generated Playlists</b>"
 msgstr "<b>Listas de reproducción generadas automáticamente</b>"
 
-#: gtkpod.glade:12414
+#: gtkpod.glade:12397
 msgid "Number of tracks in generated playlists:"
 msgstr ""
 "Número de pistas en las listas de reproducción generadas automáticamente:"
 
-#: gtkpod.glade:12439
+#: gtkpod.glade:12422
 msgid ""
 "Number of tracks in the generated playlists 'Most Often Listened', 'Best "
 "Rated' and 'Most Recently Played'. Choose '0' for 'no limit'."
@@ -1612,34 +1599,34 @@ msgstr ""
 "'Mejor puntuadas' y 'Más recientemente reproducidas' generadas "
 "automáticamente. Elegir '0' para suprimir el límite."
 
-#: gtkpod.glade:12468
+#: gtkpod.glade:12451
 msgid "Also include tracks never played in \"Best Rated\" playlist"
 msgstr ""
 "Incluir también las pistas nunca reproducidas en las listas de reproducción "
 "\"Mejor puntuadas\""
 
-#: gtkpod.glade:12514
+#: gtkpod.glade:12497
 msgid "<b>Delete Confirmation</b>"
 msgstr "<b>Confirmación de borrado</b>"
 
-#: gtkpod.glade:12577
+#: gtkpod.glade:12560
 msgid "Before removing playlists or tracks from a playlist"
 msgstr ""
 "Antes de borrar listas de reproducción o pistas de una lista de reproducción"
 
-#: gtkpod.glade:12597
+#: gtkpod.glade:12580
 msgid "Before removing tracks from the iPod"
 msgstr "Antes de borrar pistas del iPod"
 
-#: gtkpod.glade:12617
+#: gtkpod.glade:12600
 msgid "Before removing tracks from the harddisk"
 msgstr "Antes de borrar pistas del disco duro"
 
-#: gtkpod.glade:12637
+#: gtkpod.glade:12620
 msgid "Before removing tracks from the local database"
 msgstr "Antes de borrar pistas de la base de datos"
 
-#: gtkpod.glade:12657
+#: gtkpod.glade:12640
 msgid ""
 "Confirm before removing tracks from the iPod or repository\n"
 "when syncing playlists"
@@ -1647,19 +1634,19 @@ msgstr ""
 "Confirmar antes de borrar pistas del iPod o del repositorio\n"
 "al sincronizar las listas de reproducción"
 
-#: gtkpod.glade:12740
+#: gtkpod.glade:12723
 msgid "<b>Play</b>"
 msgstr "<b>Reproducir</b>"
 
-#: gtkpod.glade:12805
+#: gtkpod.glade:12788
 msgid "Command for 'Play now':"
 msgstr "Programa para 'Reproducir':"
 
-#: gtkpod.glade:12833
+#: gtkpod.glade:12816
 msgid "Command for 'Enqueue':"
 msgstr "Programa para 'Encolar':"
 
-#: gtkpod.glade:12861
+#: gtkpod.glade:12844
 msgid ""
 "For example, 'xmms %s' will clear xmms' current playlist, add the selected "
 "tracks and start playing."
@@ -1667,7 +1654,7 @@ msgstr ""
 "Por ejemplo, 'xmms %s' limpiará la actual lista de reproducción, añadirá las "
 "pistas seleccionadas y comenzará su reproducción."
 
-#: gtkpod.glade:12883
+#: gtkpod.glade:12866
 msgid ""
 "For example, 'xmms -e %s' will append (enqueue) the selected tracks to xmms' "
 "current playlist."
@@ -1675,15 +1662,15 @@ msgstr ""
 "Por ejemplo, 'xmms -e %s' añadirá las pistas seleccionadas al final de la "
 "actual lista de reproducción de xmms."
 
-#: gtkpod.glade:12970
+#: gtkpod.glade:12953
 msgid "<b>Volume Normalization</b>"
 msgstr "<b>Normalización del volumen</b>"
 
-#: gtkpod.glade:13035
+#: gtkpod.glade:13018
 msgid "'mp3gain' executable:"
 msgstr "programa 'mp3gain':"
 
-#: gtkpod.glade:13063
+#: gtkpod.glade:13046
 msgid ""
 "Set this to 'mp3gain -q -k' to use the 'Normalize volume' functionality in "
 "the Tools Menu. If this is set, missing normalization data for mp3 files "
@@ -1694,11 +1681,11 @@ msgstr ""
 "normalización serán calculados y escritos a los ficheros mp3 que no los "
 "tengan usando este comando."
 
-#: gtkpod.glade:13104
+#: gtkpod.glade:13087
 msgid "'aacgain' executable:"
 msgstr "programa 'aacgain':"
 
-#: gtkpod.glade:13132
+#: gtkpod.glade:13115
 msgid ""
 "Set this to 'aacgain -q -k' to use the 'Normalize volume' functionality in "
 "the Tools Menu. If this is set, missing normalization data for .m4a and .m4b "
@@ -1709,27 +1696,27 @@ msgstr ""
 "normalización serán calculados y escritos a los ficheros .m4a y m4b que no "
 "los tengan usando este comando."
 
-#: gtkpod.glade:13200
+#: gtkpod.glade:13183
 msgid "<b>Calendar/Contacts/Notes</b>"
 msgstr "<b>Calendario/Contactos/Notas</b>"
 
-#: gtkpod.glade:13263
+#: gtkpod.glade:13246
 msgid "Set options for Calendar/Contacts/Notes"
 msgstr "Configurar opciones para Calendario/Contactos/Notas"
 
-#: gtkpod.glade:13398
+#: gtkpod.glade:13381
 msgid "Details"
 msgstr "Detalles"
 
-#: gtkpod.glade:13466
+#: gtkpod.glade:13449
 msgid "Cover"
 msgstr "Portada"
 
-#: gtkpod.glade:13555
+#: gtkpod.glade:13538
 msgid "Set Cover Art"
 msgstr "Configurar portada"
 
-#: gtkpod.glade:13592
+#: gtkpod.glade:13575
 msgid ""
 "If you check this, information (cover art and meta information) changed for "
 "this track will be copied to all other selected tracks as well. Use with "
@@ -1739,7 +1726,7 @@ msgstr ""
 "pista que se modifique será copiada a la vez a todas las otras pistas "
 "seleccionadas. Usar con precaución."
 
-#: gtkpod.glade:13638
+#: gtkpod.glade:13621
 msgid ""
 "Change all tracks\n"
 "simultaneously"
@@ -1747,76 +1734,76 @@ msgstr ""
 "Cambiar todas las pistas\n"
 "a la vez"
 
-#: gtkpod.glade:13730
+#: gtkpod.glade:13713
 msgid "Remove Cover Art"
 msgstr "Borrar portada"
 
-#: gtkpod.glade:14663
+#: gtkpod.glade:14646
 msgid "(Checked)"
 msgstr "(Revisado)"
 
-#: gtkpod.glade:15105
+#: gtkpod.glade:15088
 msgid "_Podcasts"
 msgstr "_Podcasts"
 
-#: gtkpod.glade:16144
+#: gtkpod.glade:16127
 msgid "_Other"
 msgstr "_Otro"
 
-#: gtkpod.glade:16442
+#: gtkpod.glade:16425
 msgid "_Undo All"
 msgstr "_Deshacer Todo"
 
-#: gtkpod.glade:16516
+#: gtkpod.glade:16499
 msgid "_Undo Track"
 msgstr "_Deshacer pista"
 
-#: gtkpod.glade:16563
+#: gtkpod.glade:16546
 msgid "Repository Options"
 msgstr "Opciones de repositorio"
 
-#: gtkpod.glade:16684
+#: gtkpod.glade:16667
 msgid "Add new repository/iPod"
 msgstr "Añadir nuevo repositorio/iPod"
 
-#: gtkpod.glade:16753 gtkpod.glade:18180 gtkpod.glade:18676
+#: gtkpod.glade:16736 gtkpod.glade:18163 gtkpod.glade:18659
 msgid "iPod mountpoint:"
 msgstr "Punto de montaje del iPod:"
 
-#: gtkpod.glade:16781 gtkpod.glade:18152
+#: gtkpod.glade:16764 gtkpod.glade:18135
 msgid "iTunesDB backup:"
 msgstr "Copia de seguridad de iTunesDB:"
 
-#: gtkpod.glade:16809 gtkpod.glade:18124 gtkpod.glade:18747 gtkpod.glade:18939
+#: gtkpod.glade:16792 gtkpod.glade:18107 gtkpod.glade:18730 gtkpod.glade:18922
 msgid "Model:"
 msgstr "Modelo:"
 
-#: gtkpod.glade:16837 gtkpod.glade:18096
+#: gtkpod.glade:16820 gtkpod.glade:18079
 msgid "Path:"
 msgstr "Ruta:"
 
-#: gtkpod.glade:16865
+#: gtkpod.glade:16848
 msgid "<b>Synchronization</b>"
 msgstr "<b>Sincronización</b>"
 
-#: gtkpod.glade:16923
+#: gtkpod.glade:16906
 msgid "Contacts sync command:"
 msgstr "Programa de sincronización de contactos:"
 
-#: gtkpod.glade:16951
+#: gtkpod.glade:16934
 msgid "Calendar sync command:"
 msgstr "Programa de sincronización del calendario:"
 
-#: gtkpod.glade:16979
+#: gtkpod.glade:16962
 msgid "Notes sync command:"
 msgstr "Programa de sincronización de notas:"
 
-#: gtkpod.glade:17008
+#: gtkpod.glade:16991
 msgid "Call automatically when synchronizing iTunesDB"
 msgstr "Llamar automáticamente al sincronizar la base de datos iTunes"
 
-#: gtkpod.glade:17031 gtkpod.glade:17055 gtkpod.glade:17079 gtkpod.glade:17103
-#: gtkpod.glade:17127 gtkpod.glade:17151 gtkpod.glade:17675 gtkpod.glade:18452
+#: gtkpod.glade:17014 gtkpod.glade:17038 gtkpod.glade:17062 gtkpod.glade:17086
+#: gtkpod.glade:17110 gtkpod.glade:17134 gtkpod.glade:17658 gtkpod.glade:18435
 msgid ""
 "Specify exact path including command line options. '%i' will be replaced "
 "with the mount point of the iPod."
@@ -1825,24 +1812,24 @@ msgstr ""
 "intérprete de órdenes. '%i' será reemplazado con el directorio de montaje "
 "del iPod."
 
-#: gtkpod.glade:17311
+#: gtkpod.glade:17294
 msgid "Update/Sync all playlists now"
 msgstr "Actualizar/sincronizar ahora todas las listas de reproducción."
 
-#: gtkpod.glade:17331
+#: gtkpod.glade:17314
 msgid "Delete repository"
 msgstr "Borrar repositorio"
 
-#: gtkpod.glade:17351 src/context_menus.c:430 src/context_menus.c:448
+#: gtkpod.glade:17334 src/context_menus.c:430 src/context_menus.c:448
 #: src/context_menus.c:523
 msgid "I'm sure"
 msgstr "Estoy seguro"
 
-#: gtkpod.glade:17407
+#: gtkpod.glade:17390
 msgid "<b>Repositories</b>"
 msgstr "<b>Repositorios</b>"
 
-#: gtkpod.glade:17604
+#: gtkpod.glade:17587
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
@@ -1850,37 +1837,37 @@ msgstr ""
 "Los directorios con los que sincronizar son determinados mediante los "
 "nombres de fichero de las pistas en la lista de reproducción."
 
-#: gtkpod.glade:17606
+#: gtkpod.glade:17589
 msgid "On startup automatically sync with playlist directories"
 msgstr ""
 "Sincronizar automáticamente con los directorios de las listas de "
 "reproducción en el inicio."
 
-#: gtkpod.glade:17625
+#: gtkpod.glade:17608
 msgid "On startup automatically sync with the following directory"
 msgstr "Sincronizar automáticamente al inicio con el siguiente directorio"
 
-#: gtkpod.glade:17719
+#: gtkpod.glade:17702
 msgid "Don't automatically sync on startup"
 msgstr "No sincronizar automáticamente al inicio"
 
-#: gtkpod.glade:17865
+#: gtkpod.glade:17848
 msgid "On startup automatically update (Live Playlist)"
 msgstr "Actualizar automáticamente en el inicio (listas de reproducción vivas)"
 
-#: gtkpod.glade:17895
+#: gtkpod.glade:17878
 msgid "Update/Sync playlist now"
 msgstr "Actualizar/sincronizar ahora las listas de reproducción"
 
-#: gtkpod.glade:17942
+#: gtkpod.glade:17925
 msgid "<b>Playlists</b>"
 msgstr "<b>Listas de reproducción</b>"
 
-#: gtkpod.glade:18059
+#: gtkpod.glade:18042
 msgid "Create Repository"
 msgstr "Crear repositorio"
 
-#: gtkpod.glade:18337
+#: gtkpod.glade:18320
 msgid ""
 "Insert before\n"
 "Insert after"
@@ -1888,11 +1875,11 @@ msgstr ""
 "Insertar antes\n"
 "Insertar después"
 
-#: gtkpod.glade:18375
+#: gtkpod.glade:18358
 msgid "Repository type:"
 msgstr "Tipo de repositorio:"
 
-#: gtkpod.glade:18403
+#: gtkpod.glade:18386
 msgid ""
 "iPod\n"
 "Local Repository (Standard)\n"
@@ -1902,15 +1889,15 @@ msgstr ""
 "Repositorio local (Standard)\n"
 "Repositorio local (Podcasts)\n"
 
-#: gtkpod.glade:18424
+#: gtkpod.glade:18407
 msgid "Repository name:"
 msgstr "Nombre del repositorio:"
 
-#: gtkpod.glade:18560 gtkpod.glade:18823
+#: gtkpod.glade:18543 gtkpod.glade:18806
 msgid "Initialize iPod"
 msgstr "Inicializar iPod"
 
-#: gtkpod.glade:18630
+#: gtkpod.glade:18613
 msgid "<b>Please select mountpoint and your iPod model</b>"
 msgstr "<b>Por favor, seleccionar el punto de montaje y el modelo de iPod</b>"
 
@@ -4639,33 +4626,33 @@ msgstr ""
 "no están soportados sin la biblioteca mp4v2. gtkpod debe estar compilado "
 "junto con la biblioteca mp4v2.\n"
 
-#: src/prefs.c:308
+#: src/prefs.c:307
 #, c-format
 msgid "gtkpod version %s usage:\n"
 msgstr "Uso de gtkpod versión %s:\n"
 
-#: src/prefs.c:309
+#: src/prefs.c:308
 msgid "  -h, --help:   display this message\n"
 msgstr "  -h, --help:   muestra este mensaje\n"
 
-#: src/prefs.c:310
+#: src/prefs.c:309
 msgid "  -p <filename>:increment playcount for file by one\n"
 msgstr "  -p <fichero>:incrementa el contador del fichero en uno\n"
 
-#: src/prefs.c:311
+#: src/prefs.c:310
 msgid "  -m path:      define the mountpoint of your iPod\n"
 msgstr "  -m ruta:      define el punto de montaje del iPod\n"
 
-#: src/prefs.c:312
+#: src/prefs.c:311
 msgid "  --mountpoint: same as '-m'.\n"
 msgstr "  --mountpoint: igual que '-m'.\n"
 
-#: src/prefs.c:313
+#: src/prefs.c:312
 msgid "  -a:           import database automatically after start.\n"
 msgstr ""
 "  -a:           importa automáticamente la base de datos al arrancar.\n"
 
-#: src/prefs.c:314
+#: src/prefs.c:313
 msgid "  --auto:       same as '-a'.\n"
 msgstr "  --auto:       igual que '-a'.\n"
 
@@ -4694,11 +4681,11 @@ msgstr ""
 msgid "Please select the aacgain executable"
 msgstr "Seleccionar el ejecutable aacgain"
 
-#: src/prefs_window.c:916 src/prefs_window.c:934
+#: src/prefs_window.c:911 src/prefs_window.c:929
 msgid "Preferences not updated"
 msgstr "Preferencias no actualizadas"
 
-#: src/prefs_window.c:943
+#: src/prefs_window.c:938
 msgid "Preferences applied"
 msgstr "Preferencias actualizadas"
 
@@ -4938,6 +4925,18 @@ msgstr "No se ha podido abrir '%s' para su lectura.\n"
 #, c-format
 msgid "%s does not appear to be a supported wav file.\n"
 msgstr "%s no parece ser un fichero wav soportado.\n"
+
+#~ msgid ""
+#~ "On startup gtkpod will call 'mount <ipod mountpoint>', on exit a 'umount "
+#~ "<ipod mountpoint>' call is carried out. For more complicated arrangements "
+#~ "please use the ~/.gtkpod/gtkpod.in and ~/.gtkpod/gtkpod.out scripts."
+#~ msgstr ""
+#~ "En el arranque de gtkpod, éste intentará montar el ipod y al terminar "
+#~ "intentará desmontarlo. Usar los guiones ~/.gtkpod/gtkpod.in y ~/.gtkpod/"
+#~ "gtkpod.out para configuraciones avanzadas."
+
+#~ msgid "Handle mounting/unmounting of iPod drive"
+#~ msgstr "Manejo del montaje/desmontaje del iPod"
 
 #~ msgid "<b>Artwork</b>"
 #~ msgstr "<b>Trabajo artístico</b>"
