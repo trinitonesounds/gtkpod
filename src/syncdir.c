@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-01 22:30:24 jcs>
+/* Time-stamp: <2006-09-24 15:25:27 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -561,6 +561,11 @@ void sync_playlist (Playlist *playlist,
     afd.playlist = playlist;
     afd.tracks_updated = &tracks_updated;
     g_hash_table_foreach (dirs_hash, add_files, &afd);
+    /* Remove updated and duplicate list so it won't pop up at a later
+       time */
+    display_updated ((void *)-1, NULL);
+    display_non_updated ((void *)-1, NULL);
+    gp_duplicate_remove (NULL, (void *)-1);
 
     /* Should tracks be deleted that were not present in the
      * directories? */

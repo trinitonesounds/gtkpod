@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-21 23:51:06 jcs>
+/* Time-stamp: <2006-09-24 15:25:29 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -333,7 +333,7 @@ void gp_duplicate_remove (Track *oldtrack, Track *track)
 /**
  * Register all tracks in the md5 hash and remove duplicates (while
  * preserving playlists).
- * Call  remove_duplicate (NULL, NULL); to show an info dialogue
+ * Call  gp_duplicate_remove (NULL, NULL); to show an info dialogue
  */
 void gp_itdb_hash (iTunesDB *itdb)
 {

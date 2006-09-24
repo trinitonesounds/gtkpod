@@ -3,6 +3,10 @@
 	* src/mp3file.c (mp3_write_file_info): YEAR tag was not
           written to file. Thanks to t0C for the patch.
 
+	* src/syncdir.c (sync_playlist): clean up
+	  'updated/non-updated/duplicate' lists so they don't pop up
+  	  unexpectedly at a later time.
+
 2006-09-21 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file.c: (update_track_from_file): forgot to flag track

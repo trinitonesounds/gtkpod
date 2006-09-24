@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-21 22:56:13 jcs>
+/* Time-stamp: <2006-09-24 15:25:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1524,9 +1524,9 @@ void display_mserv_problems (Track *track, gchar *txt)
    calling display_non_updated ((void *)-1, NULL);
 
    It is also possible that duplicates get detected in the process --
-   a list of those can be displayed by calling "remove_duplicate
+   a list of those can be displayed by calling "gp_duplicate_remove
    (NULL, NULL)", that list can be deleted by calling
-   "remove_duplicate (NULL, (void *)-1)"*/
+   "gp_duplicate_remove (NULL, (void *)-1)"*/
 void update_track_from_file (iTunesDB *itdb, Track *track)
 {
     ExtraTrackData *etr;
