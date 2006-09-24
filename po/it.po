@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-22 00:13+0900\n"
+"POT-Creation-Date: 2006-09-24 18:02+0900\n"
 "PO-Revision-Date: 2005-09-18 01:54+0900\n"
 "Last-Translator: \n"
 "Language-Team:  <it@li.org>\n"
@@ -4536,18 +4536,18 @@ msgstr "drag and drop: ignorato '%s'\n"
 msgid "Error setting ID3 field: %s\n"
 msgstr "Errore nella impostazione del campo ID3: %s\n"
 
-#: src/mp3file.c:1300 src/mp3file.c:1373 src/mp3file.c:1522 src/mp3file.c:2156
+#: src/mp3file.c:1300 src/mp3file.c:1373 src/mp3file.c:1522 src/mp3file.c:2160
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "ERRORE nell'apertura del file: '%s' (%s).\n"
 
-#: src/mp3file.c:1589
+#: src/mp3file.c:1593
 #, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "ERRORE nella scrittura del tag sul file: '%s' (%s).\n"
 
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:2322
+#: src/mp3file.c:2326
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "Il file \"%s\" ha durata zero. Ignorato.\n"

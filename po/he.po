@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-22 00:13+0900\n"
+"POT-Creation-Date: 2006-09-24 18:02+0900\n"
 "PO-Revision-Date: 2005-08-02 21:19+0300\n"
 "Last-Translator: Assaf Gillat\n"
 "Language-Team: HEBREW <kde-il@yahoogroups.com>\n"
@@ -4421,18 +4421,18 @@ msgstr "גרור ושחרר: התעלמות מ '%s'\n"
 msgid "Error setting ID3 field: %s\n"
 msgstr "שגיאה בקביעת שדה ID3: %s\n"
 
-#: src/mp3file.c:1300 src/mp3file.c:1373 src/mp3file.c:1522 src/mp3file.c:2156
+#: src/mp3file.c:1300 src/mp3file.c:1373 src/mp3file.c:1522 src/mp3file.c:2160
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "שגיאה בזמן פתיחת קובץ: '%s' (%s).\n"
 
-#: src/mp3file.c:1589
+#: src/mp3file.c:1593
 #, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "שגיאה בזמן כתיבת תג לקובץ: '%s' (%s).\n"
 
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:2322
+#: src/mp3file.c:2326
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "הקובץ \"%s\" בעל זמן אפס. מתעלם.\n"

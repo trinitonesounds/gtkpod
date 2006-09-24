@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-22 00:13+0900\n"
+"POT-Creation-Date: 2006-09-24 18:02+0900\n"
 "PO-Revision-Date: 2005-06-20 23:25+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
@@ -4355,18 +4355,18 @@ msgstr "ドラッグアンドドロップ: '%s'は無視します\n"
 msgid "Error setting ID3 field: %s\n"
 msgstr "'%s'の作成に失敗: %s\n"
 
-#: src/mp3file.c:1300 src/mp3file.c:1373 src/mp3file.c:1522 src/mp3file.c:2156
+#: src/mp3file.c:1300 src/mp3file.c:1373 src/mp3file.c:1522 src/mp3file.c:2160
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
-#: src/mp3file.c:1589
+#: src/mp3file.c:1593
 #, fuzzy, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "ファイル '%s' を開く際にエラーが発生しました。 (%s)\n"
 
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:2322
+#: src/mp3file.c:2326
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr "ファイル \"%s\" は長さが0なので無視します。\n"

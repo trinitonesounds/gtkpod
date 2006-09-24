@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gtkpod.po\n"
+"Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-22 00:13+0900\n"
-"PO-Revision-Date: 2006-03-30 02:01+0200\n"
+"POT-Creation-Date: 2006-09-24 18:02+0900\n"
+"PO-Revision-Date: 2006-07-29 21:59+0200\n"
 "Last-Translator: Alejandro Lamas Daviña <alejandro.lamas@ific.uv.es>\n"
 "Language-Team:  <es_ES>\n"
 "MIME-Version: 1.0\n"
@@ -26,13 +26,12 @@ msgid "_File"
 msgstr "_Fichero"
 
 #: gtkpod.glade:49
-#, fuzzy
 msgid "_Load iPod(s)"
-msgstr "_iPod"
+msgstr "Cargar _iPod(s)"
 
 #: gtkpod.glade:69
 msgid "_Save Changes"
-msgstr ""
+msgstr "_Guardar cambios"
 
 #: gtkpod.glade:90
 msgid "Add _Files"
@@ -70,9 +69,8 @@ msgid "Update _mserv Data from File"
 msgstr "Actualizar datos de _mserv desde fichero"
 
 #: gtkpod.glade:263
-#, fuzzy
 msgid "_Synchronize Playlist"
-msgstr "Sincronizar todo"
+msgstr "_Sincronizar lista de reproducción"
 
 #: gtkpod.glade:290
 msgid "_Export Tracks from Database"
@@ -104,9 +102,8 @@ msgid "_Edit"
 msgstr "_Editar"
 
 #: gtkpod.glade:459 src/context_menus.c:480
-#, fuzzy
 msgid "Edit Track Details"
-msgstr "Editar detalles"
+msgstr "Editar detalles de la pista"
 
 #: gtkpod.glade:480
 msgid "Tracks in Selected _Playlist"
@@ -143,7 +140,7 @@ msgstr "Lista de reproducción seleccionada incluyendo pistas del disco duro"
 
 #: gtkpod.glade:583
 msgid "Selected filter tab entry from playlist"
-msgstr "Borrar selección de la lista de reproducción '%s'"
+msgstr "Pestaña seleccionada de la lista de reproducción"
 
 #: gtkpod.glade:592
 msgid "Selected filter tab entry from iPod"
@@ -159,7 +156,7 @@ msgstr "Borrar selección del disco duro"
 
 #: gtkpod.glade:625
 msgid "Selected tracks from playlist"
-msgstr "Pistas seleccionadas de la lista de reproducción '%s'"
+msgstr "Pistas seleccionadas de la lista de reproducción"
 
 #: gtkpod.glade:634
 msgid "Selected tracks from iPod"
@@ -259,14 +256,12 @@ msgid "_Save Displayed Track Order"
 msgstr "Guardar orden de pista_s mostrado"
 
 #: gtkpod.glade:920
-#, fuzzy
 msgid "Edit Repository/iPod Options"
-msgstr "Opciones de ordenamiento"
+msgstr "Editar opciones del iPod/repositorio"
 
 #: gtkpod.glade:941
-#, fuzzy
 msgid "Edit _Preferences"
-msgstr "_Editar preferencias"
+msgstr "Editar _preferencias"
 
 #: gtkpod.glade:967
 msgid "_View"
@@ -357,19 +352,20 @@ msgid ""
 "Try to load contents of all connected iPods. For each iPod a separate "
 "repository must be set up."
 msgstr ""
+"Intentar cargar los contenidos de todos los iPods. Debe configurarse un "
+"repositorio individual para cada iPod."
 
 #: gtkpod.glade:1345
-#, fuzzy
 msgid "Load iPod(s)"
-msgstr "_iPod"
+msgstr "Cargar iPod(s)"
 
 #: gtkpod.glade:1362
 msgid "Write all changes made to the disk and the iPod(s)."
-msgstr ""
+msgstr "Escribir todos los cambios hechos al disco y al/los iPod(s)."
 
 #: gtkpod.glade:1363 src/context_menus.c:507
 msgid "Save Changes"
-msgstr ""
+msgstr "Guardar cambios"
 
 #: gtkpod.glade:1380
 msgid "Add Files or Directories"
@@ -768,7 +764,7 @@ msgstr "_M3U"
 
 #: gtkpod.glade:6869
 msgid "_PLS"
-msgstr ""
+msgstr "_PLS"
 
 #: gtkpod.glade:6907
 msgid ""
@@ -944,10 +940,12 @@ msgstr "Preferencias"
 #: gtkpod.glade:7927
 msgid "<b>Mountpoint and individual repository/playlist options</b>"
 msgstr ""
+"<b>Opciones de punto de montaje y repositorio/lista de reproducción "
+"individual</b>"
 
 #: gtkpod.glade:7990
 msgid "Set mountpoint or edit repository options"
-msgstr ""
+msgstr "Configurar el punto de montaje o editar las opciones de repositorio"
 
 #: gtkpod.glade:8037
 msgid "<b>Import</b>"
@@ -1094,9 +1092,8 @@ msgid "Display info about non-updated tracks"
 msgstr "Mostrar información sobre las pistas no actualizadas"
 
 #: gtkpod.glade:8637
-#, fuzzy
 msgid "When syncing playlists"
-msgstr "Al sincronizar directorios"
+msgstr "Al sincronizar listas de reproducción"
 
 #: gtkpod.glade:8711
 msgid "Confirm lists of directories"
@@ -1113,31 +1110,43 @@ msgid ""
 "you want tracks to be removed, because removing from the master playlist "
 "means removing from the iPod."
 msgstr ""
+"Normalmente, si una pista no se encuentra presente en el directorio de "
+"sincronización, esta será borrada de la lista de reproducción, pero no del "
+"iPod o del repositorio local.\n"
+"Si esta opción está marcada, las pistas serán borradas por completo del iPod "
+"o del repositorio local a no ser que la pista pertenezca también a otras "
+"listas de reproducción.\n"
+"Nota: si se sincroniza con la lista de reproducción maestra, esta opción "
+"debe estar seleccionada, porque borrar de la lista de reproducción maestra "
+"significa borrar del iPod."
 
 #: gtkpod.glade:8733 gtkpod.glade:17779
 msgid ""
 "Delete tracks that are no longer present from the\n"
 "ipod or repository"
 msgstr ""
+"Borrar las pistas que no se encuentran presentes\n"
+"del iPod o del repositorio"
 
 #: gtkpod.glade:8752
 msgid "This is the same option as in 'Edit/Delete Confirmation'"
 msgstr "Esta es la misma opcion que en 'Confirmar Editar/Borrar'"
 
 #: gtkpod.glade:8754 gtkpod.glade:17799
-#, fuzzy
 msgid "Confirm before removing tracks from the iPod or repository"
-msgstr "Antes de borrar pistas del iPod"
+msgstr "Confirmar antes de borrar pistas del iPod o del repositorio"
 
 #: gtkpod.glade:8773 gtkpod.glade:17817
 msgid ""
 "Will show a list of tracks removed and a list of tracks newly added or "
 "updated."
 msgstr ""
+"Se mostrará una lista de las pistas eliminadas y una lista de las pistas "
+"añadidas o actualizadas."
 
 #: gtkpod.glade:8775 gtkpod.glade:17819
 msgid "Show summary of sync result"
-msgstr ""
+msgstr "Mostrar resumen del resultado de la sincronización"
 
 #: gtkpod.glade:8836
 msgid "<b>Sync</b>"
@@ -1203,8 +1212,8 @@ msgid ""
 "As a last resort set the following tags to the\n"
 "filename if they are (still) empty:"
 msgstr ""
-"Como último recurso, establecer los siguientes atributos al nombre de "
-"fichero si (todavía) están vacíos."
+"Como último recurso, establecer los siguientes\n"
+" atributos al nombre de fichero si (todavía) están vacíos."
 
 #: gtkpod.glade:9204 src/display_sorttabs.c:2942 src/display_spl.c:85
 #: src/misc_conversion.c:62
@@ -1248,8 +1257,9 @@ msgid "Read coverart from embedded APIC data"
 msgstr ""
 
 #: gtkpod.glade:9432
+#, fuzzy
 msgid "Add coverart from file using the following template"
-msgstr ""
+msgstr "Añadir carátulas desde fichero usando la siguiente plantilla"
 
 #: gtkpod.glade:9488
 msgid ""
@@ -1378,9 +1388,8 @@ msgid "<b>Sort Tabs</b>"
 msgstr "<b>Pestañas</b>"
 
 #: gtkpod.glade:11162
-#, fuzzy
 msgid "Keeps all compilation CDs grouped together in the artists sort tab."
-msgstr "Mantener agrupados en la pestaña de artistas todos los CDs generados."
+msgstr "Mantiene agrupados en la pestaña de artistas todos los CDs generados."
 
 #: gtkpod.glade:11164
 msgid "Group artists on compilation CDs"
@@ -1635,6 +1644,8 @@ msgid ""
 "Confirm before removing tracks from the iPod or repository\n"
 "when syncing playlists"
 msgstr ""
+"Confirmar antes de borrar pistas del iPod o del repositorio\n"
+"al sincronizar las listas de reproducción"
 
 #: gtkpod.glade:12740
 msgid "<b>Play</b>"
@@ -1678,11 +1689,14 @@ msgid ""
 "the Tools Menu. If this is set, missing normalization data for mp3 files "
 "will be calculated and written to your mp3 file using this command."
 msgstr ""
+"Configurar a 'mp3gain -q -k' para usar la función 'Normalizar el volumen' en "
+"el menú Herramientas. En caso de estar configurado, los datos de "
+"normalización serán calculados y escritos a los ficheros mp3 que no los "
+"tengan usando este comando."
 
 #: gtkpod.glade:13104
-#, fuzzy
 msgid "'aacgain' executable:"
-msgstr "programa 'mp3gain':"
+msgstr "programa 'aacgain':"
 
 #: gtkpod.glade:13132
 msgid ""
@@ -1690,14 +1704,18 @@ msgid ""
 "the Tools Menu. If this is set, missing normalization data for .m4a and .m4b "
 "files will be calculated and written to your music file using this command."
 msgstr ""
+"Configurar esto a 'aacgain -q -k' para usar la función 'Normalizar el "
+"volumen' en el menú Herramientas. En caso de estar configurado, los datos de "
+"normalización serán calculados y escritos a los ficheros .m4a y m4b que no "
+"los tengan usando este comando."
 
 #: gtkpod.glade:13200
 msgid "<b>Calendar/Contacts/Notes</b>"
-msgstr ""
+msgstr "<b>Calendario/Contactos/Notas</b>"
 
 #: gtkpod.glade:13263
 msgid "Set options for Calendar/Contacts/Notes"
-msgstr ""
+msgstr "Configurar opciones para Calendario/Contactos/Notas"
 
 #: gtkpod.glade:13398
 msgid "Details"
@@ -1734,9 +1752,8 @@ msgid "Remove Cover Art"
 msgstr "Borrar portada"
 
 #: gtkpod.glade:14663
-#, fuzzy
 msgid "(Checked)"
-msgstr "Revisado"
+msgstr "(Revisado)"
 
 #: gtkpod.glade:15105
 msgid "_Podcasts"
@@ -1755,30 +1772,28 @@ msgid "_Undo Track"
 msgstr "_Deshacer pista"
 
 #: gtkpod.glade:16563
-#, fuzzy
 msgid "Repository Options"
-msgstr "Opciones de ordenamiento"
+msgstr "Opciones de repositorio"
 
 #: gtkpod.glade:16684
 msgid "Add new repository/iPod"
-msgstr ""
+msgstr "Añadir nuevo repositorio/iPod"
 
 #: gtkpod.glade:16753 gtkpod.glade:18180 gtkpod.glade:18676
-#, fuzzy
 msgid "iPod mountpoint:"
-msgstr "_Punto de montaje del iPod:"
+msgstr "Punto de montaje del iPod:"
 
 #: gtkpod.glade:16781 gtkpod.glade:18152
 msgid "iTunesDB backup:"
-msgstr ""
+msgstr "Copia de seguridad de iTunesDB:"
 
 #: gtkpod.glade:16809 gtkpod.glade:18124 gtkpod.glade:18747 gtkpod.glade:18939
 msgid "Model:"
-msgstr ""
+msgstr "Modelo:"
 
 #: gtkpod.glade:16837 gtkpod.glade:18096
 msgid "Path:"
-msgstr ""
+msgstr "Ruta:"
 
 #: gtkpod.glade:16865
 msgid "<b>Synchronization</b>"
@@ -1812,71 +1827,70 @@ msgstr ""
 
 #: gtkpod.glade:17311
 msgid "Update/Sync all playlists now"
-msgstr ""
+msgstr "Actualizar/sincronizar ahora todas las listas de reproducción."
 
 #: gtkpod.glade:17331
-#, fuzzy
 msgid "Delete repository"
-msgstr "Borrar del iPod"
+msgstr "Borrar repositorio"
 
 #: gtkpod.glade:17351 src/context_menus.c:430 src/context_menus.c:448
 #: src/context_menus.c:523
 msgid "I'm sure"
-msgstr ""
+msgstr "Estoy seguro"
 
 #: gtkpod.glade:17407
-#, fuzzy
 msgid "<b>Repositories</b>"
-msgstr "<b>Sugerencias</b>"
+msgstr "<b>Repositorios</b>"
 
 #: gtkpod.glade:17604
 msgid ""
 "Directories to sync with are determined from the filenames of the tracks in "
 "the playlist."
 msgstr ""
+"Los directorios con los que sincronizar son determinados mediante los "
+"nombres de fichero de las pistas en la lista de reproducción."
 
 #: gtkpod.glade:17606
 msgid "On startup automatically sync with playlist directories"
 msgstr ""
+"Sincronizar automáticamente con los directorios de las listas de "
+"reproducción en el inicio."
 
 #: gtkpod.glade:17625
-#, fuzzy
 msgid "On startup automatically sync with the following directory"
-msgstr "¿Sincronizar los siguientes directorios?"
+msgstr "Sincronizar automáticamente al inicio con el siguiente directorio"
 
 #: gtkpod.glade:17719
-#, fuzzy
 msgid "Don't automatically sync on startup"
-msgstr "Descargar podcasts automáticamente en el inicio."
+msgstr "No sincronizar automáticamente al inicio"
 
 #: gtkpod.glade:17865
 msgid "On startup automatically update (Live Playlist)"
-msgstr ""
+msgstr "Actualizar automáticamente en el inicio (listas de reproducción vivas)"
 
 #: gtkpod.glade:17895
 msgid "Update/Sync playlist now"
-msgstr ""
+msgstr "Actualizar/sincronizar ahora las listas de reproducción"
 
 #: gtkpod.glade:17942
-#, fuzzy
 msgid "<b>Playlists</b>"
-msgstr "<b>Reproducir</b>"
+msgstr "<b>Listas de reproducción</b>"
 
 #: gtkpod.glade:18059
-#, fuzzy
 msgid "Create Repository"
-msgstr "Borrar del iPod"
+msgstr "Crear repositorio"
 
 #: gtkpod.glade:18337
 msgid ""
 "Insert before\n"
 "Insert after"
 msgstr ""
+"Insertar antes\n"
+"Insertar después"
 
 #: gtkpod.glade:18375
-#, fuzzy
 msgid "Repository type:"
-msgstr "Opciones de ordenamiento"
+msgstr "Tipo de repositorio:"
 
 #: gtkpod.glade:18403
 msgid ""
@@ -1884,19 +1898,21 @@ msgid ""
 "Local Repository (Standard)\n"
 "Local Repository (Podcasts)\n"
 msgstr ""
+"iPod\n"
+"Repositorio local (Standard)\n"
+"Repositorio local (Podcasts)\n"
 
 #: gtkpod.glade:18424
-#, fuzzy
 msgid "Repository name:"
-msgstr "Opciones de ordenamiento"
+msgstr "Nombre del repositorio:"
 
 #: gtkpod.glade:18560 gtkpod.glade:18823
 msgid "Initialize iPod"
-msgstr ""
+msgstr "Inicializar iPod"
 
 #: gtkpod.glade:18630
 msgid "<b>Please select mountpoint and your iPod model</b>"
-msgstr ""
+msgstr "<b>Por favor, seleccionar el punto de montaje y el modelo de iPod</b>"
 
 #: src/charset.c:53
 msgid "Arabic (IBM-864)"
@@ -2126,9 +2142,8 @@ msgid "Enqueue"
 msgstr "Encolar"
 
 #: src/context_menus.c:379
-#, fuzzy
 msgid "Copy Tracks to Filesystem"
-msgstr "Act_ualizar pistas desde fichero"
+msgstr "Copiar pistas al sistema de ficheros"
 
 #: src/context_menus.c:386 src/file_export.c:1081
 msgid "Create Playlist File"
@@ -2139,13 +2154,12 @@ msgid "Create new Playlist"
 msgstr "Crear nueva lista de reproducción"
 
 #: src/context_menus.c:400
-#, fuzzy
 msgid "Update Tracks from File"
-msgstr "Act_ualizar pistas desde fichero"
+msgstr "Actualizar pistas desde fichero"
 
 #: src/context_menus.c:414
 msgid "Sync Playlist with Dir(s)"
-msgstr ""
+msgstr "Sincronizar la lista de reproducción con el/los directorio(s)"
 
 #: src/context_menus.c:424
 msgid "Remove All Tracks from iPod"
@@ -2164,18 +2178,16 @@ msgid "Delete But Keep Tracks"
 msgstr "Borrar manteniendo las pistas"
 
 #: src/context_menus.c:473
-#, fuzzy
 msgid "Edit iPod Properties"
-msgstr "Crear los directorios del iPod"
+msgstr "Editar las propiedades del iPod"
 
 #: src/context_menus.c:493
-#, fuzzy
 msgid "Load iPod"
-msgstr "_iPod"
+msgstr "Cargar iPod"
 
 #: src/context_menus.c:500
 msgid "Eject iPod"
-msgstr ""
+msgstr "Expulsar iPod"
 
 #: src/context_menus.c:517
 msgid "Remove All Tracks from Database"
@@ -2210,9 +2222,8 @@ msgid "Alphabetize"
 msgstr "Orden alfabético"
 
 #: src/context_menus.c:596
-#, fuzzy
 msgid "Edit Playlist Properties"
-msgstr "Añadir lista de reproducción desde fichero"
+msgstr "Editar propiedades de la lista de reproducción"
 
 #: src/date_parser.l:269
 #, c-format
@@ -2260,6 +2271,8 @@ msgid ""
 "iPod at '%s' is not loaded.\n"
 "Please load it first."
 msgstr ""
+"El iPod de '%s' no está cargado.\n"
+"Por favor, cargar primero."
 
 #: src/display.c:1265 src/display.c:1292
 msgid "Update selected entry of which sort tab?"
@@ -2292,9 +2305,8 @@ msgid "Failed to set cover art: '%s'\n"
 msgstr "Error al configurar la carátula: '%s'"
 
 #: src/display_itdb.c:835 src/display_itdb.c:967 src/repository.c:1189
-#, fuzzy
 msgid "iPod"
-msgstr "_iPod"
+msgstr "iPod"
 
 #: src/display_itdb.c:844 src/display_itdb.c:965
 msgid "Local"
@@ -2521,7 +2533,7 @@ msgstr "BPM"
 
 #: src/display_spl.c:104 src/misc_conversion.c:87
 msgid "Grouping"
-msgstr ""
+msgstr "Agrupando"
 
 #: src/display_spl.c:111
 msgid "contains"
@@ -2827,29 +2839,30 @@ msgstr "Problema al recoger datos mserv"
 #: src/file.c:1565
 msgid "no local filename available, file on the iPod will be used instead"
 msgstr ""
+"No está disponible el nombre local, se usará el nombre del iPod en su lugar"
 
 #: src/file.c:1571
 msgid "no local filename available and copy on iPod cannot be found"
 msgstr ""
+"No está disponible el nombre local y no se encuentra la copia en el iPod"
 
 #: src/file.c:1575 src/file.c:1593
-#, fuzzy
 msgid "no local filename available"
-msgstr "Ningún nombre de fichero disponible"
+msgstr "No se encuentra disponible el nombre de fichero local"
 
 #: src/file.c:1583
 msgid "local file could not be found, file on the iPod will be used instead"
 msgstr ""
+"No se encuentra el fichero local, se usará el fichero del iPod en su lugar"
 
 #: src/file.c:1589
 msgid "local file as well as copy on the iPod cannot be found"
-msgstr ""
+msgstr "No se encuentran ni el fichero local ni la copia del iPod"
 
 #. update not successful -- log this track for later display
 #: src/file.c:1651
-#, fuzzy
 msgid "update failed (format no supported?)"
-msgstr "formato no soportado"
+msgstr "Error al actualizar (¿formato no soportado?)"
 
 #: src/file.c:1734
 #, c-format
@@ -2903,8 +2916,9 @@ msgstr "Linea incorrecta en '%s':%s\n"
 #. gint id,
 #. gboolean modal,
 #: src/file.c:2159
+#, fuzzy
 msgid "Remove offline playcounts?"
-msgstr ""
+msgstr "¿Borrar cuenta reproducciones no en linea?"
 
 #. title
 #: src/file.c:2160
@@ -3210,12 +3224,12 @@ msgstr ""
 "\n"
 
 #: src/file_itunesdb.c:531
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "'%s' (or similar) does not exist. Import aborted.\n"
 "\n"
 msgstr ""
-"'%s' no existe. Importación cancelada.\n"
+"'%s' (o similar) no existe. Importación cancelada.\n"
 "\n"
 
 #: src/file_itunesdb.c:817
@@ -3227,6 +3241,11 @@ msgid ""
 "\n"
 "Do you want to create the directory structure now?\n"
 msgstr ""
+"No se ha encontrado la estructura del iPod en '%s'.\n"
+"Si estás seguro que el iPod está montado correctamente en '%s', gtkpod puede "
+"crear la esctructura de directorios para ti.\n"
+"\n"
+"¿Quieres crear la estructura de directorios ahora?\n"
 
 #: src/file_itunesdb.c:1071
 #, c-format
@@ -3297,9 +3316,8 @@ msgstr ""
 "cancelada!"
 
 #: src/file_itunesdb.c:1613
-#, fuzzy
 msgid "Now writing database. Please wait..."
-msgstr "Escribiendo la base de datos de iTunes. Espere, por favor."
+msgstr "Escribiendo la base de datos. Espere, por favor."
 
 #: src/file_itunesdb.c:1659
 #, c-format
@@ -3307,14 +3325,14 @@ msgid "Extended information file not deleted: '%s'"
 msgstr "El fichero de información extendida '%s' no ha sido borrado."
 
 #: src/file_itunesdb.c:1745
-#, fuzzy, c-format
+#, c-format
 msgid "%s: Database saved"
-msgstr "Guardada la base de datos del iPod."
+msgstr "Guardada la base de datos: %s"
 
 #: src/file_itunesdb.c:1749
 #, c-format
 msgid "%s: Changes saved"
-msgstr ""
+msgstr "%s: Cambios guardados"
 
 #: src/fileselection.c:127
 msgid "Successfully added files"
@@ -3412,7 +3430,7 @@ msgstr "%s: la opción `-W %s' no permite un argumento\n"
 
 #: src/info.c:383
 msgid "n/c"
-msgstr ""
+msgstr "n/c"
 
 #: src/info.c:388 src/info.c:835
 msgid "offline"
@@ -3450,9 +3468,8 @@ msgid " disconnected"
 msgstr " desconectado"
 
 #: src/info.c:881
-#, fuzzy
 msgid "No database or playlist selected"
-msgstr "No se ha seleccionado ninguna lista de reproducción"
+msgstr "No se ha seleccionado ninguna base de datos o lista de reproducción"
 
 #: src/info.c:886
 msgid "No tracks selected"
@@ -3463,9 +3480,8 @@ msgid "No playlist selected"
 msgstr "No se ha seleccionado ninguna lista de reproducción"
 
 #: src/info.c:896
-#, fuzzy
 msgid "No iPod or iPod playlist selected"
-msgstr "No se ha seleccionado ninguna lista de reproducción"
+msgstr "No se ha seleccionado ningún iPod o lista de reproducción del iPod."
 
 #: src/md5.c:187
 msgid "Hashed file is 0 bytes long\n"
@@ -3673,15 +3689,16 @@ msgstr ""
 "escritura de la etiquetas de tipo mp3 id3v2.4\n"
 
 #: src/misc.c:145
-#, fuzzy
 msgid ""
 "James Liggett:\n"
 "     replacement of old GTK file selection dialogs with new GTK filechooser "
 "dialogs\n"
 "     refactored user preferences system.\n"
 msgstr ""
-"James Ligget: reemplazo de los antiguos diálogos de selección de ficheros "
-"GTK por los nuevos\n"
+"James Liggett:\n"
+"      reemplazo de los antiguos diálogos GTK de selección de ficheros por "
+"los nuevos GTK\n"
+"     rehecho el sistema de preferencias del usuario.\n"
 
 #: src/misc.c:150
 msgid "Daniel Kercher: sync scripts for abook and webcalendar\n"
@@ -3713,6 +3730,8 @@ msgid ""
 "Iain Benson: support for compilation tag in mp3 files and separate display "
 "of compilations in the sort tab.\n"
 msgstr ""
+"Iain Benson: soporte para compilar etiquetas en ficheros mp3 y visualización "
+"separada de las compilaciones en las pestañas.\n"
 
 #: src/misc.c:170
 msgid ""
@@ -3799,9 +3818,9 @@ msgid "Swedish: Stefan Asserhall (stefan asserhall at comhem dot se)\n"
 msgstr "Sueco: Stefan Asserhall (stefan asserhall en comhem punto se)\n"
 
 #: src/misc.c:936
-#, fuzzy, c-format
+#, c-format
 msgid "Could not process '%s' (no filename available)"
-msgstr "Ningún nombre de fichero disponible"
+msgstr "No se puede procesar '%s' (ningún nombre de fichero disponible)"
 
 #: src/misc.c:1084
 #, c-format
@@ -4152,22 +4171,21 @@ msgstr "Revisado"
 
 #. 35
 #: src/misc_conversion.c:96
-#, fuzzy
 msgid "Start time"
-msgstr "Última vez"
+msgstr "Hora de inicio"
 
 #: src/misc_conversion.c:97
-#, fuzzy
 msgid "Stop time"
-msgstr "Detener"
+msgstr "Hora de finalización"
 
 #: src/misc_conversion.c:98
 msgid "Remember Playback Position"
-msgstr ""
+msgstr "Recordar posición de la lista de reproducción"
 
 #: src/misc_conversion.c:99
+#, fuzzy
 msgid "Skip when Shuffling"
-msgstr ""
+msgstr "Ignorar en modo aleatorio"
 
 #: src/misc_conversion.c:100
 msgid "Artwork Path"
@@ -4554,18 +4572,18 @@ msgstr "Operación de arrastrar y soltar ignorada '%s'\n"
 msgid "Error setting ID3 field: %s\n"
 msgstr "Error al rellenar campo ID3: %s\n"
 
-#: src/mp3file.c:1300 src/mp3file.c:1373 src/mp3file.c:1522 src/mp3file.c:2156
+#: src/mp3file.c:1300 src/mp3file.c:1373 src/mp3file.c:1522 src/mp3file.c:2160
 #, c-format
 msgid "ERROR while opening file: '%s' (%s).\n"
 msgstr "Error al abrir el fichero: '%s' (%s).\n"
 
-#: src/mp3file.c:1589
+#: src/mp3file.c:1593
 #, c-format
 msgid "ERROR while writing tag to file: '%s' (%s).\n"
 msgstr "Error al escribir etiqueta al fichero: '%s' (%s).\n"
 
 #. Tracks with zero play length are ignored by iPod...
-#: src/mp3file.c:2322
+#: src/mp3file.c:2326
 #, c-format
 msgid "File \"%s\" has zero play length. Ignoring.\n"
 msgstr ""
@@ -4611,15 +4629,15 @@ msgstr ""
 "con la biblioteca mp4v2.\n"
 
 #: src/mp4file.c:497
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "m4a/m4p/m4b soundcheck update for '%s' failed: m4a/m4p/m4b not supported "
 "without the mp4v2 library. You must compile the gtkpod source together with "
 "the mp4v2 library.\n"
 msgstr ""
-"Error al actualizar los metadatos m4a/m4p/m4b para '%s': m4a/m4p/m4b no "
-"están soportados sin la biblioteca mp4v2. gtkpod debe estar compilado junto "
-"con la biblioteca mp4v2.\n"
+"Error al actualizar el control de volumen m4a/m4p/m4b para '%s': m4a/m4p/m4b "
+"no están soportados sin la biblioteca mp4v2. gtkpod debe estar compilado "
+"junto con la biblioteca mp4v2.\n"
 
 #: src/prefs.c:308
 #, c-format
@@ -4673,9 +4691,8 @@ msgstr ""
 "Seleccionar el directorio raíz de la información de las pistas de mserv"
 
 #: src/prefs_window.c:127
-#, fuzzy
 msgid "Please select the aacgain executable"
-msgstr "Seleccionar el ejecutable mp3gain"
+msgstr "Seleccionar el ejecutable aacgain"
 
 #: src/prefs_window.c:916 src/prefs_window.c:934
 msgid "Preferences not updated"
@@ -4686,18 +4703,16 @@ msgid "Preferences applied"
 msgstr "Preferencias actualizadas"
 
 #: src/repository.c:549 src/repository.c:2372
-#, fuzzy
 msgid "Select mountpoint"
-msgstr "_Punto de montaje del iPod:"
+msgstr "Seleccionar el punto de montaje del iPod"
 
 #: src/repository.c:576 src/repository.c:2398
 msgid "Set backup file"
-msgstr ""
+msgstr "Configurar fichero de copia de seguridad"
 
 #: src/repository.c:615
-#, fuzzy
 msgid "Select directory for synchronization"
-msgstr "Seleccionar directorio para añadir recursivamente"
+msgstr "Seleccionar directorio a sincronizar"
 
 #: src/repository.c:641
 msgid "Please select command to sync contacts"
@@ -4708,9 +4723,8 @@ msgid "Please select command to sync calendar"
 msgstr "Seleccionar programa para sincronizar calendario"
 
 #: src/repository.c:653
-#, fuzzy
 msgid "Please select command to sync notes"
-msgstr "Seleccionar programa para sincronizar contactos"
+msgstr "Seleccionar programa para sincronizar notas"
 
 #: src/repository.c:665
 #, c-format
@@ -4724,140 +4738,122 @@ msgstr ""
 "la siguiente publicación.</i>"
 
 #: src/repository.c:732
-#, fuzzy
 msgid "Smart playlist updated."
-msgstr "Lista de reproducción inteligente"
+msgstr "Lista de reproducción inteligente actualizada."
 
 #: src/repository.c:1193
-#, fuzzy
 msgid "Podcasts Repository"
-msgstr "Borrar del iPod"
+msgstr "Repositorio de podcasts"
 
 #: src/repository.c:1197
-#, fuzzy
 msgid "Local Repository"
-msgstr "Borrar del iPod"
+msgstr "Repositorio local"
 
 #: src/repository.c:1351
-#, fuzzy
 msgid "Master Playlist"
-msgstr "...lista de reproducción principal"
+msgstr "Lista de reproducción principal"
 
 #: src/repository.c:1355
-#, fuzzy
 msgid "Podcasts Playlist"
-msgstr "Lista de reproducción inteligente"
+msgstr "Lista de reproducción de podcasts"
 
 #: src/repository.c:1363
-#, fuzzy
 msgid "Regular Playlist"
-msgstr "Lista de reproducción inteligente"
+msgstr "Lista de reproducción regular"
 
 #: src/repository.c:2426
-#, fuzzy
 msgid "Set local repository file"
-msgstr "Borrar del iPod"
+msgstr "Configurar el fichero de repositorio local"
 
 #: src/repository.c:2525
-#, fuzzy
 msgid "New Repository"
-msgstr "Borrar del iPod"
+msgstr "Nuevo repositorio"
 
 #: src/support.c:90 src/support.c:114
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't find pixmap file: %s"
-msgstr "No se pueden modificar las etiquetas del fichero: %s\n"
+msgstr "No se puede encontrar el fichero de mapa de píxeles: %s"
 
 #: src/syncdir.c:237
 #, c-format
 msgid "Sync summary for %s/%s\n"
-msgstr ""
+msgstr "Sincronizar resumen para %s/%s\n"
 
 #: src/syncdir.c:246
-#, fuzzy
 msgid "The following track has been added or updated:\n"
 msgid_plural "The following tracks have been added or updated:\n"
-msgstr[0] "La siguiente pista ha sido actualizada"
-msgstr[1] "Las siguientes pistas %d han sido actualizadas"
+msgstr[0] "La siguiente pista ha sido añadida o actualizada:\n"
+msgstr[1] "Las siguientes pistas han sido añadidas o actualizadas:\n"
 
 #: src/syncdir.c:255
-#, fuzzy
 msgid "The following track has been completely removed from the iPod:\n"
 msgid_plural ""
 "The following tracks have been completely removed from the iPod:\n"
-msgstr[0] "La siguiente pista ha sido actualizada"
-msgstr[1] "Las siguientes pistas %d han sido actualizadas"
+msgstr[0] "La siguiente pista ha sido borrada por completo del iPod:\n"
+msgstr[1] "Las siguientes pistas han sido borradas por completo del iPod:\n"
 
 #: src/syncdir.c:264
-#, fuzzy
 msgid "The following track has been removed from the repository:\n"
 msgid_plural "The following tracks have been removed from the repository:\n"
-msgstr[0] "La siguiente pista duplicada ha sido borrada."
-msgstr[1] "Las siguientes %d pistas duplicadas han sido borradas."
+msgstr[0] "La siguiente pista ha sido borrada del repositorio:\n"
+msgstr[1] ""
+"Las siguientes pistas duplicadas han sido borradas del repositorio:\n"
 
 #: src/syncdir.c:271
-#, fuzzy
 msgid "The following track has been removed from the playlist:\n"
 msgid_plural "The following tracks have been removed from the playlist:\n"
-msgstr[0] ""
-"La siguiente pista duplicada no ha sido añadida a la lista de reproducción "
-"principal."
+msgstr[0] "La siguiente pista ha sido borrada de la lista de reproducción:\n"
 msgstr[1] ""
-"Las siguientes %d pistas duplicadas no han sido añadidas a la lista de "
-"reproducción principal."
+"Las siguientes pistas han sido borradas de la lista de reproducción:\n"
 
 #: src/syncdir.c:277
 msgid "Nothing was changed.\n"
-msgstr ""
+msgstr "No ha habido cambios.\n"
 
 #: src/syncdir.c:282
 msgid "Sync summary"
-msgstr ""
+msgstr "Sincronizar resumen"
 
 #: src/tools.c:119
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not find '%s'\n"
 ". Please specifiy the exact path in the Tools section of the preference "
 "dialog or install the programm if it is not installed on your system.\n"
 "\n"
 msgstr ""
-"No se ha encontrado el programa '%s'.\n"
-"\n"
-"Conprobar la configuración en el apartado 'Herramientas' del diálogo de "
-"edición de preferencias.\n"
+"No se ha encontrado '%s'.\n"
+" Especificar la ruta exacta en en el apartado 'Herramientas' del diálogo de "
+"edición de preferencias o instalar el programa si no está instalado en el "
+"sistema.\n"
 "\n"
 
 #: src/tools.c:204
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Execution of '%s' failed.\n"
 "\n"
-msgstr "Error al ejecutar mp3gain ('%s')."
+msgstr ""
+"Error al ejecutar '%s'.\n"
+"\n"
 
 #: src/tools.c:249
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Did not normalize '%s'. Set mp3gain path in the Tools section of the "
 "preferences.\n"
 msgstr ""
-"No se ha encontrado el programa '%s'.\n"
-"\n"
-"Conprobar la configuración en el apartado 'Herramientas' del diálogo de "
-"edición de preferencias.\n"
-"\n"
+"No se ha normalizado '%s'. Configurar la ruta de mp3gain en el apartado "
+"'Herramientas' del diálogo de edición de preferencias.\n"
 
 #: src/tools.c:259
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Did not normalize '%s'. Set aacgain path in the Tools section of the "
 "preferences.\n"
 msgstr ""
-"No se ha encontrado el programa '%s'.\n"
-"\n"
-"Conprobar la configuración en el apartado 'Herramientas' del diálogo de "
-"edición de preferencias.\n"
-"\n"
+"No se ha normalizado '%s'. Configurar la ruta de aacgain en el apartado "
+"'Herramientas' del diálogo de edición de preferencias.\n"
 
 #: src/tools.c:384
 msgid "Normalizing..."
@@ -4945,364 +4941,3 @@ msgstr "%s no parece ser un fichero wav soportado.\n"
 
 #~ msgid "<b>Artwork</b>"
 #~ msgstr "<b>Trabajo artístico</b>"
-
-#~ msgid "_Offline"
-#~ msgstr "M_odo desconectado"
-
-#~ msgid ""
-#~ "You only need to specify this if your 'mp3gain' executable is not in your "
-#~ "default path. Example: '/usr/local/foo/mp3gain'. mp3gain will write the "
-#~ "calculated gain value back to the file -- if you don't want this, set "
-#~ "this entry to /bin/true or similar. mp3gain is only called if appropriate "
-#~ "tags are not already set by your encoder. E.g. lame version 0.95 already "
-#~ "writes the gain values into tags. The exact conversion factor between "
-#~ "mp3gain's gain value and iPod's volume tag is not known yet -- your input "
-#~ "is appreciated."
-#~ msgstr ""
-#~ "Sólo es necesario especificar la ubicación de mp3gain si el programa no "
-#~ "se encuentra el la ruta de búsqueda por defecto. Ejemplo: '/usr/local/foo/"
-#~ "mp3gain'"
-
-#, fuzzy
-#~ msgid "Edit Repository Properties"
-#~ msgstr "Opciones de ordenamiento"
-
-#~ msgid "Currently no iPod database selected"
-#~ msgstr "No se ha seleccionado ninguna base de datos iPod"
-
-#~ msgid "No playlist selected."
-#~ msgstr "No se ha seleccionado ninguna lista de reproducción"
-
-#~ msgid "Could not delete backup file: \"%s\"\n"
-#~ msgstr "No se puede borrar fichero de copia de seguridad: \"%s\"\n"
-
-#~ msgid "No tracks selected."
-#~ msgstr "No se ha seleccionado ninguna pista"
-
-#~ msgid "Problem creating iPod directory: '%s'."
-#~ msgstr "Se ha producido un error al crear el directorio del iPod: '%s'"
-
-#~ msgid "Successfully created iPod directories in '%s'."
-#~ msgstr "Los directorios del iPod se han creado con éxito en '%s'"
-
-#~ msgid "Create iPod directories"
-#~ msgstr "Crear los directorios del iPod"
-
-#~ msgid "OK to create the following directories?"
-#~ msgstr "¿Desea crear los siguientes directorios?"
-
-#~ msgid ""
-#~ "Could not find mp3gain. I tried to use the following executable: '%s'.\n"
-#~ "\n"
-#~ "If the mp3gain executable is not in your path or named differently, you "
-#~ "can set the full path in the 'Tools' section of the preferences dialog.\n"
-#~ "\n"
-#~ "If you do not have mp3gain installed, you can download it from http://www."
-#~ "sourceforge.net/projects/mp3gain."
-#~ msgstr ""
-#~ "No se ha encontrado mp3gain. Ejecutable usado: '%s'.\n"
-#~ "\n"
-#~ "Si el programa mp3gain no esta en la ruta de búsqueda o tiene otro "
-#~ "nombre, se puede configurar su ubicación en la sección de 'Herramientas' "
-#~ "del diálogo de 'Editar preferencias'.\n"
-#~ "\n"
-#~ "Si mp3gain no está instalado, puede descargarse de http://www.sourceforge."
-#~ "net/projects/mp3gain."
-
-#~ msgid ""
-#~ "  -o:           use offline mode. No changes are exported to the iPod,\n"
-#~ "                but to ~/.gtkpod/ instead. iPod is updated if 'Sync' is\n"
-#~ "                used with 'Offline' deactivated.\n"
-#~ msgstr ""
-#~ "  -o:           usar el modo desconectado. Los cambios se guardarán en ~/."
-#~ "gtkpod/ \n"
-#~ "                en vez de hacerlo en el iPod. El iPod es actualizado al\n"
-#~ "               sincronizar en modo conectado.\n"
-
-#~ msgid "  --offline:    same as '-o'.\n"
-#~ msgstr "  --offline:    igual que '-o'.\n"
-
-#~ msgid "Error while reading prefs: %s\n"
-#~ msgstr "Error al leer las preferencias: %s\n"
-
-#~ msgid "Unable to open config file '%s' for reading\n"
-#~ msgstr "Error al leer el fichero de configuración '%s'\n"
-
-#~ msgid "Unknown option: %s\n"
-#~ msgstr "Opción desconocida: %s\n"
-
-#~ msgid "# delete confirmation\n"
-#~ msgstr "# confirmación de la cancelación\n"
-
-#~ msgid "# sort tab: select 'All', last selected page (=category)\n"
-#~ msgstr ""
-#~ "#pestaña de ordenamiento: seleccionar 'Todo', última página seleccionada "
-#~ "(=category)\n"
-
-#~ msgid "# autoselect master playlist?\n"
-#~ msgstr ""
-#~ "# ¿seleccionar automáticamente la lista de reproducción principal?\n"
-
-#~ msgid "# title=0, artist, album, genre, composer\n"
-#~ msgstr "# título=0, artista, álbum, género, compositor\n"
-
-#~ msgid "# track_nr=5, ipod_id, pc_path, transferred\n"
-#~ msgstr "# track_nr=5, ipod_id, pc_path, transferida\n"
-
-#~ msgid "# autoset: set empty tag to filename?\n"
-#~ msgstr ""
-#~ "# definición automática: ¿poner etiqueta vacía al nombre de fichero?\n"
-
-#~ msgid ""
-#~ "# position of sliders (paned): playlists, above tracks,\n"
-#~ "# between sort tabs, and in statusbar.\n"
-#~ msgstr ""
-#~ "# posición de los separadores (de paneles): listas de reproducción, "
-#~ "pistas superiores,\n"
-#~ "# entre pestañas, y en la barra de estado.\n"
-
-#~ msgid ""
-#~ "# window sizes: main window, confirmation scrolled,\n"
-#~ "#               confirmation non-scrolled, dirbrowser, prefs\n"
-#~ msgstr ""
-#~ "# tamaños de las ventanas: ventana principal, confirmaciones paginadas,\n"
-#~ "#               confirmaciones no paginadas, examinador de directorios, "
-#~ "preferencias\n"
-
-#~ msgid "Unable to open '%s' for writing\n"
-#~ msgstr "Error al abrir '%s' en modo escritura\n"
-
-#~ msgid ""
-#~ " Preferences: Category nr (%d<%d?) or sorttab nr (%d<%d?) out of range.\n"
-#~ msgstr ""
-#~ "Preferencias: Número de categoría (%d<%d?) o Número de pestaña (%d<%d?) "
-#~ "fuera de rango.\n"
-
-#~ msgid "Unable to 'mkdir %s'\n"
-#~ msgstr "Error al crear directorio 'mkdir %s'\n"
-
-#~ msgid "prefs_set_toolbar_style: illegal style '%d' ignored\n"
-#~ msgstr "prefs_set_toolbar_style: estilo no permitido '%d' ignorado\n"
-
-#~ msgid "prefs_set_pm_sort: illegal type '%d' ignored\n"
-#~ msgstr "prefs_set_pm_sort: tipo no permitido '%d' ignorado\n"
-
-#~ msgid "'%s': no arguments (%%...) allowed.\n"
-#~ msgstr "'%s': argumentos (%%...) no permitidos.\n"
-
-#~ msgid "'%s': only '%%[%s]' allowed.\n"
-#~ msgstr "'%s': sólo '%%[%s]' permitido.\n"
-
-#~ msgid "_Read iTunesDB"
-#~ msgstr "Lee_r base de datos iTunes"
-
-#~ msgid "Synchronize _iTunesDB"
-#~ msgstr "Sincronizar base de datos _iTunes"
-
-#~ msgid "Edit"
-#~ msgstr "Editar"
-
-#~ msgid "Read Existing Database from Disk/iPod"
-#~ msgstr "Leer la actual base de datos del Disco/iPod"
-
-#~ msgid "Read"
-#~ msgstr "Leer"
-
-#~ msgid "Write Changes to Disk/iPod"
-#~ msgstr "Guardar cambios a disco/iPod"
-
-#~ msgid "Sync"
-#~ msgstr "Sincronizar"
-
-#, fuzzy
-#~ msgid "Update Tracks"
-#~ msgstr "Pistas sin puntuar"
-
-#~ msgid "Normalize"
-#~ msgstr "Normalizar"
-
-#~ msgid "Update Podcasts"
-#~ msgstr "Actualizar podcasts"
-
-#~ msgid "Podcasts Preferences"
-#~ msgstr "Prefefencias de los podcasts"
-
-#~ msgid "file not found"
-#~ msgstr "fichero no encontrado"
-
-#~ msgid "Unmounting of '%s' (%s) unsuccessful."
-#~ msgstr "Desmontaje de '%s' (%s) fallido."
-
-#~ msgid "Unmounting of '%s' unsuccessful."
-#~ msgstr "Desmontaje de '%s' fallido."
-
-#~ msgid "Update"
-#~ msgstr "Actualizar"
-
-#~ msgid "Sync Dirs"
-#~ msgstr "Sincronizar directorios"
-
-#~ msgid "Sync dirs of selected entry in which sort tab?"
-#~ msgstr "¿En qué pestaña desea sincronizar la entrada seleccionada?"
-
-#~ msgid "Syncing directory '%s'"
-#~ msgstr "Sincronizando directorio '%s'"
-
-#~ msgid "Syncing completed. No files deleted."
-#~ msgstr "Sincronización terminada. Ningún fichero borrado."
-
-#~ msgid "Never delete any files when syncing"
-#~ msgstr "Nunca borrar ficheros al sincronizar."
-
-#~ msgid "Syncing completed."
-#~ msgstr "Sincronización terminada."
-
-#~ msgid "Syncing aborted"
-#~ msgstr "Sincronización abortada."
-
-#~ msgid "No tracks in selection"
-#~ msgstr "Ninguna pista seleccionada"
-
-#~ msgid "'%s' is not a directory. Ignored.\n"
-#~ msgstr "'%s' no es un directorio. Ignorado.\n"
-
-#~ msgid ""
-#~ "No directory names were stored. Make sure that you enable 'Write extended "
-#~ "information' in the Export section of the preferences at the time of "
-#~ "importing files.\n"
-#~ "\n"
-#~ "To synchronize directories now, activate the duplicate detection ('Don't "
-#~ "allow file duplication') in the Import section and add the directories "
-#~ "you want to sync again.\n"
-#~ msgstr ""
-#~ "Ningún nombre de directorio ha sido memorizado. Asegurarse de haber "
-#~ "activado el 'Escribir información extendida' durante la importación en la "
-#~ "sección 'Exportar' de las preferencias.\n"
-#~ "\n"
-#~ "Para sincronizar directorios ahora, activar la detección de duplicados "
-#~ "(no permitir ficheros duplicados) en la sección 'Importar'  y añadir los "
-#~ "directorios a sincronizar de nuevo.\n"
-
-#~ msgid "No valid directories have been found. Sync aborted.\n"
-#~ msgstr ""
-#~ "No se han encontrado directorios válidos. Sincronización abortada.\n"
-
-#~ msgid ""
-#~ "The (former) contents of the following directories will be removed from "
-#~ "the database:\n"
-#~ "\n"
-#~ msgstr ""
-#~ "El contenido (actual) de los siguientes directorios será borrado de la "
-#~ "base de datos:\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "The following directories will be synchronized:\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Los siguientes directorios serán sincronizados:\n"
-#~ "\n"
-
-#~ msgid "Synchronize directories"
-#~ msgstr "Sincronizar directorios"
-
-#~ msgid "Syncing contacts, calendar and notes..."
-#~ msgstr "Sincronizando contactos, calendario y notas..."
-
-#~ msgid "_Synchronize Directories"
-#~ msgstr "_Sincronizar directorios"
-
-#~ msgid ""
-#~ "Where you mounted your iPod's filesystem. Usually '/mnt/ipod/' or similar."
-#~ msgstr "Directorio de montaje del iPod. Normalmente '/mnt/ipod' o similar."
-
-#~ msgid ""
-#~ "If you check this option, tracks that have been removed from the synced "
-#~ "directories will be removed from the iPod as well."
-#~ msgstr ""
-#~ "Si se selecciona esta opción, las pistas que han sido borradas de los "
-#~ "directorios a sincronizar serán también borradas del iPod."
-
-#~ msgid "Delete tracks that have been removed"
-#~ msgstr "Borrar las pistas que han sido borradas."
-
-#~ msgid "Confirm before removing tracks"
-#~ msgstr "Confirmar antes de borrar las pistas"
-
-#~ msgid ""
-#~ "Before removing tracks completely when\n"
-#~ "synchronizing directories"
-#~ msgstr ""
-#~ "Antes de borrar por completo las pistas al\n"
-#~ " sincronizar los directorios"
-
-#~ msgid "<b>Podcast subscriptions</b>"
-#~ msgstr "<b>suscripciones podcast</b>"
-
-#~ msgid "Add"
-#~ msgstr "Añadir"
-
-#~ msgid "Delete"
-#~ msgstr "Borrar"
-
-#~ msgid "Name: "
-#~ msgstr "Nombre: "
-
-#~ msgid "URL: "
-#~ msgstr "URL: "
-
-#~ msgid "<b>File options</b>"
-#~ msgstr "<b>Opciones de fichero</b>"
-
-#~ msgid "Save podcasts to: "
-#~ msgstr "Guardar podcasts en:"
-
-#~ msgid "Delete from computer when "
-#~ msgstr "Borrar del ordenador cuando "
-
-#~ msgid " days old"
-#~ msgstr " días"
-
-#~ msgid "Delete once copied to iPod"
-#~ msgstr "Borrar una vez copiado al iPod"
-
-#~ msgid "Create podcast logfile at:"
-#~ msgstr "Crear registro de podcasts en:"
-
-#~ msgid "<b>iPod options</b>"
-#~ msgstr "<b>Opciones del iPod</b>"
-
-#~ msgid "Automatically sync to iPod"
-#~ msgstr "Sincronizar automáticamente con el iPod"
-
-#~ msgid "Delete from iPod when "
-#~ msgstr "Borrar del iPod cuando"
-
-#~ msgid "Delete from iPod if podcast has been played"
-#~ msgstr "Borrar del iPod si el podcast ha sido reproducido"
-
-#~ msgid "Include broadcast date in track title"
-#~ msgstr ""
-#~ "Incluir la fecha de la difusión (broadcast) el el título de la pista."
-
-#~ msgid "Set all podcast genres to 'Podcast'"
-#~ msgstr "Marcar todos los géneros podcast a 'Podcast'"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-
-#~ msgid "Abort selected"
-#~ msgstr "Cancelar seleccionado"
-
-#~ msgid "Abort current"
-#~ msgstr "Cancelar actual"
-
-#~ msgid "Abort all"
-#~ msgstr "Cancelar todo"
-
-#~ msgid "Export Tracks"
-#~ msgstr "Exportar pistas"
