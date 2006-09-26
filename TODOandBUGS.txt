@@ -1,4 +1,6 @@
-TODO:
+, TODO:
+
+- unload iPods when exiting gtkpod (ask/option).
 
 - cddb lookup (http://freedb.freedb.org). See also
   http://musicbrainz.org/doc/libmusicbrainzDownload
