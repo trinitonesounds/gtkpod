@@ -2,6 +2,10 @@
 
 	* po/sv.po: updated version by Stefan Asserhall
 
+	* src/mp3file.c: when adding artwork make sure the correct
+          type is used (preferably type 3 (cover) or type 0 (used by
+          iTunes)). Thanks to Todd Zullinger for the patch.
+
 2006-09-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c (mp3_write_file_info): YEAR tag was not

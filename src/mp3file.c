@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-24 12:52:49 jcs>
+/* Time-stamp: <2006-09-27 00:20:22 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -965,7 +965,8 @@ static guint get_track_time (gchar *path)
 
 static const gchar* id3_get_binary (struct id3_tag *tag,
 				    char *frame_name,
-				    id3_length_t *len)
+				    id3_length_t *len,
+				    int index)
 {
     const id3_byte_t *binary = NULL;
     struct id3_frame *frame;
@@ -975,7 +976,7 @@ static const gchar* id3_get_binary (struct id3_tag *tag,
 
     *len = 0;
 
-    frame = id3_tag_findframe (tag, frame_name, 0);
+    frame = id3_tag_findframe (tag, frame_name, index);
 #if LOCALDEBUG
     printf ("frame: %p\n", frame); 
 #endif
@@ -983,7 +984,12 @@ static const gchar* id3_get_binary (struct id3_tag *tag,
     if (!frame) return NULL;
 
 #if LOCALDEBUG
-    printf (" nfields: %d\n", frame->nfields); 
+    printf (" nfields: %d\n", frame->nfields);
+    if (strncmp (frame_name, "APIC",  4) == 0)
+    {
+	field = id3_frame_field (frame, 2);
+	printf (" picture type: %ld\n", field->number.value);
+    }
 #endif
 
 
@@ -1306,9 +1312,29 @@ static gboolean id3_apic_read (gchar *filename,
     if ((id3tag = id3_file_tag(id3file)))
     {
 	id3_length_t len;
-	const guchar *coverart;
+	const guchar *coverart = NULL;
+	int i;
+	struct id3_frame *frame;
 
-	coverart = id3_get_binary (id3tag, "APIC", &len);
+	/* Loop through APIC tags and set coverart.  The picture type should be
+	 * 3 -- Cover (front), but iTunes has been known to use 0 -- Other. */
+	for (i = 0; (frame = id3_tag_findframe(id3tag, "APIC", i)) != NULL; i++)
+	{
+	    union id3_field *field = id3_frame_field (frame, 2);
+	    int pictype = field->number.value;
+/*	    printf ("%s: found apic type %d\n", filename, pictype);*/
+
+	    /* We'll prefer type 3 (cover) over type 0 (other) */
+	    if (pictype == 3)
+	    {
+		coverart = id3_get_binary (id3tag, "APIC", &len, i);
+	    }
+	    if ((pictype == 0) && !coverart)
+	    {
+		coverart = id3_get_binary (id3tag, "APIC", &len, i);
+		break;
+	    }
+	}
 
 	if (coverart)
 	{   /* I guess iTunes is doing something wrong -- the
