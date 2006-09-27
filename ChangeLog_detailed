@@ -1,3 +1,8 @@
+2006-09-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/mp3file.c: Todd Zullinger caught the break statement at
+          the wrong place.
+
 2006-09-26 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* po/sv.po: updated version by Stefan Asserhall

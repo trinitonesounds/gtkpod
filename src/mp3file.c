@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-27 00:20:22 jcs>
+/* Time-stamp: <2006-09-27 22:38:49 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1328,11 +1328,11 @@ static gboolean id3_apic_read (gchar *filename,
 	    if (pictype == 3)
 	    {
 		coverart = id3_get_binary (id3tag, "APIC", &len, i);
+		break;
 	    }
 	    if ((pictype == 0) && !coverart)
 	    {
 		coverart = id3_get_binary (id3tag, "APIC", &len, i);
-		break;
 	    }
 	}
 
