@@ -1,3 +1,9 @@
+2006-10-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/file_export.c: only write error messages for track for
+          which export failed and not all subsequent tracks as
+          well. Thanks to Joachim Tesch for the patch.
+
 2006-09-27 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/mp3file.c: Todd Zullinger caught the break statement at

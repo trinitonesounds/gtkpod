@@ -436,6 +436,7 @@ static void export_files_write (struct fcd *fcd)
 	start = time(NULL);
 	for(l = fcd->tracks; l && !abort; l = l->next)
 	{
+	    gboolean resultWrite = TRUE;
 	    Track *tr = (Track*)l->data;
 
 	    fcd->track = tr;
@@ -456,18 +457,21 @@ static void export_files_write (struct fcd *fcd)
 		    g_cond_timed_wait (cond, mutex, &gtime);
 		} while(!mutex_data);
 		g_mutex_unlock (mutex);
-		result &= (gboolean)GPOINTER_TO_INT(g_thread_join (thread));
+		resultWrite = (gboolean)GPOINTER_TO_INT(g_thread_join (thread));
+		result &= resultWrite;
 	    }
 	    else {
 		g_warning ("Thread creation failed, falling back to default.\n");
-		result &= write_track (fcd);
+		resultWrite = write_track (fcd);
+		result &= resultWrite;
 	    }
 #else
-	    result &= write_track (fcd);
+	    resultWrite = write_track (fcd);
+	    result &= resultWrite;
 	    while (widgets_blocked && gtk_events_pending ())
 		gtk_main_iteration ();
 #endif
-	    if (!result)
+	    if (!resultWrite)
 	    {
 		gtkpod_warning (_("Failed to write '%s-%s'\n"), tr->artist, tr->title);	
 	    }
