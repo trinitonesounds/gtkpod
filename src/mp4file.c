@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-18 16:03:15 jcs>
+/* Time-stamp: <2006-10-14 20:42:36 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -204,22 +204,32 @@ gboolean mp4_read_soundcheck (gchar *mp4FileName, Track *track)
     {
 	MP4TrackId trackId;
 	const char *trackType;
+	u_int32_t track_cur, tracks_num;
+	gboolean audio_or_video_found = FALSE;
 
-	trackId = MP4FindTrackId(mp4File, 0, NULL, 0);
-	trackType = MP4GetTrackType(mp4File, trackId);
+	tracks_num = MP4GetNumberOfTracks (mp4File, NULL,  0);
 
-	if (trackType &&
-	    ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) ||
-	     (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0) ||
-	     (strcmp(trackType, MP4_OD_TRACK_TYPE) == 0)))
+	for (track_cur=0; track_cur < tracks_num; ++track_cur)
 	{
-	    success = mp4_scan_soundcheck (mp4File, track);
+	    trackId = MP4FindTrackId(mp4File, track_cur, NULL, 0);
+	    trackType = MP4GetTrackType(mp4File, trackId);
+
+	    if (trackType &&
+		((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) ||
+		 (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0) ||
+		 (strcmp(trackType, MP4_OD_TRACK_TYPE) == 0)))
+	    {
+		audio_or_video_found = TRUE;
+		success = mp4_scan_soundcheck (mp4File, track);
+	    }
+	    if (audio_or_video_found) break;
 	}
-	else
+	if (!audio_or_video_found)
 	{
 	    gchar *filename = charset_to_utf8 (mp4FileName);
-	    gtkpod_warning (_("'%s' does not appear to be a mp4 audio file.\n"),
-			    filename);
+	    gtkpod_warning (
+		_("'%s' does not appear to be a mp4 audio or video file.\n"),
+		filename);
 	    g_free (filename);
 	}
 	MP4Close(mp4File);
@@ -251,96 +261,107 @@ Track *mp4_get_file_info (gchar *mp4FileName)
     {
 	MP4TrackId trackId;
 	const char *trackType;
+	u_int32_t track_cur, tracks_num;
+	gboolean audio_or_video_found = FALSE;
+/*	gboolean artwork_found = FALSE; not used yet */
 
-	trackId = MP4FindTrackId(mp4File, 0, NULL, 0);
-	trackType = MP4GetTrackType(mp4File, trackId);
-	if (trackType &&
-	    ((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) ||
-	     (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0) ||
-	     (strcmp(trackType, MP4_OD_TRACK_TYPE) == 0)))
+	tracks_num = MP4GetNumberOfTracks (mp4File, NULL,  0);
+
+	for (track_cur=0; track_cur < tracks_num; ++track_cur)
 	{
-	    gchar *value;
-	    guint16 numvalue, numvalue2;
-	    MP4Duration trackDuration = MP4GetTrackDuration(mp4File, trackId);
-	    double msDuration = 
-		(double)MP4ConvertFromTrackDuration(mp4File, trackId,
-						    trackDuration,
-						    MP4_MSECS_TIME_SCALE);
-	    guint32 avgBitRate = MP4GetTrackBitRate(mp4File, trackId);
-	    guint32 samplerate = MP4GetTrackTimeScale(mp4File, trackId);
-
-	    track = gp_track_new ();
-
-	    track->tracklen = msDuration;
-	    track->bitrate = avgBitRate/1000;
-	    track->samplerate = samplerate;
-	    value = strrchr (mp4FileName, '.');
-	    if (value)
+	    trackId = MP4FindTrackId(mp4File, track_cur, NULL, 0);
+	    trackType = MP4GetTrackType(mp4File, trackId);
+	    if (trackType &&
+		(audio_or_video_found == FALSE) &&
+		((strcmp(trackType, MP4_AUDIO_TRACK_TYPE) == 0) ||
+		 (strcmp(trackType, MP4_VIDEO_TRACK_TYPE) == 0) ||
+		 (strcmp(trackType, MP4_OD_TRACK_TYPE) == 0)))
 	    {
-		if (g_strcasecmp (value, ".m4a") == 0)
-		    track->filetype = g_strdup ("AAC audio file");
-		if (g_strcasecmp (value, ".m4p") == 0)
-		    track->filetype = g_strdup ("Protected AAC audio file");
-		if (g_strcasecmp (value, ".m4b") == 0)
-		    track->filetype = g_strdup ("AAC audio book file");
-		if (g_strcasecmp (value, ".mp4") == 0)
-		    track->filetype = g_strdup ("MP4 video file");
+		gchar *value;
+		guint16 numvalue, numvalue2;
+		MP4Duration trackDuration = MP4GetTrackDuration(mp4File, trackId);
+		double msDuration = 
+		    (double)MP4ConvertFromTrackDuration(mp4File, trackId,
+							trackDuration,
+							MP4_MSECS_TIME_SCALE);
+		guint32 avgBitRate = MP4GetTrackBitRate(mp4File, trackId);
+		guint32 samplerate = MP4GetTrackTimeScale(mp4File, trackId);
+		
+		track = gp_track_new ();
+		
+		track->tracklen = msDuration;
+		track->bitrate = avgBitRate/1000;
+		track->samplerate = samplerate;
+		value = strrchr (mp4FileName, '.');
+		if (value)
+		{
+		    if (g_strcasecmp (value, ".m4a") == 0)
+			track->filetype = g_strdup ("AAC audio file");
+		    if (g_strcasecmp (value, ".m4p") == 0)
+			track->filetype = g_strdup ("Protected AAC audio file");
+		    if (g_strcasecmp (value, ".m4b") == 0)
+			track->filetype = g_strdup ("AAC audio book file");
+		    if (g_strcasecmp (value, ".mp4") == 0)
+			track->filetype = g_strdup ("MP4 video file");
+		}
+		if (prefs_get_int("readtags"))
+		{
+		    if (MP4GetMetadataName(mp4File, &value) && value != NULL)
+		    {
+			track->title = charset_to_utf8 (value);
+			g_free(value);
+		    }
+		    if (MP4GetMetadataArtist(mp4File, &value) && value != NULL)
+		    {
+			track->artist = charset_to_utf8 (value);
+			g_free(value);
+		    }
+		    if (MP4GetMetadataWriter(mp4File, &value) && value != NULL)
+		    {
+			track->composer = charset_to_utf8 (value);
+			g_free(value);
+		    }
+		    if (MP4GetMetadataComment(mp4File, &value) && value != NULL)
+		    {
+			track->comment = charset_to_utf8 (value);
+			g_free(value);
+		    }
+		    if (MP4GetMetadataYear(mp4File, &value) && value != NULL)
+		    {
+			track->year = atoi (value);
+			g_free(value);
+		    }
+		    if (MP4GetMetadataAlbum(mp4File, &value) && value != NULL)
+		    {
+			track->album = charset_to_utf8 (value);
+			g_free(value);
+		    }
+		    if (MP4GetMetadataTrack(mp4File, &numvalue, &numvalue2))
+		    {
+			track->track_nr = numvalue;
+			track->tracks = numvalue2;
+		    }
+		    if (MP4GetMetadataDisk(mp4File, &numvalue, &numvalue2))
+		    {
+			track->cd_nr = numvalue;
+			track->cds = numvalue2;
+		    }
+		    if (MP4GetMetadataGenre(mp4File, &value) && value != NULL)
+		    {
+			track->genre = charset_to_utf8 (value);
+			g_free(value);
+		    }
+		}
+		mp4_scan_soundcheck (mp4File, track);
+		audio_or_video_found = TRUE;
 	    }
-	    if (prefs_get_int("readtags"))
-	    {
-		if (MP4GetMetadataName(mp4File, &value) && value != NULL)
-		{
-		    track->title = charset_to_utf8 (value);
-		    g_free(value);
-		}
-		if (MP4GetMetadataArtist(mp4File, &value) && value != NULL)
-		{
-		    track->artist = charset_to_utf8 (value);
-		    g_free(value);
-		}
-		if (MP4GetMetadataWriter(mp4File, &value) && value != NULL)
-		{
-		    track->composer = charset_to_utf8 (value);
-		    g_free(value);
-		}
-		if (MP4GetMetadataComment(mp4File, &value) && value != NULL)
-		{
-		    track->comment = charset_to_utf8 (value);
-		    g_free(value);
-		}
-		if (MP4GetMetadataYear(mp4File, &value) && value != NULL)
-		{
-		    track->year = atoi (value);
-		    g_free(value);
-		}
-		if (MP4GetMetadataAlbum(mp4File, &value) && value != NULL)
-		{
-		    track->album = charset_to_utf8 (value);
-		    g_free(value);
-		}
-		if (MP4GetMetadataTrack(mp4File, &numvalue, &numvalue2))
-		{
-		    track->track_nr = numvalue;
-		    track->tracks = numvalue2;
-		}
-		if (MP4GetMetadataDisk(mp4File, &numvalue, &numvalue2))
-		{
-		    track->cd_nr = numvalue;
-		    track->cds = numvalue2;
-		}
-		if (MP4GetMetadataGenre(mp4File, &value) && value != NULL)
-		{
-		    track->genre = charset_to_utf8 (value);
-		    g_free(value);
-		}
-	    }
-	    mp4_scan_soundcheck (mp4File, track);
 	}
-	else
+	if (!audio_or_video_found)
 	{
 	    gchar *filename = charset_to_utf8 (mp4FileName);
-	    gtkpod_warning (_("'%s' does not appear to be a mp4 audio file.\n"),
-			    filename);
+	    gtkpod_warning (
+		_("'%s' does not appear to be a mp4 audio or video file.\n"),
+		filename);
 	    g_free (filename);
 	}
 	MP4Close(mp4File);

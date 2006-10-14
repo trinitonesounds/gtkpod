@@ -2,6 +2,10 @@
 
         * src/prefs.c: fix compiler warning on 64bit systems (%llu)
 
+	* src/mp4file.c: don't assume that the audio track is track
+          0. Instead cycle through all tracks until an audio or video
+	  track is found.
+
 2006-10-02 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/file_export.c: only write error messages for track for
