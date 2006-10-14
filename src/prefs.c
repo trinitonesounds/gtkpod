@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-24 20:49:39 jcs>
+/* Time-stamp: <2006-10-14 19:04:40 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Copyright (C) 2006 James Liggett <jrliggett at cox.net>
@@ -1277,7 +1277,7 @@ void prefs_set_int64(const gchar *key, const gint64 value)
 	
     if (prefs_table)
     {
-	strvalue = g_strdup_printf("%llu", value);
+	strvalue = g_strdup_printf("%" G_GINT64_FORMAT, value);
 	g_hash_table_insert(prefs_table, g_strdup(key), strvalue);	
     }
 }
@@ -1645,7 +1645,7 @@ void temp_prefs_set_int64(TempPrefs *temp_prefs, const gchar *key,
     g_return_if_fail (temp_prefs && temp_prefs->tree);
     g_return_if_fail (key);
 
-    strvalue = g_strdup_printf("%llu", value);
+    strvalue = g_strdup_printf("%" G_GINT64_FORMAT, value);
     g_tree_insert(temp_prefs->tree, g_strdup(key), strvalue);
 }
 
