@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-10-14 20:42:36 jcs>
+/* Time-stamp: <2006-10-15 23:48:05 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -34,8 +34,10 @@
 #include "charset.h"
 #include "itdb.h"
 #include "misc.h"
-#include "mp4file.h"
 #include "prefs.h"
+#include "mp4file.h"
+
+
 
 /* ------------------------------------------------------------
 
@@ -134,12 +136,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mp4.h"
-#undef PACKAGE
-#undef VERSION
-/* need to include config.h again because mp4.h seems to #undef
-   PACKAGE */
-#include <config.h>
-
 
 static gboolean mp4_scan_soundcheck (MP4FileHandle mp4File, Track *track)
 {
