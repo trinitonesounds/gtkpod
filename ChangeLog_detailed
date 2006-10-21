@@ -3,6 +3,11 @@
 	* src/mp4file.c: fix compilation error when compiling with
           libmp4v2 package from http://www.debian-multimedia.org/
 
+	* src/display_songs.c (tm_get_nr_of_tracks): speed up counting
+          of displayed tracks by using
+          gtk_tree_model_iter_n_children() instead of actually
+          counting. Thanks to Clarke Brunsdon for the patch.
+
 2006-10-14 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
         * src/prefs.c: fix compiler warning on 64bit systems (%llu)

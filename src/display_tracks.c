@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-23 23:52:48 jcs>
+/* Time-stamp: <2006-10-21 19:15:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1149,25 +1149,18 @@ static void tm_cell_data_func_toggle (GtkTreeViewColumn *tree_column,
  * currently in the track model Returns - the number of tracks displayed
  * currently
  */
-guint
+gint
 tm_get_nr_of_tracks(void)
 {
-    GtkTreeIter i;
-    guint result = 0;
-    gboolean valid = FALSE;
+    gint result = 0;
     GtkTreeModel *tm = NULL;
 
-    if((tm = gtk_tree_view_get_model(GTK_TREE_VIEW(track_treeview))))
+    tm = gtk_tree_view_get_model (GTK_TREE_VIEW(track_treeview));
+    if (tm)
     {
-	if((valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(tm),&i)))
-	{
-	    result++;
-	    while((valid = gtk_tree_model_iter_next(tm,&i)))
-		result++;
-	}
+	result = gtk_tree_model_iter_n_children (tm, NULL);
     }
-    return(result);
-
+    return result;
 }
 
 
