@@ -6,10 +6,14 @@
 # 
 # sync-evocalendar.sh [-i <ipod mountpoint>] [-e <encoding>]
 #           ...       [-c <evolution calendar file>] [-t <evolution tasks file>]
+#           ...       [-f <ical filter script>]
 #
 # with the following defaults: 
 
 IPOD_MOUNT=/mnt/ipod                          # mountpoint of ipod
+
+#the path to a script that will be passed the ical information from STDIN and filter, if needed
+#FILTER_SCRIPT=
 
 #get all the local evolution calendars
 CALFILES=`find ~/.evolution/calendar/local/ -name "calendar.ics"`
@@ -78,7 +82,8 @@ while getopts i:c:t:e: option; do
         c) CALFILES=$OPTARG;;
         t) TASKFILES=$OPTARG;;
         e) ENCODING=$OPTARG;;
-        \?) echo "Usage: `basename $0` [-i <ipod mountpoint>] [-c <evolution calendar file>] [-t <evolution tasks file>] [-e <encoding>]"
+        f) FILTER=$OPTARG;;
+		\?) echo "Usage: `basename $0` [-i <ipod mountpoint>] [-c <evolution calendar file>] [-t <evolution tasks file>] [-f <filter script>] [-e <encoding>]"
 	    exit 1;;
     esac
 done
@@ -91,6 +96,11 @@ else
     RECODE="iconv -f UTF-8 -t $ENCODING"
 fi
 
+if [ $FILTER_SCRIPT ]; then
+	FILTER=$FILTER_SCRIPT
+else
+	FILTER="cat"
+fi
 
 # check if CALFILES exist
 for i in $CALFILES; do
@@ -110,8 +120,8 @@ done
 
 echo $CALFILES
 echo $TASKFILES
-sleep 30
+
 # remove all empty lines and recode if necessary
 echo -n "Syncing iPod ... [Calendar] "
-	cat $CALFILES $TASKFILES | grep -v '^[[:space:]]$\|^$' | $RECODE > $IPOD_MOUNT/Calendars/evolution
+	cat $CALFILES $TASKFILES | grep -v '^[[:space:]]$\|^$' | $FILTER |  $RECODE > $IPOD_MOUNT/Calendars/evolution
 echo "done!"
