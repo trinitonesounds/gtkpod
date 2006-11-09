@@ -589,9 +589,9 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
 		track->has_artwork = 0x02;
 	}
 
-	/* set unk208 to audio if unset (important only for iPod Video) */
-	if (track->unk208 == 0)
-	    track->unk208 = 0x00000001;
+	/* set mediatype to audio if unset (important only for iPod Video) */
+	if (track->mediatype == 0)
+	    track->mediatype = 0x00000001;
 	/* restore deleted thumbnails */
 	if ((track->artwork->thumbnails == NULL) &&
 	    (strlen (etr->thumb_path_locale) != 0))

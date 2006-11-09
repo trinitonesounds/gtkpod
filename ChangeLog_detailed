@@ -1,3 +1,10 @@
+2006-11-08 James Liggett <freethinkerjim at users.sourceforge.net>
+	
+	* src/file.c
+	  src/file_itunesdb.c: Patch from Rommel G. Custodio
+	  <sessyargc  at yahoo.com> that allows current CVS gtkpod to compile 
+	  with current CVS libgpod.  
+
 2006-10-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* scripts/sync-evocalendar.sh: new option for adding a filter
