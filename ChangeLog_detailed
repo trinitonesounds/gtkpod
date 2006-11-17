@@ -1,3 +1,9 @@
+2006-11-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/*.[ch]: realized that we are using sha1 hash and not md5
+          hash, therefore renamed all relevant occurences of md5
+          (function names only so far).
+
 2006-11-08 James Liggett <freethinkerjim at users.sourceforge.net>
 	
 	* src/file.c

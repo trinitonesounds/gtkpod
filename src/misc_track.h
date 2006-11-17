@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-14 00:54:51 jcs>
+/* Time-stamp: <2006-11-17 16:36:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -37,9 +37,9 @@
 #include "display.h"
 
 void gp_duplicate_remove (Track *oldtrack, Track *track);
-void gp_md5_hash_tracks_itdb (iTunesDB *itdb);
-void gp_md5_hash_tracks (void);
-void gp_md5_free_hash (void);
+void gp_sha1_hash_tracks_itdb (iTunesDB *itdb);
+void gp_sha1_hash_tracks (void);
+void gp_sha1_free_hash (void);
 Track *gp_track_by_filename (iTunesDB *itdb, gchar *filename);
 gchar **track_get_item_pointer (Track *track, T_item t_item);
 const gchar *track_get_item (Track *track, T_item t_item);

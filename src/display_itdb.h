@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-18 15:27:12 jcs>
+/* Time-stamp: <2006-11-17 16:33:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -71,7 +71,7 @@ typedef struct
   gchar   *thumb_path_locale; /* same for thumbnail                  */
   gchar   *thumb_path_utf8;   /* same for thumbnail                  */
   gchar   *hostname;      /* name of host this file has been imported on*/
-  gchar   *md5_hash;      /* md5 hash of file (or NULL)              */
+  gchar   *sha1_hash;     /* sha1 hash of file (or NULL)              */
   gchar   *charset;       /* charset used for ID3 tags               */
   gint32  sortindex;      /* used for stable sorting (current order) */
   gboolean tchanged;      /* temporary use, e.g. in detail.c         */

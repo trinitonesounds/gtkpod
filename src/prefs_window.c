@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-24 20:49:38 jcs>
+/* Time-stamp: <2006-11-17 16:36:10 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -695,7 +695,7 @@ prefs_window_set(void)
 
      /* Set up/free md5 hash table if changed */
      if (temp_prefs_get_int_value(temp_prefs, "md5", NULL))
-	 setup_md5();
+	 setup_sha1();
    }
   
    /* Need this in case user reordered column order (we don't

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-24 01:53:45 jcs>
+/* Time-stamp: <2006-11-17 16:33:12 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -925,15 +925,15 @@ check_db_danglingok1 (gpointer user_data1, gpointer user_data2)
 	/* Update MD5 information */
 	/* remove track from md5 hash and reinsert it
 	   (hash value may have changed!) */
-	md5_track_remove (track);
+	sha1_track_remove (track);
 	/* need to remove the old value manually! */
-	etr->md5_hash = NULL;
-	oldtrack = md5_track_exists_insert (itdb, track);
+	etr->sha1_hash = NULL;
+	oldtrack = sha1_track_exists_insert (itdb, track);
 	if (oldtrack) { /* track exists, remove old track
 			  and register the new version */
-	    md5_track_remove (oldtrack);
+	    sha1_track_remove (oldtrack);
 	    gp_duplicate_remove (track, oldtrack);
-	    md5_track_exists_insert (itdb, track);
+	    sha1_track_exists_insert (itdb, track);
 	}
     }
     g_list_free(l_dangling);
@@ -1124,7 +1124,7 @@ void check_db (iTunesDB *itdb)
 		    norphaned++;
 
                     if (localdebug) fprintf(stdout,"to orphaned ");
-		    if ((dupl_track = md5_file_exists (itdb, fn_orphaned,
+		    if ((dupl_track = sha1_file_exists (itdb, fn_orphaned,
 						       TRUE)))
 		    {  /* This orphan has already been added again.
 			  It will be removed with the next sync */

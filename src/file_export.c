@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 00:22:56 jcs>
+/* Time-stamp: <2006-11-17 16:33:13 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -747,7 +747,7 @@ GList *export_trackglist_when_necessary (iTunesDB *itdb_s,
 	Track *tr = gl->data;
 	g_return_val_if_fail (tr, NULL);
 
-	otr = md5_track_exists (itdb_d, tr);
+	otr = sha1_track_exists (itdb_d, tr);
 
 	if (otr)
 	{

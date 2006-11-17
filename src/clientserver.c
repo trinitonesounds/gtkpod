@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:25:30 jcs>
+/* Time-stamp: <2006-11-17 16:33:14 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -135,7 +135,7 @@ static gboolean register_playcount (gchar *file)
 	    {
 		if (flock (fd, LOCK_EX) == 0)
 		{
-		    gchar *md5 = md5_hash_on_filename (file, TRUE);
+		    gchar *md5 = sha1_hash_on_filename (file, TRUE);
 		    write (fd, SOCKET_PLYC, strlen (SOCKET_PLYC));
 		    if (md5) write (fd, md5, strlen (md5));
 		    write (fd, " ", 1);

@@ -1,4 +1,4 @@
-/* Time-stamp: <2005-06-17 22:12:15 jcs>
+/* Time-stamp: <2006-11-17 16:28:43 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2004-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
@@ -33,16 +33,16 @@
 
 #include "display_itdb.h"
 
-void setup_md5();
-gchar *md5_hash_on_filename (gchar *name, gboolean silent);
-/* Any calls to the following functions immediately return if md5sums
+void setup_sha1();
+gchar *sha1_hash_on_filename (gchar *name, gboolean silent);
+/* Any calls to the following functions immediately return if sha1sums
  * is not on */
-Track *md5_file_exists (iTunesDB *itdb, gchar *file, gboolean silent);
-Track *md5_md5_exists (iTunesDB *itdb, gchar *md5);
-Track *md5_track_exists (iTunesDB *itdb, Track *s);
-Track *md5_track_exists_insert (iTunesDB *itdb, Track *s);
-void md5_track_remove (Track *s);
-void md5_free (iTunesDB *itdb);
-void md5_free_eitdb (ExtraiTunesDBData *eitdb);
+Track *sha1_file_exists (iTunesDB *itdb, gchar *file, gboolean silent);
+Track *sha1_sha1_exists (iTunesDB *itdb, gchar *sha1);
+Track *sha1_track_exists (iTunesDB *itdb, Track *s);
+Track *sha1_track_exists_insert (iTunesDB *itdb, Track *s);
+void sha1_track_remove (Track *s);
+void sha1_free (iTunesDB *itdb);
+void sha1_free_eitdb (ExtraiTunesDBData *eitdb);
 
 #endif

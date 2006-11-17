@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-25 15:57:03 jcs>
+/* Time-stamp: <2006-11-17 16:36:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -62,7 +62,7 @@ struct track_extended_info
     time_t mtime;
     gchar *thumb_path_locale;
     gchar *thumb_path_utf8;
-    gchar *md5_hash;
+    gchar *sha1_hash;
     gchar *charset;
     gchar *hostname;
     gchar *ipod_path;
@@ -117,15 +117,15 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
       while (widgets_blocked && gtk_events_pending ())
 	  gtk_main_iteration ();
 
-      if (!etr->md5_hash)
+      if (!etr->sha1_hash)
       {
 	  gchar *filename = get_file_name_from_source (track, SOURCE_IPOD);
-	  etr->md5_hash = md5_hash_on_filename (filename, FALSE);
+	  etr->sha1_hash = sha1_hash_on_filename (filename, FALSE);
 	  g_free (filename);
       }
-      if (etr->md5_hash)
+      if (etr->sha1_hash)
       {
-	  sei = g_hash_table_lookup (extendedinfohash_md5, etr->md5_hash);
+	  sei = g_hash_table_lookup (extendedinfohash_md5, etr->sha1_hash);
       }
   }
   if (sei) /* found info for this id! */
@@ -141,8 +141,8 @@ void fill_in_extended_info (Track *track, gint32 total, gint32 num)
 	  etr->thumb_path_locale = g_strdup (sei->thumb_path_locale);
       if (sei->thumb_path_utf8 && !etr->thumb_path_utf8)
 	  etr->thumb_path_utf8 = g_strdup (sei->thumb_path_utf8);
-      if (sei->md5_hash && !etr->md5_hash)
-	  etr->md5_hash = g_strdup (sei->md5_hash);
+      if (sei->sha1_hash && !etr->sha1_hash)
+	  etr->sha1_hash = g_strdup (sei->sha1_hash);
       if (sei->charset && !etr->charset)
 	  etr->charset = g_strdup (sei->charset);
       if (sei->hostname && !etr->hostname)
@@ -172,7 +172,7 @@ static void hash_delete (gpointer data)
 	g_free (sei->pc_path_utf8);
 	g_free (sei->thumb_path_locale);
 	g_free (sei->thumb_path_utf8);
-	g_free (sei->md5_hash);
+	g_free (sei->sha1_hash);
 	g_free (sei->charset);
 	g_free (sei->hostname);
 	g_free (sei->ipod_path);
@@ -224,7 +224,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 			name);
 	return FALSE;
     }
-    md5 = md5_hash_on_filename (itunes, FALSE);
+    md5 = sha1_hash_on_filename (itunes, FALSE);
     if (!md5)
     {
 	gtkpod_warning (_("Could not create hash value from itunesdb\n"));
@@ -292,7 +292,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 			    g_hash_table_insert (extendedinfohash,
 						 &sei->ipod_id, sei);
 			}
-			else if (sei->md5_hash)
+			else if (sei->sha1_hash)
 			{
 			    if (!extendedinfohash_md5)
 			    {
@@ -300,7 +300,7 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 				    g_str_hash,g_str_equal, NULL,hash_delete);
 			    }
 			    g_hash_table_insert (extendedinfohash_md5,
-						 sei->md5_hash, sei);
+						 sei->sha1_hash, sei);
 			}
 			else
 			{
@@ -344,14 +344,15 @@ static gboolean read_extended_info (gchar *name, gchar *itunes)
 		sei->thumb_path_locale = g_strdup (arg);
 	    else if (g_ascii_strcasecmp (line, "thumbnail_utf8") == 0)
 		sei->thumb_path_utf8 = g_strdup (arg);
-	    else if (g_ascii_strcasecmp (line, "md5_hash") == 0)
+	    else if ((g_ascii_strcasecmp (line, "md5_hash") == 0) ||
+		     (g_ascii_strcasecmp (line, "sha1_hash") == 0))
 	    {   /* only accept hash value if version is >= 0.53 or
 		   PATH_MAX is 4096 -- in 0.53 I changed the MD5 hash
 		   routine to using blocks of 4096 Bytes in
 		   length. Before it was PATH_MAX, which might be
 		   different on different architectures. */
 		if ((extendedinfoversion >= 0.53) || (PATH_MAX == 4096))
-		    sei->md5_hash = g_strdup (arg);
+		    sei->sha1_hash = g_strdup (arg);
 	    }
 	    else if (g_ascii_strcasecmp (line, "charset") == 0)
 		sei->charset = g_strdup (arg);
@@ -618,7 +619,7 @@ iTunesDB *gp_import_itdb (iTunesDB *old_itdb, const gint type,
     /* delete hash information (if present) */
     destroy_extendedinfohash ();
     /* find duplicates */
-    gp_md5_hash_tracks_itdb (itdb);
+    gp_sha1_hash_tracks_itdb (itdb);
 
     /* mark the data as unchanged */
     data_unchanged (itdb);
@@ -1075,7 +1076,7 @@ static gboolean write_extended_info (iTunesDB *itdb)
   }
   g_free (name);
   name = NULL;
-  md5 = md5_hash_on_filename (itdb->filename, FALSE);
+  md5 = sha1_hash_on_filename (itdb->filename, FALSE);
   if (md5)
   {
       fprintf(fp, "itunesdb_hash=%s\n", md5);
@@ -1110,8 +1111,8 @@ static gboolean write_extended_info (iTunesDB *itdb)
 	 on the ipod away from gktpod/itunes etc. */
       if (strlen (track->ipod_path) != 0)
 	  fprintf (fp, "filename_ipod=%s\n", track->ipod_path);
-      if (etr->md5_hash && *etr->md5_hash)
-	  fprintf (fp, "md5_hash=%s\n", etr->md5_hash);
+      if (etr->sha1_hash && *etr->sha1_hash)
+	  fprintf (fp, "sha1_hash=%s\n", etr->sha1_hash);
       if (etr->charset && *etr->charset)
 	  fprintf (fp, "charset=%s\n", etr->charset);
       if (!track->transferred && etr->oldsize)

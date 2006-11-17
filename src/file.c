@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-24 15:25:28 jcs>
+/* Time-stamp: <2006-11-17 16:36:11 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -1600,17 +1600,17 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	/* remove track from md5 hash and reinsert it
 	   (hash value may have changed!) */
 	gchar *name_on_ipod;
-	gchar *oldhash = etr->md5_hash;
+	gchar *oldhash = etr->sha1_hash;
 
-	md5_track_remove (track);
+	sha1_track_remove (track);
 	/* need to remove the old value manually! */
-	etr->md5_hash = NULL;
-	oldtrack = md5_track_exists_insert (itdb, track);
+	etr->sha1_hash = NULL;
+	oldtrack = sha1_track_exists_insert (itdb, track);
 	if (oldtrack) { /* track exists, remove old track
 			  and register the new version */
-	    md5_track_remove (oldtrack);
+	    sha1_track_remove (oldtrack);
 	    gp_duplicate_remove (track, oldtrack);
-	    md5_track_exists_insert (itdb, track);
+	    sha1_track_exists_insert (itdb, track);
 	}
 	/* track may have to be copied to iPod on next export */
 	/* since it will copied under the same name as before, we
@@ -1618,9 +1618,9 @@ void update_track_from_file (iTunesDB *itdb, Track *track)
 	name_on_ipod = get_file_name_from_source (track, SOURCE_IPOD);
 	if (name_on_ipod && (strcmp (name_on_ipod, trackpath) != 0))
 	{   /* trackpath is not on the iPod */
-	    if (oldhash && etr->md5_hash)
+	    if (oldhash && etr->sha1_hash)
 	    {   /* do we really have to copy the track again? */
-		if (strcmp (oldhash, etr->md5_hash) != 0)
+		if (strcmp (oldhash, etr->sha1_hash) != 0)
 		{
 		    track->transferred = FALSE;
 		    data_changed (itdb);
@@ -1982,13 +1982,13 @@ gboolean write_tags_to_file (Track *track)
 	g_free (ipod_fullpath);
     }
     /* remove track from md5 hash and reinsert it (hash value has changed!) */
-    md5_track_remove (track);
-    C_FREE (etr->md5_hash);  /* need to remove the old value manually! */
-    oldtrack = md5_track_exists_insert (itdb, track);
+    sha1_track_remove (track);
+    C_FREE (etr->sha1_hash);  /* need to remove the old value manually! */
+    oldtrack = sha1_track_exists_insert (itdb, track);
     if (oldtrack) { /* track exists, remove and register the new version */
-	md5_track_remove (oldtrack);
+	sha1_track_remove (oldtrack);
 	gp_duplicate_remove (track, oldtrack);
-	md5_track_exists_insert (itdb, track);
+	sha1_track_exists_insert (itdb, track);
     }
 
     if (!prefs_get_int("write_charset") && track_charset_set)

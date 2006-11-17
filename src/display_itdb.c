@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-21 23:56:52 jcs>
+/* Time-stamp: <2006-11-17 16:33:13 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -63,7 +63,7 @@ void gp_itdb_extra_destroy (ExtraiTunesDBData *eitdb)
 {
     if (eitdb)
     {
-	md5_free_eitdb (eitdb);
+	sha1_free_eitdb (eitdb);
 	g_free (eitdb);
     }
 }
@@ -106,7 +106,7 @@ void gp_track_extra_destroy (ExtraTrackData *etrack)
 	g_free (etrack->year_str);
 	g_free (etrack->pc_path_utf8);
 	g_free (etrack->hostname);
-	g_free (etrack->md5_hash);
+	g_free (etrack->sha1_hash);
 	g_free (etrack->charset);
 	g_free (etrack);
     }
@@ -127,7 +127,7 @@ ExtraTrackData *gp_track_extra_duplicate (ExtraTrackData *etr)
 	etr_dup->thumb_path_locale = g_strdup (etr->thumb_path_locale);
 	etr_dup->thumb_path_utf8 = g_strdup (etr->thumb_path_utf8);
 	etr_dup->hostname = g_strdup (etr->hostname);
-	etr_dup->md5_hash = g_strdup (etr->md5_hash);
+	etr_dup->sha1_hash = g_strdup (etr->sha1_hash);
 	etr_dup->charset = g_strdup (etr->charset);
     }
     return etr_dup;
@@ -262,7 +262,7 @@ void gp_track_add_extra (Track *track)
 Track *gp_track_add (iTunesDB *itdb, Track *track)
 {
     Track *result=NULL;
-    Track *oldtrack = md5_track_exists_insert (itdb, track);
+    Track *oldtrack = sha1_track_exists_insert (itdb, track);
 
     if(oldtrack)
     {
@@ -274,7 +274,7 @@ Track *gp_track_add (iTunesDB *itdb, Track *track)
     {
 	/* Make sure all strings are initialised -- that way we don't
 	   have to worry about it when we are handling the strings */
-	/* exception: md5_hash, hostname, charset: these may be NULL. */
+	/* exception: sha1_hash, hostname, charset: these may be NULL. */
 	gp_track_validate_entries (track);
 	itdb_track_add (itdb, track, -1);
 	result = track;
@@ -685,7 +685,7 @@ void gp_playlist_remove_track (Playlist *plitem, Track *track,
 
     if (remove_track)
     {
-	md5_track_remove (track);
+	sha1_track_remove (track);
 	if (itdb->usertype & GP_ITDB_TYPE_IPOD)
 	{
 	    switch (deleteaction)
@@ -766,7 +766,7 @@ void gp_playlist_add_track (Playlist *pl, Track *track, gboolean display)
 
 /* Make sure all strings are initialised -- that way we don't
    have to worry about it when we are handling the strings.
-   exception: md5_hash, hostname and charset: these may be NULL. */
+   exception: sha1_hash, hostname and charset: these may be NULL. */
 void gp_track_validate_entries (Track *track)
 {
     ExtraTrackData *etr;
@@ -1037,8 +1037,8 @@ gboolean gp_increase_playcount (gchar *md5, gchar *file, gint num)
 	iTunesDB *itdb = gl->data;
 	g_return_val_if_fail (itdb, FALSE);
 
-	if (md5) track = md5_md5_exists (itdb, md5);
-	else     track = md5_file_exists (itdb, file, TRUE);
+	if (md5) track = sha1_sha1_exists (itdb, md5);
+	else     track = sha1_file_exists (itdb, file, TRUE);
 	if (!track)	  track = gp_track_by_filename (itdb, file);
 	if (track)
 	{

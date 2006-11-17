@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-24 15:25:29 jcs>
+/* Time-stamp: <2006-11-17 16:35:28 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -53,7 +53,7 @@
  * Register all tracks in the md5 hash and remove duplicates (while
  * preserving playlists)
  */
-void gp_md5_hash_tracks_itdb (iTunesDB *itdb)
+void gp_sha1_hash_tracks_itdb (iTunesDB *itdb)
 {
    gint ns, count;
    GList *gl;
@@ -66,14 +66,14 @@ void gp_md5_hash_tracks_itdb (iTunesDB *itdb)
 
    block_widgets (); /* block widgets -- this might take a while,
 			so we'll do refreshs */
-   md5_free (itdb);  /* release md5 hash */
+   sha1_free (itdb);  /* release md5 hash */
    count = 0;
    /* populate the hash table */
    gl=itdb->tracks;
    while (gl)
    {
        Track *track=gl->data;
-       Track *oldtrack = md5_track_exists_insert (itdb, track);
+       Track *oldtrack = sha1_track_exists_insert (itdb, track);
 
        /* need to get next track now because it might be a duplicate and
 	  thus be removed when we call gp_duplicate_remove() */
@@ -103,7 +103,7 @@ void gp_md5_hash_tracks_itdb (iTunesDB *itdb)
  * Call gp_hash_tracks_itdb() for each itdb.
  *
  */
-void gp_md5_hash_tracks (void)
+void gp_sha1_hash_tracks (void)
 {
     GList *gl;
     struct itdbs_head *itdbs_head;
@@ -116,17 +116,17 @@ void gp_md5_hash_tracks (void)
     block_widgets ();
     for (gl=itdbs_head->itdbs; gl; gl=gl->next)
     {
-	gp_md5_hash_tracks_itdb (gl->data);
+	gp_sha1_hash_tracks_itdb (gl->data);
     }
     release_widgets ();
 }
 
 
 /**
- * Call md5_free() for each itdb and delete md5 checksums in all tracks.
+ * Call sha1_free() for each itdb and delete md5 checksums in all tracks.
  *
  */
-void gp_md5_free_hash (void)
+void gp_sha1_free_hash (void)
 {
     void rm_md5 (gpointer track, gpointer user_data)
 	{
@@ -134,7 +134,7 @@ void gp_md5_free_hash (void)
 	    g_return_if_fail (track);
 	    etr = ((Track *)track)->userdata;
 	    g_return_if_fail (etr);
-	    C_FREE (etr->md5_hash);
+	    C_FREE (etr->sha1_hash);
 	}
     GList *gl;
     struct itdbs_head *itdbs_head;
@@ -148,7 +148,7 @@ void gp_md5_free_hash (void)
     {
 	iTunesDB *itdb = gl->data;
 	g_return_if_fail (itdb);
-	md5_free (itdb);
+	sha1_free (itdb);
 	g_list_foreach (itdb->tracks, rm_md5, NULL);
     }
 }
@@ -349,13 +349,13 @@ void gp_itdb_hash (iTunesDB *itdb)
 
    block_widgets (); /* block widgets -- this might take a while,
 			so we'll do refreshs */
-   md5_free (itdb);  /* release md5 hash */
+   sha1_free (itdb);  /* release md5 hash */
    count = 0;
    track_nr = 0;
    /* populate the hash table */
    while ((track = g_list_nth_data (itdb->tracks, track_nr)))
    {
-       oldtrack = md5_track_exists_insert (itdb, track);
+       oldtrack = sha1_track_exists_insert (itdb, track);
        ++count;
 /*        printf("%d:%d:%p:%p\n", count, track_nr, track, oldtrack); */
        if (!prefs_get_int("block_display") &&

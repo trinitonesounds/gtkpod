@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-05-17 22:10:35 jcs>
+/* Time-stamp: <2006-11-17 16:36:47 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -93,7 +93,7 @@ static void little_endian(hblock * stupidblock, int blocks);
 #define PATH_MAX_MD5 4096
 
 /* Set up or destory the md5 hash table */
-void setup_md5()
+void setup_sha1()
 {
     struct itdbs_head *itdbs_head;
 
@@ -106,13 +106,13 @@ void setup_md5()
     {
 	if (prefs_get_int("md5"))  /* MD5 hashing turned on */
 	{
-	    gp_md5_hash_tracks();
+	    gp_sha1_hash_tracks();
 	
 	    /* Display duplicates */
 	    gp_duplicate_remove(NULL, NULL);
 	}
 	else
-	    gp_md5_free_hash();
+	    gp_sha1_free_hash();
     }
 }
 
@@ -135,13 +135,13 @@ get_filesize_for_file_descriptor(FILE *fp)
 }
 
 /**
- * md5_hash_on_file - read PATH_MAX_MD5 * NR_PATH_MAX_BLOCKS bytes
+ * sha1_hash_on_file - read PATH_MAX_MD5 * NR_PATH_MAX_BLOCKS bytes
  * from the file and ask sha1 for a hash of it, convert this hash to a
  * string of hex output @fp - an open file descriptor to read from
  * Returns - A Hash String - you handle memory returned
  */
 static gchar *
-md5_hash_on_file(FILE * fp)
+sha1_hash_on_file(FILE * fp)
 {
    gchar *result = NULL;
 
@@ -196,7 +196,7 @@ md5_hash_on_file(FILE * fp)
  * Returns - an SHA1 hash in string format, is the hex output from the hash
  */
 static gchar *
-md5_hash_track(Track * s)
+sha1_hash_track(Track * s)
 {
    ExtraTrackData *etr;
    gchar *result = NULL;
@@ -206,16 +206,16 @@ md5_hash_track(Track * s)
    etr = s->userdata;
    g_return_val_if_fail (etr, NULL);
 
-   if (etr->md5_hash != NULL)
+   if (etr->sha1_hash != NULL)
    {
-       result = g_strdup(etr->md5_hash);
+       result = g_strdup(etr->sha1_hash);
    }
    else
    {
        filename = get_file_name_from_source (s, SOURCE_PREFER_LOCAL);
        if (filename)
        {
-	   result = md5_hash_on_filename (filename, FALSE);
+	   result = sha1_hash_on_filename (filename, FALSE);
 	   g_free(filename);
        }
    }
@@ -224,7 +224,7 @@ md5_hash_track(Track * s)
 
 
 /* @silent: don't print any warning */
-gchar *md5_hash_on_filename (gchar *name, gboolean silent)
+gchar *sha1_hash_on_filename (gchar *name, gboolean silent)
 {
     gchar *result = NULL;
 
@@ -244,7 +244,7 @@ gchar *md5_hash_on_filename (gchar *name, gboolean silent)
 	}
 	else
 	{
-	    result = md5_hash_on_file (fpit);
+	    result = sha1_hash_on_file (fpit);
 	    fclose (fpit);
 	}
     }
@@ -255,7 +255,7 @@ gchar *md5_hash_on_filename (gchar *name, gboolean silent)
 /**
  * Free up the dynamically allocated memory in @itdb's hash table
  */
-void md5_free_eitdb (ExtraiTunesDBData *eitdb)
+void sha1_free_eitdb (ExtraiTunesDBData *eitdb)
 {
     g_return_if_fail (eitdb);
 
@@ -269,12 +269,12 @@ void md5_free_eitdb (ExtraiTunesDBData *eitdb)
 /**
  * Free up the dynamically allocated memory in @itdb's hash table
  */
-void md5_free (iTunesDB *itdb)
+void sha1_free (iTunesDB *itdb)
 {
     g_return_if_fail (itdb);
     g_return_if_fail (itdb->userdata);
 
-    md5_free_eitdb (itdb->userdata);
+    sha1_free_eitdb (itdb->userdata);
 }
 
 /**
@@ -283,7 +283,7 @@ void md5_free (iTunesDB *itdb)
  * is inserted into the hash.
  * Returns a pointer to the duplicate track.
  */
-Track *md5_track_exists_insert (iTunesDB *itdb, Track * s)
+Track *sha1_track_exists_insert (iTunesDB *itdb, Track * s)
 {
     ExtraiTunesDBData *eitdb;
     ExtraTrackData *etr;
@@ -306,7 +306,7 @@ Track *md5_track_exists_insert (iTunesDB *itdb, Track * s)
 						   g_str_equal,
 						   g_free, NULL);
 	}
-	val = md5_hash_track (s);
+	val = sha1_hash_track (s);
 	if (val != NULL)
 	{
 	    track = g_hash_table_lookup (eitdb->md5hash, val);
@@ -316,8 +316,8 @@ Track *md5_track_exists_insert (iTunesDB *itdb, Track * s)
 	    }
 	    else
 	    {   /* if it doesn't exist we register it in the hash */
-		g_free (etr->md5_hash);
-		etr->md5_hash = g_strdup (val);
+		g_free (etr->sha1_hash);
+		etr->sha1_hash = g_strdup (val);
 		/* val is used in the next line -- we don't have to
 		 * g_free() it */
 		g_hash_table_insert (eitdb->md5hash, val, s);
@@ -332,7 +332,7 @@ Track *md5_track_exists_insert (iTunesDB *itdb, Track * s)
  * @s - the Track we want to know about.
  * Returns a pointer to the duplicate track.
  */
-Track *md5_track_exists (iTunesDB *itdb, Track *s)
+Track *sha1_track_exists (iTunesDB *itdb, Track *s)
 {
     ExtraiTunesDBData *eitdb;
     Track *track = NULL;
@@ -343,7 +343,7 @@ Track *md5_track_exists (iTunesDB *itdb, Track *s)
 
     if (prefs_get_int("md5") && eitdb->md5hash)
     {
-	gchar *val = md5_hash_track (s);
+	gchar *val = sha1_hash_track (s);
 	if (val)
 	{
 	    track = g_hash_table_lookup (eitdb->md5hash, val);
@@ -359,7 +359,7 @@ Track *md5_track_exists (iTunesDB *itdb, Track *s)
  * Returns a pointer to the duplicate track using md5 for
  * identification. If md5 checksums are off, NULL is returned.
  */
-Track *md5_file_exists (iTunesDB *itdb, gchar *file, gboolean silent)
+Track *sha1_file_exists (iTunesDB *itdb, gchar *file, gboolean silent)
 {
     ExtraiTunesDBData *eitdb;
     Track *track = NULL;
@@ -371,7 +371,7 @@ Track *md5_file_exists (iTunesDB *itdb, gchar *file, gboolean silent)
 
     if (prefs_get_int("md5") && eitdb->md5hash)
     {
-	gchar *val = md5_hash_on_filename (file, silent);
+	gchar *val = sha1_hash_on_filename (file, silent);
 	if (val)
 	{
 	    track = g_hash_table_lookup (eitdb->md5hash, val);
@@ -388,7 +388,7 @@ Track *md5_file_exists (iTunesDB *itdb, gchar *file, gboolean silent)
  * Returns a pointer to the duplicate track using md5 for
  * identification. If md5 checksums are off, NULL is returned.
  */
-Track *md5_md5_exists (iTunesDB *itdb, gchar *md5)
+Track *sha1_sha1_exists (iTunesDB *itdb, gchar *md5)
 {
     ExtraiTunesDBData *eitdb;
     Track *track = NULL;
@@ -409,7 +409,7 @@ Track *md5_md5_exists (iTunesDB *itdb, gchar *md5)
  * Free the specified track from the ipod's unique file hash
  * @s - The Track that's being freed from the ipod
  */
-void md5_track_remove (Track *s)
+void sha1_track_remove (Track *s)
 {
     ExtraiTunesDBData *eitdb;
 
@@ -420,7 +420,7 @@ void md5_track_remove (Track *s)
 
     if (prefs_get_int("md5") && eitdb->md5hash)
     {
-	gchar *val = md5_hash_track (s);
+	gchar *val = sha1_hash_track (s);
 	if (val)
 	{
 	    Track *track = g_hash_table_lookup (eitdb->md5hash, val);
