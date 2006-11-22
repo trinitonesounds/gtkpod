@@ -81,6 +81,18 @@ AC_CHECK_LIB([id3tag], [id3_frame_field], ,
 # AC_CHECK_LIB([curl],  [curl_easy_init], ,
 #	     AC_MSG_ERROR([*** curl lib not found!]))
 
+dnl Check for libcurl
+PKG_CHECK_MODULES(CURL, [libcurl >= 7.10.0], have_curl=yes, have_curl=no)
+if test "$have_curl" != "no"; then
+    AC_DEFINE(HAVE_CURL, 1, ["libcurl support"])
+    CPPFLAGS="$CPPFLAGS $CURL_CFLAGS"
+    CFLAGS="$CFLAGS $CURL_CFLAGS"
+    LDFLAGS="$LDFLAGS $CURL_LIBS"
+else
+    echo "*** libcurl could not be found, not building last.fm support"
+    have_curl="no -- will build without last.fm support"
+fi
+
 dnl Check for libmp4v2 (and mp4.h)
 AC_SEARCH_LIBS(MP4FileInfo,
 	["mp4v2" "mp4v2 -lstdc++" "mp4v2 -lz" "mp4v2 -lz -lstdc++"],
@@ -119,6 +131,7 @@ Configuration for $PACKAGE $VERSION :
  GTK2 version .........: `pkg-config gtk+-2.0 --modversion`
  GLib2/GThread version : `pkg-config gthread-2.0 --modversion`
  id3tag lib ...........: yes
+ libcurl ..............: $have_curl
  mp4v2 ................: $have_mp4v2
  NLS/gettext ..........: $USE_NLS
 

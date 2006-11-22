@@ -7,6 +7,9 @@
 
 	* subsequent changes to Makefile.am and some #includes.
 
+	* src/md5.[ch], src/lastfm.[ch]: lastfm support by Anant
+          Narayanan.
+
 2006-11-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/*.[ch]: realized that we are using sha1 hash and not md5

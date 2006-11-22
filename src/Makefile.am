@@ -43,8 +43,9 @@ gtkpod_SOURCES = \
     info.c info.h \
     ipod_init.c ipod_init.h \
     itdb.h \
+    lastfm.c lastfm.h \
     main.c \
-    sha1.c sha1.h \
+    md5.c md5.h \
     misc.c misc.h \
     misc_confirm.c misc_conversion.c misc_input.c \
     misc_playlist.c \
@@ -55,6 +56,7 @@ gtkpod_SOURCES = \
     prefs.c prefs.h \
     prefs_window.c prefs_window.h \
     repository.c repository.h \
+    sha1.c sha1.h \
     syncdir.c syncdir.h \
     tools.c tools.h \
     wavfile.c wavfile.h

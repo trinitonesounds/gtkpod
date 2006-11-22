@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-23 00:45:41 jcs>
+/* Time-stamp: <2006-11-23 00:50:17 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -35,6 +35,7 @@
 #include "info.h"
 #include "fileselection.h"
 #include "sha1.h"
+#include "md5.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
@@ -474,6 +475,18 @@ prefs_window_create (gint page)
     w = gtkpod_xml_get_widget (prefs_window_xml,  "cfg_autoimport");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
 				 prefs_get_int("autoimport"));
+
+    /* last.fm */
+    int x = prefs_get_int("lastfm_active");
+    GtkWidget *u = gtkpod_xml_get_widget (prefs_window_xml, "lastfm_username");
+    GtkWidget *p = gtkpod_xml_get_widget (prefs_window_xml, "lastfm_password");
+    w = gtkpod_xml_get_widget (prefs_window_xml, "lastfm_active");
+
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), x);
+    gtk_entry_set_text(GTK_ENTRY(u), prefs_get_string("lastfm_username"));
+    gtk_entry_set_text(GTK_ENTRY(p), prefs_get_string("lastfm_password"));
+    gtk_widget_set_sensitive (u, x);
+    gtk_widget_set_sensitive (p, x);
 
     w = gtkpod_xml_get_widget (prefs_window_xml, "autoselect_hbox");
     for (i=0; i<SORT_TAB_MAX; ++i)
@@ -1427,6 +1440,58 @@ on_mserv_username_entry_changed              (GtkEditable     *editable,
     if (!val) return;
     temp_prefs_set_string(temp_prefs, "mserv_username", val);
     g_free(val);
+}
+
+/* last.fm callbacks */
+void
+on_lastfm_active_toggled              (GtkToggleButton *togglebutton,
+					gpointer         user_data)
+{
+    int x = gtk_toggle_button_get_active(togglebutton);
+    GtkWidget *u = gtkpod_xml_get_widget  (prefs_window_xml, "lastfm_username");
+    GtkWidget *p = gtkpod_xml_get_widget  (prefs_window_xml, "lastfm_password");
+    temp_prefs_set_int(temp_prefs, "lastfm_active", x);
+
+    gtk_widget_set_sensitive (u, x);
+    gtk_widget_set_sensitive (p, x);
+}
+
+void
+on_lastfm_username_entry_changed          (GtkEditable     *editable,
+					gpointer         user_data)
+{
+    gchar *uname;
+    uname = gtk_editable_get_chars (editable, 0, -1);
+    temp_prefs_set_string(temp_prefs, "lastfm_username", uname);
+    g_free (uname);
+}
+
+void
+on_lastfm_password_entry_changed          (GtkEditable     *editable,
+					gpointer         user_data)
+{
+    gchar *upass, *upass_old;
+
+    upass = gtk_editable_get_chars (editable, 0, -1);
+    upass_old = prefs_get_string ("lastfm_password");
+
+    if (!upass_old || (strcmp (upass, upass_old) != 0))
+    {
+	unsigned char sig[16];
+	unsigned char md5[64];
+	gint i;
+
+	md5_buffer((const char *)upass, strlen(upass), sig);
+
+	for (i=0; i<16; ++i)
+	{
+	    snprintf (&md5[i*2], 3, "%02x", sig[i]);
+	}
+
+	temp_prefs_set_string(temp_prefs, "lastfm_password", md5);
+    }
+    g_free (upass);
+    g_free (upass_old);
 }
 
 
