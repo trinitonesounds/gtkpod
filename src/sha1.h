@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-17 16:28:43 jcs>
+/* Time-stamp: <2006-11-23 00:43:34 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2004-2005 Jorg Schuler <jcsjcs at users.sourceforge.net>
@@ -28,8 +28,8 @@
 |
 |  $Id$
 */
-#ifndef _GTKPOD_MD5_H_
-#define _GTKPOD_MD5_H_
+#ifndef _GTKPOD_SHA1_H_
+#define _GTKPOD_SHA1_H_
 
 #include "display_itdb.h"
 

@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-17 16:36:11 jcs>
+/* Time-stamp: <2006-11-23 00:45:43 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -46,7 +46,7 @@
 #include "info.h"
 #include "file.h"
 #include "itdb.h"
-#include "md5.h"
+#include "sha1.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "mp3file.h"

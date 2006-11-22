@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-17 16:36:47 jcs>
+/* Time-stamp: <2006-11-23 00:45:42 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -41,7 +41,7 @@
 #include <unistd.h>
 #include <glib.h>
 #include "charset.h"
-#include "md5.h"
+#include "sha1.h"
 #include "file.h"
 #include "prefs.h"
 #include "misc.h"

@@ -1,3 +1,12 @@
+2006-11-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/: renamed
+	  - display_songs.c to display_tracks.c
+	  - md5.c to sha1.c
+	  - md5.h to sha1.h
+
+	* subsequent changes to Makefile.am and some #includes.
+
 2006-11-17 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/*.[ch]: realized that we are using sha1 hash and not md5

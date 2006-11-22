@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-17 16:33:14 jcs>
+/* Time-stamp: <2006-11-23 00:45:43 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -29,7 +29,7 @@
 
 #include "config.h"
 #include "clientserver.h"
-#include "md5.h"
+#include "sha1.h"
 #include "misc.h"
 #include "display_itdb.h"
 #include "prefs.h"

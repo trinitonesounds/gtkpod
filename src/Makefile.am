@@ -36,7 +36,7 @@ gtkpod_SOURCES = \
     display.c display_playlists.c display_sorttabs.c \
     display.h display_private.h \
     display_itdb.c display_itdb.h \
-    display_songs.c display_spl.c \
+    display_spl.c display_tracks.c \
     file.c file.h file_export.c \
     file_itunesdb.c \
     fileselection.h fileselection.c \
@@ -44,7 +44,7 @@ gtkpod_SOURCES = \
     ipod_init.c ipod_init.h \
     itdb.h \
     main.c \
-    md5.c md5.h \
+    sha1.c sha1.h \
     misc.c misc.h \
     misc_confirm.c misc_conversion.c misc_input.c \
     misc_playlist.c \

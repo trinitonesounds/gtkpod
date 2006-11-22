@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-17 16:36:10 jcs>
+/* Time-stamp: <2006-11-23 00:45:41 jcs>
 |
 |  Copyright (C) 2002 Corey Donohoe <atmos at atmos.org>
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -34,7 +34,7 @@
 #include "display_itdb.h"
 #include "info.h"
 #include "fileselection.h"
-#include "md5.h"
+#include "sha1.h"
 #include "misc.h"
 #include "misc_track.h"
 #include "prefs.h"
