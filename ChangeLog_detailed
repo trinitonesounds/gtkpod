@@ -1,3 +1,10 @@
+2006-11-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* src/prefs.c
+	  src/clientserver.[ch]: Add command line argument to print
+	  out the gtkpod sha1 hash of a file ("--hash"). Thanks to
+	  Todd Zullinger.
+
 2006-11-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/: renamed

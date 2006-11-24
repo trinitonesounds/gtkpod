@@ -129,6 +129,7 @@ enum {
   GP_PLAYCOUNT,
   GP_MOUNT,
   GP_AUTO,
+  GP_PRINT_HASH,
 };
 
 /* Set default prefrences */
@@ -306,7 +307,8 @@ static void usage(FILE *fp)
 {
   locale_fprintf(fp, _("gtkpod version %s usage:\n"), VERSION);
   locale_fprintf(fp, _("  -h, --help:   display this message\n"));
-  locale_fprintf(fp, _("  -p <filename>:increment playcount for file by one\n"));
+  locale_fprintf(fp, _("  -p <file>:    increment playcount for file by one\n"));
+  locale_fprintf(fp, _("  --hash <file>:print gtkpod hash for file\n"));
   locale_fprintf(fp, _("  -m path:      define the mountpoint of your iPod\n"));
   locale_fprintf(fp, _("  --mountpoint: same as '-m'.\n"));
   locale_fprintf(fp, _("  -a:           import database automatically after start.\n"));
@@ -323,7 +325,8 @@ static void read_commandline(int argc, char *argv[])
 	{
 	    { "h",           no_argument,	NULL, GP_HELP },
 	    { "help",        no_argument,	NULL, GP_HELP },
-	    { "p",           required_argument,       NULL, GP_PLAYCOUNT },
+	    { "p",           required_argument, NULL, GP_PLAYCOUNT },
+	    { "hash",        required_argument, NULL, GP_PRINT_HASH },
 	    { "m",           required_argument,	NULL, GP_MOUNT },
 	    { "mountpoint",  required_argument,	NULL, GP_MOUNT },
 	    { "a",           no_argument,	NULL, GP_AUTO },
@@ -342,6 +345,10 @@ static void read_commandline(int argc, char *argv[])
 	    break;
 	case GP_PLAYCOUNT:
 	    client_playcount(optarg);
+	    exit(0);
+	    break;
+	case GP_PRINT_HASH:
+	    print_sha1_hash (optarg);
 	    exit(0);
 	    break;
 	case GP_MOUNT:

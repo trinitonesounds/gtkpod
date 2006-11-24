@@ -43,6 +43,7 @@ extern const gchar *SOCKET_PLYC;
 void server_setup (void);
 void server_shutdown (void);
 gboolean client_playcount (gchar *file);
+gboolean print_sha1_hash (gchar *file);
 #ifndef HAVE_FLOCK
 #include <unistd.h>
 #include <fcntl.h>

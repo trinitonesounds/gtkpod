@@ -310,4 +310,15 @@ gboolean client_playcount (gchar *file)
 }
 
 
+/* print out the "sha1" hash of a filename <file> */
+gboolean print_sha1_hash (gchar *file)
+{
+    if (file && *file)
+    {
+	gchar *hash = sha1_hash_on_filename (file, TRUE);
+	if (hash) fprintf (stdout, "%s\n", hash);
+	g_free (hash);
+    }
+    return TRUE;
+}
 
