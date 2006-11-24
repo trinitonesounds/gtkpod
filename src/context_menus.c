@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-29 20:41:31 jcs>
+/* Time-stamp: <2006-11-24 20:14:54 jcs>
 |
 |  Copyright (C) 2003 Corey Donohoe <atmos at atmos dot org>
 |  Copyright (C) 2003-2005 Jorg Schuler <jcsjcs at users sourceforge net>
@@ -475,6 +475,20 @@ static GtkWidget *add_edit_ipod_properties (GtkWidget *menu)
 		      G_CALLBACK (edit_properties), NULL);
 }
 
+static GtkWidget *add_edit_repository_properties (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Edit Repository Properties"),
+		      GTK_STOCK_PREFERENCES,
+		      G_CALLBACK (edit_properties), NULL);
+}
+
+static GtkWidget *add_edit_playlist_properties (GtkWidget *menu)
+{
+    return hookup_mi (menu,  _("Edit Playlist Properties"),
+		      GTK_STOCK_PREFERENCES,
+		      G_CALLBACK (edit_properties), NULL);
+}
+
 static GtkWidget *add_edit_track_details (GtkWidget *menu)
 {
     return hookup_mi (menu,  _("Edit Track Details"),
@@ -591,13 +605,6 @@ static GtkWidget *add_special (GtkWidget *menu)
 }
 #endif
 
-static GtkWidget *add_edit_playlist_properties (GtkWidget *menu)
-{
-    return hookup_mi (menu,  _("Edit Playlist Properties"),
-		      GTK_STOCK_PREFERENCES,
-		      G_CALLBACK (edit_properties), NULL);
-}
-
 
 void create_context_menu (CM_type type)
 {
@@ -657,7 +664,7 @@ void create_context_menu (CM_type type)
 		    {
 			add_edit_smart_playlist (menu);
 		    }
-		    if (itdb_playlist_is_mpl (pl) || pl->is_spl)
+		    if (itdb_playlist_is_mpl (pl))
 		    {
 			add_edit_ipod_properties (menu);
 		    }
@@ -704,7 +711,14 @@ void create_context_menu (CM_type type)
 		{
 		    add_edit_smart_playlist (menu);
 		}
-		add_edit_playlist_properties (menu);
+		if (itdb_playlist_is_mpl (pl))
+		{
+		    add_edit_repository_properties (menu);
+		}
+		else
+		{
+		    add_edit_playlist_properties (menu);
+		}
 		add_save_changes (menu);
 	    }
 	    break;

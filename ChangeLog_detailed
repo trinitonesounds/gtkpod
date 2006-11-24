@@ -5,6 +5,11 @@
 	  out the gtkpod sha1 hash of a file ("--hash"). Thanks to
 	  Todd Zullinger.
 
+	* src/context_menus.c: Make context menu more consistent
+          ('Edit Playlist Properties', 'Edit iPod Properties' and
+          'Edit Repository Properties').
+
+
 2006-11-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/: renamed
