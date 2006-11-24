@@ -9,6 +9,8 @@
           ('Edit Playlist Properties', 'Edit iPod Properties' and
           'Edit Repository Properties').
 
+	* src/ipod_init.c: gp_ipod_init() would 'forget' what model
+          the user selected earlier when setting up the iPod repository.
 
 2006-11-22 Jorg Schuler <jcsjcs at users.sourceforge.net>
 

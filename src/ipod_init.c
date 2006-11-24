@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-17 16:11:25 jcs>
+/* Time-stamp: <2006-11-24 20:29:50 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -246,7 +246,6 @@ gboolean gp_ipod_init (iTunesDB *itdb)
     GtkEntry *entry;
     gchar buf[PATH_MAX];
     GtkComboBox *cb;
-    const IpodInfo *info;
 
     g_return_val_if_fail (itdb, FALSE);
 
@@ -277,10 +276,11 @@ gboolean gp_ipod_init (iTunesDB *itdb)
 
     /* If available set current model number, otherwise indicate that
        none is available */
-    info = itdb_device_get_ipod_info (ii->itdb->device);
-    if (info && (info->ipod_generation != ITDB_IPOD_GENERATION_UNKNOWN))
+    model = get_itdb_prefs_string (itdb, KEY_IPOD_MODEL);
+    if (model)
     {
-	g_snprintf (buf, PATH_MAX, "x%s", info->model_number);
+	g_snprintf (buf, PATH_MAX, "%s", model);
+	g_free (model);
     }
     else
     {
@@ -330,7 +330,8 @@ gboolean gp_ipod_init (iTunesDB *itdb)
 	}
 	model = gtk_combo_box_get_active_text (
 	    GTK_COMBO_BOX (GET_WIDGET (MODEL_COMBO)));
-	if (strcmp (model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0)
+	if ((strcmp (model, gettext(SELECT_OR_ENTER_YOUR_MODEL)) == 0) ||
+	    (strlen (model) == 0))
 	{   /* User didn't choose a model */
 	    g_free (model);
 	    model = NULL;
