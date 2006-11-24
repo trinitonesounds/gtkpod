@@ -119,7 +119,7 @@ static int lastfm_handshake()
 	res = fopen(filename, "w+");
 	if (res == NULL)
 	{
-	    gtkpod_warning (_("Could not create 'lastfm.respons' in '%s'."),
+	    gtkpod_warning (_("Could not create 'lastfm.response' in '%s'."),
 			    config_dir);
 	    g_free(config_dir);
 	    return -1;
