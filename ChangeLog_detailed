@@ -3,6 +3,9 @@
 	* src/display_playlists.c: display duplicates when adding
           tracks through DND.
 
+	* src/display_playlists.c: avoid crash when clicking on the
+          'Eject/Load iPod' icons too quickly.
+
 2006-11-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/prefs.c

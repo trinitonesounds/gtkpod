@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-26 14:34:06 jcs>
+/* Time-stamp: <2006-11-26 17:39:43 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -2037,6 +2037,10 @@ pm_button_press (GtkWidget *w, GdkEventButton *e, gpointer data)
 					       e->x, e->y, NULL);
 	if (cell_nr == 0)
 	{
+	    /* don't accept clicks while widgets are blocked -- this
+	       might cause a crash (e.g. when we click the 'Eject
+	       iPod' symbol while we are ejecting it already) */
+	    if (widgets_blocked) return FALSE;
 	    /* */
 	    model= gtk_tree_view_get_model (GTK_TREE_VIEW (w));
 	    gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW(w),
