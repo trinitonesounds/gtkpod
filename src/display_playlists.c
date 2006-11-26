@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-06-28 01:25:27 jcs>
+/* Time-stamp: <2006-11-26 14:34:06 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -883,8 +883,6 @@ static void pm_drag_data_received (GtkWidget       *widget,
 		gtk_drag_finish (dc, FALSE, FALSE, time);
 		g_return_if_reached ();
 	    }
-	    pm_rows_reordered ();
-	    return;
 	}
 	else
 	{   /*handle DND between two itdbs */
@@ -945,6 +943,9 @@ static void pm_drag_data_received (GtkWidget       *widget,
 	gtk_drag_finish (dc, FALSE, FALSE, time);
 	break;
     }
+
+    /* display if any duplicates were skipped */
+    gp_duplicate_remove (NULL, NULL);
 }
 
 

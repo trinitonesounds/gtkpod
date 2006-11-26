@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-24 20:29:50 jcs>
+/* Time-stamp: <2006-11-25 00:50:21 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -246,6 +246,7 @@ gboolean gp_ipod_init (iTunesDB *itdb)
     GtkEntry *entry;
     gchar buf[PATH_MAX];
     GtkComboBox *cb;
+    const IpodInfo *info;
 
     g_return_val_if_fail (itdb, FALSE);
 
@@ -276,19 +277,28 @@ gboolean gp_ipod_init (iTunesDB *itdb)
 
     /* If available set current model number, otherwise indicate that
        none is available */
-    model = get_itdb_prefs_string (itdb, KEY_IPOD_MODEL);
-    if (model)
+    /* If available set current model number, otherwise indicate that
+       none is available */
+    info = itdb_device_get_ipod_info (itdb->device);
+    if (info && (info->ipod_generation != ITDB_IPOD_GENERATION_UNKNOWN))
     {
-	g_snprintf (buf, PATH_MAX, "%s", model);
-	g_free (model);
+	g_snprintf (buf, PATH_MAX, "x%s", info->model_number);
     }
     else
     {
-	g_snprintf (buf, PATH_MAX, "%s", gettext (SELECT_OR_ENTER_YOUR_MODEL));
+	model = get_itdb_prefs_string (itdb, KEY_IPOD_MODEL);
+	if (model && (strlen (g_strstrip (model)) != 0))
+	{
+	    g_snprintf (buf, PATH_MAX, "%s", model);
+	    g_free (model);
+	}
+	else
+	{
+	    g_snprintf (buf, PATH_MAX, "%s", gettext (SELECT_OR_ENTER_YOUR_MODEL));
+	}
     }
     entry = GTK_ENTRY (gtk_bin_get_child(GTK_BIN (cb)));
     gtk_entry_set_text (entry, buf);
-
 
     response = gtk_dialog_run (GTK_DIALOG (ii->window));
 
@@ -426,11 +436,20 @@ void gp_ipod_init_set_model (iTunesDB *itdb, const gchar *old_model)
     }
     else
     {
-	g_snprintf (buf, PATH_MAX, "%s", gettext (SELECT_OR_ENTER_YOUR_MODEL));
+	model = get_itdb_prefs_string (itdb, KEY_IPOD_MODEL);
+	if (model && (strlen (g_strstrip (model)) != 0))
+	{
+	    g_snprintf (buf, PATH_MAX, "%s", model);
+	    g_free (model);
+	}
+	else
+	{
+	    g_snprintf (buf, PATH_MAX, "%s", gettext (SELECT_OR_ENTER_YOUR_MODEL));
+	}
     }
+
     entry = GTK_ENTRY (gtk_bin_get_child(GTK_BIN (cb)));
     gtk_entry_set_text (entry, buf);
-
 
     response = gtk_dialog_run (GTK_DIALOG (window));
 
