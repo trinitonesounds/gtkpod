@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-09-21 23:31:59 jcs>
+/* Time-stamp: <2006-11-26 23:51:17 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -56,6 +56,7 @@ struct _Detail
     GList *orig_tracks; /* tracks displayed in details window */
     GList *tracks;      /* tracks displayed in details window */
     Track *track;       /* currently displayed track          */
+    gboolean artwork_ok;/* artwork can be displayed or not    */
     gboolean changed;   /* at lease one track was changed     */
 
 };
@@ -681,6 +682,12 @@ static void details_set_item (Detail *detail, Track *track, T_item item)
 	track->itdb = detail->itdb;
 	text = track_get_text (track, item);
 	track->itdb = NULL;
+	if ((item == T_THUMB_PATH) && (!detail->artwork_ok))
+	{
+	    gchar *new_text = g_strdup_printf (_("%s (image data corrupted or unreadable)"), text);
+	    g_free (text);
+	    text = new_text;
+	}
     }
     else
     {
@@ -1137,6 +1144,7 @@ static void details_update_thumbnail (Detail *detail)
 
     if (detail->track)
     {
+	detail->artwork_ok = TRUE;
 	/* Get large cover */
 	thumb = itdb_artwork_get_thumb_by_type (detail->track->artwork,
 						ITDB_THUMB_COVER_LARGE);
@@ -1149,6 +1157,12 @@ static void details_update_thumbnail (Detail *detail)
 	    {
 		gtk_image_set_from_pixbuf (img, pixbuf);
 		gdk_pixbuf_unref (pixbuf);
+	    }
+	    else
+	    {
+		gtk_image_set_from_stock (img, GTK_STOCK_DIALOG_WARNING,
+					  GTK_ICON_SIZE_DIALOG);
+		detail->artwork_ok = FALSE;
 	    }
 	}
 	details_set_item (detail,  detail->track, T_THUMB_PATH);
@@ -1195,15 +1209,15 @@ static void details_set_track (Detail *detail, Track *track)
 
     detail->track = track;
 
+    /* Set thumbnail */
+    details_update_thumbnail (detail);
+
     for (item=1; item<T_ITEM_NUM; ++item)
     {
 	details_set_item (detail, track, item);
     }
 
     details_update_headline (detail);
-
-    /* Set thumbnail */
-    details_update_thumbnail (detail);
 
     details_update_buttons (detail);
 }

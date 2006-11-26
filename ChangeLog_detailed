@@ -6,6 +6,8 @@
 	* src/display_playlists.c: avoid crash when clicking on the
           'Eject/Load iPod' icons too quickly.
 
+	* src/details.c: indicate corrupted artwork data.
+
 2006-11-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/prefs.c
