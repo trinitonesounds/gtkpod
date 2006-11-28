@@ -33,7 +33,7 @@ How to compile/install gtkpod:
         autoconf (at least 2.55)
         flex (or lex)
 	glib (at least 2.4.0)
-        gtk+ (at least 2.4.0)
+        gtk+ (at least 2.6.0)
         libglade (at least 2.4.0)
         libgpod (at least 0.4.0)
         libid3tag (at least 0.15)

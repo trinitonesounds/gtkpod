@@ -1,4 +1,8 @@
-2006-11-24 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2006-11-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* configure.in: require gtk >= 2.6.0
+
+2006-11-26 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* src/display_playlists.c: display duplicates when adding
           tracks through DND.
