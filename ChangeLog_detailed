@@ -1,6 +1,7 @@
 2006-11-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
-	* configure.in: require gtk >= 2.6.0
+	* configure.in:
+	  INSTALL: require gtk >= 2.6.0
 
 2006-11-26 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
