@@ -49,7 +49,7 @@ How to compile/install gtkpod:
    add the path to LD_LIBRARY_PATH and PKG_CONFIG_PATH
 
      LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-     PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib
+     PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
      export LD_LIBRARY_PATH
      export PKG_CONFIG_PATH
 

@@ -1,3 +1,7 @@
+2007-01-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
+	* INSTALL: corrected PKG_CONFIG_PATH
+
 2006-11-28 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* configure.in:
