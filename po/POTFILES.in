@@ -38,7 +38,6 @@ src/mp4file.c
 src/prefs.c
 src/prefs_window.c
 src/repository.c
-src/support.c
 src/syncdir.c
 src/tools.c
 src/wavfile.c

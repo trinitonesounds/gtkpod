@@ -1,4 +1,4 @@
-2007-01-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
+2007-01-08 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* po/it.po: fuzzy'ed out translation with incorrect format
           string.
@@ -6,6 +6,10 @@
 	* po/ja.po: fuzzy'ed out translation with two plural forms
           (Japanese only supports one plural form) until a solution is
           found.
+
+	* po/fr.po: updated French catalog (thanks to Eric Lassauge)
+
+	* po/POTFILES.in: added support.c
 
 2007-01-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
