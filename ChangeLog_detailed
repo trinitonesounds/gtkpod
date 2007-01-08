@@ -1,5 +1,14 @@
 2007-01-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
+	* po/it.po: fuzzy'ed out translation with incorrect format
+          string.
+
+	* po/ja.po: fuzzy'ed out translation with two plural forms
+          (Japanese only supports one plural form) until a solution is
+          found.
+
+2007-01-07 Jorg Schuler <jcsjcs at users.sourceforge.net>
+
 	* INSTALL: corrected PKG_CONFIG_PATH
 
 2006-11-28 Jorg Schuler <jcsjcs at users.sourceforge.net>

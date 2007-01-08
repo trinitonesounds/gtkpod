@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: it2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-09-24 23:08+0900\n"
-"PO-Revision-Date: 2005-09-18 01:54+0900\n"
+"PO-Revision-Date: 2007-01-08 19:05+0900\n"
 "Last-Translator: \n"
 "Language-Team:  <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -4440,7 +4440,7 @@ msgstr[1] ""
 "per lasciare tutto così"
 
 #: src/misc_playlist.c:1202
-#, c-format
+#, c-format, fuzzy
 msgid ""
 "The following dangling track doesn't have file on PC. \n"
 "Press OK to remove it, CANCEL to leave it as is."

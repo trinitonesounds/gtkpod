@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gtkpod 0.40\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-09-24 23:08+0900\n"
-"PO-Revision-Date: 2005-06-20 23:25+0900\n"
+"PO-Revision-Date: 2007-01-08 19:08+0900\n"
 "Last-Translator: Kentaro Fukuchi <fukuchi@users.sourceforge.net>\n"
 "Language-Team: n/a\n"
 "MIME-Version: 1.0\n"
@@ -2716,7 +2716,7 @@ msgid "Updated selected tracks with data from mserv."
 msgstr "選択された曲を mserv のデータを元に更新しました。"
 
 #: src/file.c:1341
-#, c-format
+#, c-format, fuzzy
 msgid "The following track could not be updated"
 msgid_plural "The following %d tracks could not be updated"
 msgstr[0] "以下の曲を更新することができませんでした"
@@ -2729,7 +2729,7 @@ msgid "Failed Track Update"
 msgstr "曲の更新に失敗"
 
 #: src/file.c:1405
-#, c-format
+#, c-format, fuzzy
 msgid "The following track has been updated"
 msgid_plural "The following %d tracks have been updated"
 msgstr[0] "以下の曲を更新しました"
@@ -2742,7 +2742,7 @@ msgid "Successful Track Update"
 msgstr "曲の更新を完了"
 
 #: src/file.c:1470
-#, c-format
+#, c-format, fuzzy
 msgid "No mserv information could be retrieved for the following track"
 msgid_plural ""
 "No mserv information could be retrieved for the following %d tracks"
@@ -3690,6 +3690,7 @@ msgid "The following has occured:"
 msgstr "以下の問題が発生しました:"
 
 #: src/misc_confirm.c:123
+#, fuzzy
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "iPod? The number of playlists this track is a member of is indicated in "
@@ -3720,12 +3721,14 @@ msgid_plural ""
 msgstr[0] "以下の曲をプレイリスト \"%s\" から削除してもよろしいですか?"
 
 #: src/misc_confirm.c:142 src/misc_confirm.c:183
+#, fuzzy
 msgid "Remove Track From Playlist?"
 msgid_plural "Remove Tracks From Playlist?"
 msgstr[0] "この曲をプレイリストから削除しますか?"
 msgstr[1] "これらの曲をプレイリストから削除しますか?"
 
 #: src/misc_confirm.c:164
+#, fuzzy
 msgid ""
 "Are you sure you want to delete the following track completely from your "
 "harddisk? The number of playlists this track is a member of is indicated in "
@@ -3742,12 +3745,14 @@ msgstr[1] ""
 "は、それぞれの曲がいくつのプレイリストに登録されているかを示しています。"
 
 #: src/misc_confirm.c:168
+#, fuzzy
 msgid "Delete Track from Harddisk?"
 msgid_plural "Delete Tracks from Harddisk?"
 msgstr[0] "この曲をハードディスクから削除しますか?"
 msgstr[1] "これらの曲をハードディスクから削除しますか?"
 
 #: src/misc_confirm.c:193
+#, fuzzy
 msgid ""
 "Are you sure you want to remove the following track completely from your "
 "local database? The number of playlists this track is a member of is "
@@ -3765,13 +3770,14 @@ msgstr[1] ""
 "す。"
 
 #: src/misc_confirm.c:197
+#, fuzzy
 msgid "Remove Track from Local Database?"
 msgid_plural "Remove Tracks from Local Database?"
 msgstr[0] "この曲をローカルのデータベースから削除しますか?"
 msgstr[1] "これらの曲をローカルのデータベースから削除しますか?"
 
 #: src/misc_confirm.c:259
-#, c-format
+#, c-format, fuzzy
 msgid "Deleted one track completely from iPod"
 msgid_plural "Deleted %d tracks completely from iPod"
 msgstr[0] "iPodから1曲完全に削除しました"
@@ -3784,14 +3790,14 @@ msgid_plural "Deleted %d tracks from playlist '%s'"
 msgstr[0] "プレイリスト '%2$s' から %1$d 曲削除しました"
 
 #: src/misc_confirm.c:283
-#, c-format
+#, c-format, fuzzy
 msgid "Deleted one track from harddisk"
 msgid_plural "Deleted %d tracks from harddisk"
 msgstr[0] "ハードディスクから1曲削除しました"
 msgstr[1] "ハードディスクから%d曲削除しました"
 
 #: src/misc_confirm.c:295
-#, c-format
+#, c-format, fuzzy
 msgid "Deleted track from local database"
 msgid_plural "Deleted %d tracks from local database"
 msgstr[0] "ローカルデータベースから1曲削除しました"
