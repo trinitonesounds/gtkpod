@@ -1,5 +1,13 @@
 , TODO:
 
+- modify "warning" when matching checksums: Send a patch that changes
+  the behavior from printing into the info window to opening a dialog
+  with the "never show this dialog again" button. Then add an option
+  to the preferences to get the dialog back.
+
+- save extended database when rehash was done, even if main database
+  is not changed.
+
 - unload iPods when exiting gtkpod (ask/option).
 
 - cddb lookup (http://freedb.freedb.org). See also
