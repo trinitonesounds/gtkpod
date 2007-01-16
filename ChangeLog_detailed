@@ -31,6 +31,10 @@
 	* src/charset.c: Default Japanese auto-conversion to UTF8
           instead of EUC-JP. Thanks to Jun Kobayashi
 
+	* src/display_sorttabs.c (on_st_switch_page): avoid CRITICAL
+          warning when the "Special" filter tab was selected. Thanks
+          to Audrius Meskauskas for pointing this out.
+
 2007-01-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* po/ja.po: updated Japanese catalog -- thanks to Kentaro Fukuchi
