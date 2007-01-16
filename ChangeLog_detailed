@@ -35,6 +35,9 @@
           warning when the "Special" filter tab was selected. Thanks
           to Audrius Meskauskas for pointing this out.
 
+	* src/file.c: when looking for thumbnail files, also look for
+          uppercase filename extensions, like .JPG -- not only for .jpg.
+
 2007-01-15 Jorg Schuler <jcsjcs at users.sourceforge.net>
 
 	* po/ja.po: updated Japanese catalog -- thanks to Kentaro Fukuchi

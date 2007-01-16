@@ -1,4 +1,4 @@
-/* Time-stamp: <2006-11-26 14:42:36 jcs>
+/* Time-stamp: <2007-01-16 22:05:01 jcs>
 |
 |  Copyright (C) 2002-2005 Jorg Schuler <jcsjcs at users sourceforge net>
 |  Part of the gtkpod project.
@@ -56,6 +56,7 @@
 #include "oggfile.h"
 #include "flacfile.h"
 
+/* The uppercase version of these extensions is tried as well. */
 static const gchar *imageext[] =
 {".jpg", ".jpeg", ".png", ".pbm", ".pgm", ".ppm", ".tif", ".tiff",
  ".gif", NULL};
@@ -1010,8 +1011,24 @@ static void add_coverart (Track *tr)
 		const gchar **extp = imageext;
 		while (*extp && !filename_local)
 		{
-		    gchar *ffname;
-		    ffname = g_strconcat (fname, *extp, NULL);
+		    gchar *ffname = g_strconcat (fname, *extp, NULL);
+		    filename_utf8 = g_build_filename (dirname, ffname, NULL);
+		    g_free (ffname);
+		    filename_local = charset_from_utf8 (filename_utf8);
+		    g_free (filename_utf8);
+		    if (!g_file_test (filename_local, G_FILE_TEST_EXISTS))
+		    {
+			g_free (filename_local);
+			filename_local = NULL;
+		    }
+		    ++extp;
+		}
+		extp = imageext;
+		while (*extp && !filename_local)
+		{   /* try uppercase version of extension */
+		    gchar *upper_ext = g_ascii_strup (*extp, -1);
+		    gchar *ffname = g_strconcat (fname, upper_ext, NULL);
+		    g_free (upper_ext);
 		    filename_utf8 = g_build_filename (dirname, ffname, NULL);
 		    g_free (ffname);
 		    filename_local = charset_from_utf8 (filename_utf8);
